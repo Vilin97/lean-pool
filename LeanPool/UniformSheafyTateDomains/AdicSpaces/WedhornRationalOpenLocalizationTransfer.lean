@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCor732BranchTransfer
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizedCor732Bridge
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizationContinuity
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPrelocalizationTransfer
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCor732BranchTransfer
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizedCor732Bridge
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizationContinuity
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPrelocalizationTransfer
 
 /-!
 # Wedhorn rational-open localization transfer (locSubring form)
@@ -74,6 +76,8 @@ per-branch chain itself, which is the genuinely-new Wedhorn content
 * Uses existing helpers and committed transfers; adds only new
   theorems for the `locSubring` plus-subring form.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

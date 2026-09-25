@@ -3,6 +3,8 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2025 William Coram. All rights reserved.
@@ -13,12 +15,14 @@ VENDORED into AINTLIB (2026-07-04) from WilliamCoram/PhD (unmerged parts of
 PhD/ToPR/GaussNorm.lean + PhD/ToPR/Restricted.lean), building on the merged
 `Mathlib.RingTheory.PowerSeries.{Restricted, GaussNorm}`.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramRestrictedCore
-import Mathlib.RingTheory.PowerSeries.GaussNorm
-import Mathlib.Analysis.Normed.Unbundled.RingSeminorm
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramMvRestrictedNorm
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramRestrictedCore
+public import Mathlib.RingTheory.PowerSeries.GaussNorm
+public import Mathlib.Analysis.Normed.Unbundled.RingSeminorm
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramMvRestrictedNorm
 
 /-! # Univariate restricted power series: subring, type, Gauss norm instances (vendored) -/
+
+@[expose] public section
 
 namespace PowerSeries
 

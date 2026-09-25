@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetMain
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyEndpoints
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativeStandardRefinement
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyCompletionModel
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetMain
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyEndpoints
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativeStandardRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyCompletionModel
 
 /-!
 # FJP: the literature-facing sheafiness endpoints (WO5)
@@ -44,6 +46,8 @@ through the generic bridges — **no FJP-specific re-proof of anything**:
 
 All original FJP headline endpoints are untouched (regression-protected).
 -/
+
+@[expose] public section
 
 noncomputable section
 

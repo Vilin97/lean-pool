@@ -3,19 +3,21 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebraTopology
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Bounded
-import Mathlib.Data.Finsupp.Antidiagonal
-import Mathlib.RingTheory.MvPowerSeries.PiTopology
-import Mathlib.Topology.Algebra.InfiniteSum.Nonarchimedean
-import Mathlib.Topology.Algebra.InfiniteSum.Ring
-import Mathlib.Topology.Algebra.Nonarchimedean.Bases
-import Mathlib.Topology.Algebra.OpenSubgroup
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebraTopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Bounded
+public import Mathlib.Data.Finsupp.Antidiagonal
+public import Mathlib.RingTheory.MvPowerSeries.PiTopology
+public import Mathlib.Topology.Algebra.InfiniteSum.Nonarchimedean
+public import Mathlib.Topology.Algebra.InfiniteSum.Ring
+public import Mathlib.Topology.Algebra.Nonarchimedean.Bases
+public import Mathlib.Topology.Algebra.OpenSubgroup
 
 /-!
 # T-topology on the Tate Algebra (Wedhorn, Definition 5.48)
@@ -61,6 +63,8 @@ a ring topology.
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Definition 5.48, Proposition 5.49,
   Corollary 5.50
 -/
+
+@[expose] public section
 
 open MvPowerSeries Filter Topology
 

@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Topology.Algebra.InfiniteSum.Nonarchimedean
-import Mathlib.Topology.Algebra.TopologicallyNilpotent
+public import Mathlib.Topology.Algebra.InfiniteSum.Nonarchimedean
+public import Mathlib.Topology.Algebra.TopologicallyNilpotent
 
 /-!
 # Geometric Series in Nonarchimedean Rings
@@ -29,6 +31,8 @@ nonarchimedean topological ring, every topologically nilpotent element `a` yield
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Proposition 5.38
 -/
+
+@[expose] public section
 
 open Filter Topology
 

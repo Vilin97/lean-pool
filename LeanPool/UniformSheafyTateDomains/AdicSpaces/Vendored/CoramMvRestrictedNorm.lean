@@ -3,6 +3,8 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2025 William Coram. All rights reserved.
@@ -12,12 +14,14 @@ Authors: William Coram
 VENDORED into AINTLIB (2026-07-04) from WilliamCoram/PhD (PhD/ToPR/MvRestricted.lean),
 pending its mathlib PR. Import paths redirected to this workspace's vendored copies.
 -/
-import Mathlib.Analysis.Normed.Unbundled.RingSeminorm
-import Mathlib.Order.Lex
-import Mathlib.Data.Finsupp.Lex
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramMvGaussNorm
+public import Mathlib.Analysis.Normed.Unbundled.RingSeminorm
+public import Mathlib.Order.Lex
+public import Mathlib.Data.Finsupp.Lex
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramMvGaussNorm
 
 /-! # Norm instances on multivariate restricted power series (vendored) -/
+
+@[expose] public section
 
 
 

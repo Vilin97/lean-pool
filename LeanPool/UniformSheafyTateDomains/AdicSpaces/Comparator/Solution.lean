@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.SheafyEndpoints
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PowerBoundedIntegralElements
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.StrongSheafy
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.SheafyEndpoints
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PowerBoundedIntegralElements
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.StrongSheafy
 
 /-!
 # Comparator solution: [FJP] Theorem 1.1
@@ -26,6 +28,8 @@ nontrivially-normed field whose valuation ring is a DVR — and each forwards to
 `FiniteJetOver.*_of_dvr` layer-2 endpoint, which is what the paper's own `<lean>` references
 for Theorem 1.1 cite.
 -/
+
+@[expose] public section
 
 open FiniteJetOver ValuationSpectrum TopologicalRing MvTateAlgebra
 open scoped NormedField Valued

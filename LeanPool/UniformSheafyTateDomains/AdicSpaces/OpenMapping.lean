@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Topology.Algebra.Group.Basic
-import Mathlib.Topology.Algebra.Module.ModuleTopology
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.NoetherianTateModules
+public import Mathlib.Topology.Algebra.Group.Basic
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.NoetherianTateModules
 
 /-!
 # Open Mapping and Strict Exactness for Tate Modules
@@ -27,6 +29,8 @@ Open mapping framework for completed Tate rings, following Wedhorn Thm 6.16 / Pr
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Theorem 6.16, Proposition 6.18
 -/
+
+@[expose] public section
 
 open Filter Topology
 

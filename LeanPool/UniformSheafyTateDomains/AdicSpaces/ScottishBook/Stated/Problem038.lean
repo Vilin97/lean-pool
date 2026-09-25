@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Tilting
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Tilting
 
 /-!
 # Nonarchimedean Scottish Book — Problem 38
@@ -35,6 +37,8 @@ We state the negation: there exists a perfectoid field `K` of characteristic 0 w
 `K♭` contains a perfectoid subfield `E` that is not the tilt of any perfectoid subfield
 of `K`.
 -/
+
+@[expose] public section
 
 open TopologicalRing ValuationSpectrum
 

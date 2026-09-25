@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpvAITopology
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicSpectrum
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompact
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalSubsets
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpvAITopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicSpectrum
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompact
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalSubsets
 
 /-!
 # Quasi-compactness of `Spa A A⁺` via `Spv(A, I)` (Wedhorn 7.5 / 7.12 / 7.35)
@@ -41,6 +43,8 @@ The principal case (`I = (π)`, Tate) uses the FAITHFUL `restrictIdealSingle` ma
 (T-SPVAI, 2026-06-22); the general-`I` `cGammaIdeal` is the known-unfaithful B2 and is
 not used here.
 -/
+
+@[expose] public section
 
 open ValuationSpectrum
 

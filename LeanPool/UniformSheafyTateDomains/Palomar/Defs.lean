@@ -3,6 +3,8 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
@@ -12,25 +14,25 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -- `«Adic spaces».RestrictedPowerSeries` declares `MvPowerSeries.IsRestricted`, which clashes
 -- with Mathlib's module of the same name, and `Solution.lean` must import both this file and
 -- the library. A narrow import list is also easier for a reader to audit.
-import Mathlib.RingTheory.Valuation.ValuativeRel.Basic
-import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
-import Mathlib.RingTheory.Localization.Away.Basic
-import Mathlib.Topology.Algebra.UniformRing
-import Mathlib.Topology.Category.TopCommRingCat
-import Mathlib.Topology.Sheaves.Sheaf
-import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
-import Mathlib.Analysis.Normed.Ring.Basic
-import Mathlib.Analysis.Normed.Group.Ultra
-import Mathlib.Analysis.Normed.Group.Completion
-import Mathlib.Analysis.Normed.Module.Completion
-import Mathlib.Analysis.Normed.Field.Basic
-import Mathlib.Algebra.MonoidAlgebra.Basic
-import Mathlib.Topology.Algebra.Valued.NormedValued
-import Mathlib.Topology.Algebra.Valued.ValuedField
-import Mathlib.RingTheory.DiscreteValuationRing.Basic
-import Mathlib.Topology.Algebra.Ring.Basic
-import Mathlib.RingTheory.Noetherian.Defs
-import Mathlib.Topology.MetricSpace.Ultra.Basic
+public import Mathlib.RingTheory.Valuation.ValuativeRel.Basic
+public import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Mathlib.Topology.Algebra.UniformRing
+public import Mathlib.Topology.Category.TopCommRingCat
+public import Mathlib.Topology.Sheaves.Sheaf
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
+public import Mathlib.Analysis.Normed.Ring.Basic
+public import Mathlib.Analysis.Normed.Group.Ultra
+public import Mathlib.Analysis.Normed.Group.Completion
+public import Mathlib.Analysis.Normed.Module.Completion
+public import Mathlib.Analysis.Normed.Field.Basic
+public import Mathlib.Algebra.MonoidAlgebra.Basic
+public import Mathlib.Topology.Algebra.Valued.NormedValued
+public import Mathlib.Topology.Algebra.Valued.ValuedField
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.Topology.Algebra.Ring.Basic
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Mathlib.Topology.MetricSpace.Ultra.Basic
 
 /-!
 # Palomar challenge — the definitions (GENERATED from `Challenge.lean`)
@@ -86,6 +88,8 @@ only so the statements elaborate identically in both environments; it is the sam
 * [FJP] C. Birkbeck, A. Torzewski, *Uniform sheafy Tate rings that are not stably uniform*,
   https://cbirkbeck.github.io/uniform-sheafy-tate-domains/ — Definition 1.2, (1.7), Theorem 1.1.
 -/
+
+@[expose] public section
 
 -- Style linters only: explicit `[IsTopologicalRing A]` binders and `Prop`-valued `def`s below
 -- are deliberate (they mirror the library). Neither affects what is stated.

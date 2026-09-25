@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PerfectoidRing
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Uniform
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PerfectoidRing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Uniform
 
 /-!
 # Nonarchimedean Scottish Book — Problem 34
@@ -40,6 +42,8 @@ The fiber condition is abstracted as a `Prop` parameter since fully formalizing 
 of a morphism of adic spaces is perfectoid" requires adic space morphisms and fiber
 functors that are not yet available in this library.
 -/
+
+@[expose] public section
 
 open TopologicalRing ValuationSpectrum
 

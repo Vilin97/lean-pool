@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.CechCohomology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.CechCohomology
 
 /-!
 # The Čech refinement calculus (T634: Wedhorn Appendix A, all degrees)
@@ -26,6 +28,8 @@ degrees:
 * **Remark A.2** ([Wedhorn] l.5311): covers that refine each other have
   transferring acyclicity.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

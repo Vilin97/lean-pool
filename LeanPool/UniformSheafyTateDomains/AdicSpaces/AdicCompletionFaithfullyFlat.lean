@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
-import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
-import Mathlib.RingTheory.Jacobson.Ideal
-import Mathlib.RingTheory.Jacobson.Radical
-import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
+public import Mathlib.RingTheory.Jacobson.Ideal
+public import Mathlib.RingTheory.Jacobson.Radical
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
 
 /-!
 # Faithful flatness of adic completion under the Jacobson condition
@@ -51,6 +53,8 @@ descent):
    maximal contains the Jacobson radical), `I + m = m`, so `m = ⊤`,
    contradicting `m.IsMaximal`.
 -/
+
+@[expose] public section
 
 namespace AdicCompletion
 

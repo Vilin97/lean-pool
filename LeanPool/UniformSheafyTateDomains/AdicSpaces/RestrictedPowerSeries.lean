@@ -3,17 +3,19 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization project
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
-import Mathlib.RingTheory.Noetherian.Defs
-import Mathlib.RingTheory.MvPowerSeries.Basic
-import Mathlib.Topology.Order.Basic
-import Mathlib.Topology.Algebra.Nonarchimedean.Basic
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Mathlib.RingTheory.MvPowerSeries.Basic
+public import Mathlib.Topology.Order.Basic
+public import Mathlib.Topology.Algebra.Nonarchimedean.Basic
 
 /-!
 # Restricted Power Series
@@ -46,6 +48,8 @@ that `A` is a topological ring. The proof that the convolution of two sequences 
 to `0` also tends to `0` uses the nonarchimedean property to ensure that
 arbitrary finite sums of elements in an open additive subgroup remain in the subgroup.
 -/
+
+@[expose] public section
 
 open Filter
 

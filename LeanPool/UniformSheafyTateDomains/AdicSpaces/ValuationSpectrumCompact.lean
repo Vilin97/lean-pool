@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationSpectrum
-import Mathlib.Topology.Compactness.Compact
-import Mathlib.Topology.Constructions
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationSpectrum
+public import Mathlib.Topology.Compactness.Compact
+public import Mathlib.Topology.Constructions
 
 /-!
 # Compactness of the Valuation Spectrum (scaffolding)
@@ -78,6 +80,8 @@ the raw valuative preorder `v.vle f s`.
 * T. Wedhorn, *Adic Spaces*, Theorem 4.9.
 * R. Huber, *Continuous valuations*, Math. Z. 212 (1993), 445–477.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

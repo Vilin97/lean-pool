@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Topology.Algebra.Valued.NormedValued
-import Mathlib.Data.Int.WithZero
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ExampleLaurentSeries
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramRestrictedIso
+public import Mathlib.Topology.Algebra.Valued.NormedValued
+public import Mathlib.Data.Int.WithZero
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ExampleLaurentSeries
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramRestrictedIso
 
 /-!
 # The closed unit disc over `F⸨X⸩` is sheafy (Wedhorn 8.28(b), second example)
@@ -30,6 +32,8 @@ Strong noetherianity comes from the **flattening isometry**
 norm/topology bridge, and then discharged by `IsStronglyNoetherian K` from
 `ExampleLaurentSeries`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

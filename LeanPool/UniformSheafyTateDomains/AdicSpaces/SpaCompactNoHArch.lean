@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompact
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpvAITopology
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaQCviaSpvAI
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicMorphismsCore
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompact
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpvAITopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaQCviaSpvAI
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicMorphismsCore
 
 /-!
 # No-`hArch` compactness and per-`v` cofinality (T-COMPACT-NO-HARCH)
@@ -39,6 +41,8 @@ continuity + topological nilpotence of `π`.
 References: Wedhorn §7.1–§7.2 + §7.5 (arXiv:1910.05934). Round-22
 reviewer reply at `.mathlib-quality/expert-review/2026-05-16-3/reply.md`.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

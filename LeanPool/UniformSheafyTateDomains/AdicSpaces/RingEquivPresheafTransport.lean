@@ -3,17 +3,19 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafFunctoriality
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AffinoidTransport
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativePieceKeystone
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalIntersection
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FaithfulLocLift
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafFunctoriality
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AffinoidTransport
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativePieceKeystone
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalIntersection
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FaithfulLocLift
 
 /-!
 # Transport of the rational-localization layer along a bicontinuous ring equivalence
@@ -53,6 +55,8 @@ this file in the import graph).
 `Finset.image` computations are performed under the file-local scoped `Classical`
 instance — no `DecidableEq` binder appears in any signature.
 -/
+
+@[expose] public section
 
 noncomputable section
 

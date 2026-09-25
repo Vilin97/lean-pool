@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AnalyticPoints
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicSpectrum
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Lemma745
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AnalyticPoints
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicSpectrum
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Lemma745
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
 
 /-!
 # Adic Morphisms
@@ -41,6 +43,8 @@ following §7.5 and §8.4 of [Wedhorn, *Adic Spaces*].
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], §7.5, §8.4
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.HeadReduced
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicNakayama
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.HeadReduced
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicNakayama
 
 /-!
 # Transport of completed local rings
@@ -21,6 +23,8 @@ local ring of the base at the contraction of `p` agrees with the completed
 local ring of `Localization M` at `p` (mathlib's
 `localizationLocalizationAtPrimeIsoLocalization` at each finite level).
 -/
+
+@[expose] public section
 
 @[expose] public section
 

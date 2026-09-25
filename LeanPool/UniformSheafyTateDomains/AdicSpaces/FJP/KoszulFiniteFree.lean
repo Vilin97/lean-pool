@@ -3,17 +3,19 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Fintype.Powerset
-import Mathlib.LinearAlgebra.Pi
-import Mathlib.Topology.Algebra.Monoid
-import Mathlib.Topology.Algebra.Ring.Basic
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Fintype.Powerset
+public import Mathlib.LinearAlgebra.Pi
+public import Mathlib.Topology.Algebra.Monoid
+public import Mathlib.Topology.Algebra.Ring.Basic
 
 /-!
 # The finite free Koszul complex in all exterior degrees
@@ -59,6 +61,8 @@ This file is deliberately **mathlib-only** (no project imports); see the FJP →
 campaign crosswalk, decisions D3 and D4.  Positive-degree exactness of the coordinate
 and graph sequences is ticket K4 and is *not* stated here.
 -/
+
+@[expose] public section
 
 namespace FiniteJet.KoszulFree
 

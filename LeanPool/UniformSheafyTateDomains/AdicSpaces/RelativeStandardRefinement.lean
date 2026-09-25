@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StandardDescent
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCechAcyclicity
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StandardDescent
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCechAcyclicity
 
 /-!
 # The relative standard refinement (Huber form-(a) product trick) and unconditional A⁺-independence
@@ -59,6 +61,8 @@ topological-embedding transfer in the `A⁺`-free standard condition
 `Wedhorn-Adic_Spaces-1910.05934v1.pdf` / `references/wedhorn.txt`). Other public
 revisions shift the §8 numbering by one; use v1 to resolve any citation here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

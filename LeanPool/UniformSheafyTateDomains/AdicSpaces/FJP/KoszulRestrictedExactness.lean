@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.KoszulFreeExactness
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.RestrictedGaussAdic
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFNoetherian
-import Mathlib.LinearAlgebra.TensorProduct.Pi
-import Mathlib.RingTheory.Flat.Basic
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.KoszulFreeExactness
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.RestrictedGaussAdic
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFNoetherian
+public import Mathlib.LinearAlgebra.TensorProduct.Pi
+public import Mathlib.RingTheory.Flat.Basic
 
 /-!
 # All-degree exactness of the graph Koszul complex over `P_E = E⟨T₁,…,T_m⟩`
@@ -49,6 +51,8 @@ the `hr`-parametric sequence `r` — matches the degree-1 statement
 `GraphKoszul.syzygy_graph_restricted`, which this theorem supersedes mathematically
 (both remain; the degree-1 equational-criterion argument is not repeated here).
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

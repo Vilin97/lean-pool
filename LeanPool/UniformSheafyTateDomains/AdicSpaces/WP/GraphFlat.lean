@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.GraphFibreL1
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Reduced
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.GraphFibreL1
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Reduced
 
 /-!
 # Flatness of the graph model over the head
@@ -19,6 +21,8 @@ rational subset is flat — transported to the head's graph model along the two
 project bridges: the completion model `A ≃ 𝒪_X(X)` and the graph bridge
 `𝒪_X(U) ≅ Q`.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

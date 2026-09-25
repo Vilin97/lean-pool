@@ -3,17 +3,19 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Wedhorn828
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinementCore
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.GeometricReduction
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafIdentification
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictionFlatness
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FaithfulLocLift
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Wedhorn828
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinementCore
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.GeometricReduction
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafIdentification
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictionFlatness
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FaithfulLocLift
 
 /-!
 # The relative-piece keystone (Wedhorn Prop 8.2 / Prop 8.16) and Prop 8.30 / Cor 8.32
@@ -35,6 +37,8 @@ flatness chain see the keystone.
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Prop 8.2, Remark 8.4, Prop 8.16,
   Remark 7.55, Prop 8.30, Cor 8.32 (wedhorn.txt:3504-3517, 4095-4140)
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

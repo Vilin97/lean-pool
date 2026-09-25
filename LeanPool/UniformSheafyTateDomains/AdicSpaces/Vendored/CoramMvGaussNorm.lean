@@ -3,6 +3,8 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2025 William Coram. All rights reserved.
@@ -20,12 +22,14 @@ MERGED INTO MATHLIB under the same names and are now provided by
 `ultrametric_strict`, `antidiagonal_dominant`, `gaussNorm_le_mul`, `gaussNorm_neg`,
 `gaussNorm_mul_eq_mul`. Only the not-yet-upstreamed helpers remain here.
 -/
-import Mathlib.RingTheory.MvPowerSeries.GaussNorm
-import Mathlib.Analysis.Normed.Group.Ultra
-import Mathlib.Analysis.Normed.Ring.WithAbs
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramMvRestricted
+public import Mathlib.RingTheory.MvPowerSeries.GaussNorm
+public import Mathlib.Analysis.Normed.Group.Ultra
+public import Mathlib.Analysis.Normed.Ring.WithAbs
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramMvRestricted
 
 /-! # Gauss norm extras (vendored remainder — see the trim note above) -/
+
+@[expose] public section
 
 namespace MvPowerSeries
 

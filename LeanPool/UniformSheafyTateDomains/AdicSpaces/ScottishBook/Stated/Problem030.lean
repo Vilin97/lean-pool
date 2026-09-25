@@ -3,10 +3,12 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
 
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
-import Mathlib.RingTheory.Localization.AtPrime.Basic
+
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
 
 /-!
 # Nonarchimedean Scottish Book — Problem 30
@@ -34,6 +36,8 @@ Open.
 - **Stalk of structure sheaf**: The colimit O_{X,x} = colim_{x ∈ U} O_X(U) over open
   neighborhoods of x in Spa(A, A+).
 -/
+
+@[expose] public section
 
 open ValuationSpectrum Filter
 

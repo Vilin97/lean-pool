@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornC1PerCallSupplyHonest
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornC1PerCallSupplyHonest
 
 /-!
 # Wedhorn 8.34(ii) — Honest per-call supply assembly
@@ -58,6 +60,8 @@ external hypothesis at the per-call layer.
 * No T001, Lane B, Cor 8.32, Jacobson, faithful-flatness, Zavyalov,
   or bivariate-overlap content.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

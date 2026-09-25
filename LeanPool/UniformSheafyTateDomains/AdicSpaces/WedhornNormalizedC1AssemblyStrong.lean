@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornC1AssemblyStrong
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornNormalizedC1Assembly
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornC1AssemblyStrong
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornNormalizedC1Assembly
 
 /-!
 # Wedhorn Normalized Strong C1 Assembly
@@ -59,6 +61,8 @@ The result is a per-D Finset existential that:
   `D.T` and `C.base.T` are augmented with their respective
   denominators, and the rational opens at the augmented sets agree
   with the originals on the same `v` (Wedhorn 7.30(3)). -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornC1PerWCoverPieceSupplier
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornC1PerWCoverPieceSupplier
 
 /-!
 # Wedhorn 8.34(ii) — Per-`w` cover-piece upper-bound supplier (T040)
@@ -116,6 +118,8 @@ corresponding to Wedhorn 7.45's deduction at the localized side.
   the C1 layer; its honest discharge corresponds to the localized
   analog of Wedhorn Lemma 7.45 and is genuine downstream content.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

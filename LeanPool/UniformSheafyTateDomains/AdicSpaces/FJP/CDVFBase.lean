@@ -3,18 +3,20 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.RingTheory.DiscreteValuationRing.Basic
-import Mathlib.RingTheory.PrincipalIdealDomain
-import Mathlib.Topology.Algebra.TopologicallyNilpotent
-import Mathlib.Topology.Algebra.Valued.LocallyCompact
-import Mathlib.Topology.Algebra.Valued.NormedValued
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetRings
+public import Mathlib.Analysis.SpecificLimits.Normed
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.PrincipalIdealDomain
+public import Mathlib.Topology.Algebra.TopologicallyNilpotent
+public import Mathlib.Topology.Algebra.Valued.LocallyCompact
+public import Mathlib.Topology.Algebra.Valued.NormedValued
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetRings
 
 /-!
 # Base-field API over a complete discretely valued nonarchimedean field
@@ -52,6 +54,8 @@ equality of `Subring K`, with `unitBallEquivInteger` the induced ring equivalenc
 transports noetherianity from the DVR hypothesis: `isNoetherianRing_integer` and
 `isNoetherianRing_unitBall`.
 -/
+
+@[expose] public section
 
 open Filter Topology
 open scoped NormedField Valued

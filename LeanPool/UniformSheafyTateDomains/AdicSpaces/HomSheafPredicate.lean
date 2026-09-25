@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.CompleteTopCommRingCat
-import Mathlib.Topology.Sheaves.SheafCondition.UniqueGluing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.CompleteTopCommRingCat
+public import Mathlib.Topology.Sheaves.SheafCondition.UniqueGluing
 
 /-!
 # The sheaf-of-topological-rings condition for an arbitrary bundled presheaf
@@ -46,6 +48,8 @@ mathlib's unique-gluing translation. A cross-universe generalization would requi
 universe-polymorphic Hom-types; the campaign records this as a deliberate policy,
 not an accident (P6).
 -/
+
+@[expose] public section
 
 noncomputable
 section

@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.HeadReducedMaximal
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.KappaResidue
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.SpectralExtension
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornBanachTheorem
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.HeadReducedMaximal
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.KappaResidue
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.SpectralExtension
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornBanachTheorem
 
 /-!
 # The trivial special fibre of the graph model (BETA)
@@ -23,6 +25,8 @@ maximal contraction: closedness of ideals in normed noetherian Tate rings
 (the faithful Wedhorn 6.17 engine), the residue-field package, the bounded
 evaluation, and the closed-plus-dense argument.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

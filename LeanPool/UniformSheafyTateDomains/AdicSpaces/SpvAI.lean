@@ -3,17 +3,19 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationContinuity
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationSpectrum
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.CharacteristicSubgroup
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Lemma745
-import Mathlib.Combinatorics.Pigeonhole
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationContinuity
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationSpectrum
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.CharacteristicSubgroup
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Lemma745
+public import Mathlib.Combinatorics.Pigeonhole
 
 /-!
 # `Spv(A, I)` infrastructure (Wedhorn §7.1) — T-COMPACT-NO-HARCH foundation
@@ -44,6 +46,8 @@ and the cofinality predicate used in Wedhorn 7.10's reverse direction.
 * Wedhorn, *Adic Spaces*, §7.1 (Definition 7.3, Lemma 7.4),
   arXiv:1910.05934.
 -/
+
+@[expose] public section
 
 open Pointwise
 

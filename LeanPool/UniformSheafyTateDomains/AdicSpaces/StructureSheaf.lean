@@ -3,32 +3,34 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberLocLift
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Prop752
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.CompleteTopCommRingCat
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.HomSheafPredicate
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Lemma745
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.TopologyComparison
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
-import Mathlib.RingTheory.AdicCompletion.Topology
-import Mathlib.RingTheory.RingHom.Flat
-import Mathlib.RingTheory.TensorProduct.IncludeLeftSubRight
-import Mathlib.Topology.Sheaves.LocalPredicate
-import Mathlib.Topology.Sheaves.Forget
-import Mathlib.Topology.Sheaves.Stalks
-import Mathlib.Algebra.Category.Ring.Limits
-import Mathlib.Algebra.Category.Ring.Colimits
-import Mathlib.RingTheory.Localization.AtPrime.Basic
-import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
-import Mathlib.RingTheory.LocalRing.RingHom.Basic
-import Mathlib.Geometry.RingedSpace.PresheafedSpace
-import Mathlib.Geometry.RingedSpace.Stalks
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberLocLift
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Prop752
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.CompleteTopCommRingCat
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.HomSheafPredicate
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Lemma745
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.TopologyComparison
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
+public import Mathlib.RingTheory.AdicCompletion.Topology
+public import Mathlib.RingTheory.RingHom.Flat
+public import Mathlib.RingTheory.TensorProduct.IncludeLeftSubRight
+public import Mathlib.Topology.Sheaves.LocalPredicate
+public import Mathlib.Topology.Sheaves.Forget
+public import Mathlib.Topology.Sheaves.Stalks
+public import Mathlib.Algebra.Category.Ring.Limits
+public import Mathlib.Algebra.Category.Ring.Colimits
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
+public import Mathlib.RingTheory.LocalRing.RingHom.Basic
+public import Mathlib.Geometry.RingedSpace.PresheafedSpace
+public import Mathlib.Geometry.RingedSpace.Stalks
 
 /-!
 # Rational-localization presheaf infrastructure and the internal sheafiness criterion
@@ -58,6 +60,8 @@ presheaf `structurePresheaf` of `StructurePresheafBundled.lean` (values
   Remark 8.20, Definition 8.21, Definition 8.22, Definition 8.26,
   Theorem 8.28(c)
 -/
+
+@[expose] public section
 
 universe u
 

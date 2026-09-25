@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Topology.Category.TopCommRingCat
-import Mathlib.Topology.UniformSpace.Completion
-import Mathlib.Topology.Algebra.UniformRing
+public import Mathlib.Topology.Category.TopCommRingCat
+public import Mathlib.Topology.UniformSpace.Completion
+public import Mathlib.Topology.Algebra.UniformRing
 
 /-!
 # Category of Complete Topological Commutative Rings
@@ -36,6 +38,8 @@ incoherence is structurally impossible now (audit 2026-07-20, WO1 task 2).
 `IsTopologicalRing` is stated about the derived topology, and `IsUniformAddGroup`
 ties the additive structure to the uniformity itself.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyRing
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StandardRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyRing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StandardRefinement
 
 /-!
 # A⁺-independence via standard covers (Kedlaya Lemma 1.6.8 / Remark 1.6.9)
@@ -65,6 +67,8 @@ assertions of the sheaf axiom for these coverings, depend only on `A`, not on `A
 * [R. Huber, *A generalization of formal schemes and rigid analytic varieties*],
   Lemma 2.6.
 -/
+
+@[expose] public section
 
 noncomputable section
 

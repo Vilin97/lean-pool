@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.KoszulRestrictedExactness
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetGraphKoszul
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.KoszulRestrictedExactness
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetGraphKoszul
 
 /-!
 # Strictness, closed images, and the loss-of-precision inclusions (9)/(10)
@@ -46,6 +48,8 @@ its closure ([FJP] §6 caution 1).  All statements degenerate correctly when an 
 `KoszulIndex m q` is empty (`q > m`): the sup norm of the empty tuple is `0`, so no
 `Nonempty` hypothesis is required.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

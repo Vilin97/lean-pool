@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalSubsetViaFactoredChains
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornMultiBranchSubsetInequality
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornDominatingUnitInequality
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalSubsetViaFactoredChains
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornMultiBranchSubsetInequality
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornDominatingUnitInequality
 
 /-!
 # Wedhorn per-`t'` factored chain — α_s_D branch link
@@ -69,6 +71,8 @@ inequality into the desired per-`t'` factored bound.
 * No σ-power-decay derivation; uses the structural inequality
   `h_Wedhorn_α_s_D` directly.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

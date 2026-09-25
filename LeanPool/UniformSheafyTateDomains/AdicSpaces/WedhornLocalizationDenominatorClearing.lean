@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.RingTheory.Localization.Away.Basic
+public import Mathlib.RingTheory.Localization.Away.Basic
 
 /-!
 # Wedhorn Localization Denominator Clearing
@@ -52,6 +54,8 @@ an `A`-element after multiplication by a power of the base denominator.
 * Does not edit Tertiary's `WedhornValuationLocalizationLift.lean`,
   `WedhornC1StrongSupplierCore.lean`, or any other in-flight file.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

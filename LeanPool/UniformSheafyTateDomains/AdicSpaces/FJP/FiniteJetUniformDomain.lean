@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetRings
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Uniform
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Uniform
 
 /-!
 # 𝓐 is a uniform domain and is not noetherian ([FJP] Propositions 2.3, 2.4, and (5.2))
@@ -21,6 +23,8 @@ import LeanPool.UniformSheafyTateDomains.AdicSpaces.Uniform
 * **Prop 2.4**: `𝓐` is not noetherian: the ideal `J = Q²𝒞 = ker(jB)` is not finitely
   generated, since `J/KJ ≅ L` over `𝓐/K ≅ k⟨W⟩` and `W⁻¹` is not integral over `k⟨W⟩`.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

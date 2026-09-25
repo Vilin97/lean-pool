@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.CompletedAlgClosure
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.CompletedAlgClosure
 
 /-!
 # Nonarchimedean Scottish Book — Problem 23
@@ -65,6 +67,8 @@ integral over the tame closure), then `f` cannot be surjective.
 
 * Kedlaya, *The Nonarchimedean Scottish Book*, Problem 23
 -/
+
+@[expose] public section
 
 open ScottishBook
 

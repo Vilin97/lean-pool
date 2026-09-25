@@ -3,20 +3,22 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.RingTheory.LaurentSeries
-import Mathlib.RingTheory.Valuation.Integral
-import Mathlib.RingTheory.PowerSeries.Ideal
-import Mathlib.RingTheory.Polynomial.Basic
-import Mathlib.Topology.Algebra.Valued.WithZeroMulInt
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AffinoidRings
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCechAcyclicity
+public import Mathlib.RingTheory.LaurentSeries
+public import Mathlib.RingTheory.Valuation.Integral
+public import Mathlib.RingTheory.PowerSeries.Ideal
+public import Mathlib.RingTheory.Polynomial.Basic
+public import Mathlib.Topology.Algebra.Valued.WithZeroMulInt
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AffinoidRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCechAcyclicity
 
 /-!
 # A non-trivial instance of Theorem 8.28(b): the Laurent series field `F⸨X⸩`
@@ -43,6 +45,8 @@ headline theorem's hypotheses are satisfiable by a genuinely topologized
 * **Complete**: mathlib's `instLaurentSeriesComplete`, transported to the canonical
   right uniformity via `IsUniformAddGroup.rightUniformSpace_eq`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

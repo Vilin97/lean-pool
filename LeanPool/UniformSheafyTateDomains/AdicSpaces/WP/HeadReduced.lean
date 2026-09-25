@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.CoeffLocalization
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Reduced
-import Mathlib.RingTheory.Filtration
-import Mathlib.RingTheory.LocalProperties.Basic
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.CoeffLocalization
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Reduced
+public import Mathlib.RingTheory.Filtration
+public import Mathlib.RingTheory.LocalProperties.Basic
 
 /-!
 # Head-localization reducedness — the BGR 7.3.2/10 sub-campaign
@@ -35,6 +37,8 @@ route follows the 2026-07-28 plan review
   quadratic-tower case;
 * `headLocsReduced` (L4): assembly through `headLocEquiv`.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

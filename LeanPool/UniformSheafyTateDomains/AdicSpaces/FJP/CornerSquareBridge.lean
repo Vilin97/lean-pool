@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.CornerSquareDatum
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CornerSquareLocalization
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetFunctoriality
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.CornerSquareDatum
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CornerSquareLocalization
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetFunctoriality
 
 /-!
 # The graph bridge over a single abstract corner (T625, campaign B)
@@ -37,6 +39,8 @@ The closedness of the graph ideal enters as an explicit argument `hIcl` (at the
 `B`/`C`/`D`-corners it is `isClosed_graphIdeal`; at the base corner of a pinch
 it is `Pinch.isClosed_IA`, which needs the square).
 -/
+
+@[expose] public section
 
 @[expose] public section
 

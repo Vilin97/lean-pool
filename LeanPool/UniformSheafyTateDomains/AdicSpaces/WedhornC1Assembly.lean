@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StandardCoverConditionalBridge
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCompactExtraction
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StandardCoverConditionalBridge
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCompactExtraction
 
 /-!
 # Wedhorn C1 Assembly: composition of conditional-bridge + compactness layers
@@ -54,6 +56,8 @@ and a per-E `hZavyalov_per_E` discharge:
 * `mk_S_D` is built by `Classical.dec` dispatch on `D ∈ C.covers`
   (no project-level `DecidableEq` for `RationalLocData A`); on
   out-of-cover inputs `mk_S_D D = ∅`. -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

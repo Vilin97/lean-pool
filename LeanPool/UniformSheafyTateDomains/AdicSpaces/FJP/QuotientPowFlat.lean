@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FlatCompletion
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FlatCompletion
 
 /-!
 # Flat + trivial special fibre ⟹ all finite levels agree
@@ -23,6 +25,8 @@ against the flat `B` (`Module.Flat.lTensor_exact`).
 WIP frontier for the 8.30-conditional L1 assembly
 (`qHead_completedLocal_comparison`) — build against the central flatness.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

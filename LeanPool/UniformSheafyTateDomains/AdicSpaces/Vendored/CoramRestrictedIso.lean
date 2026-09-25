@@ -3,6 +3,8 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2025 William Coram. All rights reserved.
@@ -13,16 +15,18 @@ VENDORED into AINTLIB (2026-07-04) from WilliamCoram/PhD (PhD/ToPR/RestrictedIso
 pending its mathlib PR. Import paths redirected to the vendored stack; `IsRestricted`
 renamed `IsRestrictedGauss` (collision with this project's topological notion).
 -/
-import Mathlib.RingTheory.MvPowerSeries.Rename
-import Mathlib.Topology.Order.Basic
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.XiaMvPowerSeriesEquiv
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramMvRestrictedNorm
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramRestrictedNorm
+public import Mathlib.RingTheory.MvPowerSeries.Rename
+public import Mathlib.Topology.Order.Basic
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.XiaMvPowerSeriesEquiv
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramMvRestrictedNorm
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramRestrictedNorm
 
 /-! # The restricted Fubini isometry and completeness (vendored)
 
 `MvRestricted.finSuccEquiv : R⟨X₀,…,Xₙ⟩ ≃+* R⟨X₁,…,Xₙ⟩⟨X₀⟩` (norm-preserving), and
 `CompleteSpace (MvPowerSeries.Restricted R c)` for complete `R`. -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

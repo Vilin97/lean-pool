@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
 
 /-!
 # Finite Laurent Refinement Trees
@@ -46,6 +48,8 @@ the same mathematical content with no kernel objections.
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Lemma 8.34.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

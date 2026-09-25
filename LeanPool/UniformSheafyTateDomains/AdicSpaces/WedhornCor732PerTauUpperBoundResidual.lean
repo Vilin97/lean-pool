@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCor732ChainIdentityFromLocalizedOutput
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPointwiseClearingFromLocalizedCor732
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCor732ChainIdentityFromLocalizedOutput
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPointwiseClearingFromLocalizedCor732
 
 /-!
 # Wedhorn 8.34(ii) — Per-τ upper-bound residual from localized Cor 7.32 arithmetic (T087)
@@ -95,6 +97,8 @@ universal-Spa claims, no global lower bound.
 * All declarations are fully proven, depend only on the standard Lean
   kernel postulates, and avoid native compilation and unchecked tactics.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

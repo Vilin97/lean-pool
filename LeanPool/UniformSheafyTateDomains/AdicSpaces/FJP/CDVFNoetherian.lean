@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.AdicCompletionPrincipal
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFBase
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.RestrictedGaussAdic
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.AdicCompletionPrincipal
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFBase
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.RestrictedGaussAdic
 
 /-!
 # The restricted pods `K⟨T₁,…,T_m⟩` over a CDVF base are noetherian
@@ -39,6 +41,8 @@ ball as a hypothesis (never a class); layer-2 versions assume
 `isStronglyNoetherian` registered as an instance, mirroring the Laurent-series
 registration in `ExampleLaurentSeries.lean`.
 -/
+
+@[expose] public section
 
 open Filter Topology
 open scoped NormedField Valued

@@ -3,11 +3,13 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
 
-import Mathlib.Analysis.Normed.Field.Basic
-import Mathlib.Topology.MetricSpace.Ultra.Basic
-import Mathlib.Algebra.Field.IsField
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.UniformBanach
+
+public import Mathlib.Analysis.Normed.Field.Basic
+public import Mathlib.Topology.MetricSpace.Ultra.Basic
+public import Mathlib.Algebra.Field.IsField
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.UniformBanach
 
 /-!
 # Nonarchimedean Scottish Book — Problem 1
@@ -41,6 +43,8 @@ Open.
 
 * Kedlaya, *The Nonarchimedean Scottish Book*, Problem 1
 -/
+
+@[expose] public section
 
 namespace ScottishBook
 

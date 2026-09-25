@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.ExtendedMilnorInstance
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetSheafyEndpoints
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.ExtendedMilnorInstance
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetSheafyEndpoints
 
 /-!
 # From the Gauss ring to the Tate extension: the B-headline transport (T628)
@@ -26,6 +28,8 @@ neighborhood basis — and transport `isSheafy_extJetA` to the headline
 sheafy**), via the `IsSheafyFor → IsSheafyComplete` upgrade and
 `isSheafyComplete_congr` (the campaign-A endgame pattern).
 -/
+
+@[expose] public section
 
 @[expose] public section
 

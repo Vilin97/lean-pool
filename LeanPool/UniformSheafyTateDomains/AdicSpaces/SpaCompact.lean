@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationSpectrumCompact
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicSpectrum
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationContinuity
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationSpectrumCompact
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicSpectrum
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationContinuity
 
 /-!
 # Compactness of the Adic Spectrum `Spa(A, A⁺)`
@@ -73,6 +75,8 @@ coarsening to archimedean quotients (Wedhorn §7.1), which is future work.
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Theorem 7.30, Corollary 7.32.
 * R. Huber, *Continuous valuations*, Math. Z. 212 (1993), 445–477.
 -/
+
+@[expose] public section
 
 open Topology
 

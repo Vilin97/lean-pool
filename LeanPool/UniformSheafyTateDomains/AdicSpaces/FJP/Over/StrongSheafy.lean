@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.ExtendedSheafyTransport
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyRingEquivTransport
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.ExtendedSheafyTransport
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyRingEquivTransport
 
 /-!
 # Strong sheafiness of the finite-jet algebra over a general nonarchimedean base
@@ -20,6 +22,8 @@ a complete ultrametric field with a uniformizer and noetherian norm unit ball;
 the `_of_dvr` endpoint supplies the last two hypotheses from a discrete
 valuation ring structure on `𝒪[K]`.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

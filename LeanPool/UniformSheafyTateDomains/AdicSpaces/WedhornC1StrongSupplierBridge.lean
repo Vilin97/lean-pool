@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornStrengthenedC1
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornNormalizedC1Assembly
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizedMultiPieceLaurentRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornStrengthenedC1
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornNormalizedC1Assembly
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizedMultiPieceLaurentRefinement
 
 /-!
 # Strong-supplier insertDenom-lift bridge
@@ -110,6 +112,8 @@ file's structural lift is independent of them.
   or any other Lane B / Cor 8.32 / Jacobson / T001 / faithful-flatness
   / final-acyclicity file.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

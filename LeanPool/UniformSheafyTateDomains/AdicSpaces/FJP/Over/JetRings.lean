@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFBase
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFBase
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetRings
 
 /-!
 # The finite-jet pinching square over a general base field: the rings 𝓐, 𝓑, 𝓒, 𝓓
@@ -46,6 +48,8 @@ scaling-bundle endpoints of `FiniteJetRings.lean` (`isHuberRing_of_scale`,
 rings, `IsRingOfIntegralElements`, and right-uniformity completeness are ϖ-free and stay
 instances.
 -/
+
+@[expose] public section
 
 open Filter Topology
 open scoped NNReal

@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornMPowerStructuralDataHonest
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalArithmeticPerTChain
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalCor732ToFactoredChain
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornMPowerStructuralDataHonest
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalArithmeticPerTChain
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalCor732ToFactoredChain
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
 
 /-!
 # `WedhornMPowerStructuralDataHonest` from localized Cor 7.32 / branch
@@ -125,6 +127,8 @@ audit). This file's wrapper is callsite-ready packaging.
 * Reuses `WedhornMPowerStructuralDataHonest` (target def),
   `vle_iff_mul_unit_right` (σ-cancellation),
   `mem_localizedTestFamily_iff` (test-family branch case-split). -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

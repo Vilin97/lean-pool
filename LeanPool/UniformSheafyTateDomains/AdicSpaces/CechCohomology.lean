@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Topology.Sets.Opens
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-import Mathlib.Algebra.BigOperators.GroupWithZero.Action
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Tactic.Ring
+public import Mathlib.Topology.Sets.Opens
+public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
+public import Mathlib.Algebra.BigOperators.GroupWithZero.Action
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Tactic.Ring
 
 /-!
 # Čech Cohomology for Finite Covers
@@ -50,6 +52,8 @@ degree-zero acyclicity condition (separation + gluing).
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Appendix A
 -/
+
+@[expose] public section
 
 universe u v
 

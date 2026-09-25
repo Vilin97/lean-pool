@@ -3,9 +3,11 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
 
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ScottishBook.Stated.Problem007
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.CompletedResidueField
+
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ScottishBook.Stated.Problem007
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.CompletedResidueField
 
 /-!
 # Nonarchimedean Scottish Book — Problem 35
@@ -34,6 +36,8 @@ Open.
   completed residue fields is an isomorphism.
   See `ValuationSpectrum.completedResidueField` in `CompletedResidueField.lean`.
 -/
+
+@[expose] public section
 
 open ValuationSpectrum ScottishBook
 

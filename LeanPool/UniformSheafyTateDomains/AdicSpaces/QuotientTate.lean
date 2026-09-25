@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
-import Mathlib.Topology.Algebra.Ring.Ideal
-import Mathlib.Topology.Algebra.IsUniformGroup.Basic
-import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
+public import Mathlib.Topology.Algebra.Ring.Ideal
+public import Mathlib.Topology.Algebra.IsUniformGroup.Basic
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
 
 /-!
 # Tate-ring structure on closed quotients
@@ -38,6 +40,8 @@ pair of definition on `R ⧸ I` (with the quotient topology) and packages the
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], §6 (definitions) and Prop 6.17
   (closed ideals in noetherian Tate rings).
 -/
+
+@[expose] public section
 
 namespace IsTateRing
 

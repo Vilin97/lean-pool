@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafFunctoriality
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.EmbeddingTopo
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafFunctoriality
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.EmbeddingTopo
 
 /-!
 # Abstract Milnor descent for sheafiness (campaign B, AG1.d skeleton)
@@ -30,6 +32,8 @@ with the exactness / strictness / naturality facts the transfer chase consumes.
 Instantiations planned: the finite-jet square (regression: re-derive
 `isSheafy_JetA`) and the `⟨V₁,…,Vₙ⟩`-extended square (campaign B headline).
 -/
+
+@[expose] public section
 
 @[expose] public section
 

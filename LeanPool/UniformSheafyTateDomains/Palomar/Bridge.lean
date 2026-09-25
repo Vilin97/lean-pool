@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.Palomar.Defs
-import LeanPool.UniformSheafyTateDomains.AdicSpaces
-import Mathlib.Topology.Sheaves.Functors
+public import LeanPool.UniformSheafyTateDomains.Palomar.Defs
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces
+public import Mathlib.Topology.Sheaves.Functors
 
 /-!
 # The Challenge's definitions are the library's
@@ -34,6 +36,8 @@ localisation `presheafValue`, the canonical maps. The ones that need an argument
   library's `IsSheafy` (the finite rational-cover criterion), via the library's own
   `isSheafy_iff_structurePresheaf_forgetToTopCommRingCat_isSheaf`.
 -/
+
+@[expose] public section
 
 
 noncomputable section

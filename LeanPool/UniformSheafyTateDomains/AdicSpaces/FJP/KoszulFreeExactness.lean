@@ -3,20 +3,22 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.KoszulFiniteFree
-import Mathlib.Algebra.MvPolynomial.Basic
-import Mathlib.Algebra.MvPolynomial.Eval
-import Mathlib.Algebra.Module.LocalizedModule.IsLocalization
-import Mathlib.RingTheory.MvPolynomial.Localization
-import Mathlib.RingTheory.LocalProperties.Exactness
-import Mathlib.RingTheory.TensorProduct.IsBaseChangePi
-import Mathlib.RingTheory.Localization.Away.Basic
-import Mathlib.Tactic.LinearCombination
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.KoszulFiniteFree
+public import Mathlib.Algebra.MvPolynomial.Basic
+public import Mathlib.Algebra.MvPolynomial.Eval
+public import Mathlib.Algebra.Module.LocalizedModule.IsLocalization
+public import Mathlib.RingTheory.MvPolynomial.Localization
+public import Mathlib.RingTheory.LocalProperties.Exactness
+public import Mathlib.RingTheory.TensorProduct.IsBaseChangePi
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Mathlib.Tactic.LinearCombination
 
 /-!
 # Positive-degree exactness of the finite free Koszul complex
@@ -70,6 +72,8 @@ Everything is element-level; no homology machinery is used.
   of the coordinate sequence, and exactness transports along the translation
   automorphism and the unit rescaling.
 -/
+
+@[expose] public section
 
 namespace FiniteJet.KoszulFree
 

@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentMinusNormalized
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativeRationalLocData
-import Mathlib.RingTheory.Flat.Basic
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentMinusNormalized
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativeRationalLocData
+public import Mathlib.RingTheory.Flat.Basic
 
 /-!
 # Flatness of the restriction map via Wedhorn Prop 8.30 + Wedhorn Lemma 2.13
@@ -51,6 +53,8 @@ presheafValue (iteratedMinusDatum_B P D₀ f)` (the
 * `docs/STATUS.md` — Reframe of T-FLAT-VIA-WEDHORN830.
 * `Adic spaces/StructureSheaf.lean` — template `presheafValue_flat_of_tateQuotient`.
 -/
+
+@[expose] public section
 
 open ValuationSpectrum CompletionLocalization
 

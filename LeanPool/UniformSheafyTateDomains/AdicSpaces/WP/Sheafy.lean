@@ -3,19 +3,21 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.CoeffLocalization
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.MvTateAlgebraTopology
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Chart
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyRing
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyEndpoints
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativeStandardRefinement
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructurePresheafBundled
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.CoeffLocalization
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.MvTateAlgebraTopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Chart
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyRing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyEndpoints
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativeStandardRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructurePresheafBundled
 
 /-!
 # `𝒜` is (strongly) sheafy ([WP] §6.5, thm:parity-strongly-sheafy)
@@ -48,6 +50,8 @@ every finite Tate extension ([WP] eq:strong-sheafy-decomposition: "the preceding
 proof applies verbatim").  The bridge to the project's own Tate-extension
 (`restrictedMvPowerSeriesSubring`) is `tateExtEquiv`.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

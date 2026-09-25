@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Weight
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.RestrictedComplete
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFBase
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Weight
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.RestrictedComplete
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFBase
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetRings
 
 /-!
 # The weighted-parity algebra `𝒜` ([WP] §6.1)
@@ -31,6 +33,8 @@ following `FJP/Over/JetRings.lean`) and the coefficient / monomial API.
 The paper's example is `w = id`; general `w` uniformly covers the Tate extensions
 `𝒜⟨V_1,…,V_s⟩` (shifted weight, [WP] §6.5) — see `WP/Weight.lean`.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

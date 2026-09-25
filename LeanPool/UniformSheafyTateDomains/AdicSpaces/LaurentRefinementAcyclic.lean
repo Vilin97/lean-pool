@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinementCore
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinementCore
 
 /-!
 # Tate acyclicity gluing assembly (Wedhorn Theorem 8.28(b))
@@ -30,6 +32,8 @@ Lane-C consumer tower) and `TateAcyclicityFinalAssembly.lean`
 * `tateAcyclicity_gluing` — Part 2 of Wedhorn 8.28(b)
 * `tateAcyclicity` — Wedhorn 8.28(b) headline (Part 1 ∧ Part 2)
 -/
+
+@[expose] public section
 
 open Classical
 

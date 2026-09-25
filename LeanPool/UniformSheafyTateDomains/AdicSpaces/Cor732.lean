@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompact
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompactNoHArch
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalSubsets
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompact
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompactNoHArch
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalSubsets
 
 /-!
 # Wedhorn Corollary 7.32: Dominating unit extraction
@@ -54,6 +56,8 @@ monotonicity. Setting `s := π^(N+1)` gives a unit with
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Corollary 7.32.
 -/
+
+@[expose] public section
 
 open Topology
 

@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.RestrictedGaussAdic
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.XiaMvPowerSeriesEquiv
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.ZeroHeadTate
-import Mathlib.RingTheory.MvPowerSeries.Rename
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.RestrictedGaussAdic
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.XiaMvPowerSeriesEquiv
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.ZeroHeadTate
+public import Mathlib.RingTheory.MvPowerSeries.Rename
 
 /-!
 # The restricted Fubini: `K⟨X₁..X_{k+m}⟩ ≅ (K⟨X₁..X_m⟩)⟨T₁..T_k⟩`
@@ -27,6 +29,8 @@ algebra, funneling the tower Nullstellensatz into `module_finite_residue`.
 Both Gauss-transport legs (`isRestrictedGauss_sumToRestrictedFun`,
 `isRestrictedGauss_iterToSum`) are proven; the file is sorry-free and axiom-clean.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

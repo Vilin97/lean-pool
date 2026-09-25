@@ -3,8 +3,10 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
 
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
+
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
 
 /-!
 # Nonarchimedean Scottish Book — Problem 17
@@ -31,6 +33,8 @@ Open in general (counterexample in strongly noetherian case).
 - **Maximal ideal contraction**: Given a ring homomorphism f: A → B and a maximal ideal
   m ⊂ B, the contraction f⁻¹(m) ⊂ A.
 -/
+
+@[expose] public section
 
 open ValuationSpectrum
 

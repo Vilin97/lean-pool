@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.ExtendedCornerPackage
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.MilnorSquareInstance
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.ExtendedCornerPackage
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.MilnorSquareInstance
 
 /-!
 # The `⟨V⟩`-extended square as a `MilnorSquareData` (T627, campaign B)
@@ -24,6 +26,8 @@ Output: `isSheafy_extJetA n : IsSheafy (StrictLoc.PA K n)` — the sheafiness of
 Gauss-normed Tate extension of the pinching algebra, for every `n`
 ([Reviewer] §5.1; the normed half of the B-headline).
 -/
+
+@[expose] public section
 
 @[expose] public section
 

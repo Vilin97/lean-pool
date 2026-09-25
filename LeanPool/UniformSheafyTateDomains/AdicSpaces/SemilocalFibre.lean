@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicNakayama
-import Mathlib.RingTheory.Artinian.Ring
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicNakayama
+public import Mathlib.RingTheory.Artinian.Ring
 
 /-!
 # Semilocal fibre splitting of adic completions
@@ -20,6 +22,8 @@ completions at the finitely many maximal ideals over `Q`: the maximals of
 `C⧸Q` are finite, their intersection (the Jacobson radical) is nilpotent,
 and `AdicCompletion.semilocalSplit` applies.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

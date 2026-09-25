@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicSpectrum
-import Mathlib.Algebra.Group.Pointwise.Finset.Basic
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicSpectrum
+public import Mathlib.Algebra.Group.Pointwise.Finset.Basic
 
 /-!
 # Rational Subsets and Finite Intersection Stability
@@ -31,6 +33,8 @@ Rational subsets and their stability under finite intersection (Remark 7.30, The
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Remark 7.30, Theorem 7.35(2)
 -/
+
+@[expose] public section
 
 open scoped Pointwise
 

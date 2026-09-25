@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.IntegralStructureSheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SeminormalRing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.IntegralStructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SeminormalRing
 
 /-!
 # Nonarchimedean Scottish Book — Problem 39
@@ -62,6 +64,8 @@ seminormal.
 * Swan, *On seminormality*, J. Algebra 67 (1980), pp. 210–229
 * Wedhorn, *Adic Spaces*, §8.1 (integral structure sheaf)
 -/
+
+@[expose] public section
 
 open ValuationSpectrum
 

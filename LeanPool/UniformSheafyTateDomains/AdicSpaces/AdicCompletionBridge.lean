@@ -3,22 +3,24 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.RingTheory.AdicCompletion.Basic
-import Mathlib.RingTheory.AdicCompletion.Topology
-import Mathlib.RingTheory.AdicCompletion.Algebra
-import Mathlib.RingTheory.AdicCompletion.Exactness
-import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
-import Mathlib.RingTheory.Finiteness.Subalgebra
-import Mathlib.Topology.UniformSpace.AbstractCompletion
-import Mathlib.Topology.UniformSpace.Completion
-import Mathlib.Topology.Algebra.UniformRing
-import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
-import Mathlib.Topology.Algebra.Module.Basic
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.AdicCompletion.Topology
+public import Mathlib.RingTheory.AdicCompletion.Algebra
+public import Mathlib.RingTheory.AdicCompletion.Exactness
+public import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
+public import Mathlib.RingTheory.Finiteness.Subalgebra
+public import Mathlib.Topology.UniformSpace.AbstractCompletion
+public import Mathlib.Topology.UniformSpace.Completion
+public import Mathlib.Topology.Algebra.UniformRing
+public import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
+public import Mathlib.Topology.Algebra.Module.Basic
 
 /-!
 # Bridge between UniformSpace.Completion and AdicCompletion
@@ -40,6 +42,8 @@ type. `AdicCompletion` inherits the subtype uniformity. Then:
 4. Package as `AbstractCompletion`, use `compareEquiv`.
 5. Multiplicativity by density + T₂.
 -/
+
+@[expose] public section
 
 universe u
 

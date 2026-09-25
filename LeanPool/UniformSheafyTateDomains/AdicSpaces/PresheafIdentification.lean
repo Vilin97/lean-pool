@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebra
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebraWedhorn
-import Mathlib.Topology.Algebra.Nonarchimedean.Completion
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebra
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebraWedhorn
+public import Mathlib.Topology.Algebra.Nonarchimedean.Completion
 
 /-!
 # Presheaf Value Identifications (Wedhorn Remark 7.55)
@@ -36,6 +38,8 @@ We prove the algebraic identifications:
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Remark 7.55, Lemma 8.31, Proposition 8.30
 -/
+
+@[expose] public section
 
 open ValuationSpectrum
 

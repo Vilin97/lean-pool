@@ -3,26 +3,28 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalRefinement
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalSubsets
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.TopologyComparison
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafTateStructure
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentCoverExact
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentCoverTopology
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentBaireSupport
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.CompletionLocalization
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Example638
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.IteratedRational
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinementCore
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinementAcyclic
-import Mathlib.RingTheory.Flat.Basic
-import Mathlib.RingTheory.MvPowerSeries.NoZeroDivisors
-import Mathlib.Topology.MetricSpace.Completion
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalSubsets
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.TopologyComparison
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafTateStructure
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentCoverExact
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentCoverTopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentBaireSupport
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.CompletionLocalization
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Example638
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.IteratedRational
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinementCore
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinementAcyclic
+public import Mathlib.RingTheory.Flat.Basic
+public import Mathlib.RingTheory.MvPowerSeries.NoZeroDivisors
+public import Mathlib.Topology.MetricSpace.Completion
 
 /-!
 # Laurent Covers and Tate Acyclicity Infrastructure
@@ -51,6 +53,8 @@ faithful flatness route (Corollary 8.31).
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Lemma 7.54, 8.30, 8.31,
   Corollary 8.31, Proposition 8.15, Theorem 8.28
 -/
+
+@[expose] public section
 
 open Classical
 

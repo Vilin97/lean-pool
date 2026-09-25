@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyPair
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCechAcyclicity
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyPair
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCechAcyclicity
 
 /-!
 # Pair-level and ring-level sheafiness; the strongly noetherian Tate theorems
@@ -77,6 +79,8 @@ proves it inside the complete section only. Model-transport of `IsSheafyFor` alo
 needs the `IsLimitSheaf` transport along compatible topological-ring equivalences.
 See `docs/SHEAFY-LIVE-AUDIT-2026-07-19.md`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

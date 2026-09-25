@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativePieceKeystone
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativePieceKeystone
 
 /-!
 # Corner-square datum layer: generic pushed and intersection rational data (T624)
@@ -29,6 +31,8 @@ These generalize the Jet-concrete constructions of
 with the power-bounded transport abstracted into the single subring hypothesis
 `hAB : A⁺ ≤ (B⁺).comap φ` (exactly `comap_mem_spa`'s input).
 -/
+
+@[expose] public section
 
 @[expose] public section
 

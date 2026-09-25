@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornFullLaurentAlphaTDBranch
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornFullLaurentAlphaTDBranch
 
 /-!
 # Wedhorn 8.34(ii) α_T_D branch comparison supplier (T034)
@@ -107,6 +109,8 @@ localized Spa. Discharging this residual on every `w` requires either:
 * No revival of σ-power-decay, T001 / Lane-B, Cor832/Jacobson,
   faithful-flatness, Zavyalov, or bivariate-overlap content.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

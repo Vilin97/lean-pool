@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramMvRestrictedNorm
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramRestrictedIso
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ExampleUnitDisc
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramMvRestrictedNorm
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramRestrictedIso
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ExampleUnitDisc
 
 /-!
 # Restricted power series over an arbitrary variable index: completeness and support API
@@ -33,6 +35,8 @@ but proves `CompleteSpace` only for `σ = Fin n` (`Vendored/CoramRestrictedIso.l
   subset (the pattern behind `FJP/RestrictedLaurent.lean:765` and
   `FJP/Over/JetRings.lean:298`).
 -/
+
+@[expose] public section
 
 @[expose] public section
 

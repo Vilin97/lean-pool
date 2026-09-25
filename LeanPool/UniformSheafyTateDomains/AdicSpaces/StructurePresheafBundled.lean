@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyPair
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyPair
 
 /-!
 # The public structure presheaf, bundled (Wedhorn §8.1–§8.2, Kedlaya Def 1.2.3)
@@ -49,6 +51,8 @@ This file makes the genuine all-open projective-limit presheaf (`limitSections`,
 * [K. Kedlaya, *Sheaves, stacks, and shtukas* (AWS 2017)], Definition 1.2.3,
   Definition 1.2.8.
 -/
+
+@[expose] public section
 
 noncomputable section
 

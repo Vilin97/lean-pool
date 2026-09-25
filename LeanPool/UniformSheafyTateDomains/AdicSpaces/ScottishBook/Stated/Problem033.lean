@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PerfectoidRing
-import Mathlib.RingTheory.WittVector.Basic
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PerfectoidRing
+public import Mathlib.RingTheory.WittVector.Basic
 
 /-!
 # Nonarchimedean Scottish Book — Problem 33
@@ -39,6 +41,8 @@ The Witt vector ring `WittVector p R°` carries a `(p, [x])`-adic topology gener
 ideal `(p, [x])` where `[x]` is the Teichmuller lift of `x`. This topology is stated
 existentially since constructing it requires substantial Witt vector infrastructure.
 -/
+
+@[expose] public section
 
 open TopologicalRing ValuationSpectrum
 

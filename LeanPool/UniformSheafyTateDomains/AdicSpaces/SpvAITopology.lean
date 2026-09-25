@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpvAI
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalSubsets
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationSpectrumCompact
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpvAI
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalSubsets
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationSpectrumCompact
 
 /-!
 # Spectral structure on `Spv(A, I)` (Wedhorn 7.5) — T-SPV-AI-WEDHORN-710
@@ -43,6 +45,8 @@ declaration docstrings for the proof plans.
 
 * [Wedhorn 2019] Section 7.1, Lemma 7.5 (p. 57–58), arXiv:1910.05934.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

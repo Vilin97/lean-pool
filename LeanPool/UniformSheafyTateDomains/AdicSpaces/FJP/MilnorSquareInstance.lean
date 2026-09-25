@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetSheafTransfer
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.MilnorSheafTransfer
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetSheafTransfer
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.MilnorSheafTransfer
 
 /-!
 # The finite-jet square as a `MilnorSquareData` (campaign B, T620)
@@ -24,6 +26,8 @@ classical `dite` (the abstract laws only quantify over rational data, where
 `dif_pos` collapses the gate). The value maps are definitionally the generic
 `presheafValueMapOfHom` (that is how `presheafValueMap*` are defined).
 -/
+
+@[expose] public section
 
 @[expose] public section
 

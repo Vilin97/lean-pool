@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Bounded
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Bounded
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
 
 /-!
 # Uniform and Stably Uniform Huber Pairs
@@ -33,6 +35,8 @@ We define **uniform** and **stably uniform** Huber pairs following §7 of
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Definitions 7.36, 7.37
 -/
+
+@[expose] public section
 
 open TopologicalRing ValuationSpectrum
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
 
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
-import Mathlib.Topology.NoetherianSpace
-import Mathlib.RingTheory.Spectrum.Prime.Topology
+
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import Mathlib.Topology.NoetherianSpace
+public import Mathlib.RingTheory.Spectrum.Prime.Topology
 
 /-!
 # Nonarchimedean Scottish Book — Problem 31
@@ -35,6 +37,8 @@ Open.
 - **Restricted power series ring**: A⟨T_1, ..., T_n⟩ = `restrictedMvPowerSeriesSubring n A`,
   the subring of `MvPowerSeries (Fin n) A` with coefficients tending to 0.
 -/
+
+@[expose] public section
 
 open ValuationSpectrum TopologicalSpace
 

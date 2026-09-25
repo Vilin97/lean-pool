@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyRing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyRing
 
 /-!
 # Standard covers from generating families (Kedlaya 1.6.5, generation side)
@@ -37,6 +39,8 @@ built; that branch is the missing API recorded in
 `WedhornStandardCoverRefinement.lean` and is not on the dependency path of the
 strongly noetherian theorems.
 -/
+
+@[expose] public section
 
 noncomputable section
 

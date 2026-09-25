@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.RingTheory.MvPowerSeries.PiTopology
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebra
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
+public import Mathlib.RingTheory.MvPowerSeries.PiTopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebra
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
 
 /-!
 # Topology on the Tate Algebra A⟨X⟩
@@ -58,6 +60,8 @@ where the ring of definition is the whole ring `A₀⟨X⟩` itself, equipped wi
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], §6, §8
 -/
+
+@[expose] public section
 
 open MvPowerSeries.WithPiTopology Filter Topology Pointwise
 

@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AffinoidRings
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyFoundations
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AffinoidRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyFoundations
 
 /-!
 # The maximal plus ring of a Huber ring is a ring of integral elements
@@ -30,6 +32,8 @@ a *norm*, obtaining openness from a metric ball. That is fine for the four jet r
 are normed, and useless for the Tate extensions `A⟨V₁,…,Vₙ⟩`, whose topology is given by a
 basis rather than a norm — which is exactly where non-vacuity had not been established.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

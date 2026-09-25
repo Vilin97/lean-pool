@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.TateInstances
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.StrictLocalization
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.UniformDomain
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.Chart
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetFunctoriality
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.TateInstances
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.StrictLocalization
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.UniformDomain
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.Chart
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetFunctoriality
 
 /-!
 # Functoriality layer over a CDVF base: pushing rational data along the square, graph
@@ -42,6 +44,8 @@ This file supplies the covariant layer over `K`:
 * `HasLocLiftPowerBounded` for all four rings (the faithful pair-free discharger applies
   once the Tate structure is supplied by `ϖ`).
 -/
+
+@[expose] public section
 
 open Filter Topology
 

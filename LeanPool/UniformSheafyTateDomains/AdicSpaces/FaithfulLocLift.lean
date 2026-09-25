@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Cor832
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafTateStructure
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpvAITopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Cor832
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafTateStructure
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpvAITopology
 
 /-!
 # Faithful `HasLocLiftPowerBounded` (Wedhorn 7.52, source-justified)
@@ -41,6 +43,8 @@ generic base, but for a concrete completion `presheafValue D` it is discharged l
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Prop 7.52, Prop 7.18, Prop 7.49, Lemma 7.45.
 * [R. Huber, *Continuous valuations*][huber1993], Lemma 3.3 (the (LL-bdd) external leaf).
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

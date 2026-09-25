@@ -3,17 +3,19 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.RingTheory.Flat.Basic
-import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
-import Mathlib.RingTheory.Flat.Localization
-import Mathlib.RingTheory.Spectrum.Prime.RingHom
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebra
+public import Mathlib.RingTheory.Flat.Basic
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
+public import Mathlib.RingTheory.Flat.Localization
+public import Mathlib.RingTheory.Spectrum.Prime.RingHom
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebra
 
 /-!
 # Flatness of Restriction Maps (Prop 8.30 + Cor 8.32)
@@ -32,6 +34,8 @@ and that the product restriction for a finite rational cover is faithfully flat.
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Proposition 8.30, Corollary 8.32
 -/
+
+@[expose] public section
 
 open ValuationSpectrum
 

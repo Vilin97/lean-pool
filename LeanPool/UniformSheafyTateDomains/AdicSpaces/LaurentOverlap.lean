@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
 
 /-!
 # Wedhorn Example 6.39: bivariate Laurent-overlap identification
@@ -100,6 +102,8 @@ bivariate analog of `example638Plus_equiv` / `example638Minus_equiv`
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Example 6.38, 6.39, Lemma 8.33.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

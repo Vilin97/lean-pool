@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
 
 /-!
 # Lifting algebraic Laurent separation to the presheafValue level (R2)
@@ -56,6 +58,8 @@ purely algebraic Krull route.
   `laurentCover_gluing_presheaf_viaRow3`
   (gluing companion, mirror structure).
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

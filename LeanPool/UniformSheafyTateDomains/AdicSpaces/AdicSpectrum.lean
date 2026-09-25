@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ContinuousValuations
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.GeometricSeries
-import Mathlib.Topology.Algebra.Ring.Ideal
-import Mathlib.RingTheory.Localization.FractionRing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ContinuousValuations
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.GeometricSeries
+public import Mathlib.Topology.Algebra.Ring.Ideal
+public import Mathlib.RingTheory.Localization.FractionRing
 
 /-!
 # The Adic Spectrum
@@ -48,6 +50,8 @@ following Definition 7.23 of [Wedhorn, *Adic Spaces*].
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Definition 7.23, Example 7.26,
   Remark 7.28, Definition 7.29, Proposition 5.38, Proposition 7.51, Proposition 7.52
 -/
+
+@[expose] public section
 
 open Topology Pointwise WithZero
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
 
 /-!
 # Covariant functoriality of the presheaf value along a continuous ring hom
@@ -35,6 +37,8 @@ transport (`RingEquivPresheafTransport.lean`, PASS 2) and re-used by FJP.
 (`locTopology_continuous_lift`) and completion functoriality
 (`UniformSpace.Completion.extensionHom`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalPerBranchChain
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizedCor732Application
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornMultiDominatingUnit
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornStandardCoverRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalPerBranchChain
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizedCor732Application
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornMultiDominatingUnit
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornStandardCoverRefinement
 
 /-!
 # Wedhorn local-compatibility from canonical test family
@@ -69,6 +71,8 @@ that is the genuine Wedhorn-content residual at this lane.
 * Reuses `not_vle_zero_of_strict_dominator`
   (`WedhornMultiDominatingUnit.lean:189`).
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

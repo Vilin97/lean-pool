@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.RingTheory.WittVector.Complete
-import Mathlib.RingTheory.WittVector.Teichmuller
-import Mathlib.RingTheory.WittVector.Identities
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicConvergence
+public import Mathlib.RingTheory.WittVector.Complete
+public import Mathlib.RingTheory.WittVector.Teichmuller
+public import Mathlib.RingTheory.WittVector.Identities
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicConvergence
 
 /-!
 # Primitive Elements in Witt Vectors
@@ -37,6 +39,8 @@ by a primitive element of degree 1 (Scholze-Weinstein, Berkeley Lectures, Lemma 
 
 * Scholze-Weinstein, *Berkeley Lectures on p-adic Geometry*, Definitions 6.2.9-6.2.10
 -/
+
+@[expose] public section
 
 open WittVector
 

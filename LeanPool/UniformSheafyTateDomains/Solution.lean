@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.Palomar.Defs
-import LeanPool.UniformSheafyTateDomains.Palomar.Bridge
-import LeanPool.UniformSheafyTateDomains.Palomar.Bridge.Jet
-import LeanPool.UniformSheafyTateDomains.Palomar.Bridge.TateExt
-import LeanPool.UniformSheafyTateDomains.AdicSpaces
+public import LeanPool.UniformSheafyTateDomains.Palomar.Defs
+public import LeanPool.UniformSheafyTateDomains.Palomar.Bridge
+public import LeanPool.UniformSheafyTateDomains.Palomar.Bridge.Jet
+public import LeanPool.UniformSheafyTateDomains.Palomar.Bridge.TateExt
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces
 
 /-!
 # Palomar solution: [FJP] Theorem 1.1
@@ -27,6 +29,8 @@ definitions, so that every constant appearing in a statement is the same constan
 environments. The statements below are spelled with fully qualified names; they elaborate to
 exactly the Challenge's types.
 -/
+
+@[expose] public section
 
 
 noncomputable section

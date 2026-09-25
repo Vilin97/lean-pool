@@ -3,9 +3,11 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
 
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
+
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
 
 /-!
 # Nonarchimedean Scottish Book — Problem 28
@@ -51,6 +53,8 @@ i.e., `f` is annihilated by a power of `D.s` in `A`.
 * Kedlaya, *The Nonarchimedean Scottish Book*, Problem 28
 * Wedhorn, *Adic Spaces*, §6 (Huber/Tate rings), §8.1 (rational localizations)
 -/
+
+@[expose] public section
 
 open ValuationSpectrum
 

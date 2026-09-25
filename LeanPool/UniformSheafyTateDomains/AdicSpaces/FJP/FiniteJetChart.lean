@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetFunctoriality
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetUniformDomain
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetFunctoriality
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetUniformDomain
 
 /-!
 # The nonuniform chart: `𝓐⟨W/ϖ⟩ ≅ K⟨X,Q⟩/(Q²)` and failure of stable uniformity
@@ -27,6 +29,8 @@ Corollary 3.2 (verbatim): "The ring 𝒜 is not stably uniform." — the chart i
 nonuniform: "`Q ≠ 0`, `Q² = 0`, and every element of the unbounded line `kQ` is
 power-bounded, while `‖λQ‖ = |λ|`."
 -/
+
+@[expose] public section
 
 open Filter Topology
 

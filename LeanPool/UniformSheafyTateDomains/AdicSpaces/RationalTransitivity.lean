@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaRationalSubsetCorrespondence
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativeDescent
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaRationalSubsetCorrespondence
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativeDescent
 
 /-!
 # Existential transitivity of rational localization
@@ -32,6 +34,8 @@ unit-power padding) and the noetherian-free `keystone`
   with the base `D` does not change the upstairs rational open;
 * `exists_rationalLocalization_transitivity` — the assembly.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

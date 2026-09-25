@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornAlphaTDComparisonSupplier
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornAlphaTDComparisonSupplier
 
 /-!
 # Wedhorn 8.34(ii) max-element ≤ s_D comparison supplier (T035)
@@ -119,6 +121,8 @@ attempt and was shown false in T023).
   rational-open / σ-cancellation API.
 * Does NOT edit T027/T028/T031/T032/T033/T034 accepted files.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

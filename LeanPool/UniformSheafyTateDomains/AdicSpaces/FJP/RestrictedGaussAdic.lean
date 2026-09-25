@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetRings
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.NoetherianTateModules
-import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
-import Mathlib.RingTheory.LocalProperties.Submodule
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.NoetherianTateModules
+public import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
+public import Mathlib.RingTheory.LocalProperties.Submodule
 
 /-!
 # The restricted Gauss ring `P_E = E⟨T₁,…,T_m⟩` and its adic-completion model
@@ -37,6 +39,8 @@ rings were re-homed here from `FiniteJetNoetherianVertices.lean` for the same re
 Declaration names and namespaces are unchanged (`FiniteJet.GraphKoszul.P` etc.), so call
 sites are unaffected.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

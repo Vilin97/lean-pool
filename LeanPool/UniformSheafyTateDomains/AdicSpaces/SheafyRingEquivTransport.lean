@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyRing
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RingEquivPresheafTransport
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyRing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RingEquivPresheafTransport
 
 /-!
 # Public transport of sheafiness along a bicontinuous ring equivalence (T7)
@@ -41,6 +43,8 @@ This module sits *above* `SheafyRing.lean` — the low-level transport file
 (`RingEquivPresheafTransport.lean`) deliberately does not import the sheafy-pair
 layer, avoiding a foundational import cycle.
 -/
+
+@[expose] public section
 
 noncomputable section
 

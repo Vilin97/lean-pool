@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Algebra
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Algebra
 
 /-!
 # `𝒜` is not noetherian ([WP] prop:parity-nonnoetherian)
@@ -30,6 +32,8 @@ summing to `2q·δ_{m+1}` must consist of two EVEN pure-`U_{m+1}` exponents (an 
 `U_{m+1}`-exponent forces `W`-content `≥ w (m+1) ≥ 1` inside `S`, whence the weight
 hypothesis `hw`).  The presentation-preservation step of the paper disappears.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

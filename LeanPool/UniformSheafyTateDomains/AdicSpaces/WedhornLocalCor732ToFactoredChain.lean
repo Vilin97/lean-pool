@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPerTFactoredBranchLink
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizedCor732Application
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornStandardCoverRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPerTFactoredBranchLink
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizedCor732Application
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornStandardCoverRefinement
 
 /-!
 # Wedhorn local Cor 7.32 → factored chain bridge
@@ -76,6 +78,8 @@ specific structural output.
   `764ecac`) and `rationalOpen_subset_base_via_local_Cor732_chain`
   (commit `4197d87`).
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

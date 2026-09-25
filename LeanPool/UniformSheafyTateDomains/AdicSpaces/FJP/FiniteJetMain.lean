@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetSheafTransfer
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetChart
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetSheafTransfer
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetChart
 
 /-!
 # The finite-jet pinching algebra: headline theorems ([FJP] Theorem 1.3)
@@ -24,6 +26,8 @@ One conclusion per declaration (project statement-splitting rule). Strong sheafi
 `𝓐 = FiniteJet.JetA F` is the pinching algebra over `K = LaurentSeries F`
 (`FiniteJetRings.lean`), with its maximal plus ring.
 -/
+
+@[expose] public section
 
 namespace FiniteJet
 

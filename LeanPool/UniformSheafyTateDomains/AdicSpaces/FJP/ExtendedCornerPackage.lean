@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CornerSquareBridge
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CornerSquareBridge
 
 /-!
 # The extended corner package (T626, campaign B)
@@ -32,6 +34,8 @@ Gauss-normed Tate extensions `P (Jet• F) n` and the homs the coefficientwise
 [Reviewer] §5.1: "adjoining variables preserves the coefficientwise split
 Milnor row, while B⟨T⟩, C⟨T⟩, and D⟨T⟩ remain strongly noetherian affinoids."
 -/
+
+@[expose] public section
 
 @[expose] public section
 

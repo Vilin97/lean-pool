@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalIntersection
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructurePresheafLimit
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaQCviaSpvAI
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompactNoHArch
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalIntersection
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructurePresheafLimit
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaQCviaSpvAI
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompactNoHArch
 
 /-!
 # The rational basis of `Spa (A, A⁺)` and quasi-compactness (Wedhorn 7.35, Tate case)
@@ -29,6 +31,8 @@ import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompactNoHArch
   topologically nilpotent **unit** lands in `span T`), so every subbasic trace is a valid
   rational open, and finite intersections fold through `interRational` (R1).
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
 
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationAction
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
+
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationAction
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
 
 /-!
 # Nonarchimedean Scottish Book — Problem 12
@@ -47,6 +49,8 @@ We formalize the key definitions and state the main result:
 4. **Main theorem**: For a Tate ring `A` with finite group `G`, this descended map is a
    homeomorphism. The same holds for the adic spectrum `Spa`.
 -/
+
+@[expose] public section
 
 open ValuationSpectrum
 

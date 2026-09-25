@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetSheafyEndpoints
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.ExtendedSheafyTransport
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.RestrictedFubini
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyRingEquivTransport
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.MvTateAlgebraTopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetSheafyEndpoints
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.ExtendedSheafyTransport
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.RestrictedFubini
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyRingEquivTransport
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.MvTateAlgebraTopology
 
 /-!
 # Strong sheafiness of the finite-jet pinching algebra (campaign B skeleton)
@@ -29,6 +31,8 @@ the extended square. The `⟨V⟩`-row and the transfer instantiation are an API
 with their own sub-decomposition (`decomposition.md`, B-AG1); the leaves below are
 the statable first layer.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

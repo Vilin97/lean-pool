@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafIdentification
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebraWedhorn
-import Mathlib.Data.Finsupp.Encodable
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafIdentification
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebraWedhorn
+public import Mathlib.Data.Finsupp.Encodable
 
 /-!
 # Topology Comparison: Completion Isomorphism (Non-Discrete)
@@ -30,6 +32,8 @@ strongly noetherian Tate rings.
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], §5.6, §8.1
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

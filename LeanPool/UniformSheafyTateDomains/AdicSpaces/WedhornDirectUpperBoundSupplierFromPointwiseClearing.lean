@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPerPieceSubsetProductClearing
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornSigmaPowerClearedInequalitySupplier
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPerPieceSubsetProductClearing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornSigmaPowerClearedInequalitySupplier
 
 /-!
 # Wedhorn 8.34(ii) — Direct upper bound supplier from pointwise clearing (T077)
@@ -98,6 +100,8 @@ lane (which routes through
 * No global universal-over-`D_T` lower bound resurrection.
 * No final Tate acyclicity hypothesis additions.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

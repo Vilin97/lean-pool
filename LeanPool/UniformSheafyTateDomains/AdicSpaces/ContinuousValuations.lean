@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Topology.Algebra.Ring.Basic
-import Mathlib.Topology.Algebra.WithZeroTopology
-import Mathlib.Topology.Algebra.OpenSubgroup
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationSpectrum
+public import Mathlib.Topology.Algebra.Ring.Basic
+public import Mathlib.Topology.Algebra.WithZeroTopology
+public import Mathlib.Topology.Algebra.OpenSubgroup
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationSpectrum
 
 /-!
 # Continuous Valuations and Cont(A)
@@ -30,6 +32,8 @@ valuation spectrum `Spv(A)`, following Definition 7.7 of [Wedhorn, *Adic Spaces*
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Definition 7.7, Remark 7.8, Remark 7.9
 -/
+
+@[expose] public section
 
 namespace Valuation
 

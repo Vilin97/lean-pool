@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LocalizationTopology
-import Mathlib.Topology.Algebra.LinearTopology
-import Mathlib.RingTheory.Filtration
-import Mathlib.RingTheory.Localization.Submodule
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LocalizationTopology
+public import Mathlib.Topology.Algebra.LinearTopology
+public import Mathlib.RingTheory.Filtration
+public import Mathlib.RingTheory.Localization.Submodule
 
 /-!
 # `IsLinearTopology` for `locTopology` (audit + minimal building block)
@@ -94,6 +96,8 @@ and is the next concrete sub-target.
   per-branch-chain file.
 * No Lane B / Cor 8.32 / Jacobson / T001 / faithful-flatness /
   final-acyclicity / T005 / T013 / T016 content. -/
+
+@[expose] public section
 
 open Pointwise
 

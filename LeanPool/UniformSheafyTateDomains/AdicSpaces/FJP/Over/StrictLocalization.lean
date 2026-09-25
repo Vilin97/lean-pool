@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.JetRings
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFNoetherian
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetGraphKoszul
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetNoetherianVertices
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.JetRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFNoetherian
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetGraphKoszul
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetNoetherianVertices
 
 /-!
 # Strict localization of the finite-jet Milnor square over a CDVF base ([FJP] §4)
@@ -40,6 +42,8 @@ Tate ring openness of the ideal is generation of the unit ideal), write
   the ideals are closed) is exact, the induced map `𝓐_α → 𝓑_α × 𝓒_α` is a topological
   embedding, and `𝓒_α → 𝓓_α` is a continuous open surjection.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Data.Finsupp.Basic
-import Mathlib.Algebra.BigOperators.Finsupp.Basic
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Finsupp.Basic
+public import Mathlib.Algebra.BigOperators.Finsupp.Basic
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
 # Weighted-parity combinatorics ([WP] §6.1)
@@ -32,6 +34,8 @@ and the support monoid
 together with the head submonoids (tail support bounded by `N`) and the head/tail
 splitting of exponents that underlies the `c₀`-decomposition of [WP] §6.4.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

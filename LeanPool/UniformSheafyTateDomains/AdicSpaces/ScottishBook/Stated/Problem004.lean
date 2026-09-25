@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PerfectoidSpace
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PerfectoidRing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PerfectoidSpace
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PerfectoidRing
 
 /-!
 # Nonarchimedean Scottish Book — Problem 4
@@ -39,6 +41,8 @@ The Zariski-dense condition is captured by requiring `Dense U` in the topology o
 `Spa(A, A⁺)`. The perfectoid condition on `U` is stated via the existence of an
 `AffinoidPerfectoidSpace` covering the open subset.
 -/
+
+@[expose] public section
 
 open TopologicalRing ValuationSpectrum
 

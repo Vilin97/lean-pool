@@ -3,18 +3,20 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.OrderedGroupConvex
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationCoarsening
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationContinuity
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationSpectrum
-import Mathlib.RingTheory.Valuation.Basic
-import Mathlib.Algebra.Order.Group.Units
-import Mathlib.Algebra.Order.GroupWithZero.WithZero
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.OrderedGroupConvex
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationCoarsening
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationContinuity
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationSpectrum
+public import Mathlib.RingTheory.Valuation.Basic
+public import Mathlib.Algebra.Order.Group.Units
+public import Mathlib.Algebra.Order.GroupWithZero.WithZero
 
 /-!
 # The characteristic subgroup `cΓ_v` (Wedhorn 4.13)
@@ -48,6 +50,8 @@ spectrality).
 
 * [Wedhorn 2019] Definition 4.13, p. 27.
 -/
+
+@[expose] public section
 
 namespace Valuation
 

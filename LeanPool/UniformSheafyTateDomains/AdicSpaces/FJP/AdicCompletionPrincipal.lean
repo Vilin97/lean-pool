@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
-import Mathlib.Algebra.Polynomial.Div
-import Mathlib.RingTheory.AdicCompletion.Algebra
-import Mathlib.RingTheory.PowerSeries.Ideal
-import Mathlib.RingTheory.PowerSeries.Trunc
+public import Mathlib.Algebra.Polynomial.Div
+public import Mathlib.RingTheory.AdicCompletion.Algebra
+public import Mathlib.RingTheory.PowerSeries.Ideal
+public import Mathlib.RingTheory.PowerSeries.Trunc
 
 /-!
 # Noetherianity of the adic completion at a principal ideal
@@ -36,6 +38,8 @@ Since `R⟦X⟧` is Noetherian whenever `R` is, we deduce the main result:
 This is the principal-ideal case of the classical fact that the `I`-adic completion of a
 Noetherian ring is Noetherian.
 -/
+
+@[expose] public section
 
 suppress_compilation
 

@@ -3,26 +3,28 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicCompletionNoetherian
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinementTree
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.EmbeddingTopo
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StandardCover
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LocalBasis
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativeRationalLocData
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Cor832
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCoverNormalization
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpvCompletionExtension
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornSpaRationalOpenLiftWrapper
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompactNoHArch
-import Mathlib.Combinatorics.Pigeonhole
-import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicCompletionNoetherian
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinementTree
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.EmbeddingTopo
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StandardCover
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LocalBasis
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativeRationalLocData
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Cor832
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCoverNormalization
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpvCompletionExtension
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornSpaRationalOpenLiftWrapper
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompactNoHArch
+public import Mathlib.Combinatorics.Pigeonhole
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
 
 /-!
 # Residual mathematical statements for completing Tate acyclicity
@@ -43,6 +45,8 @@ the remaining mathematical results needed to close Wedhorn Theorem
 Each statement is given the natural Lean signature; the body is
 `:= by sorry` so the file compiles (with `sorry`-warnings).
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

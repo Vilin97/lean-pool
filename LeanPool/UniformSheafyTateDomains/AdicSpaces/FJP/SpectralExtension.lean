@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Analysis.Normed.Unbundled.SpectralNorm
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Topology.Algebra.Module.FiniteDimension
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetRings
+public import Mathlib.Analysis.Normed.Unbundled.SpectralNorm
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetRings
 
 /-!
 # The spectral norm package for finite extensions
@@ -22,6 +24,8 @@ a complete ultrametric nontrivially normed field extending the norm of `K`.
 Elements satisfying a monic relation over the unit ball have norm at most one
 (a direct ultrametric bound — no minimal-polynomial descent).
 -/
+
+@[expose] public section
 
 @[expose] public section
 

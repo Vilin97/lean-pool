@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativePieceKeystone
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictionFlatness
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativePieceKeystone
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictionFlatness
 
 /-!
 # Leaf-A chain assembly (Wedhorn Prop 8.30, whole-space residual)
@@ -38,6 +40,8 @@ stays two-level — the `𝒪(X₀)`-relative chain would be three-level and exc
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Remark 7.55, Prop 8.30 (wedhorn.txt:3504-3517)
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

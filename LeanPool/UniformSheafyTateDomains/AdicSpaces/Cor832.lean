@@ -3,24 +3,26 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.RingTheory.Flat.Basic
-import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
-import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
-import Mathlib.RingTheory.RingHom.FaithfullyFlat
-import Mathlib.RingTheory.Spectrum.Prime.RingHom
-import Mathlib.Algebra.Module.Pi
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaRationalOpenComparison
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FlatnessResults
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.IdealClosedness
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.IdealLocalization
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.IdealLocalizationCompletion
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictionFlatness
+public import Mathlib.RingTheory.Flat.Basic
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.RingHom.FaithfullyFlat
+public import Mathlib.RingTheory.Spectrum.Prime.RingHom
+public import Mathlib.Algebra.Module.Pi
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaRationalOpenComparison
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FlatnessResults
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.IdealClosedness
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.IdealLocalization
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.IdealLocalizationCompletion
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictionFlatness
 
 /-!
 # Corollary 8.32 of Wedhorn (faithful flatness of product restriction)
@@ -88,6 +90,8 @@ is NOT introduced by Cor 8.32 work; it lives upstream of everything that uses
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Proposition 8.30, Corollary 8.32.
 * `docs/plans/2026-04-08-wedhorn-vs-zavyalov.md` — Phase 3 of the Wedhorn plan.
 -/
+
+@[expose] public section
 
 open ValuationSpectrum TensorProduct
 

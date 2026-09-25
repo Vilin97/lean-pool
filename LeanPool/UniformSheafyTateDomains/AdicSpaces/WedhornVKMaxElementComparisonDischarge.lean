@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornVKNonemptyPerTBoundDischarge
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornVKNonemptyPerTBoundDischarge
 
 /-!
 # Wedhorn 8.34(ii) — V_K-nonempty max-element comparison reduction (T047)
@@ -115,6 +117,8 @@ content directly.
   to the new residual; the max-ness premise is dispatched internally
   via `Finset.mem_image`.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

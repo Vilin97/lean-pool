@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationSpectrum
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationSpectrum
 
 /-!
 # Wedhorn dominating-unit valuation-inequality core
@@ -71,6 +73,8 @@ intermediate `v.vle (τ^N * intermediate) C.base.s`.
 * Imports only `«Adic spaces».ValuationSpectrum` plus its transitive
   closure (Spv, vle, ValuativeRel infrastructure).
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

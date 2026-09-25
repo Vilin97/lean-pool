@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizedCor732Application
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizationContinuity
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalCompatFromTestFamily
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizedCor732Application
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizationContinuity
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalCompatFromTestFamily
 
 /-!
 # Localized Tate-data derivation for `exists_dominating_unit_in_localization`
@@ -66,6 +68,8 @@ The remaining explicit hypotheses for `exists_dominating_unit_in_localization`:
 * No edits to committed bridge files.
 * No Lane B / Cor 8.32 / Jacobson / T001 / faithful-flatness /
   final-acyclicity content. -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

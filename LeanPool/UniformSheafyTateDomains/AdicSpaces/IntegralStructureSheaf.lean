@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Bounded
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Bounded
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
 
 /-!
 # The Integral Structure Presheaf O⁺
@@ -34,6 +36,8 @@ We also define the sheaf cohomology groups `H^i(Spa(A, A⁺), O⁺)` as opaque t
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], §8.1
 * [K. Kedlaya, *The Nonarchimedean Scottish Book*], Problems 27, 39
 -/
+
+@[expose] public section
 
 open ValuationSpectrum TopologicalRing
 

@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.OrderedGroupConvex
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationCoarsening
-import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
-import Mathlib.RingTheory.Valuation.RankOne
-import Mathlib.RingTheory.Valuation.ValuationSubring
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.OrderedGroupConvex
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationCoarsening
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
+public import Mathlib.RingTheory.Valuation.RankOne
+public import Mathlib.RingTheory.Valuation.ValuationSubring
 
 /-!
 # Prime Ideals and Convex Subgroups of Valuation Rings
@@ -38,6 +40,8 @@ of its value group (Bourbaki, Comm. Alg., Ch. VI, §4, No. 5).
 * [N. Bourbaki, *Commutative Algebra*][bourbaki1972commutative], Chapter VI, §4
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], §7.1
 -/
+
+@[expose] public section
 
 namespace ValuationSubring
 

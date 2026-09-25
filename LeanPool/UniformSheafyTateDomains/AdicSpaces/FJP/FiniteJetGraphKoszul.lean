@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.RestrictedGaussAdic
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.KoszulFiniteFree
-import Mathlib.RingTheory.Flat.EquationalCriterion
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.RestrictedGaussAdic
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.KoszulFiniteFree
+public import Mathlib.RingTheory.Flat.EquationalCriterion
 
 /-!
 # Strict graph–Koszul exactness in degrees ≤ 2 ([FJP] Lemma 4.2)
@@ -44,6 +46,8 @@ Proof architecture (mirrors [FJP]'s proof exactly):
    the Banach open mapping theorem with constants
    (`ContinuousLinearMap.exists_preimage_norm_le`).
 -/
+
+@[expose] public section
 
 open Filter Topology
 

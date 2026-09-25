@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PseudoUniformizer
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Uniform
-import Mathlib.RingTheory.AdicCompletion.Basic
-import Mathlib.RingTheory.Valuation.Integers
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PseudoUniformizer
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Uniform
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.Valuation.Integers
 
 /-!
 # Perfectoid Rings and Fields
@@ -42,6 +44,8 @@ The condition `ϖ^p | p` is expressed as: there exists a power-bounded `c` with
 * [P. Scholze, *Perfectoid Spaces*][scholze2012perfectoid], Definition 3.5
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], §7
 -/
+
+@[expose] public section
 
 open TopologicalRing ValuationSpectrum
 

@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPerPieceLaurentC1Supplier
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPerPieceLaurentCoverAssembly
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPerPieceLaurentC1Supplier
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPerPieceLaurentCoverAssembly
 
 /-!
 # Wedhorn 8.34(ii) — C1 supplier cover-assembly closure (T060)
@@ -82,6 +84,8 @@ Secondary's lane.
 * No global universal-over-Spa multi-element clearing claim (per
   T035's counter-example).
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

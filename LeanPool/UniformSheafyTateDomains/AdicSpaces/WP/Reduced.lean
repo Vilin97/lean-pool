@@ -3,21 +3,23 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.ChainReducedDef
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.CoeffLocalization
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.UniformDomain
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.FormalReduced
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AuditCleanWrappers
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyCompletionModel
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafFunctoriality
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RingEquivPresheafTransport
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalTransitivity
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafTateStructure
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.ChainReducedDef
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.CoeffLocalization
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.UniformDomain
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.FormalReduced
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AuditCleanWrappers
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyCompletionModel
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafFunctoriality
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RingEquivPresheafTransport
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalTransitivity
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafTateStructure
 
 /-!
 # Rational stable reducedness ([WP] §6.6)
@@ -46,6 +48,8 @@ Three layers:
 `ChainReduced` (the project has no iterated-localization composition theorem; the
 induction step re-applies `nonempty_headModelData` through the model transport).
 -/
+
+@[expose] public section
 
 @[expose] public section
 

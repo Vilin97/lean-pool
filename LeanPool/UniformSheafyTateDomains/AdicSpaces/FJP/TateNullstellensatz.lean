@@ -3,17 +3,19 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.TateBallResidue
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFNoetherian
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.NoetherianGDomain
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.GeometricSeries
-import Mathlib.RingTheory.Jacobson.Artinian
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Bounded
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.TateBallResidue
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFNoetherian
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.NoetherianGDomain
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.GeometricSeries
+public import Mathlib.RingTheory.Jacobson.Artinian
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Bounded
 
 /-!
 # The affinoid Nullstellensatz for Tate algebras over a noetherian unit ball
@@ -26,6 +28,8 @@ the residue field; the G-domain lemma makes `B/ϖB` zero-dimensional and of
 finite type over the residue ring of `𝒪_K`, hence finite; topological
 Nakayama lifts finiteness to `B`, and localization finishes.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

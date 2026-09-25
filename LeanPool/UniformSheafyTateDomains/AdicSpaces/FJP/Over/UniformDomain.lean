@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetUniformDomain
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.JetRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetUniformDomain
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.JetRings
 
 /-!
 # 𝓐 over a general base is a uniform domain and is not noetherian
@@ -36,6 +38,8 @@ The generic helper layer of the Laurent file (`norm_restricted_mul`,
 `norm_pow_le_of_fst_le`, `isPowerBounded_dualNumber_iff`, `norm_pow_mul_of_scale`) is
 already base-field-free and is reused, not re-proved.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

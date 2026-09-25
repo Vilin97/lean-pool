@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicMorphismsCore
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructurePresheafBundled
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicMorphismsCore
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructurePresheafBundled
 
 /-!
 # Provisional presentation-level morphism predicates (towards Wedhorn §8.4)
@@ -25,6 +27,8 @@ Definition 8.38 / Proposition 8.39 / Corollary 8.40 for genuine adic spaces awai
 the `𝒱`-layer; the affinoid (ring-level) content of Prop 8.39 is proved below.
 Ring-level adicness (`IsAdicHom` etc.) stays in `AdicMorphisms.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

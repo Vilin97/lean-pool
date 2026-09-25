@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCovPlusLiftPerTBoundDischarge
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCovPlusLiftPerTBoundDischarge
 
 /-!
 # Wedhorn 8.34(ii) — Source-restricted structural data discharge (T045)
@@ -112,6 +114,8 @@ T037 → C1 supplier interface.
   V_K-nonempty witness; no global universal-over-`Spa(Loc s, ⁺)`
   per-`w` upper-bound is reintroduced.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

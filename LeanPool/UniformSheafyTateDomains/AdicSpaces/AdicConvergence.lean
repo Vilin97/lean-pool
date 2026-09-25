@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.AdicCompletion.Basic
 
 /-!
 # Adic Convergence — Series and Limits in I-adically Complete Rings
@@ -21,6 +23,8 @@ rings via convergent series and Cauchy sequences.
 * `IsAdicComplete.exists_limit` : Every I-adic Cauchy sequence has a limit.
 * `IsAdicComplete.series_convergent` : A series `Σ aₙ` with `aₙ ∈ I^n • ⊤` converges.
 -/
+
+@[expose] public section
 
 universe u
 

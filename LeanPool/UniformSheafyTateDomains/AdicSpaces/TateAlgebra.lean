@@ -3,28 +3,30 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedModule
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.NoetherianTateModules
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Lemma745
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornBanachTheorem
-import Mathlib.RingTheory.Ideal.Quotient.Basic
-import Mathlib.RingTheory.Ideal.Quotient.Noetherian
-import Mathlib.RingTheory.Filtration
-import Mathlib.Data.Finsupp.Antidiagonal
-import Mathlib.RingTheory.Flat.Basic
-import Mathlib.RingTheory.Flat.EquationalCriterion
-import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
-import Mathlib.RingTheory.Flat.Localization
-import Mathlib.RingTheory.Spectrum.Prime.RingHom
-import Mathlib.Algebra.MvPolynomial.CommRing
-import Mathlib.RingTheory.MvPolynomial.Localization
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedModule
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.NoetherianTateModules
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Lemma745
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornBanachTheorem
+public import Mathlib.RingTheory.Ideal.Quotient.Basic
+public import Mathlib.RingTheory.Ideal.Quotient.Noetherian
+public import Mathlib.RingTheory.Filtration
+public import Mathlib.Data.Finsupp.Antidiagonal
+public import Mathlib.RingTheory.Flat.Basic
+public import Mathlib.RingTheory.Flat.EquationalCriterion
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
+public import Mathlib.RingTheory.Flat.Localization
+public import Mathlib.RingTheory.Spectrum.Prime.RingHom
+public import Mathlib.Algebra.MvPolynomial.CommRing
+public import Mathlib.RingTheory.MvPolynomial.Localization
 
 /-!
 # Tate and Laurent Algebras
@@ -52,6 +54,8 @@ These are the central reusable objects for the Tate acyclicity proof (Theorem 8.
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], §6.9, §8.29–8.33
 -/
+
+@[expose] public section
 
 open Filter MvPowerSeries
 

@@ -3,17 +3,19 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Algebra.DualNumber
-import Mathlib.Analysis.Normed.Ring.Ultra
-import Mathlib.Analysis.Normed.Unbundled.RingSeminorm
-import Mathlib.RingTheory.Noetherian.Basic
-import Mathlib.RingTheory.Polynomial.Basic
-import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Mathlib.Algebra.DualNumber
+public import Mathlib.Analysis.Normed.Ring.Ultra
+public import Mathlib.Analysis.Normed.Unbundled.RingSeminorm
+public import Mathlib.RingTheory.Noetherian.Basic
+public import Mathlib.RingTheory.Polynomial.Basic
+public import Mathlib.Algebra.Polynomial.AlgebraMap
 
 /-!
 # The nonarchimedean max norm on dual numbers (finite-jet vertices 𝓑 and 𝓓)
@@ -29,6 +31,8 @@ ultrametric normed base and provides the instance stack ([FJP] Prop 2.1's comple
 noetherianity inputs for these vertices), the jet-power formula
 `(f + Qg)ⁿ = fⁿ + n f^(n-1) Q g` ([FJP] (5.2)), and componentwise functoriality.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

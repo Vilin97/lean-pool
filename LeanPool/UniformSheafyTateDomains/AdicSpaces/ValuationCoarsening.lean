@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Algebra.Order.Archimedean.Basic
-import Mathlib.RingTheory.Valuation.Basic
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.OrderedGroupConvex
+public import Mathlib.Algebra.Order.Archimedean.Basic
+public import Mathlib.RingTheory.Valuation.Basic
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.OrderedGroupConvex
 
 /-!
 # Valuation Coarsening by Convex Subgroups
@@ -37,6 +39,8 @@ projection `Γ₀ → (Γ ⧸ H)₀`, following §7.1 of [Wedhorn, *Adic Spaces*
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], §7.1
 -/
+
+@[expose] public section
 
 /-! ### Lifting `MonoidHom` to `MonoidWithZeroHom` on `WithZero` -/
 

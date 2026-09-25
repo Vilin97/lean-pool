@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFBase
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFBase
 
 /-!
 # The noetherian dichotomy: a noetherian valuation ring with an irreducible
@@ -21,6 +23,8 @@ noetherian it is therefore a PIR, and the existence of an irreducible element
 `(ϖ, hK₀)` hypotheses of the WP campaign to the `[IsDiscreteValuationRing 𝒪[K]]`
 instance required by the Tate-algebra Nullstellensatz layer.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

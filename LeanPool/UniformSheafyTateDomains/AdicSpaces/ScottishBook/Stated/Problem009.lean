@@ -3,9 +3,11 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
 
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ScottishBook.Stated.Problem007
-import Mathlib.RingTheory.Etale.Basic
+
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ScottishBook.Stated.Problem007
+public import Mathlib.RingTheory.Etale.Basic
 
 /-!
 # Nonarchimedean Scottish Book — Problem 9
@@ -40,6 +42,8 @@ We formalize "finite étale" using the conjunction of Mathlib's `Algebra.Etale A
 * Kedlaya, *The Nonarchimedean Scottish Book*, Problem 9
 * Wedhorn, *Adic Spaces*, §7 (Definition 7.37)
 -/
+
+@[expose] public section
 
 open ValuationSpectrum ScottishBook
 

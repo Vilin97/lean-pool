@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Cor732
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Prop752
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornExtendValuationContinuity
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornSpaRationalOpenLiftWrapper
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Cor732
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Prop752
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornExtendValuationContinuity
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornSpaRationalOpenLiftWrapper
 
 /-!
 # Wedhorn 8.34(ii): Localized plus-subring choice and lift upgrade
@@ -83,6 +85,8 @@ localized hypotheses' derivation from `A`'s setup.
   `WedhornSigmaPowerDecay.lean` (Secondary).
 * No Lane B / Cor 8.32 / Jacobson / T001 / faithful-flatness /
   final-acyclicity content. -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

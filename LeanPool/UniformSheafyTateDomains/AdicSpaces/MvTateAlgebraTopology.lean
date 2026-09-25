@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization project
 -/
-import Mathlib.RingTheory.MvPowerSeries.PiTopology
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebraTopology
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornBanachTheorem
+public import Mathlib.RingTheory.MvPowerSeries.PiTopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebraTopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornBanachTheorem
 
 /-!
 # The Tate topology on the multivariate restricted power series ring `A⟨X₁,…,Xₙ⟩`
@@ -39,6 +41,8 @@ finitely generated ideal of definition `I⟨X⟩ = I · A₀⟨X⟩`.
 * `n = 1` template: `Adic spaces/TateAlgebraTopology.lean` (`TateAlgebra.pairSubring`,
   `TateAlgebra.pairIdeal`).
 -/
+
+@[expose] public section
 
 open Filter Topology Pointwise
 

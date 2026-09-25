@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.RestrictedLaurent
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.JetDualNumberNorm
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ExampleUnitDisc
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.RestrictedLaurent
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.JetDualNumberNorm
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ExampleUnitDisc
 
 /-!
 # The finite-jet pinching square: the rings 𝓐, 𝓑, 𝓒, 𝓓 and the strict Milnor row
@@ -37,6 +39,8 @@ This file also builds the Huber-theoretic instance stack for each ring (pair of 
 `IsTateRing`, maximal plus ring, `IsRingOfIntegralElements`, completeness w.r.t. the right
 uniformity) in the pattern of `ExampleUnitDisc.lean`.
 -/
+
+@[expose] public section
 
 open Filter Topology
 open scoped NNReal

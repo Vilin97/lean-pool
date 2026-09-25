@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentCoverExact
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebraTopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentCoverExact
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAlgebraTopology
 
 /-!
 # Quotient topology API for the Laurent cover (T131)
@@ -59,6 +61,8 @@ quotient topologies. The proofs use the basic-neighborhood basis
 together with the existing coefficient bridges
 `tateAlgNhd_coeff_mem` and `tateAlgNhd₂_of_coeff_mem_principal`.
 -/
+
+@[expose] public section
 
 namespace LaurentCover
 

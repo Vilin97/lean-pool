@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Uniform
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Uniform
 
 /-!
 # Nonarchimedean Scottish Book — Problem 7
@@ -45,6 +47,8 @@ this asks whether the converse holds among uniform Huber pairs.
 * Wedhorn, *Adic Spaces*, §7 (Definitions 7.36, 7.37)
 * Buzzard–Verberkmoes, *Stably uniform affinoids are sheafy*
 -/
+
+@[expose] public section
 
 open TopologicalRing ValuationSpectrum
 

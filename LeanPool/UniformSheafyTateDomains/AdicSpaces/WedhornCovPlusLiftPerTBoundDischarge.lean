@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornC1ComapLiftRestrictedSupplier
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornC1ComapLiftRestrictedSupplier
 
 /-!
 # Wedhorn 8.34(ii) — Source-restricted Cov+ lift per-`t` bound discharge (T044)
@@ -97,6 +99,8 @@ attempt that — it composes it cleanly into T043's predicate.
 * No global universal-over-`Spa` per-`w` upper-bound resurrection:
   this file's discharge is source-restricted at every layer.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

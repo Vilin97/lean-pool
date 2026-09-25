@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
-import Mathlib.RingTheory.RingHom.Flat
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
+public import Mathlib.RingTheory.RingHom.Flat
 
 /-!
 # Nonarchimedean Scottish Book — Problem 29
@@ -37,6 +39,8 @@ RESOLVED: No (Gabber counterexample).
 - **Tate algebra A⟨T⟩**: The ring of restricted power series in one variable over A,
   i.e., `restrictedMvPowerSeriesSubring 1 A`.
 -/
+
+@[expose] public section
 
 namespace ScottishBook
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetStrictLocalization
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetStrictLocalization
 
 /-!
 # Strict localization over an abstract pinched corner square (T625, campaign B)
@@ -33,6 +35,8 @@ of `FiniteJetStrictLocalization` at arity `n`) — the reviewer §5.1 strengthen
 The Koszul layer (`exists_d1_lift`, `exists_d2_lift`, `syzygy_graph_restricted`) is
 already generic over a normed corner `E` and is consumed as-is.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

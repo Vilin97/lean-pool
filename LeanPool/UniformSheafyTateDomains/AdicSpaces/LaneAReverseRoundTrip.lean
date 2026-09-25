@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.BivariateContinuity
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.IteratedOverlapEquiv
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.QuotientTate
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.BivariateContinuity
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.IteratedOverlapEquiv
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.QuotientTate
 
 /-!
 # Lane A reverse round trip: construction of `τ_preBiv`
@@ -75,6 +77,8 @@ in `LaurentRefinement.lean`) remains.
   `bivariateOverlap_equiv_B₁₂gen`, `iteratedOverlap_forwardLocHom` /
   `iteratedOverlap_backwardLocHom` and round-trip lemma.
 -/
+
+@[expose] public section
 
 universe u
 

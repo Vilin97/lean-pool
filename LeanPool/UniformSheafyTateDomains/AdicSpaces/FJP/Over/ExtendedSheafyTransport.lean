@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.ExtendedMilnorInstance
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.SheafyEndpoints
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.ExtendedMilnorInstance
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.Over.SheafyEndpoints
 
 /-!
 # From the Gauss ring to the Tate extension over a general nonarchimedean base
@@ -21,6 +23,8 @@ transports `isSheafy_extJetA` to the canonical Tate-algebra topology.  The
 sheafiness statements require a uniformizer and noetherianity of the base norm
 unit ball; a discrete valuation ring supplies both in `StrongSheafy.lean`.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

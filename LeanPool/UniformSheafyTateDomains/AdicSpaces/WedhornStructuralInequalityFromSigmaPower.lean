@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornMPowerDecayFromStructural
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPerTFactoredBranchLink
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornMPowerDecayFromStructural
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPerTFactoredBranchLink
 
 /-!
 # Wedhorn structural inequality from σ-power-structural data
@@ -80,6 +82,8 @@ smaller than the prior three-supplier boundary in commit `9e0a147`.
   `Spv.mul_vle_mul_left` (`ValuationSpectrum`),
   `ValuativeRel.mul_vle_mul_iff_right` (Mathlib).
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

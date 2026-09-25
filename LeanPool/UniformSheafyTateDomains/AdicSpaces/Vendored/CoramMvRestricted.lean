@@ -3,6 +3,8 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2025 William Coram. All rights reserved.
@@ -12,12 +14,14 @@ Authors: William Coram
 VENDORED into AINTLIB (2026-07-04) from WilliamCoram/PhD (PhD/PR'd/MvRestricted.lean,
 with PhD/PR'd/Algebra/Order/Antidiag/Prod.lean inlined), pending its mathlib PR.
 -/
-import Mathlib.Analysis.Normed.Group.Ultra
-import Mathlib.Analysis.Normed.Order.Lattice
-import Mathlib.Analysis.RCLike.Basic
-import Mathlib.RingTheory.MvPowerSeries.Basic
+public import Mathlib.Analysis.Normed.Group.Ultra
+public import Mathlib.Analysis.Normed.Order.Lattice
+public import Mathlib.Analysis.RCLike.Basic
+public import Mathlib.RingTheory.MvPowerSeries.Basic
 
 /-! # Multivariate restricted power series over a normed ring (vendored) -/
+
+@[expose] public section
 
 namespace Finset
 

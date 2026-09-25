@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornC1Assembly
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCoverNormalization
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornC1Assembly
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCoverNormalization
 
 /-!
 # Wedhorn Normalized C1 Assembly
@@ -47,6 +49,8 @@ internally via `RationalCoveringData.insertDenom_normalized`.
   content.
 * Axioms used: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

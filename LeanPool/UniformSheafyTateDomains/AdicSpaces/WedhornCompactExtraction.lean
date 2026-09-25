@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompact
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompact
 
 /-!
 # Wedhorn Compactness Extraction (C1 → finite `mk_S_D`)
@@ -53,6 +55,8 @@ subcover-index `T₀ : Finset K`.
 This is **purely a topological extraction wrapper**: no Lane B content, no
 Cor 8.32, no Jacobson, no T001, no faithful-flatness, no final acyclicity
 hypotheses propagate. -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

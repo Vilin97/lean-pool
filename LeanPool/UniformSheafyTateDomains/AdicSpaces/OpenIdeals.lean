@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.RingTheory.Finiteness.Ideal
-import Mathlib.Topology.Algebra.OpenSubgroup
-import Mathlib.Topology.Algebra.TopologicallyNilpotent
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicSpectrum
+public import Mathlib.RingTheory.Finiteness.Ideal
+public import Mathlib.Topology.Algebra.OpenSubgroup
+public import Mathlib.Topology.Algebra.TopologicallyNilpotent
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicSpectrum
 
 /-!
 # Open Ideals and the Topological Nilradical
@@ -34,6 +36,8 @@ in its radical.
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Lemma 6.6, Remark 7.30(1)
 -/
+
+@[expose] public section
 
 variable {A : Type*} [CommRing A] [TopologicalSpace A]
 

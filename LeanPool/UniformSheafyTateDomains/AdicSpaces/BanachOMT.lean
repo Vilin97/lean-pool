@@ -3,20 +3,22 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Topology.Algebra.IsUniformGroup.Defs
-import Mathlib.Topology.Algebra.IsUniformGroup.Basic
-import Mathlib.Topology.Baire.CompleteMetrizable
-import Mathlib.Topology.Algebra.Group.OpenMapping
-import Mathlib.Topology.Algebra.Group.Pointwise
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Topology.UniformSpace.Cauchy
-import Mathlib.Topology.UniformSpace.UniformEmbedding
+public import Mathlib.Topology.Algebra.IsUniformGroup.Defs
+public import Mathlib.Topology.Algebra.IsUniformGroup.Basic
+public import Mathlib.Topology.Baire.CompleteMetrizable
+public import Mathlib.Topology.Algebra.Group.OpenMapping
+public import Mathlib.Topology.Algebra.Group.Pointwise
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Topology.UniformSpace.Cauchy
+public import Mathlib.Topology.UniformSpace.UniformEmbedding
 
 /-!
 # Banach's open mapping theorem for complete metric topological abelian groups
@@ -79,6 +81,8 @@ This file states the theorem and immediate corollaries. The proof is left as
 Once proved, the result is suitable for upstreaming to Mathlib as
 `Mathlib.Topology.Algebra.Group.OpenMappingCompleteMetric`.
 -/
+
+@[expose] public section
 
 open scoped Pointwise
 

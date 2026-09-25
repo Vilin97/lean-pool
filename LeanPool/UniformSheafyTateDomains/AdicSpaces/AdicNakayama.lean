@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.RingTheory.AdicCompletion.Functoriality
-import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Mathlib.RingTheory.AdicCompletion.Functoriality
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
 
 /-!
 # Topological Nakayama: finiteness from a finite adic quotient
@@ -24,6 +26,8 @@ The consumer instantiates `R = 𝒪_K` (`π`-adically complete), `M = B` a
 noetherian-domain quotient of the integral Tate algebra (`π`-adically
 Hausdorff by Krull intersection), with `B/πB` finite over the residue field.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

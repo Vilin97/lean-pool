@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornC1CoverAssemblyClosure
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornTateAcyclicityFinalClosure
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornC1SigmaImageAlignment
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornC1CoverAssemblyClosure
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornTateAcyclicityFinalClosure
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornC1SigmaImageAlignment
 
 /-!
 # Wedhorn 8.34(ii) — Actual C1 per-call consumer modulo alignment (T064)
@@ -96,6 +98,8 @@ inside T062.
   bivariate-overlap content.
 * No global universal-over-Spa multi-element clearing claim.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

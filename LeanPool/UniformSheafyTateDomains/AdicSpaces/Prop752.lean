@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.RingTheory.Filtration
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Lemma745
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LocalizationTopology
+public import Mathlib.RingTheory.Filtration
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Lemma745
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LocalizationTopology
 
 /-!
 # Proposition 7.52: Exact support via Zorn
@@ -28,6 +30,8 @@ minimization step that produces a valuation in a specific rational open subset.
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Proposition 7.52, §8.1
 -/
+
+@[expose] public section
 
 open ValuationSpectrum PairOfDefinition
 

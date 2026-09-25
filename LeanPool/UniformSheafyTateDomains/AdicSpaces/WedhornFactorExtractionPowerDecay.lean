@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornMultiBranchSubsetInequality
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornMultiDominatingUnit
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornMultiBranchSubsetInequality
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornMultiDominatingUnit
 
 /-!
 # Wedhorn factor-extraction discharger
@@ -74,6 +76,8 @@ file.
 * Imports `WedhornMultiBranchSubsetInequality` (committed `3bb87eb`)
   and `WedhornMultiDominatingUnit` (for `Spv.vle_prod_of_pointwise`).
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

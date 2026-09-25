@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Main
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Main
 
 /-!
 # Comparator solution: [WP] Theorem 8.1 (the weighted-parity example)
@@ -25,6 +27,8 @@ type; the paper's weight `w = id` is spelled `fun k => k` exactly as there
 Numbering: Theorem 8.1 of the current paper revision; the library's docstrings cite
 it as `[WP] thm 6.2` (the revision they were written against).
 -/
+
+@[expose] public section
 
 open WeightedParity ValuationSpectrum TopologicalRing FiniteJetOver
 open scoped NormedField Valued

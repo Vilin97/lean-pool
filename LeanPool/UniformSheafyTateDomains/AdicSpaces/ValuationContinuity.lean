@@ -3,17 +3,19 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AnalyticPoints
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AffinoidRings
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationCoarsening
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationPrimeConvex
-import Mathlib.RingTheory.Valuation.LocalSubring
-import Mathlib.GroupTheory.ArchimedeanDensely
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AnalyticPoints
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AffinoidRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationCoarsening
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationPrimeConvex
+public import Mathlib.RingTheory.Valuation.LocalSubring
+public import Mathlib.GroupTheory.ArchimedeanDensely
 
 /-!
 # Valuation Continuity Infrastructure
@@ -40,6 +42,8 @@ including the domination theorem, coarsening, restriction to convex subgroups
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Lemma 7.44, Lemma 7.45
 -/
+
+@[expose] public section
 
 open Filter Topology
 

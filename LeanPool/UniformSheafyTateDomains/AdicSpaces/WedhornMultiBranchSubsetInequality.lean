@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornDominatingBranchInequality
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizationDenominatorUnit
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornDominatingBranchInequality
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizationDenominatorUnit
 
 /-!
 # Wedhorn multi-branch subset inequality (algebraic core)
@@ -67,6 +69,8 @@ factor-extraction from `∏ T_D` after a separate boundedness argument
   primitives) and `WedhornLocalizationDenominatorUnit` (for
   `not_vle_zero_pow`).
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

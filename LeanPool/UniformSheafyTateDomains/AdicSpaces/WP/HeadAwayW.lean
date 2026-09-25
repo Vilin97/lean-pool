@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.ZeroHeadTate
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Tail
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.ZeroHeadTate
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Tail
 
 /-!
 # Inverting `W` collapses the parity constraint
@@ -23,6 +25,8 @@ universal property of the `W`-localization of the weighted head along the
 support inclusion, giving
 `Localization.Away (WaHead K w N) ≃ Localization.Away (WaHead K 0 N)`.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

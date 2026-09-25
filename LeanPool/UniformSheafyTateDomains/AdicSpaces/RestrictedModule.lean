@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2025. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Formalization project
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
-import Mathlib.Topology.Algebra.Module.Basic
-import Mathlib.Order.Filter.CountablyGenerated
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
+public import Mathlib.Topology.Algebra.Module.Basic
+public import Mathlib.Order.Filter.CountablyGenerated
 
 /-!
 # Restricted Module-valued Power Series M⟨X⟩
@@ -41,6 +43,8 @@ coefficient type.
 The surjection lifting proof uses a diagonal construction over a countable decreasing
 basis of open additive subgroups, requiring `FirstCountableTopology M` and `T2Space M`.
 -/
+
+@[expose] public section
 
 open Filter
 

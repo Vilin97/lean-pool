@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaRationalOpenComparison
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaParameterPerturbation
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativeDescent
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaRationalOpenComparison
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaParameterPerturbation
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativeDescent
 
 /-!
 # Wedhorn Proposition 8.2(2): the `Spa` comparison is a homeomorphism
@@ -49,6 +51,8 @@ subsets* of the two spectra — is delivered in
 `SpaRationalSubsetCorrespondence.lean`
 (`spaPresheafValueRationalSubsetEquiv`, the complete-Tate specialization).
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetFunctoriality
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.TateScalarExtension
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetFunctoriality
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.TateScalarExtension
 
 /-!
 # Evaluation of Tate algebras at points of the closed polydisc
@@ -21,6 +23,8 @@ import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.TateScalarExtension
 Its kernel is a maximal ideal with residue field `L` — the rationalized
 maximal ideals of the scalar-extended Tate algebra.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

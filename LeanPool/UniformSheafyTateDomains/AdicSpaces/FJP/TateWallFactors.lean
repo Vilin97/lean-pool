@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.TateTaylor
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.TateScalarExtension
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.TateNullstellensatz
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.SpectralExtension
-import Mathlib.FieldTheory.Normal.Defs
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.TateTaylor
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.TateScalarExtension
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.TateNullstellensatz
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.SpectralExtension
+public import Mathlib.FieldTheory.Normal.Defs
 
 /-!
 # Identification of the wall factors as point ideals
@@ -24,6 +26,8 @@ polynomials of the generating residues split in `L`, and a root in a domain
 picks out an element of `L`), hence is a point ideal of the closed polydisc
 by the translated-span identification.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

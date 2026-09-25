@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Heads
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.FormalReduced
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Heads
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.FormalReduced
 
 /-!
 # The tail decomposition and the twisted `c₀`-sum ([WP] §6.4)
@@ -35,6 +37,8 @@ twist and injective when `ρ` is regular, and serves both the reducedness theore
 ([WP] thm:parity-rationally-reduced) and the domain property of the chart
 ([WP] prop:weighted-chart-domain-nonuniform).
 -/
+
+@[expose] public section
 
 @[expose] public section
 

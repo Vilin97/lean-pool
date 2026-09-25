@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ContinuousValuations
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicSpectrum
-import Mathlib.Algebra.Ring.Action.Basic
-import Mathlib.GroupTheory.GroupAction.Defs
-import Mathlib.Topology.Algebra.ConstMulAction
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ContinuousValuations
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicSpectrum
+public import Mathlib.Algebra.Ring.Action.Basic
+public import Mathlib.GroupTheory.GroupAction.Defs
+public import Mathlib.Topology.Algebra.ConstMulAction
 
 /-!
 # Group Actions on the Valuation Spectrum
@@ -33,6 +35,8 @@ the subsets `Cont(A)` and `Spa(A, A⁺)`.
 * `ValuationSpectrum.smul_mem_spa` : The `G`-action preserves `Spa(A, A⁺)` membership
   when `A⁺` is `G`-stable.
 -/
+
+@[expose] public section
 
 open ValuationSpectrum
 

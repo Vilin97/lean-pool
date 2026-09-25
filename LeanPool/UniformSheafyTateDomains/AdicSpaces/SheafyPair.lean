@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalBasis
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalBasis
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
 
 /-!
 # Pair-level sheafiness: the rational criterion is the all-open sheaf condition
@@ -39,6 +41,8 @@ refinement by valid rational opens** subordinate to the cover
 Compatibility inputs cross the legacy all-raw-data interface through the R3 bridge
 (`RationalIntersection`).
 -/
+
+@[expose] public section
 
 universe u
 

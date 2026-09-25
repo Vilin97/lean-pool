@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetRings
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.RestrictedGaussAdic
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCechAcyclicity
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.RestrictedGaussAdic
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCechAcyclicity
 
 /-!
 # The comparison vertices 𝓑, 𝓒, 𝓓 are strongly noetherian, hence sheafy
@@ -33,6 +35,8 @@ The payoff instances feed `isSheafy_of_stronglyNoetherian_828b` exactly as in th
 example. Note 𝓑 and 𝓓 are non-reduced; the 828b hypothesis bundle does not require reduced
 or domain, so it applies ([FJP] Lemma 4.2's "possibly nonreduced" is mirrored here).
 -/
+
+@[expose] public section
 
 open Filter Topology
 

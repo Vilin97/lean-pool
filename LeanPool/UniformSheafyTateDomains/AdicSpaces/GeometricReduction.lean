@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentOverlapConsumer
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalRefinement
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StandardCover
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentOverlapConsumer
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StandardCover
 
 /-!
 # Geometric reduction: from Laurent-cover acyclicity to arbitrary-cover acyclicity
@@ -103,6 +105,8 @@ following external dependencies (tracked in `.mathlib-quality/tickets.md`):
 * [Hübner, *Adic spaces* (arXiv 2405.06435), Lemma 3.7, Lemma 3.8]
 * [T. Wedhorn, *Adic Spaces* (2019 lecture notes), Lemma 8.33, Lemma 8.34]
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

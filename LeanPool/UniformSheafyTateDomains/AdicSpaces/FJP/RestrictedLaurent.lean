@@ -3,21 +3,23 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Analysis.Normed.Ring.Ultra
-import Mathlib.Analysis.Normed.Group.Ultra
-import Mathlib.Analysis.Normed.Order.Lattice
-import Mathlib.Topology.Algebra.InfiniteSum.Ring
-import Mathlib.Topology.Algebra.InfiniteSum.Nonarchimedean
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.Data.Real.Pointwise
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramRestrictedNorm
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramRestrictedIso
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ExampleUnitDisc
+public import Mathlib.Analysis.Normed.Ring.Ultra
+public import Mathlib.Analysis.Normed.Group.Ultra
+public import Mathlib.Analysis.Normed.Order.Lattice
+public import Mathlib.Topology.Algebra.InfiniteSum.Ring
+public import Mathlib.Topology.Algebra.InfiniteSum.Nonarchimedean
+public import Mathlib.Analysis.SpecificLimits.Normed
+public import Mathlib.Data.Real.Pointwise
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramRestrictedNorm
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramRestrictedIso
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ExampleUnitDisc
 
 /-!
 # Restricted Laurent series `R⟨W, W⁻¹⟩` (finite-jet pinching, layer 𝓛)
@@ -36,6 +38,8 @@ norm is attained, and `W` is a norm-one unit.
 The nonnegative-support subring recovers `K⟨W⟩` (`PowerSeries.Restricted K 1`) isometrically;
 this is the inclusion `k⟨W⟩ ⊂ L` used throughout [FJP] §2.
 -/
+
+@[expose] public section
 
 open Filter Topology
 open scoped NNReal

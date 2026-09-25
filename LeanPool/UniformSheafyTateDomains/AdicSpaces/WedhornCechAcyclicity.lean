@@ -3,21 +3,25 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.CechCohomology
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinementCore
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAcyclicityResiduals
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AuditCleanWrappers
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompactNoHArch
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Wedhorn828
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativePieceKeystone
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornBanachTheorem
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.CechCohomology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinementCore
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.TateAcyclicityResiduals
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AuditCleanWrappers
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompactNoHArch
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Wedhorn828
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RelativePieceKeystone
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornBanachTheorem
+
+@[expose] public section
 
 -- Faithfulness scoping (2026-07-03): within THIS file — the 8.28(b) assembly — the
 -- sorry-carrying `HasLocLiftPowerBounded` instances must not be synthesized; every

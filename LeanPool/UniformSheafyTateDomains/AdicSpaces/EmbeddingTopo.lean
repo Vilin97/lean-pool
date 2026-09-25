@@ -3,14 +3,16 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinementTree
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinement
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentRefinementTree
 
 /-!
 # Topological embedding boundary for `IsSheafy.embedding`
@@ -47,6 +49,8 @@ alone.
   ingredient (1).
 * `docs/plans/2026-04-08-wedhorn-vs-zavyalov.md`.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

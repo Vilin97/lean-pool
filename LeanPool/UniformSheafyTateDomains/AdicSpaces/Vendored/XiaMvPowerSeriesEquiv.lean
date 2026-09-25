@@ -3,6 +3,8 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026 Bingyu Xia. All rights reserved.
@@ -13,18 +15,20 @@ VENDORED into AINTLIB (2026-07-04) from WilliamCoram/PhD (PhD/Bryce/Basic.lean +
 PhD/Bryce/Equiv.lean), pending its mathlib PR. Adapted: imports inlined,
 module-system annotations stripped, fitted to this workspace's mathlib pin.
 -/
-import Mathlib.RingTheory.MvPowerSeries.Basic
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.RingTheory.AdicCompletion.Algebra
-import Mathlib.RingTheory.MvPolynomial.Ideal
-import Mathlib.RingTheory.MvPowerSeries.Trunc
-import Mathlib.RingTheory.PowerSeries.Trunc
-import Mathlib.RingTheory.MvPowerSeries.Rename
+public import Mathlib.RingTheory.MvPowerSeries.Basic
+public import Mathlib.Algebra.Lie.OfAssociative
+public import Mathlib.RingTheory.AdicCompletion.Algebra
+public import Mathlib.RingTheory.MvPolynomial.Ideal
+public import Mathlib.RingTheory.MvPowerSeries.Trunc
+public import Mathlib.RingTheory.PowerSeries.Trunc
+public import Mathlib.RingTheory.MvPowerSeries.Rename
 
 /-! # `MvPowerSeries.map` lemmas and the equivalence zoo (vendored)
 
 Culminates in `MvPowerSeries.finSuccEquiv` — the power-series Fubini needed for the
 unit-disc sheafiness example. -/
+
+@[expose] public section
 
 
 open Finset (antidiagonal mem_antidiagonal)

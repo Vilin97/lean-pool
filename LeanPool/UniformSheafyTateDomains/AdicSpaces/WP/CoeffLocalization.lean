@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Tail
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Perturbation
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Evaluation
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.KoszulStrictClosed
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetFunctoriality
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Tail
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Perturbation
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Evaluation
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.KoszulStrictClosed
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetFunctoriality
 
 /-!
 # Coefficientwise localization ([WP] §6.4, prop:coefficientwise-localization)
@@ -37,6 +39,8 @@ twisted `c₀`-sum `TailC0` of `WP/Tail.lean` ([WP] eq:c0-quotient).
 small perturbation lemma: EVERY rational localization of `𝒜` is a `TailC0` over a
 head localization (`nonempty_headModelData`).
 -/
+
+@[expose] public section
 
 @[expose] public section
 

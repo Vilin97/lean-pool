@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPointwiseSigmaProductClearing
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornDirectUpperBoundSupplierFromPointwiseClearing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornPointwiseSigmaProductClearing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornDirectUpperBoundSupplierFromPointwiseClearing
 
 /-!
 # Wedhorn 8.34(ii) — Pointwise clearing supplier from σ-power data (T079)
@@ -108,6 +110,8 @@ intermediate at every call site.
 * No final Tate acyclicity hypothesis additions. No edits to
   Primary's final threading file or Secondary's T076 file.
 -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 

@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.XiaMvPowerSeriesEquiv
-import Mathlib.RingTheory.MvPowerSeries.NoZeroDivisors
-import Mathlib.RingTheory.Nilpotent.Lemmas
-import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.XiaMvPowerSeriesEquiv
+public import Mathlib.RingTheory.MvPowerSeries.NoZeroDivisors
+public import Mathlib.RingTheory.Nilpotent.Lemmas
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
 
 /-!
 # Formal power series over a reduced ring ([WP] lem:formal-series-reduced)
@@ -22,6 +24,8 @@ is reduced, for an ARBITRARY index `J` — via the injection of a reduced ring i
 the product of its prime quotients, the componentwise `MvPowerSeries.map` product
 decomposition, and mathlib's `NoZeroDivisors (MvPowerSeries σ R)`.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

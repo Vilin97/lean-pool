@@ -3,12 +3,14 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Presheaf
 
 /-!
 # Rational stable reducedness — the definition ([WP] def:rationally-stably-reduced)
@@ -18,6 +20,8 @@ localization is reduced". Split out of `WP/Reduced.lean` so the definition is
 importable without that file's proofs (definition layer / proving layer hygiene,
 as for the rest of the weighted-parity example).
 -/
+
+@[expose] public section
 
 @[expose] public section
 

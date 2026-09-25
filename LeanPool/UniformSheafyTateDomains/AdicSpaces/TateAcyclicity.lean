@@ -3,18 +3,20 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentCoverExact
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FlatnessResults
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.CechCohomology
-import Mathlib.AlgebraicGeometry.StructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.HuberRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RestrictedPowerSeries
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructureSheaf
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LaurentCoverExact
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FlatnessResults
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.CechCohomology
+public import Mathlib.AlgebraicGeometry.StructureSheaf
 
 /-!
 # Tate Acyclicity (Wedhorn Theorem 8.28(b))
@@ -76,6 +78,8 @@ The remaining gaps for the general case are topological:
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Definition 6.36, Theorem 8.28(b)
 -/
+
+@[expose] public section
 
 open ValuationSpectrum
 

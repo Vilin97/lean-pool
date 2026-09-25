@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafTateStructure
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpvAITopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafTateStructure
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpvAITopology
 
 /-!
 # The restriction-map existence theorem at full Huber generality (Wedhorn Prop 7.52 → 8.2)
@@ -33,6 +35,8 @@ Contents (M8, plan artifact `decomposition-m8-huber-loclift.md`):
 * `locLift_divByS_isPowerBounded_huber` (Wedhorn 7.52(1)/7.18 at `𝒪(V)`);
 * `hasLocLiftPowerBounded_huber` + the priority-1150 instance.
 -/
+
+@[expose] public section
 
 open ValuationSpectrum
 

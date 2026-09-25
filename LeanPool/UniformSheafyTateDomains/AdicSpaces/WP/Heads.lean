@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Algebra
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFNoetherian
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetNoetherianVertices
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyRing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WP.Algebra
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.CDVFNoetherian
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetNoetherianVertices
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SheafyRing
 
 /-!
 # The affinoid heads `𝒜_N` ([WP] §6.1, lem:finite-stage-normal-form)
@@ -31,6 +33,8 @@ noetherianity alone, per the prior-B2 log); head sheafiness via Wedhorn 8.28(b)
 (`isSheafyFor_of_stronglyNoetherianTate` / `isSheafy_of_stronglyNoetherian_828b`);
 density of the union of heads ([WP] eq:A-completion-of-heads).
 -/
+
+@[expose] public section
 
 @[expose] public section
 

@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaRationalOpenHomeomorph
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalIntersection
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalBasis
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompactNoHArch
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafTateStructure
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaRationalOpenHomeomorph
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalIntersection
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalBasis
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SpaCompactNoHArch
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafTateStructure
 
 /-!
 # Wedhorn Proposition 8.2(2): the bijection of valid rational subsets
@@ -48,6 +50,8 @@ valid rational subsets of `Spa A⟨T/s⟩` and the valid rational subsets of
 **Scope honesty**: stated for a complete Tate ring `A` — the complete-Tate
 specialization of Proposition 8.2(2), not the full arbitrary-affinoid theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

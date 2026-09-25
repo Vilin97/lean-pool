@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PerfectoidRing
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SeminormalRing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PerfectoidRing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SeminormalRing
 
 /-!
 # Nonarchimedean Scottish Book — Problem 20
@@ -36,6 +38,8 @@ We state: given a perfectoid ring `A`, a finite `A`-algebra `B` that is seminorm
 completion `B̂` of `B`, is `B̂` perfectoid? The completion and topology on `B` are left
 existential since the seminormalization construction requires additional infrastructure.
 -/
+
+@[expose] public section
 
 open TopologicalRing ValuationSpectrum
 

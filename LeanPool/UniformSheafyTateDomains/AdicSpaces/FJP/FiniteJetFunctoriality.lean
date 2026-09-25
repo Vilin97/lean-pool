@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetStrictLocalization
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetUniformDomain
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FaithfulLocLift
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafFunctoriality
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetStrictLocalization
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.FiniteJetUniformDomain
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FaithfulLocLift
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PresheafFunctoriality
 
 /-!
 # Functoriality layer: pushing rational data along the square, graph bridges, and
@@ -38,6 +40,8 @@ This file supplies what the survey identified as the missing covariant layer:
 * `HasLocLiftPowerBounded 𝓐`, derived **componentwise through the Milnor square** from the
   vertices' instances (the project discharger is noetherian-bound and 𝓐 is not noetherian).
 -/
+
+@[expose] public section
 
 open Filter Topology
 

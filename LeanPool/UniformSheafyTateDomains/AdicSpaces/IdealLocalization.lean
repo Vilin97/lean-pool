@@ -3,15 +3,17 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LocalizationTopology
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.IdealClosedness
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Prop752
-import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LocalizationTopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.IdealClosedness
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Prop752
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
 
 /-!
 # Ideal Closedness Transfer from `locSubring` to `Localization.Away s`
@@ -54,6 +56,8 @@ case, via `Ideal.isClosed_of_le_jacobson` + `locSubring_topology_eq_adic`).
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], §8.1, §8.2
 * `.mathlib-quality/tickets.md` T-IDEAL-2 / S-IDEAL-LOC
 -/
+
+@[expose] public section
 
 open Topology Filter
 

@@ -3,16 +3,18 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.TateWallFactors
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.SemilocalFibre
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.FlatCompletion
-import Mathlib.FieldTheory.Normal.Closure
-import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FJP.TateWallFactors
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.SemilocalFibre
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.FlatCompletion
+public import Mathlib.FieldTheory.Normal.Closure
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
 
 /-!
 # Completed local rings of Tate algebras at maximal ideals are reduced
@@ -26,6 +28,8 @@ injective into a product of polynomial adic completions — which are domains.
 The theorem is stated over an abstract such `L`; the normal closure
 instantiation is a corollary.
 -/
+
+@[expose] public section
 
 @[expose] public section
 

@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicSpectrum
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AffinoidRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicSpectrum
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AffinoidRings
 
 /-!
 # Parameter perturbation for rational subsets (Kedlaya Ex. 1.2.2 / Huber's approximation)
@@ -53,6 +55,8 @@ Kedlaya, *Sheaves, stacks, and shtukas* (AWS 2017), Exercise 1.2.2; Wedhorn,
 *Adic Spaces*, Proposition 7.48 (deferred there to [Hu2] Prop. 3.9); the
 uniform bound is the standard "absorb the spanning coefficients" argument.
 -/
+
+@[expose] public section
 
 noncomputable section
 

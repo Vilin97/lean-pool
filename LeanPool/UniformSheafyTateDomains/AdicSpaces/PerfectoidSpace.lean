@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.PerfectoidRing
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructurePresheafBundled
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.PerfectoidRing
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.StructurePresheafBundled
 
 /-!
 # Perfectoid space *presentations*
@@ -40,6 +42,8 @@ and valuations) awaits the genuine `𝒱`-layer.
 * [P. Scholze, *Perfectoid Spaces*][scholze2012perfectoid], Definition 3.19
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], §8
 -/
+
+@[expose] public section
 
 open TopologicalRing ValuationSpectrum
 

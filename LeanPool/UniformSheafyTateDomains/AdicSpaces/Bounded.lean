@@ -3,22 +3,24 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Topology.Algebra.Ring.Basic
-import Mathlib.Topology.Algebra.Group.Pointwise
-import Mathlib.Topology.Algebra.TopologicallyNilpotent
-import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
-import Mathlib.RingTheory.Polynomial.Basic
-import Mathlib.RingTheory.Polynomial.Subring
-import Mathlib.Data.Nat.Choose.Sum
-import Mathlib.Topology.Algebra.LinearTopology
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.RingTheory.Ideal.Quotient.Operations
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.GeometricSeries
+public import Mathlib.Topology.Algebra.Ring.Basic
+public import Mathlib.Topology.Algebra.Group.Pointwise
+public import Mathlib.Topology.Algebra.TopologicallyNilpotent
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
+public import Mathlib.RingTheory.Polynomial.Basic
+public import Mathlib.RingTheory.Polynomial.Subring
+public import Mathlib.Data.Nat.Choose.Sum
+public import Mathlib.Topology.Algebra.LinearTopology
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.GeometricSeries
 
 /-!
 # Bounded Subsets and Power-Bounded Elements
@@ -61,6 +63,8 @@ elements** for topological rings, following §5 of [Wedhorn, *Adic Spaces*].
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Definition 5.25, Definition 5.27,
   Proposition 5.30
 -/
+
+@[expose] public section
 
 open Filter Topology Pointwise Polynomial
 

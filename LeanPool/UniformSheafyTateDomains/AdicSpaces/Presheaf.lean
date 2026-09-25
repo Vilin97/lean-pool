@@ -3,24 +3,26 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.RingTheory.Localization.Away.Basic
-import Mathlib.RingTheory.Noetherian.Nilpotent
-import Mathlib.RingTheory.Valuation.LocalSubring
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicCompletionBridge
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.AffinoidRings
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.CompleteTopCommRingCat
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.LocalizationTopology
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.OrderedGroupConvex
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Prop752
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalSubsets
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.Lemma745
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationContinuity
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizationContinuity
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Mathlib.RingTheory.Noetherian.Nilpotent
+public import Mathlib.RingTheory.Valuation.LocalSubring
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AdicCompletionBridge
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.AffinoidRings
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.CompleteTopCommRingCat
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.LocalizationTopology
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.OrderedGroupConvex
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Prop752
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.RationalSubsets
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.Lemma745
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.ValuationContinuity
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornLocalizationContinuity
 
 /-!
 # The Presheaf on the Adic Spectrum
@@ -51,6 +53,8 @@ localization topology from `LocalizationTopology.lean`.
 
 * [T. Wedhorn, *Adic Spaces*][wedhorn2019adic], Section 8.1, Remark 8.3
 -/
+
+@[expose] public section
 
 open ValuationSpectrum
 

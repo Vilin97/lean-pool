@@ -3,13 +3,15 @@ Copyright (c) 2026 Christopher Birkbeck, Alex Torzewski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Birkbeck, Alex Torzewski
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCompactExtraction
-import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornStrengthenedC1
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornCompactExtraction
+public import LeanPool.UniformSheafyTateDomains.AdicSpaces.WedhornStrengthenedC1
 
 /-!
 # Wedhorn Strengthened Compact Extraction (C1 + non-zero clause → finite `mk_S_D`)
@@ -60,6 +62,8 @@ the non-zero clause for every `v` in the chosen plus-piece.
   `WedhornStrengthenedC1` (for the strengthened C1 supplier predicate
   documentation; the compact-extraction theorem here takes the
   strengthened pointwise input directly without the predicate). -/
+
+@[expose] public section
 
 namespace ValuationSpectrum
 
