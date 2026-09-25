@@ -624,6 +624,7 @@ theorem evenPushOpen_covers {k ℓ : ℕ}
         exact hfj.symm
       · rw [dite_eq_right hfi, dite_eq_right hfj]
 
+open scoped Classical in
 include hij hc' hc hni in
 /-- The constrained lifted even sum reindexes along the open
 push. -/

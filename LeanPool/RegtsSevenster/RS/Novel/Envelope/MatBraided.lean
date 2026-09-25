@@ -81,7 +81,8 @@ open scoped Classical in
 section Braided
 
 open scoped Classical in
-private def matBraidHom [Category.{v} C] [Preadditive C] [MonoidalCategory C]
+/-- The matrix morphism that swaps tensor factors using the component braidings. -/
+def matBraidHom [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [BraidedCategory C]
     (M N : Mat_ C) : (M ⊗ N : Mat_ C) ⟶ (N ⊗ M : Mat_ C) :=
   fun (i₁, i₂) (j₁, j₂) =>
@@ -92,7 +93,8 @@ private def matBraidHom [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     else 0
 
 open scoped Classical in
-private def matBraidInv [Category.{v} C] [Preadditive C] [MonoidalCategory C]
+/-- The inverse matrix morphism that swaps tensor factors by inverse braidings. -/
+def matBraidInv [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [BraidedCategory C]
     (M N : Mat_ C) : (N ⊗ M : Mat_ C) ⟶ (M ⊗ N : Mat_ C) :=
   fun (j₁, j₂) (i₁, i₂) =>
@@ -173,14 +175,15 @@ private theorem matBraid_inv_hom
     · intro b _ hb; simp [show ¬(j₁ = b) from Ne.symm hb]
   · intro b _ hb; simp [show ¬(j₂ = b) from Ne.symm hb]
 
-private def matBraidIso [Category.{v} C] [Preadditive C] [MonoidalCategory C]
+/-- The braiding isomorphism on matrix objects induced by the component braidings. -/
+def matBraidIso [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [BraidedCategory C]
     (M N : Mat_ C) : (M ⊗ N : Mat_ C) ≅ (N ⊗ M : Mat_ C)
   where
   hom := matBraidHom M N
   inv := matBraidInv M N
-  hom_inv_id := matBraid_hom_inv M N
-  inv_hom_id := matBraid_inv_hom M N
+  hom_inv_id := by exact matBraid_hom_inv M N
+  inv_hom_id := by exact matBraid_inv_hom M N
 
 /-! ### Braiding naturality -/
 
@@ -434,10 +437,10 @@ braidings, reindexed by the swap of index products. -/
 instance matBraided [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [MonoidalPreadditive C] [BraidedCategory C] : BraidedCategory (Mat_ C) where
   braiding := matBraidIso
-  braiding_naturality_right := mat_braiding_naturality_right
-  braiding_naturality_left := mat_braiding_naturality_left
-  hexagon_forward := mat_hexagon_forward
-  hexagon_reverse := mat_hexagon_reverse
+  braiding_naturality_right := by exact mat_braiding_naturality_right
+  braiding_naturality_left := by exact mat_braiding_naturality_left
+  hexagon_forward := by exact mat_hexagon_forward
+  hexagon_reverse := by exact mat_hexagon_reverse
 
 end Braided
 

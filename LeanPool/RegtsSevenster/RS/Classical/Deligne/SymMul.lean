@@ -668,8 +668,9 @@ noncomputable def modPowMulStage
     modPow A X m ⊗ tensorPow D X n ⟶ modPow A X (m + n) :=
   modPowWhiskerRightDesc A X m (tensorPow D X n)
     ((tensorPowConcat X m n).hom ≫ modPowπ A X (m + n))
-    (legs_whiskerRight_cond A X n _
-      (fun a b hab => modPowMul_rel_fst A X n a b hab))
+    (by
+      exact legs_whiskerRight_cond A X n _
+        (fun a b hab => modPowMul_rel_fst A X n a b hab))
 
 /-- Defining equation of the first stage. -/
 @[reassoc (attr := simp)]

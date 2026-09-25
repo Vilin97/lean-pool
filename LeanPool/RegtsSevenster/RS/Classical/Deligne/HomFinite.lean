@@ -55,7 +55,7 @@ section ScalarEnd
 variable {A : Type u}
 
 /-- Scaling the identity of the tensor unit, as a ℂ-linear map. -/
-private def unitScalarMap
+def unitScalarMap
     [Category.{v} A] [Preadditive A] [Linear ℂ A] [MonoidalCategory A] :
     ℂ →ₗ[ℂ] (𝟙_ A ⟶ 𝟙_ A) where
   toFun c := c • 𝟙 (𝟙_ A)

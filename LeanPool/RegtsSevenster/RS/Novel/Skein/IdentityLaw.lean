@@ -464,19 +464,22 @@ theorem interfaceStepEquiv_eval_inr_above (s t u : ℕ) (j : ℕ)
 
 /-! ### The stage step equivalence -/
 
-private abbrev baseFragment (t t' u : ℕ) (ht : t' + 1 ≤ t)
+/-- The relabelled strand-fragment union before the next left identity glue. -/
+abbrev baseFragment (t t' u : ℕ) (ht : t' + 1 ≤ t)
     (F : Fragment (Fin (t + u))) :=
   ((strandBundle (t' + 1)).disjUnion F).relabel (stageEquiv t (t' + 1) u ht)
 
-private abbrev targetFragment (t t' u : ℕ) (ht' : t' ≤ t)
+/-- The relabelled strand-fragment union at the target stage of identity descent. -/
+abbrev targetFragment (t t' u : ℕ) (ht' : t' ≤ t)
     (F : Fragment (Fin (t + u))) :=
   ((strandBundle t').disjUnion F).relabel (stageEquiv t t' u ht')
 
-private noncomputable abbrev sourceFragment (t t' u : ℕ) (ht : t' + 1 ≤ t)
+/-- The source fragment obtained by one open glue in the left identity descent. -/
+noncomputable abbrev sourceFragment (t t' u : ℕ) (ht : t' + 1 ≤ t)
     (F : Fragment (Fin (t + u))) :=
   ((baseFragment t t' u ht F).gluePairOpen
     (Sum.inl ⟨t + t', by omega⟩) (Sum.inr ⟨t', by omega⟩)
-    (by simp) (stageStep_hopen t t' u ht F)).relabel (interfaceStepEquiv t t' u)
+    (by simp) (by exact stageStep_hopen t t' u ht F)).relabel (interfaceStepEquiv t t' u)
 
 -- Raised budget: the four equivalence fields are checked against
 -- the glued fragment at once, each on both label halves.
@@ -996,7 +999,7 @@ private theorem stageStep_pairing (t t' u : ℕ) (ht : t' + 1 ≤ t)
 /-- The descent step: after one open glue (at the `t'`-th interface
 pair), the resulting fragment is equivalent to the stage-`t'`
 disjoint union relabelled by the stage-`t'` equivalence. -/
-private noncomputable def stageStepEquiv (t t' u : ℕ) (ht : t' + 1 ≤ t)
+noncomputable def stageStepEquiv (t t' u : ℕ) (ht : t' + 1 ≤ t)
     (F : Fragment (Fin (t + u))) :
     (sourceFragment t t' u ht F).Equiv (targetFragment t t' u (by omega) F)
       where
@@ -1008,7 +1011,7 @@ private noncomputable def stageStepEquiv (t t' u : ℕ) (ht : t' + 1 ≤ t)
     rcases fval with ⟨⟨k, hk⟩, b⟩ | g
     · exact stageStep_attach_inl t t' u ht F k hk b hne
     · exact stageStep_attach_inr t t' u ht F g hne
-  pairing_comm := stageStep_pairing t t' u ht F
+  pairing_comm := by exact stageStep_pairing t t' u ht F
 
 /-- The stage equivalence at `t' = t` acts as the identity: every
 element is mapped to itself. -/
@@ -1046,12 +1049,12 @@ def Fragment.Equiv.relabelPointwiseId (W : Fragment α) (e : α ≃ α)
 
 /-- In the base fragment, the glue is always open, so `gluePair`
 coincides with `gluePairOpen`. -/
-private theorem baseFragment_gluePair_eq (t t' u : ℕ) (ht : t' + 1 ≤ t)
+theorem baseFragment_gluePair_eq (t t' u : ℕ) (ht : t' + 1 ≤ t)
     (F : Fragment (Fin (t + u))) :
     (baseFragment t t' u ht F).gluePair (Sum.inl ⟨t + t', by omega⟩)
       (Sum.inr ⟨t', by omega⟩) (by simp) =
     (baseFragment t t' u ht F).gluePairOpen (Sum.inl ⟨t + t', by omega⟩)
-      (Sum.inr ⟨t', by omega⟩) (by simp) (stageStep_hopen t t' u ht F) := by
+      (Sum.inr ⟨t', by omega⟩) (by simp) (by exact stageStep_hopen t t' u ht F) := by
   unfold Fragment.gluePair
   exact dite_eq_right (stageStep_hopen t t' u ht F)
 
@@ -1059,7 +1062,7 @@ private theorem baseFragment_gluePair_eq (t t' u : ℕ) (ht : t' + 1 ≤ t)
 down to zero, with the stage-`t'` fragment, yields a result
 equivalent to iterating from stage `t` on the original strand/F
 union. -/
-private noncomputable def glueInterface_strandBundle_desc
+noncomputable def glueInterfaceStrandBundleDescent
     (t u : ℕ) (F : Fragment (Fin (t + u))) :
     ∀ (t' : ℕ) (ht' : t' ≤ t),
     (glueInterface t t u ((strandBundle t).disjUnion F)).Equiv
@@ -1074,7 +1077,7 @@ private noncomputable def glueInterface_strandBundle_desc
           (stageEquiv_self _ u)).symm)
     · -- Step: t' < t, use stageStepEquiv to descend one level
       have ht'_lt : t' + 1 ≤ t := by omega
-      have ih := glueInterface_strandBundle_desc t u F (t' + 1) ht'_lt
+      have ih := glueInterfaceStrandBundleDescent t u F (t' + 1) ht'_lt
       -- The IH gives equivalence to glueInterface at stage t' + 1.
       -- Unfolding glueInterface at t'+1 applies one gluePair + relabel.
       -- stageStepEquiv shows the result is equivalent to stage t'.
@@ -1095,7 +1098,7 @@ noncomputable def composeStrandBundleLeft (t u : ℕ)
     (F : Fragment (Fin (t + u))) :
     ((strandBundle t).compose F).Equiv F :=
   (Fragment.Equiv.relabelCongr
-    (glueInterface_strandBundle_desc t u F 0 (Nat.zero_le t))
+    (glueInterfaceStrandBundleDescent t u F 0 (Nat.zero_le t))
       finSumFinEquiv).trans
     (stageZeroEquiv t u F)
 

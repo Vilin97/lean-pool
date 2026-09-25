@@ -120,13 +120,13 @@ noncomputable def restrictHead (μ : YoungDiagram) {k : ℕ}
     (σ : Equiv.Perm (Fin k))
     (hfix : ∀ i : Fin k, μ.rowLens.length ≤ (i : ℕ) → σ i = i) :
     Equiv.Perm (Fin μ.rowLens.length) where
-  toFun j := ⟨(σ (Fin.castLE hk j) : ℕ), head_maps_head μ hk σ hfix j⟩
+  toFun j := ⟨(σ (Fin.castLE hk j) : ℕ), by exact head_maps_head μ hk σ hfix j⟩
   invFun j := ⟨(σ⁻¹ (Fin.castLE hk j) : ℕ),
-    head_maps_head μ hk σ⁻¹ (fun i hi => by
+    by exact (head_maps_head μ hk σ⁻¹ (fun i hi => by
       have h1 := hfix i hi
       change σ.symm i = i
       rw [Equiv.symm_apply_eq]
-      exact h1.symm) j⟩
+      exact h1.symm) j)⟩
   left_inv j := by
     ext; simp [Fin.val_castLE]
   right_inv j := by

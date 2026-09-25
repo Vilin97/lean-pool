@@ -47,7 +47,8 @@ def dataEmbedding {k ℓ K L : ℕ} (e : MixedColourEmbedding k ℓ K L) :
       (Multiset.map_injective e.even.injective (congrArg Prod.fst h))
       (Finset.map_injective e.odd.toEmbedding (congrArg Prod.snd h))
 
-private def oddInclusion {ℓ L : ℕ} (h : ℓ ≤ L)
+/-- Preserve first-half odd colours and shift their partners to the enlarged second half. -/
+def oddInclusion {ℓ L : ℕ} (h : ℓ ≤ L)
     (c : Fin (2 * ℓ)) : Fin (2 * L) :=
   if hc : c.val < ℓ then ⟨c.val, by omega⟩
   else ⟨c.val - ℓ + L, by omega⟩
@@ -67,7 +68,7 @@ def ofLE {k ℓ K L : ℕ} (hk : k ≤ K) (hℓ : ℓ ≤ L) :
     MixedColourEmbedding k ℓ K L where
   even := Fin.castLEEmb hk
   odd := OrderEmbedding.ofStrictMono (oddInclusion hℓ)
-    (oddInclusion_strictMono hℓ)
+    (by exact oddInclusion_strictMono hℓ)
   partner_eq := by
     intro c
     change oddInclusion hℓ (oddPartner ℓ c) =

@@ -74,7 +74,7 @@ is all each of them has to compute.
 `{i, j}` and then `{k, l}` nests the four exclusions one way, and
 removing `{k, l}` first nests them the other way.  The swap is the
 identity on the underlying flag of `W`. -/
-private def doubleSurvivingSwap (W : Fragment α) {i j k l : α}
+def doubleSurvivingSwap (W : Fragment α) {i j k l : α}
     (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l) :
     {f : SurvivingFlag W i j //
         f ≠ glueBoundaryFlag W i j ⟨k, hik.symm, hjk.symm⟩ ∧
@@ -208,7 +208,7 @@ private theorem closedClosed_second_kl
 /-- Configuration (4): commutativity when both `{i, j}` and
 `{k, l}` are edges of `W`.  Both glues are closed in both orders,
 giving circles `W.circles + 2` with the pairing restricted. -/
-private def closedClosed_equiv [DecidableEq α]
+def closedClosedEquiv [DecidableEq α]
     (W : Fragment α) {i j k l : α}
     (_hij : i ≠ j) (_hkl : k ≠ l)
     (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l)
@@ -216,10 +216,10 @@ private def closedClosed_equiv [DecidableEq α]
     (hclosed_kl : W.pairing (W.boundaryFlag k) = W.boundaryFlag l) :
     ((W.gluePairClosed i j hclosed_ij).gluePairClosed
       ⟨k, hik.symm, hjk.symm⟩ ⟨l, hil.symm, hjl.symm⟩
-      (closedClosed_second_ij W hik hil hjk hjl hclosed_ij hclosed_kl)).Equiv
+      (by exact (closedClosed_second_ij W hik hil hjk hjl hclosed_ij hclosed_kl))).Equiv
     (((W.gluePairClosed k l hclosed_kl).gluePairClosed
       ⟨i, hik, hil⟩ ⟨j, hjk, hjl⟩
-      (closedClosed_second_kl W hik hil hjk hjl hclosed_ij hclosed_kl)).relabel
+      (by exact (closedClosed_second_kl W hik hil hjk hjl hclosed_ij hclosed_kl))).relabel
         (swapLabelEquiv hik hil hjk hjl).symm) where
   flagEquiv := by exact doubleSurvivingSwap W hik hil hjk hjl
   vertexEquiv := _root_.Equiv.refl W.Vertex
@@ -678,7 +678,7 @@ private theorem openOpen_disjoint_equiv_attach_comm
 are open (not edges) and disjoint (no cross-edges between the two
 pairs). Both glues are open in both orders, giving circles `W.circles`
 with a double-rewire that commutes. -/
-private def openOpen_disjoint_equiv [DecidableEq α]
+def openOpenDisjointEquiv [DecidableEq α]
     (W : Fragment α) {i j k l : α}
     (hij : i ≠ j) (hkl : k ≠ l)
     (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l)
@@ -691,19 +691,21 @@ private def openOpen_disjoint_equiv [DecidableEq α]
     ((W.gluePairOpen i j hij hopen_ij).gluePairOpen
       ⟨k, hik.symm, hjk.symm⟩ ⟨l, hil.symm, hjl.symm⟩
       (fun h => hkl (congrArg Subtype.val h))
-      (openOpen_second_open_ij W hij hik hil hjk hjl
-        hopen_ij hopen_kl hfar_ik hfar_jk)).Equiv
+      (by exact (openOpen_second_open_ij W hij hik hil hjk hjl
+        hopen_ij hopen_kl hfar_ik hfar_jk))).Equiv
     (((W.gluePairOpen k l hkl hopen_kl).gluePairOpen
       ⟨i, hik, hil⟩ ⟨j, hjk, hjl⟩
       (fun h => hij (congrArg Subtype.val h))
-      (openOpen_second_open_kl W hkl hik hil hjk hjl
-        hopen_ij hopen_kl hfar_ik hfar_il)).relabel
+      (by exact (openOpen_second_open_kl W hkl hik hil hjk hjl
+        hopen_ij hopen_kl hfar_ik hfar_il))).relabel
         (swapLabelEquiv hik hil hjk hjl).symm) where
   flagEquiv := by exact doubleSurvivingSwap W hik hil hjk hjl
   vertexEquiv := _root_.Equiv.refl W.Vertex
-  attach_comm := openOpen_disjoint_equiv_attach_comm W hij hkl hik hil hjk hjl hopen_ij
+  attach_comm := by
+    exact openOpen_disjoint_equiv_attach_comm W hij hkl hik hil hjk hjl hopen_ij
       hopen_kl hfar_ik hfar_il hfar_jk
-  pairing_comm := openOpen_disjoint_equiv_pairing_comm W hij hkl hik hil hjk hjl hopen_ij
+  pairing_comm := by
+    exact openOpen_disjoint_equiv_pairing_comm W hij hkl hik hil hjk hjl hopen_ij
       hopen_kl hfar_ik hfar_il hfar_jk hfar_jl
   circles_eq := rfl
 
@@ -746,7 +748,7 @@ private theorem closedOpen_second_closed
 /-- Configuration (1): commutativity when `{i, j}` is an edge and
 `{k, l}` is not.  The ij-first order is closed then open; the kl-first
 order is open then closed; both give circles `W.circles + 1`. -/
-private def closedOpen_equiv [DecidableEq α]
+def closedOpenEquiv [DecidableEq α]
     (W : Fragment α) {i j k l : α}
     (_hij : i ≠ j) (hkl : k ≠ l)
     (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l)
@@ -755,11 +757,11 @@ private def closedOpen_equiv [DecidableEq α]
     ((W.gluePairClosed i j hclosed_ij).gluePairOpen
       ⟨k, hik.symm, hjk.symm⟩ ⟨l, hil.symm, hjl.symm⟩
       (fun h => hkl (congrArg Subtype.val h))
-      (closedOpen_second_open W hik hil hjk hjl hclosed_ij hopen_kl)).Equiv
+      (by exact (closedOpen_second_open W hik hil hjk hjl hclosed_ij hopen_kl))).Equiv
     (((W.gluePairOpen k l hkl hopen_kl).gluePairClosed
       ⟨i, hik, hil⟩ ⟨j, hjk, hjl⟩
-      (closedOpen_second_closed W hkl hik hil hjk hjl hclosed_ij
-        hopen_kl)).relabel
+      (by exact (closedOpen_second_closed W hkl hik hil hjk hjl hclosed_ij
+        hopen_kl))).relabel
         (swapLabelEquiv hik hil hjk hjl).symm) where
   flagEquiv := by exact doubleSurvivingSwap W hik hil hjk hjl
   vertexEquiv := _root_.Equiv.refl W.Vertex
@@ -878,7 +880,7 @@ private theorem openClosed_second_closed
 /-- Configuration (1'): commutativity when `{k, l}` is an edge and
 `{i, j}` is not.  The ij-first order is open then closed; the kl-first
 order is closed then open; both give circles `W.circles + 1`. -/
-private def openClosed_equiv [DecidableEq α]
+def openClosedEquiv [DecidableEq α]
     (W : Fragment α) {i j k l : α}
     (hij : i ≠ j) (_hkl : k ≠ l)
     (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l)
@@ -886,12 +888,12 @@ private def openClosed_equiv [DecidableEq α]
     (hclosed_kl : W.pairing (W.boundaryFlag k) = W.boundaryFlag l) :
     ((W.gluePairOpen i j hij hopen_ij).gluePairClosed
       ⟨k, hik.symm, hjk.symm⟩ ⟨l, hil.symm, hjl.symm⟩
-      (openClosed_second_closed W hij hik hil hjk hjl hopen_ij
-        hclosed_kl)).Equiv
+      (by exact (openClosed_second_closed W hij hik hil hjk hjl hopen_ij
+        hclosed_kl))).Equiv
     (((W.gluePairClosed k l hclosed_kl).gluePairOpen
       ⟨i, hik, hil⟩ ⟨j, hjk, hjl⟩
       (fun h => hij (congrArg Subtype.val h))
-      (openClosed_second_open W hik hil hjk hjl hopen_ij hclosed_kl)).relabel
+      (by exact (openClosed_second_open W hik hil hjk hjl hopen_ij hclosed_kl))).relabel
         (swapLabelEquiv hik hil hjk hjl).symm) where
   flagEquiv := by exact doubleSurvivingSwap W hik hil hjk hjl
   vertexEquiv := _root_.Equiv.refl W.Vertex
@@ -1264,7 +1266,7 @@ private theorem oneCross_ik_equiv_attach_comm
 
 /-- Configuration (2), variant {ik}: one cross-edge `W.pairing(bFi) = bFk`.
 Both glues are open in both orders; circles = `W.circles`. -/
-private def oneCross_ik_equiv [DecidableEq α]
+def oneCrossIkEquiv [DecidableEq α]
     (W : Fragment α) {i j k l : α}
     (hij : i ≠ j) (hkl : k ≠ l)
     (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l)
@@ -1275,19 +1277,21 @@ private def oneCross_ik_equiv [DecidableEq α]
     ((W.gluePairOpen i j hij hopen_ij).gluePairOpen
       ⟨k, hik.symm, hjk.symm⟩ ⟨l, hil.symm, hjl.symm⟩
       (fun h => hkl (congrArg Subtype.val h))
-      (oneCross_ik_second_open_kl W hij hkl hik hil hjk hjl hopen_ij hcross
-        hfar_jl)).Equiv
+      (by exact (oneCross_ik_second_open_kl W hij hkl hik hil hjk hjl hopen_ij hcross
+        hfar_jl))).Equiv
     (((W.gluePairOpen k l hkl hopen_kl).gluePairOpen
       ⟨i, hik, hil⟩ ⟨j, hjk, hjl⟩
       (fun h => hij (congrArg Subtype.val h))
-      (oneCross_ik_second_open_ij W hij hkl hik hil hjk hjl hopen_kl hcross
-        hfar_jl)).relabel
+      (by exact (oneCross_ik_second_open_ij W hij hkl hik hil hjk hjl hopen_kl hcross
+        hfar_jl))).relabel
         (swapLabelEquiv hik hil hjk hjl).symm) where
   flagEquiv := by exact doubleSurvivingSwap W hik hil hjk hjl
   vertexEquiv := _root_.Equiv.refl W.Vertex
-  attach_comm := oneCross_ik_equiv_attach_comm W hij hkl hik hil hjk hjl hopen_ij hopen_kl
+  attach_comm := by
+    exact oneCross_ik_equiv_attach_comm W hij hkl hik hil hjk hjl hopen_ij hopen_kl
       hcross hfar_jl
-  pairing_comm := oneCross_ik_equiv_pairing_comm W hij hkl hik hil hjk hjl hopen_ij
+  pairing_comm := by
+    exact oneCross_ik_equiv_pairing_comm W hij hkl hik hil hjk hjl hopen_ij
       hopen_kl hcross hfar_jl
   circles_eq := rfl
 
@@ -1340,7 +1344,7 @@ private theorem oneCross_il_second_open_ij
 
 /-- Configuration (2), variant {il}: one cross-edge `W.pairing(bFi) = bFl`.
 Both glues are open in both orders; circles = `W.circles`. -/
-private def oneCross_il_equiv [DecidableEq α]
+def oneCrossIlEquiv [DecidableEq α]
     (W : Fragment α) {i j k l : α}
     (hij : i ≠ j) (hkl : k ≠ l)
     (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l)
@@ -1351,13 +1355,13 @@ private def oneCross_il_equiv [DecidableEq α]
     ((W.gluePairOpen i j hij hopen_ij).gluePairOpen
       ⟨k, hik.symm, hjk.symm⟩ ⟨l, hil.symm, hjl.symm⟩
       (fun h => hkl (congrArg Subtype.val h))
-      (oneCross_il_second_open_kl W hij hkl hik hil hjk hjl
-        hopen_ij hopen_kl hcross hfar_jk)).Equiv
+      (by exact (oneCross_il_second_open_kl W hij hkl hik hil hjk hjl
+        hopen_ij hopen_kl hcross hfar_jk))).Equiv
     (((W.gluePairOpen k l hkl hopen_kl).gluePairOpen
       ⟨i, hik, hil⟩ ⟨j, hjk, hjl⟩
       (fun h => hij (congrArg Subtype.val h))
-      (oneCross_il_second_open_ij W hij hkl hik hil hjk hjl
-        hopen_ij hopen_kl hcross hfar_jk)).relabel
+      (by exact (oneCross_il_second_open_ij W hij hkl hik hil hjk hjl
+        hopen_ij hopen_kl hcross hfar_jk))).relabel
         (swapLabelEquiv hik hil hjk hjl).symm) where
   flagEquiv := by exact doubleSurvivingSwap W hik hil hjk hjl
   vertexEquiv := _root_.Equiv.refl W.Vertex
@@ -1577,7 +1581,7 @@ private theorem oneCross_jk_second_open_ij
 
 /-- Configuration (2), variant {jk}: one cross-edge `W.pairing(bFj) = bFk`.
 Both glues are open in both orders; circles = `W.circles`. -/
-private def oneCross_jk_equiv [DecidableEq α]
+def oneCrossJkEquiv [DecidableEq α]
     (W : Fragment α) {i j k l : α}
     (hij : i ≠ j) (hkl : k ≠ l)
     (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l)
@@ -1588,13 +1592,13 @@ private def oneCross_jk_equiv [DecidableEq α]
     ((W.gluePairOpen i j hij hopen_ij).gluePairOpen
       ⟨k, hik.symm, hjk.symm⟩ ⟨l, hil.symm, hjl.symm⟩
       (fun h => hkl (congrArg Subtype.val h))
-      (oneCross_jk_second_open_kl W hij hkl hik hil hjk hjl
-        hopen_ij hcross hfar_il)).Equiv
+      (by exact (oneCross_jk_second_open_kl W hij hkl hik hil hjk hjl
+        hopen_ij hcross hfar_il))).Equiv
     (((W.gluePairOpen k l hkl hopen_kl).gluePairOpen
       ⟨i, hik, hil⟩ ⟨j, hjk, hjl⟩
       (fun h => hij (congrArg Subtype.val h))
-      (oneCross_jk_second_open_ij W hij hkl hik hil hjk hjl
-        hopen_kl hcross hfar_il)).relabel
+      (by exact (oneCross_jk_second_open_ij W hij hkl hik hil hjk hjl
+        hopen_kl hcross hfar_il))).relabel
         (swapLabelEquiv hik hil hjk hjl).symm) where
   flagEquiv := by exact doubleSurvivingSwap W hik hil hjk hjl
   vertexEquiv := _root_.Equiv.refl W.Vertex
@@ -2046,7 +2050,7 @@ private theorem oneCross_jl_equiv_attach_comm
 
 /-- Configuration (2), variant {jl}: one cross-edge `W.pairing(bFj) = bFl`.
 Both glues are open in both orders; circles = `W.circles`. -/
-private def oneCross_jl_equiv [DecidableEq α]
+def oneCrossJlEquiv [DecidableEq α]
     (W : Fragment α) {i j k l : α}
     (hij : i ≠ j) (hkl : k ≠ l)
     (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l)
@@ -2057,19 +2061,21 @@ private def oneCross_jl_equiv [DecidableEq α]
     ((W.gluePairOpen i j hij hopen_ij).gluePairOpen
       ⟨k, hik.symm, hjk.symm⟩ ⟨l, hil.symm, hjl.symm⟩
       (fun h => hkl (congrArg Subtype.val h))
-      (oneCross_jl_second_open_kl W hij hkl hik hil hjk hjl
-        hopen_ij hopen_kl hcross hfar_ik)).Equiv
+      (by exact (oneCross_jl_second_open_kl W hij hkl hik hil hjk hjl
+        hopen_ij hopen_kl hcross hfar_ik))).Equiv
     (((W.gluePairOpen k l hkl hopen_kl).gluePairOpen
       ⟨i, hik, hil⟩ ⟨j, hjk, hjl⟩
       (fun h => hij (congrArg Subtype.val h))
-      (oneCross_jl_second_open_ij W hij hkl hik hil hjk hjl
-        hopen_ij hopen_kl hcross hfar_ik)).relabel
+      (by exact (oneCross_jl_second_open_ij W hij hkl hik hil hjk hjl
+        hopen_ij hopen_kl hcross hfar_ik))).relabel
         (swapLabelEquiv hik hil hjk hjl).symm) where
   flagEquiv := by exact doubleSurvivingSwap W hik hil hjk hjl
   vertexEquiv := _root_.Equiv.refl W.Vertex
-  attach_comm := oneCross_jl_equiv_attach_comm W hij hkl hik hil hjk hjl hopen_ij hopen_kl
+  attach_comm := by
+    exact oneCross_jl_equiv_attach_comm W hij hkl hik hil hjk hjl hopen_ij hopen_kl
       hcross hfar_ik
-  pairing_comm := oneCross_jl_equiv_pairing_comm W hij hkl hik hil hjk hjl hopen_ij
+  pairing_comm := by
+    exact oneCross_jl_equiv_pairing_comm W hij hkl hik hil hjk hjl hopen_ij
       hopen_kl hcross hfar_ik
   circles_eq := rfl
 
@@ -2114,7 +2120,7 @@ private theorem twoCross_ikjl_second_closed_ij
 
 /-- Configuration (3), variant {ik,jl}: two cross-edges.
 First glue is open, second is closed; circles = `W.circles + 1`. -/
-private def twoCross_ikjl_equiv [DecidableEq α]
+def twoCrossIkjlEquiv [DecidableEq α]
     (W : Fragment α) {i j k l : α}
     (hij : i ≠ j) (hkl : k ≠ l)
     (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l)
@@ -2124,12 +2130,12 @@ private def twoCross_ikjl_equiv [DecidableEq α]
     (hcross_jl : W.pairing (W.boundaryFlag j) = W.boundaryFlag l) :
     ((W.gluePairOpen i j hij hopen_ij).gluePairClosed
       ⟨k, hik.symm, hjk.symm⟩ ⟨l, hil.symm, hjl.symm⟩
-      (twoCross_ikjl_second_closed_kl W hij hkl hik hil hjk hjl
-        hopen_ij hcross_ik hcross_jl)).Equiv
+      (by exact (twoCross_ikjl_second_closed_kl W hij hkl hik hil hjk hjl
+        hopen_ij hcross_ik hcross_jl))).Equiv
     (((W.gluePairOpen k l hkl hopen_kl).gluePairClosed
       ⟨i, hik, hil⟩ ⟨j, hjk, hjl⟩
-      (twoCross_ikjl_second_closed_ij W hij hkl hik hil hjk hjl
-        hopen_kl hcross_ik hcross_jl)).relabel
+      (by exact (twoCross_ikjl_second_closed_ij W hij hkl hik hil hjk hjl
+        hopen_kl hcross_ik hcross_jl))).relabel
         (swapLabelEquiv hik hil hjk hjl).symm) where
   flagEquiv := by exact doubleSurvivingSwap W hik hil hjk hjl
   vertexEquiv := _root_.Equiv.refl W.Vertex
@@ -2215,7 +2221,7 @@ private theorem twoCross_iljk_second_closed_ij
 
 /-- Configuration (3), variant {il,jk}: two cross-edges.
 First glue is open, second is closed; circles = `W.circles + 1`. -/
-private def twoCross_iljk_equiv [DecidableEq α]
+def twoCrossIljkEquiv [DecidableEq α]
     (W : Fragment α) {i j k l : α}
     (hij : i ≠ j) (hkl : k ≠ l)
     (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l)
@@ -2225,12 +2231,12 @@ private def twoCross_iljk_equiv [DecidableEq α]
     (hcross_jk : W.pairing (W.boundaryFlag j) = W.boundaryFlag k) :
     ((W.gluePairOpen i j hij hopen_ij).gluePairClosed
       ⟨k, hik.symm, hjk.symm⟩ ⟨l, hil.symm, hjl.symm⟩
-      (twoCross_iljk_second_closed_kl W hij hkl hik hil hjk hjl
-        hopen_ij hcross_il hcross_jk)).Equiv
+      (by exact (twoCross_iljk_second_closed_kl W hij hkl hik hil hjk hjl
+        hopen_ij hcross_il hcross_jk))).Equiv
     (((W.gluePairOpen k l hkl hopen_kl).gluePairClosed
       ⟨i, hik, hil⟩ ⟨j, hjk, hjl⟩
-      (twoCross_iljk_second_closed_ij W hij hkl hik hil hjk hjl
-        hopen_kl hcross_il hcross_jk)).relabel
+      (by exact (twoCross_iljk_second_closed_ij W hij hkl hik hil hjk hjl
+        hopen_kl hcross_il hcross_jk))).relabel
         (swapLabelEquiv hik hil hjk hjl).symm) where
   flagEquiv := by exact doubleSurvivingSwap W hik hil hjk hjl
   vertexEquiv := _root_.Equiv.refl W.Vertex
@@ -2293,98 +2299,98 @@ def gluePairComm [DecidableEq α]
     by_cases h_kl : W.pairing (W.boundaryFlag k) = W.boundaryFlag l
     · -- Config (4): both closed
       rw [gluePair_eq_closed hkl h_kl]
-      rw [gluePair_eq_closed _ (closedClosed_second_ij W hik hil hjk hjl h_ij
-        h_kl)]
-      rw [gluePair_eq_closed _ (closedClosed_second_kl W hik hil hjk hjl h_ij
-        h_kl)]
-      exact closedClosed_equiv W hij hkl hik hil hjk hjl h_ij h_kl
+      rw [gluePair_eq_closed _ (by exact (closedClosed_second_ij W hik hil hjk hjl h_ij
+        h_kl))]
+      rw [gluePair_eq_closed _ (by exact (closedClosed_second_kl W hik hil hjk hjl h_ij
+        h_kl))]
+      exact closedClosedEquiv W hij hkl hik hil hjk hjl h_ij h_kl
     · -- Config (1): ij closed, kl open
       rw [gluePair_eq_open hkl h_kl]
-      rw [gluePair_eq_open _ (closedOpen_second_open W hik hil hjk hjl h_ij
-        h_kl)]
-      rw [gluePair_eq_closed _ (closedOpen_second_closed W hkl hik hil hjk hjl
-        h_ij h_kl)]
-      exact closedOpen_equiv W hij hkl hik hil hjk hjl h_ij h_kl
+      rw [gluePair_eq_open _ (by exact (closedOpen_second_open W hik hil hjk hjl h_ij
+        h_kl))]
+      rw [gluePair_eq_closed _ (by exact (closedOpen_second_closed W hkl hik hil hjk hjl
+        h_ij h_kl))]
+      exact closedOpenEquiv W hij hkl hik hil hjk hjl h_ij h_kl
   · -- {i,j} is an open pair
     rw [gluePair_eq_open hij h_ij]
     by_cases h_kl : W.pairing (W.boundaryFlag k) = W.boundaryFlag l
     · -- Config (1'): ij open, kl closed
       rw [gluePair_eq_closed hkl h_kl]
-      rw [gluePair_eq_closed _ (openClosed_second_closed W hij hik hil hjk hjl
-        h_ij h_kl)]
-      rw [gluePair_eq_open _ (openClosed_second_open W hik hil hjk hjl h_ij
-        h_kl)]
-      exact openClosed_equiv W hij hkl hik hil hjk hjl h_ij h_kl
+      rw [gluePair_eq_closed _ (by exact (openClosed_second_closed W hij hik hil hjk hjl
+        h_ij h_kl))]
+      rw [gluePair_eq_open _ (by exact (openClosed_second_open W hik hil hjk hjl h_ij
+        h_kl))]
+      exact openClosedEquiv W hij hkl hik hil hjk hjl h_ij h_kl
     · -- Both open: dispatch on cross-edges
       rw [gluePair_eq_open hkl h_kl]
       by_cases hcross_ik : W.pairing (W.boundaryFlag i) = W.boundaryFlag k
       · by_cases hcross_jl : W.pairing (W.boundaryFlag j) = W.boundaryFlag l
         · -- Config (3): two crosses {ik, jl}
-          rw [gluePair_eq_closed _ (twoCross_ikjl_second_closed_kl W hij hkl hik
+          rw [gluePair_eq_closed _ (by exact (twoCross_ikjl_second_closed_kl W hij hkl hik
             hil hjk hjl
-            h_ij hcross_ik hcross_jl)]
-          rw [gluePair_eq_closed _ (twoCross_ikjl_second_closed_ij W hij hkl hik
+            h_ij hcross_ik hcross_jl))]
+          rw [gluePair_eq_closed _ (by exact (twoCross_ikjl_second_closed_ij W hij hkl hik
             hil hjk hjl
-            h_kl hcross_ik hcross_jl)]
-          exact twoCross_ikjl_equiv W hij hkl hik hil hjk hjl h_ij h_kl
+            h_kl hcross_ik hcross_jl))]
+          exact twoCrossIkjlEquiv W hij hkl hik hil hjk hjl h_ij h_kl
             hcross_ik hcross_jl
         · -- Config (2) variant {ik}
-          rw [gluePair_eq_open _ (oneCross_ik_second_open_kl W hij hkl hik hil
+          rw [gluePair_eq_open _ (by exact (oneCross_ik_second_open_kl W hij hkl hik hil
             hjk hjl
-            h_ij hcross_ik hcross_jl)]
-          rw [gluePair_eq_open _ (oneCross_ik_second_open_ij W hij hkl hik hil
+            h_ij hcross_ik hcross_jl))]
+          rw [gluePair_eq_open _ (by exact (oneCross_ik_second_open_ij W hij hkl hik hil
             hjk hjl
-            h_kl hcross_ik hcross_jl)]
-          exact oneCross_ik_equiv W hij hkl hik hil hjk hjl h_ij h_kl
+            h_kl hcross_ik hcross_jl))]
+          exact oneCrossIkEquiv W hij hkl hik hil hjk hjl h_ij h_kl
             hcross_ik hcross_jl
       · by_cases hcross_il : W.pairing (W.boundaryFlag i) = W.boundaryFlag l
         · by_cases hcross_jk : W.pairing (W.boundaryFlag j) = W.boundaryFlag k
           · -- Config (3): two crosses {il, jk}
-            rw [gluePair_eq_closed _ (twoCross_iljk_second_closed_kl W hij hkl
+            rw [gluePair_eq_closed _ (by exact (twoCross_iljk_second_closed_kl W hij hkl
               hik hil hjk hjl
-              h_ij hcross_il hcross_jk)]
-            rw [gluePair_eq_closed _ (twoCross_iljk_second_closed_ij W hij hkl
+              h_ij hcross_il hcross_jk))]
+            rw [gluePair_eq_closed _ (by exact (twoCross_iljk_second_closed_ij W hij hkl
               hik hil hjk hjl
-              h_kl hcross_il hcross_jk)]
-            exact twoCross_iljk_equiv W hij hkl hik hil hjk hjl h_ij h_kl
+              h_kl hcross_il hcross_jk))]
+            exact twoCrossIljkEquiv W hij hkl hik hil hjk hjl h_ij h_kl
               hcross_il hcross_jk
           · -- Config (2) variant {il}
-            rw [gluePair_eq_open _ (oneCross_il_second_open_kl W hij hkl hik hil
+            rw [gluePair_eq_open _ (by exact (oneCross_il_second_open_kl W hij hkl hik hil
               hjk hjl
-              h_ij h_kl hcross_il hcross_jk)]
-            rw [gluePair_eq_open _ (oneCross_il_second_open_ij W hij hkl hik hil
+              h_ij h_kl hcross_il hcross_jk))]
+            rw [gluePair_eq_open _ (by exact (oneCross_il_second_open_ij W hij hkl hik hil
               hjk hjl
-              h_ij h_kl hcross_il hcross_jk)]
-            exact oneCross_il_equiv W hij hkl hik hil hjk hjl h_ij h_kl
+              h_ij h_kl hcross_il hcross_jk))]
+            exact oneCrossIlEquiv W hij hkl hik hil hjk hjl h_ij h_kl
               hcross_il hcross_jk
         · by_cases hcross_jk : W.pairing (W.boundaryFlag j) = W.boundaryFlag k
           · -- Config (2) variant {jk}
-            rw [gluePair_eq_open _ (oneCross_jk_second_open_kl W hij hkl hik hil
+            rw [gluePair_eq_open _ (by exact (oneCross_jk_second_open_kl W hij hkl hik hil
               hjk hjl
-              h_ij hcross_jk hcross_il)]
-            rw [gluePair_eq_open _ (oneCross_jk_second_open_ij W hij hkl hik hil
+              h_ij hcross_jk hcross_il))]
+            rw [gluePair_eq_open _ (by exact (oneCross_jk_second_open_ij W hij hkl hik hil
               hjk hjl
-              h_kl hcross_jk hcross_il)]
-            exact oneCross_jk_equiv W hij hkl hik hil hjk hjl h_ij h_kl
+              h_kl hcross_jk hcross_il))]
+            exact oneCrossJkEquiv W hij hkl hik hil hjk hjl h_ij h_kl
               hcross_jk hcross_il
           · by_cases hcross_jl : W.pairing (W.boundaryFlag j) = W.boundaryFlag l
             · -- Config (2) variant {jl}
-              rw [gluePair_eq_open _ (oneCross_jl_second_open_kl W hij hkl hik
+              rw [gluePair_eq_open _ (by exact (oneCross_jl_second_open_kl W hij hkl hik
                 hil hjk hjl
-                h_ij h_kl hcross_jl hcross_ik)]
-              rw [gluePair_eq_open _ (oneCross_jl_second_open_ij W hij hkl hik
+                h_ij h_kl hcross_jl hcross_ik))]
+              rw [gluePair_eq_open _ (by exact (oneCross_jl_second_open_ij W hij hkl hik
                 hil hjk hjl
-                h_ij h_kl hcross_jl hcross_ik)]
-              exact oneCross_jl_equiv W hij hkl hik hil hjk hjl h_ij h_kl
+                h_ij h_kl hcross_jl hcross_ik))]
+              exact oneCrossJlEquiv W hij hkl hik hil hjk hjl h_ij h_kl
                 hcross_jl hcross_ik
             · -- Config (0): all boundary pairs disjoint
-              rw [gluePair_eq_open _ (openOpen_second_open_ij W hij hik hil hjk
+              rw [gluePair_eq_open _ (by exact (openOpen_second_open_ij W hij hik hil hjk
                 hjl
-                h_ij h_kl hcross_ik hcross_jk)]
-              rw [gluePair_eq_open _ (openOpen_second_open_kl W hkl hik hil hjk
+                h_ij h_kl hcross_ik hcross_jk))]
+              rw [gluePair_eq_open _ (by exact (openOpen_second_open_kl W hkl hik hil hjk
                 hjl
-                h_ij h_kl hcross_ik hcross_il)]
-              exact openOpen_disjoint_equiv W hij hkl hik hil hjk hjl h_ij h_kl
+                h_ij h_kl hcross_ik hcross_il))]
+              exact openOpenDisjointEquiv W hij hkl hik hil hjk hjl h_ij h_kl
                 hcross_ik hcross_il hcross_jk hcross_jl
 
 end Fragment

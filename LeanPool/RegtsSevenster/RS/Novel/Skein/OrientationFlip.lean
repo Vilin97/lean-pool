@@ -874,7 +874,7 @@ open EdgeSubset
   circles := 0
 
 /-- The full edge subset. -/
-private def exSubset : EdgeSubset exFragment :=
+private noncomputable def exSubset : EdgeSubset exFragment :=
   ⟨Finset.univ, fun f _ => Finset.mem_univ (exFragment.pairing f)⟩
 
 private instance : IsEmpty {f : exFragment.Flag // f ∉ exSubset.flags} :=

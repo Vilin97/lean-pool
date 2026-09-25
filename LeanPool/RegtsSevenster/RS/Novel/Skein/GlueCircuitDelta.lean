@@ -1073,7 +1073,6 @@ private theorem linked_walkMap_injective (κ' : (Fg).RelTransitionSystem)
 
 private theorem linked_walkMap_equivariant (κ' : (Fg).RelTransitionSystem)
     (hbi : W.boundaryFlag i ∈ (Fl).boundaryFlags)
-    (hbj : W.boundaryFlag j ∈ (Fl).boundaryFlags)
     (k : ℕ) (hk1 : 1 ≤ k)
     (hcontA : ∀ t, t < k → W.pairing (iterWalk
       (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
@@ -1279,7 +1278,8 @@ theorem exists_walkPerm_linked (κ' : (Fg).RelTransitionSystem)
     (partnerSurvJ hopen) (partnerSurvI hopen)
     (W.boundaryFlag j) (W.boundaryFlag i) rfl rfl hpIpJ
     k hk1 hcontB htermB
-  have hinj := linked_walkMap_injective hij hopen s' hc' hc κ' hbi hbj k hk1 hcontA htermA hperA hperB
+  have hinj := linked_walkMap_injective hij hopen s' hc' hc κ' hbi hbj
+    k hk1 hcontA htermA hperA hperB
   have hsurj : Function.Surjective
       (Sum.elim (liftPeriodic hij hopen s' hc' hc κ')
         (Sum.elim
@@ -1323,7 +1323,8 @@ theorem exists_walkPerm_linked (κ' : (Fg).RelTransitionSystem)
   refine ⟨Equiv.ofBijective _ ⟨hinj, hsurj⟩, ?_⟩
   -- ═══════ STAGE 3: THE BIJECTION IS WALK-EQUIVARIANT ═══════
   -- the walk equivariance of the forward map
-  have key := linked_walkMap_equivariant hij hopen s' hc' hc κ' hbi hbj k hk1 hcontA htermA hperA hperB
+  have key := linked_walkMap_equivariant hij hopen s' hc' hc κ' hbi
+    k hk1 hcontA htermA hperA hperB
   apply Equiv.ext
   intro xg
   obtain ⟨z, rfl⟩ := hsurj xg

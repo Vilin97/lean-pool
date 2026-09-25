@@ -280,7 +280,7 @@ noncomputable instance stdExactPairing (k ℓ : ℕ) :
     ExactPairing (stdSuperPair k ℓ) (stdSuperPair k ℓ) where
   coevaluation' := stdCopair k ℓ
   evaluation' := stdForm k ℓ
-  coevaluation_evaluation' := std_coev_ev k ℓ
-  evaluation_coevaluation' := std_ev_coev k ℓ
+  coevaluation_evaluation' := by exact std_coev_ev k ℓ
+  evaluation_coevaluation' := by exact std_ev_coev k ℓ
 
 end RS

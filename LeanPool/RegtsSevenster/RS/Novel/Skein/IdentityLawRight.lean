@@ -280,10 +280,7 @@ noncomputable def stageStepFlagEquivR (s t' u : ℕ) (ht : t' + 1 ≤ u)
             rw [stageStepR_rightBoundary]
             exact hk_eq ▸ hbfalse ▸ congrArg Sum.inr (Prod.ext (Fin.ext rfl)
               rfl))
-        simp only [dite_eq_right hlt,
-          show F.boundaryFlag ⟨s + t', by omega⟩ = F.boundaryFlag
-            ⟨s + t', by omega⟩ from rfl,
-          dite_true]
+        simp only [dite_eq_right hlt, dite_true]
         exact Subtype.ext (hk_eq ▸ hb ▸ congrArg Sum.inr (Prod.ext (Fin.ext rfl)
           rfl))
   right_inv y := by
@@ -300,19 +297,22 @@ noncomputable def stageStepFlagEquivR (s t' u : ℕ) (ht : t' + 1 ≤ u)
 
 /-! ### The stage step equivalence -/
 
-private abbrev baseFragmentR (s t' u : ℕ) (ht : t' + 1 ≤ u)
+/-- The relabelled fragment-strand union before the next right identity glue. -/
+abbrev baseFragmentR (s t' u : ℕ) (ht : t' + 1 ≤ u)
     (F : Fragment (Fin (s + u))) :=
   (F.disjUnion (strandBundle (t' + 1))).relabel (stageEquivR s (t' + 1) u ht)
 
-private abbrev targetFragmentR (s t' u : ℕ) (ht' : t' ≤ u)
+/-- The relabelled fragment-strand union at the target stage of right identity descent. -/
+abbrev targetFragmentR (s t' u : ℕ) (ht' : t' ≤ u)
     (F : Fragment (Fin (s + u))) :=
   (F.disjUnion (strandBundle t')).relabel (stageEquivR s t' u ht')
 
-private noncomputable abbrev sourceFragmentR (s t' u : ℕ) (ht : t' + 1 ≤ u)
+/-- The source fragment obtained by one open glue in the right identity descent. -/
+noncomputable abbrev sourceFragmentR (s t' u : ℕ) (ht : t' + 1 ≤ u)
     (F : Fragment (Fin (s + u))) :=
   ((baseFragmentR s t' u ht F).gluePairOpen
     (Sum.inl ⟨s + t', by omega⟩) (Sum.inr ⟨t', by omega⟩)
-    (by simp) (stageStepR_hopen s t' u ht F)).relabel (interfaceStepEquiv s t'
+    (by simp) (by exact stageStepR_hopen s t' u ht F)).relabel (interfaceStepEquiv s t'
       u)
 
 private theorem stageStepR_attach_inl (s t' u : ℕ) (ht : t' + 1 ≤ u)
@@ -808,7 +808,7 @@ private theorem stageStepR_pairing_inr (s t' u : ℕ) (ht : t' + 1 ≤ u)
 /-- The descent step: after one open glue (at the `t'`-th interface
 pair), the resulting fragment is equivalent to the stage-`t'`
 disjoint union relabelled by the stage-`t'` equivalence. -/
-private noncomputable def stageStepEquivR (s t' u : ℕ) (ht : t' + 1 ≤ u)
+noncomputable def stageStepEquivR (s t' u : ℕ) (ht : t' + 1 ≤ u)
     (F : Fragment (Fin (s + u))) :
     (sourceFragmentR s t' u ht F).Equiv (targetFragmentR s t' u (by omega) F)
       where
@@ -838,12 +838,12 @@ theorem stageEquivR_self (s u : ℕ) (x : Fin (s + u) ⊕ Fin (u + u)) :
 
 /-- In the base fragment, the glue is always open, so `gluePair`
 coincides with `gluePairOpen`. -/
-private theorem baseFragmentR_gluePair_eq (s t' u : ℕ) (ht : t' + 1 ≤ u)
+theorem baseFragmentR_gluePair_eq (s t' u : ℕ) (ht : t' + 1 ≤ u)
     (F : Fragment (Fin (s + u))) :
     (baseFragmentR s t' u ht F).gluePair (Sum.inl ⟨s + t', by omega⟩)
       (Sum.inr ⟨t', by omega⟩) (by simp) =
     (baseFragmentR s t' u ht F).gluePairOpen (Sum.inl ⟨s + t', by omega⟩)
-      (Sum.inr ⟨t', by omega⟩) (by simp) (stageStepR_hopen s t' u ht F) := by
+      (Sum.inr ⟨t', by omega⟩) (by simp) (by exact stageStepR_hopen s t' u ht F) := by
   unfold Fragment.gluePair
   exact dite_eq_right (stageStepR_hopen s t' u ht F)
 
@@ -851,7 +851,7 @@ private theorem baseFragmentR_gluePair_eq (s t' u : ℕ) (ht : t' + 1 ≤ u)
 down to zero, with the stage-`t'` fragment, yields a result
 equivalent to iterating from stage `u` on the original F/strand
 union. -/
-private noncomputable def glueInterface_strandBundle_desc_right
+noncomputable def glueInterfaceStrandBundleDescentRight
     (s u : ℕ) (F : Fragment (Fin (s + u))) :
     ∀ (t' : ℕ) (ht' : t' ≤ u),
     (glueInterface s u u (F.disjUnion (strandBundle u))).Equiv
@@ -864,7 +864,7 @@ private noncomputable def glueInterface_strandBundle_desc_right
         ((Fragment.Equiv.relabelPointwiseId _ _
           (stageEquivR_self _ u)).symm)
     · have ht'_lt : t' + 1 ≤ u := by omega
-      have ih := glueInterface_strandBundle_desc_right s u F (t' + 1) ht'_lt
+      have ih := glueInterfaceStrandBundleDescentRight s u F (t' + 1) ht'_lt
       have step : ((baseFragmentR s t' u ht'_lt F).gluePair
           (Sum.inl ⟨s + t', by omega⟩) (Sum.inr ⟨t', by omega⟩)
           (by simp)).relabel (interfaceStepEquiv s t' u) =
@@ -882,7 +882,7 @@ noncomputable def composeStrandBundleRight (s u : ℕ)
     (F : Fragment (Fin (s + u))) :
     (F.compose (strandBundle u)).Equiv F :=
   (Fragment.Equiv.relabelCongr
-    (glueInterface_strandBundle_desc_right s u F 0 (Nat.zero_le u))
+    (glueInterfaceStrandBundleDescentRight s u F 0 (Nat.zero_le u))
       finSumFinEquiv).trans
     (stageZeroEquivR s u F)
 

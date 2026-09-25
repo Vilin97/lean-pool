@@ -386,7 +386,7 @@ section Orientation
 variable {α : Type} {W : Fragment α} {F : EdgeSubset W}
 
 /-- In a linear order, a ≠ b implies decide(a < b) = !decide(b < a). -/
-private theorem decide_lt_flip {γ : Type} [LinearOrder γ]
+theorem decide_lt_flip {γ : Type} [LinearOrder γ]
     [DecidableRel ((· < ·) : γ → γ → Prop)]
     {a b : γ} (h : a ≠ b) : decide (a < b) = !decide (b < a) := by
   rcases lt_or_gt_of_ne h with hab | hab
