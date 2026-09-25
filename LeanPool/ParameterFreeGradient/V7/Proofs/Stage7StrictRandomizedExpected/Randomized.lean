@@ -3,14 +3,18 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Metric
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Displacement
+
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Metric
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Displacement
 
 /-!
 A single normalized hard instance makes finite-horizon randomized success arbitrarily
 unlikely.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

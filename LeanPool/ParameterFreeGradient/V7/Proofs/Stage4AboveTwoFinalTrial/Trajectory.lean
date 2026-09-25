@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.TrajectoryDefinitions
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.TrajectoryDefinitions
 
 /-!
 The above-two dual trajectory satisfies its dynamics and exact observation requirements.
 -/
+
+@[expose] public section
 
 namespace V7.Stage4AboveTwoFinalTrial
 

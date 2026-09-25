@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Foundation
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
+
+public import LeanPool.ParameterFreeGradient.O3.Foundation
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
 
 /-!
 # Stage 9: generic Euclidean telescoping algebra
@@ -15,6 +17,8 @@ These lemmas contain no OGM-G certificate assumption.  They expose the
 recursively generated auxiliary `p` sequence and the exact polarization used
 by the finite-data identity.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

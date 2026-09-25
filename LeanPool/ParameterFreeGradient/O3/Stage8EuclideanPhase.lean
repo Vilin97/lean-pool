@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanWeights
-import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanMinimizer
-import LeanPool.ParameterFreeGradient.O3.Stage3Anchor
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
+
+public import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanWeights
+public import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanMinimizer
+public import LeanPool.ParameterFreeGradient.O3.Stage3Anchor
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
 
 /-!
 # Stage 8: the actual guarded Euclidean estimate sequence
@@ -17,6 +19,8 @@ The state stores only recursively computed vector data.  The estimate
 minimizer, query, two oracle observations, literal potential, and guard are
 deterministic definitions, while their correctness properties are theorems.
 -/
+
+@[expose] public section
 
 namespace O3
 

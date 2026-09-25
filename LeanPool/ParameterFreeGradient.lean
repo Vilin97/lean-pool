@@ -3,198 +3,202 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.AboveTwo
-import LeanPool.ParameterFreeGradient.O3.Anchor
-import LeanPool.ParameterFreeGradient.O3.BelowTwo
-import LeanPool.ParameterFreeGradient.O3.Controller
-import LeanPool.ParameterFreeGradient.O3.Euclidean
-import LeanPool.ParameterFreeGradient.O3.Foundation
-import LeanPool.ParameterFreeGradient.O3.Geometry
-import LeanPool.ParameterFreeGradient.O3.GeometryExperimental
-import LeanPool.ParameterFreeGradient.O3.Oracle
-import LeanPool.ParameterFreeGradient.O3.Stage10EuclideanGuards
-import LeanPool.ParameterFreeGradient.O3.Stage11Amortization
-import LeanPool.ParameterFreeGradient.O3.Stage11RConditionBar
-import LeanPool.ParameterFreeGradient.O3.Stage12AAnchorMachine
-import LeanPool.ParameterFreeGradient.O3.Stage2BelowGeometry
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteA
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteB
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
-import LeanPool.ParameterFreeGradient.O3.Stage3Anchor
-import LeanPool.ParameterFreeGradient.O3.Stage3AnchorNorming
-import LeanPool.ParameterFreeGradient.O3.Stage3Descent
-import LeanPool.ParameterFreeGradient.O3.Stage4AlgebraRadius
-import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanGap
-import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanMinimizer
-import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanPhase
-import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanRadius
-import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanWeights
-import LeanPool.ParameterFreeGradient.O3.Stage9Certificate
-import LeanPool.ParameterFreeGradient.O3.Stage9Execution
-import LeanPool.ParameterFreeGradient.O3.Stage9FiniteDataOGMG
-import LeanPool.ParameterFreeGradient.O3.Stage9Pairing
-import LeanPool.ParameterFreeGradient.O3.Stage9Telescoping
-import LeanPool.ParameterFreeGradient.O3.Stage9Theta
-import LeanPool.ParameterFreeGradient.Solution
-import LeanPool.ParameterFreeGradient.V7
-import LeanPool.ParameterFreeGradient.V7.AboveTwoStatements
-import LeanPool.ParameterFreeGradient.V7.BelowTwoStatements
-import LeanPool.ParameterFreeGradient.V7.ControllerStatements
-import LeanPool.ParameterFreeGradient.V7.EuclideanStatements
-import LeanPool.ParameterFreeGradient.V7.Foundation
-import LeanPool.ParameterFreeGradient.V7.Guards
-import LeanPool.ParameterFreeGradient.V7.LowerBoundStatements
-import LeanPool.ParameterFreeGradient.V7.MainStatement
-import LeanPool.ParameterFreeGradient.V7.PositiveModel
-import LeanPool.ParameterFreeGradient.V7.Proofs.Anchor
-import LeanPool.ParameterFreeGradient.V7.Proofs.Euclidean
-import LeanPool.ParameterFreeGradient.V7.Proofs.GuardAdapters
-import LeanPool.ParameterFreeGradient.V7.Proofs.Shared
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1AxiomAudit
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.AnalyticBridge
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Certificate
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Correctness
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Ledger
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Machine
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Proof
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Refinement
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Semantics
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Shapes
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.SourceData
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.Controller
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.Geometric
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.GuardSoundness
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.PathShape
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Amortization
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Closure
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Positivity
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Transport
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Dual
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Geometry
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Identity
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Primal
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoResumeS3E.Closure
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoResumeS3E.GuardScaling
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.AnalyticBridge
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Bounds
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Certificate
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Closure
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Coefficients
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Contract
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.DualTrajectory
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Ledger
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Machine
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Normalization
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.PrimalTrajectory
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Proof
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Semantics
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Shapes
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.Constants
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.Geometry
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.Identity
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.PartialClosure
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.PrimalResidual
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.WeightBalance
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoDualPhase.AnalyticPrefix
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoDualPhase.DualEnergy
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoDualPhase.PhaseBounds
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.AnalyticBridge
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Bounds
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Certificate
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Closure
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Coefficients
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Contract
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Ledger
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Machine
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Proof
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Semantics
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Shapes
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Trajectory
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoPrimalRepair.Closure
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoPrimalRepair.PrimalEnergy
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.KernelElementary
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.LocalityBridge
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.Parameters
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerResume.InfimalAttainment
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerResume.InfimalLocalityClosure
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.BaseGradient
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.Closure
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.ConditionalSmoothness
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.Construction
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.DimensionControl
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.EnvelopeDerivative
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.EnvelopeSupport
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.ExactPairCompletion
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.KernelAssembly
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.KernelCocoercivity
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.KernelConvexity
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.KernelHessianStructure
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.OptimizerRadius
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.OutsideGradient
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.PhysicalLower
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.PrimalOptimality
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.QueryGap
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.SymmetryClassification
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.SymmetryEquivariance
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.SymmetryLinearization
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AFinalRepair.OriginFrechet
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AGlobalC2.Calculus
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AGlobalC2.Continuity
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AGlobalC2.Core
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AGlobalC2.QuadraticBound
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AHessianContinuity.HessianContinuity
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.InfimalLocality
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.KernelAmbientHessian
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.KernelAmbientNonzero
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.KernelLineCalculus
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.Parameters
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.Closure
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.CompletedTrace
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.CompletionData
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.LocalTrialAdapter
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.LowerTheorem
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.ObjectiveData
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.Optimality
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.PhysicalAnalytic
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.PhysicalScaling
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.PrefixState
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.PrefixSync
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.RateAlgebra
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.UnitInstance
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.UpperAnalytic
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.UpperTheorem
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.UpperTrial
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.AffineTrace
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.Closure
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.HSelection
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.HardInstance
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.Indistinguishability
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.ScalarHard
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Closure
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Displacement
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Expected
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.MeasurableTrace
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Randomized
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Transfer
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Accounting
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.AnchorSplice
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.AxiomAudit
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Closure
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Controller
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.History
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.LocalDispatch
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.LocalSpec
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Main
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.MainExecution
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Refinement
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.RuntimeMachine
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.WholePaperAudit
-import LeanPool.ParameterFreeGradient.V7.StrictModel
-import LeanPool.ParameterFreeGradient.V7.StrictStatements
-import LeanPool.ParameterFreeGradient.V7.TrialInterfaces
+
+public import LeanPool.ParameterFreeGradient.O3.AboveTwo
+public import LeanPool.ParameterFreeGradient.O3.Anchor
+public import LeanPool.ParameterFreeGradient.O3.BelowTwo
+public import LeanPool.ParameterFreeGradient.O3.Controller
+public import LeanPool.ParameterFreeGradient.O3.Euclidean
+public import LeanPool.ParameterFreeGradient.O3.Foundation
+public import LeanPool.ParameterFreeGradient.O3.Geometry
+public import LeanPool.ParameterFreeGradient.O3.GeometryExperimental
+public import LeanPool.ParameterFreeGradient.O3.Oracle
+public import LeanPool.ParameterFreeGradient.O3.Stage10EuclideanGuards
+public import LeanPool.ParameterFreeGradient.O3.Stage11Amortization
+public import LeanPool.ParameterFreeGradient.O3.Stage11RConditionBar
+public import LeanPool.ParameterFreeGradient.O3.Stage12AAnchorMachine
+public import LeanPool.ParameterFreeGradient.O3.Stage2BelowGeometry
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteA
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteB
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
+public import LeanPool.ParameterFreeGradient.O3.Stage3Anchor
+public import LeanPool.ParameterFreeGradient.O3.Stage3AnchorNorming
+public import LeanPool.ParameterFreeGradient.O3.Stage3Descent
+public import LeanPool.ParameterFreeGradient.O3.Stage4AlgebraRadius
+public import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanGap
+public import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanMinimizer
+public import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanPhase
+public import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanRadius
+public import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanWeights
+public import LeanPool.ParameterFreeGradient.O3.Stage9Certificate
+public import LeanPool.ParameterFreeGradient.O3.Stage9Execution
+public import LeanPool.ParameterFreeGradient.O3.Stage9FiniteDataOGMG
+public import LeanPool.ParameterFreeGradient.O3.Stage9Pairing
+public import LeanPool.ParameterFreeGradient.O3.Stage9Telescoping
+public import LeanPool.ParameterFreeGradient.O3.Stage9Theta
+public import LeanPool.ParameterFreeGradient.Solution
+public import LeanPool.ParameterFreeGradient.V7
+public import LeanPool.ParameterFreeGradient.V7.AboveTwoStatements
+public import LeanPool.ParameterFreeGradient.V7.BelowTwoStatements
+public import LeanPool.ParameterFreeGradient.V7.ControllerStatements
+public import LeanPool.ParameterFreeGradient.V7.EuclideanStatements
+public import LeanPool.ParameterFreeGradient.V7.Foundation
+public import LeanPool.ParameterFreeGradient.V7.Guards
+public import LeanPool.ParameterFreeGradient.V7.LowerBoundStatements
+public import LeanPool.ParameterFreeGradient.V7.MainStatement
+public import LeanPool.ParameterFreeGradient.V7.PositiveModel
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Anchor
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Euclidean
+public import LeanPool.ParameterFreeGradient.V7.Proofs.GuardAdapters
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Shared
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1AxiomAudit
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.AnalyticBridge
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Certificate
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Correctness
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Ledger
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Machine
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Proof
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Refinement
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Semantics
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Shapes
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.SourceData
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.Controller
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.Geometric
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.GuardSoundness
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.PathShape
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Amortization
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Closure
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Positivity
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Transport
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Dual
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Geometry
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Identity
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Primal
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoResumeS3E.Closure
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoResumeS3E.GuardScaling
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.AnalyticBridge
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Bounds
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Certificate
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Closure
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Coefficients
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Contract
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.DualRecursion
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.DualTrajectory
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Ledger
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Machine
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Normalization
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.PrimalTrajectory
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Proof
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Semantics
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Shapes
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.Constants
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.Geometry
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.Identity
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.PartialClosure
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.PrimalResidual
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.WeightBalance
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoDualPhase.AnalyticPrefix
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoDualPhase.DualEnergy
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoDualPhase.PhaseBounds
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.AnalyticBridge
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Bounds
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Certificate
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Closure
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Coefficients
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Contract
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Ledger
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Machine
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Proof
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Semantics
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Shapes
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Trajectory
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.TrajectoryDefinitions
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoPrimalRepair.Closure
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoPrimalRepair.PrimalEnergy
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.KernelElementary
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.LocalityBridge
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.Parameters
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerResume.InfimalAttainment
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerResume.InfimalLocalityClosure
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.BaseGradient
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.Closure
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.ConditionalSmoothness
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.Construction
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.DimensionControl
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.EnvelopeDerivative
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.EnvelopeSupport
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.ExactPairCompletion
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.KernelAssembly
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.KernelCocoercivity
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.KernelConvexity
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.KernelHessianStructure
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.OptimizerRadius
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.OutsideGradient
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.PhysicalLower
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.PrimalOptimality
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.QueryGap
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.SymmetryClassification
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.SymmetryEquivariance
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.SymmetryLinearization
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AFinalRepair.OriginFrechet
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AGlobalC2.Calculus
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AGlobalC2.Continuity
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AGlobalC2.Core
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AGlobalC2.QuadraticBound
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AHessianContinuity.HessianContinuity
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.InfimalLocality
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.KernelAmbientHessian
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.KernelAmbientNonzero
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.KernelLineCalculus
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.Parameters
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.Closure
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.CompletedTrace
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.CompletionData
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.LocalTrialAdapter
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.LowerTheorem
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.ObjectiveData
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.Optimality
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.PhysicalAnalytic
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.PhysicalScaling
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.PrefixState
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.PrefixSync
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.RateAlgebra
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.UnitInstance
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.UpperAnalytic
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.UpperTheorem
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.UpperTrial
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.AffineTrace
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.Closure
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.HSelection
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.HardInstance
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.Indistinguishability
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.ScalarHard
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Closure
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Displacement
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Expected
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.MeasurableTrace
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Randomized
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Transfer
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Accounting
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.AnchorSplice
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.AxiomAudit
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Closure
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Controller
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.History
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.LocalDispatch
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.LocalSpec
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Main
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.MainExecution
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Refinement
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.RuntimeMachine
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.WholePaperAudit
+public import LeanPool.ParameterFreeGradient.V7.StrictModel
+public import LeanPool.ParameterFreeGradient.V7.StrictStatements
+public import LeanPool.ParameterFreeGradient.V7.TrialInterfaces
 
 /-!
 # Parameter-Free Gradient Minimization in l_p Geometry

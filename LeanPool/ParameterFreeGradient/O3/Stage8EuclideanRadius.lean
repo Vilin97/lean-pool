@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import LeanPool.ParameterFreeGradient.O3.Foundation
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
-import Mathlib.Topology.MetricSpace.HausdorffDistance
+
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import LeanPool.ParameterFreeGradient.O3.Foundation
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
+public import Mathlib.Topology.MetricSpace.HausdorffDistance
 
 /-!
 # Stage 8: attainment of the Euclidean solution radius
@@ -19,11 +21,14 @@ to the finite-dimensional `PiLp 2` space.  A closest point in that proper
 space therefore gives an actual optimizer at the exact frozen radius.
 -/
 
+@[expose] public section
+
 namespace O3.Stage8EuclideanRadius
 
 open O3
 
-private abbrev EuclideanLpSpace (d : ℕ) :=
+/-- Finite-dimensional Euclidean space with the `PiLp 2` norm. -/
+abbrev EuclideanLpSpace (d : ℕ) :=
   PiLp (ENNReal.ofReal (2 : ℝ)) (fun _ : Fin d ↦ ℝ)
 
 /-- The minimizer set of an admissible Euclidean instance is closed. -/

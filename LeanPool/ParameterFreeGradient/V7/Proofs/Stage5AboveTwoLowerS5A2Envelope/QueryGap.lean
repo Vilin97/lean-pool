@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.ExactPairCompletion
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.ExactPairCompletion
 
 /-!
 A persistent query gap and existence of a global minimizer for the completed hard objective.
 -/
+
+@[expose] public section
 
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 

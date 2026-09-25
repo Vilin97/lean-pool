@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.AboveTwo
+
+public import LeanPool.ParameterFreeGradient.O3.AboveTwo
 
 /-!
 # Scalar two-level geometric amortization for the guarded controller
@@ -15,6 +17,8 @@ paid by its last radius, and the outer scale-doubling sum is paid by its last
 scale.  In particular no estimate of the form "number of trials times the
 last trial" occurs.
 -/
+
+@[expose] public section
 
 namespace O3
 

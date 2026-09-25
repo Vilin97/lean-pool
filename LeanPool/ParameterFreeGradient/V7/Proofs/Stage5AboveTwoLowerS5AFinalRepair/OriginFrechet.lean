@@ -3,15 +3,19 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.KernelAmbientHessian
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteB
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
-import Mathlib.Analysis.InnerProductSpace.NormPow
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.KernelAmbientHessian
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteB
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
+public import Mathlib.Analysis.InnerProductSpace.NormPow
 
 /-!
 The kernel gradient is Fréchet differentiable at the origin with zero derivative.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Asymptotics

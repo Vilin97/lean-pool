@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Oracle
+
+public import LeanPool.ParameterFreeGradient.O3.Oracle
 
 /-!
 # Euclidean-chain arithmetic and oracle accounting
@@ -14,6 +16,8 @@ are independent of the guarded estimate-sequence and finite-data OGM-G vector
 identities.  It deliberately does not turn either load-bearing identity into
 a certificate field.
 -/
+
+@[expose] public section
 
 namespace O3
 

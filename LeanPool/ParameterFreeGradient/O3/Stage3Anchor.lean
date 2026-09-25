@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Stage3Descent
-import Mathlib.Analysis.SpecialFunctions.Log.Base
+
+public import LeanPool.ParameterFreeGradient.O3.Stage3Descent
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
 
 /-!
 # Stage 3: the native gradient-ray anchor
@@ -14,6 +16,8 @@ This module closes the remaining proof-side bridges for the frozen anchor:
 acceptance at the first dyadic scale dominating `L`, the actual infimum
 distance to the minimizer set, and the displayed base-two ceiling count.
 -/
+
+@[expose] public section
 
 namespace O3
 

@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.RateAlgebra
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.RateAlgebra
 
 /-!
 The normalized resisting construction yields the physical known-parameter query lower bound.
 -/
+
+@[expose] public section
 
 namespace V7.Stage5AboveTwoLowerS5F
 

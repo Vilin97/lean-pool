@@ -3,14 +3,18 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import Mathlib.Data.List.GetD
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.PhysicalLower
+
+public import Mathlib.Data.List.GetD
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.PhysicalLower
 
 /-!
 The recursive state construction of the resisting coordinates, signs, and partial smooth
 oracles.
 -/
+
+@[expose] public section
 
 namespace V7.Stage5AboveTwoLowerS5F
 

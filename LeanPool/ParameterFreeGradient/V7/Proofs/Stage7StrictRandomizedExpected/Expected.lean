@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Randomized
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Randomized
 
 /-!
 Finite-horizon failure probabilities force an unbounded worst-case expected hitting time.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

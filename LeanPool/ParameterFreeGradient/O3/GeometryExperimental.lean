@@ -3,15 +3,19 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import Mathlib.Analysis.MeanInequalitiesPow
-import Mathlib.Analysis.InnerProductSpace.NormPow
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import LeanPool.ParameterFreeGradient.O3.Geometry
+
+public import Mathlib.Analysis.MeanInequalitiesPow
+public import Mathlib.Analysis.InnerProductSpace.NormPow
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import LeanPool.ParameterFreeGradient.O3.Geometry
 
 /-!
 Scalar and vector uniform convexity for the power mirror geometry.
 -/
+
+@[expose] public section
 
 namespace O3.Experimental
 

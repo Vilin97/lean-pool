@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.PathShape
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.PathShape
 
 /-!
 Observable trial outcomes certify success or an insufficient scale or radius estimate.
 -/
+
+@[expose] public section
 
 namespace V7
 namespace Stage2

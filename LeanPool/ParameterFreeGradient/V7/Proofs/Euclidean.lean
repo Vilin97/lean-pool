@@ -3,14 +3,18 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Anchor
-import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanGap
-import LeanPool.ParameterFreeGradient.O3.Stage9FiniteDataOGMG
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Anchor
+public import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanGap
+public import LeanPool.ParameterFreeGradient.O3.Stage9FiniteDataOGMG
 
 /-!
 Euclidean gap reduction and finite OGM-G guarantees in the current interface.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

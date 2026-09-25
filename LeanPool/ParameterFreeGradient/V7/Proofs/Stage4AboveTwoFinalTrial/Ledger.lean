@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Semantics
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Ledger
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Semantics
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Ledger
 
 /-!
 Above-two reports have complete consecutive guard ledgers and bounded call counts.
 -/
+
+@[expose] public section
 
 namespace V7.Stage4AboveTwoFinalTrial
 

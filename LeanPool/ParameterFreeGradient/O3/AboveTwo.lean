@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import LeanPool.ParameterFreeGradient.O3.Foundation
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import LeanPool.ParameterFreeGradient.O3.Foundation
 
 /-!
 # The `2 < p < infinity` branch: exact restart and oracle-count ledger
@@ -21,6 +23,8 @@ while `O3.pUniformConvexity` is unavailable.  Their proofs use that theorem to
 derive both the estimate-sequence ledger and the restart gap/distance
 implication.  This module does not replace it with a target-shaped assumption.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

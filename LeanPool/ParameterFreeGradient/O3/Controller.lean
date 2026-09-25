@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Oracle
+
+public import LeanPool.ParameterFreeGradient.O3.Oracle
 
 /-!
 # Frozen outer curvature/radius controller
@@ -16,6 +18,8 @@ finite observations, guard reports, and exact counters.  Termination is proved
 from the local-trial obligations and finite numerical search caps; it is not a
 field of the controller state or of a certificate.
 -/
+
+@[expose] public section
 
 namespace O3
 

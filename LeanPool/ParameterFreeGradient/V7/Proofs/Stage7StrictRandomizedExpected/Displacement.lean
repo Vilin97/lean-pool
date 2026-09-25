@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.MeasurableTrace
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.MeasurableTrace
 
 /-!
 Measurable finite displacement bounds admit a deterministic threshold with high probability.
 -/
+
+@[expose] public section
 
 open MeasureTheory Filter
 

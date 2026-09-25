@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Stage3AnchorNorming
-import Mathlib.Analysis.Convex.Deriv
+
+public import LeanPool.ParameterFreeGradient.O3.Stage3AnchorNorming
+public import Mathlib.Analysis.Convex.Deriv
 
 /-!
 # Stage 3: exact `ell_p -> ell_q` descent lemma
@@ -16,6 +18,8 @@ model, its derivative is nonpositive on `[0,1]`; this yields the coefficient
 `L/2`, rather than the weaker coefficient obtainable from two convexity
 inequalities alone.
 -/
+
+@[expose] public section
 
 namespace O3
 namespace Stage3Anchor

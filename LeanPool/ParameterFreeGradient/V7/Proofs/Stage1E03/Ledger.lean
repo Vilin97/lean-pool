@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Machine
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Machine
 
 /-!
 The ordered guard evaluator records exactly the accepted prefix and first failure.
 -/
+
+@[expose] public section
 
 namespace V7
 namespace Stage1E03

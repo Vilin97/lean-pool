@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Ledger
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Ledger
 
 /-!
 The literal Euclidean trajectories packaged with their dynamics and exact traces.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

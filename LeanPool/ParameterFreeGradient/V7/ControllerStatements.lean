@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.EuclideanStatements
-import LeanPool.ParameterFreeGradient.V7.AboveTwoStatements
+
+public import LeanPool.ParameterFreeGradient.V7.EuclideanStatements
+public import LeanPool.ParameterFreeGradient.V7.AboveTwoStatements
 
 /-!
 Observable trial certification and amortized query bounds along the realized controller path.
 -/
+
+@[expose] public section
 
 namespace V7
 

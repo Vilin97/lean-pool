@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.AnalyticBridge
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.GuardSoundness
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.AnalyticBridge
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.GuardSoundness
 
 /-!
 Every above-two report shape supplies correctness and exact guard certificates.
 -/
+
+@[expose] public section
 
 namespace V7.Stage4AboveTwoFinalTrial
 

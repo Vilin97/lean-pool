@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.NormPow
-import Mathlib.Analysis.Calculus.Deriv.Add
-import LeanPool.ParameterFreeGradient.O3.Geometry
+
+public import Mathlib.Analysis.InnerProductSpace.NormPow
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import LeanPool.ParameterFreeGradient.O3.Geometry
 
 /-!
 # Stage 2, route B: the normalized duality map
@@ -16,6 +18,8 @@ This file is an isolated exploration of the strong-monotonicity route to
 explicit finite-dimensional definitions.  In particular, it does not assume
 strong convexity or the frozen target.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

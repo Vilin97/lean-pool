@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.Parameters
-import LeanPool.ParameterFreeGradient.O3.GeometryExperimental
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.Parameters
+public import LeanPool.ParameterFreeGradient.O3.GeometryExperimental
 
 /-!
 Elementary positivity, normalization, and norm-power identities for the smoothing kernel.
 -/
+
+@[expose] public section
 
 namespace V7.Stage5AboveTwoLower
 

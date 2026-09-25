@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.BelowTwo
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
+
+public import LeanPool.ParameterFreeGradient.O3.BelowTwo
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
 
 /-!
 # Stage 4: exact weight algebra, barycentric identity, and radius bridge
@@ -16,6 +18,8 @@ weight separate from the stationary recurrence and proves the radius of the
 regularized minimizer from its minimizing property and the actual `sInf`
 definition of the distance to the minimizer set.
 -/
+
+@[expose] public section
 
 namespace O3
 

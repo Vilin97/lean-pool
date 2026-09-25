@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Contract
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.AnalyticBridge
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Contract
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.AnalyticBridge
 
 /-!
 The completed above-two phases imply the requested physical terminal-gradient accuracy.
 -/
+
+@[expose] public section
 
 namespace V7.Stage4AboveTwoFinalTrial
 

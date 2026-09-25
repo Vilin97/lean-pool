@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoDualPhase.AnalyticPrefix
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Machine
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoDualPhase.AnalyticPrefix
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Machine
 
 /-!
 The above-two trial coefficients satisfy recurrence, support, and row-sum assumptions.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

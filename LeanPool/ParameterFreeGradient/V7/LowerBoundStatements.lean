@@ -3,14 +3,18 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import Mathlib.Analysis.Calculus.ContDiff.Basic
-import LeanPool.ParameterFreeGradient.V7.AboveTwoStatements
-import LeanPool.ParameterFreeGradient.V7.StrictModel
+
+public import Mathlib.Analysis.Calculus.ContDiff.Basic
+public import LeanPool.ParameterFreeGradient.V7.AboveTwoStatements
+public import LeanPool.ParameterFreeGradient.V7.StrictModel
 
 /-!
 Smoothing kernels, resisting oracle completions, and known-parameter lower-bound statements.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

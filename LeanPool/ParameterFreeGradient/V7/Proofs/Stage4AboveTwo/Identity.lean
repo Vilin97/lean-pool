@@ -3,14 +3,18 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.WeightBalance
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.WeightBalance
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
 
 /-!
 The pointwise primal-dual residual identity for the above-two coefficient recurrences.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

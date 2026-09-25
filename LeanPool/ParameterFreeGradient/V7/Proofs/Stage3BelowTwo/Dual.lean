@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Identity
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Identity
 
 /-!
 The below-two dual phase terminal gradient bound from the residual identity.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

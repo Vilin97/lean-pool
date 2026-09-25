@@ -3,14 +3,18 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.StrictStatements
-import LeanPool.ParameterFreeGradient.V7.LowerBoundStatements
-import LeanPool.ParameterFreeGradient.V7.ControllerStatements
+
+public import LeanPool.ParameterFreeGradient.V7.StrictStatements
+public import LeanPool.ParameterFreeGradient.V7.LowerBoundStatements
+public import LeanPool.ParameterFreeGradient.V7.ControllerStatements
 
 /-!
 The regime-dependent query rate and the main parameter-free convergence statement.
 -/
+
+@[expose] public section
 
 namespace V7
 

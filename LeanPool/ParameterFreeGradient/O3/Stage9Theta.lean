@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Euclidean
+
+public import LeanPool.ParameterFreeGradient.O3.Euclidean
 
 /-!
 # Source-exact OGM-G theta and kappa coefficients
@@ -14,6 +16,8 @@ The representation is Nat-indexed because the certificate sums over
 `i = 0, ..., n`; every theorem that uses a source index records the appropriate
 boundary hypothesis explicitly.
 -/
+
+@[expose] public section
 
 namespace O3
 

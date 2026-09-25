@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteA
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteB
-import Mathlib.Analysis.Convex.Deriv
+
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteA
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteB
+public import Mathlib.Analysis.Convex.Deriv
 
 /-!
 # Stage 2 closure: below-two geometry
@@ -15,6 +17,8 @@ This file combines the native conjugate-smoothness Hessian bound with the
 explicit duality/Fenchel reduction.  The exported theorem is the frozen
 `O3.BelowGeometryStatement` without additional hypotheses.
 -/
+
+@[expose] public section
 
 namespace O3
 namespace Stage2Closure

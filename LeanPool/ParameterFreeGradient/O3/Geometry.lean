@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import Mathlib.Analysis.MeanInequalities
+
+public import Mathlib.Analysis.MeanInequalities
 
 /-!
 # Finite-dimensional real `ell_p` geometry for the frozen O3 probe
@@ -13,6 +15,8 @@ The exponent is a genuine real number and the dimension is an arbitrary natural
 number.  We use the literal finite-sum formula from the TeX source rather than
 the ambient Euclidean norm on `Fin d → ℝ`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

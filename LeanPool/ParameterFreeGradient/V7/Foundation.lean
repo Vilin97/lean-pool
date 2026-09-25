@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Foundation
+
+public import LeanPool.ParameterFreeGradient.O3.Foundation
 
 /-!
 # V7 statement-layer foundations
@@ -12,6 +14,8 @@ import LeanPool.ParameterFreeGradient.O3.Foundation
 This module contains transparent data carriers only.  It deliberately does
 not import any historical O3 result or concrete O3 dispatcher.
 -/
+
+@[expose] public section
 
 namespace V7
 

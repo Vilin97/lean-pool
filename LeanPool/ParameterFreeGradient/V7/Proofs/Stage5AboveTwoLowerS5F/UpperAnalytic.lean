@@ -3,14 +3,18 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.LocalTrialAdapter
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.AnalyticBridge
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Semantics
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.LocalTrialAdapter
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.AnalyticBridge
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Semantics
 
 /-!
 The initial gradient is bounded by smoothness times the distance to the minimizer set.
 -/
+
+@[expose] public section
 
 namespace V7.Stage5AboveTwoLowerS5F
 

@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.Geometry
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.Geometry
 
 /-!
 Positivity of the constants and scales used by the above-two phases.
 -/
+
+@[expose] public section
 
 namespace V7.Stage4AboveTwo
 

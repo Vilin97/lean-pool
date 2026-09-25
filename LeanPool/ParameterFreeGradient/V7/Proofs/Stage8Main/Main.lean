@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.MainExecution
-import LeanPool.ParameterFreeGradient.V7.MainStatement
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.MainExecution
+public import LeanPool.ParameterFreeGradient.V7.MainStatement
 
 /-!
 The completed runtime satisfies the parameter-free main rate in all exponent regimes.
 -/
+
+@[expose] public section
 
 namespace V7.Stage8Main
 

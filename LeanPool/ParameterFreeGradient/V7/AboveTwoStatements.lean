@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.BelowTwoStatements
+
+public import LeanPool.ParameterFreeGradient.V7.BelowTwoStatements
 
 /-!
 The geometry, residual identities, phase bounds, and operational contracts for exponents above
 two.
 -/
+
+@[expose] public section
 
 namespace V7
 

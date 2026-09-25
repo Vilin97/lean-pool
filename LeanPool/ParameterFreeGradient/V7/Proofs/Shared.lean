@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.ControllerStatements
-import LeanPool.ParameterFreeGradient.O3.Stage3AnchorNorming
+
+public import LeanPool.ParameterFreeGradient.V7.ControllerStatements
+public import LeanPool.ParameterFreeGradient.O3.Stage3AnchorNorming
 
 /-!
 The normalized dual direction used by the anchor search and its norm-attaining pairing.
 -/
+
+@[expose] public section
 
 namespace V7
 

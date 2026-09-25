@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.SymmetryLinearization
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.SymmetryLinearization
 
 /-!
 Pairing-preserving `ℓp` symmetries preserve every coordinate-power norm.
 -/
+
+@[expose] public section
 
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 

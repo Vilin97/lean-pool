@@ -3,15 +3,19 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.HSelection
-import Mathlib.Analysis.Convex.Deriv
+
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.HSelection
+public import Mathlib.Analysis.Convex.Deriv
 
 /-!
 Calculus, convexity, minimizers, and growth of the scalar affine-quadratic-affine hard
 objective.
 -/
+
+@[expose] public section
 
 namespace V7.Stage6StrictDeterministic
 

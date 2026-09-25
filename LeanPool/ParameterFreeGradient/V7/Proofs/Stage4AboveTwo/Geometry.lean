@@ -3,14 +3,18 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.AboveTwoStatements
-import LeanPool.ParameterFreeGradient.O3.GeometryExperimental
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteB
+
+public import LeanPool.ParameterFreeGradient.V7.AboveTwoStatements
+public import LeanPool.ParameterFreeGradient.O3.GeometryExperimental
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteB
 
 /-!
 Conjugacy, gradients, and uniform convexity of the above-two power mirror geometry.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

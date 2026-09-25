@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Stage9Theta
-import LeanPool.ParameterFreeGradient.O3.Stage9Telescoping
-import LeanPool.ParameterFreeGradient.O3.Stage9Certificate
+
+public import LeanPool.ParameterFreeGradient.O3.Stage9Theta
+public import LeanPool.ParameterFreeGradient.O3.Stage9Telescoping
+public import LeanPool.ParameterFreeGradient.O3.Stage9Certificate
 
 /-!
 # Stage 9: quadratic pairing certificate
@@ -15,6 +17,8 @@ This module proves the pairing balance required by the finite-data
 certificate from the actual auxiliary recurrence.  The balance is a theorem,
 not a field of the final statement.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

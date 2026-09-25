@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import Mathlib.Analysis.Calculus.Deriv.Abs
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
+
+public import Mathlib.Analysis.Calculus.Deriv.Abs
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
 
 /-!
 # Stage 2, route A: finite-dimensional differentiation
@@ -15,6 +17,8 @@ This file isolates the Hessian/integration route toward `O3.belowGeometry`.
 It deliberately does not export the frozen theorem until the singular-line
 integration argument is complete.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

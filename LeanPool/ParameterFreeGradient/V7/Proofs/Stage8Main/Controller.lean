@@ -3,14 +3,18 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.LocalSpec
-import LeanPool.ParameterFreeGradient.O3.Controller
-import LeanPool.ParameterFreeGradient.O3.Stage4AlgebraRadius
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.LocalSpec
+public import LeanPool.ParameterFreeGradient.O3.Controller
+public import LeanPool.ParameterFreeGradient.O3.Stage4AlgebraRadius
 
 /-!
 Finite scale and radius caps give a decreasing rank and controller termination.
 -/
+
+@[expose] public section
 
 namespace V7.Stage8Main
 

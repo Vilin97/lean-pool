@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.LocalDispatch
-import LeanPool.ParameterFreeGradient.O3.Stage12AAnchorMachine
-import LeanPool.ParameterFreeGradient.O3.Stage11RConditionBar
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.LocalDispatch
+public import LeanPool.ParameterFreeGradient.O3.Stage12AAnchorMachine
+public import LeanPool.ParameterFreeGradient.O3.Stage11RConditionBar
 
 /-!
 # Stage 8: one current V7 runtime-p machine
@@ -15,6 +17,8 @@ This is a new V7 dispatcher.  It uses the current V7 local trials and only
 the primitive `O3.FirstOrderMethod` execution interface from the historical
 namespace.
 -/
+
+@[expose] public section
 
 namespace V7.Stage8Main
 

@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.Controller
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.Controller
 
 /-!
 Positive constants and endpoint estimates for geometric trial amortization.
 -/
+
+@[expose] public section
 
 namespace V7
 namespace Stage2Resume

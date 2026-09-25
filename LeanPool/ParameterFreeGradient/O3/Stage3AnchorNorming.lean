@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Anchor
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteB
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
+
+public import LeanPool.ParameterFreeGradient.O3.Anchor
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteB
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
 
 /-!
 # Stage 3: exact real-exponent anchor norming vector
@@ -15,6 +17,8 @@ import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
 The source coordinate formula is identified with the normalized duality map,
 then its two norming identities are derived without adding them as hypotheses.
 -/
+
+@[expose] public section
 
 namespace O3
 namespace Stage3Anchor

@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Expected
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Expected
 
 /-!
 The one-dimensional strict-oracle lower bounds transfer to every interior `ℓp` exponent.
 -/
+
+@[expose] public section
 
 namespace V7.Stage7StrictRandomizedExpected
 

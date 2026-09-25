@@ -3,18 +3,22 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Shared
-import LeanPool.ParameterFreeGradient.O3.Stage2BelowGeometry
-import Mathlib.Analysis.Calculus.FDeriv.Add
-import Mathlib.Analysis.Calculus.FDeriv.Mul
-import Mathlib.Analysis.Calculus.FDeriv.Prod
-import Mathlib.Analysis.InnerProductSpace.NormPow
-import Mathlib.Analysis.Normed.Operator.Asymptotics
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Shared
+public import LeanPool.ParameterFreeGradient.O3.Stage2BelowGeometry
+public import Mathlib.Analysis.Calculus.FDeriv.Add
+public import Mathlib.Analysis.Calculus.FDeriv.Mul
+public import Mathlib.Analysis.Calculus.FDeriv.Prod
+public import Mathlib.Analysis.InnerProductSpace.NormPow
+public import Mathlib.Analysis.Normed.Operator.Asymptotics
 
 /-!
 Conjugacy, gradients, and Bregman geometry of the scaled squared norms below exponent two.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

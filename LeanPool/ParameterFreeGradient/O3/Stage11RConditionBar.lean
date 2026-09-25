@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Stage11Amortization
-import LeanPool.ParameterFreeGradient.O3.Stage4AlgebraRadius
-import LeanPool.ParameterFreeGradient.O3.Stage3Anchor
+
+public import LeanPool.ParameterFreeGradient.O3.Stage11Amortization
+public import LeanPool.ParameterFreeGradient.O3.Stage4AlgebraRadius
+public import LeanPool.ParameterFreeGradient.O3.Stage3Anchor
 
 /-!
 # Stage 11R: normalization to the frozen condition number
@@ -15,6 +17,8 @@ This file contains only the scalar bridge from the factor-four endpoint of
 the executable controller amortization to `conditionBar = max 1 condition`.
 The constants are explicit and independent of the problem instance.
 -/
+
+@[expose] public section
 
 namespace O3
 

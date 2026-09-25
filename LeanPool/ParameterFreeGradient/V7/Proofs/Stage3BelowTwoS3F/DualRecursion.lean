@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.PrimalTrajectory
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.PrimalTrajectory
 
 /-!
 The mutually recursive normalized query and gradient-accumulator trajectories of the below-two
 dual phase.
 -/
+
+@[expose] public section
 
 namespace V7.Stage3BelowTwoS3F
 

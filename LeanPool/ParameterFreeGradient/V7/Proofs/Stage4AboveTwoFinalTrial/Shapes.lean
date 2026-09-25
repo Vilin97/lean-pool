@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Machine
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Machine
 
 /-!
 The physical above-two phase observations, guard schedules, and terminal outcome shapes.
 -/
+
+@[expose] public section
 
 namespace V7.Stage4AboveTwoFinalTrial
 

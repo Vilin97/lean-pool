@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.BaseGradient
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.BaseGradient
 
 /-!
 The completed resisting objective has a controlled, symmetry-invariant distance to its
 minimizers.
 -/
+
+@[expose] public section
 
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Oracle
+
+public import LeanPool.ParameterFreeGradient.O3.Oracle
 
 /-!
 # Secant and accepted-anchor certificates
@@ -13,6 +15,8 @@ This module proves the parts of the gradient-ray anchor that reduce directly to
 finite-dimensional `ell_p/ell_q` Hölder geometry.  It deliberately does not
 postulate termination or an accepted trace as data.
 -/
+
+@[expose] public section
 
 namespace O3
 

@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Correctness
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Correctness
 
 /-!
 Compatibility of source Euclidean states and recorded checks with the original analytic
 execution.
 -/
+
+@[expose] public section
 
 namespace V7
 namespace Stage1E03

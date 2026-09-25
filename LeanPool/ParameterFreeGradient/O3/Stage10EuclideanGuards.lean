@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanGap
-import LeanPool.ParameterFreeGradient.O3.Stage9FiniteDataOGMG
+
+public import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanGap
+public import LeanPool.ParameterFreeGradient.O3.Stage9FiniteDataOGMG
 
 /-!
 # Stage 10: Euclidean guard semantics
@@ -15,6 +17,8 @@ the true smoothness constant.  In particular, the ordered interpolation
 inequality is derived from convexity and the exact `L/2` descent lemma; it is
 not assumed as a certificate.
 -/
+
+@[expose] public section
 
 namespace O3
 

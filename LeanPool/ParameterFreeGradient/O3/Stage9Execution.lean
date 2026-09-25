@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Stage9Theta
-import LeanPool.ParameterFreeGradient.O3.Stage9Telescoping
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
+
+public import LeanPool.ParameterFreeGradient.O3.Stage9Theta
+public import LeanPool.ParameterFreeGradient.O3.Stage9Telescoping
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
 
 /-!
 # Stage 9: actual finite-data OGM-G execution
@@ -20,6 +22,8 @@ ordered-pair interpolation checks, and the final descent query.
 The phase-B trace deliberately omits `u₀ = U`, which is reused from Phase A,
 and contains exactly the newly queried points `u₁, …, uₙ, vₙ`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

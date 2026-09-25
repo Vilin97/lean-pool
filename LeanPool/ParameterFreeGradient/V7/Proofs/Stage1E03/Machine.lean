@@ -3,11 +3,15 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Euclidean
-import LeanPool.ParameterFreeGradient.O3.Stage10EuclideanGuards
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Euclidean
+public import LeanPool.ParameterFreeGradient.O3.Stage10EuclideanGuards
 
 /-! Dependency-pure causal machine for the frozen V7 Euclidean trial. -/
+
+@[expose] public section
 
 namespace V7
 namespace Stage1E03

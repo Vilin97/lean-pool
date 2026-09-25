@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.GeometryExperimental
+
+public import LeanPool.ParameterFreeGradient.O3.GeometryExperimental
 
 /-!
 # Stage 2 route D: finite-sum and duality identities
@@ -12,6 +14,8 @@ import LeanPool.ParameterFreeGradient.O3.GeometryExperimental
 This probe-local module develops native identities needed by a direct Bregman
 proof.  It contains no target-shaped hypothesis.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

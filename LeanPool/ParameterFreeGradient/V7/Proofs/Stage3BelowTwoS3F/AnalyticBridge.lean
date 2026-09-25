@@ -3,17 +3,22 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Normalization
-import Mathlib.Topology.MetricSpace.HausdorffDistance
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Normalization
+public import Mathlib.Topology.MetricSpace.HausdorffDistance
 
 /-!
 The completed below-two phases imply the requested physical terminal-gradient bound.
 -/
 
+@[expose] public section
+
 namespace V7.Stage3BelowTwoS3F
 
-private abbrev LpSpace (p : ℝ) (d : ℕ) :=
+/-- Finite-dimensional real coordinate space with the `PiLp p` norm. -/
+abbrev LpSpace (p : ℝ) (d : ℕ) :=
   PiLp (ENNReal.ofReal p) (fun _ : Fin d => ℝ)
 
 theorem minimizerSet_isClosed (inst : PositiveInstance p d x0) :

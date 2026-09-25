@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Machine
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Machine
 
 /-!
 Physical observations, guard schedules, and possible outcomes of the below-two trial.
 -/
+
+@[expose] public section
 
 namespace V7.Stage3BelowTwoS3F
 

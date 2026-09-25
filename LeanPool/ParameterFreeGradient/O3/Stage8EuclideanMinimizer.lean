@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Foundation
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
+
+public import LeanPool.ParameterFreeGradient.O3.Foundation
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
 
 /-!
 # Stage 8: the canonical Euclidean estimate potential
@@ -16,6 +18,8 @@ Phase A of the Euclidean branch.  Its minimizer and exact strong lower bound
 are derived from the project's explicit `lpNorm 2`; no ambient-norm shortcut
 or minimizer certificate is used.
 -/
+
+@[expose] public section
 
 namespace O3
 namespace Stage8EuclideanMinimizer

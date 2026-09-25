@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Stage3Anchor
+
+public import LeanPool.ParameterFreeGradient.O3.Stage3Anchor
 
 /-!
 # Stage 12A: causal initial-query and anchor prefix
@@ -14,6 +16,8 @@ dimension and receives the exponent at runtime through `MethodInput`.  Its
 transition function contains no oracle or admissible instance; objective data
 enters only through the continuation of `Action.query`.
 -/
+
+@[expose] public section
 
 namespace O3
 

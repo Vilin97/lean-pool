@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Proof
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Proof
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Proof
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Closure
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Proof
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Proof
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Proof
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Closure
 
 /-!
 # Stage 8: current local-trial runtime dispatch
@@ -15,6 +17,8 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Closure
 The selectors in this file are made before a positive instance is supplied.
 They depend only on public runtime data and the cached exact observation.
 -/
+
+@[expose] public section
 
 namespace V7.Stage8Main
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Foundation
+
+public import LeanPool.ParameterFreeGradient.O3.Foundation
 
 /-!
 # The `1 < p < 2` branch: exact numerical recurrences and call ledger
@@ -20,6 +22,8 @@ not asserted while `O3.belowGeometry` is unavailable: their TeX proofs use that
 result load-bearingly.  No conditional replacement taking the desired
 strong-convexity conclusion as an extra hypothesis is introduced.
 -/
+
+@[expose] public section
 
 namespace O3
 

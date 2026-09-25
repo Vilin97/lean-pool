@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Geometry
-import Mathlib.Analysis.Convex.Strong
-import Mathlib.Analysis.Convex.Uniform
-import Mathlib.Analysis.Normed.Lp.PiLp
+
+public import LeanPool.ParameterFreeGradient.O3.Geometry
+public import Mathlib.Analysis.Convex.Strong
+public import Mathlib.Analysis.Convex.Uniform
+public import Mathlib.Analysis.Normed.Lp.PiLp
 
 /-!
 # Stage 2, Route C: quantitative `ell_p` convexity
@@ -18,6 +20,8 @@ abstract `UniformConvexSpace` class exposes only an existential modulus.  The
 exact quantitative input needed here is therefore recorded explicitly below,
 but only as a proposition carrier, never as an assumption or an axiom.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

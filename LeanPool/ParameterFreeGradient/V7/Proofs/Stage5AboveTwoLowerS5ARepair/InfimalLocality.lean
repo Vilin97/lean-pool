@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.LocalityBridge
-import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.LocalityBridge
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
 
 /-!
 Stable interior minimizing displacements imply locality of the infimal-convolution value.
 -/
+
+@[expose] public section
 
 namespace V7.Stage5AboveTwoLower.S5ARepair
 

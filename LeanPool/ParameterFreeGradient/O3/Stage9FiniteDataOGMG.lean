@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Stage9Execution
-import LeanPool.ParameterFreeGradient.O3.Stage9Pairing
-import LeanPool.ParameterFreeGradient.O3.Stage9Certificate
+
+public import LeanPool.ParameterFreeGradient.O3.Stage9Execution
+public import LeanPool.ParameterFreeGradient.O3.Stage9Pairing
+public import LeanPool.ParameterFreeGradient.O3.Stage9Certificate
 
 /-!
 # Stage 9: finite-data OGM-G terminal-gradient certificate
@@ -15,6 +17,8 @@ This module connects the source-exact execution and its observable guards to
 the native finite algebraic certificate.  In particular, the certificate is
 proved from the actual recursion; it is not an input field or hypothesis.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Euclidean
+
+public import LeanPool.ParameterFreeGradient.O3.Euclidean
 
 /-!
 # Exact Euclidean estimate-sequence weights
@@ -14,6 +16,8 @@ This module records the source recurrence
 `Aₖ₊₁ = Aₖ + aₖ₊₁`.  In particular, the quadratic identity defining the
 weight gives the exact alternative form `Aₖ₊₁ = aₖ₊₁²`.
 -/
+
+@[expose] public section
 
 namespace O3
 

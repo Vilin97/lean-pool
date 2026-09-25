@@ -3,12 +3,16 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Transport
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Transport
 
 /-!
 The total local trial cost is bounded by the endpoint costs of the realized controller path.
 -/
+
+@[expose] public section
 
 namespace V7
 namespace Stage2Resume

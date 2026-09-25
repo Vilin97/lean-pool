@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanPhase
-import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanRadius
+
+public import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanPhase
+public import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanRadius
 
 /-!
 # Stage 8: the guarded Euclidean gap
@@ -14,6 +16,8 @@ This module proves the vector estimate-sequence invariant for the actual
 recursive Phase-A execution and evaluates it at the internally constructed
 closest optimizer.
 -/
+
+@[expose] public section
 
 namespace O3
 

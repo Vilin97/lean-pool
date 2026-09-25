@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerResume.InfimalAttainment
-import LeanPool.ParameterFreeGradient.O3.Stage3Descent
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerResume.InfimalAttainment
+public import LeanPool.ParameterFreeGradient.O3.Stage3Descent
 
 /-!
 First-order optimality of an infimal-convolution minimizer gives a supporting inequality.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

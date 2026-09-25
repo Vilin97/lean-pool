@@ -3,14 +3,18 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.KernelHessianStructure
-import LeanPool.ParameterFreeGradient.V7.Proofs.Shared
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.KernelHessianStructure
+public import LeanPool.ParameterFreeGradient.V7.Proofs.Shared
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 A positive semidefinite Hessian bound yields cocoercivity of the kernel gradient.
 -/
+
+@[expose] public section
 
 open scoped Interval
 

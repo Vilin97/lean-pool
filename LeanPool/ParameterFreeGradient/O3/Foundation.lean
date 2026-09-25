@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import Mathlib.Analysis.Calculus.FDeriv.Basic
-import LeanPool.ParameterFreeGradient.O3.Geometry
+
+public import Mathlib.Analysis.Calculus.FDeriv.Basic
+public import LeanPool.ParameterFreeGradient.O3.Geometry
 
 /-!
 # Primitive objects for the O3 probe
@@ -16,6 +18,8 @@ machine.  In particular, a method can obtain objective information only by a
 `query` transition; the smoothness constant, solution radius, optimum value,
 and an optimizer are not fields of `MethodInput`.
 -/
+
+@[expose] public section
 
 namespace O3
 

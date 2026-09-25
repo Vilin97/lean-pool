@@ -3,13 +3,17 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import LeanPool.ParameterFreeGradient.V7.Proofs.GuardAdapters
-import LeanPool.ParameterFreeGradient.O3.Stage3Anchor
+
+public import LeanPool.ParameterFreeGradient.V7.Proofs.GuardAdapters
+public import LeanPool.ParameterFreeGradient.O3.Stage3Anchor
 
 /-!
 The anchor-search theorem transported to the current positive secant interface.
 -/
+
+@[expose] public section
 
 namespace V7
 

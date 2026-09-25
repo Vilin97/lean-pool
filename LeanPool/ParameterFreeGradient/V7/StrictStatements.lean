@@ -3,14 +3,18 @@ Copyright (c) 2026 Yuning Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
+module
 
-import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
-import LeanPool.ParameterFreeGradient.V7.StrictModel
+
+public import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
+public import LeanPool.ParameterFreeGradient.V7.StrictModel
 
 /-!
 Finite-horizon, expected-time, and scale-identification impossibility statements for strict
 methods.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 
