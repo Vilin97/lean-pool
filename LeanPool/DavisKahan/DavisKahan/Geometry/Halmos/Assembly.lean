@@ -329,7 +329,8 @@ theorem coe_halmosTrivialEquiv_of_mem_common {x : H₁}
     (halmosTrivialEquiv U₁ V₁ U₂ V₂ ec es et ee ⟨x, hxT⟩ : H₂) =
       (ec ⟨x, hx⟩ : H₂) := by
   rw [halmosTrivialEquiv, TauCeti.coe_orthogonalSupGlue,
-    TauCeti.supGlueAmbient_apply_of_mem_left (commonSupSource_le_orthogonal_targetSupExterior U₁ V₁) _ _ (Submodule.mem_sup_left hx),
+    TauCeti.supGlueAmbient_apply_of_mem_left (commonSupSource_le_orthogonal_targetSupExterior U₁
+      V₁) _ _ (Submodule.mem_sup_left hx),
     TauCeti.coe_orthogonalSupGlue,
     TauCeti.supGlueAmbient_apply_of_mem_left (halmosCommon_le_sourceDefect_orthogonal U₁ V₁) _ _ hx]
 
@@ -341,9 +342,11 @@ theorem coe_halmosTrivialEquiv_of_mem_source {x : H₁}
     (halmosTrivialEquiv U₁ V₁ U₂ V₂ ec es et ee ⟨x, hxT⟩ : H₂) =
       (es ⟨x, hx⟩ : H₂) := by
   rw [halmosTrivialEquiv, TauCeti.coe_orthogonalSupGlue,
-    TauCeti.supGlueAmbient_apply_of_mem_left (commonSupSource_le_orthogonal_targetSupExterior U₁ V₁) _ _ (Submodule.mem_sup_right hx),
+    TauCeti.supGlueAmbient_apply_of_mem_left (commonSupSource_le_orthogonal_targetSupExterior U₁
+      V₁) _ _ (Submodule.mem_sup_right hx),
     TauCeti.coe_orthogonalSupGlue,
-    TauCeti.supGlueAmbient_apply_of_mem_right (halmosCommon_le_sourceDefect_orthogonal U₁ V₁) _ _ hx]
+    TauCeti.supGlueAmbient_apply_of_mem_right (halmosCommon_le_sourceDefect_orthogonal U₁ V₁) _
+      _ hx]
 
 omit [CompleteSpace H₂] [U₂.HasOrthogonalProjection] [V₂.HasOrthogonalProjection] in
 /-- On the target defect `Uᗮ ⊓ V`, the glued trivial equivalence is the
@@ -353,9 +356,11 @@ theorem coe_halmosTrivialEquiv_of_mem_target {x : H₁}
     (halmosTrivialEquiv U₁ V₁ U₂ V₂ ec es et ee ⟨x, hxT⟩ : H₂) =
       (et ⟨x, hx⟩ : H₂) := by
   rw [halmosTrivialEquiv, TauCeti.coe_orthogonalSupGlue,
-    TauCeti.supGlueAmbient_apply_of_mem_right (commonSupSource_le_orthogonal_targetSupExterior U₁ V₁) _ _ (Submodule.mem_sup_left hx),
+    TauCeti.supGlueAmbient_apply_of_mem_right (commonSupSource_le_orthogonal_targetSupExterior
+      U₁ V₁) _ _ (Submodule.mem_sup_left hx),
     TauCeti.coe_orthogonalSupGlue,
-    TauCeti.supGlueAmbient_apply_of_mem_left (halmosTargetDefect_le_exterior_orthogonal U₁ V₁) _ _ hx]
+    TauCeti.supGlueAmbient_apply_of_mem_left (halmosTargetDefect_le_exterior_orthogonal U₁ V₁) _
+      _ hx]
 
 omit [CompleteSpace H₂] [U₂.HasOrthogonalProjection] [V₂.HasOrthogonalProjection] in
 /-- On the exterior `Uᗮ ⊓ Vᗮ`, the glued trivial equivalence is the exterior
@@ -365,9 +370,11 @@ theorem coe_halmosTrivialEquiv_of_mem_exterior {x : H₁}
     (halmosTrivialEquiv U₁ V₁ U₂ V₂ ec es et ee ⟨x, hxT⟩ : H₂) =
       (ee ⟨x, hx⟩ : H₂) := by
   rw [halmosTrivialEquiv, TauCeti.coe_orthogonalSupGlue,
-    TauCeti.supGlueAmbient_apply_of_mem_right (commonSupSource_le_orthogonal_targetSupExterior U₁ V₁) _ _ (Submodule.mem_sup_right hx),
+    TauCeti.supGlueAmbient_apply_of_mem_right (commonSupSource_le_orthogonal_targetSupExterior
+      U₁ V₁) _ _ (Submodule.mem_sup_right hx),
     TauCeti.coe_orthogonalSupGlue,
-    TauCeti.supGlueAmbient_apply_of_mem_right (halmosTargetDefect_le_exterior_orthogonal U₁ V₁) _ _ hx]
+    TauCeti.supGlueAmbient_apply_of_mem_right (halmosTargetDefect_le_exterior_orthogonal U₁ V₁)
+      _ _ hx]
 
 /-- The global isometry carries the trivial part onto the trivial part. -/
 theorem map_halmosGlobalEquiv_trivial

@@ -11,7 +11,8 @@ import LeanPool.DavisKahan.DavisKahan.Geometry.Halmos.CrossedDefectGap
 -- tangent theorem consumes.  That module imports only `BoundedOperator/Compat` and
 -- `Geometry/Halmos/GenericRotationPredicates`, so the dependency is acyclic.
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
+import
+  LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
 import LeanPool.DavisKahan.DavisKahan.TanTheta.Theorem63InfiniteTrial
 import LeanPool.DavisKahan.ForTauCeti.Analysis.OperatorIdeal.ApproximationNumber.GramResolvent
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
@@ -91,9 +92,11 @@ which the printed right-hand side can be finite.
   representative `Ξ`.
 * `TauCeti.DavisKahan1970.directedTanAngleOperatorC_eq_modulus_blockRepresentative`:
   `|Ξ| = tan Θ`.
-* `TauCeti.DavisKahan1970.tanTheta_ambient_bounded_kyFan_complex_of_transversality`: the Ky Fan form,
+* `TauCeti.DavisKahan1970.tanTheta_ambient_bounded_kyFan_complex_of_transversality`: the Ky Fan
+  form,
   `δ · kyFan_k (tan Θ) ≤ kyFan_k H` for every `k`.
-* `TauCeti.DavisKahan1970.tanTheta_ambient_bounded_symmetricNorming_complex_of_transversality`: the source form,
+* `TauCeti.DavisKahan1970.tanTheta_ambient_bounded_symmetricNorming_complex_of_transversality`:
+  the source form,
   `δ N(tan Θ) ≤ N(H)` for every unitarily invariant norm `N` in the paper's
   sense.
 
@@ -1238,7 +1241,8 @@ theorem norm_sinAngleOperatorC_lt_one_of_crossedDefectsEquivalent
 
 /-- **The whole-space `tan Θ` theorem, Ky Fan form, with transversality derived.**
 
-The same conclusion as `tanTheta_ambient_bounded_kyFan_complex_of_transversality`, with the uniform transversality
+The same conclusion as `tanTheta_ambient_bounded_kyFan_complex_of_transversality`, with the
+  uniform transversality
 hypothesis replaced by the printed standing assumption (3.5). -/
 theorem tanTheta_ambient_bounded_kyFan_complex_of_crossedDefects
     (hT : T.IsSymmetric) (hA : IsSelfAdjoint A)
@@ -1252,14 +1256,16 @@ theorem tanTheta_ambient_bounded_kyFan_complex_of_crossedDefects
     ∀ k : ℕ,
       delta * kyFanApproximationGauge k (tanAngleOperatorC U V) ≤
         kyFanApproximationGauge k (T - A) :=
-  tanTheta_ambient_bounded_kyFan_complex_of_transversality hT hA hV hAU hdelta hCompressionUpper hUnwantedLower
+  tanTheta_ambient_bounded_kyFan_complex_of_transversality hT hA hV hAU hdelta hCompressionUpper
+    hUnwantedLower
     (norm_sinAngleOperatorC_lt_one_of_crossedDefectsEquivalent hT hV hdelta
       hCompressionUpper hUnwantedLower h35)
 
 /-- **Davis--Kahan 1970, the whole-space `tan Θ` theorem for every source unitarily
 invariant norm, under the printed standing assumptions only.**
 
-Identical to `tanTheta_ambient_bounded_symmetricNorming_complex_of_transversality` except that uniform transversality is no
+Identical to `tanTheta_ambient_bounded_symmetricNorming_complex_of_transversality` except that
+  uniform transversality is no
 longer a hypothesis: it is derived from the form bounds and the printed (3.5). -/
 theorem tanTheta_ambient_bounded_symmetricNorming_complex_of_crossedDefects
     (N : SymmetricNormingFunction)
@@ -1277,7 +1283,8 @@ theorem tanTheta_ambient_bounded_symmetricNorming_complex_of_crossedDefects
       delta * N.gauge (tanAngleOperatorC U V) ≤ N.gauge (T - A) :=
   ⟨norm_sinAngleOperatorC_lt_one_of_crossedDefectsEquivalent hT hV hdelta
       hCompressionUpper hUnwantedLower h35,
-    tanTheta_ambient_bounded_symmetricNorming_complex_of_transversality N hT hA hV hAU hdelta hCompressionUpper hUnwantedLower
+    tanTheta_ambient_bounded_symmetricNorming_complex_of_transversality N hT hA hV hAU hdelta
+      hCompressionUpper hUnwantedLower
       (norm_sinAngleOperatorC_lt_one_of_crossedDefectsEquivalent hT hV hdelta
         hCompressionUpper hUnwantedLower h35) hMem⟩
 

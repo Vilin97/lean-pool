@@ -5,7 +5,8 @@ Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Lemma61
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.OperatorAngleBridge
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
+import
+  LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
 import LeanPool.DavisKahan.DavisKahan.SpectralTheory.ReducingSubspace.RestrictionExtras
 import LeanPool.DavisKahan.DavisKahan.Sylvester.Unbounded.FormBoundedGap
 
@@ -176,7 +177,8 @@ theorem forward_all_kyFan
     have hL : _root_.IsSelfAdjoint D.Λ₁ :=
       PartialMap.reducingRestriction_isSelfAdjoint
         ((P.B.toLinearMap.toPMap ⊤)) P.Vᗮ
-        (TauCeti.DavisKahanExt.PartialMap.ofBounded_reducesSubspace P.B P.V P.reduces_B_V).orthogonal
+        (TauCeti.DavisKahanExt.PartialMap.ofBounded_reducesSubspace P.B P.V
+          P.reduces_B_V).orthogonal
         (TauCeti.LinearPMap.isSelfAdjoint_toPMap_top (T := P.B)
           (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mpr P.selfAdjoint_B))
     have hEq := unbounded_adjoint_residual_block_identity D
@@ -246,7 +248,8 @@ theorem reverse_all_kyFan
     have hL : _root_.IsSelfAdjoint D.Λ₁ :=
       PartialMap.reducingRestriction_isSelfAdjoint
         ((P.A.toLinearMap.toPMap ⊤)) P.Uᗮ
-        (TauCeti.DavisKahanExt.PartialMap.ofBounded_reducesSubspace P.A P.U P.reduces_A_U).orthogonal
+        (TauCeti.DavisKahanExt.PartialMap.ofBounded_reducesSubspace P.A P.U
+          P.reduces_A_U).orthogonal
         (TauCeti.LinearPMap.isSelfAdjoint_toPMap_top (T := P.A)
           (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mpr P.selfAdjoint_A))
     have hEq := unbounded_adjoint_residual_block_identity D
@@ -317,7 +320,8 @@ theorem symmetric_all_kyFan
   -- `gap` times that product.  Feeding it `gap • H` would instead demand
   -- `gap * gauge (block H) ≤ gauge (block H)`, which is false for `gap > 1`.
   have hcombine := lemma61_all_kyFan P.Uᗮ P.V
-    (((P.gap : ℝ) : ℂ) • ContinuousLinearMap.id ℂ E) (((P.gap : ℝ) : ℂ) • ContinuousLinearMap.id ℂ E)
+    (((P.gap : ℝ) : ℂ) • ContinuousLinearMap.id ℂ E) (((P.gap : ℝ) : ℂ) • ContinuousLinearMap.id
+      ℂ E)
     P.perturbation P.perturbation
     (fun j => by
       have hrev := P.reverse_all_kyFan j

@@ -1032,7 +1032,8 @@ theorem gap_mul_sum_tanArcsin_le_two_mul_kyFan_of_cutoff
     rw [kyFanApproximationGauge, ContinuousLinearMap.kyFanGauge]
     exact Finset.sum_nonneg fun p _ =>
       (reflectionResidualCorner U B).approximationNumber_nonneg p
-  set W : ℝ := 3 * (k : ℝ) * kyFanApproximationGauge k (reflectionResidualCorner U B) / (2 * κ ^ 2) +
+  set W : ℝ := 3 * (k : ℝ) * kyFanApproximationGauge k (reflectionResidualCorner U B) / (2 * κ ^
+    2) +
       (k : ℝ) * (τ + |b|) / (4 * κ) + (b - a) * (k : ℝ) / κ with hWdef
   have hW0 : (0 : ℝ) ≤ W := by
     have h1 : (0 : ℝ) ≤ 3 * (k : ℝ) * kyFanApproximationGauge k (reflectionResidualCorner U B) /
@@ -1232,7 +1233,8 @@ theorem mem_and_gauge_le_reflectionTangentCorner
     N.Mem ((((b - a) / 2 : ℝ) : ℂ) • reflectionTangentCorner U Z) ∧
       N.gauge ((((b - a) / 2 : ℝ) : ℂ) • reflectionTangentCorner U Z) ≤
         N.gauge (reflectionResidualCorner U B) := by
-  refine mem_and_gauge_le_of_all_kyFanApproximationGauge_le N.toFanDominantIdealFamily hBmem fun k => ?_
+  refine mem_and_gauge_le_of_all_kyFanApproximationGauge_le N.toFanDominantIdealFamily hBmem fun
+    k => ?_
   rw [kyFanApproximationGauge_smul, Complex.norm_real, Real.norm_eq_abs,
     abs_of_nonneg (by linarith : (0 : ℝ) ≤ (b - a) / 2)]
   have h := gap_mul_kyFan_reflectionTangentCorner_le_two_mul_kyFan hred hB hZsa

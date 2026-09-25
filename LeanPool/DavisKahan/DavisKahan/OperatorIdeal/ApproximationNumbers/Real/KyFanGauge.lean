@@ -74,12 +74,14 @@ theorem kyFanApproximationGauge_comp_strongProjection_tendsto_real
     TauCeti.ApproximationNumber.hasMinMaxLowerBound_real hPproj hP k K
 
 /-- **The real infinite-dimensional Ky Fan triangle inequality.**  No compactness and no
-finite-dimensionality; the only real-specific input is `TauCeti.ApproximationNumber.hasMinMaxLowerBound_real`. -/
+finite-dimensionality; the only real-specific input is
+  `TauCeti.ApproximationNumber.hasMinMaxLowerBound_real`. -/
 theorem kyFanApproximationGauge_add_le_real
     (k : ℕ) (K L : E →L[ℝ] F) :
     kyFanApproximationGauge k (K + L) ≤
       kyFanApproximationGauge k K + kyFanApproximationGauge k L :=
-  kyFanApproximationGauge_add_le_of_minMax TauCeti.ApproximationNumber.hasMinMaxLowerBound_real k K L
+  kyFanApproximationGauge_add_le_of_minMax TauCeti.ApproximationNumber.hasMinMaxLowerBound_real
+    k K L
 
 end
 

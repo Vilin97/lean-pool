@@ -27,7 +27,8 @@ the fixed-field proofs along the real/complex dichotomy of `RCLike`.  They are
 therefore implementation infrastructure, resolved by instance search, and no
 theorem in this module quantifies over them.
 
-The public theorem `sinTheta_unbounded_intervalExterior_symmetricNorming_rclike` avoids the historical bundled
+The public theorem `sinTheta_unbounded_intervalExterior_symmetricNorming_rclike` avoids the
+  historical bundled
 problem records.  It displays the operators, coordinate maps, residual
 identity, exact-space decomposition, interval/exterior spectral separation,
 and universal source unitary-invariant norm directly in its type.
@@ -182,7 +183,8 @@ the factor-one inequality.
 matters for source fidelity rather than for generality alone: the printed
 theorem separates the spectra by an interval and its exterior, and the source
 also permits those intervals to be half-infinite, which is what the two
-semibounded constructors carry.  `sinTheta_unbounded_intervalExterior_symmetricNorming_rclike` below is this theorem
+semibounded constructors carry.  `sinTheta_unbounded_intervalExterior_symmetricNorming_rclike`
+  below is this theorem
 with the bounded-interval branch spelled out, and
 `DavisKahan1970.sinTheta_unbounded_formGap_symmetricNorming_rclike` is it again with the
 structural hypotheses bundled as `IsTrialResidual` and `IsExactSpectralDecomposition`.

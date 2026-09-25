@@ -213,7 +213,8 @@ the same constant. -/
 theorem complexifyUnboundedCompressionTrialData_compression_upper
     (D : UnboundedCompressionTrialData Z) {alpha : ℝ}
     (hupper : TauCeti.LinearPMap.SemiboundedAbove D.compression alpha) :
-    TauCeti.LinearPMap.SemiboundedAbove (complexifyUnboundedCompressionTrialData D).compression alpha :=
+    TauCeti.LinearPMap.SemiboundedAbove (complexifyUnboundedCompressionTrialData D).compression
+      alpha :=
   semiboundedAbove_unitaryConjugate (complexifySubmoduleEquiv Z)
     (ExactSinTheta.PartialMapComplexification.complexify D.compression)
     (ExactSinTheta.PartialMapComplexification.isSelfAdjoint_complexify
@@ -356,7 +357,8 @@ theorem theorem6_3_unboundedCompression_ideal_real
     (htan : HasTheorem63DirectedTangentApproximationNumbersInfiniteReal Z V tanTheta0)
     (hResidual : N.Mem D.residual) :
     N.Mem tanTheta0 ∧ delta * N.gauge tanTheta0 ≤ N.gauge D.residual := by
-  refine mem_and_scaled_gauge_le_of_all_scaled_kyFan_le N.toFanDominantIdealFamily hdelta hResidual fun k => ?_
+  refine mem_and_scaled_gauge_le_of_all_scaled_kyFan_le N.toFanDominantIdealFamily hdelta
+    hResidual fun k => ?_
   have hcore := all_kyFan_core_unboundedCompression_real D V hdelta hupper hcross k
   have htanKy : kyFanApproximationGauge k tanTheta0 =
       ∑ n ∈ Finset.range k, Real.tan (Real.arcsin

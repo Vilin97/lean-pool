@@ -75,7 +75,9 @@ theorem exp_smul_idempotent
     _ = (∑' n : ℕ, (1 / (n + 1).factorial : ℂ) * c ^ (n + 1)) • P := by
           have hf : Summable fun n : ℕ => (1 / (n + 1).factorial : ℂ) * c ^ (n + 1) :=
             ((NormedSpace.expSeries_div_summable c).comp_injective Nat.succ_injective).congr
-              (fun n => by simp only [Function.comp_apply, Nat.succ_eq_add_one]; rw [div_eq_mul_inv, one_div, mul_comm])
+              (fun n => by
+                simp only [Function.comp_apply, Nat.succ_eq_add_one]; rw [div_eq_mul_inv,
+                  one_div, mul_comm])
           rw [hf.tsum_smul_const]
     _ = (Complex.exp c - 1) • P := by
           congr 1
@@ -178,7 +180,9 @@ theorem exp_finset_orthogonal_idempotents
             intro i
             refine Summable.smul_const ?_ (P i)
             exact ((NormedSpace.expSeries_div_summable ((t : ℂ) * c i)).comp_injective
-              Nat.succ_injective).congr (fun m => by simp only [Function.comp_apply, Nat.succ_eq_add_one]; rw [div_eq_mul_inv, one_div, mul_comm])
+              Nat.succ_injective).congr (fun m => by
+                simp only [Function.comp_apply, Nat.succ_eq_add_one]; rw [div_eq_mul_inv,
+                  one_div, mul_comm])
           rw [Summable.tsum_finsetSum (fun i _ => hsum_i i)]
     _ = ∑ i, Complex.exp ((t : ℂ) * c i) • P i := by
           apply Finset.sum_congr rfl
@@ -186,7 +190,9 @@ theorem exp_finset_orthogonal_idempotents
           have hf : Summable fun m : ℕ =>
               (1 / (m + 1).factorial : ℂ) * (((t : ℂ) * c i) ^ (m + 1)) :=
             ((NormedSpace.expSeries_div_summable ((t : ℂ) * c i)).comp_injective
-              Nat.succ_injective).congr (fun m => by simp only [Function.comp_apply, Nat.succ_eq_add_one]; rw [div_eq_mul_inv, one_div, mul_comm])
+              Nat.succ_injective).congr (fun m => by
+                simp only [Function.comp_apply, Nat.succ_eq_add_one]; rw [div_eq_mul_inv,
+                  one_div, mul_comm])
           have hscalar : (1 : ℂ) +
               ∑' m : ℕ, (1 / (m + 1).factorial : ℂ) * (((t : ℂ) * c i) ^ (m + 1)) =
               Complex.exp ((t : ℂ) * c i) := by

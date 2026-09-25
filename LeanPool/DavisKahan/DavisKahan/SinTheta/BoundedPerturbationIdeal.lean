@@ -57,7 +57,8 @@ theorem sinTheta_addBounded_gauge_of_spectrum_gap_isometric
         F₁ (Λ₁ y))
     (hXiso : IsometricEmbedding X) (hF₁iso : IsometricEmbedding F₁)
     {β α δ : ℝ} (hβα : β ≤ α) (hδ : 0 < δ)
-    (hA₀low : TauCeti.LinearPMap.SemiboundedBelow A₀ β) (hA₀high : TauCeti.LinearPMap.SemiboundedAbove A₀ α)
+    (hA₀low : TauCeti.LinearPMap.SemiboundedBelow A₀ β) (hA₀high :
+      TauCeti.LinearPMap.SemiboundedAbove A₀ α)
     (hΛspec : ∀ lam ∈ Set.Ioo (β - δ) (α + δ),
       (lam : ℂ) ∉ TauCeti.LinearPMap.spectrum Λ₁)
     (hVmem : N.Mem V) :
@@ -131,7 +132,8 @@ theorem sinTheta_addBounded_gauge_block_of_spectrum_gap
       (TauCeti.LinearPMap.addBounded A V) ⟨F₁ (y : G), hF₁dom y⟩ =
         F₁ (Λ₁ y))
     {β α δ : ℝ} (hβα : β ≤ α) (hδ : 0 < δ)
-    (hA₀low : TauCeti.LinearPMap.SemiboundedBelow A₀ β) (hA₀high : TauCeti.LinearPMap.SemiboundedAbove A₀ α)
+    (hA₀low : TauCeti.LinearPMap.SemiboundedBelow A₀ β) (hA₀high :
+      TauCeti.LinearPMap.SemiboundedAbove A₀ α)
     (hΛspec : ∀ lam ∈ Set.Ioo (β - δ) (α + δ),
       (lam : ℂ) ∉ TauCeti.LinearPMap.spectrum Λ₁)
     (hVmem : N.Mem V) :

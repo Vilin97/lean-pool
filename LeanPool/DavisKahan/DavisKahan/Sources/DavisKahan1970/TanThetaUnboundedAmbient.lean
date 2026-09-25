@@ -214,7 +214,8 @@ theorem tanTheta_ambient_bounded_symmetricNorming_complex_of_lowerCorner
 
 /-- **Unbounded-data ambient `tan Theta` theorem with transversality supplied.**
 
-This is the assembly half of `tanTheta_ambient_unboundedOperator_boundedRitzData_symmetricNorming_complex`:
+This is the assembly half of
+  `tanTheta_ambient_unboundedOperator_boundedRitzData_symmetricNorming_complex`:
 everything except the derivation of `‖sin Theta‖ < 1` from the printed standing
 assumption (3.5).  Separating the two lets the real-scalar counterpart consume
 this half after establishing transversality natively on the real side, so the
@@ -224,7 +225,8 @@ crossed-defect condition never has to be transported across complexification.
 problem.  Its residual is assumed to be exactly the lower `U -> U-perp` block of
 the bounded perturbation `H`; this is the operator form of the printed
 Rayleigh--Ritz condition `H_0 = 0`. -/
-theorem tanTheta_ambient_unboundedOperator_boundedRitzData_symmetricNorming_complex_of_transversality
+theorem
+  tanTheta_ambient_unboundedOperator_boundedRitzData_symmetricNorming_complex_of_transversality
     (N : SymmetricNormingFunction)
     {U V : Submodule ℂ E}
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
@@ -339,7 +341,8 @@ theorem tanTheta_ambient_unboundedOperator_boundedRitzData_symmetricNorming_comp
 with transversality supplied.**
 
 This is the Appendix counterpart of
-`tanTheta_ambient_unboundedOperator_boundedRitzData_symmetricNorming_complex_of_transversality`.  The crucial
+`tanTheta_ambient_unboundedOperator_boundedRitzData_symmetricNorming_complex_of_transversality`.
+  The crucial
 difference is that `D.compression` is a densely defined self-adjoint closed
 operator on the trial space, not a bounded continuous endomorphism.  Only the
 residual is bounded.  The lower-corner estimate therefore comes from
@@ -511,7 +514,8 @@ theorem tanTheta_ambient_unboundedOperator_boundedRitz_symmetricNorming_complex
       N.Mem (tanAngleOperatorC U V) ∧
       delta * N.gauge (tanAngleOperatorC U V) ≤ N.gauge H := by
   let data := Theorem63TrialData.ofUnbounded D V
-  refine tanTheta_ambient_unboundedOperator_boundedRitzData_symmetricNorming_complex N data H hH hdelta
+  refine tanTheta_ambient_unboundedOperator_boundedRitzData_symmetricNorming_complex N data H hH
+    hdelta
     hCompression ?_ h35 ?_ hMem
   · intro z
     exact crossed_lower_of_reducing A D V hVdom hVcomm hUnwanted z
@@ -590,7 +594,8 @@ theorem tanTheta_ambient_unboundedRitz_symmetricNorming_complex
     HasDefinedAmbientTangent U V ∧
       N.Mem (tanAngleOperatorC U V) ∧
       delta * N.gauge (tanAngleOperatorC U V) ≤ N.gauge H :=
-  tanTheta_ambient_unboundedRitz_explicitCompatibility_symmetricNorming_complex N D.trial A H hH hdelta
+  tanTheta_ambient_unboundedRitz_explicitCompatibility_symmetricNorming_complex N D.trial A H hH
+    hdelta
     D.mem_domain D.action_eq hV.mapsDomain hV.commutes hupper hUnwanted h35
     hResidual hMem
 

@@ -167,7 +167,9 @@ theorem spectraSeparated_top_iff (A : E →L[𝕜] E) (B : F →L[𝕜] F) (d : 
   have htopB : InvariantFor B (⊤ : Submodule 𝕜 F) := fun x _ => Submodule.mem_top
   constructor
   · rintro ⟨-, -, h⟩ a ha b hb
-    exact h a (by rw [restrictedSpectrum_top]; exact ha) b (by rw [restrictedSpectrum_top]; exact hb)
+    exact h a (by
+      rw [restrictedSpectrum_top]; exact ha) b (by
+      rw [restrictedSpectrum_top]; exact hb)
   · intro h
     refine ⟨htopA, htopB, fun a ha b hb => ?_⟩
     rw [restrictedSpectrum_top] at ha hb
@@ -379,9 +381,11 @@ end RealScalarRestriction
 open scoped RealScalarRestriction in
 /-- **The real spectrum is the spectrum after restricting scalars to `ℝ`.**
 
-Both sides are the failure of `r - A` to be invertible, and `ContinuousLinearMap.isUnit_iff_bijective`
+Both sides are the failure of `r - A` to be invertible, and
+  `ContinuousLinearMap.isUnit_iff_bijective`
 reduces each to bijectivity of the *same* underlying function: the inverse of a `𝕜`-linear
-continuous bijection is automatically `𝕜`-linear, so nothing is lost by forgetting the `𝕜`-structure.
+continuous bijection is automatically `𝕜`-linear, so nothing is lost by
+  forgetting the `𝕜`-structure.
 
 This is the step that lets a theorem proved over `ℝ` reach an operator over a general `RCLike`
 field. -/

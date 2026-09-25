@@ -578,7 +578,8 @@ proved here. -/
 /-- **Davis--Kahan 1970, `tan 2Θ`, unbounded ambient form, taking the reducing
 subspace rather than a reflection witness.**
 
-`tanTwoTheta_ambient_unbounded_blockRepresentative_symmetricNorming_complex` with `Z = V.reflectionOperator`
+`tanTwoTheta_ambient_unbounded_blockRepresentative_symmetricNorming_complex` with `Z =
+  V.reflectionOperator`
 and with `Z` self-adjoint and involutive supplied by the library. -/
 theorem tanTwoTheta_ambient_unbounded_blockRepresentative_derivedReflection_symmetricNorming_complex
     (N : SymmetricNormingFunction)
@@ -617,7 +618,8 @@ theorem tanTwoTheta_ambient_unbounded_blockRepresentative_derivedReflection_symm
 /-- **Davis--Kahan 1970, `tan 2Θ`, unbounded ambient form, on the paper's angle
 operator.**
 
-The same theorem as `tanTwoTheta_ambient_unbounded_blockRepresentative_derivedReflection_symmetricNorming_complex`, with the
+The same theorem as
+  `tanTwoTheta_ambient_unbounded_blockRepresentative_derivedReflection_symmetricNorming_complex`, with the
 proof's block tangent replaced by the paper's ambient `|tan 2Θ|`.  The two have
 the same approximation numbers -- `unboundedReflectionTangent U J_V = Ξ · J_U`
 with `J_U` a self-adjoint unitary, and `|Ξ| = |tan 2Θ|` -- so every source
@@ -663,7 +665,8 @@ theorem tanTwoTheta_ambient_unbounded_symmetricNorming_complex
         (TauCeti.LinearPMap.specRange hA (Set.Iic c) measurableSet_Iic) V) ≤
         2 * N.gauge B := by
   obtain ⟨hunit, hmem, hle⟩ :=
-    tanTwoTheta_ambient_unbounded_blockRepresentative_derivedReflection_symmetricNorming_complex N V hA hBsa hB hV hUa hUb
+    tanTwoTheta_ambient_unbounded_blockRepresentative_derivedReflection_symmetricNorming_complex
+      N V hA hBsa hB hV hUa hUb
       hab hBmem
   have hcos := DavisKahan.cos_two_ne_zero_of_isUnit_diagonalPart_reflection_sq
     (TauCeti.LinearPMap.specRange hA (Set.Iic c) measurableSet_Iic) V hunit

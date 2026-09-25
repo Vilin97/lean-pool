@@ -90,7 +90,8 @@ theorem realSpectrum_compressOperator_eq_restrictedSpectrum_of_reduces
 omit [CompleteSpace Hspace] in
 /-- A finite-gap configuration places the genuine spectra of the two diagonal
 compressions in the same interval and exterior sets. -/
-theorem _root_.TauCeti.DavisKahan.Foundation.FiniteGapConfiguration.exists_compressOperator_enclosures
+theorem
+  _root_.TauCeti.DavisKahan.Foundation.FiniteGapConfiguration.exists_compressOperator_enclosures
     (A : Hspace →L[ℂ] Hspace)
     (U : Submodule ℂ Hspace) [U.HasOrthogonalProjection]
     (hU : A.Reduces U) {d : ℝ}
@@ -117,7 +118,8 @@ variable {Hspace : Type v} [NormedAddCommGroup Hspace]
 /-- A finite-gap configuration, reduction of `A`, and off-diagonality of `K`
 provide all diagonal-spectrum placements and cross-block norm estimates needed
 for the sharp pathwise block-resolvent enclosure. -/
-theorem _root_.TauCeti.DavisKahan.Foundation.FiniteGapConfiguration.exists_operatorPath_block_enclosureData
+theorem
+  _root_.TauCeti.DavisKahan.Foundation.FiniteGapConfiguration.exists_operatorPath_block_enclosureData
     (A K : Hspace →L[ℂ] Hspace)
     (U : Submodule ℂ Hspace) [U.HasOrthogonalProjection]
     (hU : A.Reduces U) (hK : Submodule.IsOffDiagonal U K)

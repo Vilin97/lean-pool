@@ -115,13 +115,15 @@ structure SymmetricNormingFunction where
 /-- The extended symmetric-norming value of a scalar sequence: the supremum
 over its finite prefixes.  A norm of `tan Θ` is evaluated on the sequence
 `tan θ₁, tan θ₂, …`. -/
-noncomputable def SymmetricNormingFunction.evalSeq (N : SymmetricNormingFunction) (s : ℕ → ℝ) : ℝ≥0∞ :=
+noncomputable def SymmetricNormingFunction.evalSeq (N : SymmetricNormingFunction) (s : ℕ → ℝ) :
+  ℝ≥0∞ :=
   ⨆ n : ℕ, ENNReal.ofReal
     ((N.finiteNorm n).gauge (EuclideanSpace.basisFun (Fin n) ℂ)
       (fun i => s (i : ℕ)))
 
 /-- The sequence lies in the norm's ideal. -/
-def SymmetricNormingFunction.SeqFinite (N : SymmetricNormingFunction) (s : ℕ → ℝ) : Prop := N.evalSeq s ≠ ⊤
+def SymmetricNormingFunction.SeqFinite (N : SymmetricNormingFunction) (s : ℕ → ℝ) : Prop :=
+  N.evalSeq s ≠ ⊤
 
 /-- The real-valued norm of a sequence, meaningful on the ideal. -/
 noncomputable def SymmetricNormingFunction.seqNorm (N : SymmetricNormingFunction) (s : ℕ → ℝ) : ℝ :=
@@ -135,14 +137,17 @@ variable {F : Type v} [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [Complet
 
 /-- The symmetric-norming extended value on an operator: its value on the
 singular-value sequence, and `⊤` exactly off the associated ideal. -/
-noncomputable def SymmetricNormingFunction.eval (N : SymmetricNormingFunction) (T : E →L[𝕜] F) : ℝ≥0∞ :=
+noncomputable def SymmetricNormingFunction.eval (N : SymmetricNormingFunction) (T : E →L[𝕜] F) :
+  ℝ≥0∞ :=
   N.evalSeq (fun n => singularValue T n)
 
 /-- The operator lies in the norm's ideal. -/
-def SymmetricNormingFunction.Finite (N : SymmetricNormingFunction) (T : E →L[𝕜] F) : Prop := N.eval T ≠ ⊤
+def SymmetricNormingFunction.Finite (N : SymmetricNormingFunction) (T : E →L[𝕜] F) : Prop :=
+  N.eval T ≠ ⊤
 
 /-- The real-valued norm, meaningful on the ideal. -/
-noncomputable def SymmetricNormingFunction.norm (N : SymmetricNormingFunction) (T : E →L[𝕜] F) : ℝ := (N.eval T).toReal
+noncomputable def SymmetricNormingFunction.norm (N : SymmetricNormingFunction) (T : E →L[𝕜] F) :
+  ℝ := (N.eval T).toReal
 
 end NormEval
 

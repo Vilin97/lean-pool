@@ -311,7 +311,8 @@ theorem integral_unitIocMeasure_quadratic (c0 c1 c2 : ℝ) :
     integrable_contFn _ (by fun_prop)
   have hi0 : Integrable (fun _ : ℝ => c0) unitIocMeasure := integrable_contFn _ (by fun_prop)
   have hi1 : Integrable (fun t : ℝ => c1 * t) unitIocMeasure := integrable_contFn _ (by fun_prop)
-  have hi2 : Integrable (fun t : ℝ => c2 * t ^ 2) unitIocMeasure := integrable_contFn _ (by fun_prop)
+  have hi2 : Integrable (fun t : ℝ => c2 * t ^ 2) unitIocMeasure := integrable_contFn _ (by
+    fun_prop)
   rw [integral_add hi01 hi2, integral_add hi0 hi1,
     MeasureTheory.integral_const_mul, MeasureTheory.integral_const_mul,
     integral_unitIocMeasure_const, integral_unitIocMeasure_id, integral_unitIocMeasure_pow 2]
@@ -324,10 +325,14 @@ theorem integral_unitIocMeasure_quartic (c0 c1 c2 c3 c4 : ℝ) :
       c0 + c1 / 2 + c2 / 3 + c3 / 4 + c4 / 5 := by
   have hi0 : Integrable (fun _ : ℝ => c0) unitIocMeasure := integrable_contFn _ (by fun_prop)
   have hi1 : Integrable (fun t : ℝ => c1 * t) unitIocMeasure := integrable_contFn _ (by fun_prop)
-  have hi2 : Integrable (fun t : ℝ => c2 * t ^ 2) unitIocMeasure := integrable_contFn _ (by fun_prop)
-  have hi3 : Integrable (fun t : ℝ => c3 * t ^ 3) unitIocMeasure := integrable_contFn _ (by fun_prop)
-  have hi4 : Integrable (fun t : ℝ => c4 * t ^ 4) unitIocMeasure := integrable_contFn _ (by fun_prop)
-  have hi01 : Integrable (fun t : ℝ => c0 + c1 * t) unitIocMeasure := integrable_contFn _ (by fun_prop)
+  have hi2 : Integrable (fun t : ℝ => c2 * t ^ 2) unitIocMeasure := integrable_contFn _ (by
+    fun_prop)
+  have hi3 : Integrable (fun t : ℝ => c3 * t ^ 3) unitIocMeasure := integrable_contFn _ (by
+    fun_prop)
+  have hi4 : Integrable (fun t : ℝ => c4 * t ^ 4) unitIocMeasure := integrable_contFn _ (by
+    fun_prop)
+  have hi01 : Integrable (fun t : ℝ => c0 + c1 * t) unitIocMeasure := integrable_contFn _ (by
+    fun_prop)
   have hi012 : Integrable (fun t : ℝ => c0 + c1 * t + c2 * t ^ 2) unitIocMeasure :=
     integrable_contFn _ (by fun_prop)
   have hi0123 : Integrable (fun t : ℝ => c0 + c1 * t + c2 * t ^ 2 + c3 * t ^ 3)

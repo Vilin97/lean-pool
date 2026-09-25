@@ -225,7 +225,8 @@ theorem tanTheta_ambient_bounded_symmetricNorming_real_of_transversality
     rw [← complexify_sub]
     exact (SymmetricNormingFunction.mem_complexify_iff N (T - A)).2 hMem
   obtain ⟨hmemC, hboundC⟩ :=
-    tanTheta_ambient_bounded_symmetricNorming_complex_of_transversality (E := RealComplexification E) N
+    tanTheta_ambient_bounded_symmetricNorming_complex_of_transversality (E :=
+      RealComplexification E) N
       (T := complexify T) (A := complexify A)
       (U := complexifySubmodule U) (V := complexifySubmodule V)
       (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.1
@@ -349,7 +350,8 @@ theorem tanTwoTheta_ambient_bounded_orderedForm_symmetricNorming_real
 conclusion over a REAL Hilbert space, exactly from the printed hypotheses.**
 
 This is the real-scalar counterpart of
-`tanTwoTheta_directed_boundedResidual_blockRepresentative_spectralGap_symmetricNorming_complex`.  It assumes only the
+`tanTwoTheta_directed_boundedResidual_blockRepresentative_spectralGap_symmetricNorming_complex`.
+  It assumes only the
 paper's interval/half-line separation for the two blocks of `A`, positivity of
 `δ`, `H₀ = H₁ = 0`, and invariance of the comparison subspace for `A+H`.
 There is no quarter-angle branch, no caller-supplied pole exclusion, and no
@@ -424,7 +426,8 @@ theorem tanTwoTheta_directed_boundedResidual_blockRepresentative_spectralGap_sym
 Hilbert space, exactly from the printed hypotheses.**
 
 This is the real-scalar counterpart of
-`tanTwoTheta_ambient_bounded_spectralGap_symmetricNorming_complex`.  In particular it assumes only the
+`tanTwoTheta_ambient_bounded_spectralGap_symmetricNorming_complex`.  In particular it assumes
+  only the
 paper's interval/half-line separation for the two blocks of `A`, positivity of
 `δ`, `H₀ = H₁ = 0`, and invariance of the comparison subspace for `A+H`.
 There is no quarter-angle branch, no pole-exclusion hypothesis, and no

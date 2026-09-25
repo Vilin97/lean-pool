@@ -202,7 +202,8 @@ requirement for a useful unbounded conclusion.
 
 The reflected system is built internally from the trial data; no reflection
 residual appears in the statement. -/
-theorem sinTwoTheta_directed_unboundedResidual_blockRepresentative_spectrumGap_symmetricNorming_complex
+theorem
+  sinTwoTheta_directed_unboundedResidual_blockRepresentative_spectrumGap_symmetricNorming_complex
     (N : SymmetricNormingFunction)
     (hA : IsSelfAdjoint A)
     (B : Set ℝ) (hB : MeasurableSet B)
@@ -232,7 +233,8 @@ theorem sinTwoTheta_directed_unboundedResidual_blockRepresentative_spectrumGap_s
         kyFanApproximationGauge k (((2 : ℝ) : ℂ) • R0) := by
     intro k
     rw [kyFanApproximationGauge_smul, htwo, hsameR.kyFanApproximationGauge_eq k]
-    exact sinTwoTheta_directed_unboundedResidual_blockRepresentative_spectrumGap_kyFan_complex hA B hB hVdom hres
+    exact sinTwoTheta_directed_unboundedResidual_blockRepresentative_spectrumGap_kyFan_complex
+      hA B hB hVdom hres
       hβα hδ hBlow hBhigh hBcomplSpec k
   have hMem2 : N.Mem (((2 : ℝ) : ℂ) • R0) := by
     intro htop

@@ -534,7 +534,8 @@ theorem theorem8_2_sinTwoTheta_residual_symmetricNorming
   have hUspec' : ∀ x ∈ spectrum ℝ (compressOperator Qᗮ (A + K)),
       x ≤ beta - delta ∨ alpha + delta ≤ x :=
     fun _ hx => spectrum_compressOperator_subset_of_spectrumIn hQperp hx
-  exact DavisKahan1970.sinTwoTheta_directed_boundedResidual_blockRepresentative_symmetricNorming_complex
+  exact
+    DavisKahan1970.sinTwoTheta_directed_boundedResidual_blockRepresentative_symmetricNorming_complex
     (A := A + K) (U := Q) (V := P) N hAKsa hQred hdelta hab
     hUspec hUspec' (compressOperator P A) hRmem
 

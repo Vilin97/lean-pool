@@ -189,7 +189,8 @@ theorem approximationNumber_directedSineBlock_lt_one_rclike
     have hupper' : TauCeti.LinearPMap.SemiboundedAbove D'.compression alpha :=
       (D.semiboundedAbove_scalarTransport_iff (e := e)).2 hupper
     have hcross' := D.crossedLower_scalarTransport (e := e) (V := V) hcross
-    have hc := TauCeti.DavisKahan1970.approximationSingularValue_sineBlockReal_lt_one_unboundedCompression
+    have hc :=
+      TauCeti.DavisKahan1970.approximationSingularValue_sineBlockReal_lt_one_unboundedCompression
       D' V' hdelta hupper' hcross' n
     change approximationSingularValue n
         (directedSineBlock (ScalarTransport.submodule (e := e) Z) V') < 1 at hc
@@ -325,7 +326,8 @@ theorem tanTheta_directed_unboundedRitz_symmetricNorming_exists_rclike
           TanTheta.directedSineBlock] using hT' n
       calc
         T.approximationNumber n = T'.approximationNumber n := hTn.symm
-        _ = Real.tan (Real.arcsin ((TanTheta.directedSineBlock Z' V').approximationNumber n)) := hTshape
+        _ = Real.tan (Real.arcsin ((TanTheta.directedSineBlock Z' V').approximationNumber n)) :=
+          hTshape
         _ = Real.tan (Real.arcsin ((TanTheta.directedSineBlock Z V).approximationNumber n)) := by
           rw [TanTheta.approximationNumber_directedSineBlock_transport (e := e) Z V n]
     obtain ⟨hmem, hbound⟩ :=
@@ -343,7 +345,8 @@ theorem tanTheta_directed_unboundedRitz_symmetricNorming_exists_rclike
       rw [TanTheta.approximationSingularValue_directedSineBlock_transport (e := e) Z V n]
       simpa only [approximationSingularValue] using hlt n
     obtain ⟨T', hT'⟩ :=
-      TauCeti.DavisKahan.TanTheta.exists_hasTheorem63DirectedTangentApproximationNumbersInfinite Z' V' hlt'
+      TauCeti.DavisKahan.TanTheta.exists_hasTheorem63DirectedTangentApproximationNumbersInfinite
+        Z' V' hlt'
     let T : Z →L[𝕜] E :=
       (TanTheta.scalarTransportSubspaceCLMEquiv (e := e) Z).symm T'
     have htransport : TanTheta.scalarTransportSubspaceCLM (e := e) Z T = T' :=
@@ -360,7 +363,8 @@ theorem tanTheta_directed_unboundedRitz_symmetricNorming_exists_rclike
           TanTheta.directedSineBlock] using hT' n
       calc
         T.approximationNumber n = T'.approximationNumber n := hTn.symm
-        _ = Real.tan (Real.arcsin ((TanTheta.directedSineBlock Z' V').approximationNumber n)) := hTshape
+        _ = Real.tan (Real.arcsin ((TanTheta.directedSineBlock Z' V').approximationNumber n)) :=
+          hTshape
         _ = Real.tan (Real.arcsin ((TanTheta.directedSineBlock Z V).approximationNumber n)) := by
           rw [TanTheta.approximationNumber_directedSineBlock_transport (e := e) Z V n]
     obtain ⟨hmem, hbound⟩ :=

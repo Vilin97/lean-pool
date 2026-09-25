@@ -158,7 +158,8 @@ theorem sinTheta_addBounded_opNorm_of_spectrum_gap
         F₁ (Λ₁ y))
     (hXnorm : ‖X‖ ≤ 1) (hF₁norm : ‖F₁‖ ≤ 1)
     {β α δ : ℝ} (hβα : β ≤ α) (hδ : 0 < δ)
-    (hA₀low : TauCeti.LinearPMap.SemiboundedBelow A₀ β) (hA₀high : TauCeti.LinearPMap.SemiboundedAbove A₀ α)
+    (hA₀low : TauCeti.LinearPMap.SemiboundedBelow A₀ β) (hA₀high :
+      TauCeti.LinearPMap.SemiboundedAbove A₀ α)
     (hΛspec : ∀ lam ∈ Set.Ioo (β - δ) (α + δ),
       (lam : ℂ) ∉ TauCeti.LinearPMap.spectrum Λ₁) :
     δ * ‖X.adjoint ∘L F₁‖ ≤ ‖V‖ := by
@@ -194,7 +195,8 @@ theorem sinTheta_addBounded_opNorm_of_spectrum_gap_isometric
         F₁ (Λ₁ y))
     (hXiso : IsometricEmbedding X) (hF₁iso : IsometricEmbedding F₁)
     {β α δ : ℝ} (hβα : β ≤ α) (hδ : 0 < δ)
-    (hA₀low : TauCeti.LinearPMap.SemiboundedBelow A₀ β) (hA₀high : TauCeti.LinearPMap.SemiboundedAbove A₀ α)
+    (hA₀low : TauCeti.LinearPMap.SemiboundedBelow A₀ β) (hA₀high :
+      TauCeti.LinearPMap.SemiboundedAbove A₀ α)
     (hΛspec : ∀ lam ∈ Set.Ioo (β - δ) (α + δ),
       (lam : ℂ) ∉ TauCeti.LinearPMap.spectrum Λ₁) :
     δ * ‖X.adjoint ∘L F₁‖ ≤ ‖V‖ := by

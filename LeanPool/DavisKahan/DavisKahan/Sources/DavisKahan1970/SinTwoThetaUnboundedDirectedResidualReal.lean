@@ -6,9 +6,12 @@ Authors: Jon Crall, Claude Opus 5
 import LeanPool.DavisKahan.DavisKahan.DoubleAngle.RealUnboundedIdeal
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.TrialReflection
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ReflectedDefectDoubling
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.HeterogeneousRepresentative
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
+import
+  LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
+import
+  LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.HeterogeneousRepresentative
+import
+  LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.UnitaryInvariantNormLaws
 
 /-! # Sin Two Theta Unbounded Directed Residual Real -/
 
@@ -239,7 +242,8 @@ theorem sinTwoTheta_directed_unboundedResidual_blockRepresentative_symmetricNorm
 /-- The real directed endpoint restated at the **printed** separation
 hypothesis: the exact block has real spectrum inside `[β,α]` and the
 complementary block has real spectrum outside `]β-δ, α+δ[`. -/
-theorem sinTwoTheta_directed_unboundedResidual_blockRepresentative_intervalExterior_symmetricNorming_real
+theorem
+  sinTwoTheta_directed_unboundedResidual_blockRepresentative_intervalExterior_symmetricNorming_real
     (N : SymmetricNormingFunction)
     (hA : IsSelfAdjoint A)
     (B : Set ℝ) (hB : MeasurableSet B)
@@ -254,7 +258,8 @@ theorem sinTwoTheta_directed_unboundedResidual_blockRepresentative_intervalExter
       δ * N.gauge
           (sinTwoThetaIdealBlock (realSelfAdjointSpectralSubspace A hA B hB) V) ≤
         2 * N.gauge R :=
-  sinTwoTheta_directed_unboundedResidual_blockRepresentative_symmetricNorming_real N hA B hB hVdom hres hδ
+  sinTwoTheta_directed_unboundedResidual_blockRepresentative_symmetricNorming_real N hA B hB
+    hVdom hres hδ
     (FormBoundedSylvesterGap.intervalExterior hβα hgap) hRmem
 
 /-! ### The same two estimates at an arbitrary reducing subspace, over `ℝ`

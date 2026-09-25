@@ -195,7 +195,8 @@ private theorem gram_residual_of_tangent_pair_right
     have happScalar :
         (((1 + t ^ 2 : ℝ) : ℂ) • C.adjoint (C u)) +
           C.adjoint (C e) = u := by
-      rw [hTTeq, map_add, ContinuousLinearMap.map_smul, map_add, ContinuousLinearMap.map_smul] at happExpanded
+      rw [hTTeq, map_add, ContinuousLinearMap.map_smul, map_add, ContinuousLinearMap.map_smul]
+        at happExpanded
       calc
         (((1 + t ^ 2 : ℝ) : ℂ) • C.adjoint (C u)) + C.adjoint (C e) =
             C.adjoint (C u) +
@@ -584,7 +585,8 @@ theorem reflectionTangent_approximate_pair
           c * t * RCLike.re ⟪J1 v, A1 (J1 v)⟫_ℂ| ≤
           ‖A1‖ * ((‖C1‖ + ‖T‖ * M1) * eps) := by
       have := herr.trans (by simpa [hJ1norm] using hAerr)
-      simpa [ContinuousLinearMap.map_smul, inner_smul_right, RCLike.re_ofReal_mul, mul_assoc] using this
+      simpa [ContinuousLinearMap.map_smul, inner_smul_right, RCLike.re_ofReal_mul, mul_assoc]
+        using this
     rw [abs_le] at herr'
     have hform : RCLike.re ⟪J1 v, A1 (J1 v)⟫_ℂ ≤ a := by
       have h := hA1low (J1 v)

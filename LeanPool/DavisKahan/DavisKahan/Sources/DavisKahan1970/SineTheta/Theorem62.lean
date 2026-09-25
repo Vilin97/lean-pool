@@ -155,7 +155,8 @@ theorem canonicalSinTheta_frame_bound
       ContinuousLinearMap.comp_assoc]
   have hmem : approximationNumberEnergy P.canonicalSinTheta ≠ ⊤ := by
     rw [hblock]
-    have := approximationNumberEnergy_ne_top_comp hraw Q.invSqrt.adjoint (ContinuousLinearMap.id ℂ G)
+    have := approximationNumberEnergy_ne_top_comp hraw Q.invSqrt.adjoint (ContinuousLinearMap.id
+      ℂ G)
     simpa using this
   have hnorm : ‖Q.invSqrt.adjoint‖ ≤ P.frameLowerBound⁻¹ := by
     simpa using Q.invSqrt_norm_le
@@ -203,7 +204,8 @@ theorem result
   calc
     P.gap * P.frameLowerBound * ContinuousLinearMap.hilbertSchmidtNorm P.canonicalSinTheta
         = P.gap *
-            (P.frameLowerBound * ContinuousLinearMap.hilbertSchmidtNorm P.canonicalSinTheta) := by ring
+            (P.frameLowerBound * ContinuousLinearMap.hilbertSchmidtNorm P.canonicalSinTheta) := by
+              ring
     _ ≤ P.gap * ContinuousLinearMap.hilbertSchmidtNorm P.sylvesterOverlap :=
       mul_le_mul_of_nonneg_left hframe.2 P.gap_pos.le
     _ ≤ ContinuousLinearMap.hilbertSchmidtNorm P.projectedResidual := hraw.2
@@ -343,7 +345,8 @@ theorem canonicalSinTheta_frame_bound
       ContinuousLinearMap.comp_assoc]
   have hmem : approximationNumberEnergy P.canonicalSinTheta ≠ ⊤ := by
     rw [hcanonical]
-    have h := approximationNumberEnergy_ne_top_comp hraw Q.invSqrt.adjoint (ContinuousLinearMap.id ℝ G)
+    have h := approximationNumberEnergy_ne_top_comp hraw Q.invSqrt.adjoint
+      (ContinuousLinearMap.id ℝ G)
     rwa [ContinuousLinearMap.comp_id] at h
   have hnorm : ‖Q.invSqrt.adjoint‖ ≤ P.frameLowerBound⁻¹ := by
     simpa using Q.invSqrt_norm_le
@@ -420,7 +423,8 @@ theorem result
   calc
     P.gap * P.frameLowerBound * ContinuousLinearMap.hilbertSchmidtNorm P.canonicalSinTheta
         = P.gap *
-            (P.frameLowerBound * ContinuousLinearMap.hilbertSchmidtNorm P.canonicalSinTheta) := by ring
+            (P.frameLowerBound * ContinuousLinearMap.hilbertSchmidtNorm P.canonicalSinTheta) := by
+              ring
     _ ≤ P.gap * ContinuousLinearMap.hilbertSchmidtNorm P.sylvesterOverlap :=
       mul_le_mul_of_nonneg_left hframe P.gap_pos.le
     _ ≤ ContinuousLinearMap.hilbertSchmidtNorm P.projectedResidual := hraw.2

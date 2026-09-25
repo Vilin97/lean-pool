@@ -5,7 +5,8 @@ Authors: Jon Crall, Edward Wang
 -/
 
 /-
-Copyright (c) 2026 Kitware, Inc. All rights reserved.Released under Apache 2.0 license as described in the file LICENSE.Authors: Jon Crall, OpenAI GPT-5.6 Thinking
+Copyright (c) 2026 Kitware, Inc. All rights reserved.Released under Apache 2.0 license as
+  described in the file LICENSE.Authors: Jon Crall, OpenAI GPT-5.6 Thinking
 -/
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.HilbertSchmidtApproximationNorm
 import LeanPool.DavisKahan.DavisKahan.Sylvester.PairwiseSpectrumGap
@@ -22,12 +23,14 @@ open TauCeti.DavisKahan.Sylvester
 /-!
 # Pairwise-gap square-norm Sylvester theorem
 
-This file discharges the two hypotheses left by the defect-first reduction.Positive pairwise separation of the original self-adjoint spectra:
+This file discharges the two hypotheses left by
+  the defect-first reduction.Positive pairwise separation of the original self-adjoint spectra:
 
 * gives bounded homogeneous uniqueness through rectangular spectral
   intertwining; and
 * gives a global spectral gap for the left-minus-right Hilbert--Schmidt tensor
-  flow through the pure-tensor product-measure formula.The resulting theorem has the exact hypothesis and constant of the
+  flow through the pure-tensor product-measure formula.The resulting theorem has the exact
+    hypothesis and constant of the
 square-norm Sylvester estimate used in Davis--Kahan Theorem 6.2.
 -/
 

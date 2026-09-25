@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
 -/
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4
-import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
+import
+  LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Norms.SubspaceSingularTransport
 import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.BasisAngleEnergy
 import LeanPool.DavisKahan.DavisKahan.Geometry.Polar.DirectRotationReal
 import LeanPool.DavisKahan.DavisKahan.OperatorIdeal.ComplexificationApproximation
@@ -517,7 +518,8 @@ complexification of the real one. -/
 theorem complexify_displacementSquare (W : E →L[ℝ] E) :
     complexify ((1 - star W) * (1 - W)) =
       (1 - star (complexify W)) * (1 - complexify W) := by
-  rw [TauCeti.DavisKahan.complexify_mul, complexify_sub, complexify_sub, TauCeti.DavisKahan.complexify_one,
+  rw [TauCeti.DavisKahan.complexify_mul, complexify_sub, complexify_sub,
+    TauCeti.DavisKahan.complexify_one,
     TauCeti.DavisKahan.complexify_star]
 
 omit [CompleteSpace E] in
@@ -605,7 +607,8 @@ copy. -/
 theorem displacementAngleSineSq_complexify (W : E →L[ℝ] E) (x : E) :
     TauCeti.DavisKahan.Section4.displacementAngleSineSq (complexify W) (ofReal x) =
       displacementAngleSineSqR W x := by
-  rw [TauCeti.DavisKahan.Section4.displacementAngleSineSq, displacementAngleSineSqR, complexify_ofReal,
+  rw [TauCeti.DavisKahan.Section4.displacementAngleSineSq, displacementAngleSineSqR,
+    complexify_ofReal,
     inner_ofReal]
   norm_num
 

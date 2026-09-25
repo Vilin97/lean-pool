@@ -23,7 +23,8 @@ half-infinite configurations. The complex and real versions specialize it.
 `IsTrialResidual` records the isometric trial map and its bounded residual on
 the trial operator's domain. `IsExactSpectralDecomposition` records the exact
 orthogonal coordinate maps and the complementary operator. The ambient, trial,
-and complementary operators may all be unbounded. The rectangular map `(I - F₀ F₀*) E₀` has modulus `sin Theta₀`
+and complementary operators may all be unbounded. The rectangular map `(I - F₀ F₀*) E₀` has
+  modulus `sin Theta₀`
 and the same ideal norm as that positive operator on trial coordinates.
 
 The `symmetricNorming` theorems also prove ideal membership for their
@@ -193,7 +194,8 @@ and `hSinTheta₀` fixes it to that expression. The source's positive operator
 `sin Theta₀` is the modulus of `S` on the trial-coordinate space. Polar
 decomposition and the ideal contraction law give equal norms for these two
 operators, so the conclusion has the source's factor-one sine-angle norm.
-The stronger supporting theorem `sinTheta_unbounded_intervalExterior_symmetricNorming_rclike` additionally
+The stronger supporting theorem `sinTheta_unbounded_intervalExterior_symmetricNorming_rclike`
+  additionally
 certifies membership of this operator in the source norm ideal. -/
 theorem sinTheta_unbounded_intervalExterior_characterizedWitness_rclike
     (N : SymmetricNormingFunction)
@@ -409,7 +411,8 @@ theorem sinTheta_unbounded_formGap_symmetricNorming_complex_ofRCLike
 
 /-- **The familiar Section 2 interval form, over `ℂ`.**
 
-`sinTheta_unbounded_formGap_symmetricNorming_complex` with the gap spelled out as the printed separation: the
+`sinTheta_unbounded_formGap_symmetricNorming_complex` with the gap spelled out as the printed
+  separation: the
 trial spectrum inside `[β, α]` and the complementary spectrum outside
 `(β − δ, α + δ)`, or the same with the two roles exchanged.  This is one
 constructor of `FormBoundedSylvesterGap`; the Appendix's ordered half-line
@@ -433,7 +436,8 @@ theorem sinTheta_unbounded_intervalExterior_symmetricNorming_complex
     N.Mem ((ContinuousLinearMap.id ℂ E - F₀ ∘L F₀.adjoint) ∘L E₀) ∧
       δ * N.gauge ((ContinuousLinearMap.id ℂ E - F₀ ∘L F₀.adjoint) ∘L E₀) ≤
         N.gauge R :=
-  sinTheta_unbounded_formGap_symmetricNorming_complex N A A₀ Λ₁ E₀ F₀ F₁ R hA hA₀ hΛ₁ htrial hexact hδ
+  sinTheta_unbounded_formGap_symmetricNorming_complex N A A₀ Λ₁ E₀ F₀ F₁ R hA hA₀ hΛ₁ htrial
+    hexact hδ
     (FormBoundedSylvesterGap.intervalExterior hβα hspectral) hR
 
 /-! ### The where-defined normalized-UIN boundary
@@ -486,7 +490,8 @@ variable {E F G H : Type v}
 
 /-- **Davis--Kahan 1970, the sine-theta theorem, over `ℝ`.**
 
-The real-scalar sibling of `sinTheta_unbounded_formGap_symmetricNorming_complex`, with the same argument list and
+The real-scalar sibling of `sinTheta_unbounded_formGap_symmetricNorming_complex`, with the same
+  argument list and
 the same full gap scope.  The real proof descends from the complex one by
 complexification inside `result_real`; the descent is not visible here. -/
 theorem sinTheta_unbounded_formGap_symmetricNorming_real
@@ -535,7 +540,8 @@ theorem sinTheta_unbounded_formGap_symmetricNorming_real
 
 /-- **The familiar Section 2 interval form, over `ℝ`.**
 
-`sinTheta_unbounded_formGap_symmetricNorming_real` with the gap spelled out as the printed separation: the
+`sinTheta_unbounded_formGap_symmetricNorming_real` with the gap spelled out as the printed
+  separation: the
 trial spectrum inside `[β, α]` and the complementary spectrum outside
 `(β − δ, α + δ)`, or the same with the two roles exchanged.  This is one
 constructor of `FormBoundedSylvesterGap`; the Appendix's ordered half-line

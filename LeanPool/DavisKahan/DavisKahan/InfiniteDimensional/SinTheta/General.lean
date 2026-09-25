@@ -206,7 +206,8 @@ theorem norm_sylvester_le_of_generalSeparation_rclike
       Foundation.realSpectrum (complexify (T.restrictScalars ℝ)) =
         Foundation.realSpectrum T := by
     intro G _ _ _ T
-    rw [TauCeti.DavisKahan.Foundation.RealComplexification.realSpectrum_complexify (T.restrictScalars ℝ),
+    rw [TauCeti.DavisKahan.Foundation.RealComplexification.realSpectrum_complexify
+      (T.restrictScalars ℝ),
       Foundation.realSpectrum_eq_spectrum_restrictScalars T]
     rfl
   have hsepc : SpectraSeparated (complexify (A.restrictScalars ℝ)) ⊤
@@ -291,7 +292,8 @@ theorem sinTheta_residual
 Lean proof route for a weaker agent:
 
 1. Derive the off-diagonal Sylvester equation for `X=(I-P_V)P_U`.
-2. Use the interval/exterior decomposition to apply the constant-one ordered Sylvester estimate to the lower and upper pieces.
+2. Use the interval/exterior decomposition to apply the constant-one ordered Sylvester estimate
+  to the lower and upper pieces.
 3. Bound the right-hand residual by `‖B-A‖`.
 4. Rewrite `‖X‖` as the directed gap.
 
@@ -548,8 +550,10 @@ theorem projection_spectralSubspace_eq (A : E →L[𝕜] E) (hA : A.IsSymmetric)
 
 Lean proof route for a weaker agent:
 
-1. Convert the four spectral-containment hypotheses into the two `IntervalExteriorSeparated` predicates.
-2. Apply `sinTheta_symmetric` to the canonical spectral subspaces, using `isInvariant_spectralSubspace`.
+1. Convert the four spectral-containment hypotheses into the two `IntervalExteriorSeparated`
+  predicates.
+2. Apply `sinTheta_symmetric` to the canonical spectral subspaces, using
+  `isInvariant_spectralSubspace`.
 3. Rewrite the subspace gap as the norm of the two spectral projections.
 
 

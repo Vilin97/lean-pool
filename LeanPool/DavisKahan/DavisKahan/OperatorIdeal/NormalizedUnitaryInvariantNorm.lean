@@ -43,7 +43,8 @@ carry the stronger membership-transferring form.
   `gauge_le_of_forall_kyFanApproximationGauge_le_defined`.
 
 Where-defined Fan comparison is part of the mathematical base record.  Adding the
-stronger unconditional property with `NormalizedSymmetricOperatorIdealFamily.withFanDominance` recovers a
+stronger unconditional property with `NormalizedSymmetricOperatorIdealFamily.withFanDominance`
+  recovers a
 `NormalizedUnitaryInvariantNorm`.  Conversely,
 `NormalizedUnitaryInvariantNorm.toNormalizedSymmetricOperatorIdealFamily` forgets
 that extra property.
@@ -438,13 +439,16 @@ def toNormalizedSymmetricOperatorIdealFamily (N : NormalizedUnitaryInvariantNorm
     exact N.toFanDominantIdealFamily.gauge_le_of_forall_kyFanApproximationGauge_le hAB
 
 /-- The forgotten base family satisfies unconditional Fan dominance by the field carried above it. -/
-theorem toNormalizedSymmetricOperatorIdealFamily_hasFanDominance (N : NormalizedUnitaryInvariantNorm.{u, v} 𝕜) :
+theorem toNormalizedSymmetricOperatorIdealFamily_hasFanDominance (N :
+  NormalizedUnitaryInvariantNorm.{u, v} 𝕜) :
     N.toNormalizedSymmetricOperatorIdealFamily.HasFanDominance :=
   N.toFanDominantIdealFamily.gauge_le_of_forall_kyFanApproximationGauge_le
 
 /-- Forgetting Fan dominance and then adding back the carried property returns the same record. -/
-theorem toNormalizedSymmetricOperatorIdealFamily_withFanDominance (N : NormalizedUnitaryInvariantNorm.{u, v} 𝕜) :
-    N.toNormalizedSymmetricOperatorIdealFamily.withFanDominance N.toNormalizedSymmetricOperatorIdealFamily_hasFanDominance = N := by
+theorem toNormalizedSymmetricOperatorIdealFamily_withFanDominance (N :
+  NormalizedUnitaryInvariantNorm.{u, v} 𝕜) :
+    N.toNormalizedSymmetricOperatorIdealFamily.withFanDominance
+      N.toNormalizedSymmetricOperatorIdealFamily_hasFanDominance = N := by
   cases N with
   | mk fam _ => cases fam; rfl
 

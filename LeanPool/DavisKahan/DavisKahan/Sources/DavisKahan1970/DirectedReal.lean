@@ -490,7 +490,8 @@ unwanted exact subspace lies in `[α + δ, ∞)`, and the conclusion is `δ N(ta
 the paper's norm class, with the tangent representative exhibited and its membership
 concluded.  Real Hilbert space of arbitrary dimension, arbitrary closed real trial subspace.
 
-Grounded on `tanTheta_directed_bounded_symmetricNorming_real`; the spectral placement is converted to the
+Grounded on `tanTheta_directed_bounded_symmetricNorming_real`; the spectral placement is
+  converted to the
 form bounds by the two `TauCeti.SpectralOrder` bridges, exactly as
 `tanTheta_directed_bounded_spectralGap_symmetricNorming_complex` uses their complex twins. -/
 theorem tanTheta_directed_bounded_spectralGap_symmetricNorming_real
@@ -689,7 +690,8 @@ theorem norm_sinAngleOperatorR_lt_one_of_crossedDefectsEquivalent
 /-- **The whole-space `tan Θ` theorem over a REAL Hilbert space, for every source unitarily
 invariant norm, under the printed standing assumptions only.**
 
-Identical to `tanTheta_ambient_bounded_symmetricNorming_real_of_transversality` except that uniform transversality is no
+Identical to `tanTheta_ambient_bounded_symmetricNorming_real_of_transversality` except that
+  uniform transversality is no
 longer a hypothesis: it is derived from the form bounds and the printed (3.5). -/
 theorem tanTheta_ambient_bounded_symmetricNorming_real_of_crossedDefects
     (N : SymmetricNormingFunction)
@@ -707,7 +709,8 @@ theorem tanTheta_ambient_bounded_symmetricNorming_real_of_crossedDefects
       delta * N.gauge (tanAngleOperatorR U V) ≤ N.gauge (T - A) :=
   ⟨norm_sinAngleOperatorR_lt_one_of_crossedDefectsEquivalent T hT U V hV hdelta
       hCompressionUpper hUnwantedLower h35,
-    tanTheta_ambient_bounded_symmetricNorming_real_of_transversality N hT hA hV hAU hdelta hCompressionUpper
+    tanTheta_ambient_bounded_symmetricNorming_real_of_transversality N hT hA hV hAU hdelta
+      hCompressionUpper
       hUnwantedLower
       (norm_sinAngleOperatorR_lt_one_of_crossedDefectsEquivalent T hT U V hV hdelta
         hCompressionUpper hUnwantedLower h35) hMem⟩

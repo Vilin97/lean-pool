@@ -84,7 +84,8 @@ theorem exists_pos_eigenpair_beamOperator_gt (M : ℝ) :
 
 /-- A real spectral point above every bound, necessarily above `500`. -/
 theorem exists_lt_five_hundred_lt_mem_realSpectrum_beamOperator (M : ℝ) :
-    ∃ alpha : ℝ, M < alpha ∧ 500 < alpha ∧ alpha ∈ TauCeti.LinearPMap.realSpectrum beamOperator := by
+    ∃ alpha : ℝ, M < alpha ∧ 500 < alpha ∧ alpha ∈ TauCeti.LinearPMap.realSpectrum beamOperator
+      := by
   obtain ⟨lam, x, hM, hlam, hx0, heig⟩ := exists_pos_eigenpair_beamOperator_gt M
   exact ⟨lam, hM, eigenvalue_gt_five_hundred hlam hx0 heig,
     TauCeti.LinearPMap.mem_realSpectrum_of_eigenvector (A := beamOperator)
@@ -104,7 +105,8 @@ theorem exists_mem_realSpectrum_beamOperator_ne_zero :
   exact ⟨alpha, hmem, by linarith⟩
 
 /-- The real spectrum is unbounded above. -/
-theorem not_bddAbove_realSpectrum_beamOperator : ¬ BddAbove (TauCeti.LinearPMap.realSpectrum beamOperator) := by
+theorem not_bddAbove_realSpectrum_beamOperator : ¬ BddAbove (TauCeti.LinearPMap.realSpectrum
+  beamOperator) := by
   rintro ⟨b, hb⟩
   obtain ⟨alpha, hM, -, hmem⟩ := exists_lt_five_hundred_lt_mem_realSpectrum_beamOperator b
   exact absurd (hb hmem) (not_le.mpr hM)
@@ -219,7 +221,8 @@ theorem exists_lt_mem_beamEigenvalues (M : ℝ) : ∃ lam ∈ beamEigenvalues, M
 
 /-- A strictly increasing unbounded sequence of real spectral points above `500`. -/
 theorem exists_strictMono_mem_realSpectrum_beamOperator :
-    ∃ f : ℕ → ℝ, StrictMono f ∧ ∀ n, 500 < f n ∧ f n ∈ TauCeti.LinearPMap.realSpectrum beamOperator := by
+    ∃ f : ℕ → ℝ, StrictMono f ∧ ∀ n, 500 < f n ∧ f n ∈ TauCeti.LinearPMap.realSpectrum
+      beamOperator := by
   classical
   set g : ℝ → ℝ := fun M =>
     (exists_lt_five_hundred_lt_mem_realSpectrum_beamOperator M).choose with hgdef
@@ -237,7 +240,8 @@ theorem exists_strictMono_mem_realSpectrum_beamOperator :
     | succ k => exact ⟨hg2 _, hg3 _⟩
 
 /-- Zero belongs to the real spectrum through the nonzero constant mode. -/
-theorem zero_mem_realSpectrum_beamOperator : (0 : ℝ) ∈ TauCeti.LinearPMap.realSpectrum beamOperator := by
+theorem zero_mem_realSpectrum_beamOperator : (0 : ℝ) ∈ TauCeti.LinearPMap.realSpectrum
+  beamOperator := by
   obtain ⟨hmem, hzero⟩ := beamOperator_affine_mem_and_zero 1 0
   set x : beamOperator.domain := ⟨affineLp 1 0, hmem⟩ with hxdef
   have hne : (x : BeamL2) ≠ 0 := by

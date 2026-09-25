@@ -209,7 +209,8 @@ theorem Question10_4_ambient_functionalChange_complex
     {f : ℝ → ℝ} (hf1 : ∀ t ≤ α, f t = 1) (hf0 : ∀ t, α + δ ≤ t → f t = 0) :
     cfc f (A + H) - cfc f A = projectorDifference U V := by
   rw [Question10_4_stepFunction_perturbed_complex V hA hH hAplusH_V hδ hL0spec hL1spec hf1 hf0,
-    Question10_4_stepFunction_unperturbed_complex U hA hH hAU hδ hA0spec hA1spec hHU hHUperp hf1 hf0]
+    Question10_4_stepFunction_unperturbed_complex U hA hH hAU hδ hA0spec hA1spec hHU hHUperp hf1
+      hf0]
   rfl
 
 /-- **The source's displayed ambient chain**, `‖f(A+H) − f(A)‖ = ‖Q − P‖ = ‖sin Θ‖`, in the
@@ -294,7 +295,8 @@ theorem Question10_4_directed_functionalCalculusResidual_complex
 
 Davis and Kahan work on a real *or* complex Hilbert space, and the `tan 2θ` estimates these
 identities feed into already have real endpoints
-(`tanTwoTheta_ambient_bounded_spectralGap_symmetricNorming_real` and the directed sibling).  The same five
+(`tanTwoTheta_ambient_bounded_spectralGap_symmetricNorming_real` and the directed sibling).  The
+  same five
 claims over `ℝ`, on `TauCeti.SpectralGap.cfc_eq_starProjection_of_blockGap`.
 
 The ambient identity is stated as `Q − P` directly rather than through

@@ -57,7 +57,8 @@ spectrum, which is also what makes the transported conjugation on `Lp` the hones
   orthogonal cyclic sets *drawn from the real copy* already gives a dense span.
 * `exists_countable_isHilbertSum_lp_diagMeasure_conjugation_fixed` and
   `exists_countable_isHilbertSum_lp_diagMeasure_real`: **B4** -- the real analogue of
-  `TauCeti.BorelCalculus.exists_countable_isHilbertSum_lp_diagMeasure_complex`, with the equivariance.
+  `TauCeti.BorelCalculus.exists_countable_isHilbertSum_lp_diagMeasure_complex`, with the
+    equivariance.
 
 ## Hypotheses
 
@@ -423,7 +424,8 @@ section Assembly
 vector fixed by the canonical conjugation.**
 
 This is the real analogue of
-`TauCeti.BorelCalculus.exists_countable_isHilbertSum_lp_diagMeasure_complex`.  The enumeration and the
+`TauCeti.BorelCalculus.exists_countable_isHilbertSum_lp_diagMeasure_complex`.  The enumeration
+  and the
 zero-padding are the same as there -- the padding vector `0` is conjugation fixed, so the
 `ℕ`-indexed family stays inside the real copy -- and the totality input is
 `topologicalClosure_iSup_cyclicSubspace_of_maximal_fixed` instead of its unconstrained
@@ -515,7 +517,8 @@ intertwines pointwise complex conjugation on `Lp ℂ 2 μ` with the canonical co
 complexification.
 
 The Hilbert-sum component is the real analogue of
-`TauCeti.BorelCalculus.exists_countable_isHilbertSum_lp_diagMeasure_complex`; the equivariance component
+`TauCeti.BorelCalculus.exists_countable_isHilbertSum_lp_diagMeasure_complex`; the equivariance
+  component
 is what makes the *model* -- as opposed to an arbitrary unitary-equivalence witness -- descend.
 
 The cyclic vectors are exhibited as elements of the complexification together with the

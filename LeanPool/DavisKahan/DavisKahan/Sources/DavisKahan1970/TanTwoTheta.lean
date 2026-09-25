@@ -53,7 +53,8 @@ every unitary-invariant norm.
 
 ## What is compiled, at which scope
 
-* `tanTwoTheta_principalBranch_finiteDimensional_uiNorm_rclike` — **the source norm scope of equation (7.6)**: for
+* `tanTwoTheta_principalBranch_finiteDimensional_uiNorm_rclike` — **the source norm scope of
+  equation (7.6)**: for
   every rectangular unitarily invariant norm,
   `(b - a) · N(tan 2Θ₀) ≤ 2 · N(H)`, in the finite-dimensional
   graph-coordinate formulation, proved by the paper's paired-singular-vector
@@ -129,11 +130,13 @@ for a fully off-diagonal symmetric perturbation `H` across the form gap
 `[a, b]`, where `tan 2Θ₀` is any operator whose singular values are the
 double-angle tangents of the principal angles between `U` and the perturbed
 invariant graph subspace. -/
-alias tanTwoTheta_principalBranch_finiteDimensional_uiNorm_rclike := DavisKahan.FiniteDimensional.tanTwoTheta0_offDiagonal_le
+alias tanTwoTheta_principalBranch_finiteDimensional_uiNorm_rclike :=
+  DavisKahan.FiniteDimensional.tanTwoTheta0_offDiagonal_le
 
 /-- The Ky Fan prefix root of `tanTwoTheta_principalBranch_finiteDimensional_uiNorm_rclike`: equation (7.6) summed
 over paired singular vectors. -/
-alias tanTwoTheta_principalBranch_finiteDimensional_kyFan_rclike := DavisKahan.FiniteDimensional.kyFan_tanTwoTheta0_offDiagonal_le
+alias tanTwoTheta_principalBranch_finiteDimensional_kyFan_rclike :=
+  DavisKahan.FiniteDimensional.kyFan_tanTwoTheta0_offDiagonal_le
 
 /-- The paired-singular-vector scalar inequality at the heart of the source
 argument. -/

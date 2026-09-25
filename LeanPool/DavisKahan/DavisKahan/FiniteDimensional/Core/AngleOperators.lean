@@ -106,9 +106,12 @@ noncomputable def tanTwoAngleOperator (U V : Submodule 𝕜 E)
 
 Lean proof route for a weaker agent:
 
-1. Choose the canonical two-projection decomposition into common, defect, and generic principal planes.
-2. Show orthogonal complementation swaps the two defect blocks and leaves every generic angle unchanged.
-3. Use `hrank` to identify the defect multiplicities; zero-padding then gives equality of the finitely supported principal-angle sequences.
+1. Choose the canonical two-projection decomposition into common, defect, and generic principal
+  planes.
+2. Show orthogonal complementation swaps the two defect blocks and leaves every generic angle
+  unchanged.
+3. Use `hrank` to identify the defect multiplicities; zero-padding then gives equality of the
+  finitely supported principal-angle sequences.
 
 Signature audit: The equal-rank hypothesis fixes the defect multiplicities.  With the
 finitely-supported convention, additional zero angles disappear automatically, while the
