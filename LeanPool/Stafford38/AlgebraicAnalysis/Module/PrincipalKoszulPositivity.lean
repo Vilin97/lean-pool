@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalPrimeFiniteLengthLocalization
-import Mathlib.RingTheory.Length
-import Mathlib.RingTheory.Noetherian.Defs
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalPrimeFiniteLengthLocalization
+public import Mathlib.RingTheory.Length
+public import Mathlib.RingTheory.Noetherian.Defs
+
 
 /-!
 # Positivity for a principal Koszul quotient
@@ -16,6 +19,8 @@ After removing it, local Nakayama gives a positive residual cokernel when
 a support prime avoids the scalar. The proof retains embedded torsion;
 it does not infer injectivity from minimal-prime avoidance.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.PrincipalKoszulPositivity
 

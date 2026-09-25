@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.SplitTangentMatrix
-import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.LinearAlgebra.Basis.VectorSpace
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.SplitTangentMatrix
+public import Mathlib.LinearAlgebra.Matrix.Rank
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
+
 
 /-!
 # Selecting a nonsingular residue minor
@@ -16,6 +19,8 @@ with nonzero determinant.  The selected rows are returned as an embedding of
 the column index type into the row index type, matching the input expected by
 `GeometrySplitTangentMatrix`.
 -/
+
+@[expose] public section
 
 namespace Stafford38.GeometryResidueMinorSelection
 

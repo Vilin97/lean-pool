@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.UniversalAssembly
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalUnitCoordinatePreimage
-import LeanPool.Stafford38.Stafford38.Geometry.ConormalAxisContradiction
-import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalDirection
+module
+
+public import LeanPool.Stafford38.Stafford38.UniversalAssembly
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalUnitCoordinatePreimage
+public import LeanPool.Stafford38.Stafford38.Geometry.ConormalAxisContradiction
+public import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalDirection
+
 
 /-!
 # Conditional Laurent-direction skeleton for canonical support vanishing
@@ -26,6 +29,8 @@ closure back to an arbitrary characteristic-zero field.
 No finite phase-space limit is asserted: the Laurent base coordinates may have
 poles, and only the fibre residue is specialized.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CanonicalSupportVanishingReduction
 

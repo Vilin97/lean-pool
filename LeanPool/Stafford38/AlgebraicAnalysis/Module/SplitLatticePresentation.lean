@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.LocalRing.Module
-import Mathlib.LinearAlgebra.Matrix.Basis
+module
+
+public import Mathlib.RingTheory.LocalRing.Module
+public import Mathlib.LinearAlgebra.Matrix.Basis
+
 
 /-!
 # Matrix coordinates for a finite-rank direct summand
@@ -16,6 +19,8 @@ module over a local ring is finite projective, hence finite free.  Choosing a
 basis only inside the proof produces a column matrix and a retraction matrix.
 The matrices split, and their columns span exactly the original submodule.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.SplitLatticePresentation
 

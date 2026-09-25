@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermTotalActions
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermBoundaryExhaustion
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermTotalActions
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermBoundaryExhaustion
+
 
 /-!
 # Naturality of the target boundary maps
@@ -13,6 +16,8 @@ import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermBoundaryExhau
 The quotient maps from page one to later target pages commute with every
 filtered operator.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.FilteredTwoTermPages
 

@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.Stafford38.Weyl.PresentedScalarExtension
-import Mathlib.RingTheory.Flat.Equalizer
-import Mathlib.LinearAlgebra.TensorProduct.RightExactness
-import Mathlib.LinearAlgebra.TensorProduct.Basis
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import LeanPool.Stafford38.Stafford38.Weyl.PresentedScalarExtension
+public import Mathlib.RingTheory.Flat.Equalizer
+public import Mathlib.LinearAlgebra.TensorProduct.RightExactness
+public import Mathlib.LinearAlgebra.TensorProduct.Basis
+
 
 /-!
 # Filtered scalar lifting for the presented Weyl algebra
@@ -23,6 +26,8 @@ The small finite-dimensional example at the end records the cancellation
 falsifier: an arbitrary high-degree representation need not be termwise
 bounded, even though a bounded representation exists.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Weyl.FilteredScalarLifting
 

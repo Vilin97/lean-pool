@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+
 
 /-!
 # Active-coordinate decomposition in a derivation Ore extension
@@ -17,6 +20,8 @@ annihilates ground scalars and sends the coordinate to `1`.
 The results use only the checked normal-form construction.  They do not
 postulate a PBW basis, a presented Weyl algebra, or an operator realization.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.OreActiveCoordinate
 

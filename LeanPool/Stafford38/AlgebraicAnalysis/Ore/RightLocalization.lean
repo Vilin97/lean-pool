@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.OreLocalization.Ring
-import Mathlib.Algebra.Ring.Opposite
-import Mathlib.Algebra.Group.Units.Opposite
+module
+
+public import Mathlib.RingTheory.OreLocalization.Ring
+public import Mathlib.Algebra.Ring.Opposite
+public import Mathlib.Algebra.Group.Units.Opposite
+
 
 /-!
 # Right Ore localization
@@ -15,6 +18,8 @@ The opposite-ring presentation of a right Ore localization and its
 right-denominator clearing API. Extracted from Stafford38 commit
 c8a513d553b24c7c08da82f496c44dbbaeb1f2fc.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.OreRightLocalization
 

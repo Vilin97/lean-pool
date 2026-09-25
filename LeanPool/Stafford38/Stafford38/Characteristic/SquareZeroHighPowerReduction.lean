@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroArtinianTruncation
-import Mathlib.RingTheory.FiniteLength
-import Mathlib.RingTheory.LocalRing.Module
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroArtinianTruncation
+public import Mathlib.RingTheory.FiniteLength
+public import Mathlib.RingTheory.LocalRing.Module
+
 
 /-!
 # High-power reduction for a square-zero deformation
@@ -23,6 +26,8 @@ intersection used in the high-power quotient argument.  It avoids introducing
 an artificial multiplication API for two-sided ideals: membership in the
 relevant product is recorded by an explicit finite sum of products.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.SquareZeroHighPowerReduction
 

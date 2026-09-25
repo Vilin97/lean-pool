@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.FieldTheory.IntermediateField.Adjoin.Algebra
-import Mathlib.RingTheory.FiniteType
-import Mathlib.RingTheory.Localization.FractionRing
+module
+
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Algebra
+public import Mathlib.RingTheory.FiniteType
+public import Mathlib.RingTheory.Localization.FractionRing
+
 
 /-!
 # Finitely generated fraction fields
@@ -16,6 +19,8 @@ field extension.  The conclusion uses `IntermediateField.FG`, rather than
 finite type as an algebra: a transcendental fraction field is generally not
 finitely generated as an algebra over its ground field.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.FunctionField
 

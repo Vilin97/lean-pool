@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Quotient.EulerSurjectivity
-import LeanPool.Stafford38.Stafford38.Weyl.EulerRemainder
-import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence
+module
+
+public import LeanPool.Stafford38.Stafford38.Quotient.EulerSurjectivity
+public import LeanPool.Stafford38.Stafford38.Weyl.EulerRemainder
+public import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence
+
 
 /-!
 # Transport of the canonical right quotient
@@ -16,6 +19,8 @@ algebra equivalence.  This file transports the *literal* two-generator right
 ideal and its right quotient across that equivalence.  The final theorem is
 the presented-Weyl form of the already proved `PairStage` surjectivity.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylQuotientTransport
 

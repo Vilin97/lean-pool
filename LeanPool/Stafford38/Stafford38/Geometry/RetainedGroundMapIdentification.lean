@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ComponentProjectiveClosureNormalization
-import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalResidueExtension
-import LeanPool.Stafford38.Stafford38.Geometry.RetainedComponentEquationPackage
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ComponentProjectiveClosureNormalization
+public import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalResidueExtension
+public import LeanPool.Stafford38.Stafford38.Geometry.RetainedComponentEquationPackage
+
 
 /-!
 # Ground coefficients in the retained completed chart
@@ -20,6 +23,8 @@ consumer.
 The choice of `Algebra` structure is part of the statement.  No equality with
 an unrelated ground-field embedding of the residue field is asserted.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.RetainedGroundMapIdentification
 

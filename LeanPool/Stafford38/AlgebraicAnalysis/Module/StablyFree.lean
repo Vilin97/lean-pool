@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Finiteness.Projective
+module
+
+public import Mathlib.RingTheory.Finiteness.Projective
+
 
 /-!
 # Stable freeness interface for projective modules
@@ -13,6 +16,8 @@ This module records the application-independent right-module formulation of
 stable freeness used in filtered-ring arguments.  It is a definition, not a
 claim that any particular ring has the property.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis
 namespace StablyFree

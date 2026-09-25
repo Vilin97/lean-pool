@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Weyl.CommutatorSymbol
+module
+
+public import LeanPool.Stafford38.Stafford38.Weyl.CommutatorSymbol
+
 
 /-!
 # Coordinate commutators on arbitrary PBW sums
@@ -13,6 +16,8 @@ This file extends the ordered-block commutator--symbol formula to arbitrary
 presented Weyl elements.  The proof packages both sides as linear maps and
 checks equality on the full PBW basis.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylCoordinateCommutatorSymbol
 

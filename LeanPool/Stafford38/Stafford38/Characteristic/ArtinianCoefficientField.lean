@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.AlgebraicIndependent.Adjoin
-import Mathlib.RingTheory.AlgebraicIndependent.TranscendenceBasis
-import Mathlib.RingTheory.Artinian.Ring
-import Mathlib.RingTheory.Etale.Field
+module
+
+public import Mathlib.RingTheory.AlgebraicIndependent.Adjoin
+public import Mathlib.RingTheory.AlgebraicIndependent.TranscendenceBasis
+public import Mathlib.RingTheory.Artinian.Ring
+public import Mathlib.RingTheory.Etale.Field
+
 
 /-!
 # Coefficient fields in equal-characteristic-zero Artinian local rings
@@ -27,6 +30,8 @@ For an Artinian local algebra, the maximal ideal is nilpotent.  Formal
 smoothness of the residue field therefore lifts its identity map through the
 residue quotient, producing the coefficient-field section.
 -/
+
+@[expose] public section
 
 noncomputable section
 

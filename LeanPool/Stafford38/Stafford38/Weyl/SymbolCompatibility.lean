@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.Stafford38.Weyl.Symplectic
-import LeanPool.Stafford38.Stafford38.Weyl.LeadingSymbol
-import LeanPool.Stafford38.Stafford38.Characteristic.LinearAction
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import LeanPool.Stafford38.Stafford38.Weyl.Symplectic
+public import LeanPool.Stafford38.Stafford38.Weyl.LeadingSymbol
+public import LeanPool.Stafford38.Stafford38.Characteristic.LinearAction
+
 
 /-!
 # Bernstein-symbol compatibility for linear Weyl changes
@@ -18,6 +21,8 @@ commutatively substituting the degree-one principal symbols of those images.
 For a symplectic linear Weyl map, this induced substitution is exactly the
 phase-space linear action defined in `Characteristic.LinearAction`.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylSymbolCompatibility
 

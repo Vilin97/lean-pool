@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.CanonicalAsymptoticLaurentProducer
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalAsymptoticLaurentProducer
+
 
 /-!
 # Projective residue frames and the generic tangent rank bound
@@ -23,6 +26,8 @@ This is a generic-fibre statement.  No equality with an arc-derivation frame
 and no closed-boundary tangent bound is asserted; either conclusion needs an
 additional geometric comparison.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ProjectiveBoundaryFrameRank
 

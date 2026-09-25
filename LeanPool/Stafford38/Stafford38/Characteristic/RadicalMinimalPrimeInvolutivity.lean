@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
-import LeanPool.Stafford38.Stafford38.Characteristic.PostScalarExtensionPoisson
+module
+
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
+public import LeanPool.Stafford38.Stafford38.Characteristic.PostScalarExtensionPoisson
+
 
 /-!
 # Involutivity descends from a radical to its minimal primes
@@ -41,6 +44,8 @@ Two facts are proved.
 Nothing here proves involutivity of any concrete radical; this is the
 descent step only.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.RadicalMinimalPrimeInvolutivity
 

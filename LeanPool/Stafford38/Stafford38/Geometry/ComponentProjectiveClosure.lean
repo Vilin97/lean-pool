@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.AffineComponentCoordinateSplit
-import LeanPool.Stafford38.Stafford38.Geometry.LocalizedProjectiveChartTransition
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineComponentCoordinateSplit
+public import LeanPool.Stafford38.Stafford38.Geometry.LocalizedProjectiveChartTransition
+
 
 /-!
 # The projective cone of an affine component
@@ -19,6 +22,8 @@ The kernel is a prime homogeneous-coordinate ideal, saturated by the zeroth
 coordinate. Zeroth-chart dehomogenization recovers the affine component ideal
 exactly.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ComponentProjectiveClosure
 

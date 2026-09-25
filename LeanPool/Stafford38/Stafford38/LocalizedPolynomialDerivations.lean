@@ -4,9 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.LocalizedPolynomialDerivations
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.LocalizedPolynomialDerivations
+
 
 /-! Compatibility exports for reusable localized polynomial derivations. -/
+
+@[expose] public section
 namespace Stafford38.LocalizedPolynomialDerivations
 
 export AlgebraicAnalysis.DifferentialOperators.LocalizedPolynomialDerivations

@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Tactic
-import LeanPool.Stafford38.AlgebraicAnalysis.Commutator
+module
+
+public import Mathlib.Tactic
+public import LeanPool.Stafford38.AlgebraicAnalysis.Commutator
+
 
 /-!
 # Inverse-Euler/Riccati commutator identities
@@ -14,6 +17,8 @@ This module contains the purely ring-theoretic identities behind the
 inverse-Euler calculation.  No Weyl presentation, filtration, module, or
 application-specific hypothesis is assumed.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.InverseEulerRiccati
 

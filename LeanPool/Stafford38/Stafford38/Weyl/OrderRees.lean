@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedModule
-import Mathlib.Algebra.Polynomial.Coeff
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedModule
+public import Mathlib.Algebra.Polynomial.Coeff
+
 
 /-!
 # The differential-order Rees ring
@@ -15,6 +18,8 @@ filtration as the subring of the central polynomial ring `A[T]` whose
 degree-`N` coefficient lies in `F_N A`.  No commutativity of `A`, Rees
 specialization, or Gabber theorem is assumed.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylOrderRees
 

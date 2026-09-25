@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.AdjoinRoot
-import Mathlib.Algebra.Module.Torsion.Basic
-import Mathlib.RingTheory.Finiteness.Basic
-import Mathlib.RingTheory.Polynomial.Basic
+module
+
+public import Mathlib.RingTheory.AdjoinRoot
+public import Mathlib.Algebra.Module.Torsion.Basic
+public import Mathlib.RingTheory.Finiteness.Basic
+public import Mathlib.RingTheory.Polynomial.Basic
+
 
 /-!
 # Finiteness from a monic annihilator
@@ -16,6 +19,8 @@ A finite polynomial-ring module annihilated by a monic polynomial is finite
 over the coefficient ring. This is the algebraic finiteness step for the
 normal covariable; no characteristic-support assertion is assumed.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.MonicAnnihilatorFinite
 

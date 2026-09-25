@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedModule
-import LeanPool.Stafford38.Stafford38.Weyl.OrderRees
-import Mathlib.Algebra.DirectSum.Module
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedModule
+public import LeanPool.Stafford38.Stafford38.Weyl.OrderRees
+public import Mathlib.Algebra.DirectSum.Module
+
 
 /-!
 # The filtered quotient direct sum and associated-graded map
@@ -18,6 +21,8 @@ that it kills the shift, and prove surjectivity. This file does not construct
 the required right action of the order-Rees ring. Kernel equality and that
 action are deliberately left as subsequent theorems.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicFilteredQuotientRees
 

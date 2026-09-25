@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ScalarExtensionPoints
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ScalarExtensionPoints
+
 
 /-!
 # Poisson closure after scalar extension
@@ -16,6 +19,8 @@ transports that stronger predicate by extracting stability under every
 coordinate derivation.  No claim is made that taking a radical after base
 change preserves bracket closure.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.PostScalarExtensionPoisson
 

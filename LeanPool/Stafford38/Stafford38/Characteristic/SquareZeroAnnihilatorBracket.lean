@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroTraceData
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroTraceData
+
 
 /-!
 # Annihilator closure from a square-zero deformation
@@ -19,6 +22,8 @@ This proves closure only when both bracket inputs lie in the annihilator
 itself.  It does not prove bracket closure of its radical or of any prime ideal
 for inputs that merely lie in that larger ideal.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.SquareZeroAnnihilatorBracket
 

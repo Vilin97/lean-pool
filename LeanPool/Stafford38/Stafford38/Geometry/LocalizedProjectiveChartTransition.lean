@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ChartArcAnnihilation
-import Mathlib.RingTheory.Localization.Away.Basic
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ChartArcAnnihilation
+public import Mathlib.RingTheory.Localization.Away.Basic
+
 
 /-!
 # Localized transition between projective affine charts
@@ -14,6 +17,8 @@ The coordinate ring of the overlap between the zeroth affine chart and a
 chosen chart is obtained by inverting the chosen-chart coordinate representing
 `X₀ / X_chart`.  This file constructs the resulting transition homomorphism.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.LocalizedProjectiveChartTransition
 

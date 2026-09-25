@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Module.Submodule.Basic
-import Mathlib.Algebra.Module.Submodule.Lattice
-import Mathlib.Data.Finsupp.Pointwise
-import Mathlib.Data.Finsupp.SMul
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Module.Submodule.Basic
+public import Mathlib.Algebra.Module.Submodule.Lattice
+public import Mathlib.Data.Finsupp.Pointwise
+public import Mathlib.Data.Finsupp.SMul
+public import Mathlib.Tactic
+
 
 /-!
 # The concrete right-coordinate model for a stage
@@ -21,6 +24,8 @@ right action on the free coordinate object `ι →₀ S`, together with its fini
 single-coordinate decomposition.  No freeness of an Ore localization is
 assumed or encoded by an equivalent hypothesis here.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.RightCoordinates
 

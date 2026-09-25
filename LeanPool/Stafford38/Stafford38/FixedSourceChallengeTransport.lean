@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.FixedSourceStatement
-import Mathlib.Order.Lattice.Nat
+module
+
+public import LeanPool.Stafford38.Stafford38.FixedSourceStatement
+public import Mathlib.Order.Lattice.Nat
+
 
 /-!
 # Transport for the Mathlib-only exact-source challenge
@@ -34,6 +37,8 @@ proves that they agree with the substantive development:
 theorem `Stafford38.universalFixedSourceStatement`. No degree and no
 normal-form datum is supplied as a hypothesis anywhere.
 -/
+
+@[expose] public section
 
 namespace Stafford38FixedSourceChallenge
 

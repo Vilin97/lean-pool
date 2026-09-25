@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorLaurentConormal
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorLaurentConormal
+
 
 /-!
 # Projective tangent inclusion is enough for affine conormality
@@ -18,6 +21,8 @@ This file propagates that weaker hypothesis through the existing formal
 divisor and Laurent-direction consumers.  It constructs no projective chart,
 normalization, tangent comparison, or conormal-closure theorem.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ProjectiveTangentInclusion
 

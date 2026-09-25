@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialPageOperators
-import LeanPool.Stafford38.Stafford38.Characteristic.CommutingPolynomialAction
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialPageOperators
+public import LeanPool.Stafford38.Stafford38.Characteristic.CommutingPolynomialAction
+
 
 /-!
 # Tangential symbol action on the canonical total pages
@@ -13,6 +16,8 @@ import LeanPool.Stafford38.Stafford38.Characteristic.CommutingPolynomialAction
 The commuting polynomial action is constructed from the actual right Weyl
 generators. Their commutators have lower order and hence vanish on the pages.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalTangentialTotalAction
 

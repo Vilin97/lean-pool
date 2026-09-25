@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Ore.PairStage
+module
+
+public import LeanPool.Stafford38.Stafford38.Ore.PairStage
+
 
 /-!
 # Iterated coordinate-momentum pair stages
@@ -14,6 +17,8 @@ arbitrary coefficient ring.  It records only the resulting tower and the
 canonical data introduced at each successor; it does not identify the tower
 with a presented Weyl algebra.
 -/
+
+@[expose] public section
 
 namespace Stafford38.OreIteratedPairStage
 

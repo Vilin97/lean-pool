@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Analysis.Complex.Polynomial.Basic
-import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoisotropicSets
-import LeanPool.Stafford38.Stafford38.Characteristic.PostScalarExtensionPoisson
+module
+
+public import Mathlib.Analysis.Complex.Polynomial.Basic
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoisotropicSets
+public import LeanPool.Stafford38.Stafford38.Characteristic.PostScalarExtensionPoisson
+
 
 /-!
 # Independent consumer for the set-level coisotropic exclusion
@@ -17,6 +20,8 @@ hypotheses on `W`, while fibre homogeneity is supplied by `IsFibreConical`
 rather than by an explicit homogeneous-ideal hypothesis.  The additional
 Poisson import supplies product rules for the independent negative control.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.GeneralCoisotropicSetsTest
 

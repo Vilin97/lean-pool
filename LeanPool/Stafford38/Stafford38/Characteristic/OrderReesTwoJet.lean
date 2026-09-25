@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Weyl.OrderRees
-import Mathlib.Algebra.RingQuot
-import Mathlib.RingTheory.TwoSidedIdeal.Kernel
-import Mathlib.RingTheory.TwoSidedIdeal.Operations
+module
+
+public import LeanPool.Stafford38.Stafford38.Weyl.OrderRees
+public import Mathlib.Algebra.RingQuot
+public import Mathlib.RingTheory.TwoSidedIdeal.Kernel
+public import Mathlib.RingTheory.TwoSidedIdeal.Operations
+
 
 /-!
 # The order-Rees two-jet ring
@@ -20,6 +23,8 @@ written coefficient order in the noncommutative Weyl algebra.
 No Rees-module action, quotient module, trace package, or Gabber theorem is
 constructed here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicOrderReesTwoJet
 

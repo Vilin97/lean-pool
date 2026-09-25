@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.Unimodular
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.Unimodular
+
 
 /-!
 # Finite iteration of unimodular splittings
@@ -13,6 +16,8 @@ This file packages the unconditional finite iteration of normalized
 functionals.  It does not assert that such a sequence can be constructed
 from rank or torsion hypotheses.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.FreeSummandInduction
 

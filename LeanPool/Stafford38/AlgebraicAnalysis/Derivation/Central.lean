@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Ring.Subring.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Ring.Subring.Basic
+public import Mathlib.Tactic
+
 
 /-!
 # Centrality and inner derivations
@@ -19,6 +22,8 @@ The fraction-presentation lemma is deliberately stated with all hypotheses
 visible.  It does not assert that a particular localization has those
 properties.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.NoncommutativeDerivation
 

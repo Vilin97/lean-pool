@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdeal
-import LeanPool.Stafford38.Stafford38.Weyl.AssociatedGraded
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdeal
+public import LeanPool.Stafford38.Stafford38.Weyl.AssociatedGraded
+
 
 /-!
 # Differential-order filtration on a right-ideal quotient
@@ -20,6 +23,8 @@ The remaining global step is to assemble these degreewise equivalences into a
 graded `SymbolRing`-module equivalence and identify its annihilator/support
 with `orderInitialIdeal`.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicFilteredQuotient
 

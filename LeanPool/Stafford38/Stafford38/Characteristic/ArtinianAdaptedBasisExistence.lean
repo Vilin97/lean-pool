@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianAdaptedBasisTraceAdapter
-import Mathlib.Data.Fintype.Sort
-import Mathlib.Data.Prod.Lex
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianAdaptedBasisTraceAdapter
+public import Mathlib.Data.Fintype.Sort
+public import Mathlib.Data.Prod.Lex
+
 
 /-!
 # Existence of filtration-adapted bases
@@ -18,6 +21,8 @@ label each newly added vector by the layer at which it appears.  A final
 sorting by decreasing labels gives the ordered `Fin` basis used by the
 Artinian trace argument.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.ArtinianAdaptedBasisExistence
 

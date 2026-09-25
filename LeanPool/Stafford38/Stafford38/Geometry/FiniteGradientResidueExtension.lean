@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientBoundaryProducer
-import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalResidueExtension
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientBoundaryProducer
+public import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalResidueExtension
+
 
 /-!
 # Finite-gradient certificates over a boundary residue field
@@ -20,6 +23,8 @@ connects it directly to the residue-extension fibre-symbol contradiction.  No
 map `K → k`, algebraic-closedness of `K`, normalization, boundary divisor, or
 global certificate construction is assumed.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.FiniteGradientResidueExtension
 

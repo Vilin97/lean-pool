@@ -4,17 +4,22 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.BaseLocalizedKoszulPositivity
-import LeanPool.Stafford38.Stafford38.Characteristic.BaseLocalizationModuleComparison
-import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedKernelCokernelEquivalences
-import LeanPool.Stafford38.Stafford38.Characteristic.MinimalSupportKernelCokernelLengths
-import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedMinimalSupportAvoidance
-import LeanPool.Stafford38.Stafford38.Characteristic.PrincipalKoszulMinimalSupportPositivity
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.BaseLocalizedKoszulPositivity
+public import LeanPool.Stafford38.Stafford38.Characteristic.BaseLocalizationModuleComparison
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedKernelCokernelEquivalences
+public import LeanPool.Stafford38.Stafford38.Characteristic.MinimalSupportKernelCokernelLengths
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedMinimalSupportAvoidance
+public import LeanPool.Stafford38.Stafford38.Characteristic.PrincipalKoszulMinimalSupportPositivity
+
 
 /-!
 Compatibility exports for Koszul positivity after base localization
 from the shared algebraic-analysis library.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.BaseLocalizedKoszulPositivity
 

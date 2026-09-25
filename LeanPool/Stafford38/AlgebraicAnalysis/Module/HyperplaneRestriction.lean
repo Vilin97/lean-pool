@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Finiteness.Nakayama
-import Mathlib.RingTheory.Support
+module
+
+public import Mathlib.RingTheory.Finiteness.Nakayama
+public import Mathlib.RingTheory.Support
+
 
 /-!
 # Algebraic hyperplane restriction
@@ -15,6 +18,8 @@ by an element forces the module support to avoid the corresponding principal
 hypersurface. The proof is the determinant trick and is independent of any
 filtered or differential-operator application.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.HyperplaneRestriction
 

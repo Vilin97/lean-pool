@@ -4,13 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.MvPolynomial.EulerIdentity
-import LeanPool.Stafford38.Stafford38.Characteristic.GabberGlobalAssembly
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalNormalAxisSupport
+module
+
+public import Mathlib.RingTheory.MvPolynomial.EulerIdentity
+public import LeanPool.Stafford38.Stafford38.Characteristic.GabberGlobalAssembly
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalNormalAxisSupport
+
 
 /-!
 Avoidance of the normal coordinate by minimal primes of the characteristic support.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.NoncharacteristicMinimalPrime
 

@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedHighPowerTwoBlockVanishing
-import Mathlib.Algebra.Module.RingHom
-import Mathlib.RingTheory.Ideal.Quotient.Basic
-import Mathlib.RingTheory.TwoSidedIdeal.Kernel
-import Mathlib.RingTheory.TwoSidedIdeal.Operations
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedHighPowerTwoBlockVanishing
+public import Mathlib.Algebra.Module.RingHom
+public import Mathlib.RingTheory.Ideal.Quotient.Basic
+public import Mathlib.RingTheory.TwoSidedIdeal.Kernel
+public import Mathlib.RingTheory.TwoSidedIdeal.Operations
+
 
 /-!
 # The localized two-block quotient
@@ -23,6 +26,8 @@ congruence quotient by `J`.
 
 No source matrices, adapted basis, or trace identity is assumed here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.LocalizedTwoBlockQuotient
 

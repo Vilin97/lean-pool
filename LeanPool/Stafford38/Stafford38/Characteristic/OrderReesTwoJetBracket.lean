@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.OrderReesTwoJet
-import LeanPool.Stafford38.Stafford38.Weyl.PBWFirstContraction
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.OrderReesTwoJet
+public import LeanPool.Stafford38.Stafford38.Weyl.PBWFirstContraction
+
 
 /-!
 # The commutator bracket in the order-Rees two-jet
@@ -20,6 +23,8 @@ quotient by `T` is only determined modulo `T`.  The final theorem therefore
 asserts existence for arbitrary two-jet classes while retaining the explicit
 source-level witness used to prove it.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicOrderReesTwoJetBracket
 

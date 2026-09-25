@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Etale.Field
-import Mathlib.RingTheory.Etale.Kaehler
+module
+
+public import Mathlib.RingTheory.Etale.Field
+public import Mathlib.RingTheory.Etale.Kaehler
+
 
 /-!
 # Extending residue-field derivations through a separable extension
@@ -26,6 +29,8 @@ This file does not construct a coefficient-field section of a complete DVR,
 identify a completion with `K[[t]]`, or extend these derivations continuously
 to power series.  Those remain separate inputs to the completed-chart step.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.SeparableResidueDerivationExtension
 

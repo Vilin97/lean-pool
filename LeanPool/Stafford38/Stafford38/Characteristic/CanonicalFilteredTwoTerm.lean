@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermPages
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalAxisAvoidanceConsumer
-import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedModule
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermPages
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalAxisAvoidanceConsumer
+public import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedModule
+
 
 /-!
 # The canonical filtered two-term complex
@@ -15,6 +18,8 @@ This is the concrete filtered complex used for the canonical Weyl quotient.
 The filtration is the actual order filtration on the quotient, extended by
 zero in negative order.  No associated-graded identification is assumed here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalFilteredTwoTerm
 

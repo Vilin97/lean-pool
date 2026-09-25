@@ -4,12 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalPrimeFiniteLengthLocalization
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalPrimeFiniteLengthLocalization
+
 
 /-!
 Compatibility exports for finite length after localization at a minimal support prime
 from the shared algebraic-analysis library.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.MinimalPrimeFiniteLengthLocalization
 

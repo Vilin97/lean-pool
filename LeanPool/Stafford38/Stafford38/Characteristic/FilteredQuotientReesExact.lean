@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientRees
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientRees
+
 
 /-!
 # Exact specialization of the filtered quotient Rees direct sum
@@ -17,6 +20,8 @@ quotient is exactly its range.
 Only `k`-linear maps are used here.  In particular, this file introduces no
 Rees-ring action and asserts no special-fibre ring or module equivalence.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicFilteredQuotientReesExact
 

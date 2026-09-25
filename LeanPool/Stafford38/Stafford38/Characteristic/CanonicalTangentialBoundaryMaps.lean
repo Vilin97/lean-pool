@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialTotalAction
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermBoundaryNaturality
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialTotalAction
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermBoundaryNaturality
+
 
 /-!
 # Tangential-linear boundary maps for the canonical quotient
@@ -13,6 +16,8 @@ import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermBoundaryNatu
 These are the actual quotient maps of the filtered complex, with their
 linearity over the tangential polynomial ring proved from the Weyl action.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalTangentialTotalAction
 

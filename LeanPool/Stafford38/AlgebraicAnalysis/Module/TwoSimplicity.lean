@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Defs
-import Mathlib.Algebra.Ring.Hom.Defs
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Ring.Hom.Defs
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Tactic
+
 
 /-!
 # Abstract two-simplicity transfer
@@ -16,6 +19,8 @@ This file records the ring-theoretic transfer from a principal-right-quotient
 torsion statement to two-simplicity.  It does not assert the localization or
 rank theorem needed to produce that torsion statement.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.TwoSimplicity
 

@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.LinearAlgebra.Quotient.Basic
+module
+
+public import Mathlib.LinearAlgebra.Quotient.Basic
+
 
 /-!
 # Strict filtered endomorphisms
@@ -13,6 +16,8 @@ A strict surjective endomorphism of a filtered module is surjective on every
 subquotient of the filtration.  The formulation here uses only submodules and
 their quotients; it does not introduce a separate associated-graded framework.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.FilteredStrictness
 

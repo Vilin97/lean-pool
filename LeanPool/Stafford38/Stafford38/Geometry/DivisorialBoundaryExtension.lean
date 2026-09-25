@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.AsymptoticDivisorExistence
-import Mathlib.RingTheory.DedekindDomain.IntegralClosure
-import Mathlib.RingTheory.DedekindDomain.Dvr
-import Mathlib.RingTheory.Ideal.Over
-import Mathlib.RingTheory.Localization.AsSubring
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.AsymptoticDivisorExistence
+public import Mathlib.RingTheory.DedekindDomain.IntegralClosure
+public import Mathlib.RingTheory.DedekindDomain.Dvr
+public import Mathlib.RingTheory.Ideal.Over
+public import Mathlib.RingTheory.Localization.AsSubring
+
 
 /-!
 # Discrete boundary places in finite extensions
@@ -30,6 +33,8 @@ field of a DVR whose parameter maps to the selected coordinate.  In
 characteristic zero this is the usual finite transcendence-basis step; no
 such presentation is assumed or named in the theorem proved here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.DivisorialBoundaryExtension
 

@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.Polynomial
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.Polynomial
+
 
 /-!
 # Poisson closure and vertical translation
@@ -19,6 +22,8 @@ Only polynomial rings, ideals, partial derivatives, and evaluation maps occur
 here.  In particular, no variety, characteristic support, conormal bundle, or
 geometric integration theorem is represented by these declarations.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.CoisotropicTranslation
 

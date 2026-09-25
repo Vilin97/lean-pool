@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulSupportOverBase
-import Mathlib.RingTheory.Support
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulSupportOverBase
+public import Mathlib.RingTheory.Support
+
 
 /-!
 # Principal Koszul positivity from minimal support
@@ -14,6 +17,8 @@ The support primes used by the strict length argument are produced from the
 finite `C`-module itself.  In particular, no finiteness of `E` over the base
 ring `R` is needed.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.PrincipalKoszulMinimalSupportPositivity
 

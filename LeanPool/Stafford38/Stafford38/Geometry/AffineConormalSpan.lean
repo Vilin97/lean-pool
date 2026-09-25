@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.LinearAlgebra.Dual.Lemmas
-import Mathlib.LinearAlgebra.Finsupp.LinearCombination
-import LeanPool.Stafford38.Stafford38.Characteristic.BaseZeroSection
-import LeanPool.Stafford38.Stafford38.Geometry.PointwiseConormalContainment
+module
+
+public import Mathlib.LinearAlgebra.Dual.Lemmas
+public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
+public import LeanPool.Stafford38.Stafford38.Characteristic.BaseZeroSection
+public import LeanPool.Stafford38.Stafford38.Geometry.PointwiseConormalContainment
+
 
 /-!
 # Affine conormals are finite spans of equation differentials
@@ -26,6 +29,8 @@ identification of this equation-defined tangent space with the tangent fibre
 of a smooth locus, or the passage from pointwise fibres to the closure of the
 smooth conormal bundle.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.AffineConormalSpan
 

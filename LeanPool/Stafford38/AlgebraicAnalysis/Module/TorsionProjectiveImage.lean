@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.FreeSummandInduction
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FreeSummandInduction
+
 
 /-!
 # A projective-image terminal module lemma
@@ -14,6 +17,8 @@ presentation: a surjection from a product which kills its free factor factors
 through the first factor.  It does not assert that a torsion module admits
 such a presentation.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.TorsionProjectiveImage
 

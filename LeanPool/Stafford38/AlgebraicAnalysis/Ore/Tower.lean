@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.LeftPBW
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.LeftPBW
+
 
 /-!
 # Commuting derivations and the next Ore stage
@@ -15,6 +18,8 @@ first derivation-Ore extension by differentiating every coefficient in left
 normal form.  The formulas at the coefficient embedding and at the Ore
 variable are part of the interface used by later tower stages.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.OreTower
 

@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.FiniteLength
-import Mathlib.Algebra.Module.Torsion.Basic
-import Mathlib.RingTheory.Finiteness.Ideal
-import Mathlib.RingTheory.Ideal.MinimalPrime.Localization
-import Mathlib.RingTheory.Localization.Finiteness
-import Mathlib.RingTheory.Noetherian.Basic
-import Mathlib.RingTheory.Support
+module
+
+public import Mathlib.RingTheory.FiniteLength
+public import Mathlib.Algebra.Module.Torsion.Basic
+public import Mathlib.RingTheory.Finiteness.Ideal
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Localization
+public import Mathlib.RingTheory.Localization.Finiteness
+public import Mathlib.RingTheory.Noetherian.Basic
+public import Mathlib.RingTheory.Support
+
 
 /-!
 # Finite length at a minimal prime of a finite module
@@ -19,6 +22,8 @@ This file isolates the commutative-algebra localization statement used later:
 if `P` is minimal over the annihilator of a finite module, then localization at
 `P` is nonzero and has finite length.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.MinimalPrimeFiniteLengthLocalization
 

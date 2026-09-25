@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Nullstellensatz
-import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalClosure
+module
+
+public import Mathlib.RingTheory.Nullstellensatz
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalClosure
+
 
 /-!
 # Density of the equation conormal over a principal open
@@ -15,6 +18,8 @@ principal-open density argument.  The conormal-specific graph construction is
 kept as a separate theorem below, so its hypotheses and its use of the
 equation-defined conormal are visible at the call site.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ConormalPrincipalOpenDensity
 

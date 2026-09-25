@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import Mathlib.RingTheory.OreLocalization.Ring
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import Mathlib.RingTheory.OreLocalization.Ring
+
 
 /-!
 # Localization interface for derivation-Ore extensions
@@ -15,6 +18,8 @@ localizing a derivation-Ore extension at coefficients gives the derivation-Ore
 extension of the localized coefficient ring.  It packages data and its
 compatibility law; it does not assert that the data exist.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis
 namespace OreLocalizationExtension

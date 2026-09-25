@@ -4,12 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianTriangularTrace
-import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianCoefficientField
-import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroLinearTrace
-import Mathlib.LinearAlgebra.Basis.Basic
-import Mathlib.RingTheory.Artinian.Module
-import Mathlib.RingTheory.LocalRing.Module
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianTriangularTrace
+public import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianCoefficientField
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroLinearTrace
+public import Mathlib.LinearAlgebra.Basis.Basic
+public import Mathlib.RingTheory.Artinian.Module
+public import Mathlib.RingTheory.LocalRing.Module
+
 
 /-!
 # Adapted bases and square-zero quotient descent
@@ -29,6 +32,8 @@ hypothesis already implies trace zero. It is not a formalization of equation
 (3.3), and neither `q = 0` nor the concrete deformation-ring/right-Rees
 adapter is proved here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.ArtinianAdaptedBasisTraceAdapter
 

@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalMonicSaturation
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalMonicSaturation
+
 
 /-!
 # A unit-only strict coordinate criterion for canonical axis avoidance
@@ -21,6 +24,8 @@ coordinate hyperplane from characteristic support.  It also records that the
 previous all-degree cancellation and strict-lower-preimage hypotheses imply
 the unit-only condition.  No converse is asserted.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CanonicalUnitCoordinatePreimage
 

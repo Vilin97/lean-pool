@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroTraceData
-import Mathlib.RingTheory.OreLocalization.OreSet
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroTraceData
+public import Mathlib.RingTheory.OreLocalization.OreSet
+
 
 /-!
 # Ore localization of a square-zero deformation
@@ -18,6 +21,8 @@ enough both for the Ore equation and for the weak cancellation axiom.
 This is the localization input needed by the minimal-prime trace argument.  No
 trace, finite-length, or prime-ideal conclusion is asserted here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.SquareZeroOreLocalization
 

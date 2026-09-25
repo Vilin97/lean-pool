@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.Stafford38.Ore.ScalarAlgebra
-import LeanPool.Stafford38.Stafford38.Ore.PairStage
-import Mathlib.Algebra.MvPolynomial.Equiv
-import Mathlib.Algebra.Polynomial.AlgebraMap
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import LeanPool.Stafford38.Stafford38.Ore.ScalarAlgebra
+public import LeanPool.Stafford38.Stafford38.Ore.PairStage
+public import Mathlib.Algebra.MvPolynomial.Equiv
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+
 
 /-!
 # Scalar-linear Ore normal forms
@@ -17,6 +20,8 @@ The additive normal-form equivalence is linear over every central scalar ring
 killed by the coefficient derivation.  This is the scalar interface needed to
 turn the iterated Ore normal form into a PBW basis.
 -/
+
+@[expose] public section
 
 namespace Stafford38.OreLinearNormalForm
 

@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedModule
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalAxisAvoidanceConsumer
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedModule
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalAxisAvoidanceConsumer
+
 
 /-!
 # The exact strictness interface for canonical noncharacteristic cancellation
@@ -22,6 +25,8 @@ equivalently, force saturation of the canonical order initial ideal by the
 coordinate).  Monicity and unrestricted surjectivity alone do not prove that
 strictness statement; no such implication is assumed here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CanonicalNoncharacteristicCancellation
 

@@ -4,13 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPageActions
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermPages
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPageActions
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermPages
+
 
 /-!
 Compatibility exports for operator actions on filtered two-term pages
 from the shared algebraic-analysis library.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.FilteredTwoTermPages
 

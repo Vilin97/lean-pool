@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulPositivity
-import Mathlib.RingTheory.Support
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulPositivity
+public import Mathlib.RingTheory.Support
+
 
 /-!
 # Support detects the residual after stable scalar torsion
@@ -14,6 +17,8 @@ The support argument is most transparent before localization: the exact
 sequence for the power kernel splits support into torsion and residual parts,
 and `support_quotSMulTop` then applies at the larger prime.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.StableTorsionResidualSupport
 

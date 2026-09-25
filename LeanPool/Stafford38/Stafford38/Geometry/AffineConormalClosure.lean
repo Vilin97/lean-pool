@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Nullstellensatz
-import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalSpan
+module
+
+public import Mathlib.RingTheory.Nullstellensatz
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalSpan
+
 
 /-!
 # Algebraic closure of the equation-defined affine conormal locus
@@ -19,6 +22,8 @@ This file uses the closure operator `V(I(S))` on field-valued affine points.
 It does not identify a smooth scheme-theoretic conormal bundle or prove the
 asymptotic conormal theorem at infinity.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.AffineConormalClosure
 

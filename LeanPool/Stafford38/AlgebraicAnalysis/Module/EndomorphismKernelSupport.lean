@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Support
-import Mathlib.RingTheory.Noetherian.Orzech
+module
+
+public import Mathlib.RingTheory.Support
+public import Mathlib.RingTheory.Noetherian.Orzech
+
 
 /-!
 # Kernel support is contained in cokernel support
@@ -14,6 +17,8 @@ The only input is the Hopfian property of a finite module over a commutative
 Noetherian ring.  The proof is deliberately made at a prime, using the
 actual `LocalizedModule` support definition.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis
 

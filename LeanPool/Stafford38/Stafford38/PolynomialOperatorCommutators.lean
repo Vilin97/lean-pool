@@ -4,9 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.PolynomialDifferentialOperators
+module
+
+public import LeanPool.Stafford38.Stafford38.PolynomialDifferentialOperators
+
 
 /-! Coordinate commutators on the intrinsic polynomial endomorphism ring. -/
+
+@[expose] public section
 
 namespace Stafford38.PolynomialOperatorCommutators
 

@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.LinearAlgebra.Trace
-import Mathlib.LinearAlgebra.Projection
+module
+
+public import Mathlib.LinearAlgebra.Trace
+public import Mathlib.LinearAlgebra.Projection
+
 
 /-!
 # The square-zero linear trace calculation
@@ -21,6 +24,8 @@ Choosing a linear section of the quotient map gives the usual two-by-two
 block decomposition.  The off-diagonal block of the displayed commutator is
 a sum of two rectangular commutators, so its trace is zero.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalFilteredTwoTerm
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientRees
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalFilteredTwoTerm
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientRees
+
 
 /-!
 # The degree-zero page of the canonical filtered quotient
@@ -13,6 +16,8 @@ import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientRees
 This file records the first genuine page-level bridge: at `p = -m`, the
 zero-page source and target are the actual order-`m` quotient graded piece.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalFilteredGradedBridge
 

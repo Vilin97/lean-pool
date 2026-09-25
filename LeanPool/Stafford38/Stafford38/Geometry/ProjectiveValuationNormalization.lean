@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Localization.Integer
-import Mathlib.RingTheory.Valuation.ValuationSubring
-import Mathlib.RingTheory.Filtration
-import Mathlib.RingTheory.AdicCompletion.Algebra
+module
+
+public import Mathlib.RingTheory.Localization.Integer
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Mathlib.RingTheory.Filtration
+public import Mathlib.RingTheory.AdicCompletion.Algebra
+
 
 /-!
 # Finite projective normalization in a valuation subring
@@ -17,6 +20,8 @@ scaled into the valuation ring so that one coordinate is exactly one.  The
 same scalar is used in every coordinate, so all projective ratios and
 homogeneous equations are preserved.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ProjectiveValuationNormalization
 

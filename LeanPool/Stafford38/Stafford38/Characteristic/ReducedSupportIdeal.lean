@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.BaseRelativePoisson
-import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdeal
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.BaseRelativePoisson
+public import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdeal
+
 
 /-!
 # The reduced order-characteristic ideal
@@ -15,6 +18,8 @@ characteristic support.  It also records its contraction to the base
 polynomial ring.  These definitions make the remaining base-relative Gabber
 statement concrete; no Poisson-closure theorem is asserted here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.ReducedSupportIdeal
 

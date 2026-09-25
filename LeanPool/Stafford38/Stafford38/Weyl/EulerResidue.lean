@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.Proofs.WeylPurePower
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import LeanPool.Stafford38.Proofs.WeylPurePower
+
 
 /-!
 # The positive Euler residue in the canonical right ideal
@@ -14,6 +17,8 @@ This module fixes the right-ideal orientation of the Euler Bezout identity.
 The remaining step for quotient surjectivity is to prove that the displayed
 error term has a right factor `x` lying in the Euler-nonnegative subring.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylEulerResidue
 

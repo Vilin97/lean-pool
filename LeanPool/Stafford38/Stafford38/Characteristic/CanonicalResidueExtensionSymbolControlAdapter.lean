@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalLaurentSymbolControl
-import LeanPool.Stafford38.Stafford38.Characteristic.GeometricSupportScalarExtension
-import LeanPool.Stafford38.Stafford38.Characteristic.MinimalPrimePoisson
-import LeanPool.Stafford38.Stafford38.Geometry.CanonicalResidueExtensionAssembly
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalLaurentSymbolControl
+public import LeanPool.Stafford38.Stafford38.Characteristic.GeometricSupportScalarExtension
+public import LeanPool.Stafford38.Stafford38.Characteristic.MinimalPrimePoisson
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalResidueExtensionAssembly
+
 
 /-!
 # Residue-extension symbol control from base-relative Poisson closure
@@ -51,6 +54,8 @@ implied by involutivity of every minimal prime of the order initial ideal.
 Nothing here proves any Gabber-type statement; the new predicates are
 theorem-shaped interfaces that a caller must still prove.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalResidueExtensionSymbolControlAdapter
 

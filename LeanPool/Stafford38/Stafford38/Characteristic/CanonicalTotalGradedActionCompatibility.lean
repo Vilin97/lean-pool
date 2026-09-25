@@ -4,13 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTotalGradedBridge
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialTotalAction
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialRingEquivalence
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTotalGradedBridge
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialTotalAction
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialRingEquivalence
+
 
 /-!
 Compatibility of tangential polynomial actions with the total-to-graded equivalences.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalTotalGradedActionCompatibility
 

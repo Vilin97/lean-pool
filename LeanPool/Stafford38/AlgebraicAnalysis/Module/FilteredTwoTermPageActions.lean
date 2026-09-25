@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPages
-import Mathlib.LinearAlgebra.Isomorphisms
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPages
+public import Mathlib.LinearAlgebra.Isomorphisms
+
 
 /-!
 # Filtered operators on two-term pages
@@ -16,6 +19,8 @@ source and target pages, proves compatibility with `drop`, and proves that an
 operator is unchanged on pages after adding one that shifts an additional
 filtration level.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.FilteredTwoTermPages
 

@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.RelativeDivisorialTower
-import LeanPool.Stafford38.Stafford38.Geometry.DivisorialBoundaryExtension
-import Mathlib.RingTheory.AlgebraicIndependent.Adjoin
-import Mathlib.RingTheory.Localization.LocalizationLocalization
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.RelativeDivisorialTower
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorialBoundaryExtension
+public import Mathlib.RingTheory.AlgebraicIndependent.Adjoin
+public import Mathlib.RingTheory.Localization.LocalizationLocalization
+
 
 /-!
 # Transport from a relative rational function field to the coordinate DVR
@@ -18,6 +21,8 @@ equivalence is compatible with evaluation at `x`; it therefore transports the
 finite separable tower constructed in `RelativeDivisorialTower` to the exact
 input expected by `DivisorialBoundaryExtension`.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.RelativeFractionFieldTransport
 

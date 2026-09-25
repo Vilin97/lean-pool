@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Smooth.Field
-import Mathlib.RingTheory.Smooth.Locus
-import Mathlib.RingTheory.FinitePresentation
+module
+
+public import Mathlib.RingTheory.Smooth.Field
+public import Mathlib.RingTheory.Smooth.Locus
+public import Mathlib.RingTheory.FinitePresentation
+
 
 /-!
 # A generic smooth principal open
@@ -17,6 +20,8 @@ smooth-locus spreading theorem then supplies a nonzero principal open which
 is smooth.  This file deliberately makes no Jacobian or conormal
 identification.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry
 

@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.AsymptoticChartArcAdapter
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.AsymptoticChartArcAdapter
+
 
 /-!
 # Annihilation by the completed chart arc
@@ -20,6 +23,8 @@ its actual normalized chart, with precisely the coordinate ordering used by
 `completedChartAffineArc`.  Projective equation vanishing then proves arc
 annihilation; annihilation itself is not a field of the certificate.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ChartArcAnnihilation
 

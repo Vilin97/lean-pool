@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalResidueExtensionSymbolControlAdapter
-import LeanPool.Stafford38.Stafford38.Characteristic.RadicalMinimalPrimeInvolutivity
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalResidueExtensionSymbolControlAdapter
+public import LeanPool.Stafford38.Stafford38.Characteristic.RadicalMinimalPrimeInvolutivity
+
 
 /-!
 # Lane B: the residue-extension input reduced to the cited Gabber theorem
@@ -55,6 +58,8 @@ The chain proved here is
 every step trust-zero.  No Gabber-type statement is proved here; the first
 proposition is a theorem-shaped interface a caller must still supply.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalGabberInvolutivityInterface
 

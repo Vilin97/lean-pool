@@ -4,12 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Statement
-import LeanPool.Stafford38.AlgebraicAnalysis.RingTheory.TwoGeneratorIdentity
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightLocalization
+module
+
+public import LeanPool.Stafford38.Stafford38.Statement
+public import LeanPool.Stafford38.AlgebraicAnalysis.RingTheory.TwoGeneratorIdentity
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightLocalization
+
 
 /-! Right Ore localization corollaries for the Stafford 3.8 identity.
 The generic unit-denominator transport proof lives in AlgebraicAnalysis. -/
+
+@[expose] public section
 
 namespace Stafford38.LocalizationCorollaries
 

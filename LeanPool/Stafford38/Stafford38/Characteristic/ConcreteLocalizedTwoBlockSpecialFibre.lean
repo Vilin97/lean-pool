@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedOrderReesTwoJetSpecializationKernel
-import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedTwoBlockPrincipalKernelDescent
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedOrderReesTwoJetSpecializationKernel
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedTwoBlockPrincipalKernelDescent
+
 
 /-!
 # The concrete localized two-block special fibre
@@ -18,6 +21,8 @@ with the commutative doubled-power quotient.
 
 No Artinianness, module action, adapted basis, or equation-(3.3) input is used.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.ConcreteLocalizedTwoBlockSpecialFibre
 

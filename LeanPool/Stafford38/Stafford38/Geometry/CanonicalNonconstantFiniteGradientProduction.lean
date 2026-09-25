@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.AffineComponentCoordinateSplit
-import LeanPool.Stafford38.Stafford38.Geometry.CanonicalConstantCoordinateBranch
-import LeanPool.Stafford38.Stafford38.Geometry.CanonicalResidueExtensionAssembly
-import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientResidueExtension
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineComponentCoordinateSplit
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalConstantCoordinateBranch
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalResidueExtensionAssembly
+public import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientResidueExtension
+
 
 /-!
 # Canonical finite-gradient production
@@ -18,6 +21,8 @@ component interface and adapts it to the existing component-split assembly.
 The actual construction of the finite-gradient certificate remains a separate
 geometric problem.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.CanonicalNonconstantFiniteGradientProduction
 

@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Etale.Kaehler
-import Mathlib.RingTheory.Kaehler.Polynomial
-import Mathlib.RingTheory.Derivation.Basic
+module
+
+public import Mathlib.RingTheory.Etale.Kaehler
+public import Mathlib.RingTheory.Kaehler.Polynomial
+public import Mathlib.RingTheory.Derivation.Basic
+
 
 /-!
 # Derivations through localizations
@@ -15,6 +18,8 @@ The differentials of a localization are obtained by formally-etale base
 change.  This file records the resulting extension operation and its
 specialization to the partial derivations of a polynomial ring.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.DifferentialOperators.LocalizedPolynomialDerivations
 

@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveBoundaryFrameRank
-import LeanPool.Stafford38.Stafford38.Geometry.ArcFrameConormal
-import LeanPool.Stafford38.Stafford38.Geometry.JacobianConormalComparison
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveBoundaryFrameRank
+public import LeanPool.Stafford38.Stafford38.Geometry.ArcFrameConormal
+public import LeanPool.Stafford38.Stafford38.Geometry.JacobianConormalComparison
+
 
 /-!
 # The exact completed-chart to arc-frame adapter boundary
@@ -28,6 +31,8 @@ therefore the finrank bound consumed by `ArcFrameConormal`.  This regularity
 criterion concerns the closed point directly; no generic-rank specialization
 is used.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.AsymptoticChartArcAdapter
 

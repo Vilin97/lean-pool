@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialTotalAction
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermSuccessorNaturality
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialTotalAction
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermSuccessorNaturality
+
 
 /-!
 # Successor pages over the tangential symbol ring
@@ -14,6 +17,8 @@ The actual successor maps are tangential-linear. Their already proved
 injectivity, surjectivity and exactness therefore give kernel and cokernel
 equivalences over that ring, not just over the ground field.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalTangentialTotalAction
 

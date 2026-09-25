@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Group.Subgroup.Defs
-import Mathlib.Algebra.Module.LinearMap.Defs
-import Mathlib.Algebra.Module.Opposite
-import Mathlib.Tactic
-import Mathlib.Tactic.Abel
+module
+
+public import Mathlib.Algebra.Group.Subgroup.Defs
+public import Mathlib.Algebra.Module.LinearMap.Defs
+public import Mathlib.Algebra.Module.Opposite
+public import Mathlib.Tactic
+public import Mathlib.Tactic.Abel
+
 
 /-!
 # Exact filtered Schreyer criterion
@@ -19,6 +22,8 @@ encoded by the opposite scalar ring, while the lower piece is only an
 additive subgroup.  No Ore, Weyl, or characteristic-variety structure is
 needed.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.FilteredSchreyer
 

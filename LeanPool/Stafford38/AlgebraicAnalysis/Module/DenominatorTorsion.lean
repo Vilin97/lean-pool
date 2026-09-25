@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.GroupWithZero.NonZeroDivisors
-import Mathlib.Algebra.Module.Submodule.Range
-import Mathlib.GroupTheory.OreLocalization.OreSet
-import Mathlib.LinearAlgebra.Quotient.Defs
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.GroupWithZero.NonZeroDivisors
+public import Mathlib.Algebra.Module.Submodule.Range
+public import Mathlib.GroupTheory.OreLocalization.OreSet
+public import Mathlib.LinearAlgebra.Quotient.Defs
+public import Mathlib.Tactic
+
 
 /-!
 # Generic denominator clearing and torsion quotients
@@ -19,6 +22,8 @@ explicit clearing witness for each vector implies torsion of the quotient;
 the principal right-ideal case is proved directly from the opposite Ore
 condition.  No stage freeness or noncommutative flatness is postulated.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis
 namespace DenominatorTorsion

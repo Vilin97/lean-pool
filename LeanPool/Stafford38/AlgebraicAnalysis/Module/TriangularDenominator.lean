@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightIntersection
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightIntersection
+
 
 /-!
 # Generic finite triangular denominator arguments
@@ -20,6 +23,8 @@ finite filtration composes to denominator clearance for the whole quotient.
 The hypotheses describing the filtration are data, rather than an assertion
 that an arbitrary Ore extension is free or flat.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis
 namespace TriangularDenominator

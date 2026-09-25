@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.Stafford38.Ore.ScalarAlgebra
-import LeanPool.Stafford38.Proofs.WeylSymplectic
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import LeanPool.Stafford38.Stafford38.Ore.ScalarAlgebra
+public import LeanPool.Stafford38.Proofs.WeylSymplectic
+
 
 /-!
 # Universal property of the presented Weyl algebra
@@ -14,6 +17,8 @@ import LeanPool.Stafford38.Proofs.WeylSymplectic
 This factors the quotient lift used by the existing symplectic maps: any
 family satisfying the prescribed commutators induces a unique algebra map.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylUniversal
 

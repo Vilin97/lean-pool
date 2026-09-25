@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Module.Opposite
-import Mathlib.Algebra.Ring.Subring.Basic
-import Mathlib.LinearAlgebra.Quotient.Defs
-import Mathlib.Tactic
-import Mathlib.Tactic.Abel
+module
+
+public import Mathlib.Algebra.Module.Opposite
+public import Mathlib.Algebra.Ring.Subring.Basic
+public import Mathlib.LinearAlgebra.Quotient.Defs
+public import Mathlib.Tactic
+public import Mathlib.Tactic.Abel
+
 
 /-!
 # Euler-normality surjectivity on a right quotient
@@ -17,6 +20,8 @@ This file isolates the quotient argument used in the Stafford proof. A right
 ideal is a submodule of the regular right module, encoded as an
 `Aᵐᵒᵖ`-submodule of `A`.
 -/
+
+@[expose] public section
 
 namespace Stafford38.EulerSurjectivity
 

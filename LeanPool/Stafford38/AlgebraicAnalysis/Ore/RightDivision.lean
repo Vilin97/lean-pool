@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Algebra.Basic
-import Mathlib.Algebra.Polynomial.Degree.Support
-import Mathlib.LinearAlgebra.Quotient.Defs
-import Mathlib.Tactic
-import Mathlib.Tactic.Abel
+module
+
+public import Mathlib.Algebra.Algebra.Basic
+public import Mathlib.Algebra.Polynomial.Degree.Support
+public import Mathlib.LinearAlgebra.Quotient.Defs
+public import Mathlib.Tactic
+public import Mathlib.Tactic.Abel
+
 
 /-!
 # Right division in a coefficient-left derivation Ore model
@@ -22,6 +25,8 @@ and the leading-term fact which drives right division by a monic polynomial.
 The coefficient ring is allowed to be noncommutative.  No commutative
 polynomial division theorem is used.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis
 

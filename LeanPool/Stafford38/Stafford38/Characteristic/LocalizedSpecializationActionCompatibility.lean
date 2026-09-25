@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroLocalizedRing
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroLocalizedRing
+
 
 /-!
 # Localized specialization respects the localized action
@@ -20,6 +23,8 @@ exactly the reversal from written right multiplication to the left action.
 No Artinian descent, characteristic-variety, or involutivity statement is
 made here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.LocalizedSpecializationActionCompatibility
 

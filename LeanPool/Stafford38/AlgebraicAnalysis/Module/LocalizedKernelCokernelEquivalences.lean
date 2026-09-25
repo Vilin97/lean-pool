@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Module.LocalizedModule.Submodule
+module
+
+public import Mathlib.Algebra.Module.LocalizedModule.Submodule
+
 
 /-!
 # Kernel and cokernel equivalences for module localization
@@ -13,6 +16,8 @@ The actual localization functor preserves the two elementary constructions
 needed by the successor pages.  The equivalences below are obtained from the
 canonical submodule and quotient localization equivalences in Mathlib.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.LocalizedKernelCokernelEquivalences
 

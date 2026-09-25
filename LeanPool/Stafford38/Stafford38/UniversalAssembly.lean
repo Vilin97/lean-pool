@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Statement
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalCertificate
-import LeanPool.Stafford38.Stafford38.Weyl.MonicNormalization
-import LeanPool.Stafford38.Stafford38.Weyl.PBWMonicBridge
+module
+
+public import LeanPool.Stafford38.Stafford38.Statement
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalCertificate
+public import LeanPool.Stafford38.Stafford38.Weyl.MonicNormalization
+public import LeanPool.Stafford38.Stafford38.Weyl.PBWMonicBridge
+
 
 /-!
 # Final assembly from the canonical support theorem
@@ -17,6 +20,8 @@ and fixed-source certificate transport in the exact universal statement.  Its
 single remaining hypothesis is the concrete support-vanishing theorem for the
 literal canonical right ideal attached to a normalized PBW-monic operator.
 -/
+
+@[expose] public section
 
 namespace Stafford38.UniversalAssembly
 

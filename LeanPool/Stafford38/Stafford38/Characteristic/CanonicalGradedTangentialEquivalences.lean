@@ -4,13 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTotalGradedActionCompatibility
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalOldTangentialFiniteness
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialSuccessors
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTotalGradedActionCompatibility
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalOldTangentialFiniteness
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialSuccessors
+
 
 /-!
 Tangentially linear equivalences between canonical total pages and graded modules.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalGradedTangentialEquivalences
 

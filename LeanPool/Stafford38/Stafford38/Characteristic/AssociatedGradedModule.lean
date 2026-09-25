@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientSupport
-import Mathlib.RingTheory.Ideal.Colon
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientSupport
+public import Mathlib.RingTheory.Ideal.Colon
+
 
 /-!
 # The symbol-ring module on the actual associated graded quotient
@@ -21,6 +24,8 @@ equivalent over `SymbolRing` to its cyclic quotient by `orderInitialIdeal`, and
 its annihilator is proved equal (not merely comparable) to that ideal.  No
 Rees algebra, radical involutivity, or Gabber theorem is asserted here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicAssociatedGradedModule
 

@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Module.LocalizedModule.Basic
-import Mathlib.RingTheory.Ideal.MinimalPrime.Localization
-import Mathlib.RingTheory.Support
+module
+
+public import Mathlib.Algebra.Module.LocalizedModule.Basic
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Localization
+public import Mathlib.RingTheory.Support
+
 
 /-!
 # Transport of minimal-prime support avoidance through localization
@@ -16,6 +19,8 @@ inclusion uses a finite generating set to clear all denominators at once.
 Minimal-prime avoidance then follows from the ordinary minimal-prime
 correspondence for a localization.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.LocalizedMinimalSupportAvoidance
 

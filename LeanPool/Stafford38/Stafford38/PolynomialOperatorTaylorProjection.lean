@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.PolynomialOperatorCommutators
-import LeanPool.Stafford38.AlgebraicAnalysis.LinearAlgebra.FiniteTaylorReconstruction
+module
+
+public import LeanPool.Stafford38.Stafford38.PolynomialOperatorCommutators
+public import LeanPool.Stafford38.AlgebraicAnalysis.LinearAlgebra.FiniteTaylorReconstruction
+
 
 /-!
 # One-coordinate Taylor projection for polynomial operators
@@ -14,6 +17,8 @@ This file constructs the finite Taylor projection using the actual polynomial
 operator representation.  Products are compositions and the powers of the
 partial derivative stay on the right.
 -/
+
+@[expose] public section
 
 namespace Stafford38.PolynomialOperatorTaylorProjection
 

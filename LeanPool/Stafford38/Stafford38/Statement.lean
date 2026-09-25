@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Proofs.Stafford38Reduction
-import LeanPool.Stafford38.Proofs.WeylSymplectic
+module
+
+public import LeanPool.Stafford38.Proofs.Stafford38Reduction
+public import LeanPool.Stafford38.Proofs.WeylSymplectic
+
 
 /-!
 # The universal Stafford 3.8 target
@@ -14,6 +17,8 @@ This file owns the exact theorem statement that the end-to-end formalization
 must eventually prove. It intentionally declares no theorem with an unproved
 hypothesis and introduces no project axiom.
 -/
+
+@[expose] public section
 
 namespace Stafford38
 

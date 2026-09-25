@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.LinearAlgebra.Projectivization.Basic
-import Mathlib.RingTheory.MvPolynomial.Homogeneous
-import LeanPool.Stafford38.Stafford38.Geometry.SmoothAffineConormal
+module
+
+public import Mathlib.LinearAlgebra.Projectivization.Basic
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+public import LeanPool.Stafford38.Stafford38.Geometry.SmoothAffineConormal
+
 
 /-!
 # Projective conormal directions
@@ -14,6 +17,8 @@ import LeanPool.Stafford38.Stafford38.Geometry.SmoothAffineConormal
 Only the polynomial criterion is recorded here.  This file does not identify
 an asymptotic conormal variety with a projective closure.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ProjectiveConormalDirections
 

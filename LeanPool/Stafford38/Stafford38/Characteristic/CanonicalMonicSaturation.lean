@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalNoncharacteristicCancellation
-import LeanPool.Stafford38.Stafford38.Weyl.CoordinateCommutatorSymbol
-import LeanPool.Stafford38.Stafford38.Weyl.FilteredCommutator
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalNoncharacteristicCancellation
+public import LeanPool.Stafford38.Stafford38.Weyl.CoordinateCommutatorSymbol
+public import LeanPool.Stafford38.Stafford38.Weyl.FilteredCommutator
+
 
 /-!
 # A concrete filtered criterion for canonical monic saturation
@@ -30,6 +33,8 @@ division and the positive Euler residue provide unrestricted coordinate
 preimages, but do not provide the strict differential-order estimate isolated
 below.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CanonicalMonicSaturation
 

@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.RingTheory.DedekindDomain.IntegralClosure
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.NoetherNormalization
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic
+module
+
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.RingTheory.DedekindDomain.IntegralClosure
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.NoetherNormalization
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Tactic
+
 
 /-!
 # Normalization finiteness and height-one places
@@ -45,6 +48,8 @@ Stafford-specific.  The proofs are kept exactly as machine-verified, including
 the `haveI` style option, so that the checked artefact is not perturbed for
 cosmetics.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.NormalizationHeightOne
 

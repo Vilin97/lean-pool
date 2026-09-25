@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPageEquivalences
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPageActions
-import Mathlib.Algebra.DirectSum.Module
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPageEquivalences
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPageActions
+public import Mathlib.Algebra.DirectSum.Module
+
 
 /-!
 # Total direct sums of the filtered two-term pages
@@ -15,6 +18,8 @@ The page differential has target component indexed by `p + r`.  This file
 packages the component maps into one direct-sum map; no successor-page
 interface is assumed here.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.FilteredTwoTermPages
 

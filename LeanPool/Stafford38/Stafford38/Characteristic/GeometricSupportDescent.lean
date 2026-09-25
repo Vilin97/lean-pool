@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.MvPolynomial
-import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
-import LeanPool.Stafford38.Stafford38.Geometry.ScalarExtensionPoints
+module
+
+public import Mathlib.RingTheory.MvPolynomial
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import LeanPool.Stafford38.Stafford38.Geometry.ScalarExtensionPoints
+
 
 /-!
 # Geometric points and support after algebraic closure
@@ -20,6 +23,8 @@ to make its residue field algebraic over the ground field, and embeds that
 residue field into the algebraic closure.  It does not use characteristic
 varieties, Gabber's theorem, or asymptotic geometry.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.GeometricSupportDescent
 

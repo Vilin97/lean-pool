@@ -4,12 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.CStarAlgebra.Classes
-import Mathlib.Analysis.Complex.Polynomial.Basic
-import Mathlib.Tactic
-import LeanPool.Stafford38.Stafford38.EvolutionaryCertificate
+module
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Complex.Polynomial.Basic
+public import Mathlib.Tactic
+public import LeanPool.Stafford38.Stafford38.EvolutionaryCertificate
+
 
 /-!
 # The Euler root line and the Bézout hypothesis
@@ -39,6 +42,8 @@ from its own translates.
 Everything is proved over `ℂ`, descended to `ℚ` by `Polynomial.isCoprime_map`,
 and transported to an arbitrary characteristic-zero field by `IsCoprime.map`.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Evolution
 

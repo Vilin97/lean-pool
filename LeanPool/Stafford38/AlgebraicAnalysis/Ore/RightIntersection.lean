@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Module.Opposite
-import Mathlib.Algebra.Module.Submodule.Defs
-import Mathlib.Data.Finset.Insert
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Module.Opposite
+public import Mathlib.Algebra.Module.Submodule.Defs
+public import Mathlib.Data.Finset.Insert
+public import Mathlib.Tactic
+
 
 /-!
 # Finite intersections in a right Ore domain
@@ -16,6 +19,8 @@ Right ideals are represented as left modules over the opposite ring.  The
 right Ore condition is kept as an explicit common-right-multiple hypothesis;
 this module does not depend on a particular localization construction.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.OreRightIntersection
 

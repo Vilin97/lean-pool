@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightQuotient
-import Mathlib.RingTheory.Noetherian.Filter
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightQuotient
+public import Mathlib.RingTheory.Noetherian.Filter
+
 
 /-!
 # The derivation-Ore right Hilbert-basis theorem
@@ -15,6 +18,8 @@ differential Ore extension.  Coefficients are allowed to be noncommutative:
 right ideals of the coefficient ring are represented as submodules for the
 opposite scalar ring.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.OreDerivationRightHilbertBasis
 

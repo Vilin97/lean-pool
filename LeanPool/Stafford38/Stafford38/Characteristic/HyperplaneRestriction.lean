@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.HyperplaneRestriction
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.HyperplaneRestriction
+
 
 /-!
 # Compatibility import for algebraic hyperplane restriction

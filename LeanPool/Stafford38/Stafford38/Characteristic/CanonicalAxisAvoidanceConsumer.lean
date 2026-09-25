@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientGraded
-import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdealHomogeneous
-import LeanPool.Stafford38.Stafford38.Weyl.QuotientTransport
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientGraded
+public import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdealHomogeneous
+public import LeanPool.Stafford38.Stafford38.Weyl.QuotientTransport
+
 
 /-!
 # Conditional consumer for canonical axis avoidance
@@ -17,6 +20,8 @@ with the proved surjectivity of right multiplication by the distinguished
 coordinate and derives strict filtered surjectivity and its associated-graded
 form.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CanonicalAxisAvoidanceConsumer
 

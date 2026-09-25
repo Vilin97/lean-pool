@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ConstantCoordinateConormal
-import Mathlib.RingTheory.PrincipalIdealDomain
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ConstantCoordinateConormal
+public import Mathlib.RingTheory.PrincipalIdealDomain
+
 
 /-!
 # One-variable prime components and the conormal axis
@@ -22,6 +25,8 @@ constant-coordinate consumer and produces the exact Laurent conormal axis.
 No projective chart, completion, Gabber input, or filtered cancellation is
 used here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.OneVariablePrimeConormal
 

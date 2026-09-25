@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Polynomial.AlgebraMap
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Mathlib.Tactic
+
 
 /-!
 # The evolutionary Stafford certificate
@@ -37,6 +40,8 @@ needed polynomial coprimality under every positive integer shift.
 Convention: all ideals here are **right** ideals, matching the repository
 convention.  Statements are written as `d * R + x ^ r * d * S = 1`.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Evolution
 

@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.OreLocalization.Ring
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightLocalization
+module
+
+public import Mathlib.RingTheory.OreLocalization.Ring
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightLocalization
+
 
 /-!
 # Two-generator identities and unit-denominator transport
@@ -22,6 +25,8 @@ The extracted declarations are application-independent; Stafford38-specific
 names and imports are intentionally absent.  The written multiplication order
 is preserved.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis
 

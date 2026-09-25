@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.OrderReesTwoJetSpecializationKernel
-import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroLocalizedRing
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.OrderReesTwoJetSpecializationKernel
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroLocalizedRing
+
 
 /-!
 # The localized order-Rees two-jet specialization kernel
@@ -21,6 +24,8 @@ Products remain in the opposite/right-module orientation throughout.  In
 particular, the localized parameter is written on the left; centrality is used
 explicitly before applying the unlocalized factorization.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicLocalizedOrderReesTwoJetSpecializationKernel
 

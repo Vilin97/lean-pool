@@ -4,12 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.MonicAnnihilatorFinite
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.MonicAnnihilatorFinite
+
 
 /-!
 Compatibility exports for finite modules from monic annihilators
 from the shared algebraic-analysis library.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.MonicAnnihilatorFinite
 

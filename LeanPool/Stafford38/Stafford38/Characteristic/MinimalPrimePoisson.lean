@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
-import LeanPool.Stafford38.Stafford38.Characteristic.BaseRelativePoisson
-import LeanPool.Stafford38.Stafford38.Characteristic.PostScalarExtensionPoisson
+module
+
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
+public import LeanPool.Stafford38.Stafford38.Characteristic.BaseRelativePoisson
+public import LeanPool.Stafford38.Stafford38.Characteristic.PostScalarExtensionPoisson
+
 
 /-!
 # Minimal-prime assembly for base-relative Poisson closure
@@ -16,6 +19,8 @@ To prove base-relative Poisson closure of a radical, it is enough to prove the
 required bracket membership in every minimal prime over the original ideal.
 No integrability statement for those minimal primes is asserted here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.MinimalPrimePoisson
 

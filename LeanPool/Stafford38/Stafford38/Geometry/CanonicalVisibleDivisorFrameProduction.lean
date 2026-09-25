@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.CanonicalNonconstantFiniteGradientProduction
-import LeanPool.Stafford38.Stafford38.Geometry.GenericPointKaehlerConormal
-import LeanPool.Stafford38.Stafford38.Geometry.RetainedPlaceConormalTransport
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalNonconstantFiniteGradientProduction
+public import LeanPool.Stafford38.Stafford38.Geometry.GenericPointKaehlerConormal
+public import LeanPool.Stafford38.Stafford38.Geometry.RetainedPlaceConormalTransport
+
 
 /-!
 # Lane C reduced to a visible divisor frame
@@ -32,6 +35,8 @@ Nothing here constructs the place or the frame.  The producer statement
 `HigherDimensionalCanonicalVisibleDivisorFrameProduction` is the exact
 remaining geometric input of lane C.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.CanonicalVisibleDivisorFrameProduction
 

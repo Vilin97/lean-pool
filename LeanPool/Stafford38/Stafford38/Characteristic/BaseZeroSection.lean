@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.MvPolynomial.Monad
-import LeanPool.Stafford38.Stafford38.Characteristic.ZeroSectionContainment
+module
+
+public import Mathlib.Algebra.MvPolynomial.Monad
+public import LeanPool.Stafford38.Stafford38.Characteristic.ZeroSectionContainment
+
 
 /-!
 # Zero-section containment over the contracted base zero locus
@@ -16,6 +19,8 @@ Consequently a common zero of the contracted reduced order-support ideal
 already determines a zero-section point of the full reduced support; no
 chosen point in the original support fibre is needed.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.BaseZeroSection
 

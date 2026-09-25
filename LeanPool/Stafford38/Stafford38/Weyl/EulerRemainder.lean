@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.Stafford38.Weyl.EulerSubring
-import LeanPool.Stafford38.Stafford38.Weyl.EulerResidue
-import LeanPool.Stafford38.Stafford38.Weyl.OuterOreMonic
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import LeanPool.Stafford38.Stafford38.Weyl.EulerSubring
+public import LeanPool.Stafford38.Stafford38.Weyl.EulerResidue
+public import LeanPool.Stafford38.Stafford38.Weyl.OuterOreMonic
+
 
 /-!
 # Positive outer-Ore remainders
@@ -16,6 +19,8 @@ An element whose outer momentum support is strictly below `N` acquires a
 right coordinate factor after multiplication by `x^N` on either side.  The
 cofactors remain in the concrete Euler subring.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylEulerRemainder
 

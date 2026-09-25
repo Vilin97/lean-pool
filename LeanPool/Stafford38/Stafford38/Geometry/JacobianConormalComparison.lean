@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalClosure
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalClosure
+
 
 /-!
 # Comparing Jacobian and equation-defined affine conormals
@@ -25,6 +28,8 @@ No smoothness criterion, scheme tangent-space construction, geometric-point
 comparison, algebraic closedness, or base change is asserted here.  Those are
 inputs to the comparison theorem, not consequences of it.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.JacobianConormalComparison
 

@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+
 
 /-!
 # The central-coordinate Ore stage
@@ -13,6 +16,8 @@ The zero-derivation Ore product is ordinary polynomial multiplication.  This
 identifies the first stage in the recursive Weyl construction with a central
 polynomial extension and transports ordinary differentiation to it.
 -/
+
+@[expose] public section
 
 namespace Stafford38.OreCoordinateStage
 

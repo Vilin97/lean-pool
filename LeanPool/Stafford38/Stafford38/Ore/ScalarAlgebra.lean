@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.Stafford38.Ore.CoordinateStage
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import LeanPool.Stafford38.Stafford38.Ore.CoordinateStage
+
 
 /-!
 # Scalar algebra structure on an Ore extension
@@ -13,6 +16,8 @@ import LeanPool.Stafford38.Stafford38.Ore.CoordinateStage
 If the coefficient ring is a `k`-algebra and the derivation kills `k`, then
 the canonical image of `k` is central in the normal-form Ore ring.
 -/
+
+@[expose] public section
 
 namespace Stafford38.OreScalarAlgebra
 

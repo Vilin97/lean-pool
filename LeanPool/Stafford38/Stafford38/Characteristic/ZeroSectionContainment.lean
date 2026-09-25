@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdealHomogeneous
-import LeanPool.Stafford38.Stafford38.Characteristic.ReducedSupportIdeal
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdealHomogeneous
+public import LeanPool.Stafford38.Stafford38.Characteristic.ReducedSupportIdeal
+
 
 /-!
 # Zero-section containment of the reduced order support
@@ -19,6 +22,8 @@ The proof does not assume conicality of the radical.  For an element of the
 radical, it takes a power in the order initial ideal, extracts its fibre-degree
 zero component there, and then uses reducedness of the ground field.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.ZeroSectionContainment
 

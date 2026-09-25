@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientReesExact
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientReesExact
+
 
 /-!
 # Additive special fibre of the filtered quotient direct sum
@@ -13,6 +16,8 @@ The exact successor-shift sequence identifies the quotient by the shift range
 with the actual associated graded module. This is a `k`-linear equivalence
 only. The right order-Rees action and its parameter compatibility are separate.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicFilteredQuotientSpecialFibre
 

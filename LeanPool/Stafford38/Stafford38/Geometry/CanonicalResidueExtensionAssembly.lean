@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalLaurentSymbolControl
-import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientResidueExtension
-import LeanPool.Stafford38.Stafford38.Geometry.OneVariableAmbientConormal
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalLaurentSymbolControl
+public import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientResidueExtension
+public import LeanPool.Stafford38.Stafford38.Geometry.OneVariableAmbientConormal
+
 
 /-!
 # Canonical geometry over the boundary residue field
@@ -30,6 +33,8 @@ higher-dimensional conormal axis, prove post-extension Poisson/Gabber
 integrability, prove noncharacteristic restriction, or prove the canonical
 coordinate-preimage hypothesis.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.CanonicalResidueExtensionAssembly
 

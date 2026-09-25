@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.RingQuot
-import Mathlib.LinearAlgebra.SymplecticGroup
-import Mathlib.Tactic
-import LeanPool.Stafford38.AlgebraicAnalysis.Commutator
+module
+
+public import Mathlib.Algebra.RingQuot
+public import Mathlib.LinearAlgebra.SymplecticGroup
+public import Mathlib.Tactic
+public import LeanPool.Stafford38.AlgebraicAnalysis.Commutator
+
 
 /-!
 # The linear symplectic layer of the A₂ reduction
@@ -32,6 +35,8 @@ normalization belong to the downstream Weyl modules, outside this module's
 linear-algebra scope. Reusable commutator identities are imported from
 AlgebraicAnalysis.
 -/
+
+@[expose] public section
 
 namespace Stafford
 

@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Module.LinearMap.End
-import Mathlib.Data.Nat.Factorial.Cast
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Module.LinearMap.End
+public import Mathlib.Data.Nat.Factorial.Cast
+public import Mathlib.Data.Nat.Choose.Basic
+public import Mathlib.Tactic
+
 
 /-!
 # Finite Taylor reconstruction
@@ -15,6 +18,8 @@ import Mathlib.Tactic
 Application-independent finite Taylor reconstruction for a nilpotent
 endomorphism. Extracted from Stafford38 commit c8a513d553b24c7c08da82f496c44dbbaeb1f2fc.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.FiniteTaylorReconstruction
 

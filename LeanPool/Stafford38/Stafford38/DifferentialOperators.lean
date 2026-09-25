@@ -4,10 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.Basic
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.Basic
+
 
 /-! Compatibility aliases for the neutral AlgebraicAnalysis differential
 operator API. -/
+
+@[expose] public section
 
 namespace Stafford38.DifferentialOperators
 

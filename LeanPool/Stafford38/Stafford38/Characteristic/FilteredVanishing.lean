@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotient
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotient
+
 
 /-!
 # Vanishing reflected by an exhaustive filtered quotient
@@ -16,6 +19,8 @@ that its strict-lower piece is zero, and the successor step lowers the degree
 by one.  Exhaustivity of the PBW order filtration then reaches every quotient
 class.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicFilteredVanishing
 

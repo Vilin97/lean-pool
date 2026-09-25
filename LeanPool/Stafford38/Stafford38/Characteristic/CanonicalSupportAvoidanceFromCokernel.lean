@@ -4,13 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.TransposedFilteredModuleSupport
-import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedFinite
-import LeanPool.Stafford38.Stafford38.PaperInputs
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.TransposedFilteredModuleSupport
+public import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedFinite
+public import LeanPool.Stafford38.Stafford38.PaperInputs
+
 
 /-! A zero coordinate cokernel has empty support.  Transposition fixes the
 coordinate variable, so the same empty-support statement excludes the
 coordinate zero locus from the transposed support. -/
+
+@[expose] public section
 
 
 namespace Stafford38.Characteristic.CanonicalSupportAvoidanceFromCokernel

@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.LinearAlgebra.Quotient.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.LinearAlgebra.Quotient.Basic
+public import Mathlib.Tactic
+
 
 /-!
 # Pages of a filtered two-term complex
@@ -17,6 +20,8 @@ representatives; no successor-page equivalence is part of the input.
 We use a decreasing, integer-indexed filtration `G`, as obtained from an
 increasing filtration `F` by `G p = F (-p)`.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.FilteredTwoTermPages
 

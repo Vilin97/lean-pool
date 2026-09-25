@@ -4,13 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.AffineComponentCoordinateSplit
-import LeanPool.Stafford38.Stafford38.Geometry.ConstantCoordinateConormal
-import Mathlib.RingTheory.Nullstellensatz
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineComponentCoordinateSplit
+public import LeanPool.Stafford38.Stafford38.Geometry.ConstantCoordinateConormal
+public import Mathlib.RingTheory.Nullstellensatz
+
 
 /-!
 A constant coordinate equation and its pure conormal axis on an affine component.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.GeneralConstantCoordinateAxis
 

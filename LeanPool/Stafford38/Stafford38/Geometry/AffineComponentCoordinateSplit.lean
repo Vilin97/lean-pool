@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.FieldTheory.IsAlgClosed.Basic
-import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
-import Mathlib.RingTheory.Localization.FractionRing
-import Mathlib.RingTheory.MvPolynomial.Basic
-import Mathlib.RingTheory.Spectrum.Prime.Defs
+module
+
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.RingTheory.MvPolynomial.Basic
+public import Mathlib.RingTheory.Spectrum.Prime.Defs
+
 
 /-!
 # Constant or transcendental coordinates on an affine component
@@ -19,6 +22,8 @@ Together with existence of a minimal prime over every proper affine ideal,
 this gives the component split used before the divisorial-boundary
 construction.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.AffineComponentCoordinateSplit
 

@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientGraded
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientGraded
+
 
 /-!
 # Homogeneous pieces of the order initial ideal
@@ -16,6 +19,8 @@ relation.  The proof uses the finite direct-sum decomposition of each
 polynomial multiplier and the homogeneous relation closure proved in
 `FilteredQuotientGraded`.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicInitialIdealHomogeneous
 

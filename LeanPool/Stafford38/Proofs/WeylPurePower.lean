@@ -4,14 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Algebra.Polynomial.RingDivision
-import Mathlib.Algebra.Ring.GeomSum
-import Mathlib.Data.Rat.Star
-import Mathlib.RingTheory.Coprime.Lemmas
-import Mathlib.RingTheory.Nilpotent.Defs
-import Mathlib.Tactic
-import Mathlib.Tactic.NoncommRing
+module
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Algebra.Polynomial.RingDivision
+public import Mathlib.Algebra.Ring.GeomSum
+public import Mathlib.Data.Rat.Star
+public import Mathlib.RingTheory.Coprime.Lemmas
+public import Mathlib.RingTheory.Nilpotent.Defs
+public import Mathlib.Tactic
+public import Mathlib.Tactic.NoncommRing
+
 
 /-!
 # Pure-power Weyl certificates
@@ -24,6 +27,8 @@ Bézout relation between the two disjoint Euler products.
 The remaining universal monic problem is not hidden here: it is the passage
 from a pure power to a general monic polynomial.
 -/
+
+@[expose] public section
 
 namespace Stafford
 

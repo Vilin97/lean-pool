@@ -4,13 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.LocalizedWeylAction
-import LeanPool.Stafford38.Stafford38.CoordinateDifferentialGeneration
-import LeanPool.Stafford38.Stafford38.LocalizedPolynomialCommutant
+module
+
+public import LeanPool.Stafford38.Stafford38.LocalizedWeylAction
+public import LeanPool.Stafford38.Stafford38.CoordinateDifferentialGeneration
+public import LeanPool.Stafford38.Stafford38.LocalizedPolynomialCommutant
+
 
 /-!
 Clearing coefficient denominators in localized polynomial differential operators.
 -/
+
+@[expose] public section
 
 namespace Stafford38.LocalizedDifferentialClearing
 

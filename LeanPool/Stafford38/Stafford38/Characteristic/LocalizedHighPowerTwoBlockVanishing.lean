@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedSpecializationActionCompatibility
-import LeanPool.Stafford38.Stafford38.Characteristic.RightReesArtinianAdapter
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedSpecializationActionCompatibility
+public import LeanPool.Stafford38.Stafford38.Characteristic.RightReesArtinianAdapter
+
 
 /-!
 # Localized high-power two-block vanishing
@@ -21,6 +24,8 @@ written right multiplication.  The finite sum below consequently retains the
 displayed product order.  No residue-field action is placed on the deformation
 module.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.LocalizedHighPowerTwoBlockVanishing
 

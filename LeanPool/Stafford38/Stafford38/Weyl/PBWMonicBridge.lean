@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Weyl.MonicNormalization
+module
+
+public import LeanPool.Stafford38.Stafford38.Weyl.MonicNormalization
+
 
 /-!
 # From principal-axis normalization to PBW monicity
@@ -19,6 +22,8 @@ The resulting data retain the symplectic matrices, inverse identities, scalar,
 and exact normalized image. Converting this PBW statement to `Polynomial.Monic`
 for the outer Ore layer remains separate.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylPBWMonicBridge
 

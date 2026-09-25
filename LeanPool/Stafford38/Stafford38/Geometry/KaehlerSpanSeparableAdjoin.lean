@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.SeparableResidueDerivationExtension
-import LeanPool.Stafford38.Stafford38.Geometry.KaehlerVisibleDerivationFrame
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.SeparableResidueDerivationExtension
+public import LeanPool.Stafford38.Stafford38.Geometry.KaehlerVisibleDerivationFrame
+
 
 /-!
 # Kähler span after a separable residue-field extension
@@ -23,6 +26,8 @@ This file does not construct a projective boundary divisor, prove that the
 residue coordinates at a chosen divisor generate an intermediate field, or
 produce any completed boundary chart.  Those are separate geometric inputs.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.KaehlerSpanSeparableAdjoin
 

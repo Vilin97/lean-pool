@@ -4,15 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveConormalDehomogenization
-import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalDirection
-import LeanPool.Stafford38.Stafford38.Geometry.SmoothAffineConormal
-import LeanPool.Stafford38.Stafford38.Geometry.ConormalScalarExtensionVanishing
-import LeanPool.Stafford38.Stafford38.Geometry.SmoothConormalFibreVanishing
-import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveConormalDirections
-import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorLaurentConormal
-import LeanPool.Stafford38.Stafford38.Geometry.GeneralTangentLatticePresentation
-import LeanPool.Stafford38.Stafford38.Geometry.LocalizedProjectiveChartTransition
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveConormalDehomogenization
+public import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalDirection
+public import LeanPool.Stafford38.Stafford38.Geometry.SmoothAffineConormal
+public import LeanPool.Stafford38.Stafford38.Geometry.ConormalScalarExtensionVanishing
+public import LeanPool.Stafford38.Stafford38.Geometry.SmoothConormalFibreVanishing
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveConormalDirections
+public import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorLaurentConormal
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralTangentLatticePresentation
+public import LeanPool.Stafford38.Stafford38.Geometry.LocalizedProjectiveChartTransition
+
 
 /-!
 # The split-lattice tangent-limit calculation
@@ -33,6 +36,8 @@ actual complemented tangent lattice.  The theorem below constructs the
 matrix presentation and proves the projective-closure and tangent-chart
 dictionaries before applying that kernel.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.GeneralTangentLimitCriterion
 

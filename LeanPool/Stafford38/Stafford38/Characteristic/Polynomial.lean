@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.MvPolynomial.PDeriv
-import Mathlib.RingTheory.Ideal.Defs
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.MvPolynomial.PDeriv
+public import Mathlib.RingTheory.Ideal.Defs
+public import Mathlib.Tactic
+
 
 /-!
 # Polynomial phase space for characteristic support
@@ -16,6 +19,8 @@ weight zero and cotangent variables of fibre weight one. This file introduces
 that ring and its canonical polynomial Poisson bracket without assuming any
 characteristic-variety theorem.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic
 

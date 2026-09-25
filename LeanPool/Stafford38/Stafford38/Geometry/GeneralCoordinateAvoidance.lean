@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Nullstellensatz
+module
+
+public import Mathlib.RingTheory.Nullstellensatz
+
 
 /-!
 # Polynomial inverses from coordinate avoidance
@@ -12,6 +15,8 @@ import Mathlib.RingTheory.Nullstellensatz
 A coordinate that never vanishes on an affine zero locus is invertible modulo
 its defining ideal. The ideal need not be prime or radical.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.GeneralCoordinateAvoidance
 

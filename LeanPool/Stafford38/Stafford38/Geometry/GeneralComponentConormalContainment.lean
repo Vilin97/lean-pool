@@ -4,15 +4,20 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Ideal.MinimalPrime.Noetherian
-import LeanPool.Stafford38.Stafford38.Geometry.GeneralConormalContainment
-import LeanPool.Stafford38.Stafford38.Geometry.ConormalPrincipalOpenDensity
-import LeanPool.Stafford38.Stafford38.Geometry.SmoothAffineConormal
-import Mathlib.RingTheory.Ideal.MinimalPrime.Localization
+module
+
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Noetherian
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralConormalContainment
+public import LeanPool.Stafford38.Stafford38.Geometry.ConormalPrincipalOpenDensity
+public import LeanPool.Stafford38.Stafford38.Geometry.SmoothAffineConormal
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Localization
+
 
 /-!
 Containment of a component’s conormal closure in the ambient characteristic variety.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.GeneralComponentConormalContainment
 

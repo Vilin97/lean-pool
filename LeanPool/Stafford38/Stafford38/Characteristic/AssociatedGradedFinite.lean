@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedModule
-import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroLocalizedExactness
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedModule
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroLocalizedExactness
+
 
 /-!
 # Finiteness of the actual order-associated graded module
@@ -15,6 +18,8 @@ ring.  This file records the resulting `Module.Finite` instance and feeds it
 to the already checked minimal-prime localization theorem.  No Noetherian,
 trace, or involutivity conclusion is hidden in the construction.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.AssociatedGradedFinite
 

@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Polynomial.DistinguishedVariable
-import LeanPool.Stafford38.Stafford38.Characteristic.TransposedFilteredModuleSupport
-import LeanPool.Stafford38.Stafford38.Geometry.ConormalAxisContradiction
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Polynomial.DistinguishedVariable
+public import LeanPool.Stafford38.Stafford38.Characteristic.TransposedFilteredModuleSupport
+public import LeanPool.Stafford38.Stafford38.Geometry.ConormalAxisContradiction
+
 
 /-!
 # Scheme-theoretic exclusion of the punctured normal fibre axis
@@ -17,6 +20,8 @@ tangential momentum variable must also contain the normal momentum variable.
 This is the exact prime-ideal form of normal-axis exclusion.  It proves no
 filtered strictness or noncharacteristic inverse-image theorem.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalNormalAxisSupport
 

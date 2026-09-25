@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.LocalizedPolynomialDerivations
-import LeanPool.Stafford38.Stafford38.DifferentialOperators
-import LeanPool.Stafford38.Stafford38.Weyl.Universal
-import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence
+module
+
+public import LeanPool.Stafford38.Stafford38.LocalizedPolynomialDerivations
+public import LeanPool.Stafford38.Stafford38.DifferentialOperators
+public import LeanPool.Stafford38.Stafford38.Weyl.Universal
+public import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence
+
 
 /-!
 # The Weyl action on a polynomial localization
@@ -16,6 +19,8 @@ This file constructs the Weyl action on the genuine finite-order differential
 operators of a localization of a polynomial ring.  No identification of the
 resulting differential-operator algebra with another presentation is used.
 -/
+
+@[expose] public section
 
 namespace Stafford38.LocalizedWeylAction
 

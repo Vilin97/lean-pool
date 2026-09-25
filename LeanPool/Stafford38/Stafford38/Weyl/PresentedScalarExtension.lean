@@ -4,18 +4,21 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence
-import LeanPool.Stafford38.Stafford38.Weyl.Universal
-import LeanPool.Stafford38.Stafford38.Weyl.PBW
-import LeanPool.Stafford38.Stafford38.Weyl.Filtration
-import LeanPool.Stafford38.Stafford38.Weyl.LeadingSymbol
-import LeanPool.Stafford38.Stafford38.Weyl.PBWMonicBridge
-import LeanPool.Stafford38.Stafford38.Weyl.EulerResidue
-import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdeal
-import LeanPool.Stafford38.Stafford38.Characteristic.GeometricSupportDescent
-import LeanPool.Stafford38.Stafford38.UniversalAssembly
-import LeanPool.Stafford38.Stafford38.CanonicalSupportVanishingReduction
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence
+public import LeanPool.Stafford38.Stafford38.Weyl.Universal
+public import LeanPool.Stafford38.Stafford38.Weyl.PBW
+public import LeanPool.Stafford38.Stafford38.Weyl.Filtration
+public import LeanPool.Stafford38.Stafford38.Weyl.LeadingSymbol
+public import LeanPool.Stafford38.Stafford38.Weyl.PBWMonicBridge
+public import LeanPool.Stafford38.Stafford38.Weyl.EulerResidue
+public import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdeal
+public import LeanPool.Stafford38.Stafford38.Characteristic.GeometricSupportDescent
+public import LeanPool.Stafford38.Stafford38.UniversalAssembly
+public import LeanPool.Stafford38.Stafford38.CanonicalSupportVanishingReduction
+
 
 /-!
 # Coefficient extension for the presented Weyl algebra
@@ -33,6 +36,8 @@ comparison is recorded as an explicit contract below and proved in
 `FilteredScalarLifting.lean`; no base-change equality is treated as
 definitional.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Weyl.PresentedScalarExtension
 

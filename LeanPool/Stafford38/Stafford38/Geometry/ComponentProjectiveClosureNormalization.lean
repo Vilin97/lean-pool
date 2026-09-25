@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ComponentFunctionFieldBoundary
-import LeanPool.Stafford38.Stafford38.Geometry.ComponentProjectiveClosure
-import LeanPool.Stafford38.Stafford38.Geometry.RetainedProjectiveCompletion
-import Mathlib.RingTheory.LaurentSeries
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ComponentFunctionFieldBoundary
+public import LeanPool.Stafford38.Stafford38.Geometry.ComponentProjectiveClosure
+public import LeanPool.Stafford38.Stafford38.Geometry.RetainedProjectiveCompletion
+public import Mathlib.RingTheory.LaurentSeries
+
 
 /-!
 # Projective-component equations under retained normalization
@@ -22,6 +25,8 @@ retained completion and its Laurent-series embedding.
 This is only a homogeneous projective statement.  It does not assert that an
 arbitrary affine chart point satisfies the original affine component ideal.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ComponentProjectiveClosureNormalization
 

@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.ConcreteInducedZAction
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.ConcreteInducedZAction
+
 
 /-!
 # Commutator expansion for source-row action equations
@@ -23,6 +26,8 @@ The result records the actual specialized action of the source expansion and
 isolates the remaining trace-comparison obligation.  It does not assert an
 equality with a residue-mapped coefficient matrix.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.SourceActionCommutatorExpansion
 

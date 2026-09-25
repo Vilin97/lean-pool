@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.RetainedDVRPlace
-import Mathlib.FieldTheory.Separable
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.RetainedDVRPlace
+public import Mathlib.FieldTheory.Separable
+
 
 /-!
 # Relative coefficients in a retained DVR place
@@ -17,6 +20,8 @@ residue extension is finite and separable in characteristic zero.
 
 No inverse limit, completion, or power-series chart is constructed here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.RelativeCoefficientDVR
 

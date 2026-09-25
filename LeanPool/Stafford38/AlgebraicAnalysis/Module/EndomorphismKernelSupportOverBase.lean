@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.EndomorphismKernelSupport
-import Mathlib.RingTheory.Ideal.Maps
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.EndomorphismKernelSupport
+public import Mathlib.RingTheory.Ideal.Maps
+
 
 /-!
 # Kernel support over a base ring
@@ -14,6 +17,8 @@ A finite module over a commutative Noetherian coefficient algebra is Hopfian
 over that algebra.  This gives the kernel--cokernel support inclusion after
 restriction of scalars, without assuming finite generation over the base.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis
 

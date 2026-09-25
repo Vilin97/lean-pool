@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalKoszulContradiction
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalGabberInvolutivityInterface
-import LeanPool.Stafford38.Stafford38.Geometry.ExactDivisorialVisibleFrameExistence
-import LeanPool.Stafford38.Stafford38.PaperInputs
-import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoisotropicCanonicalAdapter
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalKoszulContradiction
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalGabberInvolutivityInterface
+public import LeanPool.Stafford38.Stafford38.Geometry.ExactDivisorialVisibleFrameExistence
+public import LeanPool.Stafford38.Stafford38.PaperInputs
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoisotropicCanonicalAdapter
+
 
 /-! The paper's three assembly interfaces and both universal statements are
 proved from Lean and Mathlib without project or literature axioms. The final
@@ -24,6 +27,8 @@ Conjecture 3.8, p. 438, is the source problem. This project proves the general c
   exact-degree strengthening. See docs/literature.md for the imported involutivity and
   visible-frame route.
 -/
+
+@[expose] public section
 
 namespace Stafford38.FoundationClosure
 

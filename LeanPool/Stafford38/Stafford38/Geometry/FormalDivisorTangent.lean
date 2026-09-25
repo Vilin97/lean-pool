@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ResidueMinorSelection
-import Mathlib.RingTheory.PowerSeries.Derivative
-import Mathlib.Data.Nat.Find
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ResidueMinorSelection
+public import Mathlib.RingTheory.PowerSeries.Derivative
+public import Mathlib.Data.Nat.Find
+
 
 /-!
 # Correcting and normalizing a formal divisor tangent
@@ -23,6 +26,8 @@ power of `X` and a primitive normalized vector.
 Every output is constructed from the displayed equations.  No residue-rank,
 saturation, splitting, or left-inverse hypothesis is assumed.
 -/
+
+@[expose] public section
 
 namespace Stafford38.GeometryFormalDivisorTangent
 

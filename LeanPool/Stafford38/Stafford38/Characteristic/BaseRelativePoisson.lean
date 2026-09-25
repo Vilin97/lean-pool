@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.CoisotropicTranslation
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.CoisotropicTranslation
+
 
 /-!
 # Base-relative Poisson closure
@@ -17,6 +20,8 @@ No assertion is made here that a radical initial ideal, or the reduced
 characteristic ideal of a Weyl module, satisfies this condition.  Supplying
 that fact is the remaining Gabber input.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.BaseRelativePoisson
 

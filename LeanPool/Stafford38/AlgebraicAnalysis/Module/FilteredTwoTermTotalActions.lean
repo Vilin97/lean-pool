@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermTotalPages
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermTotalPages
+
 
 /-!
 # Total direct-sum actions on filtered two-term pages
@@ -13,6 +16,8 @@ This file packages the source and target page actions of a filtered operator
 into maps on the total direct sums.  The index shift is part of the map: an
 operator of degree `d` sends the summand at `p` to the summand at `p - d`.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.FilteredTwoTermPages
 

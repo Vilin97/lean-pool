@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Tactic
-import LeanPool.Stafford38.Stafford38.Geometry.DivisorTangentLattice
-import LeanPool.Stafford38.Stafford38.Geometry.KaehlerSpanSeparableAdjoin
+module
+
+public import Mathlib.Algebra.Lie.OfAssociative
+public import Mathlib.Tactic
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorTangentLattice
+public import LeanPool.Stafford38.Stafford38.Geometry.KaehlerSpanSeparableAdjoin
+
 
 /-!
 # Kähler visibility at a discrete valuation place
@@ -20,6 +23,8 @@ the residues of a coordinate family, those coordinate differentials span the
 remaining residue cotangent space.  Mapping this statement to the fraction
 field gives the visibility condition used by `VisibleDivisorFrame`.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.KaehlerDVRVisibility
 

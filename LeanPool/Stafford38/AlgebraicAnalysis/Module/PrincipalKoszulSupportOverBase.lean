@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.StableTorsionResidualSupport
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulFiniteTorsion
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.StableTorsionResidualSupport
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulFiniteTorsion
+
 
 /-!
 # Principal Koszul positivity after restriction of scalars
@@ -15,6 +18,8 @@ resulting length inequality is measured over the base ring `R`.  No finite
 generation of `E` over `R` is needed: only the first `R`-kernel has finite
 length.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.PrincipalKoszulSupportOverBase
 

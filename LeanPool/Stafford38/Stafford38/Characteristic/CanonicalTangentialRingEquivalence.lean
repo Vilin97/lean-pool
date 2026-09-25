@@ -4,11 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialSymbolFiniteness
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialSymbolFiniteness
+
 
 /-!
 The polynomial-ring equivalence identifying old and retained tangential variables.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalTangentialRingEquivalence
 

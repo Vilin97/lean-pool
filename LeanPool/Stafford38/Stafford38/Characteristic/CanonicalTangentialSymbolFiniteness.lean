@@ -4,11 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalNormalSymbolFiniteness
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalNormalSymbolFiniteness
+
 
 /-!
 Finiteness of canonical graded modules over the tangential symbol ring.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalTangentialSymbolFiniteness
 

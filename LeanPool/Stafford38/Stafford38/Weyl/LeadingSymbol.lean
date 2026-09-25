@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Weyl.Filtration
-import Mathlib.RingTheory.MvPolynomial.WeightedHomogeneous
+module
+
+public import LeanPool.Stafford38.Stafford38.Weyl.Filtration
+public import Mathlib.RingTheory.MvPolynomial.WeightedHomogeneous
+
 
 /-!
 # Principal components and leading-symbol multiplication
@@ -16,6 +19,8 @@ normal ordering proves that, for both the Bernstein and differential-order
 filtrations, the principal component of a product is the product of the
 principal components. No associated graded identification is assumed here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylLeadingSymbol
 

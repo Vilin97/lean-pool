@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Algebra.Basic
-import Mathlib.Algebra.Order.Group.Nat
-import Mathlib.Algebra.Order.Sub.Basic
-import Mathlib.Tactic
-import Mathlib.Tactic.Abel
+module
+
+public import Mathlib.Algebra.Algebra.Basic
+public import Mathlib.Algebra.Order.Group.Nat
+public import Mathlib.Algebra.Order.Sub.Basic
+public import Mathlib.Tactic
+public import Mathlib.Tactic.Abel
+
 
 /-!
 # Ring commutators
@@ -18,6 +21,8 @@ symplectic layer and the differential-Ore escape layer.  The convention is
 `[u,v] = u*v - v*u`; no Weyl relation, Ore presentation, or application
 specific structure is assumed.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis
 

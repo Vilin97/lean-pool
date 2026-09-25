@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightDivision
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightDivision
+
 
 /-!
 # Associativity of derivation Ore normal forms over a noncommutative ring
@@ -12,6 +15,8 @@ import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightDivision
 This removes the commutativity assumption from the faithful-operator proof of
 associativity for `Stafford.OreDivision.rightMul`.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.OreAssociativity
 

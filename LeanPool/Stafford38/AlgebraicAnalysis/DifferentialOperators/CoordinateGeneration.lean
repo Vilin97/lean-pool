@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.Basic
-import LeanPool.Stafford38.AlgebraicAnalysis.LinearAlgebra.FiniteTaylorReconstruction
-import Mathlib.RingTheory.Derivation.Basic
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.Basic
+public import LeanPool.Stafford38.AlgebraicAnalysis.LinearAlgebra.FiniteTaylorReconstruction
+public import Mathlib.RingTheory.Derivation.Basic
+
 
 /-!
 # Generation from coordinates and coordinate derivations
@@ -16,6 +19,8 @@ family of elements and dual derivations generates every intrinsic finite-order
 differential operator, provided that commuting with all the coordinates
 already characterizes multiplication operators.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.DifferentialOperators.CoordinateGeneration
 

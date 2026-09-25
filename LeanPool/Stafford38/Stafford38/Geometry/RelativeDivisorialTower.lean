@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.DivisorialBoundaryExtension
-import Mathlib.RingTheory.AlgebraicIndependent.TranscendenceBasis
-import Mathlib.RingTheory.AlgebraicIndependent.Transcendental
-import Mathlib.RingTheory.FiniteType
-import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorialBoundaryExtension
+public import Mathlib.RingTheory.AlgebraicIndependent.TranscendenceBasis
+public import Mathlib.RingTheory.AlgebraicIndependent.Transcendental
+public import Mathlib.RingTheory.FiniteType
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
+
 
 /-!
 # A relative transcendence tower containing a selected coordinate
@@ -26,6 +29,8 @@ ambient field.  It does not pretend that the remaining identification
 comparison, together with transport of the finite-dimensional instance, is
 the next formal interface needed by the existing divisorial-extension theorem.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.RelativeDivisorialTower
 

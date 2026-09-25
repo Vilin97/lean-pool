@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientBoundaryProducer
-import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveTangentInclusion
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientBoundaryProducer
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveTangentInclusion
+
 
 /-!
 # Extracting a finite gradient certificate from tangent inclusion
@@ -25,6 +28,8 @@ global normalization argument has only to establish the displayed tangent
 inclusion for the completed boundary chart (and separately handle any
 residue-field transport).
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.FiniteGradientFromTangentInclusion
 

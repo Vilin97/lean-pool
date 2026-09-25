@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ContinuousPowerSeriesTangentFrame
-import LeanPool.Stafford38.Stafford38.Geometry.RetractionSpecialization
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ContinuousPowerSeriesTangentFrame
+public import LeanPool.Stafford38.Stafford38.Geometry.RetractionSpecialization
+
 
 /-!
 # Tangency of the formal-arc velocity
@@ -21,6 +24,8 @@ The file does not construct the arc or identify its tangent data with a
 projective component.  Those chart, normalization, frame-independence, and
 dimension arguments remain separate geometric obligations.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.PowerSeriesArcTangency
 

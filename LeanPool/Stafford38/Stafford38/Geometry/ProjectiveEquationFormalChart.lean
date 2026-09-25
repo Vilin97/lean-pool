@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorLaurentConormal
-import Mathlib.RingTheory.MvPolynomial.Homogeneous
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorLaurentConormal
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+
 
 /-!
 # Projective equations on a formal affine chart
@@ -21,6 +24,8 @@ No projective closure, normalization, divisor, formal parameter, smoothness,
 or tangent-space equality is constructed here.  Those geometric existence
 statements remain outside this algebraic chart calculation.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ProjectiveEquationFormalChart
 

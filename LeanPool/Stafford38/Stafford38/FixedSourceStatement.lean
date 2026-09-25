@@ -4,9 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.UniversalAssembly
+module
+
+public import LeanPool.Stafford38.Stafford38.UniversalAssembly
+
 
 /-! The (actual) Bernstein degree, read directly from checked PBW normal form. -/
+
+@[expose] public section
 
 
 namespace Stafford38.FixedSource

@@ -4,16 +4,21 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Valuation.Basic
-import Mathlib.RingTheory.Valuation.ValuationSubring
-import Mathlib.RingTheory.LocalRing.ResidueField.Basic
-import Mathlib.RingTheory.Algebraic.Basic
-import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
-import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
+module
+
+public import Mathlib.RingTheory.Valuation.Basic
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
+public import Mathlib.RingTheory.Algebraic.Basic
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
+
 
 /-!
 Algebraicity of the divisorial residue field from integral affine models.
 -/
+
+@[expose] public section
 
 open IsLocalRing
 noncomputable section

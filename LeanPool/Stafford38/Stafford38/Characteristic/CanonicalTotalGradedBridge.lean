@@ -4,13 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalFilteredGradedBridge
-import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedModule
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermTotalPages
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalFilteredGradedBridge
+public import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedModule
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermTotalPages
+
 
 /-!
 Equivalences between total two-term pages and the canonical associated graded modules.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalTotalGradedBridge
 

@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ContinuousPowerSeriesTangentFrame
-import LeanPool.Stafford38.Stafford38.Geometry.ResidueMinorSelection
-import Mathlib.LinearAlgebra.Basis.VectorSpace
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ContinuousPowerSeriesTangentFrame
+public import LeanPool.Stafford38.Stafford38.Geometry.ResidueMinorSelection
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
+
 
 /-!
 # Derivation frames visible in residue coordinates
@@ -24,6 +27,8 @@ coefficient exactly one.
 This file assumes the spanning hypothesis.  In particular, it does not claim
 that an arbitrary retained DVR or boundary place supplies it.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.KaehlerVisibleDerivationFrame
 

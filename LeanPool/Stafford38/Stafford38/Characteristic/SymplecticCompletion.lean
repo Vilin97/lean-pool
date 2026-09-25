@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Weyl.Symplectic
-import LeanPool.Stafford38.Stafford38.Characteristic.HomogeneousChart
+module
+
+public import LeanPool.Stafford38.Stafford38.Weyl.Symplectic
+public import LeanPool.Stafford38.Stafford38.Characteristic.HomogeneousChart
+
 
 /-!
 # Symplectic completion of a phase vector
@@ -17,6 +20,8 @@ Consequently any nonzero phase vector can occupy a prescribed matrix column.
 Combined with homogeneous nonvanishing, this makes the transformed pure-power
 coefficient nonzero over the original characteristic-zero field.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicSymplecticCompletion
 

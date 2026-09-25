@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Module.LocalizedModule.Basic
-import Mathlib.RingTheory.Localization.Module
-import Mathlib.RingTheory.Noetherian.Filter
+module
+
+public import Mathlib.Algebra.Module.LocalizedModule.Basic
+public import Mathlib.RingTheory.Localization.Module
+public import Mathlib.RingTheory.Noetherian.Filter
+
 
 /-!
 # Uniform vanishing of an ascending family of boundary maps
@@ -15,6 +18,8 @@ Pointwise eventual vanishing becomes uniform on a Noetherian source.  The
 localized statement deliberately assumes Noetherianity only after
 localization.
 -/
+
+@[expose] public section
 
 open IsNoetherian
 

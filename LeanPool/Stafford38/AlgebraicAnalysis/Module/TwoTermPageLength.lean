@@ -4,13 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Length
-import Mathlib.LinearAlgebra.Isomorphisms
-import Mathlib.Tactic
+module
+
+public import Mathlib.RingTheory.Length
+public import Mathlib.LinearAlgebra.Isomorphisms
+public import Mathlib.Tactic
+
 
 /-!
 Length comparison for stabilized two-term pages with exhaustive target boundaries.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.TwoTermPageLength
 

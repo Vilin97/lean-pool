@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorAxisLift
-import Mathlib.RingTheory.PowerSeries.Inverse
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorAxisLift
+public import Mathlib.RingTheory.PowerSeries.Inverse
+
 
 /-!
 # The strict projective order gap at a divisor
@@ -26,6 +29,8 @@ This does not construct the projective closure, its normalization, or the
 prime divisor.  Those global existence statements are not presently
 available in Mathlib's algebraic-geometry library.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ProjectiveDivisorOrderGap
 

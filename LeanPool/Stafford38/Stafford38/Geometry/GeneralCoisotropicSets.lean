@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.FibreConicalVanishingIdeal
-import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoisotropicExclusion
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.FibreConicalVanishingIdeal
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoisotropicExclusion
+
 
 /-!
 # Coisotropic sets and their vanishing ideals
@@ -14,6 +17,8 @@ Closed affine sets are represented as common zero loci of polynomial ideals.
 The vanishing ideal is radical, and its base contraction describes the base
 projection of a closed fibre-conical set.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.GeneralCoisotropicSets
 

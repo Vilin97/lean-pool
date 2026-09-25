@@ -4,15 +4,20 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialSuccessors
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialBoundaryMaps
-import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedKernelCokernelEquivalences
-import LeanPool.Stafford38.Stafford38.Characteristic.UniformBoundaryVanishing
-import LeanPool.Stafford38.Stafford38.Characteristic.TwoTermPageLength
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialSuccessors
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialBoundaryMaps
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedKernelCokernelEquivalences
+public import LeanPool.Stafford38.Stafford38.Characteristic.UniformBoundaryVanishing
+public import LeanPool.Stafford38.Stafford38.Characteristic.TwoTermPageLength
+
 
 /-!
 The localized Euler length inequality for canonical two-term pages.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalPageEulerInequality
 open Stafford38.Characteristic

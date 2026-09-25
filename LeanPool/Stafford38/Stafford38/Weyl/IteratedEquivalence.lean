@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.Stafford38.Ore.IteratedPairStage
-import LeanPool.Stafford38.Stafford38.Ore.PairUniversal
-import LeanPool.Stafford38.Stafford38.Weyl.Universal
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import LeanPool.Stafford38.Stafford38.Ore.IteratedPairStage
+public import LeanPool.Stafford38.Stafford38.Ore.PairUniversal
+public import LeanPool.Stafford38.Stafford38.Weyl.Universal
+
 
 /-!
 # The presented Weyl algebra maps to the iterated Ore construction
@@ -17,6 +20,8 @@ presentation and the recursively iterated `PairStage`.  The proof uses only
 the two checked universal properties; it does not assume a PBW theorem for
 the quotient presentation.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylIteratedEquivalence
 

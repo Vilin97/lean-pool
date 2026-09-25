@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.CompletedDVRCoefficientSection
-import Mathlib.RingTheory.PowerSeries.Trunc
-import Mathlib.RingTheory.DiscreteValuationRing.Basic
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.CompletedDVRCoefficientSection
+public import Mathlib.RingTheory.PowerSeries.Trunc
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+
 
 /-!
 # A chosen-coordinate power-series map to a completed DVR
@@ -24,6 +27,8 @@ coordinates and proves its coefficient and uniformizer formulas.
 No Cohen structure theorem is invoked.  In particular, an equivalence is
 constructed only from a separately proved surjectivity statement.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.CompletedDVRPowerSeries
 

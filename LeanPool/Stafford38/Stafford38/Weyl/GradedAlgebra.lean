@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Weyl.AssociatedGraded
-import Mathlib.Algebra.DirectSum.Decomposition
-import Mathlib.Algebra.Ring.TransferInstance
-import Mathlib.Algebra.Algebra.TransferInstance
+module
+
+public import LeanPool.Stafford38.Stafford38.Weyl.AssociatedGraded
+public import Mathlib.Algebra.DirectSum.Decomposition
+public import Mathlib.Algebra.Ring.TransferInstance
+public import Mathlib.Algebra.Algebra.TransferInstance
+
 
 /-!
 # The associated graded algebra of the presented Weyl algebra
@@ -18,6 +21,8 @@ polynomial ring. For the Bernstein and differential-order filtrations, the
 transported multiplication is proved to be the multiplication induced by Weyl
 products of filtered representatives.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylAssociatedGraded
 

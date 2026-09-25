@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Nullstellensatz
-import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalClosure
+module
+
+public import Mathlib.RingTheory.Nullstellensatz
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalClosure
+
 
 /-!
 # Scalar extension and geometric points
@@ -20,6 +23,8 @@ radical of the extended ideal, not as the extension of `J.radical`.  The two
 zero loci agree over every extension field.  No assertion that radicals,
 closures, or ideal contractions commute with base change is made here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ScalarExtensionPoints
 

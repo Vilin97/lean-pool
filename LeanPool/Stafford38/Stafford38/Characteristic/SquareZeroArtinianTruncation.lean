@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroAnnihilatorBracket
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroAnnihilatorBracket
+
 
 /-!
 # Artinian truncation in a square-zero deformation
@@ -19,6 +22,8 @@ The result is deliberately stated without a noncommutative ideal on the
 deformation ring.  Membership is tested after specialization in the
 commutative fibre, which is exactly the datum available in the Rees two-jet.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.SquareZeroArtinianTruncation
 

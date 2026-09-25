@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.GeneralDivisorialVisibleFrame
-import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientResidueExtension
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralDivisorialVisibleFrame
+public import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientResidueExtension
+
 
 /-!
 # Laurent conormal axes for arbitrary affine components
@@ -25,6 +28,8 @@ https://doi.org/10.1007/978-0-8176-4523-6
 Chapters 1–2 supply characteristic-variety context. The visible-frame and finite-gradient
   construction is project mathematics, not a cited theorem from this book. See docs/literature.md.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.GeneralConormalAxis
 

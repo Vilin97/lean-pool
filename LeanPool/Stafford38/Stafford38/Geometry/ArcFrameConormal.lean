@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalSpan
-import LeanPool.Stafford38.Stafford38.Geometry.PowerSeriesArcTangency
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalSpan
+public import LeanPool.Stafford38.Stafford38.Geometry.PowerSeriesArcTangency
+
 
 /-!
 # From an annihilating arc frame to an affine conormal covector
@@ -21,6 +24,8 @@ divisorial chart, identify an arc with a projective component, or descend a
 `K[[t]]` chart to `k[[t]]`.  Those are still global production obligations for
 `CanonicalAsymptoticLaurentProducer`.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ArcFrameConormal
 

@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Algebra.Equiv
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Algebra.Equiv
+public import Mathlib.Tactic
+
 
 /-!
 # Transport of Stafford certificates
@@ -16,6 +19,8 @@ an exponent hypothesis, together with transport through algebra automorphisms
 and nonzero scalars. These conditional interfaces are retained for current
 imports; the unconditional theorem is proved in `Stafford38.FoundationClosure`.
 -/
+
+@[expose] public section
 
 namespace Stafford
 namespace Reduction

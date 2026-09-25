@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightQuotient
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightQuotient
+
 
 /-!
 # Principal right ideals in a derivation Ore normal form
@@ -16,6 +19,8 @@ explicit: division has the divisor on the left and the quotient on the right.
 
 No simplicity, localization, or left-PID statement is asserted here.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.OrePrincipalRightIdeal
 

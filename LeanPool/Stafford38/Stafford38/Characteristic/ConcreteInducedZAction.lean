@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.ConcreteEquation33SourceMatrices
-import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedTwoBlockModuleExactness
-import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedSpecializationActionCompatibility
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.ConcreteEquation33SourceMatrices
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedTwoBlockModuleExactness
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedSpecializationActionCompatibility
+
 
 /-!
 # Concrete lifted source-basis action equations
@@ -27,6 +30,8 @@ The induced `z`-operator identity is not assumed in this file.  Its proof also
 requires expanding the commutator of the two constructed action equations and
 descending the resulting parameter-multiple equality through exactness.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.ConcreteInducedZAction
 

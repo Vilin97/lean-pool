@@ -4,12 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.ConcreteSquareZeroTraceData
-import LeanPool.Stafford38.Stafford38.Characteristic.MinimalPrimeFiniteLengthLocalization
-import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroOreLocalization
-import Mathlib.Algebra.Module.LocalizedModule.Basic
-import Mathlib.GroupTheory.QuotientGroup.Basic
-import Mathlib.RingTheory.OreLocalization.Ring
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.ConcreteSquareZeroTraceData
+public import LeanPool.Stafford38.Stafford38.Characteristic.MinimalPrimeFiniteLengthLocalization
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroOreLocalization
+public import Mathlib.Algebra.Module.LocalizedModule.Basic
+public import Mathlib.GroupTheory.QuotientGroup.Basic
+public import Mathlib.RingTheory.OreLocalization.Ring
+
 
 /-!
 # Localization preserves the square-zero deformation sequence
@@ -26,6 +29,8 @@ module, parameter action, and specialization map are concrete constructions.
 The only typeclass parameter is Mathlib's `OreSet`; its existence for the
 pulled-back denominators is proved in `SquareZeroOreLocalization`.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.SquareZeroLocalizedExactness
 

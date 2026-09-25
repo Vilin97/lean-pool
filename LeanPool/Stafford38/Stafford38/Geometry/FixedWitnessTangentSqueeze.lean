@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalSpan
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalSpan
+
 
 /-!
 # A finite family determines the tangent space at full rank
@@ -15,6 +18,8 @@ tangent space is exactly their span.  This is only the finite-dimensional
 linear-algebra consumer; it does not construct tangent vectors or establish a
 smoothness or dimension bound.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.FixedWitnessTangentSqueeze
 

@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.EvolutionaryCertificate
-import LeanPool.Stafford38.Stafford38.EulerRootSeparation
-import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence
+module
+
+public import LeanPool.Stafford38.Stafford38.EvolutionaryCertificate
+public import LeanPool.Stafford38.Stafford38.EulerRootSeparation
+public import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence
+
 
 /-!
 # Evolutionary Stafford corollary
@@ -14,6 +17,8 @@ import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence
 This file combines the algebraic certificate with Euler-root separation. It
 contains only the unconditional ring-theoretic corollary needed by the paper.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Evolution
 

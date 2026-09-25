@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.FiniteSeparableDVRChartFoundation
-import LeanPool.Stafford38.Stafford38.Geometry.RelativeCoefficientDVRPlace
-import Mathlib.RingTheory.AdicCompletion.Algebra
-import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.FiniteSeparableDVRChartFoundation
+public import LeanPool.Stafford38.Stafford38.Geometry.RelativeCoefficientDVRPlace
+public import Mathlib.RingTheory.AdicCompletion.Algebra
+public import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
+
 
 /-!
 # A residue-field section in the adic completion of the retained DVR
@@ -23,6 +26,8 @@ The retained DVR produced by `RelativeCoefficientDVRPlace` satisfies the
 separability hypothesis in characteristic zero, so the construction applies
 to it directly.  No equivalence with a power-series ring is asserted.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.CompletedDVRCoefficientSection
 

@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.FieldTheory.FunctionField
-import LeanPool.Stafford38.Stafford38.Geometry.AffineComponentCoordinateSplit
-import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveValuationNormalization
-import LeanPool.Stafford38.Stafford38.Geometry.RelativeFractionFieldTransport
-import LeanPool.Stafford38.Stafford38.Geometry.RelativeRetainedBoundaryPlace
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.FieldTheory.FunctionField
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineComponentCoordinateSplit
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveValuationNormalization
+public import LeanPool.Stafford38.Stafford38.Geometry.RelativeFractionFieldTransport
+public import LeanPool.Stafford38.Stafford38.Geometry.RelativeRetainedBoundaryPlace
+
 
 /-!
 # Discrete boundary places for affine components
@@ -17,6 +20,8 @@ An affine component function field is finitely generated over the ground
 field.  Therefore every transcendental component coordinate admits the
 discrete boundary refinement constructed by the relative divisorial tower.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ComponentFunctionFieldBoundary
 

@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.RankTorsion
-import Mathlib.LinearAlgebra.Dimension.DivisionRing
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.RankTorsion
+public import Mathlib.LinearAlgebra.Dimension.DivisionRing
+
 
 /-!
 # Rank additivity for split sequences
@@ -17,6 +20,8 @@ localization.  In particular, whenever a localized short exact sequence is
 known to split, its localized middle term is equivalent to a product and the
 rank is additive.  No flatness or exactness interface is postulated here.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis
 namespace RankExact

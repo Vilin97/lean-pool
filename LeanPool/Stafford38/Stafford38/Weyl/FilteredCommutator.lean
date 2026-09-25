@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Weyl.AssociatedGraded
+module
+
+public import LeanPool.Stafford38.Stafford38.Weyl.AssociatedGraded
+
 
 /-!
 # Filtered commutators and subprincipal symbols
@@ -14,6 +17,8 @@ order filtration.  The first theorem is the exact filtration drop for arbitrary
 filtered elements; it includes the degree-zero case rather than hiding natural-
 number truncation behind a positivity hypothesis.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylFilteredCommutator
 

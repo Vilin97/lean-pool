@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
+module
+
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
+
 
 /-!
 # The Artinian triangular trace calculation
@@ -33,6 +36,8 @@ This file does not construct the coefficient field or adapted basis, derive
 the trace-zero operator from a square-zero module, or connect it to the
 localized right Rees module.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.ArtinianTriangularTrace
 

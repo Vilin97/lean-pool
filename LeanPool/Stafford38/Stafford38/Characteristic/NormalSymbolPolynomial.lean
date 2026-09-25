@@ -4,13 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalNormalAxisSupport
-import LeanPool.Stafford38.Stafford38.Weyl.PBWMonicBridge
-import Mathlib.RingTheory.MvPolynomial.Homogeneous
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalNormalAxisSupport
+public import LeanPool.Stafford38.Stafford38.Weyl.PBWMonicBridge
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+
 
 /-!
 Normal-symbol polynomials obtained from the canonical filtered quotient.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.NormalSymbolPolynomial
 

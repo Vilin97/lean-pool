@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.LaurentSeries
-import LeanPool.Stafford38.Stafford38.Geometry.RetractionSpecialization
-import LeanPool.Stafford38.Stafford38.Geometry.ScalarExtensionPoints
+module
+
+public import Mathlib.RingTheory.LaurentSeries
+public import LeanPool.Stafford38.Stafford38.Geometry.RetractionSpecialization
+public import LeanPool.Stafford38.Stafford38.Geometry.ScalarExtensionPoints
+
 
 /-!
 # Laurent specialization of projected conormal directions
@@ -25,6 +28,8 @@ No full phase-space closure, compatibility of closure with base change,
 normalization chart, asymptotic-conormal producer, or Gabber theorem is proved
 here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.LaurentConormalDirection
 

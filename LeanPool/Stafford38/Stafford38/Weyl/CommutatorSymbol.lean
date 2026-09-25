@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Weyl.GradedAlgebra
-import LeanPool.Stafford38.Stafford38.Characteristic.Polynomial
+module
+
+public import LeanPool.Stafford38.Stafford38.Weyl.GradedAlgebra
+public import LeanPool.Stafford38.Stafford38.Characteristic.Polynomial
+
 
 /-!
 # Coordinate commutators and order symbols
@@ -14,6 +17,8 @@ This file proves the newest-coordinate generator case of the filtered
 commutator--Poisson correspondence.  It uses the exact PBW block normal form;
 no characteristic-ideal, radical, or Gabber statement is assumed.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylCommutatorSymbol
 

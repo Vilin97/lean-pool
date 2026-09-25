@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.Stafford38.Weyl.PBWMonicBridge
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import LeanPool.Stafford38.Stafford38.Weyl.PBWMonicBridge
+
 
 /-!
 # PBW monicity as concrete outer-Ore monicity
@@ -16,6 +19,8 @@ the exact coefficient formula relating the nested PBW normal form to that
 polynomial, and turns the checked PBW coefficient-one bound into
 `Polynomial.Monic`.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylOuterOreMonic
 

@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientTwoJet
-import LeanPool.Stafford38.Stafford38.Characteristic.OrderReesTwoJetBracket
-import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroTraceData
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientTwoJet
+public import LeanPool.Stafford38.Stafford38.Characteristic.OrderReesTwoJetBracket
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroTraceData
+
 
 /-!
 # Concrete square-zero trace data for a filtered Weyl quotient
@@ -19,6 +22,8 @@ as forced by the convention `[x,p] = -1`.
 No localization, finite-length trace theorem, or radical involutivity theorem
 is asserted here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicConcreteSquareZeroTraceData
 

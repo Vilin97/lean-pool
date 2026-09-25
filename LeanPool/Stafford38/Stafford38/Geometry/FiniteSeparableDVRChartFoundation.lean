@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Etale.Field
-import Mathlib.RingTheory.Smooth.Basic
-import Mathlib.RingTheory.Unramified.Basic
+module
+
+public import Mathlib.RingTheory.Etale.Field
+public import Mathlib.RingTheory.Smooth.Basic
+public import Mathlib.RingTheory.Unramified.Basic
+
 
 /-!
 # Finite-separable coefficient sections through nilpotent thickenings
@@ -22,6 +25,8 @@ for a completed power-series chart.  The passage from this compatible family
 to the inverse limit is outside this module's finite-level scope; the
 completion comparison is supplied by the downstream completed-DVR chart.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.FiniteSeparableDVRChartFoundation
 

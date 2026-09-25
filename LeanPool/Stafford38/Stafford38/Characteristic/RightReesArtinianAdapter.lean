@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedFinite
-import LeanPool.Stafford38.Stafford38.Characteristic.ConcreteSquareZeroTraceData
-import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroHighPowerReduction
-import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroLocalizedRing
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedFinite
+public import LeanPool.Stafford38.Stafford38.Characteristic.ConcreteSquareZeroTraceData
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroHighPowerReduction
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroLocalizedRing
+
 
 /-!
 # The concrete right-Rees Artinian-local adapter
@@ -33,6 +36,8 @@ modulo its parameter with the commutative local fibre.  High-power Artinian
 quotient descent and survival of parameter exactness are then separate.  No
 Artinian quotient action is asserted below.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.RightReesArtinianAdapter
 

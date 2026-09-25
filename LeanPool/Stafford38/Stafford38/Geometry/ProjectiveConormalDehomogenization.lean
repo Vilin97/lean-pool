@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.JacobianConormalComparison
-import LeanPool.Stafford38.Stafford38.Geometry.RetractionSpecialization
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.JacobianConormalComparison
+public import LeanPool.Stafford38.Stafford38.Geometry.RetractionSpecialization
+
 
 /-!
 # Dehomogenizing projective conormal data
@@ -18,6 +21,8 @@ No projective closure, normalization, formal chart, tangent-space comparison,
 Laurent specialization, closure theorem, or coisotropy statement is constructed
 here.  The tangent-space equality and the base equations are explicit inputs.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ProjectiveConormalDehomogenization
 

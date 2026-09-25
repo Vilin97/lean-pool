@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.BaseRelativePoisson
-import LeanPool.Stafford38.Stafford38.Characteristic.ZeroSectionContainment
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.BaseRelativePoisson
+public import LeanPool.Stafford38.Stafford38.Characteristic.ZeroSectionContainment
+
 
 /-!
 # Pointwise conormal containment
@@ -20,6 +23,8 @@ the existing one-direction translation theorem once.  It assumes zero-section
 vanishing at the chosen point; it does not prove that hypothesis or any
 homogeneity statement.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.PointwiseConormalContainment
 

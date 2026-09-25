@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.OreLocalization.Ring
+module
+
+public import Mathlib.RingTheory.OreLocalization.Ring
+
 
 /-!
 # Generic Ore-localization facts
@@ -14,6 +17,8 @@ stage argument.  The common-denominator lemma is proved directly from the
 Ore condition.  No flatness, Noetherianity, or freeness of a localized ring
 over a stage ring is assumed.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis
 namespace OreStageLocalization

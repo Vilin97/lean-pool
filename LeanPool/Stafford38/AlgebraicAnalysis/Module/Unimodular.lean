@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Module.Projective
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Module.Projective
+public import Mathlib.Tactic
+
 
 /-!
 # Unimodular elements and a free rank-one summand
@@ -14,6 +17,8 @@ This file contains the unconditional module-theoretic splitting associated
 to a unimodular element.  It uses no rank, Ore, simplicity, or finiteness
 hypothesis.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.Unimodular
 

@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.LinearAlgebra.Matrix.Trace
-import Mathlib.RingTheory.Ideal.Maps
+module
+
+public import Mathlib.LinearAlgebra.Matrix.Trace
+public import Mathlib.RingTheory.Ideal.Maps
+
 
 /-!
 # Matrix trace reductions for equation (3.3)
@@ -25,6 +28,8 @@ assumed.  This file does not construct the matrices from a deformation module,
 instantiate the localized right-Rees ring, identify the reduced matrix with
 the induced `z`-action, or prove the high-power Artinian reduction.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.ArtinianEquation33TraceProducer
 

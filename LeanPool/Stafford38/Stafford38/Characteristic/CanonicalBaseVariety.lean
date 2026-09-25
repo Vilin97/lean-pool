@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalAxisAvoidanceConsumer
-import LeanPool.Stafford38.Stafford38.Characteristic.BaseZeroSection
-import LeanPool.Stafford38.Stafford38.Characteristic.ReducedSupportIdeal
-import Mathlib.RingTheory.Nullstellensatz
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalAxisAvoidanceConsumer
+public import LeanPool.Stafford38.Stafford38.Characteristic.BaseZeroSection
+public import LeanPool.Stafford38.Stafford38.Characteristic.ReducedSupportIdeal
+public import Mathlib.RingTheory.Nullstellensatz
+
 
 /-!
 # The affine base variety feeding the asymptotic argument
@@ -18,6 +21,8 @@ support avoids the distinguished coordinate hyperplane, every such base point
 has nonzero distinguished coordinate.  These are exactly the affine premises
 of the remaining projective-boundary theorem.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalBaseVariety
 

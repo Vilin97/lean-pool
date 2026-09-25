@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.CanonicalFiniteGradientProjectiveCoordinates
-import LeanPool.Stafford38.Stafford38.Geometry.CanonicalVisibleDivisorFrameProduction
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalFiniteGradientProjectiveCoordinates
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalVisibleDivisorFrameProduction
+
 
 /-!
 # Exact visible-divisor-frame interface
@@ -24,6 +27,8 @@ whereas the retained coordinate can have higher valuation after ramification.
 The exact producer is supplied separately by
 `ExactDivisorialVisibleFrameExistence`.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ExactVisibleDivisorFrameInterface
 

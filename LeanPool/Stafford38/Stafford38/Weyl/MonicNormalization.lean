@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.SymplecticCompletion
-import LeanPool.Stafford38.Stafford38.Weyl.SymbolCompatibility
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.SymplecticCompletion
+public import LeanPool.Stafford38.Stafford38.Weyl.SymbolCompatibility
+
 
 /-!
 # Bernstein-top selection and scalar monic normalization
@@ -19,6 +22,8 @@ normalized principal axis coefficient is then exactly one.
 This file stops at the commutative-symbol monicity interface. Identifying it
 with a monic Ore polynomial in the selected momentum is the next dependency.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylMonicNormalization
 

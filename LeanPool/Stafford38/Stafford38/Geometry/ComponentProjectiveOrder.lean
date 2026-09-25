@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalBaseVariety
-import LeanPool.Stafford38.Stafford38.Geometry.ComponentFunctionFieldBoundary
-import LeanPool.Stafford38.Stafford38.Geometry.RetainedProjectiveCompletion
-import Mathlib.RingTheory.Nullstellensatz
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalBaseVariety
+public import LeanPool.Stafford38.Stafford38.Geometry.ComponentFunctionFieldBoundary
+public import LeanPool.Stafford38.Stafford38.Geometry.RetainedProjectiveCompletion
+public import Mathlib.RingTheory.Nullstellensatz
+
 
 /-!
 # Vanishing of the normalized projective denominator
@@ -17,6 +20,8 @@ component of the reduced base variety.  At the retained boundary place that
 coordinate is a nonunit.  Consequently, a common projective normalization of
 all affine coordinates cannot have unit homogeneous denominator.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ComponentProjectiveOrder
 

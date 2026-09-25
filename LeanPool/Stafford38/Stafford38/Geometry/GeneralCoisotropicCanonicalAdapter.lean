@@ -4,17 +4,20 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.GradedAlgebra.Radical
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalGabberInvolutivityInterface
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalLaurentSymbolControl
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalUnitCoordinatePreimage
-import LeanPool.Stafford38.Stafford38.Characteristic.GabberGlobalAssembly
-import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdealHomogeneous
-import LeanPool.Stafford38.Stafford38.Characteristic.ReducedSupportIdeal
-import LeanPool.Stafford38.Stafford38.Characteristic.ZeroSectionContainment
-import LeanPool.Stafford38.Stafford38.CanonicalSupportVanishingReduction
-import LeanPool.Stafford38.Stafford38.Geometry.FibreConicalVanishingIdeal
-import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoisotropicSets
+module
+
+public import Mathlib.RingTheory.GradedAlgebra.Radical
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalGabberInvolutivityInterface
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalLaurentSymbolControl
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalUnitCoordinatePreimage
+public import LeanPool.Stafford38.Stafford38.Characteristic.GabberGlobalAssembly
+public import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdealHomogeneous
+public import LeanPool.Stafford38.Stafford38.Characteristic.ReducedSupportIdeal
+public import LeanPool.Stafford38.Stafford38.Characteristic.ZeroSectionContainment
+public import LeanPool.Stafford38.Stafford38.CanonicalSupportVanishingReduction
+public import LeanPool.Stafford38.Stafford38.Geometry.FibreConicalVanishingIdeal
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoisotropicSets
+
 
 /-!
 # Adapter from canonical order support to the arbitrary coisotropic theorem
@@ -29,6 +32,8 @@ ideal.
 This adapter is deliberately separate from the canonical support assembly, so
 the general theorem can be integrated there without an import cycle.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.GeneralCoisotropicCanonicalAdapter
 

@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulPositivity
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulPositivity
+
 
 /-!
 # Finite power torsion for a principal Koszul endomorphism
@@ -18,6 +21,8 @@ The final theorem deliberately assumes that the actual residual quotient is
 nonzero.  It proves only the strict length inequality and makes no
 noncharacteristic-support or geometric nonvanishing claim.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.PrincipalKoszulFiniteTorsion
 

@@ -4,14 +4,19 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.DivisorialVisibleFrameCore
-import LeanPool.Stafford38.Stafford38.Geometry.DivisorialVisibleFrameStage2
-import LeanPool.Stafford38.Stafford38.Geometry.DivisorialVisibleFrameStage4
-import LeanPool.Stafford38.Stafford38.Geometry.DivisorialVisibleFrameStage5
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorialVisibleFrameCore
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorialVisibleFrameStage2
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorialVisibleFrameStage4
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorialVisibleFrameStage5
+
 
 /-!
 Assembly of the verified affine, residue-field, and valuation stages of a visible frame.
 -/
+
+@[expose] public section
 
 open IsLocalRing Polynomial
 open Stafford38.Geometry.NormalizationHeightOne

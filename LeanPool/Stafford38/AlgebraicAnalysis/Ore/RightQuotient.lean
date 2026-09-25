@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+
 
 /-!
 # Finite right quotients over noncommutative Ore coefficients
@@ -17,6 +20,8 @@ commutativity restriction from the older finite-quotient consumer.
 The final section instantiates the construction on the outer momentum layer
 of the iterated Weyl tower and uses the literal generators `d` and `x^N d`.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.OreRightQuotient
 

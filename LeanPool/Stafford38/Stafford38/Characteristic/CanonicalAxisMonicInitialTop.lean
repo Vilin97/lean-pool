@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedFinite
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalUnitPreimageFromInitialTop
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientReesAction
-import LeanPool.Stafford38.Stafford38.Characteristic.HyperplaneRestriction
-import LeanPool.Stafford38.Stafford38.Weyl.QuotientTransport
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedFinite
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalUnitPreimageFromInitialTop
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientReesAction
+public import LeanPool.Stafford38.Stafford38.Characteristic.HyperplaneRestriction
+public import LeanPool.Stafford38.Stafford38.Weyl.QuotientTransport
+
 
 /-!
 # The exact Rees--Koszul form of canonical axis cancellation
@@ -27,6 +30,8 @@ quotient; ordinary quotient surjectivity is not silently promoted to it.
 No D-module theorem, noncharacteristic pullback theorem, or project axiom is
 used here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CanonicalAxisMonicInitialTop
 

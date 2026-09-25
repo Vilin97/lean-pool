@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.FoundationClosure
-import LeanPool.Stafford38.Stafford38.FixedSourceChallengeTransport
+module
+
+public import LeanPool.Stafford38.Stafford38.FoundationClosure
+public import LeanPool.Stafford38.Stafford38.FixedSourceChallengeTransport
+
 
 /-!
 # Solution for the exact-source challenge
@@ -19,6 +22,8 @@ two linear symplectic coordinate predicates are definitionally equal.  This
 file only combines those facts; it adds no hypothesis and supplies no degree
 or normal-form datum.
 -/
+
+@[expose] public section
 
 namespace Stafford38FixedSourceChallenge
 

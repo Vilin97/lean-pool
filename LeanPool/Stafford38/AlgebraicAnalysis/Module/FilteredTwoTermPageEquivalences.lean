@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPages
-import Mathlib.LinearAlgebra.Isomorphisms
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPages
+public import Mathlib.LinearAlgebra.Isomorphisms
+
 
 /-!
 # Successor equivalences for the filtered two-term pages
@@ -14,6 +17,8 @@ This file proves, from the concrete representative definitions in
 `FilteredTwoTermPages`, that the next source page is the kernel of the page
 differential and that the next target page is its cokernel.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.FilteredTwoTermPages
 

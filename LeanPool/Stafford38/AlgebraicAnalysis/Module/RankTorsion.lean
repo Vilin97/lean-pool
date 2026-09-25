@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.OreLocalization.Ring
-import Mathlib.LinearAlgebra.Dimension.DivisionRing
-import Mathlib.LinearAlgebra.Dimension.Torsion.Finite
+module
+
+public import Mathlib.RingTheory.OreLocalization.Ring
+public import Mathlib.LinearAlgebra.Dimension.DivisionRing
+public import Mathlib.LinearAlgebra.Dimension.Torsion.Finite
+
 
 /-!
 # Rank and torsion over Ore localizations
@@ -31,6 +34,8 @@ The commutative-domain criterion `rank_eq_zero_iff_isTorsion` imported from
 Mathlib remains available, but is deliberately not reused as a theorem about
 noncommutative `R`.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis
 namespace RankTorsion

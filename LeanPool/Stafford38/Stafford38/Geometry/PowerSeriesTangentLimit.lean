@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.PowerSeries.NoZeroDivisors
-import LeanPool.Stafford38.Stafford38.Geometry.RetractionSpecialization
+module
+
+public import Mathlib.RingTheory.PowerSeries.NoZeroDivisors
+public import LeanPool.Stafford38.Stafford38.Geometry.RetractionSpecialization
+
 
 /-!
 # A power-series tangent-lattice limit
@@ -23,6 +26,8 @@ annihilator over `k[[X]]`.  This is only the tangent-lattice calculation.  It
 does not construct the split lattice from `T`, nor does it construct an arc, a
 normalization, a divisor at infinity, or a projective closure.
 -/
+
+@[expose] public section
 
 namespace Stafford38.GeometryPowerSeriesTangentLimit
 

@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Weyl.FilteredScalarLifting
-import LeanPool.Stafford38.Stafford38.Geometry.ScalarExtensionPoints
+module
+
+public import LeanPool.Stafford38.Stafford38.Weyl.FilteredScalarLifting
+public import LeanPool.Stafford38.Stafford38.Geometry.ScalarExtensionPoints
+
 
 /-!
 # Reduced order support after scalar extension
@@ -16,6 +19,8 @@ reduced order support of the scalar-extended canonical Weyl quotient.  Thus a
 universal Gabber theorem can be run directly over the extension field; no
 unrecorded transport of Poisson closure is needed.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.GeometricSupportScalarExtension
 

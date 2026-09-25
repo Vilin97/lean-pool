@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.Basic
-import Mathlib.RingTheory.Kaehler.Polynomial
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.Basic
+public import Mathlib.RingTheory.Kaehler.Polynomial
+
 
 /-!
 # The polynomial commutant after localization
@@ -15,6 +18,8 @@ multiplications is multiplication by its value at `1`.  The argument only
 uses the localization presentation; it does not use a finite-order
 hypothesis.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.DifferentialOperators.LocalizedPolynomialCommutant
 

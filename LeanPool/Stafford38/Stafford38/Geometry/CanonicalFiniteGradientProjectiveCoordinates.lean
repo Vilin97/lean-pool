@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ComponentFunctionFieldBoundary
-import LeanPool.Stafford38.Stafford38.Geometry.ComponentProjectiveClosureNormalization
-import LeanPool.Stafford38.Stafford38.Geometry.ComponentProjectiveOrder
-import LeanPool.Stafford38.Stafford38.Geometry.RetainedProjectiveCompletion
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ComponentFunctionFieldBoundary
+public import LeanPool.Stafford38.Stafford38.Geometry.ComponentProjectiveClosureNormalization
+public import LeanPool.Stafford38.Stafford38.Geometry.ComponentProjectiveOrder
+public import LeanPool.Stafford38.Stafford38.Geometry.RetainedProjectiveCompletion
+
 
 /-!
 # Exact normalized projective coordinates at a retained boundary place
@@ -18,6 +21,8 @@ retained place, and records the projective normalization, the distinguished
 coordinate ratio, and the two zero-residue facts needed by downstream
 certificates.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.CanonicalFiniteGradientProjectiveCoordinates
 

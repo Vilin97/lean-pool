@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.Stafford38.Ore.PairStage
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import LeanPool.Stafford38.Stafford38.Ore.PairStage
+
 
 /-!
 # Universal property of a coordinate-momentum pair stage
@@ -15,6 +18,8 @@ First a coefficient map and a commuting coordinate define a map from the
 central-coordinate stage.  A momentum satisfying the derivation relation
 against that map then defines a map from `PairStage`.
 -/
+
+@[expose] public section
 
 namespace Stafford38.OrePairUniversal
 

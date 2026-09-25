@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalFilteredGradedBridge
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermTotalActions
-import LeanPool.Stafford38.Stafford38.Weyl.FilteredCommutator
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalFilteredGradedBridge
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermTotalActions
+public import LeanPool.Stafford38.Stafford38.Weyl.FilteredCommutator
+
 
 /-!
 # Tangential filtered operators on the canonical quotient
@@ -15,6 +18,8 @@ Right multiplication by every tangential Weyl generator gives an actual
 filtered operator on the canonical quotient.  The distinguished coordinate
 commutes with these operators, so they induce operators on every page.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalTangentialPageOperators
 

@@ -4,17 +4,22 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Valuation.LocalSubring
-import Mathlib.RingTheory.Valuation.ValuationSubring
-import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
-import Mathlib.RingTheory.Localization.FractionRing
-import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
-import Mathlib.RingTheory.FiniteType
-import LeanPool.Stafford38.Stafford38.Geometry.NormalizationHeightOne
+module
+
+public import Mathlib.RingTheory.Valuation.LocalSubring
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
+public import Mathlib.RingTheory.FiniteType
+public import LeanPool.Stafford38.Stafford38.Geometry.NormalizationHeightOne
+
 
 /-!
 Normalized affine charts and integral models for a selected divisorial boundary coordinate.
 -/
+
+@[expose] public section
 
 open IsLocalRing
 open scoped nonZeroDivisors

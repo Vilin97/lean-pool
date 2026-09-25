@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.MvPolynomial.PDeriv
-import LeanPool.Stafford38.Stafford38.DifferentialOperators
-import LeanPool.Stafford38.Stafford38.Weyl.Universal
-import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence
+module
+
+public import Mathlib.Algebra.MvPolynomial.PDeriv
+public import LeanPool.Stafford38.Stafford38.DifferentialOperators
+public import LeanPool.Stafford38.Stafford38.Weyl.Universal
+public import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence
+
 
 /-!
 # The polynomial representation of the Weyl algebra
@@ -17,6 +20,8 @@ formal partial differentiation.  The target is the intrinsic algebra of
 finite-order differential operators, so this construction does not assume an
 identification of that algebra with the Weyl algebra.
 -/
+
+@[expose] public section
 
 namespace Stafford38.PolynomialDifferentialOperators
 

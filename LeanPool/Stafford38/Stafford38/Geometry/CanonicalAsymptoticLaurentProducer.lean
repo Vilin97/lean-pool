@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.CanonicalSupportVanishingReduction
-import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveDivisorOrderGap
-import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveEquationFormalChart
-import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveTangentInclusion
+module
+
+public import LeanPool.Stafford38.Stafford38.CanonicalSupportVanishingReduction
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveDivisorOrderGap
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveEquationFormalChart
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveTangentInclusion
+
 
 /-!
 # The completed-boundary consumer for the Laurent producer
@@ -37,6 +40,8 @@ specializing that chart to `k[[X]]`, constructing homogeneous equations, and
 proving the tangent-span inclusion are separate geometric obligations.
 `CanonicalBoundaryChartProduction` records exactly that remaining obligation.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.CanonicalAsymptoticLaurentProducer
 

@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ConormalPrincipalOpenDensity
-import LeanPool.Stafford38.Stafford38.Geometry.GenericSmoothOpen
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ConormalPrincipalOpenDensity
+public import LeanPool.Stafford38.Stafford38.Geometry.GenericSmoothOpen
+
 
 /-!
 # Density of the conormal over the smooth affine locus
@@ -15,6 +18,8 @@ Mathlib smooth points contain a nonempty principal open.  Consequently the
 equation conormal over those smooth points has the same algebraic closure as
 the full equation conormal.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.SmoothAffineConormal
 

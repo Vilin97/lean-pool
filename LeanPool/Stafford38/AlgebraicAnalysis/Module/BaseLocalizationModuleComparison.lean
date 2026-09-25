@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Localization.Module
-import Mathlib.RingTheory.Localization.LocalizationLocalization
+module
+
+public import Mathlib.RingTheory.Localization.Module
+public import Mathlib.RingTheory.Localization.LocalizationLocalization
+
 
 /-!
 # Comparison of base and coefficient localizations
@@ -13,6 +16,8 @@ import Mathlib.RingTheory.Localization.LocalizationLocalization
 For an `R`-algebra `C`, localizing a `C`-module at the image of a submonoid
 `S ≤ R` agrees with localizing it as an `R`-module at `S`.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.BaseLocalizationModuleComparison
 

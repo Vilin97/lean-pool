@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.HopkinsLevitzki
-import LeanPool.Stafford38.Stafford38.Characteristic.SourceActionCommutatorExpansion
-import Mathlib.RingTheory.Finiteness.NilpotentKer
+module
+
+public import Mathlib.RingTheory.HopkinsLevitzki
+public import LeanPool.Stafford38.Stafford38.Characteristic.SourceActionCommutatorExpansion
+public import Mathlib.RingTheory.Finiteness.NilpotentKer
+
 
 /-!
 # Actual traces using coefficient-field corrections
@@ -17,6 +20,8 @@ traces. The remaining source matrix has arbitrary special-fibre coefficients,
 but sends each basis vector to a strictly deeper maximal-ideal layer. This
 is sufficient to kill its diagonal without replacing coefficients by residues.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.BGab001CoefficientFieldTrace
 

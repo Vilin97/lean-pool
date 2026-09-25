@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Tower
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Tower
+
 
 /-!
 # Finite iterated derivation-Ore towers
@@ -19,6 +22,8 @@ The final result is an additive iterated normal-form equivalence.  Operator
 faithfulness and freeness over a rational Weyl subring are deliberately not
 asserted here.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.OreIteratedTower
 

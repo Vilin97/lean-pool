@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.GeneralConormalAxis
-import LeanPool.Stafford38.Stafford38.Geometry.GeneralConstantCoordinateAxis
-import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoordinateAvoidance
-import LeanPool.Stafford38.Stafford38.Geometry.CanonicalConstantCoordinateBranch
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralConormalAxis
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralConstantCoordinateAxis
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoordinateAvoidance
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalConstantCoordinateBranch
+
 
 /-!
 # Laurent conormal axes for coordinate-avoiding prime varieties
@@ -16,6 +19,8 @@ This combines the constant-coordinate and divisorial cases for an arbitrary
 prime affine ideal. The conclusion is a residue-extension Laurent witness;
 its comparison with ground-field projective directions is separate.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.GeneralAsymptoticLaurentAxis
 

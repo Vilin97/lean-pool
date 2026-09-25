@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Weyl.EulerRemainder
-import Mathlib.RingTheory.Support
+module
+
+public import LeanPool.Stafford38.Stafford38.Weyl.EulerRemainder
+public import Mathlib.RingTheory.Support
+
 
 /-!
 # Bernstein initial ideals and characteristic support
@@ -16,6 +19,8 @@ file defines the resulting cyclic graded module and its support.  The
 construction is concrete: no abstract D-module or characteristic-variety
 interface is assumed.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicInitialIdeal
 

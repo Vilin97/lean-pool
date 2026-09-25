@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedTwoBlockQuotient
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedTwoBlockQuotient
+
 
 /-!
 # Module exactness after the localized two-block ring quotient
@@ -18,6 +21,8 @@ special-fibre equivalence therefore transfer without quotienting the module.
 No identification of the quotient ring modulo its parameter with the
 commutative doubled-power quotient is asserted.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.LocalizedTwoBlockModuleExactness
 

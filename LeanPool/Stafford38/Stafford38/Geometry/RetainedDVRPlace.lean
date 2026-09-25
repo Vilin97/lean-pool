@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Finiteness.Quotient
-import LeanPool.Stafford38.Stafford38.Geometry.RelativeFractionFieldTransport
-import Mathlib.RingTheory.LocalRing.ResidueField.Ideal
-import Mathlib.RingTheory.Polynomial.Quotient
-import Mathlib.RingTheory.Trace.Quotient
+module
+
+public import Mathlib.RingTheory.Finiteness.Quotient
+public import LeanPool.Stafford38.Stafford38.Geometry.RelativeFractionFieldTransport
+public import Mathlib.RingTheory.LocalRing.ResidueField.Ideal
+public import Mathlib.RingTheory.Polynomial.Quotient
+public import Mathlib.RingTheory.Trace.Quotient
+
 
 /-!
 # A retained source-DVR place
@@ -18,6 +21,8 @@ construction and proves finiteness of the induced residue extension. It does
 not construct a relative coefficient-field map, residue separability, an
 inverse limit, or a power-series chart.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.RetainedDVR
 

@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.SimpleModule.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.RingTheory.SimpleModule.Basic
+public import Mathlib.Tactic
+
 
 /-!
 # Maximal-submodule splice
@@ -15,6 +18,8 @@ arguments.  They contain no finite-length, Ore, or differential-operator
 assumption.  The hypotheses that construct the relevant submodules remain
 with the application.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.Splice
 

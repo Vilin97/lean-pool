@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorAxisLift
-import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveConormalDehomogenization
-import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalDirection
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorAxisLift
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveConormalDehomogenization
+public import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalDirection
+
 
 /-!
 # From a formal divisor tangent to a Laurent conormal point
@@ -23,6 +26,8 @@ equations and the exact affine tangent-space equality are supplied.
 No normalization or divisor chart is constructed here.  In particular this
 file makes no global closure, coisotropy, or Gabber claim.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.FormalDivisorLaurentConormal
 

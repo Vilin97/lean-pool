@@ -4,11 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.NormalizationHeightOne
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.NormalizationHeightOne
+
 
 /-!
 Coefficient-field maps and residue-field compatibility for a divisorial valuation ring.
 -/
+
+@[expose] public section
 
 open IsLocalRing
 

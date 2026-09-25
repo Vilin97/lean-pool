@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdealHomogeneous
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdealHomogeneous
+
 
 /-!
 # Global support of the filtered right-ideal quotient
@@ -18,6 +21,8 @@ The further transport of the full symbol-ring module structure, and hence the
 support equality, is not proved in this file.  No conclusion about vanishing
 of the ungraded Weyl quotient is made here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicFilteredQuotientSupport
 

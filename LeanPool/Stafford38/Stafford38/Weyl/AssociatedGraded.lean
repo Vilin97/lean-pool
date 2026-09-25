@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Weyl.LeadingSymbol
-import Mathlib.LinearAlgebra.Isomorphisms
+module
+
+public import LeanPool.Stafford38.Stafford38.Weyl.LeadingSymbol
+public import Mathlib.LinearAlgebra.Isomorphisms
+
 
 /-!
 # Associated graded pieces of the PBW filtrations
@@ -16,6 +19,8 @@ surjective onto the weighted-homogeneous symbol submodule, so each filtered
 quotient is canonically linearly equivalent to its symbol component. The
 external graded multiplication is a downstream construction.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylAssociatedGraded
 

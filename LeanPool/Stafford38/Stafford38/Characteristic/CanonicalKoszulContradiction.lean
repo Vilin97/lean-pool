@@ -4,16 +4,21 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalGradedTangentialEquivalences
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalPageEulerInequality
-import LeanPool.Stafford38.Stafford38.Characteristic.BaseLocalizedKoszulPositivity
-import LeanPool.Stafford38.Stafford38.Characteristic.NoncharacteristicMinimalPrime
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalSupportAvoidanceFromCokernel
-import LeanPool.Stafford38.Stafford38.Characteristic.MinimalSupportExistence
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalGradedTangentialEquivalences
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalPageEulerInequality
+public import LeanPool.Stafford38.Stafford38.Characteristic.BaseLocalizedKoszulPositivity
+public import LeanPool.Stafford38.Stafford38.Characteristic.NoncharacteristicMinimalPrime
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalSupportAvoidanceFromCokernel
+public import LeanPool.Stafford38.Stafford38.Characteristic.MinimalSupportExistence
+
 
 /-!
 The contradiction between the canonical page length inequality and Koszul positivity.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalKoszulContradiction
 

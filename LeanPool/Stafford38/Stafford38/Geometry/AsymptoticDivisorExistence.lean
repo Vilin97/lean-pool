@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveDivisorOrderGap
-import Mathlib.FieldTheory.IsAlgClosed.Basic
-import Mathlib.Algebra.Polynomial.FieldDivision
-import Mathlib.RingTheory.DedekindDomain.Dvr
-import Mathlib.RingTheory.Localization.AtPrime.Basic
-import Mathlib.RingTheory.PrincipalIdealDomain
-import Mathlib.RingTheory.Valuation.LocalSubring
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveDivisorOrderGap
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.Algebra.Polynomial.FieldDivision
+public import Mathlib.RingTheory.DedekindDomain.Dvr
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Mathlib.RingTheory.PrincipalIdealDomain
+public import Mathlib.RingTheory.Valuation.LocalSubring
+
 
 /-!
 # A scheme-free boundary valuation for a nonconstant affine coordinate
@@ -32,6 +35,8 @@ extension and the source DVR, but no theorem preserving rank one/discreteness
 under the extension (nor the equivalent normalization/height-one-prime
 construction).
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.AsymptoticDivisorExistence
 

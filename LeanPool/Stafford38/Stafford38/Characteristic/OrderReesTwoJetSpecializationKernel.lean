@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.OrderReesTwoJet
-import Mathlib.Algebra.Polynomial.Inductions
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.OrderReesTwoJet
+public import Mathlib.Algebra.Polynomial.Inductions
+
 
 /-!
 # The specialization kernel of the order-Rees two-jet
@@ -20,6 +23,8 @@ elementwise principal-kernel statement for the two-jet.
 The factor is always written on the left.  Centrality of `T` is not used to
 reverse any noncommutative product.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicOrderReesTwoJetSpecializationKernel
 

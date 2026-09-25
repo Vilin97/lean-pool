@@ -4,13 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.NormalSymbolPolynomial
-import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedFinite
-import LeanPool.Stafford38.Stafford38.Characteristic.MonicAnnihilatorFinite
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.NormalSymbolPolynomial
+public import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedFinite
+public import LeanPool.Stafford38.Stafford38.Characteristic.MonicAnnihilatorFinite
+
 
 /-!
 Finiteness of the canonical graded quotient from a monic normal-symbol annihilator.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.CanonicalNormalSymbolFiniteness
 

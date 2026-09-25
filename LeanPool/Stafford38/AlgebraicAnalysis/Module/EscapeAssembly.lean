@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.EscapeSpan
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.EscapeSpan
+
 
 /-!
 # Finite-tuple central-coordinate escape
@@ -20,6 +23,8 @@ gives the whole free module.
 The theorem deliberately stops at this local span result.  It does not claim
 that a global Stafford correction family supplies the hypotheses.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.EscapeAssembly
 

@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.PowerSeries.Inverse
-import LeanPool.Stafford38.Stafford38.Geometry.PowerSeriesTangentLimit
+module
+
+public import Mathlib.RingTheory.PowerSeries.Inverse
+public import LeanPool.Stafford38.Stafford38.Geometry.PowerSeriesTangentLimit
+
 
 /-!
 # Splitting a rectangular power-series matrix from a selected minor
@@ -19,6 +22,8 @@ For matrices over `k[[X]]`, it is enough to assume that the determinant of the
 selected minor has nonzero constant coefficient.  This file does not assert
 that a suitable minor exists for a geometric tangent family.
 -/
+
+@[expose] public section
 
 namespace Stafford38.GeometrySplitTangentMatrix
 

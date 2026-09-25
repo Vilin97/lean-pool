@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Weyl.FilteredCommutator
+module
+
+public import LeanPool.Stafford38.Stafford38.Weyl.FilteredCommutator
+
 
 /-!
 # The first PBW contraction
@@ -14,6 +17,8 @@ PBW multiplication formula.  It is kept separate from the downstream
 commutator argument so that the one-sided normal-ordering calculation is an
 independent input.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylPBWFirstContraction
 

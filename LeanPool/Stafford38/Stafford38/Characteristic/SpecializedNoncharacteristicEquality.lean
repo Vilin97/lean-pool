@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalAxisMonicInitialTop
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalUnitPreimageFromInitialTop
-import LeanPool.Stafford38.Stafford38.Characteristic.TransposedFilteredModuleSupport
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalAxisMonicInitialTop
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalUnitPreimageFromInitialTop
+public import LeanPool.Stafford38.Stafford38.Characteristic.TransposedFilteredModuleSupport
+
 
 /-!
 # The specialized noncharacteristic boundary for the canonical quotient
@@ -23,6 +26,8 @@ to associated-graded surjectivity is not available in Mathlib: it is the
 specialized strict noncharacteristic inverse-image theorem.  No substitute
 for that theorem is assumed here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.SpecializedNoncharacteristicEquality
 

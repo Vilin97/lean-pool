@@ -4,12 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.MvPolynomial.Derivation
-import Mathlib.Algebra.MvPolynomial.PDeriv
-import Mathlib.RingTheory.Etale.Kaehler
-import Mathlib.RingTheory.Localization.FractionRing
-import Mathlib.RingTheory.Localization.Module
-import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalSpan
+module
+
+public import Mathlib.Algebra.MvPolynomial.Derivation
+public import Mathlib.Algebra.MvPolynomial.PDeriv
+public import Mathlib.RingTheory.Etale.Kaehler
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.RingTheory.Localization.Module
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalSpan
+
 
 /-!
 # Kähler relations at the generic point are affine conormal covectors
@@ -29,6 +32,8 @@ Not proved here: nothing about places, residue fields, boundary charts,
 smoothness, or geometric conormal bundles.  Only linear algebra of Kähler
 differentials and derivations over the fraction field of a quotient ring.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.GenericPointKaehlerConormal
 

@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.EndomorphismKernelSupportOverBase
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalPrimeFiniteLengthLocalization
-import Mathlib.RingTheory.Support
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.EndomorphismKernelSupportOverBase
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalPrimeFiniteLengthLocalization
+public import Mathlib.RingTheory.Support
+
 
 /-!
 # Finite length of a localized kernel and cokernel
@@ -16,6 +19,8 @@ over a larger coefficient algebra.  Finiteness over the base is supplied
 explicitly; no restriction-of-scalars finiteness of the ambient module is
 used.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis
 

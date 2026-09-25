@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveValuationNormalization
-import LeanPool.Stafford38.Stafford38.Geometry.RelativeRetainedBoundaryPlace
-import Mathlib.RingTheory.PowerSeries.Inverse
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveValuationNormalization
+public import LeanPool.Stafford38.Stafford38.Geometry.RelativeRetainedBoundaryPlace
+public import Mathlib.RingTheory.PowerSeries.Inverse
+
 
 /-!
 # Transport from a retained valuation ring to its power-series completion
@@ -15,6 +18,8 @@ The completed-DVR equivalence turns every valuation-ring coordinate into a
 power series over the actual residue field.  Krull intersection makes this
 coordinate map injective, so projective nonvanishing is preserved.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.RetainedProjectiveCompletion
 

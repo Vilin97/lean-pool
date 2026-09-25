@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
-import Mathlib.RingTheory.Support
+module
+
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
+public import Mathlib.RingTheory.Support
+
 
 /-!
 # Existence of a minimal support prime
@@ -13,6 +16,8 @@ import Mathlib.RingTheory.Support
 A nontrivial finite module over a commutative Noetherian ring has a prime in
 its support which is minimal among the support primes.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.MinimalSupportExistence
 

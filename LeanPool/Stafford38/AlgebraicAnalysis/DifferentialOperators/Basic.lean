@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Algebra.Subalgebra.Basic
+module
+
+public import Mathlib.Algebra.Algebra.Subalgebra.Basic
+
 
 /-!
 # Finite-order differential operators
@@ -14,6 +17,8 @@ from Stafford38 commit `1585e4c7`, originally
 `Stafford38/DifferentialOperators.lean`.  No Weyl presentation or
 application-specific hypothesis is used.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.DifferentialOperators
 

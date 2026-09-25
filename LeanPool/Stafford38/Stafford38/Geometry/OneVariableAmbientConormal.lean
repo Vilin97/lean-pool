@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalBaseVariety
-import LeanPool.Stafford38.Stafford38.Geometry.OneVariablePrimeConormal
-import Mathlib.FieldTheory.Perfect
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalBaseVariety
+public import LeanPool.Stafford38.Stafford38.Geometry.OneVariablePrimeConormal
+public import Mathlib.FieldTheory.Perfect
+
 
 /-!
 # Ambient rank-one conormal production
@@ -22,6 +25,8 @@ is squarefree.  At every zero, separability therefore makes the derivative
 nonzero, so the ambient equation itself spans the unique cotangent direction.
 This produces the Laurent conormal axis for the ambient ideal directly.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.OneVariableAmbientConormal
 

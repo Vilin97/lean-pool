@@ -4,12 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Derivation.Basic
-import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic
+module
+
+public import Mathlib.RingTheory.Derivation.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Tactic
+
 
 /-!
 # The divisor-tangent lattice lemma
@@ -45,6 +48,8 @@ No geometry enters here: the visibility hypothesis is an explicit statement
 about the derivation restricted to `V`, and producing a place that satisfies
 it is the remaining geometric input of lane C.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.DivisorTangentLattice
 

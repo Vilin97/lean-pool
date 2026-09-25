@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalClosure
-import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalDirection
-import LeanPool.Stafford38.Stafford38.Geometry.ScalarExtensionPoints
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalClosure
+public import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalDirection
+public import LeanPool.Stafford38.Stafford38.Geometry.ScalarExtensionPoints
+
 
 /-!
 # Constant-coordinate conormal directions
@@ -18,6 +21,8 @@ pure `i`-th coordinate covector at every base point.  The desired conormal
 axis is then present at a constant point, with no projective boundary or
 completion.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ConstantCoordinateConormal
 

@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalDirection
-import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveDivisorOrderGap
-import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveEquationFormalChart
-import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveTangentInclusion
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalDirection
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveDivisorOrderGap
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveEquationFormalChart
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveTangentInclusion
+
 
 /-!
 # Laurent conormal specialization over a residue-field extension
@@ -30,6 +33,8 @@ The final structure and consumer are a residue-extension version of the
 completed-boundary local interface.  They construct no projective chart,
 normalization, divisor, or tangent comparison.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.LaurentConormalResidueExtension
 

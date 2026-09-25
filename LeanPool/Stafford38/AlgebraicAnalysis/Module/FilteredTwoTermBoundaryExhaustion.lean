@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermTotalPages
-import Mathlib.Algebra.DirectSum.Module
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermTotalPages
+public import Mathlib.Algebra.DirectSum.Module
+
 
 /-!
 # Boundary exhaustion on the total target pages
@@ -15,6 +18,8 @@ later target page.  Surjectivity of the underlying differential and exhaustive
 filtration imply pointwise eventual vanishing; finite support then gives the
 same statement on the external direct sum.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.FilteredTwoTermPages
 

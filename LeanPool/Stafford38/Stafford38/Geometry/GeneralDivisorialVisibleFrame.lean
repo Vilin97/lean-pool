@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.ExactDivisorialVisibleFrameExistence
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.ExactDivisorialVisibleFrameExistence
+
 
 /-!
 # Divisorial visible frames for arbitrary prime affine components
@@ -15,6 +18,8 @@ hypotheses from the boundary producer. Identification of the resulting Laurent
 direction with the smooth projective conormal closure is performed downstream
 in the general asymptotic-conormal construction.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.GeneralDivisorialVisibleFrame
 

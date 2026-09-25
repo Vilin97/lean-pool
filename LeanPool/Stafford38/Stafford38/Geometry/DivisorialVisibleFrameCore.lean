@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.NormalizationHeightOne
-import Mathlib.RingTheory.Kaehler.Basic
-import Mathlib.RingTheory.Valuation.LocalSubring
-import Mathlib.Tactic
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.NormalizationHeightOne
+public import Mathlib.RingTheory.Kaehler.Basic
+public import Mathlib.RingTheory.Valuation.LocalSubring
+public import Mathlib.Tactic
+
 
 /-!
 # Divisorial visible-frame construction core
@@ -16,6 +19,8 @@ This file packages the already checked valuation, DVR, Kähler, and
 transcendence stages and states the assembly interface used by the dedicated
 normalization, residue-algebraicity, and coefficient-field modules.
 -/
+
+@[expose] public section
 
 open IsLocalRing Polynomial
 open Stafford38.Geometry.NormalizationHeightOne

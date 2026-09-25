@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Algebra.Opposite
-import Mathlib.Algebra.Module.RingHom
-import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence
+module
+
+public import Mathlib.Algebra.Algebra.Opposite
+public import Mathlib.Algebra.Module.RingHom
+public import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence
+
 
 /-!
 # Transposition of the presented Weyl algebra
@@ -16,6 +19,8 @@ equivalence with the opposite algebra.  Coordinates are fixed and momenta
 change sign.  The construction uses only the checked universal property of
 the quotient presentation.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylTransposition
 

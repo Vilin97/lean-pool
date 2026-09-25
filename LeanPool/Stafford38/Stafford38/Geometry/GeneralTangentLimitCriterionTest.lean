@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.GeneralTangentLimitCriterion
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralTangentLimitCriterion
+
 
 /-!
 # Independent consumer for the paper-level tangent-limit criterion
@@ -15,6 +18,8 @@ homogeneous-equation closure, and an actual finite-rank direct-summand tangent
 lattice.  No matrix basis, retraction, annihilator, position coefficients, or
 separate tangent-chart equality is supplied.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.GeneralTangentLimitCriterionTest
 

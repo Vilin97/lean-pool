@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.CharZero.Infinite
-import LeanPool.Stafford38.Stafford38.Characteristic.LinearAction
-import Mathlib.RingTheory.MvPolynomial.Homogeneous
+module
+
+public import Mathlib.Algebra.CharZero.Infinite
+public import LeanPool.Stafford38.Stafford38.Characteristic.LinearAction
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+
 
 /-!
 # Homogeneous symbols and prospective monic charts
@@ -18,6 +21,8 @@ column. Axis restriction to one variable identifies this value with the exact
 pure-power coefficient. The remaining chart-existence obligation is to place
 the chosen nonzero vector into a prescribed column of a symplectic matrix.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicHomogeneousChart
 

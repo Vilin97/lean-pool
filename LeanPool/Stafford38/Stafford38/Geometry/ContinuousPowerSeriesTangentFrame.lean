@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.PowerSeries.Derivative
-import Mathlib.RingTheory.PowerSeries.PiTopology
-import LeanPool.Stafford38.Stafford38.Geometry.FixedWitnessTangentSqueeze
-import LeanPool.Stafford38.Stafford38.Geometry.SeparableResidueDerivationExtension
+module
+
+public import Mathlib.RingTheory.PowerSeries.Derivative
+public import Mathlib.RingTheory.PowerSeries.PiTopology
+public import LeanPool.Stafford38.Stafford38.Geometry.FixedWitnessTangentSqueeze
+public import LeanPool.Stafford38.Stafford38.Geometry.SeparableResidueDerivationExtension
+
 
 /-!
 # Continuous derivation frames on a supplied power-series chart
@@ -33,6 +36,8 @@ component.  After that, the remaining inputs to the squeeze are independence
 of the residue vectors and the tangent-dimension bound.  This file does not
 construct the residue-field section or the `K[[t]]` chart.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ContinuousPowerSeriesTangentFrame
 

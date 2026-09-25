@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.GeneralAsymptoticLaurentAxis
-import LeanPool.Stafford38.Stafford38.Geometry.SmoothConormalFibreVanishing
-import LeanPool.Stafford38.Stafford38.Geometry.ConormalScalarExtensionVanishing
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralAsymptoticLaurentAxis
+public import LeanPool.Stafford38.Stafford38.Geometry.SmoothConormalFibreVanishing
+public import LeanPool.Stafford38.Stafford38.Geometry.ConormalScalarExtensionVanishing
+
 
 /-!
 # Asymptotic conormal directions of coordinate-avoiding varieties
@@ -15,6 +18,8 @@ The boundary witness specializes only in the fibre coordinates. Its base
 coordinates may have poles. Smooth-locus density and scalar-extension
 vanishing relate that witness to the ground-field projective direction set.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.GeneralAsymptoticConormal
 

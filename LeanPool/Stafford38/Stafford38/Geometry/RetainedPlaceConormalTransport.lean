@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.CanonicalNonconstantFiniteGradientProductionProof
-import LeanPool.Stafford38.Stafford38.Geometry.DivisorTangentLattice
-import LeanPool.Stafford38.Stafford38.Geometry.RetainedGroundMapIdentification
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalNonconstantFiniteGradientProductionProof
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorTangentLattice
+public import LeanPool.Stafford38.Stafford38.Geometry.RetainedGroundMapIdentification
+
 
 /-!
 # Transport of a divisor-tangent conormal row to the completed chart
@@ -52,6 +55,8 @@ What is proved (all trust-zero, no axioms beyond the standard three):
 What is not proved here: the existence of a visible divisor frame `D`, and
 the bridge `hbridge`; both are explicit hypotheses.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.RetainedPlaceConormalTransport
 

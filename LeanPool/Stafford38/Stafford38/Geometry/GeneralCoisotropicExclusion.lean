@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.GeneralAsymptoticConormal
-import LeanPool.Stafford38.Stafford38.Geometry.GeneralComponentConormalContainment
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralAsymptoticConormal
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralComponentConormalContainment
+
 
 /-!
 # Coisotropic exclusion for arbitrary homogeneous radical ideals
@@ -14,6 +17,8 @@ A nonempty fibre-conical coisotropic zero locus contained in a fibre-only
 symbol hypersurface transverse to the distinguished axis must meet the
 coordinate hyperplane.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.GeneralCoisotropicExclusion
 

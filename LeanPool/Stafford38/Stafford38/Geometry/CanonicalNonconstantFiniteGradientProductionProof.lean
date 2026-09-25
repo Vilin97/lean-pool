@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.CanonicalFiniteGradientProjectiveCoordinates
-import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientResidueExtension
-import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientBoundaryProducer
-import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientFromTangentInclusion
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalFiniteGradientProjectiveCoordinates
+public import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientResidueExtension
+public import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientBoundaryProducer
+public import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientFromTangentInclusion
+
 
 /-!
 # The first explicit boundary producer interface
@@ -23,6 +26,8 @@ row exists.  Its `conormal` field is the first open bridge in the nonconstant
 boundary construction.  The theorem below is the trust-zero adapter from
 that bridge to the finite equation/gradient certificate.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.CanonicalNonconstantFiniteGradientProductionProof
 

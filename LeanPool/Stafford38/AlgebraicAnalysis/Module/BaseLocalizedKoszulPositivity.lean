@@ -4,15 +4,20 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.BaseLocalizationModuleComparison
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.LocalizedKernelCokernelEquivalences
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalSupportKernelCokernelLengths
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.LocalizedMinimalSupportAvoidance
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulMinimalSupportPositivity
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.BaseLocalizationModuleComparison
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.LocalizedKernelCokernelEquivalences
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalSupportKernelCokernelLengths
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.LocalizedMinimalSupportAvoidance
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulMinimalSupportPositivity
+
 
 /-!
 Strict positivity of the localized principal Koszul Euler characteristic over the base ring.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.BaseLocalizedKoszulPositivity
 

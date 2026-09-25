@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightHilbertBasis
-import Mathlib.LinearAlgebra.Basis.Basic
-import Mathlib.LinearAlgebra.Finsupp.LinearCombination
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightHilbertBasis
+public import Mathlib.LinearAlgebra.Basis.Basic
+public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
+
 
 /-!
 # Right-coefficient PBW data for one derivation-Ore stage
@@ -16,6 +19,8 @@ triangular coefficient identities.  We prove directly that the candidate
 monomials form a genuine right basis; the proof uses finite-support maximal
 degree induction, so no freeness or flatness assumption is introduced.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.OreRightPBW
 

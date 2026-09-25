@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.Polynomial
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.Polynomial
+
 
 /-!
 # Linear substitutions on polynomial phase space
@@ -14,6 +17,8 @@ row-linear combination for each variable. Composition is contravariant in the
 matrix order, matching the Weyl-generator substitution convention. Explicit
 mutual inverse certificates produce an algebra equivalence.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicLinearAction
 

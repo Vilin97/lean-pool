@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Weyl.OrderRees
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientRees
-import Mathlib.Algebra.Module.GradedModule
-import Mathlib.Algebra.Module.Equiv.Opposite
+module
+
+public import LeanPool.Stafford38.Stafford38.Weyl.OrderRees
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientRees
+public import Mathlib.Algebra.Module.GradedModule
+public import Mathlib.Algebra.Module.Equiv.Opposite
+
 
 /-!
 # The right order-Rees action on the filtered quotient
@@ -16,6 +19,8 @@ This file constructs the actual right action.  Scalars are taken in the
 opposite of the order-Rees ring, so homogeneous scalar action is written
 right Weyl multiplication and raises filtration degree additively.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicFilteredQuotientReesAction
 

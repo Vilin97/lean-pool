@@ -4,12 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.RingTheory.Nullstellensatz
-import LeanPool.Stafford38.Stafford38.Geometry.ScalarExtensionPoints
+module
+
+public import Mathlib.RingTheory.Nullstellensatz
+public import LeanPool.Stafford38.Stafford38.Geometry.ScalarExtensionPoints
+
 
 /-!
 # Scalar extension of equation-conormal vanishing
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ConormalScalarExtensionVanishing
 

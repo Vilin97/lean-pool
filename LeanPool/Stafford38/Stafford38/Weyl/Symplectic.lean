@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.Proofs.WeylSymplectic
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import LeanPool.Stafford38.Proofs.WeylSymplectic
+
 
 /-!
 # General-rank linear symplectic changes of Weyl generators
@@ -16,6 +19,8 @@ are mutual inverses define a checked algebra equivalence. The inverse is part
 of the input, which keeps this theorem independent of matrix inversion APIs
 and makes the exact direction of generator substitution explicit.
 -/
+
+@[expose] public section
 
 namespace Stafford38.WeylSymplectic
 

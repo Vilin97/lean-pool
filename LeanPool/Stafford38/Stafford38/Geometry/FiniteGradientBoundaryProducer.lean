@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.CanonicalAsymptoticLaurentProducer
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalAsymptoticLaurentProducer
+
 
 /-!
 # A finite-gradient boundary producer
@@ -21,6 +24,8 @@ annihilating row and is independently checkable coordinate by coordinate.
 No normalization, projective closure, boundary divisor, or existence of such
 a certificate is asserted here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.FiniteGradientBoundaryProducer
 

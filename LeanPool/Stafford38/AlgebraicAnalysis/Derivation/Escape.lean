@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib.Algebra.Polynomial.Derivative
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Polynomial.Derivative
+public import Mathlib.Tactic
+
 
 /-!
 # The central-coordinate escape kernel
@@ -27,6 +30,8 @@ than hiding it behind an axiom.
 No module-span, simplicity, denominator, or geometric statement is included:
 those are separate packet obligations.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.Escape
 

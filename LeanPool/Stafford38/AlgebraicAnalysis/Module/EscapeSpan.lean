@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Derivation.Escape
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Derivation.Escape
+
 
 /-!
 # Right-sided span consequences of escape
@@ -17,6 +20,8 @@ scalar multiplication by `op a` is right multiplication by `a` in `S`.
 No claim is made here that a particular escape family produces the pure
 coordinate vectors.  That is the remaining Stafford correction construction.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.EscapeSpan
 

@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.BGab001CoefficientFieldTrace
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalGabberInvolutivityInterface
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.BGab001CoefficientFieldTrace
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalGabberInvolutivityInterface
+
 
 /-!
 # Gabber involutivity for Weyl quotients
@@ -26,6 +29,8 @@ https://doi.org/10.2307/2374101
 This is the classical theorem implemented for cyclic Weyl quotients. Its exact
   radical-involutivity interface is proved here; see docs/literature.md and docs/proof-guide.md.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.GabberGlobalAssembly
 

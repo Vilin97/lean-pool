@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightPBW
-import Mathlib.LinearAlgebra.Basis.Basic
-import LeanPool.Stafford38.Stafford38.Ore.ScalarAlgebra
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightPBW
+public import Mathlib.LinearAlgebra.Basis.Basic
+public import LeanPool.Stafford38.Stafford38.Ore.ScalarAlgebra
+
 
 /-!
 # A coordinate-momentum pair over a coefficient ring
@@ -16,6 +19,8 @@ Two successive Ore extensions adjoin a central coordinate and then its
 derivation momentum.  This file packages the resulting three canonical
 generator families and proves their exact relations.
 -/
+
+@[expose] public section
 
 namespace Stafford38.OrePairStage
 

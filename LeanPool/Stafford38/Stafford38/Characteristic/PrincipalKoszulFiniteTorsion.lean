@@ -4,13 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulFiniteTorsion
-import LeanPool.Stafford38.Stafford38.Characteristic.PrincipalKoszulPositivity
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulFiniteTorsion
+public import LeanPool.Stafford38.Stafford38.Characteristic.PrincipalKoszulPositivity
+
 
 /-!
 Compatibility exports for finite torsion in principal Koszul complexes
 from the shared algebraic-analysis library.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.PrincipalKoszulFiniteTorsion
 

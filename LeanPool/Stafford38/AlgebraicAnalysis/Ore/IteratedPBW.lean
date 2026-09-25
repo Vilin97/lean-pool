@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.IteratedTower
-import Mathlib.Algebra.Polynomial.Basis
-import Mathlib.LinearAlgebra.Basis.Basic
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.IteratedTower
+public import Mathlib.Algebra.Polynomial.Basis
+public import Mathlib.LinearAlgebra.Basis.Basic
+
 
 /-!
 # Left-field PBW bases for the finite Ore tower
@@ -15,6 +18,8 @@ This is the noncentral left-module layer.  Scalars act through the canonical
 coefficient embedding at every stage; no centrality of the coefficient field
 inside the Ore ring is used.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.OreIteratedPBW
 

@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientReesAction
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientReesExact
-import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientSpecialFibre
-import LeanPool.Stafford38.Stafford38.Characteristic.OrderReesTwoJet
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientReesAction
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientReesExact
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientSpecialFibre
+public import LeanPool.Stafford38.Stafford38.Characteristic.OrderReesTwoJet
+
 
 /-!
 # The filtered quotient two-jet module
@@ -19,6 +22,8 @@ its action retains written right Weyl multiplication.
 
 No trace theorem, minimal-prime statement, or Gabber theorem is asserted.
 -/
+
+@[expose] public section
 
 namespace Stafford38.CharacteristicFilteredQuotientTwoJet
 

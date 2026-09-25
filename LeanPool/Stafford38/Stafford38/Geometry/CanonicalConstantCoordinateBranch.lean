@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalBaseVariety
-import LeanPool.Stafford38.Stafford38.Geometry.ConstantCoordinateConormal
-import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalResidueExtension
-import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
-import Mathlib.RingTheory.Nullstellensatz
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalBaseVariety
+public import LeanPool.Stafford38.Stafford38.Geometry.ConstantCoordinateConormal
+public import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalResidueExtension
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
+public import Mathlib.RingTheory.Nullstellensatz
+
 
 /-!
 # Canonical constant-coordinate branch
@@ -19,6 +22,8 @@ produce an ambient equation whose differential is the pure coordinate axis.
 This gives the exact residue-extension endpoint used by the canonical
 assembly, with residue extension equal to the ground field.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.CanonicalConstantCoordinateBranch
 

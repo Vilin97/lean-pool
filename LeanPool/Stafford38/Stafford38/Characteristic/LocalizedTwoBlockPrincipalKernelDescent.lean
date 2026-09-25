@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedTwoBlockQuotient
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedTwoBlockQuotient
+
 
 /-!
 # Principal specialization kernels after the localized two-block quotient
@@ -22,6 +25,8 @@ kernel is factored by the parameter.
 No Artinianness, module-action statement, adapted basis, or matrix identity is
 used here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.LocalizedTwoBlockPrincipalKernelDescent
 

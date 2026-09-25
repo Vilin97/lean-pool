@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.ConcreteLocalizedTwoBlockSpecialFibre
-import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianAdaptedBasisExistence
-import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianEquation33TraceProducer
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.ConcreteLocalizedTwoBlockSpecialFibre
+public import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianAdaptedBasisExistence
+public import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianEquation33TraceProducer
+
 
 /-!
 # Source matrices for the concrete equation-(3.3) bridge
@@ -32,6 +35,8 @@ the bracket cofactor `z` on the concrete localized module.  That is the first
 remaining source-specific action identity; its exact signature is recorded at
 the end, without claiming the final operator trace.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Characteristic.ConcreteEquation33SourceMatrices
 

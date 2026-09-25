@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorTangent
-import LeanPool.Stafford38.Stafford38.Geometry.PowerSeriesTangentLimit
+module
+
+public import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorTangent
+public import LeanPool.Stafford38.Stafford38.Geometry.PowerSeriesTangentLimit
+
 
 /-!
 # The axis lift for a formal divisor tangent
@@ -22,6 +25,8 @@ left inverse.  Retraction correction then produces an exact annihilator whose
 residue is the pure axis covector.  No normalization, projective divisor,
 formal-chart construction, or global conormal-closure statement is made here.
 -/
+
+@[expose] public section
 
 namespace Stafford38.GeometryFormalDivisorAxisLift
 

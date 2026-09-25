@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.Stafford38.Characteristic.HomogeneousChart
-import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalClosure
+module
+
+public import LeanPool.Stafford38.Stafford38.Characteristic.HomogeneousChart
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalClosure
+
 
 /-!
 # The pure-momentum axis obstruction
@@ -20,6 +23,8 @@ in the principal-symbol hypersurface.  Applying the existing conditional
 equation-conormal-closure containment gives the corresponding contradiction.
 This file proves no conormal-axis producer and no Gabber theorem.
 -/
+
+@[expose] public section
 
 namespace Stafford38.Geometry.ConormalAxisContradiction
 

@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermTotalActions
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermTotalActions
+
 
 /-!
 # Naturality of the total successor maps
@@ -13,6 +16,8 @@ The concrete successor maps on the source and target pages commute with the
 page action.  The proof is by direct-sum induction and quotient
 representatives; no abstract successor-page interface is used.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.FilteredTwoTermPages
 

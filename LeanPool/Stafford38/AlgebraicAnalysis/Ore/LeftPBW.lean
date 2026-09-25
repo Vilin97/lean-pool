@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import Mathlib.Algebra.Polynomial.Basis
-import Mathlib.LinearAlgebra.Basis.Basic
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import Mathlib.Algebra.Polynomial.Basis
+public import Mathlib.LinearAlgebra.Basis.Basic
+
 
 /-!
 # Left PBW basis for a derivation Ore extension
@@ -20,6 +23,8 @@ gives the expected basis `1, ∂, ∂², ...`.
 The iterated tower still needs the commuting derivations to be extended over
 earlier stages.  Nothing in this file postulates such extensions.
 -/
+
+@[expose] public section
 
 namespace AlgebraicAnalysis.OreLeftPBW
 
