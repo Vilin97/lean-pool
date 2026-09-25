@@ -39,6 +39,42 @@ private theorem parked_of_binaryPrefix {t : Tape} {bits : List Bool}
   ⟨by rw [h.1]; omega,
     (show t.HasBinaryContent bits from h.2).cells_ne_start⟩
 
+/-- Two parked modified tapes and a parked unchanged frame give a parked work family. -/
+private theorem parked_work_of_frame
+    (query replacement : Fin n) (initial current : Fin n → Tape)
+    (hinitial : ∀ i, TM.Parked (initial i))
+    (hquery : TM.Parked (current query)) (hreplacement : TM.Parked (current replacement))
+    (hframe : ∀ i, i ≠ query → i ≠ replacement → current i = initial i) :
+    ∀ i, TM.Parked (current i) := by
+  intro i
+  by_cases hiq : i = query
+  · subst i
+    exact hquery
+  · by_cases hir : i = replacement
+    · subst i
+      exact hreplacement
+    · rw [hframe i hiq hir]
+      exact hinitial i
+
+/-- Rewinding the two modified tapes restores the entire framed work-tape family. -/
+private theorem work_eq_of_two_rewinds
+    (query replacement : Fin n) (initial encoded queryRewound restored : Fin n → Tape)
+    (hreplacementRestored : restored replacement = initial replacement)
+    (hreplacementFrame : ∀ i, i ≠ replacement → restored i = queryRewound i)
+    (hqueryRestored : queryRewound query = initial query)
+    (hqueryFrame : ∀ i, i ≠ query → queryRewound i = encoded i)
+    (hencodedFrame : ∀ i, i ≠ query → i ≠ replacement → encoded i = initial i) :
+    restored = initial := by
+  funext i
+  by_cases hir : i = replacement
+  · subst i
+    exact hreplacementRestored
+  · rw [hreplacementFrame i hir]
+    by_cases hiq : i = query
+    · subst i
+      exact hqueryRestored
+    · exact (hqueryFrame i hiq).trans (hencodedFrame i hiq hir)
+
 theorem entryAppendRestoreTM_hoareTime_frame_internal
     (tapes : EntryReplaceTapes n) (address newValue : ℕ)
     (emitted : List Bool) (initialWork readyWork : Fin n → Tape)
@@ -93,16 +129,10 @@ theorem entryAppendRestoreTM_hoareTime_frame_internal
     exact hinput
   have hencodedOutputParked : TM.Parked encoded.output :=
     parked_of_binaryPrefix hencodedOutput
-  have hencodedWorkParked : ∀ i, TM.Parked (encoded.work i) := by
-    intro i
-    by_cases hiq : i = tapes.entry.query
-    · subst i
-      exact parked_of_binarySuffix (by simpa using! hquerySuffix)
-    · by_cases hir : i = tapes.replacement
-      · subst i
-        exact parked_of_binarySuffix (by simpa using! hreplacementSuffix)
-      · rw [hencodedFrame i hiq hir]
-        exact hready.parked i
+  have hencodedWorkParked : ∀ i, TM.Parked (encoded.work i) :=
+    parked_work_of_frame tapes.entry.query tapes.replacement readyWork encoded.work
+      hready.parked (parked_of_binarySuffix (by simpa using! hquerySuffix))
+      (parked_of_binarySuffix (by simpa using! hreplacementSuffix)) hencodedFrame
   have hqueryContent :
       (encoded.work tapes.entry.query).HasBinaryContent address.bits := by
     simpa only [Tape.HasBinaryContent, hqueryCells'] using! hready.query.2
@@ -175,16 +205,10 @@ theorem entryAppendRestoreTM_hoareTime_frame_internal
   have hreplacementRestored : restored.work tapes.replacement =
       readyWork tapes.replacement :=
     hreplacementRestoredCanonical.trans hreplacementCanonical.symm
-  have hrestoredWork : restored.work = readyWork := by
-    funext i
-    by_cases hir : i = tapes.replacement
-    · subst i
-      exact hreplacementRestored
-    · rw [hreplacementFrame i hir]
-      by_cases hiq : i = tapes.entry.query
-      · subst i
-        exact hqueryRestored
-      · exact (hqueryFrame i hiq).trans (hencodedFrame i hiq hir)
+  have hrestoredWork : restored.work = readyWork :=
+    work_eq_of_two_rewinds tapes.entry.query tapes.replacement readyWork encoded.work
+      queryRewound.work restored.work hreplacementRestored hreplacementFrame
+      hqueryRestored hqueryFrame hencodedFrame
   obtain ⟨hqueryInputTransition, hqueryWorkTransition,
       hqueryOutputTransition⟩ :=
     TM.phaseTransition_eq_self_of_reads_ne_start
