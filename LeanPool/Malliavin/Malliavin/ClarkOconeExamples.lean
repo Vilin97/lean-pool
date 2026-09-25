@@ -3,10 +3,12 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.ClarkOcone
-import LeanPool.Malliavin.Malliavin.DualDerivative
-import LeanPool.Malliavin.Malliavin.CylindricalGrowth
-import LeanPool.Malliavin.Malliavin.ChainRule
+module
+
+public import LeanPool.Malliavin.Malliavin.ClarkOcone
+public import LeanPool.Malliavin.Malliavin.DualDerivative
+public import LeanPool.Malliavin.Malliavin.CylindricalGrowth
+public import LeanPool.Malliavin.Malliavin.ChainRule
 
 /-!
 # Consistency of the Clark--Ocone contract on the first chaos
@@ -33,6 +35,8 @@ and for the Wick exponential `exp (B T - T / 2)` (`clarkOcone_wickExp`).  The te
 `E[g' (B T) | 𝓕ₜ]` of the integrand is the pointwise identification still missing from the
 contract.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace

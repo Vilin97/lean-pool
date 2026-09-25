@@ -3,8 +3,10 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.ElementaryIto
-import LeanPool.Malliavin.Malliavin.PredictableDensity
+module
+
+public import LeanPool.Malliavin.Malliavin.ElementaryIto
+public import LeanPool.Malliavin.Malliavin.PredictableDensity
 
 /-!
 # Construction identities for the Brownian Itô integral
@@ -23,6 +25,8 @@ as both `naturalItoIntegralIsometry` and `centeredNaturalItoIntegralIsometry`. T
 Itô integration side no longer needs to be stipulated by `ClarkOconeFamily`; the remaining family
 contract concerns martingale representation and Malliavin--Itô duality.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

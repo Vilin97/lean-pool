@@ -3,10 +3,12 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.ClarkOcone
-import LeanPool.Malliavin.Malliavin.WienerChaos
-import Mathlib.Probability.Kernel.Condexp
-import Mathlib.Probability.ConditionalExpectation
+module
+
+public import LeanPool.Malliavin.Malliavin.ClarkOcone
+public import LeanPool.Malliavin.Malliavin.WienerChaos
+public import Mathlib.Probability.Kernel.Condexp
+public import Mathlib.Probability.ConditionalExpectation
 
 /-!
 # Pointwise conditional expectations via the disintegration kernel
@@ -31,6 +33,8 @@ This file records the consequences for the Clark--Ocone development:
   *every* predictable set of finite measure, not only over the rectangles recorded in
   `ClarkOcone.lean`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace

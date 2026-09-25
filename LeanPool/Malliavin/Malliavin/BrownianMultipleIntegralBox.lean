@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianMultipleIntegral
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianMultipleIntegral
 
 /-!
 # Ordered-box values of canonical Brownian multiple integrals
@@ -12,6 +14,8 @@ Symmetrization averages all coordinate permutations of an ordered-box indicator.
 simplex only the identity permutation survives, so the factorial normalization in the canonical
 multiple-integral operator cancels that average and recovers the Brownian increment chain.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal InnerProductSpace

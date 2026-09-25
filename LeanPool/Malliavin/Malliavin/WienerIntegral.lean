@@ -3,8 +3,10 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.CameronMartinTheorem
-import LeanPool.Malliavin.Malliavin.IteratedIntegral
+module
+
+public import LeanPool.Malliavin.Malliavin.CameronMartinTheorem
+public import LeanPool.Malliavin.Malliavin.IteratedIntegral
 
 /-!
 # The Wiener integral
@@ -52,6 +54,8 @@ along the dense map `stepToLp` to the Wiener integral `wienerIntegral hB`.
 * `IsBrownian.integral_two_boxKernel`: the Brownian link conditionally fixes the order-two box
   value as the corresponding product of increments.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.KernelIdentification
+module
+
+public import LeanPool.Malliavin.Malliavin.KernelIdentification
 
 /-!
 # The remaining inputs for the natural Clark--Ocone family
@@ -11,6 +13,8 @@ import LeanPool.Malliavin.Malliavin.KernelIdentification
 This file records exact formulations of the analytic inputs still required to construct a
 `ClarkOconeFamily` from the natural Brownian Itô integral.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

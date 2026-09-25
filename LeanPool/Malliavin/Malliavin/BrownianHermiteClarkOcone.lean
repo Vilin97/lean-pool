@@ -3,8 +3,10 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianHermiteMultipleIntegral
-import LeanPool.Malliavin.Malliavin.PastCylinderDensity
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianHermiteMultipleIntegral
+public import LeanPool.Malliavin.Malliavin.PastCylinderDensity
 
 /-!
 # Clark--Ocone from the Brownian Hermite/multiple-integral identity
@@ -14,6 +16,8 @@ The finite-coordinate density theorem supplies Malliavin--Itô duality without a
 hypothesis.  Combining the two identifies the canonical inverse-Itô integrand with the
 predictable Malliavin derivative and yields the concrete Clark--Ocone formula.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace

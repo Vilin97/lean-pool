@@ -3,9 +3,11 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.ClarkOcone
-import Mathlib.Probability.Kernel.Condexp
-import Mathlib.Probability.Kernel.Composition.MapComap
+module
+
+public import LeanPool.Malliavin.Malliavin.ClarkOcone
+public import Mathlib.Probability.Kernel.Condexp
+public import Mathlib.Probability.Kernel.Composition.MapComap
 
 /-!
 # A finite-horizon kernel for the predictable projection
@@ -23,6 +25,8 @@ kernel's sample-space marginal with the fixed-time kernel `condExpKernel P (𝓕
 natural Brownian filtration that identification — almost every time, almost every sample, as
 measures — is `predictableSectionKernel_ae_eq_condExpKernel` in `KernelIdentification.lean`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal InnerProductSpace

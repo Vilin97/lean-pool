@@ -3,10 +3,13 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.WienerIntegral
-import LeanPool.Malliavin.Malliavin.FubiniLift
-import LeanPool.Malliavin.Malliavin.MalliavinDerivative
-import Mathlib.Tactic.Recall
+module
+
+public import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
+public import LeanPool.Malliavin.Malliavin.WienerIntegral
+public import LeanPool.Malliavin.Malliavin.FubiniLift
+public import LeanPool.Malliavin.Malliavin.MalliavinDerivative
+public import Mathlib.Tactic.Recall
 
 /-!
 # The time derivative: from `H`-valued random variables to processes
@@ -43,6 +46,8 @@ contract's `timeDerivative` unconditionally (`timeDerivative`).
 * `Malliavin.timeDerivative_mderivLp_cylinder`: the textbook formula
   `Dₜ f(B t₁, …, B tₙ) = ∑ᵢ ∂ᵢ f (B t₁, …, B tₙ) · 1_{(0, tᵢ]}(t)`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace

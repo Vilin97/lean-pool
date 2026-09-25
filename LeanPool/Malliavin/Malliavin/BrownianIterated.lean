@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.ItoConstruction
+module
+
+public import LeanPool.Malliavin.Malliavin.ItoConstruction
 
 /-!
 # Brownian terminal values for iterated Itô integrals
@@ -12,6 +14,8 @@ This file begins the Brownian-linked iterated-Itô construction by packaging the
 finite chain of Brownian increments as an element of `L²(P)`.  These terminal values are the
 required images of ordered-box kernels in `IteratedIntegralFamily.IsBrownian`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal InnerProductSpace

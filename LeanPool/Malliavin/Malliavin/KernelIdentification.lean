@@ -3,10 +3,12 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.PredictableKernel
-import LeanPool.Malliavin.Malliavin.TimewiseCondExp
-import LeanPool.Malliavin.Malliavin.NaturalFiltrationLeftContinuous
-import Mathlib.MeasureTheory.Function.Floor
+module
+
+public import LeanPool.Malliavin.Malliavin.PredictableKernel
+public import LeanPool.Malliavin.Malliavin.TimewiseCondExp
+public import LeanPool.Malliavin.Malliavin.NaturalFiltrationLeftContinuous
+public import Mathlib.MeasureTheory.Function.Floor
 
 /-!
 # Identification of the predictable-section kernel with the fixed-time kernels
@@ -40,6 +42,8 @@ integral of its time sections against this one kernel
 the corresponding kernel integral of the Malliavin time derivative
 (`ClarkOconeFamily.predictableDerivative_ae_eq_integral_globalPredictableSectionKernel`).
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal InnerProductSpace

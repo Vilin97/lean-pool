@@ -3,8 +3,10 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianHermite
-import Mathlib.Probability.Distributions.Gaussian.Real
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianHermite
+public import Mathlib.Probability.Distributions.Gaussian.Real
 
 /-!
 # Generalized Hermite polynomials under centered Gaussian laws
@@ -12,6 +14,8 @@ import Mathlib.Probability.Distributions.Gaussian.Real
 This file develops the Gaussian moment and orthogonality identities for the variance-parametrized
 Hermite polynomials used by the Brownian chaos construction.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.MultipleIntegral
+module
+
+public import LeanPool.Malliavin.Malliavin.MultipleIntegral
 
 /-!
 # Homogeneous chaoses of the selected Hilbert tower
@@ -29,6 +31,8 @@ process-measurable `L²` onto ambient `L²`; only under that exhaustion conditio
 global simplex tower use its onto branch.  Order zero supplies constants, and
 `IsHilbertSum.mkInternal` packages the resulting total orthogonal family.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace Topology symmDiff

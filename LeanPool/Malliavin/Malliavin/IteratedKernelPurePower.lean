@@ -3,8 +3,10 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianMultipleIntegral
-import Mathlib.MeasureTheory.Integral.Pi
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianMultipleIntegral
+public import Mathlib.MeasureTheory.Integral.Pi
 
 /-!
 # Pure powers in iterated kernel spaces
@@ -14,6 +16,8 @@ The pointwise product `t ↦ ∏ i, f (t i)` realizes the pure tensor power of a
 square-integrability, symmetry, and Hilbert-space formulas.  These are the deterministic inputs
 for identifying generalized Hermite values with canonical Brownian multiple integrals.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ENNReal NNReal InnerProductSpace

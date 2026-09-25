@@ -3,10 +3,12 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianMultipleIntegral
-import Mathlib.Algebra.Polynomial.Basis
-import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
-import Mathlib.RingTheory.Polynomial.Hermite.Basic
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianMultipleIntegral
+public import Mathlib.Algebra.Polynomial.Basis
+public import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
+public import Mathlib.RingTheory.Polynomial.Hermite.Basic
 
 /-!
 # Algebraic Hermite bridge for Brownian chaos
@@ -15,6 +17,8 @@ The probabilists' Hermite polynomials, transported from integer to real coeffici
 real polynomial ring.  This is the finite-dimensional algebraic half of the standard Hermite
 route from polynomial Brownian cylinders to Wiener--Itô chaos.
 -/
+
+@[expose] public section
 
 noncomputable
 section

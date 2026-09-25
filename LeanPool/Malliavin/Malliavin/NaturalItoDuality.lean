@@ -3,8 +3,10 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.NaturalItoRange
-import LeanPool.Malliavin.Malliavin.ClarkOconeExamples
+module
+
+public import LeanPool.Malliavin.Malliavin.NaturalItoRange
+public import LeanPool.Malliavin.Malliavin.ClarkOconeExamples
 
 /-!
 # Malliavin--Itô duality on the first chaos
@@ -27,6 +29,8 @@ direct integrand identification
 `ClarkOconeFamily.ofNaturalItoBestIntegrand` therefore offers a version of the family constructor
 whose final input is this textbook statement instead of an inner-product duality axiom.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

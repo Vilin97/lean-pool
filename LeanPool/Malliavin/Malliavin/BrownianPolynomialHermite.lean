@@ -3,9 +3,11 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianHermite
-import LeanPool.Malliavin.Malliavin.BrownianCylinderDensity
-import LeanPool.Malliavin.Malliavin.BrownianChaosTotality
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianHermite
+public import LeanPool.Malliavin.Malliavin.BrownianCylinderDensity
+public import LeanPool.Malliavin.Malliavin.BrownianChaosTotality
 
 /-!
 # Brownian polynomial generators and the stochastic Hermite gap
@@ -15,6 +17,8 @@ subspace as its powers.  This file isolates the remaining stochastic input as th
 those Wick values belong to the closed span of ordered, disjoint increment products, and proves
 that this exact assertion implies canonical-chaos totality and natural martingale representation.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

@@ -3,9 +3,11 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianWickPurePowerComparison
-import LeanPool.Malliavin.Malliavin.BrownianMultipleIntegralBoxSpan
-import LeanPool.Malliavin.Malliavin.PastCylinderDensity
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianWickPurePowerComparison
+public import LeanPool.Malliavin.Malliavin.BrownianMultipleIntegralBoxSpan
+public import LeanPool.Malliavin.Malliavin.PastCylinderDensity
 
 /-!
 # Brownian pure powers from Malliavin--Itô duality
@@ -14,6 +16,8 @@ On a generated linear Wiener space, the unconditional Malliavin--Itô duality re
 computes the pairing of a Wick power with every ordered Brownian increment chain.  Ordered-box
 density then identifies the Wick power with the canonical pure-power multiple integral.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

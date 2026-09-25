@@ -3,8 +3,10 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.GaussianHermite
-import LeanPool.Malliavin.Malliavin.BrownianPolynomialHermite
+module
+
+public import LeanPool.Malliavin.Malliavin.GaussianHermite
+public import LeanPool.Malliavin.Malliavin.BrownianPolynomialHermite
 
 /-!
 # Hilbert-space laws of Brownian Wick powers
@@ -12,6 +14,8 @@ import LeanPool.Malliavin.Malliavin.BrownianPolynomialHermite
 The exact centered Gaussian law of each finite Brownian step sum transfers generalized-Hermite
 orthogonality to the concrete `L²` Wick powers used in the Brownian chaos reduction.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace

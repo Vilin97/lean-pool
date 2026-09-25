@@ -3,8 +3,10 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.NaturalClarkOcone
-import LeanPool.Malliavin.Malliavin.WienerChaos
+module
+
+public import LeanPool.Malliavin.Malliavin.NaturalClarkOcone
+public import LeanPool.Malliavin.Malliavin.WienerChaos
 
 /-!
 # Martingale representation from the Brownian chaos tower
@@ -12,6 +14,8 @@ import LeanPool.Malliavin.Malliavin.WienerChaos
 This file connects the selected homogeneous Wiener chaos tower to the closed range of the
 natural Brownian Itô integral.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

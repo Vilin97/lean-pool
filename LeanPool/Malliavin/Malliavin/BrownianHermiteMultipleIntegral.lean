@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianPurePowerIntegral
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianPurePowerIntegral
 
 /-!
 # Brownian Hermite powers as multiple integrals
@@ -14,6 +16,8 @@ Orders zero and one have already been identified unconditionally, so the endpoin
 only concerns orders at least two.  Under that hypothesis, homogeneous-chaos membership gives
 ordered-chain compatibility and hence natural martingale representation.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace

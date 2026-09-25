@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.ClarkOcone
+module
+
+public import LeanPool.Malliavin.Malliavin.ClarkOcone
 
 /-!
 # The Itô isometry on adapted elementary processes
@@ -21,6 +23,8 @@ The first part records these identities for the elementary values attached to an
 construction-level Itô isometry for every adapted step process on a common partition. Exact
 comparison theorems connect these genuine Brownian values back to the family-level API.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

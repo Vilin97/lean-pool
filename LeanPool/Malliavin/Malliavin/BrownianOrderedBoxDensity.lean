@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianIterated
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianIterated
 
 /-!
 # Density of ordered boxes in Brownian simplex kernels
@@ -12,6 +14,8 @@ Finite unions of positive ordered time boxes are measure-dense in the strict sim
 indicators lie in the range of the ordered-box linear map, so simple-function density proves that
 this map has dense range at every positive order.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal symmDiff

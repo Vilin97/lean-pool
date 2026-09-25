@@ -3,11 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
+
 /-
 Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.Malliavin.Malliavin
+public import LeanPool.Malliavin.Malliavin
 
 /-!
 # Closability of the Malliavin derivative (Solution)
@@ -15,6 +17,8 @@ import LeanPool.Malliavin.Malliavin
 This module repeats the Mathlib-only statement boundary from `Challenge` and
 discharges the advertised theorem using the development in `Malliavin`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal Real Topology InnerProductSpace

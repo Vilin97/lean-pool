@@ -3,7 +3,9 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathlib.MeasureTheory.Integral.Prod
+module
+
+public import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # The original totalization of product measures
@@ -17,6 +19,8 @@ when the right factor is s-finite, including every use in the main Fubini theory
 The estimates below adapt the corresponding proofs from that Mathlib revision's
 `MeasureTheory/Measure/Prod.lean` and `MeasureTheory/Integral/Prod.lean`.
 -/
+
+@[expose] public section
 
 open MeasureTheory MeasureTheory.Measure Set
 open scoped ENNReal

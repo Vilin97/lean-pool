@@ -3,10 +3,12 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianHermiteClarkOcone
-import LeanPool.Malliavin.Malliavin.BrownianPurePowerDuality
-import LeanPool.Malliavin.Malliavin.ClarkOconeExamples
-import LeanPool.Malliavin.Malliavin.NaturalFiltrationLeftContinuous
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianHermiteClarkOcone
+public import LeanPool.Malliavin.Malliavin.BrownianPurePowerDuality
+public import LeanPool.Malliavin.Malliavin.ClarkOconeExamples
+public import LeanPool.Malliavin.Malliavin.NaturalFiltrationLeftContinuous
 
 /-!
 # Brownian Clark--Ocone on a generated linear Wiener space
@@ -19,6 +21,8 @@ of the inverse-Itô integrand with the predictable Malliavin derivative, the con
 Clark--Ocone formula, and a Brownian-compatible `ClarkOconeFamily` are all available under the
 standing hypotheses alone, with no remaining identity-family input.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace

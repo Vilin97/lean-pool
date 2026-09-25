@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.IteratedIntegral
+module
+
+public import LeanPool.Malliavin.Malliavin.IteratedIntegral
 
 /-!
 # Symmetrized multiple-integral operators
@@ -23,6 +25,8 @@ constants.  These are the Hilbert-space laws consumed by the next rung.  Identif
 operators with genuine multiple Wiener--Itô integrals additionally requires the Brownian
 ordered-box property; that property is not part of `IteratedIntegralFamily` itself.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace

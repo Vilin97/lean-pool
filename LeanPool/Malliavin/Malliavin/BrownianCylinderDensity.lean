@@ -3,9 +3,11 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.PastCylinderDensity
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+module
+
+public import LeanPool.Malliavin.Malliavin.PastCylinderDensity
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Polynomial density for Brownian cylinders
@@ -13,6 +15,8 @@ import Mathlib.MeasureTheory.Integral.DominatedConvergence
 This file proves that powers of finite linear combinations of Brownian coordinates span the
 ambient real `L²` space whenever the Brownian process generates the ambient measurable space.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open NormedSpace

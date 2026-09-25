@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianChaosMartingaleRepresentation
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianChaosMartingaleRepresentation
 
 /-!
 # Totality criterion for the canonical Brownian chaos tower
@@ -12,6 +14,8 @@ The completed canonical Brownian chaos tower has the same closed span as the exp
 products of ordered, disjoint Brownian increments.  Thus its remaining totality question is
 equivalent to a concrete dense-span statement for those products.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

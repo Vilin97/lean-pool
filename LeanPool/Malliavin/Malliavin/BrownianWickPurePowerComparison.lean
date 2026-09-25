@@ -3,8 +3,10 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianWickIsometry
-import LeanPool.Malliavin.Malliavin.BrownianPurePowerRecurrence
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianWickIsometry
+public import LeanPool.Malliavin.Malliavin.BrownianPurePowerRecurrence
 
 /-!
 # Mixed-inner characterization of the Hermite/multiple-integral identity
@@ -14,6 +16,8 @@ squared norms.  Consequently, their vector equality is equivalent to a single mi
 formula.  This file packages that scalar endpoint and relates it to both the higher Hermite
 identity and the pure-power Itô recurrence.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace

@@ -3,11 +3,13 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import Mathlib.MeasureTheory.Function.Holder
-import Mathlib.MeasureTheory.Measure.LogLikelihoodRatio
-import Mathlib.Probability.Distributions.Gaussian.Fernique
-import Mathlib.Probability.Moments.CovarianceBilinDual
-import Mathlib.Tactic.Recall
+module
+
+public import Mathlib.MeasureTheory.Function.Holder
+public import Mathlib.MeasureTheory.Measure.LogLikelihoodRatio
+public import Mathlib.Probability.Distributions.Gaussian.Fernique
+public import Mathlib.Probability.Moments.CovarianceBilinDual
+public import Mathlib.Tactic.Recall
 
 /-!
 # The Cameron--Martin space of a Gaussian measure
@@ -30,6 +32,8 @@ equivalent to `μ`; using that characterization as the definition here would be 
 * `CameronMartin.inclusion`: its covariance embedding into the ambient Banach space;
 * `CameronMartin.logDensity`: the log Radon--Nikodym derivative used by the next rung.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal Real Topology

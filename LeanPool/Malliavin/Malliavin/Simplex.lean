@@ -3,7 +3,10 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.Symmetrization
+module
+
+public import Mathlib.Data.Fin.Tuple.Sort
+public import LeanPool.Malliavin.Malliavin.Symmetrization
 
 /-!
 # Rung 2 prerequisite: the simplex `Δₙ` and the tiling `Tⁿ = ⨆_σ σ·Δₙ` (mod null sets)
@@ -36,6 +39,8 @@ which is what turns `E[Jₙ(f_sym)²] = ‖f_sym‖²_{L²(Δₙ)}` into `E[Iₙ
   integrable `g`;
   `Malliavin.integral_sq_norm_eq_factorial_smul` — its `L²` form `∫ ‖g‖² = n! • ∫_{Δₙ} ‖g‖²`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Finset Set
 open scoped ENNReal

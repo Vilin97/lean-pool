@@ -3,10 +3,15 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import Mathlib.Analysis.InnerProductSpace.l2Space
-import Mathlib.MeasureTheory.Measure.SeparableMeasure
-import LeanPool.Malliavin.Malliavin.Simplex
-import Mathlib.Probability.BrownianMotion.Basic
+module
+
+public import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
+public import Mathlib.Probability.Distributions.Gaussian.IsGaussianProcess.Basic
+public import Mathlib.Probability.Independence.Integration
+public import Mathlib.Analysis.InnerProductSpace.l2Space
+public import Mathlib.MeasureTheory.Measure.SeparableMeasure
+public import LeanPool.Malliavin.Malliavin.Simplex
+public import Mathlib.Probability.BrownianMotion.Basic
 
 /-!
 # Iterated-integral Hilbert laws
@@ -30,6 +35,8 @@ additional link.  The selected law-level family assembles all positive simplex k
 Hilbert sum.  The construction selects its onto branch only when process-measurable `L²` exhausts
 the separable ambient space, so unrelated ambient randomness is never absorbed into the tower.
 -/
+
+@[expose] public section
 
 namespace Malliavin
 
@@ -576,7 +583,7 @@ noncomputable def processLpEmbedding
       (processTrimMeasure P B hmeas)) →ₗᵢ[ℝ] RandomL2 P := by
   exact @Lp.compMeasurePreservingₗᵢ Ω' ℝ mΩ' 2 P _ Ω'
     (processMeasurableSpace B) (processTrimMeasure P B hmeas) ℝ _ _ _ _ id
-    (measurePreserving_id_processTrim hmeas)
+    (by exact measurePreserving_id_processTrim hmeas)
 
 /-- If the process sigma-algebra is ambient, its `L²` embedding is onto. -/
 theorem processLpEmbedding_surjective
@@ -677,10 +684,11 @@ private lemma restrictedSimplexMeasure_le (n : ℕ) :
     (Measure.restrict_le_self :
       (iteratedKernelMeasure n).restrict (simplex ℝ≥0 n) ≤ iteratedKernelMeasure n)
 
-private noncomputable def restrictToSimplex (n : ℕ) :
+/-- Restrict an L² kernel to the strictly ordered simplex. -/
+noncomputable def restrictToSimplex (n : ℕ) :
     IteratedKernel n →L[ℝ] SimplexKernel n := by
   exact Lp.LpToLpOfMeasureLeSMul (p := (2 : ℝ≥0∞)) (c := 1)
-    (by norm_num) (restrictedSimplexMeasure_le n)
+    (by norm_num) (by exact restrictedSimplexMeasure_le n)
 
 private lemma restrictToSimplex_ae (n : ℕ) (f : IteratedKernel n) :
     restrictToSimplex n f =ᵐ[(iteratedKernelMeasure n).restrict (simplex ℝ≥0 n)] f := by
@@ -848,10 +856,12 @@ private theorem setIntegral_simplex_zero (φ : (Fin 0 → ℝ≥0) → ℝ) :
   rw [simplex_zero, Measure.restrict_univ]
   exact integral_iteratedKernelMeasure_zero φ
 
-private noncomputable def zeroKernelOne : IteratedKernel 0 :=
+/-- The constant-one element of the order-zero kernel space. -/
+noncomputable def zeroKernelOne : IteratedKernel 0 :=
   Lp.const 2 (iteratedKernelMeasure 0) (1 : ℝ)
 
-private noncomputable def zeroKernelIntegral : IteratedKernel 0 →L[ℝ] ℝ :=
+/-- Integrate an order-zero kernel by taking its inner product with the constant one. -/
+noncomputable def zeroKernelIntegral : IteratedKernel 0 →L[ℝ] ℝ :=
   innerSL ℝ zeroKernelOne
 
 private theorem zeroKernelIntegral_apply (f : IteratedKernel 0) :
@@ -860,7 +870,8 @@ private theorem zeroKernelIntegral_apply (f : IteratedKernel 0) :
     L2.inner_indicatorConstLp_one MeasurableSet.univ
       (measure_ne_top (iteratedKernelMeasure 0) Set.univ), Measure.restrict_univ]
 
-private noncomputable def probabilityConstL (hB : IsPreBrownianReal B P) :
+/-- Embed a real constant into the ambient probability-space L² space. -/
+noncomputable def probabilityConstL (hB : IsPreBrownianReal B P) :
     ℝ →L[ℝ] RandomL2 P := by
   let _ : IsProbabilityMeasure P := hB.isGaussianProcess.isProbabilityMeasure
   exact Lp.constL 2 P ℝ
@@ -872,7 +883,8 @@ private theorem probabilityConstL_coe (hB : IsPreBrownianReal B P) (c : ℝ) :
   filter_upwards [h] with ω hω
   exact hω
 
-private noncomputable def zeroIntegralCLM (hB : IsPreBrownianReal B P) :
+/-- The order-zero integral, realized as a constant random variable. -/
+noncomputable def zeroIntegralCLM (hB : IsPreBrownianReal B P) :
     IteratedKernel 0 →L[ℝ] RandomL2 P :=
   (probabilityConstL hB).comp zeroKernelIntegral
 
@@ -926,7 +938,8 @@ end IteratedIntegralConstruction
 
 namespace IteratedIntegralConstruction
 
-private def unitIncrement (B : ℝ≥0 → Ω' → ℝ) (k : ℕ) : Ω' → ℝ :=
+/-- The Brownian increment over a unit time interval. -/
+def unitIncrement (B : ℝ≥0 → Ω' → ℝ) (k : ℕ) : Ω' → ℝ :=
   fun ω => B (k + 1) ω - B k ω
 
 private theorem unitIncrement_memLp (hB : IsPreBrownianReal B P) (k : ℕ) :
@@ -973,9 +986,11 @@ private theorem integral_unitIncrement_mul_of_ne (hB : IsPreBrownianReal B P)
     (unitIncrement_memLp hB l).aestronglyMeasurable,
     integral_unitIncrement hB, zero_mul]
 
-private noncomputable def unitIncrementL2 (hB : IsPreBrownianReal B P) (k : ℕ) :
+/-- A Brownian unit increment as an ambient L² class. -/
+noncomputable def unitIncrementL2 (hB : IsPreBrownianReal B P) (k : ℕ) :
     RandomL2 P :=
-  (unitIncrement_memLp hB k).toLp (unitIncrement B k)
+  (show MemLp (unitIncrement B k) 2 P from by
+    exact unitIncrement_memLp hB k).toLp (unitIncrement B k)
 
 private theorem unitIncrementL2_orthonormal (hB : IsPreBrownianReal B P) :
     Orthonormal ℝ (unitIncrementL2 hB) := by
@@ -1061,13 +1076,16 @@ private theorem norm_simplexUnitBoxIndicator (n : ℕ) : ‖simplexUnitBoxIndica
     measureReal_def, restrict_measure_orderedUnitBox]
   norm_num
 
-private noncomputable def simplexBasisSet (n : ℕ) : Set (SimplexKernel (n + 1)) :=
+/-- A set indexing a Hilbert basis of the simplex-kernel space. -/
+noncomputable def simplexBasisSet (n : ℕ) : Set (SimplexKernel (n + 1)) :=
   Classical.choose (exists_hilbertBasis ℝ (SimplexKernel (n + 1)))
 
-private noncomputable abbrev simplexBasisIndex (n : ℕ) : Type :=
+/-- The index type of the chosen Hilbert basis for one simplex-kernel space. -/
+noncomputable abbrev simplexBasisIndex (n : ℕ) : Type :=
   simplexBasisSet n
 
-private noncomputable def simplexBasis (n : ℕ) :
+/-- A chosen Hilbert basis of a positive-order simplex-kernel space. -/
+noncomputable def simplexBasis (n : ℕ) :
     HilbertBasis (simplexBasisIndex n) ℝ (SimplexKernel (n + 1)) :=
   Classical.choose (show ∃ b : HilbertBasis (simplexBasisIndex n) ℝ
       (SimplexKernel (n + 1)), ⇑b = Subtype.val from
@@ -1101,7 +1119,8 @@ private noncomputable local instance globalBasisIndex_infinite :
     Infinite (Σ n : ℕ, simplexBasisIndex n) :=
   Infinite.of_injective globalBasisIndexPoint globalBasisIndexPoint_injective
 
-private noncomputable def globalBasisVector
+/-- Insert one simplex basis vector into its coordinate of the positive kernel sum. -/
+noncomputable def globalBasisVector
     (a : Σ n : ℕ, simplexBasisIndex n) : PositiveKernelSum :=
   lp.single 2 a.1 (simplexBasis a.1 a.2)
 
@@ -1140,10 +1159,12 @@ private theorem globalBasisVector_orthogonal_eq_bot :
   simpa only [real_inner_comm, Pi.zero_apply, map_zero, ZeroMemClass.coe_zero,
     PreLp.zero_apply] using hinner
 
-private noncomputable def positiveKernelHilbertBasis :
+/-- The Hilbert basis of the positive kernel sum obtained from the simplex bases. -/
+noncomputable def positiveKernelHilbertBasis :
     HilbertBasis (Σ n : ℕ, simplexBasisIndex n) ℝ PositiveKernelSum :=
-  HilbertBasis.mkOfOrthogonalEqBot globalBasisVector_orthonormal
-    globalBasisVector_orthogonal_eq_bot
+  HilbertBasis.mkOfOrthogonalEqBot
+    (show Orthonormal ℝ globalBasisVector from by exact globalBasisVector_orthonormal)
+    (by exact globalBasisVector_orthogonal_eq_bot)
 
 private noncomputable def l2CongrLeft {ι κ : Type*} (e : ι ≃ κ) :
     ℓ²(ι, ℝ) ≃ₗᵢ[ℝ] ℓ²(κ, ℝ) where
@@ -1185,7 +1206,8 @@ noncomputable def probabilityOne (hB : IsPreBrownianReal B P) : RandomL2 P := by
 noncomputable abbrev CenteredRandomL2 (hB : IsPreBrownianReal B P) :=
   (ℝ ∙ probabilityOne hB)ᗮ
 
-private noncomputable def centeredUnitIncrement (hB : IsPreBrownianReal B P) (k : ℕ) :
+/-- A Brownian unit increment as an element of centered L². -/
+noncomputable def centeredUnitIncrement (hB : IsPreBrownianReal B P) (k : ℕ) :
     CenteredRandomL2 hB := by
   let _ : IsProbabilityMeasure P := hB.isGaussianProcess.isProbabilityMeasure
   refine ⟨unitIncrementL2 hB k, ?_⟩
@@ -1195,8 +1217,8 @@ private noncomputable def centeredUnitIncrement (hB : IsPreBrownianReal B P) (k 
     (unitIncrementL2 hB k) = 0
   rw [L2.inner_indicatorConstLp_one, setIntegral_univ]
   unfold unitIncrementL2
-  rw [integral_congr_ae (MemLp.coeFn_toLp (unitIncrement_memLp hB k))]
-  exact integral_unitIncrement hB k
+  rw [integral_congr_ae (MemLp.coeFn_toLp (by exact unitIncrement_memLp hB k))]
+  exact (by exact integral_unitIncrement hB k)
 
 private theorem centeredUnitIncrement_orthonormal (hB : IsPreBrownianReal B P) :
     Orthonormal ℝ (centeredUnitIncrement hB) := by
@@ -1219,15 +1241,21 @@ private theorem nonempty_positiveKernelSum_equiv_centered
   let e : (Σ n : ℕ, simplexBasisIndex n) ≃ sF := nonempty_equiv_of_countable.some
   exact ⟨positiveKernelHilbertBasis.repr.trans ((l2CongrLeft e).trans bF.repr.symm)⟩
 
-private noncomputable def positiveKernelEmbeddingCentered
+/-- Embed the positive kernel sum into centered random variables
+using orthonormal Brownian increments. -/
+noncomputable def positiveKernelEmbeddingCentered
     (hB : IsPreBrownianReal B P) : PositiveKernelSum →ₗᵢ[ℝ] CenteredRandomL2 hB := by
+  letI (n : ℕ) : Countable (simplexBasisIndex n) := by
+    exact simplexBasisIndex_countable n
   let hex := exists_injective_nat (Σ n : ℕ, simplexBasisIndex n)
   let e := Classical.choose hex
   have he : Function.Injective e := Classical.choose_spec hex
-  exact (((centeredUnitIncrement_orthonormal hB).comp e he).orthogonalFamily.linearIsometry).comp
+  exact (((show Orthonormal ℝ (centeredUnitIncrement hB) from by
+    exact centeredUnitIncrement_orthonormal hB).comp e he).orthogonalFamily.linearIsometry).comp
     positiveKernelHilbertBasis.repr.toLinearIsometry
 
-private def processMeasurableL2Exhausts (P : Measure Ω') (B : ℝ≥0 → Ω' → ℝ) : Prop :=
+/-- Every ambient L² class has a representative measurable for the process sigma-algebra. -/
+def processMeasurableL2Exhausts (P : Measure Ω') (B : ℝ≥0 → Ω' → ℝ) : Prop :=
   ∃ hmeas : ∀ t, Measurable (B t), Function.Surjective (processLpEmbedding P B hmeas)
 
 /-- A single isometry from the positive kernel sum into centered `L²(P)`.  It is selected to be
@@ -1241,7 +1269,8 @@ noncomputable def positiveIteratedTowerLI (hB : IsPreBrownianReal B P) :
   exact if h : Nonempty (SecondCountableTopology (CenteredRandomL2 hB)) ∧
       processMeasurableL2Exhausts P B then
       let _ : SecondCountableTopology (CenteredRandomL2 hB) := Classical.choice h.1
-      (Classical.choice (nonempty_positiveKernelSum_equiv_centered hB)).toLinearIsometry
+      (Classical.choice (show Nonempty (PositiveKernelSum ≃ₗᵢ[ℝ] CenteredRandomL2 hB) from by
+        exact nonempty_positiveKernelSum_equiv_centered hB)).toLinearIsometry
     else
       positiveKernelEmbeddingCentered hB
 
@@ -1268,7 +1297,8 @@ theorem positiveIteratedTowerLI_surjective_of_generated
     (processLpEmbedding_surjective P B hmeas hgen)
 
 -- Compiles at default 200k heartbeats (override removed).
-private noncomputable def singleKernelLI (n : ℕ) :
+/-- Insert one positive-order simplex kernel into the orthogonal sum of all positive orders. -/
+noncomputable def singleKernelLI (n : ℕ) :
     SimplexKernel (n + 1) →ₗᵢ[ℝ] PositiveKernelSum where
   toLinearMap := lp.lsingle (𝕜 := ℝ)
     (E := fun k : ℕ ↦ SimplexKernel (k + 1)) (2 : ℝ≥0∞) n
@@ -1303,7 +1333,8 @@ theorem hasSum_simplexIntegralLI (hB : IsPreBrownianReal B P) (f : PositiveKerne
     rfl
   · rfl
 
-private noncomputable def positiveIntegralCLM (hB : IsPreBrownianReal B P) (n : ℕ) :
+/-- Restrict a positive-order kernel to its simplex and apply the selected isometric tower. -/
+noncomputable def positiveIntegralCLM (hB : IsPreBrownianReal B P) (n : ℕ) :
     IteratedKernel (n + 1) →L[ℝ] RandomL2 P :=
   (simplexIntegralLI hB n).toContinuousLinearMap.comp (restrictToSimplex (n + 1))
 
@@ -1360,7 +1391,9 @@ private theorem norm_positiveIntegralCLM_le (hB : IsPreBrownianReal B P) (n : �
   rw [LinearIsometry.norm_map]
   exact norm_restrictToSimplex_le (n + 1) f
 
-private noncomputable def integralCLM (hB : IsPreBrownianReal B P) :
+/-- The iterated-integral operator, using the constant kernel at order zero
+and simplex kernels above zero. -/
+noncomputable def integralCLM (hB : IsPreBrownianReal B P) :
     (n : ℕ) → IteratedKernel n →L[ℝ] RandomL2 P
   | 0 => zeroIntegralCLM hB
   | n + 1 => positiveIntegralCLM hB n
@@ -1415,11 +1448,11 @@ private theorem integralCLM_norm_le (hB : IsPreBrownianReal B P)
 /-- A law-level iterated-integral family obtained from the global positive kernel tower. -/
 noncomputable def family (hB : IsPreBrownianReal B P) : IteratedIntegralFamily P where
   integral := integralCLM hB
-  sameOrder := integralCLM_sameOrder hB
-  centered := integralCLM_centered hB
-  zeroOrder := integralCLM_zeroOrder hB
-  differentOrder := integralCLM_differentOrder hB
-  norm_integral_le := integralCLM_norm_le hB
+  sameOrder := by exact integralCLM_sameOrder hB
+  centered := by exact integralCLM_centered hB
+  zeroOrder := by exact integralCLM_zeroOrder hB
+  differentOrder := by exact integralCLM_differentOrder hB
+  norm_integral_le := by exact integralCLM_norm_le hB
 
 end IteratedIntegralConstruction
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.DualDerivative
+module
+
+public import LeanPool.Malliavin.Malliavin.DualDerivative
 
 /-!
 # The chain rule in `𝔻₁,₂`
@@ -38,6 +40,8 @@ smooth bounded with derivative `φ' (Fₖ) • D Fₖ` (`IsSmoothBounded.comp_of
 by dominated convergence (`tendsto_toLp_of_dominated`, bound `(2K)² ‖D_cl F‖²`) along the almost
 everywhere convergent subsequence.  Closedness of the graph (`mem_domD12_of_tendsto`) concludes.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

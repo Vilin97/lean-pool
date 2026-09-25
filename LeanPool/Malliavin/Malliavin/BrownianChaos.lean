@@ -3,9 +3,11 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianOrderedBoxDensity
-import LeanPool.Malliavin.Malliavin.NaturalClarkOcone
-import LeanPool.Malliavin.Malliavin.NaturalItoRange
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianOrderedBoxDensity
+public import LeanPool.Malliavin.Malliavin.NaturalClarkOcone
+public import LeanPool.Malliavin.Malliavin.NaturalItoRange
 
 /-!
 # Brownian homogeneous chaoses from iterated Itô integrals
@@ -14,6 +16,8 @@ The ordered-box construction gives canonical Brownian multiple-integral operator
 defines their closed homogeneous ranges and proves that every positive range lies in the closed
 range of the natural Itô integral.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

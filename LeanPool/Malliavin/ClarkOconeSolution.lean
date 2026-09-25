@@ -3,11 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
+
 /-
 Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.Malliavin.Malliavin.BrownianClarkOconeCapstone
+public import LeanPool.Malliavin.Malliavin.BrownianClarkOconeCapstone
 
 /-!
 # Malliavin calculus through the Clark--Ocone formula
@@ -18,6 +20,8 @@ projection, and the natural predictable process space.  The theorem supplies
 the time realization and Brownian Itô isometry and states martingale
 representation together with the Clark--Ocone identity on the closed graph.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal Real Topology InnerProductSpace

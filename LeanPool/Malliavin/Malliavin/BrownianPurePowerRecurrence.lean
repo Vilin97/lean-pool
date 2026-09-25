@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianHermiteMultipleIntegral
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianHermiteMultipleIntegral
 
 /-!
 # The pure-power recurrence endpoint
@@ -14,6 +16,8 @@ multiplication by the underlying Brownian step sum.  This file packages that lea
 identity is equivalent to the matching recurrence for canonical pure-power multiple integrals.
 Thus the remaining all-order stochastic input can be stated as the usual Itô product recurrence.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace

@@ -3,8 +3,10 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.TimeDerivative
-import Mathlib.Probability.Process.Predictable
+module
+
+public import LeanPool.Malliavin.Malliavin.TimeDerivative
+public import Mathlib.Probability.Process.Predictable
 
 /-!
 # An abstract Clark--Ocone representation contract
@@ -32,6 +34,8 @@ and deterministic time integrands, respectively; the former implies the latter. 
 these hypotheses, the public identity and its centered/norm consequences concern the designated
 contract operator rather than asserting that it is the constructed Brownian Itô integral.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

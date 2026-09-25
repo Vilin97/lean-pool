@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.ClarkOcone
+module
+
+public import LeanPool.Malliavin.Malliavin.ClarkOcone
 
 /-!
 # Density of adapted elementary predictable processes
@@ -17,6 +19,8 @@ time; the omitted time origin is null.
 `predictableTrimEquiv` also identifies the local `lpMeas` model with the equivalent
 trimmed-measure `L²` model used by completion constructions of the Itô integral.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology Function
 open scoped ENNReal NNReal InnerProductSpace
@@ -267,7 +271,7 @@ theorem elementaryPredictable_adaptedIndicator
     (elementaryPredictable (P := P) 𝓕 a b (adaptedIndicator (P := P) 𝓕 a hF) :
         TimeProcessL2 P) =
       indicatorConstLp (μ := nonnegativeLebesgueMeasure.prod P) 2
-        (measurableSet_Ioc.prod (𝓕.le a F hF))
+        ((measurableSet_Ioc (a := a) (b := b)).prod (𝓕.le a F hF))
         (by
           rw [Measure.prod_prod (μ := nonnegativeLebesgueMeasure) (ν := P)]
           exact ENNReal.mul_ne_top
@@ -318,7 +322,7 @@ lemma inner_elementaryPredictable_adaptedIndicator
     by_cases ht : z.1 ∈ Set.Ioc a b <;>
       by_cases hw : z.2 ∈ F <;> simp [ht, hw]
   rw [integral_congr_ae hae]
-  exact integral_indicator (measurableSet_Ioc.prod (𝓕.le a F hF))
+  exact integral_indicator ((measurableSet_Ioc (a := a) (b := b)).prod (𝓕.le a F hF))
 
 namespace LegacyTensor
 

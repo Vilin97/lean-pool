@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.CameronMartinTheorem
+module
+
+public import LeanPool.Malliavin.Malliavin.CameronMartinTheorem
 
 /-!
 # The Malliavin derivative and its closability
@@ -84,6 +86,8 @@ and agreeing with `D` on smooth bounded functionals.
 * `Malliavin.integral_fderiv_inclusion_ofDual`, `integral_inner_mderiv`: Gaussian integration
   by parts, derived from the Cameron--Martin theorem.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

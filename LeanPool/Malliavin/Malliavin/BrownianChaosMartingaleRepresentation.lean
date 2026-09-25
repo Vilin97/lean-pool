@@ -3,8 +3,10 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianChaos
-import LeanPool.Malliavin.Malliavin.ChaosMartingaleRepresentation
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianChaos
+public import LeanPool.Malliavin.Malliavin.ChaosMartingaleRepresentation
 
 /-!
 # Martingale representation from the canonical Brownian chaos tower
@@ -13,6 +15,8 @@ This file specializes the generic graded-submodule martingale-representation the
 canonical Brownian multiple-integral ranges.  The remaining hypothesis is exactly totality of
 that concrete tower.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

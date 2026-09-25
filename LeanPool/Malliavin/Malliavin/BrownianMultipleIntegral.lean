@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianChaosHilbertSum
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianChaosHilbertSum
 
 /-!
 # Canonical Brownian multiple Wiener--Itô operators
@@ -13,6 +15,8 @@ The canonical Brownian simplex operator gives the symmetrized multiple-integral 
 constructed from Brownian increment products.  Its range agrees orderwise with the raw simplex
 operator range, so its closed ranges are the canonical Brownian homogeneous chaoses.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

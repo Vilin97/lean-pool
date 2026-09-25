@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.BrownianChaosTotality
+module
+
+public import LeanPool.Malliavin.Malliavin.BrownianChaosTotality
 
 /-!
 # The canonical positive Brownian chaos embedding
@@ -12,6 +14,8 @@ The completed simplex integrals form an orthogonal family of linear isometries. 
 gives a single canonical isometry from the external Hilbert sum of positive simplex kernels into
 random `L²`; its range is exactly the closed supremum of the positive canonical Brownian chaoses.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

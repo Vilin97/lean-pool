@@ -3,12 +3,14 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.LegacyProduct
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Function.SimpleFuncDenseLp
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.Analysis.Normed.Operator.Extend
-import Mathlib.Tactic.Recall
+module
+
+public import LeanPool.Malliavin.Malliavin.LegacyProduct
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.Function.SimpleFuncDenseLp
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.Analysis.Normed.Operator.Extend
+public import Mathlib.Tactic.Recall
 
 /-!
 # The Fubini lift `L²(μ; L²(ν)) → L²(ν × μ)`
@@ -36,6 +38,8 @@ representatives is delicate, so we construct the map as an isometry: on the simp
 * `Malliavin.fubiniLift_surjective`, `fubiniEquiv`: for σ-finite measures the lift is onto, so
   `L²(μ; L²(ν)) ≃ L²(ν × μ)` isometrically.
 -/
+
+@[expose] public section
 
 open MeasureTheory Filter Topology Function
 open scoped ENNReal NNReal InnerProductSpace

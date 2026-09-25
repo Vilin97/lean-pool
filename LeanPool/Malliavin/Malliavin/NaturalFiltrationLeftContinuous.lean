@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.PointwiseCondExp
+module
+
+public import LeanPool.Malliavin.Malliavin.PointwiseCondExp
 
 /-!
 # Left-continuity modulo null sets of the natural Brownian filtration
@@ -22,6 +24,8 @@ at `t` is the strict past joined with `B_t`.  Conditional-expectation uniqueness
 claim.  Combining it with `PointwiseCondExp.lean` yields the literal textbook
 `E[DₜF | 𝓕_t]` representative of the Clark--Ocone integrand.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal InnerProductSpace

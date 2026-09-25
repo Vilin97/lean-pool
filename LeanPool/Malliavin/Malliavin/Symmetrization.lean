@@ -3,8 +3,10 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: lean-malliavin contributors
 -/
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.Tactic.Recall
+module
+
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.Tactic.Recall
 
 /-!
 # Rung 1 (`symm`): the symmetrization operator
@@ -39,6 +41,8 @@ functions, and `symmetrize` is the projection onto them.
   idempotent (`symmetrizeL_comp_symmetrizeL`), with fixed points exactly the a.e.-symmetric
   functions (`symmetrizeL_eq_self_iff`).
 -/
+
+@[expose] public section
 
 open MeasureTheory Finset
 open scoped ENNReal

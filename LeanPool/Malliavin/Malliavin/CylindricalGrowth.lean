@@ -3,9 +3,11 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.DualDerivative
-import Mathlib.Analysis.Calculus.ContDiff.Polynomial
-import Mathlib.Analysis.Calculus.Deriv.Polynomial
+module
+
+public import LeanPool.Malliavin.Malliavin.DualDerivative
+public import Mathlib.Analysis.Calculus.ContDiff.Polynomial
+public import Mathlib.Analysis.Calculus.Deriv.Polynomial
 
 /-!
 # Cylindrical functionals of polynomial growth lie in `𝔻₁,₂`
@@ -35,6 +37,8 @@ where the Gaussian weight `gaussWeight L x = 1 + ∑ᵢ |Lᵢ x|` has all moment
 functionals and of their derivatives, and closedness of the graph (`mem_domD12_of_tendsto`)
 concludes.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

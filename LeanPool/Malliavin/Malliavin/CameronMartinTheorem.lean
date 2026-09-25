@@ -3,10 +3,12 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.CameronMartin
-import Mathlib.MeasureTheory.Function.ConvergenceInDistribution
-import Mathlib.MeasureTheory.Measure.LevyConvergence
-import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
+module
+
+public import LeanPool.Malliavin.Malliavin.CameronMartin
+public import Mathlib.MeasureTheory.Function.ConvergenceInDistribution
+public import Mathlib.MeasureTheory.Measure.LevyConvergence
+public import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
 
 /-!
 # The Cameron--Martin theorem
@@ -28,6 +30,8 @@ first chaos is Gaussian and derives the normalized density formula from that ste
 its measure-theoretic consequences: mutual absolute continuity, the Radon--Nikodym derivative,
 and the almost-everywhere logarithmic density formula used by the closability rung.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal Real Topology

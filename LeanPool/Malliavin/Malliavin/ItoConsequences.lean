@@ -3,7 +3,9 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
-import LeanPool.Malliavin.Malliavin.ItoConstruction
+module
+
+public import LeanPool.Malliavin.Malliavin.ItoConstruction
 
 /-!
 # Consequences of the constructed Brownian Itô integral
@@ -21,6 +23,8 @@ terminal-value representation is equivalent to surjectivity of the constructed c
 isometry. Under that hypothesis, predictable processes and centered terminal random variables
 are linearly isometrically equivalent.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
