@@ -167,14 +167,12 @@ noncomputable def makeNonNegativeExceptQ (G : CFGraph) (q : G.V) (D : CFDiv G) (
     : Option (CFDiv G) :=
   makeNonNegativeExceptQLoop G q D max_fuel
 
-/-- Fuel-bounded reduction loop that fires the nonburning set and returns the current
-divisor. -/
+/-- Fuel-bounded reduction loop that fires the nonburning set.
+Returns `none` if the fuel runs out before reduction completes. -/
 noncomputable def findQReducedDivisorLoop (G : CFGraph) (q : G.V) (current_D : CFDiv G) (fuel :
-    Nat) : CFDiv G :=
-  if h_fuel_zero : fuel = 0 then -- Name hypothesis
-    -- Fuel exhausted in main findQReducedDivisorLoop G q, return current state (might not
-    -- be fully q-reduced)
-    current_D
+    Nat) : Option (CFDiv G) :=
+  if h_fuel_zero : fuel = 0 then
+    none
   else
     -- Use current_D as the configuration function for dharBurningSet
     let S := dharBurningSet G q current_D
@@ -183,7 +181,7 @@ noncomputable def findQReducedDivisorLoop (G : CFGraph) (q : G.V) (current_D : C
       findQReducedDivisorLoop G q (fireSet G current_D S) (fuel - 1)
     else
       -- S is empty, the divisor is q-reduced
-      current_D
+      some current_D
 termination_by fuel
 decreasing_by simp_wf; exact Nat.pos_of_ne_zero h_fuel_zero -- Simpler explicit proof
 
@@ -197,7 +195,7 @@ It then repeatedly finds the maximal legal firing set
 $S \subseteq V(G) \setminus \{q\}$ using `dharBurningSet`, and fires $S$ until
 `dharBurningSet` returns the empty set.
 
-Returns `none` if preprocessing fails (fuel exhaustion or insufficient degree).
+Returns `none` if preprocessing or reduction exhausts its fuel.
 -/
 @[simp]
 noncomputable def findQReducedDivisor (G : CFGraph) (q : G.V) (D : CFDiv G) : Option (CFDiv G) :=
@@ -210,7 +208,7 @@ noncomputable def findQReducedDivisor (G : CFGraph) (q : G.V) (D : CFDiv G) : Op
           -- Estimate fuel for main findQReducedDivisorLoop G q from possible
           -- q-effective non-source chip vectors.
       let main_loop_fuel := (nonSourceChipCount G q D_preprocessed + 1) ^ Fintype.card G.V + 1
-      some (findQReducedDivisorLoop G q D_preprocessed main_loop_fuel)
+      findQReducedDivisorLoop G q D_preprocessed main_loop_fuel
 
 /-- Simulates the fire spread from $q$ in Dhar's algorithm on a configuration $c$.
 
