@@ -2632,7 +2632,7 @@ private theorem Smale.CoverNaturality.chainMap_comp {X Y Z : Type} [TopologicalS
     [TopologicalSpace Y] [TopologicalSpace Z] (f : C(X, Y)) (g : C(Y, Z)) :
     FirstHurewicz.singularChainMap f ≫ FirstHurewicz.singularChainMap g =
       FirstHurewicz.singularChainMap (g.comp f) :=
-  (((AlgebraicTopology.singularChainComplexFunctor (ModuleCat ℤ)).obj (ModuleCat.of ℤ ℤ)).map_comp
+  (((AlgebraicTopology.singularChainComplexFunctor.{0} (ModuleCat.{0} ℤ)).obj (ModuleCat.of ℤ ℤ)).map_comp
       (TopCat.ofHom f) (TopCat.ofHom g)).symm
 
 public

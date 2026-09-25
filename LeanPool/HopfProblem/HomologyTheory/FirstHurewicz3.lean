@@ -553,7 +553,8 @@ private theorem SingularMayerVietoris.coverRestriction_ambient {X Y : Type} [Top
     FirstHurewicz.singularChainMap (coverRestriction f A B hf) ≫
         FirstHurewicz.singularChainMap (subtypeInclusion B) =
       FirstHurewicz.singularChainMap (subtypeInclusion A) ≫ FirstHurewicz.singularChainMap f := by
-  let F := ((AlgebraicTopology.singularChainComplexFunctor (ModuleCat ℤ)).obj (ModuleCat.of ℤ ℤ))
+  let F :=
+    ((AlgebraicTopology.singularChainComplexFunctor.{0} (ModuleCat.{0} ℤ)).obj (ModuleCat.of ℤ ℤ))
   have h₁ :=
     F.map_comp (TopCat.ofHom (coverRestriction f A B hf)) (TopCat.ofHom (subtypeInclusion B))
   have h₂ := F.map_comp (TopCat.ofHom (subtypeInclusion A)) (TopCat.ofHom f)
@@ -566,7 +567,8 @@ private theorem
     intersectionToLeft U V ≫ FirstHurewicz.singularChainMap (coverRestriction f U U' hfU) =
       FirstHurewicz.singularChainMap (intersectionRestriction f U V U' V' hfU hfV) ≫
         intersectionToLeft U' V' := by
-  let F := ((AlgebraicTopology.singularChainComplexFunctor (ModuleCat ℤ)).obj (ModuleCat.of ℤ ℤ))
+  let F :=
+    ((AlgebraicTopology.singularChainComplexFunctor.{0} (ModuleCat.{0} ℤ)).obj (ModuleCat.of ℤ ℤ))
   have h₁ :=
     F.map_comp (TopCat.ofHom (ContinuousMap.inclusion (Set.inter_subset_left : U ∩ V ⊆ U)))
       (TopCat.ofHom (coverRestriction f U U' hfU))
@@ -581,7 +583,8 @@ private theorem SingularMayerVietoris.coverRestriction_intersection_right {X Y :
     intersectionToRight U V ≫ FirstHurewicz.singularChainMap (coverRestriction f V V' hfV) =
       FirstHurewicz.singularChainMap (intersectionRestriction f U V U' V' hfU hfV) ≫
         intersectionToRight U' V' := by
-  let F := ((AlgebraicTopology.singularChainComplexFunctor (ModuleCat ℤ)).obj (ModuleCat.of ℤ ℤ))
+  let F :=
+    ((AlgebraicTopology.singularChainComplexFunctor.{0} (ModuleCat.{0} ℤ)).obj (ModuleCat.of ℤ ℤ))
   have h₁ :=
     F.map_comp (TopCat.ofHom (ContinuousMap.inclusion (Set.inter_subset_right : U ∩ V ⊆ V)))
       (TopCat.ofHom (coverRestriction f V V' hfV))
