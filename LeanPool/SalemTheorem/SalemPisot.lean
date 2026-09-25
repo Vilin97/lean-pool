@@ -3,13 +3,14 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
-import Mathlib.Tactic
-import LeanPool.SalemTheorem.PdtPisotLadder
-import LeanPool.SalemTheorem.PdtSalemCircle
-import LeanPool.SalemTheorem.PdtSalemArith
-import LeanPool.SalemTheorem.PdtSalemMinus
-import LeanPool.SalemTheorem.PdtSalemEndgame
-import LeanPool.SalemTheorem.PdtSalemQuadUnit
+module
+public import Mathlib.Tactic
+public import LeanPool.SalemTheorem.PdtPisotLadder
+public import LeanPool.SalemTheorem.PdtSalemCircle
+public import LeanPool.SalemTheorem.PdtSalemArith
+public import LeanPool.SalemTheorem.PdtSalemMinus
+public import LeanPool.SalemTheorem.PdtSalemEndgame
+public import LeanPool.SalemTheorem.PdtSalemQuadUnit
 
 /-!
 # SalemPisot — Salem's theorem for Pisot numbers, and the two
@@ -56,6 +57,8 @@ here as `1 < α`, `IsIntegral ℤ α`, and
   re-run keeping the index and the root equation, the family spelled
   as `(X² − rX + 1)(X^{2m} + 1) ± X^{m+1}` (`m ≥ 1`).
 -/
+
+public section
 
 namespace PDT
 namespace SalemPisot

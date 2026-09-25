@@ -3,9 +3,10 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
-import Mathlib.Analysis.Complex.Polynomial.Basic
-import Mathlib.Tactic
-import LeanPool.SalemTheorem.PdtSalemCircle
+module
+public import Mathlib.Analysis.Complex.Polynomial.Basic
+public import Mathlib.Tactic
+public import LeanPool.SalemTheorem.PdtSalemCircle
 
 /-!
 # PdtSalemArith — the arithmetic Salem-ness certificate
@@ -41,6 +42,8 @@ image constrained, so the reverse-polynomial identification is decoupled
 (`reverse_bridge` below discharges it for the actual companion
 `Qz = Pz.reverse`).
 -/
+
+public section
 
 namespace PDT
 namespace SalemArith

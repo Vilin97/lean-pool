@@ -3,6 +3,7 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
+module
 /-
 Solution: proofs of the challenge statements, transferred from the
 bridge module SalemPisot — the Pisot-number form, and the assemblies of
@@ -12,9 +13,11 @@ root kept. The inline Salem block is definitionally
 PDT.SalemEndgame.IsSalem; the inline product is definitionally
 PDT.SalemCircle.P.
 -/
-import LeanPool.SalemTheorem.SalemPisot
+public import LeanPool.SalemTheorem.SalemPisot
 
 /-! Completed statement bridges for Salem’s theorem. -/
+
+public section
 
 namespace SalemTheorem
 
