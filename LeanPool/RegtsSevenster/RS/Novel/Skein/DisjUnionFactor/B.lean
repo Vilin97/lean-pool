@@ -28,29 +28,39 @@ open EdgeSubset
 variable {α β : Type} {W₁ : Fragment α} {W₂ : Fragment β}
   {F : EdgeSubset (W₁.disjUnion W₂)}
 
-private theorem notmem_left {g : W₁.Flag}
+/-- A left flag outside a union subset is outside its left
+restriction. -/
+theorem notmem_left {g : W₁.Flag}
     (hg : (Sum.inl g : (W₁.disjUnion W₂).Flag) ∉ F.flags) :
     g ∉ (leftSub F).flags :=
   fun h => hg (mem_leftSub_flags.mp h)
 
-private theorem notmem_left' {g : W₁.Flag}
+/-- Conversely, a left flag outside the left restriction is outside the
+union subset. -/
+theorem notmem_left' {g : W₁.Flag}
     (hg : g ∉ (leftSub F).flags) :
     (Sum.inl g : (W₁.disjUnion W₂).Flag) ∉ F.flags :=
   fun h => hg (mem_leftSub_flags.mpr h)
 
-private theorem notmem_right {g : W₂.Flag}
+/-- A right flag outside a union subset is outside its right
+restriction. -/
+theorem notmem_right {g : W₂.Flag}
     (hg : (Sum.inr g : (W₁.disjUnion W₂).Flag) ∉ F.flags) :
     g ∉ (rightSub F).flags :=
   fun h => hg (mem_rightSub_flags.mp h)
 
-private theorem notmem_right' {g : W₂.Flag}
+/-- Conversely, a right flag outside the right restriction is outside
+the union subset. -/
+theorem notmem_right' {g : W₂.Flag}
     (hg : g ∉ (rightSub F).flags) :
     (Sum.inr g : (W₁.disjUnion W₂).Flag) ∉ F.flags :=
   fun h => hg (mem_rightSub_flags.mpr h)
 
 /-! ### Joining even colourings -/
 
-private noncomputable def joinEvenVal {k : ℕ}
+/-- The underlying map of the join of two even colourings: each
+non-participating flag takes its own component's colour. -/
+noncomputable def joinEvenVal {k : ℕ}
     (ψ₁ : (leftSub F).EvenColouring k)
     (ψ₂ : (rightSub F).EvenColouring k) :
     {f : (W₁.disjUnion W₂).Flag // f ∉ F.flags} → Fin k :=
@@ -58,21 +68,25 @@ private noncomputable def joinEvenVal {k : ℕ}
   | ⟨Sum.inl g, hg⟩ => ψ₁.val ⟨g, notmem_left hg⟩
   | ⟨Sum.inr g, hg⟩ => ψ₂.val ⟨g, notmem_right hg⟩
 
-private theorem joinEvenVal_inl {k : ℕ}
+/-- The join reads the left colouring at a left flag. -/
+theorem joinEvenVal_inl {k : ℕ}
     (ψ₁ : (leftSub F).EvenColouring k)
     (ψ₂ : (rightSub F).EvenColouring k) (g : W₁.Flag)
     (hg : (Sum.inl g : (W₁.disjUnion W₂).Flag) ∉ F.flags)
     (hg' : g ∉ (leftSub F).flags) :
     joinEvenVal ψ₁ ψ₂ ⟨Sum.inl g, hg⟩ = ψ₁.val ⟨g, hg'⟩ := rfl
 
-private theorem joinEvenVal_inr {k : ℕ}
+/-- The join reads the right colouring at a right flag. -/
+theorem joinEvenVal_inr {k : ℕ}
     (ψ₁ : (leftSub F).EvenColouring k)
     (ψ₂ : (rightSub F).EvenColouring k) (g : W₂.Flag)
     (hg : (Sum.inr g : (W₁.disjUnion W₂).Flag) ∉ F.flags)
     (hg' : g ∉ (rightSub F).flags) :
     joinEvenVal ψ₁ ψ₂ ⟨Sum.inr g, hg⟩ = ψ₂.val ⟨g, hg'⟩ := rfl
 
-private noncomputable def joinEven {k : ℕ}
+/-- The join of two component even colourings as an even colouring of
+the union subset. -/
+noncomputable def joinEven {k : ℕ}
     (ψ₁ : (leftSub F).EvenColouring k)
     (ψ₂ : (rightSub F).EvenColouring k) : F.EvenColouring k :=
   ⟨joinEvenVal ψ₁ ψ₂, by
@@ -93,7 +107,9 @@ private noncomputable def joinEven {k : ℕ}
         (ψ₂.prop ⟨g, hgR⟩)).trans
         (joinEvenVal_inr ψ₁ ψ₂ g hf hgR).symm⟩
 
-private noncomputable def joinEvenEquiv
+/-- Even colourings of a union subset are pairs of even colourings of
+the two restrictions. -/
+noncomputable def joinEvenEquiv
     (F : EdgeSubset (W₁.disjUnion W₂)) (k : ℕ) :
     ((leftSub F).EvenColouring k × (rightSub F).EvenColouring k) ≃
       F.EvenColouring k where
@@ -116,7 +132,9 @@ private noncomputable def joinEvenEquiv
 
 /-! ### Joining core odd colourings -/
 
-private noncomputable def joinCoreVal {ℓ : ℕ}
+/-- The underlying map of the join of two core odd colourings: each
+core flag takes its own component's colour. -/
+noncomputable def joinCoreVal {ℓ : ℕ}
     (φ₁ : (leftSub F).CoreOddColouring ℓ)
     (φ₂ : (rightSub F).CoreOddColouring ℓ) :
     {f : (W₁.disjUnion W₂).Flag // f ∈ F.coreFlags} → Fin (2 * ℓ) :=
@@ -124,21 +142,25 @@ private noncomputable def joinCoreVal {ℓ : ℕ}
   | ⟨Sum.inl g, hg⟩ => φ₁.val ⟨g, inl_mem_core.mp hg⟩
   | ⟨Sum.inr g, hg⟩ => φ₂.val ⟨g, inr_mem_core.mp hg⟩
 
-private theorem joinCoreVal_inl {ℓ : ℕ}
+/-- The core join reads the left colouring at a left flag. -/
+theorem joinCoreVal_inl {ℓ : ℕ}
     (φ₁ : (leftSub F).CoreOddColouring ℓ)
     (φ₂ : (rightSub F).CoreOddColouring ℓ) (g : W₁.Flag)
     (hg : (Sum.inl g : (W₁.disjUnion W₂).Flag) ∈ F.coreFlags)
     (hg' : g ∈ (leftSub F).coreFlags) :
     joinCoreVal φ₁ φ₂ ⟨Sum.inl g, hg⟩ = φ₁.val ⟨g, hg'⟩ := rfl
 
-private theorem joinCoreVal_inr {ℓ : ℕ}
+/-- The core join reads the right colouring at a right flag. -/
+theorem joinCoreVal_inr {ℓ : ℕ}
     (φ₁ : (leftSub F).CoreOddColouring ℓ)
     (φ₂ : (rightSub F).CoreOddColouring ℓ) (g : W₂.Flag)
     (hg : (Sum.inr g : (W₁.disjUnion W₂).Flag) ∈ F.coreFlags)
     (hg' : g ∈ (rightSub F).coreFlags) :
     joinCoreVal φ₁ φ₂ ⟨Sum.inr g, hg⟩ = φ₂.val ⟨g, hg'⟩ := rfl
 
-private noncomputable def joinCore {ℓ : ℕ}
+/-- The join of two component core odd colourings as a core odd
+colouring of the union subset. -/
+noncomputable def joinCore {ℓ : ℕ}
     (φ₁ : (leftSub F).CoreOddColouring ℓ)
     (φ₂ : (rightSub F).CoreOddColouring ℓ) :
     F.CoreOddColouring ℓ :=
@@ -160,7 +182,9 @@ private noncomputable def joinCore {ℓ : ℕ}
         (φ₂.prop ⟨g, hgR⟩)).trans
         (joinCoreVal_inr φ₁ φ₂ g hf hgR).symm⟩
 
-private noncomputable def joinCoreEquiv
+/-- Core odd colourings of a union subset are pairs of core odd
+colourings of the two restrictions. -/
+noncomputable def joinCoreEquiv
     (F : EdgeSubset (W₁.disjUnion W₂)) (ℓ : ℕ) :
     ((leftSub F).CoreOddColouring ℓ ×
         (rightSub F).CoreOddColouring ℓ) ≃
@@ -184,7 +208,9 @@ private noncomputable def joinCoreEquiv
 
 /-! ### Boundary-match transfer -/
 
-private theorem genEvenBoundaryMatch_join {k ℓ : ℕ}
+/-- A join of even colourings meets the union's boundary constraint
+exactly when both components meet theirs. -/
+theorem genEvenBoundaryMatch_join {k ℓ : ℕ}
     {st : GenBoundaryState k ℓ (α ⊕ β)}
     (hbnd : genBoundarySubsetMatches (W₁.disjUnion W₂) F.flags st)
     (hbnd₁ : genBoundarySubsetMatches W₁ (leftSub F).flags
@@ -224,7 +250,9 @@ private theorem genEvenBoundaryMatch_join {k ℓ : ℕ}
         (genBoundaryFlag_not_mem_of_even hbnd₂ b c hst)).trans
         (h₂ b c hst)
 
-private theorem coreOddBoundaryMatch_join {k ℓ : ℕ}
+/-- A join of core odd colourings meets the union's boundary
+constraint exactly when both components meet theirs. -/
+theorem coreOddBoundaryMatch_join {k ℓ : ℕ}
     {st : GenBoundaryState k ℓ (α ⊕ β)}
     (φ₁ : (leftSub F).CoreOddColouring ℓ)
     (φ₂ : (rightSub F).CoreOddColouring ℓ) :
@@ -256,7 +284,9 @@ private theorem coreOddBoundaryMatch_join {k ℓ : ℕ}
 
 /-! ### Even colour multisets at component vertices -/
 
-private noncomputable def leftComplEmb
+/-- The left injection embeds the left restriction's
+non-participating flags into the union's. -/
+noncomputable def leftComplEmb
     (F : EdgeSubset (W₁.disjUnion W₂)) :
     {g : W₁.Flag // g ∉ (leftSub F).flags} ↪
       {f : (W₁.disjUnion W₂).Flag // f ∉ F.flags} :=
@@ -264,7 +294,9 @@ private noncomputable def leftComplEmb
    fun _g _g' h =>
      Subtype.ext (Sum.inl.inj (congrArg Subtype.val h))⟩
 
-private noncomputable def rightComplEmb
+/-- The right injection embeds the right restriction's
+non-participating flags into the union's. -/
+noncomputable def rightComplEmb
     (F : EdgeSubset (W₁.disjUnion W₂)) :
     {g : W₂.Flag // g ∉ (rightSub F).flags} ↪
       {f : (W₁.disjUnion W₂).Flag // f ∉ F.flags} :=
@@ -272,7 +304,9 @@ private noncomputable def rightComplEmb
    fun _g _g' h =>
      Subtype.ext (Sum.inr.inj (congrArg Subtype.val h))⟩
 
-private theorem evenColours_aux_inl {k : ℕ}
+/-- At a left vertex, the join's colour multiset over the flags there
+is the left colouring's. -/
+theorem evenColours_aux_inl {k : ℕ}
     (ψ₁ : (leftSub F).EvenColouring k)
     (ψ₂ : (rightSub F).EvenColouring k) (v : W₁.Vertex)
     (S : Finset {f : (W₁.disjUnion W₂).Flag // f ∉ F.flags})
@@ -300,7 +334,9 @@ private theorem evenColours_aux_inl {k : ℕ}
   exact Multiset.map_congr rfl fun g hg =>
     joinEvenVal_inl ψ₁ ψ₂ g.val (notmem_left' g.prop) g.prop
 
-private theorem evenColours_aux_inr {k : ℕ}
+/-- At a right vertex, the join's colour multiset over the flags there
+is the right colouring's. -/
+theorem evenColours_aux_inr {k : ℕ}
     (ψ₁ : (leftSub F).EvenColouring k)
     (ψ₂ : (rightSub F).EvenColouring k) (v : W₂.Vertex)
     (S : Finset {f : (W₁.disjUnion W₂).Flag // f ∉ F.flags})
@@ -328,7 +364,9 @@ private theorem evenColours_aux_inr {k : ℕ}
   exact Multiset.map_congr rfl fun g hg =>
     joinEvenVal_inr ψ₁ ψ₂ g.val (notmem_right' g.prop) g.prop
 
-private theorem evenColoursAt_join_inl {k : ℕ}
+/-- The join's even colours at a left vertex are the left
+colouring's. -/
+theorem evenColoursAt_join_inl {k : ℕ}
     (ψ₁ : (leftSub F).EvenColouring k)
     (ψ₂ : (rightSub F).EvenColouring k) (v : W₁.Vertex) :
     F.evenColoursAt (joinEven ψ₁ ψ₂) (Sum.inl v) =
@@ -341,7 +379,9 @@ private theorem evenColoursAt_join_inl {k : ℕ}
   · intro y
     simp only [Finset.mem_filter, Finset.mem_univ, true_and]
 
-private theorem evenColoursAt_join_inr {k : ℕ}
+/-- The join's even colours at a right vertex are the right
+colouring's. -/
+theorem evenColoursAt_join_inr {k : ℕ}
     (ψ₁ : (leftSub F).EvenColouring k)
     (ψ₂ : (rightSub F).EvenColouring k) (v : W₂.Vertex) :
     F.evenColoursAt (joinEven ψ₁ ψ₂) (Sum.inr v) =
@@ -356,7 +396,9 @@ private theorem evenColoursAt_join_inr {k : ℕ}
 
 /-! ### In-flag lists at component vertices -/
 
-private theorem relInFlagsAt_join_perm_inl
+/-- At a left vertex, the product orientation's in-flags are the left
+factor's, injected — up to the enumeration order. -/
+theorem relInFlagsAt_join_perm_inl
     {κ₁ : (leftSub F).RelTransitionSystem}
     {κ₂ : (rightSub F).RelTransitionSystem}
     (o₁ : κ₁.Orientation) (o₂ : κ₂.Orientation) (v : W₁.Vertex) :
@@ -392,7 +434,9 @@ private theorem relInFlagsAt_join_perm_inl
       ⟨mem_leftSub_flags.mp h.1,
         attach_inl_eq_inl.mpr h.2.1, h.2.2⟩)
 
-private theorem relInFlagsAt_join_perm_inr
+/-- At a right vertex, the product orientation's in-flags are the
+right factor's, injected — up to the enumeration order. -/
+theorem relInFlagsAt_join_perm_inr
     {κ₁ : (leftSub F).RelTransitionSystem}
     {κ₂ : (rightSub F).RelTransitionSystem}
     (o₁ : κ₁.Orientation) (o₂ : κ₂.Orientation) (v : W₂.Vertex) :
@@ -428,7 +472,9 @@ private theorem relInFlagsAt_join_perm_inr
       ⟨mem_rightSub_flags.mp h.1,
         attach_inr_eq_inr.mpr h.2.1, h.2.2⟩)
 
-private theorem mem_internal_of_mem_map_inl
+/-- An injected left in-flag is an internal flag of the union
+subset. -/
+theorem mem_internal_of_mem_map_inl
     {κ₁ : (leftSub F).RelTransitionSystem} {o₁ : κ₁.Orientation}
     {v : W₁.Vertex} {f : (W₁.disjUnion W₂).Flag}
     (hf : f ∈ ((leftSub F).relInFlagsAt o₁ v).map Sum.inl) :
@@ -437,7 +483,9 @@ private theorem mem_internal_of_mem_map_inl
   exact inl_mem_internal.mpr
     ((leftSub F).mem_internal_of_mem_relInFlagsAt hgl)
 
-private theorem mem_internal_of_mem_map_inr
+/-- An injected right in-flag is an internal flag of the union
+subset. -/
+theorem mem_internal_of_mem_map_inr
     {κ₂ : (rightSub F).RelTransitionSystem} {o₂ : κ₂.Orientation}
     {v : W₂.Vertex} {f : (W₁.disjUnion W₂).Flag}
     (hf : f ∈ ((rightSub F).relInFlagsAt o₂ v).map Sum.inr) :
@@ -448,7 +496,8 @@ private theorem mem_internal_of_mem_map_inr
 
 /-! ### `pmap` helpers (mirrors `MixedPartition`) -/
 
-private theorem perm_pmap' {β' γ' : Type*} {p : β' → Prop}
+/-- `List.pmap` respects permutations. -/
+theorem perm_pmap' {β' γ' : Type*} {p : β' → Prop}
     (f : ∀ b, p b → γ') {l₁ l₂ : List β'} (hp : l₁.Perm l₂) :
     ∀ (H₁ : ∀ b ∈ l₁, p b) (H₂ : ∀ b ∈ l₂, p b),
       (l₁.pmap f H₁).Perm (l₂.pmap f H₂) := by
@@ -461,7 +510,9 @@ private theorem perm_pmap' {β' γ' : Type*} {p : β' → Prop}
       (ih₁ H₁ (fun b hb => H₁ b (hp₁.mem_iff.mpr hb))).trans
         (ih₂ (fun b hb => H₁ b (hp₁.mem_iff.mpr hb)) H₂)
 
-private theorem pmap_flatMap_congr' {β' β₁ β₂ γ' : Type*}
+/-- Two `pmap`-then-`flatMap` passes over one list agree when they
+agree elementwise. -/
+theorem pmap_flatMap_congr' {β' β₁ β₂ γ' : Type*}
     {p₁ p₂ : β' → Prop} (f₁ : ∀ b, p₁ b → β₁) (f₂ : ∀ b, p₂ b → β₂)
     (G₁ : β₁ → List γ') (G₂ : β₂ → List γ') (l : List β')
     (H₁ : ∀ b ∈ l, p₁ b) (H₂ : ∀ b ∈ l, p₂ b)
@@ -476,7 +527,9 @@ private theorem pmap_flatMap_congr' {β' β₁ β₂ γ' : Type*}
 
 /-! ### Vertex-local core data at component vertices -/
 
-private theorem coreOddSignFn_join_inl {ℓ : ℕ}
+/-- The join's odd sign at a left internal flag is the left
+factor's. -/
+theorem coreOddSignFn_join_inl {ℓ : ℕ}
     {κ₁ : (leftSub F).RelTransitionSystem}
     {κ₂ : (rightSub F).RelTransitionSystem}
     (φ₁ : (leftSub F).CoreOddColouring ℓ)
@@ -487,7 +540,9 @@ private theorem coreOddSignFn_join_inl {ℓ : ℕ}
         ⟨Sum.inl g, hg'⟩ =
       (leftSub F).coreOddSignFn κ₁ φ₁ ⟨g, hg⟩ := rfl
 
-private theorem coreOddSignFn_join_inr {ℓ : ℕ}
+/-- The join's odd sign at a right internal flag is the right
+factor's. -/
+theorem coreOddSignFn_join_inr {ℓ : ℕ}
     {κ₁ : (leftSub F).RelTransitionSystem}
     {κ₂ : (rightSub F).RelTransitionSystem}
     (φ₁ : (leftSub F).CoreOddColouring ℓ)
@@ -498,7 +553,9 @@ private theorem coreOddSignFn_join_inr {ℓ : ℕ}
         ⟨Sum.inr g, hg'⟩ =
       (rightSub F).coreOddSignFn κ₂ φ₂ ⟨g, hg⟩ := rfl
 
-private theorem coreOddPairFn_join_inl {ℓ : ℕ}
+/-- The join's odd pair at a left internal flag is the left factor's,
+injected. -/
+theorem coreOddPairFn_join_inl {ℓ : ℕ}
     {κ₁ : (leftSub F).RelTransitionSystem}
     {κ₂ : (rightSub F).RelTransitionSystem}
     (φ₁ : (leftSub F).CoreOddColouring ℓ)
@@ -509,7 +566,9 @@ private theorem coreOddPairFn_join_inl {ℓ : ℕ}
         ⟨Sum.inl g, hg'⟩ =
       (leftSub F).coreOddPairFn κ₁ φ₁ ⟨g, hg⟩ := rfl
 
-private theorem coreOddPairFn_join_inr {ℓ : ℕ}
+/-- The join's odd pair at a right internal flag is the right
+factor's, injected. -/
+theorem coreOddPairFn_join_inr {ℓ : ℕ}
     {κ₁ : (leftSub F).RelTransitionSystem}
     {κ₂ : (rightSub F).RelTransitionSystem}
     (φ₁ : (leftSub F).CoreOddColouring ℓ)
@@ -520,7 +579,9 @@ private theorem coreOddPairFn_join_inr {ℓ : ℕ}
         ⟨Sum.inr g, hg'⟩ =
       (rightSub F).coreOddPairFn κ₂ φ₂ ⟨g, hg⟩ := rfl
 
-private theorem coreOddSignAt_join_inl {ℓ : ℕ}
+/-- The join's odd-pairing sign at a left vertex is the left
+factor's. -/
+theorem coreOddSignAt_join_inl {ℓ : ℕ}
     {κ₁ : (leftSub F).RelTransitionSystem}
     {κ₂ : (rightSub F).RelTransitionSystem}
     (o₁ : κ₁.Orientation) (o₂ : κ₂.Orientation)
@@ -542,7 +603,9 @@ private theorem coreOddSignAt_join_inl {ℓ : ℕ}
     (fun a ha h₁ h₂ => coreOddSignFn_join_inl φ₁ φ₂ a h₁ h₂))
     (List.map_pmap _).symm
 
-private theorem coreOddSignAt_join_inr {ℓ : ℕ}
+/-- The join's odd-pairing sign at a right vertex is the right
+factor's. -/
+theorem coreOddSignAt_join_inr {ℓ : ℕ}
     {κ₁ : (leftSub F).RelTransitionSystem}
     {κ₂ : (rightSub F).RelTransitionSystem}
     (o₁ : κ₁.Orientation) (o₂ : κ₂.Orientation)
@@ -564,7 +627,9 @@ private theorem coreOddSignAt_join_inr {ℓ : ℕ}
     (fun a ha h₁ h₂ => coreOddSignFn_join_inr φ₁ φ₂ a h₁ h₂))
     (List.map_pmap _).symm
 
-private theorem evalOdd_coreOddListAt_join_inl {k ℓ : ℕ}
+/-- The vertex functional's odd evaluation at a left vertex reads the
+left factor's odd list. -/
+theorem evalOdd_coreOddListAt_join_inl {k ℓ : ℕ}
     (h : MixedFunctional k ℓ) (μ : Multiset (Fin k))
     {κ₁ : (leftSub F).RelTransitionSystem}
     {κ₂ : (rightSub F).RelTransitionSystem}
@@ -591,7 +656,9 @@ private theorem evalOdd_coreOddListAt_join_inl {k ℓ : ℕ}
   exact pmap_flatMap_congr' _ _ _ _ _ _ _
     (fun a ha h₁ h₂ => coreOddPairFn_join_inl φ₁ φ₂ a h₁ h₂)
 
-private theorem evalOdd_coreOddListAt_join_inr {k ℓ : ℕ}
+/-- The vertex functional's odd evaluation at a right vertex reads the
+right factor's odd list. -/
+theorem evalOdd_coreOddListAt_join_inr {k ℓ : ℕ}
     (h : MixedFunctional k ℓ) (μ : Multiset (Fin k))
     {κ₁ : (leftSub F).RelTransitionSystem}
     {κ₂ : (rightSub F).RelTransitionSystem}
@@ -620,17 +687,21 @@ private theorem evalOdd_coreOddListAt_join_inr {k ℓ : ℕ}
 
 /-! ### The colouring-sum factorization -/
 
-private theorem joinEvenEquiv_apply {k : ℕ}
+/-- The even-colouring equivalence is the join. -/
+theorem joinEvenEquiv_apply {k : ℕ}
     (ψ₁ : (leftSub F).EvenColouring k)
     (ψ₂ : (rightSub F).EvenColouring k) :
     joinEvenEquiv F k (ψ₁, ψ₂) = joinEven ψ₁ ψ₂ := rfl
 
-private theorem joinCoreEquiv_apply {ℓ : ℕ}
+/-- The core-colouring equivalence is the join. -/
+theorem joinCoreEquiv_apply {ℓ : ℕ}
     (φ₁ : (leftSub F).CoreOddColouring ℓ)
     (φ₂ : (rightSub F).CoreOddColouring ℓ) :
     joinCoreEquiv F ℓ (φ₁, φ₂) = joinCore φ₁ φ₂ := rfl
 
-private theorem prod_vertex_split
+/-- A product over the union's vertices splits into the two
+components' products. -/
+theorem prod_vertex_split
     (X : (W₁.disjUnion W₂).Vertex → ℂ) :
     ∏ v : (W₁.disjUnion W₂).Vertex, X v =
       (∏ v : W₁.Vertex, X (Sum.inl v)) *

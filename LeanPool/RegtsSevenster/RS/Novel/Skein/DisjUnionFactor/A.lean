@@ -96,7 +96,9 @@ theorem attach_inl_ne_inr {f : W₁.Flag} {v : W₂.Vertex} :
   change (W₁.attach f).map Sum.inl Sum.inl ≠ Sum.inl (Sum.inr v)
   rcases W₁.attach f with w | ℓ <;> simp
 
-private theorem attach_inl_vertex_iff {g : W₁.Flag} :
+/-- A left flag is internally attached in the union exactly when it
+is internally attached in the left component. -/
+theorem attach_inl_vertex_iff {g : W₁.Flag} :
     (∃ v : (W₁.disjUnion W₂).Vertex,
         (W₁.disjUnion W₂).attach (Sum.inl g) = Sum.inl v) ↔
       ∃ w : W₁.Vertex, W₁.attach g = Sum.inl w := by
@@ -108,7 +110,9 @@ private theorem attach_inl_vertex_iff {g : W₁.Flag} :
   · rintro ⟨w, hw⟩
     exact ⟨Sum.inl w, attach_inl_eq_inl.mpr hw⟩
 
-private theorem attach_inr_vertex_iff {g : W₂.Flag} :
+/-- A right flag is internally attached in the union exactly when it
+is internally attached in the right component. -/
+theorem attach_inr_vertex_iff {g : W₂.Flag} :
     (∃ v : (W₁.disjUnion W₂).Vertex,
         (W₁.disjUnion W₂).attach (Sum.inr g) = Sum.inl v) ↔
       ∃ w : W₂.Vertex, W₂.attach g = Sum.inl w := by
@@ -457,33 +461,37 @@ variable {α β : Type} {W₁ : Fragment α} {W₂ : Fragment β}
 /-! ### Restriction to the components -/
 
 /-- Restrict a union matching to a left flag, fixing it if the image lies on the right. -/
-noncomputable def factorLeftDescend (κ : F.RelTransitionSystem)
+noncomputable def leftDescend (κ : F.RelTransitionSystem)
     (g : W₁.Flag) : W₁.Flag :=
   Sum.elim id (fun _ => g) (κ.match_ (Sum.inl g))
 
 /-- Restrict a union matching to a right flag, fixing it if the image lies on the left. -/
-noncomputable def factorRightDescend (κ : F.RelTransitionSystem)
+noncomputable def rightDescend (κ : F.RelTransitionSystem)
     (g : W₂.Flag) : W₂.Flag :=
   Sum.elim (fun _ => g) id (κ.match_ (Sum.inr g))
 
-private theorem leftDescend_spec (κ : F.RelTransitionSystem)
+/-- On an internal left flag, the union system's match is the left
+descent, injected. -/
+theorem leftDescend_spec (κ : F.RelTransitionSystem)
     {g : W₁.Flag} (hg : g ∈ (leftSub F).internalFlags) :
-    κ.match_ (Sum.inl g) = Sum.inl (factorLeftDescend κ g) := by
+    κ.match_ (Sum.inl g) = Sum.inl (leftDescend κ g) := by
   have hgU : (Sum.inl g : (W₁.disjUnion W₂).Flag) ∈ F.internalFlags :=
     inl_mem_internal.mpr hg
   obtain ⟨w, hw⟩ := (leftSub F).attach_internal_of_mem hg
   have hvert := κ.match_vertex _ hgU (Sum.inl w)
     (attach_inl_eq_inl.mpr hw)
   rcases hm : κ.match_ (Sum.inl g) with g' | g'
-  · unfold factorLeftDescend
+  · unfold leftDescend
     rw [hm]
     rfl
   · rw [hm] at hvert
     exact absurd hvert attach_inr_ne_inl
 
-private theorem rightDescend_spec (κ : F.RelTransitionSystem)
+/-- On an internal right flag, the union system's match is the right
+descent, injected. -/
+theorem rightDescend_spec (κ : F.RelTransitionSystem)
     {g : W₂.Flag} (hg : g ∈ (rightSub F).internalFlags) :
-    κ.match_ (Sum.inr g) = Sum.inr (factorRightDescend κ g) := by
+    κ.match_ (Sum.inr g) = Sum.inr (rightDescend κ g) := by
   have hgU : (Sum.inr g : (W₁.disjUnion W₂).Flag) ∈ F.internalFlags :=
     inr_mem_internal.mpr hg
   obtain ⟨w, hw⟩ := (rightSub F).attach_internal_of_mem hg
@@ -492,20 +500,22 @@ private theorem rightDescend_spec (κ : F.RelTransitionSystem)
   rcases hm : κ.match_ (Sum.inr g) with g' | g'
   · rw [hm] at hvert
     exact absurd hvert attach_inl_ne_inr
-  · unfold factorRightDescend
+  · unfold rightDescend
     rw [hm]
     rfl
 
-private theorem leftDescend_mem (κ : F.RelTransitionSystem)
+/-- The left descent of an internal left flag is again internal. -/
+theorem leftDescend_mem (κ : F.RelTransitionSystem)
     {g : W₁.Flag} (hg : g ∈ (leftSub F).internalFlags) :
-    factorLeftDescend κ g ∈ (leftSub F).internalFlags := by
+    leftDescend κ g ∈ (leftSub F).internalFlags := by
   have h := κ.match_mem _ (inl_mem_internal.mpr hg)
   rw [leftDescend_spec κ hg] at h
   exact inl_mem_internal.mp h
 
-private theorem rightDescend_mem (κ : F.RelTransitionSystem)
+/-- The right descent of an internal right flag is again internal. -/
+theorem rightDescend_mem (κ : F.RelTransitionSystem)
     {g : W₂.Flag} (hg : g ∈ (rightSub F).internalFlags) :
-    factorRightDescend κ g ∈ (rightSub F).internalFlags := by
+    rightDescend κ g ∈ (rightSub F).internalFlags := by
   have h := κ.match_mem _ (inr_mem_internal.mpr hg)
   rw [rightDescend_spec κ hg] at h
   exact inr_mem_internal.mp h
@@ -515,7 +525,7 @@ component: the matching never crosses between components, so it
 restricts. -/
 noncomputable def leftRel (κ : F.RelTransitionSystem) :
     (leftSub F).RelTransitionSystem where
-  match_ := factorLeftDescend κ
+  match_ := leftDescend κ
   match_invol g hg := by
     have h := κ.match_invol _ (inl_mem_internal.mpr hg)
     rw [leftDescend_spec κ hg,
@@ -535,7 +545,7 @@ noncomputable def leftRel (κ : F.RelTransitionSystem) :
 /-- The restriction to the right component. -/
 noncomputable def rightRel (κ : F.RelTransitionSystem) :
     (rightSub F).RelTransitionSystem where
-  match_ := factorRightDescend κ
+  match_ := rightDescend κ
   match_invol g hg := by
     have h := κ.match_invol _ (inr_mem_internal.mpr hg)
     rw [rightDescend_spec κ hg,
@@ -651,7 +661,9 @@ theorem iterWalk_prodRel_inr (κ₁ : (leftSub F).RelTransitionSystem)
       iterWalk_succ κ₂ g n]
     rfl
 
-private theorem inl_mem_periodic {κ₁ : (leftSub F).RelTransitionSystem}
+/-- A left flag is periodic for the product system exactly when it is
+periodic for the left factor: the walk never crosses components. -/
+theorem inl_mem_periodic {κ₁ : (leftSub F).RelTransitionSystem}
     {κ₂ : (rightSub F).RelTransitionSystem} {g : W₁.Flag} :
     (Sum.inl g : (W₁.disjUnion W₂).Flag) ∈
         (prodRel (F := F) κ₁ κ₂).periodicFlags ↔
@@ -679,7 +691,9 @@ private theorem inl_mem_periodic {κ₁ : (leftSub F).RelTransitionSystem}
       exact inl_mem_internal.mpr (hcont j hj)
     · rw [iterWalk_prodRel_inl κ₁ κ₂ g n, hper]
 
-private theorem inr_mem_periodic {κ₁ : (leftSub F).RelTransitionSystem}
+/-- A right flag is periodic for the product system exactly when it is
+periodic for the right factor. -/
+theorem inr_mem_periodic {κ₁ : (leftSub F).RelTransitionSystem}
     {κ₂ : (rightSub F).RelTransitionSystem} {g : W₂.Flag} :
     (Sum.inr g : (W₁.disjUnion W₂).Flag) ∈
         (prodRel (F := F) κ₁ κ₂).periodicFlags ↔
@@ -707,7 +721,9 @@ private theorem inr_mem_periodic {κ₁ : (leftSub F).RelTransitionSystem}
       exact inr_mem_internal.mpr (hcont j hj)
     · rw [iterWalk_prodRel_inr κ₁ κ₂ g n, hper]
 
-private noncomputable def periodicSumEquiv
+/-- The product system's periodic flags are the disjoint sum of the
+two factors' periodic flags. -/
+noncomputable def periodicSumEquiv
     (κ₁ : (leftSub F).RelTransitionSystem)
     (κ₂ : (rightSub F).RelTransitionSystem) :
     {f : (W₁.disjUnion W₂).Flag //
@@ -728,7 +744,9 @@ private noncomputable def periodicSumEquiv
   right_inv x := by
     rcases x with ⟨g, h⟩ | ⟨g, h⟩ <;> rfl
 
-private theorem walkPermPeriodic_prodRel (κ₁ : (leftSub F).RelTransitionSystem)
+/-- Under that identification the product system's walk permutation is
+the sum of the two factors' walk permutations. -/
+theorem walkPermPeriodic_prodRel (κ₁ : (leftSub F).RelTransitionSystem)
     (κ₂ : (rightSub F).RelTransitionSystem) :
     (prodRel (F := F) κ₁ κ₂).walkPermPeriodic =
       (periodicSumEquiv κ₁ κ₂).symm.permCongr
