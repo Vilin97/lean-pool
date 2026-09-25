@@ -47,16 +47,19 @@ section LocalAlgebra
 variable (E V : Type u)
 variable [Field E] [CommRing V] [IsLocalRing V] [Algebra E V]
 
-private abbrev K := ResidueField V
-private abbrev m : Ideal V := maximalIdeal V
+/-- The residue field of the local ring. -/
+abbrev ResidueFieldModel := ResidueField V
+
+/-- The maximal ideal defining the adic filtration. -/
+abbrev maximalIdealModel : Ideal V := maximalIdeal V
 
 /-- The positive `n`-th nilpotent quotient of the local ring. -/
-abbrev AdicJet (n : ℕ) := V ⧸ ((m V) ^ (n + 1))
+abbrev AdicJet (n : ℕ) := V ⧸ ((maximalIdealModel V) ^ (n + 1))
 
 /-- Reduction of a positive adic jet to the residue field. -/
-def adicJetResidue (n : ℕ) : AdicJet V n →ₐ[E] K V :=
-  Ideal.Quotient.liftₐ ((m V) ^ (n + 1))
-    (IsScalarTower.toAlgHom E V (K V)) (by
+def adicJetResidue (n : ℕ) : AdicJet V n →ₐ[E] ResidueFieldModel V :=
+  Ideal.Quotient.liftₐ ((maximalIdealModel V) ^ (n + 1))
+    (IsScalarTower.toAlgHom E V (ResidueFieldModel V)) (by
       intro x hx
       change residue V x = 0
       rw [residue_eq_zero_iff]
@@ -67,20 +70,21 @@ theorem adicJetResidue_surjective (n : ℕ) :
     Function.Surjective (adicJetResidue E V n) := by
   intro z
   obtain ⟨x, rfl⟩ := residue_surjective (R := V) z
-  exact ⟨Ideal.Quotient.mk ((m V) ^ (n + 1)) x, rfl⟩
+  exact ⟨Ideal.Quotient.mk ((maximalIdealModel V) ^ (n + 1)) x, rfl⟩
 
 /-- The kernel of positive-jet reduction is nilpotent. -/
 theorem adicJetResidue_kernel_isNilpotent (n : ℕ) :
     IsNilpotent (RingHom.ker (adicJetResidue E V n).toRingHom) := by
   have hkerLift :
       RingHom.ker (adicJetResidue E V n).toRingHom =
-        (RingHom.ker (IsScalarTower.toAlgHom E V (K V)).toRingHom).map
-          (Ideal.Quotient.mk ((m V) ^ (n + 1))) := by
+        (RingHom.ker (IsScalarTower.toAlgHom E V (ResidueFieldModel V)).toRingHom).map
+          (Ideal.Quotient.mk ((maximalIdealModel V) ^ (n + 1))) := by
     exact Ideal.ker_quotient_lift _ _
   rw [hkerLift]
   have hker :
-      RingHom.ker (IsScalarTower.toAlgHom E V (K V)).toRingHom = m V := by
-    change RingHom.ker (algebraMap V (K V)) = m V
+      RingHom.ker (IsScalarTower.toAlgHom E V (ResidueFieldModel V)).toRingHom =
+        maximalIdealModel V := by
+    change RingHom.ker (algebraMap V (ResidueFieldModel V)) = maximalIdealModel V
     rw [ResidueField.algebraMap_eq, ker_residue]
   rw [hker]
   refine ⟨n + 1, ?_⟩
@@ -89,26 +93,26 @@ theorem adicJetResidue_kernel_isNilpotent (n : ℕ) :
 
 /-- The unique coefficient section in the positive `n`-th adic jet. -/
 def adicJetCoefficientSection
-    (hsep : Algebra.IsSeparable E (K V)) (n : ℕ) :
-    K V →ₐ[E] AdicJet V n :=
-  finiteSeparableSection E (K V) (AdicJet V n) hsep
+    (hsep : Algebra.IsSeparable E (ResidueFieldModel V)) (n : ℕ) :
+    ResidueFieldModel V →ₐ[E] AdicJet V n :=
+  finiteSeparableSection E (ResidueFieldModel V) (AdicJet V n) hsep
     (adicJetResidue E V n) (adicJetResidue_surjective E V n)
     (adicJetResidue_kernel_isNilpotent E V n)
 
 /-- Each finite-level coefficient map is a section of reduction. -/
 @[simp]
 theorem adicJetResidue_comp_adicJetCoefficientSection
-    (hsep : Algebra.IsSeparable E (K V)) (n : ℕ) :
+    (hsep : Algebra.IsSeparable E (ResidueFieldModel V)) (n : ℕ) :
     (adicJetResidue E V n).comp (adicJetCoefficientSection E V hsep n) =
-      AlgHom.id E (K V) :=
-  residue_comp_finiteSeparableSection E (K V) (AdicJet V n) hsep
+      AlgHom.id E (ResidueFieldModel V) :=
+  residue_comp_finiteSeparableSection E (ResidueFieldModel V) (AdicJet V n) hsep
     (adicJetResidue E V n) (adicJetResidue_surjective E V n)
     (adicJetResidue_kernel_isNilpotent E V n)
 
 /-- The transition map between two positive adic jets. -/
 def adicJetTransition {a b : ℕ} (hab : a ≤ b) :
     AdicJet V b →ₐ[E] AdicJet V a :=
-  Ideal.quotientMapₐ ((m V) ^ (a + 1)) (AlgHom.id E V) (by
+  Ideal.quotientMapₐ ((maximalIdealModel V) ^ (a + 1)) (AlgHom.id E V) (by
     simpa using Ideal.pow_le_pow_right (Nat.add_le_add_right hab 1))
 
 /-- Reduction commutes with every positive-jet transition. -/
@@ -121,11 +125,11 @@ theorem adicJetResidue_comp_transition {a b : ℕ} (hab : a ≤ b) :
 
 /-- Uniqueness forces the positive finite-level sections to be compatible. -/
 theorem adicJetCoefficientSection_compatible
-    (hsep : Algebra.IsSeparable E (K V)) {a b : ℕ} (hab : a ≤ b) :
+    (hsep : Algebra.IsSeparable E (ResidueFieldModel V)) {a b : ℕ} (hab : a ≤ b) :
     (adicJetTransition E V hab).comp
         (adicJetCoefficientSection E V hsep b) =
       adicJetCoefficientSection E V hsep a := by
-  exact finiteSeparableSection_naturality E (K V)
+  exact finiteSeparableSection_naturality E (ResidueFieldModel V)
     (AdicJet V a) (AdicJet V b) hsep
     (adicJetResidue E V a) (adicJetResidue_surjective E V a)
     (adicJetResidue_kernel_isNilpotent E V a)
@@ -133,22 +137,22 @@ theorem adicJetCoefficientSection_compatible
     (adicJetResidue_kernel_isNilpotent E V b)
     (adicJetTransition E V hab) (adicJetResidue_comp_transition E V hab)
 
-/-- Convert the usual quotient by `m^n` to the coordinate quotient used in
+/-- Convert the usual quotient by `maximalIdealModel^n` to the coordinate quotient used in
 the definition of `AdicCompletion`. -/
-private def exactQuotientToCompletionCoordinate (n : ℕ) :
-    (V ⧸ ((m V) ^ n)) ≃ₐ[E]
-      V ⧸ ((m V) ^ n • ⊤ : Ideal V) := by
-  have h : ((m V) ^ n • ⊤ : Ideal V) = (m V) ^ n := by
+def exactQuotientToCompletionCoordinate (n : ℕ) :
+    (V ⧸ ((maximalIdealModel V) ^ n)) ≃ₐ[E]
+      V ⧸ ((maximalIdealModel V) ^ n • ⊤ : Ideal V) := by
+  have h : ((maximalIdealModel V) ^ n • ⊤ : Ideal V) = (maximalIdealModel V) ^ n := by
     ext x
     simp
   exact (Ideal.quotientEquivAlgOfEq V h).symm.restrictScalars E
 
 /-- The zeroth completion coordinate is the zero quotient, so it has a unique
 `E`-algebra map from the residue field. -/
-private def zeroCompletionCoordinateSection :
-    K V →ₐ[E] V ⧸ ((m V) ^ 0 • ⊤ : Ideal V) := by
-  have htop : ((m V) ^ 0 • ⊤ : Ideal V) = ⊤ := by simp
-  letI : Subsingleton (V ⧸ ((m V) ^ 0 • ⊤ : Ideal V)) := by
+def zeroCompletionCoordinateSection :
+    ResidueFieldModel V →ₐ[E] V ⧸ ((maximalIdealModel V) ^ 0 • ⊤ : Ideal V) := by
+  have htop : ((maximalIdealModel V) ^ 0 • ⊤ : Ideal V) = ⊤ := by simp
+  letI : Subsingleton (V ⧸ ((maximalIdealModel V) ^ 0 • ⊤ : Ideal V)) := by
     rw [htop]
     infer_instance
   exact {
@@ -161,10 +165,10 @@ private def zeroCompletionCoordinateSection :
 
 /-- The coefficient section in every coordinate of Mathlib's adic inverse
 limit.  Coordinate zero is trivial; coordinate `n+1` is the formally etale
-section in `V / m^(n+1)`. -/
+section in `V / maximalIdealModel^(n+1)`. -/
 def completionCoordinateSection
-    (hsep : Algebra.IsSeparable E (K V)) :
-    ∀ n : ℕ, K V →ₐ[E] V ⧸ ((m V) ^ n • ⊤ : Ideal V)
+    (hsep : Algebra.IsSeparable E (ResidueFieldModel V)) :
+    ∀ n : ℕ, ResidueFieldModel V →ₐ[E] V ⧸ ((maximalIdealModel V) ^ n • ⊤ : Ideal V)
   | 0 => zeroCompletionCoordinateSection E V
   | n + 1 =>
       (exactQuotientToCompletionCoordinate E V (n + 1)).toAlgHom.comp
@@ -173,11 +177,11 @@ def completionCoordinateSection
 /-- Transition on exact power quotients agrees with transition on the raw
 coordinates occurring in `AdicCompletion`. -/
 private theorem transition_exactQuotientToCompletionCoordinate
-    {a b : ℕ} (hab : a ≤ b) (x : V ⧸ ((m V) ^ b)) :
-    AdicCompletion.transitionMap (m V) V hab
+    {a b : ℕ} (hab : a ≤ b) (x : V ⧸ ((maximalIdealModel V) ^ b)) :
+    AdicCompletion.transitionMap (maximalIdealModel V) V hab
         (exactQuotientToCompletionCoordinate E V b x) =
       exactQuotientToCompletionCoordinate E V a
-        (Ideal.quotientMapₐ ((m V) ^ a) (AlgHom.id E V)
+        (Ideal.quotientMapₐ ((maximalIdealModel V) ^ a) (AlgHom.id E V)
           (by simpa using Ideal.pow_le_pow_right hab) x) := by
   obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective x
   rfl
@@ -185,15 +189,15 @@ private theorem transition_exactQuotientToCompletionCoordinate
 /-- The completion-coordinate sections form a compatible inverse-limit
 family. -/
 theorem completionCoordinateSection_compatible
-    (hsep : Algebra.IsSeparable E (K V)) {a b : ℕ} (hab : a ≤ b)
-    (x : K V) :
-    AdicCompletion.transitionMap (m V) V hab
+    (hsep : Algebra.IsSeparable E (ResidueFieldModel V)) {a b : ℕ} (hab : a ≤ b)
+    (x : ResidueFieldModel V) :
+    AdicCompletion.transitionMap (maximalIdealModel V) V hab
         (completionCoordinateSection E V hsep b x) =
       completionCoordinateSection E V hsep a x := by
   cases a with
   | zero =>
-      have htop : ((m V) ^ 0 • ⊤ : Ideal V) = ⊤ := by simp
-      let : Subsingleton (V ⧸ ((m V) ^ 0 • ⊤ : Ideal V)) := by
+      have htop : ((maximalIdealModel V) ^ 0 • ⊤ : Ideal V) = ⊤ := by simp
+      let : Subsingleton (V ⧸ ((maximalIdealModel V) ^ 0 • ⊤ : Ideal V)) := by
         rw [htop]
         infer_instance
       exact Subsingleton.elim _ _
@@ -202,7 +206,7 @@ theorem completionCoordinateSection_compatible
       | zero => omega
       | succ b =>
           have hab' : a ≤ b := Nat.succ_le_succ_iff.mp hab
-          change AdicCompletion.transitionMap (m V) V hab
+          change AdicCompletion.transitionMap (maximalIdealModel V) V hab
               (exactQuotientToCompletionCoordinate E V (b + 1)
                 (adicJetCoefficientSection E V hsep b x)) =
             exactQuotientToCompletionCoordinate E V (a + 1)
@@ -220,8 +224,8 @@ theorem completionCoordinateSection_compatible
 /-- The compatible finite-level sections assemble to an actual
 `E`-algebra coefficient section in the adic completion. -/
 def completedCoefficientSection
-    (hsep : Algebra.IsSeparable E (K V)) :
-    K V →ₐ[E] AdicCompletion (m V) V where
+    (hsep : Algebra.IsSeparable E (ResidueFieldModel V)) :
+    ResidueFieldModel V →ₐ[E] AdicCompletion (maximalIdealModel V) V where
   toFun x :=
     ⟨fun n ↦ completionCoordinateSection E V hsep n x,
       fun hab ↦ completionCoordinateSection_compatible E V hsep hab x⟩
@@ -239,15 +243,15 @@ def completedCoefficientSection
 /-- Evaluation of the completed section at every positive level recovers the
 finite-level section constructed by formal etaleness. -/
 theorem eval_completedCoefficientSection
-    (hsep : Algebra.IsSeparable E (K V)) (n : ℕ) :
-    ((AdicCompletion.evalₐ (m V) (n + 1)).restrictScalars E).comp
+    (hsep : Algebra.IsSeparable E (ResidueFieldModel V)) (n : ℕ) :
+    ((AdicCompletion.evalₐ (maximalIdealModel V) (n + 1)).restrictScalars E).comp
         (completedCoefficientSection E V hsep) =
       adicJetCoefficientSection E V hsep n := by
   ext x
   simp only [AlgHom.comp_apply, AlgHom.restrictScalars_apply,
     completedCoefficientSection, AdicCompletion.evalₐ,
     completionCoordinateSection, exactQuotientToCompletionCoordinate]
-  have h : ((m V) ^ (n + 1) • ⊤ : Ideal V) = (m V) ^ (n + 1) := by
+  have h : ((maximalIdealModel V) ^ (n + 1) • ⊤ : Ideal V) = (maximalIdealModel V) ^ (n + 1) := by
     ext y
     simp
   change (Ideal.quotientEquivAlgOfEq V h)
@@ -256,26 +260,26 @@ theorem eval_completedCoefficientSection
     adicJetCoefficientSection E V hsep n x
   exact (Ideal.quotientEquivAlgOfEq V h).apply_symm_apply _
 
-/-- Residue specialization of the completion is evaluation modulo `m`,
+/-- Residue specialization of the completion is evaluation modulo `maximalIdealModel`,
 followed by the ordinary residue map. -/
 def completedResidue :
-    AdicCompletion (m V) V →ₐ[E] K V :=
+    AdicCompletion (maximalIdealModel V) V →ₐ[E] ResidueFieldModel V :=
   (adicJetResidue E V 0).comp
-    ((AdicCompletion.evalₐ (m V) 1).restrictScalars E)
+    ((AdicCompletion.evalₐ (maximalIdealModel V) 1).restrictScalars E)
 
 /-- The adic-completion coefficient map is an actual section of residue. -/
 @[simp]
 theorem completedResidue_comp_completedCoefficientSection
-    (hsep : Algebra.IsSeparable E (K V)) :
+    (hsep : Algebra.IsSeparable E (ResidueFieldModel V)) :
     (completedResidue E V).comp (completedCoefficientSection E V hsep) =
-      AlgHom.id E (K V) := by
+      AlgHom.id E (ResidueFieldModel V) := by
   ext x
   change adicJetResidue E V 0
-      (AdicCompletion.evalₐ (m V) 1
+      (AdicCompletion.evalₐ (maximalIdealModel V) 1
         (completedCoefficientSection E V hsep x)) = x
   have heval :=
     DFunLike.congr_fun (eval_completedCoefficientSection E V hsep 0) x
-  change AdicCompletion.evalₐ (m V) 1
+  change AdicCompletion.evalₐ (maximalIdealModel V) 1
       (completedCoefficientSection E V hsep x) =
     adicJetCoefficientSection E V hsep 0 x at heval
   rw [heval]
@@ -286,7 +290,8 @@ end LocalAlgebra
 
 section RetainedDVR
 
-private abbrev SourceDVR (E : Type u) [Field E] :=
+/-- The coordinate-zero discrete valuation ring used for retained places. -/
+abbrev SourceDVR (E : Type u) [Field E] :=
   CoordinateZeroLocalRing E
 
 /-- The actual residue-field coefficient section in the maximal-ideal adic

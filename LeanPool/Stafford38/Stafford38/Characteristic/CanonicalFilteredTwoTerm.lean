@@ -39,7 +39,8 @@ universe u
 
 variable (k : Type u) [Field k] [Algebra ℚ k]
 
-private abbrev CanonicalIdeal (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
+/-- The canonical right ideal determined by the Weyl element and its monic degree. -/
+abbrev CanonicalIdeal (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
   presentedCanonicalRightIdeal (k := k) n N d
 
 /-- The filtered quotient by the canonical right ideal determined by `d` and its monic degree. -/

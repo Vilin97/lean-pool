@@ -39,7 +39,8 @@ noncomputable section
 universe u
 
 
-private abbrev SourceDVR (E : Type u) [Field E] :=
+/-- The coordinate-zero discrete valuation ring used for retained places. -/
+abbrev SourceDVR (E : Type u) [Field E] :=
   CoordinateZeroLocalRing E
 
 /-- A retained boundary place for `x`, including the relative coefficient

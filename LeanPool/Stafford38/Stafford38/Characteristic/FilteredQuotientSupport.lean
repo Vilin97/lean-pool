@@ -42,7 +42,8 @@ universe u
 variable (k : Type u) [Field k]
 variable {n : ℕ}
 
-private abbrev orderDecomposition :=
+/-- The homogeneous pieces of the symbol ring for differential order. -/
+abbrev orderDecomposition :=
   MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n)
 
 /-- The weighted graded-algebra structure used for support of the filtered quotient. -/

@@ -45,10 +45,12 @@ noncomputable section
 universe u
 variable (k : Type u) [Field k]
 
-private abbrev CI (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
+/-- The canonical right ideal in the presented Weyl algebra. -/
+abbrev CanonicalIdeal (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
   presentedCanonicalRightIdeal (k := k) n N d
 
-private abbrev K (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
+/-- The canonical filtered two-term complex associated with the Weyl element. -/
+abbrev CanonicalComplex (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
   canonicalFilteredTwoTerm k n N d
 
 /-- A tangential Weyl generator bundled with its order-filtration membership. -/
@@ -104,7 +106,7 @@ theorem principal_oldGenerator (n : ℕ) (i : Fin n ⊕ Fin n) :
 /-- The source zero-page class represented by an element of the specified order piece. -/
 def sourceRepresentative (n N : ℕ) (d : PresentedWeyl k (n + 1))
     (p : ℤ) (m : ℕ) (h : p = -(m : ℤ)) (a : orderPiece k (n + 1) m) :
-    (K k n N d).SourcePage 0 p :=
+    (CanonicalComplex k n N d).SourcePage 0 p :=
   Submodule.Quotient.mk ⟨Submodule.Quotient.mk (a : PresentedWeyl k (n + 1)), by
     rw [h, zeroPage_source_cycles_eq_orderPiece k n N m d]
     exact ⟨a, a.property, rfl⟩⟩
@@ -112,7 +114,7 @@ def sourceRepresentative (n N : ℕ) (d : PresentedWeyl k (n + 1))
 /-- The target zero-page class represented by an element of the specified order piece. -/
 def targetRepresentative (n N : ℕ) (d : PresentedWeyl k (n + 1))
     (p : ℤ) (m : ℕ) (h : p = -(m : ℤ)) (a : orderPiece k (n + 1) m) :
-    (K k n N d).TargetPage 0 p :=
+    (CanonicalComplex k n N d).TargetPage 0 p :=
   Submodule.Quotient.mk ⟨Submodule.Quotient.mk (a : PresentedWeyl k (n + 1)), by
     rw [h, G_at_neg k n N m d]
     exact ⟨a, a.property, rfl⟩⟩
@@ -120,7 +122,7 @@ def targetRepresentative (n N : ℕ) (d : PresentedWeyl k (n + 1))
 private theorem sourceRepresentative_cast (n N : ℕ) (d : PresentedWeyl k (n + 1))
     {p q : ℤ} (m : ℕ) (hp : p = -(m : ℤ)) (hq : q = -(m : ℤ))
     (h : p = q) (a : orderPiece k (n + 1) m) :
-    LinearEquiv.cast (R := k) (M := fun p => (K k n N d).SourcePage 0 p) h
+    LinearEquiv.cast (R := k) (M := fun p => (CanonicalComplex k n N d).SourcePage 0 p) h
       (sourceRepresentative k n N d p m hp a) =
       sourceRepresentative k n N d q m hq a := by
   cases h
@@ -129,7 +131,7 @@ private theorem sourceRepresentative_cast (n N : ℕ) (d : PresentedWeyl k (n + 
 private theorem targetRepresentative_cast (n N : ℕ) (d : PresentedWeyl k (n + 1))
     {p q : ℤ} (m : ℕ) (hp : p = -(m : ℤ)) (hq : q = -(m : ℤ))
     (h : p = q) (a : orderPiece k (n + 1) m) :
-    LinearEquiv.cast (R := k) (M := fun p => (K k n N d).TargetPage 0 p) h
+    LinearEquiv.cast (R := k) (M := fun p => (CanonicalComplex k n N d).TargetPage 0 p) h
       (targetRepresentative k n N d p m hp a) =
       targetRepresentative k n N d q m hq a := by
   cases h
@@ -156,10 +158,10 @@ private theorem targetRepresentative_lof_eq (n N : ℕ) (d : PresentedWeyl k (n 
 theorem sourceEquiv_representative (n N : ℕ) (d : PresentedWeyl k (n + 1))
     (p : ℤ) (m : ℕ) (h : p = -(m : ℤ)) (a : orderPiece k (n + 1) m) :
     sourceTotal0LinearEquivOrderAssociatedGraded k n N d
-      (DirectSum.lof k ℤ (fun p => (K k n N d).SourcePage 0 p) p
+      (DirectSum.lof k ℤ (fun p => (CanonicalComplex k n N d).SourcePage 0 p) p
         (sourceRepresentative k n N d p m h a)) =
-      orderAssociatedGradedOf k (CI k n N d) m
-        (orderPieceToQuotientGraded k (CI k n N d) m a) := by
+      orderAssociatedGradedOf k (CanonicalIdeal k n N d) m
+        (orderPieceToQuotientGraded k (CanonicalIdeal k n N d) m a) := by
   rw [sourceRepresentative_lof_eq k n N d m h (negIndex_eq m) a]
   have H := sourceTotal0LinearEquiv_lof_negIndex k n N m d
     (sourceRepresentative k n N d (negIndex m) m (negIndex_eq m) a)
@@ -170,10 +172,10 @@ theorem sourceEquiv_representative (n N : ℕ) (d : PresentedWeyl k (n + 1))
 theorem targetEquiv_representative (n N : ℕ) (d : PresentedWeyl k (n + 1))
     (p : ℤ) (m : ℕ) (h : p = -(m : ℤ)) (a : orderPiece k (n + 1) m) :
     targetTotal0LinearEquivOrderAssociatedGraded k n N d
-      (DirectSum.lof k ℤ (fun p => (K k n N d).TargetPage 0 p) p
+      (DirectSum.lof k ℤ (fun p => (CanonicalComplex k n N d).TargetPage 0 p) p
         (targetRepresentative k n N d p m h a)) =
-      orderAssociatedGradedOf k (CI k n N d) m
-        (orderPieceToQuotientGraded k (CI k n N d) m a) := by
+      orderAssociatedGradedOf k (CanonicalIdeal k n N d) m
+        (orderPieceToQuotientGraded k (CanonicalIdeal k n N d) m a) := by
   rw [targetRepresentative_lof_eq k n N d m h (negIndex_eq m) a]
   have H := targetTotal0LinearEquiv_lof_negIndex k n N m d
     (targetRepresentative k n N d (negIndex m) m (negIndex_eq m) a)
@@ -210,8 +212,8 @@ theorem targetRepresentative_surjective (n N : ℕ) (d : PresentedWeyl k (n + 1)
 
 theorem sourceRepresentative_map (n N : ℕ) (d : PresentedWeyl k (n + 1))
     (e : ℕ) (a : orderPiece k (n + 1) e)
-    (P : (K k n N d).PageOperator (e : ℤ))
-    (hP : P.g = rightMulLinearMap k (CI k n N d) a)
+    (P : (CanonicalComplex k n N d).PageOperator (e : ℤ))
+    (hP : P.g = rightMulLinearMap k (CanonicalIdeal k n N d) a)
     (p : ℤ) (m : ℕ) (h : p = -(m : ℤ)) (z : orderPiece k (n + 1) m) :
     P.sourceMap 0 p (sourceRepresentative k n N d p m h z) =
       sourceRepresentative k n N d (p - e) (m + e) (by omega)
@@ -225,8 +227,8 @@ theorem sourceRepresentative_map (n N : ℕ) (d : PresentedWeyl k (n + 1))
 
 theorem targetRepresentative_map (n N : ℕ) (d : PresentedWeyl k (n + 1))
     (e : ℕ) (a : orderPiece k (n + 1) e)
-    (P : (K k n N d).PageOperator (e : ℤ))
-    (hP : P.g = rightMulLinearMap k (CI k n N d) a)
+    (P : (CanonicalComplex k n N d).PageOperator (e : ℤ))
+    (hP : P.g = rightMulLinearMap k (CanonicalIdeal k n N d) a)
     (p : ℤ) (m : ℕ) (h : p = -(m : ℤ)) (z : orderPiece k (n + 1) m) :
     P.targetMap 0 p (targetRepresentative k n N d p m h z) =
       targetRepresentative k n N d (p - e) (m + e) (by omega)
@@ -240,9 +242,9 @@ theorem targetRepresentative_map (n N : ℕ) (d : PresentedWeyl k (n + 1))
 
 theorem sourceEquiv_intertwines_rightMul (n N : ℕ) (d : PresentedWeyl k (n + 1))
     (e : ℕ) (a : orderPiece k (n + 1) e)
-    (P : (K k n N d).PageOperator (e : ℤ))
-    (hP : P.g = rightMulLinearMap k (CI k n N d) a)
-    (z : (K k n N d).SourceTotal 0) :
+    (P : (CanonicalComplex k n N d).PageOperator (e : ℤ))
+    (hP : P.g = rightMulLinearMap k (CanonicalIdeal k n N d) a)
+    (z : (CanonicalComplex k n N d).SourceTotal 0) :
     sourceTotal0LinearEquivOrderAssociatedGraded k n N d (P.sourceTotalMap 0 z) =
       (principalComponentOnPiece k (@orderWeight (n + 1)) e a : SymbolRing k (n + 1)) •
         sourceTotal0LinearEquivOrderAssociatedGraded k n N d z := by
@@ -255,8 +257,9 @@ theorem sourceEquiv_intertwines_rightMul (n N : ℕ) (d : PresentedWeyl k (n + 1
     · let m := (-p).toNat
       have hm : p = -(m : ℤ) := by dsimp [m]; omega
       obtain ⟨z, rfl⟩ := sourceRepresentative_surjective k n N d p m hm y
-      rw [show DirectSum.of ((K k n N d).SourcePage 0) p =
-        (DirectSum.lof k ℤ (fun p => (K k n N d).SourcePage 0 p) p).toAddMonoidHom from rfl]
+      rw [show DirectSum.of ((CanonicalComplex k n N d).SourcePage 0) p =
+        (DirectSum.lof k ℤ
+          (fun p => (CanonicalComplex k n N d).SourcePage 0 p) p).toAddMonoidHom from rfl]
       simp only [LinearMap.toAddMonoidHom_coe]
       change sourceTotal0LinearEquivOrderAssociatedGraded k n N d
         (P.sourceTotalMap 0 (DirectSum.lof k ℤ _ p
@@ -269,9 +272,9 @@ theorem sourceEquiv_intertwines_rightMul (n N : ℕ) (d : PresentedWeyl k (n + 1
 
 theorem targetEquiv_intertwines_rightMul (n N : ℕ) (d : PresentedWeyl k (n + 1))
     (e : ℕ) (a : orderPiece k (n + 1) e)
-    (P : (K k n N d).PageOperator (e : ℤ))
-    (hP : P.g = rightMulLinearMap k (CI k n N d) a)
-    (z : (K k n N d).TargetTotal 0) :
+    (P : (CanonicalComplex k n N d).PageOperator (e : ℤ))
+    (hP : P.g = rightMulLinearMap k (CanonicalIdeal k n N d) a)
+    (z : (CanonicalComplex k n N d).TargetTotal 0) :
     targetTotal0LinearEquivOrderAssociatedGraded k n N d (P.targetTotalMap 0 z) =
       (principalComponentOnPiece k (@orderWeight (n + 1)) e a : SymbolRing k (n + 1)) •
         targetTotal0LinearEquivOrderAssociatedGraded k n N d z := by
@@ -284,8 +287,9 @@ theorem targetEquiv_intertwines_rightMul (n N : ℕ) (d : PresentedWeyl k (n + 1
     · let m := (-p).toNat
       have hm : p = -(m : ℤ) := by dsimp [m]; omega
       obtain ⟨z, rfl⟩ := targetRepresentative_surjective k n N d p m hm y
-      rw [show DirectSum.of ((K k n N d).TargetPage 0) p =
-        (DirectSum.lof k ℤ (fun p => (K k n N d).TargetPage 0 p) p).toAddMonoidHom from rfl]
+      rw [show DirectSum.of ((CanonicalComplex k n N d).TargetPage 0) p =
+        (DirectSum.lof k ℤ
+          (fun p => (CanonicalComplex k n N d).TargetPage 0 p) p).toAddMonoidHom from rfl]
       simp only [LinearMap.toAddMonoidHom_coe]
       change targetTotal0LinearEquivOrderAssociatedGraded k n N d
         (P.targetTotalMap 0 (DirectSum.lof k ℤ _ p
@@ -297,7 +301,7 @@ theorem targetEquiv_intertwines_rightMul (n N : ℕ) (d : PresentedWeyl k (n + 1
   | add x y hx hy => simpa [smul_add] using congrArg₂ (· + ·) hx hy
 
 theorem sourceEquiv_intertwines_generator (n N : ℕ) (d : PresentedWeyl k (n + 1))
-    (i : Fin n ⊕ Fin n) (z : (K k n N d).SourceTotal 0) :
+    (i : Fin n ⊕ Fin n) (z : (CanonicalComplex k n N d).SourceTotal 0) :
     sourceTotal0LinearEquivOrderAssociatedGraded k n N d
         (sourceGenerator k n N d 0 i z) =
       (MvPolynomial.X (oldIndex i) : SymbolRing k (n + 1)) •
@@ -308,7 +312,7 @@ theorem sourceEquiv_intertwines_generator (n N : ℕ) (d : PresentedWeyl k (n + 
   exact h
 
 theorem targetEquiv_intertwines_generator (n N : ℕ) (d : PresentedWeyl k (n + 1))
-    (i : Fin n ⊕ Fin n) (z : (K k n N d).TargetTotal 0) :
+    (i : Fin n ⊕ Fin n) (z : (CanonicalComplex k n N d).TargetTotal 0) :
     targetTotal0LinearEquivOrderAssociatedGraded k n N d
         (targetGenerator k n N d 0 i z) =
       (MvPolynomial.X (oldIndex i) : SymbolRing k (n + 1)) •
@@ -339,19 +343,19 @@ theorem principal_coordinate (n : ℕ) :
 
 theorem sourceRepresentative_drop (n N : ℕ) (d : PresentedWeyl k (n + 1))
     (p : ℤ) (m : ℕ) (h : p = -(m : ℤ)) (z : orderPiece k (n + 1) m) :
-    (K k n N d).drop 0 p (sourceRepresentative k n N d p m h z) =
+    (CanonicalComplex k n N d).drop 0 p (sourceRepresentative k n N d p m h z) =
       targetRepresentative k n N d (p + 0) (m + 0) (by omega)
         ⟨(z : PresentedWeyl k (n + 1)) * presentedCoordinate k n,
           mul_mem_orderPiece k z.property (presentedCoordinate_mem_orderPiece_zero k n)⟩ := by
-  rw [sourceRepresentative, (K k n N d).drop_mk]
+  rw [sourceRepresentative, (CanonicalComplex k n N d).drop_mk]
   apply congrArg Submodule.Quotient.mk
   apply Subtype.ext
   rfl
 
 theorem totalDrop_zero_intertwines_coordinate (n N : ℕ) (d : PresentedWeyl k (n + 1))
-    (z : (K k n N d).SourceTotal 0) :
+    (z : (CanonicalComplex k n N d).SourceTotal 0) :
     targetTotal0LinearEquivOrderAssociatedGraded k n N d
-        ((K k n N d).totalDrop 0 z) =
+        ((CanonicalComplex k n N d).totalDrop 0 z) =
       (MvPolynomial.X (.inl (0 : Fin (n + 1))) : SymbolRing k (n + 1)) •
         sourceTotal0LinearEquivOrderAssociatedGraded k n N d z := by
   induction z using DirectSum.induction_on with
@@ -363,16 +367,17 @@ theorem totalDrop_zero_intertwines_coordinate (n N : ℕ) (d : PresentedWeyl k (
     · let m := (-p).toNat
       have hm : p = -(m : ℤ) := by dsimp [m]; omega
       obtain ⟨z, rfl⟩ := sourceRepresentative_surjective k n N d p m hm y
-      rw [show DirectSum.of ((K k n N d).SourcePage 0) p =
-        (DirectSum.lof k ℤ (fun p => (K k n N d).SourcePage 0 p) p).toAddMonoidHom from rfl]
+      rw [show DirectSum.of ((CanonicalComplex k n N d).SourcePage 0) p =
+        (DirectSum.lof k ℤ
+          (fun p => (CanonicalComplex k n N d).SourcePage 0 p) p).toAddMonoidHom from rfl]
       simp only [LinearMap.toAddMonoidHom_coe]
       change targetTotal0LinearEquivOrderAssociatedGraded k n N d
-        ((K k n N d).totalDrop 0 (DirectSum.lof k ℤ _ p
+        ((CanonicalComplex k n N d).totalDrop 0 (DirectSum.lof k ℤ _ p
           (sourceRepresentative k n N d p m hm z))) = _
-      rw [(K k n N d).totalDrop_lof,
+      rw [(CanonicalComplex k n N d).totalDrop_lof,
         sourceRepresentative_drop]
-      trans orderAssociatedGradedOf k (CI k n N d) (m + 0)
-        (orderPieceToQuotientGraded k (CI k n N d) (m + 0)
+      trans orderAssociatedGradedOf k (CanonicalIdeal k n N d) (m + 0)
+        (orderPieceToQuotientGraded k (CanonicalIdeal k n N d) (m + 0)
           ⟨(z : PresentedWeyl k (n + 1)) * presentedCoordinate k n,
             mul_mem_orderPiece k z.property (presentedCoordinate_mem_orderPiece_zero k n)⟩)
       · exact targetEquiv_representative k n N d (p + 0) (m + 0) (by omega) _

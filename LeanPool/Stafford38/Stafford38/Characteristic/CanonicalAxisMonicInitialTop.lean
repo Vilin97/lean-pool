@@ -56,12 +56,13 @@ universe u
 
 variable (k : Type u) [Field k] [Algebra ℚ k]
 
-private abbrev CanonicalIdeal (n N : ℕ)
+/-- The canonical right ideal determined by the Weyl element and its monic degree. -/
+abbrev CanonicalIdeal (n N : ℕ)
     (d : PresentedWeyl k (n + 1)) :=
   canonicalRightIdeal (presentedCoordinate k n) d N
 
 /-- The distinguished base-coordinate symbol. -/
-private abbrev AxisCoordinate (n : ℕ) : SymbolRing k (n + 1) :=
+abbrev AxisCoordinate (n : ℕ) : SymbolRing k (n + 1) :=
   MvPolynomial.X (.inl (0 : Fin (n + 1)))
 
 /-- Zeroth Koszul homology of the distinguished coordinate on the actual
