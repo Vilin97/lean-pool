@@ -711,9 +711,9 @@ theorem bellman_value_attained_multi (T : ℕ)
 /-- **Phase 5, full attainment — competitor form.**  Unfolding the infimum
     of `bellman_value_attained_multi`: the exhibited pair `(γ₀*, γopt)` is
     feasible, its strategy half is plain-Borel measurable, and no feasible
-    competitor `(γ₀', γ)` does better.  This is the statement "the
-    `T`-period bicausal optimal transport problem has an optimal solution"
-    in the Feller/lsc model. -/
+    competitor `(γ₀', γ)` does better. This proves existence of an optimal
+    initial coupling and locally feasible strategy in the Feller/lsc model.
+    Equivalence with minimization over bicausal path laws is not proved here. -/
 theorem exists_minimizing_pair_multi (T : ℕ)
     (μ₀ : Measure (X 0)) [IsProbabilityMeasure μ₀]
     (ν₀ : Measure (Y 0)) [IsProbabilityMeasure ν₀]

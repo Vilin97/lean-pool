@@ -560,10 +560,12 @@ theorem cap_measurable_layer
     exact MeasurableSet.iInter fun i =>
       (measurable_pi_apply (i : ℕ)) (measurableSet_singleton (b i))
 
-/-- **Parametrized Choquet capacitability** (kernel key lemma; BS Prop 7.46):
-    for `A` analytic in `X × Y` and a finite Borel kernel `κ`, the function
+/-- **Analytic superlevel sets for finite-kernel sections.**
+    For `A` analytic in `X × Y` and a finite Borel kernel `κ`, the function
     `x ↦ κ x (A_x)` is upper semianalytic: its strict superlevel sets are
-    analytic. -/
+    analytic. This parametrized finite-kernel variant is proved below. For the
+    related probability-measure statement, see Bertsekas–Shreve, *Stochastic
+    Optimal Control: The Discrete-Time Case*, Corollary 7.43.1, p. 170. -/
 theorem MeasureTheory.AnalyticSet.kernel_section_gt
     {A : Set (X × Y)} (hA : AnalyticSet A)
     (κ : Kernel X Y) [IsFiniteKernel κ] (c : ℝ≥0∞) :

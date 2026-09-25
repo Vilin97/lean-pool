@@ -4,7 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: KT. Wu
 -/
 /-
-  Proposition 1: Bicausal ↔ Kernel Decomposition  ✓ FULLY VERIFIED
+  Two-step kernel-decomposition interface.
+
+  IsBicausal₂ is defined by the existence of a KernelDecomp with the required
+  marginals. The implications below package and unpack that definition; they
+  do not establish equivalence with a conditional-independence definition.
 -/
 module
 

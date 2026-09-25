@@ -45,7 +45,7 @@ public import LeanPool.BicausalOT.SolutionPolish
 
 
 /-!
-# BicausalOT
+# BicausalOT: measurable selection and coupling strategies
 
 Source: url:https://github.com/maxwellapexlab/bicausalot-palomar
 Authors: KT. Wu
@@ -53,6 +53,22 @@ Status: verified
 Main declarations: `MeasurableSelection.exists_measurable_selection`
 Tags: probability
 MSC: 28B20, 54C65, 54H05, 03E15, 28A20, 68V20
+-/
+
+/-! ## Scope
+
+The Bellman identities compare nested strategy costs with Bellman recursions over locally
+feasible one-step couplings. The development does not establish equivalence with minimization
+over bicausal measures on a path space. Exact Borel measurable strategies and optimal initial
+couplings are obtained for weakly continuous probability kernels and nonnegative extended-real
+lower semicontinuous costs on Polish Borel spaces; see
+`MultiPeriod.bellman_value_attained_multi`.
+
+The basic analytic-set capacitability and universal measurability results overlap with
+`LeanPool.FormalLearningTheory.PureMath.ChoquetCapacity` and
+`LeanPool.FormalLearningTheory.PureMath.AnalyticMeasurability`. This development also proves
+analytic superlevel sets for finite-kernel sections, measurable selection, and coupling-strategy
+results. Its local Souslin-scheme construction supports the kernel-section proof.
 -/
 
 @[expose] public section

@@ -10110,11 +10110,12 @@ projects:
       - '90C35'
       - '05C21'
   - slug: bicausalot-palomar
-    title: BicausalOT
-    summary: Develops measurable selection, descriptive set theory, and the Bellman representation
-      for bicausal optimal transport over finite horizons. It includes Kuratowski–Ryll-Nardzewski
-      selection, Jankov–von Neumann uniformization, Choquet capacitability, Polish probability-measure
-      spaces, and measurable optimal strategies.
+    title: "BicausalOT: measurable selection and coupling strategies"
+    summary: Develops Kuratowski–Ryll-Nardzewski selection, Jankov–von Neumann uniformization,
+      and finite-horizon Bellman identities for locally feasible coupling strategies. Exact Borel
+      measurable optimal strategies and initial couplings are obtained on Polish Borel spaces
+      for weakly continuous probability kernels and nonnegative extended-real lower semicontinuous
+      costs. Equivalence with optimization over bicausal path laws is not established.
     branch: probability
     entry_module: LeanPool.BicausalOT
     authors:
