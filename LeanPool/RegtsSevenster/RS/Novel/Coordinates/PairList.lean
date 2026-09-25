@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ChainLists
-import LeanPool.RegtsSevenster.RS.Common.FinSlots
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ChainLists
+public import LeanPool.RegtsSevenster.RS.Common.FinSlots
 
 /-!
 # Membership and uniqueness in the edge and oriented enumerations
@@ -13,6 +15,8 @@ import LeanPool.RegtsSevenster.RS.Common.FinSlots
 The edge and oriented pair lists enumerate each participating flag
 exactly once. The slot helpers identify the two ends of each edge.
 -/
+
+@[expose] public section
 
 namespace RS
 

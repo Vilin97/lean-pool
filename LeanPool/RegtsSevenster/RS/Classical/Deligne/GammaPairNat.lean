@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModuleFunctor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPair
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModMonoidal
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModuleFunctor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPair
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModMonoidal
 
 /-!
 # Naturality of the comparison map
@@ -47,6 +49,8 @@ reduces the naturality square to exactly those four instances.
   map is an isomorphism depends only on the isomorphism classes of
   the two module objects.
 -/
+
+@[expose] public section
 
 namespace RS
 

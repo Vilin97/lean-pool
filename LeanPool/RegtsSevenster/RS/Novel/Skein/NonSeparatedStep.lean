@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PathLedger
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PathLedger
 
 /-!
 # The non-separated repair move: the flipped-segment ledger
@@ -54,6 +56,8 @@ the parity files:
   circuit not carrying `a` flips the count parity (the splice
   merges the circuit into `a`'s component, Δ = −1).
 -/
+
+@[expose] public section
 
 namespace RS
 

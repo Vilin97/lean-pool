@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleClose
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleClose
 
 /-!
 # The star trace identity
@@ -16,6 +18,8 @@ strand bundle self-glues its straight matching
 the star union restores the fragment (`starUnion_reglue`).  On Hom
 classes: the descended trace of the star-union class is the value.
 -/
+
+@[expose] public section
 
 namespace RS
 

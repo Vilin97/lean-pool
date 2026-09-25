@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GrowthDichotomy
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IdemCut
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowCast
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.RowColIdem
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GrowthDichotomy
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IdemCut
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowCast
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.RowColIdem
 
 /-!
 # Schur vanishing at the module level
@@ -17,6 +19,8 @@ the relative tensor powers of a module through `modPowAlg`; when
 every block of one size acts as zero, the completeness of the
 blocks collapses the whole power.
 -/
+
+@[expose] public section
 
 namespace RS
 

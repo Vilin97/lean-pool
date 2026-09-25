@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowTriangle
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowTriangle
 
 /-!
 # The carrier calculus of the power chain
@@ -15,6 +17,8 @@ against a pairing (`RS.carrierContract`) and insertion of a
 copairing (`RS.zigCarrier`), with their naturality in the module
 and their evaluation on scalars.
 -/
+
+@[expose] public section
 
 namespace RS
 

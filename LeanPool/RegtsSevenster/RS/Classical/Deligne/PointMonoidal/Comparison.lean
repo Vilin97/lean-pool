@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Residue
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Residue
 
 /-!
 # The comparison in super vector spaces, and its inverse
@@ -43,6 +45,8 @@ hypothesis is needed.
 * `RS.svEvenInl` and its three companions: the four summands of a
   tensor product of super vector spaces.
 -/
+
+@[expose] public section
 
 namespace RS
 

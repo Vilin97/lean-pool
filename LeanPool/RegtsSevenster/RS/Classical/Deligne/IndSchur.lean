@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndTensorExact
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurVanishing
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndTensorExact
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurVanishing
 
 /-!
 # Transport of tensor powers and the permutation action along
@@ -54,6 +56,8 @@ Yoneda lemma, by one element — its value on the canonical element
 `RS.dayCoyonedaUnitElt` assembled from identities.  All coherence
 comparisons are decided by evaluating both sides there.
 -/
+
+@[expose] public section
 
 namespace RS
 

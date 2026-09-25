@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowSucc
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowSucc
 
 /-!
 # The pair side of the power step
@@ -18,6 +20,8 @@ identity after a symmetric rearrangement of the four carriers; the
 rearrangement itself is the retraction `tensorMu_braid_retract`, a
 pure braid coherence.
 -/
+
+@[expose] public section
 
 namespace RS
 

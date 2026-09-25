@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairingPos
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTPad
-import LeanPool.RegtsSevenster.RS.Common.FactorialBound
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairingPos
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTPad
+public import LeanPool.RegtsSevenster.RS.Common.FactorialBound
 
 /-!
 # The Schur package, unconditionally
@@ -15,6 +17,8 @@ Discharging the padding and branching inputs: the classical
 symmetric-group representation theory consumed by the development
 is a theorem of this tree.
 -/
+
+@[expose] public section
 
 namespace RS
 

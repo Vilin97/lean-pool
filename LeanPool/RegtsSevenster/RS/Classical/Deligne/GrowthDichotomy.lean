@@ -4,14 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurVanishing
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IdempotentLength
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FactorialBeats
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PieriPos
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BlockUnits
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.WhiskerFaithful
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitSimple
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorPowZero
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurVanishing
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IdempotentLength
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FactorialBeats
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PieriPos
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BlockUnits
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.WhiskerFaithful
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitSimple
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorPowZero
 
 /-!
 # Moderate growth forces Schur vanishing
@@ -28,6 +30,8 @@ The two block-theoretic inputs — completeness and orthogonality of
 the central idempotents at each size — are named `Prop`s here and
 discharged for the tree's package where the block theory lives.
 -/
+
+@[expose] public section
 
 namespace RS
 

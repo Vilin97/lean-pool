@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitAssemble
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitAssemble
 
 /-!
 # The base entry is multiplicative
@@ -16,6 +18,8 @@ multiplying on the carrier.  Together with unitality this is the
 monoid-morphism property of the base entry of the splitting
 data.
 -/
+
+@[expose] public section
 
 namespace RS
 

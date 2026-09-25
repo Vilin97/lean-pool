@@ -4,12 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTIntChar
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTIrreducible
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTIntChar
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTIrreducible
 
 /-!
 # The Jacobi–Trudi character is plus-or-minus a native character
 -/
+
+@[expose] public section
 
 namespace RS
 

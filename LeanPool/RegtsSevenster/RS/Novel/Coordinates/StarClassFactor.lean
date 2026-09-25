@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SortFactor
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SortFactor
 
 /-!
 # The class-level star factorization
@@ -14,6 +16,8 @@ classes: the star-union class of a closed fragment is the circle
 power times the iterated vertex-star tensor class composed with
 the bundle map of the sort.
 -/
+
+@[expose] public section
 
 namespace RS
 

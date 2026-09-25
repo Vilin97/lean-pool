@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitSimple
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitSimple
 
 /-!
 # Finite length bounds Hom-dimension from the unit
@@ -31,6 +33,8 @@ separately: `Hom (𝟙, S)` vanishes for a simple `S` not isomorphic
 to the unit, and is the line `End (𝟙_ A) = ℂ` when it is — the
 scalar-unit hypothesis read as a ℂ-linear equivalence.
 -/
+
+@[expose] public section
 
 namespace RS
 

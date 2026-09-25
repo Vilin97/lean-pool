@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreAdditive
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreEps
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaShift
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreAdditive
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreEps
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaShift
 
 /-!
 # The fibre functor of a mixed sum
@@ -16,6 +18,8 @@ has for its fibre the free super module of rank `(p | q)`: the unit
 contributes the algebra and the line contributes its parity shift,
 and the fibre functor is additive.
 -/
+
+@[expose] public section
 
 namespace RS
 

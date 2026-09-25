@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MixedPartition
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MixedPartition
 
 /-!
 # Existence of transition systems with orientations
@@ -25,6 +27,8 @@ orientation.  The construction proceeds in two parts:
    obtained by choosing, for each orbit-pair, one side as "out" using
    orbit representatives under the flag order.
 -/
+
+@[expose] public section
 
 namespace RS
 

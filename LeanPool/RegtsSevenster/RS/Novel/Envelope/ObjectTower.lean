@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.ScalarPermTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPermCast
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.ScalarTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.TraceZetaSharp
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.ScalarPermTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPermCast
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.ScalarTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.TraceZetaSharp
 
 /-!
 # The Frobenius tower of an object
@@ -21,6 +23,8 @@ vanishing propagates by `permAlg_compat`, the traces are
 identity comes from the cycle-type formula for the trace of a
 permutation against a tensor power.
 -/
+
+@[expose] public section
 
 namespace RS
 

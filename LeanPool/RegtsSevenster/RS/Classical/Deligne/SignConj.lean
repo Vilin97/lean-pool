@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CoverFactor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.AltPow
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddPermSign
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CoverFactor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.AltPow
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddPermSign
 
 /-!
 # Conjugating the permutation action through the twisted power
@@ -18,6 +20,8 @@ action on the powers of a twisted module conjugates to the
 simultaneous action: the plain action on the twisting powers
 alongside the descended action on the module powers.
 -/
+
+@[expose] public section
 
 namespace RS
 

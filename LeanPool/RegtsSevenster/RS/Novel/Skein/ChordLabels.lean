@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingSignature
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordSwapParity
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingSignature
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordSwapParity
 
 /-!
 # Boundary chord labels
@@ -15,6 +17,8 @@ relation rewritten as an order condition on the four labels — the
 concrete bridge from `chordCrossingCount` to the abstract chord
 parity layer.
 -/
+
+@[expose] public section
 
 namespace RS
 

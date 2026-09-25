@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PathCanon
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionExists
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.EulerianIndependence
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PathCanon
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionExists
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.EulerianIndependence
 
 /-!
 # Closed-fragment agreement: throughMixedPartitionAt = mixedPartition
@@ -21,6 +23,8 @@ Definition 5 value.
 
 This is the base case of the converse's factorization induction.
 -/
+
+@[expose] public section
 
 namespace RS
 

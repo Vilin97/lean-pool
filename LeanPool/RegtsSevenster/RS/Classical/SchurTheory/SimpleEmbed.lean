@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeTable
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeTable
 
 /-!
 # Every simple module embeds in the regular module
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeTable
 Every simple `ℂ[G]`-module is isomorphic (as a module) to a simple
 submodule of the regular module `MonoidAlgebra ℂ G`.
 -/
+
+@[expose] public section
 
 namespace RS
 

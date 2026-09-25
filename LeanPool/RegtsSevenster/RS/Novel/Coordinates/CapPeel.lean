@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapMatch
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapMatch
 
 /-!
 # Peeling the bundle cap
@@ -15,6 +17,8 @@ rotation that moves the last strand's two ends to the end of the
 boundary word.  This is the recursion that computes the cap
 functional in coordinates.
 -/
+
+@[expose] public section
 
 namespace RS
 

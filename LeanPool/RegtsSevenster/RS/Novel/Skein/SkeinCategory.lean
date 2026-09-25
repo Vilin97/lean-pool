@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomCompose
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceCyclic
-import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLawRight
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomCompose
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceCyclic
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLawRight
 
 /-!
 # The skein category: the axioms on Hom spaces
@@ -19,6 +21,8 @@ elements, proven by linear induction
 with the per-single case supplied by a fragment equivalence
 (identity laws, associativity) through isomorphism invariance.
 -/
+
+@[expose] public section
 
 namespace RS
 

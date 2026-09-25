@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffleLine
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffleLine
 
 /-!
 # Tensoring a mixed sum with the odd line
@@ -17,6 +19,8 @@ labels therefore identifies `L.obj ⊗ L.mix p q` with the mixed
 sum `L.mix q p` of `q` copies of the unit and `p` copies of the
 line.
 -/
+
+@[expose] public section
 
 namespace RS
 

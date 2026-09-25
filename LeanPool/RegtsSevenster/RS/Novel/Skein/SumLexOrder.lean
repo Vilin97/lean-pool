@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplit
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplit
 
 /-!
 # The lexicographic order on disjoint-union labels
@@ -17,6 +19,8 @@ right) and pins the disjoint-union factorization interface — the
 multiplicativity of the corrected value, first target of the
 factorization chain.
 -/
+
+@[expose] public section
 
 namespace RS
 

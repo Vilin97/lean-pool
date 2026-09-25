@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowCast
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PlainShuffle
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MuInterchange
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowCast
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PlainShuffle
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MuInterchange
 
 /-!
 # The relative power of a free module
@@ -23,6 +25,8 @@ multiplication into the head factor — installed as a local instance
 for the whole file; the statements of record are spelt at the
 carrier `A ⊗ V` with that instance.
 -/
+
+@[expose] public section
 
 namespace RS
 

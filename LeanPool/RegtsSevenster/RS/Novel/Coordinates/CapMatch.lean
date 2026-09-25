@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BraidWord
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BraidWord
 
 /-!
 # Towards the matching cap
@@ -15,6 +17,8 @@ the absorption step for permuted caps — composing a braiding word
 into the strand-bundle cap yields the cap of the permuted
 matching.
 -/
+
+@[expose] public section
 
 namespace RS
 

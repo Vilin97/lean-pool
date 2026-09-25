@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableDescent
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableDescent
 
 /-!
 # The algebra structure on the image tower
@@ -46,6 +48,8 @@ cancels, so each reduces to the corresponding law in `A`.  This is
 `RS.monObjOfMono`, and it gives `MonObj (RS.imageSubalgebra A i₀)`
 and, over a symmetric `C`, `IsCommMonObj` of the same.
 -/
+
+@[expose] public section
 
 namespace RS
 

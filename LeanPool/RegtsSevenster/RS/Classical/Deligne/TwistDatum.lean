@@ -4,14 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitFreeMod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistFreeTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagTransferIso
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorZigzag
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeTransport
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.InitDatum
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddLinePairing
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BigTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitFreeMod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistFreeTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagTransferIso
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorZigzag
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeTransport
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.InitDatum
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddLinePairing
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BigTensor
 
 /-!
 # The odd twist of a duality datum
@@ -25,6 +27,8 @@ tensoring a duality datum with the line datum and transporting
 along the twist shuffle gives the odd twist of a duality datum,
 zigzag laws included.
 -/
+
+@[expose] public section
 
 namespace RS
 

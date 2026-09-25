@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.FlagEnum
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.IndexPerm
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockAlign
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.FlagEnum
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.IndexPerm
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockAlign
 
 /-!
 # The sorted-position key
@@ -15,6 +17,8 @@ The block enumeration is sorted under the sigma-position key, so
 the canonical index permutation's sign is the key-sortSign of the
 pair enumeration alone.
 -/
+
+@[expose] public section
 
 namespace RS
 

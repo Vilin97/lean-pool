@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexBij
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ListSignPerm
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexBij
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ListSignPerm
 
 /-!
 # The canonical permutation of colour data
@@ -22,6 +24,8 @@ That is what lets the mixed summand be read off the data alone: the
 functional sees only the multiset and the set, and the sign the
 reindexing costs is exactly the one the list carries.
 -/
+
+@[expose] public section
 
 namespace RS
 

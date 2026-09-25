@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PlainShuffle
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistPow
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PlainShuffle
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistPow
 
 /-!
 # The cover factorisation of the twisted power identification
@@ -16,6 +18,8 @@ of the module factor.  This reduces the conjugation of the
 permutation action through the identification to the committed
 plain equivariance.
 -/
+
+@[expose] public section
 
 namespace RS
 

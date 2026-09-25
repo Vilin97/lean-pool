@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockSigma
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockSort
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockSigma
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockSort
 
 /-!
 # The sorted factorization of a multi-star
@@ -16,6 +18,8 @@ sort, the iterated tensor of vertex stars over its degree list
 with the free circles split off.  Specialised to the star union
 this is the fragment-level star factorization.
 -/
+
+@[expose] public section
 
 namespace RS
 

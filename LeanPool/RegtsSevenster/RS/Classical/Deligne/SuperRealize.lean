@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarLinear
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarLinear
 
 /-!
 # Realization of ind-super-objects as super algebras
@@ -46,6 +48,8 @@ layers.
   `isZero_of_generator_hom_eq_zero` of zero ind-objects by their
   values on `C`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModule
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModule
 
 /-!
 # Morphisms of super modules
@@ -14,6 +16,8 @@ pair of ℂ-linear maps, one in each degree, commuting with the
 four action blocks.  Postcomposition with a morphism of module
 objects realizes one.
 -/
+
+@[expose] public section
 
 namespace RS
 

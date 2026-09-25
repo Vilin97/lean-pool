@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # A fixed-point-free involution halves a finset
@@ -16,6 +18,8 @@ is the counting behind every parity statement about matched flags:
 edges match flags in pairs, chords match labels in pairs, and a
 directed matching matches its points in pairs.
 -/
+
+@[expose] public section
 
 namespace RS
 

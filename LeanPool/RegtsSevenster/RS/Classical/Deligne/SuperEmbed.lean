@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed.Standard
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed.Standard
 
 /-!
 # Transport of the standard nonvanishing into the ambient category

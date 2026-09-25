@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.UnitEnd
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModuleFunctor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPair
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichRetract
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModMonoidal
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.UnitEnd
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModuleFunctor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPair
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichRetract
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModMonoidal
 
 /-!
 # The comparison map at the regular module
@@ -25,6 +27,8 @@ exactly the self-braiding of the odd line: pushing a scalar past a
 module element on the odd-odd block braids `L` past `L`, which is
 `−1`.
 -/
+
+@[expose] public section
 
 namespace RS
 

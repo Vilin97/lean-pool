@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTraceNondegenerate
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTraceNondegenerate
 
 /-!
 # Trace cyclicity on Hom classes
@@ -14,6 +16,8 @@ descended trace of a composition is independent of the
 order.  Bilinear induction
 with `fragTrace_comm` at the singles.
 -/
+
+@[expose] public section
 
 namespace RS
 

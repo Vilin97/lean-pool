@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Doubling
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Doubling
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29
 
 /-!
 # The odd line of the doubling
@@ -16,6 +18,8 @@ unit and self-braids by `−1`.  This is Deligne's device for the
 general case of 2.11, where the category itself need not contain
 such an object.
 -/
+
+@[expose] public section
 
 namespace RS
 

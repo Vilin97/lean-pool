@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConj
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConj
 
 /-!
 # Step compatibility of the colouring conjugation
@@ -15,6 +17,8 @@ model equals the colour-extension of the conjugate: unwinding
 observing that the `tensorCongr`-conjugation of a whisker is
 `tensorHom` of the inner conjugation.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

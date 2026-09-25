@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourMergeOdd
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourMergeOdd
 
 /-!
 # Basis vectors split over the merge
@@ -15,6 +17,8 @@ halves through the odd pair.  The coordinate product rules of
 both parities identify the coordinates; injectivity does the
 rest.
 -/
+
+@[expose] public section
 
 namespace RS
 

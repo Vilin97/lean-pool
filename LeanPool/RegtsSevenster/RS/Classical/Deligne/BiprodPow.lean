@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedConc
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PermNat
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedConc
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PermNat
 
 /-!
 # Binomial expansion of a tensor power of a biproduct
@@ -33,6 +35,8 @@ and an arity transport `eqToHom` at the target.
 power of a rigid object, so the word-indexed power here is called
 `wordPow` instead.
 -/
+
+@[expose] public section
 
 namespace RS
 

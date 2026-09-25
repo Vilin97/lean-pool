@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.OrthonormalBasis
-import LeanPool.RegtsSevenster.RS.Classical.Super.SymplecticBasis
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdDuality
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.OrthonormalBasis
+public import LeanPool.RegtsSevenster.RS.Classical.Super.SymplecticBasis
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdDuality
 
 /-!
 # Standard orthosymplectic coordinates
@@ -31,6 +33,8 @@ The route:
   `stdFormOdd`.
 * `exists_coordinates` assembles the graded statement.
 -/
+
+@[expose] public section
 
 noncomputable section
 

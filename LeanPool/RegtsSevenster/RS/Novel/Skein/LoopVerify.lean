@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TransposeLedger
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TransposeLedger
 
 /-!
 # A repaired system carrying a path-canonical orientation
@@ -29,6 +31,8 @@ carry path-canonical orientations with trivial chord sign, yet the
 summands are `−1` and `0`, so the canonical value depends on the
 boundary pairing and independence can only be asserted within one.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharClass
-import LeanPool.RegtsSevenster.RS.Common.PermCongr
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SigmaCycleType
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharClass
+public import LeanPool.RegtsSevenster.RS.Common.PermCongr
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SigmaCycleType
 
 /-!
 # Discharge of the cycle-type transport hypotheses
@@ -16,6 +18,8 @@ the `PermCongrCT` and `SigmaCT` hypotheses: the colour cycle sum
 and the Frobenius formula for the Jacobi–Trudi character hold
 unconditionally.
 -/
+
+@[expose] public section
 
 namespace RS
 

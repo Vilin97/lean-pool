@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeDatum
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeDatum
 
 /-!
 # The zigzag laws of a base-changed duality datum
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeDatum
 The statement that base change preserves the zigzag laws, named
 so that the dévissage steps can refer to it directly.
 -/
+
+@[expose] public section
 
 namespace RS
 

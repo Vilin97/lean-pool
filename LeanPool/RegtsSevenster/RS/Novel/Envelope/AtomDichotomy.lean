@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiSemisimple
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.AtomicIdempotents
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiSemisimple
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.AtomicIdempotents
 
 /-!
 # The Hom-dichotomy between atoms
@@ -17,6 +19,8 @@ morphism composes with a partner to a nonzero scalar, hence is an
 isomorphism.  This is the engine turning the atomic idempotent
 decomposition into a semisimple-category structure.
 -/
+
+@[expose] public section
 
 namespace RS
 

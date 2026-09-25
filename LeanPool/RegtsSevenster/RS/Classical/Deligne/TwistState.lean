@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistDatum
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistMixLine
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.StateTransport
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistDatum
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistMixLine
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.StateTransport
 
 /-!
 # The odd twist of a dévissage state
@@ -18,6 +20,8 @@ is the odd twist, and the mixed free part turns each unit summand
 into a line and each line summand into a unit, so the two counts
 change places.  Twisting twice returns to the original object.
 -/
+
+@[expose] public section
 
 namespace RS
 

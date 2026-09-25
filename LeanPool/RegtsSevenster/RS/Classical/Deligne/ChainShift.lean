@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainAlgebra
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainAlgebra
 
 /-!
 # Shifting a chain colimit by one stage
@@ -19,6 +21,8 @@ descent-from-legs helper `chainDesc` is factored out for reuse: any
 family of legs absorbed by the transitions descends to the chain
 colimit, with the stage computation exposed as a simp lemma.
 -/
+
+@[expose] public section
 
 namespace RS
 

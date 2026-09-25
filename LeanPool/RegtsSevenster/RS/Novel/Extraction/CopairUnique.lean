@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.Nondegenerate
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdRigid
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.Nondegenerate
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdRigid
 
 /-!
 # Uniqueness of the copairing
@@ -23,6 +25,8 @@ injective for a nondegenerate form on a finite-dimensional space
 with its dual), so the blocks are pinned to the standard
 copairing elements, which satisfy the same identities.
 -/
+
+@[expose] public section
 
 noncomputable section
 

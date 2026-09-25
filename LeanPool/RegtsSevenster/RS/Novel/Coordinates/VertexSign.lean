@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockOddList
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TauKey
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockOddList
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TauKey
 
 /-!
 # The per-vertex sign collapse
@@ -15,6 +17,8 @@ key-sortSign of the pair enumeration: both lists are value maps
 of the two flag enumerations, so the reindexing sign transports
 between them, and the block enumeration is key-sorted.
 -/
+
+@[expose] public section
 
 namespace RS
 

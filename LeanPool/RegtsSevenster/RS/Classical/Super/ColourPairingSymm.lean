@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPairing
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPairing
 
 /-!
 # S_d-invariance of the pinned pairing (Lemma 5.1(b))
@@ -26,6 +28,8 @@ the same vertex and a permutation bundle map is absorbed before
 the fibre functor is applied.  The lemma is kept because it is a
 numbered lemma of the paper.
 -/
+
+@[expose] public section
 
 namespace RS
 

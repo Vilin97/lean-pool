@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UniversalAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreRestrict
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UniversalAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreRestrict
 
 /-!
 # The splitting algebra of the embedded category
@@ -17,6 +19,8 @@ splits every chosen epimorphism.  These are exactly the two
 hypotheses under which the fibre functor over that algebra is strong
 monoidal and exact.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedConc
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedConc
 
 /-!
 # Module powers and symmetric powers over an internal monoid
@@ -50,6 +52,8 @@ are outside this module's scope; `tensorPowConcat_peel` and the
 frame machinery below are the concatenation substrate they will
 consume.
 -/
+
+@[expose] public section
 
 namespace RS
 

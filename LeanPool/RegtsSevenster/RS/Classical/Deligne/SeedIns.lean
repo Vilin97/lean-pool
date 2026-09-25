@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.InterchangeAct
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBGr
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.InterchangeAct
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBGr
 
 /-!
 # The seed entries of the splitting data
@@ -16,6 +18,8 @@ through the seed element.  These are the stage-level precursors
 of the `ofBase`, `ins` and `ins'` fields of the splitting data of
 the Key Lemma.
 -/
+
+@[expose] public section
 
 namespace RS
 

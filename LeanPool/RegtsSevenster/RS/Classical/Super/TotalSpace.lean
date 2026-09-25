@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.SuperVect
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.SuperVect
 
 /-!
 # Total spaces of super vector spaces
@@ -13,6 +15,8 @@ Forgetting the grading gives the product of the even and odd
 components. Morphisms act componentwise, giving an algebra map on
 endomorphisms.
 -/
+
+@[expose] public section
 
 namespace RS
 

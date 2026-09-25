@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueRelTransport
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueRelTransport
 
 /-!
 # Circuit-count delta across a participating glued interface
@@ -31,6 +33,8 @@ rewire.
   delta: gluing adds exactly one circuit when the interface is
   linked and none otherwise.
 -/
+
+@[expose] public section
 
 namespace RS
 

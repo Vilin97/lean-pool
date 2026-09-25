@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexBij
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexBij
 
 /-!
 # The pattern inversion count
@@ -13,6 +15,8 @@ The master sum's global sign at a data colouring depends only on
 the pattern: the sort-permutation's odd inversions count pairs of
 participating slots, a pure `(W, F)` quantity.
 -/
+
+@[expose] public section
 
 namespace RS
 

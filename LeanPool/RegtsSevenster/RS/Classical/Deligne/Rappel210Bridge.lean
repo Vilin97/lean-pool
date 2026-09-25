@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPoint
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CoverFactor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Chain
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPoint
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CoverFactor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Chain
 
 /-!
 # The stage units of the local splitting chain are point powers
@@ -17,6 +19,8 @@ point powers, so for a monic point in a rigid category with
 nonzero unit no stage unit vanishes.  The class of the object in
 the splitting algebra restricts on the point to the unit.
 -/
+
+@[expose] public section
 
 namespace RS
 

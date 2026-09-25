@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModAssoc
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemma
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModAssoc
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemma
 
 /-!
 # Base change and the tensor product of modules
@@ -17,6 +19,8 @@ restricted module.  Together with the associativity of the
 relative tensor this yields the projection formula: base change
 commutes with the tensor product of modules.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.YoungDiagrams
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.YoungDiagrams
 
 /-!
 # Young diagrams of a fixed size
@@ -14,6 +16,8 @@ carries decidable equality and a `Fintype` instance, obtained from the
 correspondence with `Nat.Partition n` that reads off the row lengths.
 This is the tree's standard idiom for "sum over the partitions of `n`".
 -/
+
+@[expose] public section
 
 namespace RS
 

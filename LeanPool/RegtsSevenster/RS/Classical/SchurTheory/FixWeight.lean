@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourWeight
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CycleSum
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourWeight
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CycleSum
 
 /-!
 # Weighted stabilizer factorization
@@ -18,6 +20,8 @@ cycle-type transport facts (invariance under `permCongr` and
 additivity over `sigmaCongrRight`) enter as explicit hypotheses,
 discharged in `ColourCycleSum.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

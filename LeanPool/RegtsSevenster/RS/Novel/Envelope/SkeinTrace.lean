@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinTower
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalInstance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseUnion
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ScalarFunctional
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinTower
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalInstance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseUnion
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ScalarFunctional
 
 /-!
 # The skein trace
@@ -17,6 +19,8 @@ the strand bundle -- and the one fact the trace calculus needs of
 it: closing a tensor product multiplies the two closures, proved
 by bilinear induction down to single fragments.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.NilpotentMatTrace
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.NilpotentMatTrace
 
 /-!
 # The envelope and its regularity
@@ -18,6 +20,8 @@ of every morphism follows from semisimplicity of the biproduct
 endomorphism algebra, and kernels are the splittings of the
 regular idempotents.
 -/
+
+@[expose] public section
 
 namespace RS
 

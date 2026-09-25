@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Definitions
+module
+
+public import LeanPool.RegtsSevenster.RS.Definitions
 
 /-!
 # Connection ranks and minimum colour dimension
@@ -15,6 +17,8 @@ so its natural dimension agrees with its module rank. The minimum
 colour dimension is the least total colour bound of a representing
 mixed model; it is zero when no representing model exists.
 -/
+
+@[expose] public section
 
 namespace RS
 

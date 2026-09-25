@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CommutantBound
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CommutantBound
 
 /-!
 # Polynomial commutant bounds for monomial word actions
@@ -15,6 +17,8 @@ Such an orbit is determined by its letter-pair counts. Each count
 lies between zero and the word length, giving the polynomial bound
 `(n + 1) ^ (Fintype.card α ^ 2)`.
 -/
+
+@[expose] public section
 
 namespace RS
 

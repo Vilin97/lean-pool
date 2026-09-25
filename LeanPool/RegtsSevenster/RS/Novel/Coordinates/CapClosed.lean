@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelPermCoord
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaDiag
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelPermCoord
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaDiag
 
 /-!
 # The cap closed form
@@ -13,6 +15,8 @@ import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaDiag
 The peel induction: the cap value on colour basis vectors is the
 diagonal cap pairing.
 -/
+
+@[expose] public section
 
 namespace RS
 

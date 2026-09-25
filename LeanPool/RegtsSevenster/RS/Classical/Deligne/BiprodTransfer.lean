@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BiprodPow
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndKill
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.HookMult
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BiprodPow
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndKill
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.HookMult
 
 /-!
 # The direct-sum transfer of Schur vanishing
@@ -21,6 +23,8 @@ vanishes, and through the killed factor and naturality when it does
 not, since a nonzero multiplicity pushes a bounding-box cell into
 `μ'` or `ν'` (Deligne 1.10).
 -/
+
+@[expose] public section
 
 namespace RS
 

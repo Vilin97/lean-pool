@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.RowSpanRank
-import LeanPool.RegtsSevenster.RS.Novel.Skein.FragmentEquiv
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.RowSpanRank
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.FragmentEquiv
 
 /-!
 # Connection pairings and the edge-rank hypothesis
@@ -23,6 +25,8 @@ gained or lost), and the row-span reading agrees with the
 literature's supremum over finite submatrices
 (`edgeRankBounded_iff_submatrixRank`).
 -/
+
+@[expose] public section
 
 namespace RS
 

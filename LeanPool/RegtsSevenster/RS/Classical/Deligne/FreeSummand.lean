@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModAdjoint
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffle
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModAdjoint
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffle
 
 /-!
 # Free summands of free mixed modules
@@ -16,6 +18,8 @@ and of an odd line, idempotent endomorphisms of those mixed sums
 split off further mixed sums, and consequently a direct summand of
 a free mixed module is again a free mixed module.
 -/
+
+@[expose] public section
 
 namespace RS
 

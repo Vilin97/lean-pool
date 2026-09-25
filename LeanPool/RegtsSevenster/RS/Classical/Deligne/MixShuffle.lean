@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29
 
 /-!
 # Peeling a unit summand off a mixed sum
@@ -15,6 +17,8 @@ unit summand and the smaller mixed sum `L.mix p q`.  The
 isomorphism is pure index bookkeeping: the first unit index is
 peeled off and the remaining indices are shifted down by one.
 -/
+
+@[expose] public section
 
 namespace RS
 

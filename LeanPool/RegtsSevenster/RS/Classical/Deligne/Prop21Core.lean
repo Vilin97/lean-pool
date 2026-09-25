@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplittingAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndLocallyMixed
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSplitSection
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndUnitNonzero
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarUnitInd
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplittingAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndLocallyMixed
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSplitSection
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndUnitNonzero
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarUnitInd
 
 /-!
 # The splitting algebra of a Schur-killed category
@@ -19,6 +21,8 @@ short exact sequence splits after base change; so the universal
 algebra of `RS.exists_splitting_algebra` splits every embedded
 object and every embedded short exact sequence at once.
 -/
+
+@[expose] public section
 
 namespace RS
 

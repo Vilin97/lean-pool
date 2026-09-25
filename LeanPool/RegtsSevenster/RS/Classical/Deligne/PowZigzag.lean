@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagTransfer
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagTransfer
 
 /-!
 # The power datum inherits the zigzag laws
@@ -16,6 +18,8 @@ transfer of the datum along the arity-one comparison isomorphisms
 step peels one inserted couple off the onion-aligned copairing
 power against the outermost ring of the nested pairing.
 -/
+
+@[expose] public section
 
 namespace RS
 

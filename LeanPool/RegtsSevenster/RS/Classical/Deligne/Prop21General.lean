@@ -4,13 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop21
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledLine
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledScalar
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledGrowth
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.EvenEmbedMonoidal
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddLineMap
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarUnitEquiv
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop21
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledLine
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledScalar
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledGrowth
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.EvenEmbedMonoidal
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddLineMap
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarUnitEquiv
 
 /-!
 # Deligne's Proposition 2.1 without an odd line
@@ -34,6 +36,8 @@ The hypothesis of 2.1 — that every object is killed by some Schur
 functor — is supplied by the growth dichotomy
 `RS.forall_exists_schurKilled`, applied to the doubling.
 -/
+
+@[expose] public section
 
 namespace RS
 

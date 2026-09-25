@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StrandTransport
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StrandTransport
 
 /-!
 # One-position basis vectors
@@ -13,6 +15,8 @@ The colour-model basis vectors at a single position are the
 unit-padded standard basis vectors: the single-layer computation
 of `colourPowerEquiv 1` on padded pure tensors.
 -/
+
+@[expose] public section
 
 namespace RS
 

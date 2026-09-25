@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StarDecomposition
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StarDecomposition
 
 /-!
 # The star union with a `Fin`-boundary
@@ -17,6 +19,8 @@ matching `i ↔ m + i`, so the star decomposition says that gluing
 the straight matching in the star union restores the fragment —
 the shape the trace calculus closes against the strand bundle.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvAbelian
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiMonoidal
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatMonoidal
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvAbelian
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiMonoidal
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatMonoidal
 
 /-!
 # Monoidal preadditivity and linearity through the tower
@@ -16,6 +18,8 @@ is monoidal-preadditive and monoidal-linear; both properties lift
 through the Karoubi and matrix layers entrywise, giving the full
 instance chain for the envelope.
 -/
+
+@[expose] public section
 
 namespace RS
 

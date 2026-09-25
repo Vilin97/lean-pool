@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.TotalSpace
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelPermCoord
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.TotalSpace
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelPermCoord
 
 /-!
 # The total colouring coordinates
@@ -14,6 +16,8 @@ Combining the even and odd coordinate functions identifies the total
 tensor space with all functions on colour words. The model permutation
 acts there by reindexing and its odd-inversion sign.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePow
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePow
 
 /-!
 # The collapse against the group-algebra action
@@ -14,6 +16,8 @@ the whole symmetric-group algebra: the action on a word of free
 letters becomes, after collapsing the heads, the action on the
 ambient word under the head.
 -/
+
+@[expose] public section
 
 namespace RS
 

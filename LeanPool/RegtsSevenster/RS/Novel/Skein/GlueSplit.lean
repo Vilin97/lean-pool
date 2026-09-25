@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughValue
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughValue
 
 /-!
 # The gluing-splitting interface
@@ -19,6 +21,8 @@ The unsigned through-independence is refuted in
 the signed path-canonical value of `PathCanon.lean`, whose
 within-pairing independence is `PropThreeOpen.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

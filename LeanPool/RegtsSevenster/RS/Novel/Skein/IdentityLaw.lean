@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CompositionEquiv
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CompositionEquiv
 
 /-!
 # The identity law: stage equivalences
@@ -23,6 +25,8 @@ interface labels `C`, and the outer labels `D`; the shuffle
 `(A ⊕ A') ⊕ ((B ⊕ C) ⊕ D) ≃ ((A ⊕ C) ⊕ A') ⊕ (B ⊕ D)` is a plain
 constructor permutation with definitional inverses.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorMuBraid
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorMuBraid
 
 /-!
 # The Λ coend of a pair of functors
@@ -17,6 +19,8 @@ the target.  This file provides the diagram, the coend with its
 stage maps and dinaturality, the mapping property, and
 functoriality in both arguments.
 -/
+
+@[expose] public section
 
 namespace RS
 

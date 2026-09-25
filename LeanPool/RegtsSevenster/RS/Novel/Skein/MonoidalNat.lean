@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleMapClasses
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorAssoc
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorUnit
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorCompClass
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleMapClasses
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorAssoc
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorUnit
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorCompClass
 
 /-!
 # Naturality of the structural morphisms, fragment level
@@ -18,6 +20,8 @@ bundle map on either side is a boundary cast, the tensor
 associativity and unit laws are relabellings by casts, and all
 casts collapse through the transport lemmas.
 -/
+
+@[expose] public section
 
 namespace RS
 

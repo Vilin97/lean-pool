@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.FibreCard
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.FibreCard
 
 /-!
 # Content-grouped counting identity
@@ -15,6 +17,8 @@ groups the sum over colourings `f : Fin n → Fin N` by content multiset
 and uses an orbit-stabilizer argument.  The stabiliser count enters as
 a hypothesis, discharged as `card_fixing_perms` in `StabCount.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

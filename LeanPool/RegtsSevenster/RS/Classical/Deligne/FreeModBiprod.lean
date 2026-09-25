@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
 
 /-!
 # Components of the free module on a biproduct
@@ -24,6 +26,8 @@ defining equations of `biprod.lift` and `biprod.desc`.
 The vanishing of the free module on a zero object completes the
 bookkeeping of the empty mixed sum.
 -/
+
+@[expose] public section
 
 namespace RS
 

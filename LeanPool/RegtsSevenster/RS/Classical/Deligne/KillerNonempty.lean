@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PieriPos
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurVanishing
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PieriPos
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurVanishing
 
 /-!
 # Upgrading a killing diagram to a nonempty one
@@ -14,6 +16,8 @@ Schur vanishing is upward closed, and the empty diagram is below
 every diagram, so a killed object is killed at some diagram with
 at least one cell.
 -/
+
+@[expose] public section
 
 namespace RS
 

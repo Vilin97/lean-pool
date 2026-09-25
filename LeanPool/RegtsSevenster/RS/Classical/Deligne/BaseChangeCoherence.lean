@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeDatum
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichRetract
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeDatum
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichRetract
 
 /-!
 # Coherence of the base-change structure map
@@ -14,6 +16,8 @@ The projection formula is compatible with the right unit
 collapse: contracting the regular factor before or after the
 base change gives the same map.
 -/
+
+@[expose] public section
 
 namespace RS
 

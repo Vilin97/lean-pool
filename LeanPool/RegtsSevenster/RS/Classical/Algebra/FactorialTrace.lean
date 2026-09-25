@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.NilpotentPowerTrace
-import LeanPool.RegtsSevenster.RS.Common.TraceSeparation
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FactorialBeats
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.NilpotentPowerTrace
+public import LeanPool.RegtsSevenster.RS.Common.TraceSeparation
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FactorialBeats
 
 /-!
 # The factorial obstruction to a nonzero nilpotent trace
@@ -22,6 +24,8 @@ idempotents, branching, hook confinement or rationality. The object
 and strand instances are supplied in `Novel/Envelope/FactorialTrace`
 and `Novel/Envelope/BlockFactorialTrace`.
 -/
+
+@[expose] public section
 
 namespace RS
 

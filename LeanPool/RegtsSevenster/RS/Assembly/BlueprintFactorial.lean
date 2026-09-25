@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.FactorialTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiSemisimple
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.ObjectTower
-import LeanPool.RegtsSevenster.RS.Summit
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.FactorialTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiSemisimple
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.ObjectTower
+public import LeanPool.RegtsSevenster.RS.Summit
 
 /-!
 # Audit: the factorial route to nilpotent-trace vanishing
@@ -26,6 +28,8 @@ dependencies and exclude the appendix's nilpotent-trace and
 trace-zeta mechanisms. Schur theory used by Deligne and by the
 colour bounds is audited separately.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EvForm
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EvForm
 
 /-!
 # The peel rotation as a permutation and a cast
@@ -13,6 +15,8 @@ The peel rotation splits as a same-arity permutation followed by
 an arity cast; the permutation feeds the braiding-word transport
 and the cast transports as an equality of powers.
 -/
+
+@[expose] public section
 
 namespace RS
 

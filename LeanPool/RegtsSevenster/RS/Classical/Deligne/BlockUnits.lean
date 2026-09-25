@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeFaithful
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SchurPackage
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeFaithful
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SchurPackage
 
 /-!
 # Matrix units inside a block
@@ -26,6 +28,8 @@ identifies the dimension of the carrier with `P.dim μ`, and the
 rank-one projections attached to a basis of the carrier
 (`basisProj`) pull back to the required family of units.
 -/
+
+@[expose] public section
 
 namespace RS
 

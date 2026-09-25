@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCatInstance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeRelabel
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCatInstance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeRelabel
 
 /-!
 # The rigidity classes of the skein category
@@ -18,6 +20,8 @@ the coevaluation) is absorbed, because the strand is symmetric
 under any boundary relabelling.  These are the data that the
 Deligne fibre functor sends to the standard form and copairing.
 -/
+
+@[expose] public section
 
 namespace RS
 

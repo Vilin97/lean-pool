@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PartialCloseTensor
-import LeanPool.RegtsSevenster.RS.Novel.Skein.Multiplicativity
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceCyclic
-import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PartialCloseTensor
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.Multiplicativity
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceCyclic
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleTensor
 
 /-!
 # Closure against a fragment with a closed attachment
@@ -21,6 +23,8 @@ Combined with `partialCloseTensor`, `strandBundleTensor` and
 the multiplicativity of the parameter (Lemma 3.2), this yields the
 trace multiplicativity (Lemma 3.5(b)).
 -/
+
+@[expose] public section
 
 namespace RS
 

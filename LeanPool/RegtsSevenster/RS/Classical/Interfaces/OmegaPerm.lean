@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DelignePackage
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.FibreTransport
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinTower
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ExactPairingInstance
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DelignePackage
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.FibreTransport
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinTower
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ExactPairingInstance
 
 /-!
 # Omega-equivariance of the symmetric-group action
@@ -44,6 +46,8 @@ homomorphism on endomorphisms via functoriality.  The composite
 the symmetric-group algebra to `End (ω.obj (SkeinObj.mk n))`, and
 agreeing on the generators `σ` makes it that composite.
 -/
+
+@[expose] public section
 
 noncomputable section
 

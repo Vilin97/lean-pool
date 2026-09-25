@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePow
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePow
 
 /-!
 # A section of the free collapse
@@ -26,6 +28,8 @@ insertion cancels the braiding hidden inside the middle-four
 interchange, and the folded unit word contributes only a left
 unitor.
 -/
+
+@[expose] public section
 
 namespace RS
 

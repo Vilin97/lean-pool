@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.EHDischarge
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.EHDischarge
 
 /-!
 # The bialternant Jacobi–Trudi identity
@@ -19,6 +21,8 @@ determinants and anchoring at `v = 0` gives the bialternant form:
 
 the polynomial Jacobi–Trudi identity `a_{v+δ} = s_v · a_δ`.
 -/
+
+@[expose] public section
 
 namespace RS
 

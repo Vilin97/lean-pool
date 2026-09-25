@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockParity
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaDiagForm
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.FibreParam
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockParity
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaDiagForm
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.FibreParam
 
 /-!
 # Vanishing branches of the fibre identity
@@ -14,6 +16,8 @@ import LeanPool.RegtsSevenster.RS.Novel.Coordinates.FibreParam
 Non-Eulerian patterns kill every master summand in their fibre:
 the odd-degree vertex is a block of odd parity.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.Coordinates
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.Coordinates
 
 /-!
 # Nondegeneracy from the snake identities
@@ -29,6 +31,8 @@ nondegenerate (`blocks_nondegenerate_of_snake`), and the graded
 coordinate identification follows unconditionally
 (`exists_coordinates_of_snake`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

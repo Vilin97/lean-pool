@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.TensorTrace
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.BinomialH
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PackageAssembly
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.TensorTrace
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.BinomialH
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PackageAssembly
 
 /-!
 # Signed tensor identities
@@ -15,6 +17,8 @@ The sign-twisted cycle product for constant sequences, and the
 signed Frobenius sum expressing the twisted trace in terms of
 Schur values at the negated sequence.
 -/
+
+@[expose] public section
 
 namespace RS
 

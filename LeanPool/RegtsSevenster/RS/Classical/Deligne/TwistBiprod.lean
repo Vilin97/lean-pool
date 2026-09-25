@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistShuffle
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistShuffle
 
 /-!
 # Twisting distributes over the biproduct of modules
@@ -21,6 +23,8 @@ componentwise action of the biproduct, because each biproduct
 projection is a module map and the twist of a module map is again
 a module map.
 -/
+
+@[expose] public section
 
 namespace RS
 

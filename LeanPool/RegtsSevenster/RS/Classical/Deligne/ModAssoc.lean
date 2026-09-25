@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMulLaws
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMulLaws
 
 /-!
 # Associativity of the tensor product of modules
@@ -28,6 +30,8 @@ target.
   bundled modules; inverse linearity follows by cancelling the
   forward map.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CharSplit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperSeries
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SignedTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CharSplit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperSeries
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SignedTensor
 
 /-!
 # One-sided super specialisations are multiplicities
@@ -25,6 +27,8 @@ character against a recast Jacobi–Trudi character identifies the
 Schur specialisation as the dimension of an equivariant Hom
 space.
 -/
+
+@[expose] public section
 
 namespace RS
 

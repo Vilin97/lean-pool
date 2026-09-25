@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.KaroubiTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SemisimpleAll
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockFactorialTrace
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.KaroubiTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SemisimpleAll
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockFactorialTrace
 
 /-!
 # Semisimplicity of Karoubi endomorphism algebras
@@ -17,6 +19,8 @@ criterion restricts: corner-nilpotents are ambient-nilpotents, and
 cyclicity moves the idempotent across products, so ambient
 nondegeneracy restricts to the corner.
 -/
+
+@[expose] public section
 
 namespace RS
 

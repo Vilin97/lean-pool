@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.PowBraid
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourEval
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.PowBraid
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourEval
 
 /-!
 # Conjugation into the colouring model
@@ -15,6 +17,8 @@ Endomorphisms of the monoidal power conjugate through
 step is conjugation of the whisker through `colourPowerStep`.
 These are the carriers of the braiding-coordinate computation.
 -/
+
+@[expose] public section
 
 namespace RS
 

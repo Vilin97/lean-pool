@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourWord
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapVal
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourWord
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapVal
 
 /-!
 # Block restrictions of colourings
@@ -15,6 +17,8 @@ through the block enumeration, with the enumeration's value laws
 at a cons: the vocabulary in which the assembled star vector's
 coordinates factor over the vertices.
 -/
+
+@[expose] public section
 
 namespace RS
 

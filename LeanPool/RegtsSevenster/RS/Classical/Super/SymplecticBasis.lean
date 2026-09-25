@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Symplectic structure of alternating nondegenerate bilinear forms
@@ -28,6 +30,8 @@ The assembly interleaves the plane's basis with the complement's
 through `Basis.prod`, `Submodule.prodEquivOfIsCompl` and the
 reindexing `symplecticReindexEquiv` on `Fin (2 * ℓ)`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

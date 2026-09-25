@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBGraded
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBGraded
 
 /-!
 # Laws of the graded line multiplication
@@ -17,6 +19,8 @@ Each law descends from the corresponding two-index stage law of
 `ChainStage2` through pair and triple extensionality for tensored
 chain colimits, mirroring the homogeneous laws of `ChainAlgebra`.
 -/
+
+@[expose] public section
 
 namespace RS
 

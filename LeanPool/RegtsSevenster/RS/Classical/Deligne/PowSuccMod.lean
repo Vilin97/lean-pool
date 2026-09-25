@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowMerge
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowMerge
 
 /-!
 # Module-level inverses of the merge maps
@@ -25,6 +27,8 @@ back — become isomorphisms of modules.
 * `powBackMod`/`powBackModInv`: the back insertion and its
   inverse, with roundtrips.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Definitions
+module
+
+public import LeanPool.RegtsSevenster.RS.Definitions
 
 /-!
 # Unit-prefixed associator and braiding values in SuperVect
@@ -18,6 +20,8 @@ unit-prefixed associator and inverse associator on the four graded
 blocks, and the braiding on the four generator shapes, including
 the Koszul sign on odd⊗odd.
 -/
+
+@[expose] public section
 
 noncomputable section
 

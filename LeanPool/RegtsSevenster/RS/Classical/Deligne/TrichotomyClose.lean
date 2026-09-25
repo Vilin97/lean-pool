@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModSchur
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29State
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModSchur
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29State
 
 /-!
 # The trichotomy, closed over a descent
@@ -17,6 +19,8 @@ and then the Schur collapse and the power descent kill the
 remainder.  The descent is a parameter, discharged by the
 sandwich retract.
 -/
+
+@[expose] public section
 
 namespace RS
 

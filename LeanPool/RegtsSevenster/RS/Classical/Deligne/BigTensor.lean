@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # The tensor product of an arbitrary family of monoid objects
@@ -23,6 +25,8 @@ of the missing factors into the extra slots; these are the
 transition maps of a `Finset ι`-shaped diagram, and the big
 tensor product is its colimit.
 -/
+
+@[expose] public section
 
 namespace RS
 

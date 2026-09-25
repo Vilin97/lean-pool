@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingValue
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StepLedger
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingValue
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StepLedger
 
 /-!
 # The ledgers in value form
@@ -18,6 +20,8 @@ existence.  The single-step disjunct is a theorem
 (`stepLedger_single`), so the move ledger in value form reduces to
 the paired step in value form.
 -/
+
+@[expose] public section
 
 namespace RS
 

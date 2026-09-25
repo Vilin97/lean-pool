@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseIdentity
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseIdentity
 
 /-!
 # The Regts–Sevenster theorem, both directions
@@ -15,6 +17,8 @@ hypothesis at all: every mixed partition function is an
 edge-rank-bounded parameter.  With it the characterization and the
 quantitative round trip rest on Deligne alone.
 -/
+
+@[expose] public section
 
 namespace RS
 

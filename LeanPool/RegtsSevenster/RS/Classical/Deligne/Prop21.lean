@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop21Core
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreOverSplitting
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSimple
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop21Core
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreOverSplitting
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSimple
 
 /-!
 # Deligne's Proposition 2.1, over a category with an odd line
@@ -17,6 +19,8 @@ Schur functor, and its Ind-completion carries an odd line, then
 there is a nonzero commutative algebra in the Ind-completion whose
 fibre functor is strong monoidal, exact and faithful.
 -/
+
+@[expose] public section
 
 namespace RS
 

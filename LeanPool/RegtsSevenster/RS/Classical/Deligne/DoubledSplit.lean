@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitEverything
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop21General
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitEverything
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop21General
 
 /-!
 # The splitting algebra of the doubling
@@ -17,6 +19,8 @@ generation, and finite length of every object — so the single
 simple algebra that splits the doubling is available, together with
 the complex point of its Γ-algebra.
 -/
+
+@[expose] public section
 
 namespace RS
 

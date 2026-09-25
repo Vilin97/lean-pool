@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # The scalars of a monoidal category commute
@@ -16,6 +18,8 @@ Eckmann–Hilton argument applies: conjugating by the unitor writes an
 endomorphism of the unit either as a right whiskering or as a left
 whiskering, and whiskerings on opposite sides commute.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerSets
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerSets
 
 /-!
 # Per-step status identification of the relabel sets
@@ -24,6 +26,8 @@ low-in-old (the re-paired ends carry opposite old statuses,
 `swap_dirs_opposite`); conversely a status-changed label must sit
 on a re-paired end (`mem_highSet_repair_untouched`).
 -/
+
+@[expose] public section
 
 namespace RS
 

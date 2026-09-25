@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SkeinPowBraid
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.AdjacentWord
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SkeinPowBraid
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.AdjacentWord
 
 /-!
 # The skein braiding as a bundle map
@@ -16,6 +18,8 @@ of label equivalences and the one-strand braiding is the
 transpose, so the whole recursion lives in the bundle-map
 calculus.
 -/
+
+@[expose] public section
 
 namespace RS
 

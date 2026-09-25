@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordParity
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PathLedger
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordParity
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PathLedger
 
 /-!
 # Chord re-pairing parity: the bridge and the crossing table
@@ -24,6 +26,8 @@ coexisting crossing predicates:
   chords avoiding the four points, re-pairing two chords preserves
   the total crossing parity (`third_chord_reparity` per element).
 -/
+
+@[expose] public section
 
 namespace RS
 

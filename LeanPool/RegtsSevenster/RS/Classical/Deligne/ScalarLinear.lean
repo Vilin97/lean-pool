@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndTensorExact
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPerm
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndTensorExact
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPerm
 
 /-!
 # ℂ-linearity from the scalar unit
@@ -41,6 +43,8 @@ global `Linear ℂ` instance built from an arbitrary `φ` would clash
 with existing linear structures (and with itself, for two different
 `φ`), so callers install the structure with `letI` at use sites.
 -/
+
+@[expose] public section
 
 namespace RS
 

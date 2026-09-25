@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.PairDisjoint
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueAmbient
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.PairDisjoint
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueAmbient
 
 /-!
 # Fold-and-reorder theory for iterated single-pair gluing
@@ -16,6 +18,8 @@ a reorder theorem: the result is invariant under permutation of the
 pair list, up to fragment equivalence composed with the canonical
 relabelling.
 -/
+
+@[expose] public section
 
 namespace RS
 

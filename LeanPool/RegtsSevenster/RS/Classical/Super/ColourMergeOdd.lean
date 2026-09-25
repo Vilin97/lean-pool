@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourMerge
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourMerge
 
 /-!
 # The merge coordinate product rule, odd input
@@ -18,6 +20,8 @@ The four chain reductions run on the four parity patterns of a
 pure tensor, and the two parts of `colourMerge_pair_odd` are
 proved by one mutual induction on the second arity.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

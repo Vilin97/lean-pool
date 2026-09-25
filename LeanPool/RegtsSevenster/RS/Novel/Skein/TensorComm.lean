@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorIdeal
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceCyclic
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorIdeal
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceCyclic
 
 /-!
 # Tensor commutativity and the right-slot ideal
@@ -15,6 +17,8 @@ so the closure rows of `x ⊗ z` are closure rows of `z` — the
 right-slot half of the monoidal ideal follows from the left-slot
 machinery through the swap.
 -/
+
+@[expose] public section
 
 namespace RS
 

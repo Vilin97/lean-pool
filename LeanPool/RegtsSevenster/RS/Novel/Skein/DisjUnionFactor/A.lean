@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SumLexOrder
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InvolutionCard
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjSubsetSplit
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonExistence
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SumLexOrder
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InvolutionCard
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjSubsetSplit
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonExistence
 
 /-!
 # The disjoint-union factorization of the corrected value
@@ -26,6 +28,8 @@ adds circuit counts (each component's orbit data is even: the
 edge-pairing reversal is a fixed-point-free involution on walk
 orbits), and splits the through product and the colouring sums.
 -/
+
+@[expose] public section
 
 namespace RS
 

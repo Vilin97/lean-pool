@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarPerm
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarPerm
 
 /-!
 # Fermionic vanishing of star coordinates
@@ -13,6 +15,8 @@ Repeated odd colours kill the star coordinate: the adjacent-swap
 inversion count is the both-odd indicator, so a colouring fixed
 by an adjacent swap of equal odd colours equals its own negation.
 -/
+
+@[expose] public section
 
 namespace RS
 

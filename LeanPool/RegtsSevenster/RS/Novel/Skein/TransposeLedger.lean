@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TwoPathStep
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingConnectivity
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TwoPathStep
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingConnectivity
 
 /-!
 # The transpose ledger: the explicit two-path transform factor
@@ -52,6 +54,8 @@ separated configuration.  The decomposition behind the constant:
   concretely, and the value `cSummand_O = −1` that
   `ThroughIndCFalse.lean` compares against.
 -/
+
+@[expose] public section
 
 namespace RS
 

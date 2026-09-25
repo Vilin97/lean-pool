@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchur
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitStage
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchur
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitStage
 
 /-!
 # Points tensor without vanishing in the ind-completion
@@ -48,6 +50,8 @@ and `Ind.colimitPresentationCompYoneda` exhibit every ind-object as
 the colimit of `X.presentation.F ⋙ Ind.yoneda` over the filtered
 index category `X.presentation.I`.
 -/
+
+@[expose] public section
 
 namespace RS
 

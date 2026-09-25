@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.AltPow
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.AltPow
 
 /-!
 # The dévissage state of the trichotomy
@@ -20,6 +22,8 @@ splits a further unit factor off the remainder (through the Key
 Lemma), splits a line factor (through the sign-twisted mirror),
 or exits with the remainder already zero.
 -/
+
+@[expose] public section
 
 namespace RS
 

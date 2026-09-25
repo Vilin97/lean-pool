@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29Close
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchurKilled
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29Close
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchurKilled
 
 /-!
 # Embedded objects are locally mixed
@@ -16,6 +18,8 @@ Ind-embedding, its dual embeds to a dual, and the trichotomy then
 makes it a mixed sum of the unit and the odd line after base change
 to some nonzero commutative algebra.
 -/
+
+@[expose] public section
 
 namespace RS
 

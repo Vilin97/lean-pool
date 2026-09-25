@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.AdjacentWord
-import LeanPool.RegtsSevenster.RS.Common.ListSign
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.AdjacentWord
+public import LeanPool.RegtsSevenster.RS.Common.ListSign
 
 /-!
 # Sorting signs under a permutation of positions
@@ -15,6 +17,8 @@ list it spells by the sign of the reordering.  The proof reduces to
 adjacent transpositions, where the two lists differ by one swap and
 the sorting signs by one factor of `−1`.
 -/
+
+@[expose] public section
 
 namespace RS
 

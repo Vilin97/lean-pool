@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionExists
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionExists
 
 /-!
 # The pair enumeration
@@ -13,6 +15,8 @@ The Definition 5 odd list at a vertex is, order-exactly, the
 per-flag value map over an explicit flag list: the incoming flags
 in the fixed order, each followed by its match.
 -/
+
+@[expose] public section
 
 namespace RS
 

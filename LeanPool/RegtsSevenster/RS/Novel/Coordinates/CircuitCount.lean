@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionExists
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionExists
 
 /-!
 # Circuit count decomposition via orientations
@@ -16,6 +18,8 @@ restrictions have the same orbit count, whence the circuit count
 (half the total orbit count) equals the orbit count of the
 out-restriction.
 -/
+
+@[expose] public section
 
 namespace RS
 

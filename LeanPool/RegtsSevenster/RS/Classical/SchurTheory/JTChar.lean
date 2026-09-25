@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.FixWeight
-import LeanPool.RegtsSevenster.RS.Common.YoungDiagrams
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.FixWeight
+public import LeanPool.RegtsSevenster.RS.Common.YoungDiagrams
 
 /-!
 # The Jacobi–Trudi virtual character
@@ -19,6 +21,8 @@ Frobenius transform is the Jacobi–Trudi determinant
 cycle sum.  The two cycle-type transport facts enter as explicit
 hypotheses, discharged in `ColourCycleSum.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

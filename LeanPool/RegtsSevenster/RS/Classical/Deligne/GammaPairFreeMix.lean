@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairRetract
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairUnit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeMixRetract
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairRetract
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairUnit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeMixRetract
 
 /-!
 # The comparison map on the free module of a mixed sum
@@ -18,6 +20,8 @@ invertible as soon as it is invertible on those two.  The unit case
 is the left unitor of `RS.gammaPairComparison_unitLeft`; the odd
 line is passed in as a hypothesis and discharged separately.
 -/
+
+@[expose] public section
 
 namespace RS
 

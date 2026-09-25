@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchur
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarLinear
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.ScalarTrace
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchur
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarLinear
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.ScalarTrace
 
 /-!
 # Schur-vanishing transport along the embedding `C ⥤ Ind C`
@@ -37,6 +39,8 @@ embedded object is Schur vanishing downstairs.
   faithfully along `C ⥤ Ind C`, with the `HasScalarUnit`
   instantiation `RS.schurKilled_indOf_iff_of_hasScalarUnit`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PermModule
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PermModule
 
 /-!
 # The tensor-space permutation representation and its character
@@ -15,6 +17,8 @@ the tensor space `(ℂ^m)^{⊗n}` in its basis-indexed form.  The
 character of the induced representation equals the completed
 cycle-type product at the constant sequence `fun _ => (m : ℂ)`.
 -/
+
+@[expose] public section
 
 namespace RS
 

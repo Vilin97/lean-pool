@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperRealize
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperRealize
 
 /-!
 # A small model of `SuperVect`
@@ -57,6 +59,8 @@ constructions (`Preadditive.hasCoequalizers_of_hasCokernels`,
 all reachable through the funnel; `isBilimitOfTotal` lives in the
 root `CategoryTheory.Limits` namespace, not on `Bicone`.
 -/
+
+@[expose] public section
 
 namespace RS
 

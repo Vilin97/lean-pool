@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourCycleSum
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourCycleSum
 
 /-!
 # The delta power-sum sequence
@@ -15,6 +17,8 @@ inverse factorials; the Frobenius formula then evaluates the
 Jacobi–Trudi character degree as `n!` times the Jacobi–Trudi
 determinant at `t₀`.
 -/
+
+@[expose] public section
 
 namespace RS
 

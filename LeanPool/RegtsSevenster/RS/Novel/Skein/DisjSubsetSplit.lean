@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughValue
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughValue
 
 /-!
 # Subset splitting over disjoint unions
@@ -15,6 +17,8 @@ of pairing-closure, Eulerian-ness, and boundary-state matching —
 the first layer of the multiplicativity of the corrected
 constrained value over `disjUnion`.
 -/
+
+@[expose] public section
 
 namespace RS
 

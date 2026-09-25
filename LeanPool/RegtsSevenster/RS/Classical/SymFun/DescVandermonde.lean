@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Determinant of the descending-Pochhammer evaluation matrix
@@ -18,6 +20,8 @@ This follows from the Mathlib theorem
 the descending Pochhammer polynomials (which are monic of the
 correct degree) combined with `det_vandermonde`.
 -/
+
+@[expose] public section
 
 open Polynomial Matrix Finset
 

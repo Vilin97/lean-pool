@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.MultiStar
-import LeanPool.RegtsSevenster.RS.DimensionDefinitions
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.MultiStar
+public import LeanPool.RegtsSevenster.RS.DimensionDefinitions
 
 /-!
 # Free circles as scalars
@@ -16,6 +18,8 @@ off as the power of the circle value.  This is the accompanying paper's
 "free circles are carried by multiplicativity" discipline, at
 class level.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeTable
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SchurPackage
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeTable
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SchurPackage
 
 /-!
 # The interface idempotent as a class element
@@ -15,6 +17,8 @@ projector theory; for inversion-invariant class functions the
 normalizations agree, identifying `charIdempotent (nDim S) (nChar S)`
 with `nProjector S` over the symmetric group.
 -/
+
+@[expose] public section
 
 namespace RS
 

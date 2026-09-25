@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBGradedLaws
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBGradedLaws
 
 /-!
 # The graded splitting algebra carrier
@@ -15,6 +17,8 @@ starting bidegree `((−a)⁺, a⁺)`, so nonnegative degrees extend
 the `M`-arity and negative degrees the `M'`-arity.  The balanced
 degree is the algebra of the splitting chain, carrying the unit.
 -/
+
+@[expose] public section
 
 namespace RS
 

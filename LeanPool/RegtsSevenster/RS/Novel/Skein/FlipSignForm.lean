@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.FlipSignProduct
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.FlipSignProduct
 
 /-!
 # The closed form of the flip-sign product
@@ -15,6 +17,8 @@ product of the flip sequence, so a sequence in which every label
 occurs evenly contributes exactly `(−1)^length`.  That is the sign
 bookkeeping the paired step of Proposition 3 runs on.
 -/
+
+@[expose] public section
 
 namespace RS
 

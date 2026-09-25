@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockFactorialTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SemisimpleEnd
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockFactorialTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SemisimpleEnd
 
 /-!
 # Trace nondegeneracy, in Hom-typed form
@@ -20,6 +22,8 @@ With the nilpotent-trace vanishing of `BlockFactorialTrace`, this is
 what `isSemisimpleRing_of_trace` consumes to make every skein
 endomorphism algebra semisimple.
 -/
+
+@[expose] public section
 
 namespace RS
 

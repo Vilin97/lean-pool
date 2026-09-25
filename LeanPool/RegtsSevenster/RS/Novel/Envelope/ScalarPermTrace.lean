@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.PermTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.ScalarTrace
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.PermTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.ScalarTrace
 
 /-!
 # The scalar cycle-trace formula
@@ -15,6 +17,8 @@ This is the common trace input to the factorial obstruction and to
 the Frobenius formula. Fixed points can be recorded separately
 from the nontrivial cycles.
 -/
+
+@[expose] public section
 
 namespace RS
 

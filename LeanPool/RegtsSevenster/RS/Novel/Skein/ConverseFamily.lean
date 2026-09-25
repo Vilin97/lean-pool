@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConversePair
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConversePair
 
 /-!
 # The pair family and the base sum
@@ -17,6 +19,8 @@ determines, and `base_sum_eq_superForm_pairing_bitsOf` writes it as
 the super form pairing of the two fragments' tensors — the tensor
 side of the Gram identity.
 -/
+
+@[expose] public section
 
 namespace RS
 

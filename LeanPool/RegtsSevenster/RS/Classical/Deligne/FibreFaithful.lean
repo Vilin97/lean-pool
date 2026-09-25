@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreAdditive
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModAdjoint
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreAdditive
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModAdjoint
 
 /-!
 # The fibre functor is faithful
@@ -16,6 +18,8 @@ the odd line.  So a morphism killed by the fibre functor is killed
 after base change; and if the unit of the algebra is a monomorphism
 that is enough to kill the morphism itself.
 -/
+
+@[expose] public section
 
 namespace RS
 

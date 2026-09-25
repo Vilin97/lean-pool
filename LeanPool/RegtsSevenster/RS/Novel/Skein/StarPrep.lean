@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StarEnum
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceCyclic
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StarEnum
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceCyclic
 
 /-!
 # Preparations for the bundle closure
@@ -17,6 +19,8 @@ the strand bundle is invariant under transposing its two boundary
 blocks; and the interface pairs of a full closure split into the
 high-block pairs followed by the low-block pairs.
 -/
+
+@[expose] public section
 
 namespace RS
 

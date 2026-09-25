@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemmaClose
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitAdjoint
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29State
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemmaClose
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitAdjoint
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29State
 
 /-!
 # The unit step of the dévissage
@@ -16,6 +18,8 @@ Lemma splits a unit factor off it: the splitting algebra becomes
 the new base, the complement becomes the new remainder, and the
 mixed free part gains one unit summand.
 -/
+
+@[expose] public section
 
 namespace RS
 

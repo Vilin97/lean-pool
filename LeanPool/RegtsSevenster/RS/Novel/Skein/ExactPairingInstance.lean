@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.BraidedInstance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SnakeClasses
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.BraidedInstance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SnakeClasses
 
 /-!
 # The exact pairing on the strand object
@@ -16,6 +18,8 @@ snake identities — every structural cast in the categorical
 formulation lives at equal numeral arities and collapses to the
 identity class.
 -/
+
+@[expose] public section
 
 namespace RS
 

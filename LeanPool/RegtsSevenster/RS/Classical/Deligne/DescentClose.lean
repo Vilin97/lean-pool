@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichZig
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowDescentClose
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TrichotomyClose
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichZig
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowDescentClose
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TrichotomyClose
 
 /-!
 # The power descent, unconditionally
@@ -14,6 +16,8 @@ import LeanPool.RegtsSevenster.RS.Classical.Deligne.TrichotomyClose
 Over a zigzag datum the sandwich retract exists, so vanishing of
 a relative tensor power descends to the module itself.
 -/
+
+@[expose] public section
 
 namespace RS
 

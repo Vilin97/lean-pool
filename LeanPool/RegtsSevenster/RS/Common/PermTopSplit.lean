@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Splitting a permutation at the top slot
@@ -20,6 +22,8 @@ it compresses by `swap 0 p` rather than order-preservingly, so its
 induced permutation is not the one a tensor power's factors see.  The
 compression here is `finSuccAboveEquiv`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareGrowth
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareGrowth
 
 /-!
 # Sharp square dimension growth via the exponential bound
@@ -15,6 +17,8 @@ analytic `n ^ n ≤ e ^ n · n !` (one term of the Taylor series of
 `n ^ n ≤ 3 ^ n · n !`, and it is the sharp constant that yields the
 displayed `2e` of the paper.
 -/
+
+@[expose] public section
 
 namespace RS
 

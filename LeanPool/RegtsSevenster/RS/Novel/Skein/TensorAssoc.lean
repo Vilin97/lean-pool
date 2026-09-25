@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorFragment
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeAssoc
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorFragment
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeAssoc
 
 /-!
 # Associativity of the fragment tensor
@@ -17,6 +19,8 @@ interleaved boundary up to the arithmetic cast: block order is
 interleave value lemmas; the associator equivalence follows by
 pure relabel algebra.
 -/
+
+@[expose] public section
 
 namespace RS
 

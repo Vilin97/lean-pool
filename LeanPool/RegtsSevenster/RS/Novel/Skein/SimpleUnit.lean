@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.Multiplicativity
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdeal
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.Multiplicativity
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdeal
 
 /-!
 # The simple unit
@@ -17,6 +19,8 @@ arity zero caps the dimension at one, and the empty class is
 nonzero because its closure row at the empty fragment is
 `f(∅) = 1`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

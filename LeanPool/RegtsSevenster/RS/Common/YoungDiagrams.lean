@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Young diagram helpers
@@ -15,6 +17,8 @@ region of the alive shapes in the hook-confinement argument, and the
 square diagram is the shape whose dimension growth drives that
 confinement.
 -/
+
+@[expose] public section
 
 namespace RS
 

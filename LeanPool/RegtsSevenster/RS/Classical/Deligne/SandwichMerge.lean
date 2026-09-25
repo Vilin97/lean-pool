@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModAssoc
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowDescent
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistPow
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModAssoc
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowDescent
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistPow
 
 /-!
 # Merging the sandwich tower into a power pair
@@ -28,6 +30,8 @@ letters `M'`).
 * `isZero_sandwichTower_of_isZero_modPow`: vanishing of the power
   descends to every tower stage.
 -/
+
+@[expose] public section
 
 namespace RS
 

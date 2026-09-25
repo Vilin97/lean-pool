@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBInd
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowInduct
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBInd
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowInduct
 
 /-!
 # Nonvanishing of the chain algebra unit
@@ -15,6 +17,8 @@ nonzero: the finite-stage detection reduces vanishing to a chain
 unit stage, and the power zigzag induction keeps every stage
 alive.
 -/
+
+@[expose] public section
 
 namespace RS
 

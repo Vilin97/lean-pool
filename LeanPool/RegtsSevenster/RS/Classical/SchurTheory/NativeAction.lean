@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.BlockKill
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.EndSum
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.BlockKill
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.EndSum
 
 /-!
 # The native simple-submodule representation
@@ -16,6 +18,8 @@ via `Representation.ofModule'`: the algebra action is
 definitionally scalar multiplication, so no transparency options
 and no equivalence transport are needed.
 -/
+
+@[expose] public section
 
 namespace RS
 

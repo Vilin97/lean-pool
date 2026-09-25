@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeTable
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeTable
 
 /-!
 # Native block faithfulness
@@ -17,6 +19,8 @@ pulls back to express the projector in the two-sided ideal it
 generates, so an algebra map vanishing on a block element but not
 on the projector is impossible.
 -/
+
+@[expose] public section
 
 namespace RS
 

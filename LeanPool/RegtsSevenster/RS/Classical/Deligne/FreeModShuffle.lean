@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.WhiskerAdditive
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.WhiskerAdditive
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210
 
 /-!
 # Free modules on units and biproducts
@@ -16,6 +18,8 @@ the free module on a biproduct is the biproduct of the free
 modules: the bookkeeping of the mixed free part of the dévissage
 decomposition.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaTransport
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaTransport
 
 /-!
 # The coordinate interface
@@ -17,6 +19,8 @@ definitionally.  Specialised to the star composite this expresses
 the parameter value as a pairing in the fibre, ready for the
 standard-model coordinates.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StarCompClass
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinLinear
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DeligneBridge
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ExactPairingInstance
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StarCompClass
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinLinear
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DeligneBridge
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ExactPairingInstance
 
 /-!
 # Transporting the star identity through the fibre functor
@@ -17,6 +19,8 @@ star identity: the images of the star-union and bundle classes
 compose to the parameter value times the identity of the image
 of the unit object.
 -/
+
+@[expose] public section
 
 namespace RS
 

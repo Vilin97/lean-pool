@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarPeel
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarPeel
 
 /-!
 # The block sigma equivalence
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarPeel
 The block enumeration pairs a block index with an offset within the
 block to enumerate the concatenated total.
 -/
+
+@[expose] public section
 
 namespace RS
 

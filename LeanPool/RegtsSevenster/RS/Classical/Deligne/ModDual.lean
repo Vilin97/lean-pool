@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModTensor
 
 /-!
 # The dual of a module object
@@ -42,6 +44,8 @@ Zigzag identities at the `modTensor` level, and nonvanishing of the
 copairing, need the multi-tensor coherence layer and are outside
 this module's scope.
 -/
+
+@[expose] public section
 
 namespace RS
 

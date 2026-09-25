@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.RhoTwist
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.RhoTwist
 
 /-!
 # The realization of a biproduct
@@ -13,6 +15,8 @@ Morphisms into a finite biproduct are families of morphisms into
 the summands, ℂ-linearly.  With the distribution of a tensor over
 a biproduct this computes `ρ` on a mixed sum.
 -/
+
+@[expose] public section
 
 namespace RS
 

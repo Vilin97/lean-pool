@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Nilpotency from a shifted finite filtration
@@ -35,6 +37,8 @@ syntactically against `f ^ N` should unfold via `pow_end_eq`.)
 The shift hypothesis is phrased with `End.asHom f`, so consumers
 supply factorisations of the morphism `(F k).arrow ≫ End.asHom f`.
 -/
+
+@[expose] public section
 
 namespace RS
 

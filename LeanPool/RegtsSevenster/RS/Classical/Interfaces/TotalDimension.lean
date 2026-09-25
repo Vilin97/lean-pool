@@ -4,12 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.ExponentialGrowth
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.WordCommutant
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourTotal
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.OmegaTensorPower
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.Frobenius
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.RankDimension
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.ExponentialGrowth
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.WordCommutant
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourTotal
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.OmegaTensorPower
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.Frobenius
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.RankDimension
 
 /-!
 # The total dimension bound for the standard model
@@ -20,6 +22,8 @@ The monomial word action has polynomial commutant dimension. Native
 block faithfulness therefore bounds `(k + 2 * ℓ) ^ n` by `R ^ n`
 times a fixed polynomial, forcing `k + 2 * ℓ ≤ R`.
 -/
+
+@[expose] public section
 
 namespace RS
 

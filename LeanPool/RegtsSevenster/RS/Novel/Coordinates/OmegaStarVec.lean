@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaTensor
 
 /-!
 # The assembled star vector
@@ -16,6 +18,8 @@ parameter value of a closed fragment is then the circle power
 times the cap functional evaluated on the sorted assembled
 vector — arc (b) of the extraction, complete.
 -/
+
+@[expose] public section
 
 namespace RS
 

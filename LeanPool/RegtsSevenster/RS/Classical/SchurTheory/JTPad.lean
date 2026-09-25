@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTChar
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTChar
 
 /-!
 # Zero-row padding for the Jacobi–Trudi character
@@ -14,6 +16,8 @@ can equivalently be written as a sum over `Perm (Fin k)`: every
 extra permutation index beyond the diagram's row count contributes
 zero weight, because the guard forces it to be fixed.
 -/
+
+@[expose] public section
 
 namespace RS
 

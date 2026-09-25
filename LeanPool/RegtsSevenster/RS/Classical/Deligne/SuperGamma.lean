@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperSmall
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperSmall
 
 /-!
 # The four-block Γ-algebra of a commutative monoid at an odd line
@@ -50,6 +52,8 @@ identities, and the odd-odd pattern picks up the Koszul sign from
 an `RS.SuperCommAlgebra`, feeding the odd-nil quotient theory of
 `RS.SuperRealize`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Attached lists and list-to-finset products
@@ -15,6 +17,8 @@ the attached subtype agrees with mapping the total function, and a
 list product is the finset product of the finset the list
 enumerates.
 -/
+
+@[expose] public section
 
 namespace RS
 

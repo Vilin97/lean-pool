@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowerSums
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowerSums
 
 /-!
 # Recurrence from Schur-determinant vanishing
@@ -31,6 +33,8 @@ The proof proceeds in three stages:
    on that span is converted to the coefficient vector `c` of the
    recurrence.
 -/
+
+@[expose] public section
 
 namespace RS
 

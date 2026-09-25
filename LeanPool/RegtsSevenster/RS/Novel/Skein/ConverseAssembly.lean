@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RSTensor
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedIdentify
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedTopSum
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RSTensor
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedIdentify
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedTopSum
 
 /-!
 # The closure of two fragments, read on the base
@@ -18,6 +20,8 @@ closed identification with the colouring recursion writes that value
 as the base's summands, summed over its subsets and over the
 interface colours.
 -/
+
+@[expose] public section
 
 namespace RS
 

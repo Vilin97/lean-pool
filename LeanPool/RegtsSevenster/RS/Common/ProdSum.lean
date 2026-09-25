@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Sums through linear maps and into a product
@@ -19,6 +21,8 @@ rewrite under a `LinearMap` applied to a `Finset.sum`, and they
 live here rather than beside their first user because two files
 need them.
 -/
+
+@[expose] public section
 
 namespace RS
 

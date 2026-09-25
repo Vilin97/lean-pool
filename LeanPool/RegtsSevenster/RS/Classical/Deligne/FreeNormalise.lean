@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeNormaliseStep
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeNormaliseBase
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowStage
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePowDesc
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeCollapseAlg
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeNormaliseStep
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeNormaliseBase
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowStage
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePowDesc
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeCollapseAlg
 
 /-!
 # The relative power of a free module
@@ -21,6 +23,8 @@ collapse is an isomorphism
 and under it the descended group-algebra action becomes the
 ambient action under the head.
 -/
+
+@[expose] public section
 
 namespace RS
 

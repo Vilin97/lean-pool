@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.ListAttach
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplit
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.ListAttach
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplit
 
 /-!
 # Vertex-local in-sets and the incoming-flag sign
@@ -20,6 +22,8 @@ Flipping the colours on a set `S` negates the sign at the flags of
 `S` and leaves the others alone, which is what makes the flip
 analysis a product of independent local factors.
 -/
+
+@[expose] public section
 
 namespace RS
 

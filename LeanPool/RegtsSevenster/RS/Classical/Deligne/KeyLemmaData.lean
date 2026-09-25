@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemma
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemma
 
 /-!
 # The Key Lemma conclusion, in Deligne's insertion form
@@ -25,6 +27,8 @@ is the degree-zero part — the unit lives in degree zero, so the
 nonvanishing argument is unaffected; the insertions live in
 degrees `±1`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CoordOf
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BasisSplit
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CoordOf
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BasisSplit
 
 /-!
 # Coordinates of basis vectors
@@ -13,6 +15,8 @@ import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BasisSplit
 The coordinate of a colour basis vector is the equality
 indicator: the coordinate calculus closes on basis input.
 -/
+
+@[expose] public section
 
 namespace RS
 

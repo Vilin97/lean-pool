@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.YoungDiagrams
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.RecurrenceFromVanishing
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.RationalityFromRecurrence
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.YoungDiagrams
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.RecurrenceFromVanishing
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.RationalityFromRecurrence
 
 /-!
 # Super power sums from hook vanishing
@@ -22,6 +24,8 @@ This is the composition of `exists_recurrence_of_schurDet_vanishing`
 (`RationalityFromRecurrence.lean`), through the list↔diagram bridge
 of `Common/YoungDiagrams.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

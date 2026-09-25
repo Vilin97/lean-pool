@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CommonAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitTransport
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CommonAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitTransport
 
 /-!
 # The universal algebra of Deligne 2.11
@@ -16,6 +18,8 @@ which it splits, and taking the tensor product of all of them,
 gives a single nonzero algebra over which every object is a mixed
 sum and every short exact sequence splits.
 -/
+
+@[expose] public section
 
 namespace RS
 

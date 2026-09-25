@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndDayClosure
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndDayClosure
 
 /-!
 # The monoidal structure on ind-objects
@@ -20,6 +22,8 @@ representables to the representable of the tensor — and `Ind C`
 inherits the structure through `Ind.equivalence` and the full
 monoidal subcategory of the ind-property.
 -/
+
+@[expose] public section
 
 namespace RS
 

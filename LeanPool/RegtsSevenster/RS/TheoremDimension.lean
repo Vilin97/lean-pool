@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.TheoremTotal
-import LeanPool.RegtsSevenster.RS.TheoremConverse
+module
+
+public import LeanPool.RegtsSevenster.RS.TheoremTotal
+public import LeanPool.RegtsSevenster.RS.TheoremConverse
 
 /-!
 # Minimum colour dimension and connection-rank growth
@@ -15,6 +17,8 @@ among all mixed models of the parameter. Its value is the limit of
 the even roots of the actual connection ranks. The assembly is
 conditional on Deligne's theorem, discharged in `RS/Summit.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

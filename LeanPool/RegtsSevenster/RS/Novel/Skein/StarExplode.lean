@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueFold
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConnectionRank
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueFold
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConnectionRank
 
 /-!
 # Exploding a closed fragment into stars
@@ -21,6 +23,8 @@ the disjoint union of vertex stars.  Regluing shrinks `C` one
 edge at a time (`explodeAtGluePair`, next file), giving the star
 decomposition by induction.
 -/
+
+@[expose] public section
 
 namespace RS
 

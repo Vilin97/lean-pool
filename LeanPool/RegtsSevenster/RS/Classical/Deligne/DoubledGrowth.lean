@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.TensorPow
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledAbelian
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.TensorPow
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledAbelian
 
 /-!
 # Deligne's growth and generation hypotheses in the doubling
@@ -44,6 +46,8 @@ spreading an even word over both degrees.  No dual is ever formed
 in the doubling: the presentations produced here use mixed powers
 with no dual factors at all.
 -/
+
+@[expose] public section
 
 namespace RS
 

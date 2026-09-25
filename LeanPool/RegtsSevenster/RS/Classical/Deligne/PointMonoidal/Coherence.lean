@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Calculus
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Calculus
 
 /-!
 # Coherence and invertibility of the comparison
@@ -38,6 +40,8 @@ strength of base change along an algebra map, in super form.
   `RS.superVectEpsIso`, `RS.isIso_superVectEps`: both comparisons
   are invertible.
 -/
+
+@[expose] public section
 
 namespace RS
 

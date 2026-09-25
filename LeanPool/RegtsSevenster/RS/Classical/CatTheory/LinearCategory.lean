@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Definitions
+module
+
+public import LeanPool.RegtsSevenster.RS.Definitions
 
 /-!
 # Conditions on a ℂ-linear category
@@ -15,6 +17,8 @@ every object is a finite biproduct of simple objects.  The third,
 scalar endomorphisms of the tensor unit (`HasScalarUnit`), is
 defined in `RS/Definitions.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

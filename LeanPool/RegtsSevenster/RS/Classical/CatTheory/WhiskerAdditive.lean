@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Whiskering against negation, zero and binary biproducts
@@ -24,6 +26,8 @@ isomorphism, but its `PreservesBinaryBiproduct` hypothesis is not an
 instance for `tensorLeft`, so the distributors are built here
 directly.
 -/
+
+@[expose] public section
 
 namespace RS
 

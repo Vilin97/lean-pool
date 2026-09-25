@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.AlternantExpand
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.AlternantExpand
 
 /-!
 # Leibniz expansion of the Jacobi–Trudi determinant
@@ -13,6 +15,8 @@ The determinant of `jtMat v` in row-normal form: a signed sum over
 permutations of complete homogeneous products, with terms
 containing a negative degree vanishing.
 -/
+
+@[expose] public section
 
 namespace RS
 

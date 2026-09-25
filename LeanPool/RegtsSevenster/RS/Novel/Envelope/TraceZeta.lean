@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.NilpotentTrace
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.ZetaRational
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.ZetaExp
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.NilpotentTrace
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.ZetaRational
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.ZetaExp
 
 /-!
 # The quantitative trace-zeta theorem
@@ -27,6 +29,8 @@ Unlike `NilpotentTrace`, no nilpotency hypothesis is needed: the
 hook-vanishing half of the proof uses only the Frobenius identity and
 hook confinement, both of which hold for every element.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexHeart
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvDelignePackage
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexHeart
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvDelignePackage
 
 /-!
 # The Regts–Sevenster theorem, forward direction
@@ -15,6 +17,8 @@ factorial trace obstruction supplies semisimplicity and abelianness
 of the envelope from the connection-rank bound, without a Schur
 package. The resulting fibre functor provides the mixed model.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.DimensionDefinitions
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinTower
+module
+
+public import LeanPool.RegtsSevenster.RS.DimensionDefinitions
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinTower
 
 /-!
 # Connection ranks as skein dimensions
@@ -14,6 +16,8 @@ The first isomorphism theorem identifies the connection-map range
 with the skein Hom space. At even arity this is the endomorphism
 algebra used by the commutant estimate.
 -/
+
+@[expose] public section
 
 namespace RS
 

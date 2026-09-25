@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.FragmentEquiv
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.FragmentEquiv
 
 /-!
 # Commutation of disjoint single-pair glues
@@ -20,6 +22,8 @@ The proof proceeds by classifying the involution structure of
 and `{k, l}` are edges determines the open/closed status of each
 glue and thus the circle count and rewiring behaviour.
 -/
+
+@[expose] public section
 
 namespace RS
 

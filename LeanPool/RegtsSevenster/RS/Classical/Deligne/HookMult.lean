@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PieriPos
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PieriPos
 
 /-!
 # Hook bounds on induction and Kronecker multiplicities
@@ -19,6 +21,8 @@ vanishes, every term of the bilinear splitting is a natural
 number, so every term vanishes; hook positivity makes the two
 specialisation factors nonzero, killing the multiplicity.
 -/
+
+@[expose] public section
 
 namespace RS
 

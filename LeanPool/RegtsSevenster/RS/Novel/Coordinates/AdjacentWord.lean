@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Adjacent-transposition words for permutations of `Fin n`
@@ -25,6 +27,8 @@ conjugation identity
 `swap 0 (k+2) = swap 0 (k+1) * swap (k+1) (k+2) * swap 0 (k+1)`,
 and lift the recursive word for `σ'` by mapping positions through `Fin.succ`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RelTransition
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RelTransition
 
 /-!
 # The elementary re-pairing move on relative transition systems
@@ -59,6 +61,8 @@ needs the orbit machinery; that construction is
 `Orientation.flipOrbit` of `PathLedger.lean` for a periodic
 segment.
 -/
+
+@[expose] public section
 
 namespace RS
 

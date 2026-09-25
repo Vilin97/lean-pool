@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.VertexOddSign
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.VertexOddSign
 
 /-!
 # Orientation invariance of the constrained summand: circuit flips
@@ -51,6 +53,8 @@ Consequently any orientation-independence interface must restrict to
 circuit-supported differences (or fix path orientations by
 convention).
 -/
+
+@[expose] public section
 
 namespace RS
 

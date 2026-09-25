@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarSymm
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarSymm
 
 /-!
 # The canonical colouring of multiset data
@@ -15,6 +17,8 @@ odd colours after.  This is the representative through which the
 vertex functional of Definition 5 evaluates the symmetric star
 coordinates.
 -/
+
+@[expose] public section
 
 namespace RS
 

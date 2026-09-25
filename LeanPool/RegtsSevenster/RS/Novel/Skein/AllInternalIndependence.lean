@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StepLedger
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StepLedger
 
 /-!
 # Unconditional independence on all-internal subsets
@@ -15,6 +17,8 @@ ledger connects any two transition systems: the constrained
 summand at the open circuit count is independent of all choices —
 Proposition 3 for the boundary-free sector, as a theorem.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMulLaws
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainDelta
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMulLaws
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainDelta
 
 /-!
 # The two-index splitting-chain stages
@@ -17,6 +19,8 @@ multiplication, its commutativity and associativity laws, and the
 seed transitions all restate the balanced machinery at two free
 indices; the substrate for the graded splitting algebra.
 -/
+
+@[expose] public section
 
 namespace RS
 

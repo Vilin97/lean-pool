@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Algebra.FactorialTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.ScalarPermTrace
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Algebra.FactorialTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.ScalarPermTrace
 
 /-!
 # Nilpotent categorical traces from the factorial obstruction
@@ -16,6 +18,8 @@ nilpotent-trace vanishing from a single tensor level of dimension
 less than `n!`, and hence from exponential endomorphism growth.
 The Frobenius and trace-zeta route is retained in `ObjectTower`.
 -/
+
+@[expose] public section
 
 namespace RS
 

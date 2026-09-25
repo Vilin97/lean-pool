@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Functors out of the natural numbers from step data
@@ -15,6 +17,8 @@ into a functor from `ℕ` — the shape of the Key Lemma's
 defined by recursion on its length, with the composition law
 proved once and the one-step computation exposed as a simp lemma.
 -/
+
+@[expose] public section
 
 namespace RS
 

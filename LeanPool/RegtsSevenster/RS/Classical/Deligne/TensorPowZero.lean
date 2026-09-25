@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.WhiskerAdditive
-import LeanPool.RegtsSevenster.RS.Definitions
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.WhiskerAdditive
+public import LeanPool.RegtsSevenster.RS.Definitions
 
 /-!
 # A vanishing tensor power forces a vanishing object
@@ -25,6 +27,8 @@ tensored with `Xᘁ`, which is zero because tensoring preserves zero
 objects over a preadditive monoidal structure.  Downward induction
 and the left unitor then give the theorem.
 -/
+
+@[expose] public section
 
 namespace RS
 

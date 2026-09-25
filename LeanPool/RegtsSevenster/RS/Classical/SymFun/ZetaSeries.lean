@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.SuperPowerSums
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.SuperPowerSums
 
 /-!
 # Zeta series characterization
@@ -16,6 +18,8 @@ power-sum series.  This file establishes the ODE-uniqueness principle
 for formal power series over ℂ and applies it to characterize the
 Newton series.
 -/
+
+@[expose] public section
 
 namespace RS
 

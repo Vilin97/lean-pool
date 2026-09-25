@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarClassFactor
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarClassFactor
 
 /-!
 # The star-tensor class and its recursion
@@ -14,6 +16,8 @@ defining recursion at class level: the cons case is the monoidal
 tensor of the vertex-star class with the tail, composed with the
 sum cast.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourRecursion
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourRecursion
 
 /-!
 # The composition's own sum
@@ -16,6 +18,8 @@ sign as a weight on the composition's subsets and reads the
 constrained partition value as the weighted sum the iteration
 carries.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseRotate
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceShift
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairCloseComm
-import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLaw
-import LeanPool.RegtsSevenster.RS.Novel.Skein.Trace
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseRotate
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceShift
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairCloseComm
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLaw
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.Trace
 
 /-!
 # Cyclicity of the trace
@@ -24,6 +26,8 @@ commutativity of the closure and the closure-relabel exchange
 (`pairCloseRelabel`), itself derived from `interfaceShift` at
 `s = 0`, where the outgoing block is the entire boundary.
 -/
+
+@[expose] public section
 
 namespace RS
 

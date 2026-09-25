@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvInstances
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.TensorPow
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvInstances
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.TensorPow
 
 /-!
 # The strand generator of the envelope
@@ -15,6 +17,8 @@ calculus: the `n`-strand envelope object is the `n`-th tensor
 power of the single strand, up to canonical isomorphism.  This is
 the spine of the Deligne generator and moderate-growth fields.
 -/
+
+@[expose] public section
 
 namespace RS
 

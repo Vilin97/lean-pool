@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Doubling
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Doubling
 
 /-!
 # The doubling is the square
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Classical.Deligne.Doubling
 The doubling of a category is its product with itself: an object
 is a pair and a morphism is a pair.  Essential smallness follows.
 -/
+
+@[expose] public section
 
 namespace RS
 

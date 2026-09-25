@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionExists
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionExists
 
 /-!
 # A vertex's odd list, as a multiset
@@ -15,6 +17,8 @@ simply the image of those flags under that value, with the walking
 order forgotten — the form in which two orientations' lists can be
 compared, since only the order distinguishes them.
 -/
+
+@[expose] public section
 
 namespace RS
 

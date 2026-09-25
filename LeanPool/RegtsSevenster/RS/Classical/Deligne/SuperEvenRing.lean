@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.NullPoint
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperRealize
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.NullPoint
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperRealize
 
 /-!
 # The even ring acting on the odd part, and ℂ-points
@@ -36,6 +38,8 @@ top of them.
   `RS.exists_algHom_complex` of
   [NullPoint.lean](NullPoint.lean).
 -/
+
+@[expose] public section
 
 namespace RS
 

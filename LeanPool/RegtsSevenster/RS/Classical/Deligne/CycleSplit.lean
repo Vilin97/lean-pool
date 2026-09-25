@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CharSplit
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CharSplit
 
 /-!
 # Additive splitting of the completed cycle product
@@ -23,6 +25,8 @@ permutation, singleton orbits included; the splitting is then the
 expansion of a product of binomials, with subsets of the orbit set
 enumerating exactly the invariant subsets of the carrier.
 -/
+
+@[expose] public section
 
 namespace RS
 

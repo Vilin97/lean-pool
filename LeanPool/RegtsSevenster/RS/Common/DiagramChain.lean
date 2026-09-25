@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.YoungDiagrams
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.YoungDiagrams
 
 /-!
 # Single-box interpolation for Young diagrams
@@ -14,6 +16,8 @@ Given `lam ≤ mu` with `lam.card < mu.card`, we produce `nu` satisfying
 cell in `mu.cells \ lam.cells` that is minimal for the sum of
 coordinates, then insert it into `lam`.
 -/
+
+@[expose] public section
 
 namespace RS
 

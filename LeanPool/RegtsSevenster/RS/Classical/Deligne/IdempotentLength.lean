@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Length
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Length
 
 /-!
 # Length lower bounds from orthogonal idempotents
@@ -23,6 +25,8 @@ increasing: a collapse of consecutive kernels would factor
 `f (n + 1)` through `ker (𝟙 Y - E n)`, where it is annihilated by
 orthogonality, contradicting `f (n + 1) ≠ 0`.
 -/
+
+@[expose] public section
 
 namespace RS
 

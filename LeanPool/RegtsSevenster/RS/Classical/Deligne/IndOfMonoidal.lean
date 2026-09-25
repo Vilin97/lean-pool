@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurTransport
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurTransport
 
 /-!
 # The embedding `C ⥤ Ind C` as a strong braided monoidal functor
@@ -45,6 +47,8 @@ characterised on the Kan-extension unit by the `leftUnitor_hom_unit_app`
 and `rightUnitor_hom_unit_app` fields of Mathlib's
 `CategoryTheory.MonoidalCategory.LawfulDayConvolutionMonoidalCategoryStruct`.
 -/
+
+@[expose] public section
 
 namespace RS
 

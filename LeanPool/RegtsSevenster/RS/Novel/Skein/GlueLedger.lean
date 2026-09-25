@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueChord
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueChord
 
 /-!
 # The glue ledger at a cut the subset misses
@@ -23,6 +25,8 @@ is left out of it.  There nothing moves at all: the used labels are
 the same on both sides, the chord matching is unchanged, and so is
 the circuit count.
 -/
+
+@[expose] public section
 
 namespace RS
 

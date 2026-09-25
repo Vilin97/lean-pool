@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.TheoremConverse
-import LeanPool.RegtsSevenster.RS.TheoremTotal
-import LeanPool.RegtsSevenster.RS.TheoremPadding
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DeligneAssembly
+module
+
+public import LeanPool.RegtsSevenster.RS.TheoremConverse
+public import LeanPool.RegtsSevenster.RS.TheoremTotal
+public import LeanPool.RegtsSevenster.RS.TheoremPadding
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DeligneAssembly
 
 /-!
 # The theorems, unconditionally
@@ -31,6 +33,8 @@ nilpotent-trace and trace-zeta mechanisms.
 The axiom checks are pinned in
 `RS/Assembly/BlueprintDeligne.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

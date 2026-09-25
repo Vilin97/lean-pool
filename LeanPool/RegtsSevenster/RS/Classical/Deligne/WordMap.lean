@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BiprodPow
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BiprodPow
 
 /-!
 # Word maps of an arbitrary pair of morphisms
@@ -33,6 +35,8 @@ words `standardWord`, their structural isomorphism
 reused from `BiprodPow` unchanged: they depend only on the two
 source objects, never on the letter maps.
 -/
+
+@[expose] public section
 
 namespace RS
 

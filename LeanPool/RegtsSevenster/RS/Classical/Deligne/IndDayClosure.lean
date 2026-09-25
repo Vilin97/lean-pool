@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DayCalculus
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DayCalculus
 
 /-!
 # Ind-objects are closed under Day convolution
@@ -33,6 +35,8 @@ under small filtered colimits (`isIndObject_colimit`) concludes.  The
 two colimit steps are the same manoeuvre, factored out as
 `RS.isIndObject_obj_of_preservesColimits`.
 -/
+
+@[expose] public section
 
 namespace RS
 

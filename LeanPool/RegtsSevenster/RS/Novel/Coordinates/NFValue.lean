@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CoreParity
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.NFDef
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CoreParity
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.NFDef
 
 /-!
 # The h-generic value identity and Definition 5 normal-form theorem
@@ -14,6 +16,8 @@ For a closed fragment, an arbitrary mixed functional's Definition 5
 summand equals the (κ, o)-free normal form — the engine of Eulerian
 independence.
 -/
+
+@[expose] public section
 
 namespace RS
 

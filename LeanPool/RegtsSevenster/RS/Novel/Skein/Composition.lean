@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.FlagGraph
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.FlagGraph
 
 /-!
 # Fragment composition
@@ -20,6 +22,8 @@ gluing chain rewrites boundary states through the re-indexings, so
 it needs each surviving label's new index as an explicit natural
 number.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.GlobalSlotList
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.GlobalSlotList
 
 /-!
 # The chain enumerations
@@ -13,6 +15,8 @@ The intermediate flag enumerations of the parity chain: the
 edge-interleaved list, the oriented list, the matched list, and
 the global pair concatenation.
 -/
+
+@[expose] public section
 
 namespace RS
 

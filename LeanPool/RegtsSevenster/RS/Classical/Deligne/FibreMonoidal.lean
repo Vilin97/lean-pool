@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMuNat
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreEps
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffleCoh
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModFunctor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMuNat
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreEps
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffleCoh
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModFunctor
 
 /-!
 # The fibre functor is symmetric monoidal
@@ -48,6 +50,8 @@ The functor is packaged as `CategoryTheory.Functor.LaxMonoidal` and
 a separate matter and is not assumed here, so the strong notions
 `Functor.Monoidal` and `Functor.Braided` are not instantiated.
 -/
+
+@[expose] public section
 
 namespace RS
 

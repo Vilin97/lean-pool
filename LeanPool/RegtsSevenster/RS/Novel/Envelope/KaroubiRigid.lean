@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiMonoidal
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiMonoidal
 
 /-!
 # Rigidity of the Karoubi envelope
@@ -20,6 +22,8 @@ adjoint mate, the second onto the base snake identity.
 
 When `C` is moreover braided, `Karoubi C` is rigid.
 -/
+
+@[expose] public section
 
 namespace RS
 

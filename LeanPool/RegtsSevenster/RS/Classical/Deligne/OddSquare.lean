@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModTensor
 
 /-!
 # Contracting the shuffle of two odd twists
@@ -21,6 +23,8 @@ The four instances of that coherence identity — one for each pair
 of parities — are the content of this file.  Two of them carry a
 sign, and the sign is the self-braiding of the odd line.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.WhiskerAdditive
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeBiprod
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.WhiskerAdditive
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeBiprod
 
 /-!
 # Modules over a monoid object form an abelian category
@@ -54,6 +56,8 @@ the inclusion of the kernel is split.  The specialisations to a
 companion) and to a sum of copies of two simple objects
 (`RS.exists_mixSum_iso_of_mono` and its companion) follow.
 -/
+
+@[expose] public section
 
 namespace RS
 

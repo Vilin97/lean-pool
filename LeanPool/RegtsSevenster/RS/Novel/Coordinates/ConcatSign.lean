@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ChainLists
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ChainLists
 
 /-!
 # Concatenation sign factorisation
@@ -13,6 +15,8 @@ The global key-sortSign of the concatenated pair enumeration equals
 the product of the per-block key-sortSigns: key ranges of distinct
 blocks are disjoint and ordered, so concatenation adds no inversions.
 -/
+
+@[expose] public section
 
 namespace RS
 

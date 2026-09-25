@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndBigTensorUnit
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndBigTensorUnit
 
 /-!
 # A common extension of a family of algebras
@@ -18,6 +20,8 @@ split simultaneously.
 The index type is put in bijection with a well-ordered one so
 that the slot order required by the tensor product is available.
 -/
+
+@[expose] public section
 
 namespace RS
 

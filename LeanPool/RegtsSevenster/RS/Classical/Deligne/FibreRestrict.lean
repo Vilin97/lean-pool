@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreStrong
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreStrong
 
 /-!
 # Restricting the fibre functor along a monoidal functor
@@ -16,6 +18,8 @@ only that it split the objects in the image of a chosen monoidal
 functor; the composite of that functor with the fibre functor is
 then strong monoidal.
 -/
+
+@[expose] public section
 
 namespace RS
 

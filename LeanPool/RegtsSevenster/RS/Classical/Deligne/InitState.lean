@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.InitDatum
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29State
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.InitDatum
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29State
 
 /-!
 # The initial state of the dévissage
@@ -14,6 +16,8 @@ Every object with an exact pairing seeds the dévissage: the base
 is the tensor unit, no factors are split off, and the remainder
 is the object itself with its ambient duality.
 -/
+
+@[expose] public section
 
 namespace RS
 

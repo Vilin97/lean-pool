@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPower
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPower
 
 /-!
 # Evaluating a colour tensor
@@ -13,6 +15,8 @@ The function tensor on a pure tensor is the pointwise product, and
 the colouring of a product index splits into its two factors — the
 computation rules the standard super model's coordinates use.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

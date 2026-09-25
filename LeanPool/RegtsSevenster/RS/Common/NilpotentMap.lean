@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Nilpotence under zero-preserving multiplicative maps
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 A positive vanishing exponent transports through a multiplicative
 map even when that map does not preserve the identity.
 -/
+
+@[expose] public section
 
 namespace RS
 

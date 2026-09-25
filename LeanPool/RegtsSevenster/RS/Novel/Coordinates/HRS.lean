@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CanonColour
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourFormMatch
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CanonColour
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourFormMatch
 
 /-!
 # The Regts–Sevenster functional
@@ -18,6 +20,8 @@ and sends `ξ_i` to `η_i`. Lemma 5.6 gives the coordinate dictionary;
 Lemma 5.7 proves the change of basis and the invariance of the
 partition function under the isometry `Ψ`.
 -/
+
+@[expose] public section
 
 namespace RS
 

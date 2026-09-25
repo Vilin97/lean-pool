@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConnectionRank
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConnectionRank
 
 /-!
 # A factored connection pairing has bounded rank
@@ -19,6 +21,8 @@ This is the linear algebra behind writing a connection matrix as a
 Gram matrix: a Gram factorization exhibits each row as a combination
 of the columns indexed by the ambient space's coordinates.
 -/
+
+@[expose] public section
 
 namespace RS
 

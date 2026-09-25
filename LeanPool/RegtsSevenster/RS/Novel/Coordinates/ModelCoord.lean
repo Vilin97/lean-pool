@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourMerge
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ClosedTransition
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.HRS
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourMerge
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ClosedTransition
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.HRS
 
 /-!
 # Coordinates of the assembled star vector
@@ -15,6 +17,8 @@ The coordinates of the model star vector factor into star
 coordinates over the degree blocks: the merge coordinate product
 rule threaded through the sum casts and the block enumeration.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdDuality
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdDuality
 
 /-!
 # Self-duality of the standard super space
@@ -16,6 +18,8 @@ SuperVect.  This is the categorical form of the §5.2 conventions —
 the contraction identities `L_C = id` distributed over the graded
 blocks.
 -/
+
+@[expose] public section
 
 namespace RS
 

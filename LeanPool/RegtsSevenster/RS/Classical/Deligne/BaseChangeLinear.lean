@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeBiprod
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeBiprod
 
 /-!
 # Linearity of the base-changed pairing and copairing
@@ -15,6 +17,8 @@ linear over the new base: each factor of the defining composites
 intertwines the descended actions, and the two linearity laws
 follow by chaining the factors.
 -/
+
+@[expose] public section
 
 namespace RS
 

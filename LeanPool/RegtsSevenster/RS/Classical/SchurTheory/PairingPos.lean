@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.BranchTrace
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.MixedCount
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.CoeffSplit
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.PieriChain
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.BranchTrace
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.MixedCount
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.CoeffSplit
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.PieriChain
 
 /-!
 # Positivity of the restriction pairing
@@ -16,6 +18,8 @@ The pairing `restrPairing lam mu` is nonzero whenever `lam ≤ mu`,
 bridging the combinatorial Pieri chain to the representation-theoretic
 branching sandwich.
 -/
+
+@[expose] public section
 
 namespace RS
 

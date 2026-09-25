@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemma
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowAct
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemma
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowAct
 
 /-!
 # The power pairing
@@ -20,6 +22,8 @@ descent obligations through the module-power and module-tensor
 coequalizers reduce, by the same recursion, to the datum's
 linearity and the commutativity of the monoid.
 -/
+
+@[expose] public section
 
 namespace RS
 

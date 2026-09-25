@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CentralElem
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CentralElem
 
 /-!
 # Schur scalarity for commuting endomorphisms
@@ -15,6 +17,8 @@ an eigenvalue, and the eigenspace is an invariant subspace.  The
 image of a class-function element under a representation commutes
 with the action, so it acts as a scalar on every irreducible.
 -/
+
+@[expose] public section
 
 namespace RS
 

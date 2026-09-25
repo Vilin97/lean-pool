@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CompositionEquiv
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueComm
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CompositionEquiv
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueComm
 
 /-!
 # Gluing in an ambient union
@@ -15,6 +17,8 @@ composition: disjoint union of fragments is associative up to
 equivalence (with the label re-bracketing), and a single-pair glue
 commutes with extending the ambient fragment by a disjoint union.
 -/
+
+@[expose] public section
 
 namespace RS
 

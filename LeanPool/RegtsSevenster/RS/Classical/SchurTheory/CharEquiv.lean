@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeTable
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeTable
 
 /-!
 # Character invariance under representation equivalence
@@ -14,6 +16,8 @@ two equivalent representations have the same character at every
 group element.  The corollary specialises this to the native
 submodule representations `rhoS`.
 -/
+
+@[expose] public section
 
 namespace RS
 

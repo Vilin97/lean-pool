@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainDelta
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainDelta
 
 /-!
 # The power-level chain and the copairing powers
@@ -15,6 +17,8 @@ bundles as a module map; through the interchange, power stages
 multiply; the copairing seeds the bottom stage, and the iterated
 seed multiplication is the copairing power of the duality datum.
 -/
+
+@[expose] public section
 
 namespace RS
 

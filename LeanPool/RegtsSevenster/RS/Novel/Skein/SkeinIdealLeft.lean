@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseRotateLeft
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdeal
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseRotateLeft
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdeal
 
 /-!
 # The composition ideal, left half
@@ -18,6 +20,8 @@ with `composeFinsupp_ker_left` this makes the pairing kernel a
 two-sided ideal (accompanying paper, Lemma 3.3(a)), so composition
 descends to the Hom spaces.
 -/
+
+@[expose] public section
 
 namespace RS
 

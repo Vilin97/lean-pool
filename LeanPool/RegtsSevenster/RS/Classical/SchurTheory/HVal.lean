@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowerSums
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowerSums
 
 /-!
 # Evaluated symmetric values and the power–complete Newton identity
@@ -22,6 +24,8 @@ size-`(k−i)` multiset produces each size-`(k+1)` multiset once per
 unit of multiplicity.  Consequently `hVal x` satisfies the defining
 recursion of `newtonH (pVal x)`.
 -/
+
+@[expose] public section
 
 namespace RS
 

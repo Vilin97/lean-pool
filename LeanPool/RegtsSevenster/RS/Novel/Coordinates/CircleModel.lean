@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StdTransport
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.CircleValue
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StdTransport
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.CircleValue
 
 /-!
 # The circle value in the model
@@ -17,6 +19,8 @@ value of the parameter.  Transporting through the fibre functor
 and the standard model identifies it with the superdimension
 `k − 2ℓ`.
 -/
+
+@[expose] public section
 
 namespace RS
 

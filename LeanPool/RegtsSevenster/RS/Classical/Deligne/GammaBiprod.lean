@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModIso
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModIso
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
 
 /-!
 # Realization of a biproduct of module objects
@@ -15,6 +17,8 @@ Morphisms out of the two generators into a biproduct are pairs of
 morphisms, and the action on a biproduct is componentwise, so the
 realization of a biproduct is the biproduct of the realizations.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModHom
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModHom
 
 /-!
 # Recognising isomorphisms of super modules
@@ -14,6 +16,8 @@ an isomorphism: the componentwise inverses are again ℂ-linear and
 again commute with the four actions, because the actions on the
 source are determined by those on the target.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreFunctor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModuleFunctor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreFunctor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModuleFunctor
 
 /-!
 # The free-module functor, and the factorisation of `ω`
@@ -17,6 +19,8 @@ treated separately: the free-module functor carries the monoidal
 comparison of the ambient category, and realization carries the
 comparison of (2.11.1).
 -/
+
+@[expose] public section
 
 namespace RS
 

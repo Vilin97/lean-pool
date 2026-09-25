@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaCountable
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchurKilled
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaCountable
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchurKilled
 
 /-!
 # ℂ-linearity of the embedding `C ⥤ Ind C`
@@ -47,6 +49,8 @@ and an ambient linear structure is asked, and no braiding is needed:
 both actions are defined from the same `ψ`, and the proof uses only
 the unitality of the strong monoidal structure of the embedding.
 -/
+
+@[expose] public section
 
 namespace RS
 

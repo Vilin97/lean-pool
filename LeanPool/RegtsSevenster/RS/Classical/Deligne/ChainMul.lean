@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PairMul
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PairMul
 
 /-!
 # The multiplication of the chain algebra
@@ -14,6 +16,8 @@ coequalizer of two symmetric powers, giving a module map of
 bundles; through the interchange, the tensor product of two chain
 stages multiplies into the chain stage of summed arity.
 -/
+
+@[expose] public section
 
 namespace RS
 

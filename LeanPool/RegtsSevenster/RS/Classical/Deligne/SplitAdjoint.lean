@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeAdjoint
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeAdjoint
 
 /-!
 # Adjointness of the split idempotents
@@ -18,6 +20,8 @@ whisker exchange identifies them.
 Passing to the complementary idempotents gives the adjointness
 in the form the dévissage step consumes.
 -/
+
+@[expose] public section
 
 namespace RS
 

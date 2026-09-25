@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMul
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowCopairing
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMul
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowCopairing
 
 /-!
 # The transitions of the splitting chain
@@ -15,6 +17,8 @@ splitting chain, and multiplication by the seed is the chain
 transition.  The stage units ride along the transitions by
 construction; their nonvanishing is the pairing side's business.
 -/
+
+@[expose] public section
 
 namespace RS
 

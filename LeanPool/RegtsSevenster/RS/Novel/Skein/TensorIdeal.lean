@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorFragment
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PartialClose
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdeal
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorFragment
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PartialClose
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdeal
 
 /-!
 # The absorption of a tensor factor into the test fragment
@@ -22,6 +24,8 @@ closure pairs split into the `z`-blocks and the `x`-blocks, the
 remains is the closure of `x` against the survivors — the
 defining gluing of `partialClose`.
 -/
+
+@[expose] public section
 
 namespace RS
 

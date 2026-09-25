@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarBraiding
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperVectSchur
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarBraiding
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperVectSchur
 
 /-!
 # Slot labellings and the Koszul sign of a permutation
@@ -25,6 +27,8 @@ categorical side consumes it in [Letters.lean](Letters.lean).
   and its sign, with `oddPerm_mul` and `parSign_mul`, and the value
   `parSign_swap` on an adjacent transposition.
 -/
+
+@[expose] public section
 
 namespace RS
 

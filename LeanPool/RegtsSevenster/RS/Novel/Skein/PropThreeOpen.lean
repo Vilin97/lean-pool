@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairedAssembly
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RelabelChords
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairedAssembly
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RelabelChords
 
 /-!
 # Proposition 3 for open fragments
@@ -19,6 +21,8 @@ this is the open-sector Proposition 3 in its exact form: the
 constrained value is a function of the boundary pairing, and of
 nothing else.
 -/
+
+@[expose] public section
 
 namespace RS
 

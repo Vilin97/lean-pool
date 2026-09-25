@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitExact
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitExact
 
 /-!
 # Exactness from short exact sequences
@@ -19,6 +21,8 @@ the third of them records the intermediate entry, preservation of
 homology.
 
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatBraided
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvGenerator
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatBraided
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvGenerator
 
 /-!
 # Monoidal, braided, additive, and linear structure on `Mat_.embedding C`
@@ -25,6 +27,8 @@ coherence conditions: from `εIso`, `μIso`, and the lax axioms, mathlib
 automatically derives the full `Functor.Monoidal` structure including
 the `OplaxMonoidal` fields.
 -/
+
+@[expose] public section
 
 noncomputable section
 

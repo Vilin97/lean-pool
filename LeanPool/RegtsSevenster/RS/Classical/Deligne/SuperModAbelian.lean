@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModBiprod
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModBiprod
 
 /-!
 # Super modules form an abelian category
@@ -41,6 +43,8 @@ quotients; the ten axioms of a super module are pointwise
 identities, so each survives verbatim in a submodule and in a
 quotient.
 -/
+
+@[expose] public section
 
 namespace RS
 

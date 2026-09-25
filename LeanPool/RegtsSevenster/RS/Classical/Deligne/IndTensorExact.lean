@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndCompact
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndCompact
 
 /-!
 # Right-exactness of the tensor product on ind-objects
@@ -58,6 +60,8 @@ The `@[reducible]` marking on the small `coprodDiagram`/
 object fields must reduce at instance transparency for the
 `show`-retyped colimit proofs below to be stateable.
 -/
+
+@[expose] public section
 
 namespace RS
 

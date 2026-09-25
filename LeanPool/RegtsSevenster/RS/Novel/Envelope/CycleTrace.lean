@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.TensorPowHom
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.PartialTrace
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.TensorPowHom
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.PartialTrace
 
 /-!
 # The trace of a cycle against a tensor power
@@ -23,6 +25,8 @@ trace is unchanged by the descent (`catTrace_ptr`).  Carrying an
 arbitrary endomorphism on the top factor through the induction is
 what makes the accumulated copies of `g` bookkeepable.
 -/
+
+@[expose] public section
 
 namespace RS
 

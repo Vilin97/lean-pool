@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapPeelSplit
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BasisCoord
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapPeelSplit
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BasisCoord
 
 /-!
 # The diagonal cap pairing
@@ -15,6 +17,8 @@ recursion the peel induction produces: the peel coefficient at
 the peeled colouring times the split factor — the smaller diagonal
 against the two-position form entry, vanishing on odd halves.
 -/
+
+@[expose] public section
 
 namespace RS
 

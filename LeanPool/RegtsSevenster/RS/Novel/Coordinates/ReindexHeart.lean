@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.NFValue
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CircleModel
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.NFValue
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CircleModel
 
 /-!
 # The reindexing at the heart of the extraction
@@ -14,6 +16,8 @@ The master summand under a colouring flip, the fibre sum it induces,
 and the identification of the parameter with Definition 5's mixed
 partition function.
 -/
+
+@[expose] public section
 
 namespace RS
 

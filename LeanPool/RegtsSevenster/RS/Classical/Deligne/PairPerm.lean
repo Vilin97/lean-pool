@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPairing
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPairing
 
 /-!
 # Permutations across the power pairing
@@ -36,6 +38,8 @@ into the *order-reversing adjoint* permutation of the `M'`-slots.
   self-adjointness that transfers the power-level duality to the
   symmetric powers.
 -/
+
+@[expose] public section
 
 namespace RS
 

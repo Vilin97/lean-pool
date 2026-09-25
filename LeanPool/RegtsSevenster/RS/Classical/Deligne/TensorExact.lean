@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Definitions
+module
+
+public import LeanPool.RegtsSevenster.RS.Definitions
 
 /-!
 # Tensoring is exact in a rigid abelian category
@@ -17,6 +19,8 @@ monomorphisms, epimorphisms, and
 zero objects, and a tensor power of a nonzero object detects
 nothing (`X ^ ⊗ n = 0` forces `X = 0`, Deligne 1.17).
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedTopSum
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedTopSum
 
 /-!
 # The interface alternates
@@ -21,6 +23,8 @@ are internal — that is, where the label is a chain label on both
 sides — the unglued orientation's chain directions at the two glued
 labels are opposite.
 -/
+
+@[expose] public section
 
 namespace RS
 

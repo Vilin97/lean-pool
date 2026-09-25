@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalInstance
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalInstance
 
 /-!
 # Braiding naturality, fragment level
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalInstance
 Value lemmas for the tensor swap, the braiding-naturality label
 meets, and the fragment-level naturality squares.
 -/
+
+@[expose] public section
 
 namespace RS
 

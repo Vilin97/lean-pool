@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndImage
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndImage
 
 /-!
 # Quotients of countably presented ind-objects
@@ -47,6 +49,8 @@ of a countably presented ind-object is of at most countable dimension
 (`RS.rank_hom_unit_le_aleph0_of_presented`), and hence so is that of
 any of its quotients (`RS.rank_hom_unit_le_aleph0_of_epi`).
 -/
+
+@[expose] public section
 
 namespace RS
 

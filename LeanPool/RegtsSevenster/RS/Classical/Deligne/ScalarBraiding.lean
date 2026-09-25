@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.UnitEnd
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BiprodTransfer
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.UnitEnd
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BiprodTransfer
 
 /-!
 # Scalar self-braidings and the vanishing for even and odd lines
@@ -23,6 +25,8 @@ one-variable indicator evaluations kill every non-row
 give the vanishing half of Deligne 1.9 for `𝟙^p ⊕ 1̄^q` inside any
 ambient category — the engine of the trichotomy 2.9.
 -/
+
+@[expose] public section
 
 namespace RS
 

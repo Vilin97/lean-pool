@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModuleFunctor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModMonoidal
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModuleFunctor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModMonoidal
 
 /-!
 # Additivity for the comparison map
@@ -18,6 +20,8 @@ finite sum of endomorphisms of its realization summing to the
 identity.  These are what let a decomposition of a module object
 into a finite family of retracts be pushed through the comparison.
 -/
+
+@[expose] public section
 
 namespace RS
 

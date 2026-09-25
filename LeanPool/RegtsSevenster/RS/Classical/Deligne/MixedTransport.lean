@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.StepATransport
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.StepATransport
 
 /-!
 # Transport of local mixedness along a base change
@@ -14,6 +16,8 @@ base change: the free module on an object is carried to the free
 module on the same object, so a decomposition over one algebra
 becomes a decomposition over any algebra under it.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourWord
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourWord
 
 /-!
 # Word sign depends only on the word's permutation
@@ -13,6 +15,8 @@ We show that `wordSign w c` depends on `w` only through `wordPerm w`,
 by identifying it as `(-1) ^ oddInversions (wordPerm w) c`, where
 `oddInversions σ c` counts inversions of `σ` at odd-coloured positions.
 -/
+
+@[expose] public section
 
 namespace RS
 

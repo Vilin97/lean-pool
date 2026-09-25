@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.ListPairs
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PairList
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CircuitCount
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.ListPairs
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PairList
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CircuitCount
 
 /-!
 # The regroup sign
@@ -31,6 +33,8 @@ it in two halves.
 Both run on the flat-map presentations of the three lists and on
 the index arithmetic of a list of pairs.
 -/
+
+@[expose] public section
 
 namespace RS
 

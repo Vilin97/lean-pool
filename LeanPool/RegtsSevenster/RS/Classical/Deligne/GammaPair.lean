@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModHom
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModHom
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModTensor
 
 /-!
 # The comparison map of Deligne's (2.11.1)
@@ -54,6 +56,8 @@ The only identity not implied by coherence is the odd-odd-odd one,
 self-duality of the odd line,
 `RS.OddLine.evaluation_coevaluation`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29
 
 /-!
 # The sign action on tensor powers of an odd line
@@ -18,6 +20,8 @@ adjacent transpositions, forces a general permutation to act by its
 sign.  The linear extension evaluates the group algebra's action on
 a single group element accordingly.
 -/
+
+@[expose] public section
 
 namespace RS
 

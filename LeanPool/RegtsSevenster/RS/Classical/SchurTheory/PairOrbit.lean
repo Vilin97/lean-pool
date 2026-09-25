@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairStab
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairStab
 
 /-!
 # Orbit–stabilizer for pair colourings
@@ -13,6 +15,8 @@ Pair contents, the orbit–stabilizer identity for pair-colouring
 classes (transported along `finProdFinEquiv`), and the
 fibre-margin partition.
 -/
+
+@[expose] public section
 
 namespace RS
 

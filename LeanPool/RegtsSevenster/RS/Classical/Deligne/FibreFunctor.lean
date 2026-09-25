@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModHom
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModHom
 
 /-!
 # The fibre functor over an algebra
@@ -15,6 +17,8 @@ morphisms out of the two generators.  Both steps are functorial,
 so `ω` is a functor from the category to the super modules over
 the Γ-algebra of the base.
 -/
+
+@[expose] public section
 
 namespace RS
 

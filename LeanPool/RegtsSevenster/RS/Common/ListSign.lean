@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Definitions
+module
+
+public import LeanPool.RegtsSevenster.RS.Definitions
 
 /-!
 # Inversions and the sorting sign
@@ -15,6 +17,8 @@ adjacent transpositions of distinct elements, which is the
 combinatorial engine of the alternating evaluation of mixed vertex
 functionals.
 -/
+
+@[expose] public section
 
 namespace RS
 

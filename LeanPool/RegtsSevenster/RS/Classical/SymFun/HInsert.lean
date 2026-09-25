@@ -4,13 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.SubsetEH
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.SubsetEH
 
 /-!
 # The add-one-variable recurrence for `hSub`
 
 `hSub (insert j A) (m+1) = hSub A (m+1) + X j * hSub (insert j A) m`
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.SubsetEH
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.SubsetEH
 
 /-!
 # The e–h convolution and the single-variable resolvent
@@ -16,6 +18,8 @@ of the bialternant matrix factorization.  The `hSub`
 add-one-variable recurrence enters as the hypothesis `HSubRec`,
 discharged in `HInsert.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

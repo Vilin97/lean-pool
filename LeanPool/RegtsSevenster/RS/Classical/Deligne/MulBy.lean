@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaAlgebra
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaAlgebra
 
 /-!
 # Multiplication by a scalar
@@ -20,6 +22,8 @@ algebra: multiplication by a nonzero even element has an ideal for
 its kernel and an ideal for its image, so simplicity makes it
 invertible, and the preimage of the unit is then an inverse for `g`.
 -/
+
+@[expose] public section
 
 namespace RS
 

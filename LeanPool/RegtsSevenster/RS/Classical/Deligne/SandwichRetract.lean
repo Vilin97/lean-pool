@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
 
 /-!
 # The sandwich retract legs
@@ -15,6 +17,8 @@ double-dual sandwich, built from bundled pieces: the unit
 collapses of the relative tensor as module isomorphisms, the
 bundled copairing and pairing, and the associator.
 -/
+
+@[expose] public section
 
 namespace RS
 

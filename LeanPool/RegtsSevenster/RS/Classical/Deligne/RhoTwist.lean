@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddParity
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddParity
 
 /-!
 # The realization of a twisted object
@@ -15,6 +17,8 @@ changes nothing, and twisting by the odd line exchanges the two
 components.  These four identifications are the base cases of the
 computation of `ρ` on the free modules of 2.11.
 -/
+
+@[expose] public section
 
 namespace RS
 

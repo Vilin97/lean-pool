@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLaw
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLaw
 
 /-!
 # The right identity law: stage equivalences
@@ -34,6 +36,8 @@ The stage equivalence maps `Fin (s + u) ⊕ Fin (t' + t')` to
   A' = Fin t' (strand-bundle outgoing ends)
 The shuffle: `((D ⊕ C) ⊕ B) ⊕ (A ⊕ A') ≃ (D ⊕ C) ⊕ ((A ⊕ A') ⊕ B)`.
 -/
+
+@[expose] public section
 
 namespace RS
 

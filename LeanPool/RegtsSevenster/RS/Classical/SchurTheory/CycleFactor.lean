@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SameCycleQuot
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SameCycleQuot
 
 /-!
 # The orbit factorization of a fixed-colouring sum
@@ -14,6 +16,8 @@ over the colourings fixed by `π` factorizes over the orbit space:
 each orbit is coloured uniformly, contributing a power sum in its
 size.
 -/
+
+@[expose] public section
 
 namespace RS
 

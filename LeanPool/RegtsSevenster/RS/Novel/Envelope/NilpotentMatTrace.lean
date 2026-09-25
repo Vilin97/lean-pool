@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatSemisimple
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatSemisimple
 
 /-!
 # The nilpotent leg of the matrix-envelope trace
@@ -19,6 +21,8 @@ insertion), is supported on class blocks (the dichotomy), and
 inherits nilpotency — so each class block has vanishing complex
 trace, and the diagonal trace is the class-weighted sum of those.
 -/
+
+@[expose] public section
 
 namespace RS
 

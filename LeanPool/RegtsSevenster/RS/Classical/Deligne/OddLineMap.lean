@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29
 
 /-!
 # Transporting an odd line along a monoidal functor
@@ -14,6 +16,8 @@ odd line: the square of the image is the image of the square, and
 the self-braiding of the image is the image of the self-braiding,
 which is minus an identity.
 -/
+
+@[expose] public section
 
 namespace RS
 

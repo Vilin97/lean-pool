@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Label pairs sharing no label
@@ -17,6 +19,8 @@ a pair list its plain union.  It is stated once here, with named
 fields, so that the four inequalities are never read off a nested
 conjunction by position.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowerSums
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowerSums
 
 /-!
 # Super power sums
@@ -21,6 +23,8 @@ where `H` is the generating power series of `newtonH t` and `T` is
 the shifted power-sum series; this is immediate from the Newton
 recursion that defines `newtonH`.
 -/
+
+@[expose] public section
 
 namespace RS
 

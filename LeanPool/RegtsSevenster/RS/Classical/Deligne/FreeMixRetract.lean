@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210
 
 /-!
 # The free modules of a finite biproduct as retracts
@@ -16,6 +18,8 @@ how a mixed sum of copies of the unit and the odd line is fed to an
 additivity argument without ever forming a biproduct in the
 category of module objects.
 -/
+
+@[expose] public section
 
 namespace RS
 

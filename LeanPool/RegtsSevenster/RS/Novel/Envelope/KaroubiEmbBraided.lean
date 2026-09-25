@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvInstances
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvInstances
 
 /-!
 # The Karoubi embedding is braided and linear
@@ -13,6 +15,8 @@ The canonical functor `toKaroubi C` is a braided monoidal functor
 (with respect to the in-tree monoidal and braided structures on
 the Karoubi envelope) and is ℂ-linear.
 -/
+
+@[expose] public section
 
 namespace RS
 

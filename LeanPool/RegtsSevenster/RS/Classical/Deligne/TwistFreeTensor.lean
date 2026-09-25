@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichRetract
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistUnitor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichRetract
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistUnitor
 
 /-!
 # The free module inside the relative tensor
@@ -20,6 +22,8 @@ braiding.
 * `freeTensorTwistIso`: the relative tensor of a free module with
   a module is the twist of that module by the generating object.
 -/
+
+@[expose] public section
 
 namespace RS
 

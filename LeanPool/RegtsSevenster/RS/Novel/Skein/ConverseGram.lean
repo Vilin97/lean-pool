@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RSTensor
-import LeanPool.RegtsSevenster.RS.StatementConverse
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RSTensor
+public import LeanPool.RegtsSevenster.RS.StatementConverse
 
 /-!
 # The converse from a super-Gram factorization
@@ -20,6 +22,8 @@ function, is the super form of their two tensors.  That identity is
 the converse it gives is `regts_sevenster_converse` in
 `RS/TheoremConverse.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPower
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPower
 
 /-!
 # The tensor-power pairing in colouring coordinates
@@ -18,6 +20,8 @@ On colouring basis vectors this is a sign times a product of
 single-position form entries: `1` on matching even colours, the
 symplectic entry on odd colours, `0` on mixed positions.
 -/
+
+@[expose] public section
 
 namespace RS
 

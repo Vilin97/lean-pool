@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OrbitCard
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InvolutionCard
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OrbitCard
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InvolutionCard
 
 /-!
 # Directed perfect matchings and the rotation of their union
@@ -26,6 +28,8 @@ This is the sign lemma the Gram identity for mixed partition
 functions runs on: the product of two matchings' signs is `(-1)` to
 the number of components of their union.
 -/
+
+@[expose] public section
 
 namespace RS
 

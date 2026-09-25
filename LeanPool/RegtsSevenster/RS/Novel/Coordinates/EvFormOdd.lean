@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BasisSplit
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddPair
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BasisSplit
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddPair
 
 /-!
 # The evaluation functional on odd pairs
@@ -15,6 +17,8 @@ transported odd pairs the one-strand evaluation through the
 structure map is the standard form's odd block — the symplectic
 entries.
 -/
+
+@[expose] public section
 
 namespace RS
 

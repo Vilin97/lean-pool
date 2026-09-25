@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchur
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarLinear
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchur
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarLinear
 
 /-!
 # The ind-embedding preserves simplicity
@@ -42,6 +44,8 @@ epimorphism in an abelian category is an isomorphism.
 * `RS.mono_unit_ind` — a nonzero algebra unit in `Ind C` is a
   monomorphism.
 -/
+
+@[expose] public section
 
 namespace RS
 

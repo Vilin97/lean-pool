@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagCarrier
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymDatum
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PairPerm
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagCarrier
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymDatum
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PairPerm
 
 /-!
 # Transfer of the zigzag laws along retractions
@@ -20,6 +22,8 @@ retraction.  Instantiated at the symmetriser section and
 projection, this gives the zigzag laws of the symmetric-power
 datum from those of the power datum — Deligne's 1.15.1.
 -/
+
+@[expose] public section
 
 namespace RS
 

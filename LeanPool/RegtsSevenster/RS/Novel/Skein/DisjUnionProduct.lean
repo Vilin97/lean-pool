@@ -4,13 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.TheoremQuant
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceOrderIso
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor
-import LeanPool.RegtsSevenster.RS.StatementConverse
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughEdgeCut
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedCutDispatch
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedAgreement
+module
+
+public import LeanPool.RegtsSevenster.RS.TheoremQuant
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceOrderIso
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor
+public import LeanPool.RegtsSevenster.RS.StatementConverse
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughEdgeCut
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedCutDispatch
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedAgreement
 
 /-!
 # The final chain: assembling the factorization
@@ -23,6 +25,8 @@ canonical choice value agrees with the choice-free Definition 5
 value (`EdgeSubset.throughValueC_eq_mixedValue`).  Independence
 across boundary pairings is not needed, there being no boundary.
 -/
+
+@[expose] public section
 
 namespace RS
 

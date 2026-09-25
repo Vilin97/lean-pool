@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.AltPow
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PermNat
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowAct
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.AltPow
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PermNat
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowAct
 
 /-!
 # The idempotent cut of module powers
@@ -35,6 +37,8 @@ interface are plugged in elsewhere.
   symmetriser and the antisymmetriser the cut is the symmetric and
   the alternating power, definitionally.
 -/
+
+@[expose] public section
 
 namespace RS
 

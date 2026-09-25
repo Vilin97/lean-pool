@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceCyclic
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdeal
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceCyclic
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdeal
 
 /-!
 # Zero negligibles: nondegeneracy of the trace pairing
@@ -17,6 +19,8 @@ transpose relabeling of the open ends — a bijection on fragments —
 so the two test families coincide, and an element all of whose
 traces vanish lies in the pairing kernel.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TransposeLedger
-import LeanPool.RegtsSevenster.RS.Novel.Skein.NonSeparatedStep
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TransposeLedger
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.NonSeparatedStep
 
 /-!
 # The two-path non-separated transform
@@ -25,6 +27,8 @@ Composing with the separated ledger gives the transform, whose
 factor is minus the product of the two end colours' odd-partner
 signs.
 -/
+
+@[expose] public section
 
 namespace RS
 

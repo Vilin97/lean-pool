@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplitProof.C
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplitProof.C
 
 /-!
 # The single-pair gluing decomposition

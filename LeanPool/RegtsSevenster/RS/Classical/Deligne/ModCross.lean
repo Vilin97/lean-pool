@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModMulti
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModMulti
 
 /-!
 # Crossing the monoid over a block of the multi-tensor
@@ -35,6 +37,8 @@ two-element multi-tensor.
   of a two-element multi-tensor, by descent through the single slot
   relation, with its defining equation `modMultiπ_swapPair`.
 -/
+
+@[expose] public section
 
 namespace RS
 

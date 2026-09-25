@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.AllInternalIndependence
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.EulerianIndependence
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.AllInternalIndependence
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.EulerianIndependence
 
 /-!
 # All-internal agreement: Eulerian independence outright
@@ -33,6 +35,8 @@ by fibre proves the Eulerian-independence interface outright.  No
 state is ever chosen — every state used is manufactured from an
 existing even colouring — so no `(k, ℓ) = (0, 0)` edge case arises.
 -/
+
+@[expose] public section
 
 namespace RS
 

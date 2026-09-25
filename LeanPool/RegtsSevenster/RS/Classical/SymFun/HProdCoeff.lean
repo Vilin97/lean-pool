@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.CoeffExtract
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.CoeffExtract
 
 /-!
 # Coefficient of a product of complete homogeneous polynomials
@@ -13,6 +15,8 @@ The coefficient of a monomial `w` in the product
 `∏ i, hSub univ (c i)` counts the number of tuples of
 symmetric-function indices whose combined weight equals `w`.
 -/
+
+@[expose] public section
 
 namespace RS
 

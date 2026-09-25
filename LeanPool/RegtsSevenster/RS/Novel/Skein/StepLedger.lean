@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingConnectivity
-import LeanPool.RegtsSevenster.RS.Novel.Skein.OrbitParities
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TwoPathStep
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingConnectivity
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.OrbitParities
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TwoPathStep
 
 /-!
 # The pairing-preserving step ledger
@@ -62,6 +64,8 @@ re-routed strand.  `TwoPathStep` supplies the count invariance the halves need
 repair does not carry the ledger on its own, which is why a pair
 is treated as one composite move.
 -/
+
+@[expose] public section
 
 namespace RS
 

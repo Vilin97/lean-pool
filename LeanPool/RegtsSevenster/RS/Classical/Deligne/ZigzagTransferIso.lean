@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagTransfer
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagTransfer
 
 /-!
 # Transport of the zigzag laws along isomorphisms
@@ -14,6 +16,8 @@ idempotent is the identity, so the adjointness condition of the
 transfer is vacuous and the zigzag laws pass across without any
 further hypothesis.
 -/
+
+@[expose] public section
 
 namespace RS
 

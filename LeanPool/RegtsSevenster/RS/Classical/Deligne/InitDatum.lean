@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitBase
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagCarrier
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitBase
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagCarrier
 
 /-!
 # The duality datum over the trivial base
@@ -15,6 +17,8 @@ between the corresponding modules over the tensor unit: the
 relative tensor collapses to the plain tensor, and the pairing
 and copairing pass through the collapse.
 -/
+
+@[expose] public section
 
 namespace RS
 

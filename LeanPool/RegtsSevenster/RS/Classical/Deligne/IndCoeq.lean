@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndTensorExact
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorExact
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndTensorExact
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorExact
 
 /-!
 # Exactness of the tensor product on ind-objects, (co)equalizer half
@@ -68,6 +70,8 @@ Deliverables, for every `A : Ind C`:
 The acceptance tests confirm that the cokernel and kernel comparison
 isomorphisms of both tensoring functors synthesize.
 -/
+
+@[expose] public section
 
 namespace RS
 

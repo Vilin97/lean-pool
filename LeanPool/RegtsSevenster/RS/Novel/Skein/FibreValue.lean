@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LabelChords
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerValue
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LabelChords
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerValue
 
 /-!
 # The fibre value: the open-sector value indexed by chord diagrams
@@ -20,6 +22,8 @@ system.  Independence holds *within* a chord diagram, not across
 diagrams: `not_throughIndependenceC` exhibits two path-canonical
 data with different boundary pairings whose signed values differ.
 -/
+
+@[expose] public section
 
 namespace RS
 

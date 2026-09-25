@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.VertexSum
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordLabels
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.VertexSum
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordLabels
 
 /-!
 # Colourings of the whole subset
@@ -22,6 +24,8 @@ types, stated here so that the split the flag model makes is a
 theorem about `EdgeOddColouring` rather than a definition in its
 own right.
 -/
+
+@[expose] public section
 
 namespace RS
 

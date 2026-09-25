@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockFactor
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.NilpotentTrace
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockFactor
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.NilpotentTrace
 
 /-!
 # The block Frobenius tower
@@ -18,6 +20,8 @@ resulting `FrobeniusTower` gives the appendix's nilpotent-trace
 proof at every strand arity. The mainline semisimplicity proof
 uses the factorial argument in `BlockFactorialTrace`.
 -/
+
+@[expose] public section
 
 namespace RS
 

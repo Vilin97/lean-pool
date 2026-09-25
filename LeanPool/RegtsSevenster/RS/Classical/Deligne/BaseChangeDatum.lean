@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeLinear
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeLinear
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
 
 /-!
 # The base change of a duality datum
@@ -16,6 +18,8 @@ functorial maps and the unit collapses are all linear, so the
 composites defining the base-changed pairing and copairing are
 linear too.
 -/
+
+@[expose] public section
 
 namespace RS
 

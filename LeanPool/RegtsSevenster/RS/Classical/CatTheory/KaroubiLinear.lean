@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Linear structure on a Karoubi completion
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 The underlying-morphism map transports the linear structure of the
 base category to its Karoubi completion.
 -/
+
+@[expose] public section
 
 namespace RS
 

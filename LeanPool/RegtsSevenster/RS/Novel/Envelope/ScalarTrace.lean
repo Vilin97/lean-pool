@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Trace
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.LinearCategory
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Trace
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.LinearCategory
 
 /-!
 # The trace as a complex number
@@ -18,6 +20,8 @@ trace fields ask for.
 
 Cyclicity carries across the identification unchanged.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.OrientationFlip
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueCircuitDelta
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.OrientationFlip
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueCircuitDelta
 
 /-!
 # Path-canonical orientations and the corrected independence
@@ -20,6 +22,8 @@ the circuit-restricted invariance makes the canonical
 summand well-defined; the corrected value chooses among canonical
 data, and the corrected independence interface quantifies over it.
 -/
+
+@[expose] public section
 
 namespace RS
 

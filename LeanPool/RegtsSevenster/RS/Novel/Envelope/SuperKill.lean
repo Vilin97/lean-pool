@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinDimBound
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.OmegaTensorPower
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinDimBound
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.OmegaTensorPower
 
 /-!
 # Square death at the super level
@@ -16,6 +18,8 @@ permutation action, and in particular the square block idempotent
 at any side `s > 2eR` dies at the super level — the unconditional
 half of the sector dichotomy.
 -/
+
+@[expose] public section
 
 namespace RS
 

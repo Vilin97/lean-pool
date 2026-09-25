@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeMonoidal
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeZigzag
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagSandwich
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeMonoidal
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeZigzag
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagSandwich
 
 /-!
 # Transport of the zigzag laws along base change
@@ -18,6 +20,8 @@ base-changed insertion and contraction are the images of the
 insertion and contraction, conjugated by the structure map, so
 their composite is the image of an identity.
 -/
+
+@[expose] public section
 
 namespace RS
 

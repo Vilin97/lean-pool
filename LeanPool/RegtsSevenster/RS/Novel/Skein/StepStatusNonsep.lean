@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StepStatus
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StepStatus
 
 /-!
 # The non-separated per-step status identification
@@ -36,6 +38,8 @@ exactly when `x` is an end of the anchor chord
 No swap-end data is consumed: the identity holds for the anchored
 transported frame of *any* repair from a canonical source.
 -/
+
+@[expose] public section
 
 namespace RS
 

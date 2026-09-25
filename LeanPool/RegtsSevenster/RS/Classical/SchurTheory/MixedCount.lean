@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.MixedFixed
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourWeight
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.MixedFixed
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourWeight
 
 /-!
 # Mixed fixed-point convolution
@@ -13,6 +15,8 @@ import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourWeight
 Expresses the colour character of a lifted permutation as a convolution
 over tail-content vectors.
 -/
+
+@[expose] public section
 
 namespace RS
 

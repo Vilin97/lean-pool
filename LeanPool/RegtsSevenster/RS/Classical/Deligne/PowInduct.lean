@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainNonzero
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPairSucc
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowSuccMod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowZigzag
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainNonzero
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPairSucc
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowSuccMod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowZigzag
 
 /-!
 # The power zigzag induction
@@ -18,6 +20,8 @@ the zigzag laws climb the powers: the base is the arity-one
 transfer and the step is the tensor inheritance transferred along
 the merge.
 -/
+
+@[expose] public section
 
 namespace RS
 

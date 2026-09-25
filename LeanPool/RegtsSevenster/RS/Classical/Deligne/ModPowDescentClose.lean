@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichMerge
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichMerge
 
 /-!
 # Descent of power vanishing to the module
@@ -14,6 +16,8 @@ relative tensor power descends to the module itself: the retract
 iterates up the tower, and the tower reassembles into a power
 pair whose first factor is the vanishing power.
 -/
+
+@[expose] public section
 
 namespace RS
 

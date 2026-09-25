@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Monoidal structure on the matrix envelope
@@ -26,6 +28,8 @@ multiplication turns into iterated sums that factor via `tensor_sum` and
 `sum_tensor` (the `MonoidalPreadditive` hypothesis).  The pentagon and triangle
 identities reduce componentwise to the corresponding identities in `C`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.FactorialBound
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.FactorialBound
 
 /-!
 # The square root of the factorial beats every geometric progression
@@ -23,6 +25,8 @@ least `1`, and it then suffices to pick `m` beyond both `3 * b ^ 2`
 (so the base `2 * m / 3` dominates `2 * b ^ 2`) and a natural number
 exceeding the constant (so the spare factor `2 ^ m` swallows it).
 -/
+
+@[expose] public section
 
 namespace RS
 

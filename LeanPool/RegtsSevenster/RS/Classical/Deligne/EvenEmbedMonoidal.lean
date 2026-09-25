@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledAbelian
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledAbelian
 
 /-!
 # The even embedding is strong braided monoidal
@@ -31,6 +33,8 @@ even-component functor `evenFunctor` of
 or out of the zero object is unique; so it preserves all limits and
 all colimits, in particular the finite ones.
 -/
+
+@[expose] public section
 
 namespace RS
 

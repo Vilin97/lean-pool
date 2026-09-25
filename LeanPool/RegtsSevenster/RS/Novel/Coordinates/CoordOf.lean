@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ParameterModel
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConj
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ParameterModel
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConj
 
 /-!
 # Coordinates of model vectors
@@ -15,6 +17,8 @@ odd parity), the cast rule, the conjugation transfer, and the
 basis expansion: the vocabulary in which the final computation
 evaluates.
 -/
+
+@[expose] public section
 
 namespace RS
 

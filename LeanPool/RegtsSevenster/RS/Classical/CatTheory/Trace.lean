@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.UnitEnd
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.UnitEnd
 
 /-!
 # The categorical trace
@@ -18,6 +20,8 @@ The basic calculus: the trace of the identity is the categorical
 dimension; the trace is additive and ℂ-homogeneous; it is cyclic;
 and it is multiplicative over the tensor product.
 -/
+
+@[expose] public section
 
 namespace RS
 

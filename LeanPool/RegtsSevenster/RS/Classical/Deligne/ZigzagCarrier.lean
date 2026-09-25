@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemma
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemma
 
 /-!
 # Carrier-level zigzag identities
@@ -33,6 +35,8 @@ conversely.
 * `modZigzagDatum_of_carrier`: the converse packaging, producing
   the multi-level laws from the carrier-level identities.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.KaroubiLinear
-import LeanPool.RegtsSevenster.RS.Classical.Algebra.TraceCriterion
-import LeanPool.RegtsSevenster.RS.Common.NilpotentMap
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.KaroubiLinear
+public import LeanPool.RegtsSevenster.RS.Classical.Algebra.TraceCriterion
+public import LeanPool.RegtsSevenster.RS.Common.NilpotentMap
 
 /-!
 # The trace criterion on a Karoubi corner
@@ -16,6 +18,8 @@ sandwiches arbitrary ambient tests into the corner, so a
 nondegenerate trace that kills nilpotents proves semisimplicity
 of every corner endomorphism algebra.
 -/
+
+@[expose] public section
 
 namespace RS
 

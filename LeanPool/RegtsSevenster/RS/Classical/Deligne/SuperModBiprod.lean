@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModHom
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModHom
 
 /-!
 # Biproducts of super modules
@@ -28,6 +30,8 @@ componentwise statement `(p.1, 0) + (0, p.2) = p`.  Finite
 biproducts then follow formally from the zero object and the binary
 ones.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreRestrict
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffleLine
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreRestrict
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffleLine
 
 /-!
 # The objects split by a fixed algebra
@@ -29,6 +31,8 @@ The payoff is `RS.splitsOn_of_generator`: an algebra splitting a
 tensor generator and its dual splits every embedded object, once
 subquotients of split objects are known to be split.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourExtendSwap
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BraidWord
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourExtendSwap
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BraidWord
 
 /-!
 # The colour-side braiding word
@@ -16,6 +18,8 @@ colouring along the word's permutation and multiplies by the
 word's Koszul sign, computed stepwise along the colouring's own
 trajectory.
 -/
+
+@[expose] public section
 
 namespace RS
 

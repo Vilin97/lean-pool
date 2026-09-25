@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.HookConfinement
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.HookVanishing
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.HookConfinement
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.HookVanishing
 
 /-!
 # The nilpotent-trace theorem
@@ -28,6 +30,8 @@ The skein construction discharges the tower fields: `rep` is the
 permutation action on strand bundles, `pow` the tensor power of an
 endomorphism, and `frobenius` the categorical Frobenius formula.
 -/
+
+@[expose] public section
 
 namespace RS
 

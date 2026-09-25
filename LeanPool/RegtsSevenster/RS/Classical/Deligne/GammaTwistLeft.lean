@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaShift
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistShuffle
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaShift
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistShuffle
 
 /-!
 # The realization of a left odd twist is a parity shift
@@ -33,6 +35,8 @@ odd-scalar blocks that carrying is the self-braiding of the odd
 line, which is `−1`.  The sign is absorbed once and for all into
 the odd component `RS.gammaTwistLeftOdd`.
 -/
+
+@[expose] public section
 
 namespace RS
 

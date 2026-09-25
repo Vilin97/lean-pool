@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymDatum
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymDatum
 
 /-!
 # The bridge from the power chain to the splitting chain
@@ -19,6 +21,8 @@ unit to the corresponding splitting-chain unit.  This is the
 wiring that connects the copairing powers of the duality datum
 to the stage units that the colimit detection speaks about.
 -/
+
+@[expose] public section
 
 namespace RS
 

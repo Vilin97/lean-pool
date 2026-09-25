@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockSplice
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.Frobenius
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockTower
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockSplice
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.Frobenius
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockTower
 
 /-!
 # The block cycle trace
@@ -22,6 +24,8 @@ induction on the number of blocks then turns the tensor of a tuple
 into the tuple's cyclic composite, which for a constant tuple is a
 power.
 -/
+
+@[expose] public section
 
 namespace RS
 

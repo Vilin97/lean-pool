@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelCoord
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelCoord
 
 /-!
 # The split cap on merged vectors
@@ -14,6 +16,8 @@ The multiplicative midpoint of the cap recursion: the split cap
 transported merge of model vectors is the product of the smaller
 cap value and the strand evaluation.
 -/
+
+@[expose] public section
 
 namespace RS
 

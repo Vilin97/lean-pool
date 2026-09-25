@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PathLedger
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PathLedger
 
 /-!
 # The separated count parity
@@ -47,6 +49,8 @@ moves by exactly `±2`, i.e. the circuit count by `±1`.
 * `EdgeSubset.fullPerm_repair` — the move is the double swap.
 * `separatedCountParity` — the discharged `SeparatedCountParity`.
 -/
+
+@[expose] public section
 
 namespace RS
 

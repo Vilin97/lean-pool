@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StarExplode
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeAssoc
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StarExplode
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeAssoc
 
 /-!
 # The star decomposition
@@ -18,6 +20,8 @@ canonical ones gives `starDecomposition`, the accompanying paper's
 "stars and closed graphs" (§3.2): every closed fragment is its star
 union glued along the edge matching.
 -/
+
+@[expose] public section
 
 namespace RS
 

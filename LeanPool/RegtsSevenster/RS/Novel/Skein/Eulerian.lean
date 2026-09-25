@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.PermCongr
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConnectionRank
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.PermCongr
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConnectionRank
 
 /-!
 # Eulerian edge subsets and circuit data
@@ -17,6 +19,8 @@ systems and the circuit count — is defined in
 edge subsets, the Eulerian condition, transition systems and the
 circuit count all transport along fragment equivalences.
 -/
+
+@[expose] public section
 
 namespace RS
 

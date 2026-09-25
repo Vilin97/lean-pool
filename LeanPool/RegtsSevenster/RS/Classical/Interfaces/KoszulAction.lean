@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.OmegaTensorPower
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.OmegaTensorPower
 
 /-!
 # The even-component restriction of the super permutation action
@@ -19,6 +21,8 @@ the super permutation action kills, the even-component
 representation kills too.  That containment is what the sector
 trace needs.
 -/
+
+@[expose] public section
 
 noncomputable section
 

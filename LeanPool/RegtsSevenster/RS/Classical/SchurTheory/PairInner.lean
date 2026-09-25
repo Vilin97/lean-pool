@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairOrbit
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairOrbit
 
 /-!
 # The pair-colouring count with margins
@@ -14,6 +16,8 @@ with prescribed row and column margins is `n!` times the number of
 pair contents with those margins: Fubini, the pair stabilizer
 count, content grouping, and orbit–stabilizer.
 -/
+
+@[expose] public section
 
 namespace RS
 

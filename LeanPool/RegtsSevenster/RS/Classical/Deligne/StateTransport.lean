@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29State
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29State
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
 
 /-!
 # Transport of a dévissage state along an isomorphism
@@ -14,6 +16,8 @@ The state depends on the object only through the free module it
 generates, so an isomorphism of objects carries a state to a
 state without disturbing any of the counts.
 -/
+
+@[expose] public section
 
 namespace RS
 

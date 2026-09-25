@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableDescent
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableDescent
 
 /-!
 # Embedded images from finite length
@@ -37,6 +39,8 @@ factorisation of `g₀` stays an epimorphism, and `f` acquires a strong
 epi–mono factorisation through `indOf.obj (image g₀)`; uniqueness of
 such factorisations identifies the image of `f` with it.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableNullstellensatz
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.HomFinite
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEvenRing
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UniversalAlgebra
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableNullstellensatz
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.HomFinite
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEvenRing
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UniversalAlgebra
 
 /-!
 # Countable dimension of the Γ-algebra
@@ -60,6 +62,8 @@ families (`RS.exists_universal_algebra_rank_le_aleph0`), and, through
 the countable Nullstellensatz, as a ℂ-point of the Γ-algebra
 (`RS.nonempty_superPoint_gammaAlgebra`).
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StrandBundle
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomSpaces
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StrandBundle
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomSpaces
 
 /-!
 # The categorical trace on Hom spaces
@@ -17,6 +19,8 @@ therefore the connection pairing evaluated at the bundle; it kills
 the pairing kernel by construction and so descends to the Hom
 spaces of the skein category.
 -/
+
+@[expose] public section
 
 namespace RS
 

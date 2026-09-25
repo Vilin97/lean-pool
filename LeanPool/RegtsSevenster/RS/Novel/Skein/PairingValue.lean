@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingSignature
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingSignature
 
 /-!
 # The pairing-resolved signed value
@@ -16,6 +18,8 @@ systems with the same boundary pairing it is invariant given the
 pairing-preserving ledger — the well-definedness of the value as a
 function of the pairing, riding on the proved block connectivity.
 -/
+
+@[expose] public section
 
 namespace RS
 

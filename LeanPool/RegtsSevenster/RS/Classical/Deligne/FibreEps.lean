@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairNat
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairNat
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
 
 /-!
 # The unit comparison of the fibre functor
@@ -17,6 +19,8 @@ fibre functor is therefore an isomorphism outright, and on the two
 components it is composition with the inverse right unitor of the
 algebra.
 -/
+
+@[expose] public section
 
 namespace RS
 

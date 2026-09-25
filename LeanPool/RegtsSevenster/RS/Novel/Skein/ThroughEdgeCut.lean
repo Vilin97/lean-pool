@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GluePathMatch
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueCrossDelta
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseDischarge
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PropThreeOpen
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GluePathMatch
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueCrossDelta
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseDischarge
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PropThreeOpen
 
 /-!
 # Transport across a through-edge cut
@@ -18,6 +20,8 @@ vertex factors transport across the glue unchanged.  The two
 transports here are what the colouring recursion needs at such a
 cut.
 -/
+
+@[expose] public section
 
 namespace RS
 

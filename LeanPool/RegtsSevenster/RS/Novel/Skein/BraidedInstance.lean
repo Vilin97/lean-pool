@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.BraidedNat
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.BraidedNat
 
 /-!
 # The symmetric skein category
@@ -13,6 +15,8 @@ Kernel descents of the braiding-naturality squares, the hexagon
 label identities, and the `BraidedCategory`/`SymmetricCategory`
 instances on `SkeinObj f`.
 -/
+
+@[expose] public section
 
 namespace RS
 

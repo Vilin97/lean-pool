@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.AltPow
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowAct
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.AltPow
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowAct
 
 /-!
 # The monoid action on alternating powers
@@ -28,6 +30,8 @@ every positive alternating power a module.
   with `altPowσ` a module map.
 * `altPowMod`: the bundled module.
 -/
+
+@[expose] public section
 
 namespace RS
 

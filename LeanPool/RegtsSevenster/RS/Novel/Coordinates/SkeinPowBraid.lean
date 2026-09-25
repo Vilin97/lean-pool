@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StdTransport
-import LeanPool.RegtsSevenster.RS.Classical.Super.PowBraid
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StdTransport
+public import LeanPool.RegtsSevenster.RS.Classical.Super.PowBraid
 
 /-!
 # The skein-side adjacent braiding and the transport intertwining
@@ -18,6 +20,8 @@ braided monoidal functor — where every rewrite fires — and the
 strictness of the skein associator enters only through a small
 concrete collapse.
 -/
+
+@[expose] public section
 
 namespace RS
 

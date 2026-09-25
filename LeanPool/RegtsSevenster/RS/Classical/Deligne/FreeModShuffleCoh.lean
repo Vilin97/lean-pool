@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorMuBraid
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorMuBraid
 
 /-!
 # Coherence of the free-module shuffle
@@ -34,6 +36,8 @@ generator, and that double twist is not the identity.  Accordingly
 `freeModShuffle_braiding` is stated over a `SymmetricCategory`, as
 is the interchange identity `RS.tensorμ_braiding` behind it.
 -/
+
+@[expose] public section
 
 namespace RS
 

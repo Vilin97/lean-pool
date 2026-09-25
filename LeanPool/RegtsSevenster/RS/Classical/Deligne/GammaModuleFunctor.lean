@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModHom
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModHom
 
 /-!
 # Realization as a functor on module objects
@@ -13,6 +15,8 @@ Taking the morphisms out of the two generators is functorial on
 module objects over a fixed commutative monoid object: the
 realization of a module map is postcomposition.
 -/
+
+@[expose] public section
 
 namespace RS
 

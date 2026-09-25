@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffleCoh
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePow
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffleCoh
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePow
 
 /-!
 # The free collapse descends to the module power
@@ -37,6 +39,8 @@ Throughout, the module structure on `A ⊗ V` is `freeModObj A V`; the
 carrier is spelt `(freeMod A V).X` so that instance synthesis finds
 it.
 -/
+
+@[expose] public section
 
 namespace RS
 

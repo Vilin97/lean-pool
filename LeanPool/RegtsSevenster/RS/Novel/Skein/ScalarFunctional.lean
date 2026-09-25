@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTraceNondegenerate
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTraceNondegenerate
 
 /-!
 # The scalar functional
@@ -16,6 +18,8 @@ of `f` itself.  This is the numerical endpoint of the extraction:
 every identity of Hom-classes at arity zero becomes an identity
 of parameter values through this functional.
 -/
+
+@[expose] public section
 
 namespace RS
 

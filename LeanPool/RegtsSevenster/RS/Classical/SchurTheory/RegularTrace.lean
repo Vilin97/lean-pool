@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PowerSurj
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PowerSurj
 
 /-!
 # The trace of left multiplication on a group algebra
@@ -14,6 +16,8 @@ regular character.  Combined with rank-equals-trace for
 idempotents this computes block dimensions without any
 decomposition theory.
 -/
+
+@[expose] public section
 
 namespace RS
 

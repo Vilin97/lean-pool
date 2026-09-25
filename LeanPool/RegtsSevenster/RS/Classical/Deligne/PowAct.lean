@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymMul
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymMul
 
 /-!
 # The monoid action on module powers and symmetric powers
@@ -32,6 +34,8 @@ symmetric power a module again.
   power, with `symPowσ` a module map.
 * `modPowMod`/`symPowMod`: the bundled modules.
 -/
+
+@[expose] public section
 
 namespace RS
 

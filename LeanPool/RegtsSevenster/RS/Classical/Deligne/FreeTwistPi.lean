@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPair
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistFreeTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPair
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistFreeTensor
 
 /-!
 # The free factor on the projection
@@ -20,6 +22,8 @@ carries the algebra past the generator, reassociates, and acts.
   `RS.gpair`, which is the form the comparison map of the Γ-modules
   consumes.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Preservation of coproducts from finite and filtered
@@ -18,6 +20,8 @@ supplied here.  The consumer is the tensor product on the
 ind-category, which is exact and preserves filtered colimits, and
 must be seen to preserve the coend presentations of §3.
 -/
+
+@[expose] public section
 
 namespace RS
 

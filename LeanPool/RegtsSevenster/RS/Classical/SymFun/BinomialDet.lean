@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.BinomialH
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareStair
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.BinomialH
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareStair
 
 /-!
 # Nonvanishing of square-diagram Schur values at constant sequences
@@ -16,6 +18,8 @@ is proved here by a row-normalized product identity; the negated
 case is stated as `SquareBinomialDetPos` and proved by the
 Lindström–Gessel–Viennot argument of `LGVStrict.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

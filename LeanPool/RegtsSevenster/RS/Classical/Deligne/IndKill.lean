@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSplit
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.RegularTrace
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSplit
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.RegularTrace
 
 /-!
 # The induction kill: block products die with their multiplicity
@@ -20,6 +22,8 @@ zero as soon as the multiplicity is.  This is the bridge from the
 character combinatorics to the categorical direct-sum transfer of
 Schur vanishing.
 -/
+
+@[expose] public section
 
 namespace RS
 

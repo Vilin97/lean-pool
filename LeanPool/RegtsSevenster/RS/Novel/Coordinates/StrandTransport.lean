@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EvFormOdd
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EvFormOdd
 
 /-!
 # The one-strand transport collapse
@@ -14,6 +16,8 @@ strand identification: the counit-tensor coherence with the
 strict skein unitor eliminated.  Its even and odd evaluations on
 unit-padded vectors are the strand identification itself.
 -/
+
+@[expose] public section
 
 namespace RS
 

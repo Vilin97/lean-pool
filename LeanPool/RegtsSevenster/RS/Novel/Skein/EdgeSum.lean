@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.EdgeColouring
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.EdgeColouring
 
 /-!
 # RS21's colouring sum
@@ -25,6 +27,8 @@ through-edge one colour and `φ ∼ χ₁` pins it at both ends.  So
 RS21's sum is the flag model's, cut down to the agreeing states —
 which is what the pairing of two tensors computes.
 -/
+
+@[expose] public section
 
 namespace RS
 

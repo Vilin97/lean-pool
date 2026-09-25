@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSplit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PermRepChar
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSplit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PermRepChar
 
 /-!
 # Schur specialisations at super power sums are multiplicities
@@ -17,6 +19,8 @@ so every Schur specialisation at a super power sum is a natural
 number — the full nonnegativity input for the hook arguments of
 Deligne 1.10/1.12.
 -/
+
+@[expose] public section
 
 namespace RS
 

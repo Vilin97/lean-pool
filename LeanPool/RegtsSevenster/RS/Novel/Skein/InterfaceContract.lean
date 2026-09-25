@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerRecursion
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerRecursion
 
 /-!
 # Contracting the interface
@@ -23,6 +25,8 @@ per-cut kernels are the ones the dispatches deliver: the super form
 at a closed cut, and at an open one the configuration's own kernel,
 which is the same form read in the basis the tensor twists into.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPerm
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPerm
 
 /-!
 # The action along the standard embeddings
@@ -23,6 +25,8 @@ The whiskering algebra map is where the linear structure of the
 category is used: additivity of `▷` is `MonoidalPreadditive` and its
 ℂ-homogeneity is `MonoidalLinear`.
 -/
+
+@[expose] public section
 
 namespace RS
 

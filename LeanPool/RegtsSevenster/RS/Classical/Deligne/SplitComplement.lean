@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitExtract
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitExtract
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
 
 /-!
 # The complement of the split factor
@@ -15,6 +17,8 @@ idempotent on the base change of the module; its kernel is the
 complement of the split unit factor, and carries the descended
 action.
 -/
+
+@[expose] public section
 
 namespace RS
 

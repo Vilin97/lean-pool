@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitSimple
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitSimple
 
 /-!
 # Points of objects tensor without vanishing
@@ -15,6 +17,8 @@ exact, so the tensor of two nonzero points is again a
 monomorphism, and in particular nonzero.  This is the input that
 makes a tensor product of nonzero algebras nonzero.
 -/
+
+@[expose] public section
 
 namespace RS
 

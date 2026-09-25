@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Definitions
+module
+
+public import LeanPool.RegtsSevenster.RS.Definitions
 
 /-!
 # Simplicity of the tensor unit
@@ -25,6 +27,8 @@ produces an idempotent unit endomorphism, and `End (𝟙) = ℂ` has no
 idempotents besides `0` and `1`: the value `1` would force `i = 0`,
 so the idempotent vanishes, `V = 0`, and `i` is an isomorphism.
 -/
+
+@[expose] public section
 
 namespace RS
 

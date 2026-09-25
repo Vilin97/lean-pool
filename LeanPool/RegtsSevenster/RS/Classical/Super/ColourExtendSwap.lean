@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConj
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConj
 
 /-!
 # Extension commutes with an adjacent colour swap
@@ -17,6 +19,8 @@ the two commute on the nose (`colourExtend_colourSwap`).
 The proof is the corresponding statement for the adjacency sign
 (`adjSign_eq_tail`) carried through the word and its permutation.
 -/
+
+@[expose] public section
 
 namespace RS
 

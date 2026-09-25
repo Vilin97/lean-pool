@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedDiag
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedDiag
 
 /-!
 # The plain diagonal shuffle and its equivariance
@@ -27,6 +29,8 @@ equations on both the forward and the inverse maps and the
 equivariance statements in the form the plain tensor-power calculus
 consumes.
 -/
+
+@[expose] public section
 
 namespace RS
 

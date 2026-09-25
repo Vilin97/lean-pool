@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeNormal
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeNormal
 
 /-!
 # Partial closure: gluing a fragment into a test fragment
@@ -20,6 +22,8 @@ pairClose x (partialClose z G)` lives in `TensorIdeal.lean`; this
 file provides the construction: the gluing pair list, its
 well-formedness, the survivor identification, and congruence.
 -/
+
+@[expose] public section
 
 namespace RS
 

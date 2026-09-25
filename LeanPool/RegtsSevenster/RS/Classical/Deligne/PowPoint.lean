@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.UnitEnd
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PermNat
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitMod
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.UnitEnd
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PermNat
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitMod
 
 /-!
 # Point powers and the trivial permutation action on unit strands
@@ -18,6 +20,8 @@ point powers.  In a rigid category the point powers of a
 monomorphism are monomorphisms.  The substrate of the
 nonvanishing of the local splitting algebra.
 -/
+
+@[expose] public section
 
 namespace RS
 

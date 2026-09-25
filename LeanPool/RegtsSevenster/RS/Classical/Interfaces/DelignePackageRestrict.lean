@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DelignePackage
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DelignePackage
 
 /-!
 # Restriction of Deligne packages
@@ -13,6 +15,8 @@ A Deligne fibre-functor package restricts along any braided
 monoidal, additive, ℂ-linear functor: compose the fibre functor
 with the embedding.
 -/
+
+@[expose] public section
 
 namespace RS
 

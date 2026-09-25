@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorFragment
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorFragment
 
 /-!
 # Units of the fragment tensor
@@ -13,6 +15,8 @@ Tensoring with the empty closed fragment is a relabel by the
 arithmetic cast, on either side.  These power the unitors of the
 monoidal skein category.
 -/
+
+@[expose] public section
 
 namespace RS
 

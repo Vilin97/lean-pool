@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointFibre
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointFibre
 
 /-!
 # The residue algebra of a complex point
@@ -43,6 +45,8 @@ The comparison is carried down to super vector spaces in
   morphisms of the category of super modules, in the form the
   generator computations consume.
 -/
+
+@[expose] public section
 
 namespace RS
 

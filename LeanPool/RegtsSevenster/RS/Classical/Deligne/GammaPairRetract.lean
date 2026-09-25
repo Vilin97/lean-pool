@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairNat
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairAdd
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairNat
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairAdd
 
 /-!
 # The comparison map on a family of retracts
@@ -18,6 +20,8 @@ step that reduces (2.11.1) on free modules to the two rank-one
 cases; it needs no biproducts in the category of module objects,
 only the retraction identities and the totality of the projectors.
 -/
+
+@[expose] public section
 
 namespace RS
 

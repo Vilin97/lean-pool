@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SignedTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SignedTensor
 
 /-!
 # Nonvanishing of idempotent images from Schur values
@@ -18,6 +20,8 @@ a functional cannot kill the idempotent when the Schur value is
 nonzero — the even and odd sectors of the dimension-bound
 dichotomy.
 -/
+
+@[expose] public section
 
 namespace RS
 

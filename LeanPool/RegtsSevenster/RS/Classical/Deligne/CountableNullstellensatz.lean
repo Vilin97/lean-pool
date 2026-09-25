@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # The countable Nullstellensatz over ℂ
@@ -31,6 +33,8 @@ The finite-type predecessor is `RS.exists_algHom_complex` in
 — quotient by a maximal ideal, lift along `IsAlgClosed.lift` — over
 Zariski's lemma instead of the dimension count.
 -/
+
+@[expose] public section
 
 namespace RS
 

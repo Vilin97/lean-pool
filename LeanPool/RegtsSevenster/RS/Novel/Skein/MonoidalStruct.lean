@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleMapClasses
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleMapClasses
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTensor
 
 /-!
 # The monoidal structure data of the skein category
@@ -17,6 +19,8 @@ the coherence lemmas provable without the interchange law
 (identity tensoring, pentagon, triangle) all collapse through the
 bundle-map calculus.
 -/
+
+@[expose] public section
 
 namespace RS
 

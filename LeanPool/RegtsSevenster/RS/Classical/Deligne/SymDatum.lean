@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowDatum
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowDatum
 
 /-!
 # The symmetric power duality datum
@@ -17,6 +19,8 @@ chosen maps — linearity is compositional; the zigzag laws of the
 transferred datum are where retraction and self-adjointness
 enter, and they live with the pairing calculus.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PathCanon
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PathCanon
 
 /-!
 # Chain agreement of path-canonical orientations
@@ -44,6 +46,8 @@ whole chain's values are determined by the pinned seed.
    forward walk reaches, as a pairing-side flag of the reverse
    chain.
 -/
+
+@[expose] public section
 
 namespace RS
 

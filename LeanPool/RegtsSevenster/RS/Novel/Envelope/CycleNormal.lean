@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.PermCongr
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.PermCongr
 
 /-!
 # The block-cycle normal form
@@ -14,6 +16,8 @@ block lengths are its full cycle type (fixed points included):
 the normal form against which the skein trace of a permutation
 factors into cycle loops.
 -/
+
+@[expose] public section
 
 namespace RS
 

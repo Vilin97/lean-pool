@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # The limit theorem for flatness at a finite stage
@@ -54,6 +56,8 @@ a stage `j`, and every module presented over `Rⱼ` by the pushed
 matrix — in particular the base change `Rⱼ ⊗_{R_{i₀}} M_{i₀}` —
 is projective, hence flat.
 -/
+
+@[expose] public section
 
 namespace RS
 namespace FlatLimit

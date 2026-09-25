@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPoint
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPoint
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210
 
 /-!
 # Exactness of tensoring with a dualizable object
@@ -17,6 +19,8 @@ at once.  A short exact sequence therefore stays short exact after
 tensoring, which produces the internal-hom extension that the
 pullback stage consumes.
 -/
+
+@[expose] public section
 
 namespace RS
 

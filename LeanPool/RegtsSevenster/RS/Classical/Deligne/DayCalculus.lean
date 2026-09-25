@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DayType
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DayType
 
 /-!
 # The corepresentable calculus of Day convolution on `Type`
@@ -30,6 +32,8 @@ functor followed by the left Kan extension functor along `tensor D`;
 the former preserves colimits pointwise because tensoring in `Type v`
 does, and the latter is a left adjoint.
 -/
+
+@[expose] public section
 
 namespace RS
 

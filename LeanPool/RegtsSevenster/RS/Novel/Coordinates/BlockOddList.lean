@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.VertexValue
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.FlagEnum
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.VertexValue
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.FlagEnum
 
 /-!
 # The block odd list, order-exactly
@@ -14,6 +16,8 @@ The odd list of a block of the flipped data colouring is the
 Definition 5 value map over the block-slot flag enumeration,
 entry by entry.
 -/
+
+@[expose] public section
 
 namespace RS
 

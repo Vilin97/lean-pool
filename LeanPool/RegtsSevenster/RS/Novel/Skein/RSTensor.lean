@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.EdgeSum
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CutMatching
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SuperGram
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GluePathMatch
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseDischarge
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.EdgeSum
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CutMatching
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SuperGram
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GluePathMatch
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseDischarge
 
 /-!
 # The fragment tensor
@@ -31,6 +33,8 @@ weighted by the leaving legs' signs.
 The tensor is zero at a coordinate whose parity pattern is not the
 subset's, which is the condition that `χ` be consistent with `S`.
 -/
+
+@[expose] public section
 
 namespace RS
 

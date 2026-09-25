@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffle
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffle
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed
 
 /-!
 # Mixed sums as folded biproduct powers
@@ -18,6 +20,8 @@ binary sum `sumPow` identifies the mixed sum with the object
 nonvanishing of the mixed sum at every diagram avoiding the cell
 `(p + 1, q + 1)` then transports across the isomorphism.
 -/
+
+@[expose] public section
 
 namespace RS
 

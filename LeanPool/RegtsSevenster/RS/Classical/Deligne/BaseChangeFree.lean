@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModTensor
 
 /-!
 # Base change of a free module
@@ -19,6 +21,8 @@ the free module on an object to the free module over the new base:
 * `baseChangeFreeIso`: the isomorphism `baseChangeMod φ (freeMod
   A V) ≅ freeMod B V` in the category of `B`-modules.
 -/
+
+@[expose] public section
 
 namespace RS
 

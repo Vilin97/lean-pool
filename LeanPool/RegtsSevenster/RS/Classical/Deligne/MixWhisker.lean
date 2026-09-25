@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixSumPow
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixSumPow
 
 /-!
 # Whiskered nonvanishing of the mixed sum
@@ -28,6 +30,8 @@ The hypothesis feeding the whiskered form is that no power of the
 odd line is killed by `W ⊗ −`; for `W` a monoid object with
 nonzero unit this is automatic, since the odd line is invertible.
 -/
+
+@[expose] public section
 
 namespace RS
 

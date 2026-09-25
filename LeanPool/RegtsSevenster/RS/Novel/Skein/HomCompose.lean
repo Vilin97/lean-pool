@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdealLeft
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdealLeft
 
 /-!
 # Composition descends to the Hom spaces
@@ -14,6 +16,8 @@ halves), the bilinear composition of free modules descends to a
 bilinear composition of Hom spaces — the composition of the skein
 category.  On fragment classes it is composition of fragments.
 -/
+
+@[expose] public section
 
 namespace RS
 

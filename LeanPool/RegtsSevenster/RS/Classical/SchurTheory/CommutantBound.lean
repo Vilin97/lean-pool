@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharDecomp
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeFaithful
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharDecomp
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeFaithful
 
 /-!
 # Dimension bounds through the commutant
@@ -16,6 +18,8 @@ Each simple constituent has dimension at most `B`, by native block
 faithfulness, and the commutant dimension bounds the number of simple
 summands, counted with multiplicity.
 -/
+
+@[expose] public section
 
 namespace RS
 

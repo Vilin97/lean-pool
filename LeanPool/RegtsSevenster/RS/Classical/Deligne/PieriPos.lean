@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.HookZero
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.NewtonConv
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperValues
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.HookZero
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.NewtonConv
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperValues
 
 /-!
 # Pieri rules and hook positivity for Schur specialisations
@@ -34,6 +36,8 @@ specialisations.
    specialisation at `superPS p q` is a positive natural number —
    the nonvanishing direction of Deligne 1.9 on the character side.
 -/
+
+@[expose] public section
 
 namespace RS
 

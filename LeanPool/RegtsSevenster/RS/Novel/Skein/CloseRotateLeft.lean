@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseRotate
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseRotate
 
 /-!
 # Mirror rotation of closures
@@ -17,6 +19,8 @@ For an `(s,t)`-fragment `W`, a `(t,u)`-fragment `F`, and an
 where `Wᵀ` transposes the boundary of `W`.  This is the
 left-mirror variant of `pairCloseComposeRotate`.
 -/
+
+@[expose] public section
 
 namespace RS
 

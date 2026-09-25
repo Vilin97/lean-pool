@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.YoungDiagrams
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowerSums
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.YoungDiagrams
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowerSums
 
 /-!
 # The symmetric-group Schur interface
@@ -31,6 +33,8 @@ trace arguments of `Envelope/` consume, no more.  A term is
 constructed from mathlib's linear algebra as `RS.schurPackage` in
 `RS/Classical/SchurTheory/Package.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

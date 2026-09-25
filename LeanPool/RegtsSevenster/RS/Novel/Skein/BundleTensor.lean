@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorFragment
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorFragment
 
 /-!
 # The strand bundle is a tensor of strand bundles
@@ -15,6 +17,8 @@ This is the object-level compatibility of the identity fragments
 with the monoidal product, the entry point for the trace
 multiplicativity (Lemma 3.5(b)).
 -/
+
+@[expose] public section
 
 namespace RS
 

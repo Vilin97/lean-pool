@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapPerm
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapPerm
 
 /-!
 # Symmetry of the vertex star
@@ -14,6 +16,8 @@ permutation is absorbed: the star class is symmetric.  This is
 the S_d-invariance that makes the vertex coordinates well
 defined on multiset data.
 -/
+
+@[expose] public section
 
 namespace RS
 

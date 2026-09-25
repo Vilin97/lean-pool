@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Assembly.Blueprint
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.ObjectTower
-import LeanPool.RegtsSevenster.RS.TheoremTotal
+module
+
+public import LeanPool.RegtsSevenster.RS.Assembly.Blueprint
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.ObjectTower
+public import LeanPool.RegtsSevenster.RS.TheoremTotal
 
 /-!
 # Blueprint: the Schur package, the dimension bound, the open sector

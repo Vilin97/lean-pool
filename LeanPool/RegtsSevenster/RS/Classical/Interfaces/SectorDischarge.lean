@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SectorIntertwine
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.BinomialDet
-import LeanPool.RegtsSevenster.RS.QuantSector
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SectorIntertwine
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.BinomialDet
+public import LeanPool.RegtsSevenster.RS.QuantSector
 
 /-!
 # Sector discharge: the last gap of the quantitative Regts–Sevenster theorem
@@ -29,6 +31,8 @@ standard-model extraction `(e, e')`, then feeds the sector traces
 
 * `squareSectorBound_of_detPos` — the last gap of the quantitative theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

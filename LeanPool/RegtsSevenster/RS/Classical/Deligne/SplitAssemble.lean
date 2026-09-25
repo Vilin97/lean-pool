@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SeedIns
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SeedIns
 
 /-!
 # Assembly of the splitting-data entries on the graded carrier
@@ -19,6 +21,8 @@ unit, and both module entries are linear over the base through
 the base entry, in the exact shape of the splitting data of the
 Key Lemma.
 -/
+
+@[expose] public section
 
 namespace RS
 

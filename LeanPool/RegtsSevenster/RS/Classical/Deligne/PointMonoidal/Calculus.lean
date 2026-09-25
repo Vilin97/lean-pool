@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Comparison
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Comparison
 
 /-!
 # A point-free calculus for the two tensor products
@@ -40,6 +42,8 @@ proved in [Coherence.lean](Coherence.lean).
   `RS.superVectPairOdd_ext`: extensionality for a twofold and a
   threefold graded tensor product.
 -/
+
+@[expose] public section
 
 namespace RS
 

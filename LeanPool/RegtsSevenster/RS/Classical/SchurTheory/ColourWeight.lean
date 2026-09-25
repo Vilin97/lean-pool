@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ContentCount
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.StabCount
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ContentCount
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.StabCount
 
 /-!
 # Colour classes of prescribed composition
@@ -17,6 +19,8 @@ character `colourChar`, and the Fubini exchange expressing its
 weighted permutation sum as a sum of stabilizer weights over the
 class.
 -/
+
+@[expose] public section
 
 namespace RS
 

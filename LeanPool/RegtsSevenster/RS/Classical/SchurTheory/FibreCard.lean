@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PowerSurj
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PowerSurj
 
 /-!
 # Fibres of a colouring
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PowerSurj
 Shared definitions for the cycle sums: the fibre counts of
 a function `Fin n → Fin N` and its content multiset.
 -/
+
+@[expose] public section
 
 namespace RS
 

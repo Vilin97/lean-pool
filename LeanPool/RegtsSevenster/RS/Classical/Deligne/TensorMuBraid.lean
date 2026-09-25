@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # The interchange `tensorμ` intertwines the braidings
@@ -24,6 +26,8 @@ the hexagon identities; the crossing `β_ d a` supplied by
 exchange of the disjoint crossings `β_ a c` and `β_ b d` produces the
 right-hand side.
 -/
+
+@[expose] public section
 
 namespace RS
 

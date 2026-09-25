@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMul
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorMuBraid
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMul
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorMuBraid
 
 /-!
 # Commutativity and associativity of the chain multiplication
@@ -17,6 +19,8 @@ the corresponding `symMul` laws together with the coherence of the
 interchange `tensorμ`.  Transports of chain stages along equalities
 of arities are packaged as `chainStageCast`.
 -/
+
+@[expose] public section
 
 namespace RS
 

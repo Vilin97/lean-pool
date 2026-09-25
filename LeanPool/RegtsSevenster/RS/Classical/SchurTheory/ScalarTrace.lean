@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SchurAction
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SchurAction
 
 /-!
 # Identifying the Schur scalar by its trace
@@ -13,6 +15,8 @@ The scalar through which a class-function element acts on an
 irreducible representation is determined by the character pairing:
 `z · dim V = ∑ g, c g · χ_ρ(g)`.
 -/
+
+@[expose] public section
 
 namespace RS
 

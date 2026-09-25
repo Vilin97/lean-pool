@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowChain
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowChain
 
 /-!
 # The merge isomorphism for module powers
@@ -32,6 +34,8 @@ concatenation of ambient tensor powers.
 * `powMergeIso`: the packaged isomorphism, with `powMulDesc` as the
   forward direction and `powSplit` as the inverse.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarLinear
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarLinear
 
 /-!
 # The scalar-unit hypothesis from a scalar unit
@@ -15,6 +17,8 @@ isomorphism, so the scalar-unit hypothesis holds.  Applied to the
 ind-completion this supplies the hypothesis upstairs from the one
 downstairs.
 -/
+
+@[expose] public section
 
 namespace RS
 

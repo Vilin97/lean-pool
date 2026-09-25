@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModIso
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModIso
 
 /-!
 # Functoriality of the biproduct of super modules
@@ -14,6 +16,8 @@ A pair of morphisms of super modules induces one on the
 biproducts, componentwise; a pair of isomorphisms induces an
 isomorphism.
 -/
+
+@[expose] public section
 
 namespace RS
 

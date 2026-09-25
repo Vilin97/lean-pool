@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairAdd
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModShiftUnit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperPointMod
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairAdd
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModShiftUnit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperPointMod
 
 /-!
 # Base change of a free super module to a complex point
@@ -58,6 +60,8 @@ finite-dimensional spaces is finite-dimensional.
   the two explicit coordinate equivalences
   `RS.freeEvenEquivFin`, `freeOddEquivFin`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.JTGuard
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.HProdCoeff
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.JTGuard
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.HProdCoeff
 
 /-!
 # The counting form of the double-sum identity
@@ -14,6 +16,8 @@ Substituting the tuple-count coefficients and the guard/margin
 bridges into the signed double-sum identity: the signed count of
 margin-constrained Sym-tuples over shifted compositions is `1`.
 -/
+
+@[expose] public section
 
 namespace RS
 

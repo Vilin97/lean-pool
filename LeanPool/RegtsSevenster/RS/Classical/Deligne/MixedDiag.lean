@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Intertwine
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPerm
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Intertwine
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPerm
 
 /-!
 # Distribution of the permutation action over a tensor product
@@ -25,6 +27,8 @@ the recursions of `insertTop` and `permMor` exactly as the naturality
 lemmas of `Deligne/PermNat.lean` do, and linearises to the group
 algebra, whose diagonal double action is packaged as `diagAlg`.
 -/
+
+@[expose] public section
 
 namespace RS
 

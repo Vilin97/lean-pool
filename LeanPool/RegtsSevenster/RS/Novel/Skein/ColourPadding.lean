@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourEmbedding
-import LeanPool.RegtsSevenster.RS.DimensionDefinitions
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourEmbedding
+public import LeanPool.RegtsSevenster.RS.DimensionDefinitions
 
 /-!
 # Padding a mixed model with unused colours
@@ -15,6 +17,8 @@ have the original vertex values, and every other colouring has a
 zero vertex factor. Equality of superdimensions then preserves the
 free-circle factor as well.
 -/
+
+@[expose] public section
 
 namespace RS
 

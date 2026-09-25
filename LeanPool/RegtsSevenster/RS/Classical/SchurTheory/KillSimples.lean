@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ScalarTrace
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ScalarTrace
 
 /-!
 # The faithfulness trick
@@ -15,6 +17,8 @@ supremum of simple submodules, so `1` decomposes as a finite sum
 of elements of simples, and left multiplication kills each
 summand.
 -/
+
+@[expose] public section
 
 namespace RS
 

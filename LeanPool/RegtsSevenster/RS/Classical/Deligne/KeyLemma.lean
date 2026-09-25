@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymMul
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModContractL
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainUnit
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymMul
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModContractL
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainUnit
 
 /-!
 # The Key Lemma: the universal splitting algebra
@@ -40,6 +42,8 @@ grades every morphism constructible from a duality datum, and
 constructible morphism connects them.  The degree-zero object
 `modTensor A M' M ⊗ B` is where the splitting genuinely lives.
 -/
+
+@[expose] public section
 
 namespace RS
 

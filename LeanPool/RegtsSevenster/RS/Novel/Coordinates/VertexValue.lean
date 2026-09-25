@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockCanon
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockCanon
 
 /-!
 # The per-vertex value
@@ -15,6 +17,8 @@ normalised form: the canonical permutation carries the block to
 the canonical colouring, whose star coordinate the functional
 `hRS` evaluates.
 -/
+
+@[expose] public section
 
 namespace RS
 

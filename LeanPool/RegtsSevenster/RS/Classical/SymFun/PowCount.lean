@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.HProdCoeff
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.HProdCoeff
 
 /-!
 # Coefficient of a power of p₁
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Classical.SymFun.HProdCoeff
 The coefficient of a monomial `w` in `(∑ l, X l) ^ |T|` counts the
 number of functions `T → Fin k` whose fibre sizes match `w`.
 -/
+
+@[expose] public section
 
 namespace RS
 

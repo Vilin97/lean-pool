@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdSuper
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdSuper
 
 /-!
 # The colouring model of tensor powers
@@ -20,6 +22,8 @@ colourings, graded by the parity of the odd support.  All the
 meshing directly with the mixed partition function's
 Definition-5 sum.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

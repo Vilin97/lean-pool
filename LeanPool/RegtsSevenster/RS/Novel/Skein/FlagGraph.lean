@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Definitions
+module
+
+public import LeanPool.RegtsSevenster.RS.Definitions
 
 /-!
 # The strand, and the two branches of a glue
@@ -16,6 +18,8 @@ the single-pair gluing primitive — is defined in
 checks that closing the strand onto itself yields one free circle
 and no flags.
 -/
+
+@[expose] public section
 
 namespace RS
 

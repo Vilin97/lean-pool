@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeTransport
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitExtractDual
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeTransport
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitExtractDual
 
 /-!
 # The base-changed pairing on its cover
@@ -16,6 +18,8 @@ multiplies the two base factors and applies the pairing through
 the base morphism.  This is the working form for the adjointness
 of the split idempotents.
 -/
+
+@[expose] public section
 
 namespace RS
 

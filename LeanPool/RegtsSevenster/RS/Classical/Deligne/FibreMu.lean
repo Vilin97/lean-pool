@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairNat
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairNat
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModTensor
 
 /-!
 # The monoidal comparison of the fibre functor
@@ -20,6 +22,8 @@ two morphisms and shuffle.  No coequalizer survives in that
 formula, which is what makes the coherence of `ω` a computation in
 the ambient category alone.
 -/
+
+@[expose] public section
 
 namespace RS
 

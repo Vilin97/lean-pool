@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBInd
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Close
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBInd
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Close
 
 /-!
 # The local splitting statement over the ind-completion
@@ -17,6 +19,8 @@ by the filtered criterion, and no stage unit of a monic point
 vanishes.  The local splitting statement therefore holds for
 every short exact sequence whose relevant objects carry duals.
 -/
+
+@[expose] public section
 
 namespace RS
 

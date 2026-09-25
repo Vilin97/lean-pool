@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.Reindex
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.Reindex
 
 /-!
 # Block parity dictionary
@@ -15,6 +17,8 @@ sorted colouring is even iff the pattern-flags at the
 corresponding vertex have even count.  Corollary: the master
 summand vanishes whenever any block is odd-parity.
 -/
+
+@[expose] public section
 
 namespace RS
 

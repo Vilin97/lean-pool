@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.ZetaSeries
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.ZetaSeries
 
 /-!
 # The trace zeta function in exponential form
@@ -14,6 +16,8 @@ series, and its identification with the Newton generating series
 via the differential characterization — the displayed form of the
 trace zeta function.
 -/
+
+@[expose] public section
 
 namespace RS
 

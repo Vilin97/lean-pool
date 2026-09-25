@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.TensorPowSplit
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.CycleTrace
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.TensorPowSplit
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.CycleTrace
 
 /-!
 # The trace of a permutation against a tensor power
@@ -20,6 +22,8 @@ permutation is conjugate to a block sum of rotations whose block
 lengths are its full cycle type (`exists_conj_blockCycles`), so the
 three combine to give the general formula.
 -/
+
+@[expose] public section
 
 namespace RS
 

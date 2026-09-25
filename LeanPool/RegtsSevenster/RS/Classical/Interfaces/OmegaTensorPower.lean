@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.OmegaPerm
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPower
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.OmegaPerm
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPower
 
 /-!
 # Tensor-power decomposition of the fibre-functor image
@@ -35,6 +37,8 @@ This file builds the chain:
   `superPermAction σ` equals the conjugation of `ω.map (permClass σ)`
   by `omegaPow`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

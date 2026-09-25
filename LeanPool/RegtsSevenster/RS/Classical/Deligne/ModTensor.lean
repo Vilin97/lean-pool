@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Tensor product of internal modules over a commutative monoid
@@ -44,6 +46,8 @@ given by `ModObj A X` over the self-action of `D` and bundled as
 The development is scoped to the structures above; associativity of
 `modTensor` is outside this module's scope.
 -/
+
+@[expose] public section
 
 namespace RS
 

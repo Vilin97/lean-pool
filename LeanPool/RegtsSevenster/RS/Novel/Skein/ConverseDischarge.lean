@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.AllInternalAgreement
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.AllInternalAgreement
 
 /-!
 # Unconditional consequences of Eulerian independence
@@ -13,6 +15,8 @@ import LeanPool.RegtsSevenster.RS.Novel.Skein.AllInternalAgreement
 the choice-free value lemma and equivalence invariance of the
 mixed partition value hold unconditionally.
 -/
+
+@[expose] public section
 
 namespace RS
 

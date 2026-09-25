@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.TIdentity
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.TIdentity
 
 /-!
 # Guard and margin bridges for the double-sum identity
@@ -14,6 +16,8 @@ nonnegativity guard of the Jacobi–Trudi character, the shifted
 margins match the shifted compositions, and sorted shapes have
 injective staircase exponents.
 -/
+
+@[expose] public section
 
 namespace RS
 

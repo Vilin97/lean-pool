@@ -4,13 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaFlip
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.VertexSign
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TauCount
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ConcatSign
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SignPair
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RiffleSign
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RegroupSign
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaFlip
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.VertexSign
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TauCount
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ConcatSign
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SignPair
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RiffleSign
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RegroupSign
 
 /-!
 # The core and grand parities
@@ -19,6 +21,8 @@ The two parity counts the extraction's sign bookkeeping rests on:
 the parity of the core slots' pairing and the parity of the whole
 slot list.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Trace
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Trace
 
 /-!
 # The partial categorical trace
@@ -20,6 +22,8 @@ is the identity, and the full trace of a partial trace is the full
 trace.  Those are what the cycle-trace factorisation of a
 permutation action needs.
 -/
+
+@[expose] public section
 
 namespace RS
 

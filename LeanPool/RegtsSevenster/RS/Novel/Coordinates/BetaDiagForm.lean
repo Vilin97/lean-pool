@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaDiag
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelPermCoord
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaDiag
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelPermCoord
 
 /-!
 # The diagonal cap pairing equals the colour pairing
@@ -14,6 +16,8 @@ The diagonal cap pairing `betaDiag m c` on a colouring
 `c : MixedColouring k ℓ (m + m)` equals the tensor-power
 pairing `betaColour` applied to the two halves of `c`.
 -/
+
+@[expose] public section
 
 namespace RS
 

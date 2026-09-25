@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinLinear
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PermCompose
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTensor
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.HookConfinement
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinLinear
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PermCompose
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTensor
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.HookConfinement
 
 /-!
 # The skein endomorphism tower
@@ -37,6 +39,8 @@ The monoid-hom direction uses `End.mul_def : x * y = y ≫ x`, so the
 map `σ ↦ [permFragment σ]` is a genuine `MonoidHom` from
 `Perm (Fin n)` to `End (SkeinObj.mk n)` by `permFragmentCompose`.
 -/
+
+@[expose] public section
 
 namespace RS
 

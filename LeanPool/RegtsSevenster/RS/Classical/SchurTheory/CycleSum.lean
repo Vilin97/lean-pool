@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CycleSumPrep
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.OrbitBridge
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.StabCount
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ContentCount
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CycleSumPrep
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.OrbitBridge
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.StabCount
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ContentCount
 
 /-!
 # The cycle-sum identity (assembly)
@@ -16,6 +18,8 @@ The fixed-colouring sum of a permutation is its completed
 cycle-type product in the power sums of the colours; summed over
 the symmetric group this yields `n! · h_n`.
 -/
+
+@[expose] public section
 
 namespace RS
 

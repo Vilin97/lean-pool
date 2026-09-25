@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PermCompose
-import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLawRight
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PermCompose
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLawRight
 
 /-!
 # Free-side relabels pass through composition
@@ -23,6 +25,8 @@ its two halves `outPermEquiv_symm_low` and
 `outPermEquiv_symm_high`) lives here too, since it is what lets the
 absorption run in either direction.
 -/
+
+@[expose] public section
 
 namespace RS
 

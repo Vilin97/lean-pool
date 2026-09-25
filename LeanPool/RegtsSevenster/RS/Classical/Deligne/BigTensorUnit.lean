@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BigTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BigTensor
 
 /-!
 # The unit of a big tensor product survives
@@ -17,6 +19,8 @@ stage inclusion, so it survives as soon as the unit of the
 ambient category can be tested against the filtered colimit one
 stage at a time.
 -/
+
+@[expose] public section
 
 namespace RS
 

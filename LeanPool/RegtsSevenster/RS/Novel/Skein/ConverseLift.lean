@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseAssembly
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceAlternate
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseAssembly
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceAlternate
 
 /-!
 # The lift's round trip, and the identity at no cuts
@@ -15,6 +17,8 @@ followed by a stage of the push, the congruences that let that
 iterate over the interface, and the identity when the interface is
 empty.
 -/
+
+@[expose] public section
 
 namespace RS
 

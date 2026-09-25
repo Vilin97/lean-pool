@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeCoherence
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.StepATransport
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeCoherence
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.StepATransport
 
 /-!
 # Base change as a monoidal functor
@@ -17,6 +19,8 @@ structure map, the collapse of the regular module is the unit.
 This file bundles the structure map as an isomorphism of modules
 over the new base and proves it natural in both slots.
 -/
+
+@[expose] public section
 
 namespace RS
 

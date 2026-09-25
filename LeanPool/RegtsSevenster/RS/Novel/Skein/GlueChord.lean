@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CutMatching
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedCutDispatch
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CutMatching
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedCutDispatch
 
 /-!
 # The chord matching across one glue
@@ -21,6 +23,8 @@ labels of the glued subset are the used labels of the lifted one
 with the two glued labels removed, and the glued chord matching is
 the contraction of the lifted one at those two labels.
 -/
+
+@[expose] public section
 
 namespace RS
 

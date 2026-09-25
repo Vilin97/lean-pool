@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledSplit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreLinear
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledSplit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreLinear
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal
 
 /-!
 # Deligne's theorem assembled
@@ -69,6 +71,8 @@ scalar unit with the ambient action in a monoidally ℂ-linear category,
 and `RS.evenEmbedLinear_scalarUnit` reads that off for the even
 embedding.
 -/
+
+@[expose] public section
 
 namespace RS
 

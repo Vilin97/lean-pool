@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StrandBundle
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StrandBundle
 
 /-!
 # Permutation fragments
@@ -15,6 +17,8 @@ of `t` disjoint strands, strand `k` joining incoming boundary label
 `k` to outgoing boundary label `t + σ k`.  The identity permutation
 gives the strand bundle.
 -/
+
+@[expose] public section
 
 namespace RS
 

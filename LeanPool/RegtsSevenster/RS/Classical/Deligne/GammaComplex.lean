@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleScalars
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PresentedQuotient
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleScalars
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PresentedQuotient
 
 /-!
 # The scalars of a simple countably presented algebra are complex
@@ -21,6 +23,8 @@ of hypotheses that `RS/Classical/Deligne/FreeSummand.lean` consumes:
 the free-module functor is then full and faithful on the mixed
 objects, and idempotents split with free image.
 -/
+
+@[expose] public section
 
 namespace RS
 

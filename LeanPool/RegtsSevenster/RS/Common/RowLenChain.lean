@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.DiagramChain
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.DiagramChain
 
 /-!
 # Row lengths along single-box extensions
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Common.DiagramChain
 A diagram extending another by a single cell bumps exactly one row
 length by one; row lengths are monotone in diagram containment.
 -/
+
+@[expose] public section
 
 namespace RS
 

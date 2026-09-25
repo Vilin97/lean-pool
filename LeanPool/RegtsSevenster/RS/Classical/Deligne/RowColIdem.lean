@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.AltPow
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PieriPos
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.AltPow
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PieriPos
 
 /-!
 # The one-row and one-column idempotents
@@ -29,6 +31,8 @@ pins the package's characters on these shapes; idempotency then
 forces dimension one, and the idempotents coincide with the
 symmetriser and antisymmetriser on the nose.
 -/
+
+@[expose] public section
 
 namespace RS
 

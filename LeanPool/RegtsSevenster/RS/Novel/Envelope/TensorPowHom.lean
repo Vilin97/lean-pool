@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPerm
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPerm
 
 /-!
 # The tensor power of an endomorphism
@@ -16,6 +18,8 @@ every factor carries the same endomorphism, so permuting the factors
 and applying `g` to each may be done in either order
 (`permMor_comp_powHom`).
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMonoidal
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairFreeFree
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMonoidal
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairFreeFree
 
 /-!
 # The fibre functor is strong monoidal over a splitting algebra
@@ -16,6 +18,8 @@ Deligne's (2.11.1) is invertible at every pair of objects, and the
 unit comparison is invertible outright.  The lax symmetric monoidal
 structure of the fibre functor is therefore strong.
 -/
+
+@[expose] public section
 
 namespace RS
 

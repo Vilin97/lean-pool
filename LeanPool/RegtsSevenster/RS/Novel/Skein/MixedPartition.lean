@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.ListSign
-import LeanPool.RegtsSevenster.RS.Novel.Skein.Eulerian
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.ListSign
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.Eulerian
 
 /-!
 # Mixed partition functions: the vertex functional
@@ -17,6 +19,8 @@ changes `evalOdd` by the sign of the permutation, and lists with
 repeated colours evaluate to zero — and the transport of the
 Definition 5 summand along fragment equivalences.
 -/
+
+@[expose] public section
 
 namespace RS
 

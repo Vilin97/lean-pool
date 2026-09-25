@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Algebra.FactorialTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockFactor
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SemisimpleEnd
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Algebra.FactorialTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockFactor
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SemisimpleEnd
 
 /-!
 # The factorial proof for strand endomorphisms
@@ -17,6 +19,8 @@ bound then forces nilpotent traces to vanish. Nondegeneracy of the
 connection pairing supplies semisimplicity by the trace criterion.
 The Schur and trace-zeta proof remains in `BlockAssembly`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.RhoTwist
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModIso
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModShift
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.RhoTwist
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModIso
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModShift
 
 /-!
 # The realization of an odd twist is a parity shift
@@ -30,6 +32,8 @@ associator of the three sources.  Each of the four action
 compatibilities is that lemma conjugated by the very coherence
 isomorphisms that identify the sources in `RS.gammaAlgebra`.
 -/
+
+@[expose] public section
 
 namespace RS
 

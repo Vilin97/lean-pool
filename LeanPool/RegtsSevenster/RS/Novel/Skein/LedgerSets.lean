@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StateFlipSet
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StatusSet
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StateFlipSet
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StatusSet
 
 /-!
 # Relabel sets for the canonical ledgers
@@ -24,6 +26,8 @@ The accumulated relabel of a whole route is the status difference
 and vanishes on a pairing-preserving one
 (`statusDiff_of_samePairing`).
 -/
+
+@[expose] public section
 
 namespace RS
 

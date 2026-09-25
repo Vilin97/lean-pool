@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.InterchangeAct
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.InterchangeAct
 
 /-!
 # The tensor product of duality data
@@ -16,6 +18,8 @@ copairing unfolds the unit and inserts both copairings.  The
 descended interchange exists because the interchange is linear in
 both factors.
 -/
+
+@[expose] public section
 
 namespace RS
 

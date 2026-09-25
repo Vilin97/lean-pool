@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCategory
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceNondegenerate
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCategory
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceNondegenerate
 
 /-!
 # Trace nondegeneracy on Hom classes
@@ -15,6 +17,8 @@ class all of whose composition traces vanish is zero.  This is
 the input to the semisimplicity of the End algebras (Theorem 4.4)
 and the atom dichotomy (Lemma 4.5).
 -/
+
+@[expose] public section
 
 namespace RS
 

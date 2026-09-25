@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Power sums and the determinant Schur specialization
@@ -22,6 +24,8 @@ values in this development are these determinants; the link to the
 symmetric-group characters is the `frobenius` field of
 `SchurPackage` in `Interfaces/SchurPackage.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

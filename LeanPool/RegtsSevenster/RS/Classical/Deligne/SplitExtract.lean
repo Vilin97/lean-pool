@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowCopairing
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowCopairing
 
 /-!
 # Factor extraction from splitting data
@@ -16,6 +18,8 @@ factor of the base change of the module.  The insertion extends
 against the dual insertion supplies a coevaluation; the section
 identity of the data makes the pair a retract.
 -/
+
+@[expose] public section
 
 namespace RS
 

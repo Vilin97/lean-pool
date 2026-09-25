@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowCount
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowCount
 
 /-!
 # The pointwise convolution form of product coefficients
@@ -13,6 +15,8 @@ import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowCount
 antidiagonal to guarded pointwise splits over a bounded pi-set —
 the shape produced by the colour-character convolution.
 -/
+
+@[expose] public section
 
 namespace RS
 

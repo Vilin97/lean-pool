@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TwoBasis
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TopBraidMerge
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TwoBasis
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TopBraidMerge
 
 /-!
 # The colour action of the top braiding, base case
@@ -14,6 +16,8 @@ The two-strand braid conjugated into the colouring model is the
 Koszul-signed adjacent swap: coordinate evaluation of the braid
 on the block structure, one encoding context throughout.
 -/
+
+@[expose] public section
 
 namespace RS
 

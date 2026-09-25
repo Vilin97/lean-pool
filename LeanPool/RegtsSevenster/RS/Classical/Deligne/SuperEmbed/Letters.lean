@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed.Signs
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed.Signs
 
 /-!
 # Letter systems and the sign transport
@@ -30,6 +32,8 @@ that transports; the two systems it is applied to are built in
   `colourSum_eq_zero` and `permAlg_eq_zero`: an element kills the
   tensor power exactly when its colour sums vanish.
 -/
+
+@[expose] public section
 
 namespace RS
 

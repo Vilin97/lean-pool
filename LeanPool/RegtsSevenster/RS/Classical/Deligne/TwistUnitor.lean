@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistShuffle
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistShuffle
 
 /-!
 # Unit, associativity and functoriality of the left twist
@@ -27,6 +29,8 @@ actions.
 * `freeTwistIso`: the free module on a twisted object is the
   twist of the free module, through the carrying isomorphism.
 -/
+
+@[expose] public section
 
 namespace RS
 

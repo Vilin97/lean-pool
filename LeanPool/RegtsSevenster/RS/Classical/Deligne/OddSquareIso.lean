@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddSquare
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMu
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaShift
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModShiftUnit
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddSquare
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMu
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaShift
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModShiftUnit
 
 /-!
 # The comparison map at the odd line against itself
@@ -20,6 +22,8 @@ odd line against itself is minus the canonical isomorphism, so it
 is an isomorphism.  The sign is the self-braiding of the line and
 is the same on all four blocks.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModCross
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModCross
 
 /-!
 # Insertion and contraction on the multi-tensor
@@ -16,6 +18,8 @@ it lands in the larger multi-tensor through the concatenation;
 contraction descends through the coequalizer using the pairing's
 linearity.
 -/
+
+@[expose] public section
 
 namespace RS
 

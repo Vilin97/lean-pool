@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.NonSeparatedStep
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SeparatedParity
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.NonSeparatedStep
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SeparatedParity
 
 /-!
 # The non-separated count parities
@@ -47,6 +49,8 @@ The localization needed for `fullPerm_repair` comes from
 `periodic_or_onBoundaryChain` (merge case); their `[LinearOrder α]`
 assumption is discharged by well-ordering the label type.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.EHConv
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.EHConv
 
 /-!
 # Integer-indexed complete homogeneous polynomials
@@ -13,6 +15,8 @@ The `ℤ`-indexed extension of `hSub`, vanishing in negative
 degrees, and the guarded range-`k` form of the resolvent — the
 entry form of the bialternant matrices.
 -/
+
+@[expose] public section
 
 namespace RS
 

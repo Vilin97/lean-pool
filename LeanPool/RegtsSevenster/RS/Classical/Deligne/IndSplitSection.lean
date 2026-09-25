@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchurKilled
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Ind
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchurKilled
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Ind
 
 /-!
 # The base-change section for embedded short exact sequences
@@ -42,6 +44,8 @@ rigid, so the pullback taken in `C` has a right dual there, and
 `RS.exactPairingOfIso` carries the embedded pairing across the
 comparison isomorphism.
 -/
+
+@[expose] public section
 
 namespace RS
 

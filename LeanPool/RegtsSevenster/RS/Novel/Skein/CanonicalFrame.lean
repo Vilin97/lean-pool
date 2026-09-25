@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TwoPathNonSep
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordLabels
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TwoPathNonSep
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordLabels
 
 /-!
 # The canonical frame: chain directions and re-canonicalization
@@ -25,6 +27,8 @@ by the two end-colour signs at a `∂`-relabelled state; iterating
 over the anti-canonical chains re-canonicalizes any orientation
 (`exists_recanonicalize`).
 -/
+
+@[expose] public section
 
 namespace RS
 

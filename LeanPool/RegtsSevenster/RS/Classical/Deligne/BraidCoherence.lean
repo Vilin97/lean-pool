@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorMuBraid
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorMuBraid
 
 /-!
 # A braid-coherence identity for the interchange prefix
@@ -18,6 +20,8 @@ the right-hand side crosses the first `Q`-strand past `R` (inside
 adjacent pair of crossings `β_ Q R ≫ β_ R Q` cancels by the symmetry
 axiom, and the residual pure-associator words close by coherence.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Atomic idempotents in semisimple complex algebras
@@ -15,6 +17,8 @@ lines they span: pull back the diagonal matrix units through
 Wedderburn–Artin.  These are the atoms along which Karoubi
 objects split into simples.
 -/
+
+@[expose] public section
 
 namespace RS
 

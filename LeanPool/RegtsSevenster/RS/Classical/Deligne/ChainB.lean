@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMulLaws
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainDelta
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMulLaws
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainDelta
 
 /-!
 # The transition squares of the splitting chain
@@ -16,6 +18,8 @@ commute with the chain multiplication: multiplying after an
 insertion is inserting after multiplying.  These are the
 compatibility squares consumed by the colimit algebra.
 -/
+
+@[expose] public section
 
 namespace RS
 

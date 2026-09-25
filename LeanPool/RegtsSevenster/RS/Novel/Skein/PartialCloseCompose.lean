@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PartialCloseTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PartialCloseTensor
 
 /-!
 # Partial closure as a composition
@@ -17,6 +19,8 @@ interface and the `x`-blocks the outgoing free side
 the entire compose-calculus (identity laws, free-side relabels,
 permutation absorption) act on partial closures.
 -/
+
+@[expose] public section
 
 namespace RS
 

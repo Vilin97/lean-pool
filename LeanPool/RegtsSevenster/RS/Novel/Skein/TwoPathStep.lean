@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PathLedger
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonExistence
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PathLedger
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonExistence
 
 /-!
 # The two-path separated move
@@ -29,6 +31,8 @@ chain geometry of such a square and the count invariance it gives:
 The transform factor the move contributes to the summand is pinned
 in `TransposeLedger.lean`, on top of this count invariance.
 -/
+
+@[expose] public section
 
 namespace RS
 

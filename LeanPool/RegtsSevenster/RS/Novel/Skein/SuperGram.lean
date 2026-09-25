@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GramRank
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SuperSpace
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GramRank
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SuperSpace
 
 /-!
 # The super form on boundary states, and the rank it bounds
@@ -22,6 +24,8 @@ Writing the connection pairing as this form evaluated at vectors
 attached to the two fragments bounds the edge-rank by `(k + 2ℓ)^t`,
 because that is how many boundary states there are.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePow
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePow
 
 /-!
 # Sliding a head along a word of free letters
@@ -15,6 +17,8 @@ same letter is the identity, so the slot relation of the module
 power says exactly that the slide is invisible after the
 projection.
 -/
+
+@[expose] public section
 
 namespace RS
 

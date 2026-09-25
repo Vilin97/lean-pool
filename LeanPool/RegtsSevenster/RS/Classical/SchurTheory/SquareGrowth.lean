@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareStair
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareStair
 
 /-!
 # The square dimension growth
@@ -16,6 +18,8 @@ most `(2s)^(s²)` times it, so the dimension dominates
 `s = 6(R+1)`.  The factorial lower bound `n^n ≤ 3^n·n!` enters as
 the hypothesis `H3`, discharged in `FactorialBound.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Linear combinations of intertwining endomorphisms
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 An intertwining relation is preserved by addition and scalar
 multiplication in a linear category.
 -/
+
+@[expose] public section
 
 namespace RS
 

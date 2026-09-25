@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseFamily
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseGram
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseFamily
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseGram
 
 /-!
 # The super-Gram identity
@@ -18,6 +20,8 @@ sum the composition's own total equals is
 the bits each subset itself determines, and the tensor side of that
 sum is `EdgeSubset.base_sum_eq_superForm_pairing_bitsOf`.
 -/
+
+@[expose] public section
 
 namespace RS
 

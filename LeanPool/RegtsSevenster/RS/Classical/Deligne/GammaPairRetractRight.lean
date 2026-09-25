@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairRetract
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeMixRetract
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairRetract
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeMixRetract
 
 /-!
 # The comparison map on a family of retracts, second variable
@@ -15,6 +17,8 @@ family of retracts in the second module variable, total in the same
 sense, transports invertibility of the comparison map of Deligne's
 (2.11.1) in exactly the same way.
 -/
+
+@[expose] public section
 
 namespace RS
 

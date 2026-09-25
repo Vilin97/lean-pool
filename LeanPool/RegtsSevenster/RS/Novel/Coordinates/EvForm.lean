@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapFun
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapFun
 
 /-!
 # The evaluation functional in standard coordinates
@@ -13,6 +15,8 @@ Under a standard-model identification, the one-strand evaluation
 functional composed with the structure map is the standard form:
 the pointwise consequence of the model transport equation.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourAction
-import LeanPool.RegtsSevenster.RS.Classical.Super.WordSignPerm
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourAction
+public import LeanPool.RegtsSevenster.RS.Classical.Super.WordSignPerm
 
 /-!
 # The permutation transport in coordinates
@@ -13,6 +15,8 @@ import LeanPool.RegtsSevenster.RS.Classical.Super.WordSignPerm
 The model permutation map acts on coordinates by the adjacent-word
 sign and the permutation reindex.
 -/
+
+@[expose] public section
 
 open CategoryTheory
 

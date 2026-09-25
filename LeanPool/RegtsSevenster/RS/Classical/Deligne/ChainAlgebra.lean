@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainUnit
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainUnit
 
 /-!
 # The colimit algebra of the splitting chain
@@ -27,6 +29,8 @@ through the preservation isomorphisms, mirroring the merge pattern of
 the second slot.  All colimit-level laws are cast-free because the
 stage inclusions absorb the index transports.
 -/
+
+@[expose] public section
 
 namespace RS
 

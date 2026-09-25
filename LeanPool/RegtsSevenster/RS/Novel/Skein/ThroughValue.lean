@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RelValue
-import LeanPool.RegtsSevenster.RS.Novel.Skein.OpenCircuits
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RelValue
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.OpenCircuits
 
 /-!
 # Through-edges and the corrected constrained value
@@ -24,6 +26,8 @@ the label order.
 Even colourings stay fully pairing-constant: the even gluing
 weight is diagonal, which pairing-constancy implements already.
 -/
+
+@[expose] public section
 
 namespace RS
 

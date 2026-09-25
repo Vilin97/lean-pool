@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.HVal
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.HVal
 
 /-!
 # Surjectivity of the power-sum specialization
@@ -21,6 +23,8 @@ This is the globalization device: symmetric-function
 identities are proved for genuine variable families and transferred
 to arbitrary prospective power sums.
 -/
+
+@[expose] public section
 
 namespace RS
 

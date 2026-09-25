@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CompositionEquiv
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CompositionEquiv
 
 /-!
 # Multiplicativity from the rank bound at arity zero
@@ -15,6 +17,8 @@ one, its row at the empty graph is nonzero (the parameter is
 normalized there), so every row is a scalar multiple of it, and
 evaluating at the empty graph identifies the scalar.
 -/
+
+@[expose] public section
 
 namespace RS
 

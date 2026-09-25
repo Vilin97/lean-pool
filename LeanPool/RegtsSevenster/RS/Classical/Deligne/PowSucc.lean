@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBofA
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorZigzag
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBofA
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorZigzag
 
 /-!
 # The successor power datum
@@ -16,6 +18,8 @@ the bottom datum, pushed along the transition legs.  The orbit
 extension principle reduces the comparison to the unit elements,
 where the chain recursion is definitional.
 -/
+
+@[expose] public section
 
 namespace RS
 

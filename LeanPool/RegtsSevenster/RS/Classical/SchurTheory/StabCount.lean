@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.FibreCard
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.FibreCard
 
 /-!
 # Stabiliser count for colourings
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.FibreCard
 For `f : Fin n → Fin N`, the number of permutations `π` with `f ∘ π = f`
 equals `∏ j, (fibreCard f j)!`.
 -/
+
+@[expose] public section
 
 namespace RS
 

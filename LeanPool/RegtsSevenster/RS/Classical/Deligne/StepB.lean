@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.StepA
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistState
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistSymPow
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.StepA
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistState
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistSymPow
 
 /-!
 # The line step of the dévissage
@@ -17,6 +19,8 @@ the unit step applies to the twisted state and splits a unit
 factor off it.  Twisting back turns that unit factor into a line
 factor of the original state.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichRetract
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagCarrier
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichRetract
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagCarrier
 
 /-!
 # The zigzag laws as a sandwich retract
@@ -21,6 +23,8 @@ associator and the relative tensor of morphisms.
 That form is what a strong monoidal functor transports, so it is
 the shape in which base change consumes the zigzag laws.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29
 
 /-!
 # The odd line is self-dual
@@ -16,6 +18,8 @@ cyclically costs two transpositions, hence no sign at all, and
 the hexagon turns that cyclic rearrangement into a braiding past
 the trivialisation, which the unit coherences absorb.
 -/
+
+@[expose] public section
 
 namespace RS
 

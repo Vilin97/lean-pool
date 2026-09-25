@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitBase
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitBase
 
 /-!
 # The trivial module as a free module
@@ -21,6 +23,8 @@ presents a bare object as a free module; the linearity of either
 leg is the coherence identity in the monoidal unit recorded by
 `freeModUnitBase_linear` and `freeModUnitBase_linear_inv`.
 -/
+
+@[expose] public section
 
 namespace RS
 

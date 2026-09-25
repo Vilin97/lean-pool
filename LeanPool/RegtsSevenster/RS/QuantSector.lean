@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.TheoremForward
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SuperKill
+module
+
+public import LeanPool.RegtsSevenster.RS.TheoremForward
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SuperKill
 
 /-!
 # Assembly of the quantitative theorem
@@ -20,6 +22,8 @@ model lie below the side.  It is discharged as
 together with the square Schur nonvanishing); this file holds the
 tower half of the dichotomy and the assembly.
 -/
+
+@[expose] public section
 
 namespace RS
 

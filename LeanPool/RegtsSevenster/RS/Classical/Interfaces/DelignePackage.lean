@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.SuperVect
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.SuperVect
 
 /-!
 # The Deligne fibre-functor interface
@@ -24,6 +26,8 @@ instantiated at the constructed envelope; the hypotheses of the
 cited theorem are discharged for that envelope in
 `RS/Novel/Envelope/EnvDelignePackage.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

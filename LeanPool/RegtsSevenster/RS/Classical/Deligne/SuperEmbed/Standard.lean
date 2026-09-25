@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed.Letters
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed.Letters
 
 /-!
 # The standard super object and the mixed sum
@@ -31,6 +33,8 @@ as well — contradicting `not_schurKilled_stdSuper`.
   diagram avoiding the cell `(p + 1, q + 1)` — the exact complement
   of `schurKilled_unit_odd`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.CoordIso
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.CopairUnique
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.CoordIso
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.CopairUnique
 
 /-!
 # The complete standard model
@@ -23,6 +25,8 @@ are identified with the `tensorHom`-conjugated form and copairing
 via `tensorHom_def'`, and the transported copairing is then pinned
 by `stdCopair_unique`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

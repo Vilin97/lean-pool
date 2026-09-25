@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockBounds
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockBounds
 
 /-!
 # Hook confinement
@@ -25,6 +27,8 @@ for the tower's dimension bound, so it is dead
 propagation no shape containing the square is alive; and a shape
 outside the hook contains the square.
 -/
+
+@[expose] public section
 
 namespace RS
 

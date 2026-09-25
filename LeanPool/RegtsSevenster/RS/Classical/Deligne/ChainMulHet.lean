@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainAlgebra
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainAlgebra
 
 /-!
 # Heterogeneous multiplication of chain colimits
@@ -20,6 +22,8 @@ total cocone over the second slot through the preservation
 isomorphisms.  The defining equation on a pair of stages is
 cast-free because the stage inclusions absorb the index transports.
 -/
+
+@[expose] public section
 
 namespace RS
 

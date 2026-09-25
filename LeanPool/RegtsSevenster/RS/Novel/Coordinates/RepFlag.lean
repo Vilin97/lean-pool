@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexBij
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexBij
 
 /-!
 # Representative flags
@@ -15,6 +17,8 @@ representative is outgoing (under an orientation) is closed under
 the pairing — it is the flip set aligning the data colouring with
 the Definition 5 odd lists.
 -/
+
+@[expose] public section
 
 namespace RS
 

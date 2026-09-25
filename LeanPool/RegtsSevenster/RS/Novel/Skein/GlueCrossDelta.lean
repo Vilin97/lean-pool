@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueChords
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueChords
 
 /-!
 # The crossing-parity delta of the diagram gluing
@@ -23,6 +25,8 @@ the converse's per-cut splitting carries.
   crossing the cut, plus the mutual-crossing indicator of the two
   cut chords.
 -/
+
+@[expose] public section
 
 namespace RS
 

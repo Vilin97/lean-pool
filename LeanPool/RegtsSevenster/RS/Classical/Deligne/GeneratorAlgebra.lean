@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableDescentClose
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndLocallyMixed
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndUnitNonzero
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarUnitInd
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableDescentClose
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndLocallyMixed
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndUnitNonzero
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarUnitInd
 
 /-!
 # The splitting algebra of a single object
@@ -29,6 +31,8 @@ splitting algebra that is *countably presented*, which is what makes
 its scalars a field of countable dimension over the complex numbers,
 hence the complex numbers themselves.
 -/
+
+@[expose] public section
 
 namespace RS
 

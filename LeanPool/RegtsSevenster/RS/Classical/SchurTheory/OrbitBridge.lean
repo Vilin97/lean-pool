@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SameCycleQuot
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SameCycleQuot
 
 /-!
 # Orbit-size multiset identity
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SameCycleQuot
 The multiset of orbit sizes of a permutation `π : Equiv.Perm (Fin n)` equals
 its cycle type plus singleton fixed-point orbits.
 -/
+
+@[expose] public section
 
 namespace RS
 

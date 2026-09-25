@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddLinePairing
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperRealize
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddLinePairing
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperRealize
 
 /-!
 # The Γ-algebra of a commutative monoid object
@@ -34,6 +36,8 @@ The odd-odd-odd associativity is the one axiom not implied by
 coherence alone: it is the first triangle identity of the
 self-duality of the odd line, `RS.OddLine.evaluation_coevaluation`.
 -/
+
+@[expose] public section
 
 namespace RS
 

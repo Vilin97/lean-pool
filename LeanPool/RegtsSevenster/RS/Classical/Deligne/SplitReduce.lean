@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorExact
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorExact
 
 /-!
 # Sections through the dual: the reduction of 2.10
@@ -16,6 +18,8 @@ dual.  This is the pure rigid-adjunction kernel of that reduction;
 the splitting-algebra argument then only ever meets maps out of
 the unit.
 -/
+
+@[expose] public section
 
 namespace RS
 

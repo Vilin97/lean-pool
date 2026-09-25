@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.DeltaSeq
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.DescVandermonde
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.DeltaSeq
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.DescVandermonde
 
 /-!
 # The exact dimension determinant
@@ -16,6 +18,8 @@ Pochhammer evaluations; reversing both indices removes all signs
 and evaluates the determinant as a manifestly positive Vandermonde
 product of staircase differences.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MixedPartition
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MixedPartition
 
 /-!
 # Boundary-relative transition systems
@@ -46,6 +48,8 @@ For a closed fragment (no boundary flags), `RelTransitionSystem`
 degenerates to `TransitionSystem` and `internalCircuitCount` equals
 `circuitCount`.
 -/
+
+@[expose] public section
 
 namespace RS
 

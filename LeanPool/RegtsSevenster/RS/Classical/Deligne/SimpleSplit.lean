@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleQuotient
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeSummand
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffleLine
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModAbelian
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleQuotient
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeSummand
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffleLine
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModAbelian
 
 /-!
 # Free mixed modules over a simple algebra
@@ -65,6 +67,8 @@ epimorphism out of a free mixed module splits
 (`RS.exists_section_freeMod_mix`), which supplies the section datum
 of the local splitting statement without constructing it by hand.
 -/
+
+@[expose] public section
 
 namespace RS
 

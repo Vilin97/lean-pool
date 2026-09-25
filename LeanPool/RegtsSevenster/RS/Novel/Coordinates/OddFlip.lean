@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MixedPartition
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MixedPartition
 
 /-!
 # Flipping an odd colouring
@@ -13,6 +15,8 @@ Reversing the odd colouring at a chosen edge is an involution of the
 colourings, so summing a value over the colourings is invariant
 under it — the reindexing the circuit-sign computation uses.
 -/
+
+@[expose] public section
 
 namespace RS
 

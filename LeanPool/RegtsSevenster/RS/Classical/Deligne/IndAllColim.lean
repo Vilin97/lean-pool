@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndCoeq
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CoprodPreserve
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndCoeq
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CoprodPreserve
 
 /-!
 # The ind tensor preserves all small colimits
@@ -17,6 +19,8 @@ ind-category preserves every small colimit.  This is the form in
 which the coend presentations of §3 pass through the tensor
 product.
 -/
+
+@[expose] public section
 
 namespace RS
 

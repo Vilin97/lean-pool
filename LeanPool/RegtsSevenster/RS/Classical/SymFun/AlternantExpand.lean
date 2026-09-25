@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.CoeffExtract
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.CoeffExtract
 
 /-!
 # Coefficients against the staircase alternant
@@ -14,6 +16,8 @@ shifts coefficient extraction by the permuted staircase: the
 coefficient of `w₀` in `P · a_δ` is the signed sum over
 permutations of the guarded shifted coefficients of `P`.
 -/
+
+@[expose] public section
 
 namespace RS
 

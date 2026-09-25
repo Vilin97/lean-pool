@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitComplement
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitComplement
 
 /-!
 # Factor extraction on the dual module
@@ -19,6 +21,8 @@ makes the pair a retract, and the kernel of the induced linear
 idempotent is the complement.  No braiding is needed anywhere:
 the copairing already presents the primal factor on the left.
 -/
+
+@[expose] public section
 
 namespace RS
 

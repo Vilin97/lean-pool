@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SortPerm
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SortPerm
 
 /-!
 # The parameter value over the model
@@ -14,6 +16,8 @@ argument of the cap functional becomes a model-side vector — the
 assembled star vector acted on by the sort's model permutation word
 and the degree-sum cast — pushed forward once.
 -/
+
+@[expose] public section
 
 namespace RS
 

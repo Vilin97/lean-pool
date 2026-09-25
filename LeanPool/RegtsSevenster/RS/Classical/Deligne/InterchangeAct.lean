@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainStage2
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowChain
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainStage2
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowChain
 
 /-!
 # The interchange is linear over the base
@@ -18,6 +20,8 @@ chain multiplication bilinear over the base, which is what the
 structure morphism of the splitting-chain algebra multiplies
 through.
 -/
+
+@[expose] public section
 
 namespace RS
 

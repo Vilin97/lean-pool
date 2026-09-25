@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.FragmentEquiv
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.FragmentEquiv
 
 /-!
 # Strand bundles
@@ -15,6 +17,8 @@ boundary label `k` to boundary label `t + k`.  Flags are pairs
 `(k, b)` with `b = false` at the incoming end (label `k`) and
 `b = true` at the outgoing end (label `t + k`).
 -/
+
+@[expose] public section
 
 namespace RS
 

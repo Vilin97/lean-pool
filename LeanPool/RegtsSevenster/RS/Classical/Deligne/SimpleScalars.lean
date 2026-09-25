@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleQuotient
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MulBy
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleQuotient
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MulBy
 
 /-!
 # The scalars of a simple algebra
@@ -29,6 +31,8 @@ odd element squares to zero, so that action kills its own image, and
 under either alternative of simplicity the action vanishes
 (`RS.hom_oddLine_eq_zero_of_simple`).
 -/
+
+@[expose] public section
 
 namespace RS
 

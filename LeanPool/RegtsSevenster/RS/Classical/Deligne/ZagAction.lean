@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BraidCoherence
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorDatum
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BraidCoherence
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorDatum
 
 /-!
 # Paired left actions and the joint action
@@ -14,6 +16,8 @@ The zag companion of the paired right action relation: acting on
 both carriers on the left and projecting is multiplying the
 scalars and acting on the projected pair.
 -/
+
+@[expose] public section
 
 namespace RS
 

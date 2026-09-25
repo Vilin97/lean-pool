@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainIns.FirstSlot
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainIns.FirstSlot
 
 /-!
 # The second-slot insertion against the stage structure
@@ -20,6 +22,8 @@ proofs need are established first.
 * `chainInsQ_delta2`: the insertion passes the seed transition,
   raising the merged arities by one on each side.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreAdditive
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMonoidal
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreAdditive
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMonoidal
 
 /-!
 # The two presentations of the fibre functor agree
@@ -15,6 +17,8 @@ so that additivity could be proved without an additive structure on
 the module objects, and once as a composite, so that the monoidal
 comparison could be read off.  The two are the same functor.
 -/
+
+@[expose] public section
 
 namespace RS
 

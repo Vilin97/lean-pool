@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.NatChain
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitStage
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.NatChain
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitStage
 
 /-!
 # Nonvanishing of the unit along a chain colimit
@@ -19,6 +21,8 @@ vanishing in the colimit to vanishing at a stage.  The chain is
 indexed by a universe-lifted copy of `ℕ`, the shape at which the
 ind-category is known to have filtered colimits.
 -/
+
+@[expose] public section
 
 namespace RS
 

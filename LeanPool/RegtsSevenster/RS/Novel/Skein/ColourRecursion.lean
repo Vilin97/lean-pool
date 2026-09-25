@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.EdgeTerm
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CutSubsetSum
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.EdgeTerm
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CutSubsetSum
 
 /-!
 # Iterating the glue
@@ -18,6 +20,8 @@ below are the bookkeeping the staging needs — the relabel at each
 stage and at the base, and the dispatch on whether the stage's cut
 closes.
 -/
+
+@[expose] public section
 
 namespace RS
 

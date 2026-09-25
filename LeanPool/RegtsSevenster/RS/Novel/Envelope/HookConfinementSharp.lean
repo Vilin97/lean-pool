@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.HookConfinement
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareGrowthSharp
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.Package
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.HookConfinement
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareGrowthSharp
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.Package
 
 /-!
 # Sharp hook confinement
@@ -20,6 +22,8 @@ confines, not merely some side.
 package. The constant here comes from the block dimensions of the
 assembled package, through `square_growth_sharp`.
 -/
+
+@[expose] public section
 
 namespace RS
 

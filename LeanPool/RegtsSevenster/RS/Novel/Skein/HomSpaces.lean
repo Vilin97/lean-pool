@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConnectionRank
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConnectionRank
 
 /-!
 # Hom spaces of the skein category
@@ -15,6 +17,8 @@ of the full-closure pairing.  The edge-rank hypothesis bounds their
 rank through the first isomorphism theorem: the quotient by the
 kernel is equivalent to the range of the pairing map.
 -/
+
+@[expose] public section
 
 namespace RS
 

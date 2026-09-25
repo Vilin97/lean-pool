@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockCycle
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockCycle
 
 /-!
 # The block trace factorization
@@ -18,6 +20,8 @@ block-permutation homomorphism for free; the tensor-splitting
 slices carry `finCongr` casts because `n·(a+b) = n·a + n·b` is
 propositional, managed by the arity-cast transport `endCast`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixSumPow
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixSumPow
 
 /-!
 # Mixed sums with degenerate counts
@@ -27,6 +29,8 @@ label type `Fin r ⊕ Fin s` is allowed to be empty, and the
 arbitrary dimensions.  The two sides are joined exactly as before,
 giving the nonvanishing statement for all counts `r s : ℕ`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchur
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitSimple
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchur
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitSimple
 
 /-!
 # The unit of the Ind-completion is nonzero
@@ -15,6 +17,8 @@ nonzero, and the embedding is faithful, so the tensor unit of the
 Ind-completion is not a zero object.  This is the side condition of
 both Proposition 2.9 and Rappel 2.10 over the Ind-completion.
 -/
+
+@[expose] public section
 
 namespace RS
 

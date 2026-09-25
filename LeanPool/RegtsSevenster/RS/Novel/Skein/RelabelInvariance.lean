@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonExistence
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonExistence
 
 /-!
 # Monotone relabel invariance of the corrected constrained value
@@ -24,6 +26,8 @@ relative transition data, so the transport is stated for a value
 already pinned to a choice: the relabel carries one side's data to
 the other's, and the conversions are identity-shaped.
 -/
+
+@[expose] public section
 
 namespace RS
 

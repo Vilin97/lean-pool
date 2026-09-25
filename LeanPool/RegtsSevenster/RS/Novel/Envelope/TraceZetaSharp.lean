@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.TraceZeta
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.HookConfinementSharp
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.TraceZeta
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.HookConfinementSharp
 
 /-!
 # The trace-zeta theorem with the sharp threshold
@@ -36,6 +38,8 @@ the quantifier and the constant: every admissible side gives its own
 degree bound,
 and the threshold is stated in the growth constant itself.
 -/
+
+@[expose] public section
 
 namespace RS
 

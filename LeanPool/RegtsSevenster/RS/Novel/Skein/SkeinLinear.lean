@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCatInstance
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCatInstance
 
 /-!
 # The skein category is ℂ-linear
@@ -13,6 +15,8 @@ Hom spaces are ℂ-modules and the descended composition is
 bilinear, so the skein category is preadditive and ℂ-linear —
 two of the instance hypotheses of the Deligne package carrier.
 -/
+
+@[expose] public section
 
 namespace RS
 

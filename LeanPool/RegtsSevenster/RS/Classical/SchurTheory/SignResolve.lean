@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.DimFormula
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTSimple
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.DimFormula
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTSimple
 
 /-!
 # The sign resolution
@@ -14,6 +16,8 @@ The Jacobi–Trudi character degree is a ratio of positive naturals,
 so in the `±`-dichotomy of `jtChar_pm_simple` only the positive
 sign survives: the Jacobi–Trudi character IS a native character.
 -/
+
+@[expose] public section
 
 namespace RS
 

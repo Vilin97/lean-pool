@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.CoeffExtract
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.CoeffExtract
 
 /-!
 # Pieri rule for plain alternants
@@ -19,6 +21,8 @@ via `det_apply'`, use the per-term product identity for
 `Function.update`, swap/reindex sums via `Equiv.sum_comp`, and
 match termwise.
 -/
+
+@[expose] public section
 
 namespace RS
 

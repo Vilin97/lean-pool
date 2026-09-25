@@ -4,843 +4,845 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS
-import LeanPool.RegtsSevenster.RS.Assembly.Blueprint
-import LeanPool.RegtsSevenster.RS.Assembly.BlueprintConverse
-import LeanPool.RegtsSevenster.RS.Assembly.BlueprintDeligne
-import LeanPool.RegtsSevenster.RS.Assembly.BlueprintFactorial
-import LeanPool.RegtsSevenster.RS.Assembly.BlueprintSchur
-import LeanPool.RegtsSevenster.RS.Assembly.BlueprintStatement
-import LeanPool.RegtsSevenster.RS.Classical
-import LeanPool.RegtsSevenster.RS.Classical.Algebra.FactorialTrace
-import LeanPool.RegtsSevenster.RS.Classical.Algebra.TraceCriterion
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Growth
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Intertwine
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.KaroubiLinear
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.KaroubiTrace
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Length
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.LengthBound
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.LinearCategory
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.PartialTrace
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.TensorPow
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Trace
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.UnitEnd
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.WhiskerAdditive
-import LeanPool.RegtsSevenster.RS.Classical.Deligne
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.AltPow
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.AltPowAct
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeAdjoint
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeCoherence
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeDatum
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeFree
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeLinear
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeMonoidal
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeTransport
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeZigzag
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BigTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BigTensorUnit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BiprodPow
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BiprodTransfer
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BlockUnits
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BraidCoherence
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainB
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBGr
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBGraded
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBGradedLaws
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBInd
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBNonzero
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBofA
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBridge
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainDelta
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainIns
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainIns.Base
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainIns.FirstSlot
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainIns.SecondSlot
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMul
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMulHet
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMulLaws
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainNonzero
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainShift
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainStage2
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainUnit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CharSplit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CommonAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CoprodPreserve
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableDescent
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableDescentClose
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableNullstellensatz
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CoverFactor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CycleSplit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DayCalculus
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DayType
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DeligneAssembly
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DescentClose
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DevissageBound
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledAbelian
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledGrowth
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledLine
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledScalar
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledSmall
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledSplit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Doubling
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DualityMate
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.EvenEmbedMonoidal
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ExactFromShort
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FactorialBeats
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreAdditive
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreBridge
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreEps
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreExact
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreFaithful
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreFunctor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreLinear
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMix
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMonoidal
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMu
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMuNat
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreOverComplex
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreOverSplitting
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreRestrict
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreStrong
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FiltNil
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FlatLimit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeCollapseAlg
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeMixRetract
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModAdjoint
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModFunctor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffleCoh
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeNormalise
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeNormaliseBase
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeNormaliseStep
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePow
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePowDesc
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePowInsert
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeSlide
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeSummand
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeTwistPi
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaComplex
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaCountable
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModule
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModuleFunctor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPair
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairAdd
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairFreeFree
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairFreeMix
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairNat
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairRetract
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairRetractRight
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairUnit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaShift
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaTwistLeft
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GeneratorAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GrowthDichotomy
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.HomFinite
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.HookMult
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.HookZero
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IdemCut
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IdempotentLength
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ImageSubalgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndAllColim
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndBigTensorUnit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndCoeq
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndCompact
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndDayClosure
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndImage
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndKill
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndLocallyMixed
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndMonoidal
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndOfLinear
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndOfMonoidal
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndPointTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchur
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchurKilled
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSimple
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSplit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSplitSection
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndTensorExact
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndUnitNonzero
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.InitDatum
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.InitState
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.InterchangeAct
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KernelPow
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemma
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemmaClose
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemmaData
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KillerNonempty
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KronKill
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.LambdaCoend
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixDegenerate
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffle
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffleLine
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixSumPow
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixWhisker
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixWhiskerAll
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedConc
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedDiag
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedTransport
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModAbelian
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModAssoc
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModContractL
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModCross
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModDual
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModIns
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModMulti
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModMultiTriple
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowCast
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowDescent
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowDescentClose
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowStage
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModSchur
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModSchurSummand
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModZero
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MuInterchange
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MulBy
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.NatChain
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.NewtonConv
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.NullPoint
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddLineMap
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddLinePairing
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddParity
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddPermSign
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddSquare
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddSquareIso
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PairCarrier
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PairMul
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PairPerm
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PermNat
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PermRepChar
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PieriPos
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PlainShuffle
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointBaseChange
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointFibre
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Calculus
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Coherence
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Comparison
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Functor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Residue
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowAct
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowActMul
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowChain
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowCopairing
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowDatum
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowInduct
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowMerge
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPairSucc
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPairing
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPoint
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowSucc
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowSuccMod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowTriangle
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowZig
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowZigzag
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PresentedQuotient
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop21
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop21Core
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop21General
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29Close
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29State
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Bridge
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Chain
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Close
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Ind
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Reduce
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.RegularSum
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.RhoBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.RhoTwist
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.RowColIdem
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichMerge
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichRetract
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichZig
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarBraiding
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarLinear
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarUnitEquiv
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarUnitInd
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurTransport
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurVanishing
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SeedIns
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ShapeAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ShapeFintype
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SignConj
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleGenerator
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimplePoint
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleQuotient
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleScalars
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleSplit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SmallReduction
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitAdjoint
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitAssemble
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitClosure
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitComplement
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitEverything
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitExact
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitExtract
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitExtractDual
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitMonHom
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitPairDef
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitReduce
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitTransport
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplittingAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.StateTransport
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.StepA
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.StepATransport
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.StepB
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed.Letters
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed.Signs
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed.Standard
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEvenRing
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperGamma
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperGammaInst
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModAbelian
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModBiprodMap
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModHom
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModIso
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModMonoidal
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModShift
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModShiftUnit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperPointMod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperRealize
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperSeries
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperSmall
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperValues
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperVectSchur
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymAlg
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymDatum
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymMul
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorDatum
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorExact
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorMuBraid
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorPowZero
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorTransfer
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorZigzag
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TrichotomyClose
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistCoherence
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistDatum
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistFreeTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistMixLine
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistPow
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistShuffle
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistState
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistSymPow
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistUnitor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitBase
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitFreeMod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitMod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitSimple
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitStage
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.UniversalAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.WhiskerFaithful
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.WordMap
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZagAction
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagCarrier
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagNonzero
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagSandwich
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagTransfer
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagTransferIso
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DeligneBridge
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DelignePackage
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DelignePackageRestrict
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DeligneTheorem
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.EulerianIndependence
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.FibreTransport
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.KoszulAction
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.OmegaPerm
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.OmegaTensorPower
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SchurPackage
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SectorDischarge
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SectorIntertwine
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.TotalDimension
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.BlockKill
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.BranchTrace
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CentralElem
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharClass
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharDecomp
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharEquiv
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourCycleSum
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourWeight
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CommutantBound
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ContentCount
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CycleFactor
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CycleSum
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CycleSumPrep
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.EndSum
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.FibreCard
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.FixWeight
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.HVal
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.IdempotentBridge
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTChar
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTIntChar
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTIrreducible
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTOrtho
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTPad
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTSimple
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.KillSimples
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.MixedCount
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.MixedFixed
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeAction
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeFaithful
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeTable
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.OrbitBridge
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.Package
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PackageAssembly
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairChar
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairInner
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairOrbit
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairStab
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairTuple
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairingPos
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PermModule
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PowerSurj
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.RegularTrace
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SameCycleQuot
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ScalarTrace
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SchurAction
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SigmaCycleType
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SignResolve
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SignedTensor
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SimpleEmbed
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareGrowth
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareGrowthSharp
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareStair
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.StabCount
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.TensorNonvanishing
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.TensorTrace
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.WordCommutant
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourAction
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConj
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConjStep
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConjTop
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourEval
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourExtendSwap
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourFormMatch
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourMerge
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourMergeOdd
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPairing
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPairingSymm
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPower
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourTotal
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourWord
-import LeanPool.RegtsSevenster.RS.Classical.Super.OrthonormalBasis
-import LeanPool.RegtsSevenster.RS.Classical.Super.PowBraid
-import LeanPool.RegtsSevenster.RS.Classical.Super.SuperVect
-import LeanPool.RegtsSevenster.RS.Classical.Super.SymplecticBasis
-import LeanPool.RegtsSevenster.RS.Classical.Super.TotalSpace
-import LeanPool.RegtsSevenster.RS.Classical.Super.WordSignPerm
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.AlternantExpand
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.AlternantPieri
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.AlternantStrict
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.Bialternant
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.BinomialDet
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.BinomialH
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.CoeffExtract
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.CoeffSplit
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.DeltaSeq
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.DescVandermonde
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.DimFormula
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.EHConv
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.EHDischarge
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.HInsert
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.HProdCoeff
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.HSubZ
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.HookVanishing
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.JTDetExpand
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.JTGuard
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.LGVStrict
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.PieriChain
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowCount
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowerSums
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.RationalityFromRecurrence
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.RecurrenceFromVanishing
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.SubsetEH
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.SuperPowerSums
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.TCount
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.TIdentity
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.ZetaExp
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.ZetaRational
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.ZetaSeries
-import LeanPool.RegtsSevenster.RS.Common
-import LeanPool.RegtsSevenster.RS.Common.DiagramChain
-import LeanPool.RegtsSevenster.RS.Common.ExponentialGrowth
-import LeanPool.RegtsSevenster.RS.Common.FactorialBound
-import LeanPool.RegtsSevenster.RS.Common.FinSlots
-import LeanPool.RegtsSevenster.RS.Common.ListAttach
-import LeanPool.RegtsSevenster.RS.Common.ListPairs
-import LeanPool.RegtsSevenster.RS.Common.ListSign
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
-import LeanPool.RegtsSevenster.RS.Common.NilpotentMap
-import LeanPool.RegtsSevenster.RS.Common.NilpotentPowerTrace
-import LeanPool.RegtsSevenster.RS.Common.PairDisjoint
-import LeanPool.RegtsSevenster.RS.Common.PermCongr
-import LeanPool.RegtsSevenster.RS.Common.PermTopSplit
-import LeanPool.RegtsSevenster.RS.Common.ProdSum
-import LeanPool.RegtsSevenster.RS.Common.RowLenChain
-import LeanPool.RegtsSevenster.RS.Common.RowSpanRank
-import LeanPool.RegtsSevenster.RS.Common.TraceSeparation
-import LeanPool.RegtsSevenster.RS.Common.YoungDiagrams
-import LeanPool.RegtsSevenster.RS.Definitions
-import LeanPool.RegtsSevenster.RS.DimensionDefinitions
-import LeanPool.RegtsSevenster.RS.Glossary
-import LeanPool.RegtsSevenster.RS.Novel
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.AdjSwapBmc
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.AdjacentWord
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BasisCoord
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BasisSplit
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaData
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaDiag
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaDiagForm
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaFlip
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockAlign
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockCanon
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockData
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockOddList
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockParity
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockRestrict
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockSigma
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockSort
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BraidWord
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CanonColour
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CanonPerm
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapClosed
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapExpansion
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapFun
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapMatch
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapPeel
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapPeelSplit
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapPerm
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapSplit
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapVal
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ChainLists
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CircleModel
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CircleScalar
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CircuitCount
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ClosedTransition
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ConcatSign
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CoordInterface
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CoordOf
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CoreParity
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EdgeSign
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EvForm
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EvFormOdd
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EvLeaf
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.FibreParam
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.FlagEnum
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.GlobalSlotList
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.HRS
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.IndexPerm
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ListSignPerm
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.MasterSum
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelCoord
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelPermCoord
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelStarVec
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.MultiStar
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.NFDef
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.NFValue
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddFlip
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddListMultiset
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddPair
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddSignProd
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaCotensor
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaStarVec
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaTensor
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaTransport
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OneBasis
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OrbitCard
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OutSignEdges
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PairEnum
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PairList
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ParameterModel
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PatternInv
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PowMerge
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RegroupSign
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.Reindex
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexBij
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexHeart
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexVanish
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RepFlag
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RiffleSign
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SignPair
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SkeinPowBraid
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SlotPairing
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SortFactor
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SortPerm
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarClassFactor
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarPeel
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarPerm
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarRepeat
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarSymm
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarTensorClass
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StdTransport
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StrandTransport
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TauCount
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TauKey
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TopBraidMerge
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TwoBasis
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.VertexSign
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.VertexValue
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.AtomDichotomy
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.AtomicIdempotents
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockAssembly
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockBounds
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockCycle
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockFactor
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockFactorialTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockSplice
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockTower
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.CycleNormal
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.CycleTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvAbelian
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvDeligne
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvDelignePackage
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvGenerator
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvGrowth
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvInstances
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvSemisimple
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.FactorialTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.Frobenius
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.HookConfinement
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.HookConfinementSharp
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiEmbBraided
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiMonoidal
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiRigid
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiSemisimple
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatBraided
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatEmbMonoidal
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatMonoidal
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatRigid
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatSemisimple
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.NilpotentMatTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.NilpotentTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.ObjectTower
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.PermTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.RankDimension
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.ScalarPermTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.ScalarTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SemisimpleAll
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SemisimpleEnd
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinDimBound
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinTower
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SuperKill
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPerm
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPermCast
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.TensorPowHom
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.TensorPowSplit
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.TraceZeta
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.TraceZetaSharp
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.CircleValue
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.CoordIso
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.Coordinates
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.CopairUnique
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.Nondegenerate
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.SnakeTransport
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdDuality
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdRigid
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdSuper
-import LeanPool.RegtsSevenster.RS.Novel.Skein.AllInternalAgreement
-import LeanPool.RegtsSevenster.RS.Novel.Skein.AllInternalIndependence
-import LeanPool.RegtsSevenster.RS.Novel.Skein.BraidedInstance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.BraidedNat
-import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleClose
-import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleMapClasses
-import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleTensor
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonExistence
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonTransport
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonicalFrame
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ChainAgreement
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordCount
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordLabels
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordParity
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordSwapParity
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseRotate
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseRotateLeft
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseUnion
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedAgreement
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedCutDispatch
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedIdentify
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedTopSum
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourEmbedding
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourGlue
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourPadding
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourRecursion
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeAssoc
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeNormal
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeRelabel
-import LeanPool.RegtsSevenster.RS.Novel.Skein.Composition
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CompositionEquiv
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConnectionRank
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseAssembly
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseDischarge
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseFamily
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseGram
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseIdentity
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseLift
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConversePair
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseTrip
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CrossingDelta
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CutMatching
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CutSubsetSum
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DirMatching
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjSubsetSplit
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor.A
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor.B
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor.C
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionProduct
-import LeanPool.RegtsSevenster.RS.Novel.Skein.EdgeColouring
-import LeanPool.RegtsSevenster.RS.Novel.Skein.EdgeSum
-import LeanPool.RegtsSevenster.RS.Novel.Skein.EdgeTerm
-import LeanPool.RegtsSevenster.RS.Novel.Skein.Eulerian
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ExactPairingInstance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.FibreValue
-import LeanPool.RegtsSevenster.RS.Novel.Skein.FlagGraph
-import LeanPool.RegtsSevenster.RS.Novel.Skein.FlipSignForm
-import LeanPool.RegtsSevenster.RS.Novel.Skein.FlipSignProduct
-import LeanPool.RegtsSevenster.RS.Novel.Skein.FourLabelParity
-import LeanPool.RegtsSevenster.RS.Novel.Skein.FragmentEquiv
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GenBoundaryStates
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueAmbient
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueChord
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueChords
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueCircuitDelta
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueComm
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueCrossDelta
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueFold
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueLedger
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GluePathMatch
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueRelTransport
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplit
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplitProof
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplitProof.A
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplitProof.C
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSubsetBij
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GramRank
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomCompose
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomSpaces
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTensor
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTraceCyclic
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTraceNondegenerate
-import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLaw
-import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLawRight
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceAlternate
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceContract
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceCut
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceOrderIso
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceShift
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InvolutionCard
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LabelChords
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerCast
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerRecursion
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerSets
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerStage
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerValue
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LoopExample
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LoopVerify
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MixedPartition
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalInstance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalNat
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalStruct
-import LeanPool.RegtsSevenster.RS.Novel.Skein.Multiplicativity
-import LeanPool.RegtsSevenster.RS.Novel.Skein.NonSeparatedStep
-import LeanPool.RegtsSevenster.RS.Novel.Skein.OpenCircuits
-import LeanPool.RegtsSevenster.RS.Novel.Skein.OrbitParities
-import LeanPool.RegtsSevenster.RS.Novel.Skein.OrientExistence
-import LeanPool.RegtsSevenster.RS.Novel.Skein.OrientationFlip
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairCloseComm
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairedAssembly
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingConnectivity
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingSignature
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingSwap
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingValue
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PartialClose
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PartialCloseCompose
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PartialCloseTensor
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PathCanon
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PathLedger
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PathMatch
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PermCompose
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PermFragment
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PropThreeOpen
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RSTensor
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RelTransition
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RelValue
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RelabelChords
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RelabelInvariance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RepairInvariance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RigidInstance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RigidityClasses
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ScalarClass
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ScalarFunctional
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SeparatedParity
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SimpleUnit
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCatInstance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCategory
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdeal
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdealLeft
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinLinear
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SnakeClasses
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StarCompClass
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StarDecomposition
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StarEnum
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StarExplode
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StarPrep
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StarTrace
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StateFlipSet
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StatusSet
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StepFrame
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StepLedger
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StepStatus
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StepStatusNonsep
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StrandBundle
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SumLexOrder
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SuperGram
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SuperSpace
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorAssoc
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorComm
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorCompClass
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorFragment
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorIdeal
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorInterchange
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorUnit
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughEdgeCut
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughIndCFalse
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughValue
-import LeanPool.RegtsSevenster.RS.Novel.Skein.Trace
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceCyclic
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceNondegenerate
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionExists
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionMove
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TransposeLedger
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TwoPathNonSep
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TwoPathStep
-import LeanPool.RegtsSevenster.RS.Novel.Skein.VertexOddSign
-import LeanPool.RegtsSevenster.RS.Novel.Skein.VertexSum
-import LeanPool.RegtsSevenster.RS.QuantSector
-import LeanPool.RegtsSevenster.RS.StatementConverse
-import LeanPool.RegtsSevenster.RS.Summit
-import LeanPool.RegtsSevenster.RS.TheoremConverse
-import LeanPool.RegtsSevenster.RS.TheoremDimension
-import LeanPool.RegtsSevenster.RS.TheoremForward
-import LeanPool.RegtsSevenster.RS.TheoremPadding
-import LeanPool.RegtsSevenster.RS.TheoremQuant
-import LeanPool.RegtsSevenster.RS.TheoremTotal
-import LeanPool.RegtsSevenster.Solution
+module
+
+public import LeanPool.RegtsSevenster.RS
+public import LeanPool.RegtsSevenster.RS.Assembly.Blueprint
+public import LeanPool.RegtsSevenster.RS.Assembly.BlueprintConverse
+public import LeanPool.RegtsSevenster.RS.Assembly.BlueprintDeligne
+public import LeanPool.RegtsSevenster.RS.Assembly.BlueprintFactorial
+public import LeanPool.RegtsSevenster.RS.Assembly.BlueprintSchur
+public import LeanPool.RegtsSevenster.RS.Assembly.BlueprintStatement
+public import LeanPool.RegtsSevenster.RS.Classical
+public import LeanPool.RegtsSevenster.RS.Classical.Algebra.FactorialTrace
+public import LeanPool.RegtsSevenster.RS.Classical.Algebra.TraceCriterion
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Growth
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Intertwine
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.KaroubiLinear
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.KaroubiTrace
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Length
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.LengthBound
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.LinearCategory
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.PartialTrace
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.TensorPow
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Trace
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.UnitEnd
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.WhiskerAdditive
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.AltPow
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.AltPowAct
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeAdjoint
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeCoherence
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeDatum
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeFree
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeLinear
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeMonoidal
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeTransport
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeZigzag
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BigTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BigTensorUnit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BiprodPow
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BiprodTransfer
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BlockUnits
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BraidCoherence
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainB
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBGr
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBGraded
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBGradedLaws
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBInd
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBNonzero
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBofA
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBridge
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainDelta
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainIns
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainIns.Base
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainIns.FirstSlot
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainIns.SecondSlot
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMul
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMulHet
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMulLaws
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainNonzero
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainShift
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainStage2
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainUnit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CharSplit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CommonAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CoprodPreserve
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableDescent
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableDescentClose
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableNullstellensatz
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CoverFactor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CycleSplit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DayCalculus
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DayType
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DeligneAssembly
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DescentClose
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DevissageBound
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledAbelian
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledGrowth
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledLine
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledScalar
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledSmall
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DoubledSplit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Doubling
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DualityMate
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.EvenEmbedMonoidal
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ExactFromShort
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FactorialBeats
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreAdditive
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreBridge
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreEps
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreExact
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreFaithful
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreFunctor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreLinear
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMix
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMonoidal
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMu
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMuNat
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreOverComplex
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreOverSplitting
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreRestrict
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreStrong
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FiltNil
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FlatLimit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeCollapseAlg
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeMixRetract
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModAdjoint
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModFunctor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffleCoh
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeNormalise
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeNormaliseBase
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeNormaliseStep
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePow
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePowDesc
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePowInsert
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeSlide
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeSummand
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeTwistPi
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaComplex
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaCountable
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModule
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModuleFunctor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPair
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairAdd
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairFreeFree
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairFreeMix
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairNat
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairRetract
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairRetractRight
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairUnit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaShift
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaTwistLeft
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GeneratorAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GrowthDichotomy
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.HomFinite
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.HookMult
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.HookZero
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IdemCut
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IdempotentLength
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ImageSubalgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndAllColim
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndBigTensorUnit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndCoeq
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndCompact
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndDayClosure
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndImage
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndKill
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndLocallyMixed
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndMonoidal
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndOfLinear
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndOfMonoidal
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndPointTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchur
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSchurKilled
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSimple
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSplit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndSplitSection
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndTensorExact
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndUnitNonzero
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.InitDatum
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.InitState
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.InterchangeAct
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KernelPow
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemma
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemmaClose
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemmaData
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KillerNonempty
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KronKill
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.LambdaCoend
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixDegenerate
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffle
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffleLine
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixSumPow
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixWhisker
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixWhiskerAll
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedConc
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedDiag
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedTransport
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModAbelian
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModAssoc
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModContractL
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModCross
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModDual
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModIns
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModMulti
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModMultiTriple
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowCast
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowDescent
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowDescentClose
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModPowStage
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModSchur
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModSchurSummand
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModZero
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MuInterchange
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MulBy
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.NatChain
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.NewtonConv
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.NullPoint
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddLineMap
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddLinePairing
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddParity
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddPermSign
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddSquare
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddSquareIso
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PairCarrier
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PairMul
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PairPerm
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PermNat
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PermRepChar
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PieriPos
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PlainShuffle
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointBaseChange
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointFibre
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Calculus
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Coherence
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Comparison
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Functor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Residue
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowAct
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowActMul
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowChain
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowCopairing
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowDatum
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowInduct
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowMerge
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPairSucc
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPairing
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPoint
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowSucc
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowSuccMod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowTriangle
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowZig
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowZigzag
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PresentedQuotient
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop21
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop21Core
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop21General
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29Close
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29State
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Bridge
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Chain
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Close
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Ind
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Reduce
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.RegularSum
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.RhoBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.RhoTwist
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.RowColIdem
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichMerge
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichRetract
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SandwichZig
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarBraiding
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarLinear
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarUnitEquiv
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarUnitInd
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurTransport
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurVanishing
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SeedIns
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ShapeAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ShapeFintype
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SignConj
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleGenerator
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimplePoint
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleQuotient
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleScalars
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleSplit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SmallReduction
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitAdjoint
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitAssemble
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitClosure
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitComplement
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitEverything
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitExact
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitExtract
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitExtractDual
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitMonHom
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitPairDef
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitReduce
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitTransport
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplittingAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.StateTransport
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.StepA
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.StepATransport
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.StepB
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed.Letters
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed.Signs
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed.Standard
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEvenRing
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperGamma
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperGammaInst
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModAbelian
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModBiprodMap
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModHom
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModIso
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModMonoidal
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModShift
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModShiftUnit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperPointMod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperRealize
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperSeries
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperSmall
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperValues
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperVectSchur
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymAlg
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymDatum
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymMul
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorDatum
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorExact
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorMuBraid
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorPowZero
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorTransfer
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorZigzag
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TrichotomyClose
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistCoherence
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistDatum
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistFreeTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistMixLine
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistPow
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistShuffle
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistState
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistSymPow
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistUnitor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitBase
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitFreeMod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitMod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitSimple
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UnitStage
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.UniversalAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.WhiskerFaithful
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.WordMap
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZagAction
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagCarrier
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagNonzero
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagSandwich
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagTransfer
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagTransferIso
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DeligneBridge
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DelignePackage
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DelignePackageRestrict
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DeligneTheorem
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.EulerianIndependence
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.FibreTransport
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.KoszulAction
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.OmegaPerm
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.OmegaTensorPower
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SchurPackage
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SectorDischarge
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SectorIntertwine
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.TotalDimension
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.BlockKill
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.BranchTrace
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CentralElem
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharClass
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharDecomp
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharEquiv
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourCycleSum
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourWeight
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CommutantBound
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ContentCount
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CycleFactor
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CycleSum
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CycleSumPrep
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.EndSum
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.FibreCard
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.FixWeight
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.HVal
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.IdempotentBridge
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTChar
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTIntChar
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTIrreducible
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTOrtho
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTPad
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTSimple
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.KillSimples
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.MixedCount
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.MixedFixed
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeAction
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeFaithful
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeTable
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.OrbitBridge
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.Package
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PackageAssembly
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairChar
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairInner
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairOrbit
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairStab
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairTuple
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairingPos
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PermModule
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PowerSurj
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.RegularTrace
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SameCycleQuot
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ScalarTrace
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SchurAction
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SigmaCycleType
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SignResolve
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SignedTensor
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SimpleEmbed
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareGrowth
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareGrowthSharp
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareStair
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.StabCount
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.TensorNonvanishing
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.TensorTrace
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.WordCommutant
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourAction
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConj
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConjStep
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConjTop
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourEval
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourExtendSwap
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourFormMatch
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourMerge
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourMergeOdd
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPairing
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPairingSymm
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPower
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourTotal
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourWord
+public import LeanPool.RegtsSevenster.RS.Classical.Super.OrthonormalBasis
+public import LeanPool.RegtsSevenster.RS.Classical.Super.PowBraid
+public import LeanPool.RegtsSevenster.RS.Classical.Super.SuperVect
+public import LeanPool.RegtsSevenster.RS.Classical.Super.SymplecticBasis
+public import LeanPool.RegtsSevenster.RS.Classical.Super.TotalSpace
+public import LeanPool.RegtsSevenster.RS.Classical.Super.WordSignPerm
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.AlternantExpand
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.AlternantPieri
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.AlternantStrict
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.Bialternant
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.BinomialDet
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.BinomialH
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.CoeffExtract
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.CoeffSplit
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.DeltaSeq
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.DescVandermonde
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.DimFormula
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.EHConv
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.EHDischarge
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.HInsert
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.HProdCoeff
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.HSubZ
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.HookVanishing
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.JTDetExpand
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.JTGuard
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.LGVStrict
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.PieriChain
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowCount
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowerSums
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.RationalityFromRecurrence
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.RecurrenceFromVanishing
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.SubsetEH
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.SuperPowerSums
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.TCount
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.TIdentity
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.ZetaExp
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.ZetaRational
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.ZetaSeries
+public import LeanPool.RegtsSevenster.RS.Common
+public import LeanPool.RegtsSevenster.RS.Common.DiagramChain
+public import LeanPool.RegtsSevenster.RS.Common.ExponentialGrowth
+public import LeanPool.RegtsSevenster.RS.Common.FactorialBound
+public import LeanPool.RegtsSevenster.RS.Common.FinSlots
+public import LeanPool.RegtsSevenster.RS.Common.ListAttach
+public import LeanPool.RegtsSevenster.RS.Common.ListPairs
+public import LeanPool.RegtsSevenster.RS.Common.ListSign
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+public import LeanPool.RegtsSevenster.RS.Common.NilpotentMap
+public import LeanPool.RegtsSevenster.RS.Common.NilpotentPowerTrace
+public import LeanPool.RegtsSevenster.RS.Common.PairDisjoint
+public import LeanPool.RegtsSevenster.RS.Common.PermCongr
+public import LeanPool.RegtsSevenster.RS.Common.PermTopSplit
+public import LeanPool.RegtsSevenster.RS.Common.ProdSum
+public import LeanPool.RegtsSevenster.RS.Common.RowLenChain
+public import LeanPool.RegtsSevenster.RS.Common.RowSpanRank
+public import LeanPool.RegtsSevenster.RS.Common.TraceSeparation
+public import LeanPool.RegtsSevenster.RS.Common.YoungDiagrams
+public import LeanPool.RegtsSevenster.RS.Definitions
+public import LeanPool.RegtsSevenster.RS.DimensionDefinitions
+public import LeanPool.RegtsSevenster.RS.Glossary
+public import LeanPool.RegtsSevenster.RS.Novel
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.AdjSwapBmc
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.AdjacentWord
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BasisCoord
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BasisSplit
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaData
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaDiag
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaDiagForm
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaFlip
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockAlign
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockCanon
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockData
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockOddList
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockParity
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockRestrict
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockSigma
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockSort
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BraidWord
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CanonColour
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CanonPerm
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapClosed
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapExpansion
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapFun
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapMatch
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapPeel
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapPeelSplit
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapPerm
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapSplit
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapVal
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ChainLists
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CircleModel
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CircleScalar
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CircuitCount
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ClosedTransition
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ConcatSign
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CoordInterface
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CoordOf
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CoreParity
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EdgeSign
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EvForm
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EvFormOdd
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EvLeaf
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.FibreParam
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.FlagEnum
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.GlobalSlotList
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.HRS
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.IndexPerm
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ListSignPerm
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.MasterSum
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelCoord
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelPermCoord
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelStarVec
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.MultiStar
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.NFDef
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.NFValue
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddFlip
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddListMultiset
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddPair
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddSignProd
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaCotensor
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaStarVec
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaTensor
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaTransport
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OneBasis
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OrbitCard
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OutSignEdges
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PairEnum
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PairList
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ParameterModel
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PatternInv
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PowMerge
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RegroupSign
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.Reindex
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexBij
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexHeart
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexVanish
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RepFlag
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RiffleSign
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SignPair
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SkeinPowBraid
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SlotPairing
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SortFactor
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SortPerm
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarClassFactor
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarPeel
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarPerm
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarRepeat
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarSymm
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarTensorClass
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StdTransport
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StrandTransport
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TauCount
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TauKey
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TopBraidMerge
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TwoBasis
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.VertexSign
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.VertexValue
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.AtomDichotomy
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.AtomicIdempotents
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockAssembly
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockBounds
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockCycle
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockFactor
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockFactorialTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockSplice
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.BlockTower
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.CycleNormal
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.CycleTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvAbelian
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvDeligne
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvDelignePackage
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvGenerator
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvGrowth
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvInstances
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvSemisimple
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.FactorialTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.Frobenius
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.HookConfinement
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.HookConfinementSharp
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiEmbBraided
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiMonoidal
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiRigid
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiSemisimple
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatBraided
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatEmbMonoidal
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatMonoidal
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatRigid
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatSemisimple
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.NilpotentMatTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.NilpotentTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.ObjectTower
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.PermTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.RankDimension
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.ScalarPermTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.ScalarTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SemisimpleAll
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SemisimpleEnd
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinDimBound
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinTower
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SuperKill
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPerm
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPermCast
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.TensorPowHom
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.TensorPowSplit
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.TraceZeta
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.TraceZetaSharp
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.CircleValue
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.CoordIso
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.Coordinates
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.CopairUnique
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.Nondegenerate
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.SnakeTransport
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdDuality
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdRigid
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdSuper
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.AllInternalAgreement
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.AllInternalIndependence
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.BraidedInstance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.BraidedNat
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleClose
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleMapClasses
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleTensor
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonExistence
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonTransport
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonicalFrame
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ChainAgreement
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordCount
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordLabels
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordParity
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordSwapParity
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseRotate
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseRotateLeft
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseUnion
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedAgreement
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedCutDispatch
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedIdentify
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ClosedTopSum
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourEmbedding
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourGlue
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourPadding
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourRecursion
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeAssoc
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeNormal
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeRelabel
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.Composition
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CompositionEquiv
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConnectionRank
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseAssembly
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseDischarge
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseFamily
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseGram
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseIdentity
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseLift
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConversePair
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseTrip
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CrossingDelta
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CutMatching
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CutSubsetSum
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DirMatching
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjSubsetSplit
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor.A
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor.B
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor.C
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionProduct
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.EdgeColouring
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.EdgeSum
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.EdgeTerm
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.Eulerian
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ExactPairingInstance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.FibreValue
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.FlagGraph
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.FlipSignForm
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.FlipSignProduct
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.FourLabelParity
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.FragmentEquiv
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GenBoundaryStates
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueAmbient
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueChord
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueChords
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueCircuitDelta
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueComm
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueCrossDelta
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueFold
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueLedger
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GluePathMatch
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueRelTransport
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplit
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplitProof
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplitProof.A
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplitProof.C
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSubsetBij
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GramRank
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomCompose
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomSpaces
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTensor
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTraceCyclic
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTraceNondegenerate
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLaw
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLawRight
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceAlternate
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceContract
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceCut
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceOrderIso
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceShift
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InvolutionCard
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LabelChords
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerCast
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerRecursion
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerSets
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerStage
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerValue
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LoopExample
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LoopVerify
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MixedPartition
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalInstance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalNat
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalStruct
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.Multiplicativity
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.NonSeparatedStep
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.OpenCircuits
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.OrbitParities
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.OrientExistence
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.OrientationFlip
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairCloseComm
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairedAssembly
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingConnectivity
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingSignature
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingSwap
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingValue
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PartialClose
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PartialCloseCompose
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PartialCloseTensor
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PathCanon
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PathLedger
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PathMatch
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PermCompose
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PermFragment
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PropThreeOpen
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RSTensor
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RelTransition
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RelValue
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RelabelChords
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RelabelInvariance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RepairInvariance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RigidInstance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RigidityClasses
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ScalarClass
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ScalarFunctional
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SeparatedParity
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SimpleUnit
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCatInstance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCategory
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdeal
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdealLeft
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinLinear
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SnakeClasses
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StarCompClass
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StarDecomposition
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StarEnum
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StarExplode
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StarPrep
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StarTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StateFlipSet
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StatusSet
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StepFrame
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StepLedger
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StepStatus
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StepStatusNonsep
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StrandBundle
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SumLexOrder
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SuperGram
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SuperSpace
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorAssoc
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorComm
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorCompClass
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorFragment
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorIdeal
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorInterchange
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorUnit
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughEdgeCut
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughIndCFalse
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughValue
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.Trace
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceCyclic
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TraceNondegenerate
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionExists
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionMove
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TransposeLedger
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TwoPathNonSep
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TwoPathStep
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.VertexOddSign
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.VertexSum
+public import LeanPool.RegtsSevenster.RS.QuantSector
+public import LeanPool.RegtsSevenster.RS.StatementConverse
+public import LeanPool.RegtsSevenster.RS.Summit
+public import LeanPool.RegtsSevenster.RS.TheoremConverse
+public import LeanPool.RegtsSevenster.RS.TheoremDimension
+public import LeanPool.RegtsSevenster.RS.TheoremForward
+public import LeanPool.RegtsSevenster.RS.TheoremPadding
+public import LeanPool.RegtsSevenster.RS.TheoremQuant
+public import LeanPool.RegtsSevenster.RS.TheoremTotal
+public import LeanPool.RegtsSevenster.Solution
 
 /-!
 # A proof of the Regts–Sevenster conjecture, formalized

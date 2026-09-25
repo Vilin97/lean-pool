@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeDatum
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeFree
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffle
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeDatum
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeFree
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixShuffle
 
 /-!
 # Transport of the dévissage decomposition
@@ -15,6 +17,8 @@ The decomposition of a state is carried along a base change and
 recombined with the splitting of the remainder: one further unit
 summand joins the mixed free part.
 -/
+
+@[expose] public section
 
 namespace RS
 

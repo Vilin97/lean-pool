@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseTrip
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseTrip
 
 /-!
 # The pair datum at one pair of subsets
@@ -18,6 +20,8 @@ at a pinned end, and the edge term the pair contributes.
 composition's base and sums the results; `ConverseTrip.lean` carries
 the choice up and down the interface.
 -/
+
+@[expose] public section
 
 namespace RS
 

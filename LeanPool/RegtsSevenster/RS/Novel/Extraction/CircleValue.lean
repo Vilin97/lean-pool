@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdRigid
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdRigid
 
 /-!
 # The circle value
@@ -13,6 +15,8 @@ Closing the standard copairing against the standard form yields
 the superdimension `k − 2ℓ`, which is the value Definition 5 gives
 a free circle.
 -/
+
+@[expose] public section
 
 noncomputable section
 

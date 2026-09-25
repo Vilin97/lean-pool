@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StarPrep
-import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLawRight
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StarPrep
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLawRight
 
 /-!
 # The bundle closure is the straight-matching self-glue
@@ -21,6 +23,8 @@ stage is itself a composition against the transposed bundle
 collapses to the fragment; and the lifted low-block pairs are
 then exactly the straight matching.
 -/
+
+@[expose] public section
 
 namespace RS
 

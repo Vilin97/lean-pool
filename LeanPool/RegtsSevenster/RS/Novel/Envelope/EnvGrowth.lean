@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvGenerator
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Growth
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvGenerator
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Growth
 
 /-!
 # Moderate growth of the envelope
@@ -17,6 +19,8 @@ which is a finite product of skein Hom-spaces of dimension at
 most `(R+1)^(2m)`; tensor powers multiply index cardinalities and
 add arities, so the total bound is exponential in the power.
 -/
+
+@[expose] public section
 
 namespace RS
 

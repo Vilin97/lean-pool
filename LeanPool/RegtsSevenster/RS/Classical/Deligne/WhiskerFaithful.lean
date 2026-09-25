@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorExact
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPermCast
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorExact
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPermCast
 
 /-!
 # Whiskering by a nonzero object is faithful
@@ -20,6 +22,8 @@ cancels it against `f ▷ (X ⊗ Xᘁ) = 0`.
 Simplicity of the unit is carried as a hypothesis and discharged
 where `End 𝟙 = ℂ` is available.
 -/
+
+@[expose] public section
 
 namespace RS
 

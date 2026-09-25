@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaStarVec
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaStarVec
 
 /-!
 # Image functionals of tensors
@@ -15,6 +17,8 @@ image functionals through the structure map.  Abstract coherence
 first — every rewrite fires over generic instances — then the
 strict skein unit and the concrete SuperVect unitor.
 -/
+
+@[expose] public section
 
 namespace RS
 

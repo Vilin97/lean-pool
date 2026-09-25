@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GluePathMatch
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueCrossDelta
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseDischarge
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PropThreeOpen
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GluePathMatch
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueCrossDelta
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseDischarge
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PropThreeOpen
 
 /-!
 # Path data across a closed glue
@@ -18,6 +20,8 @@ the unglued one on the nose.  The three transports here say so —
 which flags are boundary after the glue, that the walk agrees step
 for step, and that the path matching is carried across unchanged.
 -/
+
+@[expose] public section
 
 namespace RS
 

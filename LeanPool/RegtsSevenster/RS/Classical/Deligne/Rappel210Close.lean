@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Bridge
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Reduce
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Bridge
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Rappel210Reduce
 
 /-!
 # The local splitting statement, up to unit nonvanishing
@@ -17,6 +19,8 @@ consumer is the nonvanishing of the algebra's unit, which over an
 ind-category follows from the stage units through the filtered
 criterion.
 -/
+
+@[expose] public section
 
 namespace RS
 

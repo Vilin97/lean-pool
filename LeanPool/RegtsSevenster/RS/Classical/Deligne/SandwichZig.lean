@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModMultiTriple
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagSandwich
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModMultiTriple
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagSandwich
 
 /-!
 # The sandwich retract of the zig triangle
@@ -17,6 +19,8 @@ triangle already lives; `RS.Classical.Deligne.ZigzagSandwich`
 supplies those two readings, `RS.sandwichIns_hom` and
 `RS.modTensorπ_sandwichCon`.
 -/
+
+@[expose] public section
 
 namespace RS
 

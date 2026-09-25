@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CircleScalar
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CircleScalar
 
 /-!
 # Peeling the multi-star into vertex stars
@@ -14,6 +16,8 @@ tensor of vertex stars: `blockAssign` sends each slot to its
 block, `starTensor` is the iterated tensor, and the peel
 induction identifies them.
 -/
+
+@[expose] public section
 
 namespace RS
 

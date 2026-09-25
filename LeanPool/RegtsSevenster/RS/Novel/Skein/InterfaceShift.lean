@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeAssoc
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeAssoc
 
 /-!
 # The interface shift
@@ -17,6 +19,8 @@ enumerating the interface in different orders.  This is the
 engine of the permutation calculus of §3.1: strand fragments
 compose by composing their permutations.
 -/
+
+@[expose] public section
 
 namespace RS
 

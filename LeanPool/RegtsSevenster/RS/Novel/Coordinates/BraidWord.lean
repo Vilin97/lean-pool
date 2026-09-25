@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.AdjSwapBmc
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.AdjSwapBmc
 
 /-!
 # Bundle-map permutations through the model transport
@@ -14,6 +16,8 @@ intertwining along an adjacent-transposition word: the image of
 any permutation bundle map conjugates through `stdToOmega` into
 the corresponding word of model braidings.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughValue
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughValue
 
 /-!
 # The super-symmetric form on one leg
@@ -26,6 +28,8 @@ that factor negated.  The negation is the one already visible in
 the tower's colour kernel, which pairs the odd colours through
 `-oddThroughFactor`.
 -/
+
+@[expose] public section
 
 namespace RS
 

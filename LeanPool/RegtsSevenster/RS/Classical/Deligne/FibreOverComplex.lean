@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableDescentClose
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMix
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndOfLinear
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointBaseChange
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarUnitInd
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableDescentClose
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMix
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndOfLinear
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointBaseChange
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarUnitInd
 
 /-!
 # From a countable family to a complex point of the splitting algebra
@@ -66,6 +68,8 @@ of a mixed object as a free super module.
 * `RS.exists_superPoint_fibre_of_countable_family` — the whole chain,
   steps 1 to 5.
 -/
+
+@[expose] public section
 
 namespace RS
 

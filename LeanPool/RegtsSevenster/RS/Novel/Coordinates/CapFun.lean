@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapPeel
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaCotensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapPeel
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaCotensor
 
 /-!
 # The cap functional recursion
@@ -15,6 +17,8 @@ fibre functor: the zero cap is the identity class, and the
 successor cap evaluates through the peel rotation and the
 tensor split.
 -/
+
+@[expose] public section
 
 namespace RS
 

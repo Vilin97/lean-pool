@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.FibreCard
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.FibreCard
 
 /-!
 # Mixed fixed-point decomposition
@@ -13,6 +15,8 @@ Decomposes the subtype of colourings fixed by a lifted permutation
 `viaEmbeddingHom (castLEEmb h) σ` into a product of the fixed colourings
 on the first `m` coordinates and free colourings on the tail.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Definitions
+module
+
+public import LeanPool.RegtsSevenster.RS.Definitions
 
 /-!
 # The scalar unit as a ring isomorphism
@@ -14,6 +16,8 @@ tensor unit is a bijection from the complex numbers.  It is also a
 ring homomorphism, so it is a ring isomorphism, which is the form
 in which the ℂ-linear structure of the Ind-completion consumes it.
 -/
+
+@[expose] public section
 
 namespace RS
 

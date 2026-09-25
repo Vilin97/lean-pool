@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPair
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModShuffle
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPair
 
 /-!
 # The relative tensor of two free modules
@@ -24,6 +26,8 @@ first generator past the second algebra factor.
   isomorphism computes the projection, hence the pairing
   `RS.gpair`, as the shuffle.
 -/
+
+@[expose] public section
 
 namespace RS
 

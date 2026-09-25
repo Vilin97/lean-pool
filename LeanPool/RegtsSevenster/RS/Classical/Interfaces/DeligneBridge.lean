@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DelignePackage
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.FibreTransport
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.SnakeTransport
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DelignePackage
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.FibreTransport
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.SnakeTransport
 
 /-!
 # The Deligne bridge
@@ -18,6 +20,8 @@ model.  The pairing transports by `ExactPairing.map`, the
 supersymmetry by the braided-functor axiom, and
 `exists_std_model` produces the coordinates.
 -/
+
+@[expose] public section
 
 noncomputable section
 

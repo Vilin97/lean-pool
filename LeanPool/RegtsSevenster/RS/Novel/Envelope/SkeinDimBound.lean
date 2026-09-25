@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.HookConfinementSharp
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinTower
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.TensorNonvanishing
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.HookConfinementSharp
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinTower
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.TensorNonvanishing
 
 /-!
 # The two halves of the dimension bound
@@ -24,6 +26,8 @@ The two are composed in `Interfaces/SectorDischarge.lean`, against
 the sector traces of `SectorIntertwine.lean` and the binomial
 determinant of `SymFun/LGVStrict.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

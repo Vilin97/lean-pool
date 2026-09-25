@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DevissageBound
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.StepB
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.DescentClose
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.InitState
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KillerNonempty
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DevissageBound
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.StepB
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.DescentClose
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.InitState
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KillerNonempty
 
 /-!
 # The trichotomy, unconditionally
@@ -19,6 +21,8 @@ the recursion runs to completion from the initial state: an object
 killed by some Schur functor is locally a mixed sum of the unit
 and the odd line.
 -/
+
+@[expose] public section
 
 namespace RS
 

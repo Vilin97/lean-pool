@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PathLedger
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PathLedger
 
 /-!
 # Pairing-preserving connectivity
@@ -16,6 +18,8 @@ step relation and the connectivity statement, proves that
 localized repairs qualify, and derives the same-pairing invariance
 of the signed summand from connectivity and the per-step ledger.
 -/
+
+@[expose] public section
 
 namespace RS
 

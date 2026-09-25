@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.Multiplicativity
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdeal
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.Multiplicativity
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinIdeal
 
 /-!
 # The scalar class
@@ -17,6 +19,8 @@ The proof is the rank-one argument of Lemma 3.2 read backwards:
 both rows of the arity-zero pairing are multiples of the empty
 row, with ratio `f(W)`.
 -/
+
+@[expose] public section
 
 namespace RS
 

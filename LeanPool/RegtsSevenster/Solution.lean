@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS
+module
+
+public import LeanPool.RegtsSevenster.RS
 
 /-!
 # The certification solution
@@ -16,6 +18,8 @@ use no axiom outside `[propext, Classical.choice, Quot.sound]`, and
 that the kernel accepts them; see `comparator-config.json` and the
 CI workflow.
 -/
+
+@[expose] public section
 
 namespace Certified
 

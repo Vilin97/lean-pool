@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CycleSplit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedConc
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CycleSplit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedConc
 
 /-!
 # Additive splitting of Schur specialisations
@@ -25,6 +27,8 @@ by pairs of block permutations, the collapse of the subset sum by
 the binomial count, and the character expansion of each block
 factor.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareGrowth
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.IdempotentBridge
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeFaithful
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SquareGrowth
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.IdempotentBridge
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeFaithful
 
 /-!
 # Assembly of the Schur package
@@ -16,6 +18,8 @@ character, and the construction of a `SchurPackage` from the theory.
 The branching field and the factorial bound enter as parameters,
 discharged in `PairingPos.lean` and `Common/FactorialBound.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

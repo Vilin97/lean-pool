@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.AlternantStrict
-import LeanPool.RegtsSevenster.RS.Common.RowLenChain
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.AlternantStrict
+public import LeanPool.RegtsSevenster.RS.Common.RowLenChain
 
 /-!
 # Pieri chain: positivity of alternant coefficients along diagram chains
@@ -14,6 +16,8 @@ The staircase exponent vector `eVec`, and the positivity of the
 coefficient of the target monomial in `p₁ʳ · a_{eVec λ}` when `μ`
 extends `λ` by `r` cells.
 -/
+
+@[expose] public section
 
 namespace RS
 

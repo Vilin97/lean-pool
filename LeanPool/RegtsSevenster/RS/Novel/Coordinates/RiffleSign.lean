@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PairList
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EdgeSign
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PairList
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EdgeSign
 
 /-!
 # The riffle and orientation signs
@@ -15,6 +17,8 @@ order has sign `(−1)^C(n,2)` (the riffle sign), and the permutation
 from edge-interleaved to oriented order has sign `(−1)^s` where `s`
 is the number of edges whose representative flag is outgoing.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainB
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainIns
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMulHet
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainShift
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainB
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainIns
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMulHet
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainShift
 
 /-!
 # The shifted splitting chains
@@ -18,6 +20,8 @@ colimit is the corresponding graded component of the splitting
 algebra.  The balanced line recovers the degree-zero algebra
 carrier.
 -/
+
+@[expose] public section
 
 namespace RS
 

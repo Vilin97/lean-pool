@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModule
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModule
 
 /-!
 # The parity shift of a super module
@@ -15,6 +17,8 @@ the module parity is only a label, so the eight associativities
 permute among themselves and no sign appears.  This is the module
 underlying a twist by the odd line.
 -/
+
+@[expose] public section
 
 namespace RS
 

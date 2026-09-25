@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemmaData
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemmaData
 
 /-!
 # The local splitting statement
@@ -15,6 +17,8 @@ after base change to some nonzero commutative algebra.  The
 splitting is a section of the base-changed epimorphism as module
 maps over the algebra.
 -/
+
+@[expose] public section
 
 namespace RS
 

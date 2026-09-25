@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PermFragment
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceShift
-import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLaw
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PermFragment
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceShift
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.IdentityLaw
 
 /-!
 # Composition of permutation fragments
@@ -22,6 +24,8 @@ permutation is traded for a strand re-indexing of the bundle
 (`strandBundleRelabelBoth`), which is invisible up to
 equivalence.
 -/
+
+@[expose] public section
 
 namespace RS
 

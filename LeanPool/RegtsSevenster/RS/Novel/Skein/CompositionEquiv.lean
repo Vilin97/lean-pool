@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StrandBundle
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StrandBundle
 
 /-!
 # Composition respects fragment equivalence
@@ -14,6 +16,8 @@ relabelling equivalence of fragments: equivalent inputs glue to
 equivalent outputs.  These are the transport lemmas through which
 every up-to-isomorphism identity about composition is proved.
 -/
+
+@[expose] public section
 
 namespace RS
 

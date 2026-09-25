@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModBiprod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModBiprod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModTensor
 
 /-!
 # The symmetric monoidal structure on super modules
@@ -40,6 +42,8 @@ morphisms out of a two-, three- and four-fold tensor product.
 * The pentagon and triangle identities, and the resulting
   `MonoidalCategory` and `SymmetricCategory` instances.
 -/
+
+@[expose] public section
 
 namespace RS
 

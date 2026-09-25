@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StepFrame
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LabelChords
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StepFrame
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LabelChords
 
 /-!
 # The high-status set of a pairing
@@ -17,6 +19,8 @@ equals its high-status, so the accumulated relabel set is the
 high-status difference of the endpoint pairings — empty exactly
 when the pairing returns.
 -/
+
+@[expose] public section
 
 namespace RS
 

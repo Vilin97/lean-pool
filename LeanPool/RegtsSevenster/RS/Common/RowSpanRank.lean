@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # The row span of a matrix over arbitrary index types
@@ -26,6 +28,8 @@ on `κ` is separated by finitely many coordinates
 (`exists_finset_separating`): that is what makes the row rank of an
 infinite matrix visible on a single finite submatrix.
 -/
+
+@[expose] public section
 
 namespace RS
 

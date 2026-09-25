@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Summit
+module
+
+public import LeanPool.RegtsSevenster.RS.Summit
 
 /-!
 # Audit: Deligne's theorem and the unconditional summit
@@ -15,6 +17,8 @@ fails the build if the axiom set changes, so the claim that these
 depend on nothing beyond `propext`, `Classical.choice` and
 `Quot.sound` is checked rather than asserted.
 -/
+
+@[expose] public section
 
 namespace RS
 

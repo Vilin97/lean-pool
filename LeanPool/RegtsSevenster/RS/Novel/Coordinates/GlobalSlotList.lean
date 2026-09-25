@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TauKey
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PatternInv
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.TauKey
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PatternInv
 
 /-!
 # The global slot list
@@ -13,6 +15,8 @@ import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PatternInv
 The participating flags of an edge subset, enumerated in slot order,
 and the link between the pattern inversion count and list inversions.
 -/
+
+@[expose] public section
 
 namespace RS
 

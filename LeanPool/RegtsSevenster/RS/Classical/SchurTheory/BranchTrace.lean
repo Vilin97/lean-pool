@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PackageAssembly
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PackageAssembly
 
 /-!
 # Branching from the restriction pairing
@@ -15,6 +17,8 @@ block representation of `mu`, use that its projector acts as the
 identity, and compute the trace of the cast idempotent as the
 pairing.
 -/
+
+@[expose] public section
 
 namespace RS
 

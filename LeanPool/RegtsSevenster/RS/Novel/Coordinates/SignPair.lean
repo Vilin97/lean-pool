@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.IndexPerm
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.VertexValue
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.IndexPerm
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.VertexValue
 
 /-!
 # The sign pairing
@@ -14,6 +16,8 @@ For two duplicate-free same-membership lists, the product of
 their mapped sorting signs is the reindexing permutation's sign:
 the transport plus a square.
 -/
+
+@[expose] public section
 
 namespace RS
 

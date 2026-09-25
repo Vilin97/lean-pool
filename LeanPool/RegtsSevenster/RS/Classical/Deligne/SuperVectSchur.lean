@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PieriPos
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurVanishing
-import LeanPool.RegtsSevenster.RS.Classical.Super.TotalSpace
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PieriPos
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurVanishing
+public import LeanPool.RegtsSevenster.RS.Classical.Super.TotalSpace
 
 /-!
 # Schur nonvanishing on the standard super vector space
@@ -26,6 +28,8 @@ Evaluating `sTr ∘ permAlg` on a package idempotent through the
 Frobenius formula then yields `dim λ · s_λ(superPS p q)`, positive by
 hook positivity — so the idempotent's action cannot vanish.
 -/
+
+@[expose] public section
 
 namespace RS
 

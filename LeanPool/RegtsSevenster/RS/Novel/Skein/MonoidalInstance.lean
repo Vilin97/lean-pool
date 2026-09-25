@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalNat
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalStruct
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalNat
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalStruct
 
 /-!
 # The monoidal skein category
@@ -15,6 +17,8 @@ on classes, the identity-strand tensor, the naturality squares,
 and the coherence diagrams, all collapsing through the bundle-map
 calculus.
 -/
+
+@[expose] public section
 
 namespace RS
 

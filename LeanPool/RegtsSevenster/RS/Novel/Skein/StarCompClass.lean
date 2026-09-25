@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StarTrace
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ScalarFunctional
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCatInstance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ScalarClass
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StarTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ScalarFunctional
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCatInstance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ScalarClass
 
 /-!
 # The star composite in the category
@@ -17,6 +19,8 @@ class `Hom(0, 2m)` with the strand-bundle class `Hom(2m, 0)` is
 the parameter value times the empty class — the identity that the
 fibre functor transports into the standard model.
 -/
+
+@[expose] public section
 
 namespace RS
 

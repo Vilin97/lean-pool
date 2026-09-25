@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueCrossDelta
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueCrossDelta
 
 /-!
 # The chord diagram has half as many chords as the subset has boundary flags
@@ -18,6 +20,8 @@ This is what makes "the number of chords" a single notion: it is
 `oddLabelCount / 2` read off the state, and `labelChords.card` read off
 the diagram, and they agree.
 -/
+
+@[expose] public section
 
 namespace RS
 

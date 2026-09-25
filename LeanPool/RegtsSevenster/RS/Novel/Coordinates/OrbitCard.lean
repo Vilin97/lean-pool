@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CircuitCount
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CircuitCount
 
 /-!
 # The orbit count is the number of orbits
@@ -22,6 +24,8 @@ their underlying sets are different — a walk on flags against a
 rotation on labels, say — since a bijection of quotients is then
 enough.
 -/
+
+@[expose] public section
 
 namespace RS
 

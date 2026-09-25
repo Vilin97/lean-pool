@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaStarVec
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPower
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OmegaStarVec
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPower
 
 /-!
 # The model transport
@@ -16,6 +18,8 @@ assembles copies of the strand map left-nested through the
 structure maps of the fibre functor, `stdFromOmega` disassembles,
 and the two are mutually inverse whenever the strand maps are.
 -/
+
+@[expose] public section
 
 namespace RS
 

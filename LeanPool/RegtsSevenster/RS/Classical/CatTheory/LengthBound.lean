@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Length
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.LinearCategory
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Length
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.LinearCategory
 
 /-!
 # Length bounded by the endomorphism dimension
@@ -20,6 +22,8 @@ in `End Y`, hence a linearly independent family, so that
 `n ≤ dim End Y`.  Monotonicity of the length bound combines the
 two halves.
 -/
+
+@[expose] public section
 
 namespace RS
 

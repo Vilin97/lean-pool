@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ShapeFintype
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SchurPackage
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ShapeFintype
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SchurPackage
 
 /-!
 # The central idempotents, indexed by shapes of a fixed size
@@ -18,6 +20,8 @@ along the standard embedding at `μ.prop : μ.val.card = n` — an
 algebra map, so idempotence and products transport; an injective
 one, so nonvanishing transports too.
 -/
+
+@[expose] public section
 
 namespace RS
 

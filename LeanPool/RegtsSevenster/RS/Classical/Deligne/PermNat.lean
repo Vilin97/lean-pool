@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Intertwine
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurVanishing
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorExact
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Intertwine
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurVanishing
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorExact
 
 /-!
 # Naturality of the symmetric-group action
@@ -26,6 +28,8 @@ form of Deligne's 1.19, Catégories tensorielles): a mono `Y ⟶ X`
 intertwines the two actions, so if the block idempotent kills
 `X ^ ⊗ n` it kills `Y ^ ⊗ n` as well.
 -/
+
+@[expose] public section
 
 namespace RS
 

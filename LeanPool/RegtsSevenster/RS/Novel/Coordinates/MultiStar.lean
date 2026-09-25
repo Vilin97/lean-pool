@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CoordInterface
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CoordInterface
 
 /-!
 # The multi-star form of the explosion
@@ -14,6 +16,8 @@ of pendant edges indexed by `Fin (2m)`, each attached to a vertex
 by an assignment map.  This is the bridge between the explosion
 machinery and the vertex-star factorization.
 -/
+
+@[expose] public section
 
 namespace RS
 

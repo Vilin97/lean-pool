@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PowMerge
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PowMerge
 
 /-!
 # The assembled star vector in the model
@@ -15,6 +17,8 @@ of the standard space; transporting forward recovers the
 fibre-side assembled vector.  This is the form on which the
 colouring coordinates evaluate.
 -/
+
+@[expose] public section
 
 namespace RS
 

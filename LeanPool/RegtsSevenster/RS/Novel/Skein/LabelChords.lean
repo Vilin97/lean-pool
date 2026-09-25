@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.PairDisjoint
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordLabels
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.PairDisjoint
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordLabels
 
 /-!
 # The label chord diagram of a transition system
@@ -15,6 +17,8 @@ a finite set of label chords (each low-to-high): the combinatorial
 index over which the pairing-resolved open-sector values live.
 `SamePairing` is exactly equality of chord diagrams.
 -/
+
+@[expose] public section
 
 namespace RS
 

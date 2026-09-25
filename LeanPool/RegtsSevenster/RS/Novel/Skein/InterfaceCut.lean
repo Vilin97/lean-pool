@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueLedger
-import LeanPool.RegtsSevenster.RS.Novel.Skein.VertexSum
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SuperGram
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceOrderIso
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueLedger
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.VertexSum
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SuperGram
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceOrderIso
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor
 
 /-!
 # The interface matching on a fragment's used labels
@@ -26,6 +28,8 @@ two halves of every interface pair together.  That is exactly the
 condition under which a glued edge is in the Eulerian subset or out
 of it, and it is what the boundary state pins.
 -/
+
+@[expose] public section
 
 namespace RS
 

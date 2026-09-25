@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairInner
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairInner
 
 /-!
 # Pair-content to tuple equivalence
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairInner
 The set of pair-contents with prescribed row and column margins bijects
 with the set of row-wise multisets with matching column margins.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelStarVec
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelStarVec
 
 /-!
 # The sort as a permutation and a cast
@@ -13,6 +15,8 @@ The inverse sort of the star factorization splits as a same-arity
 permutation followed by the degree-sum cast, feeding the
 braiding-word transport and the cast transport respectively.
 -/
+
+@[expose] public section
 
 namespace RS
 

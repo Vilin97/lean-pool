@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RigidityClasses
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RigidityClasses
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTensor
 
 /-!
 # The snake identities on Hom classes
@@ -17,6 +19,8 @@ definitionally on concrete data, so the fragment equivalences are
 established by `decide` over the two surviving flags, with the
 inverse flag map given canonically by the boundary-flag function.
 -/
+
+@[expose] public section
 
 namespace RS
 

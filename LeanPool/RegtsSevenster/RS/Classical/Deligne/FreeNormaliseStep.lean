@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePowInsert
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeSlide
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePowInsert
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeSlide
 
 /-!
 # The normalisation step for a word of free letters
@@ -28,6 +30,8 @@ a head swap followed by the action (`freeSlideWin_eq`).  The two
 products are formed in the same order on both sides, so no
 commutativity is needed for the step.
 -/
+
+@[expose] public section
 
 namespace RS
 

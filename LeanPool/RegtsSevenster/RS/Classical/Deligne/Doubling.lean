@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.WhiskerAdditive
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.WhiskerAdditive
 
 /-!
 # The ℤ/2-graded doubling of a category
@@ -31,6 +33,8 @@ Koszul sign prevents from transporting, are discharged by
 componentwise matrix checks against the distributor calculus set
 up in the `Distributors` section.
 -/
+
+@[expose] public section
 
 namespace RS
 

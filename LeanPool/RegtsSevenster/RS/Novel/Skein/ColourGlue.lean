@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughEdgeCut
-import LeanPool.RegtsSevenster.RS.Novel.Skein.EdgeSum
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughEdgeCut
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.EdgeSum
 
 /-!
 # The colouring correspondence at one cut
@@ -23,6 +25,8 @@ subset, when the join carries an even colour, or both inside it,
 when it carries an odd one; the sum over the state's colour at the
 cut runs over the corresponding block.
 -/
+
+@[expose] public section
 
 namespace RS
 

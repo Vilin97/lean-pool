@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.TensorPowHom
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.CycleNormal
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.TensorPowHom
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.CycleNormal
 
 /-!
 # Splitting a tensor power into two blocks
@@ -19,6 +21,8 @@ splits factorwise (`powHom_splitPow`).  These are the identities
 that let the trace of a permutation-and-endomorphism word be
 computed block by block.
 -/
+
+@[expose] public section
 
 namespace RS
 

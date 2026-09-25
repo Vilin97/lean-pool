@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPerm
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPerm
 
 /-!
 # Concatenation of tensor powers and the block embedding
@@ -29,6 +31,8 @@ cycle bubbles inside the last block only, which is the content of
 the insertion lemma.  The `ℂ`-bilinear extension to the group
 algebras then holds on basis permutations and extends linearly.
 -/
+
+@[expose] public section
 
 namespace RS
 

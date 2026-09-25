@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixDegenerate
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixWhisker
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixDegenerate
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixWhisker
 
 /-!
 # The whiskered mixed sum at arbitrary counts
@@ -18,6 +20,8 @@ idempotent acts nontrivially on the whiskered tensor power at
 every pair of counts and every diagram avoiding the corresponding
 cell.
 -/
+
+@[expose] public section
 
 namespace RS
 

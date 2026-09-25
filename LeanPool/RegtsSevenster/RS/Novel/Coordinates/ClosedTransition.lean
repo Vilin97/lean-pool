@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockRestrict
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionExists
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockRestrict
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionExists
 
 /-!
 # Transitions on closed fragments
@@ -15,6 +17,8 @@ internally, and every Eulerian edge subset admits an oriented
 transition system: the choice in the Definition 5 value is
 always inhabited.
 -/
+
+@[expose] public section
 
 namespace RS
 

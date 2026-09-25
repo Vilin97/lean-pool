@@ -4,15 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvSemisimple
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvGrowth
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatRigid
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatEmbMonoidal
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiRigid
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiEmbBraided
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RigidInstance
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DelignePackageRestrict
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DeligneTheorem
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvSemisimple
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvGrowth
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatRigid
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatEmbMonoidal
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiRigid
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.KaroubiEmbBraided
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RigidInstance
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DelignePackageRestrict
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DeligneTheorem
 
 /-!
 # The Deligne package for the skein category
@@ -25,6 +27,8 @@ the extraction consumes — with Deligne's theorem itself as the
 only transcendental input, applied to the concretely constructed
 envelope.
 -/
+
+@[expose] public section
 
 namespace RS
 

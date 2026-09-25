@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourWeight
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourWeight
 
 /-!
 # Stabilizer counts for pair colourings
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourWeight
 The stabilizer count for colourings by pairs, transported along
 `finProdFinEquiv` from the `Fin`-codomain machinery.
 -/
+
+@[expose] public section
 
 namespace RS
 

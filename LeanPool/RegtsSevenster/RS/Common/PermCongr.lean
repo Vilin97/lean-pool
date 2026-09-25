@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Cycle data under permutation transport
@@ -19,6 +21,8 @@ The consequences for a sum of permutations follow: the two factors
 the sum of the two cycle types and the sum of the two fixed-point
 counts.
 -/
+
+@[expose] public section
 
 namespace RS
 

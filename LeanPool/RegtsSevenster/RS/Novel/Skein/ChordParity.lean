@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PathCanon
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplitProof
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PathCanon
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplitProof
 
 /-!
 # The between-legs parity identity
@@ -16,6 +18,8 @@ cut labels has the parity of the number of chords crossing the
 cut — a nested chord contributes both ends, a crossing chord
 exactly one.
 -/
+
+@[expose] public section
 
 namespace RS
 

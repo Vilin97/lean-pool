@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairChar
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairTuple
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.TCount
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTChar
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairChar
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PairTuple
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.TCount
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTChar
 
 /-!
 # Orthonormality of the Jacobi–Trudi characters
@@ -16,6 +18,8 @@ The Jacobi–Trudi characters are orthonormal for the class inner
 product of the symmetric group, which is what makes them the
 irreducible characters.
 -/
+
+@[expose] public section
 
 namespace RS
 

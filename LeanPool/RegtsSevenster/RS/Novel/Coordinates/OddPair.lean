@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapSplit
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapSplit
 
 /-!
 # Odd pairs and their vanishing under split functionals
@@ -14,6 +16,8 @@ tensor of copoint functionals it vanishes, because copoints kill
 odd parts (the unit has no odd part).  This disposes of the
 cross-split odd basis terms in the cap recursion.
 -/
+
+@[expose] public section
 
 namespace RS
 

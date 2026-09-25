@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowSuccMod
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowZigzag
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistShuffle
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowSuccMod
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowZigzag
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistShuffle
 
 /-!
 # Iso builders for the twisted power induction
@@ -15,6 +17,8 @@ Functoriality of the relative tensor and of the left twist on
 isomorphisms: the two transport devices consumed by the k-fold
 twisted power identification.
 -/
+
+@[expose] public section
 
 namespace RS
 

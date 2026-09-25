@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SchurPackage
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SchurPackage
 
 /-!
 # Block bounds
@@ -17,6 +19,8 @@ containing it (`e_killed_of_contained`), by the branching
 containment.  Both are stated against an arbitrary target algebra;
 the skein endomorphism algebras are substituted downstream.
 -/
+
+@[expose] public section
 
 namespace RS
 

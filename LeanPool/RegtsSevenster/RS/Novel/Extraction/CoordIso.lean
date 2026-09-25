@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.Nondegenerate
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.Nondegenerate
 
 /-!
 # The standard-model isomorphism
@@ -17,6 +19,8 @@ isomorphism pulling the form back to the standard form
 coordinate conventions: every self-dual object of SuperVect *is*
 a standard orthosymplectic space, form and all.
 -/
+
+@[expose] public section
 
 noncomputable section
 

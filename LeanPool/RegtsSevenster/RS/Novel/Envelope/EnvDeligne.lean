@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvInstances
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.LinearCategory
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SimpleUnit
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvInstances
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.LinearCategory
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SimpleUnit
 
 /-!
 # The Deligne hypotheses for the envelope
@@ -22,6 +24,8 @@ The other three are elsewhere: semisimplicity in
 and moderate growth in `EnvGrowth.lean`; `EnvDelignePackage.lean`
 feeds all five to the cited statement.
 -/
+
+@[expose] public section
 
 namespace RS
 

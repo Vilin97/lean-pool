@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.HookVanishing
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.HookVanishing
 
 /-!
 # Rationality of the Newton generating series
@@ -16,6 +18,8 @@ from the recurrence; here both constant terms are normalised to 1,
 which is the form the trace zeta function is read in, and the
 recurrence itself is supplied by hook vanishing.
 -/
+
+@[expose] public section
 
 namespace RS
 

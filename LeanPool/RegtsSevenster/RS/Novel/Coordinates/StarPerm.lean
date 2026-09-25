@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.MasterSum
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.MasterSum
 
 /-!
 # Star coordinate symmetry
@@ -13,6 +15,8 @@ The star vector is permutation-invariant, the inverse transport
 intertwines permutations, and hence the star coordinate at a
 permuted colouring is the odd-inversion sign times the original.
 -/
+
+@[expose] public section
 
 namespace RS
 

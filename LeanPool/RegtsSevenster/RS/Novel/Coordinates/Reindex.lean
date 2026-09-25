@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarRepeat
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SlotPairing
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.EulerianIndependence
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarRepeat
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.SlotPairing
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.EulerianIndependence
 
 /-!
 # The Eulerian reindex
@@ -14,6 +16,8 @@ import LeanPool.RegtsSevenster.RS.Classical.Interfaces.EulerianIndependence
 The master summand, the flag pattern of a colouring, and the
 fibrewise partition of the master colour sum over flag patterns.
 -/
+
+@[expose] public section
 
 namespace RS
 

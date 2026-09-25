@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Subset-indexed elementary and complete homogeneous polynomials
@@ -16,6 +18,8 @@ and the complete homogeneous polynomial `hSub A m` supported in
 of the e–h convolution and the bialternant Jacobi–Trudi identity.
 The `hSub` recurrence is proven in `HInsert.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

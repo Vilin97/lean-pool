@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarPeel
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarPeel
 
 /-!
 # Sorting a multi-star into blocks
@@ -15,6 +17,8 @@ order, and the sort equivalence regroups the slots fibre by
 fibre.  Relabelling along the sort turns the multi-star into the
 block-assigned form, ready for the block factorization.
 -/
+
+@[expose] public section
 
 namespace RS
 

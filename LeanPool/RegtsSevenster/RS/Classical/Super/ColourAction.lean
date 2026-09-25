@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConjTop
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConjStep
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConjTop
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourConjStep
 
 /-!
 # The colour action of the model braidings
@@ -14,6 +16,8 @@ Assembling the three conjugation laws: the adjacent model
 braiding acts on the colouring model as the Koszul-signed
 adjacent swap, positionwise and wordwise.
 -/
+
+@[expose] public section
 
 namespace RS
 

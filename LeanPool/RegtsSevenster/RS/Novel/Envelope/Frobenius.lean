@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinTrace
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.CycleNormal
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTraceCyclic
-import LeanPool.RegtsSevenster.RS.Novel.Skein.BraidedInstance
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SkeinTrace
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.CycleNormal
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTraceCyclic
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.BraidedInstance
 
 /-!
 # The skein Frobenius identity
@@ -23,6 +25,8 @@ is exactly a bundle map; and conjugating a block sum by
 factorization these feed is `BlockFactor.lean`, and the Frobenius
 identity itself `BlockAssembly.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseDischarge
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ConverseDischarge
 
 /-!
 # The loop graph, evaluated
@@ -26,6 +28,8 @@ loop and a free circle, and the `η`-convention that makes the two
 odd colourings contribute through a common basis vector.  A sign
 error in any one of them changes the answer.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaComplex
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaComplex
 
 /-!
 # The complex point of a simple algebra
@@ -18,6 +20,8 @@ This is the last input of the fibre functor: with a point in hand
 the base change of `RS/Classical/Deligne/PointFibre.lean` lands in
 finite-dimensional super vector spaces.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PowMerge
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourEval
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PowMerge
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourEval
 
 /-!
 # The merge coordinate product rule
@@ -13,6 +15,8 @@ import LeanPool.RegtsSevenster.RS.Classical.Super.ColourEval
 Coordinates of a merged even pair multiply over the halves,
 vanishing when the halves have odd parity.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

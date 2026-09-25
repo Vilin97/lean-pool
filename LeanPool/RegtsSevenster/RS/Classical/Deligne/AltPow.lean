@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymAlg
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymAlg
 
 /-!
 # Alternating powers over an internal monoid
@@ -31,6 +33,8 @@ The `A`-module structure on the alternating power is outside this
 module's scope, exactly as its symmetric counterpart lives in
 `PowAct.lean` rather than in `SymAlg.lean`.
 -/
+
+@[expose] public section
 
 namespace RS
 

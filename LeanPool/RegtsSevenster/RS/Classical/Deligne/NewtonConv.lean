@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.SuperPowerSums
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.SuperPowerSums
 
 /-!
 # Convolution of complete homogeneous sequences
@@ -25,6 +27,8 @@ Coefficient extraction yields the consumer-facing convolution formula
 `newtonH_add`, together with its integer-indexed form `newtonHZ_add`
 for Jacobi–Trudi consumers.
 -/
+
+@[expose] public section
 
 namespace RS
 

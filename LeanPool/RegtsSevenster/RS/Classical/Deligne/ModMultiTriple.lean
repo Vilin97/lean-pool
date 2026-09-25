@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModMulti
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModAssoc
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModMulti
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModAssoc
 
 /-!
 # The three-letter multi-tensor against the nested binary tensor
@@ -34,6 +36,8 @@ product of `ModTensor.lean`.
   with defining equations against the projections in both
   directions.
 -/
+
+@[expose] public section
 
 namespace RS
 

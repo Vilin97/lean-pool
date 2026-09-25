@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourWeight
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.ColourWeight
 
 /-!
 # The colour character of a pair
@@ -13,6 +15,8 @@ The colour character is multiplicative in the colour vector: the
 character of a pair of colourings is the product of the two
 characters at the same permutation.
 -/
+
+@[expose] public section
 
 namespace RS
 

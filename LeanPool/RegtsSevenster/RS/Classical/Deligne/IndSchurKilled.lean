@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndOfMonoidal
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndOfMonoidal
 
 /-!
 # Schur vanishing and exact pairings across `C ⥤ Ind C`
@@ -44,6 +46,8 @@ as in the acceptance section of `RS.Classical.Deligne.ScalarLinear`:
 `RS.schurKilled_indOf` comparable — no compatibility hypothesis
 between `ψ` and an ambient linear structure is needed.
 -/
+
+@[expose] public section
 
 namespace RS
 

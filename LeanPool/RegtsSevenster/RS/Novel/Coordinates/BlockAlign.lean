@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockData
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RepFlag
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddFlip
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockData
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RepFlag
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddFlip
 
 /-!
 # The block alignment
@@ -16,6 +18,8 @@ outgoing aligns the block values of the data colouring with the
 Definition 5 per-flag values: outgoing flags carry the partner of
 their colour, incoming flags the colour itself.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Orthonormal basis for nondegenerate symmetric bilinear
@@ -27,6 +29,8 @@ The proof proceeds by:
    since `ℂ` is algebraically closed) to normalise the
    diagonal entries to `1`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

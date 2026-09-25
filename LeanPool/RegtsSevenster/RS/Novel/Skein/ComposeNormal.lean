@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueFold
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueFold
 
 /-!
 # The interface pair list of a composition
@@ -15,6 +17,8 @@ characterization of the glued labels, and the identification of the
 surviving labels with `Fin s ⊕ Fin u`.  The normalization of
 `glueInterface` as a `glueList` builds on these.
 -/
+
+@[expose] public section
 
 namespace RS
 

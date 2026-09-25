@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTOrtho
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharEquiv
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharClass
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTOrtho
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharEquiv
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharClass
 
 /-!
 # Norm one forces a single simple
@@ -17,6 +19,8 @@ of the underlying simples, express the norm as a sum of integer
 squares over the classes, and conclude a unique class with
 coefficient `±1`.
 -/
+
+@[expose] public section
 
 namespace RS
 

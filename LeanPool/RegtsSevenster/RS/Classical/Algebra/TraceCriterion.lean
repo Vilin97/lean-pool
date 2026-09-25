@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Semisimplicity from a trace form
@@ -17,6 +19,8 @@ nilpotent ideal), so the functional kills `b * j` for every `b`,
 forcing `j = 0`.
 
 -/
+
+@[expose] public section
 
 namespace RS
 

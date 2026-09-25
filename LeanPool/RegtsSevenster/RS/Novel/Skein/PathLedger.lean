@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RepairInvariance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ChainAgreement
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RepairInvariance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ChainAgreement
 
 /-!
 # The path ledger for the repair move
@@ -49,6 +51,8 @@ factor and the case analysis that controls it.
   hypotheses the move analysis is stated over, discharged in
   `SeparatedParity.lean` and `NonSeparatedStep.lean` respectively.
 -/
+
+@[expose] public section
 
 namespace RS
 

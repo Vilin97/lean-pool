@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexBij
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexBij
 
 /-!
 # Block data of the data colouring
@@ -14,6 +16,8 @@ block's vertex, and the block values of the data colouring are the
 colouring data at those flags: participating flags carry the odd
 colour (or its partner on partner slots), the rest the even colour.
 -/
+
+@[expose] public section
 
 namespace RS
 

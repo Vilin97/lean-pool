@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Comparing exponential bases with polynomial factors
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 A fixed polynomial factor cannot compensate for a larger exponential
 base. This form applies directly to tensor-dimension estimates.
 -/
+
+@[expose] public section
 
 namespace RS
 

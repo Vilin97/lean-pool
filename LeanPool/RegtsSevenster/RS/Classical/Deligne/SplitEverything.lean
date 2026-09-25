@@ -4,12 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleGenerator
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimplePoint
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitClosure
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndOfLinear
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleSplit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SmallReduction
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleGenerator
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimplePoint
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitClosure
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndOfLinear
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleSplit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SmallReduction
 
 /-!
 # One simple algebra splits the whole category
@@ -24,6 +26,8 @@ generation carries them to every object.  The scalars of that
 algebra are the complex numbers, so its Γ-algebra has a complex
 point.
 -/
+
+@[expose] public section
 
 namespace RS
 

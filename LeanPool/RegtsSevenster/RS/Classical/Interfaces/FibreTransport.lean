@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Monoidal functors preserve exact pairings
@@ -21,6 +23,8 @@ direction (pulling back exact pairings along a faithful
 monoidal functor) is Mathlib's
 `ExactPairing.ofFaithful`.
 -/
+
+@[expose] public section
 
 namespace RS
 

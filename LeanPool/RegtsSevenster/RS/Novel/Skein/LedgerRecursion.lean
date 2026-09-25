@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerCast
-import LeanPool.RegtsSevenster.RS.Novel.Skein.OrientExistence
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LedgerCast
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.OrientExistence
 
 /-!
 # The data the interface recursion carries
@@ -20,6 +22,8 @@ matching exist and that a glue preserves.
 
 This file names that data and the step that advances it.
 -/
+
+@[expose] public section
 
 namespace RS
 

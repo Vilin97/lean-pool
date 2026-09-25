@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RepFlag
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddFlip
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RepFlag
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddFlip
 
 /-!
 # The edge-sign sector
@@ -14,6 +16,8 @@ Flipping the odd colouring converts the diagonal cap pairing's
 per-edge signs into the Definition 5 orientation signs, up to the
 count of edges whose representative is incoming.
 -/
+
+@[expose] public section
 
 namespace RS
 

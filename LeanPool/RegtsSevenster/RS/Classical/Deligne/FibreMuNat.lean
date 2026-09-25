@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMu
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreMu
 
 /-!
 # Naturality of the monoidal comparison of the fibre functor
@@ -13,6 +15,8 @@ The free-module shuffle is natural in its two variables, and the
 monoidal comparison of the fibre functor inherits that naturality
 directly on the generators of the tensor product of super modules.
 -/
+
+@[expose] public section
 
 namespace RS
 

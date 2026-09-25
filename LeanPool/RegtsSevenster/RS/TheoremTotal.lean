@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.TheoremForward
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.TotalDimension
+module
+
+public import LeanPool.RegtsSevenster.RS.TheoremForward
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.TotalDimension
 
 /-!
 # The total-dimension Regts–Sevenster theorem
@@ -15,6 +17,8 @@ The extraction and graph-evaluation proof are those of the forward
 theorem; the dimension bound comes from the polynomial commutant
 estimate for the full signed colour action.
 -/
+
+@[expose] public section
 
 namespace RS
 

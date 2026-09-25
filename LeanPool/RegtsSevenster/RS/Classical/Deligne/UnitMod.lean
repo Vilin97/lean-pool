@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymAlg
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymAlg
 
 /-!
 # Module powers over the unit monoid
@@ -17,6 +19,8 @@ the general machinery instantiated at the unit, with every
 multiplication law inherited — the substrate of the local
 splitting algebra.
 -/
+
+@[expose] public section
 
 namespace RS
 

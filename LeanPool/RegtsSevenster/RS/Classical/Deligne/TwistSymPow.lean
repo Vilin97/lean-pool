@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SignConj
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TrichotomyClose
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SignConj
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TrichotomyClose
 
 /-!
 # Symmetric powers of an odd twist
@@ -16,6 +18,8 @@ exactly when the alternating powers of the module do.  In arity
 zero both are the tensor unit, so the exchange holds there
 too.
 -/
+
+@[expose] public section
 
 namespace RS
 

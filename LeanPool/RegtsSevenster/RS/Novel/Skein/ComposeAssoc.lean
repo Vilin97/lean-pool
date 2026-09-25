@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeNormal
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeNormal
 
 /-!
 # Associativity of composition
@@ -20,6 +22,8 @@ of relabellings into disjoint unions, the normalization of each
 association, and the final meet in the middle via two-stage
 folding and reordering.
 -/
+
+@[expose] public section
 
 namespace RS
 

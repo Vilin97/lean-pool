@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorComm
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorComm
 
 /-!
 # The monoidal product descends to the Hom spaces
@@ -14,6 +16,8 @@ bilinear tensor of free modules descends to a bilinear tensor of
 Hom spaces — the monoidal product of the skein category.  On
 fragment classes it is the tensor of fragments.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Coherence
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PointMonoidal.Coherence
 
 /-!
 # The monoidal fibre functor at a complex point
@@ -29,6 +31,8 @@ gives a braided fibre functor out of the ambient category.
 * `RS.nonempty_braided_deligneFibre`: the fibre functor of a
   splitting algebra at a complex point is braided.
 -/
+
+@[expose] public section
 
 namespace RS
 

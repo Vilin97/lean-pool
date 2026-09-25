@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.SuperPowerSums
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.BinomialH
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.SuperPowerSums
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.BinomialH
 
 /-!
 # Super power sums and their generating series
@@ -24,6 +26,8 @@ extraction yields binomial evaluations of `newtonH (superPS p q)` in
 the pure cases and, for `n > q`, a linear recurrence of order `p` —
 the input for hook-vanishing arguments.
 -/
+
+@[expose] public section
 
 namespace RS
 

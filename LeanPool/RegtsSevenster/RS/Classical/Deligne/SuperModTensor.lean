@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModule
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModule
 
 /-!
 # The tensor product of two super modules
@@ -67,6 +69,8 @@ the construction needs a *commutative* base.
   `liftEven_unique`, `liftOdd_unique`: the universal property,
   packaged as `exists_unique_liftEven` and `exists_unique_liftOdd`.
 -/
+
+@[expose] public section
 
 namespace RS
 

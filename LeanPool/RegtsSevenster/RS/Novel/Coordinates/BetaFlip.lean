@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaData
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EdgeSign
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddSignProd
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OutSignEdges
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockAlign
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BetaData
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EdgeSign
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddSignProd
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OutSignEdges
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockAlign
 
 /-!
 # The cap pairing at the flipped colouring
@@ -18,6 +20,8 @@ per-edge collapse, and the vertex odd-sign product: the cap
 pairing at the flipped data colouring is the crossing and
 representative parities times the Definition 5 odd signs.
 -/
+
+@[expose] public section
 
 namespace RS
 

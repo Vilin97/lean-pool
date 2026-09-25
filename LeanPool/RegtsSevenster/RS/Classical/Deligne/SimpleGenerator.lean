@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GeneratorAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleQuotient
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GeneratorAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SimpleQuotient
 
 /-!
 # A simple algebra splitting the tensor generator
@@ -21,6 +23,8 @@ mixed module is semisimple of finite length.  That is what will
 carry the splitting from the tensor generator to every subquotient,
 and with it to the whole category.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeNormalise
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModSchurSummand
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixWhiskerAll
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29State
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeNormalise
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModSchurSummand
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixWhiskerAll
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Prop29State
 
 /-!
 # The dévissage counts are bounded
@@ -19,6 +21,8 @@ carries it to the mixed free part; and there the nonvanishing of
 the mixed sum forces the diagram to contain the cell recording
 the two counts.
 -/
+
+@[expose] public section
 
 namespace RS
 

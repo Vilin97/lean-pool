@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModIns
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModIns
 
 /-!
 # Contraction of a leading dual pair on the multi-tensor
@@ -15,6 +17,8 @@ its scalar acting on the head of the remainder from the left, so no
 braid is needed at the fold level.  The zag composite inserts a
 copairing's image on the right and contracts the leading pair.
 -/
+
+@[expose] public section
 
 namespace RS
 

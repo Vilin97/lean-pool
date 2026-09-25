@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TwoPathNonSep
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TwoPathNonSep
 
 /-!
 # Set-indexed state relabels
@@ -14,6 +16,8 @@ algebra of the accumulated state relabels of the canonical route.
 Composition is symmetric difference, so pairing-returning
 accumulations cancel by parity.
 -/
+
+@[expose] public section
 
 namespace RS
 

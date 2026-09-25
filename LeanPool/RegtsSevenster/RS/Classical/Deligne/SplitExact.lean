@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreAdditive
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModAbelian
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreAdditive
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModAbelian
 
 /-!
 # Split short exact sequences and additive functors
@@ -27,6 +29,8 @@ two results below are the packaged forms used in this development,
 naming the general statements at the shape in which they are
 consumed.
 -/
+
+@[expose] public section
 
 namespace RS
 

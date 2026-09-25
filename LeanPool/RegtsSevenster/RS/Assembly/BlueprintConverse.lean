@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Assembly.BlueprintSchur
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LoopExample
-import LeanPool.RegtsSevenster.RS.TheoremConverse
+module
+
+public import LeanPool.RegtsSevenster.RS.Assembly.BlueprintSchur
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LoopExample
+public import LeanPool.RegtsSevenster.RS.TheoremConverse
 
 /-!
 # Blueprint: the converse audit

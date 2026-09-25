@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.TensorPow
-import LeanPool.RegtsSevenster.RS.Common.PermTopSplit
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SchurPackage
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.TensorPow
+public import LeanPool.RegtsSevenster.RS.Common.PermTopSplit
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SchurPackage
 
 /-!
 # The symmetric-group action on a tensor power
@@ -26,6 +28,8 @@ transpositions — no presentation is needed — and the linear
 structure then turns the action into the algebra map `permAlg` that
 a tower's representation field asks for.
 -/
+
+@[expose] public section
 
 namespace RS
 

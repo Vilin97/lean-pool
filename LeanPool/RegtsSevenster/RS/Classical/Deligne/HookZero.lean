@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperSeries
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperSeries
 
 /-!
 # Hook vanishing for Jacobi–Trudi determinants
@@ -22,6 +24,8 @@ rows the recurrence applies and the transformed entries vanish, so
 those rows live in a `p`-dimensional coordinate subspace, are
 linearly dependent, and the determinant is zero.
 -/
+
+@[expose] public section
 
 namespace RS
 

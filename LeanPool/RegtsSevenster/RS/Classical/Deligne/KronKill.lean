@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndKill
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndKill
 
 /-!
 # The Kronecker kill: diagonal products die with their multiplicity
@@ -19,6 +21,8 @@ the multiplicity is.  This mirrors the induction kill of
 `RS.Classical.Deligne.IndKill`, with the block embedding replaced
 by the two external embeddings and the diagonal.
 -/
+
+@[expose] public section
 
 namespace RS
 

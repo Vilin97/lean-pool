@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.AtomDichotomy
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.AtomDichotomy
 
 /-!
 # The matrix-envelope trace and semisimplicity
@@ -15,6 +17,8 @@ test matrices).  Semisimplicity of every `End M` follows from the
 trace criterion once nilpotents are known to have vanishing trace,
 which the atom decomposition supplies.
 -/
+
+@[expose] public section
 
 namespace RS
 

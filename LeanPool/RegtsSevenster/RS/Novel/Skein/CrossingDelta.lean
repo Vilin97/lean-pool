@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordLabels
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordLabels
 
 /-!
 # The per-step crossing-parity decomposition
@@ -18,6 +20,8 @@ four touched ends leaves an untouched block (termwise equal), a
 mixed block (per-third-chord parity transfer, `third_chord_reparity`)
 and the four-end block (evaluated to the mutual-crossing indicator).
 -/
+
+@[expose] public section
 
 namespace RS
 

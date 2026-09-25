@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedTransport
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeTransport
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedTransport
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BaseChangeTransport
 
 /-!
 # Transport of a splitting along a base change
@@ -14,6 +16,8 @@ The base-change comparison of free modules is natural in the
 object, so a section of a free morphism over one algebra
 base-changes to a section over any algebra under it.
 -/
+
+@[expose] public section
 
 namespace RS
 

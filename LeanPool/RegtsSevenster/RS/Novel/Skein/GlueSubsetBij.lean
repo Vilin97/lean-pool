@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplit
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplit
 
 /-!
 # Subset correspondence for single-pair gluing
@@ -17,6 +19,8 @@ the open case (the two glued boundary flags bound distinct edges,
 unified by rewiring) and the closed case (they bound a common
 edge, which closes into a free circle parameterized by a Bool).
 -/
+
+@[expose] public section
 
 namespace RS
 

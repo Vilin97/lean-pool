@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaAlgebra
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaAlgebra
 
 /-!
 # The Γ-module of a module object
@@ -34,6 +36,8 @@ the one axiom not implied by coherence alone, and it is again the
 first triangle identity of the self-duality of the odd line,
 `RS.OddLine.evaluation_coevaluation`.
 -/
+
+@[expose] public section
 
 namespace RS
 

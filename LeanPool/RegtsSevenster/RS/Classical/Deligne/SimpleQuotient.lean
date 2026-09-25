@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableDescentClose
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KernelPow
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.CountableDescentClose
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KernelPow
 
 /-!
 # Simple quotients of commutative algebras in the ind-completion
@@ -14,6 +16,8 @@ Every nonzero commutative algebra object of `Ind C` has a quotient
 algebra which is simple as an algebra: its only ideals are `⊥` and
 `⊤`.
 -/
+
+@[expose] public section
 
 namespace RS
 

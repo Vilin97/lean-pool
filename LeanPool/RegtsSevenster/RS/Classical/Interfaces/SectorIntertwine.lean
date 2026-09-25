@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.KoszulAction
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.TensorNonvanishing
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelPermCoord
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.KoszulAction
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.TensorNonvanishing
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ModelPermCoord
 
 /-!
 # Sector intertwining for the standard model
@@ -48,6 +50,8 @@ intertwines `modelPermMap` with `evenPermRep`.  The kernel containment
 follows from `superPermAction_zero_imp_evenPermRep_zero` in
 `KoszulAction.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEvenRing
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModule
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEvenRing
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaModule
 
 /-!
 # The residue module of a complex point
@@ -16,6 +18,8 @@ the even part acts through the point and the odd part acts by zero,
 which is consistent exactly because a point kills the products of
 two odd elements.
 -/
+
+@[expose] public section
 
 namespace RS
 

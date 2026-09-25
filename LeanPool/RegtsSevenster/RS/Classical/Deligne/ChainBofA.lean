@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainB
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.InterchangeAct
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowDatum
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainB
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.InterchangeAct
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowDatum
 
 /-!
 # The structure morphism of the splitting-chain algebra
@@ -17,6 +19,8 @@ generic point-recovery of unital actions; the multiplication law
 reduces along the colimit defining equations to the bilinearity
 of the stage multiplication over the base.
 -/
+
+@[expose] public section
 
 namespace RS
 

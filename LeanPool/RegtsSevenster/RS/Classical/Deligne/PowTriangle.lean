@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowChain
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMulLaws
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowChain
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainMulLaws
 
 /-!
 # The triangle scalar of the power chain
@@ -15,6 +17,8 @@ nested power pairing: under the scalar zigzag, the pairing
 evaluates every chain unit to the unit of the base.  This is the
 nonvanishing engine of the Key Lemma's chain.
 -/
+
+@[expose] public section
 
 namespace RS
 

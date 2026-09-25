@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.WordMap
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.WordMap
 
 /-!
 # The kernel of a tensor power of an epimorphism
@@ -47,6 +49,8 @@ Three layers:
   assumed well-powered, so the subobject lattice carries finite
   joins but no indexed supremum.
 -/
+
+@[expose] public section
 
 namespace RS
 

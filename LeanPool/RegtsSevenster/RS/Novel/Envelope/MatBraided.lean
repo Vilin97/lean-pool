@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatMonoidal
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.MatMonoidal
 
 /-!
 # Braided and symmetric structure on the matrix envelope
@@ -13,6 +15,8 @@ When `C` is a braided (resp. symmetric) monoidal preadditive category, so is
 `Mat_ C`.  The braiding on `Mat_ C` is a "diagonal" matrix carrying the
 componentwise braidings of `C`, reindexed by the swap `M.ι × N.ι ↔ N.ι × M.ι`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

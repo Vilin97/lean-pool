@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DeligneTheorem
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DeligneTheorem
 
 /-!
 # Deligne's theorem reduced to a genuinely small category
@@ -34,6 +36,8 @@ monoidal structure transported along `CategoryTheory.equivSmallModel`
 * the fibre functor comes back by precomposition,
   `RS.DeligneFibreFunctor.precompose`.
 -/
+
+@[expose] public section
 
 namespace RS
 

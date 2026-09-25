@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexVanish
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexVanish
 
 /-!
 # The fibre bijection
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexVanish
 Closed-pattern fibres are pure; their sums reindex over the
 colouring data through the diagonal parametrization.
 -/
+
+@[expose] public section
 
 namespace RS
 

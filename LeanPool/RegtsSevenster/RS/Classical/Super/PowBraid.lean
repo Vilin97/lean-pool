@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPower
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPower
 
 /-!
 # Adjacent braidings on monoidal powers
@@ -16,6 +18,8 @@ model the intended action is the Koszul-signed position swap,
 defined here; the identification is the coordinate workhorse of
 the extraction.
 -/
+
+@[expose] public section
 
 namespace RS
 

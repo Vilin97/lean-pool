@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PowerSurj
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PowerSurj
 
 /-!
 # Constructive simplicity of endomorphism algebras
@@ -14,6 +16,8 @@ generates the full endomorphism algebra in the sense that it can be
 "sandwiched" to produce the identity: there exist endomorphisms
 `U i`, `W i` such that `∑ i, U i * A * W i = 1`.
 -/
+
+@[expose] public section
 
 namespace RS
 

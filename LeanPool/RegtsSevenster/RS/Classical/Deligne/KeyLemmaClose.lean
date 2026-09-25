@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemmaData
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitMonHom
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitPairDef
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBNonzero
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndAllColim
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemmaData
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitMonHom
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitPairDef
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBNonzero
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndAllColim
 
 /-!
 # The Key Lemma, closed over the ind-completion
@@ -21,6 +23,8 @@ degree-zero line, and the section identity is the advancement of
 the seed.  Nonvanishing is the stage-detection argument of the
 balanced line.
 -/
+
+@[expose] public section
 
 namespace RS
 

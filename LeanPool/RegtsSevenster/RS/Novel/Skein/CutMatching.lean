@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DirMatching
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonicalFrame
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordCount
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SuperSpace
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RelabelChords
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DirMatching
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonicalFrame
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ChordCount
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SuperSpace
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RelabelChords
 
 /-!
 # The directed matching a transition system induces on the used labels
@@ -28,6 +30,8 @@ laws say nothing about it, so its sense is taken from the label
 order.  That is the same orientation the mixed partition function's
 own through-edge product uses.
 -/
+
+@[expose] public section
 
 namespace RS
 

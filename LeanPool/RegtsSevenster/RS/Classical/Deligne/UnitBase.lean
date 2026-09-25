@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
 
 /-!
 # Modules over the tensor unit
@@ -23,6 +25,8 @@ collapses to the ambient category.
 * `modBiprodZeroLeft`: over any base, the biproduct with a module
   whose carrier is zero collapses to the other summand.
 -/
+
+@[expose] public section
 
 namespace RS
 

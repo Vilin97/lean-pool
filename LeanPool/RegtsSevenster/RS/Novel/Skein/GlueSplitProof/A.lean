@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueCircuitDelta
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueCircuitDelta
 
 /-!
 # The single-pair gluing infrastructure
@@ -25,6 +27,8 @@ through-product of a closed-off edge reads
 two ends with `i = 1, j = 0` gives `k + 2ℓ` instead of `k − 2ℓ`.
 All cuts in the development are therefore ordered.
 -/
+
+@[expose] public section
 
 namespace RS
 

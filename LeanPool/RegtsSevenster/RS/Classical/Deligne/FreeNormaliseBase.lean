@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePowInsert
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreePowInsert
 
 /-!
 # The one-letter normalisation
@@ -13,6 +15,8 @@ At arity one the collapse and the insertion are mutually inverse:
 the single head is already at the front, and re-inserting it puts
 it back where it was.
 -/
+
+@[expose] public section
 
 namespace RS
 

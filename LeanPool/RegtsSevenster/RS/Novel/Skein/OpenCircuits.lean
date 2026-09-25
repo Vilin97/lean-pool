@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PathMatch
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PathMatch
 
 /-!
 # Open circuit count for boundary-relative transition systems
@@ -34,6 +36,8 @@ whose forward walk eventually returns to them.
 * `not_periodic_of_boundary_chain` — boundary-terminating flags are
   not periodic.
 -/
+
+@[expose] public section
 
 namespace RS
 

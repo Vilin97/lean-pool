@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StepLedger
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StepLedger
 
 /-!
 # The pairing transposition of a non-localized repair
@@ -18,6 +20,8 @@ ends of distinct chords.  This is the algebraic heart of the
 holonomy programme — repair words act on boundary pairings through
 transposition conjugations.
 -/
+
+@[expose] public section
 
 namespace RS
 

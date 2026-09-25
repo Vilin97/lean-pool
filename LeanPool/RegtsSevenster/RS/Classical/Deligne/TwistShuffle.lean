@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorDatum
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistCoherence
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorDatum
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TwistCoherence
 
 /-!
 # The twist shuffle
@@ -18,6 +20,8 @@ committed interchange toolbox applies; the twisting is fully
 general, and the sign phenomena of the odd line enter only at the
 symmetriser conjugation downstream.
 -/
+
+@[expose] public section
 
 namespace RS
 

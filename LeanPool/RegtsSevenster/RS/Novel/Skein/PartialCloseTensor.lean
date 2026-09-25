@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorIdeal
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorIdeal
 
 /-!
 # Partial closure of a tensor
@@ -24,6 +26,8 @@ This file: the three-summand shuffle, the ground computation
 (the `z`-gluing pairs localize to the `z, z'` summands), and the
 inner-pair identification.
 -/
+
+@[expose] public section
 
 namespace RS
 

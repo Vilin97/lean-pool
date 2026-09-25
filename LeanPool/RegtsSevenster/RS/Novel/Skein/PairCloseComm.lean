@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeAssoc
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeAssoc
 
 /-!
 # Commutativity of pair closure
@@ -13,6 +15,8 @@ The closed fragment `pairClose F G`, formed by composing
 an `(0+t)`- with a `(t+0)`-fragment, is invariant (up to
 `Fragment.Equiv`) under swapping `F` and `G`.
 -/
+
+@[expose] public section
 
 namespace RS
 

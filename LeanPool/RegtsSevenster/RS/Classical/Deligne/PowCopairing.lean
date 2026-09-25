@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPairing
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowPairing
 
 /-!
 # The power copairing
@@ -22,6 +24,8 @@ scalar is the unit of the base.  The retraction is the
 nonvanishing engine of the Key Lemma's chain: a vanishing chain
 unit forces the unit of the base to vanish.
 -/
+
+@[expose] public section
 
 namespace RS
 

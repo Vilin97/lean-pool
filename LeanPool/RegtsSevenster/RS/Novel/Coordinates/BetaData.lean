@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexBij
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexBij
 
 /-!
 # The `β`-diagonal's colour data
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ReindexBij
 The colour-form entries at a partner slot, the colouring of a sum
 index on either side, and the `β`-diagonal these produce.
 -/
+
+@[expose] public section
 
 namespace RS
 

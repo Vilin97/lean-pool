@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplitProof.A
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplitProof.A
 
 /-!
 # The closed and open masters
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSplitProof.A
 The per-subset ledgers and the open-cut engine, assembled into the
 master splitting identities.
 -/
+
+@[expose] public section
 
 namespace RS
 

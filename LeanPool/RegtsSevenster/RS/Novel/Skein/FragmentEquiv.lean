@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.Composition
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.Composition
 
 /-!
 # Isomorphism theory of fragments
@@ -17,6 +19,8 @@ equivalences form a groupoid (refl, symm, trans) and are
 congruences for the fragment operations: relabelling, disjoint
 union, and single-pair gluing.
 -/
+
+@[expose] public section
 
 namespace RS
 

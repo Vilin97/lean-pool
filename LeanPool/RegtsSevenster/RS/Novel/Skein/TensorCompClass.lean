@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorInterchange
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTensor
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCategory
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorInterchange
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTensor
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCategory
 
 /-!
 # The interchange law on Hom classes
@@ -15,6 +17,8 @@ Tensoring two composites is composing the two tensors, descended
 to the Hom spaces: the fragment-level interchange at the singles,
 extended by the four-fold bilinear induction.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Doubling
-import LeanPool.RegtsSevenster.RS.Definitions
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Doubling
+public import LeanPool.RegtsSevenster.RS.Definitions
 
 /-!
 # Scalars on the unit of the doubling
@@ -14,6 +16,8 @@ The unit of the doubling is the unit in even degree and the zero
 object in odd degree, so its endomorphisms are those of the unit
 downstairs: the scalar-unit hypothesis passes to the doubling.
 -/
+
+@[expose] public section
 
 namespace RS
 

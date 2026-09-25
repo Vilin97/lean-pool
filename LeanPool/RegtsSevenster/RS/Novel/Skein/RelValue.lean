@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RelTransition
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GenBoundaryStates
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RelTransition
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GenBoundaryStates
 
 /-!
 # The boundary-relative constrained summand
@@ -18,6 +20,8 @@ circuit exponent — specialized to the open circuit count when
 that lands.  For subsets arising from a standard transition
 system, the relative data agrees with the original.
 -/
+
+@[expose] public section
 
 namespace RS
 

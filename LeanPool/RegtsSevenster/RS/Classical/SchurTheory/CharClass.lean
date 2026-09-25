@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTChar
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTChar
 
 /-!
 # Class-function properties of the colour and Jacobi–Trudi
@@ -14,6 +16,8 @@ characters
 under inversion (a permutation is conjugate to its inverse, having
 the same cycle type).
 -/
+
+@[expose] public section
 
 namespace RS
 

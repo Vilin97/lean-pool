@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainB
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndCoeq
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainB
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndCoeq
 
 /-!
 # The splitting chain in the ind-category
@@ -54,6 +56,8 @@ by a choice of scalar unit `ψ : ℂ ≃+* End (𝟙_ C)` through
 therefore carried as a hypothesis, as in
 `RS.Classical.Deligne.SuperRealize`.
 -/
+
+@[expose] public section
 
 namespace RS
 

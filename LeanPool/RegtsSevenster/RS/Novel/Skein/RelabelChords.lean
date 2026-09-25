@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RelabelInvariance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.FibreValue
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RelabelInvariance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.FibreValue
 
 /-!
 # Chord diagrams transport along monotone relabels
@@ -15,6 +17,8 @@ original diagram under the order isomorphism, entrywise: the flags
 and the path matching are untouched, the labels shift through `e`,
 and `e` preserves the sorting.
 -/
+
+@[expose] public section
 
 namespace RS
 

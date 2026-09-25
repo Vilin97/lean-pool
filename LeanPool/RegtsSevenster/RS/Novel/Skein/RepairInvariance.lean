@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionMove
-import LeanPool.RegtsSevenster.RS.Novel.Skein.OrientationFlip
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionMove
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.OrientationFlip
 
 /-!
 # Invariance of the constrained summand under the repair move
@@ -48,6 +50,8 @@ two-path squares are handled instead by the pathSign-corrected
 ledger of `PathLedger.lean`, whose statements weigh the summand by
 the boundary pairing's chord sign.
 -/
+
+@[expose] public section
 
 namespace RS
 

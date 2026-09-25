@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SumLexOrder
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SumLexOrder
 
 /-!
 # Monotonicity of the interface re-indexing equivalences
@@ -32,6 +34,8 @@ sum orders explicitly through the reducible aliases
 `sumLexPreorder`/`sumLexLE`/`sumLexSubtypeLinearOrder`/… below,
 which are definitionally the projections of `sumLexLinearOrder`.
 -/
+
+@[expose] public section
 
 namespace RS
 

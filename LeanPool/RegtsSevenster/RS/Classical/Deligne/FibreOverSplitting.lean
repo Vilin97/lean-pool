@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplittingAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreExact
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreFaithful
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreBridge
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndOfMonoidal
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplittingAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreExact
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreFaithful
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreBridge
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndOfMonoidal
 
 /-!
 # The fibre functor over the splitting algebra
@@ -30,6 +32,8 @@ in the variable block from the one the fibre-functor lemmas below
 consume.  The variable block therefore names the symmetry of
 `Ind C` only, matching `RS.Classical.Deligne.UniversalAlgebra`.
 -/
+
+@[expose] public section
 
 namespace RS
 

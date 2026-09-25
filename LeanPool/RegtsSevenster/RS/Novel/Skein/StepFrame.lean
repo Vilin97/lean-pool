@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonicalFrame
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingSwap
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonicalFrame
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingSwap
 
 /-!
 # The frame across a separated two-path step
@@ -18,6 +20,8 @@ pairing's rigidity forces the re-paired ends to carry opposite
 directions, a constraint on the old frame derived from the new
 system.
 -/
+
+@[expose] public section
 
 namespace RS
 

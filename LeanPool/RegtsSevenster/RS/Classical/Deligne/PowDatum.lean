@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowZig
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagNonzero
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowZig
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagNonzero
 
 /-!
 # The power duality datum
@@ -23,6 +25,8 @@ live separately; once available, `ZigzagNonzero` applied to the
 power datum detects the nonvanishing of the copairing powers
 from the nonvanishing of the power modules.
 -/
+
+@[expose] public section
 
 namespace RS
 

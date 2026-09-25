@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitAssemble
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PairCarrier
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SplitAssemble
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PairCarrier
 
 /-!
 # Defining equation of the carrier-level pair product
@@ -18,6 +20,8 @@ degree-zero component two stages up.  This is the defining
 equation of the pair product field of the splitting data of the
 Key Lemma.
 -/
+
+@[expose] public section
 
 namespace RS
 

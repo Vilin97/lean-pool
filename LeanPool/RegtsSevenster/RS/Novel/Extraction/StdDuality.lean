@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.ProdSum
-import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdSuper
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.ProdSum
+public import LeanPool.RegtsSevenster.RS.Novel.Extraction.StdSuper
 
 /-!
 # The standard form as a morphism of super vector spaces
@@ -17,6 +19,8 @@ composing with the Koszul braiding returns the form.  The even
 block is symmetric; the odd block is antisymmetric, and the Koszul
 sign of the braiding on the odd⊗odd summand exactly compensates.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OneBasis
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OneBasis
 
 /-!
 # The evaluation leaf
@@ -15,6 +17,8 @@ the two colours.  Both mixed-parity colourings are excluded by
 evenness; the pure branches route through the one-position basis
 presentations and the standard-form identification.
 -/
+
+@[expose] public section
 
 namespace RS
 

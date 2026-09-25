@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBridge
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagTransfer
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainBridge
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagTransfer
 
 /-!
 # Nonvanishing of the splitting-chain units
@@ -19,6 +21,8 @@ argument: `δⁿ` is the `δ` of a duality between the symmetric
 powers (1.15.1), and the `δ` of a duality vanishes only on the
 zero module.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughValue
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ThroughValue
 
 /-!
 # The vertex sum
@@ -21,6 +23,8 @@ that is RS21's from the part the flag model adds — the through-edge
 product, which the graph model instead carries inside the boundary
 vectors.
 -/
+
+@[expose] public section
 
 namespace RS
 

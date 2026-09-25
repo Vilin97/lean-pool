@@ -4,21 +4,23 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.NilpotentMap
-import LeanPool.RegtsSevenster.RS.Common.ListPairs
-import LeanPool.RegtsSevenster.RS.Common.FinSlots
-import LeanPool.RegtsSevenster.RS.Common.DiagramChain
-import LeanPool.RegtsSevenster.RS.Common.ExponentialGrowth
-import LeanPool.RegtsSevenster.RS.Common.FactorialBound
-import LeanPool.RegtsSevenster.RS.Common.ListAttach
-import LeanPool.RegtsSevenster.RS.Common.ListSign
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
-import LeanPool.RegtsSevenster.RS.Common.NilpotentPowerTrace
-import LeanPool.RegtsSevenster.RS.Common.PairDisjoint
-import LeanPool.RegtsSevenster.RS.Common.PermCongr
-import LeanPool.RegtsSevenster.RS.Common.PermTopSplit
-import LeanPool.RegtsSevenster.RS.Common.ProdSum
-import LeanPool.RegtsSevenster.RS.Common.RowLenChain
-import LeanPool.RegtsSevenster.RS.Common.RowSpanRank
-import LeanPool.RegtsSevenster.RS.Common.TraceSeparation
-import LeanPool.RegtsSevenster.RS.Common.YoungDiagrams
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.NilpotentMap
+public import LeanPool.RegtsSevenster.RS.Common.ListPairs
+public import LeanPool.RegtsSevenster.RS.Common.FinSlots
+public import LeanPool.RegtsSevenster.RS.Common.DiagramChain
+public import LeanPool.RegtsSevenster.RS.Common.ExponentialGrowth
+public import LeanPool.RegtsSevenster.RS.Common.FactorialBound
+public import LeanPool.RegtsSevenster.RS.Common.ListAttach
+public import LeanPool.RegtsSevenster.RS.Common.ListSign
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+public import LeanPool.RegtsSevenster.RS.Common.NilpotentPowerTrace
+public import LeanPool.RegtsSevenster.RS.Common.PairDisjoint
+public import LeanPool.RegtsSevenster.RS.Common.PermCongr
+public import LeanPool.RegtsSevenster.RS.Common.PermTopSplit
+public import LeanPool.RegtsSevenster.RS.Common.ProdSum
+public import LeanPool.RegtsSevenster.RS.Common.RowLenChain
+public import LeanPool.RegtsSevenster.RS.Common.RowSpanRank
+public import LeanPool.RegtsSevenster.RS.Common.TraceSeparation
+public import LeanPool.RegtsSevenster.RS.Common.YoungDiagrams

@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BiprodTransfer
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KronKill
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedDiag
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BiprodTransfer
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KronKill
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MixedDiag
 
 /-!
 # The tensor-product transfer of Schur vanishing
@@ -23,6 +25,8 @@ killed whiskered factor when it does not, since a nonzero
 multiplicity pushes a bounding-box cell into `μ'` or `ν'`
 (Deligne 1.12).
 -/
+
+@[expose] public section
 
 namespace RS
 

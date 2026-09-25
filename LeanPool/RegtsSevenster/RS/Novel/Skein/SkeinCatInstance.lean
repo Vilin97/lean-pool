@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTraceNondegenerate
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.HomTraceNondegenerate
 
 /-!
 # The skein category, packaged
@@ -15,6 +17,8 @@ are Hom-space classes, identities are strand bundle classes,
 composition is the descended bilinear composition.  All axioms were proven in
 `SkeinCategory.lean`; this file only packages them.
 -/
+
+@[expose] public section
 
 namespace RS
 

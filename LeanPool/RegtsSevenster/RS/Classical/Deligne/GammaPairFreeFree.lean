@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairFreeMix
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairRetractRight
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddSquareIso
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairFreeMix
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.GammaPairRetractRight
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddSquareIso
 
 /-!
 # The comparison map on a pair of free modules
@@ -16,6 +18,8 @@ square: the comparison map of Deligne's (2.11.1) is invertible at
 any pair of free modules whose objects become mixed sums after base
 change.  Every case but the odd line against itself is a unitor.
 -/
+
+@[expose] public section
 
 namespace RS
 

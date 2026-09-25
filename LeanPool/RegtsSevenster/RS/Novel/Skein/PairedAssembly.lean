@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.StepStatusNonsep
-import LeanPool.RegtsSevenster.RS.Novel.Skein.FourLabelParity
-import LeanPool.RegtsSevenster.RS.Novel.Skein.FlipSignForm
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.StepStatusNonsep
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.FourLabelParity
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.FlipSignForm
 
 /-!
 # The paired assembly: `PairedLedgerUnsigned`
@@ -38,6 +40,8 @@ Main results: `chainStatusLedger` (the enriched chain induction),
 `stepStatusLedger` (the per-step composed ledger),
 `pairedLedgerUnsigned`, and `pairedLedger`.
 -/
+
+@[expose] public section
 
 namespace RS
 

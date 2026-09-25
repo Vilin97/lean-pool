@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModFunctor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModFunctor
 
 /-!
 # The fibre functor is additive
@@ -20,6 +22,8 @@ The functor is built directly rather than as a composite through
 the module objects, because the category of module objects carries
 no additive structure in this development.
 -/
+
+@[expose] public section
 
 namespace RS
 

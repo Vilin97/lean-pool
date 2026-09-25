@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockCanon
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockCanon
 
 /-!
 # The h-generic normal form
@@ -17,6 +19,8 @@ This is the first stage of discharging the Eulerian-independence
 interface: the normal form is manifestly independent of the
 transition system and orientation.
 -/
+
+@[expose] public section
 
 namespace RS
 

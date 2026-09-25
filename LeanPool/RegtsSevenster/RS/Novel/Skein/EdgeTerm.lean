@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourGlue
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceContract
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourGlue
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceContract
 
 /-!
 # RS21's summand, at a prescribed circuit count
@@ -17,6 +19,8 @@ and settling that is the ledger's business, not the colouring's — so
 the summand is named here with the count as a parameter, extended by
 zero off the good subsets, exactly as `termAt` is.
 -/
+
+@[expose] public section
 
 namespace RS
 

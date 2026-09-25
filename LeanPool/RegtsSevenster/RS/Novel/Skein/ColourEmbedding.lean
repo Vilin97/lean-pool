@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MixedPartition
-import LeanPool.RegtsSevenster.RS.Common.ListSign
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MixedPartition
+public import LeanPool.RegtsSevenster.RS.Common.ListSign
 
 /-!
 # Embeddings of mixed colours
@@ -15,6 +17,8 @@ symplectic partners and signs. Extending a functional by zero along
 such an embedding preserves its alternating evaluations on the
 embedded colours and annihilates inputs using any other colour.
 -/
+
+@[expose] public section
 
 namespace RS
 

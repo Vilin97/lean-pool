@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceCut
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionProduct
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceCut
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionProduct
 
 /-!
 # The closed identification at an arbitrary empty label type
@@ -22,6 +24,8 @@ carried across a relabel by `relabel_throughSummand`.  Together these
 identify the relabelled fragment's Definition 5 value with the
 constrained value downstairs, with no independence input.
 -/
+
+@[expose] public section
 
 namespace RS
 

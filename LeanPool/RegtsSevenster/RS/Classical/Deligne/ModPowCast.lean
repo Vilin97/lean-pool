@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymMul
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPermCast
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymMul
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.SymPermCast
 
 /-!
 # Vanishing along the standard embeddings on module powers
@@ -30,6 +32,8 @@ that die after the projection keep dying
 (`whiskerRight_modPowπ_zero`).  The compatibility
 `modPowAlg_compat` follows.
 -/
+
+@[expose] public section
 
 namespace RS
 

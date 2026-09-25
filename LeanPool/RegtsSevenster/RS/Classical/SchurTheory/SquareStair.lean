@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SignResolve
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SignResolve
 
 /-!
 # The natural dimension identity and square staircases
@@ -14,6 +16,8 @@ natural-number level, the staircase evaluation for square
 diagrams, and the elementary factorial bounds feeding the square
 growth estimate.
 -/
+
+@[expose] public section
 
 namespace RS
 

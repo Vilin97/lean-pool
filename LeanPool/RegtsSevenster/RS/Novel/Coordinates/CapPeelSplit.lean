@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapExpansion
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapExpansion
 
 /-!
 # The peel step in model form
@@ -15,6 +17,8 @@ cast (`CapPerm`), and the cap value at `m + 1` is the split cap
 value of the permuted-and-cast vector.  The colour action of the
 permutation is the only remaining ingredient of the closed form.
 -/
+
+@[expose] public section
 
 namespace RS
 

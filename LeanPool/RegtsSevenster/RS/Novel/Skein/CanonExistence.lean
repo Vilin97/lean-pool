@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ChainAgreement
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ChainAgreement
 
 /-!
 # Existence of path-canonical orientations
@@ -39,6 +41,8 @@ flags lying on non-canonically oriented boundary-to-boundary chains.
    chain, and the flip decision at each entry flag matches its
    chain's canonicality status (`pathCanonical_canonOrientation`).
 -/
+
+@[expose] public section
 
 namespace RS
 

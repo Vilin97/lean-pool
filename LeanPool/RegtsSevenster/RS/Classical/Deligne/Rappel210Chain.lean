@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymMul
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainAlgebra
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymMul
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainAlgebra
 
 /-!
 # The local splitting chain
@@ -18,6 +20,8 @@ stage multiplication, and the stage units are pinned here, and the
 laws assemble the colimit into a commutative algebra through the
 generic chain kit.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModSchur
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModSchur
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
 
 /-!
 # Module-level Schur vanishing passes to retracts
@@ -14,6 +16,8 @@ A retract of a module inherits the vanishing of a block's action
 on the relative tensor powers: the module-power map of the section
 is a split monomorphism and intertwines the two actions.
 -/
+
+@[expose] public section
 
 namespace RS
 

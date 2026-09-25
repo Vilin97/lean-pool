@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Day convolution on `Type`-valued functor categories
@@ -33,6 +35,8 @@ The Mathlib imports above are deliberate exceptions to the
 `RS.Common.MathlibDeps` funnel: the Day-convolution modules are not
 reachable from it.
 -/
+
+@[expose] public section
 
 namespace RS
 

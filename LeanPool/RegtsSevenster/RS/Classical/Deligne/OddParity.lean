@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddLinePairing
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.OddLinePairing
 
 /-!
 # Tensoring by the odd line swaps parity
@@ -20,6 +22,8 @@ round trips are the two triangle identities of the self-duality.
 The mirror form, with the twist on the left, is obtained from this
 one by transporting along the braiding.
 -/
+
+@[expose] public section
 
 namespace RS
 

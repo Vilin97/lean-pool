@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeAssoc
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeAssoc
 
 /-!
 # Rotation of closures
@@ -24,6 +26,8 @@ closures are equivalent closed fragments.  This is the engine of
 the ideal lemma and the trace calculus (accompanying paper,
 Lemma 3.3(a) and Lemma 3.5(a)).
 -/
+
+@[expose] public section
 
 namespace RS
 

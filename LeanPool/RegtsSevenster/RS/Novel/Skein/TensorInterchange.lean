@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorFragment
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseRotate
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.TensorFragment
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseRotate
 
 /-!
 # Interchange law of the skein category
@@ -19,6 +21,8 @@ constructs the `Fragment.Equiv` witnessing
 by normalizing both sides to iterated gluing over the common
 ambient `(F₁ ⊔ G₁) ⊔ (F₂ ⊔ G₂)` and meeting the label chains.
 -/
+
+@[expose] public section
 
 namespace RS
 

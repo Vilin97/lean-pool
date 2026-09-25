@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSubsetBij
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSubsetBij
 
 /-!
 # Subset sums split across a single cut
@@ -22,6 +24,8 @@ trips of `GlueSubsetBij`: `dropSubset` recovers the glued subset,
 `liftSubsetClosed`/`liftSubsetOpen` recover the original, and a
 pairing-closed subset is always a lift.
 -/
+
+@[expose] public section
 
 namespace RS
 

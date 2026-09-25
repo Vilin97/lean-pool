@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowActMul
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowActMul
 
 /-!
 # The interchange of module tensor products
@@ -15,6 +17,8 @@ products interchanges into the module tensor product of the
 crossed pairs.  The chain transitions and the stage products of
 the splitting algebra factor through it.
 -/
+
+@[expose] public section
 
 namespace RS
 

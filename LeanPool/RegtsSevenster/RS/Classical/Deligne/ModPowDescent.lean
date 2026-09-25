@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowCopairing
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModZero
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowCopairing
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModZero
 
 /-!
 # The retract tower of a dualizable module
@@ -15,6 +17,8 @@ double-dual sandwich is a retract of every stage of the sandwich
 tower.  Together with the merge isomorphisms this descends the
 vanishing of a relative power to the module itself.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.Doubling
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.Doubling
 
 /-!
 # Abelianness of the doubling
@@ -24,6 +26,8 @@ morphism between them.  Downstairs that comparison is an
 isomorphism, so both components of the comparison upstairs are
 isomorphisms, and `Doubled.isIso_of_components` concludes.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PowMerge
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PowMerge
 
 /-!
 # The top braiding through the merge
@@ -14,6 +16,8 @@ merge: whiskering the two-strand braid inside the last block and
 merging equals merging and braiding on top.  Abstract braided
 coherence first, instantiated to the powers.
 -/
+
+@[expose] public section
 
 namespace RS
 

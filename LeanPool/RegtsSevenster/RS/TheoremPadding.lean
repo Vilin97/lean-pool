@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.TheoremDimension
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourPadding
+module
+
+public import LeanPool.RegtsSevenster.RS.TheoremDimension
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ColourPadding
 
 /-!
 # Prescribed parity dimensions
@@ -15,6 +17,8 @@ The total-dimension theorem therefore bounds both dimensions by any
 prescribed compatible pair. Extension by zero then gives a model on
 exactly that pair of colour spaces.
 -/
+
+@[expose] public section
 
 namespace RS
 

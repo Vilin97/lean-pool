@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.Bialternant
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.Bialternant
 
 /-!
 # Coefficient extraction from alternants
@@ -13,6 +15,8 @@ The coefficient of the diagonal monomial in a power alternant with
 injective exponents is `1`: distinct permutations contribute
 distinct monomials, and only the identity hits the diagonal.
 -/
+
+@[expose] public section
 
 namespace RS
 

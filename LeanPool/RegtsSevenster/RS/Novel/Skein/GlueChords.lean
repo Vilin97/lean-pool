@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LabelChords
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LabelChords
 
 /-!
 # The gluing action on chord diagrams
@@ -16,6 +18,8 @@ the cut pass through.  This is the combinatorial (Temperley–Lieb)
 composition over which the pairing-resolved gluing decomposition
 lives.
 -/
+
+@[expose] public section
 
 namespace RS
 

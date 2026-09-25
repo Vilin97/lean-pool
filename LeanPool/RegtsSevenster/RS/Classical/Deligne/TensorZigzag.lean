@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.MuInterchange
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZagAction
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagCarrier
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.MuInterchange
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZagAction
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ZigzagCarrier
 
 /-!
 # The tensor datum inherits the zigzag laws
@@ -18,6 +20,8 @@ copair elements, and the tensor contraction against a pure tensor
 of carriers is the tensor of the component contractions; nesting
 the two component triangles closes the tensor triangle.
 -/
+
+@[expose] public section
 
 namespace RS
 

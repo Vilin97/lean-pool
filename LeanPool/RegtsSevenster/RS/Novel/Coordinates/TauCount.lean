@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockData
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddListMultiset
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockData
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddListMultiset
 
 /-!
 # Tau-sign counting lemmas
@@ -13,6 +15,8 @@ import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddListMultiset
 Combinatorial lemmas connecting the tau-sign product over vertices
 to the number of outgoing flags, via the incoming/outgoing partition.
 -/
+
+@[expose] public section
 
 namespace RS
 

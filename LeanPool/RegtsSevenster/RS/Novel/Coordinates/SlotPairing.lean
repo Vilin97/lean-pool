@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.MultiStar
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.MultiStar
 
 /-!
 # The slot pairing
@@ -14,6 +16,8 @@ cap matching: the two flags of the `i`-th canonical edge sit at
 slots `i` and `edgeCount + i`.  The general-flag glue for the
 Eulerian reindex.
 -/
+
+@[expose] public section
 
 namespace RS
 

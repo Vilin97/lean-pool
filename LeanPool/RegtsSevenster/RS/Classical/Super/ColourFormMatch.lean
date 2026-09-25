@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPairing
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Super.ColourPairing
 
 /-!
 # The colour form entries are the standard form
@@ -15,6 +17,8 @@ form entry agrees with the standard super form on the
 corresponding basis vectors — the orthonormal pairing on even
 colours, the symplectic pairing on odd colours.
 -/
+
+@[expose] public section
 
 namespace RS
 

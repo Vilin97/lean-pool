@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalInstance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PartialCloseCompose
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseUnion
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MonoidalInstance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PartialCloseCompose
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CloseUnion
 
 /-!
 # The block splice
@@ -23,6 +25,8 @@ tables of the label maps they induce, and two bridges: the reshuffled
 rotation as through-strands tensored with `K` cups, and the same
 after the outer relabel is collapsed.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MixedPartition
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MixedPartition
 
 /-!
 # The standard orthosymplectic super vector space
@@ -23,6 +25,8 @@ The odd basis is named as in Regts–Sevenster, `f i` and `g i`;
 the accompanying paper writes `ξ i` and `η i` for the same
 vectors, `f` being reserved there for the graph parameter.
 -/
+
+@[expose] public section
 
 namespace RS
 

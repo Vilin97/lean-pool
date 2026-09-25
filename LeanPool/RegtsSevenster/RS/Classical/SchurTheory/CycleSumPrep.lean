@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CycleFactor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CycleFactor
 
 /-!
 # Preparation for the cycle-sum identity
@@ -14,6 +16,8 @@ colourings, and the congruence lemmas allowing transfer of the
 cycle-sum identity from realized power sums to arbitrary
 prospective ones.
 -/
+
+@[expose] public section
 
 namespace RS
 

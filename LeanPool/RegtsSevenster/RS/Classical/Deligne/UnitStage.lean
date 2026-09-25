@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarLinear
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ScalarLinear
 
 /-!
 # Stage detection for maps out of the unit
@@ -13,6 +15,8 @@ The monoidal unit of the ind-category is the embedded unit, so
 maps out of it into filtered colimits factor through stages — the
 form in which the Key Lemma's colimit algebra is probed.
 -/
+
+@[expose] public section
 
 namespace RS
 

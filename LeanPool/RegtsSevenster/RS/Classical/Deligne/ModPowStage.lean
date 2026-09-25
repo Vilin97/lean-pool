@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymAlg
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SymAlg
 
 /-!
 # The module power, one letter at a time
@@ -26,6 +28,8 @@ further letter.
 * `modPow_invisible_succ`: an ambient endomorphism invisible to the
   projection at one arity is invisible at the next.
 -/
+
+@[expose] public section
 
 namespace RS
 

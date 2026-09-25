@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.WhiskerAdditive
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemmaData
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurVanishing
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.WhiskerAdditive
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.KeyLemmaData
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurVanishing
 
 /-!
 # The trichotomy statement
@@ -17,6 +19,8 @@ unit and an odd line.  The odd line is an object squaring to the
 unit with braiding `−1`; local means after base change to some
 nonzero commutative algebra.
 -/
+
+@[expose] public section
 
 namespace RS
 

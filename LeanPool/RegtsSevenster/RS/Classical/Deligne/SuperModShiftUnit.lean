@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModMonoidal
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModShift
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModMonoidal
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperModShift
 
 /-!
 # Tensoring with the shifted unit is the parity shift
@@ -43,6 +45,8 @@ degree and `+1` in odd degree.
   structure maps, with their computation rules.
 * `RS.SuperCommAlgebra.Mod.shiftUnitTensor`: the isomorphism.
 -/
+
+@[expose] public section
 
 namespace RS
 

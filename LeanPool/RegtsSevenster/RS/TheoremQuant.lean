@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SectorDischarge
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.LGVStrict
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.SectorDischarge
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.LGVStrict
 
 /-!
 # The quantitative theorem, one determinant from Deligne-only
@@ -14,6 +16,8 @@ The sector bound is a theorem given the negated square Schur
 nonvanishing, so the quantitative Regts–Sevenster statement rests
 on Deligne's theorem and one binomial determinant.
 -/
+
+@[expose] public section
 
 namespace RS
 

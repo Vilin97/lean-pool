@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModTensor
 
 /-!
 # The multi-tensor of internal modules over a monoid object
@@ -59,6 +61,8 @@ The further descent of `modMultiConcat` through the middle
 is outside this module's scope; its substrate (the head modules,
 the concatenation map, and the slot relations) is complete.
 -/
+
+@[expose] public section
 
 namespace RS
 

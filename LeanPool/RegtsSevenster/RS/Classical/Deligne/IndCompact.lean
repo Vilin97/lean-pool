@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndMonoidal
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndMonoidal
 
 /-!
 # Compactness of the embedded objects of the ind-completion
@@ -35,6 +37,8 @@ representable presheaf preserves all colimits that exist (Mathlib's
 of a filtered colimit of types (`Types.jointly_surjective'`,
 `Types.FilteredColimit.colimit_eq_iff`).
 -/
+
+@[expose] public section
 
 namespace RS
 

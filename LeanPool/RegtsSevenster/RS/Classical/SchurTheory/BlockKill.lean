@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.KillSimples
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.KillSimples
 
 /-!
 # Kill criteria for the block development
@@ -13,6 +15,8 @@ Vanishing of the `ofModule` action is elementwise annihilation;
 intertwiners commute with the whole algebra action, so
 annihilation transports along equivalences of representations.
 -/
+
+@[expose] public section
 
 namespace RS
 

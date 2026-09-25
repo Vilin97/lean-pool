@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorMuBraid
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorMuBraid
 
 /-!
 # The twist-shuffle coherence
@@ -14,6 +16,8 @@ out of the first twisted factor, through the interchange, and
 back into the middle equals associating it into the second factor
 and interchanging.  Two crossings cancel by symmetry.
 -/
+
+@[expose] public section
 
 namespace RS
 

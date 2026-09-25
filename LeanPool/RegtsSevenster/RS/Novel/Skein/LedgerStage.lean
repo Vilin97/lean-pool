@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceCut
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.InterfaceCut
 
 /-!
 # One stage of the interface recursion, with the matchings supplied
@@ -17,6 +19,8 @@ automatic.  This file states each stage with the interface matching
 given that way, so that a stage consumes only the involution and the
 one equation saying the glued labels are partners.
 -/
+
+@[expose] public section
 
 namespace RS
 

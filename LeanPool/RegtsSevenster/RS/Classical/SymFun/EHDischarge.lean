@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.HInsert
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.HSubZ
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.HInsert
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.HSubZ
 
 /-!
 # Discharge of the `hSub` recurrence hypothesis
@@ -15,6 +17,8 @@ guarded complete-homogeneous polynomials; `HInsert.lean` proves it,
 so the resolvent identity and the shifted forms hold
 unconditionally.
 -/
+
+@[expose] public section
 
 namespace RS
 

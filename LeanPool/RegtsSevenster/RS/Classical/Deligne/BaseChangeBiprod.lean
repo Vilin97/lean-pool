@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModBiprod
 
 /-!
 # Base change distributes over biproducts
@@ -15,6 +17,8 @@ changes, as bundled modules over the new base.  The forward map
 projects componentwise; the inverse injects componentwise; both
 are linear over the new base, and they are mutually inverse.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CrossingDelta
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CrossingDelta
 
 /-!
 # The four-label parity identities
@@ -26,6 +28,8 @@ transitivity pruning of the intransitive tournaments (a tournament on
 four vertices is transitive iff it has no directed triangle), and a
 uniform decision of all indicators from the six resolved comparisons.
 -/
+
+@[expose] public section
 
 /- the closing `simp` argument list is shared by all 64 order
 branches, and each branch uses a different subset of it -/

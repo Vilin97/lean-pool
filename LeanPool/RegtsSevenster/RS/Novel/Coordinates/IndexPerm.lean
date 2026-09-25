@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ListSignPerm
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.ListSignPerm
 
 /-!
 # The index permutation between two orderings of the same list
@@ -16,6 +18,8 @@ written in one order rather than the other, so sorting signs along
 any injective relabelling differ by exactly it, and the sign is
 multiplicative along a chain of reorderings.
 -/
+
+@[expose] public section
 
 namespace RS
 

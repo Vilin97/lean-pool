@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.WhiskerAdditive
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.WhiskerAdditive
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModTensor
 
 /-!
 # Vanishing transport through the module tensor product
@@ -15,6 +17,8 @@ factor does: the projection from the ordinary tensor product is
 epic, and the ordinary tensor product with a zero object is
 zero.
 -/
+
+@[expose] public section
 
 namespace RS
 

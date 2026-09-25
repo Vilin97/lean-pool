@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SeedIns
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SeedIns
 
 /-!
 # The pair product on the graded carrier
@@ -15,6 +17,8 @@ Through the component insertions, the transitions are absorbed
 and the copair element multiplies to the unit of the carrier —
 the section identity of the splitting data of the Key Lemma.
 -/
+
+@[expose] public section
 
 namespace RS
 

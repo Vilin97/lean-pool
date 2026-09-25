@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModTensor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ModTensor
 
 /-!
 # Biproducts of internal modules
@@ -16,6 +18,8 @@ each summand.  The injections and projections are module maps,
 and morphisms out of the biproduct module are determined by the
 two components.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreOverComplex
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreOverSplitting
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreOverComplex
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FibreOverSplitting
 
 /-!
 # The fibre functor into super vector spaces
@@ -77,6 +79,8 @@ algebra being a monomorphism — vanishes itself.
   (`RS.deligneFibre_faithful`).
 * `RS.exists_deligneFibre_of_point`: the four properties packaged.
 -/
+
+@[expose] public section
 namespace RS
 
 open CategoryTheory Limits

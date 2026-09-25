@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowerSums
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.PowerSums
 
 /-!
 # Complete homogeneous values at constant sequences
@@ -15,6 +17,8 @@ function `(1−z)^{−m}`); at `−m` they are the signed binomials
 `(−1)^d C(m, d)` (the generating function `(1−z)^m`).  These feed
 the tensor-space traces of the dimension-bound argument.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.EulerianIndependence
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.EulerianIndependence
 
 /-!
 # The converse statement, assembled
@@ -19,6 +21,8 @@ bound, which the super-Gram identity supplies downstream
 proved here: the Definition 5 value of any flagless
 fragment is `(k − 2ℓ) ^ circles`.
 -/
+
+@[expose] public section
 
 namespace RS
 

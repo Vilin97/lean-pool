@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowAct
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.PowAct
 
 /-!
 # Compatibility of the module-power action with the multiplication
@@ -33,6 +35,8 @@ into `A`-module algebras.
   the braiding, and absorbing the block permutation through the
   equivariance of the descended action.
 -/
+
+@[expose] public section
 
 namespace RS
 

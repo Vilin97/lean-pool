@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarTensorClass
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.StarTensorClass
 
 /-!
 # Image vectors of tensors
@@ -15,6 +17,8 @@ The coherence is proved abstractly for any monoidal functor —
 where every rewrite fires — and the strictness of the skein unit
 is exploited only in two small concrete bridging steps.
 -/
+
+@[expose] public section
 
 namespace RS
 

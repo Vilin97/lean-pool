@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PairEnum
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockData
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.PairEnum
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockData
 
 /-!
 # The two flag enumerations
@@ -14,6 +16,8 @@ The Definition 5 pair enumeration and the block-slot enumeration
 are duplicate-free lists of the participating flags at a vertex:
 the raw material for the canonical index permutation between them.
 -/
+
+@[expose] public section
 
 namespace RS
 

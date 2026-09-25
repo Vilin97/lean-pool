@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EvLeaf
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.EvLeaf
 
 /-!
 # The cap value in coordinates
@@ -13,6 +15,8 @@ The cap value of an even vector is the coordinate-weighted sum of
 the cap values of the colour basis vectors: linearity through the
 coordinate expansion.
 -/
+
+@[expose] public section
 
 namespace RS
 

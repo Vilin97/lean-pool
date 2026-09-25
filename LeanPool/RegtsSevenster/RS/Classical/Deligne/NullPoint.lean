@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
+module
+
+public import LeanPool.RegtsSevenster.RS.Common.MathlibDeps
 
 /-!
 # Complex points of finite-type algebras
@@ -14,6 +16,8 @@ Every nonzero commutative ℂ-algebra of finite type admits a
 the Jacobson ring ℂ, and lift to the algebraically closed base.
 This is the Nullstellensatz input of the descent's final step.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RepFlag
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.RepFlag
 
 /-!
 # Per-edge factoring of the out-sign product
@@ -14,6 +16,8 @@ flags equals the edge-indexed product: each participating edge
 contributes the sign of its (pairing-constant) colour exactly once,
 and non-participating edges contribute 1 on both sides.
 -/
+
+@[expose] public section
 
 namespace RS
 

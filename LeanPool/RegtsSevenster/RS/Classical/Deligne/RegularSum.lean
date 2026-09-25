@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ShapeAlgebra
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PackageAssembly
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.PieriChain
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ShapeAlgebra
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PackageAssembly
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.PieriChain
 
 /-!
 # The regular-representation dimension bound
@@ -32,6 +34,8 @@ families and extracting an alternant coefficient.  Completeness is
 a dimension count in the centre of the group algebra against the
 class sums, which are no more numerous than the shapes.
 -/
+
+@[expose] public section
 
 namespace RS
 

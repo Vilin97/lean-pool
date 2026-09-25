@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.BinomialDet
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.BinomialDet
 
 /-!
 # Nonvanishing of the binomial Toeplitz determinant
@@ -21,6 +23,8 @@ pairs under the tail-swap involution at the first crossing; the
 noncrossing tuples all have `σ = 1` and count with sign `+1`, and at
 least one exists.
 -/
+
+@[expose] public section
 
 
 

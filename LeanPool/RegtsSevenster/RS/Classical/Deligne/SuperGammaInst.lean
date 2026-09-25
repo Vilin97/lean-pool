@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperGamma
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurTransport
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperGamma
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SuperEmbed
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.SchurTransport
 
 /-!
 # Instantiation of the Γ-algebra substrate at `Ind SmallSuperVect`
@@ -45,6 +47,8 @@ generator `indOf.obj sOdd`, and the three hypotheses are proved.
   `Ind SmallSuperVect`, with the ℂ-linear structure installed from
   the scalar unit as in `RS.ScalarLinear`.
 -/
+
+@[expose] public section
 
 namespace RS
 

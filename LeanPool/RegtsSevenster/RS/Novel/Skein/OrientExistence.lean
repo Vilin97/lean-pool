@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonTransport
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.CanonTransport
 
 /-!
 # Orientation existence
@@ -14,6 +16,8 @@ boundary-completed walk is an involution pair, and two-colouring its
 orbits by the orbit representative gives the directions.  Canonical
 data therefore exist exactly when a transition system does.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSubsetBij
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.GlueSubsetBij
 
 /-!
 # Transport of transition data across a single-pair glue
@@ -27,6 +29,8 @@ of `GlueCircuitDelta.lean` reads), and prove that
 `openCircuitCount` is stable under the transport when the glued
 edge's flags do not participate.
 -/
+
+@[expose] public section
 
 namespace RS
 

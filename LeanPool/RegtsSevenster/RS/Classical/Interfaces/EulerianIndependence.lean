@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.MixedPartition
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.MixedPartition
 
 /-!
 # The Eulerian-independence interface
@@ -17,6 +19,8 @@ proved as `RS.eulerianIndependence` in
 eliminates the choice in `EdgeSubset.mixedValue` against any
 concrete transition data.
 -/
+
+@[expose] public section
 
 namespace RS
 

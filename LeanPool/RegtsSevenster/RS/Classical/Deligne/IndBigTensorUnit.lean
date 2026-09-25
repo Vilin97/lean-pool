@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.BigTensorUnit
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndPointTensor
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndAllColim
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.BigTensorUnit
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndPointTensor
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.IndAllColim
 
 /-!
 # The unit of a big tensor product of ind-algebras survives
@@ -18,6 +20,8 @@ at a later stage.  So a tensor product of an arbitrary family of
 algebras with nonvanishing units again has a nonvanishing unit —
 the step Deligne asserts without proof in 2.11.
 -/
+
+@[expose] public section
 
 namespace RS
 

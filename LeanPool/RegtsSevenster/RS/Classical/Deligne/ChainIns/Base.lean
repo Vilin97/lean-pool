@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainStage2
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.ChainStage2
 
 /-!
 # Insertion maps into the splitting-chain stages
@@ -31,6 +33,8 @@ the subject of [FirstSlot.lean](FirstSlot.lean) and
 * `symInsL_symMul`: the insertion is associative against the
   symmetric multiplication, up to the arity transport.
 -/
+
+@[expose] public section
 
 namespace RS
 

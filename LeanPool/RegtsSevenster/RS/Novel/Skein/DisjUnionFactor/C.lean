@@ -4,13 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor.B
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor.B
 
 /-!
 # The disjoint union: canonical migration
 
 Migrating canonical data between a union and its components.
 -/
+
+@[expose] public section
 
 namespace RS
 

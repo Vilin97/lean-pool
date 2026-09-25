@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CanonColour
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CanonColour
 
 /-!
 # Merging monoidal powers
@@ -14,6 +16,8 @@ The block merge of two monoidal powers into the power of the sum
 compatibility with the model transport: transporting blockwise
 and merging through the structure map agrees with merging first.
 -/
+
+@[expose] public section
 
 namespace RS
 

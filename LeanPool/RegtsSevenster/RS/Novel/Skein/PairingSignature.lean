@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingConnectivity
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.PairingConnectivity
 
 /-!
 # The chord data is a function of the pairing
@@ -15,6 +17,8 @@ pairing-preserving blocks, and around any pairing-returning loop of
 repairs the crossing count returns — the parity backbone of the
 holonomy bookkeeping.
 -/
+
+@[expose] public section
 
 namespace RS
 

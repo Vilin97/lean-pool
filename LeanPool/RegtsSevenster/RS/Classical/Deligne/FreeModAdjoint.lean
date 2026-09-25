@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeMixRetract
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModFunctor
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeMixRetract
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.FreeModFunctor
 
 /-!
 # The free–forgetful adjunction for module objects
@@ -33,6 +35,8 @@ All the intermediate statements are phrased in the ambient
 language of `A ⊗ X` and a bare action morphism, and are transported
 into the category of module objects by definitional unfolding.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OneBasis
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OneBasis
 
 /-!
 # Two-position basis vectors, raw form
@@ -13,6 +15,8 @@ The colour-model basis vectors at two positions in the raw tensor
 structure `(superPow V 1) ⊗ V`: nested unit-padded standard basis
 vectors, one lemma per parity pattern.
 -/
+
+@[expose] public section
 
 namespace RS
 

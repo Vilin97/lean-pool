@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Definitions
+module
+
+public import LeanPool.RegtsSevenster.RS.Definitions
 
 /-!
 # Bounded length for objects of an abelian category
@@ -22,6 +24,8 @@ along isomorphisms of the ambient object, zero objects have length
 at most `0`, simple objects have length at most `1`, and the bound
 is subadditive over binary biproducts.
 -/
+
+@[expose] public section
 
 namespace RS
 

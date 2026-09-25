@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PowerSurj
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.PowerSurj
 
 /-!
 # The same-cycle quotient of a permutation
@@ -16,6 +18,8 @@ functions on the orbit space.  This is the indexing object for the
 cycle-sum identity: a permutation's completed cycle-type product
 expands as a sum over colourings of its orbits.
 -/
+
+@[expose] public section
 
 namespace RS
 

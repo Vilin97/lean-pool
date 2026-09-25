@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.Reindex
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.Reindex
 
 /-!
 # The fibre parametrization
@@ -13,6 +15,8 @@ The colouring of an edge subset with colouring data: participating
 flags carry the odd edge colour on the representative slot and its
 partner on the partner slot; the rest carry the even colour.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CoordOf
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CoordOf
 
 /-!
 # The cap value on model vectors
@@ -13,6 +15,8 @@ The cap functional pulled back to the model: the scalar the
 final computation evaluates.  Its base case: the zero cap reads
 off the scalar itself.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.LengthBound
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.LengthBound
 
 /-!
 # Moderate growth of tensor powers
@@ -21,6 +23,8 @@ Length is the measure Deligne's theorem states its growth
 hypothesis in; the endomorphism dimension is the measure the
 envelope's rank bound supplies directly.
 -/
+
+@[expose] public section
 
 namespace RS
 

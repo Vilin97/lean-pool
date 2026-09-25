@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharEquiv
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SimpleEmbed
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.CharEquiv
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.SimpleEmbed
 
 /-!
 # Character decomposition into native characters
@@ -14,6 +16,8 @@ Every character of a finite-dimensional representation over ℂ
 decomposes as a sum of native characters `nChar S g` for simple
 submodules `S` of the regular module.
 -/
+
+@[expose] public section
 
 namespace RS
 

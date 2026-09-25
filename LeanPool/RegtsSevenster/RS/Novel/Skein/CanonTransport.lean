@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionProduct
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionProduct
 
 /-!
 # Canonical data across a relabel and a glue
@@ -13,6 +15,8 @@ Canonical data — a transition system with a path-canonical
 orientation — transport along a relabel, down across either branch
 of a single-pair glue, and back up from a closed lift.
 -/
+
+@[expose] public section
 
 namespace RS
 

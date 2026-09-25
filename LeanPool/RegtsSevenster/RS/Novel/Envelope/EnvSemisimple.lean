@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvDeligne
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Envelope.EnvDeligne
 
 /-!
 # Semisimplicity of the envelope
@@ -17,6 +19,8 @@ family of atomic idempotents; each cuts out a corner object with
 scalar endomorphisms, which is simple because monomorphisms split
 in the envelope, and the object is the biproduct of its corners.
 -/
+
+@[expose] public section
 
 namespace RS
 

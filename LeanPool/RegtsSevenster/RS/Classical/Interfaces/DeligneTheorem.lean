@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DelignePackage
-import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Growth
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Interfaces.DelignePackage
+public import LeanPool.RegtsSevenster.RS.Classical.CatTheory.Growth
 
 /-!
 # Deligne's theorem on tensor categories
@@ -26,6 +28,8 @@ fibre-functor form rather than as the ⊗-equivalence with the
 representations of a supergroup, which yields the functor by
 composing with the forgetful functor.
 -/
+
+@[expose] public section
 
 namespace RS
 

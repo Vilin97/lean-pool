@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor.A
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor.A
 
 /-!
 # The disjoint union: colour and value splitting
@@ -12,6 +14,8 @@ import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor.A
 The colouring sum and the through-summand of a union split into
 the two components.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LoopVerify
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LoopVerify
 
 /-!
 # The corrected independence interface is refutable across pairings
@@ -21,6 +23,8 @@ Proposition 3 for open fragments can only assert independence
 interfaces consuming `ThroughIndependenceC` must be re-based on
 the pairing-resolved value.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapClosed
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CapClosed
 
 /-!
 # The master colour sum
@@ -13,6 +15,8 @@ The parameter value as a pure colour-combinatorial sum: the cap
 expansion through the closed form, the permutation and cast
 transports, and the star-vector coordinates.
 -/
+
+@[expose] public section
 
 namespace RS
 

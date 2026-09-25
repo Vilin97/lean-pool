@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeAction
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.NativeAction
 
 /-!
 # The native projector and its action table
@@ -14,6 +16,8 @@ submodule on the native carrier; the scalar action, the
 orthogonality-evaluated action table, idempotency, centrality,
 and the block rank.
 -/
+
+@[expose] public section
 
 namespace RS
 

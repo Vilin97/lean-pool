@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorMuBraid
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.Deligne.TensorMuBraid
 
 /-!
 # The tensorμ interchange associativity
@@ -15,6 +17,8 @@ twice.  This is the symmetric-category companion of Mathlib's
 `tensor_associativity`, with the shuffle on the other side; one
 adjacent symmetry cancellation dissolves the doubled crossing.
 -/
+
+@[expose] public section
 
 namespace RS
 

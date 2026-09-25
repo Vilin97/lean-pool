@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCatInstance
-import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleTensor
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeRelabel
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.SkeinCatInstance
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.BundleTensor
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ComposeRelabel
 
 /-!
 # The bundle-map calculus
@@ -24,6 +26,8 @@ algebra.  Every coherence diagram of the monoidal assembly
 collapses through this law into an equality of label
 equivalences.
 -/
+
+@[expose] public section
 
 namespace RS
 

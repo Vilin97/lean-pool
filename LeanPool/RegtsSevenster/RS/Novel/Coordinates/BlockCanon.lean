@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CanonPerm
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockAlign
-import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddListMultiset
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.CanonPerm
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.BlockAlign
+public import LeanPool.RegtsSevenster.RS.Novel.Coordinates.OddListMultiset
 
 /-!
 # The block data in canonical form
@@ -16,6 +18,8 @@ data colouring: the even multiset is the Definition 5 even-colour
 multiset at the block's vertex, and the odd list carries the
 Definition 5 odd values.
 -/
+
+@[expose] public section
 
 namespace RS
 

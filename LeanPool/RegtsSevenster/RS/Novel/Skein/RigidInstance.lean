@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.ExactPairingInstance
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.ExactPairingInstance
 
 /-!
 # Rigidity of the skein category
@@ -16,6 +18,8 @@ pairings for the step (the arity arithmetic `n + 1` is
 definitional, and the flip `1 + n = n + 1` is transported along
 `eqToIso`).
 -/
+
+@[expose] public section
 
 namespace RS
 

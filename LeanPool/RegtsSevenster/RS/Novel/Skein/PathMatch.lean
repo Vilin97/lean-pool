@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.RelTransition
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.RelTransition
 
 /-!
 # Path matching on boundary flags
@@ -30,6 +32,8 @@ identity on the reverse iterate sequence:
 chain result and `σ` is the edge pairing), established by induction
 on `j` using `match_invol`.
 -/
+
+@[expose] public section
 
 namespace RS
 

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Classical.SymFun.JTDetExpand
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.JTDetExpand
 
 /-!
 # The signed double-sum identity
@@ -15,6 +17,8 @@ double sum of guarded coefficients of complete homogeneous
 products equals `1`.  This is the polynomial form of the
 orthonormality `⟨χ_μ, χ_μ⟩ = 1`.
 -/
+
+@[expose] public section
 
 namespace RS
 

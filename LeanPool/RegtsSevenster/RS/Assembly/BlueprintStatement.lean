@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Whistler
 -/
 
-import LeanPool.RegtsSevenster.RS.Novel.Skein.LoopExample
-import LeanPool.RegtsSevenster.RS.TheoremConverse
-import LeanPool.RegtsSevenster.RS.TheoremForward
-import LeanPool.RegtsSevenster.RS.TheoremQuant
-import LeanPool.RegtsSevenster.RS.Summit
+module
+
+public import LeanPool.RegtsSevenster.RS.Novel.Skein.LoopExample
+public import LeanPool.RegtsSevenster.RS.TheoremConverse
+public import LeanPool.RegtsSevenster.RS.TheoremForward
+public import LeanPool.RegtsSevenster.RS.TheoremQuant
+public import LeanPool.RegtsSevenster.RS.Summit
 
 /-!
 # The statement surface, pinned
@@ -41,6 +43,8 @@ self-contained statement surface that the comparator certification
 trusts. `RS/DimensionDefinitions.lean` adds the growth, minimum and
 prescribed-dimension surface and imports only that main surface.
 -/
+
+@[expose] public section
 
 noncomputable section
 
