@@ -35,7 +35,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   {M : Type*} [TopologicalSpace M] [ChartedSpace H M]
   [T2Space M] [FiniteDimensional ℝ E] [CompleteSpace E] [IsManifold I ∞ M]
   [ContMDiffVectorBundle 2 E (TangentSpace I : M → Type _) I]
-  [RiemannianBundle (TangentSpace I : M → Type _)]
+  [ambientMetric : RiemannianBundle (TangentSpace I : M → Type _)]
   [IsContMDiffRiemannianBundle I 1 E (TangentSpace I : M → Type _)]
 
 namespace CovariantDerivative
@@ -63,6 +63,63 @@ noncomputable def connectionLaplacianWith
   letI : Bundle.RiemannianBundle TM := ⟨g.toRiemannianMetric⟩
   exact connectionLaplacian cov h x
 
+/-- The induced cotangent connection is independent of the tracing metric. -/
+private theorem covectorCovariantDerivative_metric_independent
+    (g₁ g₂ : Bundle.RiemannianBundle TM) (cov : CovariantDerivative I E TM) :
+    (letI := g₁; covectorCovariantDerivative cov) =
+      (letI := g₂; covectorCovariantDerivative cov) := by
+  rfl
+
+/-- The induced two-tensor connection is independent of the tracing metric. -/
+private theorem covariantTwoTensorCovariantDerivative_metric_independent
+    (g₁ g₂ : Bundle.RiemannianBundle TM) (cov : CovariantDerivative I E TM) :
+    (letI := g₁; covariantTwoTensorCovariantDerivative cov) =
+      (letI := g₂; covariantTwoTensorCovariantDerivative cov) := by
+  unfold covariantTwoTensorCovariantDerivative
+  rw [covectorCovariantDerivative_metric_independent g₁ g₂ cov]
+  rfl
+
+/-- The induced three-tensor connection is independent of the tracing metric. -/
+private theorem covariantThreeTensorCovariantDerivative_metric_independent
+    (g₁ g₂ : Bundle.RiemannianBundle TM) (cov : CovariantDerivative I E TM) :
+    (letI := g₁; covariantThreeTensorCovariantDerivative cov) =
+      (letI := g₂; covariantThreeTensorCovariantDerivative cov) := by
+  unfold covariantThreeTensorCovariantDerivative
+  rw [covariantTwoTensorCovariantDerivative_metric_independent g₁ g₂ cov]
+  rfl
+
+/-- Changing the tracing metric does not change the covariant Hessian. -/
+private theorem covariantHessianTwoTensor_metric_independent
+    (g₁ g₂ : Bundle.RiemannianBundle TM)
+    (cov : CovariantDerivative I E TM) (h : ∀ x : M, T₂ x) (x : M) :
+    (letI := g₁; covariantHessianTwoTensor cov h x) =
+      (letI := g₂; covariantHessianTwoTensor cov h x) := by
+  unfold covariantHessianTwoTensor
+  rw [covariantThreeTensorCovariantDerivative_metric_independent g₁ g₂ cov,
+    covariantTwoTensorCovariantDerivative_metric_independent g₁ g₂ cov]
+
+/-- An explicitly chosen metric traces the Hessian against its inverse local Gram matrix. -/
+theorem connectionLaplacianWith_eq_sum_localFrame_inverseGram
+    (g : Bundle.ContMDiffRiemannianMetric I 2 E TM)
+    (cov : CovariantDerivative I E TM) (h : ∀ x : M, T₂ x)
+    (e : Trivialization E (TotalSpace.proj : TotalSpace E TM → M))
+    [MemTrivializationAtlas e]
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℝ E) {x : M} (hx : x ∈ e.baseSet) :
+    connectionLaplacianWith (I := I) g cov h x =
+      ∑ i : ι, ∑ j : ι,
+        localFrameInverseGramMatrixWith (I := I) g e b x i j •
+          covariantHessianTwoTensor cov h x
+            (e.localFrame b i x) (e.localFrame b j x) := by
+  let chosenMetric : Bundle.RiemannianBundle TM := ⟨g.toRiemannianMetric⟩
+  letI := chosenMetric
+  have htrace := connectionLaplacian_eq_sum_localFrame_inverseGram
+    (I := I) (E := E) cov h e b hx
+  have hmetric := covariantHessianTwoTensor_metric_independent
+    chosenMetric ambientMetric cov h x
+  rw [hmetric] at htrace
+  exact htrace
+
 /-- **Local-frame trace freezing for the covariant Hessian.**  Tracing with
 `g` equals the trace with the fixed metric `g₀`, plus the inverse-Gram
 difference contracted against the unchanged covariant Hessian. -/
@@ -80,30 +137,10 @@ theorem connectionLaplacianWith_eq_connectionLaplacianWith_add_sum_localFrame_in
             localFrameInverseGramMatrixWith (I := I) g₀ e b x i j) •
             covariantHessianTwoTensor cov h x
               (e.localFrame b i x) (e.localFrame b j x) := by
-  have hg :
-      connectionLaplacianWith (I := I) g cov h x =
-        ∑ i : ι, ∑ j : ι,
-          localFrameInverseGramMatrixWith (I := I) g e b x i j •
-            covariantHessianTwoTensor cov h x
-              (e.localFrame b i x) (e.localFrame b j x) := by
-    letI : Bundle.RiemannianBundle TM := ⟨g.toRiemannianMetric⟩
-    simpa [connectionLaplacianWith, localFrameInverseGramMatrixWith] using
-      (connectionLaplacian_eq_sum_localFrame_inverseGram
-        (I := I) (E := E) cov h e b hx)
-  have hg₀ :
-      connectionLaplacianWith (I := I) g₀ cov h x =
-        ∑ i : ι, ∑ j : ι,
-          localFrameInverseGramMatrixWith (I := I) g₀ e b x i j •
-            covariantHessianTwoTensor cov h x
-              (e.localFrame b i x) (e.localFrame b j x) := by
-    letI : Bundle.RiemannianBundle TM := ⟨g₀.toRiemannianMetric⟩
-    simpa [connectionLaplacianWith, localFrameInverseGramMatrixWith] using
-      (connectionLaplacian_eq_sum_localFrame_inverseGram
-        (I := I) (E := E) cov h e b hx)
+  have hg := connectionLaplacianWith_eq_sum_localFrame_inverseGram g cov h e b hx
+  have hg₀ := connectionLaplacianWith_eq_sum_localFrame_inverseGram g₀ cov h e b hx
   rw [hg, hg₀]
-  simp_rw [sub_smul]
-  rw [Finset.sum_add_distrib]
-  rw [Finset.sum_sub_distrib]
+  simp_rw [sub_smul, Finset.sum_sub_distrib]
   abel
 
 /-- Pointwise scalar form of

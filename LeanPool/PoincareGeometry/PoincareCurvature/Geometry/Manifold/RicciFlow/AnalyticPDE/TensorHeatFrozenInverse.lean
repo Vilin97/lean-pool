@@ -38,6 +38,107 @@ namespace AnalyticPDE
 
 open CovariantDerivative
 
+private theorem value_spatialFiberPostcomp
+    {X Y V W : Type*}
+    [NormedAddCommGroup X] [NormedSpace ℝ X]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+    [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [NormedAddCommGroup W] [NormedSpace ℝ W]
+    {t₀ T α : ℝ} (hα : 0 ≤ α) (L : Y →L[ℝ] X) (B : V →L[ℝ] W)
+    (u : FiniteParabolicC2AlphaBanach X V t₀ T α)
+    (z : ℝ × Y) (hz : z ∈ parabolicFiniteCylinder Y t₀ T) :
+    FiniteParabolicC2AlphaBanach.value
+        (FiniteParabolicC2AlphaBanach.spatialPullbackL hα L
+          (FiniteParabolicC2AlphaBanach.fiberPostcompL B u)) z =
+      B (FiniteParabolicC2AlphaBanach.value u (parabolicSpatialLinearMapBetween L z)) := by
+  rw [FiniteParabolicC2AlphaBanach.value_spatialPullbackL hα L _ z hz]
+  exact FiniteParabolicC2AlphaBanach.value_fiberPostcompL B u _
+    (parabolicSpatialLinearMapBetween_mapsTo L t₀ T hz)
+
+private theorem timeDeriv_spatialFiberPostcomp
+    {X Y V W : Type*}
+    [NormedAddCommGroup X] [NormedSpace ℝ X]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+    [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [NormedAddCommGroup W] [NormedSpace ℝ W]
+    {t₀ T α : ℝ} (hα : 0 ≤ α) (L : Y →L[ℝ] X) (B : V →L[ℝ] W)
+    (u : FiniteParabolicC2AlphaBanach X V t₀ T α)
+    (z : ℝ × Y) (hz : z ∈ parabolicFiniteCylinder Y t₀ T) :
+    FiniteParabolicC2AlphaBanach.timeDeriv
+        (FiniteParabolicC2AlphaBanach.spatialPullbackL hα L
+          (FiniteParabolicC2AlphaBanach.fiberPostcompL B u)) z =
+      B (FiniteParabolicC2AlphaBanach.timeDeriv u (parabolicSpatialLinearMapBetween L z)) := by
+  rw [FiniteParabolicC2AlphaBanach.timeDeriv_spatialPullbackL hα L _ z hz]
+  exact FiniteParabolicC2AlphaBanach.timeDeriv_fiberPostcompL B u _
+    (parabolicSpatialLinearMapBetween_mapsTo L t₀ T hz)
+
+private theorem spaceSecondDeriv_spatialFiberPostcomp
+    {X Y V W : Type*}
+    [NormedAddCommGroup X] [NormedSpace ℝ X]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+    [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [NormedAddCommGroup W] [NormedSpace ℝ W]
+    {t₀ T α : ℝ} (hα : 0 ≤ α) (L : Y →L[ℝ] X) (B : V →L[ℝ] W)
+    (u : FiniteParabolicC2AlphaBanach X V t₀ T α)
+    (z : ℝ × Y) (hz : z ∈ parabolicFiniteCylinder Y t₀ T) (v w : Y) :
+    FiniteParabolicC2AlphaBanach.spaceSecondDeriv
+        (FiniteParabolicC2AlphaBanach.spatialPullbackL hα L
+          (FiniteParabolicC2AlphaBanach.fiberPostcompL B u)) z v w =
+      B (FiniteParabolicC2AlphaBanach.spaceSecondDeriv u
+        (parabolicSpatialLinearMapBetween L z) (L v) (L w)) := by
+  rw [FiniteParabolicC2AlphaBanach.spaceSecondDeriv_spatialPullbackL hα L _ z hz]
+  simp only [pullbackSecondDerivativeL_apply]
+  rw [FiniteParabolicC2AlphaBanach.spaceSecondDeriv_fiberPostcompL B u _
+    (parabolicSpatialLinearMapBetween_mapsTo L t₀ T hz)]
+  rfl
+
+private theorem spaceSecondDeriv_spatialFiberPostcomp_clm
+    {X Y V W : Type*}
+    [NormedAddCommGroup X] [NormedSpace ℝ X]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+    [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [NormedAddCommGroup W] [NormedSpace ℝ W]
+    {t₀ T α : ℝ} (hα : 0 ≤ α) (L : Y →L[ℝ] X) (B : V →L[ℝ] W)
+    (u : FiniteParabolicC2AlphaBanach X V t₀ T α)
+    (z : ℝ × Y) (hz : z ∈ parabolicFiniteCylinder Y t₀ T) :
+    FiniteParabolicC2AlphaBanach.spaceSecondDeriv
+        (FiniteParabolicC2AlphaBanach.spatialPullbackL hα L
+          (FiniteParabolicC2AlphaBanach.fiberPostcompL B u)) z =
+      pullbackSecondDerivativeL L (postcomposeSecondDerivativeL B
+        (FiniteParabolicC2AlphaBanach.spaceSecondDeriv u
+          (parabolicSpatialLinearMapBetween L z))) := by
+  rw [FiniteParabolicC2AlphaBanach.spaceSecondDeriv_spatialPullbackL hα L _ z hz,
+    FiniteParabolicC2AlphaBanach.spaceSecondDeriv_fiberPostcompL B u _
+      (parabolicSpatialLinearMapBetween_mapsTo L t₀ T hz)]
+
+private theorem euclideanTrace_postcompose {V W : Type*}
+    [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [NormedAddCommGroup W] [NormedSpace ℝ W]
+    (n : ℕ) (B : V →L[ℝ] W)
+    (D : (Fin n → ℝ) →L[ℝ] (Fin n → ℝ) →L[ℝ] V) :
+    euclideanVectorBilinearTraceCLM n W (postcomposeSecondDerivativeL B D) =
+      B (∑ k : Fin n, D (Pi.single k 1) (Pi.single k 1)) := by
+  rw [euclideanVectorBilinearTraceCLM_apply]
+  simp_rw [postcomposeSecondDerivativeL_apply]
+  rw [map_sum]
+
+private theorem matrixZeroInitialOperator_cauchy {n d : ℕ} {t₀ T α : ℝ}
+    (hT : t₀ < T) (hα : 0 < α) (hα1 : α < 1)
+    (q : ParabolicC0AlphaBanach (Fin n → ℝ) (Fin d → Fin d → ℝ) α Set.univ)
+    (z : ℝ × (Fin n → ℝ)) (hz : z ∈ parabolicFiniteCylinder (Fin n → ℝ) t₀ T) :
+    FiniteParabolicC2AlphaBanach.timeDeriv (matrixZeroInitialOperator hT hα hα1 q) z -
+        (∑ k : Fin n, FiniteParabolicC2AlphaBanach.spaceSecondDeriv
+          (matrixZeroInitialOperator hT hα hα1 q) z (Pi.single k 1) (Pi.single k 1)) =
+      ParabolicC0AlphaBanach.evalCLM z (Set.mem_univ _) q := by
+  have ht : z.1 ∈ Set.Ioc t₀ T := by
+    simpa [parabolicFiniteCylinder] using hz
+  have hheat := matrixZeroInitialSolution_heatEquation hT hα hα1 q ht z.2
+  change FiniteParabolicC2AlphaBanach.timeDeriv (matrixZeroInitialSolution hT hα hα1 q) z -
+      (∑ k : Fin n, FiniteParabolicC2AlphaBanach.spaceSecondDeriv
+        (matrixZeroInitialSolution hT hα hα1 q) z (Pi.single k 1) (Pi.single k 1)) = _
+  rw [hheat]
+  abel
+
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   {H : Type*} [TopologicalSpace H] {I : ModelWithCorners ℝ E H}
   {M : Type*} [TopologicalSpace M] [ChartedSpace H M]
@@ -311,15 +412,13 @@ theorem value_frozenTensorHeatZeroInitialInverseL
           (parabolicSpatialLinearMapBetween
             (chartOrthonormalSpatialEquiv
               (I := I) p x hxChart).symm.toContinuousLinearMap z)) := by
-  rw [frozenTensorHeatZeroInitialInverseL]
-  simp only [ContinuousLinearMap.comp_apply]
-  rw [FiniteParabolicC2AlphaBanach.value_spatialPullbackL
-    hα.le _ _ z hz]
-  rw [FiniteParabolicC2AlphaBanach.value_fiberPostcompL
-    (hz := parabolicSpatialLinearMapBetween_mapsTo
-      (chartOrthonormalSpatialEquiv
-        (I := I) p x hxChart).symm.toContinuousLinearMap t₀ T hz)]
-  rfl
+  simpa only [frozenTensorHeatZeroInitialInverseL, ContinuousLinearMap.comp_apply] using!
+    value_spatialFiberPostcomp hα.le
+      (chartOrthonormalSpatialEquiv (I := I) p x hxChart).symm.toContinuousLinearMap
+      (tensorCoordinateCurryEquiv d).symm.toContinuousLinearMap
+      (matrixZeroInitialOperator
+        (n := Module.finrank ℝ (TM x)) (d := d) hT hα hα1
+        (frozenTensorHeatSourceToEuclideanL (I := I) p x hxChart d hα.le q)) z hz
 
 /-- Explicit operator-norm Schauder estimate for the genuine frozen tensor
 heat inverse.  The only geometric factors are the two spatial coordinate
@@ -511,15 +610,13 @@ theorem timeDeriv_frozenTensorHeatZeroInitialInverseL
           (parabolicSpatialLinearMapBetween
             (chartOrthonormalSpatialEquiv
               (I := I) p x hxChart).symm.toContinuousLinearMap z)) := by
-  rw [frozenTensorHeatZeroInitialInverseL]
-  simp only [ContinuousLinearMap.comp_apply]
-  rw [FiniteParabolicC2AlphaBanach.timeDeriv_spatialPullbackL
-    hα.le _ _ z hz]
-  rw [FiniteParabolicC2AlphaBanach.timeDeriv_fiberPostcompL
-    (hz := parabolicSpatialLinearMapBetween_mapsTo
-      (chartOrthonormalSpatialEquiv
-        (I := I) p x hxChart).symm.toContinuousLinearMap t₀ T hz)]
-  rfl
+  simpa only [frozenTensorHeatZeroInitialInverseL, ContinuousLinearMap.comp_apply] using!
+    timeDeriv_spatialFiberPostcomp hα.le
+      (chartOrthonormalSpatialEquiv (I := I) p x hxChart).symm.toContinuousLinearMap
+      (tensorCoordinateCurryEquiv d).symm.toContinuousLinearMap
+      (matrixZeroInitialOperator
+        (n := Module.finrank ℝ (TM x)) (d := d) hT hα hα1
+        (frozenTensorHeatSourceToEuclideanL (I := I) p x hxChart d hα.le q)) z hz
 
 @[simp]
 theorem spaceSecondDeriv_frozenTensorHeatZeroInitialInverseL_apply
@@ -546,37 +643,33 @@ theorem spaceSecondDeriv_frozenTensorHeatZeroInitialInverseL_apply
             (I := I) p x hxChart).symm v)
           ((chartOrthonormalSpatialEquiv
             (I := I) p x hxChart).symm w)) := by
-  rw [frozenTensorHeatZeroInitialInverseL]
-  simp only [ContinuousLinearMap.comp_apply]
-  rw [FiniteParabolicC2AlphaBanach.spaceSecondDeriv_spatialPullbackL
-    hα.le _ _ z hz]
-  simp only [pullbackSecondDerivativeL_apply]
-  rw [FiniteParabolicC2AlphaBanach.spaceSecondDeriv_fiberPostcompL
-    (hz := parabolicSpatialLinearMapBetween_mapsTo
-      (chartOrthonormalSpatialEquiv
-        (I := I) p x hxChart).symm.toContinuousLinearMap t₀ T hz)]
-  rfl
+  simpa only [frozenTensorHeatZeroInitialInverseL, ContinuousLinearMap.comp_apply] using!
+    spaceSecondDeriv_spatialFiberPostcomp hα.le
+      (chartOrthonormalSpatialEquiv (I := I) p x hxChart).symm.toContinuousLinearMap
+      (tensorCoordinateCurryEquiv d).symm.toContinuousLinearMap
+      (matrixZeroInitialOperator
+        (n := Module.finrank ℝ (TM x)) (d := d) hT hα hα1
+        (frozenTensorHeatSourceToEuclideanL (I := I) p x hxChart d hα.le q)) z hz v w
 
 /-- **Frozen Schauder right inverse for the actual tensor-heat symbol.**
 The conjugated Duhamel operator is a bounded right inverse of
 `∂ₜ - AₓD²`; the only map on the right is restriction of the global source
 to the positive finite cylinder. -/
-theorem frozenTensorHeatCauchyL_comp_zeroInitialInverseL
+private theorem frozenTensorHeatCauchyL_zeroInitialInverseL_eval
     (p : M)
     (e : Trivialization E (TotalSpace.proj : TotalSpace E TM → M))
     [MemTrivializationAtlas e]
     (b : Module.Basis (Fin d) ℝ E) {x : M}
     (hxFrame : x ∈ e.baseSet)
     (hxChart : x ∈ (extChartAt I p).source)
-    {t₀ T α : ℝ} (hT : t₀ < T) (hα : 0 < α) (hα1 : α < 1) :
-    (frozenTensorHeatCauchyL (I := I) p e b x t₀ T α).comp
-        (frozenTensorHeatZeroInitialInverseL
-          (I := I) p x hxChart d hT hα hα1) =
-      restrictGlobalFrozenTensorSourceToFiniteL
-        (E := E) d t₀ T α := by
-  ext q
-  apply (ParabolicC0AlphaBanach.eq_iff_forall_evalCLM _ _).2
-  intro z hz
+    {t₀ T α : ℝ} (hT : t₀ < T) (hα : 0 < α) (hα1 : α < 1)
+    (q : ParabolicC0AlphaBanach E (Fin d × Fin d → ℝ) α Set.univ)
+    (z : ℝ × E) (hz : z ∈ parabolicFiniteCylinder E t₀ T) :
+    ParabolicC0AlphaBanach.evalCLM z hz
+        (frozenTensorHeatCauchyL (I := I) p e b x t₀ T α
+          (frozenTensorHeatZeroInitialInverseL (I := I) p x hxChart d hT hα hα1 q)) =
+      ParabolicC0AlphaBanach.evalCLM z hz
+        (restrictGlobalFrozenTensorSourceToFiniteL (E := E) d t₀ T α q) := by
   let n := Module.finrank ℝ (TM x)
   let N := chartOrthonormalSpatialEquiv (I := I) p x hxChart
   let C := tensorCoordinateCurryEquiv d
@@ -589,8 +682,7 @@ theorem frozenTensorHeatCauchyL_comp_zeroInitialInverseL
       N.symm.toContinuousLinearMap t₀ T hz
   have ht : z.1 ∈ Set.Ioc t₀ T := by
     simpa [parabolicFiniteCylinder] using hz
-  rw [ContinuousLinearMap.comp_apply,
-    evalCLM_frozenTensorHeatCauchyL]
+  rw [evalCLM_frozenTensorHeatCauchyL]
   rw [timeDeriv_frozenTensorHeatZeroInitialInverseL
     (I := I) p x hxChart d hT hα hα1 q z hz]
   have hD2 :
@@ -602,52 +694,19 @@ theorem frozenTensorHeatCauchyL_comp_zeroInitialInverseL
             (FiniteParabolicC2AlphaBanach.spaceSecondDeriv v
               (parabolicSpatialLinearMapBetween
                 N.symm.toContinuousLinearMap z))) := by
-    ext a b' ij
-    rw [spaceSecondDeriv_frozenTensorHeatZeroInitialInverseL_apply
-      (I := I) p x hxChart d hT hα hα1 q z hz a b']
-    rfl
+    simpa only [frozenTensorHeatZeroInitialInverseL, ContinuousLinearMap.comp_apply,
+      N, C, v, n, q'] using!
+      spaceSecondDeriv_spatialFiberPostcomp_clm hα.le
+        N.symm.toContinuousLinearMap C.symm.toContinuousLinearMap v z hz
   rw [hD2]
   rw [frozenPrincipalCoefficient_pullback_eq_euclideanTrace
     (I := I) p e b hxFrame hxChart]
-  have htrace :
-      euclideanVectorBilinearTraceCLM n (Fin d × Fin d → ℝ)
-          (postcomposeSecondDerivativeL C.symm.toContinuousLinearMap
-            (FiniteParabolicC2AlphaBanach.spaceSecondDeriv v
-              (parabolicSpatialLinearMapBetween N.symm.toContinuousLinearMap z))) =
-        C.symm
-          (∑ k : Fin n,
-            FiniteParabolicC2AlphaBanach.spaceSecondDeriv v
-              (parabolicSpatialLinearMapBetween N.symm.toContinuousLinearMap z)
-              (Pi.single k 1) (Pi.single k 1)) := by
-    rw [euclideanVectorBilinearTraceCLM_apply]
-    simp_rw [postcomposeSecondDerivativeL_apply]
-    rw [map_sum]
-    rfl
+  have htrace := euclideanTrace_postcompose n C.symm.toContinuousLinearMap
+    (FiniteParabolicC2AlphaBanach.spaceSecondDeriv v
+      (parabolicSpatialLinearMapBetween N.symm.toContinuousLinearMap z))
   rw [htrace]
-  have hheat := matrixZeroInitialSolution_heatEquation
-    (n := n) (d := d) hT hα hα1 q' ht (N.symm z.2)
-  have hcauchy :
-      FiniteParabolicC2AlphaBanach.timeDeriv v
-          (parabolicSpatialLinearMapBetween N.symm.toContinuousLinearMap z) -
-        (∑ k : Fin n,
-          FiniteParabolicC2AlphaBanach.spaceSecondDeriv v
-            (parabolicSpatialLinearMapBetween N.symm.toContinuousLinearMap z)
-            (Pi.single k 1) (Pi.single k 1)) =
-      ParabolicC0AlphaBanach.evalCLM
-        (parabolicSpatialLinearMapBetween N.symm.toContinuousLinearMap z)
-        (Set.mem_univ _) q' := by
-    dsimp [v]
-    change
-      FiniteParabolicC2AlphaBanach.timeDeriv
-          (matrixZeroInitialSolution hT hα hα1 q') (z.1, N.symm z.2) -
-        (∑ k : Fin n,
-          FiniteParabolicC2AlphaBanach.spaceSecondDeriv
-            (matrixZeroInitialSolution hT hα hα1 q') (z.1, N.symm z.2)
-            (Pi.single k 1) (Pi.single k 1)) =
-      ParabolicC0AlphaBanach.evalCLM (z.1, N.symm z.2)
-        (Set.mem_univ _) q'
-    rw [hheat]
-    abel
+  have hcauchy := matrixZeroInitialOperator_cauchy hT hα hα1 q'
+    (parabolicSpatialLinearMapBetween N.symm.toContinuousLinearMap z) hr
   calc
     C.symm
           (FiniteParabolicC2AlphaBanach.timeDeriv v
@@ -679,6 +738,26 @@ theorem frozenTensorHeatCauchyL_comp_zeroInitialInverseL
       unfold restrictGlobalFrozenTensorSourceToFiniteL
       rw [ParabolicC0AlphaBanach.evalCLM_restrictL_apply
         (Set.subset_univ _) z hz q]
+
+
+theorem frozenTensorHeatCauchyL_comp_zeroInitialInverseL
+    (p : M)
+    (e : Trivialization E (TotalSpace.proj : TotalSpace E TM → M))
+    [MemTrivializationAtlas e]
+    (b : Module.Basis (Fin d) ℝ E) {x : M}
+    (hxFrame : x ∈ e.baseSet)
+    (hxChart : x ∈ (extChartAt I p).source)
+    {t₀ T α : ℝ} (hT : t₀ < T) (hα : 0 < α) (hα1 : α < 1) :
+    (frozenTensorHeatCauchyL (I := I) p e b x t₀ T α).comp
+        (frozenTensorHeatZeroInitialInverseL
+          (I := I) p x hxChart d hT hα hα1) =
+      restrictGlobalFrozenTensorSourceToFiniteL
+        (E := E) d t₀ T α := by
+  ext q
+  apply (ParabolicC0AlphaBanach.eq_iff_forall_evalCLM _ _).2
+  intro z hz
+  exact frozenTensorHeatCauchyL_zeroInitialInverseL_eval
+    p e b hxFrame hxChart hT hα hα1 q z hz
 
 /-! ## Finite-cylinder source inverse -/
 
