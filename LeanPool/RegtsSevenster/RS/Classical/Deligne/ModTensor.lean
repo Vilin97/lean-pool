@@ -219,7 +219,7 @@ lemma actRight_natural_mod
     [BraidedCategory D]
     {M N : Mod D A} (f : M ⟶ N) :
     actRight A M.X ≫ f.hom = f.hom ▷ A ≫ actRight A N.X := by
-  haveI := f.isModHom
+  have := f.isModHom
   exact actRight_natural A M.X N.X f.hom
 
 /-- **The shuffle of two free modules**: multiply the two algebra
@@ -239,7 +239,7 @@ lemma actLeft_actRight [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (X : D) [ModObj A X] [IsCommMonObj A] :
     A ◁ actRight A X ≫ actLeft A X =
       (α_ A X A).inv ≫ actLeft A X ▷ A ≫ actRight A X := by
-  simp [actRight, actLeft_actLeft]
+  simp? [actRight, actLeft_actLeft]
   rw [← comp_whiskerRight_assoc, IsCommMonObj.mul_comm]
 
 /-- For a commutative monoid, the braided right action is
@@ -250,7 +250,7 @@ lemma actRight_actRight [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (X : D) [ModObj A X] [IsCommMonObj A] :
     actRight A X ▷ A ≫ actRight A X =
       (α_ X A A).hom ≫ X ◁ μ[A] ≫ actRight A X := by
-  simp [actRight, actLeft_actLeft]
+  simp? [actRight, actLeft_actLeft]
   rw [← comp_whiskerRight_assoc, IsCommMonObj.mul_comm]
 
 end RightAction
@@ -739,7 +739,7 @@ lemma modTensorLegM_regular_actLeft
     [BraidedCategory D] [IsCommMonObj A] (N : Mod D A) :
     modTensorLegM A (regularMod A) N ≫ actLeft A N.X =
       modTensorLegN A (regularMod A) N ≫ actLeft A N.X := by
-  show ((β_ A A).hom ≫ μ[A]) ▷ N.X ≫ actLeft A N.X =
+  change ((β_ A A).hom ≫ μ[A]) ▷ N.X ≫ actLeft A N.X =
     ((α_ A A N.X).hom ≫ A ◁ actLeft A N.X) ≫ actLeft A N.X
   rw [IsCommMonObj.mul_comm, mul_actLeft, Category.assoc]
 
@@ -749,7 +749,7 @@ lemma modTensorLegM_regular_actRight
     [BraidedCategory D] [IsCommMonObj A] (M : Mod D A) :
     modTensorLegM A M (regularMod A) ≫ actRight A M.X =
       modTensorLegN A M (regularMod A) ≫ actRight A M.X := by
-  show actRight A M.X ▷ A ≫ actRight A M.X =
+  change actRight A M.X ▷ A ≫ actRight A M.X =
     ((α_ M.X A A).hom ≫ M.X ◁ μ[A]) ≫ actRight A M.X
   rw [actRight_actRight, Category.assoc]
 
@@ -766,14 +766,14 @@ noncomputable def modTensorUnitLeft
   hom_inv_id := by
     have hM : (((λ_ A).inv ≫ η[A] ▷ A) ▷ N.X) ≫
         modTensorLegM A (regularMod A) N = 𝟙 (A ⊗ N.X) := by
-      show (((λ_ A).inv ≫ η[A] ▷ A) ▷ N.X) ≫
+      change (((λ_ A).inv ≫ η[A] ▷ A) ▷ N.X) ≫
         ((β_ A A).hom ≫ μ[A]) ▷ N.X = 𝟙 (A ⊗ N.X)
       rw [← comp_whiskerRight, IsCommMonObj.mul_comm]
       simp
     have hN : (((λ_ A).inv ≫ η[A] ▷ A) ▷ N.X) ≫
         modTensorLegN A (regularMod A) N =
           actLeft A N.X ≫ (λ_ N.X).inv ≫ η[A] ▷ N.X := by
-      show (((λ_ A).inv ≫ η[A] ▷ A) ▷ N.X) ≫
+      change (((λ_ A).inv ≫ η[A] ▷ A) ▷ N.X) ≫
         ((α_ A A N.X).hom ≫ A ◁ actLeft A N.X) =
           actLeft A N.X ≫ (λ_ N.X).inv ≫ η[A] ▷ N.X
       simp only [comp_whiskerRight, Category.assoc]
@@ -800,14 +800,14 @@ noncomputable def modTensorUnitRight
     have hM : ((ρ_ (M.X ⊗ A)).inv ≫ (M.X ⊗ A) ◁ η[A]) ≫
         modTensorLegM A M (regularMod A) =
           actRight A M.X ≫ (ρ_ M.X).inv ≫ M.X ◁ η[A] := by
-      show ((ρ_ (M.X ⊗ A)).inv ≫ (M.X ⊗ A) ◁ η[A]) ≫
+      change ((ρ_ (M.X ⊗ A)).inv ≫ (M.X ⊗ A) ◁ η[A]) ≫
         actRight A M.X ▷ A =
           actRight A M.X ≫ (ρ_ M.X).inv ≫ M.X ◁ η[A]
       rw [Category.assoc, whisker_exchange,
         ← rightUnitor_inv_naturality_assoc]
     have hN : ((ρ_ (M.X ⊗ A)).inv ≫ (M.X ⊗ A) ◁ η[A]) ≫
         modTensorLegN A M (regularMod A) = 𝟙 (M.X ⊗ A) := by
-      show ((ρ_ (M.X ⊗ A)).inv ≫ (M.X ⊗ A) ◁ η[A]) ≫
+      change ((ρ_ (M.X ⊗ A)).inv ≫ (M.X ⊗ A) ◁ η[A]) ≫
         ((α_ M.X A A).hom ≫ M.X ◁ μ[A]) = 𝟙 (M.X ⊗ A)
       simp only [Category.assoc]
       rw [associator_naturality_right_assoc, ← whiskerLeft_comp,
@@ -939,7 +939,7 @@ lemma modTensorAct_map [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
         A ◁ (f.hom ⊗ₘ g.hom) ≫ (α_ A M'.X N'.X).inv ≫
           actLeft A M'.X ▷ N'.X := by
     conv_rhs => rw [← id_tensorHom, associator_inv_naturality_assoc]
-    simp
+    simp?
     rw [← tensorHom_id (actLeft A M.X) N.X,
       ← tensorHom_id (actLeft A M'.X) N'.X,
       tensorHom_comp_tensorHom, tensorHom_comp_tensorHom]
@@ -973,12 +973,12 @@ noncomputable def modTensorMapIso
   hom := modTensorMapMod A e.hom f.hom
   inv := modTensorMapMod A e.inv f.inv
   hom_inv_id := Mod.hom_ext _ _ (by
-    show modTensorMap A e.hom f.hom ≫
+    change modTensorMap A e.hom f.hom ≫
         modTensorMap A e.inv f.inv = 𝟙 _
     rw [← modTensorMap_comp, Iso.hom_inv_id, Iso.hom_inv_id,
       modTensorMap_id])
   inv_hom_id := Mod.hom_ext _ _ (by
-    show modTensorMap A e.inv f.inv ≫
+    change modTensorMap A e.inv f.inv ≫
         modTensorMap A e.hom f.hom = 𝟙 _
     rw [← modTensorMap_comp, Iso.inv_hom_id, Iso.inv_hom_id,
       modTensorMap_id])
@@ -1006,7 +1006,7 @@ lemma actRight_restrictRegular
     haveI := ModObj.regular B
     haveI := Mod.scalarRestriction φ B
     actRight A B = B ◁ φ ≫ μ[B] := by
-  show (β_ B A).hom ≫ φ ▷ B ≫ μ[B] = B ◁ φ ≫ μ[B]
+  change (β_ B A).hom ≫ φ ▷ B ≫ μ[B] = B ◁ φ ≫ μ[B]
   rw [← BraidedCategory.braiding_naturality_right_assoc,
     IsCommMonObj.mul_comm]
 
@@ -1059,7 +1059,7 @@ noncomputable def baseChangeAct
   (baseChangeModObj φ M).smul
 
 /-- Defining equation of the `B`-action on the base change. -/
-@[reassoc (attr := simp)]
+@[simp, reassoc]
 lemma whiskerLeft_modTensorπ_baseChangeAct
     [Category.{v} D] [MonoidalCategory D] {A : D} {B : D} [MonObj A]
     [MonObj B] (φ : A ⟶ B) [IsMonHom φ] [BraidedCategory D]

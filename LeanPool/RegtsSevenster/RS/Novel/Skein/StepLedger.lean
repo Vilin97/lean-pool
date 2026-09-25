@@ -65,7 +65,7 @@ is treated as one composite move.
 
 namespace RS
 
-open scoped Classical
+
 
 namespace EdgeSubset
 

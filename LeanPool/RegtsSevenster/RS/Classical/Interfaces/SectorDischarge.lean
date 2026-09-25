@@ -37,7 +37,7 @@ namespace RS
 open CategoryTheory MonoidalCategory Category MonoidAlgebra
 open Functor.LaxMonoidal Functor.OplaxMonoidal
 
-open scoped Classical
+
 
 /-! ## Transport identification
 
@@ -68,9 +68,9 @@ private theorem transport_perm_eq {R : ℕ} (f : EdgeRankParameter R)
       (superPermAction f P n (MonoidAlgebra.of ℂ _ σ)) ≫
       (omegaPowHom f P n ≫ stdFromOmega f P e' n) =
     modelPermMap σ := by
-  letI := P.additive
-  letI := P.linear
-  letI := P.braided
+  let := P.additive
+  let := P.linear
+  let := P.braided
   -- Step 1: unfold superPermAction to isoConj(omegaPow)(ω.map(permClass σ))
   rw [superPermAction_perm]
   -- Step 2: unfold isoConj and omegaPow projections
@@ -175,10 +175,10 @@ private theorem evenSectorTrTransport_perm
     evenSectorTrTransport f P e e' n
       (evenPermRep f P n (MonoidAlgebra.of ℂ _ σ)) =
     cycleProd (fun _ => (k : ℂ)) σ := by
-  letI := P.additive
-  letI := P.linear
-  letI := P.braided
-  show (evenSectorTr k l n).comp (evenConjTransport f P e e' n)
+  let := P.additive
+  let := P.linear
+  let := P.braided
+  change (evenSectorTr k l n).comp (evenConjTransport f P e e' n)
     (evenPermRep f P n (MonoidAlgebra.of ℂ _ σ)) = _
   simp only [LinearMap.comp_apply]
   -- The argument of evenSectorTr equals (modelPermMap σ).evenMap
@@ -212,10 +212,10 @@ private theorem oddSectorTrTransport_perm
       (evenPermRep f P n (MonoidAlgebra.of ℂ _ σ)) =
     ((Equiv.Perm.sign σ : ℤ) : ℂ) *
       cycleProd (fun _ => ((2 * l : ℕ) : ℂ)) σ := by
-  letI := P.additive
-  letI := P.linear
-  letI := P.braided
-  show (oddSectorTr k l n hn).comp (evenConjTransport f P e e' n)
+  let := P.additive
+  let := P.linear
+  let := P.braided
+  change (oddSectorTr k l n hn).comp (evenConjTransport f P e e' n)
     (evenPermRep f P n (MonoidAlgebra.of ℂ _ σ)) = _
   simp only [LinearMap.comp_apply]
   have hkey : evenConjTransport f P e e' n
@@ -251,9 +251,9 @@ at every side `s' ≥ s` with `1 ≤ s`, both sector dimensions `k`
 theorem squareSectorBound_of_detPos (H : SquareBinomialDetPos) :
     SquareSectorBound := by
   intro R f P k l s hs1 e e' he'e hee' hdead
-  letI := P.additive
-  letI := P.linear
-  letI := P.braided
+  let := P.additive
+  let := P.linear
+  let := P.braided
   constructor
   · -- **k < s** via the even sector
     -- Apply sector_bound_of_dead with:

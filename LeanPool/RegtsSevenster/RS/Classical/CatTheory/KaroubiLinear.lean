@@ -43,11 +43,11 @@ noncomputable instance karoubiLinear {C : Type*} [Category C]
     [Preadditive C] [Linear ℂ C] : Linear ℂ (Karoubi C) where
   smul_comp P Q R c g h := by
     apply Karoubi.hom_ext
-    show (c • g.f) ≫ h.f = c • (g.f ≫ h.f)
+    change (c • g.f) ≫ h.f = c • (g.f ≫ h.f)
     rw [Linear.smul_comp]
   comp_smul P Q R g c h := by
     apply Karoubi.hom_ext
-    show g.f ≫ (c • h.f) = c • (g.f ≫ h.f)
+    change g.f ≫ (c • h.f) = c • (g.f ≫ h.f)
     rw [Linear.comp_smul]
 
 /-- The underlying-morphism map is complex linear. -/

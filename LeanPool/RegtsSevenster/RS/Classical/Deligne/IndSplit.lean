@@ -40,8 +40,8 @@ theorem jtChar_conj (μ : YoungDiagram) (τ π : Equiv.Perm (Fin μ.card)) :
   refine Finset.sum_congr rfl fun σ _ => ?_
   congr 1
   by_cases hp : ∀ i, 0 ≤ jtSigned μ σ i
-  · rw [if_pos hp, if_pos hp, colourChar_conj]
-  · rw [if_neg hp, if_neg hp]
+  · rw [ite_eq_left hp, ite_eq_left hp, colourChar_conj]
+  · rw [ite_eq_right hp, ite_eq_right hp]
 
 /-- **Transport independence of the recast Jacobi–Trudi character**:
 relabelling a permutation of an abstract carrier into the symmetric
@@ -132,7 +132,7 @@ theorem indMult_exists_nat {a b : ℕ} (lam : Shape (a + b))
       (Equiv.Perm (Fin a) × Equiv.Perm (Fin b)) : ℂ)) ≠ 0 := by
     rw [Nat.card_eq_fintype_card]
     exact_mod_cast Fintype.card_ne_zero
-  haveI : Invertible ((Nat.card
+  have : Invertible ((Nat.card
       (Equiv.Perm (Fin a) × Equiv.Perm (Fin b)) : ℂ)) :=
     invertibleOfNonzero hcard0
   have h := Representation.card_inv_mul_sum_char_mul_char_eq_finrank

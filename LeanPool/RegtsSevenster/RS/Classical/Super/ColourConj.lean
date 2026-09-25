@@ -61,11 +61,11 @@ theorem toColour_comp (n : ℕ)
       toColour n g₁ ≫ toColour n g₂ := by
   refine SuperVect.Hom.ext ?_ ?_
   · refine LinearMap.ext (fun x => ?_)
-    show (colourPowerEquiv k ℓ n).evenEquiv
+    change (colourPowerEquiv k ℓ n).evenEquiv
       ((g₂ : SuperVect.Hom _ _).evenMap
         ((g₁ : SuperVect.Hom _ _).evenMap
           ((colourPowerEquiv k ℓ n).evenEquiv.symm x))) = _
-    show _ = (colourPowerEquiv k ℓ n).evenEquiv
+    change _ = (colourPowerEquiv k ℓ n).evenEquiv
       ((g₂ : SuperVect.Hom _ _).evenMap
         ((colourPowerEquiv k ℓ n).evenEquiv.symm
           ((colourPowerEquiv k ℓ n).evenEquiv
@@ -73,11 +73,11 @@ theorem toColour_comp (n : ℕ)
               ((colourPowerEquiv k ℓ n).evenEquiv.symm x)))))
     rw [(colourPowerEquiv k ℓ n).evenEquiv.symm_apply_apply]
   · refine LinearMap.ext (fun x => ?_)
-    show (colourPowerEquiv k ℓ n).oddEquiv
+    change (colourPowerEquiv k ℓ n).oddEquiv
       ((g₂ : SuperVect.Hom _ _).oddMap
         ((g₁ : SuperVect.Hom _ _).oddMap
           ((colourPowerEquiv k ℓ n).oddEquiv.symm x))) = _
-    show _ = (colourPowerEquiv k ℓ n).oddEquiv
+    change _ = (colourPowerEquiv k ℓ n).oddEquiv
       ((g₂ : SuperVect.Hom _ _).oddMap
         ((colourPowerEquiv k ℓ n).oddEquiv.symm
           ((colourPowerEquiv k ℓ n).oddEquiv
@@ -90,11 +90,11 @@ theorem toColour_id (n : ℕ) :
     toColour (k := k) (ℓ := ℓ) n (𝟙 _) = 𝟙 _ := by
   refine SuperVect.Hom.ext ?_ ?_
   · refine LinearMap.ext (fun x => ?_)
-    show (colourPowerEquiv k ℓ n).evenEquiv
+    change (colourPowerEquiv k ℓ n).evenEquiv
       ((colourPowerEquiv k ℓ n).evenEquiv.symm x) = x
     rw [(colourPowerEquiv k ℓ n).evenEquiv.apply_symm_apply]
   · refine LinearMap.ext (fun x => ?_)
-    show (colourPowerEquiv k ℓ n).oddEquiv
+    change (colourPowerEquiv k ℓ n).oddEquiv
       ((colourPowerEquiv k ℓ n).oddEquiv.symm x) = x
     rw [(colourPowerEquiv k ℓ n).oddEquiv.apply_symm_apply]
 

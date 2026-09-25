@@ -72,10 +72,10 @@ instance fibreFun_additive
     rw [fibreFun_map, fibreFun_map, fibreFun_map]
     refine SuperCommAlgebra.Mod.Hom.ext ?_ ?_ <;>
       refine LinearMap.ext fun m => ?_
-    · show m ≫ (R ◁ (f + g)) = m ≫ (R ◁ f) + m ≫ (R ◁ g)
+    · change m ≫ (R ◁ (f + g)) = m ≫ (R ◁ f) + m ≫ (R ◁ g)
       rw [MonoidalPreadditive.whiskerLeft_add]
       exact Preadditive.comp_add _ _ _ _ _ _
-    · show m ≫ (R ◁ (f + g)) = m ≫ (R ◁ f) + m ≫ (R ◁ g)
+    · change m ≫ (R ◁ (f + g)) = m ≫ (R ◁ f) + m ≫ (R ◁ g)
       rw [MonoidalPreadditive.whiskerLeft_add]
       exact Preadditive.comp_add _ _ _ _ _ _
 

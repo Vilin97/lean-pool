@@ -96,7 +96,7 @@ theorem isIdeal_bot [SmallCategory C] [MonoidalCategory C] [Abelian C]
   have hz : IsZero (Subobject.underlying.obj (⊥ : Subobject 𝔸)) :=
     IsZero.of_iso (isZero_zero (Ind C)) Subobject.botCoeIsoZero
   have h : (⊥ : Subobject 𝔸).arrow = 0 := hz.eq_zero_of_src _
-  show (⊥ : Subobject 𝔸).Factors _
+  change (⊥ : Subobject 𝔸).Factors _
   rw [Subobject.bot_factors_iff_zero, h,
     MonoidalPreadditive.whiskerLeft_zero, zero_comp]
 
@@ -126,8 +126,8 @@ theorem isProper_iff_ne_top [SmallCategory C] [MonoidalCategory C]
         MonObj.mul_one]
     have hs : ((ρ_ 𝔸).inv ≫ (𝔸 ◁ a) ≫ b) ≫ I.arrow = 𝟙 𝔸 := by
       rw [Category.assoc, Category.assoc, hb, key, Iso.inv_hom_id]
-    haveI : IsSplitEpi I.arrow := IsSplitEpi.mk' ⟨_, hs⟩
-    haveI : IsIso I.arrow := isIso_of_mono_of_isSplitEpi _
+    have : IsSplitEpi I.arrow := IsSplitEpi.mk' ⟨_, hs⟩
+    have : IsIso I.arrow := isIso_of_mono_of_isSplitEpi _
     exact hne (Subobject.eq_top_of_isIso_arrow I)
 
 /-- **The zero ideal is proper as soon as the unit is nonzero.** -/
@@ -218,15 +218,15 @@ theorem isFiltered_subIndex [SmallCategory C] [Abelian C]
     (hne : s.Nonempty) (hdir : DirectedOn (· ≤ ·) s) :
     IsFiltered (SubIndex s) := by
   obtain ⟨x, hx⟩ := hne
-  haveI : Nonempty (SubIndex s) := ⟨equivShrink ↥s ⟨x, hx⟩⟩
-  haveI : IsDirectedOrder (SubIndex s) := by
+  have : Nonempty (SubIndex s) := ⟨equivShrink ↥s ⟨x, hx⟩⟩
+  have : IsDirectedOrder (SubIndex s) := by
     refine ⟨fun j k => ?_⟩
     obtain ⟨z, hz, h₁, h₂⟩ := hdir _ (SubIndex.val_mem j) _
       (SubIndex.val_mem k)
     refine ⟨equivShrink ↥s ⟨z, hz⟩, ?_, ?_⟩
-    · show SubIndex.val j ≤ SubIndex.val _
+    · change SubIndex.val j ≤ SubIndex.val _
       rw [SubIndex.val_index hz]; exact h₁
-    · show SubIndex.val k ≤ SubIndex.val _
+    · change SubIndex.val k ≤ SubIndex.val _
       rw [SubIndex.val_index hz]; exact h₂
   exact isFiltered_of_directed_le_nonempty _
 
@@ -288,7 +288,7 @@ theorem ι_constColimitIso [SmallCategory C]
     [IsFiltered J] (A : Ind C) (j : J) :
     colimit.ι ((Functor.const J).obj A) j ≫ (constColimitIso A).hom
       = 𝟙 A := by
-  haveI : IsConnected J := IsFiltered.isConnected J
+  have : IsConnected J := IsFiltered.isConnected J
   exact Eq.trans (IsColimit.comp_coconePointUniqueUpToIso_hom _ _ _)
     rfl
 
@@ -298,10 +298,10 @@ the comparison morphism of `RS.subUnionHom` is a monomorphism. -/
 instance mono_subUnionHom [SmallCategory C] [Abelian C]
     {A : Ind C} (s : Set (Subobject A))
     [IsFiltered (SubIndex s)] : Mono (subUnionHom s) := by
-  haveI : ∀ j, Mono ((subCocone s).ι.app j) := fun j =>
+  have : ∀ j, Mono ((subCocone s).ι.app j) := fun j =>
     inferInstanceAs (Mono (SubIndex.val j).arrow)
-  haveI : Mono ((subCocone s).ι) := NatTrans.mono_of_mono_app _
-  haveI : Mono (colimMap ((subCocone s).ι)) := by
+  have : Mono ((subCocone s).ι) := NatTrans.mono_of_mono_app _
+  have : Mono (colimMap ((subCocone s).ι)) := by
     rw [colimMap_eq]
     exact (colim (J := SubIndex s) (C := Ind C)).map_mono _
   have hd : subUnionHom s =
@@ -341,7 +341,7 @@ theorem exists_ub_of_directed
     (hpr : ∀ I ∈ c, IsProper 𝔸 I) :
     ∃ ub : Subobject 𝔸, IsIdeal 𝔸 ub ∧ IsProper 𝔸 ub ∧
       ∀ I ∈ c, I ≤ ub := by
-  haveI := isFiltered_subIndex hne hdir
+  have := isFiltered_subIndex hne hdir
   have harrow : (Subobject.mk (subUnionHom c)).arrow =
       (Subobject.underlyingIso (subUnionHom c)).hom ≫ subUnionHom c :=
     (Iso.inv_comp_eq _).1 (Subobject.underlyingIso_arrow _)
@@ -366,7 +366,7 @@ theorem exists_ub_of_directed
         (fun t => (Subobject.mk (subUnionHom c)).Factors t) hj) ?_
       exact Subobject.factors_of_le _ (hlej j)
         (hid _ (SubIndex.val_mem j))
-    haveI : Epi
+    have : Epi
         (𝔸 ◁ (Subobject.underlyingIso (subUnionHom c)).inv) :=
       inferInstanceAs (Epi ((tensorLeft 𝔸).map _))
     have hgoal : (𝔸 ◁ (Subobject.underlyingIso (subUnionHom c)).inv)
@@ -439,7 +439,7 @@ source along an epimorphism, they satisfy the algebra laws. -/
   one := o
   mul := m
   one_mul := by
-    haveI : Epi (𝟙_ (Ind C) ◁ p) :=
+    have : Epi (𝟙_ (Ind C) ◁ p) :=
       inferInstanceAs (Epi ((tensorLeft _).map p))
     have h₁ : (𝟙_ (Ind C) ◁ p) ≫ (o ▷ B) = (η[A] ▷ A) ≫ (p ⊗ₘ p) := by
       refine Eq.trans (tensorHom_def' o p).symm ?_
@@ -449,7 +449,7 @@ source along an epimorphism, they satisfy the algebra laws. -/
     rw [← Category.assoc, h₁, Category.assoc, hm, ← Category.assoc,
       MonObj.one_mul, leftUnitor_naturality]
   mul_one := by
-    haveI : Epi (p ▷ 𝟙_ (Ind C)) :=
+    have : Epi (p ▷ 𝟙_ (Ind C)) :=
       inferInstanceAs (Epi ((tensorRight _).map p))
     have h₁ : (p ▷ 𝟙_ (Ind C)) ≫ (B ◁ o) = (A ◁ η[A]) ≫ (p ⊗ₘ p) := by
       refine Eq.trans (tensorHom_def p o).symm ?_
@@ -553,7 +553,7 @@ theorem whiskerRight_quotMulAux
     (𝔸 : Ind C) [MonObj 𝔸]
     [IsCommMonObj 𝔸] (𝔪 : Subobject 𝔸) (h𝔪 : IsIdeal 𝔸 𝔪) :
     (𝔪.arrow ▷ cokernel 𝔪.arrow) ≫ quotMulAux 𝔸 𝔪 h𝔪 = 0 := by
-  haveI : Epi ((𝔪 : Ind C) ◁ cokernel.π 𝔪.arrow) :=
+  have : Epi ((𝔪 : Ind C) ◁ cokernel.π 𝔪.arrow) :=
     inferInstanceAs (Epi ((tensorLeft _).map _))
   refine zero_of_epi_comp ((𝔪 : Ind C) ◁ cokernel.π 𝔪.arrow) ?_
   rw [← Category.assoc, whisker_exchange, Category.assoc,
@@ -651,13 +651,13 @@ theorem exists_simple_quotient
       η[𝔹] ≠ 0 ∧ Epi π ∧ IsMonHom π ∧
       (∀ I : Subobject 𝔹, IsIdeal 𝔹 I → I = ⊥ ∨ I = ⊤) := by
   obtain ⟨𝔪, hid, hpr, hmax⟩ := exists_maximal_ideal 𝔸 hne
-  letI : MonObj (cokernel 𝔪.arrow) := quotMonObj 𝔸 𝔪 hid
+  let : MonObj (cokernel 𝔪.arrow) := quotMonObj 𝔸 𝔪 hid
   have hmul : (cokernel.π 𝔪.arrow ⊗ₘ cokernel.π 𝔪.arrow) ≫
       μ[cokernel 𝔪.arrow] = μ[𝔸] ≫ cokernel.π 𝔪.arrow :=
     tensorHom_π_quotMul 𝔸 𝔪 hid
-  letI : IsCommMonObj (cokernel 𝔪.arrow) :=
+  let : IsCommMonObj (cokernel 𝔪.arrow) :=
     isCommMonObj_of_epi (cokernel.π 𝔪.arrow) hmul
-  haveI : IsMonHom (cokernel.π 𝔪.arrow) := ⟨rfl, hmul.symm⟩
+  have : IsMonHom (cokernel.π 𝔪.arrow) := ⟨rfl, hmul.symm⟩
   refine ⟨cokernel 𝔪.arrow, inferInstance, inferInstance,
     cokernel.π 𝔪.arrow, ?_, inferInstance, inferInstance, ?_⟩
   · intro h0
@@ -715,7 +715,7 @@ theorem exists_simple_quotient
           cokernel.π 𝔪.arrow = 0 := by
         rw [hsnd, Category.assoc, Category.assoc,
           cokernel.condition, comp_zero, comp_zero]
-      haveI : Epi (pullback.fst I.arrow (cokernel.π 𝔪.arrow)) :=
+      have : Epi (pullback.fst I.arrow (cokernel.π 𝔪.arrow)) :=
         Abelian.epi_pullback_of_epi_g _ _
       have hIarrow : I.arrow = 0 := by
         refine zero_of_epi_comp

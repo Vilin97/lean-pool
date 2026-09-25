@@ -214,7 +214,7 @@ noncomputable def freeModAdjunction
       homEquiv_naturality_left_symm := by
         intro X' X M u g
         apply Mod.Hom.ext
-        show A ◁ (u ≫ g) ≫ actLeft A M.X =
+        change A ◁ (u ≫ g) ≫ actLeft A M.X =
           A ◁ u ≫ A ◁ g ≫ actLeft A M.X
         erw [MonoidalCategory.whiskerLeft_comp, Category.assoc]
       homEquiv_naturality_right := by

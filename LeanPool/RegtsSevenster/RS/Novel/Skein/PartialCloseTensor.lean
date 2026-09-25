@@ -55,18 +55,18 @@ noncomputable def disjUnionShuffle {α β γ : Type}
   vertexEquiv := sumShuffleEquiv W₂.Vertex W₁.Vertex W₃.Vertex
   attach_comm := fun f => by
     rcases f with f | (f | f)
-    · show ((((W₁.attach f).map Sum.inl Sum.inl).map
+    · change ((((W₁.attach f).map Sum.inl Sum.inl).map
           Sum.inr Sum.inr).map id (sumShuffleEquiv α β γ)) =
         (((W₁.attach f).map Sum.inl Sum.inl).map
           (sumShuffleEquiv W₂.Vertex W₁.Vertex W₃.Vertex) id)
       rcases W₁.attach f with v | ℓ <;> rfl
-    · show (((W₂.attach f).map Sum.inl Sum.inl).map id
+    · change (((W₂.attach f).map Sum.inl Sum.inl).map id
           (sumShuffleEquiv α β γ)) =
         ((((W₂.attach f).map Sum.inl Sum.inl).map
           Sum.inr Sum.inr).map
           (sumShuffleEquiv W₂.Vertex W₁.Vertex W₃.Vertex) id)
       rcases W₂.attach f with v | ℓ <;> rfl
-    · show ((((W₃.attach f).map Sum.inr Sum.inr).map
+    · change ((((W₃.attach f).map Sum.inr Sum.inr).map
           Sum.inr Sum.inr).map id (sumShuffleEquiv α β γ)) =
         ((((W₃.attach f).map Sum.inr Sum.inr).map
           Sum.inr Sum.inr).map
@@ -75,7 +75,7 @@ noncomputable def disjUnionShuffle {α β γ : Type}
   pairing_comm := fun f => by
     rcases f with f | (f | f) <;> rfl
   circles_eq := by
-    show W₁.circles + (W₂.circles + W₃.circles) =
+    change W₁.circles + (W₂.circles + W₃.circles) =
       W₂.circles + (W₁.circles + W₃.circles)
     omega
 
@@ -115,7 +115,7 @@ private theorem pc_tensor_ground_v_aux (s t u v : ℕ) :
     simp only [List.map_cons, Fragment.mapPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext rfl ?_)
       (pc_tensor_ground_v_aux s t u v l)
-    show Sum.inr ((interleaveEquiv s t u v).symm
+    change Sum.inr ((interleaveEquiv s t u v).symm
       ⟨(s + u) + (t + l'.val), by have := l'.isLt; omega⟩) = _
     refine congrArg Sum.inr ?_
     rw [show (⟨(s + u) + (t + l'.val),
@@ -143,7 +143,7 @@ private theorem pc_tensor_ground_u_aux (s t u v : ℕ) :
     simp only [List.map_cons, Fragment.mapPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext rfl ?_)
       (pc_tensor_ground_u_aux s t u v l)
-    show Sum.inr ((interleaveEquiv s t u v).symm
+    change Sum.inr ((interleaveEquiv s t u v).symm
       ⟨s + j.val, by have := j.isLt; omega⟩) = _
     refine congrArg Sum.inr ?_
     rw [show (⟨s + j.val, by have := j.isLt; omega⟩ :
@@ -316,6 +316,10 @@ noncomputable def pcTensorQs (s t u v : ℕ) :=
   Fragment.mapPairs (pcTensorPeel s t u v).symm
     (zClosePairs s t u v)
 
+private theorem pcTensorQs_wf (s t u v : ℕ) :
+    Fragment.PairsWF (pcTensorQs s t u v) :=
+  Fragment.mapPairs_wf (pcTensorPeel s t u v).symm _ (zClosePairs_wf s t u v)
+
 /-- The composed label identification of the partial closure of a
 tensor. -/
 noncomputable def pcTensorLabel (s t u v : ℕ) :
@@ -351,7 +355,7 @@ noncomputable def pcTensorNormal {s t u v : ℕ}
   let eP := pcTensorPeel s t u v
   let qsP := pcTensorQs s t u v
   have wfqsP : Fragment.PairsWF qsP :=
-    Fragment.mapPairs_wf eP.symm _ (zClosePairs_wf s t u v)
+    pcTensorQs_wf s t u v
   let shufE := sumShuffleEquiv (Fin (u + v)) (Fin (s + t))
     (Fin (u + v))
   let ps₂ := Fragment.inrPairs (α := Fin (s + t))
@@ -449,8 +453,8 @@ theorem pcSurvEquiv_val_low (s t u v : ℕ)
     (hb : b.val < s) :
     pcSurvEquiv s t u v ⟨Sum.inr b, hsurv⟩ =
       ⟨b.val, by omega⟩ := by
-  show (if h : b.val < s then _ else _ : Fin (s + t)) = _
-  rw [dif_pos hb]
+  change (if h : b.val < s then _ else _ : Fin (s + t)) = _
+  rw [dite_eq_left hb]
 
 /-- The forward survivor identification on high labels. -/
 theorem pcSurvEquiv_val_high (s t u v : ℕ)
@@ -462,8 +466,8 @@ theorem pcSurvEquiv_val_high (s t u v : ℕ)
     (h2 : b.val < (s + u) + t) :
     pcSurvEquiv s t u v ⟨Sum.inr b, hsurv⟩ =
       ⟨s + (b.val - (s + u)), by omega⟩ := by
-  show (if h : b.val < s then _ else _ : Fin (s + t)) = _
-  rw [dif_neg hb]
+  change (if h : b.val < s then _ else _ : Fin (s + t)) = _
+  rw [dite_eq_right hb]
 
 /-- The composed label is the clean label: the live value chase
 on the surviving `x`-labels. -/
@@ -486,14 +490,14 @@ theorem pcTensorLabel_eq (s t u v : ℕ) :
         (forall_ne_iff_not_mem_flat _ _).mpr
           ((pcSurv_iff s t u v _).mpr
             (Or.inl (by rw [hval]; exact hx)))
-      show pcSurvEquiv s t u v
+      change pcSurvEquiv s t u v
         ⟨Sum.inr (interleaveEquiv s t u v (Sum.inl x')),
           hsurv⟩ = _
       rw [pcSurvEquiv_val_low s t u v _ _ (by rw [hval]; exact hx)]
       exact Fin.ext hval
     · have hk : x'.val - s < t := by have := x'.isLt; omega
       have hx2 : x' = Fin.natAdd s ⟨x'.val - s, hk⟩ :=
-        Fin.ext (by show x'.val = s + (x'.val - s); omega)
+        Fin.ext (by change x'.val = s + (x'.val - s); omega)
       have h1 : interleaveEquiv s t u v (Sum.inl x') =
           Fin.natAdd (s + u) (Fin.castAdd v ⟨x'.val - s, hk⟩) := by
         conv_lhs => rw [hx2]
@@ -509,14 +513,14 @@ theorem pcTensorLabel_eq (s t u v : ℕ) :
           ((pcSurv_iff s t u v _).mpr
             (Or.inr ⟨by rw [hval]; omega,
               by rw [hval]; have := x'.isLt; omega⟩))
-      show pcSurvEquiv s t u v
+      change pcSurvEquiv s t u v
         ⟨Sum.inr (interleaveEquiv s t u v (Sum.inl x')),
           hsurv⟩ = _
       rw [pcSurvEquiv_val_high s t u v _ _
         (by rw [hval]; omega) (by rw [hval]; omega)
         (by rw [hval]; have := x'.isLt; omega)]
       refine Fin.ext ?_
-      show s + ((interleaveEquiv s t u v (Sum.inl x')).val -
+      change s + ((interleaveEquiv s t u v (Sum.inl x')).val -
         (s + u)) = x'.val
       rw [hval]
       omega

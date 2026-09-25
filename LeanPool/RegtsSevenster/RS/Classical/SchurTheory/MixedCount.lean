@@ -65,7 +65,7 @@ theorem colourChar_viaEmbedding {m n N : ℕ} (h : m ≤ n)
         ∀ a, fibreCard p.1.1 a +
           (univ.filter (fun i : {i : Fin n // m ≤ (i : ℕ)} => p.2 i = a)).card =
             α a} := by
-    show (univ.filter _).card = _
+    change (univ.filter _).card = _
     rw [← Fintype.card_subtype]
     exact Fintype.card_congr main_equiv
   rw [lhs_eq, Fintype.card_subtype]
@@ -99,7 +99,7 @@ theorem colourChar_viaEmbedding {m n N : ℕ} (h : m ≤ n)
   refine sum_congr rfl fun w _ => ?_
   by_cases hw : ∀ a, w a ≤ α a
   · -- Case w ≤ α: factor the fibre as product of independent filters
-    rw [if_pos hw]
+    rw [ite_eq_left hw]
     -- Rewrite fibre as product
     have fibre_eq :
         S.filter (fun p => cmap p = w) =
@@ -127,7 +127,7 @@ theorem colourChar_viaEmbedding {m n N : ℕ} (h : m ≤ n)
             (fun g => ∀ a, fibreCard g a = α a - w a)).trans
           (Equiv.subtypeEquivRight (fun _ => And.comm)))
   · -- Case w ≰ α: fibre is empty
-    rw [if_neg hw, card_eq_zero, filter_eq_empty_iff]
+    rw [ite_eq_right hw, card_eq_zero, filter_eq_empty_iff]
     intro ⟨g, t⟩ hp hcmap_eq
     rw [S_def] at hp
     simp only [mem_filter, mem_univ, true_and] at hp

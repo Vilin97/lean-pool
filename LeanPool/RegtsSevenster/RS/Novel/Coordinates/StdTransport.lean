@@ -69,13 +69,13 @@ theorem stdFromOmega_stdToOmega
         P.ω.obj (SkeinObj.mk m) ⟶ P.ω.obj (SkeinObj.mk m)) =
         𝟙 (P.ω.obj (SkeinObj.mk m))
   | 0 => by
-    letI := P.braided
-    show (η P.ω ≫ ε P.ω : P.ω.obj (SkeinObj.mk 0) ⟶
+    let := P.braided
+    change (η P.ω ≫ ε P.ω : P.ω.obj (SkeinObj.mk 0) ⟶
       P.ω.obj (SkeinObj.mk 0)) = 𝟙 _
     exact Functor.Monoidal.η_ε P.ω
   | m + 1 => by
-    letI := P.braided
-    show (δ P.ω (SkeinObj.mk m) (SkeinObj.mk 1) ≫
+    let := P.braided
+    change (δ P.ω (SkeinObj.mk m) (SkeinObj.mk 1) ≫
         (stdFromOmega f P e' m ⊗ₘ e')) ≫
       ((stdToOmega f P e m ⊗ₘ e) ≫
         (μ P.ω (SkeinObj.mk m) (SkeinObj.mk 1) :
@@ -99,13 +99,13 @@ theorem stdToOmega_stdFromOmega
           superPow (stdSuperPair k ℓ) m) =
         𝟙 (superPow (stdSuperPair k ℓ) m)
   | 0 => by
-    letI := P.braided
-    show (ε P.ω ≫ η P.ω : SuperVect.tensorUnit ⟶
+    let := P.braided
+    change (ε P.ω ≫ η P.ω : SuperVect.tensorUnit ⟶
       SuperVect.tensorUnit) = 𝟙 _
     exact Functor.Monoidal.ε_η P.ω
   | m + 1 => by
-    letI := P.braided
-    show ((stdToOmega f P e m ⊗ₘ e) ≫
+    let := P.braided
+    change ((stdToOmega f P e m ⊗ₘ e) ≫
         (μ P.ω (SkeinObj.mk m) (SkeinObj.mk 1) :
           P.ω.obj (SkeinObj.mk m) ⊗ P.ω.obj (SkeinObj.mk 1) ⟶
             P.ω.obj (SkeinObj.mk (m + 1)))) ≫

@@ -276,10 +276,10 @@ theorem IsSubquotientOf.sandwich [Category.{v} C]
   obtain ⟨s, r, hsr⟩ := hY
   obtain ⟨S, i, p, hi, hp⟩ := h
   obtain ⟨s', r', hsr'⟩ := hZ
-  haveI := hi
-  haveI := hp
-  haveI : IsSplitMono s' := IsSplitMono.mk' ⟨r', hsr'⟩
-  haveI : IsSplitEpi r := IsSplitEpi.mk' ⟨s, hsr⟩
+  have := hi
+  have := hp
+  have : IsSplitMono s' := IsSplitMono.mk' ⟨r', hsr'⟩
+  have : IsSplitEpi r := IsSplitEpi.mk' ⟨s, hsr⟩
   exact ⟨S, i ≫ s', p ≫ r, inferInstance, inferInstance⟩
 
 end Retracts
@@ -313,7 +313,7 @@ variable {C : Type u}
 
 /-- Retractions assemble over a finite biproduct. -/
 theorem IsRetractOf.biproduct [Category.{v} C] [Preadditive C]
-    {J : Type} [Fintype J] {f g : J → C}
+    {J : Type} {f g : J → C}
     [HasBiproduct f] [HasBiproduct g]
     (h : ∀ t, IsRetractOf (f t) (g t)) :
     IsRetractOf (⨁ f) (⨁ g) := by

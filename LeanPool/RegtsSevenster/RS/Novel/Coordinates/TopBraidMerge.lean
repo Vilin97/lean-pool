@@ -91,7 +91,7 @@ top. -/
 theorem powMerge_topBraid (V : SuperVect) (a : ℕ) :
     (superPow V a ◁ topBraid V 0) ≫ powMerge V a 2 =
       powMerge V a 2 ≫ topBraid V a := by
-  show (superPow V a ◁ topB (superPow V 0) V) ≫
+  change (superPow V a ◁ topB (superPow V 0) V) ≫
       (α_ (superPow V a) (superPow V 1) V).inv ≫
         (((α_ (superPow V a) (superPow V 0) V).inv ≫
           ((ρ_ (superPow V a)).hom ▷ V)) ▷ V) =
@@ -107,7 +107,7 @@ theorem powMerge_isIso (V : SuperVect) (a : ℕ) :
     ∀ b : ℕ, IsIso (powMerge V a b)
   | 0 => inferInstanceAs (IsIso (ρ_ (superPow V a)).hom)
   | b + 1 => by
-    haveI := powMerge_isIso V a b
+    have := powMerge_isIso V a b
     exact inferInstanceAs (IsIso
       ((α_ (superPow V a) (superPow V b) V).inv ≫
         ((powMerge V a b) ▷ V)))
@@ -117,7 +117,7 @@ theorem powMerge_evenMap_surjective (V : SuperVect)
     (a b : ℕ) :
     Function.Surjective
       (((powMerge V a b) : SuperVect.Hom _ _).evenMap) := by
-  haveI := powMerge_isIso V a b
+  have := powMerge_isIso V a b
   intro v
   refine ⟨((CategoryTheory.inv (powMerge V a b)) :
     SuperVect.Hom _ _).evenMap v, ?_⟩
@@ -132,7 +132,7 @@ theorem powMerge_oddMap_surjective (V : SuperVect)
     (a b : ℕ) :
     Function.Surjective
       (((powMerge V a b) : SuperVect.Hom _ _).oddMap) := by
-  haveI := powMerge_isIso V a b
+  have := powMerge_isIso V a b
   intro v
   refine ⟨((CategoryTheory.inv (powMerge V a b)) :
     SuperVect.Hom _ _).oddMap v, ?_⟩

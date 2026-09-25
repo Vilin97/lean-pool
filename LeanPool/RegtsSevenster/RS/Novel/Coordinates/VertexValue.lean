@@ -19,7 +19,7 @@ the canonical colouring, whose star coordinate the functional
 namespace RS
 
 open CategoryTheory Finset
-open Classical
+
 
 variable {R : ℕ} (f : EdgeRankParameter R)
 variable (P : DelignePackage (SkeinObj f))

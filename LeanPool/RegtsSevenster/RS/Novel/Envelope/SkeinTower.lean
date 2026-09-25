@@ -85,7 +85,7 @@ noncomputable def permToEnd (n : ℕ) :
     Equiv.Perm (Fin n) →* skeinEnd f n where
   toFun σ := permClass f n σ
   map_one' := by
-    show HomSpace.ofFragment f.val (permFragment 1) =
+    change HomSpace.ofFragment f.val (permFragment 1) =
       HomSpace.ofFragment f.val (strandBundle n)
     rw [permFragment_one]
   map_mul' σ τ := by
@@ -146,7 +146,7 @@ theorem homSpace_finrank_le (t : ℕ) :
 Uses `HomSpace.rank_le` at arity `n + n` and the identity `n + n = 2 * n`. -/
 theorem skeinEnd_finrank_le (n : ℕ) :
     Module.finrank ℂ (skeinEnd f n) ≤ R ^ (2 * n) := by
-  show Module.finrank ℂ (HomSpace f.val (n + n)) ≤ R ^ (2 * n)
+  change Module.finrank ℂ (HomSpace f.val (n + n)) ≤ R ^ (2 * n)
   rw [show n + n = 2 * n from by omega]
   exact homSpace_finrank_le f (2 * n)
 
@@ -255,7 +255,7 @@ theorem skeinRep_compat {m n : ℕ} (h : m ≤ n) (x : SymGroupAlgebra m)
     have hsym : symCast h (MonoidAlgebra.of ℂ _ σ) =
         MonoidAlgebra.of ℂ _ (Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h) σ)
           := by
-      show MonoidAlgebra.mapDomain _ (MonoidAlgebra.single σ 1) =
+      change MonoidAlgebra.mapDomain _ (MonoidAlgebra.single σ 1) =
         MonoidAlgebra.single _ 1
       exact MonoidAlgebra.mapDomain_single
     conv_lhs => rw [hsym, skeinRep_of]

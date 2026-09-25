@@ -20,8 +20,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Classical
-
+open Fragment
 /-- The lexicographic order on the interface's label type. -/
 @[reducible] local instance liftBaseOrder (n : ℕ) :
     LinearOrder (Fin (0 + n) ⊕ Fin (n + 0)) :=
@@ -60,7 +59,7 @@ theorem stepData_roundTrip_open (n : ℕ)
       = unglueDataOpen (cutL_ne_cutR n) hop
         (glueDataOpen (cutL_ne_cutR n) hop 𝒟) := by
   unfold stepDataDown stepDataUp stepDataGlued
-  rw [dif_neg hop, dif_neg hop, relabelData_roundTrip,
+  rw [dite_eq_right hop, dite_eq_right hop, relabelData_roundTrip,
     dataOfEq_roundTrip]
 
 open Classical in
@@ -73,7 +72,7 @@ theorem stepData_roundTrip_closed (n : ℕ)
       = unglueDataClosed (cutL_ne_cutR n) hcl
         (glueDataClosed hcl b 𝒟) := by
   unfold stepDataDown stepDataUp stepDataGlued
-  rw [dif_pos hcl, dif_pos hcl, relabelData_roundTrip,
+  rw [dite_eq_left hcl, dite_eq_left hcl, relabelData_roundTrip,
     dataOfEq_roundTrip]
 
 /-! ## Ungluing sees the system only through its partners
@@ -102,9 +101,9 @@ theorem match_unglueOpen_matchEq {α : Type} [LinearOrder α]
         κ₂).match_ f := by
   obtain ⟨h1, h2⟩ := internal_surviving i j hf
   have hg := internal_mk_of_glueOpen hij hopen s' hc' hcL hf h1 h2
-  show unglueMatch κ₁.match_ f = unglueMatch κ₂.match_ f
+  change unglueMatch κ₁.match_ f = unglueMatch κ₂.match_ f
   unfold unglueMatch
-  rw [dif_pos ⟨h1, h2⟩, dif_pos ⟨h1, h2⟩, hm _ hg]
+  rw [dite_eq_left ⟨h1, h2⟩, dite_eq_left ⟨h1, h2⟩, hm _ hg]
 
 open Classical in
 /-- **Ungluing respects matching equality, at a closing cut.** -/
@@ -127,9 +126,9 @@ theorem match_unglueClosed_matchEq {α : Type} [LinearOrder α]
   obtain ⟨h1, h2⟩ := internal_surviving i j hf
   have hg := (mem_internalFlags_glueClosed hclosed b s' hc' hcL
     (f' := ⟨f, h1, h2⟩)).mpr hf
-  show unglueMatch κ₁.match_ f = unglueMatch κ₂.match_ f
+  change unglueMatch κ₁.match_ f = unglueMatch κ₂.match_ f
   unfold unglueMatch
-  rw [dif_pos ⟨h1, h2⟩, dif_pos ⟨h1, h2⟩, hm _ hg]
+  rw [dite_eq_left ⟨h1, h2⟩, dite_eq_left ⟨h1, h2⟩, hm _ hg]
 
 open Classical in
 /-- **One subset is enough**, at an open cut: the ungluing at `s`
@@ -159,7 +158,7 @@ theorem match_unglueDataOpen_congr_at {α : Type} [LinearOrder α]
   by_cases hag : ∀ f ∈ V.dropSubset i j s,
       (V.gluePairOpen i j hij hopen).pairing f
         ∈ V.dropSubset i j s
-  · rw [dif_pos hag, dif_pos hag, match_relOfEq, match_relOfEq]
+  · rw [dite_eq_left hag, dite_eq_left hag, match_relOfEq, match_relOfEq]
     have hcL := liftSubsetOpen_pairing_closed hij hopen
       (V.dropSubset i j s) hag
     refine match_unglueOpen_matchEq hij hopen
@@ -169,7 +168,7 @@ theorem match_unglueDataOpen_congr_at {α : Type} [LinearOrder α]
         = EdgeSubset.mk s hc := EdgeSubset.ext hlift
     rw [hF]
     exact hf
-  · rw [dif_neg hag, dif_neg hag]
+  · rw [dite_eq_right hag, dite_eq_right hag]
 
 open Classical in
 /-- **One subset is enough**, under a transport. -/
@@ -237,7 +236,7 @@ theorem match_stepDataDown_congr_at_open (n : ℕ)
     (stepDataDown n V 𝒟₁ s hc hE hne).1.MatchEq
       (stepDataDown n V 𝒟₂ s hc hE hne).1 := by
   unfold stepDataDown
-  rw [dif_neg hop, dif_neg hop]
+  rw [dite_eq_right hop, dite_eq_right hop]
   refine match_unglueDataOpen_congr_at (cutL_ne_cutR n) hop _ _
     ?_ hc hE hne
   intro hct hEt hnet
@@ -309,7 +308,7 @@ theorem match_stepDataDown_congr_at_closed (n : ℕ)
     (stepDataDown n V 𝒟₁ s hc hE hne).1.MatchEq
       (stepDataDown n V 𝒟₂ s hc hE hne).1 := by
   unfold stepDataDown
-  rw [dif_pos hcl, dif_pos hcl]
+  rw [dite_eq_left hcl, dite_eq_left hcl]
   refine match_unglueDataClosed_congr_at (cutL_ne_cutR n) hcl _ _
     ?_ hc hE hne
   intro hct hEt hnet
@@ -329,7 +328,7 @@ theorem match_pushData_liftData_zero (V : Fragment (Fin (0 + 0) ⊕ Fin (0 + 0))
     (hne : Nonempty (EdgeSubset.mk s hc).CanonData) :
     (pushData 0 V (liftData 0 V bits 𝒟) s hc hE hne).1.MatchEq
       (𝒟 s hc hE hne).1 := by
-  show (relabelDataDown baseIso (relabelDataUp baseIso 𝒟) s hc hE
+  change (relabelDataDown baseIso (relabelDataUp baseIso 𝒟) s hc hE
     hne).1.MatchEq _
   rw [relabelData_roundTrip]
   exact fun _f _hf => rfl

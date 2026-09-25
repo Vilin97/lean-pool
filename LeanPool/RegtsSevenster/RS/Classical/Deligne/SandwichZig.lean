@@ -43,7 +43,7 @@ theorem sandwichIns_sandwichCon
   have hcar := zig_carrier_of_multi A d.copair d.pair
     d.pair_linear hz.zig
   refine Eq.trans ?_ hcar
-  show (sandwichIns A d).hom ≫ (sandwichCon A d).hom = _
+  change (sandwichIns A d).hom ≫ (sandwichCon A d).hom = _
   refine Eq.trans (eq_whisker (sandwichIns_hom A d) _) ?_
   refine Eq.trans (Category.assoc _ _ _) ?_
   refine whisker_eq _ ?_

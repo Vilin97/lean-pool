@@ -46,12 +46,12 @@ theorem blockRot_val (a b : ℕ) (x : Fin (a + b)) :
   · conv_lhs =>
       rw [show x = (⟨x.val, hb⟩ : Fin (a + b)) from Fin.ext rfl]
     rw [transposeEquiv_low a b x.val h hb (by omega)]
-    simp only [if_pos h]
+    simp only [ite_eq_left h]
   · conv_lhs =>
       rw [show x = (⟨a + (x.val - a), by omega⟩ : Fin (a + b)) from
-        Fin.ext (by show x.val = a + (x.val - a); omega)]
+        Fin.ext (by change x.val = a + (x.val - a); omega)]
     rw [transposeEquiv_high a b (x.val - a) (by omega) (by omega) (by omega)]
-    simp only [if_neg h]
+    simp only [ite_eq_right h]
 
 /-- Inverse value of `blockRot`. -/
 private theorem blockRot_symm_val (a b : ℕ) (x : Fin (a + b)) :
@@ -61,8 +61,8 @@ private theorem blockRot_symm_val (a b : ℕ) (x : Fin (a + b)) :
   have hfwd := blockRot_val a b y
   rw [Equiv.apply_symm_apply] at hfwd
   by_cases hya : y.val < a
-  · rw [if_pos hya] at hfwd; rw [if_neg (by omega)]; omega
-  · rw [if_neg hya] at hfwd; rw [if_pos (by omega)]; omega
+  · rw [ite_eq_left hya] at hfwd; rw [ite_eq_right (by omega)]; omega
+  · rw [ite_eq_right hya] at hfwd; rw [ite_eq_left (by omega)]; omega
 
 /-! ### The outer boundary permutation -/
 
@@ -80,20 +80,20 @@ private def blockOuterPerm (K n : ℕ) :
   left_inv w := by
     dsimp only
     by_cases h : w.val < n
-    · simp only [dif_pos h, Fin.val_mk]
-      rw [dif_neg (show ¬ K + K + n + w.val < K + K + n by omega)]
+    · simp only [dite_eq_left h, Fin.val_mk]
+      rw [dite_eq_right (show ¬ K + K + n + w.val < K + K + n by omega)]
       refine Fin.ext ?_; simp only []; omega
-    · simp only [dif_neg h, Fin.val_mk]
-      rw [dif_pos (show w.val - n < K + K + n by have := w.isLt; omega)]
+    · simp only [dite_eq_right h, Fin.val_mk]
+      rw [dite_eq_left (show w.val - n < K + K + n by have := w.isLt; omega)]
       refine Fin.ext ?_; simp only []; omega
   right_inv w := by
     dsimp only
     by_cases h : w.val < K + K + n
-    · simp only [dif_pos h, Fin.val_mk]
-      rw [dif_neg (show ¬ w.val + n < n by omega)]
+    · simp only [dite_eq_left h, Fin.val_mk]
+      rw [dite_eq_right (show ¬ w.val + n < n by omega)]
       refine Fin.ext ?_; simp only []; omega
-    · simp only [dif_neg h, Fin.val_mk]
-      rw [dif_pos (show w.val - (K + K + n) < n by have := w.isLt; omega)]
+    · simp only [dite_eq_right h, Fin.val_mk]
+      rw [dite_eq_left (show w.val - (K + K + n) < n by have := w.isLt; omega)]
       refine Fin.ext ?_; simp only []; omega
 
 /-- Value table of `blockOuterPerm`. -/
@@ -119,7 +119,7 @@ private theorem block_label_val (K n : ℕ)
   by_cases hlow : ℓ.val < K + n + n
   · -- Low half: permHighEquiv fixes
     have hfix : permHighEquiv (blockRot (K + n) n).symm ℓ = ℓ := by
-      unfold permHighEquiv; exact dif_pos hlow
+      unfold permHighEquiv; exact dite_eq_left hlow
     rw [hfix]
     by_cases h1 : ℓ.val < K + n
     · -- x-low block
@@ -128,12 +128,12 @@ private theorem block_label_val (K n : ℕ)
         Fin.ext rfl
       rw [hform, pcReshuffle_xlow]
       simp only [Fin.val_natAdd, Fin.val_castAdd]
-      split_ifs <;> omega
+      split_ifs; omega
     · -- z-low block
       have hform : ℓ = Fin.castAdd ((K + n) + n)
           (Fin.natAdd (K + n) (⟨ℓ.val - (K + n),
             by omega⟩ : Fin n)) :=
-        Fin.ext (by simp [Fin.val_natAdd]; omega)
+        Fin.ext (by simp []; omega)
       rw [hform, pcReshuffle_zlow]
       simp only [Fin.val_natAdd, Fin.val_castAdd]
       split_ifs <;> omega
@@ -151,11 +151,11 @@ private theorem block_label_val (K n : ℕ)
         by have := ((blockRot (K + n) n).symm
           (⟨ℓ.val - (K + n + n), hk⟩ : Fin (K + n + n))).isLt
            omega⟩ := by
-      unfold permHighEquiv; exact dif_neg (by omega)
+      unfold permHighEquiv; exact dite_eq_right (by omega)
     rw [hstep]
     by_cases hk0 : ℓ.val - (K + n + n) < n
     · -- z-high block (k < n case)
-      rw [if_pos hk0] at hrot
+      rw [ite_eq_left hk0] at hrot
       have hform : (⟨(K + n + n) + ((blockRot (K + n) n).symm
             (⟨ℓ.val - (K + n + n), hk⟩ : Fin (K + n + n))).val,
             by have := ((blockRot (K + n) n).symm
@@ -169,7 +169,7 @@ private theorem block_label_val (K n : ℕ)
       simp only [Fin.val_natAdd, Fin.val_castAdd]
       split_ifs <;> omega
     · -- x-high block (k >= n case)
-      rw [if_neg hk0] at hrot
+      rw [ite_eq_right hk0] at hrot
       have hform : (⟨(K + n + n) + ((blockRot (K + n) n).symm
             (⟨ℓ.val - (K + n + n), hk⟩ : Fin (K + n + n))).val,
             by have := ((blockRot (K + n) n).symm
@@ -180,7 +180,7 @@ private theorem block_label_val (K n : ℕ)
               by omega⟩ : Fin (K + n))) :=
         Fin.ext (by simp only [Fin.val_natAdd, Fin.val_castAdd]; omega)
       rw [hform, pcReshuffle_xhigh]
-      simp only [Fin.val_natAdd, Fin.val_castAdd]
+      simp only [Fin.val_natAdd]
       split_ifs <;> omega
 
 /-! ### The splice flag identification -/
@@ -208,56 +208,42 @@ private def blockSpliceFlagEquiv (K n : ℕ) :
   left_inv := by
     rintro ⟨i, b⟩; dsimp only
     by_cases hlo : i.val < n
-    · rw [dif_pos hlo, Sum.elim_inl]
-      rw [dif_neg (show ¬ (⟨n + i.val, by omega⟩ : Fin (n + n)).val < n by
+    · rw [dite_eq_left hlo, Sum.elim_inl]
+      rw [dite_eq_right (show ¬ (⟨n + i.val, by omega⟩ : Fin (n + n)).val < n by
         simp only []; omega)]
       exact Prod.ext (Fin.ext (by simp only []; omega)) (Bool.not_not b)
     · by_cases hhi : i.val ≥ K + n
-      · rw [dif_neg hlo, dif_pos hhi, Sum.elim_inl]
-        rw [dif_pos (show (⟨i.val - (K + n), by have := i.isLt; omega⟩ :
+      · rw [dite_eq_right hlo, dite_eq_left hhi, Sum.elim_inl]
+        rw [dite_eq_left (show (⟨i.val - (K + n), by have := i.isLt; omega⟩ :
           Fin (n + n)).val < n by simp only []; have := i.isLt; omega)]
         exact Prod.ext (Fin.ext (by simp only []; omega)) rfl
-      · rw [dif_neg hlo, dif_neg (show ¬ i.val ≥ K + n by omega), Sum.elim_inr]
+      · rw [dite_eq_right hlo, dite_eq_right (show ¬ i.val ≥ K + n by omega), Sum.elim_inr]
         exact Prod.ext (Fin.ext (by simp only []; omega)) rfl
   right_inv := by
     rintro (⟨j, c⟩ | ⟨k, c⟩)
     · rw [Sum.elim_inl]; dsimp only
       by_cases hj : j.val < n
-      · rw [dif_pos hj, dif_neg (show ¬ (⟨K + n + j.val,
+      · rw [dite_eq_left hj, dite_eq_right (show ¬ (⟨K + n + j.val,
             by have := j.isLt; omega⟩ : Fin (K + n + n)).val < n by
           simp only []; omega),
-          dif_pos (show (⟨K + n + j.val,
+          dite_eq_left (show (⟨K + n + j.val,
             by have := j.isLt; omega⟩ : Fin (K + n + n)).val ≥ K + n by
           simp only []; omega)]
         exact congrArg Sum.inl
           (Prod.ext (Fin.ext (by simp only []; omega)) rfl)
-      · rw [dif_neg hj, dif_pos (show (⟨j.val - n,
+      · rw [dite_eq_right hj, dite_eq_left (show (⟨j.val - n,
             by have := j.isLt; omega⟩ : Fin (K + n + n)).val < n by
           simp only []; have := j.isLt; omega)]
         exact congrArg Sum.inl
           (Prod.ext (Fin.ext (by simp only []; omega))
             (Bool.not_not c))
     · rw [Sum.elim_inr]; dsimp only
-      rw [dif_neg (show ¬ (⟨k.val + n, by have := k.isLt; omega⟩ :
+      rw [dite_eq_right (show ¬ (⟨k.val + n, by have := k.isLt; omega⟩ :
             Fin (K + n + n)).val < n by simp only []; omega),
-        dif_neg (show ¬ (⟨k.val + n, by have := k.isLt; omega⟩ :
+        dite_eq_right (show ¬ (⟨k.val + n, by have := k.isLt; omega⟩ :
             Fin (K + n + n)).val ≥ K + n by
           simp only []; have := k.isLt; omega)]
       exact congrArg Sum.inr (Prod.ext (Fin.ext (by simp only []; omega)) rfl)
-
-/-- The splice flag map anticommutes with strand flips. -/
-private theorem blockSpliceFlagEquiv_pairing (K n : ℕ)
-    (w : Fin (K + n + n)) (b : Bool) :
-    blockSpliceFlagEquiv K n (w, !b) =
-      Sum.map (fun q : Fin (n + n) × Bool => (q.1, !q.2))
-        (fun q : Fin K × Bool => (q.1, !q.2))
-        (blockSpliceFlagEquiv K n (w, b)) := by
-  simp only [blockSpliceFlagEquiv, Equiv.coe_fn_mk]
-  by_cases hlo : w.val < n
-  · rw [dif_pos hlo, dif_pos hlo]; rfl
-  · by_cases hhi : w.val ≥ K + n
-    · rw [dif_neg hlo, dif_pos hhi, dif_neg hlo, dif_pos hhi]; rfl
-    · rw [dif_neg hlo, dif_neg (by omega), dif_neg hlo, dif_neg (by omega)]; rfl
 
 /-! ### The collapsed outer relabel and the rotated transpose -/
 
@@ -282,7 +268,7 @@ private theorem block_bigE_val (K n : ℕ)
   rw [hform, outPermEquiv_high]
   simp only [finCongr_apply, Fin.val_cast, Fin.val_natAdd]
   rw [blockOuterPerm_val]
-  simp only [Fin.val_mk]
+  simp only []
   split_ifs <;> omega
 
 /-- Value of the rotated-transpose relabel on the right side. -/
@@ -306,10 +292,10 @@ private theorem block_ER_val (K n : ℕ)
       Fin.ext rfl]
     rw [inPermEquiv_high]
     simp only [Fin.val_natAdd]
-    rw [if_pos hlow]
+    rw [ite_eq_left hlow]
   · rw [show x = (⟨(K + n) + (x.val - (K + n)), by omega⟩ :
       Fin ((K + n) + (K + n))) from Fin.ext
-        (by show x.val = (K + n) + (x.val - (K + n)); omega)]
+        (by change x.val = (K + n) + (x.val - (K + n)); omega)]
     rw [transposeEquiv_high (K + n) (K + n) (x.val - (K + n))
       (by omega) (by omega) (by omega)]
     rw [show (⟨x.val - (K + n), by omega⟩ :
@@ -352,6 +338,290 @@ private noncomputable def compose_relabel_castOut
 
 /-! ### The bridge: the rotation as through-strands and cups -/
 
+private theorem block_bridge_attach_low (K n : ℕ)
+    (f : (((strandBundle (K + n + n)).relabel
+        ((permHighEquiv (blockRot (K + n) n).symm).trans
+          (pcReshuffle (K + n) (K + n) n n)))).Flag)
+    (hlo : f.1.val < n) :
+    ((((tensorFragment (s := n + n) (t := n + n) (u := 0) (v := K + K)
+            (strandBundle (n + n))
+            ((strandBundle K).relabel
+              (finCongr (by omega : K + K = 0 + (K + K))))).relabel
+          (finCongr (by omega :
+            (n + n + 0) + (n + n + (K + K)) =
+              (n + n) + ((K + n) + (K + n))))).relabel
+        (outPermEquiv (n + n)
+          (blockOuterPerm K n)))).attach (blockSpliceFlagEquiv K n f) =
+      ((((strandBundle (K + n + n)).relabel
+        ((permHighEquiv (blockRot (K + n) n).symm).trans
+          (pcReshuffle (K + n) (K + n) n n)))).attach f).map (
+        haveI : IsEmpty ((Empty ⊕ Empty : Type)) :=
+          ⟨fun x => x.elim Empty.elim Empty.elim⟩
+        show (Empty : Type) ≃ (Empty ⊕ Empty : Type) from
+          _root_.Equiv.equivOfIsEmpty _ _) id := by
+  obtain ⟨w, b⟩ := f
+  change w.val < n at hlo
+  change (((tensorFragment (strandBundle (n + n))
+            ((strandBundle K).relabel
+              (finCongr (by omega : K + K = 0 + (K + K))))).relabel
+          (finCongr (by omega :
+            (n + n + 0) + (n + n + (K + K)) =
+              (n + n) + ((K + n) + (K + n))))).relabel
+        (outPermEquiv (n + n) (blockOuterPerm K n))).attach
+      (blockSpliceFlagEquiv K n (w, b)) =
+    Sum.map _ id
+      (((strandBundle (K + n + n)).relabel
+          ((permHighEquiv (blockRot (K + n) n).symm).trans
+            (pcReshuffle (K + n) (K + n) n n))).attach (w, b))
+  rw [show blockSpliceFlagEquiv K n (w, b) =
+      Sum.inl (⟨n + w.val, by omega⟩, !b) from by
+    simp only [blockSpliceFlagEquiv, Equiv.coe_fn_mk]
+    exact dite_eq_left hlo]
+  cases b
+  · -- in-end (b = false): wire w in-label -> through-strand n+w, out end
+    dsimp only [tensorFragment, Fragment.relabel,
+      Fragment.disjUnion, strandBundle, Sum.elim_inl,
+      Sum.elim_inr, Sum.map_inr, Sum.map_inl,
+      Bool.not_false]
+    refine congrArg Sum.inr (Fin.ext ?_)
+    simp only [Bool.not_false,
+      Bool.false_eq_true, ite_false, ite_true, id_eq]
+    rw [show (⟨(n + n) + (n + w.val), by omega⟩ :
+        Fin ((n + n) + (n + n))) =
+      Fin.natAdd (n + n) (⟨n + w.val, by omega⟩ : Fin (n + n)) from
+      Fin.ext rfl]
+    rw [interleaveEquiv_inl_high]
+    rw [show ((finCongr (by omega :
+          (n + n + 0) + (n + n + (K + K)) =
+            (n + n) + ((K + n) + (K + n))))
+        (Fin.natAdd (n + n + 0)
+          (Fin.castAdd (K + K) (⟨n + w.val, by omega⟩ : Fin (n + n))))) =
+      Fin.natAdd (n + n)
+        (⟨n + w.val, by omega⟩ : Fin ((K + n) + (K + n))) from
+      Fin.ext (by simp)]
+    rw [outPermEquiv_high]
+    rw [block_label_val]
+    simp only [Fin.val_natAdd]
+    rw [blockOuterPerm_val]
+    simp only []
+    split_ifs <;> omega
+  · -- out-end (b = true): wire w out-label -> through-strand n+w, in end
+    dsimp only [tensorFragment, Fragment.relabel,
+      Fragment.disjUnion, strandBundle, Sum.elim_inl,
+      Sum.elim_inr, Sum.map_inr, Sum.map_inl,
+      Bool.not_true]
+    refine congrArg Sum.inr (Fin.ext ?_)
+    simp only [ Bool.not_true,
+      Bool.false_eq_true, ite_false, ite_true, id_eq]
+    rw [show (⟨(n + w.val), by omega⟩ : Fin ((n + n) + (n + n))) =
+      Fin.castAdd (n + n) (⟨n + w.val, by omega⟩ : Fin (n + n)) from
+      Fin.ext rfl]
+    rw [interleaveEquiv_inl_low]
+    rw [show ((finCongr (by omega :
+          (n + n + 0) + (n + n + (K + K)) =
+            (n + n) + ((K + n) + (K + n))))
+        (Fin.castAdd (n + n + (K + K))
+          (Fin.castAdd 0 (⟨n + w.val, by omega⟩ : Fin (n + n))))) =
+      Fin.castAdd ((K + n) + (K + n))
+        (⟨n + w.val, by omega⟩ : Fin (n + n)) from
+      Fin.ext (by simp)]
+    rw [outPermEquiv_low]
+    rw [block_label_val]
+    simp only [Fin.val_castAdd]
+    split_ifs <;> omega
+
+private theorem block_bridge_attach_comm (K n : ℕ)
+    (f : (((strandBundle (K + n + n)).relabel
+        ((permHighEquiv (blockRot (K + n) n).symm).trans
+          (pcReshuffle (K + n) (K + n) n n)))).Flag) :
+    ((((tensorFragment (s := n + n) (t := n + n) (u := 0) (v := K + K)
+            (strandBundle (n + n))
+            ((strandBundle K).relabel
+              (finCongr (by omega : K + K = 0 + (K + K))))).relabel
+          (finCongr (by omega :
+            (n + n + 0) + (n + n + (K + K)) =
+              (n + n) + ((K + n) + (K + n))))).relabel
+        (outPermEquiv (n + n)
+          (blockOuterPerm K n)))).attach (blockSpliceFlagEquiv K n f) =
+      ((((strandBundle (K + n + n)).relabel
+        ((permHighEquiv (blockRot (K + n) n).symm).trans
+          (pcReshuffle (K + n) (K + n) n n)))).attach f).map (
+        haveI : IsEmpty ((Empty ⊕ Empty : Type)) :=
+          ⟨fun x => x.elim Empty.elim Empty.elim⟩
+        show (Empty : Type) ≃ (Empty ⊕ Empty : Type) from
+          _root_.Equiv.equivOfIsEmpty _ _) id := by
+  obtain ⟨w, b⟩ := f
+  change (((tensorFragment (strandBundle (n + n))
+            ((strandBundle K).relabel
+              (finCongr (by omega : K + K = 0 + (K + K))))).relabel
+          (finCongr (by omega :
+            (n + n + 0) + (n + n + (K + K)) =
+              (n + n) + ((K + n) + (K + n))))).relabel
+        (outPermEquiv (n + n) (blockOuterPerm K n))).attach
+      (blockSpliceFlagEquiv K n (w, b)) =
+    Sum.map _ id
+      (((strandBundle (K + n + n)).relabel
+          ((permHighEquiv (blockRot (K + n) n).symm).trans
+            (pcReshuffle (K + n) (K + n) n n))).attach (w, b))
+  by_cases hlo : w.val < n
+  -- ═══════ THE THROUGH STRANDS ═══════
+  -- Wires below `n` and wires from `K+n` up are the two halves of
+  -- the through-strand bundle; each end maps across unchanged.
+  · exact block_bridge_attach_low K n (w, b) hlo
+  · by_cases hhi : w.val ≥ K + n
+    · -- Through-strand high block (wire w >= K+n)
+      rw [show blockSpliceFlagEquiv K n (w, b) =
+          Sum.inl (⟨w.val - (K + n), by have := w.isLt; omega⟩, b) from by
+        simp only [blockSpliceFlagEquiv, Equiv.coe_fn_mk]
+        rw [dite_eq_right hlo, dite_eq_left hhi]]
+      cases b
+      · -- in-end: wire w in-label -> through-strand w-(K+n), in end
+        dsimp only [tensorFragment, Fragment.relabel,
+          Fragment.disjUnion, strandBundle, Sum.elim_inl,
+          Sum.elim_inr, Sum.map_inr, Sum.map_inl]
+        refine congrArg Sum.inr (Fin.ext ?_)
+        simp only [
+          Bool.false_eq_true, ite_false,  id_eq]
+        rw [show (⟨w.val - (K + n), by have := w.isLt; omega⟩ :
+            Fin ((n + n) + (n + n))) =
+          Fin.castAdd (n + n)
+            (⟨w.val - (K + n), by have := w.isLt; omega⟩ :
+              Fin (n + n)) from Fin.ext rfl]
+        rw [interleaveEquiv_inl_low]
+        rw [show ((finCongr (by omega :
+              (n + n + 0) + (n + n + (K + K)) =
+                (n + n) + ((K + n) + (K + n))))
+            (Fin.castAdd (n + n + (K + K))
+              (Fin.castAdd 0 (⟨w.val - (K + n),
+                by have := w.isLt; omega⟩ : Fin (n + n))))) =
+          Fin.castAdd ((K + n) + (K + n))
+            (⟨w.val - (K + n),
+              by have := w.isLt; omega⟩ : Fin (n + n)) from
+          Fin.ext (by simp)]
+        rw [outPermEquiv_low]
+        rw [block_label_val]
+        simp only [Fin.val_castAdd]
+        split_ifs <;> omega
+      · -- out-end: wire w out-label -> through-strand w-(K+n), out end
+        dsimp only [tensorFragment, Fragment.relabel,
+          Fragment.disjUnion, strandBundle, Sum.elim_inl,
+          Sum.elim_inr, Sum.map_inr, Sum.map_inl]
+        refine congrArg Sum.inr (Fin.ext ?_)
+        simp only [
+            ite_true, id_eq]
+        rw [show (⟨(n + n) + (w.val - (K + n)),
+            by have := w.isLt; omega⟩ :
+            Fin ((n + n) + (n + n))) =
+          Fin.natAdd (n + n)
+            (⟨w.val - (K + n),
+              by have := w.isLt; omega⟩ : Fin (n + n)) from
+          Fin.ext rfl]
+        rw [interleaveEquiv_inl_high]
+        rw [show ((finCongr (by omega :
+              (n + n + 0) + (n + n + (K + K)) =
+                (n + n) + ((K + n) + (K + n))))
+            (Fin.natAdd (n + n + 0)
+              (Fin.castAdd (K + K)
+                (⟨w.val - (K + n),
+                  by have := w.isLt; omega⟩ : Fin (n + n))))) =
+          Fin.natAdd (n + n)
+            (⟨w.val - (K + n),
+              by have := w.isLt; omega⟩ :
+              Fin ((K + n) + (K + n))) from
+          Fin.ext (by simp)]
+        rw [outPermEquiv_high]
+        rw [block_label_val]
+        simp only [Fin.val_natAdd]
+        rw [blockOuterPerm_val]
+        simp only []
+        split_ifs <;> omega
+    -- ═══════ THE CUPS ═══════
+    -- The remaining wires are the `K` cups, indexed by `w - n`.
+    · -- Pass wire: cup k := w - n
+      have hpass : n ≤ w.val ∧ w.val < K + n := by omega
+      rw [show blockSpliceFlagEquiv K n (w, b) =
+          Sum.inr (⟨w.val - n, by omega⟩, b) from by
+        simp only [blockSpliceFlagEquiv, Equiv.coe_fn_mk]
+        rw [dite_eq_right hlo, dite_eq_right (by omega)]]
+      cases b
+      · -- in-end: pass wire -> cup, low end
+        dsimp only [tensorFragment, Fragment.relabel,
+          Fragment.disjUnion, strandBundle, Sum.elim_inl,
+          Sum.elim_inr, Sum.map_inr, Sum.map_inl]
+        refine congrArg Sum.inr (Fin.ext ?_)
+        simp only [
+          Bool.false_eq_true, ite_false,  id_eq]
+        rw [show ((finCongr (by omega :
+              K + K = 0 + (K + K)))
+            (⟨w.val - n, by omega⟩ : Fin (K + K))) =
+          Fin.natAdd 0 (⟨w.val - n, by omega⟩ :
+            Fin (K + K)) from
+          Fin.ext (by simp)]
+        rw [interleaveEquiv_inr_high]
+        rw [show ((finCongr (by omega :
+              (n + n + 0) + (n + n + (K + K)) =
+                (n + n) + ((K + n) + (K + n))))
+            (Fin.natAdd (n + n + 0)
+              (Fin.natAdd (n + n) (⟨w.val - n,
+                by omega⟩ : Fin (K + K))))) =
+          Fin.natAdd (n + n)
+            (⟨(n + n) + (w.val - n),
+              by omega⟩ :
+              Fin ((K + n) + (K + n))) from
+          Fin.ext (by simp)]
+        rw [outPermEquiv_high]
+        rw [block_label_val]
+        simp only [Fin.val_natAdd]
+        rw [blockOuterPerm_val]
+        simp only []
+        split_ifs <;> omega
+      · -- out-end: pass wire -> cup, high end
+        dsimp only [tensorFragment, Fragment.relabel,
+          Fragment.disjUnion, strandBundle, Sum.elim_inl,
+          Sum.elim_inr, Sum.map_inr, Sum.map_inl]
+        refine congrArg Sum.inr (Fin.ext ?_)
+        simp only [
+            ite_true, id_eq]
+        rw [show ((finCongr (by omega :
+              K + K = 0 + (K + K)))
+            (⟨K + (w.val - n), by omega⟩ : Fin (K + K))) =
+          Fin.natAdd 0 (⟨K + (w.val - n), by omega⟩ :
+            Fin (K + K)) from
+          Fin.ext (by simp)]
+        rw [interleaveEquiv_inr_high]
+        rw [show ((finCongr (by omega :
+              (n + n + 0) + (n + n + (K + K)) =
+                (n + n) + ((K + n) + (K + n))))
+            (Fin.natAdd (n + n + 0)
+              (Fin.natAdd (n + n) (⟨K + (w.val - n),
+                by omega⟩ : Fin (K + K))))) =
+          Fin.natAdd (n + n)
+            (⟨(n + n) + (K + (w.val - n)),
+              by omega⟩ :
+              Fin ((K + n) + (K + n))) from
+          Fin.ext (by simp)]
+        rw [outPermEquiv_high]
+        rw [block_label_val]
+        simp only [Fin.val_natAdd]
+        rw [blockOuterPerm_val]
+        simp only []
+        split_ifs <;> omega
+
+/-- The splice flag map anticommutes with strand flips. -/
+private theorem blockSpliceFlagEquiv_pairing (K n : ℕ)
+    (w : Fin (K + n + n)) (b : Bool) :
+    blockSpliceFlagEquiv K n (w, !b) =
+      Sum.map (fun q : Fin (n + n) × Bool => (q.1, !q.2))
+        (fun q : Fin K × Bool => (q.1, !q.2))
+        (blockSpliceFlagEquiv K n (w, b)) := by
+  simp only [blockSpliceFlagEquiv, Equiv.coe_fn_mk]
+  by_cases hlo : w.val < n
+  · rw [dite_eq_left hlo, dite_eq_left hlo]; rfl
+  · by_cases hhi : w.val ≥ K + n
+    · rw [dite_eq_right hlo, dite_eq_left hhi, dite_eq_right hlo, dite_eq_left hhi]; rfl
+    · rw [dite_eq_right hlo, dite_eq_right (by omega), dite_eq_right hlo, dite_eq_right (by
+        omega)]; rfl
+
 /-- **The bridge**: the reshuffled big block rotation, as a
 relabelled bundle, is the through-strands tensored with K cups,
 up to the outer boundary permutation. -/
@@ -374,219 +644,7 @@ private noncomputable def block_bridge (K n : ℕ) :
       ⟨fun x => x.elim Empty.elim Empty.elim⟩
     show (Empty : Type) ≃ (Empty ⊕ Empty : Type) from
       _root_.Equiv.equivOfIsEmpty _ _
-  attach_comm := fun f => by
-    obtain ⟨w, b⟩ := f
-    show (((tensorFragment (strandBundle (n + n))
-              ((strandBundle K).relabel
-                (finCongr (by omega : K + K = 0 + (K + K))))).relabel
-            (finCongr (by omega :
-              (n + n + 0) + (n + n + (K + K)) =
-                (n + n) + ((K + n) + (K + n))))).relabel
-          (outPermEquiv (n + n) (blockOuterPerm K n))).attach
-        (blockSpliceFlagEquiv K n (w, b)) =
-      Sum.map _ id
-        (((strandBundle (K + n + n)).relabel
-            ((permHighEquiv (blockRot (K + n) n).symm).trans
-              (pcReshuffle (K + n) (K + n) n n))).attach (w, b))
-    by_cases hlo : w.val < n
-    -- ═══════ THE THROUGH STRANDS ═══════
-    -- Wires below `n` and wires from `K+n` up are the two halves of
-    -- the through-strand bundle; each end maps across unchanged.
-    · -- Through-strand low block (wire w < n)
-      rw [show blockSpliceFlagEquiv K n (w, b) =
-          Sum.inl (⟨n + w.val, by omega⟩, !b) from by
-        simp only [blockSpliceFlagEquiv, Equiv.coe_fn_mk]
-        exact dif_pos hlo]
-      cases b
-      · -- in-end (b = false): wire w in-label -> through-strand n+w, out end
-        dsimp only [tensorFragment, Fragment.relabel,
-          Fragment.disjUnion, strandBundle, Sum.elim_inl,
-          Sum.elim_inr, Sum.map_inr, Sum.map_inl,
-          Bool.not_false]
-        refine congrArg Sum.inr (Fin.ext ?_)
-        simp only [Bool.not_false, Bool.not_true, reduceIte,
-          Bool.false_eq_true, if_false, if_true, id_eq]
-        rw [show (⟨(n + n) + (n + w.val), by omega⟩ :
-            Fin ((n + n) + (n + n))) =
-          Fin.natAdd (n + n) (⟨n + w.val, by omega⟩ : Fin (n + n)) from
-          Fin.ext rfl]
-        rw [interleaveEquiv_inl_high]
-        rw [show ((finCongr (by omega :
-              (n + n + 0) + (n + n + (K + K)) =
-                (n + n) + ((K + n) + (K + n))))
-            (Fin.natAdd (n + n + 0)
-              (Fin.castAdd (K + K) (⟨n + w.val, by omega⟩ : Fin (n + n))))) =
-          Fin.natAdd (n + n)
-            (⟨n + w.val, by omega⟩ : Fin ((K + n) + (K + n))) from
-          Fin.ext (by simp)]
-        rw [outPermEquiv_high]
-        rw [block_label_val]
-        simp only [Fin.val_natAdd, Fin.val_castAdd]
-        rw [blockOuterPerm_val]
-        simp only [Fin.val_mk]
-        split_ifs <;> omega
-      · -- out-end (b = true): wire w out-label -> through-strand n+w, in end
-        dsimp only [tensorFragment, Fragment.relabel,
-          Fragment.disjUnion, strandBundle, Sum.elim_inl,
-          Sum.elim_inr, Sum.map_inr, Sum.map_inl,
-          Bool.not_true]
-        refine congrArg Sum.inr (Fin.ext ?_)
-        simp only [Bool.not_false, Bool.not_true, reduceIte,
-          Bool.false_eq_true, if_false, if_true, id_eq]
-        rw [show (⟨(n + w.val), by omega⟩ : Fin ((n + n) + (n + n))) =
-          Fin.castAdd (n + n) (⟨n + w.val, by omega⟩ : Fin (n + n)) from
-          Fin.ext rfl]
-        rw [interleaveEquiv_inl_low]
-        rw [show ((finCongr (by omega :
-              (n + n + 0) + (n + n + (K + K)) =
-                (n + n) + ((K + n) + (K + n))))
-            (Fin.castAdd (n + n + (K + K))
-              (Fin.castAdd 0 (⟨n + w.val, by omega⟩ : Fin (n + n))))) =
-          Fin.castAdd ((K + n) + (K + n))
-            (⟨n + w.val, by omega⟩ : Fin (n + n)) from
-          Fin.ext (by simp)]
-        rw [outPermEquiv_low]
-        rw [block_label_val]
-        simp only [Fin.val_castAdd]
-        split_ifs <;> omega
-    · by_cases hhi : w.val ≥ K + n
-      · -- Through-strand high block (wire w >= K+n)
-        rw [show blockSpliceFlagEquiv K n (w, b) =
-            Sum.inl (⟨w.val - (K + n), by have := w.isLt; omega⟩, b) from by
-          simp only [blockSpliceFlagEquiv, Equiv.coe_fn_mk]
-          rw [dif_neg hlo, dif_pos hhi]]
-        cases b
-        · -- in-end: wire w in-label -> through-strand w-(K+n), in end
-          dsimp only [tensorFragment, Fragment.relabel,
-            Fragment.disjUnion, strandBundle, Sum.elim_inl,
-            Sum.elim_inr, Sum.map_inr, Sum.map_inl]
-          refine congrArg Sum.inr (Fin.ext ?_)
-          simp only [Bool.not_false, Bool.not_true, reduceIte,
-            Bool.false_eq_true, if_false, if_true, id_eq]
-          rw [show (⟨w.val - (K + n), by have := w.isLt; omega⟩ :
-              Fin ((n + n) + (n + n))) =
-            Fin.castAdd (n + n)
-              (⟨w.val - (K + n), by have := w.isLt; omega⟩ :
-                Fin (n + n)) from Fin.ext rfl]
-          rw [interleaveEquiv_inl_low]
-          rw [show ((finCongr (by omega :
-                (n + n + 0) + (n + n + (K + K)) =
-                  (n + n) + ((K + n) + (K + n))))
-              (Fin.castAdd (n + n + (K + K))
-                (Fin.castAdd 0 (⟨w.val - (K + n),
-                  by have := w.isLt; omega⟩ : Fin (n + n))))) =
-            Fin.castAdd ((K + n) + (K + n))
-              (⟨w.val - (K + n),
-                by have := w.isLt; omega⟩ : Fin (n + n)) from
-            Fin.ext (by simp)]
-          rw [outPermEquiv_low]
-          rw [block_label_val]
-          simp only [Fin.val_castAdd]
-          split_ifs <;> omega
-        · -- out-end: wire w out-label -> through-strand w-(K+n), out end
-          dsimp only [tensorFragment, Fragment.relabel,
-            Fragment.disjUnion, strandBundle, Sum.elim_inl,
-            Sum.elim_inr, Sum.map_inr, Sum.map_inl]
-          refine congrArg Sum.inr (Fin.ext ?_)
-          simp only [Bool.not_false, Bool.not_true, reduceIte,
-            Bool.false_eq_true, if_false, if_true, id_eq]
-          rw [show (⟨(n + n) + (w.val - (K + n)),
-              by have := w.isLt; omega⟩ :
-              Fin ((n + n) + (n + n))) =
-            Fin.natAdd (n + n)
-              (⟨w.val - (K + n),
-                by have := w.isLt; omega⟩ : Fin (n + n)) from
-            Fin.ext rfl]
-          rw [interleaveEquiv_inl_high]
-          rw [show ((finCongr (by omega :
-                (n + n + 0) + (n + n + (K + K)) =
-                  (n + n) + ((K + n) + (K + n))))
-              (Fin.natAdd (n + n + 0)
-                (Fin.castAdd (K + K)
-                  (⟨w.val - (K + n),
-                    by have := w.isLt; omega⟩ : Fin (n + n))))) =
-            Fin.natAdd (n + n)
-              (⟨w.val - (K + n),
-                by have := w.isLt; omega⟩ :
-                Fin ((K + n) + (K + n))) from
-            Fin.ext (by simp)]
-          rw [outPermEquiv_high]
-          rw [block_label_val]
-          simp only [Fin.val_natAdd, Fin.val_castAdd]
-          rw [blockOuterPerm_val]
-          simp only [Fin.val_mk]
-          split_ifs <;> omega
-      -- ═══════ THE CUPS ═══════
-      -- The remaining wires are the `K` cups, indexed by `w - n`.
-      · -- Pass wire: cup k := w - n
-        have hpass : n ≤ w.val ∧ w.val < K + n := by omega
-        rw [show blockSpliceFlagEquiv K n (w, b) =
-            Sum.inr (⟨w.val - n, by omega⟩, b) from by
-          simp only [blockSpliceFlagEquiv, Equiv.coe_fn_mk]
-          rw [dif_neg hlo, dif_neg (by omega)]]
-        cases b
-        · -- in-end: pass wire -> cup, low end
-          dsimp only [tensorFragment, Fragment.relabel,
-            Fragment.disjUnion, strandBundle, Sum.elim_inl,
-            Sum.elim_inr, Sum.map_inr, Sum.map_inl]
-          refine congrArg Sum.inr (Fin.ext ?_)
-          simp only [Bool.not_false, Bool.not_true, reduceIte,
-            Bool.false_eq_true, if_false, if_true, id_eq]
-          rw [show ((finCongr (by omega :
-                K + K = 0 + (K + K)))
-              (⟨w.val - n, by omega⟩ : Fin (K + K))) =
-            Fin.natAdd 0 (⟨w.val - n, by omega⟩ :
-              Fin (K + K)) from
-            Fin.ext (by simp)]
-          rw [interleaveEquiv_inr_high]
-          rw [show ((finCongr (by omega :
-                (n + n + 0) + (n + n + (K + K)) =
-                  (n + n) + ((K + n) + (K + n))))
-              (Fin.natAdd (n + n + 0)
-                (Fin.natAdd (n + n) (⟨w.val - n,
-                  by omega⟩ : Fin (K + K))))) =
-            Fin.natAdd (n + n)
-              (⟨(n + n) + (w.val - n),
-                by omega⟩ :
-                Fin ((K + n) + (K + n))) from
-            Fin.ext (by simp)]
-          rw [outPermEquiv_high]
-          rw [block_label_val]
-          simp only [Fin.val_natAdd, Fin.val_castAdd]
-          rw [blockOuterPerm_val]
-          simp only [Fin.val_mk]
-          split_ifs <;> omega
-        · -- out-end: pass wire -> cup, high end
-          dsimp only [tensorFragment, Fragment.relabel,
-            Fragment.disjUnion, strandBundle, Sum.elim_inl,
-            Sum.elim_inr, Sum.map_inr, Sum.map_inl]
-          refine congrArg Sum.inr (Fin.ext ?_)
-          simp only [Bool.not_false, Bool.not_true, reduceIte,
-            Bool.false_eq_true, if_false, if_true, id_eq]
-          rw [show ((finCongr (by omega :
-                K + K = 0 + (K + K)))
-              (⟨K + (w.val - n), by omega⟩ : Fin (K + K))) =
-            Fin.natAdd 0 (⟨K + (w.val - n), by omega⟩ :
-              Fin (K + K)) from
-            Fin.ext (by simp)]
-          rw [interleaveEquiv_inr_high]
-          rw [show ((finCongr (by omega :
-                (n + n + 0) + (n + n + (K + K)) =
-                  (n + n) + ((K + n) + (K + n))))
-              (Fin.natAdd (n + n + 0)
-                (Fin.natAdd (n + n) (⟨K + (w.val - n),
-                  by omega⟩ : Fin (K + K))))) =
-            Fin.natAdd (n + n)
-              (⟨(n + n) + (K + (w.val - n)),
-                by omega⟩ :
-                Fin ((K + n) + (K + n))) from
-            Fin.ext (by simp)]
-          rw [outPermEquiv_high]
-          rw [block_label_val]
-          simp only [Fin.val_natAdd, Fin.val_castAdd]
-          rw [blockOuterPerm_val]
-          simp only [Fin.val_mk]
-          split_ifs <;> omega
+  attach_comm := block_bridge_attach_comm K n
   pairing_comm := fun f =>
     blockSpliceFlagEquiv_pairing K n f.1 f.2
   circles_eq := rfl
@@ -637,6 +695,220 @@ private def blockFinalFlagEquiv (K n : ℕ)
     · rw [Sum.elim_inl, Sum.elim_inr, Bool.not_not]
     · rfl
 
+private theorem block_splice_bridge_attach_comm (K n : ℕ)
+    (𝔊 : Fragment (Fin (n + n)))
+    (f : (((tensorFragment (s := 0) (t := n + n) (u := 0) (v := K + K)
+        (𝔊.relabel
+          (finCongr (by omega : n + n = 0 + (n + n))))
+        ((strandBundle K).relabel
+          (finCongr (by omega : K + K = 0 + (K + K))))).relabel
+      (((finCongr (by omega :
+          0 + ((n + n) + (K + K)) = 0 + ((K + n) + (K + n)))).trans
+        (outPermEquiv 0
+          (blockOuterPerm K n))).trans
+        (finCongr (by omega :
+          0 + ((K + n) + (K + n)) = (K + n) + (K + n)))))).Flag) :
+    (((tensorFragment (strandBundle K) 𝔊).relabel
+        ((transposeEquiv (K + n) (K + n)).trans
+          (inPermEquiv
+            ((blockRot K n).symm).symm (K + n))))).attach (blockFinalFlagEquiv K n 𝔊 f) =
+      ((((tensorFragment (s := 0) (t := n + n) (u := 0) (v := K + K)
+        (𝔊.relabel
+          (finCongr (by omega : n + n = 0 + (n + n))))
+        ((strandBundle K).relabel
+          (finCongr (by omega : K + K = 0 + (K + K))))).relabel
+      (((finCongr (by omega :
+          0 + ((n + n) + (K + K)) = 0 + ((K + n) + (K + n)))).trans
+        (outPermEquiv 0
+          (blockOuterPerm K n))).trans
+        (finCongr (by omega :
+          0 + ((K + n) + (K + n)) = (K + n) + (K + n)))))).attach f).map (
+        show (𝔊.Vertex ⊕ (Empty : Type)) ≃
+            ((Empty : Type) ⊕ 𝔊.Vertex) from
+          _root_.Equiv.sumComm _ _) id := by
+  revert f
+  rintro (g | ⟨k, c⟩)
+  -- ═══════ THE FRAGMENT'S OWN FLAGS ═══════
+  · -- a G-flag crosses sides
+    change Sum.map id
+        (⇑((transposeEquiv (K + n) (K + n)).trans
+          (inPermEquiv
+            ((blockRot K n).symm).symm (K + n))))
+        (Sum.map id
+          (⇑(interleaveEquiv K K n n))
+          ((𝔊.attach g).map Sum.inr Sum.inr)) =
+      Sum.map _ id
+        (Sum.map id
+          (⇑(((finCongr (by omega :
+              0 + ((n + n) + (K + K)) =
+                0 + ((K + n) + (K + n)))).trans
+            (outPermEquiv 0
+              (blockOuterPerm K n))).trans
+            (finCongr (by omega :
+              0 + ((K + n) + (K + n)) =
+                (K + n) + (K + n)))))
+          (Sum.map id
+            (⇑(interleaveEquiv 0 (n + n) 0 (K + K)))
+            (((𝔊.attach g).map id
+                (⇑(finCongr (by omega :
+                  n + n = 0 + (n + n))))).map
+              Sum.inl Sum.inl)))
+    rcases 𝔊.attach g with v | ℓ
+    · rfl
+    · simp only [Sum.map_inr]
+      refine congrArg Sum.inr (Fin.ext ?_)
+      -- Both sides reduce to value computations
+      by_cases hv : ℓ.val < n
+      · -- ℓ is a low label of 𝔊
+        rw [show ℓ = Fin.castAdd n
+          (⟨ℓ.val, hv⟩ : Fin n) from Fin.ext
+            (by simp only [Fin.val_castAdd])]
+        rw [interleaveEquiv_inr_low]
+        rw [show ((finCongr (by omega :
+              n + n = 0 + (n + n)))
+            (Fin.castAdd n (⟨ℓ.val, hv⟩ : Fin n))) =
+          Fin.natAdd 0 (⟨ℓ.val, by omega⟩ : Fin (n + n)) from
+          Fin.ext (by simp [])]
+        rw [interleaveEquiv_inl_high]
+        rw [show (Fin.natAdd (0 + 0)
+            (Fin.castAdd (K + K) (⟨ℓ.val, by omega⟩ :
+              Fin (n + n)))) =
+          (⟨ℓ.val, by omega⟩ :
+            Fin (0 + ((n + n) + (K + K)))) from
+          Fin.ext (by simp [ Fin.val_castAdd])]
+        simp only [id_eq]
+        rw [block_ER_val, block_bigE_val]
+        simp only [Fin.val_castAdd, Fin.val_natAdd]
+        split_ifs <;> omega
+      · -- ℓ is a high label of 𝔊
+        rw [show ℓ = Fin.natAdd n
+          (⟨ℓ.val - n, by have := ℓ.isLt; omega⟩ : Fin n) from
+          Fin.ext (by simp only [Fin.val_natAdd]; omega)]
+        rw [interleaveEquiv_inr_high]
+        rw [show ((finCongr (by omega :
+              n + n = 0 + (n + n)))
+            (Fin.natAdd n (⟨ℓ.val - n, by have := ℓ.isLt; omega⟩ :
+              Fin n))) =
+          Fin.natAdd 0 (⟨ℓ.val, by have := ℓ.isLt; omega⟩ :
+            Fin (n + n)) from
+          Fin.ext (by simp []; omega)]
+        rw [interleaveEquiv_inl_high]
+        rw [show (Fin.natAdd (0 + 0)
+            (Fin.castAdd (K + K) (⟨ℓ.val, by have := ℓ.isLt; omega⟩ :
+              Fin (n + n)))) =
+          (⟨ℓ.val, by have := ℓ.isLt; omega⟩ :
+            Fin (0 + ((n + n) + (K + K)))) from
+          Fin.ext (by simp [ Fin.val_castAdd])]
+        simp only [id_eq]
+        rw [block_ER_val, block_bigE_val]
+        simp only [ Fin.val_natAdd]
+        split_ifs <;> omega
+  -- ═══════ THE CUP FLAGS ═══════
+  · -- a cup flag flips into a through-strand
+    change Sum.map id
+        (⇑((transposeEquiv (K + n) (K + n)).trans
+          (inPermEquiv
+            ((blockRot K n).symm).symm (K + n))))
+        (Sum.map id
+          (⇑(interleaveEquiv K K n n))
+          ((Sum.inr (if !c then
+              (⟨K + k.val, by have := k.isLt; omega⟩ :
+                Fin (K + K))
+            else ⟨k.val, by have := k.isLt; omega⟩)).map
+            Sum.inl Sum.inl)) =
+      Sum.map _ id
+        (Sum.map id
+          (⇑(((finCongr (by omega :
+              0 + ((n + n) + (K + K)) =
+                0 + ((K + n) + (K + n)))).trans
+            (outPermEquiv 0
+              (blockOuterPerm K n))).trans
+            (finCongr (by omega :
+              0 + ((K + n) + (K + n)) =
+                (K + n) + (K + n)))))
+          (Sum.map id
+            (⇑(interleaveEquiv 0 (n + n) 0 (K + K)))
+            (((Sum.inr ((finCongr (by omega :
+                  K + K = 0 + (K + K)))
+                (if c then
+                  (⟨K + k.val, by have := k.isLt; omega⟩ :
+                    Fin (K + K))
+                else ⟨k.val,
+                  by have := k.isLt; omega⟩))).map
+              Sum.inr Sum.inr))))
+    cases c
+    · simp only [Bool.not_false,  Sum.map_inr,
+        Bool.false_eq_true, ite_false, ite_true]
+      refine congrArg Sum.inr (Fin.ext ?_)
+      rw [show (⟨K + k.val, by have := k.isLt; omega⟩ :
+          Fin (K + K)) =
+        Fin.natAdd K (⟨k.val, k.isLt⟩ : Fin K) from
+        Fin.ext rfl]
+      rw [interleaveEquiv_inl_high]
+      rw [show ((finCongr (by omega : K + K = 0 + (K + K)))
+          (⟨k.val, by have := k.isLt; omega⟩ :
+            Fin (K + K))) =
+        Fin.natAdd 0 (⟨k.val,
+          by have := k.isLt; omega⟩ : Fin (K + K)) from
+        Fin.ext (by simp [])]
+      rw [interleaveEquiv_inr_high]
+      rw [show (Fin.natAdd (0 + 0) (Fin.natAdd (n + n)
+          (⟨k.val, by have := k.isLt; omega⟩ :
+            Fin (K + K)))) =
+        (⟨(n + n) + k.val, by have := k.isLt; omega⟩ :
+          Fin (0 + ((n + n) + (K + K)))) from
+        Fin.ext (by simp [])]
+      simp only [id_eq]
+      rw [block_ER_val, block_bigE_val]
+      simp only [Fin.val_castAdd, Fin.val_natAdd]
+      split_ifs <;> omega
+    · simp only [Bool.not_true,  Sum.map_inr,
+        Bool.false_eq_true, ite_false, ite_true]
+      refine congrArg Sum.inr (Fin.ext ?_)
+      rw [show (⟨k.val, by have := k.isLt; omega⟩ :
+          Fin (K + K)) =
+        Fin.castAdd K (⟨k.val, k.isLt⟩ : Fin K) from
+        Fin.ext rfl]
+      rw [interleaveEquiv_inl_low]
+      rw [show ((finCongr (by omega : K + K = 0 + (K + K)))
+          (⟨K + k.val, by have := k.isLt; omega⟩ :
+            Fin (K + K))) =
+        Fin.natAdd 0 (⟨K + k.val,
+          by have := k.isLt; omega⟩ : Fin (K + K)) from
+        Fin.ext (by simp [])]
+      rw [interleaveEquiv_inr_high]
+      rw [show (Fin.natAdd (0 + 0) (Fin.natAdd (n + n)
+          (⟨K + k.val, by have := k.isLt; omega⟩ :
+            Fin (K + K)))) =
+        (⟨(n + n) + (K + k.val), by have := k.isLt; omega⟩ :
+          Fin (0 + ((n + n) + (K + K)))) from
+        Fin.ext (by simp [])]
+      simp only [id_eq]
+      rw [block_ER_val, block_bigE_val]
+      simp only [Fin.val_castAdd]
+      split_ifs <;> omega
+
+private theorem block_splice_bridge_circles (K n : ℕ)
+    (𝔊 : Fragment (Fin (n + n))) :
+    (((tensorFragment (s := 0) (t := n + n) (u := 0) (v := K + K)
+        (𝔊.relabel
+          (finCongr (by omega : n + n = 0 + (n + n))))
+        ((strandBundle K).relabel
+          (finCongr (by omega : K + K = 0 + (K + K))))).relabel
+      (((finCongr (by omega :
+          0 + ((n + n) + (K + K)) = 0 + ((K + n) + (K + n)))).trans
+        (outPermEquiv 0
+          (blockOuterPerm K n))).trans
+        (finCongr (by omega :
+          0 + ((K + n) + (K + n)) = (K + n) + (K + n)))))).circles = (((tensorFragment
+              (strandBundle K) 𝔊).relabel
+        ((transposeEquiv (K + n) (K + n)).trans
+          (inPermEquiv
+            ((blockRot K n).symm).symm (K + n))))).circles := by
+  change 𝔊.circles + (strandBundle K).circles =
+    (strandBundle K).circles + 𝔊.circles
+  omega
+
 /-- The last comparison of the block splice: the leg-extended
 tensor against the rotated through-tensor. -/
 private noncomputable def block_splice_bridge (K n : ℕ)
@@ -661,179 +933,12 @@ private noncomputable def block_splice_bridge (K n : ℕ)
     show (𝔊.Vertex ⊕ (Empty : Type)) ≃
         ((Empty : Type) ⊕ 𝔊.Vertex) from
       _root_.Equiv.sumComm _ _
-  attach_comm := by
-    rintro (g | ⟨k, c⟩)
-    -- ═══════ THE FRAGMENT'S OWN FLAGS ═══════
-    · -- a G-flag crosses sides
-      show Sum.map id
-          (⇑((transposeEquiv (K + n) (K + n)).trans
-            (inPermEquiv
-              ((blockRot K n).symm).symm (K + n))))
-          (Sum.map id
-            (⇑(interleaveEquiv K K n n))
-            ((𝔊.attach g).map Sum.inr Sum.inr)) =
-        Sum.map _ id
-          (Sum.map id
-            (⇑(((finCongr (by omega :
-                0 + ((n + n) + (K + K)) =
-                  0 + ((K + n) + (K + n)))).trans
-              (outPermEquiv 0
-                (blockOuterPerm K n))).trans
-              (finCongr (by omega :
-                0 + ((K + n) + (K + n)) =
-                  (K + n) + (K + n)))))
-            (Sum.map id
-              (⇑(interleaveEquiv 0 (n + n) 0 (K + K)))
-              (((𝔊.attach g).map id
-                  (⇑(finCongr (by omega :
-                    n + n = 0 + (n + n))))).map
-                Sum.inl Sum.inl)))
-      rcases 𝔊.attach g with v | ℓ
-      · rfl
-      · simp only [Sum.map_inr]
-        refine congrArg Sum.inr (Fin.ext ?_)
-        -- Both sides reduce to value computations
-        by_cases hv : ℓ.val < n
-        · -- ℓ is a low label of 𝔊
-          rw [show ℓ = Fin.castAdd n
-            (⟨ℓ.val, hv⟩ : Fin n) from Fin.ext
-              (by simp only [Fin.val_castAdd])]
-          rw [interleaveEquiv_inr_low]
-          rw [show ((finCongr (by omega :
-                n + n = 0 + (n + n)))
-              (Fin.castAdd n (⟨ℓ.val, hv⟩ : Fin n))) =
-            Fin.natAdd 0 (⟨ℓ.val, by omega⟩ : Fin (n + n)) from
-            Fin.ext (by simp [Fin.val_natAdd])]
-          rw [interleaveEquiv_inl_high]
-          rw [show (Fin.natAdd (0 + 0)
-              (Fin.castAdd (K + K) (⟨ℓ.val, by omega⟩ :
-                Fin (n + n)))) =
-            (⟨ℓ.val, by omega⟩ :
-              Fin (0 + ((n + n) + (K + K)))) from
-            Fin.ext (by simp [Fin.val_natAdd, Fin.val_castAdd])]
-          simp only [id_eq]
-          rw [block_ER_val, block_bigE_val]
-          simp only [Fin.val_castAdd, Fin.val_natAdd]
-          split_ifs <;> omega
-        · -- ℓ is a high label of 𝔊
-          rw [show ℓ = Fin.natAdd n
-            (⟨ℓ.val - n, by have := ℓ.isLt; omega⟩ : Fin n) from
-            Fin.ext (by simp only [Fin.val_natAdd]; omega)]
-          rw [interleaveEquiv_inr_high]
-          rw [show ((finCongr (by omega :
-                n + n = 0 + (n + n)))
-              (Fin.natAdd n (⟨ℓ.val - n, by have := ℓ.isLt; omega⟩ :
-                Fin n))) =
-            Fin.natAdd 0 (⟨ℓ.val, by have := ℓ.isLt; omega⟩ :
-              Fin (n + n)) from
-            Fin.ext (by simp [Fin.val_natAdd]; omega)]
-          rw [interleaveEquiv_inl_high]
-          rw [show (Fin.natAdd (0 + 0)
-              (Fin.castAdd (K + K) (⟨ℓ.val, by have := ℓ.isLt; omega⟩ :
-                Fin (n + n)))) =
-            (⟨ℓ.val, by have := ℓ.isLt; omega⟩ :
-              Fin (0 + ((n + n) + (K + K)))) from
-            Fin.ext (by simp [Fin.val_natAdd, Fin.val_castAdd])]
-          simp only [id_eq]
-          rw [block_ER_val, block_bigE_val]
-          simp only [Fin.val_castAdd, Fin.val_natAdd]
-          split_ifs <;> omega
-    -- ═══════ THE CUP FLAGS ═══════
-    · -- a cup flag flips into a through-strand
-      show Sum.map id
-          (⇑((transposeEquiv (K + n) (K + n)).trans
-            (inPermEquiv
-              ((blockRot K n).symm).symm (K + n))))
-          (Sum.map id
-            (⇑(interleaveEquiv K K n n))
-            ((Sum.inr (if !c then
-                (⟨K + k.val, by have := k.isLt; omega⟩ :
-                  Fin (K + K))
-              else ⟨k.val, by have := k.isLt; omega⟩)).map
-              Sum.inl Sum.inl)) =
-        Sum.map _ id
-          (Sum.map id
-            (⇑(((finCongr (by omega :
-                0 + ((n + n) + (K + K)) =
-                  0 + ((K + n) + (K + n)))).trans
-              (outPermEquiv 0
-                (blockOuterPerm K n))).trans
-              (finCongr (by omega :
-                0 + ((K + n) + (K + n)) =
-                  (K + n) + (K + n)))))
-            (Sum.map id
-              (⇑(interleaveEquiv 0 (n + n) 0 (K + K)))
-              (((Sum.inr ((finCongr (by omega :
-                    K + K = 0 + (K + K)))
-                  (if c then
-                    (⟨K + k.val, by have := k.isLt; omega⟩ :
-                      Fin (K + K))
-                  else ⟨k.val,
-                    by have := k.isLt; omega⟩))).map
-                Sum.inr Sum.inr))))
-      cases c
-      · simp only [Bool.not_false, Sum.map_inl, Sum.map_inr,
-          Bool.false_eq_true, if_false, if_true, reduceIte]
-        refine congrArg Sum.inr (Fin.ext ?_)
-        rw [show (⟨K + k.val, by have := k.isLt; omega⟩ :
-            Fin (K + K)) =
-          Fin.natAdd K (⟨k.val, k.isLt⟩ : Fin K) from
-          Fin.ext rfl]
-        rw [interleaveEquiv_inl_high]
-        rw [show ((finCongr (by omega : K + K = 0 + (K + K)))
-            (⟨k.val, by have := k.isLt; omega⟩ :
-              Fin (K + K))) =
-          Fin.natAdd 0 (⟨k.val,
-            by have := k.isLt; omega⟩ : Fin (K + K)) from
-          Fin.ext (by simp [Fin.val_natAdd])]
-        rw [interleaveEquiv_inr_high]
-        rw [show (Fin.natAdd (0 + 0) (Fin.natAdd (n + n)
-            (⟨k.val, by have := k.isLt; omega⟩ :
-              Fin (K + K)))) =
-          (⟨(n + n) + k.val, by have := k.isLt; omega⟩ :
-            Fin (0 + ((n + n) + (K + K)))) from
-          Fin.ext (by simp [Fin.val_natAdd])]
-        simp only [id_eq]
-        rw [block_ER_val, block_bigE_val]
-        simp only [Fin.val_castAdd, Fin.val_natAdd]
-        split_ifs <;> first
-          | omega
-          | (have hk := k.isLt; omega)
-      · simp only [Bool.not_true, Sum.map_inl, Sum.map_inr,
-          Bool.false_eq_true, if_false, if_true, reduceIte]
-        refine congrArg Sum.inr (Fin.ext ?_)
-        rw [show (⟨k.val, by have := k.isLt; omega⟩ :
-            Fin (K + K)) =
-          Fin.castAdd K (⟨k.val, k.isLt⟩ : Fin K) from
-          Fin.ext rfl]
-        rw [interleaveEquiv_inl_low]
-        rw [show ((finCongr (by omega : K + K = 0 + (K + K)))
-            (⟨K + k.val, by have := k.isLt; omega⟩ :
-              Fin (K + K))) =
-          Fin.natAdd 0 (⟨K + k.val,
-            by have := k.isLt; omega⟩ : Fin (K + K)) from
-          Fin.ext (by simp [Fin.val_natAdd])]
-        rw [interleaveEquiv_inr_high]
-        rw [show (Fin.natAdd (0 + 0) (Fin.natAdd (n + n)
-            (⟨K + k.val, by have := k.isLt; omega⟩ :
-              Fin (K + K)))) =
-          (⟨(n + n) + (K + k.val), by have := k.isLt; omega⟩ :
-            Fin (0 + ((n + n) + (K + K)))) from
-          Fin.ext (by simp [Fin.val_natAdd])]
-        simp only [id_eq]
-        rw [block_ER_val, block_bigE_val]
-        simp only [Fin.val_castAdd, Fin.val_natAdd]
-        split_ifs <;> first
-          | omega
-          | (have hk := k.isLt; omega)
+  attach_comm := block_splice_bridge_attach_comm K n 𝔊
   pairing_comm := by
     rintro (g | ⟨k, c⟩)
     · rfl
     · rfl
-  circles_eq := by
-    show 𝔊.circles + (strandBundle K).circles =
-      (strandBundle K).circles + 𝔊.circles
-    omega
+  circles_eq := block_splice_bridge_circles K n 𝔊
 
 /-! ### The splice -/
 

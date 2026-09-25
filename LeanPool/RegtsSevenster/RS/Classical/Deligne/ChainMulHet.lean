@@ -94,7 +94,7 @@ noncomputable def chainMulHetCocone [Category.{v} E] [MonoidalCategory E]
         mu (smallNatEquiv.inverse.obj k) j ≫
           chainColimitι F δF (smallNatEquiv.inverse.obj k + 1 + j)
       naturality := fun {k k'} f => by
-        show (chainMap B δB
+        change (chainMap B δB
             (leOfHom (smallNatEquiv.inverse.map f)) ▷ C j) ≫
             (mu (smallNatEquiv.inverse.obj k') j ≫
               chainColimitι F δF
@@ -137,7 +137,7 @@ theorem ι_chainMulHetStage [Category.{v} E] [MonoidalCategory E]
     (chainColimitι B δB i ▷ C j) ≫
         chainMulHetStage B C F δB δF mu hδl j =
       mu i j ≫ chainColimitι F δF (i + 1 + j) := by
-  show (tensorRight (C j)).map (colimit.ι (chainDiagram B δB)
+  change (tensorRight (C j)).map (colimit.ι (chainDiagram B δB)
       (smallNatEquiv.functor.obj i)) ≫
       chainMulHetStage B C F δB δF mu hδl j =
     mu i j ≫ chainColimitι F δF (i + 1 + j)
@@ -183,7 +183,7 @@ noncomputable def chainMulHetTotalCocone [Category.{v} E] [MonoidalCategory E]
         chainMulHetStage B C F δB δF mu hδl
           (smallNatEquiv.inverse.obj k)
       naturality := fun {k k'} f => by
-        show (chainColimit B δB ◁ chainMap C δC
+        change (chainColimit B δB ◁ chainMap C δC
             (leOfHom (smallNatEquiv.inverse.map f))) ≫
             chainMulHetStage B C F δB δF mu hδl
               (smallNatEquiv.inverse.obj k') =
@@ -230,7 +230,7 @@ theorem whiskerLeft_ι_chainColimitMulHet [Category.{v} E] [MonoidalCategory E]
     (chainColimit B δB ◁ chainColimitι C δC j) ≫
         chainColimitMulHet B C F δB δC δF mu hδl hδr =
       chainMulHetStage B C F δB δF mu hδl j := by
-  show (tensorLeft (chainColimit B δB)).map
+  change (tensorLeft (chainColimit B δB)).map
       (colimit.ι (chainDiagram C δC)
         (smallNatEquiv.functor.obj j)) ≫
       chainColimitMulHet B C F δB δC δF mu hδl hδr =

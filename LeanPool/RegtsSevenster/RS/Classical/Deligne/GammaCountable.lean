@@ -107,7 +107,7 @@ theorem rank_le_aleph0_of_countable_cover
     rwa [(b i).span_eq, Submodule.map_top, Submodule.range_subtype]
       at h1
   have hcS : (⋃ i, s i).Countable := by
-    haveI := hcnt
+    have := hcnt
     exact Set.countable_iUnion fun i => Set.countable_range _
   have htopS : Submodule.span K (⋃ i, s i) = ⊤ := by
     rw [Submodule.span_iUnion]
@@ -271,7 +271,7 @@ theorem rank_hom_unit_indOf_le_aleph0
     (hu : HasScalarUnit C)
     (hsmul : IndOfLinear C) {W : C} (hW : ∃ N : ℕ, LengthLE W N) :
     Module.rank ℂ (𝟙_ (Ind C) ⟶ indOf.obj W) ≤ Cardinal.aleph0 := by
-  haveI : FiniteDimensional ℂ (𝟙_ C ⟶ W) :=
+  have : FiniteDimensional ℂ (𝟙_ C ⟶ W) :=
     finiteDimensional_hom_unit hu hW
   have h1 : Module.rank ℂ (𝟙_ (Ind C) ⟶ indOf.obj W) =
       Module.rank ℂ (indOf.obj (𝟙_ C) ⟶ indOf.obj W) :=
@@ -344,9 +344,9 @@ theorem rank_hom_unit_tensor_presented
     Module.rank ℂ (𝟙_ (Ind C) ⟶ (Y ⊗ Z) ⊗ indOf.obj W) ≤
       Cardinal.aleph0 := by
   obtain ⟨I, hcat, hfil, hcnt, G, ⟨eZ⟩⟩ := hZ
-  letI := hcat
-  letI := hfil
-  letI := hcnt
+  let := hcat
+  let := hfil
+  let := hcnt
   refine rank_hom_unit_le_aleph0_of_iso
     (Z := colimit (((G ⋙ indOf) ⋙ tensorRight (indOf.obj W)) ⋙
       tensorLeft Y)) ?_ ?_
@@ -441,9 +441,9 @@ theorem exists_common_algebra_rank_le_aleph0
       MonObj.one (X := 𝔸) ≠ 0 ∧
       (∀ j, ∃ φ : B j ⟶ 𝔸, IsMonHom φ) ∧
       Module.rank ℂ (𝟙_ (Ind C) ⟶ 𝔸) ≤ Cardinal.aleph0 := by
-  letI : DecidableRel (WellOrderingRel (α := J)) :=
+  let : DecidableRel (WellOrderingRel (α := J)) :=
     Classical.decRel _
-  letI : LinearOrder J := linearOrderOfSTO WellOrderingRel
+  let : LinearOrder J := linearOrderOfSTO WellOrderingRel
   exact ⟨bigTensor B, bigTensorMon B, bigTensorCommMon B,
     bigTensorUnit_ne_zero_ind B hu hB,
     fun j => ⟨bigTensorOf B j, isMonHom_bigTensorOf B j⟩,
@@ -522,11 +522,11 @@ theorem exists_universal_algebra_rank_le_aleph0
   classical
   choose pm qm Am Amon Acomm Ane Apres Aiso using hmix
   choose Bs Bmon Bcomm Bne Bpres Bsec using hsplit
-  letI : ∀ i : J ⊕ K, MonObj (Sum.elim Am Bs i) := fun i =>
+  let : ∀ i : J ⊕ K, MonObj (Sum.elim Am Bs i) := fun i =>
     match i with
     | Sum.inl j => Amon j
     | Sum.inr k => Bmon k
-  letI : ∀ i : J ⊕ K, IsCommMonObj (Sum.elim Am Bs i) := fun i =>
+  let : ∀ i : J ⊕ K, IsCommMonObj (Sum.elim Am Bs i) := fun i =>
     match i with
     | Sum.inl j => Acomm j
     | Sum.inr k => Bcomm k
@@ -542,13 +542,13 @@ theorem exists_universal_algebra_rank_le_aleph0
   refine ⟨𝔸, hmon, hcomm, hne, ?_, ?_, hrk⟩
   · intro j
     obtain ⟨φ, hφ⟩ := hmap (Sum.inl j)
-    haveI : IsMonHom (show Am j ⟶ 𝔸 from φ) := hφ
+    have : IsMonHom (show Am j ⟶ 𝔸 from φ) := hφ
     exact ⟨pm j, qm j,
       ⟨freeModIsoBaseChange (Am j) 𝔸 (show Am j ⟶ 𝔸 from φ)
         (Aiso j).some⟩⟩
   · intro k
     obtain ⟨φ, hφ⟩ := hmap (Sum.inr k)
-    haveI : IsMonHom (show Bs k ⟶ 𝔸 from φ) := hφ
+    have : IsMonHom (show Bs k ⟶ 𝔸 from φ) := hφ
     obtain ⟨s, hs⟩ := Bsec k
     exact exists_section_baseChange (Bs k) 𝔸
       (show Bs k ⟶ 𝔸 from φ) (g k) s hs
@@ -577,7 +577,7 @@ theorem nonempty_superPoint_of_rank_le_aleph0
     (S : SuperCommAlgebra.{u, u'}) [Nontrivial S.even]
     (h : Module.rank ℂ S.even ≤ Cardinal.aleph0) :
     Nonempty (SuperPoint S) := by
-  haveI := S.nontrivial_quotient_oddIdeal
+  have := S.nontrivial_quotient_oddIdeal
   refine (exists_algHom_of_countable_dimension (S.even ⧸ S.oddIdeal)
     ?_).map (SuperPoint.ofQuotient S)
   exact le_trans (LinearMap.rank_le_of_surjective
@@ -616,7 +616,7 @@ theorem nonempty_superPoint_gammaAlgebra
     (hR : MonObj.one (X := R) ≠ 0)
     (h : Module.rank ℂ (𝟙_ (Ind C) ⟶ R) ≤ Cardinal.aleph0) :
     Nonempty (SuperPoint (gammaAlgebra (Ind C) L R)) := by
-  haveI : Nontrivial (gammaAlgebra (Ind C) L R).even :=
+  have : Nontrivial (gammaAlgebra (Ind C) L R).even :=
     nontrivial_of_ne 1 0 hR
   exact nonempty_superPoint_of_rank_le_aleph0 _
     (rank_gammaEven_le_aleph0 L R h)

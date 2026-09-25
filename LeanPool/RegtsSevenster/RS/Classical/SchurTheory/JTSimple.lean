@@ -24,7 +24,7 @@ theorem jtChar_pm_simple (μ : YoungDiagram) :
       ((∀ π, jtChar μ π = nChar S₀ π) ∨
         (∀ π, jtChar μ π = - nChar S₀ π)) := by
   obtain ⟨J, hJ, ε, T, hT, hε, hchar⟩ := jtChar_eq_sum_sign_nChar μ
-  letI := hJ
+  let := hJ
   exact jt_pm_nChar μ ε T hT hchar
 
 end RS

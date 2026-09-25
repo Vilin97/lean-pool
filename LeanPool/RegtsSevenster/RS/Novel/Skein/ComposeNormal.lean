@@ -68,7 +68,7 @@ theorem interfacePairs_wf (s t u : ℕ) :
 def finLtEquiv (s t : ℕ) : {a : Fin (s + t) // a.val < s} ≃ Fin s where
   toFun a := ⟨a.val.val, a.prop⟩
   invFun a := ⟨⟨a.val, by have := a.isLt; omega⟩, by
-    show a.val < s
+    change a.val < s
     exact a.isLt⟩
   left_inv a := Subtype.ext (Fin.ext rfl)
   right_inv a := Fin.ext rfl
@@ -80,14 +80,14 @@ def finGeEquiv (t u : ℕ) : {b : Fin (t + u) // ¬ b.val < t} ≃ Fin u where
     have h2 := Nat.le_of_not_lt b.prop
     omega⟩
   invFun b := ⟨⟨t + b.val, by have := b.isLt; omega⟩, by
-    show ¬ t + b.val < t
+    change ¬ t + b.val < t
     omega⟩
   left_inv b := Subtype.ext (Fin.ext (by
     have := Nat.le_of_not_lt b.prop
-    show t + (b.val.val - t) = b.val.val
+    change t + (b.val.val - t) = b.val.val
     omega))
   right_inv b := Fin.ext (by
-    show t + b.val - t = b.val
+    change t + b.val - t = b.val
     omega)
 
 /-- The survival predicate of the interface gluing. -/
@@ -195,8 +195,8 @@ theorem interfaceStepEquiv_inl (s t u : ℕ) (a : Fin (s + t + 1))
       ⟨a, fun he => h.1 (congrArg Sum.inl he)⟩) from rfl]
   refine congrArg Sum.inl (Fin.ext ?_)
   rw [finRemoveEquiv_val]
-  show (if a.val < s + t then a.val else a.val - 1) = a.val
-  rw [if_pos ha]
+  change (if a.val < s + t then a.val else a.val - 1) = a.val
+  rw [ite_eq_left ha]
 
 /-- The step re-indexing on surviving right labels below the glued
 index: values are preserved. -/
@@ -220,8 +220,8 @@ theorem interfaceStepEquiv_inr_below (s t u : ℕ) (b : Fin (t + 1 + u))
   refine congrArg Sum.inr (Fin.ext ?_)
   unfold rightRemoveEquiv
   rw [Equiv.trans_apply, finRemoveEquiv_val]
-  show (if b.val < t then b.val else b.val - 1) = b.val
-  rw [if_pos hb]
+  change (if b.val < t then b.val else b.val - 1) = b.val
+  rw [ite_eq_left hb]
 
 /-- The step re-indexing on surviving right labels above the glued
 index: values drop by one. -/
@@ -245,8 +245,8 @@ theorem interfaceStepEquiv_inr_above (s t u : ℕ) (b : Fin (t + 1 + u))
   refine congrArg Sum.inr (Fin.ext ?_)
   unfold rightRemoveEquiv
   rw [Equiv.trans_apply, finRemoveEquiv_val]
-  show (if b.val < t then b.val else b.val - 1) = b.val - 1
-  rw [if_neg (by omega)]
+  change (if b.val < t then b.val else b.val - 1) = b.val - 1
+  rw [ite_eq_right (by omega)]
 
 /-! ### The coerced tail as a mapped pair list -/
 
@@ -261,7 +261,7 @@ theorem interfaceStepEquiv_symm_inl (s t u : ℕ) (k : ℕ) (hk : k < t) :
         fun he => Sum.inl_ne_inr he⟩ := by
   rw [_root_.Equiv.symm_apply_eq]
   exact (interfaceStepEquiv_inl s t u ⟨s + k, by omega⟩ _
-    (by show s + k < s + t; omega)).symm
+    (by change s + k < s + t; omega)).symm
 
 /-- The step re-indexing pulls tail-pair right components back to
 themselves. -/
@@ -367,7 +367,7 @@ noncomputable def glueInterfaceNormal (s u : ℕ) :
         (interfacePairs_wf s t u)).relabel (interfaceSurvEquiv s t u))
   -- ═══════ t = 0: NOTHING TO GLUE ═══════
   | 0, W => by
-    show (W.relabel (Equiv.sumCongr (finCongr (by omega))
+    change (W.relabel (Equiv.sumCongr (finCongr (by omega))
       (finCongr (by omega)))).Equiv _
     have hnil : Fragment.glueList W (interfacePairs s 0 u)
         (interfacePairs_wf s 0 u) =
@@ -384,7 +384,7 @@ noncomputable def glueInterfaceNormal (s u : ℕ) :
     exact heq ▸ Fragment.Equiv.refl _
   -- ═══════ t + 1: GLUE THE TOP PAIR, RECURSE ═══════
   | t + 1, W => by
-    show (glueInterface s t u
+    change (glueInterface s t u
       ((W.gluePair (Sum.inl ⟨s + t, by omega⟩) (Sum.inr ⟨t, by omega⟩)
         Sum.inl_ne_inr).relabel
         (interfaceStepEquiv s t u))).Equiv _
@@ -449,7 +449,7 @@ noncomputable def glueInterfaceNormal (s u : ℕ) :
             refine absurd (Subtype.ext ?_ : x.val = r.1) (x.prop r hr).1
             rw [hr1, hval]
             exact congrArg Sum.inl (Fin.ext
-              (by show a.val = s + (a.val - s); omega))
+              (by change a.val = s + (a.val - s); omega))
         have hxv : x.val = ⟨Sum.inl a,
             by rw [← hval]; exact x.val.prop.1,
             by rw [← hval]; exact x.val.prop.2⟩ :=
@@ -502,7 +502,7 @@ noncomputable def glueInterfaceNormal (s u : ℕ) :
               (Fragment.coercePairsList _ _ (tailPairs s t u)
                 hwf_cons.sep)) x))
           ⟨b.val - 1, by have := b.isLt; omega⟩ hstep
-          (by show t ≤ b.val - 1; omega)
+          (by change t ≤ b.val - 1; omega)
         have hR := interfaceSurvEquiv_inr s (t + 1) u
           ((Fragment.foldSurvivingPermEquiv
               (by rw [interfacePairs_succ s t u] :
@@ -512,7 +512,7 @@ noncomputable def glueInterfaceNormal (s u : ℕ) :
           b hval (by omega)
         refine hL.trans (Eq.trans ?_ hR.symm)
         exact congrArg Sum.inr (Fin.ext (by
-          show b.val - 1 - t = b.val - (t + 1)
+          change b.val - 1 - t = b.val - (t + 1)
           omega))
     rw [heqF]
     refine Fragment.Equiv.trans
@@ -546,7 +546,7 @@ noncomputable def composeNormal {s t u : ℕ}
         (interfacePairs_wf s t u)).relabel
         ((interfaceSurvEquiv s t u).trans finSumFinEquiv)) := by
   refine Fragment.Equiv.trans ?_ (Fragment.Equiv.relabelTrans _ _ _)
-  show ((glueInterface s t u (F.disjUnion G)).relabel
+  change ((glueInterface s t u (F.disjUnion G)).relabel
     finSumFinEquiv).Equiv _
   exact Fragment.Equiv.relabelCongr
     (glueInterfaceNormal s u t (F.disjUnion G)) finSumFinEquiv

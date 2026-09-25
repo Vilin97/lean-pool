@@ -31,7 +31,7 @@ theorem powTailAct_zero_lambda
     [MonObj A] (X : D) [ModObj A X] :
     powTailAct A X 0 ≫ (λ_ X).hom =
       (A ◁ (λ_ X).hom) ≫ actLeft A X := by
-  show actAcross A (𝟙_ D) X ≫ (λ_ X).hom = _
+  change actAcross A (𝟙_ D) X ≫ (λ_ X).hom = _
   rw [actAcross]
   simp only [Category.assoc]
   rw [MonoidalCategory.leftUnitor_naturality]
@@ -75,7 +75,7 @@ theorem symPowAct_symPowOne
     symPowAct A X 0 ≫ (symPowOne A X).hom =
       (A ◁ (symPowOne A X).hom) ≫ actLeft A X := by
   rw [symPowAct, symPowOne]
-  show ((A ◁ symPowσ A X 1) ≫ modPowAct A X 0 ≫
+  change ((A ◁ symPowσ A X 1) ≫ modPowAct A X 0 ≫
       symPowπ A X 1) ≫ symPowσ A X 1 ≫ (modPowOne A X).hom =
     (A ◁ (symPowσ A X 1 ≫ (modPowOne A X).hom)) ≫ actLeft A X
   rw [MonoidalCategory.whiskerLeft_comp]

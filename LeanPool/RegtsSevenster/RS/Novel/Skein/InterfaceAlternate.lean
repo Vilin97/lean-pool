@@ -26,8 +26,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Classical
-
+open Fragment
 section OpenCut
 
 variable {L : Type}
@@ -76,7 +75,7 @@ theorem chainDir_unglueOpen_alternates
       (partnerSurvJ hopen).prop.2
   have hflip := o'.pairing_flip (partnerSurvI hopen) hIg hJg
   rw [gluePairOpen_partnerSurvI hij hopen] at hflip
-  show unglueIsOut o'.isOut (V.pairing (V.boundaryFlag j))
+  change unglueIsOut o'.isOut (V.pairing (V.boundaryFlag j))
     = !unglueIsOut o'.isOut (V.pairing (V.boundaryFlag i))
   rw [show V.pairing (V.boundaryFlag j)
       = (partnerSurvJ hopen).val from rfl,
@@ -130,7 +129,7 @@ theorem chainDir_unglueOpen_surviving
       = V.pairing (V.boundaryFlag b.val) :=
     gluePairOpen_pairing_val_of_ne hij hopen
       (glueBoundaryFlag V i j b) hne1 hne2
-  show unglueIsOut o'.isOut (V.pairing (V.boundaryFlag b.val))
+  change unglueIsOut o'.isOut (V.pairing (V.boundaryFlag b.val))
     = o'.isOut ((V.gluePairOpen i j hij hopen).pairing
         (glueBoundaryFlag V i j b))
   rw [show V.pairing (V.boundaryFlag b.val)
@@ -206,7 +205,7 @@ theorem chainDir_unglueClosed_surviving {V : Fragment L} {i : L} {j : L}
         (V.boundaryFlag bl.val)
       = chainDir o'
         ((V.gluePairClosed i j hclosed).boundaryFlag bl) := by
-  show unglueIsOut o'.isOut (V.pairing (V.boundaryFlag bl.val))
+  change unglueIsOut o'.isOut (V.pairing (V.boundaryFlag bl.val))
     = o'.isOut ((V.gluePairClosed i j hclosed).pairing
         (glueBoundaryFlag V i j bl))
   rw [show V.pairing (V.boundaryFlag bl.val)
@@ -355,7 +354,7 @@ theorem interfaceStepEquiv_intL (n : ℕ) (b : Fin n) :
     interfaceStepEquiv 0 n 0
         ⟨intL (n + 1) b.castSucc, intL_castSucc_ne n b⟩
       = intL n b := by
-  show interfaceStepEquiv 0 n 0
+  change interfaceStepEquiv 0 n 0
       ⟨Sum.inl (Fin.cast (by omega) b.castSucc),
         intL_castSucc_ne n b⟩ = _
   rw [interfaceStepEquiv_apply_inl 0 n 0 _ (intL_castSucc_ne n b)]
@@ -368,7 +367,7 @@ theorem interfaceStepEquiv_intR (n : ℕ) (b : Fin n) :
     interfaceStepEquiv 0 n 0
         ⟨intR (n + 1) b.castSucc, intR_castSucc_ne n b⟩
       = intR n b := by
-  show interfaceStepEquiv 0 n 0
+  change interfaceStepEquiv 0 n 0
       ⟨Sum.inr (Fin.cast (by omega) b.castSucc),
         intR_castSucc_ne n b⟩ = _
   rw [interfaceStepEquiv_apply_inr 0 n 0 _ (intR_castSucc_ne n b)]
@@ -376,7 +375,7 @@ theorem interfaceStepEquiv_intR (n : ℕ) (b : Fin n) :
   rw [rightRemoveEquiv_val]
   have := b.isLt
   simp only [Fin.val_cast, Fin.val_castSucc]
-  rw [if_pos (by omega)]
+  rw [ite_eq_left (by omega)]
 
 /-! ## The subsets the composition reaches
 
@@ -445,7 +444,7 @@ theorem reachable_succ_open (n : ℕ)
           (V.dropSubset (cutL n) (cutR n) s)) := by
   have hr' : (if hcl : V.pairing (V.boundaryFlag (cutL n))
       = V.boundaryFlag (cutR n) then _ else _) := hr
-  rwa [dif_neg hop] at hr'
+  rwa [dite_eq_right hop] at hr'
 
 open Classical in
 /-- The reach, one stage down, at a closing cut. -/
@@ -461,7 +460,7 @@ theorem reachable_succ_closed (n : ℕ)
         (V.dropSubset (cutL n) (cutR n) s)) := by
   have hr' : (if hc : V.pairing (V.boundaryFlag (cutL n))
       = V.boundaryFlag (cutR n) then _ else _) := hr
-  rwa [dif_pos hcl] at hr'
+  rwa [dite_eq_left hcl] at hr'
 
 open Classical in
 /-- **The stage's own cut alternates.**  For a reached subset the
@@ -513,7 +512,7 @@ theorem chainDir_stepDataDown_top (n : ℕ)
         (dataOfEq (gluePair_eq_open n V hop)
           (stepDataGlued n V 𝒟step)) := by
     unfold stepDataDown
-    rw [dif_neg hop]
+    rw [dite_eq_right hop]
   have hIl' : (partnerSurvI hop).val
       ∈ (EdgeSubset.mk (liftSubsetOpen hop
         (V.dropSubset (cutL n) (cutR n) s)) hcL :
@@ -598,7 +597,7 @@ theorem chainDir_stepDataDown_lower_open (n : ℕ)
         (dataOfEq (gluePair_eq_open n V hop)
           (stepDataGlued n V 𝒟step)) := by
     unfold stepDataDown
-    rw [dif_neg hop]
+    rw [dite_eq_right hop]
   rw [hstep, unglueDataOpen_apply (cutL_ne_cutR n) hop _ s hc hE hne
       (V.dropSubset (cutL n) (cutR n) s) rfl hdc hcL hF hEt hnet,
     chainDir_orientOfEq, chainDir_orientOfEq]
@@ -664,7 +663,7 @@ theorem chainDir_stepDataDown_lower_closed (n : ℕ)
         (dataOfEq (gluePair_eq_closed n V hcl)
           (stepDataGlued n V 𝒟step)) := by
     unfold stepDataDown
-    rw [dif_pos hcl]
+    rw [dite_eq_left hcl]
   rw [hstep, unglueDataClosed_apply (cutL_ne_cutR n) hcl _ s hc hE
       hne (V.dropSubset (cutL n) (cutR n) s)
       (decide (V.boundaryFlag (cutL n) ∈ s)) rfl rfl hct hcL hF hEt
@@ -674,7 +673,7 @@ theorem chainDir_stepDataDown_lower_closed (n : ℕ)
     halt
 
 /-- A boundary flag is never internal. -/
-theorem boundaryFlag_not_internal {L' : Type} [LinearOrder L']
+theorem boundaryFlag_not_internal {L' : Type}
     {W : Fragment L'} (F : EdgeSubset W) (b : L') :
     W.boundaryFlag b ∉ F.internalFlags := by
   intro hx

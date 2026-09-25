@@ -98,6 +98,28 @@ theorem permMor_comp_permAlg
     rfl
   rw [h1, h2, hcen]
 
+/-- The permutation action followed by its inverse is the identity. -/
+theorem permMor_comp_inverse
+    [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
+    [Preadditive A] [Linear ℂ A]
+    (Z : A) (n : ℕ) (g : Equiv.Perm (Fin n)) :
+    permMor Z n g ≫ permMor Z n g⁻¹ = 𝟙 _ := by
+  rw [show permMor Z n g ≫
+      permMor Z n g⁻¹ =
+    permAlg Z n (MonoidAlgebra.single (g⁻¹ *
+      g) 1) from by
+    rw [show MonoidAlgebra.single (g⁻¹ *
+        g) (1 : ℂ) =
+      MonoidAlgebra.single g⁻¹ 1 *
+        MonoidAlgebra.single g 1 from by
+      rw [MonoidAlgebra.single_mul_single, one_mul],
+      map_mul, permAlg_single, permAlg_single]
+    rfl]
+  rw [inv_mul_cancel]
+  rw [show MonoidAlgebra.single (1 : Equiv.Perm (Fin n))
+    (1 : ℂ) = 1 from rfl, map_one]
+  rfl
+
 /-- **The direct-sum transfer** (Deligne 1.13, ⊕ half): Schur
 vanishing for `X` at `μ` and `Y` at `ν` forces Schur vanishing for
 `X ⊞ Y` at every diagram containing the fat-hook cell of the two
@@ -138,23 +160,7 @@ theorem SchurKilled.biprod
   have hsorted := sortIso_spec X Y n w
   -- `mixedInto ≫ permMor (sortPerm w)` is the standard inclusion.
   -- Post-compose the goal with the invertible sorting action.
-  have hperm : permMor (X ⊞ Y) n (sortPerm w) ≫
-      permMor (X ⊞ Y) n (sortPerm w)⁻¹ = 𝟙 _ := by
-    rw [show permMor (X ⊞ Y) n (sortPerm w) ≫
-        permMor (X ⊞ Y) n (sortPerm w)⁻¹ =
-      permAlg (X ⊞ Y) n (MonoidAlgebra.single ((sortPerm w)⁻¹ *
-        sortPerm w) 1) from by
-      rw [show MonoidAlgebra.single ((sortPerm w)⁻¹ *
-          sortPerm w) (1 : ℂ) =
-        MonoidAlgebra.single (sortPerm w)⁻¹ 1 *
-          MonoidAlgebra.single (sortPerm w) 1 from by
-        rw [MonoidAlgebra.single_mul_single, one_mul],
-        map_mul, permAlg_single, permAlg_single]
-      rfl]
-    rw [inv_mul_cancel]
-    rw [show MonoidAlgebra.single (1 : Equiv.Perm (Fin n))
-      (1 : ℂ) = 1 from rfl, map_one]
-    rfl
+  have hperm := permMor_comp_inverse (X ⊞ Y) n (sortPerm w)
   have hcen : ∀ y, P.e lam * y = y * P.e lam := fun y => by
     have := shape_e_central P (⟨lam, rfl⟩ : Shape lam.card) y
     rwa [show Shape.e P (⟨lam, rfl⟩ : Shape lam.card) =

@@ -36,9 +36,9 @@ theorem compContent_count (α : Fin N → ℕ) (j : Fin N) :
   rw [compContent, Multiset.count_sum']
   rw [Finset.sum_eq_single j
     (fun b _ hb => by
-      rw [Multiset.count_replicate, if_neg hb])
+      rw [Multiset.count_replicate, ite_eq_right hb])
     (fun h => absurd (Finset.mem_univ j) h)]
-  rw [Multiset.count_replicate, if_pos rfl]
+  rw [Multiset.count_replicate, ite_eq_left rfl]
 
 /-- Its size is the composition's total. -/
 theorem compContent_card (α : Fin N → ℕ) :
@@ -132,14 +132,14 @@ theorem sum_colourChar_weight (α : Fin N → ℕ)
             else 0) := by
         refine Finset.sum_congr rfl fun g _ => ?_
         by_cases hg : ∀ j, fibreCard g j = α j
-        · rw [if_pos hg, Finset.sum_filter]
+        · rw [ite_eq_left hg, Finset.sum_filter]
           exact Finset.sum_congr rfl fun π _ => by
             by_cases hf : g ∘ π = g
-            · rw [if_pos ⟨hg, hf⟩, if_pos hf]
-            · rw [if_neg (fun hc => hf hc.2), if_neg hf]
-        · rw [if_neg hg]
+            · rw [ite_eq_left ⟨hg, hf⟩, ite_eq_left hf]
+            · rw [ite_eq_right (fun hc => hf hc.2), ite_eq_right hf]
+        · rw [ite_eq_right hg]
           rw [Finset.sum_eq_zero fun π _ =>
-            if_neg (fun hc => hg hc.1)]
+            ite_eq_right (fun hc => hg hc.1)]
     _ = ∑ g : {g : Fin n → Fin N // ∀ j, fibreCard g j = α j},
           ∑ π ∈ Finset.univ.filter
             (fun π : Equiv.Perm (Fin n) => g.1 ∘ π = g.1), W π := by

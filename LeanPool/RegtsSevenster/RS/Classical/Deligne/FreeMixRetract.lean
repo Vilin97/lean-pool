@@ -30,7 +30,7 @@ theorem freeModMap_biproduct_total
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [MonoidalPreadditive D] (A : D) [MonObj A] [HasFiniteBiproducts D]
     {ι : Type} [Fintype ι]
-    [DecidableEq ι] (f : ι → D) :
+    (f : ι → D) :
     ∑ i : ι, (freeModMap A (biproduct.π f i)).hom ≫
         (freeModMap A (biproduct.ι f i)).hom =
       𝟙 (freeMod A (⨁ f)).X := by

@@ -25,7 +25,7 @@ pairing-closed subset is always a lift.
 
 namespace RS
 
-open scoped Classical
+
 
 namespace Fragment
 
@@ -41,7 +41,7 @@ theorem extendPair_left {k ℓ : ℕ} {α : Type} (i j : α)
     GenBoundaryState.extendPair i j st c c' i = c := by
   classical
   unfold GenBoundaryState.extendPair
-  rw [dif_pos rfl]
+  rw [dite_eq_left rfl]
 
 /-- And at the second, when the two are distinct. -/
 theorem extendPair_right {k ℓ : ℕ} {α : Type} {i j : α}
@@ -51,7 +51,7 @@ theorem extendPair_right {k ℓ : ℕ} {α : Type} {i j : α}
     GenBoundaryState.extendPair i j st c c' j = c' := by
   classical
   unfold GenBoundaryState.extendPair
-  rw [dif_neg (Ne.symm hij), dif_pos rfl]
+  rw [dite_eq_right (Ne.symm hij), dite_eq_left rfl]
 
 /-- And the restriction elsewhere. -/
 theorem extendPair_surviving {k ℓ : ℕ} {α : Type} (i j : α)
@@ -60,7 +60,7 @@ theorem extendPair_surviving {k ℓ : ℕ} {α : Type} (i j : α)
     GenBoundaryState.extendPair i j st c c' x.val = st x := by
   classical
   unfold GenBoundaryState.extendPair
-  rw [dif_neg x.prop.1, dif_neg x.prop.2]
+  rw [dite_eq_right x.prop.1, dite_eq_right x.prop.2]
 
 /-! ### The closed cut -/
 

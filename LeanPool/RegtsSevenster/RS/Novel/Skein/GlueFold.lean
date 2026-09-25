@@ -259,7 +259,7 @@ theorem glueList_cons {α : Type} (W : Fragment α)
         (coercePairsList p.1 p.2 ps hp.sep)
         (coercePairsList_wf p.1 p.2 ps hp.tail hp.sep)).relabel
       (foldFlatten p.1 p.2 ps hp.sep) := by
-  show glueListAux ((p :: ps).length) W (p :: ps) hp le_rfl =
+  change glueListAux ((p :: ps).length) W (p :: ps) hp le_rfl =
     (glueListAux ((coercePairsList p.1 p.2 ps hp.sep).length)
       (W.gluePair p.1 p.2 hp.head_ne)
       (coercePairsList p.1 p.2 ps hp.sep)
@@ -284,7 +284,7 @@ private noncomputable def glueListCongr_aux
     match ps, h, hn with
     | [], _, _ => exact Equiv.relabelCongr he _
     | (i, j) :: ps, h, hlen =>
-      show ((glueListAux n _ _ _ _).relabel _).Equiv
+      change ((glueListAux n _ _ _ _).relabel _).Equiv
         ((glueListAux n _ _ _ _).relabel _)
       exact Equiv.relabelCongr
         (ih (Equiv.gluePairCongr he h.head_ne)
@@ -461,7 +461,7 @@ private noncomputable def gluePair_cast_equiv (W : Fragment α) (e : α ≃ β)
     rw [hlhs_eq, hrhs_eq]
     refine ⟨flagE, _root_.Equiv.refl _, fun f => ?_, fun f => ?_, rfl⟩
     · -- attach_comm: both sides depend on W.attach f.val
-      show glueAttach W i j (flagE f) =
+      change glueAttach W i j (flagE f) =
         ((glueAttach W (e.symm (e i)) (e.symm (e j)) f).map id
           (survLabelCastEquiv e i j)).map (_root_.Equiv.refl _) id
       rcases ha : W.attach f.val with v | ℓ
@@ -492,7 +492,7 @@ private noncomputable def gluePair_cast_equiv (W : Fragment α) (e : α ≃ β)
     rw [hlhs_eq, hrhs_eq]
     refine ⟨flagE, _root_.Equiv.refl _, fun f => ?_, fun f => ?_, rfl⟩
     · -- attach_comm (same as closed case)
-      show glueAttach W i j (flagE f) =
+      change glueAttach W i j (flagE f) =
         ((glueAttach W (e.symm (e i)) (e.symm (e j)) f).map id
           (survLabelCastEquiv e i j)).map (_root_.Equiv.refl _) id
       rcases ha : W.attach f.val with v | ℓ
@@ -513,28 +513,28 @@ private noncomputable def gluePair_cast_equiv (W : Fragment α) (e : α ≃ β)
         rw [hp1, hp2]
         exact congrArg Sum.inr (Subtype.ext (hv1.trans hv2.symm))
     · -- pairing_comm for open case (rewire)
-      show flagE (rewire hopen' f) = rewire hclosed (flagE f)
+      change flagE (rewire hopen' f) = rewire hclosed (flagE f)
       unfold rewire
       split
       · rename_i hfi
         have hfi' : W.pairing (flagE f).val = W.boundaryFlag i := by
-          show W.pairing f.val = W.boundaryFlag i; rw [← hbi]; exact hfi
-        rw [dif_pos hfi']
+          change W.pairing f.val = W.boundaryFlag i; rw [← hbi]; exact hfi
+        rw [dite_eq_left hfi']
         exact Subtype.ext (congrArg W.pairing hbj)
       · rename_i hfi
         have hfi' : ¬(W.pairing (flagE f).val = W.boundaryFlag i) := by
-          show ¬(W.pairing f.val = W.boundaryFlag i); rw [← hbi]; exact hfi
-        rw [dif_neg hfi']
+          change ¬(W.pairing f.val = W.boundaryFlag i); rw [← hbi]; exact hfi
+        rw [dite_eq_right hfi']
         split
         · rename_i hfj
           have hfj' : W.pairing (flagE f).val = W.boundaryFlag j := by
-            show W.pairing f.val = W.boundaryFlag j; rw [← hbj]; exact hfj
-          rw [dif_pos hfj']
+            change W.pairing f.val = W.boundaryFlag j; rw [← hbj]; exact hfj
+          rw [dite_eq_left hfj']
           exact Subtype.ext (congrArg W.pairing hbi)
         · rename_i hfj
           have hfj' : ¬(W.pairing (flagE f).val = W.boundaryFlag j) := by
-            show ¬(W.pairing f.val = W.boundaryFlag j); rw [← hbj]; exact hfj
-          rw [dif_neg hfj']
+            change ¬(W.pairing f.val = W.boundaryFlag j); rw [← hbj]; exact hfj
+          rw [dite_eq_right hfj']
           exact Subtype.ext rfl
 
 /-- Casting a `glueList` result along a list equality: relabelling
@@ -560,7 +560,7 @@ private theorem nonempty_glueList_relabel_aux (n : ℕ) :
     intro α β W e ps hp hlen
     have hnil : ps = [] := List.eq_nil_of_length_eq_zero (Nat.le_zero.mp hlen)
     subst hnil
-    show Nonempty (((W.relabel e).relabel (foldSurvivingNilEquiv (α
+    change Nonempty (((W.relabel e).relabel (foldSurvivingNilEquiv (α
       := β)).symm).Equiv
       ((W.relabel (foldSurvivingNilEquiv (α := α)).symm).relabel
         (foldSurvivingMapEquiv e [])))
@@ -577,7 +577,7 @@ private theorem nonempty_glueList_relabel_aux (n : ℕ) :
     match ps, hp, hlen with
     -- ═══════ The list is empty anyway ═══════
     | [], _, _ =>
-      show Nonempty (((W.relabel e).relabel (foldSurvivingNilEquiv (α
+      change Nonempty (((W.relabel e).relabel (foldSurvivingNilEquiv (α
         := β)).symm).Equiv
         ((W.relabel (foldSurvivingNilEquiv (α := α)).symm).relabel
           (foldSurvivingMapEquiv e [])))
@@ -1079,7 +1079,7 @@ private theorem nonempty_glueList_append_aux (n : ℕ) :
         (liftPairs_wf _ _ h.append_right h.append_sep)
         (by rw [hlift])
       refine ⟨?_⟩
-      show ((glueList W ((i, j) :: (ps ++ qs)) h).Equiv _)
+      change ((glueList W ((i, j) :: (ps ++ qs)) h).Equiv _)
       rw [glueList_cons W (i, j) (ps ++ qs) h]
       -- move the left side to the two-stage form
       have hcompL : (foldSurvivingPermEquiv (by rw [happend] :
@@ -1297,13 +1297,13 @@ private noncomputable def relabelDisjUnionLeft
   vertexEquiv := _root_.Equiv.refl _
   attach_comm f := by
     rcases f with f | f
-    · show ((W.attach f).map Sum.inl Sum.inl).map
+    · change ((W.attach f).map Sum.inl Sum.inl).map
             id (_root_.Equiv.sumCongr e
               (_root_.Equiv.refl β)) =
           (((W.attach f).map id e).map Sum.inl
             Sum.inl).map (_root_.Equiv.refl _) id
       rcases W.attach f with v | ℓ <;> rfl
-    · show ((W'.attach f).map Sum.inr Sum.inr).map
+    · change ((W'.attach f).map Sum.inr Sum.inr).map
             id (_root_.Equiv.sumCongr e
               (_root_.Equiv.refl β)) =
           ((W'.attach f).map Sum.inr Sum.inr).map
@@ -1326,13 +1326,13 @@ private noncomputable def relabelDisjUnionRight
   vertexEquiv := _root_.Equiv.refl _
   attach_comm f := by
     rcases f with f | f
-    · show ((W.attach f).map Sum.inl Sum.inl).map
+    · change ((W.attach f).map Sum.inl Sum.inl).map
             id (_root_.Equiv.sumCongr
               (_root_.Equiv.refl α) e) =
           ((W.attach f).map Sum.inl Sum.inl).map
             (_root_.Equiv.refl _) id
       rcases W.attach f with v | ℓ <;> rfl
-    · show ((W'.attach f).map Sum.inr Sum.inr).map
+    · change ((W'.attach f).map Sum.inr Sum.inr).map
             id (_root_.Equiv.sumCongr
               (_root_.Equiv.refl α) e) =
           (((W'.attach f).map id e).map Sum.inr
@@ -1363,6 +1363,203 @@ private theorem coercePairsList_inlPairs_comm
         i j hij ps _ _)
 
 /-! ### Disjoint-union left: main induction -/
+
+private theorem nonempty_glueList_disjUnion_left_cons
+    (n : ℕ)
+    (ih : ∀ {α β : Type} (W₁ : Fragment α)
+    (W₂ : Fragment β)
+    (ps : List (α × α)) (hp : PairsWF ps)
+    (_ : ps.length ≤ n),
+    Nonempty
+      ((glueList (W₁.disjUnion W₂)
+          (inlPairs ps) (inlPairs_wf ps hp)).Equiv
+        (((glueList W₁ ps hp).disjUnion
+            W₂).relabel
+          (inlFoldEquiv ps).symm)))
+    {α β : Type} (W₁ : Fragment α) (W₂ : Fragment β)
+    (i j : α) (ps : List (α × α)) (hp : PairsWF ((i, j) :: ps))
+    (hlen : ((i, j) :: ps).length ≤ n + 1) :
+    Nonempty
+      ((glueList (W₁.disjUnion W₂)
+          (inlPairs ((i, j) :: ps)) (inlPairs_wf ((i, j) :: ps) hp)).Equiv
+        (((glueList W₁ ((i, j) :: ps) hp).disjUnion W₂).relabel
+          (inlFoldEquiv ((i, j) :: ps)).symm)) := by
+  have hij := hp.head_ne
+  have hij' : (Sum.inl i : α ⊕ β) ≠
+      Sum.inl j :=
+    fun h => hij (Sum.inl.inj h)
+  have hp_inl :=
+    inlPairs_wf (β := β)
+      ((i, j) :: ps) hp
+  have hwf_cp :=
+    coercePairsList_wf i j ps
+      hp.tail hp.sep
+  have hwf_scp :=
+    coercePairsList_wf (Sum.inl i)
+      (Sum.inl j) (inlPairs (β := β) ps)
+      hp_inl.tail hp_inl.sep
+  have hlen' :
+      (coercePairsList i j ps
+        hp.sep).length ≤ n := by
+    rw [coercePairsList_length]
+    simp only [List.length_cons] at hlen
+    omega
+  -- Abbreviations
+  let amb :=
+    ambientLabelEquiv (β := β) i j
+  let cp :=
+    coercePairsList i j ps hp.sep
+  let scp :=
+    coercePairsList (Sum.inl i)
+      (Sum.inl j)
+      (inlPairs (β := β) ps)
+      hp_inl.sep
+  -- Tail list bridge
+  have h_cpc :=
+    coercePairsList_inlPairs_comm
+      i j hij ps hp_inl.sep hp.sep
+  -- mapPairs cancellation
+  have h_mp :
+      mapPairs amb scp =
+        inlPairs (β := β) cp := by
+    change mapPairs
+      (ambientLabelEquiv i j)
+      (coercePairsList (Sum.inl i)
+        (Sum.inl j)
+        (inlPairs (β := β) ps)
+        hp_inl.sep) =
+      inlPairs (β := β)
+        (coercePairsList i j ps hp.sep)
+    rw [h_cpc, mapPairs_mapPairs,
+      show (ambientLabelEquiv
+          (β := β) i j).symm.trans
+        (ambientLabelEquiv i j) =
+        _root_.Equiv.refl _ from
+        _root_.Equiv.ext
+          (ambientLabelEquiv i j).apply_symm_apply]
+    exact List.map_id _
+  -- IH
+  obtain ⟨e_ih⟩ := ih
+    (W₁.gluePair i j hij) W₂
+    cp hwf_cp hlen'
+  -- gluePairDisjUnion
+  have e_gp :=
+    gluePairDisjUnion W₁ W₂ hij
+  -- glueListRelabel
+  have e_rel := glueListRelabel
+    ((W₁.disjUnion W₂).gluePair
+      (Sum.inl i) (Sum.inl j) hij')
+    amb scp hwf_scp
+  -- glueListEqEquiv
+  have e_eq := glueListEqEquiv
+    (((W₁.disjUnion W₂).gluePair
+      (Sum.inl i) (Sum.inl j)
+      hij').relabel amb)
+    h_mp
+    (mapPairs_wf amb scp hwf_scp)
+    (inlPairs_wf cp hwf_cp)
+    (h_mp ▸ List.Perm.refl _)
+  -- glueListCongr
+  have e_congr := glueListCongr
+    (Fragment.Equiv.symm e_gp)
+    (inlPairs (β := β) cp)
+    (inlPairs_wf cp hwf_cp)
+  -- Inner chain
+  have inner :=
+    ((Equiv.relabelCongr e_rel.symm
+      (foldSurvivingPermEquiv
+        (h_mp ▸ List.Perm.refl
+          _))).trans
+      e_eq).trans
+    (e_congr.trans e_ih)
+  -- Outer relabelling bridge
+  let σ :=
+    (inlFoldEquiv (β := β) cp).trans
+      ((_root_.Equiv.sumCongr
+        (foldFlatten i j ps hp.sep)
+        (_root_.Equiv.refl β)).trans
+      (inlFoldEquiv (β := β)
+        ((i, j) :: ps)).symm)
+  -- LHS equiv equality
+  have hLHS :
+      (foldSurvivingMapEquiv amb
+        scp).trans
+        ((foldSurvivingPermEquiv
+          (h_mp ▸ List.Perm.refl
+            _)).trans σ) =
+      foldFlatten (Sum.inl i)
+        (Sum.inl j)
+        (inlPairs (β := β) ps)
+        hp_inl.sep :=
+    _root_.Equiv.ext (fun x => by
+      obtain ⟨⟨a | b, -, -⟩, -⟩ := x
+      · exact Subtype.ext rfl
+      · exact Subtype.ext rfl)
+  -- RHS equiv equality
+  have hRHS :
+      (inlFoldEquiv (β := β)
+        cp).symm.trans σ =
+      (_root_.Equiv.sumCongr
+        (foldFlatten i j ps hp.sep)
+        (_root_.Equiv.refl β)).trans
+      (inlFoldEquiv (β := β)
+        ((i, j) :: ps)).symm :=
+    _root_.Equiv.ext (fun y => by
+      rcases y with ⟨⟨a, -⟩, -⟩ | b
+      · exact Subtype.ext rfl
+      · exact Subtype.ext rfl)
+  -- RHS chain
+  have rhs_chain :
+    (((glueList
+        (W₁.gluePair i j hij)
+        cp hwf_cp).disjUnion
+      W₂).relabel
+      ((inlFoldEquiv (β := β)
+        cp).symm.trans σ)).Equiv
+    ((((glueList
+        (W₁.gluePair i j hij)
+        cp hwf_cp).relabel
+      (foldFlatten i j ps
+        hp.sep)).disjUnion
+      W₂).relabel
+      (inlFoldEquiv (β := β)
+        ((i, j) :: ps)).symm) := by
+    rw [hRHS]
+    exact
+      (Equiv.relabelTrans _ _ _).symm.trans
+      (Equiv.relabelCongr
+        (relabelDisjUnionLeft _ W₂
+          _).symm _)
+  -- Main proof
+  refine ⟨?_⟩
+  change ((W₁.disjUnion W₂).glueList
+      ((Sum.inl i, Sum.inl j) ::
+        inlPairs (β := β) ps)
+      hp_inl).Equiv
+    (((W₁.glueList ((i, j) :: ps)
+        hp).disjUnion
+      W₂).relabel
+      (inlFoldEquiv (β := β)
+        ((i, j) :: ps)).symm)
+  rw [glueList_cons (W₁.disjUnion W₂)
+        (Sum.inl i, Sum.inl j)
+        (inlPairs (β := β) ps) hp_inl,
+      glueList_cons W₁ (i, j) ps hp]
+  rw [← hLHS]
+  exact
+    ((Equiv.relabelTrans _
+      (foldSurvivingMapEquiv amb scp)
+      ((foldSurvivingPermEquiv
+        _).trans σ)).symm.trans
+    ((Equiv.relabelTrans _
+      (foldSurvivingPermEquiv _)
+      σ).symm.trans
+    (Equiv.relabelCongr inner
+      σ))).trans
+    ((Equiv.relabelTrans _
+      (inlFoldEquiv (β := β)
+        cp).symm σ).trans
+      rhs_chain)
 
 private theorem nonempty_glueList_disjUnion_left_aux
     (n : ℕ) :
@@ -1438,182 +1635,7 @@ private theorem nonempty_glueList_disjUnion_left_aux
           (inlFoldEquiv (β := β) []).symm)⟩
     -- ═══════ Glue the head on the left component, recurse ═══════
     | (i, j) :: ps, hp, hlen =>
-      have hij := hp.head_ne
-      have hij' : (Sum.inl i : α ⊕ β) ≠
-          Sum.inl j :=
-        fun h => hij (Sum.inl.inj h)
-      have hp_inl :=
-        inlPairs_wf (β := β)
-          ((i, j) :: ps) hp
-      have hwf_cp :=
-        coercePairsList_wf i j ps
-          hp.tail hp.sep
-      have hwf_scp :=
-        coercePairsList_wf (Sum.inl i)
-          (Sum.inl j) (inlPairs (β := β) ps)
-          hp_inl.tail hp_inl.sep
-      have hlen' :
-          (coercePairsList i j ps
-            hp.sep).length ≤ n := by
-        rw [coercePairsList_length]
-        simp only [List.length_cons] at hlen
-        omega
-      -- Abbreviations
-      let amb :=
-        ambientLabelEquiv (β := β) i j
-      let cp :=
-        coercePairsList i j ps hp.sep
-      let scp :=
-        coercePairsList (Sum.inl i)
-          (Sum.inl j)
-          (inlPairs (β := β) ps)
-          hp_inl.sep
-      -- Tail list bridge
-      have h_cpc :=
-        coercePairsList_inlPairs_comm
-          i j hij ps hp_inl.sep hp.sep
-      -- mapPairs cancellation
-      have h_mp :
-          mapPairs amb scp =
-            inlPairs (β := β) cp := by
-        show mapPairs
-          (ambientLabelEquiv i j)
-          (coercePairsList (Sum.inl i)
-            (Sum.inl j)
-            (inlPairs (β := β) ps)
-            hp_inl.sep) =
-          inlPairs (β := β)
-            (coercePairsList i j ps hp.sep)
-        rw [h_cpc, mapPairs_mapPairs,
-          show (ambientLabelEquiv
-              (β := β) i j).symm.trans
-            (ambientLabelEquiv i j) =
-            _root_.Equiv.refl _ from
-            _root_.Equiv.ext
-              (ambientLabelEquiv i j).apply_symm_apply]
-        exact List.map_id _
-      -- IH
-      obtain ⟨e_ih⟩ := ih
-        (W₁.gluePair i j hij) W₂
-        cp hwf_cp hlen'
-      -- gluePairDisjUnion
-      have e_gp :=
-        gluePairDisjUnion W₁ W₂ hij
-      -- glueListRelabel
-      have e_rel := glueListRelabel
-        ((W₁.disjUnion W₂).gluePair
-          (Sum.inl i) (Sum.inl j) hij')
-        amb scp hwf_scp
-      -- glueListEqEquiv
-      have e_eq := glueListEqEquiv
-        (((W₁.disjUnion W₂).gluePair
-          (Sum.inl i) (Sum.inl j)
-          hij').relabel amb)
-        h_mp
-        (mapPairs_wf amb scp hwf_scp)
-        (inlPairs_wf cp hwf_cp)
-        (h_mp ▸ List.Perm.refl _)
-      -- glueListCongr
-      have e_congr := glueListCongr
-        (Fragment.Equiv.symm e_gp)
-        (inlPairs (β := β) cp)
-        (inlPairs_wf cp hwf_cp)
-      -- Inner chain
-      have inner :=
-        ((Equiv.relabelCongr e_rel.symm
-          (foldSurvivingPermEquiv
-            (h_mp ▸ List.Perm.refl
-              _))).trans
-          e_eq).trans
-        (e_congr.trans e_ih)
-      -- Outer relabelling bridge
-      let σ :=
-        (inlFoldEquiv (β := β) cp).trans
-          ((_root_.Equiv.sumCongr
-            (foldFlatten i j ps hp.sep)
-            (_root_.Equiv.refl β)).trans
-          (inlFoldEquiv (β := β)
-            ((i, j) :: ps)).symm)
-      -- LHS equiv equality
-      have hLHS :
-          (foldSurvivingMapEquiv amb
-            scp).trans
-            ((foldSurvivingPermEquiv
-              (h_mp ▸ List.Perm.refl
-                _)).trans σ) =
-          foldFlatten (Sum.inl i)
-            (Sum.inl j)
-            (inlPairs (β := β) ps)
-            hp_inl.sep :=
-        _root_.Equiv.ext (fun x => by
-          obtain ⟨⟨a | b, -, -⟩, -⟩ := x
-          · exact Subtype.ext rfl
-          · exact Subtype.ext rfl)
-      -- RHS equiv equality
-      have hRHS :
-          (inlFoldEquiv (β := β)
-            cp).symm.trans σ =
-          (_root_.Equiv.sumCongr
-            (foldFlatten i j ps hp.sep)
-            (_root_.Equiv.refl β)).trans
-          (inlFoldEquiv (β := β)
-            ((i, j) :: ps)).symm :=
-        _root_.Equiv.ext (fun y => by
-          rcases y with ⟨⟨a, -⟩, -⟩ | b
-          · exact Subtype.ext rfl
-          · exact Subtype.ext rfl)
-      -- RHS chain
-      have rhs_chain :
-        (((glueList
-            (W₁.gluePair i j hij)
-            cp hwf_cp).disjUnion
-          W₂).relabel
-          ((inlFoldEquiv (β := β)
-            cp).symm.trans σ)).Equiv
-        ((((glueList
-            (W₁.gluePair i j hij)
-            cp hwf_cp).relabel
-          (foldFlatten i j ps
-            hp.sep)).disjUnion
-          W₂).relabel
-          (inlFoldEquiv (β := β)
-            ((i, j) :: ps)).symm) := by
-        rw [hRHS]
-        exact
-          (Equiv.relabelTrans _ _ _).symm.trans
-          (Equiv.relabelCongr
-            (relabelDisjUnionLeft _ W₂
-              _).symm _)
-      -- Main proof
-      refine ⟨?_⟩
-      show ((W₁.disjUnion W₂).glueList
-          ((Sum.inl i, Sum.inl j) ::
-            inlPairs (β := β) ps)
-          hp_inl).Equiv
-        (((W₁.glueList ((i, j) :: ps)
-            hp).disjUnion
-          W₂).relabel
-          (inlFoldEquiv (β := β)
-            ((i, j) :: ps)).symm)
-      rw [glueList_cons (W₁.disjUnion W₂)
-            (Sum.inl i, Sum.inl j)
-            (inlPairs (β := β) ps) hp_inl,
-          glueList_cons W₁ (i, j) ps hp]
-      rw [← hLHS]
-      exact
-        ((Equiv.relabelTrans _
-          (foldSurvivingMapEquiv amb scp)
-          ((foldSurvivingPermEquiv
-            _).trans σ)).symm.trans
-        ((Equiv.relabelTrans _
-          (foldSurvivingPermEquiv _)
-          σ).symm.trans
-        (Equiv.relabelCongr inner
-          σ))).trans
-        ((Equiv.relabelTrans _
-          (inlFoldEquiv (β := β)
-            cp).symm σ).trans
-          rhs_chain)
+      exact nonempty_glueList_disjUnion_left_cons n ih W₁ W₂ i j ps hp hlen
 
 /-- Iterated left-side gluing commutes with disjoint
 union: gluing the `inlPairs`-embedded pair list in the
@@ -1821,7 +1843,7 @@ private theorem nonempty_glueList_swap_aux
       List.eq_nil_of_length_eq_zero
         (Nat.le_zero.mp hlen)
     subst hnil
-    show Nonempty
+    change Nonempty
       ((W.relabel
         foldSurvivingNilEquiv.symm).Equiv
        ((W.relabel
@@ -1843,7 +1865,7 @@ private theorem nonempty_glueList_swap_aux
     match ps, hp, hlen with
     -- ═══════ The list is empty anyway ═══════
     | [], _, _ =>
-      show Nonempty
+      change Nonempty
         ((W.relabel
           foldSurvivingNilEquiv.symm).Equiv
          ((W.relabel
@@ -1993,7 +2015,7 @@ private theorem nonempty_glueList_swap_aux
           := by rw [h_eq]; exact Equiv.refl _
       -- Assemble via glueList_cons
       refine ⟨?_⟩
-      show (glueList W
+      change (glueList W
           ((j, i) :: ps.map Prod.swap)
           hp_swap).Equiv
         ((glueList W ((i, j) :: ps)
@@ -2041,7 +2063,7 @@ noncomputable def glueListSwap
 
 /-- The doubly-coerced tail list in q-then-p order equals
 `mapPairs swapLabelEquiv.symm` of the doubly-coerced tail in p-then-q order. -/
-private theorem doubly_coerced_swap_eq [DecidableEq α]
+private theorem doubly_coerced_swap_eq
     {i j k l : α} (hik : i ≠ k) (hil : i ≠ l) (hjk : j ≠ k) (hjl : j ≠ l) :
     ∀ (ps : List (α × α))
     (hsep_ij : PairsSep i j ps) (hsep_kl : PairsSep k l ps)
@@ -2066,6 +2088,7 @@ private theorem coercePairsList_perm (i j : α)
     {ps qs : List (α × α)} (hperm : ps.Perm qs)
     (hp : PairsSep i j ps) (hq : PairsSep i j qs) :
     (coercePairsList i j ps hp).Perm (coercePairsList i j qs hq) := by
+  classical
   induction hperm with
   | nil => exact List.Perm.nil
   | @cons x _ _ _ ih =>
@@ -2141,7 +2164,7 @@ private theorem nonempty_glueList_perm_aux (n : ℕ) :
     | @swap p q ps' =>
       -- swap p q ps' : (q :: p :: ps').Perm (p :: q :: ps')
       -- hp : PairsWF (q :: p :: ps')
-      letI := Classical.typeDecidableEq α
+      let := Classical.typeDecidableEq α
       have hp' : PairsWF (p :: q :: ps') := hp.perm (List.Perm.swap p q ps')
       have hq12 := hp.head_ne
       have hp12 := hp.tail.head_ne

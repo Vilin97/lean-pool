@@ -177,20 +177,20 @@ noncomputable def explodeAtNotMem (C : Finset W.Flag)
       {f : W.Flag // f ∈ C}).symm
     vertexEquiv := _root_.Equiv.refl W.Vertex
     attach_comm := fun f => by
-      show (explodeAt W C hC).attach (Sum.inl f) =
+      change (explodeAt W C hC).attach (Sum.inl f) =
         ((W.attach f).map id _).map (_root_.Equiv.refl _) id
       rw [ClosedFragment.attach_eq_vertexOf W f]
       rfl
     pairing_comm := fun f => by
-      show (Sum.inl (W.pairing f) :
+      change (Sum.inl (W.pairing f) :
         W.Flag ⊕ {f : W.Flag // f ∈ C}) =
         (explodeAt W C hC).pairing (Sum.inl f)
       have hp : ∀ g : W.Flag, (explodeAt W C hC).pairing
           (Sum.inl g) = Sum.inl (W.pairing g) := fun g => by
-        show (if h : g ∈ C then
+        change (if h : g ∈ C then
           (Sum.inr ⟨g, h⟩ : W.Flag ⊕ {f : W.Flag // f ∈ C})
           else Sum.inl (W.pairing g)) = Sum.inl (W.pairing g)
-        exact dif_neg (hne g)
+        exact dite_eq_right (hne g)
       rw [hp f]
     circles_eq := rfl }
 
@@ -209,10 +209,10 @@ theorem explode_reglue :
     have hne : ∀ f, f ∉ C := fun f hf => by
       obtain ⟨x, hx, _⟩ := hcov f hf
       exact absurd hx (List.not_mem_nil)
-    haveI : IsEmpty {f : W.Flag // f ∈ C} :=
+    have : IsEmpty {f : W.Flag // f ∈ C} :=
       ⟨fun s => hne s.val s.prop⟩
     refine ⟨?_⟩
-    show ((explodeAt W C hC).relabel
+    change ((explodeAt W C hC).relabel
       Fragment.foldSurvivingNilEquiv.symm).Equiv (W.relabel e)
     refine (Fragment.Equiv.relabelCongr
       (explodeAtNotMem W C hC hne
@@ -243,7 +243,7 @@ theorem explode_reglue :
           (cutErase_closed W C hC x) l h') :=
       mapPairs_wf_of (stepLabelEquiv W C hC x hx)
         (hco ▸ wfco)
-    haveI : IsEmpty (Fragment.FoldSurviving
+    have : IsEmpty (Fragment.FoldSurviving
         {f : W.Flag // f ∈ cutErase W C x}
         (repPairs W (cutErase W C x)
           (cutErase_closed W C hC x) l h')) :=
@@ -253,7 +253,7 @@ theorem explode_reglue :
       (cutErase_closed W C hC x) h' hcov' wf'
       (_root_.Equiv.equivOfIsEmpty (Fin 0) _)
     refine ⟨?_⟩
-    show (Fragment.glueList (explodeAt W C hC)
+    change (Fragment.glueList (explodeAt W C hC)
       ((⟨x, hx⟩, ⟨W.pairing x, hC x hx⟩) ::
         repPairs W C hC l htail)
       wf).Equiv (W.relabel e)
@@ -329,7 +329,7 @@ theorem repPairs_wf_of (C : Finset W.Flag) (hC : CutClosed W C) :
   | x :: l, h, hnodup, hdisj => by
     have htail : ∀ y ∈ l, y ∈ C :=
       fun y hy => h y (List.mem_cons.mpr (Or.inr hy))
-    show ((⟨x, _⟩, ⟨W.pairing x, _⟩) ::
+    change ((⟨x, _⟩, ⟨W.pairing x, _⟩) ::
       repPairs W C hC l htail).flatMap
         (fun p => [p.1, p.2]) |>.Nodup
     rw [List.flatMap_cons]

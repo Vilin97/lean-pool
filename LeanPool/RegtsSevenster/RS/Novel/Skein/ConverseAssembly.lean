@@ -23,8 +23,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Classical
-
+open Fragment
 /-- The lexicographic order on the interface's label type. -/
 @[reducible] local instance assemblyBaseOrder (n : ℕ) :
     LinearOrder (Fin (0 + n) ⊕ Fin (n + 0)) :=
@@ -113,7 +112,7 @@ theorem tensorTermAt_pos {α : Type} [LinearOrder α] [Fintype α]
       = (EdgeSubset.mk s hc).tFull h (Classical.choice hne).1
         (Classical.choice hne).2.val x := by
   unfold tensorTermAt
-  rw [dif_pos hc, dif_pos hE, dif_pos hne]
+  rw [dite_eq_left hc, dite_eq_left hE, dite_eq_left hne]
 
 open Classical in
 /-- **The pair term when the two subsets use the same labels.**  This
@@ -329,7 +328,7 @@ theorem edgeSum_closeBase_eq_pairAgreeValue {k ℓ : ℕ}
     refine (relabel_genBoundarySubsetMatches_iff
       (finCongr (by omega : t = t + 0)) (rightSub B).flags
       (fun b => diagOf t x (Sum.inr b))).mpr ?_
-    show genBoundarySubsetMatches G (rightSub B).flags
+    change genBoundarySubsetMatches G (rightSub B).flags
       (fun b => diagOf t x
         (Sum.inr (finCongr (by omega : t = t + 0) b)))
     rw [diagOf_inr_relabel]
@@ -382,7 +381,7 @@ theorem stepData_sub_flags_closed (n : ℕ)
         (gluePair_eq_closed n V hcl)
         (V.dropSubset (cutL n) (cutR n) D.sub.flags) := by
   refine Eq.trans (congrArg (fun X => X.sub.flags)
-    (show stepData n V D = _ from dif_pos hcl)) ?_
+    (show stepData n V D = _ from dite_eq_left hcl)) ?_
   refine Eq.trans (stageDataOfEq_sub_flags _ _) ?_
   exact flagsOfEq_relabel (gluePair_eq_closed n V hcl)
     (interfaceStepEquiv 0 n 0) _
@@ -401,7 +400,7 @@ theorem stepData_sub_flags_open (n : ℕ)
         (gluePair_eq_open n V hop)
         (V.dropSubset (cutL n) (cutR n) D.sub.flags) := by
   refine Eq.trans (congrArg (fun X => X.sub.flags)
-    (show stepData n V D = _ from dif_neg hop)) ?_
+    (show stepData n V D = _ from dite_eq_right hop)) ?_
   refine Eq.trans (stageDataOfEq_sub_flags _ _) ?_
   exact flagsOfEq_relabel (gluePair_eq_open n V hop)
     (interfaceStepEquiv 0 n 0) _
@@ -419,28 +418,28 @@ theorem carried_eq_glueCount : ∀ (n : ℕ)
     by_cases hcl : V.pairing (V.boundaryFlag (cutL n))
         = V.boundaryFlag (cutR n)
     · rw [stepData_sub_flags_closed n V D hcl] at hstep
-      simp only [carried, glueCount, dif_pos hcl, stepBit]
+      simp only [carried, glueCount, dite_eq_left hcl, stepBit]
       by_cases hm : V.boundaryFlag (cutL n) ∈ D.sub.flags
       · have hb : V.pairing (V.boundaryFlag (cutL n))
               = V.boundaryFlag (cutR n)
             ∧ decide (V.boundaryFlag (cutL n) ∈ D.sub.flags)
               = true := ⟨hcl, by simpa using hm⟩
-        rw [if_pos hm]
-        exact congrArg₂ (· + ·) (if_pos hb).symm hstep
+        rw [ite_eq_left hm]
+        exact congrArg₂ (· + ·) (ite_eq_left hb).symm hstep
       · have hb : ¬ (V.pairing (V.boundaryFlag (cutL n))
               = V.boundaryFlag (cutR n)
             ∧ decide (V.boundaryFlag (cutL n) ∈ D.sub.flags)
               = true) := fun hx => hm (by simpa using hx.2)
-        rw [if_neg hm]
-        exact congrArg₂ (· + ·) (if_neg hb).symm hstep
+        rw [ite_eq_right hm]
+        exact congrArg₂ (· + ·) (ite_eq_right hb).symm hstep
     · rw [stepData_sub_flags_open n V D hcl] at hstep
-      simp only [carried, glueCount, dif_neg hcl, stepBit]
+      simp only [carried, glueCount, dite_eq_right hcl, stepBit]
       have hb : ¬ (V.pairing (V.boundaryFlag (cutL n))
             = V.boundaryFlag (cutR n)
           ∧ decide (V.boundaryFlag (cutL n) ∈ D.sub.flags)
             = true) := fun hx => hcl hx.1
       exact Eq.trans hstep (Eq.trans (zero_add _).symm
-        (congrArg₂ (· + ·) (if_neg hb).symm rfl))
+        (congrArg₂ (· + ·) (ite_eq_right hb).symm rfl))
 
 open Classical in
 /-- **The colouring side's image subset is the ledger's.**  Both are
@@ -526,7 +525,7 @@ theorem swapPaired_joinParts (t : ℕ) (F G : Fragment (Fin t))
   · intro hx
     refine boundaryFlag_mem_boundaryFlags ?_
     refine inr_mem_joinParts.mpr ?_
-    show G.boundaryFlag ((finCongr (by omega : t = t + 0)).symm
+    change G.boundaryFlag ((finCongr (by omega : t = t + 0)).symm
       (stepIdent t a)) ∈ s₂
     rw [hidx]
     exact (hused _).mp (inl_mem_joinParts.mp
@@ -534,7 +533,7 @@ theorem swapPaired_joinParts (t : ℕ) (F G : Fragment (Fin t))
   · intro hx
     refine boundaryFlag_mem_boundaryFlags ?_
     refine inl_mem_joinParts.mpr ?_
-    show F.boundaryFlag ((finCongr (by omega : t = 0 + t)).symm a)
+    change F.boundaryFlag ((finCongr (by omega : t = 0 + t)).symm a)
       ∈ s₁
     refine (hused _).mpr ?_
     rw [← hidx]
@@ -615,9 +614,8 @@ open Classical in
 /-- **The interface identification acts by the interface map.**  It
 is therefore the same identification `exists_eulerianPosition` uses,
 read on the two halves. -/
-theorem interfaceSideDisjEquiv_val {γ δ : Type} [LinearOrder γ]
-    [LinearOrder δ] [Fintype γ] [Fintype δ]
-    [LinearOrder (γ ⊕ δ)] {W₁ : Fragment γ} {W₂ : Fragment δ}
+theorem interfaceSideDisjEquiv_val {γ δ : Type}
+    {W₁ : Fragment γ} {W₂ : Fragment δ}
     (F : EdgeSubset (W₁.disjUnion W₂)) (e : γ ≃ δ)
     (hp : InterfacePaired F e) (a : UsedLab (leftSub F)) :
     (interfaceSideDisjEquiv F e hp a).val = e a.val := rfl
@@ -845,7 +843,7 @@ theorem usedLabLeftCloseJoin_val {t : ℕ} {F G : Fragment (Fin t)}
     (a : UsedLab (leftSub (EdgeSubset.mk (closeJoin s₁ s₂) hc))) :
     (usedLabLeftCloseJoin hc hc₁ a).val
       = (leftIso t).symm a.val := by
-  show (leftIso t).symm
+  change (leftIso t).symm
       (usedLabOrderIsoOfEq (leftSub_closeJoin hc hc₁) a).val = _
   rw [usedLabOrderIsoOfEq_val]
 
@@ -859,7 +857,7 @@ theorem usedLabRightCloseJoin_val {t : ℕ} {F G : Fragment (Fin t)}
     (b : UsedLab (rightSub (EdgeSubset.mk (closeJoin s₁ s₂) hc))) :
     (usedLabRightCloseJoin hc hc₂ b).val
       = (rightIso t).symm b.val := by
-  show (rightIso t).symm
+  change (rightIso t).symm
       (usedLabOrderIsoOfEq (rightSub_closeJoin hc hc₂) b).val = _
   rw [usedLabOrderIsoOfEq_val]
 
@@ -914,7 +912,7 @@ theorem edge_val_map_left {t : ℕ} {F G : Fragment (Fin t)}
       = chordInv (leftSub (EdgeSubset.mk (closeJoin s₁ s₂) hc))
         (pairRelLeft hc₁ hc (relabelTransUp (leftIso t).toEquiv
           (EdgeSubset.mk s₁ hc₁) κ₁)) a.val := by
-  show ((usedLabLeftCloseJoin (s₂ := s₂) hc hc₁).symm
+  change ((usedLabLeftCloseJoin (s₂ := s₂) hc hc₁).symm
       (M₁.edge (usedLabLeftCloseJoin (s₂ := s₂) hc hc₁ a))).val = _
   rw [usedLabLeftCloseJoin_symm_val, hM₁,
     usedLabLeftCloseJoin_val, chordInv_pairRelLeft]
@@ -938,7 +936,7 @@ theorem edge_val_map_right {t : ℕ} {F G : Fragment (Fin t)}
       = chordInv (rightSub (EdgeSubset.mk (closeJoin s₁ s₂) hc))
         (pairRelRight hc₂ hc (relabelTransUp (rightIso t).toEquiv
           (EdgeSubset.mk s₂ hc₂) κ₂)) b.val := by
-  show ((usedLabRightCloseJoin (s₁ := s₁) hc hc₂).symm
+  change ((usedLabRightCloseJoin (s₁ := s₁) hc hc₂).symm
       (M₂.edge (usedLabRightCloseJoin (s₁ := s₁) hc hc₂ b))).val = _
   rw [usedLabRightCloseJoin_symm_val, hM₂,
     usedLabRightCloseJoin_val, chordInv_pairRelRight]
@@ -968,7 +966,7 @@ theorem usedLabRight_interfaceSideDisj {t : ℕ}
         (usedLabLeftCloseJoin (s₂ := s₂) hc hc₁ a) := by
   refine Subtype.ext ?_
   rw [usedLabRightCloseJoin_val]
-  show (rightIso t).symm
+  change (rightIso t).symm
       ((interfaceSideDisjEquiv (EdgeSubset.mk (closeJoin s₁ s₂) hc)
         (stepIdentOrderIso t).toEquiv hp a).val)
     = ((usedLabLeftCloseJoin (s₂ := s₂) hc hc₁) a).val
@@ -1085,7 +1083,7 @@ theorem sign_composition_pair {t : ℕ} {F G : Fragment (Fin t)}
     (edge_eq_cutMatching _ _ _ _
       (edge_val_map_right hc hc₂ κ₂ M₂ hM₂))
     (fun a => by
-      show M₂.tail (eR _) = !M₁.tail (eL a)
+      change M₂.tail (eR _) = !M₁.tail (eL a)
       exact Eq.trans (congrArg M₂.tail
         (usedLabRight_interfaceSideDisj hc hc₁ hc₂ _ hb a))
         (halt (eL a)))
@@ -1229,27 +1227,27 @@ noncomputable def orientReplace {α : Type}
     (o : κ.Orientation) (g : W.Flag → Bool) : κ.Orientation where
   isOut f := if f ∈ F.internalFlags then o.isOut f else g f
   match_flip f hf := by
-    rw [if_pos (κ.match_mem f hf), if_pos hf]
+    rw [ite_eq_left (κ.match_mem f hf), ite_eq_left hf]
     exact o.match_flip f hf
   pairing_flip f hf hp := by
-    rw [if_pos hp, if_pos hf]
+    rw [ite_eq_left hp, ite_eq_left hf]
     exact o.pairing_flip f hf hp
 
 open Classical in
 /-- At an internal flag the replacement keeps the direction. -/
-theorem isOut_orientReplace_internal {α : Type} [LinearOrder α]
+theorem isOut_orientReplace_internal {α : Type}
     {W : Fragment α} {F : EdgeSubset W} {κ : F.RelTransitionSystem}
     (o : κ.Orientation) (g : W.Flag → Bool) {f : W.Flag}
     (hf : f ∈ F.internalFlags) :
-    (orientReplace o g).isOut f = o.isOut f := if_pos hf
+    (orientReplace o g).isOut f = o.isOut f := ite_eq_left hf
 
 open Classical in
 /-- Off the internal flags the replacement is the given function. -/
 theorem isOut_orientReplace_of_not_internal {α : Type}
-    [LinearOrder α] {W : Fragment α} {F : EdgeSubset W}
+    {W : Fragment α} {F : EdgeSubset W}
     {κ : F.RelTransitionSystem} (o : κ.Orientation)
     (g : W.Flag → Bool) {f : W.Flag} (hf : f ∉ F.internalFlags) :
-    (orientReplace o g).isOut f = g f := if_neg hf
+    (orientReplace o g).isOut f = g f := ite_eq_right hf
 
 /-! ## The colouring sum sees only the internal directions
 
@@ -1393,7 +1391,7 @@ theorem throughMixedPartitionC_eq_edgeTermAt_canon
   · by_cases hbnd : genBoundarySubsetMatches V s st
     · by_cases hE : (EdgeSubset.mk s hc).Eulerian
       · by_cases hne : Nonempty (EdgeSubset.mk s hc).CanonData
-        · rw [dif_pos hc, dif_pos hbnd, if_pos hE, dif_pos hne,
+        · rw [dite_eq_left hc, dite_eq_left hbnd, ite_eq_left hE, dite_eq_left hne,
             circuitWeight_pos 𝒟 hc hE hne,
             edgeTermAt_pos h 𝒟 st hc hbnd hE hne 0, pow_zero,
             one_mul,
@@ -1403,15 +1401,15 @@ theorem throughMixedPartitionC_eq_edgeTermAt_canon
             hbnd (Classical.choice hne)
             ⟨(𝒟 s hc hE hne).1,
               ⟨(𝒟 s hc hE hne).2, hcanon s hc hE hne⟩⟩
-        · rw [dif_pos hc, dif_pos hbnd, if_pos hE, dif_neg hne,
+        · rw [dite_eq_left hc, dite_eq_left hbnd, ite_eq_left hE, dite_eq_right hne,
             edgeTermAt_eq_zero_of_not_canon h 𝒟 st hc hne 0,
             mul_zero]
-      · rw [dif_pos hc, dif_pos hbnd, if_neg hE,
+      · rw [dite_eq_left hc, dite_eq_left hbnd, ite_eq_right hE,
           edgeTermAt_eq_zero_of_not_eulerian h 𝒟 st hc hE 0,
           mul_zero]
-    · rw [dif_pos hc, dif_neg hbnd,
+    · rw [dite_eq_left hc, dite_eq_right hbnd,
         edgeTermAt_eq_zero_of_not_matches h 𝒟 st hbnd 0, mul_zero]
-  · rw [dif_neg hc, edgeTermAt_eq_zero_of_not_closed h 𝒟 st hc 0,
+  · rw [dite_eq_right hc, edgeTermAt_eq_zero_of_not_closed h 𝒟 st hc 0,
       mul_zero]
 
 open Classical in
@@ -1462,10 +1460,10 @@ theorem cutMatching_tail_of_not_through [LinearOrder α] {W : Fragment α}
     (hnt : ¬ IsThroughLabel F i.val) :
     (cutMatching F κ o).tail i
       = !chainDir o (W.boundaryFlag i.val) := by
-  show (if IsThroughLabel F i.val then
+  change (if IsThroughLabel F i.val then
       decide (i.val < chordInv F κ i.val)
     else !chainDir o (W.boundaryFlag i.val)) = _
-  rw [if_neg hnt]
+  rw [ite_eq_right hnt]
 
 end TailChain
 
@@ -1742,7 +1740,7 @@ theorem glueDataOpen_pos {α : Type} [LinearOrder α]
       = RelTransitionSystem.glueOpen hij hopen t hct hcL
         (𝒟 (liftSubsetOpen hopen t) hcL hEL hneL).1 := by
   unfold glueDataOpen
-  rw [dif_pos hag]
+  rw [dite_eq_left hag]
 
 open Classical in
 /-- **The closing glue's directions.**  A closing cut rewires
@@ -1794,7 +1792,7 @@ theorem isOut_glueDataOpen_pos {α : Type} [LinearOrder α]
       = (𝒟 (liftSubsetOpen hopen t) hcL hEL hneL).2.isOut
         f'.val := by
   unfold glueDataOpen
-  rw [dif_pos hag]
+  rw [dite_eq_left hag]
   rfl
 
 section FamilySubsetCongr
@@ -1877,7 +1875,7 @@ theorem match_unglue_glueDataOpen {α : Type} [LinearOrder α]
     rw [hF]
     exact hf
   unfold unglueDataOpen
-  rw [dif_pos hdc, match_relOfEq,
+  rw [dite_eq_left hdc, match_relOfEq,
     glueDataOpen_pos hij hopen 𝒟 (V.dropSubset i j s) hdc _ _
       hcL hEL hneL hag,
     unglueOpen_glueOpen_match hij hopen (V.dropSubset i j s) hdc
@@ -1916,7 +1914,7 @@ theorem isOut_unglue_glueDataOpen {α : Type} [LinearOrder α]
   have hlift : liftSubsetOpen hopen (V.dropSubset i j s) = s :=
     liftSubsetOpen_dropSubset hij hopen s hc
   unfold unglueDataOpen
-  rw [dif_pos hdc, isOut_orientOfEq]
+  rw [dite_eq_left hdc, isOut_orientOfEq]
   refine Eq.trans (unglueIsOut_of_surviving _ f ⟨h1, h2⟩) ?_
   rw [isOut_glueDataOpen_pos hij hopen 𝒟 (V.dropSubset i j s) hdc
     _ _ hcL hEL hneL hag]

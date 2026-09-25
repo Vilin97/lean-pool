@@ -21,7 +21,7 @@ and the four-end block (evaluated to the mutual-crossing indicator).
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 
@@ -58,17 +58,17 @@ private theorem sorted_pair_sum [LinearOrder α]
   · obtain ⟨-, hxy, hux, hxw, hwy⟩ := h1
     have h2 : ¬ (x < y ∧ u < w ∧ x < u ∧ u < y ∧ y < w) :=
       fun ⟨_, _, hxu, _, _⟩ => lt_asymm hux hxu
-    rw [if_pos ⟨huw, hxy, hux, hxw, hwy⟩, if_neg h2,
-      if_pos ⟨hxy, Or.inr ⟨hux, hxw, hwy⟩⟩]
+    rw [ite_eq_left ⟨huw, hxy, hux, hxw, hwy⟩, ite_eq_right h2,
+      ite_eq_left ⟨hxy, Or.inr ⟨hux, hxw, hwy⟩⟩]
   · by_cases h2 : x < y ∧ u < w ∧ x < u ∧ u < y ∧ y < w
     · obtain ⟨hxy, -, hxu, huy, hyw⟩ := h2
-      rw [if_neg h1, if_pos ⟨hxy, huw, hxu, huy, hyw⟩,
-        if_pos ⟨hxy, Or.inl ⟨hxu, huy, hyw⟩⟩]
+      rw [ite_eq_right h1, ite_eq_left ⟨hxy, huw, hxu, huy, hyw⟩,
+        ite_eq_left ⟨hxy, Or.inl ⟨hxu, huy, hyw⟩⟩]
     · have h3 : ¬ (x < y ∧ ChordPairCross x y u w) := by
         rintro ⟨hxy, ⟨hxu, huy, hyw⟩ | ⟨hux, hxw, hwy⟩⟩
         · exact h2 ⟨hxy, huw, hxu, huy, hyw⟩
         · exact h1 ⟨huw, hxy, hux, hxw, hwy⟩
-      rw [if_neg h1, if_neg h2, if_neg h3]
+      rw [ite_eq_right h1, ite_eq_right h2, ite_eq_right h3]
 
 /-- The four ordered crossing indicators between one chord with ends
 labelled `a`, `b` and a chord recorded as `(x, y)` sum to the gated
@@ -88,19 +88,19 @@ private theorem side_label_sum [LinearOrder α]
   rcases lt_or_gt_of_ne hab with h | h
   · have e3 : (if b < a ∧ x < y ∧ b < x ∧ x < a ∧ a < y
         then (1 : ℕ) else 0) = 0 :=
-      if_neg (fun hc => lt_asymm h hc.1)
+      ite_eq_right (fun hc => lt_asymm h hc.1)
     have e4 : (if x < y ∧ b < a ∧ x < b ∧ b < y ∧ y < a
         then (1 : ℕ) else 0) = 0 :=
-      if_neg (fun hc => lt_asymm h hc.2.1)
+      ite_eq_right (fun hc => lt_asymm h hc.2.1)
     rw [e3, e4, add_zero, add_zero, min_eq_left h.le,
       max_eq_right h.le]
     exact sorted_pair_sum h
   · have e1 : (if a < b ∧ x < y ∧ a < x ∧ x < b ∧ b < y
         then (1 : ℕ) else 0) = 0 :=
-      if_neg (fun hc => lt_asymm h hc.1)
+      ite_eq_right (fun hc => lt_asymm h hc.1)
     have e2 : (if x < y ∧ a < b ∧ x < a ∧ a < y ∧ y < b
         then (1 : ℕ) else 0) = 0 :=
-      if_neg (fun hc => lt_asymm h hc.2.1)
+      ite_eq_right (fun hc => lt_asymm h hc.2.1)
     rw [e1, e2, zero_add, zero_add, min_eq_right h.le,
       max_eq_left h.le]
     exact sorted_pair_sum h
@@ -247,7 +247,7 @@ private theorem chordCross_self_ite
     (κ : F.RelTransitionSystem)
     {x : W.Flag} (hx : x ∈ F.boundaryFlags) :
     (if ChordCross κ ⟨x, hx⟩ ⟨x, hx⟩ then (1 : ℕ) else 0) = 0 :=
-  if_neg fun h => by
+  ite_eq_right fun h => by
     obtain ⟨-, -, hlt, -, -⟩ := (chordCross_iff_labels _ _).mp h
     exact lt_irrefl _ hlt
 
@@ -259,7 +259,7 @@ private theorem chordCross_partner_ite
     (hy : y ∈ F.boundaryFlags)
     (hyx : κ.pathMatch y hy = x) :
     (if ChordCross κ ⟨x, hx⟩ ⟨y, hy⟩ then (1 : ℕ) else 0) = 0 := by
-  refine if_neg (fun h => ?_)
+  refine ite_eq_right (fun h => ?_)
   obtain ⟨-, hpartner, hstart, -, -⟩ := (chordCross_iff_labels _ _).mp h
   have h2 : F.boundaryLabel (κ.pathMatch_mem (Subtype.prop
       (⟨y, hy⟩ : {z : W.Flag // z ∈ F.boundaryFlags}))) =
@@ -480,25 +480,25 @@ private theorem touched_line_parity
           (min (F.boundaryLabel h₁) (F.boundaryLabel h₂))
           (max (F.boundaryLabel h₁) (F.boundaryLabel h₂)))
         then (1 : ℕ) else 0) = 0 :=
-      if_neg (fun hc => hxy hc.1)
+      ite_eq_right (fun hc => hxy hc.1)
     have z₂ : (if (F.boundaryLabel ht < F.boundaryLabel htmm ∧
         ChordPairCross (F.boundaryLabel ht) (F.boundaryLabel htmm)
           (min (F.boundaryLabel h₃) (F.boundaryLabel h₄))
           (max (F.boundaryLabel h₃) (F.boundaryLabel h₄)))
         then (1 : ℕ) else 0) = 0 :=
-      if_neg (fun hc => hxy hc.1)
+      ite_eq_right (fun hc => hxy hc.1)
     have z₃ : (if (F.boundaryLabel ht < F.boundaryLabel htmm ∧
         ChordPairCross (F.boundaryLabel ht) (F.boundaryLabel htmm)
           (min (F.boundaryLabel h₁) (F.boundaryLabel h₃))
           (max (F.boundaryLabel h₁) (F.boundaryLabel h₃)))
         then (1 : ℕ) else 0) = 0 :=
-      if_neg (fun hc => hxy hc.1)
+      ite_eq_right (fun hc => hxy hc.1)
     have z₄ : (if (F.boundaryLabel ht < F.boundaryLabel htmm ∧
         ChordPairCross (F.boundaryLabel ht) (F.boundaryLabel htmm)
           (min (F.boundaryLabel h₂) (F.boundaryLabel h₄))
           (max (F.boundaryLabel h₂) (F.boundaryLabel h₄)))
         then (1 : ℕ) else 0) = 0 :=
-      if_neg (fun hc => hxy hc.1)
+      ite_eq_right (fun hc => hxy hc.1)
     rw [z₁, z₂, z₃, z₄]
 
 /-- The touched part of the boundary is exactly the four ends of the

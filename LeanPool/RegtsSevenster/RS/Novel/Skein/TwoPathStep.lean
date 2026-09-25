@@ -32,7 +32,7 @@ in `TransposeLedger.lean`, on top of this count invariance.
 
 namespace RS
 
-open scoped Classical
+
 
 namespace EdgeSubset
 
@@ -68,7 +68,7 @@ theorem not_periodic_of_onBoundaryChain {β f : W.Flag}
 /-- **Chain disjointness**: two genuinely distinct boundary chains
 (the second end not among the first chain's two ends) share no
 flag, on either side of an edge. -/
-theorem onBoundaryChain_disjoint [LinearOrder α] {β β' f : W.Flag}
+theorem onBoundaryChain_disjoint {β β' f : W.Flag}
     (hβ : β ∈ F.boundaryFlags) (hβ' : β' ∈ F.boundaryFlags)
     (hne : β' ≠ β) (hne' : β' ≠ κ.pathMatch β hβ)
     (h : OnBoundaryChain κ β f) (h' : OnBoundaryChain κ β' f) :
@@ -446,7 +446,7 @@ theorem openCircuitCount_repair_of_not_localized [LinearOrder α]
     rw [Equiv.permCongr_apply]
     simp only [Equiv.subtypeEquivRight_symm_apply,
       Equiv.subtypeEquivRight_apply]
-    show (κ.repair a b c d v hsq).match_ (W.pairing f) =
+    change (κ.repair a b c d v hsq).match_ (W.pairing f) =
       κ.match_ (W.pairing f)
     exact RelTransitionSystem.repair_match_of_ne hsq
       (fun he => hna (he ▸ hσ)) (fun he => hnb (he ▸ hσ))

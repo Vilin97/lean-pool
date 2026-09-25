@@ -24,14 +24,15 @@ variable {G : Type*}
 
 /-- **The faithfulness trick**: killing every simple submodule of
 the regular module forces vanishing. -/
-theorem eq_zero_of_kills_simples [Group G] [Fintype G]
+theorem eq_zero_of_kills_simples [Group G] [Finite G]
     (x : MonoidAlgebra ℂ G)
     (hx : ∀ S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G),
       IsSimpleModule (MonoidAlgebra ℂ G) S →
       ∀ s ∈ S, x * s = 0) :
     x = 0 := by
   classical
-  haveI : NeZero ((Nat.card G : ℂ)) := ⟨by
+  let := Fintype.ofFinite G
+  have : NeZero ((Nat.card G : ℂ)) := ⟨by
     rw [Nat.card_eq_fintype_card]
     exact_mod_cast Fintype.card_ne_zero⟩
   have htop := IsSemisimpleModule.sSup_simples_eq_top

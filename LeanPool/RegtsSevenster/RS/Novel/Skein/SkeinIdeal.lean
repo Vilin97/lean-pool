@@ -85,7 +85,7 @@ theorem connectionMap_compose_single
     rfl
   | add y z hy hz =>
     rw [map_add, LinearMap.add_apply, map_add]
-    show connectionMap f (m + p) _ K + connectionMap f (m + p) _ K
+    change connectionMap f (m + p) _ K + connectionMap f (m + p) _ K
       = _
     rw [hy, hz, map_add]
     rfl

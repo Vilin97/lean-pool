@@ -68,7 +68,7 @@ theorem modMultiπ_single
     [MonObj A]
     (X : Mod D A) :
     modMultiπ A [X] ≫ (modMultiSingle A X).hom = (ρ_ X.X).hom := by
-  show (modMultiTriv A (modSlots_singleton A X)).inv ≫
+  change (modMultiTriv A (modSlots_singleton A X)).inv ≫
       (modMultiTriv A (modSlots_singleton A X)).hom ≫
       (ρ_ X.X).hom = (ρ_ X.X).hom
   erw [Iso.inv_hom_id_assoc]

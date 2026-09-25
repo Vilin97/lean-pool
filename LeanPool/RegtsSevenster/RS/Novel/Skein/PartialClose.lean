@@ -162,31 +162,31 @@ def pcSurvValEquiv (s t u v : ℕ) :
       ⟨Sum.inr ⟨k.val, by omega⟩, Or.inl hk⟩
     else
       ⟨Sum.inr ⟨(s + u) + (k.val - s), by have := k.isLt; omega⟩,
-       Or.inr ⟨by show (s + u) ≤ (s + u) + (k.val - s); omega,
-         by show (s + u) + (k.val - s) < (s + u) + t
+       Or.inr ⟨by change (s + u) ≤ (s + u) + (k.val - s); omega,
+         by change (s + u) + (k.val - s) < (s + u) + t
             have := k.isLt; omega⟩⟩
   left_inv x := by
     obtain ⟨x, h⟩ := x
     rcases x with a | b
     · exact absurd h not_false
     · by_cases hb : b.val < s
-      · simp only [dif_pos hb]
+      · simp only [dite_eq_left hb]
       · have hb2 : (s + u) ≤ b.val ∧ b.val < (s + u) + t := by
           rcases h with h | h
           · omega
           · exact h
-        simp only [dif_neg hb,
-          dif_neg (show ¬ s + (b.val - (s + u)) < s by omega)]
+        simp only [dite_eq_right hb,
+          dite_eq_right (show ¬ s + (b.val - (s + u)) < s by omega)]
         exact Subtype.ext (congrArg Sum.inr (Fin.ext (by
-          show (s + u) + (s + (b.val - (s + u)) - s) = b.val
+          change (s + u) + (s + (b.val - (s + u)) - s) = b.val
           omega)))
   right_inv k := by
     by_cases hk : k.val < s
-    · simp only [dif_pos hk]
-    · simp only [dif_neg hk,
-        dif_neg (show ¬ (s + u) + (k.val - s) < s by omega)]
+    · simp only [dite_eq_left hk]
+    · simp only [dite_eq_right hk,
+        dite_eq_right (show ¬ (s + u) + (k.val - s) < s by omega)]
       exact Fin.ext (by
-        show s + ((s + u) + (k.val - s) - (s + u)) = k.val
+        change s + ((s + u) + (k.val - s) - (s + u)) = k.val
         omega)
 
 /-- The survivor identification of the `z`-gluing. -/

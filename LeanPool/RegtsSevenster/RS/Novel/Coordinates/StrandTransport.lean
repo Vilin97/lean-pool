@@ -32,14 +32,14 @@ theorem stdToOmega_one :
     stdToOmega f P e 1 =
       (SuperVect.tensorUnit ◁ e) ≫
         (λ_ (P.ω.obj (SkeinObj.mk 1))).hom := by
-  letI := P.braided
-  show (stdToOmega f P e 0 ⊗ₘ e) ≫
+  let := P.braided
+  change (stdToOmega f P e 0 ⊗ₘ e) ≫
     μ P.ω (SkeinObj.mk 0) (SkeinObj.mk 1) = _
   have h := Functor.LaxMonoidal.ε_tensorHom_comp_μ
     (F := P.ω) (X := SkeinObj.mk 1) e
   rw [show (λ_ (SkeinObj.mk 1 : SkeinObj f)).inv =
       𝟙 (SkeinObj.mk 1) from by
-    show bundleMapClass f (finCongr _) = _
+    change bundleMapClass f (finCongr _) = _
     rw [show (finCongr (show (1 : ℕ) = 0 + 1 by omega) :
         Fin 1 ≃ Fin 1) = _root_.Equiv.refl (Fin 1) from
       _root_.Equiv.ext (fun x => Fin.ext rfl)]
@@ -58,9 +58,9 @@ theorem stdToOmega_one_even (x : (stdSuperPair k ℓ).even) :
     ((stdToOmega f P e 1) : SuperVect.Hom _ _).evenMap
         (evenPair (1 : ℂ) x) =
       (e : SuperVect.Hom _ _).evenMap x := by
-  letI := P.braided
+  let := P.braided
   rw [stdToOmega_one]
-  show (((λ_ (P.ω.obj (SkeinObj.mk 1))).hom :
+  change (((λ_ (P.ω.obj (SkeinObj.mk 1))).hom :
       SuperVect.tensorObj SuperVect.tensorUnit
         (P.ω.obj (SkeinObj.mk 1)) ⟶
       P.ω.obj (SkeinObj.mk 1)) : SuperVect.Hom _ _).evenMap
@@ -70,7 +70,7 @@ theorem stdToOmega_one_even (x : (stdSuperPair k ℓ).even) :
       (SuperVect.Hom.id (𝟙_ SuperVect)) e).evenMap
       (evenPair (1 : ℂ) x) =
     evenPair (1 : ℂ) ((e : SuperVect.Hom _ _).evenMap x) from by
-    show ((TensorProduct.map LinearMap.id
+    change ((TensorProduct.map LinearMap.id
         (e : SuperVect.Hom _ _).evenMap) ((1 : ℂ) ⊗ₜ[ℂ] x),
       (TensorProduct.map
         (SuperVect.Hom.id (𝟙_ SuperVect)).oddMap
@@ -92,9 +92,9 @@ theorem stdToOmega_one_odd (y : (stdSuperPair k ℓ).odd) :
     ((stdToOmega f P e 1) : SuperVect.Hom _ _).oddMap
         (oddUnitPad y) =
       (e : SuperVect.Hom _ _).oddMap y := by
-  letI := P.braided
+  let := P.braided
   rw [stdToOmega_one]
-  show (((λ_ (P.ω.obj (SkeinObj.mk 1))).hom :
+  change (((λ_ (P.ω.obj (SkeinObj.mk 1))).hom :
       SuperVect.tensorObj SuperVect.tensorUnit
         (P.ω.obj (SkeinObj.mk 1)) ⟶
       P.ω.obj (SkeinObj.mk 1)) : SuperVect.Hom _ _).oddMap
@@ -104,7 +104,7 @@ theorem stdToOmega_one_odd (y : (stdSuperPair k ℓ).odd) :
       (SuperVect.Hom.id (𝟙_ SuperVect)) e).oddMap
       (oddUnitPad y) =
     oddUnitPad ((e : SuperVect.Hom _ _).oddMap y) from by
-    show ((TensorProduct.map LinearMap.id
+    change ((TensorProduct.map LinearMap.id
         (e : SuperVect.Hom _ _).oddMap) ((1 : ℂ) ⊗ₜ[ℂ] y),
       (TensorProduct.map
         (SuperVect.Hom.id (𝟙_ SuperVect)).oddMap

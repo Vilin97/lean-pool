@@ -27,7 +27,7 @@ theorem altDet_eq_zero_of_repeat (e : Fin k → ℕ) {i j : Fin k}
   rw [altDet]
   apply Matrix.det_zero_of_row_eq hij
   funext l
-  show (X l : MvPolynomial (Fin k) ℂ) ^ (e i) = X l ^ (e j)
+  change (X l : MvPolynomial (Fin k) ℂ) ^ (e i) = X l ^ (e j)
   rw [he]
 
 /-- Strictly decreasing sequences agreeing after a permutation
@@ -72,13 +72,13 @@ theorem alternant_coeff_strict (e w : Fin k → ℕ)
   classical
   by_cases heq : e = w
   · subst heq
-    rw [if_pos rfl, altDet]
+    rw [ite_eq_left rfl, altDet]
     exact alternant_coeff e (fun i j hij => by
       rcases lt_trichotomy i j with h | h | h
       · exact absurd hij (ne_of_gt (he i j h))
       · exact h
       · exact absurd hij.symm (ne_of_gt (he j i h)))
-  · rw [if_neg heq, altDet, Matrix.det_apply']
+  · rw [ite_eq_right heq, altDet, Matrix.det_apply']
     rw [Finset.sum_congr rfl
       (fun (τ : Equiv.Perm (Fin k)) (_ : τ ∈ Finset.univ) =>
         show ((Equiv.Perm.sign τ : ℤ) : MvPolynomial (Fin k) ℂ) *
@@ -97,7 +97,7 @@ theorem alternant_coeff_strict (e w : Fin k → ℕ)
     rw [show ((Equiv.Perm.sign τ : ℤ) : MvPolynomial (Fin k) ℂ) =
         MvPolynomial.C ((Equiv.Perm.sign τ : ℤ) : ℂ) from by simp,
       MvPolynomial.coeff_C_mul, coeff_monomial]
-    rw [if_neg (fun hc => ?_), mul_zero]
+    rw [ite_eq_right (fun hc => ?_), mul_zero]
     have hpt : ∀ i : Fin k, e (τ i) = w i := by
       intro i
       have h1 := congrArg (fun f : Fin k →₀ ℕ => f i) hc

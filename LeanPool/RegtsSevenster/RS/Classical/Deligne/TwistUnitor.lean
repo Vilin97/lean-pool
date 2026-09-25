@@ -64,11 +64,11 @@ noncomputable def tensorLeftUnitMod
     (M : Mod D A) :
     tensorLeftMod A (𝟙_ D) M ≅ M where
   hom := Mod.Hom.mk' (λ_ M.X).hom (by
-    show actAcross A (𝟙_ D) M.X ≫ (λ_ M.X).hom =
+    change actAcross A (𝟙_ D) M.X ≫ (λ_ M.X).hom =
       (A ◁ (λ_ M.X).hom) ≫ actLeft A M.X
     exact actAcross_unit A M.X)
   inv := Mod.Hom.mk' (λ_ M.X).inv (by
-    show actLeft A M.X ≫ (λ_ M.X).inv =
+    change actLeft A M.X ≫ (λ_ M.X).inv =
       (A ◁ (λ_ M.X).inv) ≫ actAcross A (𝟙_ D) M.X
     exact act_inv_of_act_hom A (λ_ M.X) (actAcross_unit A M.X))
   hom_inv_id := by
@@ -105,13 +105,13 @@ noncomputable def tensorLeftAssocMod
     tensorLeftMod A V (tensorLeftMod A W M) ≅
       tensorLeftMod A (V ⊗ W) M where
   hom := Mod.Hom.mk' (α_ V W M.X).inv (by
-    show actAcross A V (tensorLeftMod A W M).X ≫
+    change actAcross A V (tensorLeftMod A W M).X ≫
         (α_ V W M.X).inv =
       (A ◁ (α_ V W M.X).inv) ≫ actAcross A (V ⊗ W) M.X
     exact act_inv_of_act_hom A (α_ V W M.X)
       (actAcross_assoc_split A V W M))
   inv := Mod.Hom.mk' (α_ V W M.X).hom (by
-    show actAcross A (V ⊗ W) M.X ≫ (α_ V W M.X).hom =
+    change actAcross A (V ⊗ W) M.X ≫ (α_ V W M.X).hom =
       (A ◁ (α_ V W M.X).hom) ≫
         actAcross A V (tensorLeftMod A W M).X
     exact actAcross_assoc_split A V W M)
@@ -147,13 +147,13 @@ theorem freeTwist_act
         (braidPast A V X).hom =
       (A ◁ (braidPast A V X).hom) ≫
         actAcross A V (freeMod A X).X := by
-  letI := freeModObj A X
+  let := freeModObj A X
   have hbp : (braidPast (A ⊗ A) V X).hom =
       (α_ A A (V ⊗ X)).hom ≫ (A ◁ (braidPast A V X).hom) ≫
         (braidPast A V (A ⊗ X)).hom ≫ (V ◁ (α_ A A X).inv) := by
     rw [braidPast_hom]
     exact braidPast_tensor_first A A V X
-  show ((α_ A A (V ⊗ X)).inv ≫ (μ[A] ▷ (V ⊗ X))) ≫
+  change ((α_ A A (V ⊗ X)).inv ≫ (μ[A] ▷ (V ⊗ X))) ≫
       (braidPast A V X).hom =
     (A ◁ (braidPast A V X).hom) ≫ actAcross A V (A ⊗ X)
   rw [actAcross_eq_braidPast A V (A ⊗ X),
@@ -172,13 +172,13 @@ noncomputable def freeTwistIso
     (V X : D) :
     freeMod A (V ⊗ X) ≅ tensorLeftMod A V (freeMod A X) where
   hom := Mod.Hom.mk' (braidPast A V X).hom (by
-    show ((α_ A A (V ⊗ X)).inv ≫ (μ[A] ▷ (V ⊗ X))) ≫
+    change ((α_ A A (V ⊗ X)).inv ≫ (μ[A] ▷ (V ⊗ X))) ≫
         (braidPast A V X).hom =
       (A ◁ (braidPast A V X).hom) ≫
         actAcross A V (freeMod A X).X
     exact freeTwist_act A V X)
   inv := Mod.Hom.mk' (braidPast A V X).inv (by
-    show actAcross A V (freeMod A X).X ≫
+    change actAcross A V (freeMod A X).X ≫
         (braidPast A V X).inv =
       (A ◁ (braidPast A V X).inv) ≫
         ((α_ A A (V ⊗ X)).inv ≫ (μ[A] ▷ (V ⊗ X)))

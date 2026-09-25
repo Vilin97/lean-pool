@@ -116,8 +116,8 @@ theorem nonempty_unitIso_of_hom_ne_zero
     (hu : HasScalarUnit A)
     {S : A} [Simple S] {φ : 𝟙_ A ⟶ S} (hφ : φ ≠ 0) :
     Nonempty (𝟙_ A ≅ S) := by
-  haveI : Simple (𝟙_ A) := simple_unit_of_hasScalarUnit hu
-  haveI : IsIso φ := isIso_of_hom_simple hφ
+  have : Simple (𝟙_ A) := simple_unit_of_hasScalarUnit hu
+  have : IsIso φ := isIso_of_hom_simple hφ
   exact ⟨asIso φ⟩
 
 /-- **Maps from the unit to a simple object not isomorphic to it
@@ -149,7 +149,7 @@ theorem finrank_hom_unit_simple_eq_zero
     (hu : HasScalarUnit A)
     {S : A} [Simple S] (h : IsEmpty (𝟙_ A ≅ S)) :
     Module.finrank ℂ (𝟙_ A ⟶ S) = 0 := by
-  haveI := subsingleton_hom_unit_simple hu h
+  have := subsingleton_hom_unit_simple hu h
   exact Module.finrank_zero_of_subsingleton
 
 end Proportional
@@ -295,18 +295,18 @@ private theorem homFinite_core
     ∀ (N : ℕ) (Z : A), LengthLE Z N →
       Module.Finite ℂ (𝟙_ A ⟶ Z)
         ∧ Module.finrank ℂ (𝟙_ A ⟶ Z) ≤ N := by
-  haveI := hs
+  have := hs
   intro N
   induction N with
   | zero =>
     intro Z h
     rcases subsingleton_or_nontrivial (𝟙_ A ⟶ Z) with hss | hnt
-    · haveI := hss
+    · have := hss
       exact ⟨inferInstance, by
         rw [Module.finrank_zero_of_subsingleton]⟩
-    · haveI := hnt
+    · have := hnt
       obtain ⟨φ, hφ⟩ := exists_ne (0 : 𝟙_ A ⟶ Z)
-      haveI : Mono φ := mono_of_nonzero_from_simple hφ
+      have : Mono φ := mono_of_nonzero_from_simple hφ
       refine absurd ?_ (h (Fin.cons ⊥ fun _ : Fin 1 => Subobject.mk φ))
       rw [Fin.strictMono_iff_lt_succ]
       intro i
@@ -319,14 +319,14 @@ private theorem homFinite_core
   | succ M ih =>
     intro Z h
     rcases subsingleton_or_nontrivial (𝟙_ A ⟶ Z) with hss | hnt
-    · haveI := hss
+    · have := hss
       exact ⟨inferInstance, by
         rw [Module.finrank_zero_of_subsingleton]; exact Nat.zero_le _⟩
-    · haveI := hnt
+    · have := hnt
       obtain ⟨φ, hφ⟩ := exists_ne (0 : 𝟙_ A ⟶ Z)
-      haveI : Mono φ := mono_of_nonzero_from_simple hφ
+      have : Mono φ := mono_of_nonzero_from_simple hφ
       obtain ⟨hfinQ, hrkQ⟩ := ih (cokernel φ) (lengthLE_cokernel φ hφ h)
-      haveI := hfinQ
+      have := hfinQ
       set L : (𝟙_ A ⟶ Z) →ₗ[ℂ] (𝟙_ A ⟶ cokernel φ) :=
         Linear.rightComp ℂ (𝟙_ A) (cokernel.π φ) with hLdef
       have hker : LinearMap.ker L ≤ Submodule.span ℂ {φ} := by
@@ -336,11 +336,11 @@ private theorem homFinite_core
           rwa [hLdef, Linear.rightComp_apply] at hmem
         obtain ⟨c, hc⟩ := eq_smul_of_comp_cokernel_π_zero hu hψ0
         exact Submodule.mem_span_singleton.mpr ⟨c, hc.symm⟩
-      haveI hkfin : FiniteDimensional ℂ (LinearMap.ker L) :=
+      have hkfin : FiniteDimensional ℂ (LinearMap.ker L) :=
         Submodule.finiteDimensional_of_le hker
-      haveI hrfin : FiniteDimensional ℂ (LinearMap.range L) :=
+      have hrfin : FiniteDimensional ℂ (LinearMap.range L) :=
         inferInstance
-      haveI hfin : Module.Finite ℂ (𝟙_ A ⟶ Z) :=
+      have hfin : Module.Finite ℂ (𝟙_ A ⟶ Z) :=
         Module.finite_def.mpr
           (Submodule.fg_of_fg_map_of_fg_inf_ker L
             (by rw [Submodule.map_top]
@@ -404,7 +404,7 @@ theorem finrank_hom_le
     (h : LengthLE (Y ⊗ Xᘁ) N) :
     Module.Finite ℂ (X ⟶ Y) ∧ Module.finrank ℂ (X ⟶ Y) ≤ N := by
   obtain ⟨hfin, hrk⟩ := finrank_hom_unit_le hu h
-  haveI := hfin
+  have := hfin
   refine ⟨Module.Finite.equiv (homUnitDualEquiv X Y).symm, ?_⟩
   rw [(homUnitDualEquiv X Y).finrank_eq]
   exact hrk

@@ -19,7 +19,7 @@ namespace RS
 
 open CategoryTheory MonoidalCategory Finset
 open Functor.LaxMonoidal Functor.OplaxMonoidal
-open Classical
+
 
 variable {R : ℕ} (f : EdgeRankParameter R)
 variable (P : DelignePackage (SkeinObj f))
@@ -187,6 +187,7 @@ theorem masterSummand_colouringOfFlip
     rw [hL0, hR0]
     ring
 
+open scoped Classical in
 /-- **The fibre identity**, assembled from the vanishing branches
 and the termwise value identity. -/
 theorem fibreSum_eq
@@ -206,9 +207,9 @@ theorem fibreSum_eq
       else 0
     else 0) := by
   by_cases hc : ∀ g ∈ s, W.pairing g ∈ s
-  · rw [dif_pos hc]
+  · rw [dite_eq_left hc]
     by_cases hE : (EdgeSubset.mk s hc).Eulerian
-    · rw [if_pos hE]
+    · rw [ite_eq_left hE]
       set F := EdgeSubset.mk s hc with hF
       obtain ⟨⟨κ, o⟩⟩ :=
         ClosedFragment.eulerian_transition_nonempty W F hE
@@ -265,12 +266,12 @@ theorem fibreSum_eq
         F.mixedSummand (hRS f P e') o from rfl]
       exact (mixedValue_eq_summand_closed W F
         (hRS f P e') o).symm
-    · rw [if_neg hE]
+    · rw [ite_eq_right hE]
       refine Finset.sum_eq_zero (fun c hcmem => ?_)
       rw [Finset.mem_filter] at hcmem
       exact masterSummand_vanish_of_not_eulerian f P e' W
         c.val s hc hcmem.2 hE
-  · rw [dif_neg hc]
+  · rw [dite_eq_right hc]
     refine Finset.sum_eq_zero (fun c hcmem => ?_)
     rw [Finset.mem_filter] at hcmem
     exact masterSummand_vanish_of_not_closed f P e' W
@@ -296,6 +297,7 @@ theorem parameter_eq_mixedPartition (W : ClosedFragment)
           δ P.ω (SkeinObj.mk 1) (SkeinObj.mk 1)) =
         stdCopair k ℓ) :
     f.val W = mixedPartition (hRS f P e') W := by
+  classical
   rw [parameter_masterSummand f P e e' W hee' hform]
   rw [masterSum_partition]
   rw [show mixedPartition (hRS f P e') W =

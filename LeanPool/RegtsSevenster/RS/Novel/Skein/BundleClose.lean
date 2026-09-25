@@ -48,11 +48,11 @@ theorem mem_highCross_flat
   · rintro (⟨a, rfl, ha⟩ | ⟨b, rfl, hb⟩)
     · refine ⟨⟨a.val - m, by have := a.isLt; omega⟩, Or.inl ?_⟩
       refine congrArg Sum.inl (Fin.ext ?_)
-      show a.val = m + (a.val - m)
+      change a.val = m + (a.val - m)
       omega
     · refine ⟨⟨b.val - m, by have := b.isLt; omega⟩, Or.inr ?_⟩
       refine congrArg Sum.inr (Fin.ext ?_)
-      show b.val = m + (b.val - m)
+      change b.val = m + (b.val - m)
       omega
 
 /-- The high block is a well-formed gluing list. -/
@@ -121,15 +121,15 @@ noncomputable def bcPhi : Fin (m + m) ≃
   left_inv x := by
     by_cases h : x.val < m
     · have h1 : bcPhiFun m x = ⟨Sum.inl ⟨x.val, by omega⟩, _⟩ :=
-        dif_pos h
+        dite_eq_left h
       rw [h1]
-      show (⟨x.val, _⟩ : Fin (m + m)) = x
+      change (⟨x.val, _⟩ : Fin (m + m)) = x
       exact Fin.ext rfl
     · have h1 : bcPhiFun m x =
           ⟨Sum.inr ⟨x.val - m, by have := x.isLt; omega⟩, _⟩ :=
-        dif_neg h
+        dite_eq_right h
       rw [h1]
-      show (⟨m + (x.val - m), _⟩ : Fin (m + m)) = x
+      change (⟨m + (x.val - m), _⟩ : Fin (m + m)) = x
       exact Fin.ext (show m + (x.val - m) = x.val by omega)
   right_inv s := by
     obtain ⟨sv, hp⟩ := s
@@ -139,22 +139,22 @@ noncomputable def bcPhi : Fin (m + m) ≃
         by_contra hge
         exact hnot ((mem_highCross_flat m _).mpr
           (Or.inl ⟨a, rfl, by omega⟩))
-      show bcPhiFun m ⟨a.val, by omega⟩ = _
+      change bcPhiFun m ⟨a.val, by omega⟩ = _
       have h1 : bcPhiFun m ⟨a.val, by omega⟩ =
-          ⟨Sum.inl ⟨a.val, by omega⟩, _⟩ := dif_pos ha
+          ⟨Sum.inl ⟨a.val, by omega⟩, _⟩ := dite_eq_left ha
       rw [h1]
     · have hb : b.val < m := by
         have hnot := (forall_ne_iff_not_mem_flat _ _).mp hp
         by_contra hge
         exact hnot ((mem_highCross_flat m _).mpr
           (Or.inr ⟨b, rfl, by omega⟩))
-      show bcPhiFun m ⟨m + b.val, by omega⟩ = _
+      change bcPhiFun m ⟨m + b.val, by omega⟩ = _
       have h1 : bcPhiFun m ⟨m + b.val, by omega⟩ =
           ⟨Sum.inr ⟨m + b.val - m, by omega⟩, _⟩ :=
-        dif_neg (show ¬ m + b.val < m by omega)
+        dite_eq_right (show ¬ m + b.val < m by omega)
       rw [h1]
       exact Subtype.ext (congrArg Sum.inr (Fin.ext (by
-        show m + b.val - m = b.val
+        change m + b.val - m = b.val
         omega)))
 
 /-! ### The ambient relabelling -/
@@ -291,15 +291,15 @@ theorem bcPhi_eq :
     have hy : (((interfaceSurvEquiv m m m).trans
         finSumFinEquiv).symm x) =
         ⟨Sum.inl ⟨x.val, by omega⟩, wpf⟩ := by
-      show (interfaceSurvEquiv m m m).symm
+      change (interfaceSurvEquiv m m m).symm
         (finSumFinEquiv.symm x) = _
       rw [hz]
       exact (_root_.Equiv.symm_apply_eq _).mpr hw.symm
     have hval := congrArg Subtype.val hy
     have hbc : (bcPhiFun m x).val =
         Sum.inl ⟨x.val, by omega⟩ :=
-      congrArg Subtype.val (dif_pos hx)
-    show bcDelta m ((((interfaceSurvEquiv m m m).trans
+      congrArg Subtype.val (dite_eq_left hx)
+    change bcDelta m ((((interfaceSurvEquiv m m m).trans
         finSumFinEquiv).symm x)).val = (bcPhiFun m x).val
     rw [hval, hbc]
     exact congrArg Sum.inl (Fin.ext rfl)
@@ -309,7 +309,7 @@ theorem bcPhi_eq :
           Fin m ⊕ Fin m) := by
       conv_lhs => rw [show x = Fin.natAdd m
         ⟨x.val - m, by have := x.isLt; omega⟩ from
-        Fin.ext (by show x.val = m + (x.val - m); omega)]
+        Fin.ext (by change x.val = m + (x.val - m); omega)]
       exact finSumFinEquiv_symm_apply_natAdd _
     have wpf : ∀ p ∈ interfacePairs m m m,
         (Sum.inr ⟨x.val, x.isLt⟩ :
@@ -332,19 +332,19 @@ theorem bcPhi_eq :
     have hy : (((interfaceSurvEquiv m m m).trans
         finSumFinEquiv).symm x) =
         ⟨Sum.inr ⟨x.val, x.isLt⟩, wpf⟩ := by
-      show (interfaceSurvEquiv m m m).symm
+      change (interfaceSurvEquiv m m m).symm
         (finSumFinEquiv.symm x) = _
       rw [hz]
       exact (_root_.Equiv.symm_apply_eq _).mpr hw.symm
     have hval := congrArg Subtype.val hy
     have hbc : (bcPhiFun m x).val =
         Sum.inr ⟨x.val - m, by have := x.isLt; omega⟩ :=
-      congrArg Subtype.val (dif_neg hx)
-    show bcDelta m ((((interfaceSurvEquiv m m m).trans
+      congrArg Subtype.val (dite_eq_right hx)
+    change bcDelta m ((((interfaceSurvEquiv m m m).trans
         finSumFinEquiv).symm x)).val = (bcPhiFun m x).val
     rw [hval, hbc]
     refine congrArg Sum.inr (Fin.ext ?_)
-    show ((transposeEquiv m m).symm.trans
+    change ((transposeEquiv m m).symm.trans
       (finCongr (by omega : m + m = (m + m) + 0))
         ⟨x.val, x.isLt⟩).val = x.val - m
     rw [_root_.Equiv.trans_apply,
@@ -352,7 +352,7 @@ theorem bcPhi_eq :
         transposeEquiv_symm m m,
       show (⟨x.val, x.isLt⟩ : Fin (m + m)) =
         ⟨m + (x.val - m), by have := x.isLt; omega⟩ from
-        Fin.ext (by show x.val = m + (x.val - m); omega),
+        Fin.ext (by change x.val = m + (x.val - m); omega),
       transposeEquiv_high m m (x.val - m)
         (by have := x.isLt; omega) (by have := x.isLt; omega)
         (by have := x.isLt; omega)]
@@ -489,7 +489,7 @@ theorem mapPairs_bcPhi_lift :
     (h1.trans (congrArg Prod.fst hlow))
   have hs2 := bcPhi_symm_val_inr m _ ⟨m - 1 - j, by omega⟩
     (h2.trans (congrArg Prod.snd hlow)) (by
-      show m - 1 - j < m
+      change m - 1 - j < m
       omega)
   rw [hs1, hs2]
   exact Prod.ext (Fin.ext rfl) (Fin.ext rfl)
@@ -518,7 +518,7 @@ noncomputable def pairCloseStrandBundle
       ((Fragment.glueList V (matchPairs m)
           (matchPairs_wf m)).relabel
         (_root_.Equiv.equivOfIsEmpty _ _)) := by
-  show ((V.relabel
+  change ((V.relabel
       (finCongr (by omega : m + m = 0 + (m + m)))).compose
     ((strandBundle m).relabel
       (finCongr (by omega : m + m = (m + m) + 0)))).Equiv _

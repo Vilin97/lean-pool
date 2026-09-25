@@ -60,8 +60,8 @@ theorem mixedPartition_of_flagless [IsEmpty W.Flag] [IsEmpty W.Vertex]
   unfold mixedPartition
   rw [Fintype.sum_eq_single ∅
     (fun s hs => absurd (Finset.eq_empty_of_isEmpty s) hs)]
-  rw [dif_pos (fun f hf => absurd hf (Finset.notMem_empty f))]
-  rw [if_pos (show (EdgeSubset.mk (∅ : Finset W.Flag)
+  rw [dite_eq_left (fun f hf => absurd hf (Finset.notMem_empty f))]
+  rw [ite_eq_left (show (EdgeSubset.mk (∅ : Finset W.Flag)
       (fun f hf => absurd hf (Finset.notMem_empty f))).Eulerian
     from fun v => isEmptyElim v)]
   have hval : (EdgeSubset.mk (∅ : Finset W.Flag)
@@ -74,28 +74,28 @@ theorem mixedPartition_of_flagless [IsEmpty W.Flag] [IsEmpty W.Vertex]
     rw [show (EdgeSubset.mk (∅ : Finset W.Flag)
         (fun f hf => absurd hf (Finset.notMem_empty f))) =
       flaglessEmptySubset W from rfl]
-    rw [EdgeSubset.mixedValue, dif_pos hne]
+    rw [EdgeSubset.mixedValue, dite_eq_left hne]
     unfold EdgeSubset.mixedSummand
     have hcirc : ∀ κ : (flaglessEmptySubset W).TransitionSystem,
         κ.circuitCount = 0 := by
       intro κ
       unfold EdgeSubset.TransitionSystem.circuitCount
-      haveI : IsEmpty {f : W.Flag //
+      have : IsEmpty {f : W.Flag //
           f ∈ (flaglessEmptySubset W).flags} :=
         ⟨fun f => isEmptyElim f.val⟩
       rw [Subsingleton.elim κ.walkPerm 1, Equiv.Perm.cycleType_one]
       simp
     rw [hcirc, pow_zero, one_mul]
-    haveI : IsEmpty {f : W.Flag //
+    have : IsEmpty {f : W.Flag //
         f ∉ (flaglessEmptySubset W).flags} :=
       ⟨fun f => isEmptyElim f.val⟩
-    haveI : IsEmpty {f : W.Flag //
+    have : IsEmpty {f : W.Flag //
         f ∈ (flaglessEmptySubset W).flags} :=
       ⟨fun f => isEmptyElim f.val⟩
-    haveI : Subsingleton
+    have : Subsingleton
         ((flaglessEmptySubset W).EvenColouring k) :=
       ⟨fun a b => Subtype.ext (funext fun f => isEmptyElim f)⟩
-    haveI : Subsingleton
+    have : Subsingleton
         ((flaglessEmptySubset W).OddColouring ℓ) :=
       ⟨fun a b => Subtype.ext (funext fun f => isEmptyElim f)⟩
     rw [Fintype.sum_subsingleton _
@@ -112,9 +112,9 @@ end EmptyValue
 the empty closed fragment is `1`. -/
 theorem mixedPartition_empty {k ℓ : ℕ} (h : MixedFunctional k ℓ) :
     mixedPartition h emptyClosedFragment = 1 := by
-  haveI : IsEmpty emptyClosedFragment.Flag :=
+  have : IsEmpty emptyClosedFragment.Flag :=
     inferInstanceAs (IsEmpty Empty)
-  haveI : IsEmpty emptyClosedFragment.Vertex :=
+  have : IsEmpty emptyClosedFragment.Vertex :=
     inferInstanceAs (IsEmpty Empty)
   rw [mixedPartition_of_flagless emptyClosedFragment h]
   rw [show emptyClosedFragment.circles = 0 from rfl]

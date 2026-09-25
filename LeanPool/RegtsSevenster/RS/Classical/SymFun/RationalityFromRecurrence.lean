@@ -303,7 +303,7 @@ theorem truncated_product_from_recurrence {t : ℕ → ℂ} {a b : ℕ}
       change c ⟨a - k, _⟩ * newtonHZ t ((n : ℤ) - k) =
         if h : a - k < a + 1 then
           c ⟨a - k, h⟩ * newtonHZ t ((n : ℤ) - a + (a - k : ℕ)) else 0
-      rw [dif_pos (show a - k < a + 1 by omega)]
+      rw [dite_eq_left (show a - k < a + 1 by omega)]
       congr 2
       omega
     rw [Finset.sum_range_reflect f (a + 1),
@@ -314,12 +314,11 @@ theorem truncated_product_from_recurrence {t : ℕ → ℂ} {a b : ℕ}
       apply Finset.sum_congr rfl
       intro i _
       dsimp only [f]
-      rw [dif_pos i.isLt]
+      rw [dite_eq_left i.isLt]
       congr 2
       omega
     rw [hf_eq]
     exact hrec ((n : ℤ) - a - 1) (by omega)
-
   let P := PowerSeries.trunc (b + 1) ((↑Q : ℂ⟦X⟧) * H)
   have hQH_eq : (↑Q : ℂ⟦X⟧) * H = ↑P :=
     powerSeries_eq_coe_trunc_of_eventually_zero _ (b + 1) hQH_ev
@@ -340,7 +339,7 @@ theorem truncated_product_from_recurrence {t : ℕ → ℂ} {a b : ℕ}
         ≤ i := Polynomial.natDegree_C_mul_X_pow_le _ _
       _ ≤ a := by rw [Finset.mem_range] at hi; omega
   have hP_deg : P.natDegree ≤ b := by
-    show (PowerSeries.trunc (b + 1) ((↑Q : ℂ⟦X⟧) * H)).natDegree ≤ b
+    change (PowerSeries.trunc (b + 1) ((↑Q : ℂ⟦X⟧) * H)).natDegree ≤ b
     have := PowerSeries.natDegree_trunc_lt ((↑Q : ℂ⟦X⟧) * H) b
     omega
   exact ⟨Q, P, hQ_ne, hP_ne, hQH_eq, hQ_deg, hP_deg⟩
@@ -386,7 +385,7 @@ theorem coprime_pair_from_product {t : ℕ → ℂ}
   -- The Euclidean-domain GCD is not a typeclass `GCDMonoid` instance for
   -- `ℂ[X]` by default; introduce it explicitly so the coprimality API
   -- (`right_div_gcd_ne_zero`, `isCoprime_div_gcd_div_gcd`, etc.) resolves.
-  letI := EuclideanDomain.gcdMonoid ℂ[X]
+  let := EuclideanDomain.gcdMonoid ℂ[X]
   have hd_ne : EuclideanDomain.gcd P Q ≠ 0 := gcd_ne_zero_of_right hQ_ne
   have hd_coe_ne : (↑(EuclideanDomain.gcd P Q) : ℂ⟦X⟧) ≠ 0 :=
     Polynomial.coe_eq_zero_iff.not.mpr hd_ne
@@ -479,7 +478,8 @@ theorem superPowerSums_of_recurrence {t : ℕ → ℂ} {a b : ℕ}
       linear_combination
         (PowerSeries.C (P₀.coeff 0)) * X_mul_coe_derivative_prod β
     -- Leibniz rule applied to ↑Q₀ * H, then rewritten
-    have hleib := ((PowerSeries.derivative (R := ℂ))).leibniz (a := (↑Q₀ : ℂ⟦X⟧)) (b := newtonHSeries t)
+    have hleib := ((PowerSeries.derivative (R := ℂ))).leibniz (a := (↑Q₀ : ℂ⟦X⟧)) (b :=
+        newtonHSeries t)
     simp only [smul_eq_mul] at hleib
     rw [hQ0H, PowerSeries.derivative_coe, PowerSeries.derivative_coe,
         newtonH_derivative] at hleib

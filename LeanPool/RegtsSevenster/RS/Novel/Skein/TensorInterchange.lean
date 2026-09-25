@@ -41,7 +41,7 @@ noncomputable def disjUnionExchange
     W₁.Vertex W₂.Vertex W₃.Vertex W₄.Vertex
   attach_comm := fun f => by
     rcases f with (f | f) | (f | f)
-    · show (((W₁.attach f).map Sum.inl Sum.inl).map
+    · change (((W₁.attach f).map Sum.inl Sum.inl).map
           Sum.inl Sum.inl).map id
             (_root_.Equiv.sumSumSumComm α γ β δ) =
         (((W₁.attach f).map Sum.inl Sum.inl).map
@@ -49,7 +49,7 @@ noncomputable def disjUnionExchange
           (_root_.Equiv.sumSumSumComm W₁.Vertex W₂.Vertex
             W₃.Vertex W₄.Vertex) id
       rcases W₁.attach f with v | ℓ <;> rfl
-    · show (((W₂.attach f).map Sum.inl Sum.inl).map
+    · change (((W₂.attach f).map Sum.inl Sum.inl).map
           Sum.inr Sum.inr).map id
             (_root_.Equiv.sumSumSumComm α γ β δ) =
         (((W₂.attach f).map Sum.inr Sum.inr).map
@@ -57,7 +57,7 @@ noncomputable def disjUnionExchange
           (_root_.Equiv.sumSumSumComm W₁.Vertex W₂.Vertex
             W₃.Vertex W₄.Vertex) id
       rcases W₂.attach f with v | ℓ <;> rfl
-    · show (((W₃.attach f).map Sum.inr Sum.inr).map
+    · change (((W₃.attach f).map Sum.inr Sum.inr).map
           Sum.inl Sum.inl).map id
             (_root_.Equiv.sumSumSumComm α γ β δ) =
         (((W₃.attach f).map Sum.inl Sum.inl).map
@@ -65,7 +65,7 @@ noncomputable def disjUnionExchange
           (_root_.Equiv.sumSumSumComm W₁.Vertex W₂.Vertex
             W₃.Vertex W₄.Vertex) id
       rcases W₃.attach f with v | ℓ <;> rfl
-    · show (((W₄.attach f).map Sum.inr Sum.inr).map
+    · change (((W₄.attach f).map Sum.inr Sum.inr).map
           Sum.inr Sum.inr).map id
             (_root_.Equiv.sumSumSumComm α γ β δ) =
         (((W₄.attach f).map Sum.inr Sum.inr).map
@@ -76,7 +76,7 @@ noncomputable def disjUnionExchange
   pairing_comm := fun f => by
     rcases f with (f | f) | (f | f) <;> rfl
   circles_eq := by
-    show W₁.circles + W₂.circles +
+    change W₁.circles + W₂.circles +
         (W₃.circles + W₄.circles) =
       W₁.circles + W₃.circles +
         (W₂.circles + W₄.circles)
@@ -153,7 +153,7 @@ private theorem interchange_ground_low_aux
       Fragment.inlPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext ?_ ?_)
       (interchange_ground_low_aux s₁ t₁ u₁ s₂ t₂ u₂ l)
-    · show (_root_.Equiv.sumSumSumComm
+    · change (_root_.Equiv.sumSumSumComm
             (Fin (s₁+t₁)) (Fin (s₂+t₂))
             (Fin (t₁+u₁)) (Fin (t₂+u₂)))
           (Sum.inl ((interleaveEquiv s₁ t₁ s₂ t₂).symm
@@ -167,7 +167,7 @@ private theorem interchange_ground_low_aux
         from Fin.ext rfl,
         interleaveEquiv_symm_high_left]
       simp [_root_.Equiv.sumSumSumComm, Fin.ext_iff]
-    · show (_root_.Equiv.sumSumSumComm
+    · change (_root_.Equiv.sumSumSumComm
             (Fin (s₁+t₁)) (Fin (s₂+t₂))
             (Fin (t₁+u₁)) (Fin (t₂+u₂)))
           (Sum.inr ((interleaveEquiv t₁ u₁ t₂ u₂).symm
@@ -215,7 +215,7 @@ private theorem interchange_ground_high_aux
       Fragment.inrPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext ?_ ?_)
       (interchange_ground_high_aux s₁ t₁ u₁ s₂ t₂ u₂ l)
-    · show (_root_.Equiv.sumSumSumComm
+    · change (_root_.Equiv.sumSumSumComm
             (Fin (s₁+t₁)) (Fin (s₂+t₂))
             (Fin (t₁+u₁)) (Fin (t₂+u₂)))
           (Sum.inl ((interleaveEquiv s₁ t₁ s₂ t₂).symm
@@ -229,7 +229,7 @@ private theorem interchange_ground_high_aux
         from Fin.ext rfl,
         interleaveEquiv_symm_high_right]
       simp [_root_.Equiv.sumSumSumComm, Fin.ext_iff]
-    · show (_root_.Equiv.sumSumSumComm
+    · change (_root_.Equiv.sumSumSumComm
             (Fin (s₁+t₁)) (Fin (s₂+t₂))
             (Fin (t₁+u₁)) (Fin (t₂+u₂)))
           (Sum.inr ((interleaveEquiv t₁ u₁ t₂ u₂).symm
@@ -367,6 +367,230 @@ private theorem liftPairs_inlPairs_inrPairs
       (liftPairs_inlPairs_inrPairs ps qs _)
 
 /-! ### RHS normalization -/
+
+section InterchangeSurvivor
+
+variable
+    {s₁ t₁ u₁ s₂ t₂ u₂ : ℕ}
+    (g : (FoldSurviving (Fin (s₁ + t₁) ⊕ Fin (t₁ + u₁))
+        (interfacePairs s₁ t₁ u₁) ⊕
+      FoldSurviving (Fin (s₂ + t₂) ⊕ Fin (t₂ + u₂))
+        (interfacePairs s₂ t₂ u₂)) ≃
+      FoldSurviving (Fin ((s₁ + s₂) + (t₁ + t₂)) ⊕ Fin ((t₁ + t₂) + (u₁ + u₂)))
+        (interfacePairs (s₁ + s₂) (t₁ + t₂) (u₁ + u₂)))
+    (hg : ∀ x, (g x).val =
+      ((_root_.Equiv.sumSumSumComm (Fin (s₁ + t₁)) (Fin (t₁ + u₁))
+        (Fin (s₂ + t₂)) (Fin (t₂ + u₂))).trans
+        (_root_.Equiv.sumCongr (interleaveEquiv s₁ t₁ s₂ t₂)
+          (interleaveEquiv t₁ u₁ t₂ u₂))) (Sum.map Subtype.val Subtype.val x))
+
+include hg
+
+private theorem interchange_survivor_relabel_inl
+    (fs₁ : FoldSurviving (Fin (s₁ + t₁) ⊕ Fin (t₁ + u₁))
+      (interfacePairs s₁ t₁ u₁)) :
+    (g.trans ((interfaceSurvEquiv (s₁ + s₂) (t₁ + t₂) (u₁ + u₂)).trans
+      finSumFinEquiv)) (Sum.inl fs₁) =
+      ((_root_.Equiv.sumCongr
+        ((interfaceSurvEquiv s₁ t₁ u₁).trans finSumFinEquiv)
+        ((interfaceSurvEquiv s₂ t₂ u₂).trans finSumFinEquiv)).trans
+        (interleaveEquiv s₁ u₁ s₂ u₂)) (Sum.inl fs₁) := by
+  let ieF := interleaveEquiv s₁ t₁ s₂ t₂
+  let ieG := interleaveEquiv t₁ u₁ t₂ u₂
+  let E := (_root_.Equiv.sumSumSumComm
+    (Fin (s₁+t₁)) (Fin (t₁+u₁)) (Fin (s₂+t₂)) (Fin (t₂+u₂))).trans
+    (_root_.Equiv.sumCongr ieF ieG)
+  cases hxv : fs₁.val with
+  | inl a =>
+    have ha : a.val < s₁ := by
+      by_contra hge
+      exact (forall_ne_iff_not_mem_flat _ _).mp fs₁.prop
+        ((mem_interfacePairs_flat s₁ t₁ u₁ _).mpr
+          (Or.inl ⟨a, hxv, by omega⟩))
+    have hie_val : (ieF (Sum.inl a)).val = a.val := by
+      change (interleaveEquiv s₁ t₁ s₂ t₂
+        (Sum.inl a)).val = a.val
+      conv_lhs => rw [show a = Fin.castAdd t₁
+          ⟨a.val, ha⟩ from Fin.ext rfl,
+        interleaveEquiv_inl_low]
+      rfl
+    rw [_root_.Equiv.trans_apply]
+    conv_rhs =>
+      rw [_root_.Equiv.trans_apply,
+        _root_.Equiv.sumCongr_apply, Sum.map_inl,
+        _root_.Equiv.trans_apply,
+        interfaceSurvEquiv_inl s₁ t₁ u₁ fs₁ a hxv ha,
+        finSumFinEquiv_apply_left,
+        interleaveEquiv_inl_low s₁ u₁ s₂ u₂
+          ⟨a.val, ha⟩]
+    rw [_root_.Equiv.trans_apply]
+    refine (congrArg finSumFinEquiv
+      (interfaceSurvEquiv_inl (s₁+s₂) (t₁+t₂) (u₁+u₂)
+        _ (ieF (Sum.inl a))
+        (by
+          rw [hg]
+          change E (Sum.inl fs₁.val) = _
+          rw [hxv]
+          rfl)
+        (by rw [hie_val]; omega))).trans ?_
+    rw [finSumFinEquiv_apply_left]
+    exact congrArg (Fin.castAdd (u₁+u₂))
+      (Fin.ext hie_val)
+  | inr b =>
+    have hb : t₁ ≤ b.val := by
+      by_contra hlt
+      exact (forall_ne_iff_not_mem_flat _ _).mp fs₁.prop
+        ((mem_interfacePairs_flat s₁ t₁ u₁ _).mpr
+          (Or.inr ⟨b, hxv, by omega⟩))
+    have hie_val : (ieG (Sum.inl b)).val =
+        (t₁ + t₂) + (b.val - t₁) := by
+      change (interleaveEquiv t₁ u₁ t₂ u₂
+        (Sum.inl b)).val = _
+      conv_lhs => rw [show b = Fin.natAdd t₁
+          ⟨b.val - t₁, by
+            have := b.isLt
+            omega⟩ from Fin.ext (by
+          change b.val = t₁ + (b.val - t₁)
+          omega),
+        interleaveEquiv_inl_high]
+      rfl
+    rw [_root_.Equiv.trans_apply]
+    conv_rhs =>
+      rw [_root_.Equiv.trans_apply,
+        _root_.Equiv.sumCongr_apply, Sum.map_inl,
+        _root_.Equiv.trans_apply,
+        interfaceSurvEquiv_inr s₁ t₁ u₁ fs₁ b hxv hb,
+        finSumFinEquiv_apply_right,
+        interleaveEquiv_inl_high s₁ u₁ s₂ u₂
+          ⟨b.val - t₁, by have := b.isLt; omega⟩]
+    rw [_root_.Equiv.trans_apply]
+    refine (congrArg finSumFinEquiv
+      (interfaceSurvEquiv_inr (s₁+s₂) (t₁+t₂) (u₁+u₂)
+        _ (ieG (Sum.inl b))
+        (by
+          rw [hg]
+          change E (Sum.inl fs₁.val) = _
+          rw [hxv]
+          rfl)
+        (by rw [hie_val]; omega))).trans ?_
+    rw [finSumFinEquiv_apply_right]
+    exact congrArg (Fin.natAdd (s₁+s₂))
+      (Fin.ext (by
+        change (ieG (Sum.inl b)).val - (t₁ + t₂) =
+          b.val - t₁
+        rw [hie_val]
+        omega))
+
+private theorem interchange_survivor_relabel_inr
+    (fs₂ : FoldSurviving (Fin (s₂ + t₂) ⊕ Fin (t₂ + u₂))
+      (interfacePairs s₂ t₂ u₂)) :
+    (g.trans ((interfaceSurvEquiv (s₁ + s₂) (t₁ + t₂) (u₁ + u₂)).trans
+      finSumFinEquiv)) (Sum.inr fs₂) =
+      ((_root_.Equiv.sumCongr
+        ((interfaceSurvEquiv s₁ t₁ u₁).trans finSumFinEquiv)
+        ((interfaceSurvEquiv s₂ t₂ u₂).trans finSumFinEquiv)).trans
+        (interleaveEquiv s₁ u₁ s₂ u₂)) (Sum.inr fs₂) := by
+  let ieF := interleaveEquiv s₁ t₁ s₂ t₂
+  let ieG := interleaveEquiv t₁ u₁ t₂ u₂
+  let E := (_root_.Equiv.sumSumSumComm
+    (Fin (s₁+t₁)) (Fin (t₁+u₁)) (Fin (s₂+t₂)) (Fin (t₂+u₂))).trans
+    (_root_.Equiv.sumCongr ieF ieG)
+  cases hxv : fs₂.val with
+  | inl c =>
+    have hc : c.val < s₂ := by
+      by_contra hge
+      exact (forall_ne_iff_not_mem_flat _ _).mp fs₂.prop
+        ((mem_interfacePairs_flat s₂ t₂ u₂ _).mpr
+          (Or.inl ⟨c, hxv, by omega⟩))
+    have hie_val : (ieF (Sum.inr c)).val =
+        s₁ + c.val := by
+      change (interleaveEquiv s₁ t₁ s₂ t₂
+        (Sum.inr c)).val = _
+      conv_lhs => rw [show c = Fin.castAdd t₂
+          ⟨c.val, hc⟩ from Fin.ext rfl,
+        interleaveEquiv_inr_low]
+      rfl
+    rw [_root_.Equiv.trans_apply]
+    conv_rhs =>
+      rw [_root_.Equiv.trans_apply,
+        _root_.Equiv.sumCongr_apply, Sum.map_inr,
+        _root_.Equiv.trans_apply,
+        interfaceSurvEquiv_inl s₂ t₂ u₂ fs₂ c hxv hc,
+        finSumFinEquiv_apply_left,
+        interleaveEquiv_inr_low s₁ u₁ s₂ u₂
+          ⟨c.val, hc⟩]
+    rw [_root_.Equiv.trans_apply]
+    refine (congrArg finSumFinEquiv
+      (interfaceSurvEquiv_inl (s₁+s₂) (t₁+t₂) (u₁+u₂)
+        _ (ieF (Sum.inr c))
+        (by
+          rw [hg]
+          change E (Sum.inr fs₂.val) = _
+          rw [hxv]
+          rfl)
+        (by rw [hie_val]; omega))).trans ?_
+    rw [finSumFinEquiv_apply_left]
+    exact congrArg (Fin.castAdd (u₁+u₂))
+      (Fin.ext hie_val)
+  | inr d =>
+    have hd : t₂ ≤ d.val := by
+      by_contra hlt
+      exact (forall_ne_iff_not_mem_flat _ _).mp fs₂.prop
+        ((mem_interfacePairs_flat s₂ t₂ u₂ _).mpr
+          (Or.inr ⟨d, hxv, by omega⟩))
+    have hie_val : (ieG (Sum.inr d)).val =
+        (t₁ + t₂) + (u₁ + (d.val - t₂)) := by
+      change (interleaveEquiv t₁ u₁ t₂ u₂
+        (Sum.inr d)).val = _
+      conv_lhs => rw [show d = Fin.natAdd t₂
+          ⟨d.val - t₂, by
+            have := d.isLt
+            omega⟩ from Fin.ext (by
+          change d.val = t₂ + (d.val - t₂)
+          omega),
+        interleaveEquiv_inr_high]
+      rfl
+    rw [_root_.Equiv.trans_apply]
+    conv_rhs =>
+      rw [_root_.Equiv.trans_apply,
+        _root_.Equiv.sumCongr_apply, Sum.map_inr,
+        _root_.Equiv.trans_apply,
+        interfaceSurvEquiv_inr s₂ t₂ u₂ fs₂ d hxv hd,
+        finSumFinEquiv_apply_right,
+        interleaveEquiv_inr_high s₁ u₁ s₂ u₂
+          ⟨d.val - t₂, by have := d.isLt; omega⟩]
+    rw [_root_.Equiv.trans_apply]
+    refine (congrArg finSumFinEquiv
+      (interfaceSurvEquiv_inr (s₁+s₂) (t₁+t₂) (u₁+u₂)
+        _ (ieG (Sum.inr d))
+        (by
+          rw [hg]
+          change E (Sum.inr fs₂.val) = _
+          rw [hxv]
+          rfl)
+        (by rw [hie_val]; omega))).trans ?_
+    rw [finSumFinEquiv_apply_right]
+    exact congrArg (Fin.natAdd (s₁+s₂))
+      (Fin.ext (by
+        change (ieG (Sum.inr d)).val - (t₁ + t₂) =
+          u₁ + (d.val - t₂)
+        rw [hie_val]
+        omega))
+
+private theorem interchange_survivor_relabel_eq :
+    g.trans ((interfaceSurvEquiv (s₁ + s₂) (t₁ + t₂) (u₁ + u₂)).trans
+      finSumFinEquiv) =
+      (_root_.Equiv.sumCongr
+        ((interfaceSurvEquiv s₁ t₁ u₁).trans finSumFinEquiv)
+        ((interfaceSurvEquiv s₂ t₂ u₂).trans finSumFinEquiv)).trans
+        (interleaveEquiv s₁ u₁ s₂ u₂) := by
+  apply _root_.Equiv.ext
+  intro x
+  cases x with
+  | inl fs₁ => exact interchange_survivor_relabel_inl g hg fs₁
+  | inr fs₂ => exact interchange_survivor_relabel_inr g hg fs₂
+
+end InterchangeSurvivor
 
 /-- **RHS chain**: `(F₁ ⊗ F₂) . (G₁ ⊗ G₂)` normalizes to
 `(GL₁ ⊔ GL₂).relabel L_rhs`.
@@ -546,171 +770,8 @@ noncomputable def interchangeNormalRight
     (tensorFragment G₁ G₂)).trans
     ((Equiv.relabelCongr C_total surv_c).trans
       ((Equiv.relabelTrans _ _ _).trans
-        (Equiv.relabelEq _ (by
-          apply _root_.Equiv.ext; intro x
-          have h_sc : surv_c =
-            (interfaceSurvEquiv (s₁+s₂) (t₁+t₂)
-              (u₁+u₂)).trans finSumFinEquiv := rfl
-          cases x with
-          | inl fs₁ =>
-            cases hxv : fs₁.val with
-            | inl a =>
-              have ha : a.val < s₁ := by
-                by_contra hge
-                exact (forall_ne_iff_not_mem_flat _ _).mp fs₁.prop
-                  ((mem_interfacePairs_flat s₁ t₁ u₁ _).mpr
-                    (Or.inl ⟨a, hxv, by omega⟩))
-              have hie_val : (ieF (Sum.inl a)).val = a.val := by
-                show (interleaveEquiv s₁ t₁ s₂ t₂
-                  (Sum.inl a)).val = a.val
-                conv_lhs => rw [show a = Fin.castAdd t₁
-                    ⟨a.val, ha⟩ from Fin.ext rfl,
-                  interleaveEquiv_inl_low]
-                rfl
-              rw [_root_.Equiv.trans_apply]
-              conv_rhs =>
-                rw [_root_.Equiv.trans_apply,
-                  _root_.Equiv.sumCongr_apply, Sum.map_inl,
-                  _root_.Equiv.trans_apply,
-                  interfaceSurvEquiv_inl s₁ t₁ u₁ fs₁ a hxv ha,
-                  finSumFinEquiv_apply_left,
-                  interleaveEquiv_inl_low s₁ u₁ s₂ u₂
-                    ⟨a.val, ha⟩]
-              rw [h_sc, _root_.Equiv.trans_apply]
-              refine (congrArg finSumFinEquiv
-                (interfaceSurvEquiv_inl (s₁+s₂) (t₁+t₂) (u₁+u₂)
-                  _ (ieF (Sum.inl a))
-                  (by
-                    show E (Sum.inl fs₁.val) = _
-                    rw [hxv]
-                    rfl)
-                  (by rw [hie_val]; omega))).trans ?_
-              rw [finSumFinEquiv_apply_left]
-              exact congrArg (Fin.castAdd (u₁+u₂))
-                (Fin.ext hie_val)
-            | inr b =>
-              have hb : t₁ ≤ b.val := by
-                by_contra hlt
-                exact (forall_ne_iff_not_mem_flat _ _).mp fs₁.prop
-                  ((mem_interfacePairs_flat s₁ t₁ u₁ _).mpr
-                    (Or.inr ⟨b, hxv, by omega⟩))
-              have hie_val : (ieG (Sum.inl b)).val =
-                  (t₁ + t₂) + (b.val - t₁) := by
-                show (interleaveEquiv t₁ u₁ t₂ u₂
-                  (Sum.inl b)).val = _
-                conv_lhs => rw [show b = Fin.natAdd t₁
-                    ⟨b.val - t₁, by
-                      have := b.isLt
-                      omega⟩ from Fin.ext (by
-                    show b.val = t₁ + (b.val - t₁)
-                    omega),
-                  interleaveEquiv_inl_high]
-                rfl
-              rw [_root_.Equiv.trans_apply]
-              conv_rhs =>
-                rw [_root_.Equiv.trans_apply,
-                  _root_.Equiv.sumCongr_apply, Sum.map_inl,
-                  _root_.Equiv.trans_apply,
-                  interfaceSurvEquiv_inr s₁ t₁ u₁ fs₁ b hxv hb,
-                  finSumFinEquiv_apply_right,
-                  interleaveEquiv_inl_high s₁ u₁ s₂ u₂
-                    ⟨b.val - t₁, by have := b.isLt; omega⟩]
-              rw [h_sc, _root_.Equiv.trans_apply]
-              refine (congrArg finSumFinEquiv
-                (interfaceSurvEquiv_inr (s₁+s₂) (t₁+t₂) (u₁+u₂)
-                  _ (ieG (Sum.inl b))
-                  (by
-                    show E (Sum.inl fs₁.val) = _
-                    rw [hxv]
-                    rfl)
-                  (by rw [hie_val]; omega))).trans ?_
-              rw [finSumFinEquiv_apply_right]
-              exact congrArg (Fin.natAdd (s₁+s₂))
-                (Fin.ext (by
-                  show (ieG (Sum.inl b)).val - (t₁ + t₂) =
-                    b.val - t₁
-                  rw [hie_val]
-                  omega))
-          | inr fs₂ =>
-            cases hxv : fs₂.val with
-            | inl c =>
-              have hc : c.val < s₂ := by
-                by_contra hge
-                exact (forall_ne_iff_not_mem_flat _ _).mp fs₂.prop
-                  ((mem_interfacePairs_flat s₂ t₂ u₂ _).mpr
-                    (Or.inl ⟨c, hxv, by omega⟩))
-              have hie_val : (ieF (Sum.inr c)).val =
-                  s₁ + c.val := by
-                show (interleaveEquiv s₁ t₁ s₂ t₂
-                  (Sum.inr c)).val = _
-                conv_lhs => rw [show c = Fin.castAdd t₂
-                    ⟨c.val, hc⟩ from Fin.ext rfl,
-                  interleaveEquiv_inr_low]
-                rfl
-              rw [_root_.Equiv.trans_apply]
-              conv_rhs =>
-                rw [_root_.Equiv.trans_apply,
-                  _root_.Equiv.sumCongr_apply, Sum.map_inr,
-                  _root_.Equiv.trans_apply,
-                  interfaceSurvEquiv_inl s₂ t₂ u₂ fs₂ c hxv hc,
-                  finSumFinEquiv_apply_left,
-                  interleaveEquiv_inr_low s₁ u₁ s₂ u₂
-                    ⟨c.val, hc⟩]
-              rw [h_sc, _root_.Equiv.trans_apply]
-              refine (congrArg finSumFinEquiv
-                (interfaceSurvEquiv_inl (s₁+s₂) (t₁+t₂) (u₁+u₂)
-                  _ (ieF (Sum.inr c))
-                  (by
-                    show E (Sum.inr fs₂.val) = _
-                    rw [hxv]
-                    rfl)
-                  (by rw [hie_val]; omega))).trans ?_
-              rw [finSumFinEquiv_apply_left]
-              exact congrArg (Fin.castAdd (u₁+u₂))
-                (Fin.ext hie_val)
-            | inr d =>
-              have hd : t₂ ≤ d.val := by
-                by_contra hlt
-                exact (forall_ne_iff_not_mem_flat _ _).mp fs₂.prop
-                  ((mem_interfacePairs_flat s₂ t₂ u₂ _).mpr
-                    (Or.inr ⟨d, hxv, by omega⟩))
-              have hie_val : (ieG (Sum.inr d)).val =
-                  (t₁ + t₂) + (u₁ + (d.val - t₂)) := by
-                show (interleaveEquiv t₁ u₁ t₂ u₂
-                  (Sum.inr d)).val = _
-                conv_lhs => rw [show d = Fin.natAdd t₂
-                    ⟨d.val - t₂, by
-                      have := d.isLt
-                      omega⟩ from Fin.ext (by
-                    show d.val = t₂ + (d.val - t₂)
-                    omega),
-                  interleaveEquiv_inr_high]
-                rfl
-              rw [_root_.Equiv.trans_apply]
-              conv_rhs =>
-                rw [_root_.Equiv.trans_apply,
-                  _root_.Equiv.sumCongr_apply, Sum.map_inr,
-                  _root_.Equiv.trans_apply,
-                  interfaceSurvEquiv_inr s₂ t₂ u₂ fs₂ d hxv hd,
-                  finSumFinEquiv_apply_right,
-                  interleaveEquiv_inr_high s₁ u₁ s₂ u₂
-                    ⟨d.val - t₂, by have := d.isLt; omega⟩]
-              rw [h_sc, _root_.Equiv.trans_apply]
-              refine (congrArg finSumFinEquiv
-                (interfaceSurvEquiv_inr (s₁+s₂) (t₁+t₂) (u₁+u₂)
-                  _ (ieG (Sum.inr d))
-                  (by
-                    show E (Sum.inr fs₂.val) = _
-                    rw [hxv]
-                    rfl)
-                  (by rw [hie_val]; omega))).trans ?_
-              rw [finSumFinEquiv_apply_right]
-              exact congrArg (Fin.natAdd (s₁+s₂))
-                (Fin.ext (by
-                  show (ieG (Sum.inr d)).val - (t₁ + t₂) =
-                    u₁ + (d.val - t₂)
-                  rw [hie_val]
-                  omega))))))
+        (Equiv.relabelEq _ (interchange_survivor_relabel_eq _
+          (fun x => by cases x <;> rfl)))))
 
 /-! ### Final assembly -/
 

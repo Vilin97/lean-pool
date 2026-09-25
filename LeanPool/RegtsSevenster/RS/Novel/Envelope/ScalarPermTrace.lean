@@ -36,7 +36,7 @@ theorem scalarTrace_permMor_powHom
         (permMor X n π ≫ powHom X g n) =
       ((fullCycleType π).map
         (fun c => scalarTrace hu X (g ^ c))).prod := by
-  show unitScalar hu (catTrace (permMor X n π ≫ powHom X g n)) = _
+  change unitScalar hu (catTrace (permMor X n π ≫ powHom X g n)) = _
   rw [catTrace_permMor_powHom, map_multiset_prod, Multiset.map_map]
   rfl
 

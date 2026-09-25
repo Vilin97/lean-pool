@@ -155,8 +155,8 @@ instance epi_tensorHom_ind
     [MonoidalPreadditive C]
     {X Y X' Y' : Ind C} (f : X ⟶ Y)
     (g : X' ⟶ Y') [Epi f] [Epi g] : Epi (f ⊗ₘ g) := by
-  haveI : Epi (f ▷ X') := inferInstanceAs (Epi ((tensorRight X').map f))
-  haveI : Epi (Y ◁ g) := inferInstanceAs (Epi ((tensorLeft Y).map g))
+  have : Epi (f ▷ X') := inferInstanceAs (Epi ((tensorRight X').map f))
+  have : Epi (Y ◁ g) := inferInstanceAs (Epi ((tensorLeft Y).map g))
   rw [tensorHom_def]
   exact epi_comp _ _
 

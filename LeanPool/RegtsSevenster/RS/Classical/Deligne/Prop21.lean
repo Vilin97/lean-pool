@@ -49,18 +49,18 @@ theorem exists_fibre_functor
       Nonempty (Limits.PreservesFiniteColimits
         ((indOf : C ⥤ Ind C) ⋙ fibreFun L 𝔸)) ∧
       ((indOf : C ⥤ Ind C) ⋙ fibreFun L 𝔸).Faithful := by
-  letI := linearOfScalarUnit ψ
-  letI := monoidalLinearOfScalarUnitBraided ψ
-  letI := linearOfScalarUnit (indScalarUnit ψ)
-  letI := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
+  let := linearOfScalarUnit ψ
+  let := monoidalLinearOfScalarUnitBraided ψ
+  let := linearOfScalarUnit (indScalarUnit ψ)
+  let := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
   obtain ⟨𝔸, hmon, hcomm, hne, hsp, hsec⟩ :=
     exists_fibre_algebra ψ P P₀ L hkill
-  letI := hmon
-  letI := hcomm
-  haveI hmono : Mono η[𝔸] :=
+  let := hmon
+  let := hcomm
+  have hmono : Mono η[𝔸] :=
     mono_unit_ind (simple_unit_of_hasScalarUnit
       (hasScalarUnit_of_scalarUnit ψ)) 𝔸 hne
-  haveI hpm : ∀ Z : Ind C, (tensorRight Z).PreservesMonomorphisms :=
+  have hpm : ∀ Z : Ind C, (tensorRight Z).PreservesMonomorphisms :=
     fun Z => inferInstance
   exact ⟨𝔸, hmon, hcomm, hne, ⟨indFibreMonoidal L 𝔸 hsp⟩,
     ⟨indFibre_preservesFiniteLimits L 𝔸 hsec⟩,

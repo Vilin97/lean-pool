@@ -23,8 +23,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Classical
-
+open Fragment
 /-! ## The base of the iteration
 
 At an empty interface the composition still relabels, between two
@@ -116,7 +115,7 @@ theorem gluePair_eq_closed (hcl : V.pairing (V.boundaryFlag (cutL n))
     V.gluePairClosed (cutL n) (cutR n) hcl
       = V.gluePair (cutL n) (cutR n) (cutL_ne_cutR n) := by
   unfold Fragment.gluePair
-  rw [dif_pos hcl]
+  rw [dite_eq_left hcl]
 
 /-- The stage's glue, at an open cut. -/
 theorem gluePair_eq_open (hop : V.pairing (V.boundaryFlag (cutL n))
@@ -124,7 +123,7 @@ theorem gluePair_eq_open (hop : V.pairing (V.boundaryFlag (cutL n))
     V.gluePairOpen (cutL n) (cutR n) (cutL_ne_cutR n) hop
       = V.gluePair (cutL n) (cutR n) (cutL_ne_cutR n) := by
   unfold Fragment.gluePair
-  rw [dif_neg hop]
+  rw [dite_eq_right hop]
 
 /-- **One stage of the composition, on the data.**  The family is
 chosen at the composition and pushed back: along the relabel, then
@@ -171,7 +170,7 @@ theorem edgeTermAt_stepOpen_all {k ℓ : ℕ} (h : MixedFunctional k ℓ)
         (dataOfEq (gluePair_eq_open n V hop)
           (stepDataGlued n V 𝒟)) := by
     unfold stepDataDown
-    rw [dif_neg hop]
+    rw [dite_eq_right hop]
   rw [hstep, edgeTermAt_openCut_all (cutL_ne_cutR n) hop t h _
       (stageState n stβ) C,
     edgeTermAt_dataOfEq (gluePair_eq_open n V hop) h
@@ -208,7 +207,7 @@ theorem edgeTermAt_stepClosed_false_all {k ℓ : ℕ}
         (dataOfEq (gluePair_eq_closed n V hcl)
           (stepDataGlued n V 𝒟)) := by
     unfold stepDataDown
-    rw [dif_pos hcl]
+    rw [dite_eq_left hcl]
   rw [hstep, edgeTermAt_closedCut_false_row_all (cutL_ne_cutR n) hcl
       t h _ (stageState n stβ) C,
     edgeTermAt_dataOfEq (gluePair_eq_closed n V hcl) h
@@ -246,7 +245,7 @@ theorem edgeTermAt_stepClosed_true_all {k ℓ : ℕ}
         (dataOfEq (gluePair_eq_closed n V hcl)
           (stepDataGlued n V 𝒟)) := by
     unfold stepDataDown
-    rw [dif_pos hcl]
+    rw [dite_eq_left hcl]
   rw [hstep, edgeTermAt_closedCut_true_row_all (cutL_ne_cutR n) hcl
       t h _ (stageState n stβ) C,
     edgeTermAt_dataOfEq (gluePair_eq_closed n V hcl) h
@@ -287,7 +286,7 @@ theorem edgeTermAt_stepClosed_all {k ℓ : ℕ}
         (dataOfEq (gluePair_eq_closed n V hcl)
           (stepDataGlued n V 𝒟)) := by
     unfold stepDataDown
-    rw [dif_pos hcl]
+    rw [dite_eq_left hcl]
   rw [hstep, edgeTermAt_closedCut_all (cutL_ne_cutR n) hcl t h _
       (stageState n stβ) C,
     edgeTermAt_dataOfEq (gluePair_eq_closed n V hcl) h
@@ -388,23 +387,23 @@ theorem diagOf_succ {k ℓ : ℕ} (n : ℕ)
         (st := stageState n (diagOf n (fun a => x a.castSucc)))
         (c := x (Fin.last n)) (c' := x (Fin.last n))
         (a := ⟨y, hL, hR⟩)]
-      show _ = diagOf n (fun a => x a.castSucc)
+      change _ = diagOf n (fun a => x a.castSucc)
         (interfaceStepEquiv 0 n 0 ⟨y, hL, hR⟩)
       rcases y with v | w
       · rw [interfaceStepEquiv_apply_inl 0 n 0 v ⟨hL, hR⟩]
         refine congrArg x (Fin.ext ?_)
-        show (v : ℕ) = _
+        change (v : ℕ) = _
         rw [Fin.val_castSucc, Fin.val_cast]
         exact (finRemoveEquiv_top_val (n := 0 + n)
           ⟨v, fun he => hL (congrArg Sum.inl he)⟩).symm
       · rw [interfaceStepEquiv_apply_inr 0 n 0 w ⟨hL, hR⟩]
         refine congrArg x (Fin.ext ?_)
-        show (w : ℕ) = _
+        change (w : ℕ) = _
         rw [Fin.val_castSucc, Fin.val_cast, rightRemoveEquiv_val]
         have hw : (w : ℕ) ≠ n := fun hx => hR (congrArg Sum.inr
           (Fin.ext hx))
         have hlt : (w : ℕ) < n := by omega
-        rw [if_pos hlt]
+        rw [ite_eq_left hlt]
 
 open Classical in
 /-- **The carried count at an open stage** is the next stage's. -/
@@ -420,9 +419,9 @@ theorem carried_liftOpen (n : ℕ)
           (V.gluePairOpen (cutL n) (cutR n) (cutL_ne_cutR n) hop)
           (V.gluePair (cutL n) (cutR n) (cutL_ne_cutR n))
           (gluePair_eq_open n V hop) t) := by
-  show (if hcl : V.pairing (V.boundaryFlag (cutL n))
+  change (if hcl : V.pairing (V.boundaryFlag (cutL n))
       = V.boundaryFlag (cutR n) then _ else _) = _
-  rw [dif_neg hop]
+  rw [dite_eq_right hop]
   exact congrArg (fun z => carried n (stepFragment n V)
     (flagsOfEq
       (V.gluePairOpen (cutL n) (cutR n) (cutL_ne_cutR n) hop)
@@ -444,9 +443,9 @@ theorem carried_liftClosed (n : ℕ)
           (flagsOfEq (V.gluePairClosed (cutL n) (cutR n) hcl)
             (V.gluePair (cutL n) (cutR n) (cutL_ne_cutR n))
             (gluePair_eq_closed n V hcl) t) := by
-  show (if hc : V.pairing (V.boundaryFlag (cutL n))
+  change (if hc : V.pairing (V.boundaryFlag (cutL n))
       = V.boundaryFlag (cutR n) then _ else _) = _
-  rw [dif_pos hcl]
+  rw [dite_eq_left hcl]
   refine congrArg₂ (· + ·) ?_ ?_
   · exact if_congr
       (boundaryFlagI_mem_liftClosed_iff (cutL_ne_cutR n) t b) rfl
@@ -473,7 +472,7 @@ def snocEquiv (n : ℕ) (α : Type) :
     refine Fin.lastCases ?_ ?_ a <;> simp
 
 /-- **The interface colour sum, one cut at a time.** -/
-theorem sum_snoc {n : ℕ} {α : Type} [Fintype α] [DecidableEq α]
+theorem sum_snoc {n : ℕ} {α : Type} [Fintype α]
     (F : (Fin (n + 1) → α) → ℂ) :
     (∑ x : Fin (n + 1) → α, F x)
       = ∑ y : Fin n → α, ∑ c : α, F (Fin.snoc y c) := by
@@ -515,9 +514,9 @@ theorem imageOf_succ_open (n : ℕ)
           (V.gluePair (cutL n) (cutR n) (cutL_ne_cutR n))
           (gluePair_eq_open n V hop)
           (V.dropSubset (cutL n) (cutR n) s)) := by
-  show (if hcl : V.pairing (V.boundaryFlag (cutL n))
+  change (if hcl : V.pairing (V.boundaryFlag (cutL n))
       = V.boundaryFlag (cutR n) then _ else _) = _
-  exact dif_neg hop
+  exact dite_eq_right hop
 
 open Classical in
 /-- The image, one stage down, at a closing cut. -/
@@ -531,9 +530,9 @@ theorem imageOf_succ_closed (n : ℕ)
           (V.gluePair (cutL n) (cutR n) (cutL_ne_cutR n))
           (gluePair_eq_closed n V hcl)
           (V.dropSubset (cutL n) (cutR n) s)) := by
-  show (if hc : V.pairing (V.boundaryFlag (cutL n))
+  change (if hc : V.pairing (V.boundaryFlag (cutL n))
       = V.boundaryFlag (cutR n) then _ else _) = _
-  exact dif_pos hcl
+  exact dite_eq_left hcl
 
 /-- Sums over the flags of identified fragments agree. -/
 theorem sum_flagsOfEq {β : Type} {V₁ V₂ : Fragment β}
@@ -620,9 +619,9 @@ theorem cutFactor_liftOpen (k ℓ : ℕ) (n : ℕ)
           (V.gluePairOpen (cutL n) (cutR n) (cutL_ne_cutR n) hop)
           (V.gluePair (cutL n) (cutR n) (cutL_ne_cutR n))
           (gluePair_eq_open n V hop) t) := by
-  show (if hcl : V.pairing (V.boundaryFlag (cutL n))
+  change (if hcl : V.pairing (V.boundaryFlag (cutL n))
       = V.boundaryFlag (cutR n) then _ else _) = _
-  rw [dif_neg hop]
+  rw [dite_eq_right hop]
   exact congrArg (fun z => cutFactor k ℓ n (stepFragment n V)
     (flagsOfEq
       (V.gluePairOpen (cutL n) (cutR n) (cutL_ne_cutR n) hop)
@@ -644,9 +643,9 @@ theorem cutFactor_liftClosed (k ℓ : ℕ) (n : ℕ)
           (flagsOfEq (V.gluePairClosed (cutL n) (cutR n) hcl)
             (V.gluePair (cutL n) (cutR n) (cutL_ne_cutR n))
             (gluePair_eq_closed n V hcl) t) := by
-  show (if hc : V.pairing (V.boundaryFlag (cutL n))
+  change (if hc : V.pairing (V.boundaryFlag (cutL n))
       = V.boundaryFlag (cutR n) then _ else _) = _
-  rw [dif_pos hcl]
+  rw [dite_eq_left hcl]
   refine congrArg₂ (· * ·) ?_ ?_
   · exact if_congr
       (boundaryFlagI_mem_liftClosed_iff (cutL_ne_cutR n) t b) rfl
@@ -855,10 +854,10 @@ theorem edgeTermAt_glueInterface {k ℓ : ℕ}
           = V.boundaryFlag (cutR n)
       · have hcc : closedCuts (n + 1) V
             = 1 + closedCuts n (stepFragment n V) := by
-          show (if V.pairing (V.boundaryFlag (cutL n))
+          change (if V.pairing (V.boundaryFlag (cutL n))
               = V.boundaryFlag (cutR n) then 1 else 0)
             + closedCuts n (stepFragment n V) = _
-          rw [if_pos hcl]
+          rw [ite_eq_left hcl]
         rw [hcc, pow_add, pow_one, mul_assoc]
         refine Eq.trans (congrArg (fun z => ((k : ℂ) - 2 * ℓ) * z)
           ih) ?_
@@ -873,10 +872,10 @@ theorem edgeTermAt_glueInterface {k ℓ : ℕ}
           (congrArg w (imageOf_succ_closed n V hcl s).symm)
       · have hcc : closedCuts (n + 1) V
             = closedCuts n (stepFragment n V) := by
-          show (if V.pairing (V.boundaryFlag (cutL n))
+          change (if V.pairing (V.boundaryFlag (cutL n))
               = V.boundaryFlag (cutR n) then 1 else 0)
             + closedCuts n (stepFragment n V) = _
-          rw [if_neg hcl, Nat.zero_add]
+          rw [ite_eq_right hcl, Nat.zero_add]
         rw [hcc]
         refine Eq.trans ih ?_
         refine Eq.trans (stageSum_open h n V

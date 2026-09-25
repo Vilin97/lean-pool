@@ -15,7 +15,7 @@ master splitting identities.
 
 namespace RS
 
-open scoped Classical
+
 
 namespace EdgeSubset
 
@@ -217,7 +217,7 @@ private theorem flatMap_pair_map_val_open {ℓ : ℕ}
   | nil => intro _ _; rfl
   | cons f' t ih =>
     intro H1 H2
-    show ((f'.val :: t.map Subtype.val).attachWith
+    change ((f'.val :: t.map Subtype.val).attachWith
         (· ∈ (Fl).internalFlags) H1).flatMap
           ((Fl).coreOddPairFn (κW) φW) =
       ((f' :: t).attachWith (· ∈ (Fg).internalFlags) H2).flatMap
@@ -246,7 +246,7 @@ private theorem map_sign_map_val_open {ℓ : ℕ}
   | nil => intro _ _; rfl
   | cons f' t ih =>
     intro H1 H2
-    show ((f'.val :: t.map Subtype.val).attachWith
+    change ((f'.val :: t.map Subtype.val).attachWith
         (· ∈ (Fl).internalFlags) H1).map
           ((Fl).coreOddSignFn (κW) φW) =
       ((f' :: t).attachWith (· ∈ (Fg).internalFlags) H2).map
@@ -332,7 +332,7 @@ noncomputable def evenPushOpen {k : ℕ}
         rw [hpv]; exact (partnerSurvI hopen).prop.1
       have hp2 : W.pairing f.val ≠ W.boundaryFlag j := by
         rw [hpv]; exact (partnerSurvI hopen).prop.2
-      rw [dif_neg hp1, dif_neg hp2, dif_pos hfi]
+      rw [dite_eq_right hp1, dite_eq_right hp2, dite_eq_left hfi]
       refine congrArg ψ'.val (Subtype.ext (Subtype.ext ?_))
       exact hpv
     · by_cases hfj : f.val = W.boundaryFlag j
@@ -343,7 +343,7 @@ noncomputable def evenPushOpen {k : ℕ}
           rw [hpv]; exact (partnerSurvJ hopen).prop.1
         have hp2 : W.pairing f.val ≠ W.boundaryFlag j := by
           rw [hpv]; exact (partnerSurvJ hopen).prop.2
-        rw [dif_neg hp1, dif_neg hp2, dif_neg hfi, dif_pos hfj]
+        rw [dite_eq_right hp1, dite_eq_right hp2, dite_eq_right hfi, dite_eq_left hfj]
         refine congrArg ψ'.val (Subtype.ext (Subtype.ext ?_))
         exact hpv
       · by_cases hpi' : W.pairing f.val = W.boundaryFlag i
@@ -352,18 +352,18 @@ noncomputable def evenPushOpen {k : ℕ}
               partnerSurvI hopen :=
             eq_partnerSurvI_of_pairing hopen ⟨f.val, hfi, hfj⟩
               hpi'
-          rw [dif_pos hpi', dif_neg hfi, dif_neg hfj]
+          rw [dite_eq_left hpi', dite_eq_right hfi, dite_eq_right hfj]
           exact congrArg ψ'.val (Subtype.ext hfeq).symm
         · by_cases hpj' : W.pairing f.val = W.boundaryFlag j
           · have hfeq : (⟨f.val, hfi, hfj⟩ :
                 SurvivingFlag W i j) = partnerSurvJ hopen :=
               eq_partnerSurvJ_of_pairing hopen
                 ⟨f.val, hfi, hfj⟩ hpj'
-            rw [dif_neg hpi', dif_pos hpj', dif_neg hfi,
-              dif_neg hfj]
+            rw [dite_eq_right hpi', dite_eq_left hpj', dite_eq_right hfi,
+              dite_eq_right hfj]
             exact congrArg ψ'.val (Subtype.ext hfeq).symm
-          · rw [dif_neg hpi', dif_neg hpj', dif_neg hfi,
-              dif_neg hfj]
+          · rw [dite_eq_right hpi', dite_eq_right hpj', dite_eq_right hfi,
+              dite_eq_right hfj]
             have hnotmem : (⟨f.val, hfi, hfj⟩ :
                 SurvivingFlag W i j) ∉ s' := fun hmem =>
               f.prop ((surviving_val_mem_liftOpen_iff hopen
@@ -388,10 +388,10 @@ theorem evenPushOpen_agrees {k : ℕ}
       (evenPushOpen hij hopen s' hc' hc hni ψ').val ⟨g.val, h1⟩ =
         ψ'.val ⟨g, h2⟩ := by
   intro g h1 h2
-  show (if hfi : g.val = W.boundaryFlag i then _
+  change (if hfi : g.val = W.boundaryFlag i then _
       else if hfj : g.val = W.boundaryFlag j then _
       else ψ'.val ⟨⟨g.val, hfi, hfj⟩, _⟩) = ψ'.val ⟨g, h2⟩
-  rw [dif_neg g.prop.1, dif_neg g.prop.2]
+  rw [dite_eq_right g.prop.1, dite_eq_right g.prop.2]
 
 /-- The open even push at the two glued boundary flags. -/
 theorem evenPushOpen_at_i {k : ℕ}
@@ -399,7 +399,7 @@ theorem evenPushOpen_at_i {k : ℕ}
     (hP : W.boundaryFlag i ∉ liftSubsetOpen hopen s') :
     (evenPushOpen hij hopen s' hc' hc hni ψ').val
       ⟨W.boundaryFlag i, hP⟩ =
-      ψ'.val ⟨partnerSurvI hopen, hni⟩ := dif_pos rfl
+      ψ'.val ⟨partnerSurvI hopen, hni⟩ := dite_eq_left rfl
 
 /-- The pushed even colouring at the second glued boundary flag. -/
 theorem evenPushOpen_at_j {k : ℕ}
@@ -409,11 +409,11 @@ theorem evenPushOpen_at_j {k : ℕ}
       ⟨W.boundaryFlag j, hP⟩ =
       ψ'.val ⟨partnerSurvJ hopen,
         hnj_of hij hopen s' hc' hni⟩ := by
-  show (if hfi : W.boundaryFlag j = W.boundaryFlag i then _
+  change (if hfi : W.boundaryFlag j = W.boundaryFlag i then _
       else if hfj : W.boundaryFlag j = W.boundaryFlag j then _
       else _) = _
-  rw [dif_neg (fun hEq =>
-    hij (W.boundaryFlag_injective hEq).symm), dif_pos rfl]
+  rw [dite_eq_right (fun hEq =>
+    hij (W.boundaryFlag_injective hEq).symm), dite_eq_left rfl]
 
 /-- The open even push is injective. -/
 theorem evenPushOpen_injective {k : ℕ} :
@@ -578,7 +578,7 @@ theorem evenPushOpen_covers {k ℓ : ℕ}
         (hpJ (hnl _ (hnj_of hij hopen s' hc' hni)))).trans ?_
       refine ((hpI (hnl _ hni)).symm.trans
         (congrArg ψW.val (Subtype.ext ?_)))
-      show (partnerSurvI hopen).val = x.val.val
+      change (partnerSurvI hopen).val = x.val.val
       rw [hxi]
     · by_cases hxj : x.val = partnerSurvJ hopen
       · have h₁ : ((W.gluePairOpen i j hij hopen).pairing
@@ -589,7 +589,7 @@ theorem evenPushOpen_covers {k ℓ : ℕ}
         refine ((hpJ (hnl _
           (hnj_of hij hopen s' hc' hni))).symm.trans
           (congrArg ψW.val (Subtype.ext ?_)))
-        show (partnerSurvJ hopen).val = x.val.val
+        change (partnerSurvJ hopen).val = x.val.val
         rw [hxj]
       · have hp1 : W.pairing x.val.val ≠ W.boundaryFlag i :=
           fun hh => hxi (eq_partnerSurvI_of_pairing hopen x.val hh)
@@ -602,23 +602,23 @@ theorem evenPushOpen_covers {k ℓ : ℕ}
         have hp := ψW.prop ⟨x.val.val, hnl x.val x.prop⟩
         exact ((congrArg ψW.val (Subtype.ext h₁)).trans hp)
   · refine Subtype.ext (funext fun f => ?_)
-    show (if hfi : f.val = W.boundaryFlag i then _
+    change (if hfi : f.val = W.boundaryFlag i then _
         else if hfj : f.val = W.boundaryFlag j then _
         else _) = ψW.val f
     by_cases hfi : f.val = W.boundaryFlag i
-    · rw [dif_pos hfi]
+    · rw [dite_eq_left hfi]
       refine (hpI (hnl _ hni)).trans ?_
       refine ((hbi hbfiP).symm.trans
         (congrArg ψW.val (Subtype.ext ?_)))
       exact hfi.symm
     · by_cases hfj : f.val = W.boundaryFlag j
-      · rw [dif_neg hfi, dif_pos hfj]
+      · rw [dite_eq_right hfi, dite_eq_left hfj]
         refine (hpJ (hnl _
           (hnj_of hij hopen s' hc' hni))).trans ?_
         refine ((hbj hbfjP).symm.trans
           (congrArg ψW.val (Subtype.ext ?_)))
         exact hfj.symm
-      · rw [dif_neg hfi, dif_neg hfj]
+      · rw [dite_eq_right hfi, dite_eq_right hfj]
 
 include hij hc' hc hni in
 /-- The constrained lifted even sum reindexes along the open
@@ -652,7 +652,7 @@ theorem sum_even_open {k ℓ : ℕ}
                 (Sum.inl a₀)) hbndW ψW then G ψW else 0) := by
         refine (Finset.sum_subset (Finset.subset_univ _) ?_).symm
         intro ψW _ hnotim
-        rw [if_neg (fun hmatch => hnotim ?_)]
+        rw [ite_eq_right (fun hmatch => hnotim ?_)]
         obtain ⟨ψ', hψ'⟩ := evenPushOpen_covers hij hopen s' hc'
           hc hni st a₀ hbndW ψW hmatch
         exact Finset.mem_image.mpr ⟨ψ', Finset.mem_univ _, hψ'⟩

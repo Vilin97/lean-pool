@@ -118,7 +118,7 @@ theorem tensorPowPoint_mono
     [Category.{v} D] [MonoidalCategory D] {Y : D} (pt : 𝟙_ D ⟶ Y)
     [RigidCategory D] [Mono pt] (n : ℕ) :
     Mono (tensorPowPoint pt n) := by
-  haveI := tensorPowMap_mono pt n
+  have := tensorPowMap_mono pt n
   exact mono_comp _ _
 
 variable {Y} in
@@ -130,7 +130,7 @@ theorem tensorPowPoint_mono'
     [∀ Z : D, (tensorRight Z).PreservesMonomorphisms]
     [Mono pt] (n : ℕ) :
     Mono (tensorPowPoint pt n) := by
-  haveI := tensorPowMap_mono' pt n
+  have := tensorPowMap_mono' pt n
   exact mono_comp _ _
 
 variable {Y} in
@@ -257,7 +257,7 @@ theorem tensorPowPoint_symPowIdem
       tensorPowPoint pt n ≫ modPowπ A X n := by
   rw [symPowIdem, symmetriser, map_smul, map_sum]
   simp only [modPowAlg_single]
-  show tensorPowPoint pt n ≫ modPowπ A X n ≫
+  change tensorPowPoint pt n ≫ modPowπ A X n ≫
       (((n.factorial : ℂ))⁻¹ •
         ∑ σ : Equiv.Perm (Fin n),
           (modPowPerm (A := A) (X := X) n σ :
@@ -310,7 +310,7 @@ theorem point_symPow_ne_zero
     have := congrArg
       (fun t => t ≫ inv (modPowπ (𝟙_ D) X n)) h3
     simpa using this
-  haveI := tensorPowPoint_mono pt n
+  have := tensorPowPoint_mono pt n
   exact h1 ((IsZero.iff_id_eq_zero _).mpr
     ((cancel_mono (tensorPowPoint pt n)).mp
       (by rw [h4, comp_zero, zero_comp])))
@@ -337,7 +337,7 @@ theorem point_symPow_ne_zero'
     have := congrArg
       (fun t => t ≫ inv (modPowπ (𝟙_ D) X n)) h3
     simpa using this
-  haveI := tensorPowPoint_mono' pt n
+  have := tensorPowPoint_mono' pt n
   exact h1 ((IsZero.iff_id_eq_zero _).mpr
     ((cancel_mono (tensorPowPoint pt n)).mp
       (by rw [h4, comp_zero, zero_comp])))

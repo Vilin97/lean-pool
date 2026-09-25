@@ -411,10 +411,10 @@ theorem splitsOn_of_generator [SmallCategory C] [MonoidalCategory C] [Abelian C]
       IsSplit L 𝔸 ((indOf : C ⥤ Ind C).obj Y))
     (hgen : TensorGeneratedBy C X) :
     SplitsOn L 𝔸 (indOf : C ⥤ Ind C) := by
-  haveI : (indOf (C := C)).Additive := indOf_additive
+  have : (indOf (C := C)).Additive := indOf_additive
   intro Y
   obtain ⟨k, ab, hsq⟩ := hgen Y
-  show IsSplit L 𝔸 ((indOf : C ⥤ Ind C).obj Y)
+  change IsSplit L 𝔸 ((indOf : C ⥤ Ind C).obj Y)
   refine hsub Y _ hsq ?_
   refine IsSplit.of_iso L 𝔸
     (((indOf : C ⥤ Ind C).mapBiproduct

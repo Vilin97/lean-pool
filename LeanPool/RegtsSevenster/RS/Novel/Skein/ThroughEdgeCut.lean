@@ -21,7 +21,7 @@ cut.
 
 namespace RS
 
-open scoped Classical
+
 
 namespace EdgeSubset
 

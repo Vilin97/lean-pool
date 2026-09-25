@@ -45,7 +45,7 @@ lemma actRight_restrictMod
     [MonObj A] (B : D) [MonObj B] (φ : A ⟶ B) [IsMonHom φ] (P : Mod D B) :
     actRight A (restrictMod A B φ P).X =
       (P.X ◁ φ) ≫ actRight B P.X := by
-  show (β_ P.X A).hom ≫ (φ ▷ P.X) ≫ actLeft B P.X =
+  change (β_ P.X A).hom ≫ (φ ▷ P.X) ≫ actLeft B P.X =
     (P.X ◁ φ) ≫ (β_ P.X B).hom ≫ actLeft B P.X
   rw [← BraidedCategory.braiding_naturality_right_assoc]
 
@@ -155,7 +155,7 @@ noncomputable def collapseMid
     (collapseCover A B φ P N) (collapseCover_cond A B φ P N)
 
 /-- Defining equation of the half-descended collapse. -/
-@[reassoc (attr := simp)]
+@[simp, reassoc]
 theorem whiskerLeft_collapseMid
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]

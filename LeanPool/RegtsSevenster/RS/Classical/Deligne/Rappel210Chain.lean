@@ -203,7 +203,7 @@ theorem splitSeed_mu_right
     (i : ℕ) :
     (splitStage Y i ◁ splitSeed Y pt) ≫ splitMu Y i 0 =
       (ρ_ (splitStage Y i)).hom ≫ splitDelta Y pt i := by
-  show (splitStage Y i ◁ splitSeed Y pt) ≫
+  change (splitStage Y i ◁ splitSeed Y pt) ≫
       symMul (𝟙_ D) Y (i + 1) (0 + 1) ≫
       symPowCast (𝟙_ D) Y
         (by omega : i + 1 + (0 + 1) = i + 1 + 0 + 1) =
@@ -269,7 +269,7 @@ theorem splitMu_comm [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
         chainCast (splitStage Y)
           (by omega : j + 1 + i = i + 1 + j) =
       splitMu Y i j := by
-  show (β_ (symPow (𝟙_ D) Y (i + 1))
+  change (β_ (symPow (𝟙_ D) Y (i + 1))
         (symPow (𝟙_ D) Y (j + 1))).hom ≫
       (symMul (𝟙_ D) Y (j + 1) (i + 1) ≫
         symPowCast (𝟙_ D) Y
@@ -295,7 +295,7 @@ private theorem chainCast_splitDelta
         chainCast (splitStage Y) (congrArg Nat.succ h) := by
   subst h
   rw [chainCast_rfl, Category.id_comp]
-  show splitDelta Y pt a = splitDelta Y pt a ≫ 𝟙 _
+  change splitDelta Y pt a = splitDelta Y pt a ≫ 𝟙 _
   rw [Category.comp_id]
 
 /-- **Left transition law**: transitioning the first factor and

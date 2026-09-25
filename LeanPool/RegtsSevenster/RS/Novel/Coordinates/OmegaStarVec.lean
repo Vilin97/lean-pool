@@ -46,7 +46,7 @@ theorem omegaVec_starTensorClass : ∀ (ds : List ℕ),
     rw [starTensorClass_nil, empty_class_eq_id]
     rfl
   | d :: ds => by
-    letI := P.braided
+    let := P.braided
     refine (congrArg (omegaVec f P)
       (starTensorClass_cons f d ds)).trans ?_
     refine (omegaVec_comp f P

@@ -68,20 +68,20 @@ def explodeAt (W : ClosedFragment) (C : Finset W.Flag)
   pairing_invol := fun g => by
     rcases g with f | s
     · by_cases h : f ∈ C
-      · simp only [dif_pos h]
-      · simp only [dif_neg h,
-          dif_neg (fun hp => h (hC.pairing_mem.mp hp)),
+      · simp only [dite_eq_left h]
+      · simp only [dite_eq_right h,
+          dite_eq_right (fun hp => h (hC.pairing_mem.mp hp)),
           W.pairing_invol]
-    · simp only [dif_pos s.prop]
+    · simp only [dite_eq_left s.prop]
   pairing_ne := fun g h => by
     rcases g with f | s
     · have h' : (if h' : f ∈ C then
           (Sum.inr ⟨f, h'⟩ : W.Flag ⊕ {f : W.Flag // f ∈ C})
           else Sum.inl (W.pairing f)) = Sum.inl f := h
       by_cases hf : f ∈ C
-      · rw [dif_pos hf] at h'
+      · rw [dite_eq_left hf] at h'
         exact Sum.inr_ne_inl h'
-      · rw [dif_neg hf] at h'
+      · rw [dite_eq_right hf] at h'
         exact W.pairing_ne f (Sum.inl.inj h')
     · exact Sum.inl_ne_inr h
   boundaryFlag := fun s => Sum.inr s
@@ -190,6 +190,175 @@ def stepFlagEquiv :
     · rfl
     · exact congrArg Sum.inr (Subtype.ext rfl)
 
+private theorem explodeAt_rewire_pairing
+    (hopen : (explodeAt W C hC).pairing
+      ((explodeAt W C hC).boundaryFlag (stepLabelI W C f₀ h₀)) ≠
+      (explodeAt W C hC).boundaryFlag (stepLabelJ W C hC f₀ h₀))
+    (g : Fragment.SurvivingFlag (explodeAt W C hC)
+      (stepLabelI W C f₀ h₀) (stepLabelJ W C hC f₀ h₀)) :
+    stepFlagEquiv W C hC f₀ h₀ (Fragment.rewire hopen g) =
+      (explodeAt W (cutErase W C f₀) (cutErase_closed W C hC f₀)).pairing
+        (stepFlagEquiv W C hC f₀ h₀ g) := by
+  obtain ⟨gv, hg⟩ := g
+  rcases gv with f | s
+  · -- ═══════ An old flag: case-split on the rewire ═══════
+    change (stepFlagEquiv W C hC f₀ h₀)
+      (Fragment.rewire hopen ⟨Sum.inl f, hg⟩) =
+      ((explodeAt W (cutErase W C f₀) (cutErase_closed W C hC f₀)).relabel
+        (stepLabelEquiv W C hC f₀ h₀)).pairing
+      ((stepFlagEquiv W C hC f₀ h₀) ⟨Sum.inl f, hg⟩)
+    unfold Fragment.rewire
+    split
+    · -- first branch: partner = boundary i → f = f₀
+      rename_i h
+      have h' : (if hf : f ∈ C then
+          (Sum.inr ⟨f, hf⟩ : W.Flag ⊕ {f : W.Flag // f ∈ C})
+          else Sum.inl (W.pairing f)) =
+          Sum.inr ⟨f₀, h₀⟩ := h
+      by_cases hf : f ∈ C
+      · rw [dite_eq_left hf] at h'
+        have feq : f = f₀ :=
+          congrArg Subtype.val (Sum.inr.inj h')
+        -- LHS: rewire first branch gives ⟨Sum.inl (W.pairing f₀), _⟩;
+        --   stepFlagEquiv maps this to Sum.inl (W.pairing f₀).
+        -- RHS: stepFlagEquiv sends ⟨Sum.inl f, _⟩ to Sum.inl f;
+        --   the smaller explosion's pairing at Sum.inl f, with
+        --   f ∉ cutErase (since f = f₀), gives Sum.inl (W.pairing f).
+        -- Both sides = Sum.inl (W.pairing f₀) via feq.
+        have hne : f ∉ cutErase W C f₀ := by
+          rw [mem_cutErase, feq]; tauto
+        -- Expose the dite on the RHS
+        have hrhs : (if h'' : f ∈ cutErase W C f₀ then
+            (Sum.inr ⟨f, h''⟩ :
+              W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀})
+            else Sum.inl (W.pairing f)) =
+            Sum.inl (W.pairing f) := dite_eq_right hne
+        simp only [feq]
+        -- LHS: stepFlagEquiv ⟨Sum.inl (W.pairing f₀), _⟩ = Sum.inl
+        --   (W.pairing f₀)
+        -- RHS: (relabel ...).pairing (Sum.inl f₀) = dite(f₀ ∈
+        --   cutErase...)
+        -- f₀ ∉ cutErase so dite resolves to Sum.inl (W.pairing f₀)
+        have hne₀ : f₀ ∉ cutErase W C f₀ :=
+          fun hm => ((mem_cutErase W C f₀).mp hm).2.1 rfl
+        change (Sum.inl (W.pairing f₀) :
+              W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀}) =
+          (if h'' : f₀ ∈ cutErase W C f₀ then
+            (Sum.inr ⟨f₀, h''⟩ :
+              W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀})
+            else Sum.inl (W.pairing f₀))
+        rw [dite_eq_right hne₀]
+      · rw [dite_eq_right hf] at h'
+        exact absurd h' Sum.inl_ne_inr
+    · split
+      · -- second branch: partner = boundary j → f = W.pairing f₀
+        rename_i hni h
+        have h' : (if hf : f ∈ C then
+            (Sum.inr ⟨f, hf⟩ : W.Flag ⊕ {f : W.Flag // f ∈ C})
+            else Sum.inl (W.pairing f)) =
+            Sum.inr ⟨W.pairing f₀, hC f₀ h₀⟩ := h
+        by_cases hf : f ∈ C
+        · rw [dite_eq_left hf] at h'
+          have feq : f = W.pairing f₀ :=
+            congrArg Subtype.val (Sum.inr.inj h')
+          -- Rewire second branch gives ⟨Sum.inl f₀, _⟩;
+          -- stepFlagEquiv maps to Sum.inl f₀.
+          -- RHS: stepFlagEquiv sends ⟨Sum.inl f, _⟩ to Sum.inl f =
+          --   Sum.inl (W.pairing f₀); smaller explosion's pairing
+          --   at Sum.inl (W.pairing f₀), with W.pairing f₀ ∉ cutErase,
+          --   gives Sum.inl (W.pairing (W.pairing f₀)) = Sum.inl f₀
+          --   by pairing_invol.
+          simp only [feq]
+          have hne₁ : W.pairing f₀ ∉ cutErase W C f₀ :=
+            fun hm => ((mem_cutErase W C f₀).mp hm).2.2 rfl
+          change (Sum.inl f₀ :
+                W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀}) =
+            (if h'' : W.pairing f₀ ∈ cutErase W C f₀ then
+              (Sum.inr ⟨W.pairing f₀, h''⟩ :
+                W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀})
+              else Sum.inl (W.pairing (W.pairing f₀)))
+          rw [dite_eq_right hne₁, W.pairing_invol]
+        · rw [dite_eq_right hf] at h'
+          exact absurd h' Sum.inl_ne_inr
+      · -- else branch: partner is neither boundary flag
+        rename_i hni hnj
+        -- hni/hnj: pairing ≠ boundary i/j.
+        -- Rewire gives ⟨(explodeAt ...).pairing (Sum.inl f), hni, hnj⟩.
+        -- Expose the pairing dite.
+        have hni' : (if hf' : f ∈ C then
+            (Sum.inr ⟨f, hf'⟩ : W.Flag ⊕ {f : W.Flag // f ∈ C})
+            else Sum.inl (W.pairing f)) ≠
+            Sum.inr ⟨f₀, h₀⟩ := hni
+        have hnj' : (if hf' : f ∈ C then
+            (Sum.inr ⟨f, hf'⟩ : W.Flag ⊕ {f : W.Flag // f ∈ C})
+            else Sum.inl (W.pairing f)) ≠
+            Sum.inr ⟨W.pairing f₀, hC f₀ h₀⟩ := hnj
+        by_cases hf : f ∈ C
+        · -- f ∈ C, f ≠ f₀, f ≠ W.pairing f₀ → f ∈ cutErase
+          rw [dite_eq_left hf] at hni' hnj'
+          have hfne₀ : f ≠ f₀ := fun h =>
+            hni' (congrArg Sum.inr (Subtype.ext h))
+          have hfne₁ : f ≠ W.pairing f₀ := fun h =>
+            hnj' (congrArg Sum.inr (Subtype.ext h))
+          have hmem : f ∈ cutErase W C f₀ :=
+            (mem_cutErase W C f₀).mpr ⟨hf, hfne₀, hfne₁⟩
+          -- Both sides reduce to Sum.inr ⟨f, _⟩
+          -- Compute LHS pairing via defeq-ascription
+          have hp₁ : (explodeAt W C hC).pairing (Sum.inl f) =
+              (Sum.inr ⟨f, hf⟩ :
+                W.Flag ⊕ {f : W.Flag // f ∈ C}) := by
+            exact (show (if hf' : f ∈ C then
+                (Sum.inr ⟨f, hf'⟩ : W.Flag ⊕ {f : W.Flag // f ∈ C})
+                else Sum.inl (W.pairing f)) = _ from dite_eq_left hf)
+          -- Compute RHS pairing via defeq-ascription
+          have hp₂ : (explodeAt W (cutErase W C f₀)
+              (cutErase_closed W C hC f₀)).pairing (Sum.inl f) =
+              (Sum.inr ⟨f, hmem⟩ :
+                W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀}) := by
+            exact (show (if hf' : f ∈ cutErase W C f₀ then
+                (Sum.inr ⟨f, hf'⟩ :
+                  W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀})
+                else Sum.inl (W.pairing f)) = _ from
+              dite_eq_left hmem)
+          simp only [hp₁]
+          exact hp₂.symm
+        · -- f ∉ C → pairing = Sum.inl (W.pairing f)
+          rw [dite_eq_right hf] at hni' hnj'
+          have hne : f ∉ cutErase W C f₀ := fun hm =>
+            hf ((mem_cutErase W C f₀).mp hm).1
+          -- Compute both pairing values via defeq-ascription trick
+          have hp₁ : (explodeAt W C hC).pairing (Sum.inl f) =
+              (Sum.inl (W.pairing f) :
+                W.Flag ⊕ {f : W.Flag // f ∈ C}) := by
+            exact (show (if hf' : f ∈ C then
+                (Sum.inr ⟨f, hf'⟩ : W.Flag ⊕ {f : W.Flag // f ∈ C})
+                else Sum.inl (W.pairing f)) =
+              Sum.inl (W.pairing f) from dite_eq_right hf)
+          have hp₂ : (explodeAt W (cutErase W C f₀)
+              (cutErase_closed W C hC f₀)).pairing (Sum.inl f) =
+              (Sum.inl (W.pairing f) :
+                W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀}) := by
+            exact (show (if hf' : f ∈ cutErase W C f₀ then
+                (Sum.inr ⟨f, hf'⟩ :
+                  W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀})
+                else Sum.inl (W.pairing f)) =
+              Sum.inl (W.pairing f) from dite_eq_right hne)
+          simp only [hp₁]
+          exact hp₂.symm
+  · -- ═══════ A new star flag ═══════
+    change (stepFlagEquiv W C hC f₀ h₀)
+      (Fragment.rewire hopen ⟨Sum.inr s, hg⟩) =
+      ((explodeAt W (cutErase W C f₀) (cutErase_closed W C hC f₀)).relabel
+        (stepLabelEquiv W C hC f₀ h₀)).pairing
+      ((stepFlagEquiv W C hC f₀ h₀) ⟨Sum.inr s, hg⟩)
+    unfold Fragment.rewire
+    split
+    · rename_i h; exact absurd h Sum.inl_ne_inr
+    · split
+      · rename_i _ h; exact absurd h Sum.inl_ne_inr
+      · -- else branch: result is ⟨Sum.inl s.val, ...⟩
+        rfl
+
 /-- **One regluing step**: gluing the two cut ends of the edge of
 `f₀` in the explosion at `C` is the explosion at the shrunken cut
 set. -/
@@ -213,7 +382,7 @@ noncomputable def explodeAtGluePair (W : ClosedFragment)
       (stepLabelJ W C hC f₀ h₀) (stepLabel_ne W C hC f₀ h₀) =
       (explodeAt W C hC).gluePairOpen (stepLabelI W C f₀ h₀)
         (stepLabelJ W C hC f₀ h₀) (stepLabel_ne W C hC f₀ h₀) hopen :=
-    dif_neg hopen
+    dite_eq_right hopen
   rw [heq]
   exact {
     flagEquiv := stepFlagEquiv W C hC f₀ h₀
@@ -226,166 +395,7 @@ noncomputable def explodeAtGluePair (W : ClosedFragment)
         · rfl
         · rfl
     -- ═══════ PAIRING ═══════
-    pairing_comm := fun g => by
-        obtain ⟨gv, hg⟩ := g
-        rcases gv with f | s
-        · -- ═══════ An old flag: case-split on the rewire ═══════
-          show (stepFlagEquiv W C hC f₀ h₀)
-            (Fragment.rewire hopen ⟨Sum.inl f, hg⟩) =
-            ((explodeAt W (cutErase W C f₀) (cutErase_closed W C hC f₀)).relabel
-              (stepLabelEquiv W C hC f₀ h₀)).pairing
-            ((stepFlagEquiv W C hC f₀ h₀) ⟨Sum.inl f, hg⟩)
-          unfold Fragment.rewire
-          split
-          · -- first branch: partner = boundary i → f = f₀
-            rename_i h
-            have h' : (if hf : f ∈ C then
-                (Sum.inr ⟨f, hf⟩ : W.Flag ⊕ {f : W.Flag // f ∈ C})
-                else Sum.inl (W.pairing f)) =
-                Sum.inr ⟨f₀, h₀⟩ := h
-            by_cases hf : f ∈ C
-            · rw [dif_pos hf] at h'
-              have feq : f = f₀ :=
-                congrArg Subtype.val (Sum.inr.inj h')
-              -- LHS: rewire first branch gives ⟨Sum.inl (W.pairing f₀), _⟩;
-              --   stepFlagEquiv maps this to Sum.inl (W.pairing f₀).
-              -- RHS: stepFlagEquiv sends ⟨Sum.inl f, _⟩ to Sum.inl f;
-              --   the smaller explosion's pairing at Sum.inl f, with
-              --   f ∉ cutErase (since f = f₀), gives Sum.inl (W.pairing f).
-              -- Both sides = Sum.inl (W.pairing f₀) via feq.
-              have hne : f ∉ cutErase W C f₀ := by
-                rw [mem_cutErase, feq]; tauto
-              -- Expose the dite on the RHS
-              have hrhs : (if h'' : f ∈ cutErase W C f₀ then
-                  (Sum.inr ⟨f, h''⟩ :
-                    W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀})
-                  else Sum.inl (W.pairing f)) =
-                  Sum.inl (W.pairing f) := dif_neg hne
-              simp only [feq]
-              -- LHS: stepFlagEquiv ⟨Sum.inl (W.pairing f₀), _⟩ = Sum.inl
-              --   (W.pairing f₀)
-              -- RHS: (relabel ...).pairing (Sum.inl f₀) = dite(f₀ ∈
-              --   cutErase...)
-              -- f₀ ∉ cutErase so dite resolves to Sum.inl (W.pairing f₀)
-              have hne₀ : f₀ ∉ cutErase W C f₀ :=
-                fun hm => ((mem_cutErase W C f₀).mp hm).2.1 rfl
-              show (Sum.inl (W.pairing f₀) :
-                    W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀}) =
-                (if h'' : f₀ ∈ cutErase W C f₀ then
-                  (Sum.inr ⟨f₀, h''⟩ :
-                    W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀})
-                  else Sum.inl (W.pairing f₀))
-              rw [dif_neg hne₀]
-            · rw [dif_neg hf] at h'
-              exact absurd h' Sum.inl_ne_inr
-          · split
-            · -- second branch: partner = boundary j → f = W.pairing f₀
-              rename_i hni h
-              have h' : (if hf : f ∈ C then
-                  (Sum.inr ⟨f, hf⟩ : W.Flag ⊕ {f : W.Flag // f ∈ C})
-                  else Sum.inl (W.pairing f)) =
-                  Sum.inr ⟨W.pairing f₀, hC f₀ h₀⟩ := h
-              by_cases hf : f ∈ C
-              · rw [dif_pos hf] at h'
-                have feq : f = W.pairing f₀ :=
-                  congrArg Subtype.val (Sum.inr.inj h')
-                -- Rewire second branch gives ⟨Sum.inl f₀, _⟩;
-                -- stepFlagEquiv maps to Sum.inl f₀.
-                -- RHS: stepFlagEquiv sends ⟨Sum.inl f, _⟩ to Sum.inl f =
-                --   Sum.inl (W.pairing f₀); smaller explosion's pairing
-                --   at Sum.inl (W.pairing f₀), with W.pairing f₀ ∉ cutErase,
-                --   gives Sum.inl (W.pairing (W.pairing f₀)) = Sum.inl f₀
-                --   by pairing_invol.
-                simp only [feq]
-                have hne₁ : W.pairing f₀ ∉ cutErase W C f₀ :=
-                  fun hm => ((mem_cutErase W C f₀).mp hm).2.2 rfl
-                show (Sum.inl f₀ :
-                      W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀}) =
-                  (if h'' : W.pairing f₀ ∈ cutErase W C f₀ then
-                    (Sum.inr ⟨W.pairing f₀, h''⟩ :
-                      W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀})
-                    else Sum.inl (W.pairing (W.pairing f₀)))
-                rw [dif_neg hne₁, W.pairing_invol]
-              · rw [dif_neg hf] at h'
-                exact absurd h' Sum.inl_ne_inr
-            · -- else branch: partner is neither boundary flag
-              rename_i hni hnj
-              -- hni/hnj: pairing ≠ boundary i/j.
-              -- Rewire gives ⟨(explodeAt ...).pairing (Sum.inl f), hni, hnj⟩.
-              -- Expose the pairing dite.
-              have hni' : (if hf' : f ∈ C then
-                  (Sum.inr ⟨f, hf'⟩ : W.Flag ⊕ {f : W.Flag // f ∈ C})
-                  else Sum.inl (W.pairing f)) ≠
-                  Sum.inr ⟨f₀, h₀⟩ := hni
-              have hnj' : (if hf' : f ∈ C then
-                  (Sum.inr ⟨f, hf'⟩ : W.Flag ⊕ {f : W.Flag // f ∈ C})
-                  else Sum.inl (W.pairing f)) ≠
-                  Sum.inr ⟨W.pairing f₀, hC f₀ h₀⟩ := hnj
-              by_cases hf : f ∈ C
-              · -- f ∈ C, f ≠ f₀, f ≠ W.pairing f₀ → f ∈ cutErase
-                rw [dif_pos hf] at hni' hnj'
-                have hfne₀ : f ≠ f₀ := fun h =>
-                  hni' (congrArg Sum.inr (Subtype.ext h))
-                have hfne₁ : f ≠ W.pairing f₀ := fun h =>
-                  hnj' (congrArg Sum.inr (Subtype.ext h))
-                have hmem : f ∈ cutErase W C f₀ :=
-                  (mem_cutErase W C f₀).mpr ⟨hf, hfne₀, hfne₁⟩
-                -- Both sides reduce to Sum.inr ⟨f, _⟩
-                -- Compute LHS pairing via defeq-ascription
-                have hp₁ : (explodeAt W C hC).pairing (Sum.inl f) =
-                    (Sum.inr ⟨f, hf⟩ :
-                      W.Flag ⊕ {f : W.Flag // f ∈ C}) := by
-                  exact (show (if hf' : f ∈ C then
-                      (Sum.inr ⟨f, hf'⟩ : W.Flag ⊕ {f : W.Flag // f ∈ C})
-                      else Sum.inl (W.pairing f)) = _ from dif_pos hf)
-                -- Compute RHS pairing via defeq-ascription
-                have hp₂ : (explodeAt W (cutErase W C f₀)
-                    (cutErase_closed W C hC f₀)).pairing (Sum.inl f) =
-                    (Sum.inr ⟨f, hmem⟩ :
-                      W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀}) := by
-                  exact (show (if hf' : f ∈ cutErase W C f₀ then
-                      (Sum.inr ⟨f, hf'⟩ :
-                        W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀})
-                      else Sum.inl (W.pairing f)) = _ from
-                    dif_pos hmem)
-                simp only [hp₁]
-                exact hp₂.symm
-              · -- f ∉ C → pairing = Sum.inl (W.pairing f)
-                rw [dif_neg hf] at hni' hnj'
-                have hne : f ∉ cutErase W C f₀ := fun hm =>
-                  hf ((mem_cutErase W C f₀).mp hm).1
-                -- Compute both pairing values via defeq-ascription trick
-                have hp₁ : (explodeAt W C hC).pairing (Sum.inl f) =
-                    (Sum.inl (W.pairing f) :
-                      W.Flag ⊕ {f : W.Flag // f ∈ C}) := by
-                  exact (show (if hf' : f ∈ C then
-                      (Sum.inr ⟨f, hf'⟩ : W.Flag ⊕ {f : W.Flag // f ∈ C})
-                      else Sum.inl (W.pairing f)) =
-                    Sum.inl (W.pairing f) from dif_neg hf)
-                have hp₂ : (explodeAt W (cutErase W C f₀)
-                    (cutErase_closed W C hC f₀)).pairing (Sum.inl f) =
-                    (Sum.inl (W.pairing f) :
-                      W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀}) := by
-                  exact (show (if hf' : f ∈ cutErase W C f₀ then
-                      (Sum.inr ⟨f, hf'⟩ :
-                        W.Flag ⊕ {g : W.Flag // g ∈ cutErase W C f₀})
-                      else Sum.inl (W.pairing f)) =
-                    Sum.inl (W.pairing f) from dif_neg hne)
-                simp only [hp₁]
-                exact hp₂.symm
-        · -- ═══════ A new star flag ═══════
-          show (stepFlagEquiv W C hC f₀ h₀)
-            (Fragment.rewire hopen ⟨Sum.inr s, hg⟩) =
-            ((explodeAt W (cutErase W C f₀) (cutErase_closed W C hC f₀)).relabel
-              (stepLabelEquiv W C hC f₀ h₀)).pairing
-            ((stepFlagEquiv W C hC f₀ h₀) ⟨Sum.inr s, hg⟩)
-          unfold Fragment.rewire
-          split
-          · rename_i h; exact absurd h Sum.inl_ne_inr
-          · split
-            · rename_i _ h; exact absurd h Sum.inl_ne_inr
-            · -- else branch: result is ⟨Sum.inl s.val, ...⟩
-              rfl
+    pairing_comm := explodeAt_rewire_pairing W C hC f₀ h₀ hopen
   }
 
 end GlueStep

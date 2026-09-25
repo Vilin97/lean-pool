@@ -28,7 +28,7 @@ signs.
 
 namespace RS
 
-open scoped Classical
+
 
 /-! ## The two-label `∂`-relabel of a boundary state -/
 
@@ -48,17 +48,17 @@ variable {k ℓ : ℕ} {α : Type} {st : GenBoundaryState k ℓ α}
 /-- Away from the two labels the state is unchanged. -/
 theorem stateOddFlip_of_ne {i : α} (h1 : i ≠ i₁) (h2 : i ≠ i₂) :
     stateOddFlip st i₁ i₂ i = st i :=
-  if_neg (fun h => h.elim h1 h2)
+  ite_eq_right (fun h => h.elim h1 h2)
 
 /-- At the first label the state entry is `∂`-flipped. -/
 theorem stateOddFlip_left :
     stateOddFlip st i₁ i₂ i₁ = Sum.map id (oddPartner ℓ) (st i₁) :=
-  if_pos (Or.inl rfl)
+  ite_eq_left (Or.inl rfl)
 
 /-- At the second label likewise. -/
 theorem stateOddFlip_right :
     stateOddFlip st i₁ i₂ i₂ = Sum.map id (oddPartner ℓ) (st i₂) :=
-  if_pos (Or.inr rfl)
+  ite_eq_left (Or.inr rfl)
 
 /-- At the first label, on an odd entry: the colour is replaced by
 its odd partner. -/
@@ -81,7 +81,7 @@ theorem stateOddFlip_isInr (i : α) :
       ∃ c, st i = Sum.inr c := by
   unfold stateOddFlip
   by_cases h : i = i₁ ∨ i = i₂
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     cases hst : st i with
     | inl a =>
       constructor
@@ -91,14 +91,14 @@ theorem stateOddFlip_isInr (i : α) :
         cases hc
     | inr b => exact ⟨fun _ => ⟨b, rfl⟩,
         fun _ => ⟨oddPartner ℓ b, rfl⟩⟩
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
 
 /-- The relabel fixes every even entry. -/
 theorem stateOddFlip_isInl (i : α) (a : Fin k) :
     stateOddFlip st i₁ i₂ i = Sum.inl a ↔ st i = Sum.inl a := by
   unfold stateOddFlip
   by_cases h : i = i₁ ∨ i = i₂
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     cases hst : st i with
     | inl a' => exact Iff.rfl
     | inr b =>
@@ -107,7 +107,7 @@ theorem stateOddFlip_isInl (i : α) (a : Fin k) :
         cases hc
       · intro hc
         cases hc
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
 
 /-- The boundary-membership constraint transfers across the
 relabel. -/
@@ -121,18 +121,18 @@ theorem genBoundarySubsetMatches_stateOddFlip {W : Fragment α}
 theorem stateOddFlip_stateOddFlip :
     stateOddFlip (stateOddFlip st i₁ i₂) i₁ i₂ = st := by
   funext i
-  show (if i = i₁ ∨ i = i₂ then
+  change (if i = i₁ ∨ i = i₂ then
       Sum.map id (oddPartner ℓ) (stateOddFlip st i₁ i₂ i)
     else stateOddFlip st i₁ i₂ i) = st i
   by_cases h : i = i₁ ∨ i = i₂
-  · rw [if_pos h, show stateOddFlip st i₁ i₂ i =
-      Sum.map id (oddPartner ℓ) (st i) from if_pos h]
+  · rw [ite_eq_left h, show stateOddFlip st i₁ i₂ i =
+      Sum.map id (oddPartner ℓ) (st i) from ite_eq_left h]
     cases st i with
     | inl a => rfl
     | inr b =>
-      show Sum.inr (oddPartner ℓ (oddPartner ℓ b)) = Sum.inr b
+      change Sum.inr (oddPartner ℓ (oddPartner ℓ b)) = Sum.inr b
       rw [oddPartner_invol]
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     exact stateOddFlip_of_ne (fun he => h (Or.inl he))
       (fun he => h (Or.inr he))
 
@@ -292,9 +292,9 @@ noncomputable def RelTransitionSystem.Orientation.portFlip
         else o.isOut (κ.match_ f)) =
       !(if f ∈ S then !o.isOut f else o.isOut f)
     by_cases hfS : f ∈ S
-    · rw [if_pos (h.match_mem f hfS), if_pos hfS,
+    · rw [ite_eq_left (h.match_mem f hfS), ite_eq_left hfS,
         o.match_flip f hf]
-    · rw [if_neg (h.match_notMem hf hfS), if_neg hfS]
+    · rw [ite_eq_right (h.match_notMem hf hfS), ite_eq_right hfS]
       exact o.match_flip f hf
   pairing_flip := by
     intro f hf hp
@@ -316,11 +316,11 @@ noncomputable def RelTransitionSystem.Orientation.portFlip
         obtain ⟨v, hv⟩ := F.attach_internal_of_mem hp
         rw [W.attach_boundaryFlag] at hv
         cases hv
-      rw [if_pos (h.pairing_mem f hfS hfp₁ hfp₂), if_pos hfS,
+      rw [ite_eq_left (h.pairing_mem f hfS hfp₁ hfp₂), ite_eq_left hfS,
         o.pairing_flip f hf hp]
-    · rw [if_neg (h.pairing_notMem hfS
+    · rw [ite_eq_right (h.pairing_notMem hfS
           (PortedFlipSet.int_ne_boundaryFlag hf i₁)
-          (PortedFlipSet.int_ne_boundaryFlag hf i₂)), if_neg hfS]
+          (PortedFlipSet.int_ne_boundaryFlag hf i₂)), ite_eq_right hfS]
       exact o.pairing_flip f hf hp
 
 section PortFlipEval
@@ -329,11 +329,11 @@ variable (o : κ.Orientation) (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
 
 /-- On the flip set the orientation reverses. -/
 theorem portFlip_isOut_of_mem {f : W.Flag} (hf : f ∈ S) :
-    (o.portFlip h).isOut f = !o.isOut f := if_pos hf
+    (o.portFlip h).isOut f = !o.isOut f := ite_eq_left hf
 
 /-- Off the flip set the orientation is unchanged. -/
 theorem portFlip_isOut_of_notMem {f : W.Flag} (hf : f ∉ S) :
-    (o.portFlip h).isOut f = o.isOut f := if_neg hf
+    (o.portFlip h).isOut f = o.isOut f := ite_eq_right hf
 
 end PortFlipEval
 
@@ -439,7 +439,7 @@ theorem portColourFlip_val_of_mem (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
     (φ : F.CoreOddColouring ℓ)
     (g : {g : W.Flag // g ∈ F.coreFlags}) (hg : g.val ∈ S) :
     (portColourFlip h φ).val g = oddPartner ℓ (φ.val g) := by
-  rw [portColourFlip_val h φ g, if_pos (mem_portFlipCore_of_mem hg)]
+  rw [portColourFlip_val h φ g, ite_eq_left (mem_portFlipCore_of_mem hg)]
 
 /-- On an internal flag off the flip set the colour is
 unchanged. -/
@@ -449,7 +449,7 @@ theorem portColourFlip_val_int_of_notMem (h : PortedFlipSet κ S p₁ p₂ i₁ 
     (hgint : g.val ∈ F.internalFlags) (hg : g.val ∉ S) :
     (portColourFlip h φ).val g = φ.val g := by
   rw [portColourFlip_val h φ g,
-    if_neg (fun hc => hg ((h.mem_flipCore_int hgint).mp hc))]
+    ite_eq_right (fun hc => hg ((h.mem_flipCore_int hgint).mp hc))]
 
 /-- At the first chain end the colour is `∂`-flipped: this is where
 the reindexing meets the boundary, and why the transform relabels
@@ -460,7 +460,7 @@ theorem portColourFlip_val_bF₁ (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
     (portColourFlip h φ).val ⟨W.boundaryFlag i₁, hcore⟩ =
       oddPartner ℓ (φ.val ⟨W.boundaryFlag i₁, hcore⟩) := by
   rw [portColourFlip_val h φ _,
-    if_pos ((h.mem_flipCore_boundaryFlag i₁).mpr (Or.inl rfl))]
+    ite_eq_left ((h.mem_flipCore_boundaryFlag i₁).mpr (Or.inl rfl))]
 
 /-- At the second chain end likewise. -/
 theorem portColourFlip_val_bF₂ (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
@@ -469,7 +469,7 @@ theorem portColourFlip_val_bF₂ (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
     (portColourFlip h φ).val ⟨W.boundaryFlag i₂, hcore⟩ =
       oddPartner ℓ (φ.val ⟨W.boundaryFlag i₂, hcore⟩) := by
   rw [portColourFlip_val h φ _,
-    if_pos ((h.mem_flipCore_boundaryFlag i₂).mpr (Or.inr rfl))]
+    ite_eq_left ((h.mem_flipCore_boundaryFlag i₂).mpr (Or.inr rfl))]
 
 /-- At every other boundary flag the colour is unchanged: only the
 two chain-end labels move. -/
@@ -478,7 +478,7 @@ theorem portColourFlip_val_bF_of_ne (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
     (hi₂ : i ≠ i₂) (hcore : W.boundaryFlag i ∈ F.coreFlags) :
     (portColourFlip h φ).val ⟨W.boundaryFlag i, hcore⟩ =
       φ.val ⟨W.boundaryFlag i, hcore⟩ := by
-  rw [portColourFlip_val h φ _, if_neg (fun hc => by
+  rw [portColourFlip_val h φ _, ite_eq_right (fun hc => by
     rcases (h.mem_flipCore_boundaryFlag i).mp hc with he | he
     · exact hi₁ he
     · exact hi₂ he)]
@@ -557,7 +557,7 @@ private theorem inSign_portFlip_of_mem
   have hcore : g ∈ F.coreFlags :=
     F.internalFlags_subset_coreFlags (h.int_of_mem g hg)
   unfold inSign
-  rw [dif_pos hcore, dif_pos hcore,
+  rw [dite_eq_left hcore, dite_eq_left hcore,
     portColourFlip_val_of_mem h φ ⟨g, hcore⟩ hg,
     oddPartnerSign_oddPartner]
 
@@ -568,7 +568,7 @@ private theorem inSign_portFlip_of_int_notMem
   have hcore : g ∈ F.coreFlags :=
     F.internalFlags_subset_coreFlags hgint
   unfold inSign
-  rw [dif_pos hcore, dif_pos hcore,
+  rw [dite_eq_left hcore, dite_eq_left hcore,
     portColourFlip_val_int_of_notMem h φ ⟨g, hcore⟩ hgint hg]
 
 /-! ### Vertex-local in-sets -/
@@ -943,7 +943,7 @@ private theorem evalList_portFlip
           have hgS : g ∉ S :=
             (mem_keepP.mp (Finset.mem_toList.mp hg)).2
           have hmS : κ.match_ g ∉ S := h.match_notMem h₁ hgS
-          show [(portColourFlip h φ).val
+          change [(portColourFlip h φ).val
               ⟨g, F.internalFlags_subset_coreFlags h₁⟩,
             oddPartner ℓ ((portColourFlip h φ).val
               ⟨κ.match_ g, F.internalFlags_subset_coreFlags
@@ -967,7 +967,7 @@ private theorem evalList_portFlip
               {g : W.Flag // g ∈ F.coreFlags}) =
               ⟨f, F.internalFlags_subset_coreFlags h₂⟩ :=
             Subtype.ext (κ.match_invol f h₂)
-          show [(portColourFlip h φ).val
+          change [(portColourFlip h φ).val
               ⟨κ.match_ f, F.internalFlags_subset_coreFlags h₁⟩,
             oddPartner ℓ ((portColourFlip h φ).val
               ⟨κ.match_ (κ.match_ f),
@@ -1095,7 +1095,7 @@ private theorem inSign_pin₁ (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
       φ.val ⟨W.boundaryFlag i₁, h.bF₁_core⟩ :=
     φ.prop ⟨W.boundaryFlag i₁, h.bF₁_core⟩
   have h3 : inSign φ p₁ =
-      oddPartnerSign ℓ (φ.val ⟨p₁, h.p₁_core⟩) := dif_pos h.p₁_core
+      oddPartnerSign ℓ (φ.val ⟨p₁, h.p₁_core⟩) := dite_eq_left h.p₁_core
   rw [h3, h1, h2, hval]
 
 private theorem inSign_pin₂ (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
@@ -1117,7 +1117,7 @@ private theorem inSign_pin₂ (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
       φ.val ⟨W.boundaryFlag i₂, h.bF₂_core⟩ :=
     φ.prop ⟨W.boundaryFlag i₂, h.bF₂_core⟩
   have h3 : inSign φ p₂ =
-      oddPartnerSign ℓ (φ.val ⟨p₂, h.p₂_core⟩) := dif_pos h.p₂_core
+      oddPartnerSign ℓ (φ.val ⟨p₂, h.p₂_core⟩) := dite_eq_left h.p₂_core
   rw [h3, h1, h2, hval]
 
 /-! ### The colouring-sum and even-sum identities -/
@@ -1145,7 +1145,7 @@ private theorem phiSum_portFlip (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
   refine ((Equiv.sum_comp (Function.Involutive.toPerm _
       (portColourFlip_involutive h)) _).symm).trans
     (Finset.sum_congr rfl (fun φ _ => ?_))
-  show (if F.coreOddBoundaryMatch st (portColourFlip h φ) then
+  change (if F.coreOddBoundaryMatch st (portColourFlip h φ) then
       ∏ vv : W.Vertex,
         ((F.coreOddSignAt (o.portFlip h) (portColourFlip h φ)
             vv : ℂ) *
@@ -1162,16 +1162,16 @@ private theorem phiSum_portFlip (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
   rcases Classical.em
       (F.coreOddBoundaryMatch (stateOddFlip st i₁ i₂) φ) with
     hO | hO
-  · rw [if_pos ((coreOddBoundaryMatch_portColourFlip h st φ).mpr
+  · rw [ite_eq_left ((coreOddBoundaryMatch_portColourFlip h st φ).mpr
         hO),
-      if_pos hO, vertexProd_portFlip h hM o φ μf,
+      ite_eq_left hO, vertexProd_portFlip h hM o φ μf,
       inSign_pin₁ h hO hc₁, inSign_pin₂ h hO hc₂,
       oddPartnerSign_oddPartner, oddPartnerSign_oddPartner]
     push_cast
     ring
-  · rw [if_neg (fun hc =>
+  · rw [ite_eq_right (fun hc =>
         hO ((coreOddBoundaryMatch_portColourFlip h st φ).mp hc)),
-      if_neg hO, mul_zero]
+      ite_eq_right hO, mul_zero]
 
 private theorem evenMatch_stateOddFlip {st : GenBoundaryState k ℓ α}
     (hbnd : genBoundarySubsetMatches W F.flags st)
@@ -1258,7 +1258,7 @@ private theorem tBody_stateOddFlip [LinearOrder α]
       cases hi
   unfold tBody
   rw [hi, hj]
-  show (if i < j then
+  change (if i < j then
       throughStateFactor (stateOddFlip st i₁ i₂ i)
         (stateOddFlip st i₁ i₂ j) else 1) =
     (if i < j then throughStateFactor (st i) (st j) else 1)
@@ -1316,10 +1316,10 @@ theorem psiSum_portFlip
   refine Finset.sum_congr rfl (fun ψ _ => ?_)
   rcases Classical.em (genEvenBoundaryMatch F st hbnd ψ) with
     hE | hE
-  · rw [if_pos hE, if_pos ((evenMatch_stateOddFlip hbnd ψ).mpr hE)]
+  · rw [ite_eq_left hE, ite_eq_left ((evenMatch_stateOddFlip hbnd ψ).mpr hE)]
     exact phiSum_portFlip h hM st hc₁ hc₂ o (F.evenColoursAt ψ)
-  · rw [if_neg hE,
-      if_neg (fun hc => hE ((evenMatch_stateOddFlip hbnd ψ).mp hc)),
+  · rw [ite_eq_right hE,
+      ite_eq_right (fun hc => hE ((evenMatch_stateOddFlip hbnd ψ).mp hc)),
       mul_zero]
 
 /-- **The chain-flip ledger**: flipping the orientation of a ported

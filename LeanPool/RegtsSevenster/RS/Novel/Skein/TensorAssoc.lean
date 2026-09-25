@@ -65,11 +65,11 @@ theorem assocLabel_eq :
       exact Fin.ext rfl
     · have hk : a.val - s₁ < t₁ := by have := a.isLt; omega
       rw [show a = Fin.natAdd s₁ ⟨a.val - s₁, hk⟩ from
-          Fin.ext (by show a.val = s₁ + (a.val - s₁); omega),
+          Fin.ext (by change a.val = s₁ + (a.val - s₁); omega),
         interleaveEquiv_inl_high, interleaveEquiv_inl_high,
         interleaveEquiv_inl_high]
       exact Fin.ext (by
-        show ((s₁ + s₂) + s₃) + (a.val - s₁) =
+        change ((s₁ + s₂) + s₃) + (a.val - s₁) =
           (s₁ + (s₂ + s₃)) + (a.val - s₁)
         omega)
   · simp only [_root_.Equiv.sumAssoc_symm_apply_inr_inl,
@@ -81,11 +81,11 @@ theorem assocLabel_eq :
       exact Fin.ext rfl
     · have hk : b.val - s₂ < t₂ := by have := b.isLt; omega
       rw [show b = Fin.natAdd s₂ ⟨b.val - s₂, hk⟩ from
-          Fin.ext (by show b.val = s₂ + (b.val - s₂); omega),
+          Fin.ext (by change b.val = s₂ + (b.val - s₂); omega),
         interleaveEquiv_inr_high, interleaveEquiv_inl_high,
         interleaveEquiv_inl_high, interleaveEquiv_inr_high]
       exact Fin.ext (by
-        show ((s₁ + s₂) + s₃) + (t₁ + (b.val - s₂)) =
+        change ((s₁ + s₂) + s₃) + (t₁ + (b.val - s₂)) =
           (s₁ + (s₂ + s₃)) + (t₁ + (b.val - s₂))
         omega)
   · simp only [_root_.Equiv.sumAssoc_symm_apply_inr_inr,
@@ -95,15 +95,15 @@ theorem assocLabel_eq :
         interleaveEquiv_inr_low, interleaveEquiv_inr_low,
         interleaveEquiv_inr_low]
       exact Fin.ext (by
-        show (s₁ + s₂) + c.val = s₁ + (s₂ + c.val)
+        change (s₁ + s₂) + c.val = s₁ + (s₂ + c.val)
         omega)
     · have hk : c.val - s₃ < t₃ := by have := c.isLt; omega
       rw [show c = Fin.natAdd s₃ ⟨c.val - s₃, hk⟩ from
-          Fin.ext (by show c.val = s₃ + (c.val - s₃); omega),
+          Fin.ext (by change c.val = s₃ + (c.val - s₃); omega),
         interleaveEquiv_inr_high, interleaveEquiv_inr_high,
         interleaveEquiv_inr_high]
       exact Fin.ext (by
-        show ((s₁ + s₂) + s₃) + ((t₁ + t₂) + (c.val - s₃)) =
+        change ((s₁ + s₂) + s₃) + ((t₁ + t₂) + (c.val - s₃)) =
           (s₁ + (s₂ + s₃)) + (t₁ + (t₂ + (c.val - s₃)))
         omega)
 

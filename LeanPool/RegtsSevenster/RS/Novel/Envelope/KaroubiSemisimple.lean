@@ -51,7 +51,7 @@ theorem karoubiEnd_isSemisimpleRing_of_nilpotent_trace
     (hnil : ∀ g : skeinEnd f X.X.arity,
       IsNilpotent g → skeinTrace f X.X.arity g = 0) :
     IsSemisimpleRing (End X) := by
-  haveI : FiniteDimensional ℂ (End X.X) :=
+  have : FiniteDimensional ℂ (End X.X) :=
     inferInstanceAs (FiniteDimensional ℂ (skeinEnd f X.X.arity))
   exact karoubiEnd_isSemisimpleRing_of_trace X
     (HomSpace.traceMap f.val X.X.arity) hnil
@@ -82,7 +82,7 @@ theorem karoubiHom_eq_zero_of_traces_vanish
       HomSpace.traceMap f.val X.X.arity (a.f ≫ b.f) = 0) :
     a = 0 := by
   apply Karoubi.hom_ext
-  show a.f = 0
+  change a.f = 0
   apply hom_eq_zero_of_traces_vanish' f X.X Y.X a.f
   intro b
   have hb : Y.p ≫ (Y.p ≫ b ≫ X.p) ≫ X.p =

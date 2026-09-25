@@ -24,7 +24,7 @@ noncomputable section
 
 namespace RS
 
-open scoped Classical
+
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.MonoidalCategory
 open CategoryTheory.Limits CategoryTheory.MonoidalPreadditive
@@ -52,6 +52,7 @@ so we restate the ones we need.  Each is proved by `rfl`. -/
     (ix : X.ι) (iz : Z.ι) (jy : Y.ι) (jz : Z.ι) :
     (f ▷ Z) (ix, iz) (jy, jz) = f ix jy ⊗ₘ (𝟙 (Z : Mat_ C)) iz jz := rfl
 
+open scoped Classical in
 @[simp] private theorem mat_assocHom_apply'
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M N K : Mat_ C)
@@ -62,6 +63,7 @@ so we restate the ones we need.  Each is proved by `rfl`. -/
           (K.X k')).hom
       else 0 else 0 else 0 := rfl
 
+open scoped Classical in
 @[simp] private theorem mat_assocInv_apply'
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M N K : Mat_ C)
@@ -72,6 +74,7 @@ so we restate the ones we need.  Each is proved by `rfl`. -/
           (K.X k')).inv
       else 0 else 0 else 0 := rfl
 
+open scoped Classical in
 @[simp] private theorem mat_rightUnitorHom_apply'
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) (i : M.ι) (u :
@@ -80,6 +83,7 @@ so we restate the ones we need.  Each is proved by `rfl`. -/
       if h : i = j then eqToHom (by subst h; rfl) ≫ (ρ_ (M.X j)).hom else 0
         := rfl
 
+open scoped Classical in
 @[simp] private theorem mat_rightUnitorInv_apply'
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) (i : M.ι) (j :
@@ -88,6 +92,7 @@ so we restate the ones we need.  Each is proved by `rfl`. -/
       if h : i = j then (ρ_ (M.X i)).inv ≫ eqToHom (by subst h; rfl) else 0
         := rfl
 
+open scoped Classical in
 @[simp] private theorem mat_leftUnitorHom_apply'
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) (u : PUnit) (i :
@@ -96,6 +101,7 @@ so we restate the ones we need.  Each is proved by `rfl`. -/
       if h : i = j then eqToHom (by subst h; rfl) ≫ (λ_ (M.X j)).hom else 0
         := rfl
 
+open scoped Classical in
 @[simp] private theorem mat_leftUnitorInv_apply'
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) (i : M.ι) (u :
@@ -114,6 +120,7 @@ so we restate the ones we need.  Each is proved by `rfl`. -/
 
 /-! ### Coevaluation and evaluation -/
 
+open scoped Classical in
 /-- Componentwise coevaluation: diagonal matrix of cups. -/
 noncomputable def matCoev [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [RightRigidCategory C]
@@ -123,6 +130,7 @@ noncomputable def matCoev [Category.{v} C] [Preadditive C] [MonoidalCategory C]
       eqToHom (congr_arg (M.X p.1 ⊗ ·) (congr_arg (fun i => (M.X i)ᘁ) h))
   else 0
 
+open scoped Classical in
 /-- Componentwise evaluation: diagonal matrix of caps. -/
 noncomputable def matEv [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [RightRigidCategory C]
@@ -147,7 +155,7 @@ private theorem matCoev_apply_off
     (M : Mat_ C) (u : PUnit) (i j : M.ι) (h : i ≠
   j) :
     matCoev M u (i, j) = 0 :=
-  dif_neg h
+  dite_eq_right h
 
 private theorem matEv_apply_diag
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
@@ -162,7 +170,7 @@ private theorem matEv_apply_off
     (M : Mat_ C) (i j : M.ι) (u : PUnit) (h : i ≠ j)
   :
     matEv M (i, j) u = 0 :=
-  dif_neg h
+  dite_eq_right h
 
 /-! ### The snake identities -/
 
@@ -206,7 +214,7 @@ private theorem mat_snake_one
                     eqToHom_refl, id_comp, comp_id]
                   exact ExactPairing.coevaluation_evaluation (M.X a) ((M.X a)ᘁ)
                 · intro c _ hc
-                  rw [mat_rightUnitorHom_apply', dif_neg (Ne.symm hc),
+                  rw [mat_rightUnitorHom_apply', dite_eq_right (Ne.symm hc),
                     zero_comp]
               · rw [Mat_.id_apply_of_ne _ _ _ hab]
                 simp only [tensor_zero, comp_zero]
@@ -216,7 +224,7 @@ private theorem mat_snake_one
                   mat_leftUnitorInv_apply']
                   simp [hab]
                 · intro c _ hc
-                  rw [mat_rightUnitorHom_apply', dif_neg (Ne.symm hc),
+                  rw [mat_rightUnitorHom_apply', dite_eq_right (Ne.symm hc),
                     zero_comp]
             · intro l' _ hl'
               simp [Ne.symm hl', zero_comp]
@@ -303,7 +311,7 @@ private theorem mat_snake_two
                     eqToHom_refl, id_comp, comp_id]
                   exact ExactPairing.evaluation_coevaluation (M.X a) ((M.X a)ᘁ)
                 · intro c _ hc
-                  rw [mat_leftUnitorHom_apply', dif_neg (Ne.symm hc), zero_comp]
+                  rw [mat_leftUnitorHom_apply', dite_eq_right (Ne.symm hc), zero_comp]
               · rw [Mat_.id_apply_of_ne _ _ _ hab]
                 rw [MonoidalPreadditive.zero_tensor, comp_zero, comp_zero]
                 rw [Mat_.comp_apply,
@@ -312,7 +320,7 @@ private theorem mat_snake_two
                   mat_rightUnitorInv_apply']
                   simp [hab]
                 · intro c _ hc
-                  rw [mat_leftUnitorHom_apply', dif_neg (Ne.symm hc), zero_comp]
+                  rw [mat_leftUnitorHom_apply', dite_eq_right (Ne.symm hc), zero_comp]
             · intro l' _ hl'
               simp [Ne.symm hl', zero_comp]
           · intro k' _ hk'
@@ -371,6 +379,7 @@ private theorem mat_snake_two
 /-! ### The exact pairing and rigidity instances -/
 
 /-- The exact pairing between `M` and its componentwise right dual. -/
+@[instance_reducible]
 noncomputable def matExactPairing
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [MonoidalPreadditive C] [RightRigidCategory C]

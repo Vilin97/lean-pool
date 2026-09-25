@@ -45,7 +45,7 @@ noncomputable def cornerIncl
     [Category.{v} D] (X : Karoubi D) {e : End X} (he : IsIdempotentElem e) :
     karoubiCorner X he ⟶ X :=
   ⟨e.f, by
-    show e.f ≫ e.f ≫ X.p = e.f
+    change e.f ≫ e.f ≫ X.p = e.f
     rw [Karoubi.comp_p]
     exact congrArg Karoubi.Hom.f he⟩
 
@@ -54,7 +54,7 @@ noncomputable def cornerProj
     [Category.{v} D] (X : Karoubi D) {e : End X} (he : IsIdempotentElem e) :
     X ⟶ karoubiCorner X he :=
   ⟨e.f, by
-    show X.p ≫ e.f ≫ e.f = e.f
+    change X.p ≫ e.f ≫ e.f = e.f
     rw [show (e.f ≫ e.f : X.X ⟶ X.X) = e.f from
       congrArg Karoubi.Hom.f he, Karoubi.p_comp]⟩
 
@@ -64,7 +64,7 @@ theorem cornerIncl_proj
     [Category.{v} D] (X : Karoubi D) {e : End X} (he : IsIdempotentElem e) :
     cornerIncl X he ≫ cornerProj X he = 𝟙 (karoubiCorner X he) := by
   apply Karoubi.hom_ext
-  show e.f ≫ e.f = e.f
+  change e.f ≫ e.f = e.f
   exact congrArg Karoubi.Hom.f he
 
 /-- Projecting then including is the idempotent. -/
@@ -79,7 +79,7 @@ theorem cornerIncl_absorb
     [Category.{v} D] (X : Karoubi D) {e : End X} (he : IsIdempotentElem e) :
     cornerIncl X he ≫ e = cornerIncl X he := by
   apply Karoubi.hom_ext
-  show e.f ≫ e.f = e.f
+  change e.f ≫ e.f = e.f
   exact congrArg Karoubi.Hom.f he
 
 /-- And so is the projection. -/
@@ -87,7 +87,7 @@ theorem cornerProj_absorb
     [Category.{v} D] (X : Karoubi D) {e : End X} (he : IsIdempotentElem e) :
     e ≫ cornerProj X he = cornerProj X he := by
   apply Karoubi.hom_ext
-  show e.f ≫ e.f = e.f
+  change e.f ≫ e.f = e.f
   exact congrArg Karoubi.Hom.f he
 
 /-- Cross-composites of distinct orthogonal corners vanish. -/
@@ -98,7 +98,7 @@ theorem cornerIncl_proj_orthogonal
     (horth : e' * e = 0) :
     cornerIncl X he ≫ cornerProj X he' = 0 := by
   apply Karoubi.hom_ext
-  show e.f ≫ e'.f = (0 : X.X ⟶ X.X)
+  change e.f ≫ e'.f = (0 : X.X ⟶ X.X)
   exact congrArg Karoubi.Hom.f horth
 
 end GenericCut
@@ -138,7 +138,6 @@ theorem env_simple_of_scalar_end (E : Env f) (hne : 𝟙 E ≠ 0)
     have h3 : c * (c - 1) = 0 := by
       rw [mul_sub, mul_one, hc2, sub_self]
     rcases mul_eq_zero.mp h3 with h0 | h1
-
     · exfalso
       rw [h0, zero_smul] at hc
       have : g = 0 := by
@@ -198,8 +197,8 @@ theorem env_deligneSemisimple :
     IsSemisimple (Env f) := by
   classical
   intro E
-  haveI : FiniteDimensional ℂ (End E) := envHomFinite f E E
-  haveI := envEnd_isSemisimpleRing f E
+  have : FiniteDimensional ℂ (End E) := envHomFinite f E E
+  have := envEnd_isSemisimpleRing f E
   obtain ⟨ι, hfin, e, hco, hatom⟩ :=
     exists_completeOrthogonal_atomic (A := End E)
   -- The corners, reindexed over `Fin n`.
@@ -231,8 +230,8 @@ theorem env_deligneSemisimple :
           rw [biproduct.ι_desc_assoc, biproduct.ι_π]
           by_cases hij : i = j
           · subst hij
-            rw [dif_pos rfl, eqToHom_refl, cornerIncl_proj]
-          · rw [dif_neg hij]
+            rw [dite_eq_left rfl, eqToHom_refl, cornerIncl_proj]
+          · rw [dite_eq_right hij]
             exact cornerIncl_proj_orthogonal E _ _
               (hco.ortho (Ne.symm hij)) }
 

@@ -27,7 +27,7 @@ on a re-paired end (`mem_highSet_repair_untouched`).
 
 namespace RS
 
-open scoped Classical
+
 
 /-! ## Propositional inequality helpers -/
 

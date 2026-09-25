@@ -34,8 +34,7 @@ private lemma congr_refl_map_id {M₁ M₂ N : Type*}
         ((TensorProduct.congr E (LinearEquiv.refl ℂ N)).symm t)) =
     TensorProduct.map (E.toLinearMap ∘ₗ f ∘ₗ E.symm.toLinearMap)
       LinearMap.id t := by
-  induction t using TensorProduct.induction_on with
-  | zero => simp
+  induction t using TensorProduct.inductionOn with
   | tmul a b =>
     simp only [TensorProduct.congr_symm_tmul, TensorProduct.map_tmul,
       LinearEquiv.coe_toLinearMap, LinearMap.comp_apply,
@@ -56,7 +55,7 @@ theorem toColour_whisker {k ℓ : ℕ} (n : ℕ)
   · -- Even component
     refine LinearMap.ext (fun x => ?_)
     -- Expand colourPowerEquiv (n+1) = (tensorCongr CPE refl).trans step
-    show ((SuperLinearEquiv.tensorCongr (colourPowerEquiv k ℓ n)
+    change ((SuperLinearEquiv.tensorCongr (colourPowerEquiv k ℓ n)
             (SuperLinearEquiv.refl (stdSuperPair k ℓ))).evenEquiv.trans
           (colourPowerStep k ℓ n).evenEquiv)
         ((g ▷ stdSuperPair k ℓ : SuperVect.Hom _ _).evenMap
@@ -80,7 +79,7 @@ theorem toColour_whisker {k ℓ : ℕ} (n : ℕ)
     exact Prod.ext (congr_refl_map_id _ _ y₁) (congr_refl_map_id _ _ y₂)
   · -- Odd component (symmetric)
     refine LinearMap.ext (fun x => ?_)
-    show ((SuperLinearEquiv.tensorCongr (colourPowerEquiv k ℓ n)
+    change ((SuperLinearEquiv.tensorCongr (colourPowerEquiv k ℓ n)
             (SuperLinearEquiv.refl (stdSuperPair k ℓ))).oddEquiv.trans
           (colourPowerStep k ℓ n).oddEquiv)
         ((g ▷ stdSuperPair k ℓ : SuperVect.Hom _ _).oddMap

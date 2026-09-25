@@ -58,10 +58,10 @@ instance instModuleEvenOdd : Module S.even S.odd where
   smul_zero x := map_zero (S.mulEO x)
   smul_add x u v := map_add (S.mulEO x) u v
   add_smul x y u := by
-    show S.mulEO (x + y) u = S.mulEO x u + S.mulEO y u
+    change S.mulEO (x + y) u = S.mulEO x u + S.mulEO y u
     rw [map_add S.mulEO x y, LinearMap.add_apply]
   zero_smul u := by
-    show S.mulEO 0 u = 0
+    change S.mulEO 0 u = 0
     rw [map_zero S.mulEO, LinearMap.zero_apply]
 
 /-- The scalar actions of ℂ and of the even ring on the odd
@@ -70,7 +70,7 @@ even argument. -/
 instance instIsScalarTowerComplexEvenOdd :
     IsScalarTower ℂ S.even S.odd where
   smul_assoc r x u := by
-    show S.mulEO (r • x) u = r • S.mulEO x u
+    change S.mulEO (r • x) u = r • S.mulEO x u
     rw [map_smul S.mulEO r x, LinearMap.smul_apply]
 
 /-- The two scalar actions on the odd component commute: the

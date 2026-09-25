@@ -51,7 +51,7 @@ theorem exists_split_of_linear_idem {n : ℕ}
       b.equivFun.symm.toLinearMap,
     b.equivFun.toLinearMap ∘ₗ f.rangeRestrict, ?_, ?_⟩
   · refine LinearMap.ext fun x => ?_
-    show ((b.equivFun.symm (b.equivFun (f.rangeRestrict x)) :
+    change ((b.equivFun.symm (b.equivFun (f.rangeRestrict x)) :
       LinearMap.range f) : Fin n → ℂ) = f x
     rw [LinearEquiv.symm_apply_apply]
     rfl
@@ -59,7 +59,7 @@ theorem exists_split_of_linear_idem {n : ℕ}
     have h1 : f.rangeRestrict
         ((b.equivFun.symm w : LinearMap.range f) : Fin n → ℂ)
         = b.equivFun.symm w := Subtype.ext (hU _)
-    show b.equivFun (f.rangeRestrict
+    change b.equivFun (f.rangeRestrict
       ((b.equivFun.symm w : LinearMap.range f) : Fin n → ℂ)) = w
     rw [h1, LinearEquiv.apply_symm_apply]
 
@@ -86,12 +86,15 @@ variable {D : Type u}
 
 /-- **The matrix of a composite is the product of the matrices.** -/
 theorem components_comp [Category.{v} D] [Preadditive D] [HasFiniteBiproducts D]
-    {J K M : Type} [Fintype J] [Fintype K]
-    [Fintype M] {f : J → D} {g : K → D} {h : M → D}
+    {J K M : Type} [Finite J] [Fintype K]
+    [Finite M] {f : J → D} {g : K → D} {h : M → D}
     (x : ⨁ f ⟶ ⨁ g) (y : ⨁ g ⟶ ⨁ h) (j : J) (m : M) :
     biproduct.components (x ≫ y) j m =
       ∑ k : K, biproduct.components x j k ≫
         biproduct.components y k m := by
+  classical
+  let := Fintype.ofFinite J
+  let := Fintype.ofFinite M
   have key : x ≫ y = ∑ k : K, (x ≫ biproduct.π g k) ≫
       (biproduct.ι g k ≫ y) := by
     calc x ≫ y
@@ -107,27 +110,34 @@ theorem components_comp [Category.{v} D] [Preadditive D] [HasFiniteBiproducts D]
 /-- Two maps of biproducts with the same matrix agree. -/
 theorem hom_ext_components
     [Category.{v} D] [Preadditive D] [HasFiniteBiproducts D]
-    {J K : Type} [Fintype J] [Fintype K]
+    {J K : Type} [Finite J] [Finite K]
     {f : J → D} {g : K → D} (x y : ⨁ f ⟶ ⨁ g)
     (h : ∀ j k, biproduct.components x j k =
       biproduct.components y j k) : x = y := by
+  classical
+  let := Fintype.ofFinite J
+  let := Fintype.ofFinite K
   rw [← biproduct.components_matrix x, ← biproduct.components_matrix y]
   exact congrArg biproduct.matrix (funext fun j => funext fun k => h j k)
 
 /-- The diagonal entries of the identity matrix. -/
 theorem components_id_self
     [Category.{v} D] [Preadditive D] [HasFiniteBiproducts D]
-    {J : Type} [Fintype J] [DecidableEq J]
+    {J : Type} [Finite J]
     {f : J → D} (j : J) :
     biproduct.components (𝟙 (⨁ f)) j j = 𝟙 (f j) := by
+  classical
+  let := Fintype.ofFinite J
   simp [biproduct.components]
 
 /-- The off-diagonal entries of the identity matrix vanish. -/
 theorem components_id_ne
     [Category.{v} D] [Preadditive D] [HasFiniteBiproducts D]
-    {J : Type} [Fintype J] [DecidableEq J]
+    {J : Type} [Finite J]
     {f : J → D} {j k : J} (h : j ≠ k) :
     biproduct.components (𝟙 (⨁ f)) j k = 0 := by
+  classical
+  let := Fintype.ofFinite J
   simp [biproduct.components, biproduct.ι_π_ne _ h]
 
 end Biprod
@@ -199,7 +209,7 @@ theorem OddLine.eq_zero_of_whiskerRight
     {X Y : D} (f : X ⟶ Y)
     (h : f ▷ L.obj = 0) : f = 0 := by
   refine L.whiskerRight_injective ?_
-  show f ▷ L.obj = (0 : X ⟶ Y) ▷ L.obj
+  change f ▷ L.obj = (0 : X ⟶ Y) ▷ L.obj
   rw [h, MonoidalPreadditive.zero_whiskerRight]
 
 end Line
@@ -271,15 +281,17 @@ target. -/
 theorem unitBij_biproduct_right
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [MonoidalPreadditive D] [HasFiniteBiproducts D] (R : D) [MonObj R]
-    {J : Type} [Fintype J]
-    [DecidableEq J] (V : D) (g : J → D)
+    {J : Type} [Finite J]
+    (V : D) (g : J → D)
     (h : ∀ k, UnitBij R V (g k)) : UnitBij R V (⨁ g) := by
+  classical
+  let := Fintype.ofFinite J
   constructor
   · intro x y hxy
     have hxy' : x ≫ algUnitHom R (⨁ g) = y ≫ algUnitHom R (⨁ g) := hxy
     refine biproduct.hom_ext _ _ fun k => ?_
     refine (h k).1 ?_
-    show (x ≫ biproduct.π g k) ≫ algUnitHom R (g k) =
+    change (x ≫ biproduct.π g k) ≫ algUnitHom R (g k) =
       (y ≫ biproduct.π g k) ≫ algUnitHom R (g k)
     rw [Category.assoc, Category.assoc, ← algUnitHom_naturality,
       ← Category.assoc, ← Category.assoc, hxy']
@@ -288,7 +300,7 @@ theorem unitBij_biproduct_right
     have hf' : ∀ k : J, f k ≫ algUnitHom R (g k) =
         y ≫ (R ◁ biproduct.π g k) := hf
     refine ⟨∑ k : J, f k ≫ biproduct.ι g k, ?_⟩
-    show (∑ k : J, f k ≫ biproduct.ι g k) ≫ algUnitHom R (⨁ g) = y
+    change (∑ k : J, f k ≫ biproduct.ι g k) ≫ algUnitHom R (⨁ g) = y
     rw [Preadditive.sum_comp]
     have step : ∀ k : J, (f k ≫ biproduct.ι g k) ≫ algUnitHom R (⨁ g)
         = y ≫ (R ◁ (biproduct.π g k ≫ biproduct.ι g k)) := by
@@ -307,15 +319,17 @@ source. -/
 theorem unitBij_biproduct_left
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [HasFiniteBiproducts D] (R : D) [MonObj R]
-    {J : Type} [Fintype J]
-    [DecidableEq J] (f : J → D) (W : D)
+    {J : Type} [Finite J]
+    (f : J → D) (W : D)
     (h : ∀ j, UnitBij R (f j) W) : UnitBij R (⨁ f) W := by
+  classical
+  let := Fintype.ofFinite J
   constructor
   · intro x y hxy
     have hxy' : x ≫ algUnitHom R W = y ≫ algUnitHom R W := hxy
     refine biproduct.hom_ext' _ _ fun j => ?_
     refine (h j).1 ?_
-    show (biproduct.ι f j ≫ x) ≫ algUnitHom R W =
+    change (biproduct.ι f j ≫ x) ≫ algUnitHom R W =
       (biproduct.ι f j ≫ y) ≫ algUnitHom R W
     rw [Category.assoc, Category.assoc, hxy']
   · intro y
@@ -323,7 +337,7 @@ theorem unitBij_biproduct_left
     have hg' : ∀ j : J, g j ≫ algUnitHom R W = biproduct.ι f j ≫ y :=
       hg
     refine ⟨∑ j : J, biproduct.π f j ≫ g j, ?_⟩
-    show (∑ j : J, biproduct.π f j ≫ g j) ≫ algUnitHom R W = y
+    change (∑ j : J, biproduct.π f j ≫ g j) ≫ algUnitHom R W = y
     rw [Preadditive.sum_comp]
     have step : ∀ j : J,
         (biproduct.π f j ≫ g j) ≫ algUnitHom R W =
@@ -351,7 +365,7 @@ theorem OddLine.hom_line_scalar
     (f : L.obj ⟶ L.obj) : ∃ c : ℂ, f = c • 𝟙 L.obj := by
   obtain ⟨c, hc⟩ := hsc (L.sq.inv ≫ (f ▷ L.obj) ≫ L.sq.hom)
   refine ⟨c, L.whiskerRight_injective ?_⟩
-  show f ▷ L.obj = (c • 𝟙 L.obj) ▷ L.obj
+  change f ▷ L.obj = (c • 𝟙 L.obj) ▷ L.obj
   rw [MonoidalLinear.smul_whiskerRight,
     MonoidalCategory.id_whiskerRight]
   refine (Iso.cancel_iso_hom_right _ _ L.sq).mp ?_
@@ -451,7 +465,7 @@ theorem hom_line_freeLine_scalar
     ∃ c : ℂ, g = c • algUnitHom R L.obj := by
   obtain ⟨c, hc⟩ := halg (L.sq.inv ≫ (g ▷ L.obj) ≫ (L.rot R).hom)
   refine ⟨c, L.whiskerRight_injective ?_⟩
-  show g ▷ L.obj = (c • algUnitHom R L.obj) ▷ L.obj
+  change g ▷ L.obj = (c • algUnitHom R L.obj) ▷ L.obj
   rw [MonoidalLinear.smul_whiskerRight]
   refine (Iso.cancel_iso_hom_right _ _ (L.rot R)).mp ?_
   have h1 : (g ▷ L.obj) ≫ (L.rot R).hom
@@ -487,7 +501,7 @@ theorem unitBij_unit_unit
   · intro y
     obtain ⟨c, hc⟩ := halg (y ≫ (ρ_ R).hom)
     refine ⟨c • 𝟙 (𝟙_ D), ?_⟩
-    show (c • 𝟙 (𝟙_ D)) ≫ algUnitHom R (𝟙_ D) = y
+    change (c • 𝟙 (𝟙_ D)) ≫ algUnitHom R (𝟙_ D) = y
     refine (Iso.cancel_iso_hom_right _ _ (ρ_ R)).mp ?_
     rw [Linear.smul_comp, Category.id_comp, Linear.smul_comp,
       algUnitHom_unit, hc]
@@ -504,7 +518,7 @@ theorem unitBij_unit_line
     rw [L.hom_unit_line_eq_zero hLU x, L.hom_unit_line_eq_zero hLU y]
   · intro y
     refine ⟨0, ?_⟩
-    show (0 : 𝟙_ D ⟶ L.obj) ≫ algUnitHom R L.obj = y
+    change (0 : 𝟙_ D ⟶ L.obj) ≫ algUnitHom R L.obj = y
     rw [Limits.zero_comp]
     exact (hom_unit_freeLine_eq_zero L R hLR y).symm
 
@@ -519,7 +533,7 @@ theorem unitBij_line_unit
     rw [hLU x, hLU y]
   · intro y
     refine ⟨0, ?_⟩
-    show (0 : L.obj ⟶ 𝟙_ D) ≫ algUnitHom R (𝟙_ D) = y
+    change (0 : L.obj ⟶ 𝟙_ D) ≫ algUnitHom R (𝟙_ D) = y
     rw [Limits.zero_comp]
     exact (hom_line_freeUnit_eq_zero L R hLR y).symm
 
@@ -548,7 +562,7 @@ theorem unitBij_line_line
   · intro y
     obtain ⟨c, hc⟩ := hom_line_freeLine_scalar L R halg y
     refine ⟨c • 𝟙 L.obj, ?_⟩
-    show (c • 𝟙 L.obj) ≫ algUnitHom R L.obj = y
+    change (c • 𝟙 L.obj) ≫ algUnitHom R L.obj = y
     rw [Linear.smul_comp, Category.id_comp, hc]
 
 /-! ## Bijectivity at the mixed sums -/
@@ -561,7 +575,7 @@ theorem unitBij_mix_right
     (V : D)
     (h1 : UnitBij R V (𝟙_ D)) (h2 : UnitBij R V L.obj) (p q : ℕ) :
     UnitBij R V (L.mix p q) := by
-  show UnitBij R V (⨁ L.mixFun p q)
+  change UnitBij R V (⨁ L.mixFun p q)
   refine unitBij_biproduct_right R V (L.mixFun p q) ?_
   rintro (i | j)
   · exact h1
@@ -579,7 +593,7 @@ theorem unitBij_mix [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     (hLR : ∀ f : L.obj ⟶ R, f = 0)
     (hη : η[R] ≠ 0) (p q p' q' : ℕ) :
     UnitBij R (L.mix p q) (L.mix p' q') := by
-  show UnitBij R (⨁ L.mixFun p q) (L.mix p' q')
+  change UnitBij R (⨁ L.mixFun p q) (L.mix p' q')
   refine unitBij_biproduct_left R (L.mixFun p q) (L.mix p' q') ?_
   rintro (i | j)
   · exact unitBij_mix_right L R (𝟙_ D)
@@ -604,7 +618,7 @@ theorem freeModHomEquiv_freeModMap
     {V W : D} (f : V ⟶ W) :
     freeModHomEquiv R V (freeMod R W) (freeModMap R f)
       = f ≫ algUnitHom R W := by
-  show (λ_ V).inv ≫ (η[R] ▷ V) ≫ (R ◁ f) = f ≫ algUnitHom R W
+  change (λ_ V).inv ≫ (η[R] ▷ V) ≫ (R ◁ f) = f ≫ algUnitHom R W
   rw [← Category.assoc]
   exact algUnitHom_naturality R f
 
@@ -645,7 +659,7 @@ theorem freeModMap_injective_mix
   intro f f' h
   have h' : freeModMap R f = freeModMap R f' := h
   refine (unitBij_mix L R hsc hLU halg hLR hη p q p' q').1 ?_
-  show f ≫ algUnitHom R (L.mix p' q')
+  change f ≫ algUnitHom R (L.mix p' q')
     = f' ≫ algUnitHom R (L.mix p' q')
   rw [← freeModHomEquiv_freeModMap, ← freeModHomEquiv_freeModMap, h']
 
@@ -735,7 +749,7 @@ theorem OddLine.mixEntry_comp
       = L.mixEntry (A * A') (B * B') j k := by
   rcases j with i | jj <;> rcases k with i2 | j2 <;>
     rw [Fintype.sum_sum_type] <;>
-    simp only [mixEntry, Limits.zero_comp, Limits.comp_zero,
+    simp only [mixEntry,  Limits.comp_zero,
       Finset.sum_const_zero, add_zero, zero_add, Matrix.mul_apply]
   · exact sum_smul_id _ _
   · refine (congrArg₂ (· + ·) ?_ ?_).trans (zero_add 0)
@@ -781,21 +795,21 @@ theorem OddLine.mixMat_one
   · subst h
     rw [components_id_self]
     rcases j with i | jj
-    · show (1 : Matrix (Fin p) (Fin p) ℂ) i i • 𝟙 (𝟙_ D) = 𝟙 (𝟙_ D)
+    · change (1 : Matrix (Fin p) (Fin p) ℂ) i i • 𝟙 (𝟙_ D) = 𝟙 (𝟙_ D)
       rw [Matrix.one_apply_eq, one_smul]
-    · show (1 : Matrix (Fin q) (Fin q) ℂ) jj jj • 𝟙 L.obj = 𝟙 L.obj
+    · change (1 : Matrix (Fin q) (Fin q) ℂ) jj jj • 𝟙 L.obj = 𝟙 L.obj
       rw [Matrix.one_apply_eq, one_smul]
   · rw [components_id_ne h]
     rcases j with i | jj
     · rcases k with i2 | j2
       · have hne : i ≠ i2 := fun hh => h (by rw [hh])
-        show (1 : Matrix (Fin p) (Fin p) ℂ) i i2 • 𝟙 (𝟙_ D) = 0
+        change (1 : Matrix (Fin p) (Fin p) ℂ) i i2 • 𝟙 (𝟙_ D) = 0
         rw [Matrix.one_apply_ne hne, zero_smul]
       · rfl
     · rcases k with i2 | j2
       · rfl
       · have hne : jj ≠ j2 := fun hh => h (by rw [hh])
-        show (1 : Matrix (Fin q) (Fin q) ℂ) jj j2 • 𝟙 L.obj = 0
+        change (1 : Matrix (Fin q) (Fin q) ℂ) jj j2 • 𝟙 L.obj = 0
         rw [Matrix.one_apply_ne hne, zero_smul]
 
 /-- **Every endomorphism of a mixed sum is a pair of complex

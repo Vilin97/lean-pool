@@ -66,7 +66,7 @@ private theorem rhoSub_val_eq
     rw [Representation.asAlgebraHom_single, one_smul] at h
     exact h
   rw [h1]
-  show (MonoidAlgebra.single g (1 : ℂ)) • (m : ρ.asModule) = ρ g (m :
+  change (MonoidAlgebra.single g (1 : ℂ)) • (m : ρ.asModule) = ρ g (m :
     ρ.asModule)
   rw [Representation.single_smul, one_smul]; rfl
 
@@ -79,17 +79,19 @@ private theorem character_zero_of_finrank_zero {G : Type*} [Group G]
     (ρ : Representation ℂ G V) (hd : Module.finrank ℂ V = 0) (g : G) :
     ρ.character g = 0 := by
   have hall : ∀ x : V, x = 0 := finrank_zero_iff_forall_zero.mp hd
-  show (trace ℂ V) (ρ g) = 0
+  change (trace ℂ V) (ρ g) = 0
   rw [show (ρ g : V →ₗ[ℂ] V) = 0 from by ext v; exact hall _]
   exact map_zero _
 
-private theorem character_eq_sum_nChar_aux {G : Type*} [Group G] [Fintype G] :
+private theorem character_eq_sum_nChar_aux {G : Type*} [Group G] [Finite G] :
     ∀ (n : ℕ) {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
       (ρ : Representation ℂ G V),
       Module.finrank ℂ V ≤ n →
       ∃ (m : ℕ) (S : Fin m → Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G)),
         (∀ i, IsSimpleModule (MonoidAlgebra ℂ G) (S i)) ∧
         ∀ g : G, ρ.character g = ∑ i, nChar (S i) g := by
+  classical
+  let := Fintype.ofFinite G
   intro n
   induction n with
   | zero =>
@@ -102,21 +104,21 @@ private theorem character_eq_sum_nChar_aux {G : Type*} [Group G] [Fintype G] :
     · exact ⟨0, Fin.elim0, fun i => i.elim0, fun g => by
         rw [character_zero_of_finrank_zero ρ htriv g]; simp⟩
     · have hfpos : 0 < Module.finrank ℂ V := Nat.pos_of_ne_zero htriv
-      haveI hnt : Nontrivial V := Module.nontrivial_of_finrank_pos hfpos
-      haveI : Nontrivial ρ.asModule := hnt
-      haveI : NeZero ((Nat.card G : ℂ)) := ⟨by
+      have hnt : Nontrivial V := Module.nontrivial_of_finrank_pos hfpos
+      have : Nontrivial ρ.asModule := hnt
+      have : NeZero ((Nat.card G : ℂ)) := ⟨by
         rw [Nat.card_eq_fintype_card]
         exact_mod_cast Fintype.card_ne_zero⟩
-      haveI : IsSemisimpleRing (MonoidAlgebra ℂ G) := inferInstance
-      haveI : IsSemisimpleModule (MonoidAlgebra ℂ G) ρ.asModule :=
+      have : IsSemisimpleRing (MonoidAlgebra ℂ G) := inferInstance
+      have : IsSemisimpleModule (MonoidAlgebra ℂ G) ρ.asModule :=
         IsSemisimpleRing.isSemisimpleModule
       obtain ⟨T, hTsimp⟩ :=
         IsSemisimpleModule.exists_simple_submodule (MonoidAlgebra ℂ G)
           ρ.asModule
       obtain ⟨W, hTW⟩ := exists_isCompl T
-      haveI : Nontrivial (↥T) := IsSimpleModule.nontrivial (MonoidAlgebra ℂ G) T
+      have : Nontrivial (↥T) := IsSimpleModule.nontrivial (MonoidAlgebra ℂ G) T
       have hTpos : 0 < Module.finrank ℂ ↥(T.restrictScalars ℂ) := by
-        haveI : Nontrivial ↥(T.restrictScalars ℂ) := inferInstanceAs
+        have : Nontrivial ↥(T.restrictScalars ℂ) := inferInstanceAs
           (Nontrivial ↥T)
         exact Module.finrank_pos
       have hTW_C : IsCompl (T.restrictScalars ℂ : Submodule ℂ ρ.asModule)
@@ -141,13 +143,13 @@ private theorem character_eq_sum_nChar_aux {G : Type*} [Group G] [Fintype G] :
         refine Representation.Equiv.mk (eTS.symm.restrictScalars ℂ) (fun g
           => ?_)
         apply LinearMap.ext; intro ⟨v, hv⟩
-        simp only [comp_apply, LinearEquiv.coe_toLinearMap]
+        simp only [comp_apply]
         -- Both ρT and rhoS act by single g 1 •, and eTS.symm is
         --   MonoidAlgebra-linear
         change eTS.symm (ρT g ⟨v, hv⟩) = rhoS S₀ g (eTS.symm ⟨v, hv⟩)
         have h1 : ρT g ⟨v, hv⟩ = (MonoidAlgebra.single g (1 : ℂ)) •
             (⟨v, hv⟩ : ↥(T.restrictScalars ℂ)) := by
-          show (rhoSub ρ T) g ⟨v, hv⟩ = _
+          change (rhoSub ρ T) g ⟨v, hv⟩ = _
           have h := rhoSub_asAlgebraHom_apply ρ T (MonoidAlgebra.single g 1)
             ⟨v, hv⟩
           rw [Representation.asAlgebraHom_single, one_smul] at h
@@ -176,7 +178,7 @@ private theorem character_eq_sum_nChar_aux {G : Type*} [Group G] [Fintype G] :
           · exact fun _ hv => rho_mem_of_mem ρ T g hv
         have htrace := trace_eq_sum_trace_restrict hInt hMaps
         -- ρ.character g = trace ℂ V (ρ g) = trace ℂ ρ.asModule f
-        show (trace ℂ V) (ρ g) = (trace ℂ _) (ρT g) + (trace ℂ _) (ρW g)
+        change (trace ℂ V) (ρ g) = (trace ℂ _) (ρT g) + (trace ℂ _) (ρW g)
         change (trace ℂ ρ.asModule) f = _
         rw [htrace, Fintype.sum_bool]
         -- After sum_bool: trace on N true + trace on N false = ρT + ρW
@@ -208,13 +210,16 @@ private theorem character_eq_sum_nChar_aux {G : Type*} [Group G] [Fintype G] :
 
 /-- **Every character decomposes** into native characters of simple
 submodules of the regular module. -/
-theorem character_eq_sum_nChar {G : Type*} [Group G] [Fintype G]
+theorem character_eq_sum_nChar {G : Type*} [Group G] [Finite G]
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     [FiniteDimensional ℂ V] (ρ : Representation ℂ G V) :
     ∃ (m : ℕ) (S : Fin m → Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G)),
       (∀ i, IsSimpleModule (MonoidAlgebra ℂ G) (S i)) ∧
-      ∀ g : G, ρ.character g = ∑ i, nChar (S i) g :=
-  character_eq_sum_nChar_aux (Module.finrank ℂ V) ρ le_rfl
+      ∀ g : G, ρ.character g = ∑ i, nChar (S i) g := by
+  classical
+  let := Fintype.ofFinite G
+  exact
+    character_eq_sum_nChar_aux (Module.finrank ℂ V) ρ le_rfl
 
 end Main
 

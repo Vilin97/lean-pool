@@ -37,7 +37,7 @@ theorem oddInversions_adjacent {n : ℕ} (i : ℕ)
   -- otherwise the pair contributes nothing and the count is fixed.
   by_cases hodd : (c ⟨i, by omega⟩).isRight ∧
       (c ⟨i + 1, h2⟩).isRight
-  · rw [if_pos hodd]
+  · rw [ite_eq_left hodd]
     rw [show (univ.filter (fun p : Fin n × Fin n =>
         p.1 < p.2 ∧ _root_.Equiv.swap
           (⟨i, by omega⟩ : Fin n) ⟨i + 1, h2⟩ p.1 >
@@ -117,16 +117,16 @@ theorem oddInversions_adjacent {n : ℕ} (i : ℕ)
     · intro hp
       rw [hp]
       refine ⟨Fin.lt_def.mpr (by
-        show i < i + 1; omega), ?_, ?_, ?_⟩
+        change i < i + 1; omega), ?_, ?_, ?_⟩
       · rw [_root_.Equiv.swap_apply_left,
           _root_.Equiv.swap_apply_right]
         exact Fin.lt_def.mpr (by
-          show i < i + 1; omega)
+          change i < i + 1; omega)
       · rw [_root_.Equiv.swap_apply_left]
         exact hodd.2
       · rw [_root_.Equiv.swap_apply_right]
         exact hodd.1
-  · rw [if_neg hodd]
+  · rw [ite_eq_right hodd]
     rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff]
     rintro p _ ⟨hlt, hgt, ho1, ho2⟩
     refine hodd ?_
@@ -203,7 +203,7 @@ theorem starCoord_adjacent_repeat
   have hfix : c ∘ _root_.Equiv.swap
       (⟨i, by omega⟩ : Fin d) ⟨i + 1, h2⟩ = c := by
     funext x
-    show c (_root_.Equiv.swap _ _ x) = c x
+    change c (_root_.Equiv.swap _ _ x) = c x
     by_cases hx1 : x = (⟨i, by omega⟩ : Fin d)
     · rw [hx1, _root_.Equiv.swap_apply_left]
       exact heq.symm
@@ -216,7 +216,7 @@ theorem starCoord_adjacent_repeat
       ⟨i + 1, h2⟩) c
   rw [hfix] at hperm
   rw [oddInversions_adjacent i h2 c] at hperm
-  rw [if_pos ⟨hodd, heq ▸ hodd⟩] at hperm
+  rw [ite_eq_left ⟨hodd, heq ▸ hodd⟩] at hperm
   rw [pow_one] at hperm
   have h2x : starCoord f P e' d c =
       -(starCoord f P e' d c) := by
@@ -241,7 +241,7 @@ theorem starCoord_repeat_zero
     intro hgap
     have hb : i.val + 1 < d := by have := j.isLt; omega
     have hbj : (⟨i.val + 1, hb⟩ : Fin d) = j :=
-      Fin.ext (by show i.val + 1 = j.val; omega)
+      Fin.ext (by change i.val + 1 = j.val; omega)
     refine starCoord_adjacent_repeat f P e e' hee' he'e
       i.val hb c
       (show (c ⟨i.val, by omega⟩).isRight from by
@@ -267,23 +267,23 @@ theorem starCoord_repeat_zero
       have hb3 : j.val - 1 < d := by
         have := j.isLt; omega
       have hbj : (⟨j.val - 1 + 1, hj1⟩ : Fin d) = j :=
-        Fin.ext (by show j.val - 1 + 1 = j.val; omega)
+        Fin.ext (by change j.val - 1 + 1 = j.val; omega)
       refine ih (c ∘ σ) i ⟨j.val - 1, hb3⟩ hb1 ?_ ?_ hb2
-      · show (c (σ i)).isRight
+      · change (c (σ i)).isRight
         rw [show σ i = i from
           _root_.Equiv.swap_apply_of_ne_of_ne
             (Fin.ne_of_val_ne (by
-              show i.val ≠ j.val - 1; omega))
+              change i.val ≠ j.val - 1; omega))
             (Fin.ne_of_val_ne (by
-              show i.val ≠ j.val - 1 + 1; omega))]
+              change i.val ≠ j.val - 1 + 1; omega))]
         exact hodd
-      · show c (σ i) = c (σ ⟨j.val - 1, by omega⟩)
+      · change c (σ i) = c (σ ⟨j.val - 1, by omega⟩)
         rw [show σ i = i from
           _root_.Equiv.swap_apply_of_ne_of_ne
             (Fin.ne_of_val_ne (by
-              show i.val ≠ j.val - 1; omega))
+              change i.val ≠ j.val - 1; omega))
             (Fin.ne_of_val_ne (by
-              show i.val ≠ j.val - 1 + 1; omega))]
+              change i.val ≠ j.val - 1 + 1; omega))]
         rw [show σ ⟨j.val - 1, by
             have := j.isLt; omega⟩ =
           ⟨j.val - 1 + 1, hj1⟩ from

@@ -18,7 +18,7 @@ between them, and the block enumeration is key-sorted.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 

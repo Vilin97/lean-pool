@@ -222,25 +222,25 @@ unit. -/
     Module ℂ (X ⟶ Y) where
   smul c f := scalarSmul φ c f
   one_smul f := by
-    show scalarSmul φ 1 f = f
+    change scalarSmul φ 1 f = f
     rw [scalarSmul_eq, scalarEnd_one, Category.id_comp]
   mul_smul a b f := by
-    show scalarSmul φ (a * b) f = scalarSmul φ a (scalarSmul φ b f)
+    change scalarSmul φ (a * b) f = scalarSmul φ a (scalarSmul φ b f)
     rw [scalarSmul_eq, scalarSmul_eq, scalarSmul_eq, scalarEnd_mul,
       Category.assoc]
   smul_zero c := by
-    show scalarSmul φ c 0 = 0
+    change scalarSmul φ c 0 = 0
     rw [scalarSmul_eq, Limits.comp_zero]
   smul_add c f g := by
-    show scalarSmul φ c (f + g) = scalarSmul φ c f + scalarSmul φ c g
+    change scalarSmul φ c (f + g) = scalarSmul φ c f + scalarSmul φ c g
     rw [scalarSmul_eq, scalarSmul_eq, scalarSmul_eq,
       Preadditive.comp_add]
   add_smul a b f := by
-    show scalarSmul φ (a + b) f = scalarSmul φ a f + scalarSmul φ b f
+    change scalarSmul φ (a + b) f = scalarSmul φ a f + scalarSmul φ b f
     rw [scalarSmul_eq, scalarSmul_eq, scalarSmul_eq, scalarEnd_add,
       Preadditive.add_comp]
   zero_smul f := by
-    show scalarSmul φ 0 f = 0
+    change scalarSmul φ 0 f = 0
     rw [scalarSmul_eq, scalarEnd_zero, Limits.zero_comp]
 
 /-- **ℂ-linearity from the scalar unit**: a ring isomorphism
@@ -254,10 +254,10 @@ every existing linear structure, so callers install it by `letI`. -/
     CategoryTheory.Linear ℂ D where
   homModule X Y := scalarModule φ X Y
   smul_comp X Y Z r f g := by
-    show scalarSmul φ r f ≫ g = scalarSmul φ r (f ≫ g)
+    change scalarSmul φ r f ≫ g = scalarSmul φ r (f ≫ g)
     rw [scalarSmul_eq, scalarSmul_eq, Category.assoc]
   comp_smul X Y Z f r g := by
-    show f ≫ scalarSmul φ r g = scalarSmul φ r (f ≫ g)
+    change f ≫ scalarSmul φ r g = scalarSmul φ r (f ≫ g)
     rw [scalarSmul_eq, scalarSmul_eq, ← Category.assoc,
       ← scalarEnd_naturality, Category.assoc]
 
@@ -272,12 +272,12 @@ theorem monoidalLinearOfScalarUnit
     (h : ScalarBalanced φ) :
     letI := linearOfScalarUnit φ
     MonoidalLinear ℂ D := by
-  letI := linearOfScalarUnit φ
+  let := linearOfScalarUnit φ
   refine ⟨fun X {Y Z} r f => ?_, fun r {Y Z} f X => ?_⟩
-  · show X ◁ scalarSmul φ r f = scalarSmul φ r (X ◁ f)
+  · change X ◁ scalarSmul φ r f = scalarSmul φ r (X ◁ f)
     rw [scalarSmul_eq, scalarSmul_eq,
       MonoidalCategory.whiskerLeft_comp, whiskerLeft_scalarEnd φ h]
-  · show scalarSmul φ r f ▷ X = scalarSmul φ r (f ▷ X)
+  · change scalarSmul φ r f ▷ X = scalarSmul φ r (f ▷ X)
     rw [scalarSmul_eq, scalarSmul_eq, comp_whiskerRight,
       scalarEnd_whiskerRight]
 
@@ -325,16 +325,16 @@ colimits, hence binary biproducts, between preadditive
 categories. -/
 theorem indOf_additive [SmallCategory C] [Preadditive C] [HasFiniteColimits C] :
     (indOf (C := C)).Additive := by
-  haveI : Limits.HasFiniteBiproducts C :=
+  have : Limits.HasFiniteBiproducts C :=
     Limits.HasFiniteBiproducts.of_hasFiniteCoproducts
-  haveI : Limits.HasBinaryBiproducts C :=
+  have : Limits.HasBinaryBiproducts C :=
     Limits.hasBinaryBiproducts_of_finite_biproducts C
-  haveI : Limits.HasBinaryBiproducts (Ind C) :=
+  have : Limits.HasBinaryBiproducts (Ind C) :=
     Limits.hasBinaryBiproducts_of_finite_biproducts (Ind C)
-  haveI : (indOf (C := C)).PreservesZeroMorphisms :=
+  have : (indOf (C := C)).PreservesZeroMorphisms :=
     Functor.preservesZeroMorphisms_of_map_zero_object
       (isZero_indOf (Limits.isZero_zero C)).isoZero
-  haveI := Limits.preservesBinaryBiproducts_of_preservesBinaryCoproducts
+  have := Limits.preservesBinaryBiproducts_of_preservesBinaryCoproducts
     (indOf (C := C))
   exact Functor.additive_of_preservesBinaryBiproducts _
 
@@ -350,7 +350,7 @@ def indOfEndRingEquiv [SmallCategory C] [Preadditive C] [HasFiniteColimits C]
   map_mul' f g := by
     rw [End.mul_def, End.mul_def, Functor.map_comp]
   map_add' f g := by
-    haveI := indOf_additive (C := C)
+    have := indOf_additive (C := C)
     exact Functor.map_add (F := indOf (C := C))
 
 /-- **The scalar unit of `Ind C`**: a ring isomorphism

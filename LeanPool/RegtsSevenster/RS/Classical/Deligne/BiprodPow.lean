@@ -281,7 +281,7 @@ theorem sum_mixedFrom_mixedInto
           (letterFrom X Y b ≫ letterInto X Y b)) =
         𝟙 (tensorPow A (X ⊞ Y) (n + 1)) := by
       rw [← tensor_sum, Fintype.sum_bool]
-      show 𝟙 (tensorPow A (X ⊞ Y) n) ⊗ₘ
+      change 𝟙 (tensorPow A (X ⊞ Y) n) ⊗ₘ
           (biprod.fst ≫ biprod.inl + biprod.snd ≫ biprod.inr) = 𝟙 _
       rw [biprod.total, MonoidalCategory.id_tensorHom_id]
     exact e1.trans (e2.trans (e3.trans (e5.trans e6)))
@@ -379,7 +379,7 @@ theorem wordPow_const_true [Category.{v} A] [MonoidalCategory A]
   induction n with
   | zero => rfl
   | succ n ih =>
-    show wordPow X Y n (fun _ => true) ⊗ X = tensorPow A X n ⊗ X
+    change wordPow X Y n (fun _ => true) ⊗ X = tensorPow A X n ⊗ X
     rw [ih]
 
 /-- The sorted word power with empty second block is the pure
@@ -395,7 +395,7 @@ theorem wordPow_standard_succ [Category.{v} A] [MonoidalCategory A]
     (X Y : A) (p q : ℕ) :
     wordPow X Y (p + (q + 1)) (standardWord p (q + 1)) =
       wordPow X Y (p + q) (standardWord p q) ⊗ Y := by
-  show wordPow X Y (p + q)
+  change wordPow X Y (p + q)
         (standardWord p (q + 1) ∘ Fin.castSucc) ⊗
       (bif standardWord p (q + 1) (Fin.last (p + q)) then X else Y) =
     wordPow X Y (p + q) (standardWord p q) ⊗ Y
@@ -533,7 +533,7 @@ theorem mixedInto_const_true
   | zero =>
     exact (Category.id_comp _).symm
   | succ n ih =>
-    show mixedInto X Y n (fun _ => true) ⊗ₘ
+    change mixedInto X Y n (fun _ => true) ⊗ₘ
         (biprod.inl : X ⟶ X ⊞ Y) = _
     rw [ih]
     exact eqToHom_tensor_pull (wordPow_const_true X Y n) _ _

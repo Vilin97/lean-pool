@@ -129,7 +129,7 @@ theorem splitOfBase_mul
       (splitOfBase A M M' d ⊗ₘ splitOfBase A M M' d) ≫
         (letI := chainBGrMonObj A M M' d;
           μ[chainBGr A M M' d]) := by
-  show μ[A] ≫ splitOfBase A M M' d =
+  change μ[A] ≫ splitOfBase A M M' d =
     (splitOfBase A M M' d ⊗ₘ splitOfBase A M M' d) ≫
       chainBGrMul A M M' d
   refine Eq.symm ?_

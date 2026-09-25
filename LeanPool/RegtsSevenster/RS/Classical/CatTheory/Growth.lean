@@ -47,13 +47,13 @@ is at most the dimension of its endomorphism algebra, so an
 exponential bound on the latter is one on the former. -/
 theorem moderateLengthGrowth_of_endGrowth [Category.{v} A] [MonoidalCategory A]
     [Preadditive A]
-    [Linear ℂ A] [Abelian A] [HasFiniteBiproducts A]
+    [Linear ℂ A] [HasFiniteBiproducts A] (hab : Abelian A)
     (hss : IsSemisimple A)
     (hfd : HasFinDimHom A) (hgrow : ModerateEndGrowth A) :
     ModerateLengthGrowth A := by
   intro Y
   obtain ⟨C, c, hC⟩ := hgrow Y
   exact ⟨C, c, fun N =>
-    (lengthLE_finrank_end hss hfd (tensorPow A Y N)).mono (hC N)⟩
+    (lengthLE_finrank_end hab hss hfd (tensorPow A Y N)).mono (hC N)⟩
 
 end RS

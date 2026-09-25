@@ -19,7 +19,7 @@ function of the pairing, riding on the proved block connectivity.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 
@@ -54,7 +54,7 @@ theorem signedValueAt_eq [LinearOrder α] {W : Fragment α} {F : EdgeSubset W}
         F.throughSummand hM st hbnd o κ.openCircuitCount := by
   have hne : Nonempty {o : κ.Orientation // PathCanonical o} :=
     ⟨⟨o, hc⟩⟩
-  rw [signedValueAt, dif_pos hne]
+  rw [signedValueAt, dite_eq_left hne]
   exact congrArg (fun x => pathSign κ * x)
     (throughSummand_pathCanonical hM st hbnd
       (Classical.choice hne).prop hc _)
@@ -102,7 +102,7 @@ theorem signedValueAt_samePairing
       obtain ⟨o, hc⟩ := canonical_transfer_of_samePairing HLedger
         hM st hbnd (SamePairing.symm hsp) o' hc'
       exact h ⟨⟨o, hc⟩⟩
-    rw [signedValueAt, dif_neg h, signedValueAt, dif_neg h']
+    rw [signedValueAt, dite_eq_right h, signedValueAt, dite_eq_right h']
 
 end EdgeSubset
 

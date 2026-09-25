@@ -85,22 +85,22 @@ noncomputable def matEmbTensorIso
   hom_inv_id := by
     apply Mat_.hom_ext
     intro i j
-    haveI : Subsingleton (((Mat_.embedding D).obj x ⊗
+    have : Subsingleton (((Mat_.embedding D).obj x ⊗
         (Mat_.embedding D).obj y).ι) :=
       inferInstanceAs (Subsingleton (PUnit × PUnit))
     obtain rfl : i = j := Subsingleton.elim i j
     rw [Mat_.comp_apply, Mat_.id_apply_self]
-    show ∑ _j : PUnit, 𝟙 (x ⊗ y) ≫ 𝟙 (x ⊗ y) = 𝟙 (x ⊗ y)
+    change ∑ _j : PUnit, 𝟙 (x ⊗ y) ≫ 𝟙 (x ⊗ y) = 𝟙 (x ⊗ y)
     simp
   inv_hom_id := by
     apply Mat_.hom_ext
     intro i j
-    haveI : Subsingleton
+    have : Subsingleton
         (((Mat_.embedding D).obj (x ⊗ y)).ι) :=
       inferInstanceAs (Subsingleton PUnit)
     obtain rfl : i = j := Subsingleton.elim i j
     rw [Mat_.comp_apply, Mat_.id_apply_self]
-    show ∑ _j : PUnit × PUnit, 𝟙 (x ⊗ y) ≫ 𝟙 (x ⊗ y) =
+    change ∑ _j : PUnit × PUnit, 𝟙 (x ⊗ y) ≫ 𝟙 (x ⊗ y) =
       𝟙 (x ⊗ y)
     simp
 
@@ -146,35 +146,35 @@ object it corners. -/
 noncomputable def envAmbientSec (E : Env f) :
     E ⟶ (toKaroubi (Mat_ (Karoubi (SkeinObj f)))).obj E.X :=
   ⟨E.p, by
-    show E.p ≫ E.p ≫ 𝟙 E.X = E.p
+    change E.p ≫ E.p ≫ 𝟙 E.X = E.p
     rw [comp_id]; exact E.idem⟩
 
 /-- The ambient retraction. -/
 noncomputable def envAmbientRet (E : Env f) :
     (toKaroubi (Mat_ (Karoubi (SkeinObj f)))).obj E.X ⟶ E :=
   ⟨E.p, by
-    show 𝟙 E.X ≫ E.p ≫ E.p = E.p
+    change 𝟙 E.X ≫ E.p ≫ E.p = E.p
     rw [id_comp]; exact E.idem⟩
 
 /-- The envelope object is a retract of its ambient object. -/
 theorem envAmbientSec_ret (E : Env f) :
     envAmbientSec f E ≫ envAmbientRet f E = 𝟙 E := by
   apply Karoubi.hom_ext
-  show E.p ≫ E.p = E.p
+  change E.p ≫ E.p = E.p
   exact E.idem
 
 /-- The corner section: a skein corner into its full strand. -/
 noncomputable def cornerSecK (x : Karoubi (SkeinObj f)) :
     x ⟶ strandK f x.X.arity :=
   ⟨x.p, by
-    show x.p ≫ x.p ≫ 𝟙 (SkeinObj.mk x.X.arity) = x.p
+    change x.p ≫ x.p ≫ 𝟙 (SkeinObj.mk x.X.arity) = x.p
     rw [comp_id]; exact x.idem⟩
 
 /-- The corner retraction. -/
 noncomputable def cornerRetK (x : Karoubi (SkeinObj f)) :
     strandK f x.X.arity ⟶ x :=
   ⟨x.p, by
-    show 𝟙 (SkeinObj.mk x.X.arity) ≫ x.p ≫ x.p = x.p
+    change 𝟙 (SkeinObj.mk x.X.arity) ≫ x.p ≫ x.p = x.p
     rw [id_comp]; exact x.idem⟩
 
 /-- A Karoubi object is a retract of its corner in the
@@ -182,7 +182,7 @@ envelope. -/
 theorem cornerSecK_ret (x : Karoubi (SkeinObj f)) :
     cornerSecK f x ≫ cornerRetK f x = 𝟙 x := by
   apply Karoubi.hom_ext
-  show x.p ≫ x.p = x.p
+  change x.p ≫ x.p = x.p
   exact x.idem
 
 /-- The embedded corner object of the envelope. -/

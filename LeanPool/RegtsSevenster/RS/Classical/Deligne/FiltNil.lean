@@ -161,14 +161,14 @@ theorem comp_eq_zero_of_finChain
   refine comp_eq_zero_of_chain
     (fun k => if h : k ≤ N then F ⟨k, Nat.lt_succ_of_le h⟩ else ⊥)
     ?_ ?_ f ?_
-  · rw [dif_pos (Nat.zero_le N)]
+  · rw [dite_eq_left (Nat.zero_le N)]
     exact htop
-  · rw [dif_pos (le_refl N)]
+  · rw [dite_eq_left (le_refl N)]
     exact hbot
   · intro k hk
     have h1 : k ≤ N := Nat.le_of_lt hk
     have h2 : k + 1 ≤ N := hk
-    rw [dif_pos h2, dif_pos h1]
+    rw [dite_eq_left h2, dite_eq_left h1]
     exact hshift ⟨k, hk⟩
 
 /-- Convenience form of `eq_zero_of_idem_of_chain` with the chain

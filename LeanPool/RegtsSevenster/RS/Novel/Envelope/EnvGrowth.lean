@@ -69,7 +69,7 @@ theorem mat_hom_finrank_le (M N : Mat_ (Karoubi (SkeinObj f)))
     (hN : ∀ j, (N.X j).X.arity ≤ m) :
     Module.finrank ℂ (M ⟶ N) ≤
       Fintype.card M.ι * Fintype.card N.ι * (R + 1) ^ (2 * m) := by
-  haveI : ∀ p : M.ι × N.ι, Module.Finite ℂ
+  have : ∀ p : M.ι × N.ι, Module.Finite ℂ
       (HomSpace f.val
         ((M.X p.1).X.arity + (N.X p.2).X.arity)) :=
     fun p => inferInstance
@@ -130,7 +130,7 @@ theorem mat_pow_arity (A : Mat_ (Karoubi (SkeinObj f))) (m : ℕ)
         ≤ N * m
   | 0, p => Nat.le_of_eq (by rw [Nat.zero_mul]; rfl)
   | N + 1, p => by
-      show (((tensorPow (Mat_ (Karoubi (SkeinObj f))) A N).X
+      change (((tensorPow (Mat_ (Karoubi (SkeinObj f))) A N).X
           p.1).X).arity + ((A.X p.2).X).arity ≤ (N + 1) * m
       have h1 := mat_pow_arity A m hA N p.1
       have h2 := hA p.2

@@ -45,7 +45,7 @@ theorem card_fixing_pairs (p : Fin n → Fin k × Fin k) :
     · intro h
       funext i
       have h1 := congrFun h i
-      show finProdFinEquiv (p (π i)) = finProdFinEquiv (p i)
+      change finProdFinEquiv (p (π i)) = finProdFinEquiv (p i)
       rw [show p (π i) = p i from h1]
   have h1 : (Finset.univ.filter
       (fun π : Equiv.Perm (Fin n) => p ∘ π = p)).card =
@@ -62,8 +62,8 @@ theorem card_fixing_pairs (p : Fin n → Fin k × Fin k) :
     rw [fibreCard, pairFibre]
     congr 1
     refine Finset.filter_congr fun i _ => ?_
-    show finProdFinEquiv (p i) = j ↔ p i = finProdFinEquiv.symm j
-    exact Equiv.apply_eq_iff_eq_symm_apply finProdFinEquiv
+    change finProdFinEquiv (p i) = j ↔ p i = finProdFinEquiv.symm j
+    exact (Equiv.eq_symm_apply finProdFinEquiv).symm
   rw [Finset.prod_congr rfl (fun j _ => by rw [h2 j])]
   exact Equiv.prod_comp finProdFinEquiv.symm
     (fun c => (pairFibre p c).factorial)

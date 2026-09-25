@@ -58,7 +58,7 @@ theorem stdToOmega_bmc_cast {n₁ n₂ : ℕ} (h : n₁ = n₂) :
         P.ω.map (bundleMapClass f (finCongr h)) =
       eqToHom (congrArg (superPow (stdSuperPair k ℓ)) h) ≫
         stdToOmega f P e n₂ := by
-  letI := P.braided
+  let := P.braided
   subst h
   rw [show (finCongr (rfl : n₁ = n₁) : Fin n₁ ≃ Fin n₁) =
       _root_.Equiv.refl (Fin n₁) from

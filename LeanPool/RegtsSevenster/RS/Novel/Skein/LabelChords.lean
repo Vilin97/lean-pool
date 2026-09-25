@@ -18,7 +18,7 @@ index over which the pairing-resolved open-sector values live.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 

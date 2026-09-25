@@ -17,7 +17,7 @@ independence.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 
@@ -255,7 +255,7 @@ theorem mixedValue_eq_summand_closed
     {κ : F.TransitionSystem} (o : κ.Orientation) :
     F.mixedValue h = F.mixedSummand h o := by
   have hne : Nonempty ((κ' : F.TransitionSystem) × κ'.Orientation) := ⟨⟨κ, o⟩⟩
-  rw [EdgeSubset.mixedValue, dif_pos hne]
+  rw [EdgeSubset.mixedValue, dite_eq_left hne]
   exact eulerian_independence_closed W F h _ o
 
 end RS

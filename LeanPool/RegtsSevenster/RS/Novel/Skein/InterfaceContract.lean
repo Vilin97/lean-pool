@@ -28,8 +28,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Equiv Classical
-
+open Fragment Equiv
 /-- The lexicographic order on the recursion's label type. -/
 @[reducible] local instance contractOrder (n : ℕ) :
     LinearOrder (Fin (0 + n) ⊕ Fin (n + 0)) :=
@@ -160,7 +159,7 @@ theorem unglueDataOpen_apply
             (𝒟' t hct hEt hnet).1 (𝒟' t hct hEt hnet).2)⟩ := by
   subst hdrop
   unfold unglueDataOpen
-  rw [dif_pos hct]
+  rw [dite_eq_left hct]
 
 end UnglueData
 

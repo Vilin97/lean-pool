@@ -94,7 +94,7 @@ theorem twistShuffleCover_cond
       Category.assoc, h]
     simp only [Category.assoc]
   rw [actAcross, actAcross]
-  show ((β_ (V ⊗ R.X) A).hom ≫ (α_ A V R.X).inv ≫
+  change ((β_ (V ⊗ R.X) A).hom ≫ (α_ A V R.X).inv ≫
       ((β_ A V).hom ▷ R.X) ≫ (α_ V A R.X).hom ≫
       (V ◁ actLeft A R.X)) ▷ (W ⊗ S.X) ≫
       tensorμ V R.X W S.X ≫ ((V ⊗ W) ◁ modTensorπ A R S) =
@@ -338,7 +338,7 @@ theorem twistShuffleHom_twistShuffleInv
     (tensorLeftMod A W S)
   rw [modTensorπ_twistShuffleHom_assoc, Category.comp_id,
     twistShuffleCover]
-  show (tensorμ V R.X W S.X ≫
+  change (tensorμ V R.X W S.X ≫
       ((V ⊗ W) ◁ modTensorπ A R S)) ≫
       twistShuffleInv A V W R S =
     modTensorπ A (tensorLeftMod A V R) (tensorLeftMod A W S)
@@ -382,7 +382,7 @@ theorem twistShuffleHom_act
         twistShuffleHom A V W R S =
       (A ◁ twistShuffleHom A V W R S) ≫
         actAcross A (V ⊗ W) (modTensor A R S) := by
-  letI := modTensorModObj A R S
+  let := modTensorModObj A R S
   apply modTensor_whisker_hom_ext A (tensorLeftMod A V R)
     (tensorLeftMod A W S) A
   conv_lhs => rw [whiskerLeft_modTensorπ_act_assoc]
@@ -397,7 +397,7 @@ theorem twistShuffleHom_act
         ((V ⊗ W) ◁ modTensorAct A R S) from by
       rw [actAcross_eq_braidPast]
       rfl]
-  show (α_ A (V ⊗ R.X) (W ⊗ S.X)).inv ≫
+  change (α_ A (V ⊗ R.X) (W ⊗ S.X)).inv ≫
       (actAcross A V R.X ▷ (W ⊗ S.X)) ≫
       (tensorμ V R.X W S.X ≫ ((V ⊗ W) ◁ modTensorπ A R S)) =
     (A ◁ (tensorμ V R.X W S.X ≫
@@ -468,8 +468,8 @@ theorem twistShuffleInv_act
       (A ◁ twistShuffleInv A V W R S) ≫
         modTensorAct A (tensorLeftMod A V R)
           (tensorLeftMod A W S) := by
-  letI := modTensorModObj A R S
-  haveI : IsIso (twistShuffleHom A V W R S) :=
+  let := modTensorModObj A R S
+  have : IsIso (twistShuffleHom A V W R S) :=
     ⟨twistShuffleInv A V W R S,
       twistShuffleHom_twistShuffleInv A V W R S,
       twistShuffleInv_twistShuffleHom A V W R S⟩
@@ -519,7 +519,7 @@ noncomputable def tensorLeftModContextHom
     tensorLeftMod A V M ⟶ tensorLeftMod A V' M :=
   Mod.Hom.mk' (f ▷ M.X)
     (by
-      show actAcross A V M.X ≫ (f ▷ M.X) =
+      change actAcross A V M.X ≫ (f ▷ M.X) =
         (A ◁ (f ▷ M.X)) ≫ actAcross A V' M.X
       exact (actAcross_natural A f M.X).symm)
 
@@ -532,7 +532,7 @@ noncomputable def tensorLeftModWhiskerHom
     tensorLeftMod A V M ⟶ tensorLeftMod A V N :=
   Mod.Hom.mk' (V ◁ g.hom)
     (by
-      show actAcross A V M.X ≫ (V ◁ g.hom) =
+      change actAcross A V M.X ≫ (V ◁ g.hom) =
         (A ◁ (V ◁ g.hom)) ≫ actAcross A V N.X
       have hg : actLeft A M.X ≫ g.hom =
           (A ◁ g.hom) ≫ actLeft A N.X := IsModHom.smul_hom
@@ -551,11 +551,11 @@ noncomputable def tensorLeftModContextIso
   hom := tensorLeftModContextHom A e.hom M
   inv := tensorLeftModContextHom A e.inv M
   hom_inv_id := Mod.hom_ext _ _ (by
-    show (e.hom ▷ M.X) ≫ (e.inv ▷ M.X) = 𝟙 _
+    change (e.hom ▷ M.X) ≫ (e.inv ▷ M.X) = 𝟙 _
     rw [← MonoidalCategory.comp_whiskerRight, Iso.hom_inv_id,
       MonoidalCategory.id_whiskerRight])
   inv_hom_id := Mod.hom_ext _ _ (by
-    show (e.inv ▷ M.X) ≫ (e.hom ▷ M.X) = 𝟙 _
+    change (e.inv ▷ M.X) ≫ (e.hom ▷ M.X) = 𝟙 _
     rw [← MonoidalCategory.comp_whiskerRight, Iso.inv_hom_id,
       MonoidalCategory.id_whiskerRight])
 
@@ -569,13 +569,13 @@ noncomputable def tensorLeftModWhiskerIso
   hom := tensorLeftModWhiskerHom A V f.hom
   inv := tensorLeftModWhiskerHom A V f.inv
   hom_inv_id := Mod.hom_ext _ _ (by
-    show (V ◁ f.hom.hom) ≫ (V ◁ f.inv.hom) = 𝟙 _
+    change (V ◁ f.hom.hom) ≫ (V ◁ f.inv.hom) = 𝟙 _
     rw [← MonoidalCategory.whiskerLeft_comp,
       show f.hom.hom ≫ f.inv.hom = 𝟙 M.X from
         congrArg Mod.Hom.hom f.hom_inv_id,
       MonoidalCategory.whiskerLeft_id])
   inv_hom_id := Mod.hom_ext _ _ (by
-    show (V ◁ f.inv.hom) ≫ (V ◁ f.hom.hom) = 𝟙 _
+    change (V ◁ f.inv.hom) ≫ (V ◁ f.hom.hom) = 𝟙 _
     rw [← MonoidalCategory.whiskerLeft_comp,
       show f.inv.hom ≫ f.hom.hom = 𝟙 N.X from
         congrArg Mod.Hom.hom f.inv_hom_id,

@@ -75,7 +75,7 @@ theorem isIso_gammaPairComparison_of_retracts
     (h : ∀ i, IsIso (gammaPairComparison L R (M' i) N)) :
     IsIso (gammaPairComparison L R M N) := by
   classical
-  haveI := h
+  have := h
   have hnat : ∀ (P P' : Mod D R) (f : P ⟶ P'),
       SuperCommAlgebra.Mod.tensorHom (gammaFunMap L R f)
           (𝟙 (gammaModule D L R N.X)) ≫

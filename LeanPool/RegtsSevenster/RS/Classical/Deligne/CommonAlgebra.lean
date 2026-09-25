@@ -39,9 +39,9 @@ theorem exists_common_algebra [SmallCategory C] [MonoidalCategory C] [Abelian C]
     ∃ (𝔸 : Ind C) (_ : MonObj 𝔸) (_ : IsCommMonObj 𝔸),
       MonObj.one (X := 𝔸) ≠ 0 ∧
       ∀ i, ∃ φ : B i ⟶ 𝔸, IsMonHom φ := by
-  letI : DecidableRel (WellOrderingRel (α := ι)) :=
+  let : DecidableRel (WellOrderingRel (α := ι)) :=
     Classical.decRel _
-  letI : LinearOrder ι := linearOrderOfSTO WellOrderingRel
+  let : LinearOrder ι := linearOrderOfSTO WellOrderingRel
   refine ⟨bigTensor B, bigTensorMon B, bigTensorCommMon B,
     bigTensorUnit_ne_zero_ind B hu hB, ?_⟩
   intro i

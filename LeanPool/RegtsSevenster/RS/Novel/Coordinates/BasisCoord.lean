@@ -30,7 +30,7 @@ theorem coordOf_evenBasisVec {n : ℕ}
         {c : MixedColouring k ℓ n // c.IsEven})) c' =
       (colourPowerEquiv k ℓ n).evenEquiv
         (evenBasisVec ⟨c, hc⟩) ⟨c', hc'⟩ from by
-      unfold coordOf; rw [dif_pos hc']]
+      unfold coordOf; rw [dite_eq_left hc']]
     rw [show (colourPowerEquiv k ℓ n).evenEquiv
         (evenBasisVec (⟨c, hc⟩ :
           {c : MixedColouring k ℓ n // c.IsEven})) =
@@ -38,13 +38,13 @@ theorem coordOf_evenBasisVec {n : ℕ}
       (colourPowerEquiv k ℓ n).evenEquiv.apply_symm_apply _]
     by_cases he : c' = c
     · subst he
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       exact Pi.single_eq_same _ _
-    · rw [if_neg he]
+    · rw [ite_eq_right he]
       exact Pi.single_eq_of_ne
         (fun h => he (congrArg Subtype.val h)) _
   · rw [coordOf_odd _ _ hc']
-    rw [if_neg (fun he : c' = c => hc' (he ▸ hc))]
+    rw [ite_eq_right (fun he : c' = c => hc' (he ▸ hc))]
 
 /-- The arity-zero basis vector is the unit scalar. -/
 theorem evenBasisVec_zeroArity

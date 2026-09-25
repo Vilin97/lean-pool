@@ -562,7 +562,7 @@ theorem projFormula_linear
         Category.id_comp]
     exact modTensorDescAct_cast A B
       (restrictMod_baseChange_eq A B φ M) N _ _ _ _ hact
-  show modTensorAct B (baseChangeMod φ M)
+  change modTensorAct B (baseChangeMod φ M)
       (baseChangeMod φ N) ≫
       (collapseHom A B φ (baseChangeMod φ M) N ≫
         eqToHom (congrArg (fun P => modTensor A P N)

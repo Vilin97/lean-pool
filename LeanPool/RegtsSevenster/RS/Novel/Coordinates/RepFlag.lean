@@ -18,7 +18,7 @@ the Definition 5 odd lists.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 /-- The representative flag of a flag's edge: the one on the low
 slot half. -/
@@ -30,12 +30,12 @@ noncomputable def repFlag (W : ClosedFragment) (g : W.Flag) :
 /-- A flag on the low half represents its own edge. -/
 theorem repFlag_low (W : ClosedFragment) (g : W.Flag)
     (h : (starFlagEnum W g).val < edgeCount W) :
-    repFlag W g = g := if_pos h
+    repFlag W g = g := ite_eq_left h
 
 /-- A flag on the high half is represented by its partner. -/
 theorem repFlag_high (W : ClosedFragment) (g : W.Flag)
     (h : ¬ (starFlagEnum W g).val < edgeCount W) :
-    repFlag W g = W.pairing g := if_neg h
+    repFlag W g = W.pairing g := ite_eq_right h
 
 /-- The representative flag is pairing-invariant. -/
 theorem repFlag_pairing (W : ClosedFragment) (g : W.Flag) :
@@ -45,18 +45,18 @@ theorem repFlag_pairing (W : ClosedFragment) (g : W.Flag) :
     have hhigh : ¬ (starFlagEnum W (W.pairing g)).val <
         edgeCount W := by
       rw [hp]
-      show ¬ edgeCount W + _ < edgeCount W
+      change ¬ edgeCount W + _ < edgeCount W
       omega
-    rw [repFlag, if_neg hhigh, W.pairing_invol,
+    rw [repFlag, ite_eq_right hhigh, W.pairing_invol,
       repFlag_low W g h]
   · have hp := starFlagEnum_pairing_high W g h
     have hisLt := (starFlagEnum W g).isLt
     have hlow : (starFlagEnum W (W.pairing g)).val <
         edgeCount W := by
       rw [hp]
-      show (starFlagEnum W g).val - edgeCount W < edgeCount W
+      change (starFlagEnum W g).val - edgeCount W < edgeCount W
       omega
-    rw [repFlag, if_pos hlow, repFlag_high W g h]
+    rw [repFlag, ite_eq_left hlow, repFlag_high W g h]
 
 open Classical in
 /-- The flip set of an orientation: participating flags whose

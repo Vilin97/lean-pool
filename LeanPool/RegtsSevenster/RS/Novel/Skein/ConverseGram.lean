@@ -23,7 +23,7 @@ the converse it gives is `regts_sevenster_converse` in
 
 namespace RS
 
-open Classical
+
 
 /-- **THE CONVERSE FROM A SUPER-GRAM FACTORIZATION**: a
 state-indexed factorization of the connection pairing through the

@@ -26,7 +26,7 @@ noncomputable def psLog (t : ℕ → ℂ) : PowerSeries ℂ :=
 /-- The log series has no constant term. -/
 theorem constantCoeff_psLog (t : ℕ → ℂ) :
     constantCoeff (psLog t) = 0 := by
-  rw [← coeff_zero_eq_constantCoeff, psLog, coeff_mk, if_pos rfl]
+  rw [← coeff_zero_eq_constantCoeff, psLog, coeff_mk, ite_eq_left rfl]
 
 /-- Hence it can be substituted into the exponential. -/
 theorem hasSubst_psLog (t : ℕ → ℂ) : HasSubst (psLog t) :=
@@ -37,7 +37,7 @@ series. -/
 theorem derivative_psLog (t : ℕ → ℂ) :
     (PowerSeries.derivative (R := ℂ)) (psLog t) = powerSumSeries t := by
   ext n
-  rw [coeff_derivative, psLog, coeff_mk, if_neg (by omega)]
+  rw [coeff_derivative, psLog, coeff_mk, ite_eq_right (by omega)]
   rw [show coeff n (powerSumSeries t) = t (n + 1) from by
     rw [powerSumSeries, coeff_mk]]
   have hne : (((n + 1) : ℕ) : ℂ) ≠ 0 := by

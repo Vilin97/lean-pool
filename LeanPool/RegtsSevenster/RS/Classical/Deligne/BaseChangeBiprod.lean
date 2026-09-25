@@ -65,7 +65,7 @@ lemma modBiprodInl_fst [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     (M : Mod D A) (N : Mod D A) :
     modBiprodInl A M N ≫ modBiprodFst A M N = 𝟙 M := by
   apply Mod.hom_ext
-  show (biprod.inl : M.X ⟶ M.X ⊞ N.X) ≫ biprod.fst = 𝟙 M.X
+  change (biprod.inl : M.X ⟶ M.X ⊞ N.X) ≫ biprod.fst = 𝟙 M.X
   exact biprod.inl_fst
 
 /-- The second injection followed by the second projection is the
@@ -75,7 +75,7 @@ lemma modBiprodInr_snd [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     (M : Mod D A) (N : Mod D A) :
     modBiprodInr A M N ≫ modBiprodSnd A M N = 𝟙 N := by
   apply Mod.hom_ext
-  show (biprod.inr : N.X ⟶ M.X ⊞ N.X) ≫ biprod.snd = 𝟙 N.X
+  change (biprod.inr : N.X ⟶ M.X ⊞ N.X) ≫ biprod.snd = 𝟙 N.X
   exact biprod.inr_snd
 
 /-- **The forward map**: the base change of a biproduct projects
@@ -146,11 +146,10 @@ private lemma map_inl_snd
         (modBiprodSnd A M N) = 0 := by
   apply modTensor_hom_ext
   rw [modTensorπ_map_assoc, modTensorπ_map]
-  simp only [Mod.id_hom', modBiprodInl_hom, modBiprodSnd_hom,
-    MonoidalCategory.id_tensorHom]
+  simp only [Mod.id_hom', modBiprodInl_hom, modBiprodSnd_hom]
   repeat' erw [MonoidalCategory.id_tensorHom]
   erw [← MonoidalCategory.whiskerLeft_comp_assoc]
-  show B ◁ ((biprod.inl : M.X ⟶ M.X ⊞ N.X) ≫ biprod.snd) ≫
+  change B ◁ ((biprod.inl : M.X ⟶ M.X ⊞ N.X) ≫ biprod.snd) ≫
       modTensorπ A (restrictRegular φ) N =
     modTensorπ A (restrictRegular φ) M ≫ 0
   rw [biprod.inl_snd, MonoidalPreadditive.whiskerLeft_zero,
@@ -168,11 +167,10 @@ private lemma map_inr_fst
         (modBiprodFst A M N) = 0 := by
   apply modTensor_hom_ext
   rw [modTensorπ_map_assoc, modTensorπ_map]
-  simp only [Mod.id_hom', modBiprodInr_hom, modBiprodFst_hom,
-    MonoidalCategory.id_tensorHom]
+  simp only [Mod.id_hom', modBiprodInr_hom, modBiprodFst_hom]
   repeat' erw [MonoidalCategory.id_tensorHom]
   erw [← MonoidalCategory.whiskerLeft_comp_assoc]
-  show B ◁ ((biprod.inr : N.X ⟶ M.X ⊞ N.X) ≫ biprod.fst) ≫
+  change B ◁ ((biprod.inr : N.X ⟶ M.X ⊞ N.X) ≫ biprod.fst) ≫
       modTensorπ A (restrictRegular φ) M =
     modTensorπ A (restrictRegular φ) N ≫ 0
   rw [biprod.inr_fst, MonoidalPreadditive.whiskerLeft_zero,
@@ -214,7 +212,7 @@ theorem baseChangeBiprodFwd_bwd
   unfold baseChangeBiprodFwd baseChangeBiprodBwd
   erw [biprod.lift_desc]
   apply modTensor_hom_ext
-  show modTensorπ A (restrictRegular φ) (modBiprod A M N) ≫
+  change modTensorπ A (restrictRegular φ) (modBiprod A M N) ≫
       (modTensorMap A (𝟙 (restrictRegular φ))
           (modBiprodFst A M N) ≫
         modTensorMap A (𝟙 (restrictRegular φ))
@@ -229,8 +227,7 @@ theorem baseChangeBiprodFwd_bwd
   rw [modTensorπ_map_assoc, modTensorπ_map_assoc,
     modTensorπ_map, modTensorπ_map]
   simp only [Mod.id_hom', modBiprodFst_hom, modBiprodInl_hom,
-    modBiprodSnd_hom, modBiprodInr_hom,
-    MonoidalCategory.id_tensorHom]
+    modBiprodSnd_hom, modBiprodInr_hom]
   repeat' erw [MonoidalCategory.id_tensorHom]
   erw [← MonoidalCategory.whiskerLeft_comp_assoc,
     ← MonoidalCategory.whiskerLeft_comp_assoc,

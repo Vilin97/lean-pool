@@ -117,7 +117,7 @@ theorem mul_splitCoevalDual
     μ[B] ≫ splitCoevalDual A B φ v d hv =
       (B ◁ splitCoevalDual A B φ v d hv) ≫
         baseChangeAct φ M' := by
-  letI := baseChangeModObj φ M'
+  let := baseChangeModObj φ M'
   have hact : (μ[B] ▷ baseChange φ M') ≫ baseChangeAct φ M' =
       (α_ B B (baseChange φ M')).hom ≫
         (B ◁ baseChangeAct φ M') ≫ baseChangeAct φ M' :=
@@ -161,7 +161,7 @@ theorem splitCoevalDual_splitEval
       (splitCoevalCoreDual_splitEval A B φ v w hv hw
         p hp))) ?_
     exact hδ
-  show ((ρ_ B).inv ≫
+  change ((ρ_ B).inv ≫
       (B ◁ (η[A] ≫ d.copair ≫
         splitCoevalCoreDual A B φ v hv)) ≫
       baseChangeAct φ M') ≫ splitEval A B φ w hw = 𝟙 B
@@ -335,7 +335,7 @@ theorem splitComplActDual_one
     (η[B] ▷ splitComplDual A B φ v w d hv hw) ≫
         splitComplActDual A B φ v w d hv hw =
       (λ_ (splitComplDual A B φ v w d hv hw)).hom := by
-  letI := baseChangeModObj φ M'
+  let := baseChangeModObj φ M'
   have hι : ((η[B] ▷ splitComplDual A B φ v w d hv hw) ≫
       splitComplActDual A B φ v w d hv hw) ≫
       kernel.ι (splitIdemDual A B φ v w d hv hw) =
@@ -372,7 +372,7 @@ theorem splitComplActDual_mul
       (α_ B B (splitComplDual A B φ v w d hv hw)).hom ≫
         (B ◁ splitComplActDual A B φ v w d hv hw) ≫
         splitComplActDual A B φ v w d hv hw := by
-  letI := baseChangeModObj φ M'
+  let := baseChangeModObj φ M'
   have hι : ((μ[B] ▷ splitComplDual A B φ v w d hv hw) ≫
       splitComplActDual A B φ v w d hv hw) ≫
       kernel.ι (splitIdemDual A B φ v w d hv hw) =
@@ -548,7 +548,7 @@ noncomputable def splitDecompDual
     · erw [biprod.inr_desc_assoc, Category.comp_id]
       apply biprod.hom_ext
       · erw [Category.assoc, biprod.lift_fst, biprod.inr_fst]
-        haveI : IsSplitMono (splitCoevalDual A B φ v d hv) :=
+        have : IsSplitMono (splitCoevalDual A B φ v d hv) :=
           IsSplitMono.mk' ⟨splitEval A B φ w hw,
             splitCoevalDual_splitEval A B φ v w d hv hw
               p hp hδ⟩

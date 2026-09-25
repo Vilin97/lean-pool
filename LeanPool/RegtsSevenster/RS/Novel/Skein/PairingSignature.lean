@@ -18,7 +18,7 @@ holonomy bookkeeping.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 

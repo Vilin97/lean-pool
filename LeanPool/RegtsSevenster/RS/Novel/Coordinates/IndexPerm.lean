@@ -25,7 +25,7 @@ open Equiv
 
 /-- Duplicate-free lists with the same members have the same
 length. -/
-theorem length_eq_of_nodup_mem {γ : Type*} [DecidableEq γ] (l₁ l₂ : List γ)
+theorem length_eq_of_nodup_mem {γ : Type*} (l₁ l₂ : List γ)
     (h₁ : l₁.Nodup) (h₂ : l₂.Nodup) (hmem : ∀ x, x ∈ l₁ ↔ x ∈ l₂) :
     l₁.length = l₂.length := by
   have hp : l₁.Perm l₂ := (List.perm_ext_iff_of_nodup h₁ h₂).mpr
@@ -150,7 +150,7 @@ theorem sign_listIndexPerm_trans {γ : Type*} [DecidableEq γ]
   -- element l₁[i] in l₃.
   simp only [Perm.mul_apply]
   -- Unfold τ₂₃' to finCongr ∘ τ₂₃ ∘ finCongr
-  show τ₁₃ i = (finCongr hlen₁₂).symm (τ₂₃ ((finCongr hlen₁₂) (τ₁₂ i)))
+  change τ₁₃ i = (finCongr hlen₁₂).symm (τ₂₃ ((finCongr hlen₁₂) (τ₁₂ i)))
   -- Both sides yield l₃[..] = l₁[i]; use nodup of l₃ to equate indices
   apply Fin.ext
   simp only [finCongr_symm]

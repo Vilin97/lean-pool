@@ -82,7 +82,7 @@ matrix. -/
 theorem hMat_eq_submatrix (v : Fin k → ℕ) :
     hMat v = (jtMat v).submatrix id Fin.revPerm := by
   refine Matrix.ext fun i r => ?_
-  show hSubZ Finset.univ
+  change hSubZ Finset.univ
       ((v i : ℤ) + ((k : ℤ) - 1 - (r : ℕ)) - (i : ℕ)) =
     hSubZ Finset.univ
       ((v i : ℤ) + ((Fin.revPerm r : Fin k) : ℕ) - (i : ℕ))
@@ -105,15 +105,15 @@ theorem det_hMat (v : Fin k → ℕ) :
 unit diagonal. -/
 theorem det_jtMat_zero :
     (jtMat (fun _ : Fin k => 0)).det = 1 := by
-  rw [Matrix.det_of_upperTriangular]
+  rw [Matrix.det_of_isUpperTriangular]
   · refine Finset.prod_eq_one fun i _ => ?_
-    show hSubZ Finset.univ
+    change hSubZ Finset.univ
       (((0 : ℕ) : ℤ) + (i : ℕ) - (i : ℕ)) = 1
     rw [show (((0 : ℕ) : ℤ) + (i : ℕ) - (i : ℕ)) =
       ((0 : ℕ) : ℤ) from by omega]
     rw [hSubZ_natCast, hSub_zero]
   · intro i j hij
-    show hSubZ Finset.univ
+    change hSubZ Finset.univ
       (((0 : ℕ) : ℤ) + (j : ℕ) - (i : ℕ)) = 0
     have hlt : (j : ℕ) < (i : ℕ) := hij
     exact hSubZ_neg _ _ (by omega)

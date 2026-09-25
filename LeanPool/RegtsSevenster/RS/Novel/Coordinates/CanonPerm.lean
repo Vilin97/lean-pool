@@ -97,7 +97,7 @@ private theorem colourValueRank_injective :
   cases x with
   | inl a =>
     cases y with
-    | inl b => simp [colourValueRank] at hxy; exact congrArg Sum.inl (Fin.ext
+    | inl b => simp? [colourValueRank] at hxy; exact congrArg Sum.inl (Fin.ext
       hxy)
     | inr b => simp [colourValueRank] at hxy; omega
   | inr a =>
@@ -134,7 +134,7 @@ private theorem vr_comp_sigma_mono {d : ℕ} (c : MixedColouring k ℓ d) (_hd :
   | inl ai =>
     cases hcj : c sj with
     | inl aj =>
-      show ai.val ≤ aj.val
+      change ai.val ≤ aj.val
       have hcri : colourRank c si = ai.val * d + si.val :=
         by unfold colourRank; rw [hci]
       have hcrj : colourRank c sj = aj.val * d + sj.val :=
@@ -143,7 +143,7 @@ private theorem vr_comp_sigma_mono {d : ℕ} (c : MixedColouring k ℓ d) (_hd :
       have hsi := si.isLt; have hsj := sj.isLt
       nlinarith
     | inr bj =>
-      show ai.val ≤ k + bj.val
+      change ai.val ≤ k + bj.val
       have hai := ai.isLt; omega
   | inr bi =>
     cases hcj : c sj with
@@ -157,7 +157,7 @@ private theorem vr_comp_sigma_mono {d : ℕ} (c : MixedColouring k ℓ d) (_hd :
       have haj := aj.isLt; have hsj := sj.isLt
       nlinarith
     | inr bj =>
-      show k + bi.val ≤ k + bj.val
+      change k + bi.val ≤ k + bj.val
       have hcri : colourRank c si = k * d + bi.val * d + si.val := by
         unfold colourRank; rw [hci]
       have hcrj : colourRank c sj = k * d + bj.val * d + sj.val := by
@@ -178,14 +178,14 @@ private theorem vr_comp_canon_mono (μm : Multiset (Fin k)) (F : Finset (Fin (2 
   simp only
   split_ifs with h1 h2 h2
   · -- both left: sorted even values
-    show colourValueRank k (Sum.inl _) ≤ colourValueRank k (Sum.inl _)
+    change colourValueRank k (Sum.inl _) ≤ colourValueRank k (Sum.inl _)
     simp only [colourValueRank]
     have hpw := Multiset.pairwise_sort μm (· ≤ ·)
     have hlen := show (μm.sort (· ≤ ·)).length = μm.card from by simp
     exact hpw.sortedLE (Fin.mk_le_mk.mpr (by omega) :
       (⟨i, hlen ▸ h1⟩ : Fin _) ≤ ⟨j, hlen ▸ h2⟩)
   · -- left ≤ right
-    show colourValueRank k (Sum.inl _) ≤ colourValueRank k (Sum.inr _)
+    change colourValueRank k (Sum.inl _) ≤ colourValueRank k (Sum.inr _)
     simp only [colourValueRank]
     have hlen := show (μm.sort (· ≤ ·)).length = μm.card from by simp
     have hlt := ((μm.sort (· ≤ ·)).get ⟨i, hlen ▸ h1⟩).isLt
@@ -193,7 +193,7 @@ private theorem vr_comp_canon_mono (μm : Multiset (Fin k)) (F : Finset (Fin (2 
   · -- right, left: impossible
     exfalso; omega
   · -- both right: sorted odd values
-    show colourValueRank k (Sum.inr _) ≤ colourValueRank k (Sum.inr _)
+    change colourValueRank k (Sum.inr _) ≤ colourValueRank k (Sum.inr _)
     simp only [colourValueRank]
     show k + _ ≤ k + _
     have hpw := Finset.pairwise_sort F (· ≤ ·)
@@ -238,10 +238,10 @@ private theorem canon_as_concat (μm : Multiset (Fin k)) (F : Finset (Fin (2 *
         (μm.sort (· ≤ ·))).length = μm.card := by simp
     by_cases hlt : i < μm.card
     · have hfin : (finCongr h ⟨i, hi1⟩).val < μm.card := by simp [hlt]
-      rw [dif_pos hfin, List.getElem_append_left (by omega)]
+      rw [dite_eq_left hfin, List.getElem_append_left (by omega)]
       simp [List.getElem_map]
     · have hfin : ¬ (finCongr h ⟨i, hi1⟩).val < μm.card := by simp [hlt]
-      rw [dif_neg hfin, List.getElem_append_right (by omega)]
+      rw [dite_eq_right hfin, List.getElem_append_right (by omega)]
       simp [hlen_l, List.getElem_map]
 
 /-! ## Multiset equality between c and canon -/
@@ -299,7 +299,7 @@ private theorem pairInv_perm_inv {n : ℕ} (f : Perm (Fin n)) :
     · simp only [mem_filter, mem_univ, true_and]
       constructor
       · exact hmem.2
-      · show f (f.symm j) > f (f.symm i)
+      · change f (f.symm j) > f (f.symm i)
         simp only [Equiv.apply_symm_apply, gt_iff_lt]; exact hmem.1
     · simp only [Prod.mk.injEq]; exact ⟨Equiv.apply_symm_apply f i,
       Equiv.apply_symm_apply f j⟩
@@ -400,17 +400,17 @@ theorem filterMap_ofFn_sorted {β γ : Type*}
       · intro a b hab
         have ha := hpos a
         have hlt : (ps a).val < (ps b).val := hps hab
-        show (ps a).val - 1 < (ps b).val - 1
+        change (ps a).val - 1 < (ps b).val - 1
         omega
       · intro t
         have heq : (⟨(ps t).val - 1, hbd t⟩ : Fin d).succ = ps t := by
           apply Fin.ext; simp only [Fin.val_succ]; have := hpos t; omega
-        show g (f (⟨(ps t).val - 1, hbd t⟩ : Fin d).succ) = some (vals t)
+        change g (f (⟨(ps t).val - 1, hbd t⟩ : Fin d).succ) = some (vals t)
         rw [heq]; exact hgfp t
       · intro q hne
         show g (f q.succ) = none
         apply hgfn q.succ; intro t ht; apply hne t
-        apply Fin.ext; show (ps t).val - 1 = q.val
+        apply Fin.ext; change (ps t).val - 1 = q.val
         have h1 : (ps t).val = q.succ.val := congrArg Fin.val ht
         simp only [Fin.val_succ] at h1; omega
     | some b =>
@@ -445,7 +445,7 @@ theorem filterMap_ofFn_sorted {β γ : Type*}
         intro t
         have h1 : (ps ⟨0, Nat.zero_lt_succ n'⟩).val < (ps t.succ).val :=
           hps (show (⟨0, Nat.zero_lt_succ n'⟩ : Fin (n' + 1)) < t.succ from by
-            show 0 < t.val + 1; omega)
+            change 0 < t.val + 1; omega)
         simp only [hps0] at h1; exact h1
       have hbd : ∀ t : Fin n', (ps t.succ).val - 1 < d := by
         intro t; have := (ps t.succ).isLt; have := hpos t; omega
@@ -454,13 +454,13 @@ theorem filterMap_ofFn_sorted {β γ : Type*}
       · intro a b hab
         have ha := hpos a
         have hlt : (ps a.succ).val < (ps b.succ).val :=
-          hps (show a.succ < b.succ from by show a.val + 1 < b.val + 1; omega)
-        show (ps a.succ).val - 1 < (ps b.succ).val - 1
+          hps (show a.succ < b.succ from by change a.val + 1 < b.val + 1; omega)
+        change (ps a.succ).val - 1 < (ps b.succ).val - 1
         omega
       · intro t
         have heq : (⟨(ps t.succ).val - 1, hbd t⟩ : Fin d).succ = ps t.succ := by
           apply Fin.ext; simp only [Fin.val_succ]; have := hpos t; omega
-        show g (f (⟨(ps t.succ).val - 1, hbd t⟩ : Fin d).succ) = some (vals
+        change g (f (⟨(ps t.succ).val - 1, hbd t⟩ : Fin d).succ) = some (vals
           t.succ)
         rw [heq]; exact hgfp t.succ
       · intro q hne
@@ -473,7 +473,7 @@ theorem filterMap_ofFn_sorted {β γ : Type*}
             Fin.val heq)
             (by simp [Fin.val_succ])
         · intro heq; apply hne ⟨t', by omega⟩
-          apply Fin.ext; show (ps (⟨t' + 1, ht⟩ : Fin (n' + 1))).val - 1 = q.val
+          apply Fin.ext; change (ps (⟨t' + 1, ht⟩ : Fin (n' + 1))).val - 1 = q.val
           have h1 : (ps ⟨t' + 1, ht⟩).val = q.succ.val := congrArg Fin.val heq
           simp only [Fin.val_succ] at h1; omega
 
@@ -522,7 +522,7 @@ private theorem canonSortPerm_sign {d : ℕ} (c : MixedColouring k ℓ d)
     apply Fin.ext
     show a.val = b.val
     have := congrArg Fin.val hinj
-    simp at this; exact this
+    simp? at this; exact this
   -- g ∘ π is strictly monotone
   have gπ_mono : Monotone (g ∘ π) := Tuple.monotone_sort g
   have gπ_smono : StrictMono (g ∘ π) := fun a b hab =>
@@ -551,13 +551,13 @@ private theorem canonSortPerm_sign {d : ℕ} (c : MixedColouring k ℓ d)
       rw [isRight_comp] at hr1 hr2
       simp only [decide_eq_true_eq] at hr1 hr2
       constructor
-      · show p₁.val - m < p₂.val - m; omega
+      · change p₁.val - m < p₂.val - m; omega
       · have he1 : g ⟨p₁.val - m, by omega⟩ = σ p₁ := by
-          show σ ⟨m + (p₁.val - m), _⟩ = σ p₁
-          congr 1; apply Fin.ext; show m + (p₁.val - m) = p₁.val; omega
+          change σ ⟨m + (p₁.val - m), _⟩ = σ p₁
+          congr 1; apply Fin.ext; change m + (p₁.val - m) = p₁.val; omega
         have he2 : g ⟨p₂.val - m, by omega⟩ = σ p₂ := by
-          show σ ⟨m + (p₂.val - m), _⟩ = σ p₂
-          congr 1; apply Fin.ext; show m + (p₂.val - m) = p₂.val; omega
+          change σ ⟨m + (p₂.val - m), _⟩ = σ p₂
+          congr 1; apply Fin.ext; change m + (p₂.val - m) = p₂.val; omega
         rw [he1, he2]; exact hgt
     · -- injective
       intro ⟨a₁, b₁⟩ ha ⟨a₂, b₂⟩ hb heq
@@ -567,15 +567,15 @@ private theorem canonSortPerm_sign {d : ℕ} (c : MixedColouring k ℓ d)
       simp only [decide_eq_true_eq] at ha hb
       have ha1 := ha.2.1; have ha2 := ha.2.2
       have hb1 := hb.2.1; have hb2 := hb.2.2
-      exact Prod.ext (Fin.ext (by show a₁.val = a₂.val; omega))
-        (Fin.ext (by show b₁.val = b₂.val; omega))
+      exact Prod.ext (Fin.ext (by change a₁.val = a₂.val; omega))
+        (Fin.ext (by change b₁.val = b₂.val; omega))
     · -- surjective
       intro ⟨t₁, t₂⟩ ht
       simp only [mem_filter, mem_univ, true_and] at ht
       obtain ⟨hlt_t, hgt_t⟩ := ht
       refine ⟨(⟨m + t₁.val, by omega⟩, ⟨m + t₂.val, by omega⟩), ?_, ?_⟩
       · simp only [mem_filter, mem_univ, true_and]
-        refine ⟨by show m + t₁.val < m + t₂.val; omega, hgt_t, ?_, ?_⟩
+        refine ⟨by change m + t₁.val < m + t₂.val; omega, hgt_t, ?_, ?_⟩
         · rw [isRight_comp]; simp [show m ≤ m + t₁.val from Nat.le_add_right _
           _]
         · rw [isRight_comp]; simp [show m ≤ m + t₂.val from Nat.le_add_right _
@@ -608,9 +608,9 @@ private theorem canonSortPerm_sign {d : ℕ} (c : MixedColouring k ℓ d)
     unfold canonColouring
     have hge : ¬ (finCongr h ⟨m + (π t).val, by omega⟩).val < m := by
       simp [finCongr_apply]
-    rw [dif_neg hge]
+    rw [dite_eq_right hge]
     simp only [Sum.getRight?_inr, Option.some.injEq]
-    show (F.sort (· ≤ ·)).get
+    change (F.sort (· ≤ ·)).get
       ⟨(finCongr h ⟨m + (π t).val, by omega⟩).val - m, _⟩ = v (π t)
     have hval : (finCongr h ⟨m + (π t).val, by omega⟩).val - m = (π t).val := by
       simp [finCongr_apply]
@@ -622,9 +622,9 @@ private theorem canonSortPerm_sign {d : ℕ} (c : MixedColouring k ℓ d)
     have hq_low : (σ.symm q).val < m := by
       by_contra hge; push Not at hge
       have : g ⟨(σ.symm q).val - m, by omega⟩ = q := by
-        show σ ⟨m + ((σ.symm q).val - m), _⟩ = q
+        change σ ⟨m + ((σ.symm q).val - m), _⟩ = q
         rw [show (⟨m + ((σ.symm q).val - m), _⟩ : Fin d) = σ.symm q from
-          Fin.ext (by show m + ((σ.symm q).val - m) = (σ.symm q).val; omega)]
+          Fin.ext (by change m + ((σ.symm q).val - m) = (σ.symm q).val; omega)]
         exact σ.apply_symm_apply q
       have hmem : q ∈ Set.range (g ∘ ⇑π) := by
         rw [Set.range_comp]
@@ -636,11 +636,11 @@ private theorem canonSortPerm_sign {d : ℕ} (c : MixedColouring k ℓ d)
           canonColouring (evenMultisetOf c) F (finCongr h (σ.symm q))
             from congr_fun comp _]
     unfold canonColouring
-    rw [dif_pos (by simp [finCongr_apply]; exact hq_low)]
+    rw [dite_eq_left (by simp? [finCongr_apply]; exact hq_low)]
     exact Sum.getRight?_inl
   -- Step 3c: structural claim
   have step3 : oddListOf c = List.ofFn (v ∘ π) := by
-    show (List.ofFn c).filterMap Sum.getRight? = List.ofFn (v ∘ π)
+    change (List.ofFn c).filterMap Sum.getRight? = List.ofFn (v ∘ π)
     exact filterMap_ofFn_sorted (ps := fun t => g
       (π t)) gπ_smono step3_some step3_none
   -- ═══════ STAGE 4: v IS STRICTLY MONOTONE ═══════

@@ -100,10 +100,11 @@ private theorem koszulCrossings_eq_of_parity_match {k ℓ d : ℕ}
 /-- The swap map bijects upper-triangle to lower-triangle pairs
 in `S ×ˢ S`, so both halves have the same cardinality. -/
 private theorem card_filter_lt_eq_card_filter_gt
-    {α : Type*} [DecidableEq α] [LinearOrder α]
+    {α : Type*} [LinearOrder α]
     (S : Finset α) :
     ((S ×ˢ S).filter (fun p : α × α => p.1 < p.2)).card =
     ((S ×ˢ S).filter (fun p : α × α => p.2 < p.1)).card := by
+  classical
   have h : (S ×ˢ S).filter (fun p : α × α => p.1 < p.2) =
       ((S ×ˢ S).filter (fun p : α × α => p.2 < p.1)).image
         Prod.swap := by
@@ -121,10 +122,11 @@ private theorem card_filter_lt_eq_card_filter_gt
 /-- `2 * |{(i,j) ∈ S² | i < j}| = |S|² − |S|`:
 the strictly-ordered pairs are exactly half the off-diagonal. -/
 private theorem two_mul_strictPairs {α : Type*}
-    [DecidableEq α] [LinearOrder α] (S : Finset α) :
+    [LinearOrder α] (S : Finset α) :
     2 * ((S ×ˢ S).filter
       (fun p : α × α => p.1 < p.2)).card =
     S.card * S.card - S.card := by
+  classical
   have hcompl :
       (S ×ˢ S).filter (fun p : α × α => ¬ p.1 < p.2) =
       (S ×ˢ S).filter (fun p : α × α => p.1 = p.2) ∪

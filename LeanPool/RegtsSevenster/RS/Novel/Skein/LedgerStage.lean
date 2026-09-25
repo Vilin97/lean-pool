@@ -22,8 +22,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Equiv Classical
-
+open Fragment Equiv
 section StageOpen
 
 variable {α : Type} {W : Fragment α}
@@ -365,11 +364,11 @@ theorem ledgerStage_closed_bit
         + DirMatching.unionCount (cutMatching (Flb) κ o) N := by
   cases b with
   | false =>
-    rw [if_neg (by decide : ¬ (false = true)), Nat.add_zero]
+    rw [ite_eq_right (by decide : ¬ (false = true)), Nat.add_zero]
     exact ledgerStage_closed_miss hij hclosed s' hc' hcb E κ o o' o₀
       o'' ι hN hNr
   | true =>
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact ledgerStage_closed hclosed s' hc' hcb E κ o o' o₀ o''
       (boundaryFlag_mem_boundaryFlags
         ((boundaryFlagI_mem_liftClosed_iff hij s' true).mpr rfl))

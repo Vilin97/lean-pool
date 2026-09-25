@@ -65,7 +65,7 @@ theorem modPowOne_pairPow
     ((λ_ M'.X).inv ⊗ₘ (λ_ M.X).inv) ≫ t)
     (modPowπ_tensor_pairPow A M M' d 1)).trans ?_)
   rw [rawPair_succ, rawPair_zero, powPeel_zero]
-  show ((λ_ M'.X).inv ⊗ₘ (λ_ M.X).inv) ≫
+  change ((λ_ M'.X).inv ⊗ₘ (λ_ M.X).inv) ≫
       ((𝟙_ D ⊗ M'.X) ◁ (λ_ M.X ≪≫ (ρ_ M.X).symm).hom) ≫
       (α_ (𝟙_ D) M'.X (M.X ⊗ 𝟙_ D)).hom ≫
       (𝟙_ D ◁ (α_ M'.X M.X (𝟙_ D)).inv) ≫
@@ -251,15 +251,10 @@ theorem tensorHom_π_interchange_map
     (f.hom ⊗ₘ g.hom) ≫ modTensorπ A Q R :=
     modTensorπ_map A f g
   conv_lhs => arg 2; erw [Category.assoc]
-  change tensorμ N₁.X N₂.X P₁.X P₂.X ≫
-    (modTensorπ A N₁ P₁ ⊗ₘ modTensorπ A N₂ P₂) ≫
-    modTensorπ A (modTensorMod A N₁ P₁)
-      (modTensorMod A N₂ P₂) ≫
-    modTensorMap A f g = _
   refine congrArg (CategoryStruct.comp _) ?_
   refine (congrArg (CategoryStruct.comp _) h6).trans ?_
   erw [← Category.assoc]
-  show ((modTensorπ A N₁ P₁ ⊗ₘ modTensorπ A N₂ P₂) ≫
+  change ((modTensorπ A N₁ P₁ ⊗ₘ modTensorπ A N₂ P₂) ≫
       (f.hom ⊗ₘ g.hom)) ≫ modTensorπ A Q R = _
   erw [MonoidalCategory.tensorHom_comp_tensorHom]
 
@@ -311,7 +306,7 @@ private theorem powDeltaCore_layer1
     (β_ (modPow A M.X (n + 1)) (modPow A M.X (0 + 1))).hom ≫
       modPowMul A M.X (0 + 1) (n + 1) ≫
       modPowCast A M.X (by omega : 0 + 1 + n + 1 = n + 2) := by
-    show modTensorπ A (modPowMod A M.X n) (modPowMod A M.X 0) ≫
+    change modTensorπ A (modPowMod A M.X n) (modPowMod A M.X 0) ≫
       modTensorSwap A (modPowMod A M.X n) (modPowMod A M.X 0) ≫
       powMulDesc A M.X 0 n ≫
       modPowCast A M.X (by omega : 0 + 1 + n + 1 = n + 2) = _
@@ -320,7 +315,7 @@ private theorem powDeltaCore_layer1
   have hG : modTensorπ A (modPowMod A M'.X n)
       (modPowMod A M'.X 0) ≫ (powMulMod A M'.X n 0).hom =
     modPowMul A M'.X (n + 1) (0 + 1) := by
-    show modTensorπ A (modPowMod A M'.X n)
+    change modTensorπ A (modPowMod A M'.X n)
       (modPowMod A M'.X 0) ≫ powMulDesc A M'.X n 0 = _
     exact modTensorπ_powMulDesc A M'.X n 0
   rw [hF, hG]
@@ -585,7 +580,7 @@ private theorem powDeltaCore_raw
   have hraw1 : rawPair A M M' d (0 + 1) =
       ((λ_ M'.X).hom ⊗ₘ (λ_ M.X).hom) ≫ pairRaw A M M' d := by
     rw [rawPair_succ, rawPair_zero, powPeel_zero]
-    show ((𝟙_ D ⊗ M'.X) ◁ (λ_ M.X ≪≫ (ρ_ M.X).symm).hom) ≫
+    change ((𝟙_ D ⊗ M'.X) ◁ (λ_ M.X ≪≫ (ρ_ M.X).symm).hom) ≫
         (α_ (𝟙_ D) M'.X (M.X ⊗ 𝟙_ D)).hom ≫
         (𝟙_ D ◁ (α_ M'.X M.X (𝟙_ D)).inv) ≫
         (𝟙_ D ◁ (pairRaw A M M' d ▷ 𝟙_ D)) ≫
@@ -702,7 +697,7 @@ private theorem powDeltaCore_layer2
     (β_ (tensorPow D M.X (n + 2))
         (tensorPow D M'.X (n + 2))).hom ≫
       rawPair A M M' d (n + 2) := by
-    show (modPowπ A M.X (n + 2) ⊗ₘ modPowπ A M'.X (n + 2)) ≫
+    change (modPowπ A M.X (n + 2) ⊗ₘ modPowπ A M'.X (n + 2)) ≫
       (β_ (modPow A M.X (n + 2)) (modPow A M'.X (n + 2))).hom ≫
       pairPow A M M' d (n + 2) = _
     rw [BraidedCategory.braiding_naturality_assoc,
@@ -854,7 +849,7 @@ theorem powUnitStage_pairing
         modPowPairing A M M' d n = η[A]
   | 0 => powSeed_pairing A M M' d hzig
   | (n + 1) => by
-    show (powUnitStage A M M' d n ≫ powDelta A M M' d n) ≫ _ = _
+    change (powUnitStage A M M' d n ≫ powDelta A M M' d n) ≫ _ = _
     rw [Category.assoc, powDelta_pairing A M M' d hzig n]
     exact powUnitStage_pairing A M M' d hzig n
 
@@ -1009,7 +1004,7 @@ theorem modPowPairing_linear
     actLeft A (modTensor A (modPowMod A M'.X n)
         (modPowMod A M.X n)) ≫ modPowPairing A M M' d n =
       (A ◁ modPowPairing A M M' d n) ≫ μ[A] := by
-  letI := modTensorModObj A (modPowMod A M'.X n)
+  let := modTensorModObj A (modPowMod A M'.X n)
     (modPowMod A M.X n)
   apply modTensor_whisker_hom_ext A (modPowMod A M'.X n)
     (modPowMod A M.X n) A
@@ -1021,7 +1016,7 @@ theorem modPowPairing_linear
     modTensorπ_modPowPairing]
   conv_rhs => rw [← MonoidalCategory.whiskerLeft_comp_assoc,
     modTensorπ_modPowPairing]
-  show (α_ A (modPow A M'.X (n + 1))
+  change (α_ A (modPow A M'.X (n + 1))
       (modPow A M.X (n + 1))).inv ≫
     (modPowAct A M'.X n ▷ modPow A M.X (n + 1)) ≫
     pairPow A M M' d (n + 1) =

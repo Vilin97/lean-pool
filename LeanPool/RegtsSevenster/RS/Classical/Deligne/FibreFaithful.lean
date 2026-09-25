@@ -73,7 +73,7 @@ private theorem mixTotal
       Sum.elim (fun _ => 𝟙_ D) (fun _ => L.obj) k) i)).hom) ≫
           e.inv.hom := by
     intro i
-    show (e.hom.hom ≫
+    change (e.hom.hom ≫
         (freeModMap R (biproduct.π (fun k : Fin p ⊕ Fin q =>
       Sum.elim (fun _ => 𝟙_ D) (fun _ => L.obj) k) i)).hom) ≫
         ((freeModMap R (biproduct.ι (fun k : Fin p ⊕ Fin q =>
@@ -105,7 +105,7 @@ theorem whiskerLeft_eq_zero_of_fibre
   · have hz : (((λ_ (𝟙_ D)).inv ≫ (η[R] ▷ (𝟙_ D)) ≫
         (mixSec L R e (Sum.inl j)).hom) ≫
           (freeModMap R fm).hom) = 0 := by
-      show ((fibreFun L R).map fm).evenMap
+      change ((fibreFun L R).map fm).evenMap
         ((λ_ (𝟙_ D)).inv ≫ (η[R] ▷ (𝟙_ D)) ≫
           (mixSec L R e (Sum.inl j)).hom) = 0
       rw [h]
@@ -116,7 +116,7 @@ theorem whiskerLeft_eq_zero_of_fibre
   · have hz : (((λ_ L.obj).inv ≫ (η[R] ▷ L.obj) ≫
         (mixSec L R e (Sum.inr j)).hom) ≫
           (freeModMap R fm).hom) = 0 := by
-      show ((fibreFun L R).map fm).oddMap
+      change ((fibreFun L R).map fm).oddMap
         ((λ_ L.obj).inv ≫ (η[R] ▷ L.obj) ≫
           (mixSec L R e (Sum.inr j)).hom) = 0
       rw [h]
@@ -132,8 +132,8 @@ theorem eq_zero_of_whiskerLeft
     [∀ Z : D, (tensorRight Z).PreservesMonomorphisms]
     (hη : Mono η[R]) {V W : D}
     (fm : V ⟶ W) (h : R ◁ fm = 0) : fm = 0 := by
-  haveI := hη
-  haveI : Mono (η[R] ▷ W) :=
+  have := hη
+  have : Mono (η[R] ▷ W) :=
     (tensorRight W).map_mono η[R]
   have h1 : fm ≫ ((λ_ W).inv ≫ (η[R] ▷ W)) = 0 := by
     have h2 : (λ_ V).inv ≫ (η[R] ▷ V) ≫ (R ◁ fm) = 0 := by
@@ -141,7 +141,7 @@ theorem eq_zero_of_whiskerLeft
     rw [← whisker_exchange, ← Category.assoc,
       ← leftUnitor_inv_naturality, Category.assoc] at h2
     exact h2
-  haveI : Mono ((λ_ W).inv ≫ (η[R] ▷ W)) := mono_comp _ _
+  have : Mono ((λ_ W).inv ≫ (η[R] ▷ W)) := mono_comp _ _
   exact (cancel_mono ((λ_ W).inv ≫ (η[R] ▷ W))).mp
     (h1.trans (Limits.zero_comp).symm)
 

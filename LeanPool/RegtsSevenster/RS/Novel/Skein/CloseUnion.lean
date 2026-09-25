@@ -274,7 +274,7 @@ theorem fragTrace_tensor {R : ℕ} (f : EdgeRankParameter R)
         (strandBundle b))).trans
     (pairCloseUnionRight F₁ (strandBundle a)
       (pairClose F₂ (strandBundle b)))))
-  show f.val (pairClose (tensorFragment F₁ F₂)
+  change f.val (pairClose (tensorFragment F₁ F₂)
     (strandBundle (a + b))) = _
   rw [f.iso_invariant _ _ E, EdgeRankParameter.val_union]
   rfl

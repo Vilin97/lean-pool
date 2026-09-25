@@ -28,8 +28,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Equiv Classical
-
+open Fragment Equiv
 /-! ## The ledger reads only the matching
 
 Both quantities the ledger tracks — the circuit count and the chord
@@ -52,7 +51,7 @@ theorem chordInv_congr_matchEq {κ₁ κ₂ : F.RelTransitionSystem}
     rw [boundaryFlag_chordInv F κ₂ hb, boundaryFlag_chordInv F κ₁ hb,
       pathMatch_matchEq h hb]
   · unfold chordInv
-    rw [dif_neg hb, dif_neg hb]
+    rw [dite_eq_right hb, dite_eq_right hb]
 
 /-- **The cut matching's pairing reads only the matching.** -/
 theorem cutMatching_congr_matchEq

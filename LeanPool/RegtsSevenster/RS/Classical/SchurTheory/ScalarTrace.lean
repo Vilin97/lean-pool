@@ -46,7 +46,7 @@ theorem trace_asAlgebraHom_classElem
 acts on an irreducible representation as the character-pairing
 scalar divided by the dimension. -/
 theorem classElem_scalar_eq
-    [Group G] [Fintype G] [DecidableEq G] [AddCommGroup V] [Module ℂ V]
+    [Group G] [Fintype G] [AddCommGroup V] [Module ℂ V]
     [FiniteDimensional ℂ V]
     {ρ : Representation ℂ G V}
     (hirr : IsIrredRep ρ) (c : G → ℂ)
@@ -54,11 +54,12 @@ theorem classElem_scalar_eq
     ρ.asAlgebraHom (classElem c) =
       ((∑ g : G, c g * ρ.character g) /
         (Module.finrank ℂ V : ℂ)) • LinearMap.id := by
+  classical
   obtain ⟨z, hz⟩ := asAlgebraHom_classElem_scalar hirr c hc
   have htr := trace_asAlgebraHom_classElem ρ c
   rw [hz] at htr ⊢
   rw [map_smul, trace_id, smul_eq_mul] at htr
-  haveI : Nontrivial V := hirr.1
+  have : Nontrivial V := hirr.1
   have hdim : (Module.finrank ℂ V : ℂ) ≠ 0 :=
     Nat.cast_ne_zero.mpr Module.finrank_pos.ne'
   congr 1

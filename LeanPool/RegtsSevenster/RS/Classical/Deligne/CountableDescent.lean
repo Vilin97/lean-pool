@@ -684,7 +684,7 @@ theorem countablyPresented_imageSubalgebra
     intro n
     rw [hτ]
     exact inferInstanceAs (IsIso (e n).inv)
-  haveI : IsIso τ := NatIso.isIso_of_isIso_app τ
+  have : IsIso τ := NatIso.isIso_of_isIso_app τ
   refine CountablyPresented.of_iso
     (HasColimit.isoOfNatIso
       (CategoryTheory.Functor.isoWhiskerLeft (AsSmall.down (C := ℕ))

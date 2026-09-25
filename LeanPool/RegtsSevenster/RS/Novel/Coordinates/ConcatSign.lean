@@ -16,7 +16,7 @@ blocks are disjoint and ordered, so concatenation adds no inversions.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 
@@ -111,6 +111,7 @@ theorem sortKey_mem_block (W : ClosedFragment) (F : EdgeSubset W)
     (hf : f ∈ pairFlagList (F := F) o (blockVertex W v)) :
     ∃ j : Fin ((ds W).get v),
       sortKey W f.val = blockSigmaEquiv (ds W) ⟨v, j⟩ := by
+  classical
   have hatt := (mem_pairFlagList o (blockVertex W v) f).mp hf
   have hvtx : ClosedFragment.vertexOf W f.val = blockVertex W v :=
     Sum.inl.inj
@@ -138,7 +139,7 @@ theorem globalPairList_nodup (W : ClosedFragment)
   · have hpw : (List.finRange (ds W).length).Pairwise (· < ·) :=
       (List.sortedLT_finRange _).pairwise
     exact hpw.imp (fun {v₁ v₂} hlt => by
-      show List.Disjoint _ _
+      change List.Disjoint _ _
       intro x hx₁ hx₂
       have h₁ := (mem_pairFlagList o (blockVertex W v₁) x).mp hx₁
       have h₂ := (mem_pairFlagList o (blockVertex W v₂) x).mp hx₂

@@ -53,7 +53,7 @@ theorem t_identity (v : Fin k → ℕ)
   rw [← h2]
   refine Finset.sum_congr rfl fun τ _ => ?_
   by_cases hle : stairShift τ ≤ diagExp v
-  · rw [if_pos hle, if_pos hle, coeff_det_jtMat]
-  · rw [if_neg hle, if_neg hle]
+  · rw [ite_eq_left hle, ite_eq_left hle, coeff_det_jtMat]
+  · rw [ite_eq_right hle, ite_eq_right hle]
 
 end RS

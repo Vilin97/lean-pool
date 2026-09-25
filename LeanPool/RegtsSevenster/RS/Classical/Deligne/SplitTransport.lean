@@ -66,7 +66,7 @@ theorem baseChangeFreeIso_inv_natural
         baseChangeMapMod A B φ (freeModMap A f) := by
   apply Mod.Hom.ext
   rw [Mod.comp_hom', Mod.comp_hom']
-  show (B ◁ f) ≫ baseChangeFreeInv A B φ W =
+  change (B ◁ f) ≫ baseChangeFreeInv A B φ W =
     baseChangeFreeInv A B φ V ≫
       (baseChangeMapMod A B φ (freeModMap A f)).hom
   exact baseChangeFreeInv_natural A B φ f

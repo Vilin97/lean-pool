@@ -39,13 +39,13 @@ theorem devissageStepA
     (L : OddLine (Ind C)) (X : Ind C) :
     DevissageStepA (Ind C) L X := by
   intro st hSym
-  letI := st.monObj
-  letI := st.comm
+  let := st.monObj
+  let := st.comm
   obtain ⟨sd⟩ := keyLemmaData_ind st.base st.rest st.restDual
     st.datum st.zigzag st.unit_ne_zero hSym
-  letI := sd.monObj
-  letI := sd.comm
-  letI := sd.ofBase_monHom
+  let := sd.monObj
+  let := sd.comm
+  let := sd.ofBase_monHom
   obtain ⟨e⟩ := st.decomp
   refine ⟨{ base := sd.carrier
             monObj := sd.monObj

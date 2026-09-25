@@ -23,13 +23,13 @@ theorem interleave_unit_left (s t : ℕ) (ℓ : Fin (s + t)) :
   by_cases hl : ℓ.val < s
   · rw [show ℓ = Fin.castAdd t ⟨ℓ.val, hl⟩ from Fin.ext rfl,
       interleaveEquiv_inr_low]
-    exact Fin.ext (by show 0 + ℓ.val = ℓ.val; omega)
+    exact Fin.ext (by change 0 + ℓ.val = ℓ.val; omega)
   · have hk : ℓ.val - s < t := by have := ℓ.isLt; omega
     rw [show ℓ = Fin.natAdd s ⟨ℓ.val - s, hk⟩ from
-        Fin.ext (by show ℓ.val = s + (ℓ.val - s); omega),
+        Fin.ext (by change ℓ.val = s + (ℓ.val - s); omega),
       interleaveEquiv_inr_high]
     exact Fin.ext (by
-      show (0 + s) + (0 + (ℓ.val - s)) = s + (ℓ.val - s)
+      change (0 + s) + (0 + (ℓ.val - s)) = s + (ℓ.val - s)
       omega)
 
 /-- The interleave against an empty right factor is the cast. -/
@@ -42,10 +42,10 @@ theorem interleave_unit_right (s t : ℕ) (ℓ : Fin (s + t)) :
     exact Fin.ext rfl
   · have hk : ℓ.val - s < t := by have := ℓ.isLt; omega
     rw [show ℓ = Fin.natAdd s ⟨ℓ.val - s, hk⟩ from
-        Fin.ext (by show ℓ.val = s + (ℓ.val - s); omega),
+        Fin.ext (by change ℓ.val = s + (ℓ.val - s); omega),
       interleaveEquiv_inl_high]
     exact Fin.ext (by
-      show (s + 0) + (ℓ.val - s) = s + (ℓ.val - s)
+      change (s + 0) + (ℓ.val - s) = s + (ℓ.val - s)
       omega)
 
 /-- **The left unit**: the empty fragment tensors away. -/
@@ -63,7 +63,7 @@ noncomputable def tensorFragmentUnitLeft {s t : ℕ}
   attach_comm := fun f => by
     rcases f with f | f
     · exact f.elim
-    · show (X.attach f).map id
+    · change (X.attach f).map id
         (finCongr (by omega : s + t = (0 + s) + (0 + t))) =
         Sum.map (show (Empty ⊕ X.Vertex) ≃ X.Vertex from
           _root_.Equiv.emptySum Empty X.Vertex) id
@@ -77,7 +77,7 @@ noncomputable def tensorFragmentUnitLeft {s t : ℕ}
     · exact f.elim
     · rfl
   circles_eq := by
-    show 0 + X.circles = X.circles
+    change 0 + X.circles = X.circles
     omega
 
 /-- **The right unit**: the empty fragment tensors away. -/
@@ -94,7 +94,7 @@ noncomputable def tensorFragmentUnitRight {s t : ℕ}
       _root_.Equiv.sumEmpty X.Vertex Empty
   attach_comm := fun f => by
     rcases f with f | f
-    · show (X.attach f).map id
+    · change (X.attach f).map id
         (finCongr (by omega : s + t = (s + 0) + (t + 0))) =
         Sum.map (show (X.Vertex ⊕ Empty) ≃ X.Vertex from
           _root_.Equiv.sumEmpty X.Vertex Empty) id
@@ -109,7 +109,7 @@ noncomputable def tensorFragmentUnitRight {s t : ℕ}
     · rfl
     · exact f.elim
   circles_eq := by
-    show X.circles + 0 = X.circles
+    change X.circles + 0 = X.circles
     omega
 
 end RS

@@ -62,7 +62,7 @@ theorem exists_intermediate_diagram {lam mu : YoungDiagram}
       exact Or.inr (lam.isLowerSet hba hlam_a)
   · -- lam ≤ nu: lam.cells ⊆ insert c lam.cells
     intro x hx
-    show x ∈ (insert c lam.cells : Finset _)
+    change x ∈ (insert c lam.cells : Finset _)
     exact mem_insert.mpr (Or.inr hx)
   · -- nu ≤ mu: insert c lam.cells ⊆ mu.cells
     intro x hx
@@ -71,7 +71,7 @@ theorem exists_intermediate_diagram {lam mu : YoungDiagram}
     · exact hc_mu
     · exact hle hlam
   · -- nu.card = lam.card + 1
-    show (insert c lam.cells).card = lam.cells.card + 1
+    change (insert c lam.cells).card = lam.cells.card + 1
     exact card_insert_of_notMem hc_nlam
 
 end RS

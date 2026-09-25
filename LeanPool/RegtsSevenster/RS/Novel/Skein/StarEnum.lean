@@ -76,20 +76,20 @@ noncomputable def repSplitEquiv :
   invFun := repSplitInv W
   left_inv f := by
     by_cases h : f ∈ canonicalReps W
-    · have h1 : repSplitFun W f = Sum.inl ⟨f, h⟩ := dif_pos h
+    · have h1 : repSplitFun W f = Sum.inl ⟨f, h⟩ := dite_eq_left h
       rw [h1]
       rfl
     · have h1 : repSplitFun W f =
           Sum.inr ⟨W.pairing f,
-            (mem_or_pairing_mem W f).resolve_left h⟩ := dif_neg h
+            (mem_or_pairing_mem W f).resolve_left h⟩ := dite_eq_right h
       rw [h1]
       exact W.pairing_invol f
   right_inv s := by
     rcases s with x | x
-    · show repSplitFun W x.val = Sum.inl x
-      exact dif_pos x.prop
-    · show repSplitFun W (W.pairing x.val) = Sum.inr x
-      exact (dif_neg (pairing_notMem_canonicalReps W x.prop)).trans
+    · change repSplitFun W x.val = Sum.inl x
+      exact dite_eq_left x.prop
+    · change repSplitFun W (W.pairing x.val) = Sum.inr x
+      exact (dite_eq_right (pairing_notMem_canonicalReps W x.prop)).trans
         (congrArg Sum.inr (Subtype.ext (W.pairing_invol x.val)))
 
 /-- The list-position equivalence of the representatives. -/
@@ -153,11 +153,11 @@ theorem starEnum_rep (j : ℕ) (hj : j < (canonicalReps W).length) :
       Fin.castAdd (edgeCount W) ⟨j, hj⟩ := by
   have hmem : (canonicalReps W)[j]'hj ∈ canonicalReps W :=
     List.getElem_mem hj
-  show finSumFinEquiv
+  change finSumFinEquiv
     ((Equiv.sumCongr (repIndexEquiv W) (repIndexEquiv W))
       (repSplitEquiv W ((canonicalReps W)[j]'hj))) = _
   have h1 : repSplitEquiv W ((canonicalReps W)[j]'hj) =
-      Sum.inl ⟨(canonicalReps W)[j]'hj, hmem⟩ := dif_pos hmem
+      Sum.inl ⟨(canonicalReps W)[j]'hj, hmem⟩ := dite_eq_left hmem
   rw [h1, Equiv.sumCongr_apply, Sum.map_inl]
   have h2 : repIndexEquiv W ⟨(canonicalReps W)[j]'hj, hmem⟩ =
       ⟨j, hj⟩ := by
@@ -181,13 +181,13 @@ theorem starEnum_partner (j : ℕ)
   have hnot : W.pairing ((canonicalReps W)[j]'hj) ∉
       canonicalReps W :=
     pairing_notMem_canonicalReps W hmem
-  show finSumFinEquiv
+  change finSumFinEquiv
     ((Equiv.sumCongr (repIndexEquiv W) (repIndexEquiv W))
       (repSplitEquiv W (W.pairing ((canonicalReps W)[j]'hj)))) = _
   have h1 : repSplitEquiv W (W.pairing ((canonicalReps W)[j]'hj)) =
       Sum.inr ⟨W.pairing (W.pairing ((canonicalReps W)[j]'hj)),
         (mem_or_pairing_mem W _).resolve_left hnot⟩ :=
-    dif_neg hnot
+    dite_eq_right hnot
   rw [h1, Equiv.sumCongr_apply, Sum.map_inr]
   have h2 : repIndexEquiv W
       ⟨W.pairing (W.pairing ((canonicalReps W)[j]'hj)),
@@ -198,7 +198,7 @@ theorem starEnum_partner (j : ℕ)
         List.Nodup.getEquiv (canonicalReps W)
           (canonicalReps_nodup W) ⟨j, hj⟩ from
       Subtype.ext (by
-        show W.pairing (W.pairing ((canonicalReps W)[j]'hj)) = _
+        change W.pairing (W.pairing ((canonicalReps W)[j]'hj)) = _
         rw [W.pairing_invol]
         rfl)]
     exact Equiv.symm_apply_apply _ _
@@ -224,7 +224,7 @@ theorem repPairs_getElem (C : Finset W.Flag) (hC : CutClosed W C) :
   | [], _, j, hj, _ => absurd hj (by simp [repPairs])
   | x :: l, h, 0, _, _ => rfl
   | x :: l, h, j + 1, hj, hj' => by
-    show (repPairs W C hC l _)[j]'_ = _
+    change (repPairs W C hC l _)[j]'_ = _
     exact repPairs_getElem C hC l _ j _ (by simpa using hj')
 
 /-- The enumerated canonical matching is the straight matching. -/
@@ -275,7 +275,7 @@ theorem starUnion_surv_isEmpty :
     (repPairs W Finset.univ (fullCut_closed W) (canonicalReps W)
       (fun _ _ => Finset.mem_univ _))
   rw [mapPairs_repPairs W] at e
-  haveI := canonical_surv_isEmpty W
+  have := canonical_surv_isEmpty W
   exact Function.isEmpty e.symm
 
 /-- **The star union self-glue**: gluing the straight matching in
@@ -286,7 +286,7 @@ theorem starUnion_reglue :
       (W.relabel
         (haveI := starUnion_surv_isEmpty W
          Equiv.equivOfIsEmpty (Fin 0) _))) := by
-  haveI := starUnion_surv_isEmpty W
+  have := starUnion_surv_isEmpty W
   obtain ⟨D⟩ := starDecomposition W
   have G := Fragment.glueListRelabel
     (explodeAt W Finset.univ (fullCut_closed W)) (starEnum W)

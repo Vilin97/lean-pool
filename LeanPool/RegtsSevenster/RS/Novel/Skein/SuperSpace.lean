@@ -29,7 +29,7 @@ the tower's colour kernel, which pairs the odd colours through
 
 namespace RS
 
-open Classical
+
 
 /-- **The symplectic matrix** `J = [[0, I], [-I, 0]]` in
 coordinates: `J c d` is `1` when `d = c + ℓ`, `-1` when
@@ -60,8 +60,8 @@ theorem eq_oddPartner_iff {ℓ : ℕ} (c d : Fin (2 * ℓ)) :
       ↔ (if c.val < ℓ then d.val = c.val + ℓ else d.val = c.val - ℓ) := by
   unfold oddPartner
   by_cases h : c.val < ℓ
-  · rw [dif_pos h, if_pos h, Fin.ext_iff]
-  · rw [dif_neg h, if_neg h, Fin.ext_iff]
+  · rw [dite_eq_left h, ite_eq_left h, Fin.ext_iff]
+  · rw [dite_eq_right h, ite_eq_right h, Fin.ext_iff]
 
 /-! ### The dual basis at outgoing ends
 
@@ -84,8 +84,8 @@ theorem dualSign_sq (ℓ : ℕ) (c : Fin (2 * ℓ)) :
     dualSign ℓ c * dualSign ℓ c = 1 := by
   unfold dualSign oddPartnerSign
   by_cases h : c.val < ℓ
-  · rw [if_pos h]; norm_num
-  · rw [if_neg h]; norm_num
+  · rw [ite_eq_left h]; norm_num
+  · rw [ite_eq_right h]; norm_num
 
 /-- The partner colour in coordinates. -/
 theorem oddPartner_val (ℓ : ℕ) (c : Fin (2 * ℓ)) :
@@ -101,13 +101,13 @@ theorem superLeg_f_g (ℓ : ℕ) (c : Fin (2 * ℓ)) :
   have hv := oddPartner_val ℓ c
   unfold dualSign symplecticJ oddPartnerSign
   by_cases h : c.val < ℓ
-  · rw [if_pos h] at hv
-    rw [if_pos hv, if_pos h]
+  · rw [ite_eq_left h] at hv
+    rw [ite_eq_left hv, ite_eq_left h]
     norm_num
-  · rw [if_neg h] at hv
-    rw [if_neg (show ¬ ((oddPartner ℓ c).val = c.val + ℓ) by omega),
-      if_pos (show c.val = (oddPartner ℓ c).val + ℓ by omega),
-      if_neg h]
+  · rw [ite_eq_right h] at hv
+    rw [ite_eq_right (show ¬ ((oddPartner ℓ c).val = c.val + ℓ) by omega),
+      ite_eq_left (show c.val = (oddPartner ℓ c).val + ℓ by omega),
+      ite_eq_right h]
     norm_num
 
 /-! ### The through-edge factor is the dual basis at one end

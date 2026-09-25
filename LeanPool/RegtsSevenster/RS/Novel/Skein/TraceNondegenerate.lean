@@ -52,7 +52,7 @@ theorem connectionMap_eq_trace_row (f : ClosedFragment → ℂ)
     rfl
   | add y z hy hz =>
     rw [map_add]
-    show connectionMap f (t + u) y H +
+    change connectionMap f (t + u) y H +
       connectionMap f (t + u) z H = _
     rw [hy, hz, map_add, LinearMap.add_apply, map_add]
   | single F c =>

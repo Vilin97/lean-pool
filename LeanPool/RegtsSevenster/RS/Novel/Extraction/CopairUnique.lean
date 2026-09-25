@@ -195,7 +195,7 @@ theorem contractionMap_stdCopairOddElem (ℓ : ℕ)
 /-- The standard form's even block is the standard even form. -/
 theorem formEvenBlock_stdForm (k ℓ : ℕ) (x y : Fin k → ℂ) :
     formEvenBlock (stdForm k ℓ) x y = stdFormEven k x y := by
-  show LinearMap.coprod (TensorProduct.lift (stdFormEvenBilin k))
+  change LinearMap.coprod (TensorProduct.lift (stdFormEvenBilin k))
       (TensorProduct.lift (stdFormOddBilin ℓ)) (x ⊗ₜ[ℂ] y, 0) =
     stdFormEven k x y
   rw [LinearMap.coprod_apply, map_zero, add_zero,
@@ -205,7 +205,7 @@ theorem formEvenBlock_stdForm (k ℓ : ℕ) (x y : Fin k → ℂ) :
 /-- And its odd block the standard odd form. -/
 theorem formOddBlock_stdForm (k ℓ : ℕ) (x y : Fin (2 * ℓ) → ℂ) :
     formOddBlock (stdForm k ℓ) x y = stdFormOdd ℓ x y := by
-  show LinearMap.coprod (TensorProduct.lift (stdFormEvenBilin k))
+  change LinearMap.coprod (TensorProduct.lift (stdFormEvenBilin k))
       (TensorProduct.lift (stdFormOddBilin ℓ)) (0, x ⊗ₜ[ℂ] y) =
     stdFormOdd ℓ x y
   rw [LinearMap.coprod_apply, map_zero, zero_add,

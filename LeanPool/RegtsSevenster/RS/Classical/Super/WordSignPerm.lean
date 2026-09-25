@@ -263,8 +263,8 @@ private theorem neg_one_pow_oddInversions_swap_mul {n : ℕ}
         exact absurd hgt (by
           simp only [gt_iff_lt, not_lt, Fin.le_def]; omega)
       rw [hins, Finset.card_insert_of_notMem hnotmem]
-      show adjSign c a b * (-1 : ℂ) ^ _ = (-1 : ℂ) ^ (_ + 1)
-      rw [adjSign, if_pos hbo, pow_succ]
+      change adjSign c a b * (-1 : ℂ) ^ _ = (-1 : ℂ) ^ (_ + 1)
+      rw [adjSign, ite_eq_left hbo, pow_succ]
       ring
     · -- τ⁻¹ b < τ⁻¹ a: S₂ = insert (τ⁻¹ b, τ⁻¹ a) S₁, so |S₂| = |S₁| + 1
       have hins := filter_insert_of_bothOdd_rev hadj τ c hbo hrev
@@ -281,14 +281,14 @@ private theorem neg_one_pow_oddInversions_swap_mul {n : ℕ}
         exact absurd hgt (by
           simp only [gt_iff_lt, not_lt, Fin.le_def]; omega)
       rw [hins, Finset.card_insert_of_notMem hnotmem]
-      show adjSign c a b * (-1 : ℂ) ^ (_ + 1) = (-1 : ℂ) ^ _
-      rw [adjSign, if_pos hbo, pow_succ]
+      change adjSign c a b * (-1 : ℂ) ^ (_ + 1) = (-1 : ℂ) ^ _
+      rw [adjSign, ite_eq_left hbo, pow_succ]
       ring
   · -- Not both odd: the two filter sets are equal.
     have heq := filter_eq_of_not_bothOdd hadj τ c hbo
     rw [heq]
-    show adjSign c a b * (-1 : ℂ) ^ _ = (-1 : ℂ) ^ _
-    rw [adjSign, if_neg hbo, one_mul]
+    change adjSign c a b * (-1 : ℂ) ^ _ = (-1 : ℂ) ^ _
+    rw [adjSign, ite_eq_right hbo, one_mul]
 
 /-- **The word sign is an inversion count**: it is `(−1)` to the
 number of inversions of the word's permutation at odd positions. -/
@@ -300,7 +300,7 @@ theorem wordSign_eq_oddInversions {n : ℕ} (w : List (Fin n))
   | nil =>
     simp only [wordSign, wordPerm, oddInversions_one, pow_zero]
   | cons i w ih =>
-    show adjSign c ⟨i.val, by omega⟩ ⟨i.val + 1, by omega⟩ *
+    change adjSign c ⟨i.val, by omega⟩ ⟨i.val + 1, by omega⟩ *
         wordSign w (c ∘ _root_.Equiv.swap
           (⟨i.val, by omega⟩ : Fin (n + 1))
           ⟨i.val + 1, by omega⟩) =

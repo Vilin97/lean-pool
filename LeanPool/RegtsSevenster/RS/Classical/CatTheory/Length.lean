@@ -54,7 +54,7 @@ singleton, so it carries no strictly increasing pair. -/
 theorem lengthLE_of_isZero [Category.{v} C]
     {Y : C} (hY : IsZero Y) : LengthLE Y 0 := by
   intro f hf
-  haveI := Subobject.subsingleton_of_isZero hY
+  have := Subobject.subsingleton_of_isZero hY
   exact (hf (show (0 : Fin 2) < 1 by decide)).ne
     (Subsingleton.elim (f 0) (f 1))
 
@@ -101,7 +101,7 @@ private lemma pair_chains
   induction n with
   | zero =>
     intro w _
-    haveI : Subsingleton (Fin (0 + 1)) :=
+    have : Subsingleton (Fin (0 + 1)) :=
       ⟨fun a b => Fin.ext (by have := a.isLt; have := b.isLt; omega)⟩
     exact ⟨0, 0, Nat.zero_le _,
       ⟨fun _ => (w (Fin.last 0)).1, Subsingleton.strictMono _, rfl⟩,
@@ -285,9 +285,9 @@ private lemma eq_of_parts [Category.{v} C] [Abelian C]
       ← h6, Category.assoc, h5, comp_zero]
   have hcz : cokernel.π (Subobject.ofLE P Q hPQ) = 0 := by
     rw [← hd, h7, comp_zero]
-  haveI : Epi (Subobject.ofLE P Q hPQ) :=
+  have : Epi (Subobject.ofLE P Q hPQ) :=
     Preadditive.epi_of_cokernel_zero hcz
-  haveI : IsIso (Subobject.ofLE P Q hPQ) :=
+  have : IsIso (Subobject.ofLE P Q hPQ) :=
     isIso_of_mono_of_epi _
   exact le_antisymm hPQ (Subobject.le_of_comm
     (inv (Subobject.ofLE P Q hPQ)) (by rw [IsIso.inv_comp_eq, ht]))

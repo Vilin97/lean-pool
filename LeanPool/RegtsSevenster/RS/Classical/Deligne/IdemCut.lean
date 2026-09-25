@@ -390,13 +390,13 @@ theorem tensorPowMap_concat
       (tensorPowConcat X a b).hom ≫ tensorPowMap f (a + b)
   | 0 => by
     rw [tensorPowConcat_zero, tensorPowConcat_zero]
-    show (tensorPowMap f a ⊗ₘ 𝟙 (𝟙_ D)) ≫
+    change (tensorPowMap f a ⊗ₘ 𝟙 (𝟙_ D)) ≫
         (ρ_ (tensorPow D Y a)).hom =
       (ρ_ (tensorPow D X a)).hom ≫ tensorPowMap f a
     rw [MonoidalCategory.tensorHom_id,
       MonoidalCategory.rightUnitor_naturality]
   | b + 1 => by
-    show (tensorPowMap f a ⊗ₘ (tensorPowMap f b ⊗ₘ f)) ≫
+    change (tensorPowMap f a ⊗ₘ (tensorPowMap f b ⊗ₘ f)) ≫
         ((α_ (tensorPow D Y a) (tensorPow D Y b) Y).inv ≫
           (tensorPowConcat Y a b).hom ▷ Y) =
       ((α_ (tensorPow D X a) (tensorPow D X b) X).inv ≫

@@ -78,11 +78,11 @@ variable (E : Env f)
 noncomputable def envTrace : End E →ₗ[ℂ] ℂ where
   toFun x := matTrace f E.X x.f
   map_add' x y := by
-    show matTrace f E.X (x + y).f = _
+    change matTrace f E.X (x + y).f = _
     rw [show (x + y).f = x.f + y.f from rfl]
     exact (matTrace f E.X).map_add _ _
   map_smul' c x := by
-    show matTrace f E.X (c • x).f = _
+    change matTrace f E.X (c • x).f = _
     rw [show (c • x).f = c • x.f from rfl, RingHom.id_apply]
     exact (matTrace f E.X).map_smul _ _
 
@@ -98,10 +98,10 @@ theorem envEnd_isSemisimpleRing : IsSemisimpleRing (End E) :=
 /-- Every envelope morphism is von Neumann regular. -/
 theorem env_hom_regular {M N : Env f} (u : M ⟶ N) :
     ∃ g : N ⟶ M, u ≫ g ≫ u = u := by
-  haveI : HasFiniteBiproducts (Env f) := inferInstance
-  haveI : HasBinaryBiproducts (Env f) :=
+  have : HasFiniteBiproducts (Env f) := inferInstance
+  have : HasBinaryBiproducts (Env f) :=
     hasBinaryBiproducts_of_finite_biproducts _
-  haveI := envEnd_isSemisimpleRing f (M ⊞ N)
+  have := envEnd_isSemisimpleRing f (M ⊞ N)
   obtain ⟨G, hG⟩ := exists_mul_mul_self
     (A := End (M ⊞ N))
     ((biprod.fst ≫ u ≫ biprod.inr : End (M ⊞ N)))
@@ -231,6 +231,7 @@ theorem env_epi_split {M N : Env f} (e : M ⟶ N) [Epi e] :
 /-! ### Normality and the abelian structure -/
 
 /-- Every mono is a kernel. -/
+@[instance_reducible]
 noncomputable def envNormalMono {M N : Env f} (m : M ⟶ N) [Mono m] :
     NormalMono m := by
   have hex := env_mono_split f m
@@ -264,6 +265,7 @@ noncomputable def envNormalMono {M N : Env f} (m : M ⟶ N) [Mono m] :
       Category.comp_id]
 
 /-- Every epi is a cokernel. -/
+@[instance_reducible]
 noncomputable def envNormalEpi {M N : Env f} (e : M ⟶ N) [Epi e] :
     NormalEpi e := by
   have hex := env_epi_split f e

@@ -41,7 +41,7 @@ theorem omegaFun_capTensor_merge (m : ℕ)
         omegaFun f P (evClass f)
           (((stdToOmega f P e 2) :
             SuperVect.Hom _ _).evenMap y) := by
-  letI := P.braided
+  let := P.braided
   -- The transported merge is the structure-map image of the
   -- blockwise transports.
   have hmerge := congrArg (fun z :
@@ -53,7 +53,7 @@ theorem omegaFun_capTensor_merge (m : ℕ)
   refine Eq.trans (congrArg (omegaFun f P
     (HomSpace.tensor f (m + m) 0 2 0
       (bundleCapClass f m) (evClass f))) hmerge.symm) ?_
-  show omegaFun f P (HomSpace.tensor f (m + m) 0 2 0
+  change omegaFun f P (HomSpace.tensor f (m + m) 0 2 0
       (bundleCapClass f m) (evClass f))
     (((μ P.ω (SkeinObj.mk (m + m)) (SkeinObj.mk 2)) :
       SuperVect.Hom _ _).evenMap

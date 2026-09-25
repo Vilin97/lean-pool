@@ -120,7 +120,7 @@ noncomputable def restrictHead (μ : YoungDiagram) {k : ℕ}
   invFun j := ⟨(σ⁻¹ (Fin.castLE hk j) : ℕ),
     head_maps_head μ hk σ⁻¹ (fun i hi => by
       have h1 := hfix i hi
-      show σ.symm i = i
+      change σ.symm i = i
       rw [Equiv.symm_apply_eq]
       exact h1.symm) j⟩
   left_inv j := by
@@ -226,7 +226,7 @@ theorem colourChar_extend_zero {n N k : ℕ} (hNk : N ≤ k)
         π := by
   classical
   let β : Fin k → ℕ := fun i => if h : (i : ℕ) < N then α ⟨i, h⟩ else 0
-  show colourChar α π = colourChar β π
+  change colourChar α π = colourChar β π
   unfold colourChar
   -- Helper: extended fibre condition forces range into first N
   have range_bound : ∀ g : Fin n → Fin k,
@@ -234,7 +234,7 @@ theorem colourChar_extend_zero {n N k : ℕ} (hNk : N ≤ k)
     intro g hfib x
     exact range_lt_of_fibreCard_zero g (fun j hj => by
       have := hfib j
-      simp only [β, dif_neg (by omega : ¬ (j : ℕ) < N)] at this
+      simp only [β, dite_eq_right (by omega : ¬ (j : ℕ) < N)] at this
       exact this) x
   -- Key lemma: fibreCard of castLE ∘ g at a head index
   have fwd_fib_head : ∀ (g : Fin n → Fin N) (j : Fin N),
@@ -256,7 +256,7 @@ theorem colourChar_extend_zero {n N k : ℕ} (hNk : N ≤ k)
     constructor
     · intro h
       have := congrArg Fin.val h
-      simp [Fin.val_castLE] at this
+      simp? [Fin.val_castLE] at this
       exact absurd (this ▸ (g x).isLt) (by omega)
     · intro h; exact absurd h (by simp)
   -- Key lemma: fibreCard of restriction
@@ -285,18 +285,18 @@ theorem colourChar_extend_zero {n N k : ℕ} (hNk : N ≤ k)
     simp only [Finset.mem_filter, Finset.mem_univ, true_and]
     constructor
     · intro j
-      show fibreCard (fun x => (⟨(g x : ℕ), hb x⟩ : Fin N)) j = α j
+      change fibreCard (fun x => (⟨(g x : ℕ), hb x⟩ : Fin N)) j = α j
       rw [bwd_fib g hb j]
       have hβ : β (Fin.castLE hNk j) = α j := by
-        show (if h : (Fin.castLE hNk j : ℕ) < N then α ⟨(Fin.castLE hNk j : ℕ),
+        change (if h : (Fin.castLE hNk j : ℕ) < N then α ⟨(Fin.castLE hNk j : ℕ),
           h⟩ else 0) = α j
         have hlt : (Fin.castLE hNk j : ℕ) < N := by
           rw [Fin.val_castLE hNk j]; exact j.isLt
-        rw [dif_pos hlt, show (⟨(Fin.castLE hNk j : ℕ), hlt⟩ : Fin N) = j from
+        rw [dite_eq_left hlt, show (⟨(Fin.castLE hNk j : ℕ), hlt⟩ : Fin N) = j from
           Fin.ext (Fin.val_castLE hNk j)]
       rw [← hβ]
       exact hfilt.1 (Fin.castLE hNk j)
-    · show (fun x => (⟨(g x : ℕ), hb x⟩ : Fin N)) ∘ ↑π = fun x => ⟨(g x : ℕ), hb
+    · change (fun x => (⟨(g x : ℕ), hb x⟩ : Fin N)) ∘ ↑π = fun x => ⟨(g x : ℕ), hb
       x⟩
       ext x
       simp only [Function.comp]
@@ -317,17 +317,17 @@ theorem colourChar_extend_zero {n N k : ℕ} (hNk : N ≤ k)
     simp only [Finset.mem_filter, Finset.mem_univ, true_and]
     constructor
     · intro j
-      show fibreCard (Fin.castLE hNk ∘ g) j =
+      change fibreCard (Fin.castLE hNk ∘ g) j =
         (if h : (j : ℕ) < N then α ⟨(j : ℕ), h⟩ else 0)
       by_cases hj : (j : ℕ) < N
-      · rw [dif_pos hj]
+      · rw [dite_eq_left hj]
         have heq : j = Fin.castLE hNk ⟨(j : ℕ), hj⟩ := by ext; simp
         calc fibreCard (Fin.castLE hNk ∘ g) j
             = fibreCard (Fin.castLE hNk ∘ g) (Fin.castLE hNk ⟨(j : ℕ), hj⟩)
               := by rw [← heq]
           _ = fibreCard g ⟨(j : ℕ), hj⟩ := fwd_fib_head g ⟨(j : ℕ), hj⟩
           _ = α ⟨(j : ℕ), hj⟩ := hfilt.1 ⟨(j : ℕ), hj⟩
-      · rw [dif_neg hj]
+      · rw [dite_eq_right hj]
         exact fwd_fib_tail g j hj
     · ext x
       simp only [Function.comp]
@@ -376,7 +376,7 @@ theorem jtChar_pad (μ : YoungDiagram) {k : ℕ}
     rw [show (if ∀ i : Fin k, 0 ≤ (μ.rowLen (i : ℕ) : ℤ) + ((σ i : Fin k) : ℕ) -
       (i : ℕ)
       then _ else (0 : ℂ)) = 0 from by
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hguard
       exact hσ (fun i hi => tail_fixed_of_guard μ hk σ hguard i (hn_def ▸ hi))]
     simp
@@ -394,7 +394,7 @@ theorem jtChar_pad (μ : YoungDiagram) {k : ℕ}
       if h : (i : ℕ) < n then jtSigned μ σ' ⟨(i : ℕ), h⟩ else 0 := by
     intro σ' i
     by_cases hi : (i : ℕ) < n
-    · rw [dif_pos hi]
+    · rw [dite_eq_left hi]
       have heqi : i = Fin.castLE hk ⟨(i : ℕ), hi⟩ :=
         Fin.ext (Fin.val_castLE hk ⟨(i : ℕ), hi⟩).symm
       have hext : (extendTail μ hk σ' i : ℕ) = (σ' ⟨(i : ℕ), hi⟩ : ℕ) := by
@@ -403,7 +403,7 @@ theorem jtChar_pad (μ : YoungDiagram) {k : ℕ}
       have hrow : μ.rowLen (i : ℕ) = μ.rowLens.get ⟨(i : ℕ), hi⟩ :=
         (get_rowLens_eq_rowLen μ ⟨(i : ℕ), hi⟩).symm
       simp only [jtSigned, hext, hrow]
-    · rw [dif_neg hi]
+    · rw [dite_eq_right hi]
       push Not at hi
       rw [extendTail_fixes_tail μ hk σ' i hi, rowLen_eq_zero_of_ge μ hi]
       simp
@@ -418,7 +418,7 @@ theorem jtChar_pad (μ : YoungDiagram) {k : ℕ}
     · intro hbig j
       have h1 := hbig (Fin.castLE hk j)
       rw [signed_eq] at h1
-      rwa [dif_pos (show (Fin.castLE hk j : ℕ) < n from by
+      rwa [dite_eq_left (show (Fin.castLE hk j : ℕ) < n from by
               rw [Fin.val_castLE]; exact j.isLt),
            show (⟨(Fin.castLE hk j : ℕ), _⟩ : Fin n) = j from
               Fin.ext (Fin.val_castLE hk j)] at h1
@@ -440,8 +440,8 @@ theorem jtChar_pad (μ : YoungDiagram) {k : ℕ}
     congr 1; ext i
     have hsig := signed_eq σ' i
     by_cases hi : (i : ℕ) < n
-    · rw [dif_pos hi] at hsig; rw [dif_pos hi, hsig]; rfl
-    · rw [dif_neg hi] at hsig; rw [dif_neg hi, hsig]; simp
+    · rw [dite_eq_left hi] at hsig; rw [dite_eq_left hi, hsig]; rfl
+    · rw [dite_eq_right hi] at hsig; rw [dite_eq_right hi, hsig]; simp
   -- ═══════ ASSEMBLY ═══════
   calc jtChar μ π
       = ∑ σ' : Equiv.Perm (Fin n),
@@ -464,15 +464,15 @@ theorem jtChar_pad (μ : YoungDiagram) {k : ℕ}
           intro σ' _
           have hfix : tailFix (extendTail μ hk σ') :=
             fun i hi => extendTail_fixes_tail μ hk σ' i hi
-          rw [dif_pos hfix]
+          rw [dite_eq_left hfix]
           exact restrictHead_extendTail μ hk σ'
         · -- right_inv
           intro σ hσ
-          rw [dif_pos (Finset.mem_filter.mp hσ).2]
+          rw [dite_eq_left (Finset.mem_filter.mp hσ).2]
           exact extendTail_restrictHead μ hk σ (Finset.mem_filter.mp hσ).2
         · -- term matching
           intro σ' _
-          show ((Equiv.Perm.sign σ' : ℤ) : ℂ) *
+          change ((Equiv.Perm.sign σ' : ℤ) : ℂ) *
               (if ∀ i, 0 ≤ jtSigned μ σ' i
                 then (colourChar (jtComp μ σ') π : ℂ) else 0) =
             bigTerm (extendTail μ hk σ')
@@ -482,10 +482,10 @@ theorem jtChar_pad (μ : YoungDiagram) {k : ℕ}
             sign_extendTail μ hk σ']
           congr 1
           by_cases hguard : ∀ i, 0 ≤ jtSigned μ σ' i
-          · rw [if_pos hguard, if_pos ((guard_iff σ').mpr hguard)]
+          · rw [ite_eq_left hguard, ite_eq_left ((guard_iff σ').mpr hguard)]
             exact_mod_cast (comp_eq σ' hguard).symm
-          · rw [if_neg hguard,
-                 if_neg (fun h => hguard ((guard_iff σ').mp h))]
+          · rw [ite_eq_right hguard,
+                 ite_eq_right (fun h => hguard ((guard_iff σ').mp h))]
     _ = ∑ σ, bigTerm σ := filter_eq.symm
 
 end RS

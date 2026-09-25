@@ -47,7 +47,7 @@ noncomputable def whiskerLeftAlg
   map_zero' := MonoidalPreadditive.whiskerLeft_zero
   map_add' f g := MonoidalPreadditive.whiskerLeft_add f g
   commutes' c := by
-    show P ◁ (c • 𝟙 X) = c • 𝟙 (P ⊗ X)
+    change P ◁ (c • 𝟙 X) = c • 𝟙 (P ⊗ X)
     rw [MonoidalLinear.whiskerLeft_smul,
       MonoidalCategory.whiskerLeft_id]
 
@@ -63,11 +63,11 @@ noncomputable def pairPermHom
       End (tensorPow A X n ⊗ tensorPow A Y n) where
   toFun g := permMor X n g.1 ⊗ₘ permMor Y n g.2
   map_one' := by
-    show permMor X n 1 ⊗ₘ permMor Y n 1 =
+    change permMor X n 1 ⊗ₘ permMor Y n 1 =
       𝟙 (tensorPow A X n ⊗ tensorPow A Y n)
     rw [permMor_one, permMor_one, MonoidalCategory.id_tensorHom_id]
   map_mul' g h := by
-    show permMor X n (g.1 * h.1) ⊗ₘ permMor Y n (g.2 * h.2) =
+    change permMor X n (g.1 * h.1) ⊗ₘ permMor Y n (g.2 * h.2) =
       (permMor X n h.1 ⊗ₘ permMor Y n h.2) ≫
         (permMor X n g.1 ⊗ₘ permMor Y n g.2)
     rw [permMor_mul, permMor_mul,
@@ -111,13 +111,13 @@ theorem pairAlg_diagEmbed
     pairAlg X Y n (diagEmbed x) = diagAlg X Y n x := by
   have hext : (pairAlg X Y n).comp diagEmbed = diagAlg X Y n := by
     refine MonoidAlgebra.algHom_ext (fun σ => ?_) (Subsingleton.elim _ _)
-    show pairAlg X Y n (diagEmbed (MonoidAlgebra.single σ 1)) =
+    change pairAlg X Y n (diagEmbed (MonoidAlgebra.single σ 1)) =
       diagAlg X Y n (MonoidAlgebra.single σ 1)
     have hd : diagEmbed (MonoidAlgebra.single σ (1 : ℂ)) =
         MonoidAlgebra.single
           ((σ, σ) : Equiv.Perm (Fin n) × Equiv.Perm (Fin n))
           (1 : ℂ) := by
-      show MonoidAlgebra.mapDomain _ (MonoidAlgebra.single σ 1) = _
+      change MonoidAlgebra.mapDomain _ (MonoidAlgebra.single σ 1) = _
       exact MonoidAlgebra.mapDomain_single
     rw [hd, pairAlg_single, diagAlg_single]
   exact DFunLike.congr_fun hext x
@@ -138,7 +138,7 @@ theorem pairAlg_extFst
       (whiskerAlg (tensorPow A X n) (tensorPow A Y n)).comp
         (permAlg X n) := by
     refine MonoidAlgebra.algHom_ext (fun σ => ?_) (Subsingleton.elim _ _)
-    show pairAlg X Y n (MonoidAlgebra.mapDomainAlgHom ℂ ℂ
+    change pairAlg X Y n (MonoidAlgebra.mapDomainAlgHom ℂ ℂ
         (extFstHom n) (MonoidAlgebra.single σ 1)) =
       whiskerAlg (tensorPow A X n) (tensorPow A Y n)
         (permAlg X n (MonoidAlgebra.single σ 1))
@@ -147,7 +147,7 @@ theorem pairAlg_extFst
         MonoidAlgebra.single
           ((σ, 1) : Equiv.Perm (Fin n) × Equiv.Perm (Fin n))
           (1 : ℂ) := by
-      show MonoidAlgebra.mapDomain _ (MonoidAlgebra.single σ 1) = _
+      change MonoidAlgebra.mapDomain _ (MonoidAlgebra.single σ 1) = _
       exact MonoidAlgebra.mapDomain_single
     rw [hf, pairAlg_single, permAlg_single, permMor_one,
       MonoidalCategory.tensorHom_id]
@@ -170,7 +170,7 @@ theorem pairAlg_extSnd
       (whiskerLeftAlg (tensorPow A X n) (tensorPow A Y n)).comp
         (permAlg Y n) := by
     refine MonoidAlgebra.algHom_ext (fun τ => ?_) (Subsingleton.elim _ _)
-    show pairAlg X Y n (MonoidAlgebra.mapDomainAlgHom ℂ ℂ
+    change pairAlg X Y n (MonoidAlgebra.mapDomainAlgHom ℂ ℂ
         (extSndHom n) (MonoidAlgebra.single τ 1)) =
       whiskerLeftAlg (tensorPow A X n) (tensorPow A Y n)
         (permAlg Y n (MonoidAlgebra.single τ 1))
@@ -179,7 +179,7 @@ theorem pairAlg_extSnd
         MonoidAlgebra.single
           ((1, τ) : Equiv.Perm (Fin n) × Equiv.Perm (Fin n))
           (1 : ℂ) := by
-      show MonoidAlgebra.mapDomain _ (MonoidAlgebra.single τ 1) = _
+      change MonoidAlgebra.mapDomain _ (MonoidAlgebra.single τ 1) = _
       exact MonoidAlgebra.mapDomain_single
     rw [hs, pairAlg_single, permAlg_single, permMor_one,
       MonoidalCategory.id_tensorHom]

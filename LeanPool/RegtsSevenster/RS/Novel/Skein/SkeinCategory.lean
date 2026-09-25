@@ -32,7 +32,7 @@ theorem mem_ker_single_sub_of_equiv {t : ℕ}
       LinearMap.ker (connectionMap f.val t) := by
   rw [LinearMap.mem_ker, map_sub]
   funext K
-  show connectionMap f.val t (Finsupp.single F 1) K -
+  change connectionMap f.val t (Finsupp.single F 1) K -
     connectionMap f.val t (Finsupp.single G 1) K = 0
   rw [connectionMap_single, connectionMap_single, one_mul,
     one_mul,

@@ -56,9 +56,9 @@ theorem exists_algHom_of_countable_dimension (R : Type*) [CommRing R]
     [Algebra ℂ R] [Nontrivial R] (h : Module.rank ℂ R ≤ Cardinal.aleph0) :
     Nonempty (R →ₐ[ℂ] ℂ) := by
   obtain ⟨m, hm⟩ := Ideal.exists_maximal R
-  haveI := hm
-  letI := Ideal.Quotient.field m
-  haveI : Algebra.IsAlgebraic ℂ (R ⧸ m) :=
+  have := hm
+  let := Ideal.Quotient.field m
+  have : Algebra.IsAlgebraic ℂ (R ⧸ m) :=
     algebraic_of_countable_dimension (R ⧸ m) <|
       le_trans (LinearMap.rank_le_of_surjective
         (Ideal.Quotient.mkₐ ℂ m).toLinearMap
@@ -72,7 +72,7 @@ consumes. -/
 theorem exists_smul_one_of_countable_dimension (K : Type*) [Field K]
     [Algebra ℂ K] (h : Module.rank ℂ K ≤ Cardinal.aleph0) (x : K) :
     ∃ c : ℂ, x = c • (1 : K) := by
-  haveI : Algebra.IsAlgebraic ℂ K := algebraic_of_countable_dimension K h
+  have : Algebra.IsAlgebraic ℂ K := algebraic_of_countable_dimension K h
   obtain ⟨c, hc⟩ :=
     (IsAlgClosed.algebraMap_bijective_of_isIntegral (k := ℂ) (K := K)).2 x
   exact ⟨c, by rw [← hc, Algebra.algebraMap_eq_smul_one]⟩

@@ -28,12 +28,12 @@ noncomputable def strandRelabelEquiv (e : Fin 2 ≃ Fin 2) :
   flagEquiv := e
   vertexEquiv := _root_.Equiv.refl Empty
   attach_comm := fun g => by
-    show Sum.inr (e g) =
+    change Sum.inr (e g) =
       ((Sum.inr (e g) : Empty ⊕ Fin 2).map
         (_root_.Equiv.refl Empty) id)
     rfl
   pairing_comm := fun g => by
-    show e ⟨1 - g.val, by omega⟩ = ⟨1 - (e g).val, by omega⟩
+    change e ⟨1 - g.val, by omega⟩ = ⟨1 - (e g).val, by omega⟩
     set x := (⟨1 - g.val, by omega⟩ : Fin 2) with hx
     have hxv : x.val = 1 - g.val := congrArg Fin.val hx
     have hne : x ≠ g := by
@@ -46,7 +46,7 @@ noncomputable def strandRelabelEquiv (e : Fin 2 ≃ Fin 2) :
     have h1 : (e x).val < 2 := (e x).isLt
     have h2 : (e g).val < 2 := (e g).isLt
     refine Fin.ext ?_
-    show (e x).val = 1 - (e g).val
+    change (e x).val = 1 - (e g).val
     omega
   circles_eq := rfl
 

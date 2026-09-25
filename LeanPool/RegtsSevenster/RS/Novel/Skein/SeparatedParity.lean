@@ -50,7 +50,7 @@ moves by exactly `±2`, i.e. the circuit count by `±1`.
 
 namespace RS
 
-open scoped Classical
+
 
 /-! ## (i) Abstract orbit counting -/
 
@@ -788,7 +788,7 @@ theorem fullMatchFun_val_internal (κ : F.RelTransitionSystem)
     (h : x.val ∈ F.internalFlags) :
     (fullMatchFun κ x).val = κ.match_ x.val := by
   unfold fullMatchFun
-  rw [dif_pos h]
+  rw [dite_eq_left h]
 
 /-- And the path matching on boundary flags: this is what closes
 the chains into orbits. -/
@@ -800,7 +800,7 @@ theorem fullMatchFun_val_boundary (κ : F.RelTransitionSystem)
     Finset.disjoint_right.mp F.internalFlags_disjoint_boundaryFlags
       h
   unfold fullMatchFun
-  rw [dif_neg hni]
+  rw [dite_eq_right hni]
 
 /-- The full matching is an involution, both halves being ones. -/
 theorem fullMatchFun_invol (κ : F.RelTransitionSystem)
@@ -1078,7 +1078,7 @@ theorem not_sameCycle_pairingPermSP_of_chain {f : W.Flag}
         (fullPerm κ ^ t) ⟨β, mem_flags_of_boundaryFlags F hβ⟩ := by
       refine Subtype.ext ?_
       rw [fullPerm_pow_val hcont t htk, pairingPermSP_val]
-      show W.pairing f = iterWalk κ β t
+      change W.pairing f = iterWalk κ β t
       rw [hf1, W.pairing_invol]
     have hbσ : (fullPerm κ).SameCycle
         ⟨β, mem_flags_of_boundaryFlags F hβ⟩
@@ -1178,7 +1178,7 @@ theorem fullPerm_periodic_iff (x : {f : W.Flag // f ∈ F.flags}) :
     have h1 : ((fullPerm κ)⁻¹ (fullPerm κ x)).val =
         W.pairing (κ.match_ ((fullPerm κ x).val)) := by
       rw [fullPerm_inv]
-      show (pairingPermSP F
+      change (pairingPermSP F
         (fullMatchPerm κ (fullPerm κ x))).val = _
       rw [pairingPermSP_val, fullMatchPerm_apply,
         fullMatchFun_val_internal κ hzint]
@@ -1260,7 +1260,7 @@ theorem walkPermPeriodic_eq_permCongr :
     have h0 := all_pairings_internal_of_periodic κ
       ((κ.mem_periodicFlags).mp f.prop) 0
     rwa [iterWalk_zero] at h0
-  show κ.internalWalk f.val =
+  change κ.internalWalk f.val =
     ((fullPerm κ) ⟨f.val, mem_flags_of_internalFlags F
       (κ.periodicFlags_sub f.prop)⟩).val
   rw [fullPerm_val_internal hσ]

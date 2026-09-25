@@ -72,7 +72,7 @@ theorem twoPathTransformFactor_eq_neg_one :
 
 section Transform
 
-open scoped Classical
+
 
 variable {α : Type}
 
@@ -536,7 +536,7 @@ theorem cThroughSummand (κ : cSubset.RelTransitionSystem)
   unfold EdgeSubset.throughSummand
   rw [cThroughProduct, pow_zero, one_mul, one_mul]
   rw [Fintype.sum_subsingleton _ cPsi]
-  rw [if_pos cEvenMatch]
+  rw [ite_eq_left cEvenMatch]
   have hzero : ∀ φ : cSubset.CoreOddColouring 4, φ ≠ cPhi →
       (if cSubset.coreOddBoundaryMatch cState φ then
         ∏ v : cFragment.Vertex,
@@ -549,9 +549,9 @@ theorem cThroughSummand (κ : cSubset.RelTransitionSystem)
     rcases Classical.em (cSubset.coreOddBoundaryMatch cState φ) with
       hb | hb
     · exact absurd (cPhi_unique φ hb) hφ
-    · rw [if_neg hb]
+    · rw [ite_eq_right hb]
   rw [Fintype.sum_eq_single cPhi hzero]
-  rw [if_pos cOddMatch]
+  rw [ite_eq_left cOddMatch]
   rw [Fintype.prod_subsingleton _ cV]
   rw [cCoreOddSignAt κ o g₁ g₂ hglist, cCoreOddListAt κ o g₁ g₂
     hglist]
@@ -781,12 +781,12 @@ theorem cSummand_O :
         oddPartner 4 (cColour 2)] =
         ([0, 5, 2, 7] : List (Fin (2 * 4))) from by decide,
       MixedFunctional.evalOdd,
-      if_pos (by decide : ([0, 5, 2, 7] : List (Fin (2 * 4))).Nodup),
+      ite_eq_left (by decide : ([0, 5, 2, 7] : List (Fin (2 * 4))).Nodup),
       show sortSign ([0, 5, 2, 7] : List (Fin (2 * 4))) = -1 from
         by decide,
       show ([0, 5, 2, 7] : List (Fin (2 * 4))).toFinset =
         ({0, 5, 2, 7} : Finset (Fin (2 * 4))) from by decide,
-      cFunctional_apply, if_pos rfl]
+      cFunctional_apply, ite_eq_left rfl]
     norm_num
   · rw [cThroughSummand cKappa cO 3 0 h,
       show cKappa.match_ 0 = 1 from rfl,
@@ -797,12 +797,12 @@ theorem cSummand_O :
         oddPartner 4 (cColour 1)] =
         ([2, 7, 0, 5] : List (Fin (2 * 4))) from by decide,
       MixedFunctional.evalOdd,
-      if_pos (by decide : ([2, 7, 0, 5] : List (Fin (2 * 4))).Nodup),
+      ite_eq_left (by decide : ([2, 7, 0, 5] : List (Fin (2 * 4))).Nodup),
       show sortSign ([2, 7, 0, 5] : List (Fin (2 * 4))) = -1 from
         by decide,
       show ([2, 7, 0, 5] : List (Fin (2 * 4))).toFinset =
         ({0, 5, 2, 7} : Finset (Fin (2 * 4))) from by decide,
-      cFunctional_apply, if_pos rfl]
+      cFunctional_apply, ite_eq_left rfl]
     norm_num
 
 end TransposeVerify

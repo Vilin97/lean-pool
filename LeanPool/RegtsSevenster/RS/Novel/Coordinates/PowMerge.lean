@@ -49,11 +49,11 @@ theorem stdToOmega_merge :
       powMerge (stdSuperPair k ℓ) a b ≫ stdToOmega f P e (a + b)
   -- ═══════ b = 0: THE RIGHT UNITOR ═══════
   | a, 0 => by
-    letI := P.braided
+    let := P.braided
     -- The skein right unitor at `a` is the identity.
     have hρ : (ρ_ (SkeinObj.mk a : SkeinObj f)).hom =
         𝟙 (SkeinObj.mk a) := by
-      show bundleMapClass f (finCongr _) = _
+      change bundleMapClass f (finCongr _) = _
       rw [show (finCongr (show a + 0 = a by omega) :
           Fin a ≃ Fin a) = _root_.Equiv.refl (Fin a) from
         _root_.Equiv.ext (fun x => Fin.ext rfl)]
@@ -68,7 +68,7 @@ theorem stdToOmega_merge :
       rw [show P.ω.map (𝟙 (SkeinObj.mk a : SkeinObj f)) =
           𝟙 (P.ω.obj (SkeinObj.mk a)) from P.ω.map_id _] at h0
       exact h0.symm
-    show (stdToOmega f P e a ⊗ₘ ε P.ω) ≫
+    change (stdToOmega f P e a ⊗ₘ ε P.ω) ≫
       μ P.ω (SkeinObj.mk a) (SkeinObj.mk 0) =
       (ρ_ (superPow (stdSuperPair k ℓ) a)).hom ≫
         stdToOmega f P e a
@@ -77,9 +77,9 @@ theorem stdToOmega_merge :
     exact MonoidalCategory.rightUnitor_naturality _
   -- ═══════ b + 1: PEEL ONE TENSOR FACTOR ═══════
   | a, b + 1 => by
-    letI := P.braided
+    let := P.braided
     -- Expand the right transport one step.
-    show (stdToOmega f P e a ⊗ₘ
+    change (stdToOmega f P e a ⊗ₘ
         ((stdToOmega f P e b ⊗ₘ e) ≫
           μ P.ω (SkeinObj.mk b) (SkeinObj.mk 1))) ≫
       μ P.ω (SkeinObj.mk a) (SkeinObj.mk (b + 1)) =
@@ -105,7 +105,7 @@ theorem stdToOmega_merge :
       rw [show (α_ (SkeinObj.mk a : SkeinObj f)
           (SkeinObj.mk b) (SkeinObj.mk 1)).inv =
         𝟙 (SkeinObj.mk (a + (b + 1))) from by
-        show bundleMapClass f (finCongr _) = _
+        change bundleMapClass f (finCongr _) = _
         rw [show (finCongr (show a + (b + 1) = a + b + 1
             by omega) : Fin (a + (b + 1)) ≃
             Fin (a + (b + 1))) =

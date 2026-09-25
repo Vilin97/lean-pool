@@ -146,7 +146,7 @@ theorem wordPow_append_succ [Category.{v} A] [MonoidalCategory A]
     wordPow U V (a + (b + 1)) (wordAppend wa wb) =
       wordPow U V (a + b) (wordAppend wa (wb ∘ Fin.castSucc)) ⊗
         (bif wb (Fin.last b) then U else V) := by
-  show wordPow U V (a + b) (wordAppend wa wb ∘ Fin.castSucc) ⊗
+  change wordPow U V (a + b) (wordAppend wa wb ∘ Fin.castSucc) ⊗
       (bif wordAppend wa wb (Fin.last (a + b)) then U else V) = _
   rw [wordAppend_castSucc, wordAppend_last]
 
@@ -259,7 +259,7 @@ theorem wordMap_append
       rw [wordMap_congr f g (wordAppend_zero wa wb),
         eqToHom_trans_assoc]
       exact word_map_cast f g wa _
-    show ((ρ_ (wordPow U V a wa)).hom ≫
+    change ((ρ_ (wordPow U V a wa)).hom ≫
           eqToHom (wordPow_append_zero U V wa wb).symm) ≫
         wordMap f g (a + 0) (wordAppend wa wb) =
       (wordMap f g a wa ⊗ₘ 𝟙 (𝟙_ A)) ≫
@@ -367,7 +367,7 @@ theorem wordPow_const_false [Category.{v} A] [MonoidalCategory A]
   induction n with
   | zero => rfl
   | succ n ih =>
-    show wordPow X Y n (fun _ => false) ⊗ Y = tensorPow A Y n ⊗ Y
+    change wordPow X Y n (fun _ => false) ⊗ Y = tensorPow A Y n ⊗ Y
     rw [ih]
 
 /-- An `eqToHom` pulls out of the first factor of a tensor.  Stated
@@ -392,7 +392,7 @@ theorem wordMap_const_false
   | zero =>
     exact (Category.id_comp _).symm
   | succ n ih =>
-    show wordMap f g n (fun _ => false) ⊗ₘ g = _
+    change wordMap f g n (fun _ => false) ⊗ₘ g = _
     rw [ih]
     exact eqToHom_tensor_pull (wordPow_const_false U V n) _ _
 
@@ -536,7 +536,7 @@ theorem kernelSubobject_comp_le_of_cover [Category.{v} A] [Abelian A]
       Epi q' ∧ q' ≫ (imageSubobject (b ≫ u)).arrow = b ≫ u :=
     ⟨factorThruImageSubobject (b ≫ u), inferInstance,
       imageSubobject_arrow_comp (b ≫ u)⟩
-  haveI := hq_epi
+  have := hq_epi
   refine kernelSubobject_le_of_factors
     (factors_of_epi_comp _ (pullback.fst t q)
       (kernel.ι (u ≫ v)) ?_)
@@ -583,7 +583,7 @@ theorem epi_whiskerRight_of_epi
     [Category.{v} A] [MonoidalCategory A] [RigidCategory A]
     {X Y : A} (p : X ⟶ Y) [Epi p]
     (W : A) : Epi (p ▷ W) := by
-  haveI : PreservesColimitsOfSize.{0, 0} (tensorRight W) :=
+  have : PreservesColimitsOfSize.{0, 0} (tensorRight W) :=
     preservesSmallestColimits_of_preservesColimits _
   exact (tensorRight W).map_epi p
 
@@ -592,7 +592,7 @@ theorem epi_whiskerLeft_of_epi
     [Category.{v} A] [MonoidalCategory A] [RigidCategory A]
     (W : A) {X Y : A} (p : X ⟶ Y)
     [Epi p] : Epi (W ◁ p) := by
-  haveI : PreservesColimitsOfSize.{0, 0} (tensorLeft W) :=
+  have : PreservesColimitsOfSize.{0, 0} (tensorLeft W) :=
     preservesSmallestColimits_of_preservesColimits _
   exact (tensorLeft W).map_epi p
 
@@ -610,7 +610,7 @@ private theorem exists_kernel_ι_whiskerRight
     (W : A) :
     ∃ e : kernel (p ▷ W) ⟶ kernel p ⊗ W,
       kernel.ι (p ▷ W) = e ≫ (kernel.ι p ▷ W) := by
-  haveI : PreservesLimitsOfSize.{0, 0} (tensorRight W) :=
+  have : PreservesLimitsOfSize.{0, 0} (tensorRight W) :=
     preservesSmallestLimits_of_preservesLimits _
   exact ⟨(PreservesKernel.iso (tensorRight W) p).inv,
     (PreservesKernel.iso_inv_ι (tensorRight W) p).symm⟩
@@ -625,7 +625,7 @@ private theorem exists_kernel_ι_whiskerLeft
     (p : X ⟶ Y) :
     ∃ e : kernel (W ◁ p) ⟶ W ⊗ kernel p,
       kernel.ι (W ◁ p) = e ≫ (W ◁ kernel.ι p) := by
-  haveI : PreservesLimitsOfSize.{0, 0} (tensorLeft W) :=
+  have : PreservesLimitsOfSize.{0, 0} (tensorLeft W) :=
     preservesSmallestLimits_of_preservesLimits _
   exact ⟨(PreservesKernel.iso (tensorLeft W) p).inv,
     (PreservesKernel.iso_inv_ι (tensorLeft W) p).symm⟩
@@ -673,7 +673,7 @@ theorem factors_imageSubobject_whiskerRight
     {f : X ⟶ B} {c : C' ⟶ B}
     (h : (imageSubobject c).Factors f) (W : A) :
     (imageSubobject (c ▷ W)).Factors (f ▷ W) := by
-  haveI : Epi (factorThruImageSubobject c ▷ W) :=
+  have : Epi (factorThruImageSubobject c ▷ W) :=
     epi_whiskerRight_of_epi (factorThruImageSubobject c) W
   have harrow : (imageSubobject (c ▷ W)).Factors
       ((imageSubobject c).arrow ▷ W) := by
@@ -700,7 +700,7 @@ theorem factors_imageSubobject_whiskerLeft
     {f : X ⟶ B} {c : C' ⟶ B}
     (h : (imageSubobject c).Factors f) (W : A) :
     (imageSubobject (W ◁ c)).Factors (W ◁ f) := by
-  haveI : Epi (W ◁ factorThruImageSubobject c) :=
+  have : Epi (W ◁ factorThruImageSubobject c) :=
     epi_whiskerLeft_of_epi W (factorThruImageSubobject c)
   have harrow : (imageSubobject (W ◁ c)).Factors
       (W ◁ (imageSubobject c).arrow) := by
@@ -739,7 +739,7 @@ theorem kernelSubobject_tensorHom_le
         imageSubobject (Z₁ ◁ kernel.ι p₂) := by
   have hv : kernelSubobject (W₁ ◁ p₂) ≤
       imageSubobject ((Z₁ ◁ kernel.ι p₂) ≫ (p₁ ▷ Z₂)) := by
-    haveI : Epi (p₁ ▷ kernel p₂) := epi_whiskerRight_of_epi p₁ _
+    have : Epi (p₁ ▷ kernel p₂) := epi_whiskerRight_of_epi p₁ _
     refine kernelSubobject_le_of_factors
       (factors_kernel_ι_whiskerLeft p₂
         (factors_of_epi_comp _ (p₁ ▷ kernel p₂) _ ?_))
@@ -960,7 +960,7 @@ theorem kernelSubobject_tensorPowMap_le_cover
     rw [h]
     exact Subobject.factors_zero
   | succ m ih =>
-    haveI : Epi (tensorPowMap π m) := tensorPowMap_epi π m
+    have : Epi (tensorPowMap π m) := tensorPowMap_epi π m
     refine le_trans
       (kernelSubobject_tensorHom_le (tensorPowMap π m) π)
       (sup_le ?_ ?_)

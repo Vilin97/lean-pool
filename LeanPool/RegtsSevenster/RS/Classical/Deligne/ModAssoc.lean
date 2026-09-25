@@ -195,7 +195,7 @@ theorem modTensorAssocMid_cond
     rw [modTensorLegM, modTensorLegN, Category.assoc] at h
     exact h
   refine (cancel_epi ((modTensorπ A M N ▷ A) ▷ P.X)).mp ?_
-  show ((modTensorπ A M N ▷ A) ▷ P.X) ≫
+  change ((modTensorπ A M N ▷ A) ▷ P.X) ≫
       (((β_ (modTensor A M N) A).hom ≫ modTensorAct A M N)
         ▷ P.X) ≫
       modTensorAssocMid A M N P =
@@ -212,7 +212,7 @@ theorem modTensorAssocMid_cond
   conv_rhs => rw [associator_naturality_left_assoc,
     ← whisker_exchange_assoc, whiskerRight_modTensorπ_assocMid,
     modTensorAssocCover, associator_naturality_right_assoc]
-  simp only [MonoidalCategory.whiskerLeft_comp, Category.assoc]
+  simp only [MonoidalCategory.whiskerLeft_comp]
   repeat' erw [Category.assoc]
   erw [pentagon_assoc]
 
@@ -327,7 +327,7 @@ theorem modTensorAssocInvMid_cond
     rw [modTensorLegM, modTensorLegN, Category.assoc] at h
     exact h
   apply modTensor_whisker_hom_ext A N P (M.X ⊗ A)
-  show ((M.X ⊗ A) ◁ modTensorπ A N P) ≫
+  change ((M.X ⊗ A) ◁ modTensorπ A N P) ≫
       (actRight A M.X ▷ modTensor A N P) ≫
       modTensorAssocInvMid A M N P =
     ((M.X ⊗ A) ◁ modTensorπ A N P) ≫
@@ -389,7 +389,7 @@ theorem modTensorAssocHom_assocInv
   apply modTensor_hom_ext A (modTensorMod A M N) P
   rw [modTensorπ_assocHom_assoc, Category.comp_id]
   apply modTensor_whiskerR_hom_ext A M N P.X
-  show (modTensorπ A M N ▷ P.X) ≫ modTensorAssocMid A M N P ≫
+  change (modTensorπ A M N ▷ P.X) ≫ modTensorAssocMid A M N P ≫
       modTensorAssocInv A M N P =
     (modTensorπ A M N ▷ P.X) ≫
       modTensorπ A (modTensorMod A M N) P
@@ -414,7 +414,7 @@ theorem modTensorAssocInv_assocHom
   apply modTensor_hom_ext A M (modTensorMod A N P)
   rw [modTensorπ_assocInv_assoc, Category.comp_id]
   apply modTensor_whisker_hom_ext A N P M.X
-  show (M.X ◁ modTensorπ A N P) ≫ modTensorAssocInvMid A M N P ≫
+  change (M.X ◁ modTensorπ A N P) ≫ modTensorAssocInvMid A M N P ≫
       modTensorAssocHom A M N P =
     (M.X ◁ modTensorπ A N P) ≫
       modTensorπ A M (modTensorMod A N P)
@@ -516,7 +516,7 @@ theorem modTensorAssocInv_act
         modTensorAssocInv A M N P =
       (A ◁ modTensorAssocInv A M N P) ≫
         modTensorAct A (modTensorMod A M N) P := by
-  haveI : IsIso (modTensorAssocHom A M N P) :=
+  have : IsIso (modTensorAssocHom A M N P) :=
     ⟨modTensorAssocInv A M N P,
       modTensorAssocHom_assocInv A M N P,
       modTensorAssocInv_assocHom A M N P⟩

@@ -26,7 +26,7 @@ across boundary pairings is not needed, there being no boundary.
 
 namespace RS
 
-open scoped Classical
+
 
 /-! ## The closed identification, unconditional -/
 
@@ -686,9 +686,9 @@ theorem relInFlagsAt_join_perm_inl {κ₁ : (leftSub F).RelTransitionSystem}
     (o₁ : κ₁.Orientation) (o₂ : κ₂.Orientation) (v : W₁.Vertex) :
     (F.relInFlagsAt (prodOrient o₁ o₂) (Sum.inl v)).Perm
       (((leftSub F).relInFlagsAt o₁ v).map Sum.inl) := by
-  letI := (W₁.disjUnion W₂).flagOrder
-  letI := W₁.flagOrder
-  letI := Classical.dec
+  let := (W₁.disjUnion W₂).flagOrder
+  let := W₁.flagOrder
+  let := Classical.dec
   apply Multiset.coe_eq_coe.mp
   unfold EdgeSubset.relInFlagsAt
   refine Eq.trans (Finset.sort_eq _ _) ?_
@@ -723,9 +723,9 @@ theorem relInFlagsAt_join_perm_inr {κ₁ : (leftSub F).RelTransitionSystem}
     (o₁ : κ₁.Orientation) (o₂ : κ₂.Orientation) (v : W₂.Vertex) :
     (F.relInFlagsAt (prodOrient o₁ o₂) (Sum.inr v)).Perm
       (((rightSub F).relInFlagsAt o₂ v).map Sum.inr) := by
-  letI := (W₁.disjUnion W₂).flagOrder
-  letI := W₂.flagOrder
-  letI := Classical.dec
+  let := (W₁.disjUnion W₂).flagOrder
+  let := W₂.flagOrder
+  let := Classical.dec
   apply Multiset.coe_eq_coe.mp
   unfold EdgeSubset.relInFlagsAt
   refine Eq.trans (Finset.sort_eq _ _) ?_
@@ -1010,12 +1010,12 @@ variable {α β : Type}
 /-- The boundary label of a left-summand boundary flag. -/
 theorem boundaryLabel_inl
     {W₁ : Fragment α} {W₂ : Fragment β} {F : EdgeSubset (W₁.disjUnion W₂)}
-    [LinearOrder (α ⊕ β)] {g : W₁.Flag}
+    {g : W₁.Flag}
     (hb : (Sum.inl g : (W₁.disjUnion W₂).Flag) ∈ F.boundaryFlags)
     (hb' : g ∈ (leftSub F).boundaryFlags) :
     F.boundaryLabel hb = Sum.inl ((leftSub F).boundaryLabel hb') := by
   refine EdgeSubset.boundaryLabel_eq_of_attach hb ?_
-  show ((W₁.attach g).map Sum.inl Sum.inl) =
+  change ((W₁.attach g).map Sum.inl Sum.inl) =
     Sum.inr (Sum.inl ((leftSub F).boundaryLabel hb'))
   rw [EdgeSubset.attach_boundaryLabel hb']
   rfl
@@ -1023,12 +1023,12 @@ theorem boundaryLabel_inl
 /-- The boundary label of a right-summand boundary flag. -/
 theorem boundaryLabel_inr
     {W₁ : Fragment α} {W₂ : Fragment β} {F : EdgeSubset (W₁.disjUnion W₂)}
-    [LinearOrder (α ⊕ β)] {g : W₂.Flag}
+    {g : W₂.Flag}
     (hb : (Sum.inr g : (W₁.disjUnion W₂).Flag) ∈ F.boundaryFlags)
     (hb' : g ∈ (rightSub F).boundaryFlags) :
     F.boundaryLabel hb = Sum.inr ((rightSub F).boundaryLabel hb') := by
   refine EdgeSubset.boundaryLabel_eq_of_attach hb ?_
-  show ((W₂.attach g).map Sum.inr Sum.inr) =
+  change ((W₂.attach g).map Sum.inr Sum.inr) =
     Sum.inr (Sum.inr ((rightSub F).boundaryLabel hb'))
   rw [EdgeSubset.attach_boundaryLabel hb']
   rfl

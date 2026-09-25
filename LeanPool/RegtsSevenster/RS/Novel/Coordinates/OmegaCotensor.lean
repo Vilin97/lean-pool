@@ -69,13 +69,13 @@ theorem lambda_evenPair {V W : SuperVect}
       SuperVect.Hom _ _).evenMap (evenPair v w) =
       (g : SuperVect.Hom _ _).evenMap v *
         (h : SuperVect.Hom _ _).evenMap w := by
-  show ((λ_ (𝟙_ SuperVect)).hom : SuperVect.Hom _ _).evenMap
+  change ((λ_ (𝟙_ SuperVect)).hom : SuperVect.Hom _ _).evenMap
     ((SuperVect.tensorHom g h).evenMap (evenPair v w)) = _
   rw [show (SuperVect.tensorHom g h).evenMap (evenPair v w) =
       evenPair ((g : SuperVect.Hom _ _).evenMap v)
         ((h : SuperVect.Hom _ _).evenMap w) from
     tensorHom_evenPair g h v w]
-  show (TensorProduct.lid ℂ ℂ).toLinearMap
+  change (TensorProduct.lid ℂ ℂ).toLinearMap
     ((LinearMap.fst ℂ _ _)
       (evenPair ((g : SuperVect.Hom _ _).evenMap v)
         ((h : SuperVect.Hom _ _).evenMap w))) = _
@@ -101,7 +101,7 @@ theorem omegaFun_tensor {a b : ℕ}
         (((μ P.ω (SkeinObj.mk a) (SkeinObj.mk b)) :
           SuperVect.Hom _ _).evenMap (evenPair v w)) =
       omegaFun f P q₁ v * omegaFun f P q₂ w := by
-  letI := P.braided
+  let := P.braided
   have hhom : (λ_ (𝟙_ (SkeinObj f))).hom =
       𝟙 (𝟙_ (SkeinObj f)) := by
     have h1 := Iso.hom_inv_id (λ_ (𝟙_ (SkeinObj f)))
@@ -121,7 +121,7 @@ theorem omegaFun_tensor {a b : ℕ}
       (z : SuperVect.Hom _ _).evenMap (evenPair v w)) habs
   refine Eq.trans ?_ (Eq.trans hev ?_)
   · rfl
-  · show ((((P.ω.map q₁ ≫ η P.ω) ⊗ₘ (P.ω.map q₂ ≫ η P.ω)) ≫
+  · change ((((P.ω.map q₁ ≫ η P.ω) ⊗ₘ (P.ω.map q₂ ≫ η P.ω)) ≫
         (λ_ (𝟙_ SuperVect)).hom :
         P.ω.obj (SkeinObj.mk a) ⊗ P.ω.obj (SkeinObj.mk b) ⟶
           SuperVect.tensorUnit) :
@@ -137,8 +137,8 @@ theorem omegaFun_comp {a b : ℕ}
     (v : (P.ω.obj (SkeinObj.mk a)).even) :
     omegaFun f P (p ≫ q) v =
       omegaFun f P q ((P.ω.map p).evenMap v) := by
-  letI := P.braided
-  show ((P.ω.map (p ≫ q) ≫ η P.ω : P.ω.obj (SkeinObj.mk a) ⟶
+  let := P.braided
+  change ((P.ω.map (p ≫ q) ≫ η P.ω : P.ω.obj (SkeinObj.mk a) ⟶
       SuperVect.tensorUnit) :
     SuperVect.Hom _ _).evenMap v = _
   rw [P.ω.map_comp]

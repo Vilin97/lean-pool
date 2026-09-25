@@ -63,8 +63,8 @@ noncomputable def transport {W₁ W₂ : Fragment α} (e : W₁.Equiv W₂) :
 theorem transport_deg {W₁ W₂ : Fragment α} (e : W₁.Equiv W₂)
     (F : EdgeSubset W₁) (v : W₁.Vertex) :
     (transport e F).deg (e.vertexEquiv v) = F.deg v := by
-  letI := Classical.decEq (W₂.Vertex ⊕ α)
-  letI := Classical.decEq (W₁.Vertex ⊕ α)
+  let := Classical.decEq (W₂.Vertex ⊕ α)
+  let := Classical.decEq (W₁.Vertex ⊕ α)
   unfold deg
   rw [show (transport e F).flags = F.flags.map e.flagEquiv.toEmbedding
       from rfl,
@@ -104,7 +104,7 @@ theorem transport_symm_transport {W₁ W₂ : Fragment α}
     transport e.symm (transport e F) = F := by
   ext f
   rw [mem_transport_iff, mem_transport_iff]
-  show e.flagEquiv.symm (e.flagEquiv.symm.symm f) ∈ F.flags ↔ _
+  change e.flagEquiv.symm (e.flagEquiv.symm.symm f) ∈ F.flags ↔ _
   rw [Equiv.symm_symm, Equiv.symm_apply_apply]
 
 /-- Transport of a transition system along a fragment
@@ -161,7 +161,7 @@ theorem TransitionSystem.transport_walkPerm {W₁ W₂ : Fragment α}
     (κ.transport e).walkPerm =
       (transportFlagsEquiv e F).permCongr κ.walkPerm := by
   ext x
-  show e.flagEquiv (κ.match_ (e.flagEquiv.symm (W₂.pairing x.val))) = _
+  change e.flagEquiv (κ.match_ (e.flagEquiv.symm (W₂.pairing x.val))) = _
   rw [show ((transportFlagsEquiv e F).permCongr κ.walkPerm x).val =
       e.flagEquiv (κ.match_ (W₁.pairing
         (e.flagEquiv.symm x.val))) from by

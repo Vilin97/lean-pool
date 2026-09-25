@@ -87,8 +87,8 @@ Both sides are algebra homs agreeing on generators, hence equal
 on all elements by the universal property. -/
 theorem omegaSkeinRep_eq (n : ℕ) (x : SymGroupAlgebra n) :
     omegaSkeinRep f P n x = P.ω.map (skeinRep f n x) := by
-  letI := P.additive
-  letI := P.linear
+  let := P.additive
+  let := P.linear
   -- Both sides are equal on generators and respect the algebra
   -- operations.  We proceed by induction on the group algebra
   -- element.

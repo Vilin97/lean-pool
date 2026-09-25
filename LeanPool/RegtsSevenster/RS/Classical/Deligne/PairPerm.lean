@@ -197,7 +197,7 @@ theorem powPeel_permMor_swap
           (Equiv.swap ⟨a, by omega⟩ ⟨a + 1, by omega⟩))
   | q, a, 0, h => by
     subst h
-    show permMor X (a + 1 + 2) topSwap ≫
+    change permMor X (a + 1 + 2) topSwap ≫
         (powPeel X (a + 2)).hom =
       (powPeel X (a + 2)).hom ≫
         (X ◁ permMor X (a + 2) topSwap)
@@ -205,7 +205,7 @@ theorem powPeel_permMor_swap
     exact swapTop_powPeel X a
   | q, a, b + 1, h => by
     subst h
-    show permMor X (a + 2 + b + 1 + 1)
+    change permMor X (a + 2 + b + 1 + 1)
         (Equiv.swap ⟨a + 1, by omega⟩ ⟨a + 2, by omega⟩) ≫
         (powPeel X (a + 2 + b + 1)).hom =
       (powPeel X (a + 2 + b + 1)).hom ≫
@@ -284,13 +284,13 @@ theorem powPeel_permMor_low
         ((β_ X X).hom ▷ tensorPow D X n) ≫
         (α_ X X (tensorPow D X n)).hom
   | 0 => by
-    show permMor X (0 + 2) topSwap ≫
+    change permMor X (0 + 2) topSwap ≫
         (powPeel X 1).hom ≫ (X ◁ (powPeel X 0).hom) =
       (powPeel X 1).hom ≫ (X ◁ (powPeel X 0).hom) ≫
         (α_ X X (𝟙_ D)).inv ≫ ((β_ X X).hom ▷ 𝟙_ D) ≫
         (α_ X X (𝟙_ D)).hom
     rw [permMor_topSwap_eq]
-    show ((α_ (𝟙_ D) X X).hom ≫ (𝟙_ D ◁ (β_ X X).hom) ≫
+    change ((α_ (𝟙_ D) X X).hom ≫ (𝟙_ D ◁ (β_ X X).hom) ≫
         (α_ (𝟙_ D) X X).inv) ≫
         ((((λ_ X).hom ≫ (ρ_ X).inv) ▷ X) ≫
           (α_ X (𝟙_ D) X).hom) ≫
@@ -302,7 +302,7 @@ theorem powPeel_permMor_low
         (α_ X X (𝟙_ D)).hom
     monoidal
   | n + 1 => by
-    show permMor X (n + 2 + 1)
+    change permMor X (n + 2 + 1)
         (Equiv.swap ⟨0, by omega⟩ ⟨1, by omega⟩) ≫
         (powPeel X (n + 1 + 1)).hom ≫
         (X ◁ (powPeel X (n + 1)).hom) =

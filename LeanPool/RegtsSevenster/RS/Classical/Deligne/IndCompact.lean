@@ -63,7 +63,7 @@ noncomputable def indOfCoyonedaIso [SmallCategory C]
         ((Ind.yonedaCompInclusion.app X).homCongr (Iso.refl _))))
     (fun h => by
       ext f
-      show (Ind.yonedaCompInclusion.app X).inv ≫
+      change (Ind.yonedaCompInclusion.app X).inv ≫
           (Ind.inclusion C).map (f ≫ h) ≫ 𝟙 _ =
         ((Ind.yonedaCompInclusion.app X).inv ≫
           (Ind.inclusion C).map f ≫ 𝟙 _) ≫ (Ind.inclusion C).map h

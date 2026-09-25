@@ -58,7 +58,7 @@ theorem stdToOmega_modelStarVec
           (modelStarVec f P e' ds) =
         omegaStarVec f P ds
   | [] => by
-    letI := P.braided
+    let := P.braided
     exact congrArg (fun z : (SuperVect.tensorUnit ⟶
         P.ω.obj (SkeinObj.mk 0)) =>
       (z : SuperVect.Hom _ _).evenMap (1 : ℂ))
@@ -66,7 +66,7 @@ theorem stdToOmega_modelStarVec
         (congrArg (fun w => ε P.ω ≫ w)
           (P.ω.map_id (SkeinObj.mk 0)).symm))
   | d :: ds => by
-    letI := P.braided
+    let := P.braided
     -- The cast migrates across the transport.
     have hcast := stdToOmega_bmc_cast f P e
       (List.sum_cons.symm : d + ds.sum = (d :: ds).sum)
@@ -100,7 +100,7 @@ theorem stdToOmega_modelStarVec
       · rfl
       · -- Evaluate the tensor on the even pair, cancel the
         -- strand inverse, and use the induction.
-        show (P.ω.map (bundleMapClass f (finCongr
+        change (P.ω.map (bundleMapClass f (finCongr
             (List.sum_cons.symm :
               d + ds.sum = (d :: ds).sum)))).evenMap
           (((μ P.ω (SkeinObj.mk d) (SkeinObj.mk ds.sum)) :

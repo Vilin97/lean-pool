@@ -40,7 +40,7 @@ noncomputable def starCoord (d : ℕ)
 /-- Star coordinates vanish on odd-parity colourings. -/
 theorem starCoord_odd (d : ℕ) (c : MixedColouring k ℓ d)
     (hc : ¬ c.IsEven) : starCoord f P e' d c = 0 :=
-  dif_neg hc
+  dite_eq_right hc
 
 /-- **The Regts–Sevenster functional**: the star coordinate at
 the canonical colouring, the paper's witness `h^ξ` (§5.4). -/
@@ -56,6 +56,6 @@ theorem evalOdd_hRS_nodup (μm : Multiset (Fin k))
         starCoord f P e' (μm.card + w.toFinset.card)
           (canonColouring μm w.toFinset) := by
   unfold MixedFunctional.evalOdd hRS
-  rw [if_pos hw]
+  rw [ite_eq_left hw]
 
 end RS

@@ -124,7 +124,7 @@ theorem ePoly_coeff {t : ℕ → ℂ} {n k : ℕ} (hk : k ≤ n) :
       omega) rfl rfl)]
   rw [Finset.sum_ite_eq' (range (n + 1)) k
     (fun j => ((-1 : ℂ)) ^ j * eSeq t j)]
-  rw [if_pos (Finset.mem_range.mpr (by omega))]
+  rw [ite_eq_left (Finset.mem_range.mpr (by omega))]
 
 /-- Its leading coefficient is `1`. -/
 theorem ePoly_coeff_self (t : ℕ → ℂ) (n : ℕ) :

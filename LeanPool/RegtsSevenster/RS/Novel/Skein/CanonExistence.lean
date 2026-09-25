@@ -42,7 +42,7 @@ flags lying on non-canonically oriented boundary-to-boundary chains.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 
@@ -111,7 +111,7 @@ theorem pathMatch_eq_of_chain {W : Fragment α} {F : EdgeSubset W}
 
 open EdgeSubset in
 /-- **A flag whose partner is a boundary flag is matched to it.** -/
-theorem pathMatch_eq_pairing_of_boundary {α : Type} [LinearOrder α]
+theorem pathMatch_eq_pairing_of_boundary {α : Type}
     {W : Fragment α} {F : EdgeSubset W} (κ : F.RelTransitionSystem)
     {b : W.Flag} (hb : b ∈ F.boundaryFlags)
     (hp : W.pairing b ∈ F.boundaryFlags) :
@@ -234,7 +234,7 @@ theorem canonIsOut_of_bad [LinearOrder α] {W : Fragment α} {F : EdgeSubset W}
     {o : κ.Orientation} {f : W.Flag} (h : BadFlag κ o f) :
     canonIsOut κ o f = !o.isOut f := by
   unfold canonIsOut
-  rw [if_pos h]
+  rw [ite_eq_left h]
 
 /-- Elsewhere it leaves the orientation alone. -/
 theorem canonIsOut_of_not_bad
@@ -243,7 +243,7 @@ theorem canonIsOut_of_not_bad
     {o : κ.Orientation} {f : W.Flag} (h : ¬ BadFlag κ o f) :
     canonIsOut κ o f = o.isOut f := by
   unfold canonIsOut
-  rw [if_neg h]
+  rw [ite_eq_right h]
 
 /-- **The flipped orientation**: negate the given orientation on the
 flip set.  The closure lemmas make the flip commute with both

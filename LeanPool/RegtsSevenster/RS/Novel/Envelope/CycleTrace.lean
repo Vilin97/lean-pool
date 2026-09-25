@@ -43,10 +43,10 @@ theorem catTrace_powHom
     (X : A) (g : End X) :
     ∀ n : ℕ, catTrace (powHom X g n) = catTrace g ^ n
   | 0 => by
-      show catTrace (𝟙 (𝟙_ A)) = catTrace g ^ 0
+      change catTrace (𝟙 (𝟙_ A)) = catTrace g ^ 0
       rw [catTrace_id, catDim_unit, pow_zero]
   | n + 1 => by
-      show catTrace (powHom X g n ⊗ₘ g) = catTrace g ^ (n + 1)
+      change catTrace (powHom X g n ⊗ₘ g) = catTrace g ^ (n + 1)
       rw [catTrace_tensorHom, catTrace_powHom X g n, pow_succ]
 
 /-! ## Bubbling one slot down -/
@@ -116,7 +116,7 @@ private theorem ptr_cycle_step_swapTop
 private theorem pow_comp_self [Category.{v} A]
     {X : A} (g : End X) (k : ℕ) :
     (g ^ (k + 1)) ≫ g = g ^ (k + 2) := by
-  show (g ^ (k + 1)) ≫ g = g ^ (k + 1 + 1)
+  change (g ^ (k + 1)) ≫ g = g ^ (k + 1 + 1)
   rw [pow_succ' g (k + 1)]
   exact (End.mul_def g (g ^ (k + 1))).symm
 
@@ -140,7 +140,7 @@ theorem catTrace_insertTop_powHom
           insertTop X n 0 ≫ powHom X g (n + 1) =
           powHom X g n ⊗ₘ (h ≫ g) := by
         rw [insertTop_zero]
-        show (tensorPow A X n ◁ h) ≫ 𝟙 _ ≫ (powHom X g n ⊗ₘ g) = _
+        change (tensorPow A X n ◁ h) ≫ 𝟙 _ ≫ (powHom X g n ⊗ₘ g) = _
         rw [Category.id_comp, ← id_tensorHom,
           tensorHom_comp_tensorHom, Category.id_comp]
       refine (congrArg catTrace hz).trans ?_

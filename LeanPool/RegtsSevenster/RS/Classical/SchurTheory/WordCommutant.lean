@@ -19,7 +19,7 @@ lies between zero and the word length, giving the polynomial bound
 namespace RS
 
 open Finset Representation
-open scoped Classical
+
 
 noncomputable section
 
@@ -37,6 +37,7 @@ structure MonomialWordAction
   /-- The action reindexes coordinates by the permutation. -/
   apply_eq : ∀ σ v c, ρ σ v c = weight σ c * v (c ∘ σ)
 
+open scoped Classical in
 private def wordPairCounts (p : (Fin n → α) × (Fin n → α)) :
     (α × α) → Fin (n + 1) := fun a =>
   ⟨(univ.filter fun i => (p.1 i, p.2 i) = a).card,
@@ -44,6 +45,7 @@ private def wordPairCounts (p : (Fin n → α) × (Fin n → α)) :
       (Finset.card_le_univ
         (univ.filter fun i => (p.1 i, p.2 i) = a)))⟩
 
+open scoped Classical in
 private theorem wordPairCounts_eq_imp_perm
     (p q : (Fin n → α) × (Fin n → α))
     (h : wordPairCounts p = wordPairCounts q) :
@@ -62,6 +64,7 @@ private theorem wordPairCounts_eq_imp_perm
   · funext i
     exact (congrArg Prod.snd (Equiv.ofFiberEquiv_map e i)).symm
 
+open scoped Classical in
 private theorem monomial_intertwining_entry
     {ρ : Representation ℂ (Equiv.Perm (Fin n))
       ((Fin n → α) → ℂ)} (M : MonomialWordAction ρ)
@@ -90,6 +93,7 @@ private theorem monomial_intertwining_entry
   simpa [LinearMap.comp_apply, hdelta, M.apply_eq, map_smul,
     smul_eq_mul] using ha
 
+open scoped Classical in
 private def commutantEntries
     (ρ : Representation ℂ (Equiv.Perm (Fin n))
       ((Fin n → α) → ℂ)) :
@@ -100,21 +104,22 @@ private def commutantEntries
   map_add' T U := by
     funext c
     by_cases h : ∃ p, wordPairCounts p = c
-    · simp only [dif_pos h, Pi.add_apply]
+    · simp only [dite_eq_left h, Pi.add_apply]
       rfl
-    · simp only [dif_neg h, Pi.add_apply, add_zero]
+    · simp only [dite_eq_right h, Pi.add_apply, add_zero]
   map_smul' z T := by
     funext c
     by_cases h : ∃ p, wordPairCounts p = c
-    · simp only [dif_pos h, Pi.smul_apply, RingHom.id_apply]
+    · simp only [dite_eq_left h, Pi.smul_apply, RingHom.id_apply]
       rfl
-    · simp only [dif_neg h, Pi.smul_apply, smul_zero]
+    · simp only [dite_eq_right h, Pi.smul_apply, smul_zero]
 
-private theorem commutantEntries_injective [Fintype α]
+private theorem commutantEntries_injective [Finite α]
     {ρ : Representation ℂ (Equiv.Perm (Fin n))
       ((Fin n → α) → ℂ)} (M : MonomialWordAction ρ) :
     Function.Injective (commutantEntries ρ) := by
   classical
+  let := Fintype.ofFinite α
   rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
   intro T hT
   have hentry (a b : Fin n → α) : T (Pi.single b 1) a = 0 := by
@@ -125,7 +130,7 @@ private theorem commutantEntries_injective [Fintype α]
       Classical.choose_spec hc
     have hz := congrFun hT c
     simp only [commutantEntries, LinearMap.coe_mk, AddHom.coe_mk,
-      dif_pos hc, Pi.zero_apply] at hz
+      dite_eq_left hc, Pi.zero_apply] at hz
     obtain ⟨σ, hrow, hcol⟩ :=
       wordPairCounts_eq_imp_perm (a, b) p hp.symm
     have h := monomial_intertwining_entry M T σ a b
@@ -137,6 +142,7 @@ private theorem commutantEntries_injective [Fintype α]
   funext a
   simpa using hentry a b
 
+open scoped Classical in
 /-- The commutant of a monomial word action has polynomial dimension,
 with one possible coordinate for each table of letter-pair counts. -/
 theorem finrank_commutant_le_word_counts [Fintype α]

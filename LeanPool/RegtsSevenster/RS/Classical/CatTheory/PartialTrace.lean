@@ -71,7 +71,7 @@ theorem ptr_whiskerRight_comp
     [RigidCategory C]
     {P X : C} (a : P ⟶ P)
     (f : P ⊗ X ⟶ P ⊗ X) : ptr ((a ▷ X) ≫ f) = a ≫ ptr f := by
-  show (ρ_ P).inv ≫ (P ◁ η_ X Xᘁ) ≫ (α_ P X Xᘁ).inv ≫
+  change (ρ_ P).inv ≫ (P ◁ η_ X Xᘁ) ≫ (α_ P X Xᘁ).inv ≫
       (((a ▷ X) ≫ f) ▷ Xᘁ) ≫ (α_ P X Xᘁ).hom ≫
       (P ◁ ((β_ X Xᘁ).hom ≫ ε_ X Xᘁ)) ≫ (ρ_ P).hom =
     a ≫ (ρ_ P).inv ≫ (P ◁ η_ X Xᘁ) ≫ (α_ P X Xᘁ).inv ≫
@@ -90,7 +90,7 @@ theorem ptr_comp_whiskerRight
     [RigidCategory C]
     {P X : C} (a : P ⟶ P)
     (f : P ⊗ X ⟶ P ⊗ X) : ptr (f ≫ (a ▷ X)) = ptr f ≫ a := by
-  show (ρ_ P).inv ≫ (P ◁ η_ X Xᘁ) ≫ (α_ P X Xᘁ).inv ≫
+  change (ρ_ P).inv ≫ (P ◁ η_ X Xᘁ) ≫ (α_ P X Xᘁ).inv ≫
       ((f ≫ (a ▷ X)) ▷ Xᘁ) ≫ (α_ P X Xᘁ).hom ≫
       (P ◁ ((β_ X Xᘁ).hom ≫ ε_ X Xᘁ)) ≫ (ρ_ P).hom =
     ((ρ_ P).inv ≫ (P ◁ η_ X Xᘁ) ≫ (α_ P X Xᘁ).inv ≫
@@ -118,7 +118,7 @@ theorem ptr_whiskerLeft
     (Q : C) {R X : C} (u : R ⊗ X ⟶ R ⊗ X) :
     ptr ((α_ Q R X).hom ≫ (Q ◁ u) ≫ (α_ Q R X).inv) =
       Q ◁ ptr u := by
-  show (ρ_ (Q ⊗ R)).inv ≫ ((Q ⊗ R) ◁ η_ X Xᘁ) ≫
+  change (ρ_ (Q ⊗ R)).inv ≫ ((Q ⊗ R) ◁ η_ X Xᘁ) ≫
       (α_ (Q ⊗ R) X Xᘁ).inv ≫
       (((α_ Q R X).hom ≫ (Q ◁ u) ≫ (α_ Q R X).inv) ▷ Xᘁ) ≫
       (α_ (Q ⊗ R) X Xᘁ).hom ≫
@@ -136,7 +136,7 @@ of the pairing. -/
 theorem ptr_braiding [Category.{v} C] [MonoidalCategory C] [SymmetricCategory C]
     [RigidCategory C]
     (X : C) : ptr (β_ X X).hom = 𝟙 X := by
-  show (ρ_ X).inv ≫ (X ◁ η_ X Xᘁ) ≫ (α_ X X Xᘁ).inv ≫
+  change (ρ_ X).inv ≫ (X ◁ η_ X Xᘁ) ≫ (α_ X X Xᘁ).inv ≫
       ((β_ X X).hom ▷ Xᘁ) ≫ (α_ X X Xᘁ).hom ≫
       (X ◁ ((β_ X Xᘁ).hom ≫ ε_ X Xᘁ)) ≫ (ρ_ X).hom = 𝟙 X
   -- Reassemble the two crossings into the braiding past `X ⊗ Xᘁ`.
@@ -210,7 +210,7 @@ private theorem catTrace_eq_ptl_trace
     pairTrace_eq
       (ExactPairing.tensor : ExactPairing (P ⊗ X) (Xᘁ ⊗ Pᘁ))
       HasRightDual.exact f]
-  show η_ (P ⊗ X) (Xᘁ ⊗ Pᘁ) ≫ f ▷ (Xᘁ ⊗ Pᘁ) ≫
+  change η_ (P ⊗ X) (Xᘁ ⊗ Pᘁ) ≫ f ▷ (Xᘁ ⊗ Pᘁ) ≫
       (β_ (P ⊗ X) (Xᘁ ⊗ Pᘁ)).hom ≫ ε_ (P ⊗ X) (Xᘁ ⊗ Pᘁ) =
     catTrace (ptl f)
   calc

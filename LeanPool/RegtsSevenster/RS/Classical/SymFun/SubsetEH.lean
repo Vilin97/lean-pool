@@ -50,7 +50,7 @@ theorem hSub_zero (A : Finset (Fin k)) : hSub A 0 = 1 := by
   rw [hSub, Finset.filter_true_of_mem (fun w _ => fun i hi =>
     absurd ((Multiset.card_eq_zero.mp w.2) ▸ hi)
       (Multiset.notMem_zero i))]
-  letI : Unique (Sym (Fin k) 0) :=
+  let : Unique (Sym (Fin k) 0) :=
     ⟨⟨Sym.nil⟩, fun s => Sym.eq_nil_of_card_zero s⟩
   rw [Fintype.sum_unique]
   rw [show ((default : Sym (Fin k) 0)).1 = 0 from rfl]
@@ -85,7 +85,7 @@ theorem eSub_insert {A : Finset (Fin k)} {j : Fin k} (hj : j ∉ A)
     (Multiset.powersetCard r (A.val.map X)).map
       (fun t => X j * t.prod) from
     Multiset.map_congr rfl (fun t _ => by
-      show (X j ::ₘ t).prod = X j * t.prod
+      change (X j ::ₘ t).prod = X j * t.prod
       rw [Multiset.prod_cons])]
   exact Multiset.sum_map_mul_left
 

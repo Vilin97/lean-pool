@@ -30,7 +30,7 @@ namespace RS
 
 open Finset Equiv MonoidAlgebra
 
-open scoped Classical
+
 
 /-! ### The colour space and its permutation action -/
 
@@ -56,7 +56,7 @@ instance colourSpace.mulAction {n p : ℕ} :
     funext i
     rfl
   mul_smul π ρ g := by
-    show g ∘ ⇑(π * ρ)⁻¹ = (g ∘ ⇑ρ⁻¹) ∘ ⇑π⁻¹
+    change g ∘ ⇑(π * ρ)⁻¹ = (g ∘ ⇑ρ⁻¹) ∘ ⇑π⁻¹
     rw [mul_inv_rev]
     rfl
 
@@ -79,7 +79,7 @@ private theorem fixed_iff_comp_eq {n p : ℕ} (π : Equiv.Perm (Fin n))
     exact this.symm
   · intro h
     funext i
-    show g (π⁻¹ i) = g i
+    change g (π⁻¹ i) = g i
     have := congrFun h (π⁻¹ i)
     change g (π (π⁻¹ i)) = g (π⁻¹ i) at this
     simp at this
@@ -92,10 +92,10 @@ private theorem char_permRep_count (p n : ℕ)
     (permRep p n).character π =
       ((Finset.univ.filter
         (fun g : colourSpace n p => π • g = g)).card : ℂ) := by
-  show LinearMap.trace ℂ _ ((permRep p n) π) = _
+  change LinearMap.trace ℂ _ ((permRep p n) π) = _
   set b := MonoidAlgebra.basis (colourSpace n p) ℂ with hb_def
   rw [LinearMap.trace_eq_matrix_trace ℂ b]
-  show ∑ g : colourSpace n p,
+  change ∑ g : colourSpace n p,
     LinearMap.toMatrix b b ((permRep p n) π) g g = _
   have hdiag : ∀ g : colourSpace n p,
       LinearMap.toMatrix b b ((permRep p n) π) g g =
@@ -107,15 +107,16 @@ private theorem char_permRep_count (p n : ℕ)
     rw [show (permRep p n) π (MonoidAlgebra.single g 1) =
       MonoidAlgebra.single (π • g) 1 from
       Representation.ofMulAction_single π g 1]
-    show ((coeffLinearEquiv ℂ)
+    change ((coeffLinearEquiv ℂ)
       (MonoidAlgebra.single (π • g) (1 : ℂ))) g =
         if π • g = g then 1 else 0
     rw [coeffLinearEquiv_apply]
-    simp [MonoidAlgebra.coeff, Finsupp.single_apply, eq_comm]
+    simp [ Finsupp.single_apply, eq_comm]
   rw [Finset.sum_congr rfl (fun g _ => hdiag g)]
   rw [← Finset.sum_filter]
   simp
 
+open scoped Classical in
 private theorem fixedPoints_card (p n : ℕ) (π : Equiv.Perm (Fin n)) :
     (Finset.univ.filter
       (fun g : colourSpace n p => π • g = g)).card =
@@ -169,7 +170,7 @@ noncomputable def signRep (n : ℕ) :
   map_one' := by simp [Module.End.one_eq_id]
   map_mul' π ρ := by
     refine LinearMap.ext fun z => ?_
-    show ((Equiv.Perm.sign (π * ρ) : ℤ) : ℂ) • z =
+    change ((Equiv.Perm.sign (π * ρ) : ℤ) : ℂ) • z =
       ((Equiv.Perm.sign π : ℤ) : ℂ) •
         (((Equiv.Perm.sign ρ : ℤ) : ℂ) • z)
     rw [map_mul]
@@ -179,7 +180,7 @@ noncomputable def signRep (n : ℕ) :
 /-- The character of the sign representation is the sign. -/
 theorem char_signRep (n : ℕ) (π : Equiv.Perm (Fin n)) :
     (signRep n).character π = ((Equiv.Perm.sign π : ℤ) : ℂ) := by
-  show LinearMap.trace ℂ ℂ
+  change LinearMap.trace ℂ ℂ
     (((Equiv.Perm.sign π : ℤ) : ℂ) • LinearMap.id) = _
   rw [map_smul, LinearMap.trace_id]
   simp
@@ -215,7 +216,7 @@ theorem cycleFun_superPS_e {n : ℕ} (q : ℕ)
       fun c => ((fun c => (-1 : ℂ) ^ (c + 1)) c) *
         ((fun _ => (q : ℂ)) c) from by
     funext c
-    show superPS 0 q c = (-1 : ℂ) ^ (c + 1) * (q : ℂ)
+    change superPS 0 q c = (-1 : ℂ) ^ (c + 1) * (q : ℂ)
     simp [superPS]]
   rw [cycleFun_mul]
   rw [show cycleFun (fun _ => (q : ℂ)) π =
@@ -234,7 +235,7 @@ theorem char_signPermRep (q n : ℕ) (π : Equiv.Perm (Fin n)) :
     (signPermRep q n).character π = cycleFun (superPS 0 q) π := by
   have h : (signPermRep q n).character π =
       (signRep n).character π * (permRep q n).character π := by
-    show (Representation.tprod (signRep n)
+    change (Representation.tprod (signRep n)
       (permRep q n)).character π = _
     rw [Representation.char_tensor]
     rfl
@@ -260,7 +261,7 @@ theorem diagramSchur_superPS_h_exists_nat {n : ℕ} (p : ℕ)
   have hcard0 : ((Nat.card (Equiv.Perm (Fin n)) : ℂ)) ≠ 0 := by
     rw [Nat.card_eq_fintype_card]
     exact_mod_cast Fintype.card_ne_zero
-  haveI : Invertible ((Nat.card (Equiv.Perm (Fin n)) : ℂ)) :=
+  have : Invertible ((Nat.card (Equiv.Perm (Fin n)) : ℂ)) :=
     invertibleOfNonzero hcard0
   have h := Representation.card_inv_mul_sum_char_mul_char_eq_finrank
     ρμ (permRep p n)
@@ -294,7 +295,7 @@ theorem diagramSchur_superPS_e_exists_nat {n : ℕ} (q : ℕ)
   have hcard0 : ((Nat.card (Equiv.Perm (Fin n)) : ℂ)) ≠ 0 := by
     rw [Nat.card_eq_fintype_card]
     exact_mod_cast Fintype.card_ne_zero
-  haveI : Invertible ((Nat.card (Equiv.Perm (Fin n)) : ℂ)) :=
+  have : Invertible ((Nat.card (Equiv.Perm (Fin n)) : ℂ)) :=
     invertibleOfNonzero hcard0
   have h := Representation.card_inv_mul_sum_char_mul_char_eq_finrank
     ρμ (signPermRep q n)

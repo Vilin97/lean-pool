@@ -233,7 +233,7 @@ theorem map_zagContract
       actLeft A Q'.X =
       ((modTensorπ A P' P ≫ d₀.pair) ▷ P'.X) ≫
         actLeft A P'.X ≫ r'.hom := by
-    haveI := r'.isModHom
+    have := r'.isModHom
     have hd1 : (modTensorπ A P' P ≫ d₀.pair) ⊗ₘ r'.hom =
         ((modTensorπ A P' P ≫ d₀.pair) ▷ P'.X) ≫
           (A ◁ r'.hom) :=

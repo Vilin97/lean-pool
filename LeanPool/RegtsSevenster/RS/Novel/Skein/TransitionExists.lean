@@ -35,10 +35,11 @@ open Classical in
 mapping the set to itself.  Proved by strong induction on the finset:
 for cardinality 0 the properties are vacuous; for cardinality ≥ 2 pick
 two distinct elements, match them, and recurse on the remainder. -/
-theorem exists_involution_of_even {β : Type} [DecidableEq β]
+theorem exists_involution_of_even {β : Type}
     (s : Finset β) (hs : Even s.card) :
     ∃ m : β → β, (∀ x ∈ s, m x ∈ s) ∧
       (∀ x ∈ s, m (m x) = x) ∧ (∀ x ∈ s, m x ≠ x) := by
+  classical
   revert hs
   exact s.strongInductionOn fun s ih hs => by
     by_cases hempty : s.card = 0
@@ -59,7 +60,7 @@ theorem exists_involution_of_even {β : Type} [DecidableEq β]
       have hs'_card : s'.card = s.card - 2 := by
         have h1 : (s.erase a).card = s.card - 1 := Finset.card_erase_of_mem ha
         have h2 : s'.card = (s.erase a).card - 1 := by
-          show ((s.erase a).erase b).card = (s.erase a).card - 1
+          change ((s.erase a).erase b).card = (s.erase a).card - 1
           exact Finset.card_erase_of_mem hb_in_erase
         omega
       have hs'_even : Even s'.card := by
@@ -81,9 +82,9 @@ theorem exists_involution_of_even {β : Type} [DecidableEq β]
           · rw [h2, hm_b]; exact ha
           · rw [hm_other x h1 h2]
             have hxs' : x ∈ s' := by
-              simp [hs'_def, Finset.mem_erase]; exact ⟨h2, h1, hx⟩
+              simp? [hs'_def, Finset.mem_erase]; exact ⟨h2, h1, hx⟩
             have := hm'_mem x hxs'
-            simp [hs'_def, Finset.mem_erase] at this; exact this.2.2
+            simp? [hs'_def, Finset.mem_erase] at this; exact this.2.2
       · -- m is an involution on s
         intro x hx
         by_cases h1 : x = a
@@ -92,7 +93,7 @@ theorem exists_involution_of_even {β : Type} [DecidableEq β]
           · rw [h2, hm_b, hm_a]
           · rw [hm_other x h1 h2]
             have hxs' : x ∈ s' := by
-              simp [hs'_def, Finset.mem_erase]; exact ⟨h2, h1, hx⟩
+              simp? [hs'_def, Finset.mem_erase]; exact ⟨h2, h1, hx⟩
             have hm'x_ne_a : m' x ≠ a := fun heq => ha' (heq ▸ hm'_mem x hxs')
             have hm'x_ne_b : m' x ≠ b := fun heq => hb' (heq ▸ hm'_mem x hxs')
             rw [hm_other (m' x) hm'x_ne_a hm'x_ne_b]
@@ -105,7 +106,7 @@ theorem exists_involution_of_even {β : Type} [DecidableEq β]
           · rw [h2, hm_b] at hfp; exact hab hfp
           · rw [hm_other x h1 h2] at hfp
             have hxs' : x ∈ s' := by
-              simp [hs'_def, Finset.mem_erase]; exact ⟨h2, h1, hx⟩
+              simp? [hs'_def, Finset.mem_erase]; exact ⟨h2, h1, hx⟩
             exact hm'_ne x hxs' hfp
 
 /-! ### Part 1: constructing the transition system -/
@@ -141,7 +142,7 @@ noncomputable def EdgeSubset.buildTransitionSystem {α : Type}
       f ∈ flagsAt (vertexOf f hf) :=
     Finset.mem_filter.mpr ⟨hf, hvertexOf f hf⟩
   have hgm_unfold (f : W.Flag) (hf : f ∈ F.flags) :
-      globalMatch f = mv (vertexOf f hf) f := dif_pos hf
+      globalMatch f = mv (vertexOf f hf) f := dite_eq_left hf
   have hmatch_mem : ∀ f ∈ F.flags, globalMatch f ∈ F.flags := by
     intro f hf
     rw [hgm_unfold f hf]
@@ -282,7 +283,7 @@ theorem conj_zpow (κ : F.TransitionSystem) (n : ℤ) :
         map_zpow (MulAut.conj F.pairingPerm).toMonoidHom κ.walkPerm n
     _ = κ.walkPerm⁻¹ ^ n := by
         congr 1
-        show F.pairingPerm * κ.walkPerm * F.pairingPerm⁻¹ = κ.walkPerm⁻¹
+        change F.pairingPerm * κ.walkPerm * F.pairingPerm⁻¹ = κ.walkPerm⁻¹
         rw [hσ_inv]; exact κ.conj_eq_inv
     _ = κ.walkPerm ^ (-n) := inv_zpow' κ.walkPerm n
 
@@ -459,13 +460,13 @@ noncomputable def EdgeSubset.TransitionSystem.buildOrientation
   -- match_flip
   have hmatch_flip : ∀ g ∈ F.flags, isOut (κ.match_ g) = !isOut g := by
     intro g hg
-    simp only [isOut, dif_pos hg, dif_pos (κ.match_mem g hg)]
+    simp only [isOut, dite_eq_left hg, dite_eq_left (κ.match_mem g hg)]
     rw [orbitMin_pairing_match ⟨g, hg⟩, orbitMin_match ⟨g, hg⟩]
     exact decide_lt_flip (Ne.symm (orbitMin_pairing_ne ⟨g, hg⟩))
   -- pairing_flip
   have hpairing_flip : ∀ g ∈ F.flags, isOut (W.pairing g) = !isOut g := by
     intro g hg
-    simp only [isOut, dif_pos hg, dif_pos (F.pairing_mem g hg)]
+    simp only [isOut, dite_eq_left hg, dite_eq_left (F.pairing_mem g hg)]
     -- pairingPerm ⟨σ g, _⟩ = ⟨g, hg⟩ (since σ² = id)
     have hσσ : F.pairingPerm ⟨W.pairing g, F.pairing_mem g hg⟩ = ⟨g, hg⟩ :=
       Subtype.ext (by simp [W.pairing_invol g])

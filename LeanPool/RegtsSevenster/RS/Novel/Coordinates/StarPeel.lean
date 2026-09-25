@@ -61,7 +61,7 @@ noncomputable def multiStarNil (c : ℕ) :
   pairing_comm := fun g =>
     g.elim (fun i => i.elim0) (fun i => i.elim0)
   circles_eq := by
-    show c = 0 + c
+    change c = 0 + c
     omega
 
 /-- The head-vertex splitting map. -/
@@ -80,53 +80,53 @@ def peelVertexEquiv (n : ℕ) : Fin (n + 1) ≃ Unit ⊕ Fin n where
   invFun := peelVertexInv n
   left_inv v := by
     by_cases h : v.val = 0
-    · have h1 : peelVertexFun n v = Sum.inl () := dif_pos h
+    · have h1 : peelVertexFun n v = Sum.inl () := dite_eq_left h
       rw [h1]
       exact Fin.ext h.symm
     · have h1 : peelVertexFun n v =
           Sum.inr ⟨v.val - 1, by have := v.isLt; omega⟩ :=
-        dif_neg h
+        dite_eq_right h
       rw [h1]
       exact Fin.ext (by
-        show v.val - 1 + 1 = v.val
+        change v.val - 1 + 1 = v.val
         omega)
   right_inv x := by
     rcases x with u | j
-    · exact dif_pos rfl
+    · exact dite_eq_left rfl
     · have h1 : peelVertexFun n ⟨j.val + 1, by
           have := j.isLt
           omega⟩ = Sum.inr ⟨j.val + 1 - 1, by
           have := j.isLt
           omega⟩ :=
-        dif_neg (show ¬ (j.val + 1 = 0) by omega)
+        dite_eq_right (show ¬ (j.val + 1 = 0) by omega)
       rw [show peelVertexInv n (Sum.inr j) =
         (⟨j.val + 1, by have := j.isLt; omega⟩ : Fin (n + 1))
         from rfl, h1]
       exact congrArg Sum.inr (Fin.ext (by
-        show j.val + 1 - 1 = j.val
+        change j.val + 1 - 1 = j.val
         omega))
 
 /-- The peel splits off the first vertex. -/
 theorem peelVertexEquiv_zero (n : ℕ) (h : 0 < n + 1) :
     peelVertexEquiv n ⟨0, h⟩ = Sum.inl () := by
-  show peelVertexFun n ⟨0, h⟩ = Sum.inl ()
-  exact dif_pos rfl
+  change peelVertexFun n ⟨0, h⟩ = Sum.inl ()
+  exact dite_eq_left rfl
 
 /-- And leaves the rest in order. -/
 theorem peelVertexEquiv_succ (n : ℕ) (j : Fin n) :
     peelVertexEquiv n j.succ = Sum.inr j := by
   have h1 : peelVertexFun n j.succ =
       Sum.inr ⟨j.succ.val - 1, by
-        show j.val + 1 - 1 < n
+        change j.val + 1 - 1 < n
         have := j.isLt
         omega⟩ :=
-    dif_neg (show ¬ (j.succ.val = 0) from by
-      show ¬ (j.val + 1 = 0)
+    dite_eq_right (show ¬ (j.succ.val = 0) from by
+      change ¬ (j.val + 1 = 0)
       omega)
-  show peelVertexFun n j.succ = Sum.inr j
+  change peelVertexFun n j.succ = Sum.inr j
   rw [h1]
   exact congrArg Sum.inr (Fin.ext (by
-    show j.val + 1 - 1 = j.val
+    change j.val + 1 - 1 = j.val
     omega))
 
 /-- The slot shuffle of the peel. -/
@@ -175,6 +175,153 @@ theorem peelFlagEquiv_inr_high (d S : ℕ) (j : Fin S) :
     Sum.map_inr, finSumFinEquiv_symm_apply_natAdd]
   rfl
 
+private theorem multiStarPeel_attach_comm {n : ℕ} (d S c : ℕ)
+    (rest : Fin S → Fin n) (a : Fin (d + S) → Fin (n + 1))
+    (ha_low : ∀ i : Fin d,
+      a (Fin.castAdd S i) = ⟨0, Nat.succ_pos n⟩)
+    (ha_high : ∀ j : Fin S,
+      a (Fin.natAdd d j) = (rest j).succ)
+    (g : ((multiStar a c)).Flag) :
+    (((tensorFragment
+        ((vertexStar d).relabel (finCongr (by omega : d = 0 + d)))
+        ((multiStar rest c).relabel (finCongr
+          (by omega : S = 0 + S)))).relabel
+        (finCongr (by omega : (0 + 0) + (d + S) = d + S)))).attach (peelFlagEquiv d S g) =
+      (((multiStar a c)).attach g).map (peelVertexEquiv n) id := by
+  rcases g with i | i
+  · rcases Nat.lt_or_ge i.val d with hi | hi
+    · rw [show i = Fin.castAdd S ⟨i.val, hi⟩ from Fin.ext rfl]
+      erw [peelFlagEquiv_inl_low d S ⟨i.val, hi⟩]
+      change (Sum.inl (Sum.inl ()) :
+        ((Unit ⊕ Fin n) ⊕ Fin (d + S))) =
+        Sum.map (peelVertexEquiv n) id
+          (Sum.inl (a (Fin.castAdd S ⟨i.val, hi⟩)))
+      rw [ha_low]
+      change Sum.inl (Sum.inl ()) =
+        Sum.inl (peelVertexEquiv n ⟨0, Nat.succ_pos n⟩)
+      rw [peelVertexEquiv_zero]
+    · rw [show i = Fin.natAdd d ⟨i.val - d, by
+          have := i.isLt
+          omega⟩ from Fin.ext (by
+          change i.val = d + (i.val - d)
+          omega)]
+      erw [peelFlagEquiv_inl_high d S]
+      change (Sum.inl (Sum.inr (rest ⟨i.val - d, by
+          have := i.isLt
+          omega⟩)) : ((Unit ⊕ Fin n) ⊕ Fin (d + S))) =
+        Sum.map (peelVertexEquiv n) id
+          (Sum.inl (a (Fin.natAdd d ⟨i.val - d, by
+            have := i.isLt
+            omega⟩)))
+      rw [ha_high]
+      change Sum.inl (Sum.inr (rest ⟨i.val - d, _⟩)) =
+        Sum.inl (peelVertexEquiv n (rest ⟨i.val - d, _⟩).succ)
+      rw [peelVertexEquiv_succ]
+  · rcases Nat.lt_or_ge i.val d with hi | hi
+    · rw [show i = Fin.castAdd S ⟨i.val, hi⟩ from Fin.ext rfl]
+      erw [peelFlagEquiv_inr_low d S ⟨i.val, hi⟩]
+      change Sum.inr (finCongr
+        (by omega : (0 + 0) + (d + S) = d + S)
+        (interleaveEquiv 0 d 0 S
+          (Sum.inl (finCongr (by omega : d = 0 + d)
+            ⟨i.val, hi⟩)))) =
+        Sum.inr (Fin.castAdd S ⟨i.val, hi⟩)
+      refine congrArg Sum.inr (Fin.ext ?_)
+      rw [show (finCongr (by omega : d = 0 + d)
+          (⟨i.val, hi⟩ : Fin d) : Fin (0 + d)) =
+        Fin.natAdd 0 ⟨i.val, hi⟩ from Fin.ext (by
+          change i.val = 0 + i.val
+          omega),
+        interleaveEquiv_inl_high]
+      change (0 + 0) + i.val = i.val
+      omega
+    · rw [show i = Fin.natAdd d ⟨i.val - d, by
+          have := i.isLt
+          omega⟩ from Fin.ext (by
+          change i.val = d + (i.val - d)
+          omega)]
+      erw [peelFlagEquiv_inr_high d S]
+      change Sum.inr (finCongr
+        (by omega : (0 + 0) + (d + S) = d + S)
+        (interleaveEquiv 0 d 0 S
+          (Sum.inr (finCongr (by omega : S = 0 + S)
+            ⟨i.val - d, by have := i.isLt; omega⟩)))) =
+        Sum.inr (Fin.natAdd d ⟨i.val - d, by
+          have := i.isLt
+          omega⟩)
+      refine congrArg Sum.inr (Fin.ext ?_)
+      rw [show (finCongr (by omega : S = 0 + S)
+          (⟨i.val - d, by have := i.isLt; omega⟩ : Fin S) :
+          Fin (0 + S)) =
+        Fin.natAdd 0 ⟨i.val - d, by
+          have := i.isLt
+          omega⟩ from Fin.ext (by
+          change i.val - d = 0 + (i.val - d)
+          omega),
+        interleaveEquiv_inr_high]
+      change (0 + 0) + (d + (i.val - d)) = d + (i.val - d)
+      omega
+-- ═══════ PAIRING ═══════
+-- The peel does not move any edge, so both sides read the same
+-- partner.
+
+private theorem multiStarPeel_pairing_comm {n : ℕ} (d S c : ℕ)
+    (rest : Fin S → Fin n) (a : Fin (d + S) → Fin (n + 1))
+    (g : ((multiStar a c)).Flag) :
+    peelFlagEquiv d S (((multiStar a c)).pairing g) =
+      (((tensorFragment
+        ((vertexStar d).relabel (finCongr (by omega : d = 0 + d)))
+        ((multiStar rest c).relabel (finCongr
+          (by omega : S = 0 + S)))).relabel
+        (finCongr (by omega : (0 + 0) + (d + S) = d + S)))).pairing (peelFlagEquiv d S g) := by
+  rcases g with i | i
+  · rcases Nat.lt_or_ge i.val d with hi | hi
+    · rw [show i = Fin.castAdd S ⟨i.val, hi⟩ from Fin.ext rfl,
+        show (multiStar a c).pairing
+          (Sum.inl (Fin.castAdd S ⟨i.val, hi⟩)) =
+        Sum.inr (Fin.castAdd S ⟨i.val, hi⟩) from rfl]
+      erw [peelFlagEquiv_inr_low d S ⟨i.val, hi⟩,
+        peelFlagEquiv_inl_low d S ⟨i.val, hi⟩]
+      rfl
+    · rw [show i = Fin.natAdd d ⟨i.val - d, by
+          have := i.isLt
+          omega⟩ from Fin.ext (by
+          change i.val = d + (i.val - d)
+          omega),
+        show (multiStar a c).pairing
+          (Sum.inl (Fin.natAdd d ⟨i.val - d, by
+            have := i.isLt
+            omega⟩)) =
+        Sum.inr (Fin.natAdd d ⟨i.val - d, by
+          have := i.isLt
+          omega⟩) from rfl]
+      erw [peelFlagEquiv_inr_high d S,
+        peelFlagEquiv_inl_high d S]
+      rfl
+  · rcases Nat.lt_or_ge i.val d with hi | hi
+    · rw [show i = Fin.castAdd S ⟨i.val, hi⟩ from Fin.ext rfl,
+        show (multiStar a c).pairing
+          (Sum.inr (Fin.castAdd S ⟨i.val, hi⟩)) =
+        Sum.inl (Fin.castAdd S ⟨i.val, hi⟩) from rfl]
+      erw [peelFlagEquiv_inl_low d S ⟨i.val, hi⟩,
+        peelFlagEquiv_inr_low d S ⟨i.val, hi⟩]
+      rfl
+    · rw [show i = Fin.natAdd d ⟨i.val - d, by
+          have := i.isLt
+          omega⟩ from Fin.ext (by
+          change i.val = d + (i.val - d)
+          omega),
+        show (multiStar a c).pairing
+          (Sum.inr (Fin.natAdd d ⟨i.val - d, by
+            have := i.isLt
+            omega⟩)) =
+        Sum.inl (Fin.natAdd d ⟨i.val - d, by
+          have := i.isLt
+          omega⟩) from rfl]
+      erw [peelFlagEquiv_inl_high d S,
+        peelFlagEquiv_inr_high d S]
+      rfl
+
 /-- **The peel step**, generically: a multi-star whose assignment
 splits blockwise is the head vertex star tensored with the tail
 multi-star. -/
@@ -195,133 +342,10 @@ noncomputable def multiStarPeel {n : ℕ} (d S c : ℕ)
   -- ═══════ ATTACHMENT ═══════
   -- Flags below `d` sit on the peeled star, the rest on the
   -- remaining ones; each side keeps its own vertex.
-  attach_comm := fun g => by
-    rcases g with i | i
-    · rcases Nat.lt_or_ge i.val d with hi | hi
-      · rw [show i = Fin.castAdd S ⟨i.val, hi⟩ from Fin.ext rfl]
-        erw [peelFlagEquiv_inl_low d S ⟨i.val, hi⟩]
-        show (Sum.inl (Sum.inl ()) :
-          ((Unit ⊕ Fin n) ⊕ Fin (d + S))) =
-          Sum.map (peelVertexEquiv n) id
-            (Sum.inl (a (Fin.castAdd S ⟨i.val, hi⟩)))
-        rw [ha_low]
-        show Sum.inl (Sum.inl ()) =
-          Sum.inl (peelVertexEquiv n ⟨0, Nat.succ_pos n⟩)
-        rw [peelVertexEquiv_zero]
-      · rw [show i = Fin.natAdd d ⟨i.val - d, by
-            have := i.isLt
-            omega⟩ from Fin.ext (by
-            show i.val = d + (i.val - d)
-            omega)]
-        erw [peelFlagEquiv_inl_high d S]
-        show (Sum.inl (Sum.inr (rest ⟨i.val - d, by
-            have := i.isLt
-            omega⟩)) : ((Unit ⊕ Fin n) ⊕ Fin (d + S))) =
-          Sum.map (peelVertexEquiv n) id
-            (Sum.inl (a (Fin.natAdd d ⟨i.val - d, by
-              have := i.isLt
-              omega⟩)))
-        rw [ha_high]
-        show Sum.inl (Sum.inr (rest ⟨i.val - d, _⟩)) =
-          Sum.inl (peelVertexEquiv n (rest ⟨i.val - d, _⟩).succ)
-        rw [peelVertexEquiv_succ]
-    · rcases Nat.lt_or_ge i.val d with hi | hi
-      · rw [show i = Fin.castAdd S ⟨i.val, hi⟩ from Fin.ext rfl]
-        erw [peelFlagEquiv_inr_low d S ⟨i.val, hi⟩]
-        show Sum.inr (finCongr
-          (by omega : (0 + 0) + (d + S) = d + S)
-          (interleaveEquiv 0 d 0 S
-            (Sum.inl (finCongr (by omega : d = 0 + d)
-              ⟨i.val, hi⟩)))) =
-          Sum.inr (Fin.castAdd S ⟨i.val, hi⟩)
-        refine congrArg Sum.inr (Fin.ext ?_)
-        rw [show (finCongr (by omega : d = 0 + d)
-            (⟨i.val, hi⟩ : Fin d) : Fin (0 + d)) =
-          Fin.natAdd 0 ⟨i.val, hi⟩ from Fin.ext (by
-            show i.val = 0 + i.val
-            omega),
-          interleaveEquiv_inl_high]
-        show (0 + 0) + i.val = i.val
-        omega
-      · rw [show i = Fin.natAdd d ⟨i.val - d, by
-            have := i.isLt
-            omega⟩ from Fin.ext (by
-            show i.val = d + (i.val - d)
-            omega)]
-        erw [peelFlagEquiv_inr_high d S]
-        show Sum.inr (finCongr
-          (by omega : (0 + 0) + (d + S) = d + S)
-          (interleaveEquiv 0 d 0 S
-            (Sum.inr (finCongr (by omega : S = 0 + S)
-              ⟨i.val - d, by have := i.isLt; omega⟩)))) =
-          Sum.inr (Fin.natAdd d ⟨i.val - d, by
-            have := i.isLt
-            omega⟩)
-        refine congrArg Sum.inr (Fin.ext ?_)
-        rw [show (finCongr (by omega : S = 0 + S)
-            (⟨i.val - d, by have := i.isLt; omega⟩ : Fin S) :
-            Fin (0 + S)) =
-          Fin.natAdd 0 ⟨i.val - d, by
-            have := i.isLt
-            omega⟩ from Fin.ext (by
-            show i.val - d = 0 + (i.val - d)
-            omega),
-          interleaveEquiv_inr_high]
-        show (0 + 0) + (d + (i.val - d)) = d + (i.val - d)
-        omega
-  -- ═══════ PAIRING ═══════
-  -- The peel does not move any edge, so both sides read the same
-  -- partner.
-  pairing_comm := fun g => by
-    rcases g with i | i
-    · rcases Nat.lt_or_ge i.val d with hi | hi
-      · rw [show i = Fin.castAdd S ⟨i.val, hi⟩ from Fin.ext rfl,
-          show (multiStar a c).pairing
-            (Sum.inl (Fin.castAdd S ⟨i.val, hi⟩)) =
-          Sum.inr (Fin.castAdd S ⟨i.val, hi⟩) from rfl]
-        erw [peelFlagEquiv_inr_low d S ⟨i.val, hi⟩,
-          peelFlagEquiv_inl_low d S ⟨i.val, hi⟩]
-        rfl
-      · rw [show i = Fin.natAdd d ⟨i.val - d, by
-            have := i.isLt
-            omega⟩ from Fin.ext (by
-            show i.val = d + (i.val - d)
-            omega),
-          show (multiStar a c).pairing
-            (Sum.inl (Fin.natAdd d ⟨i.val - d, by
-              have := i.isLt
-              omega⟩)) =
-          Sum.inr (Fin.natAdd d ⟨i.val - d, by
-            have := i.isLt
-            omega⟩) from rfl]
-        erw [peelFlagEquiv_inr_high d S,
-          peelFlagEquiv_inl_high d S]
-        rfl
-    · rcases Nat.lt_or_ge i.val d with hi | hi
-      · rw [show i = Fin.castAdd S ⟨i.val, hi⟩ from Fin.ext rfl,
-          show (multiStar a c).pairing
-            (Sum.inr (Fin.castAdd S ⟨i.val, hi⟩)) =
-          Sum.inl (Fin.castAdd S ⟨i.val, hi⟩) from rfl]
-        erw [peelFlagEquiv_inl_low d S ⟨i.val, hi⟩,
-          peelFlagEquiv_inr_low d S ⟨i.val, hi⟩]
-        rfl
-      · rw [show i = Fin.natAdd d ⟨i.val - d, by
-            have := i.isLt
-            omega⟩ from Fin.ext (by
-            show i.val = d + (i.val - d)
-            omega),
-          show (multiStar a c).pairing
-            (Sum.inr (Fin.natAdd d ⟨i.val - d, by
-              have := i.isLt
-              omega⟩)) =
-          Sum.inl (Fin.natAdd d ⟨i.val - d, by
-            have := i.isLt
-            omega⟩) from rfl]
-        erw [peelFlagEquiv_inl_high d S,
-          peelFlagEquiv_inr_high d S]
-        rfl
+  attach_comm := multiStarPeel_attach_comm d S c rest a ha_low ha_high
+  pairing_comm := multiStarPeel_pairing_comm d S c rest a
   circles_eq := by
-    show c = 0 + c
+    change c = 0 + c
     omega
 
 /-- Circles migrate out of the second tensor factor. -/
@@ -334,18 +358,18 @@ noncomputable def tensorAddCirclesRight {s t u v : ℕ}
   vertexEquiv := _root_.Equiv.refl _
   attach_comm := fun g => by
     rcases g with g | g
-    · show ((A.attach g).map Sum.inl Sum.inl).map id _ =
+    · change ((A.attach g).map Sum.inl Sum.inl).map id _ =
         (((A.attach g).map Sum.inl Sum.inl).map id _).map
           (_root_.Equiv.refl _) id
       rcases A.attach g with x | x <;> rfl
-    · show ((B.attach g).map Sum.inr Sum.inr).map id _ =
+    · change ((B.attach g).map Sum.inr Sum.inr).map id _ =
         (((B.attach g).map Sum.inr Sum.inr).map id _).map
           (_root_.Equiv.refl _) id
       rcases B.attach g with x | x <;> rfl
   pairing_comm := fun g => by
     rcases g with g | g <;> rfl
   circles_eq := by
-    show A.circles + (B.circles + c) =
+    change A.circles + (B.circles + c) =
       (A.circles + B.circles) + c
     omega
 
@@ -359,22 +383,22 @@ noncomputable def multiStarBlocks :
   | d :: ds, c => by
     refine (multiStarPeel d ds.sum c (blockAssign ds)
       (blockAssign (d :: ds))
-      (fun i => dif_pos i.isLt)
+      (fun i => dite_eq_left i.isLt)
       (fun j => by
         have h1 : ¬ ((Fin.natAdd d j :
             Fin (d + ds.sum)).val < d) := by
-          show ¬ (d + j.val < d)
+          change ¬ (d + j.val < d)
           omega
-        refine (dif_neg h1).trans ?_
+        refine (dite_eq_right h1).trans ?_
         refine congrArg Fin.succ
           (congrArg (blockAssign ds) (Fin.ext ?_))
-        show d + j.val - d = j.val
+        change d + j.val - d = j.val
         omega)).trans ?_
     refine (Fragment.Equiv.relabelCongr
       (tensorFragmentCongr (Fragment.Equiv.refl _)
         (Fragment.Equiv.relabelCongr
           (multiStarBlocks ds c) _)) _).trans ?_
-    show ((tensorFragment
+    change ((tensorFragment
         ((vertexStar d).relabel (finCongr
           (by omega : d = 0 + d)))
         (addCircles ((starTensor ds).relabel (finCongr

@@ -302,7 +302,7 @@ theorem insertTop_braid_le
         refine (whisker_comp₂ (insertTop X n' b₀ ▷ X)
           (insertTop X (n' + 1) (a' + 1)) X).trans ?_
         exact congrArg (fun m => ((insertTop X n' b₀ ▷ X) ▷ X) ≫ m) e3
-      show swapTop X (n' + 1) ≫ (insertTop X (n' + 1) (a' + 1) ▷ X) ≫
+      change swapTop X (n' + 1) ≫ (insertTop X (n' + 1) (a' + 1) ▷ X) ≫
           (swapTop X (n' + 1) ≫ (insertTop X (n' + 1) b₀ ▷ X))
         = (insertTop X (n' + 1) (b₀ + 1) ▷ X) ≫
           (swapTop X (n' + 1) ≫ (insertTop X (n' + 1) (a' + 1) ▷ X))
@@ -585,7 +585,7 @@ theorem permMor_mul [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
   induction n with
   | zero =>
     intro σ τ
-    show 𝟙 _ = 𝟙 _ ≫ 𝟙 _
+    change 𝟙 _ = 𝟙 _ ≫ 𝟙 _
     exact (Category.comp_id _).symm
   | succ n' ih =>
     match n' with

@@ -58,19 +58,19 @@ def Hom.comp {M N P : S.Mod} (f : Hom M N) (g : Hom N P) :
   evenMap := g.evenMap.comp f.evenMap
   oddMap := g.oddMap.comp f.oddMap
   map_actEE x m := by
-    show g.evenMap (f.evenMap _) = _
+    change g.evenMap (f.evenMap _) = _
     rw [f.map_actEE, g.map_actEE]
     rfl
   map_actEO x m := by
-    show g.oddMap (f.oddMap _) = _
+    change g.oddMap (f.oddMap _) = _
     rw [f.map_actEO, g.map_actEO]
     rfl
   map_actOE u m := by
-    show g.oddMap (f.oddMap _) = _
+    change g.oddMap (f.oddMap _) = _
     rw [f.map_actOE, g.map_actOE]
     rfl
   map_actOO u m := by
-    show g.evenMap (f.evenMap _) = _
+    change g.evenMap (f.evenMap _) = _
     rw [f.map_actOO, g.map_actOO]
     rfl
 
@@ -186,9 +186,9 @@ instance instPreadditive : Preadditive S.Mod where
   add_comp _ _ _ f f' g := by
     refine Hom.ext (LinearMap.ext fun x => ?_)
       (LinearMap.ext fun x => ?_)
-    · show g.evenMap (f.evenMap x + f'.evenMap x) = _
+    · change g.evenMap (f.evenMap x + f'.evenMap x) = _
       exact map_add _ _ _
-    · show g.oddMap (f.oddMap x + f'.oddMap x) = _
+    · change g.oddMap (f.oddMap x + f'.oddMap x) = _
       exact map_add _ _ _
   comp_add _ _ _ f g g' := Hom.ext rfl rfl
 

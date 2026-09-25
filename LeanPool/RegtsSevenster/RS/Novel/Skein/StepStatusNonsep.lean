@@ -39,7 +39,7 @@ transported frame of *any* repair from a canonical source.
 
 namespace RS
 
-open scoped Classical
+
 
 /-! ## Propositional XOR helpers -/
 

@@ -18,8 +18,7 @@ compared, since only the order distinguishes them.
 
 namespace RS
 
-open Finset Classical
-
+open Finset
 variable {α : Type} {W : Fragment α} {F : EdgeSubset W} {ℓ : ℕ} {κ :
   F.TransitionSystem}
 
@@ -43,6 +42,7 @@ private theorem multiset_bind_pair {β γ : Type} (m : Multiset β)
 
 /-! ### The attachWith–sort multiset equals the finset filter val -/
 
+open scoped Classical in
 /-- The attachWith of the sorted list of a finset filter, as a multiset,
 equals the val of `univ.filter` on the subtype. -/
 theorem attachWith_sort_eq_filter_val
@@ -52,8 +52,8 @@ theorem attachWith_sort_eq_filter_val
       Multiset {f : W.Flag // f ∈ F.flags}) =
     (Finset.univ.filter (fun f : {f : W.Flag // f ∈ F.flags} =>
         W.attach f.val = Sum.inl v ∧ o.isOut f.val = false)).val := by
-  letI := W.flagOrder
-  letI := Classical.dec
+  let := W.flagOrder
+  let := Classical.dec
   -- Both sides are nodup multisets with the same members; use Nodup.ext.
   have h_nd_r : (Finset.univ.filter (fun f : {f : W.Flag // f ∈ F.flags} =>
       W.attach f.val = Sum.inl v ∧ o.isOut f.val = false)).val.Nodup :=
@@ -117,6 +117,7 @@ private theorem match_maps_out_to_in (o : κ.Orientation) (v : W.Vertex)
   exact ⟨κ.match_vertex f.val f.prop v hf.1,
     by rw [o.match_flip f.val f.prop, hf.2]; rfl⟩
 
+open scoped Classical in
 /-- The match embedding maps the incoming-at-v finset to the outgoing-at-v
 finset. -/
 private theorem match_image_in_eq_out (o : κ.Orientation) (v : W.Vertex) :
@@ -140,6 +141,7 @@ private theorem match_image_in_eq_out (o : κ.Orientation) (v : W.Vertex) :
 
 /-! ### Splitting the all-at-v filter into in and out parts -/
 
+open scoped Classical in
 private theorem filter_at_v_split (o : κ.Orientation) (v : W.Vertex) :
     (Finset.univ.filter (fun f : {f : W.Flag // f ∈ F.flags} =>
       W.attach f.val = Sum.inl v)).val =
@@ -175,6 +177,7 @@ private theorem filter_at_v_split (o : κ.Orientation) (v : W.Vertex) :
 
 /-! ### Main theorem -/
 
+open scoped Classical in
 /-- A vertex's odd list as a multiset: the per-flag odd values over
 the flags at that vertex. -/
 theorem oddListAt_coe_multiset (o : κ.Orientation) (φ : F.OddColouring ℓ)
@@ -210,8 +213,8 @@ theorem oddListAt_coe_multiset (o : κ.Orientation) (φ : F.OddColouring ℓ)
     -- As multisets: ↑[a, b] = a ::ₘ b ::ₘ 0 = {a} + {b}
     let a := φ.val ⟨f, hf⟩
     let b := oddPartner ℓ (φ.val ⟨κ.match_ f, κ.match_mem _ hf⟩)
-    show (↑(F.oddPairFn κ φ ⟨f, hf⟩) : Multiset _) = ({a} : Multiset _) + {b}
-    show (↑([a, b] : List _) : Multiset _) = ({a} : Multiset _) + {b}
+    change (↑(F.oddPairFn κ φ ⟨f, hf⟩) : Multiset _) = ({a} : Multiset _) + {b}
+    change (↑([a, b] : List _) : Multiset _) = ({a} : Multiset _) + {b}
     rfl
   -- Step 3: Bind of pairs = map of first + map of second
   have h_bind_split : S_in.val.bind (fun f => (↑(F.oddPairFn κ φ f) : Multiset

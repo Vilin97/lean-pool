@@ -19,7 +19,7 @@ Definition 5 odd values.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 
@@ -98,7 +98,7 @@ theorem oddListOf_coe_multiset {d : ℕ}
     have hnr : ¬ (c x).isRight = true :=
       fun hr => hxs ((hs x).mpr hr)
     rcases hy : c x with a | u
-    · show Sum.getRight? (c x) = none
+    · change Sum.getRight? (c x) = none
       rw [hy]
       rfl
     · exact absurd (by rw [hy]; rfl) hnr
@@ -115,7 +115,7 @@ theorem oddListOf_coe_multiset {d : ℕ}
     · rw [hy] at hr
       exact Bool.noConfusion hr
     · exact ⟨u, rfl⟩
-  show Sum.getRight? (c j.val) =
+  change Sum.getRight? (c j.val) =
     some (Sum.getRight (c j.val) hr)
   have h2 : Sum.getRight (c j.val) hr = u :=
     getRight_congr' hu hr rfl
@@ -159,7 +159,7 @@ theorem evenMultisetOf_coe {d : ℕ}
       fun hl => hxs ((hs x).mpr hl)
     rcases hy : c x with a | u
     · exact absurd (by rw [hy]; rfl) hnl
-    · show Sum.getLeft? (c x) = none
+    · change Sum.getLeft? (c x) = none
       rw [hy]
       rfl
   rw [hfil, hzero, add_zero]
@@ -175,7 +175,7 @@ theorem evenMultisetOf_coe {d : ℕ}
     · exact ⟨a, rfl⟩
     · rw [hy] at hl
       exact Bool.noConfusion hl
-  show Sum.getLeft? (c j.val) =
+  change Sum.getLeft? (c j.val) =
     some (Sum.getLeft (c j.val) hl)
   have h2 : Sum.getLeft (c j.val) hl = a :=
     getLeft_congr' ha hl rfl

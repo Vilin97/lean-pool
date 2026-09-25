@@ -104,9 +104,9 @@ theorem evenBasisVec_one (i : Fin k) :
     Pi.single ⟨oneColourE k ℓ i, oneColourE_isEven i⟩ 1 from
     (colourPowerEquiv k ℓ 1).evenEquiv.apply_symm_apply _]
   funext ⟨c', hc'⟩
-  show _ = ((colourPowerEquiv k ℓ 1).evenEquiv
+  change _ = ((colourPowerEquiv k ℓ 1).evenEquiv
     (evenPair (1 : ℂ) (stdE k i)) ⟨c', hc'⟩)
-  show _ = (colourPowerStep k ℓ 0).evenEquiv
+  change _ = (colourPowerStep k ℓ 0).evenEquiv
     ((TensorProduct.congr
         (colourPowerZero k ℓ).evenEquiv
         (LinearEquiv.refl ℂ (Fin k → ℂ)))
@@ -115,7 +115,7 @@ theorem evenBasisVec_one (i : Fin k) :
         (colourPowerZero k ℓ).oddEquiv
         (LinearEquiv.refl ℂ (Fin (2 * ℓ) → ℂ))) 0) ⟨c', hc'⟩
   rw [TensorProduct.congr_tmul, map_zero]
-  show _ = Sum.elim
+  change _ = Sum.elim
     (fun p => funTensorFun _ _
       (((colourPowerZero k ℓ).evenEquiv (1 : ℂ)) ⊗ₜ[ℂ]
         (LinearEquiv.refl ℂ (Fin k → ℂ) (stdE k i))) p)
@@ -192,9 +192,9 @@ theorem oddBasisVec_one (a : Fin (2 * ℓ)) :
     Pi.single ⟨oneColourO k ℓ a, oneColourO_not_isEven a⟩ 1 from
     (colourPowerEquiv k ℓ 1).oddEquiv.apply_symm_apply _]
   funext ⟨c', hc'⟩
-  show _ = ((colourPowerEquiv k ℓ 1).oddEquiv
+  change _ = ((colourPowerEquiv k ℓ 1).oddEquiv
     (oddUnitPad (stdF ℓ a)) ⟨c', hc'⟩)
-  show _ = (colourPowerStep k ℓ 0).oddEquiv
+  change _ = (colourPowerStep k ℓ 0).oddEquiv
     ((TensorProduct.congr
         (colourPowerZero k ℓ).evenEquiv
         (LinearEquiv.refl ℂ (Fin (2 * ℓ) → ℂ)))
@@ -203,7 +203,7 @@ theorem oddBasisVec_one (a : Fin (2 * ℓ)) :
         (colourPowerZero k ℓ).oddEquiv
         (LinearEquiv.refl ℂ (Fin k → ℂ))) 0) ⟨c', hc'⟩
   rw [TensorProduct.congr_tmul, map_zero]
-  show _ = Sum.elim
+  change _ = Sum.elim
     (fun p => funTensorFun _ _
       (((colourPowerZero k ℓ).evenEquiv (1 : ℂ)) ⊗ₜ[ℂ]
         (LinearEquiv.refl ℂ (Fin (2 * ℓ) → ℂ) (stdF ℓ a))) p)

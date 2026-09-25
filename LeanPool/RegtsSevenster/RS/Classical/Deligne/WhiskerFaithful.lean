@@ -57,7 +57,7 @@ theorem eq_zero_of_whiskerRight_eq_zero
     (hs : Simple (𝟙_ A))
     {X : A} (hX : ¬ IsZero X) {P Q : A} {f : P ⟶ Q}
     (hw : f ▷ X = 0) : f = 0 := by
-  haveI := hs
+  have := hs
   set ev' : X ⊗ (Xᘁ) ⟶ 𝟙_ A := (β_ X (Xᘁ)).hom ≫ ε_ X (Xᘁ)
     with hev'
   have hne : ev' ≠ 0 := by
@@ -65,10 +65,10 @@ theorem eq_zero_of_whiskerRight_eq_zero
     refine evaluation_ne_zero hX ?_
     have := congrArg (fun g => (β_ X (Xᘁ)).inv ≫ g) hz
     simpa [hev'] using this
-  haveI : Epi ev' := epi_of_nonzero_to_simple hne
-  haveI : Epi (P ◁ ev') := by
+  have : Epi ev' := epi_of_nonzero_to_simple hne
+  have : Epi (P ◁ ev') := by
     have heq : (tensorLeft P).map ev' = P ◁ ev' := rfl
-    haveI : (tensorLeft P).PreservesEpimorphisms :=
+    have : (tensorLeft P).PreservesEpimorphisms :=
       Functor.preservesEpimorphisms_of_adjunction
         (tensorLeftAdjunction (ᘁP) P)
     rw [← heq]
@@ -150,7 +150,7 @@ theorem isZero_left_of_tensor_isZero
         (β_ V (Vᘁ)).inv ≫ ((β_ V (Vᘁ)).hom ≫ ε_ V (Vᘁ)) from by
           rw [← Category.assoc, Iso.inv_hom_id, Category.id_comp],
         h0, Limits.comp_zero]
-    haveI := hs
+    have := hs
     exact epi_of_nonzero_to_simple hne
   -- Whisker it by `B`: an epi onto `B`, from a zero object.
   have hepi : Epi ((B ◁ ((β_ V (Vᘁ)).hom ≫ ε_ V (Vᘁ))) ≫

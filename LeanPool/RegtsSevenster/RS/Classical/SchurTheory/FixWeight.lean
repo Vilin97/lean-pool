@@ -162,3 +162,5 @@ theorem colour_cycleSum (H1 : PermCongrCT) (H2 : SigmaCT)
   congr 1
   exact_mod_cast congrArg (Nat.cast (R := ℂ))
     (card_colourClass α hsum)
+
+end RS

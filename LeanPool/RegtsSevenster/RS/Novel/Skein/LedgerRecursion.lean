@@ -25,8 +25,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Equiv Classical
-
+open Fragment Equiv
 /-- The lexicographic order on the recursion's label type, as the
 ambient instance.  It has to outrank the sum's own `≤`, which
 otherwise wins on a sum type and does not agree with it. -/
@@ -392,7 +391,7 @@ theorem stepData_eq_closed (n : ℕ)
             (gluePair_eq_closed (cutL_ne_cutR n) hcl).symm)
           (stepDataClosed n V D hcl) := by
   unfold stepData
-  rw [dif_pos hcl]
+  rw [dite_eq_left hcl]
 
 open Classical in
 /-- On an open cut the step is the open branch, transported. -/
@@ -407,7 +406,7 @@ theorem stepData_eq_open (n : ℕ)
             (gluePair_eq_open (cutL_ne_cutR n) hop).symm)
           (stepDataOpen n V D hop) := by
   unfold stepData
-  rw [dif_neg hop]
+  rw [dite_eq_right hop]
 
 /-! ## One stage of the ledger
 
@@ -511,7 +510,7 @@ theorem ledger_glueData : ∀ (n : ℕ)
         (F : EdgeSubset W) (M N : DirMatching (UsedLab F)),
         DirMatching.unionCount M N = 0 := by
       intro W F M N
-      haveI : IsEmpty (UsedLab F) := ⟨fun x => isEmptyElim x.val⟩
+      have : IsEmpty (UsedLab F) := ⟨fun x => isEmptyElim x.val⟩
       exact DirMatching.unionCount_of_isEmpty M N
     simp only [glueCount, stageLedger, ledgerOf, glueData, hzero,
       Nat.add_zero]
@@ -537,11 +536,11 @@ theorem ledger_glueData : ∀ (n : ℕ)
                 = V.boundaryFlag (cutR n) ∧ stepBit n V D = true then 1
               else 0) = (if stepBit n V D = true then 1 else 0) from by
             by_cases hb : stepBit n V D = true
-            · rw [if_pos ⟨hcl, hb⟩, if_pos hb]
-            · rw [if_neg (fun h => hb h.2), if_neg hb]]
+            · rw [ite_eq_left ⟨hcl, hb⟩, ite_eq_left hb]
+            · rw [ite_eq_right (fun h => hb h.2), ite_eq_right hb]]
         exact stageLedger_stepDataClosed n V D hcl
       · rw [stepData_eq_open n V D hcl, stageLedger_stageDataOfEq,
-          if_neg (fun h => hcl h.1), Nat.add_zero]
+          ite_eq_right (fun h => hcl h.1), Nat.add_zero]
         exact stageLedger_stepDataOpen n V D hcl
     rw [show stageLedger 0 _ (glueData (n + 1) V D)
           + glueCount (n + 1) V D
@@ -561,7 +560,7 @@ theorem ledgerOf_isEmpty {V : Fragment (Fin (0 + 0) ⊕ Fin (0 + 0))}
     (hp : SwapPaired F (interfaceSwap (stepIdent 0)))
     (κ : F.RelTransitionSystem) :
     ledgerOf F hp κ = κ.openCircuitCount := by
-  haveI : IsEmpty (UsedLab F) := ⟨fun x => isEmptyElim x.val⟩
+  have : IsEmpty (UsedLab F) := ⟨fun x => isEmptyElim x.val⟩
   rw [ledgerOf, DirMatching.unionCount_of_isEmpty, Nat.add_zero]
 
 /-- **RS21's (14).**  The composed system's circuit count, plus one
@@ -600,7 +599,7 @@ theorem circles_glueInterface : ∀ (n : ℕ)
     (V : Fragment (Fin (0 + n) ⊕ Fin (n + 0))),
     (glueInterface 0 n 0 V).circles = V.circles + closedCuts n V
   | 0, V => by
-    show V.circles = V.circles + 0
+    change V.circles = V.circles + 0
     omega
   | n + 1, V => by
     have ih := circles_glueInterface n
@@ -611,18 +610,18 @@ theorem circles_glueInterface : ∀ (n : ℕ)
           (interfaceStepEquiv 0 n 0)).circles
         = V.circles + (if V.pairing (V.boundaryFlag (cutL n))
             = V.boundaryFlag (cutR n) then 1 else 0) := by
-      show (V.gluePair (cutL n) (cutR n) (cutL_ne_cutR n)).circles = _
+      change (V.gluePair (cutL n) (cutR n) (cutL_ne_cutR n)).circles = _
       unfold Fragment.gluePair
       by_cases hcl : V.pairing (V.boundaryFlag (cutL n))
           = V.boundaryFlag (cutR n)
-      · rw [dif_pos hcl, if_pos hcl]
+      · rw [dite_eq_left hcl, ite_eq_left hcl]
         rfl
-      · rw [dif_neg hcl, if_neg hcl]
-        show V.circles = V.circles + 0
+      · rw [dite_eq_right hcl, ite_eq_right hcl]
+        change V.circles = V.circles + 0
         omega
-    show (glueInterface 0 n 0 _).circles = _
+    change (glueInterface 0 n 0 _).circles = _
     rw [ih, hstep]
-    show _ = V.circles + ((if V.pairing (V.boundaryFlag (cutL n))
+    change _ = V.circles + ((if V.pairing (V.boundaryFlag (cutL n))
         = V.boundaryFlag (cutR n) then 1 else 0) + _)
     omega
 

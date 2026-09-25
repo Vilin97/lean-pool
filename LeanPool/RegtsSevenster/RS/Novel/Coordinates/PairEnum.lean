@@ -16,7 +16,7 @@ in the fixed order, each followed by its match.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {α : Type} {W : Fragment α} {F : EdgeSubset W} {ℓ : ℕ}
   {κ : F.TransitionSystem}
@@ -34,8 +34,8 @@ noncomputable def defFiveValue (o : κ.Orientation)
 theorem isOut_of_mem_inFlagsAt (o : κ.Orientation)
     {v : W.Vertex} {f : W.Flag}
     (hf : f ∈ F.inFlagsAt o v) : o.isOut f = false := by
-  letI := W.flagOrder
-  letI := Classical.dec
+  let := W.flagOrder
+  let := Classical.dec
   unfold EdgeSubset.inFlagsAt at hf
   exact (Finset.mem_filter.mp
     ((Finset.mem_sort _).mp hf)).2.2
@@ -94,13 +94,13 @@ theorem oddListAt_eq_map (o : κ.Orientation)
     rfl
   have h1 : defFiveValue o φ f = φ.val f := by
     rw [defFiveValue, hin]
-    rw [if_neg Bool.false_ne_true]
+    rw [ite_eq_right Bool.false_ne_true]
   have h2 : defFiveValue o φ
       ⟨κ.match_ f.val, κ.match_mem _ f.prop⟩ =
       oddPartner ℓ (φ.val
         ⟨κ.match_ f.val, κ.match_mem _ f.prop⟩) := by
-    rw [defFiveValue, if_pos hout]
-  show F.oddPairFn κ φ f = _
+    rw [defFiveValue, ite_eq_left hout]
+  change F.oddPairFn κ φ f = _
   rw [EdgeSubset.oddPairFn, List.map_cons, List.map_cons,
     List.map_nil, h1, h2]
 

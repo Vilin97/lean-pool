@@ -142,19 +142,19 @@ theorem hexagonF_label (a b c : ℕ) :
       show (finCongr (by omega : (b + a) + c = b + (a + c)))
         (Fin.castAdd c ⟨b + x.val, by omega⟩) =
         Fin.natAdd b ⟨x.val, by omega⟩ from Fin.ext (by
-        show b + x.val = b + x.val
+        change b + x.val = b + x.val
         rfl),
       tensorMapEquiv_natAdd,
       transposeEquiv_low a c x.val h1 (by omega) (by omega)]
     exact (by
-      show (b + c) + x.val = b + (c + x.val)
+      change (b + c) + x.val = b + (c + x.val)
       omega)
   · rcases Nat.lt_or_ge x.val (a + b) with h2 | h2
     · conv_lhs => rw [_root_.Equiv.trans_apply,
         _root_.Equiv.trans_apply,
         show (finCongr (by omega : (a + b) + c = a + (b + c)))
           x = ⟨a + (x.val - a), by omega⟩ from Fin.ext (by
-          show x.val = a + (x.val - a)
+          change x.val = a + (x.val - a)
           omega),
         transposeEquiv_high a (b + c) (x.val - a) (by omega)
           (by omega) (by omega)]
@@ -162,7 +162,7 @@ theorem hexagonF_label (a b c : ℕ) :
         _root_.Equiv.trans_apply,
         show x = Fin.castAdd c (Fin.natAdd a
           ⟨x.val - a, by omega⟩) from Fin.ext (by
-          show x.val = a + (x.val - a)
+          change x.val = a + (x.val - a)
           omega),
         tensorMapEquiv_castAdd,
         show (transposeEquiv a b) (Fin.natAdd a
@@ -183,7 +183,7 @@ theorem hexagonF_label (a b c : ℕ) :
         _root_.Equiv.trans_apply,
         show (finCongr (by omega : (a + b) + c = a + (b + c)))
           x = ⟨a + (x.val - a), by omega⟩ from Fin.ext (by
-          show x.val = a + (x.val - a)
+          change x.val = a + (x.val - a)
           omega),
         transposeEquiv_high a (b + c) (x.val - a) (by omega)
           (by omega) (by omega)]
@@ -191,7 +191,7 @@ theorem hexagonF_label (a b c : ℕ) :
         _root_.Equiv.trans_apply,
         show x = Fin.natAdd (a + b)
           ⟨x.val - (a + b), by omega⟩ from Fin.ext (by
-          show x.val = (a + b) + (x.val - (a + b))
+          change x.val = (a + b) + (x.val - (a + b))
           omega),
         tensorMapEquiv_natAdd,
         show ((_root_.Equiv.refl (Fin c))
@@ -201,7 +201,7 @@ theorem hexagonF_label (a b c : ℕ) :
           (Fin.natAdd (b + a) ⟨x.val - (a + b), by omega⟩) =
           Fin.natAdd b ⟨a + (x.val - (a + b)), by omega⟩ from
           Fin.ext (by
-          show (b + a) + (x.val - (a + b)) =
+          change (b + a) + (x.val - (a + b)) =
             b + (a + (x.val - (a + b)))
           omega),
         tensorMapEquiv_natAdd,
@@ -211,7 +211,7 @@ theorem hexagonF_label (a b c : ℕ) :
           transposeEquiv_high a c (x.val - (a + b)) (by omega)
             (by omega) (by omega)]
       exact (by
-        show x.val - a = b + (x.val - (a + b))
+        change x.val - a = b + (x.val - (a + b))
         omega)
 
 /-- The reverse hexagon label identity. -/
@@ -262,7 +262,7 @@ theorem hexagonR_label (a b c : ℕ) :
         _root_.Equiv.trans_apply,
         show x = Fin.natAdd a ⟨x.val - a, by omega⟩ from
           Fin.ext (by
-          show x.val = a + (x.val - a)
+          change x.val = a + (x.val - a)
           omega),
         tensorMapEquiv_natAdd,
         show (transposeEquiv b c) ⟨x.val - a, by omega⟩ =
@@ -273,18 +273,18 @@ theorem hexagonR_label (a b c : ℕ) :
           (Fin.natAdd a ⟨c + (x.val - a), by omega⟩) =
           Fin.natAdd (a + c) ⟨x.val - a, by omega⟩ from
           Fin.ext (by
-          show a + (c + (x.val - a)) = (a + c) + (x.val - a)
+          change a + (c + (x.val - a)) = (a + c) + (x.val - a)
           omega),
         tensorMapEquiv_natAdd]
       exact (by
-        show c + x.val = (c + a) + (x.val - a)
+        change c + x.val = (c + a) + (x.val - a)
         omega)
     · conv_lhs => rw [_root_.Equiv.trans_apply,
         _root_.Equiv.trans_apply,
         show (finCongr (by omega : a + (b + c) = (a + b) + c))
           x = ⟨(a + b) + (x.val - (a + b)), by omega⟩ from
           Fin.ext (by
-          show x.val = (a + b) + (x.val - (a + b))
+          change x.val = (a + b) + (x.val - (a + b))
           omega),
         transposeEquiv_high (a + b) c (x.val - (a + b))
           (by omega) (by omega) (by omega)]
@@ -292,14 +292,14 @@ theorem hexagonR_label (a b c : ℕ) :
         _root_.Equiv.trans_apply,
         show x = Fin.natAdd a ⟨x.val - a, by omega⟩ from
           Fin.ext (by
-          show x.val = a + (x.val - a)
+          change x.val = a + (x.val - a)
           omega),
         tensorMapEquiv_natAdd,
         show (transposeEquiv b c) ⟨x.val - a, by omega⟩ =
           ⟨x.val - a - b, by omega⟩ from by
           rw [show (⟨x.val - a, by omega⟩ : Fin (b + c)) =
             ⟨b + (x.val - a - b), by omega⟩ from Fin.ext (by
-            show x.val - a = b + (x.val - a - b)
+            change x.val - a = b + (x.val - a - b)
             omega)]
           exact transposeEquiv_high b c (x.val - a - b)
             (by omega) (by omega) (by omega),
@@ -317,7 +317,7 @@ theorem hexagonR_label (a b c : ℕ) :
           exact transposeEquiv_high a c (x.val - a - b)
             (by omega) (by omega) (by omega)]
       exact (by
-        show x.val - (a + b) = x.val - a - b
+        change x.val - (a + b) = x.val - a - b
         omega)
 
 /-- **The braided skein category.** -/
@@ -329,7 +329,7 @@ noncomputable instance skeinBraided :
   braiding_naturality_left {X Y} p Z :=
     braidNatLeft_class f Z.arity p
   hexagon_forward X Y Z := by
-    show HomSpace.comp f _ _ _
+    change HomSpace.comp f _ _ _
         (bundleMapClass f (finCongr _))
         (HomSpace.comp f _ _ _
           (bundleMapClass f (transposeEquiv X.arity
@@ -352,7 +352,7 @@ noncomputable instance skeinBraided :
     exact bundleMapClass_congr f
       (hexagonF_label X.arity Y.arity Z.arity)
   hexagon_reverse X Y Z := by
-    show HomSpace.comp f _ _ _
+    change HomSpace.comp f _ _ _
         (bundleMapClass f (finCongr _))
         (HomSpace.comp f _ _ _
           (bundleMapClass f (transposeEquiv

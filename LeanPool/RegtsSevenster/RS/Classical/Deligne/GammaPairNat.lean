@@ -71,7 +71,7 @@ theorem gpair_naturality
     (m : X ⟶ M.X) (n : Y ⟶ N.X) :
     gpair (M := M') (N := N') (m ≫ f.hom) (n ≫ g.hom) =
       gpair (M := M) (N := N) m n ≫ modTensorMap R f g := by
-  show ((m ≫ f.hom) ⊗ₘ (n ≫ g.hom)) ≫ modTensorπ R M' N' =
+  change ((m ≫ f.hom) ⊗ₘ (n ≫ g.hom)) ≫ modTensorπ R M' N' =
     ((m ⊗ₘ n) ≫ modTensorπ R M N) ≫ modTensorMap R f g
   rw [← tensorHom_comp_tensorHom]
   simp only [Category.assoc]
@@ -336,11 +336,11 @@ theorem gammaPairComparison_isIso_of_iso
     (e : M ≅ M') (e' : N ≅ N')
     (h : IsIso (gammaPairComparison L R M' N')) :
     IsIso (gammaPairComparison L R M N) := by
-  haveI := h
-  haveI : IsIso (gammaFunMap L R (modTensorMapMod R e.hom e'.hom)) :=
+  have := h
+  have : IsIso (gammaFunMap L R (modTensorMapMod R e.hom e'.hom)) :=
     ((gammaModuleFunctor L R).mapIso
       (modTensorMapModIso R e e')).isIso_hom
-  haveI : IsIso (SuperCommAlgebra.Mod.tensorHom
+  have : IsIso (SuperCommAlgebra.Mod.tensorHom
       (gammaFunMap L R e.hom) (gammaFunMap L R e'.hom)) :=
     (SuperCommAlgebra.Mod.tensorIso
       ((gammaModuleFunctor L R).mapIso e)

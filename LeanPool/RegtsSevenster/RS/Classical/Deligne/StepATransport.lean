@@ -68,14 +68,14 @@ noncomputable def baseChangeMapIso
       exact baseChangeAct_modTensorMap A B φ e.inv)
   hom_inv_id := by
     apply Mod.Hom.ext
-    show modTensorMap A (𝟙 (restrictRegular φ)) e.hom ≫
+    change modTensorMap A (𝟙 (restrictRegular φ)) e.hom ≫
       modTensorMap A (𝟙 (restrictRegular φ)) e.inv =
       𝟙 (modTensor A (restrictRegular φ) P)
     rw [← modTensorMap_comp, Category.comp_id, e.hom_inv_id,
       modTensorMap_id]
   inv_hom_id := by
     apply Mod.Hom.ext
-    show modTensorMap A (𝟙 (restrictRegular φ)) e.inv ≫
+    change modTensorMap A (𝟙 (restrictRegular φ)) e.inv ≫
       modTensorMap A (𝟙 (restrictRegular φ)) e.hom =
       𝟙 (modTensor A (restrictRegular φ) Q)
     rw [← modTensorMap_comp, Category.comp_id, e.inv_hom_id,

@@ -27,7 +27,7 @@ noncomputable def deltaSeq : ℕ → ℂ :=
 /-- The delta sequence's first value is `1`. -/
 @[simp]
 theorem deltaSeq_one : deltaSeq 1 = 1 := by
-  rw [deltaSeq, if_pos rfl]
+  rw [deltaSeq, ite_eq_left rfl]
 
 /-- Complete homogeneous values of the delta sequence are inverse
 factorials. -/
@@ -41,7 +41,7 @@ theorem newtonH_deltaSeq (d : ℕ) :
     rw [Finset.sum_eq_single 0
       (fun i _ hi => by
         rw [show deltaSeq (i + 1) = 0 from by
-          rw [deltaSeq, if_neg (by omega)]]
+          rw [deltaSeq, ite_eq_right (by omega)]]
         rw [zero_mul])
       (fun h => absurd (Finset.mem_range.mpr (by omega)) h)]
     rw [show deltaSeq (0 + 1) = 1 from by
@@ -58,9 +58,9 @@ theorem cycleProd_deltaSeq {n : ℕ} (π : Equiv.Perm (Fin n)) :
     cycleProd deltaSeq π = if π = 1 then 1 else 0 := by
   rw [cycleProd, deltaSeq_one, one_pow, mul_one]
   by_cases hπ : π = 1
-  · rw [if_pos hπ, hπ, Equiv.Perm.cycleType_one,
+  · rw [ite_eq_left hπ, hπ, Equiv.Perm.cycleType_one,
       Multiset.map_zero, Multiset.prod_zero]
-  · rw [if_neg hπ]
+  · rw [ite_eq_right hπ]
     have hne : π.cycleType ≠ 0 := by
       intro hc
       exact hπ (Equiv.Perm.cycleType_eq_zero.mp hc)
@@ -68,7 +68,7 @@ theorem cycleProd_deltaSeq {n : ℕ} (π : Equiv.Perm (Fin n)) :
     refine Multiset.prod_eq_zero ?_
     rw [Multiset.mem_map]
     refine ⟨c, hc, ?_⟩
-    rw [deltaSeq, if_neg]
+    rw [deltaSeq, ite_eq_right]
     have := Equiv.Perm.two_le_of_mem_cycleType hc
     omega
 
@@ -81,9 +81,9 @@ theorem jtChar_one_eq (μ : YoungDiagram) :
   rw [Finset.sum_congr rfl (fun π (_ : π ∈ Finset.univ) => by
     rw [cycleProd_deltaSeq π])] at h
   rw [Finset.sum_eq_single 1
-    (fun π _ hπ => by rw [if_neg hπ, mul_zero])
+    (fun π _ hπ => by rw [ite_eq_right hπ, mul_zero])
     (fun hmem => absurd (Finset.mem_univ _) hmem)] at h
-  rw [if_pos rfl, mul_one] at h
+  rw [ite_eq_left rfl, mul_one] at h
   have hfac : ((μ.card.factorial : ℂ)) ≠ 0 := by
     exact_mod_cast Nat.factorial_ne_zero μ.card
   field_simp at h

@@ -21,7 +21,7 @@ the diagram, and they agree.
 
 namespace RS
 
-open Classical
+
 
 namespace EdgeSubset
 
@@ -71,7 +71,7 @@ theorem boundaryFlag_chordInv {W : Fragment α}
     (h : W.boundaryFlag i ∈ F.boundaryFlags) :
     W.boundaryFlag (chordInv F κ i) = κ.pathMatch (W.boundaryFlag i) h := by
   unfold chordInv
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   exact (W.eq_boundaryFlag _ _ (attach_boundaryLabel (κ.pathMatch_mem h))).symm
 
 /-- The chord partner of a participating boundary label is itself
@@ -95,7 +95,7 @@ theorem chordInv_invol {W : Fragment α}
         (κ.pathMatch_mem h)]
     exact κ.pathMatch_invol h
   · unfold chordInv
-    rw [dif_neg h, dif_neg h]
+    rw [dite_eq_right h, dite_eq_right h]
 
 /-- **The induced map is fixed-point-free on the used labels.** -/
 theorem chordInv_ne {W : Fragment α}

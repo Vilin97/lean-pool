@@ -18,7 +18,7 @@ sequence in which every label occurs evenly contributes exactly
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type} {ℓ : ℕ}
 

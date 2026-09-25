@@ -17,7 +17,7 @@ count of edges whose representative is incoming.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 
@@ -90,7 +90,7 @@ theorem edge_sign_sector (W : ClosedFragment)
     set g := (starFlagEnum W).symm
       (Fin.castAdd (edgeCount W) i) with hg
     by_cases h : g ∈ F.flags
-    · rw [dif_pos h, dif_pos h]
+    · rw [dite_eq_left h, dite_eq_left h]
       by_cases hout : o.isOut g = true
       · have hT : g ∈ outRepSet W F o :=
           (mem_outRepSet_iff W F o g h).mpr (by
@@ -98,7 +98,7 @@ theorem edge_sign_sector (W : ClosedFragment)
             exact hout)
         rw [EdgeSubset.OddColouring.flip_val_mem F _ _ φ
           ⟨g, h⟩ hT, oddPartnerSign_oddPartner]
-        rw [if_neg (by
+        rw [ite_eq_right (by
           rintro ⟨-, hfalse⟩
           rw [hout] at hfalse
           exact Bool.noConfusion hfalse)]
@@ -114,10 +114,10 @@ theorem edge_sign_sector (W : ClosedFragment)
           exact Bool.noConfusion h2
         rw [EdgeSubset.OddColouring.flip_val_not_mem F _ _ φ
           ⟨g, h⟩ hT]
-        rw [if_pos ⟨h, hof⟩]
+        rw [ite_eq_left ⟨h, hof⟩]
         ring
-    · rw [dif_neg h, dif_neg h,
-        if_neg (fun hmem => h hmem.1), one_mul]
+    · rw [dite_eq_right h, dite_eq_right h,
+        ite_eq_right (fun hmem => h hmem.1), one_mul]
   rw [Finset.prod_congr rfl (fun i _ => hterm i),
     Finset.prod_mul_distrib]
   congr 1

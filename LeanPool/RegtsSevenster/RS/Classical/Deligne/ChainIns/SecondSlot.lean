@@ -161,11 +161,7 @@ end InsQSurgery
 
 section InsQ2Laws
 
-/-- **The second-slot insertion passes the stage multiplication**:
-inserting a letter into the merged stage is inserting into the
-first factor's second slot and multiplying, up to the index
-transport. -/
-theorem chainInsQ_mul
+private theorem chainInsQ_mul_leftCover
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
     [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
@@ -173,41 +169,27 @@ theorem chainInsQ_mul
     [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
     (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
     (p q r s : ℕ) :
-    (M.X ◁ chainMul2 A M M' p q r s) ≫
-        chainInsQ A M M' (p + 1 + r) (q + 1 + s) =
-      (α_ M.X (chainStage2 A M M' p q)
-        (chainStage2 A M M' r s)).inv ≫
-      (chainInsQ A M M' p q ▷ chainStage2 A M M' r s) ≫
-      chainMul2 A M M' p (q + 1) r s ≫
-      chainStage2Cast A M M'
-        (by omega : p + 1 + r = p + 1 + r)
-        (by omega : q + 1 + 1 + s = q + 1 + s + 1) := by
-  have hp₀ : p + 1 + r = p + 1 + r := rfl
-  have hq₀ : q + 1 + 1 + s = q + 1 + s + 1 := by omega
-  refine (cancel_epi (M.X ◁
-    (modTensorπ A (symPowMod A M'.X p) (symPowMod A M.X q) ⊗ₘ
-      modTensorπ A (symPowMod A M'.X r)
-        (symPowMod A M.X s)))).mp ?_
-  show (M.X ◁
+    (M.X ◁
       (modTensorπ A (symPowMod A M'.X p) (symPowMod A M.X q) ⊗ₘ
         modTensorπ A (symPowMod A M'.X r)
           (symPowMod A M.X s))) ≫
       ((M.X ◁ chainMul2 A M M' p q r s) ≫
         chainInsQ A M M' (p + 1 + r) (q + 1 + s)) =
-    (M.X ◁
-      (modTensorπ A (symPowMod A M'.X p) (symPowMod A M.X q) ⊗ₘ
-        modTensorπ A (symPowMod A M'.X r)
-          (symPowMod A M.X s))) ≫
-      ((α_ M.X (chainStage2 A M M' p q)
-        (chainStage2 A M M' r s)).inv ≫
-      (chainInsQ A M M' p q ▷ chainStage2 A M M' r s) ≫
-      chainMul2 A M M' p (q + 1) r s ≫
-      chainStage2Cast A M M'
-        (by omega : p + 1 + r = p + 1 + r)
-        (by omega : q + 1 + 1 + s = q + 1 + s + 1))
-  -- The left leg: merge the pair cover into the multiplication,
-  -- fire its defining equation, and absorb the insertion's
-  -- defining equation at the merged arity.
+    (M.X ◁ tensorμ (symPow A M'.X (p + 1))
+        (symPow A M.X (q + 1)) (symPow A M'.X (r + 1))
+        (symPow A M.X (s + 1))) ≫
+      (M.X ◁ (symMul A M'.X (p + 1) (r + 1) ⊗ₘ
+        symMul A M.X (q + 1) (s + 1))) ≫
+      ((α_ M.X (symPow A M'.X (p + 1 + r + 1))
+          (symPow A M.X (q + 1 + s + 1))).inv ≫
+        ((β_ M.X (symPow A M'.X (p + 1 + r + 1))).hom ▷
+          symPow A M.X (q + 1 + s + 1)) ≫
+        (α_ (symPow A M'.X (p + 1 + r + 1)) M.X
+          (symPow A M.X (q + 1 + s + 1))).hom ≫
+        (symPow A M'.X (p + 1 + r + 1) ◁
+          symInsL A M.X (q + 1 + s)) ≫
+        modTensorπ A (symPowMod A M'.X (p + 1 + r))
+          (symPowMod A M.X (q + 1 + s + 1))) := by
   have l1 : (M.X ◁
       (modTensorπ A (symPowMod A M'.X p) (symPowMod A M.X q) ⊗ₘ
         modTensorπ A (symPowMod A M'.X r)
@@ -318,6 +300,46 @@ theorem chainInsQ_mul
         (M.X ◁ (symMul A M'.X (p + 1) (r + 1) ⊗ₘ
           symMul A M.X (q + 1) (s + 1))) ≫ t)
       (whiskerLeft_π_chainInsQ A M M' (p + 1 + r) (q + 1 + s))
+  exact l1.trans (l2.trans (l3.trans (l4)))
+
+private theorem chainInsQ_mul_leftInsertion
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (p q r s : ℕ) :
+    (M.X ◁ tensorμ (symPow A M'.X (p + 1))
+        (symPow A M.X (q + 1)) (symPow A M'.X (r + 1))
+        (symPow A M.X (s + 1))) ≫
+      (M.X ◁ (symMul A M'.X (p + 1) (r + 1) ⊗ₘ
+        symMul A M.X (q + 1) (s + 1))) ≫
+      ((α_ M.X (symPow A M'.X (p + 1 + r + 1))
+          (symPow A M.X (q + 1 + s + 1))).inv ≫
+        ((β_ M.X (symPow A M'.X (p + 1 + r + 1))).hom ▷
+          symPow A M.X (q + 1 + s + 1)) ≫
+        (α_ (symPow A M'.X (p + 1 + r + 1)) M.X
+          (symPow A M.X (q + 1 + s + 1))).hom ≫
+        (symPow A M'.X (p + 1 + r + 1) ◁
+          symInsL A M.X (q + 1 + s)) ≫
+        modTensorπ A (symPowMod A M'.X (p + 1 + r))
+          (symPowMod A M.X (q + 1 + s + 1))) =
+    (M.X ◁ tensorμ (symPow A M'.X (p + 1))
+        (symPow A M.X (q + 1)) (symPow A M'.X (r + 1))
+        (symPow A M.X (s + 1))) ≫
+      (α_ M.X (symPow A M'.X (p + 1) ⊗ symPow A M'.X (r + 1))
+        (symPow A M.X (q + 1) ⊗ symPow A M.X (s + 1))).inv ≫
+      ((β_ M.X (symPow A M'.X (p + 1) ⊗
+        symPow A M'.X (r + 1))).hom ▷
+        (symPow A M.X (q + 1) ⊗ symPow A M.X (s + 1))) ≫
+      (α_ (symPow A M'.X (p + 1) ⊗ symPow A M'.X (r + 1)) M.X
+        (symPow A M.X (q + 1) ⊗ symPow A M.X (s + 1))).hom ≫
+      (symMul A M'.X (p + 1) (r + 1) ⊗ₘ
+        ((M.X ◁ symMul A M.X (q + 1) (s + 1)) ≫
+          symInsL A M.X (q + 1 + s))) ≫
+      modTensorπ A (symPowMod A M'.X (p + 1 + r))
+        (symPowMod A M.X (q + 1 + s + 1)) := by
   have hβ6 : (M.X ◁ (symMul A M'.X (p + 1) (r + 1) ⊗ₘ
       symMul A M.X (q + 1) (s + 1))) ≫
       (α_ M.X (symPow A M'.X (p + 1 + r + 1))
@@ -423,6 +445,43 @@ theorem chainInsQ_mul
           (symPowMod A M.X (q + 1 + s + 1))))
   -- The right leg: cross the inserted module past the
   -- interchange and reassemble the same meeting form.
+  exact l5.trans (l6)
+
+private theorem chainInsQ_mul_rightCover
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (p q r s : ℕ)
+    (hp₀ : p + 1 + r = p + 1 + r)
+    (hq₀ : q + 1 + 1 + s = q + 1 + s + 1) :
+    (M.X ◁
+      (modTensorπ A (symPowMod A M'.X p) (symPowMod A M.X q) ⊗ₘ
+        modTensorπ A (symPowMod A M'.X r)
+          (symPowMod A M.X s))) ≫
+      ((α_ M.X (chainStage2 A M M' p q)
+        (chainStage2 A M M' r s)).inv ≫
+      (chainInsQ A M M' p q ▷ chainStage2 A M M' r s) ≫
+      chainMul2 A M M' p (q + 1) r s ≫
+      chainStage2Cast A M M' hp₀ hq₀) =
+    (α_ M.X (symPow A M'.X (p + 1) ⊗ symPow A M.X (q + 1))
+        (symPow A M'.X (r + 1) ⊗ symPow A M.X (s + 1))).inv ≫
+      (((α_ M.X (symPow A M'.X (p + 1))
+          (symPow A M.X (q + 1))).inv ≫
+        ((β_ M.X (symPow A M'.X (p + 1))).hom ▷
+          symPow A M.X (q + 1)) ≫
+        (α_ (symPow A M'.X (p + 1)) M.X
+          (symPow A M.X (q + 1))).hom ≫
+        (symPow A M'.X (p + 1) ◁ symInsL A M.X q)) ⊗ₘ
+        𝟙 (symPow A M'.X (r + 1) ⊗ symPow A M.X (s + 1))) ≫
+      (modTensorπ A (symPowMod A M'.X p)
+          (symPowMod A M.X (q + 1)) ⊗ₘ
+        modTensorπ A (symPowMod A M'.X r)
+          (symPowMod A M.X s)) ≫
+      chainMul2 A M M' p (q + 1) r s ≫
+      chainStage2Cast A M M' hp₀ hq₀ := by
   have hα1 : (M.X ◁
       (modTensorπ A (symPowMod A M'.X p) (symPowMod A M.X q) ⊗ₘ
         modTensorπ A (symPowMod A M'.X r)
@@ -567,6 +626,53 @@ theorem chainInsQ_mul
     erw [MonoidalCategory.tensorHom_comp_tensorHom_assoc,
       Category.id_comp]
     repeat' erw [Category.assoc]
+  exact r1.trans (r2.trans (r3.trans (r4)))
+
+private theorem chainInsQ_mul_rightProjection
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (p q r s : ℕ)
+    (hp₀ : p + 1 + r = p + 1 + r)
+    (hq₀ : q + 1 + 1 + s = q + 1 + s + 1) :
+    (α_ M.X
+      (symPow A M'.X (p + 1) ⊗ symPow A M.X (q + 1))
+      (symPow A M'.X (r + 1) ⊗ symPow A M.X (s + 1))).inv ≫
+      (((α_ M.X (symPow A M'.X (p + 1))
+          (symPow A M.X (q + 1))).inv ≫
+        ((β_ M.X (symPow A M'.X (p + 1))).hom ▷
+          symPow A M.X (q + 1)) ≫
+        (α_ (symPow A M'.X (p + 1)) M.X
+          (symPow A M.X (q + 1))).hom ≫
+        (symPow A M'.X (p + 1) ◁ symInsL A M.X q)) ⊗ₘ
+        𝟙 (symPow A M'.X (r + 1) ⊗ symPow A M.X (s + 1))) ≫
+      (modTensorπ A (symPowMod A M'.X p)
+          (symPowMod A M.X (q + 1)) ⊗ₘ
+        modTensorπ A (symPowMod A M'.X r)
+          (symPowMod A M.X s)) ≫
+      chainMul2 A M M' p (q + 1) r s ≫
+      chainStage2Cast A M M' hp₀ hq₀ =
+    (α_ M.X (symPow A M'.X (p + 1) ⊗ symPow A M.X (q + 1))
+        (symPow A M'.X (r + 1) ⊗ symPow A M.X (s + 1))).inv ≫
+      (((α_ M.X (symPow A M'.X (p + 1))
+          (symPow A M.X (q + 1))).inv ≫
+        ((β_ M.X (symPow A M'.X (p + 1))).hom ▷
+          symPow A M.X (q + 1)) ≫
+        (α_ (symPow A M'.X (p + 1)) M.X
+          (symPow A M.X (q + 1))).hom ≫
+        (symPow A M'.X (p + 1) ◁ symInsL A M.X q)) ⊗ₘ
+        𝟙 (symPow A M'.X (r + 1) ⊗ symPow A M.X (s + 1))) ≫
+      tensorμ (symPow A M'.X (p + 1)) (symPow A M.X (q + 1 + 1))
+        (symPow A M'.X (r + 1)) (symPow A M.X (s + 1)) ≫
+      (symMul A M'.X (p + 1) (r + 1) ⊗ₘ
+        symMul A M.X (q + 1 + 1) (s + 1)) ≫
+      (symPowCast A M'.X (congrArg Nat.succ hp₀) ⊗ₘ
+        symPowCast A M.X (congrArg Nat.succ hq₀)) ≫
+      modTensorπ A (symPowMod A M'.X (p + 1 + r))
+        (symPowMod A M.X (q + 1 + s + 1)) := by
   have r5 : (α_ M.X
       (symPow A M'.X (p + 1) ⊗ symPow A M.X (q + 1))
       (symPow A M'.X (r + 1) ⊗ symPow A M.X (s + 1))).inv ≫
@@ -685,6 +791,57 @@ theorem chainInsQ_mul
         (symMul A M'.X (p + 1) (r + 1) ⊗ₘ
           symMul A M.X (q + 1 + 1) (s + 1)) ≫ t)
       hcast
+  exact r5.trans (r6)
+
+private theorem chainInsQ_mul_rightInterchange
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (p q r s : ℕ)
+    (hp₀ : p + 1 + r = p + 1 + r)
+    (hq₀ : q + 1 + 1 + s = q + 1 + s + 1) :
+    (α_ M.X
+      (symPow A M'.X (p + 1) ⊗ symPow A M.X (q + 1))
+      (symPow A M'.X (r + 1) ⊗ symPow A M.X (s + 1))).inv ≫
+      (((α_ M.X (symPow A M'.X (p + 1))
+          (symPow A M.X (q + 1))).inv ≫
+        ((β_ M.X (symPow A M'.X (p + 1))).hom ▷
+          symPow A M.X (q + 1)) ≫
+        (α_ (symPow A M'.X (p + 1)) M.X
+          (symPow A M.X (q + 1))).hom ≫
+        (symPow A M'.X (p + 1) ◁ symInsL A M.X q)) ⊗ₘ
+        𝟙 (symPow A M'.X (r + 1) ⊗ symPow A M.X (s + 1))) ≫
+      tensorμ (symPow A M'.X (p + 1)) (symPow A M.X (q + 1 + 1))
+        (symPow A M'.X (r + 1)) (symPow A M.X (s + 1)) ≫
+      (symMul A M'.X (p + 1) (r + 1) ⊗ₘ
+        symMul A M.X (q + 1 + 1) (s + 1)) ≫
+      (symPowCast A M'.X (congrArg Nat.succ hp₀) ⊗ₘ
+        symPowCast A M.X (congrArg Nat.succ hq₀)) ≫
+      modTensorπ A (symPowMod A M'.X (p + 1 + r))
+        (symPowMod A M.X (q + 1 + s + 1)) =
+    (M.X ◁ tensorμ (symPow A M'.X (p + 1))
+        (symPow A M.X (q + 1)) (symPow A M'.X (r + 1))
+        (symPow A M.X (s + 1))) ≫
+      (α_ M.X (symPow A M'.X (p + 1) ⊗ symPow A M'.X (r + 1))
+        (symPow A M.X (q + 1) ⊗ symPow A M.X (s + 1))).inv ≫
+      ((β_ M.X (symPow A M'.X (p + 1) ⊗
+        symPow A M'.X (r + 1))).hom ▷
+        (symPow A M.X (q + 1) ⊗ symPow A M.X (s + 1))) ≫
+      (α_ (symPow A M'.X (p + 1) ⊗ symPow A M'.X (r + 1)) M.X
+        (symPow A M.X (q + 1) ⊗ symPow A M.X (s + 1))).hom ≫
+      (((𝟙 (symPow A M'.X (p + 1) ⊗ symPow A M'.X (r + 1)) ≫
+          symMul A M'.X (p + 1) (r + 1)) ≫
+        symPowCast A M'.X (congrArg Nat.succ hp₀)) ⊗ₘ
+        ((((α_ M.X (symPow A M.X (q + 1))
+            (symPow A M.X (s + 1))).inv ≫
+          (symInsL A M.X q ▷ symPow A M.X (s + 1))) ≫
+          symMul A M.X (q + 1 + 1) (s + 1)) ≫
+          symPowCast A M.X (congrArg Nat.succ hq₀))) ≫
+      modTensorπ A (symPowMod A M'.X (p + 1 + r))
+        (symPowMod A M.X (q + 1 + s + 1)) := by
   have hpast : (α_ M.X
       (symPow A M'.X (p + 1) ⊗ symPow A M.X (q + 1))
       (symPow A M'.X (r + 1) ⊗ symPow A M.X (s + 1))).inv ≫
@@ -795,6 +952,53 @@ theorem chainInsQ_mul
         (symPowMod A M.X (q + 1 + s + 1)) := by
     erw [MonoidalCategory.tensorHom_comp_tensorHom_assoc,
       MonoidalCategory.tensorHom_comp_tensorHom_assoc]
+  exact r7.trans (r8)
+
+private theorem chainInsQ_mul_rightInsertion
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (p q r s : ℕ)
+    (hp₀ : p + 1 + r = p + 1 + r)
+    (hq₀ : q + 1 + 1 + s = q + 1 + s + 1) :
+    (M.X ◁ tensorμ (symPow A M'.X (p + 1))
+        (symPow A M.X (q + 1)) (symPow A M'.X (r + 1))
+        (symPow A M.X (s + 1))) ≫
+      (α_ M.X (symPow A M'.X (p + 1) ⊗ symPow A M'.X (r + 1))
+        (symPow A M.X (q + 1) ⊗ symPow A M.X (s + 1))).inv ≫
+      ((β_ M.X (symPow A M'.X (p + 1) ⊗
+        symPow A M'.X (r + 1))).hom ▷
+        (symPow A M.X (q + 1) ⊗ symPow A M.X (s + 1))) ≫
+      (α_ (symPow A M'.X (p + 1) ⊗ symPow A M'.X (r + 1)) M.X
+        (symPow A M.X (q + 1) ⊗ symPow A M.X (s + 1))).hom ≫
+      (((𝟙 (symPow A M'.X (p + 1) ⊗ symPow A M'.X (r + 1)) ≫
+          symMul A M'.X (p + 1) (r + 1)) ≫
+        symPowCast A M'.X (congrArg Nat.succ hp₀)) ⊗ₘ
+        ((((α_ M.X (symPow A M.X (q + 1))
+            (symPow A M.X (s + 1))).inv ≫
+          (symInsL A M.X q ▷ symPow A M.X (s + 1))) ≫
+          symMul A M.X (q + 1 + 1) (s + 1)) ≫
+          symPowCast A M.X (congrArg Nat.succ hq₀))) ≫
+      modTensorπ A (symPowMod A M'.X (p + 1 + r))
+        (symPowMod A M.X (q + 1 + s + 1)) =
+    (M.X ◁ tensorμ (symPow A M'.X (p + 1))
+        (symPow A M.X (q + 1)) (symPow A M'.X (r + 1))
+        (symPow A M.X (s + 1))) ≫
+      (α_ M.X (symPow A M'.X (p + 1) ⊗ symPow A M'.X (r + 1))
+        (symPow A M.X (q + 1) ⊗ symPow A M.X (s + 1))).inv ≫
+      ((β_ M.X (symPow A M'.X (p + 1) ⊗
+        symPow A M'.X (r + 1))).hom ▷
+        (symPow A M.X (q + 1) ⊗ symPow A M.X (s + 1))) ≫
+      (α_ (symPow A M'.X (p + 1) ⊗ symPow A M'.X (r + 1)) M.X
+        (symPow A M.X (q + 1) ⊗ symPow A M.X (s + 1))).hom ≫
+      (symMul A M'.X (p + 1) (r + 1) ⊗ₘ
+        ((M.X ◁ symMul A M.X (q + 1) (s + 1)) ≫
+          symInsL A M.X (q + 1 + s))) ≫
+      modTensorπ A (symPowMod A M'.X (p + 1 + r))
+        (symPowMod A M.X (q + 1 + s + 1)) := by
   have h₁ : q + 1 + s + 2 = q + 2 + (s + 1) := by omega
   have hcc : symPowCast A M.X h₁ ≫
       symPowCast A M.X (congrArg Nat.succ hq₀) =
@@ -817,7 +1021,7 @@ theorem chainInsQ_mul
       symPowCast A M.X (congrArg Nat.succ hq₀)) =
     (M.X ◁ symMul A M.X (q + 1) (s + 1)) ≫
       symInsL A M.X (q + 1 + s) := by
-    show ((((α_ M.X (symPow A M.X (q + 1))
+    change ((((α_ M.X (symPow A M.X (q + 1))
         (symPow A M.X (s + 1))).inv ≫
       (symInsL A M.X q ▷ symPow A M.X (s + 1))) ≫
       symMul A M.X (q + 2) (s + 1)) ≫
@@ -889,30 +1093,90 @@ theorem chainInsQ_mul
         modTensorπ A (symPowMod A M'.X (p + 1 + r))
           (symPowMod A M.X (q + 1 + s + 1)))
       (congrArg₂ (· ⊗ₘ ·) hfacL hfacR)
-  exact (l1.trans (l2.trans (l3.trans (l4.trans
-      (l5.trans l6))))).trans
-    (r1.trans (r2.trans (r3.trans (r4.trans (r5.trans
-      (r6.trans (r7.trans (r8.trans r9)))))))).symm
+  exact r9
 
-/-- **The transition square for the second-slot insertion**: the
-insertion passes the seed transition, raising the merged arities
-by one on each side. -/
-theorem chainInsQ_delta2
+/-- **The second-slot insertion passes the stage multiplication**:
+inserting a letter into the merged stage is inserting into the
+first factor's second slot and multiplying, up to the index
+transport. -/
+theorem chainInsQ_mul
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
     [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
     [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
     [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
     (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
-    (d : ModDualityDatum A M M') (p q : ℕ) :
+    (p q r s : ℕ) :
+    (M.X ◁ chainMul2 A M M' p q r s) ≫
+        chainInsQ A M M' (p + 1 + r) (q + 1 + s) =
+      (α_ M.X (chainStage2 A M M' p q)
+        (chainStage2 A M M' r s)).inv ≫
+      (chainInsQ A M M' p q ▷ chainStage2 A M M' r s) ≫
+      chainMul2 A M M' p (q + 1) r s ≫
+      chainStage2Cast A M M'
+        (by omega : p + 1 + r = p + 1 + r)
+        (by omega : q + 1 + 1 + s = q + 1 + s + 1) := by
+  have hp₀ : p + 1 + r = p + 1 + r := rfl
+  have hq₀ : q + 1 + 1 + s = q + 1 + s + 1 := by omega
+  refine (cancel_epi (M.X ◁
+    (modTensorπ A (symPowMod A M'.X p) (symPowMod A M.X q) ⊗ₘ
+      modTensorπ A (symPowMod A M'.X r)
+        (symPowMod A M.X s)))).mp ?_
+  change (M.X ◁
+      (modTensorπ A (symPowMod A M'.X p) (symPowMod A M.X q) ⊗ₘ
+        modTensorπ A (symPowMod A M'.X r)
+          (symPowMod A M.X s))) ≫
+      ((M.X ◁ chainMul2 A M M' p q r s) ≫
+        chainInsQ A M M' (p + 1 + r) (q + 1 + s)) =
+    (M.X ◁
+      (modTensorπ A (symPowMod A M'.X p) (symPowMod A M.X q) ⊗ₘ
+        modTensorπ A (symPowMod A M'.X r)
+          (symPowMod A M.X s))) ≫
+      ((α_ M.X (chainStage2 A M M' p q)
+        (chainStage2 A M M' r s)).inv ≫
+      (chainInsQ A M M' p q ▷ chainStage2 A M M' r s) ≫
+      chainMul2 A M M' p (q + 1) r s ≫
+      chainStage2Cast A M M'
+        (by omega : p + 1 + r = p + 1 + r)
+        (by omega : q + 1 + 1 + s = q + 1 + s + 1))
+  -- The left leg: merge the pair cover into the multiplication,
+  -- fire its defining equation, and absorb the insertion's
+  -- defining equation at the merged arity.
+  have hLeftCover :=
+    (chainInsQ_mul_leftCover A M M' p q r s)
+  have hLeftInsertion :=
+    (chainInsQ_mul_leftInsertion A M M' p q r s)
+  have hRightCover :=
+    (chainInsQ_mul_rightCover A M M' p q r s hp₀ hq₀)
+  have hRightProjection :=
+    (chainInsQ_mul_rightProjection A M M' p q r s hp₀ hq₀)
+  have hRightInterchange :=
+    (chainInsQ_mul_rightInterchange A M M' p q r s hp₀ hq₀)
+  have hRightInsertion :=
+    (chainInsQ_mul_rightInsertion A M M' p q r s hp₀ hq₀)
+  exact (hLeftCover.trans (hLeftInsertion)).trans
+    (hRightCover.trans (hRightProjection.trans (hRightInterchange.trans (hRightInsertion)))).symm
+
+private theorem chainInsQ_delta2_left
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (d : ModDualityDatum A M M') (p q : ℕ)
+    (hz : p + 1 + 0 = p + 1 + 0)
+    (hz' : q + 1 + 1 + 0 = q + 1 + 0 + 1) :
     (M.X ◁ chainDelta2 A M M' d p q) ≫
-        chainInsQ A M M' (p + 1) (q + 1) =
-      chainInsQ A M M' p q ≫ chainDelta2 A M M' d p (q + 1) := by
-  have hz : p + 1 + 0 = p + 1 + 0 := rfl
-  have hz' : q + 1 + 1 + 0 = q + 1 + 0 + 1 := by omega
-  -- The left leg: unfold the transition, distribute the whisker,
-  -- pass the insertion through the stage multiplication, and
-  -- absorb the trivial index transport.
+      chainInsQ A M M' (p + 1) (q + 1) =
+    (M.X ◁ (ρ_ (chainStage2 A M M' p q)).inv) ≫
+      (M.X ◁ MonoidalCategory.whiskerLeft
+        (chainStage2 A M M' p q)
+        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d)) ≫
+      ((α_ M.X (chainStage2 A M M' p q)
+          (chainStage2 A M M' 0 0)).inv ≫
+        ((chainInsQ A M M' p q ▷ chainStage2 A M M' 0 0) ≫
+          chainMul2 A M M' p (q + 1) 0 0)) := by
   have l1 : (M.X ◁ chainDelta2 A M M' d p q) ≫
       chainInsQ A M M' (p + 1) (q + 1) =
     (M.X ◁ ((ρ_ (chainStage2 A M M' p q)).inv ≫
@@ -1015,6 +1279,30 @@ theorem chainInsQ_delta2
             t)))
       hkill
   -- Unitor and seed bookkeeping, as in `chainInsP_delta2`.
+  exact l1.trans (l2.trans (l3.trans (l4)))
+
+private theorem chainInsQ_delta2_seed
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (d : ModDualityDatum A M M') (p q : ℕ) :
+    (M.X ◁ (ρ_ (chainStage2 A M M' p q)).inv) ≫
+      (M.X ◁ MonoidalCategory.whiskerLeft
+        (chainStage2 A M M' p q)
+        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d)) ≫
+      ((α_ M.X (chainStage2 A M M' p q)
+          (chainStage2 A M M' 0 0)).inv ≫
+        ((chainInsQ A M M' p q ▷ chainStage2 A M M' 0 0) ≫
+          chainMul2 A M M' p (q + 1) 0 0)) =
+    (ρ_ (M.X ⊗ chainStage2 A M M' p q)).inv ≫
+      (MonoidalCategory.whiskerLeft
+        (M.X ⊗ chainStage2 A M M' p q)
+        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d) ≫
+      ((chainInsQ A M M' p q ▷ chainStage2 A M M' 0 0) ≫
+        chainMul2 A M M' p (q + 1) 0 0)) := by
   have hseed : (M.X ◁ MonoidalCategory.whiskerLeft
       (chainStage2 A M M' p q)
       (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d)) ≫
@@ -1131,6 +1419,24 @@ theorem chainInsQ_delta2
       hρ
   -- The right leg: unfold the transition and slide the insertion
   -- past the unitor and the seed.
+  exact c1.trans (c2.trans (c3.trans (c4.trans (c5))))
+
+private theorem chainInsQ_delta2_right
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (d : ModDualityDatum A M M') (p q : ℕ) :
+    chainInsQ A M M' p q ≫
+      chainDelta2 A M M' d p (q + 1) =
+    (ρ_ (M.X ⊗ chainStage2 A M M' p q)).inv ≫
+      (MonoidalCategory.whiskerLeft
+        (M.X ⊗ chainStage2 A M M' p q)
+        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d) ≫
+      ((chainInsQ A M M' p q ▷ chainStage2 A M M' 0 0) ≫
+        chainMul2 A M M' p (q + 1) 0 0)) := by
   have hρnat : chainInsQ A M M' p q ≫
       (ρ_ (chainStage2 A M M' p (q + 1))).inv =
     (ρ_ (M.X ⊗ chainStage2 A M M' p q)).inv ≫
@@ -1248,10 +1554,34 @@ theorem chainInsQ_delta2
       (CategoryStruct.comp
         (ρ_ (M.X ⊗ chainStage2 A M M' p q)).inv)
       (Category.assoc _ _ _)
-  exact (l1.trans (l2.trans (l3.trans (l4.trans (c1.trans
-      (c2.trans (c3.trans (c4.trans c5)))))))).trans
-    (b1.trans (b2.trans (b3.trans (b4.trans (b5.trans
-      (b6.trans b7)))))).symm
+  exact b1.trans (b2.trans (b3.trans (b4.trans (b5.trans (b6.trans (b7))))))
+
+/-- **The transition square for the second-slot insertion**: the
+insertion passes the seed transition, raising the merged arities
+by one on each side. -/
+theorem chainInsQ_delta2
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (d : ModDualityDatum A M M') (p q : ℕ) :
+    (M.X ◁ chainDelta2 A M M' d p q) ≫
+        chainInsQ A M M' (p + 1) (q + 1) =
+      chainInsQ A M M' p q ≫ chainDelta2 A M M' d p (q + 1) := by
+  have hz : p + 1 + 0 = p + 1 + 0 := rfl
+  have hz' : q + 1 + 1 + 0 = q + 1 + 0 + 1 := by omega
+  -- The left leg: unfold the transition, distribute the whisker,
+  -- pass the insertion through the stage multiplication, and
+  -- absorb the trivial index transport.
+  have hLeft :=
+    (chainInsQ_delta2_left A M M' d p q hz hz')
+  have hSeed :=
+    (chainInsQ_delta2_seed A M M' d p q)
+  have hRight :=
+    (chainInsQ_delta2_right A M M' d p q)
+  exact (hLeft.trans (hSeed)).trans hRight.symm
 
 end InsQ2Laws
 

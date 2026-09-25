@@ -49,20 +49,20 @@ def strand : Fragment (Fin 2) where
 theorem gluePair_eq_closed {W : Fragment α} {i j : α} (hij : i ≠ j)
     (hclosed : W.pairing (W.boundaryFlag i) = W.boundaryFlag j) :
     W.gluePair i j hij = W.gluePairClosed i j hclosed :=
-  dif_pos hclosed
+  dite_eq_left hclosed
 
 /-- The open branch of `gluePair`. -/
 theorem gluePair_eq_open {W : Fragment α} {i j : α} (hij : i ≠ j)
     (hopen : W.pairing (W.boundaryFlag i) ≠ W.boundaryFlag j) :
     W.gluePair i j hij = W.gluePairOpen i j hij hopen :=
-  dif_neg hopen
+  dite_eq_right hopen
 
 /-! ### Sanity checks -/
 
 /-- Closing the strand onto itself yields one free circle. -/
 example :
     (strand.gluePair 0 1 (by decide)).circles = 1 := by
-  rw [gluePair, dif_pos (by decide)]
+  rw [gluePair, dite_eq_left (by decide)]
   rfl
 
 /-- Closing the strand onto itself leaves no flags. -/

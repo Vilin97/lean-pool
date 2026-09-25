@@ -68,7 +68,7 @@ private theorem vandermonde_conv_trunc (s m : ℕ) (hm : s ≤ m)
 private theorem det_choose_upper (s : ℕ) :
     (Matrix.of fun t j : Fin s =>
       (Nat.choose (j : ℕ) (t : ℕ) : ℂ)).det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun t j (htj : id j < id t) => by
+  rw [Matrix.det_of_isUpperTriangular (fun t j (htj : id j < id t) => by
     rw [Matrix.of_apply]
     exact_mod_cast Nat.choose_eq_zero_of_lt htj)]
   simp [Matrix.of_apply, Nat.choose_self]
@@ -138,7 +138,7 @@ private theorem diagramSchur_square_const_mul (s m : ℕ) (hm : s ≤ m)
       rowLen_squareDiagram hi]
     have hpos : 0 ≤ (s : ℤ) + ((j : ℕ) : ℤ) - ((i : ℕ) : ℤ) := by
       omega
-    rw [newtonHZ, if_pos hpos]
+    rw [newtonHZ, ite_eq_left hpos]
     have harg : ((s : ℤ) + ↑↑j - ↑↑i).toNat =
         s + (j : ℕ) - (i : ℕ) := by omega
     rw [harg, newtonH_const]

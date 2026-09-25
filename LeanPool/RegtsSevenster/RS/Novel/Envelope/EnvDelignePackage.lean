@@ -78,10 +78,10 @@ which the package drops. -/
 theorem env_delignePackage
     (hD : DeligneTheoremStatement.{1, 1}) :
     Nonempty (DelignePackage (Env f)) := by
-  letI := envAbelian f
+  let := envAbelian f
   exact (hD (Env f) (env_endOne f)
     ⟨envStrand f 1, env_deligneGenerated f⟩
-    (moderateLengthGrowth_of_endGrowth (Env f)
+    (moderateLengthGrowth_of_endGrowth (Env f) (envAbelian f)
       (env_deligneSemisimple f) (env_finDimHom f)
       (env_deligneModerateGrowth f))).map
     DeligneFibreFunctor.toPackage

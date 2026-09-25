@@ -35,7 +35,7 @@ theorem freeModShuffle_naturality
       freeModShuffle R V W ≫ (R ◁ (f ⊗ₘ g)) := by
   have h := tensorμ_natural (C := D) (𝟙 R) f (𝟙 R) g
   simp only [id_tensorHom, MonoidalCategory.whiskerLeft_id] at h
-  show ((R ◁ f) ⊗ₘ (R ◁ g)) ≫
+  change ((R ◁ f) ⊗ₘ (R ◁ g)) ≫
       tensorμ R V' R W' ≫ μ[R] ▷ (V' ⊗ W') =
     (tensorμ R V R W ≫ μ[R] ▷ (V ⊗ W)) ≫ (R ◁ (f ⊗ₘ g))
   rw [← Category.assoc, h, Category.assoc, Category.assoc]

@@ -96,7 +96,7 @@ theorem fixed_comp_zpow {C : Type*} {f : Fin n → C}
         rw [show (π ^ ((k : ℤ) + 1) : Equiv.Perm (Fin n)) =
           (π ^ (k : ℤ)) * π from by rw [zpow_add, zpow_one]]
         rfl
-      show f ((π ^ ((k : ℤ) + 1) : Equiv.Perm (Fin n)) a) = f a
+      change f ((π ^ ((k : ℤ) + 1) : Equiv.Perm (Fin n)) a) = f a
       rw [h1]
       have h2 := congrFun ih (π a)
       simp only [Function.comp_apply] at h2
@@ -110,7 +110,7 @@ theorem fixed_comp_zpow {C : Type*} {f : Fin n → C}
           (π ^ (-k : ℤ)) * π⁻¹ from by
             rw [zpow_sub, zpow_one]]
         rfl
-      show f ((π ^ ((-k : ℤ) - 1) : Equiv.Perm (Fin n)) a) = f a
+      change f ((π ^ ((-k : ℤ) - 1) : Equiv.Perm (Fin n)) a) = f a
       rw [h1]
       have h2 := congrFun ih (π⁻¹ a)
       simp only [Function.comp_apply] at h2
@@ -130,7 +130,7 @@ noncomputable def fixedFunEquiv (C : Type*) :
     exact this.symm ▸ this.symm ▸ this)
   invFun g := ⟨fun i => g (orbitOf π i), by
     funext i
-    show g (orbitOf π (π i)) = g (orbitOf π i)
+    change g (orbitOf π (π i)) = g (orbitOf π i)
     refine congrArg g ((orbitOf_eq_iff π).mpr ?_)
     exact ⟨-1, by simp⟩⟩
   left_inv f := Subtype.ext (funext fun i => rfl)

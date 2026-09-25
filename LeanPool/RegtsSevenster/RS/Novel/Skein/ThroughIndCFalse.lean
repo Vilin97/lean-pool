@@ -24,7 +24,7 @@ the pairing-resolved value.
 
 namespace RS
 
-open scoped Classical
+
 
 namespace TransposeVerify
 

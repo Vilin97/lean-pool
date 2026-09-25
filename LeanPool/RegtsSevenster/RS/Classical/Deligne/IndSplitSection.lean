@@ -186,12 +186,12 @@ theorem rappel210_indOf
             freeMod A ((T.map (indOf : C ⥤ Ind C)).X₂),
         s ≫ freeModMap A ((T.map (indOf : C ⥤ Ind C)).g) =
           𝟙 (freeMod A ((T.map (indOf : C ⥤ Ind C)).X₃)) := by
-  haveI := indOf_additive (C := C)
-  letI i3 : HasRightDual ((T.map (indOf : C ⥤ Ind C)).X₃) :=
+  have := indOf_additive (C := C)
+  let i3 : HasRightDual ((T.map (indOf : C ⥤ Ind C)).X₃) :=
     hasRightDualIndOf T.X₃
-  letI i3d : HasRightDual (((T.map (indOf : C ⥤ Ind C)).X₃)ᘁ) :=
+  let i3d : HasRightDual (((T.map (indOf : C ⥤ Ind C)).X₃)ᘁ) :=
     hasRightDualIndOf ((T.X₃)ᘁ)
-  letI i4 : HasRightDual
+  let i4 : HasRightDual
       (unitFormMid (T.map (indOf : C ⥤ Ind C))) :=
     { rightDual := (indOf : C ⥤ Ind C).obj ((unitFormMid T)ᘁ)
       exact := exactPairingOfIso (unitFormMidIndOfIso T) }

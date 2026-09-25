@@ -42,8 +42,8 @@ theorem EdgeSubset.mem_internal_of_mem_relInFlagsAt
     {F : EdgeSubset W} {κ : F.RelTransitionSystem}
     {o : κ.Orientation} {v : W.Vertex} {f : W.Flag}
     (hf : f ∈ F.relInFlagsAt o v) : f ∈ F.internalFlags := by
-  letI := W.flagOrder
-  letI := Classical.dec
+  let := W.flagOrder
+  let := Classical.dec
   unfold EdgeSubset.relInFlagsAt at hf
   have hmem := (Finset.mem_sort (α := W.Flag) (· ≤ ·)).mp hf
   have h := Finset.mem_filter.mp hmem
@@ -68,8 +68,8 @@ theorem mem_relInFlagsAt_iff {F : EdgeSubset W}
     f ∈ F.relInFlagsAt o vv ↔
       f ∈ F.flags ∧ W.attach f = Sum.inl vv ∧
         o.isOut f = false := by
-  letI := W.flagOrder
-  letI := Classical.dec
+  let := W.flagOrder
+  let := Classical.dec
   unfold EdgeSubset.relInFlagsAt
   rw [Finset.mem_sort, Finset.mem_filter]
 
@@ -78,8 +78,8 @@ theorem relInFlagsAt_nodup {F : EdgeSubset W}
     {κ : F.RelTransitionSystem}
     (o : κ.Orientation) (vv : W.Vertex) :
     (F.relInFlagsAt o vv).Nodup := by
-  letI := W.flagOrder
-  letI := Classical.dec
+  let := W.flagOrder
+  let := Classical.dec
   unfold EdgeSubset.relInFlagsAt
   exact Finset.sort_nodup _ _
 

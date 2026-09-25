@@ -148,8 +148,8 @@ theorem isIso_fibreMu
     (L : OddLine D) (R : D) [MonObj R] [IsCommMonObj R] (V : D) (W : D)
     (h : IsIso (gammaPairComparison L R (freeMod R V)
       (freeMod R W))) : IsIso (fibreMu L R V W) := by
-  haveI := h
-  haveI : IsIso (gammaFunMap L R (freeModTensorIso R V W).hom) :=
+  have := h
+  have : IsIso (gammaFunMap L R (freeModTensorIso R V W).hom) :=
     ((gammaModuleFunctor L R).mapIso
       (freeModTensorIso R V W)).isIso_hom
   exact IsIso.comp_isIso

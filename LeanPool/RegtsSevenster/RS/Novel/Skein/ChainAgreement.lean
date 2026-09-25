@@ -47,7 +47,7 @@ whole chain's values are determined by the pinned seed.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 

@@ -24,13 +24,79 @@ namespace RS
 
 open CategoryTheory MonoidalCategory Finset
 open Functor.LaxMonoidal Functor.OplaxMonoidal
-open Classical
+
 
 variable {R : ℕ} (f : EdgeRankParameter R)
 variable (P : DelignePackage (SkeinObj f))
 variable {k ℓ : ℕ}
 variable (e : stdSuperPair k ℓ ⟶ P.ω.obj (SkeinObj.mk 1))
 variable (e' : P.ω.obj (SkeinObj.mk 1) ⟶ stdSuperPair k ℓ)
+
+private theorem core_out_card (W : ClosedFragment)
+    (F : EdgeSubset W) {κ : F.TransitionSystem}
+    (o : κ.Orientation) :
+    Fintype.card
+      {f : {g : W.Flag // g ∈ F.flags} //
+        o.isOut f.val = true} =
+    (edgeIndexSet W F).card := by
+  classical
+  have hcard2 : F.flags.card =
+      2 * (edgeIndexSet W F).card := by
+    have h1 : Fintype.card {f : W.Flag // f ∈ F.flags} =
+        F.flags.card := Fintype.card_coe _
+    have h2 : (Finset.univ :
+        Finset {f : W.Flag // f ∈ F.flags}) =
+        (edgePairList W F).toFinset := by
+      ext x
+      simp only [Finset.mem_univ, List.mem_toFinset,
+        true_iff]
+      exact mem_edgePairList W F x
+    have h3 : Fintype.card {f : W.Flag // f ∈ F.flags} =
+        (edgePairList W F).length := by
+      rw [← Finset.card_univ, h2]
+      exact List.toFinset_card_of_nodup (edgePairList_nodup W F)
+    have h4 : (edgePairList W F).length =
+        2 * (edgeIndexSet W F).card := by
+      rw [edgePairList, List.length_flatMap]
+      have h5 : (((partEdges W F).attachWith
+          (· ∈ edgeIndexSet W F)
+          (fun _ hi => (Finset.mem_sort _).mp hi)).map
+          (fun i => ([⟨(starFlagEnum W).symm
+              (Fin.castAdd (edgeCount W) i.val),
+            repMem_of_partEdge i.prop⟩,
+            ⟨(starFlagEnum W).symm
+              (Fin.natAdd (edgeCount W) i.val),
+            partnerMem_of_partEdge i.prop⟩] :
+            List {f : W.Flag // f ∈ F.flags}).length)) =
+          List.replicate (((partEdges W F).attachWith
+            (· ∈ edgeIndexSet W F)
+            (fun _ hi => (Finset.mem_sort _).mp hi)).length)
+            2 := by
+        refine Eq.trans (List.map_congr_left
+          (fun i _ => (rfl : _ = 2))) ?_
+        exact List.map_const'
+      rw [h5, List.sum_replicate, smul_eq_mul,
+        List.length_attachWith]
+      rw [show (partEdges W F).length =
+        (edgeIndexSet W F).card from Finset.length_sort (· ≤ ·)]
+      ring
+    omega
+  have hout_card : Fintype.card
+      {f : {g : W.Flag // g ∈ F.flags} //
+        o.isOut f.val = true} =
+      (edgeIndexSet W F).card := by
+    have h1 := card_out_eq_fintype W F o
+    have h2 := card_in_eq_card_out W F o
+    have h3 := Finset.card_filter_add_card_filter_not
+      (s := F.flags) (p := fun f => o.isOut f = true)
+    have h4 : F.flags.filter
+        (fun f => ¬ (o.isOut f = true)) =
+        F.flags.filter (fun f => o.isOut f = false) :=
+      Finset.filter_congr (fun f _ => by
+        cases h : o.isOut f <;> simp)
+    rw [h4] at h3
+    omega
+  exact hout_card
 
 /-- **The core parity identity**: the pattern,
 crossing and representative signs against the pair-enumeration
@@ -120,62 +186,7 @@ theorem core_parity (W : ClosedFragment)
   have hMD := sign_listIndexPerm_matched_global W F o
   -- ═══════ STAGE 3: THE FLAG-COUNT BRIDGE ═══════
   -- the flag-count bridge
-  have hcard2 : F.flags.card =
-      2 * (edgeIndexSet W F).card := by
-    have h1 : Fintype.card {f : W.Flag // f ∈ F.flags} =
-        F.flags.card := Fintype.card_coe _
-    have h2 : (Finset.univ :
-        Finset {f : W.Flag // f ∈ F.flags}) =
-        (edgePairList W F).toFinset := by
-      ext x
-      simp only [Finset.mem_univ, List.mem_toFinset,
-        true_iff]
-      exact mem_edgePairList W F x
-    have h3 : Fintype.card {f : W.Flag // f ∈ F.flags} =
-        (edgePairList W F).length := by
-      rw [← Finset.card_univ, h2]
-      exact List.toFinset_card_of_nodup nB
-    have h4 : (edgePairList W F).length =
-        2 * (edgeIndexSet W F).card := by
-      rw [edgePairList, List.length_flatMap]
-      have h5 : (((partEdges W F).attachWith
-          (· ∈ edgeIndexSet W F)
-          (fun _ hi => (Finset.mem_sort _).mp hi)).map
-          (fun i => ([⟨(starFlagEnum W).symm
-              (Fin.castAdd (edgeCount W) i.val),
-            repMem_of_partEdge i.prop⟩,
-            ⟨(starFlagEnum W).symm
-              (Fin.natAdd (edgeCount W) i.val),
-            partnerMem_of_partEdge i.prop⟩] :
-            List {f : W.Flag // f ∈ F.flags}).length)) =
-          List.replicate (((partEdges W F).attachWith
-            (· ∈ edgeIndexSet W F)
-            (fun _ hi => (Finset.mem_sort _).mp hi)).length)
-            2 := by
-        refine Eq.trans (List.map_congr_left
-          (fun i _ => (rfl : _ = 2))) ?_
-        exact List.map_const'
-      rw [h5, List.sum_replicate, smul_eq_mul,
-        List.length_attachWith]
-      rw [show (partEdges W F).length =
-        (edgeIndexSet W F).card from Finset.length_sort (· ≤ ·)]
-      ring
-    omega
-  have hout_card : Fintype.card
-      {f : {g : W.Flag // g ∈ F.flags} //
-        o.isOut f.val = true} =
-      (edgeIndexSet W F).card := by
-    have h1 := card_out_eq_fintype W F o
-    have h2 := card_in_eq_card_out W F o
-    have h3 := Finset.card_filter_add_card_filter_not
-      (s := F.flags) (p := fun f => o.isOut f = true)
-    have h4 : F.flags.filter
-        (fun f => ¬ (o.isOut f = true)) =
-        F.flags.filter (fun f => o.isOut f = false) :=
-      Finset.filter_congr (fun f _ => by
-        cases h : o.isOut f <;> simp)
-    rw [h4] at h3
-    omega
+  have hout_card := core_out_card W F o
   -- ═══════ STAGE 4: THE TWO ENDPOINTS OF THE CHAIN ═══════
   -- endpoints: the two key sortSigns pair to the chained sign
   have hpair := sortSign_key_pair

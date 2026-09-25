@@ -51,7 +51,7 @@ theorem cycleType_permCongr'
     [Fintype α] [DecidableEq α] {β : Type*} [Fintype β] [DecidableEq β]
     (e : α ≃ β) (π : Equiv.Perm α) :
     (e.permCongr π).cycleType = π.cycleType := by
-  letI : DecidablePred (fun _ : β => True) := fun _ => .isTrue trivial
+  let : DecidablePred (fun _ : β => True) := fun _ => .isTrue trivial
   have h : e.permCongr π =
       π.extendDomain (e.trans (Equiv.subtypeUnivEquiv
         (fun _ : β => trivial)).symm) := by
@@ -75,9 +75,10 @@ theorem cycleFunG_permCongr
 /-- A finite set closed under a permutation is closed in both
 directions: the permutation restricts to an injective self-map of
 the set, which is onto by finiteness. -/
-theorem mem_iff_of_invariant [DecidableEq α]
+theorem mem_iff_of_invariant
     {π : Equiv.Perm α} {s : Finset α}
     (hs : ∀ x ∈ s, π x ∈ s) : ∀ x, π x ∈ s ↔ x ∈ s := by
+  classical
   have himg : s.image π = s :=
     Finset.eq_of_subset_of_card_le
       (fun y hy => by
@@ -119,7 +120,7 @@ theorem permRestrict_of_invariant [Fintype α] [DecidableEq α]
     {π : Equiv.Perm α} {s : Finset α}
     (h : ∀ x, π x ∈ s ↔ x ∈ s) :
     permRestrict π s = π.subtypePerm h := by
-  rw [permRestrict, dif_pos h]
+  rw [permRestrict, dite_eq_left h]
 
 /-! ### Orbits as finite sets -/
 

@@ -81,13 +81,13 @@ theorem extProd_single {n : ℕ} (σ τ : Equiv.Perm (Fin n))
       (MonoidAlgebra.single σ c) =
       MonoidAlgebra.single
         ((σ, 1) : Equiv.Perm (Fin n) × Equiv.Perm (Fin n)) c := by
-    show MonoidAlgebra.mapDomain _ (MonoidAlgebra.single σ c) = _
+    change MonoidAlgebra.mapDomain _ (MonoidAlgebra.single σ c) = _
     exact MonoidAlgebra.mapDomain_single
   have hR : MonoidAlgebra.mapDomainAlgHom ℂ ℂ (extSndHom n)
       (MonoidAlgebra.single τ d) =
       MonoidAlgebra.single
         ((1, τ) : Equiv.Perm (Fin n) × Equiv.Perm (Fin n)) d := by
-    show MonoidAlgebra.mapDomain _ (MonoidAlgebra.single τ d) = _
+    change MonoidAlgebra.mapDomain _ (MonoidAlgebra.single τ d) = _
     exact MonoidAlgebra.mapDomain_single
   unfold extProd
   rw [hL, hR, MonoidAlgebra.single_mul_single]
@@ -109,7 +109,7 @@ theorem extImages_comm {n : ℕ} (x y : SymGroupAlgebra n) :
           MonoidAlgebra.single
             ((σ, 1) : Equiv.Perm (Fin n) × Equiv.Perm (Fin n))
             (1 : ℂ) := by
-        show MonoidAlgebra.mapDomain _
+        change MonoidAlgebra.mapDomain _
           (MonoidAlgebra.single σ 1) = _
         exact MonoidAlgebra.mapDomain_single
       have hR : MonoidAlgebra.mapDomainAlgHom ℂ ℂ (extSndHom n)
@@ -117,7 +117,7 @@ theorem extImages_comm {n : ℕ} (x y : SymGroupAlgebra n) :
           MonoidAlgebra.single
             ((1, τ) : Equiv.Perm (Fin n) × Equiv.Perm (Fin n))
             (1 : ℂ) := by
-        show MonoidAlgebra.mapDomain _
+        change MonoidAlgebra.mapDomain _
           (MonoidAlgebra.single τ 1) = _
         exact MonoidAlgebra.mapDomain_single
       simp only [MonoidAlgebra.of_apply]
@@ -211,8 +211,8 @@ theorem extProd_apply_pair {n : ℕ} (x y : SymGroupAlgebra n)
           intro he
           exact hcase ⟨congrArg Prod.fst he, congrArg Prod.snd he⟩
         rcases not_and_or.mp hcase with hσ | hτ
-        · simp [MonoidAlgebra.coeff_single_apply, hne, hσ]
-        · simp [MonoidAlgebra.coeff_single_apply, hne, hτ]
+        · simp [Finsupp.single_apply, hne, hσ]
+        · simp [Finsupp.single_apply, hne, hτ]
     | add y y' hy hy' =>
       rw [extProd_add_snd, ma_add_apply, hy, hy', ma_add_apply,
         mul_add]
@@ -233,7 +233,7 @@ theorem extProd_shape_e_coeff_conj (P : SchurPackage.{u}) {n : ℕ}
     (g k : Equiv.Perm (Fin n) × Equiv.Perm (Fin n)) :
     (extProd (Shape.e P μ) (Shape.e P ν)).coeff (g⁻¹ * k * g) =
       (extProd (Shape.e P μ) (Shape.e P ν)).coeff k := by
-  show (extProd (Shape.e P μ) (Shape.e P ν)).coeff
+  change (extProd (Shape.e P μ) (Shape.e P ν)).coeff
       (g.1⁻¹ * k.1 * g.1, g.2⁻¹ * k.2 * g.2) =
     (extProd (Shape.e P μ) (Shape.e P ν)).coeff (k.1, k.2)
   rw [extProd_apply_pair, extProd_apply_pair, shape_e_coeff_conj,
@@ -277,14 +277,14 @@ theorem diagHom_injective (n : ℕ) :
 /-- The diagonal image's coefficient on the diagonal. -/
 theorem diagEmbed_apply_diag {n : ℕ} (x : SymGroupAlgebra n)
     (σ : Equiv.Perm (Fin n)) : (diagEmbed x).coeff (σ, σ) = x.coeff σ := by
-  show Finsupp.mapDomain (diagHom n) x.coeff (σ, σ) = x.coeff σ
+  change Finsupp.mapDomain (diagHom n) x.coeff (σ, σ) = x.coeff σ
   exact Finsupp.mapDomain_apply_of_injective (diagHom_injective n) x.coeff σ
 
 /-- The diagonal image vanishes off the diagonal. -/
 theorem diagEmbed_apply_off_diag {n : ℕ} (x : SymGroupAlgebra n)
     {p : Equiv.Perm (Fin n) × Equiv.Perm (Fin n)}
     (h : p.1 ≠ p.2) : (diagEmbed x).coeff p = 0 := by
-  show Finsupp.mapDomain (diagHom n) x.coeff p = 0
+  change Finsupp.mapDomain (diagHom n) x.coeff p = 0
   refine Finsupp.mapDomain_of_notMem_range x.coeff p ?_
   rintro ⟨σ, hσ⟩
   rw [← hσ] at h
@@ -301,7 +301,7 @@ theorem extProd_mul_diagEmbed_apply_one (P : SchurPackage.{u})
         ((n.factorial : ℂ) * (n.factorial : ℂ)) *
         kronMult lam μ ν := by
   classical
-  show (extProd (Shape.e P μ) (Shape.e P ν) *
+  change (extProd (Shape.e P μ) (Shape.e P ν) *
       diagEmbed (Shape.e P lam)).coeff 1 = _
   rw [mul_apply_one]
   have hoff : ∀ p ∈ (Finset.univ :

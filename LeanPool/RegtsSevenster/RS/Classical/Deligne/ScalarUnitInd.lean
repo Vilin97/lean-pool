@@ -40,11 +40,11 @@ theorem hasScalarUnit_of_scalarUnit
     (φ : ℂ ≃+* End (𝟙_ D)) :
     letI := linearOfScalarUnit φ
     HasScalarUnit D := by
-  letI := linearOfScalarUnit φ
+  let := linearOfScalarUnit φ
   have hval : ∀ c : ℂ, (c • 𝟙 (𝟙_ D) : 𝟙_ D ⟶ 𝟙_ D) =
       scalarHom φ c := by
     intro c
-    show scalarSmul φ c (𝟙 (𝟙_ D)) = scalarHom φ c
+    change scalarSmul φ c (𝟙 (𝟙_ D)) = scalarHom φ c
     rw [scalarSmul_eq, Category.comp_id, scalarEnd_unit]
   constructor
   · intro a b hab
@@ -53,9 +53,9 @@ theorem hasScalarUnit_of_scalarUnit
     exact h1
   · intro f
     refine ⟨φ.symm f, ?_⟩
-    show ((φ.symm f) • 𝟙 (𝟙_ D) : 𝟙_ D ⟶ 𝟙_ D) = f
+    change ((φ.symm f) • 𝟙 (𝟙_ D) : 𝟙_ D ⟶ 𝟙_ D) = f
     rw [hval]
-    show (φ (φ.symm f) : 𝟙_ D ⟶ 𝟙_ D) = f
+    change (φ (φ.symm f) : 𝟙_ D ⟶ 𝟙_ D) = f
     rw [RingEquiv.apply_symm_apply]
 
 end RS

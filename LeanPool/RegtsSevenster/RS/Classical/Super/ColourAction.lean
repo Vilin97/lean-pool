@@ -33,14 +33,14 @@ theorem toColour_powBraid :
   | n + 2, i, h => by
     by_cases hi : i = n
     · rw [show powBraid (stdSuperPair k ℓ) (n + 2) i h =
-          topBraid (stdSuperPair k ℓ) n from dif_pos hi]
+          topBraid (stdSuperPair k ℓ) n from dite_eq_left hi]
       rw [toColour_topBraid]
       subst hi
       rfl
     · have hle : i + 2 ≤ n + 1 := by omega
       rw [show powBraid (stdSuperPair k ℓ) (n + 2) i h =
           (powBraid (stdSuperPair k ℓ) (n + 1) i hle) ▷
-            stdSuperPair k ℓ from dif_neg hi]
+            stdSuperPair k ℓ from dite_eq_right hi]
       rw [toColour_whisker]
       rw [toColour_powBraid (n + 1) i hle]
       rw [colourExtend_colourSwap]
@@ -53,7 +53,7 @@ theorem toColour_powBraidWord {n : ℕ} (w : List (Fin n)) :
   induction w with
   | nil => exact toColour_id (n + 1)
   | cons i w ih =>
-    show toColour (n + 1) (powBraidWord (stdSuperPair k ℓ) w ≫
+    change toColour (n + 1) (powBraidWord (stdSuperPair k ℓ) w ≫
       powBraid (stdSuperPair k ℓ) (n + 1) i.val (by omega)) = _
     rw [toColour_comp, ih, toColour_powBraid]
     rfl

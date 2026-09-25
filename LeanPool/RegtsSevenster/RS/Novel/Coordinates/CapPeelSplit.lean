@@ -71,7 +71,7 @@ theorem splitCapVal_expansion (m : ℕ)
   rw [show coordOf w c.val =
       (colourPowerEquiv k ℓ ((m + m) + 2)).evenEquiv w c from by
     unfold coordOf
-    rw [dif_pos c.prop]]
+    rw [dite_eq_left c.prop]]
   rfl
 
 /-- The split cap value on merges: `CapSplit` restated. -/
@@ -103,7 +103,7 @@ theorem splitCapVal_oddMerge (m : ℕ)
             (SuperVect.tensorObj
               (superPow (stdSuperPair k ℓ) (m + m))
               (superPow (stdSuperPair k ℓ) 2)).even)) = 0 := by
-  letI := P.braided
+  let := P.braided
   have hmerge := congrArg (fun z :
       (superPow (stdSuperPair k ℓ) (m + m) ⊗
         superPow (stdSuperPair k ℓ) 2 ⟶
@@ -119,7 +119,7 @@ theorem splitCapVal_oddMerge (m : ℕ)
   refine Eq.trans (congrArg (omegaFun f P
     (HomSpace.tensor f (m + m) 0 2 0
       (bundleCapClass f m) (evClass f))) hmerge.symm) ?_
-  show omegaFun f P (HomSpace.tensor f (m + m) 0 2 0
+  change omegaFun f P (HomSpace.tensor f (m + m) 0 2 0
       (bundleCapClass f m) (evClass f))
     (((μ P.ω (SkeinObj.mk (m + m)) (SkeinObj.mk 2)) :
       SuperVect.Hom _ _).evenMap
@@ -159,7 +159,7 @@ theorem capVal_succ (m : ℕ)
             eqToHom (congrArg (superPow (stdSuperPair k ℓ))
               (capPeelArity m))) :
           SuperVect.Hom _ _).evenMap v) := by
-  letI := P.braided
+  let := P.braided
   have hchain : stdToOmega f P e ((m + 1) + (m + 1)) ≫
       P.ω.map (bundleMapClass f (capPeelRotation m)) =
     (modelPermMap (capPeelPerm m) ≫

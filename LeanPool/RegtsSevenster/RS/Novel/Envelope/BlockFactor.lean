@@ -80,7 +80,7 @@ private theorem endCast_permClass {a b : ℕ} (h : a = b)
     endCast f h (permClass f a σ) =
       permClass f b ((finCongr h).permCongr σ) := by
   subst h
-  show permClass f a σ = permClass f a _
+  change permClass f a σ = permClass f a _
   congr 1
 
 /-- `permClass_sumCongr` stated for `blockTensorEnd`. -/
@@ -184,7 +184,7 @@ private theorem blockTensor_assoc {a b c : ℕ}
     blockTensorEnd f p₁ (blockTensorEnd f p₂ p₃) := by
   set h : (a + b) + c = a + (b + c) := by omega
   -- Rewrite endCast as conjugation by the associator
-  show (h ▸ blockTensorEnd f (blockTensorEnd f p₁ p₂) p₃ :
+  change (h ▸ blockTensorEnd f (blockTensorEnd f p₁ p₂) p₃ :
       skeinEnd f (a + (b + c))) =
     blockTensorEnd f p₁ (blockTensorEnd f p₂ p₃)
   rw [endCast_eq_conj f h]
@@ -225,12 +225,12 @@ private theorem blockPow_split (n : ℕ) (g : skeinEnd f n) (a : ℕ) :
   intro b
   induction b with
   | zero =>
-      show blockPow f n g a =
+      change blockPow f n g a =
         blockTensorEnd f (blockPow f n g a) (1 : skeinEnd f (n * 0))
       exact (blockTensorEnd_one_right f (blockPow f n g a)).symm
   | succ k ih =>
       -- blockPow (a + (k+1)) = blockTensorEnd f (blockPow (a+k)) g
-      show endCast f (Nat.mul_add n a (k + 1))
+      change endCast f (Nat.mul_add n a (k + 1))
           (blockTensorEnd f (blockPow f n g (a + k)) g) =
         blockTensorEnd f (blockPow f n g a)
           (blockTensorEnd f (blockPow f n g k) g)
@@ -289,7 +289,7 @@ private theorem blockPerm_sumCongr (n : ℕ) {a b : ℕ}
       -- Compute π(v/n) = σ(v/n)
       have hπq : (π ⟨v / n, hqab⟩).val = (σ ⟨v / n, hqa⟩).val := by
         rw [hπ_def]
-        show (finSumFinEquiv (Equiv.sumCongr σ τ
+        change (finSumFinEquiv (Equiv.sumCongr σ τ
           (finSumFinEquiv.symm ⟨v / n, hqab⟩))).val = _
         rw [show (⟨v / n, hqab⟩ : Fin (a + b)) =
           Fin.castAdd b ⟨v / n, hqa⟩ from Fin.ext rfl,
@@ -301,7 +301,7 @@ private theorem blockPerm_sumCongr (n : ℕ) {a b : ℕ}
           (Equiv.sumCongr (blockPerm n σ) (blockPerm n τ))
           ⟨v, hv⟩).val =
           n * (σ ⟨v / n, hqa⟩).val + v % n := by
-        show (finSumFinEquiv (Equiv.sumCongr (blockPerm n σ)
+        change (finSumFinEquiv (Equiv.sumCongr (blockPerm n σ)
           (blockPerm n τ) (finSumFinEquiv.symm ⟨v, hv⟩))).val = _
         rw [show (⟨v, hv⟩ : Fin (n * a + n * b)) =
           Fin.castAdd (n * b) ⟨v, hvna⟩ from Fin.ext rfl,
@@ -325,7 +325,7 @@ private theorem blockPerm_sumCongr (n : ℕ) {a b : ℕ}
       have hπq : (π ⟨v / n, hqab⟩).val =
           a + (τ ⟨v / n - a, hqb⟩).val := by
         rw [hπ_def]
-        show (finSumFinEquiv (Equiv.sumCongr σ τ
+        change (finSumFinEquiv (Equiv.sumCongr σ τ
           (finSumFinEquiv.symm ⟨v / n, hqab⟩))).val = _
         rw [show (⟨v / n, hqab⟩ : Fin (a + b)) =
           Fin.natAdd a ⟨v / n - a, hqb⟩ from
@@ -362,7 +362,7 @@ private theorem blockPerm_sumCongr (n : ℕ) {a b : ℕ}
           (Equiv.sumCongr (blockPerm n σ) (blockPerm n τ))
           ⟨v, hv⟩).val =
           n * a + (n * (τ ⟨v / n - a, hqb⟩).val + v % n) := by
-        show (finSumFinEquiv (Equiv.sumCongr (blockPerm n σ)
+        change (finSumFinEquiv (Equiv.sumCongr (blockPerm n σ)
           (blockPerm n τ) (finSumFinEquiv.symm ⟨v, hv⟩))).val = _
         rw [show (⟨v, hv⟩ : Fin (n * a + n * b)) =
           Fin.natAdd (n * a) ⟨v - n * a, by omega⟩ from
@@ -424,7 +424,7 @@ private theorem blockSwap01_comm (n : ℕ) (g : skeinEnd f n) :
       blockTensorEnd f g g =
     blockTensorEnd f g g *
       permClass f (n + n) (transposeEquiv n n) := by
-  show HomSpace.comp f (n + n) (n + n) (n + n)
+  change HomSpace.comp f (n + n) (n + n) (n + n)
       (show HomSpace f.val _ from blockTensorEnd f g g)
       (show HomSpace f.val _ from
         permClass f (n + n) (transposeEquiv n n)) =
@@ -521,7 +521,7 @@ private theorem blockPerm_swap01_eq_transposeEquiv (n : ℕ) :
     apply Fin.ext
     -- finCongr doesn't change .val, so reduce to blockPerm
     have hv2 : v < n * 2 := by omega
-    show (blockPerm n (Equiv.swap (0 : Fin 2) 1)
+    change (blockPerm n (Equiv.swap (0 : Fin 2) 1)
         ⟨v, hv2⟩).val =
       (transposeEquiv (n * 1) (n * 1) ⟨v, hv⟩).val
     by_cases hvn : v < n
@@ -866,7 +866,7 @@ theorem skeinTrace_blockCycles_mul_pow (n : ℕ)
       have hrest : ∀ x ∈ rest, 1 ≤ x := fun x hx =>
         hl x (List.mem_cons_of_mem c hx)
       set S := rest.sum with hS_def
-      show skeinTrace f (n * (c + S))
+      change skeinTrace f (n * (c + S))
           (permClass f (n * (c + S))
               (blockPerm n (blockCycles (c :: rest))) *
             blockPow f n g (c + S)) =

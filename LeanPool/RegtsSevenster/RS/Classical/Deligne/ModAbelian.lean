@@ -267,7 +267,7 @@ theorem modBinaryBicone_total
         + (modBinaryBicone A M N).snd ≫ (modBinaryBicone A M N).inr
       = 𝟙 (modBinaryBicone A M N).pt := by
   refine Mod.hom_ext _ _ ?_
-  show biprod.fst ≫ biprod.inl + biprod.snd ≫ biprod.inr
+  change biprod.fst ≫ biprod.inl + biprod.snd ≫ biprod.inr
     = 𝟙 (M.X ⊞ N.X)
   exact biprod.total
 
@@ -416,15 +416,15 @@ noncomputable def modBicone
     (fun j j' => by
       by_cases h : j = j'
       · subst h
-        rw [dif_pos rfl]
+        rw [dite_eq_left rfl]
         refine Mod.hom_ext _ _ ?_
-        show biproduct.ι (fun j => (M j).X) j
+        change biproduct.ι (fun j => (M j).X) j
           ≫ biproduct.π (fun j => (M j).X) j = _
         rw [biproduct.ι_π_self]
         exact (Mod.id_hom' (M j)).symm
-      · rw [dif_neg h]
+      · rw [dite_eq_right h]
         refine Mod.hom_ext _ _ ?_
-        show biproduct.ι (fun j => (M j).X) j
+        change biproduct.ι (fun j => (M j).X) j
           ≫ biproduct.π (fun j => (M j).X) j' = _
         rw [biproduct.ι_π_ne _ h]
         rfl)
@@ -573,7 +573,7 @@ theorem mono_kerIncl [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [MonoidalPreadditive D] [HasKernels D] (A : D) [MonObj A] {M : Mod D A}
     {N : Mod D A} (f : M ⟶ N) : Mono (kerIncl A f) :=
   mono_of_mono_hom _ (by
-    show Mono (kernel.ι f.hom)
+    change Mono (kernel.ι f.hom)
     infer_instance)
 
 /-- The lift of a module map annihilated by `f` through the
@@ -705,7 +705,7 @@ theorem cokerAct_one [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     (A : D) [MonObj A] {M : Mod D A} {N : Mod D A} (f : M ⟶ N) :
     η[A] ▷ cokernel f.hom ≫ cokerAct A f
       = (λ_ (cokernel f.hom)).hom := by
-  haveI := epi_whiskerLeft_cokernelπ (𝟙_ D) f.hom
+  have := epi_whiskerLeft_cokernelπ (𝟙_ D) f.hom
   refine (cancel_epi ((𝟙_ D) ◁ cokernel.π f.hom)).1 ?_
   rw [← Category.assoc, whisker_exchange, Category.assoc,
     π_cokerAct, ← Category.assoc, one_actLeft, leftUnitor_naturality]
@@ -718,7 +718,7 @@ theorem cokerAct_mul [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     μ[A] ▷ cokernel f.hom ≫ cokerAct A f
       = (α_ A A (cokernel f.hom)).hom
           ≫ A ◁ cokerAct A f ≫ cokerAct A f := by
-  haveI := epi_whiskerLeft_cokernelπ (A ⊗ A) f.hom
+  have := epi_whiskerLeft_cokernelπ (A ⊗ A) f.hom
   refine (cancel_epi ((A ⊗ A) ◁ cokernel.π f.hom)).1 ?_
   rw [← Category.assoc, whisker_exchange, Category.assoc,
     π_cokerAct, ← Category.assoc, mul_actLeft, Category.assoc,
@@ -778,7 +778,7 @@ theorem epi_cokerProj [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     (A : D) [MonObj A] {M : Mod D A} {N : Mod D A} (f : M ⟶ N) :
     Epi (cokerProj A f) :=
   epi_of_epi_hom _ (by
-    show Epi (cokernel.π f.hom)
+    change Epi (cokernel.π f.hom)
     infer_instance)
 
 /-- The descent of a module map annihilating `f` through the
@@ -795,7 +795,7 @@ noncomputable def cokerDesc
     (by
       change cokerAct A f ≫ cokernel.desc f.hom k.hom (by simpa using congrArg Mod.Hom.hom hk)
         = A ◁ cokernel.desc f.hom k.hom (by simpa using congrArg Mod.Hom.hom hk) ≫ actLeft A W.X
-      haveI := epi_whiskerLeft_cokernelπ A f.hom
+      have := epi_whiskerLeft_cokernelπ A f.hom
       refine (cancel_epi (A ◁ cokernel.π f.hom)).1 ?_
       rw [← Category.assoc, π_cokerAct, Category.assoc,
         cokernel.π_desc, ← MonoidalCategory.whiskerLeft_comp_assoc,
@@ -1035,7 +1035,7 @@ theorem epiDescHom_lin [Category.{v} D] [MonoidalCategory D] [Abelian D]
     (hk : kerIncl A φ ≫ k = 0) :
     actLeft A N.X ≫ epiDescHom A φ k hk
       = A ◁ epiDescHom A φ k hk ≫ actLeft A W.X := by
-  haveI := epi_whiskerLeft A (e := φ.hom)
+  have := epi_whiskerLeft A (e := φ.hom)
   refine (cancel_epi (A ◁ φ.hom)).1 ?_
   rw [← Category.assoc, ← actLeft_natural A M.X N.X φ.hom,
     Category.assoc, comp_epiDescHom,
@@ -1221,7 +1221,7 @@ theorem retractionBicone_total
         + (retractionBicone k r hr).snd
             ≫ (retractionBicone k r hr).inr
       = 𝟙 (retractionBicone k r hr).pt := by
-  show r ≫ k + cokernel.π k ≫ retractionSection k r hr = 𝟙 N
+  change r ≫ k + cokernel.π k ≫ retractionSection k r hr = 𝟙 N
   rw [π_retractionSection]
   abel
 
@@ -1299,7 +1299,7 @@ theorem sectionBicone_total
     (sectionBicone c s hs).fst ≫ (sectionBicone c s hs).inl
         + (sectionBicone c s hs).snd ≫ (sectionBicone c s hs).inr
       = 𝟙 (sectionBicone c s hs).pt := by
-  show sectionRetraction c s hs ≫ kernel.ι c + c ≫ s = 𝟙 N
+  change sectionRetraction c s hs ≫ kernel.ι c + c ≫ s = 𝟙 N
   rw [sectionRetraction_ι]
   abel
 
@@ -1332,8 +1332,8 @@ theorem exists_subobject_of_mono_biprod [Category.{v} E] [Abelian E]
       = (kernel.ι (f ≫ biprod.snd) ≫ f ≫ biprod.fst)
           ≫ biprod.inl := by
     refine biprod.hom_ext _ _ ?_ ?_ <;> simp [Category.assoc]
-  haveI : Mono (kernel.ι (f ≫ biprod.snd) ≫ f) := mono_comp _ _
-  haveI : Mono (kernel.ι (f ≫ biprod.snd) ≫ f ≫ biprod.fst) :=
+  have : Mono (kernel.ι (f ≫ biprod.snd) ≫ f) := mono_comp _ _
+  have : Mono (kernel.ι (f ≫ biprod.snd) ≫ f ≫ biprod.fst) :=
     mono_of_mono_fac hfac.symm
   refine ⟨Abelian.coimage (f ≫ biprod.snd),
     Abelian.factorThruCoimage (f ≫ biprod.snd), inferInstance, ?_⟩
@@ -1350,7 +1350,7 @@ theorem exists_subobject_of_mono_biprod [Category.{v} E] [Abelian E]
         = 𝟙 (kernel (f ≫ biprod.snd)) := hKz.eq_of_tgt _ _
     exact Or.inl ⟨isoBiprodOfRetraction _ 0 hr
       ≪≫ (isoZeroBiprod hKz).symm⟩
-  · haveI : IsIso (kernel.ι (f ≫ biprod.snd) ≫ f ≫ biprod.fst) :=
+  · have : IsIso (kernel.ι (f ≫ biprod.snd) ≫ f ≫ biprod.fst) :=
       isIso_of_mono_of_nonzero hu
     have hr : kernel.ι (f ≫ biprod.snd)
         ≫ ((f ≫ biprod.fst)
@@ -1378,7 +1378,7 @@ theorem exists_quotient_of_epi_biprod [Category.{v} E] [Abelian E]
       = biprod.fst
           ≫ (biprod.inl ≫ f ≫ cokernel.π (biprod.inr ≫ f)) := by
     refine biprod.hom_ext' _ _ ?_ ?_ <;> simp [hg]
-  haveI : Epi (biprod.inl ≫ f ≫ cokernel.π (biprod.inr ≫ f)) := by
+  have : Epi (biprod.inl ≫ f ≫ cokernel.π (biprod.inr ≫ f)) := by
     have h1 : Epi (f ≫ cokernel.π (biprod.inr ≫ f)) := epi_comp _ _
     rw [hfac] at h1
     exact epi_of_epi (biprod.fst : (X ⊞ T) ⟶ X)
@@ -1398,7 +1398,7 @@ theorem exists_quotient_of_epi_biprod [Category.{v} E] [Abelian E]
         = 𝟙 (cokernel (biprod.inr ≫ f)) := hCz.eq_of_src _ _
     exact Or.inl ⟨isoBiprodOfSection _ 0 hs
       ≪≫ (isoBiprodZero hCz).symm⟩
-  · haveI : IsIso (biprod.inl ≫ f ≫ cokernel.π (biprod.inr ≫ f)) :=
+  · have : IsIso (biprod.inl ≫ f ≫ cokernel.π (biprod.inr ≫ f)) :=
       isIso_of_epi_of_nonzero hu
     have hs : (inv (biprod.inl ≫ f ≫ cokernel.π (biprod.inr ≫ f))
           ≫ (biprod.inl ≫ f))
@@ -1438,7 +1438,7 @@ theorem exists_sublist_iso_of_mono [Category.{v} E] [Abelian E]
   induction L with
   | nil =>
       intro _ N f hf
-      haveI := hf
+      have := hf
       refine ⟨[], List.Sublist.refl _, ⟨?_⟩⟩
       have h0 : IsZero N := by
         rw [IsZero.iff_id_eq_zero]
@@ -1447,8 +1447,8 @@ theorem exists_sublist_iso_of_mono [Category.{v} E] [Abelian E]
       exact h0.iso (isZero_zero E)
   | cons i L₀ ih =>
       intro hS N f hf
-      haveI : Simple (S i) := hS i (List.mem_cons_self ..)
-      haveI : Mono (show N ⟶ (S i ⊞ idxSum S L₀) from f) := hf
+      have : Simple (S i) := hS i (List.mem_cons_self ..)
+      have : Mono (show N ⟶ (S i ⊞ idxSum S L₀) from f) := hf
       obtain ⟨C, m, hm, hcase⟩ :=
         exists_subobject_of_mono_biprod (X := S i)
           (T := idxSum S L₀) (N := N) f
@@ -1472,7 +1472,7 @@ theorem exists_sublist_iso_of_epi [Category.{v} E] [Abelian E]
   induction L with
   | nil =>
       intro _ N f hf
-      haveI := hf
+      have := hf
       refine ⟨[], List.Sublist.refl _, ⟨?_⟩⟩
       have h0 : IsZero N := by
         rw [IsZero.iff_id_eq_zero]
@@ -1481,8 +1481,8 @@ theorem exists_sublist_iso_of_epi [Category.{v} E] [Abelian E]
       exact h0.iso (isZero_zero E)
   | cons i L₀ ih =>
       intro hS N f hf
-      haveI : Simple (S i) := hS i (List.mem_cons_self ..)
-      haveI : Epi (show (S i ⊞ idxSum S L₀) ⟶ N from f) := hf
+      have : Simple (S i) := hS i (List.mem_cons_self ..)
+      have : Epi (show (S i ⊞ idxSum S L₀) ⟶ N from f) := hf
       obtain ⟨C, m, hm, hcase⟩ :=
         exists_quotient_of_epi_biprod (X := S i)
           (T := idxSum S L₀) (N := N) f
@@ -1593,7 +1593,7 @@ noncomputable def biproductFinSuccIso [Category.{v} E] [Abelian E]
     (⨁ S) ≅ (S 0 ⊞ ⨁ fun i : Fin n => S i.succ) :=
   biprod.uniqueUpToIso _ _
     (isBinaryBilimitOfTotal (finSuccBicone S) (by
-      show biproduct.π S 0 ≫ biproduct.ι S 0
+      change biproduct.π S 0 ≫ biproduct.ι S 0
           + biproduct.lift (fun i : Fin n => biproduct.π S i.succ)
               ≫ (biproduct.desc fun i : Fin n =>
                   biproduct.ι S i.succ)
@@ -1636,7 +1636,7 @@ theorem exists_sublist_iso_biproduct_of_mono [Category.{v} E] [Abelian E]
     ∃ L : List (Fin n), L.Sublist (List.finRange n) ∧
       Nonempty (N ≅ idxSum S L) := by
   obtain ⟨e⟩ := nonempty_biproduct_iso_idxSum n S
-  haveI := hf
+  have := hf
   exact exists_sublist_iso_of_mono S (List.finRange n)
     (fun j _ => hS j) (f ≫ e.hom) inferInstance
 

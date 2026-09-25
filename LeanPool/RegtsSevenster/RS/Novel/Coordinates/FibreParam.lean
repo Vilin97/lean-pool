@@ -17,7 +17,7 @@ partner on the partner slot; the rest carry the even colour.
 namespace RS
 
 open CategoryTheory Finset
-open Classical
+
 
 variable {k ℓ : ℕ}
 
@@ -48,14 +48,14 @@ theorem colourFlags_colouringOf (W : ClosedFragment)
     obtain ⟨-, hodd⟩ := hs
     by_contra hnot
     rw [colouringOf] at hodd
-    rw [dif_neg hnot] at hodd
+    rw [dite_eq_right hnot] at hodd
     exact Bool.noConfusion hodd
   · intro hg
     refine ⟨starFlagEnum W g, ?_, ?_⟩
     · rw [MixedColouring.oddSet, Finset.mem_filter]
       refine ⟨Finset.mem_univ _, ?_⟩
       rw [colouringOf]
-      rw [dif_pos (show (starFlagEnum W).symm
+      rw [dite_eq_left (show (starFlagEnum W).symm
           (starFlagEnum W g) ∈ F.flags from by
         rw [Equiv.symm_apply_apply]; exact hg)]
       rfl
@@ -152,13 +152,13 @@ theorem colouringOf_diagonal (W : ClosedFragment)
         (Fin.natAdd (edgeCount W) i) ∈ F.flags := by
       rw [hpair]
       exact F.pairing_mem _ h
-    rw [dif_pos h, dif_pos h']
-    rw [if_pos (show (Fin.castAdd (edgeCount W) i).val <
+    rw [dite_eq_left h, dite_eq_left h']
+    rw [ite_eq_left (show (Fin.castAdd (edgeCount W) i).val <
       edgeCount W from i.isLt)]
-    rw [if_neg (show ¬ ((Fin.natAdd (edgeCount W) i).val <
+    rw [ite_eq_right (show ¬ ((Fin.natAdd (edgeCount W) i).val <
       edgeCount W) from by
-      show ¬ (edgeCount W + i.val < edgeCount W); omega)]
-    show Sum.inr (oddPartner ℓ (φ.val ⟨_, h'⟩)) =
+      change ¬ (edgeCount W + i.val < edgeCount W); omega)]
+    change Sum.inr (oddPartner ℓ (φ.val ⟨_, h'⟩)) =
       diagPartner (Sum.inr (φ.val ⟨_, h⟩))
     rw [show φ.val ⟨(starFlagEnum W).symm
         (Fin.natAdd (edgeCount W) i), h'⟩ =
@@ -180,8 +180,8 @@ theorem colouringOf_diagonal (W : ClosedFragment)
       have := F.pairing_mem _ hmem
       rw [W.pairing_invol] at this
       exact this
-    rw [dif_neg h, dif_neg h']
-    show Sum.inl (ψ.val ⟨_, h'⟩) =
+    rw [dite_eq_right h, dite_eq_right h']
+    change Sum.inl (ψ.val ⟨_, h'⟩) =
       diagPartner (Sum.inl (ψ.val ⟨_, h⟩))
     rw [show ψ.val ⟨(starFlagEnum W).symm
         (Fin.natAdd (edgeCount W) i), h'⟩ =
@@ -301,7 +301,7 @@ theorem starFlagEnum_pairing_high (W : ClosedFragment)
       (Fin.natAdd (edgeCount W) j) := by
     rw [show Fin.natAdd (edgeCount W) j =
       starFlagEnum W g from Fin.ext (by
-        show edgeCount W + ((starFlagEnum W g).val -
+        change edgeCount W + ((starFlagEnum W g).val -
           edgeCount W) = (starFlagEnum W g).val
         omega)]
     exact (_root_.Equiv.symm_apply_apply _ _).symm
@@ -328,20 +328,20 @@ theorem oddDataOf_constancy (W : ClosedFragment)
   obtain ⟨g, hg⟩ := p
   rw [oddDataOf, oddDataOf]
   by_cases hlow : (starFlagEnum W g).val < edgeCount W
-  · rw [if_pos hlow]
-    rw [if_neg (show ¬ ((starFlagEnum W
+  · rw [ite_eq_left hlow]
+    rw [ite_eq_right (show ¬ ((starFlagEnum W
         (W.pairing g)).val < edgeCount W) from by
       rw [starFlagEnum_pairing_low W g hlow]
-      show ¬ (edgeCount W + (starFlagEnum W g).val <
+      change ¬ (edgeCount W + (starFlagEnum W g).val <
         edgeCount W)
       omega)]
     exact getRight_congr (congrArg c (congrArg _
       (W.pairing_invol g))) _ _
-  · rw [if_neg hlow]
-    rw [if_pos (show (starFlagEnum W
+  · rw [ite_eq_right hlow]
+    rw [ite_eq_left (show (starFlagEnum W
         (W.pairing g)).val < edgeCount W from by
       rw [starFlagEnum_pairing_high W g hlow]
-      show (starFlagEnum W g).val - edgeCount W <
+      change (starFlagEnum W g).val - edgeCount W <
         edgeCount W
       have := (starFlagEnum W g).isLt; omega)]
 
@@ -379,7 +379,7 @@ theorem evenDataOf_constancy (W : ClosedFragment)
   · have hlow' : (starFlagEnum W
         (W.pairing g)).val < edgeCount W := by
       rw [starFlagEnum_pairing_high W g hlow]
-      show (starFlagEnum W g).val - edgeCount W <
+      change (starFlagEnum W g).val - edgeCount W <
         edgeCount W
       have := (starFlagEnum W g).isLt; omega
     have hpart := hdiag ⟨(starFlagEnum W
@@ -440,27 +440,27 @@ theorem colouringOf_reconstruct (W : ClosedFragment)
       slot := _root_.Equiv.apply_symm_apply _ _
   rw [colouringOf]
   by_cases h : (starFlagEnum W).symm slot ∈ F.flags
-  · rw [dif_pos h]
+  · rw [dite_eq_left h]
     have hodd : (c slot).isRight = true := by
       have hm := isRight_of_mem W F c hfibre _ h
       rw [henum] at hm
       exact hm
     by_cases hrep : slot.val < edgeCount W
-    · rw [if_pos hrep]
-      show Sum.inr (oddDataOf W F c hfibre
+    · rw [ite_eq_left hrep]
+      change Sum.inr (oddDataOf W F c hfibre
         ⟨(starFlagEnum W).symm slot, h⟩) = c slot
       rw [oddDataOf]
-      rw [if_pos (show (starFlagEnum W
+      rw [ite_eq_left (show (starFlagEnum W
           ((starFlagEnum W).symm slot)).val <
           edgeCount W from by rw [henum]; exact hrep)]
       exact Eq.trans (congrArg Sum.inr
         (getRight_congr (congrArg c henum) _ hodd))
         (Sum.inr_getRight _ hodd)
-    · rw [if_neg hrep]
-      show Sum.inr (oddPartner ℓ (oddDataOf W F c hfibre
+    · rw [ite_eq_right hrep]
+      change Sum.inr (oddPartner ℓ (oddDataOf W F c hfibre
         ⟨(starFlagEnum W).symm slot, h⟩)) = c slot
       rw [oddDataOf]
-      rw [if_neg (show ¬ ((starFlagEnum W
+      rw [ite_eq_right (show ¬ ((starFlagEnum W
           ((starFlagEnum W).symm slot)).val <
           edgeCount W) from by rw [henum]; exact hrep)]
       set i₀ : Fin (edgeCount W) :=
@@ -473,13 +473,13 @@ theorem colouringOf_reconstruct (W : ClosedFragment)
           (by rw [henum]; exact hrep)) ?_
         refine congrArg (Fin.castAdd (edgeCount W)) ?_
         refine Fin.ext ?_
-        show (starFlagEnum W
+        change (starFlagEnum W
           ((starFlagEnum W).symm slot)).val -
           edgeCount W = slot.val - edgeCount W
         rw [henum]
       have hnat : Fin.natAdd (edgeCount W) i₀ = slot :=
         Fin.ext (by
-          show edgeCount W + (slot.val - edgeCount W) =
+          change edgeCount W + (slot.val - edgeCount W) =
             slot.val
           omega)
       have hd := hdiag i₀
@@ -508,7 +508,7 @@ theorem colouringOf_reconstruct (W : ClosedFragment)
         getRight_congr hu hrepodd rfl]
       rw [hd, hu]
       rfl
-  · rw [dif_neg h]
+  · rw [dite_eq_right h]
     have hnotodd : ¬ ((c slot).isRight = true) := by
       have hm : ¬ ((starFlagEnum W).symm slot ∈
           colourFlags W c) := by
@@ -519,7 +519,7 @@ theorem colouringOf_reconstruct (W : ClosedFragment)
       rcases hx : c slot with a | u
       · rfl
       · exact absurd (by rw [hx]; rfl) hnotodd
-    show Sum.inl (evenDataOf W F c hfibre
+    change Sum.inl (evenDataOf W F c hfibre
       ⟨(starFlagEnum W).symm slot, h⟩) = c slot
     exact Eq.trans (congrArg Sum.inl
       (getLeft_congr (congrArg c henum) _ hleft))
@@ -540,34 +540,34 @@ theorem oddColouringOf_colouringOf (W : ClosedFragment)
   · exact hgoal
   rw [oddDataOf]
   by_cases hlow : (starFlagEnum W g).val < edgeCount W
-  · rw [if_pos hlow]
+  · rw [ite_eq_left hlow]
     have hval : colouringOf W F ψ φ (starFlagEnum W g) =
         Sum.inr (φ.val ⟨g, hg⟩) := by
       rw [colouringOf]
-      rw [dif_pos (show (starFlagEnum W).symm
+      rw [dite_eq_left (show (starFlagEnum W).symm
           (starFlagEnum W g) ∈ F.flags from by
         rw [_root_.Equiv.symm_apply_apply]; exact hg)]
-      rw [if_pos hlow]
+      rw [ite_eq_left hlow]
       refine congrArg Sum.inr ?_
       refine congrArg φ.val (Subtype.ext ?_)
       exact _root_.Equiv.symm_apply_apply _ _
     exact Eq.trans (getRight_congr hval _ rfl) rfl
-  · rw [if_neg hlow]
+  · rw [ite_eq_right hlow]
     have hglow : (starFlagEnum W
         (W.pairing g)).val < edgeCount W := by
       rw [starFlagEnum_pairing_high W g hlow]
-      show (starFlagEnum W g).val - edgeCount W <
+      change (starFlagEnum W g).val - edgeCount W <
         edgeCount W
       have := (starFlagEnum W g).isLt; omega
     have hval : colouringOf W F ψ φ
         (starFlagEnum W (W.pairing g)) =
         Sum.inr (φ.val ⟨g, hg⟩) := by
       rw [colouringOf]
-      rw [dif_pos (show (starFlagEnum W).symm
+      rw [dite_eq_left (show (starFlagEnum W).symm
           (starFlagEnum W (W.pairing g)) ∈ F.flags from by
         rw [_root_.Equiv.symm_apply_apply]
         exact F.pairing_mem _ hg)]
-      rw [if_pos hglow]
+      rw [ite_eq_left hglow]
       refine congrArg Sum.inr ?_
       refine Eq.trans (congrArg φ.val
         (show (⟨(starFlagEnum W).symm (starFlagEnum W
@@ -598,7 +598,7 @@ theorem evenColouringOf_colouringOf (W : ClosedFragment)
   have hval : colouringOf W F ψ φ (starFlagEnum W g) =
       Sum.inl (ψ.val ⟨g, hg⟩) := by
     rw [colouringOf]
-    rw [dif_neg (show ¬ ((starFlagEnum W).symm
+    rw [dite_eq_right (show ¬ ((starFlagEnum W).symm
         (starFlagEnum W g) ∈ F.flags) from by
       rw [_root_.Equiv.symm_apply_apply]; exact hg)]
     refine congrArg Sum.inl ?_

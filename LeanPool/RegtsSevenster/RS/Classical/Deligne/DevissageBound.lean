@@ -45,8 +45,8 @@ theorem devissage_bound
     (hcard : lam.card ≠ 0) (hkill : SchurKilled P X lam)
     (st : DevissageState D L X) :
     st.units + st.lines ≤ 2 * lam.card := by
-  letI := st.monObj
-  letI := st.comm
+  let := st.monObj
+  let := st.comm
   have h1 : (st.base ◁ (permAlg X lam.card (P.e lam) :
       tensorPow D X lam.card ⟶ tensorPow D X lam.card)) = 0 := by
     rw [show (permAlg X lam.card (P.e lam) :

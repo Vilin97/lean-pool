@@ -26,8 +26,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Equiv Classical
-
+open Fragment Equiv
 /-! ## The relabel step
 
 `glueInterface` relabels after every glue, so the invariant has to
@@ -136,7 +135,7 @@ theorem chordInv_glueOpen
           ((W.gluePairOpen i j hij hopen).boundaryFlag l) hlg).val :=
     congrArg Subtype.val hgf
   by_cases h1 : chordInv (Fl) κ l.val = i
-  · rw [if_pos h1]
+  · rw [ite_eq_left h1]
     have hhit : κ.pathMatch (W.boundaryFlag l.val) hll
         = W.boundaryFlag i := by rw [← hlf, h1]
     have hpm := pathMatch_glueOpen_hit_i hij hopen s' hc' hc κ
@@ -145,7 +144,7 @@ theorem chordInv_glueOpen
     rw [hLHS, hpm]
     exact (boundaryFlag_chordInv (Fl) κ hbj).symm
   · by_cases h2 : chordInv (Fl) κ l.val = j
-    · rw [if_neg h1, if_pos h2]
+    · rw [ite_eq_right h1, ite_eq_left h2]
       have hhit : κ.pathMatch (W.boundaryFlag l.val) hll
           = W.boundaryFlag j := by rw [← hlf, h2]
       have hpm := pathMatch_glueOpen_hit_j hij hopen s' hc' hc κ
@@ -153,7 +152,7 @@ theorem chordInv_glueOpen
       refine W.boundaryFlag_injective ?_
       rw [hLHS, hpm]
       exact (boundaryFlag_chordInv (Fl) κ hbi).symm
-    · rw [if_neg h1, if_neg h2]
+    · rw [ite_eq_right h1, ite_eq_right h2]
       have hni : κ.pathMatch (W.boundaryFlag l.val) hll
           ≠ W.boundaryFlag i := by
         rw [← hlf]
@@ -197,28 +196,28 @@ theorem cutMatching_glueOpen_edge
     ⟨y.val.val, fun hx => y.prop.1 (Subtype.ext hx),
       fun hx => y.prop.2 (Subtype.ext hx)⟩
     hlg hbi hbj
-  show (chordInv (Fg)
+  change (chordInv (Fg)
       (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ)
       ⟨y.val.val, _⟩).val = _
   rw [hkey]
-  show _ = ((if (cutMatching (Fl) κ o).edge y.val = ⟨i, hbi⟩ then
+  change _ = ((if (cutMatching (Fl) κ o).edge y.val = ⟨i, hbi⟩ then
       (cutMatching (Fl) κ o).edge ⟨j, hbj⟩
     else if (cutMatching (Fl) κ o).edge y.val = ⟨j, hbj⟩ then
       (cutMatching (Fl) κ o).edge ⟨i, hbi⟩
     else (cutMatching (Fl) κ o).edge y.val) : {a : α // _}).val
   by_cases h1 : chordInv (Fl) κ y.val.val = i
-  · rw [if_pos h1, if_pos (Subtype.ext h1 :
+  · rw [ite_eq_left h1, ite_eq_left (Subtype.ext h1 :
       (cutMatching (Fl) κ o).edge y.val = ⟨i, hbi⟩)]
     rfl
   · by_cases h2 : chordInv (Fl) κ y.val.val = j
-    · rw [if_neg h1, if_pos h2,
-        if_neg (fun hx => h1 (congrArg Subtype.val hx)),
-        if_pos (Subtype.ext h2 :
+    · rw [ite_eq_right h1, ite_eq_left h2,
+        ite_eq_right (fun hx => h1 (congrArg Subtype.val hx)),
+        ite_eq_left (Subtype.ext h2 :
           (cutMatching (Fl) κ o).edge y.val = ⟨j, hbj⟩)]
       rfl
-    · rw [if_neg h1, if_neg h2,
-        if_neg (fun hx => h1 (congrArg Subtype.val hx)),
-        if_neg (fun hx => h2 (congrArg Subtype.val hx))]
+    · rw [ite_eq_right h1, ite_eq_right h2,
+        ite_eq_right (fun hx => h1 (congrArg Subtype.val hx)),
+        ite_eq_right (fun hx => h2 (congrArg Subtype.val hx))]
       rfl
 
 /-- **The interface is linked exactly when the two glued labels are
@@ -339,7 +338,7 @@ theorem openCircuitCount_add_unionCount_glueOpen
       hAij hBij (DirMatching.alternating_map _ hABg) heM heN
     have hc1 : (RelTransitionSystem.glueOpen hij hopen s' hc'
         hc κ).openCircuitCount = κ.openCircuitCount + 1 := by
-      rw [hδ, hun, if_pos (hlink.mpr hcl)]
+      rw [hδ, hun, ite_eq_left (hlink.mpr hcl)]
     rw [hc1]
     omega
   · have hMij : (cutMatching (Fl) κ o).edge ⟨i, hbi⟩ ≠ ⟨j, hbj⟩ :=
@@ -362,7 +361,7 @@ theorem openCircuitCount_add_unionCount_glueOpen
       hBij hAij (DirMatching.alternating_map _ hABg) heM heN
     have hc0 : (RelTransitionSystem.glueOpen hij hopen s' hc'
         hc κ).openCircuitCount = κ.openCircuitCount := by
-      rw [hδ, hun, if_neg (fun hL => hcl (hlink.mp hL)), add_zero]
+      rw [hδ, hun, ite_eq_right (fun hL => hcl (hlink.mp hL)), add_zero]
     rw [hc0]
     omega
 
@@ -441,20 +440,20 @@ theorem dropSubset_rewire_closed (s : Finset W.Flag)
   by_cases h1 : W.pairing f.val = W.boundaryFlag i
   · have hbi : W.boundaryFlag i ∈ s := h1 ▸ hs.1 _ hf
     have hbj : W.boundaryFlag j ∈ s := hs.2.mp hbi
-    show (rewire hopen f).val ∈ s
+    change (rewire hopen f).val ∈ s
     rw [show (rewire hopen f).val = W.pairing (W.boundaryFlag j)
-      from by unfold rewire; rw [dif_pos h1]]
+      from by unfold rewire; rw [dite_eq_left h1]]
     exact hs.1 _ hbj
   · by_cases h2 : W.pairing f.val = W.boundaryFlag j
     · have hbj : W.boundaryFlag j ∈ s := h2 ▸ hs.1 _ hf
       have hbi : W.boundaryFlag i ∈ s := hs.2.mpr hbj
-      show (rewire hopen f).val ∈ s
+      change (rewire hopen f).val ∈ s
       rw [show (rewire hopen f).val = W.pairing (W.boundaryFlag i)
-        from by unfold rewire; rw [dif_neg h1, dif_pos h2]]
+        from by unfold rewire; rw [dite_eq_right h1, dite_eq_left h2]]
       exact hs.1 _ hbi
     · show (rewire hopen f).val ∈ s
       rw [show (rewire hopen f).val = W.pairing f.val from by
-        unfold rewire; rw [dif_neg h1, dif_neg h2]]
+        unfold rewire; rw [dite_eq_right h1, dite_eq_right h2]]
       exact hs.1 _ hf
 
 end GlueChord

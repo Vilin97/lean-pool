@@ -317,7 +317,7 @@ theorem concat_peel_head [Category.{v} D] [MonoidalCategory D] (X : D)
       (X ◁ (tensorPowConcat X p q).hom)
   | 0 => by
     rw [tensorPowConcat_zero, tensorPowConcat_zero]
-    show (ρ_ (tensorPow D X (p + 1))).hom ≫
+    change (ρ_ (tensorPow D X (p + 1))).hom ≫
         𝟙 (tensorPow D X (p + 1)) ≫ (powPeel X p).hom =
       ((powPeel X p).hom ▷ 𝟙_ D) ≫
         (α_ X (tensorPow D X p) (𝟙_ D)).hom ≫
@@ -326,7 +326,7 @@ theorem concat_peel_head [Category.{v} D] [MonoidalCategory D] (X : D)
     monoidal
   | q + 1 => by
     rw [tensorPowConcat_succ, tensorPowConcat_succ]
-    show ((α_ (tensorPow D X (p + 1)) (tensorPow D X q) X).inv ≫
+    change ((α_ (tensorPow D X (p + 1)) (tensorPow D X q) X).inv ≫
         ((tensorPowConcat X (p + 1) q).hom ▷ X)) ≫
       powCast X (by omega : p + 1 + q + 1 = p + q + 1 + 1) ≫
       (((powPeel X (p + q)).hom ▷ X) ≫
@@ -336,7 +336,7 @@ theorem concat_peel_head [Category.{v} D] [MonoidalCategory D] (X : D)
       (X ◁ ((α_ (tensorPow D X p) (tensorPow D X q) X).inv ≫
         ((tensorPowConcat X p q).hom ▷ X)))
     rw [← powCast_whiskerRight]
-    simp only [Category.assoc]
+    all_goals simp only [Category.assoc]
     show (α_ (tensorPow D X (p + 1)) (tensorPow D X q) X).inv ≫
       ((tensorPowConcat X (p + 1) q).hom ▷ X) ≫
       (powCast X (by omega : p + 1 + q = p + q + 1) ▷ X) ≫
@@ -370,7 +370,7 @@ private theorem leg_step_snd_eq [Category.{v} D] [MonoidalCategory D]
       (X ◁ (((tensorPow D X a ◁ w) ▷ tensorPow D X b) ≫
         modPowGlue X a b)) := by
   rw [modPowGlue, modPowGlue]
-  show ((tensorPow D X (a + 1) ◁ w) ▷ tensorPow D X b) ≫
+  change ((tensorPow D X (a + 1) ◁ w) ▷ tensorPow D X b) ≫
     (((α_ (tensorPow D X (a + 1)) X X).inv ▷ tensorPow D X b) ≫
       (tensorPowConcat X (a + 2 + 1) b).hom) ≫
     powCast X (by omega : a + 2 + 1 + b = a + 2 + b + 1) ≫
@@ -992,7 +992,7 @@ private theorem leg_head_snd_eq [Category.{v} D] [MonoidalCategory D] (A : D)
       ((congrArg (fun t => (λ_ (tensorPow D X b)).hom ≫ t)
         (powCast_comp X _ _)).trans (Category.comp_id _))
   rw [h5]
-  show ((𝟙_ D ◁ w) ▷ tensorPow D X b) ≫
+  change ((𝟙_ D ◁ w) ▷ tensorPow D X b) ≫
     ((α_ (𝟙_ D) X X).inv ▷ tensorPow D X b) ≫
     (((((λ_ X).hom ≫ (ρ_ X).inv) ▷ X) ≫
       (α_ X (𝟙_ D) X).hom) ▷ tensorPow D X b) ≫
@@ -1136,7 +1136,7 @@ theorem rawPair_rel_fst_top
         (α_ (tensorPow D M'.X a) M'.X M'.X).inv := by
     rw [modPowLegN]; exact leg_top_eq A M' _ a
   rw [hM, hN]
-  show (((ρ_ (tensorPow D M'.X a ⊗ ((M'.X ⊗ A) ⊗ M'.X))).hom ≫
+  change (((ρ_ (tensorPow D M'.X a ⊗ ((M'.X ⊗ A) ⊗ M'.X))).hom ≫
       (tensorPow D M'.X a ◁ winLegM A M'.X) ≫
       (α_ (tensorPow D M'.X a) M'.X M'.X).inv) ▷
         tensorPow D M.X (a + 1 + 1)) ≫
@@ -1150,7 +1150,7 @@ theorem rawPair_rel_fst_top
   simp only [comp_whiskerRight]
   repeat' erw [Category.assoc]
   rw [cancel_epi]
-  show ((tensorPow D M'.X a ◁ winLegM A M'.X) ▷
+  change ((tensorPow D M'.X a ◁ winLegM A M'.X) ▷
       tensorPow D M.X (a + 1 + 1)) ≫
     ((α_ (tensorPow D M'.X a) M'.X M'.X).inv ▷
       tensorPow D M.X (a + 1 + 1)) ≫
@@ -1184,7 +1184,7 @@ private theorem leg_step_eq
         ((((tensorPow D M'.X a ◁ w) ▷ tensorPow D M'.X b) ≫
           modPowGlue M'.X a b) ▷ M'.X) := by
   rw [modPowGlue, modPowGlue, tensorPowConcat_succ]
-  show ((tensorPow D M'.X a ◁ w) ▷
+  change ((tensorPow D M'.X a ◁ w) ▷
       (tensorPow D M'.X b ⊗ M'.X)) ≫
     ((α_ (tensorPow D M'.X a) M'.X M'.X).inv ▷
       (tensorPow D M'.X b ⊗ M'.X)) ≫
@@ -1224,7 +1224,7 @@ theorem rawPair_rel_fst
       rw [modPowLegN, modPowLegN]
       exact leg_step_eq A M' _ a b
     rw [hM, hN]
-    show (((α_ (tensorPow D M'.X a ⊗ ((M'.X ⊗ A) ⊗ M'.X))
+    change (((α_ (tensorPow D M'.X a ⊗ ((M'.X ⊗ A) ⊗ M'.X))
         (tensorPow D M'.X b) M'.X).inv ≫
         (modPowLegM A M'.X a b ▷ M'.X)) ▷
           tensorPow D M.X (a + 2 + b + 1)) ≫
@@ -1238,7 +1238,7 @@ theorem rawPair_rel_fst
     repeat' erw [Category.assoc]
     rw [cancel_epi]
     rw [rawPair_succ_step]
-    show ((modPowLegM A M'.X a b ▷ M'.X) ▷
+    change ((modPowLegM A M'.X a b ▷ M'.X) ▷
         tensorPow D M.X (a + 2 + b + 1)) ≫
       ((tensorPow D M'.X (a + 2 + b) ⊗ M'.X) ◁
         (powPeel M.X (a + 2 + b)).hom) ≫
@@ -1294,7 +1294,7 @@ theorem rawPair_rel_snd
         pairStep A M M' d
           (pairStep A M M' d (rawPair A M M' d b)) := by
       intro w
-      show ((tensorPow D M'.X (b + 1) ⊗ M'.X) ◁
+      change ((tensorPow D M'.X (b + 1) ⊗ M'.X) ◁
           (((tensorPow D M.X 0 ◁ w) ▷ tensorPow D M.X b) ≫
             modPowGlue M.X 0 b)) ≫
         ((tensorPow D M'.X (b + 1) ⊗ M'.X) ◁
@@ -1441,7 +1441,7 @@ private theorem powTailAct_peel
   rw [show (powPeel X (n + 1)).hom =
     ((powPeel X n).hom ▷ X) ≫
       (α_ X (tensorPow D X n) X).hom from rfl]
-  show actAcross A (tensorPow D X (n + 1)) X ≫
+  change actAcross A (tensorPow D X (n + 1)) X ≫
       ((powPeel X n).hom ▷ X) ≫
       (α_ X (tensorPow D X n) X).hom =
     (A ◁ (((powPeel X n).hom ▷ X) ≫
@@ -1474,7 +1474,7 @@ theorem rawPair_actTail
           (α_ A M.X (tensorPow D M.X 0)).inv ≫
           (actLeft A M.X ▷ tensorPow D M.X 0) := by
       rw [powTailAct_eq]
-      show ((α_ A (tensorPow D M.X 0) M.X).inv ≫
+      change ((α_ A (tensorPow D M.X 0) M.X).inv ≫
         ((β_ A (𝟙_ D)).hom ▷ M.X) ≫
         (α_ (𝟙_ D) A M.X).hom ≫
         ((𝟙_ D) ◁ actLeft A M.X)) ≫
@@ -1489,7 +1489,7 @@ theorem rawPair_actTail
       hact]
     conv_lhs => simp only [MonoidalCategory.whiskerLeft_comp]
     conv_lhs => erw [Category.assoc, Category.assoc]
-    show ((tensorPow D M'.X 0 ⊗ M'.X) ◁
+    change ((tensorPow D M'.X 0 ⊗ M'.X) ◁
         (A ◁ (powPeel M.X 0).hom)) ≫
       ((tensorPow D M'.X 0 ⊗ M'.X) ◁
         (α_ A M.X (tensorPow D M.X 0)).inv) ≫
@@ -1522,7 +1522,7 @@ theorem rawPair_actTail
       powTailAct_peel A]
     conv_lhs => simp only [MonoidalCategory.whiskerLeft_comp]
     conv_lhs => erw [Category.assoc, Category.assoc]
-    show ((tensorPow D M'.X (n + 1) ⊗ M'.X) ◁
+    change ((tensorPow D M'.X (n + 1) ⊗ M'.X) ◁
         (A ◁ (powPeel M.X (n + 1)).hom)) ≫
       ((tensorPow D M'.X (n + 1) ⊗ M'.X) ◁
         (braidPast A M.X (tensorPow D M.X (n + 1))).hom) ≫
@@ -1563,7 +1563,7 @@ private theorem braid_powTailAct
       (α_ (tensorPow D X n) X A).hom ≫
         (tensorPow D X n ◁ actRight A X) := by
   rw [powTailAct_eq]
-  show (β_ (tensorPow D X n ⊗ X) A).hom ≫
+  change (β_ (tensorPow D X n ⊗ X) A).hom ≫
     ((α_ A (tensorPow D X n) X).inv ≫
       ((β_ A (tensorPow D X n)).hom ▷ X) ≫
       (α_ (tensorPow D X n) A X).hom ≫
@@ -1774,9 +1774,9 @@ theorem pairPow_middle_cond
       modTensorLegN A (modPowMod A M'.X n) (modPowMod A M.X n) ≫
         pairPow A M M' d (n + 1) := by
   rw [modTensorLegM, modTensorLegN]
-  letI := modPowModObj A M'.X n
-  letI := modPowModObj A M.X n
-  show (actRight A (modPow A M'.X (n + 1)) ▷
+  let := modPowModObj A M'.X n
+  let := modPowModObj A M.X n
+  change (actRight A (modPow A M'.X (n + 1)) ▷
       modPow A M.X (n + 1)) ≫ pairPow A M M' d (n + 1) =
     ((α_ (modPow A M'.X (n + 1)) A (modPow A M.X (n + 1))).hom ≫
       (modPow A M'.X (n + 1) ◁

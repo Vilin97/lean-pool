@@ -125,7 +125,7 @@ private def loopFullOrientation : loopFullTransition.Orientation where
 /-- Nothing participates, so there are no circuits. -/
 private theorem circuitCount_loopEmpty :
     loopEmptyTransition.circuitCount = 0 := by
-  haveI : IsEmpty {f : loopGraph.Flag // f ∈ loopEmpty.flags} :=
+  have : IsEmpty {f : loopGraph.Flag // f ∈ loopEmpty.flags} :=
     ⟨fun f => absurd f.prop (Finset.notMem_empty f.val)⟩
   unfold EdgeSubset.TransitionSystem.circuitCount
   rw [Subsingleton.elim loopEmptyTransition.walkPerm 1,
@@ -246,7 +246,7 @@ private theorem eulerian_loopEmpty : loopEmpty.Eulerian := by
 vertex, which therefore has degree two. -/
 private theorem eulerian_loopFull : loopFull.Eulerian := by
   intro v
-  letI := Classical.decEq (loopGraph.Vertex ⊕ Fin 0)
+  let := Classical.decEq (loopGraph.Vertex ⊕ Fin 0)
   have hdeg : loopFull.deg v = 2 := by
     unfold EdgeSubset.deg
     rw [Finset.filter_true_of_mem (fun f _ => loopGraph_attach f v),
@@ -284,8 +284,8 @@ private theorem evenColoursAt_loopEmpty (ψ : loopEmpty.EvenColouring 2)
 /-- No flag participates, so no flag is incoming. -/
 private theorem inFlagsAt_loopEmpty (v : loopGraph.Vertex) :
     loopEmpty.inFlagsAt loopEmptyOrientation v = [] := by
-  letI := loopGraph.flagOrder
-  letI := Classical.dec
+  let := loopGraph.flagOrder
+  let := Classical.dec
   unfold EdgeSubset.inFlagsAt
   rw [show loopEmpty.flags = ∅ from rfl, Finset.filter_empty,
     Finset.sort_empty]
@@ -342,8 +342,8 @@ through the same basis vector of `Λ²V₁`. -/
 /-- Exactly one half-edge of the loop is the incoming end. -/
 private theorem inFlagsAt_loopFull (v : loopGraph.Vertex) :
     loopFull.inFlagsAt loopFullOrientation v = [loopIn] := by
-  letI := loopGraph.flagOrder
-  letI := Classical.dec
+  let := loopGraph.flagOrder
+  let := Classical.dec
   have hfilter : Finset.filter
       (fun f => loopGraph.attach f = Sum.inl v ∧
         loopFullOrientation.isOut f = false) loopFull.flags =
@@ -352,7 +352,7 @@ private theorem inFlagsAt_loopFull (v : loopGraph.Vertex) :
     simp only [Finset.mem_filter, Finset.mem_singleton,
       show loopFull.flags = Finset.univ from rfl, Finset.mem_univ,
       true_and]
-    show (loopGraph.attach f = Sum.inl v ∧ f = loopIn) ↔ f = loopIn
+    change (loopGraph.attach f = Sum.inl v ∧ f = loopIn) ↔ f = loopIn
     exact ⟨fun h => h.2, fun h => ⟨loopGraph_attach f v, h⟩⟩
   unfold EdgeSubset.inFlagsAt
   rw [hfilter, Finset.sort_singleton]
@@ -380,7 +380,7 @@ open Classical in
 /-- Both half-edges participate, so no even colour survives. -/
 private theorem evenColoursAt_loopFull (ψ : loopFull.EvenColouring 2)
     (v : loopGraph.Vertex) : loopFull.evenColoursAt ψ v = 0 := by
-  haveI : IsEmpty {f : loopGraph.Flag // f ∉ loopFull.flags} :=
+  have : IsEmpty {f : loopGraph.Flag // f ∉ loopFull.flags} :=
     ⟨fun f => absurd (Finset.mem_univ f.val) f.prop⟩
   unfold EdgeSubset.evenColoursAt
   rw [Finset.univ_eq_empty, Finset.filter_empty]
@@ -455,18 +455,18 @@ theorem mixedPartition_loopGraph (θ : ℂ) :
   rw [show loopGraph.circles = 0 from rfl, pow_zero, one_mul,
     ← Finset.sum_subset (Finset.subset_univ
         ({∅, Finset.univ} : Finset (Finset loopGraph.Flag)))
-      (fun x _ hx => dif_neg (loop_pairing_not_closed x
+      (fun x _ hx => dite_eq_right (loop_pairing_not_closed x
         (fun h => hx (by rw [h]; exact Finset.mem_insert_self _ _))
         (fun h => hx (by
           rw [h]
           exact Finset.mem_insert_of_mem (Finset.mem_singleton_self _))))),
     Finset.sum_pair loop_empty_ne_univ,
-    dif_pos loopEmpty_closed, dif_pos loopFull_closed]
-  show (if loopEmpty.Eulerian then
+    dite_eq_left loopEmpty_closed, dite_eq_left loopFull_closed]
+  change (if loopEmpty.Eulerian then
         loopEmpty.mixedValue (charPolyFunctional θ) else 0) +
       (if loopFull.Eulerian then
         loopFull.mixedValue (charPolyFunctional θ) else 0) = θ - 2
-  rw [if_pos eulerian_loopEmpty, if_pos eulerian_loopFull,
+  rw [ite_eq_left eulerian_loopEmpty, ite_eq_left eulerian_loopFull,
     mixedValue_loopEmpty, mixedValue_loopFull]
   ring
 

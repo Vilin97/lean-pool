@@ -23,7 +23,7 @@ data with different boundary pairings whose signed values differ.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 
@@ -56,7 +56,7 @@ theorem throughValueC_eq_signedValueAt
     (hne : Nonempty F.CanonData) :
     F.throughValueC hM st hbnd =
       F.signedValueAt hM st hbnd (Classical.choice hne).1 := by
-  rw [throughValueC, dif_pos hne,
+  rw [throughValueC, dite_eq_left hne,
     signedValueAt_eq hM st hbnd (Classical.choice hne).2.val
       (Classical.choice hne).2.prop]
 

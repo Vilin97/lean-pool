@@ -91,7 +91,7 @@ theorem ipHigh_split (s t u v : ℕ) :
       (congrArg Sum.inr (Fin.ext ?_)) <;> rfl
   · refine Prod.ext (congrArg Sum.inl (Fin.ext ?_))
       (congrArg Sum.inr (Fin.ext ?_)) <;>
-      · show (s + u) + (t + l.val) = (s + u) + (t + l.val)
+      · change (s + u) + (t + l.val) = (s + u) + (t + l.val)
         rfl
 
 /-- The low closure half splits at `s`. -/
@@ -155,7 +155,7 @@ private theorem tensor_ground_zv_aux (s t u v : ℕ) :
     simp only [List.map_cons, Fragment.mapPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext ?_ ?_)
       (tensor_ground_zv_aux s t u v l)
-    · show Sum.inl ((interleaveEquiv s t u v).symm
+    · change Sum.inl ((interleaveEquiv s t u v).symm
         ⟨(s + u) + (t + l'.val), by have := l'.isLt; omega⟩) = _
       refine congrArg Sum.inl ?_
       rw [show (⟨(s + u) + (t + l'.val),
@@ -164,7 +164,7 @@ private theorem tensor_ground_zv_aux (s t u v : ℕ) :
           Fin.natAdd (s + u) (Fin.natAdd t l') from Fin.ext rfl,
         interleaveEquiv_symm_high_right]
       exact congrArg Sum.inr (Fin.ext rfl)
-    · show Sum.inr (⟨(s + u) + (t + l'.val),
+    · change Sum.inr (⟨(s + u) + (t + l'.val),
           by have := l'.isLt; omega⟩ :
         Fin ((s + u) + (t + v))) = _
       rfl
@@ -187,7 +187,7 @@ private theorem tensor_ground_xt_aux (s t u v : ℕ) :
     simp only [List.map_cons, Fragment.mapPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext ?_ ?_)
       (tensor_ground_xt_aux s t u v l)
-    · show Sum.inl ((interleaveEquiv s t u v).symm
+    · change Sum.inl ((interleaveEquiv s t u v).symm
         ⟨(s + u) + k.val, by have := k.isLt; omega⟩) = _
       refine congrArg Sum.inl ?_
       rw [show (⟨(s + u) + k.val, by have := k.isLt; omega⟩ :
@@ -195,7 +195,7 @@ private theorem tensor_ground_xt_aux (s t u v : ℕ) :
           Fin.natAdd (s + u) (Fin.castAdd v k) from Fin.ext rfl,
         interleaveEquiv_symm_high_left]
       exact congrArg Sum.inl (Fin.ext rfl)
-    · show Sum.inr (⟨(s + u) + k.val, by have := k.isLt; omega⟩ :
+    · change Sum.inr (⟨(s + u) + k.val, by have := k.isLt; omega⟩ :
         Fin ((s + u) + (t + v))) = _
       rfl
 
@@ -215,7 +215,7 @@ private theorem tensor_ground_zu_aux (s t u v : ℕ) :
     simp only [List.map_cons, Fragment.mapPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext ?_ ?_)
       (tensor_ground_zu_aux s t u v l)
-    · show Sum.inl ((interleaveEquiv s t u v).symm
+    · change Sum.inl ((interleaveEquiv s t u v).symm
         ⟨s + j.val, by have := j.isLt; omega⟩) = _
       refine congrArg Sum.inl ?_
       rw [show (⟨s + j.val, by have := j.isLt; omega⟩ :
@@ -223,7 +223,7 @@ private theorem tensor_ground_zu_aux (s t u v : ℕ) :
           Fin.castAdd (t + v) (Fin.natAdd s j) from Fin.ext rfl,
         interleaveEquiv_symm_low_right]
       exact congrArg Sum.inr (Fin.ext rfl)
-    · show Sum.inr (⟨s + j.val, by have := j.isLt; omega⟩ :
+    · change Sum.inr (⟨s + j.val, by have := j.isLt; omega⟩ :
         Fin ((s + u) + (t + v))) = _
       rfl
 
@@ -243,7 +243,7 @@ private theorem tensor_ground_xs_aux (s t u v : ℕ) :
     simp only [List.map_cons, Fragment.mapPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext ?_ ?_)
       (tensor_ground_xs_aux s t u v l)
-    · show Sum.inl ((interleaveEquiv s t u v).symm
+    · change Sum.inl ((interleaveEquiv s t u v).symm
         ⟨i.val, by have := i.isLt; omega⟩) = _
       refine congrArg Sum.inl ?_
       rw [show (⟨i.val, by have := i.isLt; omega⟩ :
@@ -251,7 +251,7 @@ private theorem tensor_ground_xs_aux (s t u v : ℕ) :
           Fin.castAdd (t + v) (Fin.castAdd u i) from Fin.ext rfl,
         interleaveEquiv_symm_low_left]
       exact congrArg Sum.inl (Fin.ext rfl)
-    · show Sum.inr (⟨i.val, by have := i.isLt; omega⟩ :
+    · change Sum.inr (⟨i.val, by have := i.isLt; omega⟩ :
         Fin ((s + u) + (t + v))) = _
       rfl
 
@@ -354,8 +354,8 @@ theorem xtSurv (s t u v : ℕ) (k : Fin t) :
         Fin (u + v) ⊕ Fin ((s + u) + (t + v))) ≠ p.2 :=
   (forall_ne_iff_not_mem_flat _ _).mpr
     ((pcSurv_iff s t u v _).mpr
-      (Or.inr ⟨by show (s + u) ≤ (s + u) + k.val; omega,
-        by show (s + u) + k.val < (s + u) + t
+      (Or.inr ⟨by change (s + u) ≤ (s + u) + k.val; omega,
+        by change (s + u) + k.val < (s + u) + t
            have := k.isLt; omega⟩))
 
 /-- A low `x`-block label of `G` survives the `z`-gluing. -/
@@ -478,11 +478,11 @@ theorem pcSurvEquiv_symm_high_val (s t u v : ℕ) (k : Fin t)
     ((pcSurvEquiv s t u v).symm ⟨s + k.val, h⟩).val =
       Sum.inr (⟨(s + u) + k.val, by have := k.isLt; omega⟩ :
         Fin ((s + u) + (t + v))) := by
-  show ((if hk : s + k.val < s then _ else _ :
+  change ((if hk : s + k.val < s then _ else _ :
     {x // pcSurvPred s t u v x})).val = _
-  rw [dif_neg (show ¬ s + k.val < s by omega)]
+  rw [dite_eq_right (show ¬ s + k.val < s by omega)]
   exact congrArg Sum.inr (Fin.ext (by
-    show (s + u) + (s + k.val - s) = (s + u) + k.val
+    change (s + u) + (s + k.val - s) = (s + u) + k.val
     omega))
 
 /-- The inverse survivor identification on low labels. -/
@@ -491,9 +491,9 @@ theorem pcSurvEquiv_symm_low_val (s t u v : ℕ) (i : Fin s)
     ((pcSurvEquiv s t u v).symm ⟨i.val, h⟩).val =
       Sum.inr (⟨i.val, by have := i.isLt; omega⟩ :
         Fin ((s + u) + (t + v))) := by
-  show ((if hk : i.val < s then _ else _ :
+  change ((if hk : i.val < s then _ else _ :
     {x // pcSurvPred s t u v x})).val = _
-  rw [dif_pos (show i.val < s from i.isLt)]
+  rw [dite_eq_left (show i.val < s from i.isLt)]
 
 /-! ### The right side's ground computation -/
 
@@ -513,7 +513,7 @@ private theorem rhs_ground_xt_aux (s t u v : ℕ) :
     simp only [List.map_cons, Fragment.mapPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext rfl ?_)
       (rhs_ground_xt_aux s t u v l)
-    show Sum.inr ((pcSurvEquiv s t u v).symm
+    change Sum.inr ((pcSurvEquiv s t u v).symm
       ⟨s + k.val, by have := k.isLt; omega⟩) = _
     refine congrArg Sum.inr (Subtype.ext ?_)
     rw [pcSurvEquiv_symm_high_val]
@@ -534,7 +534,7 @@ private theorem rhs_ground_xs_aux (s t u v : ℕ) :
     simp only [List.map_cons, Fragment.mapPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext rfl ?_)
       (rhs_ground_xs_aux s t u v l)
-    show Sum.inr ((pcSurvEquiv s t u v).symm
+    change Sum.inr ((pcSurvEquiv s t u v).symm
       ⟨i.val, by have := i.isLt; omega⟩) = _
     refine congrArg Sum.inr (Subtype.ext ?_)
     rw [pcSurvEquiv_symm_low_val]
@@ -764,6 +764,12 @@ noncomputable def absLabelL (s t u v : ℕ) :
   ((interfaceSurvEquiv 0 ((s + u) + (t + v)) 0).trans
     finSumFinEquiv))))))))))
 
+private theorem absPs0_wf (s t u v : ℕ) :
+    Fragment.PairsWF (absPs0 s t u v) := by
+  apply Fragment.mapPairs_wf
+  exact Fragment.liftPairs_wf _ _ (tensorPairsA_wf s t u v).append_right
+    (tensorPairsA_wf s t u v).append_sep
+
 /-- **The left side, normalized**: the closure of the tensor
 against `G` is iterated gluing of the canonical cross pairs over
 `x ⊔ (glued z ⊔ G)`. -/
@@ -800,7 +806,7 @@ noncomputable def absNormalLeft {s t u v : ℕ}
   have wfLift : Fragment.PairsWF (absQsLift s t u v) :=
     Fragment.liftPairs_wf _ _ wfA.append_right wfA.append_sep
   have wfPs0 : Fragment.PairsWF (absPs0 s t u v) :=
-    Fragment.mapPairs_wf iM.symm.symm _ wfLift
+    absPs0_wf s t u v
   let Zg := Fragment.glueList (z.disjUnion G)
     (zClosePairs s t u v) (zClosePairs_wf s t u v)
   let AmbL := (X.disjUnion z).disjUnion G
@@ -986,7 +992,7 @@ theorem absSurv_empty (s t u v : ℕ)
         (List.mem_map.mpr ⟨⟨a.val - s, hk⟩,
           List.mem_reverse.mpr (List.mem_finRange _),
           rfl⟩)))).1 (congrArg Sum.inl (Fin.ext (by
-            show a.val = s + (a.val - s)
+            change a.val = s + (a.val - s)
             omega)))
   · obtain ⟨bv, hb⟩ := b
     have hpred : pcSurvPred s t u v bv :=
@@ -1006,7 +1012,7 @@ theorem absSurv_empty (s t u v : ℕ)
             List.mem_reverse.mpr (List.mem_finRange _),
             rfl⟩)))).2 (congrArg Sum.inr (Subtype.ext
               (congrArg Sum.inr (Fin.ext (by
-                show c.val = (s + u) + (c.val - (s + u))
+                change c.val = (s + u) + (c.val - (s + u))
                 omega)))))
 
 /-- **The absorption** (accompanying paper, Lemma 3.3(b), geometric
@@ -1075,7 +1081,7 @@ theorem connectionMap_tensor_single (f : ClosedFragment → ℂ)
     rfl
   | add y w hy hw =>
     rw [map_add, LinearMap.add_apply, map_add]
-    show connectionMap f ((s + u) + (t + v)) _ K +
+    change connectionMap f ((s + u) + (t + v)) _ K +
       connectionMap f ((s + u) + (t + v)) _ K = _
     rw [hy, hw, map_add]
     rfl

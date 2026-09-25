@@ -32,10 +32,10 @@ open Finset
 /-- The chosen block dimension is positive. -/
 theorem jtSimple_dim_pos (μ : YoungDiagram) :
     0 < nDim (jtSimple μ) := by
-  haveI := jtSimple_simple μ
-  haveI := IsSimpleModule.nontrivial
+  have := jtSimple_simple μ
+  have := IsSimpleModule.nontrivial
     (MonoidAlgebra ℂ (Equiv.Perm (Fin μ.card))) (jtSimple μ)
-  haveI : Nontrivial (subCarrier (jtSimple μ)) :=
+  have : Nontrivial (subCarrier (jtSimple μ)) :=
     inferInstanceAs (Nontrivial (jtSimple μ))
   exact Module.finrank_pos
 

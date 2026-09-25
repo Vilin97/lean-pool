@@ -91,12 +91,13 @@ theorem kills_of_equiv_kills_native
 open scoped Classical in
 /-- A block element acting as zero on its simple kills every
 simple submodule. -/
-theorem natBlock_kills_of_psi_zero [Group G] [Fintype G] [DecidableEq G]
+theorem natBlock_kills_of_psi_zero [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G))
     (hS : IsSimpleModule (MonoidAlgebra ℂ G) S)
     (x : MonoidAlgebra ℂ G)
     (h0 : nPsi S (nProjector S * x) = 0) :
     nProjector S * x = 0 := by
+  classical
   have hkS := (nPsi_eq_zero_iff S _).mp h0
   refine eq_zero_of_kills_simples _ ?_
   intro T hT t ht
@@ -104,15 +105,16 @@ theorem natBlock_kills_of_psi_zero [Group G] [Fintype G] [DecidableEq G]
   · exact kills_of_equiv_kills_native S T heq _ hkS t ht
   · rw [mul_assoc]
     have hxt : x * t ∈ T := T.smul_mem x ht
-    rw [nProjector_mul_mem S T hS hT _ hxt, if_neg heq,
+    rw [nProjector_mul_mem S T hS hT _ hxt, ite_eq_right heq,
       zero_smul]
 
 open scoped Classical in
 /-- The projector acts as the identity on its own simple. -/
-theorem nPsi_projector_eq_one [Group G] [Fintype G] [DecidableEq G]
+theorem nPsi_projector_eq_one [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G))
     (hS : IsSimpleModule (MonoidAlgebra ℂ G) S) :
     nPsi S (nProjector S) = 1 := by
+  classical
   apply LinearMap.ext
   intro m
   rw [show (nPsi S (nProjector S)) m = nProjector S • m from
@@ -122,7 +124,7 @@ theorem nPsi_projector_eq_one [Group G] [Fintype G] [DecidableEq G]
     MonoidAlgebra ℂ G) = nProjector S * (m : MonoidAlgebra ℂ G)
     from rfl]
   rw [nProjector_mul_mem S S hS hS _ m.2]
-  rw [if_pos ⟨Representation.Equiv.refl _⟩, one_smul]
+  rw [ite_eq_left ⟨Representation.Equiv.refl _⟩, one_smul]
   rfl
 
 /-- The native block. -/
@@ -191,10 +193,11 @@ theorem mPsi_zero_iff [Group G] [Fintype G]
     simp
 
 /-- The projector acts as the identity on the carrier. -/
-theorem mPsi_projector_eq_one [Group G] [Fintype G] [DecidableEq G]
+theorem mPsi_projector_eq_one [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G))
     (hS : IsSimpleModule (MonoidAlgebra ℂ G) S) :
     mPsi S (nProjector S) = LinearMap.id := by
+  classical
   apply LinearMap.ext
   intro v
   rw [mPsi_apply, nPsi_projector_eq_one S hS]
@@ -230,10 +233,11 @@ noncomputable def mPsiLin [Group G] [Fintype G]
     simp [mPsi_apply]
 
 /-- The coordinate block map is injective. -/
-theorem mPsiLin_injective [Group G] [Fintype G] [DecidableEq G]
+theorem mPsiLin_injective [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G))
     (hS : IsSimpleModule (MonoidAlgebra ℂ G) S) :
     Function.Injective (mPsiLin S) := by
+  classical
   intro a b hab
   have hd : mPsiLin S (a - b) = 0 := by
     rw [map_sub, hab, sub_self]
@@ -251,10 +255,11 @@ theorem mPsiLin_injective [Group G] [Fintype G] [DecidableEq G]
 
 /-- And surjective onto the endomorphisms, by a dimension count —
 so the block is the full matrix algebra of its carrier. -/
-theorem mPsiLin_surjective [Group G] [Fintype G] [DecidableEq G]
+theorem mPsiLin_surjective [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G))
     (hS : IsSimpleModule (MonoidAlgebra ℂ G) S) :
     Function.Surjective (mPsiLin S) := by
+  classical
   have hrk : Module.finrank ℂ (natBlock S) =
       Module.finrank ℂ
         ((Fin (nDim S) → ℂ) →ₗ[ℂ] (Fin (nDim S) → ℂ)) := by
@@ -269,7 +274,7 @@ theorem mPsiLin_surjective [Group G] [Fintype G] [DecidableEq G]
 open scoped Classical in
 /-- **Native block faithfulness**: an algebra map that does not
 kill the projector is injective on its block. -/
-theorem nProjector_block_faithful [Group G] [Fintype G] [DecidableEq G]
+theorem nProjector_block_faithful [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G))
     (hS : IsSimpleModule (MonoidAlgebra ℂ G) S)
     {B : Type*} [Ring B] [Algebra ℂ B]
@@ -278,6 +283,7 @@ theorem nProjector_block_faithful [Group G] [Fintype G] [DecidableEq G]
     (x : MonoidAlgebra ℂ G)
     (h0 : φ (nProjector S * x) = 0) :
     nProjector S * x = 0 := by
+  classical
   by_contra hne
   have hA : mPsi S (nProjector S * x) ≠ 0 := by
     intro hz
@@ -295,7 +301,7 @@ theorem nProjector_block_faithful [Group G] [Fintype G] [DecidableEq G]
     exact ⟨a * (nProjector S * x) * (w i : MonoidAlgebra ℂ G),
       by
         rw [← ha]
-        show nProjector S * (a * (nProjector S * x) *
+        change nProjector S * (a * (nProjector S * x) *
           (w i : MonoidAlgebra ℂ G)) =
           nProjector S * a * (nProjector S * x) *
             (w i : MonoidAlgebra ℂ G)

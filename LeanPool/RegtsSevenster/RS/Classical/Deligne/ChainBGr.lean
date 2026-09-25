@@ -195,7 +195,7 @@ theorem chainBGrι_projZero
     chainBGrι A M M' d 0 ≫ chainBGrProjZero A M M' d =
       𝟙 (chainBGrComponent A M M' d 0) := by
   rw [chainBGrι, chainBGrProjZero]
-  erw [Sigma.ι_desc]
+  erw [Sigma.ι_comp_desc]
   simp
 
 /-- **The graded unit does not vanish** when the balanced unit
@@ -291,7 +291,7 @@ theorem whiskerLeft_ι_chainBGrMulStage
         chainBGrMulStage A M M' d a =
       chainBGrCompMul A M M' d a b ≫
         chainBGrι A M M' d (a + b) := by
-  show (tensorLeft (chainBGrComponent A M M' d a)).map
+  change (tensorLeft (chainBGrComponent A M M' d a)).map
       (colimit.ι (Discrete.functor
         fun b : ℤ => chainBGrComponent A M M' d b) ⟨b⟩) ≫
       chainBGrMulStage A M M' d a =
@@ -365,7 +365,7 @@ theorem ι_whiskerRight_chainBGrMul
     (chainBGrι A M M' d a ▷ chainBGr A M M' d) ≫
         chainBGrMul A M M' d =
       chainBGrMulStage A M M' d a := by
-  show (tensorRight (chainBGr A M M' d)).map
+  change (tensorRight (chainBGr A M M' d)).map
       (colimit.ι (Discrete.functor
         fun a : ℤ => chainBGrComponent A M M' d a) ⟨a⟩) ≫
       chainBGrMul A M M' d =
@@ -588,7 +588,7 @@ theorem chainBGrCompMul_comm
         eqToHom (congrArg (chainBGrComponent A M M' d)
           (Int.add_comm b a)) =
       chainBGrCompMul A M M' d a b := by
-  show (β_ (chainBGrComponent A M M' d a)
+  change (β_ (chainBGrComponent A M M' d a)
       (chainBGrComponent A M M' d b)).hom ≫
       (chainBdegMul A M M' d (-b).toNat b.toNat (-a).toNat
           a.toNat ≫

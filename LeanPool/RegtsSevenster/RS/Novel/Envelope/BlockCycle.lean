@@ -38,9 +38,9 @@ private theorem finRotate_val' (c : ℕ) (q : Fin (c + 1)) :
   rw [Fin.val_add_one] at h
   rw [h]
   by_cases hq : q.val = c
-  · rw [if_pos (Fin.ext hq : q = Fin.last c), if_pos hq]
-  · rw [if_neg (show q ≠ Fin.last c from fun h =>
-      hq (congrArg Fin.val h)), if_neg hq]
+  · rw [ite_eq_left (Fin.ext hq : q = Fin.last c), ite_eq_left hq]
+  · rw [ite_eq_right (show q ≠ Fin.last c from fun h =>
+      hq (congrArg Fin.val h)), ite_eq_right hq]
 
 /-- `blockPerm n (finRotate (c+1))` equals `blockRot (n*c) n`:
 both rotate strands by n modulo n*(c+1). -/
@@ -80,13 +80,13 @@ theorem blockPerm_finRotate_eq_blockRot (n c : ℕ) :
     rw [lhs_val, rhs_val, finRotate_val' c ⟨q, hq_lt⟩]
     by_cases hqc : q = c
     · -- q = c: finRotate wraps, blockRot wraps
-      rw [if_pos hqc, hqc, if_neg (by omega),
+      rw [ite_eq_left hqc, hqc, ite_eq_right (by omega),
         show n * (0 : ℕ) = 0 from mul_zero n, zero_add]
       omega
     · -- q ≠ c: finRotate shifts, blockRot shifts
       have hqc' : q + 1 ≤ c := by omega
-      rw [if_neg hqc,
-        if_pos (show n * q + r < n * c from
+      rw [ite_eq_right hqc,
+        ite_eq_left (show n * q + r < n * c from
           by nlinarith [Nat.mul_le_mul_left n hqc'])]
       ring
 
@@ -218,7 +218,7 @@ theorem skeinTrace_block_rot_step (K n : ℕ) (A : skeinEnd f (K + n))
   obtain ⟨xa, rfl⟩ := Submodule.Quotient.mk_surjective _ A
   obtain ⟨xg, rfl⟩ := Submodule.Quotient.mk_surjective _ g
   -- Convert to Finsupp level
-  show traceFunctional f.val (K + n + n)
+  change traceFunctional f.val (K + n + n)
       (composeFinsupp (K + n + n) (K + n + n) (K + n + n)
         (tensorFinsupp (K + n) (K + n) n n xa xg)
         (Finsupp.single (permFragment (blockRot (K + n) n)) 1)) =
@@ -367,7 +367,7 @@ theorem skeinTrace_block_cycle (n k : ℕ)
     rw [show blockTupleTensor f n 1 G =
       blockTensorEnd f (1 : skeinEnd f (n * 0)) (G 0) from rfl]
     -- Make additive structure visible for skeinTrace_blockTensorEnd
-    show skeinTrace f (0 + n) (blockTensorEnd f (1 : skeinEnd f 0) (G 0)) =
+    change skeinTrace f (0 + n) (blockTensorEnd f (1 : skeinEnd f 0) (G 0)) =
       skeinTrace f n (blockCycleComp f n 1 G)
     -- trace splits: skeinTrace f 0 1 * skeinTrace f n (G 0)
     rw [skeinTrace_blockTensorEnd]
@@ -387,7 +387,7 @@ theorem skeinTrace_block_cycle (n k : ℕ)
     -- Bridge: blockPerm n (finRotate (m+2)) = blockRot (n*(m+1)) n
     rw [blockPerm_finRotate_eq_blockRot]
     -- Make additive structure visible for the rot step
-    show skeinTrace f (n * m + n + n)
+    change skeinTrace f (n * m + n + n)
         (permClass f (n * m + n + n) (blockRot (n * m + n) n) *
           blockTensorEnd f
             (blockTupleTensor f n (m + 1) (fun i => G i.castSucc))
@@ -400,7 +400,7 @@ theorem skeinTrace_block_cycle (n k : ℕ)
     -- Bridge back: blockRot (n*m) n = blockPerm n (finRotate (m+1))
     rw [← blockPerm_finRotate_eq_blockRot]
     -- Reshape arity for IH: n * m + n ≡ n * (m + 1)
-    show skeinTrace f (n * (m + 1))
+    change skeinTrace f (n * (m + 1))
         (permClass f (n * (m + 1)) (blockPerm n (finRotate (m + 1))) *
           blockTupleTensor f n (m + 1)
             (Function.update (fun i => G i.castSucc) (Fin.last m)

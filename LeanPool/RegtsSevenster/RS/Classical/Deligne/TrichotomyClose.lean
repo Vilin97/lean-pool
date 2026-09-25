@@ -130,8 +130,8 @@ theorem devissageTrichotomy_of_descent
       IsZero (modPow B R.X (k + 2)) → IsZero R.X) :
     DevissageTrichotomy D L X := by
   intro st
-  letI := st.monObj
-  letI := st.comm
+  let := st.monObj
+  let := st.comm
   by_cases hS : ∀ n : ℕ,
     ¬ IsZero (symPow st.base st.rest.X n)
   · exact Or.inl hS

@@ -95,16 +95,16 @@ noncomputable def pointMulLin :
         (pointMod P : S.Mod.{u, u, u, u}).even :=
   LinearMap.mk₂ ℂ (fun a b => ULift.up (a.down * b.down))
     (fun a b c => ULift.ext _ _ (by
-      show (a.down + b.down) * c.down = _
+      change (a.down + b.down) * c.down = _
       exact add_mul _ _ _))
     (fun r a b => ULift.ext _ _ (by
-      show (r * a.down) * b.down = r * (a.down * b.down)
+      change (r * a.down) * b.down = r * (a.down * b.down)
       exact mul_assoc _ _ _))
     (fun a b c => ULift.ext _ _ (by
-      show a.down * (b.down + c.down) = _
+      change a.down * (b.down + c.down) = _
       exact mul_add _ _ _))
     (fun r a b => ULift.ext _ _ (by
-      show a.down * (r * b.down) = r * (a.down * b.down)
+      change a.down * (r * b.down) = r * (a.down * b.down)
       ring))
 
 /-- The multiplication of the residue module, evaluated. -/
@@ -124,26 +124,26 @@ noncomputable def pointMulData :
   feo := 0
   foe := 0
   hee b m n := ULift.ext _ _ (by
-    show P.chi b * m.down * n.down = m.down * (P.chi b * n.down)
+    change P.chi b * m.down * n.down = m.down * (P.chi b * n.down)
     ring)
   hoo _ _ _ := rfl
   hoeo c m n := by
     rw [pointMod_actOO]
-    show (0 : (pointMod P).even) = pointMulLin P m 0
+    change (0 : (pointMod P).even) = pointMulLin P m 0
     rw [map_zero]
   hooe c m n := by
     rw [pointMod_actOO]
-    show pointMulLin P 0 n = -(0 : (pointMod P).even)
+    change pointMulLin P 0 n = -(0 : (pointMod P).even)
     rw [map_zero, LinearMap.zero_apply, neg_zero]
   heeo _ _ _ := Subsingleton.elim _ _
   heoe _ _ _ := Subsingleton.elim _ _
   hoee _ _ _ := Subsingleton.elim _ _
   hooo _ _ _ := Subsingleton.elim _ _
   aee a m n := ULift.ext _ _ (by
-    show P.chi a * m.down * n.down = P.chi a * (m.down * n.down)
+    change P.chi a * m.down * n.down = P.chi a * (m.down * n.down)
     ring)
   aoo a m n := by
-    show (0 : (pointMod P).even) = (pointMod P).actEE a 0
+    change (0 : (pointMod P).even) = (pointMod P).actEE a 0
     rw [map_zero]
   aeo _ _ _ := Subsingleton.elim _ _
   aoe _ _ _ := Subsingleton.elim _ _
@@ -179,12 +179,12 @@ noncomputable def pointUnitHom :
     (P.chi.toLinearMap : S.even →ₗ[ℂ] ℂ)
   oddMap := 0
   map_actEE x m := ULift.ext _ _ (by
-    show P.chi (S.mulEE x m) = P.chi x * P.chi m
+    change P.chi (S.mulEE x m) = P.chi x * P.chi m
     exact map_mul P.chi x m)
   map_actEO _ _ := Subsingleton.elim _ _
   map_actOE _ _ := Subsingleton.elim _ _
   map_actOO u m := ULift.ext _ _ (by
-    show P.chi (S.mulOO u m) = (0 : ULift.{u} ℂ).down
+    change P.chi (S.mulOO u m) = (0 : ULift.{u} ℂ).down
     rw [P.vanishing]
     rfl)
 
@@ -408,7 +408,7 @@ private theorem point_triple_ee
         (ULift.up (b.down * c.down)) := by
     rw [tensorHom_evenMap_tmulEE, pointMulHom_evenMap_tmulEE]
     rfl
-  show (pointMulHom P).evenMap
+  change (pointMulHom P).evenMap
       ((SuperCommAlgebra.Mod.tensorHom (pointMulHom P)
         (𝟙 (pointMod P))).evenMap
         (tmulEE ((pointMod P).tensor (pointMod P)) (pointMod P)
@@ -423,7 +423,7 @@ private theorem point_triple_ee
   erw [e1, e2, e3, pointMulHom_evenMap_tmulEE,
     pointMulHom_evenMap_tmulEE]
   refine ULift.ext _ _ ?_
-  show a.down * b.down * c.down = a.down * (b.down * c.down)
+  change a.down * b.down * c.down = a.down * (b.down * c.down)
   exact mul_assoc _ _ _
 
 /-- **The multiplication of the residue module is associative.** -/
@@ -536,7 +536,7 @@ theorem pointBaseMu_associativity (M N Q : S.Mod.{u, u, u, u}) :
     ← whiskerLeft_comp_assoc, pointMulHom_assoc,
     whiskerLeft_comp_assoc, whisker_exchange,
     ← tensorHom_def'_assoc]
-  show tensorμ M (pointMod P) N (pointMod P) ▷ (Q ⊗ pointMod P) ≫
+  change tensorμ M (pointMod P) N (pointMod P) ▷ (Q ⊗ pointMod P) ≫
       tensorμ (M ⊗ N) (pointMod P ⊗ pointMod P) Q (pointMod P) ≫
         ((α_ M N Q).hom ⊗ₘ
           (α_ (pointMod P) (pointMod P) (pointMod P)).hom) ≫

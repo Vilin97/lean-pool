@@ -67,12 +67,12 @@ section Fold
 /-- Folding a word of units gives the unit. -/
 theorem unitWord_muFold
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D]
-    (A : D) [MonObj A] [IsCommMonObj A] (n : ℕ) :
+    (A : D) [MonObj A] (n : ℕ) :
     unitWord A n ≫ muFold A n = η[A] := by
   induction n with
   | zero => exact Category.id_comp _
   | succ n ih =>
-      show ((ρ_ (𝟙_ D)).inv ≫ (unitWord A n ⊗ₘ η[A])) ≫
+      change ((ρ_ (𝟙_ D)).inv ≫ (unitWord A n ⊗ₘ η[A])) ≫
           ((muFold A n ▷ A) ≫ μ[A]) = η[A]
       rw [Category.assoc, ← Category.assoc (unitWord A n ⊗ₘ η[A]),
         ← MonoidalCategory.tensorHom_id (muFold A n) A,
@@ -121,12 +121,12 @@ theorem unitPow_plainShuffle
         (unitWord A n ▷ tensorPow D V n) := by
   induction n with
   | zero =>
-      show 𝟙 (𝟙_ D) ≫ (λ_ (𝟙_ D)).inv =
+      change 𝟙 (𝟙_ D) ≫ (λ_ (𝟙_ D)).inv =
         (λ_ (𝟙_ D)).inv ≫ (𝟙 (𝟙_ D) ▷ 𝟙_ D)
       rw [Category.id_comp, MonoidalCategory.id_whiskerRight,
         Category.comp_id]
   | succ n ih =>
-      show (freeUnitPow A V n ⊗ₘ ((λ_ V).inv ≫ (η[A] ▷ V))) ≫
+      change (freeUnitPow A V n ⊗ₘ ((λ_ V).inv ≫ (η[A] ▷ V))) ≫
           (((plainShuffle A V n).hom ▷ (A ⊗ V)) ≫
             tensorμ (tensorPow D A n) (tensorPow D V n) A V) =
         (λ_ (tensorPow D V n ⊗ V)).inv ≫
@@ -208,7 +208,7 @@ theorem freeInsert_freeCollapse
       MonoidalCategory.tensorHom_id,
       ← MonoidalCategory.comp_whiskerRight, hA]
   rw [hcol]
-  show ((α_ A (tensorPow D V n) V).inv ≫
+  change ((α_ A (tensorPow D V n) V).inv ≫
       ((β_ A (tensorPow D V n)).hom ▷ V) ≫
       (α_ (tensorPow D V n) A V).hom ≫
       (freeUnitPow A V n ▷ (A ⊗ V))) ≫

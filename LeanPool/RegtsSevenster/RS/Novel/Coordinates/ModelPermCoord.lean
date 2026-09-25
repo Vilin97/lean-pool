@@ -27,7 +27,7 @@ theorem wordPerm_eq_prod {n : ℕ} (w : List (Fin n)) :
   induction w with
   | nil => rfl
   | cons i w ih =>
-    show _root_.Equiv.swap _ _ * wordPerm w = _
+    change _root_.Equiv.swap _ _ * wordPerm w = _
     rw [List.map_cons, List.prod_cons, ih]
     rfl
 
@@ -52,7 +52,7 @@ theorem coordOf_modelPermMap {n : ℕ}
       (colourPowerEquiv k ℓ (n + 1)).evenEquiv
         (((modelPermMap σ) :
           SuperVect.Hom _ _).evenMap v) ⟨c, hc⟩ from by
-      unfold coordOf; rw [dif_pos hc]]
+      unfold coordOf; rw [dite_eq_left hc]]
     rw [← toColour_apply]
     rw [show modelPermMap σ =
       powBraidWord (stdSuperPair k ℓ) (adjWord σ) from rfl]
@@ -62,7 +62,7 @@ theorem coordOf_modelPermMap {n : ℕ}
     rw [show coordOf v (c ∘ σ) =
       (colourPowerEquiv k ℓ (n + 1)).evenEquiv v
         ⟨c ∘ σ, hc.comp σ⟩ from by
-      unfold coordOf; rw [dif_pos (hc.comp σ)]]
+      unfold coordOf; rw [dite_eq_left (hc.comp σ)]]
   · rw [coordOf_odd _ _ hc]
     have hcσ : ¬ MixedColouring.IsEven (c ∘ σ) := fun he => hc
       (by

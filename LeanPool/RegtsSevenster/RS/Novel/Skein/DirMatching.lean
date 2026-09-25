@@ -77,17 +77,17 @@ theorem tail_rot (h : Alternating M N) (a : α) :
     M.tail (M.rot N a) = !M.tail a := by
   unfold rot
   by_cases ha : M.tail a = true
-  · rw [if_pos ha, M.tail_flip a]
-  · rw [if_neg ha, tail_edge_alt h a]
+  · rw [ite_eq_left ha, M.tail_flip a]
+  · rw [ite_eq_right ha, tail_edge_alt h a]
 
 /-- The rotation is undone by the backward step. -/
 theorem rotInv_rot (h : Alternating M N) (a : α) :
     M.rotInv N (M.rot N a) = a := by
   unfold rot rotInv
   by_cases ha : M.tail a = true
-  · rw [if_pos ha, if_neg (by rw [M.tail_flip a, ha]; simp),
+  · rw [ite_eq_left ha, ite_eq_right (by rw [M.tail_flip a, ha]; simp),
       M.edge_invol]
-  · rw [if_neg ha, if_pos (by rw [tail_edge_alt h a]; simp [ha]),
+  · rw [ite_eq_right ha, ite_eq_left (by rw [tail_edge_alt h a]; simp [ha]),
       N.edge_invol]
 
 /-- And undoes it. -/
@@ -95,9 +95,9 @@ theorem rot_rotInv (h : Alternating M N) (a : α) :
     M.rot N (M.rotInv N a) = a := by
   unfold rot rotInv
   by_cases ha : M.tail a = true
-  · rw [if_pos ha, if_neg (by rw [tail_edge_alt h a, ha]; simp),
+  · rw [ite_eq_left ha, ite_eq_right (by rw [tail_edge_alt h a, ha]; simp),
       N.edge_invol]
-  · rw [if_neg ha, if_pos (by rw [M.tail_flip a]; simp [ha]),
+  · rw [ite_eq_right ha, ite_eq_left (by rw [M.tail_flip a]; simp [ha]),
       M.edge_invol]
 
 /-- **The rotation of an Eulerian union**, as a permutation. -/
@@ -125,14 +125,14 @@ theorem sameCycle_rot_edge (h : Alternating M N) (a : α) :
   · exact ⟨1, by
       show (M.rotPerm N h ^ (1 : ℤ)) a = M.edge a
       rw [zpow_one]
-      show M.rot N a = M.edge a
-      rw [rot, if_pos ha]⟩
+      change M.rot N a = M.edge a
+      rw [rot, ite_eq_left ha]⟩
   · exact ⟨-1, by
       show (M.rotPerm N h ^ (-1 : ℤ)) a = M.edge a
       rw [zpow_neg, zpow_one]
-      show (M.rotPerm N h).symm a = M.edge a
-      show M.rotInv N a = M.edge a
-      rw [rotInv, if_neg ha]⟩
+      change (M.rotPerm N h).symm a = M.edge a
+      change M.rotInv N a = M.edge a
+      rw [rotInv, ite_eq_right ha]⟩
 
 /-- **The rotation reaches the second matching's partner.** -/
 theorem sameCycle_rot_edge' (h : Alternating M N) (a : α) :
@@ -141,30 +141,30 @@ theorem sameCycle_rot_edge' (h : Alternating M N) (a : α) :
   · exact ⟨-1, by
       show (M.rotPerm N h ^ (-1 : ℤ)) a = N.edge a
       rw [zpow_neg, zpow_one]
-      show (M.rotPerm N h).symm a = N.edge a
-      show M.rotInv N a = N.edge a
-      rw [rotInv, if_pos ha]⟩
+      change (M.rotPerm N h).symm a = N.edge a
+      change M.rotInv N a = N.edge a
+      rw [rotInv, ite_eq_left ha]⟩
   · exact ⟨1, by
       show (M.rotPerm N h ^ (1 : ℤ)) a = N.edge a
       rw [zpow_one]
-      show M.rot N a = N.edge a
-      rw [rot, if_neg ha]⟩
+      change M.rot N a = N.edge a
+      rw [rot, ite_eq_right ha]⟩
 
 /-- **A directed perfect matching forces an even ground set**: the
 partner map exchanges the tails with the heads. -/
-theorem even_card [Fintype α] [DecidableEq α] (M : DirMatching α) :
+theorem even_card [Fintype α] (M : DirMatching α) :
     Even (Fintype.card α) := by
   classical
   have hcard : (Finset.univ.filter (fun a : α => M.tail a = true)).card
       = (Finset.univ.filter (fun a : α => ¬ (M.tail a = true))).card := by
     refine Finset.card_nbij' (i := M.edge) (j := M.edge) ?_ ?_ ?_ ?_
     · intro a ha
-      simp only [Finset.coe_filter, Set.mem_setOf_eq,
+      simp only [Finset.coe_filter, Set.mem_ofPred_eq,
         Finset.mem_univ, true_and] at ha ⊢
       rw [M.tail_flip a, ha]
       simp
     · intro b hb
-      simp only [Finset.coe_filter, Set.mem_setOf_eq,
+      simp only [Finset.coe_filter, Set.mem_ofPred_eq,
         Finset.mem_univ, true_and] at hb ⊢
       rw [M.tail_flip b]
       simpa using hb
@@ -187,7 +187,7 @@ noncomputable def tailHeadEquiv (M : DirMatching α) :
   right_inv a := Subtype.ext (M.edge_invol a.val)
 
 /-- **The ground set is twice the tails.** -/
-theorem two_mul_card_tail [Fintype α] [DecidableEq α]
+theorem two_mul_card_tail [Fintype α]
     (M : DirMatching α) :
     2 * Fintype.card M.Tail = Fintype.card α := by
   have h1 : Fintype.card {a : α // ¬ (M.tail a = true)}
@@ -258,9 +258,9 @@ theorem edge_rot (h : Alternating M N) (a : α) :
     M.edge (M.rot N a) = M.rot N (N.edge a) := by
   unfold rot
   by_cases ha : M.tail a = true
-  · rw [if_pos ha, M.edge_invol,
-      if_neg (by rw [tail_edge_alt h a, ha]; simp), N.edge_invol]
-  · rw [if_neg ha, if_pos (by rw [tail_edge_alt h a]; simp [ha])]
+  · rw [ite_eq_left ha, M.edge_invol,
+      ite_eq_right (by rw [tail_edge_alt h a, ha]; simp), N.edge_invol]
+  · rw [ite_eq_right ha, ite_eq_left (by rw [tail_edge_alt h a]; simp [ha])]
 
 /-- **The rotation carries the second matching's directions to the
 first's.** -/
@@ -317,10 +317,10 @@ theorem sign_eq_of_carries_pair [Fintype α] [DecidableEq α]
   have hg : Stab M (σ * τ⁻¹) := by
     constructor
     · intro a
-      show σ (τ.symm (M.edge a)) = M.edge (σ (τ.symm a))
+      change σ (τ.symm (M.edge a)) = M.edge (σ (τ.symm a))
       rw [hτ.edge_symm a, hσ.edge]
     · intro a
-      show M.tail (σ (τ.symm a)) = M.tail a
+      change M.tail (σ (τ.symm a)) = M.tail a
       rw [hσ.tail]
       conv_rhs => rw [← Equiv.apply_symm_apply τ a]
       rw [hτ.tail]
@@ -353,7 +353,7 @@ noncomputable def ofTailEquiv (M N : DirMatching α)
   left_inv a := by
     by_cases h : N.tail a = true
     · have hm : M.tail (b ⟨a, h⟩).val = true := (b ⟨a, h⟩).prop
-      simp only [dif_pos h, dif_pos hm]
+      simp only [dite_eq_left h, dite_eq_left hm]
       have : (⟨(b ⟨a, h⟩).val, hm⟩ : M.Tail) = b ⟨a, h⟩ := rfl
       rw [this, Equiv.symm_apply_apply]
     · have hne : N.tail (N.edge a) = true := by
@@ -362,14 +362,14 @@ noncomputable def ofTailEquiv (M N : DirMatching α)
         (b ⟨N.edge a, hne⟩).prop
       have hm' : ¬ (M.tail (M.edge (b ⟨N.edge a, hne⟩).val) = true) := by
         rw [M.tail_flip, hm]; simp
-      simp only [dif_neg h, dif_neg hm', M.edge_invol]
+      simp only [dite_eq_right h, dite_eq_right hm', M.edge_invol]
       have : (⟨(b ⟨N.edge a, hne⟩).val, hm⟩ : M.Tail)
           = b ⟨N.edge a, hne⟩ := rfl
       rw [this, Equiv.symm_apply_apply, N.edge_invol]
   right_inv a := by
     by_cases h : M.tail a = true
     · have hn : N.tail (b.symm ⟨a, h⟩).val = true := (b.symm ⟨a, h⟩).prop
-      simp only [dif_pos h, dif_pos hn]
+      simp only [dite_eq_left h, dite_eq_left hn]
       have : (⟨(b.symm ⟨a, h⟩).val, hn⟩ : N.Tail) = b.symm ⟨a, h⟩ := rfl
       rw [this, Equiv.apply_symm_apply]
     · have hme : M.tail (M.edge a) = true := by
@@ -378,13 +378,13 @@ noncomputable def ofTailEquiv (M N : DirMatching α)
         (b.symm ⟨M.edge a, hme⟩).prop
       have hn' : ¬ (N.tail (N.edge (b.symm ⟨M.edge a, hme⟩).val) = true) := by
         rw [N.tail_flip, hn]; simp
-      simp only [dif_neg h, dif_neg hn', N.edge_invol]
+      simp only [dite_eq_right h, dite_eq_right hn', N.edge_invol]
       have : (⟨(b.symm ⟨M.edge a, hme⟩).val, hn⟩ : N.Tail)
           = b.symm ⟨M.edge a, hme⟩ := rfl
       rw [this, Equiv.apply_symm_apply, M.edge_invol]
 
 /-- **The tail bijection's extension carries.** -/
-theorem carries_ofTailEquiv [Fintype α] [DecidableEq α]
+theorem carries_ofTailEquiv
     (M N : DirMatching α)
     (b : N.Tail ≃ M.Tail) : Carries M N (ofTailEquiv M N b) := by
   constructor
@@ -392,38 +392,40 @@ theorem carries_ofTailEquiv [Fintype α] [DecidableEq α]
     by_cases h : N.tail a = true
     · have hne : ¬ (N.tail (N.edge a) = true) := by
         rw [N.tail_flip, h]; simp
-      show (if h' : N.tail (N.edge a) = true then _ else _) = _
-      rw [dif_neg hne]
-      show M.edge (b ⟨N.edge (N.edge a), _⟩).val
+      change (if h' : N.tail (N.edge a) = true then _ else _) = _
+      rw [dite_eq_right hne]
+      change M.edge (b ⟨N.edge (N.edge a), _⟩).val
         = M.edge (if h' : N.tail a = true then (b ⟨a, h'⟩).val else _)
-      rw [dif_pos h]
+      rw [dite_eq_left h]
       exact congrArg (fun z : M.Tail => M.edge z.val)
         (congrArg b (Subtype.ext (N.edge_invol a)))
     · have hne : N.tail (N.edge a) = true := by
         rw [N.tail_flip]; simpa using h
-      show (if h' : N.tail (N.edge a) = true then (b ⟨N.edge a, h'⟩).val
+      change (if h' : N.tail (N.edge a) = true then (b ⟨N.edge a, h'⟩).val
           else _) = _
-      rw [dif_pos hne]
-      show _ = M.edge (if h' : N.tail a = true then _
+      rw [dite_eq_left hne]
+      change _ = M.edge (if h' : N.tail a = true then _
         else M.edge (b ⟨N.edge a, _⟩).val)
-      rw [dif_neg h, M.edge_invol]
+      rw [dite_eq_right h, M.edge_invol]
   · intro a
     by_cases h : N.tail a = true
-    · show M.tail (if h' : N.tail a = true then (b ⟨a, h'⟩).val else _)
+    · change M.tail (if h' : N.tail a = true then (b ⟨a, h'⟩).val else _)
         = N.tail a
-      rw [dif_pos h, h]
+      rw [dite_eq_left h, h]
       exact (b ⟨a, h⟩).prop
     · have hne : N.tail (N.edge a) = true := by
         rw [N.tail_flip]; simpa using h
-      show M.tail (if h' : N.tail a = true then _
+      change M.tail (if h' : N.tail a = true then _
         else M.edge (b ⟨N.edge a, _⟩).val) = N.tail a
-      rw [dif_neg h, M.tail_flip, (b ⟨N.edge a, hne⟩).prop]
+      rw [dite_eq_right h, M.tail_flip, (b ⟨N.edge a, hne⟩).prop]
       simpa using (Bool.eq_false_iff.mpr h).symm
 
 /-- **A carrier exists between any two directed matchings on the
 same set.** -/
-theorem exists_carries [Fintype α] [DecidableEq α] (M N : DirMatching α) :
+theorem exists_carries [Finite α] (M N : DirMatching α) :
     ∃ σ : Equiv.Perm α, Carries M N σ := by
+  classical
+  let := Fintype.ofFinite α
   have hcard : Fintype.card N.Tail = Fintype.card M.Tail := by
     have h1 := M.two_mul_card_tail
     have h2 := N.two_mul_card_tail
@@ -448,10 +450,10 @@ theorem Carries.comp {P : DirMatching α} {σ τ : Equiv.Perm α}
     Carries M P (σ * τ) := by
   constructor
   · intro a
-    show σ (τ (P.edge a)) = M.edge (σ (τ a))
+    change σ (τ (P.edge a)) = M.edge (σ (τ a))
     rw [hτ.edge a, hσ.edge (τ a)]
   · intro a
-    show M.tail (σ (τ a)) = P.tail a
+    change M.tail (σ (τ a)) = P.tail a
     rw [hσ.tail (τ a), hτ.tail a]
 
 /-- Carriers invert. -/
@@ -461,7 +463,7 @@ theorem Carries.inv {σ : Equiv.Perm α} (hσ : Carries M N σ) :
   · intro a
     exact hσ.edge_symm a
   · intro a
-    show N.tail (σ.symm a) = M.tail a
+    change N.tail (σ.symm a) = M.tail a
     conv_rhs => rw [← Equiv.apply_symm_apply σ a]
     rw [hσ.tail]
 
@@ -547,11 +549,11 @@ def finStd (m : ℕ) : DirMatching (Fin (2 * m)) where
     have := i.isLt
     refine Fin.ext ?_
     by_cases h : i.val % 2 = 0
-    · simp only [if_pos h,
-        if_neg (show ¬ ((i.val + 1) % 2 = 0) by omega)]
+    · simp only [ite_eq_left h,
+        ite_eq_right (show ¬ ((i.val + 1) % 2 = 0) by omega)]
       omega
-    · simp only [if_neg h,
-        if_pos (show (i.val - 1) % 2 = 0 by omega)]
+    · simp only [ite_eq_right h,
+        ite_eq_left (show (i.val - 1) % 2 = 0 by omega)]
       omega
   edge_ne i := by
     have := i.isLt
@@ -563,15 +565,15 @@ def finStd (m : ℕ) : DirMatching (Fin (2 * m)) where
   tail_flip i := by
     have := i.isLt
     by_cases h : i.val % 2 = 0
-    · show decide ((⟨if i.val % 2 = 0 then i.val + 1 else i.val - 1,
+    · change decide ((⟨if i.val % 2 = 0 then i.val + 1 else i.val - 1,
         _⟩ : Fin (2 * m)).val % 2 = 0) = _
-      simp only [if_pos h]
+      simp only [ite_eq_left h]
       rw [decide_eq_false (show ¬ ((i.val + 1) % 2 = 0) by omega),
         decide_eq_true h]
       rfl
-    · show decide ((⟨if i.val % 2 = 0 then i.val + 1 else i.val - 1,
+    · change decide ((⟨if i.val % 2 = 0 then i.val + 1 else i.val - 1,
         _⟩ : Fin (2 * m)).val % 2 = 0) = _
-      simp only [if_neg h]
+      simp only [ite_eq_right h]
       rw [decide_eq_true (show (i.val - 1) % 2 = 0 by omega),
         decide_eq_false h]
       rfl
@@ -596,12 +598,12 @@ theorem carries_map {β : Type} (e : α ≃ β) {R M : DirMatching α}
     Carries (R.map e) (M.map e) (e.permCongr σ) := by
   constructor
   · intro b
-    show e (σ (e.symm (e (M.edge (e.symm b)))))
+    change e (σ (e.symm (e (M.edge (e.symm b)))))
       = e (R.edge (e.symm (e (σ (e.symm b)))))
     rw [Equiv.symm_apply_apply, Equiv.symm_apply_apply]
     exact congrArg e (hσ.edge (e.symm b))
   · intro b
-    show R.tail (e.symm (e (σ (e.symm b)))) = M.tail (e.symm b)
+    change R.tail (e.symm (e (σ (e.symm b)))) = M.tail (e.symm b)
     rw [Equiv.symm_apply_apply]
     exact hσ.tail (e.symm b)
 
@@ -683,19 +685,19 @@ def reverseArc [DecidableEq α] (M : DirMatching α) (a : α) :
   tail_flip b := by
     by_cases h1 : b = a
     · subst h1
-      rw [if_pos (Or.inr rfl), if_pos (Or.inl rfl), M.tail_flip,
+      rw [ite_eq_left (Or.inr rfl), ite_eq_left (Or.inl rfl), M.tail_flip,
         Bool.not_not]
     · by_cases h2 : b = M.edge a
       · subst h2
-        rw [if_pos (Or.inl (M.edge_invol a)),
-          if_pos (Or.inr rfl), M.tail_flip, Bool.not_not]
+        rw [ite_eq_left (Or.inl (M.edge_invol a)),
+          ite_eq_left (Or.inr rfl), M.tail_flip, Bool.not_not]
       · have h3 : ¬ (M.edge b = a ∨ M.edge b = M.edge a) := by
           rintro (hx | hx)
           · exact h2 (by rw [← hx, M.edge_invol])
           · exact h1 (by
               have := congrArg M.edge hx
               rwa [M.edge_invol, M.edge_invol] at this)
-        rw [if_neg h3, if_neg (fun hx => hx.elim h1 h2), M.tail_flip]
+        rw [ite_eq_right h3, ite_eq_right (fun hx => hx.elim h1 h2), M.tail_flip]
 
 /-- The reversed matching's directions, pointwise. -/
 theorem reverseArc_tail [DecidableEq α] (M : DirMatching α) (a b : α) :
@@ -730,24 +732,24 @@ theorem carries_reverseArc [DecidableEq α] {σ : Equiv.Perm α}
     Carries R (M.reverseArc a) (σ * Equiv.swap a (M.edge a)) := by
   constructor
   · intro b
-    show σ (Equiv.swap a (M.edge a) (M.edge b))
+    change σ (Equiv.swap a (M.edge a) (M.edge b))
       = R.edge (σ (Equiv.swap a (M.edge a) b))
     rw [swap_edge_comm M a b, hσ.edge]
   · intro b
-    show R.tail (σ (Equiv.swap a (M.edge a) b))
+    change R.tail (σ (Equiv.swap a (M.edge a) b))
       = (M.reverseArc a).tail b
     rw [hσ.tail]
-    show M.tail (Equiv.swap a (M.edge a) b)
+    change M.tail (Equiv.swap a (M.edge a) b)
       = if b = a ∨ b = M.edge a then !M.tail b else M.tail b
     by_cases h1 : b = a
     · subst h1
-      rw [Equiv.swap_apply_left, if_pos (Or.inl rfl), M.tail_flip]
+      rw [Equiv.swap_apply_left, ite_eq_left (Or.inl rfl), M.tail_flip]
     · by_cases h2 : b = M.edge a
       · subst h2
-        rw [Equiv.swap_apply_right, if_pos (Or.inr rfl),
+        rw [Equiv.swap_apply_right, ite_eq_left (Or.inr rfl),
           M.tail_flip, Bool.not_not]
       · rw [Equiv.swap_apply_of_ne_of_ne h1 h2,
-          if_neg (fun hx => hx.elim h1 h2)]
+          ite_eq_right (fun hx => hx.elim h1 h2)]
 
 /-- **Reversing an arc flips the sign** — RS21's
 `sgn(M(ω,κ)) = -sgn(M(ω′,κ′))`. -/
@@ -816,7 +818,7 @@ theorem edge_mem_flipSet [Fintype α] {P P' : DirMatching α}
   exact (Bool.not_inj h1).symm
 
 /-- The disagreement set has an even number of points. -/
-theorem even_card_flipSet [Fintype α] [DecidableEq α]
+theorem even_card_flipSet [Fintype α]
     {P P' : DirMatching α} (he : P'.edge = P.edge) :
     Even (flipSet P P').card :=
   even_card_of_involution _ P.edge
@@ -834,7 +836,7 @@ theorem flipSet_reverseArc [Fintype α] [DecidableEq α]
   rw [mem_flipSet, Finset.mem_sdiff, mem_flipSet, Finset.mem_insert,
     Finset.mem_singleton, reverseArc_tail]
   by_cases hb : b = a ∨ b = P.edge a
-  · rw [if_pos hb]
+  · rw [ite_eq_left hb]
     have hbmem : b ∈ flipSet P P' := by
       rcases hb with rfl | rfl
       · exact ha
@@ -842,7 +844,7 @@ theorem flipSet_reverseArc [Fintype α] [DecidableEq α]
     rw [mem_flipSet] at hbmem
     exact ⟨fun hx => absurd (bool_eq_not_of_ne hbmem) hx,
       fun hx => absurd hb hx.2⟩
-  · rw [if_neg hb]
+  · rw [ite_eq_right hb]
     exact ⟨fun hx => ⟨hx, hb⟩, fun hx => hx.1⟩
 
 /-! ### Repairing a union to Eulerian position
@@ -919,21 +921,21 @@ theorem not_sameCycle_edge (M N : DirMatching α) (a : α) :
     intro i
     have h1 : M.edge ((p ^ i) a)
         = (M.edgePerm * p ^ i * M.edgePerm) (M.edge a) := by
-      show M.edge ((p ^ i) a)
+      change M.edge ((p ^ i) a)
         = M.edge ((p ^ i) (M.edge (M.edge a)))
       rw [M.edge_invol]
     rw [h1, hp, edgePerm_conj M N i, ← hj, ← hp]
-    show (p ^ (-i)) ((p ^ j) a) = (p ^ (j - i)) a
+    change (p ^ (-i)) ((p ^ j) a) = (p ^ (j - i)) a
     rw [← Equiv.Perm.mul_apply, ← zpow_add]
     congr 2
     ring
   have hNstep : ∀ i : ℤ, N.edge ((p ^ i) a) = (p ^ (j - i + 1)) a := by
     intro i
     have h2 : N.edge ((p ^ i) a) = p (M.edge ((p ^ i) a)) := by
-      show N.edge ((p ^ i) a) = N.edge (M.edge (M.edge ((p ^ i) a)))
+      change N.edge ((p ^ i) a) = N.edge (M.edge (M.edge ((p ^ i) a)))
       rw [M.edge_invol]
     rw [h2, hstep i]
-    show p ((p ^ (j - i)) a) = (p ^ (j - i + 1)) a
+    change p ((p ^ (j - i)) a) = (p ^ (j - i + 1)) a
     rw [show j - i + 1 = 1 + (j - i) from by ring, zpow_add, zpow_one]
     rfl
   rcases Int.even_or_odd j with ⟨i, hi⟩ | ⟨i, hi⟩
@@ -1004,11 +1006,12 @@ theorem sameCycle_of_cycleKey_eq [Fintype α] [DecidableEq α]
 /-- **Any two matchings admit a common repair to Eulerian
 position** — RS21's `σ₁` and `σ₂`.  The repair leaves both pairings
 alone and makes the union alternating. -/
-theorem exists_alternating_repair [Fintype α] [DecidableEq α]
+theorem exists_alternating_repair [Finite α]
     (M N : DirMatching α) :
     ∃ M' N' : DirMatching α,
       M'.edge = M.edge ∧ N'.edge = N.edge ∧ Alternating M' N' := by
   classical
+  let := Fintype.ofFinite α
   set p : Equiv.Perm α := N.edgePerm * M.edgePerm with hp
   set T : α → Bool :=
     fun a => decide (cycleKey p a < cycleKey p (M.edge a)) with hT
@@ -1023,7 +1026,7 @@ theorem exists_alternating_repair [Fintype α] [DecidableEq α]
     · rw [decide_eq_true h, decide_eq_false (not_lt.mpr h.le)]; rfl
   have hMflip : ∀ a, T (M.edge a) = !T a := by
     intro a
-    show decide (cycleKey p (M.edge a)
+    change decide (cycleKey p (M.edge a)
         < cycleKey p (M.edge (M.edge a)))
       = !decide (cycleKey p a < cycleKey p (M.edge a))
     rw [M.edge_invol]
@@ -1033,7 +1036,7 @@ theorem exists_alternating_repair [Fintype α] [DecidableEq α]
     refine (cycleKey_eq (⟨1, ?_⟩ : p.SameCycle (M.edge a) (N.edge a))).symm
     show (p ^ (1 : ℤ)) (M.edge a) = N.edge a
     rw [zpow_one, hp]
-    show N.edge (M.edge (M.edge a)) = N.edge a
+    change N.edge (M.edge (M.edge a)) = N.edge a
     rw [M.edge_invol]
   have hkeyMN : ∀ a, cycleKey p (M.edge (N.edge a)) = cycleKey p a := by
     intro a
@@ -1043,7 +1046,7 @@ theorem exists_alternating_repair [Fintype α] [DecidableEq α]
     rfl
   have hNflip : ∀ a, T (N.edge a) = !T a := by
     intro a
-    show decide (cycleKey p (N.edge a)
+    change decide (cycleKey p (N.edge a)
         < cycleKey p (M.edge (N.edge a)))
       = !decide (cycleKey p a < cycleKey p (M.edge a))
     rw [hkeyN a, hkeyMN a]
@@ -1098,14 +1101,14 @@ theorem rot_rot_of_interface (h : Alternating M N) {i j : α}
   have hx : M.tail x.val = true := by
     by_contra hx
     have hrot : M.rot N x.val = N.edge x.val := by
-      unfold rot; rw [if_neg hx]
+      unfold rot; rw [ite_eq_right hx]
     rcases hs with hs | hs <;> rw [hrot] at hs
     · exact x.prop.2 (((N.edge_invol x.val).symm.trans
         (congrArg N.edge hs)).trans hN)
     · exact x.prop.1 (((N.edge_invol x.val).symm.trans
         (congrArg N.edge hs)).trans hNj)
   have hrot : M.rot N x.val = M.edge x.val := by
-    unfold rot; rw [if_pos hx]
+    unfold rot; rw [ite_eq_left hx]
   rcases hs with hs | hs
   · refine Or.inr ?_
     have hti : M.tail i = false := by
@@ -1114,7 +1117,7 @@ theorem rot_rot_of_interface (h : Alternating M N) {i j : α}
       exact hf
     rw [hs]
     unfold rot
-    rw [if_neg (by rw [hti]; exact Bool.noConfusion), hN]
+    rw [ite_eq_right (by rw [hti]; exact Bool.noConfusion), hN]
   · refine Or.inl ?_
     have htj : M.tail j = false := by
       have hf := M.tail_flip x.val
@@ -1122,7 +1125,7 @@ theorem rot_rot_of_interface (h : Alternating M N) {i j : α}
       exact hf
     rw [hs]
     unfold rot
-    rw [if_neg (by rw [htj]; exact Bool.noConfusion), hNj]
+    rw [ite_eq_right (by rw [htj]; exact Bool.noConfusion), hNj]
 
 /-- The contracted partner map: the partners of the two identified
 points are matched to one another. -/
@@ -1146,13 +1149,13 @@ theorem contractEdge_ne [DecidableEq α] (M : DirMatching α) {i j : α}
     M.contractEdge i j x ≠ i ∧ M.contractEdge i j x ≠ j := by
   unfold contractEdge
   by_cases h1 : M.edge x = i
-  · rw [if_pos h1]
+  · rw [ite_eq_left h1]
     refine ⟨fun hx => hopen ?_, fun hx => M.edge_ne j hx⟩
     rw [← hx, M.edge_invol]
   · by_cases h2 : M.edge x = j
-    · rw [if_neg h1, if_pos h2]
+    · rw [ite_eq_right h1, ite_eq_left h2]
       exact ⟨M.edge_ne i, hopen⟩
-    · rw [if_neg h1, if_neg h2]
+    · rw [ite_eq_right h1, ite_eq_right h2]
       exact ⟨h1, h2⟩
 
 /-- It is an involution on the survivors. -/
@@ -1162,33 +1165,33 @@ theorem contractEdge_invol [DecidableEq α] (M : DirMatching α) {i j : α}
     M.contractEdge i j (M.contractEdge i j x) = x := by
   unfold contractEdge
   by_cases h1 : M.edge x = i
-  · rw [if_pos h1, if_neg (by rw [M.edge_invol]; exact Ne.symm hij),
-      if_pos (by rw [M.edge_invol])]
+  · rw [ite_eq_left h1, ite_eq_right (by rw [M.edge_invol]; exact Ne.symm hij),
+      ite_eq_left (by rw [M.edge_invol])]
     rw [← h1, M.edge_invol]
   · by_cases h2 : M.edge x = j
-    · rw [if_neg h1, if_pos h2, if_pos (by rw [M.edge_invol])]
+    · rw [ite_eq_right h1, ite_eq_left h2, ite_eq_left (by rw [M.edge_invol])]
       rw [← h2, M.edge_invol]
-    · rw [if_neg h1, if_neg h2,
-        if_neg (by rw [M.edge_invol]; exact hx),
-        if_neg (by rw [M.edge_invol]; exact hx'), M.edge_invol]
+    · rw [ite_eq_right h1, ite_eq_right h2,
+        ite_eq_right (by rw [M.edge_invol]; exact hx),
+        ite_eq_right (by rw [M.edge_invol]; exact hx'), M.edge_invol]
 
 /-- And fixed-point-free, so it is again a perfect matching. -/
 theorem contractEdge_ne_self [DecidableEq α] (M : DirMatching α) {i j : α}
     (hij : i ≠ j) (x : α) : M.contractEdge i j x ≠ x := by
   unfold contractEdge
   by_cases h1 : M.edge x = i
-  · rw [if_pos h1]
+  · rw [ite_eq_left h1]
     intro hx
     refine Ne.symm hij ?_
     rw [← hx] at h1
     rwa [M.edge_invol] at h1
   · by_cases h2 : M.edge x = j
-    · rw [if_neg h1, if_pos h2]
+    · rw [ite_eq_right h1, ite_eq_left h2]
       intro hx
       refine hij ?_
       rw [← hx] at h2
       rwa [M.edge_invol] at h2
-    · rw [if_neg h1, if_neg h2]
+    · rw [ite_eq_right h1, ite_eq_right h2]
       exact M.edge_ne x
 
 /-- **The contraction of a matching at an identified pair.**  The
@@ -1207,19 +1210,19 @@ def contract [DecidableEq α] (M : DirMatching α) {i j : α} (hij : i ≠ j)
     (congrArg Subtype.val hx)
   tail x := M.tail x.val
   tail_flip x := by
-    show M.tail (M.contractEdge i j x.val) = !M.tail x.val
+    change M.tail (M.contractEdge i j x.val) = !M.tail x.val
     unfold contractEdge
     by_cases h1 : M.edge x.val = i
-    · rw [if_pos h1, M.tail_flip j, hdir, Bool.not_not]
+    · rw [ite_eq_left h1, M.tail_flip j, hdir, Bool.not_not]
       have hxx := M.tail_flip x.val
       rw [h1] at hxx
       exact hxx
     · by_cases h2 : M.edge x.val = j
-      · rw [if_neg h1, if_pos h2, M.tail_flip i]
+      · rw [ite_eq_right h1, ite_eq_left h2, M.tail_flip i]
         have hxx := M.tail_flip x.val
         rw [h2, hdir] at hxx
         exact hxx
-      · rw [if_neg h1, if_neg h2, M.tail_flip x.val]
+      · rw [ite_eq_right h1, ite_eq_right h2, M.tail_flip x.val]
 
 /-! ### The interface matching after one identification
 
@@ -1279,37 +1282,37 @@ theorem sameCycle_rot_contract [DecidableEq α] {M N : DirMatching α}
         (alternating_contract h hij hN hopen)) x).val
       = if M.tail x.val then M.contractEdge i j x.val
         else N.edge x.val := by
-    show ((M.contract hij hopen
+    change ((M.contract hij hopen
       (tail_ne_of_alternating h hN)).rot (N.restrict hN) x).val = _
     unfold rot
     by_cases hx : M.tail x.val = true
-    · rw [if_pos (show (M.contract hij hopen
+    · rw [ite_eq_left (show (M.contract hij hopen
         (tail_ne_of_alternating h hN)).tail x = true from hx),
-        if_pos hx]
+        ite_eq_left hx]
       rfl
-    · rw [if_neg (show ¬ ((M.contract hij hopen
+    · rw [ite_eq_right (show ¬ ((M.contract hij hopen
         (tail_ne_of_alternating h hN)).tail x = true) from hx),
-        if_neg hx]
+        ite_eq_right hx]
       rfl
   rw [hval]
   by_cases hx : M.tail x.val = true
-  · rw [if_pos hx]
+  · rw [ite_eq_left hx]
     unfold contractEdge
     by_cases h1 : M.edge x.val = i
-    · rw [if_pos h1]
+    · rw [ite_eq_left h1]
       refine ((sameCycle_rot_edge h x.val).trans ?_).trans
         (sameCycle_rot_edge h j)
       rw [h1, ← hN]
       exact sameCycle_rot_edge' h i
     · by_cases h2 : M.edge x.val = j
-      · rw [if_neg h1, if_pos h2]
+      · rw [ite_eq_right h1, ite_eq_left h2]
         refine ((sameCycle_rot_edge h x.val).trans ?_).trans
           (sameCycle_rot_edge h i)
         rw [h2, ← hNj]
         exact sameCycle_rot_edge' h j
-      · rw [if_neg h1, if_neg h2]
+      · rw [ite_eq_right h1, ite_eq_right h2]
         exact sameCycle_rot_edge h x.val
-  · rw [if_neg hx]
+  · rw [ite_eq_right hx]
     exact sameCycle_rot_edge' h x.val
 
 /-- **The contraction's orbits map to the original's.** -/
@@ -1342,17 +1345,17 @@ theorem rot_contract_val [DecidableEq α] (h : Alternating M N) {i j : α}
         (N.restrict hN) (alternating_contract h hij hN hopen)) x).val
       = if M.tail x.val then M.contractEdge i j x.val
         else N.edge x.val := by
-  show ((M.contract hij hopen
+  change ((M.contract hij hopen
     (tail_ne_of_alternating h hN)).rot (N.restrict hN) x).val = _
   unfold rot
   by_cases hx : M.tail x.val = true
-  · rw [if_pos (show (M.contract hij hopen
+  · rw [ite_eq_left (show (M.contract hij hopen
       (tail_ne_of_alternating h hN)).tail x = true from hx),
-      if_pos hx]
+      ite_eq_left hx]
     rfl
-  · rw [if_neg (show ¬ ((M.contract hij hopen
+  · rw [ite_eq_right (show ¬ ((M.contract hij hopen
       (tail_ne_of_alternating h hN)).tail x = true) from hx),
-      if_neg hx]
+      ite_eq_right hx]
     rfl
 
 /-- **A step landing on a survivor is unchanged.** -/
@@ -1366,12 +1369,12 @@ theorem rot_contract_eq_rot [DecidableEq α] (h : Alternating M N) {i j : α}
   rw [rot_contract_val h hij hN hopen x]
   unfold rot at hs hs' ⊢
   by_cases hx : M.tail x.val = true
-  · rw [if_pos hx] at hs hs'
-    rw [if_pos hx, if_pos hx]
+  · rw [ite_eq_left hx] at hs hs'
+    rw [ite_eq_left hx, ite_eq_left hx]
     unfold contractEdge
-    rw [if_neg hs, if_neg hs']
-  · rw [if_neg hx] at hs hs'
-    rw [if_neg hx, if_neg hx]
+    rw [ite_eq_right hs, ite_eq_right hs']
+  · rw [ite_eq_right hx] at hs hs'
+    rw [ite_eq_right hx, ite_eq_right hx]
 
 /-- **A step landing on an identified point runs three steps.** -/
 theorem rot_contract_eq_rot_three [DecidableEq α] (h : Alternating M N)
@@ -1387,15 +1390,15 @@ theorem rot_contract_eq_rot_three [DecidableEq α] (h : Alternating M N)
   have hx : M.tail x.val = true := by
     by_contra hx
     have hrot : M.rot N x.val = N.edge x.val := by
-      unfold rot; rw [if_neg hx]
+      unfold rot; rw [ite_eq_right hx]
     rcases hs with hs | hs <;> rw [hrot] at hs
     · exact x.prop.2 (((N.edge_invol x.val).symm.trans
         (congrArg N.edge hs)).trans hN)
     · exact x.prop.1 (((N.edge_invol x.val).symm.trans
         (congrArg N.edge hs)).trans hNj)
   have hrot : M.rot N x.val = M.edge x.val := by
-    unfold rot; rw [if_pos hx]
-  rw [rot_contract_val h hij hN hopen x, if_pos hx]
+    unfold rot; rw [ite_eq_left hx]
+  rw [rot_contract_val h hij hN hopen x, ite_eq_left hx]
   unfold contractEdge
   rcases hs with hs | hs <;> rw [hrot] at hs
   · -- the step lands on `i`; continue `i → j → M.edge j`
@@ -1405,11 +1408,11 @@ theorem rot_contract_eq_rot_three [DecidableEq α] (h : Alternating M N)
       exact this
     have htj : M.tail j = true := by
       rw [hdir, hti]; rfl
-    rw [if_pos hs, hrot, hs]
+    rw [ite_eq_left hs, hrot, hs]
     have h1 : M.rot N i = j := by
-      unfold rot; rw [if_neg (by rw [hti]; exact Bool.noConfusion), hN]
+      unfold rot; rw [ite_eq_right (by rw [hti]; exact Bool.noConfusion), hN]
     have h2 : M.rot N j = M.edge j := by
-      unfold rot; rw [if_pos htj]
+      unfold rot; rw [ite_eq_left htj]
     rw [h1, h2]
   · -- the step lands on `j`; continue `j → i → M.edge i`
     have htj : M.tail j = false := by
@@ -1422,12 +1425,12 @@ theorem rot_contract_eq_rot_three [DecidableEq α] (h : Alternating M N)
         rw [hdir] at htj
         exact Bool.noConfusion htj
       · rfl
-    rw [if_neg (fun hxi => hij (hxi.symm.trans hs)), if_pos hs,
+    rw [ite_eq_right (fun hxi => hij (hxi.symm.trans hs)), ite_eq_left hs,
       hrot, hs]
     have h1 : M.rot N j = i := by
-      unfold rot; rw [if_neg (by rw [htj]; exact Bool.noConfusion), hNj]
+      unfold rot; rw [ite_eq_right (by rw [htj]; exact Bool.noConfusion), hNj]
     have h2 : M.rot N i = M.edge i := by
-      unfold rot; rw [if_pos hti]
+      unfold rot; rw [ite_eq_left hti]
     rw [h1, h2]
 
 /-! ### The converse: the contraction loses no orbits
@@ -1457,8 +1460,8 @@ theorem sameCycle_pickSurvivor [DecidableEq α] (h : Alternating M N)
   have hNj : N.edge j = i := by rw [← hN, N.edge_invol]
   unfold pickSurvivor
   by_cases ha : a ≠ i ∧ a ≠ j
-  · rw [dif_pos ha]
-  · rw [dif_neg ha]
+  · rw [dite_eq_left ha]
+  · rw [dite_eq_right ha]
     have ha' : a = i ∨ a = j := by
       by_contra hc
       exact ha ⟨fun hx => hc (Or.inl hx), fun hx => hc (Or.inr hx)⟩
@@ -1473,7 +1476,7 @@ theorem sameCycle_pickSurvivor [DecidableEq α] (h : Alternating M N)
 
 /-- **Survivors joined by the original rotation are joined by the
 contracted one.** -/
-theorem sameCycle_contract_of_sameCycle [Fintype α] [DecidableEq α]
+theorem sameCycle_contract_of_sameCycle [Finite α] [DecidableEq α]
     (h : Alternating M N)
     {i j : α} (hij : i ≠ j) (hN : N.edge i = j)
     (hopen : M.edge i ≠ j) {x y : Surviving i j}
@@ -1481,6 +1484,8 @@ theorem sameCycle_contract_of_sameCycle [Fintype α] [DecidableEq α]
     ((M.contract hij hopen (tail_ne_of_alternating h hN)).rotPerm
         (N.restrict hN)
         (alternating_contract h hij hN hopen)).SameCycle x y := by
+  classical
+  let := Fintype.ofFinite α
   obtain ⟨n, hn⟩ := hxy.exists_nat_pow_eq
   clear hxy
   induction n using Nat.strong_induction_on generalizing x with
@@ -1573,8 +1578,8 @@ noncomputable def orbitsEquivContract [Fintype α] [DecidableEq α]
     refine Quotient.ind (fun x => ?_)
     have hpick : M.pickSurvivor hopen x.val = x := by
       unfold pickSurvivor
-      rw [dif_pos x.prop]
-    show Quotient.mk _ (M.pickSurvivor hopen x.val) = Quotient.mk _ x
+      rw [dite_eq_left x.prop]
+    change Quotient.mk _ (M.pickSurvivor hopen x.val) = Quotient.mk _ x
     rw [hpick]
   right_inv := by
     refine Quotient.ind (fun a => ?_)
@@ -1611,12 +1616,12 @@ theorem rot_closed {i j : α}
   constructor
   · unfold rot
     by_cases hb : M.tail i = true
-    · rw [if_pos hb, hM]
-    · rw [if_neg hb, hN]
+    · rw [ite_eq_left hb, hM]
+    · rw [ite_eq_right hb, hN]
   · unfold rot
     by_cases hb : M.tail j = true
-    · rw [if_pos hb, hMj]
-    · rw [if_neg hb, hNj]
+    · rw [ite_eq_left hb, hMj]
+    · rw [ite_eq_right hb, hNj]
 
 /-- Nothing outside the identified pair meets it. -/
 theorem rot_survivor_closed {i j : α} (hM : M.edge i = j)
@@ -1634,9 +1639,9 @@ theorem rot_survivor_closed {i j : α} (hM : M.edge i = j)
         (congrArg P.edge hx)).trans hPj
   unfold rot
   by_cases hb : M.tail x.val = true
-  · rw [if_pos hb]
+  · rw [ite_eq_left hb]
     exact key M hM hMj
-  · rw [if_neg hb]
+  · rw [ite_eq_right hb]
     exact key N hN hNj
 
 /-- **The restricted rotation is the rotation restricted.** -/
@@ -1644,19 +1649,19 @@ theorem rotPerm_restrict (h : Alternating M N) {i j : α}
     (hM : M.edge i = j) (hN : N.edge i = j) (x : Surviving i j) :
     (((M.restrict hM).rotPerm (N.restrict hN)
         (fun z => h z.val)) x).val = M.rot N x.val := by
-  show ((M.restrict hM).rot (N.restrict hN) x).val = _
+  change ((M.restrict hM).rot (N.restrict hN) x).val = _
   unfold rot
   by_cases hb : M.tail x.val = true
-  · rw [if_pos (show (M.restrict hM).tail x = true from hb),
-      if_pos hb]
+  · rw [ite_eq_left (show (M.restrict hM).tail x = true from hb),
+      ite_eq_left hb]
     rfl
-  · rw [if_neg (show ¬ ((M.restrict hM).tail x = true) from hb),
-      if_neg hb]
+  · rw [ite_eq_right (show ¬ ((M.restrict hM).tail x = true) from hb),
+      ite_eq_right hb]
     rfl
 
 /-- The identified pair is invariant under the rotation, and so is
 its complement. -/
-theorem rot_surviving_iff [DecidableEq α] (h : Alternating M N)
+theorem rot_surviving_iff (h : Alternating M N)
     {i j : α} (hM : M.edge i = j) (hN : N.edge i = j) (x : α) :
     ((M.rotPerm N h) x ≠ i ∧ (M.rotPerm N h) x ≠ j)
       ↔ (x ≠ i ∧ x ≠ j) := by
@@ -1664,9 +1669,9 @@ theorem rot_surviving_iff [DecidableEq α] (h : Alternating M N)
   constructor
   · rintro ⟨h1, h2⟩
     refine ⟨fun hx => h2 ?_, fun hx => h1 ?_⟩
-    · show M.rot N x = j
+    · change M.rot N x = j
       rw [hx]; exact hi
-    · show M.rot N x = i
+    · change M.rot N x = i
       rw [hx]; exact hj
   · intro hx
     exact rot_survivor_closed hM hN ⟨x, hx⟩
@@ -1698,7 +1703,7 @@ theorem orbitCount_pair [Fintype α] [DecidableEq α]
   · refine ⟨1, ?_⟩
     rw [zpow_one]
     refine Subtype.ext ?_
-    show M.rot N z.val = i
+    change M.rot N z.val = i
     rw [hz]
     exact hj
 
@@ -1749,9 +1754,9 @@ theorem orbitCount_rotPerm_congr [Fintype α] [DecidableEq α]
     intro P₁ Q₁ P₂ Q₂ _ k₂ hP hQ a
     unfold rot
     by_cases ha : P₁.tail a = true
-    · rw [if_pos ha, show P₁.edge a = P₂.edge a from by rw [hP]]
+    · rw [ite_eq_left ha, show P₁.edge a = P₂.edge a from by rw [hP]]
       exact sameCycle_rot_edge k₂ a
-    · rw [if_neg ha, show Q₁.edge a = Q₂.edge a from by rw [hQ]]
+    · rw [ite_eq_right ha, show Q₁.edge a = Q₂.edge a from by rw [hQ]]
       exact sameCycle_rot_edge' k₂ a
   refine orbitCount_eq_of_orbitsEquiv ?_
   refine
@@ -1815,11 +1820,11 @@ theorem orbitCount_map [Fintype α] [DecidableEq α] {β : Type}
   have hconj : (M.map e).rotPerm (N.map e) h'
       = e.permCongr (M.rotPerm N h) := by
     refine Equiv.ext (fun b => ?_)
-    show (M.map e).rot (N.map e) b = e (M.rot N (e.symm b))
+    change (M.map e).rot (N.map e) b = e (M.rot N (e.symm b))
     unfold rot map
     by_cases hb : M.tail (e.symm b) = true
-    · rw [if_pos hb, if_pos hb]
-    · rw [if_neg hb, if_neg hb]
+    · rw [ite_eq_left hb, ite_eq_left hb]
+    · rw [ite_eq_right hb, ite_eq_right hb]
   rw [hconj, orbitCount_permCongr]
 
 /-- The transported matching's partner map, conjugated by the
@@ -1846,9 +1851,9 @@ theorem contractEdge_of_closed [DecidableEq α] (M : DirMatching α)
     (hx' : x ≠ j) : M.contractEdge i j x = M.edge x := by
   have hMj : M.edge j = i := by rw [← hM, M.edge_invol]
   unfold contractEdge
-  rw [if_neg (fun hc => hx' (((M.edge_invol x).symm.trans
+  rw [ite_eq_right (fun hc => hx' (((M.edge_invol x).symm.trans
       (congrArg M.edge hc)).trans hM)),
-    if_neg (fun hc => hx (((M.edge_invol x).symm.trans
+    ite_eq_right (fun hc => hx (((M.edge_invol x).symm.trans
       (congrArg M.edge hc)).trans hMj))]
 
 /-! ### The component count of a union
@@ -1879,7 +1884,7 @@ theorem unionCount_eq_orbitCount [Fintype α] [DecidableEq α]
     {M N M' N' : DirMatching α} (h' : Alternating M' N')
     (heM : M'.edge = M.edge) (heN : N'.edge = N.edge) :
     unionCount M N = orbitCount (M'.rotPerm N' h') := by
-  show (letI := Classical.decEq α; orbitCount _) = _
+  change (letI := Classical.decEq α; orbitCount _) = _
   rw [orbitCount_congr_decEq (Classical.decEq α) (inferInstance)]
   refine orbitCount_rotPerm_congr _ h' ?_ ?_
   · rw [(exists_alternating_repair M N).choose_spec.choose_spec.1,
@@ -2018,9 +2023,9 @@ private def interfaceRepair (e : γ ≃ δ)
   tail := Sum.elim (fun a => !A₁.tail a) (fun b => !B₁.tail (e.symm b))
   tail_flip x := by
     rcases x with a | b
-    · show (!B₁.tail (e.symm (e a))) = !(!A₁.tail a)
+    · change (!B₁.tail (e.symm (e a))) = !(!A₁.tail a)
       rw [e.symm_apply_apply, h a, Bool.not_not]
-    · show (!A₁.tail (e.symm b)) = !(!B₁.tail (e.symm b))
+    · change (!A₁.tail (e.symm b)) = !(!B₁.tail (e.symm b))
       rw [h (e.symm b), Bool.not_not]
 
 private theorem alternating_sumRepair (e : γ ≃ δ)
@@ -2046,10 +2051,10 @@ private theorem sameCycle_inl (e : γ ≃ δ)
   by_cases ha : A₁.tail a = true
   · refine ⟨1, ?_⟩
     rw [zpow_one, hstep, show A₁.rot B₁ a = A₁.edge a from by
-      rw [rot, if_pos ha]]
-    show (if A₁.tail a = true then (Sum.inl (A₁.edge a) : γ ⊕ δ)
+      rw [rot, ite_eq_left ha]]
+    change (if A₁.tail a = true then (Sum.inl (A₁.edge a) : γ ⊕ δ)
       else Sum.inr (e a)) = Sum.inl (A₁.edge a)
-    rw [if_pos ha]
+    rw [ite_eq_left ha]
   · have ha' : A₁.tail a = false := by
       cases hb : A₁.tail a
       · rfl
@@ -2060,28 +2065,28 @@ private theorem sameCycle_inl (e : γ ≃ δ)
     refine ⟨3, ?_⟩
     have h1 : π (Sum.inl a) = Sum.inr (e a) := by
       rw [hstep]
-      show (if A₁.tail a = true then (Sum.inl (A₁.edge a) : γ ⊕ δ)
+      change (if A₁.tail a = true then (Sum.inl (A₁.edge a) : γ ⊕ δ)
         else Sum.inr (e a)) = Sum.inr (e a)
-      rw [if_neg ha]
+      rw [ite_eq_right ha]
     have h2 : π (Sum.inr (e a)) = Sum.inr (e (B₁.edge a)) := by
       rw [hstep]
-      show (if B₁.tail (e.symm (e a)) = true then
+      change (if B₁.tail (e.symm (e a)) = true then
           (Sum.inr (e (B₁.edge (e.symm (e a)))) : γ ⊕ δ)
         else Sum.inl (e.symm (e a))) = Sum.inr (e (B₁.edge a))
-      rw [e.symm_apply_apply, if_pos hb]
+      rw [e.symm_apply_apply, ite_eq_left hb]
     have h3 : π (Sum.inr (e (B₁.edge a))) = Sum.inl (B₁.edge a) := by
       rw [hstep]
-      show (if B₁.tail (e.symm (e (B₁.edge a))) = true then
+      change (if B₁.tail (e.symm (e (B₁.edge a))) = true then
           (Sum.inr (e (B₁.edge (e.symm (e (B₁.edge a)))))
             : γ ⊕ δ)
         else Sum.inl (e.symm (e (B₁.edge a))))
         = Sum.inl (B₁.edge a)
-      rw [e.symm_apply_apply, if_neg (by rw [hb2]; exact Bool.noConfusion)]
+      rw [e.symm_apply_apply, ite_eq_right (by rw [hb2]; exact Bool.noConfusion)]
     have : (π ^ (3 : ℕ)) (Sum.inl a) = Sum.inl (B₁.edge a) := by
-      show π (π (π (Sum.inl a))) = Sum.inl (B₁.edge a)
+      change π (π (π (Sum.inl a))) = Sum.inl (B₁.edge a)
       rw [h1, h2, h3]
     rw [show ((3 : ℤ)) = ((3 : ℕ) : ℤ) from rfl, zpow_natCast, this,
-      rot, if_neg ha]
+      rot, ite_eq_right ha]
 
 /-- The two-copy rotation projects to the one-copy one. -/
 private theorem sameCycle_proj (e : γ ≃ δ)
@@ -2099,17 +2104,17 @@ private theorem sameCycle_proj (e : γ ≃ δ)
   · by_cases ha : A₁.tail a = true
     · refine ⟨1, ?_⟩
       rw [zpow_one, hstep]
-      show A₁.rot B₁ a = Sum.elim id (fun b => e.symm b)
+      change A₁.rot B₁ a = Sum.elim id (fun b => e.symm b)
         (if A₁.tail a = true then (Sum.inl (A₁.edge a) : γ ⊕ δ)
           else Sum.inr (e a))
-      rw [if_pos ha, rot, if_pos ha]
+      rw [ite_eq_left ha, rot, ite_eq_left ha]
       rfl
     · refine ⟨0, ?_⟩
       rw [zpow_zero, hstep]
-      show a = Sum.elim id (fun b => e.symm b)
+      change a = Sum.elim id (fun b => e.symm b)
         (if A₁.tail a = true then (Sum.inl (A₁.edge a) : γ ⊕ δ)
           else Sum.inr (e a))
-      rw [if_neg ha]
+      rw [ite_eq_right ha]
       exact (e.symm_apply_apply a).symm
   · by_cases hb : B₁.tail (e.symm b) = true
     · have ha : A₁.tail (e.symm b) ≠ true := by
@@ -2122,19 +2127,19 @@ private theorem sameCycle_proj (e : γ ≃ δ)
         exact Bool.noConfusion
       refine ⟨1, ?_⟩
       rw [zpow_one, hstep]
-      show A₁.rot B₁ (e.symm b) = Sum.elim id (fun c => e.symm c)
+      change A₁.rot B₁ (e.symm b) = Sum.elim id (fun c => e.symm c)
         (if B₁.tail (e.symm b) = true then
             (Sum.inr (e (B₁.edge (e.symm b))) : γ ⊕ δ)
           else Sum.inl (e.symm b))
-      rw [if_pos hb, rot, if_neg ha]
+      rw [ite_eq_left hb, rot, ite_eq_right ha]
       exact (e.symm_apply_apply _).symm
     · refine ⟨0, ?_⟩
       rw [zpow_zero, hstep]
-      show e.symm b = Sum.elim id (fun c => e.symm c)
+      change e.symm b = Sum.elim id (fun c => e.symm c)
         (if B₁.tail (e.symm b) = true then
             (Sum.inr (e (B₁.edge (e.symm b))) : γ ⊕ δ)
           else Sum.inl (e.symm b))
-      rw [if_neg hb]
+      rw [ite_eq_right hb]
       rfl
 
 /-- The two copies of a label lie on a common component. -/
@@ -2155,24 +2160,24 @@ private theorem sameCycle_inl_proj (e : γ ≃ δ)
           (interfaceRepair e h) (alternating_sumRepair e h))
           (Sum.inr b) = Sum.inl (e.symm b) := by
         rw [hstep]
-        show (if B₁.tail (e.symm b) = true then
+        change (if B₁.tail (e.symm b) = true then
             (Sum.inr (e (B₁.edge (e.symm b))) : γ ⊕ δ)
           else Sum.inl (e.symm b)) = Sum.inl (e.symm b)
-        rw [if_neg (show ¬ (B₁.tail (e.symm b) = true) from by
+        rw [ite_eq_right (show ¬ (B₁.tail (e.symm b) = true) from by
           rw [h (e.symm b), ha]; decide)]
       refine Equiv.Perm.SameCycle.symm ?_
       exact ⟨1, by rw [zpow_one]; exact hkey⟩
     · refine ⟨1, ?_⟩
       rw [zpow_one, hstep]
-      show (if A₁.tail (e.symm b) = true then
+      change (if A₁.tail (e.symm b) = true then
           (Sum.inl (A₁.edge (e.symm b)) : γ ⊕ δ)
         else Sum.inr (e (e.symm b))) = Sum.inr b
-      rw [if_neg ha, e.apply_symm_apply]
+      rw [ite_eq_right ha, e.apply_symm_apply]
 
 /-- **The union on two copies counts what the union on one copy
 counts.** -/
 theorem unionCount_sumMatching
-    [Fintype γ] [DecidableEq γ] [Fintype δ] [DecidableEq δ] (e : γ ≃ δ)
+    [Fintype γ] [Fintype δ] (e : γ ≃ δ)
     (M₁ : DirMatching γ)
     (M₂ : DirMatching δ) :
     unionCount (sumMatching M₁ M₂) (interfaceEquivMatching e)
@@ -2186,9 +2191,9 @@ theorem unionCount_sumMatching
     rcases x with a | b
     · exact congrArg Sum.inl (congrFun hAe a)
     · refine congrArg Sum.inr ?_
-      show e (B₁.edge (e.symm b)) = M₂.edge b
+      change e (B₁.edge (e.symm b)) = M₂.edge b
       rw [congrFun hBe (e.symm b)]
-      show e (e.symm (M₂.edge (e (e.symm b)))) = M₂.edge b
+      change e (e.symm (M₂.edge (e (e.symm b)))) = M₂.edge b
       rw [e.apply_symm_apply, e.apply_symm_apply]
   rw [unionCount_eq_orbitCount (M := sumMatching M₁ M₂)
       (N := interfaceEquivMatching e)

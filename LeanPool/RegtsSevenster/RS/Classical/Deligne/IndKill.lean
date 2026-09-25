@@ -34,18 +34,21 @@ private theorem ma_smul_apply {G : Type*} (r : ℂ)
 /-- The trace of left multiplication on a group algebra is the
 group order times the identity coefficient. -/
 theorem trace_mulLeft_monoidAlgebra {G : Type*} [Group G]
-    [Fintype G] [DecidableEq G] (x : MonoidAlgebra ℂ G) :
+    [Fintype G] (x : MonoidAlgebra ℂ G) :
     LinearMap.trace ℂ (MonoidAlgebra ℂ G)
       (LinearMap.mulLeft ℂ x) =
-      (Fintype.card G : ℂ) * x.coeff 1 :=
-  trace_mulLeft x
+      (Fintype.card G : ℂ) * x.coeff 1 := by
+  classical
+  exact
+    trace_mulLeft x
 
 /-- An idempotent of a finite group algebra over ℂ with vanishing
 identity coefficient is zero. -/
 theorem eq_zero_of_idem_of_coeff_one {G : Type*} [Group G]
-    [Fintype G] [DecidableEq G] {x : MonoidAlgebra ℂ G}
+    [Finite G] {x : MonoidAlgebra ℂ G}
     (hidem : x * x = x) (h1 : x.coeff 1 = 0) : x = 0 := by
   classical
+  let := Fintype.ofFinite G
   set L := LinearMap.mulLeft ℂ x with hLdef
   have hLL : L ∘ₗ L = L := by
     rw [hLdef, ← LinearMap.mulLeft_mul, hidem]
@@ -87,7 +90,7 @@ theorem shape_e_coeff_conj (P : SchurPackage.{u}) {n : ℕ}
       ((permCast lam.prop.symm g)⁻¹ : _)
       (permCast lam.prop.symm k)
     simpa [inv_inv] using this
-  show (Shape.e P lam).coeff (g⁻¹ * k * g) =
+  change (Shape.e P lam).coeff (g⁻¹ * k * g) =
     (Shape.e P lam).coeff k
   rw [h1, h2, hchar]
 
@@ -131,13 +134,13 @@ theorem blockImages_comm {a b : ℕ} (x : SymGroupAlgebra a)
       have hL : MonoidAlgebra.mapDomainAlgHom ℂ ℂ
           (blockEmbedFstHom a b) (MonoidAlgebra.single σ 1) =
           MonoidAlgebra.single (blockEmbed σ 1) (1 : ℂ) := by
-        show MonoidAlgebra.mapDomain _
+        change MonoidAlgebra.mapDomain _
           (MonoidAlgebra.single σ 1) = _
         exact MonoidAlgebra.mapDomain_single
       have hR : MonoidAlgebra.mapDomainAlgHom ℂ ℂ
           (blockEmbedSndHom a b) (MonoidAlgebra.single τ 1) =
           MonoidAlgebra.single (blockEmbed 1 τ) (1 : ℂ) := by
-        show MonoidAlgebra.mapDomain _
+        change MonoidAlgebra.mapDomain _
           (MonoidAlgebra.single τ 1) = _
         exact MonoidAlgebra.mapDomain_single
       simp only [MonoidAlgebra.of_apply]
@@ -231,8 +234,8 @@ theorem blockAlgEmbed_apply_blockEmbed {a b : ℕ}
           intro he
           exact hcase (blockEmbed_inj he)
         rcases not_and_or.mp hcase with hσ | hτ
-        · simp [MonoidAlgebra.coeff_single_apply, hne, hσ]
-        · simp [MonoidAlgebra.coeff_single_apply, hne, hτ]
+        · simp [Finsupp.single_apply, hne, hσ]
+        · simp [Finsupp.single_apply, hne, hτ]
     | add y y' hy hy' =>
       rw [blockAlgEmbed_add_snd, ma_add_apply, hy, hy',
         ma_add_apply, mul_add]
@@ -275,7 +278,7 @@ theorem blockAlgEmbed_apply_eq_zero {a b : ℕ}
 
 /-- Convolution at the identity. -/
 theorem mul_apply_one {G : Type*} [Group G] [Fintype G]
-    [DecidableEq G] (x y : MonoidAlgebra ℂ G) :
+    (x y : MonoidAlgebra ℂ G) :
     (x * y).coeff 1 = ∑ g : G, x.coeff g * y.coeff g⁻¹ := by
   classical
   rw [MonoidAlgebra.coeff_mul_apply_left]
@@ -301,7 +304,7 @@ theorem shape_e_mul_block_apply_one (P : SchurPackage.{u})
         (Shape.e P lam).coeff g⁻¹ *
           (blockAlgEmbed (Shape.e P μ) (Shape.e P ν)).coeff g :=
     Fintype.sum_equiv (Equiv.inv _) _ _ fun g => by
-      show (Shape.e P lam).coeff g *
+      change (Shape.e P lam).coeff g *
           (blockAlgEmbed (Shape.e P μ) (Shape.e P ν)).coeff g⁻¹ =
         (Shape.e P lam).coeff g⁻¹⁻¹ *
           (blockAlgEmbed (Shape.e P μ) (Shape.e P ν)).coeff g⁻¹

@@ -46,13 +46,13 @@ noncomputable def fibreFunctor
   map_id X := by
     refine SuperCommAlgebra.Mod.Hom.ext ?_ ?_ <;>
       refine LinearMap.ext fun m => ?_ <;>
-      · show m ≫ (freeModMap A (𝟙 X)).hom = m
+      · change m ≫ (freeModMap A (𝟙 X)).hom = m
         erw [show (freeModMap A (𝟙 X)).hom = 𝟙 (fibreObj A X) from
           MonoidalCategory.whiskerLeft_id A X, Category.comp_id]
   map_comp {X Y Z} f g := by
     refine SuperCommAlgebra.Mod.Hom.ext ?_ ?_ <;>
       refine LinearMap.ext fun m => ?_ <;>
-      · show m ≫ (freeModMap A (f ≫ g)).hom =
+      · change m ≫ (freeModMap A (f ≫ g)).hom =
           (m ≫ (freeModMap A f).hom) ≫ (freeModMap A g).hom
         erw [show (freeModMap A (f ≫ g)).hom =
             (freeModMap A f).hom ≫ (freeModMap A g).hom from

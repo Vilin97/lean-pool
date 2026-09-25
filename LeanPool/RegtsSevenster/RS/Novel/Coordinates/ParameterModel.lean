@@ -42,7 +42,7 @@ theorem stdToOmega_bmc_perm_all :
           (σ : Fin n ≃ Fin n)) =
         modelPermMap σ ≫ stdToOmega f P e n
   | 0, σ => by
-    letI := P.braided
+    let := P.braided
     rw [show (σ : Fin 0 ≃ Fin 0) =
         _root_.Equiv.refl (Fin 0) from
       Subsingleton.elim _ _]
@@ -51,7 +51,7 @@ theorem stdToOmega_bmc_perm_all :
       bundleMapClass_refl f 0]
     rw [show P.ω.map (𝟙 (SkeinObj.mk 0 : SkeinObj f)) =
         𝟙 (P.ω.obj (SkeinObj.mk 0)) from P.ω.map_id _]
-    show stdToOmega f P e 0 ≫ 𝟙 _ =
+    change stdToOmega f P e 0 ≫ 𝟙 _ =
       𝟙 _ ≫ stdToOmega f P e 0
     rw [Category.comp_id, Category.id_comp]
   | n + 1, σ => stdToOmega_bmc_perm f P e σ
@@ -82,7 +82,7 @@ theorem parameter_model (W : ClosedFragment)
               SuperVect.Hom _ _).evenMap
               (modelStarVec f P e'
                 (degList (starAssignEnum W)))))) := by
-  letI := P.braided
+  let := P.braided
   rw [parameter_star_factor f P W]
   refine congrArg (fun z => circleVal f ^ W.circles *
     omegaFun f P (bundleCapClass f (edgeCount W)) z) ?_

@@ -49,7 +49,7 @@ variable {R : ℕ} (f : EdgeRankParameter R)
 the identity. -/
 theorem skein_leftUnitor_unit_inv :
     (λ_ (𝟙_ (SkeinObj f))).inv = 𝟙 (𝟙_ (SkeinObj f)) := by
-  show bundleMapClass f (finCongr _) = _
+  change bundleMapClass f (finCongr _) = _
   rw [show (finCongr (show (0 : ℕ) = 0 + 0 by omega) :
       Fin 0 ≃ Fin (0 + 0)) = _root_.Equiv.refl (Fin 0) from
     _root_.Equiv.ext (fun x => Fin.ext rfl)]
@@ -64,8 +64,8 @@ theorem omegaVec_comp {a b : ℕ}
     (q : (SkeinObj.mk a : SkeinObj f) ⟶ SkeinObj.mk b) :
     omegaVec f P (p ≫ q) =
       (P.ω.map q).evenMap (omegaVec f P p) := by
-  letI := P.braided
-  show ((ε P.ω ≫ P.ω.map (p ≫ q) : SuperVect.tensorUnit ⟶
+  let := P.braided
+  change ((ε P.ω ≫ P.ω.map (p ≫ q) : SuperVect.tensorUnit ⟶
       P.ω.obj (SkeinObj.mk b)) :
     SuperVect.Hom _ _).evenMap 1 = _
   rw [P.ω.map_comp]
@@ -75,8 +75,8 @@ theorem omegaVec_comp {a b : ℕ}
 theorem omegaVec_smul {a : ℕ} (r : ℂ)
     (p : (SkeinObj.mk 0 : SkeinObj f) ⟶ SkeinObj.mk a) :
     omegaVec f P (r • p) = r • omegaVec f P p := by
-  letI := P.braided
-  show ((ε P.ω ≫ P.ω.map (r • p) : SuperVect.tensorUnit ⟶
+  let := P.braided
+  change ((ε P.ω ≫ P.ω.map (r • p) : SuperVect.tensorUnit ⟶
       P.ω.obj (SkeinObj.mk a)) :
     SuperVect.Hom _ _).evenMap 1 = _
   rw [show P.ω.map (r • p) = r • P.ω.map p from
@@ -93,8 +93,8 @@ theorem tensorHom_evenPair {V₁ V₂ W₁ W₂ : SuperVect}
       SuperVect.Hom _ _).evenMap (evenPair v w) =
       evenPair ((g : SuperVect.Hom _ _).evenMap v)
         ((h : SuperVect.Hom _ _).evenMap w) := by
-  show (SuperVect.tensorHom g h).evenMap (evenPair v w) = _
-  show ((TensorProduct.map (g : SuperVect.Hom _ _).evenMap
+  change (SuperVect.tensorHom g h).evenMap (evenPair v w) = _
+  change ((TensorProduct.map (g : SuperVect.Hom _ _).evenMap
         (h : SuperVect.Hom _ _).evenMap) (v ⊗ₜ[ℂ] w),
     (TensorProduct.map (g : SuperVect.Hom _ _).oddMap
         (h : SuperVect.Hom _ _).oddMap) 0) = _
@@ -109,7 +109,7 @@ theorem superVect_leftUnitor_inv_one :
           SuperVect.tensorUnit) :
       SuperVect.Hom _ _).evenMap (1 : ℂ) =
       evenPair (1 : ℂ) (1 : ℂ) := by
-  show (LinearMap.inl ℂ _ _ ∘ₗ
+  change (LinearMap.inl ℂ _ _ ∘ₗ
     (TensorProduct.lid ℂ ℂ).symm.toLinearMap) 1 = _
   rw [LinearMap.comp_apply]
   rw [show (TensorProduct.lid ℂ ℂ).symm.toLinearMap (1 : ℂ) =
@@ -142,7 +142,7 @@ theorem omegaVec_tensor {a b : ℕ}
         P.ω.obj (SkeinObj.mk a ⊗ SkeinObj.mk b)) =>
       (z : SuperVect.Hom _ _).evenMap (1 : ℂ)) habs
   refine Eq.trans hev ?_
-  show ((μ P.ω (SkeinObj.mk a) (SkeinObj.mk b)) :
+  change ((μ P.ω (SkeinObj.mk a) (SkeinObj.mk b)) :
       SuperVect.Hom _ _).evenMap
     ((((ε P.ω ≫ P.ω.map p) ⊗ₘ (ε P.ω ≫ P.ω.map q) :
         SuperVect.tensorObj SuperVect.tensorUnit

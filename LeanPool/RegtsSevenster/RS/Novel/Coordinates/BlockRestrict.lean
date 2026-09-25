@@ -49,7 +49,7 @@ theorem blockSigmaEquiv_strictMono :
     match v with
     | ⟨0, hv⟩ =>
       intro j₁ j₂ hj
-      show blockSigmaEquiv (d :: ds) ⟨⟨0, hv⟩, j₁⟩ <
+      change blockSigmaEquiv (d :: ds) ⟨⟨0, hv⟩, j₁⟩ <
         blockSigmaEquiv (d :: ds) ⟨⟨0, hv⟩, j₂⟩
       rw [Fin.lt_def]
       have h1 : (blockSigmaEquiv (d :: ds)
@@ -65,7 +65,7 @@ theorem blockSigmaEquiv_strictMono :
         simp only [List.length_cons] at h
         omega
       have hrec := blockSigmaEquiv_strictMono ds ⟨w, hw⟩ hj
-      show blockSigmaEquiv (d :: ds) ⟨⟨w + 1, hv⟩, j₁⟩ <
+      change blockSigmaEquiv (d :: ds) ⟨⟨w + 1, hv⟩, j₁⟩ <
         blockSigmaEquiv (d :: ds) ⟨⟨w + 1, hv⟩, j₂⟩
       rw [Fin.lt_def]
       have h1 : (blockSigmaEquiv (d :: ds)

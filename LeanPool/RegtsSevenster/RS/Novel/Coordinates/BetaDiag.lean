@@ -46,7 +46,7 @@ theorem eq_peelColour_of (m : ℕ)
   subst hspec
   apply Eq.symm
   funext j
-  show c' (finCongr (capPeelArity m) ((capPeelPerm m)
+  change c' (finCongr (capPeelArity m) ((capPeelPerm m)
     ((capPeelPerm m)⁻¹
       ((finCongr (capPeelArity m)).symm j)))) = c' j
   rw [show (capPeelPerm m) ((capPeelPerm m)⁻¹
@@ -66,7 +66,7 @@ theorem peelColour_isEven (m : ℕ)
       (c ∘ ⇑((capPeelPerm m)⁻¹)) ∘
         ⇑(finCongr (capPeelArity m).symm) := by
     funext j
-    show c ((capPeelPerm m)⁻¹
+    change c ((capPeelPerm m)⁻¹
       ((finCongr (capPeelArity m)).symm j)) = _
     rfl
   rw [h2]
@@ -89,9 +89,9 @@ theorem peelColour_low (m : ℕ)
     peelColour m c j = c ⟨j.val, by omega⟩ := by
   rw [peelColour_apply]
   refine congrArg c (Fin.ext ?_)
-  show capPeelInv m j.val = j.val
+  change capPeelInv m j.val = j.val
   unfold capPeelInv
-  rw [if_pos h]
+  rw [ite_eq_left h]
 
 /-- The second peeled-pair slot carries the last slot. -/
 theorem peelColour_pairSnd (m : ℕ)
@@ -100,9 +100,9 @@ theorem peelColour_pairSnd (m : ℕ)
       c ⟨(m + 1) + m, by omega⟩ := by
   rw [peelColour_apply]
   refine congrArg c (Fin.ext ?_)
-  show capPeelInv m ((m + m) + 1) = (m + 1) + m
+  change capPeelInv m ((m + m) + 1) = (m + 1) + m
   unfold capPeelInv
-  rw [if_neg (by omega), if_neg (by omega), if_neg (by omega)]
+  rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega)]
   omega
 
 /-- **The diagonal cap pairing**: the colour-side cap value. -/

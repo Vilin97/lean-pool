@@ -124,7 +124,7 @@ private theorem freeCollapse_concat_collect
         freeModShuffle A (tensorPow D V a) (tensorPow D V b) ≫
         (A ◁ (tensorPowConcat V a b).hom)
   | 0 => by
-      show (ρ_ (tensorPow D (A ⊗ V) a)).hom ≫ freeCollapse A V a =
+      change (ρ_ (tensorPow D (A ⊗ V) a)).hom ≫ freeCollapse A V a =
         (freeCollapse A V a ⊗ₘ
             ((λ_ (𝟙_ D)).inv ≫ (η[A] ▷ 𝟙_ D))) ≫
           freeModShuffle A (tensorPow D V a) (𝟙_ D) ≫
@@ -154,7 +154,7 @@ private theorem freeCollapse_concat_collect
               freeModShuffle A (tensorPow D V b) V) := by
         rw [← MonoidalCategory.id_tensorHom, tensorHom_comp_tensorHom,
           Category.comp_id]
-      show ((α_ (tensorPow D (A ⊗ V) a)
+      change ((α_ (tensorPow D (A ⊗ V) a)
             (tensorPow D (A ⊗ V) b) (A ⊗ V)).inv ≫
           ((tensorPowConcat (A ⊗ V) a b).hom ▷ (A ⊗ V))) ≫
           ((freeCollapse A V (a + b) ▷ (A ⊗ V)) ≫
@@ -179,7 +179,7 @@ concatenated word is collapsing each part and multiplying the two
 heads. -/
 theorem freeCollapse_concat
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D]
-    (A : D) [MonObj A] [IsCommMonObj A]
+    (A : D) [MonObj A]
     (V : D) (a b : ℕ) :
     (tensorPowConcat (A ⊗ V) a b).hom ≫ freeCollapse A V (a + b) =
       (freeCollapse A V a ⊗ₘ freeCollapse A V b) ≫
@@ -237,7 +237,7 @@ private theorem freeWindow_legM
       tensorμ (A ⊗ A) V A V ≫ ((μ[A] ▷ A) ▷ (V ⊗ V)) := by
     rw [← MonoidalCategory.tensorHom_id μ[A] V, tensorμ_natural_left,
       MonoidalCategory.id_whiskerRight, MonoidalCategory.tensorHom_id]
-  show (((β_ (A ⊗ V) A).hom ≫ (α_ A A V).inv ≫ (μ[A] ▷ V)) ▷
+  change (((β_ (A ⊗ V) A).hom ≫ (α_ A A V).inv ≫ (μ[A] ▷ V)) ▷
       (A ⊗ V)) ≫ (tensorμ A V A V ≫ (μ[A] ▷ (V ⊗ V))) = _
   simp only [MonoidalCategory.comp_whiskerRight, Category.assoc]
   rw [reassoc_of% hleft]
@@ -255,7 +255,7 @@ private theorem freeWindow_legN
       tensorμ A V (A ⊗ A) V ≫ ((A ◁ μ[A]) ▷ (V ⊗ V)) := by
     rw [← MonoidalCategory.tensorHom_id μ[A] V, tensorμ_natural_right,
       MonoidalCategory.whiskerLeft_id, MonoidalCategory.tensorHom_id]
-  show ((α_ (A ⊗ V) A (A ⊗ V)).hom ≫
+  change ((α_ (A ⊗ V) A (A ⊗ V)).hom ≫
       ((A ⊗ V) ◁ ((α_ A A V).inv ≫ (μ[A] ▷ V)))) ≫
       (tensorμ A V A V ≫ (μ[A] ▷ (V ⊗ V))) = _
   simp only [MonoidalCategory.whiskerLeft_comp,
@@ -312,7 +312,7 @@ private theorem freeLeg_window
           ((A ⊗ tensorPow D V a) ◁ (L ≫ freeModShuffle A V V)) ≫
           freeModShuffle A (tensorPow D V a) (V ⊗ V) ≫
           (A ◁ (α_ (tensorPow D V a) V V).inv) := by
-    show (tensorPow D (A ⊗ V) a ◁ L) ≫
+    change (tensorPow D (A ⊗ V) a ◁ L) ≫
         (α_ (tensorPow D (A ⊗ V) a) (A ⊗ V) (A ⊗ V)).inv ≫
         ((((freeCollapse A V a ▷ (A ⊗ V)) ≫
             freeModShuffle A (tensorPow D V a) V) ▷ (A ⊗ V)) ≫
@@ -351,7 +351,7 @@ theorem freeCollapse_leg
       modPowLegN A (freeMod A V).X a b ≫
         powCast (freeMod A V).X hab ≫ freeCollapse A V n := by
   subst hab
-  simp only [powCast_rfl, Category.id_comp, modPowLegM, modPowLegN,
+  simp only [powCast_rfl,  modPowLegM, modPowLegN,
     Category.assoc]
   erw [Category.id_comp]
   change ((tensorPow D (A ⊗ V) a ◁ winLegM A (freeMod A V).X) ▷

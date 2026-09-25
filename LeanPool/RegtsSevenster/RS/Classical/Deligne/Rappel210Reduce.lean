@@ -53,11 +53,11 @@ theorem ShortExact_tensorLeft [Category.{v} D] [MonoidalCategory D] [Abelian D]
     (hS : S.ShortExact) (X : D) [HasLeftDual X]
     [HasRightDual X] :
     (S.map (tensorLeft X)).ShortExact := by
-  haveI := tensorLeftPreservesColimits X
-  haveI := tensorLeftPreservesLimits X
-  haveI : PreservesFiniteColimits (tensorLeft X) :=
+  have := tensorLeftPreservesColimits X
+  have := tensorLeftPreservesLimits X
+  have : PreservesFiniteColimits (tensorLeft X) :=
     PreservesColimitsOfSize.preservesFiniteColimits _
-  haveI : PreservesFiniteLimits (tensorLeft X) :=
+  have : PreservesFiniteLimits (tensorLeft X) :=
     PreservesLimitsOfSize.preservesFiniteLimits _
   exact hS.map_of_exact (tensorLeft X)
 
@@ -118,21 +118,21 @@ theorem unitForm_shortExact
     (hS : S.ShortExact) :
     (unitForm S).ShortExact := by
   have hT := ShortExact_tensorLeft hS ((S.X₃)ᘁ)
-  haveI hmf : Mono (((S.X₃)ᘁ) ◁ S.f) := hT.mono_f
-  haveI : Mono ((S.map (tensorLeft ((S.X₃)ᘁ))).f) := hT.mono_f
-  haveI hepig : Epi (((S.X₃)ᘁ) ◁ S.g) := hT.epi_g
+  have hmf : Mono (((S.X₃)ᘁ) ◁ S.f) := hT.mono_f
+  have : Mono ((S.map (tensorLeft ((S.X₃)ᘁ))).f) := hT.mono_f
+  have hepig : Epi (((S.X₃)ᘁ) ◁ S.g) := hT.epi_g
   have hw : (((S.X₃)ᘁ) ◁ S.f) ≫ (((S.X₃)ᘁ) ◁ S.g) = 0 := by
     rw [← MonoidalCategory.whiskerLeft_comp, S.zero,
       MonoidalPreadditive.whiskerLeft_zero]
   have hfker : IsLimit (KernelFork.ofι (((S.X₃)ᘁ) ◁ S.f) hw) :=
     hT.exact.fIsKernel
   have hmono : Mono (unitFormIn S) := by
-    haveI h1 : Mono (unitFormIn S ≫
+    have h1 : Mono (unitFormIn S ≫
         pullback.fst (((S.X₃)ᘁ) ◁ S.g) (unitName S.X₃)) := by
       rw [unitFormIn_fst]; exact hmf
     exact mono_of_mono (unitFormIn S)
       (pullback.fst (((S.X₃)ᘁ) ◁ S.g) (unitName S.X₃))
-  haveI : Mono ((unitForm S).f) := hmono
+  have : Mono ((unitForm S).f) := hmono
   have hker : IsLimit (KernelFork.ofι (unitForm S).f
       (unitForm S).zero) := by
     refine KernelFork.IsLimit.ofι' _ _ (fun {W} t ht => ?_)
@@ -171,10 +171,10 @@ theorem mono_rightAdjointMate [Category.{v} D] [MonoidalCategory D]
     [∀ W : D, (tensorLeft W).PreservesEpimorphisms]
     (f : X ⟶ Y) (hf : Epi f) :
     Mono (fᘁ) := by
-  haveI := hf
+  have := hf
   constructor
   intro W a b h
-  haveI : Epi (W ◁ f) := (tensorLeft W).map_epi f
+  have : Epi (W ◁ f) := (tensorLeft W).map_epi f
   have hslide : ∀ c : W ⟶ ((Yᘁ) : D),
       ((c ≫ fᘁ) ▷ X) ≫ ε_ X (Xᘁ) =
         (W ◁ f) ≫ (c ▷ Y) ≫ ε_ Y (Yᘁ) := by
@@ -397,7 +397,7 @@ noncomputable def freeModExtend [Category.{v} D] [MonoidalCategory D]
     (M : Mod D B) (q : V ⟶ M.X) : freeMod B V ⟶ M :=
   Mod.Hom.mk' ((B ◁ q) ≫ actLeft B M.X)
     (by
-      show ((α_ B B V).inv ≫ (μ[B] ▷ V)) ≫
+      change ((α_ B B V).inv ≫ (μ[B] ▷ V)) ≫
           ((B ◁ q) ≫ actLeft B M.X) =
         (B ◁ ((B ◁ q) ≫ actLeft B M.X)) ≫ actLeft B M.X
       have h1 : (μ[B] ▷ V) ≫ (B ◁ q) =
@@ -450,7 +450,7 @@ theorem freeSection_hom
     (B : D) [MonObj B]
     (cls : ((unitFormMid S)ᘁ) ⟶ B) :
     (freeSection S B cls).hom = freeSectionHom S B cls := by
-  show (B ◁ (pointSection S B cls ≫
+  change (B ◁ (pointSection S B cls ≫
         (β_ (unitFormMid S) B).hom)) ≫
       ((α_ B B (unitFormMid S)).inv ≫
         (μ[B] ▷ unitFormMid S)) =
@@ -714,7 +714,7 @@ theorem rappel210Section_splits
     rappel210Section S B cls ≫ freeModMap B S.g =
       𝟙 (freeMod B (S.X₃)) :=
   Mod.hom_ext _ _ (by
-    show ((B ◁ sectionPoint S B cls) ≫
+    change ((B ◁ sectionPoint S B cls) ≫
         ((α_ B B (S.X₂)).inv ≫ (μ[B] ▷ S.X₂))) ≫
         (B ◁ S.g) =
       𝟙 (B ⊗ S.X₃)

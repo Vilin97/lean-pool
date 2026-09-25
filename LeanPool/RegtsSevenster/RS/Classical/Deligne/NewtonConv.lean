@@ -48,7 +48,8 @@ the earlier ones by the recursion
 `(n + 1) · F_{n+1} = ∑_{i+j=n} P_i · F_j`, and division by the
 nonzero scalar `n + 1` closes the strong induction. -/
 theorem odeUnique_of_constEq (P F G : ℂ⟦X⟧)
-    (hF : (PowerSeries.derivative (R := ℂ)) F = P * F) (hG : (PowerSeries.derivative (R := ℂ)) G = P * G)
+    (hF : (PowerSeries.derivative (R := ℂ)) F = P * F) (hG : (PowerSeries.derivative (R :=
+        ℂ)) G = P * G)
     (h0 : constantCoeff F = constantCoeff G) : F = G := by
   ext n
   induction n using Nat.strong_induction_on with

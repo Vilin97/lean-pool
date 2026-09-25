@@ -86,7 +86,7 @@ identity. -/
 theorem skein_associator_collapse (n : ℕ) :
     (α_ (SkeinObj.mk n : SkeinObj f) (SkeinObj.mk 1)
       (SkeinObj.mk 1)).hom = 𝟙 (SkeinObj.mk (n + 2)) := by
-  show bundleMapClass f (finCongr _) = _
+  change bundleMapClass f (finCongr _) = _
   rw [show (finCongr (show n + 1 + 1 = n + (1 + 1) by omega) :
       Fin (n + 2) ≃ Fin (n + 2)) =
     _root_.Equiv.refl (Fin (n + 2)) from
@@ -98,7 +98,7 @@ the identity. -/
 theorem skein_associator_inv_collapse (n : ℕ) :
     (α_ (SkeinObj.mk n : SkeinObj f) (SkeinObj.mk 1)
       (SkeinObj.mk 1)).inv = 𝟙 (SkeinObj.mk (n + 2)) := by
-  show bundleMapClass f (finCongr _) = _
+  change bundleMapClass f (finCongr _) = _
   rw [show (finCongr (show n + (1 + 1) = n + 1 + 1 by omega) :
       Fin (n + 2) ≃ Fin (n + 2)) =
     _root_.Equiv.refl (Fin (n + 2)) from
@@ -123,15 +123,15 @@ theorem stdToOmega_powBraid :
   | 0, _, h => absurd h (by omega)
   | 1, _, h => absurd h (by omega)
   | n + 2, i, h => by
-    letI := P.braided
+    let := P.braided
     by_cases hi : i = n
     · -- ═══════ Top case ═══════
       rw [show skeinPowBraid f (n + 2) i h =
           (SkeinObj.mk n : SkeinObj f) ◁
             (β_ (SkeinObj.mk 1 : SkeinObj f)
-              (SkeinObj.mk 1)).hom from dif_pos hi]
+              (SkeinObj.mk 1)).hom from dite_eq_left hi]
       rw [show powBraid (stdSuperPair k ℓ) (n + 2) i h =
-          topBraid (stdSuperPair k ℓ) n from dif_pos hi]
+          topBraid (stdSuperPair k ℓ) n from dite_eq_left hi]
       have hcollapse :
           ((SkeinObj.mk n : SkeinObj f) ◁
             (β_ (SkeinObj.mk 1 : SkeinObj f)
@@ -159,11 +159,11 @@ theorem stdToOmega_powBraid :
       have hle : i + 2 ≤ n + 1 := by omega
       rw [show skeinPowBraid f (n + 2) i h =
           (skeinPowBraid f (n + 1) i hle) ▷ SkeinObj.mk 1 from
-        dif_neg hi]
+        dite_eq_right hi]
       rw [show powBraid (stdSuperPair k ℓ) (n + 2) i h =
           (powBraid (stdSuperPair k ℓ) (n + 1) i hle) ▷
-            stdSuperPair k ℓ from dif_neg hi]
-      show ((stdToOmega f P e (n + 1) ⊗ₘ e) ≫
+            stdSuperPair k ℓ from dite_eq_right hi]
+      change ((stdToOmega f P e (n + 1) ⊗ₘ e) ≫
           μ P.ω (SkeinObj.mk (n + 1)) (SkeinObj.mk 1)) ≫
         P.ω.map ((skeinPowBraid f (n + 1) i hle) ▷
           SkeinObj.mk 1) =

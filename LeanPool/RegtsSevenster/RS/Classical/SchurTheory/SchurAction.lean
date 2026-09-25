@@ -38,7 +38,7 @@ theorem commuting_scalar
     (hT : ∀ g : G, T ∘ₗ (ρ g : V →ₗ[ℂ] V) =
       (ρ g : V →ₗ[ℂ] V) ∘ₗ T) :
     ∃ c : ℂ, T = c • LinearMap.id := by
-  haveI : Nontrivial V := hirr.1
+  have : Nontrivial V := hirr.1
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue T
   refine ⟨c, ?_⟩
   have hker : LinearMap.ker (T - c • LinearMap.id) ≠ ⊥ := by
@@ -83,11 +83,12 @@ theorem commuting_scalar
 /-- The image of a class-function element commutes with the
 action. -/
 theorem asAlgebraHom_classElem_comm
-    [Group G] [Fintype G] [DecidableEq G] [AddCommGroup V] [Module ℂ V]
+    [Group G] [Fintype G] [AddCommGroup V] [Module ℂ V]
     (ρ : Representation ℂ G V)
     (c : G → ℂ) (hc : ∀ g h : G, c (h * g * h⁻¹) = c g) (g : G) :
     (ρ.asAlgebraHom (classElem c)) ∘ₗ (ρ g : V →ₗ[ℂ] V) =
       (ρ g : V →ₗ[ℂ] V) ∘ₗ ρ.asAlgebraHom (classElem c) := by
+  classical
   have h1 : ρ.asAlgebraHom (classElem c * MonoidAlgebra.single g 1) =
       ρ.asAlgebraHom (MonoidAlgebra.single g 1 * classElem c) := by
     rw [classElem_mul_comm c hc]
@@ -100,12 +101,14 @@ theorem asAlgebraHom_classElem_comm
 /-- **Scalar action**: a class-function element acts as a scalar
 on every irreducible representation. -/
 theorem asAlgebraHom_classElem_scalar
-    [Group G] [Fintype G] [DecidableEq G] [AddCommGroup V] [Module ℂ V]
+    [Group G] [Fintype G] [AddCommGroup V] [Module ℂ V]
     [FiniteDimensional ℂ V]
     {ρ : Representation ℂ G V}
     (hirr : IsIrredRep ρ) (c : G → ℂ)
     (hc : ∀ g h : G, c (h * g * h⁻¹) = c g) :
-    ∃ z : ℂ, ρ.asAlgebraHom (classElem c) = z • LinearMap.id :=
-  commuting_scalar hirr _ (asAlgebraHom_classElem_comm ρ c hc)
+    ∃ z : ℂ, ρ.asAlgebraHom (classElem c) = z • LinearMap.id := by
+  classical
+  exact
+    commuting_scalar hirr _ (asAlgebraHom_classElem_comm ρ c hc)
 
 end RS

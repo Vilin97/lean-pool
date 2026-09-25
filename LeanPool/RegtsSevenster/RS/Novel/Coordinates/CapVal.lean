@@ -35,7 +35,7 @@ noncomputable def capVal (m : ℕ)
 /-- **The zero cap value is the scalar itself.** -/
 theorem capVal_zero (v : (superPow (stdSuperPair k ℓ) 0).even) :
     capVal f P e 0 v = v := by
-  letI := P.braided
+  let := P.braided
   unfold capVal
   rw [omegaFun_cap_zero]
   have hcomp : (ε P.ω ≫ η P.ω : SuperVect.tensorUnit ⟶

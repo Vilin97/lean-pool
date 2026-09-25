@@ -90,7 +90,7 @@ theorem jtChar_inv (μ : YoungDiagram)
   refine Finset.sum_congr rfl fun σ _ => ?_
   congr 1
   by_cases hp : ∀ i, 0 ≤ jtSigned μ σ i
-  · rw [if_pos hp, if_pos hp, colourChar_inv]
-  · rw [if_neg hp, if_neg hp]
+  · rw [ite_eq_left hp, ite_eq_left hp, colourChar_inv]
+  · rw [ite_eq_right hp, ite_eq_right hp]
 
 end RS

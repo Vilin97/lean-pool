@@ -30,7 +30,7 @@ noncomputable section
 
 namespace RS
 
-open scoped Classical
+
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.MonoidalCategory
 open CategoryTheory.Limits CategoryTheory.Idempotents
@@ -76,22 +76,22 @@ private theorem matEmb_μ_natural_left
     ∑ k, matEmbTensorHom X X' i k ≫
       (Mat_.embedding C).map (f ▷ X') k j := rfl
   rw [hL, hR]
-  haveI : Subsingleton ((Mat_.embedding C).obj Y ⊗ (Mat_.embedding C).obj X').ι
+  have : Subsingleton ((Mat_.embedding C).obj Y ⊗ (Mat_.embedding C).obj X').ι
     :=
     inferInstanceAs (Subsingleton (PUnit × PUnit))
-  haveI : Subsingleton ((Mat_.embedding C).obj (X ⊗ X')).ι :=
+  have : Subsingleton ((Mat_.embedding C).obj (X ⊗ X')).ι :=
     inferInstanceAs (Subsingleton PUnit)
   set a : ((Mat_.embedding C).obj Y ⊗ (Mat_.embedding C).obj X').ι :=
     (PUnit.unit, PUnit.unit)
   set b : ((Mat_.embedding C).obj (X ⊗ X')).ι := PUnit.unit
   rw [Fintype.sum_subsingleton _ a, Fintype.sum_subsingleton _ b]
-  show (f ⊗ₘ (𝟙 ((Mat_.embedding C).obj X') : Mat_.Hom _ _) i.2 a.2) ≫ 𝟙 (Y ⊗
+  change (f ⊗ₘ (𝟙 ((Mat_.embedding C).obj X') : Mat_.Hom _ _) i.2 a.2) ≫ 𝟙 (Y ⊗
     X') =
     𝟙 (X ⊗ X') ≫ (f ▷ X')
-  haveI : Subsingleton ((Mat_.embedding C).obj X').ι := inferInstanceAs
+  have : Subsingleton ((Mat_.embedding C).obj X').ι := inferInstanceAs
     (Subsingleton PUnit)
   rw [show i.2 = a.2 from Subsingleton.elim _ _, Mat_.id_apply_self]
-  show (f ⊗ₘ 𝟙 X') ≫ 𝟙 (Y ⊗ X') = 𝟙 (X ⊗ X') ≫ (f ▷ X')
+  change (f ⊗ₘ 𝟙 X') ≫ 𝟙 (Y ⊗ X') = 𝟙 (X ⊗ X') ≫ (f ▷ X')
   rw [tensorHom_id, comp_id, id_comp]
 
 private theorem matEmb_μ_natural_right
@@ -109,27 +109,28 @@ private theorem matEmb_μ_natural_right
     ∑ k, matEmbTensorHom X' X i k ≫
       (Mat_.embedding C).map (X' ◁ f) k j := rfl
   rw [hL, hR]
-  haveI : Subsingleton ((Mat_.embedding C).obj X' ⊗ (Mat_.embedding C).obj Y).ι
+  have : Subsingleton ((Mat_.embedding C).obj X' ⊗ (Mat_.embedding C).obj Y).ι
     :=
     inferInstanceAs (Subsingleton (PUnit × PUnit))
-  haveI : Subsingleton ((Mat_.embedding C).obj (X' ⊗ X)).ι :=
+  have : Subsingleton ((Mat_.embedding C).obj (X' ⊗ X)).ι :=
     inferInstanceAs (Subsingleton PUnit)
   set a : ((Mat_.embedding C).obj X' ⊗ (Mat_.embedding C).obj Y).ι :=
     (PUnit.unit, PUnit.unit)
   set b : ((Mat_.embedding C).obj (X' ⊗ X)).ι := PUnit.unit
   rw [Fintype.sum_subsingleton _ a, Fintype.sum_subsingleton _ b]
-  show ((𝟙 ((Mat_.embedding C).obj X') : Mat_.Hom _ _) i.1 a.1 ⊗ₘ f) ≫ 𝟙 (X' ⊗
+  change ((𝟙 ((Mat_.embedding C).obj X') : Mat_.Hom _ _) i.1 a.1 ⊗ₘ f) ≫ 𝟙 (X' ⊗
     Y) =
     𝟙 (X' ⊗ X) ≫ (X' ◁ f)
-  haveI : Subsingleton ((Mat_.embedding C).obj X').ι := inferInstanceAs
+  have : Subsingleton ((Mat_.embedding C).obj X').ι := inferInstanceAs
     (Subsingleton PUnit)
   rw [show i.1 = a.1 from Subsingleton.elim _ _, Mat_.id_apply_self]
-  show (𝟙 X' ⊗ₘ f) ≫ 𝟙 (X' ⊗ Y) = 𝟙 (X' ⊗ X) ≫ (X' ◁ f)
+  change (𝟙 X' ⊗ₘ f) ≫ 𝟙 (X' ⊗ Y) = 𝟙 (X' ⊗ X) ≫ (X' ◁ f)
   rw [id_tensorHom, comp_id, id_comp]
 
 /-! #### Associativity -/
 
 -- Restate the private Mat_ associator lemma
+open scoped Classical in
 private theorem mat_assocHom_apply'
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M N K : Mat_ C)
@@ -152,11 +153,11 @@ private theorem matEmb_associativity
     (Mat_.embedding C).obj X ◁ matEmbTensorHom Y Z ≫
     matEmbTensorHom X (Y ⊗ Z) := by
   apply Mat_.hom_ext; intro i j
-  haveI : Subsingleton ((Mat_.embedding C).obj X).ι := inferInstanceAs
+  have : Subsingleton ((Mat_.embedding C).obj X).ι := inferInstanceAs
     (Subsingleton PUnit)
-  haveI : Subsingleton ((Mat_.embedding C).obj Y).ι := inferInstanceAs
+  have : Subsingleton ((Mat_.embedding C).obj Y).ι := inferInstanceAs
     (Subsingleton PUnit)
-  haveI : Subsingleton ((Mat_.embedding C).obj Z).ι := inferInstanceAs
+  have : Subsingleton ((Mat_.embedding C).obj Z).ι := inferInstanceAs
     (Subsingleton PUnit)
   -- LHS = (α_ X Y Z).hom
   have hLHS : (matEmbTensorHom X Y ▷ (Mat_.embedding C).obj Z ≫
@@ -168,7 +169,7 @@ private theorem matEmb_associativity
         (matEmbTensorHom (X ⊗ Y) Z ≫ (Mat_.embedding C).map (α_ X Y Z).hom) k j
           := rfl
     rw [h1]
-    haveI : Subsingleton ((Mat_.embedding C).obj (X ⊗ Y) ⊗ (Mat_.embedding
+    have : Subsingleton ((Mat_.embedding C).obj (X ⊗ Y) ⊗ (Mat_.embedding
       C).obj Z).ι :=
       inferInstanceAs (Subsingleton (PUnit × PUnit))
     set a1 : ((Mat_.embedding C).obj (X ⊗ Y) ⊗ (Mat_.embedding C).obj Z).ι :=
@@ -179,15 +180,15 @@ private theorem matEmb_associativity
       ∑ k, matEmbTensorHom (X ⊗ Y) Z a1 k ≫
         (Mat_.embedding C).map (α_ X Y Z).hom k j := rfl
     rw [h2]
-    haveI : Subsingleton ((Mat_.embedding C).obj ((X ⊗ Y) ⊗ Z)).ι :=
+    have : Subsingleton ((Mat_.embedding C).obj ((X ⊗ Y) ⊗ Z)).ι :=
       inferInstanceAs (Subsingleton PUnit)
     set b1 : ((Mat_.embedding C).obj ((X ⊗ Y) ⊗ Z)).ι := PUnit.unit
     rw [Fintype.sum_subsingleton _ b1]
-    show (matEmbTensorHom X Y i.1 a1.1 ⊗ₘ (𝟙 ((Mat_.embedding C).obj Z)) i.2
+    change (matEmbTensorHom X Y i.1 a1.1 ⊗ₘ (𝟙 ((Mat_.embedding C).obj Z)) i.2
       a1.2) ≫
       𝟙 ((X ⊗ Y) ⊗ Z) ≫ (α_ X Y Z).hom = (α_ X Y Z).hom
     rw [show i.2 = a1.2 from Subsingleton.elim _ _, Mat_.id_apply_self]
-    show (𝟙 (X ⊗ Y) ⊗ₘ 𝟙 Z) ≫ 𝟙 ((X ⊗ Y) ⊗ Z) ≫ (α_ X Y Z).hom = (α_ X Y Z).hom
+    change (𝟙 (X ⊗ Y) ⊗ₘ 𝟙 Z) ≫ 𝟙 ((X ⊗ Y) ⊗ Z) ≫ (α_ X Y Z).hom = (α_ X Y Z).hom
     rw [MonoidalCategory.id_tensorHom_id, id_comp, id_comp]
   -- RHS = (α_ X Y Z).hom
   have hRHS : ((α_ ((Mat_.embedding C).obj X) ((Mat_.embedding C).obj Y)
@@ -204,7 +205,7 @@ private theorem matEmb_associativity
         ((Mat_.embedding C).obj X ◁ matEmbTensorHom Y Z ≫
          matEmbTensorHom X (Y ⊗ Z)) k j := rfl
     rw [h1]
-    haveI : Subsingleton ((Mat_.embedding C).obj X ⊗
+    have : Subsingleton ((Mat_.embedding C).obj X ⊗
         ((Mat_.embedding C).obj Y ⊗ (Mat_.embedding C).obj Z)).ι :=
       inferInstanceAs (Subsingleton (PUnit × (PUnit × PUnit)))
     set a2 : ((Mat_.embedding C).obj X ⊗
@@ -216,7 +217,7 @@ private theorem matEmb_associativity
       ∑ k, ((Mat_.embedding C).obj X ◁ matEmbTensorHom Y Z) a2 k ≫
         matEmbTensorHom X (Y ⊗ Z) k j := rfl
     rw [h2]
-    haveI : Subsingleton ((Mat_.embedding C).obj X ⊗
+    have : Subsingleton ((Mat_.embedding C).obj X ⊗
         (Mat_.embedding C).obj (Y ⊗ Z)).ι :=
       inferInstanceAs (Subsingleton (PUnit × PUnit))
     set b2 : ((Mat_.embedding C).obj X ⊗ (Mat_.embedding C).obj (Y ⊗ Z)).ι :=
@@ -228,24 +229,25 @@ private theorem matEmb_associativity
       rw [show i = ((i.1.1, i.1.2), i.2) from rfl,
           show a2 = (a2.1, (a2.2.1, a2.2.2)) from rfl,
           mat_assocHom_apply',
-          dif_pos (Subsingleton.elim i.1.1 a2.1),
-          dif_pos (Subsingleton.elim i.1.2 a2.2.1),
-          dif_pos (Subsingleton.elim i.2 a2.2.2)]
+          dite_eq_left (Subsingleton.elim i.1.1 a2.1),
+          dite_eq_left (Subsingleton.elim i.1.2 a2.2.1),
+          dite_eq_left (Subsingleton.elim i.2 a2.2.2)]
       erw [eqToHom_refl, id_comp]; rfl
     rw [h_assoc]
     -- Now: (α_ X Y Z).hom ≫ whiskerLeft ≫ matEmbTensorHom = (α_ X Y Z).hom
-    show (α_ X Y Z).hom ≫
+    change (α_ X Y Z).hom ≫
       ((𝟙 ((Mat_.embedding C).obj X)) a2.1 b2.1 ⊗ₘ matEmbTensorHom Y Z a2.2
         b2.2) ≫
       𝟙 (X ⊗ (Y ⊗ Z)) = (α_ X Y Z).hom
     rw [show a2.1 = b2.1 from Subsingleton.elim _ _, Mat_.id_apply_self]
-    show (α_ X Y Z).hom ≫ (𝟙 X ⊗ₘ 𝟙 (Y ⊗ Z)) ≫ 𝟙 (X ⊗ (Y ⊗ Z)) = (α_ X Y Z).hom
+    change (α_ X Y Z).hom ≫ (𝟙 X ⊗ₘ 𝟙 (Y ⊗ Z)) ≫ 𝟙 (X ⊗ (Y ⊗ Z)) = (α_ X Y Z).hom
     rw [MonoidalCategory.id_tensorHom_id, id_comp, comp_id]
   rw [hLHS, hRHS]
 
 /-! #### Unitality -/
 
 -- Component lemmas restated from private defs
+open scoped Classical in
 private theorem mat_leftUnitorHom_apply'
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) (i : PUnit) (j k : M.ι) :
@@ -253,6 +255,7 @@ private theorem mat_leftUnitorHom_apply'
       if h : j = k then eqToHom (by subst h; rfl) ≫ (λ_ (M.X k)).hom else 0
         := rfl
 
+open scoped Classical in
 private theorem mat_rightUnitorHom_apply'
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) (i : M.ι) (j : PUnit) (k
@@ -273,16 +276,16 @@ private theorem matEmb_left_unitality
     matEmbTensorHom (𝟙_ C) X ≫
     (Mat_.embedding C).map (λ_ X).hom := by
   apply Mat_.hom_ext; intro i j
-  haveI : Subsingleton ((Mat_.embedding C).obj (𝟙_ C)).ι :=
+  have : Subsingleton ((Mat_.embedding C).obj (𝟙_ C)).ι :=
     inferInstanceAs (Subsingleton PUnit)
-  haveI : Subsingleton ((Mat_.embedding C).obj X).ι :=
+  have : Subsingleton ((Mat_.embedding C).obj X).ι :=
     inferInstanceAs (Subsingleton PUnit)
-  haveI : Subsingleton (𝟙_ (Mat_ C)).ι :=
+  have : Subsingleton (𝟙_ (Mat_ C)).ι :=
     inferInstanceAs (Subsingleton PUnit)
   -- LHS = (λ_ X).hom
   have hLHS : (λ_ ((Mat_.embedding C).obj X)).hom i j = (λ_ X).hom := by
     rw [show i = (i.1, i.2) from rfl, mat_leftUnitorHom_apply',
-        dif_pos (Subsingleton.elim i.2 j)]
+        dite_eq_left (Subsingleton.elim i.2 j)]
     erw [eqToHom_refl, id_comp]; rfl
   -- RHS = (λ_ X).hom
   have hRHS : ((𝟙 ((Mat_.embedding C).obj (𝟙_ C)) :
@@ -301,7 +304,7 @@ private theorem matEmb_left_unitality
         (matEmbTensorHom (𝟙_ C) X ≫ (Mat_.embedding C).map (λ_ X).hom) k j
           := rfl
     rw [h1]
-    haveI : Subsingleton ((Mat_.embedding C).obj (𝟙_ C) ⊗ (Mat_.embedding C).obj
+    have : Subsingleton ((Mat_.embedding C).obj (𝟙_ C) ⊗ (Mat_.embedding C).obj
       X).ι :=
       inferInstanceAs (Subsingleton (PUnit × PUnit))
     set a : ((Mat_.embedding C).obj (𝟙_ C) ⊗ (Mat_.embedding C).obj X).ι :=
@@ -312,16 +315,16 @@ private theorem matEmb_left_unitality
       ∑ k, matEmbTensorHom (𝟙_ C) X a k ≫
         (Mat_.embedding C).map (λ_ X).hom k j := rfl
     rw [h2]
-    haveI : Subsingleton ((Mat_.embedding C).obj (𝟙_ C ⊗ X)).ι :=
+    have : Subsingleton ((Mat_.embedding C).obj (𝟙_ C ⊗ X)).ι :=
       inferInstanceAs (Subsingleton PUnit)
     set b : ((Mat_.embedding C).obj (𝟙_ C ⊗ X)).ι := PUnit.unit
     rw [Fintype.sum_subsingleton _ b]
-    show ((𝟙 ((Mat_.embedding C).obj (𝟙_ C)) : Mat_.Hom _ _) i.1 a.1 ⊗ₘ
+    change ((𝟙 ((Mat_.embedding C).obj (𝟙_ C)) : Mat_.Hom _ _) i.1 a.1 ⊗ₘ
       (𝟙 ((Mat_.embedding C).obj X) : Mat_.Hom _ _) i.2 a.2) ≫
       𝟙 (𝟙_ C ⊗ X) ≫ (λ_ X).hom = (λ_ X).hom
     rw [show i.1 = a.1 from Subsingleton.elim _ _, Mat_.id_apply_self,
         show i.2 = a.2 from Subsingleton.elim _ _, Mat_.id_apply_self]
-    show (𝟙 (𝟙_ C) ⊗ₘ 𝟙 X) ≫ 𝟙 (𝟙_ C ⊗ X) ≫ (λ_ X).hom = (λ_ X).hom
+    change (𝟙 (𝟙_ C) ⊗ₘ 𝟙 X) ≫ 𝟙 (𝟙_ C ⊗ X) ≫ (λ_ X).hom = (λ_ X).hom
     rw [MonoidalCategory.id_tensorHom_id, id_comp, id_comp]
   rw [hLHS, hRHS]
 
@@ -336,15 +339,15 @@ private theorem matEmb_right_unitality
     matEmbTensorHom X (𝟙_ C) ≫
     (Mat_.embedding C).map (ρ_ X).hom := by
   apply Mat_.hom_ext; intro i j
-  haveI : Subsingleton ((Mat_.embedding C).obj X).ι := inferInstanceAs
+  have : Subsingleton ((Mat_.embedding C).obj X).ι := inferInstanceAs
     (Subsingleton PUnit)
-  haveI : Subsingleton ((Mat_.embedding C).obj (𝟙_ C)).ι :=
+  have : Subsingleton ((Mat_.embedding C).obj (𝟙_ C)).ι :=
     inferInstanceAs (Subsingleton PUnit)
-  haveI : Subsingleton (𝟙_ (Mat_ C)).ι := inferInstanceAs (Subsingleton PUnit)
+  have : Subsingleton (𝟙_ (Mat_ C)).ι := inferInstanceAs (Subsingleton PUnit)
   -- LHS = (ρ_ X).hom
   have hLHS : (ρ_ ((Mat_.embedding C).obj X)).hom i j = (ρ_ X).hom := by
     rw [show i = (i.1, i.2) from rfl, mat_rightUnitorHom_apply',
-        dif_pos (Subsingleton.elim i.1 j)]
+        dite_eq_left (Subsingleton.elim i.1 j)]
     erw [eqToHom_refl, id_comp]; rfl
   -- RHS = (ρ_ X).hom
   have hRHS : ((Mat_.embedding C).obj X ◁
@@ -363,7 +366,7 @@ private theorem matEmb_right_unitality
         (matEmbTensorHom X (𝟙_ C) ≫ (Mat_.embedding C).map (ρ_ X).hom) k j
           := rfl
     rw [h1]
-    haveI : Subsingleton ((Mat_.embedding C).obj X ⊗ (Mat_.embedding C).obj (𝟙_
+    have : Subsingleton ((Mat_.embedding C).obj X ⊗ (Mat_.embedding C).obj (𝟙_
       C)).ι :=
       inferInstanceAs (Subsingleton (PUnit × PUnit))
     set a : ((Mat_.embedding C).obj X ⊗ (Mat_.embedding C).obj (𝟙_ C)).ι :=
@@ -374,16 +377,16 @@ private theorem matEmb_right_unitality
       ∑ k, matEmbTensorHom X (𝟙_ C) a k ≫
         (Mat_.embedding C).map (ρ_ X).hom k j := rfl
     rw [h2]
-    haveI : Subsingleton ((Mat_.embedding C).obj (X ⊗ 𝟙_ C)).ι :=
+    have : Subsingleton ((Mat_.embedding C).obj (X ⊗ 𝟙_ C)).ι :=
       inferInstanceAs (Subsingleton PUnit)
     set b : ((Mat_.embedding C).obj (X ⊗ 𝟙_ C)).ι := PUnit.unit
     rw [Fintype.sum_subsingleton _ b]
-    show ((𝟙 ((Mat_.embedding C).obj X) : Mat_.Hom _ _) i.1 a.1 ⊗ₘ
+    change ((𝟙 ((Mat_.embedding C).obj X) : Mat_.Hom _ _) i.1 a.1 ⊗ₘ
       (𝟙 ((Mat_.embedding C).obj (𝟙_ C)) : Mat_.Hom _ _) i.2 a.2) ≫
       𝟙 (X ⊗ 𝟙_ C) ≫ (ρ_ X).hom = (ρ_ X).hom
     rw [show i.1 = a.1 from Subsingleton.elim _ _, Mat_.id_apply_self,
         show i.2 = a.2 from Subsingleton.elim _ _, Mat_.id_apply_self]
-    show (𝟙 X ⊗ₘ 𝟙 (𝟙_ C)) ≫ 𝟙 (X ⊗ 𝟙_ C) ≫ (ρ_ X).hom = (ρ_ X).hom
+    change (𝟙 X ⊗ₘ 𝟙 (𝟙_ C)) ≫ 𝟙 (X ⊗ 𝟙_ C) ≫ (ρ_ X).hom = (ρ_ X).hom
     rw [MonoidalCategory.id_tensorHom_id, id_comp, id_comp]
   rw [hLHS, hRHS]
 
@@ -418,6 +421,7 @@ noncomputable instance matEmbeddingMonoidal
 section Braided
 
 -- Braiding component formula (restated from private def)
+open scoped Classical in
 private theorem mat_braidHom_apply'
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [MonoidalPreadditive C] [BraidedCategory C]
@@ -439,13 +443,13 @@ private theorem matEmb_braided
     (β_ ((Mat_.embedding C).obj X) ((Mat_.embedding C).obj Y)).hom ≫
       Functor.LaxMonoidal.μ (Mat_.embedding C) Y X := by
   -- μ is matEmbTensorHom by CoreMonoidal construction
-  show matEmbTensorHom X Y ≫ (Mat_.embedding C).map (β_ X Y).hom =
+  change matEmbTensorHom X Y ≫ (Mat_.embedding C).map (β_ X Y).hom =
     (β_ ((Mat_.embedding C).obj X) ((Mat_.embedding C).obj Y)).hom ≫
       matEmbTensorHom Y X
   apply Mat_.hom_ext; intro i j
-  haveI : Subsingleton ((Mat_.embedding C).obj X).ι := inferInstanceAs
+  have : Subsingleton ((Mat_.embedding C).obj X).ι := inferInstanceAs
     (Subsingleton PUnit)
-  haveI : Subsingleton ((Mat_.embedding C).obj Y).ι := inferInstanceAs
+  have : Subsingleton ((Mat_.embedding C).obj Y).ι := inferInstanceAs
     (Subsingleton PUnit)
   -- LHS = (β_ X Y).hom
   have hLHS : (matEmbTensorHom X Y ≫ (Mat_.embedding C).map (β_ X Y).hom) i j =
@@ -454,11 +458,11 @@ private theorem matEmb_braided
       ∑ k, matEmbTensorHom X Y i k ≫
         (Mat_.embedding C).map (β_ X Y).hom k j := rfl
     rw [h1]
-    haveI : Subsingleton ((Mat_.embedding C).obj (X ⊗ Y)).ι :=
+    have : Subsingleton ((Mat_.embedding C).obj (X ⊗ Y)).ι :=
       inferInstanceAs (Subsingleton PUnit)
     set a : ((Mat_.embedding C).obj (X ⊗ Y)).ι := PUnit.unit
     rw [Fintype.sum_subsingleton _ a]
-    show 𝟙 (X ⊗ Y) ≫ (β_ X Y).hom = (β_ X Y).hom
+    change 𝟙 (X ⊗ Y) ≫ (β_ X Y).hom = (β_ X Y).hom
     rw [id_comp]
   -- RHS = (β_ X Y).hom
   have hRHS : ((β_ ((Mat_.embedding C).obj X) ((Mat_.embedding C).obj Y)).hom ≫
@@ -468,7 +472,7 @@ private theorem matEmb_braided
       ∑ k, (β_ ((Mat_.embedding C).obj X) ((Mat_.embedding C).obj Y)).hom i k ≫
         matEmbTensorHom Y X k j := rfl
     rw [h1]
-    haveI : Subsingleton ((Mat_.embedding C).obj Y ⊗ (Mat_.embedding C).obj X).ι
+    have : Subsingleton ((Mat_.embedding C).obj Y ⊗ (Mat_.embedding C).obj X).ι
       :=
       inferInstanceAs (Subsingleton (PUnit × PUnit))
     set b : ((Mat_.embedding C).obj Y ⊗ (Mat_.embedding C).obj X).ι :=
@@ -482,11 +486,11 @@ private theorem matEmb_braided
       erw [show i = (i.1, i.2) from rfl,
            show b = (b.1, b.2) from rfl,
            mat_braidHom_apply',
-           dif_pos (Subsingleton.elim i.2 b.1),
-           dif_pos (Subsingleton.elim i.1 b.2)]
+           dite_eq_left (Subsingleton.elim i.2 b.1),
+           dite_eq_left (Subsingleton.elim i.1 b.2)]
       erw [eqToHom_refl, id_comp]; rfl
     rw [h_braid]
-    show (β_ X Y).hom ≫ 𝟙 (Y ⊗ X) = (β_ X Y).hom
+    change (β_ X Y).hom ≫ 𝟙 (Y ⊗ X) = (β_ X Y).hom
     rw [comp_id]
   rw [hLHS, hRHS]
 

@@ -29,7 +29,7 @@ variable {k ℓ : ℕ}
 /-- The standard form on even pairs is the even form. -/
 theorem stdForm_evenPair (x y : (stdSuperPair k ℓ).even) :
     (stdForm k ℓ).evenMap (evenPair x y) = stdFormEven k x y := by
-  show LinearMap.coprod
+  change LinearMap.coprod
       (TensorProduct.lift (stdFormEvenBilin k))
       (TensorProduct.lift (stdFormOddBilin ℓ))
       (x ⊗ₜ[ℂ] y, 0) = _
@@ -39,7 +39,7 @@ theorem stdForm_evenPair (x y : (stdSuperPair k ℓ).even) :
 /-- The standard form on odd pairs is the odd form. -/
 theorem stdForm_oddPair (x y : (stdSuperPair k ℓ).odd) :
     (stdForm k ℓ).evenMap (oddPair x y) = stdFormOdd ℓ x y := by
-  show LinearMap.coprod
+  change LinearMap.coprod
       (TensorProduct.lift (stdFormEvenBilin k))
       (TensorProduct.lift (stdFormOddBilin ℓ))
       (0, x ⊗ₜ[ℂ] y) = _
@@ -67,7 +67,7 @@ theorem omegaFun_ev_basis
           (evenBasisVec (⟨c, hc⟩ :
             {c : MixedColouring k ℓ 2 // c.IsEven}))) =
       colourFormEntry k ℓ (c 0) (c 1) := by
-  letI := P.braided
+  let := P.braided
   have hsplit := evenBasisVec_split (a := 1) (b := 1) c hc
   -- ═══════ FOUR PARITY PATTERNS AT THE TWO POSITIONS ═══════
   -- Evenness of the colouring excludes the two mixed ones.
@@ -84,7 +84,7 @@ theorem omegaFun_ev_basis
     have hfe : MixedColouring.IsEven
         (MixedColouring.firstHalf (a := 1) (b := 1) c) := by
       rw [hfh]; exact oneColourE_isEven i
-    rw [hsplit, dif_pos hfe]
+    rw [hsplit, dite_eq_left hfe]
     rw [show (⟨MixedColouring.firstHalf (a := 1) (b := 1) c, hfe⟩ :
         {c' : MixedColouring k ℓ 1 // c'.IsEven}) =
       ⟨oneColourE k ℓ i, oneColourE_isEven i⟩ from
@@ -112,7 +112,7 @@ theorem omegaFun_ev_basis
       (stdToOmega_merge f P e 1 1)
     refine Eq.trans (congrArg (omegaFun f P (evClass f))
       hmerge.symm) ?_
-    show omegaFun f P (evClass f)
+    change omegaFun f P (evClass f)
       (((μ P.ω (SkeinObj.mk 1) (SkeinObj.mk 1)) :
         SuperVect.Hom _ _).evenMap
         (((stdToOmega f P e 1 ⊗ₘ stdToOmega f P e 1) :
@@ -160,7 +160,7 @@ theorem omegaFun_ev_basis
     have hfo : ¬ MixedColouring.IsEven
         (MixedColouring.firstHalf (a := 1) (b := 1) c) := by
       rw [hfh]; exact oneColourO_not_isEven a
-    rw [hsplit, dif_neg hfo]
+    rw [hsplit, dite_eq_right hfo]
     rw [show (⟨MixedColouring.firstHalf (a := 1) (b := 1) c, hfo⟩ :
         {c' : MixedColouring k ℓ 1 // ¬ c'.IsEven}) =
       ⟨oneColourO k ℓ a, oneColourO_not_isEven a⟩ from
@@ -188,7 +188,7 @@ theorem omegaFun_ev_basis
       (stdToOmega_merge f P e 1 1)
     refine Eq.trans (congrArg (omegaFun f P (evClass f))
       hmerge.symm) ?_
-    show omegaFun f P (evClass f)
+    change omegaFun f P (evClass f)
       (((μ P.ω (SkeinObj.mk 1) (SkeinObj.mk 1)) :
         SuperVect.Hom _ _).evenMap
         (((stdToOmega f P e 1 ⊗ₘ stdToOmega f P e 1) :

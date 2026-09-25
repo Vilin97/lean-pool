@@ -36,7 +36,7 @@ existing even colouring — so no `(k, ℓ) = (0, 0)` edge case arises.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type} {W : Fragment α}
 
@@ -272,8 +272,8 @@ theorem throughSummand_evenState [LinearOrder α]
   refine Finset.sum_congr rfl fun ψ _ => ?_
   by_cases hm : genEvenBoundaryMatch F (evenState hall ℓ ψ₀)
       (evenState_matches hall ℓ ψ₀) ψ
-  · rw [if_pos hm,
-      if_pos ((genEvenBoundaryMatch_evenState_iff hall ψ₀ ψ).mp hm)]
+  · rw [ite_eq_left hm,
+      ite_eq_left ((genEvenBoundaryMatch_evenState_iff hall ψ₀ ψ).mp hm)]
     refine Fintype.sum_equiv (coreOddEquivAll hall ℓ)
       (fun φ_core =>
         if F.coreOddBoundaryMatch (evenState hall ℓ ψ₀) φ_core then
@@ -288,11 +288,11 @@ theorem throughSummand_evenState [LinearOrder α]
             h.evalOdd (F.evenColoursAt ψ v)
               (F.oddListAt o φ v)))
       (fun φ_core => ?_)
-    rw [if_pos (coreOddBoundaryMatch_evenState hall ψ₀ φ_core)]
+    rw [ite_eq_left (coreOddBoundaryMatch_evenState hall ψ₀ φ_core)]
     refine Finset.prod_congr rfl fun v _ => ?_
     rw [coreOddSignAt_eq_of_allInternal hall o φ_core v,
       coreOddListAt_eq_of_allInternal hall o φ_core v]
-  · rw [if_neg hm, if_neg (fun he => hm
+  · rw [ite_eq_right hm, ite_eq_right (fun he => hm
       ((genEvenBoundaryMatch_evenState_iff hall ψ₀ ψ).mpr he))]
 
 /-! ## The fibre decomposition of the mixed summand -/
@@ -337,7 +337,7 @@ edge subset does not depend on the choice of transition system and
 orientation. -/
 theorem eulerianIndependence : EulerianIndependence := by
   intro α W F k ℓ h κ κ' o o'
-  letI : LinearOrder α := IsWellOrder.linearOrder WellOrderingRel
+  let : LinearOrder α := IsWellOrder.linearOrder WellOrderingRel
   have hall : F.allInternal := EdgeSubset.allInternal_of_transition κ
   rw [EdgeSubset.mixedSummand_eq_fibre_sum hall h o,
     EdgeSubset.mixedSummand_eq_fibre_sum hall h o']

@@ -50,10 +50,10 @@ theorem exists_fibre_algebra
             freeMod 𝔸 ((T.map (indOf : C ⥤ Ind C)).X₂),
           s ≫ freeModMap 𝔸 ((T.map (indOf : C ⥤ Ind C)).g) =
             𝟙 (freeMod 𝔸 ((T.map (indOf : C ⥤ Ind C)).X₃))) := by
-  letI := linearOfScalarUnit ψ
-  letI := monoidalLinearOfScalarUnitBraided ψ
-  letI := linearOfScalarUnit (indScalarUnit ψ)
-  letI := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
+  let := linearOfScalarUnit ψ
+  let := monoidalLinearOfScalarUnitBraided ψ
+  let := linearOfScalarUnit (indScalarUnit ψ)
+  let := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
   classical
   have hu : HasScalarUnit C := hasScalarUnit_of_scalarUnit ψ
   have h1 : ¬ IsZero (𝟙_ (Ind C)) := not_isZero_unit_ind hu

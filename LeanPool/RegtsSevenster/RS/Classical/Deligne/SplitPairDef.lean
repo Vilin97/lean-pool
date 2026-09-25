@@ -73,7 +73,7 @@ theorem modTensorπ_splitPairMul
       (splitIns A M M' d ⊗ₘ splitIns' A M M' d) ≫
         (letI := chainBGrMonObj A M M' d;
           μ[chainBGr A M M' d]) := by
-  show modTensorπ A M M' ≫ splitPairMul A M M' d =
+  change modTensorπ A M M' ≫ splitPairMul A M M' d =
     (splitIns A M M' d ⊗ₘ splitIns' A M M' d) ≫
       chainBGrMul A M M' d
   have hcastL : chainStage2Cast A M M'
@@ -86,7 +86,7 @@ theorem modTensorπ_splitPairMul
   have hL : modTensorπ A M M' ≫ splitPairMul A M M' d =
       chainPairRaw A M M' d ≫
         chainBGrCompι A M M' d 0 2 ≫ chainBGrι A M M' d 0 := by
-    show modTensorπ A M M' ≫ chainPairMul A M M' d ≫
+    change modTensorπ A M M' ≫ chainPairMul A M M' d ≫
         chainStage2Cast A M M'
           (by omega : 2 = (-(0 : ℤ)).toNat + 2)
           (by omega : 2 = (0 : ℤ).toNat + 2) ≫

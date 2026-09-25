@@ -160,10 +160,10 @@ instance instCommRingEven : CommRing S.even :=
     one := S.one
     left_distrib := fun x y z => map_add (S.mulEE x) y z
     right_distrib := fun x y z => by
-      show S.mulEE (x + y) z = S.mulEE x z + S.mulEE y z
+      change S.mulEE (x + y) z = S.mulEE x z + S.mulEE y z
       rw [map_add S.mulEE x y, LinearMap.add_apply]
     zero_mul := fun x => by
-      show S.mulEE 0 x = 0
+      change S.mulEE 0 x = 0
       rw [map_zero S.mulEE, LinearMap.zero_apply]
     mul_zero := fun x => map_zero (S.mulEE x)
     mul_assoc := S.assoc_eee
@@ -183,7 +183,7 @@ the even-even block. -/
 instance instAlgebraEven : Algebra ℂ S.even :=
   Algebra.ofModule
     (fun r x y => by
-      show S.mulEE (r • x) y = r • S.mulEE x y
+      change S.mulEE (r • x) y = r • S.mulEE x y
       rw [map_smul S.mulEE r x, LinearMap.smul_apply])
     (fun r x y => map_smul (S.mulEE x) r y)
 
@@ -415,15 +415,15 @@ componentwise. -/
 instance instPreadditive : Preadditive SuperMod.{u} where
   add_comp _ _ _ f f' g := by
     apply Hom.ext
-    · show g.evenMap ∘ₗ (f.evenMap + f'.evenMap) = _
+    · change g.evenMap ∘ₗ (f.evenMap + f'.evenMap) = _
       exact LinearMap.comp_add _ _ _
-    · show g.oddMap ∘ₗ (f.oddMap + f'.oddMap) = _
+    · change g.oddMap ∘ₗ (f.oddMap + f'.oddMap) = _
       exact LinearMap.comp_add _ _ _
   comp_add _ _ _ f g g' := by
     apply Hom.ext
-    · show (g.evenMap + g'.evenMap) ∘ₗ f.evenMap = _
+    · change (g.evenMap + g'.evenMap) ∘ₗ f.evenMap = _
       exact LinearMap.add_comp _ _ _
-    · show (g.oddMap + g'.oddMap) ∘ₗ f.oddMap = _
+    · change (g.oddMap + g'.oddMap) ∘ₗ f.oddMap = _
       exact LinearMap.add_comp _ _ _
 
 /-- SuperMod is ℂ-linear: composition is ℂ-bilinear
@@ -431,15 +431,15 @@ componentwise. -/
 instance instLinear : CategoryTheory.Linear ℂ SuperMod.{u} where
   smul_comp _ _ _ c f g := by
     apply Hom.ext
-    · show g.evenMap ∘ₗ (c • f.evenMap) = _
+    · change g.evenMap ∘ₗ (c • f.evenMap) = _
       exact LinearMap.comp_smul _ _ _
-    · show g.oddMap ∘ₗ (c • f.oddMap) = _
+    · change g.oddMap ∘ₗ (c • f.oddMap) = _
       exact LinearMap.comp_smul _ _ _
   comp_smul _ _ _ f c g := by
     apply Hom.ext
-    · show (c • g.evenMap) ∘ₗ f.evenMap = _
+    · change (c • g.evenMap) ∘ₗ f.evenMap = _
       exact LinearMap.smul_comp _ _ _
-    · show (c • g.oddMap) ∘ₗ f.oddMap = _
+    · change (c • g.oddMap) ∘ₗ f.oddMap = _
       exact LinearMap.smul_comp _ _ _
 
 /-- Even elements of a zero super module vanish: the identity
@@ -533,7 +533,7 @@ theorem indOf_hom_eq_zero
     (hvan : ∀ (i : ι) (f : indOf.obj (g i) ⟶ F), f = 0)
     {n : ℕ} {w : Fin n → ι} {X : C} (φ : X ≅ ⨁ (g ∘ w))
     (f : indOf.obj X ⟶ F) : f = 0 := by
-  haveI : (indOf (C := C)).Additive := indOf_additive
+  have : (indOf (C := C)).Additive := indOf_additive
   have hdec : f = indOf.map φ.hom ≫ (indOf.map φ.inv ≫ f) := by
     rw [← Category.assoc, ← Functor.map_comp, φ.hom_inv_id,
       CategoryTheory.Functor.map_id, Category.id_comp]
@@ -559,7 +559,7 @@ theorem isZero_ind_of_hom_eq_zero
     [SmallCategory C] [Preadditive C] [HasFiniteColimits C]
     {F : Ind C}
     (h : ∀ (X : C) (f : indOf.obj X ⟶ F), f = 0) : IsZero F := by
-  haveI : HasZeroObject C := hasZeroObject_of_hasInitial_object
+  have : HasZeroObject C := hasZeroObject_of_hasInitial_object
   let e : ∀ (G : Ind C) (X : C),
       (indOf.obj X ⟶ G) ≃ ((Ind.inclusion C).obj G).obj (op X) :=
     fun G X =>
@@ -571,7 +571,7 @@ theorem isZero_ind_of_hom_eq_zero
   have hsubF : ∀ X : C,
       Subsingleton (((Ind.inclusion C).obj F).obj (op X)) := by
     intro X
-    haveI : Subsingleton (indOf.obj X ⟶ F) :=
+    have : Subsingleton (indOf.obj X ⟶ F) :=
       subsingleton_of_forall_eq 0 fun f =>
         (h X f).trans (h X 0).symm
     exact (e F X).symm.subsingleton
@@ -579,7 +579,7 @@ theorem isZero_ind_of_hom_eq_zero
       Subsingleton
         (((Ind.inclusion C).obj (indOf.obj (0 : C))).obj (op X)) := by
     intro X
-    haveI : Subsingleton (indOf.obj X ⟶ indOf.obj (0 : C)) :=
+    have : Subsingleton (indOf.obj X ⟶ indOf.obj (0 : C)) :=
       subsingleton_of_forall_eq 0 fun f => hzero.eq_of_tgt f 0
     exact (e (indOf.obj (0 : C)) X).symm.subsingleton
   have hiso : (Ind.inclusion C).obj F ≅
@@ -593,10 +593,10 @@ theorem isZero_ind_of_hom_eq_zero
       exact Equiv.toIso (equivOfSubsingletonOfSubsingleton
         (fun _ => e (indOf.obj (0 : C)) X.unop 0)
         (fun _ => e F X.unop 0))
-    · haveI : Subsingleton
+    · have : Subsingleton
           (((Ind.inclusion C).obj (indOf.obj (0 : C))).obj Y) :=
         hsub0 Y.unop
-      haveI : Subsingleton (((Ind.inclusion C).obj F).obj X ⟶
+      have : Subsingleton (((Ind.inclusion C).obj F).obj X ⟶
           ((Ind.inclusion C).obj (indOf.obj (0 : C))).obj Y) :=
         ⟨fun p q => by
           ext x
@@ -688,7 +688,7 @@ theorem unitHomMul_assoc
         R ◁ R ◁ c ≫ R ◁ μ[R] ≫ μ[R] := by
     rw [rightUnitor_inv_naturality_assoc, ← whisker_exchange_assoc,
       MonObj.mul_assoc, associator_naturality_right_assoc]
-  simp [unitHomMul, tensorHom_def]
+  simp? [unitHomMul, tensorHom_def]
   rw [← unitors_equal]
   simp only [Iso.inv_hom_id_assoc]
   rw [key]

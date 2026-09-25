@@ -18,7 +18,7 @@ and `e` preserves the sorting.
 
 namespace RS
 
-open scoped Classical
+
 
 open EdgeSubset
 

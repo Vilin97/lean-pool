@@ -136,11 +136,11 @@ noncomputable def multiStarCompRelabel {V V' : Type}
   vertexEquiv := e
   attach_comm := fun g => by
     rcases g with i | i
-    · show Sum.inl (b (σ i)) =
+    · change Sum.inl (b (σ i)) =
         (Sum.inl (assign i) : V ⊕ Fin n).map e id
       rw [hb i]
       rfl
-    · show Sum.inr (σ.symm (σ i)) =
+    · change Sum.inr (σ.symm (σ i)) =
         (Sum.inr i : V ⊕ Fin n).map e id
       rw [σ.symm_apply_apply]
       rfl

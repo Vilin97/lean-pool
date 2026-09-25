@@ -115,7 +115,7 @@ theorem insertTop_muFold
   | n + 1, k + 1 => by
     have h : (insertTop A n k ▷ A) ≫ muFold A (n + 2) =
         muFold A (n + 2) := by
-      show (insertTop A n k ▷ A) ≫ ((muFold A (n + 1) ▷ A) ≫ μ[A])
+      change (insertTop A n k ▷ A) ≫ ((muFold A (n + 1) ▷ A) ≫ μ[A])
         = (muFold A (n + 1) ▷ A) ≫ μ[A]
       rw [← Category.assoc, ← comp_whiskerRight,
         insertTop_muFold A n k]
@@ -133,7 +133,7 @@ theorem muFold_permMor
     permMor A n σ ≫ muFold A n = muFold A n := by
   induction n with
   | zero =>
-      show 𝟙 _ ≫ _ = _
+      change 𝟙 _ ≫ _ = _
       exact Category.id_comp _
   | succ n ih =>
       rw [permMor_succ]
@@ -141,7 +141,7 @@ theorem muFold_permMor
       refine (congrArg
         (fun z => (permMor A n (restPerm σ) ▷ A) ≫ z)
         (insertTop_muFold A n _)).trans ?_
-      show (permMor A n (restPerm σ) ▷ A) ≫
+      change (permMor A n (restPerm σ) ▷ A) ≫
           ((muFold A n ▷ A) ≫ μ[A]) = (muFold A n ▷ A) ≫ μ[A]
       rw [← Category.assoc, ← comp_whiskerRight, ih]
 

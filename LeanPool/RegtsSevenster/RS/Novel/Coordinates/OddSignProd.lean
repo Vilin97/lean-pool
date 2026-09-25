@@ -12,8 +12,7 @@ import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionExists
 
 namespace RS
 
-open Finset Classical
-
+open Finset
 variable {α : Type} {W : Fragment α} {F : EdgeSubset W} {ℓ : ℕ}
   {κ : F.TransitionSystem}
 
@@ -28,7 +27,7 @@ private noncomputable def EdgeSubset.oddSignFn' (F : EdgeSubset W)
 private theorem EdgeSubset.oddSignFn'_eq_of_mem
     (φ : F.OddColouring ℓ) {f : W.Flag} (hf : f ∈ F.flags) :
     F.oddSignFn' κ φ f = F.oddSignFn κ φ ⟨f, hf⟩ := by
-  unfold EdgeSubset.oddSignFn'; exact dif_pos hf
+  unfold EdgeSubset.oddSignFn'; exact dite_eq_left hf
 
 /-- The attachWith-map list equals a plain map with classically
 lifted function. -/
@@ -46,6 +45,7 @@ private theorem EdgeSubset.attachWith_map_oddSignFn_eq
       (F.oddSignFn'_eq_of_mem φ h₁).symm)]
   exact List.pmap_eq_map H
 
+open scoped Classical in
 /-- `inFlagsAt` is a permutation of the filter's `toList`. -/
 private theorem EdgeSubset.inFlagsAt_perm_filter_toList
     (o : κ.Orientation) (v : W.Vertex) :
@@ -53,7 +53,7 @@ private theorem EdgeSubset.inFlagsAt_perm_filter_toList
       ((F.flags.filter
         (fun f => W.attach f = Sum.inl v ∧ o.isOut f = false)).toList) := by
   unfold EdgeSubset.inFlagsAt
-  letI := W.flagOrder
+  let := W.flagOrder
   -- The unfolded LHS sort uses `fun a b => dec (a ≤ b)` from the
   -- `letI := Classical.dec` inside inFlagsAt, while the ambient
   -- instance is `LinearOrder.toDecidableLE`. Similarly, the filter
@@ -67,6 +67,7 @@ private theorem EdgeSubset.inFlagsAt_perm_filter_toList
 
 /-! ### Step 1: oddSignAt as a Finset product -/
 
+open scoped Classical in
 /-- The list-based oddSignAt equals the finset product over the
 filter of F.flags. -/
 private theorem EdgeSubset.oddSignAt_eq_filter_prod
@@ -98,6 +99,7 @@ private theorem EdgeSubset.prod_oddSignAt_eq_prod_flags_incoming
       ∏ f ∈ F.flags,
         (if o.isOut f = false
          then F.oddSignFn' κ φ f else 1) := by
+  classical
   simp_rw [F.oddSignAt_eq_filter_prod o φ, Finset.prod_filter]
   rw [show (∏ v : W.Vertex, ∏ f ∈ F.flags,
       if W.attach f = Sum.inl v ∧ o.isOut f = false then
@@ -117,7 +119,7 @@ private theorem EdgeSubset.prod_oddSignAt_eq_prod_flags_incoming
         exact hv (Sum.inl.inj (hatt ▸ hvf))
       simp [this]
   · have hone : F.oddSignFn' κ φ f = 1 := by
-      unfold EdgeSubset.oddSignFn'; rw [dif_neg hf]
+      unfold EdgeSubset.oddSignFn'; rw [dite_eq_right hf]
     simp [hone]
 
 /-! ### Step 3: incoming to subtype, then reindex -/
@@ -146,7 +148,7 @@ theorem prod_oddSignAt (o : κ.Orientation) (φ : F.OddColouring ℓ) :
   congr 1; ext f
   simp only [e, Equiv.coe_fn_mk]
   rw [o.match_flip _ f.prop]
-  cases hb : o.isOut f.val <;> simp
+  cases hb : o.isOut f.val <;> simp?
   · unfold EdgeSubset.oddSignFn
     congr 1
     exact congrArg φ.val (Subtype.ext (κ.match_invol _ f.prop))

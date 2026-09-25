@@ -107,7 +107,7 @@ theorem coeff_chain_pos {k : ℕ} (lam mu : YoungDiagram)
     subst heq
     rw [pow_zero, one_mul,
         alternant_coeff_strict _ _ (eVec_strict _ _) (eVec_strict _ _),
-        if_pos rfl]
+        ite_eq_left rfl]
     exact ⟨1, by omega, Nat.cast_one.symm⟩
   | succ r ih =>
     -- Intermediate diagram
@@ -119,7 +119,7 @@ theorem coeff_chain_pos {k : ℕ} (lam mu : YoungDiagram)
     -- i₀ < k
     have hi₀_mem : (i₀, 0) ∈ nu := by
       rw [YoungDiagram.mem_iff_lt_rowLen]
-      have := hrowLen i₀; rw [if_pos rfl] at this
+      have := hrowLen i₀; rw [ite_eq_left rfl] at this
       have := rowLen_mono hle_nu i₀; omega
     have hi₀k : i₀ < k := by
       have h1 : i₀ < nu.colLen 0 :=

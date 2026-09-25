@@ -20,7 +20,7 @@ when the pairing returns.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 

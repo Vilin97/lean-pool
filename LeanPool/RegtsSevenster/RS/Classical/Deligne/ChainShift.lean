@@ -50,7 +50,7 @@ noncomputable def chainCocone
   ι :=
     { app := fun k => legs (smallNatEquiv.inverse.obj k)
       naturality := fun {k k'} f => by
-        show chainMap B δ (leOfHom (smallNatEquiv.inverse.map f)) ≫
+        change chainMap B δ (leOfHom (smallNatEquiv.inverse.map f)) ≫
             legs (smallNatEquiv.inverse.obj k') =
           legs (smallNatEquiv.inverse.obj k) ≫ 𝟙 Z
         rw [Category.comp_id]

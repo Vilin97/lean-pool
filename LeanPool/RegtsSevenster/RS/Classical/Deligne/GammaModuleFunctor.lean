@@ -37,12 +37,12 @@ noncomputable def gammaModuleFunctor
   map_id M := by
     refine SuperCommAlgebra.Mod.Hom.ext ?_ ?_ <;>
       refine LinearMap.ext fun m => ?_ <;>
-      · show m ≫ Mod.Hom.hom (𝟙 M) = m
+      · change m ≫ Mod.Hom.hom (𝟙 M) = m
         erw [Mod.id_hom', Category.comp_id]
   map_comp {M N P} f g := by
     refine SuperCommAlgebra.Mod.Hom.ext ?_ ?_ <;>
       refine LinearMap.ext fun m => ?_ <;>
-      · show m ≫ Mod.Hom.hom (f ≫ g) = (m ≫ f.hom) ≫ g.hom
+      · change m ≫ Mod.Hom.hom (f ≫ g) = (m ≫ f.hom) ≫ g.hom
         erw [Mod.comp_hom', Category.assoc]
 
 end RS

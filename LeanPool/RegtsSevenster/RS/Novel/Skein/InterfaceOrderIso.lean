@@ -138,7 +138,7 @@ theorem finSumFinEquiv_strictMono (m n : ℕ) :
     | inr b =>
       rw [finSumFinEquiv_apply_left, finSumFinEquiv_apply_right]
       have ha : (a : ℕ) < m := a.isLt
-      show (a : ℕ) < m + (b : ℕ)
+      change (a : ℕ) < m + (b : ℕ)
       omega
   | inr b =>
     cases y with
@@ -171,7 +171,7 @@ shifts indices up without reordering them. -/
 theorem finRemoveEquiv_symm_strictMono {n : ℕ} (a : Fin (n + 1)) :
     StrictMono (finRemoveEquiv a).symm := by
   intro y y' h
-  show a.succAbove y < a.succAbove y'
+  change a.succAbove y < a.succAbove y'
   exact Fin.strictMono_succAbove a h
 
 /-- Hence removing a point is too. -/

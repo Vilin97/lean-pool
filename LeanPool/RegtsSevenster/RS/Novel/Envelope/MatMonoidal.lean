@@ -31,7 +31,7 @@ noncomputable section
 
 namespace RS
 
-open scoped Classical
+
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.MonoidalCategory
 open CategoryTheory.Limits CategoryTheory.MonoidalPreadditive
@@ -64,6 +64,7 @@ The associator and unitors are "diagonal" morphisms: given an equivalence of
 index types, the entry at `(i, e i)` is the corresponding structural morphism
 of `C`, and all other entries are zero. -/
 
+open scoped Classical in
 /-- The associator hom in `Mat_ C`. -/
 private def matAssocHom [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M N K : Mat_ C) :
@@ -78,6 +79,7 @@ private def matAssocHom [Category.{v} C] [Preadditive C] [MonoidalCategory C]
       else 0
     else 0
 
+open scoped Classical in
 /-- The associator inv in `Mat_ C`. -/
 private def matAssocInv [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M N K : Mat_ C) :
@@ -92,6 +94,7 @@ private def matAssocInv [Category.{v} C] [Preadditive C] [MonoidalCategory C]
       else 0
     else 0
 
+open scoped Classical in
 /-- The left unitor hom in `Mat_ C`. -/
 private def matLeftUnitorHom
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
@@ -102,6 +105,7 @@ private def matLeftUnitorHom
       eqToHom (by subst h; rfl) ≫ (λ_ (M.X j)).hom
     else 0
 
+open scoped Classical in
 /-- The left unitor inv in `Mat_ C`. -/
 private def matLeftUnitorInv
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
@@ -112,6 +116,7 @@ private def matLeftUnitorInv
       (λ_ (M.X i)).inv ≫ eqToHom (by subst h; rfl)
     else 0
 
+open scoped Classical in
 /-- The right unitor hom in `Mat_ C`. -/
 private def matRightUnitorHom
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
@@ -122,6 +127,7 @@ private def matRightUnitorHom
       eqToHom (by subst h; rfl) ≫ (ρ_ (M.X j)).hom
     else 0
 
+open scoped Classical in
 /-- The right unitor inv in `Mat_ C`. -/
 private def matRightUnitorInv
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
@@ -138,6 +144,7 @@ Diagonal ≫ diagonal collapses to a single summand: all off-diagonal entries
 in the intermediate sum vanish.  `Finset.sum_eq_single_of_mem` identifies the
 unique nonzero term, and the on-diagonal entry then simplifies. -/
 
+open scoped Classical in
 private theorem matAssoc_hom_inv
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M N K : Mat_ C) :
@@ -162,6 +169,7 @@ private theorem matAssoc_hom_inv
       · simp [h2, zero_comp]
       · simp [h2, zero_comp]
 
+open scoped Classical in
 private theorem matAssoc_inv_hom
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M N K : Mat_ C) :
@@ -184,6 +192,7 @@ private theorem matAssoc_inv_hom
       · simp [h2, zero_comp]
       · simp [h2, zero_comp]
 
+open scoped Classical in
 private theorem matLeftUnitor_hom_inv
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) :
@@ -200,6 +209,7 @@ private theorem matLeftUnitor_hom_inv
     have : ¬(i = b) := fun h => hb h.symm
     simp [this, zero_comp]
 
+open scoped Classical in
 private theorem matLeftUnitor_inv_hom
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) :
@@ -216,6 +226,7 @@ private theorem matLeftUnitor_inv_hom
     have : ¬(i = b) := fun h => hb (by subst h; rfl)
     simp [this, zero_comp]
 
+open scoped Classical in
 private theorem matRightUnitor_hom_inv
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) :
@@ -233,6 +244,7 @@ private theorem matRightUnitor_hom_inv
     have : ¬(i = b) := fun h => hb h.symm
     simp [this, zero_comp]
 
+open scoped Classical in
 private theorem matRightUnitor_inv_hom
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) :
@@ -329,6 +341,7 @@ private theorem mat_tensorHom_comp
   simp_rw [← tensor_sum Finset.univ]
   rw [← sum_tensor Finset.univ]
 
+open scoped Classical in
 private theorem mat_associator_naturality
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     {M₁ M₂ M₃ N₁ N₂ N₃ : Mat_ C}
@@ -357,6 +370,7 @@ private theorem mat_associator_naturality
     · simp [h1]
     · rcases not_and_or.mp h1 with h2 | h2 <;> simp [h2]
 
+open scoped Classical in
 private theorem mat_leftUnitor_naturality
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     {M N : Mat_ C} (f : M ⟶ N) :
@@ -375,6 +389,7 @@ private theorem mat_leftUnitor_naturality
     have : b ≠ j := fun h => hne (by subst h; rfl)
     simp [this]
 
+open scoped Classical in
 private theorem mat_rightUnitor_naturality
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     {M N : Mat_ C} (f : M ⟶ N) :
@@ -404,6 +419,7 @@ gone both sides reduce to the corresponding coherence in `C`. -/
 
 -- Raised budget: the pentagon is checked entrywise on a quadruple
 -- index, so four matrix compositions expand.
+open scoped Classical in
 private theorem mat_pentagon
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [MonoidalPreadditive C]
@@ -460,6 +476,7 @@ private theorem mat_pentagon
       · simp [h2]
       · rcases not_and_or.mp h2 with h3 | h3 <;> simp [h3]
 
+open scoped Classical in
 private theorem mat_triangle
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [MonoidalPreadditive C]

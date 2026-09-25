@@ -24,7 +24,7 @@ This is the base case of the converse's factorization induction.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {W : ClosedFragment}
 
@@ -33,7 +33,7 @@ variable {W : ClosedFragment}
 /-- On a closed fragment, no flag is boundary-attached. -/
 theorem EdgeSubset.allInternal_of_closed (F : EdgeSubset W) :
     F.allInternal := by
-  show F.boundaryFlags = ∅
+  change F.boundaryFlags = ∅
   rw [Finset.eq_empty_iff_forall_notMem]
   intro f hf
   exact Fin.elim0 (F.attach_boundary_of_mem hf).choose
@@ -232,7 +232,7 @@ theorem EdgeSubset.throughSummand_eq_mixedSummand
   rw [mul_one]
   congr 1
   refine Finset.sum_congr rfl fun ψ _ => ?_
-  rw [if_pos (genEvenBoundaryMatch_closed F st hbnd ψ)]
+  rw [ite_eq_left (genEvenBoundaryMatch_closed F st hbnd ψ)]
   refine (Fintype.sum_equiv (F.coreOddEquiv ℓ)
     (fun φ_core =>
       if F.coreOddBoundaryMatch st φ_core then
@@ -247,7 +247,7 @@ theorem EdgeSubset.throughSummand_eq_mixedSummand
           h.evalOdd (F.evenColoursAt ψ v)
             (F.oddListAt o φ v)))
     (fun φ_core => ?_))
-  rw [if_pos (F.coreOddBoundaryMatch_closed st φ_core)]
+  rw [ite_eq_left (F.coreOddBoundaryMatch_closed st φ_core)]
   refine Finset.prod_congr rfl fun v _ => ?_
   rw [F.coreOddSignAt_eq o φ_core v,
     F.coreOddListAt_eq o φ_core v]

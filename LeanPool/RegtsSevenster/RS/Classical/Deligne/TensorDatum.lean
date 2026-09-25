@@ -44,7 +44,7 @@ noncomputable def interchangeDesc
     (interchange A X₁ X₂ Y₁ Y₂)
     (by
       rw [modTensorLegM, modTensorLegN, actRight]
-      show ((β_ (modTensor A X₁ X₂) A).hom ≫
+      change ((β_ (modTensor A X₁ X₂) A).hom ≫
           modTensorAct A X₁ X₂) ▷ modTensor A Y₁ Y₂ ≫
           interchange A X₁ X₂ Y₁ Y₂ =
         ((α_ (modTensor A X₁ X₂) A (modTensor A Y₁ Y₂)).hom ≫
@@ -89,7 +89,7 @@ theorem interchangeDesc_act
     modTensorπ_interchangeDesc]
   conv_rhs => rw [← MonoidalCategory.whiskerLeft_comp_assoc,
     modTensorπ_interchangeDesc]
-  show (α_ A (modTensor A X₁ X₂) (modTensor A Y₁ Y₂)).inv ≫
+  change (α_ A (modTensor A X₁ X₂) (modTensor A Y₁ Y₂)).inv ≫
       (modTensorAct A X₁ X₂ ▷ modTensor A Y₁ Y₂) ≫
       interchange A X₁ X₂ Y₁ Y₂ =
     (A ◁ interchange A X₁ X₂ Y₁ Y₂) ≫

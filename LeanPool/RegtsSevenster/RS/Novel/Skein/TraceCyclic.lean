@@ -40,7 +40,7 @@ theorem transposeEquiv_symm (n p : ℕ) :
   · have hj : x.val - p < n := by have := x.isLt; omega
     rw [show x = (⟨p + (x.val - p), by have := x.isLt; omega⟩ :
         Fin (p + n)) from Fin.ext
-          (by show x.val = p + (x.val - p); omega),
+          (by change x.val = p + (x.val - p); omega),
       transposeEquiv_symm_high n p (x.val - p) hj,
       transposeEquiv_high p n (x.val - p) hj]
     all_goals omega
@@ -64,9 +64,9 @@ theorem cast_trans_outPerm {t : ℕ} (e : Equiv.Perm (Fin t)) :
   intro j
   simp only [_root_.Equiv.trans_apply]
   rw [show (finCongr (by omega : t = 0 + t) j : Fin (0 + t)) =
-      Fin.natAdd 0 j from Fin.ext (by show j.val = 0 + j.val; omega),
+      Fin.natAdd 0 j from Fin.ext (by change j.val = 0 + j.val; omega),
     outPermEquiv_high 0 e j]
-  exact Fin.ext (by show (e j).val = 0 + (e j).val; omega)
+  exact Fin.ext (by change (e j).val = 0 + (e j).val; omega)
 
 /-- Label algebra: post-composing the inverse boundary permutation
 with the high cast is pre-composing the cast with the incoming

@@ -30,25 +30,25 @@ noncomputable def stdFormEvenBilin (k : ℕ) :
       unfold stdFormEven
       rw [← Finset.sum_add_distrib]
       exact Finset.sum_congr rfl (fun i _ => by
-        show (x i + x' i) * y i = _
+        change (x i + x' i) * y i = _
         ring))
     (fun c x y => by
       unfold stdFormEven
       rw [smul_eq_mul, Finset.mul_sum]
       exact Finset.sum_congr rfl (fun i _ => by
-        show (c * x i) * y i = _
+        change (c * x i) * y i = _
         ring))
     (fun x y y' => by
       unfold stdFormEven
       rw [← Finset.sum_add_distrib]
       exact Finset.sum_congr rfl (fun i _ => by
-        show x i * (y i + y' i) = _
+        change x i * (y i + y' i) = _
         ring))
     (fun c x y => by
       unfold stdFormEven
       rw [smul_eq_mul, Finset.mul_sum]
       exact Finset.sum_congr rfl (fun i _ => by
-        show x i * (c * y i) = _
+        change x i * (c * y i) = _
         ring))
 
 /-- The odd form as a bilinear map. -/
@@ -59,26 +59,26 @@ noncomputable def stdFormOddBilin (ℓ : ℕ) :
       unfold stdFormOdd
       rw [← Finset.sum_add_distrib]
       exact Finset.sum_congr rfl (fun i _ => by
-        show -(oddPartnerSign ℓ i : ℂ) * (x i + x' i) * y (oddPartner ℓ i) = _
+        change -(oddPartnerSign ℓ i : ℂ) * (x i + x' i) * y (oddPartner ℓ i) = _
         ring))
     (fun c x y => by
       unfold stdFormOdd
       rw [smul_eq_mul, Finset.mul_sum]
       exact Finset.sum_congr rfl (fun i _ => by
-        show -(oddPartnerSign ℓ i : ℂ) * (c * x i) * y (oddPartner ℓ i) = _
+        change -(oddPartnerSign ℓ i : ℂ) * (c * x i) * y (oddPartner ℓ i) = _
         ring))
     (fun x y y' => by
       unfold stdFormOdd
       rw [← Finset.sum_add_distrib]
       exact Finset.sum_congr rfl (fun i _ => by
-        show -(oddPartnerSign ℓ i : ℂ) * x i *
+        change -(oddPartnerSign ℓ i : ℂ) * x i *
           (y (oddPartner ℓ i) + y' (oddPartner ℓ i)) = _
         ring))
     (fun c x y => by
       unfold stdFormOdd
       rw [smul_eq_mul, Finset.mul_sum]
       exact Finset.sum_congr rfl (fun i _ => by
-        show -(oddPartnerSign ℓ i : ℂ) * x i *
+        change -(oddPartnerSign ℓ i : ℂ) * x i *
           (c * y (oddPartner ℓ i)) = _
         ring))
 

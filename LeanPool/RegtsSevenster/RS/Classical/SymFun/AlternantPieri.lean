@@ -52,17 +52,17 @@ private theorem prod_update_eq (τ : Equiv.Perm (Fin k))
     · subst h
       rw [show (τ : Fin k → Fin k) (τ.symm m) = m
         from Equiv.apply_symm_apply τ m]
-      rw [Function.update_self, if_pos rfl, pow_succ,
+      rw [Function.update_self, ite_eq_left rfl, pow_succ,
           mul_comm ((X (τ.symm m) : MvPolynomial (Fin k) ℂ) ^ _)]
     · have hne : (τ : Fin k → Fin k) i ≠ m := fun h' =>
         h (show i = τ.symm m from by
           rw [← h', Equiv.symm_apply_apply])
-      rw [Function.update_of_ne hne _ _, if_neg h, one_mul]
+      rw [Function.update_of_ne hne _ _, ite_eq_right h, one_mul]
   rw [Finset.prod_congr rfl (fun i _ => hfact i)]
   rw [Finset.prod_mul_distrib]
   rw [Finset.prod_ite_eq' Finset.univ (τ.symm m)
     (fun i => (X i : MvPolynomial (Fin k) ℂ))]
-  rw [if_pos (Finset.mem_univ _)]
+  rw [ite_eq_left (Finset.mem_univ _)]
 
 open scoped Classical in
 /-- **The Pieri rule for alternants**: multiplying by the first

@@ -69,10 +69,10 @@ noncomputable def oddParitySwap
       Linear.smul_comp]
   invFun g := L.sq.inv ≫ (g ▷ L.obj)
   left_inv f := by
-    show L.sq.inv ≫ (((λ_ L.obj).inv ≫ (f ▷ L.obj) ≫
+    change L.sq.inv ≫ (((λ_ L.obj).inv ≫ (f ▷ L.obj) ≫
       (α_ M L.obj L.obj).hom ≫ (M ◁ L.sq.hom) ≫ (ρ_ M).hom)
         ▷ L.obj) = f
-    letI := L.exactPairing
+    let := L.exactPairing
     have hs : ∀ F : 𝟙_ D ⟶ M ⊗ L.obj,
         (tensorRightHomEquiv (𝟙_ D) L.obj L.obj M).symm F =
           (F ▷ L.obj) ≫ (α_ M L.obj L.obj).hom ≫
@@ -85,9 +85,9 @@ noncomputable def oddParitySwap
     rw [← hs, L.coevaluation_whiskerRight, ← ht,
       Equiv.apply_symm_apply]
   right_inv g := by
-    show (λ_ L.obj).inv ≫ ((L.sq.inv ≫ (g ▷ L.obj)) ▷ L.obj) ≫
+    change (λ_ L.obj).inv ≫ ((L.sq.inv ≫ (g ▷ L.obj)) ▷ L.obj) ≫
       (α_ M L.obj L.obj).hom ≫ (M ◁ L.sq.hom) ≫ (ρ_ M).hom = g
-    letI := L.exactPairing
+    let := L.exactPairing
     have hs : ∀ F : 𝟙_ D ⟶ M ⊗ L.obj,
         (tensorRightHomEquiv (𝟙_ D) L.obj L.obj M).symm F =
           (F ▷ L.obj) ≫ (α_ M L.obj L.obj).hom ≫

@@ -32,7 +32,7 @@ theorem coordOf_odd {n : ℕ}
     (v : (superPow (stdSuperPair k ℓ) n).even)
     (c : MixedColouring k ℓ n) (hc : ¬ c.IsEven) :
     coordOf v c = 0 :=
-  dif_neg hc
+  dite_eq_right hc
 
 /-- The cast rule: coordinates of a recast vector read the
 recast colouring. -/
@@ -57,7 +57,7 @@ theorem toColour_apply {n : ℕ}
         ((colourPowerEquiv k ℓ n).evenEquiv v) =
       (colourPowerEquiv k ℓ n).evenEquiv
         ((g : SuperVect.Hom _ _).evenMap v) := by
-  show (colourPowerEquiv k ℓ n).evenEquiv
+  change (colourPowerEquiv k ℓ n).evenEquiv
     ((g : SuperVect.Hom _ _).evenMap
       ((colourPowerEquiv k ℓ n).evenEquiv.symm
         ((colourPowerEquiv k ℓ n).evenEquiv v))) = _

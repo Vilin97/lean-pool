@@ -81,7 +81,7 @@ noncomputable instance strandExactPairing :
   coevaluation' := coevClass f
   evaluation' := evClass f
   coevaluation_evaluation' := by
-    show HomSpace.comp f 1 3 1
+    change HomSpace.comp f 1 3 1
         (HomSpace.tensor f 1 1 0 2 (idClass f) (coevClass f))
         (HomSpace.comp f 3 3 1
           (bundleMapClass f (finCongr _))
@@ -93,7 +93,7 @@ noncomputable instance strandExactPairing :
       HomSpace.comp_id_left, HomSpace.comp_id_left]
     exact snake_right f
   evaluation_coevaluation' := by
-    show HomSpace.comp f 1 3 1
+    change HomSpace.comp f 1 3 1
         (HomSpace.tensor f 0 2 1 1 (coevClass f) (idClass f))
         (HomSpace.comp f 3 3 1
           (bundleMapClass f (finCongr _))
@@ -110,7 +110,7 @@ theorem strand_ev_symmetry :
     (β_ (SkeinObj.mk 1 : SkeinObj f) (SkeinObj.mk 1)).hom ≫
         ε_ (SkeinObj.mk 1) (SkeinObj.mk 1) =
       ε_ (SkeinObj.mk 1) (SkeinObj.mk 1) := by
-  show HomSpace.comp f 2 2 0
+  change HomSpace.comp f 2 2 0
       (bundleMapClass f (transposeEquiv 1 1)) (evClass f) =
     evClass f
   rw [← braidClass_eq_bmc]

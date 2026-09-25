@@ -25,8 +25,7 @@ namespace RS
 open Equiv Equiv.Perm
 
 /-- `permCongr` is `extendDomain` along the trivial subtype. -/
-theorem permCongr_eq_extendDomain {α β : Type} [Fintype α]
-    [DecidableEq α] [Fintype β] [DecidableEq β]
+theorem permCongr_eq_extendDomain {α β : Type}
     (e : α ≃ β) (π : Equiv.Perm α) :
     e.permCongr π =
       π.extendDomain
@@ -56,8 +55,7 @@ noncomputable def fixedPointsPermCongrEquiv {α β : Type}
     exact ⟨fun h => by rw [h], fun h => e.injective h⟩)).symm
 
 /-- Transporting a permutation preserves the fixed-point count. -/
-theorem card_fixedPoints_permCongr {α β : Type} [Fintype α]
-    [DecidableEq α] [Fintype β] [DecidableEq β]
+theorem card_fixedPoints_permCongr {α β : Type}
     (e : α ≃ β) (π : Equiv.Perm α)
     [Fintype (Function.fixedPoints π)]
     [Fintype (Function.fixedPoints (e.permCongr π))] :
@@ -90,12 +88,12 @@ theorem cycleType_sumCongr_left {α β : Type}
     rw [hsuff, cycleType_extendDomain]
   ext x; rcases x with a | b
   · -- inl a: both sides give inl (σ a)
-    show Sum.inl (σ a) = _
+    change Sum.inl (σ a) = _
     rw [@Perm.extendDomain_apply_subtype α (α ⊕ β) σ p hdec e (Sum.inl a) ⟨a,
       rfl⟩]
     simp [e]
   · -- inr b: both sides give inr b
-    show Sum.inr b = _
+    change Sum.inr b = _
     have hb : ¬ p (Sum.inr b) := fun ⟨_, h⟩ => nomatch h
     rw [@Perm.extendDomain_apply_not_subtype α (α ⊕ β) σ p hdec e (Sum.inr b)
       hb]
@@ -103,7 +101,7 @@ theorem cycleType_sumCongr_left {α β : Type}
 /-- `sumCongr 1 τ` equals the permCongr-transport of `sumCongr τ 1` by
 `sumComm`. -/
 theorem sumCongr_right_eq_permCongr {α β : Type}
-    [DecidableEq α] [DecidableEq β] (τ : Perm β) :
+    (τ : Perm β) :
     Equiv.sumCongr (1 : Perm α) τ =
       (Equiv.sumComm β α).permCongr (Equiv.sumCongr τ (1 : Perm α)) := by
   ext x
@@ -118,7 +116,6 @@ theorem cycleType_sumCongr_right {α β : Type}
 
 /-- The factors `sumCongr σ 1` and `sumCongr 1 τ` are disjoint. -/
 theorem disjoint_sumCongr {α β : Type}
-    [DecidableEq α] [DecidableEq β]
     (σ : Perm α) (τ : Perm β) :
     Disjoint
       (Equiv.sumCongr σ (1 : Perm β))

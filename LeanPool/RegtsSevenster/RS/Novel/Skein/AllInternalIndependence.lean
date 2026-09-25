@@ -18,7 +18,7 @@ Proposition 3 for the boundary-free sector, as a theorem.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 

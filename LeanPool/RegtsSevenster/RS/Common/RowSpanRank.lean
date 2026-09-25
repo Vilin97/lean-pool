@@ -70,7 +70,7 @@ private theorem separating_aux [Field K] {κ : Type*}
       refine lt_of_le_of_ne inf_le_left fun h => hj ?_
       have hmem : w₀ ∈ U' := by rw [h]; exact hw₀U
       exact LinearMap.mem_ker.1 (Submodule.mem_inf.1 hmem).2
-    haveI : FiniteDimensional K U' :=
+    have : FiniteDimensional K U' :=
       FiniteDimensional.of_injective (Submodule.inclusion (le_of_lt hlt))
         (Submodule.inclusion_injective _)
     have hfr : Module.finrank K U' < Module.finrank K U :=
@@ -159,7 +159,7 @@ private theorem card_le_of_independent_in_span
       ⟨⟨j, Finset.mem_biUnion.2 ⟨i, Finset.mem_univ _, hj⟩⟩, rfl⟩
   -- Finitely many columns already separate its span.
   set U := Submodule.span K (Set.range w) with hUdef
-  haveI : FiniteDimensional K U :=
+  have : FiniteDimensional K U :=
     FiniteDimensional.span_of_finite K (Set.finite_range _)
   have hUle : U ≤ rowsOn M S :=
     Submodule.span_le.2 (by rintro _ ⟨i, rfl⟩; exact hwS i)

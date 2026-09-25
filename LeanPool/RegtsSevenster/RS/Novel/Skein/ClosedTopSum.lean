@@ -21,8 +21,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Classical
-
+open Fragment
 variable {L : Type}
 
 open Classical in
@@ -49,7 +48,7 @@ theorem circuitWeight_pos [LinearOrder L] {V : Fragment L}
     circuitWeight 𝒟 s
       = ((-1 : ℂ) ^ (𝒟 s hc hE hne).1.openCircuitCount) := by
   unfold circuitWeight
-  rw [dif_pos hc, dif_pos hE, dif_pos hne]
+  rw [dite_eq_left hc, dite_eq_left hE, dite_eq_left hne]
 
 section ClosedTop
 

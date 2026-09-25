@@ -53,7 +53,7 @@ theorem connectionMap_compose_left_single
     rfl
   | add y z hy hz =>
     rw [map_add, map_add]
-    show connectionMap f (s + u) _ K +
+    change connectionMap f (s + u) _ K +
       connectionMap f (s + u) _ K = _
     rw [hy, hz, map_add]
     rfl

@@ -42,7 +42,7 @@ noncomputable def addCirclesTensor {s t : ℕ}
       _root_.Equiv.sumEmpty X.Vertex Empty
   attach_comm := fun g => by
     rcases g with g | g
-    · show (X.attach g).map id
+    · change (X.attach g).map id
         (finCongr (by omega : s + t = (s + 0) + (t + 0))) =
         Sum.map (show (X.Vertex ⊕ Empty) ≃ X.Vertex from
           _root_.Equiv.sumEmpty X.Vertex Empty) id
@@ -85,15 +85,15 @@ noncomputable def circlesClosedUnion (a b : ℕ) :
       inferInstanceAs (IsEmpty Empty)
     _root_.Equiv.equivOfIsEmpty _ _
   attach_comm := fun g => by
-    haveI h1 : IsEmpty (circlesClosed a).Flag :=
+    have h1 : IsEmpty (circlesClosed a).Flag :=
       inferInstanceAs (IsEmpty Empty)
-    haveI h2 : IsEmpty (circlesClosed b).Flag :=
+    have h2 : IsEmpty (circlesClosed b).Flag :=
       inferInstanceAs (IsEmpty Empty)
     exact g.elim h1.elim h2.elim
   pairing_comm := fun g => by
-    haveI h1 : IsEmpty (circlesClosed a).Flag :=
+    have h1 : IsEmpty (circlesClosed a).Flag :=
       inferInstanceAs (IsEmpty Empty)
-    haveI h2 : IsEmpty (circlesClosed b).Flag :=
+    have h2 : IsEmpty (circlesClosed b).Flag :=
       inferInstanceAs (IsEmpty Empty)
     exact g.elim h1.elim h2.elim
   circles_eq := rfl
@@ -119,11 +119,11 @@ theorem circlesClosed_val {R : ℕ} (f : EdgeRankParameter R)
             inferInstanceAs (IsEmpty Empty)
           _root_.Equiv.equivOfIsEmpty _ _
         attach_comm := fun g => by
-          haveI : IsEmpty (circlesClosed 0).Flag :=
+          have : IsEmpty (circlesClosed 0).Flag :=
             inferInstanceAs (IsEmpty Empty)
           exact isEmptyElim g
         pairing_comm := fun g => by
-          haveI : IsEmpty (circlesClosed 0).Flag :=
+          have : IsEmpty (circlesClosed 0).Flag :=
             inferInstanceAs (IsEmpty Empty)
           exact isEmptyElim g
         circles_eq := rfl }

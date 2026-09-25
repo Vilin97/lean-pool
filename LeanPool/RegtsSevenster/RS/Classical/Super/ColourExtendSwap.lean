@@ -48,16 +48,13 @@ private theorem swap_castSucc_eq {n i : ℕ} (h : i + 2 ≤ n + 1)
 
 /-- Composition of `funTensorFun`, `TensorProduct.map f id`, for
 general tensor elements. -/
-private theorem funTensorFun_map_id {ι κ : Type} [Fintype ι] [DecidableEq ι]
-    [Fintype κ] [DecidableEq κ]
+private theorem funTensorFun_map_id {ι κ : Type} [Fintype ι]
+    [Fintype κ]
     (f : (ι → ℂ) →ₗ[ℂ] (ι → ℂ))
     (t : (ι → ℂ) ⊗[ℂ] (κ → ℂ)) (x : ι) (y : κ) :
     funTensorFun ι κ (TensorProduct.map f LinearMap.id t) (x, y) =
     f (fun x' => funTensorFun ι κ t (x', y)) x := by
-  induction t using TensorProduct.induction_on with
-  | zero =>
-    simp only [map_zero, Pi.zero_apply]
-    change 0 = f 0 x; simp [map_zero]
+  induction t using TensorProduct.inductionOn with
   | tmul a b =>
     simp only [TensorProduct.map_tmul, LinearMap.id_apply, funTensorFun_tmul]
     have : (fun x' => a x' * b y) = b y • a := by
@@ -358,7 +355,7 @@ theorem colourExtend_colourSwap {k ℓ : ℕ} (n i : ℕ)
           SuperVect.Hom _ _).evenMap
           ((colourPowerStep k ℓ (n + 1)).evenEquiv P) by
       ext F
-      show (colourPowerStep k ℓ (n + 1)).evenEquiv
+      change (colourPowerStep k ℓ (n + 1)).evenEquiv
         (((SuperVect.tensorHom (colourSwap k ℓ (n + 1) i h)
           (SuperVect.Hom.id (stdSuperPair k ℓ)) :
           SuperVect.Hom _ _).evenMap)
@@ -370,7 +367,7 @@ theorem colourExtend_colourSwap {k ℓ : ℕ} (n i : ℕ)
     intro P
     funext ⟨c, hc⟩
     rw [step_tensorHom_even_apply]
-    show Sum.elim
+    change Sum.elim
         (fun p => funTensorFun _ _ (TensorProduct.map
           (colourSwap k ℓ (n + 1) i h : SuperVect.Hom _ _).evenMap
           LinearMap.id P.1) p)
@@ -412,7 +409,7 @@ theorem colourExtend_colourSwap {k ℓ : ℕ} (n i : ℕ)
           SuperVect.Hom _ _).oddMap
           ((colourPowerStep k ℓ (n + 1)).oddEquiv P) by
       ext F
-      show (colourPowerStep k ℓ (n + 1)).oddEquiv
+      change (colourPowerStep k ℓ (n + 1)).oddEquiv
         (((SuperVect.tensorHom (colourSwap k ℓ (n + 1) i h)
           (SuperVect.Hom.id (stdSuperPair k ℓ)) :
           SuperVect.Hom _ _).oddMap)
@@ -423,7 +420,7 @@ theorem colourExtend_colourSwap {k ℓ : ℕ} (n i : ℕ)
     intro P
     funext ⟨c, hc⟩
     rw [step_tensorHom_odd_apply]
-    show Sum.elim
+    change Sum.elim
         (fun p => funTensorFun _ _ (TensorProduct.map
           (colourSwap k ℓ (n + 1) i h : SuperVect.Hom _ _).evenMap
           LinearMap.id P.1) p)

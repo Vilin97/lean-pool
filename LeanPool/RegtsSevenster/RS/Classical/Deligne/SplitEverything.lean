@@ -55,21 +55,21 @@ theorem exists_splitting_simple_algebra
       (∀ I : Subobject 𝔹, IsIdeal 𝔹 I → I = ⊥ ∨ I = ⊤) ∧
       SplitsOn L 𝔹 (indOf : C ⥤ Ind C) ∧
       Nonempty (SuperPoint (gammaAlgebra (Ind C) L 𝔹)) := by
-  letI := linearOfScalarUnit ψ
-  letI := monoidalLinearOfScalarUnitBraided ψ
-  letI := linearOfScalarUnit (indScalarUnit ψ)
-  letI := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
+  let := linearOfScalarUnit ψ
+  let := monoidalLinearOfScalarUnitBraided ψ
+  let := linearOfScalarUnit (indScalarUnit ψ)
+  let := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
   have hu : HasScalarUnit C := hasScalarUnit_of_scalarUnit ψ
   obtain ⟨lam, hkill⟩ :=
     forall_exists_schurKilled P hu hgrow (X ⊞ (Xᘁ))
   obtain ⟨p, q, 𝔸, 𝔹, hmonA, hcommA, hmon, hcomm, π, hne, hcp, hepi,
       hhom, hsimple, ⟨e⟩⟩ :=
     exists_simple_generator_algebra ψ P P₀ L (X ⊞ (Xᘁ)) lam hkill hlen
-  letI := hmonA
-  letI := hcommA
-  letI := hmon
-  letI := hcomm
-  haveI := hepi
+  let := hmonA
+  let := hcommA
+  let := hmon
+  let := hcomm
+  have := hepi
   have hbig : IsSplit L 𝔹 ((indOf : C ⥤ Ind C).obj (X ⊞ (Xᘁ))) :=
     ⟨p, q, ⟨e⟩⟩
   have hsubB : ∀ Y Z : C, IsSubquotientOf Y Z →
@@ -77,7 +77,7 @@ theorem exists_splitting_simple_algebra
       IsSplit L 𝔹 ((indOf : C ⥤ Ind C).obj Y) := by
     intro Y Z hsq hZ
     obtain ⟨a, b, ⟨eZ⟩⟩ := hZ
-    haveI : (indOf (C := C)).Additive := indOf_additive
+    have : (indOf (C := C)).Additive := indOf_additive
     exact exists_mix_of_isSubquotient 𝔹 L hsimple hne
       (isSubquotientOf_map (indOf : C ⥤ Ind C) hsq) eZ
   have hX : IsSplit L 𝔹 ((indOf : C ⥤ Ind C).obj X) :=

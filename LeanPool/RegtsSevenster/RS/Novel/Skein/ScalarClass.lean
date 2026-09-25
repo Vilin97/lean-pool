@@ -40,7 +40,7 @@ theorem ofFragment_eq_smul_empty {R : ℕ}
       LinearMap.ker (connectionMap f.val 0) := by
     rw [LinearMap.mem_ker, map_sub, map_smul]
     funext G
-    show connectionMap f.val 0 (Finsupp.single W 1) G -
+    change connectionMap f.val 0 (Finsupp.single W 1) G -
       f.val W • connectionMap f.val 0
         (Finsupp.single emptyClosedFragment 1) G = 0
     rw [connectionMap_single, connectionMap_single, one_mul,

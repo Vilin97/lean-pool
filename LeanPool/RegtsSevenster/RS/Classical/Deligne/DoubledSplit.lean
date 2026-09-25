@@ -53,10 +53,10 @@ theorem exists_splitting_simple_algebra_doubled
         (indOf : Doubled A ⥤ Ind (Doubled A)) ∧
       Nonempty (SuperPoint
         (gammaAlgebra (Ind (Doubled A)) doubledIndOddLine 𝔹)) := by
-  letI := linearOfScalarUnit (doubledScalarUnit hu)
-  letI := monoidalLinearOfScalarUnitBraided (doubledScalarUnit hu)
-  letI := linearOfScalarUnit (indScalarUnit (doubledScalarUnit hu))
-  letI := monoidalLinearOfScalarUnitBraided
+  let := linearOfScalarUnit (doubledScalarUnit hu)
+  let := monoidalLinearOfScalarUnitBraided (doubledScalarUnit hu)
+  let := linearOfScalarUnit (indScalarUnit (doubledScalarUnit hu))
+  let := monoidalLinearOfScalarUnitBraided
     (indScalarUnit (doubledScalarUnit hu))
   exact exists_splitting_simple_algebra (doubledScalarUnit hu) P P₀
     doubledIndOddLine (Doubled.gen X)

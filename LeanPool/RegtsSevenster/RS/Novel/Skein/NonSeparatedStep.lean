@@ -57,7 +57,7 @@ the parity files:
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type} {W : Fragment α}
 
@@ -154,25 +154,25 @@ noncomputable def RelTransitionSystem.Orientation.segFlip
     by_cases h1 : f = a
     · subst h1
       rw [RelTransitionSystem.repair_match_a hsq,
-        if_pos hseg.hcS, if_neg hseg.haS, hsame]
+        ite_eq_left hseg.hcS, ite_eq_right hseg.haS, hsame]
     by_cases h3 : f = c
     · subst h3
       rw [RelTransitionSystem.repair_match_c hsq,
-        if_neg hseg.haS, if_pos hseg.hcS, Bool.not_not, hsame]
+        ite_eq_right hseg.haS, ite_eq_left hseg.hcS, Bool.not_not, hsame]
     by_cases h2 : f = b
     · subst h2
       rw [RelTransitionSystem.repair_match_b hsq,
-        if_neg hseg.hdS, if_pos hseg.hbS, Bool.not_not,
+        ite_eq_right hseg.hdS, ite_eq_left hseg.hbS, Bool.not_not,
         hdflip, hbflip, hsame]
     by_cases h4 : f = d
     · subst h4
       rw [RelTransitionSystem.repair_match_d hsq,
-        if_pos hseg.hbS, if_neg hseg.hdS, hbflip, hdflip, hsame]
+        ite_eq_left hseg.hbS, ite_eq_right hseg.hdS, hbflip, hdflip, hsame]
     · rw [RelTransitionSystem.repair_match_of_ne hsq h1 h2 h3 h4]
       by_cases hfS : f ∈ S
-      · rw [if_pos (hseg.match_mem f hfS h2 h3), if_pos hfS,
+      · rw [ite_eq_left (hseg.match_mem f hfS h2 h3), ite_eq_left hfS,
           o.match_flip f hf]
-      · rw [if_neg (hseg.match_notMem hsq hf hfS h1 h4), if_neg hfS]
+      · rw [ite_eq_right (hseg.match_notMem hsq hf hfS h1 h4), ite_eq_right hfS]
         exact o.match_flip f hf
   pairing_flip := by
     intro f hf hp
@@ -180,9 +180,9 @@ noncomputable def RelTransitionSystem.Orientation.segFlip
         else o.isOut (W.pairing f)) =
       !(if f ∈ S then !o.isOut f else o.isOut f)
     by_cases hfS : f ∈ S
-    · rw [if_pos (hseg.pairing_mem f hfS), if_pos hfS,
+    · rw [ite_eq_left (hseg.pairing_mem f hfS), ite_eq_left hfS,
         o.pairing_flip f hf hp]
-    · rw [if_neg (hseg.pairing_notMem hfS), if_neg hfS]
+    · rw [ite_eq_right (hseg.pairing_notMem hfS), ite_eq_right hfS]
       exact o.pairing_flip f hf hp
 
 section SegFlipEval
@@ -195,7 +195,7 @@ theorem segFlip_isOut_of_notMem (hsq : RepairSquare κ a b c d v)
     (o : κ.Orientation) (hsame : o.isOut c = o.isOut a)
     (hseg : RepairSegment κ a b c d S) {f : W.Flag} (hf : f ∉ S) :
     (RelTransitionSystem.Orientation.segFlip hsq o hsame
-      hseg).isOut f = o.isOut f := if_neg hf
+      hseg).isOut f = o.isOut f := ite_eq_right hf
 
 end SegFlipEval
 
@@ -223,8 +223,8 @@ noncomputable def segFlipColouring (hSpair : ∀ f ∈ S, W.pairing f ∈ S) {�
            ⟨W.pairing g.val, F.pairing_mem_coreFlags g.prop⟩) =
          (if g.val ∈ S then oddPartner ℓ (φ.val g) else φ.val g) := by
        by_cases hg : g.val ∈ S
-       · rw [if_pos (hSpair _ hg), if_pos hg, φ.prop g]
-       · rw [if_neg (hnot _ hg), if_neg hg, φ.prop g]
+       · rw [ite_eq_left (hSpair _ hg), ite_eq_left hg, φ.prop g]
+       · rw [ite_eq_right (hnot _ hg), ite_eq_right hg, φ.prop g]
      exact hbeta⟩
 
 /-- The segment-flipped colouring, unfolded. -/
@@ -244,13 +244,13 @@ theorem segFlipColouring_involutive
   intro φ
   apply Subtype.ext
   funext g
-  show (if g.val ∈ S then
+  change (if g.val ∈ S then
       oddPartner ℓ ((segFlipColouring hSpair φ).val g)
     else (segFlipColouring hSpair φ).val g) = φ.val g
   by_cases hg : g.val ∈ S
-  · rw [if_pos hg, segFlipColouring_val hSpair φ g, if_pos hg,
+  · rw [ite_eq_left hg, segFlipColouring_val hSpair φ g, ite_eq_left hg,
       oddPartner_invol]
-  · rw [if_neg hg, segFlipColouring_val hSpair φ g, if_neg hg]
+  · rw [ite_eq_right hg, segFlipColouring_val hSpair φ g, ite_eq_right hg]
 
 /-- The `∂`-flip preserves the odd boundary constraint when the
 segment carries no boundary flags. -/
@@ -265,7 +265,7 @@ theorem coreOddBoundaryMatch_segFlipColouring {k ℓ : ℕ}
       (segFlipColouring hSpair φ).val ⟨W.boundaryFlag i, hcore⟩ =
         φ.val ⟨W.boundaryFlag i, hcore⟩ := by
     intro i hcore
-    rw [segFlipColouring_val hSpair φ _, if_neg (hSb i)]
+    rw [segFlipColouring_val hSpair φ _, ite_eq_right (hSb i)]
   unfold coreOddBoundaryMatch
   constructor
   · intro H i cc hst hcore
@@ -291,14 +291,14 @@ private theorem flipVal_of_mem {φ φ' : F.CoreOddColouring ℓ}
       if g.val ∈ S then oddPartner ℓ (φ.val g) else φ.val g)
     (g : {g : W.Flag // g ∈ F.coreFlags}) (hg : g.val ∈ S) :
     φ'.val g = oddPartner ℓ (φ.val g) := by
-  rw [hφ' g, if_pos hg]
+  rw [hφ' g, ite_eq_left hg]
 
 private theorem flipVal_of_notMem {φ φ' : F.CoreOddColouring ℓ}
     (hφ' : ∀ g, φ'.val g =
       if g.val ∈ S then oddPartner ℓ (φ.val g) else φ.val g)
     (g : {g : W.Flag // g ∈ F.coreFlags}) (hg : g.val ∉ S) :
     φ'.val g = φ.val g := by
-  rw [hφ' g, if_neg hg]
+  rw [hφ' g, ite_eq_right hg]
 
 /-! ### Vertex-local in-sets -/
 
@@ -316,12 +316,14 @@ noncomputable def flipS (S : Finset W.Flag)
     (vv : W.Vertex) : Finset W.Flag :=
   (relInSetAt o₀ vv).filter (fun g => g ∈ S)
 
+open scoped Classical in
 private noncomputable def outbS (S : Finset W.Flag)
     {κ₀ : F.RelTransitionSystem} (o₀ : κ₀.Orientation)
     (vv : W.Vertex) : Finset W.Flag :=
   F.flags.filter
     (fun f => W.attach f = Sum.inl vv ∧ o₀.isOut f = true ∧ f ∈ S)
 
+open scoped Classical in
 private noncomputable def diffAtS (S : Finset W.Flag)
     (vv : W.Vertex) : Finset W.Flag :=
   S.filter (fun g => W.attach g = Sum.inl vv)
@@ -329,14 +331,16 @@ private noncomputable def diffAtS (S : Finset W.Flag)
 /-- Membership in the kept part of a vertex's in-set. -/
 theorem mem_keepS {κ₀ : F.RelTransitionSystem}
     {o₀ : κ₀.Orientation} {vv : W.Vertex} {g : W.Flag} :
-    g ∈ keepS S o₀ vv ↔ g ∈ relInSetAt o₀ vv ∧ g ∉ S :=
-  Finset.mem_filter
+    g ∈ keepS S o₀ vv ↔ g ∈ relInSetAt o₀ vv ∧ g ∉ S := by
+  classical
+  exact Finset.mem_filter
 
 /-- Membership in the flipped part of a vertex's in-set. -/
 theorem mem_flipS {κ₀ : F.RelTransitionSystem}
     {o₀ : κ₀.Orientation} {vv : W.Vertex} {g : W.Flag} :
-    g ∈ flipS S o₀ vv ↔ g ∈ relInSetAt o₀ vv ∧ g ∈ S :=
-  Finset.mem_filter
+    g ∈ flipS S o₀ vv ↔ g ∈ relInSetAt o₀ vv ∧ g ∈ S := by
+  classical
+  exact Finset.mem_filter
 
 /-- The flip on `S` splits a vertex's in-set into the kept and the
 flipped part. -/
@@ -363,12 +367,14 @@ private theorem mem_outbS {κ₀ : F.RelTransitionSystem}
     {o₀ : κ₀.Orientation} {vv : W.Vertex} {g : W.Flag} :
     g ∈ outbS S o₀ vv ↔
       g ∈ F.flags ∧ W.attach g = Sum.inl vv ∧
-        o₀.isOut g = true ∧ g ∈ S :=
-  Finset.mem_filter
+        o₀.isOut g = true ∧ g ∈ S := by
+  classical
+  exact Finset.mem_filter
 
 private theorem mem_diffAtS {vv : W.Vertex} {g : W.Flag} :
-    g ∈ diffAtS S vv ↔ g ∈ S ∧ W.attach g = Sum.inl vv :=
-  Finset.mem_filter
+    g ∈ diffAtS S vv ↔ g ∈ S ∧ W.attach g = Sum.inl vv := by
+  classical
+  exact Finset.mem_filter
 
 private theorem keepS_disjoint_outbS {κ₀ : F.RelTransitionSystem}
     (o₀ : κ₀.Orientation) (vv : W.Vertex) :
@@ -549,20 +555,20 @@ private theorem inb_flip (hd : SegData κ κ' o o' S v P Q R T)
   · rintro ⟨hgfl, hgat, hgout⟩
     rw [hd.hiso g] at hgout
     by_cases hgS : g ∈ S
-    · rw [if_pos hgS] at hgout
+    · rw [ite_eq_left hgS] at hgout
       refine Or.inr ⟨hgfl, hgat, ?_, hgS⟩
       cases hb : o.isOut g
       · rw [hb] at hgout
         cases hgout
       · rfl
-    · rw [if_neg hgS] at hgout
+    · rw [ite_eq_right hgS] at hgout
       exact Or.inl ⟨⟨hgfl, hgat, hgout⟩, hgS⟩
   · rintro (⟨⟨hgfl, hgat, hgout⟩, hgS⟩ | ⟨hgfl, hgat, hgout, hgS⟩)
     · refine ⟨hgfl, hgat, ?_⟩
-      rw [hd.hiso g, if_neg hgS]
+      rw [hd.hiso g, ite_eq_right hgS]
       exact hgout
     · refine ⟨hgfl, hgat, ?_⟩
-      rw [hd.hiso g, if_pos hgS, hgout]
+      rw [hd.hiso g, ite_eq_left hgS, hgout]
       rfl
 
 /-- Away from the move's vertex, the outgoing segment flags are the
@@ -993,39 +999,35 @@ private theorem evalList_flip_ne (hd : SegData κ κ' o o' S v P Q R T)
         simp only [List.nil_append] at hp
         rw [hp]
 
-/-- At the move's vertex: the flipped vertex list. -/
-private theorem evalList_flip_v (hd : SegData κ κ' o o' S v P Q R T)
+private theorem evalList_flip_v_expansion (hd : SegData κ κ' o o' S v P Q R T)
     (hM : MixedFunctional k ℓ) (μ : Multiset (Fin k))
     {φ φ' : F.CoreOddColouring ℓ}
     (hφ' : ∀ g, φ'.val g =
-      if g.val ∈ S then oddPartner ℓ (φ.val g) else φ.val g) :
-    hM.evalOdd μ (F.coreOddListAt o' φ' v) =
-      (-1 : ℂ) ^ (flipS S o v).card *
-        hM.evalOdd μ (F.coreOddListAt o φ v) := by
+      if g.val ∈ S then oddPartner ℓ (φ.val g) else φ.val g)
+    (HkE : ∀ g ∈ ((keepS S o v).erase P).toList,
+      g ∈ F.internalFlags)
+    (HfE : ∀ g ∈ ((flipS S o v).erase Q).toList,
+      g ∈ F.internalFlags) :
+    hM.evalOdd μ ((List.pmap Subtype.mk (F.relInFlagsAt o' v)
+        (fun _ hf => F.mem_internal_of_mem_relInFlagsAt hf)).flatMap
+        (F.coreOddPairFn κ' φ')) =
+    hM.evalOdd μ
+          ([φ.val ⟨P, F.internalFlags_subset_coreFlags hd.hPint⟩,
+            φ.val ⟨Q, F.internalFlags_subset_coreFlags hd.hQint⟩] ++
+          (((List.pmap Subtype.mk ((keepS S o v).erase P).toList
+              HkE).flatMap (F.coreOddPairFn κ φ)) ++
+            ([oddPartner ℓ (φ.val ⟨R,
+                F.internalFlags_subset_coreFlags hd.hRint⟩),
+              oddPartner ℓ (φ.val ⟨T,
+                F.internalFlags_subset_coreFlags hd.hTint⟩)] ++
+              (List.pmap Subtype.mk
+                ((flipS S o v).erase Q).toList HfE).flatMap
+                (fun fs => [pairB (κ₀ := κ) φ fs,
+                  pairA φ fs])))) := by
   have hPint := hd.hPint
   have hQint := hd.hQint
   have hRint := hd.hRint
   have hTint := hd.hTint
-  have HkE : ∀ g ∈ ((keepS S o v).erase P).toList,
-      g ∈ F.internalFlags :=
-    fun g hg => relInSetAt_subset_internal
-      (mem_keepS.mp (Finset.mem_of_mem_erase
-        (Finset.mem_toList.mp hg))).1
-  have HfE : ∀ g ∈ ((flipS S o v).erase Q).toList,
-      g ∈ F.internalFlags :=
-    fun g hg => relInSetAt_subset_internal
-      (mem_flipS.mp (Finset.mem_of_mem_erase
-        (Finset.mem_toList.mp hg))).1
-  have Hold : ∀ g ∈ P :: (((keepS S o v).erase P).toList ++
-      Q :: ((flipS S o v).erase Q).toList), g ∈ F.internalFlags := by
-    intro g hg
-    rcases List.mem_cons.mp hg with rfl | hg
-    · exact hPint
-    rcases List.mem_append.mp hg with hg | hg
-    · exact HkE g hg
-    rcases List.mem_cons.mp hg with rfl | hg
-    · exact hQint
-    · exact HfE g hg
   have Hnew : ∀ g ∈ P :: (((keepS S o v).erase P).toList ++
       R :: (((flipS S o v).erase Q).toList.map κ.match_)),
       g ∈ F.internalFlags := by
@@ -1075,9 +1077,6 @@ private theorem evalList_flip_v (hd : SegData κ κ' o o' S v P Q R T)
       Finset.image_val_of_injOn (fun x hx y hy =>
         hinjE x (Finset.mem_coe.mp hx) y (Finset.mem_coe.mp hy)),
       Multiset.cons_add]
-  unfold EdgeSubset.coreOddListAt
-  simp only [List.attachWith]
-  -- ═══════ THE SIGN COMPUTATION ═══════
   calc hM.evalOdd μ ((List.pmap Subtype.mk (F.relInFlagsAt o' v)
         (fun _ hf => F.mem_internal_of_mem_relInFlagsAt hf)).flatMap
         (F.coreOddPairFn κ' φ'))
@@ -1187,6 +1186,78 @@ private theorem evalList_flip_v (hd : SegData κ κ' o o' S v P Q R T)
             flipVal_of_mem hφ' _ hxS,
             oddPartner_invol]
           rfl
+
+/-- At the move's vertex: the flipped vertex list. -/
+private theorem evalList_flip_v (hd : SegData κ κ' o o' S v P Q R T)
+    (hM : MixedFunctional k ℓ) (μ : Multiset (Fin k))
+    {φ φ' : F.CoreOddColouring ℓ}
+    (hφ' : ∀ g, φ'.val g =
+      if g.val ∈ S then oddPartner ℓ (φ.val g) else φ.val g) :
+    hM.evalOdd μ (F.coreOddListAt o' φ' v) =
+      (-1 : ℂ) ^ (flipS S o v).card *
+        hM.evalOdd μ (F.coreOddListAt o φ v) := by
+  have hPint := hd.hPint
+  have hQint := hd.hQint
+  have hRint := hd.hRint
+  have hTint := hd.hTint
+  have HkE : ∀ g ∈ ((keepS S o v).erase P).toList,
+      g ∈ F.internalFlags :=
+    fun g hg => relInSetAt_subset_internal
+      (mem_keepS.mp (Finset.mem_of_mem_erase
+        (Finset.mem_toList.mp hg))).1
+  have HfE : ∀ g ∈ ((flipS S o v).erase Q).toList,
+      g ∈ F.internalFlags :=
+    fun g hg => relInSetAt_subset_internal
+      (mem_flipS.mp (Finset.mem_of_mem_erase
+        (Finset.mem_toList.mp hg))).1
+  have Hold : ∀ g ∈ P :: (((keepS S o v).erase P).toList ++
+      Q :: ((flipS S o v).erase Q).toList), g ∈ F.internalFlags := by
+    intro g hg
+    rcases List.mem_cons.mp hg with rfl | hg
+    · exact hPint
+    rcases List.mem_append.mp hg with hg | hg
+    · exact HkE g hg
+    rcases List.mem_cons.mp hg with rfl | hg
+    · exact hQint
+    · exact HfE g hg
+  have hkeepval : (keepS S o v).val =
+      P ::ₘ ((keepS S o v).erase P).val := by
+    rw [Finset.erase_val]
+    exact (Multiset.cons_erase
+      (Finset.mem_def.mp hd.P_mem_keepS)).symm
+  have hflipval : (flipS S o v).val =
+      Q ::ₘ ((flipS S o v).erase Q).val := by
+    rw [Finset.erase_val]
+    exact (Multiset.cons_erase
+      (Finset.mem_def.mp hd.Q_mem_flipS)).symm
+  -- ═══════ THE TWO ENUMERATIONS ARE THE SAME MULTISET ═══════
+  have hbase : (F.relInFlagsAt o v).Perm
+      (P :: (((keepS S o v).erase P).toList ++
+        Q :: ((flipS S o v).erase Q).toList)) := by
+    rw [← Multiset.coe_eq_coe, relInFlagsAt_coe o v,
+      ← Multiset.cons_coe, ← Multiset.coe_add,
+      ← Multiset.cons_coe, Finset.coe_toList, Finset.coe_toList,
+      relInSetAt_val_split (S := S) o v, hkeepval, hflipval,
+      Multiset.cons_add]
+  unfold EdgeSubset.coreOddListAt
+  simp only [List.attachWith]
+  -- ═══════ THE SIGN COMPUTATION ═══════
+  calc hM.evalOdd μ ((List.pmap Subtype.mk (F.relInFlagsAt o' v)
+        (fun _ hf => F.mem_internal_of_mem_relInFlagsAt hf)).flatMap
+        (F.coreOddPairFn κ' φ')) =
+      hM.evalOdd μ
+          ([φ.val ⟨P, F.internalFlags_subset_coreFlags hPint⟩,
+            φ.val ⟨Q, F.internalFlags_subset_coreFlags hQint⟩] ++
+          (((List.pmap Subtype.mk ((keepS S o v).erase P).toList
+              HkE).flatMap (F.coreOddPairFn κ φ)) ++
+            ([oddPartner ℓ (φ.val ⟨R,
+                F.internalFlags_subset_coreFlags hRint⟩),
+              oddPartner ℓ (φ.val ⟨T,
+                F.internalFlags_subset_coreFlags hTint⟩)] ++
+              (List.pmap Subtype.mk
+                ((flipS S o v).erase Q).toList HfE).flatMap
+                (fun fs => [pairB (κ₀ := κ) φ fs,
+                  pairA φ fs])))) := evalList_flip_v_expansion hd hM μ hφ' HkE HfE
     _ = (-1 : ℂ) ^ ((flipS S o v).erase Q).card *
         hM.evalOdd μ
           ([φ.val ⟨P, F.internalFlags_subset_coreFlags hPint⟩,
@@ -1358,6 +1429,7 @@ private theorem vertexProd (hd : SegData κ κ' o o' S v P Q R T)
       (fun vv _ => hd.vertexFactor hM (μf vv) hφ' vv),
     Finset.prod_mul_distrib, hglobal, one_mul]
 
+open scoped Classical in
 /-- The colouring-sum identity of the flipped comparison. -/
 private theorem phiSum (hd : SegData κ κ' o o' S v P Q R T)
     (hM : MixedFunctional k ℓ) (st : GenBoundaryState k ℓ α)
@@ -1376,7 +1448,7 @@ private theorem phiSum (hd : SegData κ κ' o o' S v P Q R T)
       (segFlipColouring_involutive hd.hSpair (ℓ := ℓ)))
       _).symm).trans
     (Finset.sum_congr rfl (fun φ _ => ?_))
-  show (if F.coreOddBoundaryMatch st
+  change (if F.coreOddBoundaryMatch st
         (segFlipColouring hd.hSpair φ) then
       ∏ vv : W.Vertex,
         ((F.coreOddSignAt o' (segFlipColouring hd.hSpair φ)
@@ -1394,6 +1466,7 @@ private theorem phiSum (hd : SegData κ κ' o o' S v P Q R T)
 
 end SegData
 
+open scoped Classical in
 /-- The parametric core of the flipped-segment ledger. -/
 private theorem throughSummand_seg_core [LinearOrder α]
     (hM : MixedFunctional k ℓ) (st : GenBoundaryState k ℓ α)
@@ -1550,7 +1623,7 @@ theorem exists_repairSegment {a b c d : W.Flag} {v : W.Vertex}
     (hsq : RepairSquare κ a b c d v) (o : κ.Orientation)
     (hsame : o.isOut c = o.isOut a) (hreach : WalkReach κ c a) :
     ∃ S : Finset W.Flag, RepairSegment κ a b c d S := by
-  haveI : DecidablePred (fun m : ℕ => 1 ≤ m ∧
+  have : DecidablePred (fun m : ℕ => 1 ≤ m ∧
       (∀ j, j < m →
         W.pairing (iterWalk κ c j) ∈ F.internalFlags) ∧
       iterWalk κ c m = a) := fun m => Classical.dec _

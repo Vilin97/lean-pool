@@ -44,13 +44,13 @@ theorem jt_term_guard (v : Fin k → ℕ) (σ : Equiv.Perm (Fin k)) :
   classical
   by_cases hp : ∀ i : Fin k,
       0 ≤ (v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)
-  · rw [if_pos hp]
+  · rw [ite_eq_left hp]
     refine Finset.prod_congr rfl fun i _ => ?_
     rw [show ((v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)) =
       ((((v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)).toNat : ℕ) :
         ℤ) from (Int.toNat_of_nonneg (hp i)).symm]
     rw [hSubZ_natCast, Int.toNat_natCast]
-  · rw [if_neg hp]
+  · rw [ite_eq_right hp]
     rw [not_forall] at hp
     obtain ⟨i0, hi0⟩ := hp
     exact Finset.prod_eq_zero (Finset.mem_univ i0)
@@ -79,8 +79,8 @@ theorem coeff_det_jtMat (v : Fin k → ℕ) (w : Fin k →₀ ℕ) :
     MvPolynomial.coeff_C_mul]
   by_cases hp : ∀ i : Fin k,
       0 ≤ (v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)
-  · rw [if_pos hp, if_pos hp]
-  · rw [if_neg hp, if_neg hp, AddMonoidAlgebra.coeff_zero]
+  · rw [ite_eq_left hp, ite_eq_left hp]
+  · rw [ite_eq_right hp, ite_eq_right hp, AddMonoidAlgebra.coeff_zero]
     rfl
 
 end RS

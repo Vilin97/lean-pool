@@ -179,18 +179,18 @@ theorem orbCard_multiset (π : Equiv.Perm (Fin n)) :
     have h2 : Multiset.count 0 π.cycleType = 0 :=
       Multiset.count_eq_zero.mpr (fun h => absurd (two_le_of_mem_cycleType h)
         (by omega))
-    rw [h2, zero_add, if_neg (by omega : ¬(1 : ℕ) = 0)]
+    rw [h2, zero_add, ite_eq_right (by omega : ¬(1 : ℕ) = 0)]
   by_cases hm1 : m = 1
   · -- m = 1
     subst hm1
     have ct_no_ones : Multiset.count 1 π.cycleType = 0 :=
       Multiset.count_eq_zero.mpr (fun h => absurd (two_le_of_mem_cycleType h)
         (by omega))
-    rw [ct_no_ones, zero_add, if_pos rfl]
+    rw [ct_no_ones, zero_add, ite_eq_left rfl]
     exact card_singleton_orbits π
   · -- m ≥ 2
     have hm_ge2 : 2 ≤ m := by omega
-    rw [if_neg (fun h : (1 : ℕ) = m => hm1 h.symm), add_zero]
+    rw [ite_eq_right (fun h : (1 : ℕ) = m => hm1 h.symm), add_zero]
     rw [cycleType_def, Multiset.count_map]
     have hconv2 : (Multiset.filter (fun a => m = (Finset.card ∘
       Equiv.Perm.support) a)

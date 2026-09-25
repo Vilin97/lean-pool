@@ -21,7 +21,7 @@ representative parities times the Definition 5 odd signs.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 

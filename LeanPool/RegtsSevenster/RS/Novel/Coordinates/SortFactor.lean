@@ -32,7 +32,7 @@ assignment. -/
 theorem blockAssign_sortEquiv (i : Fin n) :
     blockAssign (degList assign) (sortEquiv assign i) =
       finCongr (degList_length assign).symm (assign i) := by
-  show blockAssign _
+  change blockAssign _
     (blockSigmaEquiv _ (sortSigma assign i)) = _
   rw [blockAssign_blockSigmaEquiv]
   exact sortSigma_fst assign i

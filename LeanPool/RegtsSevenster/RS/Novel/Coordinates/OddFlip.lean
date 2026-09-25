@@ -80,8 +80,8 @@ theorem EdgeSubset.OddColouring.flip_val_mem
     (φ : F.OddColouring ℓ) (f : {f : W.Flag // f ∈ F.flags})
     (h : f.val ∈ T) :
     (EdgeSubset.OddColouring.flip F T hT φ).val f = oddPartner ℓ (φ.val f) := by
-  show (if f.val ∈ T then oddPartner ℓ (φ.val f) else φ.val f) = _
-  exact if_pos h
+  change (if f.val ∈ T then oddPartner ℓ (φ.val f) else φ.val f) = _
+  exact ite_eq_left h
 
 open Classical in
 /-- The value of `flip` at a flag not in `T`. -/
@@ -90,7 +90,7 @@ theorem EdgeSubset.OddColouring.flip_val_not_mem
     (φ : F.OddColouring ℓ) (f : {f : W.Flag // f ∈ F.flags})
     (h : f.val ∉ T) :
     (EdgeSubset.OddColouring.flip F T hT φ).val f = φ.val f := by
-  show (if f.val ∈ T then oddPartner ℓ (φ.val f) else φ.val f) = _
-  exact if_neg h
+  change (if f.val ∈ T then oddPartner ℓ (φ.val f) else φ.val f) = _
+  exact ite_eq_right h
 
 end RS

@@ -41,14 +41,14 @@ theorem mem_matchPairs_flat (m : ℕ) (z : Fin (m + m)) :
   · refine ⟨⟨z.val - m, by have := z.isLt; omega⟩,
       List.mem_finRange _, List.mem_cons.mpr (Or.inr
         (List.mem_cons.mpr (Or.inl (Fin.ext ?_))))⟩
-    show z.val = m + (z.val - m)
+    change z.val = m + (z.val - m)
     have := z.isLt
     omega
 
 /-- It is a well-formed gluing list. -/
 theorem matchPairs_wf (m : ℕ) :
     Fragment.PairsWF (matchPairs m) := by
-  show ((matchPairs m).flatMap (fun p => [p.1, p.2])).Nodup
+  change ((matchPairs m).flatMap (fun p => [p.1, p.2])).Nodup
   rw [matchPairs_flat]
   refine List.nodup_flatMap.mpr ⟨?_, ?_⟩
   · intro j _
@@ -115,16 +115,16 @@ noncomputable def strandBundleTranspose (m : ℕ) :
   vertexEquiv := _root_.Equiv.refl Empty
   attach_comm := fun f => by
     obtain ⟨i, b⟩ := f
-    show (strandBundle m).attach (i, !b) =
+    change (strandBundle m).attach (i, !b) =
       (((strandBundle m).attach (i, b)).map id
         (transposeEquiv m m)).map (_root_.Equiv.refl Empty) id
     cases b
-    · show (Sum.inr ⟨m + i.val, by omega⟩ :
+    · change (Sum.inr ⟨m + i.val, by omega⟩ :
           Empty ⊕ Fin (m + m)) =
         Sum.inr (transposeEquiv m m ⟨i.val, by omega⟩)
       refine congrArg Sum.inr ?_
       rw [transposeEquiv_low m m i.val i.isLt]
-    · show (Sum.inr ⟨i.val, by omega⟩ :
+    · change (Sum.inr ⟨i.val, by omega⟩ :
           Empty ⊕ Fin (m + m)) =
         Sum.inr (transposeEquiv m m ⟨m + i.val, by omega⟩)
       refine congrArg Sum.inr ?_
@@ -187,9 +187,9 @@ theorem interfacePairs_split (m : ℕ) :
     rw [hR]
     refine Prod.ext (congrArg Sum.inl (Fin.ext ?_))
       (congrArg Sum.inr (Fin.ext ?_))
-    · show 0 + (m + m - 1 - i) = m + (m - 1 - i)
+    · change 0 + (m + m - 1 - i) = m + (m - 1 - i)
       omega
-    · show m + m - 1 - i = m + (m - 1 - i)
+    · change m + m - 1 - i = m + (m - 1 - i)
       omega
   · have hml : (highCross m).length ≤ i := by
       simp only [highCross, List.length_map, List.length_reverse,
@@ -215,9 +215,9 @@ theorem interfacePairs_split (m : ℕ) :
     rw [hR]
     refine Prod.ext (congrArg Sum.inl (Fin.ext ?_))
       (congrArg Sum.inr (Fin.ext ?_))
-    · show 0 + (m + m - 1 - i) = m - 1 - (i - m)
+    · change 0 + (m + m - 1 - i) = m - 1 - (i - m)
       omega
-    · show m + m - 1 - i = m - 1 - (i - m)
+    · change m + m - 1 - i = m - 1 - (i - m)
       omega
 
 end RS

@@ -44,7 +44,7 @@ theorem stdFromOmega_perm
       P.ω.obj (SkeinObj.mk d) ⟶ superPow (stdSuperPair k ℓ) d) =
       P.ω.map (bundleMapClass f (σ : Fin d ≃ Fin d)) ≫
         stdFromOmega f P e' d := by
-  letI := P.braided
+  let := P.braided
   have h1 : modelPermMap (k := k) (ℓ := ℓ) σ =
       stdToOmega f P e d ≫
         P.ω.map (bundleMapClass f (σ : Fin d ≃ Fin d)) ≫
@@ -85,7 +85,7 @@ theorem starCoord_perm
     (c : MixedColouring k ℓ d) :
     starCoord f P e' d (c ∘ σ) =
       (-1 : ℂ) ^ oddInversions σ c * starCoord f P e' d c := by
-  letI := P.braided
+  let := P.braided
   have hfix : ((modelPermMap σ) : SuperVect.Hom _ _).evenMap
       (((stdFromOmega f P e' d) :
         SuperVect.Hom _ _).evenMap (starVec f P d)) =
@@ -97,7 +97,7 @@ theorem starCoord_perm
       (z : SuperVect.Hom _ _).evenMap (starVec f P d))
       (stdFromOmega_perm f P e e' hee' he'e d σ)
     refine Eq.trans h ?_
-    show ((stdFromOmega f P e' d) :
+    change ((stdFromOmega f P e' d) :
       SuperVect.Hom _ _).evenMap
       (((P.ω.map (bundleMapClass f
           (σ : Fin d ≃ Fin d))) :

@@ -237,7 +237,7 @@ noncomputable def OddLine.capLEquiv
   invFun h := (λ_ Y).inv ≫ (L.sq.inv ▷ Y) ≫
     (α_ L.obj L.obj Y).hom ≫ (L.obj ◁ h)
   left_inv f := by
-    letI := L.exactPairing
+    let := L.exactPairing
     have hs : ∀ F : Y ⟶ L.obj ⊗ Z,
         (tensorLeftHomEquiv Y L.obj L.obj Z).symm F =
           (L.obj ◁ F) ≫ L.capL Z := fun _ => rfl
@@ -245,11 +245,11 @@ noncomputable def OddLine.capLEquiv
         (tensorLeftHomEquiv Y L.obj L.obj Z) g =
           (λ_ Y).inv ≫ (L.sq.inv ▷ Y) ≫
             (α_ L.obj L.obj Y).hom ≫ (L.obj ◁ g) := fun _ => rfl
-    show (λ_ Y).inv ≫ (L.sq.inv ▷ Y) ≫ (α_ L.obj L.obj Y).hom ≫
+    change (λ_ Y).inv ≫ (L.sq.inv ▷ Y) ≫ (α_ L.obj L.obj Y).hom ≫
       (L.obj ◁ ((L.obj ◁ f) ≫ L.capL Z)) = f
     rw [← ht, ← hs, Equiv.apply_symm_apply]
   right_inv g := by
-    letI := L.exactPairing
+    let := L.exactPairing
     have hs : ∀ F : Y ⟶ L.obj ⊗ Z,
         (tensorLeftHomEquiv Y L.obj L.obj Z).symm F =
           (L.obj ◁ F) ≫ L.capL Z := fun _ => rfl
@@ -257,7 +257,7 @@ noncomputable def OddLine.capLEquiv
         (tensorLeftHomEquiv Y L.obj L.obj Z) g =
           (λ_ Y).inv ≫ (L.sq.inv ▷ Y) ≫
             (α_ L.obj L.obj Y).hom ≫ (L.obj ◁ g) := fun _ => rfl
-    show (L.obj ◁ ((λ_ Y).inv ≫ (L.sq.inv ▷ Y) ≫
+    change (L.obj ◁ ((λ_ Y).inv ≫ (L.sq.inv ▷ Y) ≫
       (α_ L.obj L.obj Y).hom ≫ (L.obj ◁ g))) ≫ L.capL Z = g
     rw [← hs, ← ht, Equiv.symm_apply_apply]
 
@@ -280,7 +280,7 @@ theorem gammaTwistLeftEven_apply
     (f : 𝟙_ D ⟶ L.obj ⊗ Z) :
     (gammaTwistLeftEven L Z).toLinearMap f =
       (ρ_ L.obj).inv ≫ (L.obj ◁ f) ≫ L.capL Z := by
-  show gammaTwistLeftEven L Z f = _
+  change gammaTwistLeftEven L Z f = _
   rw [gammaTwistLeftEven, LinearEquiv.trans_apply,
     Linear.homCongr_apply, Iso.refl_hom, Category.comp_id]
   rfl
@@ -306,7 +306,7 @@ theorem gammaTwistLeftOdd_apply
     (g : L.obj ⟶ L.obj ⊗ Z) :
     (gammaTwistLeftOdd L Z).toLinearMap g =
       (-L.sq.inv) ≫ (L.obj ◁ g) ≫ L.capL Z := by
-  show gammaTwistLeftOdd L Z g = _
+  change gammaTwistLeftOdd L Z g = _
   rw [gammaTwistLeftOdd, LinearEquiv.trans_apply,
     LinearEquiv.trans_apply, LinearEquiv.neg_apply,
     Linear.homCongr_apply, Iso.refl_hom, Category.comp_id,

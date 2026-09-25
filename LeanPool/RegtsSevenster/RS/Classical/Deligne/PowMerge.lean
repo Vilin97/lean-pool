@@ -256,7 +256,7 @@ theorem headMod_act [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     have h0 : headMod A X 0 =
         (show X ⊗ tensorPow D X 0 ⟶ X from (ρ_ X).hom) ≫
           (modPowOne A X).inv := by
-      show ((ρ_ X).hom ≫ (λ_ X).inv) ≫ modPowπ A X 1 = _
+      change ((ρ_ X).hom ≫ (λ_ X).inv) ≫ modPowπ A X 1 = _
       erw [Category.assoc]
       rfl
     have hu : (actLeft A X ▷ tensorPow D X 0) ≫
@@ -405,7 +405,7 @@ theorem modPowπ_actRight
         (α_ (tensorPow D X a) X A).hom ≫
           (tensorPow D X a ◁ actRight A X) :=
     braiding_actAcross A X (tensorPow D X a)
-  show (modPowπ A X (a + 1) ▷ A) ≫
+  change (modPowπ A X (a + 1) ▷ A) ≫
       ((β_ (modPow A X (a + 1)) A).hom ≫
         actLeft A (modPowMod A X a).X) = _
   erw [← Category.assoc, hβ, Category.assoc, hact]

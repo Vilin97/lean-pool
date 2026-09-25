@@ -60,7 +60,7 @@ theorem diagramSchur_delta_mul (μ : YoungDiagram) :
       have hle : (k - 1) - (j : ℕ) ≤ eStair μ i := by
         rw [hE]
         omega
-      rw [newtonHZ, if_pos hpos, harg, newtonH_deltaSeq]
+      rw [newtonHZ, ite_eq_left hpos, harg, newtonH_deltaSeq]
       have hfac := Nat.factorial_mul_descFactorial hle
       have hcast : ((eStair μ i - ((k - 1) - (j : ℕ))).factorial :
           ℂ) * ((eStair μ i).descFactorial
@@ -72,7 +72,7 @@ theorem diagramSchur_delta_mul (μ : YoungDiagram) :
         exact_mod_cast Nat.factorial_ne_zero _
       rw [← div_eq_mul_inv, div_eq_iff hne]
       linear_combination -hcast
-    · rw [newtonHZ, if_neg hpos, mul_zero]
+    · rw [newtonHZ, ite_eq_right hpos, mul_zero]
       have hlt : eStair μ i < (k - 1) - (j : ℕ) := by
         rw [hE]
         omega

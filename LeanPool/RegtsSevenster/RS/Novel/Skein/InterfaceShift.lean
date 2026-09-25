@@ -94,7 +94,7 @@ private theorem shift_ground_left_aux (s : ℕ) {t : ℕ}
     simp only [List.map_cons, Fragment.mapPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext ?_ rfl)
       (shift_ground_left_aux s σ u l)
-    show Sum.inl ((outPermEquiv s σ).symm ⟨s + k.val, _⟩) = _
+    change Sum.inl ((outPermEquiv s σ).symm ⟨s + k.val, _⟩) = _
     exact congrArg Sum.inl
       ((congrArg (outPermEquiv s σ).symm
         (show (⟨s + k.val, _⟩ : Fin (s + t)) =
@@ -122,7 +122,7 @@ private theorem shift_ground_right_aux (s : ℕ) {t : ℕ}
     simp only [List.map_cons, Fragment.mapPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext rfl ?_)
       (shift_ground_right_aux s σ u l)
-    show Sum.inr ((inPermEquiv σ.symm u).symm ⟨k.val, _⟩) = _
+    change Sum.inr ((inPermEquiv σ.symm u).symm ⟨k.val, _⟩) = _
     exact congrArg Sum.inr
       ((congrArg (inPermEquiv σ.symm u).symm
         (show (⟨k.val, _⟩ : Fin (t + u)) =
@@ -396,7 +396,7 @@ theorem shiftLabel_meet (s : ℕ) {t : ℕ} (σ : Equiv.Perm (Fin t))
   rcases xv with a | b
   · rcases Nat.lt_or_ge a.val s with ha | ha
     · refine Fin.ext ?_
-      show ((outPermEquiv s σ) a).val = a.val
+      change ((outPermEquiv s σ) a).val = a.val
       exact congrArg Fin.val
         ((congrArg (outPermEquiv s σ)
           (Fin.ext rfl : a = Fin.castAdd t ⟨a.val, ha⟩)).trans
@@ -426,7 +426,7 @@ theorem shiftLabel_meet (s : ℕ) {t : ℕ} (σ : Equiv.Perm (Fin t))
         ((inPermEquiv_high σ.symm u ⟨b.val - t, hk⟩).trans
           (Fin.ext (show t + (b.val - t) = b.val by omega))))
       refine Fin.ext ?_
-      show s + (b.val - t) =
+      change s + (b.val - t) =
         s + (((inPermEquiv σ.symm u) b).val - t)
       have := congrArg Fin.val hv
       omega

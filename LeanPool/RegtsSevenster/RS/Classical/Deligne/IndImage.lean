@@ -245,7 +245,7 @@ theorem indImageEmbedded_of_lengthLE [SmallCategory C] [Abelian C]
         CategoryTheory.Functor.map_comp, hu, hv]
       exact ((Category.assoc _ _ _).symm.trans hβ).trans
         (Category.assoc _ _ _)
-    haveI : Mono (image.ι (g ≫ Z.presentation.F.map α₀) ≫
+    have : Mono (image.ι (g ≫ Z.presentation.F.map α₀) ≫
         Z.presentation.F.map β) :=
       mono_of_kernelSubobject_comp_le _ _ (hstable k β)
     have : Ind.yoneda.fullyFaithful.preimage u =
@@ -253,8 +253,8 @@ theorem indImageEmbedded_of_lengthLE [SmallCategory C] [Abelian C]
       (cancel_mono (image.ι (g ≫ Z.presentation.F.map α₀) ≫
         Z.presentation.F.map β)).mp hpre
     rw [← hu, ← hv, this]
-  haveI := hmono
-  haveI : StrongEpi (indOf.map
+  have := hmono
+  have : StrongEpi (indOf.map
       (factorThruImage (g ≫ Z.presentation.F.map α₀))) :=
     strongEpi_of_epi _
   refine ⟨image (g ≫ Z.presentation.F.map α₀), ⟨(image.isoStrongEpiMono

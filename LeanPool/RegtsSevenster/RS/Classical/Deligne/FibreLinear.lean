@@ -36,10 +36,10 @@ instance fibreFun_linear
     rw [fibreFun_map, fibreFun_map]
     refine SuperCommAlgebra.Mod.Hom.ext ?_ ?_ <;>
       refine LinearMap.ext fun m => ?_
-    · show m ≫ (R ◁ (c • f)) = c • (m ≫ (R ◁ f))
+    · change m ≫ (R ◁ (c • f)) = c • (m ≫ (R ◁ f))
       rw [MonoidalLinear.whiskerLeft_smul]
       exact CategoryTheory.Linear.comp_smul _ _ _ m c (R ◁ f)
-    · show m ≫ (R ◁ (c • f)) = c • (m ≫ (R ◁ f))
+    · change m ≫ (R ◁ (c • f)) = c • (m ≫ (R ◁ f))
       rw [MonoidalLinear.whiskerLeft_smul]
       exact CategoryTheory.Linear.comp_smul _ _ _ m c (R ◁ f)
 

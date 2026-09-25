@@ -17,7 +17,7 @@ the raw material for the canonical index permutation between them.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 section PairSide
 
@@ -43,8 +43,8 @@ theorem mem_pairBase {o : κ.Orientation} {v : W.Vertex}
 theorem attach_of_mem_inFlagsAt {o : κ.Orientation}
     {v : W.Vertex} {f : W.Flag}
     (hf : f ∈ F.inFlagsAt o v) : W.attach f = Sum.inl v := by
-  letI := W.flagOrder
-  letI := Classical.dec
+  let := W.flagOrder
+  let := Classical.dec
   unfold EdgeSubset.inFlagsAt at hf
   exact (Finset.mem_filter.mp
     ((Finset.mem_sort _).mp hf)).2.1
@@ -65,8 +65,8 @@ theorem pairFlagList_nodup (o : κ.Orientation) (v : W.Vertex) :
         (fun _ hf' => F.mem_of_mem_inFlagsAt hf')).Nodup := by
       refine List.Nodup.pmap (fun a _ b _ h =>
         congrArg Subtype.val h) ?_
-      letI := W.flagOrder
-      letI := Classical.dec
+      let := W.flagOrder
+      let := Classical.dec
       exact Finset.sort_nodup _ _
     refine List.Pairwise.imp_of_mem ?_
       (List.Pairwise.imp (fun {a b} h => h)
@@ -128,7 +128,7 @@ theorem mem_pairFlagList (o : κ.Orientation) (v : W.Vertex)
     · set f₀ : {f : W.Flag // f ∈ F.flags} :=
         ⟨κ.match_ x.val, κ.match_mem _ x.prop⟩ with hf₀
       have hin₀ : o.isOut f₀.val = false := by
-        show o.isOut (κ.match_ x.val) = false
+        change o.isOut (κ.match_ x.val) = false
         rw [o.match_flip x.val x.prop, hout]
         rfl
       have hatt₀ : W.attach f₀.val = Sum.inl v :=
@@ -146,7 +146,7 @@ theorem mem_pairFlagList (o : κ.Orientation) (v : W.Vertex)
       · refine List.mem_cons.mpr (Or.inr ?_)
         rw [List.mem_singleton]
         refine Subtype.ext ?_
-        show x.val = κ.match_ f₀.val
+        change x.val = κ.match_ f₀.val
         exact (κ.match_invol x.val x.prop).symm
     · have hin : o.isOut x.val = false := by
         cases hb : o.isOut x.val

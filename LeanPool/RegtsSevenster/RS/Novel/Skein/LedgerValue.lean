@@ -21,7 +21,7 @@ the paired step in value form.
 
 namespace RS
 
-open scoped Classical
+
 
 /-- **The paired step, value form**: across a π-returning
 repair block, canonical-orientation existence transfers and the

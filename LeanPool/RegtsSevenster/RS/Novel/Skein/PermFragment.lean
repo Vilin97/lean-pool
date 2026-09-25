@@ -38,32 +38,32 @@ def permFragment {t : ℕ} (σ : Equiv.Perm (Fin t)) :
     else (σ.symm ⟨ℓ.val - t, by have := ℓ.isLt; omega⟩, true)
   attach_boundaryFlag := fun ℓ => by
     by_cases h : ℓ.val < t
-    · rw [dif_pos h]
+    · rw [dite_eq_left h]
       exact congrArg Sum.inr (Fin.ext rfl)
-    · rw [dif_neg h]
+    · rw [dite_eq_right h]
       refine congrArg Sum.inr (Fin.ext ?_)
-      show t + (σ (σ.symm ⟨ℓ.val - t, by have := ℓ.isLt; omega⟩)).val =
+      change t + (σ (σ.symm ⟨ℓ.val - t, by have := ℓ.isLt; omega⟩)).val =
         ℓ.val
       rw [Equiv.apply_symm_apply]
-      show t + (ℓ.val - t) = ℓ.val
+      change t + (ℓ.val - t) = ℓ.val
       have := ℓ.isLt
       omega
   eq_boundaryFlag := fun ℓ f h => by
     obtain ⟨a, b⟩ := f
     have hℓ := (Sum.inr.inj h).symm
     cases b
-    · simp only [Bool.false_eq_true, if_false] at hℓ
+    · simp only [Bool.false_eq_true, ite_false] at hℓ
       subst hℓ
-      rw [dif_pos a.isLt]
-    · simp only [if_true] at hℓ
+      rw [dite_eq_left a.isLt]
+    · simp only [ite_true] at hℓ
       subst hℓ
-      rw [dif_neg (show ¬ t + (σ a).val < t by omega)]
+      rw [dite_eq_right (show ¬ t + (σ a).val < t by omega)]
       refine Prod.ext_iff.mpr ⟨?_, rfl⟩
-      show a = σ.symm ⟨t + (σ a).val - t,
+      change a = σ.symm ⟨t + (σ a).val - t,
         by have := (σ a).isLt; omega⟩
       rw [show (⟨t + (σ a).val - t,
           by have := (σ a).isLt; omega⟩ : Fin t) = σ a from
-        Fin.ext (by show t + (σ a).val - t = (σ a).val; omega)]
+        Fin.ext (by change t + (σ a).val - t = (σ a).val; omega)]
       exact (σ.symm_apply_apply a).symm
   circles := 0
 
@@ -87,39 +87,39 @@ def permHighEquiv {t : ℕ} (σ : Equiv.Perm (Fin t)) :
   left_inv ℓ := by
     dsimp only
     by_cases h : ℓ.val < t
-    · simp only [dif_pos h]
-    · rw [dif_neg h, dif_neg (by
-        show ¬ t + (σ ⟨ℓ.val - t, _⟩).val < t
+    · simp only [dite_eq_left h]
+    · rw [dite_eq_right h, dite_eq_right (by
+        change ¬ t + (σ ⟨ℓ.val - t, _⟩).val < t
         omega)]
       refine Fin.ext ?_
-      show t + (σ.symm ⟨t + (σ ⟨ℓ.val - t, _⟩).val - t, _⟩).val = ℓ.val
+      change t + (σ.symm ⟨t + (σ ⟨ℓ.val - t, _⟩).val - t, _⟩).val = ℓ.val
       rw [show (⟨t + (σ ⟨ℓ.val - t, by have := ℓ.isLt; omega⟩).val - t,
           by have := (σ ⟨ℓ.val - t, by have := ℓ.isLt; omega⟩).isLt
              omega⟩ : Fin t) =
         σ ⟨ℓ.val - t, by have := ℓ.isLt; omega⟩ from Fin.ext (by
-          show t + _ - t = _
+          change t + _ - t = _
           omega)]
       rw [Equiv.symm_apply_apply]
-      show t + (ℓ.val - t) = ℓ.val
+      change t + (ℓ.val - t) = ℓ.val
       omega
   right_inv ℓ := by
     dsimp only
     by_cases h : ℓ.val < t
-    · simp only [dif_pos h]
-    · rw [dif_neg h, dif_neg (by
-        show ¬ t + (σ.symm ⟨ℓ.val - t, _⟩).val < t
+    · simp only [dite_eq_left h]
+    · rw [dite_eq_right h, dite_eq_right (by
+        change ¬ t + (σ.symm ⟨ℓ.val - t, _⟩).val < t
         omega)]
       refine Fin.ext ?_
-      show t + (σ ⟨t + (σ.symm ⟨ℓ.val - t, _⟩).val - t, _⟩).val = ℓ.val
+      change t + (σ ⟨t + (σ.symm ⟨ℓ.val - t, _⟩).val - t, _⟩).val = ℓ.val
       rw [show (⟨t + (σ.symm ⟨ℓ.val - t,
             by have := ℓ.isLt; omega⟩).val - t,
           by have := (σ.symm ⟨ℓ.val - t,
             by have := ℓ.isLt; omega⟩).isLt; omega⟩ : Fin t) =
         σ.symm ⟨ℓ.val - t, by have := ℓ.isLt; omega⟩ from Fin.ext (by
-          show t + _ - t = _
+          change t + _ - t = _
           omega)]
       rw [Equiv.apply_symm_apply]
-      show t + (ℓ.val - t) = ℓ.val
+      change t + (ℓ.val - t) = ℓ.val
       omega
 
 /-- A permutation fragment is the strand bundle with its outgoing
@@ -133,25 +133,25 @@ noncomputable def permFragmentRelabelBundle {t : ℕ}
   attach_comm := fun f => by
     obtain ⟨k, b⟩ := f
     cases b
-    · show Sum.inr (permHighEquiv σ ⟨k.val, by have := k.isLt; omega⟩) =
+    · change Sum.inr (permHighEquiv σ ⟨k.val, by have := k.isLt; omega⟩) =
         Sum.inr ⟨k.val, by have := k.isLt; omega⟩
       refine congrArg Sum.inr ?_
       unfold permHighEquiv
-      show (if h : (⟨k.val, by have := k.isLt; omega⟩ :
+      change (if h : (⟨k.val, by have := k.isLt; omega⟩ :
           Fin (t + t)).val < t then _ else _) = _
-      rw [dif_pos (show k.val < t from k.isLt)]
-    · show Sum.inr (permHighEquiv σ ⟨t + k.val,
+      rw [dite_eq_left (show k.val < t from k.isLt)]
+    · change Sum.inr (permHighEquiv σ ⟨t + k.val,
           by have := k.isLt; omega⟩) =
         Sum.inr ⟨t + (σ k).val, by have := (σ k).isLt; omega⟩
       refine congrArg Sum.inr ?_
       unfold permHighEquiv
-      show (if h : (⟨t + k.val, by have := k.isLt; omega⟩ :
+      change (if h : (⟨t + k.val, by have := k.isLt; omega⟩ :
           Fin (t + t)).val < t then _ else _) = _
-      rw [dif_neg (show ¬ t + k.val < t by omega)]
+      rw [dite_eq_right (show ¬ t + k.val < t by omega)]
       refine Fin.ext ?_
-      show t + (σ ⟨t + k.val - t, _⟩).val = t + (σ k).val
+      change t + (σ ⟨t + k.val - t, _⟩).val = t + (σ k).val
       rw [show (⟨t + k.val - t, by have := k.isLt; omega⟩ : Fin t) = k
-        from Fin.ext (by show t + k.val - t = k.val; omega)]
+        from Fin.ext (by change t + k.val - t = k.val; omega)]
   pairing_comm := fun _ => rfl
   circles_eq := rfl
 

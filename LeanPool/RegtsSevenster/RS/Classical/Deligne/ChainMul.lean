@@ -47,7 +47,7 @@ theorem symMul_modTensor_cond
       rfl,
     show actLeft A (symPowMod A X n).X = symPowAct A X n from
       rfl]
-  show (((β_ (symPow A X (m + 1)) A).hom ≫ symPowAct A X m) ▷
+  change (((β_ (symPow A X (m + 1)) A).hom ≫ symPowAct A X m) ▷
       symPow A X (n + 1)) ≫ symMul A X (m + 1) (n + 1) =
     ((α_ (symPow A X (m + 1)) A (symPow A X (n + 1))).hom ≫
       (symPow A X (m + 1) ◁ symPowAct A X n)) ≫
@@ -103,7 +103,7 @@ theorem symMulDesc_act
   conv_rhs => rw [← whiskerLeft_comp_assoc,
     modTensorπ_symMulDesc]
   have h := symMul_actLeft A X m n
-  show (α_ A (symPow A X (m + 1)) (symPow A X (n + 1))).inv ≫
+  change (α_ A (symPow A X (m + 1)) (symPow A X (n + 1))).inv ≫
       (symPowAct A X m ▷ symPow A X (n + 1)) ≫
       symMul A X (m + 1) (n + 1) =
     (A ◁ symMul A X (m + 1) (n + 1)) ≫ symPowAct A X (m + 1 + n)
@@ -210,7 +210,7 @@ theorem tensorHom_π_chainMul
       from rfl,
     show (symMulMod A M.X m n).hom = symMulDesc A M.X m n from
       rfl, ← Category.assoc]
-  show ((modTensorπ A (symPowMod A M'.X m)
+  change ((modTensorπ A (symPowMod A M'.X m)
         (symPowMod A M'.X n) ⊗ₘ
       modTensorπ A (symPowMod A M.X m) (symPowMod A M.X n)) ≫
       (symMulDesc A M'.X m n ⊗ₘ symMulDesc A M.X m n)) ≫

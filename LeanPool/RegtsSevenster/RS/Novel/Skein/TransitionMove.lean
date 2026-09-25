@@ -62,7 +62,7 @@ segment.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 
@@ -615,7 +615,7 @@ def Orientation.transportRepair {κ : F.RelTransitionSystem}
     have hd' : o.isOut d = !o.isOut c := by
       rw [← h.hcd]; exact o.match_flip c h.hc
     intro f hf
-    show o.isOut (repairFun κ.match_ a b c d f) = !o.isOut f
+    change o.isOut (repairFun κ.match_ a b c d f) = !o.isOut f
     by_cases h1 : f = a
     · subst h1
       rw [repairFun_a]; exact hflip

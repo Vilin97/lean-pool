@@ -166,7 +166,7 @@ theorem interchange_legM
       show actRight A (modTensorMod A N₁ P₁).X =
         (β_ (modTensor A N₁ P₁) A).hom ≫
           modTensorAct A N₁ P₁ from rfl]
-    show ((modTensorπ A N₁ P₁ ▷ A) ⊗ₘ modTensorπ A N₂ P₂) ≫
+    change ((modTensorπ A N₁ P₁ ▷ A) ⊗ₘ modTensorπ A N₂ P₂) ≫
       (((β_ (modTensor A N₁ P₁) A).hom ≫
         modTensorAct A N₁ P₁) ▷ modTensor A N₂ P₂) = _
     rw [hmw, hslot]
@@ -240,7 +240,7 @@ theorem interchange_legN
     rw [modTensorLegN,
       show actLeft A (modTensorMod A N₂ P₂).X =
         modTensorAct A N₂ P₂ from rfl]
-    show ((modTensorπ A N₁ P₁ ▷ A) ⊗ₘ modTensorπ A N₂ P₂) ≫
+    change ((modTensorπ A N₁ P₁ ▷ A) ⊗ₘ modTensorπ A N₂ P₂) ≫
       ((α_ (modTensor A N₁ P₁) A (modTensor A N₂ P₂)).hom ≫
         (modTensor A N₁ P₁ ◁ modTensorAct A N₂ P₂)) = _
     rw [← MonoidalCategory.tensorHom_id]
@@ -375,7 +375,7 @@ theorem interchange_legMP
       show actRight A (modTensorMod A N₁ P₁).X =
         (β_ (modTensor A N₁ P₁) A).hom ≫
           modTensorAct A N₁ P₁ from rfl]
-    show ((modTensorπ A N₁ P₁ ▷ A) ⊗ₘ modTensorπ A N₂ P₂) ≫
+    change ((modTensorπ A N₁ P₁ ▷ A) ⊗ₘ modTensorπ A N₂ P₂) ≫
       (((β_ (modTensor A N₁ P₁) A).hom ≫
         modTensorAct A N₁ P₁) ▷ modTensor A N₂ P₂) = _
     rw [hmw, hslot]
@@ -512,7 +512,7 @@ theorem interchange_legNP
     rw [modTensorLegN,
       show actLeft A (modTensorMod A N₂ P₂).X =
         modTensorAct A N₂ P₂ from rfl]
-    show ((modTensorπ A N₁ P₁ ▷ A) ⊗ₘ modTensorπ A N₂ P₂) ≫
+    change ((modTensorπ A N₁ P₁ ▷ A) ⊗ₘ modTensorπ A N₂ P₂) ≫
       ((α_ (modTensor A N₁ P₁) A (modTensor A N₂ P₂)).hom ≫
         (modTensor A N₁ P₁ ◁ modTensorAct A N₂ P₂)) = _
     rw [← MonoidalCategory.tensorHom_id]

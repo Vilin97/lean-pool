@@ -78,7 +78,7 @@ theorem lengthLE_biproduct_of_simple [Category.{v} C]
     rw [IsZero.iff_id_eq_zero]
     exact biproduct.hom_ext _ _ fun j => j.elim0
   | succ n ih =>
-    haveI := hS 0
+    have := hS 0
     have htail := ih (fun j => S j.succ) fun j => hS j.succ
     exact ((lengthLE_of_simple.biprod htail).of_iso
       (biproductSuccIso S).symm).mono (by omega)
@@ -103,10 +103,10 @@ private lemma linearIndependent_of_orthogonal_idempotents [Category.{v} C]
     intro i
     by_cases h : i = j
     · subst h
-      rw [if_pos rfl, Linear.smul_comp, hidem]
-    · rw [if_neg h, Linear.smul_comp, horth i j h, smul_zero]
+      rw [ite_eq_left rfl, Linear.smul_comp, hidem]
+    · rw [ite_eq_right h, Linear.smul_comp, horth i j h, smul_zero]
   rw [Finset.sum_congr rfl fun i _ => hterm i, Finset.sum_ite_eq'
-    Finset.univ j fun _ => g j • p j, if_pos (Finset.mem_univ j)] at h0
+    Finset.univ j fun _ => g j • p j, ite_eq_left (Finset.mem_univ j)] at h0
   by_contra hgj
   exact hne j (by
     rw [← one_smul ℂ (p j), ← inv_mul_cancel₀ hgj, mul_smul, h0,
@@ -131,7 +131,7 @@ private lemma card_le_finrank_end [Category.{v} C]
     simp [hp, biproduct.ι_π_ne_assoc S hij]
   have hne : ∀ i, p i ≠ 0 := by
     intro i hzero
-    haveI := hS i
+    have := hS i
     apply id_nonzero (S i)
     have hcalc : (biproduct.ι S i ≫ e.inv) ≫ p i ≫
         (e.hom ≫ biproduct.π S i) = 𝟙 (S i) := by
@@ -140,7 +140,7 @@ private lemma card_le_finrank_end [Category.{v} C]
     exact hcalc.symm
   have hli :=
     linearIndependent_of_orthogonal_idempotents p hne hidem horth
-  haveI : FiniteDimensional ℂ (Y ⟶ Y) := hfd
+  have : FiniteDimensional ℂ (Y ⟶ Y) := hfd
   have hcard := hli.fintype_card_le_finrank
   rw [Fintype.card_fin] at hcard
   exact hcard
@@ -161,7 +161,7 @@ data that transports along that uniqueness.
 structure. -/
 @[reducible]
 private def abelianOver [Category.{v} C]
-    [hpre : Preadditive C] [hab : Abelian C] :
+    [hpre : Preadditive C] (hab : Abelian C) :
     Abelian C :=
   have hzero :
       @Preadditive.preadditiveHasZeroMorphisms C _ hab.toPreadditive =
@@ -184,12 +184,12 @@ preadditive structure, and the abelian structure is rebuilt over it
 so that the two halves compose. -/
 theorem lengthLE_finrank_end [Category.{v} C]
     [Preadditive C] [Linear ℂ C]
-    [Abelian C] [HasFiniteBiproducts C]
+    [HasFiniteBiproducts C] (hab : Abelian C)
     (hss : IsSemisimple C) (hfd : HasFinDimHom C) (Y : C) :
     LengthLE Y (Module.finrank ℂ (End Y)) := by
   obtain ⟨n, S, hS, ⟨e⟩⟩ := hss Y
   have hfin : FiniteDimensional ℂ (End Y) := hfd Y Y
-  letI : Abelian C := abelianOver
+  let : Abelian C := abelianOver hab
   exact ((lengthLE_biproduct_of_simple S hS).of_iso e.symm).mono
     (card_le_finrank_end hS e hfin)
 

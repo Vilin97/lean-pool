@@ -51,7 +51,7 @@ theorem stdToOmega_bmc_word {n : ℕ} (w : List (Fin n)) :
           (Fin (n + 1))) : Fin (n + 1) ≃ Fin (n + 1))) =
       powBraidWord (stdSuperPair k ℓ) w ≫
         stdToOmega f P e (n + 1) := by
-  letI := P.braided
+  let := P.braided
   induction w with
   | nil =>
     rw [List.map_nil, List.prod_nil]
@@ -68,7 +68,7 @@ theorem stdToOmega_bmc_word {n : ℕ} (w : List (Fin n)) :
         SkeinObj f)) = 𝟙 (P.ω.obj (SkeinObj.mk (n + 1))) :=
       P.ω.map_id _
     rw [hmapid]
-    show stdToOmega f P e (n + 1) ≫ 𝟙 _ =
+    change stdToOmega f P e (n + 1) ≫ 𝟙 _ =
       𝟙 _ ≫ stdToOmega f P e (n + 1)
     rw [Category.comp_id, Category.id_comp]
   | cons i w ih =>
@@ -128,7 +128,7 @@ theorem stdToOmega_bmc_perm {n : ℕ}
         (σ : Fin (n + 1) ≃ Fin (n + 1))) =
       powBraidWord (stdSuperPair k ℓ) (adjWord σ) ≫
         stdToOmega f P e (n + 1) := by
-  letI := P.braided
+  let := P.braided
   have h := stdToOmega_bmc_word f P e (adjWord σ)
   rw [adjWord_spec σ] at h
   exact h

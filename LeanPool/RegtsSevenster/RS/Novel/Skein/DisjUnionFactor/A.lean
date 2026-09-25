@@ -29,7 +29,7 @@ orbits), and splits the through product and the colouring sums.
 
 namespace RS
 
-open scoped Classical
+
 
 /-! ## Membership characterizations (any fragment) -/
 
@@ -51,7 +51,7 @@ when it attaches to that vertex in its own component. -/
 theorem attach_inl_eq_inl {f : W₁.Flag} {v : W₁.Vertex} :
     (W₁.disjUnion W₂).attach (Sum.inl f) = Sum.inl (Sum.inl v) ↔
       W₁.attach f = Sum.inl v := by
-  show (W₁.attach f).map Sum.inl Sum.inl = Sum.inl (Sum.inl v) ↔
+  change (W₁.attach f).map Sum.inl Sum.inl = Sum.inl (Sum.inl v) ↔
     W₁.attach f = Sum.inl v
   constructor
   · intro h
@@ -67,7 +67,7 @@ theorem attach_inl_eq_inl {f : W₁.Flag} {v : W₁.Vertex} :
 theorem attach_inr_eq_inr {f : W₂.Flag} {v : W₂.Vertex} :
     (W₁.disjUnion W₂).attach (Sum.inr f) = Sum.inl (Sum.inr v) ↔
       W₂.attach f = Sum.inl v := by
-  show (W₂.attach f).map Sum.inr Sum.inr = Sum.inl (Sum.inr v) ↔
+  change (W₂.attach f).map Sum.inr Sum.inr = Sum.inl (Sum.inr v) ↔
     W₂.attach f = Sum.inl v
   constructor
   · intro h
@@ -82,13 +82,13 @@ theorem attach_inr_eq_inr {f : W₂.Flag} {v : W₂.Vertex} :
 /-- A right flag never attaches to a left vertex. -/
 theorem attach_inr_ne_inl {f : W₂.Flag} {v : W₁.Vertex} :
     (W₁.disjUnion W₂).attach (Sum.inr f) ≠ Sum.inl (Sum.inl v) := by
-  show (W₂.attach f).map Sum.inr Sum.inr ≠ Sum.inl (Sum.inl v)
+  change (W₂.attach f).map Sum.inr Sum.inr ≠ Sum.inl (Sum.inl v)
   rcases W₂.attach f with w | ℓ <;> simp
 
 /-- A left flag never attaches to a right vertex. -/
 theorem attach_inl_ne_inr {f : W₁.Flag} {v : W₂.Vertex} :
     (W₁.disjUnion W₂).attach (Sum.inl f) ≠ Sum.inl (Sum.inr v) := by
-  show (W₁.attach f).map Sum.inl Sum.inl ≠ Sum.inl (Sum.inr v)
+  change (W₁.attach f).map Sum.inl Sum.inl ≠ Sum.inl (Sum.inr v)
   rcases W₁.attach f with w | ℓ <;> simp
 
 private theorem attach_inl_vertex_iff {g : W₁.Flag} :
@@ -121,7 +121,7 @@ theorem attach_inl_label_iff {g : W₁.Flag} :
     (∃ i : α ⊕ β,
         (W₁.disjUnion W₂).attach (Sum.inl g) = Sum.inr i) ↔
       ∃ i₀ : α, W₁.attach g = Sum.inr i₀ := by
-  show (∃ i, (W₁.attach g).map Sum.inl Sum.inl = Sum.inr i) ↔ _
+  change (∃ i, (W₁.attach g).map Sum.inl Sum.inl = Sum.inr i) ↔ _
   constructor
   · rintro ⟨i, hi⟩
     rcases hA : W₁.attach g with w | i₀ <;> rw [hA] at hi
@@ -135,7 +135,7 @@ theorem attach_inr_label_iff {g : W₂.Flag} :
     (∃ i : α ⊕ β,
         (W₁.disjUnion W₂).attach (Sum.inr g) = Sum.inr i) ↔
       ∃ i₀ : β, W₂.attach g = Sum.inr i₀ := by
-  show (∃ i, (W₂.attach g).map Sum.inr Sum.inr = Sum.inr i) ↔ _
+  change (∃ i, (W₂.attach g).map Sum.inr Sum.inr = Sum.inr i) ↔ _
   constructor
   · rintro ⟨i, hi⟩
     rcases hA : W₂.attach g with w | i₀ <;> rw [hA] at hi
@@ -280,7 +280,7 @@ private theorem even_card_fixedPoints (κ : F.RelTransitionSystem) :
       revPerm κ x.val ∈ Function.fixedPoints κ.walkPermPeriodic := by
     intro x
     have hx : κ.walkPermPeriodic x.val = x.val := x.prop
-    show κ.walkPermPeriodic (revPerm κ x.val) = revPerm κ x.val
+    change κ.walkPermPeriodic (revPerm κ x.val) = revPerm κ x.val
     conv_lhs => rw [← hx]
     have h := congrArg (fun q => q x.val)
       (walkPerm_revPerm_walkPerm κ)
@@ -289,7 +289,7 @@ private theorem even_card_fixedPoints (κ : F.RelTransitionSystem) :
     (fun x => ⟨revPerm κ x.val, hfix x⟩) ?_ ?_
   · intro x
     refine Subtype.ext (Subtype.ext ?_)
-    show W.pairing (W.pairing x.val.val) = x.val.val
+    change W.pairing (W.pairing x.val.val) = x.val.val
     exact W.pairing_invol x.val.val
   · intro x heq
     exact W.pairing_ne x.val.val
@@ -556,10 +556,10 @@ noncomputable def prodRel (κ₁ : (leftSub F).RelTransitionSystem)
   match_invol f hf := by
     cases f with
     | inl g =>
-      show Sum.inl (κ₁.match_ (κ₁.match_ g)) = Sum.inl g
+      change Sum.inl (κ₁.match_ (κ₁.match_ g)) = Sum.inl g
       rw [κ₁.match_invol g (inl_mem_internal.mp hf)]
     | inr g =>
-      show Sum.inr (κ₂.match_ (κ₂.match_ g)) = Sum.inr g
+      change Sum.inr (κ₂.match_ (κ₂.match_ g)) = Sum.inr g
       rw [κ₂.match_invol g (inr_mem_internal.mp hf)]
   match_ne f hf heq := by
     cases f with
@@ -599,19 +599,19 @@ noncomputable def prodOrient {κ₁ : (leftSub F).RelTransitionSystem}
   match_flip f hf := by
     cases f with
     | inl g =>
-      show o₁.isOut (κ₁.match_ g) = !o₁.isOut g
+      change o₁.isOut (κ₁.match_ g) = !o₁.isOut g
       exact o₁.match_flip g (inl_mem_internal.mp hf)
     | inr g =>
-      show o₂.isOut (κ₂.match_ g) = !o₂.isOut g
+      change o₂.isOut (κ₂.match_ g) = !o₂.isOut g
       exact o₂.match_flip g (inr_mem_internal.mp hf)
   pairing_flip f hf hp := by
     cases f with
     | inl g =>
-      show o₁.isOut (W₁.pairing g) = !o₁.isOut g
+      change o₁.isOut (W₁.pairing g) = !o₁.isOut g
       exact o₁.pairing_flip g (inl_mem_internal.mp hf)
         (inl_mem_internal.mp hp)
     | inr g =>
-      show o₂.isOut (W₂.pairing g) = !o₂.isOut g
+      change o₂.isOut (W₂.pairing g) = !o₂.isOut g
       exact o₂.pairing_flip g (inr_mem_internal.mp hf)
         (inr_mem_internal.mp hp)
 

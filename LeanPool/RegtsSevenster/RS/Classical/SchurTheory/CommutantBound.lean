@@ -20,7 +20,7 @@ summands, counted with multiplicity.
 namespace RS
 
 open Finset LinearMap Representation
-open scoped Classical
+
 
 noncomputable section
 
@@ -41,7 +41,7 @@ private noncomputable instance cardComplexInvertible
     exact_mod_cast Fintype.card_ne_zero)
 
 private theorem intertwining_finrank_sum_right
-    [Group G] [Fintype G]
+    [Group G] [Finite G]
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
     (ρ : Representation ℂ G V) (τ : Representation ℂ G W)
@@ -51,6 +51,8 @@ private theorem intertwining_finrank_sum_right
     (hchar : IsNativeCharacterSum ρ S) :
     Module.finrank ℂ (IntertwiningMap τ ρ) =
       ∑ i, Module.finrank ℂ (IntertwiningMap τ (rhoS (S i))) := by
+  classical
+  let := Fintype.ofFinite G
   dsimp only [IsNativeCharacterSum] at hchar
   apply Nat.cast_injective (R := ℂ)
   rw [Nat.cast_sum]
@@ -59,7 +61,7 @@ private theorem intertwining_finrank_sum_right
   rw [Finset.sum_comm, Finset.mul_sum]
 
 private theorem intertwining_finrank_sum_left
-    [Group G] [Fintype G]
+    [Group G] [Finite G]
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
     (ρ : Representation ℂ G V) (τ : Representation ℂ G W)
@@ -69,6 +71,8 @@ private theorem intertwining_finrank_sum_left
     (hchar : IsNativeCharacterSum ρ S) :
     Module.finrank ℂ (IntertwiningMap ρ τ) =
       ∑ i, Module.finrank ℂ (IntertwiningMap (rhoS (S i)) τ) := by
+  classical
+  let := Fintype.ofFinite G
   dsimp only [IsNativeCharacterSum] at hchar
   apply Nat.cast_injective (R := ℂ)
   rw [Nat.cast_sum]
@@ -77,7 +81,7 @@ private theorem intertwining_finrank_sum_left
   rw [Finset.sum_comm]
 
 private theorem constituent_multiplicity_pos
-    [Group G] [Fintype G]
+    [Group G] [Finite G]
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (ρ : Representation ℂ G V) {m : ℕ}
     (S : Fin m → Submodule (MonoidAlgebra ℂ G)
@@ -86,8 +90,10 @@ private theorem constituent_multiplicity_pos
     (hchar : IsNativeCharacterSum ρ S)
     (i : Fin m) :
     0 < Module.finrank ℂ (IntertwiningMap (rhoS (S i)) ρ) := by
+  classical
+  let := Fintype.ofFinite G
   rw [intertwining_finrank_sum_right ρ _ S hchar]
-  haveI := rhoS_isIrreducible (S i) (hS i)
+  have := rhoS_isIrreducible (S i) (hS i)
   have hself : Module.finrank ℂ
       (IntertwiningMap (rhoS (S i)) (rhoS (S i))) = 1 := by simp
   have hle := Finset.single_le_sum
@@ -114,6 +120,7 @@ private theorem trace_nProjector
   intro g _
   ring
 
+open scoped Classical in
 /-- A nonzero native block in a finite-dimensional algebra has at
 least the square of its simple constituent's dimension. -/
 theorem nDim_sq_le_finrank_of_projector_ne_zero
@@ -140,7 +147,7 @@ theorem nDim_sq_le_finrank_of_projector_ne_zero
 the square root of the dimension of a factoring algebra, times the
 dimension of its commutant. -/
 theorem finrank_le_sqrt_mul_commutant
-    [Group G] [Fintype G]
+    [Group G] [Finite G]
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (ρ : Representation ℂ G V)
     {A : Type*} [Ring A] [Algebra ℂ A] [FiniteDimensional ℂ A]
@@ -150,6 +157,7 @@ theorem finrank_le_sqrt_mul_commutant
       Nat.sqrt (Module.finrank ℂ A) *
         Module.finrank ℂ (IntertwiningMap ρ ρ) := by
   classical
+  let := Fintype.ofFinite G
   obtain ⟨m, S, hS, hchar⟩ := character_eq_sum_nChar ρ
   have hdim : Module.finrank ℂ V = ∑ i, nDim (S i) := by
     have h := hchar 1
@@ -162,7 +170,7 @@ theorem finrank_le_sqrt_mul_commutant
       intro hzero
       have ht := congrArg (LinearMap.trace ℂ V) (hker _ hzero)
       rw [trace_nProjector, map_zero] at ht
-      haveI : Nontrivial (subCarrier (S i)) :=
+      have : Nontrivial (subCarrier (S i)) :=
         (isIrredRep_rhoS (S i) (hS i)).1
       have hd : (nDim (S i) : ℂ) ≠ 0 :=
         Nat.cast_ne_zero.mpr Module.finrank_pos.ne'
@@ -190,7 +198,7 @@ theorem finrank_le_sqrt_mul_commutant
 dimension at most `B ^ 2`, its dimension is at most `B` times the
 dimension of its commutant. -/
 theorem finrank_le_mul_commutant
-    [Group G] [Fintype G]
+    [Group G] [Finite G]
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (ρ : Representation ℂ G V)
     {A : Type*} [Ring A] [Algebra ℂ A] [FiniteDimensional ℂ A]
@@ -199,6 +207,8 @@ theorem finrank_le_mul_commutant
     (B : ℕ) (hB : Module.finrank ℂ A ≤ B ^ 2) :
     Module.finrank ℂ V ≤
       B * Module.finrank ℂ (IntertwiningMap ρ ρ) := by
+  classical
+  let := Fintype.ofFinite G
   have hsqrt : Nat.sqrt (Module.finrank ℂ A) ≤ B := by
     have := Nat.sqrt_le' (Module.finrank ℂ A)
     nlinarith
@@ -209,7 +219,7 @@ theorem finrank_le_mul_commutant
 factoring algebra dimension times the square of the commutant
 dimension. -/
 theorem finrank_sq_le_mul_commutant_sq
-    [Group G] [Fintype G]
+    [Group G] [Finite G]
     [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
     (ρ : Representation ℂ G V)
     {A : Type*} [Ring A] [Algebra ℂ A] [FiniteDimensional ℂ A]
@@ -217,6 +227,8 @@ theorem finrank_sq_le_mul_commutant_sq
     (hker : ∀ x, φ x = 0 → ρ.asAlgebraHom x = 0) :
     Module.finrank ℂ V ^ 2 ≤ Module.finrank ℂ A *
       Module.finrank ℂ (IntertwiningMap ρ ρ) ^ 2 := by
+  classical
+  let := Fintype.ofFinite G
   have h := finrank_le_sqrt_mul_commutant ρ φ hker
   calc
     Module.finrank ℂ V ^ 2 ≤

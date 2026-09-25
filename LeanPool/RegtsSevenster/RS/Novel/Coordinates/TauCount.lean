@@ -16,7 +16,7 @@ to the number of outgoing flags, via the incoming/outgoing partition.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ} (W : ClosedFragment) (F : EdgeSubset W)
   {κ : F.TransitionSystem} (o : κ.Orientation) (φ : F.OddColouring ℓ)

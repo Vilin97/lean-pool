@@ -156,7 +156,7 @@ theorem catTrace_blockCycles
           powHom X g l.sum) =
         (l.map (fun c => catTrace (g ^ c))).prod
   | [], _ => by
-      show catTrace (permMor X 0 1 ≫ powHom X g 0) = 1
+      change catTrace (permMor X 0 1 ≫ powHom X g 0) = 1
       rw [permMor_one, powHom_zero]
       erw [Category.id_comp]
       exact (catTrace_id _).trans catDim_unit
@@ -165,7 +165,7 @@ theorem catTrace_blockCycles
         ⟨c - 1, by have := hmem c (by simp); omega⟩
       have hrest : ∀ d ∈ rest, 1 ≤ d := fun d hd =>
         hmem d (by simp [hd])
-      show catTrace (permMor X ((m + 1) + rest.sum)
+      change catTrace (permMor X ((m + 1) + rest.sum)
           (blockSum (finRotate (m + 1)) (blockCycles rest)) ≫
           powHom X g ((m + 1) + rest.sum)) = _
       rw [catTrace_permMor_blockSum, catTrace_permMor_finRotate,

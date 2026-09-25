@@ -125,7 +125,7 @@ private theorem twistPow_cover_factor_zero
       (plainShuffle V R.X (0 + 1)).hom ≫
         ((tensorPow D V (0 + 1)) ◁ modPowπ A R.X (0 + 1)) := by
   rw [twistPowModIso]
-  show modPowπ A ((tensorLeftMod A V R).X) 1 ≫
+  change modPowπ A ((tensorLeftMod A V R).X) 1 ≫
       ((modPowOne A ((tensorLeftMod A V R).X)).hom ≫
         (((λ_ V).inv ▷ R.X) ≫
           ((𝟙_ D ⊗ V) ◁ (modPowOne A R.X).inv))) =
@@ -146,6 +146,71 @@ private theorem twistPow_cover_factor_zero
       MonoidalCategory.id_tensorHom_id, Category.comp_id]
   exact (reassoc_of% hL) ((𝟙_ D ⊗ V) ◁ modPowπ A R.X 1)
 
+private theorem twistPow_cover_factor_moduleProjection
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    (A : D) [MonObj A] [IsCommMonObj A]
+    (V : D) (R : Mod D A) (k : ℕ) : ((tensorPow D V (k + 1) ⊗
+          tensorPow D V (0 + 1)) ◁
+        (modPowπ A R.X (k + 1) ⊗ₘ modPowπ A R.X (0 + 1))) ≫
+      (((tensorPow D V (k + 1) ⊗ tensorPow D V (0 + 1)) ◁
+          modTensorπ A (modPowMod A R.X k)
+            (modPowMod A R.X 0)) ≫
+        (((tensorPowConcat V (k + 1) (0 + 1)).hom ▷
+            modTensor A (modPowMod A R.X k)
+              (modPowMod A R.X 0)) ≫
+          (tensorPow D V (k + 1 + (0 + 1)) ◁
+            powMulDesc A R.X k 0))) =
+    ((tensorPowConcat V (k + 1) (0 + 1)).hom ▷
+        (tensorPow D R.X (k + 1) ⊗ tensorPow D R.X (0 + 1))) ≫
+      ((tensorPow D V (k + 1 + (0 + 1)) ◁
+          (tensorPowConcat R.X (k + 1) (0 + 1)).hom) ≫
+        (tensorPow D V (k + 1 + (0 + 1)) ◁
+          modPowπ A R.X (k + 1 + (0 + 1)))) :=
+    ((MonoidalCategory.whiskerLeft_comp_assoc
+        (tensorPow D V (k + 1) ⊗ tensorPow D V (0 + 1))
+        (modPowπ A R.X (k + 1) ⊗ₘ modPowπ A R.X (0 + 1))
+        (modTensorπ A (modPowMod A R.X k) (modPowMod A R.X 0))
+        _).symm).trans
+      ((MonoidalCategory.whisker_exchange_assoc
+          (tensorPowConcat V (k + 1) (0 + 1)).hom
+          ((modPowπ A R.X (k + 1) ⊗ₘ modPowπ A R.X (0 + 1)) ≫
+            modTensorπ A (modPowMod A R.X k)
+              (modPowMod A R.X 0))
+          (tensorPow D V (k + 1 + (0 + 1)) ◁
+            powMulDesc A R.X k 0)).trans
+        (congrArg (fun z =>
+            ((tensorPowConcat V (k + 1) (0 + 1)).hom ▷
+              (tensorPow D R.X (k + 1) ⊗
+                tensorPow D R.X (0 + 1))) ≫ z)
+          (((MonoidalCategory.whiskerLeft_comp
+              (tensorPow D V (k + 1 + (0 + 1)))
+              ((modPowπ A R.X (k + 1) ⊗ₘ
+                  modPowπ A R.X (0 + 1)) ≫
+                modTensorπ A (modPowMod A R.X k)
+                  (modPowMod A R.X 0))
+              (powMulDesc A R.X k 0)).symm).trans
+            ((congrArg (fun z =>
+                tensorPow D V (k + 1 + (0 + 1)) ◁ z)
+              ((Category.assoc
+                  (modPowπ A R.X (k + 1) ⊗ₘ
+                    modPowπ A R.X (0 + 1))
+                  (modTensorπ A (modPowMod A R.X k)
+                    (modPowMod A R.X 0))
+                  (powMulDesc A R.X k 0)).trans
+                ((congrArg (fun z =>
+                    (modPowπ A R.X (k + 1) ⊗ₘ
+                      modPowπ A R.X (0 + 1)) ≫ z)
+                  (modTensorπ_powMulDesc A R.X k 0)).trans
+                  (modPowπ_tensor_modPowMul A R.X (k + 1)
+                    (0 + 1))))).trans
+              (MonoidalCategory.whiskerLeft_comp
+                (tensorPow D V (k + 1 + (0 + 1)))
+                (tensorPowConcat R.X (k + 1) (0 + 1)).hom
+                (modPowπ A R.X (k + 1 + (0 + 1))))))))
+
 /-- **The cover factorisation**: over the plain covers, the
 twisted power identification is the diagonal shuffle followed by
 the projection of the module factor. -/
@@ -164,7 +229,7 @@ theorem twistPow_cover_factor
   | 0 => twistPow_cover_factor_zero A V R
   | (k + 1) => by
     rw [twistPowModIso]
-    show modPowπ A ((tensorLeftMod A V R).X) (k + 1 + 0 + 1) ≫
+    change modPowπ A ((tensorLeftMod A V R).X) (k + 1 + 0 + 1) ≫
         (powSplit A ((tensorLeftMod A V R).X) k 0 ≫
           (modTensorMap A (twistPowModIso A V R k).hom
               (twistPowModIso A V R 0).hom ≫
@@ -203,64 +268,7 @@ theorem twistPow_cover_factor
       simpa using tensorμ_natural (𝟙 (tensorPow D V (k + 1)))
         (modPowπ A R.X (k + 1)) (𝟙 (tensorPow D V (0 + 1)))
         (modPowπ A R.X (0 + 1))
-    have hRside : ((tensorPow D V (k + 1) ⊗
-            tensorPow D V (0 + 1)) ◁
-          (modPowπ A R.X (k + 1) ⊗ₘ modPowπ A R.X (0 + 1))) ≫
-        (((tensorPow D V (k + 1) ⊗ tensorPow D V (0 + 1)) ◁
-            modTensorπ A (modPowMod A R.X k)
-              (modPowMod A R.X 0)) ≫
-          (((tensorPowConcat V (k + 1) (0 + 1)).hom ▷
-              modTensor A (modPowMod A R.X k)
-                (modPowMod A R.X 0)) ≫
-            (tensorPow D V (k + 1 + (0 + 1)) ◁
-              powMulDesc A R.X k 0))) =
-      ((tensorPowConcat V (k + 1) (0 + 1)).hom ▷
-          (tensorPow D R.X (k + 1) ⊗ tensorPow D R.X (0 + 1))) ≫
-        ((tensorPow D V (k + 1 + (0 + 1)) ◁
-            (tensorPowConcat R.X (k + 1) (0 + 1)).hom) ≫
-          (tensorPow D V (k + 1 + (0 + 1)) ◁
-            modPowπ A R.X (k + 1 + (0 + 1)))) :=
-      ((MonoidalCategory.whiskerLeft_comp_assoc
-          (tensorPow D V (k + 1) ⊗ tensorPow D V (0 + 1))
-          (modPowπ A R.X (k + 1) ⊗ₘ modPowπ A R.X (0 + 1))
-          (modTensorπ A (modPowMod A R.X k) (modPowMod A R.X 0))
-          _).symm).trans
-        ((MonoidalCategory.whisker_exchange_assoc
-            (tensorPowConcat V (k + 1) (0 + 1)).hom
-            ((modPowπ A R.X (k + 1) ⊗ₘ modPowπ A R.X (0 + 1)) ≫
-              modTensorπ A (modPowMod A R.X k)
-                (modPowMod A R.X 0))
-            (tensorPow D V (k + 1 + (0 + 1)) ◁
-              powMulDesc A R.X k 0)).trans
-          (congrArg (fun z =>
-              ((tensorPowConcat V (k + 1) (0 + 1)).hom ▷
-                (tensorPow D R.X (k + 1) ⊗
-                  tensorPow D R.X (0 + 1))) ≫ z)
-            (((MonoidalCategory.whiskerLeft_comp
-                (tensorPow D V (k + 1 + (0 + 1)))
-                ((modPowπ A R.X (k + 1) ⊗ₘ
-                    modPowπ A R.X (0 + 1)) ≫
-                  modTensorπ A (modPowMod A R.X k)
-                    (modPowMod A R.X 0))
-                (powMulDesc A R.X k 0)).symm).trans
-              ((congrArg (fun z =>
-                  tensorPow D V (k + 1 + (0 + 1)) ◁ z)
-                ((Category.assoc
-                    (modPowπ A R.X (k + 1) ⊗ₘ
-                      modPowπ A R.X (0 + 1))
-                    (modTensorπ A (modPowMod A R.X k)
-                      (modPowMod A R.X 0))
-                    (powMulDesc A R.X k 0)).trans
-                  ((congrArg (fun z =>
-                      (modPowπ A R.X (k + 1) ⊗ₘ
-                        modPowπ A R.X (0 + 1)) ≫ z)
-                    (modTensorπ_powMulDesc A R.X k 0)).trans
-                    (modPowπ_tensor_modPowMul A R.X (k + 1)
-                      (0 + 1))))).trans
-                (MonoidalCategory.whiskerLeft_comp
-                  (tensorPow D V (k + 1 + (0 + 1)))
-                  (tensorPowConcat R.X (k + 1) (0 + 1)).hom
-                  (modPowπ A R.X (k + 1 + (0 + 1))))))))
+    have hRside := twistPow_cover_factor_moduleProjection A V R k
     have hTail : modTensorπ A
           (modPowMod A ((tensorLeftMod A V R).X) k)
           (modPowMod A ((tensorLeftMod A V R).X) 0) ≫

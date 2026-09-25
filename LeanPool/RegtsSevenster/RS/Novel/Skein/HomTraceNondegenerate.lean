@@ -35,7 +35,7 @@ theorem HomSpace.eq_zero_of_traces_vanish {t u : ℕ}
     refine mem_ker_of_traces_vanish f.val f.iso_invariant x ?_
     intro G
     exact hq G
-  show (LinearMap.ker (connectionMap f.val (t + u))).mkQ x = 0
+  change (LinearMap.ker (connectionMap f.val (t + u))).mkQ x = 0
   rw [Submodule.mkQ_apply]
   exact (Submodule.Quotient.mk_eq_zero _).mpr hker
 

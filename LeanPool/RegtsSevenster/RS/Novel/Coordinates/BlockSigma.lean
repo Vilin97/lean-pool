@@ -77,17 +77,17 @@ theorem blockAssign_blockSigmaEquiv (ds : List ℕ)
       --   sumCongr → inl j
       --   finSumFinEquiv → castAdd ds.sum j
       --   finCongr → same val
-      show blockAssign (d :: ds) (blockSigmaEquiv (d :: ds) ⟨⟨0, hv⟩, j⟩) =
+      change blockAssign (d :: ds) (blockSigmaEquiv (d :: ds) ⟨⟨0, hv⟩, j⟩) =
         ⟨0, hv⟩
       -- The equiv value has val = j.val < d
       have hval : (blockSigmaEquiv (d :: ds) ⟨⟨0, hv⟩, j⟩).val = j.val := rfl
       have hlt : (blockSigmaEquiv (d :: ds) ⟨⟨0, hv⟩, j⟩).val < d := by
         rw [hval]; exact j.isLt
       unfold blockAssign
-      rw [dif_pos hlt]
+      rw [dite_eq_left hlt]
     | v + 1 =>
       -- p = ⟨⟨v+1, hv⟩, j⟩ where j : Fin (ds.get ⟨v, _⟩)
-      show blockAssign (d :: ds) (blockSigmaEquiv (d :: ds) ⟨⟨v + 1, hv⟩, j⟩) =
+      change blockAssign (d :: ds) (blockSigmaEquiv (d :: ds) ⟨⟨v + 1, hv⟩, j⟩) =
         ⟨v + 1, hv⟩
       -- The equiv value has val = d + (blockSigmaEquiv ds ⟨⟨v, _⟩, j⟩).val
       have hlc : (d :: ds).length = ds.length + 1 := rfl
@@ -97,7 +97,7 @@ theorem blockAssign_blockSigmaEquiv (ds : List ℕ)
       have hnlt : ¬ (blockSigmaEquiv (d :: ds) ⟨⟨v + 1, hv⟩, j⟩).val < d := by
         rw [hval]; omega
       unfold blockAssign
-      rw [dif_neg hnlt]
+      rw [dite_eq_right hnlt]
       -- Goal: (blockAssign ds ⟨val - d, _⟩).succ = ⟨v + 1, hv⟩
       have hisLt : (blockSigmaEquiv (d :: ds) ⟨⟨v + 1, hv⟩, j⟩).val - d < ds.sum
         := by

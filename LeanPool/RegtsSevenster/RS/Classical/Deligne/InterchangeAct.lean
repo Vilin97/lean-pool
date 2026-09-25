@@ -290,7 +290,7 @@ theorem chainMul_actLeft
         (A ◁ chainMul A M M' m n) ≫
         modTensorAct A (symPowMod A M'.X (m + 1 + n))
           (symPowMod A M.X (m + 1 + n)) := by
-  show (modTensorAct A (symPowMod A M'.X m) (symPowMod A M.X m) ▷
+  change (modTensorAct A (symPowMod A M'.X m) (symPowMod A M.X m) ▷
       modTensor A (symPowMod A M'.X n) (symPowMod A M.X n)) ≫
       (interchange A (symPowMod A M'.X m) (symPowMod A M.X m)
           (symPowMod A M'.X n) (symPowMod A M.X n) ≫
@@ -338,7 +338,7 @@ theorem chainMul2_actLeft
         (A ◁ chainMul2 A M M' p q r s) ≫
         modTensorAct A (symPowMod A M'.X (p + 1 + r))
           (symPowMod A M.X (q + 1 + s)) := by
-  show (modTensorAct A (symPowMod A M'.X p) (symPowMod A M.X q) ▷
+  change (modTensorAct A (symPowMod A M'.X p) (symPowMod A M.X q) ▷
       modTensor A (symPowMod A M'.X r) (symPowMod A M.X s)) ≫
       (interchange A (symPowMod A M'.X p) (symPowMod A M.X q)
           (symPowMod A M'.X r) (symPowMod A M.X s) ≫
@@ -394,7 +394,7 @@ theorem chainMul2_actMid
         (A ◁ chainMul2 A M M' p q r s) ≫
         modTensorAct A (symPowMod A M'.X (p + 1 + r))
           (symPowMod A M.X (q + 1 + s)) := by
-  show (modTensor A (symPowMod A M'.X p) (symPowMod A M.X q) ◁
+  change (modTensor A (symPowMod A M'.X p) (symPowMod A M.X q) ◁
       modTensorAct A (symPowMod A M'.X r) (symPowMod A M.X s)) ≫
       (interchange A (symPowMod A M'.X p) (symPowMod A M.X q)
           (symPowMod A M'.X r) (symPowMod A M.X s) ≫

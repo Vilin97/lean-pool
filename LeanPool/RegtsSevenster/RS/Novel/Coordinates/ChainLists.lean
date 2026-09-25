@@ -16,7 +16,7 @@ the global pair concatenation.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 

@@ -40,7 +40,7 @@ def refl (W : Fragment α) : Equiv W W where
   flagEquiv := _root_.Equiv.refl _
   vertexEquiv := _root_.Equiv.refl _
   attach_comm := fun f => by
-    show W.attach f = (W.attach f).map (_root_.Equiv.refl _) id
+    change W.attach f = (W.attach f).map (_root_.Equiv.refl _) id
     rcases W.attach f with v | ℓ <;> simp
   pairing_comm := fun _ => rfl
   circles_eq := rfl
@@ -51,12 +51,12 @@ def symm (e : Equiv W₁ W₂) : Equiv W₂ W₁ where
   vertexEquiv := e.vertexEquiv.symm
   attach_comm := fun f => by
     have h := e.attach_comm (e.flagEquiv.symm f)
-    simp at h
+    simp? at h
     rw [h]
     rcases W₁.attach (e.flagEquiv.symm f) with v | ℓ <;> simp
   pairing_comm := fun f => by
     have h := e.pairing_comm (e.flagEquiv.symm f)
-    simp at h
+    simp? at h
     rw [← h]
     simp
   circles_eq := e.circles_eq.symm
@@ -66,11 +66,11 @@ def trans (e₁ : Equiv W₁ W₂) (e₂ : Equiv W₂ W₃) : Equiv W₁ W₃ wh
   flagEquiv := e₁.flagEquiv.trans e₂.flagEquiv
   vertexEquiv := e₁.vertexEquiv.trans e₂.vertexEquiv
   attach_comm := fun f => by
-    simp [_root_.Equiv.trans_apply]
+    simp? [_root_.Equiv.trans_apply]
     rw [e₂.attach_comm, e₁.attach_comm]
     rcases W₁.attach f with v | ℓ <;> simp
   pairing_comm := fun f => by
-    simp [_root_.Equiv.trans_apply]
+    simp? [_root_.Equiv.trans_apply]
     rw [e₁.pairing_comm, e₂.pairing_comm]
   circles_eq := e₁.circles_eq.trans e₂.circles_eq
 
@@ -132,15 +132,15 @@ def disjUnionCongr (e₁ : Equiv W₁ W₂) (e₂ : Equiv V₁ V₂) :
   pairing_comm := fun f => by
     cases f with
     | inl g =>
-      show Sum.inl (e₁.flagEquiv (W₁.pairing g)) =
+      change Sum.inl (e₁.flagEquiv (W₁.pairing g)) =
         Sum.inl (W₂.pairing (e₁.flagEquiv g))
       rw [e₁.pairing_comm]
     | inr g =>
-      show Sum.inr (e₂.flagEquiv (V₁.pairing g)) =
+      change Sum.inr (e₂.flagEquiv (V₁.pairing g)) =
         Sum.inr (V₂.pairing (e₂.flagEquiv g))
       rw [e₂.pairing_comm]
   circles_eq := by
-    show W₁.circles + V₁.circles = W₂.circles + V₂.circles
+    change W₁.circles + V₁.circles = W₂.circles + V₂.circles
     rw [e₁.circles_eq, e₂.circles_eq]
 
 /-! ### Glue-pair congruence -/
@@ -159,11 +159,11 @@ def survivingFlagEquiv (e : Equiv W₁ W₂) (i j : α) :
   invFun f := ⟨e.flagEquiv.symm f.val, by
     refine ⟨fun h => f.prop.1 ?_, fun h => f.prop.2 ?_⟩
     · have h1 := congrArg e.flagEquiv h
-      simp at h1
+      simp? at h1
       rw [e.boundaryFlag_comm i] at h1
       exact h1
     · have h1 := congrArg e.flagEquiv h
-      simp at h1
+      simp? at h1
       rw [e.boundaryFlag_comm j] at h1
       exact h1⟩
   left_inv f := Subtype.ext (by simp)
@@ -216,10 +216,10 @@ def gluePairClosedCongr
   attach_comm := fun f => e.survivingFlagEquiv_glueAttach i j f
   pairing_comm := fun f => by
     apply Subtype.ext
-    show e.flagEquiv (W₁.pairing f.val) = W₂.pairing (e.flagEquiv f.val)
+    change e.flagEquiv (W₁.pairing f.val) = W₂.pairing (e.flagEquiv f.val)
     exact e.pairing_comm f.val
   circles_eq := by
-    show W₁.circles + 1 = W₂.circles + 1
+    change W₁.circles + 1 = W₂.circles + 1
     rw [e.circles_eq]
 
 /-! #### Rewire commutation -/
@@ -231,7 +231,7 @@ private theorem rewire_val_of_eq_left {W : Fragment α} {i j : α}
     {f : SurvivingFlag W i j}
     (hfi : W.pairing f.val = W.boundaryFlag i) :
     (rewire hopen f).val = W.pairing (W.boundaryFlag j) := by
-  unfold rewire; simp [dif_pos hfi]
+  unfold rewire; simp [dite_eq_left hfi]
 
 /-- The `.val` of a `rewire` in the second branch (partner is `j`'s
 boundary flag). -/
@@ -241,7 +241,7 @@ private theorem rewire_val_of_eq_right {W : Fragment α} {i j : α}
     (hfi : W.pairing f.val ≠ W.boundaryFlag i)
     (hfj : W.pairing f.val = W.boundaryFlag j) :
     (rewire hopen f).val = W.pairing (W.boundaryFlag i) := by
-  unfold rewire; simp [dif_neg hfi, dif_pos hfj]
+  unfold rewire; simp [dite_eq_right hfi, dite_eq_left hfj]
 
 /-- The `.val` of a `rewire` in the third branch (partner is
 neither boundary flag). -/
@@ -251,7 +251,7 @@ private theorem rewire_val_of_ne {W : Fragment α} {i j : α}
     (hfi : W.pairing f.val ≠ W.boundaryFlag i)
     (hfj : W.pairing f.val ≠ W.boundaryFlag j) :
     (rewire hopen f).val = W.pairing f.val := by
-  unfold rewire; simp [dif_neg hfi, dif_neg hfj]
+  unfold rewire; simp [dite_eq_right hfi, dite_eq_right hfj]
 
 /-- The open case: the flag equivalence commutes with rewiring. -/
 private theorem survivingFlagEquiv_rewire
@@ -267,7 +267,7 @@ private theorem survivingFlagEquiv_rewire
   by_cases hfi : W₁.pairing f.val = W₁.boundaryFlag i
   · have hfi₂ : W₂.pairing g.val = W₂.boundaryFlag i := by
       rw [hgval, ← e.pairing_comm, hfi, e.boundaryFlag_comm]
-    show e.flagEquiv (rewire hopen₁ f).val = (rewire hopen₂ g).val
+    change e.flagEquiv (rewire hopen₁ f).val = (rewire hopen₂ g).val
     rw [rewire_val_of_eq_left hfi, rewire_val_of_eq_left hfi₂]
     rw [e.pairing_comm, e.boundaryFlag_comm]
   -- ═══════ CASE: f's partner is the boundary flag of j ═══════
@@ -279,7 +279,7 @@ private theorem survivingFlagEquiv_rewire
         exact e.flagEquiv.injective h
       have hfj₂ : W₂.pairing g.val = W₂.boundaryFlag j := by
         rw [hgval, ← e.pairing_comm, hfj, e.boundaryFlag_comm]
-      show e.flagEquiv (rewire hopen₁ f).val = (rewire hopen₂ g).val
+      change e.flagEquiv (rewire hopen₁ f).val = (rewire hopen₂ g).val
       rw [rewire_val_of_eq_right hfi hfj,
           rewire_val_of_eq_right hfi₂ hfj₂]
       rw [e.pairing_comm, e.boundaryFlag_comm]
@@ -294,7 +294,7 @@ private theorem survivingFlagEquiv_rewire
         apply hfj
         rw [← e.boundaryFlag_comm j, ← e.pairing_comm] at h
         exact e.flagEquiv.injective h
-      show e.flagEquiv (rewire hopen₁ f).val = (rewire hopen₂ g).val
+      change e.flagEquiv (rewire hopen₁ f).val = (rewire hopen₂ g).val
       rw [rewire_val_of_ne hfi hfj, rewire_val_of_ne hfi₂ hfj₂,
           hgval, e.pairing_comm]
 
@@ -319,11 +319,11 @@ def gluePairCongr (hij : i ≠ j) :
   unfold gluePair
   split
   · rename_i h₁
-    rw [dif_pos ((e.gluePair_case_preserved i j).mp h₁)]
+    rw [dite_eq_left ((e.gluePair_case_preserved i j).mp h₁)]
     exact e.gluePairClosedCongr h₁
       ((e.gluePair_case_preserved i j).mp h₁)
   · rename_i h₁
-    rw [dif_neg (mt (e.gluePair_case_preserved i j).mpr h₁)]
+    rw [dite_eq_right (mt (e.gluePair_case_preserved i j).mpr h₁)]
     exact e.gluePairOpenCongr h₁
       (mt (e.gluePair_case_preserved i j).mpr h₁) hij
 

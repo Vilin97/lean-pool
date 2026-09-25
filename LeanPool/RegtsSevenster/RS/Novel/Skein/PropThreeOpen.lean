@@ -22,7 +22,7 @@ nothing else.
 
 namespace RS
 
-open scoped Classical
+
 
 /-- The paired step in value form, unconditionally. -/
 theorem pairedValueLedger : PairedValueLedger :=

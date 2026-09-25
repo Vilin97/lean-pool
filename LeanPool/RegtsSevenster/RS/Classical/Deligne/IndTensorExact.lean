@@ -314,7 +314,7 @@ lemma dayCoyonedaIso_hom_natural_right
     eta_comp_dayCoyonedaIso_hom]
   ext X : 2
   refine ConcreteCategory.hom_ext _ _ fun fg => ?_
-  show fg.1 ⊗ₘ (h ≫ fg.2) = (a ◁ h) ≫ (fg.1 ⊗ₘ fg.2)
+  change fg.1 ⊗ₘ (h ≫ fg.2) = (a ◁ h) ≫ (fg.1 ⊗ₘ fg.2)
   rw [← id_tensorHom, tensorHom_comp_tensorHom, Category.id_comp]
 
 /-- Naturality of `RS.dayCoyonedaIso` in the left variable. -/
@@ -351,7 +351,7 @@ lemma dayCoyonedaIso_hom_natural_left
     eta_comp_dayCoyonedaIso_hom]
   ext X : 2
   refine ConcreteCategory.hom_ext _ _ fun fg => ?_
-  show (f ≫ fg.1) ⊗ₘ fg.2 = (f ▷ b) ≫ (fg.1 ⊗ₘ fg.2)
+  change (f ≫ fg.1) ⊗ₘ fg.2 = (f ▷ b) ≫ (fg.1 ⊗ₘ fg.2)
   rw [← tensorHom_id, tensorHom_comp_tensorHom, Category.id_comp]
 
 end DayNaturality
@@ -628,7 +628,7 @@ def coprodCocone {J : Type v₁} [Category.{v₁} J] {ℬ : Type u₃} [Category
   ι :=
     { app := fun j => coprod.map (coconeLeg c₁ j) (coconeLeg c₂ j)
       naturality := fun j k u => by
-        show coprod.map (D₁.map u) (D₂.map u) ≫
+        change coprod.map (D₁.map u) (D₂.map u) ≫
             coprod.map (coconeLeg c₁ k) (coconeLeg c₂ k) =
           coprod.map (coconeLeg c₁ j) (coconeLeg c₂ j) ≫
             𝟙 (c₁.pt ⨿ c₂.pt)
@@ -646,7 +646,7 @@ def coprodCoconeFst
   ι :=
     { app := fun j => coprod.inl ≫ coprodLeg s j
       naturality := fun j k u => by
-        show D₁.map u ≫ coprod.inl ≫ coprodLeg s k =
+        change D₁.map u ≫ coprod.inl ≫ coprodLeg s k =
           (coprod.inl ≫ coprodLeg s j) ≫ 𝟙 s.pt
         rw [Category.comp_id, ← coprodLeg_w s u, coprod.inl_map_assoc] }
 
@@ -662,7 +662,7 @@ def coprodCoconeSnd
   ι :=
     { app := fun j => coprod.inr ≫ coprodLeg s j
       naturality := fun j k u => by
-        show D₂.map u ≫ coprod.inr ≫ coprodLeg s k =
+        change D₂.map u ≫ coprod.inr ≫ coprodLeg s k =
           (coprod.inr ≫ coprodLeg s j) ≫ 𝟙 s.pt
         rw [Category.comp_id, ← coprodLeg_w s u, coprod.inr_map_assoc] }
 
@@ -682,7 +682,7 @@ def isColimitCoprodCocone
         coprod.inl ≫ coprodLeg s j := h₁.fac (coprodCoconeFst s) j
     have f₂ : coconeLeg c₂ j ≫ h₂.desc (coprodCoconeSnd s) =
         coprod.inr ≫ coprodLeg s j := h₂.fac (coprodCoconeSnd s) j
-    show coprod.map (coconeLeg c₁ j) (coconeLeg c₂ j) ≫
+    change coprod.map (coconeLeg c₁ j) (coconeLeg c₂ j) ≫
         coprod.desc (h₁.desc (coprodCoconeFst s))
           (h₂.desc (coprodCoconeSnd s)) = coprodLeg s j
     apply coprod.hom_ext
@@ -693,21 +693,21 @@ def isColimitCoprodCocone
   uniq s m hm := by
     have hm' : ∀ j, coprod.map (coconeLeg c₁ j) (coconeLeg c₂ j) ≫ m =
         coprodLeg s j := hm
-    show m = coprod.desc (h₁.desc (coprodCoconeFst s))
+    change m = coprod.desc (h₁.desc (coprodCoconeFst s))
       (h₂.desc (coprodCoconeSnd s))
     apply coprod.hom_ext
     · rw [coprod.inl_desc]
       refine h₁.hom_ext fun j => ?_
       have hf : coconeLeg c₁ j ≫ h₁.desc (coprodCoconeFst s) =
           coprod.inl ≫ coprodLeg s j := h₁.fac (coprodCoconeFst s) j
-      show coconeLeg c₁ j ≫ coprod.inl ≫ m =
+      change coconeLeg c₁ j ≫ coprod.inl ≫ m =
         coconeLeg c₁ j ≫ h₁.desc (coprodCoconeFst s)
       rw [hf, ← hm' j, coprod.inl_map_assoc]
     · rw [coprod.inr_desc]
       refine h₂.hom_ext fun j => ?_
       have hf : coconeLeg c₂ j ≫ h₂.desc (coprodCoconeSnd s) =
           coprod.inr ≫ coprodLeg s j := h₂.fac (coprodCoconeSnd s) j
-      show coconeLeg c₂ j ≫ coprod.inr ≫ m =
+      change coconeLeg c₂ j ≫ coprod.inr ≫ m =
         coconeLeg c₂ j ≫ h₂.desc (coprodCoconeSnd s)
       rw [hf, ← hm' j, coprod.inr_map_assoc]
 
@@ -732,7 +732,7 @@ lemma preservesColimitsOfShape_coprodPairFunctor
           (isColimitCoprodCocone (isColimitOfPreserves F hc)
             (isColimitOfPreserves G hc))
           (Cocone.ext (Iso.refl _) fun j => ?_)⟩
-        show coprod.map (coconeLeg (F.mapCocone c) j)
+        change coprod.map (coconeLeg (F.mapCocone c) j)
             (coconeLeg (G.mapCocone c) j) ≫
             𝟙 ((F.mapCocone c).pt ⨿ (G.mapCocone c).pt) =
           coprod.map (F.map (c.ι.app j)) (G.map (c.ι.app j))
@@ -749,7 +749,7 @@ lemma preservesColimitsOfShape_const_of_isConnected
     { preserves := fun {c} _ => by
         refine ⟨IsColimit.ofIsoColimit (isColimitConstCocone J W)
           (Cocone.ext (Iso.refl _) fun j => ?_)⟩
-        show 𝟙 W ≫ 𝟙 W = 𝟙 W
+        change 𝟙 W ≫ 𝟙 W = 𝟙 W
         rw [Category.comp_id] }
 
 end CoconeTools
@@ -776,7 +776,7 @@ lemma isIso_app_of_isIso_indOf [SmallCategory C]
     infer_instance
   have hw : ∀ k, IsIso ((Functor.whiskerLeft D γ).app k) := fun k =>
     hbase (A.presentation.F.obj k)
-  haveI : IsIso (Functor.whiskerLeft D γ) :=
+  have : IsIso (Functor.whiskerLeft D γ) :=
     NatIso.isIso_of_isIso_app _
   have hL : IsColimit (L.mapCocone (colimit.cocone D)) :=
     isColimitOfPreserves L (colimit.isColimit D)
@@ -882,15 +882,15 @@ lemma isIso_coprodComparison_tensorLeft_indOf₀
     (a x y : C) :
     IsIso (coprodComparison (tensorLeft (indOf.obj a))
       (indOf.obj x) (indOf.obj y)) := by
-  haveI : HasFiniteBiproducts C :=
+  have : HasFiniteBiproducts C :=
     HasFiniteBiproducts.of_hasFiniteCoproducts
-  haveI : HasBinaryBiproducts C :=
+  have : HasBinaryBiproducts C :=
     hasBinaryBiproducts_of_finite_biproducts C
-  haveI : PreservesBiproductsOfShape WalkingPair (tensorLeft a) :=
+  have : PreservesBiproductsOfShape WalkingPair (tensorLeft a) :=
     PreservesFiniteBiproducts.preserves
-  haveI := preservesBinaryBiproducts_of_preservesBiproducts
+  have := preservesBinaryBiproducts_of_preservesBiproducts
     (tensorLeft a)
-  haveI := preservesBinaryCoproducts_of_preservesBinaryBiproducts
+  have := preservesBinaryCoproducts_of_preservesBinaryBiproducts
     (tensorLeft a)
   exact isIso_of_coprod_eq_whiskerLeft_indOf a x y
     (PreservesColimitPair.iso (tensorLeft a) x y).hom
@@ -910,15 +910,15 @@ lemma isIso_coprodComparison_tensorRight_indOf₀
     (a x y : C) :
     IsIso (coprodComparison (tensorRight (indOf.obj a))
       (indOf.obj x) (indOf.obj y)) := by
-  haveI : HasFiniteBiproducts C :=
+  have : HasFiniteBiproducts C :=
     HasFiniteBiproducts.of_hasFiniteCoproducts
-  haveI : HasBinaryBiproducts C :=
+  have : HasBinaryBiproducts C :=
     hasBinaryBiproducts_of_finite_biproducts C
-  haveI : PreservesBiproductsOfShape WalkingPair (tensorRight a) :=
+  have : PreservesBiproductsOfShape WalkingPair (tensorRight a) :=
     PreservesFiniteBiproducts.preserves
-  haveI := preservesBinaryBiproducts_of_preservesBiproducts
+  have := preservesBinaryBiproducts_of_preservesBiproducts
     (tensorRight a)
-  haveI := preservesBinaryCoproducts_of_preservesBinaryBiproducts
+  have := preservesBinaryCoproducts_of_preservesBinaryBiproducts
     (tensorRight a)
   exact isIso_of_coprod_eq_whiskerRight_indOf a x y
     (PreservesColimitPair.iso (tensorRight a) x y).hom
@@ -939,7 +939,7 @@ lemma isIso_coprodComparison_tensorLeft_indOf₁
     (Y : Ind C) :
     IsIso (coprodComparison (tensorLeft (indOf.obj a))
       (indOf.obj x) Y) := by
-  haveI hL : PreservesFilteredColimits
+  have hL : PreservesFilteredColimits
       (coprodPairFunctor ((Functor.const (Ind C)).obj
         (indOf.obj a ⊗ indOf.obj x)) (tensorLeft (indOf.obj a))) :=
     ⟨fun I _ _ =>
@@ -947,14 +947,14 @@ lemma isIso_coprodComparison_tensorLeft_indOf₁
       haveI := preservesColimitsOfShape_const_of_isConnected
         (𝒜 := Ind C) (J := I) (indOf.obj a ⊗ indOf.obj x)
       preservesColimitsOfShape_coprodPairFunctor _ _⟩
-  haveI hR : PreservesFilteredColimits
+  have hR : PreservesFilteredColimits
       (coprodPairFunctor ((Functor.const (Ind C)).obj (indOf.obj x))
         (𝟭 (Ind C)) ⋙ tensorLeft (indOf.obj a)) :=
     ⟨fun I _ _ => by
-      haveI := IsFiltered.isConnected (C := I)
-      haveI := preservesColimitsOfShape_const_of_isConnected
+      have := IsFiltered.isConnected (C := I)
+      have := preservesColimitsOfShape_const_of_isConnected
         (𝒜 := Ind C) (J := I) (indOf.obj x)
-      haveI := preservesColimitsOfShape_coprodPairFunctor
+      have := preservesColimitsOfShape_coprodPairFunctor
         ((Functor.const (Ind C)).obj (indOf.obj x)) (𝟭 (Ind C))
         (J := I)
       infer_instance⟩
@@ -966,7 +966,7 @@ lemma isIso_coprodComparison_tensorLeft_indOf₁
         (indOf.obj a ◁ (coprod.inl : indOf.obj x ⟶ indOf.obj x ⨿ B))
         (indOf.obj a ◁ (coprod.inr : B ⟶ indOf.obj x ⨿ B))
       naturality := fun B B' u => by
-        show coprod.map (𝟙 (indOf.obj a ⊗ indOf.obj x))
+        change coprod.map (𝟙 (indOf.obj a ⊗ indOf.obj x))
             (indOf.obj a ◁ u) ≫
             coprod.desc (indOf.obj a ◁ coprod.inl)
               (indOf.obj a ◁ coprod.inr) =
@@ -988,7 +988,7 @@ lemma isIso_coprodComparison_tensorRight_indOf₁
     (Y : Ind C) :
     IsIso (coprodComparison (tensorRight (indOf.obj a))
       (indOf.obj x) Y) := by
-  haveI hL : PreservesFilteredColimits
+  have hL : PreservesFilteredColimits
       (coprodPairFunctor ((Functor.const (Ind C)).obj
         (indOf.obj x ⊗ indOf.obj a)) (tensorRight (indOf.obj a))) :=
     ⟨fun I _ _ =>
@@ -996,14 +996,14 @@ lemma isIso_coprodComparison_tensorRight_indOf₁
       haveI := preservesColimitsOfShape_const_of_isConnected
         (𝒜 := Ind C) (J := I) (indOf.obj x ⊗ indOf.obj a)
       preservesColimitsOfShape_coprodPairFunctor _ _⟩
-  haveI hR : PreservesFilteredColimits
+  have hR : PreservesFilteredColimits
       (coprodPairFunctor ((Functor.const (Ind C)).obj (indOf.obj x))
         (𝟭 (Ind C)) ⋙ tensorRight (indOf.obj a)) :=
     ⟨fun I _ _ => by
-      haveI := IsFiltered.isConnected (C := I)
-      haveI := preservesColimitsOfShape_const_of_isConnected
+      have := IsFiltered.isConnected (C := I)
+      have := preservesColimitsOfShape_const_of_isConnected
         (𝒜 := Ind C) (J := I) (indOf.obj x)
-      haveI := preservesColimitsOfShape_coprodPairFunctor
+      have := preservesColimitsOfShape_coprodPairFunctor
         ((Functor.const (Ind C)).obj (indOf.obj x)) (𝟭 (Ind C))
         (J := I)
       infer_instance⟩
@@ -1015,7 +1015,7 @@ lemma isIso_coprodComparison_tensorRight_indOf₁
         ((coprod.inl : indOf.obj x ⟶ indOf.obj x ⨿ B) ▷ indOf.obj a)
         ((coprod.inr : B ⟶ indOf.obj x ⨿ B) ▷ indOf.obj a)
       naturality := fun B B' u => by
-        show coprod.map (𝟙 (indOf.obj x ⊗ indOf.obj a))
+        change coprod.map (𝟙 (indOf.obj x ⊗ indOf.obj a))
             (u ▷ indOf.obj a) ≫
             coprod.desc (coprod.inl ▷ indOf.obj a)
               (coprod.inr ▷ indOf.obj a) =
@@ -1037,7 +1037,7 @@ lemma isIso_coprodComparison_tensorLeft_indOf₂
     (a : C)
     (X Y : Ind C) :
     IsIso (coprodComparison (tensorLeft (indOf.obj a)) X Y) := by
-  haveI hL : PreservesFilteredColimits
+  have hL : PreservesFilteredColimits
       (coprodPairFunctor (tensorLeft (indOf.obj a))
         ((Functor.const (Ind C)).obj (indOf.obj a ⊗ Y))) :=
     ⟨fun I _ _ =>
@@ -1045,15 +1045,15 @@ lemma isIso_coprodComparison_tensorLeft_indOf₂
       haveI := preservesColimitsOfShape_const_of_isConnected
         (𝒜 := Ind C) (J := I) (indOf.obj a ⊗ Y)
       preservesColimitsOfShape_coprodPairFunctor _ _⟩
-  haveI hR : PreservesFilteredColimits
+  have hR : PreservesFilteredColimits
       (coprodPairFunctor (𝟭 (Ind C))
         ((Functor.const (Ind C)).obj Y) ⋙
         tensorLeft (indOf.obj a)) :=
     ⟨fun I _ _ => by
-      haveI := IsFiltered.isConnected (C := I)
-      haveI := preservesColimitsOfShape_const_of_isConnected
+      have := IsFiltered.isConnected (C := I)
+      have := preservesColimitsOfShape_const_of_isConnected
         (𝒜 := Ind C) (J := I) Y
-      haveI := preservesColimitsOfShape_coprodPairFunctor
+      have := preservesColimitsOfShape_coprodPairFunctor
         (𝟭 (Ind C)) ((Functor.const (Ind C)).obj Y) (J := I)
       infer_instance⟩
   let γ : coprodPairFunctor (tensorLeft (indOf.obj a))
@@ -1065,7 +1065,7 @@ lemma isIso_coprodComparison_tensorLeft_indOf₂
         (indOf.obj a ◁ (coprod.inl : B ⟶ B ⨿ Y))
         (indOf.obj a ◁ (coprod.inr : Y ⟶ B ⨿ Y))
       naturality := fun B B' u => by
-        show coprod.map (indOf.obj a ◁ u)
+        change coprod.map (indOf.obj a ◁ u)
             (𝟙 (indOf.obj a ⊗ Y)) ≫
             coprod.desc (indOf.obj a ◁ coprod.inl)
               (indOf.obj a ◁ coprod.inr) =
@@ -1086,7 +1086,7 @@ lemma isIso_coprodComparison_tensorRight_indOf₂
     (a : C)
     (X Y : Ind C) :
     IsIso (coprodComparison (tensorRight (indOf.obj a)) X Y) := by
-  haveI hL : PreservesFilteredColimits
+  have hL : PreservesFilteredColimits
       (coprodPairFunctor (tensorRight (indOf.obj a))
         ((Functor.const (Ind C)).obj (Y ⊗ indOf.obj a))) :=
     ⟨fun I _ _ =>
@@ -1094,15 +1094,15 @@ lemma isIso_coprodComparison_tensorRight_indOf₂
       haveI := preservesColimitsOfShape_const_of_isConnected
         (𝒜 := Ind C) (J := I) (Y ⊗ indOf.obj a)
       preservesColimitsOfShape_coprodPairFunctor _ _⟩
-  haveI hR : PreservesFilteredColimits
+  have hR : PreservesFilteredColimits
       (coprodPairFunctor (𝟭 (Ind C))
         ((Functor.const (Ind C)).obj Y) ⋙
         tensorRight (indOf.obj a)) :=
     ⟨fun I _ _ => by
-      haveI := IsFiltered.isConnected (C := I)
-      haveI := preservesColimitsOfShape_const_of_isConnected
+      have := IsFiltered.isConnected (C := I)
+      have := preservesColimitsOfShape_const_of_isConnected
         (𝒜 := Ind C) (J := I) Y
-      haveI := preservesColimitsOfShape_coprodPairFunctor
+      have := preservesColimitsOfShape_coprodPairFunctor
         (𝟭 (Ind C)) ((Functor.const (Ind C)).obj Y) (J := I)
       infer_instance⟩
   let γ : coprodPairFunctor (tensorRight (indOf.obj a))
@@ -1114,7 +1114,7 @@ lemma isIso_coprodComparison_tensorRight_indOf₂
         ((coprod.inl : B ⟶ B ⨿ Y) ▷ indOf.obj a)
         ((coprod.inr : Y ⟶ B ⨿ Y) ▷ indOf.obj a)
       naturality := fun B B' u => by
-        show coprod.map (u ▷ indOf.obj a)
+        change coprod.map (u ▷ indOf.obj a)
             (𝟙 (Y ⊗ indOf.obj a)) ≫
             coprod.desc (coprod.inl ▷ indOf.obj a)
               (coprod.inr ▷ indOf.obj a) =
@@ -1135,7 +1135,7 @@ lemma isIso_coprodComparison_tensorLeft
     [HasFiniteColimits C] [MonoidalPreadditive C]
     (A X Y : Ind C) :
     IsIso (coprodComparison (tensorLeft A) X Y) := by
-  haveI hL : PreservesFilteredColimits
+  have hL : PreservesFilteredColimits
       (coprodPairFunctor (tensorRight X) (tensorRight Y)) :=
     ⟨fun I _ _ => preservesColimitsOfShape_coprodPairFunctor _ _⟩
   let γ : coprodPairFunctor (tensorRight X) (tensorRight Y) ⟶
@@ -1144,7 +1144,7 @@ lemma isIso_coprodComparison_tensorLeft
         (B ◁ (coprod.inl : X ⟶ X ⨿ Y))
         (B ◁ (coprod.inr : Y ⟶ X ⨿ Y))
       naturality := fun B B' u => by
-        show coprod.map (u ▷ X) (u ▷ Y) ≫
+        change coprod.map (u ▷ X) (u ▷ Y) ≫
             coprod.desc (B' ◁ coprod.inl) (B' ◁ coprod.inr) =
           coprod.desc (B ◁ coprod.inl) (B ◁ coprod.inr) ≫
             (u ▷ (X ⨿ Y))
@@ -1161,7 +1161,7 @@ lemma isIso_coprodComparison_tensorRight
     [HasFiniteColimits C] [MonoidalPreadditive C]
     (A X Y : Ind C) :
     IsIso (coprodComparison (tensorRight A) X Y) := by
-  haveI hL : PreservesFilteredColimits
+  have hL : PreservesFilteredColimits
       (coprodPairFunctor (tensorLeft X) (tensorLeft Y)) :=
     ⟨fun I _ _ => preservesColimitsOfShape_coprodPairFunctor _ _⟩
   let γ : coprodPairFunctor (tensorLeft X) (tensorLeft Y) ⟶
@@ -1170,7 +1170,7 @@ lemma isIso_coprodComparison_tensorRight
         ((coprod.inl : X ⟶ X ⨿ Y) ▷ B)
         ((coprod.inr : Y ⟶ X ⨿ Y) ▷ B)
       naturality := fun B B' u => by
-        show coprod.map (X ◁ u) (Y ◁ u) ≫
+        change coprod.map (X ◁ u) (Y ◁ u) ≫
             coprod.desc (coprod.inl ▷ B') (coprod.inr ▷ B') =
           coprod.desc (coprod.inl ▷ B) (coprod.inr ▷ B) ≫
             ((X ⨿ Y) ◁ u)
@@ -1219,7 +1219,7 @@ lemma isZero_tensor_left_ind
     [HasFiniteColimits C] [MonoidalPreadditive C]
     (A : Ind C) {Z : Ind C}
     (hZ : IsZero Z) : IsZero (A ⊗ Z) := by
-  haveI : HasFiniteBiproducts C :=
+  have : HasFiniteBiproducts C :=
     HasFiniteBiproducts.of_hasFiniteCoproducts
   have h0 : IsZero (indOf.obj (0 : C)) := isZero_indOf (isZero_zero C)
   set D : A.presentation.I ⥤ Ind C := A.presentation.F ⋙ indOf
@@ -1250,7 +1250,7 @@ lemma isZero_tensor_right_ind
     [HasFiniteColimits C] [MonoidalPreadditive C]
     (A : Ind C) {Z : Ind C}
     (hZ : IsZero Z) : IsZero (Z ⊗ A) := by
-  haveI : HasFiniteBiproducts C :=
+  have : HasFiniteBiproducts C :=
     HasFiniteBiproducts.of_hasFiniteCoproducts
   have h0 : IsZero (indOf.obj (0 : C)) := isZero_indOf (isZero_zero C)
   set D : A.presentation.I ⥤ Ind C := A.presentation.F ⋙ indOf
@@ -1299,9 +1299,9 @@ lemma preservesBinaryCoproducts_tensorLeft_ind
     PreservesColimitsOfShape (Discrete WalkingPair)
       (tensorLeft A) where
   preservesColimit {K} := by
-    haveI := isIso_coprodComparison_tensorLeft A
+    have := isIso_coprodComparison_tensorLeft A
       (K.obj ⟨WalkingPair.left⟩) (K.obj ⟨WalkingPair.right⟩)
-    haveI := PreservesColimitPair.of_iso_coprod_comparison
+    have := PreservesColimitPair.of_iso_coprod_comparison
       (tensorLeft A) (K.obj ⟨WalkingPair.left⟩)
       (K.obj ⟨WalkingPair.right⟩)
     exact preservesColimit_of_iso_diagram _ (diagramIsoPair K).symm
@@ -1314,9 +1314,9 @@ lemma preservesBinaryCoproducts_tensorRight_ind
     PreservesColimitsOfShape (Discrete WalkingPair)
       (tensorRight A) where
   preservesColimit {K} := by
-    haveI := isIso_coprodComparison_tensorRight A
+    have := isIso_coprodComparison_tensorRight A
       (K.obj ⟨WalkingPair.left⟩) (K.obj ⟨WalkingPair.right⟩)
-    haveI := PreservesColimitPair.of_iso_coprod_comparison
+    have := PreservesColimitPair.of_iso_coprod_comparison
       (tensorRight A) (K.obj ⟨WalkingPair.left⟩)
       (K.obj ⟨WalkingPair.right⟩)
     exact preservesColimit_of_iso_diagram _ (diagramIsoPair K).symm
@@ -1327,11 +1327,11 @@ instance tensorLeft_ind_additive
     [HasFiniteColimits C] [MonoidalPreadditive C]
     (A : Ind C) :
     (tensorLeft A).Additive := by
-  haveI : HasBinaryBiproducts (Ind C) :=
+  have : HasBinaryBiproducts (Ind C) :=
     hasBinaryBiproducts_of_finite_biproducts (Ind C)
-  haveI := preservesZeroMorphisms_tensorLeft_ind A
-  haveI := preservesBinaryCoproducts_tensorLeft_ind A
-  haveI := preservesBinaryBiproducts_of_preservesBinaryCoproducts
+  have := preservesZeroMorphisms_tensorLeft_ind A
+  have := preservesBinaryCoproducts_tensorLeft_ind A
+  have := preservesBinaryBiproducts_of_preservesBinaryCoproducts
     (tensorLeft A)
   exact Functor.additive_of_preservesBinaryBiproducts _
 
@@ -1341,11 +1341,11 @@ instance tensorRight_ind_additive
     [HasFiniteColimits C] [MonoidalPreadditive C]
     (A : Ind C) :
     (tensorRight A).Additive := by
-  haveI : HasBinaryBiproducts (Ind C) :=
+  have : HasBinaryBiproducts (Ind C) :=
     hasBinaryBiproducts_of_finite_biproducts (Ind C)
-  haveI := preservesZeroMorphisms_tensorRight_ind A
-  haveI := preservesBinaryCoproducts_tensorRight_ind A
-  haveI := preservesBinaryBiproducts_of_preservesBinaryCoproducts
+  have := preservesZeroMorphisms_tensorRight_ind A
+  have := preservesBinaryCoproducts_tensorRight_ind A
+  have := preservesBinaryBiproducts_of_preservesBinaryCoproducts
     (tensorRight A)
   exact Functor.additive_of_preservesBinaryBiproducts _
 

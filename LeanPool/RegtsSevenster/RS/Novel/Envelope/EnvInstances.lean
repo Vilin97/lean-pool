@@ -31,25 +31,25 @@ instance skeinMonoidalPreadditive :
     MonoidalPreadditive (SkeinObj f) where
   whiskerLeft_zero := by
     intro X Y Z
-    show (HomSpace.tensor f X.arity X.arity Y.arity Z.arity
+    change (HomSpace.tensor f X.arity X.arity Y.arity Z.arity
       (HomSpace.ofFragment f.val (strandBundle X.arity))) 0 = 0
     rw [map_zero]
   zero_whiskerRight := by
     intro X Y Z
-    show (HomSpace.tensor f Y.arity Z.arity X.arity X.arity) 0
+    change (HomSpace.tensor f Y.arity Z.arity X.arity X.arity) 0
       (HomSpace.ofFragment f.val (strandBundle X.arity)) = 0
     rw [map_zero]
     rfl
   whiskerLeft_add := by
     intro X Y Z g g'
-    show (HomSpace.tensor f X.arity X.arity Y.arity Z.arity
+    change (HomSpace.tensor f X.arity X.arity Y.arity Z.arity
       (HomSpace.ofFragment f.val (strandBundle X.arity)))
       (g + g') = _
     rw [map_add]
     rfl
   add_whiskerRight := by
     intro X Y Z g g'
-    show (HomSpace.tensor f Y.arity Z.arity X.arity X.arity)
+    change (HomSpace.tensor f Y.arity Z.arity X.arity X.arity)
       (g + g')
       (HomSpace.ofFragment f.val (strandBundle X.arity)) = _
     rw [map_add]
@@ -60,14 +60,14 @@ instance skeinMonoidalLinear :
     MonoidalLinear ℂ (SkeinObj f) where
   whiskerLeft_smul := by
     intro X Y Z c g
-    show (HomSpace.tensor f X.arity X.arity Y.arity Z.arity
+    change (HomSpace.tensor f X.arity X.arity Y.arity Z.arity
       (HomSpace.ofFragment f.val (strandBundle X.arity)))
       (c • g) = _
     rw [map_smul]
     rfl
   smul_whiskerRight := by
     intro c X Y g Z
-    show (HomSpace.tensor f X.arity Y.arity Z.arity Z.arity)
+    change (HomSpace.tensor f X.arity Y.arity Z.arity Z.arity)
       (c • g)
       (HomSpace.ofFragment f.val (strandBundle Z.arity)) = _
     rw [map_smul]
@@ -88,22 +88,22 @@ instance karoubiMonoidalPreadditive
   whiskerLeft_zero := by
     intro X Y Z
     apply Karoubi.hom_ext
-    show X.p ⊗ₘ (0 : Y.X ⟶ Z.X) = 0
+    change X.p ⊗ₘ (0 : Y.X ⟶ Z.X) = 0
     rw [MonoidalPreadditive.tensor_zero]
   zero_whiskerRight := by
     intro X Y Z
     apply Karoubi.hom_ext
-    show (0 : Y.X ⟶ Z.X) ⊗ₘ X.p = 0
+    change (0 : Y.X ⟶ Z.X) ⊗ₘ X.p = 0
     rw [MonoidalPreadditive.zero_tensor]
   whiskerLeft_add := by
     intro X Y Z g g'
     apply Karoubi.hom_ext
-    show X.p ⊗ₘ (g.f + g'.f) = X.p ⊗ₘ g.f + X.p ⊗ₘ g'.f
+    change X.p ⊗ₘ (g.f + g'.f) = X.p ⊗ₘ g.f + X.p ⊗ₘ g'.f
     rw [MonoidalPreadditive.tensor_add]
   add_whiskerRight := by
     intro X Y Z g g'
     apply Karoubi.hom_ext
-    show (g.f + g'.f) ⊗ₘ X.p = g.f ⊗ₘ X.p + g'.f ⊗ₘ X.p
+    change (g.f + g'.f) ⊗ₘ X.p = g.f ⊗ₘ X.p + g'.f ⊗ₘ X.p
     rw [MonoidalPreadditive.add_tensor]
 
 /-- And so does monoidal linearity. -/
@@ -113,14 +113,14 @@ instance karoubiMonoidalLinear [Category C] [Preadditive C] [MonoidalCategory C]
   whiskerLeft_smul := by
     intro X Y Z c g
     apply Karoubi.hom_ext
-    show X.p ⊗ₘ (c • g.f) = c • (X.p ⊗ₘ g.f)
+    change X.p ⊗ₘ (c • g.f) = c • (X.p ⊗ₘ g.f)
     rw [tensorHom_def, tensorHom_def,
       MonoidalLinear.whiskerLeft_smul,
       CategoryTheory.Linear.comp_smul]
   smul_whiskerRight := by
     intro c X Y g Z
     apply Karoubi.hom_ext
-    show (c • g.f) ⊗ₘ Z.p = c • (g.f ⊗ₘ Z.p)
+    change (c • g.f) ⊗ₘ Z.p = c • (g.f ⊗ₘ Z.p)
     rw [tensorHom_def, tensorHom_def,
       MonoidalLinear.smul_whiskerRight,
       CategoryTheory.Linear.smul_comp]
@@ -142,7 +142,7 @@ instance matMonoidalPreadditive
     intro X Y Z
     apply Mat_.hom_ext
     intro ⟨i₁, i₂⟩ ⟨j₁, j₂⟩
-    show (𝟙 X : Mat_.Hom X X) i₁ j₁ ⊗ₘ
+    change (𝟙 X : Mat_.Hom X X) i₁ j₁ ⊗ₘ
       (0 : Y ⟶ Z) i₂ j₂ = _
     rw [show (0 : Y ⟶ Z) i₂ j₂ = 0 from rfl,
       MonoidalPreadditive.tensor_zero]
@@ -151,7 +151,7 @@ instance matMonoidalPreadditive
     intro X Y Z
     apply Mat_.hom_ext
     intro ⟨i₁, i₂⟩ ⟨j₁, j₂⟩
-    show (0 : Y ⟶ Z) i₁ j₁ ⊗ₘ
+    change (0 : Y ⟶ Z) i₁ j₁ ⊗ₘ
       (𝟙 X : Mat_.Hom X X) i₂ j₂ = _
     rw [show (0 : Y ⟶ Z) i₁ j₁ = 0 from rfl,
       MonoidalPreadditive.zero_tensor]
@@ -160,7 +160,7 @@ instance matMonoidalPreadditive
     intro X Y Z g g'
     apply Mat_.hom_ext
     intro i j
-    show (𝟙 X : Mat_.Hom X X) i.1 j.1 ⊗ₘ
+    change (𝟙 X : Mat_.Hom X X) i.1 j.1 ⊗ₘ
       (g + g' : Mat_.Hom Y Z) i.2 j.2 = _
     rw [show (g + g' : Mat_.Hom Y Z) i.2 j.2 =
       g i.2 j.2 + g' i.2 j.2 from rfl,
@@ -170,7 +170,7 @@ instance matMonoidalPreadditive
     intro X Y Z g g'
     apply Mat_.hom_ext
     intro ⟨i₁, i₂⟩ ⟨j₁, j₂⟩
-    show (g + g' : Mat_.Hom Y Z) i₁ j₁ ⊗ₘ
+    change (g + g' : Mat_.Hom Y Z) i₁ j₁ ⊗ₘ
       (𝟙 X : Mat_.Hom X X) i₂ j₂ = _
     rw [show (g + g' : Mat_.Hom Y Z) i₁ j₁ =
       g i₁ j₁ + g' i₁ j₁ from rfl,
@@ -195,11 +195,11 @@ noncomputable instance matHomModule'
   smul_zero c := by funext i j; exact smul_zero c
   smul_add c φ ψ := by
     funext i j
-    show c • (φ i j + ψ i j) = c • φ i j + c • ψ i j
+    change c • (φ i j + ψ i j) = c • φ i j + c • ψ i j
     exact smul_add c _ _
   add_smul c d φ := by
     funext i j
-    show (c + d) • φ i j = c • φ i j + d • φ i j
+    change (c + d) • φ i j = c • φ i j + d • φ i j
     exact add_smul c d _
   zero_smul φ := by funext i j; exact zero_smul ℂ (φ i j)
 
@@ -209,13 +209,13 @@ noncomputable instance matLinear'
     CategoryTheory.Linear ℂ (Mat_ C) where
   smul_comp M N K c φ ψ := by
     funext i k
-    show ∑ j, (c • φ i j) ≫ ψ j k = c • ∑ j, φ i j ≫ ψ j k
+    change ∑ j, (c • φ i j) ≫ ψ j k = c • ∑ j, φ i j ≫ ψ j k
     rw [Finset.smul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [CategoryTheory.Linear.smul_comp]
   comp_smul M N K φ c ψ := by
     funext i k
-    show ∑ j, φ i j ≫ (c • ψ j k) = c • ∑ j, φ i j ≫ ψ j k
+    change ∑ j, φ i j ≫ (c • ψ j k) = c • ∑ j, φ i j ≫ ψ j k
     rw [Finset.smul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [CategoryTheory.Linear.comp_smul]
@@ -249,7 +249,7 @@ instance matMonoidalLinear [Category C] [Preadditive C] [MonoidalCategory C]
     intro X Y Z c g
     apply Mat_.hom_ext
     intro i j
-    show (𝟙 X : Mat_.Hom X X) i.1 j.1 ⊗ₘ
+    change (𝟙 X : Mat_.Hom X X) i.1 j.1 ⊗ₘ
         (c • g i.2 j.2) =
       c • ((𝟙 X : Mat_.Hom X X) i.1 j.1 ⊗ₘ g i.2 j.2)
     exact base_tensor_smul C _ c _
@@ -257,7 +257,7 @@ instance matMonoidalLinear [Category C] [Preadditive C] [MonoidalCategory C]
     intro c X Y g Z
     apply Mat_.hom_ext
     intro i j
-    show (c • g i.1 j.1) ⊗ₘ
+    change (c • g i.1 j.1) ⊗ₘ
         (𝟙 Z : Mat_.Hom Z Z) i.2 j.2 =
       c • (g i.1 j.1 ⊗ₘ (𝟙 Z : Mat_.Hom Z Z) i.2 j.2)
     exact base_smul_tensor C c _ _

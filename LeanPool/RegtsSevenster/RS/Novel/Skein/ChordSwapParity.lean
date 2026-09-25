@@ -27,7 +27,7 @@ coexisting crossing predicates:
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 

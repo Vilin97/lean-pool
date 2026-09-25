@@ -26,10 +26,11 @@ namespace RS
 
 namespace EdgeSubset
 
-open Classical
+
 
 variable {α : Type}
 
+open scoped Classical in
 /-- **The vertex sum**: over colourings extending the boundary
 state, the product of the functional's vertex values. -/
 noncomputable def vertexSum {W : Fragment α}

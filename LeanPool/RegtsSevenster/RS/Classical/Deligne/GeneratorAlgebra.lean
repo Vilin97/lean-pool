@@ -59,10 +59,10 @@ theorem exists_generator_algebra
       η[𝔸] ≠ 0 ∧ CountablyPresented 𝔸 ∧
         Nonempty (freeMod 𝔸 ((indOf : C ⥤ Ind C).obj X₀) ≅
           freeMod 𝔸 (L.mix p q)) := by
-  letI := linearOfScalarUnit ψ
-  letI := monoidalLinearOfScalarUnitBraided ψ
-  letI := linearOfScalarUnit (indScalarUnit ψ)
-  letI := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
+  let := linearOfScalarUnit ψ
+  let := monoidalLinearOfScalarUnitBraided ψ
+  let := linearOfScalarUnit (indScalarUnit ψ)
+  let := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
   have hu : HasScalarUnit C := hasScalarUnit_of_scalarUnit ψ
   have h1 : ¬ IsZero (𝟙_ (Ind C)) := not_isZero_unit_ind hu
   exact locallyMixed_countablyPresented L

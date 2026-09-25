@@ -45,8 +45,10 @@ theorem powerSeries_ode_unique {F G S : PowerSeries ℂ}
       rw [coeff_zero_eq_constantCoeff_apply, hF0,
           coeff_zero_eq_constantCoeff_apply, hG0]
     | n + 1 =>
-      have hFn : coeff n ((PowerSeries.derivative (R := ℂ)) F) = coeff n (S * F) := congr_arg (coeff n) hF
-      have hGn : coeff n ((PowerSeries.derivative (R := ℂ)) G) = coeff n (S * G) := congr_arg (coeff n) hG
+      have hFn : coeff n ((PowerSeries.derivative (R := ℂ)) F) = coeff n (S * F) :=
+          congr_arg (coeff n) hF
+      have hGn : coeff n ((PowerSeries.derivative (R := ℂ)) G) = coeff n (S * G) :=
+          congr_arg (coeff n) hG
       rw [coeff_derivative] at hFn hGn
       rw [coeff_mul] at hFn hGn
       have heq : ∑ p ∈ antidiagonal n, coeff p.1 S * coeff p.2 F =

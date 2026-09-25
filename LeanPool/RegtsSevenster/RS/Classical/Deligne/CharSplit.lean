@@ -119,16 +119,16 @@ theorem jtChar_orthogonal {n : ℕ} (μ ν : Shape n) (hne : μ ≠ ν) :
   set ρν : Representation ℂ (Equiv.Perm (Fin n))
       (subCarrier (jtSimple ν.val)) :=
     (rhoS (jtSimple ν.val)).comp (permCastHom ν.prop.symm) with hρν
-  haveI : ρμ.IsIrreducible :=
+  have : ρμ.IsIrreducible :=
     isIrreducible_comp_permCastHom μ.prop.symm _
       (rhoS_isIrreducible _ (jtSimple_simple μ.val))
-  haveI : ρν.IsIrreducible :=
+  have : ρν.IsIrreducible :=
     isIrreducible_comp_permCastHom ν.prop.symm _
       (rhoS_isIrreducible _ (jtSimple_simple ν.val))
   have hcard0 : ((Nat.card (Equiv.Perm (Fin n)) : ℂ)) ≠ 0 := by
     rw [Nat.card_eq_fintype_card]
     exact_mod_cast Fintype.card_ne_zero
-  haveI : Invertible ((Nat.card (Equiv.Perm (Fin n)) : ℂ)) :=
+  have : Invertible ((Nat.card (Equiv.Perm (Fin n)) : ℂ)) :=
     invertibleOfNonzero hcard0
   -- the recast characters are the characters of the pullbacks
   have hchμ : ∀ g : Equiv.Perm (Fin n),
@@ -154,7 +154,7 @@ theorem jtChar_orthogonal {n : ℕ} (μ ν : Shape n) (hne : μ ≠ ν) :
       rw [← hchμ g, ← hchν g, hchar]
     exact hne (Shape.ext (diagramSchur_injective hds)).symm
   have horth := Representation.char_orthonormal ρμ ρν
-  rw [if_neg hnoiso] at horth
+  rw [ite_eq_right hnoiso] at horth
   rw [show ((n.factorial : ℂ))⁻¹ =
       ((Nat.card (Equiv.Perm (Fin n)) : ℂ))⁻¹ from by
     rw [Nat.card_eq_fintype_card, Fintype.card_perm, Fintype.card_fin]]
@@ -233,7 +233,7 @@ theorem cycleFun_expand {n : ℕ} (t : ℕ → ℂ)
     rw [Finset.sum_congr rfl (fun μ _ => show
         (a μ • Shape.e P μ).coeff g =
           a μ * (Shape.e P μ).coeff g from
-        MonoidAlgebra.smul_apply _ _ _)] at h
+        MonoidAlgebra.coeff_smul_apply _ _ _)] at h
     rw [Finset.sum_congr rfl (fun μ _ => by
       rw [shape_e_coeff P μ g, ← mul_assoc])] at h
     exact h
@@ -300,7 +300,7 @@ theorem kronMult_exists_nat {n : ℕ} (lam μ ν : Shape n) :
   have hcard0 : ((Nat.card (Equiv.Perm (Fin n)) : ℂ)) ≠ 0 := by
     rw [Nat.card_eq_fintype_card]
     exact_mod_cast Fintype.card_ne_zero
-  haveI : Invertible ((Nat.card (Equiv.Perm (Fin n)) : ℂ)) :=
+  have : Invertible ((Nat.card (Equiv.Perm (Fin n)) : ℂ)) :=
     invertibleOfNonzero hcard0
   have h := Representation.card_inv_mul_sum_char_mul_char_eq_finrank
     (W := TensorProduct ℂ (subCarrier (jtSimple μ.val))

@@ -231,7 +231,7 @@ noncomputable def superVectFunctorBraided
     (superVectFunctor P G hE hO).Braided where
   toMonoidal := superVectFunctorMonoidal P G
   braided X Y := by
-    show (superVectMu P (G.obj X) (G.obj Y) ≫
+    change (superVectMu P (G.obj X) (G.obj Y) ≫
         superVectHom P (Functor.LaxMonoidal.μ G X Y)) ≫
       superVectHom P (G.map (β_ X Y).hom) = _
     simp only [Category.assoc, ← superVectHom_comp]
@@ -264,14 +264,14 @@ theorem nonempty_braided_deligneFibre
     (hsp : SplitsOn L 𝔸 (indOf : C ⥤ Ind C))
     (pt : SuperPoint (gammaAlgebra (Ind C) L 𝔸)) :
     Nonempty (deligneFibre L 𝔸 hsp pt).Braided := by
-  letI : ((indOf : C ⥤ Ind C) ⋙ fibreOver L 𝔸).Braided :=
+  let : ((indOf : C ⥤ Ind C) ⋙ fibreOver L 𝔸).Braided :=
     { toMonoidal := indFibreMonoidal L 𝔸 hsp
       braided := Functor.LaxBraided.braided }
-  haveI hE : ∀ X, FiniteDimensional ℂ
+  have hE : ∀ X, FiniteDimensional ℂ
       ((((indOf : C ⥤ Ind C) ⋙ fibreOver L 𝔸).obj X).tensor
         (pointMod pt)).even :=
     finiteDimensional_indFibre_even L 𝔸 hsp pt
-  haveI hO : ∀ X, FiniteDimensional ℂ
+  have hO : ∀ X, FiniteDimensional ℂ
       ((((indOf : C ⥤ Ind C) ⋙ fibreOver L 𝔸).obj X).tensor
         (pointMod pt)).odd :=
     finiteDimensional_indFibre_odd L 𝔸 hsp pt

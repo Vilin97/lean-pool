@@ -30,13 +30,13 @@ noncomputable def hSubZ (A : Finset (Fin k)) (d : ℤ) :
 @[simp]
 theorem hSubZ_natCast (A : Finset (Fin k)) (m : ℕ) :
     hSubZ A (m : ℤ) = hSub A m := by
-  rw [hSubZ, if_pos (Int.natCast_nonneg m), Int.toNat_natCast]
+  rw [hSubZ, ite_eq_left (Int.natCast_nonneg m), Int.toNat_natCast]
 
 /-- And vanishes in negative ones. -/
 @[simp]
 theorem hSubZ_neg (A : Finset (Fin k)) (d : ℤ) (hd : d < 0) :
     hSubZ A d = 0 := by
-  rw [hSubZ, if_neg (not_le.mpr hd)]
+  rw [hSubZ, ite_eq_right (not_le.mpr hd)]
 
 /-- The resolvent in guarded range-`k` form: for `j ∉ A` with
 `insert j A` filling all `k` variables, the `r`-sum over `Fin k`

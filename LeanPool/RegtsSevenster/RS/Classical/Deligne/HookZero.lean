@@ -52,7 +52,7 @@ theorem hookColOp_blockTriangular (p ℓ : ℕ) :
 
 /-- The column operation has determinant one. -/
 theorem det_hookColOp (p ℓ : ℕ) : (hookColOp p ℓ).det = 1 := by
-  rw [Matrix.det_of_upperTriangular (hookColOp_blockTriangular p ℓ)]
+  rw [Matrix.det_of_isUpperTriangular (hookColOp_blockTriangular p ℓ)]
   apply Finset.prod_eq_one
   intro j _
   simp only [hookColOp, Matrix.of_apply]
@@ -107,8 +107,8 @@ theorem jtMatrix_mul_hookColOp (t : ℕ → ℂ) (rows : List ℕ) (p : ℕ)
       intro k _ hk
       rw [Finset.mem_filter, not_and] at hk
       have hkj : ¬ (k : ℕ) ≤ (j : ℕ) := hk (Finset.mem_univ k)
-      simp only [hookColOp, Matrix.of_apply, if_neg hnotlt,
-        if_neg hkj, mul_zero])).symm]
+      simp only [hookColOp, Matrix.of_apply, ite_eq_right hnotlt,
+        ite_eq_right hkj, mul_zero])).symm]
   -- Reindex by `d = j − k`.
   refine Finset.sum_bij'
     (i := fun k _ => (j : ℕ) - (k : ℕ))
@@ -124,17 +124,17 @@ theorem jtMatrix_mul_hookColOp (t : ℕ → ℂ) (rows : List ℕ) (p : ℕ)
   · intro k hk
     rw [Finset.mem_filter] at hk
     refine Fin.ext ?_
-    show (j : ℕ) - ((j : ℕ) - (k : ℕ)) = (k : ℕ)
+    change (j : ℕ) - ((j : ℕ) - (k : ℕ)) = (k : ℕ)
     omega
   · intro d hd
     rw [Finset.mem_range] at hd
-    show (j : ℕ) - ((j : ℕ) - d) = d
+    change (j : ℕ) - ((j : ℕ) - d) = d
     omega
   · intro k hk
     rw [Finset.mem_filter] at hk
     have hkj : (k : ℕ) ≤ (j : ℕ) := hk.2
-    simp only [jtMatrix, hookColOp, Matrix.of_apply, if_neg hnotlt,
-      if_pos hkj]
+    simp only [jtMatrix, hookColOp, Matrix.of_apply, ite_eq_right hnotlt,
+      ite_eq_left hkj]
     have hcast : (((j : ℕ) - (k : ℕ) : ℕ) : ℤ) =
         (j : ℤ) - (k : ℤ) := by omega
     rw [hcast]
@@ -214,14 +214,14 @@ theorem diagramSchur_eq_zero_of_hook (t : ℕ → ℂ) {p q : ℕ}
     apply hc₀
     calc c i₀ = w ⟨(i₀ : ℕ), lt_of_lt_of_le i₀.isLt hpl⟩ := by
           rw [hw]
-          show c i₀ =
+          change c i₀ =
             if h : (i₀ : ℕ) < p + 1 then c ⟨(i₀ : ℕ), h⟩ else 0
-          rw [dif_pos i₀.isLt]
+          rw [dite_eq_left i₀.isLt]
       _ = 0 := by rw [h0]; rfl
   -- The extended vector annihilates the transformed matrix.
   have hvm : Matrix.vecMul w M = 0 := by
     funext j
-    show ∑ k, w k * M k j = 0
+    change ∑ k, w k * M k j = 0
     -- Only the first `p + 1` rows contribute.
     rw [show (∑ k, w k * M k j) =
         ∑ a : Fin (p + 1), c a *
@@ -237,7 +237,7 @@ theorem diagramSchur_eq_zero_of_hook (t : ℕ → ℂ) {p q : ℕ}
         have hz := jtMatrix_mul_hookColOp_eq_zero t hrec lam hcell
           ⟨(a : ℕ), lt_of_lt_of_le a.isLt hpl⟩ j
           (Nat.lt_succ_iff.mp a.isLt) hjp
-        show c a * (jtMatrix t lam.rowLens *
+        change c a * (jtMatrix t lam.rowLens *
           hookColOp p lam.rowLens.length)
             ⟨(a : ℕ), lt_of_lt_of_le a.isLt hpl⟩ j = 0
         rw [hz, mul_zero]
@@ -250,7 +250,7 @@ theorem diagramSchur_eq_zero_of_hook (t : ℕ → ℂ) {p q : ℕ}
           rw [Finset.mem_filter, not_and] at hk
           have : ¬ (k : ℕ) < p + 1 := hk (Finset.mem_univ k)
           rw [hw]
-          simp only [dif_neg this, zero_mul])).symm]
+          simp only [dite_eq_right this, zero_mul])).symm]
       refine Finset.sum_bij'
         (i := fun k hk => (⟨(k : ℕ),
           (Finset.mem_filter.mp hk).2⟩ : Fin (p + 1)))
@@ -269,7 +269,7 @@ theorem diagramSchur_eq_zero_of_hook (t : ℕ → ℂ) {p q : ℕ}
       · intro k hk
         have hklt : (k : ℕ) < p + 1 := (Finset.mem_filter.mp hk).2
         rw [hw]
-        simp only [dif_pos hklt]
+        simp only [dite_eq_left hklt]
         rfl
   -- Conclude through the determinant.
   have hdet0 : M.det = 0 :=
@@ -314,7 +314,7 @@ theorem superPS_rec_int (p q : ℕ) {m : ℤ} (hm : (q : ℤ) < m) :
       omega
     · rw [Finset.mem_range, not_lt] at hd
       have hneg : m - (d : ℤ) < 0 := by omega
-      rw [newtonHZ, if_neg (not_le.mpr hneg), mul_zero]
+      rw [newtonHZ, ite_eq_right (not_le.mpr hneg), mul_zero]
   have hconv :
       (∑ d ∈ Finset.range (n + 1), (-1 : ℂ) ^ d * (p.choose d : ℂ) *
         newtonHZ (superPS p q) (m - (d : ℤ))) =
@@ -343,24 +343,24 @@ theorem diagramSchur_superPS_row (ν : YoungDiagram) :
     diagramSchur ν (superPS 1 0) =
       if ν.colLen 0 ≤ 1 then 1 else 0 := by
   by_cases h : ν.colLen 0 ≤ 1
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     have hlen : ν.rowLens.length ≤ 1 := by
       rw [YoungDiagram.length_rowLens]; exact h
     rw [diagramSchur, schurDet_eq_det_jtMatrix,
-      Matrix.det_of_upperTriangular
+      Matrix.det_of_isUpperTriangular
         (by
           intro i j hji
           have hji' : (j : ℕ) < (i : ℕ) := hji
           have hi := i.isLt
           omega)]
     refine Finset.prod_eq_one fun i _ => ?_
-    show newtonHZ (superPS 1 0)
+    change newtonHZ (superPS 1 0)
       ((ν.rowLens.get i : ℤ) + (i : ℤ) - (i : ℤ)) = 1
     rw [show ((ν.rowLens.get i : ℤ) + (i : ℤ) - (i : ℤ)) =
       ((ν.rowLens.get i : ℕ) : ℤ) by ring, newtonHZ_natCast,
       newtonH_superPS_zero_q 1 _ Nat.one_pos]
     simp
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     exact diagramSchur_superPS_eq_zero ν
       (YoungDiagram.mem_iff_lt_colLen.mpr (by omega))
 
@@ -370,7 +370,7 @@ theorem diagramSchur_superPS_col (ν : YoungDiagram) :
     diagramSchur ν (superPS 0 1) =
       if ν.rowLen 0 ≤ 1 then 1 else 0 := by
   by_cases h : ν.rowLen 0 ≤ 1
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     have hone : ∀ i : Fin ν.rowLens.length,
         ν.rowLens.get i = 1 := by
       intro i
@@ -384,10 +384,10 @@ theorem diagramSchur_superPS_col (ν : YoungDiagram) :
         newtonH (superPS 0 1) n = ((1 : ℕ).choose n : ℂ) :=
       newtonH_superPS_zero_p 1
     rw [diagramSchur, schurDet_eq_det_jtMatrix,
-      Matrix.det_of_lowerTriangular _ (by
+      Matrix.det_of_isLowerTriangular _ (by
         intro i j hij
         have hij' : (i : ℕ) < (j : ℕ) := hij
-        show newtonHZ (superPS 0 1)
+        change newtonHZ (superPS 0 1)
           ((ν.rowLens.get i : ℤ) + (j : ℤ) - (i : ℤ)) = 0
         rw [hone i, show ((1 : ℕ) : ℤ) + (j : ℤ) - (i : ℤ) =
           ((1 + (j : ℕ) - (i : ℕ) : ℕ) : ℤ) by omega,
@@ -395,12 +395,12 @@ theorem diagramSchur_superPS_col (ν : YoungDiagram) :
         rw [Nat.choose_eq_zero_of_lt (by omega)]
         simp)]
     refine Finset.prod_eq_one fun i _ => ?_
-    show newtonHZ (superPS 0 1)
+    change newtonHZ (superPS 0 1)
       ((ν.rowLens.get i : ℤ) + (i : ℤ) - (i : ℤ)) = 1
     rw [hone i, show ((1 : ℕ) : ℤ) + (i : ℤ) - (i : ℤ) =
       ((1 : ℕ) : ℤ) by ring, newtonHZ_natCast, hval]
     simp
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     exact diagramSchur_superPS_eq_zero ν
       (YoungDiagram.mem_iff_lt_rowLen.mpr (by omega))
 

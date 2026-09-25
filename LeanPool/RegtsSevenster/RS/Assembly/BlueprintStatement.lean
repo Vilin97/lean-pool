@@ -253,8 +253,8 @@ example : @HasScalarUnit = (fun (A : Type u) [CategoryTheory.Category.{v, u} A] 
     [CategoryTheory.MonoidalCategory A] =>
   Function.Bijective fun (c : ℂ) =>
     c • CategoryTheory.CategoryStruct.id (CategoryTheory.MonoidalCategoryStruct.tensorUnit A) : (A : Type u) →
-  [inst : CategoryTheory.Category.{v, u} A] →
-    [inst_1 : CategoryTheory.Preadditive A] →
+  [_inst : CategoryTheory.Category.{v, u} A] →
+    [_inst_1 : CategoryTheory.Preadditive A] →
       [CategoryTheory.Linear ℂ A] → [CategoryTheory.MonoidalCategory A] → Prop) := rfl
 
 
@@ -263,8 +263,8 @@ tensorPow_zero : ∀ (A : Type u_2) [inst : CategoryTheory.Category.{u_1, u_2} A
   [inst_1 : CategoryTheory.MonoidalCategory A] (X : A),
   tensorPow A X 0 = CategoryTheory.MonoidalCategoryStruct.tensorUnit A
 -/
-example : ∀ (A : Type u_2) [inst : CategoryTheory.Category.{u_1, u_2} A]
-  [inst_1 : CategoryTheory.MonoidalCategory A] (X : A),
+example : ∀ (A : Type u_2) [_inst : CategoryTheory.Category.{u_1, u_2} A]
+  [_inst_1 : CategoryTheory.MonoidalCategory A] (X : A),
   tensorPow A X 0 = CategoryTheory.MonoidalCategoryStruct.tensorUnit A :=
   @tensorPow_zero
 
@@ -274,8 +274,8 @@ tensorPow_succ : ∀ (A : Type u_2) [inst : CategoryTheory.Category.{u_1, u_2} A
   [inst_1 : CategoryTheory.MonoidalCategory A] (X : A) (n : ℕ),
   tensorPow A X (n + 1) = CategoryTheory.MonoidalCategoryStruct.tensorObj (tensorPow A X n) X
 -/
-example : ∀ (A : Type u_2) [inst : CategoryTheory.Category.{u_1, u_2} A]
-  [inst_1 : CategoryTheory.MonoidalCategory A] (X : A) (n : ℕ),
+example : ∀ (A : Type u_2) [_inst : CategoryTheory.Category.{u_1, u_2} A]
+  [_inst_1 : CategoryTheory.MonoidalCategory A] (X : A) (n : ℕ),
   tensorPow A X (n + 1) = CategoryTheory.MonoidalCategoryStruct.tensorObj (tensorPow A X n) X :=
   @tensorPow_succ
 
@@ -291,8 +291,8 @@ fun (A : Type u) [CategoryTheory.Category.{v, u} A] [CategoryTheory.MonoidalCate
 example : @mixedPow = (fun (A : Type u) [CategoryTheory.Category.{v, u} A] [CategoryTheory.MonoidalCategory A] [CategoryTheory.RigidCategory A]
     (X : A) (a b : ℕ) =>
   CategoryTheory.MonoidalCategoryStruct.tensorObj (tensorPow A X a) (tensorPow A Xᘁ b) : (A : Type u) →
-  [inst : CategoryTheory.Category.{v, u} A] →
-    [inst_1 : CategoryTheory.MonoidalCategory A] → [CategoryTheory.RigidCategory A] → A → ℕ → ℕ → A) := rfl
+  [_inst : CategoryTheory.Category.{v, u} A] →
+    [_inst_1 : CategoryTheory.MonoidalCategory A] → [CategoryTheory.RigidCategory A] → A → ℕ → ℕ → A) := rfl
 
 
 /- Upstream contract:
@@ -317,9 +317,9 @@ fun (A : Type u) [CategoryTheory.Category.{v, u} A] [CategoryTheory.MonoidalCate
 example : @TensorGeneratedBy = (fun (A : Type u) [CategoryTheory.Category.{v, u} A] [CategoryTheory.MonoidalCategory A] [CategoryTheory.Preadditive A]
     [CategoryTheory.Limits.HasFiniteBiproducts A] [CategoryTheory.RigidCategory A] (X : A) =>
   ∀ (Y : A), ∃ (k : ℕ) (ab : Fin k → ℕ × ℕ), IsSubquotientOf Y (⨁ fun (t : Fin k) => mixedPow A X (ab t).1 (ab t).2) : (A : Type u) →
-  [inst : CategoryTheory.Category.{v, u} A] →
-    [inst_1 : CategoryTheory.MonoidalCategory A] →
-      [inst_2 : CategoryTheory.Preadditive A] →
+  [_inst : CategoryTheory.Category.{v, u} A] →
+    [_inst_1 : CategoryTheory.MonoidalCategory A] →
+      [_inst_2 : CategoryTheory.Preadditive A] →
         [CategoryTheory.Limits.HasFiniteBiproducts A] → [CategoryTheory.RigidCategory A] → A → Prop) := rfl
 
 
@@ -340,7 +340,7 @@ fun (A : Type u) [CategoryTheory.Category.{v, u} A] [CategoryTheory.MonoidalCate
 -/
 example : @ModerateLengthGrowth = (fun (A : Type u) [CategoryTheory.Category.{v, u} A] [CategoryTheory.MonoidalCategory A] =>
   ∀ (Y : A), ∃ (C : ℕ) (c : ℕ), ∀ (N : ℕ), LengthLE (tensorPow A Y N) (C * c ^ N) : (A : Type u) →
-  [inst : CategoryTheory.Category.{v, u} A] → [CategoryTheory.MonoidalCategory A] → Prop) := rfl
+  [_inst : CategoryTheory.Category.{v, u} A] → [CategoryTheory.MonoidalCategory A] → Prop) := rfl
 
 
 /- Upstream contract:
@@ -383,11 +383,11 @@ def RS.DeligneTheoremStatement.{u, v} : Prop :=
   [inst_8 : CategoryTheory.RigidCategory A] [CategoryTheory.EssentiallySmall.{v, v, u} A],
   HasScalarUnit A → (∃ (X : A), TensorGeneratedBy A X) → ModerateLengthGrowth A → Nonempty (DeligneFibreFunctor A)
 -/
-example : @DeligneTheoremStatement.{u, v} = (∀ (A : Type u) [inst : CategoryTheory.Category.{v, u} A] [inst_1 : CategoryTheory.Abelian A]
-  [inst_2 : CategoryTheory.Linear ℂ A] [inst_3 : CategoryTheory.MonoidalCategory A]
-  [inst_4 : CategoryTheory.SymmetricCategory A] [inst_5 : CategoryTheory.MonoidalPreadditive A]
-  [CategoryTheory.MonoidalLinear ℂ A] [inst_7 : CategoryTheory.Limits.HasFiniteBiproducts A]
-  [inst_8 : CategoryTheory.RigidCategory A] [CategoryTheory.EssentiallySmall.{v, v, u} A],
+example : @DeligneTheoremStatement.{u, v} = (∀ (A : Type u) [_inst : CategoryTheory.Category.{v, u} A] [_inst_1 : CategoryTheory.Abelian A]
+  [_inst_2 : CategoryTheory.Linear ℂ A] [_inst_3 : CategoryTheory.MonoidalCategory A]
+  [_inst_4 : CategoryTheory.SymmetricCategory A] [_inst_5 : CategoryTheory.MonoidalPreadditive A]
+  [CategoryTheory.MonoidalLinear ℂ A] [_inst_7 : CategoryTheory.Limits.HasFiniteBiproducts A]
+  [_inst_8 : CategoryTheory.RigidCategory A] [CategoryTheory.EssentiallySmall.{v, v, u} A],
   HasScalarUnit A → (∃ (X : A), TensorGeneratedBy A X) → ModerateLengthGrowth A → Nonempty (DeligneFibreFunctor A) : Prop) := rfl
 
 
@@ -450,7 +450,7 @@ regts_sevenster_iff : DeligneTheoremStatement →
 example : DeligneTheoremStatement.{1, 1} →
   ∀ (f : ClosedFragment → ℂ),
     f emptyClosedFragment = 1 →
-      (∀ (W₁ W₂ : ClosedFragment) (a : Fragment.Equiv W₁ W₂), f W₁ = f W₂) →
+      (∀ (W₁ W₂ : ClosedFragment) (_a : Fragment.Equiv W₁ W₂), f W₁ = f W₂) →
         ((∃ R, EdgeRankBounded f R) ↔ IsMixedPartitionFunction f) :=
   @regts_sevenster_iff
 
@@ -466,7 +466,7 @@ regts_sevenster_quant_roundtrip : DeligneTheoremStatement →
 example : DeligneTheoremStatement.{1, 1} →
   ∀ (f : ClosedFragment → ℂ),
     f emptyClosedFragment = 1 →
-      (∀ (W₁ W₂ : ClosedFragment) (a : Fragment.Equiv W₁ W₂), f W₁ = f W₂) →
+      (∀ (W₁ W₂ : ClosedFragment) (_a : Fragment.Equiv W₁ W₂), f W₁ = f W₂) →
         (∀ (R : ℕ), EdgeRankBounded f R → IsMixedPartitionFunctionBounded f ⌊2 * Real.exp 1 * ↑R⌋₊) ∧
           ∀ (B : ℕ), IsMixedPartitionFunctionBounded f B → EdgeRankBounded f (max 1 (2 * B)) :=
   @regts_sevenster_quant_roundtrip
@@ -583,7 +583,7 @@ regts_sevenster_prescribed : ∀ (f : ClosedFragment → ℂ),
 -/
 example : ∀ (f : ClosedFragment → ℂ),
   f emptyClosedFragment = 1 →
-    (∀ (W₁ W₂ : ClosedFragment) (a : Fragment.Equiv W₁ W₂), f W₁ = f W₂) →
+    (∀ (W₁ W₂ : ClosedFragment) (_a : Fragment.Equiv W₁ W₂), f W₁ = f W₂) →
       ∀ (k ℓ : ℕ), (∃ h : MixedFunctional k ℓ, h.Represents f) ↔ PrescribedColourBounds f k ℓ :=
   @regts_sevenster_prescribed
 
@@ -620,7 +620,7 @@ regts_sevenster_prescribed_deligne_only : DeligneTheoremStatement →
 example : DeligneTheoremStatement.{1, 1} →
   ∀ (f : ClosedFragment → ℂ),
     f emptyClosedFragment = 1 →
-      (∀ (W₁ W₂ : ClosedFragment) (a : Fragment.Equiv W₁ W₂), f W₁ = f W₂) →
+      (∀ (W₁ W₂ : ClosedFragment) (_a : Fragment.Equiv W₁ W₂), f W₁ = f W₂) →
         ∀ (K L : ℕ), (∃ h : MixedFunctional K L, h.Represents f) ↔ PrescribedColourBounds f K L :=
   @regts_sevenster_prescribed_deligne_only
 
@@ -708,7 +708,7 @@ example : @connectionRank = (fun f t => Module.finrank ℂ ↥(connectionMap f t
 def RS.MixedFunctional.Represents : {k ℓ : ℕ} → MixedFunctional k ℓ → (ClosedFragment → ℂ) → Prop :=
 fun {k ℓ} h f => ∀ (W : ClosedFragment), f W = mixedPartition h W
 -/
-example : @MixedFunctional.Represents = (fun {k ℓ} h f => ∀ (W : ClosedFragment), f W = mixedPartition h W : {k ℓ : ℕ} → MixedFunctional k ℓ → (ClosedFragment → ℂ) → Prop) := rfl
+example : @MixedFunctional.Represents = (fun {_k _ℓ} h f => ∀ (W : ClosedFragment), f W = mixedPartition h W : {k ℓ : ℕ} → MixedFunctional k ℓ → (ClosedFragment → ℂ) → Prop) := rfl
 
 
 /- Upstream contract:

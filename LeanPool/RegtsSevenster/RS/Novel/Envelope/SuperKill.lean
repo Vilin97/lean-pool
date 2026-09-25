@@ -27,8 +27,8 @@ propagates to the super permutation action. -/
 theorem skeinRep_zero_imp_superPermAction_zero (n : ℕ)
     (x : SymGroupAlgebra n) (hx : skeinRep f n x = 0) :
     superPermAction f P n x = 0 := by
-  letI := P.additive
-  letI := P.linear
+  let := P.additive
+  let := P.linear
   rw [superPermAction_eq_zero_iff, omegaSkeinRep_eq, hx]
   exact P.ω.map_zero _ _
 

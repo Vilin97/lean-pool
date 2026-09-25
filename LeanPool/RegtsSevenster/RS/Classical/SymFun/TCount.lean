@@ -44,11 +44,11 @@ theorem t_count (v : Fin k → ℕ)
   refine Finset.sum_congr rfl fun τ _ => ?_
   by_cases hτ : stairShift τ ≤ diagExp v
   · have hτ' := (stair_guard_iff v τ).mp hτ
-    rw [if_pos hτ, Finset.mul_sum]
+    rw [ite_eq_left hτ, Finset.mul_sum]
     refine Finset.sum_congr rfl fun σ _ => ?_
     by_cases hσ : ∀ i : Fin k,
         0 ≤ (v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)
-    · rw [if_pos ⟨hσ, hτ'⟩, if_pos hσ, coeff_hSub_prod]
+    · rw [ite_eq_left ⟨hσ, hτ'⟩, ite_eq_left hσ, coeff_hSub_prod]
       rw [show (Fintype.card {W : ∀ i : Fin k,
           Sym (Fin k)
             (((v i : ℤ) + ((σ i : Fin k) : ℕ) -
@@ -66,11 +66,11 @@ theorem t_count (v : Fin k → ℕ)
           forall_congr' fun j => by
             rw [stair_margin_eq v τ hτ j])]
       ring
-    · rw [if_neg (fun hc => hσ hc.1), if_neg hσ]
+    · rw [ite_eq_right (fun hc => hσ hc.1), ite_eq_right hσ]
       ring
-  · rw [if_neg hτ, mul_zero]
+  · rw [ite_eq_right hτ, mul_zero]
     rw [Finset.sum_eq_zero fun σ _ => by
-      rw [if_neg (fun hc =>
+      rw [ite_eq_right (fun hc =>
         hτ ((stair_guard_iff v τ).mpr hc.2)), mul_zero]]
 
 end RS

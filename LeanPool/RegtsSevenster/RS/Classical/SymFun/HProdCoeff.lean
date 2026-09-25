@@ -33,7 +33,7 @@ private theorem map_X_prod_eq_monomial (s : Multiset (Fin k)) :
     rw [Multiset.map_cons, Multiset.prod_cons, ih]
     rw [show (X a : MvPolynomial (Fin k) ℂ) =
       monomial (Finsupp.single a 1) 1 from rfl]
-    rw [monomial_mul, one_mul]
+    rw [MvPolynomial.monomial_mul_monomial, one_mul]
     congr 1
     rw [← Multiset.singleton_add]
     rw [Multiset.toFinsupp_add, Multiset.toFinsupp_singleton]

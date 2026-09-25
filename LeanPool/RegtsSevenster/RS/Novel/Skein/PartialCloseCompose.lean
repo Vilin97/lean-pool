@@ -104,12 +104,12 @@ theorem interfacePairs_zsplit (s t u v : ℕ) :
     (List.map_congr_left fun l _ => ?_)
   · refine Prod.ext (congrArg Sum.inl (Fin.ext ?_))
       (congrArg Sum.inr (Fin.ext ?_))
-    · show 0 + j.val = j.val
+    · change 0 + j.val = j.val
       omega
     · rfl
   · refine Prod.ext (congrArg Sum.inl (Fin.ext ?_))
       (congrArg Sum.inr (Fin.ext ?_))
-    · show 0 + (u + l.val) = u + l.val
+    · change 0 + (u + l.val) = u + l.val
       omega
     · rfl
 
@@ -133,7 +133,7 @@ private theorem pc_compose_ground_v_aux (s t u v : ℕ) :
     simp only [List.map_cons, Fragment.mapPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext rfl ?_)
       (pc_compose_ground_v_aux s t u v l)
-    show Sum.inr ((pcReshuffle s t u v).symm
+    change Sum.inr ((pcReshuffle s t u v).symm
       ⟨u + l'.val, by have := l'.isLt; omega⟩) = _
     refine congrArg Sum.inr ?_
     rw [show (⟨u + l'.val, by have := l'.isLt; omega⟩ :
@@ -161,7 +161,7 @@ private theorem pc_compose_ground_u_aux (s t u v : ℕ) :
     simp only [List.map_cons, Fragment.mapPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext rfl ?_)
       (pc_compose_ground_u_aux s t u v l)
-    show Sum.inr ((pcReshuffle s t u v).symm
+    change Sum.inr ((pcReshuffle s t u v).symm
       ⟨j.val, by have := j.isLt; omega⟩) = _
     refine congrArg Sum.inr ?_
     rw [show (⟨j.val, by have := j.isLt; omega⟩ :
@@ -235,29 +235,29 @@ theorem pc_compose_meet (s t u v : ℕ) :
             Fin (0 + (u + v)) ⊕ Fin ((u + v) + (s + t))) ≠ p.2 :=
         (forall_ne_iff_not_mem_flat _ _).mpr
           ((interfaceSurv_iff 0 (u + v) (s + t) _).mpr
-            (by show ¬ (pcReshuffle s t u v b).val < u + v
+            (by change ¬ (pcReshuffle s t u v b).val < u + v
                 rw [hbv]
-                show ¬ (u + v) + b.val < u + v
+                change ¬ (u + v) + b.val < u + v
                 omega))
-      show finCongr (by omega : 0 + (s + t) = s + t)
+      change finCongr (by omega : 0 + (s + t) = s + t)
         (finSumFinEquiv (interfaceSurvEquiv 0 (u + v) (s + t)
           ⟨Sum.inr (pcReshuffle s t u v b), hsurvL⟩)) =
         pcSurvEquiv s t u v ⟨Sum.inr b, hx⟩
       rw [interfaceSurvEquiv_inr 0 (u + v) (s + t)
           ⟨Sum.inr (pcReshuffle s t u v b), hsurvL⟩ _ rfl
-          (by rw [hbv]; show u + v ≤ (u + v) + b.val; omega),
+          (by rw [hbv]; change u + v ≤ (u + v) + b.val; omega),
         finSumFinEquiv_apply_right,
         pcSurvEquiv_val_low s t u v b hx hb]
       refine Fin.ext ?_
-      show 0 + ((pcReshuffle s t u v b).val - (u + v)) = b.val
+      change 0 + ((pcReshuffle s t u v b).val - (u + v)) = b.val
       rw [hbv]
-      show 0 + ((u + v) + b.val - (u + v)) = b.val
+      change 0 + ((u + v) + b.val - (u + v)) = b.val
       omega
     · have hk : b.val - (s + u) < t := by omega
       have hb2 : b = Fin.natAdd (s + u)
           (Fin.castAdd v ⟨b.val - (s + u), hk⟩) :=
         Fin.ext (by
-          show b.val = (s + u) + (b.val - (s + u))
+          change b.val = (s + u) + (b.val - (s + u))
           omega)
       have hbv : pcReshuffle s t u v b =
           Fin.natAdd (u + v)
@@ -271,27 +271,27 @@ theorem pc_compose_meet (s t u v : ℕ) :
             Fin (0 + (u + v)) ⊕ Fin ((u + v) + (s + t))) ≠ p.2 :=
         (forall_ne_iff_not_mem_flat _ _).mpr
           ((interfaceSurv_iff 0 (u + v) (s + t) _).mpr
-            (by show ¬ (pcReshuffle s t u v b).val < u + v
+            (by change ¬ (pcReshuffle s t u v b).val < u + v
                 rw [hbv]
-                show ¬ (u + v) + (s + (b.val - (s + u))) < u + v
+                change ¬ (u + v) + (s + (b.val - (s + u))) < u + v
                 omega))
-      show finCongr (by omega : 0 + (s + t) = s + t)
+      change finCongr (by omega : 0 + (s + t) = s + t)
         (finSumFinEquiv (interfaceSurvEquiv 0 (u + v) (s + t)
           ⟨Sum.inr (pcReshuffle s t u v b), hsurvL⟩)) =
         pcSurvEquiv s t u v ⟨Sum.inr b, hx⟩
       rw [interfaceSurvEquiv_inr 0 (u + v) (s + t)
           ⟨Sum.inr (pcReshuffle s t u v b), hsurvL⟩ _ rfl
           (by rw [hbv]
-              show u + v ≤ (u + v) + (s + (b.val - (s + u)))
+              change u + v ≤ (u + v) + (s + (b.val - (s + u)))
               omega),
         finSumFinEquiv_apply_right,
         pcSurvEquiv_val_high s t u v b hx
           (by omega) (by omega) (by omega)]
       refine Fin.ext ?_
-      show 0 + ((pcReshuffle s t u v b).val - (u + v)) =
+      change 0 + ((pcReshuffle s t u v b).val - (u + v)) =
         s + (b.val - (s + u))
       rw [hbv]
-      show 0 + ((u + v) + (s + (b.val - (s + u))) - (u + v)) =
+      change 0 + ((u + v) + (s + (b.val - (s + u))) - (u + v)) =
         s + (b.val - (s + u))
       omega
 

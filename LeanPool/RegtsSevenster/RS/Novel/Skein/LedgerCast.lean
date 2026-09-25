@@ -24,8 +24,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Equiv Classical
-
+open Fragment Equiv
 section SubsetEq
 
 variable {β : Type}
@@ -47,7 +46,6 @@ def orientOfEq
 change its circuit count. -/
 theorem openCircuitCount_relOfEq
     {V : Fragment β} {F : EdgeSubset V} {F' : EdgeSubset V} (hF : F = F')
-    [Fintype β]
     (κ : F.RelTransitionSystem) :
     (relOfEq hF κ).openCircuitCount = κ.openCircuitCount := by
   subst hF; rfl

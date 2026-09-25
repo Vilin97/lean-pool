@@ -97,18 +97,18 @@ theorem permMor_of_scalar
       (if Equiv.Perm.sign σ = 1 then (1 : ℂ) else c) •
         𝟙 (tensorPow A X n) := by
   induction σ using Equiv.Perm.swap_induction_on with
-  | one => rw [permMor_one, Equiv.Perm.sign_one, if_pos rfl,
+  | one => rw [permMor_one, Equiv.Perm.sign_one, ite_eq_left rfl,
       one_smul]
   | swap_mul σ x y hxy ih =>
     rw [permMor_mul, ih, permMor_swap_of_scalar hβ x y hxy,
       Linear.smul_comp, Linear.comp_smul, Category.comp_id,
       smul_smul, Equiv.Perm.sign_mul, Equiv.Perm.sign_swap hxy]
     by_cases hs : Equiv.Perm.sign σ = 1
-    · rw [if_pos hs, hs]
+    · rw [ite_eq_left hs, hs]
       norm_num
     · have hs' : Equiv.Perm.sign σ = -1 :=
         (Int.units_eq_one_or _).resolve_left hs
-      rw [if_neg hs, hs']
+      rw [ite_eq_right hs, hs']
       norm_num [hc2]
 
 /-- The group-algebra action under a scalar self-braiding is
@@ -258,7 +258,7 @@ theorem schurKilled_of_braiding_id
     ∑ σ : Equiv.Perm (Fin lam.card), (P.e lam).coeff σ from
     Finset.sum_congr rfl fun σ _ => by rw [ite_self, mul_one]]
   rw [sum_e_coeff, diagramSchur_superPS_row,
-    if_neg (by omega), mul_zero, zero_smul]
+    ite_eq_right (by omega), mul_zero, zero_smul]
 
 /-- **Self-braiding `−1` kills every non-column Schur functor**:
 the central idempotent acts by the signed character sum, the Schur
@@ -281,13 +281,13 @@ theorem schurKilled_of_braiding_neg
       ((Equiv.Perm.sign σ : ℤ) : ℂ) from
     Finset.sum_congr rfl fun σ _ => by
       by_cases hs : Equiv.Perm.sign σ = 1
-      · rw [if_pos hs, hs]
+      · rw [ite_eq_left hs, hs]
         norm_num
-      · rw [if_neg hs,
+      · rw [ite_eq_right hs,
           (Int.units_eq_one_or _).resolve_left hs]
         norm_num]
   rw [sum_e_coeff_sign, diagramSchur_superPS_col,
-    if_neg (by omega), mul_zero, zero_smul]
+    ite_eq_right (by omega), mul_zero, zero_smul]
 
 /-- The unit is killed at the two-cell column. -/
 theorem schurKilled_unit_col

@@ -62,10 +62,10 @@ noncomputable def schurPackageOf
   dim := fun μ => nDim (jtSimple μ)
   char := fun μ => jtChar μ
   dim_pos := fun μ => by
-    haveI := jtSimple_simple μ
-    haveI := IsSimpleModule.nontrivial
+    have := jtSimple_simple μ
+    have := IsSimpleModule.nontrivial
       (MonoidAlgebra ℂ (Equiv.Perm (Fin μ.card))) (jtSimple μ)
-    haveI : Nontrivial (subCarrier (jtSimple μ)) :=
+    have : Nontrivial (subCarrier (jtSimple μ)) :=
       inferInstanceAs (Nontrivial (jtSimple μ))
     exact Module.finrank_pos
   central := fun μ x => by

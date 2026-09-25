@@ -18,7 +18,7 @@ the odd-degree vertex is a block of odd parity.
 namespace RS
 
 open CategoryTheory Finset
-open Classical
+
 
 variable {R : ℕ} (f : EdgeRankParameter R)
 variable (P : DelignePackage (SkeinObj f))
@@ -100,7 +100,7 @@ theorem masterSummand_vanish_of_not_closed
 theorem colourFormEntry_inr_ne {u v : Fin (2 * ℓ)}
     (h : v ≠ oddPartner ℓ u) :
     colourFormEntry k ℓ (Sum.inr u) (Sum.inr v) = 0 := by
-  rw [colourFormEntry_odd, stdFormOdd_stdF, if_neg h]
+  rw [colourFormEntry_odd, stdFormOdd_stdF, ite_eq_right h]
 
 -- Raised budget: the vanishing is located at one off-diagonal
 -- slot, but reaching it unfolds the whole summand.
@@ -134,14 +134,14 @@ theorem masterSummand_vanish_of_not_diagonal
         (b := edgeCount W) c) j)) = 0 from ?_]
   · rw [mul_zero]
   refine Finset.prod_eq_zero (Finset.mem_univ i) ?_
-  show colourFormEntry k ℓ (c (Fin.castAdd (edgeCount W) i))
+  change colourFormEntry k ℓ (c (Fin.castAdd (edgeCount W) i))
     (c (Fin.natAdd (edgeCount W) i)) = 0
   have hp := hpure i
   rcases hx : c (Fin.castAdd (edgeCount W) i) with a | u
   · rcases hy : c (Fin.natAdd (edgeCount W) i) with b | v
     · rw [show colourFormEntry k ℓ (Sum.inl a)
           (Sum.inl b) = if a = b then 1 else 0 from rfl]
-      rw [if_neg (fun hab => hi (by
+      rw [ite_eq_right (fun hab => hi (by
         rw [hy, hx, hab]
         rfl))]
     · exfalso

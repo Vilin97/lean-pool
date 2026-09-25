@@ -22,7 +22,7 @@ noncrossing tuples all have `σ = 1` and count with sign `+1`, and at
 least one exists.
 -/
 
-open scoped Classical
+
 
 namespace RS
 
@@ -91,7 +91,7 @@ theorem diagramSchur_neg_eq_sign_mul_binomDet (s m : ℕ) (hs : 1 ≤ s)
     have hi : (i : ℕ) < s := by have := i.isLt; omega
     have hj : (j : ℕ) < s := by have := j.isLt; omega
     rw [List.get_eq_getElem, YoungDiagram.get_rowLens, rowLen_squareDiagram hi]
-    rw [newtonHZ, if_pos (show (0 : ℤ) ≤ (s : ℤ) + ↑↑j - ↑↑i by omega)]
+    rw [newtonHZ, ite_eq_left (show (0 : ℤ) ≤ (s : ℤ) + ↑↑j - ↑↑i by omega)]
     rw [show ((s : ℤ) + ↑↑j - ↑↑i).toNat = s + (j : ℕ) - (i : ℕ) from by omega]
     rw [newtonH_neg_const m hm1, neg_one_pow_split s (i : ℕ) (j : ℕ) (by omega)]
     ring
@@ -213,11 +213,13 @@ private def partnerSet {s m : ℕ} (F : Fin s → Finset (Fin m))
   Finset.univ.filter fun i' =>
     i0 < i' ∧ xcoord F i0 h = xcoord F i' h
 
+open scoped Classical in
 /-- Least crossing height. -/
 private noncomputable def cH {s m : ℕ} (F : Fin s → Finset (Fin m))
     (hc : Crossing F) : ℕ :=
   Nat.find hc
 
+open scoped Classical in
 private theorem crossSet_nonempty {s m : ℕ} (F : Fin s → Finset (Fin m))
     (hc : Crossing F) : (crossSet F (cH F hc)).Nonempty := by
   obtain ⟨i, i', hlt, heq⟩ := Nat.find_spec hc
@@ -269,7 +271,7 @@ private def swapFam {s m : ℕ} (F : Fin s → Finset (Fin m)) (h : ℕ)
 private theorem swapFam_apply_other {s m : ℕ}
     (F : Fin s → Finset (Fin m)) (h : ℕ) (i i' j : Fin s)
     (hj : j ≠ i) (hj' : j ≠ i') : swapFam F h i i' j = F j := by
-  rw [swapFam, if_neg hj, if_neg hj']
+  rw [swapFam, ite_eq_right hj, ite_eq_right hj']
 
 /-- Prefixes below `h' ≤ h` are unchanged by the tail swap. -/
 private theorem swapFam_prefix {s m : ℕ} (F : Fin s → Finset (Fin m))
@@ -291,9 +293,9 @@ private theorem swapFam_prefix {s m : ℕ} (F : Fin s → Finset (Fin m))
       Finset.filter_congr (fun a _ => by constructor <;> intro <;> omega)
     rw [h1, h2, Finset.union_empty]
   by_cases hji : j = i
-  · subst hji; rw [swapFam, if_pos rfl]; exact key _ _
+  · subst hji; rw [swapFam, ite_eq_left rfl]; exact key _ _
   · by_cases hji' : j = i'
-    · subst hji'; rw [swapFam, if_neg hji, if_pos rfl]; exact key _ _
+    · subst hji'; rw [swapFam, ite_eq_right hji, ite_eq_left rfl]; exact key _ _
     · rw [swapFam_apply_other F h i i' j hji hji']
 
 private theorem swapFam_xcoord {s m : ℕ} (F : Fin s → Finset (Fin m))
@@ -308,7 +310,7 @@ private theorem swapFam_card_left {s m : ℕ}
     (swapFam F h i i' i).card +
         ((F i').filter fun a : Fin m => (a : ℕ) < h).card =
       ((F i).filter fun a : Fin m => (a : ℕ) < h).card + (F i').card := by
-  rw [swapFam, if_pos rfl,
+  rw [swapFam, ite_eq_left rfl,
     Finset.card_union_of_disjoint
       (Finset.disjoint_filter_filter_not (F i) (F i')
         (fun a : Fin m => (a : ℕ) < h))]
@@ -322,7 +324,7 @@ private theorem swapFam_card_right {s m : ℕ}
     (swapFam F h i i' i').card +
         ((F i).filter fun a : Fin m => (a : ℕ) < h).card =
       ((F i').filter fun a : Fin m => (a : ℕ) < h).card + (F i).card := by
-  rw [swapFam, if_neg (Ne.symm hne), if_pos rfl,
+  rw [swapFam, ite_eq_right (Ne.symm hne), ite_eq_left rfl,
     Finset.card_union_of_disjoint
       (Finset.disjoint_filter_filter_not (F i') (F i)
         (fun a : Fin m => (a : ℕ) < h))]
@@ -364,24 +366,25 @@ private theorem swapFam_involutive {s m : ℕ}
   have hGi : swapFam F h i i' i =
       ((F i).filter fun a : Fin m => (a : ℕ) < h) ∪
         ((F i').filter fun a : Fin m => ¬ (a : ℕ) < h) := by
-    rw [swapFam, if_pos rfl]
+    rw [swapFam, ite_eq_left rfl]
   have hGi' : swapFam F h i i' i' =
       ((F i').filter fun a : Fin m => (a : ℕ) < h) ∪
         ((F i).filter fun a : Fin m => ¬ (a : ℕ) < h) := by
-    rw [swapFam, if_neg (Ne.symm hne), if_pos rfl]
+    rw [swapFam, ite_eq_right (Ne.symm hne), ite_eq_left rfl]
   by_cases hji : j = i
   · rw [hji]
-    rw [swapFam, if_pos rfl]
+    rw [swapFam, ite_eq_left rfl]
     rw [hGi, hGi', keyPre, keySuf, Finset.filter_union_filter_not_eq]
   · by_cases hji' : j = i'
     · rw [hji']
-      rw [swapFam, if_neg (Ne.symm hne), if_pos rfl]
+      rw [swapFam, ite_eq_right (Ne.symm hne), ite_eq_left rfl]
       rw [hGi, hGi', keyPre, keySuf, Finset.filter_union_filter_not_eq]
     · rw [swapFam_apply_other _ h i i' j hji hji',
         swapFam_apply_other F h i i' j hji hji']
 
 /-! ## 5. Invariance of the canonical crossing data -/
 
+open scoped Classical in
 /-- If `G` agrees with `F` in all x-coordinates up to the first
 crossing height of `F`, then `G` has the same canonical crossing
 data. -/
@@ -657,6 +660,7 @@ private theorem det_eq_signed_count (s m : ℕ) :
     rw [Matrix.transpose_apply, Matrix.of_apply, ddeg]
   rw [hprod, Finset.sum_const, nsmul_eq_mul, mul_comm]
 
+open scoped Classical in
 /-- The crossing terms cancel. -/
 private theorem sum_crossing_zero (s m : ℕ) :
     ∑ p ∈ ((Finset.univ : Finset (Equiv.Perm (Fin s))).sigma
@@ -717,6 +721,7 @@ private theorem const_fam_noncross {s m : ℕ} (S : Finset (Fin m)) :
   have hval : (i : ℕ) = (i' : ℕ) := by omega
   exact absurd (Fin.ext hval) (ne_of_lt hlt)
 
+open scoped Classical in
 /-- The noncrossing terms count a nonempty set with sign `+1`. -/
 private theorem sum_noncrossing_pos (s m : ℕ) (_ : s ≤ m) :
     ∑ p ∈ ((Finset.univ : Finset (Equiv.Perm (Fin s))).sigma
@@ -732,6 +737,7 @@ private theorem sum_noncrossing_pos (s m : ℕ) (_ : s ≤ m) :
   rw [h1, Equiv.Perm.sign_one]
   norm_num
 
+open scoped Classical in
 /-- The constant family: every path uses the same `s`-subset. -/
 private theorem noncross_witness (s m : ℕ) (hm : s ≤ m) :
     (⟨1, fun _ => (Finset.univ : Finset (Fin s)).map
@@ -754,6 +760,7 @@ private theorem noncross_witness (s m : ℕ) (hm : s ≤ m) :
 
 /-! ## 9. Core nonvanishing -/
 
+open scoped Classical in
 /-- The determinant `det[C(m, s+j-i)]` is nonzero for `1 ≤ s ≤ m`. -/
 theorem det_binomial_upper_ne_zero (s m : ℕ) (_ : 1 ≤ s) (hm : s ≤ m) :
     (Matrix.of fun i j : Fin s =>

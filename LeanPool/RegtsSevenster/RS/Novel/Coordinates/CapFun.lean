@@ -53,9 +53,9 @@ theorem omegaFun_cap_zero
       ((η P.ω : P.ω.obj (SkeinObj.mk 0) ⟶
         SuperVect.tensorUnit) :
         SuperVect.Hom _ _).evenMap v := by
-  letI := P.braided
+  let := P.braided
   rw [bundleCapClass_zero]
-  show ((P.ω.map (𝟙 (SkeinObj.mk 0)) ≫ η P.ω :
+  change ((P.ω.map (𝟙 (SkeinObj.mk 0)) ≫ η P.ω :
       P.ω.obj (SkeinObj.mk 0) ⟶ SuperVect.tensorUnit) :
     SuperVect.Hom _ _).evenMap v = _
   rw [show P.ω.map (𝟙 (SkeinObj.mk 0 : SkeinObj f)) =

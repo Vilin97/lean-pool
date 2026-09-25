@@ -95,7 +95,7 @@ theorem tensorμ_oddLine
     (A : D) :
     tensorμ A L.obj L.obj L.obj =
       -𝟙 ((A ⊗ L.obj) ⊗ (L.obj ⊗ L.obj)) := by
-  show (α_ A L.obj (L.obj ⊗ L.obj)).hom ≫
+  change (α_ A L.obj (L.obj ⊗ L.obj)).hom ≫
       (A ◁ (α_ L.obj L.obj L.obj).inv) ≫
       (A ◁ (β_ L.obj L.obj).hom ▷ L.obj) ≫
       (A ◁ (α_ L.obj L.obj L.obj).hom) ≫

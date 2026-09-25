@@ -184,7 +184,7 @@ lemma dayCoyonedaIso_hom_leftUnitor [SmallCategory D] [MonoidalCategory D]
           (dayCoyonedaUnitElt (𝟙_ D) a))
     rw [dayCoyonedaIso_hom_app_unitElt,
       whiskerRight_dayUnitIso_inv_app_unitElt, day_leftUnitor_hom_app_eta]
-    show 𝟙 a ≫ (λ_ a).inv = (λ_ a).inv ≫ 𝟙 (𝟙_ D ⊗ a)
+    change 𝟙 a ≫ (λ_ a).inv = (λ_ a).inv ≫ 𝟙 (𝟙_ D ⊗ a)
     rw [Category.id_comp, Category.comp_id]
   rw [← aux, ← Category.assoc, ← MonoidalCategory.comp_whiskerRight,
     Iso.hom_inv_id, MonoidalCategory.id_whiskerRight,
@@ -417,8 +417,8 @@ theorem permAlg_indOf_conj {C : Type v} [SmallCategory C] [MonoidalCategory C]
     letI := linearOfScalarUnit (indScalarUnit ψ)
     permAlg (indOf.obj X) n x ≫ (indOfPowIso X n).hom =
       (indOfPowIso X n).hom ≫ indOf.map (permAlg X n x) := by
-  letI := linearOfScalarUnit (indScalarUnit ψ)
-  haveI := indOf_additive (C := C)
+  let := linearOfScalarUnit (indScalarUnit ψ)
+  have := indOf_additive (C := C)
   induction x using MonoidAlgebra.induction_on with
   | of σ =>
     rw [MonoidAlgebra.of_apply, permAlg_single, permAlg_single]
@@ -447,7 +447,7 @@ theorem schurKilled_indOf_iff
     {X : C} {μ : YoungDiagram} :
     letI := linearOfScalarUnit (indScalarUnit ψ)
     (SchurKilled P (indOf.obj X) μ ↔ SchurKilled P X μ) := by
-  letI := linearOfScalarUnit (indScalarUnit ψ)
+  let := linearOfScalarUnit (indScalarUnit ψ)
   have hconj : permAlg (indOf.obj X) μ.card (P.e μ) =
       (indOfPowIso X μ.card).hom ≫
         indOf.map (permAlg X μ.card (P.e μ)) ≫
@@ -465,7 +465,7 @@ theorem schurKilled_indOf_iff
       (indOfPowIso X μ.card).hom
     simpa using h1
   · intro h0
-    show permAlg (indOf.obj X) μ.card (P.e μ) = 0
+    change permAlg (indOf.obj X) μ.card (P.e μ) = 0
     rw [hconj, (schurKilled_iff_indOf_map_permAlg_eq_zero P X μ).mp h0,
       zero_comp, comp_zero]
 

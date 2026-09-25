@@ -194,7 +194,7 @@ noncomputable def chainMulCocone
         mu (smallNatEquiv.inverse.obj k) j ≫
           chainColimitι B δ (smallNatEquiv.inverse.obj k + 1 + j)
       naturality := fun {k k'} f => by
-        show (chainMap B δ
+        change (chainMap B δ
             (leOfHom (smallNatEquiv.inverse.map f)) ▷ B j) ≫
             (mu (smallNatEquiv.inverse.obj k') j ≫
               chainColimitι B δ
@@ -235,7 +235,7 @@ theorem ι_chainMulStage [Category.{v} E] (B : ℕ → E) (δ : ∀ n, B n ⟶ B
     (i j : ℕ) :
     (chainColimitι B δ i ▷ B j) ≫ chainMulStage B δ mu hδl j =
       mu i j ≫ chainColimitι B δ (i + 1 + j) := by
-  show (tensorRight (B j)).map (colimit.ι (chainDiagram B δ)
+  change (tensorRight (B j)).map (colimit.ι (chainDiagram B δ)
       (smallNatEquiv.functor.obj i)) ≫
       chainMulStage B δ mu hδl j =
     mu i j ≫ chainColimitι B δ (i + 1 + j)
@@ -315,7 +315,7 @@ noncomputable def chainMulTotalCocone
     { app := fun k =>
         chainMulStage B δ mu hδl (smallNatEquiv.inverse.obj k)
       naturality := fun {k k'} f => by
-        show (chainColimit B δ ◁ chainMap B δ
+        change (chainColimit B δ ◁ chainMap B δ
             (leOfHom (smallNatEquiv.inverse.map f))) ≫
             chainMulStage B δ mu hδl
               (smallNatEquiv.inverse.obj k') =
@@ -361,7 +361,7 @@ theorem whiskerLeft_ι_chainColimitMul
     (chainColimit B δ ◁ chainColimitι B δ j) ≫
         chainColimitMul B δ mu hδl hδr =
       chainMulStage B δ mu hδl j := by
-  show (tensorLeft (chainColimit B δ)).map
+  change (tensorLeft (chainColimit B δ)).map
       (colimit.ι (chainDiagram B δ)
         (smallNatEquiv.functor.obj j)) ≫
       chainColimitMul B δ mu hδl hδr =
@@ -405,7 +405,7 @@ noncomputable def chainMulLCocone
         mu i (smallNatEquiv.inverse.obj k) ≫
           chainColimitι B δ (i + 1 + smallNatEquiv.inverse.obj k)
       naturality := fun {k k'} f => by
-        show (B i ◁ chainMap B δ
+        change (B i ◁ chainMap B δ
             (leOfHom (smallNatEquiv.inverse.map f))) ≫
             (mu i (smallNatEquiv.inverse.obj k') ≫
               chainColimitι B δ
@@ -445,7 +445,7 @@ theorem ι_chainMulStageL [Category.{v} E] (B : ℕ → E) (δ : ∀ n, B n ⟶ 
     (i j : ℕ) :
     (B i ◁ chainColimitι B δ j) ≫ chainMulStageL B δ mu hδr i =
       mu i j ≫ chainColimitι B δ (i + 1 + j) := by
-  show (tensorLeft (B i)).map (colimit.ι (chainDiagram B δ)
+  change (tensorLeft (B i)).map (colimit.ι (chainDiagram B δ)
       (smallNatEquiv.functor.obj j)) ≫
       chainMulStageL B δ mu hδr i =
     mu i j ≫ chainColimitι B δ (i + 1 + j)

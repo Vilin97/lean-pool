@@ -884,14 +884,14 @@ theorem gammaPairEven_actEE
         (gammaPairEven L R M N) := by
     refine liftEven_unique _ _ _ _ ?_ ?_
     · intro m n
-      show gammaPairEven L R M N (tmulEE _ _
+      change gammaPairEven L R M N (tmulEE _ _
           ((gammaModule D L R M.X).actEE x m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actEE x
           (gammaPairEven L R M N (tmulEE _ _ m n))
       erw [gammaPairEven_tmulEE, gammaPairEven_tmulEE]
       exact (gpair_act_eee M N x m n).symm
     · intro m n
-      show gammaPairEven L R M N (tmulOO _ _
+      change gammaPairEven L R M N (tmulOO _ _
           ((gammaModule D L R M.X).actEO x m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actEE x
           (gammaPairEven L R M N (tmulOO _ _ m n))
@@ -922,14 +922,14 @@ theorem gammaPairOdd_actEO
         (gammaPairOdd L R M N) := by
     refine liftOdd_unique _ _ _ _ ?_ ?_
     · intro m n
-      show gammaPairOdd L R M N (tmulEO _ _
+      change gammaPairOdd L R M N (tmulEO _ _
           ((gammaModule D L R M.X).actEE x m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actEO x
           (gammaPairOdd L R M N (tmulEO _ _ m n))
       erw [gammaPairOdd_tmulEO, gammaPairOdd_tmulEO]
       exact (gpair_act_eeo L M N x m n).symm
     · intro m n
-      show gammaPairOdd L R M N (tmulOE _ _
+      change gammaPairOdd L R M N (tmulOE _ _
           ((gammaModule D L R M.X).actEO x m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actEO x
           (gammaPairOdd L R M N (tmulOE _ _ m n))
@@ -961,14 +961,14 @@ theorem gammaPairOdd_actOE
         (gammaPairEven L R M N) := by
     refine liftEven_unique _ _ _ _ ?_ ?_
     · intro m n
-      show gammaPairOdd L R M N (tmulOE _ _
+      change gammaPairOdd L R M N (tmulOE _ _
           ((gammaModule D L R M.X).actOE u m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actOE u
           (gammaPairEven L R M N (tmulEE _ _ m n))
       erw [gammaPairOdd_tmulOE, gammaPairEven_tmulEE]
       exact (gpair_act_oee L M N u m n).symm
     · intro m n
-      show gammaPairOdd L R M N (tmulEO _ _
+      change gammaPairOdd L R M N (tmulEO _ _
           ((gammaModule D L R M.X).actOO u m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actOE u
           (gammaPairEven L R M N (tmulOO _ _ m n))
@@ -1000,14 +1000,14 @@ theorem gammaPairEven_actOO
         (gammaPairOdd L R M N) := by
     refine liftOdd_unique _ _ _ _ ?_ ?_
     · intro m n
-      show gammaPairEven L R M N (tmulOO _ _
+      change gammaPairEven L R M N (tmulOO _ _
           ((gammaModule D L R M.X).actOE u m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actOO u
           (gammaPairOdd L R M N (tmulEO _ _ m n))
       erw [gammaPairEven_tmulOO, gammaPairOdd_tmulEO]
       exact (gpair_act_oeo L M N u m n).symm
     · intro m n
-      show gammaPairEven L R M N (tmulEE _ _
+      change gammaPairEven L R M N (tmulEE _ _
           ((gammaModule D L R M.X).actOO u m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actOO u
           (gammaPairOdd L R M N (tmulOE _ _ m n))

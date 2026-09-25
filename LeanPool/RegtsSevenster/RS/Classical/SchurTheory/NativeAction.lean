@@ -42,7 +42,7 @@ instance [Group G] (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G)) :
     IsScalarTower ℂ (MonoidAlgebra ℂ G) (subCarrier S) where
   smul_assoc z y m := by
     apply Subtype.ext
-    show ((z • y) • (m : MonoidAlgebra ℂ G)) =
+    change ((z • y) • (m : MonoidAlgebra ℂ G)) =
       z • (y • (m : MonoidAlgebra ℂ G))
     rw [smul_assoc]
 
@@ -86,7 +86,7 @@ theorem isIrredRep_rhoS
     IsIrredRep (rhoS S) := by
   constructor
   · -- Nontrivial
-    haveI := IsSimpleModule.nontrivial (MonoidAlgebra ℂ G) S
+    have := IsSimpleModule.nontrivial (MonoidAlgebra ℂ G) S
     exact inferInstanceAs (Nontrivial ↥S)
   · intro p hp
     -- The invariant ℂ-subspace is a `ℂ[G]`-submodule.

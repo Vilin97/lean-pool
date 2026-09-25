@@ -86,9 +86,9 @@ theorem jt_pm_nChar (μ : YoungDiagram) {J : Type} [Fintype J]
       (if Nonempty ((rhoS (T j')).Equiv (rhoS (T j)))
         then (1 : ℂ) else 0) := by
     intro j j'
-    haveI := rhoS_isIrreducible (T j) (hT j)
-    haveI := rhoS_isIrreducible (T j') (hT j')
-    haveI : Invertible ((Nat.card (Equiv.Perm (Fin μ.card)) : ℂ)) :=
+    have := rhoS_isIrreducible (T j) (hT j)
+    have := rhoS_isIrreducible (T j') (hT j')
+    have : Invertible ((Nat.card (Equiv.Perm (Fin μ.card)) : ℂ)) :=
       invertibleOfNonzero (by
         rw [Nat.card_eq_fintype_card]
         exact_mod_cast Fintype.card_ne_zero)
@@ -99,7 +99,7 @@ theorem jt_pm_nChar (μ : YoungDiagram) {J : Type} [Fintype J]
       rw [Nat.card_eq_fintype_card, Fintype.card_perm,
         Fintype.card_fin]] at horth
     exact horth
-  letI sd : Setoid J :=
+  let sd : Setoid J :=
     ⟨fun j j' => Nonempty ((rhoS (T j)).Equiv (rhoS (T j'))),
       fun _ => ⟨Representation.Equiv.refl _⟩,
       fun ⟨e⟩ => ⟨e.symm⟩,
@@ -143,8 +143,8 @@ theorem jt_pm_nChar (μ : YoungDiagram) {J : Type} [Fintype J]
       (if Nonempty ((rhoS (T j')).Equiv (rhoS (T j)))
         then (1 : ℂ) else 0) from by
       by_cases hc : Nonempty ((rhoS (T j')).Equiv (rhoS (T j)))
-      · rw [if_pos hc, if_pos ((hgr j j').mpr ⟨hc.some.symm⟩)]
-      · rw [if_neg hc, if_neg (fun hgj => hc
+      · rw [ite_eq_left hc, ite_eq_left ((hgr j j').mpr ⟨hc.some.symm⟩)]
+      · rw [ite_eq_right hc, ite_eq_right (fun hgj => hc
           ⟨((hgr j j').mp hgj).some.symm⟩)]]
     rw [← hip j j']
     rw [Finset.mul_sum, Finset.mul_sum]
@@ -167,8 +167,8 @@ theorem jt_pm_nChar (μ : YoungDiagram) {J : Type} [Fintype J]
             then ((ε j : ℤ) : ℂ) * ((ε j' : ℤ) : ℂ) else 0)
         from by
         by_cases hc : g j = g j'
-        · rw [if_pos hc, if_pos hc.symm, mul_one]
-        · rw [if_neg hc, if_neg (fun h => hc h.symm), mul_zero])]
+        · rw [ite_eq_left hc, ite_eq_left hc.symm, mul_one]
+        · rw [ite_eq_right hc, ite_eq_right (fun h => hc h.symm), mul_zero])]
       rw [← Finset.sum_filter, hZc, Finset.mul_sum])]
     rw [← Fintype.sum_fiberwise g
       (fun j => ((ε j : ℤ) : ℂ) * ((Z (g j) : ℤ) : ℂ))]

@@ -18,7 +18,7 @@ parity layer.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 

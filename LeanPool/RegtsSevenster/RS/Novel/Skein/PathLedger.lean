@@ -52,7 +52,7 @@ factor and the case analysis that controls it.
 
 namespace RS
 
-open scoped Classical
+
 
 /-! ## (i) Chord combinatorics: the third-chord parity lemma -/
 
@@ -106,21 +106,21 @@ theorem chordPairCross_parity [LinearOrder γ]
       rintro (⟨-, h⟩ | ⟨-, h⟩)
       · exact h hw
       · exact h hu
-    rw [if_neg hnX, if_pos hu, if_pos hw]
+    rw [ite_eq_right hnX, ite_eq_left hu, ite_eq_left hw]
   · have hX : ChordPairCross x y u w := by
       rw [chordPairCross_iff_xor huw hux hwy]
       exact Or.inl ⟨hu, hw⟩
-    rw [if_pos hX, if_pos hu, if_neg hw]
+    rw [ite_eq_left hX, ite_eq_left hu, ite_eq_right hw]
   · have hX : ChordPairCross x y u w := by
       rw [chordPairCross_iff_xor huw hux hwy]
       exact Or.inr ⟨hw, hu⟩
-    rw [if_pos hX, if_neg hu, if_pos hw]
+    rw [ite_eq_left hX, ite_eq_right hu, ite_eq_left hw]
   · have hnX : ¬ ChordPairCross x y u w := by
       rw [chordPairCross_iff_xor huw hux hwy]
       rintro (⟨h, -⟩ | ⟨h, -⟩)
       · exact hu h
       · exact hw h
-    rw [if_neg hnX, if_neg hu, if_neg hw]
+    rw [ite_eq_right hnX, ite_eq_right hu, ite_eq_right hw]
 
 private theorem inside_sum_eq [LinearOrder γ]
     (x y u₁ w₁ u₂ w₂ : γ) :
@@ -952,10 +952,10 @@ noncomputable def RelTransitionSystem.Orientation.flipOrbit
         else o.isOut (κ.match_ f)) =
       !(if OrbitFlag κ g f then !o.isOut f else o.isOut f)
     by_cases hfo : OrbitFlag κ g f
-    · rw [if_pos (orbitFlag_match hg hfo), if_pos hfo,
+    · rw [ite_eq_left (orbitFlag_match hg hfo), ite_eq_left hfo,
         o.match_flip f hf]
-    · rw [if_neg (fun hcon => hfo (orbitFlag_of_match hg hf hcon)),
-        if_neg hfo]
+    · rw [ite_eq_right (fun hcon => hfo (orbitFlag_of_match hg hf hcon)),
+        ite_eq_right hfo]
       exact o.match_flip f hf
   pairing_flip := by
     intro f hf hp
@@ -963,27 +963,27 @@ noncomputable def RelTransitionSystem.Orientation.flipOrbit
         else o.isOut (W.pairing f)) =
       !(if OrbitFlag κ g f then !o.isOut f else o.isOut f)
     by_cases hfo : OrbitFlag κ g f
-    · rw [if_pos (orbitFlag_pairing hfo), if_pos hfo,
+    · rw [ite_eq_left (orbitFlag_pairing hfo), ite_eq_left hfo,
         o.pairing_flip f hf hp]
-    · rw [if_neg (fun hcon => hfo (orbitFlag_of_pairing hcon)),
-        if_neg hfo]
+    · rw [ite_eq_right (fun hcon => hfo (orbitFlag_of_pairing hcon)),
+        ite_eq_right hfo]
       exact o.pairing_flip f hf hp
 
 /-- Flipping an orbit reverses the orientation on it. -/
 theorem flipOrbit_isOut_of_mem (o : κ.Orientation) {g : W.Flag}
     (hg : κ.PeriodicFlag g) {f : W.Flag} (hf : OrbitFlag κ g f) :
     (o.flipOrbit hg).isOut f = !o.isOut f := by
-  show (if OrbitFlag κ g f then !o.isOut f else o.isOut f) =
+  change (if OrbitFlag κ g f then !o.isOut f else o.isOut f) =
     !o.isOut f
-  exact if_pos hf
+  exact ite_eq_left hf
 
 /-- And leaves it alone elsewhere. -/
 theorem flipOrbit_isOut_of_notMem (o : κ.Orientation) {g : W.Flag}
     (hg : κ.PeriodicFlag g) {f : W.Flag} (hf : ¬ OrbitFlag κ g f) :
     (o.flipOrbit hg).isOut f = o.isOut f := by
-  show (if OrbitFlag κ g f then !o.isOut f else o.isOut f) =
+  change (if OrbitFlag κ g f then !o.isOut f else o.isOut f) =
     o.isOut f
-  exact if_neg hf
+  exact ite_eq_right hf
 
 /-- An orbit flip is a circuit-supported gauge, so the constrained
 summand is invariant under it: the difference is supported on

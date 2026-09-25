@@ -28,7 +28,7 @@ over the anti-canonical chains re-canonicalizes any orientation
 
 namespace RS
 
-open scoped Classical
+
 
 namespace EdgeSubset
 
@@ -91,7 +91,7 @@ theorem chainDir_pathMatch
   have hpm : κ.pathMatch β hβ = W.pairing (iterWalk κ β k) :=
     κ.pathMatch_eq hβ (traceChain_fuel_mono κ (by omega)
       (traceChain_forward κ β hcont hterm))
-  show o.isOut (W.pairing (κ.pathMatch β hβ)) =
+  change o.isOut (W.pairing (κ.pathMatch β hβ)) =
     !o.isOut (W.pairing β)
   rw [hpm, W.pairing_invol]
   exact isOut_iterWalk_eq_not_seed o hcont k hk1 le_rfl
@@ -129,7 +129,7 @@ theorem pathCanonical_iff_chainDir
       exact W.eq_boundaryFlag _ _
         (attach_boundaryLabel (κ.pathMatch_mem hβ))
     have hval := hc _ _ hbB hintB hpm hlt
-    show o.isOut (W.pairing β) = false
+    change o.isOut (W.pairing β) = false
     rw [hβeq]
     exact hval
   · intro H i j hb hint hpm hij

@@ -20,7 +20,7 @@ edge, which closes into a free circle parameterized by a Bool).
 
 namespace RS
 
-open scoped Classical
+
 
 namespace Fragment
 
@@ -161,7 +161,7 @@ theorem boundaryFlagI_mem_liftOpen_iff
     rw [liftSubsetOpen]
     apply Finset.mem_union_left
     apply Finset.mem_union_right
-    rw [if_pos h]
+    rw [ite_eq_left h]
     exact Finset.mem_singleton_self _
 
 /-- The same at the second glued boundary flag. -/
@@ -186,7 +186,7 @@ theorem boundaryFlagJ_mem_liftOpen_iff
   · intro h
     rw [liftSubsetOpen]
     apply Finset.mem_union_right
-    rw [if_pos h]
+    rw [ite_eq_left h]
     exact Finset.mem_singleton_self _
 
 /-! #### Round trips (open case) -/
@@ -343,7 +343,7 @@ theorem boundaryFlagI_mem_liftClosed_iff
       · simp at h
   · intro h
     rw [liftSubsetClosed, Finset.mem_union]
-    right; rw [if_pos h]
+    right; rw [ite_eq_left h]
     exact Finset.mem_insert_self _ _
 
 /-- The same at the second glued boundary flag, on the same bit. -/
@@ -361,7 +361,7 @@ theorem boundaryFlagJ_mem_liftClosed_iff
       · simp at h
   · intro h
     rw [liftSubsetClosed, Finset.mem_union]
-    right; rw [if_pos h]
+    right; rw [ite_eq_left h]
     simp [Finset.mem_insert, Finset.mem_singleton]
 
 /-! #### Round trips (closed case) -/
@@ -433,7 +433,7 @@ theorem liftSubsetClosed_pairing_closed
     · exact absurd hg (boundaryFlagI_not_mem_image s')
     · split_ifs at hg with hb
       · rw [liftSubsetClosed, Finset.mem_union]; right
-        rw [if_pos hb]
+        rw [ite_eq_left hb]
         simp [Finset.mem_insert, Finset.mem_singleton]
       · simp at hg
   · by_cases hgj : g = W.boundaryFlag j
@@ -446,7 +446,7 @@ theorem liftSubsetClosed_pairing_closed
       · exact absurd hg (boundaryFlagJ_not_mem_image s')
       · split_ifs at hg with hb
         · rw [liftSubsetClosed, Finset.mem_union]; right
-          rw [if_pos hb]
+          rw [ite_eq_left hb]
           exact Finset.mem_insert_self _ _
         · simp at hg
     · set gs : SurvivingFlag W i j := ⟨g, hgi, hgj⟩
@@ -498,8 +498,8 @@ theorem deg_liftSubsetOpen_eq
         (fun f => W.attach f = Sum.inl v)).card =
       (s'.filter
         (fun f => glueAttach W i j f = Sum.inl v)).card := by
-  letI := Classical.decEq (W.Vertex ⊕ α)
-  letI := Classical.decEq (W.Vertex ⊕ SurvivingLabel α i j)
+  let := Classical.decEq (W.Vertex ⊕ α)
+  let := Classical.decEq (W.Vertex ⊕ SurvivingLabel α i j)
   have hset : (liftSubsetOpen hopen s').filter
       (fun f => W.attach f = Sum.inl v) =
     (s'.filter (fun f => glueAttach W i j f = Sum.inl v)).image
@@ -533,8 +533,8 @@ theorem deg_liftSubsetClosed_eq
         (fun f => W.attach f = Sum.inl v)).card =
       (s'.filter
         (fun f => glueAttach W i j f = Sum.inl v)).card := by
-  letI := Classical.decEq (W.Vertex ⊕ α)
-  letI := Classical.decEq (W.Vertex ⊕ SurvivingLabel α i j)
+  let := Classical.decEq (W.Vertex ⊕ α)
+  let := Classical.decEq (W.Vertex ⊕ SurvivingLabel α i j)
   have hset : (liftSubsetClosed s' b).filter
       (fun f => W.attach f = Sum.inl v) =
     (s'.filter (fun f => glueAttach W i j f = Sum.inl v)).image

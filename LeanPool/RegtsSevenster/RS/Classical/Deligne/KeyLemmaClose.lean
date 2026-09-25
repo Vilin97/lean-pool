@@ -64,7 +64,7 @@ theorem keyLemmaData_ind
     (d : ModDualityDatum B N N') :
     KeyLemmaDataStatement B d := by
   intro hz _ hS
-  letI := chainBGrMonObj B N N' d
+  let := chainBGrMonObj B N N' d
   exact ⟨{ carrier := chainBGr B N N' d
            monObj := chainBGrMonObj B N N' d
            comm := chainBGr_isCommMonObj B N N' d

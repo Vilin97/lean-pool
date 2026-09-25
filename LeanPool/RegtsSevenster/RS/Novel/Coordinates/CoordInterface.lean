@@ -57,7 +57,7 @@ theorem omega_pairing {d : ℕ}
 theorem star_pairing (W : ClosedFragment) :
     omegaFun f P (bundleCapClass f (edgeCount W))
       (omegaVec f P (starClass f W)) = f.val W := by
-  letI := P.braided
+  let := P.braided
   rw [← omega_pairing]
   exact omega_star_scalar f P W
 

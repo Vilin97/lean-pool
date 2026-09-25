@@ -61,7 +61,7 @@ theorem modTensorπ_freeTensorTwistIso
   have hπ : modTensorπ A (regularMod A) M ≫
       (modTensorUnitLeft A M).hom = actLeft A M.X :=
     modTensorπ_desc A (regularMod A) M _ _
-  show modTensorπ A (freeMod A V) M ≫
+  change modTensorπ A (freeMod A V) M ≫
       modTensorMap A (freeRegTwistIso A V).hom
           (tensorLeftUnitMod A M).symm.hom ≫
         twistShuffleHom A V (𝟙_ D) (regularMod A) M ≫
@@ -70,7 +70,7 @@ theorem modTensorπ_freeTensorTwistIso
     ((β_ A V).hom ▷ M.X) ≫ (α_ V A M.X).hom ≫
       (V ◁ actLeft A M.X)
   rw [modTensorπ_map_assoc, modTensorπ_twistShuffleHom_assoc]
-  show ((β_ A V).hom ⊗ₘ (λ_ M.X).inv) ≫
+  change ((β_ A V).hom ⊗ₘ (λ_ M.X).inv) ≫
       (tensorμ V A (𝟙_ D) M.X ≫
         ((V ⊗ 𝟙_ D) ◁ modTensorπ A (regularMod A) M)) ≫
       ((ρ_ V).hom ▷ modTensor A (regularMod A) M) ≫

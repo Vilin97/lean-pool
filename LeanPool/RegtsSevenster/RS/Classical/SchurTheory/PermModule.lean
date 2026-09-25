@@ -19,7 +19,7 @@ namespace RS
 
 open Finset Equiv MonoidAlgebra
 
-open scoped Classical
+
 
 /-- The colour class: colourings with prescribed fibre sizes. -/
 def colourClass (n : ℕ) {N : ℕ} (α : Fin N → ℕ) : Type :=
@@ -43,11 +43,11 @@ instance colourClass.mulAction {n N : ℕ} (α : Fin N → ℕ) :
     rw [fibreCard_comp_perm]; exact g.2 j⟩
   one_smul g := by
     apply Subtype.ext
-    show g.1 ∘ ⇑(1 : Equiv.Perm (Fin n))⁻¹ = g.1
+    change g.1 ∘ ⇑(1 : Equiv.Perm (Fin n))⁻¹ = g.1
     simp
   mul_smul π ρ g := by
     apply Subtype.ext
-    show g.1 ∘ ⇑(π * ρ)⁻¹ = (⟨(g.1 ∘ ⇑ρ⁻¹) ∘ ⇑π⁻¹, _⟩ : colourClass n α).1
+    change g.1 ∘ ⇑(π * ρ)⁻¹ = (⟨(g.1 ∘ ⇑ρ⁻¹) ∘ ⇑π⁻¹, _⟩ : colourClass n α).1
     rw [mul_inv_rev]
     rfl
 
@@ -109,12 +109,12 @@ theorem colourRep_character {n N : ℕ} (α : Fin N → ℕ)
     (π : Equiv.Perm (Fin n)) :
     (colourRep α).character π = (colourChar α π : ℂ) := by
   -- character = trace of the linear map
-  show LinearMap.trace ℂ _ ((colourRep α) π) = _
+  change LinearMap.trace ℂ _ ((colourRep α) π) = _
   -- express trace via MonoidAlgebra basis
   set b := MonoidAlgebra.basis (colourClass n α) ℂ with hb_def
   rw [LinearMap.trace_eq_matrix_trace ℂ b]
   -- Matrix.trace = ∑ g, diagonal entry
-  show ∑ g : colourClass n α,
+  change ∑ g : colourClass n α,
     LinearMap.toMatrix b b ((colourRep α) π) g g = _
   -- compute each diagonal entry
   have hdiag : ∀ g : colourClass n α,
@@ -130,11 +130,11 @@ theorem colourRep_character {n N : ℕ} (α : Fin N → ℕ)
       MonoidAlgebra.single (π • g) 1 from
       Representation.ofMulAction_single π g 1]
     -- b.repr = coeffLinearEquiv
-    show ((coeffLinearEquiv ℂ)
+    change ((coeffLinearEquiv ℂ)
       (MonoidAlgebra.single (π • g) (1 : ℂ))) g =
         if π • g = g then 1 else 0
     rw [coeffLinearEquiv_apply]
-    simp [MonoidAlgebra.coeff, Finsupp.single_apply, eq_comm]
+    simp [ Finsupp.single_apply, eq_comm]
   -- rewrite using the diagonal formula
   rw [Finset.sum_congr rfl (fun g _ => hdiag g)]
   -- ∑ g, if π • g = g then 1 else 0 = card of fixed points

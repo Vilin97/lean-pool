@@ -220,7 +220,7 @@ def evenFunctorAdjEvenEmbed [Category.{v} A] [Preadditive A] [HasZeroObject A] :
 instance evenEmbedPreservesFiniteLimits
     [Category.{v} A] [Preadditive A] [HasZeroObject A] :
     PreservesFiniteLimits (evenEmbed (A := A)) := by
-  haveI : PreservesLimitsOfSize.{0, 0} (evenEmbed (A := A)) :=
+  have : PreservesLimitsOfSize.{0, 0} (evenEmbed (A := A)) :=
     (evenFunctorAdjEvenEmbed (A := A)).rightAdjoint_preservesLimits
   infer_instance
 
@@ -228,7 +228,7 @@ instance evenEmbedPreservesFiniteLimits
 instance evenEmbedPreservesFiniteColimits
     [Category.{v} A] [Preadditive A] [HasZeroObject A] :
     PreservesFiniteColimits (evenEmbed (A := A)) := by
-  haveI : PreservesColimitsOfSize.{0, 0} (evenEmbed (A := A)) :=
+  have : PreservesColimitsOfSize.{0, 0} (evenEmbed (A := A)) :=
     (evenEmbedAdjEvenFunctor (A := A)).leftAdjoint_preservesColimits
   infer_instance
 

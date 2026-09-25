@@ -36,12 +36,12 @@ private theorem succAbove_val_ite {n : ℕ} (a : Fin (n + 1)) (y : Fin n) :
   by_cases hc : Fin.castSucc y < a
   · rw [Fin.succAbove_of_castSucc_lt _ _ hc]
     have h1 : (y : ℕ) < (a : ℕ) := hc
-    rw [if_pos h1]
+    rw [ite_eq_left h1]
     rfl
   · have hc' : a ≤ Fin.castSucc y := not_lt.mp hc
     rw [Fin.succAbove_of_le_castSucc _ _ hc']
     have h1 : (a : ℕ) ≤ (y : ℕ) := hc'
-    rw [if_neg (not_lt.mpr h1)]
+    rw [ite_eq_right (not_lt.mpr h1)]
     rfl
 
 /-- Inverting that shift: a label above the removed point drops by
@@ -51,11 +51,11 @@ private theorem removed_val_ite {n : ℕ} {a : Fin (n + 1)} {y : Fin n}
     (y : ℕ) = if v < (a : ℕ) then v else v - 1 := by
   rw [succAbove_val_ite] at h
   by_cases hc : (y : ℕ) < (a : ℕ)
-  · rw [if_pos hc] at h
-    rw [if_pos (by omega)]
+  · rw [ite_eq_left hc] at h
+    rw [ite_eq_left (by omega)]
     omega
-  · rw [if_neg hc] at h
-    rw [if_neg (by omega)]
+  · rw [ite_eq_right hc] at h
+    rw [ite_eq_right (by omega)]
     omega
 
 /-- `Fin.succAbove` at the removed point inverts `finRemoveEquiv`. -/
@@ -80,7 +80,7 @@ theorem finRemoveEquiv_top_val {n : ℕ}
   have hx : (x.val : ℕ) ≠ n := fun hh => x.prop (Fin.ext hh)
   have hb : (x.val : ℕ) < n + 1 := x.val.isLt
   have ha : ((⟨n, Nat.lt_succ_self n⟩ : Fin (n + 1)) : ℕ) = n := rfl
-  rw [h, ha, if_pos (by omega)]
+  rw [h, ha, ite_eq_left (by omega)]
 
 /-- `Fin.succAbove` at `t` inverts `rightRemoveEquiv`. -/
 theorem rightRemoveEquiv_apply_val (t u : ℕ)

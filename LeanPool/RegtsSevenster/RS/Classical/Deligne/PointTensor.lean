@@ -30,7 +30,7 @@ theorem mono_of_point_ne_zero
     [MonoidalPreadditive A] [MonoidalLinear ℂ A] [RigidCategory A]
     (hu : HasScalarUnit A) {X : A}
     {u : 𝟙_ A ⟶ X} (h : u ≠ 0) : Mono u := by
-  haveI := simple_unit_of_hasScalarUnit hu
+  have := simple_unit_of_hasScalarUnit hu
   exact mono_of_nonzero_from_simple h
 
 /-- **The tensor of two nonzero points is a monomorphism.** -/
@@ -40,12 +40,12 @@ theorem mono_tensorHom_point
     (hu : HasScalarUnit A) {X Y : A}
     {u : 𝟙_ A ⟶ X} {v : 𝟙_ A ⟶ Y} (hu0 : u ≠ 0) (hv0 : v ≠ 0) :
     Mono (u ⊗ₘ v) := by
-  haveI : Mono u := mono_of_point_ne_zero hu hu0
-  haveI : Mono v := mono_of_point_ne_zero hu hv0
-  haveI hR : (tensorRight (𝟙_ A)).PreservesMonomorphisms :=
+  have : Mono u := mono_of_point_ne_zero hu hu0
+  have : Mono v := mono_of_point_ne_zero hu hv0
+  have hR : (tensorRight (𝟙_ A)).PreservesMonomorphisms :=
     Functor.preservesMonomorphisms_of_adjunction
       (tensorRightAdjunction (ᘁ(𝟙_ A)) (𝟙_ A))
-  haveI hL : (tensorLeft X).PreservesMonomorphisms :=
+  have hL : (tensorLeft X).PreservesMonomorphisms :=
     Functor.preservesMonomorphisms_of_adjunction
       (tensorLeftAdjunction X (Xᘁ))
   have hmu : Mono (u ▷ 𝟙_ A) := hR.preserves (f := u)
@@ -60,7 +60,7 @@ theorem tensorHom_point_ne_zero
     (hu : HasScalarUnit A) {X Y : A}
     {u : 𝟙_ A ⟶ X} {v : 𝟙_ A ⟶ Y} (hu0 : u ≠ 0) (hv0 : v ≠ 0) :
     (u ⊗ₘ v) ≠ 0 := by
-  haveI := mono_tensorHom_point hu hu0 hv0
+  have := mono_tensorHom_point hu hu0 hv0
   intro h0
   have hid : 𝟙 (𝟙_ A ⊗ 𝟙_ A) = 0 := by
     refine (cancel_mono (u ⊗ₘ v)).mp ?_

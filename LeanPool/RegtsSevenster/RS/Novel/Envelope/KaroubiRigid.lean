@@ -262,20 +262,21 @@ theorem karoubi_snake_two
 /-! ### The exact pairing and rigidity -/
 
 /-- The exact pairing between an idempotent and its mate dual. -/
+@[instance_reducible]
 noncomputable def karoubiExactPairing
     [Category.{v} C] [MonoidalCategory C] [RightRigidCategory C]
     (P : Karoubi C) :
     ExactPairing P (karoubiRightDualObj P) where
   coevaluation' :=
     ⟨η_ P.X (P.X)ᘁ ≫ (P.p ⊗ₘ (P.p)ᘁ), by
-      show 𝟙 (𝟙_ C) ≫ (η_ P.X (P.X)ᘁ ≫ (P.p ⊗ₘ (P.p)ᘁ)) ≫
+      change 𝟙 (𝟙_ C) ≫ (η_ P.X (P.X)ᘁ ≫ (P.p ⊗ₘ (P.p)ᘁ)) ≫
           (P.p ⊗ₘ (P.p)ᘁ) =
         η_ P.X (P.X)ᘁ ≫ (P.p ⊗ₘ (P.p)ᘁ)
       rw [id_comp]
       exact coev_corr_idem P⟩
   evaluation' :=
     ⟨((P.p)ᘁ ⊗ₘ P.p) ≫ ε_ P.X (P.X)ᘁ, by
-      show ((P.p)ᘁ ⊗ₘ P.p) ≫
+      change ((P.p)ᘁ ⊗ₘ P.p) ≫
           ((((P.p)ᘁ ⊗ₘ P.p) ≫ ε_ P.X (P.X)ᘁ) ≫ 𝟙 (𝟙_ C)) =
         ((P.p)ᘁ ⊗ₘ P.p) ≫ ε_ P.X (P.X)ᘁ
       rw [comp_id]

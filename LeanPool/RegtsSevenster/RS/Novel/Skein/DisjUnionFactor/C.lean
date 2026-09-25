@@ -14,7 +14,7 @@ Migrating canonical data between a union and its components.
 
 namespace RS
 
-open scoped Classical
+
 
 /-! ## The canonical-value migration
 
@@ -73,7 +73,7 @@ theorem inr_mem_boundary
 /-- A left boundary flag's chain stays left, so the product
 system's path matching is the left component's. -/
 theorem pathMatch_prodRel_inl
-    [LinearOrder α] [LinearOrder β] {W₁ : Fragment α} {W₂ : Fragment β}
+    {W₁ : Fragment α} {W₂ : Fragment β}
     {F : EdgeSubset (W₁.disjUnion W₂)}
     (κ₁ : (leftSub F).RelTransitionSystem)
     (κ₂ : (rightSub F).RelTransitionSystem)
@@ -82,7 +82,7 @@ theorem pathMatch_prodRel_inl
     (hb' : g ∈ (leftSub F).boundaryFlags) :
     (prodRel (F := F) κ₁ κ₂).pathMatch (Sum.inl g) hb =
       Sum.inl (κ₁.pathMatch g hb') := by
-  letI := sumLexLinearOrder α β
+  let := sumLexLinearOrder α β
   obtain ⟨k, -, hcont, hpm⟩ := pathMatch_chain_length κ₁ hb'
   have hterm : W₁.pairing (iterWalk κ₁ g k) ∈
       (leftSub F).boundaryFlags := by
@@ -108,7 +108,7 @@ theorem pathMatch_prodRel_inl
 -- needs both component orders even though the statement does not.
 /-- And likewise on the right. -/
 theorem pathMatch_prodRel_inr
-    [LinearOrder α] [LinearOrder β] {W₁ : Fragment α} {W₂ : Fragment β}
+    {W₁ : Fragment α} {W₂ : Fragment β}
     {F : EdgeSubset (W₁.disjUnion W₂)}
     (κ₁ : (leftSub F).RelTransitionSystem)
     (κ₂ : (rightSub F).RelTransitionSystem)
@@ -117,7 +117,7 @@ theorem pathMatch_prodRel_inr
     (hb' : g ∈ (rightSub F).boundaryFlags) :
     (prodRel (F := F) κ₁ κ₂).pathMatch (Sum.inr g) hb =
       Sum.inr (κ₂.pathMatch g hb') := by
-  letI := sumLexLinearOrder α β
+  let := sumLexLinearOrder α β
   obtain ⟨k, -, hcont, hpm⟩ := pathMatch_chain_length κ₂ hb'
   have hterm : W₂.pairing (iterWalk κ₂ g k) ∈
       (rightSub F).boundaryFlags := by

@@ -30,7 +30,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Classical
+
 
 variable {α : Type}
 
@@ -63,13 +63,13 @@ theorem edgeSum_eq_vertexSum {W : Fragment α}
   unfold edgeSum vertexSum
   refine Finset.sum_congr rfl (fun ψ _ => ?_)
   by_cases hev : genEvenBoundaryMatch F st hbnd ψ
-  · rw [if_pos hev, if_pos hev]
+  · rw [ite_eq_left hev, ite_eq_left hev]
     exact sum_edgeOddColouring hbnd hag
       (fun φ' => ∏ v : W.Vertex,
         ((F.coreOddSignAt o φ' v : ℂ) *
           h.evalOdd (F.evenColoursAt ψ v)
             (F.coreOddListAt o φ' v)))
-  · rw [if_neg hev, if_neg hev]
+  · rw [ite_eq_right hev, ite_eq_right hev]
 
 /-- **A disagreeing state is coloured by nothing.** -/
 theorem edgeSum_eq_zero_of_not_throughAgree {W : Fragment α}
@@ -83,10 +83,10 @@ theorem edgeSum_eq_zero_of_not_throughAgree {W : Fragment α}
   unfold edgeSum
   refine Finset.sum_eq_zero (fun ψ _ => ?_)
   by_cases hev : genEvenBoundaryMatch F st hbnd ψ
-  · rw [if_pos hev]
-    exact Finset.sum_eq_zero (fun φ _ => if_neg (fun hφ =>
+  · rw [ite_eq_left hev]
+    exact Finset.sum_eq_zero (fun φ _ => ite_eq_right (fun hφ =>
       hag (throughAgree_of_edgeOddBoundaryMatch hbnd hφ)))
-  · rw [if_neg hev]
+  · rw [ite_eq_right hev]
 
 end EdgeSubset
 

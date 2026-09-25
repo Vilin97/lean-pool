@@ -176,19 +176,19 @@ def piBicone {n : ℕ} (f : Fin n → SuperVect) : Bicone f where
     LinearMap.single ℂ (fun i => (f i).odd) j⟩
   ι_π j j' := by
     rcases eq_or_ne j j' with rfl | hne
-    · rw [dif_pos rfl, eqToHom_refl]
+    · rw [dite_eq_left rfl, eqToHom_refl]
       refine hom_ext (LinearMap.ext fun x => ?_)
         (LinearMap.ext fun x => ?_)
-      · show Pi.single (M := fun i => (f i).even) j x j = x
+      · change Pi.single (M := fun i => (f i).even) j x j = x
         exact Pi.single_eq_same (M := fun i => (f i).even) j x
-      · show Pi.single (M := fun i => (f i).odd) j x j = x
+      · change Pi.single (M := fun i => (f i).odd) j x j = x
         exact Pi.single_eq_same (M := fun i => (f i).odd) j x
-    · rw [dif_neg hne]
+    · rw [dite_eq_right hne]
       refine hom_ext (LinearMap.ext fun x => ?_)
         (LinearMap.ext fun x => ?_)
-      · show Pi.single (M := fun i => (f i).even) j x j' = 0
+      · change Pi.single (M := fun i => (f i).even) j x j' = 0
         exact Pi.single_eq_of_ne (M := fun i => (f i).even) hne.symm x
-      · show Pi.single (M := fun i => (f i).odd) j x j' = 0
+      · change Pi.single (M := fun i => (f i).odd) j x j' = 0
         exact Pi.single_eq_of_ne (M := fun i => (f i).odd) hne.symm x
 
 /-- Taking the even component of a morphism is additive. -/
@@ -338,7 +338,7 @@ theorem evenLineIn_comp_prj_same (p q : ℕ) (i : Fin p) :
   refine hom_ext (LinearMap.ext fun x => funext fun k => ?_)
     (Subsingleton.elim _ _)
   obtain rfl : k = 0 := Subsingleton.elim k 0
-  show Pi.single (M := fun _ : Fin 1 => ℂ) 0
+  change Pi.single (M := fun _ : Fin 1 => ℂ) 0
       (Pi.single (M := fun _ : Fin p => ℂ) i (x 0) i) 0 = x 0
   simp [Pi.single_eq_same]
 
@@ -347,7 +347,7 @@ theorem evenLineIn_comp_prj_ne (p q : ℕ) {i i' : Fin p}
     (h : i ≠ i') : evenLineIn p q i ≫ evenLinePrj p q i' = 0 := by
   refine hom_ext (LinearMap.ext fun x => funext fun k => ?_)
     (Subsingleton.elim _ _)
-  show Pi.single (M := fun _ : Fin 1 => ℂ) 0
+  change Pi.single (M := fun _ : Fin 1 => ℂ) 0
       (Pi.single (M := fun _ : Fin p => ℂ) i (x 0) i') k = 0
   rw [Pi.single_eq_of_ne (Ne.symm h), Pi.single_zero]
   rfl
@@ -359,7 +359,7 @@ theorem oddLineIn_comp_prj_same (p q : ℕ) (j : Fin q) :
   refine hom_ext (Subsingleton.elim _ _)
     (LinearMap.ext fun x => funext fun k => ?_)
   obtain rfl : k = 0 := Subsingleton.elim k 0
-  show Pi.single (M := fun _ : Fin 1 => ℂ) 0
+  change Pi.single (M := fun _ : Fin 1 => ℂ) 0
       (Pi.single (M := fun _ : Fin q => ℂ) j (x 0) j) 0 = x 0
   simp [Pi.single_eq_same]
 
@@ -368,7 +368,7 @@ theorem oddLineIn_comp_prj_ne (p q : ℕ) {j j' : Fin q}
     (h : j ≠ j') : oddLineIn p q j ≫ oddLinePrj p q j' = 0 := by
   refine hom_ext (Subsingleton.elim _ _)
     (LinearMap.ext fun x => funext fun k => ?_)
-  show Pi.single (M := fun _ : Fin 1 => ℂ) 0
+  change Pi.single (M := fun _ : Fin 1 => ℂ) 0
       (Pi.single (M := fun _ : Fin q => ℂ) j (x 0) j') k = 0
   rw [Pi.single_eq_of_ne (Ne.symm h), Pi.single_zero]
   rfl
@@ -391,7 +391,7 @@ theorem evenLinePrj_comp_in_evenMap (p q : ℕ) (i : Fin p) :
       LinearMap.single ℂ (fun _ : Fin p => ℂ) i ∘ₗ
         LinearMap.proj (φ := fun _ : Fin p => ℂ) i := by
   refine LinearMap.ext fun x => funext fun k => ?_
-  show Pi.single (M := fun _ : Fin p => ℂ) i
+  change Pi.single (M := fun _ : Fin p => ℂ) i
       (Pi.single (M := fun _ : Fin 1 => ℂ) 0 (x i) 0) k =
     Pi.single (M := fun _ : Fin p => ℂ) i (x i) k
   rw [Pi.single_eq_same]
@@ -410,7 +410,7 @@ theorem oddLinePrj_comp_in_oddMap (p q : ℕ) (j : Fin q) :
       LinearMap.single ℂ (fun _ : Fin q => ℂ) j ∘ₗ
         LinearMap.proj (φ := fun _ : Fin q => ℂ) j := by
   refine LinearMap.ext fun x => funext fun k => ?_
-  show Pi.single (M := fun _ : Fin q => ℂ) j
+  change Pi.single (M := fun _ : Fin q => ℂ) j
       (Pi.single (M := fun _ : Fin 1 => ℂ) 0 (x j) 0) k =
     Pi.single (M := fun _ : Fin q => ℂ) j (x j) k
   rw [Pi.single_eq_same]
@@ -559,26 +559,26 @@ def genBicone (p q : ℕ) : Bicone (genFamily p q) where
   ι_π s t := by
     rcases s with i | j <;> rcases t with i' | j'
     · rcases eq_or_ne i i' with rfl | hne
-      · rw [dif_pos rfl, eqToHom_refl]
+      · rw [dite_eq_left rfl, eqToHom_refl]
         exact InducedCategory.hom_ext
           (SuperVect.evenLineIn_comp_prj_same p q i)
-      · rw [dif_neg fun h => hne (Sum.inl.inj h)]
+      · rw [dite_eq_right fun h => hne (Sum.inl.inj h)]
         refine InducedCategory.hom_ext ?_
         rw [smallZero_hom]
         exact SuperVect.evenLineIn_comp_prj_ne p q hne
-    · rw [dif_neg (Sum.inl_ne_inr)]
+    · rw [dite_eq_right (Sum.inl_ne_inr)]
       refine InducedCategory.hom_ext ?_
       rw [smallZero_hom]
       exact SuperVect.evenLineIn_comp_oddPrj p q i j'
-    · rw [dif_neg (Sum.inr_ne_inl)]
+    · rw [dite_eq_right (Sum.inr_ne_inl)]
       refine InducedCategory.hom_ext ?_
       rw [smallZero_hom]
       exact SuperVect.oddLineIn_comp_evenPrj p q i' j
     · rcases eq_or_ne j j' with rfl | hne
-      · rw [dif_pos rfl, eqToHom_refl]
+      · rw [dite_eq_left rfl, eqToHom_refl]
         exact InducedCategory.hom_ext
           (SuperVect.oddLineIn_comp_prj_same p q j)
-      · rw [dif_neg fun h => hne (Sum.inr.inj h)]
+      · rw [dite_eq_right fun h => hne (Sum.inr.inj h)]
         refine InducedCategory.hom_ext ?_
         rw [smallZero_hom]
         exact SuperVect.oddLineIn_comp_prj_ne p q hne
@@ -608,7 +608,7 @@ theorem biproductGenerates_smallSuper :
   intro X
   obtain ⟨p, q⟩ := X
   refine ⟨p + q, fun j => genWord p q (finSumFinEquiv.symm j), ?_⟩
-  haveI : HasBiproduct (genFamily p q) :=
+  have : HasBiproduct (genFamily p q) :=
     HasBiproduct.mk ⟨genBicone p q, genBiconeIsBilimit p q⟩
   exact ⟨biproduct.uniqueUpToIso (genFamily p q)
       (genBiconeIsBilimit p q) ≪≫

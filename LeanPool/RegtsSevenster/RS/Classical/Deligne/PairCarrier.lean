@@ -92,7 +92,7 @@ theorem copairUnit_splitPairMul
         chainBGrι A M M' d 0 := by
     erw [chainBGrUnit, ← Category.assoc,
       chainBUnit_chainBGrComponentZeroIso_inv, Category.assoc]
-  show copairUnit A M M' d ≫ chainPairMul A M M' d ≫
+  change copairUnit A M M' d ≫ chainPairMul A M M' d ≫
       chainStage2Cast A M M'
         (by omega : 2 = (-(0 : ℤ)).toNat + 2)
         (by omega : 2 = (0 : ℤ).toNat + 2) ≫

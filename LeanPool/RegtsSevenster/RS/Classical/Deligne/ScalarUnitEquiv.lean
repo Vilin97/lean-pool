@@ -31,7 +31,7 @@ def scalarUnitRingHom
   toFun c := c • 𝟙 (𝟙_ A)
   map_one' := one_smul _ _
   map_mul' a b := by
-    show (a * b) • 𝟙 (𝟙_ A) = (b • 𝟙 (𝟙_ A)) ≫ (a • 𝟙 (𝟙_ A))
+    change (a * b) • 𝟙 (𝟙_ A) = (b • 𝟙 (𝟙_ A)) ≫ (a • 𝟙 (𝟙_ A))
     rw [Linear.smul_comp, Linear.comp_smul, Category.comp_id,
       smul_smul, mul_comm]
   map_zero' := zero_smul _ _

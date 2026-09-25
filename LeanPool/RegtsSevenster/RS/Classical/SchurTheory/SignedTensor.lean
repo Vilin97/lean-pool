@@ -66,7 +66,7 @@ theorem sign_mul_cycleProd_const {n : ℕ} (m : ℕ)
   set K := c + (n - s)
   have hsn : s ≤ n := by
     have := Equiv.Perm.sum_cycleType_le π
-    simp [Fintype.card_fin] at this
+    simp? [Fintype.card_fin] at this
     exact this
   -- RHS: (-1)^n * ((-m)^K) = (-1)^n * ((-1)^K * m^K)
   have hneg : (-(m : ℂ)) ^ K = (-1 : ℂ) ^ K * (m : ℂ) ^ K :=

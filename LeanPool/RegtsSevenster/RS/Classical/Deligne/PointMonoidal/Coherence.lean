@@ -58,6 +58,246 @@ attribute [local irreducible] superVectMu
 variable {S : SuperCommAlgebra.{u, u}} (P : SuperPoint S)
   (M N Q : S.Mod.{u, u, u, u})
 
+private theorem superVectMu_associativity_evenMap
+    [FiniteDimensional ℂ (M.tensor (pointMod P)).even]
+    [FiniteDimensional ℂ (M.tensor (pointMod P)).odd]
+    [FiniteDimensional ℂ (N.tensor (pointMod P)).even]
+    [FiniteDimensional ℂ (N.tensor (pointMod P)).odd]
+    [FiniteDimensional ℂ (Q.tensor (pointMod P)).even]
+    [FiniteDimensional ℂ (Q.tensor (pointMod P)).odd]
+    [FiniteDimensional ℂ ((M.tensor N).tensor (pointMod P)).even]
+    [FiniteDimensional ℂ ((M.tensor N).tensor (pointMod P)).odd]
+    [FiniteDimensional ℂ ((N.tensor Q).tensor (pointMod P)).even]
+    [FiniteDimensional ℂ ((N.tensor Q).tensor (pointMod P)).odd]
+    [FiniteDimensional ℂ (((M.tensor N).tensor Q).tensor (pointMod P)).even]
+    [FiniteDimensional ℂ (((M.tensor N).tensor Q).tensor (pointMod P)).odd]
+    [FiniteDimensional ℂ ((M.tensor (N.tensor Q)).tensor (pointMod P)).even]
+    [FiniteDimensional ℂ ((M.tensor (N.tensor Q)).tensor (pointMod P)).odd] :
+    ((superVectMu P M N ▷ toSuperVect P Q) ≫
+        superVectMu P (M.tensor N) Q ≫
+        superVectHom P (α_ M N Q).hom).evenMap =
+      ((α_ (toSuperVect P M) (toSuperVect P N)
+          (toSuperVect P Q)).hom ≫
+        (toSuperVect P M ◁ superVectMu P N Q) ≫
+        superVectMu P M (N.tensor Q)).evenMap := by
+  refine superVectTripleEven_ext (fun a b c => ?_) (fun a b c => ?_)
+    (fun a b c => ?_) (fun a b c => ?_)
+  · have key := LinearMap.congr_fun (congrArg
+      SuperCommAlgebra.Mod.Hom.evenMap
+      (pointBaseMu_associativity P M N Q))
+      (tmulEE ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
+        (Q.tensor (pointMod P))
+        (tmulEE (M.tensor (pointMod P)) (N.tensor (pointMod P))
+          ((toSuperVectEvenEquiv P M).symm a)
+          ((toSuperVectEvenEquiv P N).symm b))
+        ((toSuperVectEvenEquiv P Q).symm c))
+    simp only [modComp_evenMap_apply] at key
+    rw [whiskerRight_evenMap_tmulEE, modAssoc_evenMap_ee,
+      whiskerLeft_evenMap_tmulEE (pointBaseMu P N Q)
+        (M.tensor (pointMod P))] at key
+    simp only [svComp_evenMap_apply,
+      svWhiskerRight_evenMap_inl,
+      svWhiskerLeft_evenMap_inl,
+      svAssoc_evenMap_ee,
+
+      superVectMu_evenMap_ee,
+      superVectHom_evenMap_apply,
+      LinearEquiv.symm_apply_apply]
+    rw [key]
+    rfl
+  · have key := LinearMap.congr_fun (congrArg
+      SuperCommAlgebra.Mod.Hom.evenMap
+      (pointBaseMu_associativity P M N Q))
+      (tmulEE ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
+        (Q.tensor (pointMod P))
+        (tmulOO (M.tensor (pointMod P)) (N.tensor (pointMod P))
+          ((toSuperVectOddEquiv P M).symm a)
+          ((toSuperVectOddEquiv P N).symm b))
+        ((toSuperVectEvenEquiv P Q).symm c))
+    simp only [modComp_evenMap_apply] at key
+    rw [whiskerRight_evenMap_tmulEE, modAssoc_evenMap_oo,
+      whiskerLeft_evenMap_tmulOO (pointBaseMu P N Q)
+        (M.tensor (pointMod P))] at key
+    simp only [svComp_evenMap_apply,
+      svWhiskerRight_evenMap_inl,
+       svWhiskerLeft_evenMap_inr,
+       svAssoc_evenMap_oo,
+
+      superVectMu_evenMap_ee, superVectMu_evenMap_oo,
+       superVectMu_oddMap_oe,
+      superVectHom_evenMap_apply,
+      LinearEquiv.symm_apply_apply]
+    rw [key]
+    rfl
+  · have key := LinearMap.congr_fun (congrArg
+      SuperCommAlgebra.Mod.Hom.evenMap
+      (pointBaseMu_associativity P M N Q))
+      (tmulOO ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
+        (Q.tensor (pointMod P))
+        (tmulEO (M.tensor (pointMod P)) (N.tensor (pointMod P))
+          ((toSuperVectEvenEquiv P M).symm a)
+          ((toSuperVectOddEquiv P N).symm b))
+        ((toSuperVectOddEquiv P Q).symm c))
+    simp only [modComp_evenMap_apply] at key
+    rw [whiskerRight_evenMap_tmulOO, modAssoc_evenMap_eo,
+      whiskerLeft_evenMap_tmulEE (pointBaseMu P N Q)
+        (M.tensor (pointMod P))] at key
+    simp only [svComp_evenMap_apply,
+       svWhiskerRight_evenMap_inr,
+      svWhiskerLeft_evenMap_inl,
+        svAssoc_evenMap_eo,
+
+       superVectMu_evenMap_oo,
+      superVectMu_oddMap_eo,
+      superVectHom_evenMap_apply,
+      LinearEquiv.symm_apply_apply]
+    rw [key, superVectMu_evenMap_ee,
+      LinearEquiv.symm_apply_apply]
+    rfl
+  · have key := LinearMap.congr_fun (congrArg
+      SuperCommAlgebra.Mod.Hom.evenMap
+      (pointBaseMu_associativity P M N Q))
+      (tmulOO ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
+        (Q.tensor (pointMod P))
+        (tmulOE (M.tensor (pointMod P)) (N.tensor (pointMod P))
+          ((toSuperVectOddEquiv P M).symm a)
+          ((toSuperVectEvenEquiv P N).symm b))
+        ((toSuperVectOddEquiv P Q).symm c))
+    simp only [modComp_evenMap_apply] at key
+    rw [whiskerRight_evenMap_tmulOO, modAssoc_evenMap_oe,
+      whiskerLeft_evenMap_tmulOO (pointBaseMu P N Q)
+        (M.tensor (pointMod P))] at key
+    simp only [svComp_evenMap_apply,
+       svWhiskerRight_evenMap_inr,
+       svWhiskerLeft_evenMap_inr,
+
+      svAssoc_evenMap_oe,
+       superVectMu_evenMap_oo,
+      superVectMu_oddMap_eo, superVectMu_oddMap_oe,
+      superVectHom_evenMap_apply,
+      LinearEquiv.symm_apply_apply]
+    rw [key]
+    rfl
+
+private theorem superVectMu_associativity_oddMap
+    [FiniteDimensional ℂ (M.tensor (pointMod P)).even]
+    [FiniteDimensional ℂ (M.tensor (pointMod P)).odd]
+    [FiniteDimensional ℂ (N.tensor (pointMod P)).even]
+    [FiniteDimensional ℂ (N.tensor (pointMod P)).odd]
+    [FiniteDimensional ℂ (Q.tensor (pointMod P)).even]
+    [FiniteDimensional ℂ (Q.tensor (pointMod P)).odd]
+    [FiniteDimensional ℂ ((M.tensor N).tensor (pointMod P)).even]
+    [FiniteDimensional ℂ ((M.tensor N).tensor (pointMod P)).odd]
+    [FiniteDimensional ℂ ((N.tensor Q).tensor (pointMod P)).even]
+    [FiniteDimensional ℂ ((N.tensor Q).tensor (pointMod P)).odd]
+    [FiniteDimensional ℂ (((M.tensor N).tensor Q).tensor (pointMod P)).even]
+    [FiniteDimensional ℂ (((M.tensor N).tensor Q).tensor (pointMod P)).odd]
+    [FiniteDimensional ℂ ((M.tensor (N.tensor Q)).tensor (pointMod P)).even]
+    [FiniteDimensional ℂ ((M.tensor (N.tensor Q)).tensor (pointMod P)).odd] :
+    ((superVectMu P M N ▷ toSuperVect P Q) ≫
+        superVectMu P (M.tensor N) Q ≫
+        superVectHom P (α_ M N Q).hom).oddMap =
+      ((α_ (toSuperVect P M) (toSuperVect P N)
+          (toSuperVect P Q)).hom ≫
+        (toSuperVect P M ◁ superVectMu P N Q) ≫
+        superVectMu P M (N.tensor Q)).oddMap := by
+  refine superVectTripleOdd_ext (fun a b c => ?_) (fun a b c => ?_)
+    (fun a b c => ?_) (fun a b c => ?_)
+  · have key := LinearMap.congr_fun (congrArg
+      SuperCommAlgebra.Mod.Hom.oddMap
+      (pointBaseMu_associativity P M N Q))
+      (tmulEO ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
+        (Q.tensor (pointMod P))
+        (tmulEE (M.tensor (pointMod P)) (N.tensor (pointMod P))
+          ((toSuperVectEvenEquiv P M).symm a)
+          ((toSuperVectEvenEquiv P N).symm b))
+        ((toSuperVectOddEquiv P Q).symm c))
+    simp only [modComp_oddMap_apply] at key
+    rw [whiskerRight_oddMap_tmulEO, modAssoc_oddMap_ee,
+      whiskerLeft_oddMap_tmulEO (pointBaseMu P N Q)
+        (M.tensor (pointMod P))] at key
+    simp only [ svComp_oddMap_apply,
+      svWhiskerRight_oddMap_inl,
+      svWhiskerLeft_oddMap_inl,
+       svAssoc_oddMap_ee,
+      superVectMu_evenMap_ee,
+      superVectMu_oddMap_eo,
+       superVectHom_oddMap_apply,
+      LinearEquiv.symm_apply_apply]
+    rw [key]
+    rfl
+  · have key := LinearMap.congr_fun (congrArg
+      SuperCommAlgebra.Mod.Hom.oddMap
+      (pointBaseMu_associativity P M N Q))
+      (tmulEO ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
+        (Q.tensor (pointMod P))
+        (tmulOO (M.tensor (pointMod P)) (N.tensor (pointMod P))
+          ((toSuperVectOddEquiv P M).symm a)
+          ((toSuperVectOddEquiv P N).symm b))
+        ((toSuperVectOddEquiv P Q).symm c))
+    simp only [modComp_oddMap_apply] at key
+    rw [whiskerRight_oddMap_tmulEO, modAssoc_oddMap_oo,
+      whiskerLeft_oddMap_tmulOE (pointBaseMu P N Q)
+        (M.tensor (pointMod P))] at key
+    simp only [ svComp_oddMap_apply,
+      svWhiskerRight_oddMap_inl,
+       svWhiskerLeft_oddMap_inr,
+        svAssoc_oddMap_oo,
+       superVectMu_evenMap_oo,
+      superVectMu_oddMap_eo,
+       superVectHom_oddMap_apply,
+      LinearEquiv.symm_apply_apply]
+    rw [key, superVectMu_oddMap_oe,
+      LinearEquiv.symm_apply_apply]
+    rfl
+  · have key := LinearMap.congr_fun (congrArg
+      SuperCommAlgebra.Mod.Hom.oddMap
+      (pointBaseMu_associativity P M N Q))
+      (tmulOE ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
+        (Q.tensor (pointMod P))
+        (tmulEO (M.tensor (pointMod P)) (N.tensor (pointMod P))
+          ((toSuperVectEvenEquiv P M).symm a)
+          ((toSuperVectOddEquiv P N).symm b))
+        ((toSuperVectEvenEquiv P Q).symm c))
+    simp only [modComp_oddMap_apply] at key
+    rw [whiskerRight_oddMap_tmulOE, modAssoc_oddMap_eo,
+      whiskerLeft_oddMap_tmulEO (pointBaseMu P N Q)
+        (M.tensor (pointMod P))] at key
+    simp only [ svComp_oddMap_apply,
+       svWhiskerRight_oddMap_inr,
+      svWhiskerLeft_oddMap_inl,
+
+      svAssoc_oddMap_eo,
+      superVectMu_oddMap_eo, superVectMu_oddMap_oe,
+       superVectHom_oddMap_apply,
+      LinearEquiv.symm_apply_apply]
+    rw [key]
+    rfl
+  · have key := LinearMap.congr_fun (congrArg
+      SuperCommAlgebra.Mod.Hom.oddMap
+      (pointBaseMu_associativity P M N Q))
+      (tmulOE ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
+        (Q.tensor (pointMod P))
+        (tmulOE (M.tensor (pointMod P)) (N.tensor (pointMod P))
+          ((toSuperVectOddEquiv P M).symm a)
+          ((toSuperVectEvenEquiv P N).symm b))
+        ((toSuperVectEvenEquiv P Q).symm c))
+    simp only [modComp_oddMap_apply] at key
+    rw [whiskerRight_oddMap_tmulOE, modAssoc_oddMap_oe,
+      whiskerLeft_oddMap_tmulOE (pointBaseMu P N Q)
+        (M.tensor (pointMod P))] at key
+    simp only [ svComp_oddMap_apply,
+       svWhiskerRight_oddMap_inr,
+       svWhiskerLeft_oddMap_inr,
+
+       svAssoc_oddMap_oe,
+      superVectMu_evenMap_ee,
+       superVectMu_oddMap_oe,
+       superVectHom_oddMap_apply,
+      LinearEquiv.symm_apply_apply]
+    rw [key]
+    rfl
+
 /-- **Associativity of the monoidal comparison.** -/
 @[reassoc]
 theorem superVectMu_associativity
@@ -82,235 +322,8 @@ theorem superVectMu_associativity
           (toSuperVect P Q)).hom ≫
         (toSuperVect P M ◁ superVectMu P N Q) ≫
         superVectMu P M (N.tensor Q) := by
-  refine SuperVect.hom_ext
-    (superVectTripleEven_ext (fun a b c => ?_) (fun a b c => ?_)
-      (fun a b c => ?_) (fun a b c => ?_))
-    (superVectTripleOdd_ext (fun a b c => ?_) (fun a b c => ?_)
-      (fun a b c => ?_) (fun a b c => ?_))
-  · have key := LinearMap.congr_fun (congrArg
-      SuperCommAlgebra.Mod.Hom.evenMap
-      (pointBaseMu_associativity P M N Q))
-      (tmulEE ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
-        (Q.tensor (pointMod P))
-        (tmulEE (M.tensor (pointMod P)) (N.tensor (pointMod P))
-          ((toSuperVectEvenEquiv P M).symm a)
-          ((toSuperVectEvenEquiv P N).symm b))
-        ((toSuperVectEvenEquiv P Q).symm c))
-    simp only [modComp_evenMap_apply] at key
-    rw [whiskerRight_evenMap_tmulEE, modAssoc_evenMap_ee,
-      whiskerLeft_evenMap_tmulEE (pointBaseMu P N Q)
-        (M.tensor (pointMod P))] at key
-    simp only [svComp_evenMap_apply, svComp_oddMap_apply,
-      svWhiskerRight_evenMap_inl, svWhiskerRight_evenMap_inr,
-      svWhiskerRight_oddMap_inl, svWhiskerRight_oddMap_inr,
-      svWhiskerLeft_evenMap_inl, svWhiskerLeft_evenMap_inr,
-      svWhiskerLeft_oddMap_inl, svWhiskerLeft_oddMap_inr,
-      svAssoc_evenMap_ee, svAssoc_evenMap_oo, svAssoc_evenMap_eo,
-      svAssoc_evenMap_oe, svAssoc_oddMap_ee, svAssoc_oddMap_oo,
-      svAssoc_oddMap_eo, svAssoc_oddMap_oe,
-      superVectMu_evenMap_ee, superVectMu_evenMap_oo,
-      superVectMu_oddMap_eo, superVectMu_oddMap_oe,
-      superVectHom_evenMap_apply, superVectHom_oddMap_apply,
-      LinearEquiv.symm_apply_apply]
-    rw [key, superVectMu_evenMap_ee,
-      LinearEquiv.symm_apply_apply]
-    rfl
-  · have key := LinearMap.congr_fun (congrArg
-      SuperCommAlgebra.Mod.Hom.evenMap
-      (pointBaseMu_associativity P M N Q))
-      (tmulEE ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
-        (Q.tensor (pointMod P))
-        (tmulOO (M.tensor (pointMod P)) (N.tensor (pointMod P))
-          ((toSuperVectOddEquiv P M).symm a)
-          ((toSuperVectOddEquiv P N).symm b))
-        ((toSuperVectEvenEquiv P Q).symm c))
-    simp only [modComp_evenMap_apply] at key
-    rw [whiskerRight_evenMap_tmulEE, modAssoc_evenMap_oo,
-      whiskerLeft_evenMap_tmulOO (pointBaseMu P N Q)
-        (M.tensor (pointMod P))] at key
-    simp only [svComp_evenMap_apply, svComp_oddMap_apply,
-      svWhiskerRight_evenMap_inl, svWhiskerRight_evenMap_inr,
-      svWhiskerRight_oddMap_inl, svWhiskerRight_oddMap_inr,
-      svWhiskerLeft_evenMap_inl, svWhiskerLeft_evenMap_inr,
-      svWhiskerLeft_oddMap_inl, svWhiskerLeft_oddMap_inr,
-      svAssoc_evenMap_ee, svAssoc_evenMap_oo, svAssoc_evenMap_eo,
-      svAssoc_evenMap_oe, svAssoc_oddMap_ee, svAssoc_oddMap_oo,
-      svAssoc_oddMap_eo, svAssoc_oddMap_oe,
-      superVectMu_evenMap_ee, superVectMu_evenMap_oo,
-      superVectMu_oddMap_eo, superVectMu_oddMap_oe,
-      superVectHom_evenMap_apply, superVectHom_oddMap_apply,
-      LinearEquiv.symm_apply_apply]
-    rw [key, superVectMu_evenMap_oo,
-      LinearEquiv.symm_apply_apply]
-    rfl
-  · have key := LinearMap.congr_fun (congrArg
-      SuperCommAlgebra.Mod.Hom.evenMap
-      (pointBaseMu_associativity P M N Q))
-      (tmulOO ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
-        (Q.tensor (pointMod P))
-        (tmulEO (M.tensor (pointMod P)) (N.tensor (pointMod P))
-          ((toSuperVectEvenEquiv P M).symm a)
-          ((toSuperVectOddEquiv P N).symm b))
-        ((toSuperVectOddEquiv P Q).symm c))
-    simp only [modComp_evenMap_apply] at key
-    rw [whiskerRight_evenMap_tmulOO, modAssoc_evenMap_eo,
-      whiskerLeft_evenMap_tmulEE (pointBaseMu P N Q)
-        (M.tensor (pointMod P))] at key
-    simp only [svComp_evenMap_apply, svComp_oddMap_apply,
-      svWhiskerRight_evenMap_inl, svWhiskerRight_evenMap_inr,
-      svWhiskerRight_oddMap_inl, svWhiskerRight_oddMap_inr,
-      svWhiskerLeft_evenMap_inl, svWhiskerLeft_evenMap_inr,
-      svWhiskerLeft_oddMap_inl, svWhiskerLeft_oddMap_inr,
-      svAssoc_evenMap_ee, svAssoc_evenMap_oo, svAssoc_evenMap_eo,
-      svAssoc_evenMap_oe, svAssoc_oddMap_ee, svAssoc_oddMap_oo,
-      svAssoc_oddMap_eo, svAssoc_oddMap_oe,
-      superVectMu_evenMap_ee, superVectMu_evenMap_oo,
-      superVectMu_oddMap_eo, superVectMu_oddMap_oe,
-      superVectHom_evenMap_apply, superVectHom_oddMap_apply,
-      LinearEquiv.symm_apply_apply]
-    rw [key, superVectMu_evenMap_ee,
-      LinearEquiv.symm_apply_apply]
-    rfl
-  · have key := LinearMap.congr_fun (congrArg
-      SuperCommAlgebra.Mod.Hom.evenMap
-      (pointBaseMu_associativity P M N Q))
-      (tmulOO ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
-        (Q.tensor (pointMod P))
-        (tmulOE (M.tensor (pointMod P)) (N.tensor (pointMod P))
-          ((toSuperVectOddEquiv P M).symm a)
-          ((toSuperVectEvenEquiv P N).symm b))
-        ((toSuperVectOddEquiv P Q).symm c))
-    simp only [modComp_evenMap_apply] at key
-    rw [whiskerRight_evenMap_tmulOO, modAssoc_evenMap_oe,
-      whiskerLeft_evenMap_tmulOO (pointBaseMu P N Q)
-        (M.tensor (pointMod P))] at key
-    simp only [svComp_evenMap_apply, svComp_oddMap_apply,
-      svWhiskerRight_evenMap_inl, svWhiskerRight_evenMap_inr,
-      svWhiskerRight_oddMap_inl, svWhiskerRight_oddMap_inr,
-      svWhiskerLeft_evenMap_inl, svWhiskerLeft_evenMap_inr,
-      svWhiskerLeft_oddMap_inl, svWhiskerLeft_oddMap_inr,
-      svAssoc_evenMap_ee, svAssoc_evenMap_oo, svAssoc_evenMap_eo,
-      svAssoc_evenMap_oe, svAssoc_oddMap_ee, svAssoc_oddMap_oo,
-      svAssoc_oddMap_eo, svAssoc_oddMap_oe,
-      superVectMu_evenMap_ee, superVectMu_evenMap_oo,
-      superVectMu_oddMap_eo, superVectMu_oddMap_oe,
-      superVectHom_evenMap_apply, superVectHom_oddMap_apply,
-      LinearEquiv.symm_apply_apply]
-    rw [key, superVectMu_evenMap_oo,
-      LinearEquiv.symm_apply_apply]
-    rfl
-  · have key := LinearMap.congr_fun (congrArg
-      SuperCommAlgebra.Mod.Hom.oddMap
-      (pointBaseMu_associativity P M N Q))
-      (tmulEO ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
-        (Q.tensor (pointMod P))
-        (tmulEE (M.tensor (pointMod P)) (N.tensor (pointMod P))
-          ((toSuperVectEvenEquiv P M).symm a)
-          ((toSuperVectEvenEquiv P N).symm b))
-        ((toSuperVectOddEquiv P Q).symm c))
-    simp only [modComp_oddMap_apply] at key
-    rw [whiskerRight_oddMap_tmulEO, modAssoc_oddMap_ee,
-      whiskerLeft_oddMap_tmulEO (pointBaseMu P N Q)
-        (M.tensor (pointMod P))] at key
-    simp only [svComp_evenMap_apply, svComp_oddMap_apply,
-      svWhiskerRight_evenMap_inl, svWhiskerRight_evenMap_inr,
-      svWhiskerRight_oddMap_inl, svWhiskerRight_oddMap_inr,
-      svWhiskerLeft_evenMap_inl, svWhiskerLeft_evenMap_inr,
-      svWhiskerLeft_oddMap_inl, svWhiskerLeft_oddMap_inr,
-      svAssoc_evenMap_ee, svAssoc_evenMap_oo, svAssoc_evenMap_eo,
-      svAssoc_evenMap_oe, svAssoc_oddMap_ee, svAssoc_oddMap_oo,
-      svAssoc_oddMap_eo, svAssoc_oddMap_oe,
-      superVectMu_evenMap_ee, superVectMu_evenMap_oo,
-      superVectMu_oddMap_eo, superVectMu_oddMap_oe,
-      superVectHom_evenMap_apply, superVectHom_oddMap_apply,
-      LinearEquiv.symm_apply_apply]
-    rw [key, superVectMu_oddMap_eo,
-      LinearEquiv.symm_apply_apply]
-    rfl
-  · have key := LinearMap.congr_fun (congrArg
-      SuperCommAlgebra.Mod.Hom.oddMap
-      (pointBaseMu_associativity P M N Q))
-      (tmulEO ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
-        (Q.tensor (pointMod P))
-        (tmulOO (M.tensor (pointMod P)) (N.tensor (pointMod P))
-          ((toSuperVectOddEquiv P M).symm a)
-          ((toSuperVectOddEquiv P N).symm b))
-        ((toSuperVectOddEquiv P Q).symm c))
-    simp only [modComp_oddMap_apply] at key
-    rw [whiskerRight_oddMap_tmulEO, modAssoc_oddMap_oo,
-      whiskerLeft_oddMap_tmulOE (pointBaseMu P N Q)
-        (M.tensor (pointMod P))] at key
-    simp only [svComp_evenMap_apply, svComp_oddMap_apply,
-      svWhiskerRight_evenMap_inl, svWhiskerRight_evenMap_inr,
-      svWhiskerRight_oddMap_inl, svWhiskerRight_oddMap_inr,
-      svWhiskerLeft_evenMap_inl, svWhiskerLeft_evenMap_inr,
-      svWhiskerLeft_oddMap_inl, svWhiskerLeft_oddMap_inr,
-      svAssoc_evenMap_ee, svAssoc_evenMap_oo, svAssoc_evenMap_eo,
-      svAssoc_evenMap_oe, svAssoc_oddMap_ee, svAssoc_oddMap_oo,
-      svAssoc_oddMap_eo, svAssoc_oddMap_oe,
-      superVectMu_evenMap_ee, superVectMu_evenMap_oo,
-      superVectMu_oddMap_eo, superVectMu_oddMap_oe,
-      superVectHom_evenMap_apply, superVectHom_oddMap_apply,
-      LinearEquiv.symm_apply_apply]
-    rw [key, superVectMu_oddMap_oe,
-      LinearEquiv.symm_apply_apply]
-    rfl
-  · have key := LinearMap.congr_fun (congrArg
-      SuperCommAlgebra.Mod.Hom.oddMap
-      (pointBaseMu_associativity P M N Q))
-      (tmulOE ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
-        (Q.tensor (pointMod P))
-        (tmulEO (M.tensor (pointMod P)) (N.tensor (pointMod P))
-          ((toSuperVectEvenEquiv P M).symm a)
-          ((toSuperVectOddEquiv P N).symm b))
-        ((toSuperVectEvenEquiv P Q).symm c))
-    simp only [modComp_oddMap_apply] at key
-    rw [whiskerRight_oddMap_tmulOE, modAssoc_oddMap_eo,
-      whiskerLeft_oddMap_tmulEO (pointBaseMu P N Q)
-        (M.tensor (pointMod P))] at key
-    simp only [svComp_evenMap_apply, svComp_oddMap_apply,
-      svWhiskerRight_evenMap_inl, svWhiskerRight_evenMap_inr,
-      svWhiskerRight_oddMap_inl, svWhiskerRight_oddMap_inr,
-      svWhiskerLeft_evenMap_inl, svWhiskerLeft_evenMap_inr,
-      svWhiskerLeft_oddMap_inl, svWhiskerLeft_oddMap_inr,
-      svAssoc_evenMap_ee, svAssoc_evenMap_oo, svAssoc_evenMap_eo,
-      svAssoc_evenMap_oe, svAssoc_oddMap_ee, svAssoc_oddMap_oo,
-      svAssoc_oddMap_eo, svAssoc_oddMap_oe,
-      superVectMu_evenMap_ee, superVectMu_evenMap_oo,
-      superVectMu_oddMap_eo, superVectMu_oddMap_oe,
-      superVectHom_evenMap_apply, superVectHom_oddMap_apply,
-      LinearEquiv.symm_apply_apply]
-    rw [key, superVectMu_oddMap_eo,
-      LinearEquiv.symm_apply_apply]
-    rfl
-  · have key := LinearMap.congr_fun (congrArg
-      SuperCommAlgebra.Mod.Hom.oddMap
-      (pointBaseMu_associativity P M N Q))
-      (tmulOE ((M.tensor (pointMod P)).tensor (N.tensor (pointMod P)))
-        (Q.tensor (pointMod P))
-        (tmulOE (M.tensor (pointMod P)) (N.tensor (pointMod P))
-          ((toSuperVectOddEquiv P M).symm a)
-          ((toSuperVectEvenEquiv P N).symm b))
-        ((toSuperVectEvenEquiv P Q).symm c))
-    simp only [modComp_oddMap_apply] at key
-    rw [whiskerRight_oddMap_tmulOE, modAssoc_oddMap_oe,
-      whiskerLeft_oddMap_tmulOE (pointBaseMu P N Q)
-        (M.tensor (pointMod P))] at key
-    simp only [svComp_evenMap_apply, svComp_oddMap_apply,
-      svWhiskerRight_evenMap_inl, svWhiskerRight_evenMap_inr,
-      svWhiskerRight_oddMap_inl, svWhiskerRight_oddMap_inr,
-      svWhiskerLeft_evenMap_inl, svWhiskerLeft_evenMap_inr,
-      svWhiskerLeft_oddMap_inl, svWhiskerLeft_oddMap_inr,
-      svAssoc_evenMap_ee, svAssoc_evenMap_oo, svAssoc_evenMap_eo,
-      svAssoc_evenMap_oe, svAssoc_oddMap_ee, svAssoc_oddMap_oo,
-      svAssoc_oddMap_eo, svAssoc_oddMap_oe,
-      superVectMu_evenMap_ee, superVectMu_evenMap_oo,
-      superVectMu_oddMap_eo, superVectMu_oddMap_oe,
-      superVectHom_evenMap_apply, superVectHom_oddMap_apply,
-      LinearEquiv.symm_apply_apply]
-    rw [key, superVectMu_oddMap_oe,
-      LinearEquiv.symm_apply_apply]
-    rfl
+  exact SuperVect.hom_ext (superVectMu_associativity_evenMap P M N Q)
+    (superVectMu_associativity_oddMap P M N Q)
 
 end SuperVectAssoc
 
@@ -524,7 +537,7 @@ variable {S : SuperCommAlgebra.{u, u}} (P : SuperPoint S)
 theorem pointEven_eq_smul_one (a : (pointMod P : S.Mod.{u, u, u, u}).even) :
     a = a.down • pointOne P :=
   ULift.ext _ _ (by
-    show a.down = a.down * 1
+    change a.down = a.down * 1
     rw [mul_one])
 
 /-- The unit of the residue module is idempotent. -/
@@ -532,7 +545,7 @@ theorem pointOne_mul_self :
     (ULift.up ((pointOne P).down * (pointOne P).down) :
       (pointMod P : S.Mod.{u, u, u, u}).even) = pointOne P :=
   ULift.ext _ _ (by
-    show (1 : ℂ) * 1 = 1
+    change (1 : ℂ) * 1 = 1
     rw [one_mul])
 
 variable {M N}
@@ -565,7 +578,7 @@ theorem superVectMuEvenRaw_baseNuEven (w : ((M.tensor N).tensor (pointMod P) :
     (pointMod P) ((superVectMuEvenRaw P M N).comp
       (baseNuEven P M N)) LinearMap.id (fun t a => ?_)
     (fun t v => ?_)) w
-  · show superVectMuEvenRaw P M N
+  · change superVectMuEvenRaw P M N
         (baseNuEven P M N (tmulEE (M.tensor N) (pointMod P) t a))
       = tmulEE (M.tensor N) (pointMod P) t a
     rw [baseNuEven_tmulEE]
@@ -574,24 +587,24 @@ theorem superVectMuEvenRaw_baseNuEven (w : ((M.tensor N).tensor (pointMod P) :
         ((baseNuInnerEven P M N).flip a))
       ((tmulEE (M.tensor N) (pointMod P)).flip a)
       (fun m n => ?_) (fun m n => ?_)) t
-    · show superVectMuEvenRaw P M N (baseNuFee P M N m n a) = _
+    · change superVectMuEvenRaw P M N (baseNuFee P M N m n a) = _
       rw [baseNuFee_apply, map_smul]
-      show a.down • (pointBaseMu P M N).evenMap
+      change a.down • (pointBaseMu P M N).evenMap
         (tmulEE (M.tensor (pointMod P)) (N.tensor (pointMod P))
           (tmulEE M (pointMod P) m (pointOne P))
           (tmulEE N (pointMod P) n (pointOne P))) = _
       rw [pointBaseMu_evenMap_ee, pointOne_mul_self, ← map_smul]
       exact congrArg _ (pointEven_eq_smul_one P a).symm
-    · show superVectMuEvenRaw P M N (baseNuFoo P M N m n a) = _
+    · change superVectMuEvenRaw P M N (baseNuFoo P M N m n a) = _
       rw [baseNuFoo_apply, map_smul]
-      show a.down • (pointBaseMu P M N).evenMap
+      change a.down • (pointBaseMu P M N).evenMap
         (tmulOO (M.tensor (pointMod P)) (N.tensor (pointMod P))
           (tmulOE M (pointMod P) m (pointOne P))
           (tmulOE N (pointMod P) n (pointOne P))) = _
       rw [pointBaseMu_evenMap_oo, pointOne_mul_self, ← map_smul]
       exact congrArg _ (pointEven_eq_smul_one P a).symm
   · rw [pointMod_odd_eq_zero P v, map_zero]
-    show superVectMuEvenRaw P M N (baseNuEven P M N 0) = 0
+    change superVectMuEvenRaw P M N (baseNuEven P M N 0) = 0
     rw [map_zero, map_zero]
 
 /-- **The comparison undoes the inverse**, in odd degree. -/
@@ -603,9 +616,9 @@ theorem superVectMuOddRaw_baseNuOdd (w : ((M.tensor N).tensor (pointMod P) :
       (baseNuOdd P M N)) LinearMap.id (fun t v => ?_)
     (fun t a => ?_)) w
   · rw [pointMod_odd_eq_zero P v, map_zero]
-    show superVectMuOddRaw P M N (baseNuOdd P M N 0) = 0
+    change superVectMuOddRaw P M N (baseNuOdd P M N 0) = 0
     rw [map_zero, map_zero]
-  · show superVectMuOddRaw P M N
+  · change superVectMuOddRaw P M N
         (baseNuOdd P M N (tmulOE (M.tensor N) (pointMod P) t a))
       = tmulOE (M.tensor N) (pointMod P) t a
     rw [baseNuOdd_tmulOE]
@@ -614,17 +627,17 @@ theorem superVectMuOddRaw_baseNuOdd (w : ((M.tensor N).tensor (pointMod P) :
         ((baseNuInnerOdd P M N).flip a))
       ((tmulOE (M.tensor N) (pointMod P)).flip a)
       (fun m n => ?_) (fun m n => ?_)) t
-    · show superVectMuOddRaw P M N (baseNuFeo P M N m n a) = _
+    · change superVectMuOddRaw P M N (baseNuFeo P M N m n a) = _
       rw [baseNuFeo_apply, map_smul]
-      show a.down • (pointBaseMu P M N).oddMap
+      change a.down • (pointBaseMu P M N).oddMap
         (tmulEO (M.tensor (pointMod P)) (N.tensor (pointMod P))
           (tmulEE M (pointMod P) m (pointOne P))
           (tmulOE N (pointMod P) n (pointOne P))) = _
       rw [pointBaseMu_oddMap_eo, pointOne_mul_self, ← map_smul]
       exact congrArg _ (pointEven_eq_smul_one P a).symm
-    · show superVectMuOddRaw P M N (baseNuFoe P M N m n a) = _
+    · change superVectMuOddRaw P M N (baseNuFoe P M N m n a) = _
       rw [baseNuFoe_apply, map_smul]
-      show a.down • (pointBaseMu P M N).oddMap
+      change a.down • (pointBaseMu P M N).oddMap
         (tmulOE (M.tensor (pointMod P)) (N.tensor (pointMod P))
           (tmulOE M (pointMod P) m (pointOne P))
           (tmulEE N (pointMod P) n (pointOne P))) = _
@@ -669,14 +682,14 @@ theorem baseNuEven_muRaw_inl :
     (fun m v => ?_)
   · refine liftEven_unique N (pointMod P) _ _ (fun n b => ?_)
       (fun n w => ?_)
-    · show baseNuEven P M N ((pointBaseMu P M N).evenMap
+    · change baseNuEven P M N ((pointBaseMu P M N).evenMap
         (gradedTensorEven (M.tensor (pointMod P))
           (N.tensor (pointMod P))
           (tmulEE M (pointMod P) m a ⊗ₜ[ℂ]
             tmulEE N (pointMod P) n b, 0))) = _
       rw [gradedTensorEven_ee, pointBaseMu_evenMap_ee]
       erw [baseNuEven_tmulEE, baseNuInnerEven_tmulEE, baseNuFee_apply]
-      show (a.down * b.down) • _ = _
+      change (a.down * b.down) • _ = _
       rw [tmulEE_point_eq_smul P m a, tmulEE_point_eq_smul P n b]
       exact smulPairInl _ _ _ _
     · rw [pointMod_odd_eq_zero P w, map_zero, map_zero, map_zero]
@@ -698,14 +711,14 @@ theorem baseNuEven_muRaw_inr :
   · refine liftOdd_unique N (pointMod P) _ _ (fun n w => ?_)
       (fun n b => ?_)
     · rw [pointMod_odd_eq_zero P w, map_zero, map_zero, map_zero]
-    · show baseNuEven P M N ((pointBaseMu P M N).evenMap
+    · change baseNuEven P M N ((pointBaseMu P M N).evenMap
         (gradedTensorEven (M.tensor (pointMod P))
           (N.tensor (pointMod P))
           (0, tmulOE M (pointMod P) m a ⊗ₜ[ℂ]
             tmulOE N (pointMod P) n b))) = _
       rw [gradedTensorEven_oo, pointBaseMu_evenMap_oo]
       erw [baseNuEven_tmulEE, baseNuInnerEven_tmulOO, baseNuFoo_apply]
-      show (a.down * b.down) • _ = _
+      change (a.down * b.down) • _ = _
       rw [tmulOE_point_eq_smul P m a, tmulOE_point_eq_smul P n b]
       exact smulPairInr _ _ _ _
 
@@ -724,14 +737,14 @@ theorem baseNuOdd_muRaw_inl :
   · refine liftOdd_unique N (pointMod P) _ _ (fun n w => ?_)
       (fun n b => ?_)
     · rw [pointMod_odd_eq_zero P w, map_zero, map_zero, map_zero]
-    · show baseNuOdd P M N ((pointBaseMu P M N).oddMap
+    · change baseNuOdd P M N ((pointBaseMu P M N).oddMap
         (gradedTensorOdd (M.tensor (pointMod P))
           (N.tensor (pointMod P))
           (tmulEE M (pointMod P) m a ⊗ₜ[ℂ]
             tmulOE N (pointMod P) n b, 0))) = _
       rw [gradedTensorOdd_eo, pointBaseMu_oddMap_eo]
       erw [baseNuOdd_tmulOE, baseNuInnerOdd_tmulEO, baseNuFeo_apply]
-      show (a.down * b.down) • _ = _
+      change (a.down * b.down) • _ = _
       rw [tmulEE_point_eq_smul P m a, tmulOE_point_eq_smul P n b]
       exact smulPairInl _ _ _ _
   · rw [pointMod_odd_eq_zero P v, map_zero, map_zero, map_zero]
@@ -751,14 +764,14 @@ theorem baseNuOdd_muRaw_inr :
   · rw [pointMod_odd_eq_zero P v, map_zero, map_zero, map_zero]
   · refine liftEven_unique N (pointMod P) _ _ (fun n b => ?_)
       (fun n w => ?_)
-    · show baseNuOdd P M N ((pointBaseMu P M N).oddMap
+    · change baseNuOdd P M N ((pointBaseMu P M N).oddMap
         (gradedTensorOdd (M.tensor (pointMod P))
           (N.tensor (pointMod P))
           (0, tmulOE M (pointMod P) m a ⊗ₜ[ℂ]
             tmulEE N (pointMod P) n b))) = _
       rw [gradedTensorOdd_oe, pointBaseMu_oddMap_oe]
       erw [baseNuOdd_tmulOE, baseNuInnerOdd_tmulOE, baseNuFoe_apply]
-      show (a.down * b.down) • _ = _
+      change (a.down * b.down) • _ = _
       rw [tmulOE_point_eq_smul P m a, tmulEE_point_eq_smul P n b]
       exact smulPairInr _ _ _ _
     · rw [pointMod_odd_eq_zero P w, map_zero, map_zero, map_zero]
@@ -963,23 +976,23 @@ theorem unitTensorPoint_superVectEpsRaw (c : ℂ) :
   have h1 : (pointBaseEps P).evenMap (c • S.one) =
       tmulEE (S.unitMod : S.Mod.{u, u, u, u}) (pointMod P)
         (c • S.one) (pointOne P) := by
-    show (SuperCommAlgebra.Mod.tensorHom (𝟙 S.unitMod)
+    change (SuperCommAlgebra.Mod.tensorHom (𝟙 S.unitMod)
         (pointUnitHom P)).evenMap
       ((rightUnitorInv (S.unitMod : S.Mod.{u, u, u, u})).evenMap
         (c • S.one)) = _
     rw [rightUnitorInv_evenMap, tensorHom_evenMap_tmulEE,
       pointUnitHom_evenMap]
-    show tmulEE (S.unitMod : S.Mod.{u, u, u, u}) (pointMod P)
+    change tmulEE (S.unitMod : S.Mod.{u, u, u, u}) (pointMod P)
       (LinearMap.id (c • S.one)) (ULift.up (P.chi 1)) = _
     rw [map_one]
     rfl
-  show (leftUnitorHom (pointMod P)).evenMap
+  change (leftUnitorHom (pointMod P)).evenMap
     ((pointBaseEps P).evenMap (c • S.one)) = _
   rw [h1, leftUnitorHom_evenMap_tmulEE]
   refine ULift.ext _ _ ?_
-  show P.chi (c • S.one) * 1 = c
+  change P.chi (c • S.one) * 1 = c
   rw [mul_one, map_smul]
-  show c * P.chi 1 = c
+  change c * P.chi 1 = c
   rw [map_one, mul_one]
 
 /-- **The raw unit comparison is bijective.** -/
@@ -1036,7 +1049,7 @@ theorem superVectEps_oddMap_bijective
     [FiniteDimensional ℂ ((S.unitMod : S.Mod.{u, u, u, u}).tensor (pointMod
       P)).odd] :
     Function.Bijective (superVectEps P).oddMap := by
-  haveI : Subsingleton (𝟙_ SuperVect).odd :=
+  have : Subsingleton (𝟙_ SuperVect).odd :=
     (inferInstance : Subsingleton PUnit.{1})
   exact ⟨fun _ _ _ => Subsingleton.elim _ _,
     fun y => ⟨0, Subsingleton.elim _ y⟩⟩
@@ -1092,7 +1105,7 @@ theorem superVectMu_left_unitality
       (superVectEps P ▷ toSuperVect P M) ≫
         superVectMu P S.unitMod M ≫
         superVectHom P (λ_ M).hom := by
-  haveI : Subsingleton (𝟙_ SuperVect).odd :=
+  have : Subsingleton (𝟙_ SuperVect).odd :=
     (inferInstance : Subsingleton PUnit.{1})
   refine SuperVect.hom_ext
     (superVectPairEven_ext (fun r x => ?_) (fun u y => ?_))
@@ -1148,7 +1161,7 @@ theorem superVectMu_right_unitality
       (toSuperVect P M ◁ superVectEps P) ≫
         superVectMu P M S.unitMod ≫
         superVectHom P (ρ_ M).hom := by
-  haveI : Subsingleton (𝟙_ SuperVect).odd :=
+  have : Subsingleton (𝟙_ SuperVect).odd :=
     (inferInstance : Subsingleton PUnit.{1})
   refine SuperVect.hom_ext
     (superVectPairEven_ext (fun x r => ?_) (fun y u => ?_))

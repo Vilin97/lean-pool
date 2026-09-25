@@ -62,7 +62,7 @@ theorem scalarTrace_comp_comm
     (h : HasScalarUnit C) {X Y : C}
     (f : X ⟶ Y) (g : Y ⟶ X) :
     scalarTrace h X (f ≫ g) = scalarTrace h Y (g ≫ f) := by
-  show unitScalar h (catTrace (f ≫ g)) = unitScalar h (catTrace (g ≫ f))
+  change unitScalar h (catTrace (f ≫ g)) = unitScalar h (catTrace (g ≫ f))
   rw [catTrace_comp_comm]
 
 end RS

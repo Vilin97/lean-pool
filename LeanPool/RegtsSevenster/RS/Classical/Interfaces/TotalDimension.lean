@@ -46,7 +46,7 @@ private theorem stdOmegaIso_perm {R k ℓ : ℕ}
     (stdOmegaIso f P e n).hom ≫
       P.ω.map (permClass f n σ) ≫ (stdOmegaIso f P e n).inv =
       modelPermMap σ := by
-  letI := P.braided
+  let := P.braided
   change stdToOmega f P e.hom n ≫ P.ω.map (permClass f n σ) ≫
     stdFromOmega f P e.inv n = _
   rw [permClass_eq_bundleMapClass, ← Category.assoc,
@@ -62,9 +62,9 @@ theorem stdModel_pow_le_connectionRank {R k ℓ : ℕ}
     (k + 2 * ℓ) ^ (2 * n) ≤ connectionRank f.val (2 * n) *
       (n + 1) ^ (2 * (k + 2 * ℓ) ^ 2) := by
   classical
-  letI := P.additive
-  letI := P.linear
-  letI := P.braided
+  let := P.additive
+  let := P.linear
+  let := P.braided
   let C := MixedColouring k ℓ n → ℂ
   let c : Tot (P.ω.obj (SkeinObj.mk n)) ≃ₗ[ℂ] C :=
     (totIso (stdOmegaIso f P e n)).symm.trans (colourTotalEquiv k ℓ n)

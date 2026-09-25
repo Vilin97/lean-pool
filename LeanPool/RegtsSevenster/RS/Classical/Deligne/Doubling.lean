@@ -1078,6 +1078,22 @@ end UnitAndStruct
 
 section MonoidalPreadditive
 
+private theorem doubled_whiskerLeft_zero
+    [Category.{v} A] [MonoidalCategory A] [Preadditive A]
+    [MonoidalPreadditive A] [HasBinaryBiproducts A] [HasZeroObject A]
+    (X Y Z : Doubled A) : X ◁ (0 : Y ⟶ Z) = 0 := by
+  ext
+  · change biprod.map (X.even ◁ (0 : Y.even ⟶ Z.even))
+        (X.odd ◁ (0 : Y.odd ⟶ Z.odd)) =
+      (0 : X.even ⊗ Y.even ⊞ X.odd ⊗ Y.odd ⟶
+        X.even ⊗ Z.even ⊞ X.odd ⊗ Z.odd)
+    apply biprod.hom_ext <;> simp
+  · change biprod.map (X.even ◁ (0 : Y.odd ⟶ Z.odd))
+        (X.odd ◁ (0 : Y.even ⟶ Z.even)) =
+      (0 : X.even ⊗ Y.odd ⊞ X.odd ⊗ Y.even ⟶
+        X.even ⊗ Z.odd ⊞ X.odd ⊗ Z.even)
+    apply biprod.hom_ext <;> simp
+
 /-- The doubling of a monoidal preadditive category is monoidal
 preadditive, componentwise.  Each component equation is restated
 (`show`) with its objects in literal biproduct form, so that the
@@ -1086,50 +1102,39 @@ instance instMonoidalPreadditive
     [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     [MonoidalPreadditive A] [HasBinaryBiproducts A] [HasZeroObject A] :
     MonoidalPreadditive (Doubled A) where
-  whiskerLeft_zero {X Y Z} := by
-    ext
-    · show biprod.map (X.even ◁ (0 : Y.even ⟶ Z.even))
-          (X.odd ◁ (0 : Y.odd ⟶ Z.odd)) =
-        (0 : X.even ⊗ Y.even ⊞ X.odd ⊗ Y.odd ⟶
-          X.even ⊗ Z.even ⊞ X.odd ⊗ Z.odd)
-      apply biprod.hom_ext <;> simp
-    · show biprod.map (X.even ◁ (0 : Y.odd ⟶ Z.odd))
-          (X.odd ◁ (0 : Y.even ⟶ Z.even)) =
-        (0 : X.even ⊗ Y.odd ⊞ X.odd ⊗ Y.even ⟶
-          X.even ⊗ Z.odd ⊞ X.odd ⊗ Z.even)
-      apply biprod.hom_ext <;> simp
+  whiskerLeft_zero := doubled_whiskerLeft_zero _ _ _
   zero_whiskerRight {X Y Z} := by
     ext
-    · show biprod.map ((0 : Y.even ⟶ Z.even) ▷ X.even)
+    · change biprod.map ((0 : Y.even ⟶ Z.even) ▷ X.even)
           ((0 : Y.odd ⟶ Z.odd) ▷ X.odd) =
         (0 : Y.even ⊗ X.even ⊞ Y.odd ⊗ X.odd ⟶
           Z.even ⊗ X.even ⊞ Z.odd ⊗ X.odd)
       apply biprod.hom_ext <;> simp
-    · show biprod.map ((0 : Y.even ⟶ Z.even) ▷ X.odd)
+    · change biprod.map ((0 : Y.even ⟶ Z.even) ▷ X.odd)
           ((0 : Y.odd ⟶ Z.odd) ▷ X.even) =
         (0 : Y.even ⊗ X.odd ⊞ Y.odd ⊗ X.even ⟶
           Z.even ⊗ X.odd ⊞ Z.odd ⊗ X.even)
       apply biprod.hom_ext <;> simp
   whiskerLeft_add {X Y Z} f g := by
     ext
-    · show biprod.map (X.even ◁ (evenHom f + evenHom g))
+    · change biprod.map (X.even ◁ (evenHom f + evenHom g))
           (X.odd ◁ (oddHom f + oddHom g)) =
         biprod.map (X.even ◁ evenHom f) (X.odd ◁ oddHom f) +
           biprod.map (X.even ◁ evenHom g) (X.odd ◁ oddHom g)
       apply biprod.hom_ext <;> simp
-    · show biprod.map (X.even ◁ (oddHom f + oddHom g))
+    · change biprod.map (X.even ◁ (oddHom f + oddHom g))
           (X.odd ◁ (evenHom f + evenHom g)) =
         biprod.map (X.even ◁ oddHom f) (X.odd ◁ evenHom f) +
           biprod.map (X.even ◁ oddHom g) (X.odd ◁ evenHom g)
       apply biprod.hom_ext <;> simp
   add_whiskerRight {X Y Z} f g := by
     ext
-    · show biprod.map ((evenHom f + evenHom g) ▷ X.even)
+    · change biprod.map ((evenHom f + evenHom g) ▷ X.even)
           ((oddHom f + oddHom g) ▷ X.odd) =
         biprod.map (evenHom f ▷ X.even) (oddHom f ▷ X.odd) +
           biprod.map (evenHom g ▷ X.even) (oddHom g ▷ X.odd)
       apply biprod.hom_ext <;> simp
-    · show biprod.map ((evenHom f + evenHom g) ▷ X.odd)
+    · change biprod.map ((evenHom f + evenHom g) ▷ X.odd)
           ((oddHom f + oddHom g) ▷ X.even) =
         biprod.map (evenHom f ▷ X.odd) (oddHom f ▷ X.even) +
           biprod.map (evenHom g ▷ X.odd) (oddHom g ▷ X.even)
@@ -1144,21 +1149,21 @@ instance instMonoidalLinear
     [MonoidalLinear ℂ A] : MonoidalLinear ℂ (Doubled A) where
   whiskerLeft_smul X {Y Z} r f := by
     ext
-    · show biprod.map (X.even ◁ (r • evenHom f))
+    · change biprod.map (X.even ◁ (r • evenHom f))
           (X.odd ◁ (r • oddHom f)) =
         r • biprod.map (X.even ◁ evenHom f) (X.odd ◁ oddHom f)
       apply biprod.hom_ext <;> simp
-    · show biprod.map (X.even ◁ (r • oddHom f))
+    · change biprod.map (X.even ◁ (r • oddHom f))
           (X.odd ◁ (r • evenHom f)) =
         r • biprod.map (X.even ◁ oddHom f) (X.odd ◁ evenHom f)
       apply biprod.hom_ext <;> simp
   smul_whiskerRight r {Y Z} f X := by
     ext
-    · show biprod.map ((r • evenHom f) ▷ X.even)
+    · change biprod.map ((r • evenHom f) ▷ X.even)
           ((r • oddHom f) ▷ X.odd) =
         r • biprod.map (evenHom f ▷ X.even) (oddHom f ▷ X.odd)
       apply biprod.hom_ext <;> simp
-    · show biprod.map ((r • evenHom f) ▷ X.odd)
+    · change biprod.map ((r • evenHom f) ▷ X.odd)
           ((r • oddHom f) ▷ X.even) =
         r • biprod.map (evenHom f ▷ X.odd) (oddHom f ▷ X.even)
       apply biprod.hom_ext <;> simp
@@ -1208,29 +1213,29 @@ instance instBraidedCategory
     ext
     · apply biprod.hom_ext'
       · apply tensorRight_ext
-        · simp [braidingEven, braidingOdd, assocEven, assocOdd]
-        · simp [braidingEven, braidingOdd, assocEven, assocOdd,
+        · simp [braidingEven, braidingOdd, assocEven]
+        · simp [braidingEven, braidingOdd, assocEven,
             Preadditive.neg_comp, Preadditive.comp_neg]
       · apply tensorRight_ext
-        · simp [braidingEven, braidingOdd, assocEven, assocOdd]
-        · simp [braidingEven, braidingOdd, assocEven, assocOdd,
+        · simp [braidingEven, braidingOdd, assocEven]
+        · simp [braidingEven, braidingOdd, assocEven,
             Preadditive.neg_comp, Preadditive.comp_neg]
     · apply biprod.hom_ext' <;> apply tensorRight_ext <;>
-        simp [braidingEven, braidingOdd, assocEven, assocOdd,
+        simp [braidingEven, braidingOdd,  assocOdd,
           Preadditive.neg_comp, Preadditive.comp_neg]
   hexagon_reverse X Y Z := by
     ext
     · apply biprod.hom_ext'
       · apply tensorLeft_ext
-        · simp [braidingEven, braidingOdd, assocEven, assocOdd]
-        · simp [braidingEven, braidingOdd, assocEven, assocOdd,
+        · simp [braidingEven, braidingOdd, assocEven]
+        · simp [braidingEven, braidingOdd, assocEven,
             Preadditive.neg_comp, Preadditive.comp_neg]
       · apply tensorLeft_ext
-        · simp [braidingEven, braidingOdd, assocEven, assocOdd,
+        · simp [braidingEven, braidingOdd, assocEven,
             Preadditive.neg_comp, Preadditive.comp_neg]
-        · simp [braidingEven, braidingOdd, assocEven, assocOdd]
+        · simp [braidingEven, braidingOdd, assocEven]
     · apply biprod.hom_ext' <;> apply tensorLeft_ext <;>
-        simp [braidingEven, braidingOdd, assocEven, assocOdd,
+        simp [braidingEven, braidingOdd,  assocOdd,
           Preadditive.neg_comp, Preadditive.comp_neg]
 
 /-- The doubling of a symmetric category is symmetric: the Koszul
@@ -1241,13 +1246,13 @@ instance instSymmetricCategory
     [SymmetricCategory A] : SymmetricCategory (Doubled A) where
   symmetry X Y := by
     ext
-    · show biprod.map (β_ X.even Y.even).hom
+    · change biprod.map (β_ X.even Y.even).hom
           (-(β_ X.odd Y.odd).hom) ≫
         biprod.map (β_ Y.even X.even).hom
           (-(β_ Y.odd X.odd).hom) =
         𝟙 (X.even ⊗ Y.even ⊞ X.odd ⊗ Y.odd)
       apply biprod.hom_ext <;> simp
-    · show biprod.desc ((β_ X.even Y.odd).hom ≫ biprod.inr)
+    · change biprod.desc ((β_ X.even Y.odd).hom ≫ biprod.inr)
           ((β_ X.odd Y.even).hom ≫ biprod.inl) ≫
         biprod.desc ((β_ Y.even X.odd).hom ≫ biprod.inr)
           ((β_ Y.odd X.even).hom ≫ biprod.inl) =
@@ -1344,7 +1349,7 @@ theorem evenEmbedTensorIso_braided
         (evenEmbedTensorIso Y X).hom =
       (evenEmbedTensorIso X Y).hom ≫ evenEmbed.map (β_ X Y).hom := by
   ext
-  · show biprod.map (β_ X Y).hom (-(β_ (0 : A) (0 : A)).hom) ≫
+  · change biprod.map (β_ X Y).hom (-(β_ (0 : A) (0 : A)).hom) ≫
         biprod.fst = biprod.fst ≫ (β_ X Y).hom
     simp
 
@@ -1399,7 +1404,7 @@ theorem braiding_oddUnit [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     [SymmetricCategory A] :
     (β_ (oddUnit (A := A)) oddUnit).hom = -𝟙 (oddUnit ⊗ oddUnit) := by
   ext
-  · show biprod.map (β_ (0 : A) (0 : A)).hom
+  · change biprod.map (β_ (0 : A) (0 : A)).hom
         (-(β_ (𝟙_ A) (𝟙_ A)).hom) =
       -𝟙 ((0 : A) ⊗ (0 : A) ⊞ 𝟙_ A ⊗ 𝟙_ A)
     apply biprod.hom_ext
@@ -1433,10 +1438,10 @@ instance instHasBinaryBiproducts
   has_binary_biproduct X Y :=
     hasBinaryBiproduct_of_total (binaryBicone X Y) (by
       ext
-      · show biprod.fst ≫ biprod.inl + biprod.snd ≫ biprod.inr =
+      · change biprod.fst ≫ biprod.inl + biprod.snd ≫ biprod.inr =
           𝟙 (X.even ⊞ Y.even)
         exact biprod.total
-      · show biprod.fst ≫ biprod.inl + biprod.snd ≫ biprod.inr =
+      · change biprod.fst ≫ biprod.inl + biprod.snd ≫ biprod.inr =
           𝟙 (X.odd ⊞ Y.odd)
         exact biprod.total)
 
@@ -1468,12 +1473,12 @@ def decomposition [Category.{v} A] [MonoidalCategory A] [Preadditive A]
   hom_inv_id := by
     rw [biprod.lift_desc]
     ext
-    · show 𝟙 X.even ≫ 𝟙 X.even +
+    · change 𝟙 X.even ≫ 𝟙 X.even +
           (0 : X.even ⟶ ((0 : A) ⊗ X.odd ⊞ 𝟙_ A ⊗ (0 : A))) ≫
             (0 : ((0 : A) ⊗ X.odd ⊞ 𝟙_ A ⊗ (0 : A)) ⟶ X.even) =
         𝟙 X.even
       simp
-    · show (0 : X.odd ⟶ (0 : A)) ≫ (0 : (0 : A) ⟶ X.odd) +
+    · change (0 : X.odd ⟶ (0 : A)) ≫ (0 : (0 : A) ⟶ X.odd) +
           ((λ_ X.odd).inv ≫ biprod.inr) ≫
             biprod.desc 0 (λ_ X.odd).hom =
         𝟙 X.odd
@@ -1497,7 +1502,7 @@ def decomposition [Category.{v} A] [MonoidalCategory A] [Preadditive A]
       ext
       · exact (isZero_biprod (isZero_zeroTensor _)
           (isZero_tensorZero _)).eq_of_src _ _
-      · show biprod.desc 0 (λ_ X.odd).hom ≫
+      · change biprod.desc 0 (λ_ X.odd).hom ≫
             (λ_ X.odd).inv ≫ biprod.inr =
           𝟙 ((0 : A) ⊗ (0 : A) ⊞ 𝟙_ A ⊗ X.odd)
         apply biprod.hom_ext'

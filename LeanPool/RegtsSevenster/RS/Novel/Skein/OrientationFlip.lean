@@ -54,7 +54,7 @@ convention).
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type} {W : Fragment α}
 
@@ -165,9 +165,9 @@ noncomputable def flipColouring (o o' : κ.Orientation)
          (if g.val ∈ orientDiff o o' then oddPartner ℓ (φ.val g)
          else φ.val g) := by
        by_cases hg : g.val ∈ orientDiff o o'
-       · rw [if_pos (pairing_mem_orientDiff hpair hg), if_pos hg,
+       · rw [ite_eq_left (pairing_mem_orientDiff hpair hg), ite_eq_left hg,
            φ.prop g]
-       · rw [if_neg (pairing_notMem_orientDiff hpair hg), if_neg hg,
+       · rw [ite_eq_right (pairing_notMem_orientDiff hpair hg), ite_eq_right hg,
            φ.prop g]
      exact hbeta⟩
 
@@ -179,7 +179,7 @@ theorem flipColouring_val_of_mem (o o' : κ.Orientation)
     (g : {g : W.Flag // g ∈ F.coreFlags})
     (hg : g.val ∈ orientDiff o o') :
     (flipColouring o o' hpair φ).val g = oddPartner ℓ (φ.val g) :=
-  if_pos hg
+  ite_eq_left hg
 
 /-- Off it the colouring is unchanged. -/
 theorem flipColouring_val_of_notMem (o o' : κ.Orientation)
@@ -189,7 +189,7 @@ theorem flipColouring_val_of_notMem (o o' : κ.Orientation)
     (g : {g : W.Flag // g ∈ F.coreFlags})
     (hg : g.val ∉ orientDiff o o') :
     (flipColouring o o' hpair φ).val g = φ.val g :=
-  if_neg hg
+  ite_eq_right hg
 
 /-- The flip negates the incoming sign on the difference set: the
 flip colouring is the colour flip on `orientDiff o o'`. -/
@@ -224,13 +224,13 @@ theorem flipColouring_involutive (o o' : κ.Orientation)
   intro φ
   apply Subtype.ext
   funext g
-  show (if g.val ∈ orientDiff o o' then
+  change (if g.val ∈ orientDiff o o' then
       oddPartner ℓ ((flipColouring o o' hpair φ).val g)
     else (flipColouring o o' hpair φ).val g) = φ.val g
   by_cases hg : g.val ∈ orientDiff o o'
-  · rw [if_pos hg, flipColouring_val_of_mem o o' hpair φ g hg,
+  · rw [ite_eq_left hg, flipColouring_val_of_mem o o' hpair φ g hg,
       oddPartner_invol]
-  · rw [if_neg hg, flipColouring_val_of_notMem o o' hpair φ g hg]
+  · rw [ite_eq_right hg, flipColouring_val_of_notMem o o' hpair φ g hg]
 
 /-- The reindexing preserves the odd boundary constraint. -/
 theorem coreOddBoundaryMatch_flipColouring {k ℓ : ℕ}
@@ -371,7 +371,7 @@ private theorem coreOddSignFn_eq {ℓ : ℕ} (φ : F.CoreOddColouring ℓ)
     (f : {f : W.Flag // f ∈ F.internalFlags}) :
     F.coreOddSignFn κ φ f = inSign φ (κ.match_ f.val) := by
   unfold EdgeSubset.coreOddSignFn inSign
-  rw [dif_pos
+  rw [dite_eq_left
     (F.internalFlags_subset_coreFlags (κ.match_mem _ f.prop))]
 
 private theorem coreOddSignAt_eq_prod {ℓ : ℕ} (o : κ.Orientation)
@@ -436,6 +436,7 @@ private theorem coreOddSignAt_flip {ℓ : ℕ} (o o' : κ.Orientation)
 
 /-! ## The global sign telescopes -/
 
+open scoped Classical in
 /-- The difference flags attached to a vertex. -/
 private noncomputable def diffAt (o o' : κ.Orientation)
     (v : W.Vertex) : Finset W.Flag :=
@@ -462,6 +463,7 @@ private theorem diffAt_eq (o o' : κ.Orientation) (v : W.Vertex) :
     diffAt o o' v = (flipIn o o' v).disjUnion
       ((flipIn o o' v).image κ.match_)
       (flipIn_disjoint_image o o' v) := by
+  classical
   apply Finset.ext
   intro g
   rw [Finset.mem_disjUnion]
@@ -496,6 +498,7 @@ private theorem diffAt_eq (o o' : κ.Orientation) (v : W.Vertex) :
 private theorem orientDiff_eq_biUnion (o o' : κ.Orientation) :
     orientDiff o o' =
       Finset.univ.biUnion (fun v => diffAt o o' v) := by
+  classical
   apply Finset.ext
   intro g
   rw [Finset.mem_biUnion]
@@ -510,6 +513,7 @@ private theorem orientDiff_eq_biUnion (o o' : κ.Orientation) :
 private theorem diffAt_pairwiseDisjoint (o o' : κ.Orientation) :
     Set.PairwiseDisjoint (↑(Finset.univ : Finset W.Vertex))
       (fun v => diffAt o o' v) := by
+  classical
   intro v _ w _ hvw
   refine Finset.disjoint_left.mpr (fun g hgv hgw => hvw ?_)
   have h1 := (Finset.mem_filter.mp hgv).2
@@ -634,7 +638,7 @@ private theorem evalOdd_coreOddListAt_flip {k ℓ : ℕ}
             (mem_keepIn.mp (Finset.mem_toList.mp hg)).2
           have hmD : κ.match_ g ∉ orientDiff o o' :=
             match_notMem_orientDiff h₁ hgD
-          show [(flipColouring o o' hpair φ).val
+          change [(flipColouring o o' hpair φ).val
               ⟨g, F.internalFlags_subset_coreFlags h₁⟩,
             oddPartner ℓ ((flipColouring o o' hpair φ).val
               ⟨κ.match_ g, F.internalFlags_subset_coreFlags
@@ -658,7 +662,7 @@ private theorem evalOdd_coreOddListAt_flip {k ℓ : ℕ}
               {g : W.Flag // g ∈ F.coreFlags}) =
               ⟨f, F.internalFlags_subset_coreFlags h₂⟩ :=
             Subtype.ext (κ.match_invol f h₂)
-          show [(flipColouring o o' hpair φ).val
+          change [(flipColouring o o' hpair φ).val
               ⟨κ.match_ f, F.internalFlags_subset_coreFlags h₁⟩,
             oddPartner ℓ ((flipColouring o o' hpair φ).val
               ⟨κ.match_ (κ.match_ f),
@@ -763,6 +767,7 @@ private theorem vertexProd_flip {k ℓ : ℕ} (h : MixedFunctional k ℓ)
   rw [Finset.prod_congr rfl (fun v _ => hv v),
     Finset.prod_mul_distrib, hglobal, one_mul]
 
+open scoped Classical in
 /-- **The colouring-sum identity**: the constrained inner sum over
 core odd colourings is invariant under the orientation flip. -/
 private theorem phiSum_flip {k ℓ : ℕ} (h : MixedFunctional k ℓ)
@@ -783,7 +788,7 @@ private theorem phiSum_flip {k ℓ : ℕ} (h : MixedFunctional k ℓ)
   refine ((Equiv.sum_comp (Function.Involutive.toPerm _
       (flipColouring_involutive o o' hpair (ℓ := ℓ))) _).symm).trans
     (Finset.sum_congr rfl (fun φ _ => ?_))
-  show (if F.coreOddBoundaryMatch st (flipColouring o o' hpair φ)
+  change (if F.coreOddBoundaryMatch st (flipColouring o o' hpair φ)
       then ∏ v : W.Vertex,
         ((F.coreOddSignAt o' (flipColouring o o' hpair φ) v : ℂ) *
           h.evalOdd (μf v)

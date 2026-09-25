@@ -130,12 +130,12 @@ noncomputable def freeModUnitBase
     [Category.{v} D] [MonoidalCategory D] (V : D) :
     freeMod (𝟙_ D) V ≅ unitMod V where
   hom := Mod.Hom.mk' (λ_ V).hom (by
-    show ((α_ (𝟙_ D) (𝟙_ D) V).inv ≫ (λ_ (𝟙_ D)).hom ▷ V) ≫
+    change ((α_ (𝟙_ D) (𝟙_ D) V).inv ≫ (λ_ (𝟙_ D)).hom ▷ V) ≫
         (λ_ V).hom =
       (𝟙_ D) ◁ (λ_ V).hom ≫ (λ_ V).hom
     exact freeModUnitBase_linear V)
   inv := Mod.Hom.mk' (λ_ V).inv (by
-    show (λ_ V).hom ≫ (λ_ V).inv =
+    change (λ_ V).hom ≫ (λ_ V).inv =
       (𝟙_ D) ◁ (λ_ V).inv ≫
         ((α_ (𝟙_ D) (𝟙_ D) V).inv ≫ (λ_ (𝟙_ D)).hom ▷ V)
     exact freeModUnitBase_linear_inv V)
@@ -163,13 +163,13 @@ noncomputable def modBiprodZeroLeft
   inv := modBiprodInr A Z N
   hom_inv_id := by
     apply Mod.Hom.ext
-    show (biprod.snd ≫ biprod.inr : Z.X ⊞ N.X ⟶ _) = 𝟙 _
+    change (biprod.snd ≫ biprod.inr : Z.X ⊞ N.X ⟶ _) = 𝟙 _
     have hfst : (biprod.fst : Z.X ⊞ N.X ⟶ Z.X) = 0 :=
       hZ.eq_of_tgt _ _
     rw [← biprod.total, hfst, Limits.zero_comp, zero_add]
   inv_hom_id := by
     apply Mod.Hom.ext
-    show (biprod.inr ≫ biprod.snd : N.X ⟶ _) = 𝟙 _
+    change (biprod.inr ≫ biprod.snd : N.X ⟶ _) = 𝟙 _
     rw [biprod.inr_snd]
 
 end BiprodZero

@@ -43,11 +43,11 @@ noncomputable def freeModUnitIso
     [Category.{v} D] [MonoidalCategory D] (B : D) [MonObj B] :
     freeMod B (𝟙_ D) ≅ regularMod B where
   hom := Mod.Hom.mk' (ρ_ B).hom (by
-    show ((α_ B B (𝟙_ D)).inv ≫ μ[B] ▷ (𝟙_ D)) ≫
+    change ((α_ B B (𝟙_ D)).inv ≫ μ[B] ▷ (𝟙_ D)) ≫
         (ρ_ B).hom = (B ◁ (ρ_ B).hom) ≫ μ[B]
     exact freeModUnit_linear B)
   inv := Mod.Hom.mk' (ρ_ B).inv (by
-    show μ[B] ≫ (ρ_ B).inv = (B ◁ (ρ_ B).inv) ≫
+    change μ[B] ≫ (ρ_ B).inv = (B ◁ (ρ_ B).inv) ≫
       ((α_ B B (𝟙_ D)).inv ≫ μ[B] ▷ (𝟙_ D))
     refine (cancel_mono (ρ_ B).hom).mp ?_
     refine Eq.trans (Category.assoc _ _ _) ?_
@@ -145,13 +145,13 @@ noncomputable def freeModBiprodIso
     freeMod B (X ⊞ Y) ≅
       modBiprod B (freeMod B X) (freeMod B Y) where
   hom := Mod.Hom.mk' (tensorBiprodIso B X Y).hom (by
-    show ((α_ B B (X ⊞ Y)).inv ≫ μ[B] ▷ (X ⊞ Y)) ≫
+    change ((α_ B B (X ⊞ Y)).inv ≫ μ[B] ▷ (X ⊞ Y)) ≫
         (tensorBiprodIso B X Y).hom =
       (B ◁ (tensorBiprodIso B X Y).hom) ≫
         modBiprodAct B (freeMod B X) (freeMod B Y)
     exact freeModBiprod_linear B X Y)
   inv := Mod.Hom.mk' (tensorBiprodIso B X Y).inv (by
-    show modBiprodAct B (freeMod B X) (freeMod B Y) ≫
+    change modBiprodAct B (freeMod B X) (freeMod B Y) ≫
         (tensorBiprodIso B X Y).inv =
       (B ◁ (tensorBiprodIso B X Y).inv) ≫
         ((α_ B B (X ⊞ Y)).inv ≫ μ[B] ▷ (X ⊞ Y))
@@ -175,12 +175,12 @@ noncomputable def freeModMapIso
   inv := freeModMap B e.inv
   hom_inv_id := by
     apply Mod.Hom.ext
-    show (B ◁ e.hom) ≫ (B ◁ e.inv) = 𝟙 (B ⊗ V)
+    change (B ◁ e.hom) ≫ (B ◁ e.inv) = 𝟙 (B ⊗ V)
     rw [← MonoidalCategory.whiskerLeft_comp, e.hom_inv_id,
       MonoidalCategory.whiskerLeft_id]
   inv_hom_id := by
     apply Mod.Hom.ext
-    show (B ◁ e.inv) ≫ (B ◁ e.hom) = 𝟙 (B ⊗ W)
+    change (B ◁ e.inv) ≫ (B ◁ e.hom) = 𝟙 (B ⊗ W)
     rw [← MonoidalCategory.whiskerLeft_comp, e.inv_hom_id,
       MonoidalCategory.whiskerLeft_id]
 

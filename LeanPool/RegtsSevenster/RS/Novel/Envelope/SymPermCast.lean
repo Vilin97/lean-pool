@@ -48,7 +48,7 @@ noncomputable def whiskerAlg
   map_zero' := MonoidalPreadditive.zero_whiskerRight
   map_add' f g := MonoidalPreadditive.add_whiskerRight f g
   commutes' c := by
-    show (c • 𝟙 P) ▷ X = c • 𝟙 (P ⊗ X)
+    change (c • 𝟙 P) ▷ X = c • 𝟙 (P ⊗ X)
     rw [MonoidalLinear.smul_whiskerRight,
       MonoidalCategory.id_whiskerRight]
 
@@ -115,14 +115,14 @@ theorem permAlg_symCast
       (whiskerPowAlg X m k).comp (permAlg X m) := by
     refine MonoidAlgebra.algHom_ext (R := ℂ) (A := ℂ) (M := Equiv.Perm (Fin m))
       (fun σ => ?_) (by ext)
-    show permAlg X (m + k) (symCast _ (MonoidAlgebra.single σ 1)) =
+    change permAlg X (m + k) (symCast _ (MonoidAlgebra.single σ 1)) =
       whiskerPowAlg X m k (permAlg X m (MonoidAlgebra.single σ 1))
     have hsym : symCast (Nat.le_add_right m k)
         (MonoidAlgebra.single σ (1 : ℂ)) =
         MonoidAlgebra.single
           (σ.viaEmbedding (Fin.castLEEmb (Nat.le_add_right m k)))
           (1 : ℂ) := by
-      show MonoidAlgebra.mapDomain _ (MonoidAlgebra.single σ 1) =
+      change MonoidAlgebra.mapDomain _ (MonoidAlgebra.single σ 1) =
         MonoidAlgebra.single _ 1
       exact MonoidAlgebra.mapDomain_single
     rw [hsym, permAlg_single, permAlg_single]

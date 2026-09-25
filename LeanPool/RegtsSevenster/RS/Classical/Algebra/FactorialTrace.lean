@@ -63,7 +63,7 @@ theorem trace_perm_pow
   by_cases hπ : π = 1
   · subst π
     simp
-  · rw [if_neg hπ]
+  · rw [ite_eq_right hπ]
     have hcycles : π.cycleType ≠ 0 :=
       mt Equiv.Perm.cycleType_eq_zero.mp hπ
     obtain ⟨c, hc⟩ := Multiset.exists_mem_of_ne_zero hcycles

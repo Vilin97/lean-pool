@@ -45,7 +45,7 @@ theorem newtonH_zero_fun (m : ℕ) :
     newtonH (fun _ => (0 : ℂ)) (m + 1) = 0 := by
   rw [newtonH]
   rw [Finset.sum_congr rfl fun i _ => by
-    show (fun _ => (0 : ℂ)) (i + 1) * _ = (0 : ℂ)
+    change (fun _ => (0 : ℂ)) (i + 1) * _ = (0 : ℂ)
     exact zero_mul _]
   rw [Finset.sum_const_zero, mul_zero]
 
@@ -73,7 +73,7 @@ theorem newtonH_alt (t : ℕ → ℂ) :
         rw [← pow_add, ← pow_succ]
         congr 1
         omega
-      show (-1 : ℂ) ^ (i + 1 + 1) * t (i + 1) *
+      change (-1 : ℂ) ^ (i + 1 + 1) * t (i + 1) *
           ((-1) ^ (m - i) * newtonH (fun c => -t c) (m - i)) =
         (-1) ^ (m + 1) *
           (-t (i + 1) * newtonH (fun c => -t c) (m - i))
@@ -212,13 +212,13 @@ noncomputable def negHMat (t : ℕ → ℂ) (n : ℕ) :
 theorem negHMat_det (t : ℕ → ℂ) (n : ℕ) : (negHMat t n).det = 1 := by
   have htri : (negHMat t n).BlockTriangular id := by
     intro i j hij
-    show newtonHZ (fun c => -t c) ((j : ℤ) - (i : ℤ)) = 0
+    change newtonHZ (fun c => -t c) ((j : ℤ) - (i : ℤ)) = 0
     refine newtonHZ_neg _ _ ?_
     have : (j : ℕ) < (i : ℕ) := hij
     omega
-  rw [Matrix.det_of_upperTriangular htri]
+  rw [Matrix.det_of_isUpperTriangular htri]
   refine Finset.prod_eq_one fun i _ => ?_
-  show newtonHZ (fun c => -t c) ((i : ℤ) - (i : ℤ)) = 1
+  change newtonHZ (fun c => -t c) ((i : ℤ) - (i : ℤ)) = 1
   rw [sub_self, show (0 : ℤ) = ((0 : ℕ) : ℤ) from rfl,
     newtonHZ_natCast, newtonH_zero]
 
@@ -233,7 +233,7 @@ private theorem conv_sum_pos (t : ℕ → ℂ) {n ik kk : ℕ}
       if kk + 1 = ik then 1 else 0 := by
   rcases Nat.lt_or_ge (kk + 1) ik with hB | hA
   · -- below the surviving band every term vanishes
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
     refine Finset.sum_eq_zero fun j hj => ?_
     rcases Nat.lt_or_ge (j + 1) ik with hj' | hj'
     · rw [newtonHZ_neg t (1 + (j : ℤ) - (ik : ℤ)) (by omega),
@@ -315,10 +315,10 @@ private theorem conv_sum_pos (t : ℕ → ℂ) {n ik kk : ℕ}
           rw [show (fun c => t c + -t c) = (fun _ => (0 : ℂ)) from
             funext fun c => by ring]
           rcases Nat.eq_zero_or_pos (kk + 1 - ik) with hz | hp
-          · rw [hz, newtonH_zero, if_pos (by omega)]
+          · rw [hz, newtonH_zero, ite_eq_left (by omega)]
           · obtain ⟨l, hl⟩ : ∃ l, kk + 1 - ik = l + 1 :=
               ⟨kk - ik, by omega⟩
-            rw [hl, newtonH_zero_fun, if_neg (by omega)]
+            rw [hl, newtonH_zero_fun, ite_eq_right (by omega)]
 
 /-- The top-row convolution sum: the missing degree-zero term
 leaves the negated elementary value. -/
@@ -333,7 +333,7 @@ private theorem conv_sum_zero (t : ℕ → ℂ) {n kk : ℕ}
       (fun d => newtonH t d *
         newtonH (fun c => -t c) (kk + 1 - d)) (j + 1) := by
     intro j _
-    show _ = newtonH t (j + 1) *
+    change _ = newtonH t (j + 1) *
       newtonH (fun c => -t c) (kk + 1 - (j + 1))
     rw [Nat.succ_sub_succ]
   have hconv : ∑ d ∈ Finset.range (kk + 1 + 1),
@@ -352,7 +352,7 @@ private theorem conv_sum_zero (t : ℕ → ℂ) {n kk : ℕ}
   have h0 : (fun d => newtonH t d *
       newtonH (fun c => -t c) (kk + 1 - d)) 0 =
       newtonH (fun c => -t c) (kk + 1) := by
-    show newtonH t 0 * newtonH (fun c => -t c) (kk + 1 - 0) = _
+    change newtonH t 0 * newtonH (fun c => -t c) (kk + 1 - 0) = _
     rw [newtonH_zero, one_mul, Nat.sub_zero]
   calc ∑ j ∈ Finset.range n,
         newtonHZ t (1 + (j : ℤ)) *
@@ -450,14 +450,14 @@ theorem colJTMat_det (t : ℕ → ℂ) (n : ℕ) :
       rw [colJT_mul_negH_pos t _ _ (by
         rw [coe_finRotate_of_ne_last hne]
         omega)]
-      rw [if_neg (by
+      rw [ite_eq_right (by
         rw [coe_finRotate_of_ne_last hne]
         have : (a : ℕ) < (b : ℕ) := hab'
         omega)]
     have hdiag : ((colJTMat t (m + 1) * negHMat t (m + 1)).submatrix
         (finRotate (m + 1)) id).det =
         -newtonH (fun c => -t c) (m + 1) := by
-      rw [Matrix.det_of_lowerTriangular _ htri]
+      rw [Matrix.det_of_isLowerTriangular _ htri]
       rw [Fin.prod_univ_castSucc]
       have hone : ∀ i : Fin m,
           ((colJTMat t (m + 1) * negHMat t (m + 1)).submatrix
@@ -469,7 +469,7 @@ theorem colJTMat_det (t : ℕ → ℂ) (n : ℕ) :
         rw [colJT_mul_negH_pos t _ _ (by
           rw [coe_finRotate_of_ne_last hne]
           omega)]
-        rw [if_pos (by rw [coe_finRotate_of_ne_last hne])]
+        rw [ite_eq_left (by rw [coe_finRotate_of_ne_last hne])]
       rw [Finset.prod_congr rfl fun i _ => hone i,
         Finset.prod_const_one, one_mul]
       rw [Matrix.submatrix_apply, id_eq, finRotate_last]
@@ -525,7 +525,7 @@ theorem sign_mul_cycleProd (t : ℕ → ℂ) {n : ℕ}
     (π : Equiv.Perm (Fin n)) :
     ((Equiv.Perm.sign π : ℤ) : ℂ) * cycleProd t π =
       cycleProd (fun c => (-1) ^ (c + 1) * t c) π := by
-  show ((Equiv.Perm.sign π : ℤ) : ℂ) *
+  change ((Equiv.Perm.sign π : ℤ) : ℂ) *
       ((π.cycleType.map t).prod * t 1 ^ (n - π.cycleType.sum)) =
     (π.cycleType.map fun c => (-1 : ℂ) ^ (c + 1) * t c).prod *
       ((-1 : ℂ) ^ (1 + 1) * t 1) ^ (n - π.cycleType.sum)

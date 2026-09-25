@@ -40,7 +40,7 @@ theorem canonColouring_isRight_low (μm : Multiset (Fin k))
     (i : Fin (μm.card + F.card)) (h : i.val < μm.card) :
     (canonColouring μm F i).isRight = false := by
   unfold canonColouring
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   rfl
 
 /-- High positions are odd colours. -/
@@ -49,7 +49,7 @@ theorem canonColouring_isRight_high (μm : Multiset (Fin k))
     (i : Fin (μm.card + F.card)) (h : ¬ i.val < μm.card) :
     (canonColouring μm F i).isRight = true := by
   unfold canonColouring
-  rw [dif_neg h]
+  rw [dite_eq_right h]
   rfl
 
 end RS

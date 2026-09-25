@@ -166,7 +166,7 @@ theorem splitComplAct_one
     (η[B] ▷ splitCompl A B φ v w d hv hw) ≫
         splitComplAct A B φ v w d hv hw =
       (λ_ (splitCompl A B φ v w d hv hw)).hom := by
-  letI := baseChangeModObj φ M
+  let := baseChangeModObj φ M
   have hι : ((η[B] ▷ splitCompl A B φ v w d hv hw) ≫
       splitComplAct A B φ v w d hv hw) ≫
       kernel.ι (splitIdem A B φ v w d hv hw) =
@@ -203,7 +203,7 @@ theorem splitComplAct_mul
       (α_ B B (splitCompl A B φ v w d hv hw)).hom ≫
         (B ◁ splitComplAct A B φ v w d hv hw) ≫
         splitComplAct A B φ v w d hv hw := by
-  letI := baseChangeModObj φ M
+  let := baseChangeModObj φ M
   have hι : ((μ[B] ▷ splitCompl A B φ v w d hv hw) ≫
       splitComplAct A B φ v w d hv hw) ≫
       kernel.ι (splitIdem A B φ v w d hv hw) =
@@ -374,7 +374,7 @@ noncomputable def splitDecomp
     · erw [biprod.inr_desc_assoc, Category.comp_id]
       apply biprod.hom_ext
       · erw [Category.assoc, biprod.lift_fst, biprod.inr_fst]
-        haveI : IsSplitMono (splitCoeval A B φ w d hw) :=
+        have : IsSplitMono (splitCoeval A B φ w d hw) :=
           IsSplitMono.mk' ⟨splitEval A B φ v hv,
             splitCoeval_splitEval A B φ v w d hv hw p hp hδ⟩
         refine (cancel_mono
@@ -625,7 +625,7 @@ noncomputable def splitDecompMod
     (by exact modBiprodAct_splitDecompInv A B φ v w d hv hw)
   hom_inv_id := by
     apply Mod.Hom.ext
-    show biprod.lift (splitEval A B φ v hv)
+    change biprod.lift (splitEval A B φ v hv)
         (splitComplProj A B φ v w d hv hw p hp hδ) ≫
       biprod.desc (splitCoeval A B φ w d hw)
         (kernel.ι (splitIdem A B φ v w d hv hw)) =
@@ -633,7 +633,7 @@ noncomputable def splitDecompMod
     exact (splitDecomp A B φ v w d hv hw p hp hδ).hom_inv_id
   inv_hom_id := by
     apply Mod.Hom.ext
-    show biprod.desc (splitCoeval A B φ w d hw)
+    change biprod.desc (splitCoeval A B φ w d hw)
         (kernel.ι (splitIdem A B φ v w d hv hw)) ≫
       biprod.lift (splitEval A B φ v hv)
         (splitComplProj A B φ v w d hv hw p hp hδ) =

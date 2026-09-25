@@ -139,7 +139,7 @@ theorem projFormula_natural_right
     (Category.assoc _ _ _).symm) ?_
   refine Eq.trans (Category.assoc _ _ _).symm ?_
   refine Eq.trans (eq_whisker (hend _ _) _) ?_
-  simp only [Category.assoc]
+  simp only []
   conv_lhs => erw [Category.assoc]; arg 2; erw [Category.assoc]
   rfl
 
@@ -315,7 +315,7 @@ theorem projFormula_assoc_leftCover
     refine Eq.trans (eq_whisker (whisker_exchange
       (projFormula A B φ M N).hom
       (modTensorπ A (restrictRegular φ) P)) _) ?_
-    simp only [Category.assoc]
+    simp only []
     erw [Category.assoc]
     rfl
   have hcore2 : ∀ {Z : D}

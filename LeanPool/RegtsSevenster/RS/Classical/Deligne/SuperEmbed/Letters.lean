@@ -326,7 +326,7 @@ private theorem normIso_inv_succ [Category.{v} A] [MonoidalCategory A]
         (tailIso U (popCount (w ∘ Fin.castSucc)) (w (Fin.last n))).inv ≫
         ((normIso U n (w ∘ Fin.castSucc)).inv ▷
           (bif w (Fin.last n) then U else 𝟙_ A)) := by
-  show (whiskerRightIso (normIso U n (w ∘ Fin.castSucc)) _ ≪≫
+  change (whiskerRightIso (normIso U n (w ∘ Fin.castSucc)) _ ≪≫
       tailIso U (popCount (w ∘ Fin.castSucc)) (w (Fin.last n)) ≪≫
       eqToIso (congrArg (tensorPow A U) (popCount_succ w).symm)).inv = _
   simp only [Iso.trans_inv, whiskerRightIso_inv, eqToIso.inv,
@@ -341,7 +341,7 @@ private theorem normIso_hom_succ [Category.{v} A] [MonoidalCategory A]
           (bif w (Fin.last n) then U else 𝟙_ A)) ≫
         (tailIso U (popCount (w ∘ Fin.castSucc)) (w (Fin.last n))).hom ≫
         eqToHom (congrArg (tensorPow A U) (popCount_succ w).symm) := by
-  show (whiskerRightIso (normIso U n (w ∘ Fin.castSucc)) _ ≪≫
+  change (whiskerRightIso (normIso U n (w ∘ Fin.castSucc)) _ ≪≫
       tailIso U (popCount (w ∘ Fin.castSucc)) (w (Fin.last n)) ≪≫
       eqToIso (congrArg (tensorPow A U) (popCount_succ w).symm)).hom = _
   simp only [Iso.trans_hom, whiskerRightIso_hom, eqToIso.hom]
@@ -486,7 +486,7 @@ theorem permIndex_extPerm_castSucc {K : Type*} {n : ℕ}
     permIndex (extPerm τ) c ∘ Fin.castSucc =
       permIndex τ (c ∘ Fin.castSucc) := by
   funext j
-  show c ((extPerm τ)⁻¹ (Fin.castSucc j)) = c (Fin.castSucc (τ⁻¹ j))
+  change c ((extPerm τ)⁻¹ (Fin.castSucc j)) = c (Fin.castSucc (τ⁻¹ j))
   rw [extPerm_inv, extPerm_castSucc]
 
 /-- Reindexing along a top-fixing permutation fixes the top
@@ -494,7 +494,7 @@ letter. -/
 theorem permIndex_extPerm_last {K : Type*} {n : ℕ}
     (τ : Equiv.Perm (Fin n)) (c : Fin (n + 1) → K) :
     permIndex (extPerm τ) c (Fin.last n) = c (Fin.last n) := by
-  show c ((extPerm τ)⁻¹ (Fin.last n)) = c (Fin.last n)
+  change c ((extPerm τ)⁻¹ (Fin.last n)) = c (Fin.last n)
   rw [extPerm_inv, extPerm_last]
 
 /-- The top transposition is its own inverse. -/
@@ -507,7 +507,7 @@ theorem permIndex_topSwap_last {K : Type*} {n : ℕ}
     (c : Fin (n + 2) → K) :
     permIndex topSwap c (Fin.last (n + 1)) =
       c (Fin.castSucc (Fin.last n)) := by
-  show c (topSwap⁻¹ (Fin.last (n + 1))) = _
+  change c (topSwap⁻¹ (Fin.last (n + 1))) = _
   rw [topSwap_inv, topSwap_last]
 
 /-- Reindexing along the top transposition, second letter. -/
@@ -515,7 +515,7 @@ theorem permIndex_topSwap_castSucc_last {K : Type*} {n : ℕ}
     (c : Fin (n + 2) → K) :
     permIndex topSwap c (Fin.castSucc (Fin.last n)) =
       c (Fin.last (n + 1)) := by
-  show c (topSwap⁻¹ (Fin.castSucc (Fin.last n))) = _
+  change c (topSwap⁻¹ (Fin.castSucc (Fin.last n))) = _
   rw [topSwap_inv, topSwap_castSucc_last]
 
 /-- Reindexing along the top transposition, lower letters. -/
@@ -524,7 +524,7 @@ theorem permIndex_topSwap_low {K : Type*} {n : ℕ}
     permIndex topSwap c ∘ Fin.castSucc ∘ Fin.castSucc =
       c ∘ Fin.castSucc ∘ Fin.castSucc := by
   funext j
-  show c (topSwap⁻¹ (Fin.castSucc (Fin.castSucc j))) = _
+  change c (topSwap⁻¹ (Fin.castSucc (Fin.castSucc j))) = _
   rw [topSwap_inv, topSwap_castSucc_castSucc]
   rfl
 
@@ -1268,15 +1268,15 @@ theorem nIn_permAlg_nOut
       Linear.smul_comp, smul_smul, Linear.smul_comp]
   rw [hstep]
   by_cases hpop : popCount (par ∘ c) = popCount (par ∘ d)
-  · rw [dif_pos hpop, colourSum, Finset.sum_filter,
+  · rw [dite_eq_left hpop, colourSum, Finset.sum_filter,
       Finset.sum_smul]
     refine Finset.sum_congr rfl fun σ _ => ?_
     by_cases hσ : permIndex σ c = d
-    · rw [if_pos hσ, Linear.smul_comp, Category.assoc,
+    · rw [ite_eq_left hσ, Linear.smul_comp, Category.assoc,
         S.nIn_nOut_of_eq hσ, eqToHom_trans]
-    · rw [if_neg hσ, Linear.smul_comp, Category.assoc,
+    · rw [ite_eq_right hσ, Linear.smul_comp, Category.assoc,
         S.nIn_nOut_ne n hσ, Limits.comp_zero, smul_zero, zero_smul]
-  · rw [dif_neg hpop]
+  · rw [dite_eq_right hpop]
     refine Finset.sum_eq_zero fun σ _ => ?_
     have hσ : permIndex σ c ≠ d := fun hcd => hpop (by
       rw [← hcd]
@@ -1312,7 +1312,7 @@ theorem colourSum_eq_zero
         (0 : tensorPow A M n ⟶ tensorPow A M n) := hx
     have h0 : S.nIn n c ≫ permAlg M n x ≫ S.nOut n d = 0 := by
       rw [hx', Limits.zero_comp, Limits.comp_zero]
-    rw [S.nIn_permAlg_nOut hβ x c d, dif_pos hpop] at h0
+    rw [S.nIn_permAlg_nOut hβ x c d, dite_eq_left hpop] at h0
     by_contra hne
     have h1 : eqToHom (congrArg (tensorPow A U) hpop) =
         (0 : tensorPow A U (popCount (par ∘ c)) ⟶
@@ -1357,9 +1357,9 @@ theorem permAlg_eq_zero
       _ = 0 := by
           rw [S.nIn_permAlg_nOut hβ x c d]
           by_cases hpop : popCount (par ∘ c) = popCount (par ∘ d)
-          · rw [dif_pos hpop, hx c d, zero_smul, Limits.zero_comp,
+          · rw [dite_eq_left hpop, hx c d, zero_smul, Limits.zero_comp,
               Limits.comp_zero]
-          · rw [dif_neg hpop, Limits.zero_comp, Limits.comp_zero]
+          · rw [dite_eq_right hpop, Limits.zero_comp, Limits.comp_zero]
   have hmid2 : ∀ c : Fin n → K,
       S.colourInto n c ≫ permAlg M n x ≫
         (∑ d : Fin n → K, S.colourFrom n d ≫ S.colourInto n d) = 0

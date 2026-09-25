@@ -27,7 +27,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Classical
+
 
 variable {α : Type}
 
@@ -305,9 +305,9 @@ theorem extendFun_pairing {W : Fragment α}
       = extendFun hbnd φ' f := by
   unfold extendFun
   by_cases hc : f.val ∈ F.coreFlags
-  · rw [dif_pos hc, dif_pos (F.pairing_mem_coreFlags hc)]
+  · rw [dite_eq_left hc, dite_eq_left (F.pairing_mem_coreFlags hc)]
     exact φ'.prop ⟨f.val, hc⟩
-  · rw [dif_neg hc, dif_neg (not_coreFlags_pairing F f.prop hc)]
+  · rw [dite_eq_right hc, dite_eq_right (not_coreFlags_pairing F f.prop hc)]
     exact hag f.val _ _
 
 open Classical in
@@ -329,10 +329,10 @@ theorem CoreOddColouring.core_extend {W : Fragment α}
     (hag : ThroughAgree F χ hbnd) (φ' : F.CoreOddColouring ℓ) :
     (CoreOddColouring.extend hbnd hag φ').core = φ' := by
   refine Subtype.ext (funext fun f => ?_)
-  show extendFun hbnd φ' ⟨f.val, coreFlags_subset F f.prop⟩
+  change extendFun hbnd φ' ⟨f.val, coreFlags_subset F f.prop⟩
     = φ'.val f
   unfold extendFun
-  rw [dif_pos f.prop]
+  rw [dite_eq_left f.prop]
 
 /-- A matching colouring restricts to a matching core colouring. -/
 theorem coreOddBoundaryMatch_core {W : Fragment α}
@@ -362,12 +362,12 @@ theorem edgeOddBoundaryMatch_extend {W : Fragment α}
     edgeOddBoundaryMatch F χ
       (CoreOddColouring.extend hbnd hag φ') := by
   intro i c hci hmem
-  show extendFun hbnd φ' ⟨W.boundaryFlag i, hmem⟩ = c
+  change extendFun hbnd φ' ⟨W.boundaryFlag i, hmem⟩ = c
   unfold extendFun
   by_cases hc : W.boundaryFlag i ∈ F.coreFlags
-  · rw [dif_pos hc]
+  · rw [dite_eq_left hc]
     exact hφ' i c hci hc
-  · rw [dif_neg hc]
+  · rw [dite_eq_right hc]
     have hb := mem_boundaryFlags_of_not_coreFlags F hmem hc
     have hli : F.boundaryLabel hb = i :=
       boundaryLabel_eq_of_attach hb (W.attach_boundaryFlag i)

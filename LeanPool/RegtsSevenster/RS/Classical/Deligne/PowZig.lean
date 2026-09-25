@@ -53,7 +53,7 @@ theorem powCopairA_zero
       d.copair ≫ modTensorMap A (toModPowModZero A M)
         (toModPowModZero A M') := by
   rw [powCopairA]
-  show (ρ_ A).inv ≫ (A ◁ (copairUnit A M M' d ≫
+  change (ρ_ A).inv ≫ (A ◁ (copairUnit A M M' d ≫
       modTensorMap A (toModPowModZero A M)
         (toModPowModZero A M'))) ≫
     modTensorAct A (modPowMod A M.X 0) (modPowMod A M'.X 0) = _
@@ -190,7 +190,7 @@ theorem carrierContract_map
   rw [reassoc_of% hs2]
   refine congrArg (CategoryStruct.comp _) ?_
   rw [whisker_exchange_assoc, whisker_exchange_assoc]
-  haveI := f.isModHom
+  have := f.isModHom
   rw [show (A ◁ f.hom) ≫ actLeft A M.X ≫ e.hom =
       actLeft A N.X ≫ f.hom ≫ e.hom from by
     rw [← actLeft_natural_assoc]]

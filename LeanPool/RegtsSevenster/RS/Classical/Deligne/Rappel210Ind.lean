@@ -42,7 +42,7 @@ theorem splitAlgebraUnit_ne_zero_ind
     (h1 : ¬ IsZero (𝟙_ (Ind C))) :
     splitAlgebraUnit (((unitFormMid S)ᘁ) : Ind C)
       (unitFormPoint S) ≠ 0 := by
-  haveI hmono : Mono (unitFormPoint S) :=
+  have hmono : Mono (unitFormPoint S) :=
     mono_unitFormPoint S hS
   intro h0
   obtain ⟨n, hn⟩ := (chainColimitUnit_eq_zero_iff

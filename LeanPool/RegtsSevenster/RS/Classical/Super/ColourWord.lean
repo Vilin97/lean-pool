@@ -61,16 +61,16 @@ theorem colourSwapWord_evenMap {n : ℕ} (w : List (Fin n))
         F ⟨c.val ∘ wordPerm w, c.prop.comp _⟩ := by
   induction w generalizing c with
   | nil =>
-    show F c = 1 * F ⟨c.val ∘ (1 : _root_.Equiv.Perm
+    change F c = 1 * F ⟨c.val ∘ (1 : _root_.Equiv.Perm
       (Fin (n + 1))), c.prop.comp _⟩
     rw [one_mul]
     exact congrArg F (Subtype.ext rfl)
   | cons i w ih =>
-    show ((colourSwap k ℓ (n + 1) i.val (by omega)) :
+    change ((colourSwap k ℓ (n + 1) i.val (by omega)) :
         SuperVect.Hom _ _).evenMap
         (((colourSwapWord k ℓ w) :
           SuperVect.Hom _ _).evenMap F) c = _
-    show adjSign c.val ⟨i.val, by omega⟩
+    change adjSign c.val ⟨i.val, by omega⟩
         ⟨i.val + 1, by omega⟩ *
       (((colourSwapWord k ℓ w) :
         SuperVect.Hom _ _).evenMap F)
@@ -78,7 +78,7 @@ theorem colourSwapWord_evenMap {n : ℕ} (w : List (Fin n))
           (⟨i.val, by omega⟩ : Fin (n + 1))
           ⟨i.val + 1, by omega⟩, c.prop.comp _⟩ = _
     rw [ih]
-    show adjSign c.val ⟨i.val, by omega⟩
+    change adjSign c.val ⟨i.val, by omega⟩
         ⟨i.val + 1, by omega⟩ *
       (wordSign w (c.val ∘ _root_.Equiv.swap
           (⟨i.val, by omega⟩ : Fin (n + 1))
@@ -87,7 +87,7 @@ theorem colourSwapWord_evenMap {n : ℕ} (w : List (Fin n))
             (⟨i.val, by omega⟩ : Fin (n + 1))
             ⟨i.val + 1, by omega⟩) ∘ wordPerm w, _⟩) = _
     rw [← mul_assoc]
-    show (adjSign c.val ⟨i.val, by omega⟩
+    change (adjSign c.val ⟨i.val, by omega⟩
         ⟨i.val + 1, by omega⟩ *
       wordSign w (c.val ∘ _root_.Equiv.swap
           (⟨i.val, by omega⟩ : Fin (n + 1))
@@ -111,7 +111,7 @@ theorem colourSwapWord_oddMap {n : ℕ} (w : List (Fin n))
           MixedColouring.not_isEven_comp c.prop _⟩ := by
   induction w generalizing c with
   | nil =>
-    show F c = 1 * F ⟨c.val ∘ (1 : _root_.Equiv.Perm
+    change F c = 1 * F ⟨c.val ∘ (1 : _root_.Equiv.Perm
       (Fin (n + 1))), MixedColouring.not_isEven_comp c.prop _⟩
     rw [one_mul]
     exact congrArg F (Subtype.ext rfl)

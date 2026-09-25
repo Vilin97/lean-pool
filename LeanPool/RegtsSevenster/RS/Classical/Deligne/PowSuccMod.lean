@@ -49,7 +49,7 @@ theorem powSplit_act [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     modPowAct A X (a + 1 + b) ≫ powSplit A X a b =
       (A ◁ powSplit A X a b) ≫
         modTensorAct A (modPowMod A X a) (modPowMod A X b) := by
-  haveI : IsIso (powMulDesc A X a b) :=
+  have : IsIso (powMulDesc A X a b) :=
     ⟨powSplit A X a b, powMulDesc_powSplit A X a b,
       powSplit_powMulDesc A X a b⟩
   rw [← cancel_mono (powMulDesc A X a b), Category.assoc,
@@ -84,7 +84,7 @@ theorem powMulMod_powMulModInv
     powMulMod A X a b ≫ powMulModInv A X a b =
       𝟙 (modTensorMod A (modPowMod A X a) (modPowMod A X b)) := by
   apply Mod.hom_ext
-  show powMulDesc A X a b ≫ powSplit A X a b = 𝟙 _
+  change powMulDesc A X a b ≫ powSplit A X a b = 𝟙 _
   exact powMulDesc_powSplit A X a b
 
 /-- The bundled inverse and the merge compose to the identity on
@@ -100,7 +100,7 @@ theorem powMulModInv_powMulMod
     powMulModInv A X a b ≫ powMulMod A X a b =
       𝟙 (modPowMod A X (a + 1 + b)) := by
   apply Mod.hom_ext
-  show powSplit A X a b ≫ powMulDesc A X a b = 𝟙 _
+  change powSplit A X a b ≫ powMulDesc A X a b = 𝟙 _
   exact powSplit_powMulDesc A X a b
 
 /-! ## Transport and braiding helpers at the module level -/
@@ -118,7 +118,7 @@ theorem modPowCastMod_comp_id
     modPowCastMod A X h ≫ modPowCastMod A X h' =
       𝟙 (modPowMod A X a) := by
   apply Mod.hom_ext
-  show modPowCast A X h ≫ modPowCast A X h' = 𝟙 _
+  change modPowCast A X h ≫ modPowCast A X h' = 𝟙 _
   calc modPowCast A X h ≫ modPowCast A X h'
       = modPowCast A X (h.trans h') := eqToHom_trans _ _
     _ = 𝟙 _ := modPowCast_rfl A X (a + 1)
@@ -135,7 +135,7 @@ theorem modTensorSwapMod_modTensorSwapMod
     modTensorSwapMod A P Q ≫ modTensorSwapMod A Q P =
       𝟙 (modTensorMod A P Q) := by
   apply Mod.hom_ext
-  show modTensorSwap A P Q ≫ modTensorSwap A Q P = 𝟙 _
+  change modTensorSwap A P Q ≫ modTensorSwap A Q P = 𝟙 _
   exact modTensorSwap_modTensorSwap A P Q
 
 /-! ## The front insertion -/

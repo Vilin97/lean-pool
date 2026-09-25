@@ -167,7 +167,7 @@ private theorem blockPerm_viaEmbedding (n : ℕ) {j k : ℕ}
     · -- v / n < j: in-range, both sides apply σ
       -- Simplify τ on q
       have hτq : (τ ⟨v / n, hqk⟩).val = (σ ⟨v / n, hqj⟩).val := by
-        show (Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h) σ
+        change (Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h) σ
           ⟨v / n, hqk⟩).val = _
         rw [Equiv.Perm.viaEmbeddingHom_apply,
           show (⟨v / n, hqk⟩ : Fin k) =
@@ -202,7 +202,7 @@ private theorem blockPerm_viaEmbedding (n : ℕ) {j k : ℕ}
           _ = v := Nat.div_add_mod v n
       -- LHS: τ fixes q
       have hτq : (τ ⟨v / n, hqk⟩).val = v / n := by
-        show (Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h) σ
+        change (Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h) σ
           ⟨v / n, hqk⟩).val = _
         rw [Equiv.Perm.viaEmbeddingHom_apply,
           Equiv.Perm.viaEmbedding_apply_of_notMem σ
@@ -255,7 +255,7 @@ theorem blockRep_compat (n : ℕ) {j k : ℕ} (h : j ≤ k)
             (MonoidAlgebra.of ℂ (Equiv.Perm (Fin m)) σ) =
           MonoidAlgebra.of ℂ (Equiv.Perm (Fin (n * m)))
             (blockPerm n σ) from by
-        show MonoidAlgebra.mapDomain (blockPermHom n m)
+        change MonoidAlgebra.mapDomain (blockPermHom n m)
             (MonoidAlgebra.single σ 1) =
           MonoidAlgebra.single (blockPerm n σ) 1
         exact MonoidAlgebra.mapDomain_single,
@@ -274,7 +274,7 @@ theorem blockRep_compat (n : ℕ) {j k : ℕ} (h : j ≤ k)
         symCast h' (bLift j (MonoidAlgebra.of ℂ _ σ))
       -- LHS: bLift k (of (viaEmbeddingHom (castLEEmb h) σ))
       --    = of (blockPerm n (viaEmbeddingHom (castLEEmb h) σ))
-      show MonoidAlgebra.mapDomain (blockPermHom n k)
+      change MonoidAlgebra.mapDomain (blockPermHom n k)
           (MonoidAlgebra.mapDomain
             (Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h))
             (MonoidAlgebra.single σ 1)) =

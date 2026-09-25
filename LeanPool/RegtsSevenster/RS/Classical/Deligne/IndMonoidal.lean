@@ -105,7 +105,7 @@ instance symmetricCategoryOp {D : Type*} [Category D]
     [MonoidalCategory D] [SymmetricCategory D] :
     SymmetricCategory Dᵒᵖ where
   symmetry X Y := by
-    show (β_ (Opposite.unop Y) (Opposite.unop X)).hom.op ≫
+    change (β_ (Opposite.unop Y) (Opposite.unop X)).hom.op ≫
       (β_ (Opposite.unop X) (Opposite.unop Y)).hom.op = 𝟙 _
     rw [← op_comp, SymmetricCategory.symmetry]
     rfl

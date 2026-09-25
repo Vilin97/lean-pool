@@ -23,13 +23,14 @@ analysis a product of independent local factors.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type} {W : Fragment α} {F : EdgeSubset W}
   {k ℓ : ℕ} {S : Finset W.Flag}
 
 /-! ## The in-set at a vertex -/
 
+open scoped Classical in
 /-- The in-set at a vertex over a relative orientation: the
 participating flags attached to the vertex and marked incoming. -/
 noncomputable def relInSetAt {κ₀ : F.RelTransitionSystem}
@@ -42,8 +43,9 @@ theorem mem_relInSetAt {κ₀ : F.RelTransitionSystem}
     {o₀ : κ₀.Orientation} {vv : W.Vertex} {g : W.Flag} :
     g ∈ relInSetAt o₀ vv ↔
       g ∈ F.flags ∧ W.attach g = Sum.inl vv ∧
-        o₀.isOut g = false :=
-  Finset.mem_filter
+        o₀.isOut g = false := by
+  classical
+  exact Finset.mem_filter
 
 /-- An in-flag at a vertex is an internal flag. -/
 theorem relInSetAt_subset_internal {κ₀ : F.RelTransitionSystem}
@@ -57,8 +59,8 @@ theorem relInFlagsAt_coe {κ₀ : F.RelTransitionSystem}
     (o₀ : κ₀.Orientation) (vv : W.Vertex) :
     (F.relInFlagsAt o₀ vv : Multiset W.Flag) =
       (relInSetAt o₀ vv).val := by
-  letI := W.flagOrder
-  letI := Classical.dec
+  let := W.flagOrder
+  let := Classical.dec
   unfold EdgeSubset.relInFlagsAt
   rw [Finset.sort_eq]
   exact congrArg Finset.val (Finset.ext (fun g => by
@@ -132,7 +134,7 @@ theorem inSign_flip_of_mem {φ φ' : F.CoreOddColouring ℓ}
     {g : W.Flag} (hg : g ∈ S) (hcore : g ∈ F.coreFlags) :
     inSign φ' g = -inSign φ g := by
   unfold inSign
-  rw [dif_pos hcore, dif_pos hcore, hφ' ⟨g, hcore⟩, if_pos hg,
+  rw [dite_eq_left hcore, dite_eq_left hcore, hφ' ⟨g, hcore⟩, ite_eq_left hg,
     oddPartnerSign_oddPartner]
 
 /-- Flipping the colours on `S` leaves the sign off `S` alone. -/
@@ -142,18 +144,18 @@ theorem inSign_flip_of_notMem {φ φ' : F.CoreOddColouring ℓ}
     {g : W.Flag} (hg : g ∉ S) : inSign φ' g = inSign φ g := by
   unfold inSign
   by_cases hcore : g ∈ F.coreFlags
-  · rw [dif_pos hcore, dif_pos hcore, hφ' ⟨g, hcore⟩, if_neg hg]
-  · rw [dif_neg hcore, dif_neg hcore]
+  · rw [dite_eq_left hcore, dite_eq_left hcore, hφ' ⟨g, hcore⟩, ite_eq_right hg]
+  · rw [dite_eq_right hcore, dite_eq_right hcore]
 
 /-- The sign is a square root of one. -/
 theorem inSign_mul_self (φ : F.CoreOddColouring ℓ)
     (g : W.Flag) : inSign φ g * inSign φ g = 1 := by
   unfold inSign
   by_cases hg : g ∈ F.coreFlags
-  · rw [dif_pos hg]
+  · rw [dite_eq_left hg]
     unfold oddPartnerSign
     by_cases h : (φ.val ⟨g, hg⟩).val < ℓ <;> simp [h]
-  · rw [dif_neg hg]
+  · rw [dite_eq_right hg]
     norm_num
 
 /-- Paired flags carry the same sign. -/
@@ -161,7 +163,7 @@ theorem inSign_pairing (φ : F.CoreOddColouring ℓ)
     {g : W.Flag} (hg : g ∈ F.coreFlags) :
     inSign φ (W.pairing g) = inSign φ g := by
   unfold inSign
-  rw [dif_pos (F.pairing_mem_coreFlags hg), dif_pos hg]
+  rw [dite_eq_left (F.pairing_mem_coreFlags hg), dite_eq_left hg]
   exact congrArg (oddPartnerSign ℓ) (φ.prop ⟨g, hg⟩)
 
 /-! ## The core odd data in this vocabulary -/
@@ -180,7 +182,7 @@ theorem signFn_eq {κ₀ : F.RelTransitionSystem}
     (f : {f : W.Flag // f ∈ F.internalFlags}) :
     F.coreOddSignFn κ₀ φ f = inSign φ (κ₀.match_ f.val) := by
   unfold EdgeSubset.coreOddSignFn inSign
-  rw [dif_pos
+  rw [dite_eq_left
     (F.internalFlags_subset_coreFlags (κ₀.match_mem _ f.prop))]
 
 /-- The odd-pairing sign at a vertex is the product of the incoming

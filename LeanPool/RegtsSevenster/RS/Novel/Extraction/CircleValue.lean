@@ -26,7 +26,7 @@ the standard copairing to the superdimension `k − 2ℓ`. -/
 theorem stdForm_comp_stdCopair (k ℓ : ℕ) :
     (SuperVect.Hom.comp (stdForm k ℓ) (stdCopair k ℓ)).evenMap 1 =
       (k : ℂ) - 2 * ℓ := by
-  show (LinearMap.coprod (TensorProduct.lift (stdFormEvenBilin k))
+  change (LinearMap.coprod (TensorProduct.lift (stdFormEvenBilin k))
       (TensorProduct.lift (stdFormOddBilin ℓ)))
     ((LinearMap.toSpanSingleton ℂ _
       (stdCopairEvenElem k, stdCopairOddElem ℓ)) 1) =

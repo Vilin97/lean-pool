@@ -22,7 +22,7 @@ of the columns indexed by the ambient space's coordinates.
 
 namespace RS
 
-open Classical
+
 
 /-- **A pairing whose rows lie in a span has rank at most that
 span's generating set.** -/

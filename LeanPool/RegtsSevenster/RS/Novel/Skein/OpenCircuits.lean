@@ -37,7 +37,7 @@ whose forward walk eventually returns to them.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type} {W : Fragment α}
 
@@ -122,16 +122,17 @@ theorem RelTransitionSystem.periodicFlag_step
   refine ⟨iterWalk_mem_internal_of_periodic κ hf' 1 (by omega),
     n, hn1, fun j hj => ?_, ?_⟩
   · -- iterWalk κ f 1 is definitionally κ.match_ (W.pairing f)
-    show W.pairing (iterWalk κ (κ.match_ (W.pairing f)) j) ∈
+    change W.pairing (iterWalk κ (κ.match_ (W.pairing f)) j) ∈
       F.internalFlags
     rw [iterWalk_shift]
     exact all_pairings_internal_of_periodic κ hf' (j + 1)
-  · show iterWalk κ (κ.match_ (W.pairing f)) n =
+  · change iterWalk κ (κ.match_ (W.pairing f)) n =
       κ.match_ (W.pairing f)
     rw [iterWalk_shift, iterWalk_succ, hperiod]
 
 /-! ### 2. periodicFlags -/
 
+open scoped Classical in
 /-- The finset of periodic flags. -/
 noncomputable def RelTransitionSystem.periodicFlags
     (κ : F.RelTransitionSystem) : Finset W.Flag :=
@@ -162,7 +163,7 @@ theorem RelTransitionSystem.internalWalk_periodic
     (hf : f ∈ κ.periodicFlags) :
     κ.internalWalk f ∈ κ.periodicFlags := by
   rw [κ.mem_periodicFlags] at hf ⊢
-  show κ.PeriodicFlag (κ.match_ (W.pairing f))
+  change κ.PeriodicFlag (κ.match_ (W.pairing f))
   rw [show κ.match_ (W.pairing f) = iterWalk κ f 1 from rfl]
   exact κ.periodicFlag_step hf
 
@@ -413,7 +414,7 @@ theorem internal_periodic_or_terminates
   · -- Walk exits at some step. Find the first exit.
     right
     simp only [not_forall] at hexall
-    haveI : DecidablePred (fun k =>
+    have : DecidablePred (fun k =>
         W.pairing (iterWalk κ f k) ∉ F.internalFlags) :=
       fun k => Classical.dec _
     have hk₀_spec := Nat.find_spec hexall
@@ -487,7 +488,7 @@ theorem walkPerm_revPerm_walkPerm (κ : F.RelTransitionSystem) :
   have hp0 : W.pairing x.val ∈ F.internalFlags :=
     all_pairings_internal_of_periodic κ
       (κ.mem_periodicFlags.mp x.prop) 0
-  show κ.internalWalk (W.pairing (κ.internalWalk x.val)) =
+  change κ.internalWalk (W.pairing (κ.internalWalk x.val)) =
     W.pairing x.val
   calc κ.internalWalk (W.pairing (κ.internalWalk x.val))
       = κ.match_ (W.pairing (W.pairing
@@ -500,7 +501,7 @@ theorem walkPerm_revPerm_walkPerm (κ : F.RelTransitionSystem) :
 theorem revPerm_mul_self (κ : F.RelTransitionSystem) :
     revPerm κ * revPerm κ = 1 := by
   ext x
-  show W.pairing (W.pairing x.val) = x.val
+  change W.pairing (W.pairing x.val) = x.val
   exact W.pairing_invol x.val
 
 /-- Equivalently, it is its own inverse. -/

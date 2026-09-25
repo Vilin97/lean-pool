@@ -862,7 +862,7 @@ theorem actEO_tmulOE (a : S.even) (m : M.odd) (n : N.even) :
 theorem actOE_tmulEE (c : S.odd) (m : M.even) (n : N.even) :
     (tensor M N).actOE c (tmulEE M N m n)
       = tmulOE M N (M.actOE c m) n := by
-  show Submodule.Quotient.mk
+  change Submodule.Quotient.mk
       (preActOE M N c ((m ⊗ₜ[ℂ] n, 0) : tenEven M N))
     = Submodule.Quotient.mk
       ((0, M.actOE c m ⊗ₜ[ℂ] n) : tenOdd M N)
@@ -873,7 +873,7 @@ theorem actOE_tmulEE (c : S.odd) (m : M.even) (n : N.even) :
 theorem actOE_tmulOO (c : S.odd) (m : M.odd) (n : N.odd) :
     (tensor M N).actOE c (tmulOO M N m n)
       = tmulEO M N (M.actOO c m) n := by
-  show Submodule.Quotient.mk
+  change Submodule.Quotient.mk
       (preActOE M N c ((0, m ⊗ₜ[ℂ] n) : tenEven M N))
     = Submodule.Quotient.mk
       ((M.actOO c m ⊗ₜ[ℂ] n, 0) : tenOdd M N)
@@ -884,7 +884,7 @@ theorem actOE_tmulOO (c : S.odd) (m : M.odd) (n : N.odd) :
 theorem actOO_tmulEO (c : S.odd) (m : M.even) (n : N.odd) :
     (tensor M N).actOO c (tmulEO M N m n)
       = tmulOO M N (M.actOE c m) n := by
-  show Submodule.Quotient.mk
+  change Submodule.Quotient.mk
       (preActOO M N c ((m ⊗ₜ[ℂ] n, 0) : tenOdd M N))
     = Submodule.Quotient.mk
       ((0, M.actOE c m ⊗ₜ[ℂ] n) : tenEven M N)
@@ -895,7 +895,7 @@ theorem actOO_tmulEO (c : S.odd) (m : M.even) (n : N.odd) :
 theorem actOO_tmulOE (c : S.odd) (m : M.odd) (n : N.even) :
     (tensor M N).actOO c (tmulOE M N m n)
       = tmulEE M N (M.actOO c m) n := by
-  show Submodule.Quotient.mk
+  change Submodule.Quotient.mk
       (preActOO M N c ((0, m ⊗ₜ[ℂ] n) : tenOdd M N))
     = Submodule.Quotient.mk
       ((M.actOO c m ⊗ₜ[ℂ] n, 0) : tenEven M N)
@@ -996,7 +996,7 @@ theorem liftEven_tmulEE
     (m : M.even) (n : N.even) :
     liftEven M N fee foo hee hoo hoeo hooe (tmulEE M N m n)
       = fee m n := by
-  show TensorProduct.lift fee (m ⊗ₜ[ℂ] n)
+  change TensorProduct.lift fee (m ⊗ₜ[ℂ] n)
       + TensorProduct.lift foo 0 = fee m n
   rw [map_zero, add_zero, TensorProduct.lift.tmul]
 
@@ -1016,7 +1016,7 @@ theorem liftEven_tmulOO
     (m : M.odd) (n : N.odd) :
     liftEven M N fee foo hee hoo hoeo hooe (tmulOO M N m n)
       = foo m n := by
-  show TensorProduct.lift fee 0
+  change TensorProduct.lift fee 0
       + TensorProduct.lift foo (m ⊗ₜ[ℂ] n) = foo m n
   rw [map_zero, zero_add, TensorProduct.lift.tmul]
 
@@ -1036,7 +1036,7 @@ theorem liftOdd_tmulEO
     (m : M.even) (n : N.odd) :
     liftOdd M N feo foe heeo heoe hoee hooo (tmulEO M N m n)
       = feo m n := by
-  show TensorProduct.lift feo (m ⊗ₜ[ℂ] n)
+  change TensorProduct.lift feo (m ⊗ₜ[ℂ] n)
       + TensorProduct.lift foe 0 = feo m n
   rw [map_zero, add_zero, TensorProduct.lift.tmul]
 
@@ -1056,7 +1056,7 @@ theorem liftOdd_tmulOE
     (m : M.odd) (n : N.even) :
     liftOdd M N feo foe heeo heoe hoee hooo (tmulOE M N m n)
       = foe m n := by
-  show TensorProduct.lift feo 0
+  change TensorProduct.lift feo 0
       + TensorProduct.lift foe (m ⊗ₜ[ℂ] n) = foe m n
   rw [map_zero, zero_add, TensorProduct.lift.tmul]
 

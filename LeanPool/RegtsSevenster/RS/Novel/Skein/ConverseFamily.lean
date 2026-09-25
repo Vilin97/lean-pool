@@ -22,8 +22,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Classical
-
+open Fragment
 /-- The lexicographic order on the interface's label type. -/
 @[reducible] local instance famBaseOrder (n : ℕ) :
     LinearOrder (Fin (0 + n) ⊕ Fin (n + 0)) :=
@@ -136,7 +135,7 @@ theorem exists_pairDatum_total {k ℓ : ℕ}
         · rw [show pairAgreeValue (EdgeSubset.mk s₁ hc₁)
               (EdgeSubset.mk s₂ hc₂) h o₁' o₂' st = 0 by
             unfold pairAgreeValue
-            rw [dif_pos hm₁, dif_neg hm₂]]
+            rw [dite_eq_left hm₁, dite_eq_right hm₂]]
           ring
       · rw [pairAgreeValue_eq_zero (EdgeSubset.mk s₁ hc₁)
           (EdgeSubset.mk s₂ hc₂) h o₁' o₂' st hm₁]
@@ -150,13 +149,13 @@ theorem exists_pairDatum_total {k ℓ : ℕ}
   · intro f hf
     cases f with
     | inl g =>
-      show Sum.inl _ = Sum.inl _
+      change Sum.inl _ = Sum.inl _
       refine congrArg Sum.inl ?_
       exact Eq.trans (match_relOfEq _ (Classical.choice hn₁).1 g)
         (match_relOfEq _ (relabelTransUp (leftIso t).toEquiv
           (EdgeSubset.mk s₁ hc₁) (Classical.choice hn₁).1) g).symm
     | inr g =>
-      show Sum.inr _ = Sum.inr _
+      change Sum.inr _ = Sum.inr _
       refine congrArg Sum.inr ?_
       exact Eq.trans (match_relOfEq _ (Classical.choice hn₂).1 g)
         (match_relOfEq _ (relabelTransUp (rightIso t).toEquiv
@@ -642,7 +641,7 @@ theorem cutBalanced_stageSubset (n : ℕ)
       (gluePair_eq_open n V hop)
       (V.dropSubset (cutL n) (cutR n) s) := by
     unfold stageSubset
-    exact dif_neg hop
+    exact dite_eq_right hop
   rw [hss]
   refine (key (intL n b)).trans (Iff.trans ?_ (key (intR n b)).symm)
   rw [hlift, interfaceStepEquiv_symm_intL n b,
@@ -665,7 +664,7 @@ theorem bitsOf_castSucc (n : ℕ)
     (s : Finset V.Flag) (a : Fin n) :
     bitsOf (n + 1) V s a.castSucc
       = bitsOf n (stepFragment n V) (stageSubset n V s) a := by
-  show (Fin.snoc (bitsOf n (stepFragment n V) (stageSubset n V s))
+  change (Fin.snoc (bitsOf n (stepFragment n V) (stageSubset n V s))
       (decide (V.boundaryFlag (cutL n) ∈ s)) : Fin (n + 1) → Bool)
       a.castSucc
     = bitsOf n (stepFragment n V) (stageSubset n V s) a
@@ -682,7 +681,7 @@ theorem stageSubset_closed (n : ℕ)
         (gluePair_eq_closed n V hcl)
         (V.dropSubset (cutL n) (cutR n) s) := by
   unfold stageSubset
-  exact dif_pos hcl
+  exact dite_eq_left hcl
 
 /-- The stage subset, at an open cut. -/
 theorem stageSubset_open (n : ℕ)
@@ -696,7 +695,7 @@ theorem stageSubset_open (n : ℕ)
         (gluePair_eq_open n V hop)
         (V.dropSubset (cutL n) (cutR n) s) := by
   unfold stageSubset
-  exact dif_neg hop
+  exact dite_eq_right hop
 
 open Classical in
 /-- **The base's directions give the alignment at every stage.**
@@ -1041,7 +1040,7 @@ theorem cutBalanced_stageSubset_closed (n : ℕ)
       (gluePair_eq_closed n V hcl)
       (V.dropSubset (cutL n) (cutR n) s) := by
     unfold stageSubset
-    exact dif_pos hcl
+    exact dite_eq_left hcl
   rw [hss]
   refine (key (intL n b)).trans (Iff.trans ?_ (key (intR n b)).symm)
   rw [hlift, interfaceStepEquiv_symm_intL n b,
@@ -1068,7 +1067,7 @@ theorem edgeTermAt_pushData_colourSum {k ℓ : ℕ}
           * edgeTermAt h 𝒢 emptyState (imageOf n V s) C
   | 0, V, 𝒢, s, _, _, C => by
       rw [Fintype.sum_unique]
-      show edgeTermAt h (relabelDataDown baseIso 𝒢) _ s C
+      change edgeTermAt h (relabelDataDown baseIso 𝒢) _ s C
         = (1 : ℂ) * _
       rw [one_mul]
       refine Eq.trans ?_
@@ -1077,7 +1076,7 @@ theorem edgeTermAt_pushData_colourSum {k ℓ : ℕ}
         (fun st => edgeTermAt h (relabelDataDown baseIso 𝒢) st s C)
         (funext fun a => isEmptyElim a)
   | n + 1, V, 𝒢, s, hc, hbal, C => by
-      show (∑ x : Fin (n + 1) → (Fin k ⊕ Fin (2 * ℓ)),
+      change (∑ x : Fin (n + 1) → (Fin k ⊕ Fin (2 * ℓ)),
           edgeTermAt h (stepDataDown n V
             (pushData n (stepFragment n V) 𝒢)) (diagOf (n + 1) x) s
             (C + carried (n + 1) V s)) = _
@@ -1142,7 +1141,7 @@ theorem edgeTermAt_pushData_colourSum {k ℓ : ℕ}
                     (V.gluePairClosed (cutL n) (cutR n) hcl)
               (V.gluePair (cutL n) (cutR n) (cutL_ne_cutR n))
               (gluePair_eq_closed n V hcl) t)
-                from by simp, if_neg (by simp : ¬ ((false : Bool)
+                from by simp, ite_eq_right (by simp : ¬ ((false : Bool)
                   = true))]
               exact edgeTermAt_stepClosed_false_all n V h
                 (pushData n (stepFragment n V) 𝒢) hcl t (diagOf n y)
@@ -1157,7 +1156,7 @@ theorem edgeTermAt_pushData_colourSum {k ℓ : ℕ}
                     (V.gluePairClosed (cutL n) (cutR n) hcl)
               (V.gluePair (cutL n) (cutR n) (cutL_ne_cutR n))
               (gluePair_eq_closed n V hcl) t)) + 1
-                from by simp; omega, if_pos rfl]
+                from by simp; omega, ite_eq_left rfl]
               exact edgeTermAt_stepClosed_true_all n V h
                 (pushData n (stepFragment n V) 𝒢) hcl t (diagOf n y)
                 _
@@ -1439,7 +1438,7 @@ theorem match_liftData_glueData_bitsOf : ∀ (n : ℕ)
     have hbits := bitsOf_stepData n V D
     have hlast : bitsOf (n + 1) V D.sub.flags (Fin.last n)
         = stepBit n V D := bitsOf_last n V D.sub.flags
-    show (liftData n (stepFragment n V)
+    change (liftData n (stepFragment n V)
         (fun a => bitsOf (n + 1) V D.sub.flags a.castSucc)
         (stepDataUp n V
           (bitsOf (n + 1) V D.sub.flags (Fin.last n)) 𝒟)
@@ -1461,7 +1460,7 @@ theorem match_liftData_glueData_bitsOf : ∀ (n : ℕ)
           (stepBit n V D) 𝒟 D hcompat
           (fun hcL hEL hneL => hal'.1 hcl _ hcL hEL hneL
             (by
-              show CutBalanced V (liftSubsetOpen
+              change CutBalanced V (liftSubsetOpen
                 hcl (V.dropSubset (cutL n) (cutR n) D.sub.flags))
               rw [liftSubsetOpen_dropSubset (cutL_ne_cutR n) hcl
                 D.sub.flags D.sub.pairing_mem]
@@ -1518,7 +1517,7 @@ theorem tensorTermAt_eq_zero_of_not_closed {α : Type} [LinearOrder α]
     (s : Finset V.Flag) (x : GenBoundaryState k ℓ α)
     (hc : ¬ ∀ f ∈ s, V.pairing f ∈ s) : tensorTermAt V h s x = 0 := by
   unfold tensorTermAt
-  rw [dif_neg hc]
+  rw [dite_eq_right hc]
 
 open Classical in
 /-- **A non-Eulerian subset carries no tensor term.** -/
@@ -1529,7 +1528,7 @@ theorem tensorTermAt_eq_zero_of_not_eulerian {α : Type}
     (hE : ¬ (EdgeSubset.mk s hc).Eulerian) :
     tensorTermAt V h s x = 0 := by
   unfold tensorTermAt
-  rw [dif_pos hc, dif_neg hE]
+  rw [dite_eq_left hc, dite_eq_right hE]
 
 open Classical in
 /-- **A subset with no canonical data carries no tensor term.** -/
@@ -1541,7 +1540,7 @@ theorem tensorTermAt_eq_zero_of_not_canon {α : Type} [LinearOrder α]
     (hne : ¬ Nonempty (EdgeSubset.mk s hc).CanonData) :
     tensorTermAt V h s x = 0 := by
   unfold tensorTermAt
-  rw [dif_pos hc, dif_pos hE, dif_neg hne]
+  rw [dite_eq_left hc, dite_eq_left hE, dite_eq_right hne]
 
 open Classical in
 /-- **Tensors of subsets using different labels are orthogonal.** -/

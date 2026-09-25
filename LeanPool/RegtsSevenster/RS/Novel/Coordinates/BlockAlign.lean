@@ -19,7 +19,7 @@ their colour, incoming flags the colour itself.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 
@@ -58,7 +58,7 @@ theorem blockRestrict_colouringOfFlip_mem (W : ClosedFragment)
     blockRestrict_colouringOf_mem W F _ _ v j h]
   congr 1
   by_cases hlow : (slotEmbed W v j).val < edgeCount W
-  · rw [if_pos hlow]
+  · rw [ite_eq_left hlow]
     have hrep : repFlag W (blockFlag W v j) =
         blockFlag W v j :=
       repFlag_low W _ (by
@@ -70,15 +70,15 @@ theorem blockRestrict_colouringOfFlip_mem (W : ClosedFragment)
           rw [hrep]
           exact hout)
       rw [EdgeSubset.OddColouring.flip_val_mem F _ _ φ
-        ⟨blockFlag W v j, h⟩ hT, if_pos hout]
+        ⟨blockFlag W v j, h⟩ hT, ite_eq_left hout]
     · have hT : blockFlag W v j ∉ outRepSet W F o :=
         fun hmem => hout (by
           have h2 := (mem_outRepSet_iff W F o _ h).mp hmem
           rw [hrep] at h2
           exact h2)
       rw [EdgeSubset.OddColouring.flip_val_not_mem F _ _ φ
-        ⟨blockFlag W v j, h⟩ hT, if_neg hout]
-  · rw [if_neg hlow]
+        ⟨blockFlag W v j, h⟩ hT, ite_eq_right hout]
+  · rw [ite_eq_right hlow]
     have hnotlow :
         ¬ (starFlagEnum W (blockFlag W v j)).val <
           edgeCount W := by
@@ -95,7 +95,7 @@ theorem blockRestrict_colouringOfFlip_mem (W : ClosedFragment)
           rw [hrep, hpair, hout] at h2
           exact Bool.noConfusion h2
       rw [EdgeSubset.OddColouring.flip_val_not_mem F _ _ φ
-        ⟨blockFlag W v j, h⟩ hT, if_pos hout]
+        ⟨blockFlag W v j, h⟩ hT, ite_eq_left hout]
     · have hof : o.isOut (blockFlag W v j) = false := by
         cases hb : o.isOut (blockFlag W v j)
         · rfl
@@ -106,7 +106,7 @@ theorem blockRestrict_colouringOfFlip_mem (W : ClosedFragment)
           rfl)
       rw [EdgeSubset.OddColouring.flip_val_mem F _ _ φ
         ⟨blockFlag W v j, h⟩ hT, oddPartner_invol,
-        if_neg hout]
+        ite_eq_right hout]
 
 /-- Non-participating block values are unchanged by the flip. -/
 theorem blockRestrict_colouringOfFlip_not_mem

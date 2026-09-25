@@ -96,7 +96,7 @@ theorem scalarEnd_scalarUnitEquiv
     (h : HasScalarUnit D) (c : ℂ)
     (X : D) : scalarEnd (scalarUnitEquiv h) c X = c • 𝟙 X := by
   have hs : scalarHom (scalarUnitEquiv h) c = c • 𝟙 (𝟙_ D) := rfl
-  show (λ_ X).inv ≫ (scalarHom (scalarUnitEquiv h) c ▷ X) ≫
+  change (λ_ X).inv ≫ (scalarHom (scalarUnitEquiv h) c ▷ X) ≫
     (λ_ X).hom = c • 𝟙 X
   rw [hs, MonoidalLinear.smul_whiskerRight, id_whiskerRight,
     CategoryTheory.Linear.smul_comp, CategoryTheory.Linear.comp_smul,
@@ -246,18 +246,18 @@ theorem exists_deligneFibreFunctor_small
     (hu : HasScalarUnit B) (X : B) (hgen : TensorGeneratedBy B X)
     (hgrow : ModerateLengthGrowth B) :
     Nonempty (DeligneFibreFunctor B) := by
-  letI := linearOfScalarUnit (doubledScalarUnit hu)
-  letI := monoidalLinearOfScalarUnitBraided (doubledScalarUnit hu)
-  letI := linearOfScalarUnit (indScalarUnit (doubledScalarUnit hu))
-  letI := monoidalLinearOfScalarUnitBraided
+  let := linearOfScalarUnit (doubledScalarUnit hu)
+  let := monoidalLinearOfScalarUnitBraided (doubledScalarUnit hu)
+  let := linearOfScalarUnit (indScalarUnit (doubledScalarUnit hu))
+  let := monoidalLinearOfScalarUnitBraided
     (indScalarUnit (doubledScalarUnit hu))
   obtain ⟨𝔹, hmon, hcomm, hne, hsimple, hsp, ⟨pt⟩⟩ :=
     exists_splitting_simple_algebra_doubled P P₀ hu X hgen hgrow
-  letI := hmon
-  letI := hcomm
-  haveI hpm : ∀ Z : Ind (Doubled B),
+  let := hmon
+  let := hcomm
+  have hpm : ∀ Z : Ind (Doubled B),
       (tensorRight Z).PreservesMonomorphisms := fun _ => inferInstance
-  haveI hmono : Mono η[𝔹] :=
+  have hmono : Mono η[𝔹] :=
     mono_unit_ind (simple_unit_of_hasScalarUnit
       (hasScalarUnit_of_scalarUnit (doubledScalarUnit hu))) 𝔹 hne
   have hsec : ∀ T : CategoryTheory.ShortComplex (Doubled B),
@@ -271,13 +271,13 @@ theorem exists_deligneFibreFunctor_small
           𝟙 (freeMod 𝔹 ((T.map
             (indOf : Doubled B ⥤ Ind (Doubled B))).X₃)) := by
     intro T hT
-    haveI := (indOf_shortExact hT).epi_g
+    have := (indOf_shortExact hT).epi_g
     exact exists_section_of_simple 𝔹 doubledIndOddLine hsimple hne
       ((T.map (indOf : Doubled B ⥤ Ind (Doubled B))).g) (hsp T.X₂)
       (epi_freeModMap 𝔹 _ inferInstance)
-  letI := indOf_additive (C := Doubled B)
-  letI := indOfFunctorLinear (doubledScalarUnit hu)
-  letI := evenEmbedLinear_scalarUnit hu
+  let := indOf_additive (C := Doubled B)
+  let := indOfFunctorLinear (doubledScalarUnit hu)
+  let := evenEmbedLinear_scalarUnit hu
   have hb := (hbr (Doubled B) doubledIndOddLine 𝔹 hsp pt).some
   have hF : DeligneFibreFunctor (Doubled B) :=
     deligneFibreFunctorOfPoint doubledIndOddLine 𝔹 hmono hsp hsec pt hb

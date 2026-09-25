@@ -74,8 +74,8 @@ theorem indOf_linear [SmallCategory C] [MonoidalCategory C] [Preadditive C]
     ∀ {X Y : C} (c : ℂ) (f : X ⟶ Y),
       (indOf : C ⥤ Ind C).map (c • f) =
         c • (indOf : C ⥤ Ind C).map f := by
-  letI := linearOfScalarUnit ψ
-  letI := linearOfScalarUnit (indScalarUnit ψ)
+  let := linearOfScalarUnit ψ
+  let := linearOfScalarUnit (indScalarUnit ψ)
   intro X Y c f
   exact indOf_map_scalarSmul ψ c f
 
@@ -88,8 +88,8 @@ theorem indOfFunctorLinear
     letI := linearOfScalarUnit ψ
     letI := linearOfScalarUnit (indScalarUnit ψ)
     Functor.Linear ℂ (indOf : C ⥤ Ind C) := by
-  letI := linearOfScalarUnit ψ
-  letI := linearOfScalarUnit (indScalarUnit ψ)
+  let := linearOfScalarUnit ψ
+  let := linearOfScalarUnit (indScalarUnit ψ)
   exact ⟨fun f c => indOf_map_scalarSmul ψ c f⟩
 
 end Installed
@@ -111,8 +111,8 @@ theorem indOfLinear_of_scalarUnit
     letI := linearOfScalarUnit ψ
     letI := linearOfScalarUnit (indScalarUnit ψ)
     IndOfLinear C := by
-  letI := linearOfScalarUnit ψ
-  letI := linearOfScalarUnit (indScalarUnit ψ)
+  let := linearOfScalarUnit ψ
+  let := linearOfScalarUnit (indScalarUnit ψ)
   exact fun _ _ c f => indOf_map_scalarSmul ψ c f
 
 end Hypothesis

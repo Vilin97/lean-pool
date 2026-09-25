@@ -269,7 +269,7 @@ theorem freeModHomEquiv_id
     (X : D) :
     freeModHomEquiv R X (freeMod R X) (𝟙 (freeMod R X)) =
       (λ_ X).inv ≫ η[R] ▷ X := by
-  show (λ_ X).inv ≫ (η[R] ▷ X) ≫ 𝟙 _ = _
+  change (λ_ X).inv ≫ (η[R] ▷ X) ≫ 𝟙 _ = _
   rw [Category.comp_id]
 
 /-- **An isomorphism of free modules from a round trip**: a pair of
@@ -480,15 +480,15 @@ theorem locallyMixed_countablyPresented
       η[A] ≠ 0 ∧ CountablyPresented A ∧
         Nonempty (freeMod A X ≅ freeMod A (L.mix p q)) := by
   obtain ⟨p, q, A, hmon, hcomm, hA, ⟨Φ⟩⟩ := h
-  letI := hmon
-  letI := hcomm
+  let := hmon
+  let := hcomm
   obtain ⟨j, hjunit, u, v, hu, hv⟩ :=
     exists_imageSubalgebra_pair A hX (indCompactObj_mix L p q)
       (freeModHomEquiv A X (freeMod A (L.mix p q)) Φ.hom)
       (freeModHomEquiv A (L.mix p q) (freeMod A X) Φ.inv)
-  haveI := hjunit
-  haveI := mono_imageSubalgebraHom_whiskerRight A j X
-  haveI := mono_imageSubalgebraHom_whiskerRight A j (L.mix p q)
+  have := hjunit
+  have := mono_imageSubalgebraHom_whiskerRight A j X
+  have := mono_imageSubalgebraHom_whiskerRight A j (L.mix p q)
   refine ⟨p, q, imageSubalgebra A j, inferInstance, inferInstance,
     one_imageSubalgebra_ne_zero A j hA,
     countablyPresented_imageSubalgebra A j
@@ -523,12 +523,12 @@ theorem section_countablyPresented
         ∃ s : freeMod A W ⟶ freeMod A V,
           s ≫ freeModMap A g = 𝟙 (freeMod A W) := by
   obtain ⟨A, hmon, hcomm, hA, s, hs⟩ := h
-  letI := hmon
-  letI := hcomm
+  let := hmon
+  let := hcomm
   obtain ⟨j, hjunit, t, ht⟩ := exists_imageSubalgebra_single A hW
     (freeModHomEquiv A W (freeMod A V) s)
-  haveI := hjunit
-  haveI := mono_imageSubalgebraHom_whiskerRight A j W
+  have := hjunit
+  have := mono_imageSubalgebraHom_whiskerRight A j W
   refine ⟨imageSubalgebra A j, inferInstance, inferInstance,
     one_imageSubalgebra_ne_zero A j hA,
     countablyPresented_imageSubalgebra A j

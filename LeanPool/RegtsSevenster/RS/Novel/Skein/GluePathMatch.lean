@@ -32,7 +32,7 @@ terms of the `pathMatch` of `κ`:
 
 namespace RS
 
-open scoped Classical
+
 
 namespace EdgeSubset
 
@@ -186,13 +186,13 @@ theorem iterWalk_glueOpen_from
         rw [hrw]
         exact hintv
       refine ⟨?_, ?_⟩
-      · show ((RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
+      · change ((RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
             ((W.gluePairOpen i j hij hopen).pairing
               (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) g'
                 k))).val =
           κ.match_ (W.pairing (iterWalk κ g k))
         exact hstep.trans (by rw [hval])
-      · show (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
+      · change (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
             ((W.gluePairOpen i j hij hopen).pairing
               (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) g'
                 k)) ∈ s'
@@ -232,7 +232,7 @@ theorem boundary_val_of_glueOpen
 /-- **Exit-time uniqueness**: any explicitly exhibited chain walk
 computes the path matching — the chain's exit step is unique, so
 no fuel bookkeeping is needed. -/
-theorem pathMatch_exit_unique {α' : Type} [LinearOrder α']
+theorem pathMatch_exit_unique {α' : Type}
     {W' : Fragment α'} {F : EdgeSubset W'}
     (κ : F.RelTransitionSystem) {b : W'.Flag}
     (hb : b ∈ F.boundaryFlags) (N : ℕ)
@@ -321,6 +321,40 @@ theorem pathMatch_glueOpen_of_ne
     hbg k hcontg htermg
   rw [hpmg, hrw, hval, hpm]
 
+private theorem pathMatch_reverse_eq {F : EdgeSubset W}
+    (κ : F.RelTransitionSystem) {b x : W.Flag}
+    (hb : b ∈ F.boundaryFlags) (hx : x ∈ F.boundaryFlags)
+    (he : κ.pathMatch b hb = x) : κ.pathMatch x hx = b := by
+  subst he
+  exact κ.pathMatch_invol hb
+
+private theorem iterWalk_glueOpen_internal
+    (κ : (Fl).RelTransitionSystem) {b' : SurvivingFlag W i j}
+    (hbs : b' ∈ s') (k : ℕ)
+    (hcont : ∀ m, m < k →
+      W.pairing (iterWalk κ b'.val m) ∈ (Fl).internalFlags) : ∀ m, m < k →
+    (W.gluePairOpen i j hij hopen).pairing
+      (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b' m) ∈
+        (Fg).internalFlags := by
+  have hw := iterWalk_glueOpen_from hij hopen s' hc' hc κ
+    (g := b'.val) rfl hbs k hcont
+  intro m hm
+  obtain ⟨hval, _⟩ := hw m (by omega)
+  have hint := hcont m hm
+  have hnecut := internal_surviving i j hint
+  have hrw : ((W.gluePairOpen i j hij hopen).pairing
+      (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b'
+        m)).val =
+      W.pairing (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ)
+        b' m).val := by
+    refine rewire_val_of_ne hopen _ ?_ ?_
+    · rw [hval]; exact hnecut.1
+    · rw [hval]; exact hnecut.2
+  refine (mem_internalFlags_glueOpen hij hopen s' hc'
+    hc).mpr ?_
+  rw [hrw, hval]
+  exact hint
+
 /-- **pathMatch through an open glue, `i`-cut hit**: when the
 original chain from a surviving boundary flag ends at the `i`-cut
 flag, the glued chain continues through the cut and ends at the
@@ -345,36 +379,7 @@ theorem pathMatch_glueOpen_hit_i
   -- ═══════ THE GLUED WALK FOLLOWS THE BASE WALK ═══════
   have hw := iterWalk_glueOpen_from hij hopen s' hc' hc κ
     (g := b'.val) rfl hbs k hcont
-  have hcontg : ∀ m, m < k →
-      (W.gluePairOpen i j hij hopen).pairing
-        (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b' m) ∈
-          (Fg).internalFlags := by
-    intro m hm
-    obtain ⟨hval, _⟩ := hw m (by omega)
-    have hint := hcont m hm
-    have hnecut := internal_surviving i j hint
-    have hrw : ((W.gluePairOpen i j hij hopen).pairing
-        (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b'
-          m)).val =
-        W.pairing (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ)
-          b' m).val := by
-      refine rewire_val_of_ne hopen _ ?_ ?_
-      · rw [hval]; exact hnecut.1
-      · rw [hval]; exact hnecut.2
-    refine (mem_internalFlags_glueOpen hij hopen s' hc'
-      hc).mpr ?_
-    rw [hrw, hval]
-    exact hint
-  have hinvol : ∀ (x : W.Flag)
-      (hx : x ∈ (EdgeSubset.mk
-        (liftSubsetOpen hopen s') hc :
-        EdgeSubset W).boundaryFlags)
-      (he : κ.pathMatch b'.val hbl = x),
-      κ.pathMatch x hx = b'.val := by
-    intro x hx he
-    subst he
-    exact κ.pathMatch_invol hbl
-
+  have hcontg := iterWalk_glueOpen_internal hij hopen s' hc' hc κ hbs k hcont
   have hhitk : W.pairing (iterWalk κ b'.val k) =
       W.boundaryFlag i := hpm.symm.trans hhit
   -- ═══════ CROSSING THE REWIRED INTERFACE ═══════
@@ -401,16 +406,8 @@ theorem pathMatch_glueOpen_hit_i
   have hne₂i : κ.pathMatch (W.boundaryFlag j) hbfj ≠
       W.boundaryFlag i := by
     intro hcon
-    have h1 : ∀ (x : W.Flag) (hx : x ∈ (EdgeSubset.mk
-        (liftSubsetOpen hopen s') hc :
-        EdgeSubset W).boundaryFlags)
-        (he : κ.pathMatch (W.boundaryFlag j) hbfj = x),
-        κ.pathMatch x hx = W.boundaryFlag j := by
-      intro x hx he
-      subst he
-      exact κ.pathMatch_invol hbfj
-    have h2 := h1 (W.boundaryFlag i) hbfi hcon
-    have h3 := hinvol (W.boundaryFlag i) hbfi hhit
+    have h2 := pathMatch_reverse_eq κ hbfj hbfi hcon
+    have h3 := pathMatch_reverse_eq κ hbl hbfi hhit
     exact b'.prop.2 (h3.symm.trans h2)
   rcases mem_internalFlags_or_boundaryFlags (Fl)
       (hc _ ((Finset.mem_filter.mp hbfj).1)) with hint₂ | hb₂
@@ -429,7 +426,7 @@ theorem pathMatch_glueOpen_hit_i
     have hb2v : (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ)
       b' (k + 1)).val =
         κ.match_ (W.pairing (W.boundaryFlag j)) := by
-      show ((RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
+      change ((RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
           ((W.gluePairOpen i j hij hopen).pairing
             (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b'
               k))).val = _
@@ -438,7 +435,7 @@ theorem pathMatch_glueOpen_hit_i
         hpsjint).trans (by rw [partnerSurvJ_val])
     have hmem2 : iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ)
       b' (k + 1) ∈ s' := by
-      show (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
+      change (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
           ((W.gluePairOpen i j hij hopen).pairing
             (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b'
               k)) ∈ s'
@@ -457,26 +454,9 @@ theorem pathMatch_glueOpen_hit_i
       (g' := iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b'
         (k + 1)) hb2v hmem2
       (k₃ - 1) hcontsh
-    have hadd : ∀ m, iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc
-      κ)
-        (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b' (k +
-          1)) m =
-        iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b' (k + 1
-          + m) := by
-      intro m
-      induction m with
-      | zero => rfl
-      | succ m ih =>
-          show (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
-              ((W.gluePairOpen i j hij hopen).pairing
-                (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ)
-                  (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ)
-                    b' (k + 1)) m)) =
-            (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
-              ((W.gluePairOpen i j hij hopen).pairing
-                (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ)
-                  b' (k + 1 + m)))
-          rw [ih]
+    have hadd := fun m =>
+      (iterWalk_add (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b'
+        (k + 1) m).symm
     have hcontN : ∀ m, m < k + k₃ →
         (W.gluePairOpen i j hij hopen).pairing
           (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b' m) ∈
@@ -593,36 +573,7 @@ theorem pathMatch_glueOpen_hit_j
   have hbs : b' ∈ s' := (Finset.mem_filter.mp hbg).1
   have hw := iterWalk_glueOpen_from hij hopen s' hc' hc κ
     (g := b'.val) rfl hbs k hcont
-  have hcontg : ∀ m, m < k →
-      (W.gluePairOpen i j hij hopen).pairing
-        (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b' m) ∈
-          (Fg).internalFlags := by
-    intro m hm
-    obtain ⟨hval, _⟩ := hw m (by omega)
-    have hint := hcont m hm
-    have hnecut := internal_surviving i j hint
-    have hrw : ((W.gluePairOpen i j hij hopen).pairing
-        (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b'
-          m)).val =
-        W.pairing (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ)
-          b' m).val := by
-      refine rewire_val_of_ne hopen _ ?_ ?_
-      · rw [hval]; exact hnecut.1
-      · rw [hval]; exact hnecut.2
-    refine (mem_internalFlags_glueOpen hij hopen s' hc'
-      hc).mpr ?_
-    rw [hrw, hval]
-    exact hint
-  have hinvol : ∀ (x : W.Flag)
-      (hx : x ∈ (EdgeSubset.mk
-        (liftSubsetOpen hopen s') hc :
-        EdgeSubset W).boundaryFlags)
-      (he : κ.pathMatch b'.val hbl = x),
-      κ.pathMatch x hx = b'.val := by
-    intro x hx he
-    subst he
-    exact κ.pathMatch_invol hbl
-
+  have hcontg := iterWalk_glueOpen_internal hij hopen s' hc' hc κ hbs k hcont
   have hhitk : W.pairing (iterWalk κ b'.val k) =
       W.boundaryFlag j := hpm.symm.trans hhit
   have hhitne : W.pairing (iterWalk κ b'.val k) ≠
@@ -653,16 +604,8 @@ theorem pathMatch_glueOpen_hit_j
   have hne₂j : κ.pathMatch (W.boundaryFlag i) hbfi ≠
       W.boundaryFlag j := by
     intro hcon
-    have h1 : ∀ (x : W.Flag) (hx : x ∈ (EdgeSubset.mk
-        (liftSubsetOpen hopen s') hc :
-        EdgeSubset W).boundaryFlags)
-        (he : κ.pathMatch (W.boundaryFlag i) hbfi = x),
-        κ.pathMatch x hx = W.boundaryFlag i := by
-      intro x hx he
-      subst he
-      exact κ.pathMatch_invol hbfi
-    have h2 := h1 (W.boundaryFlag j) hbfj hcon
-    have h3 := hinvol (W.boundaryFlag j) hbfj hhit
+    have h2 := pathMatch_reverse_eq κ hbfi hbfj hcon
+    have h3 := pathMatch_reverse_eq κ hbl hbfj hhit
     exact b'.prop.1 (h3.symm.trans h2)
   rcases mem_internalFlags_or_boundaryFlags (Fl)
       (hc _ ((Finset.mem_filter.mp hbfi).1)) with hint₂ | hb₂
@@ -681,7 +624,7 @@ theorem pathMatch_glueOpen_hit_j
     have hb2v : (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ)
       b' (k + 1)).val =
         κ.match_ (W.pairing (W.boundaryFlag i)) := by
-      show ((RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
+      change ((RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
           ((W.gluePairOpen i j hij hopen).pairing
             (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b'
               k))).val = _
@@ -690,7 +633,7 @@ theorem pathMatch_glueOpen_hit_j
         hpsiint).trans (by rw [partnerSurvI_val])
     have hmem2 : iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ)
       b' (k + 1) ∈ s' := by
-      show (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
+      change (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
           ((W.gluePairOpen i j hij hopen).pairing
             (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b'
               k)) ∈ s'
@@ -709,26 +652,9 @@ theorem pathMatch_glueOpen_hit_j
       (g' := iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b'
         (k + 1)) hb2v hmem2
       (k₃ - 1) hcontsh
-    have hadd : ∀ m, iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc
-      κ)
-        (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b' (k +
-          1)) m =
-        iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b' (k + 1
-          + m) := by
-      intro m
-      induction m with
-      | zero => rfl
-      | succ m ih =>
-          show (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
-              ((W.gluePairOpen i j hij hopen).pairing
-                (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ)
-                  (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ)
-                    b' (k + 1)) m)) =
-            (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_
-              ((W.gluePairOpen i j hij hopen).pairing
-                (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ)
-                  b' (k + 1 + m)))
-          rw [ih]
+    have hadd := fun m =>
+      (iterWalk_add (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b'
+        (k + 1) m).symm
     have hcontN : ∀ m, m < k + k₃ →
         (W.gluePairOpen i j hij hopen).pairing
           (iterWalk (RelTransitionSystem.glueOpen hij hopen s' hc' hc κ) b' m) ∈
@@ -828,7 +754,7 @@ open EdgeSubset Fragment in
 /-- Participation transports through the open glue at label
 level. -/
 theorem glued_participation_iff
-    {α : Type} [LinearOrder α] {W : Fragment α} {i j : α}
+    {α : Type} {W : Fragment α} {i j : α}
     (hij : i ≠ j)
     (hopen : W.pairing (W.boundaryFlag i) ≠ W.boundaryFlag j)
     (s' : Finset (SurvivingFlag W i j))

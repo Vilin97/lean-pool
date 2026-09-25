@@ -67,14 +67,14 @@ theorem jtChar_orthonormal (μ : YoungDiagram) :
     refine Finset.sum_congr rfl fun τ _ => ?_
     by_cases hσ : ∀ i, 0 ≤ jtSigned μ σ i
     · by_cases hτ : ∀ i, 0 ≤ jtSigned μ τ i
-      · rw [if_pos ⟨hσ, hτ⟩, Finset.mul_sum]
+      · rw [ite_eq_left ⟨hσ, hτ⟩, Finset.mul_sum]
         refine Finset.sum_congr rfl fun π _ => ?_
-        rw [if_pos hσ, if_pos hτ]; ring
-      · rw [if_neg (fun hc => hτ hc.2)]
+        rw [ite_eq_left hσ, ite_eq_left hτ]; ring
+      · rw [ite_eq_right (fun hc => hτ hc.2)]
         rw [Finset.sum_eq_zero fun π _ => by
-          rw [if_neg hτ, mul_zero, mul_zero]]
+          rw [ite_eq_right hτ, mul_zero, mul_zero]]
         rw [mul_zero]
-    · rw [if_neg (fun hc => hσ hc.1)]
+    · rw [ite_eq_right (fun hc => hσ hc.1)]
       rw [show (∑ π : Equiv.Perm (Fin n),
         ((Equiv.Perm.sign σ : ℤ) : ℂ) *
           (if ∀ i, 0 ≤ jtSigned μ σ i
@@ -83,7 +83,7 @@ theorem jtChar_orthonormal (μ : YoungDiagram) :
             (if ∀ i, 0 ≤ jtSigned μ τ i
               then (colourChar (jtComp μ τ) π : ℂ) else 0))) = 0
         from Finset.sum_eq_zero fun π _ => by
-          rw [if_neg hσ, mul_zero, zero_mul]]
+          rw [ite_eq_right hσ, mul_zero, zero_mul]]
       rw [mul_zero]
   -- ═══════ STAGE 2: PRODUCTS OF CHARACTERS AS FILTER CARDS ═══════
   -- colourChar values are ℕ, so colourChar * colourChar is ℕ too
@@ -144,11 +144,11 @@ theorem jtChar_orthonormal (μ : YoungDiagram) :
             else 0)) := by
     intro σ τ
     by_cases hboth : (∀ i, 0 ≤ jtSigned μ σ i) ∧ (∀ i, 0 ≤ jtSigned μ τ i)
-    · rw [if_pos hboth, if_pos hboth]
+    · rw [ite_eq_left hboth, ite_eq_left hboth]
       rw [hstep2 σ τ hboth.1 hboth.2, hstep3 σ τ hboth.1 hboth.2,
         hstep4 σ τ hboth.1 hboth.2]
       push_cast; ring
-    · rw [if_neg hboth, if_neg hboth, mul_zero, mul_zero]
+    · rw [ite_eq_right hboth, ite_eq_right hboth, mul_zero, mul_zero]
   rw [Finset.sum_congr rfl (fun (σ : Equiv.Perm (Fin μ.rowLens.length)) (_ : σ ∈
     Finset.univ) =>
     Finset.sum_congr rfl (fun (τ : Equiv.Perm (Fin μ.rowLens.length)) (_ : τ ∈

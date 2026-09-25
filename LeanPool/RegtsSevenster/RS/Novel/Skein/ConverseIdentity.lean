@@ -21,7 +21,7 @@ sum is `EdgeSubset.base_sum_eq_superForm_pairing_bitsOf`.
 
 namespace RS
 
-open scoped Classical
+
 
 namespace EdgeSubset
 
@@ -111,7 +111,7 @@ tensors. -/
 theorem superGramIdentity_of_baseSum (H : BaseSumIsClosure) :
     SuperGramIdentity := by
   intro k ℓ h t F G
-  show mixedPartition h (pairClose F G) = _
+  change mixedPartition h (pairClose F G) = _
   rw [mixedPartition_pairClose_eq_superForm_of_baseSum H h t F G,
     circles_closeBase, Finset.mul_sum]
   refine Finset.sum_congr rfl (fun x _ => ?_)

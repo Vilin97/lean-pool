@@ -27,8 +27,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Classical
-
+open Fragment
 section Indep
 
 variable {L : Type}
@@ -103,7 +102,7 @@ theorem mixedValue_relabelUp_closed [LinearOrder L] {V : Fragment L}
       (Classical.choice hne')
       ⟨relabelTransUp e.toEquiv F d.1,
         ⟨relabelOrientUp e.toEquiv F d.2.val, hcan⟩⟩]
-  show (F.relabelUp e.toEquiv).throughSummand h _ hbnd'
+  change (F.relabelUp e.toEquiv).throughSummand h _ hbnd'
       (relabelOrientUp e.toEquiv F d.2.val)
       (relabelTransUp e.toEquiv F d.1).openCircuitCount = _
   rw [relabel_openCircuitCount e.toEquiv F d.1]
@@ -143,8 +142,8 @@ theorem mixedPartition_relabel_orderIso
   simp only [relabel_pairing_eq]
   by_cases hc : ∀ f ∈ s, V.pairing f ∈ s
   · have hbnd := genBoundarySubsetMatches_isEmpty (V := V) s st
-    refine Eq.trans (dif_pos hc) (Eq.trans ?_ (dif_pos hc).symm)
-    refine Eq.trans ?_ (dif_pos hbnd).symm
+    refine Eq.trans (dite_eq_left hc) (Eq.trans ?_ (dite_eq_left hc).symm)
+    refine Eq.trans ?_ (dite_eq_left hbnd).symm
     by_cases hE : (EdgeSubset.mk s hc : EdgeSubset V).Eulerian
     · have hE' : (EdgeSubset.mk s hc :
           EdgeSubset (V.relabel e.toEquiv)).Eulerian :=
@@ -158,8 +157,8 @@ theorem mixedPartition_relabel_orderIso
       have hne : Nonempty (EdgeSubset.mk s hc :
           EdgeSubset V).CanonData :=
         ⟨⟨κ.toRelTransitionSystem, o.toRel, hcan⟩⟩
-      refine Eq.trans (if_pos hE') (Eq.trans ?_ (if_pos hE).symm)
-      refine Eq.trans ?_ (dif_pos hne).symm
+      refine Eq.trans (ite_eq_left hE') (Eq.trans ?_ (ite_eq_left hE).symm)
+      refine Eq.trans ?_ (dite_eq_left hne).symm
       rw [throughSummand_canon_indep (V := V) (EdgeSubset.mk s hc) h
         st hbnd
         (Classical.choice hne)
@@ -171,11 +170,11 @@ theorem mixedPartition_relabel_orderIso
           EdgeSubset (V.relabel e.toEquiv)).Eulerian :=
         fun hx => hE
           ((relabelUp_eulerian e.toEquiv (EdgeSubset.mk s hc)).mp hx)
-      refine Eq.trans (if_neg hE') ?_
-      exact (if_neg hE).symm
-  · refine Eq.trans (dif_neg hc) ?_
+      refine Eq.trans (ite_eq_right hE') ?_
+      exact (ite_eq_right hE).symm
+  · refine Eq.trans (dite_eq_right hc) ?_
     symm
-    exact dif_neg hc
+    exact dite_eq_right hc
 
 open Classical in
 /-- **The relabelled fragment's Definition 5 partition value is the

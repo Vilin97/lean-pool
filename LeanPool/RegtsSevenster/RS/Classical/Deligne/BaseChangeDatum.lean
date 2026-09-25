@@ -38,7 +38,7 @@ theorem baseChangePair_linear
     modTensorAct B (baseChangeMod φ M')
         (baseChangeMod φ M) ≫ baseChangePair A B φ d =
       (B ◁ baseChangePair A B φ d) ≫ μ[B] := by
-  show modTensorAct B (baseChangeMod φ M')
+  change modTensorAct B (baseChangeMod φ M')
       (baseChangeMod φ M) ≫
       ((projFormula A B φ M' M).hom ≫
         modTensorMap A (𝟙 (restrictRegular φ)) (d.pairMod) ≫
@@ -93,7 +93,7 @@ theorem baseChangeCopair_linear
           (baseChangeMod φ M') := by
     refine act_inv_of_act_hom B (projFormula A B φ M M') ?_
     exact projFormula_linear A B φ M M'
-  show μ[B] ≫
+  change μ[B] ≫
       ((modTensorUnitRight A (restrictRegular φ)).inv ≫
         modTensorMap A (𝟙 (restrictRegular φ))
           (d.copairMod) ≫

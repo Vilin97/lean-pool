@@ -20,7 +20,7 @@ namespace RS
 
 open Finset Equiv MonoidAlgebra
 
-open scoped Classical
+
 
 /-! ## The permutation action on the full function space -/
 
@@ -30,10 +30,10 @@ instance tensorAction (n m : ℕ) :
     MulAction (Equiv.Perm (Fin n)) (Fin n → Fin m) where
   smul π g := g ∘ ⇑π⁻¹
   one_smul g := by
-    show g ∘ ⇑(1 : Equiv.Perm (Fin n))⁻¹ = g
+    change g ∘ ⇑(1 : Equiv.Perm (Fin n))⁻¹ = g
     simp
   mul_smul π ρ g := by
-    show g ∘ ⇑(π * ρ)⁻¹ = (g ∘ ⇑ρ⁻¹) ∘ ⇑π⁻¹
+    change g ∘ ⇑(π * ρ)⁻¹ = (g ∘ ⇑ρ⁻¹) ∘ ⇑π⁻¹
     rw [mul_inv_rev]
     rfl
 

@@ -158,7 +158,7 @@ theorem twistPow_symIdem_conj
             modPowPerm (A := A) (X := R.X) (k + 1) σ) := by
     rw [altPowIdem, antisymmetriser, map_smul, map_sum]
     simp only [halt]
-    show tensorPow D L.obj (k + 1) ◁
+    change tensorPow D L.obj (k + 1) ◁
         (((Nat.factorial (k + 1) : ℂ))⁻¹ •
           ∑ σ : Equiv.Perm (Fin (k + 1)),
             ((Equiv.Perm.sign σ : ℤ) : ℂ) •
@@ -189,7 +189,7 @@ theorem twistPow_symIdem_conj
   refine Eq.trans ?_ hc.symm
   rw [symPowIdem, symmetriser, map_smul, map_sum]
   simp only [modPowAlg_single]
-  show (((Nat.factorial (k + 1) : ℂ))⁻¹ •
+  change (((Nat.factorial (k + 1) : ℂ))⁻¹ •
       ∑ σ : Equiv.Perm (Fin (k + 1)),
         (modPowPerm (A := A)
             (X := (tensorLeftMod A L.obj R).X) (k + 1) σ :

@@ -96,18 +96,18 @@ theorem tensorPowMap_mono [Category.{v} A] [MonoidalCategory A]
   | zero =>
     exact inferInstanceAs (Mono (𝟙 (𝟙_ A)))
   | succ n ih =>
-    haveI : PreservesLimitsOfSize.{0, 0} (tensorRight X) :=
+    have : PreservesLimitsOfSize.{0, 0} (tensorRight X) :=
       preservesSmallestLimits_of_preservesLimits _
-    haveI : PreservesLimitsOfSize.{0, 0}
+    have : PreservesLimitsOfSize.{0, 0}
         (tensorLeft (tensorPow A Y n)) :=
       preservesSmallestLimits_of_preservesLimits _
-    haveI := ih
-    haveI : Mono (tensorPowMap f n ▷ X) :=
+    have := ih
+    have : Mono (tensorPowMap f n ▷ X) :=
       (tensorRight X).map_mono (tensorPowMap f n)
-    haveI : Mono (tensorPow A Y n ◁ f) :=
+    have : Mono (tensorPow A Y n ◁ f) :=
       (tensorLeft (tensorPow A Y n)).map_mono f
     rw [tensorPowMap_succ, MonoidalCategory.tensorHom_def]
-    show Mono ((tensorPowMap f n ▷ X) ≫ (tensorPow A Y n ◁ f))
+    change Mono ((tensorPowMap f n ▷ X) ≫ (tensorPow A Y n ◁ f))
     exact mono_comp _ _
 
 /-- **Tensor powers preserve monomorphisms**, from mono
@@ -122,13 +122,13 @@ theorem tensorPowMap_mono' [Category.{v} A] [MonoidalCategory A]
   | zero =>
     exact inferInstanceAs (Mono (𝟙 (𝟙_ A)))
   | succ n ih =>
-    haveI := ih
-    haveI : Mono (tensorPowMap f n ▷ X) :=
+    have := ih
+    have : Mono (tensorPowMap f n ▷ X) :=
       (tensorRight X).map_mono (tensorPowMap f n)
-    haveI : Mono (tensorPow A Y n ◁ f) :=
+    have : Mono (tensorPow A Y n ◁ f) :=
       (tensorLeft (tensorPow A Y n)).map_mono f
     rw [tensorPowMap_succ, MonoidalCategory.tensorHom_def]
-    show Mono ((tensorPowMap f n ▷ X) ≫
+    change Mono ((tensorPowMap f n ▷ X) ≫
       (tensorPow A Y n ◁ f))
     exact mono_comp _ _
 
@@ -142,18 +142,18 @@ theorem tensorPowMap_epi [Category.{v} A] [MonoidalCategory A]
   | zero =>
     exact inferInstanceAs (Epi (𝟙 (𝟙_ A)))
   | succ n ih =>
-    haveI : PreservesColimitsOfSize.{0, 0} (tensorRight X) :=
+    have : PreservesColimitsOfSize.{0, 0} (tensorRight X) :=
       preservesSmallestColimits_of_preservesColimits _
-    haveI : PreservesColimitsOfSize.{0, 0}
+    have : PreservesColimitsOfSize.{0, 0}
         (tensorLeft (tensorPow A Y n)) :=
       preservesSmallestColimits_of_preservesColimits _
-    haveI := ih
-    haveI : Epi (tensorPowMap f n ▷ X) :=
+    have := ih
+    have : Epi (tensorPowMap f n ▷ X) :=
       (tensorRight X).map_epi (tensorPowMap f n)
-    haveI : Epi (tensorPow A Y n ◁ f) :=
+    have : Epi (tensorPow A Y n ◁ f) :=
       (tensorLeft (tensorPow A Y n)).map_epi f
     rw [tensorPowMap_succ, MonoidalCategory.tensorHom_def]
-    show Epi ((tensorPowMap f n ▷ X) ≫ (tensorPow A Y n ◁ f))
+    change Epi ((tensorPowMap f n ▷ X) ≫ (tensorPow A Y n ◁ f))
     exact epi_comp _ _
 
 /-! ## Naturality of the action
@@ -274,7 +274,7 @@ theorem permMor_natural
   induction n with
   | zero =>
     intro σ
-    show 𝟙 (𝟙_ A) ≫ 𝟙 (𝟙_ A) = 𝟙 (𝟙_ A) ≫ 𝟙 (𝟙_ A)
+    change 𝟙 (𝟙_ A) ≫ 𝟙 (𝟙_ A) = 𝟙 (𝟙_ A) ≫ 𝟙 (𝟙_ A)
     rfl
   | succ n ih =>
     intro σ
@@ -356,7 +356,7 @@ theorem SchurKilled.of_mono
     [RigidCategory A] (P : SchurPackage.{v})
     {X Y : A} (f : Y ⟶ X) [Mono f] {μ : YoungDiagram}
     (h : SchurKilled P X μ) : SchurKilled P Y μ := by
-  haveI := tensorPowMap_mono f μ.card
+  have := tensorPowMap_mono f μ.card
   exact zero_of_intertwine_mono (permAlg_natural f μ.card (P.e μ)) h
 
 /-- **Schur vanishing descends along epimorphisms** (the quotient
@@ -367,7 +367,7 @@ theorem SchurKilled.of_epi
     [RigidCategory A] (P : SchurPackage.{v})
     {X Y : A} (f : X ⟶ Y) [Epi f] {μ : YoungDiagram}
     (h : SchurKilled P X μ) : SchurKilled P Y μ := by
-  haveI := tensorPowMap_epi f μ.card
+  have := tensorPowMap_epi f μ.card
   exact zero_of_intertwine_epi (permAlg_natural f μ.card (P.e μ)) h
 
 /-- **Schur vanishing is invariant under isomorphism.**  No rigidity

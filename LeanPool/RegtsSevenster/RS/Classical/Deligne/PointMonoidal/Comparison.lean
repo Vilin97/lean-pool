@@ -81,10 +81,10 @@ noncomputable def pointScale (X : Type u) [AddCommGroup X]
   toFun x := LinearMap.smulRight
     (ULift.moduleEquiv (R := ℂ) (M := ℂ)).toLinearMap x
   map_add' x y := LinearMap.ext fun a => by
-    show a.down • (x + y) = a.down • x + a.down • y
+    change a.down • (x + y) = a.down • x + a.down • y
     exact smul_add _ _ _
   map_smul' c x := LinearMap.ext fun a => by
-    show a.down • (c • x) = c • (a.down • x)
+    change a.down • (c • x) = c • (a.down • x)
     rw [smul_comm]
 
 /-- Scaling by a residue class, evaluated. -/
@@ -103,7 +103,7 @@ theorem tmulEE_actEE_pointOne (b : S.even) (m : M.even) :
   rw [tmulEE_balanced_eee]
   have h : (pointMod P : S.Mod.{u, u, u, u}).actEE b (pointOne P)
       = P.chi b • pointOne P := ULift.ext _ _ (by
-    show P.chi b * 1 = P.chi b * 1
+    change P.chi b * 1 = P.chi b * 1
     rfl)
   rw [h, map_smul]
 
@@ -115,7 +115,7 @@ theorem tmulOE_actEO_pointOne (b : S.even) (m : M.odd) :
   rw [tmulOE_balanced_eoe]
   have h : (pointMod P : S.Mod.{u, u, u, u}).actEE b (pointOne P)
       = P.chi b • pointOne P := ULift.ext _ _ (by
-    show P.chi b * 1 = P.chi b * 1
+    change P.chi b * 1 = P.chi b * 1
     rfl)
   rw [h, map_smul]
 
@@ -188,11 +188,11 @@ theorem gradedTensorEven_naturality {A' B' : S.Mod.{u, u, u, u}}
           (TensorProduct.map uu.oddMap vv.oddMap)) := by
   refine LinearMap.prod_ext (TensorProduct.ext' fun x y => ?_)
     (TensorProduct.ext' fun x y => ?_)
-  · show (SuperCommAlgebra.Mod.tensorHom uu vv).evenMap
+  · change (SuperCommAlgebra.Mod.tensorHom uu vv).evenMap
       (tmulEE A B x y) = _
     rw [tensorHom_evenMap_tmulEE]
     rfl
-  · show (SuperCommAlgebra.Mod.tensorHom uu vv).evenMap
+  · change (SuperCommAlgebra.Mod.tensorHom uu vv).evenMap
       (tmulOO A B x y) = _
     rw [tensorHom_evenMap_tmulOO]
     rfl
@@ -208,11 +208,11 @@ theorem gradedTensorOdd_naturality {A' B' : S.Mod.{u, u, u, u}}
           (TensorProduct.map uu.oddMap vv.evenMap)) := by
   refine LinearMap.prod_ext (TensorProduct.ext' fun x y => ?_)
     (TensorProduct.ext' fun x y => ?_)
-  · show (SuperCommAlgebra.Mod.tensorHom uu vv).oddMap
+  · change (SuperCommAlgebra.Mod.tensorHom uu vv).oddMap
       (tmulEO A B x y) = _
     rw [tensorHom_oddMap_tmulEO]
     rfl
-  · show (SuperCommAlgebra.Mod.tensorHom uu vv).oddMap
+  · change (SuperCommAlgebra.Mod.tensorHom uu vv).oddMap
       (tmulOE A B x y) = _
     rw [tensorHom_oddMap_tmulOE]
     rfl
@@ -561,10 +561,10 @@ noncomputable def baseNuEven :
     (fun b t a => baseNuInnerEven_actEE P b t a)
     (fun _ _ _ => rfl)
     (fun c t v => by
-      show (0 : basePairEven P M N) = _
+      change (0 : basePairEven P M N) = _
       rw [pointMod_actOO, map_zero])
     (fun c t a => by
-      show baseNuInnerEven P M N ((M.tensor N).actOO c t) a = -0
+      change baseNuInnerEven P M N ((M.tensor N).actOO c t) a = -0
       rw [baseNuInnerEven_actOO, neg_zero])
 
 /-- **The inverse comparison in odd degree.** -/
@@ -575,10 +575,10 @@ noncomputable def baseNuOdd :
     (fun _ _ _ => rfl)
     (fun b t a => baseNuInnerOdd_actEO P b t a)
     (fun c t a => by
-      show baseNuInnerOdd P M N ((M.tensor N).actOE c t) a = 0
+      change baseNuInnerOdd P M N ((M.tensor N).actOE c t) a = 0
       rw [baseNuInnerOdd_actOE])
     (fun c t v => by
-      show (0 : basePairOdd P M N) = -_
+      change (0 : basePairOdd P M N) = -_
       rw [pointMod_actOO, map_zero, neg_zero])
 
 variable {M N}

@@ -127,8 +127,8 @@ theorem devissageExit
     (L : OddLine D) (X : D) :
     DevissageExit D L X := by
   intro st hz
-  letI := st.monObj
-  letI := st.comm
+  let := st.monObj
+  let := st.comm
   obtain ⟨e⟩ := st.decomp
   refine ⟨st.units, st.lines, st.base, st.monObj, st.comm,
     st.unit_ne_zero, ⟨e.trans ?_⟩⟩
@@ -139,12 +139,12 @@ theorem devissageExit
   refine ⟨modBiprodFst st.base _ st.rest,
     modBiprodInl st.base _ st.rest, ?_, ?_⟩
   · apply Mod.Hom.ext
-    show (biprod.fst ≫ biprod.inl :
+    change (biprod.fst ≫ biprod.inl :
         (freeMod st.base (L.mix st.units st.lines)).X ⊞
           st.rest.X ⟶ _) = 𝟙 _
     rw [← biprod.total, hsnd, Limits.zero_comp, add_zero]
   · apply Mod.Hom.ext
-    show (biprod.inl ≫ biprod.fst : _ ⟶ _) = 𝟙 _
+    change (biprod.inl ≫ biprod.fst : _ ⟶ _) = 𝟙 _
     rw [biprod.inl_fst]
 
 /-- **The trichotomy**: over any state, either every symmetric

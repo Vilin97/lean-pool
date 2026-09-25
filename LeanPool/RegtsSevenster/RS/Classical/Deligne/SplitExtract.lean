@@ -248,7 +248,7 @@ theorem mul_splitCoeval
     μ[B] ≫ splitCoeval A B φ w d hw =
       (B ◁ splitCoeval A B φ w d hw) ≫
         baseChangeAct φ M := by
-  letI := baseChangeModObj φ M
+  let := baseChangeModObj φ M
   have hact : (μ[B] ▷ baseChange φ M) ≫ baseChangeAct φ M =
       (α_ B B (baseChange φ M)).hom ≫
         (B ◁ baseChangeAct φ M) ≫ baseChangeAct φ M :=
@@ -291,7 +291,7 @@ theorem splitCoeval_splitEval
     refine Eq.trans (whisker_eq _ (whisker_eq _
       (splitCoevalCore_splitEval A B φ v w hv hw p hp))) ?_
     exact hδ
-  show ((ρ_ B).inv ≫
+  change ((ρ_ B).inv ≫
       (B ◁ (η[A] ≫ d.copair ≫
         splitCoevalCore A B φ w hw)) ≫
       baseChangeAct φ M) ≫ splitEval A B φ v hv = 𝟙 B

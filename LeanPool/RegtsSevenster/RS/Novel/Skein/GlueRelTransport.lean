@@ -30,7 +30,7 @@ edge's flags do not participate.
 
 namespace RS
 
-open scoped Classical
+
 
 namespace Fragment
 
@@ -47,7 +47,7 @@ theorem rewire_val_of_ne
     (h2 : W.pairing f.val ≠ W.boundaryFlag j) :
     (rewire hopen f).val = W.pairing f.val := by
   unfold rewire
-  rw [dif_neg h1, dif_neg h2]
+  rw [dite_eq_right h1, dite_eq_right h2]
 
 /-- At the `i`-side of the interface, `rewire` jumps to the far
 end of the `j`-edge. -/
@@ -57,7 +57,7 @@ theorem rewire_eq_partnerSurvJ
     (h : W.pairing f.val = W.boundaryFlag i) :
     rewire hopen f = partnerSurvJ hopen := by
   unfold rewire
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   rfl
 
 /-- At the `j`-side of the interface, `rewire` jumps to the far
@@ -69,7 +69,7 @@ theorem rewire_eq_partnerSurvI
     (h : W.pairing f.val = W.boundaryFlag j) :
     rewire hopen f = partnerSurvI hopen := by
   unfold rewire
-  rw [dif_neg hne, dif_pos h]
+  rw [dite_eq_right hne, dite_eq_left h]
   rfl
 
 /-- A surviving flag whose pairing is the `i`-boundary flag is the
@@ -130,7 +130,7 @@ theorem unglueMatch_of_surviving
     (h : f ≠ W.boundaryFlag i ∧ f ≠ W.boundaryFlag j) :
     unglueMatch m f = (m ⟨f, h⟩).val := by
   unfold unglueMatch
-  rw [dif_pos h]
+  rw [dite_eq_left h]
 
 /-- The same, stated on a surviving flag's underlying flag. -/
 theorem unglueMatch_val
@@ -138,7 +138,7 @@ theorem unglueMatch_val
     (g : SurvivingFlag W i j) :
     unglueMatch m g.val = (m g).val := by
   unfold unglueMatch
-  rw [dif_pos g.prop]
+  rw [dite_eq_left g.prop]
 
 /-- Restrict a flag self-map of `W` to the surviving flags on a
 given internal-flag set: apply it through `Subtype.val` there
@@ -160,7 +160,7 @@ theorem glueMatch_val_of_mem (m : W.Flag → W.Flag)
     {f' : SurvivingFlag W i j} (h : f' ∈ P) :
     (glueMatch m P hP f').val = m f'.val := by
   unfold glueMatch
-  rw [dif_pos h]
+  rw [dite_eq_left h]
 
 /-- Extend a surviving-flag orientation to all of `W.Flag`:
 through the subtype on surviving flags, `false` elsewhere. -/
@@ -176,14 +176,14 @@ theorem unglueIsOut_of_surviving
     (h : f ≠ W.boundaryFlag i ∧ f ≠ W.boundaryFlag j) :
     unglueIsOut b f = b ⟨f, h⟩ := by
   unfold unglueIsOut
-  rw [dif_pos h]
+  rw [dite_eq_left h]
 
 /-- The same, stated on a surviving flag's underlying flag. -/
 theorem unglueIsOut_val
     (b : SurvivingFlag W i j → Bool) (g : SurvivingFlag W i j) :
     unglueIsOut b g.val = b g := by
   unfold unglueIsOut
-  rw [dif_pos g.prop]
+  rw [dite_eq_left g.prop]
 
 /-! ### The open case -/
 
@@ -567,7 +567,7 @@ theorem iterWalk_unglueOpen
     obtain ⟨hval, hmem⟩ := ih (by omega)
     have hp := hcont k (by omega)
     refine ⟨?_, ?_⟩
-    · show (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
+    · change (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
           κ').match_ (W.pairing (iterWalk
             (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
               κ') g.val k)) =
@@ -611,7 +611,7 @@ theorem iterWalk_unglueOpen_rev
         W.pairing g.val :=
       gluePairOpen_pairing_val_of_notMem_interface hij hopen s'
         hc' hni (mem_flags_of_internalFlags _ hg)
-    show (W.gluePairOpen i j hij hopen).pairing g ∈
+    change (W.gluePairOpen i j hij hopen).pairing g ∈
       (Fg).internalFlags
     refine (mem_internalFlags_glueOpen hij hopen s' hc' hc).mpr ?_
     rw [hag]
@@ -627,7 +627,7 @@ theorem iterWalk_unglueOpen_rev
     have hstep : iterWalk (RelTransitionSystem.unglueOpen hij
         hopen s' hc' hc κ') g.val (k + 1) =
         (iterWalk κ' g (k + 1)).val := by
-      show (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
+      change (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
           κ').match_ (W.pairing (iterWalk
             (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
               κ') g.val k)) =
@@ -744,7 +744,7 @@ theorem walkPermPeriodic_unglueOpen
     ((RelTransitionSystem.unglueOpen hij hopen s' hc' hc
       κ').periodicFlags_sub hf)
   apply Subtype.ext
-  show (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
+  change (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
       κ').match_ (W.pairing f) =
     (κ'.match_ ((W.gluePairOpen i j hij hopen).pairing
       ⟨f, h1, h2⟩)).val
@@ -1074,7 +1074,7 @@ theorem iterWalk_unglueClosed
     obtain ⟨hval, hmem⟩ := ih (by omega)
     have hp := hcont k (by omega)
     refine ⟨?_, ?_⟩
-    · show (RelTransitionSystem.unglueClosed hclosed b s' hc' hc
+    · change (RelTransitionSystem.unglueClosed hclosed b s' hc' hc
           κ').match_ (W.pairing (iterWalk
             (RelTransitionSystem.unglueClosed hclosed b s' hc' hc
               κ') g.val k)) =
@@ -1108,7 +1108,7 @@ theorem iterWalk_unglueClosed_rev
     intro h0
     have hpW := hcontW 0 h0
     rw [iterWalk_zero] at hpW
-    show (W.gluePairClosed i j hclosed).pairing g ∈
+    change (W.gluePairClosed i j hclosed).pairing g ∈
       (Fg).internalFlags
     exact (mem_internalFlags_glueClosed hclosed b s' hc' hc).mpr
       hpW
@@ -1123,7 +1123,7 @@ theorem iterWalk_unglueClosed_rev
     have hstep : iterWalk (RelTransitionSystem.unglueClosed
         hclosed b s' hc' hc κ') g.val (k + 1) =
         (iterWalk κ' g (k + 1)).val := by
-      show (RelTransitionSystem.unglueClosed hclosed b s' hc' hc
+      change (RelTransitionSystem.unglueClosed hclosed b s' hc' hc
           κ').match_ (W.pairing (iterWalk
             (RelTransitionSystem.unglueClosed hclosed b s' hc' hc
               κ') g.val k)) =
@@ -1222,7 +1222,7 @@ theorem walkPermPeriodic_unglueClosed
     ((RelTransitionSystem.unglueClosed hclosed b s' hc' hc
       κ').periodicFlags_sub hf)
   apply Subtype.ext
-  show (RelTransitionSystem.unglueClosed hclosed b s' hc' hc
+  change (RelTransitionSystem.unglueClosed hclosed b s' hc' hc
       κ').match_ (W.pairing f) =
     (κ'.match_ ((W.gluePairClosed i j hclosed).pairing
       ⟨f, h1, h2⟩)).val

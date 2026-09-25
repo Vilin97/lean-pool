@@ -126,11 +126,7 @@ private theorem tensorHom_π_pairFold
 
 end Fold
 
-/-- **The pair side of the power step** (Deligne 1.15): pushing the
-primed back merge and the swapped unprimed front merge into the
-successor power pairing yields the tensor pairing of the stage
-datum with the bottom datum. -/
-theorem modPowPairing_succ_tensor
+private theorem modPowPairing_succ_tensor_leftCover
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
     [HasCoequalizers D]
@@ -139,70 +135,36 @@ theorem modPowPairing_succ_tensor
     (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
     (d : ModDualityDatum A M M')
     (n : ℕ) :
-    modTensorMap A
-        (powMulMod A M'.X n 0)
-        (modTensorSwapMod A (modPowMod A M.X n)
-            (modPowMod A M.X 0) ≫
-          powMulMod A M.X 0 n ≫
-          modPowCastMod A M.X
-            (by omega : 0 + 1 + n + 1 = n + 2)) ≫
-      modPowPairing A M M' d (n + 1) =
-    tensorPair A (powDualityDatum A M M' d n)
-      (powDualityDatum A M M' d 0) := by
-  -- Left descent: the merged pairing against the big projection.
-  have hLdesc : modTensorπ A
-      (modTensorMod A (modPowMod A M'.X n) (modPowMod A M'.X 0))
-      (modTensorMod A (modPowMod A M.X n) (modPowMod A M.X 0)) ≫
+    (modTensorπ A (modPowMod A M.X n)
+        (modPowMod A M'.X n) ⊗ₘ
+      modTensorπ A (modPowMod A M.X 0) (modPowMod A M'.X 0)) ≫
+      interchange A (modPowMod A M.X n) (modPowMod A M'.X n)
+        (modPowMod A M.X 0) (modPowMod A M'.X 0) ≫
       modTensorMap A
-        (powMulMod A M'.X n 0)
         (modTensorSwapMod A (modPowMod A M.X n)
             (modPowMod A M.X 0) ≫
           powMulMod A M.X 0 n ≫
           modPowCastMod A M.X
-            (by omega : 0 + 1 + n + 1 = n + 2)) ≫
+            (by omega : 0 + 1 + n + 1 = n + 2))
+        (powMulMod A M'.X n 0) ≫
+      modTensorSwap A (modPowMod A M.X (n + 1))
+        (modPowMod A M'.X (n + 1)) ≫
       modPowPairing A M M' d (n + 1) =
-      ((powMulMod A M'.X n 0).hom ⊗ₘ
+    tensorμ (modPowMod A M.X n).X (modPowMod A M'.X n).X
+        (modPowMod A M.X 0).X (modPowMod A M'.X 0).X ≫
+      ((modTensorπ A (modPowMod A M.X n)
+          (modPowMod A M.X 0) ≫
         (modTensorSwapMod A (modPowMod A M.X n)
             (modPowMod A M.X 0) ≫
           powMulMod A M.X 0 n ≫
           modPowCastMod A M.X
-            (by omega : 0 + 1 + n + 1 = n + 2)).hom) ≫
+            (by omega : 0 + 1 + n + 1 = n + 2)).hom) ⊗ₘ
+        (modTensorπ A (modPowMod A M'.X n)
+            (modPowMod A M'.X 0) ≫
+          (powMulMod A M'.X n 0).hom)) ≫
+      (β_ (modPowMod A M.X (n + 1)).X
+        (modPowMod A M'.X (n + 1)).X).hom ≫
       pairPow A M M' d (n + 2) := by
-    rw [modTensorπ_map_assoc]
-    exact congrArg (fun t : (modPowMod A M'.X (n + 1)).X ⊗
-        (modPowMod A M.X (n + 1)).X ⟶ A =>
-      ((powMulMod A M'.X n 0).hom ⊗ₘ
-        (modTensorSwapMod A (modPowMod A M.X n)
-            (modPowMod A M.X 0) ≫
-          powMulMod A M.X 0 n ≫
-          modPowCastMod A M.X
-            (by omega : 0 + 1 + n + 1 = n + 2)).hom) ≫ t)
-      (modTensorπ_modPowPairing A M M' d (n + 1))
-  -- Fuse the covering projections into the merge carriers.
-  have hLfuse : (modTensorπ A (modPowMod A M'.X n)
-        (modPowMod A M'.X 0) ⊗ₘ
-      modTensorπ A (modPowMod A M.X n) (modPowMod A M.X 0)) ≫
-      ((powMulMod A M'.X n 0).hom ⊗ₘ
-        (modTensorSwapMod A (modPowMod A M.X n)
-            (modPowMod A M.X 0) ≫
-          powMulMod A M.X 0 n ≫
-          modPowCastMod A M.X
-            (by omega : 0 + 1 + n + 1 = n + 2)).hom) ≫
-      pairPow A M M' d (n + 2) =
-      ((modTensorπ A (modPowMod A M'.X n)
-          (modPowMod A M'.X 0) ≫
-        (powMulMod A M'.X n 0).hom) ⊗ₘ
-        (modTensorπ A (modPowMod A M.X n)
-            (modPowMod A M.X 0) ≫
-          (modTensorSwapMod A (modPowMod A M.X n)
-              (modPowMod A M.X 0) ≫
-            powMulMod A M.X 0 n ≫
-            modPowCastMod A M.X
-              (by omega : 0 + 1 + n + 1 = n + 2)).hom)) ≫
-      pairPow A M M' d (n + 2) := by
-    erw [← Category.assoc,
-      MonoidalCategory.tensorHom_comp_tensorHom]
-  -- The successor pairing against the swapped projection.
   have hstep : modTensorπ A (modPowMod A M.X (n + 1))
       (modPowMod A M'.X (n + 1)) ≫
       modTensorSwap A (modPowMod A M.X (n + 1))
@@ -298,17 +260,36 @@ theorem modPowPairing_succ_tensor
     exact MonoidalCategory.tensorHom_comp_tensorHom_assoc
       _ _ _ _ _
   -- The triangle core, covered by the projections.
-  have hcov := congrArg
-    (fun t : modTensor A (modPowMod A M.X n)
-        (modPowMod A M'.X n) ⊗
-        modTensor A (modPowMod A M.X 0)
-          (modPowMod A M'.X 0) ⟶ A =>
-      (modTensorπ A (modPowMod A M.X n)
-          (modPowMod A M'.X n) ⊗ₘ
-        modTensorπ A (modPowMod A M.X 0)
-          (modPowMod A M'.X 0)) ≫ t)
-    (powDeltaCore_pairing A M M' d n)
-  -- The stage pairings against the swapped projections.
+  exact hL2
+
+private theorem modPowPairing_succ_tensor_rightCover
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (d : ModDualityDatum A M M')
+    (n : ℕ) :
+    (modTensorπ A (modPowMod A M.X n)
+        (modPowMod A M'.X n) ⊗ₘ
+      modTensorπ A (modPowMod A M.X 0) (modPowMod A M'.X 0)) ≫
+      ((modTensorSwap A (modPowMod A M.X n)
+          (modPowMod A M'.X n) ≫
+        modPowPairing A M M' d n) ⊗ₘ
+        (modTensorSwap A (modPowMod A M.X 0)
+            (modPowMod A M'.X 0) ≫
+          modPowPairing A M M' d 0)) ≫ μ[A] =
+    ((β_ (modPowMod A M.X n).X
+          (modPowMod A M'.X n).X).hom ⊗ₘ
+        (β_ (modPowMod A M.X 0).X
+          (modPowMod A M'.X 0).X).hom) ≫
+      ((modTensorπ A (modPowMod A M'.X n)
+          (modPowMod A M.X n) ≫
+        modPowPairing A M M' d n) ⊗ₘ
+        (modTensorπ A (modPowMod A M'.X 0)
+            (modPowMod A M.X 0) ≫
+          modPowPairing A M M' d 0)) ≫ μ[A] := by
   have hswn : modTensorπ A (modPowMod A M.X n)
       (modPowMod A M'.X n) ≫
       modTensorSwap A (modPowMod A M.X n) (modPowMod A M'.X n) ≫
@@ -348,8 +329,50 @@ theorem modPowPairing_succ_tensor
     rw [MonoidalCategory.tensorHom_comp_tensorHom_assoc, hswn,
       hsw0, ← MonoidalCategory.tensorHom_comp_tensorHom_assoc]
   -- The core identity over the cover.
-  have hmeet := hL2.symm.trans (hcov.trans hR2)
-  -- Braid the merged pair across the successor braiding.
+  exact hR2
+
+private theorem modPowPairing_succ_tensor_braidingRetract
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (d : ModDualityDatum A M M')
+    (n : ℕ) :
+    tensorμ (modPowMod A M'.X n).X
+      (modPowMod A M'.X 0).X (modPowMod A M.X n).X
+      (modPowMod A M.X 0).X ≫
+      ((β_ (modPowMod A M'.X n).X
+          (modPowMod A M.X n).X).hom ⊗ₘ
+        (β_ (modPowMod A M'.X 0).X
+          (modPowMod A M.X 0).X).hom) ≫
+      tensorμ (modPowMod A M.X n).X (modPowMod A M'.X n).X
+        (modPowMod A M.X 0).X (modPowMod A M'.X 0).X ≫
+      ((modTensorπ A (modPowMod A M.X n)
+          (modPowMod A M.X 0) ≫
+        (modTensorSwapMod A (modPowMod A M.X n)
+            (modPowMod A M.X 0) ≫
+          powMulMod A M.X 0 n ≫
+          modPowCastMod A M.X
+            (by omega : 0 + 1 + n + 1 = n + 2)).hom) ⊗ₘ
+        (modTensorπ A (modPowMod A M'.X n)
+            (modPowMod A M'.X 0) ≫
+          (powMulMod A M'.X n 0).hom)) ≫
+      (β_ (modPowMod A M.X (n + 1)).X
+        (modPowMod A M'.X (n + 1)).X).hom ≫
+      pairPow A M M' d (n + 2) =
+    ((modTensorπ A (modPowMod A M'.X n)
+          (modPowMod A M'.X 0) ≫
+        (powMulMod A M'.X n 0).hom) ⊗ₘ
+        (modTensorπ A (modPowMod A M.X n)
+            (modPowMod A M.X 0) ≫
+          (modTensorSwapMod A (modPowMod A M.X n)
+              (modPowMod A M.X 0) ≫
+            powMulMod A M.X 0 n ≫
+            modPowCastMod A M.X
+              (by omega : 0 + 1 + n + 1 = n + 2)).hom)) ≫
+      pairPow A M M' d (n + 2) := by
   have hnat3 : ((modTensorπ A (modPowMod A M.X n)
         (modPowMod A M.X 0) ≫
       (modTensorSwapMod A (modPowMod A M.X n)
@@ -438,6 +461,37 @@ theorem modPowPairing_succ_tensor
       hnat3) ?_
     exact tensorMu_braid_retract_assoc _ _ _ _ _
   -- The two block braidings cancel.
+  exact hfinalL
+
+private theorem modPowPairing_succ_tensor_braidingCancel
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (d : ModDualityDatum A M M')
+    (n : ℕ) :
+    ((β_ (modPowMod A M'.X n).X
+        (modPowMod A M.X n).X).hom ⊗ₘ
+      (β_ (modPowMod A M'.X 0).X
+        (modPowMod A M.X 0).X).hom) ≫
+      ((β_ (modPowMod A M.X n).X
+          (modPowMod A M'.X n).X).hom ⊗ₘ
+        (β_ (modPowMod A M.X 0).X
+          (modPowMod A M'.X 0).X).hom) ≫
+      ((modTensorπ A (modPowMod A M'.X n)
+          (modPowMod A M.X n) ≫
+        modPowPairing A M M' d n) ⊗ₘ
+        (modTensorπ A (modPowMod A M'.X 0)
+            (modPowMod A M.X 0) ≫
+          modPowPairing A M M' d 0)) ≫ μ[A] =
+    ((modTensorπ A (modPowMod A M'.X n)
+          (modPowMod A M.X n) ≫
+        modPowPairing A M M' d n) ⊗ₘ
+        (modTensorπ A (modPowMod A M'.X 0)
+            (modPowMod A M.X 0) ≫
+          modPowPairing A M M' d 0)) ≫ μ[A] := by
   have hcancel : ((β_ (modPowMod A M'.X n).X
         (modPowMod A M.X n).X).hom ⊗ₘ
       (β_ (modPowMod A M'.X 0).X
@@ -473,6 +527,102 @@ theorem modPowPairing_succ_tensor
           modPowPairing A M M' d 0)) ≫ μ[A] := by
     rw [← Category.assoc, hcancel, Category.id_comp]
   -- The merged pair equals the crossed coordinatewise pairing.
+  exact htail
+
+/-- **The pair side of the power step** (Deligne 1.15): pushing the
+primed back merge and the swapped unprimed front merge into the
+successor power pairing yields the tensor pairing of the stage
+datum with the bottom datum. -/
+theorem modPowPairing_succ_tensor
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (d : ModDualityDatum A M M')
+    (n : ℕ) :
+    modTensorMap A
+        (powMulMod A M'.X n 0)
+        (modTensorSwapMod A (modPowMod A M.X n)
+            (modPowMod A M.X 0) ≫
+          powMulMod A M.X 0 n ≫
+          modPowCastMod A M.X
+            (by omega : 0 + 1 + n + 1 = n + 2)) ≫
+      modPowPairing A M M' d (n + 1) =
+    tensorPair A (powDualityDatum A M M' d n)
+      (powDualityDatum A M M' d 0) := by
+  -- Left descent: the merged pairing against the big projection.
+  have hLdesc : modTensorπ A
+      (modTensorMod A (modPowMod A M'.X n) (modPowMod A M'.X 0))
+      (modTensorMod A (modPowMod A M.X n) (modPowMod A M.X 0)) ≫
+      modTensorMap A
+        (powMulMod A M'.X n 0)
+        (modTensorSwapMod A (modPowMod A M.X n)
+            (modPowMod A M.X 0) ≫
+          powMulMod A M.X 0 n ≫
+          modPowCastMod A M.X
+            (by omega : 0 + 1 + n + 1 = n + 2)) ≫
+      modPowPairing A M M' d (n + 1) =
+      ((powMulMod A M'.X n 0).hom ⊗ₘ
+        (modTensorSwapMod A (modPowMod A M.X n)
+            (modPowMod A M.X 0) ≫
+          powMulMod A M.X 0 n ≫
+          modPowCastMod A M.X
+            (by omega : 0 + 1 + n + 1 = n + 2)).hom) ≫
+      pairPow A M M' d (n + 2) := by
+    rw [modTensorπ_map_assoc]
+    exact congrArg (fun t : (modPowMod A M'.X (n + 1)).X ⊗
+        (modPowMod A M.X (n + 1)).X ⟶ A =>
+      ((powMulMod A M'.X n 0).hom ⊗ₘ
+        (modTensorSwapMod A (modPowMod A M.X n)
+            (modPowMod A M.X 0) ≫
+          powMulMod A M.X 0 n ≫
+          modPowCastMod A M.X
+            (by omega : 0 + 1 + n + 1 = n + 2)).hom) ≫ t)
+      (modTensorπ_modPowPairing A M M' d (n + 1))
+  -- Fuse the covering projections into the merge carriers.
+  have hLfuse : (modTensorπ A (modPowMod A M'.X n)
+        (modPowMod A M'.X 0) ⊗ₘ
+      modTensorπ A (modPowMod A M.X n) (modPowMod A M.X 0)) ≫
+      ((powMulMod A M'.X n 0).hom ⊗ₘ
+        (modTensorSwapMod A (modPowMod A M.X n)
+            (modPowMod A M.X 0) ≫
+          powMulMod A M.X 0 n ≫
+          modPowCastMod A M.X
+            (by omega : 0 + 1 + n + 1 = n + 2)).hom) ≫
+      pairPow A M M' d (n + 2) =
+      ((modTensorπ A (modPowMod A M'.X n)
+          (modPowMod A M'.X 0) ≫
+        (powMulMod A M'.X n 0).hom) ⊗ₘ
+        (modTensorπ A (modPowMod A M.X n)
+            (modPowMod A M.X 0) ≫
+          (modTensorSwapMod A (modPowMod A M.X n)
+              (modPowMod A M.X 0) ≫
+            powMulMod A M.X 0 n ≫
+            modPowCastMod A M.X
+              (by omega : 0 + 1 + n + 1 = n + 2)).hom)) ≫
+      pairPow A M M' d (n + 2) := by
+    erw [← Category.assoc,
+      MonoidalCategory.tensorHom_comp_tensorHom]
+  -- The successor pairing against the swapped projection.
+  have hL2 := modPowPairing_succ_tensor_leftCover A M M' d n
+  have hcov := congrArg
+    (fun t : modTensor A (modPowMod A M.X n)
+        (modPowMod A M'.X n) ⊗
+        modTensor A (modPowMod A M.X 0)
+          (modPowMod A M'.X 0) ⟶ A =>
+      (modTensorπ A (modPowMod A M.X n)
+          (modPowMod A M'.X n) ⊗ₘ
+        modTensorπ A (modPowMod A M.X 0)
+          (modPowMod A M'.X 0)) ≫ t)
+    (powDeltaCore_pairing A M M' d n)
+  -- The stage pairings against the swapped projections.
+  have hR2 := modPowPairing_succ_tensor_rightCover A M M' d n
+  have hmeet := hL2.symm.trans (hcov.trans hR2)
+  -- Braid the merged pair across the successor braiding.
+  have hfinalL := modPowPairing_succ_tensor_braidingRetract A M M' d n
+  have htail := modPowPairing_succ_tensor_braidingCancel A M M' d n
   have hfinal : ((modTensorπ A (modPowMod A M'.X n)
         (modPowMod A M'.X 0) ≫
       (powMulMod A M'.X n 0).hom) ⊗ₘ

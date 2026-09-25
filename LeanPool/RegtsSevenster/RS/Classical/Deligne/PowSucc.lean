@@ -207,7 +207,7 @@ theorem powCopairA_succ_tensor
                 (by omega : 0 + 1 + n + 1 = n + 2))
             (powMulMod A M'.X n 0)) h2) ?_
     erw [reassoc_of% hpt]
-    show _ = powUnitStage A M M' d n ≫ powDelta A M M' d n
+    change _ = powUnitStage A M M' d n ≫ powDelta A M M' d n
     rw [powDelta]
     simp only [Category.assoc]
     conv_lhs => arg 2; arg 2; erw [Category.assoc]

@@ -25,7 +25,7 @@ because that is how many boundary states there are.
 
 namespace RS
 
-open Classical
+
 
 /-- **The super form on boundary states at arity `t`**: the product
 over the legs of the one-leg form of RS21 (11) — the identity on the
@@ -165,23 +165,23 @@ theorem superLeg_eq_zero_of_ne_dualLeg {k ℓ : ℕ}
     superLeg u v = 0 := by
   rcases u with a | c
   · rcases v with b | d
-    · exact if_neg (fun hb => h (by rw [hb]; rfl))
+    · exact ite_eq_right (fun hb => h (by rw [hb]; rfl))
     · rfl
   · rcases v with b | d
     · rfl
-    · show symplecticJ ℓ c d = 0
+    · change symplecticJ ℓ c d = 0
       have hd : d ≠ oddPartner ℓ c := fun hx => h (by rw [hx]; rfl)
       have hc := c.isLt
       have hd' := d.isLt
       have hpart := eq_oddPartner_iff c d
       unfold symplecticJ
       by_cases hlt : c.val < ℓ
-      · rw [if_pos hlt] at hpart
-        rw [if_neg (fun hx => hd (hpart.mpr hx)),
-          if_neg (by omega)]
-      · rw [if_neg hlt] at hpart
-        rw [if_neg (by omega),
-          if_neg (fun hx => hd (hpart.mpr (by omega)))]
+      · rw [ite_eq_left hlt] at hpart
+        rw [ite_eq_right (fun hx => hd (hpart.mpr hx)),
+          ite_eq_right (by omega)]
+      · rw [ite_eq_right hlt] at hpart
+        rw [ite_eq_right (by omega),
+          ite_eq_right (fun hx => hd (hpart.mpr (by omega)))]
 
 /-- **The form vanishes off the dual state.** -/
 theorem superForm_eq_zero_of_ne_dualState {k ℓ t : ℕ}
@@ -205,8 +205,8 @@ noncomputable def legSelf {k ℓ : ℕ} :
 theorem superLeg_dualLeg {k ℓ : ℕ} (u : Fin k ⊕ Fin (2 * ℓ)) :
     superLeg u (dualLeg u) = legSelf u := by
   rcases u with a | c
-  · exact if_pos rfl
-  · show symplecticJ ℓ c (oddPartner ℓ c) = -dualSign ℓ c
+  · exact ite_eq_left rfl
+  · change symplecticJ ℓ c (oddPartner ℓ c) = -dualSign ℓ c
     have hfg := superLeg_f_g ℓ c
     have hsq := dualSign_sq ℓ c
     linear_combination dualSign ℓ c * hfg
@@ -259,23 +259,23 @@ theorem legBracket_odd {k ℓ : ℕ} (u : Fin (2 * ℓ)) (t₁ : Bool) :
       (Sum.inr (oddPartner ℓ u))) = -dualSign ℓ u := by
     have hfg := superLeg_f_g ℓ u
     have hsq := dualSign_sq ℓ u
-    show symplecticJ ℓ u (oddPartner ℓ u) = -dualSign ℓ u
+    change symplecticJ ℓ u (oddPartner ℓ u) = -dualSign ℓ u
     linear_combination dualSign ℓ u * hfg
       - symplecticJ ℓ u (oddPartner ℓ u) * hsq
   have hsq := dualSign_sq ℓ u
   have hpart := dualSign_oddPartner ℓ u
   cases t₁
-  · rw [if_neg (by simp), Bool.not_false, if_pos rfl, hJ, hpart,
-      if_neg (by simp)]
+  · rw [ite_eq_right (by simp), Bool.not_false, ite_eq_left rfl, hJ, hpart,
+      ite_eq_right (by simp)]
     linear_combination hsq
-  · rw [if_pos rfl, Bool.not_true, if_neg (by simp), hJ,
-      if_pos rfl]
+  · rw [ite_eq_left rfl, Bool.not_true, ite_eq_right (by simp), hJ,
+      ite_eq_left rfl]
     linear_combination -hsq
 
 /-- **The leg bracket on an even leg** is trivial. -/
 theorem legBracket_even {k ℓ : ℕ} (a : Fin k) :
     (superLeg (k := k) (ℓ := ℓ) (Sum.inl a) (Sum.inl a)) = 1 :=
-  if_pos rfl
+  ite_eq_left rfl
 
 /-! ### The legs, multiplied out
 
@@ -315,22 +315,22 @@ theorem legWeight_mul {k ℓ : ℕ} (b : Bool)
     legWeight b v * legWeight (!b) (dualLeg v) * superLeg v (dualLeg v)
       = if (∃ c, v = Sum.inr c) ∧ b = true then -1 else 1 := by
   rcases v with a | u
-  · rw [if_neg (by
+  · rw [ite_eq_right (by
       rintro ⟨⟨c, hcc⟩, -⟩
       exact Sum.inl_ne_inr hcc)]
-    show (1 : ℂ) * 1 * superLeg (Sum.inl a) (Sum.inl a) = 1
+    change (1 : ℂ) * 1 * superLeg (Sum.inl a) (Sum.inl a) = 1
     rw [legBracket_even a]
     ring
   · have hb := legBracket_odd (k := k) u b
     by_cases hbt : b = true
-    · rw [if_pos ⟨⟨u, rfl⟩, hbt⟩, hbt]
+    · rw [ite_eq_left ⟨⟨u, rfl⟩, hbt⟩, hbt]
       rw [hbt] at hb
       simpa [legWeight, dualLeg] using hb
     · have hbf : b = false := by
         cases b
         · rfl
         · exact absurd rfl hbt
-      rw [if_neg (fun hc => hbt hc.2), hbf]
+      rw [ite_eq_right (fun hc => hbt hc.2), hbf]
       rw [hbf] at hb
       simpa [legWeight, dualLeg] using hb
 
@@ -346,7 +346,7 @@ theorem dualLeg_involutive {k ℓ : ℕ} :
     Function.Involutive (dualLeg (k := k) (ℓ := ℓ)) := by
   rintro (a | c)
   · rfl
-  · show Sum.inr (oddPartner ℓ (oddPartner ℓ c)) = Sum.inr c
+  · change Sum.inr (oddPartner ℓ (oddPartner ℓ c)) = Sum.inr c
     rw [oddPartner_invol]
 
 /-- **Undoing the dual basis at the legs whose arc leaves.** -/
@@ -360,15 +360,15 @@ theorem untwistState_involutive {k ℓ t : ℕ} (b : Fin t → Bool) :
     Function.Involutive (untwistState (k := k) (ℓ := ℓ) b) := by
   intro x
   funext i
-  show (if b i then dualLeg (untwistState b x i)
+  change (if b i then dualLeg (untwistState b x i)
       else untwistState b x i) = x i
   by_cases hb : b i = true
-  · rw [if_pos hb]
-    show dualLeg (if b i then dualLeg (x i) else x i) = x i
-    rw [if_pos hb, dualLeg_involutive (x i)]
-  · rw [if_neg hb]
-    show (if b i then dualLeg (x i) else x i) = x i
-    rw [if_neg hb]
+  · rw [ite_eq_left hb]
+    change dualLeg (if b i then dualLeg (x i) else x i) = x i
+    rw [ite_eq_left hb, dualLeg_involutive (x i)]
+  · rw [ite_eq_right hb]
+    change (if b i then dualLeg (x i) else x i) = x i
+    rw [ite_eq_right hb]
 
 /-- **The two sums agree.** -/
 theorem sum_untwistState {k ℓ t : ℕ} (b : Fin t → Bool)
@@ -383,7 +383,7 @@ theorem sum_untwistState {k ℓ t : ℕ} (b : Fin t → Bool)
 theorem dualState_isInr {k ℓ t : ℕ}
     (x : GenBoundaryState k ℓ (Fin t)) (i : Fin t) :
     (∃ c, dualState x i = Sum.inr c) ↔ (∃ c, x i = Sum.inr c) := by
-  show (∃ c, dualLeg (x i) = Sum.inr c) ↔ (∃ c, x i = Sum.inr c)
+  change (∃ c, dualLeg (x i) = Sum.inr c) ↔ (∃ c, x i = Sum.inr c)
   rcases x i with a | c
   · constructor
     · rintro ⟨d, hd⟩
@@ -400,29 +400,29 @@ theorem untwistState_dualState' {k ℓ t : ℕ} (b₁ b₂ : Fin t → Bool)
     (hb : ∀ i, (∃ c, x i = Sum.inr c) → b₂ i = !(b₁ i)) :
     untwistState b₂ (dualState x) = untwistState b₁ x := by
   funext i
-  show (if b₂ i then dualLeg (dualLeg (x i)) else dualLeg (x i))
+  change (if b₂ i then dualLeg (dualLeg (x i)) else dualLeg (x i))
     = if b₁ i then dualLeg (x i) else x i
   rcases hx : x i with a | c
   · have he : dualLeg (Sum.inl a : Fin k ⊕ Fin (2 * ℓ))
         = Sum.inl a := rfl
     rw [he, he]
     by_cases h₂ : b₂ i = true
-    · rw [if_pos h₂]
+    · rw [ite_eq_left h₂]
       by_cases h₁ : b₁ i = true
-      · rw [if_pos h₁]
-      · rw [if_neg h₁]
-    · rw [if_neg h₂]
+      · rw [ite_eq_left h₁]
+      · rw [ite_eq_right h₁]
+    · rw [ite_eq_right h₂]
       by_cases h₁ : b₁ i = true
-      · rw [if_pos h₁]
-      · rw [if_neg h₁]
+      · rw [ite_eq_left h₁]
+      · rw [ite_eq_right h₁]
   · rw [hb i ⟨c, hx⟩]
     by_cases h₁ : b₁ i = true
-    · rw [h₁, Bool.not_true, if_neg (by simp), if_pos rfl]
+    · rw [h₁, Bool.not_true, ite_eq_right (by simp), ite_eq_left rfl]
     · have hf : b₁ i = false := by
         cases hbb : b₁ i
         · rfl
         · exact absurd hbb h₁
-      rw [hf, Bool.not_false, if_pos rfl, if_neg (by simp)]
+      rw [hf, Bool.not_false, ite_eq_left rfl, ite_eq_right (by simp)]
       exact dualLeg_involutive _
 
 /-! ### Contracting one leg
@@ -446,7 +446,7 @@ theorem prod_legBracket {k ℓ t : ℕ}
   classical
   rw [superForm, ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
   rw [Finset.prod_congr rfl (fun i _ => by
-    show legWeight (b i) (x i) * legWeight (!(b i)) (dualLeg (x i))
+    change legWeight (b i) (x i) * legWeight (!(b i)) (dualLeg (x i))
         * superLeg (x i) (dualState x i) = _
     exact legWeight_mul (b i) (x i))]
   rw [Finset.prod_ite, Finset.prod_const, Finset.prod_const_one,
@@ -467,7 +467,7 @@ theorem oddCount_dualState {k ℓ t : ℕ}
     · exact ⟨u, rfl⟩
   · rintro ⟨u, hu⟩
     exact ⟨oddPartner ℓ u, by
-      show dualLeg (x i) = Sum.inr (oddPartner ℓ u)
+      change dualLeg (x i) = Sum.inr (oddPartner ℓ u)
       rw [hu]
       rfl⟩
 
@@ -560,7 +560,7 @@ theorem sum_legBracket_with_twists' {k ℓ t : ℕ}
   have hodd' : ∀ (x : GenBoundaryState k ℓ (Fin t)) (i : Fin t),
       (∃ c, dualState x i = Sum.inr c) ↔ (∃ c, x i = Sum.inr c) := by
     intro x i
-    show (∃ c, dualLeg (x i) = Sum.inr c) ↔ (∃ c, x i = Sum.inr c)
+    change (∃ c, dualLeg (x i) = Sum.inr c) ↔ (∃ c, x i = Sum.inr c)
     rcases x i with a | c
     · constructor
       · rintro ⟨d, hd⟩

@@ -63,9 +63,9 @@ theorem trace_symCast_charIdempotent (lam mu : YoungDiagram)
         (MonoidAlgebra.of ℂ (Equiv.Perm (Fin lam.card)) σ) =
       MonoidAlgebra.of ℂ (Equiv.Perm (Fin mu.card))
         (Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h) σ) from by
-      show symCast h (MonoidAlgebra.of ℂ _ σ) = _
+      change symCast h (MonoidAlgebra.of ℂ _ σ) = _
       rw [symCast, MonoidAlgebra.of_apply, MonoidAlgebra.of_apply]
-      show MonoidAlgebra.mapDomain
+      change MonoidAlgebra.mapDomain
         (⇑(Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h)))
         (MonoidAlgebra.single σ (1 : ℂ)) = _
       rw [MonoidAlgebra.mapDomain_single]]
@@ -76,7 +76,7 @@ theorem trace_symCast_charIdempotent (lam mu : YoungDiagram)
           (Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h) σ)) =
       rhoS (jtSimple mu)
         (Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h) σ) from by
-      show (rhoS (jtSimple mu)).asAlgebraHom
+      change (rhoS (jtSimple mu)).asAlgebraHom
         (MonoidAlgebra.of ℂ _ _) = _
       rw [MonoidAlgebra.of_apply,
         Representation.asAlgebraHom_single, one_smul]]
@@ -126,11 +126,11 @@ theorem branching_of_pairing (lam mu : YoungDiagram)
   have htr := trace_symCast_charIdempotent lam mu h
   rw [← hy, hψ, map_zero] at htr
   have hd : ((nDim (jtSimple lam) : ℂ)) ≠ 0 := by
-    haveI := jtSimple_simple lam
-    haveI := IsSimpleModule.nontrivial
+    have := jtSimple_simple lam
+    have := IsSimpleModule.nontrivial
       (MonoidAlgebra ℂ (Equiv.Perm (Fin lam.card)))
       (jtSimple lam)
-    haveI : Nontrivial (subCarrier (jtSimple lam)) :=
+    have : Nontrivial (subCarrier (jtSimple lam)) :=
       inferInstanceAs (Nontrivial (jtSimple lam))
     have := Module.finrank_pos
       (R := ℂ) (M := subCarrier (jtSimple lam))

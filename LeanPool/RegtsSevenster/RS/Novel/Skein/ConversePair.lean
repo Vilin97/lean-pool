@@ -23,8 +23,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Classical
-
+open Fragment
 /-- The lexicographic order on the interface's label type. -/
 @[reducible] local instance pairBaseOrder (n : ℕ) :
     LinearOrder (Fin (0 + n) ⊕ Fin (n + 0)) :=
@@ -255,7 +254,7 @@ theorem pairTailFun_of_not_used {t : ℕ} {F G : Fragment (Fin t)}
         ∧ G.boundaryFlag m ∈ (EdgeSubset.mk s₂ hc₂).boundaryFlags) :
     pairTailFun hc₁ hc₂ M₁ M₂ c f = c f := by
   unfold pairTailFun
-  rw [dif_neg h, dif_neg h']
+  rw [dite_eq_right h, dite_eq_right h']
 
 /-- The left labels are distinct. -/
 theorem intL_inj {n : ℕ} {m m' : Fin n} (h : intL n m = intL n m') :
@@ -295,7 +294,7 @@ theorem pairTailFun_intL {t : ℕ} {F G : Fragment (Fin t)}
         ∧ F.boundaryFlag m'
           ∈ (EdgeSubset.mk s₁ hc₁).boundaryFlags := ⟨m, rfl, hm⟩
   unfold pairTailFun
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   refine congrArg M₁.tail (Subtype.ext ?_)
   exact (intL_inj ((closeBase F G).boundaryFlag_injective
     h.choose_spec.1)).symm
@@ -328,7 +327,7 @@ theorem pairTailFun_intR {t : ℕ} {F G : Fragment (Fin t)}
         ∧ G.boundaryFlag m'
           ∈ (EdgeSubset.mk s₂ hc₂).boundaryFlags := ⟨m, rfl, hm⟩
   unfold pairTailFun
-  rw [dif_neg hno, dif_pos h]
+  rw [dite_eq_right hno, dite_eq_left h]
   refine congrArg M₂.tail (Subtype.ext ?_)
   exact (intR_inj ((closeBase F G).boundaryFlag_injective
     h.choose_spec.1)).symm
@@ -336,7 +335,7 @@ theorem pairTailFun_intR {t : ℕ} {F G : Fragment (Fin t)}
 /-- **At a through label the chord is the edge.**  The chain from a
 through label's flag is the single edge, so the chord partner's flag
 is the pairing partner. -/
-theorem boundaryFlag_chordInv_of_through {α : Type} [LinearOrder α]
+theorem boundaryFlag_chordInv_of_through {α : Type}
     {W : Fragment α} (F : EdgeSubset W) (κ : F.RelTransitionSystem)
     {i : α} (h : W.boundaryFlag i ∈ F.boundaryFlags)
     (hthr : IsThroughLabel F i) :
@@ -467,7 +466,7 @@ theorem flip_pinned_left {t : ℕ} {F G : Fragment (Fin t)}
   rw [isOut_orientReplace_internal O g hint,
     isOut_orientReplace_of_not_internal O g
       (boundaryFlag_not_internal B (intL t m)), hg, Bool.not_not]
-  show O.isOut ((closeBase F G).pairing
+  change O.isOut ((closeBase F G).pairing
     ((closeBase F G).boundaryFlag (intL t m))) = _
   rw [pairing_boundaryFlag_intL]
   exact hL _
@@ -489,7 +488,7 @@ theorem flip_pinned_right {t : ℕ} {F G : Fragment (Fin t)}
   rw [isOut_orientReplace_internal O g hint,
     isOut_orientReplace_of_not_internal O g
       (boundaryFlag_not_internal B (intR t m)), hg, Bool.not_not]
-  show O.isOut ((closeBase F G).pairing
+  change O.isOut ((closeBase F G).pairing
     ((closeBase F G).boundaryFlag (intR t m))) = _
   rw [pairing_boundaryFlag_intR]
   exact hR _
@@ -546,7 +545,7 @@ open Classical in
 /-- **An unused label's partner label is unused.**  The subset is
 closed under the pairing, so a used partner would drag the label in
 with it. -/
-theorem not_used_of_pairing {α : Type} [LinearOrder α] [Fintype α]
+theorem not_used_of_pairing {α : Type}
     {W : Fragment α} {s : Finset W.Flag}
     (hc : ∀ f ∈ s, W.pairing f ∈ s) {a b : α}
     (h : W.pairing (W.boundaryFlag a) = W.boundaryFlag b)
@@ -671,7 +670,7 @@ theorem pairTailFun_cut_unused {t : ℕ} {F G : Fragment (Fin t)}
   exact hcut m
 
 /-- **An absent flag's partner is not internal.** -/
-theorem pairing_not_internal_of_not_mem {α : Type} [LinearOrder α]
+theorem pairing_not_internal_of_not_mem {α : Type}
     {W : Fragment α} (B : EdgeSubset W) {f : W.Flag}
     (hf : f ∉ B.flags) : W.pairing f ∉ B.internalFlags := by
   intro hx
@@ -1027,7 +1026,7 @@ noncomputable def edgeTermOf {α : Type}
 open Classical in
 /-- **The family's summand is its datum's.** -/
 theorem edgeTermAt_eq_edgeTermOf {α : Type} [LinearOrder α]
-    [Fintype α] {V : Fragment α} {k ℓ : ℕ}
+    {V : Fragment α} {k ℓ : ℕ}
     (h : MixedFunctional k ℓ) (𝒟 : DataFamily V)
     (st : GenBoundaryState k ℓ α) {s : Finset V.Flag}
     (hc : ∀ f ∈ s, V.pairing f ∈ s)
@@ -1042,7 +1041,7 @@ theorem edgeTermAt_eq_edgeTermOf {α : Type} [LinearOrder α]
 open Classical in
 /-- **The datum's summand transports along an equality of
 subsets.** -/
-theorem edgeTermOf_ofEq {α : Type} [LinearOrder α] {V : Fragment α}
+theorem edgeTermOf_ofEq {α : Type} {V : Fragment α}
     {k ℓ : ℕ} (h : MixedFunctional k ℓ) {s s' : Finset V.Flag}
     {hc : ∀ f ∈ s, V.pairing f ∈ s}
     {hc' : ∀ f ∈ s', V.pairing f ∈ s'}

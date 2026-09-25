@@ -32,7 +32,7 @@ private theorem peelFirstHalf_firstHalf (m : ℕ)
         (peelColour m c)) =
     fun (i : Fin m) => c ⟨i.val, by omega⟩ := by
   funext i
-  show peelColour m c ⟨i.val, by omega⟩ = c ⟨i.val, by omega⟩
+  change peelColour m c ⟨i.val, by omega⟩ = c ⟨i.val, by omega⟩
   rw [peelColour_low m c ⟨i.val, by omega⟩ i.isLt]
 
 /-- The second half of the first half of the peeled colouring
@@ -44,11 +44,11 @@ private theorem peelFirstHalf_secondHalf (m : ℕ)
         (peelColour m c)) =
     fun (j : Fin m) => c ⟨(m + 1) + j.val, by omega⟩ := by
   funext j
-  show peelColour m c ⟨m + j.val, by omega⟩ =
+  change peelColour m c ⟨m + j.val, by omega⟩ =
     c ⟨(m + 1) + j.val, by omega⟩
   rw [peelColour_apply]
   refine congrArg c (Fin.ext ?_)
-  show capPeelInv m (m + j.val) = (m + 1) + j.val
+  change capPeelInv m (m + j.val) = (m + 1) + j.val
   unfold capPeelInv; split_ifs <;> omega
 
 /-- The peeled pair's first entry is c at position m. -/
@@ -56,10 +56,10 @@ private theorem peelSecondHalf_zero (m : ℕ)
     (c : MixedColouring k ℓ ((m + 1) + (m + 1))) :
     MixedColouring.secondHalf (a := m + m) (b := 2)
       (peelColour m c) 0 = c ⟨m, by omega⟩ := by
-  show peelColour m c ⟨(m + m) + 0, by omega⟩ = c ⟨m, by omega⟩
+  change peelColour m c ⟨(m + m) + 0, by omega⟩ = c ⟨m, by omega⟩
   rw [peelColour_apply]
   refine congrArg c (Fin.ext ?_)
-  show capPeelInv m ((m + m) + 0) = m
+  change capPeelInv m ((m + m) + 0) = m
   unfold capPeelInv; split_ifs <;> omega
 
 /-- The peeled pair's second entry is c at position (m+1)+m. -/
@@ -81,7 +81,7 @@ private theorem firstHalf_castSucc_eq (m : ℕ)
     MixedColouring.firstHalf (a := m) (b := m)
       (MixedColouring.firstHalf (a := m + m) (b := 2)
         (peelColour m c)) i := by
-  show c ⟨(Fin.castSucc i).val, by omega⟩ = _
+  change c ⟨(Fin.castSucc i).val, by omega⟩ = _
   rw [peelFirstHalf_firstHalf]
   exact congrArg c (Fin.ext rfl)
 
@@ -95,7 +95,7 @@ private theorem secondHalf_castSucc_eq (m : ℕ)
     MixedColouring.secondHalf (a := m) (b := m)
       (MixedColouring.firstHalf (a := m + m) (b := 2)
         (peelColour m c)) j := by
-  show c ⟨(m + 1) + (Fin.castSucc j).val, by omega⟩ = _
+  change c ⟨(m + 1) + (Fin.castSucc j).val, by omega⟩ = _
   rw [peelFirstHalf_secondHalf]
   exact congrArg c (Fin.ext rfl)
 
@@ -350,7 +350,7 @@ private theorem sign_eq (m : ℕ)
       obtain ⟨ha_eq, hb_lo, hb_hi⟩ := hinv a b hab hgt
       refine mem_filter.mpr ⟨mem_filter.mpr
         ⟨mem_univ _, ?_, ?_, ?_⟩, rfl⟩
-      · show b.val - (m + 1) < m; omega
+      · change b.val - (m + 1) < m; omega
       · have hca : (c a).isRight := by rw [← hdc]; exact hr1
         have ha_fin : (⟨m, by omega⟩ :
             Fin ((m + 1) + (m + 1))) = a :=
@@ -361,7 +361,7 @@ private theorem sign_eq (m : ℕ)
             (⟨b.val - (m + 1), by omega⟩ : Fin (m + 1)) =
             b :=
           Fin.ext (by simp; omega)
-        rw [hsHc_def]; show (c (Fin.natAdd (m + 1)
+        rw [hsHc_def]; change (c (Fin.natAdd (m + 1)
           ⟨b.val - (m + 1), _⟩)).isRight
         rw [hb_fin]; exact hcb
     · intro ⟨a₁, b₁⟩ hp₁ ⟨a₂, b₂⟩ hp₂ h
@@ -388,7 +388,7 @@ private theorem sign_eq (m : ℕ)
         ?_, ?_⟩
       · simp only [mem_filter, mem_univ, true_and]
         refine ⟨show m < (m + 1) + i.val by omega, ?_, ?_, ?_⟩
-        · show (capPeelPerm m
+        · change (capPeelPerm m
               ⟨(m + 1) + i.val, _⟩).val <
             (capPeelPerm m ⟨m, _⟩).val
           rw [hσm, hσi ⟨i.val, hi_lt⟩]; omega
@@ -440,7 +440,7 @@ theorem betaDiag_eq_betaColour {k ℓ : ℕ} :
     · -- All pairs match: the main computation
       have heven := peelFirstHalf_isEven_of_matching m c hmatch
       rw [betaDiag_succ]
-      rw [dif_pos heven]
+      rw [dite_eq_left heven]
       -- Apply the inductive hypothesis
       rw [ih]
       -- Unfold betaColour on both sides

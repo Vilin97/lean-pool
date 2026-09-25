@@ -68,7 +68,7 @@ theorem sum_split_eq_count (x : Fin N → ℂ) (k : ℕ) (j : Fin N) :
       (fun S => range (S.1.count j))
       (fun q => ((q.1 : Sym (Fin N) (k + 1)).1.map x).prod)]
     refine Finset.sum_congr rfl fun S _ => ?_
-    show (S.1.count j : ℂ) * (S.1.map x).prod =
+    change (S.1.count j : ℂ) * (S.1.map x).prod =
       ∑ _s ∈ range (S.1.count j), (S.1.map x).prod
     rw [Finset.sum_const, Finset.card_range, nsmul_eq_mul]]
   refine Finset.sum_bij'
@@ -89,8 +89,8 @@ theorem sum_split_eq_count (x : Fin N → ℂ) (k : ℕ) (j : Fin N) :
     intro p hp
     refine Finset.mem_sigma.mpr ⟨Finset.mem_univ _, ?_⟩
     refine Finset.mem_range.mpr ?_
-    show p.1 < Multiset.count j (p.2.1 + Multiset.replicate (p.1 + 1) j)
-    rw [Multiset.count_add, Multiset.count_replicate, if_pos rfl]
+    change p.1 < Multiset.count j (p.2.1 + Multiset.replicate (p.1 + 1) j)
+    rw [Multiset.count_add, Multiset.count_replicate, ite_eq_left rfl]
     omega
   · -- backward membership
     intro q hq
@@ -100,13 +100,13 @@ theorem sum_split_eq_count (x : Fin N → ℂ) (k : ℕ) (j : Fin N) :
       Finset.mem_range.mp (Finset.mem_sigma.mp hq).2
     have hcc := Multiset.count_le_card j q.1.1
     rw [q.1.2] at hcc
-    show q.2 < k + 1
+    change q.2 < k + 1
     omega
   · -- left inverse
     intro p hp
     refine Sigma.ext rfl (heq_of_eq ?_)
     refine Subtype.ext ?_
-    show (p.2.1 + Multiset.replicate (p.1 + 1) j) -
+    change (p.2.1 + Multiset.replicate (p.1 + 1) j) -
       Multiset.replicate (p.1 + 1) j = p.2.1
     exact Multiset.add_sub_cancel_right
   · -- right inverse
@@ -117,12 +117,12 @@ theorem sum_split_eq_count (x : Fin N → ℂ) (k : ℕ) (j : Fin N) :
       Finset.mem_range.mp (Finset.mem_sigma.mp hq).2
     have hle : Multiset.replicate (q.2 + 1) j ≤ q.1.1 :=
       Multiset.le_count_iff_replicate_le.mp hd
-    show (q.1.1 - Multiset.replicate (q.2 + 1) j) +
+    change (q.1.1 - Multiset.replicate (q.2 + 1) j) +
       Multiset.replicate (q.2 + 1) j = q.1.1
     exact Multiset.sub_add_cancel hle
   · -- weights
     intro p hp
-    show x j ^ (p.1 + 1) * (p.2.1.map x).prod =
+    change x j ^ (p.1 + 1) * (p.2.1.map x).prod =
       ((p.2.1 + Multiset.replicate (p.1 + 1) j).map x).prod
     rw [Multiset.map_add, Multiset.prod_add, Multiset.map_replicate,
       Multiset.prod_replicate, mul_comm]

@@ -96,7 +96,7 @@ theorem connectionMap_tensor_right_single
     rfl
   | add y z hy hz =>
     rw [map_add, map_add]
-    show connectionMap f ((s + u) + (t + v)) _ K +
+    change connectionMap f ((s + u) + (t + v)) _ K +
       connectionMap f ((s + u) + (t + v)) _ K = _
     rw [hy, hz, map_add]
     rfl

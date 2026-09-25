@@ -161,7 +161,7 @@ lemma modCrossBridge_legM
           (modCrossHeadWin A X [] (Y :: m)) pre =
         modCrossBridge A X Y m pre ≫ modMultiLegM A pre X Y m
   | [] => by
-    show (((β_ (X.X ⊗ 𝟙_ D) A).hom ≫
+    change (((β_ (X.X ⊗ 𝟙_ D) A).hom ≫
           ((α_ A X.X (𝟙_ D)).inv ≫
             (actLeft A X.X ▷ 𝟙_ D))) ▷ (Y.X ⊗ modList A m)) ≫
         ((α_ X.X (𝟙_ D) (Y.X ⊗ modList A m)).hom ≫
@@ -188,7 +188,7 @@ lemma modCrossBridge_legM
       associator_naturality_left_assoc, Iso.inv_hom_id_assoc]
     rw [reassoc_of% hcoh]
   | P :: rest => by
-    show P.X ◁ modCrossLegOf A [X] (Y :: m)
+    change P.X ◁ modCrossLegOf A [X] (Y :: m)
           (modCrossHeadWin A X [] (Y :: m)) rest =
       (P.X ◁ modCrossBridge A X Y m rest) ≫
         (P.X ◁ modMultiLegM A rest X Y m)
@@ -205,7 +205,7 @@ lemma modCrossBridge_legN
           (modCrossYWin A [X] Y m) pre =
         modCrossBridge A X Y m pre ≫ modMultiLegN A pre X Y m
   | [] => by
-    show (α_ (X.X ⊗ 𝟙_ D) A (Y.X ⊗ modList A m)).hom ≫
+    change (α_ (X.X ⊗ 𝟙_ D) A (Y.X ⊗ modList A m)).hom ≫
         ((X.X ⊗ 𝟙_ D) ◁
           ((α_ A Y.X (modList A m)).inv ≫
             (actLeft A Y.X ▷ modList A m))) ≫
@@ -236,7 +236,7 @@ lemma modCrossBridge_legN
     simp only [MonoidalCategory.whiskerLeft_comp]
     rw [reassoc_of% hcoh]
   | P :: rest => by
-    show P.X ◁ modCrossLegOf A [X] (Y :: m)
+    change P.X ◁ modCrossLegOf A [X] (Y :: m)
           (modCrossYWin A [X] Y m) rest =
       (P.X ◁ modCrossBridge A X Y m rest) ≫
         (P.X ◁ modMultiLegN A rest X Y m)
@@ -283,7 +283,7 @@ lemma modCrossPeel_yWin [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
   | [], h => by
     simp only [List.nil_append, List.cons_append, modListCast_rfl,
       Category.comp_id]
-    show (((α_ X.X (modList A Xs') A).hom ▷ modList A (Y :: m)) ≫
+    change (((α_ X.X (modList A Xs') A).hom ▷ modList A (Y :: m)) ≫
         (α_ X.X (modList A Xs' ⊗ A) (modList A (Y :: m))).hom) ≫
       (X.X ◁ ((α_ (modList A Xs') A (modList A (Y :: m))).hom ≫
         (modList A Xs' ◁ modListHeadAct A Y m) ≫
@@ -304,7 +304,7 @@ lemma modCrossPeel_yWin [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     conv_rhs => rw [associator_naturality_right_assoc]
     rw [reassoc_of% hcoh]
   | P :: rest, h => by
-    show (P.X ◁ modCrossPeel A X Xs' (Y :: m) rest) ≫
+    change (P.X ◁ modCrossPeel A X Xs' (Y :: m) rest) ≫
         (P.X ◁ modCrossLegOf A Xs' (Y :: m)
           (modCrossYWin A Xs' Y m) (rest ++ [X])) ≫
         modListCast A h =
@@ -348,7 +348,7 @@ lemma modCrossStepBridge_legM
         modCrossStepBridge A X P l' Ys pre ≫
           modMultiLegM A pre X P (l' ++ Ys)
   | [] => by
-    show (((β_ (X.X ⊗ (P.X ⊗ modList A l')) A).hom ≫
+    change (((β_ (X.X ⊗ (P.X ⊗ modList A l')) A).hom ≫
           ((α_ A X.X (P.X ⊗ modList A l')).inv ≫
             (actLeft A X.X ▷ (P.X ⊗ modList A l')))) ▷
             modList A Ys) ≫
@@ -377,7 +377,7 @@ lemma modCrossStepBridge_legM
       whisker_exchange_assoc, whisker_exchange_assoc,
       whisker_exchange, whisker_exchange_assoc]
   | Q :: rest => by
-    show Q.X ◁ modCrossLegOf A (X :: P :: l') Ys
+    change Q.X ◁ modCrossLegOf A (X :: P :: l') Ys
           (modCrossHeadWin A X (P :: l') Ys) rest =
       (Q.X ◁ modCrossStepBridge A X P l' Ys rest) ≫
         (Q.X ◁ modMultiLegM A rest X P (l' ++ Ys))
@@ -404,7 +404,7 @@ lemma modCrossStepBridge_legN
   | [], h => by
     simp only [List.nil_append, List.cons_append, modListCast_rfl,
       Category.comp_id]
-    show ((((α_ X.X (P.X ⊗ modList A l') A).hom ≫
+    change ((((α_ X.X (P.X ⊗ modList A l') A).hom ≫
           (X.X ◁ (β_ (P.X ⊗ modList A l') A).hom) ≫
           (α_ X.X A (P.X ⊗ modList A l')).inv) ▷ modList A Ys) ≫
         (α_ (X.X ⊗ A) (P.X ⊗ modList A l') (modList A Ys)).hom ≫
@@ -465,7 +465,7 @@ lemma modCrossStepBridge_legN
         rest ++ ((X :: P :: l') ++ Ys) := by simp
     have hQC : Q.X ◁ modListCast A h' = modListCast A h :=
       modListCast_whiskerLeft A Q h'
-    show (Q.X ◁ modCrossStepBridge A X P l' Ys rest) ≫
+    change (Q.X ◁ modCrossStepBridge A X P l' Ys rest) ≫
         (Q.X ◁ modMultiLegN A rest X P (l' ++ Ys)) =
       (Q.X ◁ modCrossPeel A X (P :: l') Ys rest) ≫
         (Q.X ◁ modCrossLegOf A (P :: l') Ys
@@ -676,7 +676,7 @@ lemma modTensorLeg_multi
       (modListHeadAct A X l ▷ modList A (Y :: m)) ≫
       (modListConcat A (X :: l) (Y :: m)).hom ≫
       modMultiπ A ((X :: l) ++ (Y :: m)) := by
-    show (modMultiπ A (X :: l) ▷ (A ⊗ modList A (Y :: m))) ≫
+    change (modMultiπ A (X :: l) ▷ (A ⊗ modList A (Y :: m))) ≫
         (α_ (modMulti A (X :: l)) A (modList A (Y :: m))).inv ≫
         ((modMulti A (X :: l) ⊗ A) ◁ modMultiπ A (Y :: m)) ≫
         (((β_ (modMulti A (X :: l)) A).hom ≫
@@ -699,7 +699,7 @@ lemma modTensorLeg_multi
     (modList A (X :: l) ◁ modListHeadAct A Y m) ≫
       (modListConcat A (X :: l) (Y :: m)).hom ≫
       modMultiπ A ((X :: l) ++ (Y :: m)) := by
-    show (modMultiπ A (X :: l) ▷ (A ⊗ modList A (Y :: m))) ≫
+    change (modMultiπ A (X :: l) ▷ (A ⊗ modList A (Y :: m))) ≫
         (α_ (modMulti A (X :: l)) A (modList A (Y :: m))).inv ≫
         ((modMulti A (X :: l) ⊗ A) ◁ modMultiπ A (Y :: m)) ≫
         ((α_ (modMulti A (X :: l)) A (modMulti A (Y :: m))).hom ≫
@@ -721,7 +721,7 @@ lemma modTensorLeg_multi
   have mc := modListCross A X Y l m
   rw [MonoidalCategory.comp_whiskerRight] at mc
   simp only [Category.assoc] at mc
-  show (modMultiπ A (X :: l) ▷ (A ⊗ modList A (Y :: m))) ≫
+  change (modMultiπ A (X :: l) ▷ (A ⊗ modList A (Y :: m))) ≫
       (α_ (modMulti A (X :: l)) A (modList A (Y :: m))).inv ≫
       ((modMulti A (X :: l) ⊗ A) ◁ modMultiπ A (Y :: m)) ≫
       modTensorLegM A (modMultiMod A X l) (modMultiMod A Y m) ≫

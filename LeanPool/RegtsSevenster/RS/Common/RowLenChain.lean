@@ -74,7 +74,7 @@ theorem rowLen_of_card_succ {lam nu : YoungDiagram}
       rcases this with heq | hmem
       · exact absurd (congrArg Prod.snd heq) hne
       · exact (YoungDiagram.mem_cells _).mp hmem
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     -- rowLen nu = c.2 + 1 and rowLen lam = c.2
     have h1 : c.2 + 1 ≤ nu.rowLen c.1 := hlt
     have h2 : lam.rowLen c.1 ≤ c.2 := by omega
@@ -88,7 +88,7 @@ theorem rowLen_of_card_succ {lam nu : YoungDiagram}
       · have := hup (c.2 - 1) (by omega) (by omega)
         omega
     omega
-  · rw [if_neg hi]
+  · rw [ite_eq_right hi]
     apply le_antisymm
     · by_contra h
       have hmem : (i, lam.rowLen i) ∈ nu := by

@@ -203,7 +203,7 @@ lemma inclFilter_cons_pos
         rw [List.filter_cons_of_pos h, listTensor_cons]) ≫
         (B i ◁ inclFilter B p l) ≫
         eqToHom (listTensor_cons B i l).symm := by
-  rw [inclFilter, dif_pos h]
+  rw [inclFilter, dite_eq_left h]
 
 lemma inclFilter_cons_neg
     [Category.{v} D] [MonoidalCategory D] (B : ι → D) [∀ i, MonObj (B i)]
@@ -215,7 +215,7 @@ lemma inclFilter_cons_neg
         rw [List.filter_cons_of_neg (by simp [h])]) ≫
         inclFilter B p l ≫ unitIncl (B i) (listTensor B l) ≫
         eqToHom (listTensor_cons B i l).symm := by
-  rw [inclFilter, dif_neg h]
+  rw [inclFilter, dite_eq_right h]
 
 /-- Equal index lists give equal (conjugated) insertions. -/
 lemma inclFilter_congr
@@ -253,13 +253,13 @@ instance isMonHom_inclFilter
     ∀ l : List ι, IsMonHom (inclFilter B p l)
   | [] => inferInstanceAs (IsMonHom (𝟙 (𝟙_ D)))
   | i :: l => by
-    haveI := isMonHom_inclFilter B p l
-    haveI : IsMonHom (eqToHom (listTensor_cons B i l).symm) :=
+    have := isMonHom_inclFilter B p l
+    have : IsMonHom (eqToHom (listTensor_cons B i l).symm) :=
       isMonHom_eqToHom B (l₁ := i :: l) (l₂ := i :: l) rfl
         (listTensor_cons B i l).symm
     by_cases h : p i
     · rw [inclFilter_cons_pos B p l h]
-      haveI : IsMonHom (eqToHom
+      have : IsMonHom (eqToHom
           (show listTensor B ((i :: l).filter p) =
             B i ⊗ listTensor B (l.filter p) by
           rw [List.filter_cons_of_pos h, listTensor_cons])) :=
@@ -269,7 +269,7 @@ instance isMonHom_inclFilter
               listTensor B (i :: l.filter p))
       infer_instance
     · rw [inclFilter_cons_neg B p l h]
-      haveI : IsMonHom (eqToHom
+      have : IsMonHom (eqToHom
           (show listTensor B ((i :: l).filter p) =
             listTensor B (l.filter p) by
           rw [List.filter_cons_of_neg (by simp [h])])) :=
@@ -425,14 +425,14 @@ instance isMonHom_finTensorIncl
     [BraidedCategory D] {s t : Finset ι}
     (h : s ⊆ t) : IsMonHom (finTensorIncl B h) := by
   rw [finTensorIncl]
-  haveI : IsMonHom (eqToHom (show finTensor B s =
+  have : IsMonHom (eqToHom (show finTensor B s =
       listTensor B ((t.sort (· ≤ ·)).filter fun i => decide (i ∈ s)) by
     rw [sort_filter_of_subset h]; rfl)) :=
     isMonHom_eqToHom B (l₁ := s.sort (· ≤ ·))
       (l₂ := (t.sort (· ≤ ·)).filter fun i => decide (i ∈ s))
       (sort_filter_of_subset h).symm
       (by rw [sort_filter_of_subset h])
-  haveI : IsMonHom (eqToHom
+  have : IsMonHom (eqToHom
       (show listTensor B (t.sort (· ≤ ·)) = finTensor B t from rfl)) :=
     isMonHom_eqToHom B (l₁ := t.sort (· ≤ ·)) (l₂ := t.sort (· ≤ ·))
       rfl rfl
@@ -787,7 +787,7 @@ noncomputable def bigTensorMulCocone
   ι :=
     { app := fun s => finTensorMul B s t ≫ bigTensorStage B (s ∪ t)
       naturality := fun {s s'} f => by
-        show (finTensorIncl B (leOfHom f) ▷ finTensor B t) ≫
+        change (finTensorIncl B (leOfHom f) ▷ finTensor B t) ≫
             (finTensorMul B s' t ≫ bigTensorStage B (s' ∪ t)) =
           (finTensorMul B s t ≫ bigTensorStage B (s ∪ t)) ≫
             𝟙 (bigTensor B)
@@ -819,7 +819,7 @@ lemma stage_bigTensorMulStage
     (s t : Finset ι) :
     (bigTensorStage B s ▷ finTensor B t) ≫ bigTensorMulStage B t =
       finTensorMul B s t ≫ bigTensorStage B (s ∪ t) := by
-  show (tensorRight (finTensor B t)).map
+  change (tensorRight (finTensor B t)).map
       (colimit.ι (finTensorDiagram B) s) ≫ bigTensorMulStage B t =
     finTensorMul B s t ≫ bigTensorStage B (s ∪ t)
   erw [bigTensorMulStage, ι_preservesColimitIso_hom_assoc]
@@ -853,7 +853,7 @@ noncomputable def bigTensorMulTotalCocone
   ι :=
     { app := fun t => bigTensorMulStage B t
       naturality := fun {t t'} f => by
-        show (bigTensor B ◁ finTensorIncl B (leOfHom f)) ≫
+        change (bigTensor B ◁ finTensorIncl B (leOfHom f)) ≫
             bigTensorMulStage B t' =
           bigTensorMulStage B t ≫ 𝟙 (bigTensor B)
         rw [Category.comp_id]
@@ -883,7 +883,7 @@ lemma stage_bigTensorMul_right
     (t : Finset ι) :
     (bigTensor B ◁ bigTensorStage B t) ≫ bigTensorMul B =
       bigTensorMulStage B t := by
-  show (tensorLeft (bigTensor B)).map
+  change (tensorLeft (bigTensor B)).map
       (colimit.ι (finTensorDiagram B) t) ≫ bigTensorMul B =
     bigTensorMulStage B t
   erw [bigTensorMul, ι_preservesColimitIso_hom_assoc]
@@ -954,7 +954,7 @@ noncomputable def bigTensorMulLCocone
   ι :=
     { app := fun t => finTensorMul B s t ≫ bigTensorStage B (s ∪ t)
       naturality := fun {t t'} f => by
-        show (finTensor B s ◁ finTensorIncl B (leOfHom f)) ≫
+        change (finTensor B s ◁ finTensorIncl B (leOfHom f)) ≫
             (finTensorMul B s t' ≫ bigTensorStage B (s ∪ t')) =
           (finTensorMul B s t ≫ bigTensorStage B (s ∪ t)) ≫
             𝟙 (bigTensor B)
@@ -987,7 +987,7 @@ lemma stage_bigTensorMulStageL
     (s t : Finset ι) :
     (finTensor B s ◁ bigTensorStage B t) ≫ bigTensorMulStageL B s =
       finTensorMul B s t ≫ bigTensorStage B (s ∪ t) := by
-  show (tensorLeft (finTensor B s)).map
+  change (tensorLeft (finTensor B s)).map
       (colimit.ι (finTensorDiagram B) t) ≫ bigTensorMulStageL B s =
     finTensorMul B s t ≫ bigTensorStage B (s ∪ t)
   erw [bigTensorMulStageL, ι_preservesColimitIso_hom_assoc]
@@ -1128,7 +1128,7 @@ instance isMonHom_bigTensorOf
     (i : ι) :
     IsMonHom (bigTensorOf B i) := by
   rw [bigTensorOf]
-  haveI : IsMonHom (eqToHom (finTensor_singleton B i).symm) :=
+  have : IsMonHom (eqToHom (finTensor_singleton B i).symm) :=
     isMonHom_eqToHom B (l₁ := [i])
       (l₂ := ({i} : Finset ι).sort (· ≤ ·))
       (Finset.sort_singleton (fun a b => a ≤ b) i).symm
@@ -1166,7 +1166,7 @@ instance bigTensorCommMon [Category.{v} D] [MonoidalCategory D] [LinearOrder ι]
     [∀ X : D, PreservesColimitsOfShape (Finset ι) (tensorLeft X)] :
     IsCommMonObj (bigTensor B) where
   mul_comm := by
-    show (β_ (bigTensor B) (bigTensor B)).hom ≫ bigTensorMul B =
+    change (β_ (bigTensor B) (bigTensor B)).hom ≫ bigTensorMul B =
       bigTensorMul B
     apply bigTensor_pair_hom_ext B
     intro s t

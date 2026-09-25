@@ -51,7 +51,7 @@ private def extendZero [Category.{v} C] [Abelian C]
 private lemma extendZero_of_lt [Category.{v} C] [Abelian C]
     {Y : C} {k : ℕ} (f : Fin k → End Y)
     {n : ℕ} (h : n < k) : extendZero f n = f ⟨n, h⟩ :=
-  dif_pos h
+  dite_eq_left h
 
 /-- The extension by zero inherits idempotence. -/
 private lemma extendZero_idem [Category.{v} C] [Abelian C]

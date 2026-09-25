@@ -67,14 +67,14 @@ theorem coordOf_modelStarVec :
         ∏ v : Fin ds.length,
           starCoord f P e' (ds.get v) (blockRestrict ds c v)
   | [], c, hc => by
-    haveI : IsEmpty (Fin ([] : List ℕ).length) :=
+    have : IsEmpty (Fin ([] : List ℕ).length) :=
       inferInstanceAs (IsEmpty (Fin 0))
     rw [show (∏ v : Fin ([] : List ℕ).length,
         starCoord f P e' (([] : List ℕ).get v)
           (blockRestrict [] c v)) = 1 from
       Finset.prod_of_isEmpty _]
     unfold coordOf
-    rw [dif_pos hc]
+    rw [dite_eq_left hc]
     rfl
   | d :: ds, c, hc => by
     -- Push through the cast.
@@ -94,7 +94,7 @@ theorem coordOf_modelStarVec :
         (List.sum_cons.symm : d + ds.sum = (d :: ds).sum)) :=
       (isEven_comp_finCongr _ c).mpr hc
     unfold coordOf
-    rw [dif_pos hc']
+    rw [dite_eq_left hc']
     rw [colourMerge_coord d ds.sum _ _ _ hc']
     have hsucc : (∏ v : Fin ((d :: ds).length),
         starCoord f P e' ((d :: ds).get v)
@@ -110,7 +110,7 @@ theorem coordOf_modelStarVec :
         (MixedColouring.firstHalf ((c ∘ finCongr
           (List.sum_cons.symm : d + ds.sum = (d :: ds).sum)) :
           MixedColouring k ℓ (d + ds.sum)))
-    · rw [dif_pos hfe]
+    · rw [dite_eq_left hfe]
       -- Head factor is the star coordinate.
       rw [show ((colourPowerEquiv k ℓ d).evenEquiv
           (((stdFromOmega f P e' d) :
@@ -123,7 +123,7 @@ theorem coordOf_modelStarVec :
           ⟨0, by simp⟩) from by
         rw [blockRestrict_cons_head]
         unfold starCoord
-        rw [dif_pos hfe]]
+        rw [dite_eq_left hfe]]
       -- Tail factor is the induction.
       rw [show ((colourPowerEquiv k ℓ ds.sum).evenEquiv
           (modelStarVec f P e' ds)
@@ -137,7 +137,7 @@ theorem coordOf_modelStarVec :
               d + ds.sum = (d :: ds).sum)) :
             MixedColouring k ℓ (d + ds.sum))) from by
         unfold coordOf
-        rw [dif_pos (MixedColouring.secondHalf_isEven _
+        rw [dite_eq_left (MixedColouring.secondHalf_isEven _
           hc' hfe)]]
       rw [coordOf_modelStarVec ds _
         (MixedColouring.secondHalf_isEven _ hc' hfe)]
@@ -145,7 +145,7 @@ theorem coordOf_modelStarVec :
       refine Finset.prod_congr rfl (fun v _ => ?_)
       rw [blockRestrict_cons_tail]
       rfl
-    · rw [dif_neg hfe]
+    · rw [dite_eq_right hfe]
       have hzero : starCoord f P e' ((d :: ds).get 0)
           (blockRestrict (d :: ds) c 0) = 0 := by
         rw [show blockRestrict (d :: ds) c

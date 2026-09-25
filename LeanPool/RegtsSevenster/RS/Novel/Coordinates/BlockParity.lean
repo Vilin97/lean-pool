@@ -18,7 +18,7 @@ summand vanishes whenever any block is odd-parity.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 
@@ -100,7 +100,7 @@ theorem vertexOf_slotEmbed (W : ClosedFragment)
   apply (Fintype.equivFin W.Vertex).injective
   -- Goal: equivFin (vertexOf W ((starFlagEnum W).symm (slotEmbed W v j)))
   --     = equivFin (blockVertex W v)
-  show starAssignEnum W (slotEmbed W v j) =
+  change starAssignEnum W (slotEmbed W v j) =
     (Fintype.equivFin W.Vertex) (blockVertex W v)
   rw [assign_slotEmbed, blockVertex, _root_.Equiv.apply_symm_apply]
 
@@ -129,16 +129,17 @@ theorem slotEmbed_recover (W : ClosedFragment)
         Fin ((ds W).get _w)) =
       sortSigma (starAssignEnum W) s) :
     slotEmbed W v jw = s := by
-  show (sortEquiv (starAssignEnum W)).symm
+  change (sortEquiv (starAssignEnum W)).symm
     (blockSigmaEquiv (ds W) ⟨v, jw⟩) = s
   have hbe : blockSigmaEquiv (ds W) ⟨v, jw⟩ =
       sortEquiv (starAssignEnum W) s := by
-    show blockSigmaEquiv (ds W) ⟨v, jw⟩ =
+    change blockSigmaEquiv (ds W) ⟨v, jw⟩ =
       ((sortSigma (starAssignEnum W)).trans
         (blockSigmaEquiv (ds W))) s
     rw [_root_.Equiv.trans_apply, ← hq]
   rw [hbe, _root_.Equiv.symm_apply_apply]
 
+open scoped Classical in
 /-- **Block parity**: the v-th block of the sorted colouring has
 the same odd-set cardinality as the pattern-flags at the
 corresponding vertex. -/
@@ -178,9 +179,9 @@ theorem blockRestrict_oddSet_card (W : ClosedFragment)
     -- The assignment of s matches block v
     have hassign : starAssignEnum W s =
         finCongr (degList_length (starAssignEnum W)) v := by
-      show (Fintype.equivFin W.Vertex) (starAssign W s) = _
+      change (Fintype.equivFin W.Vertex) (starAssign W s) = _
       have hv : starAssign W s = blockVertex W v := by
-        show ClosedFragment.vertexOf W
+        change ClosedFragment.vertexOf W
           ((starFlagEnum W).symm s) = blockVertex W v
         rw [hsg, hvtx]
       rw [hv, blockVertex, _root_.Equiv.apply_symm_apply]
@@ -208,6 +209,7 @@ theorem blockRestrict_oddSet_card (W : ClosedFragment)
       show (starFlagEnum W).symm (slotEmbed W w jw) = g
       rw [slotEmbed_recover W w s jw hq_def, hsg]
 
+open scoped Classical in
 /-- **Block parity dictionary**: the v-th block of the sorted
 colouring is even iff the pattern-flags at the corresponding
 vertex have even count. -/

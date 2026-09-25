@@ -54,19 +54,19 @@ theorem exists_simple_generator_algebra
       (∀ I : Subobject 𝔹, IsIdeal 𝔹 I → I = ⊥ ∨ I = ⊤) ∧
       Nonempty (freeMod 𝔹 ((indOf : C ⥤ Ind C).obj X₀) ≅
         freeMod 𝔹 (L.mix p q)) := by
-  letI := linearOfScalarUnit ψ
-  letI := monoidalLinearOfScalarUnitBraided ψ
-  letI := linearOfScalarUnit (indScalarUnit ψ)
-  letI := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
+  let := linearOfScalarUnit ψ
+  let := monoidalLinearOfScalarUnitBraided ψ
+  let := linearOfScalarUnit (indScalarUnit ψ)
+  let := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
   obtain ⟨p, q, 𝔸, hmon, hcomm, hne, hcp, ⟨e⟩⟩ :=
     exists_generator_algebra ψ P P₀ L X₀ lam hkill hlen
-  letI := hmon
-  letI := hcomm
+  let := hmon
+  let := hcomm
   obtain ⟨𝔹, hmon', hcomm', π, hne', hepi, hhom, hsimple⟩ :=
     exists_simple_quotient 𝔸 hne
-  letI := hmon'
-  letI := hcomm'
-  haveI := hhom
+  let := hmon'
+  let := hcomm'
+  have := hhom
   exact ⟨p, q, 𝔸, 𝔹, hmon, hcomm, hmon', hcomm', π, hne', hcp, hepi,
     hhom, hsimple, ⟨freeModIsoBaseChange 𝔸 𝔹 π e⟩⟩
 

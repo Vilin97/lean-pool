@@ -201,7 +201,7 @@ theorem actRight_ins
     (hv : actLeft A M.X ≫ v =
       (A ◁ v) ≫ (φ ▷ B) ≫ μ[B]) :
     actRight A M.X ≫ v = (v ▷ A) ≫ (B ◁ φ) ≫ μ[B] := by
-  show ((β_ M.X A).hom ≫ actLeft A M.X) ≫ v = _
+  change ((β_ M.X A).hom ≫ actLeft A M.X) ≫ v = _
   rw [Category.assoc, hv,
     ← BraidedCategory.braiding_naturality_left_assoc,
     ← BraidedCategory.braiding_naturality_right_assoc,
@@ -425,7 +425,7 @@ theorem baseChangePair_linear_outer
         (B ◁ (modTensorπ B (baseChangeMod φ M')
           (baseChangeMod φ M) ≫
           (baseChangeDatum A B φ d).pair)) ≫ μ[B] := by
-  letI := modTensorModObj B (baseChangeMod φ M')
+  let := modTensorModObj B (baseChangeMod φ M')
     (baseChangeMod φ M)
   have hact : (B ◁ modTensorπ B (baseChangeMod φ M')
         (baseChangeMod φ M)) ≫

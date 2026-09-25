@@ -121,7 +121,7 @@ private theorem freeSlideWin_eq
         (V ◁ ((α_ A A V).inv ≫ (μ[A] ▷ V))) ≫
         (((λ_ V).inv ≫ (η[A] ▷ V)) ▷ (A ⊗ V)) := by
   simp only [headSwap, Category.assoc, Iso.hom_inv_id_assoc]
-  show (((β_ A V).hom ≫ (((λ_ V).inv ≫ (η[A] ▷ V)) ▷ A)) ▷
+  change (((β_ A V).hom ≫ (((λ_ V).inv ≫ (η[A] ▷ V)) ▷ A)) ▷
       (A ⊗ V)) ≫ ((α_ (A ⊗ V) A (A ⊗ V)).hom ≫
         ((A ⊗ V) ◁ ((α_ A A V).inv ≫ (μ[A] ▷ V)))) = _
   rw [MonoidalCategory.comp_whiskerRight, Category.assoc,
@@ -189,7 +189,7 @@ place along. -/
 theorem freeCollapse_freeInsert_succ
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     (A : D) [MonObj A]
-    [IsCommMonObj A] (V : D) (k : ℕ) :
+    (V : D) (k : ℕ) :
     freeCollapse A V (k + 2) ≫ freeInsert A V (k + 1) =
       ((freeCollapse A V (k + 1) ≫ freeInsert A V k) ▷ (A ⊗ V)) ≫
         freeSlideTop A V k := by

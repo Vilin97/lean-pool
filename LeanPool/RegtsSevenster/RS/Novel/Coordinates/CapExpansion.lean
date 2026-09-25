@@ -34,7 +34,7 @@ theorem capVal_expansion (m : ℕ)
   rw [show coordOf v c.val =
       (colourPowerEquiv k ℓ (m + m)).evenEquiv v c from by
     unfold coordOf
-    rw [dif_pos c.prop]]
+    rw [dite_eq_left c.prop]]
   rfl
 
 end RS

@@ -198,7 +198,7 @@ noncomputable def chainBdegZeroStageIso
   inv := chainStage2Cast A M M' (Nat.zero_add k).symm
     (Nat.zero_add k).symm
   hom_inv_id := by
-    show chainStage2Cast A M M' (Nat.zero_add k)
+    change chainStage2Cast A M M' (Nat.zero_add k)
         (Nat.zero_add k) ≫
       chainStage2Cast A M M' (Nat.zero_add k).symm
         (Nat.zero_add k).symm =
@@ -206,7 +206,7 @@ noncomputable def chainBdegZeroStageIso
     rw [chainStage2Cast_trans]
     exact chainStage2Cast_rfl A M M' _ _
   inv_hom_id := by
-    show chainStage2Cast A M M' (Nat.zero_add k).symm
+    change chainStage2Cast A M M' (Nat.zero_add k).symm
         (Nat.zero_add k).symm ≫
       chainStage2Cast A M M' (Nat.zero_add k)
         (Nat.zero_add k) =
@@ -221,7 +221,6 @@ private theorem chainBdegZeroStage_compatibility
     [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
     [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
     (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
-    [HasColimitsOfShape SmallNat.{v} D]
     (d : ModDualityDatum A M M')
     (k : ℕ) :
     chainDelta2 A M M' d (0 + k) (0 + k) ≫
@@ -278,7 +277,6 @@ private theorem chainBdegSuccStage_compatibility
     [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
     [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
     (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
-    [HasColimitsOfShape SmallNat.{v} D]
     (d : ModDualityDatum A M M')
     (p₀ q₀ : ℕ)
     (k : ℕ) :
@@ -515,7 +513,7 @@ noncomputable def chainBdegInsPCocone
           chainBdegι A M M' d (p₀ + 1) q₀
             (smallNatEquiv.inverse.obj k)
       naturality := fun {k k'} f => by
-        show (M'.X ◁ chainMap
+        change (M'.X ◁ chainMap
             (fun k => chainStage2 A M M' (p₀ + k) (q₀ + k))
             (fun k => chainDelta2 A M M' d (p₀ + k) (q₀ + k))
             (leOfHom (smallNatEquiv.inverse.map f))) ≫
@@ -570,7 +568,7 @@ theorem whiskerLeft_ι_chainBdegInsP
         chainBdegInsP A M M' d p₀ q₀ =
       chainBdegInsPStage A M M' p₀ q₀ k ≫
         chainBdegι A M M' d (p₀ + 1) q₀ k := by
-  show (tensorLeft M'.X).map (colimit.ι (chainDiagram _ _)
+  change (tensorLeft M'.X).map (colimit.ι (chainDiagram _ _)
       (smallNatEquiv.functor.obj k)) ≫ _ = _
   erw [chainBdegInsP, ι_preservesColimitIso_hom_assoc]
   exact colimit.ι_desc (chainBdegInsPCocone A M M' d p₀ q₀)

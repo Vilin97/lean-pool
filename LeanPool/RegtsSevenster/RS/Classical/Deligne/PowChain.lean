@@ -48,7 +48,7 @@ theorem modPowMul_modTensor_cond
       rfl,
     show actLeft A (modPowMod A X n).X = modPowAct A X n from
       rfl]
-  show (((β_ (modPow A X (m + 1)) A).hom ≫ modPowAct A X m) ▷
+  change (((β_ (modPow A X (m + 1)) A).hom ≫ modPowAct A X m) ▷
       modPow A X (n + 1)) ≫ modPowMul A X (m + 1) (n + 1) =
     ((α_ (modPow A X (m + 1)) A (modPow A X (n + 1))).hom ≫
       (modPow A X (m + 1) ◁ modPowAct A X n)) ≫
@@ -105,7 +105,7 @@ theorem powMulDesc_act
   conv_rhs => rw [← whiskerLeft_comp_assoc,
     modTensorπ_powMulDesc]
   have h := modPowMul_actLeft A X m n
-  show (α_ A (modPow A X (m + 1)) (modPow A X (n + 1))).inv ≫
+  change (α_ A (modPow A X (m + 1)) (modPow A X (n + 1))).inv ≫
       (modPowAct A X m ▷ modPow A X (n + 1)) ≫
       modPowMul A X (m + 1) (n + 1) =
     (A ◁ modPowMul A X (m + 1) (n + 1)) ≫

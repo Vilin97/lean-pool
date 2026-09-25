@@ -62,7 +62,7 @@ theorem karoubiTrace_split {X : Karoubi (SkeinObj f)}
       ((e a).f ≫ x.f)).trans
     (congrArg (HomSpace.traceMap f.val X.X.arity)
       (by
-        show ((e a).f ≫ x.f) ≫ (e a).f =
+        change ((e a).f ≫ x.f) ≫ (e a).f =
           (e a).f ≫ x.f ≫ (e a).f
         exact Category.assoc _ _ _))
 
@@ -89,8 +89,8 @@ noncomputable def atomResolution
       (e : ι → End (M.X i)),
       CompleteOrthogonalIdempotents e ∧
         ∀ a, IsAtomicIdempotent (e a) := fun i => by
-    haveI := karoubiEndFinite f (M.X i)
-    haveI := karoubiEnd_isSemisimpleRing f (M.X i)
+    have := karoubiEndFinite f (M.X i)
+    have := karoubiEnd_isSemisimpleRing f (M.X i)
     exact exists_completeOrthogonal_atomic
   choose idx fin e hco hatom using h
   exact ⟨idx, fin, e, hco, hatom⟩
@@ -258,7 +258,7 @@ noncomputable def AtomResolution.w (A : AtomResolution f M)
 noncomputable def AtomResolution.t (A : AtomResolution f M)
     (φ : End M) (p q : A.κ) : A.S p ⟶ A.S q :=
   ⟨(A.e p.1 p.2).f ≫ (φ p.1 q.1).f ≫ (A.e q.1 q.2).f, by
-    show (A.e p.1 p.2).f ≫ ((A.e p.1 p.2).f ≫
+    change (A.e p.1 p.2).f ≫ ((A.e p.1 p.2).f ≫
         (φ p.1 q.1).f ≫ (A.e q.1 q.2).f) ≫
       (A.e q.1 q.2).f = _
     rw [show (A.e p.1 p.2).f ≫ ((A.e p.1 p.2).f ≫
@@ -405,12 +405,12 @@ noncomputable def AtomResolution.B (φ : End M) :
 blocks, there being no isomorphism to transport along. -/
 theorem AtomResolution.B_apply_of_ne (φ : End M) {p q : A.κ}
     (h : ¬ A.rep p = A.rep q) : A.B φ p q = 0 :=
-  dif_neg h
+  dite_eq_right h
 
 /-- The scalar matrix of the zero endomorphism is zero. -/
 theorem AtomResolution.B_zero : A.B (0 : End M) = 0 := by
   funext p q
-  show A.B 0 p q = 0
+  change A.B 0 p q = 0
   unfold AtomResolution.B
   split_ifs with h
   · rw [show A.t (0 : End M) p q = 0 from by
@@ -438,7 +438,7 @@ theorem AtomResolution.B_comp (φ ψ : End M) :
       atomScalar (A.isAtom_S (A.rep p))
         (((A.w p).hom ≫ A.t ((φ ≫ ψ : End M)) p r ≫
           (A.w r).inv ≫ eqToHom (congrArg A.S h.symm) :
-            End (A.S (A.rep p)))) from dif_pos h]
+            End (A.S (A.rep p)))) from dite_eq_left h]
     rw [A.t_comp φ ψ p r]
     rw [show ((A.w p).hom ≫
         (∑ q : A.κ, (A.t φ p q ≫ A.t ψ q r :
@@ -473,12 +473,12 @@ theorem AtomResolution.B_comp (φ ψ : End M) :
     · rw [show A.B φ p q = atomScalar (A.isAtom_S (A.rep p))
         (((A.w p).hom ≫ A.t φ p q ≫ (A.w q).inv ≫
           eqToHom (congrArg A.S hq.symm) :
-            End (A.S (A.rep p)))) from dif_pos hq]
+            End (A.S (A.rep p)))) from dite_eq_left hq]
       have hqr : A.rep q = A.rep r := hq ▸ h
       rw [show A.B ψ q r = atomScalar (A.isAtom_S (A.rep q))
         (((A.w q).hom ≫ A.t ψ q r ≫ (A.w r).inv ≫
           eqToHom (congrArg A.S hqr.symm) :
-            End (A.S (A.rep q)))) from dif_pos hqr]
+            End (A.S (A.rep q)))) from dite_eq_left hqr]
       rw [← atomScalar_eqToHom_conj (congrArg A.S hq)
         (A.isAtom_S (A.rep p)) (A.isAtom_S (A.rep q))]
       rw [← atomScalar_comp]
@@ -549,7 +549,7 @@ theorem AtomResolution.trace_t_diag (φ : End M) (p : A.κ) :
       atomScalar (A.isAtom_S (A.rep p))
         (((A.w p).hom ≫ A.t φ p p ≫ (A.w p).inv ≫
           eqToHom (congrArg A.S (rfl : A.rep p = A.rep p).symm) :
-            End (A.S (A.rep p)))) := dif_pos rfl
+            End (A.S (A.rep p)))) := dite_eq_left rfl
   rw [show eqToHom (congrArg A.S
       (rfl : A.rep p = A.rep p).symm) =
     𝟙 (A.S (A.rep p)) from eqToHom_refl _ _,

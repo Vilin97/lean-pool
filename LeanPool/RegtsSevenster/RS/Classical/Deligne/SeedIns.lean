@@ -1213,28 +1213,24 @@ private theorem symInsL_zero
     show symPowCast A X (by omega : 1 + (0 + 1) = 0 + 2) =
       𝟙 (symPow A X (0 + 2)) from rfl, Category.comp_id]
 
-/-- **Pair multiplication is double insertion**: multiplying the
-embedded letter pair onto a bottom-stage element inserts the two
-letters. -/
-theorem pairIns [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+private theorem pairIns_leftCover [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
     [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
     [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
     [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
     (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A) :
-    ((((symPowOne A M'.X).inv ⊗ₘ (symPowOne A M.X).inv) ≫
+    ((M'.X ⊗ M.X) ◁ modTensorπ A
+      (symPowMod A M'.X 0) (symPowMod A M.X 0)) ≫
+      ((((symPowOne A M'.X).inv ⊗ₘ
+        (symPowOne A M.X).inv) ≫
         modTensorπ A (symPowMod A M'.X 0)
-          (symPowMod A M.X 0)) ▷ chainStage2 A M M' 0 0) ≫
+          (symPowMod A M.X 0)) ▷
+        chainStage2 A M M' 0 0) ≫
       chainMul2 A M M' 0 0 0 0 =
-    (α_ M'.X M.X (chainStage2 A M M' 0 0)).hom ≫
-      (M'.X ◁ chainInsQ A M M' 0 0) ≫
-      chainInsP A M M' 0 1 := by
-  refine (cancel_epi ((M'.X ⊗ M.X) ◁
-    modTensorπ A (symPowMod A M'.X 0)
-      (symPowMod A M.X 0))).mp ?_
-  -- Left side: exchange the cover, pair the projections, expand
-  -- the multiplication, and slide the singleton maps through the
-  -- interchange.
+    tensorμ M'.X M.X (symPow A M'.X 1) (symPow A M.X 1) ≫
+      (symInsL A M'.X 0 ⊗ₘ symInsL A M.X 0) ≫
+      modTensorπ A (symPowMod A M'.X 1)
+        (symPowMod A M.X 1) := by
   have hL1 : ((M'.X ⊗ M.X) ◁
       modTensorπ A (symPowMod A M'.X 0)
         (symPowMod A M.X 0)) ≫
@@ -1294,6 +1290,65 @@ theorem pairIns [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
   -- Right side: naturality of the associator, the two insertion
   -- defining equations, and the rearrangement identifying the
   -- crossing with the interchange.
+  have hIns : ((symPowOne A M'.X).inv ▷ symPow A M'.X 1) ≫
+        symMul A M'.X 1 1 = symInsL A M'.X 0 :=
+    (symInsL_zero A M'.X).symm
+  have hIns' : ((symPowOne A M.X).inv ▷ symPow A M.X 1) ≫
+        symMul A M.X 1 1 = symInsL A M.X 0 :=
+    (symInsL_zero A M.X).symm
+  have hMuls : (((symPowOne A M'.X).inv ▷ symPow A M'.X 1) ⊗ₘ
+      ((symPowOne A M.X).inv ▷ symPow A M.X 1)) ≫
+      (symMul A M'.X 1 1 ⊗ₘ symMul A M.X 1 1) =
+    symInsL A M'.X 0 ⊗ₘ symInsL A M.X 0 :=
+    (MonoidalCategory.tensorHom_comp_tensorHom _ _ _ _).trans
+      (congrArg₂ (· ⊗ₘ ·) hIns hIns')
+  have hLfinal : ((M'.X ⊗ M.X) ◁ modTensorπ A
+      (symPowMod A M'.X 0) (symPowMod A M.X 0)) ≫
+      ((((symPowOne A M'.X).inv ⊗ₘ
+        (symPowOne A M.X).inv) ≫
+        modTensorπ A (symPowMod A M'.X 0)
+          (symPowMod A M.X 0)) ▷
+        chainStage2 A M M' 0 0) ≫
+      chainMul2 A M M' 0 0 0 0 =
+    tensorμ M'.X M.X (symPow A M'.X 1) (symPow A M.X 1) ≫
+      (symInsL A M'.X 0 ⊗ₘ symInsL A M.X 0) ≫
+      modTensorπ A (symPowMod A M'.X 1)
+        (symPowMod A M.X 1) := by
+    refine (Category.assoc _ _ _).symm.trans ?_
+    refine (eq_whisker hL1 _).trans ?_
+    refine (eq_whisker hL2 _).trans ?_
+    refine (Category.assoc _ _ _).trans ?_
+    refine (whisker_eq _ hL3).trans ?_
+    refine (Category.assoc _ _ _).symm.trans ?_
+    refine (eq_whisker hL4 _).trans ?_
+    refine (Category.assoc _ _ _).trans ?_
+    refine whisker_eq _ ?_
+    refine (Category.assoc _ _ _).symm.trans ?_
+    exact eq_whisker hMuls _
+  exact hLfinal
+
+/-- **Pair multiplication is double insertion**: multiplying the
+embedded letter pair onto a bottom-stage element inserts the two
+letters. -/
+theorem pairIns [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A) :
+    ((((symPowOne A M'.X).inv ⊗ₘ (symPowOne A M.X).inv) ≫
+        modTensorπ A (symPowMod A M'.X 0)
+          (symPowMod A M.X 0)) ▷ chainStage2 A M M' 0 0) ≫
+      chainMul2 A M M' 0 0 0 0 =
+    (α_ M'.X M.X (chainStage2 A M M' 0 0)).hom ≫
+      (M'.X ◁ chainInsQ A M M' 0 0) ≫
+      chainInsP A M M' 0 1 := by
+  refine (cancel_epi ((M'.X ⊗ M.X) ◁
+    modTensorπ A (symPowMod A M'.X 0)
+      (symPowMod A M.X 0))).mp ?_
+  -- Left side: exchange the cover, pair the projections, expand
+  -- the multiplication, and slide the singleton maps through the
+  -- interchange.
   have hR1 : ((M'.X ⊗ M.X) ◁
       modTensorπ A (symPowMod A M'.X 0)
         (symPowMod A M.X 0)) ≫
@@ -1353,41 +1408,7 @@ theorem pairIns [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     (MonoidalCategory.tensorHom_def _ _).symm
   -- Assemble both sides at the common form
   -- tensorμ ≫ (symInsL ⊗ symInsL) ≫ π.
-  have hIns : ((symPowOne A M'.X).inv ▷ symPow A M'.X 1) ≫
-        symMul A M'.X 1 1 = symInsL A M'.X 0 :=
-    (symInsL_zero A M'.X).symm
-  have hIns' : ((symPowOne A M.X).inv ▷ symPow A M.X 1) ≫
-        symMul A M.X 1 1 = symInsL A M.X 0 :=
-    (symInsL_zero A M.X).symm
-  have hMuls : (((symPowOne A M'.X).inv ▷ symPow A M'.X 1) ⊗ₘ
-      ((symPowOne A M.X).inv ▷ symPow A M.X 1)) ≫
-      (symMul A M'.X 1 1 ⊗ₘ symMul A M.X 1 1) =
-    symInsL A M'.X 0 ⊗ₘ symInsL A M.X 0 :=
-    (MonoidalCategory.tensorHom_comp_tensorHom _ _ _ _).trans
-      (congrArg₂ (· ⊗ₘ ·) hIns hIns')
-  have hLfinal : ((M'.X ⊗ M.X) ◁ modTensorπ A
-      (symPowMod A M'.X 0) (symPowMod A M.X 0)) ≫
-      ((((symPowOne A M'.X).inv ⊗ₘ
-        (symPowOne A M.X).inv) ≫
-        modTensorπ A (symPowMod A M'.X 0)
-          (symPowMod A M.X 0)) ▷
-        chainStage2 A M M' 0 0) ≫
-      chainMul2 A M M' 0 0 0 0 =
-    tensorμ M'.X M.X (symPow A M'.X 1) (symPow A M.X 1) ≫
-      (symInsL A M'.X 0 ⊗ₘ symInsL A M.X 0) ≫
-      modTensorπ A (symPowMod A M'.X 1)
-        (symPowMod A M.X 1) := by
-    refine (Category.assoc _ _ _).symm.trans ?_
-    refine (eq_whisker hL1 _).trans ?_
-    refine (eq_whisker hL2 _).trans ?_
-    refine (Category.assoc _ _ _).trans ?_
-    refine (whisker_eq _ hL3).trans ?_
-    refine (Category.assoc _ _ _).symm.trans ?_
-    refine (eq_whisker hL4 _).trans ?_
-    refine (Category.assoc _ _ _).trans ?_
-    refine whisker_eq _ ?_
-    refine (Category.assoc _ _ _).symm.trans ?_
-    exact eq_whisker hMuls _
+  have hLfinal := pairIns_leftCover A M M'
   have hexp : M'.X ◁ ((α_ M.X (symPow A M'.X 1)
       (symPow A M.X 1)).inv ≫
       ((β_ M.X (symPow A M'.X 1)).hom ▷ symPow A M.X 1) ≫
@@ -2096,6 +2117,64 @@ private theorem pairPrefix_coh'
   rw [hsplit, hsplit']
   rw [reassoc_of% (pairPrefix_coh A M M')]
 
+private theorem pairSeed_tensor_prefix
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (d : ModDualityDatum A M M') :
+    (((ρ_ M'.X).inv ≫ MonoidalCategory.whiskerLeft M'.X
+        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d)) ⊗ₘ
+      ((ρ_ M.X).inv ≫ MonoidalCategory.whiskerLeft M.X
+        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d))) ≫
+      (α_ M'.X (chainStage2 A M M' 0 0)
+        (M.X ⊗ chainStage2 A M M' 0 0)).hom ≫
+      (M'.X ◁ ((β_ (chainStage2 A M M' 0 0)
+          (M.X ⊗ chainStage2 A M M' 0 0)).hom ≫
+        (α_ M.X (chainStage2 A M M' 0 0)
+          (chainStage2 A M M' 0 0)).hom ≫
+        (M.X ◁ chainMul2 A M M' 0 0 0 0)))
+      = (((ρ_ M'.X).inv ≫ MonoidalCategory.whiskerLeft M'.X
+        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d)) ▷ M.X) ≫
+          (α_ M'.X (chainStage2 A M M' 0 0) M.X).hom ≫
+          (M'.X ◁ (((chainStage2 A M M' 0 0) ◁
+            ((ρ_ M.X).inv ≫ MonoidalCategory.whiskerLeft M.X
+        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d))) ≫
+            (β_ (chainStage2 A M M' 0 0)
+              (M.X ⊗ chainStage2 A M M' 0 0)).hom ≫
+            (α_ M.X (chainStage2 A M M' 0 0)
+              (chainStage2 A M M' 0 0)).hom ≫
+            (M.X ◁ chainMul2 A M M' 0 0 0 0)))  := by
+  have hD1 : (((ρ_ M'.X).inv ≫ MonoidalCategory.whiskerLeft M'.X
+        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d)) ⊗ₘ
+      ((ρ_ M.X).inv ≫ MonoidalCategory.whiskerLeft M.X
+        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d))) =
+    (((ρ_ M'.X).inv ≫ MonoidalCategory.whiskerLeft M'.X
+        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d)) ▷ M.X) ≫
+      ((M'.X ⊗ (chainStage2 A M M' 0 0)) ◁
+        ((ρ_ M.X).inv ≫ MonoidalCategory.whiskerLeft M.X
+        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d))) :=
+    MonoidalCategory.tensorHom_def _ _
+  have hD2 : ((M'.X ⊗ (chainStage2 A M M' 0 0)) ◁
+      ((ρ_ M.X).inv ≫ MonoidalCategory.whiskerLeft M.X
+        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d))) ≫
+      (α_ M'.X (chainStage2 A M M' 0 0)
+        (M.X ⊗ chainStage2 A M M' 0 0)).hom =
+    (α_ M'.X (chainStage2 A M M' 0 0) M.X).hom ≫
+      (M'.X ◁ ((chainStage2 A M M' 0 0) ◁
+        ((ρ_ M.X).inv ≫ MonoidalCategory.whiskerLeft M.X
+        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d)))) :=
+    associator_naturality_right _ _ _
+  rw [hD1]
+  simp only [Category.assoc]
+  rw [← Category.assoc ((M'.X ⊗ (chainStage2 A M M' 0 0)) ◁
+    ((ρ_ M.X).inv ≫ MonoidalCategory.whiskerLeft M.X
+  (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d))), hD2]
+  simp only [Category.assoc,
+    MonoidalCategory.whiskerLeft_comp]
+
 /-- **The two seed routes agree**: feeding the seeds through the
 pair equals feeding them through the transition. -/
 private theorem pairSeed_match
@@ -2120,26 +2199,6 @@ private theorem pairSeed_match
     (ρ_ (M'.X ⊗ M.X)).inv ≫ (α_ M'.X M.X (𝟙_ D)).hom ≫
       (M'.X ◁ (M.X ◁ (chainSeed A M M' d ≫
         chainDelta2 A M M' d 0 0))) := by
-  have hD1 : (((ρ_ M'.X).inv ≫ MonoidalCategory.whiskerLeft M'.X
-        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d)) ⊗ₘ
-      ((ρ_ M.X).inv ≫ MonoidalCategory.whiskerLeft M.X
-        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d))) =
-    (((ρ_ M'.X).inv ≫ MonoidalCategory.whiskerLeft M'.X
-        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d)) ▷ M.X) ≫
-      ((M'.X ⊗ (chainStage2 A M M' 0 0)) ◁
-        ((ρ_ M.X).inv ≫ MonoidalCategory.whiskerLeft M.X
-        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d))) :=
-    MonoidalCategory.tensorHom_def _ _
-  have hD2 : ((M'.X ⊗ (chainStage2 A M M' 0 0)) ◁
-      ((ρ_ M.X).inv ≫ MonoidalCategory.whiskerLeft M.X
-        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d))) ≫
-      (α_ M'.X (chainStage2 A M M' 0 0)
-        (M.X ⊗ chainStage2 A M M' 0 0)).hom =
-    (α_ M'.X (chainStage2 A M M' 0 0) M.X).hom ≫
-      (M'.X ◁ ((chainStage2 A M M' 0 0) ◁
-        ((ρ_ M.X).inv ≫ MonoidalCategory.whiskerLeft M.X
-        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d)))) :=
-    associator_naturality_right _ _ _
   have hD4 : ((chainStage2 A M M' 0 0) ◁
       ((ρ_ M.X).inv ≫ MonoidalCategory.whiskerLeft M.X
         (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d))) ≫
@@ -2208,14 +2267,7 @@ private theorem pairSeed_match
               (M.X ⊗ chainStage2 A M M' 0 0)).hom ≫
             (α_ M.X (chainStage2 A M M' 0 0)
               (chainStage2 A M M' 0 0)).hom ≫
-            (M.X ◁ chainMul2 A M M' 0 0 0 0))) := by
-        rw [hD1]
-        simp only [Category.assoc]
-        rw [← Category.assoc ((M'.X ⊗ (chainStage2 A M M' 0 0)) ◁
-          ((ρ_ M.X).inv ≫ MonoidalCategory.whiskerLeft M.X
-        (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d))), hD2]
-        simp only [Category.assoc,
-          MonoidalCategory.whiskerLeft_comp]
+            (M.X ◁ chainMul2 A M M' 0 0 0 0))) := pairSeed_tensor_prefix A M M' d
     _ = (((ρ_ M'.X).inv ≫ MonoidalCategory.whiskerLeft M'.X
         (Y₂ := chainStage2 A M M' 0 0) (chainSeed A M M' d)) ▷ M.X) ≫
           (α_ M'.X (chainStage2 A M M' 0 0) M.X).hom ≫

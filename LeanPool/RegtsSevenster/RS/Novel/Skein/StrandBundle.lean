@@ -35,24 +35,24 @@ def strandBundle (t : ℕ) : Fragment (Fin (t + t)) where
     else (⟨ℓ.val - t, by omega⟩, true)
   attach_boundaryFlag := fun ℓ => by
     by_cases h : ℓ.val < t
-    · rw [dif_pos h]
+    · rw [dite_eq_left h]
       exact congrArg Sum.inr (Fin.ext rfl)
-    · rw [dif_neg h]
+    · rw [dite_eq_right h]
       refine congrArg Sum.inr (Fin.ext ?_)
-      show t + (ℓ.val - t) = ℓ.val
+      change t + (ℓ.val - t) = ℓ.val
       omega
   eq_boundaryFlag := fun ℓ f h => by
     obtain ⟨a, b⟩ := f
     have hℓ := (Sum.inr.inj h).symm
     cases b
-    · simp only [Bool.false_eq_true, if_false] at hℓ
+    · simp only [Bool.false_eq_true, ite_false] at hℓ
       subst hℓ
-      rw [dif_pos a.isLt]
-    · simp only [if_true] at hℓ
+      rw [dite_eq_left a.isLt]
+    · simp only [ite_true] at hℓ
       subst hℓ
-      rw [dif_neg (show ¬ t + a.val < t by omega)]
+      rw [dite_eq_right (show ¬ t + a.val < t by omega)]
       refine Prod.ext_iff.mpr ⟨Fin.ext ?_, rfl⟩
-      show a.val = t + a.val - t
+      change a.val = t + a.val - t
       omega
   circles := 0
 
@@ -60,13 +60,13 @@ def strandBundle (t : ℕ) : Fragment (Fin (t + t)) where
 theorem strandBundle_boundaryFlag_low (t : ℕ) (ℓ : Fin (t + t))
     (h : ℓ.val < t) :
     (strandBundle t).boundaryFlag ℓ = (⟨ℓ.val, h⟩, false) := by
-  simp only [strandBundle, dif_pos h]
+  simp only [strandBundle, dite_eq_left h]
 
 /-- The boundary flag of an outgoing label. -/
 theorem strandBundle_boundaryFlag_high (t : ℕ) (ℓ : Fin (t + t))
     (h : ¬ ℓ.val < t) :
     (strandBundle t).boundaryFlag ℓ =
       (⟨ℓ.val - t, by omega⟩, true) := by
-  simp only [strandBundle, dif_neg h]
+  simp only [strandBundle, dite_eq_right h]
 
 end RS

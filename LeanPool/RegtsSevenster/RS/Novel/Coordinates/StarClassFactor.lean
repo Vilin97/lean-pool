@@ -54,7 +54,7 @@ theorem sort_transport_eq {N M : ℕ} (σ : Fin N ≃ Fin M) :
           finSumFinEquiv)) : Fin N ≃ Fin (0 + M)) =
     σ.trans (finCongr (by omega : M = 0 + M)) := by
   refine _root_.Equiv.ext (fun x => Fin.ext ?_)
-  show (finSumFinEquiv ((_root_.Equiv.sumCongr
+  change (finSumFinEquiv ((_root_.Equiv.sumCongr
       (_root_.Equiv.refl (Fin 0)) σ)
     (finSumFinEquiv.symm (finCongr
       (by omega : N = 0 + N) x)))).val = _
@@ -62,7 +62,7 @@ theorem sort_transport_eq {N M : ℕ} (σ : Fin N ≃ Fin M) :
         Fin (0 + N)) = Fin.natAdd 0 x from
       Fin.ext (show x.val = 0 + x.val by omega),
     finSumFinEquiv_symm_apply_natAdd]
-  show 0 + (σ x).val = (σ x).val
+  change 0 + (σ x).val = (σ x).val
   omega
 
 /-- **The class-level star factorization**: the star-union class

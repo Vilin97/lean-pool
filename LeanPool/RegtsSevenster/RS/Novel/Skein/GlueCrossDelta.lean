@@ -26,7 +26,7 @@ the converse's per-cut splitting carries.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 
@@ -62,7 +62,7 @@ private theorem diagCrossCount_eq_sum [LinearOrder α]
 
 private theorem xInd_self [LinearOrder α]
     (p : α × α) : xInd p p = 0 :=
-  if_neg (fun h => lt_irrefl _ h.1)
+  ite_eq_right (fun h => lt_irrefl _ h.1)
 
 /-- The two ordered indicators of a chord pair with distinct starts
 sum to the plain crossing indicator. -/
@@ -73,13 +73,13 @@ private theorem xInd_pair [LinearOrder α]
   rcases lt_or_gt_of_ne h with hlt | hgt
   · have e0 : xInd q p = 0 := by
       unfold xInd
-      exact if_neg (fun hc => lt_asymm hlt hc.1)
+      exact ite_eq_right (fun hc => lt_asymm hlt hc.1)
     rw [e0, add_zero]
     unfold xInd
     exact if_congr (and_iff_right hlt) rfl rfl
   · have e0 : xInd p q = 0 := by
       unfold xInd
-      exact if_neg (fun hc => lt_asymm hgt hc.1)
+      exact ite_eq_right (fun hc => lt_asymm hgt hc.1)
     rw [e0, zero_add]
     unfold xInd
     exact if_congr ((and_iff_right hgt).trans chordPairCross_comm)
@@ -192,13 +192,13 @@ private theorem pair_cut_parity [LinearOrder α]
     exact e1.trans (chordPairCross_comm.trans e2)
   by_cases hI : InsideChord p.1 p.2 i <;>
     by_cases hJ : InsideChord p.1 p.2 j
-  · rw [if_pos hI, if_pos hJ, if_neg (fun hc =>
+  · rw [ite_eq_left hI, ite_eq_left hJ, ite_eq_right (fun hc =>
       ((hxor.mp hc).elim (fun h => h.2 hJ) (fun h => h.2 hI)))]
-  · rw [if_pos hI, if_neg hJ,
-      if_pos (hxor.mpr (Or.inl ⟨hI, hJ⟩))]
-  · rw [if_neg hI, if_pos hJ,
-      if_pos (hxor.mpr (Or.inr ⟨hJ, hI⟩))]
-  · rw [if_neg hI, if_neg hJ, if_neg (fun hc =>
+  · rw [ite_eq_left hI, ite_eq_right hJ,
+      ite_eq_left (hxor.mpr (Or.inl ⟨hI, hJ⟩))]
+  · rw [ite_eq_right hI, ite_eq_left hJ,
+      ite_eq_left (hxor.mpr (Or.inr ⟨hJ, hI⟩))]
+  · rw [ite_eq_right hI, ite_eq_right hJ, ite_eq_right (fun hc =>
       ((hxor.mp hc).elim (fun h => hI h.1) (fun h => hJ h.1)))]
 
 /-- An entry of a sorted pair is one of the sorted values. -/

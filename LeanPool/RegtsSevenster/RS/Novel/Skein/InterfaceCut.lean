@@ -31,8 +31,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Equiv Classical
-
+open Fragment Equiv
 section InterfaceCut
 
 variable {γ δ : Type}
@@ -222,7 +221,7 @@ theorem interfaceCut_relabelUp_edge
     (((interfaceCut (F.relabelUp E.toEquiv) e' hp').map
         (usedLabRelabelEquiv E F)).edge x).val
       = E.symm (interfaceSwap e' (E x.val)) := by
-  show E.symm ((interfaceCut (F.relabelUp E.toEquiv) e' hp').edge
+  change E.symm ((interfaceCut (F.relabelUp E.toEquiv) e' hp').edge
       ⟨E x.val, _⟩).val = _
   rw [interfaceCut_edge_val]
 
@@ -305,7 +304,7 @@ theorem interfaceSwap_interfaceStep (n : ℕ)
         hy.1 (congrArg Sum.inl (Fin.ext hh))
       have h2 : (v : ℕ) < 0 + n + 1 := v.isLt
       omega
-    show Sum.inr (((rightRemoveEquiv n 0).symm
+    change Sum.inr (((rightRemoveEquiv n 0).symm
         (stepIdent n (finRemoveEquiv ⟨0 + n, Nat.lt_succ_self _⟩
           ⟨v, fun he => hy.1 (congrArg Sum.inl he)⟩))).val)
       = Sum.inr (stepIdent (n + 1) v)
@@ -333,7 +332,7 @@ theorem interfaceSwap_interfaceStep (n : ℕ)
         hy.2 (congrArg Sum.inr (Fin.ext hh))
       have h2 : (w : ℕ) < n + 1 + 0 := w.isLt
       omega
-    show Sum.inl (((finRemoveEquiv ⟨0 + n, Nat.lt_succ_self _⟩).symm
+    change Sum.inl (((finRemoveEquiv ⟨0 + n, Nat.lt_succ_self _⟩).symm
         ((stepIdent n).symm (rightRemoveEquiv n 0
           ⟨w, fun he => hy.2 (congrArg Sum.inr he)⟩))).val)
       = Sum.inl ((stepIdent (n + 1)).symm w)
@@ -343,8 +342,8 @@ theorem interfaceSwap_interfaceStep (n : ℕ)
     have hcw : (c : ℕ) = (w : ℕ) := by
       have h := rightRemoveEquiv_val n 0
         ⟨w, fun he => hy.2 (congrArg Sum.inr he)⟩
-      rw [if_pos hw] at h
-      show ((rightRemoveEquiv n 0
+      rw [ite_eq_left hw] at h
+      change ((rightRemoveEquiv n 0
         ⟨w, fun he => hy.2 (congrArg Sum.inr he)⟩ : Fin (n + 0)) : ℕ)
         = (w : ℕ)
       exact h
@@ -368,7 +367,7 @@ theorem interfaceSwap_cut (n : ℕ) :
         (Sum.inl ⟨0 + n, Nat.lt_succ_self _⟩)
       = Sum.inr (⟨n, by omega⟩ : Fin (n + 1 + 0)) := by
   refine congrArg Sum.inr (Fin.ext ?_)
-  show (0 + n : ℕ) = n
+  change (0 + n : ℕ) = n
   omega
 
 end InterfaceStep
@@ -421,7 +420,7 @@ theorem throughValueC_isEmpty [LinearOrder L] [IsEmpty L] {V : Fragment L}
       = F.throughSummand h st hbnd (Classical.choice hne).2.val
           ((Classical.choice hne).1.openCircuitCount) := by
   unfold EdgeSubset.throughValueC
-  rw [dif_pos hne, pathSign_isEmpty, one_mul]
+  rw [dite_eq_left hne, pathSign_isEmpty, one_mul]
 
 open Classical in
 /-- **The closed top's partition value is a sum of RS21's
@@ -449,20 +448,20 @@ theorem throughMixedPartitionC_isEmpty
   unfold throughMixedPartitionC
   refine congrArg₂ (· * ·) rfl (Finset.sum_congr rfl (fun s _ => ?_))
   by_cases hc : ∀ f ∈ s, V.pairing f ∈ s
-  · rw [dif_pos hc, dif_pos hc]
+  · rw [dite_eq_left hc, dite_eq_left hc]
     by_cases hbnd : genBoundarySubsetMatches V s st
-    · rw [dif_pos hbnd, dif_pos hbnd]
+    · rw [dite_eq_left hbnd, dite_eq_left hbnd]
       by_cases hE : (EdgeSubset.mk s hc).Eulerian
-      · rw [if_pos hE, if_pos hE]
+      · rw [ite_eq_left hE, ite_eq_left hE]
         by_cases hne : Nonempty (EdgeSubset.mk s hc).CanonData
-        · rw [dif_pos hne]
+        · rw [dite_eq_left hne]
           exact throughValueC_isEmpty _ h st hbnd hne
-        · rw [dif_neg hne]
+        · rw [dite_eq_right hne]
           unfold EdgeSubset.throughValueC
-          rw [dif_neg hne]
-      · rw [if_neg hE, if_neg hE]
-    · rw [dif_neg hbnd, dif_neg hbnd]
-  · rw [dif_neg hc, dif_neg hc]
+          rw [dite_eq_right hne]
+      · rw [ite_eq_right hE, ite_eq_right hE]
+    · rw [dite_eq_right hbnd, dite_eq_right hbnd]
+  · rw [dite_eq_right hc, dite_eq_right hc]
 
 /-- **The through-edge product is one at the closed top.** -/
 theorem throughProduct_isEmpty [LinearOrder L] [IsEmpty L] {V : Fragment L}
@@ -527,7 +526,7 @@ theorem chordInv_prodRel_inl
     inl_mem_boundary.mp hb
   refine (W₁.disjUnion W₂).boundaryFlag_injective ?_
   rw [boundaryFlag_chordInv F (prodRel κ₁ κ₂) hb]
-  show (prodRel κ₁ κ₂).pathMatch (Sum.inl (W₁.boundaryFlag a)) hb
+  change (prodRel κ₁ κ₂).pathMatch (Sum.inl (W₁.boundaryFlag a)) hb
     = Sum.inl (W₁.boundaryFlag (chordInv (leftSub F) κ₁ a))
   rw [pathMatch_prodRel_inl κ₁ κ₂ hb hb',
     boundaryFlag_chordInv (leftSub F) κ₁ hb']
@@ -546,7 +545,7 @@ theorem chordInv_prodRel_inr
     inr_mem_boundary.mp hb
   refine (W₁.disjUnion W₂).boundaryFlag_injective ?_
   rw [boundaryFlag_chordInv F (prodRel κ₁ κ₂) hb]
-  show (prodRel κ₁ κ₂).pathMatch (Sum.inr (W₂.boundaryFlag b)) hb
+  change (prodRel κ₁ κ₂).pathMatch (Sum.inr (W₂.boundaryFlag b)) hb
     = Sum.inr (W₂.boundaryFlag (chordInv (rightSub F) κ₂ b))
   rw [pathMatch_prodRel_inr κ₁ κ₂ hb hb',
     boundaryFlag_chordInv (rightSub F) κ₂ hb']
@@ -574,7 +573,7 @@ theorem cutMatching_disjUnion_edge
             rw [← chordInv_prodRel_inl F κ₁ κ₂ hb]
             exact chordInv_mem F (prodRel κ₁ κ₂) hb⟩ :=
       Subtype.ext (chordInv_prodRel_inl F κ₁ κ₂ hb)
-    show usedDisjUnionEquiv F ((cutMatching F (prodRel κ₁ κ₂)
+    change usedDisjUnionEquiv F ((cutMatching F (prodRel κ₁ κ₂)
         (prodOrient o₁ o₂)).edge
         ((usedDisjUnionEquiv F).symm (Sum.inl a))) = _
     rw [hy]
@@ -588,7 +587,7 @@ theorem cutMatching_disjUnion_edge
             rw [← chordInv_prodRel_inr F κ₁ κ₂ hb]
             exact chordInv_mem F (prodRel κ₁ κ₂) hb⟩ :=
       Subtype.ext (chordInv_prodRel_inr F κ₁ κ₂ hb)
-    show usedDisjUnionEquiv F ((cutMatching F (prodRel κ₁ κ₂)
+    change usedDisjUnionEquiv F ((cutMatching F (prodRel κ₁ κ₂)
         (prodOrient o₁ o₂)).edge
         ((usedDisjUnionEquiv F).symm (Sum.inr b))) = _
     rw [hy]

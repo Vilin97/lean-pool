@@ -109,19 +109,19 @@ theorem blockEmbed_one_succ (σ : Equiv.Perm (Fin a)) :
   refine Equiv.ext fun x => ?_
   induction x using Fin.addCases with
   | left i =>
-    show blockEmbed σ 1 (Fin.castAdd (b + 1) i) =
+    change blockEmbed σ 1 (Fin.castAdd (b + 1) i) =
       extPerm (blockEmbed σ 1) (Fin.castSucc (Fin.castAdd b i))
     rw [blockEmbed_castAdd, extPerm_castSucc, blockEmbed_castAdd]
     rfl
   | right j =>
     induction j using Fin.lastCases with
     | last =>
-      show blockEmbed σ 1 (Fin.natAdd a (Fin.last b)) =
+      change blockEmbed σ 1 (Fin.natAdd a (Fin.last b)) =
         extPerm (blockEmbed σ 1) (Fin.last (a + b))
       rw [blockEmbed_natAdd, extPerm_last]
       rfl
     | cast j =>
-      show blockEmbed σ 1 (Fin.natAdd a (Fin.castSucc j)) =
+      change blockEmbed σ 1 (Fin.natAdd a (Fin.castSucc j)) =
         extPerm (blockEmbed σ 1) (Fin.castSucc (Fin.natAdd a j))
       rw [blockEmbed_natAdd, extPerm_castSucc, blockEmbed_natAdd]
       rfl
@@ -131,7 +131,7 @@ does, shifted into the last block. -/
 theorem topImage_blockEmbed (τ : Equiv.Perm (Fin (b + 1))) :
     topImage (n := a + b) (blockEmbed (a := a) (b := b + 1) 1 τ) =
       Fin.natAdd a (topImage τ) := by
-  show blockEmbed (a := a) (b := b + 1) 1 τ
+  change blockEmbed (a := a) (b := b + 1) 1 τ
       (Fin.natAdd a (Fin.last b)) =
     Fin.natAdd a (topImage τ)
   rw [blockEmbed_natAdd]
@@ -175,7 +175,7 @@ theorem restPerm_blockEmbed (τ : Equiv.Perm (Fin (b + 1))) :
         Fin.lt_def.mpr (show (i : ℕ) < a + ((topImage τ) : ℕ) by
           have := i.isLt
           omega)
-      show (Fin.natAdd a (topImage τ)).succAbove
+      change (Fin.natAdd a (topImage τ)).succAbove
           (blockEmbed (1 : Equiv.Perm (Fin a)) (restPerm τ)
             (Fin.castAdd b i)) =
         blockEmbed (1 : Equiv.Perm (Fin a)) τ (Fin.castAdd (b + 1) i)
@@ -183,7 +183,7 @@ theorem restPerm_blockEmbed (τ : Equiv.Perm (Fin (b + 1))) :
         Fin.succAbove_of_castSucc_lt _ _ hlt]
       rfl
     | right i =>
-      show (Fin.natAdd a (topImage τ)).succAbove
+      change (Fin.natAdd a (topImage τ)).succAbove
           (blockEmbed (1 : Equiv.Perm (Fin a)) (restPerm τ)
             (Fin.natAdd a i)) =
         blockEmbed (1 : Equiv.Perm (Fin a)) τ
@@ -419,7 +419,7 @@ theorem tensorPowConcat_permMor_snd
     have harith : a + b - ((Fin.natAdd a (topImage τ) :
           Fin (a + b + 1)) : ℕ) =
         b - ((topImage τ : Fin (b + 1)) : ℕ) := by
-      show a + b - (a + ((topImage τ : Fin (b + 1)) : ℕ)) = _
+      change a + b - (a + ((topImage τ : Fin (b + 1)) : ℕ)) = _
       omega
     rw [harith] at hs
     have hs' : permMor X (a + (b + 1))
@@ -500,12 +500,12 @@ theorem blockAlgEmbed_single {a b : ℕ} (σ : Equiv.Perm (Fin a))
   have hL : MonoidAlgebra.mapDomainAlgHom ℂ ℂ (blockEmbedFstHom a b)
       (MonoidAlgebra.single σ c) =
       MonoidAlgebra.single (blockEmbed σ 1) c := by
-    show MonoidAlgebra.mapDomain _ (MonoidAlgebra.single σ c) = _
+    change MonoidAlgebra.mapDomain _ (MonoidAlgebra.single σ c) = _
     exact MonoidAlgebra.mapDomain_single
   have hR : MonoidAlgebra.mapDomainAlgHom ℂ ℂ (blockEmbedSndHom a b)
       (MonoidAlgebra.single τ d) =
       MonoidAlgebra.single (blockEmbed 1 τ) d := by
-    show MonoidAlgebra.mapDomain _ (MonoidAlgebra.single τ d) = _
+    change MonoidAlgebra.mapDomain _ (MonoidAlgebra.single τ d) = _
     exact MonoidAlgebra.mapDomain_single
   unfold blockAlgEmbed
   rw [hL, hR, MonoidAlgebra.single_mul_single, ← blockEmbed_decompose]

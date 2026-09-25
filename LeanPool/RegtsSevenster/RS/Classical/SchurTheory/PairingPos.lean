@@ -87,7 +87,8 @@ private theorem inner_sum_eq {m n k : ℕ} (h : m ≤ n)
           (Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h) σ) : ℂ)) =
     (m.factorial : ℂ) *
       ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β i)) *
-          (∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ (n - m)).coeff (∑ a, Finsupp.single a (α a)) := by
+          (∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ (n - m)).coeff (∑ a,
+              Finsupp.single a (α a)) := by
   set r := n - m
   set P := ∏ i, hSub (Finset.univ : Finset (Fin k)) (β i)
   set Q := (∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ r
@@ -143,9 +144,9 @@ private theorem inner_sum_eq {m n k : ℕ} (h : m ≤ n)
         else 0) := by
     intro w _
     by_cases hw : ∀ a, w a ≤ α a
-    · rw [Finset.sum_congr rfl fun σ _ => by rw [if_pos hw]]
+    · rw [Finset.sum_congr rfl fun σ _ => by rw [ite_eq_left hw]]
       rw [← Finset.sum_mul]
-      rw [if_pos hw]
+      rw [ite_eq_left hw]
       congr 1
       -- ∑_σ cc(β,σ) * cc(α-w,σ) as ℂ = (∑_σ cc(β,σ)*cc(α-w,σ) as ℕ) as ℂ
       -- = (∑_σ |pairs|) as ℂ  via colourChar_mul
@@ -161,7 +162,7 @@ private theorem inner_sum_eq {m n k : ℕ} (h : m ≤ n)
         rw [pair_tuple_card β (fun a => α a - w a) hβ]
       -- Cast to ℂ
       exact_mod_cast hnat
-    · rw [if_neg hw, Finset.sum_eq_zero fun σ _ => by rw [if_neg hw]]
+    · rw [ite_eq_right hw, Finset.sum_eq_zero fun σ _ => by rw [ite_eq_right hw]]
   rw [Finset.sum_congr rfl hstep2]
   -- ═══════ STAGE 3: FACTOR OUT `m!` ═══════
   rw [show ∑ w ∈ W,
@@ -192,7 +193,7 @@ private theorem inner_sum_eq {m n k : ℕ} (h : m ≤ n)
       (Finset.mem_univ a); exact this)]
   refine Finset.sum_congr rfl fun w _ => ?_
   by_cases hw : ∀ a, w a ≤ α a
-  · rw [if_pos hw, if_pos hw]
+  · rw [ite_eq_left hw, ite_eq_left hw]
     -- coeff(α-w)(P) = |tuples|  via coeff_hSub_prod
     -- coeff(w)(Q) = |tail functions|  via coeff_p1_pow
     congr 1
@@ -209,7 +210,7 @@ private theorem inner_sum_eq {m n k : ℕ} (h : m ≤ n)
       simp_rw [sum_single_apply]
       norm_cast
       convert rfl using 5
-  · rw [if_neg hw, if_neg hw]
+  · rw [ite_eq_right hw, ite_eq_right hw]
 
 -- Coefficient of w in (jtMat v).det * Q: signed guarded sum with extra Q
 open scoped Classical in
@@ -238,8 +239,8 @@ private theorem coeff_det_jtMat_mul {k : ℕ}
     MvPolynomial.coeff_C_mul]
   by_cases hp : ∀ i : Fin k,
       0 ≤ (v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)
-  · rw [if_pos hp, if_pos hp]
-  · rw [if_neg hp, if_neg hp, zero_mul, MvPolynomial.coeff_zero]
+  · rw [ite_eq_left hp, ite_eq_left hp]
+  · rw [ite_eq_right hp, ite_eq_right hp, zero_mul, AddMonoidAlgebra.coeff_zero]
     rfl
 
 -- The main algebraic reduction
@@ -289,7 +290,8 @@ private theorem pairing_eq_factorial_coeff
       ∑ τ : Equiv.Perm (Fin k), ∑ σ' : Equiv.Perm (Fin k),
         ((Equiv.Perm.sign τ : ℤ) : ℂ) * ((Equiv.Perm.sign σ' : ℤ) : ℂ) *
           (if guard_mu τ ∧ guard_lam σ'
-            then ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β σ' i)) * Q).coeff (∑ a, Finsupp.single a (α τ a))
+            then ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β σ' i)) * Q).coeff (∑ a,
+                Finsupp.single a (α τ a))
             else 0) := by
     -- eVec finsupp = diagExp vm
     have heVec : (∑ i : Fin k, Finsupp.single i (eVec mu k i)) =
@@ -303,25 +305,26 @@ private theorem pairing_eq_factorial_coeff
     rw [coeff_mul_alternant]
     refine Finset.sum_congr rfl fun τ _ => ?_
     by_cases hτ : stairShift τ ≤ diagExp vm
-    · rw [if_pos hτ, coeff_det_jtMat_mul, Finset.mul_sum]
+    · rw [ite_eq_left hτ, coeff_det_jtMat_mul, Finset.mul_sum]
       have hguard_mu : guard_mu τ := (stair_guard_iff vm τ).mp hτ
       refine Finset.sum_congr rfl fun σ' _ => ?_
       by_cases hσ : guard_lam σ'
       · have hmargin : diagExp vm - stairShift τ =
             ∑ a, Finsupp.single a (α τ a) := by
           ext j; rw [sum_single_apply]; exact stair_margin_eq vm τ hτ j
-        rw [mul_assoc, if_pos hσ, if_pos ⟨hguard_mu, hσ⟩, hmargin]
-      · rw [mul_assoc, if_neg hσ, if_neg (fun ⟨_, h⟩ => hσ h), mul_zero]
-    · rw [if_neg hτ]
+        rw [mul_assoc, ite_eq_left hσ, ite_eq_left ⟨hguard_mu, hσ⟩, hmargin]
+      · rw [mul_assoc, ite_eq_right hσ, ite_eq_right (fun ⟨_, h⟩ => hσ h), mul_zero]
+    · rw [ite_eq_right hτ]
       have hguard_mu_neg : ¬ guard_mu τ := fun h =>
         hτ ((stair_guard_iff vm τ).mpr h)
       have hsum_zero : (∑ σ' : Equiv.Perm (Fin k),
           ((Equiv.Perm.sign τ : ℤ) : ℂ) * ((Equiv.Perm.sign σ' : ℤ) : ℂ) *
             (if guard_mu τ ∧ guard_lam σ'
-              then ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β σ' i)) * Q).coeff (∑ a, Finsupp.single a (α τ a))
+              then ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β σ' i)) * Q).coeff (∑ a,
+                  Finsupp.single a (α τ a))
               else 0)) = 0 := by
         apply Finset.sum_eq_zero; intro σ' _
-        rw [if_neg (fun ⟨h, _⟩ => hguard_mu_neg h)]; ring
+        rw [ite_eq_right (fun ⟨h, _⟩ => hguard_mu_neg h)]; ring
       rw [hsum_zero, mul_zero]
   -- ═══════ STAGE 2: THE PAIRING AS `m!` TIMES THAT SUM ═══════
   have lhs_chain :
@@ -330,7 +333,8 @@ private theorem pairing_eq_factorial_coeff
         ∑ σ' : Equiv.Perm (Fin k), ∑ τ : Equiv.Perm (Fin k),
           ((Equiv.Perm.sign σ' : ℤ) : ℂ) * ((Equiv.Perm.sign τ : ℤ) : ℂ) *
             (if guard_lam σ' ∧ guard_mu τ
-              then ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β σ' i)) * Q).coeff (∑ a, Finsupp.single a (α τ a))
+              then ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β σ' i)) * Q).coeff (∑ a,
+                  Finsupp.single a (α τ a))
               else 0) := by
     -- Expand restrPairing
     unfold restrPairing
@@ -359,8 +363,8 @@ private theorem pairing_eq_factorial_coeff
       · have hτ_exp : ∀ i : Fin k,
             (0 : ℤ) ≤ ↑(mu.rowLen ↑i) + ↑↑(τ i) - ↑↑i := hτ
         -- Both guards hold: apply inner_sum_eq
-        simp_rw [if_pos hσ_exp, if_pos hτ_exp]
-        rw [if_pos ⟨hσ, hτ⟩]
+        simp_rw [ite_eq_left hσ_exp, ite_eq_left hτ_exp]
+        rw [ite_eq_left ⟨hσ, hτ⟩]
         -- Rearrange: (sign * cc) * (sign * cc') → (sign * sign) * (cc * cc')
         conv_lhs => arg 2; ext π; rw [mul_mul_mul_comm]
         rw [← Finset.mul_sum]
@@ -383,14 +387,14 @@ private theorem pairing_eq_factorial_coeff
       · -- guard_mu fails
         have hτ_exp : ¬ ∀ i : Fin k,
             (0 : ℤ) ≤ ↑(mu.rowLen ↑i) + ↑↑(τ i) - ↑↑i := hτ
-        simp_rw [if_pos hσ_exp, if_neg hτ_exp]
-        rw [if_neg (fun ⟨_, h⟩ => hτ h)]
+        simp_rw [ite_eq_left hσ_exp, ite_eq_right hτ_exp]
+        rw [ite_eq_right (fun ⟨_, h⟩ => hτ h)]
         simp only [mul_zero, Finset.sum_const_zero]
     · -- guard_lam fails
       have hσ_exp : ¬ ∀ i : Fin k,
           (0 : ℤ) ≤ ↑(lam.rowLen ↑i) + ↑↑(σ' i) - ↑↑i := hσ
-      simp_rw [if_neg hσ_exp]
-      rw [if_neg (fun ⟨h, _⟩ => hσ h)]
+      simp_rw [ite_eq_right hσ_exp]
+      rw [ite_eq_right (fun ⟨h, _⟩ => hσ h)]
       simp only [mul_zero, zero_mul, Finset.sum_const_zero]
   -- ═══════ ASSEMBLY ═══════
   rw [lhs_chain]

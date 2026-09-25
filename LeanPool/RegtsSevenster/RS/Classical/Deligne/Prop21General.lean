@@ -94,10 +94,10 @@ theorem exists_fibre_functor_general
           fibreFun doubledIndOddLine 𝔸)) ∧
       (Doubled.evenEmbed ⋙ (indOf : Doubled A ⥤ Ind (Doubled A)) ⋙
         fibreFun doubledIndOddLine 𝔸).Faithful := by
-  letI := linearOfScalarUnit (doubledScalarUnit hu)
-  letI := monoidalLinearOfScalarUnitBraided (doubledScalarUnit hu)
-  letI := linearOfScalarUnit (indScalarUnit (doubledScalarUnit hu))
-  letI := monoidalLinearOfScalarUnitBraided
+  let := linearOfScalarUnit (doubledScalarUnit hu)
+  let := monoidalLinearOfScalarUnitBraided (doubledScalarUnit hu)
+  let := linearOfScalarUnit (indScalarUnit (doubledScalarUnit hu))
+  let := monoidalLinearOfScalarUnitBraided
     (indScalarUnit (doubledScalarUnit hu))
   obtain ⟨𝔸, hmon, hcomm, hne, ⟨hM⟩, ⟨hL⟩, ⟨hCo⟩, hF⟩ :=
     exists_fibre_functor (C := Doubled A) (doubledScalarUnit hu) P P₀
@@ -105,12 +105,12 @@ theorem exists_fibre_functor_general
       (forall_exists_schurKilled P
         (hasScalarUnit_of_scalarUnit (doubledScalarUnit hu))
         (moderateLengthGrowth_doubled hgrow))
-  letI := hmon
-  letI := hcomm
-  letI := hM
-  letI := hL
-  letI := hCo
-  letI := hF
+  let := hmon
+  let := hcomm
+  let := hM
+  let := hL
+  let := hCo
+  let := hF
   exact ⟨𝔸, hmon, hcomm, hne, ⟨inferInstance⟩,
     ⟨comp_preservesFiniteLimits _ _⟩,
     ⟨comp_preservesFiniteColimits _ _⟩, inferInstance⟩

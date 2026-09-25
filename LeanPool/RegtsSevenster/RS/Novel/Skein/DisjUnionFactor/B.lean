@@ -15,7 +15,7 @@ the two components.
 
 namespace RS
 
-open scoped Classical
+
 
 section ColourSplit
 
@@ -358,9 +358,9 @@ private theorem relInFlagsAt_join_perm_inl
     (o₁ : κ₁.Orientation) (o₂ : κ₂.Orientation) (v : W₁.Vertex) :
     (F.relInFlagsAt (prodOrient o₁ o₂) (Sum.inl v)).Perm
       (((leftSub F).relInFlagsAt o₁ v).map Sum.inl) := by
-  letI := (W₁.disjUnion W₂).flagOrder
-  letI := W₁.flagOrder
-  letI := Classical.dec
+  let := (W₁.disjUnion W₂).flagOrder
+  let := W₁.flagOrder
+  let := Classical.dec
   apply Multiset.coe_eq_coe.mp
   unfold EdgeSubset.relInFlagsAt
   refine Eq.trans (Finset.sort_eq _ _) ?_
@@ -394,9 +394,9 @@ private theorem relInFlagsAt_join_perm_inr
     (o₁ : κ₁.Orientation) (o₂ : κ₂.Orientation) (v : W₂.Vertex) :
     (F.relInFlagsAt (prodOrient o₁ o₂) (Sum.inr v)).Perm
       (((rightSub F).relInFlagsAt o₂ v).map Sum.inr) := by
-  letI := (W₁.disjUnion W₂).flagOrder
-  letI := W₂.flagOrder
-  letI := Classical.dec
+  let := (W₁.disjUnion W₂).flagOrder
+  let := W₂.flagOrder
+  let := Classical.dec
   apply Multiset.coe_eq_coe.mp
   unfold EdgeSubset.relInFlagsAt
   refine Eq.trans (Finset.sort_eq _ _) ?_
@@ -690,8 +690,8 @@ theorem colouringSum_split {k ℓ : ℕ}
     (fun a => st (Sum.inl a)) hbnd₁ ψ₁
   · by_cases hP₂ : genEvenBoundaryMatch (rightSub F)
       (fun b => st (Sum.inr b)) hbnd₂ ψ₂
-    · rw [if_pos ((genEvenBoundaryMatch_join hbnd hbnd₁ hbnd₂
-          ψ₁ ψ₂).mpr ⟨hP₁, hP₂⟩), if_pos hP₁, if_pos hP₂]
+    · rw [ite_eq_left ((genEvenBoundaryMatch_join hbnd hbnd₁ hbnd₂
+          ψ₁ ψ₂).mpr ⟨hP₁, hP₂⟩), ite_eq_left hP₁, ite_eq_left hP₂]
       rw [← Equiv.sum_comp (joinCoreEquiv F ℓ),
         Fintype.sum_prod_type, Fintype.sum_mul_sum]
       refine Finset.sum_congr rfl fun φ₁ _ => ?_
@@ -701,8 +701,8 @@ theorem colouringSum_split {k ℓ : ℕ}
         (fun a => st (Sum.inl a)) φ₁
       · by_cases hQ₂ : (rightSub F).coreOddBoundaryMatch
           (fun b => st (Sum.inr b)) φ₂
-        · rw [if_pos ((coreOddBoundaryMatch_join φ₁ φ₂).mpr
-              ⟨hQ₁, hQ₂⟩), if_pos hQ₁, if_pos hQ₂]
+        · rw [ite_eq_left ((coreOddBoundaryMatch_join φ₁ φ₂).mpr
+              ⟨hQ₁, hQ₂⟩), ite_eq_left hQ₁, ite_eq_left hQ₂]
           refine Eq.trans (prod_vertex_split _) ?_
           refine congrArg₂ (· * ·) ?_ ?_
           · refine Finset.prod_congr rfl fun v _ => ?_
@@ -713,20 +713,20 @@ theorem colouringSum_split {k ℓ : ℕ}
             rw [coreOddSignAt_join_inr o₁ o₂ φ₁ φ₂ v,
               evenColoursAt_join_inr ψ₁ ψ₂ v,
               evalOdd_coreOddListAt_join_inr h _ o₁ o₂ φ₁ φ₂ v]
-        · rw [if_neg (fun hu => hQ₂
+        · rw [ite_eq_right (fun hu => hQ₂
               ((coreOddBoundaryMatch_join φ₁ φ₂).mp hu).2),
-            if_neg hQ₂, mul_zero]
-      · rw [if_neg (fun hu => hQ₁
+            ite_eq_right hQ₂, mul_zero]
+      · rw [ite_eq_right (fun hu => hQ₁
             ((coreOddBoundaryMatch_join φ₁ φ₂).mp hu).1),
-          if_neg hQ₁, zero_mul]
-    · rw [if_neg (fun hu => hP₂
+          ite_eq_right hQ₁, zero_mul]
+    · rw [ite_eq_right (fun hu => hP₂
           ((genEvenBoundaryMatch_join hbnd hbnd₁ hbnd₂
             ψ₁ ψ₂).mp hu).2),
-        if_neg hP₂, mul_zero]
-  · rw [if_neg (fun hu => hP₁
+        ite_eq_right hP₂, mul_zero]
+  · rw [ite_eq_right (fun hu => hP₁
         ((genEvenBoundaryMatch_join hbnd hbnd₁ hbnd₂
           ψ₁ ψ₂).mp hu).1),
-      if_neg hP₁, zero_mul]
+      ite_eq_right hP₁, zero_mul]
 
 end ColourSplit
 

@@ -92,7 +92,7 @@ noncomputable def liftEmbeddedIso [SmallCategory C]
     liftEmbedded F W θ ⋙ indOf ≅ F :=
   NatIso.ofComponents (fun i => (θ i).symm) (by
     intro i j α
-    show indOf.map (Ind.yoneda.fullyFaithful.preimage
+    change indOf.map (Ind.yoneda.fullyFaithful.preimage
       ((θ i).inv ≫ F.map α ≫ (θ j).hom)) ≫ (θ j).inv =
       (θ i).inv ≫ F.map α
     rw [Ind.yoneda.fullyFaithful.map_preimage]
@@ -183,15 +183,15 @@ theorem exists_iso_colimit_imageDiag
     (hepi : ∀ {T : Ind C} (a b : Q ⟶ T),
       (∀ i, f i ≫ a = f i ≫ b) → a = b) :
     Nonempty (Q ≅ colimit (imageDiag f hf)) := by
-  haveI : ∀ i : I, Mono ((imageDiagHom f hf).app i) := fun i =>
+  have : ∀ i : I, Mono ((imageDiagHom f hf).app i) := fun i =>
     inferInstanceAs (Mono (image.ι (f i)))
-  haveI : Mono (imageDiagHom f hf) := NatTrans.mono_of_mono_app _
-  haveI : Mono (imageColimitDesc f hf) :=
+  have : Mono (imageDiagHom f hf) := NatTrans.mono_of_mono_app _
+  have : Mono (imageColimitDesc f hf) :=
     colim.map_mono' (imageDiagHom f hf) (colimit.isColimit _)
       (isColimitConstCocone I Q) (imageColimitDesc f hf)
       (fun j => (ι_imageColimitDesc f hf j).trans
         (Category.comp_id _).symm)
-  haveI : Epi (imageColimitDesc f hf) := by
+  have : Epi (imageColimitDesc f hf) := by
     refine ⟨fun a b hab => hepi a b (fun i => ?_)⟩
     have h1 : (colimit.ι (imageDiag f hf) i ≫
           imageColimitDesc f hf) ≫ a =
@@ -206,7 +206,7 @@ theorem exists_iso_colimit_imageDiag
       ((Category.assoc _ _ _).trans ((whisker_eq _ h2).trans
         (Category.assoc _ _ _).symm))).trans
       (eq_whisker (image.fac (f i)) b)
-  haveI : IsIso (imageColimitDesc f hf) := isIso_of_mono_of_epi _
+  have : IsIso (imageColimitDesc f hf) := isIso_of_mono_of_epi _
   exact ⟨(asIso (imageColimitDesc f hf)).symm⟩
 
 end ImageDiagram
@@ -234,7 +234,7 @@ theorem quotientStage_comp
     (e : Z ≅ colimit D) (p : Z ⟶ Q) (i j : I)
     (α : i ⟶ j) :
     D.map α ≫ quotientStage e p j = quotientStage e p i := by
-  show D.map α ≫ colimit.ι D j ≫ e.inv ≫ p =
+  change D.map α ≫ colimit.ι D j ≫ e.inv ≫ p =
     colimit.ι D i ≫ e.inv ≫ p
   rw [← Category.assoc, colimit.w]
 
@@ -266,9 +266,9 @@ theorem CountablyPresented.of_epi [SmallCategory C] [Abelian C]
     [Epi p] (h : CountablyPresented Z) : CountablyPresented Q := by
   classical
   obtain ⟨I, hcat, hfil, hcnt, G, ⟨e⟩⟩ := h
-  letI := hcat
-  letI := hfil
-  letI := hcnt
+  let := hcat
+  let := hfil
+  let := hcnt
   have hcomp := quotientStage_comp e p
   obtain ⟨eQ⟩ := exists_iso_colimit_imageDiag (quotientStage e p)
     hcomp (fun a b hab => quotientStage_jointly_epi e p a b hab)
@@ -309,9 +309,9 @@ theorem rank_hom_unit_le_aleph0_of_presented
     {Z : Ind C} (h : CountablyPresented Z) :
     Module.rank ℂ (𝟙_ (Ind C) ⟶ Z) ≤ Cardinal.aleph0 := by
   obtain ⟨I, hcat, hfil, hcnt, G, ⟨e⟩⟩ := h
-  letI := hcat
-  letI := hfil
-  letI := hcnt
+  let := hcat
+  let := hfil
+  let := hcnt
   refine rank_hom_unit_le_aleph0_of_iso e ?_
   exact rank_hom_unit_colimit_le_aleph0 _ (fun i =>
     rank_hom_unit_indOf_le_aleph0 hu hsmul (hlen (G.obj i)))

@@ -39,7 +39,7 @@ theorem omega_star (W : ClosedFragment) :
         (edgeCount W + edgeCount W)) (starClass f W) ≫
       P.ω.map (bundleCapClass f (edgeCount W)) =
     f.val W • 𝟙 (P.ω.obj (SkeinObj.mk 0)) := by
-  letI := P.linear
+  let := P.linear
   rw [← Functor.map_comp]
   rw [show (starClass f W ≫ bundleCapClass f (edgeCount W) :
       (SkeinObj.mk 0 : SkeinObj f) ⟶ SkeinObj.mk 0) =
@@ -62,7 +62,7 @@ theorem omega_star_scalar (W : ClosedFragment) :
       η P.ω : SuperVect.tensorUnit ⟶ SuperVect.tensorUnit)
       : SuperVect.Hom SuperVect.tensorUnit
         SuperVect.tensorUnit).evenMap 1 = f.val W := by
-  letI := P.braided
+  let := P.braided
   rw [omega_star f P W]
   rw [CategoryTheory.Linear.smul_comp,
     CategoryTheory.Linear.comp_smul]
@@ -73,7 +73,7 @@ theorem omega_star_scalar (W : ClosedFragment) :
       SuperVect.tensorUnit) = 𝟙 _ :=
     Functor.Monoidal.ε_η P.ω
   rw [h2]
-  show f.val W * 1 = f.val W
+  change f.val W * 1 = f.val W
   ring
 
 open Functor.LaxMonoidal Functor.OplaxMonoidal in
@@ -101,7 +101,7 @@ theorem skein_std_model :
         (ε P.ω ≫ P.ω.map (η_ (SkeinObj.mk 1) (SkeinObj.mk 1)) ≫
           δ P.ω (SkeinObj.mk 1) (SkeinObj.mk 1)) =
         stdCopair k ℓ := by
-  letI := P.braided
+  let := P.braided
   exact braided_std_model P.ω (SkeinObj.mk 1)
     (strand_ev_symmetry f)
 

@@ -204,7 +204,7 @@ theorem sumPow_total [Category.{v} A] [Preadditive A] [HasBinaryBiproducts A]
   intro k
   induction k with
   | zero =>
-    show (∑ i : Fin 1, sumPowPrj X 0 i ≫ sumPowIns X 0 i) =
+    change (∑ i : Fin 1, sumPowPrj X 0 i ≫ sumPowIns X 0 i) =
       𝟙 (sumPow X 0)
     rw [Fin.sum_univ_one]
     exact Category.id_comp _
@@ -235,12 +235,12 @@ noncomputable def mixedSumLetters
   ins_prj k := by
     cases k with
     | inl i =>
-      show (sumPowIns (𝟙_ A) p i ≫ biprod.inl) ≫
+      change (sumPowIns (𝟙_ A) p i ≫ biprod.inl) ≫
         (biprod.fst ≫ sumPowPrj (𝟙_ A) p i) = 𝟙 _
       rw [Category.assoc, biprod.inl_fst_assoc]
       exact sumPowIns_prj_same (𝟙_ A) p i
     | inr j =>
-      show (sumPowIns U q j ≫ biprod.inr) ≫
+      change (sumPowIns U q j ≫ biprod.inr) ≫
         (biprod.snd ≫ sumPowPrj U q j) = 𝟙 _
       rw [Category.assoc, biprod.inr_snd_assoc]
       exact sumPowIns_prj_same U q j
@@ -249,25 +249,25 @@ noncomputable def mixedSumLetters
     | inl i =>
       cases k' with
       | inl i' =>
-        show (sumPowIns (𝟙_ A) p i ≫ biprod.inl) ≫
+        change (sumPowIns (𝟙_ A) p i ≫ biprod.inl) ≫
           (biprod.fst ≫ sumPowPrj (𝟙_ A) p i') = 0
         rw [Category.assoc, biprod.inl_fst_assoc,
           sumPowIns_prj_ne (𝟙_ A) p
             (fun h => hkk' (congrArg Sum.inl h))]
       | inr j' =>
-        show (sumPowIns (𝟙_ A) p i ≫ biprod.inl) ≫
+        change (sumPowIns (𝟙_ A) p i ≫ biprod.inl) ≫
           (biprod.snd ≫ sumPowPrj U q j') = 0
         rw [Category.assoc, biprod.inl_snd_assoc,
           Limits.zero_comp, Limits.comp_zero]
     | inr j =>
       cases k' with
       | inl i' =>
-        show (sumPowIns U q j ≫ biprod.inr) ≫
+        change (sumPowIns U q j ≫ biprod.inr) ≫
           (biprod.fst ≫ sumPowPrj (𝟙_ A) p i') = 0
         rw [Category.assoc, biprod.inr_fst_assoc,
           Limits.zero_comp, Limits.comp_zero]
       | inr j' =>
-        show (sumPowIns U q j ≫ biprod.inr) ≫
+        change (sumPowIns U q j ≫ biprod.inr) ≫
           (biprod.snd ≫ sumPowPrj U q j') = 0
         rw [Category.assoc, biprod.inr_snd_assoc,
           sumPowIns_prj_ne U q
@@ -298,7 +298,7 @@ noncomputable def mixedSumLetters
         Preadditive.comp_sum]
       refine Finset.sum_congr rfl fun j _ => ?_
       simp only [Category.assoc]
-    show (∑ i : Fin (p + 1),
+    change (∑ i : Fin (p + 1),
         ((biprod.fst : sumPow (𝟙_ A) p ⊞ sumPow U q ⟶ _) ≫
           sumPowPrj (𝟙_ A) p i) ≫
           (sumPowIns (𝟙_ A) p i ≫
@@ -420,7 +420,7 @@ private theorem prodMap_smul₂ {M₁ M₂ N₁ N₂ : Type*}
 instance : MonoidalPreadditive SuperVect where
   whiskerLeft_zero {X Y Z} := by
     apply SuperVect.hom_ext
-    · show LinearMap.prodMap
+    · change LinearMap.prodMap
         (TensorProduct.map LinearMap.id
           (SuperVect.Hom.evenMap (0 : Y ⟶ Z)))
         (TensorProduct.map LinearMap.id
@@ -430,7 +430,7 @@ instance : MonoidalPreadditive SuperVect where
         TensorProduct.map_zero_right, TensorProduct.map_zero_right,
         prodMap_zero₂]
       rfl
-    · show LinearMap.prodMap
+    · change LinearMap.prodMap
         (TensorProduct.map LinearMap.id
           (SuperVect.Hom.oddMap (0 : Y ⟶ Z)))
         (TensorProduct.map LinearMap.id
@@ -442,7 +442,7 @@ instance : MonoidalPreadditive SuperVect where
       rfl
   zero_whiskerRight {X Y Z} := by
     apply SuperVect.hom_ext
-    · show LinearMap.prodMap
+    · change LinearMap.prodMap
         (TensorProduct.map (SuperVect.Hom.evenMap (0 : Y ⟶ Z))
           LinearMap.id)
         (TensorProduct.map (SuperVect.Hom.oddMap (0 : Y ⟶ Z))
@@ -452,7 +452,7 @@ instance : MonoidalPreadditive SuperVect where
         TensorProduct.map_zero_left, TensorProduct.map_zero_left,
         prodMap_zero₂]
       rfl
-    · show LinearMap.prodMap
+    · change LinearMap.prodMap
         (TensorProduct.map (SuperVect.Hom.evenMap (0 : Y ⟶ Z))
           LinearMap.id)
         (TensorProduct.map (SuperVect.Hom.oddMap (0 : Y ⟶ Z))
@@ -464,7 +464,7 @@ instance : MonoidalPreadditive SuperVect where
       rfl
   whiskerLeft_add {X Y Z} f g := by
     apply SuperVect.hom_ext
-    · show LinearMap.prodMap
+    · change LinearMap.prodMap
         (TensorProduct.map LinearMap.id
           (SuperVect.Hom.evenMap (f + g)))
         (TensorProduct.map LinearMap.id
@@ -474,7 +474,7 @@ instance : MonoidalPreadditive SuperVect where
         TensorProduct.map_add_right, TensorProduct.map_add_right,
         prodMap_add₂]
       rfl
-    · show LinearMap.prodMap
+    · change LinearMap.prodMap
         (TensorProduct.map LinearMap.id
           (SuperVect.Hom.oddMap (f + g)))
         (TensorProduct.map LinearMap.id
@@ -486,7 +486,7 @@ instance : MonoidalPreadditive SuperVect where
       rfl
   add_whiskerRight {X Y Z} f g := by
     apply SuperVect.hom_ext
-    · show LinearMap.prodMap
+    · change LinearMap.prodMap
         (TensorProduct.map (SuperVect.Hom.evenMap (f + g))
           LinearMap.id)
         (TensorProduct.map (SuperVect.Hom.oddMap (f + g))
@@ -496,7 +496,7 @@ instance : MonoidalPreadditive SuperVect where
         TensorProduct.map_add_left, TensorProduct.map_add_left,
         prodMap_add₂]
       rfl
-    · show LinearMap.prodMap
+    · change LinearMap.prodMap
         (TensorProduct.map (SuperVect.Hom.evenMap (f + g))
           LinearMap.id)
         (TensorProduct.map (SuperVect.Hom.oddMap (f + g))
@@ -511,7 +511,7 @@ instance : MonoidalPreadditive SuperVect where
 instance : MonoidalLinear ℂ SuperVect where
   whiskerLeft_smul X Y Z r f := by
     apply SuperVect.hom_ext
-    · show LinearMap.prodMap
+    · change LinearMap.prodMap
         (TensorProduct.map LinearMap.id
           (SuperVect.Hom.evenMap (r • f)))
         (TensorProduct.map LinearMap.id
@@ -521,7 +521,7 @@ instance : MonoidalLinear ℂ SuperVect where
         TensorProduct.map_smul_right, TensorProduct.map_smul_right,
         prodMap_smul₂]
       rfl
-    · show LinearMap.prodMap
+    · change LinearMap.prodMap
         (TensorProduct.map LinearMap.id
           (SuperVect.Hom.oddMap (r • f)))
         (TensorProduct.map LinearMap.id
@@ -533,7 +533,7 @@ instance : MonoidalLinear ℂ SuperVect where
       rfl
   smul_whiskerRight r {Y Z} f X := by
     apply SuperVect.hom_ext
-    · show LinearMap.prodMap
+    · change LinearMap.prodMap
         (TensorProduct.map (SuperVect.Hom.evenMap (r • f))
           LinearMap.id)
         (TensorProduct.map (SuperVect.Hom.oddMap (r • f))
@@ -543,7 +543,7 @@ instance : MonoidalLinear ℂ SuperVect where
         TensorProduct.map_smul_left, TensorProduct.map_smul_left,
         prodMap_smul₂]
       rfl
-    · show LinearMap.prodMap
+    · change LinearMap.prodMap
         (TensorProduct.map (SuperVect.Hom.evenMap (r • f))
           LinearMap.id)
         (TensorProduct.map (SuperVect.Hom.oddMap (r • f))
@@ -592,8 +592,7 @@ private theorem tensor_zero_right_eq {M : Type*} [AddCommGroup M]
 /-- The flip on the square of a line is the identity. -/
 private theorem comm_line_self (b : (Fin 1 → ℂ) ⊗[ℂ] (Fin 1 → ℂ)) :
     TensorProduct.comm ℂ (Fin 1 → ℂ) (Fin 1 → ℂ) b = b := by
-  induction b using TensorProduct.induction_on with
-  | zero => simp
+  induction b using TensorProduct.inductionOn with
   | add x y hx hy => rw [map_add, hx, hy]
   | tmul v w =>
     have hrep : ∀ v : Fin 1 → ℂ,
@@ -623,14 +622,14 @@ theorem stdSuper_braiding_neg :
   apply SuperVect.hom_ext
   · apply LinearMap.ext
     rintro ⟨a, b⟩
-    show ((TensorProduct.comm ℂ (Fin 0 → ℂ) (Fin 0 → ℂ)) a,
+    change ((TensorProduct.comm ℂ (Fin 0 → ℂ) (Fin 0 → ℂ)) a,
         -((TensorProduct.comm ℂ (Fin 1 → ℂ) (Fin 1 → ℂ)) b)) =
       (-a, -b)
     refine Prod.ext (hEE _ _) ?_
     exact congrArg Neg.neg (comm_line_self b)
   · apply LinearMap.ext
     rintro ⟨x, y⟩
-    show ((TensorProduct.comm ℂ (Fin 1 → ℂ) (Fin 0 → ℂ)) y,
+    change ((TensorProduct.comm ℂ (Fin 1 → ℂ) (Fin 0 → ℂ)) y,
         (TensorProduct.comm ℂ (Fin 0 → ℂ) (Fin 1 → ℂ)) x) =
       (-x, -y)
     exact Prod.ext (hEO _ _) (hOE _ _)
@@ -761,11 +760,11 @@ noncomputable def stdSuperLetters (p q : ℕ) :
     cases k with
     | inl i =>
       apply SuperVect.hom_ext
-      · show (LinearMap.proj (R := ℂ) (φ := fun _ : Fin (p + 1) => ℂ)
+      · change (LinearMap.proj (R := ℂ) (φ := fun _ : Fin (p + 1) => ℂ)
             i).comp (LinearMap.single ℂ (fun _ => ℂ) i) =
           LinearMap.id
         refine LinearMap.ext fun z => ?_
-        show Pi.single (M := fun _ : Fin (p + 1) => ℂ) i z i = z
+        change Pi.single (M := fun _ : Fin (p + 1) => ℂ) i z i = z
         rw [Pi.single_eq_same]
       · refine LinearMap.ext fun z => ?_
         exact Subsingleton.elim (α := PUnit) _ _
@@ -773,14 +772,14 @@ noncomputable def stdSuperLetters (p q : ℕ) :
       apply SuperVect.hom_ext
       · refine LinearMap.ext fun z => ?_
         exact Subsingleton.elim (α := Fin 0 → ℂ) _ _
-      · show (LinearMap.pi fun _ : Fin 1 =>
+      · change (LinearMap.pi fun _ : Fin 1 =>
             LinearMap.proj (R := ℂ) (φ := fun _ : Fin (q + 1) => ℂ) j).comp
           ((LinearMap.single ℂ (fun _ => ℂ) j).comp
             (LinearMap.proj (R := ℂ) (φ := fun _ : Fin 1 => ℂ) 0)) =
           LinearMap.id
         refine LinearMap.ext fun v => ?_
         funext i
-        show Pi.single (M := fun _ : Fin (q + 1) => ℂ) j (v 0) j =
+        change Pi.single (M := fun _ : Fin (q + 1) => ℂ) j (v 0) j =
           v i
         rw [Pi.single_eq_same, Subsingleton.elim i 0]
   ins_prj_ne {k k'} hkk' := by
@@ -789,10 +788,10 @@ noncomputable def stdSuperLetters (p q : ℕ) :
       cases k' with
       | inl i' =>
         apply SuperVect.hom_ext
-        · show (LinearMap.proj (R := ℂ) (φ := fun _ : Fin (p + 1) => ℂ)
+        · change (LinearMap.proj (R := ℂ) (φ := fun _ : Fin (p + 1) => ℂ)
               i').comp (LinearMap.single ℂ (fun _ => ℂ) i) = 0
           refine LinearMap.ext fun z => ?_
-          show Pi.single (M := fun _ : Fin (p + 1) => ℂ) i z i' = 0
+          change Pi.single (M := fun _ : Fin (p + 1) => ℂ) i z i' = 0
           exact Pi.single_eq_of_ne (M := fun _ : Fin (p + 1) => ℂ)
             (fun h => hkk' (congrArg Sum.inl h.symm)) z
         · refine LinearMap.ext fun z => ?_
@@ -802,7 +801,7 @@ noncomputable def stdSuperLetters (p q : ℕ) :
         · refine LinearMap.ext fun z => ?_
           exact Subsingleton.elim (α := Fin 0 → ℂ) _ _
         · refine LinearMap.ext fun z => ?_
-          show (LinearMap.pi fun _ : Fin 1 =>
+          change (LinearMap.pi fun _ : Fin 1 =>
               LinearMap.proj (R := ℂ)
                 (φ := fun _ : Fin (q + 1) => ℂ) j')
             ((0 : PUnit →ₗ[ℂ] (Fin (q + 1) → ℂ)) z) = 0
@@ -812,7 +811,7 @@ noncomputable def stdSuperLetters (p q : ℕ) :
       | inl i' =>
         apply SuperVect.hom_ext
         · refine LinearMap.ext fun z => ?_
-          show (LinearMap.proj (R := ℂ)
+          change (LinearMap.proj (R := ℂ)
               (φ := fun _ : Fin (p + 1) => ℂ) i')
             ((0 : (Fin 0 → ℂ) →ₗ[ℂ] (Fin (p + 1) → ℂ)) z) = 0
           rfl
@@ -822,14 +821,14 @@ noncomputable def stdSuperLetters (p q : ℕ) :
         apply SuperVect.hom_ext
         · refine LinearMap.ext fun z => ?_
           exact Subsingleton.elim (α := Fin 0 → ℂ) _ _
-        · show (LinearMap.pi fun _ : Fin 1 =>
+        · change (LinearMap.pi fun _ : Fin 1 =>
               LinearMap.proj (R := ℂ) (φ := fun _ : Fin (q + 1) => ℂ)
                 j').comp
             ((LinearMap.single ℂ (fun _ => ℂ) j).comp
               (LinearMap.proj (R := ℂ) (φ := fun _ : Fin 1 => ℂ) 0)) = 0
           refine LinearMap.ext fun v => ?_
           funext i
-          show Pi.single (M := fun _ : Fin (q + 1) => ℂ) j (v 0) j'
+          change Pi.single (M := fun _ : Fin (q + 1) => ℂ) j (v 0) j'
             = 0
           exact Pi.single_eq_of_ne (M := fun _ : Fin (q + 1) => ℂ)
             (fun h => hkk' (congrArg Sum.inr h.symm)) (v 0)

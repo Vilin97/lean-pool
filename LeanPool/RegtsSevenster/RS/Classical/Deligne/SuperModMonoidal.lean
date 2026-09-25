@@ -926,10 +926,10 @@ noncomputable def leftUnitor : S.unitMod.tensor M ≅ M where
   inv_hom_id := by
     refine Hom.ext (LinearMap.ext fun m => ?_)
       (LinearMap.ext fun m => ?_)
-    · show (leftUnitorHom M).evenMap (tmulEE S.unitMod M S.one m) = m
+    · change (leftUnitorHom M).evenMap (tmulEE S.unitMod M S.one m) = m
       rw [leftUnitorHom_evenMap_tmulEE]
       exact M.one_act_e m
-    · show (leftUnitorHom M).oddMap (tmulEO S.unitMod M S.one m) = m
+    · change (leftUnitorHom M).oddMap (tmulEO S.unitMod M S.one m) = m
       rw [leftUnitorHom_oddMap_tmulEO]
       exact M.one_act_o m
 
@@ -1062,11 +1062,11 @@ noncomputable def rightUnitor : M.tensor S.unitMod ≅ M where
   inv_hom_id := by
     refine Hom.ext (LinearMap.ext fun m => ?_)
       (LinearMap.ext fun m => ?_)
-    · show (rightUnitorHom M).evenMap
+    · change (rightUnitorHom M).evenMap
         (tmulEE M S.unitMod m S.one) = m
       rw [rightUnitorHom_evenMap_tmulEE]
       exact M.one_act_e m
-    · show (rightUnitorHom M).oddMap
+    · change (rightUnitorHom M).oddMap
         (tmulOE M S.unitMod m S.one) = m
       rw [rightUnitorHom_oddMap_tmulOE]
       exact M.one_act_o m

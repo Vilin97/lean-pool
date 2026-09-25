@@ -41,11 +41,11 @@ theorem bijective_evenMap {M N : S.Mod} (e : M ≅ N) :
   refine Function.bijective_iff_has_inverse.mpr
     ⟨e.inv.evenMap, ?_, ?_⟩
   · intro m
-    show (e.hom ≫ e.inv).evenMap m = m
+    change (e.hom ≫ e.inv).evenMap m = m
     rw [e.hom_inv_id]
     rfl
   · intro n
-    show (e.inv ≫ e.hom).evenMap n = n
+    change (e.inv ≫ e.hom).evenMap n = n
     rw [e.inv_hom_id]
     rfl
 
@@ -55,11 +55,11 @@ theorem bijective_oddMap {M N : S.Mod} (e : M ≅ N) :
   refine Function.bijective_iff_has_inverse.mpr
     ⟨e.inv.oddMap, ?_, ?_⟩
   · intro m
-    show (e.hom ≫ e.inv).oddMap m = m
+    change (e.hom ≫ e.inv).oddMap m = m
     rw [e.hom_inv_id]
     rfl
   · intro n
-    show (e.inv ≫ e.hom).oddMap n = n
+    change (e.inv ≫ e.hom).oddMap n = n
     rw [e.inv_hom_id]
     rfl
 

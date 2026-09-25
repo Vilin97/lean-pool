@@ -73,7 +73,7 @@ theorem window_contract3LFold
         contract3LFold A p N =
       ((w ≫ modTensorπ A M' M ≫ p) ▷ (N.X ⊗ 𝟙_ D)) ≫
         modListHeadAct A N [] ≫ modMultiπ A [N] := by
-  show ((w ▷ (N.X ⊗ 𝟙_ D)) ≫ (α_ M'.X M.X (N.X ⊗ 𝟙_ D)).hom) ≫
+  change ((w ▷ (N.X ⊗ 𝟙_ D)) ≫ (α_ M'.X M.X (N.X ⊗ 𝟙_ D)).hom) ≫
       (α_ M'.X M.X (N.X ⊗ 𝟙_ D)).inv ≫
       ((modTensorπ A M' M ≫ p) ▷ (N.X ⊗ 𝟙_ D)) ≫
       modListHeadAct A N [] ≫ modMultiπ A [N] = _
@@ -91,7 +91,7 @@ theorem contract3LFold_pair_cond
     (N : Mod D A) :
     modMultiLegM A [] M' M [N] ≫ contract3LFold A p N =
       modMultiLegN A [] M' M [N] ≫ contract3LFold A p N := by
-  show ((modTensorLegM A M' M ▷ modList A [N]) ≫
+  change ((modTensorLegM A M' M ▷ modList A [N]) ≫
       (α_ M'.X M.X (modList A [N])).hom) ≫
       contract3LFold A p N =
     ((modTensorLegN A M' M ▷ modList A [N]) ≫
@@ -119,7 +119,7 @@ theorem contract3LFold_boundary_cond
     (N : Mod D A) :
     modMultiLegM A [M'] M N [] ≫ contract3LFold A p N =
       modMultiLegN A [M'] M N [] ≫ contract3LFold A p N := by
-  show (M'.X ◁ (((actRight A M.X ▷ N.X) ▷ (𝟙_ D)) ≫
+  change (M'.X ◁ (((actRight A M.X ▷ N.X) ▷ (𝟙_ D)) ≫
       (α_ M.X N.X (𝟙_ D)).hom)) ≫
       (α_ M'.X M.X (N.X ⊗ 𝟙_ D)).inv ≫
       ((modTensorπ A M' M ≫ p) ▷ (N.X ⊗ 𝟙_ D)) ≫
@@ -153,11 +153,11 @@ theorem contract3LFold_boundary_cond
   have hML : (M'.X ◁ actRight A M.X) ≫ modTensorπ A M' M ≫ p =
       (α_ M'.X M.X A).inv ≫
         ((modTensorπ A M' M ≫ p) ▷ A) ≫ μ[A] := by
-    show (M'.X ◁ ((β_ M.X A).hom ≫ actLeft A M.X)) ≫
+    change (M'.X ◁ ((β_ M.X A).hom ≫ actLeft A M.X)) ≫
         modTensorπ A M' M ≫ p = _
     rw [MonoidalCategory.whiskerLeft_comp, Category.assoc,
       reassoc_of% hrel]
-    show (M'.X ◁ (β_ M.X A).hom) ≫ (α_ M'.X A M.X).inv ≫
+    change (M'.X ◁ (β_ M.X A).hom) ≫ (α_ M'.X A M.X).inv ≫
         (((β_ M'.X A).hom ≫ actLeft A M'.X) ▷ M.X) ≫
         modTensorπ A M' M ≫ p = _
     rw [MonoidalCategory.comp_whiskerRight, Category.assoc,

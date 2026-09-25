@@ -28,7 +28,7 @@ theorem HomSpace.traceMap_comp_comm {t u : ℕ}
         (HomSpace.comp f u t u q p) := by
   obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ p
   obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ q
-  show traceFunctional f.val t (composeFinsupp t u t x y) =
+  change traceFunctional f.val t (composeFinsupp t u t x y) =
     traceFunctional f.val u (composeFinsupp u t u y x)
   induction x using Finsupp.induction_linear with
   | zero => simp only [map_zero, LinearMap.zero_apply]

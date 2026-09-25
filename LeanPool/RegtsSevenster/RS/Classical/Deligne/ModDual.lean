@@ -286,7 +286,7 @@ lemma actRight_dualMod [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [IsCommMonObj A] :
     haveI := dualModObj A X Y
     actRight A Y = dualActRight A X Y := by
-  show (β_ Y A).hom ≫ dualActLeft A X Y = dualActRight A X Y
+  change (β_ Y A).hom ≫ dualActLeft A X Y = dualActRight A X Y
   rw [dualActLeft_def, Iso.hom_inv_id_assoc]
 
 end DualModule
@@ -312,8 +312,8 @@ lemma modTensorLeg_pair [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
         (ε_ X Y ≫ η[A]) =
       modTensorLegN A (dualMod A X Y) (asMod A X) ≫
         (ε_ X Y ≫ η[A]) := by
-  letI := dualModObj A X Y
-  show actRight A Y ▷ X ≫ (ε_ X Y ≫ η[A]) =
+  let := dualModObj A X Y
+  change actRight A Y ▷ X ≫ (ε_ X Y ≫ η[A]) =
     ((α_ Y A X).hom ≫ Y ◁ actLeft A X) ≫ (ε_ X Y ≫ η[A])
   rw [actRight_dualMod, dualActRight_evaluation_assoc,
     Category.assoc]
@@ -375,8 +375,8 @@ lemma whiskerLeft_modTensorπ_act_modPairing
       (α_ A Y X).inv ≫ (β_ Y A).inv ▷ X ≫ (α_ Y A X).hom ≫
         Y ◁ actLeft A X ≫ ε_ X Y ≫ η[A] := by
   rw [whiskerLeft_modTensorπ_act_assoc, modTensorπ_modPairing]
-  letI := dualModObj A X Y
-  show (α_ A Y X).inv ≫ actLeft A Y ▷ X ≫ ε_ X Y ≫ η[A] = _
+  let := dualModObj A X Y
+  change (α_ A Y X).inv ≫ actLeft A Y ▷ X ≫ ε_ X Y ≫ η[A] = _
   rw [actLeft_dualMod, dualActLeft_evaluation_assoc]
 
 /-- The copairing is a morphism of modules. -/

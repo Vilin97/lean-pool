@@ -31,11 +31,11 @@ theorem linearIndependent_of_group_trace {G A : Type*} [Group G]
   apply LinearIndependent.of_pairwise_dual_eq_zero_one _ dual
   · intro σ π hne
     change c⁻¹ * τ (ρ σ⁻¹ * ρ π) = 0
-    rw [← map_mul, hτ, if_neg (fun h => hne (inv_mul_eq_one.mp h)),
+    rw [← map_mul, hτ, ite_eq_right (fun h => hne (inv_mul_eq_one.mp h)),
       mul_zero]
   · intro σ
     change c⁻¹ * τ (ρ σ⁻¹ * ρ σ) = 1
-    rw [← map_mul, inv_mul_cancel, hτ, if_pos rfl, inv_mul_cancel₀ hc]
+    rw [← map_mul, inv_mul_cancel, hτ, ite_eq_left rfl, inv_mul_cancel₀ hc]
 
 /-- In a finite-dimensional algebra a group representation with
 such a trace has at most the dimension many group elements. -/

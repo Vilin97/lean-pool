@@ -78,7 +78,7 @@ private theorem wk_pullback_aux (s t u : ℕ) :
     refine congrArg₂ List.cons
       (Prod.ext ?_ rfl)
       (wk_pullback_aux s t u l)
-    show Sum.inl
+    change Sum.inl
       ((transposeEquiv s t).symm
         ⟨t + j.val, _⟩) = _
     exact congrArg Sum.inl
@@ -578,7 +578,7 @@ theorem leftRot_q4_eq (s t u : ℕ) :
       Fragment.liftPairs _ _
         ((leftRotPairsR_wf s t u
           ).append_sep) := by
-  show Fragment.mapPairs
+  change Fragment.mapPairs
       (leftRotMR s t u).symm
     (Fragment.mapPairs
       (Fragment.inrFoldEquiv
@@ -668,6 +668,11 @@ noncomputable def leftRotLabelR (s t u : ℕ) :
 
 /-! ### The right side, normalized -/
 
+private theorem leftRotQ4_wf (s t u : ℕ) :
+    Fragment.PairsWF (leftRotQ4 s t u) :=
+  Fragment.mapPairs_wf _ _ (Fragment.mapPairs_wf _ _
+    (Fragment.mapPairs_wf _ _ (Fragment.mapPairs_wf _ _ (interfacePairs_wf 0 (t + u) 0))))
+
 /-- **The right side, normalized**: the closure of `F`
 against the left-rotated composite is iterated gluing
 of the three interface blocks over the common ambient,
@@ -713,7 +718,7 @@ noncomputable def leftRotNormalRight
     Fragment.mapPairs_wf i'.symm _ wfq2
   let wfq4 : Fragment.PairsWF
       (leftRotQ4 s t u) :=
-    Fragment.mapPairs_wf MR.symm _ wfq3
+    leftRotQ4_wf s t u
   let A := (W.disjUnion F).disjUnion K
   let XWK := Fragment.glueList
     (W.disjUnion K) (wkPairs s t u)
@@ -746,21 +751,7 @@ noncomputable def leftRotNormalRight
   -- `CRapp` merges the appended fold into one glue list; `BE` carries
   -- the ambient `(W ⊔ F) ⊔ K` to `F ⊔ (W ⊔ K)`, which is the shape the
   -- m-fold is stated over; `CRX` transports the fold along it.
-  have CRapp :
-      (Fragment.glueList UMB
-        (leftRotQ4 s t u) wfq4).Equiv
-      ((Fragment.glueList A
-          (mBlock s t u ++
-            (pBlock s t u ++
-              nBlockSwap s t u))
-          (leftRotPairsR_wf s t u)).relabel
-        ((Fragment.appendFlatten _ _
-            ((leftRotPairsR_wf s t u
-              ).append_sep)).symm.trans
-          (Fragment.foldSurvivingPermEquiv
-            ((leftRot_q4_eq s t u) ▸
-              List.Perm.refl _
-              )).symm)) :=
+  have CRapp :=
     (Fragment.Equiv.relabelFlip'
       (Fragment.glueListEqEquiv UMB
         (leftRot_q4_eq s t u)
@@ -784,10 +775,7 @@ noncomputable def leftRotNormalRight
           List.Perm.refl _)).symm).trans
     (Fragment.Equiv.relabelTrans _ _ _))
   -- BE: the ambient bridge.
-  have BE : A.Equiv
-      ((F.disjUnion
-        (W.disjUnion K)).relabel
-        (leftRotBridge s t u)) :=
+  have BE :=
     (Fragment.Equiv.disjUnionCongr
       (Fragment.disjUnionComm W F)
       (Fragment.Equiv.refl K)).trans
@@ -805,96 +793,23 @@ noncomputable def leftRotNormalRight
           (Fin (s + u))))).trans
     (Fragment.Equiv.relabelTrans _ _ _)))
   -- CRX: the ambient bridge on the m-fold.
-  have CRX : XR.Equiv (UMB.relabel MR) :=
-    (Fragment.glueListCongr
-      (Fragment.Equiv.relabelFlip BE)
-        _ _).trans
-    ((Fragment.Equiv.relabelFlip'
-      (Fragment.glueListEqEquiv
-        (A.relabel
-          (leftRotBridge s t u).symm)
-        (mapPairs_symm_cancel
-          (leftRotBridge s t u).symm
-          (Fragment.inrPairs
-            (α := Fin (t + u))
-            (wkPairs s t u))).symm
-        (Fragment.inrPairs_wf _
-          (wkPairs_wf s t u))
-        (Fragment.mapPairs_wf
-          (leftRotBridge s t u).symm _
-          wfground)
-        ((mapPairs_symm_cancel
-          (leftRotBridge s t u).symm
-          (Fragment.inrPairs
-            (α := Fin (t + u))
-            (wkPairs s t u))).symm ▸
-          List.Perm.refl _))).trans
-    ((Fragment.Equiv.relabelCongr
-      ((Fragment.glueListRelabel A
-        (leftRotBridge s t u).symm
-        ground wfground).trans
-      ((Fragment.Equiv.relabelCongr
-        (Fragment.Equiv.relabelFlip'
-          (Fragment.glueListEqEquiv A
-            (leftRot_ground s t u)
-            wfground
-            ((leftRotPairsR_wf s t u
-              ).append_left)
-            ((leftRot_ground s t u) ▸
-              List.Perm.refl _)))
-        (Fragment.foldSurvivingMapEquiv
-          (leftRotBridge s t u).symm
-          ground)).trans
-      (Fragment.Equiv.relabelTrans
-        _ _ _)))
-      (Fragment.foldSurvivingPermEquiv
-        ((mapPairs_symm_cancel
-          (leftRotBridge s t u).symm
-          (Fragment.inrPairs
-            (α := Fin (t + u))
-            (wkPairs s t u))).symm ▸
-          List.Perm.refl _
-          )).symm).trans
-    (Fragment.Equiv.relabelTrans _ _ _)))
+  have CRX := (Fragment.glueListCongr (Fragment.Equiv.relabelFlip BE) _ _).trans
+    (glueListPullRelabelTrans A (leftRotBridge s t u).symm
+      (Fragment.inrPairs (α := Fin (t + u)) (wkPairs s t u))
+      (Fragment.inrPairs_wf _ (wkPairs_wf s t u))
+      (Fragment.Equiv.relabelFlip'
+        (Fragment.glueListEqEquiv A (leftRot_ground s t u) wfground
+          ((leftRotPairsR_wf s t u).append_left)
+          ((leftRot_ground s t u) ▸ List.Perm.refl _))))
   -- CR5: transport across the bridge.
   -- ═══════ STAGE 2: THE EMBEDDED FOLD ═══════
   -- The fold sitting inside `F ⊔ –`: `CR5` transports along the
   -- ambient bridge, `E5` identifies `F ⊔ XWK` with `XR` relabelled,
   -- and `CR3` carries the fold across that identification.
-  have CR5 :=
-    (Fragment.glueListCongr CRX
-      (leftRotQ3 s t u) wfq3).trans
-    ((Fragment.Equiv.relabelFlip'
-      (Fragment.glueListEqEquiv
-        (UMB.relabel MR)
-        (mapPairs_symm_cancel MR
-          (leftRotQ3 s t u)).symm
-        wfq3
-        (Fragment.mapPairs_wf MR _ wfq4)
-        ((mapPairs_symm_cancel MR
-          (leftRotQ3 s t u)).symm ▸
-          List.Perm.refl _))).trans
-    ((Fragment.Equiv.relabelCongr
-      ((Fragment.glueListRelabel UMB MR
-        (leftRotQ4 s t u) wfq4).trans
-      ((Fragment.Equiv.relabelCongr
-        CRapp
-        (Fragment.foldSurvivingMapEquiv
-          MR
-          (leftRotQ4 s t u))).trans
-      (Fragment.Equiv.relabelTrans
-        _ _ _)))
-      (Fragment.foldSurvivingPermEquiv
-        ((mapPairs_symm_cancel MR
-          (leftRotQ3 s t u)).symm ▸
-          List.Perm.refl _
-          )).symm).trans
-    (Fragment.Equiv.relabelTrans
-      _ _ _)))
+  have CR5 := (Fragment.glueListCongr CRX (leftRotQ3 s t u) wfq3).trans
+    (glueListPullRelabelTrans UMB MR (leftRotQ3 s t u) wfq3 CRapp)
   -- E5: the embedded fold.
-  have E5 :
-      (F.disjUnion XWK).Equiv
-        (XR.relabel i') :=
+  have E5 :=
     (Fragment.Equiv.relabelFlip
       (Fragment.glueListDisjUnionRight
         F (W.disjUnion K) (wkPairs s t u)
@@ -902,247 +817,39 @@ noncomputable def leftRotNormalRight
     (Fragment.Equiv.relabelEq XR
       (_root_.Equiv.symm_symm i'))
   -- CR3: the embedded-fold stage.
-  have CR3 :=
-    (Fragment.glueListCongr E5
-      (leftRotQ2 s t u) wfq2).trans
-    ((Fragment.Equiv.relabelFlip'
-      (Fragment.glueListEqEquiv
-        (XR.relabel i')
-        (mapPairs_symm_cancel i'
-          (leftRotQ2 s t u)).symm
-        wfq2
-        (Fragment.mapPairs_wf i' _ wfq3)
-        ((mapPairs_symm_cancel i'
-          (leftRotQ2 s t u)).symm ▸
-          List.Perm.refl _))).trans
-    ((Fragment.Equiv.relabelCongr
-      ((Fragment.glueListRelabel XR i'
-        (leftRotQ3 s t u) wfq3).trans
-      ((Fragment.Equiv.relabelCongr
-        CR5
-        (Fragment.foldSurvivingMapEquiv
-          i'
-          (leftRotQ3 s t u))).trans
-      (Fragment.Equiv.relabelTrans
-        _ _ _)))
-      (Fragment.foldSurvivingPermEquiv
-        ((mapPairs_symm_cancel i'
-          (leftRotQ2 s t u)).symm ▸
-          List.Perm.refl _
-          )).symm).trans
-    (Fragment.Equiv.relabelTrans
-      _ _ _)))
+  have CR3 := (Fragment.glueListCongr E5 (leftRotQ2 s t u) wfq2).trans
+    (glueListPullRelabelTrans XR i' (leftRotQ2 s t u) wfq2 CR5)
   -- E3: the inner fold (no swap needed).
   -- ═══════ STAGE 3: THE TRANSPOSE ON `W ⊔ K` ═══════
   -- `E3` absorbs the `transposeEquiv` on `W` into the fold's own
   -- relabel; `CR2` carries the next block across it.
-  have E3 : N₂.Equiv (XWK.relabel M₂) :=
-    (Fragment.glueListCongr
-      (Fragment.relabelDisjUnionLeft
-        W K (transposeEquiv s t))
-        _ _).trans
-    ((Fragment.Equiv.relabelFlip'
-      (Fragment.glueListEqEquiv
-        ((W.disjUnion K).relabel sτ)
-        (mapPairs_symm_cancel sτ
-          (interfacePairs t s u)).symm
-        (interfacePairs_wf t s u)
-        (Fragment.mapPairs_wf sτ _
-          (Fragment.mapPairs_wf sτ.symm _
-            (interfacePairs_wf t s u)))
-        ((mapPairs_symm_cancel sτ
-          (interfacePairs t s u)).symm ▸
-          List.Perm.refl _))).trans
-    ((Fragment.Equiv.relabelCongr
-      ((Fragment.glueListRelabel
-        (W.disjUnion K) sτ
-        (Fragment.mapPairs sτ.symm
-          (interfacePairs t s u))
-        (Fragment.mapPairs_wf sτ.symm _
-          (interfacePairs_wf t s u
-            ))).trans
-      ((Fragment.Equiv.relabelCongr
-        (Fragment.Equiv.relabelFlip'
-          (Fragment.glueListEqEquiv
-            (W.disjUnion K)
-            (wk_pullback s t u)
-            (Fragment.mapPairs_wf
-              sτ.symm _
-              (interfacePairs_wf t s u
-                ))
-            (wkPairs_wf s t u)
-            ((wk_pullback s t u) ▸
-              List.Perm.refl _)))
-        (Fragment.foldSurvivingMapEquiv
-          sτ
-          (Fragment.mapPairs sτ.symm
-            (interfacePairs t s u
-              )))).trans
-      (Fragment.Equiv.relabelTrans
-        _ _ _)))
-      (Fragment.foldSurvivingPermEquiv
-        ((mapPairs_symm_cancel sτ
-          (interfacePairs t s u)).symm ▸
-          List.Perm.refl _
-          )).symm).trans
-    (Fragment.Equiv.relabelTrans
-      _ _ _)))
+  have E3 := (Fragment.glueListCongr
+    (Fragment.relabelDisjUnionLeft W K (transposeEquiv s t)) _ _).trans
+    (glueListPullRelabelTrans (W.disjUnion K) sτ (interfacePairs t s u)
+      (interfacePairs_wf t s u)
+      (Fragment.Equiv.relabelFlip'
+        (Fragment.glueListEqEquiv (W.disjUnion K) (wk_pullback s t u)
+          (Fragment.mapPairs_wf sτ.symm _ (interfacePairs_wf t s u))
+          (wkPairs_wf s t u) ((wk_pullback s t u) ▸ List.Perm.refl _))))
   -- CR2: the inner-transport stage.
-  have CR2 :=
-    (Fragment.glueListCongr
-      ((Fragment.Equiv.disjUnionCongr
-        (Fragment.Equiv.refl F) E3).trans
-      (Fragment.relabelDisjUnionRight
-        F XWK M₂))
-      (leftRotQ1 s t u) wfq1).trans
-    ((Fragment.Equiv.relabelFlip'
-      (Fragment.glueListEqEquiv
-        ((F.disjUnion XWK).relabel
-          (_root_.Equiv.sumCongr
-            (_root_.Equiv.refl
-              (Fin (t + u))) M₂))
-        (mapPairs_symm_cancel
-          (_root_.Equiv.sumCongr
-            (_root_.Equiv.refl
-              (Fin (t + u))) M₂)
-          (leftRotQ1 s t u)).symm
-        wfq1
-        (Fragment.mapPairs_wf
-          (_root_.Equiv.sumCongr
-            (_root_.Equiv.refl
-              (Fin (t + u))) M₂) _
-          wfq2)
-        ((mapPairs_symm_cancel
-          (_root_.Equiv.sumCongr
-            (_root_.Equiv.refl
-              (Fin (t + u))) M₂)
-          (leftRotQ1 s t u)).symm ▸
-          List.Perm.refl _))).trans
-    ((Fragment.Equiv.relabelCongr
-      ((Fragment.glueListRelabel
-        (F.disjUnion XWK)
-        (_root_.Equiv.sumCongr
-          (_root_.Equiv.refl
-            (Fin (t + u))) M₂)
-        (leftRotQ2 s t u) wfq2).trans
-      ((Fragment.Equiv.relabelCongr
-        CR3
-        (Fragment.foldSurvivingMapEquiv
-          (_root_.Equiv.sumCongr
-            (_root_.Equiv.refl
-              (Fin (t + u))) M₂)
-          (leftRotQ2 s t u))).trans
-      (Fragment.Equiv.relabelTrans
-        _ _ _)))
-      (Fragment.foldSurvivingPermEquiv
-        ((mapPairs_symm_cancel
-          (_root_.Equiv.sumCongr
-            (_root_.Equiv.refl
-              (Fin (t + u))) M₂)
-          (leftRotQ1 s t u)).symm ▸
-          List.Perm.refl _
-          )).symm).trans
-    (Fragment.Equiv.relabelTrans
-      _ _ _)))
+  have CR2 := (Fragment.glueListCongr
+    ((Fragment.Equiv.disjUnionCongr (Fragment.Equiv.refl F) E3).trans
+      (Fragment.relabelDisjUnionRight F XWK M₂)) (leftRotQ1 s t u) wfq1).trans
+    (glueListPullRelabelTrans (F.disjUnion XWK)
+      (_root_.Equiv.sumCongr (_root_.Equiv.refl _) M₂)
+      (leftRotQ1 s t u) wfq1 CR3)
   -- E1: peel closure casts, normalize composite.
   -- ═══════ STAGE 4: THE CLOSURE'S OWN INTERFACE ═══════
   -- The outermost `pairClose`, whose interface is the single block of
   -- `t + u` labels; `CR1` carries the accumulated fold across it.
-  have E1 :
-      ((F.relabel (finCongr
-          (by omega : t + u = 0 + (t + u)
-            ))).disjUnion
-        (((W.relabel
-            (transposeEquiv s t)).compose
-          K).relabel (finCongr
-            (by omega :
-              t + u = t + u + 0)))).Equiv
-      ((F.disjUnion N₂).relabel σR) :=
-    (Fragment.relabelDisjUnionLeft F
-      (((W.relabel
-          (transposeEquiv s t)).compose
-        K).relabel (finCongr
-          (by omega : t + u = t + u + 0)))
-      (finCongr
-        (by omega :
-          t + u = 0 + (t + u)))).trans
-    ((Fragment.Equiv.relabelCongr
-      (Fragment.relabelDisjUnionRight F
-        ((W.relabel
-            (transposeEquiv s t)).compose
-          K)
-        (finCongr
-          (by omega :
-            t + u = t + u + 0)))
-      (_root_.Equiv.sumCongr
-        (finCongr
-          (by omega :
-            t + u = 0 + (t + u)))
-        (_root_.Equiv.refl _))).trans
-    ((Fragment.Equiv.relabelTrans
-      _ _ _).trans
-    ((Fragment.Equiv.relabelCongr
-      ((Fragment.Equiv.disjUnionCongr
-        (Fragment.Equiv.refl F)
-        (composeNormal
-          (W.relabel
-            (transposeEquiv s t)) K
-          )).trans
-      (Fragment.relabelDisjUnionRight
-        F N₂
-        ((interfaceSurvEquiv t s u).trans
-          finSumFinEquiv)))
-      ((_root_.Equiv.sumCongr
-          (_root_.Equiv.refl
-            (Fin (t + u)))
-          (finCongr
-            (by omega :
-              t + u = t + u + 0))).trans
-        (_root_.Equiv.sumCongr
-          (finCongr
-            (by omega :
-              t + u = 0 + (t + u)))
-          (_root_.Equiv.refl _)))).trans
-    (Fragment.Equiv.relabelTrans
-      _ _ _))))
+  have E1 := pairCloseAmbientEquiv F _ (composeNormal (W.relabel (transposeEquiv s t)) K)
   -- CR1: transport the closure gluing.
-  have CR1 :=
-    (Fragment.glueListCongr E1
+  have CR1 := (Fragment.glueListCongr E1
+    (interfacePairs 0 (t + u) 0)
+    (interfacePairs_wf 0 (t + u) 0)).trans
+    (glueListPullRelabelTrans (F.disjUnion N₂) σR
       (interfacePairs 0 (t + u) 0)
-      (interfacePairs_wf 0 (t + u) 0
-        )).trans
-    ((Fragment.Equiv.relabelFlip'
-      (Fragment.glueListEqEquiv
-        ((F.disjUnion N₂).relabel σR)
-        (mapPairs_symm_cancel σR
-          (interfacePairs 0
-            (t + u) 0)).symm
-        (interfacePairs_wf 0 (t + u) 0)
-        (Fragment.mapPairs_wf σR _
-          wfq1)
-        ((mapPairs_symm_cancel σR
-          (interfacePairs 0
-            (t + u) 0)).symm ▸
-          List.Perm.refl _))).trans
-    ((Fragment.Equiv.relabelCongr
-      ((Fragment.glueListRelabel
-        (F.disjUnion N₂) σR
-        (leftRotQ1 s t u) wfq1).trans
-      ((Fragment.Equiv.relabelCongr
-        CR2
-        (Fragment.foldSurvivingMapEquiv
-          σR
-          (leftRotQ1 s t u))).trans
-      (Fragment.Equiv.relabelTrans
-        _ _ _)))
-      (Fragment.foldSurvivingPermEquiv
-        ((mapPairs_symm_cancel σR
-          (interfacePairs 0
-            (t + u) 0)).symm ▸
-          List.Perm.refl _
-          )).symm).trans
-    (Fragment.Equiv.relabelTrans
-      _ _ _)))
+      (interfacePairs_wf 0 (t + u) 0) CR2)
   -- Assemble.
   -- ═══════ ASSEMBLY ═══════
   exact (composeNormal
@@ -1300,6 +1007,11 @@ theorem leftRot_surv_empty (s t u : ℕ)
 
 /-! ### The final theorem -/
 
+private theorem leftRotPairs_assoc_wf (s t u : ℕ) :
+    Fragment.PairsWF ((mBlock s t u ++ pBlock s t u) ++ nBlock s t u) := by
+  simpa only [List.append_assoc] using
+    (rotatePairsL_wf s t u).perm (leftRotPairs_perm s t u)
+
 /-- **Mirror rotation of closures**: the closure of
 a composite equals the closure of the second factor
 against the left-rotated composite. -/
@@ -1337,7 +1049,7 @@ noncomputable def pairCloseComposeRotateLeft
   have wf_MA :
       Fragment.PairsWF
         (mp ++ nBlock s t u) :=
-    hassocM ▸ wf_M
+    leftRotPairs_assoc_wf s t u
   have hassocR :
       mp ++ nBlockSwap s t u =
       mBlock s t u ++

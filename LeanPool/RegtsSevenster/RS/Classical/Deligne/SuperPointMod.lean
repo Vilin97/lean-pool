@@ -53,27 +53,27 @@ noncomputable def pointMod (P : SuperPoint S) :
   actOO := 0
   one_act_e m := by
     refine ULift.ext _ _ ?_
-    show P.chi 1 * m.down = m.down
+    change P.chi 1 * m.down = m.down
     rw [map_one, one_mul]
   one_act_o m := Subsingleton.elim _ _
   assoc_eee x y m := by
     refine ULift.ext _ _ ?_
-    show P.chi (S.mulEE x y) * m.down = P.chi x * (P.chi y * m.down)
+    change P.chi (S.mulEE x y) * m.down = P.chi x * (P.chi y * m.down)
     rw [show S.mulEE x y = x * y from rfl, map_mul, mul_assoc]
   assoc_eeo _ _ _ := Subsingleton.elim _ _
   assoc_eoe _ _ _ := Subsingleton.elim _ _
   assoc_eoo x u m := by
     refine ULift.ext _ _ ?_
-    show (0 : ℂ) = P.chi x * (0 : ULift.{w} ℂ).down
+    change (0 : ℂ) = P.chi x * (0 : ULift.{w} ℂ).down
     simp
   assoc_oee _ _ _ := Subsingleton.elim _ _
   assoc_oeo x u m := by
     refine ULift.ext _ _ ?_
-    show (0 : ℂ) = (0 : ULift.{w} ℂ).down
+    change (0 : ℂ) = (0 : ULift.{w} ℂ).down
     rfl
   assoc_ooe u v m := by
     refine ULift.ext _ _ ?_
-    show P.chi (S.mulOO u v) * m.down = (0 : ULift.{w} ℂ).down
+    change P.chi (S.mulOO u v) * m.down = (0 : ULift.{w} ℂ).down
     rw [P.vanishing, zero_mul]; rfl
   assoc_ooo _ _ _ := Subsingleton.elim _ _
 

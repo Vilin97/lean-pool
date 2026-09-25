@@ -304,59 +304,59 @@ def superGammaAlgebra [Category.{u'} D] [MonoidalCategory D] [BraidedCategory D]
   mulOE := convAlongHom R (ρ_ o).inv
   mulOO := convAlongHom R ho.inv
   one_mul_e := fun x => by
-    show convAlong R (λ_ (𝟙_ D)).inv η x = x
+    change convAlong R (λ_ (𝟙_ D)).inv η x = x
     exact convAlong_one_left R x
   one_mul_o := fun u => by
-    show convAlong R (λ_ o).inv η u = u
+    change convAlong R (λ_ o).inv η u = u
     exact convAlong_one_left R u
   assoc_eee := fun x y z => by
-    show convAlong R (λ_ (𝟙_ D)).inv
+    change convAlong R (λ_ (𝟙_ D)).inv
         (convAlong R (λ_ (𝟙_ D)).inv x y) z =
       convAlong R (λ_ (𝟙_ D)).inv x
         (convAlong R (λ_ (𝟙_ D)).inv y z)
     exact convAlong_assoc R _ _ _ _ (by monoidal) x y z
   assoc_eeo := fun x y u => by
-    show convAlong R (λ_ o).inv
+    change convAlong R (λ_ o).inv
         (convAlong R (λ_ (𝟙_ D)).inv x y) u =
       convAlong R (λ_ o).inv x (convAlong R (λ_ o).inv y u)
     exact convAlong_assoc R _ _ _ _ (by monoidal) x y u
   assoc_eoe := fun x u y => by
-    show convAlong R (ρ_ o).inv
+    change convAlong R (ρ_ o).inv
         (convAlong R (λ_ o).inv x u) y =
       convAlong R (λ_ o).inv x (convAlong R (ρ_ o).inv u y)
     exact convAlong_assoc R _ _ _ _ (by monoidal) x u y
   assoc_eoo := fun x u v => by
-    show convAlong R ho.inv (convAlong R (λ_ o).inv x u) v =
+    change convAlong R ho.inv (convAlong R (λ_ o).inv x u) v =
       convAlong R (λ_ (𝟙_ D)).inv x (convAlong R ho.inv u v)
     exact convAlong_assoc R _ _ _ _ (residue_eoo ho) x u v
   assoc_oee := fun u x y => by
-    show convAlong R (ρ_ o).inv
+    change convAlong R (ρ_ o).inv
         (convAlong R (ρ_ o).inv u x) y =
       convAlong R (ρ_ o).inv u
         (convAlong R (λ_ (𝟙_ D)).inv x y)
     exact convAlong_assoc R _ _ _ _ (by monoidal) u x y
   assoc_oeo := fun u x v => by
-    show convAlong R ho.inv (convAlong R (ρ_ o).inv u x) v =
+    change convAlong R ho.inv (convAlong R (ρ_ o).inv u x) v =
       convAlong R ho.inv u (convAlong R (λ_ o).inv x v)
     exact convAlong_assoc R _ _ _ _ (by monoidal) u x v
   assoc_ooe := fun u v y => by
-    show convAlong R (λ_ (𝟙_ D)).inv
+    change convAlong R (λ_ (𝟙_ D)).inv
         (convAlong R ho.inv u v) y =
       convAlong R ho.inv u (convAlong R (ρ_ o).inv v y)
     exact convAlong_assoc R _ _ _ _ (residue_ooe ho) u v y
   assoc_ooo := fun u v w => by
-    show convAlong R (λ_ o).inv (convAlong R ho.inv u v) w =
+    change convAlong R (λ_ o).inv (convAlong R ho.inv u v) w =
       convAlong R (ρ_ o).inv u (convAlong R ho.inv v w)
     exact convAlong_assoc R _ _ _ _ hα u v w
   comm_ee := fun x y => by
-    show convAlong R (λ_ (𝟙_ D)).inv x y =
+    change convAlong R (λ_ (𝟙_ D)).inv x y =
       convAlong R (λ_ (𝟙_ D)).inv y x
     exact convAlong_ee_comm R x y
   comm_eo := fun x u => by
-    show convAlong R (λ_ o).inv x u = convAlong R (ρ_ o).inv u x
+    change convAlong R (λ_ o).inv x u = convAlong R (ρ_ o).inv u x
     exact convAlong_eo_comm R x u
   comm_oo := fun u v => by
-    show convAlong R ho.inv u v = -convAlong R ho.inv v u
+    change convAlong R ho.inv u v = -convAlong R ho.inv v u
     exact convAlong_oo_comm R ho hβ u v
 
 end OddLine

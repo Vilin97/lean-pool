@@ -74,7 +74,7 @@ theorem coev_comp_ev :
         ε_ (SkeinObj.mk 1) (SkeinObj.mk 1) :
       (SkeinObj.mk 0 : SkeinObj f) ⟶ SkeinObj.mk 0) =
       circleVal f • 𝟙 (SkeinObj.mk 0) := by
-  show HomSpace.comp f 0 2 0 (coevClass f) (evClass f) = _
+  change HomSpace.comp f 0 2 0 (coevClass f) (evClass f) = _
   rw [coevClass, evClass, HomSpace.comp_ofFragment]
   rw [HomSpace.ofFragment_congr f circleComposeEquiv]
   rw [show HomSpace.ofFragment f.val (circlesClosed 1) =
@@ -109,7 +109,7 @@ theorem circleVal_model {k ℓ : ℕ}
           δ P.ω (SkeinObj.mk 1) (SkeinObj.mk 1)) =
         stdCopair k ℓ) :
     circleVal f = (k : ℂ) - 2 * ℓ := by
-  letI := P.braided
+  let := P.braided
   -- The categorical scalar of the circle is the circle value.
   have hcirc : ((ε P.ω ≫ P.ω.map
       (η_ (SkeinObj.mk 1 : SkeinObj f) (SkeinObj.mk 1) ≫
@@ -129,7 +129,7 @@ theorem circleVal_model {k ℓ : ℕ}
     rw [show (ε P.ω ≫ η P.ω : SuperVect.tensorUnit ⟶
         SuperVect.tensorUnit) = 𝟙 _ from
       Functor.Monoidal.ε_η P.ω]
-    show circleVal f * 1 = circleVal f
+    change circleVal f * 1 = circleVal f
     ring
   -- The same scalar through the standard model.
   have hsplit : ((ε P.ω ≫ P.ω.map

@@ -38,19 +38,19 @@ noncomputable def disjUnionAssoc (W₁ : Fragment α)
   vertexEquiv := _root_.Equiv.sumAssoc W₁.Vertex W₂.Vertex W₃.Vertex
   attach_comm f := by
     rcases f with (f | f) | f
-    · show ((W₁.attach f).map Sum.inl Sum.inl).map id
+    · change ((W₁.attach f).map Sum.inl Sum.inl).map id
           (_root_.Equiv.sumAssoc α β γ).symm =
         (((W₁.attach f).map Sum.inl Sum.inl).map Sum.inl
           Sum.inl).map
           (_root_.Equiv.sumAssoc W₁.Vertex W₂.Vertex W₃.Vertex) id
       rcases W₁.attach f with v | ℓ <;> rfl
-    · show (((W₂.attach f).map Sum.inl Sum.inl).map Sum.inr
+    · change (((W₂.attach f).map Sum.inl Sum.inl).map Sum.inr
           Sum.inr).map id (_root_.Equiv.sumAssoc α β γ).symm =
         (((W₂.attach f).map Sum.inr Sum.inr).map Sum.inl
           Sum.inl).map
           (_root_.Equiv.sumAssoc W₁.Vertex W₂.Vertex W₃.Vertex) id
       rcases W₂.attach f with v | ℓ <;> rfl
-    · show (((W₃.attach f).map Sum.inr Sum.inr).map Sum.inr
+    · change (((W₃.attach f).map Sum.inr Sum.inr).map Sum.inr
           Sum.inr).map id (_root_.Equiv.sumAssoc α β γ).symm =
         ((W₃.attach f).map Sum.inr Sum.inr).map
           (_root_.Equiv.sumAssoc W₁.Vertex W₂.Vertex W₃.Vertex) id
@@ -58,7 +58,7 @@ noncomputable def disjUnionAssoc (W₁ : Fragment α)
   pairing_comm f := by
     rcases f with (f | f) | f <;> rfl
   circles_eq := by
-    show W₁.circles + W₂.circles + W₃.circles =
+    change W₁.circles + W₂.circles + W₃.circles =
       W₁.circles + (W₂.circles + W₃.circles)
     omega
 
@@ -73,12 +73,12 @@ noncomputable def relabelDisjUnionLeft {α' : Type}
   vertexEquiv := _root_.Equiv.refl _
   attach_comm f := by
     rcases f with f | f
-    · show ((W.attach f).map Sum.inl Sum.inl).map id
+    · change ((W.attach f).map Sum.inl Sum.inl).map id
           (_root_.Equiv.sumCongr e (_root_.Equiv.refl β)) =
         (((W.attach f).map id e).map Sum.inl Sum.inl).map
           (_root_.Equiv.refl _) id
       rcases W.attach f with v | ℓ <;> rfl
-    · show ((W'.attach f).map Sum.inr Sum.inr).map id
+    · change ((W'.attach f).map Sum.inr Sum.inr).map id
           (_root_.Equiv.sumCongr e (_root_.Equiv.refl β)) =
         ((W'.attach f).map Sum.inr Sum.inr).map
           (_root_.Equiv.refl _) id
@@ -97,12 +97,12 @@ noncomputable def relabelDisjUnionRight {β' : Type}
   vertexEquiv := _root_.Equiv.refl _
   attach_comm f := by
     rcases f with f | f
-    · show ((W.attach f).map Sum.inl Sum.inl).map id
+    · change ((W.attach f).map Sum.inl Sum.inl).map id
           (_root_.Equiv.sumCongr (_root_.Equiv.refl α) e) =
         ((W.attach f).map Sum.inl Sum.inl).map
           (_root_.Equiv.refl _) id
       rcases W.attach f with v | ℓ <;> rfl
-    · show ((W'.attach f).map Sum.inr Sum.inr).map id
+    · change ((W'.attach f).map Sum.inr Sum.inr).map id
           (_root_.Equiv.sumCongr (_root_.Equiv.refl α) e) =
         (((W'.attach f).map id e).map Sum.inr Sum.inr).map
           (_root_.Equiv.refl _) id
@@ -268,7 +268,7 @@ theorem interfaceEquiv_symm_high (s t u : ℕ) (k : ℕ) (_hk : k < u)
         (interfacePairs s t u)).val =
       Sum.inr (⟨t + k, h2⟩ : Fin (t + u)) := by
   have hsurv := highG_surv s t u ⟨t + k, h2⟩
-    (by show t ≤ t + k; omega)
+    (by change t ≤ t + k; omega)
   have hy : ((interfaceSurvEquiv s t u).trans finSumFinEquiv)
       (⟨Sum.inr ⟨t + k, h2⟩, hsurv⟩ :
         Fragment.FoldSurviving (Fin (s + t) ⊕ Fin (t + u))
@@ -278,9 +278,9 @@ theorem interfaceEquiv_symm_high (s t u : ℕ) (k : ℕ) (_hk : k < u)
         (⟨Sum.inr ⟨t + k, h2⟩, hsurv⟩ :
           Fragment.FoldSurviving (Fin (s + t) ⊕ Fin (t + u))
             (interfacePairs s t u))
-        ⟨t + k, h2⟩ rfl (by show t ≤ t + k; omega))
+        ⟨t + k, h2⟩ rfl (by change t ≤ t + k; omega))
     rw [finSumFinEquiv_apply_right] at h3
-    exact h3.trans (Fin.ext (by show s + (t + k - t) = s + k; omega))
+    exact h3.trans (Fin.ext (by change s + (t + k - t) = s + k; omega))
   exact congrArg Subtype.val
     ((_root_.Equiv.symm_apply_eq _).mpr hy.symm)
 
@@ -443,6 +443,47 @@ noncomputable def glueListProofIrrel (W : Fragment α)
   Equiv.refl (glueList W ps h1)
 
 end Fragment
+
+/-- Pull gluing pairs through a relabelling and compose a normalized inner fold. -/
+noncomputable def glueListPullRelabelTrans {α β γ : Type} (W : Fragment α)
+    (σ : α ≃ β) (ps : List (β × β)) (hp : Fragment.PairsWF ps)
+    {V : Fragment γ}
+    {τ : γ ≃ Fragment.FoldSurviving α (Fragment.mapPairs σ.symm ps)}
+    (e : (Fragment.glueList W (Fragment.mapPairs σ.symm ps)
+        (Fragment.mapPairs_wf σ.symm ps hp)).Equiv (V.relabel τ)) :=
+  (Fragment.Equiv.relabelFlip'
+    (Fragment.glueListEqEquiv (W.relabel σ) (mapPairs_symm_cancel σ ps).symm
+      hp (Fragment.mapPairs_wf σ _ (Fragment.mapPairs_wf σ.symm ps hp))
+      ((mapPairs_symm_cancel σ ps).symm ▸ List.Perm.refl _))).trans
+    ((Fragment.Equiv.relabelCongr
+      ((Fragment.glueListRelabel W σ (Fragment.mapPairs σ.symm ps)
+        (Fragment.mapPairs_wf σ.symm ps hp)).trans
+        ((Fragment.Equiv.relabelCongr e
+          (Fragment.foldSurvivingMapEquiv σ (Fragment.mapPairs σ.symm ps))).trans
+          (Fragment.Equiv.relabelTrans _ _ _)))
+      (Fragment.foldSurvivingPermEquiv
+        ((mapPairs_symm_cancel σ ps).symm ▸ List.Perm.refl _)).symm).trans
+      (Fragment.Equiv.relabelTrans _ _ _))
+
+/-- Transport the two closure casts across a normalized right-hand fragment. -/
+noncomputable def pairCloseAmbientEquiv {n : ℕ} (F G : Fragment (Fin n))
+    {α : Type} {N : Fragment α} {e : α ≃ Fin n} (E : G.Equiv (N.relabel e)) :=
+  (Fragment.relabelDisjUnionLeft F
+    (G.relabel (finCongr (by omega : n = n + 0)))
+    (finCongr (by omega : n = 0 + n))).trans
+  ((Fragment.Equiv.relabelCongr
+    (Fragment.relabelDisjUnionRight F G (finCongr (by omega : n = n + 0)))
+    (_root_.Equiv.sumCongr (finCongr (by omega : n = 0 + n))
+      (_root_.Equiv.refl _))).trans
+  ((Fragment.Equiv.relabelTrans _ _ _).trans
+  ((Fragment.Equiv.relabelCongr
+    ((Fragment.Equiv.disjUnionCongr (Fragment.Equiv.refl F) E).trans
+      (Fragment.relabelDisjUnionRight F N e))
+    ((_root_.Equiv.sumCongr (_root_.Equiv.refl (Fin n))
+        (finCongr (by omega : n = n + 0))).trans
+      (_root_.Equiv.sumCongr (finCongr (by omega : n = 0 + n))
+        (_root_.Equiv.refl _)))).trans
+    (Fragment.Equiv.relabelTrans _ _ _))))
 
 /-! ### The left association, normalized -/
 
@@ -652,6 +693,15 @@ theorem rhs_pairs_eq (s t u v : ℕ)
       (congrArg Sum.inr
         (interfaceEquiv_symm_low t u v k hk h1 h2)))
 
+private theorem lhsOuterPairs_wf (s t u v : ℕ) :
+    Fragment.PairsWF
+      (Fragment.mapPairs (Fragment.inlFoldEquiv (β := Fin (u + v))
+          (interfacePairs s t u)).symm
+        (Fragment.mapPairs (_root_.Equiv.sumCongr
+            ((interfaceSurvEquiv s t u).trans finSumFinEquiv)
+            (_root_.Equiv.refl (Fin (u + v)))).symm (interfacePairs s u v))) :=
+  Fragment.mapPairs_wf _ _ (Fragment.mapPairs_wf _ _ (interfacePairs_wf s u v))
+
 /-- **The left association, normalized**: composing `F` with `G`
 and then with `H` is iterated gluing of the embedded
 `t`-interface pairs followed by the `u`-interface pairs over the
@@ -675,7 +725,7 @@ noncomputable def assocNormalLeft {s t u v : ℕ}
   let wfps' : Fragment.PairsWF ps' :=
     Fragment.mapPairs_wf σ.symm _ (interfacePairs_wf s u v)
   let wfps'' : Fragment.PairsWF ps'' :=
-    Fragment.mapPairs_wf i.symm _ wfps'
+    lhsOuterPairs_wf s t u v
   let A := (F.disjUnion G).disjUnion H
   let X := Fragment.glueList A
     (Fragment.inlPairs (interfacePairs s t u))
@@ -683,17 +733,7 @@ noncomputable def assocNormalLeft {s t u v : ℕ}
   let N₁ := Fragment.glueList (F.disjUnion G)
     (interfacePairs s t u) (interfacePairs_wf s t u)
   -- C8: the doubly-glued fragment against the two-stage fold.
-  have C8 : (Fragment.glueList X ps'' wfps'').Equiv
-      ((Fragment.glueList A
-          (Fragment.inlPairs (interfacePairs s t u) ++
-            uPairsAssoc s t u v)
-          (assocPairs_wf s t u v)).relabel
-        ((Fragment.appendFlatten _ _
-            ((assocPairs_wf s t u v).append_sep)).symm.trans
-          (Fragment.foldSurvivingPermEquiv
-            ((lhs_pairs_eq s t u v
-              ((assocPairs_wf s t u v).append_sep)) ▸
-              List.Perm.refl _)).symm)) :=
+  have C8 :=
     (Fragment.Equiv.relabelFlip'
       (Fragment.glueListEqEquiv X
         (lhs_pairs_eq s t u v ((assocPairs_wf s t u v).append_sep))
@@ -733,7 +773,7 @@ noncomputable def assocNormalLeft {s t u v : ℕ}
           List.Perm.refl _)).symm).trans
     (Fragment.Equiv.relabelTrans _ _ _))
   -- E4: the glued left factor is the embedded fold, relabelled.
-  have E4 : (N₁.disjUnion H).Equiv (X.relabel i) :=
+  have E4 :=
     (Fragment.Equiv.relabelFlip
       (Fragment.glueListDisjUnionLeft (F.disjUnion G) H
         (interfacePairs s t u)
@@ -766,8 +806,7 @@ noncomputable def assocNormalLeft {s t u v : ℕ}
           List.Perm.refl _)).symm).trans
     (Fragment.Equiv.relabelTrans _ _ _))
   -- E1: normalize the inner composition inside the disjoint union.
-  have E1 : ((F.compose G).disjUnion H).Equiv
-      ((N₁.disjUnion H).relabel σ) :=
+  have E1 :=
     (Fragment.Equiv.disjUnionCongr (composeNormal F G)
       (Fragment.Equiv.refl H)).trans
     (Fragment.relabelDisjUnionLeft N₁ H
@@ -796,6 +835,10 @@ noncomputable def rhsQs1 (s t u v : ℕ) :
     (_root_.Equiv.sumCongr (_root_.Equiv.refl (Fin (s + t)))
       ((interfaceSurvEquiv t u v).trans finSumFinEquiv)).symm
     (interfacePairs s t v)
+
+private theorem rhsQs1_wf (s t u v : ℕ) :
+    Fragment.PairsWF (rhsQs1 s t u v) :=
+  Fragment.mapPairs_wf _ _ (interfacePairs_wf s t v)
 
 /-- The outer interface pairs, pulled into the right-embedded
 fold survivors. -/
@@ -866,6 +909,10 @@ noncomputable def rhsLabelEquiv (s t u v : ℕ) :
                       ((interfaceSurvEquiv s t v).trans
                         finSumFinEquiv)))))))))))
 
+private theorem rhsQs3_wf (s t u v : ℕ) :
+    Fragment.PairsWF (rhsQs3 s t u v) :=
+  Fragment.mapPairs_wf _ _ (Fragment.mapPairs_wf _ _ (rhsQs1_wf s t u v))
+
 /-- **The right association, normalized**: composing `F` with the
 composition of `G` and `H` is the same iterated gluing over the
 common ambient, through the associativity bridge. -/
@@ -888,11 +935,11 @@ noncomputable def assocNormalRight {s t u v : ℕ}
   let e2a := (_root_.Equiv.sumAssoc (Fin (s + t)) (Fin (t + u))
     (Fin (u + v))).symm.symm
   let wfqs1 : Fragment.PairsWF (rhsQs1 s t u v) :=
-    Fragment.mapPairs_wf σ'.symm _ (interfacePairs_wf s t v)
+    rhsQs1_wf s t u v
   let wfqs2 : Fragment.PairsWF (rhsQs2 s t u v) :=
     Fragment.mapPairs_wf i'.symm _ wfqs1
   let wfqs3 : Fragment.PairsWF (rhsQs3 s t u v) :=
-    Fragment.mapPairs_wf (rhsBridgeEquiv s t u v).symm _ wfqs2
+    rhsQs3_wf s t u v
   let uA' := Fragment.mapPairs e2a.symm
     (Fragment.inrPairs (α := Fin (s + t)) (interfacePairs t u v))
   let wfuA' : Fragment.PairsWF uA' :=
@@ -911,19 +958,7 @@ noncomputable def assocNormalRight {s t u v : ℕ}
     ((assocPairsR_wf s t u v).append_left)
   -- ═══════ STAGE 1: THE REORDER AND THE APPEND MERGE ═══════
   -- CP: reorder and rename the pair blocks.
-  have CP : YR.Equiv
-      ((Fragment.glueList A
-          (Fragment.inlPairs (interfacePairs s t u) ++
-            uPairsAssoc s t u v)
-          (assocPairs_wf s t u v)).relabel
-        ((Fragment.foldSurvivingPermEquiv
-            ((congrArg (· ++ uPairsAssoc s t u v)
-              (tPairsAssoc_eq s t u v)) ▸
-              List.Perm.refl _)).symm.trans
-          (Fragment.foldSurvivingPermEquiv
-            (List.perm_append_comm
-              (l₁ := uPairsAssoc s t u v)
-              (l₂ := tPairsAssoc s t u v))).symm)) :=
+  have CP :=
     (Fragment.glueListPerm A
       (List.perm_append_comm
         (l₁ := uPairsAssoc s t u v)
@@ -948,25 +983,7 @@ noncomputable def assocNormalRight {s t u v : ℕ}
           (l₂ := tPairsAssoc s t u v))).symm).trans
     (Fragment.Equiv.relabelTrans _ _ _))
   -- CR8: the append merge, with the reorder folded in.
-  have CR8 : (Fragment.glueList UPA (rhsQs3 s t u v) wfqs3).Equiv
-      ((Fragment.glueList A
-          (Fragment.inlPairs (interfacePairs s t u) ++
-            uPairsAssoc s t u v)
-          (assocPairs_wf s t u v)).relabel
-        (((Fragment.foldSurvivingPermEquiv
-            ((congrArg (· ++ uPairsAssoc s t u v)
-              (tPairsAssoc_eq s t u v)) ▸
-              List.Perm.refl _)).symm.trans
-          (Fragment.foldSurvivingPermEquiv
-            (List.perm_append_comm
-              (l₁ := uPairsAssoc s t u v)
-              (l₂ := tPairsAssoc s t u v))).symm).trans
-          ((Fragment.appendFlatten _ _
-              ((assocPairsR_wf s t u v).append_sep)).symm.trans
-            (Fragment.foldSurvivingPermEquiv
-              ((rhs_pairs_eq s t u v
-                ((assocPairsR_wf s t u v).append_sep)) ▸
-                List.Perm.refl _)).symm))) :=
+  have CR8 :=
     (Fragment.Equiv.relabelFlip'
       (Fragment.glueListEqEquiv UPA
         (rhs_pairs_eq s t u v
@@ -994,7 +1011,7 @@ noncomputable def assocNormalRight {s t u v : ℕ}
     (Fragment.Equiv.relabelTrans _ _ _))
   -- ═══════ STAGE 2: THE ASSOCIATIVITY BRIDGE ═══════
   -- CRX: the associativity bridge on the inner fold.
-  have CRX : XR.Equiv (UPA.relabel (rhsBridgeEquiv s t u v)) :=
+  have CRX :=
     (Fragment.glueListCongr
       (Fragment.Equiv.relabelFlip (Fragment.disjUnionAssoc F G H))
       _ _).trans
@@ -1027,14 +1044,7 @@ noncomputable def assocNormalRight {s t u v : ℕ}
           List.Perm.refl _)).symm).trans
     (Fragment.Equiv.relabelTrans _ _ _)))
   -- CR5: transport the outer pairs across the bridge.
-  have CR5 : (Fragment.glueList XR (rhsQs2 s t u v) wfqs2).Equiv
-      ((Fragment.glueList UPA (rhsQs3 s t u v) wfqs3).relabel
-        ((Fragment.foldSurvivingMapEquiv (rhsBridgeEquiv s t u v)
-            (rhsQs3 s t u v)).trans
-          (Fragment.foldSurvivingPermEquiv
-            ((mapPairs_symm_cancel (rhsBridgeEquiv s t u v)
-              (rhsQs2 s t u v)).symm ▸
-              List.Perm.refl _)).symm)) :=
+  have CR5 :=
     (Fragment.glueListCongr CRX _ _).trans
     ((Fragment.Equiv.relabelFlip'
       (Fragment.glueListEqEquiv
@@ -1056,20 +1066,14 @@ noncomputable def assocNormalRight {s t u v : ℕ}
     (Fragment.Equiv.relabelTrans _ _ _)))
   -- ═══════ STAGE 3: THE EMBEDDED FOLD ═══════
   -- ER4: the inner composition is the embedded fold.
-  have ER4 : (F.disjUnion N₂).Equiv (XR.relabel i') :=
+  have ER4 :=
     (Fragment.Equiv.relabelFlip
       (Fragment.glueListDisjUnionRight F (G.disjUnion H)
         (interfacePairs t u v)
         (interfacePairs_wf t u v))).trans
     (Fragment.Equiv.relabelEq XR (_root_.Equiv.symm_symm i'))
   -- CR3: the i'-relabelling stage.
-  have CR3 : (Fragment.glueList (F.disjUnion N₂)
-      (rhsQs1 s t u v) wfqs1).Equiv
-      ((Fragment.glueList XR (rhsQs2 s t u v) wfqs2).relabel
-        ((Fragment.foldSurvivingMapEquiv i' (rhsQs2 s t u v)).trans
-          (Fragment.foldSurvivingPermEquiv
-            ((mapPairs_symm_cancel i' (rhsQs1 s t u v)).symm ▸
-              List.Perm.refl _)).symm)) :=
+  have CR3 :=
     (Fragment.glueListCongr ER4 _ _).trans
     ((Fragment.Equiv.relabelFlip'
       (Fragment.glueListEqEquiv (XR.relabel i')
@@ -1086,22 +1090,13 @@ noncomputable def assocNormalRight {s t u v : ℕ}
     (Fragment.Equiv.relabelTrans _ _ _)))
   -- ═══════ STAGE 4: THE INNER COMPOSITION, NORMALIZED ═══════
   -- ER1: normalize the inner composition.
-  have ER1 : (F.disjUnion (G.compose H)).Equiv
-      ((F.disjUnion N₂).relabel σ') :=
+  have ER1 :=
     (Fragment.Equiv.disjUnionCongr (Fragment.Equiv.refl F)
       (composeNormal G H)).trans
     (Fragment.relabelDisjUnionRight F N₂
       ((interfaceSurvEquiv t u v).trans finSumFinEquiv))
   -- CR1: the σ'-relabelling stage.
-  have CR1 : (Fragment.glueList (F.disjUnion (G.compose H))
-      (interfacePairs s t v) (interfacePairs_wf s t v)).Equiv
-      ((Fragment.glueList (F.disjUnion N₂)
-          (rhsQs1 s t u v) wfqs1).relabel
-        ((Fragment.foldSurvivingMapEquiv σ' (rhsQs1 s t u v)).trans
-          (Fragment.foldSurvivingPermEquiv
-            ((mapPairs_symm_cancel σ'
-              (interfacePairs s t v)).symm ▸
-              List.Perm.refl _)).symm)) :=
+  have CR1 :=
     (Fragment.glueListCongr ER1 _ _).trans
     ((Fragment.Equiv.relabelFlip'
       (Fragment.glueListEqEquiv ((F.disjUnion N₂).relabel σ')
@@ -1177,7 +1172,7 @@ theorem label_equiv_meet (s t u v : ℕ) :
       exact (hxp _ hmem).2
         (congrArg Sum.inr (Fin.ext (rfl : b.val = b.val)))
     · exact Fin.ext
-        (by show s + (b.val - u) = s + (t + (b.val - u) - t); omega)
+        (by change s + (b.val - u) = s + (t + (b.val - u) - t); omega)
 
 /-- **Associativity of composition**: the two associations of a
 triple composition are equivalent fragments. -/

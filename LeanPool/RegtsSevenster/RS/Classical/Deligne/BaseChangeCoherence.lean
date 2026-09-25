@@ -100,7 +100,6 @@ theorem projFormula_cover
       (whiskerLeft_collapseMid A B φ (baseChangeMod φ M) N)
       h) ?_
     rw [collapseCover]
-    simp only [Category.assoc]
   rw [hpf]
   refine Eq.trans (hmid _) ?_
   refine whisker_eq _ (whisker_eq _ ?_)
@@ -165,10 +164,10 @@ theorem actRight_modTensor_restrictRegular
       ((baseChangeMod φ M).X ◁ φ) ≫
         actRight B (baseChangeMod φ M).X := by
   have h := actLeft_restrict_baseChange A B φ M
-  show (β_ (baseChange φ M) A).hom ≫
+  change (β_ (baseChange φ M) A).hom ≫
     modTensorAct A (restrictRegular φ) M = _
   rw [← h]
-  show (β_ (baseChange φ M) A).hom ≫ (φ ▷ baseChange φ M) ≫
+  change (β_ (baseChange φ M) A).hom ≫ (φ ▷ baseChange φ M) ≫
       baseChangeAct φ M =
     ((baseChange φ M) ◁ φ) ≫ (β_ (baseChange φ M) B).hom ≫
       baseChangeAct φ M
@@ -252,7 +251,7 @@ theorem actRight_toRegular
     actRight A Q.X ≫ g.hom = (g.hom ▷ A) ≫ μ[A] := by
   have hlin : actLeft A Q.X ≫ g.hom = (A ◁ g.hom) ≫ μ[A] :=
     g.isModHom.smul_hom
-  show ((β_ Q.X A).hom ≫ actLeft A Q.X) ≫ g.hom = _
+  change ((β_ Q.X A).hom ≫ actLeft A Q.X) ≫ g.hom = _
   rw [Category.assoc, hlin,
     ← BraidedCategory.braiding_naturality_left_assoc,
     IsCommMonObj.mul_comm]
@@ -406,7 +405,7 @@ theorem whiskerRight_modTensorπ_actRight_baseChange
       ((β_ (B ⊗ M.X) B).hom ≫ (α_ B B M.X).inv ≫
           (μ[B] ▷ M.X)) ≫
         modTensorπ A (restrictRegular φ) M := by
-  show (modTensorπ A (restrictRegular φ) M ▷ B) ≫
+  change (modTensorπ A (restrictRegular φ) M ▷ B) ≫
       (β_ (baseChange φ M) B).hom ≫ baseChangeAct φ M = _
   refine Eq.trans (Category.assoc _ _ _).symm ?_
   refine Eq.trans (eq_whisker

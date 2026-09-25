@@ -21,7 +21,7 @@ transposition conjugations.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 

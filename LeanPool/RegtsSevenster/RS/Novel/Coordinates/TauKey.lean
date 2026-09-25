@@ -18,7 +18,7 @@ pair enumeration alone.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 

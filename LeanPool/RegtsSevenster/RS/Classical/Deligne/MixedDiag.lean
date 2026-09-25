@@ -334,11 +334,11 @@ noncomputable def diagPermHom
     where
   toFun σ := permMor X n σ ⊗ₘ permMor Y n σ
   map_one' := by
-    show permMor X n 1 ⊗ₘ permMor Y n 1 =
+    change permMor X n 1 ⊗ₘ permMor Y n 1 =
       𝟙 (tensorPow A X n ⊗ tensorPow A Y n)
     rw [permMor_one, permMor_one, MonoidalCategory.id_tensorHom_id]
   map_mul' σ τ := by
-    show permMor X n (σ * τ) ⊗ₘ permMor Y n (σ * τ) =
+    change permMor X n (σ * τ) ⊗ₘ permMor Y n (σ * τ) =
       (permMor X n τ ⊗ₘ permMor Y n τ) ≫
         (permMor X n σ ⊗ₘ permMor Y n σ)
     rw [permMor_mul, permMor_mul,

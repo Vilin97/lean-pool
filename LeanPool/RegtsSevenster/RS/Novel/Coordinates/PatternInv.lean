@@ -16,7 +16,7 @@ participating slots, a pure `(W, F)` quantity.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 

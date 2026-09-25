@@ -93,13 +93,14 @@ theorem basisProj_ne_zero [AddCommGroup V] [Module ℂ V] {d : ℕ}
 has a simple submodule of the regular module inside its block: a
 simple submodule on which it multiplies as the identity. -/
 theorem exists_simple_of_central_idem {G : Type*} [Group G]
-    [Fintype G] (e : MonoidAlgebra ℂ G) (hidem : e * e = e)
+    [Finite G] (e : MonoidAlgebra ℂ G) (hidem : e * e = e)
     (hcentral : ∀ x : MonoidAlgebra ℂ G, e * x = x * e)
     (hne : e ≠ 0) :
     ∃ S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G),
       IsSimpleModule (MonoidAlgebra ℂ G) S ∧
         ∀ s ∈ S, e * s = s := by
   classical
+  let := Fintype.ofFinite G
   have hex : ∃ T : Submodule (MonoidAlgebra ℂ G)
       (MonoidAlgebra ℂ G),
       IsSimpleModule (MonoidAlgebra ℂ G) T ∧
@@ -109,13 +110,13 @@ theorem exists_simple_of_central_idem {G : Type*} [Group G]
     exact hne (eq_zero_of_kills_simples e fun T hT t ht =>
       hno T hT t ht)
   obtain ⟨T, hT, t, ht, het⟩ := hex
-  haveI := hT
+  have := hT
   let g : T →ₗ[MonoidAlgebra ℂ G] MonoidAlgebra ℂ G :=
     { toFun := fun s => e * (s : MonoidAlgebra ℂ G)
       map_add' := fun a b => by
         rw [Submodule.coe_add, mul_add]
       map_smul' := fun a s => by
-        show e * ((a • s : T) : MonoidAlgebra ℂ G) =
+        change e * ((a • s : T) : MonoidAlgebra ℂ G) =
           a • (e * (s : MonoidAlgebra ℂ G))
         rw [Submodule.coe_smul, smul_eq_mul, smul_eq_mul,
           ← mul_assoc, hcentral a, mul_assoc] }
@@ -157,11 +158,12 @@ theorem nPsi_eq_one_of_forall_eq {G : Type*} [Group G]
 
 /-- The native action of a simple submodule of the regular module
 is surjective onto the endomorphisms of its carrier. -/
-theorem nPsi_surjective {G : Type*} [Group G] [Fintype G]
-    [DecidableEq G]
+theorem nPsi_surjective {G : Type*} [Group G] [Finite G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G))
     (hS : IsSimpleModule (MonoidAlgebra ℂ G) S) :
     Function.Surjective (nPsi S) := by
+  classical
+  let := Fintype.ofFinite G
   intro T
   obtain ⟨y, hy⟩ := mPsiLin_surjective S hS
     ((stdEquiv S).toLinearMap ∘ₗ T ∘ₗ
@@ -208,10 +210,10 @@ theorem SchurPackage.exists_block_units (P : SchurPackage.{u})
   -- A simple submodule inside the block.
   obtain ⟨S, hS, hSb⟩ :=
     exists_simple_of_central_idem (P.e μ) hidem hcentral hne
-  haveI := hS
-  haveI := IsSimpleModule.nontrivial
+  have := hS
+  have := IsSimpleModule.nontrivial
     (MonoidAlgebra ℂ (Equiv.Perm (Fin μ.card))) S
-  haveI : Nontrivial (subCarrier S) :=
+  have : Nontrivial (subCarrier S) :=
     inferInstanceAs (Nontrivial S)
   have hone : nPsi S (P.e μ) = 1 :=
     nPsi_eq_one_of_forall_eq S (P.e μ) hSb
@@ -242,7 +244,7 @@ theorem SchurPackage.exists_block_units (P : SchurPackage.{u})
         (nPsi S) : SymGroupAlgebra μ.card →ₐ[ℂ]
           ULift.{u} (Module.End ℂ (subCarrier S)))
         (P.e μ * x) = 0 := by
-      show (ULift.algEquiv (R := ℂ)).symm
+      change (ULift.algEquiv (R := ℂ)).symm
         (nPsi S (P.e μ * x)) = 0
       rw [hx0, map_zero]
     exact P.block_faithful μ
@@ -279,7 +281,7 @@ theorem SchurPackage.exists_block_units (P : SchurPackage.{u})
         LinearMap.range (LinearMap.mulLeft ℂ (P.e μ)) :=
       LinearMap.mem_range.mpr ⟨x, rfl⟩
     refine ⟨⟨P.e μ * x, hmem⟩, ?_⟩
-    show nPsi S (P.e μ * x) = T
+    change nPsi S (P.e μ * x) = T
     rw [map_mul, hone, one_mul, hx]
   have hdim : P.dim μ = nDim S := by
     have hfr := LinearEquiv.finrank_eq

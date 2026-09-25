@@ -83,7 +83,7 @@ lemma tripleResolve_inv
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (X : Mod D A)
     (Y : Mod D A) (Z : Mod D A) :
     tripleResolve A X Y Z ≫ tripleResolveInv A X Y Z = 𝟙 _ := by
-  show (X.X ◁ (Y.X ◁ (ρ_ Z.X).hom)) ≫
+  change (X.X ◁ (Y.X ◁ (ρ_ Z.X).hom)) ≫
       (X.X ◁ (Y.X ◁ (ρ_ Z.X).inv)) =
     𝟙 (X.X ⊗ (Y.X ⊗ (Z.X ⊗ 𝟙_ D)))
   rw [← MonoidalCategory.whiskerLeft_comp,
@@ -95,7 +95,7 @@ lemma tripleResolveInv_resolve
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (X : Mod D A)
     (Y : Mod D A) (Z : Mod D A) :
     tripleResolveInv A X Y Z ≫ tripleResolve A X Y Z = 𝟙 _ := by
-  show (X.X ◁ (Y.X ◁ (ρ_ Z.X).inv)) ≫
+  change (X.X ◁ (Y.X ◁ (ρ_ Z.X).inv)) ≫
       (X.X ◁ (Y.X ◁ (ρ_ Z.X).hom)) =
     𝟙 (X.X ⊗ (Y.X ⊗ Z.X))
   rw [← MonoidalCategory.whiskerLeft_comp,
@@ -129,7 +129,7 @@ lemma tripleLegFst_resolve
         tripleResolve A X Y Z =
       tripleSeedFst A X Y Z ≫ (w ▷ Z.X) ≫
         (α_ X.X Y.X Z.X).hom := by
-  show ((w ▷ (Z.X ⊗ 𝟙_ D)) ≫
+  change ((w ▷ (Z.X ⊗ 𝟙_ D)) ≫
         (α_ X.X Y.X (Z.X ⊗ 𝟙_ D)).hom) ≫
       𝟙 (X.X ⊗ (Y.X ⊗ (Z.X ⊗ 𝟙_ D))) ≫
         (X.X ◁ (Y.X ◁ (ρ_ Z.X).hom)) =
@@ -150,7 +150,7 @@ lemma tripleLegFst_resolveInv
         tripleResolveInv A X Y Z =
       tripleSeedFstInv A X Y Z ≫ modMultiLegOf A X Y [Z] w [] ≫
         modListCast A h := by
-  show (w ▷ Z.X) ≫ (α_ X.X Y.X Z.X).hom ≫
+  change (w ▷ Z.X) ≫ (α_ X.X Y.X Z.X).hom ≫
       (X.X ◁ (Y.X ◁ (ρ_ Z.X).inv)) =
     (((X.X ⊗ A) ⊗ Y.X) ◁ (ρ_ Z.X).inv) ≫
       ((w ▷ (Z.X ⊗ 𝟙_ D)) ≫
@@ -185,7 +185,7 @@ lemma tripleLegSnd_resolve
     modMultiLegOf A Y Z [] w [X] ≫ modListCast A h ≫
         tripleResolve A X Y Z =
       tripleSeedSnd A X Y Z ≫ (X.X ◁ w) := by
-  show (X.X ◁ ((w ▷ 𝟙_ D) ≫ (α_ Y.X Z.X (𝟙_ D)).hom)) ≫
+  change (X.X ◁ ((w ▷ 𝟙_ D) ≫ (α_ Y.X Z.X (𝟙_ D)).hom)) ≫
       𝟙 (X.X ⊗ (Y.X ⊗ (Z.X ⊗ 𝟙_ D))) ≫
         (X.X ◁ (Y.X ◁ (ρ_ Z.X).hom)) =
     (X.X ◁ (ρ_ ((Y.X ⊗ A) ⊗ Z.X)).hom) ≫ (X.X ◁ w)
@@ -207,7 +207,7 @@ lemma tripleLegSnd_resolveInv
     (X.X ◁ w) ≫ tripleResolveInv A X Y Z =
       tripleSeedSndInv A X Y Z ≫
         modMultiLegOf A Y Z [] w [X] ≫ modListCast A h := by
-  show (X.X ◁ w) ≫ (X.X ◁ (Y.X ◁ (ρ_ Z.X).inv)) =
+  change (X.X ◁ w) ≫ (X.X ◁ (Y.X ◁ (ρ_ Z.X).inv)) =
     (X.X ◁ (ρ_ ((Y.X ⊗ A) ⊗ Z.X)).inv) ≫
       ((X.X ◁ ((w ▷ 𝟙_ D) ≫ (α_ Y.X Z.X (𝟙_ D)).hom)) ≫
         𝟙 (X.X ⊗ (Y.X ⊗ (Z.X ⊗ 𝟙_ D))))
@@ -343,7 +343,7 @@ lemma tripleResolveInv_snd_rel
   have hrel := modMulti_rel A [X] Y Z []
     (rfl : [X, Y, Z] = [X] ++ Y :: Z :: [])
   rw [modMultiLegM, modMultiLegN] at hrel
-  show (X.X ◁ modTensorLegM A Y Z) ≫ tripleResolveInv A X Y Z ≫
+  change (X.X ◁ modTensorLegM A Y Z) ≫ tripleResolveInv A X Y Z ≫
       modMultiπ A [X, Y, Z] =
     (X.X ◁ modTensorLegN A Y Z) ≫ tripleResolveInv A X Y Z ≫
       modMultiπ A [X, Y, Z]
@@ -389,7 +389,7 @@ lemma tripleInvMid_cond
       modTensorLegN A (modTensorMod A X Y) Z ≫
         tripleInvMid A X Y Z := by
   refine (cancel_epi ((modTensorπ A X Y ▷ A) ▷ Z.X)).mp ?_
-  show ((modTensorπ A X Y ▷ A) ▷ Z.X) ≫
+  change ((modTensorπ A X Y ▷ A) ▷ Z.X) ≫
       (((β_ (modTensor A X Y) A).hom ≫ modTensorAct A X Y) ▷
         Z.X) ≫
       tripleInvMid A X Y Z =
@@ -453,7 +453,6 @@ lemma whiskerRight_modTensorπ_tripleInv
         modMultiTripleInv A X Y Z =
       (α_ X.X Y.X Z.X).hom ≫ tripleResolveInv A X Y Z ≫
         modMultiπ A [X, Y, Z] := by
-  repeat' erw [Category.assoc]
   erw [modTensorπ_tripleInv]
   erw [whiskerRight_modTensorπ_tripleInvMid, tripleInvCover]
 
@@ -491,7 +490,7 @@ lemma modMultiTripleInv_tripleHom
   apply modTensor_hom_ext
   rw [modTensorπ_tripleInv_assoc, Category.comp_id]
   apply modTensor_whiskerR_hom_ext A X Y Z.X
-  show (modTensorπ A X Y ▷ Z.X) ≫ tripleInvMid A X Y Z ≫
+  change (modTensorπ A X Y ▷ Z.X) ≫ tripleInvMid A X Y Z ≫
       modMultiTripleHom A X Y Z =
     (modTensorπ A X Y ▷ Z.X) ≫ modTensorπ A (modTensorMod A X Y) Z
   rw [whiskerRight_modTensorπ_tripleInvMid_assoc, tripleInvCover]

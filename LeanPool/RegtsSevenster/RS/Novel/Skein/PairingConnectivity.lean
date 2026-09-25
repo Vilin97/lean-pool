@@ -19,7 +19,7 @@ of the signed summand from connectivity and the per-step ledger.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 

@@ -526,7 +526,7 @@ lemma pairResolve_inv
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (X : Mod D A)
     (Y : Mod D A) :
     pairResolve A X Y ≫ pairResolveInv A X Y = 𝟙 _ := by
-  show (X.X ◁ (ρ_ Y.X).hom) ≫ (X.X ◁ (ρ_ Y.X).inv) =
+  change (X.X ◁ (ρ_ Y.X).hom) ≫ (X.X ◁ (ρ_ Y.X).inv) =
     𝟙 (X.X ⊗ (Y.X ⊗ 𝟙_ D))
   rw [← MonoidalCategory.whiskerLeft_comp, Iso.hom_inv_id,
     MonoidalCategory.whiskerLeft_id]
@@ -536,7 +536,7 @@ lemma pairResolveInv_resolve
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (X : Mod D A)
     (Y : Mod D A) :
     pairResolveInv A X Y ≫ pairResolve A X Y = 𝟙 _ := by
-  show (X.X ◁ (ρ_ Y.X).inv) ≫ (X.X ◁ (ρ_ Y.X).hom) =
+  change (X.X ◁ (ρ_ Y.X).inv) ≫ (X.X ◁ (ρ_ Y.X).hom) =
     𝟙 (X.X ⊗ Y.X)
   rw [← MonoidalCategory.whiskerLeft_comp, Iso.inv_hom_id,
     MonoidalCategory.whiskerLeft_id]
@@ -567,7 +567,7 @@ lemma modMultiLeg_pair_resolve
       pairSeed A X Y ≫ w := by
   have hcoh : (α_ X.X Y.X (𝟙_ D)).hom ≫ (X.X ◁ (ρ_ Y.X).hom) =
       (ρ_ (X.X ⊗ Y.X)).hom := by monoidal
-  show ((w ▷ 𝟙_ D) ≫ (α_ X.X Y.X (𝟙_ D)).hom) ≫
+  change ((w ▷ 𝟙_ D) ≫ (α_ X.X Y.X (𝟙_ D)).hom) ≫
       𝟙 (X.X ⊗ (Y.X ⊗ 𝟙_ D)) ≫ (X.X ◁ (ρ_ Y.X).hom) =
     (ρ_ ((X.X ⊗ A) ⊗ Y.X)).hom ≫ w
   rw [Category.id_comp, Category.assoc, hcoh, rightUnitor_naturality]
@@ -585,7 +585,7 @@ lemma modMultiLeg_pair_resolveInv
         modListCast A h := by
   have hcoh : (ρ_ (X.X ⊗ Y.X)).inv ≫ (α_ X.X Y.X (𝟙_ D)).hom =
       X.X ◁ (ρ_ Y.X).inv := by monoidal
-  show w ≫ (X.X ◁ (ρ_ Y.X).inv) =
+  change w ≫ (X.X ◁ (ρ_ Y.X).inv) =
     (ρ_ ((X.X ⊗ A) ⊗ Y.X)).inv ≫
       ((w ▷ 𝟙_ D) ≫ (α_ X.X Y.X (𝟙_ D)).hom) ≫
         𝟙 (X.X ⊗ (Y.X ⊗ 𝟙_ D))
@@ -700,7 +700,7 @@ lemma modListConcat_cons_whisker
     ((P.X ◁ u) ▷ modList A Ys) ≫ (modListConcat A (P :: T) Ys).hom =
       (α_ P.X S (modList A Ys)).hom ≫
         (P.X ◁ ((u ▷ modList A Ys) ≫ (modListConcat A T Ys).hom)) := by
-  show ((P.X ◁ u) ▷ modList A Ys) ≫
+  change ((P.X ◁ u) ▷ modList A Ys) ≫
       ((α_ P.X (modList A T) (modList A Ys)).hom ≫
         (P.X ◁ (modListConcat A T Ys).hom)) =
     (α_ P.X S (modList A Ys)).hom ≫
@@ -719,7 +719,7 @@ lemma modListConcat_whiskerLeft_cons
       (α_ P.X (modList A Xs) S).hom ≫
         (P.X ◁ ((modList A Xs ◁ u) ≫
           (modListConcat A Xs T).hom)) := by
-  show ((P.X ⊗ modList A Xs) ◁ u) ≫
+  change ((P.X ⊗ modList A Xs) ◁ u) ≫
       ((α_ P.X (modList A Xs) (modList A T)).hom ≫
         (P.X ◁ (modListConcat A Xs T).hom)) =
     (α_ P.X (modList A Xs) S).hom ≫
@@ -765,7 +765,7 @@ lemma modMultiLegOf_concat_nil
         (modListConcat A (M :: N :: post) Ys).hom =
       modMultiMidConcat A M N post Ys [] ≫
         modMultiLegOf A M N (post ++ Ys) w [] := by
-  show (((w ▷ modList A post) ≫
+  change (((w ▷ modList A post) ≫
         (α_ M.X N.X (modList A post)).hom) ▷ modList A Ys) ≫
       ((α_ M.X (N.X ⊗ modList A post) (modList A Ys)).hom ≫
         (M.X ◁ ((α_ N.X (modList A post) (modList A Ys)).hom ≫
@@ -800,7 +800,7 @@ lemma modMultiLegOf_concat
       Category.comp_id]
     exact modMultiLegOf_concat_nil A M N post Ys w
   | P :: rest, h => by
-    show ((P.X ◁ modMultiLegOf A M N post w rest) ▷ modList A Ys) ≫
+    change ((P.X ◁ modMultiLegOf A M N post w rest) ▷ modList A Ys) ≫
         (modListConcat A (P :: (rest ++ M :: N :: post)) Ys).hom =
       ((α_ P.X (modMultiMid A rest M N post) (modList A Ys)).hom ≫
           (P.X ◁ modMultiMidConcat A M N post Ys rest)) ≫
@@ -841,7 +841,7 @@ lemma modMultiLegOf_concatL
       modMultiMidConcatL A pre M N post Xs ≫
         modMultiLegOf A M N post w (Xs ++ pre) ≫ modListCast A h
   | [], h => by
-    show ((𝟙_ D) ◁ modMultiLegOf A M N post w pre) ≫
+    change ((𝟙_ D) ◁ modMultiLegOf A M N post w pre) ≫
         (λ_ (modList A (pre ++ M :: N :: post))).hom =
       (λ_ (modMultiMid A pre M N post)).hom ≫
         modMultiLegOf A M N post w pre ≫
@@ -850,7 +850,7 @@ lemma modMultiLegOf_concatL
   | P :: rest, h => by
     rw [modListConcat_whiskerLeft_cons A P rest,
       modMultiLegOf_concatL A pre M N post w rest (by simp)]
-    show (α_ P.X (modList A rest) (modMultiMid A pre M N post)).hom ≫
+    change (α_ P.X (modList A rest) (modMultiMid A pre M N post)).hom ≫
         (P.X ◁ (modMultiMidConcatL A pre M N post rest ≫
           modMultiLegOf A M N post w (rest ++ pre) ≫
             modListCast A (show (rest ++ pre) ++ M :: N :: post =
@@ -879,11 +879,13 @@ whiskered injections. -/
 lemma biproduct_whiskerRight_hom_ext
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [MonoidalPreadditive D] [HasFiniteBiproducts D]
-    {J : Type} [Fintype J]
+    {J : Type} [Finite J]
     (f : J → D) (P : D) {W : D} {u v : (⨁ f) ⊗ P ⟶ W}
     (h : ∀ j, (biproduct.ι f j ▷ P) ≫ u =
       (biproduct.ι f j ▷ P) ≫ v) :
     u = v := by
+  classical
+  let := Fintype.ofFinite J
   apply (cancel_epi (rightDistributor f P).inv).mp
   apply biproduct.hom_ext'
   intro j
@@ -896,11 +898,13 @@ whiskered injections. -/
 lemma biproduct_whiskerLeft_hom_ext
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [MonoidalPreadditive D] [HasFiniteBiproducts D]
-    {J : Type} [Fintype J]
+    {J : Type} [Finite J]
     (f : J → D) (P : D) {W : D} {u v : P ⊗ (⨁ f) ⟶ W}
     (h : ∀ j, (P ◁ biproduct.ι f j) ≫ u =
       (P ◁ biproduct.ι f j) ≫ v) :
     u = v := by
+  classical
+  let := Fintype.ofFinite J
   apply (cancel_epi (leftDistributor P f).inv).mp
   apply biproduct.hom_ext'
   intro j
@@ -1260,7 +1264,7 @@ lemma modListHeadAct_window
       ((α_ A M.X N.X).inv ▷ modList A post) ≫
         (α_ (A ⊗ M.X) N.X (modList A post)).hom := by
     monoidal
-  show (A ◁ ((w ▷ modList A post) ≫
+  change (A ◁ ((w ▷ modList A post) ≫
         (α_ M.X N.X (modList A post)).hom)) ≫
       ((α_ A M.X (N.X ⊗ modList A post)).inv ≫
         (actLeft A M.X ▷ (N.X ⊗ modList A post))) =
@@ -1284,7 +1288,7 @@ lemma modListHeadAct_tail
     {T : List (Mod D A)} (u : S ⟶ modList A T) :
     (A ◁ (X.X ◁ u)) ≫ modListHeadAct A X T =
       ((α_ A X.X S).inv ≫ (actLeft A X.X ▷ S)) ≫ (X.X ◁ u) := by
-  show (A ◁ (X.X ◁ u)) ≫
+  change (A ◁ (X.X ◁ u)) ≫
       ((α_ A X.X (modList A T)).inv ≫
         (actLeft A X.X ▷ modList A T)) =
     ((α_ A X.X S).inv ≫ (actLeft A X.X ▷ S)) ≫ (X.X ◁ u)
@@ -1316,7 +1320,7 @@ lemma modListHeadAct_slotwise
     subst h1
     subst h2
     rw [modMultiLegM, modMultiLegN]
-    show (A ◁ (modMultiLegOf A X N post (modTensorLegM A X N) [] ≫
+    change (A ◁ (modMultiLegOf A X N post (modTensorLegM A X N) [] ≫
           𝟙 (modList A ([] ++ X :: N :: post)))) ≫
         (modListHeadAct A X (N :: post) ≫
           modMultiπ A (X :: N :: post)) =
@@ -1342,7 +1346,7 @@ lemma modListHeadAct_slotwise
     subst h1
     subst h2
     rw [modMultiLegM, modMultiLegN]
-    show (A ◁ ((X.X ◁ modMultiLegOf A M N post
+    change (A ◁ ((X.X ◁ modMultiLegOf A M N post
             (modTensorLegM A M N) pre') ≫
           𝟙 (X.X ⊗ modList A (pre' ++ M :: N :: post)))) ≫
         (modListHeadAct A X (pre' ++ M :: N :: post) ≫

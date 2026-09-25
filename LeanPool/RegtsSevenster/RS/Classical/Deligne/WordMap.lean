@@ -113,7 +113,7 @@ theorem wordMap_natural
   | zero => intro w; exact Category.id_comp _
   | succ n ih =>
     intro w
-    show (wordCongrMap α β n (w ∘ Fin.castSucc) ⊗ₘ
+    change (wordCongrMap α β n (w ∘ Fin.castSucc) ⊗ₘ
           letterCongr α β (w (Fin.last n))) ≫
         (wordMap f g n (w ∘ Fin.castSucc) ⊗ₘ
           letterMap f g (w (Fin.last n))) =
@@ -203,7 +203,7 @@ theorem wordMap_const_true
   | zero =>
     exact (Category.id_comp _).symm
   | succ n ih =>
-    show wordMap f g n (fun _ => true) ⊗ₘ f = _
+    change wordMap f g n (fun _ => true) ⊗ₘ f = _
     rw [ih]
     exact eqToHom_tensor_pull (wordPow_const_true U V n) _ _
 
@@ -283,7 +283,7 @@ theorem wordMap_standard
         wordMap_const_true f g, eqToHom_trans_assoc,
         eqToHom_trans_assoc]
       exact map_pow_cast f p _
-    show ((ρ_ (tensorPow A U p)).hom ≫
+    change ((ρ_ (tensorPow A U p)).hom ≫
           eqToHom (wordPow_standard_zero U V p).symm) ≫
         wordMap f g (p + 0) (standardWord p 0) =
       (tensorPowMap f p ⊗ₘ 𝟙 (𝟙_ A)) ≫

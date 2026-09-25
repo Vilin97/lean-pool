@@ -37,11 +37,11 @@ noncomputable instance matHomModule
   smul_zero c := by funext i j; exact smul_zero c
   smul_add c φ ψ := by
     funext i j
-    show c • (φ i j + ψ i j) = c • φ i j + c • ψ i j
+    change c • (φ i j + ψ i j) = c • φ i j + c • ψ i j
     exact smul_add c _ _
   add_smul c d φ := by
     funext i j
-    show (c + d) • φ i j = c • φ i j + d • φ i j
+    change (c + d) • φ i j = c • φ i j + d • φ i j
     exact add_smul c d _
   zero_smul φ := by funext i j; exact zero_smul ℂ (φ i j)
 
@@ -50,13 +50,13 @@ noncomputable instance matLinear :
     CategoryTheory.Linear ℂ (Mat_ (Karoubi (SkeinObj f))) where
   smul_comp M N K c φ ψ := by
     funext i k
-    show ∑ j, (c • φ i j) ≫ ψ j k = c • ∑ j, φ i j ≫ ψ j k
+    change ∑ j, (c • φ i j) ≫ ψ j k = c • ∑ j, φ i j ≫ ψ j k
     rw [Finset.smul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [CategoryTheory.Linear.smul_comp]
   comp_smul M N K φ c ψ := by
     funext i k
-    show ∑ j, φ i j ≫ (c • ψ j k) = c • ∑ j, φ i j ≫ ψ j k
+    change ∑ j, φ i j ≫ (c • ψ j k) = c • ∑ j, φ i j ≫ ψ j k
     rw [Finset.smul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [CategoryTheory.Linear.comp_smul]
@@ -90,7 +90,7 @@ private theorem karoubi_trace_comm
 theorem matTrace_comp_comm {M N : Mat_ (Karoubi (SkeinObj f))}
     (α : M ⟶ N) (β : N ⟶ M) :
     matTrace f M (α ≫ β) = matTrace f N (β ≫ α) := by
-  show (∑ i : M.ι, HomSpace.traceMap f.val (M.X i).X.arity
+  change (∑ i : M.ι, HomSpace.traceMap f.val (M.X i).X.arity
       ((α ≫ β) i i).f) =
     ∑ j : N.ι, HomSpace.traceMap f.val (N.X j).X.arity
       ((β ≫ α) j j).f
@@ -150,7 +150,7 @@ private theorem matTrace_matSingle_mul
       HomSpace.traceMap f.val (M.X i).X.arity
         ((φ i j).f ≫ b.f) := by
   classical
-  show (∑ k : M.ι, HomSpace.traceMap f.val (M.X k).X.arity
+  change (∑ k : M.ι, HomSpace.traceMap f.val (M.X k).X.arity
       ((φ ≫ matSingle f j i b) k k).f) = _
   rw [Finset.sum_eq_single i
     (fun k _ hk => by
@@ -164,7 +164,7 @@ private theorem matTrace_matSingle_mul
       rw [Finset.sum_eq_zero, map_zero]
       intro l _
       rw [show matSingle f j i b l k = 0 from
-        dif_neg (fun h => hk h.2)]
+        dite_eq_right (fun h => hk h.2)]
       rw [show ((φ k l ≫ (0 : M.X l ⟶ M.X k) :
         M.X k ⟶ M.X k)).f = 0 from by
           rw [Limits.comp_zero]
@@ -181,7 +181,7 @@ private theorem matTrace_matSingle_mul
   rw [Finset.sum_eq_single j
     (fun l _ hl => by
       rw [show matSingle f j i b l i = 0 from
-        dif_neg (fun h => hl h.1)]
+        dite_eq_right (fun h => hl h.1)]
       rw [show ((φ i l ≫ (0 : M.X l ⟶ M.X i) :
         M.X i ⟶ M.X i)).f = 0 from by
           rw [Limits.comp_zero]
@@ -190,7 +190,7 @@ private theorem matTrace_matSingle_mul
     (fun h => absurd (Finset.mem_univ j) h)]
   rw [show matSingle f j i b j i =
     eqToHom (congrArg M.X rfl) ≫ b ≫
-      eqToHom (congrArg M.X rfl) from dif_pos ⟨rfl, rfl⟩]
+      eqToHom (congrArg M.X rfl) from dite_eq_left ⟨rfl, rfl⟩]
   rw [eqToHom_refl, eqToHom_refl, Category.comp_id,
     Category.id_comp]
   rfl
@@ -202,7 +202,7 @@ theorem matEnd_eq_zero_of_traces_vanish
     φ = 0 := by
   apply Mat_.hom_ext
   intro i j
-  show φ i j = 0
+  change φ i j = 0
   apply karoubiHom_eq_zero_of_traces_vanish f (φ i j)
   intro b
   have h := hφ (show End M from matSingle f j i b)
@@ -216,7 +216,7 @@ the skein hom-spaces. -/
 noncomputable instance karoubiHomFinite
     (P Q : Karoubi (SkeinObj f)) :
     FiniteDimensional ℂ (P ⟶ Q) := by
-  haveI : FiniteDimensional ℂ (P.X ⟶ Q.X) :=
+  have : FiniteDimensional ℂ (P.X ⟶ Q.X) :=
     inferInstanceAs (Module.Finite ℂ
       (HomSpace f.val (P.X.arity + Q.X.arity)))
   exact FiniteDimensional.of_injective (karoubiHomLinearMap P Q)

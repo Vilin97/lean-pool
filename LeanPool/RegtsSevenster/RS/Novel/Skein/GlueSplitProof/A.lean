@@ -28,7 +28,7 @@ All cuts in the development are therefore ordered.
 
 namespace RS
 
-open scoped Classical
+
 
 /-! ## Evaluation of the extended state -/
 
@@ -42,7 +42,7 @@ theorem extendPair_left
     (c c' : Fin k ⊕ Fin (2 * ℓ)) :
     extendPair i j st c c' i = c := by
   unfold extendPair
-  exact dif_pos rfl
+  exact dite_eq_left rfl
 
 /-- At the second glued label. -/
 theorem extendPair_right (hij : i ≠ j)
@@ -50,7 +50,7 @@ theorem extendPair_right (hij : i ≠ j)
     (c c' : Fin k ⊕ Fin (2 * ℓ)) :
     extendPair i j st c c' j = c' := by
   unfold extendPair
-  rw [dif_neg (Ne.symm hij), dif_pos rfl]
+  rw [dite_eq_right (Ne.symm hij), dite_eq_left rfl]
 
 /-- And at a surviving label, where it is the state extended. -/
 theorem extendPair_surviving
@@ -59,7 +59,7 @@ theorem extendPair_surviving
     (a : Fragment.SurvivingLabel α i j) :
     extendPair i j st c c' a.val = st a := by
   unfold extendPair
-  rw [dif_neg a.prop.1, dif_neg a.prop.2]
+  rw [dite_eq_right a.prop.1, dite_eq_right a.prop.2]
 
 end GenBoundaryState
 
@@ -84,6 +84,7 @@ namespace EdgeSubset
 
 open Fragment
 
+open scoped Classical in
 /-- Unfolded membership in the through-flags (stated generically to
 avoid reducibility friction at glued fragments). -/
 theorem mem_throughFlags_iff {β : Type} {V : Fragment β}
@@ -294,7 +295,7 @@ private theorem flatMap_pair_map_val {ℓ : ℕ}
   | nil => intro _ _; rfl
   | cons f' t ih =>
     intro H1 H2
-    show ((f'.val :: t.map Subtype.val).attachWith
+    change ((f'.val :: t.map Subtype.val).attachWith
         (· ∈ (Fl).internalFlags) H1).flatMap
           ((Fl).coreOddPairFn (κW) φW) =
       ((f' :: t).attachWith (· ∈ (Fg).internalFlags) H2).flatMap
@@ -324,7 +325,7 @@ private theorem map_sign_map_val {ℓ : ℕ}
   | nil => intro _ _; rfl
   | cons f' t ih =>
     intro H1 H2
-    show ((f'.val :: t.map Subtype.val).attachWith
+    change ((f'.val :: t.map Subtype.val).attachWith
         (· ∈ (Fl).internalFlags) H1).map
           ((Fl).coreOddSignFn (κW) φW) =
       ((f' :: t).attachWith (· ∈ (Fg).internalFlags) H2).map

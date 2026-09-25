@@ -41,8 +41,8 @@ private theorem permHighEquiv_eq_outMapEquiv {t : ℕ}
   by_cases hx : x.val < t
   · -- Low label: both are the identity
     have h1 : (permHighEquiv σ x).val = x.val := by
-      show (if h : x.val < t then x else _).val = x.val
-      rw [dif_pos hx]
+      change (if h : x.val < t then x else _).val = x.val
+      rw [dite_eq_left hx]
     have h2 : (outMapEquiv σ x).val = x.val := by
       rw [show x = Fin.castAdd t ⟨x.val, hx⟩ from Fin.ext rfl,
         outMapEquiv_castAdd]
@@ -51,10 +51,10 @@ private theorem permHighEquiv_eq_outMapEquiv {t : ℕ}
     have hxt := x.isLt
     have h1 : (permHighEquiv σ x).val =
         t + (σ ⟨x.val - t, by omega⟩).val := by
-      show (if h : x.val < t then x else _).val = _
-      rw [dif_neg hx]
+      change (if h : x.val < t then x else _).val = _
+      rw [dite_eq_right hx]
     have hxeq : x = Fin.natAdd t ⟨x.val - t, by omega⟩ :=
-      Fin.ext (by show x.val = t + (x.val - t); omega)
+      Fin.ext (by change x.val = t + (x.val - t); omega)
     have h2 : (outMapEquiv σ x).val =
         t + (σ ⟨x.val - t, by omega⟩).val := by
       conv_lhs => rw [hxeq]
@@ -65,7 +65,7 @@ private theorem permHighEquiv_eq_outMapEquiv {t : ℕ}
 theorem permClass_eq_bundleMapClass (n : ℕ)
     (σ : Equiv.Perm (Fin n)) :
     permClass f n σ = bundleMapClass f σ := by
-  show HomSpace.ofFragment f.val (permFragment σ) =
+  change HomSpace.ofFragment f.val (permFragment σ) =
     HomSpace.ofFragment f.val (bundleMap σ)
   exact HomSpace.ofFragment_congr f
     ((permFragmentRelabelBundle σ).trans
@@ -81,7 +81,7 @@ private theorem permCongr_sumCongr_eq_tensorMapEquiv
     finSumFinEquiv.permCongr (Equiv.sumCongr σ τ) =
       tensorMapEquiv σ τ := by
   refine _root_.Equiv.ext (fun x => Fin.ext ?_)
-  show (finSumFinEquiv ((Equiv.sumCongr σ τ)
+  change (finSumFinEquiv ((Equiv.sumCongr σ τ)
     (finSumFinEquiv.symm x))).val =
     (tensorMapEquiv σ τ x).val
   unfold tensorMapEquiv
@@ -100,7 +100,7 @@ theorem permClass_sumCongr (a b : ℕ) (σ : Equiv.Perm (Fin a))
       End (SkeinObj.mk (a + b))) := by
   rw [permClass_eq_bundleMapClass,
     permCongr_sumCongr_eq_tensorMapEquiv]
-  show bundleMapClass f (tensorMapEquiv σ τ) =
+  change bundleMapClass f (tensorMapEquiv σ τ) =
     HomSpace.tensor f a a b b (permClass f a σ) (permClass f b τ)
   rw [permClass_eq_bundleMapClass, permClass_eq_bundleMapClass]
   exact (bundleMapClass_tensor f σ τ).symm

@@ -72,7 +72,7 @@ noncomputable def liftToFinsetComparison
       (sigmaComparison G fun x : S => (Discrete.functor f).obj x)
       (isIso_sigmaComparison_stage G f S)) ?_
   intro S T h
-  show ((Sigma.desc fun y : S =>
+  change ((Sigma.desc fun y : S =>
       Sigma.ι (fun x : T =>
           (Discrete.functor fun z => G.obj (f z)).obj x)
         ⟨y.1, h.down.down y.2⟩ :
@@ -89,8 +89,8 @@ noncomputable def liftToFinsetComparison
         ∐ fun x : T => (Discrete.functor f).obj x))
   apply Sigma.hom_ext
   intro x
-  erw [stage_ι_comp_assoc, ← G.map_comp, Sigma.ι_desc,
-    Sigma.ι_desc_assoc, stage_ι_comp]
+  erw [stage_ι_comp_assoc, ← G.map_comp, Sigma.ι_comp_desc,
+    Sigma.ι_comp_desc_assoc, stage_ι_comp]
 
 /-- **Preservation of coproducts from finite and filtered**: a
 functor preserving finite coproducts and `Finset`-shaped colimits
@@ -104,9 +104,9 @@ theorem preservesCoproduct_of_finite_and_filtered
     [PreservesColimitsOfShape (Finset (Discrete α)) G]
     (f : α → C) :
     PreservesColimit (Discrete.functor f) G := by
-  haveI : HasCoproduct f :=
+  have : HasCoproduct f :=
     HasColimit.mk (liftToFinsetColimitCocone (Discrete.functor f))
-  haveI : HasCoproduct fun x => G.obj (f x) :=
+  have : HasCoproduct fun x => G.obj (f x) :=
     HasColimit.mk
       (liftToFinsetColimitCocone (Discrete.functor fun x => G.obj (f x)))
   have hD' : IsColimit ((Cocone.precompose
@@ -121,7 +121,7 @@ theorem preservesCoproduct_of_finite_and_filtered
     { hom := sigmaComparison G f
       w := by
         intro S
-        show ((Sigma.desc fun s : S =>
+        change ((Sigma.desc fun s : S =>
             Sigma.ι (fun y => G.obj (f y)) s.1.as :
             (∐ fun x : S =>
               (Discrete.functor fun z => G.obj (f z)).obj x) ⟶
@@ -133,10 +133,10 @@ theorem preservesCoproduct_of_finite_and_filtered
                 ∐ f))
         apply Sigma.hom_ext
         intro x
-        erw [Sigma.ι_desc_assoc, ι_comp_sigmaComparison,
-          stage_ι_comp_assoc, ← G.map_comp, Sigma.ι_desc] }
-  haveI : IsIso m := hD2.hom_isIso hD' m
-  haveI : IsIso (sigmaComparison G f) := by
+        erw [Sigma.ι_comp_desc_assoc, ι_comp_sigmaComparison,
+          stage_ι_comp_assoc, ← G.map_comp, Sigma.ι_comp_desc] }
+  have : IsIso m := hD2.hom_isIso hD' m
+  have : IsIso (sigmaComparison G f) := by
     have : IsIso ((Cocone.forget _).map m) := inferInstance
     exact this
   exact PreservesCoproduct.of_iso_comparison G f
@@ -153,7 +153,7 @@ theorem preservesColimitsOfShape_discrete_of_finite_and_filtered
     PreservesColimitsOfShape (Discrete α) G := by
   constructor
   intro F
-  haveI := preservesCoproduct_of_finite_and_filtered G
+  have := preservesCoproduct_of_finite_and_filtered G
     (F.obj ∘ Discrete.mk)
   exact preservesColimit_of_iso_diagram G Discrete.natIsoFunctor.symm
 

@@ -93,7 +93,7 @@ theorem exists_section_biprod [Category.{vE} E] [Abelian E]
     (hT : ∀ {N' : E} (g : T ⟶ N'), Epi g →
       ∃ s : N' ⟶ T, s ≫ g = 𝟙 N') :
     ∃ s : N ⟶ (X ⊞ T), s ≫ f = 𝟙 N := by
-  haveI := hf
+  have := hf
   have hg : biprod.inr ≫ f ≫ cokernel.π (biprod.inr ≫ f) = 0 := by
     rw [← Category.assoc]
     exact cokernel.condition _
@@ -101,7 +101,7 @@ theorem exists_section_biprod [Category.{vE} E] [Abelian E]
       biprod.fst ≫
         (biprod.inl ≫ f ≫ cokernel.π (biprod.inr ≫ f)) := by
     refine biprod.hom_ext' _ _ ?_ ?_ <;> simp [hg]
-  haveI : Epi (biprod.inl ≫ f ≫ cokernel.π (biprod.inr ≫ f)) := by
+  have : Epi (biprod.inl ≫ f ≫ cokernel.π (biprod.inr ≫ f)) := by
     have h1 : Epi (f ≫ cokernel.π (biprod.inr ≫ f)) := epi_comp _ _
     rw [hfac] at h1
     exact epi_of_epi (biprod.fst : (X ⊞ T) ⟶ X)
@@ -110,7 +110,7 @@ theorem exists_section_biprod [Category.{vE} E] [Abelian E]
   · have hc0 : cokernel.π (biprod.inr ≫ f) = 0 := by
       refine zero_of_epi_comp f ?_
       rw [hfac, hu, Limits.comp_zero]
-    haveI : Epi (biprod.inr ≫ f) := by
+    have : Epi (biprod.inr ≫ f) := by
       rw [Preadditive.epi_iff_cancel_zero]
       intro R w hw
       rw [← cokernel.π_desc (biprod.inr ≫ f) w hw, hc0,
@@ -119,7 +119,7 @@ theorem exists_section_biprod [Category.{vE} E] [Abelian E]
     refine ⟨s₀ ≫ biprod.inr, ?_⟩
     rw [Category.assoc]
     exact hs₀
-  · haveI : IsIso (biprod.inl ≫ f ≫ cokernel.π (biprod.inr ≫ f)) :=
+  · have : IsIso (biprod.inl ≫ f ≫ cokernel.π (biprod.inr ≫ f)) :=
       isIso_of_epi_of_nonzero hu
     have hs : (inv (biprod.inl ≫ f ≫ cokernel.π (biprod.inr ≫ f))
           ≫ (biprod.inl ≫ f)) ≫ cokernel.π (biprod.inr ≫ f) =
@@ -154,7 +154,7 @@ theorem exists_section_idxSum [Category.{vE} E] [Abelian E]
   induction L with
   | nil =>
       intro _ N f hf
-      haveI := hf
+      have := hf
       have h0 : f = 0 := (isZero_zero E).eq_zero_of_src f
       have h1 : (𝟙 N : N ⟶ N) = 0 := by
         refine (cancel_epi f).1 ?_
@@ -162,7 +162,7 @@ theorem exists_section_idxSum [Category.{vE} E] [Abelian E]
       exact ⟨0, by rw [Limits.zero_comp, h1]⟩
   | cons i L₀ ih =>
       intro hS N f hf
-      haveI : Simple (S i) := hS i (List.mem_cons_self ..)
+      have : Simple (S i) := hS i (List.mem_cons_self ..)
       exact exists_section_biprod
         (X := S i) (T := idxSum S L₀) (N := N) f hf
         (fun g hg =>
@@ -193,12 +193,12 @@ theorem isIso_iff_hom
     IsIso f ↔ IsIso f.hom := by
   constructor
   · intro h
-    haveI := h
+    have := h
     exact inferInstanceAs (IsIso ((Mod.forget (D := Ind C) 𝔹).map f))
   · intro h
-    haveI := h
-    haveI : Mono f := (mono_iff_hom 𝔹 f).2 inferInstance
-    haveI : Epi f := (epi_iff_hom 𝔹 f).2 inferInstance
+    have := h
+    have : Mono f := (mono_iff_hom 𝔹 f).2 inferInstance
+    have : Epi f := (epi_iff_hom 𝔹 f).2 inferInstance
     exact isIso_of_mono_of_epi f
 
 /-- **A submodule of the regular module is an ideal.**  The
@@ -214,7 +214,7 @@ theorem isIdeal_mk_hom
   have harrow : (Subobject.mk g.hom).arrow =
       (Subobject.underlyingIso g.hom).hom ≫ g.hom :=
     (Iso.inv_comp_eq _).1 (Subobject.underlyingIso_arrow _)
-  show (Subobject.mk g.hom).Factors
+  change (Subobject.mk g.hom).Factors
     ((𝔹 ◁ (Subobject.mk g.hom).arrow) ≫ μ[𝔹])
   refine factors_of_comm
     ((𝔹 ◁ (Subobject.underlyingIso g.hom).hom) ≫
@@ -238,11 +238,11 @@ theorem simple_regularMod
     (hne : η[𝔹] ≠ 0) : Simple (regularMod 𝔹) := by
   constructor
   intro M g hg
-  haveI := hg
-  haveI hmono : Mono g.hom := (mono_iff_hom 𝔹 g).1 hg
+  have := hg
+  have hmono : Mono g.hom := (mono_iff_hom 𝔹 g).1 hg
   constructor
   · intro hiso h0
-    haveI := hiso
+    have := hiso
     refine hne ?_
     have h1 : (𝟙 (regularMod 𝔹) : regularMod 𝔹 ⟶ regularMod 𝔹) = 0 :=
       (IsIso.inv_hom_id g).symm.trans
@@ -254,7 +254,7 @@ theorem simple_regularMod
     have hghom : g.hom ≠ 0 := fun h => hg0 (Mod.hom_ext _ _ h)
     rcases hsimple _ (isIdeal_mk_hom 𝔹 g) with h | h
     · exact absurd (Subobject.mk_eq_bot_iff_zero.1 h) hghom
-    · haveI : IsIso g.hom := (Subobject.isIso_iff_mk_eq_top g.hom).2 h
+    · have : IsIso g.hom := (Subobject.isIso_iff_mk_eq_top g.hom).2 h
       exact (isIso_iff_hom 𝔹 g).2 inferInstance
 
 end Regular
@@ -320,8 +320,8 @@ theorem isIso_of_whiskerRight
     (L : OddLine (Ind C))
     {X Y : Ind C} (f : X ⟶ Y)
     (h : IsIso (f ▷ L.obj)) : IsIso f := by
-  haveI := h
-  haveI : IsIso ((f ▷ L.obj) ▷ L.obj) :=
+  have := h
+  have : IsIso ((f ▷ L.obj) ▷ L.obj) :=
     inferInstanceAs (IsIso ((tensorRight L.obj).map (f ▷ L.obj)))
   have hf : f = (L.rot X).inv ≫ ((f ▷ L.obj) ▷ L.obj) ≫
       (L.rot Y).hom := (L.rot_whiskerRight f).symm
@@ -364,7 +364,7 @@ noncomputable def lineToRegular
     have h1 := whiskerRight_act L (actLeft 𝔹 M.X)
       ((α_ 𝔹 𝔹 L.obj).inv ≫ μ[𝔹] ▷ L.obj) g.hom hf
     have h2 := rot_act L (A := 𝔹) (X := 𝔹) μ[𝔹]
-    show ((α_ 𝔹 M.X L.obj).inv ≫ actLeft 𝔹 M.X ▷ L.obj) ≫
+    change ((α_ 𝔹 M.X L.obj).inv ≫ actLeft 𝔹 M.X ▷ L.obj) ≫
         ((g.hom ▷ L.obj) ≫ (L.rot 𝔹).hom) =
       (𝔹 ◁ ((g.hom ▷ L.obj) ≫ (L.rot 𝔹).hom)) ≫ μ[𝔹]
     refine Eq.trans (Category.assoc _ _ _).symm ?_
@@ -392,7 +392,7 @@ theorem lineToRegular_eq_zero_iff
     exact Mod.hom_ext _ _ (L.eq_zero_of_whiskerRight g.hom h2)
   · intro h
     refine Mod.hom_ext _ _ ?_
-    show (g.hom ▷ L.obj) ≫ (L.rot 𝔹).hom = 0
+    change (g.hom ▷ L.obj) ≫ (L.rot 𝔹).hom = 0
     erw [show g.hom = 0 from congrArg Mod.Hom.hom h,
       MonoidalPreadditive.zero_whiskerRight, Limits.zero_comp]
 
@@ -426,32 +426,32 @@ theorem simple_freeMod_oddLine
     (L : OddLine (Ind C))
     (hsimple : ∀ I : Subobject 𝔹, IsIdeal 𝔹 I → I = ⊥ ∨ I = ⊤)
     (hne : η[𝔹] ≠ 0) : Simple (freeMod 𝔹 L.obj) := by
-  haveI := simple_regularMod 𝔹 hsimple hne
+  have := simple_regularMod 𝔹 hsimple hne
   constructor
   intro M g hg
-  haveI := hg
-  haveI hgm : Mono g.hom := (mono_iff_hom 𝔹 g).1 hg
-  haveI hwm : Mono (g.hom ▷ L.obj) :=
+  have := hg
+  have hgm : Mono g.hom := (mono_iff_hom 𝔹 g).1 hg
+  have hwm : Mono (g.hom ▷ L.obj) :=
     inferInstanceAs (Mono ((tensorRight L.obj).map g.hom))
   have hrot : IsIso (L.rot 𝔹).hom := (L.rot 𝔹).isIso_hom
   have hrotMono : Mono (L.rot 𝔹).hom := @IsIso.mono_of_iso _ _ _ _ _ (L.rot 𝔹).isIso_hom
-  haveI hhm : Mono (lineToRegular 𝔹 L g) := by
+  have hhm : Mono (lineToRegular 𝔹 L g) := by
     refine mono_of_mono_hom _ ?_
-    show Mono ((g.hom ▷ L.obj) ≫ (L.rot 𝔹).hom)
+    change Mono ((g.hom ▷ L.obj) ≫ (L.rot 𝔹).hom)
     exact mono_comp' hwm hrotMono
   constructor
   · intro hiso h0
-    haveI := hiso
+    have := hiso
     refine id_freeMod_oddLine_ne_zero 𝔹 L hne ?_
     exact (IsIso.inv_hom_id g).symm.trans
       ((congrArg (fun t => inv g ≫ t) h0).trans Limits.comp_zero)
   · intro h0
-    haveI : IsIso (lineToRegular 𝔹 L g) :=
+    have : IsIso (lineToRegular 𝔹 L g) :=
       isIso_of_mono_of_nonzero
         (fun h => h0 ((lineToRegular_eq_zero_iff 𝔹 L g).1 h))
-    haveI : IsIso ((g.hom ▷ L.obj) ≫ (L.rot 𝔹).hom) :=
+    have : IsIso ((g.hom ▷ L.obj) ≫ (L.rot 𝔹).hom) :=
       (isIso_iff_hom 𝔹 (lineToRegular 𝔹 L g)).1 inferInstance
-    haveI : IsIso (g.hom ▷ L.obj) :=
+    have : IsIso (g.hom ▷ L.obj) :=
       @IsIso.of_isIso_comp_right _ _ _ _ _ _ _ hrot
         ((isIso_iff_hom 𝔹 (lineToRegular 𝔹 L g)).1 inferInstance)
     exact (isIso_iff_hom 𝔹 g).2
@@ -511,9 +511,9 @@ theorem mono_freeModMap
     [MonoidalPreadditive C] (𝔹 : Ind C) [MonObj 𝔹]
     {V W : Ind C} (f : V ⟶ W) (hf : Mono f) :
     Mono (freeModMap 𝔹 f) := by
-  haveI := hf
+  have := hf
   refine mono_of_mono_hom _ ?_
-  show Mono (𝔹 ◁ f)
+  change Mono (𝔹 ◁ f)
   exact inferInstanceAs (Mono ((tensorLeft 𝔹).map f))
 
 /-- **The free-module functor preserves epimorphisms.** -/
@@ -522,9 +522,9 @@ theorem epi_freeModMap
     [MonoidalPreadditive C] (𝔹 : Ind C) [MonObj 𝔹]
     {V W : Ind C} (f : V ⟶ W) (hf : Epi f) :
     Epi (freeModMap 𝔹 f) := by
-  haveI := hf
+  have := hf
   refine epi_of_epi_hom _ ?_
-  show Epi (𝔹 ◁ f)
+  change Epi (𝔹 ◁ f)
   exact inferInstanceAs (Epi ((tensorLeft 𝔹).map f))
 
 /-- **A subobject of an object with free mixed module has a free
@@ -538,9 +538,9 @@ theorem exists_mix_of_mono_of_simple
     {p q : ℕ} (e : freeMod 𝔹 W ≅ freeMod 𝔹 (L.mix p q)) :
     ∃ p' q' : ℕ,
       Nonempty (freeMod 𝔹 Y ≅ freeMod 𝔹 (L.mix p' q')) := by
-  haveI := simple_regularMod 𝔹 hsimple hne
-  haveI := simple_freeMod_oddLine 𝔹 L hsimple hne
-  haveI := mono_freeModMap 𝔹 f hf
+  have := simple_regularMod 𝔹 hsimple hne
+  have := simple_freeMod_oddLine 𝔹 L hsimple hne
+  have := mono_freeModMap 𝔹 f hf
   obtain ⟨p', q', -, -, ⟨w⟩⟩ :=
     exists_mixSum_iso_of_mono (regularMod 𝔹) (freeMod 𝔹 L.obj) p q
       (freeModMap 𝔹 f ≫ e.hom ≫ (freeModMixIso 𝔹 L p q).hom)
@@ -558,9 +558,9 @@ theorem exists_mix_of_epi_of_simple
     {p q : ℕ} (e : freeMod 𝔹 W ≅ freeMod 𝔹 (L.mix p q)) :
     ∃ p' q' : ℕ,
       Nonempty (freeMod 𝔹 Y ≅ freeMod 𝔹 (L.mix p' q')) := by
-  haveI := simple_regularMod 𝔹 hsimple hne
-  haveI := simple_freeMod_oddLine 𝔹 L hsimple hne
-  haveI := epi_freeModMap 𝔹 f hf
+  have := simple_regularMod 𝔹 hsimple hne
+  have := simple_freeMod_oddLine 𝔹 L hsimple hne
+  have := epi_freeModMap 𝔹 f hf
   obtain ⟨p', q', -, -, ⟨w⟩⟩ :=
     exists_mixSum_iso_of_epi (regularMod 𝔹) (freeMod 𝔹 L.obj) p q
       ((freeModMixIso 𝔹 L p q).inv ≫ e.inv ≫ freeModMap 𝔹 f)
@@ -595,9 +595,9 @@ theorem exists_section_freeMod_mix
     (hne : η[𝔹] ≠ 0) (p q : ℕ) {N : Mod (Ind C) 𝔹}
     (f : freeMod 𝔹 (L.mix p q) ⟶ N) (hf : Epi f) :
     ∃ s : N ⟶ freeMod 𝔹 (L.mix p q), s ≫ f = 𝟙 N := by
-  haveI := simple_regularMod 𝔹 hsimple hne
-  haveI := simple_freeMod_oddLine 𝔹 L hsimple hne
-  haveI := hf
+  have := simple_regularMod 𝔹 hsimple hne
+  have := simple_freeMod_oddLine 𝔹 L hsimple hne
+  have := hf
   obtain ⟨s₀, hs₀⟩ :=
     exists_section_mixSum (regularMod 𝔹) (freeMod 𝔹 L.obj) p q
       ((freeModMixIso 𝔹 L p q).inv ≫ f) (epi_comp _ _)
@@ -620,7 +620,7 @@ theorem exists_section_of_simple
     (hepi : Epi (freeModMap 𝔹 g)) :
     ∃ s : freeMod 𝔹 W ⟶ freeMod 𝔹 V,
       s ≫ freeModMap 𝔹 g = 𝟙 (freeMod 𝔹 W) := by
-  haveI := hepi
+  have := hepi
   obtain ⟨p, q, ⟨e⟩⟩ := hV
   obtain ⟨s₀, hs₀⟩ :=
     exists_section_freeMod_mix 𝔹 L hsimple hne p q

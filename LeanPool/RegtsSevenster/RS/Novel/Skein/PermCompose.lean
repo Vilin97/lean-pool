@@ -36,13 +36,13 @@ noncomputable def permFragmentRelabelOutPerm {t : ℕ}
   attach_comm := fun f => by
     obtain ⟨k, b⟩ := f
     cases b
-    · show Sum.inr (outPermEquiv t σ
+    · change Sum.inr (outPermEquiv t σ
           ⟨k.val, by have := k.isLt; omega⟩) =
         Sum.inr (⟨k.val, by have := k.isLt; omega⟩ : Fin (t + t))
       refine congrArg Sum.inr ?_
       rw [show (⟨k.val, by have := k.isLt; omega⟩ : Fin (t + t)) =
           Fin.castAdd t k from Fin.ext rfl, outPermEquiv_low]
-    · show Sum.inr (outPermEquiv t σ
+    · change Sum.inr (outPermEquiv t σ
           ⟨t + k.val, by have := k.isLt; omega⟩) =
         Sum.inr (⟨t + (σ k).val,
           by have := (σ k).isLt; omega⟩ : Fin (t + t))
@@ -67,7 +67,7 @@ noncomputable def strandBundleRelabelBoth {t : ℕ}
   attach_comm := fun f => by
     obtain ⟨k, b⟩ := f
     cases b
-    · show Sum.inr (⟨(δ k).val,
+    · change Sum.inr (⟨(δ k).val,
           by have := (δ k).isLt; omega⟩ : Fin (t + t)) =
         Sum.inr ((inPermEquiv δ t).trans (outPermEquiv t δ)
           ⟨k.val, by have := k.isLt; omega⟩)
@@ -76,7 +76,7 @@ noncomputable def strandBundleRelabelBoth {t : ℕ}
           Fin.castAdd t k from Fin.ext rfl,
         _root_.Equiv.trans_apply, inPermEquiv_low, outPermEquiv_low]
       exact Fin.ext rfl
-    · show Sum.inr (⟨t + (δ k).val,
+    · change Sum.inr (⟨t + (δ k).val,
           by have := (δ k).isLt; omega⟩ : Fin (t + t)) =
         Sum.inr ((inPermEquiv δ t).trans (outPermEquiv t δ)
           ⟨t + k.val, by have := k.isLt; omega⟩)
@@ -104,7 +104,7 @@ theorem outPerm_shift_both {t : ℕ} (σ τ : Equiv.Perm (Fin t)) :
       inPermEquiv_low]
   · rw [show ℓ = (Fin.natAdd t ⟨ℓ.val - t,
         by have := ℓ.isLt; omega⟩ : Fin (t + t)) from
-      Fin.ext (by show ℓ.val = t + (ℓ.val - t); omega)]
+      Fin.ext (by change ℓ.val = t + (ℓ.val - t); omega)]
     simp only [_root_.Equiv.trans_apply, outPermEquiv_high,
       inPermEquiv_high]
     refine congrArg (Fin.natAdd t) ?_

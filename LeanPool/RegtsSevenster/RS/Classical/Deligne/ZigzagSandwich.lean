@@ -126,7 +126,7 @@ theorem sandwichIns_hom
         modTensorπ A (modTensorMod A M M') M := by
   have h := modTensorMap_of_regular A (modTensorMod A M M') M
     (d.copairMod)
-  show (modTensorUnitLeft A M).inv ≫
+  change (modTensorUnitLeft A M).inv ≫
     modTensorMap A (d.copairMod) (𝟙 M) = _
   rw [← h, Iso.inv_hom_id_assoc]
   rfl
@@ -144,7 +144,7 @@ theorem sandwich_zig_carrier
     (sandwichIns A d ≫ sandwichCon A d).hom =
       (λ_ M.X).inv ≫ ((η[A] ≫ d.copair) ▷ M.X) ≫
         zigContract A d.pair d.pair_linear := by
-  show (sandwichIns A d).hom ≫ (sandwichCon A d).hom = _
+  change (sandwichIns A d).hom ≫ (sandwichCon A d).hom = _
   rw [sandwichIns_hom]
   refine Eq.trans (Category.assoc _ _ _) ?_
   refine whisker_eq _ ?_
@@ -259,7 +259,7 @@ theorem sandwichInsR_hom
         modTensorπ A M' (modTensorMod A M M') := by
   have h := modTensorMap_of_regular_right A M'
     (modTensorMod A M M') (d.copairMod)
-  show (modTensorUnitRight A M').inv ≫
+  change (modTensorUnitRight A M').inv ≫
     modTensorMap A (𝟙 M') (d.copairMod) = _
   rw [← h, Iso.inv_hom_id_assoc]
   rfl
@@ -275,7 +275,7 @@ theorem sandwich_zag_carrier
     (sandwichInsR A d ≫ sandwichConR A d).hom =
       (ρ_ M'.X).inv ≫ (M'.X ◁ (η[A] ≫ d.copair)) ≫
         zagContract A d.pair d.pair_linear := by
-  show (sandwichInsR A d).hom ≫ (sandwichConR A d).hom = _
+  change (sandwichInsR A d).hom ≫ (sandwichConR A d).hom = _
   rw [sandwichInsR_hom]
   refine Eq.trans (Category.assoc _ _ _) ?_
   refine whisker_eq _ ?_

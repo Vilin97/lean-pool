@@ -54,7 +54,7 @@ theorem tensorCopair_point
       (λ_ (𝟙_ D)).inv ≫ (η[A] ⊗ₘ η[A]) ≫
         modTensorπ A (regularMod A) (regularMod A) := by
     rw [regPairUnfold]
-    show η[A] ≫ (λ_ A).inv ≫ η[A] ▷ A ≫
+    change η[A] ≫ (λ_ A).inv ≫ η[A] ▷ A ≫
         modTensorπ A (regularMod A) (regularMod A) = _
     rw [leftUnitor_inv_naturality_assoc,
       whisker_exchange_assoc, MonoidalCategory.tensorHom_def,
@@ -162,6 +162,282 @@ theorem tensorHom_actRight_π
     braid_prefix_coherence N₁.X A N₂.X
   rw [reassoc_of% hpre]
 
+private theorem tensorDatum_pair_rawInterchange
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [HasFiniteBiproducts D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] {N₁ : Mod D A} {N₂ : Mod D A}
+    {N₁' : Mod D A} {N₂' : Mod D A}
+    (d₁ : ModDualityDatum A N₁ N₁')
+    (d₂ : ModDualityDatum A N₂ N₂') :
+    ((modTensorπ A N₁' N₂' ⊗ₘ modTensorπ A N₁ N₂) :
+        (N₁'.X ⊗ N₂'.X) ⊗ (N₁.X ⊗ N₂.X) ⟶ _) ≫
+      interchange A N₁' N₂' N₁ N₂ ≫
+      modTensorMap A d₁.pairMod d₂.pairMod ≫ regPairFold A =
+      tensorμ N₁'.X N₂'.X N₁.X N₂.X ≫
+        ((modTensorπ A N₁' N₁ ≫ d₁.pair) ⊗ₘ
+          (modTensorπ A N₂' N₂ ≫ d₂.pair)) ≫ μ[A] := by
+  have hfold : modTensorπ A (regularMod A) (regularMod A) ≫
+      regPairFold A = μ[A] := by
+    rw [regPairFold]
+    exact modTensorπ_desc A _ _ _ _
+  have hw : ((modTensorπ A N₁' N₂' ⊗ₘ modTensorπ A N₁ N₂) :
+        (N₁'.X ⊗ N₂'.X) ⊗ (N₁.X ⊗ N₂.X) ⟶ _) ≫
+      interchange A N₁' N₂' N₁ N₂ ≫
+      modTensorMap A d₁.pairMod d₂.pairMod ≫ regPairFold A =
+      tensorμ N₁'.X N₂'.X N₁.X N₂.X ≫
+        ((modTensorπ A N₁' N₁ ≫ d₁.pair) ⊗ₘ
+          (modTensorπ A N₂' N₂ ≫ d₂.pair)) ≫ μ[A] := by
+    have hm : modTensorπ A (modTensorMod A N₁' N₁)
+        (modTensorMod A N₂' N₂) ≫
+        modTensorMap A d₁.pairMod d₂.pairMod =
+        (d₁.pair ⊗ₘ d₂.pair) ≫
+          modTensorπ A (regularMod A) (regularMod A) :=
+      modTensorπ_map A d₁.pairMod d₂.pairMod
+    have htail : (modTensorπ A N₁' N₁ ⊗ₘ modTensorπ A N₂' N₂) ≫
+        modTensorπ A (modTensorMod A N₁' N₁)
+          (modTensorMod A N₂' N₂) ≫
+        modTensorMap A d₁.pairMod d₂.pairMod ≫
+        regPairFold A =
+        ((modTensorπ A N₁' N₁ ≫ d₁.pair) ⊗ₘ
+          (modTensorπ A N₂' N₂ ≫ d₂.pair)) ≫ μ[A] := by
+      have t2 : modTensorπ A (modTensorMod A N₁' N₁)
+          (modTensorMod A N₂' N₂) ≫
+          modTensorMap A d₁.pairMod d₂.pairMod ≫
+          regPairFold A =
+          (d₁.pair ⊗ₘ d₂.pair) ≫ μ[A] := by
+        rw [← Category.assoc, hm]
+        exact (Category.assoc _ _ _).trans
+          (congrArg (fun t : (regularMod A).X ⊗
+              (regularMod A).X ⟶ A =>
+            (d₁.pair ⊗ₘ d₂.pair) ≫ t) hfold)
+      exact (congrArg (fun t : (modTensorMod A N₁' N₁).X ⊗
+            (modTensorMod A N₂' N₂).X ⟶ A =>
+          (modTensorπ A N₁' N₁ ⊗ₘ modTensorπ A N₂' N₂) ≫ t)
+        t2).trans (by
+          rw [← MonoidalCategory.tensorHom_comp_tensorHom_assoc])
+    erw [← Category.assoc, tensorHom_π_interchange,
+      rawInterchangeπ, rawInterchange]
+    conv_lhs => erw [Category.assoc]; arg 2; erw [Category.assoc]
+    simpa only [Category.assoc] using congrArg (fun t : (N₁'.X ⊗ N₁.X) ⊗ (N₂'.X ⊗ N₂.X) ⟶
+        A => tensorμ N₁'.X N₂'.X N₁.X N₂.X ≫ t) htail
+  exact hw
+
+private theorem zigContract_tensor_components_raw
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [HasFiniteBiproducts D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] {N₁ : Mod D A} {N₂ : Mod D A}
+    {N₁' : Mod D A} {N₂' : Mod D A}
+    (d₁ : ModDualityDatum A N₁ N₁')
+    (d₂ : ModDualityDatum A N₂ N₂') :
+    ((modTensorπ A N₁ N₁' ⊗ₘ modTensorπ A N₂ N₂') ▷
+      (N₁.X ⊗ N₂.X)) ≫
+      (tensorμ (modTensor A N₁ N₁') (modTensor A N₂ N₂')
+        N₁.X N₂.X ≫
+      ((zigContract A d₁.pair d₁.pair_linear ⊗ₘ
+        zigContract A d₂.pair d₂.pair_linear) ≫
+        modTensorπ A N₁ N₂)) =
+      tensorμ (N₁.X ⊗ N₁'.X) (N₂.X ⊗ N₂'.X) N₁.X N₂.X ≫
+        (((α_ N₁.X N₁'.X N₁.X).hom ⊗ₘ
+          (α_ N₂.X N₂'.X N₂.X).hom) ≫
+        (((N₁.X ◁ (modTensorπ A N₁' N₁ ≫ d₁.pair)) ⊗ₘ
+          (N₂.X ◁ (modTensorπ A N₂' N₂ ≫ d₂.pair))) ≫
+        (tensorμ N₁.X A N₂.X A ≫
+          ((N₁.X ⊗ N₂.X) ◁ μ[A]) ≫
+          (modTensorπ A N₁ N₂ ▷ A) ≫
+          (β_ (modTensor A N₁ N₂) A).hom ≫
+          modTensorAct A N₁ N₂))) := by
+  have hμnat : ((modTensorπ A N₁ N₁' ⊗ₘ modTensorπ A N₂ N₂') ▷
+      (N₁.X ⊗ N₂.X)) ≫
+      tensorμ (modTensor A N₁ N₁') (modTensor A N₂ N₂')
+        N₁.X N₂.X =
+      tensorμ (N₁.X ⊗ N₁'.X) (N₂.X ⊗ N₂'.X) N₁.X N₂.X ≫
+        ((modTensorπ A N₁ N₁' ▷ N₁.X) ⊗ₘ
+          (modTensorπ A N₂ N₂' ▷ N₂.X)) := by
+    simpa using tensorμ_natural (modTensorπ A N₁ N₁')
+      (modTensorπ A N₂ N₂') (𝟙 N₁.X) (𝟙 N₂.X)
+  have hzc₁ : (modTensorπ A N₁ N₁' ▷ N₁.X) ≫
+      zigContract A d₁.pair d₁.pair_linear =
+      (α_ N₁.X N₁'.X N₁.X).hom ≫
+        (N₁.X ◁ (modTensorπ A N₁' N₁ ≫ d₁.pair)) ≫
+        actRight A N₁.X :=
+    whiskerRight_modTensorπ_zigContract A d₁.pair
+      d₁.pair_linear
+  have hzc₂ : (modTensorπ A N₂ N₂' ▷ N₂.X) ≫
+      zigContract A d₂.pair d₂.pair_linear =
+      (α_ N₂.X N₂'.X N₂.X).hom ≫
+        (N₂.X ◁ (modTensorπ A N₂' N₂ ≫ d₂.pair)) ≫
+        actRight A N₂.X :=
+    whiskerRight_modTensorπ_zigContract A d₂.pair
+      d₂.pair_linear
+  have hpair2 : ((modTensorπ A N₁ N₁' ▷ N₁.X) ⊗ₘ
+      (modTensorπ A N₂ N₂' ▷ N₂.X)) ≫
+      (zigContract A d₁.pair d₁.pair_linear ⊗ₘ
+        zigContract A d₂.pair d₂.pair_linear) =
+      ((α_ N₁.X N₁'.X N₁.X).hom ⊗ₘ
+        (α_ N₂.X N₂'.X N₂.X).hom) ≫
+        ((N₁.X ◁ (modTensorπ A N₁' N₁ ≫ d₁.pair)) ⊗ₘ
+          (N₂.X ◁ (modTensorπ A N₂' N₂ ≫ d₂.pair))) ≫
+        (actRight A N₁.X ⊗ₘ actRight A N₂.X) := by
+    rw [MonoidalCategory.tensorHom_comp_tensorHom, hzc₁, hzc₂,
+      ← MonoidalCategory.tensorHom_comp_tensorHom,
+      ← MonoidalCategory.tensorHom_comp_tensorHom]
+  have hR : ((modTensorπ A N₁ N₁' ⊗ₘ modTensorπ A N₂ N₂') ▷
+      (N₁.X ⊗ N₂.X)) ≫
+      (tensorμ (modTensor A N₁ N₁') (modTensor A N₂ N₂')
+        N₁.X N₂.X ≫
+      ((zigContract A d₁.pair d₁.pair_linear ⊗ₘ
+        zigContract A d₂.pair d₂.pair_linear) ≫
+        modTensorπ A N₁ N₂)) =
+      tensorμ (N₁.X ⊗ N₁'.X) (N₂.X ⊗ N₂'.X) N₁.X N₂.X ≫
+        (((α_ N₁.X N₁'.X N₁.X).hom ⊗ₘ
+          (α_ N₂.X N₂'.X N₂.X).hom) ≫
+        (((N₁.X ◁ (modTensorπ A N₁' N₁ ≫ d₁.pair)) ⊗ₘ
+          (N₂.X ◁ (modTensorπ A N₂' N₂ ≫ d₂.pair))) ≫
+        (tensorμ N₁.X A N₂.X A ≫
+          ((N₁.X ⊗ N₂.X) ◁ μ[A]) ≫
+          (modTensorπ A N₁ N₂ ▷ A) ≫
+          (β_ (modTensor A N₁ N₂) A).hom ≫
+          modTensorAct A N₁ N₂))) :=
+    (Category.assoc _ _ _).symm.trans <|
+      (congrArg (fun t : (((N₁.X ⊗ N₁'.X) ⊗ (N₂.X ⊗ N₂'.X)) ⊗
+            (N₁.X ⊗ N₂.X)) ⟶
+            ((modTensor A N₁ N₁' ⊗ N₁.X) ⊗
+              (modTensor A N₂ N₂' ⊗ N₂.X)) =>
+          t ≫ ((zigContract A d₁.pair d₁.pair_linear ⊗ₘ
+            zigContract A d₂.pair d₂.pair_linear) ≫
+            modTensorπ A N₁ N₂)) hμnat).trans <|
+      (Category.assoc _ _ _).trans <|
+      congrArg (fun t : ((N₁.X ⊗ N₁'.X) ⊗ N₁.X) ⊗
+            ((N₂.X ⊗ N₂'.X) ⊗ N₂.X) ⟶ modTensor A N₁ N₂ =>
+        tensorμ (N₁.X ⊗ N₁'.X) (N₂.X ⊗ N₂'.X) N₁.X N₂.X ≫ t) <|
+      (Category.assoc _ _ _).symm.trans <|
+      (congrArg (fun t : ((N₁.X ⊗ N₁'.X) ⊗ N₁.X) ⊗
+            ((N₂.X ⊗ N₂'.X) ⊗ N₂.X) ⟶ N₁.X ⊗ N₂.X =>
+        t ≫ modTensorπ A N₁ N₂) hpair2).trans <|
+      (Category.assoc _ _ _).trans <|
+      congrArg (fun t : (N₁.X ⊗ (N₁'.X ⊗ N₁.X)) ⊗
+            (N₂.X ⊗ (N₂'.X ⊗ N₂.X)) ⟶ modTensor A N₁ N₂ =>
+        ((α_ N₁.X N₁'.X N₁.X).hom ⊗ₘ
+          (α_ N₂.X N₂'.X N₂.X).hom) ≫ t) <|
+      (Category.assoc _ _ _).trans <|
+      congrArg (fun t : (N₁.X ⊗ A) ⊗ (N₂.X ⊗ A) ⟶
+            modTensor A N₁ N₂ =>
+        ((N₁.X ◁ (modTensorπ A N₁' N₁ ≫ d₁.pair)) ⊗ₘ
+          (N₂.X ◁ (modTensorπ A N₂' N₂ ≫ d₂.pair))) ≫ t)
+        (tensorHom_actRight_π A N₁ N₂)
+  exact hR
+
+private theorem zagContract_tensor_components_raw
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [HasFiniteBiproducts D] [HasCoequalizers D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] {N₁ : Mod D A} {N₂ : Mod D A}
+    {N₁' : Mod D A} {N₂' : Mod D A}
+    (d₁ : ModDualityDatum A N₁ N₁')
+    (d₂ : ModDualityDatum A N₂ N₂') :
+    ((N₁'.X ⊗ N₂'.X) ◁
+      (modTensorπ A N₁ N₁' ⊗ₘ modTensorπ A N₂ N₂')) ≫
+      (tensorμ N₁'.X N₂'.X (modTensor A N₁ N₁')
+        (modTensor A N₂ N₂') ≫
+      ((zagContract A d₁.pair d₁.pair_linear ⊗ₘ
+        zagContract A d₂.pair d₂.pair_linear) ≫
+        modTensorπ A N₁' N₂')) =
+      tensorμ N₁'.X N₂'.X (N₁.X ⊗ N₁'.X) (N₂.X ⊗ N₂'.X) ≫
+        (((α_ N₁'.X N₁.X N₁'.X).inv ⊗ₘ
+          (α_ N₂'.X N₂.X N₂'.X).inv) ≫
+        ((((modTensorπ A N₁' N₁ ≫ d₁.pair) ▷ N₁'.X) ⊗ₘ
+          ((modTensorπ A N₂' N₂ ≫ d₂.pair) ▷ N₂'.X)) ≫
+        (tensorμ A N₁'.X A N₂'.X ≫
+          (μ[A] ▷ (N₁'.X ⊗ N₂'.X)) ≫
+          (A ◁ modTensorπ A N₁' N₂') ≫
+          modTensorAct A N₁' N₂'))) := by
+  have hμnat : ((N₁'.X ⊗ N₂'.X) ◁
+      (modTensorπ A N₁ N₁' ⊗ₘ modTensorπ A N₂ N₂')) ≫
+      tensorμ N₁'.X N₂'.X (modTensor A N₁ N₁')
+        (modTensor A N₂ N₂') =
+      tensorμ N₁'.X N₂'.X (N₁.X ⊗ N₁'.X) (N₂.X ⊗ N₂'.X) ≫
+        ((N₁'.X ◁ modTensorπ A N₁ N₁') ⊗ₘ
+          (N₂'.X ◁ modTensorπ A N₂ N₂')) := by
+    simpa using tensorμ_natural (𝟙 N₁'.X) (𝟙 N₂'.X)
+      (modTensorπ A N₁ N₁') (modTensorπ A N₂ N₂')
+  have hzagc₁ : (N₁'.X ◁ modTensorπ A N₁ N₁') ≫
+      zagContract A d₁.pair d₁.pair_linear =
+      (α_ N₁'.X N₁.X N₁'.X).inv ≫
+        ((modTensorπ A N₁' N₁ ≫ d₁.pair) ▷ N₁'.X) ≫
+        actLeft A N₁'.X :=
+    whiskerLeft_modTensorπ_zagContract A d₁.pair
+      d₁.pair_linear
+  have hzagc₂ : (N₂'.X ◁ modTensorπ A N₂ N₂') ≫
+      zagContract A d₂.pair d₂.pair_linear =
+      (α_ N₂'.X N₂.X N₂'.X).inv ≫
+        ((modTensorπ A N₂' N₂ ≫ d₂.pair) ▷ N₂'.X) ≫
+        actLeft A N₂'.X :=
+    whiskerLeft_modTensorπ_zagContract A d₂.pair
+      d₂.pair_linear
+  have hpair2 : ((N₁'.X ◁ modTensorπ A N₁ N₁') ⊗ₘ
+      (N₂'.X ◁ modTensorπ A N₂ N₂')) ≫
+      (zagContract A d₁.pair d₁.pair_linear ⊗ₘ
+        zagContract A d₂.pair d₂.pair_linear) =
+      ((α_ N₁'.X N₁.X N₁'.X).inv ⊗ₘ
+        (α_ N₂'.X N₂.X N₂'.X).inv) ≫
+        (((modTensorπ A N₁' N₁ ≫ d₁.pair) ▷ N₁'.X) ⊗ₘ
+          ((modTensorπ A N₂' N₂ ≫ d₂.pair) ▷ N₂'.X)) ≫
+        (actLeft A N₁'.X ⊗ₘ actLeft A N₂'.X) := by
+    rw [MonoidalCategory.tensorHom_comp_tensorHom,
+      hzagc₁, hzagc₂,
+      ← MonoidalCategory.tensorHom_comp_tensorHom,
+      ← MonoidalCategory.tensorHom_comp_tensorHom]
+  have hR : ((N₁'.X ⊗ N₂'.X) ◁
+      (modTensorπ A N₁ N₁' ⊗ₘ modTensorπ A N₂ N₂')) ≫
+      (tensorμ N₁'.X N₂'.X (modTensor A N₁ N₁')
+        (modTensor A N₂ N₂') ≫
+      ((zagContract A d₁.pair d₁.pair_linear ⊗ₘ
+        zagContract A d₂.pair d₂.pair_linear) ≫
+        modTensorπ A N₁' N₂')) =
+      tensorμ N₁'.X N₂'.X (N₁.X ⊗ N₁'.X) (N₂.X ⊗ N₂'.X) ≫
+        (((α_ N₁'.X N₁.X N₁'.X).inv ⊗ₘ
+          (α_ N₂'.X N₂.X N₂'.X).inv) ≫
+        ((((modTensorπ A N₁' N₁ ≫ d₁.pair) ▷ N₁'.X) ⊗ₘ
+          ((modTensorπ A N₂' N₂ ≫ d₂.pair) ▷ N₂'.X)) ≫
+        (tensorμ A N₁'.X A N₂'.X ≫
+          (μ[A] ▷ (N₁'.X ⊗ N₂'.X)) ≫
+          (A ◁ modTensorπ A N₁' N₂') ≫
+          modTensorAct A N₁' N₂'))) :=
+    (Category.assoc _ _ _).symm.trans <|
+      (congrArg (fun t : ((N₁'.X ⊗ N₂'.X) ⊗
+            ((N₁.X ⊗ N₁'.X) ⊗ (N₂.X ⊗ N₂'.X))) ⟶
+            ((N₁'.X ⊗ modTensor A N₁ N₁') ⊗
+              (N₂'.X ⊗ modTensor A N₂ N₂')) =>
+          t ≫ ((zagContract A d₁.pair d₁.pair_linear ⊗ₘ
+            zagContract A d₂.pair d₂.pair_linear) ≫
+            modTensorπ A N₁' N₂')) hμnat).trans <|
+      (Category.assoc _ _ _).trans <|
+      congrArg (fun t : (N₁'.X ⊗ (N₁.X ⊗ N₁'.X)) ⊗
+            (N₂'.X ⊗ (N₂.X ⊗ N₂'.X)) ⟶ modTensor A N₁' N₂' =>
+        tensorμ N₁'.X N₂'.X (N₁.X ⊗ N₁'.X)
+          (N₂.X ⊗ N₂'.X) ≫ t) <|
+      (Category.assoc _ _ _).symm.trans <|
+      (congrArg (fun t : (N₁'.X ⊗ (N₁.X ⊗ N₁'.X)) ⊗
+            (N₂'.X ⊗ (N₂.X ⊗ N₂'.X)) ⟶ N₁'.X ⊗ N₂'.X =>
+        t ≫ modTensorπ A N₁' N₂') hpair2).trans <|
+      (Category.assoc _ _ _).trans <|
+      congrArg (fun t : ((N₁'.X ⊗ N₁.X) ⊗ N₁'.X) ⊗
+            ((N₂'.X ⊗ N₂.X) ⊗ N₂'.X) ⟶ modTensor A N₁' N₂' =>
+        ((α_ N₁'.X N₁.X N₁'.X).inv ⊗ₘ
+          (α_ N₂'.X N₂.X N₂'.X).inv) ≫ t) <|
+      (Category.assoc _ _ _).trans <|
+      congrArg (fun t : (A ⊗ N₁'.X) ⊗ (A ⊗ N₂'.X) ⟶
+            modTensor A N₁' N₂' =>
+        (((modTensorπ A N₁' N₁ ≫ d₁.pair) ▷ N₁'.X) ⊗ₘ
+          ((modTensorπ A N₂' N₂ ≫ d₂.pair) ▷ N₂'.X)) ≫ t)
+        (tensorHom_actLeft_π A N₁' N₂')
+  exact hR
+
 /-- **The tensor contraction against the interchange is the
 tensor of the component contractions**: the crossing seats each
 dual half against its own carrier. -/
@@ -220,54 +496,13 @@ theorem interchange_zigContract
       (tensorDatum A d₁ d₂).pair_linear
   conv_lhs => erw [
     comp_whiskerRight (tensorμ N₁.X N₁'.X N₂.X N₂'.X)
-      ((modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂') ≫ (modTensorπ A (modTensorMod A N₁ N₂) (modTensorMod A N₁' N₂'))) _,
-    comp_whiskerRight (modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂') (modTensorπ A (modTensorMod A N₁ N₂) (modTensorMod A N₁' N₂')) _,
+      ((modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂') ≫ (modTensorπ A (modTensorMod A N₁ N₂)
+          (modTensorMod A N₁' N₂'))) _,
+    comp_whiskerRight (modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂') (modTensorπ A
+        (modTensorMod A N₁ N₂) (modTensorMod A N₁' N₂')) _,
     Category.assoc, Category.assoc, hzdef]
   -- The inner contraction word, fully reduced at the fold.
-  have hfold : modTensorπ A (regularMod A) (regularMod A) ≫
-      regPairFold A = μ[A] := by
-    rw [regPairFold]
-    exact modTensorπ_desc A _ _ _ _
-  have hw : ((modTensorπ A N₁' N₂' ⊗ₘ modTensorπ A N₁ N₂) :
-        (N₁'.X ⊗ N₂'.X) ⊗ (N₁.X ⊗ N₂.X) ⟶ _) ≫
-      interchange A N₁' N₂' N₁ N₂ ≫
-      modTensorMap A d₁.pairMod d₂.pairMod ≫ regPairFold A =
-      tensorμ N₁'.X N₂'.X N₁.X N₂.X ≫
-        ((modTensorπ A N₁' N₁ ≫ d₁.pair) ⊗ₘ
-          (modTensorπ A N₂' N₂ ≫ d₂.pair)) ≫ μ[A] := by
-    have hm : modTensorπ A (modTensorMod A N₁' N₁)
-        (modTensorMod A N₂' N₂) ≫
-        modTensorMap A d₁.pairMod d₂.pairMod =
-        (d₁.pair ⊗ₘ d₂.pair) ≫
-          modTensorπ A (regularMod A) (regularMod A) :=
-      modTensorπ_map A d₁.pairMod d₂.pairMod
-    have htail : (modTensorπ A N₁' N₁ ⊗ₘ modTensorπ A N₂' N₂) ≫
-        modTensorπ A (modTensorMod A N₁' N₁)
-          (modTensorMod A N₂' N₂) ≫
-        modTensorMap A d₁.pairMod d₂.pairMod ≫
-        regPairFold A =
-        ((modTensorπ A N₁' N₁ ≫ d₁.pair) ⊗ₘ
-          (modTensorπ A N₂' N₂ ≫ d₂.pair)) ≫ μ[A] := by
-      have t2 : modTensorπ A (modTensorMod A N₁' N₁)
-          (modTensorMod A N₂' N₂) ≫
-          modTensorMap A d₁.pairMod d₂.pairMod ≫
-          regPairFold A =
-          (d₁.pair ⊗ₘ d₂.pair) ≫ μ[A] := by
-        rw [← Category.assoc, hm]
-        exact (Category.assoc _ _ _).trans
-          (congrArg (fun t : (regularMod A).X ⊗
-              (regularMod A).X ⟶ A =>
-            (d₁.pair ⊗ₘ d₂.pair) ≫ t) hfold)
-      exact (congrArg (fun t : (modTensorMod A N₁' N₁).X ⊗
-            (modTensorMod A N₂' N₂).X ⟶ A =>
-          (modTensorπ A N₁' N₁ ⊗ₘ modTensorπ A N₂' N₂) ≫ t)
-        t2).trans (by
-          rw [← MonoidalCategory.tensorHom_comp_tensorHom_assoc])
-    erw [← Category.assoc, tensorHom_π_interchange,
-      rawInterchangeπ, rawInterchange]
-    conv_lhs => erw [Category.assoc]; arg 2; erw [Category.assoc]
-    simpa only [Category.assoc] using congrArg (fun t : (N₁'.X ⊗ N₁.X) ⊗ (N₂'.X ⊗ N₂.X) ⟶
-        A => tensorμ N₁'.X N₂'.X N₁.X N₂.X ≫ t) htail
+  have hw := tensorDatum_pair_rawInterchange A d₁ d₂
   conv_lhs => rw [hinner]
   conv_lhs => erw [whisker_exchange_assoc
       (tensorμ N₁.X N₁'.X N₂.X N₂'.X) (modTensorπ A N₁ N₂),
@@ -365,7 +600,7 @@ theorem interchange_zigContract
             (modTensorπ A N₂' N₂ ≫ d₂.pair)) ≫ μ[A])) ≫
       (β_ (N₁.X ⊗ N₂.X) A).hom ≫
       (A ◁ modTensorπ A N₁ N₂) ≫ modTensorAct A N₁ N₂ := by
-    show (modTensorπ A N₁ N₂ ⊗ₘ
+    change (modTensorπ A N₁ N₂ ⊗ₘ
         (tensorμ N₁'.X N₂'.X N₁.X N₂.X ≫
           ((modTensorπ A N₁' N₁ ≫ d₁.pair) ⊗ₘ
             (modTensorπ A N₂' N₂ ≫ d₂.pair)) ≫ μ[A])) ≫
@@ -383,85 +618,7 @@ theorem interchange_zigContract
       tensorμ N₁.X N₁'.X N₂.X N₂'.X ▷ (N₁.X ⊗ N₂.X) ≫
         ((α_ (N₁.X ⊗ N₂.X) (N₁'.X ⊗ N₂'.X)
           (N₁.X ⊗ N₂.X)).hom ≫ t)) hL) ?_
-  have hμnat : ((modTensorπ A N₁ N₁' ⊗ₘ modTensorπ A N₂ N₂') ▷
-      (N₁.X ⊗ N₂.X)) ≫
-      tensorμ (modTensor A N₁ N₁') (modTensor A N₂ N₂')
-        N₁.X N₂.X =
-      tensorμ (N₁.X ⊗ N₁'.X) (N₂.X ⊗ N₂'.X) N₁.X N₂.X ≫
-        ((modTensorπ A N₁ N₁' ▷ N₁.X) ⊗ₘ
-          (modTensorπ A N₂ N₂' ▷ N₂.X)) := by
-    simpa using tensorμ_natural (modTensorπ A N₁ N₁')
-      (modTensorπ A N₂ N₂') (𝟙 N₁.X) (𝟙 N₂.X)
-  have hzc₁ : (modTensorπ A N₁ N₁' ▷ N₁.X) ≫
-      zigContract A d₁.pair d₁.pair_linear =
-      (α_ N₁.X N₁'.X N₁.X).hom ≫
-        (N₁.X ◁ (modTensorπ A N₁' N₁ ≫ d₁.pair)) ≫
-        actRight A N₁.X :=
-    whiskerRight_modTensorπ_zigContract A d₁.pair
-      d₁.pair_linear
-  have hzc₂ : (modTensorπ A N₂ N₂' ▷ N₂.X) ≫
-      zigContract A d₂.pair d₂.pair_linear =
-      (α_ N₂.X N₂'.X N₂.X).hom ≫
-        (N₂.X ◁ (modTensorπ A N₂' N₂ ≫ d₂.pair)) ≫
-        actRight A N₂.X :=
-    whiskerRight_modTensorπ_zigContract A d₂.pair
-      d₂.pair_linear
-  have hpair2 : ((modTensorπ A N₁ N₁' ▷ N₁.X) ⊗ₘ
-      (modTensorπ A N₂ N₂' ▷ N₂.X)) ≫
-      (zigContract A d₁.pair d₁.pair_linear ⊗ₘ
-        zigContract A d₂.pair d₂.pair_linear) =
-      ((α_ N₁.X N₁'.X N₁.X).hom ⊗ₘ
-        (α_ N₂.X N₂'.X N₂.X).hom) ≫
-        ((N₁.X ◁ (modTensorπ A N₁' N₁ ≫ d₁.pair)) ⊗ₘ
-          (N₂.X ◁ (modTensorπ A N₂' N₂ ≫ d₂.pair))) ≫
-        (actRight A N₁.X ⊗ₘ actRight A N₂.X) := by
-    rw [MonoidalCategory.tensorHom_comp_tensorHom, hzc₁, hzc₂,
-      ← MonoidalCategory.tensorHom_comp_tensorHom,
-      ← MonoidalCategory.tensorHom_comp_tensorHom]
-  have hR : ((modTensorπ A N₁ N₁' ⊗ₘ modTensorπ A N₂ N₂') ▷
-      (N₁.X ⊗ N₂.X)) ≫
-      (tensorμ (modTensor A N₁ N₁') (modTensor A N₂ N₂')
-        N₁.X N₂.X ≫
-      ((zigContract A d₁.pair d₁.pair_linear ⊗ₘ
-        zigContract A d₂.pair d₂.pair_linear) ≫
-        modTensorπ A N₁ N₂)) =
-      tensorμ (N₁.X ⊗ N₁'.X) (N₂.X ⊗ N₂'.X) N₁.X N₂.X ≫
-        (((α_ N₁.X N₁'.X N₁.X).hom ⊗ₘ
-          (α_ N₂.X N₂'.X N₂.X).hom) ≫
-        (((N₁.X ◁ (modTensorπ A N₁' N₁ ≫ d₁.pair)) ⊗ₘ
-          (N₂.X ◁ (modTensorπ A N₂' N₂ ≫ d₂.pair))) ≫
-        (tensorμ N₁.X A N₂.X A ≫
-          ((N₁.X ⊗ N₂.X) ◁ μ[A]) ≫
-          (modTensorπ A N₁ N₂ ▷ A) ≫
-          (β_ (modTensor A N₁ N₂) A).hom ≫
-          modTensorAct A N₁ N₂))) :=
-    (Category.assoc _ _ _).symm.trans <|
-      (congrArg (fun t : (((N₁.X ⊗ N₁'.X) ⊗ (N₂.X ⊗ N₂'.X)) ⊗
-            (N₁.X ⊗ N₂.X)) ⟶
-            ((modTensor A N₁ N₁' ⊗ N₁.X) ⊗
-              (modTensor A N₂ N₂' ⊗ N₂.X)) =>
-          t ≫ ((zigContract A d₁.pair d₁.pair_linear ⊗ₘ
-            zigContract A d₂.pair d₂.pair_linear) ≫
-            modTensorπ A N₁ N₂)) hμnat).trans <|
-      (Category.assoc _ _ _).trans <|
-      congrArg (fun t : ((N₁.X ⊗ N₁'.X) ⊗ N₁.X) ⊗
-            ((N₂.X ⊗ N₂'.X) ⊗ N₂.X) ⟶ modTensor A N₁ N₂ =>
-        tensorμ (N₁.X ⊗ N₁'.X) (N₂.X ⊗ N₂'.X) N₁.X N₂.X ≫ t) <|
-      (Category.assoc _ _ _).symm.trans <|
-      (congrArg (fun t : ((N₁.X ⊗ N₁'.X) ⊗ N₁.X) ⊗
-            ((N₂.X ⊗ N₂'.X) ⊗ N₂.X) ⟶ N₁.X ⊗ N₂.X =>
-        t ≫ modTensorπ A N₁ N₂) hpair2).trans <|
-      (Category.assoc _ _ _).trans <|
-      congrArg (fun t : (N₁.X ⊗ (N₁'.X ⊗ N₁.X)) ⊗
-            (N₂.X ⊗ (N₂'.X ⊗ N₂.X)) ⟶ modTensor A N₁ N₂ =>
-        ((α_ N₁.X N₁'.X N₁.X).hom ⊗ₘ
-          (α_ N₂.X N₂'.X N₂.X).hom) ≫ t) <|
-      (Category.assoc _ _ _).trans <|
-      congrArg (fun t : (N₁.X ⊗ A) ⊗ (N₂.X ⊗ A) ⟶
-            modTensor A N₁ N₂ =>
-        ((N₁.X ◁ (modTensorπ A N₁' N₁ ≫ d₁.pair)) ⊗ₘ
-          (N₂.X ◁ (modTensorπ A N₂' N₂ ≫ d₂.pair))) ≫ t)
-        (tensorHom_actRight_π A N₁ N₂)
+  have hR := zigContract_tensor_components_raw A d₁ d₂
   refine Eq.trans ?_ hR.symm
   conv_lhs => rw [MonoidalCategory.whiskerLeft_comp,
     MonoidalCategory.whiskerLeft_comp]
@@ -544,8 +701,10 @@ theorem interchange_zagContract
       (tensorDatum A d₁ d₂).pair_linear
   conv_lhs => erw [
     MonoidalCategory.whiskerLeft_comp _ (tensorμ N₁.X N₁'.X N₂.X N₂'.X)
-      ((modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂') ≫ (modTensorπ A (modTensorMod A N₁ N₂) (modTensorMod A N₁' N₂'))),
-    MonoidalCategory.whiskerLeft_comp _ (modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂') (modTensorπ A (modTensorMod A N₁ N₂) (modTensorMod A N₁' N₂')),
+      ((modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂') ≫ (modTensorπ A (modTensorMod A N₁ N₂)
+          (modTensorMod A N₁' N₂'))),
+    MonoidalCategory.whiskerLeft_comp _ (modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂')
+        (modTensorπ A (modTensorMod A N₁ N₂) (modTensorMod A N₁' N₂')),
     Category.assoc, Category.assoc]
   refine Eq.trans (congrArg
     (fun t : modTensor A N₁' N₂' ⊗
@@ -565,50 +724,7 @@ theorem interchange_zagContract
     ← whisker_exchange_assoc (modTensorπ A N₁' N₂')
       (modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂')]
   -- The inner contraction word, fully reduced at the fold.
-  have hfold : modTensorπ A (regularMod A) (regularMod A) ≫
-      regPairFold A = μ[A] := by
-    rw [regPairFold]
-    exact modTensorπ_desc A _ _ _ _
-  have hw : ((modTensorπ A N₁' N₂' ⊗ₘ modTensorπ A N₁ N₂) :
-        (N₁'.X ⊗ N₂'.X) ⊗ (N₁.X ⊗ N₂.X) ⟶ _) ≫
-      interchange A N₁' N₂' N₁ N₂ ≫
-      modTensorMap A d₁.pairMod d₂.pairMod ≫ regPairFold A =
-      tensorμ N₁'.X N₂'.X N₁.X N₂.X ≫
-        ((modTensorπ A N₁' N₁ ≫ d₁.pair) ⊗ₘ
-          (modTensorπ A N₂' N₂ ≫ d₂.pair)) ≫ μ[A] := by
-    have hm : modTensorπ A (modTensorMod A N₁' N₁)
-        (modTensorMod A N₂' N₂) ≫
-        modTensorMap A d₁.pairMod d₂.pairMod =
-        (d₁.pair ⊗ₘ d₂.pair) ≫
-          modTensorπ A (regularMod A) (regularMod A) :=
-      modTensorπ_map A d₁.pairMod d₂.pairMod
-    have htail : (modTensorπ A N₁' N₁ ⊗ₘ modTensorπ A N₂' N₂) ≫
-        modTensorπ A (modTensorMod A N₁' N₁)
-          (modTensorMod A N₂' N₂) ≫
-        modTensorMap A d₁.pairMod d₂.pairMod ≫
-        regPairFold A =
-        ((modTensorπ A N₁' N₁ ≫ d₁.pair) ⊗ₘ
-          (modTensorπ A N₂' N₂ ≫ d₂.pair)) ≫ μ[A] := by
-      have t2 : modTensorπ A (modTensorMod A N₁' N₁)
-          (modTensorMod A N₂' N₂) ≫
-          modTensorMap A d₁.pairMod d₂.pairMod ≫
-          regPairFold A =
-          (d₁.pair ⊗ₘ d₂.pair) ≫ μ[A] := by
-        rw [← Category.assoc, hm]
-        exact (Category.assoc _ _ _).trans
-          (congrArg (fun t : (regularMod A).X ⊗
-              (regularMod A).X ⟶ A =>
-            (d₁.pair ⊗ₘ d₂.pair) ≫ t) hfold)
-      exact (congrArg (fun t : (modTensorMod A N₁' N₁).X ⊗
-            (modTensorMod A N₂' N₂).X ⟶ A =>
-          (modTensorπ A N₁' N₁ ⊗ₘ modTensorπ A N₂' N₂) ≫ t)
-        t2).trans (by
-          rw [← MonoidalCategory.tensorHom_comp_tensorHom_assoc])
-    erw [← Category.assoc, tensorHom_π_interchange,
-      rawInterchangeπ, rawInterchange]
-    conv_lhs => erw [Category.assoc]; arg 2; erw [Category.assoc]
-    simpa only [Category.assoc] using congrArg (fun t : (N₁'.X ⊗ N₁.X) ⊗ (N₂'.X ⊗ N₂.X) ⟶
-        A => tensorμ N₁'.X N₂'.X N₁.X N₂.X ≫ t) htail
+  have hw := tensorDatum_pair_rawInterchange A d₁ d₂
   conv_lhs => erw [← reassoc_of% (MonoidalCategory.tensorHom_def'
       (modTensorπ A N₁' N₂')
       (modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂'))]
@@ -696,7 +812,7 @@ theorem interchange_zagContract
         (N₁'.X ⊗ N₂'.X)) ≫
       (A ◁ modTensorπ A N₁' N₂') ≫
       modTensorAct A N₁' N₂' := by
-    show ((tensorμ N₁'.X N₂'.X N₁.X N₂.X ≫
+    change ((tensorμ N₁'.X N₂'.X N₁.X N₂.X ≫
         ((modTensorπ A N₁' N₁ ≫ d₁.pair) ⊗ₘ
           (modTensorπ A N₂' N₂ ≫ d₂.pair)) ≫ μ[A]) ⊗ₘ
         modTensorπ A N₁' N₂') ≫
@@ -708,86 +824,7 @@ theorem interchange_zagContract
       ((N₁'.X ⊗ N₂'.X) ◁ tensorμ N₁.X N₁'.X N₂.X N₂'.X) ≫
         ((α_ (N₁'.X ⊗ N₂'.X) (N₁.X ⊗ N₂.X)
           (N₁'.X ⊗ N₂'.X)).inv ≫ t)) hL) ?_
-  have hμnat : ((N₁'.X ⊗ N₂'.X) ◁
-      (modTensorπ A N₁ N₁' ⊗ₘ modTensorπ A N₂ N₂')) ≫
-      tensorμ N₁'.X N₂'.X (modTensor A N₁ N₁')
-        (modTensor A N₂ N₂') =
-      tensorμ N₁'.X N₂'.X (N₁.X ⊗ N₁'.X) (N₂.X ⊗ N₂'.X) ≫
-        ((N₁'.X ◁ modTensorπ A N₁ N₁') ⊗ₘ
-          (N₂'.X ◁ modTensorπ A N₂ N₂')) := by
-    simpa using tensorμ_natural (𝟙 N₁'.X) (𝟙 N₂'.X)
-      (modTensorπ A N₁ N₁') (modTensorπ A N₂ N₂')
-  have hzagc₁ : (N₁'.X ◁ modTensorπ A N₁ N₁') ≫
-      zagContract A d₁.pair d₁.pair_linear =
-      (α_ N₁'.X N₁.X N₁'.X).inv ≫
-        ((modTensorπ A N₁' N₁ ≫ d₁.pair) ▷ N₁'.X) ≫
-        actLeft A N₁'.X :=
-    whiskerLeft_modTensorπ_zagContract A d₁.pair
-      d₁.pair_linear
-  have hzagc₂ : (N₂'.X ◁ modTensorπ A N₂ N₂') ≫
-      zagContract A d₂.pair d₂.pair_linear =
-      (α_ N₂'.X N₂.X N₂'.X).inv ≫
-        ((modTensorπ A N₂' N₂ ≫ d₂.pair) ▷ N₂'.X) ≫
-        actLeft A N₂'.X :=
-    whiskerLeft_modTensorπ_zagContract A d₂.pair
-      d₂.pair_linear
-  have hpair2 : ((N₁'.X ◁ modTensorπ A N₁ N₁') ⊗ₘ
-      (N₂'.X ◁ modTensorπ A N₂ N₂')) ≫
-      (zagContract A d₁.pair d₁.pair_linear ⊗ₘ
-        zagContract A d₂.pair d₂.pair_linear) =
-      ((α_ N₁'.X N₁.X N₁'.X).inv ⊗ₘ
-        (α_ N₂'.X N₂.X N₂'.X).inv) ≫
-        (((modTensorπ A N₁' N₁ ≫ d₁.pair) ▷ N₁'.X) ⊗ₘ
-          ((modTensorπ A N₂' N₂ ≫ d₂.pair) ▷ N₂'.X)) ≫
-        (actLeft A N₁'.X ⊗ₘ actLeft A N₂'.X) := by
-    rw [MonoidalCategory.tensorHom_comp_tensorHom,
-      hzagc₁, hzagc₂,
-      ← MonoidalCategory.tensorHom_comp_tensorHom,
-      ← MonoidalCategory.tensorHom_comp_tensorHom]
-  have hR : ((N₁'.X ⊗ N₂'.X) ◁
-      (modTensorπ A N₁ N₁' ⊗ₘ modTensorπ A N₂ N₂')) ≫
-      (tensorμ N₁'.X N₂'.X (modTensor A N₁ N₁')
-        (modTensor A N₂ N₂') ≫
-      ((zagContract A d₁.pair d₁.pair_linear ⊗ₘ
-        zagContract A d₂.pair d₂.pair_linear) ≫
-        modTensorπ A N₁' N₂')) =
-      tensorμ N₁'.X N₂'.X (N₁.X ⊗ N₁'.X) (N₂.X ⊗ N₂'.X) ≫
-        (((α_ N₁'.X N₁.X N₁'.X).inv ⊗ₘ
-          (α_ N₂'.X N₂.X N₂'.X).inv) ≫
-        ((((modTensorπ A N₁' N₁ ≫ d₁.pair) ▷ N₁'.X) ⊗ₘ
-          ((modTensorπ A N₂' N₂ ≫ d₂.pair) ▷ N₂'.X)) ≫
-        (tensorμ A N₁'.X A N₂'.X ≫
-          (μ[A] ▷ (N₁'.X ⊗ N₂'.X)) ≫
-          (A ◁ modTensorπ A N₁' N₂') ≫
-          modTensorAct A N₁' N₂'))) :=
-    (Category.assoc _ _ _).symm.trans <|
-      (congrArg (fun t : ((N₁'.X ⊗ N₂'.X) ⊗
-            ((N₁.X ⊗ N₁'.X) ⊗ (N₂.X ⊗ N₂'.X))) ⟶
-            ((N₁'.X ⊗ modTensor A N₁ N₁') ⊗
-              (N₂'.X ⊗ modTensor A N₂ N₂')) =>
-          t ≫ ((zagContract A d₁.pair d₁.pair_linear ⊗ₘ
-            zagContract A d₂.pair d₂.pair_linear) ≫
-            modTensorπ A N₁' N₂')) hμnat).trans <|
-      (Category.assoc _ _ _).trans <|
-      congrArg (fun t : (N₁'.X ⊗ (N₁.X ⊗ N₁'.X)) ⊗
-            (N₂'.X ⊗ (N₂.X ⊗ N₂'.X)) ⟶ modTensor A N₁' N₂' =>
-        tensorμ N₁'.X N₂'.X (N₁.X ⊗ N₁'.X)
-          (N₂.X ⊗ N₂'.X) ≫ t) <|
-      (Category.assoc _ _ _).symm.trans <|
-      (congrArg (fun t : (N₁'.X ⊗ (N₁.X ⊗ N₁'.X)) ⊗
-            (N₂'.X ⊗ (N₂.X ⊗ N₂'.X)) ⟶ N₁'.X ⊗ N₂'.X =>
-        t ≫ modTensorπ A N₁' N₂') hpair2).trans <|
-      (Category.assoc _ _ _).trans <|
-      congrArg (fun t : ((N₁'.X ⊗ N₁.X) ⊗ N₁'.X) ⊗
-            ((N₂'.X ⊗ N₂.X) ⊗ N₂'.X) ⟶ modTensor A N₁' N₂' =>
-        ((α_ N₁'.X N₁.X N₁'.X).inv ⊗ₘ
-          (α_ N₂'.X N₂.X N₂'.X).inv) ≫ t) <|
-      (Category.assoc _ _ _).trans <|
-      congrArg (fun t : (A ⊗ N₁'.X) ⊗ (A ⊗ N₂'.X) ⟶
-            modTensor A N₁' N₂' =>
-        (((modTensorπ A N₁' N₁ ≫ d₁.pair) ▷ N₁'.X) ⊗ₘ
-          ((modTensorπ A N₂' N₂ ≫ d₂.pair) ▷ N₂'.X)) ≫ t)
-        (tensorHom_actLeft_π A N₁' N₂')
+  have hR := zagContract_tensor_components_raw A d₁ d₂
   refine Eq.trans ?_ hR.symm
   conv_lhs => rw [comp_whiskerRight, comp_whiskerRight]
   simp only [Category.assoc]

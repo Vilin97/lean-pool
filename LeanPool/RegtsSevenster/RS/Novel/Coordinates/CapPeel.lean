@@ -43,12 +43,12 @@ def capPeelRotation (m : ℕ) :
     split_ifs <;> omega⟩
   left_inv i := Fin.ext (by
     have := i.isLt
-    show capPeelInv m (capPeelFun m i.val) = i.val
+    change capPeelInv m (capPeelFun m i.val) = i.val
     unfold capPeelFun capPeelInv
     split_ifs <;> omega)
   right_inv j := Fin.ext (by
     have := j.isLt
-    show capPeelFun m (capPeelInv m j.val) = j.val
+    change capPeelFun m (capPeelInv m j.val) = j.val
     unfold capPeelFun capPeelInv
     split_ifs <;> omega)
 
@@ -89,31 +89,31 @@ def capPeelFlagEquiv (m : ℕ) :
     obtain ⟨i, b⟩ := g
     unfold capPeelFlagFun
     by_cases h : i.val < m
-    · rw [dif_pos h]
-      show (⟨i.val, _⟩, b) = (i, b)
+    · rw [dite_eq_left h]
+      change (⟨i.val, _⟩, b) = (i, b)
       exact Prod.ext (Fin.ext rfl) rfl
-    · rw [dif_neg h]
+    · rw [dite_eq_right h]
       have hi : i.val = m := by
         have := i.isLt
         omega
       cases b
-      · show ((⟨m, _⟩ : Fin (m + 1)),
+      · change ((⟨m, _⟩ : Fin (m + 1)),
           decide ((0 : Fin 2).val = 1)) = (i, false)
         exact Prod.ext (Fin.ext (show m = i.val by omega)) rfl
-      · show ((⟨m, _⟩ : Fin (m + 1)),
+      · change ((⟨m, _⟩ : Fin (m + 1)),
           decide ((1 : Fin 2).val = 1)) = (i, true)
         exact Prod.ext (Fin.ext (show m = i.val by omega)) rfl
   right_inv g := by
     rcases g with ⟨j, b⟩ | t
-    · show capPeelFlagFun m (⟨j.val, _⟩, b) = _
+    · change capPeelFlagFun m (⟨j.val, _⟩, b) = _
       unfold capPeelFlagFun
-      rw [dif_pos (show (⟨j.val, by omega⟩ :
+      rw [dite_eq_left (show (⟨j.val, by omega⟩ :
         Fin (m + 1)).val < m from j.isLt)]
-    · show capPeelFlagFun m (⟨m, _⟩, decide (t.val = 1)) = _
+    · change capPeelFlagFun m (⟨m, _⟩, decide (t.val = 1)) = _
       unfold capPeelFlagFun
-      rw [dif_neg (show ¬ ((⟨m, by omega⟩ :
+      rw [dite_eq_right (show ¬ ((⟨m, by omega⟩ :
         Fin (m + 1)).val < m) from by
-          show ¬ (m < m); omega)]
+          change ¬ (m < m); omega)]
       refine congrArg Sum.inr ?_
       have ht := t.isLt
       rcases (show t.val = 0 ∨ t.val = 1 by omega)
@@ -143,6 +143,267 @@ theorem capPeel_interleave_right_val (m X : ℕ)
     interleaveEquiv_inr_low]
   rfl
 
+private theorem capPeelEquiv_attach_comm (m : ℕ)
+    (g : (((strandBundle (m + 1)).relabel (finCongr
+      (by omega : (m + 1) + (m + 1) =
+        ((m + 1) + (m + 1)) + 0)))).Flag) :
+    (((tensorFragment
+        ((strandBundle m).relabel (finCongr
+          (by omega : m + m = (m + m) + 0)))
+        (Fragment.strand.relabel (finCongr
+          (by omega : 2 = 2 + 0)))).relabel
+      (finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv)))).attach (capPeelFlagEquiv m g) =
+      ((((strandBundle (m + 1)).relabel (finCongr
+      (by omega : (m + 1) + (m + 1) =
+        ((m + 1) + (m + 1)) + 0)))).attach g).map (_root_.Equiv.equivOfIsEmpty Empty (Empty
+            ⊕ Empty)) id := by
+  -- ═══════ PAIRING ═══════
+  -- The flag map sends a strand's two ends to the same factor, so
+  -- the pairing is the factor's own.
+  obtain ⟨i, b⟩ := g
+  by_cases h : i.val < m
+  · have hflag : capPeelFlagEquiv m (i, b) =
+        Sum.inl (⟨i.val, h⟩, b) := dite_eq_left h
+    refine Eq.trans (congrArg
+      (fun z : ((Fin m × Bool) ⊕ Fin 2) =>
+        ((tensorFragment
+        ((strandBundle m).relabel (finCongr
+          (by omega : m + m = (m + m) + 0)))
+        (Fragment.strand.relabel (finCongr
+          (by omega : 2 = 2 + 0)))).relabel
+      (finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv))).attach z) hflag) ?_
+    cases b
+    · change Sum.inr ((finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv))
+        ((interleaveEquiv (m + m) 0 2 0)
+          (Sum.inl ⟨i.val, by omega⟩))) =
+        Sum.inr (finCongr
+          (by omega : (m + 1) + (m + 1) =
+            ((m + 1) + (m + 1)) + 0) ⟨i.val, by omega⟩)
+      refine congrArg Sum.inr (Fin.ext ?_)
+      rw [capPeel_inTransport_val,
+        capPeel_interleave_left_val]
+      change capPeelInv m i.val = i.val
+      unfold capPeelInv
+      rw [ite_eq_left h]
+    · change Sum.inr ((finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv))
+        ((interleaveEquiv (m + m) 0 2 0)
+          (Sum.inl ⟨m + i.val, by omega⟩))) =
+        Sum.inr (finCongr
+          (by omega : (m + 1) + (m + 1) =
+            ((m + 1) + (m + 1)) + 0)
+          ⟨(m + 1) + i.val, by omega⟩)
+      refine congrArg Sum.inr (Fin.ext ?_)
+      rw [capPeel_inTransport_val,
+        capPeel_interleave_left_val]
+      change capPeelInv m (m + i.val) = (m + 1) + i.val
+      unfold capPeelInv
+      split_ifs <;> omega
+  -- ─────── the top strand ───────
+  · have hi : i.val = m := by
+      have := i.isLt
+      omega
+    cases b
+    · have hflag : capPeelFlagEquiv m (i, false) =
+          Sum.inr 0 := by
+        change capPeelFlagFun m (i, false) = _
+        unfold capPeelFlagFun
+        rw [dite_eq_right h]
+        rfl
+      refine Eq.trans (congrArg
+        (fun z : ((Fin m × Bool) ⊕ Fin 2) =>
+          ((tensorFragment
+        ((strandBundle m).relabel (finCongr
+          (by omega : m + m = (m + m) + 0)))
+        (Fragment.strand.relabel (finCongr
+          (by omega : 2 = 2 + 0)))).relabel
+      (finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv))).attach z) hflag) ?_
+      change Sum.inr ((finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv))
+        ((interleaveEquiv (m + m) 0 2 0)
+          (Sum.inr ⟨0, by omega⟩))) =
+        Sum.inr (finCongr
+          (by omega : (m + 1) + (m + 1) =
+            ((m + 1) + (m + 1)) + 0) ⟨i.val, by omega⟩)
+      refine congrArg Sum.inr (Fin.ext ?_)
+      rw [capPeel_inTransport_val,
+        capPeel_interleave_right_val]
+      change capPeelInv m ((m + m) + 0) = i.val
+      unfold capPeelInv
+      split_ifs <;> omega
+    · have hflag : capPeelFlagEquiv m (i, true) =
+          Sum.inr 1 := by
+        change capPeelFlagFun m (i, true) = _
+        unfold capPeelFlagFun
+        rw [dite_eq_right h]
+        rfl
+      refine Eq.trans (congrArg
+        (fun z : ((Fin m × Bool) ⊕ Fin 2) =>
+          ((tensorFragment
+        ((strandBundle m).relabel (finCongr
+          (by omega : m + m = (m + m) + 0)))
+        (Fragment.strand.relabel (finCongr
+          (by omega : 2 = 2 + 0)))).relabel
+      (finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv))).attach z) hflag) ?_
+      change Sum.inr ((finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv))
+        ((interleaveEquiv (m + m) 0 2 0)
+          (Sum.inr ⟨1, by omega⟩))) =
+        Sum.inr (finCongr
+          (by omega : (m + 1) + (m + 1) =
+            ((m + 1) + (m + 1)) + 0)
+          ⟨(m + 1) + i.val, by omega⟩)
+      refine congrArg Sum.inr (Fin.ext ?_)
+      rw [capPeel_inTransport_val,
+        capPeel_interleave_right_val]
+      change capPeelInv m ((m + m) + 1) = (m + 1) + i.val
+      unfold capPeelInv
+      split_ifs <;> omega
+-- ═══════ PAIRING ═══════
+
+private theorem capPeelEquiv_pairing_comm (m : ℕ)
+    (g : (((strandBundle (m + 1)).relabel (finCongr
+      (by omega : (m + 1) + (m + 1) =
+        ((m + 1) + (m + 1)) + 0)))).Flag) :
+    capPeelFlagEquiv m ((((strandBundle (m + 1)).relabel (finCongr
+      (by omega : (m + 1) + (m + 1) =
+        ((m + 1) + (m + 1)) + 0)))).pairing g) =
+      (((tensorFragment
+        ((strandBundle m).relabel (finCongr
+          (by omega : m + m = (m + m) + 0)))
+        (Fragment.strand.relabel (finCongr
+          (by omega : 2 = 2 + 0)))).relabel
+      (finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv)))).pairing (capPeelFlagEquiv m g) := by
+  obtain ⟨i, b⟩ := g
+  change capPeelFlagEquiv m (i, !b) =
+    ((((tensorFragment
+        ((strandBundle m).relabel (finCongr
+          (by omega : m + m = (m + m) + 0)))
+        (Fragment.strand.relabel (finCongr
+          (by omega : 2 = 2 + 0)))).relabel
+      (finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv))).pairing
+      (capPeelFlagEquiv m (i, b)) :
+      ((Fin m × Bool) ⊕ Fin 2)))
+  by_cases h : i.val < m
+  · exact ((dite_eq_left h : capPeelFlagEquiv m (i, !b) =
+        Sum.inl (⟨i.val, h⟩, !b))).trans
+      (((rfl : (Sum.inl (⟨i.val, h⟩, !b) :
+          ((Fin m × Bool) ⊕ Fin 2)) =
+        (((tensorFragment
+        ((strandBundle m).relabel (finCongr
+          (by omega : m + m = (m + m) + 0)))
+        (Fragment.strand.relabel (finCongr
+          (by omega : 2 = 2 + 0)))).relabel
+      (finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv))).pairing
+          (Sum.inl (⟨i.val, h⟩, b)) :
+          ((Fin m × Bool) ⊕ Fin 2)))).trans
+      ((congrArg (fun z : ((Fin m × Bool) ⊕ Fin 2) =>
+        (((tensorFragment
+        ((strandBundle m).relabel (finCongr
+          (by omega : m + m = (m + m) + 0)))
+        (Fragment.strand.relabel (finCongr
+          (by omega : 2 = 2 + 0)))).relabel
+      (finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv))).pairing z : ((Fin m × Bool) ⊕ Fin 2)))
+        (dite_eq_left h : capPeelFlagEquiv m (i, b) =
+          Sum.inl (⟨i.val, h⟩, b))).symm))
+  -- ─────── the top strand ───────
+  · have hf : capPeelFlagEquiv m (i, false) =
+        Sum.inr (0 : Fin 2) := by
+      change capPeelFlagFun m (i, false) = _
+      unfold capPeelFlagFun
+      rw [dite_eq_right h]
+      rfl
+    have ht : capPeelFlagEquiv m (i, true) =
+        Sum.inr (1 : Fin 2) := by
+      change capPeelFlagFun m (i, true) = _
+      unfold capPeelFlagFun
+      rw [dite_eq_right h]
+      rfl
+    cases b
+    · exact ht.trans
+        (((show (Sum.inr (1 : Fin 2) :
+            ((Fin m × Bool) ⊕ Fin 2)) =
+          (((tensorFragment
+        ((strandBundle m).relabel (finCongr
+          (by omega : m + m = (m + m) + 0)))
+        (Fragment.strand.relabel (finCongr
+          (by omega : 2 = 2 + 0)))).relabel
+      (finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv))).pairing
+            (Sum.inr (0 : Fin 2)) :
+            ((Fin m × Bool) ⊕ Fin 2)) from
+          congrArg Sum.inr (Fin.ext rfl))).trans
+        ((congrArg (fun z : ((Fin m × Bool) ⊕ Fin 2) =>
+          (((tensorFragment
+        ((strandBundle m).relabel (finCongr
+          (by omega : m + m = (m + m) + 0)))
+        (Fragment.strand.relabel (finCongr
+          (by omega : 2 = 2 + 0)))).relabel
+      (finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv))).pairing z : ((Fin m × Bool) ⊕ Fin 2))) hf).symm))
+    · exact hf.trans
+        (((show (Sum.inr (0 : Fin 2) :
+            ((Fin m × Bool) ⊕ Fin 2)) =
+          (((tensorFragment
+        ((strandBundle m).relabel (finCongr
+          (by omega : m + m = (m + m) + 0)))
+        (Fragment.strand.relabel (finCongr
+          (by omega : 2 = 2 + 0)))).relabel
+      (finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv))).pairing
+            (Sum.inr (1 : Fin 2)) :
+            ((Fin m × Bool) ⊕ Fin 2)) from
+          congrArg Sum.inr (Fin.ext rfl))).trans
+        ((congrArg (fun z : ((Fin m × Bool) ⊕ Fin 2) =>
+          (((tensorFragment
+        ((strandBundle m).relabel (finCongr
+          (by omega : m + m = (m + m) + 0)))
+        (Fragment.strand.relabel (finCongr
+          (by omega : 2 = 2 + 0)))).relabel
+      (finSumFinEquiv.symm.trans
+        ((_root_.Equiv.sumCongr (capPeelRotation m).symm
+          (_root_.Equiv.refl (Fin 0))).trans
+          finSumFinEquiv))).pairing z : ((Fin m × Bool) ⊕ Fin 2))) ht).symm))
+
 /-- **The cap peel equivalence**: the padded bundle cap on
 `m + 1` strands is the tensor of the cap on `m` strands with one
 evaluation, relabelled along the peel rotation. -/
@@ -164,234 +425,8 @@ noncomputable def capPeelEquiv (m : ℕ) :
     show Empty ≃ (Empty ⊕ Empty) from
       _root_.Equiv.equivOfIsEmpty _ _
   -- ═══════ ATTACHMENT ═══════
-  attach_comm := fun g => by
-    -- ═══════ PAIRING ═══════
-    -- The flag map sends a strand's two ends to the same factor, so
-    -- the pairing is the factor's own.
-    obtain ⟨i, b⟩ := g
-    by_cases h : i.val < m
-    · have hflag : capPeelFlagEquiv m (i, b) =
-          Sum.inl (⟨i.val, h⟩, b) := dif_pos h
-      refine Eq.trans (congrArg
-        (fun z : ((Fin m × Bool) ⊕ Fin 2) =>
-          ((tensorFragment
-          ((strandBundle m).relabel (finCongr
-            (by omega : m + m = (m + m) + 0)))
-          (Fragment.strand.relabel (finCongr
-            (by omega : 2 = 2 + 0)))).relabel
-        (finSumFinEquiv.symm.trans
-          ((_root_.Equiv.sumCongr (capPeelRotation m).symm
-            (_root_.Equiv.refl (Fin 0))).trans
-            finSumFinEquiv))).attach z) hflag) ?_
-      cases b
-      · show Sum.inr ((finSumFinEquiv.symm.trans
-          ((_root_.Equiv.sumCongr (capPeelRotation m).symm
-            (_root_.Equiv.refl (Fin 0))).trans
-            finSumFinEquiv))
-          ((interleaveEquiv (m + m) 0 2 0)
-            (Sum.inl ⟨i.val, by omega⟩))) =
-          Sum.inr (finCongr
-            (by omega : (m + 1) + (m + 1) =
-              ((m + 1) + (m + 1)) + 0) ⟨i.val, by omega⟩)
-        refine congrArg Sum.inr (Fin.ext ?_)
-        rw [capPeel_inTransport_val,
-          capPeel_interleave_left_val]
-        show capPeelInv m i.val = i.val
-        unfold capPeelInv
-        rw [if_pos h]
-      · show Sum.inr ((finSumFinEquiv.symm.trans
-          ((_root_.Equiv.sumCongr (capPeelRotation m).symm
-            (_root_.Equiv.refl (Fin 0))).trans
-            finSumFinEquiv))
-          ((interleaveEquiv (m + m) 0 2 0)
-            (Sum.inl ⟨m + i.val, by omega⟩))) =
-          Sum.inr (finCongr
-            (by omega : (m + 1) + (m + 1) =
-              ((m + 1) + (m + 1)) + 0)
-            ⟨(m + 1) + i.val, by omega⟩)
-        refine congrArg Sum.inr (Fin.ext ?_)
-        rw [capPeel_inTransport_val,
-          capPeel_interleave_left_val]
-        show capPeelInv m (m + i.val) = (m + 1) + i.val
-        unfold capPeelInv
-        split_ifs <;> omega
-    -- ─────── the top strand ───────
-    · have hi : i.val = m := by
-        have := i.isLt
-        omega
-      cases b
-      · have hflag : capPeelFlagEquiv m (i, false) =
-            Sum.inr 0 := by
-          show capPeelFlagFun m (i, false) = _
-          unfold capPeelFlagFun
-          rw [dif_neg h]
-          rfl
-        refine Eq.trans (congrArg
-          (fun z : ((Fin m × Bool) ⊕ Fin 2) =>
-            ((tensorFragment
-          ((strandBundle m).relabel (finCongr
-            (by omega : m + m = (m + m) + 0)))
-          (Fragment.strand.relabel (finCongr
-            (by omega : 2 = 2 + 0)))).relabel
-        (finSumFinEquiv.symm.trans
-          ((_root_.Equiv.sumCongr (capPeelRotation m).symm
-            (_root_.Equiv.refl (Fin 0))).trans
-            finSumFinEquiv))).attach z) hflag) ?_
-        show Sum.inr ((finSumFinEquiv.symm.trans
-          ((_root_.Equiv.sumCongr (capPeelRotation m).symm
-            (_root_.Equiv.refl (Fin 0))).trans
-            finSumFinEquiv))
-          ((interleaveEquiv (m + m) 0 2 0)
-            (Sum.inr ⟨0, by omega⟩))) =
-          Sum.inr (finCongr
-            (by omega : (m + 1) + (m + 1) =
-              ((m + 1) + (m + 1)) + 0) ⟨i.val, by omega⟩)
-        refine congrArg Sum.inr (Fin.ext ?_)
-        rw [capPeel_inTransport_val,
-          capPeel_interleave_right_val]
-        show capPeelInv m ((m + m) + 0) = i.val
-        unfold capPeelInv
-        split_ifs <;> omega
-      · have hflag : capPeelFlagEquiv m (i, true) =
-            Sum.inr 1 := by
-          show capPeelFlagFun m (i, true) = _
-          unfold capPeelFlagFun
-          rw [dif_neg h]
-          rfl
-        refine Eq.trans (congrArg
-          (fun z : ((Fin m × Bool) ⊕ Fin 2) =>
-            ((tensorFragment
-          ((strandBundle m).relabel (finCongr
-            (by omega : m + m = (m + m) + 0)))
-          (Fragment.strand.relabel (finCongr
-            (by omega : 2 = 2 + 0)))).relabel
-        (finSumFinEquiv.symm.trans
-          ((_root_.Equiv.sumCongr (capPeelRotation m).symm
-            (_root_.Equiv.refl (Fin 0))).trans
-            finSumFinEquiv))).attach z) hflag) ?_
-        show Sum.inr ((finSumFinEquiv.symm.trans
-          ((_root_.Equiv.sumCongr (capPeelRotation m).symm
-            (_root_.Equiv.refl (Fin 0))).trans
-            finSumFinEquiv))
-          ((interleaveEquiv (m + m) 0 2 0)
-            (Sum.inr ⟨1, by omega⟩))) =
-          Sum.inr (finCongr
-            (by omega : (m + 1) + (m + 1) =
-              ((m + 1) + (m + 1)) + 0)
-            ⟨(m + 1) + i.val, by omega⟩)
-        refine congrArg Sum.inr (Fin.ext ?_)
-        rw [capPeel_inTransport_val,
-          capPeel_interleave_right_val]
-        show capPeelInv m ((m + m) + 1) = (m + 1) + i.val
-        unfold capPeelInv
-        split_ifs <;> omega
-  -- ═══════ PAIRING ═══════
-  pairing_comm := fun g => by
-    obtain ⟨i, b⟩ := g
-    show capPeelFlagEquiv m (i, !b) =
-      ((((tensorFragment
-          ((strandBundle m).relabel (finCongr
-            (by omega : m + m = (m + m) + 0)))
-          (Fragment.strand.relabel (finCongr
-            (by omega : 2 = 2 + 0)))).relabel
-        (finSumFinEquiv.symm.trans
-          ((_root_.Equiv.sumCongr (capPeelRotation m).symm
-            (_root_.Equiv.refl (Fin 0))).trans
-            finSumFinEquiv))).pairing
-        (capPeelFlagEquiv m (i, b)) :
-        ((Fin m × Bool) ⊕ Fin 2)))
-    by_cases h : i.val < m
-    · exact ((dif_pos h : capPeelFlagEquiv m (i, !b) =
-          Sum.inl (⟨i.val, h⟩, !b))).trans
-        (((rfl : (Sum.inl (⟨i.val, h⟩, !b) :
-            ((Fin m × Bool) ⊕ Fin 2)) =
-          (((tensorFragment
-          ((strandBundle m).relabel (finCongr
-            (by omega : m + m = (m + m) + 0)))
-          (Fragment.strand.relabel (finCongr
-            (by omega : 2 = 2 + 0)))).relabel
-        (finSumFinEquiv.symm.trans
-          ((_root_.Equiv.sumCongr (capPeelRotation m).symm
-            (_root_.Equiv.refl (Fin 0))).trans
-            finSumFinEquiv))).pairing
-            (Sum.inl (⟨i.val, h⟩, b)) :
-            ((Fin m × Bool) ⊕ Fin 2)))).trans
-        ((congrArg (fun z : ((Fin m × Bool) ⊕ Fin 2) =>
-          (((tensorFragment
-          ((strandBundle m).relabel (finCongr
-            (by omega : m + m = (m + m) + 0)))
-          (Fragment.strand.relabel (finCongr
-            (by omega : 2 = 2 + 0)))).relabel
-        (finSumFinEquiv.symm.trans
-          ((_root_.Equiv.sumCongr (capPeelRotation m).symm
-            (_root_.Equiv.refl (Fin 0))).trans
-            finSumFinEquiv))).pairing z : ((Fin m × Bool) ⊕ Fin 2)))
-          (dif_pos h : capPeelFlagEquiv m (i, b) =
-            Sum.inl (⟨i.val, h⟩, b))).symm))
-    -- ─────── the top strand ───────
-    · have hf : capPeelFlagEquiv m (i, false) =
-          Sum.inr (0 : Fin 2) := by
-        show capPeelFlagFun m (i, false) = _
-        unfold capPeelFlagFun
-        rw [dif_neg h]
-        rfl
-      have ht : capPeelFlagEquiv m (i, true) =
-          Sum.inr (1 : Fin 2) := by
-        show capPeelFlagFun m (i, true) = _
-        unfold capPeelFlagFun
-        rw [dif_neg h]
-        rfl
-      cases b
-      · exact ht.trans
-          (((show (Sum.inr (1 : Fin 2) :
-              ((Fin m × Bool) ⊕ Fin 2)) =
-            (((tensorFragment
-          ((strandBundle m).relabel (finCongr
-            (by omega : m + m = (m + m) + 0)))
-          (Fragment.strand.relabel (finCongr
-            (by omega : 2 = 2 + 0)))).relabel
-        (finSumFinEquiv.symm.trans
-          ((_root_.Equiv.sumCongr (capPeelRotation m).symm
-            (_root_.Equiv.refl (Fin 0))).trans
-            finSumFinEquiv))).pairing
-              (Sum.inr (0 : Fin 2)) :
-              ((Fin m × Bool) ⊕ Fin 2)) from
-            congrArg Sum.inr (Fin.ext rfl))).trans
-          ((congrArg (fun z : ((Fin m × Bool) ⊕ Fin 2) =>
-            (((tensorFragment
-          ((strandBundle m).relabel (finCongr
-            (by omega : m + m = (m + m) + 0)))
-          (Fragment.strand.relabel (finCongr
-            (by omega : 2 = 2 + 0)))).relabel
-        (finSumFinEquiv.symm.trans
-          ((_root_.Equiv.sumCongr (capPeelRotation m).symm
-            (_root_.Equiv.refl (Fin 0))).trans
-            finSumFinEquiv))).pairing z : ((Fin m × Bool) ⊕ Fin 2))) hf).symm))
-      · exact hf.trans
-          (((show (Sum.inr (0 : Fin 2) :
-              ((Fin m × Bool) ⊕ Fin 2)) =
-            (((tensorFragment
-          ((strandBundle m).relabel (finCongr
-            (by omega : m + m = (m + m) + 0)))
-          (Fragment.strand.relabel (finCongr
-            (by omega : 2 = 2 + 0)))).relabel
-        (finSumFinEquiv.symm.trans
-          ((_root_.Equiv.sumCongr (capPeelRotation m).symm
-            (_root_.Equiv.refl (Fin 0))).trans
-            finSumFinEquiv))).pairing
-              (Sum.inr (1 : Fin 2)) :
-              ((Fin m × Bool) ⊕ Fin 2)) from
-            congrArg Sum.inr (Fin.ext rfl))).trans
-          ((congrArg (fun z : ((Fin m × Bool) ⊕ Fin 2) =>
-            (((tensorFragment
-          ((strandBundle m).relabel (finCongr
-            (by omega : m + m = (m + m) + 0)))
-          (Fragment.strand.relabel (finCongr
-            (by omega : 2 = 2 + 0)))).relabel
-        (finSumFinEquiv.symm.trans
-          ((_root_.Equiv.sumCongr (capPeelRotation m).symm
-            (_root_.Equiv.refl (Fin 0))).trans
-            finSumFinEquiv))).pairing z : ((Fin m × Bool) ⊕ Fin 2))) ht).symm))
+  attach_comm := capPeelEquiv_attach_comm m
+  pairing_comm := capPeelEquiv_pairing_comm m
   circles_eq := rfl
 
 variable {R : ℕ} (f : EdgeRankParameter R)

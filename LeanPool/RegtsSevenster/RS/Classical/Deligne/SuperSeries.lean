@@ -92,7 +92,7 @@ private theorem one_add_X_mul_alt :
   | zero => simp
   | succ m =>
       rw [coeff_succ_X_mul, coeff_mk, coeff_mk, coeff_one,
-        if_neg (Nat.succ_ne_zero m), pow_succ]
+        ite_eq_right (Nat.succ_ne_zero m), pow_succ]
       ring
 
 private theorem powerSumSeries_superPS_eq (p q : ℕ) :

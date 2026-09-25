@@ -113,7 +113,7 @@ slot's image alone. -/
 @[simp]
 theorem topImage_mul_extPerm (σ : Perm (Fin (n + 1))) (τ : Perm (Fin n)) :
     topImage (σ * extPerm τ) = topImage σ := by
-  show σ (extPerm τ (Fin.last n)) = σ (Fin.last n)
+  change σ (extPerm τ (Fin.last n)) = σ (Fin.last n)
   rw [extPerm_last]
 
 /-- **Precomposing with a permutation of the lower slots** acts on
@@ -125,7 +125,7 @@ theorem restPerm_mul_extPerm (σ : Perm (Fin (n + 1))) (τ : Perm (Fin n)) :
   have h1 := succAbove_restPerm (σ * extPerm τ) j
   rw [topImage_mul_extPerm] at h1
   have h2 : (σ * extPerm τ) j.castSucc = σ (τ j).castSucc := by
-    show σ (extPerm τ j.castSucc) = σ (τ j).castSucc
+    change σ (extPerm τ j.castSucc) = σ (τ j).castSucc
     rw [extPerm_castSucc]
   rw [h2, ← succAbove_restPerm σ (τ j)] at h1
   exact congrArg Fin.val (Fin.succAbove_right_injective h1)
@@ -203,7 +203,7 @@ noncomputable def ofSplit (p : Fin (n + 1)) (τ : Perm (Fin n)) :
 @[simp]
 theorem ofSplit_last (p : Fin (n + 1)) (τ : Perm (Fin n)) :
     ofSplit p τ (Fin.last n) = p := by
-  show (finSuccEquiv' p).symm ((Equiv.optionCongr τ)
+  change (finSuccEquiv' p).symm ((Equiv.optionCongr τ)
     ((finSuccEquiv' (Fin.last n)) (Fin.last n))) = p
   rw [finSuccEquiv'_at]
   simp
@@ -213,7 +213,7 @@ reinserted above `p`. -/
 @[simp]
 theorem ofSplit_castSucc (p : Fin (n + 1)) (τ : Perm (Fin n)) (j : Fin n) :
     ofSplit p τ j.castSucc = p.succAbove (τ j) := by
-  show (finSuccEquiv' p).symm ((Equiv.optionCongr τ)
+  change (finSuccEquiv' p).symm ((Equiv.optionCongr τ)
     ((finSuccEquiv' (Fin.last n)) j.castSucc)) = p.succAbove (τ j)
   rw [finSuccEquiv'_last_apply_castSucc]
   simp
@@ -259,7 +259,7 @@ theorem topCycle_zero :
       ofSplit_last 0 1, finRotate_last]
   | cast j =>
     have h : topCycle (0 : Fin (n + 1)) j.castSucc = j.succ := by
-      show ofSplit (0 : Fin (n + 1)) 1 j.castSucc = j.succ
+      change ofSplit (0 : Fin (n + 1)) 1 j.castSucc = j.succ
       simp
     refine Fin.ext ?_
     rw [h, coe_finRotate_of_ne_last (Fin.castSucc_lt_last j).ne]
@@ -360,7 +360,7 @@ transposition sends the top slot where the slot below it went. -/
 theorem topImage_mul_topSwap (σ : Perm (Fin (n + 2))) :
     topImage (σ * topSwap) =
       (topImage σ).succAbove (topImage (restPerm σ)) := by
-  show σ (topSwap (Fin.last (n + 1))) = _
+  change σ (topSwap (Fin.last (n + 1))) = _
   rw [topSwap_last, ← succAbove_restPerm σ (Fin.last n)]
   rfl
 
@@ -373,7 +373,7 @@ theorem succAbove_topImage_restPerm_mul_topSwap (σ : Perm (Fin (n + 2))) :
   rw [show restPerm (σ * topSwap) (Fin.last n)
       = topImage (restPerm (σ * topSwap)) from rfl] at h
   rw [h]
-  show σ (topSwap (Fin.castSucc (Fin.last n))) = σ (Fin.last (n + 1))
+  change σ (topSwap (Fin.castSucc (Fin.last n))) = σ (Fin.last (n + 1))
   rw [topSwap_castSucc_last]
 
 /-- **The new second target** is the old first one, compressed.  This

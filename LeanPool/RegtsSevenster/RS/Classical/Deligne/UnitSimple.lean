@@ -203,11 +203,11 @@ private theorem isZero_coker_tensor
     [Category.{v} A] [Abelian A] [MonoidalCategory A] [RigidCategory A]
     {U : A} (i : U ⟶ 𝟙_ A) [Mono i] :
     IsZero (cokernel i ⊗ U) := by
-  haveI := tensorLeft_preservesMono (A := A) (cokernel i)
-  haveI := tensorRight_preservesEpi (A := A) U
-  haveI : Mono (cokernel i ◁ i) :=
+  have := tensorLeft_preservesMono (A := A) (cokernel i)
+  have := tensorRight_preservesEpi (A := A) U
+  have : Mono (cokernel i ◁ i) :=
     Functor.map_mono (tensorLeft (cokernel i)) i
-  haveI : Epi (cokernel.π i ▷ U) :=
+  have : Epi (cokernel.π i ▷ U) :=
     Functor.map_epi (tensorRight U) (cokernel.π i)
   have hcomp : cokernel.π i ▷ U ≫ cokernel i ◁ i = 0 := by
     rw [← whisker_exchange]
@@ -220,11 +220,11 @@ private theorem isZero_tensor_coker
     [Category.{v} A] [Abelian A] [MonoidalCategory A] [RigidCategory A]
     {U : A} (i : U ⟶ 𝟙_ A) [Mono i] :
     IsZero (U ⊗ cokernel i) := by
-  haveI := tensorRight_preservesMono (A := A) (cokernel i)
-  haveI := tensorLeft_preservesEpi (A := A) U
-  haveI : Mono (i ▷ cokernel i) :=
+  have := tensorRight_preservesMono (A := A) (cokernel i)
+  have := tensorLeft_preservesEpi (A := A) U
+  have : Mono (i ▷ cokernel i) :=
     Functor.map_mono (tensorRight (cokernel i)) i
-  haveI : Epi (U ◁ cokernel.π i) :=
+  have : Epi (U ◁ cokernel.π i) :=
     Functor.map_epi (tensorLeft U) (cokernel.π i)
   have hcomp : U ◁ cokernel.π i ≫ i ▷ cokernel i = 0 := by
     rw [whisker_exchange]
@@ -237,8 +237,8 @@ private theorem isZero_kernelMate_tensor
     [MonoidalPreadditive A] [RigidCategory A]
     {U : A} (i : U ⟶ 𝟙_ A)
     [Mono i] : IsZero (kernel (unitMate i) ⊗ U) := by
-  haveI := tensorRight_preservesMono (A := A) U
-  haveI : Mono (kernel.ι (unitMate i) ▷ U) :=
+  have := tensorRight_preservesMono (A := A) U
+  have : Mono (kernel.ι (unitMate i) ▷ U) :=
     Functor.map_mono (tensorRight U) (kernel.ι (unitMate i))
   exact isZero_of_mono_eq_zero _
     (whiskerRight_eq_zero_of_comp_unitMate i _ (kernel.condition _))
@@ -291,7 +291,7 @@ private theorem isIso_whiskerLeft_kernelMate
     [MonoidalPreadditive A] [RigidCategory A]
     {U : A} (i : U ⟶ 𝟙_ A)
     [Mono i] : IsIso (cokernel i ◁ kernel.ι (unitMate i)) := by
-  haveI : PreservesLimitsOfSize.{0, 0} (tensorLeft (cokernel i)) :=
+  have : PreservesLimitsOfSize.{0, 0} (tensorLeft (cokernel i)) :=
     tensorLeft_preservesLimits (cokernel i)
   have hlim := isLimitForkMapOfIsLimit' (tensorLeft (cokernel i))
     (kernel.condition (unitMate i)) (kernelIsKernel (unitMate i))
@@ -301,11 +301,11 @@ private theorem isIso_whiskerLeft_kernelMate
     (𝟙 ((tensorLeft (cokernel i)).obj (𝟙_ A)))
     (by rw [hzero, comp_zero])
   simp only [Fork.ι_ofι] at hl
-  haveI : IsSplitEpi
+  have : IsSplitEpi
       ((tensorLeft (cokernel i)).map (kernel.ι (unitMate i))) :=
     IsSplitEpi.mk' ⟨l, hl⟩
-  haveI := tensorLeft_preservesMono (A := A) (cokernel i)
-  haveI : Mono ((tensorLeft (cokernel i)).map (kernel.ι (unitMate i))) :=
+  have := tensorLeft_preservesMono (A := A) (cokernel i)
+  have : Mono ((tensorLeft (cokernel i)).map (kernel.ι (unitMate i))) :=
     Functor.map_mono _ _
   exact isIso_of_mono_of_epi
     ((tensorLeft (cokernel i)).map (kernel.ι (unitMate i)))
@@ -329,13 +329,13 @@ private theorem isZero_of_sub_of_tensor_isZero
     {U T : A}
     (i : U ⟶ 𝟙_ A) [Mono i] (t : T ⟶ U) (ht : Mono t)
     (hT : IsZero (T ⊗ U)) : IsZero T := by
-  haveI := ht
-  haveI := tensorRight_preservesMono (A := A) (cokernel i)
-  haveI : Mono (t ▷ cokernel i) :=
+  have := ht
+  have := tensorRight_preservesMono (A := A) (cokernel i)
+  have : Mono (t ▷ cokernel i) :=
     Functor.map_mono (tensorRight (cokernel i)) t
   have hTV : IsZero (T ⊗ cokernel i) :=
     IsZero.of_mono (t ▷ cokernel i) (isZero_tensor_coker i)
-  haveI : PreservesLimitsOfSize.{0, 0} (tensorLeft T) :=
+  have : PreservesLimitsOfSize.{0, 0} (tensorLeft T) :=
     tensorLeft_preservesLimits T
   have hbase : IsLimit (KernelFork.ofι i (cokernel.condition i)) :=
     Abelian.monoIsKernelOfCokernel
@@ -343,12 +343,12 @@ private theorem isZero_of_sub_of_tensor_isZero
       (cokernelIsCokernel i)
   have hlim := isLimitForkMapOfIsLimit' (tensorLeft T)
     (cokernel.condition i) hbase
-  haveI : Mono (T ◁ cokernel.π i) :=
+  have : Mono (T ◁ cokernel.π i) :=
     Preadditive.mono_of_isZero_kernel' _ hlim hT
-  haveI := tensorLeft_preservesEpi (A := A) T
-  haveI : Epi (T ◁ cokernel.π i) :=
+  have := tensorLeft_preservesEpi (A := A) T
+  have : Epi (T ◁ cokernel.π i) :=
     Functor.map_epi (tensorLeft T) (cokernel.π i)
-  haveI : IsIso (T ◁ cokernel.π i) := isIso_of_mono_of_epi _
+  have : IsIso (T ◁ cokernel.π i) := isIso_of_mono_of_epi _
   have h1 : IsZero (T ⊗ 𝟙_ A) :=
     hTV.of_iso (asIso (T ◁ cokernel.π i))
   exact h1.of_iso (ρ_ T).symm
@@ -365,16 +365,16 @@ endomorphisms are exactly the scalars, `𝟙_ A` is a simple object.
 This is Proposition 1.17 of Deligne–Milne, *Tannakian categories*. -/
 theorem simple_unit_of_hasScalarUnit
     {A : Type u} [Category.{v} A] [Abelian A] [Linear ℂ A]
-    [MonoidalCategory A] [MonoidalPreadditive A] [MonoidalLinear ℂ A]
+    [MonoidalCategory A] [MonoidalPreadditive A]
     [RigidCategory A] (hu : HasScalarUnit A) :
     Simple (𝟙_ A) := by
   constructor
   intro U i hi
-  haveI := hi
+  have := hi
   constructor
   · -- an isomorphism into the unit is nonzero
     intro hIso h0
-    haveI := hIso
+    have := hIso
     have hU : IsZero (𝟙_ A) :=
       (isZero_of_mono_eq_zero i h0).of_iso (asIso i).symm
     exact id_unit_ne_zero hu (hU.eq_zero_of_src _)
@@ -382,10 +382,10 @@ theorem simple_unit_of_hasScalarUnit
     intro hne
     -- `W ⟶ 𝟙 ⟶ V` is epi: it factors as
     -- `λ⁻¹ ≫ (π ▷ W ≫ V ◁ ι) ≫ ρ` with `V ◁ ι` invertible
-    haveI : IsIso (cokernel i ◁ kernel.ι (unitMate i)) :=
+    have : IsIso (cokernel i ◁ kernel.ι (unitMate i)) :=
       isIso_whiskerLeft_kernelMate i
-    haveI := tensorRight_preservesEpi (A := A) (kernel (unitMate i))
-    haveI : Epi (cokernel.π i ▷ kernel (unitMate i)) :=
+    have := tensorRight_preservesEpi (A := A) (kernel (unitMate i))
+    have : Epi (cokernel.π i ▷ kernel (unitMate i)) :=
       Functor.map_epi (tensorRight (kernel (unitMate i)))
         (cokernel.π i)
     have hfact : kernel.ι (unitMate i) ≫ cokernel.π i
@@ -395,7 +395,7 @@ theorem simple_unit_of_hasScalarUnit
           ≫ (ρ_ (cokernel i)).hom := by
       rw [← whisker_exchange]
       simp [unitors_inv_equal]
-    haveI : Epi (kernel.ι (unitMate i) ≫ cokernel.π i) := by
+    have : Epi (kernel.ι (unitMate i) ≫ cokernel.π i) := by
       rw [hfact]; infer_instance
     -- `W ⟶ 𝟙 ⟶ V` is mono: its kernel lies in both `U` and `W`,
     -- so it is killed by `⊗ U`, hence zero
@@ -408,9 +408,9 @@ theorem simple_unit_of_hasScalarUnit
         ≫ kernel.ι (unitMate i))
       (by rw [Category.assoc]; exact kernel.condition _)
     simp only [Fork.ι_ofι] at hj
-    haveI : Mono (j ≫ i) := by rw [hj]; exact mono_comp _ _
-    haveI := tensorRight_preservesMono (A := A) U
-    haveI : Mono
+    have : Mono (j ≫ i) := by rw [hj]; exact mono_comp _ _
+    have := tensorRight_preservesMono (A := A) U
+    have : Mono
         (kernel.ι (kernel.ι (unitMate i) ≫ cokernel.π i) ▷ U) :=
       Functor.map_mono (tensorRight U) _
     have hKU : IsZero
@@ -420,9 +420,9 @@ theorem simple_unit_of_hasScalarUnit
         ((isZero_kernelMate_tensor i).eq_zero_of_tgt _)
     have hK : IsZero (kernel (kernel.ι (unitMate i) ≫ cokernel.π i)) :=
       isZero_of_sub_of_tensor_isZero i j (mono_of_mono j i) hKU
-    haveI : Mono (kernel.ι (unitMate i) ≫ cokernel.π i) :=
+    have : Mono (kernel.ι (unitMate i) ≫ cokernel.π i) :=
       Abelian.mono_of_kernel_ι_eq_zero _ (hK.eq_zero_of_src _)
-    haveI : IsIso (kernel.ι (unitMate i) ≫ cokernel.π i) :=
+    have : IsIso (kernel.ι (unitMate i) ≫ cokernel.π i) :=
       isIso_of_mono_of_epi _
     -- the resulting splitting of `𝟙 ↠ V` is an idempotent scalar
     set σ : cokernel i ⟶ 𝟙_ A :=
@@ -440,7 +440,7 @@ theorem simple_unit_of_hasScalarUnit
           rw [Category.assoc, hσq, Category.comp_id]
         rw [h0, zero_comp] at h2
         exact h2.symm
-      haveI : Epi i := Abelian.epi_of_cokernel_π_eq_zero i hq0
+      have : Epi i := Abelian.epi_of_cokernel_π_eq_zero i hq0
       exact isIso_of_mono_of_epi i
     · -- idempotent one: `i` would vanish, contradiction
       refine absurd ?_ hne

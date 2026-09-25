@@ -18,7 +18,7 @@ is the number of edges whose representative flag is outgoing.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 
@@ -100,12 +100,12 @@ private theorem filter_lt_castAdd_head_eq_zero {n : ℕ}
   obtain ⟨x, hx, hq⟩ := hq
   rcases List.mem_cons.mp hq with rfl | hq
   · -- q = castAdd x, x > e
-    show (Fin.castAdd n e).val ≤ (Fin.castAdd n x).val
+    change (Fin.castAdd n e).val ≤ (Fin.castAdd n x).val
     simp only [Fin.val_castAdd]
     exact Nat.le_of_lt (hgt x hx)
   · -- q = natAdd x
     rw [List.mem_singleton] at hq; subst hq
-    show (Fin.castAdd n e).val ≤ (Fin.natAdd n x).val
+    change (Fin.castAdd n e).val ≤ (Fin.natAdd n x).val
     simp only [Fin.val_castAdd, Fin.val_natAdd]
     have := e.isLt; omega
 
@@ -139,12 +139,12 @@ private theorem filter_lt_natAdd_head_eq_length {n : ℕ}
       (List.mem_cons_of_mem _ hy)
     rw [ih hxs_gt]
     -- Filter of [castAdd x, natAdd x]: castAdd x passes, natAdd x doesn't
-    show (([Fin.castAdd n x, Fin.natAdd n x].filter
+    change (([Fin.castAdd n x, Fin.natAdd n x].filter
       (fun b => decide (b < Fin.natAdd n e)))).length + xs.length =
       xs.length + 1
     -- castAdd x < natAdd e: castAdd x = x.val < n ≤ n + e.val = natAdd e
     have hcast_lt : Fin.castAdd n x < Fin.natAdd n e := by
-      show (Fin.castAdd n x).val < (Fin.natAdd n e).val
+      change (Fin.castAdd n x).val < (Fin.natAdd n e).val
       simp only [Fin.val_castAdd, Fin.val_natAdd]
       exact x.isLt.trans_le (Nat.le_add_right _ _)
     -- natAdd x ≥ natAdd e: n + x.val > n + e.val
@@ -174,7 +174,7 @@ private theorem inversions_interleave_sorted {n : ℕ} :
     --   :: rest_fm)
     set rest_fm := rest.flatMap (fun i => [Fin.castAdd n i, Fin.natAdd n i])
     -- Unfold inversions for the cons case (definitional equality)
-    show ((Fin.natAdd n e :: rest_fm).filter
+    change ((Fin.natAdd n e :: rest_fm).filter
         (fun b => decide (b < Fin.castAdd n e))).length +
       ((rest_fm.filter (fun b => decide (b < Fin.natAdd n e))).length +
         inversions rest_fm) = _
@@ -213,10 +213,11 @@ private theorem partEdges_length (W : ClosedFragment) (F : EdgeSubset W) :
 /-! ### Part 1 helpers: crossings count -/
 
 /-- Ordered pairs from a finset biject with choose 2. -/
-private theorem card_ordered_pairs_eq_choose {α : Type*} [DecidableEq α]
+private theorem card_ordered_pairs_eq_choose {α : Type*}
     [LinearOrder α] (S : Finset α) :
     ((S ×ˢ S).filter (fun p => p.1 < p.2)).card =
     Nat.choose S.card 2 := by
+  classical
   induction S using Finset.induction_on with
   | empty => simp
   | insert a s ha ih =>
@@ -440,14 +441,14 @@ private theorem inversions_oriented_interleave {n : ℕ}
     -- (within each pair, values are just swapped). So filters have same length.
     set rest_unsw := rest.flatMap (fun i => [Fin.castAdd n i, Fin.natAdd n i])
     have hperm_rest : rest_fm.Perm rest_unsw := by
-      show (rest.flatMap (fun i =>
+      change (rest.flatMap (fun i =>
         if sw i = true then [Fin.natAdd n i, Fin.castAdd n i]
         else [Fin.castAdd n i, Fin.natAdd n i])).Perm
         (rest.flatMap (fun i => [Fin.castAdd n i, Fin.natAdd n i]))
       exact List.Perm.flatMap_left rest (fun x _ => by
         by_cases hsw : sw x = true
-        · rw [if_pos hsw]; exact List.Perm.swap _ _ _
-        · rw [if_neg hsw])
+        · rw [ite_eq_left hsw]; exact List.Perm.swap _ _ _
+        · rw [ite_eq_right hsw])
     have h_rest_filter_cast :
         (rest_fm.filter (fun b => decide (b < Fin.castAdd n e))).length = 0 :=
           by
@@ -461,40 +462,40 @@ private theorem inversions_oriented_interleave {n : ℕ}
     -- Now handle the head element's contribution
     by_cases hsw_e : sw e = true
     · -- Swapped: [natAdd e, castAdd e] ++ rest_fm
-      rw [if_pos hsw_e]
+      rw [ite_eq_left hsw_e]
       simp only [List.cons_append, List.nil_append]
       -- inversions (natAdd :: castAdd :: rest_fm)
-      show ((Fin.castAdd n e :: rest_fm).filter
+      change ((Fin.castAdd n e :: rest_fm).filter
           (fun b => decide (b < Fin.natAdd n e))).length +
         ((rest_fm.filter (fun b => decide (b < Fin.castAdd n e))).length +
           inversions rest_fm) = _
       -- filter (< natAdd e) (castAdd e :: rest_fm) = 1 + rest.length
       have hcast_lt_nat : Fin.castAdd n e < Fin.natAdd n e := by
-        show (Fin.castAdd n e).val < (Fin.natAdd n e).val
+        change (Fin.castAdd n e).val < (Fin.natAdd n e).val
         simp only [Fin.val_castAdd, Fin.val_natAdd]; omega
-      rw [List.filter_cons, if_pos (show decide (Fin.castAdd n e < Fin.natAdd n
+      rw [List.filter_cons, ite_eq_left (show decide (Fin.castAdd n e < Fin.natAdd n
         e) = true from
         decide_eq_true_eq.mpr hcast_lt_nat),
         List.length_cons, h_rest_filter_nat]
       rw [h_rest_filter_cast, Nat.zero_add, ih hrest]
       rw [List.length_cons, Nat.choose_succ_succ, Nat.choose_one_right]
-      rw [List.filter_cons, if_pos hsw_e, List.length_cons]
+      rw [List.filter_cons, ite_eq_left hsw_e, List.length_cons]
       simp only [show Nat.succ 1 = 2 from rfl]; omega
     · -- Not swapped: [castAdd e, natAdd e] ++ rest_fm
-      rw [if_neg hsw_e]
+      rw [ite_eq_right hsw_e]
       simp only [List.cons_append, List.nil_append]
       -- inversions (castAdd :: natAdd :: rest_fm)
-      show ((Fin.natAdd n e :: rest_fm).filter
+      change ((Fin.natAdd n e :: rest_fm).filter
           (fun b => decide (b < Fin.castAdd n e))).length +
         ((rest_fm.filter (fun b => decide (b < Fin.natAdd n e))).length +
           inversions rest_fm) = _
       -- filter (< castAdd e) (natAdd e :: rest_fm) = 0
-      rw [List.filter_cons, if_neg (show ¬ decide (Fin.natAdd n e < Fin.castAdd
+      rw [List.filter_cons, ite_eq_right (show ¬ decide (Fin.natAdd n e < Fin.castAdd
         n e) = true from
         fun h => not_natAdd_lt_castAdd e (decide_eq_true_eq.mp h))]
       rw [h_rest_filter_cast, Nat.zero_add, h_rest_filter_nat, ih hrest]
       rw [List.length_cons, Nat.choose_succ_succ, Nat.choose_one_right]
-      rw [List.filter_cons, if_neg hsw_e]
+      rw [List.filter_cons, ite_eq_right hsw_e]
       simp only [show Nat.succ 1 = 2 from rfl]; omega
 
 open Classical in

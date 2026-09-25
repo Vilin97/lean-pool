@@ -16,7 +16,7 @@ and the link between the pattern inversion count and list inversions.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 
@@ -63,7 +63,7 @@ theorem mem_globalSlotList (W : ClosedFragment) (F : EdgeSubset W)
     Subtype.ext (_root_.Equiv.symm_apply_apply _ _)⟩
 
 /-- Filter length of `ofFn` matches finset card. -/
-theorem filter_length_ofFn {β : Type} [DecidableEq β]
+theorem filter_length_ofFn {β : Type}
     {n : ℕ} (g : Fin n → β) (p : β → Bool) :
     ((List.ofFn g).filter p).length =
       (Finset.univ.filter (fun i : Fin n => p (g i) = true)).card := by
@@ -82,11 +82,12 @@ theorem filter_length_ofFn {β : Type} [DecidableEq β]
 
 /-- Helper: the head-filter count in the successor step. -/
 private theorem head_filter_card {β : Type} [LinearOrder β]
-    [DecidableEq β] {n : ℕ} (g : Fin (n + 1) → β) :
+    {n : ℕ} (g : Fin (n + 1) → β) :
     ((List.ofFn (fun i : Fin n => g i.succ)).filter
       (fun b => decide (b < g 0))).length =
     (Finset.univ.filter (fun i : Fin n =>
       g i.succ < g 0)).card := by
+  classical
   rw [filter_length_ofFn]
   congr 1
   ext i
@@ -381,7 +382,7 @@ private theorem sort_getElem_slotPos (W : ClosedFragment)
 private theorem nodup_getElem_injective {α : Type} {l : List α}
     (hnd : l.Nodup) {i j : ℕ} (hi : i < l.length) (hj : j < l.length)
     (h : l[i] = l[j]) : i = j := by
-  exact (List.getElem?_inj hi hnd).mp
+  exact (List.Nodup.getElem?_inj hi hnd).mp
     (show l[i]? = l[j]? by
       rw [List.getElem?_eq_getElem hi, List.getElem?_eq_getElem hj]
       exact congrArg _ h)
@@ -497,13 +498,13 @@ private theorem inversions_eq_slotInvPairs (W : ClosedFragment)
       · exact slotPos_lt_of_lt W F q₁ q₂ hq1 hq2 hlt
       · have hvi : (l.get ⟨i.val, hi_lt⟩).val =
             (starFlagEnum W).symm q₁ := by
-          show ((globalSlotList W F)[i.val]'hi_lt).val = _
+          change ((globalSlotList W F)[i.val]'hi_lt).val = _
           rw [globalSlotList_getElem_val]
           congr 1
           exact sort_getElem_slotPos W F q₁ hq1
         have hvj : (l.get ⟨j.val, hj_lt⟩).val =
             (starFlagEnum W).symm q₂ := by
-          show ((globalSlotList W F)[j.val]'hj_lt).val = _
+          change ((globalSlotList W F)[j.val]'hj_lt).val = _
           rw [globalSlotList_getElem_val]
           congr 1
           exact sort_getElem_slotPos W F q₂ hq2

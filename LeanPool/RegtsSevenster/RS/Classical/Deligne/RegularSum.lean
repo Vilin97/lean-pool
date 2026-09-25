@@ -71,7 +71,7 @@ theorem mv_eval_zero_fin :
       (Set.infinite_univ.image
         ((C_injective (Fin m) ℂ).injOn (s := Set.univ)))
     rintro _ ⟨r, -, rfl⟩
-    show Polynomial.IsRoot _ (C r)
+    change Polynomial.IsRoot _ (C r)
     rw [Polynomial.IsRoot]
     apply ih
     intro s
@@ -278,12 +278,12 @@ theorem diagramSchur_injective {lam mu : YoungDiagram}
   -- extract the diagonal coefficient of the `lam` alternant
   have h1 : (altDet (eVec lam k)).coeff (∑ i, Finsupp.single i (eVec lam k i)) = 1 := by
     rw [alternant_coeff_strict _ _ (eVec_strict lam k)
-      (eVec_strict lam k), if_pos rfl]
+      (eVec_strict lam k), ite_eq_left rfl]
   rw [halt, alternant_coeff_strict _ _ (eVec_strict mu k)
     (eVec_strict lam k)] at h1
   have heVec : eVec mu k = eVec lam k := by
     by_contra hne
-    rw [if_neg hne] at h1
+    rw [ite_eq_right hne] at h1
     exact zero_ne_one h1
   -- row lengths agree everywhere
   have hzero : ∀ (nu : YoungDiagram) (i : ℕ), nu.colLen 0 ≤ i →
@@ -481,18 +481,18 @@ theorem SchurPackage.e_ne_zero (P : SchurPackage.{u})
 
 /-- Coefficients of an element commuting with the whole group
 algebra are conjugation-invariant. -/
-theorem coeff_conj_of_comm {G : Type*} [Group G] [Fintype G]
-    [DecidableEq G] (x : MonoidAlgebra ℂ G)
+theorem coeff_conj_of_comm {G : Type*} [Group G]
+    (x : MonoidAlgebra ℂ G)
     (hx : ∀ y, x * y = y * x) (g c : G) :
     x.coeff (c * g * c⁻¹) = x.coeff g := by
   have h := congrArg (fun z : MonoidAlgebra ℂ G => z.coeff (c * g))
     (hx (MonoidAlgebra.single c 1))
   rw [show (x * MonoidAlgebra.single c (1 : ℂ)).coeff (c * g) =
       x.coeff ((c * g) * c⁻¹) * 1 from
-    MonoidAlgebra.mul_single_apply x 1 c (c * g)] at h
+    MonoidAlgebra.coeff_mul_single_apply x 1 c (c * g)] at h
   rw [show (MonoidAlgebra.single c (1 : ℂ) * x).coeff (c * g) =
       1 * x.coeff (c⁻¹ * (c * g)) from
-    MonoidAlgebra.single_mul_apply x 1 c (c * g)] at h
+    MonoidAlgebra.coeff_single_mul_apply x 1 c (c * g)] at h
   rw [mul_one, one_mul, inv_mul_cancel_left] at h
   exact h
 
@@ -581,7 +581,7 @@ theorem cycExp_eq_iff {n : ℕ} (π π' : Equiv.Perm (Fin n)) :
       · have happ := congrArg (fun f : ℕ →₀ ℕ => f c) h
         simp only [cycExp, Finsupp.add_apply,
           Multiset.toFinsupp_apply, Finsupp.single_apply] at happ
-        simp only [if_neg (fun h1 : (1 : ℕ) = c => hc h1.symm),
+        simp only [ite_eq_right (fun h1 : (1 : ℕ) = c => hc h1.symm),
           add_zero] at happ
         exact happ
     exact Multiset.ext.mpr hcount
@@ -619,12 +619,12 @@ theorem classFun_eq_zero_of_cycleProd {n : ℕ}
       (if cycExp π = cycExp π₀ then δ π else 0) =
       (if cycExp π = cycExp π₀ then δ π₀ else 0) from by
     by_cases hπ : cycExp π = cycExp π₀
-    · rw [if_pos hπ, if_pos hπ]
+    · rw [ite_eq_left hπ, ite_eq_left hπ]
       have hct := (cycExp_eq_iff π π₀).mp hπ
       obtain ⟨c, hc⟩ := isConj_iff.mp
         (Equiv.Perm.isConj_of_cycleType_eq hct.symm)
       rw [← hc, hconj]
-    · rw [if_neg hπ, if_neg hπ])] at hcoeff
+    · rw [ite_eq_right hπ, ite_eq_right hπ])] at hcoeff
   rw [← Finset.sum_filter, Finset.sum_const, nsmul_eq_mul] at hcoeff
   have hmem : π₀ ∈ Finset.univ.filter
       (fun π : Equiv.Perm (Fin n) => cycExp π = cycExp π₀) :=
@@ -719,7 +719,7 @@ theorem isIrreducible_comp_permCastHom {m n : ℕ} (h : m = n)
   have hid : permCastHom (rfl : m = m) =
       MonoidHom.id (Equiv.Perm (Fin m)) := by
     refine MonoidHom.ext fun g => ?_
-    show permCast rfl g = g
+    change permCast rfl g = g
     rw [permCast_rfl]
     rfl
   rw [hid, MonoidHom.comp_id]
@@ -747,7 +747,7 @@ theorem e_mul_e_eq_zero_of_ne (P : SchurPackage.{u}) {n : ℕ}
       c' (c * g * c⁻¹) = c' g := by
     intro g c
     rw [hc'def]
-    show nCoeff (jtSimple mu)
+    change nCoeff (jtSimple mu)
       ((permCast hm).symm (c * g * c⁻¹)) = _
     rw [permCast_symm, permCast_mul, permCast_mul, permCast_inv]
     exact nCoeff_classFun (jtSimple mu) _ _
@@ -763,8 +763,8 @@ theorem e_mul_e_eq_zero_of_ne (P : SchurPackage.{u}) {n : ℕ}
   by_cases hiso :
       Nonempty ((rhoS (jtSimple lam)).Equiv (rhoS T))
   swap
-  · rw [if_neg hiso, zero_smul, smul_zero]
-  rw [if_pos hiso, one_smul]
+  · rw [ite_eq_right hiso, zero_smul, smul_zero]
+  rw [ite_eq_left hiso, one_smul]
   suffices hzero : (∑ g, c' g * nChar T g) = 0 by
     rw [hzero, zero_div, zero_smul]
   by_contra hne0
@@ -779,15 +779,15 @@ theorem e_mul_e_eq_zero_of_ne (P : SchurPackage.{u}) {n : ℕ}
   -- the pulled-back representation of the common simple
   set ρ' : Representation ℂ (Equiv.Perm (Fin mu.card))
       (subCarrier T) := (rhoS T).comp (permCastHom hm) with hρ'
-  haveI hirr' : ρ'.IsIrreducible :=
+  have hirr' : ρ'.IsIrreducible :=
     isIrreducible_comp_permCastHom hm (rhoS T)
       (rhoS_isIrreducible T hT)
-  haveI hirrS : (rhoS (jtSimple mu)).IsIrreducible :=
+  have hirrS : (rhoS (jtSimple mu)).IsIrreducible :=
     rhoS_isIrreducible (jtSimple mu) (jtSimple_simple mu)
   have hcard0 : ((Nat.card (Equiv.Perm (Fin mu.card)) : ℂ)) ≠ 0 := by
     rw [Nat.card_eq_fintype_card]
     exact_mod_cast Fintype.card_ne_zero
-  haveI : Invertible ((Nat.card (Equiv.Perm (Fin mu.card)) : ℂ)) :=
+  have : Invertible ((Nat.card (Equiv.Perm (Fin mu.card)) : ℂ)) :=
     invertibleOfNonzero hcard0
   have horth := Representation.char_orthonormal ρ'
     (rhoS (jtSimple mu))
@@ -814,7 +814,7 @@ theorem e_mul_e_eq_zero_of_ne (P : SchurPackage.{u}) {n : ℕ}
   -- a common simple forces the characters to agree
   have hiso2 : Nonempty ((rhoS (jtSimple mu)).Equiv ρ') := by
     by_contra hempty
-    rw [hre, hval, hval2, if_neg hempty, mul_zero, mul_zero]
+    rw [hre, hval, hval2, ite_eq_right hempty, mul_zero, mul_zero]
       at hne0
     exact hne0 rfl
   obtain ⟨φlam⟩ := hiso
@@ -974,8 +974,8 @@ theorem one_eq_classElem_ite (n : ℕ) :
       Finsupp.single_apply]
   by_cases hk : k = 1
   · subst hk
-    rw [if_pos rfl]
-  · rw [if_neg (fun h => hk h.symm), if_neg hk]
+    rw [ite_eq_left rfl]
+  · rw [ite_eq_right (fun h => hk h.symm), ite_eq_right hk]
 
 /-- The recast idempotent of a shape is a class element. -/
 theorem shape_e_eq_classElem (P : SchurPackage.{u}) {n : ℕ}
@@ -1043,8 +1043,8 @@ theorem one_mem_span_classSum (n : ℕ) :
     (if g = 1 then (1 : ℂ) else 0)
   by_cases hg : g = 1
   · subst hg
-    rw [if_pos rfl, if_pos (by group)]
-  · rw [if_neg hg, if_neg (fun h => hg (by
+    rw [ite_eq_left rfl, ite_eq_left (by group)]
+  · rw [ite_eq_right hg, ite_eq_right (fun h => hg (by
       calc g = k⁻¹ * (k * g * k⁻¹) * k := by group
         _ = 1 := by rw [h]; group))]
 
@@ -1056,7 +1056,7 @@ theorem eq_sum_shape_e_of_mem_span (P : SchurPackage.{u}) {n : ℕ}
     ∃ c : Shape n → ℂ, ∑ μ, c μ • Shape.e P μ = x := by
   classical
   set W := Submodule.span ℂ (Set.range (classSum n)) with hWdef
-  haveI : FiniteDimensional ℂ W :=
+  have : FiniteDimensional ℂ W :=
     FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
   have hfr : Module.finrank ℂ W ≤ Fintype.card (Nat.Partition n) := by
     refine le_trans (finrank_span_le_card (Set.range (classSum n))) ?_

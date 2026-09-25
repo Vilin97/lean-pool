@@ -331,13 +331,13 @@ noncomputable def freeModTensorIso
     modTensorMod R (freeMod R V) (freeMod R W) ≅
       freeMod R (V ⊗ W) where
   hom := Mod.Hom.mk' (freeModTensorCarrier R V W).hom (by
-    show modTensorAct R (freeMod R V) (freeMod R W) ≫
+    change modTensorAct R (freeMod R V) (freeMod R W) ≫
         (freeModTensorCarrier R V W).hom =
       (R ◁ (freeModTensorCarrier R V W).hom) ≫
         ((α_ R R (V ⊗ W)).inv ≫ μ[R] ▷ (V ⊗ W))
     exact freeModTensorCarrier_linear R V W)
   inv := Mod.Hom.mk' (freeModTensorCarrier R V W).inv (by
-    show ((α_ R R (V ⊗ W)).inv ≫ μ[R] ▷ (V ⊗ W)) ≫
+    change ((α_ R R (V ⊗ W)).inv ≫ μ[R] ▷ (V ⊗ W)) ≫
         (freeModTensorCarrier R V W).inv =
       (R ◁ (freeModTensorCarrier R V W).inv) ≫
         modTensorAct R (freeMod R V) (freeMod R W)

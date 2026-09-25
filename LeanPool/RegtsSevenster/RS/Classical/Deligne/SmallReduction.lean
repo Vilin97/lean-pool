@@ -58,20 +58,19 @@ def linearOfFullyFaithful (R : Type*) [Semiring R] {B : Type u₁}
     exact Function.Injective.module R (G.mapAddHom (X := X) (Y := Y))
       (fun _ _ h => hG.map_injective h) (fun _ _ => hG.map_preimage _)
   smul_comp X Y Z r f g := hG.map_injective (by
-    show G.map ((hG.preimage (r • G.map f)) ≫ g) = _
+    change G.map ((hG.preimage (r • G.map f)) ≫ g) = _
     rw [Functor.map_comp, hG.map_preimage]
-    show _ = G.map (hG.preimage (r • G.map (f ≫ g)))
+    change _ = G.map (hG.preimage (r • G.map (f ≫ g)))
     rw [hG.map_preimage, Functor.map_comp, Linear.smul_comp])
   comp_smul X Y Z f r g := hG.map_injective (by
-    show G.map (f ≫ (hG.preimage (r • G.map g))) = _
+    change G.map (f ≫ (hG.preimage (r • G.map g))) = _
     rw [Functor.map_comp, hG.map_preimage]
-    show _ = G.map (hG.preimage (r • G.map (f ≫ g)))
+    change _ = G.map (hG.preimage (r • G.map (f ≫ g)))
     rw [hG.map_preimage, Functor.map_comp, Linear.comp_smul])
 
 /-- The inducing functor is linear for the induced structure: that
 structure is defined so that it is. -/
-@[implicit_reducible]
-def functorLinearOfFullyFaithful (R : Type*) [Semiring R]
+theorem functorLinearOfFullyFaithful (R : Type*) [Semiring R]
     {B : Type u₁} [Category.{v₁} B] [Preadditive B] {A : Type u₂}
     [Category.{v₂} A] [Preadditive A] [Linear R A] {G : B ⥤ A}
     (hG : G.FullyFaithful) [G.Additive] :
@@ -150,8 +149,8 @@ theorem isSubquotientOf_map {A : Type u₁} [Category.{v₁} A]
     (h : IsSubquotientOf Y Z) :
     IsSubquotientOf (G.obj Y) (G.obj Z) := by
   obtain ⟨S, i, p, hi, hp⟩ := h
-  haveI := hi
-  haveI := hp
+  have := hi
+  have := hp
   exact ⟨G.obj S, G.map i, G.map p, inferInstance, inferInstance⟩
 
 /-- The subquotient relation transfers along isomorphisms of both
@@ -160,8 +159,8 @@ theorem IsSubquotientOf.congr {A : Type u₁} [Category.{v₁} A]
     {Y Y' Z Z' : A} (h : IsSubquotientOf Y Z) (iY : Y ≅ Y')
     (iZ : Z ≅ Z') : IsSubquotientOf Y' Z' := by
   obtain ⟨S, i, p, hi, hp⟩ := h
-  haveI := hi
-  haveI := hp
+  have := hi
+  have := hp
   exact ⟨S, i ≫ iZ.hom, p ≫ iY.hom, inferInstance, inferInstance⟩
 
 /-- A fully faithful functor preserving monomorphisms reflects the
@@ -207,11 +206,11 @@ bijective. -/
 theorem hasScalarUnit_of_fullyFaithful {A : Type u₁} [Category.{v₁} A]
     [Preadditive A] [Linear ℂ A] [MonoidalCategory A] {B : Type u₂}
     [Category.{v₂} B] [Preadditive B] [Linear ℂ B] [MonoidalCategory B]
-    (G : B ⥤ A) (hG : G.FullyFaithful) [G.Additive] [G.Linear ℂ]
+    (G : B ⥤ A) (hG : G.FullyFaithful) [G.Linear ℂ]
     [G.Monoidal] (h : HasScalarUnit A) : HasScalarUnit B := by
   have h' : Function.Bijective
       (fun c : ℂ => (c • 𝟙 (𝟙_ A) : 𝟙_ A ⟶ 𝟙_ A)) := h
-  show Function.Bijective (fun c : ℂ => (c • 𝟙 (𝟙_ B) : 𝟙_ B ⟶ 𝟙_ B))
+  change Function.Bijective (fun c : ℂ => (c • 𝟙 (𝟙_ B) : 𝟙_ B ⟶ 𝟙_ B))
   set α : G.obj (𝟙_ B) ≅ 𝟙_ A := (Functor.Monoidal.εIso G).symm
   have hcomp : (fun c : ℂ => (c • 𝟙 (𝟙_ A) : 𝟙_ A ⟶ 𝟙_ A)) =
       (fun g : G.obj (𝟙_ B) ⟶ G.obj (𝟙_ B) => α.conj g) ∘
@@ -319,8 +318,7 @@ noncomputable def smallDelignePreadditive
 attribute [local instance] smallDelignePreadditive
 
 /-- The inverse of the transporting equivalence is additive. -/
-@[implicit_reducible]
-def smallDeligneInverseAdditive
+theorem smallDeligneInverseAdditive
     [Category.{v} A] [Abelian A] [EssentiallySmall.{v} A] :
     (smallDeligneEquiv A).inverse.Additive :=
   (smallDeligneEquiv A).fullyFaithfulInverse.additive_ofFullyFaithful
@@ -328,8 +326,7 @@ def smallDeligneInverseAdditive
 attribute [local instance] smallDeligneInverseAdditive
 
 /-- The transporting equivalence is additive. -/
-@[implicit_reducible]
-def smallDeligneFunctorAdditive
+theorem smallDeligneFunctorAdditive
     [Category.{v} A] [Abelian A] [EssentiallySmall.{v} A] :
     (smallDeligneEquiv A).functor.Additive :=
   haveI : (smallDeligneEquiv A).symm.functor.Additive :=
@@ -348,8 +345,7 @@ noncomputable def smallDeligneLinear
 attribute [local instance] smallDeligneLinear
 
 /-- The inverse of the transporting equivalence is ℂ-linear. -/
-@[implicit_reducible]
-def smallDeligneInverseLinear
+theorem smallDeligneInverseLinear
     [Category.{v} A] [Abelian A] [Linear ℂ A] [EssentiallySmall.{v} A] :
     (smallDeligneEquiv A).inverse.Linear ℂ :=
   functorLinearOfFullyFaithful ℂ
@@ -358,8 +354,7 @@ def smallDeligneInverseLinear
 attribute [local instance] smallDeligneInverseLinear
 
 /-- The transporting equivalence is ℂ-linear. -/
-@[implicit_reducible]
-def smallDeligneFunctorLinear
+theorem smallDeligneFunctorLinear
     [Category.{v} A] [Abelian A] [Linear ℂ A] [EssentiallySmall.{v} A] :
     (smallDeligneEquiv A).functor.Linear ℂ :=
   haveI : (smallDeligneEquiv A).symm.functor.Linear ℂ :=
@@ -369,8 +364,7 @@ def smallDeligneFunctorLinear
 attribute [local instance] smallDeligneFunctorLinear
 
 /-- The small model has finite limits. -/
-@[implicit_reducible]
-def smallDeligneFiniteLimits
+theorem smallDeligneFiniteLimits
     [Category.{v} A] [Abelian A] [EssentiallySmall.{v} A] :
     HasFiniteLimits (SmallDeligne A) :=
   ⟨fun _ _ _ =>
@@ -388,8 +382,7 @@ noncomputable def smallDeligneAbelian
 attribute [local instance] smallDeligneAbelian
 
 /-- The small model has finite biproducts. -/
-@[implicit_reducible]
-def smallDeligneBiproducts
+theorem smallDeligneBiproducts
     [Category.{v} A] [Abelian A] [EssentiallySmall.{v} A] :
     HasFiniteBiproducts (SmallDeligne A) :=
   HasFiniteBiproducts.of_hasFiniteProducts
@@ -397,8 +390,7 @@ def smallDeligneBiproducts
 attribute [local instance] smallDeligneBiproducts
 
 /-- The tensor product of the small model is biadditive. -/
-@[implicit_reducible]
-def smallDeligneMonoidalPreadditive
+theorem smallDeligneMonoidalPreadditive
     [Category.{v} A] [Abelian A] [MonoidalCategory A]
     [MonoidalPreadditive A] [EssentiallySmall.{v} A] :
     MonoidalPreadditive (SmallDeligne A) :=
@@ -407,8 +399,7 @@ def smallDeligneMonoidalPreadditive
 attribute [local instance] smallDeligneMonoidalPreadditive
 
 /-- The tensor product of the small model is ℂ-bilinear. -/
-@[implicit_reducible]
-def smallDeligneMonoidalLinear
+theorem smallDeligneMonoidalLinear
     [Category.{v} A] [Abelian A] [Linear ℂ A] [MonoidalCategory A]
     [MonoidalPreadditive A] [MonoidalLinear ℂ A] [EssentiallySmall.{v} A] :
     MonoidalLinear ℂ (SmallDeligne A) :=

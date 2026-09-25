@@ -27,7 +27,7 @@ the other's, and the conversions are identity-shaped.
 
 namespace RS
 
-open scoped Classical
+
 
 section General
 
@@ -41,13 +41,13 @@ theorem relabel_pairing_eq : (W.relabel ee).pairing = W.pairing := rfl
 /-- Internal attachment is untouched by a relabel. -/
 theorem relabel_attach_inl_iff (f : W.Flag) (v : W.Vertex) :
     (W.relabel ee).attach f = Sum.inl v ↔ W.attach f = Sum.inl v := by
-  show (W.attach f).map id ⇑ee = Sum.inl v ↔ W.attach f = Sum.inl v
+  change (W.attach f).map id ⇑ee = Sum.inl v ↔ W.attach f = Sum.inl v
   rcases W.attach f with w | i <;> simp
 
 /-- Boundary attachment is shifted through the equivalence. -/
 theorem relabel_attach_inr_iff (f : W.Flag) (i : α) :
     (W.relabel ee).attach f = Sum.inr (ee i) ↔ W.attach f = Sum.inr i := by
-  show (W.attach f).map id ⇑ee = Sum.inr (ee i) ↔ W.attach f = Sum.inr i
+  change (W.attach f).map id ⇑ee = Sum.inr (ee i) ↔ W.attach f = Sum.inr i
   rcases W.attach f with w | j <;> simp
 
 /-- Being internally attached is invariant under a relabel. -/
@@ -79,7 +79,7 @@ private theorem filter_eq_of_iff {γ : Type} {p q : γ → Prop}
 /-- The relabelled boundary flag at a pushed-forward label. -/
 theorem relabel_boundaryFlag_apply (a : α) :
     (W.relabel ee).boundaryFlag (ee a) = W.boundaryFlag a := by
-  show W.boundaryFlag (ee.symm (ee a)) = W.boundaryFlag a
+  change W.boundaryFlag (ee.symm (ee a)) = W.boundaryFlag a
   rw [Equiv.symm_apply_apply]
 
 /-! ## Edge subsets under a relabel -/
@@ -213,7 +213,7 @@ theorem relabel_iterWalk (F : EdgeSubset W) (κ : F.RelTransitionSystem)
   induction n with
   | zero => rfl
   | succ n ih =>
-    show (relabelTransUp ee F κ).match_ ((W.relabel ee).pairing
+    change (relabelTransUp ee F κ).match_ ((W.relabel ee).pairing
         (EdgeSubset.iterWalk (relabelTransUp ee F κ) f n)) =
       κ.match_ (W.pairing (EdgeSubset.iterWalk κ f n))
     rw [ih]
@@ -317,8 +317,8 @@ theorem relabel_relInFlagsAt (F : EdgeSubset W)
     (F.relabelUp ee).relInFlagsAt (relabelOrientUp ee F o) v =
       F.relInFlagsAt o v := by
   unfold EdgeSubset.relInFlagsAt
-  letI := (W.relabel ee).flagOrder
-  letI := Classical.dec
+  let := (W.relabel ee).flagOrder
+  let := Classical.dec
   exact congrArg
     (fun s : Finset (W.relabel ee).Flag => Finset.sort s (· ≤ ·))
     (filter_eq_of_iff rfl fun f =>
@@ -490,7 +490,7 @@ theorem relabel_throughProduct
         (relabel_attach_inl_iff e.toEquiv (W.pairing a.val) w).mpr hb]
     · rw [(relabel_attach_inr_iff e.toEquiv a.val i₀).mpr ha,
         (relabel_attach_inr_iff e.toEquiv (W.pairing a.val) j₀).mpr hb]
-      show (if e.toEquiv i₀ < e.toEquiv j₀ then
+      change (if e.toEquiv i₀ < e.toEquiv j₀ then
           throughStateFactor (st (e.toEquiv i₀)) (st (e.toEquiv j₀))
           else 1) =
         (if i₀ < j₀ then throughStateFactor (st (e i₀)) (st (e j₀))

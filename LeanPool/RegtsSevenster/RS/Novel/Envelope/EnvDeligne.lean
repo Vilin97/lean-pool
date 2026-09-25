@@ -73,7 +73,7 @@ scalars. -/
 theorem unitExtract_id :
     unitExtract f (𝟙 (𝟙_ (Env f))) =
       HomSpace.ofFragment f.val (strandBundle 0) := by
-  show ((Karoubi.Hom.f (𝟙 (𝟙_ (Env f))) PUnit.unit
+  change ((Karoubi.Hom.f (𝟙 (𝟙_ (Env f))) PUnit.unit
     PUnit.unit).f : SkeinObj.mk (f := f) 0 ⟶ SkeinObj.mk 0) =
     _
   rw [show Karoubi.Hom.f (𝟙 (𝟙_ (Env f))) =
@@ -106,7 +106,7 @@ theorem env_endOne : HasScalarUnit (Env f) := by
     obtain ⟨c, hc⟩ := homSpace_zero_spanned f (unitExtract f x)
     refine ⟨c, ?_⟩
     apply unitExtract_injective f
-    show c • unitExtract f (𝟙 (𝟙_ (Env f))) = unitExtract f x
+    change c • unitExtract f (𝟙 (𝟙_ (Env f))) = unitExtract f x
     rw [unitExtract_id, unit_id_eq_emptyClass]
     exact hc.symm
 

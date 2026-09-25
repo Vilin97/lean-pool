@@ -51,11 +51,11 @@ theorem exists_universal_algebra
   classical
   choose pm qm Am Amon Acomm Ane Aiso using hmix
   choose Bs Bmon Bcomm Bne Bsec using hsplit
-  letI : ∀ i : J ⊕ K, MonObj (Sum.elim Am Bs i) := fun i =>
+  let : ∀ i : J ⊕ K, MonObj (Sum.elim Am Bs i) := fun i =>
     match i with
     | Sum.inl j => Amon j
     | Sum.inr k => Bmon k
-  letI : ∀ i : J ⊕ K, IsCommMonObj (Sum.elim Am Bs i) := fun i =>
+  let : ∀ i : J ⊕ K, IsCommMonObj (Sum.elim Am Bs i) := fun i =>
     match i with
     | Sum.inl j => Acomm j
     | Sum.inr k => Bcomm k
@@ -67,13 +67,13 @@ theorem exists_universal_algebra
   refine ⟨𝔸, hmon, hcomm, hne, ?_, ?_⟩
   · intro j
     obtain ⟨φ, hφ⟩ := hmap (Sum.inl j)
-    haveI : IsMonHom (show Am j ⟶ 𝔸 from φ) := hφ
+    have : IsMonHom (show Am j ⟶ 𝔸 from φ) := hφ
     exact ⟨pm j, qm j,
       ⟨freeModIsoBaseChange (Am j) 𝔸 (show Am j ⟶ 𝔸 from φ)
         (Aiso j).some⟩⟩
   · intro k
     obtain ⟨φ, hφ⟩ := hmap (Sum.inr k)
-    haveI : IsMonHom (show Bs k ⟶ 𝔸 from φ) := hφ
+    have : IsMonHom (show Bs k ⟶ 𝔸 from φ) := hφ
     obtain ⟨s, hs⟩ := Bsec k
     exact exists_section_baseChange (Bs k) 𝔸
       (show Bs k ⟶ 𝔸 from φ) (g k) s hs

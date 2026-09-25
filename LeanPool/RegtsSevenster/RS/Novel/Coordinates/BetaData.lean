@@ -15,7 +15,7 @@ index on either side, and the `β`-diagonal these produce.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 
@@ -27,18 +27,18 @@ theorem colourFormEntry_inr_partner (u : Fin (2 * ℓ)) :
   have hu := u.isLt
   unfold oddPartner oddPartnerSign
   by_cases h : u.val < ℓ
-  · rw [dif_pos h, if_pos h]
-    show (if u.val + ℓ = u.val + ℓ then (1 : ℂ)
+  · rw [dite_eq_left h, ite_eq_left h]
+    change (if u.val + ℓ = u.val + ℓ then (1 : ℂ)
       else if (u.val + ℓ) + ℓ = u.val then -1 else 0) =
       -((-1 : ℤ) : ℂ)
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     simp
-  · rw [dif_neg h, if_neg h]
-    show (if u.val + ℓ = u.val - ℓ then (1 : ℂ)
+  · rw [dite_eq_right h, ite_eq_right h]
+    change (if u.val + ℓ = u.val - ℓ then (1 : ℂ)
       else if (u.val - ℓ) + ℓ = u.val then -1 else 0) =
       -((1 : ℤ) : ℂ)
     have h1 : ¬ (u.val + ℓ = u.val - ℓ) := by omega
-    rw [if_neg h1, if_pos (by omega)]
+    rw [ite_eq_right h1, ite_eq_left (by omega)]
     simp
 
 /-- The data colouring at a castAdd slot gives the representative
@@ -59,8 +59,8 @@ theorem colouringOf_castAdd (W : ClosedFragment) (F : EdgeSubset W)
     intro slot hslot
     rw [colouringOf]
     by_cases h : (starFlagEnum W).symm slot ∈ F.flags
-    · rw [dif_pos h, dif_pos h, if_pos hslot]
-    · rw [dif_neg h, dif_neg h]
+    · rw [dite_eq_left h, dite_eq_left h, ite_eq_left hslot]
+    · rw [dite_eq_right h, dite_eq_right h]
   exact key (Fin.castAdd (edgeCount W) i) i.isLt
 
 /-- The data colouring at a natAdd slot gives the partner colour
@@ -85,15 +85,15 @@ theorem colouringOf_natAdd (W : ClosedFragment) (F : EdgeSubset W)
     intro slot hslot
     rw [colouringOf]
     by_cases h : (starFlagEnum W).symm slot ∈ F.flags
-    · rw [dif_pos h, dif_pos h, if_neg hslot]
-    · rw [dif_neg h, dif_neg h]
+    · rw [dite_eq_left h, dite_eq_left h, ite_eq_right hslot]
+    · rw [dite_eq_right h, dite_eq_right h]
   rw [key (Fin.natAdd (edgeCount W) i)
     (show ¬ (Fin.natAdd (edgeCount W) i).val < edgeCount W from by
-      show ¬ (edgeCount W + i.val < edgeCount W); omega)]
+      change ¬ (edgeCount W + i.val < edgeCount W); omega)]
   by_cases h : (starFlagEnum W).symm (Fin.castAdd (edgeCount W) i) ∈ F.flags
   · have h' : (starFlagEnum W).symm (Fin.natAdd (edgeCount W) i) ∈ F.flags := by
       rw [hpair]; exact F.pairing_mem _ h
-    rw [dif_pos h', dif_pos h]
+    rw [dite_eq_left h', dite_eq_left h]
     congr 1
     have harg : (⟨(starFlagEnum W).symm (Fin.natAdd (edgeCount W) i), h'⟩ :
         {f : W.Flag // f ∈ F.flags}) =
@@ -107,7 +107,7 @@ theorem colouringOf_natAdd (W : ClosedFragment) (F : EdgeSubset W)
         have := F.pairing_mem _ hmem
         rw [W.pairing_invol] at this
         exact this)
-    rw [dif_neg h', dif_neg h]
+    rw [dite_eq_right h', dite_eq_right h]
     congr 1
     have harg : (⟨(starFlagEnum W).symm (Fin.natAdd (edgeCount W) i), h'⟩ :
         {f : W.Flag // f ∉ F.flags}) =
@@ -142,15 +142,15 @@ theorem betaDiag_colouringOf (W : ClosedFragment) (F : EdgeSubset W)
   -- Show the products agree entry-by-entry
   refine Finset.prod_congr rfl (fun i _ => ?_)
   -- Convert firstHalf/secondHalf to castAdd/natAdd
-  show colourFormEntry k ℓ
+  change colourFormEntry k ℓ
     (colouringOf W F ψ φ (Fin.castAdd (edgeCount W) i))
     (colouringOf W F ψ φ (Fin.natAdd (edgeCount W) i)) = _
   rw [colouringOf_castAdd, colouringOf_natAdd]
   by_cases h : (starFlagEnum W).symm (Fin.castAdd (edgeCount W) i) ∈ F.flags
-  · rw [dif_pos h, dif_pos h, dif_pos h]
+  · rw [dite_eq_left h, dite_eq_left h, dite_eq_left h]
     exact colourFormEntry_inr_partner _
-  · rw [dif_neg h, dif_neg h, dif_neg h]
-    show (if (ψ.val ⟨_, h⟩) = (ψ.val ⟨_, h⟩) then (1 : ℂ) else 0) = 1
-    rw [if_pos rfl]
+  · rw [dite_eq_right h, dite_eq_right h, dite_eq_right h]
+    change (if (ψ.val ⟨_, h⟩) = (ψ.val ⟨_, h⟩) then (1 : ℂ) else 0) = 1
+    rw [ite_eq_left rfl]
 
 end RS

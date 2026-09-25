@@ -58,7 +58,7 @@ private noncomputable def pairCloseAmbient
     _root_.Equiv.sumComm F.Vertex G.Vertex
   attach_comm f := by
     rcases f with g | g
-    · show (((F.attach g).map id
+    · change (((F.attach g).map id
               (finCongr (by omega : t = t + 0))).map
             Sum.inr Sum.inr).map
             id (pairCloseSwap t) =
@@ -68,7 +68,7 @@ private noncomputable def pairCloseAmbient
             (_root_.Equiv.sumComm F.Vertex
               G.Vertex) id
       rcases F.attach g with v | ℓ <;> rfl
-    · show (((G.attach g).map id
+    · change (((G.attach g).map id
               (finCongr (by omega : t = 0 + t))).map
             Sum.inl Sum.inl).map
             id (pairCloseSwap t) =
@@ -81,7 +81,7 @@ private noncomputable def pairCloseAmbient
   pairing_comm f := by
     rcases f with g | g <;> rfl
   circles_eq := by
-    show F.circles + G.circles =
+    change F.circles + G.circles =
       G.circles + F.circles
     omega
 
@@ -97,7 +97,7 @@ private theorem mapPairs_pcs_symm (t : ℕ) :
     (List.map_congr_left fun k _ => ?_)
   -- Each pair: (Sum.inl ⟨0+k, _⟩, Sum.inr ⟨k, _⟩)
   -- .symm acts as pcSwapFun since self-inverse
-  show (pcSwapFun t (Sum.inl ⟨0 + k.val, _⟩),
+  change (pcSwapFun t (Sum.inl ⟨0 + k.val, _⟩),
         pcSwapFun t (Sum.inr ⟨k.val, _⟩)) =
     (Sum.inr ⟨k.val, _⟩,
      Sum.inl ⟨0 + k.val, _⟩)

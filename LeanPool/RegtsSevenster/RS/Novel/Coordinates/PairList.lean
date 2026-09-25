@@ -16,7 +16,7 @@ exactly once. The slot helpers identify the two ends of each edge.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 /-! ### Edge enumeration -/
 
@@ -124,7 +124,7 @@ theorem mem_edgePairList (W : ClosedFragment)
       have := q.isLt; omega
     set i : Fin (edgeCount W) := ⟨q.val - edgeCount W, hlt⟩ with hi_def
     have hslot : Fin.natAdd (edgeCount W) i = q :=
-      Fin.ext (by show edgeCount W + (q.val - edgeCount W) = q.val; omega)
+      Fin.ext (by change edgeCount W + (q.val - edgeCount W) = q.val; omega)
     have hmem : (starFlagEnum W).symm (Fin.natAdd (edgeCount W) i) = x.val := by
       rw [hslot, hq_def, _root_.Equiv.symm_apply_apply]
     -- The partner of x.val is the rep flag for this edge
@@ -159,7 +159,7 @@ theorem orientedPairList_nodup (W : ClosedFragment)
     -- Each block is either [partner, rep] or [rep, partner]
     by_cases ho : o.isOut ((starFlagEnum W).symm
         (Fin.castAdd (edgeCount W) i.val)) = true
-    · rw [if_pos ho]
+    · rw [ite_eq_left ho]
       refine List.nodup_cons.mpr ⟨?_, List.nodup_singleton _⟩
       intro hmem
       rw [List.mem_singleton] at hmem
@@ -167,7 +167,7 @@ theorem orientedPairList_nodup (W : ClosedFragment)
           (starFlagEnum W).symm (Fin.castAdd (edgeCount W) i.val) :=
         congrArg (fun z : {f : W.Flag // f ∈ F.flags} => z.val) hmem
       exact (castAdd_flag_ne_natAdd_flag W i.val hval.symm)
-    · rw [if_neg ho]
+    · rw [ite_eq_right ho]
       refine List.nodup_cons.mpr ⟨?_, List.nodup_singleton _⟩
       intro hmem
       rw [List.mem_singleton] at hmem
@@ -200,7 +200,7 @@ theorem orientedPairList_nodup (W : ClosedFragment)
       intro i hmem
       by_cases ho : o.isOut ((starFlagEnum W).symm
           (Fin.castAdd (edgeCount W) i.val)) = true
-      · rw [if_pos ho] at hmem
+      · rw [ite_eq_left ho] at hmem
         rcases List.mem_cons.mp hmem with h | h
         · right
           rw [show x.val = (starFlagEnum W).symm
@@ -211,7 +211,7 @@ theorem orientedPairList_nodup (W : ClosedFragment)
           rw [show x.val = (starFlagEnum W).symm
               (Fin.castAdd (edgeCount W) i.val) from
               congrArg Subtype.val h, _root_.Equiv.apply_symm_apply]
-      · rw [if_neg ho] at hmem
+      · rw [ite_eq_right ho] at hmem
         rcases List.mem_cons.mp hmem with h | h
         · left
           rw [show x.val = (starFlagEnum W).symm
@@ -246,12 +246,12 @@ theorem mem_orientedPairList (W : ClosedFragment)
   refine ⟨i, hi, ?_⟩
   by_cases ho : o.isOut ((starFlagEnum W).symm
       (Fin.castAdd (edgeCount W) i.val)) = true
-  · rw [if_pos ho]
+  · rw [ite_eq_left ho]
     rcases List.mem_cons.mp hx with h | h
     · exact List.mem_cons.mpr (Or.inr (List.mem_singleton.mpr h))
     · rw [List.mem_singleton] at h
       exact List.mem_cons.mpr (Or.inl h)
-  · rw [if_neg ho]
+  · rw [ite_eq_right ho]
     exact hx
 
 end RS

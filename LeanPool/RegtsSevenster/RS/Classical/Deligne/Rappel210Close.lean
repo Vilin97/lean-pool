@@ -55,10 +55,10 @@ theorem rappel210_of_unit_nonzero
     (hnz : splitAlgebraUnit ((unitFormMid S)ᘁ)
       (unitFormPoint S) ≠ 0) :
     Rappel210Statement S hS := by
-  letI : MonObj (rappel210Algebra S) :=
+  let : MonObj (rappel210Algebra S) :=
     splitAlgebraMonObj (((unitFormMid S)ᘁ : D))
       (unitFormPoint S)
-  haveI : IsCommMonObj (rappel210Algebra S) :=
+  have : IsCommMonObj (rappel210Algebra S) :=
     splitAlgebra_isCommMonObj (((unitFormMid S)ᘁ : D))
       (unitFormPoint S)
   exact rappel210_of_class S hS (rappel210Algebra S) hnz

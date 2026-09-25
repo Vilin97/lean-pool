@@ -31,7 +31,7 @@ theorem neg_id_whiskerRight
     [MonoidalPreadditive D]
     (X Y : D) :
     (-𝟙 X) ▷ Y = -𝟙 (X ⊗ Y) := by
-  show (tensorRight Y).map (-𝟙 X) = _
+  change (tensorRight Y).map (-𝟙 X) = _
   rw [Functor.map_neg]
   simp
 
@@ -40,7 +40,7 @@ theorem whiskerLeft_neg_id [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [MonoidalPreadditive D]
     (X Y : D) :
     X ◁ (-𝟙 Y) = -𝟙 (X ⊗ Y) := by
-  show (tensorLeft X).map (-𝟙 Y) = _
+  change (tensorLeft X).map (-𝟙 Y) = _
   rw [Functor.map_neg]
   simp
 

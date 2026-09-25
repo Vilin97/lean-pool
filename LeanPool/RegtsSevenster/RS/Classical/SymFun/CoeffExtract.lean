@@ -70,7 +70,7 @@ theorem alternant_coeff (e : Fin k → ℕ)
       rw [map_one]
       exact Int.cast_one]
     rw [one_mul, coeff_monomial]
-    rw [if_pos (Finset.sum_congr rfl fun i _ => by
+    rw [ite_eq_left (Finset.sum_congr rfl fun i _ => by
       rw [Equiv.Perm.one_apply])]
   · have hne : (∑ i, Finsupp.single i (e (τ i))) ≠
         ∑ i, Finsupp.single i (e i) := by
@@ -82,7 +82,7 @@ theorem alternant_coeff (e : Fin k → ℕ)
       exact hinj h1
     rw [show ((Equiv.Perm.sign τ : ℤ) : MvPolynomial (Fin k) ℂ) =
         MvPolynomial.C ((Equiv.Perm.sign τ : ℤ) : ℂ) from by simp,
-      MvPolynomial.coeff_C_mul, coeff_monomial, if_neg hne,
+      MvPolynomial.coeff_C_mul, coeff_monomial, ite_eq_right hne,
       mul_zero]
 
 end RS

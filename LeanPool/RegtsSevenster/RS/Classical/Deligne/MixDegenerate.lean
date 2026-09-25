@@ -209,11 +209,11 @@ noncomputable def superLetters (r s : ℕ) :
     cases k with
     | inl i =>
       apply SuperVect.hom_ext
-      · show (LinearMap.proj (R := ℂ) (φ := fun _ : Fin r => ℂ)
+      · change (LinearMap.proj (R := ℂ) (φ := fun _ : Fin r => ℂ)
             i).comp (LinearMap.single ℂ (fun _ => ℂ) i) =
           LinearMap.id
         refine LinearMap.ext fun z => ?_
-        show Pi.single (M := fun _ : Fin r => ℂ) i z i = z
+        change Pi.single (M := fun _ : Fin r => ℂ) i z i = z
         rw [Pi.single_eq_same]
       · refine LinearMap.ext fun z => ?_
         exact Subsingleton.elim (α := PUnit) _ _
@@ -221,7 +221,7 @@ noncomputable def superLetters (r s : ℕ) :
       apply SuperVect.hom_ext
       · refine LinearMap.ext fun z => ?_
         exact Subsingleton.elim (α := Fin 0 → ℂ) _ _
-      · show (LinearMap.pi fun _ : Fin 1 =>
+      · change (LinearMap.pi fun _ : Fin 1 =>
             LinearMap.proj (R := ℂ)
               (φ := fun _ : Fin s => ℂ) j).comp
           ((LinearMap.single ℂ (fun _ => ℂ) j).comp
@@ -229,7 +229,7 @@ noncomputable def superLetters (r s : ℕ) :
           = LinearMap.id
         refine LinearMap.ext fun v => ?_
         funext i
-        show Pi.single (M := fun _ : Fin s => ℂ) j (v 0) j = v i
+        change Pi.single (M := fun _ : Fin s => ℂ) j (v 0) j = v i
         rw [Pi.single_eq_same, Subsingleton.elim i 0]
   ins_prj_ne {k k'} hkk' := by
     cases k with
@@ -237,10 +237,10 @@ noncomputable def superLetters (r s : ℕ) :
       cases k' with
       | inl i' =>
         apply SuperVect.hom_ext
-        · show (LinearMap.proj (R := ℂ) (φ := fun _ : Fin r => ℂ)
+        · change (LinearMap.proj (R := ℂ) (φ := fun _ : Fin r => ℂ)
               i').comp (LinearMap.single ℂ (fun _ => ℂ) i) = 0
           refine LinearMap.ext fun z => ?_
-          show Pi.single (M := fun _ : Fin r => ℂ) i z i' = 0
+          change Pi.single (M := fun _ : Fin r => ℂ) i z i' = 0
           exact Pi.single_eq_of_ne (M := fun _ : Fin r => ℂ)
             (fun h => hkk' (congrArg Sum.inl h.symm)) z
         · refine LinearMap.ext fun z => ?_
@@ -250,7 +250,7 @@ noncomputable def superLetters (r s : ℕ) :
         · refine LinearMap.ext fun z => ?_
           exact Subsingleton.elim (α := Fin 0 → ℂ) _ _
         · refine LinearMap.ext fun z => ?_
-          show (LinearMap.pi fun _ : Fin 1 =>
+          change (LinearMap.pi fun _ : Fin 1 =>
               LinearMap.proj (R := ℂ)
                 (φ := fun _ : Fin s => ℂ) j')
             ((0 : PUnit →ₗ[ℂ] (Fin s → ℂ)) z) = 0
@@ -260,7 +260,7 @@ noncomputable def superLetters (r s : ℕ) :
       | inl i' =>
         apply SuperVect.hom_ext
         · refine LinearMap.ext fun z => ?_
-          show (LinearMap.proj (R := ℂ)
+          change (LinearMap.proj (R := ℂ)
               (φ := fun _ : Fin r => ℂ) i')
             ((0 : (Fin 0 → ℂ) →ₗ[ℂ] (Fin r → ℂ)) z) = 0
           rfl
@@ -270,7 +270,7 @@ noncomputable def superLetters (r s : ℕ) :
         apply SuperVect.hom_ext
         · refine LinearMap.ext fun z => ?_
           exact Subsingleton.elim (α := Fin 0 → ℂ) _ _
-        · show (LinearMap.pi fun _ : Fin 1 =>
+        · change (LinearMap.pi fun _ : Fin 1 =>
               LinearMap.proj (R := ℂ) (φ := fun _ : Fin s => ℂ)
                 j').comp
             ((LinearMap.single ℂ (fun _ => ℂ) j).comp
@@ -278,7 +278,7 @@ noncomputable def superLetters (r s : ℕ) :
                 (φ := fun _ : Fin 1 => ℂ) 0)) = 0
           refine LinearMap.ext fun v => ?_
           funext i
-          show Pi.single (M := fun _ : Fin s => ℂ) j (v 0) j' = 0
+          change Pi.single (M := fun _ : Fin s => ℂ) j (v 0) j' = 0
           exact Pi.single_eq_of_ne (M := fun _ : Fin s => ℂ)
             (fun h => hkk' (congrArg Sum.inr h.symm)) (v 0)
   total := superSum_total r s

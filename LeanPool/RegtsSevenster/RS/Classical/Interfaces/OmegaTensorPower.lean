@@ -89,12 +89,12 @@ theorem omegaPow_inv_hom :
           P.ω.obj (SkeinObj.mk n)) =
         𝟙 (P.ω.obj (SkeinObj.mk n))
   | 0 => by
-    letI := P.braided
-    show (η P.ω ≫ ε P.ω : P.ω.obj (SkeinObj.mk 0) ⟶ _) = 𝟙 _
+    let := P.braided
+    change (η P.ω ≫ ε P.ω : P.ω.obj (SkeinObj.mk 0) ⟶ _) = 𝟙 _
     exact Functor.Monoidal.η_ε P.ω
   | n + 1 => by
-    letI := P.braided
-    show (δ P.ω (SkeinObj.mk n) (SkeinObj.mk 1) ≫
+    let := P.braided
+    change (δ P.ω (SkeinObj.mk n) (SkeinObj.mk 1) ≫
         (omegaPowInv f P n ⊗ₘ 𝟙 (P.ω.obj (SkeinObj.mk 1)))) ≫
       ((omegaPowHom f P n ⊗ₘ 𝟙 (P.ω.obj (SkeinObj.mk 1))) ≫
         μ P.ω (SkeinObj.mk n) (SkeinObj.mk 1)) = 𝟙 _
@@ -115,12 +115,12 @@ theorem omegaPow_hom_inv :
           superPow (strandImage f P) n) =
         𝟙 (superPow (strandImage f P) n)
   | 0 => by
-    letI := P.braided
-    show (ε P.ω ≫ η P.ω : SuperVect.tensorUnit ⟶ _) = 𝟙 _
+    let := P.braided
+    change (ε P.ω ≫ η P.ω : SuperVect.tensorUnit ⟶ _) = 𝟙 _
     exact Functor.Monoidal.ε_η P.ω
   | n + 1 => by
-    letI := P.braided
-    show ((omegaPowHom f P n ⊗ₘ 𝟙 (P.ω.obj (SkeinObj.mk 1))) ≫
+    let := P.braided
+    change ((omegaPowHom f P n ⊗ₘ 𝟙 (P.ω.obj (SkeinObj.mk 1))) ≫
         μ P.ω (SkeinObj.mk n) (SkeinObj.mk 1)) ≫
       (δ P.ω (SkeinObj.mk n) (SkeinObj.mk 1) ≫
         (omegaPowInv f P n ⊗ₘ 𝟙 (P.ω.obj (SkeinObj.mk 1)))) = 𝟙 _
@@ -168,7 +168,7 @@ theorem isoConj_one {C : Type*} [Category C] {X Y : C}
   simp only [isoConj, id_comp, e.hom_inv_id]
 
 /-- And composition. -/
-theorem isoConj_mul {C : Type*} [Category C] [Preadditive C]
+theorem isoConj_mul {C : Type*} [Category C]
     {X Y : C} (e : X ≅ Y) (f g : End Y) :
     isoConj e (f ≫ g) =
       isoConj e f ≫ isoConj e g := by
@@ -179,14 +179,14 @@ theorem isoConj_mul {C : Type*} [Category C] [Preadditive C]
 theorem isoConj_zero {C : Type*} [Category C] [Preadditive C]
     {X Y : C} (e : X ≅ Y) :
     isoConj e (0 : End Y) = 0 := by
-  show e.hom ≫ (0 : Y ⟶ Y) ≫ e.inv = 0
+  change e.hom ≫ (0 : Y ⟶ Y) ≫ e.inv = 0
   simp
 
 /-- And is additive — so it is an algebra map on endomorphisms. -/
 theorem isoConj_add {C : Type*} [Category C] [Preadditive C]
     {X Y : C} (e : X ≅ Y) (f g : End Y) :
     isoConj e (f + g) = isoConj e f + isoConj e g := by
-  show e.hom ≫ (f + g) ≫ e.inv =
+  change e.hom ≫ (f + g) ≫ e.inv =
     e.hom ≫ f ≫ e.inv + e.hom ≫ g ≫ e.inv
   have h1 : (f + g) ≫ e.inv = f ≫ e.inv + g ≫ e.inv :=
     map_add (Preadditive.rightComp Y e.inv) f g
@@ -198,7 +198,7 @@ theorem isoConj_smul {C : Type*} [Category C] [Preadditive C]
     [Linear ℂ C] {X Y : C} (e : X ≅ Y)
     (r : ℂ) (f : End Y) :
     isoConj e (r • f) = r • isoConj e f := by
-  show e.hom ≫ (r • f) ≫ e.inv = r • (e.hom ≫ f ≫ e.inv)
+  change e.hom ≫ (r • f) ≫ e.inv = r • (e.hom ≫ f ≫ e.inv)
   have h1 : (r • f) ≫ e.inv = r • (f ≫ e.inv) :=
     Linear.smul_comp _ _ _ r f e.inv
   rw [h1]
@@ -206,7 +206,7 @@ theorem isoConj_smul {C : Type*} [Category C] [Preadditive C]
 
 /-- Conjugation by an iso is injective. -/
 theorem isoConj_injective {C : Type*} [Category C]
-    [Preadditive C] {X Y : C}
+    {X Y : C}
     (e : X ≅ Y) : Function.Injective (isoConj e) := by
   intro f g (h : e.hom ≫ f ≫ e.inv = e.hom ≫ g ≫ e.inv)
   have h2 : e.inv ≫ (e.hom ≫ f ≫ e.inv) ≫ e.hom =
@@ -263,8 +263,8 @@ theorem superPermAction_eq_zero_iff (n : ℕ)
     letI := P.linear
     superPermAction f P n x = 0 ↔
       omegaSkeinRep f P n x = 0 := by
-  letI := P.additive
-  letI := P.linear
+  let := P.additive
+  let := P.linear
   exact isoConj_eq_zero_iff (omegaPow f P n)
     (omegaSkeinRep f P n x)
 
@@ -280,9 +280,9 @@ theorem superPermAction_perm (n : ℕ)
       (MonoidAlgebra.of ℂ (Equiv.Perm (Fin n)) σ) =
       isoConj (omegaPow f P n)
         (P.ω.map (permClass f n σ)) := by
-  letI := P.additive
-  letI := P.linear
-  show isoConj (omegaPow f P n)
+  let := P.additive
+  let := P.linear
+  change isoConj (omegaPow f P n)
     (omegaSkeinRep f P n
       (MonoidAlgebra.of ℂ (Equiv.Perm (Fin n)) σ)) = _
   rw [omegaSkeinRep_of]

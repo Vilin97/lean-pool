@@ -53,12 +53,12 @@ private theorem matUnit_mul_matUnit {n : ℕ} {d : Fin n → ℕ}
     dsimp at hij
     subst hij
     rcases eq_or_ne pr qr with rfl | hr
-    · rw [if_pos rfl]
+    · rw [ite_eq_left rfl]
       unfold matUnit
       rcases eq_or_ne k pi with rfl | hk
       · simp
       · simp [Pi.single_eq_of_ne hk]
-    · rw [if_neg (by
+    · rw [ite_eq_right (by
         intro h
         exact hr (by
           have := Sigma.mk.inj_iff.mp h
@@ -67,7 +67,7 @@ private theorem matUnit_mul_matUnit {n : ℕ} {d : Fin n → ℕ}
       rcases eq_or_ne k pi with rfl | hk
       · simp [hr]
       · simp [Pi.single_eq_of_ne hk]
-  · rw [if_neg (fun h => hij (congrArg Sigma.fst h))]
+  · rw [ite_eq_right (fun h => hij (congrArg Sigma.fst h))]
     unfold matUnit
     rcases eq_or_ne k p.1 with rfl | hk
     · rw [Pi.single_eq_same, Pi.single_eq_of_ne hij,
@@ -108,13 +108,13 @@ private theorem matUnit_sum {n : ℕ} {d : Fin n → ℕ} :
     rw [Finset.sum_eq_single r
       (fun b _ hb => by
         simp only [Matrix.single, Matrix.of_apply]
-        rw [if_neg (by simp [hb])])
+        rw [ite_eq_right (by simp [hb])])
       (fun h => absurd (Finset.mem_univ r) h)]
     simp [Matrix.single]
   · rw [Matrix.one_apply_ne hrs]
     refine Finset.sum_eq_zero fun b _ => ?_
     simp only [Matrix.single, Matrix.of_apply]
-    rw [if_neg (by
+    rw [ite_eq_right (by
       rintro ⟨hbr, hbs⟩
       exact hrs (hbr ▸ hbs))]
 
@@ -139,7 +139,6 @@ private theorem matUnit_corner {n : ℕ} {d : Fin n → ℕ}
   · simp [Pi.single_eq_of_ne hk]
 
 private theorem matUnit_ne_zero {n : ℕ} {d : Fin n → ℕ}
-    [∀ i, NeZero (d i)]
     (p : (i : Fin n) × Fin (d i)) : matUnit p ≠ 0 := by
   intro h
   have h2 := congrFun h p.1
@@ -165,15 +164,15 @@ theorem exists_completeOrthogonal_atomic [Ring A] [Algebra ℂ A]
     fun p => Φ.symm (matUnit p), ⟨⟨fun p => ?_, ?_⟩, ?_⟩, ?_⟩
   · show IsIdempotentElem _
     rw [IsIdempotentElem, ← map_mul, matUnit_mul_matUnit,
-      if_pos rfl]
+      ite_eq_left rfl]
   · intro p q hpq
-    rw [← map_mul, matUnit_mul_matUnit, if_neg hpq, map_zero]
+    rw [← map_mul, matUnit_mul_matUnit, ite_eq_right hpq, map_zero]
   · rw [← map_sum, matUnit_sum, map_one]
   · intro p
     refine ⟨?_, ?_, ?_⟩
     · show IsIdempotentElem _
       rw [IsIdempotentElem, ← map_mul, matUnit_mul_matUnit,
-        if_pos rfl]
+        ite_eq_left rfl]
     · intro h
       exact matUnit_ne_zero p (by
         have := congrArg Φ h

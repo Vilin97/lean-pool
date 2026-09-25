@@ -42,8 +42,8 @@ theorem freeRegTwist_act
     letI := ModObj.regular A
     ((α_ A A V).inv ≫ (μ[A] ▷ V)) ≫ (β_ A V).hom =
       (A ◁ (β_ A V).hom) ≫ actAcross A V A := by
-  letI := ModObj.regular A
-  show ((α_ A A V).inv ≫ (μ[A] ▷ V)) ≫ (β_ A V).hom =
+  let := ModObj.regular A
+  change ((α_ A A V).inv ≫ (μ[A] ▷ V)) ≫ (β_ A V).hom =
     (A ◁ (β_ A V).hom) ≫ actAcross A V A
   rw [actAcross_eq_braidPast, braidPast_hom,
     show actLeft A A = μ[A] from rfl, Category.assoc,
@@ -60,13 +60,13 @@ noncomputable def freeRegTwistIso
     (V : D) :
     freeMod A V ≅ tensorLeftMod A V (regularMod A) where
   hom := Mod.Hom.mk' (β_ A V).hom (by
-    letI := ModObj.regular A
-    show ((α_ A A V).inv ≫ (μ[A] ▷ V)) ≫ (β_ A V).hom =
+    let := ModObj.regular A
+    change ((α_ A A V).inv ≫ (μ[A] ▷ V)) ≫ (β_ A V).hom =
       (A ◁ (β_ A V).hom) ≫ actAcross A V A
     exact freeRegTwist_act A V)
   inv := Mod.Hom.mk' (β_ A V).inv (by
-    letI := ModObj.regular A
-    show actAcross A V A ≫ (β_ A V).inv =
+    let := ModObj.regular A
+    change actAcross A V A ≫ (β_ A V).inv =
       (A ◁ (β_ A V).inv) ≫ ((α_ A A V).inv ≫ (μ[A] ▷ V))
     exact act_inv_of_act_hom A (β_ A V) (freeRegTwist_act A V))
   hom_inv_id := by

@@ -21,7 +21,7 @@ for step, and that the path matching is carried across unchanged.
 
 namespace RS
 
-open scoped Classical
+
 open Fragment
 
 namespace EdgeSubset
@@ -131,7 +131,7 @@ theorem iterWalk_unglueClosed_val_all (δ' : SurvivingFlag W i j) :
   induction t with
   | zero => rfl
   | succ t ih =>
-    show (κW).match_ (W.pairing (iterWalk (κW) δ'.val t)) =
+    change (κW).match_ (W.pairing (iterWalk (κW) δ'.val t)) =
       (κ'.match_ ((W.gluePairClosed i j hclosed).pairing
         (iterWalk κ' δ' t))).val
     rw [ih]

@@ -108,11 +108,11 @@ theorem pair_count_sum (α β : Fin k → ℕ) :
           by_cases hm : (∀ a, fibreCard (fun i => (p i).1) a =
               α a) ∧ (∀ b, fibreCard (fun i => (p i).2) b = β b)
           · by_cases hf : p ∘ π = p
-            · rw [if_pos ⟨hm.1, hm.2, hf⟩, if_pos ⟨hm, hf⟩]
-            · rw [if_neg (fun hc => hf hc.2.2),
-                if_neg (fun hc => hf hc.2)]
-          · rw [if_neg (fun hc => hm ⟨hc.1, hc.2.1⟩),
-              if_neg (fun hc => hm hc.1)]
+            · rw [ite_eq_left ⟨hm.1, hm.2, hf⟩, ite_eq_left ⟨hm, hf⟩]
+            · rw [ite_eq_right (fun hc => hf hc.2.2),
+                ite_eq_right (fun hc => hf hc.2)]
+          · rw [ite_eq_right (fun hc => hm ⟨hc.1, hc.2.1⟩),
+              ite_eq_right (fun hc => hm hc.1)]
       _ = ∑ p : Fin n → Fin k × Fin k,
             ∑ π : Equiv.Perm (Fin n),
               (if ((∀ a, fibreCard (fun i => (p i).1) a = α a) ∧
@@ -129,14 +129,14 @@ theorem pair_count_sum (α β : Fin k → ℕ) :
           refine Finset.sum_congr rfl fun p _ => ?_
           by_cases hm : (∀ a, fibreCard (fun i => (p i).1) a =
               α a) ∧ (∀ b, fibreCard (fun i => (p i).2) b = β b)
-          · rw [if_pos hm, Finset.card_filter]
+          · rw [ite_eq_left hm, Finset.card_filter]
             refine Finset.sum_congr rfl fun π _ => ?_
             by_cases hf : p ∘ π = p
-            · rw [if_pos ⟨hm, hf⟩, if_pos hf]
-            · rw [if_neg (fun hc => hf hc.2), if_neg hf]
-          · rw [if_neg hm]
+            · rw [ite_eq_left ⟨hm, hf⟩, ite_eq_left hf]
+            · rw [ite_eq_right (fun hc => hf hc.2), ite_eq_right hf]
+          · rw [ite_eq_right hm]
             rw [Finset.sum_eq_zero fun π _ =>
-              if_neg (fun hc => hm hc.1)]
+              ite_eq_right (fun hc => hm hc.1)]
   rw [h1]
   -- ═══════ STAGE 2: THE STABILIZER COUNT PER COLOURING ═══════
   rw [Finset.sum_congr rfl (fun p _ => card_fixing_pairs p)]
@@ -175,11 +175,11 @@ theorem pair_count_sum (α β : Fin k → ℕ) :
             rw [margin_snd_of_content]; exact hm.2 b⟩
     by_cases hm : (∀ a, fibreCard (fun i => (p i).1) a = α a) ∧
         (∀ b, fibreCard (fun i => (p i).2) b = β b)
-    · rw [if_pos hm, if_pos (hiff.mp hm)]
+    · rw [ite_eq_left hm, ite_eq_left (hiff.mp hm)]
       refine Finset.prod_congr rfl fun c _ => ?_
       rw [pairFibre_eq_count]
       rfl
-    · rw [if_neg hm, if_neg (fun hc => hm (hiff.mpr hc))]]
+    · rw [ite_eq_right hm, ite_eq_right (fun hc => hm (hiff.mpr hc))]]
   rw [← Fintype.sum_fiberwise pairContentSym
     (fun p => (if (∀ a, (∑ b : Fin k,
           (pairContentSym p).1.count (a, b)) = α a) ∧
@@ -210,7 +210,7 @@ theorem pair_count_sum (α β : Fin k → ℕ) :
     rw [Finset.sum_const, Finset.card_univ, smul_eq_mul]
     by_cases hm : (∀ a, (∑ b : Fin k, s.1.count (a, b)) = α a) ∧
         (∀ b, (∑ a : Fin k, s.1.count (a, b)) = β b)
-    · rw [if_pos hm, if_pos hm]
+    · rw [ite_eq_left hm, ite_eq_left hm]
       have h := pair_orbit_stab p₀
       have hv : pairContent p₀ = s.1 := congrArg Subtype.val hp₀
       rw [hv] at h
@@ -223,7 +223,7 @@ theorem pair_count_sum (α β : Fin k → ℕ) :
             fun h' => Subtype.ext h'⟩)
       rw [hc]
       exact h
-    · rw [if_neg hm, if_neg hm, mul_zero]
+    · rw [ite_eq_right hm, ite_eq_right hm, mul_zero]
   rw [Finset.sum_congr rfl
     (fun (s : Sym (Fin k × Fin k) n) (_ : s ∈ Finset.univ) =>
       hclass s)]

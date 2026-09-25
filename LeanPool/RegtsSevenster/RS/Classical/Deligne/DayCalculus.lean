@@ -97,7 +97,7 @@ def dayCoyonedaCorepresentableBy [SmallCategory D] [MonoidalCategory D]
         (coyonedaEquiv (C := D × D) (X := ((a, b) : D × D))
           (F := tensor D ⋙ F.functor))
   homEquiv_comp {F F'} g f := by
-    show coyonedaEquiv (C := D × D) (X := ((a, b) : D × D))
+    change coyonedaEquiv (C := D × D) (X := ((a, b) : D × D))
       (F := tensor D ⋙ F'.functor)
       (η (DayFunctor.mk (coyoneda.obj (Opposite.op a)))
           (DayFunctor.mk (coyoneda.obj (Opposite.op b))) ≫
@@ -304,10 +304,10 @@ colimits. -/
 noncomputable instance [SmallCategory D] [MonoidalCategory D]
     (F : MonoidalCategory.DayFunctor D (Type v)) :
     Limits.PreservesColimitsOfSize.{v, v} (tensorLeft F) := by
-  haveI : PreservesColimitsOfSize.{v, v}
+  have : PreservesColimitsOfSize.{v, v}
       ((tensor D).lan (H := Type v)) :=
     ((tensor D).lanAdjunction (Type v)).leftAdjoint_preservesColimits
-  haveI : PreservesColimitsOfSize.{v, v}
+  have : PreservesColimitsOfSize.{v, v}
       (tensorLeft F ⋙ (equiv D (Type v)).functor) :=
     preservesColimits_of_natIso (tensorLeftCompIso F).symm
   exact preservesColimits_of_reflects_of_preserves _
@@ -320,10 +320,10 @@ colimits. -/
 noncomputable instance [SmallCategory D] [MonoidalCategory D]
     (F : MonoidalCategory.DayFunctor D (Type v)) :
     Limits.PreservesColimitsOfSize.{v, v} (tensorRight F) := by
-  haveI : PreservesColimitsOfSize.{v, v}
+  have : PreservesColimitsOfSize.{v, v}
       ((tensor D).lan (H := Type v)) :=
     ((tensor D).lanAdjunction (Type v)).leftAdjoint_preservesColimits
-  haveI : PreservesColimitsOfSize.{v, v}
+  have : PreservesColimitsOfSize.{v, v}
       (tensorRight F ⋙ (equiv D (Type v)).functor) :=
     preservesColimits_of_natIso (tensorRightCompIso F).symm
   exact preservesColimits_of_reflects_of_preserves _

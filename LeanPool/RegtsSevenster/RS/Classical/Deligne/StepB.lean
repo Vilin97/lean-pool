@@ -40,8 +40,8 @@ theorem devissageStepB
     (L : OddLine (Ind C)) (X : Ind C) :
     DevissageStepB (Ind C) L X := by
   intro st hAlt
-  letI := st.monObj
-  letI := st.comm
+  let := st.monObj
+  let := st.comm
   obtain ⟨st', hu, hl⟩ :=
     devissageStepA L (L.obj ⊗ X) (twistState L st)
       (not_isZero_symPow_twist st.base L st.rest hAlt)

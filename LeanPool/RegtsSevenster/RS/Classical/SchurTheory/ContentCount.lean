@@ -27,7 +27,7 @@ variable {n N : ℕ}
 /-- The weight of a colouring depends only on its content. -/
 theorem prod_eq_content_prod (f : Fin n → Fin N) (x : Fin N → ℂ) :
     ∏ i : Fin n, x (f i) = ((content f).1.map x).prod := by
-  show (Finset.univ.val.map (x ∘ f)).prod = ((Finset.univ.val.map f).map x).prod
+  change (Finset.univ.val.map (x ∘ f)).prod = ((Finset.univ.val.map f).map x).prod
   rw [Multiset.map_map]
 
 /-- The fibre-factorial product equals the count-factorial product. -/
@@ -47,7 +47,7 @@ private theorem perm_map_univ_val (σ : Equiv.Perm (Fin n)) :
 theorem content_comp_perm (f : Fin n → Fin N) (σ : Equiv.Perm (Fin n)) :
     content (f ∘ σ) = content f := by
   unfold content; refine Subtype.ext ?_
-  show Finset.univ.val.map (f ∘ ⇑σ) = Finset.univ.val.map f
+  change Finset.univ.val.map (f ∘ ⇑σ) = Finset.univ.val.map f
   conv_lhs => rw [show (f ∘ ⇑σ) = f ∘ ⇑σ from rfl]
   rw [← Multiset.map_map f σ, perm_map_univ_val]
 
@@ -75,7 +75,7 @@ theorem content_eq_exists_perm (f g : Fin n → Fin N)
     monotone_eq_of_content_eq hsf hsg
       ((content_comp_perm f _).trans (h.trans (content_comp_perm g _).symm))
   refine ⟨Tuple.sort f * (Tuple.sort g)⁻¹, funext fun i => ?_⟩
-  show f ((Tuple.sort f) ((Tuple.sort g)⁻¹ i)) = g i
+  change f ((Tuple.sort f) ((Tuple.sort g)⁻¹ i)) = g i
   have := congrFun heq ((Tuple.sort g).symm i)
   simp only [Function.comp_apply, Equiv.apply_symm_apply] at this
   exact this
@@ -220,7 +220,7 @@ theorem sum_fibreFactorial_weight' {n N : ℕ} (x : Fin N → ℂ)
       ((∏ j : Fin N, (s.1.count j).factorial : ℕ) : ℂ) *
         (s.1.map x).prod := by
       rintro ⟨f, hf⟩
-      show ((∏ j : Fin N, (fibreCard f j).factorial : ℕ) : ℂ) *
+      change ((∏ j : Fin N, (fibreCard f j).factorial : ℕ) : ℂ) *
         ∏ i, x (f i) = _
       rw [show (∏ j : Fin N, (fibreCard f j).factorial : ℕ) =
         (∏ j : Fin N, (s.1.count j).factorial : ℕ) from by

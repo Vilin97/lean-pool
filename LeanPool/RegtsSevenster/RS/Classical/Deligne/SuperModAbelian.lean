@@ -175,7 +175,7 @@ theorem quotientMap_spec
   have hs : (LinearMap.quotKerEquivOfSurjective φ hφ).symm (φ e)
       = Submodule.Quotient.mk e :=
     LinearMap.quotKerEquivOfSurjective_symm_apply φ hφ e
-  show Submodule.liftQ (LinearMap.ker φ) g (ker_le_ker g φ h)
+  change Submodule.liftQ (LinearMap.ker φ) g (ker_le_ker g φ h)
       ((LinearMap.quotKerEquivOfSurjective φ hφ).symm (φ e)) = g e
   rw [hs]
   rfl

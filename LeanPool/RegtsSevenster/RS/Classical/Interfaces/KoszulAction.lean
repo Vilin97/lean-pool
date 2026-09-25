@@ -96,10 +96,10 @@ theorem superPermAction_zero_imp_evenPermRep_zero (n : ℕ)
     letI := P.linear
     superPermAction f P n x = 0 →
       evenPermRep f P n x = 0 := by
-  letI := P.additive
-  letI := P.linear
+  let := P.additive
+  let := P.linear
   intro h
-  show (evenComponentLinear _).comp
+  change (evenComponentLinear _).comp
     (superPermAction f P n).toLinearMap x = 0
   simp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, h,
     map_zero]

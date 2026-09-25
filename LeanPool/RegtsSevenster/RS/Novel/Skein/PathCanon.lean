@@ -23,7 +23,7 @@ data, and the corrected independence interface quantifies over it.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 

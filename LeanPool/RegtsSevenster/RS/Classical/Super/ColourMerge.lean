@@ -48,14 +48,14 @@ theorem MixedColouring.oddSet_card_split {k ℓ a b : ℕ}
 theorem MixedColouring.firstHalf_zero {k ℓ a : ℕ}
     (c : MixedColouring k ℓ (a + 0)) :
     c.firstHalf = c := by
-  funext i; show c (Fin.castAdd 0 i) = c i; congr 1
+  funext i; change c (Fin.castAdd 0 i) = c i; congr 1
 
 /-- The first half of a tail equals the first half. -/
 theorem MixedColouring.firstHalf_tail {k ℓ a b : ℕ}
     (c : MixedColouring k ℓ (a + (b + 1))) :
     (MixedColouring.tail c).firstHalf = c.firstHalf := by
   funext i
-  show c (Fin.castAdd b i).castSucc = c (Fin.castAdd (b + 1) i)
+  change c (Fin.castAdd b i).castSucc = c (Fin.castAdd (b + 1) i)
   congr 1
 
 /-- The second half of a tail equals the tail of the second half. -/
@@ -64,7 +64,7 @@ theorem MixedColouring.secondHalf_tail {k ℓ a b : ℕ}
     (MixedColouring.tail c).secondHalf =
       MixedColouring.tail (c.secondHalf) := by
   funext j
-  show c (Fin.natAdd a j).castSucc = c (Fin.natAdd a j.castSucc)
+  change c (Fin.natAdd a j).castSucc = c (Fin.natAdd a j.castSucc)
   congr 1
 
 /-- Parity of the halves is linked when the whole is even. -/
@@ -97,7 +97,7 @@ second half. -/
 theorem MixedColouring.secondHalf_last {k ℓ a b : ℕ}
     (c : MixedColouring k ℓ (a + (b + 1))) :
     c.secondHalf (Fin.last b) = c (Fin.last (a + b)) := by
-  show c (Fin.natAdd a (Fin.last b)) = c (Fin.last (a + b))
+  change c (Fin.natAdd a (Fin.last b)) = c (Fin.last (a + b))
   congr 1
 
 /-! ### Forward computation of evenSplitEquiv -/
@@ -189,7 +189,7 @@ theorem cps_even_at_inl {k ℓ d : ℕ}
       funTensorFun _ _ z₁
         (⟨MixedColouring.tail c,
           (c.isEven_succ_left a' ha).mp hc⟩, a') := by
-  show Sum.elim (fun p => funTensorFun _ _ z₁ p)
+  change Sum.elim (fun p => funTensorFun _ _ z₁ p)
     (fun q => funTensorFun _ _ z₂ q)
     (evenSplitEquiv k ℓ d ⟨c, hc⟩) = _
   simp only [evenSplitEquiv_inl c hc a' ha, Sum.elim_inl]
@@ -207,7 +207,7 @@ theorem cps_even_at_inr {k ℓ d : ℕ}
       funTensorFun _ _ z₂
         (⟨MixedColouring.tail c,
           (c.isEven_succ_right b' hb).mp hc⟩, b') := by
-  show Sum.elim (fun p => funTensorFun _ _ z₁ p)
+  change Sum.elim (fun p => funTensorFun _ _ z₁ p)
     (fun q => funTensorFun _ _ z₂ q)
     (evenSplitEquiv k ℓ d ⟨c, hc⟩) = _
   simp only [evenSplitEquiv_inr c hc b' hb, Sum.elim_inr]
@@ -257,7 +257,7 @@ theorem cps_odd_at_inl {k ℓ d : ℕ}
   --   Step 4: piCongrLeft' oddSplit.symm: precompose with oddSplit
   --     At ⟨c, hc⟩: oddSplit(⟨c, hc⟩) = Sum.inl(⟨tail c, ¬ tail.IsEven⟩, a')
   --       so the value from Step 3 is ftf z₂ (⟨tail c, ht⟩, a')
-  show (Sum.elim (funTensorFun _ _ z₁) (funTensorFun _ _ z₂))
+  change (Sum.elim (funTensorFun _ _ z₁) (funTensorFun _ _ z₂))
     ((Equiv.sumComm _ _).symm
       (oddSplitEquiv k ℓ d ⟨c, hc⟩)) = _
   simp only [oddSplitEquiv_inl c hc a' ha, Equiv.sumComm_symm,
@@ -277,7 +277,7 @@ theorem cps_odd_at_inr {k ℓ d : ℕ}
         (⟨MixedColouring.tail c,
           Decidable.not_not.mp
             ((c.isEven_succ_right b' hb).not.mp hc)⟩, b') := by
-  show (Sum.elim (funTensorFun _ _ z₁) (funTensorFun _ _ z₂))
+  change (Sum.elim (funTensorFun _ _ z₁) (funTensorFun _ _ z₂))
     ((Equiv.sumComm _ _).symm
       (oddSplitEquiv k ℓ d ⟨c, hc⟩)) = _
   simp only [oddSplitEquiv_inr c hc b' hb, Equiv.sumComm_symm,
@@ -302,7 +302,7 @@ private theorem assoc_inv_ee_tmul {k ℓ a b : ℕ}
         (superPow (stdSuperPair k ℓ) b)).odd ⊗[ℂ] (stdSuperPair k ℓ).odd))) :
       (SuperVect.tensorObj (SuperVect.tensorObj (superPow (stdSuperPair k ℓ) a)
         (superPow (stdSuperPair k ℓ) b)) (stdSuperPair k ℓ)).even) := by
-  show (SuperVect.assocAux _ _ _ _ _ _).symm
+  change (SuperVect.assocAux _ _ _ _ _ _).symm
       ((v ⊗ₜ[ℂ] ((w₁ ⊗ₜ[ℂ] x₁, (0 : _)) : _), (0 : _)) : _) = _
   exact SuperVect.assocAux_symm_ee v w₁ x₁
 
@@ -324,7 +324,7 @@ private theorem assoc_inv_eo_tmul {k ℓ a b : ℕ}
         (superPow (stdSuperPair k ℓ) b).even)) ⊗ₜ[ℂ] x₂)) :
       (SuperVect.tensorObj (SuperVect.tensorObj (superPow (stdSuperPair k ℓ) a)
         (superPow (stdSuperPair k ℓ) b)) (stdSuperPair k ℓ)).even) := by
-  show (SuperVect.assocAux _ _ _ _ _ _).symm
+  change (SuperVect.assocAux _ _ _ _ _ _).symm
       ((v ⊗ₜ[ℂ] (((0 : _), w₂ ⊗ₜ[ℂ] x₂) : _), (0 : _)) : _) = _
   exact SuperVect.assocAux_symm_eo v w₂ x₂
 
@@ -353,7 +353,7 @@ private theorem assoc_inv_odd_eo_tmul {k ℓ a b : ℕ}
         (superPow (stdSuperPair k ℓ) b)).odd ⊗[ℂ] (stdSuperPair k ℓ).even)) :
       (SuperVect.tensorObj (SuperVect.tensorObj (superPow (stdSuperPair k ℓ) a)
         (superPow (stdSuperPair k ℓ) b)) (stdSuperPair k ℓ)).odd) := by
-  show (SuperVect.assocAux _ _ _ _ _ _).symm
+  change (SuperVect.assocAux _ _ _ _ _ _).symm
       ((v ⊗ₜ[ℂ] ((w₂ ⊗ₜ[ℂ] x₂, (0 : _)) : _), (0 : _)) : _) = _
   exact SuperVect.assocAux_symm_ee v w₂ x₂
 
@@ -382,7 +382,7 @@ private theorem assoc_inv_odd_oe_tmul {k ℓ a b : ℕ}
         (superPow (stdSuperPair k ℓ) b).even)) ⊗ₜ[ℂ] x₁)) :
       (SuperVect.tensorObj (SuperVect.tensorObj (superPow (stdSuperPair k ℓ) a)
         (superPow (stdSuperPair k ℓ) b)) (stdSuperPair k ℓ)).odd) := by
-  show (SuperVect.assocAux _ _ _ _ _ _).symm
+  change (SuperVect.assocAux _ _ _ _ _ _).symm
       ((v ⊗ₜ[ℂ] (((0 : _), w₁ ⊗ₜ[ℂ] x₁) : _), (0 : _)) : _) = _
   exact SuperVect.assocAux_symm_eo v w₁ x₁
 
@@ -413,7 +413,7 @@ private theorem chain_even_ee {k ℓ a b : ℕ}
           (0 : ({c : MixedColouring k ℓ (a + b) // ¬ c.IsEven} → ℂ)
             ⊗[ℂ] (Fin (2 * ℓ) → ℂ)))) := by
   -- Unfold cpe(a+(b+1)) = cps ∘ tc and pm(a,b+1) = (pm ▷ V) ∘ α⁻¹
-  show (colourPowerStep k ℓ (a + b)).evenEquiv
+  change (colourPowerStep k ℓ (a + b)).evenEquiv
       ((SuperLinearEquiv.tensorCongr (colourPowerEquiv k ℓ (a + b))
           (SuperLinearEquiv.refl (stdSuperPair k ℓ))).evenEquiv
         ((powMerge (stdSuperPair k ℓ) a b ▷ stdSuperPair k ℓ :
@@ -427,7 +427,7 @@ private theorem chain_even_ee {k ℓ a b : ℕ}
       LinearMap.id := rfl
   simp only [MonoidalCategoryStruct.whiskerRight,
     SuperVect.tensorHom_evenMap, hid_e]
-  show LinearEquiv.prodCongr
+  change LinearEquiv.prodCongr
     (TensorProduct.congr (colourPowerEquiv k ℓ (a + b)).evenEquiv
       (LinearEquiv.refl ℂ _))
     (TensorProduct.congr (colourPowerEquiv k ℓ (a + b)).oddEquiv
@@ -466,7 +466,7 @@ private theorem chain_even_eo {k ℓ a b : ℕ}
                   (superPow (stdSuperPair k ℓ) b)).odd))
               ) ⊗ₜ[ℂ] x₂)) := by
   -- Unfold cpe(a+(b+1)) = cps ∘ tc and pm(a,b+1) = (pm ▷ V) ∘ α⁻¹
-  show (colourPowerStep k ℓ (a + b)).evenEquiv
+  change (colourPowerStep k ℓ (a + b)).evenEquiv
       ((SuperLinearEquiv.tensorCongr (colourPowerEquiv k ℓ (a + b))
           (SuperLinearEquiv.refl (stdSuperPair k ℓ))).evenEquiv
         ((powMerge (stdSuperPair k ℓ) a b ▷ stdSuperPair k ℓ :
@@ -480,7 +480,7 @@ private theorem chain_even_eo {k ℓ a b : ℕ}
       LinearMap.id := rfl
   simp only [MonoidalCategoryStruct.whiskerRight,
     SuperVect.tensorHom_evenMap, hid_o]
-  show LinearEquiv.prodCongr
+  change LinearEquiv.prodCongr
     (TensorProduct.congr (colourPowerEquiv k ℓ (a + b)).evenEquiv
       (LinearEquiv.refl ℂ _))
     (TensorProduct.congr (colourPowerEquiv k ℓ (a + b)).oddEquiv
@@ -507,7 +507,7 @@ theorem rhs_even_ee {k ℓ b : ℕ}
         (((colourPowerEquiv k ℓ b).evenEquiv w₁ ⊗ₜ[ℂ] x₁,
           (0 : ({c : MixedColouring k ℓ b // ¬ c.IsEven} → ℂ)
             ⊗[ℂ] (Fin (2 * ℓ) → ℂ)))) := by
-  show (colourPowerStep k ℓ b).evenEquiv
+  change (colourPowerStep k ℓ b).evenEquiv
       (LinearEquiv.prodCongr
         (TensorProduct.congr (colourPowerEquiv k ℓ b).evenEquiv
           (LinearEquiv.refl ℂ _))
@@ -534,7 +534,7 @@ theorem rhs_even_oo {k ℓ b : ℕ}
         (((0 : ({c : MixedColouring k ℓ b // c.IsEven} → ℂ)
             ⊗[ℂ] (Fin k → ℂ)),
           (colourPowerEquiv k ℓ b).oddEquiv w₂ ⊗ₜ[ℂ] x₂)) := by
-  show (colourPowerStep k ℓ b).evenEquiv
+  change (colourPowerStep k ℓ b).evenEquiv
       (LinearEquiv.prodCongr
         (TensorProduct.congr (colourPowerEquiv k ℓ b).evenEquiv
           (LinearEquiv.refl ℂ _))
@@ -573,7 +573,7 @@ private theorem chain_odd_eo {k ℓ a b : ℕ}
               (evenPair v w₂))) ⊗ₜ[ℂ] x₂,
           (0 : ({c : MixedColouring k ℓ (a + b) // ¬ c.IsEven} → ℂ)
             ⊗[ℂ] (Fin k → ℂ)))) := by
-  show (colourPowerStep k ℓ (a + b)).oddEquiv
+  change (colourPowerStep k ℓ (a + b)).oddEquiv
       ((SuperLinearEquiv.tensorCongr (colourPowerEquiv k ℓ (a + b))
           (SuperLinearEquiv.refl (stdSuperPair k ℓ))).oddEquiv
         ((powMerge (stdSuperPair k ℓ) a b ▷ stdSuperPair k ℓ :
@@ -599,7 +599,7 @@ private theorem chain_odd_eo {k ℓ a b : ℕ}
       LinearMap.id := rfl
   simp only [MonoidalCategoryStruct.whiskerRight,
     SuperVect.tensorHom_oddMap, hid_o, hid_e]
-  show LinearEquiv.prodCongr
+  change LinearEquiv.prodCongr
     (TensorProduct.congr (colourPowerEquiv k ℓ (a + b)).evenEquiv
       (LinearEquiv.refl ℂ _))
     (TensorProduct.congr (colourPowerEquiv k ℓ (a + b)).oddEquiv
@@ -642,7 +642,7 @@ private theorem chain_odd_oe {k ℓ a b : ℕ}
                 (SuperVect.tensorObj (superPow (stdSuperPair k ℓ) a)
                   (superPow (stdSuperPair k ℓ) b)).odd)))
             ⊗ₜ[ℂ] x₁)) := by
-  show (colourPowerStep k ℓ (a + b)).oddEquiv
+  change (colourPowerStep k ℓ (a + b)).oddEquiv
       ((SuperLinearEquiv.tensorCongr (colourPowerEquiv k ℓ (a + b))
           (SuperLinearEquiv.refl (stdSuperPair k ℓ))).oddEquiv
         ((powMerge (stdSuperPair k ℓ) a b ▷ stdSuperPair k ℓ :
@@ -668,7 +668,7 @@ private theorem chain_odd_oe {k ℓ a b : ℕ}
       LinearMap.id := rfl
   simp only [MonoidalCategoryStruct.whiskerRight,
     SuperVect.tensorHom_oddMap, hid_o, hid_e]
-  show LinearEquiv.prodCongr
+  change LinearEquiv.prodCongr
     (TensorProduct.congr (colourPowerEquiv k ℓ (a + b)).evenEquiv
       (LinearEquiv.refl ℂ _))
     (TensorProduct.congr (colourPowerEquiv k ℓ (a + b)).oddEquiv
@@ -695,7 +695,7 @@ theorem rhs_odd_eo {k ℓ b : ℕ}
         (((colourPowerEquiv k ℓ b).evenEquiv w₂ ⊗ₜ[ℂ] x₂,
           (0 : ({c : MixedColouring k ℓ b // ¬ c.IsEven} → ℂ)
             ⊗[ℂ] (Fin k → ℂ)))) := by
-  show (colourPowerStep k ℓ b).oddEquiv
+  change (colourPowerStep k ℓ b).oddEquiv
       (LinearEquiv.prodCongr
         (TensorProduct.congr (colourPowerEquiv k ℓ b).evenEquiv
           (LinearEquiv.refl ℂ _))
@@ -722,7 +722,7 @@ theorem rhs_odd_oe {k ℓ b : ℕ}
         (((0 : ({c : MixedColouring k ℓ b // c.IsEven} → ℂ)
             ⊗[ℂ] (Fin (2 * ℓ) → ℂ)),
           (colourPowerEquiv k ℓ b).oddEquiv w₁ ⊗ₜ[ℂ] x₁)) := by
-  show (colourPowerStep k ℓ b).oddEquiv
+  change (colourPowerStep k ℓ b).oddEquiv
       (LinearEquiv.prodCongr
         (TensorProduct.congr (colourPowerEquiv k ℓ b).evenEquiv
           (LinearEquiv.refl ℂ _))
@@ -739,6 +739,352 @@ theorem rhs_odd_oe {k ℓ b : ℕ}
 -- Raised budget: the even and odd coordinate formulas are proved
 -- by one mutual induction, so both statements and all four chain
 -- lemmas are elaborated in a single declaration.
+private theorem colourMerge_pair_even_step {k ℓ : ℕ} (a : ℕ)
+    (v : (superPow (stdSuperPair k ℓ) a).even) (b : ℕ)
+    (ih_even : ∀ (w : (superPow (stdSuperPair k ℓ) b).even)
+        (c : MixedColouring k ℓ (a + b)) (hc : c.IsEven),
+        (colourPowerEquiv k ℓ (a + b)).evenEquiv
+            (((powMerge (stdSuperPair k ℓ) a b) :
+              SuperVect.Hom _ _).evenMap (evenPair v w)) ⟨c, hc⟩ =
+          if h : MixedColouring.IsEven c.firstHalf then
+            (colourPowerEquiv k ℓ a).evenEquiv v ⟨c.firstHalf, h⟩ *
+            (colourPowerEquiv k ℓ b).evenEquiv w ⟨c.secondHalf,
+              c.secondHalf_isEven hc h⟩
+          else 0)
+    (ih_odd : ∀ (u : (superPow (stdSuperPair k ℓ) b).odd)
+        (c : MixedColouring k ℓ (a + b)) (hc : ¬ c.IsEven),
+        (colourPowerEquiv k ℓ (a + b)).oddEquiv
+            (((powMerge (stdSuperPair k ℓ) a b) :
+              SuperVect.Hom _ _).oddMap
+              ((v ⊗ₜ[ℂ] u, 0) :
+                (SuperVect.tensorObj (superPow (stdSuperPair k ℓ) a)
+                  (superPow (stdSuperPair k ℓ) b)).odd))
+            ⟨c, hc⟩ =
+          if h : MixedColouring.IsEven c.firstHalf then
+            (colourPowerEquiv k ℓ a).evenEquiv v ⟨c.firstHalf, h⟩ *
+            (colourPowerEquiv k ℓ b).oddEquiv u ⟨c.secondHalf,
+              c.secondHalf_not_isEven hc h⟩
+          else 0) :
+    ∀ (w : (superPow (stdSuperPair k ℓ) (b + 1)).even)
+        (c : MixedColouring k ℓ (a + (b + 1))) (hc : c.IsEven),
+        (colourPowerEquiv k ℓ (a + (b + 1))).evenEquiv
+            (((powMerge (stdSuperPair k ℓ) a (b + 1)) :
+              SuperVect.Hom _ _).evenMap (evenPair v w)) ⟨c, hc⟩ =
+          if h : MixedColouring.IsEven c.firstHalf then
+            (colourPowerEquiv k ℓ a).evenEquiv v ⟨c.firstHalf, h⟩ *
+            (colourPowerEquiv k ℓ (b + 1)).evenEquiv w ⟨c.secondHalf,
+              c.secondHalf_isEven hc h⟩
+          else 0 := by
+  intro w c hc
+  obtain ⟨w_ee, w_oo⟩ := w
+  -- Both sides are additive in w; decompose and reduce to generators.
+  -- Helper: evenPair distributes over addition
+  have ep_add : ∀ (w₁ w₂ : (SuperVect.tensorObj
+      (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).even),
+      evenPair v (w₁ + w₂) = evenPair v w₁ + evenPair v w₂ :=
+    fun w₁ w₂ => Prod.ext (TensorProduct.tmul_add v w₁ w₂)
+      (add_zero 0).symm
+  -- Helper for zero pair
+  have ep_zero : evenPair v (0 : (SuperVect.tensorObj
+      (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).even) = (0 : _) :=
+    Prod.ext (TensorProduct.tmul_zero _ v) rfl
+  -- Abbreviate the goal predicate for w
+  set Goal := fun (w : (SuperVect.tensorObj
+      (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).even) =>
+    (colourPowerEquiv k ℓ (a + (b + 1))).evenEquiv
+        (((powMerge (stdSuperPair k ℓ) a (b + 1) :
+          SuperVect.Hom _ _).evenMap (evenPair v w))) ⟨c, hc⟩ =
+      if h : MixedColouring.IsEven c.firstHalf then
+        (colourPowerEquiv k ℓ a).evenEquiv v ⟨c.firstHalf, h⟩ *
+        (colourPowerEquiv k ℓ (b + 1)).evenEquiv w ⟨c.secondHalf,
+          c.secondHalf_isEven hc h⟩
+      else 0 with hGoal
+  change Goal (w_ee, w_oo)
+  -- Additivity: Goal(w₁ + w₂) follows from Goal(w₁) and Goal(w₂)
+  have Goal_add : ∀ (w₁ w₂ : _), Goal w₁ → Goal w₂ → Goal (w₁ + w₂) := by
+    intro w₁ w₂ h₁ h₂
+    simp only [hGoal] at h₁ h₂ ⊢
+    erw [ep_add w₁ w₂, map_add, LinearEquiv.map_add, Pi.add_apply, h₁, h₂]
+    split_ifs with h
+    · erw [← mul_add]; congr 1
+      erw [LinearEquiv.map_add, Pi.add_apply]
+    · exact add_zero 0
+  -- Prove for (t, 0) by TensorProduct.induction_on
+  have h_ee : ∀ t, Goal (t, (0 : (superPow (stdSuperPair k ℓ) b).odd ⊗[ℂ]
+      (stdSuperPair k ℓ).odd)) := by
+    intro t; induction t using TensorProduct.inductionOn with
+    | tmul w₁ x₁ =>
+      simp only [hGoal]
+      -- Case split on the last colour of c
+      rcases hcl : c (Fin.last (a + b)) with a' | b'
+      · -- Last colour even: chain + cps_even_at_inl on LHS
+        erw [(congr_fun (chain_even_ee v w₁ x₁) ⟨c, hc⟩).trans
+          (cps_even_at_inl _ _ c hc a' hcl), funTensorFun_tmul]
+        have hcl_sh : c.secondHalf (Fin.last b) = Sum.inl a' :=
+          c.secondHalf_last.symm ▸ hcl
+        erw [ih_even w₁ (MixedColouring.tail c)
+          ((c.isEven_succ_left a' hcl).mp hc)]
+        simp only [MixedColouring.firstHalf_tail,
+          MixedColouring.secondHalf_tail]
+        split_ifs with h
+        · -- c.firstHalf.IsEven: chain + cps_even_at_inl on RHS
+          erw [(congr_fun (rhs_even_ee w₁ x₁)
+              ⟨c.secondHalf, c.secondHalf_isEven hc h⟩).trans
+            (cps_even_at_inl _ _ c.secondHalf
+              (c.secondHalf_isEven hc h) a' hcl_sh),
+            funTensorFun_tmul]
+          ring
+        · -- ¬ c.firstHalf.IsEven
+          simp [zero_mul]
+      · -- Last colour odd: both sides vanish
+        erw [(congr_fun (chain_even_ee v w₁ x₁) ⟨c, hc⟩).trans
+          (cps_even_at_inr _ _ c hc b' hcl)]
+        simp only [map_zero, Pi.zero_apply]
+        split_ifs with h
+        · have hcl_sh : c.secondHalf (Fin.last b) = Sum.inr b' :=
+            c.secondHalf_last.symm ▸ hcl
+          erw [(congr_fun (rhs_even_ee w₁ x₁)
+              ⟨c.secondHalf, c.secondHalf_isEven hc h⟩).trans
+            (cps_even_at_inr _ _ c.secondHalf
+              (c.secondHalf_isEven hc h) b' hcl_sh)]
+          simp [map_zero, mul_zero]
+        · rfl
+    | add t₁ t₂ ih₁ ih₂ =>
+      have : ((t₁ + t₂, (0 : _)) : (SuperVect.tensorObj
+          (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).even) =
+        ((t₁, (0 : _)) : _) + ((t₂, (0 : _)) : _) :=
+        Prod.ext rfl (add_zero 0).symm
+      rw [this]; exact Goal_add _ _ ih₁ ih₂
+  -- Prove for (0, s) by TensorProduct.induction_on
+  have h_oo : ∀ s, Goal ((0 : (superPow (stdSuperPair k ℓ) b).even ⊗[ℂ]
+      (stdSuperPair k ℓ).even), s) := by
+    intro s; induction s using TensorProduct.inductionOn with
+    | tmul w₂ x₂ =>
+      simp only [hGoal]
+      -- Case split on the last colour of c
+      rcases hcl : c (Fin.last (a + b)) with a' | b'
+      · -- Last colour even: both sides vanish
+        erw [(congr_fun (chain_even_eo v w₂ x₂) ⟨c, hc⟩).trans
+          (cps_even_at_inl _ _ c hc a' hcl)]
+        simp only [map_zero, Pi.zero_apply]
+        split_ifs with h
+        · have hcl_sh : c.secondHalf (Fin.last b) = Sum.inl a' :=
+            c.secondHalf_last.symm ▸ hcl
+          erw [(congr_fun (rhs_even_oo w₂ x₂)
+              ⟨c.secondHalf, c.secondHalf_isEven hc h⟩).trans
+            (cps_even_at_inl _ _ c.secondHalf
+              (c.secondHalf_isEven hc h) a' hcl_sh)]
+          simp [map_zero, mul_zero]
+        · rfl
+      · -- Last colour odd: chain + cps_even_at_inr on LHS
+        erw [(congr_fun (chain_even_eo v w₂ x₂) ⟨c, hc⟩).trans
+          (cps_even_at_inr _ _ c hc b' hcl), funTensorFun_tmul]
+        have hcl_sh : c.secondHalf (Fin.last b) = Sum.inr b' :=
+          c.secondHalf_last.symm ▸ hcl
+        erw [ih_odd w₂ (MixedColouring.tail c)
+          ((c.isEven_succ_right b' hcl).mp hc)]
+        simp only [MixedColouring.firstHalf_tail,
+          MixedColouring.secondHalf_tail]
+        split_ifs with h
+        · -- c.firstHalf.IsEven: chain + cps_even_at_inr on RHS
+          erw [(congr_fun (rhs_even_oo w₂ x₂)
+              ⟨c.secondHalf, c.secondHalf_isEven hc h⟩).trans
+            (cps_even_at_inr _ _ c.secondHalf
+              (c.secondHalf_isEven hc h) b' hcl_sh),
+            funTensorFun_tmul]
+          ring
+        · -- ¬ c.firstHalf.IsEven
+          simp [zero_mul]
+    | add s₁ s₂ ih₁ ih₂ =>
+      have : (((0 : _), s₁ + s₂) : (SuperVect.tensorObj
+          (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).even) =
+        (((0 : _), s₁) : _) + (((0 : _), s₂) : _) :=
+        Prod.ext (add_zero 0).symm rfl
+      rw [this]; exact Goal_add _ _ ih₁ ih₂
+  -- Combine: (w_ee, w_oo) = (w_ee, 0) + (0, w_oo)
+  have hw : ((w_ee, w_oo) : (SuperVect.tensorObj
+      (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).even) =
+    ((w_ee, (0 : _)) : _) + (((0 : _), w_oo) : _) :=
+    Prod.ext (add_zero w_ee).symm (zero_add w_oo).symm
+  rw [hw]; exact Goal_add _ _ (h_ee w_ee) (h_oo w_oo)
+
+private theorem colourMerge_pair_odd_step {k ℓ : ℕ} (a : ℕ)
+    (v : (superPow (stdSuperPair k ℓ) a).even) (b : ℕ)
+    (ih_even : ∀ (w : (superPow (stdSuperPair k ℓ) b).even)
+        (c : MixedColouring k ℓ (a + b)) (hc : c.IsEven),
+        (colourPowerEquiv k ℓ (a + b)).evenEquiv
+            (((powMerge (stdSuperPair k ℓ) a b) :
+              SuperVect.Hom _ _).evenMap (evenPair v w)) ⟨c, hc⟩ =
+          if h : MixedColouring.IsEven c.firstHalf then
+            (colourPowerEquiv k ℓ a).evenEquiv v ⟨c.firstHalf, h⟩ *
+            (colourPowerEquiv k ℓ b).evenEquiv w ⟨c.secondHalf,
+              c.secondHalf_isEven hc h⟩
+          else 0)
+    (ih_odd : ∀ (u : (superPow (stdSuperPair k ℓ) b).odd)
+        (c : MixedColouring k ℓ (a + b)) (hc : ¬ c.IsEven),
+        (colourPowerEquiv k ℓ (a + b)).oddEquiv
+            (((powMerge (stdSuperPair k ℓ) a b) :
+              SuperVect.Hom _ _).oddMap
+              ((v ⊗ₜ[ℂ] u, 0) :
+                (SuperVect.tensorObj (superPow (stdSuperPair k ℓ) a)
+                  (superPow (stdSuperPair k ℓ) b)).odd))
+            ⟨c, hc⟩ =
+          if h : MixedColouring.IsEven c.firstHalf then
+            (colourPowerEquiv k ℓ a).evenEquiv v ⟨c.firstHalf, h⟩ *
+            (colourPowerEquiv k ℓ b).oddEquiv u ⟨c.secondHalf,
+              c.secondHalf_not_isEven hc h⟩
+          else 0) :
+    ∀ (u : (superPow (stdSuperPair k ℓ) (b + 1)).odd)
+        (c : MixedColouring k ℓ (a + (b + 1))) (hc : ¬ c.IsEven),
+        (colourPowerEquiv k ℓ (a + (b + 1))).oddEquiv
+            (((powMerge (stdSuperPair k ℓ) a (b + 1)) :
+              SuperVect.Hom _ _).oddMap
+              ((v ⊗ₜ[ℂ] u, 0) :
+                (SuperVect.tensorObj (superPow (stdSuperPair k ℓ) a)
+                  (superPow (stdSuperPair k ℓ) (b + 1))).odd))
+            ⟨c, hc⟩ =
+          if h : MixedColouring.IsEven c.firstHalf then
+            (colourPowerEquiv k ℓ a).evenEquiv v ⟨c.firstHalf, h⟩ *
+            (colourPowerEquiv k ℓ (b + 1)).oddEquiv u ⟨c.secondHalf,
+              c.secondHalf_not_isEven hc h⟩
+          else 0 := by
+  intro u c hc
+  obtain ⟨u_eo, u_oe⟩ := u
+  -- Both sides are additive in u; decompose and reduce to generators.
+  -- Helper: (v ⊗ₜ ·, 0) distributes over addition
+  have op_add : ∀ (u₁ u₂ : (SuperVect.tensorObj
+      (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).odd),
+      ((v ⊗ₜ[ℂ] (u₁ + u₂), (0 : _)) :
+        (SuperVect.tensorObj (superPow (stdSuperPair k ℓ) a)
+          (superPow (stdSuperPair k ℓ) (b + 1))).odd) =
+      ((v ⊗ₜ[ℂ] u₁, (0 : _)) : _) + ((v ⊗ₜ[ℂ] u₂, (0 : _)) : _) :=
+    fun u₁ u₂ => Prod.ext (TensorProduct.tmul_add v u₁ u₂)
+      (add_zero 0).symm
+  -- Helper for zero pair
+  have op_zero : ((v ⊗ₜ[ℂ] (0 : (SuperVect.tensorObj
+      (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).odd), (0 : _)) :
+      (SuperVect.tensorObj (superPow (stdSuperPair k ℓ) a)
+        (superPow (stdSuperPair k ℓ) (b + 1))).odd) = (0 : _) :=
+    Prod.ext (TensorProduct.tmul_zero _ v) rfl
+  -- Abbreviate the goal predicate for u
+  set Goal := fun (u : (SuperVect.tensorObj
+      (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).odd) =>
+    (colourPowerEquiv k ℓ (a + (b + 1))).oddEquiv
+        (((powMerge (stdSuperPair k ℓ) a (b + 1) :
+          SuperVect.Hom _ _).oddMap
+          ((v ⊗ₜ[ℂ] u, 0) :
+            (SuperVect.tensorObj (superPow (stdSuperPair k ℓ) a)
+              (superPow (stdSuperPair k ℓ) (b + 1))).odd)))
+        ⟨c, hc⟩ =
+      if h : MixedColouring.IsEven c.firstHalf then
+        (colourPowerEquiv k ℓ a).evenEquiv v ⟨c.firstHalf, h⟩ *
+        (colourPowerEquiv k ℓ (b + 1)).oddEquiv u ⟨c.secondHalf,
+          c.secondHalf_not_isEven hc h⟩
+      else 0 with hGoal
+  change Goal (u_eo, u_oe)
+  -- Additivity: Goal(u₁ + u₂) follows from Goal(u₁) and Goal(u₂)
+  have Goal_add : ∀ (u₁ u₂ : _), Goal u₁ → Goal u₂ → Goal (u₁ + u₂) := by
+    intro u₁ u₂ h₁ h₂
+    simp only [hGoal] at h₁ h₂ ⊢
+    erw [op_add u₁ u₂, map_add, LinearEquiv.map_add, Pi.add_apply, h₁, h₂]
+    split_ifs with h
+    · erw [← mul_add]; congr 1
+      erw [LinearEquiv.map_add, Pi.add_apply]
+    · exact add_zero 0
+  -- Prove for (t, 0) by TensorProduct.induction_on
+  have h_eo : ∀ t, Goal (t, (0 : (superPow (stdSuperPair k ℓ) b).odd ⊗[ℂ]
+      (stdSuperPair k ℓ).even)) := by
+    intro t; induction t using TensorProduct.inductionOn with
+    | tmul w₂ x₂ =>
+      simp only [hGoal]
+      rcases hcl : c (Fin.last (a + b)) with a' | b'
+      · -- Last colour even: both sides vanish
+        erw [(congr_fun (chain_odd_eo v w₂ x₂) ⟨c, hc⟩).trans
+          (cps_odd_at_inl _ _ c hc a' hcl)]
+        simp only [map_zero, Pi.zero_apply]
+        split_ifs with h
+        · have hcl_sh : c.secondHalf (Fin.last b) = Sum.inl a' :=
+            c.secondHalf_last.symm ▸ hcl
+          erw [(congr_fun (rhs_odd_eo w₂ x₂)
+              ⟨c.secondHalf, c.secondHalf_not_isEven hc h⟩).trans
+            (cps_odd_at_inl _ _ c.secondHalf
+              (c.secondHalf_not_isEven hc h) a' hcl_sh)]
+          simp [map_zero, mul_zero]
+        · rfl
+      · -- Last colour odd: chain + cps_odd_at_inr + IH
+        erw [(congr_fun (chain_odd_eo v w₂ x₂) ⟨c, hc⟩).trans
+          (cps_odd_at_inr _ _ c hc b' hcl), funTensorFun_tmul]
+        have hcl_sh : c.secondHalf (Fin.last b) = Sum.inr b' :=
+          c.secondHalf_last.symm ▸ hcl
+        erw [ih_even w₂ (MixedColouring.tail c)
+          (Decidable.not_not.mp
+            ((c.isEven_succ_right b' hcl).not.mp hc))]
+        simp only [MixedColouring.firstHalf_tail,
+          MixedColouring.secondHalf_tail]
+        split_ifs with h
+        · erw [(congr_fun (rhs_odd_eo w₂ x₂)
+              ⟨c.secondHalf, c.secondHalf_not_isEven hc h⟩).trans
+            (cps_odd_at_inr _ _ c.secondHalf
+              (c.secondHalf_not_isEven hc h) b' hcl_sh),
+            funTensorFun_tmul]
+          ring
+        · simp [zero_mul]
+    | add t₁ t₂ ih₁ ih₂ =>
+      have : ((t₁ + t₂, (0 : _)) : (SuperVect.tensorObj
+          (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).odd) =
+        ((t₁, (0 : _)) : _) + ((t₂, (0 : _)) : _) :=
+        Prod.ext rfl (add_zero 0).symm
+      rw [this]; exact Goal_add _ _ ih₁ ih₂
+  -- Prove for (0, s) by TensorProduct.induction_on
+  have h_oe : ∀ s, Goal ((0 : (superPow (stdSuperPair k ℓ) b).even ⊗[ℂ]
+      (stdSuperPair k ℓ).odd), s) := by
+    intro s; induction s using TensorProduct.inductionOn with
+    | tmul w₁ x₁ =>
+      simp only [hGoal]
+      rcases hcl : c (Fin.last (a + b)) with a' | b'
+      · -- Last colour even: chain + cps_odd_at_inl + IH
+        erw [(congr_fun (chain_odd_oe v w₁ x₁) ⟨c, hc⟩).trans
+          (cps_odd_at_inl _ _ c hc a' hcl), funTensorFun_tmul]
+        have hcl_sh : c.secondHalf (Fin.last b) = Sum.inl a' :=
+          c.secondHalf_last.symm ▸ hcl
+        erw [ih_odd w₁ (MixedColouring.tail c)
+          ((c.isEven_succ_left a' hcl).not.mp hc)]
+        simp only [MixedColouring.firstHalf_tail,
+          MixedColouring.secondHalf_tail]
+        split_ifs with h
+        · erw [(congr_fun (rhs_odd_oe w₁ x₁)
+              ⟨c.secondHalf, c.secondHalf_not_isEven hc h⟩).trans
+            (cps_odd_at_inl _ _ c.secondHalf
+              (c.secondHalf_not_isEven hc h) a' hcl_sh),
+            funTensorFun_tmul]
+          ring
+        · simp [zero_mul]
+      · -- Last colour odd: both sides vanish
+        erw [(congr_fun (chain_odd_oe v w₁ x₁) ⟨c, hc⟩).trans
+          (cps_odd_at_inr _ _ c hc b' hcl)]
+        simp only [map_zero, Pi.zero_apply]
+        split_ifs with h
+        · have hcl_sh : c.secondHalf (Fin.last b) = Sum.inr b' :=
+            c.secondHalf_last.symm ▸ hcl
+          erw [(congr_fun (rhs_odd_oe w₁ x₁)
+              ⟨c.secondHalf, c.secondHalf_not_isEven hc h⟩).trans
+            (cps_odd_at_inr _ _ c.secondHalf
+              (c.secondHalf_not_isEven hc h) b' hcl_sh)]
+          simp [map_zero, mul_zero]
+        · rfl
+    | add s₁ s₂ ih₁ ih₂ =>
+      have : (((0 : _), s₁ + s₂) : (SuperVect.tensorObj
+          (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).odd) =
+        (((0 : _), s₁) : _) + (((0 : _), s₂) : _) :=
+        Prod.ext (add_zero 0).symm rfl
+      rw [this]; exact Goal_add _ _ ih₁ ih₂
+  -- Combine: (u_eo, u_oe) = (u_eo, 0) + (0, u_oe)
+  have hu : ((u_eo, u_oe) : (SuperVect.tensorObj
+      (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).odd) =
+    ((u_eo, (0 : _)) : _) + (((0 : _), u_oe) : _) :=
+    Prod.ext (add_zero u_eo).symm (zero_add u_oe).symm
+  rw [hu]; exact Goal_add _ _ (h_eo u_eo) (h_oe u_oe)
+
 /-- Combined even and odd merge coordinate formulas, proved by
 mutual induction on `b`. -/
 private theorem colourMerge_pair {k ℓ : ℕ} (a : ℕ)
@@ -786,11 +1132,11 @@ private theorem colourMerge_pair {k ℓ : ℕ} (a : ℕ)
       have hfe : c.firstHalf.IsEven := hfh ▸ hc
       have h0 : (colourPowerEquiv k ℓ 0).evenEquiv w
           ⟨c.secondHalf, c.secondHalf_isEven hc hfe⟩ = w' := by
-        show (LinearEquiv.funUnique
+        change (LinearEquiv.funUnique
           {c : MixedColouring k ℓ 0 // c.IsEven} ℂ ℂ).symm w' _ = w'
         rfl
       simp only [hpow, LinearEquiv.map_smul,
-        dif_pos hfe,
+        dite_eq_left hfe,
         show (⟨c.firstHalf, hfe⟩ :
           {c : MixedColouring k ℓ a // c.IsEven}) = ⟨c, hc⟩ from
           Subtype.ext hfh]
@@ -804,7 +1150,7 @@ private theorem colourMerge_pair {k ℓ : ℕ} (a : ℕ)
       -- odd side vanishes.
       intro u c hc
       have hfe : ¬ c.firstHalf.IsEven := c.firstHalf_zero ▸ hc
-      simp only [dif_neg hfe]
+      simp only [dite_eq_right hfe]
       -- pm(a,0) = right unitor; its oddMap sends (v ⊗ₜ u, 0) to 0
       have hzero : ((powMerge (stdSuperPair k ℓ) a 0 :
           SuperVect.Hom _ _).oddMap
@@ -819,300 +1165,8 @@ private theorem colourMerge_pair {k ℓ : ℕ} (a : ℕ)
   | b + 1 => by
     obtain ⟨ih_even, ih_odd⟩ := colourMerge_pair a v b
     constructor
-    · -- ═══════ b + 1, EVEN COMPONENT ═══════
-      intro w c hc
-      obtain ⟨w_ee, w_oo⟩ := w
-      -- Both sides are additive in w; decompose and reduce to generators.
-      -- Helper: evenPair distributes over addition
-      have ep_add : ∀ (w₁ w₂ : (SuperVect.tensorObj
-          (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).even),
-          evenPair v (w₁ + w₂) = evenPair v w₁ + evenPair v w₂ :=
-        fun w₁ w₂ => Prod.ext (TensorProduct.tmul_add v w₁ w₂)
-          (add_zero 0).symm
-      -- Helper for zero pair
-      have ep_zero : evenPair v (0 : (SuperVect.tensorObj
-          (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).even) = (0 : _) :=
-        Prod.ext (TensorProduct.tmul_zero _ v) rfl
-      -- Abbreviate the goal predicate for w
-      set Goal := fun (w : (SuperVect.tensorObj
-          (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).even) =>
-        (colourPowerEquiv k ℓ (a + (b + 1))).evenEquiv
-            (((powMerge (stdSuperPair k ℓ) a (b + 1) :
-              SuperVect.Hom _ _).evenMap (evenPair v w))) ⟨c, hc⟩ =
-          if h : MixedColouring.IsEven c.firstHalf then
-            (colourPowerEquiv k ℓ a).evenEquiv v ⟨c.firstHalf, h⟩ *
-            (colourPowerEquiv k ℓ (b + 1)).evenEquiv w ⟨c.secondHalf,
-              c.secondHalf_isEven hc h⟩
-          else 0 with hGoal
-      change Goal (w_ee, w_oo)
-      -- Additivity: Goal(w₁ + w₂) follows from Goal(w₁) and Goal(w₂)
-      have Goal_add : ∀ (w₁ w₂ : _), Goal w₁ → Goal w₂ → Goal (w₁ + w₂) := by
-        intro w₁ w₂ h₁ h₂
-        simp only [hGoal] at h₁ h₂ ⊢
-        erw [ep_add w₁ w₂, map_add, LinearEquiv.map_add, Pi.add_apply, h₁, h₂]
-        split_ifs with h
-        · erw [← mul_add]; congr 1
-          erw [LinearEquiv.map_add, Pi.add_apply]
-        · exact add_zero 0
-      -- Prove for (t, 0) by TensorProduct.induction_on
-      have h_ee : ∀ t, Goal (t, (0 : (superPow (stdSuperPair k ℓ) b).odd ⊗[ℂ]
-          (stdSuperPair k ℓ).odd)) := by
-        intro t; induction t using TensorProduct.induction_on with
-        | zero =>
-          simp only [hGoal]
-          erw [ep_zero, map_zero, LinearEquiv.map_zero, Pi.zero_apply]
-          split_ifs with h
-          · exact (mul_zero _).symm
-          · rfl
-        | tmul w₁ x₁ =>
-          simp only [hGoal]
-          -- Case split on the last colour of c
-          rcases hcl : c (Fin.last (a + b)) with a' | b'
-          · -- Last colour even: chain + cps_even_at_inl on LHS
-            erw [(congr_fun (chain_even_ee v w₁ x₁) ⟨c, hc⟩).trans
-              (cps_even_at_inl _ _ c hc a' hcl), funTensorFun_tmul]
-            have hcl_sh : c.secondHalf (Fin.last b) = Sum.inl a' :=
-              c.secondHalf_last.symm ▸ hcl
-            erw [ih_even w₁ (MixedColouring.tail c)
-              ((c.isEven_succ_left a' hcl).mp hc)]
-            simp only [MixedColouring.firstHalf_tail,
-              MixedColouring.secondHalf_tail]
-            split_ifs with h
-            · -- c.firstHalf.IsEven: chain + cps_even_at_inl on RHS
-              erw [(congr_fun (rhs_even_ee w₁ x₁)
-                  ⟨c.secondHalf, c.secondHalf_isEven hc h⟩).trans
-                (cps_even_at_inl _ _ c.secondHalf
-                  (c.secondHalf_isEven hc h) a' hcl_sh),
-                funTensorFun_tmul]
-              ring
-            · -- ¬ c.firstHalf.IsEven
-              simp [zero_mul]
-          · -- Last colour odd: both sides vanish
-            erw [(congr_fun (chain_even_ee v w₁ x₁) ⟨c, hc⟩).trans
-              (cps_even_at_inr _ _ c hc b' hcl)]
-            simp only [map_zero, Pi.zero_apply]
-            split_ifs with h
-            · have hcl_sh : c.secondHalf (Fin.last b) = Sum.inr b' :=
-                c.secondHalf_last.symm ▸ hcl
-              erw [(congr_fun (rhs_even_ee w₁ x₁)
-                  ⟨c.secondHalf, c.secondHalf_isEven hc h⟩).trans
-                (cps_even_at_inr _ _ c.secondHalf
-                  (c.secondHalf_isEven hc h) b' hcl_sh)]
-              simp [map_zero, mul_zero]
-            · rfl
-        | add t₁ t₂ ih₁ ih₂ =>
-          have : ((t₁ + t₂, (0 : _)) : (SuperVect.tensorObj
-              (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).even) =
-            ((t₁, (0 : _)) : _) + ((t₂, (0 : _)) : _) :=
-            Prod.ext rfl (add_zero 0).symm
-          rw [this]; exact Goal_add _ _ ih₁ ih₂
-      -- Prove for (0, s) by TensorProduct.induction_on
-      have h_oo : ∀ s, Goal ((0 : (superPow (stdSuperPair k ℓ) b).even ⊗[ℂ]
-          (stdSuperPair k ℓ).even), s) := by
-        intro s; induction s using TensorProduct.induction_on with
-        | zero =>
-          simp only [hGoal]
-          erw [ep_zero, map_zero, LinearEquiv.map_zero, Pi.zero_apply]
-          split_ifs with h
-          · exact (mul_zero _).symm
-          · rfl
-        | tmul w₂ x₂ =>
-          simp only [hGoal]
-          -- Case split on the last colour of c
-          rcases hcl : c (Fin.last (a + b)) with a' | b'
-          · -- Last colour even: both sides vanish
-            erw [(congr_fun (chain_even_eo v w₂ x₂) ⟨c, hc⟩).trans
-              (cps_even_at_inl _ _ c hc a' hcl)]
-            simp only [map_zero, Pi.zero_apply]
-            split_ifs with h
-            · have hcl_sh : c.secondHalf (Fin.last b) = Sum.inl a' :=
-                c.secondHalf_last.symm ▸ hcl
-              erw [(congr_fun (rhs_even_oo w₂ x₂)
-                  ⟨c.secondHalf, c.secondHalf_isEven hc h⟩).trans
-                (cps_even_at_inl _ _ c.secondHalf
-                  (c.secondHalf_isEven hc h) a' hcl_sh)]
-              simp [map_zero, mul_zero]
-            · rfl
-          · -- Last colour odd: chain + cps_even_at_inr on LHS
-            erw [(congr_fun (chain_even_eo v w₂ x₂) ⟨c, hc⟩).trans
-              (cps_even_at_inr _ _ c hc b' hcl), funTensorFun_tmul]
-            have hcl_sh : c.secondHalf (Fin.last b) = Sum.inr b' :=
-              c.secondHalf_last.symm ▸ hcl
-            erw [ih_odd w₂ (MixedColouring.tail c)
-              ((c.isEven_succ_right b' hcl).mp hc)]
-            simp only [MixedColouring.firstHalf_tail,
-              MixedColouring.secondHalf_tail]
-            split_ifs with h
-            · -- c.firstHalf.IsEven: chain + cps_even_at_inr on RHS
-              erw [(congr_fun (rhs_even_oo w₂ x₂)
-                  ⟨c.secondHalf, c.secondHalf_isEven hc h⟩).trans
-                (cps_even_at_inr _ _ c.secondHalf
-                  (c.secondHalf_isEven hc h) b' hcl_sh),
-                funTensorFun_tmul]
-              ring
-            · -- ¬ c.firstHalf.IsEven
-              simp [zero_mul]
-        | add s₁ s₂ ih₁ ih₂ =>
-          have : (((0 : _), s₁ + s₂) : (SuperVect.tensorObj
-              (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).even) =
-            (((0 : _), s₁) : _) + (((0 : _), s₂) : _) :=
-            Prod.ext (add_zero 0).symm rfl
-          rw [this]; exact Goal_add _ _ ih₁ ih₂
-      -- Combine: (w_ee, w_oo) = (w_ee, 0) + (0, w_oo)
-      have hw : ((w_ee, w_oo) : (SuperVect.tensorObj
-          (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).even) =
-        ((w_ee, (0 : _)) : _) + (((0 : _), w_oo) : _) :=
-        Prod.ext (add_zero w_ee).symm (zero_add w_oo).symm
-      rw [hw]; exact Goal_add _ _ (h_ee w_ee) (h_oo w_oo)
-    · -- ═══════ b + 1, ODD COMPONENT ═══════
-      intro u c hc
-      obtain ⟨u_eo, u_oe⟩ := u
-      -- Both sides are additive in u; decompose and reduce to generators.
-      -- Helper: (v ⊗ₜ ·, 0) distributes over addition
-      have op_add : ∀ (u₁ u₂ : (SuperVect.tensorObj
-          (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).odd),
-          ((v ⊗ₜ[ℂ] (u₁ + u₂), (0 : _)) :
-            (SuperVect.tensorObj (superPow (stdSuperPair k ℓ) a)
-              (superPow (stdSuperPair k ℓ) (b + 1))).odd) =
-          ((v ⊗ₜ[ℂ] u₁, (0 : _)) : _) + ((v ⊗ₜ[ℂ] u₂, (0 : _)) : _) :=
-        fun u₁ u₂ => Prod.ext (TensorProduct.tmul_add v u₁ u₂)
-          (add_zero 0).symm
-      -- Helper for zero pair
-      have op_zero : ((v ⊗ₜ[ℂ] (0 : (SuperVect.tensorObj
-          (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).odd), (0 : _)) :
-          (SuperVect.tensorObj (superPow (stdSuperPair k ℓ) a)
-            (superPow (stdSuperPair k ℓ) (b + 1))).odd) = (0 : _) :=
-        Prod.ext (TensorProduct.tmul_zero _ v) rfl
-      -- Abbreviate the goal predicate for u
-      set Goal := fun (u : (SuperVect.tensorObj
-          (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).odd) =>
-        (colourPowerEquiv k ℓ (a + (b + 1))).oddEquiv
-            (((powMerge (stdSuperPair k ℓ) a (b + 1) :
-              SuperVect.Hom _ _).oddMap
-              ((v ⊗ₜ[ℂ] u, 0) :
-                (SuperVect.tensorObj (superPow (stdSuperPair k ℓ) a)
-                  (superPow (stdSuperPair k ℓ) (b + 1))).odd)))
-            ⟨c, hc⟩ =
-          if h : MixedColouring.IsEven c.firstHalf then
-            (colourPowerEquiv k ℓ a).evenEquiv v ⟨c.firstHalf, h⟩ *
-            (colourPowerEquiv k ℓ (b + 1)).oddEquiv u ⟨c.secondHalf,
-              c.secondHalf_not_isEven hc h⟩
-          else 0 with hGoal
-      change Goal (u_eo, u_oe)
-      -- Additivity: Goal(u₁ + u₂) follows from Goal(u₁) and Goal(u₂)
-      have Goal_add : ∀ (u₁ u₂ : _), Goal u₁ → Goal u₂ → Goal (u₁ + u₂) := by
-        intro u₁ u₂ h₁ h₂
-        simp only [hGoal] at h₁ h₂ ⊢
-        erw [op_add u₁ u₂, map_add, LinearEquiv.map_add, Pi.add_apply, h₁, h₂]
-        split_ifs with h
-        · erw [← mul_add]; congr 1
-          erw [LinearEquiv.map_add, Pi.add_apply]
-        · exact add_zero 0
-      -- Prove for (t, 0) by TensorProduct.induction_on
-      have h_eo : ∀ t, Goal (t, (0 : (superPow (stdSuperPair k ℓ) b).odd ⊗[ℂ]
-          (stdSuperPair k ℓ).even)) := by
-        intro t; induction t using TensorProduct.induction_on with
-        | zero =>
-          simp only [hGoal]
-          erw [op_zero, map_zero, LinearEquiv.map_zero, Pi.zero_apply]
-          split_ifs with h
-          · exact (mul_zero _).symm
-          · rfl
-        | tmul w₂ x₂ =>
-          simp only [hGoal]
-          rcases hcl : c (Fin.last (a + b)) with a' | b'
-          · -- Last colour even: both sides vanish
-            erw [(congr_fun (chain_odd_eo v w₂ x₂) ⟨c, hc⟩).trans
-              (cps_odd_at_inl _ _ c hc a' hcl)]
-            simp only [map_zero, Pi.zero_apply]
-            split_ifs with h
-            · have hcl_sh : c.secondHalf (Fin.last b) = Sum.inl a' :=
-                c.secondHalf_last.symm ▸ hcl
-              erw [(congr_fun (rhs_odd_eo w₂ x₂)
-                  ⟨c.secondHalf, c.secondHalf_not_isEven hc h⟩).trans
-                (cps_odd_at_inl _ _ c.secondHalf
-                  (c.secondHalf_not_isEven hc h) a' hcl_sh)]
-              simp [map_zero, mul_zero]
-            · rfl
-          · -- Last colour odd: chain + cps_odd_at_inr + IH
-            erw [(congr_fun (chain_odd_eo v w₂ x₂) ⟨c, hc⟩).trans
-              (cps_odd_at_inr _ _ c hc b' hcl), funTensorFun_tmul]
-            have hcl_sh : c.secondHalf (Fin.last b) = Sum.inr b' :=
-              c.secondHalf_last.symm ▸ hcl
-            erw [ih_even w₂ (MixedColouring.tail c)
-              (Decidable.not_not.mp
-                ((c.isEven_succ_right b' hcl).not.mp hc))]
-            simp only [MixedColouring.firstHalf_tail,
-              MixedColouring.secondHalf_tail]
-            split_ifs with h
-            · erw [(congr_fun (rhs_odd_eo w₂ x₂)
-                  ⟨c.secondHalf, c.secondHalf_not_isEven hc h⟩).trans
-                (cps_odd_at_inr _ _ c.secondHalf
-                  (c.secondHalf_not_isEven hc h) b' hcl_sh),
-                funTensorFun_tmul]
-              ring
-            · simp [zero_mul]
-        | add t₁ t₂ ih₁ ih₂ =>
-          have : ((t₁ + t₂, (0 : _)) : (SuperVect.tensorObj
-              (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).odd) =
-            ((t₁, (0 : _)) : _) + ((t₂, (0 : _)) : _) :=
-            Prod.ext rfl (add_zero 0).symm
-          rw [this]; exact Goal_add _ _ ih₁ ih₂
-      -- Prove for (0, s) by TensorProduct.induction_on
-      have h_oe : ∀ s, Goal ((0 : (superPow (stdSuperPair k ℓ) b).even ⊗[ℂ]
-          (stdSuperPair k ℓ).odd), s) := by
-        intro s; induction s using TensorProduct.induction_on with
-        | zero =>
-          simp only [hGoal]
-          erw [op_zero, map_zero, LinearEquiv.map_zero, Pi.zero_apply]
-          split_ifs with h
-          · exact (mul_zero _).symm
-          · rfl
-        | tmul w₁ x₁ =>
-          simp only [hGoal]
-          rcases hcl : c (Fin.last (a + b)) with a' | b'
-          · -- Last colour even: chain + cps_odd_at_inl + IH
-            erw [(congr_fun (chain_odd_oe v w₁ x₁) ⟨c, hc⟩).trans
-              (cps_odd_at_inl _ _ c hc a' hcl), funTensorFun_tmul]
-            have hcl_sh : c.secondHalf (Fin.last b) = Sum.inl a' :=
-              c.secondHalf_last.symm ▸ hcl
-            erw [ih_odd w₁ (MixedColouring.tail c)
-              ((c.isEven_succ_left a' hcl).not.mp hc)]
-            simp only [MixedColouring.firstHalf_tail,
-              MixedColouring.secondHalf_tail]
-            split_ifs with h
-            · erw [(congr_fun (rhs_odd_oe w₁ x₁)
-                  ⟨c.secondHalf, c.secondHalf_not_isEven hc h⟩).trans
-                (cps_odd_at_inl _ _ c.secondHalf
-                  (c.secondHalf_not_isEven hc h) a' hcl_sh),
-                funTensorFun_tmul]
-              ring
-            · simp [zero_mul]
-          · -- Last colour odd: both sides vanish
-            erw [(congr_fun (chain_odd_oe v w₁ x₁) ⟨c, hc⟩).trans
-              (cps_odd_at_inr _ _ c hc b' hcl)]
-            simp only [map_zero, Pi.zero_apply]
-            split_ifs with h
-            · have hcl_sh : c.secondHalf (Fin.last b) = Sum.inr b' :=
-                c.secondHalf_last.symm ▸ hcl
-              erw [(congr_fun (rhs_odd_oe w₁ x₁)
-                  ⟨c.secondHalf, c.secondHalf_not_isEven hc h⟩).trans
-                (cps_odd_at_inr _ _ c.secondHalf
-                  (c.secondHalf_not_isEven hc h) b' hcl_sh)]
-              simp [map_zero, mul_zero]
-            · rfl
-        | add s₁ s₂ ih₁ ih₂ =>
-          have : (((0 : _), s₁ + s₂) : (SuperVect.tensorObj
-              (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).odd) =
-            (((0 : _), s₁) : _) + (((0 : _), s₂) : _) :=
-            Prod.ext (add_zero 0).symm rfl
-          rw [this]; exact Goal_add _ _ ih₁ ih₂
-      -- Combine: (u_eo, u_oe) = (u_eo, 0) + (0, u_oe)
-      have hu : ((u_eo, u_oe) : (SuperVect.tensorObj
-          (superPow (stdSuperPair k ℓ) b) (stdSuperPair k ℓ)).odd) =
-        ((u_eo, (0 : _)) : _) + (((0 : _), u_oe) : _) :=
-        Prod.ext (add_zero u_eo).symm (zero_add u_oe).symm
-      rw [hu]; exact Goal_add _ _ (h_eo u_eo) (h_oe u_oe)
+    · exact colourMerge_pair_even_step a v b ih_even ih_odd
+    · exact colourMerge_pair_odd_step a v b ih_even ih_odd
 
 -- Raised budget: specializing the mutual induction re-elaborates
 -- the paired statement.

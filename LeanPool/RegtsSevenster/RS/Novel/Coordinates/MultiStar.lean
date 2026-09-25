@@ -63,16 +63,16 @@ noncomputable def starUnionMultiStar (W : ClosedFragment) :
   vertexEquiv := _root_.Equiv.refl W.Vertex
   attach_comm := fun g => by
     rcases g with fo | fc
-    · show Sum.inl (starAssign W (starFlagEnum W fo)) =
+    · change Sum.inl (starAssign W (starFlagEnum W fo)) =
         (Sum.inl (ClosedFragment.vertexOf W fo) :
           W.Vertex ⊕ Fin (edgeCount W + edgeCount W)).map
           (_root_.Equiv.refl W.Vertex) id
       refine congrArg Sum.inl ?_
-      show ClosedFragment.vertexOf W
+      change ClosedFragment.vertexOf W
         ((starFlagEnum W).symm (starFlagEnum W fo)) = _
       rw [(starFlagEnum W).symm_apply_apply]
       rfl
-    · show Sum.inr (starEnum W fc) =
+    · change Sum.inr (starEnum W fc) =
         (Sum.inr (starEnum W fc) :
           W.Vertex ⊕ Fin (edgeCount W + edgeCount W)).map
           (_root_.Equiv.refl W.Vertex) id
@@ -81,12 +81,12 @@ noncomputable def starUnionMultiStar (W : ClosedFragment) :
     rcases g with fo | fc
     · have hp : (starUnion W).pairing (Sum.inl fo) =
           Sum.inr ⟨fo, Finset.mem_univ fo⟩ :=
-        dif_pos (Finset.mem_univ fo)
+        dite_eq_left (Finset.mem_univ fo)
       rw [hp]
-      show Sum.inr (starEnum W ⟨fo, Finset.mem_univ fo⟩) =
+      change Sum.inr (starEnum W ⟨fo, Finset.mem_univ fo⟩) =
         Sum.inr (starFlagEnum W fo)
       rfl
-    · show Sum.inl (starFlagEnum W fc.val) =
+    · change Sum.inl (starFlagEnum W fc.val) =
         Sum.inl ((starFlagEnum W).symm.symm fc.val)
       rfl
   circles_eq := rfl

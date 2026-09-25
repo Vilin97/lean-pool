@@ -47,7 +47,7 @@ noncomputable def bundleMapRefl (n : ℕ) :
       (strandBundle n) :=
   (Fragment.Equiv.relabelEq (strandBundle n)
     (_root_.Equiv.ext (fun x => by
-      show finSumFinEquiv
+      change finSumFinEquiv
         ((_root_.Equiv.sumCongr (_root_.Equiv.refl (Fin n))
           (_root_.Equiv.refl (Fin n))) (finSumFinEquiv.symm x)) =
         x
@@ -94,7 +94,7 @@ noncomputable def tensorFragmentRelabel
         ((interleaveEquiv s t u v).symm.trans
           ((_root_.Equiv.sumCongr r₁ r₂).trans
             (interleaveEquiv s' t' u' v')))) := by
-  show (((X.relabel r₁).disjUnion (z.relabel r₂)).relabel
+  change (((X.relabel r₁).disjUnion (z.relabel r₂)).relabel
     (interleaveEquiv s' t' u' v')).Equiv _
   refine (Fragment.Equiv.relabelCongr
     ((Fragment.relabelDisjUnionLeft X (z.relabel r₂) r₁).trans
@@ -102,7 +102,7 @@ noncomputable def tensorFragmentRelabel
         (Fragment.relabelDisjUnionRight X z r₂) _).trans
         (Fragment.Equiv.relabelTrans _ _ _))) _).trans ?_
   refine (Fragment.Equiv.relabelTrans _ _ _).trans ?_
-  show ((X.disjUnion z).relabel _).Equiv
+  change ((X.disjUnion z).relabel _).Equiv
     (((X.disjUnion z).relabel (interleaveEquiv s t u v)).relabel _)
   refine Fragment.Equiv.trans ?_
     (Fragment.Equiv.relabelTrans _ _ _).symm
@@ -177,7 +177,7 @@ noncomputable def bundleMapTensor {n₁ m₁ n₂ m₂ : ℕ}
         outMapEquiv_castAdd (tensorMapEquiv e₁ e₂)]
     · rw [show x = Fin.castAdd (n₁ + n₂)
           (Fin.natAdd n₁ ⟨x.val - n₁, by omega⟩) from
-        Fin.ext (by show x.val = n₁ + (x.val - n₁); omega),
+        Fin.ext (by change x.val = n₁ + (x.val - n₁); omega),
         _root_.Equiv.trans_apply,
         interleaveEquiv_symm_low_right n₁ n₁ n₂ n₂
           ⟨x.val - n₁, by omega⟩,
@@ -190,7 +190,7 @@ noncomputable def bundleMapTensor {n₁ m₁ n₂ m₂ : ℕ}
     · rw [show x = Fin.natAdd (n₁ + n₂)
           (Fin.castAdd n₂ ⟨x.val - (n₁ + n₂), hx1⟩) from
         Fin.ext (by
-          show x.val = (n₁ + n₂) + (x.val - (n₁ + n₂))
+          change x.val = (n₁ + n₂) + (x.val - (n₁ + n₂))
           omega),
         _root_.Equiv.trans_apply,
         interleaveEquiv_symm_high_left n₁ n₁ n₂ n₂
@@ -206,7 +206,7 @@ noncomputable def bundleMapTensor {n₁ m₁ n₂ m₂ : ℕ}
             have := x.isLt
             omega⟩) from
         Fin.ext (by
-          show x.val = (n₁ + n₂) + (n₁ + (x.val - (n₁ + n₂) - n₁))
+          change x.val = (n₁ + n₂) + (n₁ + (x.val - (n₁ + n₂) - n₁))
           have := x.isLt
           omega),
         _root_.Equiv.trans_apply,
@@ -277,7 +277,7 @@ theorem outTransport_finCongr {s n m : ℕ} (h : n = m) :
   · rw [show x = Fin.natAdd s ⟨x.val - s, by
         have := x.isLt
         omega⟩ from Fin.ext (by
-        show x.val = s + (x.val - s)
+        change x.val = s + (x.val - s)
         omega),
       _root_.Equiv.trans_apply,
       finSumFinEquiv_symm_apply_natAdd]
@@ -300,7 +300,7 @@ theorem inTransport_finCongr {n m u : ℕ} (h : n = m) :
   · rw [show x = Fin.natAdd n ⟨x.val - n, by
         have := x.isLt
         omega⟩ from Fin.ext (by
-        show x.val = n + (x.val - n)
+        change x.val = n + (x.val - n)
         omega),
       _root_.Equiv.trans_apply,
       finSumFinEquiv_symm_apply_natAdd]

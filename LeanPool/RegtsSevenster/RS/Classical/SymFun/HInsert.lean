@@ -25,7 +25,7 @@ theorem hSub_insert {k : ℕ} {A : Finset (Fin k)} {j : Fin k}
   classical
   -- Rewrite all three hSub into explicit filtered sums over Sym, keeping
   -- the Sym type explicit to prevent Sym/Subtype transparency issues.
-  show ∑ w ∈ Finset.univ.filter
+  change ∑ w ∈ Finset.univ.filter
       (fun w : Sym (Fin k) (m + 1) => ∀ i ∈ w.1, i ∈ insert j A),
       (w.1.map (X : Fin k → MvPolynomial (Fin k) ℂ)).prod =
     ∑ w ∈ Finset.univ.filter
@@ -101,7 +101,7 @@ theorem hSub_insert {k : ℕ} {A : Finset (Fin k)} {j : Fin k}
       -- weight: (w.1.map X).prod = X j * ((w.1.erase j).map X).prod
       (fun w hw => by
         have hmem : jj ∈ w.1 := (Finset.mem_filter.mp hw).2
-        show (w.1.map X).prod = X jj * ((w.1.erase jj).map X).prod
+        change (w.1.map X).prod = X jj * ((w.1.erase jj).map X).prod
         conv_lhs => rw [(Multiset.cons_erase hmem).symm]
         rw [Multiset.map_cons, Multiset.prod_cons])
 

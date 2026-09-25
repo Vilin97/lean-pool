@@ -18,7 +18,7 @@ quantitative round trip rest on Deligne alone.
 
 namespace RS
 
-open Classical
+
 
 /-- The converse rank bound with the exact total dimension as its
 base, including the zero-dimensional model. -/

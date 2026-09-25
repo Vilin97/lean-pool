@@ -245,7 +245,7 @@ noncomputable def modBiprodMapIso
   inv := modBiprodMap A M' N' e₁.inv e₂.inv
   hom_inv_id := by
     apply Mod.Hom.ext
-    show biprod.map e₁.hom.hom e₂.hom.hom ≫
+    change biprod.map e₁.hom.hom e₂.hom.hom ≫
         biprod.map e₁.inv.hom e₂.inv.hom =
       𝟙 (M.X ⊞ N.X)
     have h₁ : e₁.hom.hom ≫ e₁.inv.hom = 𝟙 M.X :=
@@ -261,7 +261,7 @@ noncomputable def modBiprodMapIso
         Category.comp_id, Category.id_comp]
   inv_hom_id := by
     apply Mod.Hom.ext
-    show biprod.map e₁.inv.hom e₂.inv.hom ≫
+    change biprod.map e₁.inv.hom e₂.inv.hom ≫
         biprod.map e₁.hom.hom e₂.hom.hom =
       𝟙 (M'.X ⊞ N'.X)
     have h₁ : e₁.inv.hom ≫ e₁.hom.hom = 𝟙 M'.X :=
@@ -320,12 +320,12 @@ noncomputable def modBiprodSymmIso
     exact modBiprodAct_braiding A N M)
   hom_inv_id := by
     apply Mod.Hom.ext
-    show (biprod.braiding M.X N.X).hom ≫
+    change (biprod.braiding M.X N.X).hom ≫
       (biprod.braiding N.X M.X).hom = 𝟙 (M.X ⊞ N.X)
     exact (biprod.braiding M.X N.X).hom_inv_id
   inv_hom_id := by
     apply Mod.Hom.ext
-    show (biprod.braiding N.X M.X).hom ≫
+    change (biprod.braiding N.X M.X).hom ≫
       (biprod.braiding M.X N.X).hom = 𝟙 (N.X ⊞ M.X)
     exact (biprod.braiding N.X M.X).hom_inv_id
 
@@ -376,7 +376,7 @@ theorem modBiprodAct_associator
       (A ◁ biprod.fst) ≫ modBiprodAct A M N ≫ g := by
     intro Z g
     rw [← Category.assoc, h1, Category.assoc]
-  show actLeftNest A M N P ≫
+  change actLeftNest A M N P ≫
       biprod.lift (biprod.fst ≫ biprod.fst)
         (biprod.lift (biprod.fst ≫ biprod.snd)
           biprod.snd) =
@@ -420,7 +420,7 @@ noncomputable def modBiprodAssocIso
   hom := Mod.Hom.mk' (biprod.associator M.X N.X P.X).hom (by
     exact modBiprodAct_associator A M N P)
   inv := Mod.Hom.mk' (biprod.associator M.X N.X P.X).inv (by
-    show actRightNest A M N P ≫
+    change actRightNest A M N P ≫
         (biprod.associator M.X N.X P.X).inv =
       (A ◁ (biprod.associator M.X N.X P.X).inv) ≫
         actLeftNest A M N P

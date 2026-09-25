@@ -68,3 +68,5 @@ theorem unit_copair_ne_zero
     (d : ModDualityDatum A M M') (hz : ModZigzagDatum A d)
     (hM : ¬ IsZero M.X) : η[A] ≫ d.copair ≠ 0 :=
   fun h0 => hM (isZero_of_unit_copair_eq_zero A d hz h0)
+
+end RS

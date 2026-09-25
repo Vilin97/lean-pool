@@ -372,7 +372,7 @@ lemma dayCoyonedaIso_hom_associator [SmallCategory D] [MonoidalCategory D]
       (dayCoyonedaUnitElt a (b ⊗ c))
   rw [hnatl, whiskerLeft_dayCoyonedaIso_app_unitElt, hnati,
     dayCoyonedaIso_hom_app_unitElt]
-  show (α_ a b c).inv ≫ 𝟙 ((a ⊗ b) ⊗ c) =
+  change (α_ a b c).inv ≫ 𝟙 ((a ⊗ b) ⊗ c) =
     𝟙 (a ⊗ (b ⊗ c)) ≫ (α_ a b c).inv
   rw [Category.id_comp, Category.comp_id]
 
@@ -433,7 +433,7 @@ lemma dayCoyonedaIso_hom_braiding
       (eta_comp_dayCoyonedaIso_hom b a)
     exact ConcreteCategory.congr_hom h ((𝟙 b, 𝟙 a) : (b ⟶ b) × (a ⟶ a))
   rw [hβ, hnat, hid]
-  show (𝟙 b ⊗ₘ 𝟙 a) ≫ (β_ b a).hom = (β_ b a).hom ≫ 𝟙 (a ⊗ b)
+  change (𝟙 b ⊗ₘ 𝟙 a) ≫ (β_ b a).hom = (β_ b a).hom ≫ 𝟙 (a ⊗ b)
   rw [MonoidalCategory.id_tensorHom_id, Category.id_comp,
     Category.comp_id]
 
@@ -810,7 +810,7 @@ lemma indOfPowIso_swapTop
     (X : C) (n : ℕ) :
     swapTop (indOf.obj X) n ≫ (indOfPowIso X (n + 2)).hom =
       (indOfPowIso X (n + 2)).hom ≫ indOf.map (swapTop X n) := by
-  show ((α_ (tensorPow (Ind C) (indOf.obj X) n) (indOf.obj X)
+  change ((α_ (tensorPow (Ind C) (indOf.obj X) n) (indOf.obj X)
         (indOf.obj X)).hom ≫
       (tensorPow (Ind C) (indOf.obj X) n ◁
         (β_ (indOf.obj X) (indOf.obj X)).hom) ≫
@@ -839,7 +839,7 @@ lemma indOfPowIso_whiskerRight [SmallCategory C] [MonoidalCategory C]
       (indOfPowIso X m).hom ≫ indOf.map u) :
     (f ▷ indOf.obj X) ≫ (indOfPowIso X (m + 1)).hom =
       (indOfPowIso X (m + 1)).hom ≫ indOf.map (u ▷ X) := by
-  show (f ▷ indOf.obj X) ≫
+  change (f ▷ indOf.obj X) ≫
       (((indOfPowIso X m).hom ▷ indOf.obj X) ≫
         (indOfTensorIso (tensorPow C X m) X).hom) =
     (((indOfPowIso X m).hom ▷ indOf.obj X) ≫
@@ -897,7 +897,7 @@ theorem indOfPowIso_permMor
   induction n with
   | zero =>
     intro σ
-    show 𝟙 _ ≫ _ = _ ≫ indOf.map (𝟙 _)
+    change 𝟙 _ ≫ _ = _ ≫ indOf.map (𝟙 _)
     rw [Category.id_comp, CategoryTheory.Functor.map_id,
       Category.comp_id]
   | succ m ih =>
@@ -926,9 +926,9 @@ lemma indOf_map_eq_zero_iff
     [SmallCategory C] [Preadditive C] [HasFiniteColimits C]
     {P Q : C} (f : P ⟶ Q) :
     indOf.map f = 0 ↔ f = 0 := by
-  haveI : HasFiniteBiproducts C :=
+  have : HasFiniteBiproducts C :=
     HasFiniteBiproducts.of_hasFiniteCoproducts
-  haveI : indOf.PreservesZeroMorphisms (C := C) :=
+  have : indOf.PreservesZeroMorphisms (C := C) :=
     Functor.preservesZeroMorphisms_of_map_zero_object
       ((isZero_indOf (isZero_zero C)).isoZero)
   constructor

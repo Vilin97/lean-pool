@@ -150,7 +150,7 @@ theorem diagramSchur_smul_pow (mu : YoungDiagram) (t : ℕ → ℂ)
     (z : ℂ) :
     diagramSchur mu (fun c => z ^ c * t c) =
       z ^ mu.card * diagramSchur mu t := by
-  show diagramSchur (⟨mu, rfl⟩ : Shape mu.card).val
+  change diagramSchur (⟨mu, rfl⟩ : Shape mu.card).val
       (fun c => z ^ c * t c) =
     z ^ mu.card * diagramSchur (⟨mu, rfl⟩ : Shape mu.card).val t
   rw [← jtChar_shape_frobenius (⟨mu, rfl⟩ : Shape mu.card)
@@ -203,12 +203,12 @@ theorem diagramSchur_graded_lin_indep {n : ℕ}
         if j = k then (∑ κ : Shape j, c j κ * diagramSchur κ.val t)
           else 0 from by
       by_cases hjk : j = k
-      · rw [if_pos hjk, if_pos hjk.symm, mul_one]
-      · rw [if_neg hjk, if_neg (fun hkj => hjk hkj.symm), mul_zero])]
+      · rw [ite_eq_left hjk, ite_eq_left hjk.symm, mul_one]
+      · rw [ite_eq_right hjk, ite_eq_right (fun hkj => hjk hkj.symm), mul_zero])]
       at hcoeff
     rw [Finset.sum_ite_eq' (Finset.range (n + 1)) k
       (fun j => ∑ κ : Shape j, c j κ * diagramSchur κ.val t),
-      if_pos (Finset.mem_range.mpr (Nat.lt_succ_of_le hk))] at hcoeff
+      ite_eq_left (Finset.mem_range.mpr (Nat.lt_succ_of_le hk))] at hcoeff
     exact hcoeff
   intro k hk
   exact diagramSchur_lin_indep (c k) (fun t => hgrade t k hk)
@@ -336,7 +336,7 @@ noncomputable def stripDiagram {ℓ : ℕ} (r : Fin ℓ → ℕ) :
 theorem stripDiagram_mem {ℓ : ℕ} {r : Fin ℓ → ℕ}
     (h : ∀ i j : Fin ℓ, i ≤ j → r j ≤ r i) (c : ℕ × ℕ) :
     c ∈ stripDiagram r ↔ ∃ hc : c.1 < ℓ, c.2 < r ⟨c.1, hc⟩ := by
-  rw [stripDiagram, dif_pos h, YoungDiagram.mem_ofRowLens]
+  rw [stripDiagram, dite_eq_left h, YoungDiagram.mem_ofRowLens]
   constructor
   · rintro ⟨h1, h2⟩
     have hc : c.1 < ℓ := by simpa using h1
@@ -537,8 +537,8 @@ private theorem sum_stripDiagram_graded {ℓ n : ℕ}
     rw [Finset.sum_filter]
     refine Finset.sum_congr rfl fun μ _ => ?_
     by_cases hμ : p μ.val
-    · rw [if_pos hμ, if_pos hμ, one_mul]
-    · rw [if_neg hμ, if_neg hμ, zero_mul])]
+    · rw [ite_eq_left hμ, ite_eq_left hμ, one_mul]
+    · rw [ite_eq_right hμ, ite_eq_right hμ, zero_mul])]
   -- fiber the vector sum by the cell count
   rw [← Finset.sum_fiberwise_of_maps_to
     (g := fun r : Fin ℓ → ℕ => (stripDiagram r).card)
@@ -684,7 +684,7 @@ theorem rowOp_blockTriangular (ℓ : ℕ) :
 
 /-- The row operation has determinant one. -/
 theorem det_rowOp (ℓ : ℕ) : (rowOp ℓ).det = 1 := by
-  rw [Matrix.det_of_upperTriangular (rowOp_blockTriangular ℓ)]
+  rw [Matrix.det_of_isUpperTriangular (rowOp_blockTriangular ℓ)]
   refine Finset.prod_eq_one fun i _ => ?_
   simp [rowOp]
 
@@ -696,47 +696,47 @@ private theorem rowOp_mul_apply {ℓ : ℕ}
         else 0) := by
   rw [Matrix.mul_apply]
   by_cases h : (i : ℕ) + 1 < ℓ
-  · rw [dif_pos h]
+  · rw [dite_eq_left h]
     have hsplit : ∀ k : Fin ℓ, rowOp ℓ i k * M k j =
         (if k = i then M k j else 0) +
           (if k = (⟨(i : ℕ) + 1, h⟩ : Fin ℓ) then -M k j else 0) := by
       intro k
       simp only [rowOp, Matrix.of_apply]
       by_cases h1 : k = i
-      · rw [if_pos h1, if_pos h1, one_mul,
-          if_neg (fun he => by
+      · rw [ite_eq_left h1, ite_eq_left h1, one_mul,
+          ite_eq_right (fun he => by
             have hv : (i : ℕ) = (i : ℕ) + 1 :=
               congrArg Fin.val (h1.symm.trans he)
             omega),
           add_zero]
-      · rw [if_neg h1, if_neg h1]
+      · rw [ite_eq_right h1, ite_eq_right h1]
         by_cases h2 : (k : ℕ) = (i : ℕ) + 1
-        · rw [if_pos h2, if_pos (Fin.ext h2), neg_one_mul, zero_add]
-        · rw [if_neg h2,
-            if_neg (fun hk => h2 (congrArg Fin.val hk)),
+        · rw [ite_eq_left h2, ite_eq_left (Fin.ext h2), neg_one_mul, zero_add]
+        · rw [ite_eq_right h2,
+            ite_eq_right (fun hk => h2 (congrArg Fin.val hk)),
             zero_mul, add_zero]
     rw [Finset.sum_congr rfl fun k _ => hsplit k,
       Finset.sum_add_distrib,
       Finset.sum_ite_eq' Finset.univ i (fun k => M k j),
-      if_pos (Finset.mem_univ i),
+      ite_eq_left (Finset.mem_univ i),
       Finset.sum_ite_eq' Finset.univ (⟨(i : ℕ) + 1, h⟩ : Fin ℓ)
         (fun k => -M k j),
-      if_pos (Finset.mem_univ _)]
+      ite_eq_left (Finset.mem_univ _)]
     ring
-  · rw [dif_neg h]
+  · rw [dite_eq_right h]
     have hone : ∀ k : Fin ℓ, rowOp ℓ i k * M k j =
         if k = i then M k j else 0 := by
       intro k
       simp only [rowOp, Matrix.of_apply]
       by_cases h1 : k = i
-      · rw [if_pos h1, if_pos h1, one_mul]
-      · rw [if_neg h1, if_neg h1,
-          if_neg (fun h2 : (k : ℕ) = (i : ℕ) + 1 =>
+      · rw [ite_eq_left h1, ite_eq_left h1, one_mul]
+      · rw [ite_eq_right h1, ite_eq_right h1,
+          ite_eq_right (fun h2 : (k : ℕ) = (i : ℕ) + 1 =>
             h (h2 ▸ k.isLt)),
           zero_mul]
     rw [Finset.sum_congr rfl fun k _ => hone k,
       Finset.sum_ite_eq' Finset.univ i (fun k => M k j),
-      if_pos (Finset.mem_univ i)]
+      ite_eq_left (Finset.mem_univ i)]
     ring
 
 /-! ### The horizontal Pieri determinant identity -/
@@ -806,8 +806,8 @@ theorem diagramSchur_add_one_row (lam : YoungDiagram) (t : ℕ → ℂ) :
       congr 1
       ring
     by_cases h : (i : ℕ) + 1 < lam.rowLens.length
-    · rw [dif_pos h]
-      show newtonHZ (fun c => t c + superPS 1 0 c)
+    · rw [dite_eq_left h]
+      change newtonHZ (fun c => t c + superPS 1 0 c)
           ((lam.rowLen (i : ℕ) : ℤ) + (j : ℤ) - (i : ℤ)) -
           newtonHZ (fun c => t c + superPS 1 0 c)
             ((lam.rowLen ((i : ℕ) + 1) : ℤ) + (j : ℤ) -
@@ -818,7 +818,7 @@ theorem diagramSchur_add_one_row (lam : YoungDiagram) (t : ℕ → ℂ) :
             ((j : ℤ) - (i : ℤ)) from by push_cast; ring]
       rw [harg, hsum, hfix]
       ring
-    · rw [dif_neg h]
+    · rw [dite_eq_right h]
       have hneg : (lam.rowLen ((i : ℕ) + 1) : ℤ) - 1 +
           ((j : ℤ) - (i : ℤ)) < 0 := by
         rw [rowLen_eq_zero_of_ge lam (by omega)]
@@ -826,7 +826,7 @@ theorem diagramSchur_add_one_row (lam : YoungDiagram) (t : ℕ → ℂ) :
         have hi := i.isLt
         push_cast
         omega
-      show newtonHZ (fun c => t c + superPS 1 0 c)
+      change newtonHZ (fun c => t c + superPS 1 0 c)
           ((lam.rowLen (i : ℕ) : ℤ) + (j : ℤ) - (i : ℤ)) - 0 = _
       rw [harg, hsum, newtonHZ_neg _ _ hneg, hfix]
       ring
@@ -848,7 +848,7 @@ theorem diagramSchur_add_one_row (lam : YoungDiagram) (t : ℕ → ℂ) :
       funext j
       rw [Finset.sum_apply]
       exact h2 i j
-    show Matrix.detRowAlternating
+    change Matrix.detRowAlternating
       (fun i : Fin lam.rowLens.length =>
         (rowOp lam.rowLens.length * M) i) = _
     rw [hrows]
@@ -970,6 +970,49 @@ private theorem colStripVecs_anti {lam : YoungDiagram} :
   exact fin_antitone_of_adjacent (colStripVecs_good hr)
 
 open scoped Classical in
+private theorem colStripChoice_antitone_of_det_ne_zero (lam : YoungDiagram) (t : ℕ → ℂ) :
+    ∀ r ∈ Fintype.piFinset
+    (fun i : Fin lam.rowLens.length =>
+      ({(lam.rowLen (i : ℕ) : ℤ) - 1,
+        (lam.rowLen (i : ℕ) : ℤ)} : Finset ℤ)),
+    (Matrix.of fun i j : Fin lam.rowLens.length =>
+      newtonHZ t (r i + (j : ℤ) - (i : ℤ))).det ≠ 0 →
+    ∀ (i : ℕ) (hi : i + 1 < lam.rowLens.length),
+      r ⟨i + 1, hi⟩ ≤ r ⟨i, Nat.lt_of_succ_lt hi⟩ := by
+  classical
+  intro r hr hne i hi
+  by_contra hlt
+  rw [not_le] at hlt
+  have hm1 := Fintype.mem_piFinset.mp hr ⟨i, Nat.lt_of_succ_lt hi⟩
+  have hm2 := Fintype.mem_piFinset.mp hr ⟨i + 1, hi⟩
+  rw [Finset.mem_insert, Finset.mem_singleton] at hm1 hm2
+  have hm1' : r ⟨i, Nat.lt_of_succ_lt hi⟩ = (lam.rowLen i : ℤ) - 1 ∨
+      r ⟨i, Nat.lt_of_succ_lt hi⟩ = (lam.rowLen i : ℤ) := hm1
+  have hm2' : r ⟨i + 1, hi⟩ = (lam.rowLen (i + 1) : ℤ) - 1 ∨
+      r ⟨i + 1, hi⟩ = (lam.rowLen (i + 1) : ℤ) := hm2
+  have hba : lam.rowLen (i + 1) ≤ lam.rowLen i :=
+    lam.rowLen_anti _ _ (by omega)
+  have hkey : r ⟨i, Nat.lt_of_succ_lt hi⟩ =
+      (lam.rowLen i : ℤ) - 1 ∧
+      r ⟨i + 1, hi⟩ = (lam.rowLen i : ℤ) := by
+    rcases hm1' with h1 | h1 <;> rcases hm2' with h2 | h2 <;>
+      constructor <;> omega
+  refine hne (Matrix.det_zero_of_row_eq
+    (i := (⟨i, Nat.lt_of_succ_lt hi⟩ : Fin lam.rowLens.length))
+    (j := (⟨i + 1, hi⟩ : Fin lam.rowLens.length))
+    (fun he => by
+      have hv : i = i + 1 := congrArg Fin.val he
+      omega) ?_)
+  funext j
+  change newtonHZ t (r ⟨i, Nat.lt_of_succ_lt hi⟩ +
+      (j : ℤ) - ((i : ℕ) : ℤ)) =
+    newtonHZ t (r ⟨i + 1, hi⟩ + (j : ℤ) - ((i + 1 : ℕ) : ℤ))
+  rw [hkey.1, hkey.2]
+  congr 1
+  push_cast
+  ring
+
+open scoped Classical in
 /-- **One extra odd variable — the vertical Pieri identity**: the
 Schur specialisation of `lam` at `t + superPS 0 1` is the sum of
 the Schur specialisations at `t` of the vertical-strip sub-diagrams
@@ -999,7 +1042,7 @@ theorem diagramSchur_add_one_col (lam : YoungDiagram) (t : ℕ → ℂ) :
     funext i
     funext j
     rw [Finset.sum_apply]
-    show newtonHZ (fun c => t c + superPS 0 1 c)
+    change newtonHZ (fun c => t c + superPS 0 1 c)
       ((lam.rowLen (i : ℕ) : ℤ) + (j : ℤ) - (i : ℤ)) = _
     rw [newtonHZ_col_step,
       Finset.sum_pair (by omega : (lam.rowLen (i : ℕ) : ℤ) - 1 ≠
@@ -1015,7 +1058,7 @@ theorem diagramSchur_add_one_col (lam : YoungDiagram) (t : ℕ → ℂ) :
           (lam.rowLen (i : ℕ) : ℤ)} : Finset ℤ)),
       (Matrix.of fun i j : Fin lam.rowLens.length =>
         newtonHZ t (r i + (j : ℤ) - (i : ℤ))).det := by
-    show Matrix.detRowAlternating
+    change Matrix.detRowAlternating
       (fun i : Fin lam.rowLens.length => M i) = _
     rw [h2]
     exact (Matrix.detRowAlternating (n := Fin lam.rowLens.length)
@@ -1026,45 +1069,7 @@ theorem diagramSchur_add_one_col (lam : YoungDiagram) (t : ℕ → ℂ) :
       (fun i => ({(lam.rowLen (i : ℕ) : ℤ) - 1,
         (lam.rowLen (i : ℕ) : ℤ)} : Finset ℤ))
   -- non-monotone choices produce equal adjacent rows
-  have h4 : ∀ r ∈ Fintype.piFinset
-      (fun i : Fin lam.rowLens.length =>
-        ({(lam.rowLen (i : ℕ) : ℤ) - 1,
-          (lam.rowLen (i : ℕ) : ℤ)} : Finset ℤ)),
-      (Matrix.of fun i j : Fin lam.rowLens.length =>
-        newtonHZ t (r i + (j : ℤ) - (i : ℤ))).det ≠ 0 →
-      ∀ (i : ℕ) (hi : i + 1 < lam.rowLens.length),
-        r ⟨i + 1, hi⟩ ≤ r ⟨i, Nat.lt_of_succ_lt hi⟩ := by
-    intro r hr hne i hi
-    by_contra hlt
-    rw [not_le] at hlt
-    have hm1 := Fintype.mem_piFinset.mp hr ⟨i, Nat.lt_of_succ_lt hi⟩
-    have hm2 := Fintype.mem_piFinset.mp hr ⟨i + 1, hi⟩
-    rw [Finset.mem_insert, Finset.mem_singleton] at hm1 hm2
-    have hm1' : r ⟨i, Nat.lt_of_succ_lt hi⟩ = (lam.rowLen i : ℤ) - 1 ∨
-        r ⟨i, Nat.lt_of_succ_lt hi⟩ = (lam.rowLen i : ℤ) := hm1
-    have hm2' : r ⟨i + 1, hi⟩ = (lam.rowLen (i + 1) : ℤ) - 1 ∨
-        r ⟨i + 1, hi⟩ = (lam.rowLen (i + 1) : ℤ) := hm2
-    have hba : lam.rowLen (i + 1) ≤ lam.rowLen i :=
-      lam.rowLen_anti _ _ (by omega)
-    have hkey : r ⟨i, Nat.lt_of_succ_lt hi⟩ =
-        (lam.rowLen i : ℤ) - 1 ∧
-        r ⟨i + 1, hi⟩ = (lam.rowLen i : ℤ) := by
-      rcases hm1' with h1 | h1 <;> rcases hm2' with h2 | h2 <;>
-        constructor <;> omega
-    refine hne (Matrix.det_zero_of_row_eq
-      (i := (⟨i, Nat.lt_of_succ_lt hi⟩ : Fin lam.rowLens.length))
-      (j := (⟨i + 1, hi⟩ : Fin lam.rowLens.length))
-      (fun he => by
-        have hv : i = i + 1 := congrArg Fin.val he
-        omega) ?_)
-    funext j
-    show newtonHZ t (r ⟨i, Nat.lt_of_succ_lt hi⟩ +
-        (j : ℤ) - ((i : ℕ) : ℤ)) =
-      newtonHZ t (r ⟨i + 1, hi⟩ + (j : ℤ) - ((i + 1 : ℕ) : ℤ))
-    rw [hkey.1, hkey.2]
-    congr 1
-    push_cast
-    ring
+  have h4 := colStripChoice_antitone_of_det_ne_zero lam t
   -- reindex the surviving choices to natural strip vectors
   have h5 : ∑ r ∈ Fintype.piFinset
       (fun i : Fin lam.rowLens.length =>
@@ -1093,12 +1098,12 @@ theorem diagramSchur_add_one_col (lam : YoungDiagram) (t : ℕ → ℂ) :
         have hpos : 0 < lam.rowLen (i : ℕ) :=
           rowLen_pos_of_lt_length lam i.isLt
         rw [Finset.mem_Icc]
-        show lam.rowLen (i : ℕ) - 1 ≤ (r i).toNat ∧
+        change lam.rowLen (i : ℕ) - 1 ≤ (r i).toNat ∧
           (r i).toNat ≤ lam.rowLen (i : ℕ)
         rcases hm with h | h <;> omega
       · intro i hi
         have hle := hrp.2 i hi
-        show (r ⟨i + 1, hi⟩).toNat ≤
+        change (r ⟨i + 1, hi⟩).toNat ≤
           (r ⟨i, Nat.lt_of_succ_lt hi⟩).toNat
         omega
     · intro s hs
@@ -1116,7 +1121,7 @@ theorem diagramSchur_add_one_col (lam : YoungDiagram) (t : ℕ → ℂ) :
         omega
       · intro i hi
         have := hgood i hi
-        show ((s ⟨i + 1, hi⟩ : ℕ) : ℤ) ≤
+        change ((s ⟨i + 1, hi⟩ : ℕ) : ℤ) ≤
           ((s ⟨i, Nat.lt_of_succ_lt hi⟩ : ℕ) : ℤ)
         omega
     · intro r hr
@@ -1126,11 +1131,11 @@ theorem diagramSchur_add_one_col (lam : YoungDiagram) (t : ℕ → ℂ) :
       rw [Finset.mem_insert, Finset.mem_singleton] at hm
       have hpos : 0 < lam.rowLen (i : ℕ) :=
         rowLen_pos_of_lt_length lam i.isLt
-      show ((r i).toNat : ℤ) = r i
+      change ((r i).toNat : ℤ) = r i
       omega
     · intro s _
       funext i
-      show ((s i : ℕ) : ℤ).toNat = s i
+      change ((s i : ℕ) : ℤ).toNat = s i
       omega
     · intro r hr
       have hgood := (Finset.mem_filter.mp hr).2
@@ -1207,10 +1212,10 @@ private theorem sum_shape_superPS_row {b : ℕ} (G : Shape b → ℂ) :
     rw [diagramSchur_superPS_row ν.val]]
   rw [Finset.sum_eq_single (rowShape b)
     (fun ν _ hne => by
-      rw [if_neg (fun hle => hne (shape_eq_rowShape ν hle)),
+      rw [ite_eq_right (fun hle => hne (shape_eq_rowShape ν hle)),
         mul_zero])
     (fun h => absurd (Finset.mem_univ _) h)]
-  rw [if_pos (rowShape_colLen b), mul_one]
+  rw [ite_eq_left (rowShape_colLen b), mul_one]
 
 /-- Pairing a coefficient family against the one-column indicator
 collapses the shape sum to the one-column shape. -/
@@ -1221,10 +1226,10 @@ private theorem sum_shape_superPS_col {b : ℕ} (G : Shape b → ℂ) :
     rw [diagramSchur_superPS_col ν.val]]
   rw [Finset.sum_eq_single (colShape b)
     (fun ν _ hne => by
-      rw [if_neg (fun hle => hne (shape_eq_colShape ν hle)),
+      rw [ite_eq_right (fun hle => hne (shape_eq_colShape ν hle)),
         mul_zero])
     (fun h => absurd (Finset.mem_univ _) h)]
-  rw [if_pos (colShape_rowLen_zero_le b), mul_one]
+  rw [ite_eq_left (colShape_rowLen_zero_le b), mul_one]
 
 /-- Transport of induction multiplicities along an equality of the
 second size. -/
@@ -1277,7 +1282,7 @@ private theorem diagramSchur_add_superPS_row_expand {n : ℕ}
     refine Finset.sum_congr rfl fun κ _ => ?_
     have h1 := Finset.mem_antidiagonal.mp ab.2
     have h2 := lam.prop
-    rw [dif_pos (show ab.1.1 ≤ n by omega)]
+    rw [dite_eq_left (show ab.1.1 ≤ n by omega)]
     congr 1
     exact indMult_congr (show ab.1.2 = n - ab.1.1 by omega)
       _ _ rfl κ _ _
@@ -1325,7 +1330,7 @@ private theorem diagramSchur_add_superPS_col_expand {n : ℕ}
     refine Finset.sum_congr rfl fun κ _ => ?_
     have h1 := Finset.mem_antidiagonal.mp ab.2
     have h2 := lam.prop
-    rw [dif_pos (show ab.1.1 ≤ n by omega)]
+    rw [dite_eq_left (show ab.1.1 ≤ n by omega)]
     congr 1
     exact indMult_congr (show ab.1.2 = n - ab.1.1 by omega)
       _ _ rfl κ _ _
@@ -1398,7 +1403,7 @@ private theorem diagramSchur_superPS_pos_rows :
           rcases Nat.lt_or_ge p lam.rowLens.length with hp | hp
           · rw [stripDiagram_rowLen_lt hanti₀ ⟨p, hp⟩]
             refine rowLen_eq_zero_of_ge lam ?_
-            show lam.rowLens.length ≤ p + 1
+            change lam.rowLens.length ≤ p + 1
             have hl := YoungDiagram.length_rowLens (μ := lam)
             omega
           · exact stripDiagram_rowLen_le hanti₀ hp
@@ -1413,9 +1418,9 @@ private theorem diagramSchur_superPS_pos_rows :
       · intro k _
         refine exists_nat_sum _ _ fun μ _ => ?_
         by_cases hμ : IsHStrip lam μ.val
-        · rw [if_pos hμ, one_mul]
+        · rw [ite_eq_left hμ, one_mul]
           exact diagramSchur_superPS_exists_nat p 0 μ.val
-        · rw [if_neg hμ, zero_mul]
+        · rw [ite_eq_right hμ, zero_mul]
           exact ⟨0, by simp⟩
       · exact Finset.mem_range.mpr
           (Nat.lt_succ_of_le (YoungDiagram.card_le_card hstrip.1))
@@ -1424,15 +1429,15 @@ private theorem diagramSchur_superPS_pos_rows :
           (Finset.mem_univ _) ?_
         · intro μ _
           by_cases hμ : IsHStrip lam μ.val
-          · rw [if_pos hμ, one_mul]
+          · rw [ite_eq_left hμ, one_mul]
             exact diagramSchur_superPS_exists_nat p 0 μ.val
-          · rw [if_neg hμ, zero_mul]
+          · rw [ite_eq_right hμ, zero_mul]
             exact ⟨0, by simp⟩
         · refine ⟨m₀, hm₀, ?_⟩
-          show (if IsHStrip lam (stripDiagram r₀) then (1 : ℂ)
+          change (if IsHStrip lam (stripDiagram r₀) then (1 : ℂ)
             else 0) * diagramSchur (stripDiagram r₀)
               (superPS p 0) = (m₀ : ℂ)
-          rw [if_pos hstrip, one_mul, hval₀]
+          rw [ite_eq_left hstrip, one_mul, hval₀]
 
 /-- **Hook positivity** (Deligne 1.9, nonvanishing direction,
 character side): the Schur specialisation at the super power sums
@@ -1464,7 +1469,7 @@ theorem diagramSchur_superPS_pos {p q : ℕ} (lam : YoungDiagram)
           r₁ j ≤ r₁ i := by
         intro i j hij
         have h := lam.rowLen_anti (i : ℕ) (j : ℕ) hij
-        show (if q < lam.rowLen (j : ℕ) then lam.rowLen (j : ℕ) - 1
+        change (if q < lam.rowLen (j : ℕ) then lam.rowLen (j : ℕ) - 1
             else lam.rowLen (j : ℕ)) ≤
           (if q < lam.rowLen (i : ℕ) then lam.rowLen (i : ℕ) - 1
             else lam.rowLen (i : ℕ))
@@ -1474,7 +1479,7 @@ theorem diagramSchur_superPS_pos {p q : ℕ} (lam : YoungDiagram)
         · refine le_of_rowLen_le fun i => ?_
           rcases Nat.lt_or_ge i lam.rowLens.length with hi | hi
           · rw [stripDiagram_rowLen_lt hanti₁ ⟨i, hi⟩]
-            show (if q < lam.rowLen i then lam.rowLen i - 1
+            change (if q < lam.rowLen i then lam.rowLen i - 1
               else lam.rowLen i) ≤ lam.rowLen i
             split_ifs <;> omega
           · rw [stripDiagram_rowLen_le hanti₁ hi]
@@ -1482,7 +1487,7 @@ theorem diagramSchur_superPS_pos {p q : ℕ} (lam : YoungDiagram)
         · intro i
           rcases Nat.lt_or_ge i lam.rowLens.length with hi | hi
           · rw [stripDiagram_rowLen_lt hanti₁ ⟨i, hi⟩]
-            show lam.rowLen i ≤ (if q < lam.rowLen i then
+            change lam.rowLen i ≤ (if q < lam.rowLen i then
               lam.rowLen i - 1 else lam.rowLen i) + 1
             split_ifs <;> omega
           · rw [stripDiagram_rowLen_le hanti₁ hi,
@@ -1492,7 +1497,7 @@ theorem diagramSchur_superPS_pos {p q : ℕ} (lam : YoungDiagram)
         have hval : (stripDiagram r₁).rowLen p ≤ q := by
           rcases Nat.lt_or_ge p lam.rowLens.length with hp | hp
           · rw [stripDiagram_rowLen_lt hanti₁ ⟨p, hp⟩]
-            show (if q < lam.rowLen p then lam.rowLen p - 1
+            change (if q < lam.rowLen p then lam.rowLen p - 1
               else lam.rowLen p) ≤ q
             split_ifs <;> omega
           · rw [stripDiagram_rowLen_le hanti₁ hp]
@@ -1505,9 +1510,9 @@ theorem diagramSchur_superPS_pos {p q : ℕ} (lam : YoungDiagram)
       · intro k _
         refine exists_nat_sum _ _ fun μ _ => ?_
         by_cases hμ : IsVStrip lam μ.val
-        · rw [if_pos hμ, one_mul]
+        · rw [ite_eq_left hμ, one_mul]
           exact diagramSchur_superPS_exists_nat p q μ.val
-        · rw [if_neg hμ, zero_mul]
+        · rw [ite_eq_right hμ, zero_mul]
           exact ⟨0, by simp⟩
       · exact Finset.mem_range.mpr
           (Nat.lt_succ_of_le (YoungDiagram.card_le_card hstrip.1))
@@ -1516,14 +1521,14 @@ theorem diagramSchur_superPS_pos {p q : ℕ} (lam : YoungDiagram)
           (Finset.mem_univ _) ?_
         · intro μ _
           by_cases hμ : IsVStrip lam μ.val
-          · rw [if_pos hμ, one_mul]
+          · rw [ite_eq_left hμ, one_mul]
             exact diagramSchur_superPS_exists_nat p q μ.val
-          · rw [if_neg hμ, zero_mul]
+          · rw [ite_eq_right hμ, zero_mul]
             exact ⟨0, by simp⟩
         · refine ⟨m₀, hm₀, ?_⟩
-          show (if IsVStrip lam (stripDiagram r₁) then (1 : ℂ)
+          change (if IsVStrip lam (stripDiagram r₁) then (1 : ℂ)
             else 0) * diagramSchur (stripDiagram r₁)
               (superPS p q) = (m₀ : ℂ)
-          rw [if_pos hstrip, one_mul, hval₀]
+          rw [ite_eq_left hstrip, one_mul, hval₀]
 
 end RS

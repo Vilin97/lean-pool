@@ -211,7 +211,7 @@ theorem baseChangeRetraction_lin
         baseChangeRetractionHom R hS s hs =
       (R ◁ baseChangeRetractionHom R hS s hs) ≫
         ((α_ R R S.X₁).inv ≫ (μ[R] ▷ S.X₁)) := by
-  haveI : Mono (R ◁ S.f) := (shortExact_map_tensorLeft R hS).mono_f
+  have : Mono (R ◁ S.f) := (shortExact_map_tensorLeft R hS).mono_f
   exact lin_of_complement R (R ◁ S.f) (freeModMap_lin R S.f)
     (baseChangeRetractionHom R hS s hs)
     ((R ◁ S.g) ≫ baseChangeSectionHom R s)
@@ -282,7 +282,7 @@ theorem gammaModuleFunctor_map_add
       (gammaModuleFunctor L R).map h := by
   refine SuperCommAlgebra.Mod.Hom.ext ?_ ?_ <;>
     refine LinearMap.ext fun m => ?_ <;>
-    · show m ≫ Mod.Hom.hom f + m ≫ Mod.Hom.hom g =
+    · change m ≫ Mod.Hom.hom f + m ≫ Mod.Hom.hom g =
         m ≫ Mod.Hom.hom h
       erw [← Preadditive.comp_add, hfg]
 
@@ -306,19 +306,19 @@ noncomputable def fibreFunSplitting
   r := (gammaModuleFunctor L R).map (baseChangeRetraction R hS s hs)
   s := (gammaModuleFunctor L R).map s
   f_r := by
-    show (gammaModuleFunctor L R).map (freeModMap R S.f) ≫
+    change (gammaModuleFunctor L R).map (freeModMap R S.f) ≫
         (gammaModuleFunctor L R).map
           (baseChangeRetraction R hS s hs) = _
     rw [← CategoryTheory.Functor.map_comp,
       freeModMap_baseChangeRetraction R hS s hs]
     exact CategoryTheory.Functor.map_id _ _
   s_g := by
-    show (gammaModuleFunctor L R).map s ≫
+    change (gammaModuleFunctor L R).map s ≫
         (gammaModuleFunctor L R).map (freeModMap R S.g) = _
     rw [← CategoryTheory.Functor.map_comp, hs]
     exact CategoryTheory.Functor.map_id _ _
   id := by
-    show (gammaModuleFunctor L R).map
+    change (gammaModuleFunctor L R).map
           (baseChangeRetraction R hS s hs) ≫
           (gammaModuleFunctor L R).map (freeModMap R S.f) +
         (gammaModuleFunctor L R).map (freeModMap R S.g) ≫

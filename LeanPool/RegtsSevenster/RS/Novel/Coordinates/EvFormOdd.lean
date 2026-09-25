@@ -43,12 +43,12 @@ theorem evFormOdd
           SuperVect.Hom _ _).evenMap
           (oddPair (e.oddMap x) (e.oddMap y))) =
       (stdForm k ℓ).evenMap (oddPair x y) := by
-  letI := P.braided
+  let := P.braided
   have h := congrArg (fun z : SuperVect.Hom
       (SuperVect.tensorObj (stdSuperPair k ℓ) (stdSuperPair k ℓ))
       SuperVect.tensorUnit => z.evenMap (oddPair x y)) hform
   refine Eq.trans ?_ h
-  show omegaFun f P (ε_ (SkeinObj.mk 1) (SkeinObj.mk 1))
+  change omegaFun f P (ε_ (SkeinObj.mk 1) (SkeinObj.mk 1))
       (((μ P.ω (SkeinObj.mk 1) (SkeinObj.mk 1)) :
         SuperVect.Hom _ _).evenMap
         (oddPair (e.oddMap x) (e.oddMap y))) =

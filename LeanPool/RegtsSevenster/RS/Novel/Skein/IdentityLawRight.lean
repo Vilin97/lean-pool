@@ -58,24 +58,24 @@ def stageEquivR (s t' u : ℕ) (ht : t' ≤ u) :
     · -- Sum.inl ℓ
       simp only
       by_cases h : ℓ.val < s + t'
-      · rw [dif_pos h]
+      · rw [dite_eq_left h]
       · simp only
-        [dif_neg h, dif_neg (show ¬ (t' + (ℓ.val - s) < t' + t') from by omega)]
+        [dite_eq_right h, dite_eq_right (show ¬ (t' + (ℓ.val - s) < t' + t') from by omega)]
         exact congrArg Sum.inl (Fin.ext (by simp; omega))
     · -- Sum.inr a
       simp only
-      rw [dif_pos a.isLt]
+      rw [dite_eq_left a.isLt]
   right_inv y := by
     rcases y with j | k
     · -- Sum.inl j
       simp only
-      rw [dif_pos j.isLt]
+      rw [dite_eq_left j.isLt]
     · -- Sum.inr k
       simp only
       by_cases h : k.val < t' + t'
-      · rw [dif_pos h]
+      · rw [dite_eq_left h]
       · simp only
-        [dif_neg h, dif_neg (show ¬ (s + (k.val - t') < s + t') from by omega)]
+        [dite_eq_right h, dite_eq_right (show ¬ (s + (k.val - t') < s + t') from by omega)]
         exact congrArg Sum.inr (Fin.ext (by simp; omega))
 
 /-! ### Label evaluations -/
@@ -106,8 +106,8 @@ theorem stageEquivR_zero_inl (s u : ℕ) (ℓ : Fin (s + u)) :
       else Sum.inr ⟨ℓ.val - s, by omega⟩ := by
   rw [stageEquivR_inl]
   by_cases h : ℓ.val < s
-  · rw [dif_pos (show ℓ.val < s + 0 from by omega), dif_pos h]
-  · rw [dif_neg (show ¬ ℓ.val < s + 0 from by omega), dif_neg h]
+  · rw [dite_eq_left (show ℓ.val < s + 0 from by omega), dite_eq_left h]
+  · rw [dite_eq_right (show ¬ ℓ.val < s + 0 from by omega), dite_eq_right h]
     exact congrArg Sum.inr (Fin.ext (by simp))
 
 /-- The base case of the right identity law: after zero interface
@@ -122,12 +122,12 @@ noncomputable def stageZeroEquivR (s u : ℕ) (F : Fragment (Fin (s + u))) :
   attach_comm f := by
     rcases f with g | ⟨⟨k, hk⟩, _⟩
     · -- inl g (F-flag)
-      show F.attach ((Equiv.sumEmpty _ _) (Sum.inl g)) =
+      change F.attach ((Equiv.sumEmpty _ _) (Sum.inl g)) =
         (((glueInterface s 0 u ((F.disjUnion (strandBundle 0)).relabel
           (stageEquivR s 0 u (Nat.zero_le u)))).relabel finSumFinEquiv).attach
           (Sum.inl g)).map (Equiv.sumEmpty _ _) id
       simp only [Equiv.sumEmpty_apply_inl]
-      show F.attach g =
+      change F.attach g =
         (((((F.attach g).map Sum.inl Sum.inl).map id
           (stageEquivR s 0 u (Nat.zero_le u))).map id
           (Equiv.sumCongr (finCongr (by omega : s + 0 = s))
@@ -162,13 +162,13 @@ theorem stageStepR_leftBoundary (s t' u : ℕ) (ht : t' + 1 ≤ u)
       (stageEquivR s (t' + 1) u ht)).boundaryFlag
       (Sum.inl ⟨s + t', by omega⟩) =
     Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := by
-  show (F.disjUnion (strandBundle (t' + 1))).boundaryFlag
+  change (F.disjUnion (strandBundle (t' + 1))).boundaryFlag
     ((stageEquivR s (t' + 1) u ht).symm (Sum.inl ⟨s + t', by omega⟩)) =
     Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩)
   have hsymm : (stageEquivR s (t' + 1) u ht).symm (Sum.inl ⟨s + t', by omega⟩) =
       Sum.inl ⟨s + t', by omega⟩ := by
     rw [Equiv.symm_apply_eq, stageEquivR_inl]
-    rw [dif_pos (show (s + t' : ℕ) < s + (t' + 1) from by omega)]
+    rw [dite_eq_left (show (s + t' : ℕ) < s + (t' + 1) from by omega)]
   rw [hsymm]
   rfl
 
@@ -180,7 +180,7 @@ theorem stageStepR_rightBoundary (s t' u : ℕ) (ht : t' + 1 ≤ u)
       (stageEquivR s (t' + 1) u ht)).boundaryFlag
       (Sum.inr ⟨t', by omega⟩) =
     Sum.inr (⟨t', by omega⟩, false) := by
-  show (F.disjUnion (strandBundle (t' + 1))).boundaryFlag
+  change (F.disjUnion (strandBundle (t' + 1))).boundaryFlag
     ((stageEquivR s (t' + 1) u ht).symm (Sum.inr ⟨t', by omega⟩)) =
     Sum.inr (⟨t', by omega⟩, false)
   have hsymm : (stageEquivR s (t' + 1) u ht).symm (Sum.inr ⟨t', by omega⟩) =
@@ -264,10 +264,10 @@ noncomputable def stageStepFlagEquivR (s t' u : ℕ) (ht : t' + 1 ≤ u)
         exact hne.1 (by
           rw [stageStepR_leftBoundary]
           exact congrArg Sum.inl heq)
-      simp only [dif_neg hg]
+      simp only [dite_eq_right hg]
     · -- f = Sum.inr (⟨k, hk⟩, b)
       by_cases hlt : k < t'
-      · simp only [dif_pos hlt]
+      · simp only [dite_eq_left hlt]
       · have hk_eq : k = t' := by omega
         have hb : b = true := by
           by_contra hbf
@@ -276,7 +276,7 @@ noncomputable def stageStepFlagEquivR (s t' u : ℕ) (ht : t' + 1 ≤ u)
             rw [stageStepR_rightBoundary]
             exact hk_eq ▸ hbfalse ▸ congrArg Sum.inr (Prod.ext (Fin.ext rfl)
               rfl))
-        simp only [dif_neg hlt,
+        simp only [dite_eq_right hlt,
           show F.boundaryFlag ⟨s + t', by omega⟩ = F.boundaryFlag
             ⟨s + t', by omega⟩ from rfl,
           dite_true]
@@ -287,12 +287,12 @@ noncomputable def stageStepFlagEquivR (s t' u : ℕ) (ht : t' + 1 ≤ u)
     | Sum.inl g =>
       dsimp only
       by_cases hg : g = F.boundaryFlag ⟨s + t', by omega⟩
-      · simp only [dif_pos hg, dif_neg (show ¬ (t' : ℕ) < t' from Nat.lt_irrefl
+      · simp only [dite_eq_left hg, dite_eq_right (show ¬ (t' : ℕ) < t' from Nat.lt_irrefl
         t')]
         exact congrArg Sum.inl hg.symm
-      · simp only [dif_neg hg]
+      · simp only [dite_eq_right hg]
     | Sum.inr (⟨k, hk⟩, b) =>
-      simp only [dif_pos hk]
+      simp only [dite_eq_left hk]
 
 /-! ### The stage step equivalence -/
 
@@ -311,7 +311,496 @@ private noncomputable abbrev sourceFragmentR (s t' u : ℕ) (ht : t' + 1 ≤ u)
     (by simp) (stageStepR_hopen s t' u ht F)).relabel (interfaceStepEquiv s t'
       u)
 
--- Raised budget: as for the left-hand step.
+private theorem stageStepR_attach_inl (s t' u : ℕ) (ht : t' + 1 ≤ u)
+    (F : Fragment (Fin (s + u)))
+    (g : F.Flag)
+    (hne : (Sum.inl g : (baseFragmentR s t' u ht F).Flag) ≠
+      (baseFragmentR s t' u ht F).boundaryFlag (Sum.inl ⟨s + t', by omega⟩) ∧
+      (Sum.inl g : (baseFragmentR s t' u ht F).Flag) ≠
+      (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩)) :
+    (targetFragmentR s t' u (by omega) F).attach
+      (stageStepFlagEquivR s t' u ht F ⟨Sum.inl g, hne⟩) =
+      ((sourceFragmentR s t' u ht F).attach ⟨Sum.inl g, hne⟩).map (Equiv.refl _) id := by
+  have hg_ne : g ≠ F.boundaryFlag ⟨s + t', by omega⟩ := by
+    intro heq
+    exact hne.1
+      (by rw [stageStepR_leftBoundary]; exact congrArg Sum.inl heq)
+  have hflag : (stageStepFlagEquivR s t' u ht F) ⟨Sum.inl g, hne⟩ = Sum.inl
+    g := rfl
+  rcases ha : F.attach g with v | ℓ
+  · -- F.attach g = Sum.inl v (vertex)
+    set common : (targetFragmentR s t' u (by omega) F).Vertex ⊕
+        (Fin (s + t') ⊕ Fin (t' + u)) := Sum.inl (Sum.inl v)
+    have hLHS : (targetFragmentR s t' u (by omega) F).attach (Sum.inl g) =
+        common := by
+      change ((F.disjUnion (strandBundle t')).attach (Sum.inl g)).map id
+        (stageEquivR s t' u _) = _
+      change ((F.attach g).map Sum.inl Sum.inl).map id (stageEquivR s t' u
+        _) = _
+      rw [ha]; rfl
+    have hRHS : (sourceFragmentR s t' u ht F).attach ⟨Sum.inl g, hne⟩ =
+        common := by
+      change ((Fragment.glueAttach (baseFragmentR s t' u ht F)
+          (Sum.inl ⟨s + t', by omega⟩) (Sum.inr ⟨t', by omega⟩)
+          ⟨Sum.inl g, hne⟩).map id (interfaceStepEquiv s t' u)) = _
+      have hba : (baseFragmentR s t' u ht F).attach (Sum.inl g) =
+          Sum.inl (Sum.inl v) := by
+        change ((F.disjUnion (strandBundle (t' + 1))).attach (Sum.inl
+          g)).map id
+          (stageEquivR s (t' + 1) u ht) = _
+        change ((F.attach g).map Sum.inl Sum.inl).map id (stageEquivR s (t'
+          + 1) u ht) = _
+        rw [ha]; rfl
+      refine Fragment.glueAttach_cases _ (fun v' hv' => ?_)
+        (fun ℓ' hℓ' => ?_)
+      · simp only [Sum.map_inl, id_eq]
+        exact congrArg Sum.inl (Sum.inl.inj (hv'.symm.trans hba))
+      · obtain ⟨ℓ', _hs₁, _hs₂⟩ := ℓ'
+        exact absurd (hℓ'.symm.trans hba) (nomatch ·)
+    exact (hflag ▸ hLHS).trans
+      (by rw [hRHS]; rfl : ((sourceFragmentR s t' u ht F).attach
+        ⟨Sum.inl g, hne⟩).map (Equiv.refl _) id = common).symm
+  · -- F.attach g = Sum.inr ℓ (label)
+    have hℓ_ne_st' : ℓ.val ≠ s + t' := by
+      intro heq
+      have hatt : F.attach g = Sum.inr ⟨s + t', by omega⟩ := by
+        exact ha.trans (congrArg Sum.inr (Fin.ext heq))
+      exact hg_ne (F.eq_boundaryFlag ⟨s + t', by omega⟩ g hatt)
+    by_cases hℓ_lt : ℓ.val < s + t'
+    · -- ℓ.val < s + t'
+      set common : (targetFragmentR s t' u (by omega) F).Vertex ⊕
+          (Fin (s + t') ⊕ Fin (t' + u)) := Sum.inr
+            (Sum.inl ⟨ℓ.val, by omega⟩)
+      have hLHS : (targetFragmentR s t' u (by omega) F).attach (Sum.inl g) =
+          common := by
+        change ((F.disjUnion (strandBundle t')).attach (Sum.inl g)).map id
+          (stageEquivR s t' u _) = _
+        change ((F.attach g).map Sum.inl Sum.inl).map id (stageEquivR s t' u
+          _) = _
+        rw [ha]; simp only [Sum.map_inr]; refine congrArg Sum.inr ?_
+        rw [stageEquivR_inl, dite_eq_left hℓ_lt]
+      have hRHS : (sourceFragmentR s t' u ht F).attach ⟨Sum.inl g, hne⟩ =
+          common := by
+        change ((Fragment.glueAttach (baseFragmentR s t' u ht F)
+            (Sum.inl ⟨s + t', by omega⟩) (Sum.inr ⟨t', by omega⟩)
+            ⟨Sum.inl g, hne⟩).map id (interfaceStepEquiv s t' u)) = _
+        have hba : (baseFragmentR s t' u ht F).attach (Sum.inl g) =
+            Sum.inr (Sum.inl ⟨ℓ.val, by omega⟩) := by
+          change ((F.disjUnion (strandBundle (t' + 1))).attach (Sum.inl
+            g)).map id
+            (stageEquivR s (t' + 1) u ht) = _
+          change ((F.attach g).map Sum.inl Sum.inl).map id
+            (stageEquivR s (t' + 1) u ht) = _
+          rw [ha]; simp only [Sum.map_inr]; refine congrArg Sum.inr ?_
+          rw [stageEquivR_inl,
+            dite_eq_left (show ℓ.val < s + (t' + 1) from by omega)]
+        refine Fragment.glueAttach_cases _ (fun v' hv' => ?_)
+          (fun ℓ' hℓ' => ?_)
+        · exact absurd (hv'.symm.trans hba) (nomatch ·)
+        · obtain ⟨ℓ', _hs₁, _hs₂⟩ := ℓ'
+          simp only [Sum.map_inr]
+          have hℓ'_eq : ℓ' = Sum.inl ⟨ℓ.val, by omega⟩ :=
+            Sum.inr.inj (hℓ'.symm.trans hba)
+          subst hℓ'_eq; refine congrArg Sum.inr ?_
+          exact interfaceStepEquiv_eval_inl s t' u ℓ.val (by omega)
+      exact (hflag ▸ hLHS).trans
+        (by rw [hRHS]; rfl : ((sourceFragmentR s t' u ht F).attach
+          ⟨Sum.inl g, hne⟩).map (Equiv.refl _) id = common).symm
+    · -- ℓ.val > s + t'
+      have hℓ_gt : s + t' < ℓ.val := by omega
+      set common : (targetFragmentR s t' u (by omega) F).Vertex ⊕
+          (Fin (s + t') ⊕ Fin (t' + u)) :=
+        Sum.inr (Sum.inr ⟨t' + (ℓ.val - s), by omega⟩)
+      have hLHS : (targetFragmentR s t' u (by omega) F).attach (Sum.inl g) =
+          common := by
+        change ((F.disjUnion (strandBundle t')).attach (Sum.inl g)).map id
+          (stageEquivR s t' u _) = _
+        change ((F.attach g).map Sum.inl Sum.inl).map id (stageEquivR s t' u
+          _) = _
+        rw [ha]; simp only [Sum.map_inr]; refine congrArg Sum.inr ?_
+        rw [stageEquivR_inl, dite_eq_right (show ¬ ℓ.val < s + t' from by omega)]
+      have hRHS : (sourceFragmentR s t' u ht F).attach ⟨Sum.inl g, hne⟩ =
+          common := by
+        change ((Fragment.glueAttach (baseFragmentR s t' u ht F)
+            (Sum.inl ⟨s + t', by omega⟩) (Sum.inr ⟨t', by omega⟩)
+            ⟨Sum.inl g, hne⟩).map id (interfaceStepEquiv s t' u)) = _
+        have hba : (baseFragmentR s t' u ht F).attach (Sum.inl g) =
+            Sum.inr (Sum.inr ⟨(t' + 1) + (ℓ.val - s), by omega⟩) := by
+          change ((F.disjUnion (strandBundle (t' + 1))).attach (Sum.inl
+            g)).map id
+            (stageEquivR s (t' + 1) u ht) = _
+          change ((F.attach g).map Sum.inl Sum.inl).map id
+            (stageEquivR s (t' + 1) u ht) = _
+          rw [ha]; simp only [Sum.map_inr]; refine congrArg Sum.inr ?_
+          rw [stageEquivR_inl,
+            dite_eq_right (show ¬ ℓ.val < s + (t' + 1) from by omega)]
+        refine Fragment.glueAttach_cases _ (fun v' hv' => ?_)
+          (fun ℓ' hℓ' => ?_)
+        · exact absurd (hv'.symm.trans hba) (nomatch ·)
+        · obtain ⟨ℓ', _hs₁, _hs₂⟩ := ℓ'
+          have hℓ'_eq : ℓ' = Sum.inr ⟨(t' + 1) + (ℓ.val - s), by omega⟩ :=
+            Sum.inr.inj (hℓ'.symm.trans hba)
+          subst hℓ'_eq
+          simp only [Sum.map_inr]
+          exact congrArg Sum.inr ((interfaceStepEquiv_eval_inr_above s t' u
+            ((t' + 1) + (ℓ.val - s)) (by omega) (by omega)).trans
+            (congrArg Sum.inr (Fin.ext (by simp))))
+      exact (hflag ▸ hLHS).trans
+        (by rw [hRHS]; rfl : ((sourceFragmentR s t' u ht F).attach
+          ⟨Sum.inl g, hne⟩).map (Equiv.refl _) id = common).symm
+
+private theorem stageStepR_attach_inr (s t' u : ℕ) (ht : t' + 1 ≤ u)
+    (F : Fragment (Fin (s + u)))
+    (k : ℕ) (hk : k < t' + 1) (b : Bool)
+    (hne : (Sum.inr (⟨k, hk⟩, b) : (baseFragmentR s t' u ht F).Flag) ≠
+      (baseFragmentR s t' u ht F).boundaryFlag (Sum.inl ⟨s + t', by omega⟩) ∧
+      (Sum.inr (⟨k, hk⟩, b) : (baseFragmentR s t' u ht F).Flag) ≠
+      (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩)) :
+    (targetFragmentR s t' u (by omega) F).attach
+      (stageStepFlagEquivR s t' u ht F ⟨Sum.inr (⟨k, hk⟩, b), hne⟩) =
+      ((sourceFragmentR s t' u ht F).attach ⟨Sum.inr (⟨k, hk⟩, b), hne⟩).map (Equiv.refl _) id := by
+  by_cases hlt : k < t'
+  · -- Sub-case: k < t'
+    have hflag : (stageStepFlagEquivR s t' u ht F)
+        ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ = Sum.inr (⟨k, hlt⟩, b) := by
+      have key : (stageStepFlagEquivR s t' u ht F)
+          ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ =
+        if hlt' : k < t' then Sum.inr (⟨k, hlt'⟩, b)
+        else Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := rfl
+      rw [key, dite_eq_left hlt]
+    set common : (targetFragmentR s t' u (by omega) F).Vertex ⊕
+        (Fin (s + t') ⊕ Fin (t' + u)) :=
+      Sum.inr (Sum.inr ⟨if b then t' + k else k, by split <;> omega⟩)
+    have hLHS : (targetFragmentR s t' u (by omega) F).attach
+        (Sum.inr (⟨k, hlt⟩, b)) = common := by
+      change ((F.disjUnion (strandBundle t')).attach
+        (Sum.inr (⟨k, hlt⟩, b))).map id (stageEquivR s t' u _) = _
+      change (((strandBundle t').attach (⟨k, hlt⟩, b)).map Sum.inr
+        Sum.inr).map id
+        (stageEquivR s t' u _) = _
+      simp only [strandBundle, Sum.map, Sum.elim, Function.comp]
+      apply congrArg Sum.inr; cases b
+      · simp only [ite_false, Bool.false_eq_true]
+        rw [stageEquivR_inr]
+      · simp only [ite_true]
+        rw [stageEquivR_inr]
+    have hRHS : (sourceFragmentR s t' u ht F).attach
+        ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ = common := by
+      change ((Fragment.glueAttach (baseFragmentR s t' u ht F)
+          (Sum.inl ⟨s + t', by omega⟩) (Sum.inr ⟨t', by omega⟩)
+          ⟨Sum.inr (⟨k, hk⟩, b), hne⟩).map id (interfaceStepEquiv s t' u)) =
+            _
+      have hba : (baseFragmentR s t' u ht F).attach (Sum.inr (⟨k, hk⟩, b)) =
+          Sum.inr
+            (Sum.inr ⟨if b then (t' + 1) + k else k, by split <;> omega⟩) :=
+            by
+        change ((F.disjUnion (strandBundle (t' + 1))).attach
+          (Sum.inr (⟨k, hk⟩, b))).map id (stageEquivR s (t' + 1) u ht) = _
+        change (((strandBundle (t' + 1)).attach (⟨k, hk⟩, b)).map
+          Sum.inr Sum.inr).map id (stageEquivR s (t' + 1) u ht) = _
+        simp only [strandBundle, Sum.map, Sum.elim, Function.comp]
+        apply congrArg Sum.inr; cases b
+        · simp only [ite_false, Bool.false_eq_true]
+          rw [stageEquivR_inr]
+        · simp only [ite_true]
+          rw [stageEquivR_inr]
+      refine Fragment.glueAttach_cases _ (fun v' hv' => ?_)
+        (fun ℓ' hℓ' => ?_)
+      · exact absurd (hv'.symm.trans hba) (nomatch ·)
+      · obtain ⟨ℓ', _hs₁, _hs₂⟩ := ℓ'
+        simp only [Sum.map_inr]
+        have hℓ'_eq : ℓ' = Sum.inr ⟨if b then (t' + 1) + k else k,
+            by split <;> omega⟩ :=
+          Sum.inr.inj (hℓ'.symm.trans hba)
+        subst hℓ'_eq; refine congrArg Sum.inr ?_
+        cases b
+        · exact interfaceStepEquiv_eval_inr_below s t' u k hlt
+        · exact (interfaceStepEquiv_eval_inr_above s t' u
+            ((t' + 1) + k) (by omega) (by omega)).trans
+            (congrArg Sum.inr (Fin.ext (by simp only [ite_true]; omega)))
+    exact (hflag ▸ hLHS).trans
+      (by rw [hRHS]; rfl : ((sourceFragmentR s t' u ht F).attach
+        ⟨Sum.inr (⟨k, hk⟩, b), hne⟩).map (Equiv.refl _) id = common).symm
+  · -- Sub-case: k ≥ t' (must be k = t', b = true)
+    have hk_eq : k = t' := by omega
+    have hb : b = true := by
+      by_contra hbf
+      have hbfalse : b = false := by cases b <;> simp_all
+      exact hne.2 (by
+        rw [stageStepR_rightBoundary]
+        exact hk_eq ▸ hbfalse ▸ congrArg Sum.inr (Prod.ext (Fin.ext rfl)
+          rfl))
+    have hflag : (stageStepFlagEquivR s t' u ht F)
+        ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ =
+        Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := by
+      have key : (stageStepFlagEquivR s t' u ht F)
+          ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ =
+        if hlt' : k < t' then Sum.inr (⟨k, hlt'⟩, b)
+        else Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := rfl
+      rw [key, dite_eq_right hlt]
+    set common : (targetFragmentR s t' u (by omega) F).Vertex ⊕
+        (Fin (s + t') ⊕ Fin (t' + u)) := Sum.inr
+          (Sum.inr ⟨t' + t', by omega⟩)
+    have hLHS : (targetFragmentR s t' u (by omega) F).attach
+        (Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩)) = common := by
+      change ((F.disjUnion (strandBundle t')).attach
+        (Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩))).map id
+        (stageEquivR s t' u _) = _
+      change ((F.attach (F.boundaryFlag ⟨s + t', by omega⟩)).map
+        Sum.inl Sum.inl).map id (stageEquivR s t' u _) = _
+      rw [F.attach_boundaryFlag]; simp only [Sum.map_inr]; refine congrArg
+        Sum.inr ?_
+      rw [stageEquivR_inl,
+        dite_eq_right (show ¬ (s + t' : ℕ) < s + t' from by omega)]
+      exact congrArg Sum.inr (Fin.ext (by simp))
+    have hRHS : (sourceFragmentR s t' u ht F).attach
+        ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ = common := by
+      change ((Fragment.glueAttach (baseFragmentR s t' u ht F)
+          (Sum.inl ⟨s + t', by omega⟩) (Sum.inr ⟨t', by omega⟩)
+          ⟨Sum.inr (⟨k, hk⟩, b), hne⟩).map id (interfaceStepEquiv s t' u)) =
+            _
+      have hba : (baseFragmentR s t' u ht F).attach (Sum.inr (⟨k, hk⟩, b)) =
+          Sum.inr (Sum.inr ⟨(t' + 1) + t', by omega⟩) := by
+        change ((F.disjUnion (strandBundle (t' + 1))).attach
+          (Sum.inr (⟨k, hk⟩, b))).map id (stageEquivR s (t' + 1) u ht) = _
+        change (((strandBundle (t' + 1)).attach (⟨k, hk⟩, b)).map
+          Sum.inr Sum.inr).map id (stageEquivR s (t' + 1) u ht) = _
+        simp only [strandBundle, Sum.map, Sum.elim, Function.comp]
+        refine congrArg Sum.inr ?_
+        rw [show (if (b : Bool) = true then
+              (⟨(t' + 1) + k, by omega⟩ : Fin ((t' + 1) + (t' + 1)))
+            else ⟨k, by omega⟩) =
+            (⟨(t' + 1) + k, by omega⟩ : Fin ((t' + 1) + (t' + 1))) from
+              by rw [hb]; rfl]
+        rw [stageEquivR_inr]
+        exact congrArg Sum.inr (Fin.ext (by simp; omega))
+      refine Fragment.glueAttach_cases _ (fun v' hv' => ?_)
+        (fun ℓ' hℓ' => ?_)
+      · exact absurd (hv'.symm.trans hba) (nomatch ·)
+      · obtain ⟨ℓ', _hs₁, _hs₂⟩ := ℓ'
+        simp only [Sum.map_inr]
+        have hℓ'_eq : ℓ' = Sum.inr ⟨(t' + 1) + t', by omega⟩ :=
+          Sum.inr.inj (hℓ'.symm.trans hba)
+        subst hℓ'_eq; refine congrArg Sum.inr ?_
+        exact (interfaceStepEquiv_eval_inr_above s t' u
+          ((t' + 1) + t') (by omega) (by omega)).trans
+          (congrArg Sum.inr (Fin.ext (by simp)))
+    exact (hflag ▸ hLHS).trans
+      (by rw [hRHS]; rfl : ((sourceFragmentR s t' u ht F).attach
+        ⟨Sum.inr (⟨k, hk⟩, b), hne⟩).map (Equiv.refl _) id = common).symm
+
+private theorem stageStepR_pairing_inl (s t' u : ℕ) (ht : t' + 1 ≤ u)
+    (F : Fragment (Fin (s + u)))
+    (g : F.Flag)
+    (hne : (Sum.inl g : (baseFragmentR s t' u ht F).Flag) ≠
+      (baseFragmentR s t' u ht F).boundaryFlag (Sum.inl ⟨s + t', by omega⟩) ∧
+      (Sum.inl g : (baseFragmentR s t' u ht F).Flag) ≠
+      (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩)) :
+    stageStepFlagEquivR s t' u ht F
+      (Fragment.rewire (stageStepR_hopen s t' u ht F) ⟨Sum.inl g, hne⟩) =
+      (targetFragmentR s t' u (by omega) F).pairing
+        (stageStepFlagEquivR s t' u ht F ⟨Sum.inl g, hne⟩) := by
+  have hg_ne : g ≠ F.boundaryFlag ⟨s + t', by omega⟩ := by
+    intro heq
+    exact hne.1
+      (by rw [stageStepR_leftBoundary]; exact congrArg Sum.inl heq)
+  have hnj : (baseFragmentR s t' u ht F).pairing (Sum.inl g) ≠
+      (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩) :=
+        by
+    change Sum.inl (F.pairing g) ≠
+      (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩)
+    rw [stageStepR_rightBoundary]; exact (nomatch ·)
+  have hflag_f : (stageStepFlagEquivR s t' u ht F) ⟨Sum.inl g, hne⟩ =
+      Sum.inl g := rfl
+  by_cases hpg : F.pairing g = F.boundaryFlag ⟨s + t', by omega⟩
+  · -- Sub-case: F.pairing g = F.boundaryFlag ⟨s + t', _⟩
+    -- rewire branch 1: pairing(g) = boundaryFlag(left)
+    have hpi : (baseFragmentR s t' u ht F).pairing (Sum.inl g) =
+        (baseFragmentR s t' u ht F).boundaryFlag
+          (Sum.inl ⟨s + t', by omega⟩) := by
+      change Sum.inl (F.pairing g) = _
+      rw [stageStepR_leftBoundary, hpg]
+    have hrewire_val : (Fragment.rewire (stageStepR_hopen s t' u ht F)
+        ⟨Sum.inl g, hne⟩).val =
+        Sum.inr (⟨t', by omega⟩, true) := by
+      simp only [Fragment.rewire, dite_eq_left hpi]
+      change (baseFragmentR s t' u ht F).pairing
+        ((baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩))
+          = _
+      rw [stageStepR_rightBoundary]
+      exact stageStepR_rightPairing s t' u ht F
+    have hne_rw : Sum.inr (⟨t', by omega⟩, true) ≠
+        (baseFragmentR s t' u ht F).boundaryFlag
+          (Sum.inl ⟨s + t', by omega⟩) ∧
+        Sum.inr (⟨t', by omega⟩, true) ≠
+        (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩) :=
+          by
+      refine ⟨?_, ?_⟩
+      · rw [stageStepR_leftBoundary]; exact (nomatch ·)
+      · rw [stageStepR_rightBoundary]; intro h
+        exact absurd (congrArg Prod.snd (Sum.inr.inj h)) (Ne.symm
+          Bool.false_ne_true)
+    have heq_rw : Fragment.rewire (stageStepR_hopen s t' u ht F)
+        ⟨Sum.inl g, hne⟩ = ⟨Sum.inr (⟨t', by omega⟩, true), hne_rw⟩ :=
+      Subtype.ext hrewire_val
+    have hflag_rw : (stageStepFlagEquivR s t' u ht F)
+        (Fragment.rewire (stageStepR_hopen s t' u ht F) ⟨Sum.inl g, hne⟩) =
+        Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := by
+      rw [heq_rw]
+      have key : (stageStepFlagEquivR s t' u ht F)
+          ⟨Sum.inr (⟨t', by omega⟩, true), hne_rw⟩ =
+        if hlt' : t' < t' then Sum.inr (⟨t', hlt'⟩, true)
+        else Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := rfl
+      rw [key, dite_eq_right (Nat.lt_irrefl t')]
+    rw [hflag_rw, hflag_f]
+    change Sum.inl (F.boundaryFlag ⟨s + t', _⟩) = Sum.inl (F.pairing g)
+    exact congrArg Sum.inl hpg.symm
+  · -- Sub-case: F.pairing g ≠ F.boundaryFlag ⟨s + t', _⟩
+    -- rewire branch 3: neither
+    have hni : (baseFragmentR s t' u ht F).pairing (Sum.inl g) ≠
+        (baseFragmentR s t' u ht F).boundaryFlag
+          (Sum.inl ⟨s + t', by omega⟩) := by
+      change Sum.inl (F.pairing g) ≠ _
+      rw [stageStepR_leftBoundary]
+      exact fun h => hpg (Sum.inl.inj h)
+    have hrewire_val : (Fragment.rewire (stageStepR_hopen s t' u ht F)
+        ⟨Sum.inl g, hne⟩).val = Sum.inl (F.pairing g) := by
+      unfold Fragment.rewire
+      simp only [show (baseFragmentR s t' u ht F).pairing (Sum.inl g) =
+        Sum.inl (F.pairing g) from rfl]
+      rw [dite_eq_right hni, dite_eq_right hnj]
+    have heq_rw : Fragment.rewire (stageStepR_hopen s t' u ht F)
+        ⟨Sum.inl g, hne⟩ = ⟨Sum.inl (F.pairing g), ⟨hni, hnj⟩⟩ :=
+      Subtype.ext hrewire_val
+    have hflag_rw : (stageStepFlagEquivR s t' u ht F)
+        (Fragment.rewire (stageStepR_hopen s t' u ht F) ⟨Sum.inl g, hne⟩) =
+        Sum.inl (F.pairing g) := by
+      rw [heq_rw]; rfl
+    rw [hflag_rw, hflag_f]
+    rfl
+
+private theorem stageStepR_pairing_inr (s t' u : ℕ) (ht : t' + 1 ≤ u)
+    (F : Fragment (Fin (s + u)))
+    (k : ℕ) (hk : k < t' + 1) (b : Bool)
+    (hne : (Sum.inr (⟨k, hk⟩, b) : (baseFragmentR s t' u ht F).Flag) ≠
+      (baseFragmentR s t' u ht F).boundaryFlag (Sum.inl ⟨s + t', by omega⟩) ∧
+      (Sum.inr (⟨k, hk⟩, b) : (baseFragmentR s t' u ht F).Flag) ≠
+      (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩)) :
+    stageStepFlagEquivR s t' u ht F
+      (Fragment.rewire (stageStepR_hopen s t' u ht F) ⟨Sum.inr (⟨k, hk⟩, b), hne⟩) =
+      (targetFragmentR s t' u (by omega) F).pairing
+        (stageStepFlagEquivR s t' u ht F ⟨Sum.inr (⟨k, hk⟩, b), hne⟩) := by
+  by_cases hlt : k < t'
+  · -- Sub-case: k < t', rewire "neither" branch
+    have hni : (baseFragmentR s t' u ht F).pairing (Sum.inr (⟨k, hk⟩, b)) ≠
+        (baseFragmentR s t' u ht F).boundaryFlag
+          (Sum.inl ⟨s + t', by omega⟩) := by
+      change Sum.inr (⟨k, hk⟩, !b) ≠
+        (baseFragmentR s t' u ht F).boundaryFlag
+          (Sum.inl ⟨s + t', by omega⟩)
+      rw [stageStepR_leftBoundary]; exact (nomatch ·)
+    have hnj : (baseFragmentR s t' u ht F).pairing (Sum.inr (⟨k, hk⟩, b)) ≠
+        (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩) :=
+          by
+      change Sum.inr (⟨k, hk⟩, !b) ≠
+        (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩)
+      rw [stageStepR_rightBoundary]; intro h
+      have := congrArg Prod.fst (Sum.inr.inj h)
+      exact absurd (Fin.ext_iff.mp this) (Nat.ne_of_lt hlt)
+    have hrewire_val : (Fragment.rewire (stageStepR_hopen s t' u ht F)
+        ⟨Sum.inr (⟨k, hk⟩, b), hne⟩).val = Sum.inr (⟨k, hk⟩, !b) := by
+      unfold Fragment.rewire
+      simp only [show (baseFragmentR s t' u ht F).pairing (Sum.inr (⟨k, hk⟩,
+        b)) =
+        Sum.inr (⟨k, hk⟩, !b) from rfl]
+      rw [dite_eq_right hni, dite_eq_right hnj]
+    have heq_rw : Fragment.rewire (stageStepR_hopen s t' u ht F)
+        ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ = ⟨Sum.inr (⟨k, hk⟩, !b), ⟨hni, hnj⟩⟩ :=
+      Subtype.ext hrewire_val
+    have hflag_rw : (stageStepFlagEquivR s t' u ht F)
+        (Fragment.rewire (stageStepR_hopen s t' u ht F)
+        ⟨Sum.inr (⟨k, hk⟩, b), hne⟩) =
+        Sum.inr (⟨k, hlt⟩, !b) := by
+      rw [heq_rw]
+      have key : (stageStepFlagEquivR s t' u ht F)
+          ⟨Sum.inr (⟨k, hk⟩, !b), ⟨hni, hnj⟩⟩ =
+        if hlt' : k < t' then Sum.inr (⟨k, hlt'⟩, !b)
+        else Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := rfl
+      rw [key, dite_eq_left hlt]
+    have hflag_f : (stageStepFlagEquivR s t' u ht F) ⟨Sum.inr (⟨k, hk⟩, b),
+      hne⟩ =
+        Sum.inr (⟨k, hlt⟩, b) := by
+      have key : (stageStepFlagEquivR s t' u ht F)
+          ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ =
+        if hlt' : k < t' then Sum.inr (⟨k, hlt'⟩, b)
+        else Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := rfl
+      rw [key, dite_eq_left hlt]
+    rw [hflag_rw, hflag_f]
+    rfl
+  · -- Sub-case: k = t', b = true
+    have hk_eq : k = t' := by omega
+    have hb : b = true := by
+      by_contra hbf
+      have hbfalse : b = false := by cases b <;> simp_all
+      exact hne.2 (by
+        rw [stageStepR_rightBoundary]
+        exact hk_eq ▸ hbfalse ▸ congrArg Sum.inr (Prod.ext (Fin.ext rfl)
+          rfl))
+    -- rewire branch 2: pairing(strand t' true) = (t', false) =
+    --   boundaryFlag(right)
+    have hpair_eq_bdy : (baseFragmentR s t' u ht F).pairing (Sum.inr (⟨k,
+      hk⟩, b)) =
+        (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩) :=
+          by
+      change Sum.inr (⟨k, hk⟩, !b) =
+        (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩)
+      rw [stageStepR_rightBoundary]; subst hk_eq; subst hb; rfl
+    have hni : (baseFragmentR s t' u ht F).pairing (Sum.inr (⟨k, hk⟩, b)) ≠
+        (baseFragmentR s t' u ht F).boundaryFlag
+          (Sum.inl ⟨s + t', by omega⟩) := by
+      change Sum.inr (⟨k, hk⟩, !b) ≠
+        (baseFragmentR s t' u ht F).boundaryFlag
+          (Sum.inl ⟨s + t', by omega⟩)
+      rw [stageStepR_leftBoundary]; exact (nomatch ·)
+    have hrewire_val : (Fragment.rewire (stageStepR_hopen s t' u ht F)
+        ⟨Sum.inr (⟨k, hk⟩, b), hne⟩).val =
+        Sum.inl (F.pairing (F.boundaryFlag ⟨s + t', by omega⟩)) := by
+      simp only [Fragment.rewire, dite_eq_right hni, dite_eq_left hpair_eq_bdy]
+      change (baseFragmentR s t' u ht F).pairing
+        ((baseFragmentR s t' u ht F).boundaryFlag
+          (Sum.inl ⟨s + t', by omega⟩)) = _
+      rw [stageStepR_leftBoundary]; rfl
+    have hprop : Sum.inl (F.pairing (F.boundaryFlag ⟨s + t', by omega⟩)) ≠
+        (baseFragmentR s t' u ht F).boundaryFlag
+          (Sum.inl ⟨s + t', by omega⟩) ∧
+        Sum.inl (F.pairing (F.boundaryFlag ⟨s + t', by omega⟩)) ≠
+        (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩) :=
+          by
+      refine ⟨?_, ?_⟩
+      · rw [stageStepR_leftBoundary]; intro h
+        exact F.pairing_ne (F.boundaryFlag ⟨s + t', by omega⟩)
+          (Sum.inl.inj h)
+      · rw [stageStepR_rightBoundary]; exact (nomatch ·)
+    have heq_rw : Fragment.rewire (stageStepR_hopen s t' u ht F)
+        ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ =
+        ⟨Sum.inl (F.pairing (F.boundaryFlag ⟨s + t', by omega⟩)), hprop⟩ :=
+      Subtype.ext hrewire_val
+    have hflag_rw : (stageStepFlagEquivR s t' u ht F)
+        (Fragment.rewire (stageStepR_hopen s t' u ht F)
+        ⟨Sum.inr (⟨k, hk⟩, b), hne⟩) =
+        Sum.inl (F.pairing (F.boundaryFlag ⟨s + t', by omega⟩)) := by
+      rw [heq_rw]; rfl
+    have hflag_f : (stageStepFlagEquivR s t' u ht F) ⟨Sum.inr (⟨k, hk⟩, b),
+      hne⟩ =
+        Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := by
+      have key : (stageStepFlagEquivR s t' u ht F)
+          ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ =
+        if hlt' : k < t' then Sum.inr (⟨k, hlt'⟩, b)
+        else Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := rfl
+      rw [key, dite_eq_right hlt]
+    rw [hflag_rw, hflag_f]
+    rfl
+
 /-- The descent step: after one open glue (at the `t'`-th interface
 pair), the resulting fragment is equivalent to the stage-`t'`
 disjoint union relabelled by the stage-`t'` equivalence. -/
@@ -325,461 +814,13 @@ private noncomputable def stageStepEquivR (s t' u : ℕ) (ht : t' + 1 ≤ u)
   attach_comm f := by
     obtain ⟨fval, hne⟩ := f
     rcases fval with g | ⟨⟨k, hk⟩, b⟩
-    · -- ═══════ CASE: F-flag g ═══════
-      have hg_ne : g ≠ F.boundaryFlag ⟨s + t', by omega⟩ := by
-        intro heq
-        exact hne.1
-          (by rw [stageStepR_leftBoundary]; exact congrArg Sum.inl heq)
-      have hflag : (stageStepFlagEquivR s t' u ht F) ⟨Sum.inl g, hne⟩ = Sum.inl
-        g := rfl
-      rcases ha : F.attach g with v | ℓ
-      · -- F.attach g = Sum.inl v (vertex)
-        set common : (targetFragmentR s t' u (by omega) F).Vertex ⊕
-            (Fin (s + t') ⊕ Fin (t' + u)) := Sum.inl (Sum.inl v)
-        have hLHS : (targetFragmentR s t' u (by omega) F).attach (Sum.inl g) =
-            common := by
-          change ((F.disjUnion (strandBundle t')).attach (Sum.inl g)).map id
-            (stageEquivR s t' u _) = _
-          change ((F.attach g).map Sum.inl Sum.inl).map id (stageEquivR s t' u
-            _) = _
-          rw [ha]; rfl
-        have hRHS : (sourceFragmentR s t' u ht F).attach ⟨Sum.inl g, hne⟩ =
-            common := by
-          change ((Fragment.glueAttach (baseFragmentR s t' u ht F)
-              (Sum.inl ⟨s + t', by omega⟩) (Sum.inr ⟨t', by omega⟩)
-              ⟨Sum.inl g, hne⟩).map id (interfaceStepEquiv s t' u)) = _
-          have hba : (baseFragmentR s t' u ht F).attach (Sum.inl g) =
-              Sum.inl (Sum.inl v) := by
-            change ((F.disjUnion (strandBundle (t' + 1))).attach (Sum.inl
-              g)).map id
-              (stageEquivR s (t' + 1) u ht) = _
-            change ((F.attach g).map Sum.inl Sum.inl).map id (stageEquivR s (t'
-              + 1) u ht) = _
-            rw [ha]; rfl
-          refine Fragment.glueAttach_cases _ (fun v' hv' => ?_)
-            (fun ℓ' hℓ' => ?_)
-          · simp only [Sum.map_inl, id_eq]
-            exact congrArg Sum.inl (Sum.inl.inj (hv'.symm.trans hba))
-          · obtain ⟨ℓ', _hs₁, _hs₂⟩ := ℓ'
-            exact absurd (hℓ'.symm.trans hba) (nomatch ·)
-        exact (hflag ▸ hLHS).trans
-          (by rw [hRHS]; rfl : ((sourceFragmentR s t' u ht F).attach
-            ⟨Sum.inl g, hne⟩).map (Equiv.refl _) id = common).symm
-      · -- F.attach g = Sum.inr ℓ (label)
-        have hℓ_ne_st' : ℓ.val ≠ s + t' := by
-          intro heq
-          have hatt : F.attach g = Sum.inr ⟨s + t', by omega⟩ := by
-            exact ha.trans (congrArg Sum.inr (Fin.ext heq))
-          exact hg_ne (F.eq_boundaryFlag ⟨s + t', by omega⟩ g hatt)
-        by_cases hℓ_lt : ℓ.val < s + t'
-        · -- ℓ.val < s + t'
-          set common : (targetFragmentR s t' u (by omega) F).Vertex ⊕
-              (Fin (s + t') ⊕ Fin (t' + u)) := Sum.inr
-                (Sum.inl ⟨ℓ.val, by omega⟩)
-          have hLHS : (targetFragmentR s t' u (by omega) F).attach (Sum.inl g) =
-              common := by
-            change ((F.disjUnion (strandBundle t')).attach (Sum.inl g)).map id
-              (stageEquivR s t' u _) = _
-            change ((F.attach g).map Sum.inl Sum.inl).map id (stageEquivR s t' u
-              _) = _
-            rw [ha]; simp only [Sum.map_inr]; refine congrArg Sum.inr ?_
-            rw [stageEquivR_inl, dif_pos hℓ_lt]
-          have hRHS : (sourceFragmentR s t' u ht F).attach ⟨Sum.inl g, hne⟩ =
-              common := by
-            change ((Fragment.glueAttach (baseFragmentR s t' u ht F)
-                (Sum.inl ⟨s + t', by omega⟩) (Sum.inr ⟨t', by omega⟩)
-                ⟨Sum.inl g, hne⟩).map id (interfaceStepEquiv s t' u)) = _
-            have hba : (baseFragmentR s t' u ht F).attach (Sum.inl g) =
-                Sum.inr (Sum.inl ⟨ℓ.val, by omega⟩) := by
-              change ((F.disjUnion (strandBundle (t' + 1))).attach (Sum.inl
-                g)).map id
-                (stageEquivR s (t' + 1) u ht) = _
-              change ((F.attach g).map Sum.inl Sum.inl).map id
-                (stageEquivR s (t' + 1) u ht) = _
-              rw [ha]; simp only [Sum.map_inr]; refine congrArg Sum.inr ?_
-              rw [stageEquivR_inl,
-                dif_pos (show ℓ.val < s + (t' + 1) from by omega)]
-            refine Fragment.glueAttach_cases _ (fun v' hv' => ?_)
-              (fun ℓ' hℓ' => ?_)
-            · exact absurd (hv'.symm.trans hba) (nomatch ·)
-            · obtain ⟨ℓ', _hs₁, _hs₂⟩ := ℓ'
-              simp only [Sum.map_inr]
-              have hℓ'_eq : ℓ' = Sum.inl ⟨ℓ.val, by omega⟩ :=
-                Sum.inr.inj (hℓ'.symm.trans hba)
-              subst hℓ'_eq; refine congrArg Sum.inr ?_
-              exact interfaceStepEquiv_eval_inl s t' u ℓ.val (by omega)
-          exact (hflag ▸ hLHS).trans
-            (by rw [hRHS]; rfl : ((sourceFragmentR s t' u ht F).attach
-              ⟨Sum.inl g, hne⟩).map (Equiv.refl _) id = common).symm
-        · -- ℓ.val > s + t'
-          have hℓ_gt : s + t' < ℓ.val := by omega
-          set common : (targetFragmentR s t' u (by omega) F).Vertex ⊕
-              (Fin (s + t') ⊕ Fin (t' + u)) :=
-            Sum.inr (Sum.inr ⟨t' + (ℓ.val - s), by omega⟩)
-          have hLHS : (targetFragmentR s t' u (by omega) F).attach (Sum.inl g) =
-              common := by
-            change ((F.disjUnion (strandBundle t')).attach (Sum.inl g)).map id
-              (stageEquivR s t' u _) = _
-            change ((F.attach g).map Sum.inl Sum.inl).map id (stageEquivR s t' u
-              _) = _
-            rw [ha]; simp only [Sum.map_inr]; refine congrArg Sum.inr ?_
-            rw [stageEquivR_inl, dif_neg (show ¬ ℓ.val < s + t' from by omega)]
-          have hRHS : (sourceFragmentR s t' u ht F).attach ⟨Sum.inl g, hne⟩ =
-              common := by
-            change ((Fragment.glueAttach (baseFragmentR s t' u ht F)
-                (Sum.inl ⟨s + t', by omega⟩) (Sum.inr ⟨t', by omega⟩)
-                ⟨Sum.inl g, hne⟩).map id (interfaceStepEquiv s t' u)) = _
-            have hba : (baseFragmentR s t' u ht F).attach (Sum.inl g) =
-                Sum.inr (Sum.inr ⟨(t' + 1) + (ℓ.val - s), by omega⟩) := by
-              change ((F.disjUnion (strandBundle (t' + 1))).attach (Sum.inl
-                g)).map id
-                (stageEquivR s (t' + 1) u ht) = _
-              change ((F.attach g).map Sum.inl Sum.inl).map id
-                (stageEquivR s (t' + 1) u ht) = _
-              rw [ha]; simp only [Sum.map_inr]; refine congrArg Sum.inr ?_
-              rw [stageEquivR_inl,
-                dif_neg (show ¬ ℓ.val < s + (t' + 1) from by omega)]
-            refine Fragment.glueAttach_cases _ (fun v' hv' => ?_)
-              (fun ℓ' hℓ' => ?_)
-            · exact absurd (hv'.symm.trans hba) (nomatch ·)
-            · obtain ⟨ℓ', _hs₁, _hs₂⟩ := ℓ'
-              have hℓ'_eq : ℓ' = Sum.inr ⟨(t' + 1) + (ℓ.val - s), by omega⟩ :=
-                Sum.inr.inj (hℓ'.symm.trans hba)
-              subst hℓ'_eq
-              simp only [Sum.map_inr]
-              exact congrArg Sum.inr ((interfaceStepEquiv_eval_inr_above s t' u
-                ((t' + 1) + (ℓ.val - s)) (by omega) (by omega)).trans
-                (congrArg Sum.inr (Fin.ext (by simp))))
-          exact (hflag ▸ hLHS).trans
-            (by rw [hRHS]; rfl : ((sourceFragmentR s t' u ht F).attach
-              ⟨Sum.inl g, hne⟩).map (Equiv.refl _) id = common).symm
-    · -- ═══════ CASE: strand flag (⟨k, hk⟩, b) ═══════
-      by_cases hlt : k < t'
-      · -- Sub-case: k < t'
-        have hflag : (stageStepFlagEquivR s t' u ht F)
-            ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ = Sum.inr (⟨k, hlt⟩, b) := by
-          have key : (stageStepFlagEquivR s t' u ht F)
-              ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ =
-            if hlt' : k < t' then Sum.inr (⟨k, hlt'⟩, b)
-            else Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := rfl
-          rw [key, dif_pos hlt]
-        set common : (targetFragmentR s t' u (by omega) F).Vertex ⊕
-            (Fin (s + t') ⊕ Fin (t' + u)) :=
-          Sum.inr (Sum.inr ⟨if b then t' + k else k, by split <;> omega⟩)
-        have hLHS : (targetFragmentR s t' u (by omega) F).attach
-            (Sum.inr (⟨k, hlt⟩, b)) = common := by
-          change ((F.disjUnion (strandBundle t')).attach
-            (Sum.inr (⟨k, hlt⟩, b))).map id (stageEquivR s t' u _) = _
-          change (((strandBundle t').attach (⟨k, hlt⟩, b)).map Sum.inr
-            Sum.inr).map id
-            (stageEquivR s t' u _) = _
-          simp only [strandBundle, Sum.map, Sum.elim, Function.comp]
-          apply congrArg Sum.inr; cases b
-          · simp only [ite_false, Bool.false_eq_true]
-            rw [stageEquivR_inr]
-          · simp only [ite_true]
-            rw [stageEquivR_inr]
-        have hRHS : (sourceFragmentR s t' u ht F).attach
-            ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ = common := by
-          change ((Fragment.glueAttach (baseFragmentR s t' u ht F)
-              (Sum.inl ⟨s + t', by omega⟩) (Sum.inr ⟨t', by omega⟩)
-              ⟨Sum.inr (⟨k, hk⟩, b), hne⟩).map id (interfaceStepEquiv s t' u)) =
-                _
-          have hba : (baseFragmentR s t' u ht F).attach (Sum.inr (⟨k, hk⟩, b)) =
-              Sum.inr
-                (Sum.inr ⟨if b then (t' + 1) + k else k, by split <;> omega⟩) :=
-                by
-            change ((F.disjUnion (strandBundle (t' + 1))).attach
-              (Sum.inr (⟨k, hk⟩, b))).map id (stageEquivR s (t' + 1) u ht) = _
-            change (((strandBundle (t' + 1)).attach (⟨k, hk⟩, b)).map
-              Sum.inr Sum.inr).map id (stageEquivR s (t' + 1) u ht) = _
-            simp only [strandBundle, Sum.map, Sum.elim, Function.comp]
-            apply congrArg Sum.inr; cases b
-            · simp only [ite_false, Bool.false_eq_true]
-              rw [stageEquivR_inr]
-            · simp only [ite_true]
-              rw [stageEquivR_inr]
-          refine Fragment.glueAttach_cases _ (fun v' hv' => ?_)
-            (fun ℓ' hℓ' => ?_)
-          · exact absurd (hv'.symm.trans hba) (nomatch ·)
-          · obtain ⟨ℓ', _hs₁, _hs₂⟩ := ℓ'
-            simp only [Sum.map_inr]
-            have hℓ'_eq : ℓ' = Sum.inr ⟨if b then (t' + 1) + k else k,
-                by split <;> omega⟩ :=
-              Sum.inr.inj (hℓ'.symm.trans hba)
-            subst hℓ'_eq; refine congrArg Sum.inr ?_
-            cases b
-            · exact interfaceStepEquiv_eval_inr_below s t' u k hlt
-            · exact (interfaceStepEquiv_eval_inr_above s t' u
-                ((t' + 1) + k) (by omega) (by omega)).trans
-                (congrArg Sum.inr (Fin.ext (by simp only [ite_true]; omega)))
-        exact (hflag ▸ hLHS).trans
-          (by rw [hRHS]; rfl : ((sourceFragmentR s t' u ht F).attach
-            ⟨Sum.inr (⟨k, hk⟩, b), hne⟩).map (Equiv.refl _) id = common).symm
-      · -- Sub-case: k ≥ t' (must be k = t', b = true)
-        have hk_eq : k = t' := by omega
-        have hb : b = true := by
-          by_contra hbf
-          have hbfalse : b = false := by cases b <;> simp_all
-          exact hne.2 (by
-            rw [stageStepR_rightBoundary]
-            exact hk_eq ▸ hbfalse ▸ congrArg Sum.inr (Prod.ext (Fin.ext rfl)
-              rfl))
-        have hflag : (stageStepFlagEquivR s t' u ht F)
-            ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ =
-            Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := by
-          have key : (stageStepFlagEquivR s t' u ht F)
-              ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ =
-            if hlt' : k < t' then Sum.inr (⟨k, hlt'⟩, b)
-            else Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := rfl
-          rw [key, dif_neg hlt]
-        set common : (targetFragmentR s t' u (by omega) F).Vertex ⊕
-            (Fin (s + t') ⊕ Fin (t' + u)) := Sum.inr
-              (Sum.inr ⟨t' + t', by omega⟩)
-        have hLHS : (targetFragmentR s t' u (by omega) F).attach
-            (Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩)) = common := by
-          change ((F.disjUnion (strandBundle t')).attach
-            (Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩))).map id
-            (stageEquivR s t' u _) = _
-          change ((F.attach (F.boundaryFlag ⟨s + t', by omega⟩)).map
-            Sum.inl Sum.inl).map id (stageEquivR s t' u _) = _
-          rw [F.attach_boundaryFlag]; simp only [Sum.map_inr]; refine congrArg
-            Sum.inr ?_
-          rw [stageEquivR_inl,
-            dif_neg (show ¬ (s + t' : ℕ) < s + t' from by omega)]
-          exact congrArg Sum.inr (Fin.ext (by simp))
-        have hRHS : (sourceFragmentR s t' u ht F).attach
-            ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ = common := by
-          change ((Fragment.glueAttach (baseFragmentR s t' u ht F)
-              (Sum.inl ⟨s + t', by omega⟩) (Sum.inr ⟨t', by omega⟩)
-              ⟨Sum.inr (⟨k, hk⟩, b), hne⟩).map id (interfaceStepEquiv s t' u)) =
-                _
-          have hba : (baseFragmentR s t' u ht F).attach (Sum.inr (⟨k, hk⟩, b)) =
-              Sum.inr (Sum.inr ⟨(t' + 1) + t', by omega⟩) := by
-            change ((F.disjUnion (strandBundle (t' + 1))).attach
-              (Sum.inr (⟨k, hk⟩, b))).map id (stageEquivR s (t' + 1) u ht) = _
-            change (((strandBundle (t' + 1)).attach (⟨k, hk⟩, b)).map
-              Sum.inr Sum.inr).map id (stageEquivR s (t' + 1) u ht) = _
-            simp only [strandBundle, Sum.map, Sum.elim, Function.comp]
-            refine congrArg Sum.inr ?_
-            rw [show (if (b : Bool) = true then
-                  (⟨(t' + 1) + k, by omega⟩ : Fin ((t' + 1) + (t' + 1)))
-                else ⟨k, by omega⟩) =
-                (⟨(t' + 1) + k, by omega⟩ : Fin ((t' + 1) + (t' + 1))) from
-                  by rw [hb]; rfl]
-            rw [stageEquivR_inr]
-            exact congrArg Sum.inr (Fin.ext (by simp; omega))
-          refine Fragment.glueAttach_cases _ (fun v' hv' => ?_)
-            (fun ℓ' hℓ' => ?_)
-          · exact absurd (hv'.symm.trans hba) (nomatch ·)
-          · obtain ⟨ℓ', _hs₁, _hs₂⟩ := ℓ'
-            simp only [Sum.map_inr]
-            have hℓ'_eq : ℓ' = Sum.inr ⟨(t' + 1) + t', by omega⟩ :=
-              Sum.inr.inj (hℓ'.symm.trans hba)
-            subst hℓ'_eq; refine congrArg Sum.inr ?_
-            exact (interfaceStepEquiv_eval_inr_above s t' u
-              ((t' + 1) + t') (by omega) (by omega)).trans
-              (congrArg Sum.inr (Fin.ext (by simp)))
-        exact (hflag ▸ hLHS).trans
-          (by rw [hRHS]; rfl : ((sourceFragmentR s t' u ht F).attach
-            ⟨Sum.inr (⟨k, hk⟩, b), hne⟩).map (Equiv.refl _) id = common).symm
+    · exact stageStepR_attach_inl s t' u ht F g hne
+    · exact stageStepR_attach_inr s t' u ht F k hk b hne
   pairing_comm f := by
     obtain ⟨fval, hne⟩ := f
-    show (stageStepFlagEquivR s t' u ht F)
-      (Fragment.rewire (stageStepR_hopen s t' u ht F) ⟨fval, hne⟩) =
-      (targetFragmentR s t' u (by omega) F).pairing
-      ((stageStepFlagEquivR s t' u ht F) ⟨fval, hne⟩)
     rcases fval with g | ⟨⟨k, hk⟩, b⟩
-    · -- ═══════ CASE: F-flag g ═══════
-      have hg_ne : g ≠ F.boundaryFlag ⟨s + t', by omega⟩ := by
-        intro heq
-        exact hne.1
-          (by rw [stageStepR_leftBoundary]; exact congrArg Sum.inl heq)
-      have hnj : (baseFragmentR s t' u ht F).pairing (Sum.inl g) ≠
-          (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩) :=
-            by
-        change Sum.inl (F.pairing g) ≠
-          (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩)
-        rw [stageStepR_rightBoundary]; exact (nomatch ·)
-      have hflag_f : (stageStepFlagEquivR s t' u ht F) ⟨Sum.inl g, hne⟩ =
-          Sum.inl g := rfl
-      by_cases hpg : F.pairing g = F.boundaryFlag ⟨s + t', by omega⟩
-      · -- Sub-case: F.pairing g = F.boundaryFlag ⟨s + t', _⟩
-        -- rewire branch 1: pairing(g) = boundaryFlag(left)
-        have hpi : (baseFragmentR s t' u ht F).pairing (Sum.inl g) =
-            (baseFragmentR s t' u ht F).boundaryFlag
-              (Sum.inl ⟨s + t', by omega⟩) := by
-          change Sum.inl (F.pairing g) = _
-          rw [stageStepR_leftBoundary, hpg]
-        have hrewire_val : (Fragment.rewire (stageStepR_hopen s t' u ht F)
-            ⟨Sum.inl g, hne⟩).val =
-            Sum.inr (⟨t', by omega⟩, true) := by
-          simp only [Fragment.rewire, dif_pos hpi]
-          show (baseFragmentR s t' u ht F).pairing
-            ((baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩))
-              = _
-          rw [stageStepR_rightBoundary]
-          exact stageStepR_rightPairing s t' u ht F
-        have hne_rw : Sum.inr (⟨t', by omega⟩, true) ≠
-            (baseFragmentR s t' u ht F).boundaryFlag
-              (Sum.inl ⟨s + t', by omega⟩) ∧
-            Sum.inr (⟨t', by omega⟩, true) ≠
-            (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩) :=
-              by
-          refine ⟨?_, ?_⟩
-          · rw [stageStepR_leftBoundary]; exact (nomatch ·)
-          · rw [stageStepR_rightBoundary]; intro h
-            exact absurd (congrArg Prod.snd (Sum.inr.inj h)) (Ne.symm
-              Bool.false_ne_true)
-        have heq_rw : Fragment.rewire (stageStepR_hopen s t' u ht F)
-            ⟨Sum.inl g, hne⟩ = ⟨Sum.inr (⟨t', by omega⟩, true), hne_rw⟩ :=
-          Subtype.ext hrewire_val
-        have hflag_rw : (stageStepFlagEquivR s t' u ht F)
-            (Fragment.rewire (stageStepR_hopen s t' u ht F) ⟨Sum.inl g, hne⟩) =
-            Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := by
-          rw [heq_rw]
-          have key : (stageStepFlagEquivR s t' u ht F)
-              ⟨Sum.inr (⟨t', by omega⟩, true), hne_rw⟩ =
-            if hlt' : t' < t' then Sum.inr (⟨t', hlt'⟩, true)
-            else Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := rfl
-          rw [key, dif_neg (Nat.lt_irrefl t')]
-        rw [hflag_rw, hflag_f]
-        show Sum.inl (F.boundaryFlag ⟨s + t', _⟩) = Sum.inl (F.pairing g)
-        exact congrArg Sum.inl hpg.symm
-      · -- Sub-case: F.pairing g ≠ F.boundaryFlag ⟨s + t', _⟩
-        -- rewire branch 3: neither
-        have hni : (baseFragmentR s t' u ht F).pairing (Sum.inl g) ≠
-            (baseFragmentR s t' u ht F).boundaryFlag
-              (Sum.inl ⟨s + t', by omega⟩) := by
-          change Sum.inl (F.pairing g) ≠ _
-          rw [stageStepR_leftBoundary]
-          exact fun h => hpg (Sum.inl.inj h)
-        have hrewire_val : (Fragment.rewire (stageStepR_hopen s t' u ht F)
-            ⟨Sum.inl g, hne⟩).val = Sum.inl (F.pairing g) := by
-          unfold Fragment.rewire
-          simp only [show (baseFragmentR s t' u ht F).pairing (Sum.inl g) =
-            Sum.inl (F.pairing g) from rfl]
-          rw [dif_neg hni, dif_neg hnj]
-        have heq_rw : Fragment.rewire (stageStepR_hopen s t' u ht F)
-            ⟨Sum.inl g, hne⟩ = ⟨Sum.inl (F.pairing g), ⟨hni, hnj⟩⟩ :=
-          Subtype.ext hrewire_val
-        have hflag_rw : (stageStepFlagEquivR s t' u ht F)
-            (Fragment.rewire (stageStepR_hopen s t' u ht F) ⟨Sum.inl g, hne⟩) =
-            Sum.inl (F.pairing g) := by
-          rw [heq_rw]; rfl
-        rw [hflag_rw, hflag_f]
-        rfl
-    · -- ═══════ CASE: strand flag (⟨k, hk⟩, b) ═══════
-      by_cases hlt : k < t'
-      · -- Sub-case: k < t', rewire "neither" branch
-        have hni : (baseFragmentR s t' u ht F).pairing (Sum.inr (⟨k, hk⟩, b)) ≠
-            (baseFragmentR s t' u ht F).boundaryFlag
-              (Sum.inl ⟨s + t', by omega⟩) := by
-          change Sum.inr (⟨k, hk⟩, !b) ≠
-            (baseFragmentR s t' u ht F).boundaryFlag
-              (Sum.inl ⟨s + t', by omega⟩)
-          rw [stageStepR_leftBoundary]; exact (nomatch ·)
-        have hnj : (baseFragmentR s t' u ht F).pairing (Sum.inr (⟨k, hk⟩, b)) ≠
-            (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩) :=
-              by
-          change Sum.inr (⟨k, hk⟩, !b) ≠
-            (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩)
-          rw [stageStepR_rightBoundary]; intro h
-          have := congrArg Prod.fst (Sum.inr.inj h)
-          exact absurd (Fin.ext_iff.mp this) (Nat.ne_of_lt hlt)
-        have hrewire_val : (Fragment.rewire (stageStepR_hopen s t' u ht F)
-            ⟨Sum.inr (⟨k, hk⟩, b), hne⟩).val = Sum.inr (⟨k, hk⟩, !b) := by
-          unfold Fragment.rewire
-          simp only [show (baseFragmentR s t' u ht F).pairing (Sum.inr (⟨k, hk⟩,
-            b)) =
-            Sum.inr (⟨k, hk⟩, !b) from rfl]
-          rw [dif_neg hni, dif_neg hnj]
-        have heq_rw : Fragment.rewire (stageStepR_hopen s t' u ht F)
-            ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ = ⟨Sum.inr (⟨k, hk⟩, !b), ⟨hni, hnj⟩⟩ :=
-          Subtype.ext hrewire_val
-        have hflag_rw : (stageStepFlagEquivR s t' u ht F)
-            (Fragment.rewire (stageStepR_hopen s t' u ht F)
-            ⟨Sum.inr (⟨k, hk⟩, b), hne⟩) =
-            Sum.inr (⟨k, hlt⟩, !b) := by
-          rw [heq_rw]
-          have key : (stageStepFlagEquivR s t' u ht F)
-              ⟨Sum.inr (⟨k, hk⟩, !b), ⟨hni, hnj⟩⟩ =
-            if hlt' : k < t' then Sum.inr (⟨k, hlt'⟩, !b)
-            else Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := rfl
-          rw [key, dif_pos hlt]
-        have hflag_f : (stageStepFlagEquivR s t' u ht F) ⟨Sum.inr (⟨k, hk⟩, b),
-          hne⟩ =
-            Sum.inr (⟨k, hlt⟩, b) := by
-          have key : (stageStepFlagEquivR s t' u ht F)
-              ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ =
-            if hlt' : k < t' then Sum.inr (⟨k, hlt'⟩, b)
-            else Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := rfl
-          rw [key, dif_pos hlt]
-        rw [hflag_rw, hflag_f]
-        rfl
-      · -- Sub-case: k = t', b = true
-        have hk_eq : k = t' := by omega
-        have hb : b = true := by
-          by_contra hbf
-          have hbfalse : b = false := by cases b <;> simp_all
-          exact hne.2 (by
-            rw [stageStepR_rightBoundary]
-            exact hk_eq ▸ hbfalse ▸ congrArg Sum.inr (Prod.ext (Fin.ext rfl)
-              rfl))
-        -- rewire branch 2: pairing(strand t' true) = (t', false) =
-        --   boundaryFlag(right)
-        have hpair_eq_bdy : (baseFragmentR s t' u ht F).pairing (Sum.inr (⟨k,
-          hk⟩, b)) =
-            (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩) :=
-              by
-          change Sum.inr (⟨k, hk⟩, !b) =
-            (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩)
-          rw [stageStepR_rightBoundary]; subst hk_eq; subst hb; rfl
-        have hni : (baseFragmentR s t' u ht F).pairing (Sum.inr (⟨k, hk⟩, b)) ≠
-            (baseFragmentR s t' u ht F).boundaryFlag
-              (Sum.inl ⟨s + t', by omega⟩) := by
-          change Sum.inr (⟨k, hk⟩, !b) ≠
-            (baseFragmentR s t' u ht F).boundaryFlag
-              (Sum.inl ⟨s + t', by omega⟩)
-          rw [stageStepR_leftBoundary]; exact (nomatch ·)
-        have hrewire_val : (Fragment.rewire (stageStepR_hopen s t' u ht F)
-            ⟨Sum.inr (⟨k, hk⟩, b), hne⟩).val =
-            Sum.inl (F.pairing (F.boundaryFlag ⟨s + t', by omega⟩)) := by
-          simp only [Fragment.rewire, dif_neg hni, dif_pos hpair_eq_bdy]
-          show (baseFragmentR s t' u ht F).pairing
-            ((baseFragmentR s t' u ht F).boundaryFlag
-              (Sum.inl ⟨s + t', by omega⟩)) = _
-          rw [stageStepR_leftBoundary]; rfl
-        have hprop : Sum.inl (F.pairing (F.boundaryFlag ⟨s + t', by omega⟩)) ≠
-            (baseFragmentR s t' u ht F).boundaryFlag
-              (Sum.inl ⟨s + t', by omega⟩) ∧
-            Sum.inl (F.pairing (F.boundaryFlag ⟨s + t', by omega⟩)) ≠
-            (baseFragmentR s t' u ht F).boundaryFlag (Sum.inr ⟨t', by omega⟩) :=
-              by
-          refine ⟨?_, ?_⟩
-          · rw [stageStepR_leftBoundary]; intro h
-            exact F.pairing_ne (F.boundaryFlag ⟨s + t', by omega⟩)
-              (Sum.inl.inj h)
-          · rw [stageStepR_rightBoundary]; exact (nomatch ·)
-        have heq_rw : Fragment.rewire (stageStepR_hopen s t' u ht F)
-            ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ =
-            ⟨Sum.inl (F.pairing (F.boundaryFlag ⟨s + t', by omega⟩)), hprop⟩ :=
-          Subtype.ext hrewire_val
-        have hflag_rw : (stageStepFlagEquivR s t' u ht F)
-            (Fragment.rewire (stageStepR_hopen s t' u ht F)
-            ⟨Sum.inr (⟨k, hk⟩, b), hne⟩) =
-            Sum.inl (F.pairing (F.boundaryFlag ⟨s + t', by omega⟩)) := by
-          rw [heq_rw]; rfl
-        have hflag_f : (stageStepFlagEquivR s t' u ht F) ⟨Sum.inr (⟨k, hk⟩, b),
-          hne⟩ =
-            Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := by
-          have key : (stageStepFlagEquivR s t' u ht F)
-              ⟨Sum.inr (⟨k, hk⟩, b), hne⟩ =
-            if hlt' : k < t' then Sum.inr (⟨k, hlt'⟩, b)
-            else Sum.inl (F.boundaryFlag ⟨s + t', by omega⟩) := rfl
-          rw [key, dif_neg hlt]
-        rw [hflag_rw, hflag_f]
-        rfl
+    · exact stageStepR_pairing_inl s t' u ht F g hne
+    · exact stageStepR_pairing_inr s t' u ht F k hk b hne
 
 /-! ### Assembly: the right identity law -/
 
@@ -788,7 +829,7 @@ element is mapped to itself. -/
 theorem stageEquivR_self (s u : ℕ) (x : Fin (s + u) ⊕ Fin (u + u)) :
     stageEquivR s u u (le_refl u) x = x := by
   rcases x with ℓ | a
-  · rw [stageEquivR_inl, dif_pos ℓ.isLt]
+  · rw [stageEquivR_inl, dite_eq_left ℓ.isLt]
   · rw [stageEquivR_inr]
 
 /-- In the base fragment, the glue is always open, so `gluePair`
@@ -800,7 +841,7 @@ private theorem baseFragmentR_gluePair_eq (s t' u : ℕ) (ht : t' + 1 ≤ u)
     (baseFragmentR s t' u ht F).gluePairOpen (Sum.inl ⟨s + t', by omega⟩)
       (Sum.inr ⟨t', by omega⟩) (by simp) (stageStepR_hopen s t' u ht F) := by
   unfold Fragment.gluePair
-  exact dif_neg (stageStepR_hopen s t' u ht F)
+  exact dite_eq_right (stageStepR_hopen s t' u ht F)
 
 /-- Descending induction: iterating `glueInterface` from stage `t'`
 down to zero, with the stage-`t'` fragment, yields a result

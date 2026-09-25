@@ -47,7 +47,7 @@ theorem bijective_algebraMap_gammaEven
       gammaEvenField 𝔹 L hsimple hne
     Function.Bijective
       (algebraMap ℂ ((gammaAlgebra (Ind C) L 𝔹).even)) := by
-  letI : Field ((gammaAlgebra (Ind C) L 𝔹).even) :=
+  let : Field ((gammaAlgebra (Ind C) L 𝔹).even) :=
     gammaEvenField 𝔹 L hsimple hne
   refine ⟨(algebraMap ℂ _).injective, fun g => ?_⟩
   obtain ⟨c, hc⟩ :=

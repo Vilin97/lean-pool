@@ -30,7 +30,7 @@ noncomputable def castIso {n m : ℕ} (h : n = m) :
   hom := bundleMapClass f (finCongr h)
   inv := bundleMapClass f (finCongr h.symm)
   hom_inv_id := by
-    show HomSpace.comp f n m n
+    change HomSpace.comp f n m n
       (bundleMapClass f (finCongr h))
       (bundleMapClass f (finCongr h.symm)) =
       HomSpace.ofFragment f.val (strandBundle n)
@@ -40,7 +40,7 @@ noncomputable def castIso {n m : ℕ} (h : n = m) :
         _root_.Equiv.ext (fun x => Fin.ext rfl)]
     exact bundleMapClass_refl f n
   inv_hom_id := by
-    show HomSpace.comp f m n m
+    change HomSpace.comp f m n m
       (bundleMapClass f (finCongr h.symm))
       (bundleMapClass f (finCongr h)) =
       HomSpace.ofFragment f.val (strandBundle m)
@@ -86,7 +86,7 @@ theorem bundleMapClass_tensor {n₁ m₁ n₂ m₂ : ℕ}
 theorem skein_tensor_id (X Y : SkeinObj f) :
     MonoidalCategoryStruct.tensorHom (𝟙 X) (𝟙 Y) =
       𝟙 (MonoidalCategoryStruct.tensorObj X Y) := by
-  show HomSpace.tensor f X.arity X.arity Y.arity Y.arity
+  change HomSpace.tensor f X.arity X.arity Y.arity Y.arity
       (HomSpace.ofFragment f.val (strandBundle X.arity))
       (HomSpace.ofFragment f.val (strandBundle Y.arity)) =
     HomSpace.ofFragment f.val (strandBundle (X.arity + Y.arity))
@@ -136,7 +136,7 @@ theorem transposeEquiv_trans_self (a b : ℕ) :
   · rw [_root_.Equiv.trans_apply,
       show x = (⟨a + (x.val - a), by have := x.isLt; omega⟩ :
         Fin (a + b)) from Fin.ext (by
-          show x.val = a + (x.val - a)
+          change x.val = a + (x.val - a)
           omega),
       transposeEquiv_high a b (x.val - a)
         (by have := x.isLt; omega) (by have := x.isLt; omega)
@@ -154,7 +154,7 @@ noncomputable def skeinBraiding (X Y : SkeinObj f) :
   hom := bundleMapClass f (transposeEquiv X.arity Y.arity)
   inv := bundleMapClass f (transposeEquiv Y.arity X.arity)
   hom_inv_id := by
-    show HomSpace.comp f _ _ _
+    change HomSpace.comp f _ _ _
       (bundleMapClass f (transposeEquiv X.arity Y.arity))
       (bundleMapClass f (transposeEquiv Y.arity X.arity)) =
       HomSpace.ofFragment f.val
@@ -162,7 +162,7 @@ noncomputable def skeinBraiding (X Y : SkeinObj f) :
     rw [bundleMapClass_comp, transposeEquiv_trans_self]
     exact bundleMapClass_refl f _
   inv_hom_id := by
-    show HomSpace.comp f _ _ _
+    change HomSpace.comp f _ _ _
       (bundleMapClass f (transposeEquiv Y.arity X.arity))
       (bundleMapClass f (transposeEquiv X.arity Y.arity)) =
       HomSpace.ofFragment f.val
@@ -175,7 +175,7 @@ noncomputable def skeinBraiding (X Y : SkeinObj f) :
 theorem skeinBraiding_symmetry (X Y : SkeinObj f) :
     (skeinBraiding f X Y).hom ≫ (skeinBraiding f Y X).hom =
       𝟙 (MonoidalCategoryStruct.tensorObj X Y) := by
-  show HomSpace.comp f _ _ _
+  change HomSpace.comp f _ _ _
     (bundleMapClass f (transposeEquiv X.arity Y.arity))
     (bundleMapClass f (transposeEquiv Y.arity X.arity)) =
     HomSpace.ofFragment f.val (strandBundle (X.arity + Y.arity))

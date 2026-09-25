@@ -138,7 +138,7 @@ def lambdaDiagramMap
   app X :=
     { app := fun Y => η.app ((unop X)ᘁ) ⊗ₘ τ.app Y
       naturality := fun Y Y' g => by
-        show α.obj ((unop X)ᘁ) ◁ β.map g ≫
+        change α.obj ((unop X)ᘁ) ◁ β.map g ≫
             (η.app ((unop X)ᘁ) ⊗ₘ τ.app Y') =
           (η.app ((unop X)ᘁ) ⊗ₘ τ.app Y) ≫
             α'.obj ((unop X)ᘁ) ◁ β'.map g
@@ -148,7 +148,7 @@ def lambdaDiagramMap
           ← MonoidalCategory.whiskerLeft_comp, τ.naturality] }
   naturality f f' g := by
     ext Y
-    show α.map ((g.unop)ᘁ) ▷ β.obj Y ≫
+    change α.map ((g.unop)ᘁ) ▷ β.obj Y ≫
         (η.app ((unop f')ᘁ) ⊗ₘ τ.app Y) =
       (η.app ((unop f)ᘁ) ⊗ₘ τ.app Y) ≫
         α'.map ((g.unop)ᘁ) ▷ β'.obj Y
@@ -266,7 +266,7 @@ theorem coend_hom_ext_of_preserves
       colimit.ι (multispanIndexCoend F).multispan (.left a) :=
       colimit.w _ _
     have hf := h ((multispanShapeCoend J).fst a)
-    show G.map
+    change G.map
         (colimit.ι (multispanIndexCoend F).multispan (.left a)) ≫
           f =
       G.map
@@ -302,7 +302,7 @@ theorem tensorLeft_coend_hom_ext
       colimit.ι (multispanIndexCoend F).multispan (.left a) :=
       colimit.w _ _
     have hf := h ((multispanShapeCoend J).fst a)
-    show (tensorLeft W).map
+    change (tensorLeft W).map
         (colimit.ι (multispanIndexCoend F).multispan (.left a)) ≫
           f =
       (tensorLeft W).map
@@ -334,7 +334,7 @@ theorem tensorRight_coend_hom_ext
       colimit.ι (multispanIndexCoend F).multispan (.left a) :=
       colimit.w _ _
     have hf := h ((multispanShapeCoend J).fst a)
-    show (tensorRight W).map
+    change (tensorRight W).map
         (colimit.ι (multispanIndexCoend F).multispan (.left a)) ≫
           f =
       (tensorRight W).map
@@ -825,7 +825,7 @@ theorem unitTensorDualIso_inv_comp_evaluation
         𝟙 _ ⊗≫ (Yᘁ : A) ◁
           (unitRigidEvaluation (A := A) ▷ Y) ⊗≫
           ε_ Y (Yᘁ) := by
-  letI pt : ExactPairing (𝟙_ A ⊗ Y)
+  let pt : ExactPairing (𝟙_ A ⊗ Y)
       ((Yᘁ : A) ⊗ unitRigidDual) :=
     @ExactPairing.tensor A _ _ (𝟙_ A) Y (unitRigidDual (A := A))
       (Yᘁ) (@HasRightDual.exact A _ _ (𝟙_ A)
@@ -859,7 +859,7 @@ theorem tensorUnitDualIso_inv_comp_evaluation
         𝟙 _ ⊗≫ (unitRigidDual (A := A)) ◁
           (ε_ Y (Yᘁ) ▷ (𝟙_ A)) ⊗≫
           unitRigidEvaluation (A := A) := by
-  letI pt : ExactPairing (Y ⊗ 𝟙_ A)
+  let pt : ExactPairing (Y ⊗ 𝟙_ A)
       ((unitRigidDual (A := A)) ⊗ (Yᘁ : A)) :=
     @ExactPairing.tensor A _ _ Y (𝟙_ A) (Yᘁ)
       (unitRigidDual (A := A)) inferInstance
@@ -1184,7 +1184,7 @@ theorem lambdaMulStage_unit_left
     rw [tensor_left_unitality]
     simp only [Category.assoc, tensorHom_comp_tensorHom,
       Iso.hom_inv_id, id_tensorHom_id, Category.comp_id]
-  show ((λ_ (𝟙_ D)).inv ▷ (α.obj (Yᘁ) ⊗ β.obj Y)) ≫
+  change ((λ_ (𝟙_ D)).inv ▷ (α.obj (Yᘁ) ⊗ β.obj Y)) ≫
       ((((ε α ≫ α.map unitRightDualIso.inv) ⊗ₘ ε β)) ▷
         (α.obj (Yᘁ) ⊗ β.obj Y)) ≫
       (tensorμ (α.obj (unitRigidDual (A := A))) (β.obj (𝟙_ A))
@@ -1313,7 +1313,7 @@ theorem lambdaMulLeft_dinat
         lambdaMulLeft α β X' := by
   refine tensorLeft_coend_hom_ext (lambdaDiagram α β)
     (α.obj (X'ᘁ) ⊗ β.obj X) (fun Y => ?_)
-  show ((α.obj (X'ᘁ) ⊗ β.obj X) ◁ lambdaStage α β Y) ≫
+  change ((α.obj (X'ᘁ) ⊗ β.obj X) ◁ lambdaStage α β Y) ≫
       ((α.map (fᘁ) ▷ β.obj X) ▷ lambdaObj α β) ≫
         lambdaMulLeft α β X =
     ((α.obj (X'ᘁ) ⊗ β.obj X) ◁ lambdaStage α β Y) ≫
@@ -1398,12 +1398,12 @@ theorem lambdaMul_unit_left
       (λ_ (lambdaObj α β)).hom := by
   refine tensorLeft_coend_hom_ext (lambdaDiagram α β) (𝟙_ D)
     (fun Y => ?_)
-  show (𝟙_ D ◁ lambdaStage α β Y) ≫
+  change (𝟙_ D ◁ lambdaStage α β Y) ≫
       (lambdaUnit α β ▷ lambdaObj α β) ≫ lambdaMul α β =
     (𝟙_ D ◁ lambdaStage α β Y) ≫ (λ_ (lambdaObj α β)).hom
   erw [lambdaUnit, comp_whiskerRight, comp_whiskerRight]
   simp only [Category.assoc]
-  show (𝟙_ D ◁ lambdaStage α β Y) ≫
+  change (𝟙_ D ◁ lambdaStage α β Y) ≫
       ((λ_ (𝟙_ D)).inv ▷ lambdaObj α β) ≫
       (((ε α ≫ α.map unitRightDualIso.inv) ⊗ₘ ε β) ▷
         lambdaObj α β) ≫
@@ -1437,7 +1437,7 @@ theorem lambdaMulStage_unit_right
     rw [tensor_right_unitality]
     simp only [Category.assoc, tensorHom_comp_tensorHom,
       Iso.hom_inv_id, id_tensorHom_id, Category.comp_id]
-  show ((α.obj (Yᘁ) ⊗ β.obj Y) ◁ (λ_ (𝟙_ D)).inv) ≫
+  change ((α.obj (Yᘁ) ⊗ β.obj Y) ◁ (λ_ (𝟙_ D)).inv) ≫
       ((α.obj (Yᘁ) ⊗ β.obj Y) ◁
         ((ε α ≫ α.map unitRightDualIso.inv) ⊗ₘ ε β)) ≫
       (tensorμ (α.obj (Yᘁ)) (β.obj Y)
@@ -1490,7 +1490,7 @@ theorem lambdaMul_unit_right
       (ρ_ (lambdaObj α β)).hom := by
   refine tensorRight_coend_hom_ext (lambdaDiagram α β) (𝟙_ D)
     (fun X => ?_)
-  show (lambdaStage α β X ▷ 𝟙_ D) ≫
+  change (lambdaStage α β X ▷ 𝟙_ D) ≫
       (lambdaObj α β ◁ lambdaUnit α β) ≫ lambdaMul α β =
     (lambdaStage α β X ▷ 𝟙_ D) ≫ (ρ_ (lambdaObj α β)).hom
   rw [← whisker_exchange_assoc]
@@ -1533,7 +1533,7 @@ theorem lambda_triple_hom_ext
   refine coend_hom_ext_of_preserves (lambdaDiagram α β)
     (tensorLeft (α.obj (Xᘁ) ⊗ β.obj X) ⋙
       tensorRight (α.obj (W'ᘁ) ⊗ β.obj W')) (fun Y => ?_)
-  show (((α.obj (Xᘁ) ⊗ β.obj X) ◁ lambdaStage α β Y) ▷
+  change (((α.obj (Xᘁ) ⊗ β.obj X) ◁ lambdaStage α β Y) ▷
       (α.obj (W'ᘁ) ⊗ β.obj W')) ≫
       ((lambdaStage α β X ▷ lambdaObj α β) ▷
         (α.obj (W'ᘁ) ⊗ β.obj W')) ≫
@@ -1642,7 +1642,7 @@ theorem lambda_pair_hom_ext
     (lambdaObj α β) (fun X => ?_)
   refine tensorLeft_coend_hom_ext (lambdaDiagram α β)
     (α.obj (Xᘁ) ⊗ β.obj X) (fun Y => ?_)
-  show ((α.obj (Xᘁ) ⊗ β.obj X) ◁ lambdaStage α β Y) ≫
+  change ((α.obj (Xᘁ) ⊗ β.obj X) ◁ lambdaStage α β Y) ≫
       ((lambdaStage α β X ▷ lambdaObj α β) ≫ f) =
     ((α.obj (Xᘁ) ⊗ β.obj X) ◁ lambdaStage α β Y) ≫
       ((lambdaStage α β X ▷ lambdaObj α β) ≫ g)
@@ -1785,8 +1785,7 @@ theorem lambdaMul_comm
 
 /-- **The Λ algebra is commutative** over symmetric data with
 braided functors (Deligne 3.7–3.8 in full). -/
-@[implicit_reducible]
-noncomputable def lambdaIsCommMonObj
+theorem lambdaIsCommMonObj
     [Category.{v} A] [MonoidalCategory A] [RightRigidCategory A]
     {D : Type u'} [Category.{v'} D] [MonoidalCategory D]
     [SymmetricCategory A] [SymmetricCategory D] (α : A ⥤ D) (β : A ⥤ D)
@@ -1809,7 +1808,7 @@ noncomputable def lambdaIsCommMonObj
         tensorLeft W) (tensorRight W')] :
     letI : MonObj (lambdaObj α β) := lambdaMonObj α β
     IsCommMonObj (lambdaObj α β) := by
-  letI : MonObj (lambdaObj α β) := lambdaMonObj α β
+  let : MonObj (lambdaObj α β) := lambdaMonObj α β
   exact ⟨lambdaMul_comm α β⟩
 
 end Commutativity

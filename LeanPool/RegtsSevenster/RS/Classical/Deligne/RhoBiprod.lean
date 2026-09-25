@@ -43,7 +43,7 @@ noncomputable def homBiproductEquiv
     rw [biproduct.lift_π]
   right_inv h := by
     funext j
-    show biproduct.lift h ≫ biproduct.π f j = h j
+    change biproduct.lift h ≫ biproduct.π f j = h j
     rw [biproduct.lift_π]
 
 end RS

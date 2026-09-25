@@ -17,7 +17,7 @@ the transport plus a square.
 
 namespace RS
 
-open Classical
+
 
 /-- **The sign pairing**: mapped sorting signs of two
 enumerations multiply to the reindexing sign. -/

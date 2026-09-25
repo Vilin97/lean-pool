@@ -41,7 +41,7 @@ Main results: `chainStatusLedger` (the enriched chain induction),
 
 namespace RS
 
-open scoped Classical
+
 
 /-! ## Flip-sign list algebra -/
 
@@ -102,6 +102,7 @@ theorem flipSignProd_append (f : α → Fin (2 * ℓ))
       ih (flipColours f p), flipColoursFold_cons]
     ring
 
+open scoped Classical in
 private theorem flipLabels_count_cons (p : α × α)
     (L : List (α × α)) (i : α) :
     (flipLabels (p :: L)).count i =
@@ -113,13 +114,13 @@ private theorem flipLabels_count_cons (p : α × α)
     simp only [flipLabels_cons, List.count_cons, beq_iff_eq]
   rw [hbase]
   by_cases h1 : i = p.1 <;> by_cases h2 : i = p.2
-  · rw [if_pos h1.symm, if_pos h2.symm, if_pos h1, if_pos h2]
-  · rw [if_neg (fun h => h2 h.symm), if_pos h1.symm, if_pos h1,
-      if_neg h2]
-  · rw [if_pos h2.symm, if_neg (fun h => h1 h.symm), if_neg h1,
-      if_pos h2]
-  · rw [if_neg (fun h => h2 h.symm), if_neg (fun h => h1 h.symm),
-      if_neg h1, if_neg h2]
+  · rw [ite_eq_left h1.symm, ite_eq_left h2.symm, ite_eq_left h1, ite_eq_left h2]
+  · rw [ite_eq_right (fun h => h2 h.symm), ite_eq_left h1.symm, ite_eq_left h1,
+      ite_eq_right h2]
+  · rw [ite_eq_left h2.symm, ite_eq_right (fun h => h1 h.symm), ite_eq_right h1,
+      ite_eq_left h2]
+  · rw [ite_eq_right (fun h => h2 h.symm), ite_eq_right (fun h => h1 h.symm),
+      ite_eq_right h1, ite_eq_right h2]
 
 /-- The odd-count set of a cons toggles exactly at the head's
 labels. -/
@@ -131,7 +132,7 @@ private theorem mem_oddCountLabels_cons {p : α × α}
   simp only [mem_oddCountLabels, flipLabels_count_cons p L i]
   by_cases h1 : i = p.1 <;> by_cases h2 : i = p.2
   · exact absurd (h1.symm.trans h2) hp
-  · rw [if_pos h1, if_neg h2]
+  · rw [ite_eq_left h1, ite_eq_right h2]
     have hm : i = p.1 ∨ i = p.2 := Or.inl h1
     constructor
     · intro h
@@ -139,7 +140,7 @@ private theorem mem_oddCountLabels_cons {p : α × α}
     · rintro (⟨-, hodd⟩ | ⟨-, hnot⟩)
       · omega
       · exact absurd hm hnot
-  · rw [if_neg h1, if_pos h2]
+  · rw [ite_eq_right h1, ite_eq_left h2]
     have hm : i = p.1 ∨ i = p.2 := Or.inr h2
     constructor
     · intro h
@@ -147,7 +148,7 @@ private theorem mem_oddCountLabels_cons {p : α × α}
     · rintro (⟨-, hodd⟩ | ⟨-, hnot⟩)
       · omega
       · exact absurd hm hnot
-  · rw [if_neg h1, if_neg h2]
+  · rw [ite_eq_right h1, ite_eq_right h2]
     have hm : ¬(i = p.1 ∨ i = p.2) := by
       rintro (h | h)
       · exact h1 h
@@ -180,6 +181,7 @@ theorem pairFold_eq_oddCountLabels {L : List (α × α)}
     rw [mem_symmU, mem_oddCountLabels_cons hp]
     simp only [mem_pairSet]
 
+open scoped Classical in
 /-- The accumulated colour relabel is the odd-partner relabel at
 the odd-count labels. -/
 theorem flipColoursFold_apply {L : List (α × α)}
@@ -188,7 +190,7 @@ theorem flipColoursFold_apply {L : List (α × α)}
       if i ∈ oddCountLabels L then oddPartner ℓ (f i) else f i := by
   induction L generalizing f with
   | nil =>
-    rw [flipColoursFold_nil, if_neg (fun h => by
+    rw [flipColoursFold_nil, ite_eq_right (fun h => by
       rw [mem_oddCountLabels] at h
       simp [flipLabels_nil] at h)]
   | cons p L ih =>
@@ -199,30 +201,30 @@ theorem flipColoursFold_apply {L : List (α × α)}
     by_cases hm : i = p.1 ∨ i = p.2
     · have hfc : flipColours f p i = oddPartner ℓ (f i) := by
         unfold flipColours
-        rw [if_pos hm]
+        rw [ite_eq_left hm]
       by_cases ho : i ∈ oddCountLabels L
       · have hnot : i ∉ oddCountLabels (p :: L) := by
           rw [mem_oddCountLabels_cons hp]
           rintro (⟨-, h⟩ | ⟨-, h⟩)
           · exact h ho
           · exact h hm
-        rw [if_pos ho, hfc, oddPartner_invol, if_neg hnot]
+        rw [ite_eq_left ho, hfc, oddPartner_invol, ite_eq_right hnot]
       · have hyes : i ∈ oddCountLabels (p :: L) :=
           (mem_oddCountLabels_cons hp).mpr (Or.inl ⟨hm, ho⟩)
-        rw [if_neg ho, hfc, if_pos hyes]
+        rw [ite_eq_right ho, hfc, ite_eq_left hyes]
     · have hfc : flipColours f p i = f i := by
         unfold flipColours
-        rw [if_neg hm]
+        rw [ite_eq_right hm]
       by_cases ho : i ∈ oddCountLabels L
       · have hyes : i ∈ oddCountLabels (p :: L) :=
           (mem_oddCountLabels_cons hp).mpr (Or.inr ⟨ho, hm⟩)
-        rw [if_pos ho, hfc, if_pos hyes]
+        rw [ite_eq_left ho, hfc, ite_eq_left hyes]
       · have hnot : i ∉ oddCountLabels (p :: L) := by
           rw [mem_oddCountLabels_cons hp]
           rintro (⟨h, -⟩ | ⟨h, -⟩)
           · exact hm h
           · exact ho h
-        rw [if_neg ho, hfc, if_neg hnot]
+        rw [ite_eq_right ho, hfc, ite_eq_right hnot]
 
 end SignAlgebra
 
@@ -232,6 +234,7 @@ section Indicators
 
 variable {β : Type}
 
+open scoped Classical in
 /-- The cardinality of a subset of an explicit finset as an
 indicator sum. -/
 private theorem card_eq_sum_indicator {s t : Finset β}
@@ -262,15 +265,15 @@ private theorem two_indicator_if [LinearOrder α]
       if (if x < y then P else Q) then 1 else 0 := by
   rcases lt_or_gt_of_ne hxy with h | h
   · have e2 : (if y < x ∧ Q then 1 else 0 : ℕ) = 0 :=
-      if_neg (fun hc => lt_asymm h hc.1)
+      ite_eq_right (fun hc => lt_asymm h hc.1)
     have hcond : (if x < y then P else Q) ↔ P := by
-      rw [if_pos h]
+      rw [ite_eq_left h]
     rw [e2, add_zero, if_congr (and_iff_right h) rfl rfl,
       if_congr hcond rfl rfl]
   · have e1 : (if x < y ∧ P then 1 else 0 : ℕ) = 0 :=
-      if_neg (fun hc => lt_asymm h hc.1)
+      ite_eq_right (fun hc => lt_asymm h hc.1)
     have hcond : (if x < y then P else Q) ↔ Q := by
-      rw [if_neg (lt_asymm h)]
+      rw [ite_eq_right (lt_asymm h)]
     rw [e1, zero_add, if_congr (and_iff_right h) rfl rfl,
       if_congr hcond rfl rfl]
 
@@ -281,8 +284,8 @@ private theorem indicator_pair_one [LinearOrder α]
     ((if x < y then 1 else 0) + (if y < x then 1 else 0) : ℕ) =
       1 := by
   rcases lt_or_gt_of_ne hxy with h | h
-  · rw [if_pos h, if_neg (lt_asymm h)]
-  · rw [if_neg (lt_asymm h), if_pos h]
+  · rw [ite_eq_left h, ite_eq_right (lt_asymm h)]
+  · rw [ite_eq_right (lt_asymm h), ite_eq_left h]
 
 /-- The symmetrized chord crossing is symmetric in its two
 arguments. -/
@@ -297,7 +300,7 @@ private theorem chordPairCrossSym_swap_pair [LinearOrder α]
     (a₁ a₂ b₁ b₂ : α) :
     chordPairCrossSym (a₂, a₁) (b₂, b₁) ↔
       chordPairCrossSym (a₁, a₂) (b₁, b₂) := by
-  show (ChordPairCross (min a₂ a₁) (max a₂ a₁) (min b₂ b₁)
+  change (ChordPairCross (min a₂ a₁) (max a₂ a₁) (min b₂ b₁)
         (max b₂ b₁) ∨
       ChordPairCross (min b₂ b₁) (max b₂ b₁) (min a₂ a₁)
         (max a₂ a₁)) ↔
@@ -386,7 +389,7 @@ private theorem flipColours_matches {st : GenBoundaryState k ℓ α}
     rw [hst] at hic
     have hfc : flipColours g (l₁, l₂) i = oddPartner ℓ (g i) := by
       unfold flipColours
-      rw [if_pos hm]
+      rw [ite_eq_left hm]
     rcases hval : st i with a | c₀
     · rw [hval] at hic
       simp only [Sum.map_inl] at hic
@@ -400,7 +403,7 @@ private theorem flipColours_matches {st : GenBoundaryState k ℓ α}
         (fun h => hm (Or.inr h))
     have hfc : flipColours g (l₁, l₂) i = g i := by
       unfold flipColours
-      rw [if_neg hm]
+      rw [ite_eq_right hm]
     rw [hst] at hic
     rw [hfc]
     exact hg i c hic
@@ -417,7 +420,7 @@ private theorem flipColoursFold_matches
   rw [flipColoursFold_apply hd g i, ← pairFold_eq_oddCountLabels hd]
   by_cases hm : i ∈ pairFold T
   · rw [stateOddFlipSet_of_mem hm] at hic
-    rw [if_pos hm]
+    rw [ite_eq_left hm]
     rcases hval : st i with a | c₀
     · rw [hval] at hic
       simp only [Sum.map_inl] at hic
@@ -427,7 +430,7 @@ private theorem flipColoursFold_matches
       rw [hg i c₀ hval]
       exact Sum.inr.inj hic
   · rw [stateOddFlipSet_of_notMem hm] at hic
-    rw [if_neg hm]
+    rw [ite_eq_right hm]
     exact hg i c hic
 
 end StateColours
@@ -951,6 +954,54 @@ private theorem nonsep_anti_card_mixed
         F.boundaryLabel (κ.pathMatch_mem hε₂))]
   omega
 
+private theorem repair_pathMatch_reverse
+    {W : Fragment α} {F : EdgeSubset W} {κ : F.RelTransitionSystem}
+    {x y : W.Flag} (hx : x ∈ F.boundaryFlags) (hy : y ∈ F.boundaryFlags)
+    (h : κ.pathMatch x hx = y) : κ.pathMatch y hy = x :=
+  (κ.pathMatch_congr h.symm hy (κ.pathMatch_mem hx)).trans (κ.pathMatch_invol hx)
+
+private theorem nonsep_anti_subset_six_candidates
+    [LinearOrder α] {W : Fragment α} {F : EdgeSubset W}
+    {κ : F.RelTransitionSystem} {a : W.Flag} {b : W.Flag} {c : W.Flag}
+    {d : W.Flag} {v : W.Vertex} {S : Finset W.Flag} {p₁ : W.Flag}
+    {p₂ : W.Flag} {iβ : α} {iγ : α}
+    (hsq : RepairSquare κ a b c d v) {o : κ.Orientation}
+    (hc : PathCanonical o)
+    (hpf : PortedFlipSet κ S p₁ p₂ iβ iγ)
+    (hflip : (o.portFlip hpf).isOut c = !(o.portFlip hpf).isOut a)
+    {β₂ : W.Flag} (hβ₂ : β₂ ∈ F.boundaryFlags)
+    (hintβ : W.pairing β₂ ∈ F.internalFlags)
+    (honS : ∀ f ∈ S, OnBoundaryChain κ β₂ f)
+    (hSon : ∀ f ∈ F.internalFlags, OnBoundaryChain κ β₂ f → f ∈ S)
+    {ε₁ ε₂ : W.Flag} (hε₁ : ε₁ ∈ F.boundaryFlags)
+    (hε₂ : ε₂ ∈ F.boundaryFlags)
+    (hout : ∀ (δ : W.Flag) (hδ : δ ∈ F.boundaryFlags),
+      δ ≠ ε₁ → δ ≠ ε₂ → δ ≠ κ.pathMatch ε₁ hε₁ →
+      δ ≠ κ.pathMatch ε₂ hε₂ →
+      (κ.repair a b c d v hsq).pathMatch δ hδ =
+        κ.pathMatch δ hδ)
+    : antiLowSet
+      (RelTransitionSystem.Orientation.transportRepair hsq
+        (o.portFlip hpf) hflip) ⊆
+      ({ε₁, ε₂, κ.pathMatch ε₁ hε₁, κ.pathMatch ε₂ hε₂, β₂,
+        κ.pathMatch β₂ hβ₂} : Finset W.Flag) := by
+  intro δ hδmem
+  by_contra hnot
+  simp only [Finset.mem_insert, Finset.mem_singleton, not_or]
+    at hnot
+  obtain ⟨h1, h2, h3, h4, h5, h6⟩ := hnot
+  have h7 := (mem_antiLowSet_transport_untouched hsq
+    (o.portFlip hpf) hflip hε₁ hε₂ hout h1 h2 h3 h4).mp hδmem
+  obtain ⟨hδb, hintδ, hlowδ, hdirδ⟩ := mem_antiLowSet.mp h7
+  by_cases hTδ : W.pairing δ ∈ S
+  · rcases (pairing_mem_flipSet_iff hpf hβ₂ hintβ honS hSon
+      hδb hintδ).mp hTδ with hδ1 | hδ1
+    · exact h5 hδ1
+    · exact h6 hδ1
+  · rw [chainDir_portFlip_of_notMem o hpf hTδ] at hdirδ
+    exact absurd ((chainDir_true_iff_high hc hδb hintδ).mp
+      hdirδ) (lt_asymm hlowδ)
+
 /-- **The untoggled anti count**: when neither re-paired chord is
 the anchor chord, the anchor chord is untouched by the repair and
 contributes exactly its low end to the anti set of the anchored
@@ -996,19 +1047,9 @@ private theorem nonsep_anti_card_untoggled
           else F.boundaryLabel hε₂ <
               F.boundaryLabel (κ.pathMatch_mem hε₂)) then 1
         else 0) + 1 := by
-  have hcross₂ : (κ.repair a b c d v hsq).pathMatch ε₂ hε₂ = ε₁ :=
-    ((κ.repair a b c d v hsq).pathMatch_congr hcross.symm hε₂
-      ((κ.repair a b c d v hsq).pathMatch_mem hε₁)).trans
-      ((κ.repair a b c d v hsq).pathMatch_invol hε₁)
-  have hfar₂ : (κ.repair a b c d v hsq).pathMatch
-      (κ.pathMatch ε₂ hε₂) (κ.pathMatch_mem hε₂) =
-      κ.pathMatch ε₁ hε₁ :=
-    ((κ.repair a b c d v hsq).pathMatch_congr hfar.symm
-      (κ.pathMatch_mem hε₂)
-      ((κ.repair a b c d v hsq).pathMatch_mem
-        (κ.pathMatch_mem hε₁))).trans
-      ((κ.repair a b c d v hsq).pathMatch_invol
-        (κ.pathMatch_mem hε₁))
+  have hcross₂ := repair_pathMatch_reverse hε₁ hε₂ hcross
+  have hfar₂ := repair_pathMatch_reverse (κ.pathMatch_mem hε₁)
+    (κ.pathMatch_mem hε₂) hfar
   have hPne' : ε₁ ≠ κ.pathMatch ε₂ hε₂ := fun h =>
     hPne ((κ.pathMatch_congr h hε₁ (κ.pathMatch_mem hε₂)).trans
       (κ.pathMatch_invol hε₂))
@@ -1183,27 +1224,8 @@ private theorem nonsep_anti_card_untoggled
   -- Everything off the four re-paired ends and the anchor chord's
   -- two ends is untouched by both the flip and the repair.
   -- the anti set lies on the six candidates
-  have hsub : antiLowSet
-      (RelTransitionSystem.Orientation.transportRepair hsq
-        (o.portFlip hpf) hflip) ⊆
-      ({ε₁, ε₂, κ.pathMatch ε₁ hε₁, κ.pathMatch ε₂ hε₂, β₂,
-        κ.pathMatch β₂ hβ₂} : Finset W.Flag) := by
-    intro δ hδmem
-    by_contra hnot
-    simp only [Finset.mem_insert, Finset.mem_singleton, not_or]
-      at hnot
-    obtain ⟨h1, h2, h3, h4, h5, h6⟩ := hnot
-    have h7 := (mem_antiLowSet_transport_untouched hsq
-      (o.portFlip hpf) hflip hε₁ hε₂ hout h1 h2 h3 h4).mp hδmem
-    obtain ⟨hδb, hintδ, hlowδ, hdirδ⟩ := mem_antiLowSet.mp h7
-    by_cases hTδ : W.pairing δ ∈ S
-    · rcases (pairing_mem_flipSet_iff hpf hβ₂ hintβ honS hSon
-        hδb hintδ).mp hTδ with hδ1 | hδ1
-      · exact h5 hδ1
-      · exact h6 hδ1
-    · rw [chainDir_portFlip_of_notMem o hpf hTδ] at hdirδ
-      exact absurd ((chainDir_true_iff_high hc hδb hintδ).mp
-        hdirδ) (lt_asymm hlowδ)
+  have hsub := nonsep_anti_subset_six_candidates hsq hc hpf hflip
+    hβ₂ hintβ honS hSon hε₁ hε₂ hout
   -- ═══════ COUNTING THE CANDIDATES ═══════
   have hcards := card_eq_sum_indicator hsub
   rw [Finset.sum_insert (by
@@ -1229,6 +1251,7 @@ private theorem nonsep_anti_card_untoggled
         F.boundaryLabel (κ.pathMatch_mem hε₂))]
   omega
 
+open scoped Classical in
 /-- **The non-separated per-step flip-count parity**: the anti
 count of the anchored transported frame matches, mod 2, the
 chord-crossing change of the repair.  The toggle configuration of
@@ -1456,6 +1479,441 @@ end NonsepCount
 
 section StepLemma
 
+private theorem stepStatusLedger_nonseparated
+    [LinearOrder α] {W : Fragment α} {F : EdgeSubset W} {k : ℕ} {ℓ : ℕ}
+    (hM : MixedFunctional k ℓ)
+    (st : GenBoundaryState k ℓ α)
+    (hbnd : genBoundarySubsetMatches W F.flags st)
+    {κ₁ κ₂ : F.RelTransitionSystem}
+    {o₁ : κ₁.Orientation} (hc₁ : PathCanonical o₁)
+    (g : α → Fin (2 * ℓ))
+    (hg : ∀ i c, st i = Sum.inr c → g i = c)
+    {a b c d : W.Flag} {v : W.Vertex}
+    (hsq : RepairSquare κ₁ a b c d v)
+    (heq : (κ₁.repair a b c d v hsq).MatchEq κ₂)
+    (hloc : ¬ SquareLocalized κ₁ a b c d)
+    {ε₁ ε₂ : W.Flag} (hε₁ : ε₁ ∈ F.boundaryFlags) (hε₂ : ε₂ ∈ F.boundaryFlags)
+    (hne : ε₁ ≠ ε₂) (hPne : κ₁.pathMatch ε₁ hε₁ ≠ ε₂)
+    (hcross : (κ₁.repair a b c d v hsq).pathMatch ε₁ hε₁ = ε₂)
+    (hfar : (κ₁.repair a b c d v hsq).pathMatch (κ₁.pathMatch ε₁ hε₁)
+      (κ₁.pathMatch_mem hε₁) = κ₁.pathMatch ε₂ hε₂)
+    (hout : ∀ (δ : W.Flag) (hδ : δ ∈ F.boundaryFlags),
+      δ ≠ ε₁ → δ ≠ ε₂ → δ ≠ κ₁.pathMatch ε₁ hε₁ → δ ≠ κ₁.pathMatch ε₂ hε₂ →
+      (κ₁.repair a b c d v hsq).pathMatch δ hδ = κ₁.pathMatch δ hδ)
+    (hsame : o₁.isOut c = o₁.isOut a) :
+    ∃ (o₂ : κ₂.Orientation) (T : List (α × α)) (tp : ℕ),
+      PathCanonical o₂ ∧
+      (∀ p ∈ T, p.1 ≠ p.2) ∧
+      pairFold T = statusDiff κ₁ κ₂ ∧
+      (tp + T.length + chordCrossingCount κ₁ +
+        chordCrossingCount κ₂) % 2 = 0 ∧
+      F.throughSummand hM (stateOddFlipSet st (pairFold T))
+          (genBoundarySubsetMatches_stateOddFlipSet hbnd
+            (pairFold T)) o₂ κ₂.openCircuitCount =
+        (((-1) ^ tp * flipSignProd g T : ℤ) : ℂ) *
+          F.throughSummand hM st hbnd o₁ κ₁.openCircuitCount := by
+  have hccp := chordCrossingCount_repair_parity hε₁ hε₂ hne
+    hPne hcross hfar hout
+  have hcc₂ : chordCrossingCount κ₂ =
+      chordCrossingCount (κ₁.repair a b c d v hsq) :=
+    chordCrossingCount_matchEq heq
+  -- The chain of `c` is flipped first, which moves the state at
+  -- its two ends, and the flipped square is then separated.
+  obtain ⟨β₁, β₂, hβ₁, hβ₂, hca, hcc, h21, h2γ⟩ :=
+    twoChains_of_not_localized hsq hloc
+  obtain ⟨kc, hkle, hcont, hterm⟩ :=
+    chain_terminates_with_data κ₁ hβ₂
+  have hk : 1 ≤ kc := by
+    by_contra hlt
+    obtain rfl : kc = 0 := by omega
+    obtain ⟨k', t, htk, hcont', hterm', hft⟩ := hcc
+    have hkk : k' = 0 :=
+      chain_exit_unique hcont' hterm' hcont hterm
+    subst hkk
+    obtain rfl : t = 0 := by omega
+    simp only [iterWalk_zero] at hterm
+    rcases hft with hE | hE
+    · rw [iterWalk_zero] at hE
+      exact Finset.disjoint_left.mp
+        F.internalFlags_disjoint_boundaryFlags (hE ▸ hsq.hc)
+        hβ₂
+    · rw [iterWalk_zero] at hE
+      exact Finset.disjoint_left.mp
+        F.internalFlags_disjoint_boundaryFlags (hE ▸ hsq.hc)
+        hterm
+  obtain ⟨iβ, hiβ⟩ := F.attach_boundary_of_mem hβ₂
+  obtain ⟨iγ, hiγ⟩ := F.attach_boundary_of_mem hterm
+  obtain ⟨S, hpf, honS, hSon⟩ :=
+    exists_chainPortedFlipSet κ₁ hβ₂ hcont hterm hk hiβ hiγ
+  have hcS : c ∈ S := hSon c hsq.hc hcc
+  have h1γ2 : β₁ ≠ κ₁.pathMatch β₂ hβ₂ := by
+    intro he
+    apply h2γ
+    have h3 := κ₁.pathMatch_congr he hβ₁
+      (κ₁.pathMatch_mem hβ₂)
+    exact (h3.trans (κ₁.pathMatch_invol hβ₂)).symm
+  have haS : a ∉ S := fun hmem =>
+    onBoundaryChain_disjoint hβ₂ hβ₁ (Ne.symm h21) h1γ2
+      (honS a hmem) hca
+  have hbF₁ : W.boundaryFlag iβ ∈ F.flags := by
+    rw [← W.eq_boundaryFlag iβ β₂ hiβ]
+    exact mem_flags_of_boundaryFlags F hβ₂
+  have hbF₂ : W.boundaryFlag iγ ∈ F.flags := by
+    rw [← W.eq_boundaryFlag iγ _ hiγ]
+    exact mem_flags_of_boundaryFlags F hterm
+  obtain ⟨c₁, hcol₁⟩ := (hbnd iβ).mp hbF₁
+  obtain ⟨c₂, hcol₂⟩ := (hbnd iγ).mp hbF₂
+  have hbndS := genBoundarySubsetMatches_stateOddFlip hbnd
+    iβ iγ
+  have hcol₁' : stateOddFlip st iβ iγ iβ =
+      Sum.inr (oddPartner ℓ c₁) := stateOddFlip_left_odd hcol₁
+  have hcol₂' : stateOddFlip st iβ iγ iγ =
+      Sum.inr (oddPartner ℓ c₂) := stateOddFlip_right_odd hcol₂
+  have hflip' := portFlip_separated o₁ hpf hsame hcS haS
+  have htrans := twoPathNonSep_transform hM
+    (stateOddFlip st iβ iγ) hbndS hsq o₁ hsame hloc hpf hcS
+    haS hcol₁' hcol₂'
+  have hret := F.throughSummand_state_congr hM
+    (stateOddFlip_stateOddFlip (st := st) (i₁ := iβ)
+      (i₂ := iγ))
+    (genBoundarySubsetMatches_stateOddFlip hbndS iβ iγ) hbnd
+    (κ := κ₁) o₁ κ₁.openCircuitCount
+  rw [hret] at htrans
+  have hint₂ : W.pairing β₂ ∈ F.internalFlags := by
+    have h0 := hcont 0 hk
+    rwa [iterWalk_zero] at h0
+  have hpm₂ : κ₁.pathMatch β₂ hβ₂ =
+      W.pairing (iterWalk κ₁ β₂ kc) :=
+    κ₁.pathMatch_eq hβ₂ (traceChain_fuel_mono κ₁ (by omega)
+      (traceChain_forward κ₁ β₂ hcont hterm))
+  have hlabβ : F.boundaryLabel hβ₂ = iβ :=
+    boundaryLabel_eq_of_attach hβ₂ hiβ
+  have hlabγ : F.boundaryLabel (κ₁.pathMatch_mem hβ₂) =
+      iγ := by
+    apply boundaryLabel_eq_of_attach
+    rw [hpm₂]
+    exact hiγ
+  obtain ⟨o'', L, hcanon, hlen, hpw, hprov, hled⟩ :=
+    exists_recanonicalize_signed hM (stateOddFlip st iβ iγ)
+      hbndS
+      (RelTransitionSystem.Orientation.transportRepair hsq
+        (o₁.portFlip hpf) hflip')
+      (flipColours g (iβ, iγ)) (flipColours_matches hg iβ iγ)
+  have hstEq : stateOddFlipSet (stateOddFlip st iβ iγ)
+      (pairFold L) =
+      stateOddFlipSet st (pairFold ((iβ, iγ) :: L)) := by
+    rw [stateOddFlip_eq_flipSet, stateOddFlipSet_symmU,
+      pairFold_cons]
+    rfl
+  have hb1 := genBoundarySubsetMatches_stateOddFlipSet hbndS
+    (pairFold L)
+  have hb2 := genBoundarySubsetMatches_stateOddFlipSet hbnd
+    (pairFold ((iβ, iγ) :: L))
+  have hsq2 : ((flipSignProd (flipColours g (iβ, iγ)) L :
+      ℤ) : ℂ) *
+      ((flipSignProd (flipColours g (iβ, iγ)) L : ℤ) : ℂ) =
+      1 := by
+    rw [← Int.cast_mul, flipSignProd_mul_self, Int.cast_one]
+  have hval' : F.throughSummand hM
+      (stateOddFlipSet st (pairFold ((iβ, iγ) :: L))) hb2 o''
+      ((κ₁.repair a b c d v hsq).openCircuitCount) =
+      (((-1) ^ 1 * flipSignProd g ((iβ, iγ) :: L) : ℤ) : ℂ) *
+        F.throughSummand hM st hbnd o₁
+          κ₁.openCircuitCount := by
+    have h1 := hled
+      ((κ₁.repair a b c d v hsq).openCircuitCount)
+    have h3 : ((flipSignProd (flipColours g (iβ, iγ)) L :
+        ℤ) : ℂ) *
+        F.throughSummand hM
+          (stateOddFlipSet (stateOddFlip st iβ iγ)
+            (pairFold L)) hb1 o''
+          ((κ₁.repair a b c d v hsq).openCircuitCount) =
+        twoPathNonSepFactor ℓ (oddPartner ℓ c₁)
+            (oddPartner ℓ c₂) *
+          F.throughSummand hM st hbnd o₁
+            κ₁.openCircuitCount :=
+      h1.symm.trans htrans
+    have hcongr := F.throughSummand_state_congr hM hstEq hb1
+      hb2 o'' ((κ₁.repair a b c d v hsq).openCircuitCount)
+    have hfac : twoPathNonSepFactor ℓ (oddPartner ℓ c₁)
+        (oddPartner ℓ c₂) =
+        -((oddPartnerSign ℓ c₁ * oddPartnerSign ℓ c₂ : ℤ) :
+          ℂ) := by
+      rw [twoPathNonSepFactor_eq, oddPartnerSign_oddPartner,
+        oddPartnerSign_oddPartner]
+      push_cast
+      ring
+    have hsign : (((-1) ^ 1 *
+        flipSignProd g ((iβ, iγ) :: L) : ℤ) : ℂ) =
+        -((oddPartnerSign ℓ c₁ * oddPartnerSign ℓ c₂ : ℤ) :
+          ℂ) *
+          ((flipSignProd (flipColours g (iβ, iγ)) L : ℤ) :
+            ℂ) := by
+      rw [flipSignProd_cons,
+        show g (iβ, iγ).1 = c₁ from hg _ c₁ hcol₁,
+        show g (iβ, iγ).2 = c₂ from hg _ c₂ hcol₂]
+      push_cast
+      ring
+    calc F.throughSummand hM
+          (stateOddFlipSet st (pairFold ((iβ, iγ) :: L)))
+          hb2 o''
+          ((κ₁.repair a b c d v hsq).openCircuitCount)
+        = F.throughSummand hM
+            (stateOddFlipSet (stateOddFlip st iβ iγ)
+              (pairFold L)) hb1 o''
+            ((κ₁.repair a b c d v hsq).openCircuitCount) :=
+          hcongr.symm
+      _ = (((flipSignProd (flipColours g (iβ, iγ)) L : ℤ) :
+            ℂ) *
+            ((flipSignProd (flipColours g (iβ, iγ)) L : ℤ) :
+              ℂ)) *
+          F.throughSummand hM
+            (stateOddFlipSet (stateOddFlip st iβ iγ)
+              (pairFold L)) hb1 o''
+            ((κ₁.repair a b c d v hsq).openCircuitCount) := by
+          rw [hsq2, one_mul]
+      _ = ((flipSignProd (flipColours g (iβ, iγ)) L : ℤ) :
+            ℂ) *
+          (((flipSignProd (flipColours g (iβ, iγ)) L : ℤ) :
+            ℂ) *
+            F.throughSummand hM
+              (stateOddFlipSet (stateOddFlip st iβ iγ)
+                (pairFold L)) hb1 o''
+              ((κ₁.repair a b c d v hsq).openCircuitCount)) :=
+          by ring
+      _ = ((flipSignProd (flipColours g (iβ, iγ)) L : ℤ) :
+            ℂ) *
+          (twoPathNonSepFactor ℓ (oddPartner ℓ c₁)
+              (oddPartner ℓ c₂) *
+            F.throughSummand hM st hbnd o₁
+              κ₁.openCircuitCount) := by rw [h3]
+      _ = (((-1) ^ 1 * flipSignProd g ((iβ, iγ) :: L) : ℤ) :
+            ℂ) *
+          F.throughSummand hM st hbnd o₁
+            κ₁.openCircuitCount := by
+          rw [hfac, hsign]
+          ring
+  obtain ⟨o₂, hc₂, htrans₂⟩ := matchEq_canonical_transfer hM
+    (stateOddFlipSet st (pairFold ((iβ, iγ) :: L))) hb2 heq
+    hcanon
+  refine ⟨o₂, (iβ, iγ) :: L, 1, hc₂, ?_, ?_, ?_, ?_⟩
+  · intro p hp
+    rcases List.mem_cons.mp hp with rfl | hp'
+    · exact hpf.hlab
+    · exact ne_of_lt (AntiLowPair.lt (hprov p hp'))
+  · rw [← statusDiff_matchEq_right heq]
+    apply Finset.ext
+    intro i
+    rw [mem_statusDiff]
+    exact nonsep_labels_eq_statusChange hsq hc₁ hpf hflip'
+      hβ₂ hint₂ honS hSon hlabβ hlabγ hprov hpw hlen
+  · have hcnt := nonsep_count_parity hsq hc₁ hpf hflip' hβ₂
+      hint₂ honS hSon hε₁ hε₂ hne hPne hcross hfar hout
+    rw [List.length_cons, hlen]
+    omega
+  · exact htrans₂.trans hval'
+
+private theorem stepStatusLedger_separated
+    [LinearOrder α] {W : Fragment α} {F : EdgeSubset W} {k : ℕ} {ℓ : ℕ}
+    (hM : MixedFunctional k ℓ)
+    (st : GenBoundaryState k ℓ α)
+    (hbnd : genBoundarySubsetMatches W F.flags st)
+    {κ₁ κ₂ : F.RelTransitionSystem}
+    {o₁ : κ₁.Orientation} (hc₁ : PathCanonical o₁)
+    (g : α → Fin (2 * ℓ))
+    (hg : ∀ i c, st i = Sum.inr c → g i = c)
+    {a b c d : W.Flag} {v : W.Vertex}
+    (hsq : RepairSquare κ₁ a b c d v)
+    (heq : (κ₁.repair a b c d v hsq).MatchEq κ₂)
+    (hloc : ¬ SquareLocalized κ₁ a b c d)
+    {ε₁ ε₂ : W.Flag} (hε₁ : ε₁ ∈ F.boundaryFlags) (hε₂ : ε₂ ∈ F.boundaryFlags)
+    (hne : ε₁ ≠ ε₂) (hPne : κ₁.pathMatch ε₁ hε₁ ≠ ε₂)
+    (hcross : (κ₁.repair a b c d v hsq).pathMatch ε₁ hε₁ = ε₂)
+    (hfar : (κ₁.repair a b c d v hsq).pathMatch (κ₁.pathMatch ε₁ hε₁)
+      (κ₁.pathMatch_mem hε₁) = κ₁.pathMatch ε₂ hε₂)
+    (hout : ∀ (δ : W.Flag) (hδ : δ ∈ F.boundaryFlags),
+      δ ≠ ε₁ → δ ≠ ε₂ → δ ≠ κ₁.pathMatch ε₁ hε₁ → δ ≠ κ₁.pathMatch ε₂ hε₂ →
+      (κ₁.repair a b c d v hsq).pathMatch δ hδ = κ₁.pathMatch δ hδ)
+    (hsame : ¬ o₁.isOut c = o₁.isOut a) :
+    ∃ (o₂ : κ₂.Orientation) (T : List (α × α)) (tp : ℕ),
+      PathCanonical o₂ ∧
+      (∀ p ∈ T, p.1 ≠ p.2) ∧
+      pairFold T = statusDiff κ₁ κ₂ ∧
+      (tp + T.length + chordCrossingCount κ₁ +
+        chordCrossingCount κ₂) % 2 = 0 ∧
+      F.throughSummand hM (stateOddFlipSet st (pairFold T))
+          (genBoundarySubsetMatches_stateOddFlipSet hbnd
+            (pairFold T)) o₂ κ₂.openCircuitCount =
+        (((-1) ^ tp * flipSignProd g T : ℤ) : ℂ) *
+          F.throughSummand hM st hbnd o₁ κ₁.openCircuitCount := by
+  have hcross₂ : (κ₁.repair a b c d v hsq).pathMatch ε₂ hε₂ =
+      ε₁ :=
+    ((κ₁.repair a b c d v hsq).pathMatch_congr hcross.symm hε₂
+      ((κ₁.repair a b c d v hsq).pathMatch_mem hε₁)).trans
+      ((κ₁.repair a b c d v hsq).pathMatch_invol hε₁)
+  have hfar₂ : (κ₁.repair a b c d v hsq).pathMatch
+      (κ₁.pathMatch ε₂ hε₂) (κ₁.pathMatch_mem hε₂) =
+      κ₁.pathMatch ε₁ hε₁ :=
+    ((κ₁.repair a b c d v hsq).pathMatch_congr hfar.symm
+      (κ₁.pathMatch_mem hε₂)
+      ((κ₁.repair a b c d v hsq).pathMatch_mem
+        (κ₁.pathMatch_mem hε₁))).trans
+      ((κ₁.repair a b c d v hsq).pathMatch_invol
+        (κ₁.pathMatch_mem hε₁))
+  have hPne' : ε₁ ≠ κ₁.pathMatch ε₂ hε₂ := fun h =>
+    hPne ((κ₁.pathMatch_congr h hε₁
+      (κ₁.pathMatch_mem hε₂)).trans (κ₁.pathMatch_invol hε₂))
+  have hPP : κ₁.pathMatch ε₁ hε₁ ≠ κ₁.pathMatch ε₂ hε₂ := by
+    intro h
+    apply hne
+    calc ε₁ = κ₁.pathMatch (κ₁.pathMatch ε₁ hε₁)
+          (κ₁.pathMatch_mem hε₁) :=
+          (κ₁.pathMatch_invol hε₁).symm
+      _ = κ₁.pathMatch (κ₁.pathMatch ε₂ hε₂)
+          (κ₁.pathMatch_mem hε₂) :=
+        κ₁.pathMatch_congr h (κ₁.pathMatch_mem hε₁)
+          (κ₁.pathMatch_mem hε₂)
+      _ = ε₂ := κ₁.pathMatch_invol hε₂
+  have hint₁ : W.pairing ε₁ ∈ F.internalFlags :=
+    repartner_internal (κ := κ₁)
+      (κ' := κ₁.repair a b c d v hsq) hε₁ (by
+        rw [hcross]
+        exact fun h => hPne h.symm)
+  have hint₂' : W.pairing ε₂ ∈ F.internalFlags :=
+    repartner_internal (κ := κ₁)
+      (κ' := κ₁.repair a b c d v hsq) hε₂ (by
+        rw [hcross₂]
+        exact hPne')
+  have hintP₁ : W.pairing (κ₁.pathMatch ε₁ hε₁) ∈
+      F.internalFlags :=
+    repartner_internal (κ := κ₁)
+      (κ' := κ₁.repair a b c d v hsq)
+      (κ₁.pathMatch_mem hε₁) (by
+        rw [hfar, κ₁.pathMatch_invol hε₁]
+        exact fun h => hPne' h.symm)
+  have hintP₂ : W.pairing (κ₁.pathMatch ε₂ hε₂) ∈
+      F.internalFlags :=
+    repartner_internal (κ := κ₁)
+      (κ' := κ₁.repair a b c d v hsq)
+      (κ₁.pathMatch_mem hε₂) (by
+        rw [hfar₂, κ₁.pathMatch_invol hε₂]
+        exact hPne)
+  have hLxy : F.boundaryLabel hε₁ ≠ F.boundaryLabel hε₂ :=
+    fun h => hne (boundaryLabel_inj hε₁ hε₂ h)
+  have hLxbyb : F.boundaryLabel (κ₁.pathMatch_mem hε₁) ≠
+      F.boundaryLabel (κ₁.pathMatch_mem hε₂) :=
+    fun h => hPP (boundaryLabel_inj (κ₁.pathMatch_mem hε₁)
+      (κ₁.pathMatch_mem hε₂) h)
+  have hLx_xb : F.boundaryLabel hε₁ ≠
+      F.boundaryLabel (κ₁.pathMatch_mem hε₁) := fun h =>
+    κ₁.pathMatch_ne_self hε₁
+      (boundaryLabel_inj hε₁ (κ₁.pathMatch_mem hε₁) h).symm
+  have hLy_yb : F.boundaryLabel hε₂ ≠
+      F.boundaryLabel (κ₁.pathMatch_mem hε₂) := fun h =>
+    κ₁.pathMatch_ne_self hε₂
+      (boundaryLabel_inj hε₂ (κ₁.pathMatch_mem hε₂) h).symm
+  have hLx_yb : F.boundaryLabel hε₁ ≠
+      F.boundaryLabel (κ₁.pathMatch_mem hε₂) := fun h =>
+    hPne' (boundaryLabel_inj hε₁ (κ₁.pathMatch_mem hε₂) h)
+  have hLxb_y : F.boundaryLabel (κ₁.pathMatch_mem hε₁) ≠
+      F.boundaryLabel hε₂ := fun h =>
+    hPne (boundaryLabel_inj (κ₁.pathMatch_mem hε₁) hε₂ h)
+  have hccp := chordCrossingCount_repair_parity hε₁ hε₂ hne
+    hPne hcross hfar hout
+  have hcc₂ : chordCrossingCount κ₂ =
+      chordCrossingCount (κ₁.repair a b c d v hsq) :=
+    chordCrossingCount_matchEq heq
+  -- The orientation transports verbatim; re-canonicalizing it
+  -- supplies the flip list and the transform gives the sign.
+  have hflip : o₁.isOut c = !o₁.isOut a := by
+    cases h1 : o₁.isOut c <;> cases h2 : o₁.isOut a <;>
+      simp_all
+  obtain ⟨o'', L, hcanon, hlen, hpw, hprov, hled⟩ :=
+    exists_recanonicalize_signed hM st hbnd
+      (RelTransitionSystem.Orientation.transportRepair hsq o₁
+        hflip) g hg
+  have hb2 := genBoundarySubsetMatches_stateOddFlipSet hbnd
+    (pairFold L)
+  have h2 := twoPath_transform hM st hbnd hsq o₁ hflip hloc
+  rw [twoPathTransformFactor_eq_neg_one] at h2
+  have hsq2 : ((flipSignProd g L : ℤ) : ℂ) *
+      ((flipSignProd g L : ℤ) : ℂ) = 1 := by
+    rw [← Int.cast_mul, flipSignProd_mul_self, Int.cast_one]
+  have hval' : F.throughSummand hM
+      (stateOddFlipSet st (pairFold L)) hb2 o''
+      ((κ₁.repair a b c d v hsq).openCircuitCount) =
+      (((-1) ^ 1 * flipSignProd g L : ℤ) : ℂ) *
+        F.throughSummand hM st hbnd o₁
+          κ₁.openCircuitCount := by
+    have h1 := hled
+      ((κ₁.repair a b c d v hsq).openCircuitCount)
+    have h3 : ((flipSignProd g L : ℤ) : ℂ) *
+        F.throughSummand hM (stateOddFlipSet st (pairFold L))
+          hb2 o''
+          ((κ₁.repair a b c d v hsq).openCircuitCount) =
+        -1 * F.throughSummand hM st hbnd o₁
+          κ₁.openCircuitCount :=
+      h1.symm.trans h2
+    calc F.throughSummand hM (stateOddFlipSet st (pairFold L))
+          hb2 o''
+          ((κ₁.repair a b c d v hsq).openCircuitCount)
+        = (((flipSignProd g L : ℤ) : ℂ) *
+            ((flipSignProd g L : ℤ) : ℂ)) *
+          F.throughSummand hM
+            (stateOddFlipSet st (pairFold L)) hb2 o''
+            ((κ₁.repair a b c d v hsq).openCircuitCount) := by
+          rw [hsq2, one_mul]
+      _ = ((flipSignProd g L : ℤ) : ℂ) *
+          (((flipSignProd g L : ℤ) : ℂ) *
+            F.throughSummand hM
+              (stateOddFlipSet st (pairFold L)) hb2 o''
+              ((κ₁.repair a b c d v hsq).openCircuitCount)) :=
+          by ring
+      _ = ((flipSignProd g L : ℤ) : ℂ) *
+          (-1 * F.throughSummand hM st hbnd o₁
+            κ₁.openCircuitCount) := by rw [h3]
+      _ = (((-1) ^ 1 * flipSignProd g L : ℤ) : ℂ) *
+          F.throughSummand hM st hbnd o₁
+            κ₁.openCircuitCount := by
+          push_cast
+          ring
+  obtain ⟨o₂, hc₂, htrans₂⟩ := matchEq_canonical_transfer hM
+    (stateOddFlipSet st (pairFold L)) hb2 heq hcanon
+  refine ⟨o₂, L, 1, hc₂, ?_, ?_, ?_, ?_⟩
+  · exact fun p hp => ne_of_lt (AntiLowPair.lt (hprov p hp))
+  · rw [← statusDiff_matchEq_right heq]
+    apply Finset.ext
+    intro i
+    rw [mem_statusDiff, mem_pairFold_antiLow hprov hpw hlen]
+    exact antiLow_labels_eq_statusChange hsq hflip hc₁ hε₁
+      hε₂ hcross hfar hout hint₁ hint₂' hintP₁ hintP₂
+  · have hcardL := hlen.trans (antiLowSet_transport_card hsq
+      hflip hc₁ hε₁ hε₂ hne hPne hcross hfar hout hint₁
+      hint₂' hintP₁ hintP₂)
+    have hdirs := swap_dirs_opposite hsq o₁ hflip hε₁ hcross
+      hint₁
+    have i1 := chainDir_true_iff_high hc₁ hε₁ hint₁
+    have i2 := chainDir_true_iff_high hc₁ hε₂ hint₂'
+    have hsep : (F.boundaryLabel (κ₁.pathMatch_mem hε₁) <
+        F.boundaryLabel hε₁) ≠
+        (F.boundaryLabel (κ₁.pathMatch_mem hε₂) <
+          F.boundaryLabel hε₂) := by
+      cases hb : chainDir o₁ ε₁
+      · rw [hb, Bool.not_false] at hdirs
+        refine prop_ne_of_right ?_ (i2.mp hdirs)
+        intro hlt
+        rw [i1.mpr hlt] at hb
+        cases hb
+      · rw [hb, Bool.not_true] at hdirs
+        refine prop_ne_of_left (i1.mp hb) ?_
+        intro hlt
+        rw [i2.mpr hlt] at hdirs
+        cases hdirs
+    have hfour := fourLabel_parity_sep hLx_xb hLy_yb hLxy
+      hLx_yb hLxb_y hLxbyb hsep
+    omega
+  · exact htrans₂.trans hval'
+
 /-- **The per-step composed ledger**: across one repair step from a
 canonical frame, the state relabel is `stateOddFlipSet` at the fold
 of an explicit flip list `T` with `pairFold T = statusDiff κ₁ κ₂`,
@@ -1522,371 +1980,9 @@ theorem stepStatusLedger
     -- orientation splits into the separated and non-separated cases.
     obtain ⟨ε₁, ε₂, hε₁, hε₂, hne, hPne, hcross, hfar, hout⟩ :=
       pathMatch_repair_swap hsq hloc
-    have hcross₂ : (κ₁.repair a b c d v hsq).pathMatch ε₂ hε₂ =
-        ε₁ :=
-      ((κ₁.repair a b c d v hsq).pathMatch_congr hcross.symm hε₂
-        ((κ₁.repair a b c d v hsq).pathMatch_mem hε₁)).trans
-        ((κ₁.repair a b c d v hsq).pathMatch_invol hε₁)
-    have hfar₂ : (κ₁.repair a b c d v hsq).pathMatch
-        (κ₁.pathMatch ε₂ hε₂) (κ₁.pathMatch_mem hε₂) =
-        κ₁.pathMatch ε₁ hε₁ :=
-      ((κ₁.repair a b c d v hsq).pathMatch_congr hfar.symm
-        (κ₁.pathMatch_mem hε₂)
-        ((κ₁.repair a b c d v hsq).pathMatch_mem
-          (κ₁.pathMatch_mem hε₁))).trans
-        ((κ₁.repair a b c d v hsq).pathMatch_invol
-          (κ₁.pathMatch_mem hε₁))
-    have hPne' : ε₁ ≠ κ₁.pathMatch ε₂ hε₂ := fun h =>
-      hPne ((κ₁.pathMatch_congr h hε₁
-        (κ₁.pathMatch_mem hε₂)).trans (κ₁.pathMatch_invol hε₂))
-    have hPP : κ₁.pathMatch ε₁ hε₁ ≠ κ₁.pathMatch ε₂ hε₂ := by
-      intro h
-      apply hne
-      calc ε₁ = κ₁.pathMatch (κ₁.pathMatch ε₁ hε₁)
-            (κ₁.pathMatch_mem hε₁) :=
-            (κ₁.pathMatch_invol hε₁).symm
-        _ = κ₁.pathMatch (κ₁.pathMatch ε₂ hε₂)
-            (κ₁.pathMatch_mem hε₂) :=
-          κ₁.pathMatch_congr h (κ₁.pathMatch_mem hε₁)
-            (κ₁.pathMatch_mem hε₂)
-        _ = ε₂ := κ₁.pathMatch_invol hε₂
-    have hint₁ : W.pairing ε₁ ∈ F.internalFlags :=
-      repartner_internal (κ := κ₁)
-        (κ' := κ₁.repair a b c d v hsq) hε₁ (by
-          rw [hcross]
-          exact fun h => hPne h.symm)
-    have hint₂' : W.pairing ε₂ ∈ F.internalFlags :=
-      repartner_internal (κ := κ₁)
-        (κ' := κ₁.repair a b c d v hsq) hε₂ (by
-          rw [hcross₂]
-          exact hPne')
-    have hintP₁ : W.pairing (κ₁.pathMatch ε₁ hε₁) ∈
-        F.internalFlags :=
-      repartner_internal (κ := κ₁)
-        (κ' := κ₁.repair a b c d v hsq)
-        (κ₁.pathMatch_mem hε₁) (by
-          rw [hfar, κ₁.pathMatch_invol hε₁]
-          exact fun h => hPne' h.symm)
-    have hintP₂ : W.pairing (κ₁.pathMatch ε₂ hε₂) ∈
-        F.internalFlags :=
-      repartner_internal (κ := κ₁)
-        (κ' := κ₁.repair a b c d v hsq)
-        (κ₁.pathMatch_mem hε₂) (by
-          rw [hfar₂, κ₁.pathMatch_invol hε₂]
-          exact hPne)
-    have hLxy : F.boundaryLabel hε₁ ≠ F.boundaryLabel hε₂ :=
-      fun h => hne (boundaryLabel_inj hε₁ hε₂ h)
-    have hLxbyb : F.boundaryLabel (κ₁.pathMatch_mem hε₁) ≠
-        F.boundaryLabel (κ₁.pathMatch_mem hε₂) :=
-      fun h => hPP (boundaryLabel_inj (κ₁.pathMatch_mem hε₁)
-        (κ₁.pathMatch_mem hε₂) h)
-    have hLx_xb : F.boundaryLabel hε₁ ≠
-        F.boundaryLabel (κ₁.pathMatch_mem hε₁) := fun h =>
-      κ₁.pathMatch_ne_self hε₁
-        (boundaryLabel_inj hε₁ (κ₁.pathMatch_mem hε₁) h).symm
-    have hLy_yb : F.boundaryLabel hε₂ ≠
-        F.boundaryLabel (κ₁.pathMatch_mem hε₂) := fun h =>
-      κ₁.pathMatch_ne_self hε₂
-        (boundaryLabel_inj hε₂ (κ₁.pathMatch_mem hε₂) h).symm
-    have hLx_yb : F.boundaryLabel hε₁ ≠
-        F.boundaryLabel (κ₁.pathMatch_mem hε₂) := fun h =>
-      hPne' (boundaryLabel_inj hε₁ (κ₁.pathMatch_mem hε₂) h)
-    have hLxb_y : F.boundaryLabel (κ₁.pathMatch_mem hε₁) ≠
-        F.boundaryLabel hε₂ := fun h =>
-      hPne (boundaryLabel_inj (κ₁.pathMatch_mem hε₁) hε₂ h)
-    have hccp := chordCrossingCount_repair_parity hε₁ hε₂ hne
-      hPne hcross hfar hout
-    have hcc₂ : chordCrossingCount κ₂ =
-        chordCrossingCount (κ₁.repair a b c d v hsq) :=
-      chordCrossingCount_matchEq heq
     by_cases hsame : o₁.isOut c = o₁.isOut a
-    · -- ─────── non-separated ───────
-      -- The chain of `c` is flipped first, which moves the state at
-      -- its two ends, and the flipped square is then separated.
-      obtain ⟨β₁, β₂, hβ₁, hβ₂, hca, hcc, h21, h2γ⟩ :=
-        twoChains_of_not_localized hsq hloc
-      obtain ⟨kc, hkle, hcont, hterm⟩ :=
-        chain_terminates_with_data κ₁ hβ₂
-      have hk : 1 ≤ kc := by
-        by_contra hlt
-        obtain rfl : kc = 0 := by omega
-        obtain ⟨k', t, htk, hcont', hterm', hft⟩ := hcc
-        have hkk : k' = 0 :=
-          chain_exit_unique hcont' hterm' hcont hterm
-        subst hkk
-        obtain rfl : t = 0 := by omega
-        simp only [iterWalk_zero] at hterm
-        rcases hft with hE | hE
-        · rw [iterWalk_zero] at hE
-          exact Finset.disjoint_left.mp
-            F.internalFlags_disjoint_boundaryFlags (hE ▸ hsq.hc)
-            hβ₂
-        · rw [iterWalk_zero] at hE
-          exact Finset.disjoint_left.mp
-            F.internalFlags_disjoint_boundaryFlags (hE ▸ hsq.hc)
-            hterm
-      obtain ⟨iβ, hiβ⟩ := F.attach_boundary_of_mem hβ₂
-      obtain ⟨iγ, hiγ⟩ := F.attach_boundary_of_mem hterm
-      obtain ⟨S, hpf, honS, hSon⟩ :=
-        exists_chainPortedFlipSet κ₁ hβ₂ hcont hterm hk hiβ hiγ
-      have hcS : c ∈ S := hSon c hsq.hc hcc
-      have h1γ2 : β₁ ≠ κ₁.pathMatch β₂ hβ₂ := by
-        intro he
-        apply h2γ
-        have h3 := κ₁.pathMatch_congr he hβ₁
-          (κ₁.pathMatch_mem hβ₂)
-        exact (h3.trans (κ₁.pathMatch_invol hβ₂)).symm
-      have haS : a ∉ S := fun hmem =>
-        onBoundaryChain_disjoint hβ₂ hβ₁ (Ne.symm h21) h1γ2
-          (honS a hmem) hca
-      have hbF₁ : W.boundaryFlag iβ ∈ F.flags := by
-        rw [← W.eq_boundaryFlag iβ β₂ hiβ]
-        exact mem_flags_of_boundaryFlags F hβ₂
-      have hbF₂ : W.boundaryFlag iγ ∈ F.flags := by
-        rw [← W.eq_boundaryFlag iγ _ hiγ]
-        exact mem_flags_of_boundaryFlags F hterm
-      obtain ⟨c₁, hcol₁⟩ := (hbnd iβ).mp hbF₁
-      obtain ⟨c₂, hcol₂⟩ := (hbnd iγ).mp hbF₂
-      have hbndS := genBoundarySubsetMatches_stateOddFlip hbnd
-        iβ iγ
-      have hcol₁' : stateOddFlip st iβ iγ iβ =
-          Sum.inr (oddPartner ℓ c₁) := stateOddFlip_left_odd hcol₁
-      have hcol₂' : stateOddFlip st iβ iγ iγ =
-          Sum.inr (oddPartner ℓ c₂) := stateOddFlip_right_odd hcol₂
-      have hflip' := portFlip_separated o₁ hpf hsame hcS haS
-      have htrans := twoPathNonSep_transform hM
-        (stateOddFlip st iβ iγ) hbndS hsq o₁ hsame hloc hpf hcS
-        haS hcol₁' hcol₂'
-      have hret := F.throughSummand_state_congr hM
-        (stateOddFlip_stateOddFlip (st := st) (i₁ := iβ)
-          (i₂ := iγ))
-        (genBoundarySubsetMatches_stateOddFlip hbndS iβ iγ) hbnd
-        (κ := κ₁) o₁ κ₁.openCircuitCount
-      rw [hret] at htrans
-      have hint₂ : W.pairing β₂ ∈ F.internalFlags := by
-        have h0 := hcont 0 hk
-        rwa [iterWalk_zero] at h0
-      have hpm₂ : κ₁.pathMatch β₂ hβ₂ =
-          W.pairing (iterWalk κ₁ β₂ kc) :=
-        κ₁.pathMatch_eq hβ₂ (traceChain_fuel_mono κ₁ (by omega)
-          (traceChain_forward κ₁ β₂ hcont hterm))
-      have hlabβ : F.boundaryLabel hβ₂ = iβ :=
-        boundaryLabel_eq_of_attach hβ₂ hiβ
-      have hlabγ : F.boundaryLabel (κ₁.pathMatch_mem hβ₂) =
-          iγ := by
-        apply boundaryLabel_eq_of_attach
-        rw [hpm₂]
-        exact hiγ
-      obtain ⟨o'', L, hcanon, hlen, hpw, hprov, hled⟩ :=
-        exists_recanonicalize_signed hM (stateOddFlip st iβ iγ)
-          hbndS
-          (RelTransitionSystem.Orientation.transportRepair hsq
-            (o₁.portFlip hpf) hflip')
-          (flipColours g (iβ, iγ)) (flipColours_matches hg iβ iγ)
-      have hstEq : stateOddFlipSet (stateOddFlip st iβ iγ)
-          (pairFold L) =
-          stateOddFlipSet st (pairFold ((iβ, iγ) :: L)) := by
-        rw [stateOddFlip_eq_flipSet, stateOddFlipSet_symmU,
-          pairFold_cons]
-        rfl
-      have hb1 := genBoundarySubsetMatches_stateOddFlipSet hbndS
-        (pairFold L)
-      have hb2 := genBoundarySubsetMatches_stateOddFlipSet hbnd
-        (pairFold ((iβ, iγ) :: L))
-      have hsq2 : ((flipSignProd (flipColours g (iβ, iγ)) L :
-          ℤ) : ℂ) *
-          ((flipSignProd (flipColours g (iβ, iγ)) L : ℤ) : ℂ) =
-          1 := by
-        rw [← Int.cast_mul, flipSignProd_mul_self, Int.cast_one]
-      have hval' : F.throughSummand hM
-          (stateOddFlipSet st (pairFold ((iβ, iγ) :: L))) hb2 o''
-          ((κ₁.repair a b c d v hsq).openCircuitCount) =
-          (((-1) ^ 1 * flipSignProd g ((iβ, iγ) :: L) : ℤ) : ℂ) *
-            F.throughSummand hM st hbnd o₁
-              κ₁.openCircuitCount := by
-        have h1 := hled
-          ((κ₁.repair a b c d v hsq).openCircuitCount)
-        have h3 : ((flipSignProd (flipColours g (iβ, iγ)) L :
-            ℤ) : ℂ) *
-            F.throughSummand hM
-              (stateOddFlipSet (stateOddFlip st iβ iγ)
-                (pairFold L)) hb1 o''
-              ((κ₁.repair a b c d v hsq).openCircuitCount) =
-            twoPathNonSepFactor ℓ (oddPartner ℓ c₁)
-                (oddPartner ℓ c₂) *
-              F.throughSummand hM st hbnd o₁
-                κ₁.openCircuitCount :=
-          h1.symm.trans htrans
-        have hcongr := F.throughSummand_state_congr hM hstEq hb1
-          hb2 o'' ((κ₁.repair a b c d v hsq).openCircuitCount)
-        have hfac : twoPathNonSepFactor ℓ (oddPartner ℓ c₁)
-            (oddPartner ℓ c₂) =
-            -((oddPartnerSign ℓ c₁ * oddPartnerSign ℓ c₂ : ℤ) :
-              ℂ) := by
-          rw [twoPathNonSepFactor_eq, oddPartnerSign_oddPartner,
-            oddPartnerSign_oddPartner]
-          push_cast
-          ring
-        have hsign : (((-1) ^ 1 *
-            flipSignProd g ((iβ, iγ) :: L) : ℤ) : ℂ) =
-            -((oddPartnerSign ℓ c₁ * oddPartnerSign ℓ c₂ : ℤ) :
-              ℂ) *
-              ((flipSignProd (flipColours g (iβ, iγ)) L : ℤ) :
-                ℂ) := by
-          rw [flipSignProd_cons,
-            show g (iβ, iγ).1 = c₁ from hg _ c₁ hcol₁,
-            show g (iβ, iγ).2 = c₂ from hg _ c₂ hcol₂]
-          push_cast
-          ring
-        calc F.throughSummand hM
-              (stateOddFlipSet st (pairFold ((iβ, iγ) :: L)))
-              hb2 o''
-              ((κ₁.repair a b c d v hsq).openCircuitCount)
-            = F.throughSummand hM
-                (stateOddFlipSet (stateOddFlip st iβ iγ)
-                  (pairFold L)) hb1 o''
-                ((κ₁.repair a b c d v hsq).openCircuitCount) :=
-              hcongr.symm
-          _ = (((flipSignProd (flipColours g (iβ, iγ)) L : ℤ) :
-                ℂ) *
-                ((flipSignProd (flipColours g (iβ, iγ)) L : ℤ) :
-                  ℂ)) *
-              F.throughSummand hM
-                (stateOddFlipSet (stateOddFlip st iβ iγ)
-                  (pairFold L)) hb1 o''
-                ((κ₁.repair a b c d v hsq).openCircuitCount) := by
-              rw [hsq2, one_mul]
-          _ = ((flipSignProd (flipColours g (iβ, iγ)) L : ℤ) :
-                ℂ) *
-              (((flipSignProd (flipColours g (iβ, iγ)) L : ℤ) :
-                ℂ) *
-                F.throughSummand hM
-                  (stateOddFlipSet (stateOddFlip st iβ iγ)
-                    (pairFold L)) hb1 o''
-                  ((κ₁.repair a b c d v hsq).openCircuitCount)) :=
-              by ring
-          _ = ((flipSignProd (flipColours g (iβ, iγ)) L : ℤ) :
-                ℂ) *
-              (twoPathNonSepFactor ℓ (oddPartner ℓ c₁)
-                  (oddPartner ℓ c₂) *
-                F.throughSummand hM st hbnd o₁
-                  κ₁.openCircuitCount) := by rw [h3]
-          _ = (((-1) ^ 1 * flipSignProd g ((iβ, iγ) :: L) : ℤ) :
-                ℂ) *
-              F.throughSummand hM st hbnd o₁
-                κ₁.openCircuitCount := by
-              rw [hfac, hsign]
-              ring
-      obtain ⟨o₂, hc₂, htrans₂⟩ := matchEq_canonical_transfer hM
-        (stateOddFlipSet st (pairFold ((iβ, iγ) :: L))) hb2 heq
-        hcanon
-      refine ⟨o₂, (iβ, iγ) :: L, 1, hc₂, ?_, ?_, ?_, ?_⟩
-      · intro p hp
-        rcases List.mem_cons.mp hp with rfl | hp'
-        · exact hpf.hlab
-        · exact ne_of_lt (AntiLowPair.lt (hprov p hp'))
-      · rw [← statusDiff_matchEq_right heq]
-        apply Finset.ext
-        intro i
-        rw [mem_statusDiff]
-        exact nonsep_labels_eq_statusChange hsq hc₁ hpf hflip'
-          hβ₂ hint₂ honS hSon hlabβ hlabγ hprov hpw hlen
-      · have hcnt := nonsep_count_parity hsq hc₁ hpf hflip' hβ₂
-          hint₂ honS hSon hε₁ hε₂ hne hPne hcross hfar hout
-        rw [List.length_cons, hlen]
-        omega
-      · exact htrans₂.trans hval'
-    · -- ─────── separated ───────
-      -- The orientation transports verbatim; re-canonicalizing it
-      -- supplies the flip list and the transform gives the sign.
-      have hflip : o₁.isOut c = !o₁.isOut a := by
-        cases h1 : o₁.isOut c <;> cases h2 : o₁.isOut a <;>
-          simp_all
-      obtain ⟨o'', L, hcanon, hlen, hpw, hprov, hled⟩ :=
-        exists_recanonicalize_signed hM st hbnd
-          (RelTransitionSystem.Orientation.transportRepair hsq o₁
-            hflip) g hg
-      have hb2 := genBoundarySubsetMatches_stateOddFlipSet hbnd
-        (pairFold L)
-      have h2 := twoPath_transform hM st hbnd hsq o₁ hflip hloc
-      rw [twoPathTransformFactor_eq_neg_one] at h2
-      have hsq2 : ((flipSignProd g L : ℤ) : ℂ) *
-          ((flipSignProd g L : ℤ) : ℂ) = 1 := by
-        rw [← Int.cast_mul, flipSignProd_mul_self, Int.cast_one]
-      have hval' : F.throughSummand hM
-          (stateOddFlipSet st (pairFold L)) hb2 o''
-          ((κ₁.repair a b c d v hsq).openCircuitCount) =
-          (((-1) ^ 1 * flipSignProd g L : ℤ) : ℂ) *
-            F.throughSummand hM st hbnd o₁
-              κ₁.openCircuitCount := by
-        have h1 := hled
-          ((κ₁.repair a b c d v hsq).openCircuitCount)
-        have h3 : ((flipSignProd g L : ℤ) : ℂ) *
-            F.throughSummand hM (stateOddFlipSet st (pairFold L))
-              hb2 o''
-              ((κ₁.repair a b c d v hsq).openCircuitCount) =
-            -1 * F.throughSummand hM st hbnd o₁
-              κ₁.openCircuitCount :=
-          h1.symm.trans h2
-        calc F.throughSummand hM (stateOddFlipSet st (pairFold L))
-              hb2 o''
-              ((κ₁.repair a b c d v hsq).openCircuitCount)
-            = (((flipSignProd g L : ℤ) : ℂ) *
-                ((flipSignProd g L : ℤ) : ℂ)) *
-              F.throughSummand hM
-                (stateOddFlipSet st (pairFold L)) hb2 o''
-                ((κ₁.repair a b c d v hsq).openCircuitCount) := by
-              rw [hsq2, one_mul]
-          _ = ((flipSignProd g L : ℤ) : ℂ) *
-              (((flipSignProd g L : ℤ) : ℂ) *
-                F.throughSummand hM
-                  (stateOddFlipSet st (pairFold L)) hb2 o''
-                  ((κ₁.repair a b c d v hsq).openCircuitCount)) :=
-              by ring
-          _ = ((flipSignProd g L : ℤ) : ℂ) *
-              (-1 * F.throughSummand hM st hbnd o₁
-                κ₁.openCircuitCount) := by rw [h3]
-          _ = (((-1) ^ 1 * flipSignProd g L : ℤ) : ℂ) *
-              F.throughSummand hM st hbnd o₁
-                κ₁.openCircuitCount := by
-              push_cast
-              ring
-      obtain ⟨o₂, hc₂, htrans₂⟩ := matchEq_canonical_transfer hM
-        (stateOddFlipSet st (pairFold L)) hb2 heq hcanon
-      refine ⟨o₂, L, 1, hc₂, ?_, ?_, ?_, ?_⟩
-      · exact fun p hp => ne_of_lt (AntiLowPair.lt (hprov p hp))
-      · rw [← statusDiff_matchEq_right heq]
-        apply Finset.ext
-        intro i
-        rw [mem_statusDiff, mem_pairFold_antiLow hprov hpw hlen]
-        exact antiLow_labels_eq_statusChange hsq hflip hc₁ hε₁
-          hε₂ hcross hfar hout hint₁ hint₂' hintP₁ hintP₂
-      · have hcardL := hlen.trans (antiLowSet_transport_card hsq
-          hflip hc₁ hε₁ hε₂ hne hPne hcross hfar hout hint₁
-          hint₂' hintP₁ hintP₂)
-        have hdirs := swap_dirs_opposite hsq o₁ hflip hε₁ hcross
-          hint₁
-        have i1 := chainDir_true_iff_high hc₁ hε₁ hint₁
-        have i2 := chainDir_true_iff_high hc₁ hε₂ hint₂'
-        have hsep : (F.boundaryLabel (κ₁.pathMatch_mem hε₁) <
-            F.boundaryLabel hε₁) ≠
-            (F.boundaryLabel (κ₁.pathMatch_mem hε₂) <
-              F.boundaryLabel hε₂) := by
-          cases hb : chainDir o₁ ε₁
-          · rw [hb, Bool.not_false] at hdirs
-            refine prop_ne_of_right ?_ (i2.mp hdirs)
-            intro hlt
-            rw [i1.mpr hlt] at hb
-            cases hb
-          · rw [hb, Bool.not_true] at hdirs
-            refine prop_ne_of_left (i1.mp hb) ?_
-            intro hlt
-            rw [i2.mpr hlt] at hdirs
-            cases hdirs
-        have hfour := fourLabel_parity_sep hLx_xb hLy_yb hLxy
-          hLx_yb hLxb_y hLxbyb hsep
-        omega
-      · exact htrans₂.trans hval'
+    · exact stepStatusLedger_nonseparated hM st hbnd hc₁ g hg hsq heq hloc hε₁ hε₂ hne hPne hcross hfar hout hsame
+    · exact stepStatusLedger_separated hM st hbnd hc₁ g hg hsq heq hloc hε₁ hε₂ hne hPne hcross hfar hout hsame
 
 /-- **The chain status ledger**: fold the per-step ledger along a
 repair chain — the relabel set is the status difference of the

@@ -163,7 +163,7 @@ private theorem swapBase_naturality [Category.{v} A] [MonoidalCategory A]
     {T T' : A} (X : A)
     [SymmetricCategory A] (f : T ⟶ T') :
     ((f ▷ X) ▷ X) ≫ swapBase T' X = swapBase T X ≫ ((f ▷ X) ▷ X) := by
-  show ((f ▷ X) ▷ X) ≫
+  change ((f ▷ X) ▷ X) ≫
       ((α_ T' X X).hom ≫ (T' ◁ (β_ X X).hom) ≫ (α_ T' X X).inv) =
     ((α_ T X X).hom ≫ (T ◁ (β_ X X).hom) ≫ (α_ T X X).inv) ≫
       ((f ▷ X) ▷ X)
@@ -180,11 +180,11 @@ private theorem swapBase_tensor [Category.{v} A] [MonoidalCategory A]
         (α_ P (Q ⊗ X) X).hom =
       ((α_ P Q X).hom ▷ X) ≫ (α_ P (Q ⊗ X) X).hom ≫
         (P ◁ swapBase Q X) := by
-  show swapBase (P ⊗ Q) X ≫ ((α_ P Q X).hom ▷ X) ≫
+  change swapBase (P ⊗ Q) X ≫ ((α_ P Q X).hom ▷ X) ≫
       (α_ P (Q ⊗ X) X).hom =
     ((α_ P Q X).hom ▷ X) ≫ (α_ P (Q ⊗ X) X).hom ≫
       (P ◁ ((α_ Q X X).hom ≫ (Q ◁ (β_ X X).hom) ≫ (α_ Q X X).inv))
-  show ((α_ (P ⊗ Q) X X).hom ≫ ((P ⊗ Q) ◁ (β_ X X).hom) ≫
+  change ((α_ (P ⊗ Q) X X).hom ≫ ((P ⊗ Q) ◁ (β_ X X).hom) ≫
       (α_ (P ⊗ Q) X X).inv) ≫ ((α_ P Q X).hom ▷ X) ≫
       (α_ P (Q ⊗ X) X).hom = _
   simp only [whiskerLeft_comp, Category.assoc]
@@ -199,7 +199,7 @@ theorem swapTop_comp_splitPow [Category.{v} A] [MonoidalCategory A]
       (splitPow X p (q + 1 + 1)).hom ≫
         (tensorPow A X p ◁ swapTop X q) := by
   rw [splitPow_succ, splitPow_succ]
-  show swapBase (tensorPow A X (p + q)) X ≫
+  change swapBase (tensorPow A X (p + q)) X ≫
       ((((splitPow X p q).hom ▷ X) ≫
         (α_ (tensorPow A X p) (tensorPow A X q) X).hom) ▷ X) ≫
       (α_ (tensorPow A X p) (tensorPow A X q ⊗ X) X).hom =
@@ -229,7 +229,7 @@ private theorem whiskerRight_comp_splitPow [Category.{v} A] [MonoidalCategory A]
       (splitPow X p (q + 1)).hom ≫
         (tensorPow A X p ◁ (v ▷ X)) := by
   rw [splitPow_succ]
-  show (u ▷ X) ≫ (((splitPow X p q).hom ▷ X) ≫
+  change (u ▷ X) ≫ (((splitPow X p q).hom ▷ X) ≫
       (α_ (tensorPow A X p) (tensorPow A X q) X).hom) =
     ((((splitPow X p q).hom ▷ X) ≫
       (α_ (tensorPow A X p) (tensorPow A X q) X).hom)) ≫
@@ -288,7 +288,7 @@ private theorem tensorHom_comp_splitPow [Category.{v} A] [MonoidalCategory A]
     (u ⊗ₘ c) ≫ (splitPow X p (q + 1)).hom =
       (splitPow X p (q + 1)).hom ≫ (a ⊗ₘ (b ⊗ₘ c)) := by
   rw [splitPow_succ]
-  show (u ⊗ₘ c) ≫ (((splitPow X p q).hom ▷ X) ≫
+  change (u ⊗ₘ c) ≫ (((splitPow X p q).hom ▷ X) ≫
       (α_ (tensorPow A X p) (tensorPow A X q) X).hom) =
     ((((splitPow X p q).hom ▷ X) ≫
       (α_ (tensorPow A X p) (tensorPow A X q) X).hom)) ≫
@@ -328,7 +328,7 @@ theorem powHom_comp_splitPow [Category.{v} A] [MonoidalCategory A]
         (splitPow X p q).hom ≫ (powHom X g p ⊗ₘ powHom X g q)
   | 0 => by
       rw [splitPow_zero]
-      show powHom X g p ≫ (ρ_ (tensorPow A X p)).inv =
+      change powHom X g p ≫ (ρ_ (tensorPow A X p)).inv =
         (ρ_ (tensorPow A X p)).inv ≫ (powHom X g p ⊗ₘ 𝟙 (𝟙_ A))
       rw [tensorHom_id, rightUnitor_inv_naturality]
   | q + 1 => by
@@ -349,7 +349,7 @@ theorem permMor_comp_splitPow [Category.{v} A] [MonoidalCategory A]
         (splitPow X p q).hom ≫ (permMor X p σ ⊗ₘ permMor X q τ)
   | 0, τ => by
       rw [blockSum_of_zero, splitPow_zero]
-      show permMor X p σ ≫ (ρ_ (tensorPow A X p)).inv =
+      change permMor X p σ ≫ (ρ_ (tensorPow A X p)).inv =
         (ρ_ (tensorPow A X p)).inv ≫ (permMor X p σ ⊗ₘ 𝟙 (𝟙_ A))
       rw [tensorHom_id, rightUnitor_inv_naturality]
   | q + 1, τ => by
@@ -367,7 +367,7 @@ theorem permMor_comp_splitPow [Category.{v} A] [MonoidalCategory A]
           (blockSum (p := p) (q := q + 1) σ τ) =
           (permMor X (p + q) (blockSum σ (restPerm τ)) ▷ X) ≫
             insertTop X (p + q) (q - (topImage τ : ℕ)) := by
-        show permMor X (p + q + 1)
+        change permMor X (p + q + 1)
             (blockSum (p := p) (q := q + 1) σ τ) = _
         rw [permMor_succ X (p + q)
             (blockSum (p := p) (q := q + 1) σ τ),

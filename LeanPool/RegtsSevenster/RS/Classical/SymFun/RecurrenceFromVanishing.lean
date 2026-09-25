@@ -53,7 +53,7 @@ private lemma strictAnti_drop {n : ℕ} {ρ : Fin n → ℤ}
     have h_step := hρ
       (show (⟨m + d, hmd'⟩ : Fin n) < ⟨m + d + 1, hmd⟩ by
         exact Fin.mk_lt_mk.mpr (by omega))
-    show ρ ⟨m + d + 1, hmd⟩ + ((d + 1 : ℕ) : ℤ) ≤ ρ ⟨m, hm⟩
+    change ρ ⟨m + d + 1, hmd⟩ + ((d + 1 : ℕ) : ℤ) ≤ ρ ⟨m, hm⟩
     omega
 
 /-- For a `StrictAnti` function `ρ` on `Fin n` valued in `ℤ`, the sum
@@ -62,12 +62,12 @@ increase of the index. -/
 private lemma antitone_strictAnti_add_val {n : ℕ} {ρ : Fin n → ℤ}
     (hρ : StrictAnti ρ) : Antitone (fun j : Fin n => ρ j + (j : ℤ)) := by
   intro i j hij
-  show ρ j + (j.val : ℤ) ≤ ρ i + (i.val : ℤ)
+  change ρ j + (j.val : ℤ) ≤ ρ i + (i.val : ℤ)
   have him : i.val ≤ j.val := hij
   have hmd_lt : i.val + (j.val - i.val) < n := by omega
   have key := strictAnti_drop hρ (j.val - i.val) i.val i.isLt hmd_lt
   have h_fin_eq : (⟨i.val + (j.val - i.val), hmd_lt⟩ : Fin n) = j := by
-    ext; show i.val + (j.val - i.val) = j.val; omega
+    ext; change i.val + (j.val - i.val) = j.val; omega
   suffices h : ρ j + ((j.val - i.val : ℕ) : ℤ) ≤ ρ i by omega
   calc ρ j + ((j.val - i.val : ℕ) : ℤ)
       = ρ ⟨i.val + (j.val - i.val), hmd_lt⟩ +
@@ -115,7 +115,7 @@ private lemma det_vanishing_of_strictAnti {t : ℕ → ℂ} {a b : ℕ}
     have := hf_cast i
     omega
   have hw_last : b + 1 ≤ w.getD a 0 := by
-    show b + 1 ≤ (List.ofFn f).getD a 0
+    change b + 1 ≤ (List.ofFn f).getD a 0
     rw [List.getD_eq_getElem _ _ (by rw [List.length_ofFn]; omega),
       List.getElem_ofFn]
     have := hrow (Fin.last a)
@@ -188,7 +188,7 @@ private lemma det_vanishing_of_all_ge {t : ℕ → ℂ} {a b : ℕ}
       (Matrix.of fun i j : Fin (a + 1) =>
         newtonHZ t (g i + 1 + (j : ℤ))).submatrix σ id := by
       ext i j; simp only [Matrix.of_apply, Matrix.submatrix_apply, id]
-      show newtonHZ t (ρ i + 1 + (j : ℤ)) =
+      change newtonHZ t (ρ i + 1 + (j : ℤ)) =
         newtonHZ t (g (σ_fun i) + 1 + (j : ℤ))
       rw [hσ]
     rw [h_eq, det_permute, mul_eq_zero,
@@ -230,7 +230,7 @@ theorem exists_recurrence_of_schurDet_vanishing {t : ℕ → ℂ} {a b : ℕ}
       (v '' {ρ | (b : ℤ) - a ≤ ρ})
     have hspanB : span ℂ B = ⊤ := hspan.trans h_top
     have hBfin : B.Finite := hLI.set_finite_of_isNoetherian
-    haveI : Fintype B := hBfin.fintype
+    have : Fintype B := hBfin.fintype
     have hBcard : Fintype.card B = a + 1 := by
       have h1 := finrank_span_eq_card hLI
       rw [Subtype.range_coe, hspanB, finrank_top, finrank_fin_fun ℂ]

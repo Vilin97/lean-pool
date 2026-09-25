@@ -17,7 +17,7 @@ data therefore exist exactly when a transition system does.
 
 namespace RS
 
-open scoped Classical
+
 /-! ## Orientation existence
 
 Every boundary-relative transition system admits an orientation:
@@ -81,21 +81,21 @@ theorem relComplete_internal (κ : F.RelTransitionSystem)
     {f : W.Flag} (hf : f ∈ F.internalFlags) :
     relComplete κ f = κ.match_ f := by
   unfold relComplete
-  rw [dif_pos hf]
+  rw [dite_eq_left hf]
 
 /-- And the path matching on boundary flags. -/
 theorem relComplete_boundary (κ : F.RelTransitionSystem)
     {f : W.Flag} (hb : f ∈ F.boundaryFlags) :
     relComplete κ f = κ.pathMatch f hb := by
   unfold relComplete
-  rw [dif_neg (fun hf => internal_not_boundary hf hb), dif_pos hb]
+  rw [dite_eq_right (fun hf => internal_not_boundary hf hb), dite_eq_left hb]
 
 /-- Off the subset it is the identity. -/
 theorem relComplete_off (κ : F.RelTransitionSystem)
     {f : W.Flag} (hf : f ∉ F.flags) : relComplete κ f = f := by
   unfold relComplete
-  rw [dif_neg (fun h1 => hf (mem_flags_of_internalFlags F h1)),
-    dif_neg (fun h1 => hf (mem_flags_of_boundaryFlags F h1))]
+  rw [dite_eq_right (fun h1 => hf (mem_flags_of_internalFlags F h1)),
+    dite_eq_right (fun h1 => hf (mem_flags_of_boundaryFlags F h1))]
 
 /-- The completed matching is a global involution. -/
 theorem relComplete_invol (κ : F.RelTransitionSystem) :
@@ -169,7 +169,7 @@ noncomputable def relWalkPerm (κ : F.RelTransitionSystem) :
     (x : {f : W.Flag // f ∈ F.flags}) :
     (relWalkPerm κ x).val =
       relComplete κ (W.pairing x.val) := by
-  show (relMatchPerm κ (F.pairingPerm x)).val = _
+  change (relMatchPerm κ (F.pairingPerm x)).val = _
   rw [relMatchPerm_val, EdgeSubset.pairingPerm_val]
 
 /-- Its inverse walks the other way: match, then cross. -/
@@ -210,7 +210,7 @@ theorem relConj_zpow (κ : F.RelTransitionSystem) (n : ℤ) :
           (relWalkPerm κ) n
     _ = (relWalkPerm κ)⁻¹ ^ n := by
         congr 1
-        show F.pairingPerm * relWalkPerm κ * F.pairingPerm⁻¹ =
+        change F.pairingPerm * relWalkPerm κ * F.pairingPerm⁻¹ =
           (relWalkPerm κ)⁻¹
         rw [hσ_inv]
         exact relConj κ
@@ -374,8 +374,8 @@ noncomputable def relBuildOrientation (κ : F.RelTransitionSystem) :
       isOut (κ.match_ g) = !isOut g := by
     intro g hg
     have hgf : g ∈ F.flags := mem_flags_of_internalFlags F hg
-    simp only [isOut, dif_pos hgf,
-      dif_pos (mem_flags_of_internalFlags F (κ.match_mem g hg))]
+    simp only [isOut, dite_eq_left hgf,
+      dite_eq_left (mem_flags_of_internalFlags F (κ.match_mem g hg))]
     rw [orbitMin_pairing_match ⟨g, hgf⟩ hg,
       orbitMin_match ⟨g, hgf⟩ hg]
     exact decide_lt_flip' (Ne.symm (orbitMin_pairing_ne ⟨g, hgf⟩))
@@ -384,8 +384,8 @@ noncomputable def relBuildOrientation (κ : F.RelTransitionSystem) :
       isOut (W.pairing g) = !isOut g := by
     intro g hg _hpg
     have hgf : g ∈ F.flags := mem_flags_of_internalFlags F hg
-    simp only [isOut, dif_pos hgf,
-      dif_pos (F.pairing_mem g hgf)]
+    simp only [isOut, dite_eq_left hgf,
+      dite_eq_left (F.pairing_mem g hgf)]
     have hσσ : F.pairingPerm ⟨W.pairing g, F.pairing_mem g hgf⟩ =
         ⟨g, hgf⟩ := Subtype.ext (by simp [W.pairing_invol g])
     have hσ_eq : (⟨W.pairing g, F.pairing_mem g hgf⟩ :

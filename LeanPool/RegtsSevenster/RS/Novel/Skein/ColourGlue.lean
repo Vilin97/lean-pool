@@ -28,8 +28,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Classical
-
+open Fragment
 section OpenCut
 
 variable {L : Type} {V : Fragment L} {i j : L}
@@ -211,7 +210,7 @@ theorem sum_odd_miss
   by_cases hm : edgeOddBoundaryMatch (Fl)
       (GenBoundaryState.extendPair i j st' (Sum.inl a) (Sum.inl a))
       φ
-  · rw [if_pos hm, if_pos ((edgeOddBoundaryMatch_miss hij hopen t
+  · rw [ite_eq_left hm, ite_eq_left ((edgeOddBoundaryMatch_miss hij hopen t
       hct hcL hni st' a φ).mp hm)]
     refine Finset.prod_congr rfl (fun v _ => ?_)
     exact vertexFactor_transport_T hij hopen t hct hcL κ' o' h
@@ -219,7 +218,7 @@ theorem sum_odd_miss
       (evenPushOpen_agrees hij hopen t hct hcL hni ψ')
       φ.core (oddColourEquivMiss hij hopen t hct hcL hni ℓ φ).core
       (fun g h1 h2 => congrArg φ.val (Subtype.ext rfl)) v
-  · rw [if_neg hm, if_neg (fun hx => hm
+  · rw [ite_eq_right hm, ite_eq_right (fun hx => hm
       ((edgeOddBoundaryMatch_miss hij hopen t hct hcL hni st' a
         φ).mpr hx))]
 
@@ -273,10 +272,10 @@ theorem edgeSum_openCut_miss
         (GenBoundaryState.extendPair i j st' (Sum.inl a)
           (Sum.inl a)) (hbndW a)
         (evenPushOpen hij hopen t hct hcL hni ψ')
-    · rw [if_pos hg, if_pos ((genEvenBoundaryMatch_open_iff hij
+    · rw [ite_eq_left hg, ite_eq_left ((genEvenBoundaryMatch_open_iff hij
         hopen t hct hcL hni st' a (hbndW a) hbnd' ψ').mp hg)]
       exact sum_odd_miss hij hopen t hct hcL hni κ' o' h st' a ψ'
-    · rw [if_neg hg, if_neg (fun hx => hg
+    · rw [ite_eq_right hg, ite_eq_right (fun hx => hg
         ((genEvenBoundaryMatch_open_iff hij hopen t hct hcL hni st'
           a (hbndW a) hbnd' ψ').mpr hx))]
   rw [Finset.sum_congr rfl (fun a (_ : a ∈ Finset.univ) => hL a),
@@ -284,13 +283,13 @@ theorem edgeSum_openCut_miss
   unfold edgeSum
   refine Finset.sum_congr rfl (fun ψ' _ => ?_)
   by_cases hg : genEvenBoundaryMatch (Fg) st' hbnd' ψ'
-  · rw [if_pos hg, Finset.sum_eq_single
+  · rw [ite_eq_left hg, Finset.sum_eq_single
       (ψ'.val ⟨partnerSurvI hopen, hni⟩)
-      (fun a _ hne => if_neg (fun hx => hne hx.1.symm))
-      (fun hx => absurd (Finset.mem_univ _) hx), if_pos ⟨rfl, hg⟩]
+      (fun a _ hne => ite_eq_right (fun hx => hne hx.1.symm))
+      (fun hx => absurd (Finset.mem_univ _) hx), ite_eq_left ⟨rfl, hg⟩]
     rfl
-  · rw [if_neg hg]
-    exact Finset.sum_eq_zero (fun a _ => if_neg (fun hx => hg hx.2))
+  · rw [ite_eq_right hg]
+    exact Finset.sum_eq_zero (fun a _ => ite_eq_right (fun hx => hg hx.2))
 
 end MissSum
 
@@ -435,7 +434,7 @@ theorem oddPushHitFun_at_i {ℓ : ℕ}
       EdgeSubset (V.gluePairOpen i j hij hopen)).EdgeOddColouring ℓ)
     (hP : V.boundaryFlag i ∈ liftSubsetOpen hopen t) :
     oddPushHitFun hij hopen t hct hpi φ' ⟨V.boundaryFlag i, hP⟩
-      = φ'.val ⟨partnerSurvI hopen, hpi⟩ := dif_pos rfl
+      = φ'.val ⟨partnerSurvI hopen, hpi⟩ := dite_eq_left rfl
 
 include hij in
 /-- At the second it takes the same colour: the two ends of the
@@ -447,8 +446,8 @@ theorem oddPushHitFun_at_j {ℓ : ℕ}
     oddPushHitFun hij hopen t hct hpi φ' ⟨V.boundaryFlag j, hP⟩
       = φ'.val ⟨partnerSurvI hopen, hpi⟩ := by
   unfold oddPushHitFun
-  rw [dif_neg (fun hEq => hij (V.boundaryFlag_injective hEq).symm),
-    dif_pos rfl]
+  rw [dite_eq_right (fun hEq => hij (V.boundaryFlag_injective hEq).symm),
+    dite_eq_left rfl]
 
 /-- Away from the two glued flags the pushed colouring is the
 colouring it was pushed from. -/
@@ -460,7 +459,7 @@ theorem oddPushHitFun_agrees {ℓ : ℕ}
     oddPushHitFun hij hopen t hct hpi φ' ⟨g.val, h1⟩
       = φ'.val ⟨g, h2⟩ := by
   unfold oddPushHitFun
-  rw [dif_neg g.prop.1, dif_neg g.prop.2]
+  rw [dite_eq_right g.prop.1, dite_eq_right g.prop.2]
 
 /-- **Push a glued odd colouring up to the lift**, colouring the two
 glued flags with the join's own colour. -/
@@ -480,7 +479,7 @@ noncomputable def oddPushHit {ℓ : ℕ}
             mem_lift_of_mem hopen t hpi⟩ from Subtype.ext hpv,
         oddPushHitFun_agrees hij hopen t hct hpi φ'
           (partnerSurvI hopen) _ hpi]
-      show _ = oddPushHitFun hij hopen t hct hpi φ' ⟨f.val, f.prop⟩
+      change _ = oddPushHitFun hij hopen t hct hpi φ' ⟨f.val, f.prop⟩
       rw [show (⟨f.val, f.prop⟩ :
             {g : V.Flag // g ∈ liftSubsetOpen hopen t})
           = ⟨V.boundaryFlag i,
@@ -501,7 +500,7 @@ noncomputable def oddPushHit {ℓ : ℕ}
             (partnerSurvJ hopen) _
             (partnerSurvJ_mem_of_hit hij hopen t hct hpi),
           glued_odd_merged hij hopen t hct hpi φ']
-        show _ = oddPushHitFun hij hopen t hct hpi φ' ⟨f.val, f.prop⟩
+        change _ = oddPushHitFun hij hopen t hct hpi φ' ⟨f.val, f.prop⟩
         rw [show (⟨f.val, f.prop⟩ :
               {g : V.Flag // g ∈ liftSubsetOpen hopen t})
             = ⟨V.boundaryFlag j,
@@ -740,7 +739,7 @@ theorem oddPushHit_covers {k ℓ : ℕ}
         rw [h1]
         exact φW.prop ⟨g.val.val, hmC⟩
   · refine Subtype.ext (funext fun f => ?_)
-    show oddPushHitFun hij hopen t hct hpi _ f = φW.val f
+    change oddPushHitFun hij hopen t hct hpi _ f = φW.val f
     by_cases hfi : f.val = V.boundaryFlag i
     · have hfe : f = ⟨V.boundaryFlag i, hbi⟩ := Subtype.ext hfi
       rw [hfe]
@@ -837,7 +836,7 @@ theorem sum_odd_hit {k ℓ : ℕ}
                 (Sum.inr d)) φW then G φW else 0) := by
         refine (Finset.sum_subset (Finset.subset_univ _) ?_).symm
         intro φW _ hnotim
-        rw [if_neg (fun hmatch => hnotim ?_)]
+        rw [ite_eq_right (fun hmatch => hnotim ?_)]
         obtain ⟨φ', hφ'⟩ := oddPushHit_covers hij hopen t hct hcL
           hpi st' d φW hmatch
         exact Finset.mem_image.mpr ⟨φ', Finset.mem_univ _, hφ'⟩
@@ -913,7 +912,7 @@ theorem edgeSum_openCut_hit
       (fun ψ' => ?_)).symm
     by_cases hg : genEvenBoundaryMatch (EdgeSubset.mk t hct :
         EdgeSubset (V.gluePairOpen i j hij hopen)) st' hbnd' ψ'
-    · rw [if_pos hg, if_pos ((genEvenBoundaryMatch_hit_iff hij hopen
+    · rw [ite_eq_left hg, ite_eq_left ((genEvenBoundaryMatch_hit_iff hij hopen
         t hct hcL hpi st' d (hbndW d) hbnd' ψ').mpr hg),
         sum_odd_hit hij hopen t hct hcL hpi st' d
           (fun φW => ∏ v : V.Vertex,
@@ -933,8 +932,8 @@ theorem edgeSum_openCut_hit
       by_cases hp : (φ'.val ⟨partnerSurvI hopen, hpi⟩ = d ∧
           edgeOddBoundaryMatch (EdgeSubset.mk t hct :
             EdgeSubset (V.gluePairOpen i j hij hopen)) st' φ')
-      · rw [if_pos ((edgeOddBoundaryMatch_hit_iff hij hopen t hct
-          hcL hpi st' d φ').mpr hp), if_pos hp]
+      · rw [ite_eq_left ((edgeOddBoundaryMatch_hit_iff hij hopen t hct
+          hcL hpi st' d φ').mpr hp), ite_eq_left hp]
         refine Finset.prod_congr rfl (fun v _ => ?_)
         exact (vertexFactor_transport_T hij hopen t hct hcL κ' o' h
           ((evenColourEquivHit hij hopen t hct hcL hpi k).symm ψ')
@@ -943,9 +942,9 @@ theorem edgeSum_openCut_hit
           (oddPushHit hij hopen t hct hcL hpi φ').core φ'.core
           (fun g h1 h2 => oddPushHitFun_agrees hij hopen t hct hpi
             φ' g _ _) v).symm
-      · rw [if_neg (fun hx => hp ((edgeOddBoundaryMatch_hit_iff hij
-          hopen t hct hcL hpi st' d φ').mp hx)), if_neg hp]
-    · rw [if_neg hg, if_neg (fun hx => hg
+      · rw [ite_eq_right (fun hx => hp ((edgeOddBoundaryMatch_hit_iff hij
+          hopen t hct hcL hpi st' d φ').mp hx)), ite_eq_right hp]
+    · rw [ite_eq_right hg, ite_eq_right (fun hx => hg
         ((genEvenBoundaryMatch_hit_iff hij hopen t hct hcL hpi st' d
           (hbndW d) hbnd' ψ').mp hx))]
   -- ═══════ SUMMING THE COLOURS BACK UP ═══════
@@ -955,19 +954,19 @@ theorem edgeSum_openCut_hit
   refine Finset.sum_congr rfl (fun ψ' _ => ?_)
   by_cases hg : genEvenBoundaryMatch (EdgeSubset.mk t hct :
       EdgeSubset (V.gluePairOpen i j hij hopen)) st' hbnd' ψ'
-  · simp only [if_pos hg]
+  · simp only [ite_eq_left hg]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl (fun φ' _ => ?_)
     by_cases hp : edgeOddBoundaryMatch (EdgeSubset.mk t hct :
         EdgeSubset (V.gluePairOpen i j hij hopen)) st' φ'
-    · rw [if_pos hp, Finset.sum_eq_single
+    · rw [ite_eq_left hp, Finset.sum_eq_single
         (φ'.val ⟨partnerSurvI hopen, hpi⟩)
-        (fun d _ hne => if_neg (fun hx => hne hx.1.symm))
-        (fun hx => absurd (Finset.mem_univ _) hx), if_pos ⟨rfl, hp⟩]
+        (fun d _ hne => ite_eq_right (fun hx => hne hx.1.symm))
+        (fun hx => absurd (Finset.mem_univ _) hx), ite_eq_left ⟨rfl, hp⟩]
       rfl
-    · rw [if_neg hp]
-      exact Finset.sum_eq_zero (fun d _ => if_neg (fun hx => hp hx.2))
-  · simp only [if_neg hg]
+    · rw [ite_eq_right hp]
+      exact Finset.sum_eq_zero (fun d _ => ite_eq_right (fun hx => hp hx.2))
+  · simp only [ite_eq_right hg]
     exact Finset.sum_const_zero
 
 end HitSum
@@ -1126,7 +1125,7 @@ theorem evenPushClosedFalseFun_at_i {k : ℕ} (a : Fin k)
       EdgeSubset (V.gluePairClosed i j hclosed)).EvenColouring k)
     (hP : V.boundaryFlag i ∉ liftSubsetClosed t false) :
     evenPushClosedFalseFun hclosed t hct a ψ'
-        ⟨V.boundaryFlag i, hP⟩ = a := dif_pos rfl
+        ⟨V.boundaryFlag i, hP⟩ = a := dite_eq_left rfl
 
 include hij in
 /-- At the second it takes the same colour. -/
@@ -1137,8 +1136,8 @@ theorem evenPushClosedFalseFun_at_j {k : ℕ} (a : Fin k)
     evenPushClosedFalseFun hclosed t hct a ψ'
         ⟨V.boundaryFlag j, hP⟩ = a := by
   unfold evenPushClosedFalseFun
-  rw [dif_neg (fun hEq => hij (V.boundaryFlag_injective hEq).symm),
-    dif_pos rfl]
+  rw [dite_eq_right (fun hEq => hij (V.boundaryFlag_injective hEq).symm),
+    dite_eq_left rfl]
 
 /-- Away from the two glued flags the pushed even colouring is
 unchanged. -/
@@ -1150,7 +1149,7 @@ theorem evenPushClosedFalseFun_agrees {k : ℕ} (a : Fin k)
     evenPushClosedFalseFun hclosed t hct a ψ' ⟨g.val, h1⟩
       = ψ'.val ⟨g, h2⟩ := by
   unfold evenPushClosedFalseFun
-  rw [dif_neg g.prop.1, dif_neg g.prop.2]
+  rw [dite_eq_right g.prop.1, dite_eq_right g.prop.2]
 
 /-- **Push a glued even colouring up to the lift**, colouring the
 closed edge with the join's colour. -/
@@ -1336,7 +1335,7 @@ theorem evenPushClosedFalse_covers {k ℓ : ℕ}
     rw [h1]
     exact ψW.prop ⟨g.val.val, hmC⟩
   · refine Subtype.ext (funext fun f => ?_)
-    show evenPushClosedFalseFun hclosed t hct a _ f = ψW.val f
+    change evenPushClosedFalseFun hclosed t hct a _ f = ψW.val f
     by_cases hfi : f.val = V.boundaryFlag i
     · have hfe : f = ⟨V.boundaryFlag i, hbi⟩ := Subtype.ext hfi
       rw [hfe]
@@ -1399,7 +1398,7 @@ theorem sum_even_closed_false {k ℓ : ℕ}
                 (Sum.inl a)) hbndW ψW then G ψW else 0) := by
         refine (Finset.sum_subset (Finset.subset_univ _) ?_).symm
         intro ψW _ hnotim
-        rw [if_neg (fun hmatch => hnotim ?_)]
+        rw [ite_eq_right (fun hmatch => hnotim ?_)]
         obtain ⟨ψ', hψ'⟩ := evenPushClosedFalse_covers hij hclosed t
           hct hcL st' a hbndW ψW hmatch
         exact Finset.mem_image.mpr ⟨ψ', Finset.mem_univ _, hψ'⟩
@@ -1451,8 +1450,8 @@ theorem edgeSum_closedCut_false
   refine Finset.sum_congr rfl (fun ψ' _ => ?_)
   by_cases hg : genEvenBoundaryMatch (EdgeSubset.mk t hct :
       EdgeSubset (V.gluePairClosed i j hclosed)) st' hbnd' ψ'
-  · rw [if_pos ((genEvenBoundaryMatch_closedFalse_iff hij hclosed t
-      hct hcL st' a hbndW hbnd' ψ').mpr hg), if_pos hg]
+  · rw [ite_eq_left ((genEvenBoundaryMatch_closedFalse_iff hij hclosed t
+      hct hcL st' a hbndW hbnd' ψ').mpr hg), ite_eq_left hg]
     refine Fintype.sum_equiv
       (oddColourEquivClosedFalse hij hclosed t hct hcL ℓ) _ _
       (fun φ => ?_)
@@ -1460,7 +1459,7 @@ theorem edgeSum_closedCut_false
         (EdgeSubset.mk (liftSubsetClosed t false) hcL)
         (GenBoundaryState.extendPair i j st' (Sum.inl a)
           (Sum.inl a)) φ
-    · rw [if_pos hm, if_pos ((edgeOddBoundaryMatch_closedFalse hij
+    · rw [ite_eq_left hm, ite_eq_left ((edgeOddBoundaryMatch_closedFalse hij
         hclosed t hct hcL st' a φ).mp hm)]
       refine Finset.prod_congr rfl (fun v _ => ?_)
       exact vertexFactor_transport_closed hclosed t false hct hcL
@@ -1470,12 +1469,12 @@ theorem edgeSum_closedCut_false
         φ.core (oddColourEquivClosedFalse hij hclosed t hct hcL ℓ
           φ).core
         (fun g h1 h2 => congrArg φ.val (Subtype.ext rfl)) v
-    · rw [if_neg hm, if_neg (fun hx => hm
+    · rw [ite_eq_right hm, ite_eq_right (fun hx => hm
         ((edgeOddBoundaryMatch_closedFalse hij hclosed t hct hcL st'
           a φ).mpr hx))]
-  · rw [if_neg (fun hx => hg ((genEvenBoundaryMatch_closedFalse_iff
+  · rw [ite_eq_right (fun hx => hg ((genEvenBoundaryMatch_closedFalse_iff
       hij hclosed t hct hcL st' a hbndW hbnd' ψ').mp hx)),
-      if_neg hg]
+      ite_eq_right hg]
 
 end ClosedFalseSum
 
@@ -1626,7 +1625,7 @@ theorem oddPushClosedTrueFun_at_i {ℓ : ℕ} (d : Fin (2 * ℓ))
       EdgeSubset (V.gluePairClosed i j hclosed)).EdgeOddColouring ℓ)
     (hP : V.boundaryFlag i ∈ liftSubsetClosed t true) :
     oddPushClosedTrueFun hclosed t hct d φ' ⟨V.boundaryFlag i, hP⟩
-      = d := dif_pos rfl
+      = d := dite_eq_left rfl
 
 include hij in
 /-- At the second it takes the same colour. -/
@@ -1637,8 +1636,8 @@ theorem oddPushClosedTrueFun_at_j {ℓ : ℕ} (d : Fin (2 * ℓ))
     oddPushClosedTrueFun hclosed t hct d φ' ⟨V.boundaryFlag j, hP⟩
       = d := by
   unfold oddPushClosedTrueFun
-  rw [dif_neg (fun hEq => hij (V.boundaryFlag_injective hEq).symm),
-    dif_pos rfl]
+  rw [dite_eq_right (fun hEq => hij (V.boundaryFlag_injective hEq).symm),
+    dite_eq_left rfl]
 
 /-- Away from the two glued flags the pushed odd colouring is
 unchanged. -/
@@ -1650,7 +1649,7 @@ theorem oddPushClosedTrueFun_agrees {ℓ : ℕ} (d : Fin (2 * ℓ))
     oddPushClosedTrueFun hclosed t hct d φ' ⟨g.val, h1⟩
       = φ'.val ⟨g, h2⟩ := by
   unfold oddPushClosedTrueFun
-  rw [dif_neg g.prop.1, dif_neg g.prop.2]
+  rw [dite_eq_right g.prop.1, dite_eq_right g.prop.2]
 
 /-- **Push a glued odd colouring up to the carried lift**, colouring
 the closed edge with the join's colour. -/
@@ -1823,7 +1822,7 @@ theorem oddPushClosedTrue_covers {k ℓ : ℕ}
     rw [h1]
     exact φW.prop ⟨g.val.val, hmC⟩
   · refine Subtype.ext (funext fun f => ?_)
-    show oddPushClosedTrueFun hclosed t hct d _ f = φW.val f
+    change oddPushClosedTrueFun hclosed t hct d _ f = φW.val f
     by_cases hfi : f.val = V.boundaryFlag i
     · have hfe : f = ⟨V.boundaryFlag i, hbi⟩ := Subtype.ext hfi
       rw [hfe]
@@ -1878,7 +1877,7 @@ theorem sum_odd_closed_true {k ℓ : ℕ}
                 (Sum.inr d)) φW then G φW else 0) := by
         refine (Finset.sum_subset (Finset.subset_univ _) ?_).symm
         intro φW _ hnotim
-        rw [if_neg (fun hmatch => hnotim ?_)]
+        rw [ite_eq_right (fun hmatch => hnotim ?_)]
         obtain ⟨φ', hφ'⟩ := oddPushClosedTrue_covers hij hclosed t
           hct hcT st' d φW hmatch
         exact Finset.mem_image.mpr ⟨φ', Finset.mem_univ _, hφ'⟩
@@ -1920,7 +1919,7 @@ theorem edgeSum_closedCut_true
     (fun ψ' => ?_)).symm
   by_cases hg : genEvenBoundaryMatch (EdgeSubset.mk t hct :
       EdgeSubset (V.gluePairClosed i j hclosed)) st' hbnd' ψ'
-  · rw [if_pos hg, if_pos ((genEvenBoundaryMatch_closedTrue_iff hij
+  · rw [ite_eq_left hg, ite_eq_left ((genEvenBoundaryMatch_closedTrue_iff hij
       hclosed t hct hcT st' d hbndW hbnd' ψ').mpr hg),
       sum_odd_closed_true hij hclosed t hct hcT st' d
         (fun φW => ∏ v : V.Vertex,
@@ -1939,7 +1938,7 @@ theorem edgeSum_closedCut_true
     refine Finset.sum_congr rfl (fun φ' _ => ?_)
     by_cases hp : edgeOddBoundaryMatch (EdgeSubset.mk t hct :
         EdgeSubset (V.gluePairClosed i j hclosed)) st' φ'
-    · rw [if_pos hp, if_pos ((edgeOddBoundaryMatch_closedTrue_iff
+    · rw [ite_eq_left hp, ite_eq_left ((edgeOddBoundaryMatch_closedTrue_iff
         hij hclosed t hct hcT st' d φ').mpr hp)]
       refine Finset.prod_congr rfl (fun v _ => ?_)
       exact (vertexFactor_transport_closed hclosed t true hct hcT
@@ -1952,10 +1951,10 @@ theorem edgeSum_closedCut_true
         φ'.core
         (fun g h1 h2 => oddPushClosedTrueFun_agrees hclosed t hct d
           φ' g _ _) v).symm
-    · rw [if_neg hp, if_neg (fun hx => hp
+    · rw [ite_eq_right hp, ite_eq_right (fun hx => hp
         ((edgeOddBoundaryMatch_closedTrue_iff hij hclosed t hct hcT
           st' d φ').mp hx))]
-  · rw [if_neg hg, if_neg (fun hx => hg
+  · rw [ite_eq_right hg, ite_eq_right (fun hx => hg
       ((genEvenBoundaryMatch_closedTrue_iff hij hclosed t hct hcT
         st' d hbndW hbnd' ψ').mp hx))]
 

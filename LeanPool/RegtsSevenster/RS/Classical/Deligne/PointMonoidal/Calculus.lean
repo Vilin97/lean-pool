@@ -136,7 +136,7 @@ theorem actEE_span_one {X : S.Mod.{u, u, u, u}} (r : ℂ)
     (z : X.even) :
     X.actEE (LinearMap.toSpanSingleton ℂ S.even S.one r) z =
       r • z := by
-  show X.actEE (r • S.one) z = r • z
+  change X.actEE (r • S.one) z = r • z
   rw [map_smul, LinearMap.smul_apply, X.one_act_e]
 
 /-- A scalar multiple of the unit acts by that scalar, in odd
@@ -145,7 +145,7 @@ theorem actEO_span_one {X : S.Mod.{u, u, u, u}} (r : ℂ)
     (z : X.odd) :
     X.actEO (LinearMap.toSpanSingleton ℂ S.even S.one r) z =
       r • z := by
-  show X.actEO (r • S.one) z = r • z
+  change X.actEO (r • S.one) z = r • z
   rw [map_smul, LinearMap.smul_apply, X.one_act_o]
 
 /-- The monoidal tensor of two morphisms on an even-even

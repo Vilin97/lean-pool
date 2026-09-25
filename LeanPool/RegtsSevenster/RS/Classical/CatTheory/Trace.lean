@@ -53,7 +53,7 @@ theorem catTrace_add [Category.{v} C] [MonoidalCategory C] [SymmetricCategory C]
     [Preadditive C] [MonoidalPreadditive C] [RigidCategory C]
     {X : C} (f g : X ⟶ X) :
     catTrace (f + g) = catTrace f + catTrace g := by
-  show η_ X Xᘁ ≫ (f + g) ▷ Xᘁ ≫ (β_ X Xᘁ).hom ≫ ε_ X Xᘁ =
+  change η_ X Xᘁ ≫ (f + g) ▷ Xᘁ ≫ (β_ X Xᘁ).hom ≫ ε_ X Xᘁ =
     (η_ X Xᘁ ≫ f ▷ Xᘁ ≫ (β_ X Xᘁ).hom ≫ ε_ X Xᘁ) +
       (η_ X Xᘁ ≫ g ▷ Xᘁ ≫ (β_ X Xᘁ).hom ≫ ε_ X Xᘁ)
   simp [MonoidalPreadditive.add_whiskerRight]
@@ -65,7 +65,7 @@ theorem catTrace_smul
     [MonoidalLinear ℂ C] [RigidCategory C]
     {X : C} (a : ℂ) (f : X ⟶ X) :
     catTrace (a • f) = a • catTrace f := by
-  show η_ X Xᘁ ≫ (a • f) ▷ Xᘁ ≫ (β_ X Xᘁ).hom ≫ ε_ X Xᘁ =
+  change η_ X Xᘁ ≫ (a • f) ▷ Xᘁ ≫ (β_ X Xᘁ).hom ≫ ε_ X Xᘁ =
     a • (η_ X Xᘁ ≫ f ▷ Xᘁ ≫ (β_ X Xᘁ).hom ≫ ε_ X Xᘁ)
   simp [MonoidalLinear.smul_whiskerRight]
 
@@ -77,7 +77,7 @@ theorem catTrace_comp_comm
     [RigidCategory C]
     {X Y : C} (f : X ⟶ Y) (g : Y ⟶ X) :
     catTrace (f ≫ g) = catTrace (g ≫ f) := by
-  show η_ X Xᘁ ≫ (f ≫ g) ▷ Xᘁ ≫ (β_ X Xᘁ).hom ≫ ε_ X Xᘁ =
+  change η_ X Xᘁ ≫ (f ≫ g) ▷ Xᘁ ≫ (β_ X Xᘁ).hom ≫ ε_ X Xᘁ =
     η_ Y Yᘁ ≫ (g ≫ f) ▷ Yᘁ ≫ (β_ Y Yᘁ).hom ≫ ε_ Y Yᘁ
   rw [comp_whiskerRight]
   simp only [Category.assoc]
@@ -96,7 +96,7 @@ theorem catTrace_eq_loop
     [RigidCategory C]
     {X : C} (f : X ⟶ X) :
     catTrace f = η_ X Xᘁ ≫ (β_ X Xᘁ).hom ≫ Xᘁ ◁ f ≫ ε_ X Xᘁ := by
-  show η_ X Xᘁ ≫ f ▷ Xᘁ ≫ (β_ X Xᘁ).hom ≫ ε_ X Xᘁ = _
+  change η_ X Xᘁ ≫ f ▷ Xᘁ ≫ (β_ X Xᘁ).hom ≫ ε_ X Xᘁ = _
   rw [braiding_naturality_left_assoc]
 
 /-- The trace computed against a chosen exact pairing. -/
@@ -113,8 +113,8 @@ theorem pairTrace_eq [Category.{v} C] [MonoidalCategory C] [SymmetricCategory C]
     {X D₁ D₂ : C} (p₁ : ExactPairing X D₁)
     (p₂ : ExactPairing X D₂) (f : X ⟶ X) :
     pairTrace p₂ f = pairTrace p₁ f := by
-  letI := p₁
-  letI := p₂
+  let := p₁
+  let := p₂
   obtain ⟨φ, hA, hB⟩ :
       ∃ φ : D₁ ⟶ D₂, η_ X D₁ ≫ X ◁ φ = η_ X D₂ ∧
         φ ▷ X ≫ ε_ X D₂ = ε_ X D₁ := by
@@ -123,7 +123,7 @@ theorem pairTrace_eq [Category.{v} C] [MonoidalCategory C] [SymmetricCategory C]
         @coevaluation_comp_rightAdjointMate C _ _ X X ⟨D₂⟩ ⟨D₁⟩ (𝟙 X)
     · simpa using
         @rightAdjointMate_comp_evaluation C _ _ X X ⟨D₂⟩ ⟨D₁⟩ (𝟙 X)
-  show η_ X D₂ ≫ f ▷ D₂ ≫ (β_ X D₂).hom ≫ ε_ X D₂ =
+  change η_ X D₂ ≫ f ▷ D₂ ≫ (β_ X D₂).hom ≫ ε_ X D₂ =
     η_ X D₁ ≫ f ▷ D₁ ≫ (β_ X D₁).hom ≫ ε_ X D₁
   rw [← hA, assoc, whisker_exchange_assoc,
     braiding_naturality_right_assoc, hB]
@@ -283,7 +283,7 @@ theorem catTrace_tensorHom
   rw [End.mul_def, catTrace_eq_pairTrace (f ⊗ₘ g),
     pairTrace_eq (ExactPairing.tensor : ExactPairing (X ⊗ Y) (Yᘁ ⊗ Xᘁ))
       HasRightDual.exact (f ⊗ₘ g)]
-  show η_ (X ⊗ Y) (Yᘁ ⊗ Xᘁ) ≫ (f ⊗ₘ g) ▷ (Yᘁ ⊗ Xᘁ) ≫
+  change η_ (X ⊗ Y) (Yᘁ ⊗ Xᘁ) ≫ (f ⊗ₘ g) ▷ (Yᘁ ⊗ Xᘁ) ≫
       (β_ (X ⊗ Y) (Yᘁ ⊗ Xᘁ)).hom ≫ ε_ (X ⊗ Y) (Yᘁ ⊗ Xᘁ) =
     catTrace g ≫ catTrace f
   obtain ⟨s, hs⟩ : ∃ s : 𝟙_ C ⟶ 𝟙_ C,
@@ -371,7 +371,7 @@ theorem catDim_unit [Category.{v} C] [MonoidalCategory C] [SymmetricCategory C]
     rw [← catTrace_id, catTrace_eq_pairTrace]
     exact pairTrace_eq _ _ _
   rw [h, End.one_def]
-  show (ρ_ (𝟙_ C)).inv ≫ (𝟙 (𝟙_ C) ▷ 𝟙_ C) ≫
+  change (ρ_ (𝟙_ C)).inv ≫ (𝟙 (𝟙_ C) ▷ 𝟙_ C) ≫
     (β_ (𝟙_ C) (𝟙_ C)).hom ≫ (ρ_ (𝟙_ C)).hom = 𝟙 (𝟙_ C)
   rw [braiding_tensorUnit_left, MonoidalCategory.unitors_equal]
   monoidal

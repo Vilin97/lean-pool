@@ -86,44 +86,44 @@ def shiftUnitData : TensorData (shift S.unitMod) M (shift M) where
   feo := -M.actOO
   foe := M.actEE
   hee := fun b m n => by
-    show M.actOE (S.mulEO b m) n = M.actOE m (M.actEE b n)
+    change M.actOE (S.mulEO b m) n = M.actOE m (M.actEE b n)
     erw [← M.assoc_oee, ← S.comm_eo]
   hoo := fun b m n => by
-    show -M.actEO (S.mulEE b m) n = -M.actEO m (M.actEO b n)
+    change -M.actEO (S.mulEE b m) n = -M.actEO m (M.actEO b n)
     erw [M.assoc_eeo, M.actEO_actEO_comm]
   hoeo := fun c m n => by
-    show -M.actEO (S.mulOO c m) n = M.actOE m (M.actOO c n)
+    change -M.actEO (S.mulOO c m) n = M.actOE m (M.actOO c n)
     erw [M.assoc_ooo, M.actOE_actOO_neg, neg_neg]
   hooe := fun c m n => by
-    show M.actOE (S.mulOE c m) n
+    change M.actOE (S.mulOE c m) n
       = -(-(M.actEO m (M.actOE c n)))
     erw [neg_neg, M.assoc_oee, M.actEO_actOE]
   heeo := fun b m n => by
-    show -M.actOO (S.mulEO b m) n = -M.actOO m (M.actEO b n)
+    change -M.actOO (S.mulEO b m) n = -M.actOO m (M.actEO b n)
     erw [M.assoc_eoo, M.actEE_actOO]
   heoe := fun b m n => by
-    show M.actEE (S.mulEE b m) n = M.actEE m (M.actEE b n)
+    change M.actEE (S.mulEE b m) n = M.actEE m (M.actEE b n)
     erw [M.assoc_eee, M.actEE_actEE_comm]
   hoee := fun c m n => by
-    show M.actEE (S.mulOO c m) n = -(M.actOO m (M.actOE c n))
+    change M.actEE (S.mulOO c m) n = -(M.actOO m (M.actOE c n))
     erw [M.assoc_ooe, M.actOO_actOE_neg]
   hooo := fun c m n => by
-    show -M.actOO (S.mulOE c m) n = -(M.actEE m (M.actOO c n))
+    change -M.actOO (S.mulOE c m) n = -(M.actEE m (M.actOO c n))
     erw [M.assoc_oeo, M.actEE_actOO]
   aee := fun a m n => M.assoc_eoe a m n
   aoo := fun a m n => by
-    show -M.actEO (S.mulEE a m) n = M.actEO a (-(M.actEO m n))
+    change -M.actEO (S.mulEE a m) n = M.actEO a (-(M.actEO m n))
     erw [M.assoc_eeo, map_neg]
   aeo := fun a m n => by
-    show -M.actOO (S.mulEO a m) n = M.actEE a (-(M.actOO m n))
+    change -M.actOO (S.mulEO a m) n = M.actEE a (-(M.actOO m n))
     erw [M.assoc_eoo, map_neg]
   aoe := fun a m n => M.assoc_eee a m n
   cee := fun c m n => M.assoc_ooe c m n
   coo := fun c m n => by
-    show -M.actOO (S.mulOE c m) n = M.actOO c (-(M.actEO m n))
+    change -M.actOO (S.mulOE c m) n = M.actOO c (-(M.actEO m n))
     erw [M.assoc_oeo, map_neg]
   ceo := fun c m n => by
-    show -M.actEO (S.mulOO c m) n = M.actOE c (-(M.actOO m n))
+    change -M.actEO (S.mulOO c m) n = M.actOE c (-(M.actOO m n))
     erw [M.assoc_ooo, map_neg]
   coe := fun c m n => M.assoc_oee c m n
 
@@ -166,18 +166,18 @@ noncomputable def shiftUnitInv :
   evenMap := -tmulOO (shift S.unitMod) M S.one
   oddMap := tmulOE (shift S.unitMod) M S.one
   map_actEE x m := by
-    show -(tmulOO (shift S.unitMod) M S.one (M.actEO x m))
+    change -(tmulOO (shift S.unitMod) M S.one (M.actEO x m))
       = ((shift S.unitMod).tensor M).actEE x
         (-(tmulOO (shift S.unitMod) M S.one m))
     erw [map_neg, actEE_tmulOO, tmulOO_balanced_eoo]
   map_actEO x m := by
-    show tmulOE (shift S.unitMod) M S.one (M.actEE x m)
+    change tmulOE (shift S.unitMod) M S.one (M.actEE x m)
       = ((shift S.unitMod).tensor M).actEO x
         (tmulOE (shift S.unitMod) M S.one m)
     exact ((actEO_tmulOE (shift S.unitMod) M x S.one m).trans
       (tmulOE_balanced_eoe (shift S.unitMod) M x S.one m)).symm
   map_actOE v m := by
-    show tmulOE (shift S.unitMod) M S.one (M.actOO v m)
+    change tmulOE (shift S.unitMod) M S.one (M.actOO v m)
       = ((shift S.unitMod).tensor M).actOE v
         (-(tmulOO (shift S.unitMod) M S.one m))
     rw [map_neg]
@@ -185,7 +185,7 @@ noncomputable def shiftUnitInv :
     simpa only [neg_neg] using
       (congrArg Neg.neg (tmulEO_balanced_ooo (shift S.unitMod) M v S.one m)).symm
   map_actOO v m := by
-    show -(tmulOO (shift S.unitMod) M S.one (M.actOE v m))
+    change -(tmulOO (shift S.unitMod) M S.one (M.actOE v m))
       = ((shift S.unitMod).tensor M).actOO v
         (tmulOE (shift S.unitMod) M S.one m)
     erw [actOO_tmulOE, tmulEE_balanced_ooe]
@@ -231,7 +231,7 @@ noncomputable def shiftUnitTensor :
   inv_hom_id := by
     refine Hom.ext (LinearMap.ext fun m => ?_)
       (LinearMap.ext fun m => ?_)
-    · show (shiftUnitHom M).evenMap
+    · change (shiftUnitHom M).evenMap
         (-(tmulOO (shift S.unitMod) M S.one m)) = m
       refine Eq.trans (map_neg _ _) ?_
       refine Eq.trans (congrArg Neg.neg

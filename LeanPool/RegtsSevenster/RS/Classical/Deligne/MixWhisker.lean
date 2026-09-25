@@ -66,7 +66,7 @@ theorem colourSum_eq_zero_whisker
       rw [MonoidalCategory.whiskerLeft_comp,
         MonoidalCategory.whiskerLeft_comp, hx, Limits.zero_comp,
         Limits.comp_zero]
-    rw [S.nIn_permAlg_nOut hβ x c d, dif_pos hpop,
+    rw [S.nIn_permAlg_nOut hβ x c d, dite_eq_left hpop,
       MonoidalLinear.whiskerLeft_smul] at h1
     by_contra hne
     have h2 : W ◁ eqToHom (congrArg (tensorPow A U) hpop) = 0 := by

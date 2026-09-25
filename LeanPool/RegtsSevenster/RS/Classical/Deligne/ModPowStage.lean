@@ -82,7 +82,7 @@ theorem modPowLegM_succ
     modPowLegM A X a (b + 1) =
       (α_ (tensorPow D X a ⊗ ((X ⊗ A) ⊗ X)) (tensorPow D X b) X).inv ≫
         (modPowLegM A X a b ▷ X) := by
-  show ((tensorPow D X a ◁ winLegM A X) ▷ tensorPow D X (b + 1)) ≫
+  change ((tensorPow D X a ◁ winLegM A X) ▷ tensorPow D X (b + 1)) ≫
       modPowGlue X a (b + 1) = _
   rw [modPowGlue_succ]
   exact glue_succ_aux (tensorPow D X a ◁ winLegM A X)
@@ -98,7 +98,7 @@ theorem modPowLegN_succ
     modPowLegN A X a (b + 1) =
       (α_ (tensorPow D X a ⊗ ((X ⊗ A) ⊗ X)) (tensorPow D X b) X).inv ≫
         (modPowLegN A X a b ▷ X) := by
-  show ((tensorPow D X a ◁ winLegN A X) ▷ tensorPow D X (b + 1)) ≫
+  change ((tensorPow D X a ◁ winLegN A X) ▷ tensorPow D X (b + 1)) ≫
       modPowGlue X a (b + 1) = _
   rw [modPowGlue_succ]
   exact glue_succ_aux (tensorPow D X a ◁ winLegN A X)

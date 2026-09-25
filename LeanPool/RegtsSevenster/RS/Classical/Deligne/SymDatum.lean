@@ -45,20 +45,20 @@ noncomputable def ModDualityDatum.transfer
   pair := modTensorMap A s' s ≫ d.pair
   copair := d.copair ≫ modTensorMap A r r'
   pair_linear := by
-    letI := modTensorModObj A Q' Q
-    letI := modTensorModObj A P' P
+    let := modTensorModObj A Q' Q
+    let := modTensorModObj A P' P
     have hp : modTensorAct A P' P ≫ d.pair =
         (A ◁ d.pair) ≫ μ[A] := d.pair_linear
-    show modTensorAct A Q' Q ≫ modTensorMap A s' s ≫ d.pair =
+    change modTensorAct A Q' Q ≫ modTensorMap A s' s ≫ d.pair =
       (A ◁ (modTensorMap A s' s ≫ d.pair)) ≫ μ[A]
     rw [← Category.assoc, modTensorAct_map, Category.assoc, hp,
       ← MonoidalCategory.whiskerLeft_comp_assoc]
   copair_linear := by
-    letI := modTensorModObj A Q Q'
-    letI := modTensorModObj A P P'
+    let := modTensorModObj A Q Q'
+    let := modTensorModObj A P P'
     have hc : μ[A] ≫ d.copair =
         (A ◁ d.copair) ≫ modTensorAct A P P' := d.copair_linear
-    show μ[A] ≫ d.copair ≫ modTensorMap A r r' =
+    change μ[A] ≫ d.copair ≫ modTensorMap A r r' =
       (A ◁ (d.copair ≫ modTensorMap A r r')) ≫
         modTensorAct A Q Q'
     rw [← Category.assoc, hc, Category.assoc, modTensorAct_map,

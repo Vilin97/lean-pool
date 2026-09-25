@@ -47,7 +47,7 @@ theorem outPermEquiv_symm (s : ℕ) {t : ℕ}
       Fin.ext rfl, outPermEquiv_symm_low, outPermEquiv_low]
   · have hk : x.val - s < t := by have := x.isLt; omega
     rw [show x = Fin.natAdd s (⟨x.val - s, hk⟩ : Fin t) from
-      Fin.ext (by show x.val = s + (x.val - s); omega),
+      Fin.ext (by change x.val = s + (x.val - s); omega),
       outPermEquiv_symm_high, outPermEquiv_high]
 
 private theorem out_ground_aux (s t u : ℕ)
@@ -69,7 +69,7 @@ private theorem out_ground_aux (s t u : ℕ)
     simp only [List.map_cons, Fragment.mapPairs, Prod.map]
     refine congrArg₂ List.cons (Prod.ext rfl ?_)
       (out_ground_aux s t u σ l)
-    show Sum.inr ((outPermEquiv t σ).symm
+    change Sum.inr ((outPermEquiv t σ).symm
       ⟨k.val, by have := k.isLt; omega⟩) = _
     refine congrArg Sum.inr ?_
     rw [show (⟨k.val, by have := k.isLt; omega⟩ : Fin (t + u)) =
@@ -120,7 +120,7 @@ theorem out_label_meet (s t u : ℕ) (σ : Equiv.Perm (Fin u)) :
   have hpred := (interfaceSurv_iff s t u xv).mp
     ((forall_ne_iff_not_mem_flat _ xv).mp hx)
   rcases xv with a | b
-  · show finSumFinEquiv (interfaceSurvEquiv s t u
+  · change finSumFinEquiv (interfaceSurvEquiv s t u
       ⟨Sum.inl a, hx⟩) =
       outPermEquiv s σ (finSumFinEquiv (interfaceSurvEquiv s t u
         ⟨Sum.inl a, hx⟩))
@@ -129,7 +129,7 @@ theorem out_label_meet (s t u : ℕ) (σ : Equiv.Perm (Fin u)) :
   · have hb : t ≤ b.val := Nat.le_of_not_lt hpred
     have hj : b.val - t < u := by have := b.isLt; omega
     have hb2 : b = Fin.natAdd t ⟨b.val - t, hj⟩ :=
-      Fin.ext (by show b.val = t + (b.val - t); omega)
+      Fin.ext (by change b.val = t + (b.val - t); omega)
     have hbv : outPermEquiv t σ b =
         Fin.natAdd t (σ ⟨b.val - t, hj⟩) := by
       conv_lhs => rw [hb2]
@@ -141,25 +141,25 @@ theorem out_label_meet (s t u : ℕ) (σ : Equiv.Perm (Fin u)) :
           Fin (s + t) ⊕ Fin (t + u)) ≠ p.2 :=
       (forall_ne_iff_not_mem_flat _ _).mpr
         ((interfaceSurv_iff s t u _).mpr
-          (by show ¬ (outPermEquiv t σ b).val < t
+          (by change ¬ (outPermEquiv t σ b).val < t
               rw [hbv]
-              show ¬ t + (σ ⟨b.val - t, hj⟩).val < t
+              change ¬ t + (σ ⟨b.val - t, hj⟩).val < t
               omega))
-    show finSumFinEquiv (interfaceSurvEquiv s t u
+    change finSumFinEquiv (interfaceSurvEquiv s t u
       ⟨Sum.inr (outPermEquiv t σ b), hsurvL⟩) =
       outPermEquiv s σ (finSumFinEquiv (interfaceSurvEquiv s t u
         ⟨Sum.inr b, hx⟩))
     rw [interfaceSurvEquiv_inr s t u
         ⟨Sum.inr (outPermEquiv t σ b), hsurvL⟩ _ rfl
-        (by rw [hbv]; show t ≤ t + _; omega),
+        (by rw [hbv]; change t ≤ t + _; omega),
       interfaceSurvEquiv_inr s t u ⟨Sum.inr b, hx⟩ b rfl hb,
       finSumFinEquiv_apply_right, finSumFinEquiv_apply_right,
       outPermEquiv_high]
     refine congrArg (Fin.natAdd s) ?_
     refine Fin.ext ?_
-    show (outPermEquiv t σ b).val - t = (σ ⟨b.val - t, hj⟩).val
+    change (outPermEquiv t σ b).val - t = (σ ⟨b.val - t, hj⟩).val
     rw [hbv]
-    show t + (σ ⟨b.val - t, hj⟩).val - t = (σ ⟨b.val - t, hj⟩).val
+    change t + (σ ⟨b.val - t, hj⟩).val - t = (σ ⟨b.val - t, hj⟩).val
     omega
 
 /-- **Outgoing relabels pass through composition**: permuting the

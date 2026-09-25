@@ -17,7 +17,7 @@ colour (or its partner on partner slots), the rest the even colour.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 
@@ -40,6 +40,7 @@ theorem blockFlag_injective (W : ClosedFragment)
   fun _ _ h => slotEmbed_injective W v
     ((starFlagEnum W).symm.injective h)
 
+open scoped Classical in
 /-- **Block flags enumerate the vertex's flags**: the image of the
 block-flag enumeration is the set of flags at the block's
 vertex. -/
@@ -57,11 +58,11 @@ theorem image_blockFlag (W : ClosedFragment)
   · intro hvtx
     have hassign : starAssignEnum W (starFlagEnum W g) =
         finCongr (degList_length (starAssignEnum W)) v := by
-      show (Fintype.equivFin W.Vertex)
+      change (Fintype.equivFin W.Vertex)
         (starAssign W (starFlagEnum W g)) = _
       have hv : starAssign W (starFlagEnum W g) =
           blockVertex W v := by
-        show ClosedFragment.vertexOf W
+        change ClosedFragment.vertexOf W
           ((starFlagEnum W).symm (starFlagEnum W g)) =
           blockVertex W v
         rw [_root_.Equiv.symm_apply_apply, hvtx]
@@ -76,7 +77,7 @@ theorem image_blockFlag (W : ClosedFragment)
     simp only at hfst
     rcases hfst with rfl
     refine ⟨jw, ?_⟩
-    show (starFlagEnum W).symm (slotEmbed W w jw) = g
+    change (starFlagEnum W).symm (slotEmbed W w jw) = g
     rw [slotEmbed_recover W w (starFlagEnum W g) jw hq_def,
       _root_.Equiv.symm_apply_apply]
 
@@ -107,7 +108,7 @@ theorem blockRestrict_colouringOf_not_mem (W : ClosedFragment)
     blockRestrict (ds W)
       (cSorted W (colouringOf W F ψ φ)) v j =
     Sum.inl (ψ.val ⟨blockFlag W v j, h⟩) := by
-  rw [blockRestrict_colouringOf, dif_neg h]
+  rw [blockRestrict_colouringOf, dite_eq_right h]
 
 /-- Participating block flags carry the odd colour or its
 partner. -/
@@ -122,7 +123,7 @@ theorem blockRestrict_colouringOf_mem (W : ClosedFragment)
       φ.val ⟨blockFlag W v j, h⟩
     else
       oddPartner ℓ (φ.val ⟨blockFlag W v j, h⟩)) := by
-  rw [blockRestrict_colouringOf, dif_pos h]
+  rw [blockRestrict_colouringOf, dite_eq_left h]
 
 open Classical in
 /-- The non-participating slots of a block. -/

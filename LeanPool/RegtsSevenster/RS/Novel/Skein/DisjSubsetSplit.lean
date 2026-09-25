@@ -20,7 +20,7 @@ namespace RS
 
 variable {α β : Type} {W₁ : Fragment α} {W₂ : Fragment β}
 
-open scoped Classical
+
 
 /-! ## The parts and the join -/
 
@@ -114,7 +114,7 @@ fragment. -/
 private theorem attach_inl_eq_inl {f : W₁.Flag} {v : W₁.Vertex} :
     (W₁.disjUnion W₂).attach (Sum.inl f) = Sum.inl (Sum.inl v) ↔
       W₁.attach f = Sum.inl v := by
-  show (W₁.attach f).map Sum.inl Sum.inl = Sum.inl (Sum.inl v) ↔
+  change (W₁.attach f).map Sum.inl Sum.inl = Sum.inl (Sum.inl v) ↔
     W₁.attach f = Sum.inl v
   constructor
   · intro h
@@ -131,7 +131,7 @@ fragment. -/
 private theorem attach_inr_eq_inr {f : W₂.Flag} {v : W₂.Vertex} :
     (W₁.disjUnion W₂).attach (Sum.inr f) = Sum.inl (Sum.inr v) ↔
       W₂.attach f = Sum.inl v := by
-  show (W₂.attach f).map Sum.inr Sum.inr = Sum.inl (Sum.inr v) ↔
+  change (W₂.attach f).map Sum.inr Sum.inr = Sum.inl (Sum.inr v) ↔
     W₂.attach f = Sum.inl v
   constructor
   · intro h
@@ -146,13 +146,13 @@ private theorem attach_inr_eq_inr {f : W₂.Flag} {v : W₂.Vertex} :
 /-- A right flag never sits at a left vertex. -/
 private theorem attach_inr_ne_inl {f : W₂.Flag} {v : W₁.Vertex} :
     (W₁.disjUnion W₂).attach (Sum.inr f) ≠ Sum.inl (Sum.inl v) := by
-  show (W₂.attach f).map Sum.inr Sum.inr ≠ Sum.inl (Sum.inl v)
+  change (W₂.attach f).map Sum.inr Sum.inr ≠ Sum.inl (Sum.inl v)
   rcases W₂.attach f with w | ℓ <;> simp
 
 /-- A left flag never sits at a right vertex. -/
 private theorem attach_inl_ne_inr {f : W₁.Flag} {v : W₂.Vertex} :
     (W₁.disjUnion W₂).attach (Sum.inl f) ≠ Sum.inl (Sum.inr v) := by
-  show (W₁.attach f).map Sum.inl Sum.inl ≠ Sum.inl (Sum.inr v)
+  change (W₁.attach f).map Sum.inl Sum.inl ≠ Sum.inl (Sum.inr v)
   rcases W₁.attach f with w | ℓ <;> simp
 
 /-! ## Filtering a disjoint sum -/

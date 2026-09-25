@@ -206,6 +206,30 @@ end MulBridge
 
 /-! ## The transition bridge -/
 
+private theorem projStage_mul_leftLift
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A)
+    (k : ℕ) : modTensorπ A (modPowMod A M.X k)
+    (modPowMod A M.X 0) ≫
+    (modTensorSwapMod A (modPowMod A M.X k)
+        (modPowMod A M.X 0) ≫
+      powMulMod A M.X 0 k ≫
+      modPowCastMod A M.X
+        (by omega : 0 + 1 + k + 1 = k + 2)).hom =
+  (β_ (modPow A M.X (k + 1)) (modPow A M.X (0 + 1))).hom ≫
+    modPowMul A M.X (0 + 1) (k + 1) ≫
+    modPowCast A M.X (by omega : 0 + 1 + k + 1 = k + 2) := by
+  change modTensorπ A (modPowMod A M.X k) (modPowMod A M.X 0) ≫
+    modTensorSwap A (modPowMod A M.X k) (modPowMod A M.X 0) ≫
+    powMulDesc A M.X 0 k ≫
+    modPowCast A M.X (by omega : 0 + 1 + k + 1 = k + 2) = _
+  rw [modTensorπ_swap_assoc, modTensorπ_powMulDesc_assoc]
+  rfl
+
 /-- **The transition core**: the interchange followed by the
 power multiplications and the stage projection is the slotwise
 stage projection followed by the chain multiplication. -/
@@ -229,26 +253,11 @@ theorem projStage_mul
       projStage A M M' (k + 1) =
     (projStage A M M' k ⊗ₘ projStage A M M' 0) ≫
       chainMul A M M' k 0 := by
-  have hF : modTensorπ A (modPowMod A M.X k)
-      (modPowMod A M.X 0) ≫
-      (modTensorSwapMod A (modPowMod A M.X k)
-          (modPowMod A M.X 0) ≫
-        powMulMod A M.X 0 k ≫
-        modPowCastMod A M.X
-          (by omega : 0 + 1 + k + 1 = k + 2)).hom =
-    (β_ (modPow A M.X (k + 1)) (modPow A M.X (0 + 1))).hom ≫
-      modPowMul A M.X (0 + 1) (k + 1) ≫
-      modPowCast A M.X (by omega : 0 + 1 + k + 1 = k + 2) := by
-    show modTensorπ A (modPowMod A M.X k) (modPowMod A M.X 0) ≫
-      modTensorSwap A (modPowMod A M.X k) (modPowMod A M.X 0) ≫
-      powMulDesc A M.X 0 k ≫
-      modPowCast A M.X (by omega : 0 + 1 + k + 1 = k + 2) = _
-    rw [modTensorπ_swap_assoc, modTensorπ_powMulDesc_assoc]
-    rfl
+  have hF := projStage_mul_leftLift A M k
   have hG : modTensorπ A (modPowMod A M'.X k)
       (modPowMod A M'.X 0) ≫ (powMulMod A M'.X k 0).hom =
     modPowMul A M'.X (k + 1) (0 + 1) := by
-    show modTensorπ A (modPowMod A M'.X k)
+    change modTensorπ A (modPowMod A M'.X k)
       (modPowMod A M'.X 0) ≫ powMulDesc A M'.X k 0 = _
     exact modTensorπ_powMulDesc A M'.X k 0
   have hslot :

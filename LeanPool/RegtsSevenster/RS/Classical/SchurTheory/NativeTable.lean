@@ -61,13 +61,14 @@ theorem mem_subCarrier
 
 /-- **The native scalar action**: a class element multiplies each
 element of a simple submodule by the character-pairing scalar. -/
-theorem classElem_mul_mem_native [Group G] [Fintype G] [DecidableEq G]
+theorem classElem_mul_mem_native [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G))
     (hS : IsSimpleModule (MonoidAlgebra ℂ G) S)
     (c : G → ℂ) (hc : ∀ g h : G, c (h * g * h⁻¹) = c g)
     (t : MonoidAlgebra ℂ G) (ht : t ∈ S) :
     classElem c * t =
       ((∑ g : G, c g * nChar S g) / (nDim S : ℂ)) • t := by
+  classical
   have hsc := classElem_scalar_eq (ρ := rhoS S)
     (isIrredRep_rhoS S hS) c hc
   have happ := congrFun (congrArg (fun (f : Module.End ℂ
@@ -90,9 +91,9 @@ theorem rhoS_isIrreducible
     (hS : IsSimpleModule (MonoidAlgebra ℂ G) S) :
     (rhoS S).IsIrreducible := by
   have hirr := isIrredRep_rhoS S hS
-  haveI hnt : Nontrivial (Subrepresentation (rhoS S)) := by
+  have hnt : Nontrivial (Subrepresentation (rhoS S)) := by
     refine ⟨⟨⊥, ⊤, ?_⟩⟩
-    haveI : Nontrivial (subCarrier S) := hirr.1
+    have : Nontrivial (subCarrier S) := hirr.1
     intro hbt
     have h1 := congrArg Subrepresentation.toSubmodule hbt
     have h2 : (⊥ : Submodule ℂ (subCarrier S)) =
@@ -120,7 +121,7 @@ open scoped Classical in
 /-- **The native action table**: the projector of a simple
 submodule acts on each simple submodule as `1` or `0` by
 equivalence. -/
-theorem nProjector_mul_mem [Group G] [Fintype G] [DecidableEq G]
+theorem nProjector_mul_mem [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G))
     (T : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G))
     (hS : IsSimpleModule (MonoidAlgebra ℂ G) S)
@@ -129,15 +130,16 @@ theorem nProjector_mul_mem [Group G] [Fintype G] [DecidableEq G]
     nProjector S * t =
       (if Nonempty ((rhoS S).Equiv (rhoS T)) then (1 : ℂ) else 0)
         • t := by
-  haveI := rhoS_isIrreducible S hS
-  haveI := rhoS_isIrreducible T hT
+  classical
+  have := rhoS_isIrreducible S hS
+  have := rhoS_isIrreducible T hT
   rw [nProjector, classElem_mul_mem_native T hT _
     (nCoeff_classFun S) t ht]
   congr 1
   have hcard0 : ((Nat.card G : ℂ)) ≠ 0 := by
     rw [Nat.card_eq_fintype_card]
     exact_mod_cast Fintype.card_ne_zero
-  haveI : Invertible ((Nat.card G : ℂ)) := invertibleOfNonzero hcard0
+  have : Invertible ((Nat.card G : ℂ)) := invertibleOfNonzero hcard0
   have horth := Representation.char_orthonormal (rhoS T) (rhoS S)
   have hcard : ((Nat.card G : ℂ)) ≠ 0 := by
     rw [Nat.card_eq_fintype_card]
@@ -157,13 +159,13 @@ theorem nProjector_mul_mem [Group G] [Fintype G] [DecidableEq G]
     rw [← horth, ← mul_assoc, mul_inv_cancel₀ hcard, one_mul]
   rw [hsum, h2]
   by_cases heq : Nonempty ((rhoS S).Equiv (rhoS T))
-  · rw [if_pos heq]
+  · rw [ite_eq_left heq]
     have hdim : nDim S = nDim T := by
       obtain ⟨e⟩ := heq
       exact e.toLinearEquiv.finrank_eq
     rw [hdim, Nat.card_eq_fintype_card, mul_one]
     have hd : ((nDim T : ℂ)) ≠ 0 := by
-      haveI : Nontrivial (subCarrier T) :=
+      have : Nontrivial (subCarrier T) :=
         (isIrredRep_rhoS T hT).1
       have h1 := Module.finrank_pos
         (R := ℂ) (M := subCarrier T)
@@ -171,15 +173,16 @@ theorem nProjector_mul_mem [Group G] [Fintype G] [DecidableEq G]
     have hc : ((Fintype.card G : ℂ)) ≠ 0 := by
       exact_mod_cast Fintype.card_ne_zero
     field_simp
-  · rw [if_neg heq]
+  · rw [ite_eq_right heq]
     simp
 
 open scoped Classical in
 /-- **Idempotency of the native projector.** -/
-theorem nProjector_idem [Group G] [Fintype G] [DecidableEq G]
+theorem nProjector_idem [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G))
     (hS : IsSimpleModule (MonoidAlgebra ℂ G) S) :
     nProjector S * nProjector S = nProjector S := by
+  classical
   have hkill : ∀ T : Submodule (MonoidAlgebra ℂ G)
       (MonoidAlgebra ℂ G),
       IsSimpleModule (MonoidAlgebra ℂ G) T →
@@ -190,36 +193,40 @@ theorem nProjector_idem [Group G] [Fintype G] [DecidableEq G]
     rw [nProjector_mul_mem S T hS hT t ht]
     rw [mul_smul_comm, nProjector_mul_mem S T hS hT t ht]
     by_cases heq : Nonempty ((rhoS S).Equiv (rhoS T))
-    · rw [if_pos heq, one_smul, one_smul, sub_self]
-    · rw [if_neg heq]
+    · rw [ite_eq_left heq, one_smul, one_smul, sub_self]
+    · rw [ite_eq_right heq]
       simp
   have h0 := eq_zero_of_kills_simples _ hkill
   exact sub_eq_zero.mp h0
 
 /-- Centrality of the native projector. -/
-theorem nProjector_central [Group G] [Fintype G] [DecidableEq G]
+theorem nProjector_central [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G))
     (y : MonoidAlgebra ℂ G) :
-    nProjector S * y = y * nProjector S :=
-  classElem_mul_comm (nCoeff S) (nCoeff_classFun S) y
+    nProjector S * y = y * nProjector S := by
+  classical
+  exact
+    classElem_mul_comm (nCoeff S) (nCoeff_classFun S) y
 
 /-- The projector's coefficient at the identity. -/
-theorem nProjector_coeff_one [Group G] [Fintype G] [DecidableEq G]
+theorem nProjector_coeff_one [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G)) :
     (nProjector S).coeff 1 =
       ((nDim S : ℂ) ^ 2) / (Fintype.card G : ℂ) := by
+  classical
   rw [nProjector, classElem_coeff, nCoeff, inv_one]
   rw [nChar, Representation.char_one]
   rw [show Module.finrank ℂ (subCarrier S) = nDim S from rfl]
   ring
 
 /-- **The native block rank.** -/
-theorem nProjector_block_rank [Group G] [Fintype G] [DecidableEq G]
+theorem nProjector_block_rank [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G))
     (hS : IsSimpleModule (MonoidAlgebra ℂ G) S) :
     Module.finrank ℂ
       (LinearMap.range (mulLeft ℂ (nProjector S))) =
       nDim S ^ 2 := by
+  classical
   have h := finrank_range_mulLeft (nProjector S)
     (nProjector_idem S hS)
   rw [nProjector_coeff_one] at h

@@ -205,7 +205,7 @@ theorem tensorPowConcat_peel [Category.{v} D] [MonoidalCategory D] (X : D)
   | 0 => by
     rw [tensorPowConcat_succ X p 0, powPeel_zero,
       tensorPowConcat_zero, tensorPowConcat_zero]
-    simp only [Iso.trans_hom, Iso.symm_hom, whiskerRightIso_hom]
+    simp only [Iso.trans_hom, Iso.symm_hom]
     exact (concat_peel_zero_aux X (tensorPow D X p)).trans
       (congrArg (fun z =>
           (tensorPow D X p ◁ ((λ_ X).hom ≫ (ρ_ X).inv)) ≫
@@ -1493,8 +1493,8 @@ private theorem winFrame_adjSwap_low
     (tensorPowConcat X (a + 2) (q + 1)) hCb
   simp only [winFrame, winAssemble, adjSwapMor, swapTop,
     Category.assoc] at h0 ⊢
-  simp only [tensorPow, tensorPowConcat, Iso.trans_inv, whiskerRightIso_inv,
-    Iso.symm_inv, winAssemble, Category.assoc] at h0 ⊢
+  simp only [tensorPow, tensorPowConcat, Iso.trans_inv,
+    Iso.symm_inv,  Category.assoc] at h0 ⊢
   repeat' erw [Category.assoc] at h0
   exact h0
 

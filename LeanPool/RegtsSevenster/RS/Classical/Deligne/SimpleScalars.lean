@@ -165,7 +165,7 @@ epimorphism. -/
 instance epi_imageFactor [SmallCategory C] [Abelian C]
     {X Y : Ind C} (k : X ⟶ Y) :
     Epi (imageFactor k) := by
-  show Epi (factorThruImage k ≫ _)
+  change Epi (factorThruImage k ≫ _)
   exact epi_comp _ _
 
 /-! ## Kernel and image are ideals -/
@@ -192,7 +192,7 @@ theorem isIdeal_imageSubobject_of
     {X : Ind C} (k : X ⟶ R)
     (θ : R ⊗ X ⟶ X) (hθ : θ ≫ k = (R ◁ k) ≫ μ[R]) :
     IsIdeal R (Subobject.mk (image.ι k)) := by
-  haveI : Epi (R ◁ imageFactor k) :=
+  have : Epi (R ◁ imageFactor k) :=
     inferInstanceAs (Epi ((tensorLeft R).map _))
   refine factors_of_epi_comp _ (R ◁ imageFactor k) _ ?_
   refine factors_of_comm (θ ≫ imageFactor k) ?_
@@ -221,9 +221,9 @@ theorem eq_zero_of_imageSubobject_eq_bot [SmallCategory C] [Abelian C]
 theorem epi_of_imageSubobject_eq_top [SmallCategory C] [Abelian C]
     {X Y : Ind C} {k : X ⟶ Y}
     (h : Subobject.mk (image.ι k) = ⊤) : Epi k := by
-  haveI : IsIso (Subobject.mk (image.ι k)).arrow :=
+  have : IsIso (Subobject.mk (image.ι k)).arrow :=
     (Subobject.isIso_arrow_iff_eq_top _).2 h
-  haveI : IsIso (image.ι k) := by
+  have : IsIso (image.ι k) := by
     rw [← Subobject.underlyingIso_arrow (image.ι k)]
     infer_instance
   have he : Epi (factorThruImage k ≫ image.ι k) := epi_comp _ _
@@ -245,7 +245,7 @@ theorem isIso_mulBy_of_simple
     IsIso (mulBy R g) := by
   have hz : mulBy R g ≠ 0 := fun h =>
     hg (eq_zero_of_mulBy_eq_zero R h)
-  haveI : Mono (mulBy R g) := by
+  have : Mono (mulBy R g) := by
     rcases hsimple _ (isIdeal_kernelSubobject_mulBy R g) with h | h
     · refine Preadditive.mono_of_kernel_zero ?_
       have ha : (kernelSubobject (mulBy R g)).arrow = 0 := by
@@ -253,11 +253,11 @@ theorem isIso_mulBy_of_simple
       have hk := kernelSubobject_arrow' (mulBy R g)
       rw [ha, comp_zero] at hk
       exact hk.symm
-    · haveI : IsIso (kernelSubobject (mulBy R g)).arrow :=
+    · have : IsIso (kernelSubobject (mulBy R g)).arrow :=
         (Subobject.isIso_arrow_iff_eq_top _).2 h
       exact absurd (zero_of_epi_comp _
         (kernelSubobject_arrow_comp (mulBy R g))) hz
-  haveI : Epi (mulBy R g) := by
+  have : Epi (mulBy R g) := by
     rcases hsimple _ (isIdeal_imageSubobject_mulBy R g) with h | h
     · exact absurd (eq_zero_of_imageSubobject_eq_bot h) hz
     · exact epi_of_imageSubobject_eq_top h
@@ -276,7 +276,7 @@ theorem exists_inverse_of_simple
     {g : 𝟙_ (Ind C) ⟶ R} (hg : g ≠ 0) :
     ∃ g' : 𝟙_ (Ind C) ⟶ R,
       (λ_ (𝟙_ (Ind C))).inv ≫ gmul g g' = η[R] := by
-  haveI := isIso_mulBy_of_simple R hsimple hg
+  have := isIso_mulBy_of_simple R hsimple hg
   refine ⟨η[R] ≫ inv (mulBy R g), ?_⟩
   rw [← comp_mulBy, Category.assoc, IsIso.inv_hom_id,
     Category.comp_id]
@@ -339,8 +339,8 @@ theorem hom_oddLine_eq_zero_of_simple
   have hzero : gmul f (𝟙 R) = 0 := by
     rcases hsimple _ hid with h | h
     · exact eq_zero_of_imageSubobject_eq_bot h
-    · haveI := epi_of_imageSubobject_eq_top h
-      haveI : Epi (L.obj ◁ gmul f (𝟙 R)) :=
+    · have := epi_of_imageSubobject_eq_top h
+      have : Epi (L.obj ◁ gmul f (𝟙 R)) :=
         inferInstanceAs (Epi ((tensorLeft L.obj).map _))
       refine zero_of_epi_comp (L.obj ◁ gmul f (𝟙 R)) ?_
       rw [← gmul_comp, Category.comp_id]

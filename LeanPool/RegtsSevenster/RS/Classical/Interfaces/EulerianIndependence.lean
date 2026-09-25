@@ -42,7 +42,7 @@ theorem EdgeSubset.mixedValue_eq_summand
     F.mixedValue h = F.mixedSummand h o := by
   have hne : Nonempty ((κ' : F.TransitionSystem) × κ'.Orientation) :=
     ⟨⟨κ, o⟩⟩
-  rw [EdgeSubset.mixedValue, dif_pos hne]
+  rw [EdgeSubset.mixedValue, dite_eq_left hne]
   exact hInd F h _ o
 
 open Classical in
@@ -72,7 +72,7 @@ theorem EdgeSubset.mixedValue_transport (hInd : EulerianIndependence)
           EdgeSubset.TransitionSystem.Orientation.transport e.symm o₂⟩⟩
       rwa [EdgeSubset.transport_symm_transport] at hback
     rw [EdgeSubset.mixedValue, EdgeSubset.mixedValue,
-      dif_neg hne, dif_neg hne₂]
+      dite_eq_right hne, dite_eq_right hne₂]
 
 open Classical in
 /-- **Isomorphism invariance of the mixed partition function**:
@@ -104,13 +104,13 @@ theorem mixedPartition_transport (hInd : EulerianIndependence)
         (by rw [Finset.mem_map_equiv, Equiv.symm_apply_apply]; exact hf)
       rwa [Finset.mem_map_equiv, hpair, Equiv.symm_apply_apply] at hg
   by_cases hc : ∀ f ∈ s, W₁.pairing f ∈ s
-  · rw [dif_pos hc, dif_pos (hclosed.mp hc)]
+  · rw [dite_eq_left hc, dite_eq_left (hclosed.mp hc)]
     rw [show EdgeSubset.mk (s.map e.flagEquiv.toEmbedding)
           (hclosed.mp hc) =
         EdgeSubset.transport e (EdgeSubset.mk s hc)
       from EdgeSubset.ext rfl]
     simp only [EdgeSubset.transport_eulerian,
       EdgeSubset.mixedValue_transport hInd]
-  · rw [dif_neg hc, dif_neg (fun hcc => hc (hclosed.mpr hcc))]
+  · rw [dite_eq_right hc, dite_eq_right (fun hcc => hc (hclosed.mpr hcc))]
 
 end RS

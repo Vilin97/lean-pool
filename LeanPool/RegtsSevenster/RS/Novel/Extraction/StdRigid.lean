@@ -95,7 +95,7 @@ private theorem std_coev_ev (k ℓ : ℕ) :
         (TensorProduct.lid ℂ (Fin k → ℂ)).symm.toLinearMap) ∘ₗ
       ((TensorProduct.rid ℂ (Fin k → ℂ)).toLinearMap ∘ₗ LinearMap.fst ℂ _ _)
     ext x
-    all_goals simp [-Prod.mk_add_mk, -Prod.smul_mk, stdCopairEvenElem,
+    all_goals simp? [-Prod.mk_add_mk, -Prod.smul_mk, stdCopairEvenElem,
       stdCopairOddElem,
       mk_sum_split, mk_sum_left, mk_add_left,
        mk_smul_left, mk_smul_right,
@@ -112,7 +112,7 @@ private theorem std_coev_ev (k ℓ : ℕ) :
           (if x = i then (1 : ℂ) else 0) :=
       fun i => stdFormEven_stdE k x i
     simp only [hcollapse, TensorProduct.ite_tmul, Finset.sum_ite_eq,
-      Finset.mem_univ, if_pos]
+      Finset.mem_univ, ite_eq_left]
   · change
       (LinearMap.prodMap
         (TensorProduct.map
@@ -133,7 +133,7 @@ private theorem std_coev_ev (k ℓ : ℕ) :
       ((TensorProduct.rid ℂ (Fin (2 * ℓ) → ℂ)).toLinearMap ∘ₗ LinearMap.snd ℂ _
         _)
     ext x
-    all_goals simp [-Prod.mk_add_mk, -Prod.smul_mk, stdCopairEvenElem,
+    all_goals simp? [-Prod.mk_add_mk, -Prod.smul_mk, stdCopairEvenElem,
       stdCopairOddElem,
       mk_sum_split, mk_sum_left, mk_sum_right,
       mk_add_right, mk_smul_left, mk_smul_right,
@@ -154,14 +154,14 @@ private theorem std_coev_ev (k ℓ : ℕ) :
       exact Finset.sum_congr rfl (fun n _ => by ring)
     simp only [hinner, stdFormOdd_stdF]
     rw [Finset.sum_eq_single (oddPartner ℓ x)]
-    · rw [if_pos rfl, oddPartner_invol, oddPartnerSign_oddPartner,
+    · rw [ite_eq_left rfl, oddPartner_invol, oddPartnerSign_oddPartner,
         TensorProduct.smul_tmul', smul_eq_mul]
       push_cast
       rw [show (-(oddPartnerSign ℓ x : ℂ)) * -(oddPartnerSign ℓ x : ℂ) =
           ((oddPartnerSign ℓ x * oddPartnerSign ℓ x : ℤ) : ℂ) from by
         push_cast; ring, oddPartnerSign_mul_self, Int.cast_one]
     · intro m _ hm
-      rw [if_neg (fun hh : m = oddPartner ℓ x => hm hh),
+      rw [ite_eq_right (fun hh : m = oddPartner ℓ x => hm hh),
         TensorProduct.zero_tmul, smul_zero]
     · intro hmem
       exact absurd (Finset.mem_univ _) hmem
@@ -199,7 +199,7 @@ private theorem std_ev_coev (k ℓ : ℕ) :
         (TensorProduct.rid ℂ (Fin k → ℂ)).symm.toLinearMap) ∘ₗ
       ((TensorProduct.lid ℂ (Fin k → ℂ)).toLinearMap ∘ₗ LinearMap.fst ℂ _ _)
     ext x
-    all_goals simp [-Prod.mk_add_mk, -Prod.smul_mk, stdCopairEvenElem,
+    all_goals simp? [-Prod.mk_add_mk, -Prod.smul_mk, stdCopairEvenElem,
       stdCopairOddElem,
       mk_sum_split, mk_sum_left, mk_add_left,
        mk_smul_left, mk_smul_right,
@@ -216,7 +216,7 @@ private theorem std_ev_coev (k ℓ : ℕ) :
           (if i = x then (1 : ℂ) else 0) :=
       fun i => stdFormEven_stdE k i x
     simp only [hcollapse, TensorProduct.tmul_ite, Finset.sum_ite_eq',
-      Finset.mem_univ, if_pos]
+      Finset.mem_univ, ite_eq_left]
   · change
       (LinearMap.prodMap
         (TensorProduct.map LinearMap.id (0 : _ →ₗ[ℂ] PUnit))
@@ -237,7 +237,7 @@ private theorem std_ev_coev (k ℓ : ℕ) :
       ((TensorProduct.lid ℂ (Fin (2 * ℓ) → ℂ)).toLinearMap ∘ₗ LinearMap.fst ℂ _
         _)
     ext x
-    all_goals simp [-Prod.mk_add_mk, -Prod.smul_mk, stdCopairEvenElem,
+    all_goals simp? [-Prod.mk_add_mk, -Prod.smul_mk, stdCopairEvenElem,
       stdCopairOddElem,
       mk_sum_split, mk_sum_left, mk_sum_right, mk_add_left,
        mk_smul_left, mk_smul_right,
@@ -259,13 +259,13 @@ private theorem std_ev_coev (k ℓ : ℕ) :
     simp only [hinner, stdFormOdd_stdF, oddPartner_invol,
       oddPartnerSign_oddPartner, Int.cast_neg, neg_neg]
     rw [Finset.sum_eq_single x]
-    · rw [if_pos rfl, ← TensorProduct.tmul_smul, smul_eq_mul,
+    · rw [ite_eq_left rfl, ← TensorProduct.tmul_smul, smul_eq_mul,
         show (oddPartnerSign ℓ x : ℂ) * (oddPartnerSign ℓ x : ℂ) =
           ((oddPartnerSign ℓ x * oddPartnerSign ℓ x : ℤ) : ℂ) from by
           push_cast; ring,
         oddPartnerSign_mul_self, Int.cast_one]
     · intro m _ hm
-      rw [if_neg (fun hh : x = m => hm hh.symm),
+      rw [ite_eq_right (fun hh : x = m => hm hh.symm),
         TensorProduct.tmul_zero, smul_zero]
     · intro hmem
       exact absurd (Finset.mem_univ _) hmem

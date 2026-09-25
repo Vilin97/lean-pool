@@ -50,7 +50,7 @@ assumption is discharged by well-ordering the label type.
 
 namespace RS
 
-open scoped Classical
+
 
 /-! ## The incoherent double swap: merge then split -/
 
@@ -149,7 +149,7 @@ second splits them again: `Δ permOrbitCount = 0`. -/
 theorem nonSeparatedSegmentParity : NonSeparatedSegmentParity := by
   intro α W F κ a b c d v hsq hreach
   classical
-  letI : LinearOrder α := IsWellOrder.linearOrder WellOrderingRel
+  let : LinearOrder α := IsWellOrder.linearOrder WellOrderingRel
   -- localization and pathMatch invariance of the move
   have hloc : SquareLocalized κ a b c d :=
     squareLocalized_of_walkReach hsq hreach
@@ -269,7 +269,7 @@ orbit-disjointness hypothesis. -/
 theorem nonSeparatedMergeParity : NonSeparatedMergeParity := by
   intro α W F κ a b c d v hsq hpc hdisj
   classical
-  letI : LinearOrder α := IsWellOrder.linearOrder WellOrderingRel
+  let : LinearOrder α := IsWellOrder.linearOrder WellOrderingRel
   -- localization: `c`'s circuit is periodic, `a` is periodic or on
   -- a boundary chain carrying its whole edge
   have hloc : SquareLocalized κ a b c d := by

@@ -23,11 +23,11 @@ theorem exists_algHom_complex (R : Type*) [CommRing R]
     [Algebra ℂ R] [Nontrivial R] [Algebra.FiniteType ℂ R] :
     Nonempty (R →ₐ[ℂ] ℂ) := by
   obtain ⟨m, hm⟩ := Ideal.exists_maximal R
-  haveI := hm
-  letI := Ideal.Quotient.field m
-  haveI : Module.Finite ℂ (R ⧸ m) :=
+  have := hm
+  let := Ideal.Quotient.field m
+  have : Module.Finite ℂ (R ⧸ m) :=
     finite_of_finite_type_of_isJacobsonRing ℂ (R ⧸ m)
-  haveI : Algebra.IsAlgebraic ℂ (R ⧸ m) :=
+  have : Algebra.IsAlgebraic ℂ (R ⧸ m) :=
     Algebra.IsAlgebraic.of_finite ℂ (R ⧸ m)
   exact ⟨(IsAlgClosed.lift (M := ℂ)).comp (Ideal.Quotient.mkₐ ℂ m)⟩
 

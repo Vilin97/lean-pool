@@ -121,7 +121,7 @@ private theorem oddSqMap_ee
       (λ_ (𝟙_ D)).inv ≫ (u ⊗ₘ v) ≫
         freeModShuffle R L.obj L.obj ≫ (R ◁ L.sq.hom) ≫
           (ρ_ R).hom := by
-  show ((fibreMu L R L.obj L.obj).evenMap (tmulEE _ _ u v) ≫
+  change ((fibreMu L R L.obj L.obj).evenMap (tmulEE _ _ u v) ≫
       (R ◁ L.sq.hom)) ≫ (ρ_ R).hom = _
   rw [fibreMu_evenMap_tmulEE]
   refine Eq.trans (Category.assoc _ _ _) ?_
@@ -139,7 +139,7 @@ private theorem oddSqMap_oo
       L.sq.inv ≫ (u ⊗ₘ v) ≫
         freeModShuffle R L.obj L.obj ≫ (R ◁ L.sq.hom) ≫
           (ρ_ R).hom := by
-  show ((fibreMu L R L.obj L.obj).evenMap (tmulOO _ _ u v) ≫
+  change ((fibreMu L R L.obj L.obj).evenMap (tmulOO _ _ u v) ≫
       (R ◁ L.sq.hom)) ≫ (ρ_ R).hom = _
   rw [fibreMu_evenMap_tmulOO]
   refine Eq.trans (Category.assoc _ _ _) ?_
@@ -158,7 +158,7 @@ private theorem oddSqMap_eo
       (λ_ L.obj).inv ≫ (u ⊗ₘ v) ≫
         freeModShuffle R L.obj L.obj ≫ (R ◁ L.sq.hom) ≫
           (ρ_ R).hom := by
-  show ((fibreMu L R L.obj L.obj).oddMap (tmulEO _ _ u v) ≫
+  change ((fibreMu L R L.obj L.obj).oddMap (tmulEO _ _ u v) ≫
       (R ◁ L.sq.hom)) ≫ (ρ_ R).hom = _
   rw [fibreMu_oddMap_tmulEO]
   refine Eq.trans (Category.assoc _ _ _) ?_
@@ -177,7 +177,7 @@ private theorem oddSqMap_oe
       (ρ_ L.obj).inv ≫ (u ⊗ₘ v) ≫
         freeModShuffle R L.obj L.obj ≫ (R ◁ L.sq.hom) ≫
           (ρ_ R).hom := by
-  show ((fibreMu L R L.obj L.obj).oddMap (tmulOE _ _ u v) ≫
+  change ((fibreMu L R L.obj L.obj).oddMap (tmulOE _ _ u v) ≫
       (R ◁ L.sq.hom)) ≫ (ρ_ R).hom = _
   rw [fibreMu_oddMap_tmulOE]
   refine Eq.trans (Category.assoc _ _ _) ?_
@@ -209,7 +209,7 @@ private theorem oddSqShift_ee
     (oddSqShift L R).evenMap (tmulEE _ _
         (L.sq.inv ≫ (a ▷ L.obj)) (L.sq.inv ≫ (b ▷ L.obj))) =
       L.sq.inv ≫ (a ⊗ₘ b) ≫ μ[R] := by
-  show (shiftUnitHom (shift (gammaAlgebra D L R).unitMod)).evenMap
+  change (shiftUnitHom (shift (gammaAlgebra D L R).unitMod)).evenMap
       (tmulEE (shift (gammaAlgebra D L R).unitMod)
         (shift (gammaAlgebra D L R).unitMod)
         (rhoEvenOdd L R (L.sq.inv ≫ (a ▷ L.obj)))
@@ -227,7 +227,7 @@ private theorem oddSqShift_oo
         ((λ_ L.obj).inv ≫ (x ▷ L.obj))
         ((λ_ L.obj).inv ≫ (y ▷ L.obj))) =
       -((λ_ (𝟙_ D)).inv ≫ (x ⊗ₘ y) ≫ μ[R]) := by
-  show (shiftUnitHom (shift (gammaAlgebra D L R).unitMod)).evenMap
+  change (shiftUnitHom (shift (gammaAlgebra D L R).unitMod)).evenMap
       (tmulOO (shift (gammaAlgebra D L R).unitMod)
         (shift (gammaAlgebra D L R).unitMod)
         (rhoOddOdd L R ((λ_ L.obj).inv ≫ (x ▷ L.obj)))
@@ -245,7 +245,7 @@ private theorem oddSqShift_eo
         (L.sq.inv ≫ (a ▷ L.obj))
         ((λ_ L.obj).inv ≫ (x ▷ L.obj))) =
       -((ρ_ L.obj).inv ≫ (a ⊗ₘ x) ≫ μ[R]) := by
-  show (shiftUnitHom (shift (gammaAlgebra D L R).unitMod)).oddMap
+  change (shiftUnitHom (shift (gammaAlgebra D L R).unitMod)).oddMap
       (tmulEO (shift (gammaAlgebra D L R).unitMod)
         (shift (gammaAlgebra D L R).unitMod)
         (rhoEvenOdd L R (L.sq.inv ≫ (a ▷ L.obj)))
@@ -263,7 +263,7 @@ private theorem oddSqShift_oe
         ((λ_ L.obj).inv ≫ (x ▷ L.obj))
         (L.sq.inv ≫ (a ▷ L.obj))) =
       (λ_ L.obj).inv ≫ (x ⊗ₘ a) ≫ μ[R] := by
-  show (shiftUnitHom (shift (gammaAlgebra D L R).unitMod)).oddMap
+  change (shiftUnitHom (shift (gammaAlgebra D L R).unitMod)).oddMap
       (tmulOE (shift (gammaAlgebra D L R).unitMod)
         (shift (gammaAlgebra D L R).unitMod)
         (rhoOddOdd L R ((λ_ L.obj).inv ≫ (x ▷ L.obj)))
@@ -340,28 +340,28 @@ theorem isIso_gammaPairComparison_oddSquare
     [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)] :
     IsIso (gammaPairComparison L R (freeMod R L.obj)
       (freeMod R L.obj)) := by
-  haveI hsh : IsIso (oddSqShift L R) :=
+  have hsh : IsIso (oddSqShift L R) :=
     ((SuperCommAlgebra.Mod.tensorIso (gammaShiftIso L R) (gammaShiftIso L R)).trans
       (shiftUnitTensor (shift (gammaAlgebra D L R).unitMod))).isIso_hom
-  haveI hmap : IsIso (oddSqMap L R) := by
+  have hmap : IsIso (oddSqMap L R) := by
     rw [oddSqMap_eq]
     refine ⟨-inv (oddSqShift L R), ?_, ?_⟩
     · rw [Preadditive.neg_comp, Preadditive.comp_neg, neg_neg,
         IsIso.hom_inv_id]
     · rw [Preadditive.neg_comp, Preadditive.comp_neg, neg_neg,
         IsIso.inv_hom_id]
-  haveI h1 : IsIso (gammaFunMap L R (freeModMap R L.sq.hom)) :=
+  have h1 : IsIso (gammaFunMap L R (freeModMap R L.sq.hom)) :=
     ((gammaModuleFunctor L R).mapIso
       (freeModMapIso R L.sq)).isIso_hom
-  haveI h2 : IsIso (gammaFunMap L R (freeModUnitIso R).hom) :=
+  have h2 : IsIso (gammaFunMap L R (freeModUnitIso R).hom) :=
     ((gammaModuleFunctor L R).mapIso (freeModUnitIso R)).isIso_hom
-  haveI h3 : IsIso (gammaFunMap L R (freeModMap R L.sq.hom) ≫
+  have h3 : IsIso (gammaFunMap L R (freeModMap R L.sq.hom) ≫
       gammaFunMap L R (freeModUnitIso R).hom) := IsIso.comp_isIso
-  haveI h4 : IsIso (gammaFunMap L R
+  have h4 : IsIso (gammaFunMap L R
       (freeModTensorIso R L.obj L.obj).hom) :=
     ((gammaModuleFunctor L R).mapIso
       (freeModTensorIso R L.obj L.obj)).isIso_hom
-  haveI hmu : IsIso (gammaPairComparison L R (freeMod R L.obj)
+  have hmu : IsIso (gammaPairComparison L R (freeMod R L.obj)
       (freeMod R L.obj) ≫
         gammaFunMap L R (freeModTensorIso R L.obj L.obj).hom) :=
     @IsIso.of_isIso_comp_right _ _ _ _ _

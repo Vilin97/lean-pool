@@ -21,14 +21,16 @@ variable {G : Type*}
 
 /-- Every simple `ℂ[G]`-module is isomorphic to a simple submodule
 of the regular module. -/
-theorem exists_simple_submodule_linearEquiv [Group G] [Fintype G]
+theorem exists_simple_submodule_linearEquiv [Group G] [Finite G]
     (M : Type*) [AddCommGroup M] [Module (MonoidAlgebra ℂ G) M]
     (hM : IsSimpleModule (MonoidAlgebra ℂ G) M) :
     ∃ S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G),
       IsSimpleModule (MonoidAlgebra ℂ G) S ∧
       Nonempty (S ≃ₗ[MonoidAlgebra ℂ G] M) := by
+  classical
+  let := Fintype.ofFinite G
   -- Pick a nonzero element m : M.
-  haveI := IsSimpleModule.nontrivial (MonoidAlgebra ℂ G) M
+  have := IsSimpleModule.nontrivial (MonoidAlgebra ℂ G) M
   obtain ⟨m, hm⟩ := exists_ne (0 : M)
   -- The map φ : MonoidAlgebra ℂ G →ₗ[MonoidAlgebra ℂ G] M, x ↦ x • m.
   let φ : MonoidAlgebra ℂ G →ₗ[MonoidAlgebra ℂ G] M :=
@@ -42,7 +44,7 @@ theorem exists_simple_submodule_linearEquiv [Group G] [Fintype G]
       have h1 : φ 1 ∈ range φ := mem_range_self φ 1
       have h1bot := h h1
       rw [Submodule.mem_bot] at h1bot
-      simp [φ, toSpanSingleton, smulRight] at h1bot
+      simp? [φ, toSpanSingleton, smulRight] at h1bot
       exact hm h1bot
     rcases hM.eq_bot_or_eq_top (range φ) with h | h
     · exact absurd h hne
@@ -50,10 +52,10 @@ theorem exists_simple_submodule_linearEquiv [Group G] [Fintype G]
   -- The kernel K := ker φ.
   let K := ker φ
   -- By Maschke / semisimplicity, K has a complement S.
-  haveI : NeZero ((Nat.card G : ℂ)) := ⟨by
+  have : NeZero ((Nat.card G : ℂ)) := ⟨by
     rw [Nat.card_eq_fintype_card]
     exact_mod_cast Fintype.card_ne_zero⟩
-  haveI : IsSemisimpleModule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G)
+  have : IsSemisimpleModule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G)
     := inferInstance
   obtain ⟨S, hcompl⟩ := exists_isCompl K
   -- Build the linear equivalence S ≃ₗ M.

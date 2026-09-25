@@ -69,7 +69,7 @@ noncomputable def mixedFixedEquiv (h : m ≤ n) (σ : Equiv.Perm (Fin m)) :
           exact lift_castLE h σ ⟨i, hi⟩
         rw [heq]
         have hσval : (Fin.castLE h (σ ⟨i, hi⟩) : ℕ) < m := (σ ⟨i, hi⟩).2
-        rw [dif_pos hσval, dif_pos hi]
+        rw [dite_eq_left hσval, dite_eq_left hi]
         have hfix := congr_fun p.1.2 ⟨i, hi⟩
         simp only [Function.comp_apply] at hfix
         rw [show (⟨↑(Fin.castLE h (σ ⟨↑i, hi⟩)), hσval⟩ : Fin m) = σ ⟨i, hi⟩
@@ -82,14 +82,14 @@ noncomputable def mixedFixedEquiv (h : m ≤ n) (σ : Equiv.Perm (Fin m)) :
   left_inv f := by
     apply Subtype.ext; funext i; simp only
     by_cases hi : (i : ℕ) < m
-    · rw [dif_pos hi]; simp only [Function.comp_apply]; congr 1
-    · rw [dif_neg hi]
+    · rw [dite_eq_left hi]; simp only [Function.comp_apply]; congr 1
+    · rw [dite_eq_right hi]
   right_inv p := by
     apply Prod.ext
     · apply Subtype.ext; funext j; simp only [Function.comp_apply]
-      rw [dif_pos (show (Fin.castLE h j : ℕ) < m from j.2)]; congr 1
+      rw [dite_eq_left (show (Fin.castLE h j : ℕ) < m from j.2)]; congr 1
     · funext ⟨i, hi⟩; simp only
-      rw [dif_neg (show ¬ (i : ℕ) < m by omega)]
+      rw [dite_eq_right (show ¬ (i : ℕ) < m by omega)]
 
 /-- The colour counts add across the split. -/
 theorem mixedFixedEquiv_symm_fibreCard (h : m ≤ n)
@@ -115,17 +115,17 @@ theorem mixedFixedEquiv_symm_fibreCard (h : m ≤ n)
   refine {
     toFun := fun ⟨i, hi⟩ =>
       if him : (i : ℕ) < m then
-        Sum.inl ⟨⟨i, him⟩, by rw [glue_eq, dif_pos him] at hi; exact hi⟩
+        Sum.inl ⟨⟨i, him⟩, by rw [glue_eq, dite_eq_left him] at hi; exact hi⟩
       else
         Sum.inr
-          ⟨⟨i, Nat.not_lt.mp him⟩, by rw [glue_eq, dif_neg him] at hi; exact hi⟩
+          ⟨⟨i, Nat.not_lt.mp him⟩, by rw [glue_eq, dite_eq_right him] at hi; exact hi⟩
     invFun := fun x => x.elim
       (fun ⟨j, hj⟩ => ⟨Fin.castLE h j, by
         have : (Fin.castLE h j : ℕ) < m := j.2
-        rw [glue_eq, dif_pos this]; convert hj using 1; exact Fin.ext rfl⟩)
+        rw [glue_eq, dite_eq_left this]; convert hj using 1; exact Fin.ext rfl⟩)
       (fun ⟨s, hs⟩ => ⟨s.1, by
         have : ¬ (s.1 : ℕ) < m := Nat.not_lt.mpr s.2
-        rw [glue_eq, dif_neg this]
+        rw [glue_eq, dite_eq_right this]
         exact (congr_arg t (Subtype.ext rfl)).trans hs⟩)
     left_inv := ?_
     right_inv := ?_ }
@@ -136,9 +136,9 @@ theorem mixedFixedEquiv_symm_fibreCard (h : m ≤ n)
     · exact Subtype.ext rfl
   · rintro (⟨j, hj⟩ | ⟨s, hs⟩)
     · dsimp only [Sum.elim_inl]
-      rw [dif_pos (show (Fin.castLE h j : ℕ) < m from j.2)]
+      rw [dite_eq_left (show (Fin.castLE h j : ℕ) < m from j.2)]
       exact congr_arg Sum.inl (Subtype.ext (Fin.ext rfl))
     · dsimp only [Sum.elim_inr]
-      simp only [dif_neg (show ¬ (s.1 : ℕ) < m from Nat.not_lt.mpr s.2)]
+      simp only [dite_eq_right (show ¬ (s.1 : ℕ) < m from Nat.not_lt.mpr s.2)]
 
 end RS

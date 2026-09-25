@@ -19,7 +19,7 @@ lives.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 
@@ -50,7 +50,7 @@ theorem cutPartner_eq_some [LinearOrder α]
     (hP : IsChordDiagram P) {x y : α}
     (h : (min x y, max x y) ∈ P) : cutPartner P x = some y := by
   have hex : ∃ z, (min x z, max x z) ∈ P := ⟨y, h⟩
-  rw [cutPartner, dif_pos hex]
+  rw [cutPartner, dite_eq_left hex]
   have hch := Classical.choose_spec hex
   have hxy : x ≠ y := by
     intro he
@@ -114,6 +114,6 @@ theorem glueChords_cross [LinearOrder α]
         {(min x y, max x y)} := by
   rw [glueChords, cutPartner_eq_some hP hi,
     cutPartner_eq_some hP hj]
-  simp only [if_neg hxj]
+  simp only [ite_eq_right hxj]
 
 end RS

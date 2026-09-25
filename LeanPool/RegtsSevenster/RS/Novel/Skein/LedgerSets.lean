@@ -27,7 +27,7 @@ and vanishes on a pairing-preserving one
 
 namespace RS
 
-open scoped Classical
+
 
 section PairSets
 

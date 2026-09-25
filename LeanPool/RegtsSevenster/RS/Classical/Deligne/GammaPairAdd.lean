@@ -130,10 +130,10 @@ theorem sum_gammaModuleFunctor_map
   refine SuperCommAlgebra.Mod.Hom.ext ?_ ?_ <;>
     refine LinearMap.ext fun m => ?_
   · rw [SuperCommAlgebra.Mod.sum_evenMap_apply]
-    show ∑ i ∈ s, m ≫ (g i).hom = m
+    change ∑ i ∈ s, m ≫ (g i).hom = m
     erw [← Preadditive.comp_sum, h, Category.comp_id]
   · rw [SuperCommAlgebra.Mod.sum_oddMap_apply]
-    show ∑ i ∈ s, m ≫ (g i).hom = m
+    change ∑ i ∈ s, m ≫ (g i).hom = m
     erw [← Preadditive.comp_sum, h, Category.comp_id]
 
 end Realize

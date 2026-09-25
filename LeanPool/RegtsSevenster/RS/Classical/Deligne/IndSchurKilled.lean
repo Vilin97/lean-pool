@@ -232,9 +232,9 @@ theorem permAlg_indOf_conj_scalarUnit
     letI := linearOfScalarUnit (indScalarUnit ψ)
     permAlg (indOf.obj X) n x ≫ (indOfPowIso X n).hom =
       (indOfPowIso X n).hom ≫ indOf.map (permAlg X n x) := by
-  letI := linearOfScalarUnit ψ
-  letI := linearOfScalarUnit (indScalarUnit ψ)
-  haveI := indOf_additive (C := C)
+  let := linearOfScalarUnit ψ
+  let := linearOfScalarUnit (indScalarUnit ψ)
+  have := indOf_additive (C := C)
   induction x using MonoidAlgebra.induction_on with
   | of σ =>
     rw [MonoidAlgebra.of_apply, permAlg_single, permAlg_single]
@@ -263,8 +263,8 @@ theorem schurKilled_indOf {C : Type v} [SmallCategory C] [MonoidalCategory C]
     letI := linearOfScalarUnit (indScalarUnit ψ)
     (SchurKilled P ((indOf : C ⥤ Ind C).obj X) μ ↔
       SchurKilled P X μ) := by
-  letI := linearOfScalarUnit ψ
-  letI := linearOfScalarUnit (indScalarUnit ψ)
+  let := linearOfScalarUnit ψ
+  let := linearOfScalarUnit (indScalarUnit ψ)
   have hconj : permAlg (indOf.obj X) μ.card (P.e μ) =
       (indOfPowIso X μ.card).hom ≫
         indOf.map (permAlg X μ.card (P.e μ)) ≫
@@ -287,7 +287,7 @@ theorem schurKilled_indOf {C : Type v} [SmallCategory C] [MonoidalCategory C]
       simpa using h1
     exact hdown.mpr ((indOf_map_eq_zero_iff _).mp h2)
   · intro h0
-    show permAlg (indOf.obj X) μ.card (P.e μ) = 0
+    change permAlg (indOf.obj X) μ.card (P.e μ) = 0
     rw [hconj,
       (indOf_map_eq_zero_iff (permAlg X μ.card (P.e μ))).mpr
         (hdown.mp h0),

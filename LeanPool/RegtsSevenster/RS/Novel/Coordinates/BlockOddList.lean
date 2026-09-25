@@ -17,7 +17,7 @@ entry by entry.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 

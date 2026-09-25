@@ -200,7 +200,7 @@ theorem tensorHom_π_chainMul2
       from rfl,
     show (symMulMod A M.X q s).hom = symMulDesc A M.X q s from
       rfl, ← Category.assoc]
-  show ((modTensorπ A (symPowMod A M'.X p)
+  change ((modTensorπ A (symPowMod A M'.X p)
         (symPowMod A M'.X r) ⊗ₘ
       modTensorπ A (symPowMod A M.X q) (symPowMod A M.X s)) ≫
       (symMulDesc A M'.X p r ⊗ₘ symMulDesc A M.X q s)) ≫
@@ -237,24 +237,26 @@ end SymCast
 
 section Chain2Comm
 
-/-- **Commutativity of the two-index chain multiplication**, up to
-the slotwise stage transports. -/
-theorem chainMul2_comm
+private theorem chainMul2_comm_factors
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
     [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
     [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
     [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
     (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
-    (p q r s : ℕ) :
-    (β_ (chainStage2 A M M' p q) (chainStage2 A M M' r s)).hom ≫
-        chainMul2 A M M' r s p q ≫
-        chainStage2Cast A M M'
-          (by omega : r + 1 + p = p + 1 + r)
-          (by omega : s + 1 + q = q + 1 + s) =
-      chainMul2 A M M' p q r s := by
-  have hp₀ : r + 1 + p = p + 1 + r := by omega
-  have hq₀ : s + 1 + q = q + 1 + s := by omega
+    (p q r s : ℕ)
+    (hp₀ : r + 1 + p = p + 1 + r)
+    (hq₀ : s + 1 + q = q + 1 + s) :
+    (((β_ (symPow A M'.X (p + 1))
+        (symPow A M'.X (r + 1))).hom ≫
+        symMul A M'.X (r + 1) (p + 1)) ≫
+        symPowCast A M'.X (congrArg Nat.succ hp₀) =
+      symMul A M'.X (p + 1) (r + 1)) ∧
+    (((β_ (symPow A M.X (q + 1))
+        (symPow A M.X (s + 1))).hom ≫
+        symMul A M.X (s + 1) (q + 1)) ≫
+        symPowCast A M.X (congrArg Nat.succ hq₀) =
+      symMul A M.X (q + 1) (s + 1)) := by
   have hfac₁ :
       (β_ (symPow A M'.X (p + 1)) (symPow A M'.X (r + 1))).hom ≫
           symMul A M'.X (r + 1) (p + 1) ≫
@@ -293,6 +295,27 @@ theorem chainMul2_comm
         symPowCast A M.X (congrArg Nat.succ hq₀) =
       symMul A M.X (q + 1) (s + 1) :=
     (Category.assoc _ _ _).trans (hfac₂.trans hkill₂)
+  exact ⟨hfacL₁, hfacL₂⟩
+
+/-- **Commutativity of the two-index chain multiplication**, up to
+the slotwise stage transports. -/
+theorem chainMul2_comm
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (p q r s : ℕ) :
+    (β_ (chainStage2 A M M' p q) (chainStage2 A M M' r s)).hom ≫
+        chainMul2 A M M' r s p q ≫
+        chainStage2Cast A M M'
+          (by omega : r + 1 + p = p + 1 + r)
+          (by omega : s + 1 + q = q + 1 + s) =
+      chainMul2 A M M' p q r s := by
+  have hp₀ : r + 1 + p = p + 1 + r := by omega
+  have hq₀ : s + 1 + q = q + 1 + s := by omega
+  obtain ⟨hfacL₁, hfacL₂⟩ := chainMul2_comm_factors A M M' p q r s hp₀ hq₀
   have hβ :
       (modTensorπ A (symPowMod A M'.X p) (symPowMod A M.X q) ⊗ₘ
         modTensorπ A (symPowMod A M'.X r) (symPowMod A M.X s)) ≫
@@ -549,9 +572,7 @@ end TensorSurgery
 
 section Chain2Assoc
 
-/-- **Associativity of the two-index chain multiplication**, up to
-the slotwise stage transports onto the common arities. -/
-theorem chainMul2_assoc
+private theorem chainMul2_assoc_left
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
     [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
@@ -559,40 +580,33 @@ theorem chainMul2_assoc
     [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
     (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
     (a b c d e f : ℕ) :
-    (chainMul2 A M M' a b c d ▷ chainStage2 A M M' e f) ≫
-        chainMul2 A M M' (a + 1 + c) (b + 1 + d) e f ≫
-        chainStage2Cast A M M'
-          (by omega : a + 1 + c + 1 + e = a + 1 + c + 1 + e)
-          (by omega : b + 1 + d + 1 + f = b + 1 + d + 1 + f) =
-      (α_ (chainStage2 A M M' a b) (chainStage2 A M M' c d)
-          (chainStage2 A M M' e f)).hom ≫
-        (chainStage2 A M M' a b ◁ chainMul2 A M M' c d e f) ≫
-        chainMul2 A M M' a b (c + 1 + e) (d + 1 + f) ≫
-        chainStage2Cast A M M'
-          (by omega :
-            a + 1 + (c + 1 + e) = a + 1 + c + 1 + e)
-          (by omega :
-            b + 1 + (d + 1 + f) = b + 1 + d + 1 + f) := by
-  have hp₂ : a + 1 + (c + 1 + e) = a + 1 + c + 1 + e := by omega
-  have hq₂ : b + 1 + (d + 1 + f) = b + 1 + d + 1 + f := by omega
+    ((modTensorπ A (symPowMod A M'.X a)
+          (symPowMod A M.X b) ⊗ₘ
+        modTensorπ A (symPowMod A M'.X c) (symPowMod A M.X d)) ⊗ₘ
+        modTensorπ A (symPowMod A M'.X e) (symPowMod A M.X f)) ≫
+        ((chainMul2 A M M' a b c d ▷ chainStage2 A M M' e f) ≫
+          chainMul2 A M M' (a + 1 + c) (b + 1 + d) e f ≫
+          chainStage2Cast A M M'
+            (rfl : a + 1 + c + 1 + e = a + 1 + c + 1 + e)
+            (rfl : b + 1 + d + 1 + f = b + 1 + d + 1 + f)) =
+    ((tensorμ (symPow A M'.X (a + 1)) (symPow A M.X (b + 1))
+          (symPow A M'.X (c + 1)) (symPow A M.X (d + 1)) ≫
+        (symMul A M'.X (a + 1) (c + 1) ⊗ₘ
+          symMul A M.X (b + 1) (d + 1))) ▷
+        (symPow A M'.X (e + 1) ⊗ symPow A M.X (f + 1))) ≫
+        tensorμ (symPow A M'.X (a + 1 + c + 1))
+          (symPow A M.X (b + 1 + d + 1))
+          (symPow A M'.X (e + 1)) (symPow A M.X (f + 1)) ≫
+        (symMul A M'.X (a + 1 + c + 1) (e + 1) ⊗ₘ
+          symMul A M.X (b + 1 + d + 1) (f + 1)) ≫
+        modTensorπ A (symPowMod A M'.X (a + 1 + c + 1 + e))
+          (symPowMod A M.X (b + 1 + d + 1 + f)) := by
   have hK : chainMul2 A M M' (a + 1 + c) (b + 1 + d) e f ≫
       chainStage2Cast A M M'
         (rfl : a + 1 + c + 1 + e = a + 1 + c + 1 + e)
         (rfl : b + 1 + d + 1 + f = b + 1 + d + 1 + f) =
       chainMul2 A M M' (a + 1 + c) (b + 1 + d) e f := by
     rw [chainStage2Cast_rfl, Category.comp_id]
-  have hcore := chainMulAssoc_core
-    (symMul_assoc A M'.X (a + 1) (c + 1) (e + 1))
-    (symMul_assoc A M.X (b + 1) (d + 1) (f + 1))
-    (modTensorπ A (symPowMod A M'.X (a + 1 + c + 1 + e))
-      (symPowMod A M.X (b + 1 + d + 1 + f)))
-  refine (cancel_epi
-    ((modTensorπ A (symPowMod A M'.X a) (symPowMod A M.X b) ⊗ₘ
-        modTensorπ A (symPowMod A M'.X c) (symPowMod A M.X d)) ⊗ₘ
-      modTensorπ A (symPowMod A M'.X e)
-        (symPowMod A M.X f))).mp ?_
-  -- Left bridge: from the whiskered chain multiplication to the
-  -- instantiated core's left-hand side.
   have l1 : ((modTensorπ A (symPowMod A M'.X a)
           (symPowMod A M.X b) ⊗ₘ
         modTensorπ A (symPowMod A M'.X c) (symPowMod A M.X d)) ⊗ₘ
@@ -707,6 +721,134 @@ theorem chainMul2_assoc
       (tensorHom_π_chainMul2 A M M' (a + 1 + c) (b + 1 + d) e f)
   -- Right bridge: from the reassociated side to the instantiated
   -- core's right-hand side.
+  exact l1.trans (l2.trans (l3.trans (l4.trans (l5.trans (l6)))))
+
+private theorem chainMul2_assoc_rightTail
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (a b c d e f : ℕ)
+    (hp₂ : a + 1 + (c + 1 + e) = a + 1 + c + 1 + e)
+    (hq₂ : b + 1 + (d + 1 + f) = b + 1 + d + 1 + f) :
+    (modTensorπ A (symPowMod A M'.X a)
+          (symPowMod A M.X b) ⊗ₘ
+        modTensorπ A (symPowMod A M'.X (c + 1 + e))
+          (symPowMod A M.X (d + 1 + f))) ≫
+        (chainMul2 A M M' a b (c + 1 + e) (d + 1 + f) ≫
+          chainStage2Cast A M M' hp₂ hq₂) =
+    tensorμ (symPow A M'.X (a + 1)) (symPow A M.X (b + 1))
+          (symPow A M'.X (c + 1 + e + 1))
+          (symPow A M.X (d + 1 + f + 1)) ≫
+        ((symMul A M'.X (a + 1) (c + 1 + e + 1) ≫
+          symPowCast A M'.X (congrArg Nat.succ hp₂)) ⊗ₘ
+          (symMul A M.X (b + 1) (d + 1 + f + 1) ≫
+            symPowCast A M.X (congrArg Nat.succ hq₂))) ≫
+        modTensorπ A (symPowMod A M'.X (a + 1 + c + 1 + e))
+          (symPowMod A M.X (b + 1 + d + 1 + f)) := by
+  have r6 : (modTensorπ A (symPowMod A M'.X a)
+          (symPowMod A M.X b) ⊗ₘ
+        modTensorπ A (symPowMod A M'.X (c + 1 + e))
+          (symPowMod A M.X (d + 1 + f))) ≫
+        (chainMul2 A M M' a b (c + 1 + e) (d + 1 + f) ≫
+          chainStage2Cast A M M' hp₂ hq₂) =
+      tensorμ (symPow A M'.X (a + 1)) (symPow A M.X (b + 1))
+          (symPow A M'.X (c + 1 + e + 1))
+          (symPow A M.X (d + 1 + f + 1)) ≫
+        (symMul A M'.X (a + 1) (c + 1 + e + 1) ⊗ₘ
+          symMul A M.X (b + 1) (d + 1 + f + 1)) ≫
+        (modTensorπ A (symPowMod A M'.X (a + 1 + (c + 1 + e)))
+          (symPowMod A M.X (b + 1 + (d + 1 + f))) ≫
+          chainStage2Cast A M M' hp₂ hq₂) :=
+    (Category.assoc _ _ _).symm.trans
+      ((congrArg (fun t => t ≫ chainStage2Cast A M M' hp₂ hq₂)
+        (tensorHom_π_chainMul2 A M M' a b
+          (c + 1 + e) (d + 1 + f))).trans
+        ((Category.assoc _ _ _).trans
+          (congrArg (CategoryStruct.comp _)
+            (Category.assoc _ _ _))))
+  have r7 : modTensorπ A (symPowMod A M'.X (a + 1 + (c + 1 + e)))
+        (symPowMod A M.X (b + 1 + (d + 1 + f))) ≫
+        chainStage2Cast A M M' hp₂ hq₂ =
+      (symPowCast A M'.X (congrArg Nat.succ hp₂) ⊗ₘ
+        symPowCast A M.X (congrArg Nat.succ hq₂)) ≫
+        modTensorπ A (symPowMod A M'.X (a + 1 + c + 1 + e))
+          (symPowMod A M.X (b + 1 + d + 1 + f)) :=
+    modTensorπ_chainStage2Cast A M M' hp₂ hq₂
+  have r8 : (symMul A M'.X (a + 1) (c + 1 + e + 1) ⊗ₘ
+        symMul A M.X (b + 1) (d + 1 + f + 1)) ≫
+        ((symPowCast A M'.X (congrArg Nat.succ hp₂) ⊗ₘ
+          symPowCast A M.X (congrArg Nat.succ hq₂)) ≫
+          modTensorπ A (symPowMod A M'.X (a + 1 + c + 1 + e))
+            (symPowMod A M.X (b + 1 + d + 1 + f))) =
+      ((symMul A M'.X (a + 1) (c + 1 + e + 1) ≫
+        symPowCast A M'.X (congrArg Nat.succ hp₂)) ⊗ₘ
+        (symMul A M.X (b + 1) (d + 1 + f + 1) ≫
+          symPowCast A M.X (congrArg Nat.succ hq₂))) ≫
+        modTensorπ A (symPowMod A M'.X (a + 1 + c + 1 + e))
+          (symPowMod A M.X (b + 1 + d + 1 + f)) :=
+    MonoidalCategory.tensorHom_comp_tensorHom_assoc _ _ _ _ _
+  have rTail : (modTensorπ A (symPowMod A M'.X a)
+          (symPowMod A M.X b) ⊗ₘ
+        modTensorπ A (symPowMod A M'.X (c + 1 + e))
+          (symPowMod A M.X (d + 1 + f))) ≫
+        (chainMul2 A M M' a b (c + 1 + e) (d + 1 + f) ≫
+          chainStage2Cast A M M' hp₂ hq₂) =
+      tensorμ (symPow A M'.X (a + 1)) (symPow A M.X (b + 1))
+          (symPow A M'.X (c + 1 + e + 1))
+          (symPow A M.X (d + 1 + f + 1)) ≫
+        ((symMul A M'.X (a + 1) (c + 1 + e + 1) ≫
+          symPowCast A M'.X (congrArg Nat.succ hp₂)) ⊗ₘ
+          (symMul A M.X (b + 1) (d + 1 + f + 1) ≫
+            symPowCast A M.X (congrArg Nat.succ hq₂))) ≫
+        modTensorπ A (symPowMod A M'.X (a + 1 + c + 1 + e))
+          (symPowMod A M.X (b + 1 + d + 1 + f)) :=
+    r6.trans ((congrArg (CategoryStruct.comp _)
+      (congrArg (CategoryStruct.comp _) r7)).trans
+      (congrArg (CategoryStruct.comp _) r8))
+  exact rTail
+
+/-- **Associativity of the two-index chain multiplication**, up to
+the slotwise stage transports onto the common arities. -/
+theorem chainMul2_assoc
+    [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
+    [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
+    [HasCoequalizers D] [Linear ℂ D] [MonoidalLinear ℂ D]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)]
+    [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorRight Z)]
+    (A : D) [MonObj A] [IsCommMonObj A] (M : Mod D A) (M' : Mod D A)
+    (a b c d e f : ℕ) :
+    (chainMul2 A M M' a b c d ▷ chainStage2 A M M' e f) ≫
+        chainMul2 A M M' (a + 1 + c) (b + 1 + d) e f ≫
+        chainStage2Cast A M M'
+          (by omega : a + 1 + c + 1 + e = a + 1 + c + 1 + e)
+          (by omega : b + 1 + d + 1 + f = b + 1 + d + 1 + f) =
+      (α_ (chainStage2 A M M' a b) (chainStage2 A M M' c d)
+          (chainStage2 A M M' e f)).hom ≫
+        (chainStage2 A M M' a b ◁ chainMul2 A M M' c d e f) ≫
+        chainMul2 A M M' a b (c + 1 + e) (d + 1 + f) ≫
+        chainStage2Cast A M M'
+          (by omega :
+            a + 1 + (c + 1 + e) = a + 1 + c + 1 + e)
+          (by omega :
+            b + 1 + (d + 1 + f) = b + 1 + d + 1 + f) := by
+  have hp₂ : a + 1 + (c + 1 + e) = a + 1 + c + 1 + e := by omega
+  have hq₂ : b + 1 + (d + 1 + f) = b + 1 + d + 1 + f := by omega
+  have hcore := chainMulAssoc_core
+    (symMul_assoc A M'.X (a + 1) (c + 1) (e + 1))
+    (symMul_assoc A M.X (b + 1) (d + 1) (f + 1))
+    (modTensorπ A (symPowMod A M'.X (a + 1 + c + 1 + e))
+      (symPowMod A M.X (b + 1 + d + 1 + f)))
+  refine (cancel_epi
+    ((modTensorπ A (symPowMod A M'.X a) (symPowMod A M.X b) ⊗ₘ
+        modTensorπ A (symPowMod A M'.X c) (symPowMod A M.X d)) ⊗ₘ
+      modTensorπ A (symPowMod A M'.X e)
+        (symPowMod A M.X f))).mp ?_
+  -- Left bridge: from the whiskered chain multiplication to the
+  -- instantiated core's left-hand side.
+  have hleft := chainMul2_assoc_left A M M' a b c d e f
   have hα : ((modTensorπ A (symPowMod A M'.X a)
           (symPowMod A M.X b) ⊗ₘ
         modTensorπ A (symPowMod A M'.X c) (symPowMod A M.X d)) ⊗ₘ
@@ -864,68 +1006,8 @@ theorem chainMul2_assoc
           chainStage2Cast A M M' hp₂ hq₂) :=
     congrArg (CategoryStruct.comp _)
       (compTensorHom_whiskerLeft_split _ _ _ _)
-  have r6 : (modTensorπ A (symPowMod A M'.X a)
-          (symPowMod A M.X b) ⊗ₘ
-        modTensorπ A (symPowMod A M'.X (c + 1 + e))
-          (symPowMod A M.X (d + 1 + f))) ≫
-        (chainMul2 A M M' a b (c + 1 + e) (d + 1 + f) ≫
-          chainStage2Cast A M M' hp₂ hq₂) =
-      tensorμ (symPow A M'.X (a + 1)) (symPow A M.X (b + 1))
-          (symPow A M'.X (c + 1 + e + 1))
-          (symPow A M.X (d + 1 + f + 1)) ≫
-        (symMul A M'.X (a + 1) (c + 1 + e + 1) ⊗ₘ
-          symMul A M.X (b + 1) (d + 1 + f + 1)) ≫
-        (modTensorπ A (symPowMod A M'.X (a + 1 + (c + 1 + e)))
-          (symPowMod A M.X (b + 1 + (d + 1 + f))) ≫
-          chainStage2Cast A M M' hp₂ hq₂) :=
-    (Category.assoc _ _ _).symm.trans
-      ((congrArg (fun t => t ≫ chainStage2Cast A M M' hp₂ hq₂)
-        (tensorHom_π_chainMul2 A M M' a b
-          (c + 1 + e) (d + 1 + f))).trans
-        ((Category.assoc _ _ _).trans
-          (congrArg (CategoryStruct.comp _)
-            (Category.assoc _ _ _))))
-  have r7 : modTensorπ A (symPowMod A M'.X (a + 1 + (c + 1 + e)))
-        (symPowMod A M.X (b + 1 + (d + 1 + f))) ≫
-        chainStage2Cast A M M' hp₂ hq₂ =
-      (symPowCast A M'.X (congrArg Nat.succ hp₂) ⊗ₘ
-        symPowCast A M.X (congrArg Nat.succ hq₂)) ≫
-        modTensorπ A (symPowMod A M'.X (a + 1 + c + 1 + e))
-          (symPowMod A M.X (b + 1 + d + 1 + f)) :=
-    modTensorπ_chainStage2Cast A M M' hp₂ hq₂
-  have r8 : (symMul A M'.X (a + 1) (c + 1 + e + 1) ⊗ₘ
-        symMul A M.X (b + 1) (d + 1 + f + 1)) ≫
-        ((symPowCast A M'.X (congrArg Nat.succ hp₂) ⊗ₘ
-          symPowCast A M.X (congrArg Nat.succ hq₂)) ≫
-          modTensorπ A (symPowMod A M'.X (a + 1 + c + 1 + e))
-            (symPowMod A M.X (b + 1 + d + 1 + f))) =
-      ((symMul A M'.X (a + 1) (c + 1 + e + 1) ≫
-        symPowCast A M'.X (congrArg Nat.succ hp₂)) ⊗ₘ
-        (symMul A M.X (b + 1) (d + 1 + f + 1) ≫
-          symPowCast A M.X (congrArg Nat.succ hq₂))) ≫
-        modTensorπ A (symPowMod A M'.X (a + 1 + c + 1 + e))
-          (symPowMod A M.X (b + 1 + d + 1 + f)) :=
-    MonoidalCategory.tensorHom_comp_tensorHom_assoc _ _ _ _ _
-  have rTail : (modTensorπ A (symPowMod A M'.X a)
-          (symPowMod A M.X b) ⊗ₘ
-        modTensorπ A (symPowMod A M'.X (c + 1 + e))
-          (symPowMod A M.X (d + 1 + f))) ≫
-        (chainMul2 A M M' a b (c + 1 + e) (d + 1 + f) ≫
-          chainStage2Cast A M M' hp₂ hq₂) =
-      tensorμ (symPow A M'.X (a + 1)) (symPow A M.X (b + 1))
-          (symPow A M'.X (c + 1 + e + 1))
-          (symPow A M.X (d + 1 + f + 1)) ≫
-        ((symMul A M'.X (a + 1) (c + 1 + e + 1) ≫
-          symPowCast A M'.X (congrArg Nat.succ hp₂)) ⊗ₘ
-          (symMul A M.X (b + 1) (d + 1 + f + 1) ≫
-            symPowCast A M.X (congrArg Nat.succ hq₂))) ≫
-        modTensorπ A (symPowMod A M'.X (a + 1 + c + 1 + e))
-          (symPowMod A M.X (b + 1 + d + 1 + f)) :=
-    r6.trans ((congrArg (CategoryStruct.comp _)
-      (congrArg (CategoryStruct.comp _) r7)).trans
-      (congrArg (CategoryStruct.comp _) r8))
-  exact (l1.trans (l2.trans (l3.trans (l4.trans
-      (l5.trans l6))))).trans
+  have rTail := chainMul2_assoc_rightTail A M M' a b c d e f hp₂ hq₂
+  exact hleft.trans
     (hcore.trans (r1.trans (r2.trans (r3.trans (r4.trans
       (r5.trans (congrArg (CategoryStruct.comp _)
         (congrArg (CategoryStruct.comp _) rTail))))))).symm)

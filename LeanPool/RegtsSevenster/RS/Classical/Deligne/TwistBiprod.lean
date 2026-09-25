@@ -162,7 +162,7 @@ theorem twistBiprodActL_fst
         (V ◁ (biprod.fst : P.X ⊞ Q.X ⟶ P.X)) =
       (A ◁ (V ◁ (biprod.fst : P.X ⊞ Q.X ⟶ P.X))) ≫
         actAcross A V P.X := by
-  letI := modBiprodModObj A P Q
+  let := modBiprodModObj A P Q
   exact actAcross_whiskerLeft_of A V biprod.fst
     (modBiprodAct_fst A P Q)
 
@@ -175,7 +175,7 @@ theorem twistBiprodActL_snd
         (V ◁ (biprod.snd : P.X ⊞ Q.X ⟶ Q.X)) =
       (A ◁ (V ◁ (biprod.snd : P.X ⊞ Q.X ⟶ Q.X))) ≫
         actAcross A V Q.X := by
-  letI := modBiprodModObj A P Q
+  let := modBiprodModObj A P Q
   exact actAcross_whiskerLeft_of A V biprod.snd
     (modBiprodAct_snd A P Q)
 
@@ -227,7 +227,7 @@ theorem twistBiprodActR_inv
     twistBiprodActR A V P Q ≫ tensorLeftBiprodInv V P.X Q.X =
       (A ◁ tensorLeftBiprodInv V P.X Q.X) ≫
         twistBiprodActL A V P Q := by
-  haveI : IsIso (tensorLeftBiprodHom V P.X Q.X) :=
+  have : IsIso (tensorLeftBiprodHom V P.X Q.X) :=
     ⟨tensorLeftBiprodInv V P.X Q.X,
       tensorLeftBiprodHom_inv V P.X Q.X,
       tensorLeftBiprodInv_hom V P.X Q.X⟩

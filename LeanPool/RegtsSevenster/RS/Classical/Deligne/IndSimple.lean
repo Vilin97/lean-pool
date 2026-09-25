@@ -59,16 +59,16 @@ object of a small abelian category `C`, then `indOf.obj X` is a
 simple object of `Ind C`. -/
 theorem simple_indOf [SmallCategory C] [Abelian C]
     (X : C) [Simple X] : Simple (indOf.obj X) := by
-  haveI := indOf_additive (C := C)
+  have := indOf_additive (C := C)
   constructor
   intro U m hm
-  haveI := hm
+  have := hm
   constructor
   · -- An isomorphism onto an embedded simple object is nonzero:
     -- otherwise the identity of `X` would be killed by a faithful
     -- functor.
     intro hiso hzero
-    haveI := hiso
+    have := hiso
     have hid : 𝟙 (indOf.obj X) = 0 :=
       calc 𝟙 (indOf.obj X) = inv m ≫ m := (IsIso.inv_hom_id m).symm
         _ = inv m ≫ 0 := congrArg (fun t => inv m ≫ t) hzero
@@ -93,12 +93,12 @@ theorem simple_indOf [SmallCategory C] [Abelian C]
     have hfne : Ind.yoneda.fullyFaithful.preimage (g ≫ m) ≠ 0 := by
       intro h0
       exact hgm (((indOf_map_eq_zero_iff _).mpr h0).symm.trans hmap).symm
-    haveI : Epi (Ind.yoneda.fullyFaithful.preimage (g ≫ m)) :=
+    have : Epi (Ind.yoneda.fullyFaithful.preimage (g ≫ m)) :=
       epi_of_nonzero_to_simple hfne
-    haveI : Epi (g ≫ m) := by
+    have : Epi (g ≫ m) := by
       rw [← hmap]
       infer_instance
-    haveI : Epi m := epi_of_epi g m
+    have : Epi m := epi_of_epi g m
     exact isIso_of_mono_of_epi m
 
 end Embedding

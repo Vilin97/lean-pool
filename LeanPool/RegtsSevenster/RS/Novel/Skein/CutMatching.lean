@@ -31,7 +31,7 @@ own through-edge product uses.
 
 namespace RS
 
-open Classical EdgeSubset
+open EdgeSubset
 
 variable {α : Type}
 
@@ -94,11 +94,11 @@ noncomputable def cutMatching [LinearOrder α] {W : Fragment α}
     by_cases ht : IsThroughLabel F i.val
     · have ht' : IsThroughLabel F (chordInv F κ i.val) :=
         isThroughLabel_chordInv F κ i.prop ht
-      show (if IsThroughLabel F (chordInv F κ i.val) then
+      change (if IsThroughLabel F (chordInv F κ i.val) then
           decide (chordInv F κ i.val
             < chordInv F κ (chordInv F κ i.val))
         else _) = !(if IsThroughLabel F i.val then _ else _)
-      rw [if_pos ht', if_pos ht, chordInv_invol]
+      rw [ite_eq_left ht', ite_eq_left ht, chordInv_invol]
       exact decide_lt_flip (fun hx =>
         chordInv_ne F κ i.prop hx.symm)
     · have hint := pairing_internal_of_not_through F i.prop ht
@@ -109,11 +109,11 @@ noncomputable def cutMatching [LinearOrder α] {W : Fragment α}
       have ht' : ¬ IsThroughLabel F (chordInv F κ i.val) := fun hx =>
         Finset.disjoint_left.mp F.internalFlags_disjoint_boundaryFlags
           hfar hx
-      show (if IsThroughLabel F (chordInv F κ i.val) then _
+      change (if IsThroughLabel F (chordInv F κ i.val) then _
         else !chainDir o (W.boundaryFlag (chordInv F κ i.val)))
         = !(if IsThroughLabel F i.val then _
           else !chainDir o (W.boundaryFlag i.val))
-      rw [if_neg ht', if_neg ht, boundaryFlag_chordInv F κ i.prop,
+      rw [ite_eq_right ht', ite_eq_right ht, boundaryFlag_chordInv F κ i.prop,
         chainDir_pathMatch o i.prop hint]
 
 /-! ### Undoing the dual basis
@@ -144,7 +144,7 @@ theorem chordInv_relabelUp [LinearOrder α] {W : Fragment α}
         ∈ (F.relabelUp e.toEquiv).boundaryFlags := by
       rw [hbf, relabelUp_boundaryFlags e F]
       exact hb
-    rw [dif_pos hb', dif_pos hb]
+    rw [dite_eq_left hb', dite_eq_left hb]
     have hpm := relabel_pathMatch e F κ hb' hb
     have hmem' : κ.pathMatch (W.boundaryFlag (e.symm b)) hb
         ∈ (F.relabelUp e.toEquiv).boundaryFlags := by
@@ -160,7 +160,7 @@ theorem chordInv_relabelUp [LinearOrder α] {W : Fragment α}
         ∈ (F.relabelUp e.toEquiv).boundaryFlags) := by
       rw [hbf, relabelUp_boundaryFlags e F]
       exact hb
-    rw [dif_neg hb', dif_neg hb]
+    rw [dite_eq_right hb', dite_eq_right hb]
     exact (e.apply_symm_apply b).symm
 
 /-- **The used labels shift through the relabel.** -/
@@ -190,7 +190,7 @@ theorem cutMatching_relabelUp_edge [LinearOrder α] {W : Fragment α}
           (relabelTransUp e.toEquiv F κ) o').map
         (usedLabRelabelEquiv e F)).edge a).val)
       = chordInv F κ a.val := by
-  show e.symm (chordInv (F.relabelUp e.toEquiv)
+  change e.symm (chordInv (F.relabelUp e.toEquiv)
       (relabelTransUp e.toEquiv F κ) (e a.val))
     = chordInv F κ a.val
   rw [chordInv_relabelUp e F κ (e a.val), e.symm_apply_apply,
@@ -386,7 +386,7 @@ theorem cutMatching_portFlip [LinearOrder α] {W : Fragment α}
     · rintro (hx | hx)
       · exact Or.inl (Subtype.ext hx)
       · exact Or.inr (Subtype.ext (by rw [hx]; exact hchord.symm))
-  show (if IsThroughLabel F j.val then
+  change (if IsThroughLabel F j.val then
         decide (j.val < chordInv F κ j.val)
       else !chainDir (o.portFlip h) (W.boundaryFlag j.val))
     = (if j = ⟨i₁, hb₁⟩ ∨ j = (cutMatching F κ o).edge ⟨i₁, hb₁⟩
@@ -397,25 +397,25 @@ theorem cutMatching_portFlip [LinearOrder α] {W : Fragment α}
       rintro (hx | hx)
       · exact (not_isThroughLabel_port h) (hx ▸ hnt)
       · exact (not_isThroughLabel_port' h) (hx ▸ hnt)
-    rw [if_pos hnt, if_neg (fun hx => hj (hcond.mp hx))]
-    show _ = if IsThroughLabel F j.val then
+    rw [ite_eq_left hnt, ite_eq_right (fun hx => hj (hcond.mp hx))]
+    change _ = if IsThroughLabel F j.val then
         decide (j.val < chordInv F κ j.val) else _
-    rw [if_pos hnt]
+    rw [ite_eq_left hnt]
   · have htail : (cutMatching F κ o).tail j
         = !chainDir o (W.boundaryFlag j.val) := by
-      show (if IsThroughLabel F j.val then
+      change (if IsThroughLabel F j.val then
           decide (j.val < chordInv F κ j.val) else _) = _
-      rw [if_neg hnt]
-    rw [if_neg hnt, htail, chainDir_eq, chainDir_eq]
+      rw [ite_eq_right hnt]
+    rw [ite_eq_right hnt, htail, chainDir_eq, chainDir_eq]
     by_cases hj : j.val = i₁ ∨ j.val = i₂
     · have hmem : W.pairing (W.boundaryFlag j.val) ∈ S := by
         rcases hj with hx | hx <;> rw [hx]
         · rw [pairing_boundaryFlag_eq_port h]; exact h.hp₁S
         · rw [pairing_boundaryFlag_eq_port' h]; exact h.hp₂S
-      rw [if_pos (hcond.mpr hj), portFlip_isOut_of_mem o h hmem]
+      rw [ite_eq_left (hcond.mpr hj), portFlip_isOut_of_mem o h hmem]
     · have hnm : W.pairing (W.boundaryFlag j.val) ∉ S := fun hx =>
         hj (label_of_pairing_mem_flipSet h j.prop hx)
-      rw [if_neg (fun hx => hj (hcond.mp hx)),
+      rw [ite_eq_right (fun hx => hj (hcond.mp hx)),
         portFlip_isOut_of_notMem o h hnm]
 
 open Classical in
@@ -472,7 +472,7 @@ theorem untwist_apply_of_mem [LinearOrder α] {W : Fragment α}
             | Sum.inl a => Sum.inl a
             | Sum.inr c => Sum.inr (oddPartner ℓ c))
         else x i :=
-  dif_pos hb
+  dite_eq_left hb
 
 open Classical in
 /-- The change of basis is trivial off the used labels. -/
@@ -482,7 +482,7 @@ theorem untwist_apply_of_not_mem [LinearOrder α] {W : Fragment α}
     (x : GenBoundaryState k ℓ α) {i : α}
     (hb : W.boundaryFlag i ∉ F.boundaryFlags) :
     untwist F κ o x i = x i :=
-  dif_neg hb
+  dite_eq_right hb
 
 /-! ### The chain flip's effect on the dual basis
 
@@ -522,7 +522,7 @@ theorem tail_portFlip_of_mem [LinearOrder α] {W : Fragment α} {F : EdgeSubset 
   rw [show (cutMatching F κ (o.portFlip h)).tail ⟨i, hb⟩
         = ((cutMatching F κ o).reverseArc ⟨i₁, hb₁⟩).tail ⟨i, hb⟩
       from by rw [cutMatching_portFlip o h hb₁ hchord],
-    DirMatching.reverseArc_tail, if_pos]
+    DirMatching.reverseArc_tail, ite_eq_left]
   rcases hj with hx | hx
   · exact Or.inl (Subtype.ext hx)
   · exact Or.inr (Subtype.ext (hx.trans hchord.symm))
@@ -544,7 +544,7 @@ theorem tail_portFlip_of_not_mem
   rw [show (cutMatching F κ (o.portFlip h)).tail ⟨i, hb⟩
         = ((cutMatching F κ o).reverseArc ⟨i₁, hb₁⟩).tail ⟨i, hb⟩
       from by rw [cutMatching_portFlip o h hb₁ hchord],
-    DirMatching.reverseArc_tail, if_neg]
+    DirMatching.reverseArc_tail, ite_eq_right]
   rintro (hx | hx)
   · exact hj (Or.inl (congrArg Subtype.val hx))
   · refine hj (Or.inr ?_)
@@ -572,14 +572,14 @@ theorem untwist_portFlip [LinearOrder α] {W : Fragment α} {F : EdgeSubset W}
       untwist_apply_of_mem F κ o x hb,
       tail_portFlip_of_mem o h hb₁ hchord hb hj]
     by_cases ht : (cutMatching F κ o).tail ⟨i, hb⟩ = true
-    · rw [ht, Bool.not_true, if_neg (by simp), if_pos rfl]
+    · rw [ht, Bool.not_true, ite_eq_right (by simp), ite_eq_left rfl]
       rcases hx : x i with a | c
       · rfl
-      · show Sum.inr c
+      · change Sum.inr c
           = Sum.map id (oddPartner ℓ) (Sum.inr (oddPartner ℓ c))
         rw [Sum.map_inr, oddPartner_invol]
-    · rw [Bool.eq_false_iff.mpr ht, Bool.not_false, if_pos rfl,
-        if_neg (by simp)]
+    · rw [Bool.eq_false_iff.mpr ht, Bool.not_false, ite_eq_left rfl,
+        ite_eq_right (by simp)]
       rcases hx : x i with a | c <;> rfl
   funext i
   by_cases h1 : i = i₁
@@ -639,18 +639,18 @@ theorem dualWeight_portFlip_mul
     have hj : ¬ (i = i₁ ∨ i = i₂) := by
       rintro (rfl | rfl) <;> exact hi (by simp)
     by_cases hb : W.boundaryFlag i ∈ F.boundaryFlags
-    · rw [dif_pos hb, dif_pos hb,
+    · rw [dite_eq_left hb, dite_eq_left hb,
         tail_portFlip_of_not_mem o h hb₁ hchord hb hj]
       by_cases ht : (cutMatching F κ o).tail ⟨i, hb⟩ = true
-      · rw [if_pos ht]
+      · rw [ite_eq_left ht]
         exact dualFactor_sq (x i)
-      · rw [if_neg ht]
+      · rw [ite_eq_right ht]
         norm_num
-    · rw [dif_neg hb, dif_neg hb]
+    · rw [dite_eq_right hb, dite_eq_right hb]
       norm_num
   rw [← Finset.prod_subset (Finset.subset_univ ({i₁, i₂} :
       Finset α)) hpair, Finset.prod_pair hne,
-    dif_pos hb₁, dif_pos hb₂, dif_pos hb₁, dif_pos hb₂,
+    dite_eq_left hb₁, dite_eq_left hb₂, dite_eq_left hb₁, dite_eq_left hb₂,
     tail_portFlip_of_mem o h hb₁ hchord hb₁ (Or.inl rfl),
     tail_portFlip_of_mem o h hb₁ hchord hb₂ (Or.inr rfl), hc₁, hc₂]
   by_cases t₁ : (cutMatching F κ o).tail ⟨i₁, hb₁⟩ = true <;>
@@ -672,8 +672,8 @@ theorem untwist_apply_odd [LinearOrder α] {W : Fragment α}
           oddPartner ℓ c else c) := by
   rw [untwist_apply_of_mem F κ o x hb, hc]
   by_cases ht : (cutMatching F κ o).tail ⟨i, hb⟩ = true
-  · rw [if_pos ht, if_pos ht]
-  · rw [if_neg ht, if_neg ht]
+  · rw [ite_eq_left ht, ite_eq_left ht]
+  · rw [ite_eq_right ht, ite_eq_right ht]
 
 /-! ### Reversing one arc's direction
 
@@ -721,19 +721,19 @@ theorem dualWeightD_reverseArc_mul {W : Fragment α}
         else 1)) = 1 := by
     intro i h1 h2
     by_cases hb : W.boundaryFlag i ∈ F.boundaryFlags
-    · rw [dif_pos hb, dif_pos hb,
+    · rw [dite_eq_left hb, dite_eq_left hb,
         show (M.reverseArc a).tail ⟨i, hb⟩ = M.tail ⟨i, hb⟩ from by
           rw [DirMatching.reverseArc_tail]
-          exact if_neg (by
+          exact ite_eq_right (by
             rintro (hx | hx)
             · exact h1 (congrArg Subtype.val hx)
             · exact h2 (congrArg Subtype.val hx))]
       by_cases ht : M.tail ⟨i, hb⟩ = true
-      · rw [if_pos ht]
+      · rw [ite_eq_left ht]
         exact dualFactor_sq (x i)
-      · rw [if_neg ht]
+      · rw [ite_eq_right ht]
         norm_num
-    · rw [dif_neg hb, dif_neg hb]
+    · rw [dite_eq_right hb, dite_eq_right hb]
       norm_num
   have hpair : ∀ f : α → ℂ, (∀ i, i ≠ a.val → i ≠ (M.edge a).val →
       f i = 1) → (∏ i : α, f i) = f a.val * f (M.edge a).val := by
@@ -752,21 +752,21 @@ theorem dualWeightD_reverseArc_mul {W : Fragment α}
   have htb : M.tail (M.edge a) = false := by
     rw [M.tail_flip a, hta]
     rfl
-  rw [dif_pos a.prop, dif_pos a.prop, dif_pos (M.edge a).prop,
-    dif_pos (M.edge a).prop]
+  rw [dite_eq_left a.prop, dite_eq_left a.prop, dite_eq_left (M.edge a).prop,
+    dite_eq_left (M.edge a).prop]
   rw [show (M.reverseArc a).tail ⟨a.val, a.prop⟩ = false from by
-      rw [ha, DirMatching.reverseArc_tail, if_pos (Or.inl rfl), hta]
+      rw [ha, DirMatching.reverseArc_tail, ite_eq_left (Or.inl rfl), hta]
       rfl,
     show M.tail ⟨a.val, a.prop⟩ = true from by rw [ha]; exact hta,
     show (M.reverseArc a).tail ⟨(M.edge a).val, (M.edge a).prop⟩
         = true from by
-      rw [ha', DirMatching.reverseArc_tail, if_pos (Or.inr rfl), htb]
+      rw [ha', DirMatching.reverseArc_tail, ite_eq_left (Or.inr rfl), htb]
       rfl,
     show M.tail ⟨(M.edge a).val, (M.edge a).prop⟩ = false from by
       rw [ha']; exact htb]
-  rw [if_neg (by simp), if_pos rfl, if_pos rfl, if_neg (by simp),
+  rw [ite_eq_right (by simp), ite_eq_left rfl, ite_eq_left rfl, ite_eq_right (by simp),
     hca, hca']
-  show (1 * dualSign ℓ c) * (dualSign ℓ (oddPartner ℓ c) * 1) = -1
+  change (1 * dualSign ℓ c) * (dualSign ℓ (oddPartner ℓ c) * 1) = -1
   rw [dualSign_oddPartner]
   have hsq := dualSign_sq ℓ c
   linear_combination -hsq
@@ -781,11 +781,11 @@ theorem untwistD_apply_mem {W : Fragment α}
       = if tl ⟨i, hb⟩ then Sum.map id (oddPartner ℓ) (x i)
         else x i := by
   unfold untwistD
-  rw [dif_pos hb]
+  rw [dite_eq_left hb]
   by_cases ht : tl ⟨i, hb⟩ = true
-  · rw [if_pos ht, if_pos ht]
+  · rw [ite_eq_left ht, ite_eq_left ht]
     rcases x i with a | c <;> rfl
-  · rw [if_neg ht, if_neg ht]
+  · rw [ite_eq_right ht, ite_eq_right ht]
 
 open Classical in
 /-- The change of basis away from the used legs. -/
@@ -793,7 +793,7 @@ theorem untwistD_apply_not_mem {W : Fragment α}
     {k ℓ : ℕ} (F : EdgeSubset W)
     (tl : UsedLab F → Bool) (x : GenBoundaryState k ℓ α) {i : α}
     (hb : W.boundaryFlag i ∉ F.boundaryFlags) :
-    untwistD F tl x i = x i := dif_neg hb
+    untwistD F tl x i = x i := dite_eq_right hb
 
 open Classical in
 /-- **Reversing an arc partners the colour at its two legs.** -/
@@ -807,7 +807,7 @@ theorem untwistD_reverseArc {W : Fragment α}
       Sum.map id (oddPartner ℓ) (Sum.map id (oddPartner ℓ) v) = v := by
     rintro (b | d)
     · rfl
-    · show Sum.inr (oddPartner ℓ (oddPartner ℓ d)) = Sum.inr d
+    · change Sum.inr (oddPartner ℓ (oddPartner ℓ d)) = Sum.inr d
       rw [oddPartner_invol]
   funext i
   by_cases hi₁ : i = a.val
@@ -816,14 +816,14 @@ theorem untwistD_reverseArc {W : Fragment α}
       show (M.reverseArc a).tail ⟨a.val, a.prop⟩
           = !M.tail ⟨a.val, a.prop⟩ from by
         rw [DirMatching.reverseArc_tail]
-        exact if_pos (Or.inl (Subtype.ext rfl))]
+        exact ite_eq_left (Or.inl (Subtype.ext rfl))]
     by_cases ht : M.tail ⟨a.val, a.prop⟩ = true
-    · rw [ht, Bool.not_true, if_neg (by simp), if_pos rfl, hinv]
+    · rw [ht, Bool.not_true, ite_eq_right (by simp), ite_eq_left rfl, hinv]
     · have htf : M.tail ⟨a.val, a.prop⟩ = false := by
         cases hbb : M.tail ⟨a.val, a.prop⟩
         · rfl
         · exact absurd hbb ht
-      rw [htf, Bool.not_false, if_pos rfl, if_neg (by simp)]
+      rw [htf, Bool.not_false, ite_eq_left rfl, ite_eq_right (by simp)]
   · by_cases hi₂ : i = (M.edge a).val
     · rw [hi₂, stateOddFlip_right,
         untwistD_apply_mem F _ x (M.edge a).prop,
@@ -831,21 +831,21 @@ theorem untwistD_reverseArc {W : Fragment α}
         show (M.reverseArc a).tail ⟨(M.edge a).val, (M.edge a).prop⟩
             = !M.tail ⟨(M.edge a).val, (M.edge a).prop⟩ from by
           rw [DirMatching.reverseArc_tail]
-          exact if_pos (Or.inr (Subtype.ext rfl))]
+          exact ite_eq_left (Or.inr (Subtype.ext rfl))]
       by_cases ht : M.tail ⟨(M.edge a).val, (M.edge a).prop⟩ = true
-      · rw [ht, Bool.not_true, if_neg (by simp), if_pos rfl, hinv]
+      · rw [ht, Bool.not_true, ite_eq_right (by simp), ite_eq_left rfl, hinv]
       · have htf : M.tail ⟨(M.edge a).val, (M.edge a).prop⟩
             = false := by
           cases hbb : M.tail ⟨(M.edge a).val, (M.edge a).prop⟩
           · rfl
           · exact absurd hbb ht
-        rw [htf, Bool.not_false, if_pos rfl, if_neg (by simp)]
+        rw [htf, Bool.not_false, ite_eq_left rfl, ite_eq_right (by simp)]
     · rw [stateOddFlip_of_ne hi₁ hi₂]
       by_cases hb : W.boundaryFlag i ∈ F.boundaryFlags
       · rw [untwistD_apply_mem F _ x hb, untwistD_apply_mem F _ x hb,
           show (M.reverseArc a).tail ⟨i, hb⟩ = M.tail ⟨i, hb⟩ from by
             rw [DirMatching.reverseArc_tail]
-            exact if_neg (by
+            exact ite_eq_right (by
               rintro (hx | hx)
               · exact hi₁ (congrArg Subtype.val hx)
               · exact hi₂ (congrArg Subtype.val hx))]
@@ -864,13 +864,13 @@ theorem dualWeightD_mul_self {W : Fragment α}
   rw [← Finset.prod_mul_distrib]
   refine Finset.prod_eq_one (fun i _ => ?_)
   by_cases hb : W.boundaryFlag i ∈ F.boundaryFlags
-  · rw [dif_pos hb]
+  · rw [dite_eq_left hb]
     by_cases ht : tl ⟨i, hb⟩ = true
-    · rw [if_pos ht]
+    · rw [ite_eq_left ht]
       exact dualFactor_sq (x i)
-    · rw [if_neg ht]
+    · rw [ite_eq_right ht]
       norm_num
-  · rw [dif_neg hb]
+  · rw [dite_eq_right hb]
     norm_num
 
 open Classical in
@@ -888,13 +888,13 @@ theorem genBoundarySubsetMatches_untwistD {W : Fragment α}
     by_cases hb : W.boundaryFlag i ∈ F.boundaryFlags
     · rw [untwistD_apply_mem F tl x hb]
       by_cases ht : tl ⟨i, hb⟩ = true
-      · rw [if_pos ht]
+      · rw [ite_eq_left ht]
         rcases hx : x i with a | c
         · exact ⟨fun ⟨d, hd⟩ => absurd hd (by simp), fun ⟨d, hd⟩ =>
             absurd hd (by simp)⟩
         · exact ⟨fun _ => ⟨c, rfl⟩,
             fun _ => ⟨oddPartner ℓ c, rfl⟩⟩
-      · rw [if_neg ht]
+      · rw [ite_eq_right ht]
     · rw [untwistD_apply_not_mem F tl x hb]
   constructor
   · intro hm i
@@ -915,13 +915,13 @@ theorem dualWeight_mul_self [LinearOrder α] {W : Fragment α}
   rw [← Finset.prod_mul_distrib]
   refine Finset.prod_eq_one (fun i _ => ?_)
   by_cases hb : W.boundaryFlag i ∈ F.boundaryFlags
-  · rw [dif_pos hb]
+  · rw [dite_eq_left hb]
     by_cases ht : (cutMatching F κ o).tail ⟨i, hb⟩ = true
-    · rw [if_pos ht]
+    · rw [ite_eq_left ht]
       exact dualFactor_sq (x i)
-    · rw [if_neg ht]
+    · rw [ite_eq_right ht]
       norm_num
-  · rw [dif_neg hb]
+  · rw [dite_eq_right hb]
     norm_num
 
 /-! ### The through-edge product ignores a chain flip

@@ -104,7 +104,7 @@ theorem sTr_conj {V W : SuperVect} (e : V ≅ W) (f : V ⟶ V) :
 product of endomorphisms. -/
 theorem sTr_tensorHom {V W : SuperVect} (f : V ⟶ V) (g : W ⟶ W) :
     sTr (f ⊗ₘ g) = sTr f * sTr g := by
-  show sTr (SuperVect.tensorHom f g) = sTr f * sTr g
+  change sTr (SuperVect.tensorHom f g) = sTr f * sTr g
   rw [sTr, SuperVect.tensorHom_evenMap, SuperVect.tensorHom_oddMap]
   rw [show LinearMap.trace ℂ (SuperVect.tensorObj V W).even
         (LinearMap.prodMap (TensorProduct.map f.evenMap g.evenMap)
@@ -168,7 +168,7 @@ theorem parPow_evenMap (V : SuperVect) (n : ℕ) :
   induction n with
   | zero => rfl
   | succ n ih =>
-      show ((parPow V n) ≫ parHom V).evenMap = _
+      change ((parPow V n) ≫ parHom V).evenMap = _
       rw [SuperVect.cat_comp_evenMap, parHom_evenMap, ih]
       rfl
 
@@ -178,7 +178,7 @@ theorem parPow_oddMap (V : SuperVect) (n : ℕ) :
   induction n with
   | zero => simp [parPow, SuperVect.cat_id_oddMap]
   | succ n ih =>
-      show ((parPow V n) ≫ parHom V).oddMap = _
+      change ((parPow V n) ≫ parHom V).oddMap = _
       rw [SuperVect.cat_comp_oddMap, parHom_oddMap, ih, pow_succ]
       ext v
       simp
@@ -245,8 +245,8 @@ theorem totTensor_tmul (V W : SuperVect) (x : Tot V) (y : Tot W) :
       ((x.1 ⊗ₜ y.1, x.2 ⊗ₜ y.2), (x.1 ⊗ₜ y.2, x.2 ⊗ₜ y.1)) := by
   obtain ⟨x1, x2⟩ := x
   obtain ⟨y1, y2⟩ := y
-  simp only [totTensor, LinearEquiv.trans_apply, LinearEquiv.prodCongr_apply,
-    TensorProduct.prodLeft_tmul, TensorProduct.prodRight_tmul]
+  simp only [totTensor, LinearEquiv.trans_apply,
+    TensorProduct.prodLeft_tmul]
   rfl
 
 /-- **Naturality of the total tensor identification**: the total map
@@ -259,10 +259,10 @@ theorem tot_tensorHom {V₁ V₂ W₁ W₂ : SuperVect}
         (TensorProduct.map (tot f) (tot g)) := by
   apply TensorProduct.ext'
   intro x y
-  show tot (f ⊗ₘ g) (totTensor V₁ W₁ (x ⊗ₜ y)) =
+  change tot (f ⊗ₘ g) (totTensor V₁ W₁ (x ⊗ₜ y)) =
     totTensor V₂ W₂ (TensorProduct.map (tot f) (tot g) (x ⊗ₜ y))
   rw [TensorProduct.map_tmul, totTensor_tmul, totTensor_tmul]
-  show tot (SuperVect.tensorHom f g) _ = _
+  change tot (SuperVect.tensorHom f g) _ = _
   simp only [tot, SuperVect.tensorHom_evenMap, SuperVect.tensorHom_oddMap,
     LinearMap.prodMap_apply]
   rfl
@@ -314,11 +314,10 @@ theorem tot_associator (V W Z : SuperVect) :
     := by
   apply TensorProduct.ext'
   intro u z
-  induction u using TensorProduct.induction_on with
-  | zero => simp
+  induction u using TensorProduct.inductionOn with
   | add a b ha hb => simp only [TensorProduct.add_tmul, map_add, ha, hb]
   | tmul x y =>
-      show tot (α_ V W Z).hom
+      change tot (α_ V W Z).hom
           (totTensor (SuperVect.tensorObj V W) Z
             (TensorProduct.map (totTensor V W).toLinearMap
               LinearMap.id ((x ⊗ₜ y) ⊗ₜ z))) =
@@ -331,12 +330,12 @@ theorem tot_associator (V W Z : SuperVect) :
         LinearMap.id_apply, LinearEquiv.coe_coe,
         LinearEquiv.coe_coe, totTensor_tmul, totTensor_tmul,
         totTensor_tmul, totTensor_tmul]
-      show (LinearMap.prodMap
+      change (LinearMap.prodMap
           ((SuperVect.associator V W Z).hom.evenMap)
           ((SuperVect.associator V W Z).hom.oddMap)) _ = _
       rw [SuperVect.associator_hom_evenMap,
         SuperVect.associator_hom_oddMap]
-      show ((SuperVect.assocEvenEquiv V W Z) _,
+      change ((SuperVect.assocEvenEquiv V W Z) _,
         (SuperVect.assocOddEquiv V W Z) _) = _
       rw [show SuperVect.assocEvenEquiv V W Z =
         SuperVect.assocAux V.even V.odd W.even W.odd Z.even Z.odd
@@ -394,7 +393,7 @@ theorem tot_koszulBraiding (V W : SuperVect) :
   obtain ⟨x1, x2⟩ := x
   have hx : ((x1, x2) : Tot V) = (x1, 0) + (0, x2) := by
     rw [Prod.mk_add_mk, add_zero, zero_add]
-  show tot (β_ V W).hom (totTensor V W ((x1, x2) ⊗ₜ y)) =
+  change tot (β_ V W).hom (totTensor V W ((x1, x2) ⊗ₜ y)) =
     totTensor W V (signedFlip V W ((x1, x2) ⊗ₜ y))
   rw [hx, TensorProduct.add_tmul, map_add, map_add, map_add, map_add]
   refine congrArg₂ (· + ·) ?_ ?_
@@ -403,7 +402,7 @@ theorem tot_koszulBraiding (V W : SuperVect) :
     rw [show ((0, 0) : Tot V) = 0 from rfl, TensorProduct.tmul_zero,
       add_zero, TensorProduct.zero_tmul,
       TensorProduct.zero_tmul, totTensor_tmul]
-    show (SuperVect.koszulBraidingEven V W (x1 ⊗ₜ y.1, 0),
+    change (SuperVect.koszulBraidingEven V W (x1 ⊗ₜ y.1, 0),
         SuperVect.koszulBraidingOdd V W (x1 ⊗ₜ y.2, 0)) = _
     rw [koszulBraidingEven_pair, SuperVect.koszulBraidingOdd_pair]
     simp [TensorProduct.comm_tmul, TensorProduct.tmul_zero]
@@ -412,7 +411,7 @@ theorem tot_koszulBraiding (V W : SuperVect) :
     rw [show ((0, 0) : Tot V) = 0 from rfl, TensorProduct.tmul_zero,
       zero_add, TensorProduct.zero_tmul,
       TensorProduct.zero_tmul, totTensor_tmul]
-    show (SuperVect.koszulBraidingEven V W (0, x2 ⊗ₜ y.2),
+    change (SuperVect.koszulBraidingEven V W (0, x2 ⊗ₜ y.2),
         SuperVect.koszulBraidingOdd V W (0, x2 ⊗ₜ y.1)) = _
     rw [koszulBraidingEven_pair, SuperVect.koszulBraidingOdd_pair]
     simp [TensorProduct.comm_tmul, TensorProduct.tmul_zero,
@@ -486,8 +485,7 @@ theorem trace_flip_twist
   -- equivalence
   obtain ⟨T, rfl⟩ := (homTensorHomEquiv ℂ U V U V).surjective G
   rw [homTensorHomEquiv_apply]
-  induction T using TensorProduct.induction_on with
-  | zero => simp
+  induction T using TensorProduct.inductionOn with
   | add a c ha hc =>
       rw [map_add, TensorProduct.map_add_left, LinearMap.add_comp,
         LinearMap.comp_add, map_add, ha, hc, LinearMap.add_comp,
@@ -511,8 +509,7 @@ theorem trace_flip_twist
               (TensorProduct.assoc ℂ U V V).toLinearMap)) := by
         apply TensorProduct.ext'
         intro w z
-        induction w using TensorProduct.induction_on with
-        | zero => simp
+        induction w using TensorProduct.inductionOn with
         | add w₁ w₂ h₁ h₂ =>
             rw [TensorProduct.add_tmul, map_add, map_add, h₁, h₂]
         | tmul u v =>
@@ -553,12 +550,57 @@ private theorem trace_comp_comm_monoid {M N : Type*}
     [Module.Free ℂ N] [Module.Finite ℂ N]
     (f : M →ₗ[ℂ] N) (g : N →ₗ[ℂ] M) :
     LinearMap.trace ℂ M (g ∘ₗ f) = LinearMap.trace ℂ N (f ∘ₗ g) := by
-  letI : AddCommGroup M := Module.addCommMonoidToAddCommGroup ℂ
-  letI : AddCommGroup N := Module.addCommMonoidToAddCommGroup ℂ
+  let : AddCommGroup M := Module.addCommMonoidToAddCommGroup ℂ
+  let : AddCommGroup N := Module.addCommMonoidToAddCommGroup ℂ
   exact LinearMap.trace_comp_comm' f g
 
 -- Raised budget: the supertrace is conjugated through the
 -- braiding on each of the four parity blocks.
+private theorem sTr_comp_whiskerLeft_total (P X : SuperVect)
+    (g : SuperVect.tensorObj P X ⟶ SuperVect.tensorObj P X) (k : X ⟶ X) :
+    sTr (g ≫ (P ◁ k)) =
+      LinearMap.trace ℂ _
+        ((((totTensor P X).symm.toLinearMap.comp (tot g)).comp
+          (totTensor P X).toLinearMap).comp
+          (TensorProduct.map LinearMap.id (tot k))) := by
+  classical
+  set TP := totTensor P X
+  set g' : (Tot P ⊗[ℂ] Tot X) →ₗ[ℂ] Tot P ⊗[ℂ] Tot X :=
+    (TP.symm.toLinearMap.comp (tot g)).comp TP.toLinearMap with hg'
+  have hwhiskk : ∀ y, tot (P ◁ k) (TP y) =
+      TP (TensorProduct.map LinearMap.id (tot k) y) := by
+    intro y
+    have h1 := LinearMap.congr_fun (tot_tensorHom (𝟙 P) k) y
+    rwa [tot_id] at h1
+  have hRHS : sTr (g ≫ (P ◁ k)) =
+      LinearMap.trace ℂ _
+        (g'.comp (TensorProduct.map LinearMap.id (tot k))) := by
+    rw [sTr_eq_trace_tot, tot_comp]
+    have hcomp2 : tot (P ◁ k) =
+        (TP.toLinearMap.comp
+          (TensorProduct.map LinearMap.id (tot k))).comp
+          TP.symm.toLinearMap := by
+      refine LinearMap.ext fun z => ?_
+      have h1 := hwhiskk (TP.symm z)
+      rw [LinearEquiv.apply_symm_apply] at h1
+      simpa using h1
+    rw [hcomp2]
+    rw [show ((TP.toLinearMap.comp
+        (TensorProduct.map LinearMap.id (tot k))).comp
+        TP.symm.toLinearMap).comp (tot g) =
+      TP.toLinearMap.comp
+        (((TensorProduct.map LinearMap.id (tot k)).comp
+          TP.symm.toLinearMap).comp (tot g)) from by
+      simp only [LinearMap.comp_assoc]]
+    rw [LinearMap.trace_comp_comm']
+    rw [show (((TensorProduct.map LinearMap.id (tot k)).comp
+        TP.symm.toLinearMap).comp (tot g)).comp TP.toLinearMap =
+      (TensorProduct.map LinearMap.id (tot k)).comp g' from by
+      rw [hg']
+      simp only [LinearMap.comp_assoc]]
+    rw [LinearMap.trace_comp_comm']
+  exact hRHS
+
 /-- **The braiding partial-trace identity**: composing the braiding
 of the top two slots with a whiskered endomorphism and a twist of
 the top slot traces to the endomorphism alone, with the twist
@@ -599,7 +641,7 @@ theorem sTr_swap_conj (P X : SuperVect)
   have hbeta : ∀ x, tot (P ◁ (β_ X X).hom) (J'lin x) =
       J'lin (TensorProduct.map LinearMap.id (signedFlip X X) x) := by
     intro x
-    show tot (P ◁ (β_ X X).hom)
+    change tot (P ◁ (β_ X X).hom)
         (TB (TensorProduct.map LinearMap.id TXX.toLinearMap x)) =
       TB (TensorProduct.map LinearMap.id TXX.toLinearMap
         (TensorProduct.map LinearMap.id (signedFlip X X) x))
@@ -619,7 +661,7 @@ theorem sTr_swap_conj (P X : SuperVect)
   have hgconj : (tot g).comp TP.toLinearMap = TP.toLinearMap.comp g'
       := by
     refine LinearMap.ext fun y => ?_
-    show tot g (TP y) = TP (g' y)
+    change tot g (TP y) = TP (g' y)
     rw [hg']
     simp
   have hwhiskg : ∀ y, tot (g ▷ X) (TA y) =
@@ -630,7 +672,7 @@ theorem sTr_swap_conj (P X : SuperVect)
   have hgstep : ∀ x, tot (g ▷ X) (Jlin x) =
       Jlin (TensorProduct.map g' LinearMap.id x) := by
     intro x
-    show tot (g ▷ X)
+    change tot (g ▷ X)
         (TA (TensorProduct.map TP.toLinearMap LinearMap.id x)) =
       TA (TensorProduct.map TP.toLinearMap LinearMap.id
         (TensorProduct.map g' LinearMap.id x))
@@ -646,7 +688,7 @@ theorem sTr_swap_conj (P X : SuperVect)
   have hhstep : ∀ x, tot (SuperVect.tensorObj P X ◁ h) (Jlin x) =
       Jlin (TensorProduct.map LinearMap.id (tot h) x) := by
     intro x
-    show tot (SuperVect.tensorObj P X ◁ h)
+    change tot (SuperVect.tensorObj P X ◁ h)
         (TA (TensorProduct.map TP.toLinearMap LinearMap.id x)) =
       TA (TensorProduct.map TP.toLinearMap LinearMap.id
         (TensorProduct.map LinearMap.id (tot h) x))
@@ -685,7 +727,7 @@ theorem sTr_swap_conj (P X : SuperVect)
         (g ▷ X) ≫ (SuperVect.tensorObj P X ◁ h)) =
       (JE.toLinearMap.comp C').comp JE.symm.toLinearMap := by
     refine LinearMap.ext fun z => ?_
-    show tot _ z = JE (C' (JE.symm z))
+    change tot _ z = JE (C' (JE.symm z))
     conv_lhs => rw [show z = JE (JE.symm z) from
       (JE.apply_symm_apply z).symm]
     rw [show (JE (JE.symm z) :
@@ -741,10 +783,10 @@ theorem sTr_swap_conj (P X : SuperVect)
       ((tot (parHom X)).comp (tot h)).comp (totOddProj X) = tot k
       := by
     refine LinearMap.ext fun x => ?_
-    show (tot h ((x.1, 0) : Tot X)) +
+    change (tot h ((x.1, 0) : Tot X)) +
       tot (parHom X) (tot h ((0, x.2) : Tot X)) = tot k x
     rw [hk]
-    show ((SuperVect.Hom.evenMap h x.1, SuperVect.Hom.oddMap h 0)
+    change ((SuperVect.Hom.evenMap h x.1, SuperVect.Hom.oddMap h 0)
         : Tot X) +
       ((SuperVect.Hom.evenMap h 0,
         -SuperVect.Hom.oddMap h x.2) : Tot X) =
@@ -763,38 +805,7 @@ theorem sTr_swap_conj (P X : SuperVect)
       rw [← LinearMap.comp_add, ← TensorProduct.map_add_right, hkey]
     rw [← map_add, hsum]
   -- identify the right-hand side
-  have hwhiskk : ∀ y, tot (P ◁ k) (TP y) =
-      TP (TensorProduct.map LinearMap.id (tot k) y) := by
-    intro y
-    have h1 := LinearMap.congr_fun (tot_tensorHom (𝟙 P) k) y
-    rwa [tot_id] at h1
-  have hRHS : sTr (g ≫ (P ◁ k)) =
-      LinearMap.trace ℂ _
-        (g'.comp (TensorProduct.map LinearMap.id (tot k))) := by
-    rw [sTr_eq_trace_tot, tot_comp]
-    have hcomp2 : tot (P ◁ k) =
-        (TP.toLinearMap.comp
-          (TensorProduct.map LinearMap.id (tot k))).comp
-          TP.symm.toLinearMap := by
-      refine LinearMap.ext fun z => ?_
-      have h1 := hwhiskk (TP.symm z)
-      rw [LinearEquiv.apply_symm_apply] at h1
-      simpa using h1
-    rw [hcomp2]
-    rw [show ((TP.toLinearMap.comp
-        (TensorProduct.map LinearMap.id (tot k))).comp
-        TP.symm.toLinearMap).comp (tot g) =
-      TP.toLinearMap.comp
-        (((TensorProduct.map LinearMap.id (tot k)).comp
-          TP.symm.toLinearMap).comp (tot g)) from by
-      simp only [LinearMap.comp_assoc]]
-    rw [LinearMap.trace_comp_comm']
-    rw [show (((TensorProduct.map LinearMap.id (tot k)).comp
-        TP.symm.toLinearMap).comp (tot g)).comp TP.toLinearMap =
-      (TensorProduct.map LinearMap.id (tot k)).comp g' from by
-      rw [hg']
-      simp only [LinearMap.comp_assoc]]
-    rw [LinearMap.trace_comp_comm']
+  have hRHS := sTr_comp_whiskerLeft_total P X g k
   rw [htrace1, htrace3, hRHS]
 
 /-! ## The trace of the standard cycles
@@ -816,11 +827,11 @@ theorem sTr_insertTop_full (X : SuperVect) :
       intro h
       erw [show insertTop X 0 0 = 𝟙 _ from insertTop_zero X 0,
         Category.id_comp]
-      show sTr (𝟙 (tensorPow SuperVect X 0) ⊗ₘ h) = _
+      change sTr (𝟙 (tensorPow SuperVect X 0) ⊗ₘ h) = _
       rw [sTr_tensorHom, sTr_id, parPow, Category.id_comp]
       rw [show Module.finrank ℂ (tensorPow SuperVect X 0).even
         = 1 from Module.finrank_self ℂ]
-      haveI : Subsingleton (tensorPow SuperVect X 0).odd :=
+      have : Subsingleton (tensorPow SuperVect X 0).odd :=
         inferInstanceAs (Subsingleton PUnit)
       rw [show Module.finrank ℂ (tensorPow SuperVect X 0).odd
         = 0 from Module.finrank_eq_zero_of_subsingleton _ _]
@@ -847,7 +858,7 @@ theorem sTr_permMor_topCycle_zero (X : SuperVect) (n : ℕ) :
   have h2 : insertTop X n n ≫
       (tensorPow SuperVect X n ◁ (𝟙 X)) = insertTop X n n := by
     rw [MonoidalCategory.whiskerLeft_id]
-    show insertTop X n n ≫ 𝟙 (tensorPow SuperVect X (n + 1)) = _
+    change insertTop X n n ≫ 𝟙 (tensorPow SuperVect X (n + 1)) = _
     rw [Category.comp_id]
   rw [permMor_topCycle,
     show ((0 : Fin (n + 1)) : ℕ) = 0 from rfl, Nat.sub_zero]
@@ -919,7 +930,7 @@ theorem cycleType_viaEmbedding {α β : Type*}
     (e : Equiv.Perm α) (ι : α ↪ β) :
     (e.viaEmbedding ι).cycleType = e.cycleType := by
   rw [Equiv.Perm.viaEmbedding]
-  letI : DecidablePred (· ∈ Set.range ι.toFun) :=
+  let : DecidablePred (· ∈ Set.range ι.toFun) :=
     fun a => Classical.propDecidable _
   exact Equiv.Perm.cycleType_extendDomain _
 
@@ -1043,14 +1054,14 @@ theorem superChar_nfPerm (p q : ℕ) : ∀ cs : List ℕ,
   induction cs with
   | nil =>
       intro _
-      show superChar p q 0 1 = (List.map (fun c => superPS p q c)
+      change superChar p q 0 1 = (List.map (fun c => superPS p q c)
         []).prod
       unfold superChar
       rw [permMor_one, sTr_id]
       rw [show Module.finrank ℂ
         (tensorPow SuperVect (stdSuper p q) 0).even = 1 from
         Module.finrank_self ℂ]
-      haveI : Subsingleton
+      have : Subsingleton
           (tensorPow SuperVect (stdSuper p q) 0).odd :=
         inferInstanceAs (Subsingleton PUnit)
       rw [show Module.finrank ℂ
@@ -1156,7 +1167,7 @@ theorem sTr_permAlg_e (P : SchurPackage.{0}) (p q : ℕ)
       L (MonoidAlgebra.of ℂ (Equiv.Perm (Fin lam.card)) π) =
         cycleFun (superPS p q) π := by
     intro π
-    show sTrL _ (permAlg (stdSuper p q) lam.card
+    change sTrL _ (permAlg (stdSuper p q) lam.card
       (MonoidAlgebra.of ℂ (Equiv.Perm (Fin lam.card)) π)) = _
     rw [show MonoidAlgebra.of ℂ (Equiv.Perm (Fin lam.card)) π =
       MonoidAlgebra.single π (1 : ℂ) from rfl, permAlg_single,
@@ -1220,7 +1231,7 @@ def gradedSignRep (p q n : ℕ) :
   toFun σ := tot (permMor (stdSuper p q) n σ)
   map_one' := by rw [permMor_one, tot_id]; rfl
   map_mul' σ τ := by
-    show tot (permMor (stdSuper p q) n (σ * τ)) = _
+    change tot (permMor (stdSuper p q) n (σ * τ)) = _
     rw [permMor_mul, tot_comp]
     rfl
 
@@ -1237,7 +1248,7 @@ theorem gradedSignRep_asAlgebraHom (p q n : ℕ)
       tot (permAlg (stdSuper p q) n z) := by
   induction z using MonoidAlgebra.induction_on with
   | of σ =>
-      show (gradedSignRep p q n).asAlgebraHom
+      change (gradedSignRep p q n).asAlgebraHom
           (MonoidAlgebra.single σ (1 : ℂ)) =
         tot (permAlg (stdSuper p q) n
           (MonoidAlgebra.single σ (1 : ℂ)))

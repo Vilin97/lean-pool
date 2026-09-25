@@ -123,7 +123,7 @@ theorem unitBaseDatum_zigzag
       refine Eq.trans (eq_whisker (congrArg
         (fun t => X ◁ t) h2) _) ?_
       exact whisker_eq _ (actRight_unitBase X)
-    show (λ_ X).inv ≫
+    change (λ_ X).inv ≫
       ((η[𝟙_ D] ≫ (unitBaseDatum X Y).copair) ▷ X) ≫
       zigContract (𝟙_ D) (unitBaseDatum X Y).pair
         (unitBaseDatum X Y).pair_linear = 𝟙 X
@@ -164,7 +164,7 @@ theorem unitBaseDatum_zigzag
       refine Eq.trans (eq_whisker (congrArg
         (fun t => t ▷ Y) h2) _) ?_
       exact whisker_eq _ (actLeft_unitBase Y)
-    show (ρ_ Y).inv ≫
+    change (ρ_ Y).inv ≫
       (Y ◁ (η[𝟙_ D] ≫ (unitBaseDatum X Y).copair)) ≫
       zagContract (𝟙_ D) (unitBaseDatum X Y).pair
         (unitBaseDatum X Y).pair_linear = 𝟙 Y

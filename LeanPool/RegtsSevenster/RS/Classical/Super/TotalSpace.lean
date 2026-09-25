@@ -41,7 +41,7 @@ theorem tot_comp {V W X : SuperVect} (f : V ⟶ W) (g : W ⟶ X) :
 theorem tot_add {V W : SuperVect} (f g : V ⟶ W) :
     tot (f + g) = tot f + tot g := by
   refine LinearMap.ext fun x => ?_
-  show ((f + g).evenMap x.1, (f + g).oddMap x.2) = _
+  change ((f + g).evenMap x.1, (f + g).oddMap x.2) = _
   rw [SuperVect.add_evenMap, SuperVect.add_oddMap]
   rfl
 
@@ -49,7 +49,7 @@ theorem tot_add {V W : SuperVect} (f g : V ⟶ W) :
 theorem tot_smul {V W : SuperVect} (c : ℂ) (f : V ⟶ W) :
     tot (c • f) = c • tot f := by
   refine LinearMap.ext fun x => ?_
-  show ((c • f).evenMap x.1, (c • f).oddMap x.2) = _
+  change ((c • f).evenMap x.1, (c • f).oddMap x.2) = _
   rw [SuperVect.smul_evenMap, SuperVect.smul_oddMap]
   rfl
 

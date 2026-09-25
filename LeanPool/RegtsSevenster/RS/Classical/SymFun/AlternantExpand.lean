@@ -52,7 +52,7 @@ theorem coeff_mul_alternant (P : MvPolynomial (Fin k) ℂ)
         ∏ i, (X i : MvPolynomial (Fin k) ℂ) ^
           ((k - 1) - ((τ i : Fin k) : ℕ)) from
         Finset.prod_congr rfl fun i _ => by
-          show (X i : MvPolynomial (Fin k) ℂ) ^
+          change (X i : MvPolynomial (Fin k) ℂ) ^
               (0 + ((k - 1) - ((τ i : Fin k) : ℕ))) = _
           rw [Nat.zero_add]]
       rw [prod_pow_eq_monomial, stairShift])]
@@ -71,7 +71,7 @@ theorem coeff_mul_alternant (P : MvPolynomial (Fin k) ℂ)
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [MvPolynomial.coeff_C_mul, coeff_mul_monomial']
   by_cases hle : stairShift τ ≤ w₀
-  · rw [if_pos hle, if_pos hle, mul_one]
-  · rw [if_neg hle, if_neg hle]
+  · rw [ite_eq_left hle, ite_eq_left hle, mul_one]
+  · rw [ite_eq_right hle, ite_eq_right hle]
 
 end RS

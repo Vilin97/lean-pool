@@ -20,7 +20,7 @@ transition system and orientation.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable {k ℓ : ℕ}
 
@@ -88,10 +88,10 @@ theorem hMaster_vertex_nodup (h : MixedFunctional k ℓ)
   have hnd_b : (oddListOf (blockRestrict (ds W)
       (cSorted W (colouringOfFlip W F o ψ φ)) v)).Nodup :=
     (oddListOf_blockRestrict_nodup_iff W F o ψ φ v).mpr hnd
-  rw [if_pos hnd_b]
+  rw [ite_eq_left hnd_b]
   rw [evenMultisetOf_blockRestrict W F o ψ φ v]
   rw [oddFinsetOf_blockRestrict W F o ψ φ v]
-  rw [MixedFunctional.evalOdd, if_pos hnd]
+  rw [MixedFunctional.evalOdd, ite_eq_left hnd]
   set A := (sortSign (oddListOf (blockRestrict (ds W)
       (cSorted W (colouringOfFlip W F o ψ φ)) v)) : ℂ)
   set B := (sortSign (F.oddListAt o φ (blockVertex W v)) : ℂ)
@@ -124,7 +124,7 @@ theorem hMaster_vertex_not_nodup (h : MixedFunctional k ℓ)
       (cSorted W (colouringOfFlip W F o ψ φ)) v)).Nodup :=
     fun hn => hnd
       ((oddListOf_blockRestrict_nodup_iff W F o ψ φ v).mp hn)
-  exact if_neg hnd_b
+  exact ite_eq_right hnd_b
 
 /-! ## The normal form -/
 

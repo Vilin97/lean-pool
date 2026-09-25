@@ -34,7 +34,7 @@ rewire.
 
 namespace RS
 
-open scoped Classical
+
 
 /-! ### Permutation counting helpers: `sumCongr` -/
 
@@ -88,16 +88,6 @@ variable {α : Type} {W : Fragment α}
 section GenericWalk
 
 variable {F : EdgeSubset W}
-
-/-- Splitting an iterated walk. -/
-theorem iterWalk_add (κ : F.RelTransitionSystem) (f : W.Flag)
-    (a b : ℕ) :
-    iterWalk κ f (a + b) = iterWalk κ (iterWalk κ f a) b := by
-  induction b with
-  | zero => rfl
-  | succ b ih =>
-    rw [show a + (b + 1) = (a + b) + 1 from rfl, iterWalk_succ,
-      ih, ← iterWalk_succ]
 
 /-- Iterates of a periodic flag are periodic. -/
 theorem periodicFlag_iterWalk (κ : F.RelTransitionSystem)
@@ -298,7 +288,7 @@ theorem iterWalk_val_of_glued_avoids
       fun hh => havI (eq_partnerSurvI_of_pairing hopen _ hh)
     have h2 : W.pairing (iterWalk κ' g m).val ≠ W.boundaryFlag j :=
       fun hh => havJ (eq_partnerSurvJ_of_pairing hopen _ hh)
-    show (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
+    change (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
         κ').match_ (W.pairing (iterWalk
           (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
           g.val m)) =
@@ -331,7 +321,7 @@ theorem iterWalk_val_of_internal
     have hp := hcontW m (by omega)
     rw [hval] at hp
     obtain ⟨h1, h2⟩ := internal_surviving i j hp
-    show (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
+    change (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
         κ').match_ (W.pairing (iterWalk
           (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
           g.val m)) =
@@ -707,7 +697,7 @@ theorem walkPermPeriodic_notLinked (κ' : (Fg).RelTransitionSystem)
     ((RelTransitionSystem.unglueOpen hij hopen s' hc' hc
       κ').periodicFlags_sub hf)
   apply Subtype.ext
-  show (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
+  change (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
       κ').match_ (W.pairing f) =
     (κ'.match_ ((W.gluePairOpen i j hij hopen).pairing
       ⟨f, h1, h2⟩)).val
@@ -824,7 +814,7 @@ omit hb hbo in
 theorem splice_period : iterWalk κ' (κ'.match_ x) k = κ'.match_ x
     := by
   obtain ⟨k0, rfl⟩ : ∃ k0, k = k0 + 1 := ⟨k - 1, by omega⟩
-  show κ'.match_ ((W.gluePairOpen i j hij hopen).pairing
+  change κ'.match_ ((W.gluePairOpen i j hij hopen).pairing
     (iterWalk κ' (κ'.match_ x) k0)) = κ'.match_ x
   have hlast := splice_last hij hopen s' hc' hc κ' x y b bo
     hxb hyo (k0 + 1) hk1 hcont hterm
@@ -939,6 +929,277 @@ noncomputable def spliceFlag (κ' : (Fg).RelTransitionSystem)
   ⟨iterWalk κ' (κ'.match_ x) t,
     (κ'.mem_periodicFlags).mpr (periodicFlag_iterWalk κ' hper t)⟩
 
+private theorem linked_walkMap_injective (κ' : (Fg).RelTransitionSystem)
+    (hbi : W.boundaryFlag i ∈ (Fl).boundaryFlags)
+    (hbj : W.boundaryFlag j ∈ (Fl).boundaryFlags)
+    (k : ℕ) (hk1 : 1 ≤ k)
+    (hcontA : ∀ t, t < k → W.pairing (iterWalk
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      (W.boundaryFlag i) t) ∈ (Fl).internalFlags)
+    (htermA : W.pairing (iterWalk
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      (W.boundaryFlag i) k) = W.boundaryFlag j)
+    (hperA : κ'.PeriodicFlag (κ'.match_ (partnerSurvI hopen)))
+    (hperB : κ'.PeriodicFlag (κ'.match_ (partnerSurvJ hopen))) :
+    Function.Injective
+      (Sum.elim (liftPeriodic hij hopen s' hc' hc κ')
+        (Sum.elim
+          (fun t : Fin k => spliceFlag hij hopen s' hc' κ'
+            (partnerSurvI hopen) hperA t.val)
+          (fun t : Fin k => spliceFlag hij hopen s' hc' κ'
+            (partnerSurvJ hopen) hperB t.val))) := by
+  have hbfj_eq : W.boundaryFlag j = W.pairing (iterWalk
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      (W.boundaryFlag i) k) := htermA.symm
+  have hcontB : ∀ t, t < k → W.pairing (iterWalk
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      (W.boundaryFlag j) t) ∈ (Fl).internalFlags := by
+    intro t ht
+    rw [hbfj_eq]
+    exact reverse_chain_continues
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      hbi hcontA t ht
+  have htermB : W.pairing (iterWalk
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      (W.boundaryFlag j) k) = W.boundaryFlag i := by
+    rw [hbfj_eq]
+    exact reverse_chain_terminates
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      hcontA
+  -- the two spliced cycles
+  have hSA_val := splice_walk_val hij hopen s' hc' hc κ'
+    (partnerSurvI hopen) (W.boundaryFlag i) rfl k hk1 hcontA
+  have hSB_val := splice_walk_val hij hopen s' hc' hc κ'
+    (partnerSurvJ hopen) (W.boundaryFlag j) rfl k hk1 hcontB
+  have hSA_inj := splice_inj hij hopen s' hc' hc κ'
+    (partnerSurvI hopen) (W.boundaryFlag i) hbi rfl
+    k hk1 hcontA
+  have hSB_inj := splice_inj hij hopen s' hc' hc κ'
+    (partnerSurvJ hopen) (W.boundaryFlag j) hbj rfl
+    k hk1 hcontB
+  have hSA_notper := splice_val_not_periodic hij hopen s' hc' hc κ'
+    (partnerSurvI hopen) (W.boundaryFlag i) (W.boundaryFlag j)
+    hbj rfl k hk1 hcontA htermA
+  have hSB_notper := splice_val_not_periodic hij hopen s' hc' hc κ'
+    (partnerSurvJ hopen) (W.boundaryFlag j) (W.boundaryFlag i)
+    hbi rfl k hk1 hcontB htermB
+  have hcross : ∀ t₁ t₂ : ℕ, t₁ < k → t₂ < k →
+      (iterWalk κ' (κ'.match_ (partnerSurvI hopen)) t₁).val ≠
+      (iterWalk κ' (κ'.match_ (partnerSurvJ hopen)) t₂).val
+      := by
+    intro t₁ t₂ h₁ h₂ hEq
+    rw [hSA_val t₁ h₁, hSB_val t₂ h₂] at hEq
+    have hrev : iterWalk
+        (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+        (W.boundaryFlag j) (t₂ + 1) =
+        W.pairing (iterWalk
+          (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+          (W.boundaryFlag i) (k - (t₂ + 1))) := by
+      rw [hbfj_eq]
+      exact iterWalk_reverse
+        (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+        hcontA (t₂ + 1) (by omega)
+    rw [hrev] at hEq
+    exact pairing_iterWalk_ne
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      hcontA (by omega : k - (t₂ + 1) ≤ k) (by omega : t₁ + 1 ≤ k)
+      hEq.symm
+  -- ═══════ STAGE 1: THE FORWARD MAP IS INJECTIVE ═══════
+  -- injectivity of the forward map
+  rintro (f₁ | (t₁ | t₁)) (f₂ | (t₂ | t₂)) hEq
+  · exact congrArg Sum.inl (Subtype.ext
+      (congrArg (fun z => z.val.val) hEq : f₁.val = f₂.val))
+  · exfalso
+    have h1 : f₁.val = (iterWalk κ'
+        (κ'.match_ (partnerSurvI hopen)) t₂.val).val :=
+      congrArg (fun z => z.val.val) hEq
+    have hf := f₁.prop
+    rw [h1] at hf
+    exact hSA_notper t₂.val t₂.isLt hf
+  · exfalso
+    have h1 : f₁.val = (iterWalk κ'
+        (κ'.match_ (partnerSurvJ hopen)) t₂.val).val :=
+      congrArg (fun z => z.val.val) hEq
+    have hf := f₁.prop
+    rw [h1] at hf
+    exact hSB_notper t₂.val t₂.isLt hf
+  · exfalso
+    have h1 : (iterWalk κ' (κ'.match_ (partnerSurvI hopen))
+        t₁.val).val = f₂.val :=
+      congrArg (fun z => z.val.val) hEq
+    have hf := f₂.prop
+    rw [← h1] at hf
+    exact hSA_notper t₁.val t₁.isLt hf
+  · have h1 : iterWalk κ' (κ'.match_ (partnerSurvI hopen))
+        t₁.val =
+        iterWalk κ' (κ'.match_ (partnerSurvI hopen)) t₂.val :=
+      congrArg Subtype.val hEq
+    exact congrArg (fun t => Sum.inr (Sum.inl t))
+      (Fin.ext (hSA_inj t₁.val t₂.val t₁.isLt t₂.isLt h1))
+  · exfalso
+    have h1 : (iterWalk κ' (κ'.match_ (partnerSurvI hopen))
+        t₁.val).val =
+        (iterWalk κ' (κ'.match_ (partnerSurvJ hopen))
+          t₂.val).val :=
+      congrArg (fun z => z.val.val) hEq
+    exact hcross t₁.val t₂.val t₁.isLt t₂.isLt h1
+  · exfalso
+    have h1 : (iterWalk κ' (κ'.match_ (partnerSurvJ hopen))
+        t₁.val).val = f₂.val :=
+      congrArg (fun z => z.val.val) hEq
+    have hf := f₂.prop
+    rw [← h1] at hf
+    exact hSB_notper t₁.val t₁.isLt hf
+  · exfalso
+    have h1 : (iterWalk κ' (κ'.match_ (partnerSurvI hopen))
+        t₂.val).val =
+        (iterWalk κ' (κ'.match_ (partnerSurvJ hopen))
+          t₁.val).val :=
+      (congrArg (fun z => z.val.val) hEq).symm
+    exact hcross t₂.val t₁.val t₂.isLt t₁.isLt h1
+  · have h1 : iterWalk κ' (κ'.match_ (partnerSurvJ hopen))
+        t₁.val =
+        iterWalk κ' (κ'.match_ (partnerSurvJ hopen)) t₂.val
+        :=
+      congrArg Subtype.val hEq
+    exact congrArg (fun t => Sum.inr (Sum.inr t))
+      (Fin.ext (hSB_inj t₁.val t₂.val t₁.isLt t₂.isLt h1))
+-- ═══════ STAGE 2: THE FORWARD MAP IS SURJECTIVE ═══════
+-- surjectivity of the forward map
+
+private theorem linked_walkMap_equivariant (κ' : (Fg).RelTransitionSystem)
+    (hbi : W.boundaryFlag i ∈ (Fl).boundaryFlags)
+    (hbj : W.boundaryFlag j ∈ (Fl).boundaryFlags)
+    (k : ℕ) (hk1 : 1 ≤ k)
+    (hcontA : ∀ t, t < k → W.pairing (iterWalk
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      (W.boundaryFlag i) t) ∈ (Fl).internalFlags)
+    (htermA : W.pairing (iterWalk
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      (W.boundaryFlag i) k) = W.boundaryFlag j)
+    (hperA : κ'.PeriodicFlag (κ'.match_ (partnerSurvI hopen)))
+    (hperB : κ'.PeriodicFlag (κ'.match_ (partnerSurvJ hopen))) :
+    ∀ z, κ'.walkPermPeriodic
+      ((Sum.elim (liftPeriodic hij hopen s' hc' hc κ')
+        (Sum.elim
+          (fun t : Fin k => spliceFlag hij hopen s' hc' κ'
+            (partnerSurvI hopen) hperA t.val)
+          (fun t : Fin k => spliceFlag hij hopen s' hc' κ'
+            (partnerSurvJ hopen) hperB t.val))) z) =
+      (Sum.elim (liftPeriodic hij hopen s' hc' hc κ')
+        (Sum.elim
+          (fun t : Fin k => spliceFlag hij hopen s' hc' κ'
+            (partnerSurvI hopen) hperA t.val)
+          (fun t : Fin k => spliceFlag hij hopen s' hc' κ'
+            (partnerSurvJ hopen) hperB t.val)))
+        ((Equiv.sumCongr (RelTransitionSystem.unglueOpen hij hopen
+          s' hc' hc κ').walkPermPeriodic
+          (Equiv.sumCongr (finRotate k) (finRotate k))) z) := by
+  have hpIpJ : (W.gluePairOpen i j hij hopen).pairing
+      (partnerSurvI hopen) = partnerSurvJ hopen :=
+    gluePairOpen_pairing_interface_i hij hopen _
+      (by rw [partnerSurvI_val hopen, W.pairing_invol])
+  have hpJpI : (W.gluePairOpen i j hij hopen).pairing
+      (partnerSurvJ hopen) = partnerSurvI hopen :=
+    gluePairOpen_pairing_interface_j hij hopen _
+      (by
+        rw [partnerSurvJ_val hopen, W.pairing_invol]
+        exact fun hh => hij (W.boundaryFlag_injective hh).symm)
+      (by rw [partnerSurvJ_val hopen, W.pairing_invol])
+  -- the reversed chain from bf_j
+  have hbfj_eq : W.boundaryFlag j = W.pairing (iterWalk
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      (W.boundaryFlag i) k) := htermA.symm
+  have hcontB : ∀ t, t < k → W.pairing (iterWalk
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      (W.boundaryFlag j) t) ∈ (Fl).internalFlags := by
+    intro t ht
+    rw [hbfj_eq]
+    exact reverse_chain_continues
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      hbi hcontA t ht
+  have htermB : W.pairing (iterWalk
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      (W.boundaryFlag j) k) = W.boundaryFlag i := by
+    rw [hbfj_eq]
+    exact reverse_chain_terminates
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+      hcontA
+  -- the two spliced cycles
+  have hSA_per := splice_period hij hopen s' hc' hc κ'
+    (partnerSurvI hopen) (partnerSurvJ hopen)
+    (W.boundaryFlag i) (W.boundaryFlag j) rfl rfl hpJpI
+    k hk1 hcontA htermA
+  have hSB_per := splice_period hij hopen s' hc' hc κ'
+    (partnerSurvJ hopen) (partnerSurvI hopen)
+    (W.boundaryFlag j) (W.boundaryFlag i) rfl rfl hpIpJ
+    k hk1 hcontB htermB
+  -- cross-cycle disjointness at the value level
+  intro z
+  rcases z with f | (t | t)
+  · -- lifted periodic flags: the walk corresponds valuewise
+    obtain ⟨h1, h2⟩ := internal_surviving i j
+      ((RelTransitionSystem.unglueOpen hij hopen s' hc' hc
+        κ').periodicFlags_sub f.prop)
+    refine Subtype.ext (Subtype.ext ?_)
+    change (κ'.match_ ((W.gluePairOpen i j hij hopen).pairing
+        ⟨f.val, h1, h2⟩)).val =
+      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
+        κ').match_ (W.pairing f.val)
+    have hpf : W.pairing f.val ∈ (Fl).internalFlags :=
+      all_pairings_internal_of_periodic
+        (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
+        (((RelTransitionSystem.unglueOpen hij hopen s' hc' hc
+          κ').mem_periodicFlags).mp f.prop) 0
+    obtain ⟨hp1, hp2⟩ := internal_surviving i j hpf
+    have hag : W.pairing f.val =
+        ((W.gluePairOpen i j hij hopen).pairing
+          ⟨f.val, h1, h2⟩).val :=
+      (gluePairOpen_pairing_val_of_ne hij hopen ⟨f.val, h1, h2⟩
+        hp1 hp2).symm
+    rw [hag, unglueOpen_match_val hij hopen s' hc' hc κ'
+      ((W.gluePairOpen i j hij hopen).pairing ⟨f.val, h1, h2⟩)]
+  · -- the A-cycle rotates
+    refine Subtype.ext ?_
+    change iterWalk κ' (κ'.match_ (partnerSurvI hopen))
+        (t.val + 1) =
+      iterWalk κ' (κ'.match_ (partnerSurvI hopen))
+        (((finRotate k) t).val)
+    obtain ⟨k0, rfl⟩ : ∃ k0, k = k0 + 1 := ⟨k - 1, by omega⟩
+    rcases eq_or_ne t (Fin.last k0) with rfl | hne
+    · rw [finRotate_last, Fin.val_zero, Fin.val_last]
+      exact hSA_per
+    · have hne' : t.val ≠ k0 := by
+        intro h
+        exact hne (Fin.ext (by rw [h, Fin.val_last]))
+      have hlt : t.val < k0 := by
+        have := t.isLt
+        omega
+      have hrot : ((finRotate (k0 + 1)) t).val = t.val + 1 := by
+        rw [finRotate_apply]
+        exact Fin.val_add_one_of_lt' (by omega)
+      rw [hrot]
+  · -- the B-cycle rotates
+    refine Subtype.ext ?_
+    change iterWalk κ' (κ'.match_ (partnerSurvJ hopen))
+        (t.val + 1) =
+      iterWalk κ' (κ'.match_ (partnerSurvJ hopen))
+        (((finRotate k) t).val)
+    obtain ⟨k0, rfl⟩ : ∃ k0, k = k0 + 1 := ⟨k - 1, by omega⟩
+    rcases eq_or_ne t (Fin.last k0) with rfl | hne
+    · rw [finRotate_last, Fin.val_zero, Fin.val_last]
+      exact hSB_per
+    · have hne' : t.val ≠ k0 := by
+        intro h
+        exact hne (Fin.ext (by rw [h, Fin.val_last]))
+      have hlt : t.val < k0 := by
+        have := t.isLt
+        omega
+      have hrot : ((finRotate (k0 + 1)) t).val = t.val + 1 := by
+        rw [finRotate_apply]
+        exact Fin.val_add_one_of_lt' (by omega)
+      rw [hrot]
+
 /-- **The linked-case conjugation**: when the chain from `bf_i`
 exits at `bf_j`, the glued walk permutation is, up to a bijection,
 the lifted walk permutation plus two `k`-rotations (the two
@@ -961,11 +1222,6 @@ theorem exists_walkPerm_linked (κ' : (Fg).RelTransitionSystem)
         (Equiv.sumCongr (RelTransitionSystem.unglueOpen hij hopen
           s' hc' hc κ').walkPermPeriodic
           (Equiv.sumCongr (finRotate k) (finRotate k))) := by
-  -- ═══════ SETUP: THE TWO SPLICED CYCLES ═══════
-  -- The open glue rewires the two interface flags; the walk out of
-  -- `bf_i` and the reversed walk out of `bf_j` splice into the two
-  -- cycles `SA`, `SB`, whose basic properties are collected here.
-  -- interface rewires
   have hpIpJ : (W.gluePairOpen i j hij hopen).pairing
       (partnerSurvI hopen) = partnerSurvJ hopen :=
     gluePairOpen_pairing_interface_i hij hopen _
@@ -1005,28 +1261,12 @@ theorem exists_walkPerm_linked (κ' : (Fg).RelTransitionSystem)
     (partnerSurvJ hopen) (partnerSurvI hopen)
     (W.boundaryFlag j) (W.boundaryFlag i) rfl rfl hpIpJ
     k hk1 hcontB htermB
-  have hSA_val := splice_walk_val hij hopen s' hc' hc κ'
-    (partnerSurvI hopen) (W.boundaryFlag i) rfl k hk1 hcontA
-  have hSB_val := splice_walk_val hij hopen s' hc' hc κ'
-    (partnerSurvJ hopen) (W.boundaryFlag j) rfl k hk1 hcontB
   have hSA_last := splice_last hij hopen s' hc' hc κ'
     (partnerSurvI hopen) (partnerSurvJ hopen)
     (W.boundaryFlag i) (W.boundaryFlag j) rfl rfl k hk1 hcontA htermA
   have hSB_last := splice_last hij hopen s' hc' hc κ'
     (partnerSurvJ hopen) (partnerSurvI hopen)
     (W.boundaryFlag j) (W.boundaryFlag i) rfl rfl k hk1 hcontB htermB
-  have hSA_inj := splice_inj hij hopen s' hc' hc κ'
-    (partnerSurvI hopen) (W.boundaryFlag i) hbi rfl
-    k hk1 hcontA
-  have hSB_inj := splice_inj hij hopen s' hc' hc κ'
-    (partnerSurvJ hopen) (W.boundaryFlag j) hbj rfl
-    k hk1 hcontB
-  have hSA_notper := splice_val_not_periodic hij hopen s' hc' hc κ'
-    (partnerSurvI hopen) (W.boundaryFlag i) (W.boundaryFlag j)
-    hbj rfl k hk1 hcontA htermA
-  have hSB_notper := splice_val_not_periodic hij hopen s' hc' hc κ'
-    (partnerSurvJ hopen) (W.boundaryFlag j) (W.boundaryFlag i)
-    hbi rfl k hk1 hcontB htermB
   have hSA_mod := splice_mod hij hopen s' hc' hc κ'
     (partnerSurvI hopen) (partnerSurvJ hopen)
     (W.boundaryFlag i) (W.boundaryFlag j) rfl rfl hpJpI
@@ -1035,105 +1275,7 @@ theorem exists_walkPerm_linked (κ' : (Fg).RelTransitionSystem)
     (partnerSurvJ hopen) (partnerSurvI hopen)
     (W.boundaryFlag j) (W.boundaryFlag i) rfl rfl hpIpJ
     k hk1 hcontB htermB
-  have hSA_per := splice_period hij hopen s' hc' hc κ'
-    (partnerSurvI hopen) (partnerSurvJ hopen)
-    (W.boundaryFlag i) (W.boundaryFlag j) rfl rfl hpJpI
-    k hk1 hcontA htermA
-  have hSB_per := splice_period hij hopen s' hc' hc κ'
-    (partnerSurvJ hopen) (partnerSurvI hopen)
-    (W.boundaryFlag j) (W.boundaryFlag i) rfl rfl hpIpJ
-    k hk1 hcontB htermB
-  -- cross-cycle disjointness at the value level
-  have hcross : ∀ t₁ t₂ : ℕ, t₁ < k → t₂ < k →
-      (iterWalk κ' (κ'.match_ (partnerSurvI hopen)) t₁).val ≠
-      (iterWalk κ' (κ'.match_ (partnerSurvJ hopen)) t₂).val
-      := by
-    intro t₁ t₂ h₁ h₂ hEq
-    rw [hSA_val t₁ h₁, hSB_val t₂ h₂] at hEq
-    have hrev : iterWalk
-        (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
-        (W.boundaryFlag j) (t₂ + 1) =
-        W.pairing (iterWalk
-          (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
-          (W.boundaryFlag i) (k - (t₂ + 1))) := by
-      rw [hbfj_eq]
-      exact iterWalk_reverse
-        (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
-        hcontA (t₂ + 1) (by omega)
-    rw [hrev] at hEq
-    exact pairing_iterWalk_ne
-      (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
-      hcontA (by omega : k - (t₂ + 1) ≤ k) (by omega : t₁ + 1 ≤ k)
-      hEq.symm
-  -- ═══════ STAGE 1: THE FORWARD MAP IS INJECTIVE ═══════
-  -- injectivity of the forward map
-  have hinj : Function.Injective
-      (Sum.elim (liftPeriodic hij hopen s' hc' hc κ')
-        (Sum.elim
-          (fun t : Fin k => spliceFlag hij hopen s' hc' κ'
-            (partnerSurvI hopen) hperA t.val)
-          (fun t : Fin k => spliceFlag hij hopen s' hc' κ'
-            (partnerSurvJ hopen) hperB t.val))) := by
-    rintro (f₁ | (t₁ | t₁)) (f₂ | (t₂ | t₂)) hEq
-    · exact congrArg Sum.inl (Subtype.ext
-        (congrArg (fun z => z.val.val) hEq : f₁.val = f₂.val))
-    · exfalso
-      have h1 : f₁.val = (iterWalk κ'
-          (κ'.match_ (partnerSurvI hopen)) t₂.val).val :=
-        congrArg (fun z => z.val.val) hEq
-      have hf := f₁.prop
-      rw [h1] at hf
-      exact hSA_notper t₂.val t₂.isLt hf
-    · exfalso
-      have h1 : f₁.val = (iterWalk κ'
-          (κ'.match_ (partnerSurvJ hopen)) t₂.val).val :=
-        congrArg (fun z => z.val.val) hEq
-      have hf := f₁.prop
-      rw [h1] at hf
-      exact hSB_notper t₂.val t₂.isLt hf
-    · exfalso
-      have h1 : (iterWalk κ' (κ'.match_ (partnerSurvI hopen))
-          t₁.val).val = f₂.val :=
-        congrArg (fun z => z.val.val) hEq
-      have hf := f₂.prop
-      rw [← h1] at hf
-      exact hSA_notper t₁.val t₁.isLt hf
-    · have h1 : iterWalk κ' (κ'.match_ (partnerSurvI hopen))
-          t₁.val =
-          iterWalk κ' (κ'.match_ (partnerSurvI hopen)) t₂.val :=
-        congrArg Subtype.val hEq
-      exact congrArg (fun t => Sum.inr (Sum.inl t))
-        (Fin.ext (hSA_inj t₁.val t₂.val t₁.isLt t₂.isLt h1))
-    · exfalso
-      have h1 : (iterWalk κ' (κ'.match_ (partnerSurvI hopen))
-          t₁.val).val =
-          (iterWalk κ' (κ'.match_ (partnerSurvJ hopen))
-            t₂.val).val :=
-        congrArg (fun z => z.val.val) hEq
-      exact hcross t₁.val t₂.val t₁.isLt t₂.isLt h1
-    · exfalso
-      have h1 : (iterWalk κ' (κ'.match_ (partnerSurvJ hopen))
-          t₁.val).val = f₂.val :=
-        congrArg (fun z => z.val.val) hEq
-      have hf := f₂.prop
-      rw [← h1] at hf
-      exact hSB_notper t₁.val t₁.isLt hf
-    · exfalso
-      have h1 : (iterWalk κ' (κ'.match_ (partnerSurvI hopen))
-          t₂.val).val =
-          (iterWalk κ' (κ'.match_ (partnerSurvJ hopen))
-            t₁.val).val :=
-        (congrArg (fun z => z.val.val) hEq).symm
-      exact hcross t₂.val t₁.val t₂.isLt t₁.isLt h1
-    · have h1 : iterWalk κ' (κ'.match_ (partnerSurvJ hopen))
-          t₁.val =
-          iterWalk κ' (κ'.match_ (partnerSurvJ hopen)) t₂.val
-          :=
-        congrArg Subtype.val hEq
-      exact congrArg (fun t => Sum.inr (Sum.inr t))
-        (Fin.ext (hSB_inj t₁.val t₂.val t₁.isLt t₂.isLt h1))
-  -- ═══════ STAGE 2: THE FORWARD MAP IS SURJECTIVE ═══════
-  -- surjectivity of the forward map
+  have hinj := linked_walkMap_injective hij hopen s' hc' hc κ' hbi hbj k hk1 hcontA htermA hperA hperB
   have hsurj : Function.Surjective
       (Sum.elim (liftPeriodic hij hopen s' hc' hc κ')
         (Sum.elim
@@ -1156,7 +1298,7 @@ theorem exists_walkPerm_linked (κ' : (Fg).RelTransitionSystem)
         exact hcEq
       refine ⟨Sum.inr (Sum.inr ⟨((k - 1) + c) % k,
         Nat.mod_lt _ (by omega)⟩), Subtype.ext ?_⟩
-      show iterWalk κ' (κ'.match_ (partnerSurvJ hopen))
+      change iterWalk κ' (κ'.match_ (partnerSurvJ hopen))
         (((k - 1) + c) % k) = g
       rw [← hSB_mod ((k - 1) + c)]
       exact hstep
@@ -1170,93 +1312,14 @@ theorem exists_walkPerm_linked (κ' : (Fg).RelTransitionSystem)
         exact hcEq
       refine ⟨Sum.inr (Sum.inl ⟨((k - 1) + c) % k,
         Nat.mod_lt _ (by omega)⟩), Subtype.ext ?_⟩
-      show iterWalk κ' (κ'.match_ (partnerSurvI hopen))
+      change iterWalk κ' (κ'.match_ (partnerSurvI hopen))
         (((k - 1) + c) % k) = g
       rw [← hSA_mod ((k - 1) + c)]
       exact hstep
   refine ⟨Equiv.ofBijective _ ⟨hinj, hsurj⟩, ?_⟩
   -- ═══════ STAGE 3: THE BIJECTION IS WALK-EQUIVARIANT ═══════
   -- the walk equivariance of the forward map
-  have key : ∀ z, κ'.walkPermPeriodic
-      ((Sum.elim (liftPeriodic hij hopen s' hc' hc κ')
-        (Sum.elim
-          (fun t : Fin k => spliceFlag hij hopen s' hc' κ'
-            (partnerSurvI hopen) hperA t.val)
-          (fun t : Fin k => spliceFlag hij hopen s' hc' κ'
-            (partnerSurvJ hopen) hperB t.val))) z) =
-      (Sum.elim (liftPeriodic hij hopen s' hc' hc κ')
-        (Sum.elim
-          (fun t : Fin k => spliceFlag hij hopen s' hc' κ'
-            (partnerSurvI hopen) hperA t.val)
-          (fun t : Fin k => spliceFlag hij hopen s' hc' κ'
-            (partnerSurvJ hopen) hperB t.val)))
-        ((Equiv.sumCongr (RelTransitionSystem.unglueOpen hij hopen
-          s' hc' hc κ').walkPermPeriodic
-          (Equiv.sumCongr (finRotate k) (finRotate k))) z) := by
-    intro z
-    rcases z with f | (t | t)
-    · -- lifted periodic flags: the walk corresponds valuewise
-      obtain ⟨h1, h2⟩ := internal_surviving i j
-        ((RelTransitionSystem.unglueOpen hij hopen s' hc' hc
-          κ').periodicFlags_sub f.prop)
-      refine Subtype.ext (Subtype.ext ?_)
-      show (κ'.match_ ((W.gluePairOpen i j hij hopen).pairing
-          ⟨f.val, h1, h2⟩)).val =
-        (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
-          κ').match_ (W.pairing f.val)
-      have hpf : W.pairing f.val ∈ (Fl).internalFlags :=
-        all_pairings_internal_of_periodic
-          (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
-          (((RelTransitionSystem.unglueOpen hij hopen s' hc' hc
-            κ').mem_periodicFlags).mp f.prop) 0
-      obtain ⟨hp1, hp2⟩ := internal_surviving i j hpf
-      have hag : W.pairing f.val =
-          ((W.gluePairOpen i j hij hopen).pairing
-            ⟨f.val, h1, h2⟩).val :=
-        (gluePairOpen_pairing_val_of_ne hij hopen ⟨f.val, h1, h2⟩
-          hp1 hp2).symm
-      rw [hag, unglueOpen_match_val hij hopen s' hc' hc κ'
-        ((W.gluePairOpen i j hij hopen).pairing ⟨f.val, h1, h2⟩)]
-    · -- the A-cycle rotates
-      refine Subtype.ext ?_
-      show iterWalk κ' (κ'.match_ (partnerSurvI hopen))
-          (t.val + 1) =
-        iterWalk κ' (κ'.match_ (partnerSurvI hopen))
-          (((finRotate k) t).val)
-      obtain ⟨k0, rfl⟩ : ∃ k0, k = k0 + 1 := ⟨k - 1, by omega⟩
-      rcases eq_or_ne t (Fin.last k0) with rfl | hne
-      · rw [finRotate_last, Fin.val_zero, Fin.val_last]
-        exact hSA_per
-      · have hne' : t.val ≠ k0 := by
-          intro h
-          exact hne (Fin.ext (by rw [h, Fin.val_last]))
-        have hlt : t.val < k0 := by
-          have := t.isLt
-          omega
-        have hrot : ((finRotate (k0 + 1)) t).val = t.val + 1 := by
-          rw [finRotate_apply]
-          exact Fin.val_add_one_of_lt' (by omega)
-        rw [hrot]
-    · -- the B-cycle rotates
-      refine Subtype.ext ?_
-      show iterWalk κ' (κ'.match_ (partnerSurvJ hopen))
-          (t.val + 1) =
-        iterWalk κ' (κ'.match_ (partnerSurvJ hopen))
-          (((finRotate k) t).val)
-      obtain ⟨k0, rfl⟩ : ∃ k0, k = k0 + 1 := ⟨k - 1, by omega⟩
-      rcases eq_or_ne t (Fin.last k0) with rfl | hne
-      · rw [finRotate_last, Fin.val_zero, Fin.val_last]
-        exact hSB_per
-      · have hne' : t.val ≠ k0 := by
-          intro h
-          exact hne (Fin.ext (by rw [h, Fin.val_last]))
-        have hlt : t.val < k0 := by
-          have := t.isLt
-          omega
-        have hrot : ((finRotate (k0 + 1)) t).val = t.val + 1 := by
-          rw [finRotate_apply]
-          exact Fin.val_add_one_of_lt' (by omega)
-        rw [hrot]
+  have key := linked_walkMap_equivariant hij hopen s' hc' hc κ' hbi hbj k hk1 hcontA htermA hperA hperB
   apply Equiv.ext
   intro xg
   obtain ⟨z, rfl⟩ := hsurj xg
@@ -1299,6 +1362,7 @@ theorem openCircuitCount_linked_chain (κ' : (Fg).RelTransitionSystem)
   have hrot := finRotate_orbit_count k hk1
   omega
 
+open scoped Classical in
 /-- **The circuit-count delta of a participating open glue**: the
 glued count exceeds the unglued count by `1` exactly when the
 interface is linked. -/
@@ -1310,7 +1374,7 @@ theorem openCircuitCount_glueOpen_participating (κ' : (Fg).RelTransitionSystem)
         (if InterfaceLinked hij hopen s' hc' hc κ' hpi then 1
           else 0) := by
   by_cases hL : InterfaceLinked hij hopen s' hc' hc κ' hpi
-  · rw [if_pos hL]
+  · rw [ite_eq_left hL]
     obtain ⟨k, hk_le, hcontA, hpm⟩ := pathMatch_chain_length
       (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ')
       (boundaryFlagI_mem_boundaryFlags hij hopen s' hc hpi)
@@ -1328,7 +1392,7 @@ theorem openCircuitCount_glueOpen_participating (κ' : (Fg).RelTransitionSystem)
       (boundaryFlagI_mem_boundaryFlags hij hopen s' hc hpi)
       (boundaryFlagJ_mem_boundaryFlags hij hopen s' hc' hc hpi)
       k hk1 hcontA htermA
-  · rw [if_neg hL, add_zero]
+  · rw [ite_eq_right hL, add_zero]
     exact (openCircuitCount_notLinked hij hopen s' hc' hc κ' hpi
       hL).symm
 

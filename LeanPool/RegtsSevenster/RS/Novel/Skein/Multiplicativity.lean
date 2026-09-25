@@ -43,7 +43,7 @@ noncomputable def relabelZeroEquiv (W : Fragment (Fin 0))
   attach_comm := fun f => by
     rcases ha : W.attach f with v | ℓ
     · have hval : (W.relabel e).attach f = (W.attach f).map id e := rfl
-      show W.attach f = _
+      change W.attach f = _
       rw [hval, ha]
       rfl
     · exact ℓ.elim0
@@ -64,7 +64,7 @@ noncomputable def composeZeroEquiv (F G : ClosedFragment) :
       ((Equiv.sumCongr (finCongr (by omega : (0:ℕ) + 0 = 0))
         (finCongr (by omega : (0:ℕ) + 0 = 0))).trans finSumFinEquiv) =
       F.union G := by
-    haveI : Subsingleton ((Fin ((0:ℕ) + 0) ⊕ Fin ((0:ℕ) + 0)) ≃ Fin ((0:ℕ) + 0))
+    have : Subsingleton ((Fin ((0:ℕ) + 0) ⊕ Fin ((0:ℕ) + 0)) ≃ Fin ((0:ℕ) + 0))
       :=
       ⟨fun a b => Equiv.ext fun x => isEmptyElim x⟩
     rw [he]
@@ -84,7 +84,7 @@ noncomputable def unionEmptyLeftEquiv (G : ClosedFragment) :
       · have hval : (emptyClosedFragment.union G).attach (Sum.inr g) =
             ((G.attach g).map Sum.inr Sum.inr).map id
               (Equiv.equivOfIsEmpty (Fin 0 ⊕ Fin 0) (Fin 0)) := rfl
-        show G.attach g = _
+        change G.attach g = _
         rw [hval, ha]
         rfl
       · exact ℓ.elim0
@@ -105,7 +105,7 @@ noncomputable def unionEmptyRightEquiv (W : ClosedFragment) :
       · have hval : (W.union emptyClosedFragment).attach (Sum.inl g) =
             ((W.attach g).map Sum.inl Sum.inl).map id
               (Equiv.equivOfIsEmpty (Fin 0 ⊕ Fin 0) (Fin 0)) := rfl
-        show W.attach g = _
+        change W.attach g = _
         rw [hval, ha]
         rfl
       · exact ℓ.elim0

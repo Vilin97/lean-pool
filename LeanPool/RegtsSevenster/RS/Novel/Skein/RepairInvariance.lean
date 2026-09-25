@@ -51,7 +51,7 @@ the boundary pairing's chord sign.
 
 namespace RS
 
-open scoped Classical
+
 
 /-! ## List helpers -/
 
@@ -305,8 +305,8 @@ theorem relInFlagsAt_congr {κ₁ κ₂ : F.RelTransitionSystem}
     {o₁ : κ₁.Orientation} {o₂ : κ₂.Orientation}
     (hiso : o₁.isOut = o₂.isOut) (vv : W.Vertex) :
     F.relInFlagsAt o₁ vv = F.relInFlagsAt o₂ vv := by
-  letI := W.flagOrder
-  letI := Classical.dec
+  let := W.flagOrder
+  let := Classical.dec
   unfold EdgeSubset.relInFlagsAt
   have hfil : F.flags.filter
       (fun f => W.attach f = Sum.inl vv ∧ o₁.isOut f = false) =
@@ -446,7 +446,7 @@ theorem walkPermPeriodic_matchEq {κ₁ κ₂ : F.RelTransitionSystem}
   have hpint : W.pairing f ∈ F.internalFlags := by
     have h0 := all_pairings_internal_of_periodic κ₂ hper₂ 0
     simpa using h0
-  show κ₂.match_ (W.pairing f) = _
+  change κ₂.match_ (W.pairing f) = _
   exact (heq _ hpint).symm.trans rfl
 
 /-- **Matching-equal systems have equal open circuit counts.** -/

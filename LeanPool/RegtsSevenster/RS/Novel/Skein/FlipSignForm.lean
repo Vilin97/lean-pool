@@ -18,7 +18,7 @@ bookkeeping the paired step of Proposition 3 runs on.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type} {ℓ : ℕ}
 
@@ -39,14 +39,14 @@ sign. -/
 theorem oddPartnerSign_flipColours_of_mem (f : α → Fin (2 * ℓ))
     (p : α × α) {a : α} (ha : a = p.1 ∨ a = p.2) :
     oddPartnerSign ℓ (flipColours f p a) = -oddPartnerSign ℓ (f a) := by
-  simp only [flipColours, if_pos ha]
+  simp only [flipColours, ite_eq_left ha]
   exact oddPartnerSign_oddPartner ℓ (f a)
 
 /-- A non-participating label keeps its colour. -/
 theorem flipColours_of_not_mem (f : α → Fin (2 * ℓ))
     (p : α × α) {a : α} (ha : ¬(a = p.1 ∨ a = p.2)) :
     flipColours f p a = f a := by
-  simp only [flipColours, if_neg ha]
+  simp only [flipColours, ite_eq_right ha]
 
 /-- The triangular-number increment `T (n+1) = T n + n`. -/
 private theorem tri_succ (n : ℕ) :
@@ -143,7 +143,7 @@ theorem flipSignProd_formula (f : α → Fin (2 * ℓ))
         have hc : (p.1 :: p.2 :: flipLabels L).count p.1
             = (flipLabels L).count p.1 + 1 := by
           rw [List.count_cons_self, List.count_cons_of_ne (Ne.symm hij)]
-        rw [hc, if_pos rfl, if_neg hij,
+        rw [hc, ite_eq_left rfl, ite_eq_right hij,
           oddPartnerSign_flipColours_of_mem f p (Or.inl rfl), one_mul,
           Nat.add_sub_cancel]
         exact step_algebra _ _
@@ -152,7 +152,7 @@ theorem flipSignProd_formula (f : α → Fin (2 * ℓ))
           have hc : (p.1 :: p.2 :: flipLabels L).count p.2
               = (flipLabels L).count p.2 + 1 := by
             rw [List.count_cons_of_ne hij, List.count_cons_self]
-          rw [hc, if_neg h1, if_pos rfl,
+          rw [hc, ite_eq_right h1, ite_eq_left rfl,
             oddPartnerSign_flipColours_of_mem f p (Or.inr rfl), one_mul,
             Nat.add_sub_cancel]
           exact step_algebra _ _
@@ -160,14 +160,14 @@ theorem flipSignProd_formula (f : α → Fin (2 * ℓ))
               = (flipLabels L).count a := by
             rw [List.count_cons_of_ne (Ne.symm h1),
               List.count_cons_of_ne (Ne.symm h2)]
-          rw [hc, if_neg h1, if_neg h2,
+          rw [hc, ite_eq_right h1, ite_eq_right h2,
             flipColours_of_not_mem f p (not_or.mpr ⟨h1, h2⟩), one_mul,
             one_mul]
     refine Eq.trans ?_ (Finset.prod_congr rfl hfac).symm
     conv_rhs => rw [Finset.prod_mul_distrib, Finset.prod_mul_distrib,
       Finset.prod_ite_eq', Finset.prod_ite_eq']
-    rw [if_pos (Finset.mem_insert_self p.1 _),
-      if_pos (Finset.mem_insert_of_mem (Finset.mem_insert_self p.2 _))]
+    rw [ite_eq_left (Finset.mem_insert_self p.1 _),
+      ite_eq_left (Finset.mem_insert_of_mem (Finset.mem_insert_self p.2 _))]
     ring
 
 /-- **The even corollary**: a flip sequence in which every label

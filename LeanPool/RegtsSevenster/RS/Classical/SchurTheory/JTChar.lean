@@ -104,12 +104,12 @@ theorem jtChar_frobenius (H1 : PermCongrCT) (H2 : SigmaCT)
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun σ _ => ?_
     by_cases hp : ∀ i, 0 ≤ jtSigned μ σ i
-    · rw [if_pos hp, Finset.mul_sum]
+    · rw [ite_eq_left hp, Finset.mul_sum]
       refine Finset.sum_congr rfl fun π _ => ?_
-      rw [if_pos hp, mul_assoc]
-    · rw [if_neg hp]
+      rw [ite_eq_left hp, mul_assoc]
+    · rw [ite_eq_right hp]
       rw [Finset.sum_eq_zero fun π _ => by
-        rw [if_neg hp, mul_zero, zero_mul]]
+        rw [ite_eq_right hp, mul_zero, zero_mul]]
       rw [mul_zero]
   have hterm : ∀ σ : Equiv.Perm (Fin μ.rowLens.length),
       ((Equiv.Perm.sign σ : ℤ) : ℂ) *
@@ -122,7 +122,7 @@ theorem jtChar_frobenius (H1 : PermCongrCT) (H2 : SigmaCT)
           ∏ i, newtonHZ t (jtSigned μ σ i)) := by
     intro σ
     by_cases hp : ∀ i, 0 ≤ jtSigned μ σ i
-    · rw [if_pos hp]
+    · rw [ite_eq_left hp]
       rw [colour_cycleSum H1 H2 t (jtComp μ σ) (sum_jtComp μ σ hp)]
       rw [show (∏ i, newtonHZ t (jtSigned μ σ i)) =
           ∏ i, newtonH t (jtComp μ σ i) from
@@ -131,7 +131,7 @@ theorem jtChar_frobenius (H1 : PermCongrCT) (H2 : SigmaCT)
           conv_lhs => rw [← Int.toNat_of_nonneg (hp i)]
           rw [newtonHZ_natCast]]
       ring
-    · rw [if_neg hp]
+    · rw [ite_eq_right hp]
       rw [not_forall] at hp
       obtain ⟨i0, hi0⟩ := hp
       rw [Finset.prod_eq_zero (Finset.mem_univ i0)

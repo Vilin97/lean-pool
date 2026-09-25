@@ -16,7 +16,7 @@ of a single-pair glue, and back up from a closed lift.
 
 namespace RS
 
-open scoped Classical
+
 
 /-! ## Transport along a relabel -/
 

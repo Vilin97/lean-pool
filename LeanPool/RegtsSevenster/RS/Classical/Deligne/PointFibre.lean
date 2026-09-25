@@ -231,12 +231,12 @@ theorem superVectHom_id [FiniteDimensional ℂ (M.tensor (pointMod P)).even]
     [FiniteDimensional ℂ (M.tensor (pointMod P)).odd] :
     superVectHom P (𝟙 M) = 𝟙 (toSuperVect P M) := by
   refine SuperVect.hom_ext ?_ ?_ <;> refine LinearMap.ext fun x => ?_
-  · show (toSuperVectEvenEquiv P M)
+  · change (toSuperVectEvenEquiv P M)
       (((tensorRightFunctor (pointMod P)).map (𝟙 M)).evenMap
         ((toSuperVectEvenEquiv P M).symm x)) = x
     rw [CategoryTheory.Functor.map_id]
     exact (toSuperVectEvenEquiv P M).apply_symm_apply x
-  · show (toSuperVectOddEquiv P M)
+  · change (toSuperVectOddEquiv P M)
       (((tensorRightFunctor (pointMod P)).map (𝟙 M)).oddMap
         ((toSuperVectOddEquiv P M).symm x)) = x
     rw [CategoryTheory.Functor.map_id]
@@ -253,22 +253,22 @@ theorem superVectHom_comp [FiniteDimensional ℂ (M.tensor (pointMod P)).even]
     (u : M ⟶ N) (v : N ⟶ Q) :
     superVectHom P (u ≫ v) = superVectHom P u ≫ superVectHom P v := by
   refine SuperVect.hom_ext ?_ ?_ <;> refine LinearMap.ext fun x => ?_
-  · show (toSuperVectEvenEquiv P Q)
+  · change (toSuperVectEvenEquiv P Q)
       (((tensorRightFunctor (pointMod P)).map (u ≫ v)).evenMap
         ((toSuperVectEvenEquiv P M).symm x)) = _
     rw [CategoryTheory.Functor.map_comp]
-    show _ = (toSuperVectEvenEquiv P Q)
+    change _ = (toSuperVectEvenEquiv P Q)
       (((tensorRightFunctor (pointMod P)).map v).evenMap
         ((toSuperVectEvenEquiv P N).symm ((toSuperVectEvenEquiv P N)
           (((tensorRightFunctor (pointMod P)).map u).evenMap
             ((toSuperVectEvenEquiv P M).symm x)))))
     erw [LinearEquiv.symm_apply_apply]
     rfl
-  · show (toSuperVectOddEquiv P Q)
+  · change (toSuperVectOddEquiv P Q)
       (((tensorRightFunctor (pointMod P)).map (u ≫ v)).oddMap
         ((toSuperVectOddEquiv P M).symm x)) = _
     rw [CategoryTheory.Functor.map_comp]
-    show _ = (toSuperVectOddEquiv P Q)
+    change _ = (toSuperVectOddEquiv P Q)
       (((tensorRightFunctor (pointMod P)).map v).oddMap
         ((toSuperVectOddEquiv P N).symm ((toSuperVectOddEquiv P N)
           (((tensorRightFunctor (pointMod P)).map u).oddMap
@@ -284,20 +284,20 @@ theorem superVectHom_add [FiniteDimensional ℂ (M.tensor (pointMod P)).even]
     (u v : M ⟶ N) :
     superVectHom P (u + v) = superVectHom P u + superVectHom P v := by
   refine SuperVect.hom_ext ?_ ?_ <;> refine LinearMap.ext fun x => ?_
-  · show (toSuperVectEvenEquiv P N)
+  · change (toSuperVectEvenEquiv P N)
       (((tensorRightFunctor (pointMod P)).map (u + v)).evenMap
         ((toSuperVectEvenEquiv P M).symm x)) = _
     rw [CategoryTheory.Functor.map_add]
-    show (toSuperVectEvenEquiv P N)
+    change (toSuperVectEvenEquiv P N)
       ((((tensorRightFunctor (pointMod P)).map u).evenMap +
         ((tensorRightFunctor (pointMod P)).map v).evenMap)
         ((toSuperVectEvenEquiv P M).symm x)) = _
     exact map_add _ _ _
-  · show (toSuperVectOddEquiv P N)
+  · change (toSuperVectOddEquiv P N)
       (((tensorRightFunctor (pointMod P)).map (u + v)).oddMap
         ((toSuperVectOddEquiv P M).symm x)) = _
     rw [CategoryTheory.Functor.map_add]
-    show (toSuperVectOddEquiv P N)
+    change (toSuperVectOddEquiv P N)
       ((((tensorRightFunctor (pointMod P)).map u).oddMap +
         ((tensorRightFunctor (pointMod P)).map v).oddMap)
         ((toSuperVectOddEquiv P M).symm x)) = _
@@ -311,19 +311,19 @@ theorem superVectHom_smul [FiniteDimensional ℂ (M.tensor (pointMod P)).even]
     (c : ℂ) (u : M ⟶ N) :
     superVectHom P (c • u) = c • superVectHom P u := by
   refine SuperVect.hom_ext ?_ ?_ <;> refine LinearMap.ext fun x => ?_
-  · show (toSuperVectEvenEquiv P N)
+  · change (toSuperVectEvenEquiv P N)
       (((tensorRightFunctor (pointMod P)).map (c • u)).evenMap
         ((toSuperVectEvenEquiv P M).symm x)) = _
     rw [CategoryTheory.Functor.map_smul]
-    show (toSuperVectEvenEquiv P N)
+    change (toSuperVectEvenEquiv P N)
       ((c • ((tensorRightFunctor (pointMod P)).map u).evenMap)
         ((toSuperVectEvenEquiv P M).symm x)) = _
     exact map_smul (toSuperVectEvenEquiv P N) c _
-  · show (toSuperVectOddEquiv P N)
+  · change (toSuperVectOddEquiv P N)
       (((tensorRightFunctor (pointMod P)).map (c • u)).oddMap
         ((toSuperVectOddEquiv P M).symm x)) = _
     rw [CategoryTheory.Functor.map_smul]
-    show (toSuperVectOddEquiv P N)
+    change (toSuperVectOddEquiv P N)
       ((c • ((tensorRightFunctor (pointMod P)).map u).oddMap)
         ((toSuperVectOddEquiv P M).symm x)) = _
     exact map_smul (toSuperVectOddEquiv P N) c _
@@ -343,16 +343,16 @@ noncomputable def superVectFunctor
     (hE : ∀ X, FiniteDimensional ℂ ((G.obj X).tensor (pointMod P)).even)
     (hO : ∀ X, FiniteDimensional ℂ ((G.obj X).tensor (pointMod P)).odd) :
     E ⥤ SuperVect where
-  obj X := @toSuperVect _ P (G.obj X) (hE X) (hO X)
+  obj X := toSuperVect P (G.obj X)
   map {X Y} f :=
     @superVectHom _ P _ _ (hE X) (hO X) (hE Y) (hO Y) (G.map f)
   map_id X := by
-    show @superVectHom _ P _ _ (hE X) (hO X) (hE X) (hO X)
+    change @superVectHom _ P _ _ (hE X) (hO X) (hE X) (hO X)
       (G.map (𝟙 X)) = _
     rw [CategoryTheory.Functor.map_id]
     exact superVectHom_id P
   map_comp {X Y Z} f g := by
-    show @superVectHom _ P _ _ (hE X) (hO X) (hE Z) (hO Z)
+    change @superVectHom _ P _ _ (hE X) (hO X) (hE Z) (hO Z)
       (G.map (f ≫ g)) = _
     rw [CategoryTheory.Functor.map_comp]
     exact superVectHom_comp P _ _
@@ -363,7 +363,7 @@ noncomputable def superVectFunctor
     (hO : ∀ X, FiniteDimensional ℂ ((G.obj X).tensor (pointMod P)).odd)
     (X : E) :
     (superVectFunctor P G hE hO).obj X =
-      @toSuperVect _ P (G.obj X) (hE X) (hO X) := rfl
+      toSuperVect P (G.obj X) := rfl
 
 @[simp] theorem superVectFunctor_map
     [Category.{v₂} E] (G : E ⥤ S.Mod.{u, u, u, u})
@@ -384,7 +384,7 @@ instance superVectFunctor_additive
     [Preadditive E] [G.Additive] :
     (superVectFunctor P G hE hO).Additive where
   map_add {X Y f g} := by
-    show @superVectHom _ P _ _ (hE X) (hO X) (hE Y) (hO Y)
+    change @superVectHom _ P _ _ (hE X) (hO X) (hE Y) (hO Y)
       (G.map (f + g)) = _
     rw [CategoryTheory.Functor.map_add]
     exact superVectHom_add P _ _
@@ -394,10 +394,10 @@ instance superVectFunctor_linear [Category.{v₂} E] (G : E ⥤ S.Mod.{u, u, u, 
     (hE : ∀ X, FiniteDimensional ℂ ((G.obj X).tensor (pointMod P)).even)
     (hO : ∀ X, FiniteDimensional ℂ ((G.obj X).tensor (pointMod P)).odd)
     [Preadditive E]
-    [CategoryTheory.Linear ℂ E] [G.Additive] [G.Linear ℂ] :
+    [CategoryTheory.Linear ℂ E] [G.Linear ℂ] :
     (superVectFunctor P G hE hO).Linear ℂ where
   map_smul {X Y} f c := by
-    show @superVectHom _ P _ _ (hE X) (hO X) (hE Y) (hO Y)
+    change @superVectHom _ P _ _ (hE X) (hO X) (hE Y) (hO Y)
       (G.map (c • f)) = _
     rw [CategoryTheory.Functor.map_smul]
     exact superVectHom_smul P _ _
@@ -675,7 +675,7 @@ theorem id_eq_zero_of_deligneFibre_id_eq_zero
     (hsp : SplitsOn L 𝔸 (indOf : C ⥤ Ind C))
     (P : SuperPoint (gammaAlgebra (Ind C) L 𝔸)) (Z : C)
     (hz : 𝟙 ((deligneFibre L 𝔸 hsp P).obj Z) = 0) : 𝟙 Z = 0 := by
-  haveI : (indOf (C := C)).Additive := indOf_additive
+  have : (indOf (C := C)).Additive := indOf_additive
   obtain ⟨p, q, ⟨e⟩⟩ := hsp Z
   have hide : (LinearMap.id :
       ((deligneFibre L 𝔸 hsp P).obj Z).even →ₗ[ℂ]
@@ -685,12 +685,12 @@ theorem id_eq_zero_of_deligneFibre_id_eq_zero
       ((deligneFibre L 𝔸 hsp P).obj Z).odd →ₗ[ℂ]
         ((deligneFibre L 𝔸 hsp P).obj Z).odd) = 0 :=
     congrArg SuperVect.Hom.oddMap hz
-  haveI : Subsingleton ((deligneFibre L 𝔸 hsp P).obj Z).even :=
+  have : Subsingleton ((deligneFibre L 𝔸 hsp P).obj Z).even :=
     ⟨fun a b => by
       have ha : a = 0 := by simpa using DFunLike.congr_fun hide a
       have hb : b = 0 := by simpa using DFunLike.congr_fun hide b
       rw [ha, hb]⟩
-  haveI : Subsingleton ((deligneFibre L 𝔸 hsp P).obj Z).odd :=
+  have : Subsingleton ((deligneFibre L 𝔸 hsp P).obj Z).odd :=
     ⟨fun a b => by
       have ha : a = 0 := by simpa using DFunLike.congr_fun hido a
       have hb : b = 0 := by simpa using DFunLike.congr_fun hido b
@@ -755,7 +755,7 @@ theorem deligneFibre_faithful
           𝟙 (freeMod 𝔸 ((T.map (indOf : C ⥤ Ind C)).X₃)))
     (P : SuperPoint (gammaAlgebra (Ind C) L 𝔸)) :
     (deligneFibre L 𝔸 hsp P).Faithful := by
-  haveI : (deligneFibre L 𝔸 hsp P).PreservesHomology :=
+  have : (deligneFibre L 𝔸 hsp P).PreservesHomology :=
     superVectFunctor_preservesHomology P _ _ _
       (indFibre_nonempty_splitting L 𝔸 hsec)
   refine ⟨fun {X Y} f g hfg => ?_⟩

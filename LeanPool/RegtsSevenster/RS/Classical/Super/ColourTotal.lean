@@ -74,12 +74,12 @@ theorem colourTotalEquiv_modelPermMap
           (colourSplit k ℓ (n + 1) v)) c = _
     rw [toColour_powBraidWord, colourSplit_symm_apply]
     by_cases hc : c.IsEven
-    · rw [dif_pos hc]
+    · rw [dite_eq_left hc]
       change (colourSwapWord k ℓ (adjWord σ)).evenMap
         (fun a => v a.val) ⟨c, hc⟩ = _
       erw [colourSwapWord_evenMap, wordSign_eq_oddInversions,
         wordPerm_adjWord]
-    · rw [dif_neg hc]
+    · rw [dite_eq_right hc]
       change (colourSwapWord k ℓ (adjWord σ)).oddMap
         (fun a => v a.val) ⟨c, hc⟩ = _
       erw [colourSwapWord_oddMap, wordSign_eq_oddInversions,

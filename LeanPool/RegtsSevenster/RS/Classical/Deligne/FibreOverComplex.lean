@@ -124,10 +124,10 @@ theorem exists_superPoint_of_countable_family
         s ≫ freeModMap 𝔸 (g k) =
           𝟙 (freeMod 𝔸 ((indOf : C ⥤ Ind C).obj (W k)))) ∧
       Nonempty (SuperPoint (gammaAlgebra (Ind C) L 𝔸)) := by
-  letI := linearOfScalarUnit ψ
-  letI := monoidalLinearOfScalarUnitBraided ψ
-  letI := linearOfScalarUnit (indScalarUnit ψ)
-  letI := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
+  let := linearOfScalarUnit ψ
+  let := monoidalLinearOfScalarUnitBraided ψ
+  let := linearOfScalarUnit (indScalarUnit ψ)
+  let := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
   have hu : HasScalarUnit C := hasScalarUnit_of_scalarUnit ψ
   obtain ⟨𝔸, hmon, hcomm, hne, hmixed, hsec, hrk⟩ :=
     exists_universal_algebra_rank_le_aleph0 (C := C) hu
@@ -140,8 +140,8 @@ theorem exists_superPoint_of_countable_family
       (fun k => section_countablyPresented (g k)
         (indCompactObj_indOf (V k)) (indCompactObj_indOf (W k)) hlen
         (hsplit k))
-  letI := hmon
-  letI := hcomm
+  let := hmon
+  let := hcomm
   exact ⟨𝔸, hmon, hcomm, hne, hmixed, hsec,
     nonempty_superPoint_gammaAlgebra L 𝔸 hne hrk⟩
 
@@ -230,8 +230,8 @@ theorem exists_superVect_fibre
     {p q : ℕ} (e : freeMod 𝔸 X ≅ freeMod 𝔸 (L.mix p q)) :
     ∃ E : SuperVect, Module.finrank ℂ E.even = p ∧
       Module.finrank ℂ E.odd = q := by
-  haveI := finiteDimensional_fibre_tensor_point_even L 𝔸 P e
-  haveI := finiteDimensional_fibre_tensor_point_odd L 𝔸 P e
+  have := finiteDimensional_fibre_tensor_point_even L 𝔸 P e
+  have := finiteDimensional_fibre_tensor_point_odd L 𝔸 P e
   refine ⟨toSuperVect P ((fibreFun L 𝔸).obj X), ?_, ?_⟩
   · exact finrank_toSuperVect_even_of_free P p q _ (fibreFreeIso L 𝔸 e)
   · exact finrank_toSuperVect_odd_of_free P p q _ (fibreFreeIso L 𝔸 e)
@@ -282,14 +282,14 @@ theorem exists_superPoint_fibre_of_countable_family
               (pointMod P)).odd = q ∧
           ∃ E : SuperVect, Module.finrank ℂ E.even = p ∧
             Module.finrank ℂ E.odd = q := by
-  letI := linearOfScalarUnit ψ
-  letI := monoidalLinearOfScalarUnitBraided ψ
-  letI := linearOfScalarUnit (indScalarUnit ψ)
-  letI := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
+  let := linearOfScalarUnit ψ
+  let := monoidalLinearOfScalarUnitBraided ψ
+  let := linearOfScalarUnit (indScalarUnit ψ)
+  let := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
   obtain ⟨𝔸, hmon, hcomm, hne, hmixed, hsec, ⟨P⟩⟩ :=
     exists_superPoint_of_countable_family ψ L Xf V W g hlen hmix hsplit
-  letI := hmon
-  letI := hcomm
+  let := hmon
+  let := hcomm
   refine ⟨𝔸, hmon, hcomm, hne, hsec, P, fun j => ?_⟩
   obtain ⟨p, q, ⟨e⟩⟩ := hmixed j
   exact ⟨p, q, ⟨e⟩, finrank_fibre_tensor_point_even L 𝔸 P e,
@@ -323,10 +323,10 @@ example
         Nonempty (freeMod 𝔸 ((indOf : C ⥤ Ind C).obj (Xf j)) ≅
           freeMod 𝔸 (L.mix p q))) ∧
       Nonempty (SuperPoint (gammaAlgebra (Ind C) L 𝔸)) := by
-  letI := linearOfScalarUnit ψ
-  letI := monoidalLinearOfScalarUnitBraided ψ
-  letI := linearOfScalarUnit (indScalarUnit ψ)
-  letI := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
+  let := linearOfScalarUnit ψ
+  let := monoidalLinearOfScalarUnitBraided ψ
+  let := linearOfScalarUnit (indScalarUnit ψ)
+  let := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
   obtain ⟨𝔸, hmon, hcomm, hne, hmixed, _, hP⟩ :=
     exists_superPoint_of_countable_family ψ L Xf
       (K := PEmpty.{v + 1}) PEmpty.elim PEmpty.elim

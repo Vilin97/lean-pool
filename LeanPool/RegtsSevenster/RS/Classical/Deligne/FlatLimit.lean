@@ -237,9 +237,10 @@ theorem DirectedColimitPresentation.exists_stage_family
     [IsDirectedOrder ι] {f : ∀ ⦃i j : ι⦄, i ≤ j → F i →+* F j} {R : Type*}
     [CommRing R]
     (P : DirectedColimitPresentation f R)
-    {κ : Type*} [Fintype κ] (x : κ → R) :
+    {κ : Type*} [Finite κ] (x : κ → R) :
     ∃ i, ∃ y : κ → F i, ∀ k, P.toColim i (y k) = x k := by
   classical
+  let := Fintype.ofFinite κ
   choose idx y hy using fun k => P.exhaustive (x k)
   obtain ⟨i, hi⟩ := (Finset.univ.image idx).exists_le
   refine ⟨i, fun k => f (hi (idx k)
@@ -255,10 +256,11 @@ theorem DirectedColimitPresentation.exists_stage_eq
     [CommRing R]
     (P : DirectedColimitPresentation f R)
     (hDS : DirectedSystem F fun _ _ h => f h)
-    {κ : Type*} [Fintype κ] {i : ι} {a b : κ → F i}
+    {κ : Type*} [Finite κ] {i : ι} {a b : κ → F i}
     (hab : ∀ k, P.toColim i (a k) = P.toColim i (b k)) :
     ∃ j, ∃ h : i ≤ j, ∀ k, f h (a k) = f h (b k) := by
   classical
+  let := Fintype.ofFinite κ
   choose jdx hjdx hj using fun k =>
     P.eventuallyEq i (a k) (b k) (hab k)
   obtain ⟨j, hjle⟩ := (insert i (Finset.univ.image jdx)).exists_le

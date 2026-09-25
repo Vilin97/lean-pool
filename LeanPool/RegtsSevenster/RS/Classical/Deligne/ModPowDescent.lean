@@ -77,7 +77,7 @@ theorem sandwichTower_retract
         modTensorMapMod A (𝟙 (modTensorMod A M M')) rk =
         𝟙 (modTensorMod A (modTensorMod A M M') M) := by
       apply Mod.Hom.ext
-      show modTensorMap A (𝟙 (modTensorMod A M M')) ik ≫
+      change modTensorMap A (𝟙 (modTensorMod A M M')) ik ≫
         modTensorMap A (𝟙 (modTensorMod A M M')) rk =
         𝟙 (modTensor A (modTensorMod A M M') M)
       rw [← modTensorMap_comp, Category.comp_id]

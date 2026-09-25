@@ -108,7 +108,7 @@ theorem tensorPowConcat_assoc [Category.{v} D] [MonoidalCategory D] (X : D)
         (by omega : p + (q + (r + 1)) = p + q + (r + 1)) =
           powCast X (by omega : p + (q + r) = p + q + r) ▷ X := by
       rw [powCast_whiskerRight]
-    show ((tensorPowConcat X p q).hom ▷
+    change ((tensorPowConcat X p q).hom ▷
           (tensorPow D X r ⊗ X)) ≫
         (powExpose X (p + q) r ≫
           ((tensorPowConcat X (p + q) r).hom ▷ X)) =
@@ -120,7 +120,6 @@ theorem tensorPowConcat_assoc [Category.{v} D] [MonoidalCategory D] (X : D)
           ((tensorPowConcat X p (q + r)).hom ▷ X)) ≫
         powCast X (by omega : p + (q + (r + 1)) = p + q + (r + 1))
     rw [hcast, powExpose, powExpose, powExpose]
-    repeat' erw [Category.assoc] at hstep
     repeat' erw [Category.assoc]
     rw [MonoidalCategory.associator_inv_naturality_left_assoc,
       ← MonoidalCategory.comp_whiskerRight,
@@ -139,7 +138,7 @@ theorem tensorPowConcat_zero_left
   | 0 => by
     have hc : powCast X (by omega : 0 = 0 + 0) = 𝟙 _ := rfl
     rw [tensorPowConcat_zero, hc, Category.comp_id]
-    show (ρ_ (𝟙_ D)).hom = (λ_ (𝟙_ D)).hom
+    change (ρ_ (𝟙_ D)).hom = (λ_ (𝟙_ D)).hom
     rw [← unitors_equal]
   | n + 1 => by
     have hcast : powCast X (by omega : n + 1 = 0 + (n + 1)) =
@@ -150,7 +149,7 @@ theorem tensorPowConcat_zero_left
         (λ_ (tensorPow D X n ⊗ X)).hom := by
       monoidal
     rw [tensorPowConcat_succ_hom X 0 n, tensorPowConcat_zero_left X n]
-    show (α_ (𝟙_ D) (tensorPow D X n) X).inv ≫
+    change (α_ (𝟙_ D) (tensorPow D X n) X).inv ≫
         (((λ_ (tensorPow D X n)).hom ≫
           powCast X (by omega : n = 0 + n)) ▷ X) =
       (λ_ (tensorPow D X n ⊗ X)).hom ≫
@@ -893,7 +892,7 @@ theorem symmetriser_mul_mapDomain {k N : ℕ}
     rw [symmetriser, map_smul, map_sum]
     congr 1
     refine Finset.sum_congr rfl fun σ _ => ?_
-    show MonoidAlgebra.mapDomain _ _ = _
+    change MonoidAlgebra.mapDomain _ _ = _
     exact MonoidAlgebra.mapDomain_single
   rw [hmap, mul_smul_comm, Finset.mul_sum]
   simp only [symmetriser_mul_single]
@@ -1013,10 +1012,10 @@ section ZeroPow
 /-- At arity zero the symmetriser is the unit of the group
 algebra. -/
 theorem symmetriser_zero : symmetriser 0 = 1 := by
-  letI : Unique (Equiv.Perm (Fin 0)) :=
+  let : Unique (Equiv.Perm (Fin 0)) :=
     ⟨⟨1⟩, fun σ => Equiv.ext fun x => x.elim0⟩
   rw [symmetriser, Fintype.sum_unique]
-  show ((Nat.factorial 0 : ℂ))⁻¹ •
+  change ((Nat.factorial 0 : ℂ))⁻¹ •
     MonoidAlgebra.single 1 (1 : ℂ) = 1
   rw [Nat.factorial_zero, Nat.cast_one, inv_one, one_smul]
   exact MonoidAlgebra.one_def.symm
@@ -1045,10 +1044,10 @@ noncomputable def symPowZero
 /-- At arity one the symmetriser is the unit of the group
 algebra. -/
 theorem symmetriser_one : symmetriser 1 = 1 := by
-  letI : Unique (Equiv.Perm (Fin 1)) :=
+  let : Unique (Equiv.Perm (Fin 1)) :=
     ⟨⟨1⟩, fun σ => Equiv.ext fun x => Subsingleton.elim _ _⟩
   rw [symmetriser, Fintype.sum_unique]
-  show ((Nat.factorial 1 : ℂ))⁻¹ •
+  change ((Nat.factorial 1 : ℂ))⁻¹ •
     MonoidAlgebra.single 1 (1 : ℂ) = 1
   rw [Nat.factorial_one, Nat.cast_one, inv_one, one_smul]
   exact MonoidAlgebra.one_def.symm
@@ -1217,7 +1216,7 @@ theorem symPowZero_inv_symPowσ
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
     [HasCoequalizers D] [Linear ℂ D] :
     (symPowZero A X).inv ≫ symPowσ A X 0 = (modPowZero A X).inv := by
-  show ((modPowZero A X).inv ≫ symPowπ A X 0) ≫ symPowσ A X 0 =
+  change ((modPowZero A X).inv ≫ symPowπ A X 0) ≫ symPowσ A X 0 =
     (modPowZero A X).inv
   rw [Category.assoc, symPowπ_symPowσ, symPowIdem_zero,
     Category.comp_id]
@@ -1484,7 +1483,7 @@ theorem braiding_one_pow_exists
         permMor X (n + 1) τ
   | 0 => ⟨1, by
       rw [powPeel_zero, permMor_one]
-      show ((λ_ X).hom ≫ (ρ_ X).inv) ≫ (β_ X (𝟙_ D)).hom =
+      change ((λ_ X).hom ≫ (ρ_ X).inv) ≫ (β_ X (𝟙_ D)).hom =
         𝟙 (𝟙_ D ⊗ X)
       rw [braiding_tensorUnit_right, Category.assoc,
         Iso.inv_hom_id_assoc, Iso.hom_inv_id]⟩
@@ -1571,7 +1570,7 @@ theorem tensorPowConcat_braiding_exists
   | 0 => ⟨1, by
       rw [permMor_one, Category.comp_id, tensorPowConcat_zero,
         tensorPowConcat_zero_left]
-      show (β_ (𝟙_ D) (tensorPow D X n)).hom ≫
+      change (β_ (𝟙_ D) (tensorPow D X n)).hom ≫
           (ρ_ (tensorPow D X n)).hom =
         ((λ_ (tensorPow D X n)).hom ≫
             powCast X (by omega : n = 0 + n)) ≫
@@ -1717,3 +1716,5 @@ theorem symMul_comm
   rw [reassoc_of% hσ, permMor_π_absorb]
 
 end SymCommLaw
+
+end RS

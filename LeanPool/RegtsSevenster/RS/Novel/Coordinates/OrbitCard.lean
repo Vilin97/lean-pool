@@ -34,7 +34,11 @@ set. -/
 abbrev Orbits (π : Perm β) : Type := Quotient (SameCycle.setoid π)
 
 /-- The orbit space of a permutation of a finite type is finite. -/
-instance [Fintype β] (π : Perm β) : Finite (Orbits π) := Quotient.finite _
+instance [Finite β] (π : Perm β) : Finite (Orbits π) := by
+  classical
+  let := Fintype.ofFinite β
+  exact
+    Quotient.finite _
 
 /-- Hence it carries a fintype structure. -/
 noncomputable instance [Fintype β] (π : Perm β) : Fintype (Orbits π) :=
@@ -82,10 +86,10 @@ theorem orbitName_congr [Fintype β] [DecidableEq β] {π : Perm β} {x y : β}
     (h : π.SameCycle x y) : orbitName π x = orbitName π y := by
   unfold orbitName
   by_cases hx : π x = x
-  · rw [dif_pos hx, dif_pos (eq_of_sameCycle_of_fixed hx h ▸ hx)]
+  · rw [dite_eq_left hx, dite_eq_left (eq_of_sameCycle_of_fixed hx h ▸ hx)]
     exact congrArg Sum.inr
       (Subtype.ext (eq_of_sameCycle_of_fixed hx h).symm)
-  · rw [dif_neg hx, dif_neg (apply_ne_of_sameCycle hx h)]
+  · rw [dite_eq_right hx, dite_eq_right (apply_ne_of_sameCycle hx h)]
     exact congrArg Sum.inl (Subtype.ext h.cycleOf_eq)
 
 /-- A chosen point on one of the permutation's cycles. -/
@@ -109,14 +113,14 @@ noncomputable def orbitsEquiv [Fintype β] [DecidableEq β] (π : Perm β) :
     | Sum.inr x => Quotient.mk (SameCycle.setoid π) x.val
   left_inv := by
     refine Quotient.ind (fun x => ?_)
-    show (match orbitName π x with
+    change (match orbitName π x with
       | Sum.inl c => Quotient.mk (SameCycle.setoid π) _
       | Sum.inr y => Quotient.mk (SameCycle.setoid π) y.val)
       = Quotient.mk (SameCycle.setoid π) x
     unfold orbitName
     by_cases hx : π x = x
-    · rw [dif_pos hx]
-    · rw [dif_neg hx]
+    · rw [dite_eq_left hx]
+    · rw [dite_eq_right hx]
       refine Quotient.sound ?_
       have hmem := cycleRep_mem
         (⟨π.cycleOf x, cycleOf_mem_cycleFactorsFinset_iff.mpr
@@ -135,14 +139,14 @@ noncomputable def orbitsEquiv [Fintype β] [DecidableEq β] (π : Perm β) :
           rw [← cycleOf_mem_cycleFactorsFinset_iff, hyc]
           exact hc
         exact mem_support.mp this
-      show orbitName π y = Sum.inl ⟨c, hc⟩
+      change orbitName π y = Sum.inl ⟨c, hc⟩
       unfold orbitName
-      rw [dif_neg hyne]
+      rw [dite_eq_right hyne]
       exact congrArg Sum.inl (Subtype.ext hyc)
     · have hx' : π x = x := hx
-      show orbitName π x = Sum.inr ⟨x, hx⟩
+      change orbitName π x = Sum.inr ⟨x, hx⟩
       unfold orbitName
-      rw [dif_pos hx']
+      rw [dite_eq_left hx']
 
 /-- **The orbit count is the number of orbits.** -/
 theorem orbitCount_eq_card_orbits [Fintype β] [DecidableEq β]

@@ -65,7 +65,7 @@ theorem cycleType_blockCycles (l : List ℕ)
     --   ...)
     have key : (blockCycles (c :: rest)).cycleType =
         (finRotate c).cycleType + (blockCycles rest).cycleType := by
-      show cycleType (finSumFinEquiv.permCongr
+      change cycleType (finSumFinEquiv.permCongr
         (Equiv.sumCongr (finRotate c) (blockCycles rest))) = _
       rw [cycleType_permCongr, cycleType_sumCongr]
     rw [key, ih hrest]

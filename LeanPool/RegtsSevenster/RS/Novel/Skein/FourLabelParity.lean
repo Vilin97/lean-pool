@@ -32,7 +32,7 @@ branches, and each branch uses a different subset of it -/
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 
@@ -74,7 +74,6 @@ theorem fourLabel_parity_sep [LinearOrder α]
         gt_iff_lt.mp h4, gt_iff_lt.mp h5, gt_iff_lt.mp h6,
         le_of_lt h1, le_of_lt h2, le_of_lt h3,
         le_of_lt h6,
-
         lt_asymm h1, lt_asymm h2, lt_asymm h3, lt_asymm h4,
         lt_asymm h5, lt_asymm h6]
 
@@ -114,7 +113,6 @@ theorem fourLabel_parity_nonsep [LinearOrder α]
         gt_iff_lt.mp h4, gt_iff_lt.mp h5, gt_iff_lt.mp h6,
         le_of_lt h1, le_of_lt h2, le_of_lt h3,
         le_of_lt h6,
-
         lt_asymm h1, lt_asymm h2, lt_asymm h3, lt_asymm h4,
         lt_asymm h5, lt_asymm h6]
 

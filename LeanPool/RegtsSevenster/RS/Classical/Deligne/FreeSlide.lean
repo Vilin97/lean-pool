@@ -39,8 +39,8 @@ theorem freeSplit_actRight
     [MonObj A] (V : D) :
     letI := freeModObj A V
     freeSplit A V ≫ actRight A (A ⊗ V) = 𝟙 (A ⊗ V) := by
-  letI := freeModObj A V
-  show freeSplit A V ≫ (β_ (A ⊗ V) A).hom ≫
+  let := freeModObj A V
+  change freeSplit A V ≫ (β_ (A ⊗ V) A).hom ≫
     ((α_ A A V).inv ≫ (μ[A] ▷ V)) = 𝟙 (A ⊗ V)
   rw [freeSplit, Category.assoc,
     BraidedCategory.braiding_naturality_left_assoc,
@@ -68,7 +68,7 @@ theorem freeSplit_winLegM
     letI := freeModObj A V
     (freeSplit A V ▷ (A ⊗ V)) ≫ winLegM A (A ⊗ V) =
       𝟙 ((A ⊗ V) ⊗ (A ⊗ V)) := by
-  letI := freeModObj A V
+  let := freeModObj A V
   rw [winLegM, ← MonoidalCategory.comp_whiskerRight,
     freeSplit_actRight, MonoidalCategory.id_whiskerRight]
 
@@ -88,7 +88,7 @@ theorem freeSlideWin_modPowπ
         modPowπ A (A ⊗ V) n =
       modPowGlue (A ⊗ V) a b ≫ powCast (A ⊗ V) hab ≫
         modPowπ A (A ⊗ V) n := by
-  letI := freeModObj A V
+  let := freeModObj A V
   have hsplitN : ((tensorPow D (A ⊗ V) a ◁ freeSlideWin A V) ▷
       tensorPow D (A ⊗ V) b) ≫ modPowGlue (A ⊗ V) a b =
       ((tensorPow D (A ⊗ V) a ◁ (freeSplit A V ▷ (A ⊗ V))) ▷
@@ -128,7 +128,7 @@ theorem freeSlideTop_modPowπ
     letI := freeModObj A V
     freeSlideTop A V k ≫ modPowπ A (A ⊗ V) (k + 2) =
       modPowπ A (A ⊗ V) (k + 2) := by
-  letI := freeModObj A V
+  let := freeModObj A V
   have hnat : ∀ {P Q Z : D} (f : P ⟶ Q) (m : Q ⟶ Z),
       (f ▷ tensorPow D (A ⊗ V) 0) ≫ (ρ_ Q).hom ≫ m =
         (ρ_ P).hom ≫ f ≫ m := by

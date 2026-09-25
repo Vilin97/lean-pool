@@ -32,11 +32,11 @@ theorem swap_val {m : ℕ} (a b x : Fin m) :
       else if x.val = b.val then a.val else x.val := by
   rw [_root_.Equiv.swap_apply_def]
   by_cases h1 : x = a
-  · rw [if_pos h1, if_pos (by rw [h1])]
-  · rw [if_neg h1, if_neg (fun hv => h1 (Fin.ext hv))]
+  · rw [ite_eq_left h1, ite_eq_left (by rw [h1])]
+  · rw [ite_eq_right h1, ite_eq_right (fun hv => h1 (Fin.ext hv))]
     by_cases h2 : x = b
-    · rw [if_pos h2, if_pos (by rw [h2])]
-    · rw [if_neg h2, if_neg (fun hv => h2 (Fin.ext hv))]
+    · rw [ite_eq_left h2, ite_eq_left (by rw [h2])]
+    · rw [ite_eq_right h2, ite_eq_right (fun hv => h2 (Fin.ext hv))]
 
 /-- The value of the adjacent swap. -/
 theorem adjSwapEquiv_val (n i : ℕ) (h : i + 2 ≤ n)
@@ -56,30 +56,30 @@ theorem tensorMapEquiv_top (n : ℕ) :
   rcases Nat.lt_or_ge x.val n with hx | hx
   · conv_lhs => rw [show x = Fin.castAdd 2 ⟨x.val, hx⟩ from
       Fin.ext rfl, tensorMapEquiv_castAdd]
-    show x.val = _
-    rw [if_neg (show ¬ (x.val = n) by omega),
-      if_neg (show ¬ (x.val = n + 1) by omega)]
+    change x.val = _
+    rw [ite_eq_right (show ¬ (x.val = n) by omega),
+      ite_eq_right (show ¬ (x.val = n + 1) by omega)]
   · have hx2 := x.isLt
     rcases (show x.val = n ∨ x.val = n + 1 by omega)
       with hv | hv
     · conv_lhs => rw [show x = Fin.natAdd n ⟨0, by omega⟩ from
-        Fin.ext (by show x.val = n + 0; omega),
+        Fin.ext (by change x.val = n + 0; omega),
         tensorMapEquiv_natAdd,
         show transposeEquiv 1 1 ⟨0, by omega⟩ =
             ⟨1 + 0, by omega⟩ from
           transposeEquiv_low 1 1 0 (by omega) _ _]
-      show n + (1 + 0) = _
-      rw [if_pos hv]
+      change n + (1 + 0) = _
+      rw [ite_eq_left hv]
     · conv_lhs => rw [show x = Fin.natAdd n ⟨1, by omega⟩ from
-        Fin.ext (by show x.val = n + 1; omega),
+        Fin.ext (by change x.val = n + 1; omega),
         tensorMapEquiv_natAdd,
         show transposeEquiv 1 1 ⟨1, by omega⟩ =
             ⟨0, by omega⟩ from by
           rw [show (⟨1, by omega⟩ : Fin (1 + 1)) =
             ⟨1 + 0, by omega⟩ from Fin.ext rfl]
           exact transposeEquiv_high 1 1 0 (by omega) _ _]
-      show n + 0 = _
-      rw [if_neg (show ¬ (x.val = n) by omega), if_pos hv]
+      change n + 0 = _
+      rw [ite_eq_right (show ¬ (x.val = n) by omega), ite_eq_left hv]
       omega
 
 /-- The whiskered block sum is the shifted adjacent swap. -/
@@ -92,16 +92,16 @@ theorem tensorMapEquiv_whisker (n i : ℕ) (h : i + 2 ≤ n + 1) :
   rcases Nat.lt_or_ge x.val (n + 1) with hx | hx
   · conv_lhs => rw [show x = Fin.castAdd 1 ⟨x.val, hx⟩ from
       Fin.ext rfl, tensorMapEquiv_castAdd]
-    show ((adjSwapEquiv (n + 1) i h) ⟨x.val, hx⟩).val = _
+    change ((adjSwapEquiv (n + 1) i h) ⟨x.val, hx⟩).val = _
     rw [adjSwapEquiv_val]
   · have hx2 := x.isLt
     have hv : x.val = n + 1 := by omega
     conv_lhs => rw [show x = Fin.natAdd (n + 1) ⟨0, by omega⟩
-      from Fin.ext (by show x.val = n + 1 + 0; omega),
+      from Fin.ext (by change x.val = n + 1 + 0; omega),
       tensorMapEquiv_natAdd]
-    show n + 1 + 0 = _
-    rw [if_neg (show ¬ (x.val = i) by omega),
-      if_neg (show ¬ (x.val = i + 1) by omega)]
+    change n + 1 + 0 = _
+    rw [ite_eq_right (show ¬ (x.val = i) by omega),
+      ite_eq_right (show ¬ (x.val = i + 1) by omega)]
     omega
 
 variable {R : ℕ} (f : EdgeRankParameter R)
@@ -119,8 +119,8 @@ theorem skeinPowBraid_bmc :
     · rw [show skeinPowBraid f (n + 2) i h =
           (SkeinObj.mk n : SkeinObj f) ◁
             (β_ (SkeinObj.mk 1 : SkeinObj f)
-              (SkeinObj.mk 1)).hom from dif_pos hi]
-      show HomSpace.tensor f n n 2 2
+              (SkeinObj.mk 1)).hom from dite_eq_left hi]
+      change HomSpace.tensor f n n 2 2
           (HomSpace.ofFragment f.val (strandBundle n))
           (bundleMapClass f (transposeEquiv 1 1)) = _
       rw [bundleMapClass_tensor_id_left, tensorMapEquiv_top]
@@ -128,9 +128,9 @@ theorem skeinPowBraid_bmc :
     · have hle : i + 2 ≤ n + 1 := by omega
       rw [show skeinPowBraid f (n + 2) i h =
           (skeinPowBraid f (n + 1) i hle) ▷ SkeinObj.mk 1 from
-        dif_neg hi]
+        dite_eq_right hi]
       rw [skeinPowBraid_bmc (n + 1) i hle]
-      show HomSpace.tensor f (n + 1) (n + 1) 1 1
+      change HomSpace.tensor f (n + 1) (n + 1) 1 1
           (bundleMapClass f (adjSwapEquiv (n + 1) i hle))
           (HomSpace.ofFragment f.val (strandBundle 1)) = _
       rw [bundleMapClass_tensor_id_right,

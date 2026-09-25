@@ -23,7 +23,7 @@ variable {G : Type*}
 
 /-- **The regular trace**: left multiplication by `y` has trace
 `|G| · y 1`. -/
-theorem trace_mulLeft [Group G] [Fintype G] [DecidableEq G]
+theorem trace_mulLeft [Group G] [Fintype G]
     (y : MonoidAlgebra ℂ G) :
     LinearMap.trace ℂ (MonoidAlgebra ℂ G) (mulLeft ℂ y) =
       (Fintype.card G : ℂ) * y.coeff 1 := by
@@ -40,13 +40,13 @@ theorem trace_mulLeft [Group G] [Fintype G] [DecidableEq G]
       (y * MonoidAlgebra.single g 1).coeff g from rfl]
     rw [show (y * MonoidAlgebra.single g (1 : ℂ)).coeff g =
         y.coeff (g * g⁻¹) * 1 from
-      MonoidAlgebra.mul_single_apply y 1 g g]
+      MonoidAlgebra.coeff_mul_single_apply y 1 g g]
     rw [mul_inv_cancel, mul_one])]
   rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
 
 /-- Rank of an idempotent multiplication equals the regular
 trace: the block dimension formula. -/
-theorem finrank_range_mulLeft [Group G] [Fintype G] [DecidableEq G]
+theorem finrank_range_mulLeft [Group G] [Fintype G]
     (y : MonoidAlgebra ℂ G)
     (hy : y * y = y) :
     (Module.finrank ℂ (LinearMap.range (mulLeft ℂ y)) : ℂ) =

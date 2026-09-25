@@ -64,11 +64,11 @@ theorem ModSchurKilled.of_biprod_left
     (P : SchurPackage.{v}) {lam : YoungDiagram}
     (h : ModSchurKilled A (modBiprod A M N).X P lam) :
     ModSchurKilled A M.X P lam := by
-  haveI := (modBiprodInl A M N).isModHom
-  haveI := (modBiprodFst A M N).isModHom
+  have := (modBiprodInl A M N).isModHom
+  have := (modBiprodFst A M N).isModHom
   refine ModSchurKilled.of_split A (modBiprodInl A M N).hom
     (modBiprodFst A M N).hom ?_ P h
-  show (biprod.inl : M.X ⟶ M.X ⊞ N.X) ≫ biprod.fst = 𝟙 M.X
+  change (biprod.inl : M.X ⟶ M.X ⊞ N.X) ≫ biprod.fst = 𝟙 M.X
   exact biprod.inl_fst
 
 /-- **Module-level Schur vanishing is invariant under
@@ -81,8 +81,8 @@ theorem ModSchurKilled.of_modIso
     (P : SchurPackage.{v}) {lam : YoungDiagram}
     (h : ModSchurKilled A N.X P lam) :
     ModSchurKilled A M.X P lam := by
-  haveI := e.hom.isModHom
-  haveI := e.inv.isModHom
+  have := e.hom.isModHom
+  have := e.inv.isModHom
   refine ModSchurKilled.of_split A e.hom.hom e.inv.hom ?_ P h
   have h1 := congrArg Mod.Hom.hom e.hom_inv_id
   rw [Mod.comp_hom', Mod.id_hom'] at h1

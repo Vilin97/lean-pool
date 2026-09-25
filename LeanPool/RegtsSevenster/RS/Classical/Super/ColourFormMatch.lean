@@ -30,34 +30,34 @@ theorem colourFormEntry_odd (k ℓ : ℕ) (a b : Fin (2 * ℓ)) :
     colourFormEntry k ℓ (Sum.inr a) (Sum.inr b) =
       stdFormOdd ℓ (stdF ℓ a) (stdF ℓ b) := by
   rw [stdFormOdd_stdF]
-  show (if a.val + ℓ = b.val then (1 : ℂ)
+  change (if a.val + ℓ = b.val then (1 : ℂ)
     else if b.val + ℓ = a.val then -1 else 0) =
     if b = oddPartner ℓ a then -(oddPartnerSign ℓ a : ℂ) else 0
   unfold oddPartner oddPartnerSign
   by_cases h : a.val < ℓ
-  · rw [dif_pos h, if_pos h]
+  · rw [dite_eq_left h, ite_eq_left h]
     by_cases hb : a.val + ℓ = b.val
-    · rw [if_pos hb,
-        if_pos (show b = ⟨a.val + ℓ, by omega⟩ from
+    · rw [ite_eq_left hb,
+        ite_eq_left (show b = ⟨a.val + ℓ, by omega⟩ from
           Fin.ext (show b.val = a.val + ℓ by omega))]
       norm_num
-    · rw [if_neg hb,
-        if_neg (show ¬(b.val + ℓ = a.val) by omega),
-        if_neg (show ¬(b = ⟨a.val + ℓ, by omega⟩) from
+    · rw [ite_eq_right hb,
+        ite_eq_right (show ¬(b.val + ℓ = a.val) by omega),
+        ite_eq_right (show ¬(b = ⟨a.val + ℓ, by omega⟩) from
           fun he => hb (by
             have hv : b.val = a.val + ℓ := congrArg Fin.val he
             omega))]
-  · rw [dif_neg h, if_neg h,
-      if_neg (show ¬(a.val + ℓ = b.val) by
+  · rw [dite_eq_right h, ite_eq_right h,
+      ite_eq_right (show ¬(a.val + ℓ = b.val) by
         have := b.isLt
         omega)]
     by_cases hb : b.val + ℓ = a.val
-    · rw [if_pos hb,
-        if_pos (show b = ⟨a.val - ℓ, by omega⟩ from
+    · rw [ite_eq_left hb,
+        ite_eq_left (show b = ⟨a.val - ℓ, by omega⟩ from
           Fin.ext (show b.val = a.val - ℓ by omega))]
       norm_num
-    · rw [if_neg hb,
-        if_neg (show ¬(b = ⟨a.val - ℓ, by omega⟩) from
+    · rw [ite_eq_right hb,
+        ite_eq_right (show ¬(b = ⟨a.val - ℓ, by omega⟩) from
           fun he => hb (by
             have hv : b.val = a.val - ℓ := congrArg Fin.val he
             omega))]

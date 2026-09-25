@@ -67,8 +67,8 @@ theorem indFibre_faithful [SmallCategory C] [MonoidalCategory C] [Abelian C]
     (hsp : SplitsOn L 𝔸 (indOf : C ⥤ Ind C))
     [∀ Z : Ind C, (tensorRight Z).PreservesMonomorphisms] :
     ((indOf : C ⥤ Ind C) ⋙ fibreFun L 𝔸).Faithful := by
-  haveI : (indOf (C := C)).Additive := indOf_additive
-  haveI : ((indOf : C ⥤ Ind C) ⋙ fibreFun L 𝔸).Additive :=
+  have : (indOf (C := C)).Additive := indOf_additive
+  have : ((indOf : C ⥤ Ind C) ⋙ fibreFun L 𝔸).Additive :=
     inferInstance
   refine ⟨fun {X Y} f g hfg => ?_⟩
   obtain ⟨p, q, ⟨e⟩⟩ := hsp X
@@ -92,7 +92,7 @@ theorem indOf_shortExact [SmallCategory C] [Abelian C]
     {S : CategoryTheory.ShortComplex C}
     (hS : S.ShortExact) :
     (S.map (indOf : C ⥤ Ind C)).ShortExact := by
-  haveI : (indOf (C := C)).Additive := indOf_additive
+  have : (indOf (C := C)).Additive := indOf_additive
   exact hS.map_of_exact (indOf : C ⥤ Ind C)
 
 /-- The restricted fibre functor carries short exact sequences to
@@ -130,8 +130,8 @@ theorem indFibre_preservesFiniteLimits
         s ≫ freeModMap 𝔸 ((S.map (indOf : C ⥤ Ind C)).g) = 𝟙 _) :
     Limits.PreservesFiniteLimits
       ((indOf : C ⥤ Ind C) ⋙ fibreFun L 𝔸) := by
-  haveI : (indOf (C := C)).Additive := indOf_additive
-  haveI : ((indOf : C ⥤ Ind C) ⋙ fibreFun L 𝔸).Additive :=
+  have : (indOf (C := C)).Additive := indOf_additive
+  have : ((indOf : C ⥤ Ind C) ⋙ fibreFun L 𝔸).Additive :=
     inferInstance
   exact preservesFiniteLimits_of_shortExact _
     (indFibre_shortExact L 𝔸 hsec)
@@ -150,8 +150,8 @@ theorem indFibre_preservesFiniteColimits
         s ≫ freeModMap 𝔸 ((S.map (indOf : C ⥤ Ind C)).g) = 𝟙 _) :
     Limits.PreservesFiniteColimits
       ((indOf : C ⥤ Ind C) ⋙ fibreFun L 𝔸) := by
-  haveI : (indOf (C := C)).Additive := indOf_additive
-  haveI : ((indOf : C ⥤ Ind C) ⋙ fibreFun L 𝔸).Additive :=
+  have : (indOf (C := C)).Additive := indOf_additive
+  have : ((indOf : C ⥤ Ind C) ⋙ fibreFun L 𝔸).Additive :=
     inferInstance
   exact preservesFiniteColimits_of_shortExact _
     (indFibre_shortExact L 𝔸 hsec)

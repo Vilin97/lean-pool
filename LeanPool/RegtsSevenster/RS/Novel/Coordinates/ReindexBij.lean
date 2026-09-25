@@ -16,7 +16,7 @@ colouring data through the diagonal parametrization.
 namespace RS
 
 open CategoryTheory Finset
-open Classical
+
 
 variable {R : ℕ} (f : EdgeRankParameter R)
 variable (P : DelignePackage (SkeinObj f))
@@ -96,6 +96,7 @@ theorem fibreSum_eq_dataSum (W : ClosedFragment)
       masterSummand f P e' W c.val) =
     ∑ ψ : F.EvenColouring k, ∑ φ : F.OddColouring ℓ,
       masterSummand f P e' W (colouringOf W F ψ φ) := by
+  classical
   have hrestrict : (∑ c ∈ Finset.univ.filter
       (fun c : {c : MixedColouring k ℓ
           (edgeCount W + edgeCount W) // c.IsEven} =>

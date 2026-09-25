@@ -34,7 +34,7 @@ theorem eq_zero_of_sum_nat_eq_zero {ι : Type*} {s : Finset ι}
       ((if h' : i ∈ s then Classical.choose (h i h') else 0 : ℕ) :
         ℂ) := by
     intro i hi
-    rw [dif_pos hi]
+    rw [dite_eq_left hi]
     exact Classical.choose_spec (h i hi)
   have hsum : ((∑ i ∈ s,
       (if h' : i ∈ s then Classical.choose (h i h') else 0) : ℕ) :

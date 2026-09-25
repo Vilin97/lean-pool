@@ -112,7 +112,7 @@ def trueShift {n : ℕ} (σ : Equiv.Perm (Fin n)) (w : Fin n → Bool) :
     {i // i ∈ trueSet w} ≃ {i // i ∈ trueSet (permIndex σ w)} :=
   (σ : Fin n ≃ Fin n).subtypeEquiv fun i => by
     rw [mem_trueSet, mem_trueSet]
-    show w i = true ↔ permIndex σ w (σ i) = true
+    change w i = true ↔ permIndex σ w (σ i) = true
     rw [permIndex_apply_self]
 
 /-- The shift, applied. -/
@@ -292,7 +292,7 @@ private theorem oddPerm_swap_of_both {n : ℕ} {w : Fin (n + 1) → Bool}
         swap_mem_trueSet ha hb (trueEnum w xa).2⟩ :
           {j // j ∈ trueSet w}) = ⟨i.succ, mem_trueSet.mpr hb⟩ := by
       refine Subtype.ext ?_
-      show s ((trueEnum w xa : Fin (n + 1))) = i.succ
+      change s ((trueEnum w xa : Fin (n + 1))) = i.succ
       have hv : (trueEnum w xa : Fin (n + 1)) = i.castSucc :=
         congrArg Subtype.val hEa
       rw [hv]
@@ -306,7 +306,7 @@ private theorem oddPerm_swap_of_both {n : ℕ} {w : Fin (n + 1) → Bool}
           swap_mem_trueSet ha hb (trueEnum w xb).2⟩ :
             {j // j ∈ trueSet w}) = ⟨i.castSucc, mem_trueSet.mpr ha⟩ := by
         refine Subtype.ext ?_
-        show s ((trueEnum w xb : Fin (n + 1))) = i.castSucc
+        change s ((trueEnum w xb : Fin (n + 1))) = i.castSucc
         have hv : (trueEnum w xb : Fin (n + 1)) = i.succ :=
           congrArg Subtype.val hEb
         rw [hv]
@@ -330,7 +330,7 @@ private theorem oddPerm_swap_of_both {n : ℕ} {w : Fin (n + 1) → Bool}
           swap_mem_trueSet ha hb (trueEnum w x).2⟩ :
             {j // j ∈ trueSet w}) = trueEnum w x := by
         refine Subtype.ext ?_
-        show s ((trueEnum w x : Fin (n + 1))) =
+        change s ((trueEnum w x : Fin (n + 1))) =
           ((trueEnum w x : {j // j ∈ trueSet w}) : Fin (n + 1))
         exact Equiv.swap_apply_of_ne_of_ne hja hjb
       rw [harg, Equiv.swap_apply_of_ne_of_ne hxa' hxb']
@@ -408,14 +408,14 @@ theorem parSign_swap {n : ℕ} (i : Fin n) (w : Fin (n + 1) → Bool) :
     parSign (Equiv.swap i.castSucc i.succ) w =
       if w i.castSucc = true ∧ w i.succ = true then -1 else 1 := by
   by_cases hab : w i.castSucc = true ∧ w i.succ = true
-  · rw [if_pos hab, parSign, oddPerm_swap_of_both hab.1 hab.2,
+  · rw [ite_eq_left hab, parSign, oddPerm_swap_of_both hab.1 hab.2,
       Equiv.Perm.sign_swap]
     · norm_num
     · intro h
       have h1 := (trueEnum w).toEquiv.symm.injective h
       have h2 : i.castSucc = i.succ := congrArg Subtype.val h1
       exact absurd h2 (Fin.castSucc_lt_succ (i := i)).ne
-  · rw [if_neg hab, parSign, oddPerm_swap_of_not hab,
+  · rw [ite_eq_right hab, parSign, oddPerm_swap_of_not hab,
       Equiv.Perm.sign_one]
     norm_num
 

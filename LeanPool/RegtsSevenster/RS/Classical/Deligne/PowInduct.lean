@@ -46,7 +46,7 @@ theorem powDualityDatum_succ
         (powFrontModInv A M.X n) (powBackModInv A M'.X n)
         (powFrontMod A M.X n) (powBackMod A M'.X n) := by
   refine ModDualityDatum.ext' A ?_ ?_
-  · show modPowPairing A M M' d (n + 1) =
+  · change modPowPairing A M M' d (n + 1) =
       modTensorMap A (powBackModInv A M'.X n)
         (powFrontModInv A M.X n) ≫
       tensorPair A (powDualityDatum A M M' d n)
@@ -65,7 +65,7 @@ theorem powDualityDatum_succ
         𝟙 (modPowMod A M.X (n + 1)) from
       powFrontModInv_powFrontMod A M.X n]
     rw [modTensorMap_id, Category.id_comp]
-  · show powCopairA A M M' d (n + 1) =
+  · change powCopairA A M M' d (n + 1) =
       tensorCopair A (powDualityDatum A M M' d n)
         (powDualityDatum A M M' d 0) ≫
       modTensorMap A (powFrontMod A M.X n)

@@ -94,6 +94,87 @@ private theorem glueAttach_of_label {W : Fragment α} {i j : α}
     glueAttach W i j f = Sum.inr ⟨ℓ, hℓi, hℓj⟩ :=
   (glueAttach_inr_iff f ⟨ℓ, hℓi, hℓj⟩).mpr ha
 
+private theorem gluePairClosed_disjUnion_attach_comm (W : Fragment α) (V :
+  Fragment β)
+    {i j : α}
+    (hclosed : W.pairing (W.boundaryFlag i) = W.boundaryFlag j)
+    (f : (((W.gluePairClosed i j hclosed).disjUnion V)).Flag) :
+    ((((W.disjUnion V).gluePairClosed (Sum.inl i) (Sum.inl j)
+          (congrArg Sum.inl hclosed)).relabel
+        (ambientLabelEquiv i j))).attach (ambientFlagEquiv W V i j f) =
+      ((((W.gluePairClosed i j hclosed).disjUnion V)).attach f).map (_root_.Equiv.refl
+          (W.Vertex ⊕ V.Vertex)) id := by
+  rcases f with ⟨g, hg⟩ | g
+  · -- W-side survivor: flagEquiv maps Sum.inl ⟨g, hg⟩ to ⟨Sum.inl g, ...⟩
+    -- The union's attach at Sum.inl g = (W.attach g).map Sum.inl Sum.inl
+    have hunion : (W.disjUnion V).attach (Sum.inl g) =
+        (W.attach g).map Sum.inl Sum.inl := rfl
+    set f' : SurvivingFlag (W.disjUnion V) (Sum.inl i) (Sum.inl j) :=
+      ⟨Sum.inl g, fun h => hg.1 (Sum.inl.inj h),
+        fun h => hg.2 (Sum.inl.inj h)⟩
+    -- Change the goal to an explicit form
+    change (glueAttach (W.disjUnion V) (Sum.inl i) (Sum.inl j) f').map id
+          (ambientLabelEquiv i j) =
+        Sum.map (⇑(_root_.Equiv.refl (W.Vertex ⊕ V.Vertex))) id
+          ((glueAttach W i j ⟨g, hg⟩).map Sum.inl Sum.inl)
+    rcases ha : W.attach g with v | ℓ
+    · -- vertex case
+      have hf' : (W.disjUnion V).attach f'.val = Sum.inl (Sum.inl v) := by
+        change (W.attach g).map Sum.inl Sum.inl = _; rw [ha]; rfl
+      rw [glueAttach_of_vertex f' hf',
+          glueAttach_of_vertex ⟨g, hg⟩ ha]
+      rfl
+    · -- label case
+      have hℓi : ℓ ≠ i := fun h => hg.1 (W.eq_boundaryFlag i g (h ▸ ha))
+      have hℓj : ℓ ≠ j := fun h => hg.2 (W.eq_boundaryFlag j g (h ▸ ha))
+      have hf' : (W.disjUnion V).attach f'.val = Sum.inr (Sum.inl ℓ) := by
+        change (W.attach g).map Sum.inl Sum.inl = _; rw [ha]; rfl
+      have hℓi' : (Sum.inl ℓ : α ⊕ β) ≠ Sum.inl i :=
+        fun h => hℓi (Sum.inl.inj h)
+      have hℓj' : (Sum.inl ℓ : α ⊕ β) ≠ Sum.inl j :=
+        fun h => hℓj (Sum.inl.inj h)
+      rw [glueAttach_of_label f' hf' hℓi' hℓj',
+          glueAttach_of_label ⟨g, hg⟩ ha hℓi hℓj]
+      rfl
+  · -- V-side flag
+    set f' : SurvivingFlag (W.disjUnion V) (Sum.inl i) (Sum.inl j) :=
+      ⟨Sum.inr g, fun (h : Sum.inr g = Sum.inl (W.boundaryFlag i)) =>
+        absurd h Sum.inr_ne_inl,
+        fun (h : Sum.inr g = Sum.inl (W.boundaryFlag j)) =>
+        absurd h Sum.inr_ne_inl⟩
+    change (glueAttach (W.disjUnion V) (Sum.inl i) (Sum.inl j) f').map id
+          (ambientLabelEquiv i j) =
+        Sum.map (⇑(_root_.Equiv.refl (W.Vertex ⊕ V.Vertex))) id
+          ((V.attach g).map Sum.inr Sum.inr)
+    rcases ha : V.attach g with v | ℓ
+    · have hf' : (W.disjUnion V).attach f'.val = Sum.inl (Sum.inr v) := by
+        change (V.attach g).map Sum.inr Sum.inr = _; rw [ha]; rfl
+      rw [glueAttach_of_vertex f' hf']
+      rfl
+    · have hf' : (W.disjUnion V).attach f'.val = Sum.inr (Sum.inr ℓ) := by
+        change (V.attach g).map Sum.inr Sum.inr = _; rw [ha]; rfl
+      have hℓi : (Sum.inr ℓ : α ⊕ β) ≠ Sum.inl i := Sum.inr_ne_inl
+      have hℓj : (Sum.inr ℓ : α ⊕ β) ≠ Sum.inl j := Sum.inr_ne_inl
+      rw [glueAttach_of_label f' hf' hℓi hℓj]
+      rfl
+
+private theorem gluePairClosed_disjUnion_pairing_comm (W : Fragment α) (V :
+  Fragment β)
+    {i j : α}
+    (hclosed : W.pairing (W.boundaryFlag i) = W.boundaryFlag j)
+    (f : (((W.gluePairClosed i j hclosed).disjUnion V)).Flag) :
+    ambientFlagEquiv W V i j ((((W.gluePairClosed i j hclosed).disjUnion V)).pairing f) =
+      ((((W.disjUnion V).gluePairClosed (Sum.inl i) (Sum.inl j)
+          (congrArg Sum.inl hclosed)).relabel
+        (ambientLabelEquiv i j))).pairing (ambientFlagEquiv W V i j f) := by
+  rcases f with ⟨g, hg⟩ | g
+  · apply Subtype.ext
+    change Sum.inl (W.pairing g) = (W.disjUnion V).pairing (Sum.inl g)
+    rfl
+  · apply Subtype.ext
+    change Sum.inr (V.pairing g) = (W.disjUnion V).pairing (Sum.inr g)
+    rfl
+
 /-- The closed case of glue-in-ambient: when the two boundary flags
 bound a common edge in W, the LHS and RHS produce equivalent
 fragments. -/
@@ -107,71 +188,137 @@ private noncomputable def gluePairClosed_disjUnion (W : Fragment α) (V :
         (ambientLabelEquiv i j)) where
   flagEquiv := ambientFlagEquiv W V i j
   vertexEquiv := _root_.Equiv.refl (W.Vertex ⊕ V.Vertex)
-  attach_comm f := by
-    rcases f with ⟨g, hg⟩ | g
-    · -- W-side survivor: flagEquiv maps Sum.inl ⟨g, hg⟩ to ⟨Sum.inl g, ...⟩
-      -- The union's attach at Sum.inl g = (W.attach g).map Sum.inl Sum.inl
-      have hunion : (W.disjUnion V).attach (Sum.inl g) =
-          (W.attach g).map Sum.inl Sum.inl := rfl
-      set f' : SurvivingFlag (W.disjUnion V) (Sum.inl i) (Sum.inl j) :=
-        ⟨Sum.inl g, fun h => hg.1 (Sum.inl.inj h),
-          fun h => hg.2 (Sum.inl.inj h)⟩
-      -- Change the goal to an explicit form
-      change (glueAttach (W.disjUnion V) (Sum.inl i) (Sum.inl j) f').map id
-            (ambientLabelEquiv i j) =
-          Sum.map (⇑(_root_.Equiv.refl (W.Vertex ⊕ V.Vertex))) id
-            ((glueAttach W i j ⟨g, hg⟩).map Sum.inl Sum.inl)
-      rcases ha : W.attach g with v | ℓ
-      · -- vertex case
-        have hf' : (W.disjUnion V).attach f'.val = Sum.inl (Sum.inl v) := by
-          show (W.attach g).map Sum.inl Sum.inl = _; rw [ha]; rfl
-        rw [glueAttach_of_vertex f' hf',
-            glueAttach_of_vertex ⟨g, hg⟩ ha]
-        rfl
-      · -- label case
-        have hℓi : ℓ ≠ i := fun h => hg.1 (W.eq_boundaryFlag i g (h ▸ ha))
-        have hℓj : ℓ ≠ j := fun h => hg.2 (W.eq_boundaryFlag j g (h ▸ ha))
-        have hf' : (W.disjUnion V).attach f'.val = Sum.inr (Sum.inl ℓ) := by
-          show (W.attach g).map Sum.inl Sum.inl = _; rw [ha]; rfl
-        have hℓi' : (Sum.inl ℓ : α ⊕ β) ≠ Sum.inl i :=
-          fun h => hℓi (Sum.inl.inj h)
-        have hℓj' : (Sum.inl ℓ : α ⊕ β) ≠ Sum.inl j :=
-          fun h => hℓj (Sum.inl.inj h)
-        rw [glueAttach_of_label f' hf' hℓi' hℓj',
-            glueAttach_of_label ⟨g, hg⟩ ha hℓi hℓj]
-        rfl
-    · -- V-side flag
-      set f' : SurvivingFlag (W.disjUnion V) (Sum.inl i) (Sum.inl j) :=
-        ⟨Sum.inr g, fun (h : Sum.inr g = Sum.inl (W.boundaryFlag i)) =>
-          absurd h Sum.inr_ne_inl,
-          fun (h : Sum.inr g = Sum.inl (W.boundaryFlag j)) =>
-          absurd h Sum.inr_ne_inl⟩
-      change (glueAttach (W.disjUnion V) (Sum.inl i) (Sum.inl j) f').map id
-            (ambientLabelEquiv i j) =
-          Sum.map (⇑(_root_.Equiv.refl (W.Vertex ⊕ V.Vertex))) id
-            ((V.attach g).map Sum.inr Sum.inr)
-      rcases ha : V.attach g with v | ℓ
-      · have hf' : (W.disjUnion V).attach f'.val = Sum.inl (Sum.inr v) := by
-          show (V.attach g).map Sum.inr Sum.inr = _; rw [ha]; rfl
-        rw [glueAttach_of_vertex f' hf']
-        rfl
-      · have hf' : (W.disjUnion V).attach f'.val = Sum.inr (Sum.inr ℓ) := by
-          show (V.attach g).map Sum.inr Sum.inr = _; rw [ha]; rfl
-        have hℓi : (Sum.inr ℓ : α ⊕ β) ≠ Sum.inl i := Sum.inr_ne_inl
-        have hℓj : (Sum.inr ℓ : α ⊕ β) ≠ Sum.inl j := Sum.inr_ne_inl
-        rw [glueAttach_of_label f' hf' hℓi hℓj]
-        rfl
-  pairing_comm f := by
-    rcases f with ⟨g, hg⟩ | g
-    · apply Subtype.ext
-      show Sum.inl (W.pairing g) = (W.disjUnion V).pairing (Sum.inl g)
-      rfl
-    · apply Subtype.ext
-      show Sum.inr (V.pairing g) = (W.disjUnion V).pairing (Sum.inr g)
-      rfl
+  attach_comm := gluePairClosed_disjUnion_attach_comm W V hclosed
+  pairing_comm := gluePairClosed_disjUnion_pairing_comm W V hclosed
   circles_eq := by
-    show (W.circles + 1) + V.circles = (W.circles + V.circles) + 1
+    change (W.circles + 1) + V.circles = (W.circles + V.circles) + 1
     omega
+
+private theorem gluePairOpen_disjUnion_attach_comm (W : Fragment α) (V : Fragment
+  β)
+    {i j : α} (hij : i ≠ j)
+    (hopen : W.pairing (W.boundaryFlag i) ≠ W.boundaryFlag j)
+    (f : (((W.gluePairOpen i j hij hopen).disjUnion V)).Flag) :
+    ((((W.disjUnion V).gluePairOpen (Sum.inl i) (Sum.inl j)
+          (fun h => hij (Sum.inl.inj h))
+          (fun h => hopen (Sum.inl.inj h))).relabel
+        (ambientLabelEquiv i j))).attach (ambientFlagEquiv W V i j f) =
+      ((((W.gluePairOpen i j hij hopen).disjUnion V)).attach f).map (_root_.Equiv.refl
+          (W.Vertex ⊕ V.Vertex)) id := by
+  -- The attach proof is identical to the closed case: glueAttach is
+  -- the same function in both gluePairClosed and gluePairOpen.
+  rcases f with ⟨g, hg⟩ | g
+  · set f' : SurvivingFlag (W.disjUnion V) (Sum.inl i) (Sum.inl j) :=
+      ⟨Sum.inl g, fun h => hg.1 (Sum.inl.inj h),
+        fun h => hg.2 (Sum.inl.inj h)⟩
+    change (glueAttach (W.disjUnion V) (Sum.inl i) (Sum.inl j) f').map id
+          (ambientLabelEquiv i j) =
+        Sum.map (⇑(_root_.Equiv.refl (W.Vertex ⊕ V.Vertex))) id
+          ((glueAttach W i j ⟨g, hg⟩).map Sum.inl Sum.inl)
+    rcases ha : W.attach g with v | ℓ
+    · have hf' : (W.disjUnion V).attach f'.val = Sum.inl (Sum.inl v) := by
+        change (W.attach g).map Sum.inl Sum.inl = _; rw [ha]; rfl
+      rw [glueAttach_of_vertex f' hf',
+          glueAttach_of_vertex ⟨g, hg⟩ ha]
+      rfl
+    · have hℓi : ℓ ≠ i := fun h => hg.1 (W.eq_boundaryFlag i g (h ▸ ha))
+      have hℓj : ℓ ≠ j := fun h => hg.2 (W.eq_boundaryFlag j g (h ▸ ha))
+      have hf' : (W.disjUnion V).attach f'.val = Sum.inr (Sum.inl ℓ) := by
+        change (W.attach g).map Sum.inl Sum.inl = _; rw [ha]; rfl
+      rw [glueAttach_of_label f' hf'
+            (fun h => hℓi (Sum.inl.inj h)) (fun h => hℓj (Sum.inl.inj h)),
+          glueAttach_of_label ⟨g, hg⟩ ha hℓi hℓj]
+      rfl
+  · set f' : SurvivingFlag (W.disjUnion V) (Sum.inl i) (Sum.inl j) :=
+      ⟨Sum.inr g, fun (h : Sum.inr g = Sum.inl (W.boundaryFlag i)) =>
+        absurd h Sum.inr_ne_inl,
+        fun (h : Sum.inr g = Sum.inl (W.boundaryFlag j)) =>
+        absurd h Sum.inr_ne_inl⟩
+    change (glueAttach (W.disjUnion V) (Sum.inl i) (Sum.inl j) f').map id
+          (ambientLabelEquiv i j) =
+        Sum.map (⇑(_root_.Equiv.refl (W.Vertex ⊕ V.Vertex))) id
+          ((V.attach g).map Sum.inr Sum.inr)
+    rcases ha : V.attach g with v | ℓ
+    · have hf' : (W.disjUnion V).attach f'.val = Sum.inl (Sum.inr v) := by
+        change (V.attach g).map Sum.inr Sum.inr = _; rw [ha]; rfl
+      rw [glueAttach_of_vertex f' hf']
+      rfl
+    · have hf' : (W.disjUnion V).attach f'.val = Sum.inr (Sum.inr ℓ) := by
+        change (V.attach g).map Sum.inr Sum.inr = _; rw [ha]; rfl
+      rw [glueAttach_of_label f' hf' Sum.inr_ne_inl Sum.inr_ne_inl]
+      rfl
+
+private theorem gluePairOpen_disjUnion_pairing_comm (W : Fragment α) (V : Fragment
+  β)
+    {i j : α} (hij : i ≠ j)
+    (hopen : W.pairing (W.boundaryFlag i) ≠ W.boundaryFlag j)
+    (f : (((W.gluePairOpen i j hij hopen).disjUnion V)).Flag) :
+    ambientFlagEquiv W V i j ((((W.gluePairOpen i j hij hopen).disjUnion V)).pairing f) =
+      ((((W.disjUnion V).gluePairOpen (Sum.inl i) (Sum.inl j)
+          (fun h => hij (Sum.inl.inj h))
+          (fun h => hopen (Sum.inl.inj h))).relabel
+        (ambientLabelEquiv i j))).pairing (ambientFlagEquiv W V i j f) := by
+  -- ═══════ REWIRE COMMUTATION ═══════
+  rcases f with ⟨g, hg⟩ | g
+  · -- W-side survivor: three dite branches of rewire align
+    apply Subtype.ext
+    -- After Subtype.ext, goal is about .val in W.Flag ⊕ V.Flag
+    -- LHS: Sum.inl (rewire hopen ⟨g, hg⟩).val
+    -- RHS: (rewire hopen_union ⟨Sum.inl g, ...⟩).val
+    change Sum.inl (rewire hopen ⟨g, hg⟩).val =
+      (rewire (show (W.disjUnion V).pairing
+            ((W.disjUnion V).boundaryFlag (Sum.inl i)) ≠
+          (W.disjUnion V).boundaryFlag (Sum.inl j) from
+          fun h => hopen (Sum.inl.inj h))
+        (⟨Sum.inl g, fun h => hg.1 (Sum.inl.inj h),
+          fun h => hg.2 (Sum.inl.inj h)⟩ :
+          SurvivingFlag (W.disjUnion V) (Sum.inl i) (Sum.inl j))).val
+    unfold rewire
+    split
+    · rename_i hfi
+      rw [dite_eq_left (show (W.disjUnion V).pairing (Sum.inl g) =
+          (W.disjUnion V).boundaryFlag (Sum.inl i) from
+          congrArg Sum.inl hfi)]
+      rfl
+    · split
+      · rename_i hfi hfj
+        rw [dite_eq_right (show (W.disjUnion V).pairing (Sum.inl g) ≠
+            (W.disjUnion V).boundaryFlag (Sum.inl i) from
+            fun h => hfi (Sum.inl.inj h)),
+          dite_eq_left (show (W.disjUnion V).pairing (Sum.inl g) =
+            (W.disjUnion V).boundaryFlag (Sum.inl j) from
+            congrArg Sum.inl hfj)]
+        rfl
+      · rename_i hfi hfj
+        rw [dite_eq_right (show (W.disjUnion V).pairing (Sum.inl g) ≠
+            (W.disjUnion V).boundaryFlag (Sum.inl i) from
+            fun h => hfi (Sum.inl.inj h)),
+          dite_eq_right (show (W.disjUnion V).pairing (Sum.inl g) ≠
+            (W.disjUnion V).boundaryFlag (Sum.inl j) from
+            fun h => hfj (Sum.inl.inj h))]
+        rfl
+  · -- V-side flag: both dite conditions false since Sum.inr ≠ Sum.inl
+    apply Subtype.ext
+    change Sum.inr (V.pairing g) =
+      (rewire (show (W.disjUnion V).pairing
+            ((W.disjUnion V).boundaryFlag (Sum.inl i)) ≠
+          (W.disjUnion V).boundaryFlag (Sum.inl j) from
+          fun h => hopen (Sum.inl.inj h))
+        (⟨Sum.inr g, fun (h : Sum.inr g =
+            (W.disjUnion V).boundaryFlag (Sum.inl i)) =>
+          absurd h Sum.inr_ne_inl,
+          fun (h : Sum.inr g =
+            (W.disjUnion V).boundaryFlag (Sum.inl j)) =>
+          absurd h Sum.inr_ne_inl⟩ :
+          SurvivingFlag (W.disjUnion V) (Sum.inl i) (Sum.inl j))).val
+    unfold rewire
+    rw [dite_eq_right (show (W.disjUnion V).pairing (Sum.inr g) ≠
+          (W.disjUnion V).boundaryFlag (Sum.inl i) from
+          Sum.inr_ne_inl),
+        dite_eq_right (show (W.disjUnion V).pairing (Sum.inr g) ≠
+          (W.disjUnion V).boundaryFlag (Sum.inl j) from
+          Sum.inr_ne_inl)]
+    rfl
 
 /-- The open case of glue-in-ambient: when the two boundary flags
 bound distinct edges in W, the LHS and RHS produce equivalent
@@ -187,113 +334,10 @@ private noncomputable def gluePairOpen_disjUnion (W : Fragment α) (V : Fragment
         (ambientLabelEquiv i j)) where
   flagEquiv := ambientFlagEquiv W V i j
   vertexEquiv := _root_.Equiv.refl (W.Vertex ⊕ V.Vertex)
-  attach_comm f := by
-    -- The attach proof is identical to the closed case: glueAttach is
-    -- the same function in both gluePairClosed and gluePairOpen.
-    rcases f with ⟨g, hg⟩ | g
-    · set f' : SurvivingFlag (W.disjUnion V) (Sum.inl i) (Sum.inl j) :=
-        ⟨Sum.inl g, fun h => hg.1 (Sum.inl.inj h),
-          fun h => hg.2 (Sum.inl.inj h)⟩
-      change (glueAttach (W.disjUnion V) (Sum.inl i) (Sum.inl j) f').map id
-            (ambientLabelEquiv i j) =
-          Sum.map (⇑(_root_.Equiv.refl (W.Vertex ⊕ V.Vertex))) id
-            ((glueAttach W i j ⟨g, hg⟩).map Sum.inl Sum.inl)
-      rcases ha : W.attach g with v | ℓ
-      · have hf' : (W.disjUnion V).attach f'.val = Sum.inl (Sum.inl v) := by
-          show (W.attach g).map Sum.inl Sum.inl = _; rw [ha]; rfl
-        rw [glueAttach_of_vertex f' hf',
-            glueAttach_of_vertex ⟨g, hg⟩ ha]
-        rfl
-      · have hℓi : ℓ ≠ i := fun h => hg.1 (W.eq_boundaryFlag i g (h ▸ ha))
-        have hℓj : ℓ ≠ j := fun h => hg.2 (W.eq_boundaryFlag j g (h ▸ ha))
-        have hf' : (W.disjUnion V).attach f'.val = Sum.inr (Sum.inl ℓ) := by
-          show (W.attach g).map Sum.inl Sum.inl = _; rw [ha]; rfl
-        rw [glueAttach_of_label f' hf'
-              (fun h => hℓi (Sum.inl.inj h)) (fun h => hℓj (Sum.inl.inj h)),
-            glueAttach_of_label ⟨g, hg⟩ ha hℓi hℓj]
-        rfl
-    · set f' : SurvivingFlag (W.disjUnion V) (Sum.inl i) (Sum.inl j) :=
-        ⟨Sum.inr g, fun (h : Sum.inr g = Sum.inl (W.boundaryFlag i)) =>
-          absurd h Sum.inr_ne_inl,
-          fun (h : Sum.inr g = Sum.inl (W.boundaryFlag j)) =>
-          absurd h Sum.inr_ne_inl⟩
-      change (glueAttach (W.disjUnion V) (Sum.inl i) (Sum.inl j) f').map id
-            (ambientLabelEquiv i j) =
-          Sum.map (⇑(_root_.Equiv.refl (W.Vertex ⊕ V.Vertex))) id
-            ((V.attach g).map Sum.inr Sum.inr)
-      rcases ha : V.attach g with v | ℓ
-      · have hf' : (W.disjUnion V).attach f'.val = Sum.inl (Sum.inr v) := by
-          show (V.attach g).map Sum.inr Sum.inr = _; rw [ha]; rfl
-        rw [glueAttach_of_vertex f' hf']
-        rfl
-      · have hf' : (W.disjUnion V).attach f'.val = Sum.inr (Sum.inr ℓ) := by
-          show (V.attach g).map Sum.inr Sum.inr = _; rw [ha]; rfl
-        rw [glueAttach_of_label f' hf' Sum.inr_ne_inl Sum.inr_ne_inl]
-        rfl
-  pairing_comm f := by
-    -- ═══════ REWIRE COMMUTATION ═══════
-    rcases f with ⟨g, hg⟩ | g
-    · -- W-side survivor: three dite branches of rewire align
-      apply Subtype.ext
-      -- After Subtype.ext, goal is about .val in W.Flag ⊕ V.Flag
-      -- LHS: Sum.inl (rewire hopen ⟨g, hg⟩).val
-      -- RHS: (rewire hopen_union ⟨Sum.inl g, ...⟩).val
-      change Sum.inl (rewire hopen ⟨g, hg⟩).val =
-        (rewire (show (W.disjUnion V).pairing
-              ((W.disjUnion V).boundaryFlag (Sum.inl i)) ≠
-            (W.disjUnion V).boundaryFlag (Sum.inl j) from
-            fun h => hopen (Sum.inl.inj h))
-          (⟨Sum.inl g, fun h => hg.1 (Sum.inl.inj h),
-            fun h => hg.2 (Sum.inl.inj h)⟩ :
-            SurvivingFlag (W.disjUnion V) (Sum.inl i) (Sum.inl j))).val
-      unfold rewire
-      split
-      · rename_i hfi
-        rw [dif_pos (show (W.disjUnion V).pairing (Sum.inl g) =
-            (W.disjUnion V).boundaryFlag (Sum.inl i) from
-            congrArg Sum.inl hfi)]
-        rfl
-      · split
-        · rename_i hfi hfj
-          rw [dif_neg (show (W.disjUnion V).pairing (Sum.inl g) ≠
-              (W.disjUnion V).boundaryFlag (Sum.inl i) from
-              fun h => hfi (Sum.inl.inj h)),
-            dif_pos (show (W.disjUnion V).pairing (Sum.inl g) =
-              (W.disjUnion V).boundaryFlag (Sum.inl j) from
-              congrArg Sum.inl hfj)]
-          rfl
-        · rename_i hfi hfj
-          rw [dif_neg (show (W.disjUnion V).pairing (Sum.inl g) ≠
-              (W.disjUnion V).boundaryFlag (Sum.inl i) from
-              fun h => hfi (Sum.inl.inj h)),
-            dif_neg (show (W.disjUnion V).pairing (Sum.inl g) ≠
-              (W.disjUnion V).boundaryFlag (Sum.inl j) from
-              fun h => hfj (Sum.inl.inj h))]
-          rfl
-    · -- V-side flag: both dite conditions false since Sum.inr ≠ Sum.inl
-      apply Subtype.ext
-      change Sum.inr (V.pairing g) =
-        (rewire (show (W.disjUnion V).pairing
-              ((W.disjUnion V).boundaryFlag (Sum.inl i)) ≠
-            (W.disjUnion V).boundaryFlag (Sum.inl j) from
-            fun h => hopen (Sum.inl.inj h))
-          (⟨Sum.inr g, fun (h : Sum.inr g =
-              (W.disjUnion V).boundaryFlag (Sum.inl i)) =>
-            absurd h Sum.inr_ne_inl,
-            fun (h : Sum.inr g =
-              (W.disjUnion V).boundaryFlag (Sum.inl j)) =>
-            absurd h Sum.inr_ne_inl⟩ :
-            SurvivingFlag (W.disjUnion V) (Sum.inl i) (Sum.inl j))).val
-      unfold rewire
-      rw [dif_neg (show (W.disjUnion V).pairing (Sum.inr g) ≠
-            (W.disjUnion V).boundaryFlag (Sum.inl i) from
-            Sum.inr_ne_inl),
-          dif_neg (show (W.disjUnion V).pairing (Sum.inr g) ≠
-            (W.disjUnion V).boundaryFlag (Sum.inl j) from
-            Sum.inr_ne_inl)]
-      rfl
+  attach_comm := gluePairOpen_disjUnion_attach_comm W V hij hopen
+  pairing_comm := gluePairOpen_disjUnion_pairing_comm W V hij hopen
   circles_eq := by
-    show W.circles + V.circles = (W.circles + V.circles)
+    change W.circles + V.circles = (W.circles + V.circles)
     rfl
 
 /-- A single-pair glue commutes with extending the ambient
@@ -314,7 +358,7 @@ noncomputable def gluePairDisjUnion (W : Fragment α) (V : Fragment β)
         ((W.disjUnion V).boundaryFlag (Sum.inl i)) =
         (W.disjUnion V).boundaryFlag (Sum.inl j) :=
       congrArg Sum.inl hclosed
-    rw [dif_pos hunion]
+    rw [dite_eq_left hunion]
     exact gluePairClosed_disjUnion W V hclosed
   · -- open case: W's pair is open, so union's pair is open
     rename_i hopen
@@ -322,7 +366,7 @@ noncomputable def gluePairDisjUnion (W : Fragment α) (V : Fragment β)
         ((W.disjUnion V).boundaryFlag (Sum.inl i)) ≠
         (W.disjUnion V).boundaryFlag (Sum.inl j) :=
       fun h => hopen (Sum.inl.inj h)
-    rw [dif_neg hunion]
+    rw [dite_eq_right hunion]
     exact gluePairOpen_disjUnion W V hij hopen
 
 /-- The label condition transported along a relabelling. -/
@@ -345,7 +389,7 @@ private theorem relabelGlueAttach_aux (W : Fragment α) (e : α ≃ β)
   · rw [glueAttach_of_vertex (W := W) (i := e.symm i) (j := e.symm j) f ha,
       glueAttach_of_vertex f
         (show (W.relabel e).attach f.val = Sum.inl v from by
-          show (W.attach f.val).map id e = _
+          change (W.attach f.val).map id e = _
           rw [ha]; rfl)]
     rfl
   · have h1 : ℓ ≠ e.symm i :=
@@ -360,7 +404,7 @@ private theorem relabelGlueAttach_aux (W : Fragment α) (e : α ≃ β)
         f ha h1 h2,
       glueAttach_of_label f
         (show (W.relabel e).attach f.val = Sum.inr (e ℓ) from by
-          show (W.attach f.val).map id e = _
+          change (W.attach f.val).map id e = _
           rw [ha]; rfl) h1' h2']
     rfl
 
@@ -432,7 +476,7 @@ noncomputable def gluePairSwap (W : Fragment α) {i j : α}
       gluePair_eq_closed (Ne.symm hij) hclosed']
     refine ⟨flagE.symm, _root_.Equiv.refl _, fun f => ?_, fun f => ?_,
       rfl⟩
-    · show (glueAttach W j i (flagE.symm f)).map id
+    · change (glueAttach W j i (flagE.symm f)).map id
           (survLabelSwapEquiv α i j) =
         (glueAttach W i j f).map (_root_.Equiv.refl _) id
       rcases ha : W.attach f.val with v | ℓ
@@ -460,7 +504,7 @@ noncomputable def gluePairSwap (W : Fragment α) {i j : α}
       gluePair_eq_open (Ne.symm hij) hopen']
     refine ⟨flagE.symm, _root_.Equiv.refl _, fun f => ?_, fun f => ?_,
       rfl⟩
-    · show (glueAttach W j i (flagE.symm f)).map id
+    · change (glueAttach W j i (flagE.symm f)).map id
           (survLabelSwapEquiv α i j) =
         (glueAttach W i j f).map (_root_.Equiv.refl _) id
       rcases ha : W.attach f.val with v | ℓ
@@ -480,26 +524,26 @@ noncomputable def gluePairSwap (W : Fragment α) {i j : α}
         obtain ⟨p2, hp2, hv2⟩ := h2
         rw [hp1, hp2]
         exact congrArg Sum.inr (Subtype.ext (hv1.trans hv2.symm))
-    · show flagE.symm (rewire hclosed f) = rewire hopen' (flagE.symm f)
+    · change flagE.symm (rewire hclosed f) = rewire hopen' (flagE.symm f)
       unfold rewire
       by_cases hfi : W.pairing f.val = W.boundaryFlag i
       · have hfj : ¬ W.pairing f.val = W.boundaryFlag j :=
           fun h => hbne (hfi.symm.trans h)
-        rw [dif_pos hfi,
-          dif_neg (show ¬ W.pairing ((flagE.symm f).val) =
+        rw [dite_eq_left hfi,
+          dite_eq_right (show ¬ W.pairing ((flagE.symm f).val) =
             W.boundaryFlag j from hfj),
-          dif_pos (show W.pairing ((flagE.symm f).val) =
+          dite_eq_left (show W.pairing ((flagE.symm f).val) =
             W.boundaryFlag i from hfi)]
         exact Subtype.ext rfl
       · by_cases hfj : W.pairing f.val = W.boundaryFlag j
-        · rw [dif_neg hfi, dif_pos hfj,
-            dif_pos (show W.pairing ((flagE.symm f).val) =
+        · rw [dite_eq_right hfi, dite_eq_left hfj,
+            dite_eq_left (show W.pairing ((flagE.symm f).val) =
               W.boundaryFlag j from hfj)]
           exact Subtype.ext rfl
-        · rw [dif_neg hfi, dif_neg hfj,
-            dif_neg (show ¬ W.pairing ((flagE.symm f).val) =
+        · rw [dite_eq_right hfi, dite_eq_right hfj,
+            dite_eq_right (show ¬ W.pairing ((flagE.symm f).val) =
               W.boundaryFlag j from hfj),
-            dif_neg (show ¬ W.pairing ((flagE.symm f).val) =
+            dite_eq_right (show ¬ W.pairing ((flagE.symm f).val) =
               W.boundaryFlag i from hfi)]
           exact Subtype.ext rfl
 
@@ -512,12 +556,12 @@ noncomputable def disjUnionComm (W₁ : Fragment α) (W₂ : Fragment β) :
   vertexEquiv := Equiv.sumComm W₁.Vertex W₂.Vertex
   attach_comm := fun f => by
     rcases f with f | f
-    · show ((W₁.attach f).map Sum.inr Sum.inr).map id
+    · change ((W₁.attach f).map Sum.inr Sum.inr).map id
           (Equiv.sumComm β α) =
         ((W₁.attach f).map Sum.inl Sum.inl).map
           (Equiv.sumComm W₁.Vertex W₂.Vertex) id
       rcases W₁.attach f with v | ℓ <;> rfl
-    · show ((W₂.attach f).map Sum.inl Sum.inl).map id
+    · change ((W₂.attach f).map Sum.inl Sum.inl).map id
           (Equiv.sumComm β α) =
         ((W₂.attach f).map Sum.inr Sum.inr).map
           (Equiv.sumComm W₁.Vertex W₂.Vertex) id
@@ -525,7 +569,7 @@ noncomputable def disjUnionComm (W₁ : Fragment α) (W₂ : Fragment β) :
   pairing_comm := fun f => by
     rcases f with f | f <;> rfl
   circles_eq := by
-    show W₁.circles + W₂.circles = W₂.circles + W₁.circles
+    change W₁.circles + W₂.circles = W₂.circles + W₁.circles
     omega
 
 end Fragment

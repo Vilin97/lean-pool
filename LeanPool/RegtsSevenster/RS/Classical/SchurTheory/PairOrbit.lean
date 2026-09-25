@@ -41,7 +41,7 @@ theorem content_comp_equiv (p : Fin n → Fin k × Fin k) :
     (content (finProdFinEquiv ∘ p)).1 =
       (pairContent p).map finProdFinEquiv := by
   rw [content, pairContent]
-  show Finset.univ.val.map (finProdFinEquiv ∘ p) = _
+  change Finset.univ.val.map (finProdFinEquiv ∘ p) = _
   rw [← Multiset.map_map]
 
 open scoped Classical in

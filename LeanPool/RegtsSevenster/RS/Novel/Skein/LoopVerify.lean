@@ -79,7 +79,7 @@ theorem lvThroughSummand (hM : MixedFunctional 0 4)
   unfold EdgeSubset.throughSummand
   rw [cThroughProduct, pow_zero, one_mul, one_mul]
   rw [Fintype.sum_subsingleton _ cPsi]
-  rw [if_pos cEvenMatch]
+  rw [ite_eq_left cEvenMatch]
   have hzero : ∀ φ : cSubset.CoreOddColouring 4, φ ≠ cPhi →
       (if cSubset.coreOddBoundaryMatch cState φ then
         ∏ v : cFragment.Vertex,
@@ -92,9 +92,9 @@ theorem lvThroughSummand (hM : MixedFunctional 0 4)
     rcases Classical.em (cSubset.coreOddBoundaryMatch cState φ) with
       hb | hb
     · exact absurd (cPhi_unique φ hb) hφ
-    · rw [if_neg hb]
+    · rw [ite_eq_right hb]
   rw [Fintype.sum_eq_single cPhi hzero]
-  rw [if_pos cOddMatch]
+  rw [ite_eq_left cOddMatch]
   rw [Fintype.prod_subsingleton _ cV]
   rw [cCoreOddSignAt κ o g₁ g₂ hglist, cCoreOddListAt κ o g₁ g₂
     hglist]
@@ -117,11 +117,11 @@ theorem lvSummand₂flip :
         oddPartner 4 (cColour 3)] =
         ([0, 7, 1, 6] : List (Fin (2 * 4))) from by decide,
       MixedFunctional.evalOdd,
-      if_pos (by decide : ([0, 7, 1, 6] : List (Fin (2 * 4))).Nodup),
+      ite_eq_left (by decide : ([0, 7, 1, 6] : List (Fin (2 * 4))).Nodup),
       show ([0, 7, 1, 6] : List (Fin (2 * 4))).toFinset =
         ({0, 7, 1, 6} : Finset (Fin (2 * 4))) from by decide,
       cFunctional_apply,
-      if_neg (by decide : ¬ ({0, 7, 1, 6} : Finset (Fin (2 * 4))) =
+      ite_eq_right (by decide : ¬ ({0, 7, 1, 6} : Finset (Fin (2 * 4))) =
         ({0, 5, 2, 7} : Finset (Fin (2 * 4)))),
       mul_zero, mul_zero]
   · rw [lvThroughSummand cFunctional lvKappa₂R lvO₂flip 1 0 h,
@@ -131,11 +131,11 @@ theorem lvSummand₂flip :
         oddPartner 4 (cColour 2)] =
         ([1, 6, 0, 7] : List (Fin (2 * 4))) from by decide,
       MixedFunctional.evalOdd,
-      if_pos (by decide : ([1, 6, 0, 7] : List (Fin (2 * 4))).Nodup),
+      ite_eq_left (by decide : ([1, 6, 0, 7] : List (Fin (2 * 4))).Nodup),
       show ([1, 6, 0, 7] : List (Fin (2 * 4))).toFinset =
         ({0, 7, 1, 6} : Finset (Fin (2 * 4))) from by decide,
       cFunctional_apply,
-      if_neg (by decide : ¬ ({0, 7, 1, 6} : Finset (Fin (2 * 4))) =
+      ite_eq_right (by decide : ¬ ({0, 7, 1, 6} : Finset (Fin (2 * 4))) =
         ({0, 5, 2, 7} : Finset (Fin (2 * 4)))),
       mul_zero, mul_zero]
 

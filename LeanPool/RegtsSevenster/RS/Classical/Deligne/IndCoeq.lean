@@ -150,7 +150,7 @@ lemma preservesColimit_flip_lim
       refine (Category.assoc _ _ _).trans ?_
       refine (congrArg (fun t => colimit.ι (G.flip ⋙ lim) a ≫ t)
         (Category.assoc _ _ _)).trans ?_
-      refine (HasColimit.isoOfNatIso_ι_hom_assoc
+      refine (HasColimit.ι_isoOfNatIso_hom_assoc
         (limitIsoFlipCompLim G).symm a _).trans ?_
       refine (congrArg
         (fun t => (limitIsoFlipCompLim G).symm.hom.app a ≫ t)
@@ -159,7 +159,7 @@ lemma preservesColimit_flip_lim
       apply congrArg (fun t => t ≫ (colimit.ι G.flip a).app b)
       simp [limitIsoFlipCompLim, Category.assoc]
     exact hL.trans hR.symm
-  haveI : IsIso (colimit.post G.flip lim) := by
+  have : IsIso (colimit.post G.flip lim) := by
     rw [key]
     exact IsIso.comp_isIso
   exact preservesColimit_of_isIso_post _ _
@@ -295,12 +295,12 @@ lemma preservesColimit_parallelPair_tensorLeft_indOf
   obtain ⟨P⟩ := nonempty_indParallelPairPresentation
     (Ind.isIndObject_inclusion_obj X) (Ind.isIndObject_inclusion_obj Y)
     ((Ind.inclusion C).map f) ((Ind.inclusion C).map g)
-  haveI : PreservesColimitsOfSize.{0, 0} (tensorLeft a) :=
+  have : PreservesColimitsOfSize.{0, 0} (tensorLeft a) :=
     preservesSmallestColimits_of_preservesColimits _
-  haveI : PreservesColimit (parallelPair P.φ P.ψ)
+  have : PreservesColimit (parallelPair P.φ P.ψ)
       (Ind.lim P.I ⋙ tensorLeft (indOf.obj a)) :=
     preservesColimit_of_natIso _ (indLimCompTensorLeftIso a P.I).symm
-  haveI : PreservesColimit (parallelPair P.φ P.ψ ⋙ Ind.lim P.I)
+  have : PreservesColimit (parallelPair P.φ P.ψ ⋙ Ind.lim P.I)
       (tensorLeft (indOf.obj a)) :=
     preservesColimit_comp_diagram _ _ _
   exact preservesColimit_of_iso_diagram _
@@ -319,12 +319,12 @@ lemma preservesLimit_parallelPair_tensorLeft_indOf
   obtain ⟨P⟩ := nonempty_indParallelPairPresentation
     (Ind.isIndObject_inclusion_obj X) (Ind.isIndObject_inclusion_obj Y)
     ((Ind.inclusion C).map f) ((Ind.inclusion C).map g)
-  haveI : PreservesLimitsOfSize.{0, 0} (tensorLeft a) :=
+  have : PreservesLimitsOfSize.{0, 0} (tensorLeft a) :=
     preservesSmallestLimits_of_preservesLimits _
-  haveI : PreservesLimit (parallelPair P.φ P.ψ)
+  have : PreservesLimit (parallelPair P.φ P.ψ)
       (Ind.lim P.I ⋙ tensorLeft (indOf.obj a)) :=
     preservesLimit_of_natIso _ (indLimCompTensorLeftIso a P.I).symm
-  haveI : PreservesLimit (parallelPair P.φ P.ψ ⋙ Ind.lim P.I)
+  have : PreservesLimit (parallelPair P.φ P.ψ ⋙ Ind.lim P.I)
       (tensorLeft (indOf.obj a)) :=
     preservesLimit_comp_diagram _ _ _
   exact preservesLimit_of_iso_diagram _
@@ -339,12 +339,12 @@ lemma preservesLimit_parallelPair_tensorRight_indOf
   obtain ⟨P⟩ := nonempty_indParallelPairPresentation
     (Ind.isIndObject_inclusion_obj X) (Ind.isIndObject_inclusion_obj Y)
     ((Ind.inclusion C).map f) ((Ind.inclusion C).map g)
-  haveI : PreservesLimitsOfSize.{0, 0} (tensorRight a) :=
+  have : PreservesLimitsOfSize.{0, 0} (tensorRight a) :=
     preservesSmallestLimits_of_preservesLimits _
-  haveI : PreservesLimit (parallelPair P.φ P.ψ)
+  have : PreservesLimit (parallelPair P.φ P.ψ)
       (Ind.lim P.I ⋙ tensorRight (indOf.obj a)) :=
     preservesLimit_of_natIso _ (indLimCompTensorRightIso a P.I).symm
-  haveI : PreservesLimit (parallelPair P.φ P.ψ ⋙ Ind.lim P.I)
+  have : PreservesLimit (parallelPair P.φ P.ψ ⋙ Ind.lim P.I)
       (tensorRight (indOf.obj a)) :=
     preservesLimit_comp_diagram _ _ _
   exact preservesLimit_of_iso_diagram _
@@ -359,12 +359,12 @@ lemma preservesColimit_parallelPair_tensorRight_indOf
   obtain ⟨P⟩ := nonempty_indParallelPairPresentation
     (Ind.isIndObject_inclusion_obj X) (Ind.isIndObject_inclusion_obj Y)
     ((Ind.inclusion C).map f) ((Ind.inclusion C).map g)
-  haveI : PreservesColimitsOfSize.{0, 0} (tensorRight a) :=
+  have : PreservesColimitsOfSize.{0, 0} (tensorRight a) :=
     preservesSmallestColimits_of_preservesColimits _
-  haveI : PreservesColimit (parallelPair P.φ P.ψ)
+  have : PreservesColimit (parallelPair P.φ P.ψ)
       (Ind.lim P.I ⋙ tensorRight (indOf.obj a)) :=
     preservesColimit_of_natIso _ (indLimCompTensorRightIso a P.I).symm
-  haveI : PreservesColimit (parallelPair P.φ P.ψ ⋙ Ind.lim P.I)
+  have : PreservesColimit (parallelPair P.φ P.ψ ⋙ Ind.lim P.I)
       (tensorRight (indOf.obj a)) :=
     preservesColimit_comp_diagram _ _ _
   exact preservesColimit_of_iso_diagram _
@@ -426,7 +426,7 @@ def whiskerLeftPairFunctorEvalIso
       tensorRight ((parallelPair f g).obj k) :=
   NatIso.ofComponents (fun _ => Iso.refl _)
     (fun u => by
-      show u ▷ (parallelPair f g).obj k ≫ 𝟙 _ =
+      change u ▷ (parallelPair f g).obj k ≫ 𝟙 _ =
         𝟙 _ ≫ u ▷ (parallelPair f g).obj k
       rw [Category.comp_id, Category.id_comp])
 
@@ -440,7 +440,7 @@ def whiskerRightPairFunctorEvalIso
       tensorLeft ((parallelPair f g).obj k) :=
   NatIso.ofComponents (fun _ => Iso.refl _)
     (fun u => by
-      show (parallelPair f g).obj k ◁ u ≫ 𝟙 _ =
+      change (parallelPair f g).obj k ◁ u ≫ 𝟙 _ =
         𝟙 _ ≫ (parallelPair f g).obj k ◁ u
       rw [Category.comp_id, Category.id_comp])
 
@@ -475,21 +475,21 @@ def whiskerLeftCoeqComparison
       tensorRight (colimit (parallelPair f g)) where
   app A := colimit.post (parallelPair f g) (tensorLeft A)
   naturality {A B} u := by
-    show colimMap ((whiskerLeftPairFunctor f g).map u) ≫
+    change colimMap ((whiskerLeftPairFunctor f g).map u) ≫
         colimit.post (parallelPair f g) (tensorLeft B) =
       colimit.post (parallelPair f g) (tensorLeft A) ≫
         u ▷ colimit (parallelPair f g)
     apply colimit.hom_ext
     intro k
     rw [ι_colimMap_assoc]
-    show ((whiskerLeftPairFunctor f g).map u).app k ≫
+    change ((whiskerLeftPairFunctor f g).map u).app k ≫
         colimit.ι (parallelPair f g ⋙ tensorLeft B) k ≫
           colimit.post (parallelPair f g) (tensorLeft B) =
       colimit.ι (parallelPair f g ⋙ tensorLeft A) k ≫
         colimit.post (parallelPair f g) (tensorLeft A) ≫
           u ▷ colimit (parallelPair f g)
     rw [colimit.ι_post, colimit.ι_post_assoc]
-    show u ▷ (parallelPair f g).obj k ≫
+    change u ▷ (parallelPair f g).obj k ≫
         (B ◁ colimit.ι (parallelPair f g) k) =
       (A ◁ colimit.ι (parallelPair f g) k) ≫
         u ▷ colimit (parallelPair f g)
@@ -505,21 +505,21 @@ def whiskerRightCoeqComparison
       tensorLeft (colimit (parallelPair f g)) where
   app A := colimit.post (parallelPair f g) (tensorRight A)
   naturality {A B} u := by
-    show colimMap ((whiskerRightPairFunctor f g).map u) ≫
+    change colimMap ((whiskerRightPairFunctor f g).map u) ≫
         colimit.post (parallelPair f g) (tensorRight B) =
       colimit.post (parallelPair f g) (tensorRight A) ≫
         colimit (parallelPair f g) ◁ u
     apply colimit.hom_ext
     intro k
     rw [ι_colimMap_assoc]
-    show ((whiskerRightPairFunctor f g).map u).app k ≫
+    change ((whiskerRightPairFunctor f g).map u).app k ≫
         colimit.ι (parallelPair f g ⋙ tensorRight B) k ≫
           colimit.post (parallelPair f g) (tensorRight B) =
       colimit.ι (parallelPair f g ⋙ tensorRight A) k ≫
         colimit.post (parallelPair f g) (tensorRight A) ≫
           colimit (parallelPair f g) ◁ u
     rw [colimit.ι_post, colimit.ι_post_assoc]
-    show (parallelPair f g).obj k ◁ u ≫
+    change (parallelPair f g).obj k ◁ u ≫
         (colimit.ι (parallelPair f g) k ▷ B) =
       (colimit.ι (parallelPair f g) k ▷ A) ≫
         colimit (parallelPair f g) ◁ u
@@ -533,17 +533,17 @@ lemma isIso_post_parallelPair_tensorLeft
     {X : Ind C} {Y : Ind C}
     (A : Ind C) (f g : X ⟶ Y) :
     IsIso (colimit.post (parallelPair f g) (tensorLeft A)) := by
-  haveI : PreservesFilteredColimits (whiskerLeftPairFunctor f g) :=
+  have : PreservesFilteredColimits (whiskerLeftPairFunctor f g) :=
     preservesFilteredColimits_whiskerLeftPairFunctor f g
-  haveI : PreservesColimitsOfSize.{v, v}
+  have : PreservesColimitsOfSize.{v, v}
       (colim : (WalkingParallelPair ⥤ Ind C) ⥤ Ind C) :=
     colimConstAdj.leftAdjoint_preservesColimits
-  haveI : PreservesFilteredColimits
+  have : PreservesFilteredColimits
       (whiskerLeftPairFunctor f g ⋙ colim) :=
     ⟨fun _ _ _ => inferInstance⟩
   have h := isIso_app_of_isIso_indOf (whiskerLeftCoeqComparison f g)
     (fun c => by
-      haveI := preservesColimit_parallelPair_tensorLeft_indOf c f g
+      have := preservesColimit_parallelPair_tensorLeft_indOf c f g
       exact inferInstanceAs (IsIso (colimit.post (parallelPair f g)
         (tensorLeft (indOf.obj c))))) A
   exact h
@@ -554,17 +554,17 @@ lemma isIso_post_parallelPair_tensorRight
     {X : Ind C} {Y : Ind C}
     (A : Ind C) (f g : X ⟶ Y) :
     IsIso (colimit.post (parallelPair f g) (tensorRight A)) := by
-  haveI : PreservesFilteredColimits (whiskerRightPairFunctor f g) :=
+  have : PreservesFilteredColimits (whiskerRightPairFunctor f g) :=
     preservesFilteredColimits_whiskerRightPairFunctor f g
-  haveI : PreservesColimitsOfSize.{v, v}
+  have : PreservesColimitsOfSize.{v, v}
       (colim : (WalkingParallelPair ⥤ Ind C) ⥤ Ind C) :=
     colimConstAdj.leftAdjoint_preservesColimits
-  haveI : PreservesFilteredColimits
+  have : PreservesFilteredColimits
       (whiskerRightPairFunctor f g ⋙ colim) :=
     ⟨fun _ _ _ => inferInstance⟩
   have h := isIso_app_of_isIso_indOf (whiskerRightCoeqComparison f g)
     (fun c => by
-      haveI := preservesColimit_parallelPair_tensorRight_indOf c f g
+      have := preservesColimit_parallelPair_tensorRight_indOf c f g
       exact inferInstanceAs (IsIso (colimit.post (parallelPair f g)
         (tensorRight (indOf.obj c))))) A
   exact h
@@ -579,10 +579,10 @@ instance tensorLeft_ind_preservesCoequalizers
     (A : Ind C) :
     PreservesColimitsOfShape WalkingParallelPair (tensorLeft A) where
   preservesColimit {K} := by
-    haveI := isIso_post_parallelPair_tensorLeft A
+    have := isIso_post_parallelPair_tensorLeft A
       (K.map WalkingParallelPairHom.left)
       (K.map WalkingParallelPairHom.right)
-    haveI : PreservesColimit
+    have : PreservesColimit
         (parallelPair (K.map WalkingParallelPairHom.left)
           (K.map WalkingParallelPairHom.right)) (tensorLeft A) :=
       preservesColimit_of_isIso_post _ _
@@ -595,10 +595,10 @@ instance tensorRight_ind_preservesCoequalizers
     (A : Ind C) :
     PreservesColimitsOfShape WalkingParallelPair (tensorRight A) where
   preservesColimit {K} := by
-    haveI := isIso_post_parallelPair_tensorRight A
+    have := isIso_post_parallelPair_tensorRight A
       (K.map WalkingParallelPairHom.left)
       (K.map WalkingParallelPairHom.right)
-    haveI : PreservesColimit
+    have : PreservesColimit
         (parallelPair (K.map WalkingParallelPairHom.left)
           (K.map WalkingParallelPairHom.right)) (tensorRight A) :=
       preservesColimit_of_isIso_post _ _
@@ -619,10 +619,10 @@ lemma preservesColimitsOfShape_parallelPairLim_ind [SmallCategory C] [Abelian C]
     (I : Type v) [SmallCategory I] [IsFiltered I] :
     PreservesColimitsOfShape I
       (lim : (WalkingParallelPair ⥤ Ind C) ⥤ Ind C) := by
-  haveI hlim : PreservesColimitsOfShape I
+  have hlim : PreservesColimitsOfShape I
       (lim : (WalkingParallelPair ⥤ (Cᵒᵖ ⥤ Type v)) ⥤ _) :=
     preservesColimitsOfShape_lim
-  haveI h₁ : PreservesColimitsOfShape I
+  have h₁ : PreservesColimitsOfShape I
       ((lim : (WalkingParallelPair ⥤ Ind C) ⥤ Ind C) ⋙
         Ind.inclusion C) := by
     exact preservesColimitsOfShape_of_natIso
@@ -716,16 +716,16 @@ lemma isIso_limitPost_parallelPair_tensorLeft
     (A : Ind C)
     (f g : X ⟶ Y) :
     IsIso (limit.post (parallelPair f g) (tensorLeft A)) := by
-  haveI : PreservesFilteredColimits (whiskerLeftPairFunctor f g) :=
+  have : PreservesFilteredColimits (whiskerLeftPairFunctor f g) :=
     preservesFilteredColimits_whiskerLeftPairFunctor f g
-  haveI : PreservesFilteredColimits
+  have : PreservesFilteredColimits
       (whiskerLeftPairFunctor f g ⋙ lim) :=
     ⟨fun I _ _ => by
-      haveI := preservesColimitsOfShape_parallelPairLim_ind (C := C) I
+      have := preservesColimitsOfShape_parallelPairLim_ind (C := C) I
       infer_instance⟩
   have h := isIso_app_of_isIso_indOf (whiskerLeftEqComparison f g)
     (fun c => by
-      haveI := preservesLimit_parallelPair_tensorLeft_indOf c f g
+      have := preservesLimit_parallelPair_tensorLeft_indOf c f g
       exact inferInstanceAs (IsIso (limit.post (parallelPair f g)
         (tensorLeft (indOf.obj c))))) A
   exact h
@@ -737,16 +737,16 @@ lemma isIso_limitPost_parallelPair_tensorRight
     (A : Ind C)
     (f g : X ⟶ Y) :
     IsIso (limit.post (parallelPair f g) (tensorRight A)) := by
-  haveI : PreservesFilteredColimits (whiskerRightPairFunctor f g) :=
+  have : PreservesFilteredColimits (whiskerRightPairFunctor f g) :=
     preservesFilteredColimits_whiskerRightPairFunctor f g
-  haveI : PreservesFilteredColimits
+  have : PreservesFilteredColimits
       (whiskerRightPairFunctor f g ⋙ lim) :=
     ⟨fun I _ _ => by
-      haveI := preservesColimitsOfShape_parallelPairLim_ind (C := C) I
+      have := preservesColimitsOfShape_parallelPairLim_ind (C := C) I
       infer_instance⟩
   have h := isIso_app_of_isIso_indOf (whiskerRightEqComparison f g)
     (fun c => by
-      haveI := preservesLimit_parallelPair_tensorRight_indOf c f g
+      have := preservesLimit_parallelPair_tensorRight_indOf c f g
       exact inferInstanceAs (IsIso (limit.post (parallelPair f g)
         (tensorRight (indOf.obj c))))) A
   exact h
@@ -761,10 +761,10 @@ instance tensorLeft_ind_preservesEqualizers
     (A : Ind C) :
     PreservesLimitsOfShape WalkingParallelPair (tensorLeft A) where
   preservesLimit {K} := by
-    haveI := isIso_limitPost_parallelPair_tensorLeft A
+    have := isIso_limitPost_parallelPair_tensorLeft A
       (K.map WalkingParallelPairHom.left)
       (K.map WalkingParallelPairHom.right)
-    haveI : PreservesLimit
+    have : PreservesLimit
         (parallelPair (K.map WalkingParallelPairHom.left)
           (K.map WalkingParallelPairHom.right)) (tensorLeft A) :=
       preservesLimit_of_isIso_post _ _
@@ -777,10 +777,10 @@ instance tensorRight_ind_preservesEqualizers
     (A : Ind C) :
     PreservesLimitsOfShape WalkingParallelPair (tensorRight A) where
   preservesLimit {K} := by
-    haveI := isIso_limitPost_parallelPair_tensorRight A
+    have := isIso_limitPost_parallelPair_tensorRight A
       (K.map WalkingParallelPairHom.left)
       (K.map WalkingParallelPairHom.right)
-    haveI : PreservesLimit
+    have : PreservesLimit
         (parallelPair (K.map WalkingParallelPairHom.left)
           (K.map WalkingParallelPairHom.right)) (tensorRight A) :=
       preservesLimit_of_isIso_post _ _

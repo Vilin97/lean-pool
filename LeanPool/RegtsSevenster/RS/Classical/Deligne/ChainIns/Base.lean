@@ -151,7 +151,7 @@ theorem symInsL_actRight
       rfl,
     show actLeft A (symPowMod A X (n + 1)).X =
       symPowAct A X (n + 1) from rfl]
-  show (X ◁ ((β_ (symPow A X (n + 1)) A).hom ≫
+  change (X ◁ ((β_ (symPow A X (n + 1)) A).hom ≫
       symPowAct A X n)) ≫ symInsL A X n =
     (α_ X (symPow A X (n + 1)) A).inv ≫ (symInsL A X n ▷ A) ≫
       (β_ (symPow A X (n + 2)) A).hom ≫ symPowAct A X (n + 1)
@@ -287,7 +287,7 @@ theorem chainInsP_cond
       from rfl,
     show actLeft A (symPowMod A M.X q).X = symPowAct A M.X q
       from rfl]
-  show M'.X ◁ (((β_ (symPow A M'.X (p + 1)) A).hom ≫
+  change M'.X ◁ (((β_ (symPow A M'.X (p + 1)) A).hom ≫
         symPowAct A M'.X p) ▷ symPow A M.X (q + 1)) ≫
       ((α_ M'.X (symPow A M'.X (p + 1))
           (symPow A M.X (q + 1))).inv ≫
@@ -437,7 +437,7 @@ theorem chainInsQ_cond
       from rfl,
     show actLeft A (symPowMod A M.X q).X = symPowAct A M.X q
       from rfl]
-  show M.X ◁ (((β_ (symPow A M'.X (p + 1)) A).hom ≫
+  change M.X ◁ (((β_ (symPow A M'.X (p + 1)) A).hom ≫
         symPowAct A M'.X p) ▷ symPow A M.X (q + 1)) ≫
       ((α_ M.X (symPow A M'.X (p + 1))
           (symPow A M.X (q + 1))).inv ≫

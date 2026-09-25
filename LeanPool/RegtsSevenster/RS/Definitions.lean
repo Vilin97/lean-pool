@@ -178,7 +178,7 @@ def disjUnion (W₁ : Fragment α) (W₂ : Fragment β) :
     | inl ℓ₁ =>
       cases f with
       | inl g =>
-        rcases ha : W₁.attach g with v | ℓ' <;> simp [ha] at h
+        rcases ha : W₁.attach g with v | ℓ' <;> simp? [ha] at h
         subst h
         simp [W₁.eq_boundaryFlag ℓ' g ha]
       | inr g =>
@@ -188,7 +188,7 @@ def disjUnion (W₁ : Fragment α) (W₂ : Fragment β) :
       | inl g =>
         rcases ha : W₁.attach g with v | ℓ' <;> simp [ha] at h
       | inr g =>
-        rcases ha : W₂.attach g with v | ℓ' <;> simp [ha] at h
+        rcases ha : W₂.attach g with v | ℓ' <;> simp? [ha] at h
         subst h
         simp [W₂.eq_boundaryFlag ℓ' g ha]
   circles := W₁.circles + W₂.circles
@@ -279,24 +279,24 @@ theorem rewire_invol (hij : i ≠ j)
   · -- f is the far end of i's edge; its rewired partner is the far
     -- end of j's edge, whose rewired partner is back at f.
     rename_i hfi
-    rw [dif_neg (by
+    rw [dite_eq_right (by
       rw [W.pairing_invol]
       exact fun h => hbne h.symm)]
-    rw [dif_pos (by rw [W.pairing_invol])]
+    rw [dite_eq_left (by rw [W.pairing_invol])]
     refine Subtype.ext ?_
     have h2 := congrArg W.pairing hfi
     rw [W.pairing_invol] at h2
     exact h2.symm
   · split
     · rename_i hfi hfj
-      rw [dif_pos (by rw [W.pairing_invol])]
+      rw [dite_eq_left (by rw [W.pairing_invol])]
       refine Subtype.ext ?_
       have h2 := congrArg W.pairing hfj
       rw [W.pairing_invol] at h2
       exact h2.symm
     · rename_i hfi hfj
-      rw [dif_neg (by rw [W.pairing_invol]; exact fun h => f.prop.1 h)]
-      rw [dif_neg (by rw [W.pairing_invol]; exact fun h => f.prop.2 h)]
+      rw [dite_eq_right (by rw [W.pairing_invol]; exact fun h => f.prop.1 h)]
+      rw [dite_eq_right (by rw [W.pairing_invol]; exact fun h => f.prop.2 h)]
       exact Subtype.ext (W.pairing_invol f.val)
 
 /-- And fixed-point-free, so the glued fragment is again a
@@ -790,6 +790,7 @@ structure EdgeSubset.TransitionSystem.Orientation {α : Type}
 transported from an enumeration.  Used only to enumerate vertex
 pairings; the evaluated summands are independent of the choice
 because pair blocks move by even permutations. -/
+@[instance_reducible]
 noncomputable def Fragment.flagOrder {α : Type} (W : Fragment α) :
     LinearOrder W.Flag :=
   LinearOrder.lift' (Fintype.equivFin W.Flag)
@@ -857,8 +858,8 @@ noncomputable def EdgeSubset.evenColoursAt (F : EdgeSubset W) {k : ℕ}
 theorem EdgeSubset.mem_of_mem_inFlagsAt {F : EdgeSubset W}
     {κ : F.TransitionSystem} {o : κ.Orientation} {v : W.Vertex}
     {f : W.Flag} (hf : f ∈ F.inFlagsAt o v) : f ∈ F.flags := by
-  letI := W.flagOrder
-  letI := Classical.dec
+  let := W.flagOrder
+  let := Classical.dec
   unfold EdgeSubset.inFlagsAt at hf
   exact (Finset.mem_filter.mp ((Finset.mem_sort _).mp hf)).1
 
@@ -1978,7 +1979,7 @@ instance instMonoidalCategory : MonoidalCategory SuperVect :=
     (id_tensorHom := fun _ {_ _} _ => rfl)
     (tensorHom_id := fun {_ _} _ _ => rfl)
     (tensorHom_comp_tensorHom := fun {_ _ _ _ _ _} f₁ f₂ g₁ g₂ => by
-      show Hom.comp (SuperVect.tensorHom g₁ g₂) (SuperVect.tensorHom f₁ f₂) =
+      change Hom.comp (SuperVect.tensorHom g₁ g₂) (SuperVect.tensorHom f₁ f₂) =
            SuperVect.tensorHom (Hom.comp g₁ f₁) (Hom.comp g₂ f₂)
       exact tensorHom_comp _ _ _ _ _ _ f₁ f₂ g₁ g₂)
     -- ═══════ ASSOCIATOR NATURALITY ═══════
@@ -2037,8 +2038,7 @@ instance instMonoidalCategory : MonoidalCategory SuperVect :=
         simp only [LinearMap.comp_apply, LinearMap.fst_apply,
           LinearMap.prodMap_apply,
           LinearEquiv.coe_toLinearMap]
-        induction x using TensorProduct.induction_on with
-        | zero => simp
+        induction x using TensorProduct.inductionOn with
         | tmul r m => simp [TensorProduct.lid_tmul, TensorProduct.map_tmul,
           map_smul]
         | add x₁ x₂ hx₁ hx₂ => simp only [map_add, hx₁, hx₂]
@@ -2053,8 +2053,7 @@ instance instMonoidalCategory : MonoidalCategory SuperVect :=
         simp only [LinearMap.comp_apply, LinearMap.fst_apply,
           LinearMap.prodMap_apply,
           LinearEquiv.coe_toLinearMap]
-        induction x using TensorProduct.induction_on with
-        | zero => simp
+        induction x using TensorProduct.inductionOn with
         | tmul r m => simp [TensorProduct.lid_tmul, TensorProduct.map_tmul,
           map_smul]
         | add x₁ x₂ hx₁ hx₂ => simp only [map_add, hx₁, hx₂])
@@ -2074,8 +2073,7 @@ instance instMonoidalCategory : MonoidalCategory SuperVect :=
         simp only [LinearMap.comp_apply, LinearMap.fst_apply,
           LinearMap.prodMap_apply,
           LinearEquiv.coe_toLinearMap]
-        induction x using TensorProduct.induction_on with
-        | zero => simp
+        induction x using TensorProduct.inductionOn with
         | tmul m r => simp [TensorProduct.rid_tmul, TensorProduct.map_tmul,
           map_smul]
         | add x₁ x₂ hx₁ hx₂ => simp only [map_add, hx₁, hx₂]
@@ -2091,8 +2089,7 @@ instance instMonoidalCategory : MonoidalCategory SuperVect :=
         simp only [LinearMap.comp_apply, LinearMap.snd_apply,
           LinearMap.prodMap_apply,
           LinearEquiv.coe_toLinearMap]
-        induction y using TensorProduct.induction_on with
-        | zero => simp
+        induction y using TensorProduct.inductionOn with
         | tmul m r => simp [TensorProduct.rid_tmul, TensorProduct.map_tmul,
           map_smul]
         | add y₁ y₂ hy₁ hy₂ => simp only [map_add, hy₁, hy₂])
@@ -2110,53 +2107,54 @@ instance instMonoidalCategory : MonoidalCategory SuperVect :=
 
 /-! ### Braided and symmetric structure -/
 
+private theorem koszulBraiding_naturality_right (X : SuperVect)
+    {Y Z : SuperVect} (f : Y ⟶ Z) :
+    MonoidalCategory.whiskerLeft X f ≫ (koszulBraidingIso X Z).hom =
+      (koszulBraidingIso X Y).hom ≫ MonoidalCategory.whiskerRight f X := by
+  apply Hom.ext
+  · -- even component
+    change (koszulBraidingEven X Z).comp
+        (LinearMap.prodMap (TensorProduct.map LinearMap.id f.evenMap)
+          (TensorProduct.map LinearMap.id f.oddMap)) =
+      (LinearMap.prodMap (TensorProduct.map f.evenMap LinearMap.id)
+          (TensorProduct.map f.oddMap LinearMap.id)).comp
+        (koszulBraidingEven X Y)
+    apply LinearMap.ext; intro ⟨x, y⟩
+    simp only [LinearMap.comp_apply, LinearMap.prodMap_apply,
+      koszulBraidingEven, koszulEvenAux,
+      LinearMap.neg_apply, LinearEquiv.coe_toLinearMap, Prod.mk.injEq]
+    refine ⟨?_, ?_⟩
+    · induction x using TensorProduct.inductionOn with
+      | tmul a b => simp [TensorProduct.comm_tmul, TensorProduct.map_tmul]
+      | add x₁ x₂ hx₁ hx₂ => simp only [map_add, hx₁, hx₂]
+    · induction y using TensorProduct.inductionOn with
+      | tmul a b =>
+        simp [TensorProduct.comm_tmul, TensorProduct.map_tmul, map_neg]
+      | add y₁ y₂ hy₁ hy₂ =>
+        simp only [map_add, neg_add]; exact congr_arg₂ (· + ·) hy₁ hy₂
+  · -- odd component
+    change (koszulBraidingOdd X Z).comp
+        (LinearMap.prodMap (TensorProduct.map LinearMap.id f.oddMap)
+          (TensorProduct.map LinearMap.id f.evenMap)) =
+      (LinearMap.prodMap (TensorProduct.map f.evenMap LinearMap.id)
+          (TensorProduct.map f.oddMap LinearMap.id)).comp
+        (koszulBraidingOdd X Y)
+    apply LinearMap.ext; intro ⟨x, y⟩
+    simp only [LinearMap.comp_apply, LinearMap.prodMap_apply,
+      koszulBraidingOdd_pair, Prod.mk.injEq]
+    refine ⟨?_, ?_⟩
+    · induction y using TensorProduct.inductionOn with
+      | tmul a b => simp [TensorProduct.comm_tmul, TensorProduct.map_tmul]
+      | add y₁ y₂ hy₁ hy₂ => simp only [map_add, hy₁, hy₂]
+    · induction x using TensorProduct.inductionOn with
+      | tmul a b => simp [TensorProduct.comm_tmul, TensorProduct.map_tmul]
+      | add x₁ x₂ hx₁ hx₂ => simp only [map_add, hx₁, hx₂]
+
 /-- SuperVect is a braided monoidal category with the Koszul
 braiding: swapping odd ⊗ odd elements picks up a factor of −1. -/
 instance instBraidedCategory : BraidedCategory SuperVect where
   braiding := koszulBraidingIso
-  braiding_naturality_right := fun X {Y Z} f => by
-    apply Hom.ext
-    · -- even component
-      change (koszulBraidingEven X Z).comp
-          (LinearMap.prodMap (TensorProduct.map LinearMap.id f.evenMap)
-            (TensorProduct.map LinearMap.id f.oddMap)) =
-        (LinearMap.prodMap (TensorProduct.map f.evenMap LinearMap.id)
-            (TensorProduct.map f.oddMap LinearMap.id)).comp
-          (koszulBraidingEven X Y)
-      apply LinearMap.ext; intro ⟨x, y⟩
-      simp only [LinearMap.comp_apply, LinearMap.prodMap_apply,
-        koszulBraidingEven, koszulEvenAux,
-        LinearMap.neg_apply, LinearEquiv.coe_toLinearMap, Prod.mk.injEq]
-      refine ⟨?_, ?_⟩
-      · induction x using TensorProduct.induction_on with
-        | zero => simp
-        | tmul a b => simp [TensorProduct.comm_tmul, TensorProduct.map_tmul]
-        | add x₁ x₂ hx₁ hx₂ => simp only [map_add, hx₁, hx₂]
-      · induction y using TensorProduct.induction_on with
-        | zero => simp
-        | tmul a b =>
-          simp [TensorProduct.comm_tmul, TensorProduct.map_tmul, map_neg]
-        | add y₁ y₂ hy₁ hy₂ =>
-          simp only [map_add, neg_add]; exact congr_arg₂ (· + ·) hy₁ hy₂
-    · -- odd component
-      change (koszulBraidingOdd X Z).comp
-          (LinearMap.prodMap (TensorProduct.map LinearMap.id f.oddMap)
-            (TensorProduct.map LinearMap.id f.evenMap)) =
-        (LinearMap.prodMap (TensorProduct.map f.evenMap LinearMap.id)
-            (TensorProduct.map f.oddMap LinearMap.id)).comp
-          (koszulBraidingOdd X Y)
-      apply LinearMap.ext; intro ⟨x, y⟩
-      simp only [LinearMap.comp_apply, LinearMap.prodMap_apply,
-        koszulBraidingOdd_pair, Prod.mk.injEq]
-      refine ⟨?_, ?_⟩
-      · induction y using TensorProduct.induction_on with
-        | zero => simp
-        | tmul a b => simp [TensorProduct.comm_tmul, TensorProduct.map_tmul]
-        | add y₁ y₂ hy₁ hy₂ => simp only [map_add, hy₁, hy₂]
-      · induction x using TensorProduct.induction_on with
-        | zero => simp
-        | tmul a b => simp [TensorProduct.comm_tmul, TensorProduct.map_tmul]
-        | add x₁ x₂ hx₁ hx₂ => simp only [map_add, hx₁, hx₂]
+  braiding_naturality_right := fun X {_ _} f => koszulBraiding_naturality_right X f
   braiding_naturality_left := fun {X Y} f Z => by
     apply Hom.ext
     · -- even component
@@ -2171,12 +2169,10 @@ instance instBraidedCategory : BraidedCategory SuperVect where
         koszulBraidingEven, koszulEvenAux,
         LinearMap.neg_apply, LinearEquiv.coe_toLinearMap, Prod.mk.injEq]
       refine ⟨?_, ?_⟩
-      · induction x using TensorProduct.induction_on with
-        | zero => simp
+      · induction x using TensorProduct.inductionOn with
         | tmul a b => simp [TensorProduct.comm_tmul, TensorProduct.map_tmul]
         | add x₁ x₂ hx₁ hx₂ => simp only [map_add, hx₁, hx₂]
-      · induction y using TensorProduct.induction_on with
-        | zero => simp
+      · induction y using TensorProduct.inductionOn with
         | tmul a b =>
           simp [TensorProduct.comm_tmul, TensorProduct.map_tmul, map_neg]
         | add y₁ y₂ hy₁ hy₂ =>
@@ -2192,12 +2188,10 @@ instance instBraidedCategory : BraidedCategory SuperVect where
       simp only [LinearMap.comp_apply, LinearMap.prodMap_apply,
         koszulBraidingOdd_pair, Prod.mk.injEq]
       refine ⟨?_, ?_⟩
-      · induction y using TensorProduct.induction_on with
-        | zero => simp
+      · induction y using TensorProduct.inductionOn with
         | tmul a b => simp [TensorProduct.comm_tmul, TensorProduct.map_tmul]
         | add y₁ y₂ hy₁ hy₂ => simp only [map_add, hy₁, hy₂]
-      · induction x using TensorProduct.induction_on with
-        | zero => simp
+      · induction x using TensorProduct.inductionOn with
         | tmul a b => simp [TensorProduct.comm_tmul, TensorProduct.map_tmul]
         | add x₁ x₂ hx₁ hx₂ => simp only [map_add, hx₁, hx₂]
   hexagon_forward := fun X Y Z => by
@@ -2311,15 +2305,15 @@ componentwise. -/
 instance instPreadditive : Preadditive SuperVect where
   add_comp _ _ _ f f' g := by
     apply Hom.ext
-    · show g.evenMap ∘ₗ (f.evenMap + f'.evenMap) = _
+    · change g.evenMap ∘ₗ (f.evenMap + f'.evenMap) = _
       exact LinearMap.comp_add _ _ _
-    · show g.oddMap ∘ₗ (f.oddMap + f'.oddMap) = _
+    · change g.oddMap ∘ₗ (f.oddMap + f'.oddMap) = _
       exact LinearMap.comp_add _ _ _
   comp_add _ _ _ f g g' := by
     apply Hom.ext
-    · show (g.evenMap + g'.evenMap) ∘ₗ f.evenMap = _
+    · change (g.evenMap + g'.evenMap) ∘ₗ f.evenMap = _
       exact LinearMap.add_comp _ _ _
-    · show (g.oddMap + g'.oddMap) ∘ₗ f.oddMap = _
+    · change (g.oddMap + g'.oddMap) ∘ₗ f.oddMap = _
       exact LinearMap.add_comp _ _ _
 
 /-- SuperVect is ℂ-linear: composition is ℂ-bilinear
@@ -2327,15 +2321,15 @@ componentwise. -/
 instance instLinear : CategoryTheory.Linear ℂ SuperVect where
   smul_comp _ _ _ c f g := by
     apply Hom.ext
-    · show g.evenMap ∘ₗ (c • f.evenMap) = _
+    · change g.evenMap ∘ₗ (c • f.evenMap) = _
       exact LinearMap.comp_smul _ _ _
-    · show g.oddMap ∘ₗ (c • f.oddMap) = _
+    · change g.oddMap ∘ₗ (c • f.oddMap) = _
       exact LinearMap.comp_smul _ _ _
   comp_smul _ _ _ f c g := by
     apply Hom.ext
-    · show (c • g.evenMap) ∘ₗ f.evenMap = _
+    · change (c • g.evenMap) ∘ₗ f.evenMap = _
       exact LinearMap.smul_comp _ _ _
-    · show (c • g.oddMap) ∘ₗ f.oddMap = _
+    · change (c • g.oddMap) ∘ₗ f.oddMap = _
       exact LinearMap.smul_comp _ _ _
 
 end SuperVect
@@ -2371,7 +2365,7 @@ inclusion a mono, and the object is a quotient of itself. -/
 theorem isSubquotientOf_of_retract [Category.{v} C]
     {Y Z : C} (i : Y ⟶ Z) (r : Z ⟶ Y)
     (h : i ≫ r = 𝟙 Y) : IsSubquotientOf Y Z := by
-  haveI : IsSplitMono i := ⟨⟨r, h⟩⟩
+  have : IsSplitMono i := ⟨⟨r, h⟩⟩
   exact ⟨Y, i, 𝟙 Y, inferInstance, inferInstance⟩
 
 /-- `LengthLE Y k` states that the subobject order of `Y` contains

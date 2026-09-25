@@ -448,7 +448,7 @@ private theorem superOddSquare_inv_evenMap_one :
     superOddSquare.inv.evenMap (1 : ℂ) =
       ((0 : (Fin 0 → ℂ) ⊗[ℂ] (Fin 0 → ℂ)),
         oddGen ⊗ₜ[ℂ] oddGen) := by
-  show (prodZeroEquiv ((Fin 0 → ℂ) ⊗[ℂ] (Fin 0 → ℂ))
+  change (prodZeroEquiv ((Fin 0 → ℂ) ⊗[ℂ] (Fin 0 → ℂ))
       ((Fin 1 → ℂ) ⊗[ℂ] (Fin 1 → ℂ)) ≪≫ₗ
         lineTensorEquiv).symm.toLinearMap (1 : ℂ) = _
   have hg : (LinearEquiv.funUnique (Fin 1) ℂ ℂ).symm 1 = oddGen :=
@@ -476,7 +476,7 @@ private theorem line_pair_swap (x : Fin 1 → ℂ) :
       x 0 • (0, oddGen ⊗ₜ[ℂ] oddGen) := by
     refine Prod.ext ?_ ?_
     · exact Subsingleton.elim _ _
-    · show oddGen ⊗ₜ[ℂ] (x 0 • oddGen) =
+    · change oddGen ⊗ₜ[ℂ] (x 0 • oddGen) =
         x 0 • (oddGen ⊗ₜ[ℂ] oddGen)
       rw [TensorProduct.tmul_smul]
   conv_lhs => rw [oddGen_rep x]
@@ -583,16 +583,16 @@ def superVectScalarUnit : ℂ ≃+* End (𝟙_ SuperVect) where
   toFun c := ⟨c • (LinearMap.id : ℂ →ₗ[ℂ] ℂ), 0⟩
   invFun f := unitEvenMap f 1
   left_inv c := by
-    show (c • (LinearMap.id : ℂ →ₗ[ℂ] ℂ)) 1 = c
+    change (c • (LinearMap.id : ℂ →ₗ[ℂ] ℂ)) 1 = c
     simp
   right_inv f := by
     apply SuperVect.hom_ext
-    · show (unitEvenMap f 1) • (LinearMap.id : ℂ →ₗ[ℂ] ℂ) =
+    · change (unitEvenMap f 1) • (LinearMap.id : ℂ →ₗ[ℂ] ℂ) =
         unitEvenMap f
       refine LinearMap.ext fun z => ?_
       calc (unitEvenMap f 1 • (LinearMap.id : ℂ →ₗ[ℂ] ℂ)) z
           = z • unitEvenMap f 1 := by
-            show unitEvenMap f 1 * z = _
+            change unitEvenMap f 1 * z = _
             rw [smul_eq_mul, mul_comm]
         _ = unitEvenMap f (z • 1) :=
             (map_smul (unitEvenMap f) z 1).symm
@@ -601,16 +601,16 @@ def superVectScalarUnit : ℂ ≃+* End (𝟙_ SuperVect) where
     · exact Subsingleton.elim _ _
   map_mul' a b := by
     apply SuperVect.hom_ext
-    · show (a * b) • (LinearMap.id : ℂ →ₗ[ℂ] ℂ) =
+    · change (a * b) • (LinearMap.id : ℂ →ₗ[ℂ] ℂ) =
         (a • (LinearMap.id : ℂ →ₗ[ℂ] ℂ)) ∘ₗ
           (b • (LinearMap.id : ℂ →ₗ[ℂ] ℂ))
       refine LinearMap.ext fun z => ?_
-      show (a * b) * z = a * (b * z)
+      change (a * b) * z = a * (b * z)
       rw [mul_assoc]
     · exact Subsingleton.elim _ _
   map_add' a b := by
     apply SuperVect.hom_ext
-    · show (a + b) • (LinearMap.id : ℂ →ₗ[ℂ] ℂ) =
+    · change (a + b) • (LinearMap.id : ℂ →ₗ[ℂ] ℂ) =
         a • (LinearMap.id : ℂ →ₗ[ℂ] ℂ) +
           b • (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
       exact add_smul a b _
@@ -653,7 +653,7 @@ trivialization it was pulled back from. -/
 theorem smallComparison_square :
     smallComparison.square sOdd smallOddSquare = superOddSquare := by
   refine Iso.ext ?_
-  show (Functor.Monoidal.μIso smallSuperInclusion sOdd sOdd).hom ≫
+  change (Functor.Monoidal.μIso smallSuperInclusion sOdd sOdd).hom ≫
       smallSuperInclusion.map smallOddSquare.hom ≫
       (Functor.Monoidal.εIso smallSuperInclusion).inv =
     superOddSquare.hom

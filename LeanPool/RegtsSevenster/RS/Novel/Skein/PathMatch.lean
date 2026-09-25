@@ -33,7 +33,7 @@ on `j` using `match_invol`.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type} {W : Fragment α}
 
@@ -57,13 +57,13 @@ theorem traceChain_internal (κ : F.RelTransitionSystem)
     traceChain κ (n + 1) f =
       traceChain κ n (κ.match_ (W.pairing f)) := by
   conv_lhs => unfold traceChain
-  simp only [if_neg (not_boundary_of_internal h), dif_pos h]
+  simp only [ite_eq_right (not_boundary_of_internal h), dite_eq_left h]
 
 /-- The chain stops at the first boundary partner and returns it. -/
 theorem traceChain_boundary (κ : F.RelTransitionSystem)
     (n : ℕ) (f : W.Flag) (h : W.pairing f ∈ F.boundaryFlags) :
     traceChain κ (n + 1) f = some (W.pairing f) := by
-  conv_lhs => unfold traceChain; simp only [if_pos h]
+  conv_lhs => unfold traceChain; simp only [ite_eq_left h]
 
 /-- The chain fails on a partner outside the subset. -/
 theorem traceChain_neither (κ : F.RelTransitionSystem)
@@ -72,7 +72,7 @@ theorem traceChain_neither (κ : F.RelTransitionSystem)
     (hi : W.pairing f ∉ F.internalFlags) :
     traceChain κ (n + 1) f = none := by
   conv_lhs => unfold traceChain
-  simp only [if_neg hb, dif_neg hi]
+  simp only [ite_eq_right hb, dite_eq_right hi]
 
 /-! ### Fuel monotonicity -/
 
@@ -131,6 +131,16 @@ theorem iterWalk_succ (κ : F.RelTransitionSystem)
     (f : W.Flag) (n : ℕ) :
     iterWalk κ f (n + 1) =
       κ.match_ (W.pairing (iterWalk κ f n)) := rfl
+
+/-- Splitting an iterated walk. -/
+theorem iterWalk_add (κ : F.RelTransitionSystem) (f : W.Flag)
+    (a b : ℕ) :
+    iterWalk κ f (a + b) = iterWalk κ (iterWalk κ f a) b := by
+  induction b with
+  | zero => rfl
+  | succ b ih =>
+    rw [show a + (b + 1) = (a + b) + 1 from rfl, iterWalk_succ,
+      ih, ← iterWalk_succ]
 
 /-- Starting one step along is the same as taking one more step. -/
 theorem iterWalk_shift (κ : F.RelTransitionSystem)
@@ -307,7 +317,7 @@ theorem chain_terminates_with_data
     omega
   have hex' : ∃ k, W.pairing (iterWalk κ b k) ∉
       F.internalFlags := ⟨_, hex.choose_spec.2⟩
-  haveI : DecidablePred (fun k =>
+  have : DecidablePred (fun k =>
       W.pairing (iterWalk κ b k) ∉ F.internalFlags) :=
     fun k => Classical.dec _
   set k₀ := Nat.find hex'

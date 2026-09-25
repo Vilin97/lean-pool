@@ -64,7 +64,7 @@ theorem stdFormEven_stdE (k : ℕ) (i j : Fin k) :
   rw [Finset.sum_eq_single i]
   · by_cases h : i = j
     · subst h; simp
-    · rw [Pi.single_eq_same, one_mul, Pi.single_eq_of_ne h, if_neg h]
+    · rw [Pi.single_eq_same, one_mul, Pi.single_eq_of_ne h, ite_eq_right h]
   · intro m _ hm
     rw [Pi.single_eq_of_ne hm, zero_mul]
   · intro hmem
@@ -79,8 +79,8 @@ theorem stdFormOdd_stdF (ℓ : ℕ) (i j : Fin (2 * ℓ)) :
   rw [Finset.sum_eq_single i]
   · rw [Pi.single_eq_same, mul_one]
     by_cases h : j = oddPartner ℓ i
-    · subst h; rw [Pi.single_eq_same, if_pos rfl, mul_one]
-    · rw [Pi.single_eq_of_ne (fun hh => h hh.symm), if_neg h,
+    · subst h; rw [Pi.single_eq_same, ite_eq_left rfl, mul_one]
+    · rw [Pi.single_eq_of_ne (fun hh => h hh.symm), ite_eq_right h,
         mul_zero]
   · intro m _ hm
     rw [Pi.single_eq_of_ne hm, mul_zero, zero_mul]
@@ -95,7 +95,7 @@ theorem stdFormOdd_antisymm (ℓ : ℕ) (x y : Fin (2 * ℓ) → ℂ) :
   refine Fintype.sum_equiv
     ⟨oddPartner ℓ, oddPartner ℓ, oddPartner_invol ℓ, oddPartner_invol ℓ⟩
     _ _ (fun i => ?_)
-  show -(oddPartnerSign ℓ i : ℂ) * x i * y (oddPartner ℓ i) =
+  change -(oddPartnerSign ℓ i : ℂ) * x i * y (oddPartner ℓ i) =
     -(-(oddPartnerSign ℓ (oddPartner ℓ i) : ℂ) * y (oddPartner ℓ i) *
       x (oddPartner ℓ (oddPartner ℓ i)))
   rw [oddPartner_invol, oddPartnerSign_oddPartner]
@@ -121,19 +121,19 @@ theorem stdFormOdd_stdF_stdG (ℓ : ℕ) (i j : Fin (2 * ℓ)) :
     stdFormOdd_stdF]
   by_cases h : i = j
   · subst h
-    rw [if_pos rfl, if_pos rfl, mul_neg, ← Int.cast_mul,
+    rw [ite_eq_left rfl, ite_eq_left rfl, mul_neg, ← Int.cast_mul,
       oddPartnerSign_mul_self, Int.cast_one]
-  · rw [if_neg (fun hh : oddPartner ℓ j = oddPartner ℓ i =>
+  · rw [ite_eq_right (fun hh : oddPartner ℓ j = oddPartner ℓ i =>
       h (by
         have := congrArg (oddPartner ℓ) hh
         rwa [oddPartner_invol, oddPartner_invol, eq_comm] at this)),
-      mul_zero, if_neg h]
+      mul_zero, ite_eq_right h]
 
 /-- The even trace of the copairing: `Σ_i b(e_i, e_i) = k`. -/
 theorem sum_stdFormEven_diag (k : ℕ) :
     (∑ i, stdFormEven k (stdE k i) (stdE k i)) = (k : ℂ) := by
   rw [Finset.sum_congr rfl
-    (fun i _ => (stdFormEven_stdE k i i).trans (if_pos rfl))]
+    (fun i _ => (stdFormEven_stdE k i i).trans (ite_eq_left rfl))]
   simp
 
 /-- The odd trace of the copairing: `Σ_i b(f_i, g_i) = −2ℓ`;
@@ -142,7 +142,7 @@ a free circle. -/
 theorem sum_stdFormOdd_diag (ℓ : ℕ) :
     (∑ i, stdFormOdd ℓ (stdF ℓ i) (stdG ℓ i)) = -(2 * ℓ : ℂ) := by
   rw [Finset.sum_congr rfl
-    (fun i _ => (stdFormOdd_stdF_stdG ℓ i i).trans (if_pos rfl))]
+    (fun i _ => (stdFormOdd_stdF_stdG ℓ i i).trans (ite_eq_left rfl))]
   simp
 
 /-- The even form against a basis vector reads off the

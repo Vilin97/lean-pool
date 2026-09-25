@@ -23,8 +23,8 @@ power of the superdimension. -/
 theorem mixedPartition_circlesClosed {k ℓ : ℕ}
     (h : MixedFunctional k ℓ) (c : ℕ) :
     mixedPartition h (circlesClosed c) = ((k : ℂ) - 2 * ℓ) ^ c := by
-  letI : IsEmpty (circlesClosed c).Flag := inferInstanceAs (IsEmpty Empty)
-  letI : IsEmpty (circlesClosed c).Vertex := inferInstanceAs (IsEmpty Empty)
+  let : IsEmpty (circlesClosed c).Flag := inferInstanceAs (IsEmpty Empty)
+  let : IsEmpty (circlesClosed c).Vertex := inferInstanceAs (IsEmpty Empty)
   exact mixedPartition_of_flagless (circlesClosed c) h
 
 /-- Every representing model has superdimension equal to the

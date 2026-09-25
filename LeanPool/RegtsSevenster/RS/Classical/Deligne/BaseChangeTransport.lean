@@ -194,7 +194,7 @@ theorem baseChangeMapMod_id
     (X : Mod D A) :
     baseChangeMapMod A B φ (𝟙 X) = 𝟙 (baseChangeMod φ X) :=
   Mod.Hom.ext (by
-    show modTensorMap A (𝟙 (restrictRegular φ)) (𝟙 X) = _
+    change modTensorMap A (𝟙 (restrictRegular φ)) (𝟙 X) = _
     rw [modTensorMap_id, Mod.id_hom']
     rfl)
 
@@ -235,7 +235,7 @@ theorem modTensorMapMod_id
     (X W : Mod D B) :
     modTensorMapMod B (𝟙 X) (𝟙 W) = 𝟙 (modTensorMod B X W) :=
   Mod.Hom.ext (by
-    show modTensorMap B (𝟙 X) (𝟙 W) = _
+    change modTensorMap B (𝟙 X) (𝟙 W) = _
     rw [modTensorMap_id, Mod.id_hom']
     rfl)
 
@@ -347,7 +347,7 @@ theorem baseChange_sandwichCon
         modTensorMapMod B (𝟙 (baseChangeMod φ M))
           (baseChangeUnitIso A B φ).hom ≫
         (modTensorUnitRightMod B (baseChangeMod φ M)).hom := by
-    show (modTensorAssocModIso B (baseChangeMod φ M)
+    change (modTensorAssocModIso B (baseChangeMod φ M)
         (baseChangeMod φ M') (baseChangeMod φ M)).hom ≫
       modTensorMapMod B (𝟙 (baseChangeMod φ M))
         ((baseChangeDatum A B φ d).pairMod) ≫
@@ -537,7 +537,7 @@ theorem baseChange_sandwichConR
         modTensorMapMod B (baseChangeUnitIso A B φ).hom
           (𝟙 (baseChangeMod φ M')) ≫
         (modTensorUnitLeftMod B (baseChangeMod φ M')).hom := by
-    show (modTensorAssocModIso B (baseChangeMod φ M')
+    change (modTensorAssocModIso B (baseChangeMod φ M')
         (baseChangeMod φ M) (baseChangeMod φ M')).inv ≫
       modTensorMapMod B
         ((baseChangeDatum A B φ d).pairMod)

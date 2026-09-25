@@ -49,7 +49,7 @@ degenerates to `TransitionSystem` and `internalCircuitCount` equals
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 
@@ -59,11 +59,13 @@ variable {W : Fragment α}
 
 /-! ## Internal vs boundary flag classification -/
 
+open scoped Classical in
 /-- The internal flags of an edge subset: participating flags attached
 to a vertex. -/
 noncomputable def internalFlags (F : EdgeSubset W) : Finset W.Flag :=
   F.flags.filter (fun f => ∃ v : W.Vertex, W.attach f = Sum.inl v)
 
+open scoped Classical in
 /-- A flag is internal exactly when it is in the subset and attached
 to a vertex. -/
 theorem mem_internalFlags_iff {f : W.Flag} {F : EdgeSubset W} :
@@ -71,11 +73,13 @@ theorem mem_internalFlags_iff {f : W.Flag} {F : EdgeSubset W} :
       ∃ v : W.Vertex, W.attach f = Sum.inl v :=
   Finset.mem_filter
 
+open scoped Classical in
 /-- The boundary flags of an edge subset: participating flags attached
 to a boundary label. -/
 noncomputable def boundaryFlags (F : EdgeSubset W) : Finset W.Flag :=
   F.flags.filter (fun f => ∃ i : α, W.attach f = Sum.inr i)
 
+open scoped Classical in
 /-- Every participating flag is either internal or boundary. -/
 theorem mem_internalFlags_or_boundaryFlags (F : EdgeSubset W)
     {f : W.Flag} (hf : f ∈ F.flags) :
@@ -87,26 +91,31 @@ theorem mem_internalFlags_or_boundaryFlags (F : EdgeSubset W)
 /-- Internal and boundary flags are disjoint. -/
 theorem internalFlags_disjoint_boundaryFlags (F : EdgeSubset W) :
     Disjoint F.internalFlags F.boundaryFlags := by
+  classical
   unfold internalFlags boundaryFlags
   rw [Finset.disjoint_filter]
   intro f _ ⟨v, hv⟩ ⟨i, hi⟩
   rw [hv] at hi; cases hi
 
+open scoped Classical in
 /-- An internal flag is in the edge subset. -/
 theorem mem_flags_of_internalFlags (F : EdgeSubset W) {f : W.Flag}
     (hf : f ∈ F.internalFlags) : f ∈ F.flags :=
   (Finset.mem_filter.mp hf).1
 
+open scoped Classical in
 /-- A boundary flag is in the edge subset. -/
 theorem mem_flags_of_boundaryFlags (F : EdgeSubset W) {f : W.Flag}
     (hf : f ∈ F.boundaryFlags) : f ∈ F.flags :=
   (Finset.mem_filter.mp hf).1
 
+open scoped Classical in
 /-- An internal flag is attached to some vertex. -/
 theorem attach_internal_of_mem (F : EdgeSubset W) {f : W.Flag}
     (hf : f ∈ F.internalFlags) : ∃ v : W.Vertex, W.attach f = Sum.inl v :=
   (Finset.mem_filter.mp hf).2
 
+open scoped Classical in
 /-- A boundary flag is attached to some label. -/
 theorem attach_boundary_of_mem (F : EdgeSubset W) {f : W.Flag}
     (hf : f ∈ F.boundaryFlags) : ∃ i : α, W.attach f = Sum.inr i :=
@@ -157,6 +166,7 @@ structure RelTransitionSystem (F : EdgeSubset W) where
 
 /-! ## Compatibility: conversions -/
 
+open scoped Classical in
 /-- A participating flag that is internally attached is an internal
 flag. -/
 theorem mem_internalFlags_of {F : EdgeSubset W} {f : W.Flag}
@@ -164,6 +174,7 @@ theorem mem_internalFlags_of {F : EdgeSubset W} {f : W.Flag}
     f ∈ F.internalFlags := by
   exact Finset.mem_filter.mpr ⟨hf, hv⟩
 
+open scoped Classical in
 /-- Every `TransitionSystem` is a `RelTransitionSystem`. -/
 def TransitionSystem.toRelTransitionSystem {F : EdgeSubset W}
     (κ : F.TransitionSystem) : F.RelTransitionSystem where
@@ -262,6 +273,7 @@ noncomputable def RelTransitionSystem.internalCircuitCount
 
 /-! ## Compatibility: circuit-count agreement for closed subsets -/
 
+open scoped Classical in
 /-- When a `TransitionSystem` exists (all flags internal), the internal
 flags equal the full flag set. -/
 theorem internalFlags_eq_flags_of_transition {F : EdgeSubset W}
@@ -302,7 +314,7 @@ theorem walkPerm_eq_of_transition {F : EdgeSubset W}
     ((flagsEquivInternal κ).permCongr κ.walkPerm ⟨f, hf⟩).val
   simp only [RelTransitionSystem.walkPermInternal, Equiv.ofBijective_apply,
     Equiv.permCongr_apply, flagsEquivInternal]
-  show κ.match_ (W.pairing f) = κ.walk f
+  change κ.match_ (W.pairing f) = κ.walk f
   rfl
 
 /-- **Compatibility**: for a closed-fragment transition system,

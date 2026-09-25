@@ -39,9 +39,9 @@ theorem locallyMixed_indOf
     letI := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
     ∀ (L : OddLine (Ind C)), ¬ IsZero (𝟙_ (Ind C)) →
       L.LocallyMixed ((indOf : C ⥤ Ind C).obj Z) := by
-  letI := linearOfScalarUnit ψ
-  letI := linearOfScalarUnit (indScalarUnit ψ)
-  letI := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
+  let := linearOfScalarUnit ψ
+  let := linearOfScalarUnit (indScalarUnit ψ)
+  let := monoidalLinearOfScalarUnitBraided (indScalarUnit ψ)
   intro L h1
   refine prop29 P P₀ L ((indOf : C ⥤ Ind C).obj Z)
     ((indOf : C ⥤ Ind C).obj (Zᘁ)) h1 ⟨lam, ?_⟩

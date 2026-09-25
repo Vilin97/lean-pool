@@ -37,14 +37,14 @@ theorem skeinTrace_tensorHom {a b : ℕ}
         MonoidalCategoryStruct.tensorHom u v) =
     skeinTrace f a u * skeinTrace f b v := by
   -- Reduce to HomSpace operations
-  show HomSpace.traceMap f.val (a + b)
+  change HomSpace.traceMap f.val (a + b)
     (HomSpace.tensor f a a b b u v) =
     HomSpace.traceMap f.val a u * HomSpace.traceMap f.val b v
   -- Lift u, v to free-module representatives
   obtain ⟨xu, rfl⟩ := Submodule.Quotient.mk_surjective _ u
   obtain ⟨xv, rfl⟩ := Submodule.Quotient.mk_surjective _ v
   -- At the free module level
-  show traceFunctional f.val (a + b) (tensorFinsupp a a b b xu xv) =
+  change traceFunctional f.val (a + b) (tensorFinsupp a a b b xu xv) =
     traceFunctional f.val a xu * traceFunctional f.val b xv
   -- Helper: traceFunctional on a scaled single fragment
   have htr : ∀ (n : ℕ) (H : Fragment (Fin (n + n))) (e : ℂ),

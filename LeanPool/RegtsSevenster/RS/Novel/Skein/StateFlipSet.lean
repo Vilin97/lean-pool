@@ -17,7 +17,7 @@ accumulations cancel by parity.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {k ℓ : ℕ} {α : Type}
 
@@ -33,32 +33,32 @@ variable {st : GenBoundaryState k ℓ α}
 theorem stateOddFlipSet_of_mem {E : Finset α} {i : α}
     (h : i ∈ E) :
     stateOddFlipSet st E i = Sum.map id (oddPartner ℓ) (st i) :=
-  if_pos h
+  ite_eq_left h
 
 /-- Off it the state is unchanged. -/
 theorem stateOddFlipSet_of_notMem {E : Finset α} {i : α}
     (h : i ∉ E) : stateOddFlipSet st E i = st i :=
-  if_neg h
+  ite_eq_right h
 
 /-- The empty relabel is the identity. -/
 theorem stateOddFlipSet_empty :
     stateOddFlipSet st (∅ : Finset α) = st := by
   funext i
-  exact if_neg (Finset.notMem_empty i)
+  exact ite_eq_right (Finset.notMem_empty i)
 
 /-- The pair relabel is the two-element set relabel. -/
 theorem stateOddFlip_eq_flipSet {i₁ i₂ : α} :
     stateOddFlip st i₁ i₂ = stateOddFlipSet st {i₁, i₂} := by
   funext i
-  show (if i = i₁ ∨ i = i₂ then Sum.map id (oddPartner ℓ) (st i)
+  change (if i = i₁ ∨ i = i₂ then Sum.map id (oddPartner ℓ) (st i)
     else st i) = _
   unfold stateOddFlipSet
   by_cases h : i = i₁ ∨ i = i₂
-  · rw [if_pos h, if_pos (by
+  · rw [ite_eq_left h, ite_eq_left (by
       rcases h with rfl | rfl
       · exact Finset.mem_insert_self _ _
       · exact Finset.mem_insert_of_mem (Finset.mem_singleton_self _))]
-  · rw [if_neg h, if_neg (by
+  · rw [ite_eq_right h, ite_eq_right (by
       intro hmem
       rcases Finset.mem_insert.mp hmem with rfl | hmem'
       · exact h (Or.inl rfl)
@@ -73,20 +73,20 @@ theorem stateOddFlipSet_flipSet (E₁ E₂ : Finset α) :
   funext i
   unfold stateOddFlipSet
   by_cases h1 : i ∈ E₁ <;> by_cases h2 : i ∈ E₂
-  · rw [if_pos h2, if_pos h1, if_neg (by
+  · rw [ite_eq_left h2, ite_eq_left h1, ite_eq_right (by
       intro hmem
       rcases Finset.mem_union.mp hmem with h | h
       · exact (Finset.mem_sdiff.mp h).2 h2
       · exact (Finset.mem_sdiff.mp h).2 h1)]
     rcases hst : st i with a | c
     · rfl
-    · show Sum.inr (oddPartner ℓ (oddPartner ℓ c)) = Sum.inr c
+    · change Sum.inr (oddPartner ℓ (oddPartner ℓ c)) = Sum.inr c
       rw [oddPartner_invol]
-  · rw [if_neg h2, if_pos h1, if_pos
+  · rw [ite_eq_right h2, ite_eq_left h1, ite_eq_left
       (Finset.mem_union_left _ (Finset.mem_sdiff.mpr ⟨h1, h2⟩))]
-  · rw [if_pos h2, if_neg h1, if_pos
+  · rw [ite_eq_left h2, ite_eq_right h1, ite_eq_left
       (Finset.mem_union_right _ (Finset.mem_sdiff.mpr ⟨h2, h1⟩))]
-  · rw [if_neg h2, if_neg h1, if_neg (by
+  · rw [ite_eq_right h2, ite_eq_right h1, ite_eq_right (by
       intro hmem
       rcases Finset.mem_union.mp hmem with h | h
       · exact h1 (Finset.mem_sdiff.mp h).1

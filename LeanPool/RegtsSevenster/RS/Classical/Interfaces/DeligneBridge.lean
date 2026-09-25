@@ -38,7 +38,7 @@ theorem braided_transported_supersymmetry
     SuperVect.Hom.comp (μ ω X X ≫ ω.map (ε_ X X) ≫ η ω)
         (SuperVect.koszulBraiding (ω.obj X) (ω.obj X)) =
       (μ ω X X ≫ ω.map (ε_ X X) ≫ η ω) := by
-  show (β_ (ω.obj X) (ω.obj X)).hom ≫
+  change (β_ (ω.obj X) (ω.obj X)).hom ≫
     (μ ω X X ≫ ω.map (ε_ X X) ≫ η ω) = _
   rw [← Category.assoc, ← Functor.Braided.braided,
     Category.assoc, ← Functor.map_comp_assoc, hsym]
@@ -62,7 +62,7 @@ theorem braided_std_model
         (SuperVect.tensorHom e e) = stdForm k ℓ ∧
       SuperVect.Hom.comp (SuperVect.tensorHom e' e')
         (ε ω ≫ ω.map (η_ X X) ≫ δ ω X X) = stdCopair k ℓ := by
-  letI EP : ExactPairing (ω.obj X) (ω.obj X) :=
+  let EP : ExactPairing (ω.obj X) (ω.obj X) :=
     ExactPairing.map ω (X := X) (Y := X)
   exact exists_std_model
     (μ ω X X ≫ ω.map (ε_ X X) ≫ η ω)

@@ -141,36 +141,36 @@ theorem symplecticMatrix_eq_std (ℓ : ℕ) (i j : Fin (2 * ℓ)) :
       ((i : ℕ) + ℓ = (j : ℕ) ∨ (j : ℕ) + ℓ = (i : ℕ)) := by
     unfold oddPartner
     rcases Nat.lt_or_ge i.val ℓ with h | h
-    · rw [dif_pos h]
+    · rw [dite_eq_left h]
       constructor
       · intro hh
         have h2 : (j : ℕ) = i.val + ℓ := congrArg Fin.val hh
         omega
       · intro hh
         refine Fin.ext ?_
-        show (j : ℕ) = i.val + ℓ
+        change (j : ℕ) = i.val + ℓ
         omega
-    · rw [dif_neg (Nat.not_lt.mpr h)]
+    · rw [dite_eq_right (Nat.not_lt.mpr h)]
       constructor
       · intro hh
         have h2 : (j : ℕ) = i.val - ℓ := congrArg Fin.val hh
         omega
       · intro hh
         refine Fin.ext ?_
-        show (j : ℕ) = i.val - ℓ
+        change (j : ℕ) = i.val - ℓ
         omega
   by_cases hp : j = oddPartner ℓ i
-  · rw [if_pos hp]
+  · rw [ite_eq_left hp]
     unfold oddPartnerSign
     rcases hpart.mp hp with h1 | h1
-    · rw [if_pos h1, if_pos (show i.val < ℓ by omega)]
+    · rw [ite_eq_left h1, ite_eq_left (show i.val < ℓ by omega)]
       norm_num
-    · rw [if_neg (show ¬ (i : ℕ) + ℓ = (j : ℕ) by omega), if_pos h1,
-        if_neg (show ¬ i.val < ℓ by omega)]
+    · rw [ite_eq_right (show ¬ (i : ℕ) + ℓ = (j : ℕ) by omega), ite_eq_left h1,
+        ite_eq_right (show ¬ i.val < ℓ by omega)]
       norm_num
-  · rw [if_neg hp,
-      if_neg (fun hh => hp (hpart.mpr (Or.inl hh))),
-      if_neg (fun hh => hp (hpart.mpr (Or.inr hh)))]
+  · rw [ite_eq_right hp,
+      ite_eq_right (fun hh => hp (hpart.mpr (Or.inl hh))),
+      ite_eq_right (fun hh => hp (hpart.mpr (Or.inr hh)))]
 
 /-! ### Coordinates for the two blocks -/
 
@@ -190,10 +190,10 @@ theorem exists_even_coordinates {V : Type} [AddCommGroup V]
     LinearMap.smul_apply, smul_eq_mul, hbb]
   unfold stdFormEven
   refine Finset.sum_congr rfl (fun i _ => ?_)
-  rw [Finset.sum_eq_single i, if_pos rfl, mul_one]
+  rw [Finset.sum_eq_single i, ite_eq_left rfl, mul_one]
   · exact mul_comm _ _
   · intro m _ hm
-    rw [if_neg hm, mul_zero]
+    rw [ite_eq_right hm, mul_zero]
   · intro hmem
     exact absurd (Finset.mem_univ i) hmem
 
@@ -219,10 +219,10 @@ theorem exists_odd_coordinates {V : Type} [AddCommGroup V]
     _ _ (fun i => ?_)
   simp only [Equiv.coe_fn_mk]
   rw [Finset.sum_eq_single (oddPartner ℓ i),
-    if_pos (oddPartner_invol ℓ i).symm, oddPartner_invol]
+    ite_eq_left (oddPartner_invol ℓ i).symm, oddPartner_invol]
   · ring
   · intro m _ hm
-    rw [if_neg (fun hh => hm (by rw [hh, oddPartner_invol])), mul_zero]
+    rw [ite_eq_right (fun hh => hm (by rw [hh, oddPartner_invol])), mul_zero]
   · intro hmem
     exact absurd (Finset.mem_univ (oddPartner ℓ i)) hmem
 

@@ -80,20 +80,20 @@ theorem exists_std_model {V : SuperVect}
   refine ⟨k, ℓ, e, e', hinv1, hinv2, hform, ?_⟩
   let eIso : stdSuperPair k ℓ ≅ V :=
     ⟨e, e', hinv1, hinv2⟩
-  letI EPV : ExactPairing V V := exactPairingOfSnake b C h1 h2
-  letI EP : ExactPairing (stdSuperPair k ℓ) (stdSuperPair k ℓ) :=
+  let EPV : ExactPairing V V := exactPairingOfSnake b C h1 h2
+  let EP : ExactPairing (stdSuperPair k ℓ) (stdSuperPair k ℓ) :=
     exactPairingCongr eIso eIso
   have hev : (ε_ (stdSuperPair k ℓ) (stdSuperPair k ℓ)) =
       (show stdSuperPair k ℓ ⊗ stdSuperPair k ℓ ⟶ 𝟙_ SuperVect from
         stdForm k ℓ) := by
-    show stdSuperPair k ℓ ◁ eIso.hom ≫
+    change stdSuperPair k ℓ ◁ eIso.hom ≫
         (eIso.hom ▷ V ≫ (show V ⊗ V ⟶ 𝟙_ SuperVect from b)) = _
     rw [← Category.assoc, ← tensorHom_def' eIso.hom eIso.hom]
     exact hform
   have hcoev : (η_ (stdSuperPair k ℓ) (stdSuperPair k ℓ)) =
       (show 𝟙_ SuperVect ⟶ stdSuperPair k ℓ ⊗ stdSuperPair k ℓ from
         SuperVect.Hom.comp (SuperVect.tensorHom e' e') C) := by
-    show ((show 𝟙_ SuperVect ⟶ V ⊗ V from C) ≫ V ◁ eIso.inv) ≫
+    change ((show 𝟙_ SuperVect ⟶ V ⊗ V from C) ≫ V ◁ eIso.inv) ≫
         eIso.inv ▷ stdSuperPair k ℓ = _
     rw [Category.assoc, ← tensorHom_def' eIso.inv eIso.inv]
     rfl

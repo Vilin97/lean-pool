@@ -53,7 +53,7 @@ theorem jtChar_eq_sum_sign_nChar (μ : YoungDiagram) :
         character_eq_sum_nChar (G := Equiv.Perm (Fin μ.card)) (colourRep
           (jtComp μ σ))
       refine ⟨m, S, hSimp, fun π => ?_⟩
-      rw [if_pos hp]
+      rw [ite_eq_left hp]
       -- colourRep_character converts representation character to colourChar
       have hconv : (colourChar (jtComp μ σ) π : ℂ) =
           ∑ i : Fin m, nChar (S i) π := by
@@ -62,7 +62,7 @@ theorem jtChar_eq_sum_sign_nChar (μ : YoungDiagram) :
       rw [hconv, Finset.mul_sum]
     · -- Guard false: empty family, both sides are zero
       exact ⟨0, Fin.elim0, fun i => i.elim0, fun π => by
-        rw [if_neg hp, mul_zero]; simp⟩
+        rw [ite_eq_right hp, mul_zero]; simp⟩
   -- Step 2: Extract the families via Classical.choose
   let dm : Equiv.Perm (Fin μ.rowLens.length) → ℕ :=
     fun σ => (hdecomp σ).choose
@@ -91,14 +91,14 @@ theorem jtChar_eq_sum_sign_nChar (μ : YoungDiagram) :
     exact hdS_simp σ i
   · -- Sign values: (Perm.sign σ : ℤ) ∈ {1, -1}
     intro ⟨σ, _⟩
-    show (Equiv.Perm.sign σ : ℤ) = 1 ∨ (Equiv.Perm.sign σ : ℤ) = -1
+    change (Equiv.Perm.sign σ : ℤ) = 1 ∨ (Equiv.Perm.sign σ : ℤ) = -1
     rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with h | h
     · left; exact congrArg Units.val h
     · right; exact congrArg Units.val h
   · -- Character identity
     intro π
     -- Unfold jtChar to the outer sum
-    show jtChar μ π = ∑ j : J, ((ε j : ℤ) : ℂ) * nChar (T j) π
+    change jtChar μ π = ∑ j : J, ((ε j : ℤ) : ℂ) * nChar (T j) π
     -- Step 3a: rewrite each summand of jtChar using hdS_char
     have h1 : jtChar μ π =
         ∑ σ : Equiv.Perm (Fin μ.rowLens.length),

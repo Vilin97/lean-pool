@@ -39,7 +39,7 @@ theorem MixedFunctional.evalOdd_swap_adjacent {k ℓ : ℕ}
     List.Perm.append_left l₁ (List.Perm.swap a b l₂)
   by_cases hnd : (l₁ ++ a :: b :: l₂).Nodup
   · have hnd' : (l₁ ++ b :: a :: l₂).Nodup := hperm.nodup_iff.mpr hnd
-    rw [if_pos hnd', if_pos hnd, sortSign_swap_adjacent l₁ l₂ hab,
+    rw [ite_eq_left hnd', ite_eq_left hnd, sortSign_swap_adjacent l₁ l₂ hab,
       show (l₁ ++ b :: a :: l₂).toFinset =
           (l₁ ++ a :: b :: l₂).toFinset from
         Finset.ext fun x => by
@@ -47,7 +47,7 @@ theorem MixedFunctional.evalOdd_swap_adjacent {k ℓ : ℕ}
           exact hperm.mem_iff]
     push_cast
     ring
-  · rw [if_neg (fun hh => hnd (hperm.nodup_iff.mp hh)), if_neg hnd,
+  · rw [ite_eq_right (fun hh => hnd (hperm.nodup_iff.mp hh)), ite_eq_right hnd,
       neg_zero]
 
 /-- Moving a two-element block of odd colours past another preserves
@@ -68,14 +68,14 @@ theorem MixedFunctional.evalOdd_pair_block_swap {k ℓ : ℕ}
     simpa using hblocks.append_right l₂
   by_cases hnd : (l₁ ++ p₁ :: p₂ :: q₁ :: q₂ :: l₂).Nodup
   · have hnd' := hperm.nodup_iff.mpr hnd
-    rw [if_pos hnd', if_pos hnd,
+    rw [ite_eq_left hnd', ite_eq_left hnd,
       sortSign_pair_block_swap l₁ l₂ hp₁q₁ hp₁q₂ hp₂q₁ hp₂q₂,
       show (l₁ ++ q₁ :: q₂ :: p₁ :: p₂ :: l₂).toFinset =
           (l₁ ++ p₁ :: p₂ :: q₁ :: q₂ :: l₂).toFinset from
         Finset.ext fun x => by
           simp only [List.mem_toFinset]
           exact hperm.mem_iff]
-  · rw [if_neg (fun hh => hnd (hperm.nodup_iff.mp hh)), if_neg hnd]
+  · rw [ite_eq_right (fun hh => hnd (hperm.nodup_iff.mp hh)), ite_eq_right hnd]
 
 /-- The alternating evaluation is invariant under permuting a list
 of length-two blocks: each transposition of adjacent blocks moves
@@ -130,11 +130,11 @@ theorem oddPartner_invol (ℓ : ℕ) (c : Fin (2 * ℓ)) :
     oddPartner ℓ (oddPartner ℓ c) = c := by
   unfold oddPartner
   by_cases h : c.val < ℓ
-  · rw [dif_pos h, dif_neg (show ¬ c.val + ℓ < ℓ by omega)]
-    exact Fin.ext (by show c.val + ℓ - ℓ = c.val; omega)
+  · rw [dite_eq_left h, dite_eq_right (show ¬ c.val + ℓ < ℓ by omega)]
+    exact Fin.ext (by change c.val + ℓ - ℓ = c.val; omega)
   · have hc : c.val < 2 * ℓ := c.isLt
-    rw [dif_neg h, dif_pos (show c.val - ℓ < ℓ by omega)]
-    exact Fin.ext (by show c.val - ℓ + ℓ = c.val; omega)
+    rw [dite_eq_right h, dite_eq_left (show c.val - ℓ < ℓ by omega)]
+    exact Fin.ext (by change c.val - ℓ + ℓ = c.val; omega)
 
 /-- Flags attached at the vertex and incoming are in the incoming
 list. -/
@@ -144,8 +144,8 @@ theorem mem_inFlagsAt_of {α : Type} {W : Fragment α}
     {f : W.Flag} (hmem : f ∈ F.flags)
     (hatt : W.attach f = Sum.inl v)
     (hin : o.isOut f = false) : f ∈ F.inFlagsAt o v := by
-  letI := W.flagOrder
-  letI := Classical.dec
+  let := W.flagOrder
+  let := Classical.dec
   unfold EdgeSubset.inFlagsAt
   rw [Finset.mem_sort, Finset.mem_filter]
   exact ⟨hmem, hatt, hin⟩
@@ -161,7 +161,7 @@ noncomputable def EdgeSubset.TransitionSystem.Orientation.transport
     (κ.transport e).Orientation where
   isOut := fun f => o.isOut (e.flagEquiv.symm f)
   match_flip := fun f hf => by
-    show o.isOut (e.flagEquiv.symm
+    change o.isOut (e.flagEquiv.symm
       (e.flagEquiv (κ.match_ (e.flagEquiv.symm f)))) = _
     rw [Equiv.symm_apply_apply]
     exact o.match_flip _ ((EdgeSubset.mem_transport_iff e F f).mp hf)
@@ -230,7 +230,7 @@ theorem EdgeSubset.evenColoursAt_transport {W₁ W₂ : Fragment α}
   rw [Multiset.map_map]
   congr 1
   · funext x
-    show ψ.val ((EdgeSubset.transportComplEquiv e F).symm
+    change ψ.val ((EdgeSubset.transportComplEquiv e F).symm
       ((EdgeSubset.transportComplEquiv e F) x)) = ψ.val x
     rw [Equiv.symm_apply_apply]
   · have hfilter : Finset.filter
@@ -303,7 +303,7 @@ theorem EdgeSubset.inFlagsAt_transport_perm {W₁ W₂ : Fragment α}
       · have hcomm := e.attach_comm x
         rw [hatt] at hcomm
         simpa using hcomm
-      · show o.isOut (e.flagEquiv.symm (e.flagEquiv x)) = false
+      · change o.isOut (e.flagEquiv.symm (e.flagEquiv x)) = false
         rwa [Equiv.symm_apply_apply]
 
 /-- A transported odd colouring evaluated at a transported flag is
@@ -314,7 +314,7 @@ theorem EdgeSubset.OddColouring.transport_apply {W₁ W₂ : Fragment α}
     (hg' : e.flagEquiv g ∈ (EdgeSubset.transport e F).flags) :
     (EdgeSubset.OddColouring.transport e φ).val ⟨e.flagEquiv g, hg'⟩ =
       φ.val ⟨g, hg⟩ := by
-  show φ.val
+  change φ.val
     ((EdgeSubset.transportFlagsEquiv e F).symm ⟨e.flagEquiv g, hg'⟩) = _
   exact congrArg φ.val (Subtype.ext (Equiv.symm_apply_apply _ _))
 
@@ -325,7 +325,7 @@ theorem EdgeSubset.TransitionSystem.transport_match
     (κ : F.TransitionSystem) (g : W₁.Flag) :
     (κ.transport e).match_ (e.flagEquiv g) =
       e.flagEquiv (κ.match_ g) := by
-  show e.flagEquiv (κ.match_ (e.flagEquiv.symm (e.flagEquiv g))) = _
+  change e.flagEquiv (κ.match_ (e.flagEquiv.symm (e.flagEquiv g))) = _
   rw [Equiv.symm_apply_apply]
 
 open Classical in
@@ -433,7 +433,7 @@ noncomputable def EdgeSubset.EvenColouring.transportEquiv
       have harg : (EdgeSubset.transportComplEquiv e F
             ⟨W₁.pairing f.val, F.pairing_not_mem f.prop⟩).val =
           W₂.pairing (EdgeSubset.transportComplEquiv e F f).val := by
-        show e.flagEquiv (W₁.pairing f.val) = W₂.pairing (e.flagEquiv f.val)
+        change e.flagEquiv (W₁.pairing f.val) = W₂.pairing (e.flagEquiv f.val)
         exact e.pairing_comm f.val
       exact (congrArg ψ.val (Subtype.ext harg)).trans (ψ.prop _)⟩
   left_inv ψ := Subtype.ext (funext fun f => congrArg ψ.val
@@ -452,7 +452,7 @@ noncomputable def EdgeSubset.OddColouring.transportEquiv
       have harg : (EdgeSubset.transportFlagsEquiv e F
             ⟨W₁.pairing f.val, F.pairing_mem _ f.prop⟩).val =
           W₂.pairing (EdgeSubset.transportFlagsEquiv e F f).val := by
-        show e.flagEquiv (W₁.pairing f.val) = W₂.pairing (e.flagEquiv f.val)
+        change e.flagEquiv (W₁.pairing f.val) = W₂.pairing (e.flagEquiv f.val)
         exact e.pairing_comm f.val
       exact (congrArg φ.val (Subtype.ext harg)).trans (φ.prop _)⟩
   left_inv φ := Subtype.ext (funext fun f => congrArg φ.val
@@ -514,12 +514,12 @@ theorem oddPartnerSign_oddPartner (ℓ : ℕ) (i : Fin (2 * ℓ)) :
     oddPartnerSign ℓ (oddPartner ℓ i) = -oddPartnerSign ℓ i := by
   unfold oddPartner oddPartnerSign
   by_cases h : i.val < ℓ
-  · rw [dif_pos h, if_pos h,
-      if_neg (show ¬ i.val + ℓ < ℓ by omega)]
+  · rw [dite_eq_left h, ite_eq_left h,
+      ite_eq_right (show ¬ i.val + ℓ < ℓ by omega)]
     norm_num
   · have hi : i.val < 2 * ℓ := i.isLt
-    rw [dif_neg h, if_neg h,
-      if_pos (show i.val - ℓ < ℓ by omega)]
+    rw [dite_eq_right h, ite_eq_right h,
+      ite_eq_left (show i.val - ℓ < ℓ by omega)]
 
 /-- The partner sign squares to one. -/
 theorem oddPartnerSign_mul_self (ℓ : ℕ) (i : Fin (2 * ℓ)) :

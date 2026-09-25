@@ -35,7 +35,7 @@ theorem tensorMapEquiv_finCongr {n₁ m₁ n₂ m₂ : ℕ}
   · rw [show x = Fin.natAdd n₁ ⟨x.val - n₁, by
         have := x.isLt
         omega⟩ from Fin.ext (by
-        show x.val = n₁ + (x.val - n₁)
+        change x.val = n₁ + (x.val - n₁)
         omega),
       tensorMapEquiv_natAdd]
     rfl
@@ -62,7 +62,7 @@ variable {R : ℕ} (f : EdgeRankParameter R)
 noncomputable instance skeinMonoidal :
     MonoidalCategory (SkeinObj f) where
   tensorHom_def {X₁ Y₁ X₂ Y₂} p q := by
-    show HomSpace.tensor f X₁.arity Y₁.arity X₂.arity Y₂.arity
+    change HomSpace.tensor f X₁.arity Y₁.arity X₂.arity Y₂.arity
         p q =
       HomSpace.comp f (X₁.arity + X₂.arity)
         (Y₁.arity + X₂.arity) (Y₁.arity + Y₂.arity)
@@ -82,7 +82,7 @@ noncomputable instance skeinMonoidal :
   leftUnitor_naturality {X Y} p := leftUnitNat_class f p
   rightUnitor_naturality {X Y} p := rightUnitNat_class f p
   pentagon W X Y Z := by
-    show HomSpace.comp f _ _ _
+    change HomSpace.comp f _ _ _
         (HomSpace.tensor f _ _ _ _
           (bundleMapClass f (finCongr _))
           (HomSpace.ofFragment f.val (strandBundle Z.arity)))
@@ -103,7 +103,7 @@ noncomputable instance skeinMonoidal :
     exact bundleMapClass_congr f
       (_root_.Equiv.ext (fun x => Fin.ext rfl))
   triangle X Y := by
-    show HomSpace.comp f _ _ _
+    change HomSpace.comp f _ _ _
         (bundleMapClass f (finCongr _))
         (HomSpace.tensor f _ _ _ _
           (HomSpace.ofFragment f.val (strandBundle X.arity))

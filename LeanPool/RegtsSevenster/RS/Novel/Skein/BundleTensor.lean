@@ -31,17 +31,17 @@ def bundleFlagEquiv (a b : ℕ) :
     | Sum.inr (l, c) => (⟨a + l.val, by have := l.isLt; omega⟩, c)
   left_inv f := by
     by_cases h : f.1.val < a
-    · simp only [dif_pos h]
-    · simp only [dif_neg h]
+    · simp only [dite_eq_left h]
+    · simp only [dite_eq_right h]
       exact Prod.ext (Fin.ext (by
-        show a + (f.1.val - a) = f.1.val
+        change a + (f.1.val - a) = f.1.val
         omega)) rfl
   right_inv g := by
     rcases g with ⟨k, c⟩ | ⟨l, c⟩
-    · simp only [dif_pos k.isLt]
-    · simp only [dif_neg (show ¬ a + l.val < a by omega)]
+    · simp only [dite_eq_left k.isLt]
+    · simp only [dite_eq_right (show ¬ a + l.val < a by omega)]
       refine congrArg Sum.inr (Prod.ext (Fin.ext ?_) rfl)
-      show a + l.val - a = l.val
+      change a + l.val - a = l.val
       omega
 
 /-- **The bundle splits**: the `(a + b)`-strand bundle is the
@@ -57,18 +57,18 @@ noncomputable def strandBundleTensor (a b : ℕ) :
     obtain ⟨k, c⟩ := f
     by_cases h : k.val < a
     · have hbfe : bundleFlagEquiv a b (k, c) =
-          Sum.inl (⟨k.val, h⟩, c) := dif_pos h
-      show (tensorFragment (strandBundle a)
+          Sum.inl (⟨k.val, h⟩, c) := dite_eq_left h
+      change (tensorFragment (strandBundle a)
         (strandBundle b)).attach (bundleFlagEquiv a b (k, c)) = _
       rw [hbfe]
       rcases c with _ | _
-      · show Sum.inr (interleaveEquiv a a b b
+      · change Sum.inr (interleaveEquiv a a b b
           (Sum.inl ⟨k.val, by omega⟩)) = Sum.inr ⟨k.val, by omega⟩
         rw [show (⟨k.val, by omega⟩ : Fin (a + a)) =
             Fin.castAdd a ⟨k.val, h⟩ from Fin.ext rfl,
           interleaveEquiv_inl_low]
         exact congrArg Sum.inr (Fin.ext rfl)
-      · show Sum.inr (interleaveEquiv a a b b
+      · change Sum.inr (interleaveEquiv a a b b
           (Sum.inl ⟨a + k.val, by omega⟩)) =
           Sum.inr ⟨(a + b) + k.val, by have := k.isLt; omega⟩
         rw [show (⟨a + k.val, by omega⟩ : Fin (a + a)) =
@@ -77,12 +77,12 @@ noncomputable def strandBundleTensor (a b : ℕ) :
         exact congrArg Sum.inr (Fin.ext rfl)
     · have hbfe : bundleFlagEquiv a b (k, c) =
           Sum.inr (⟨k.val - a, by have := k.isLt; omega⟩, c) :=
-        dif_neg h
-      show (tensorFragment (strandBundle a)
+        dite_eq_right h
+      change (tensorFragment (strandBundle a)
         (strandBundle b)).attach (bundleFlagEquiv a b (k, c)) = _
       rw [hbfe]
       rcases c with _ | _
-      · show Sum.inr (interleaveEquiv a a b b
+      · change Sum.inr (interleaveEquiv a a b b
           (Sum.inr ⟨k.val - a, by have := k.isLt; omega⟩)) =
           Sum.inr ⟨k.val, by omega⟩
         rw [show (⟨k.val - a, by have := k.isLt; omega⟩ :
@@ -90,9 +90,9 @@ noncomputable def strandBundleTensor (a b : ℕ) :
             Fin.castAdd b ⟨k.val - a, by have := k.isLt; omega⟩
           from Fin.ext rfl, interleaveEquiv_inr_low]
         exact congrArg Sum.inr (Fin.ext (by
-          show a + (k.val - a) = k.val
+          change a + (k.val - a) = k.val
           omega))
-      · show Sum.inr (interleaveEquiv a a b b
+      · change Sum.inr (interleaveEquiv a a b b
           (Sum.inr ⟨b + (k.val - a), by have := k.isLt; omega⟩)) =
           Sum.inr ⟨(a + b) + k.val, by have := k.isLt; omega⟩
         rw [show (⟨b + (k.val - a), by have := k.isLt; omega⟩ :
@@ -100,30 +100,30 @@ noncomputable def strandBundleTensor (a b : ℕ) :
             Fin.natAdd b ⟨k.val - a, by have := k.isLt; omega⟩
           from Fin.ext rfl, interleaveEquiv_inr_high]
         exact congrArg Sum.inr (Fin.ext (by
-          show (a + b) + (a + (k.val - a)) = (a + b) + k.val
+          change (a + b) + (a + (k.val - a)) = (a + b) + k.val
           omega))
   pairing_comm := fun f => by
     obtain ⟨k, c⟩ := f
     by_cases h : k.val < a
     · have h1 : bundleFlagEquiv a b (k, !c) =
-          Sum.inl (⟨k.val, h⟩, !c) := dif_pos h
+          Sum.inl (⟨k.val, h⟩, !c) := dite_eq_left h
       have h2 : bundleFlagEquiv a b (k, c) =
-          Sum.inl (⟨k.val, h⟩, c) := dif_pos h
-      show bundleFlagEquiv a b (k, !c) = _
+          Sum.inl (⟨k.val, h⟩, c) := dite_eq_left h
+      change bundleFlagEquiv a b (k, !c) = _
       rw [h1]
-      show _ = (tensorFragment (strandBundle a)
+      change _ = (tensorFragment (strandBundle a)
         (strandBundle b)).pairing (bundleFlagEquiv a b (k, c))
       rw [h2]
       rfl
     · have h1 : bundleFlagEquiv a b (k, !c) =
           Sum.inr (⟨k.val - a, by have := k.isLt; omega⟩, !c) :=
-        dif_neg h
+        dite_eq_right h
       have h2 : bundleFlagEquiv a b (k, c) =
           Sum.inr (⟨k.val - a, by have := k.isLt; omega⟩, c) :=
-        dif_neg h
-      show bundleFlagEquiv a b (k, !c) = _
+        dite_eq_right h
+      change bundleFlagEquiv a b (k, !c) = _
       rw [h1]
-      show _ = (tensorFragment (strandBundle a)
+      change _ = (tensorFragment (strandBundle a)
         (strandBundle b)).pairing (bundleFlagEquiv a b (k, c))
       rw [h2]
       rfl

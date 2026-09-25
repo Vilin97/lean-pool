@@ -21,7 +21,7 @@ system.
 
 namespace RS
 
-open scoped Classical
+
 
 variable {α : Type}
 
@@ -346,20 +346,20 @@ theorem antiLowSet_transport_eq
     rcases Finset.mem_insert.mp hx4 with rfl | hx4b
     · obtain ⟨hlt, hhigh⟩ := hm₁.mp hx
       left
-      rw [if_pos (by rw [if_pos hlt]; exact hhigh)]
-      rw [Finset.mem_singleton, newLow, if_pos hlt]
+      rw [ite_eq_left (by rw [ite_eq_left hlt]; exact hhigh)]
+      rw [Finset.mem_singleton, newLow, ite_eq_left hlt]
     · rcases Finset.mem_insert.mp hx4b with rfl | hx4c
       · obtain ⟨hlt, hhigh⟩ := hm₂.mp hx
         left
         have hnlt : ¬ F.boundaryLabel he₁ < F.boundaryLabel he₂ :=
           fun h => lt_asymm h hlt
-        rw [if_pos (by rw [if_neg hnlt]; exact hhigh)]
-        rw [Finset.mem_singleton, newLow, if_neg hnlt]
+        rw [ite_eq_left (by rw [ite_eq_right hnlt]; exact hhigh)]
+        rw [Finset.mem_singleton, newLow, ite_eq_right hnlt]
       · rcases Finset.mem_insert.mp hx4c with rfl | hx4d
         · obtain ⟨hlt, hhigh⟩ := hm₃.mp hx
           right
-          rw [if_pos (by rw [if_pos hlt]; exact hhigh)]
-          rw [Finset.mem_singleton, newLow, if_pos hlt]
+          rw [ite_eq_left (by rw [ite_eq_left hlt]; exact hhigh)]
+          rw [Finset.mem_singleton, newLow, ite_eq_left hlt]
         · rw [Finset.mem_singleton] at hx4d
           subst hx4d
           obtain ⟨hlt, hhigh⟩ := hm₄.mp hx
@@ -367,8 +367,8 @@ theorem antiLowSet_transport_eq
           have hnlt : ¬ F.boundaryLabel (κ.pathMatch_mem he₁) <
               F.boundaryLabel (κ.pathMatch_mem he₂) :=
             fun h => lt_asymm h hlt
-          rw [if_pos (by rw [if_neg hnlt]; exact hhigh)]
-          rw [Finset.mem_singleton, newLow, if_neg hnlt]
+          rw [ite_eq_left (by rw [ite_eq_right hnlt]; exact hhigh)]
+          rw [Finset.mem_singleton, newLow, ite_eq_right hnlt]
   · intro hx
     rcases hx with hx | hx
     · by_cases hcond : (if F.boundaryLabel he₁ <
@@ -378,21 +378,21 @@ theorem antiLowSet_transport_eq
         else
           F.boundaryLabel (κ.pathMatch_mem he₂) <
             F.boundaryLabel he₂)
-      · rw [if_pos hcond, Finset.mem_singleton] at hx
+      · rw [ite_eq_left hcond, Finset.mem_singleton] at hx
         subst hx
         unfold newLow
         by_cases hlt : F.boundaryLabel he₁ < F.boundaryLabel he₂
-        · rw [if_pos hlt]
-          rw [if_pos hlt] at hcond
+        · rw [ite_eq_left hlt]
+          rw [ite_eq_left hlt] at hcond
           exact hm₁.mpr ⟨hlt, hcond⟩
-        · rw [if_neg hlt]
-          rw [if_neg hlt] at hcond
+        · rw [ite_eq_right hlt]
+          rw [ite_eq_right hlt] at hcond
           have hlt2 : F.boundaryLabel he₂ <
               F.boundaryLabel he₁ :=
             lt_of_le_of_ne (not_lt.mp hlt)
               (fun h => hL12 h.symm)
           exact hm₂.mpr ⟨hlt2, hcond⟩
-      · rw [if_neg hcond] at hx
+      · rw [ite_eq_right hcond] at hx
         exact absurd hx (Finset.notMem_empty _)
     · by_cases hcond : (if F.boundaryLabel
           (κ.pathMatch_mem he₁) <
@@ -402,22 +402,22 @@ theorem antiLowSet_transport_eq
         else
           F.boundaryLabel he₂ <
             F.boundaryLabel (κ.pathMatch_mem he₂))
-      · rw [if_pos hcond, Finset.mem_singleton] at hx
+      · rw [ite_eq_left hcond, Finset.mem_singleton] at hx
         subst hx
         unfold newLow
         by_cases hlt : F.boundaryLabel (κ.pathMatch_mem he₁) <
             F.boundaryLabel (κ.pathMatch_mem he₂)
-        · rw [if_pos hlt]
-          rw [if_pos hlt] at hcond
+        · rw [ite_eq_left hlt]
+          rw [ite_eq_left hlt] at hcond
           exact hm₃.mpr ⟨hlt, hcond⟩
-        · rw [if_neg hlt]
-          rw [if_neg hlt] at hcond
+        · rw [ite_eq_right hlt]
+          rw [ite_eq_right hlt] at hcond
           have hlt2 : F.boundaryLabel (κ.pathMatch_mem he₂) <
               F.boundaryLabel (κ.pathMatch_mem he₁) :=
             lt_of_le_of_ne (not_lt.mp hlt)
               (fun h => hLP h.symm)
           exact hm₄.mpr ⟨hlt2, hcond⟩
-      · rw [if_neg hcond] at hx
+      · rw [ite_eq_right hcond] at hx
         exact absurd hx (Finset.notMem_empty _)
 
 /-- **The flip count of a separated canonical step**: the four-label

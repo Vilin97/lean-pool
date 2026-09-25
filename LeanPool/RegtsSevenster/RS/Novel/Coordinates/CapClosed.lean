@@ -50,7 +50,7 @@ theorem capVal_closed
     rw [capVal_zero, evenBasisVec_zeroArity, betaDiag_zero]
   | succ m ih =>
     intro c hc
-    letI := P.braided
+    let := P.braided
     rw [capVal_succ, splitCapVal_expansion, betaDiag_succ]
     have hterm : ∀ c' :
         {c' : MixedColouring k ℓ ((m + m) + 2) // c'.IsEven},
@@ -91,12 +91,12 @@ theorem capVal_closed
         {c' : MixedColouring k ℓ
           ((m + m) + 2) // c'.IsEven}) ?_ ?_) ?_
     · intro b _ hb
-      rw [if_neg (fun hspec => hb
+      rw [ite_eq_right (fun hspec => hb
         (Subtype.ext (eq_peelColour_of m hspec)))]
       rw [mul_zero, zero_mul]
     · intro habs
       exact absurd (Finset.mem_univ _) habs
-    · rw [if_pos (peelColour_spec m c), mul_one]
+    · rw [ite_eq_left (peelColour_spec m c), mul_one]
       congr 1
       rw [show evenBasisVec
           (⟨peelColour m c, peelColour_isEven m hc⟩ :
@@ -109,7 +109,7 @@ theorem capVal_closed
       by_cases hfh : MixedColouring.IsEven
           (MixedColouring.firstHalf (a := m + m) (b := 2)
             (peelColour m c))
-      · rw [dif_pos hfh]
+      · rw [dite_eq_left hfh]
         rw [show evenBasisVec
             (⟨peelColour m c, peelColour_isEven m hc⟩ :
               {c' : MixedColouring k ℓ
@@ -124,14 +124,14 @@ theorem capVal_closed
                 (peelColour m c).secondHalf_isEven
                   (peelColour_isEven m hc) hfh⟩)) from by
           rw [evenBasisVec_split (peelColour m c)
-            (peelColour_isEven m hc), dif_pos hfh]]
+            (peelColour_isEven m hc), dite_eq_left hfh]]
         rw [splitCapVal_merge]
         rw [ih (MixedColouring.firstHalf (peelColour m c)) hfh]
         rw [omegaFun_ev_basis f P e hform
           (MixedColouring.secondHalf (peelColour m c))
           ((peelColour m c).secondHalf_isEven
             (peelColour_isEven m hc) hfh)]
-      · rw [dif_neg hfh]
+      · rw [dite_eq_right hfh]
         rw [show evenBasisVec
             (⟨peelColour m c, peelColour_isEven m hc⟩ :
               {c' : MixedColouring k ℓ
@@ -151,7 +151,7 @@ theorem capVal_closed
                 (superPow (stdSuperPair k ℓ) (m + m))
                 (superPow (stdSuperPair k ℓ) 2)).even) from by
           rw [evenBasisVec_split (peelColour m c)
-            (peelColour_isEven m hc), dif_neg hfh]]
+            (peelColour_isEven m hc), dite_eq_right hfh]]
         rw [splitCapVal_oddMerge]
 
 end RS

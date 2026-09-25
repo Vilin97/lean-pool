@@ -36,7 +36,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Classical
+
 
 variable {α : Type}
 
@@ -107,21 +107,21 @@ theorem dualWeightD_eq_prod_legWeight [Fintype α] {W : Fragment α}
   unfold dualWeightD legDir
   refine Finset.prod_congr rfl (fun i _ => ?_)
   by_cases hb : W.boundaryFlag i ∈ F.boundaryFlags
-  · rw [dif_pos hb, dif_pos hb]
+  · rw [dite_eq_left hb, dite_eq_left hb]
     by_cases ht : tl ⟨i, hb⟩ = true
-    · rw [if_pos ht]
+    · rw [ite_eq_left ht]
       rcases hxi : x i with a | c
-      · show (1 : ℂ) = legWeight (tl ⟨i, hb⟩) (Sum.inl a)
+      · change (1 : ℂ) = legWeight (tl ⟨i, hb⟩) (Sum.inl a)
         rfl
-      · show dualSign ℓ c = legWeight (tl ⟨i, hb⟩) (Sum.inr c)
-        show dualSign ℓ c = if tl ⟨i, hb⟩ then dualSign ℓ c else 1
-        rw [if_pos ht]
-    · rw [if_neg ht]
+      · change dualSign ℓ c = legWeight (tl ⟨i, hb⟩) (Sum.inr c)
+        change dualSign ℓ c = if tl ⟨i, hb⟩ then dualSign ℓ c else 1
+        rw [ite_eq_left ht]
+    · rw [ite_eq_right ht]
       rcases hxi : x i with a | c
       · rfl
-      · show (1 : ℂ) = if tl ⟨i, hb⟩ then dualSign ℓ c else 1
-        rw [if_neg ht]
-  · rw [dif_neg hb, dif_neg hb]
+      · change (1 : ℂ) = if tl ⟨i, hb⟩ then dualSign ℓ c else 1
+        rw [ite_eq_right ht]
+  · rw [dite_eq_right hb, dite_eq_right hb]
     have hev : ¬ ∃ c, x i = Sum.inr c := by
       intro hc
       exact hb (boundaryFlag_mem_boundaryFlags ((hx i).mpr hc))
@@ -215,13 +215,13 @@ theorem tPrimeD_eq_zero_of_not_throughAgree [Fintype α] {W : Fragment α}
     (hag : ¬ ThroughAgree F (untwistD F tl x) hbnd) :
     F.tPrimeD h κ o tl x = 0 := by
   unfold tPrimeD
-  rw [dif_pos hbnd]
+  rw [dite_eq_left hbnd]
   refine mul_eq_zero_of_right _ (Finset.sum_eq_zero (fun ψ _ => ?_))
   by_cases hev : genEvenBoundaryMatch F (untwistD F tl x) hbnd ψ
-  · rw [if_pos hev]
-    exact Finset.sum_eq_zero (fun φ _ => if_neg (fun hφ =>
+  · rw [ite_eq_left hev]
+    exact Finset.sum_eq_zero (fun φ _ => ite_eq_right (fun hφ =>
       hag (throughAgree_of_edgeOddBoundaryMatch hbnd hφ)))
-  · rw [if_neg hev]
+  · rw [ite_eq_right hev]
 
 open Classical in
 /-- **A disagreeing state carries no colouring**, at the chain
@@ -236,13 +236,13 @@ theorem tPrime_eq_zero_of_not_throughAgree
     (hag : ¬ ThroughAgree F (untwist F κ o x) hbnd) :
     F.tPrime h κ o x = 0 := by
   unfold tPrime
-  rw [dif_pos hbnd]
+  rw [dite_eq_left hbnd]
   refine mul_eq_zero_of_right _ (Finset.sum_eq_zero (fun ψ _ => ?_))
   by_cases hev : genEvenBoundaryMatch F (untwist F κ o x) hbnd ψ
-  · rw [if_pos hev]
-    exact Finset.sum_eq_zero (fun φ _ => if_neg (fun hφ =>
+  · rw [ite_eq_left hev]
+    exact Finset.sum_eq_zero (fun φ _ => ite_eq_right (fun hφ =>
       hag (throughAgree_of_edgeOddBoundaryMatch hbnd hφ)))
-  · rw [if_neg hev]
+  · rw [ite_eq_right hev]
 
 open Classical in
 /-- **RS21's `t_h` vanishes at a disagreeing state.** -/
@@ -292,7 +292,7 @@ theorem genBoundarySubsetMatches_of_tPrimeD_ne_zero [Fintype α] {W : Fragment �
   by_contra hc
   refine hne ?_
   unfold tPrimeD
-  refine dif_neg (fun hb => hc ?_)
+  refine dite_eq_right (fun hb => hc ?_)
   exact (genBoundarySubsetMatches_untwistD F tl x).mp hb
 
 open Classical in
@@ -332,7 +332,7 @@ labels. -/
 theorem legDir_eq {W : Fragment α}
     (F : EdgeSubset W) (tl : UsedLab F → Bool)
     (i : α) (h : W.boundaryFlag i ∈ F.boundaryFlags) :
-    legDir F tl i = tl ⟨i, h⟩ := dif_pos h
+    legDir F tl i = tl ⟨i, h⟩ := dite_eq_left h
 
 open Classical in
 /-- **The fragment's change of basis is the abstract one** at its
@@ -344,17 +344,17 @@ theorem untwistD_eq_untwistState {t : ℕ} {W : Fragment (Fin t)}
   funext i
   by_cases hb : W.boundaryFlag i ∈ F.boundaryFlags
   · rw [untwistD_apply_mem F tl x hb]
-    show (if tl ⟨i, hb⟩ then Sum.map id (oddPartner ℓ) (x i)
+    change (if tl ⟨i, hb⟩ then Sum.map id (oddPartner ℓ) (x i)
         else x i)
       = if legDir F tl i then dualLeg (x i) else x i
     rw [legDir_eq F tl i hb]
     by_cases ht : tl ⟨i, hb⟩ = true
-    · rw [if_pos ht, if_pos ht]
+    · rw [ite_eq_left ht, ite_eq_left ht]
       rcases x i with a | c <;> rfl
-    · rw [if_neg ht, if_neg ht]
+    · rw [ite_eq_right ht, ite_eq_right ht]
   · rw [untwistD_apply_not_mem F tl x hb]
-    show x i = if legDir F tl i then dualLeg (x i) else x i
-    rw [show legDir F tl i = false from dif_neg hb, if_neg (by simp)]
+    change x i = if legDir F tl i then dualLeg (x i) else x i
+    rw [show legDir F tl i = false from dite_eq_right hb, ite_eq_right (by simp)]
 
 open Classical in
 /-- **Half the used legs**, in the form the leg count needs: the
@@ -436,19 +436,19 @@ theorem tPrime_eq_vertexSum [LinearOrder α] [Fintype α] {W : Fragment α}
       = ((-1 : ℂ) ^ κ.openCircuitCount) * dualWeight F κ o x
         * F.vertexSum h (untwist F κ o x) hbnd o := by
   unfold tPrime vertexSum
-  rw [dif_pos hbnd]
+  rw [dite_eq_left hbnd]
   refine congrArg
     (fun z : ℂ => ((-1 : ℂ) ^ κ.openCircuitCount)
       * dualWeight F κ o x * z) ?_
   refine Finset.sum_congr rfl (fun ψ _ => ?_)
   by_cases hψ : genEvenBoundaryMatch F (untwist F κ o x) hbnd ψ
-  · rw [if_pos hψ, if_pos hψ]
+  · rw [ite_eq_left hψ, ite_eq_left hψ]
     exact sum_edgeOddColouring hbnd hag
       (fun φ' => ∏ v : W.Vertex,
         ((F.coreOddSignAt o φ' v : ℂ) *
           h.evalOdd (F.evenColoursAt ψ v)
             (F.coreOddListAt o φ' v)))
-  · rw [if_neg hψ, if_neg hψ]
+  · rw [ite_eq_right hψ, ite_eq_right hψ]
 
 open Classical in
 /-- **The tensor at given arc directions is the vertex sum,
@@ -464,19 +464,19 @@ theorem tPrimeD_eq_vertexSum [Fintype α] {W : Fragment α}
       = ((-1 : ℂ) ^ κ.openCircuitCount) * dualWeightD F tl x
         * F.vertexSum h (untwistD F tl x) hbnd o := by
   unfold tPrimeD vertexSum
-  rw [dif_pos hbnd]
+  rw [dite_eq_left hbnd]
   refine congrArg
     (fun z : ℂ => ((-1 : ℂ) ^ κ.openCircuitCount)
       * dualWeightD F tl x * z) ?_
   refine Finset.sum_congr rfl (fun ψ _ => ?_)
   by_cases hψ : genEvenBoundaryMatch F (untwistD F tl x) hbnd ψ
-  · rw [if_pos hψ, if_pos hψ]
+  · rw [ite_eq_left hψ, ite_eq_left hψ]
     exact sum_edgeOddColouring hbnd hag
       (fun φ' => ∏ v : W.Vertex,
         ((F.coreOddSignAt o φ' v : ℂ) *
           h.evalOdd (F.evenColoursAt ψ v)
             (F.coreOddListAt o φ' v)))
-  · rw [if_neg hψ, if_neg hψ]
+  · rw [ite_eq_right hψ, ite_eq_right hψ]
 
 open Classical in
 /-- **The tensor in the Gram computation's terms**: a fourth root
@@ -549,7 +549,7 @@ theorem pairAgreeValue_pos {t : ℕ} {W₁ W₂ : Fragment (Fin t)}
     pairAgreeValue F₁ F₂ h o₁ o₂ st
       = F₁.vertexSum h st h₁ o₁ * F₂.vertexSum h st h₂ o₂ := by
   unfold pairAgreeValue
-  rw [dif_pos h₁, dif_pos h₂, if_pos ⟨hag₁, hag₂⟩]
+  rw [dite_eq_left h₁, dite_eq_left h₂, ite_eq_left ⟨hag₁, hag₂⟩]
 
 open Classical in
 /-- **The agreeing value vanishes off the first tensor's
@@ -562,7 +562,7 @@ theorem pairAgreeValue_eq_zero {t : ℕ} {W₁ W₂ : Fragment (Fin t)}
     (h₁ : ¬ genBoundarySubsetMatches W₁ F₁.flags st) :
     pairAgreeValue F₁ F₂ h o₁ o₂ st = 0 := by
   unfold pairAgreeValue
-  rw [dif_neg h₁]
+  rw [dite_eq_right h₁]
 
 open Classical in
 /-- **The agreeing value vanishes where the first side
@@ -577,10 +577,10 @@ theorem pairAgreeValue_eq_zero_of_not_agree₁ {t : ℕ}
     (hag : ¬ ThroughAgree F₁ st h₁) :
     pairAgreeValue F₁ F₂ h o₁ o₂ st = 0 := by
   unfold pairAgreeValue
-  rw [dif_pos h₁]
+  rw [dite_eq_left h₁]
   by_cases h₂ : genBoundarySubsetMatches W₂ F₂.flags st
-  · rw [dif_pos h₂, if_neg (fun hx => hag hx.1)]
-  · rw [dif_neg h₂]
+  · rw [dite_eq_left h₂, ite_eq_right (fun hx => hag hx.1)]
+  · rw [dite_eq_right h₂]
 
 open Classical in
 /-- **The agreeing value vanishes where the second side
@@ -596,8 +596,8 @@ theorem pairAgreeValue_eq_zero_of_not_agree₂ {t : ℕ}
     pairAgreeValue F₁ F₂ h o₁ o₂ st = 0 := by
   unfold pairAgreeValue
   by_cases h₁ : genBoundarySubsetMatches W₁ F₁.flags st
-  · rw [dif_pos h₁, dif_pos h₂, if_neg (fun hx => hag hx.2)]
-  · rw [dif_neg h₁]
+  · rw [dite_eq_left h₁, dite_eq_left h₂, ite_eq_right (fun hx => hag hx.2)]
+  · rw [dite_eq_right h₁]
 
 open Classical in
 /-- **The paired value is the two colouring sums**, in RS21's own
@@ -716,7 +716,7 @@ theorem sum_sum_superForm_tFullD {t : ℕ} {W₁ W₂ : Fragment (Fin t)}
         (hused i).mpr (boundaryFlag_mem_boundaryFlags hf)
       obtain ⟨c, hc⟩ := (hx i).mp (mem_flags_of_boundaryFlags F₁ h1)
       exact ⟨oddPartner ℓ c, by
-        show dualLeg (x i) = Sum.inr (oddPartner ℓ c)
+        change dualLeg (x i) = Sum.inr (oddPartner ℓ c)
         rw [hc]; rfl⟩
     · rintro ⟨c, hc⟩
       have hodd : ∃ d, x i = Sum.inr d :=
@@ -816,7 +816,7 @@ theorem sum_sum_superForm_tFullD {t : ℕ} {W₁ W₂ : Fragment (Fin t)}
       have hzp : pairAgreeValue F₁ F₂ h o₁ o₂
           (untwistState (legDir F₁ M₁.tail) x) = 0 := by
         unfold pairAgreeValue
-        refine dif_neg (fun hc => hx ?_)
+        refine dite_eq_right (fun hc => hx ?_)
         rw [← untwistD_eq_untwistState F₁ M₁.tail x] at hc
         exact (genBoundarySubsetMatches_untwistD F₁ M₁.tail x).mp hc
       rw [hz₁, hzp]
@@ -833,7 +833,7 @@ theorem sum_sum_superForm_tFullD {t : ℕ} {W₁ W₂ : Fragment (Fin t)}
       by_contra hc
       refine hne ?_
       unfold pairAgreeValue
-      refine dif_neg (fun hd => hc ?_)
+      refine dite_eq_right (fun hd => hc ?_)
       rw [← untwistD_eq_untwistState F₁ M₁.tail x] at hd
       exact (genBoundarySubsetMatches_untwistD F₁ M₁.tail x).mp hd
     have := oddCount_eq_two_mul_legDir F₁ x hx M₁
@@ -844,7 +844,7 @@ theorem sum_sum_superForm_tFullD {t : ℕ} {W₁ W₂ : Fragment (Fin t)}
       by_contra hc
       refine hne ?_
       unfold pairAgreeValue
-      refine dif_neg (fun hd => hc ?_)
+      refine dite_eq_right (fun hd => hc ?_)
       rw [← untwistD_eq_untwistState F₁ M₁.tail x] at hd
       exact (genBoundarySubsetMatches_untwistD F₁ M₁.tail x).mp hd
     rw [oddCount_eq_card_usedLab F₁ x hx, hcard₁]
@@ -853,7 +853,7 @@ theorem sum_sum_superForm_tFullD {t : ℕ} {W₁ W₂ : Fragment (Fin t)}
       by_contra hc
       refine hne ?_
       unfold pairAgreeValue
-      refine dif_neg (fun hd => hc ?_)
+      refine dite_eq_right (fun hd => hc ?_)
       rw [← untwistD_eq_untwistState F₁ M₁.tail x] at hd
       exact (genBoundarySubsetMatches_untwistD F₁ M₁.tail x).mp hd
     exact halt i (boundaryFlag_mem_boundaryFlags ((hx i).mpr hi))
@@ -918,7 +918,7 @@ theorem vertexSum_stateOddFlip_through {W : Fragment α}
     · intro hm i c hst
       exact hm i c ((stateOddFlip_isInl (st := st) i c).mp hst)
   by_cases hψ : genEvenBoundaryMatch F st hbnd ψ
-  · rw [if_pos (heven.mpr hψ), if_pos hψ]
+  · rw [ite_eq_left (heven.mpr hψ), ite_eq_left hψ]
     refine Finset.sum_congr rfl (fun φ _ => ?_)
     have hcore : F.coreOddBoundaryMatch (stateOddFlip st i₁ i₂) φ
         ↔ F.coreOddBoundaryMatch st φ := by
@@ -932,9 +932,9 @@ theorem vertexSum_stateOddFlip_through {W : Fragment α}
         rw [← stateOddFlip_of_ne (st := st) hn₁ hn₂]
         exact hst
     by_cases hφ : F.coreOddBoundaryMatch st φ
-    · rw [if_pos (hcore.mpr hφ), if_pos hφ]
-    · rw [if_neg (fun hx => hφ (hcore.mp hx)), if_neg hφ]
-  · rw [if_neg (fun hx => hψ (heven.mp hx)), if_neg hψ]
+    · rw [ite_eq_left (hcore.mpr hφ), ite_eq_left hφ]
+    · rw [ite_eq_right (fun hx => hφ (hcore.mp hx)), ite_eq_right hφ]
+  · rw [ite_eq_right (fun hx => hψ (heven.mp hx)), ite_eq_right hψ]
 
 /-! ### The tensor under a chain flip
 
@@ -995,20 +995,20 @@ theorem tPrime_portFlip [LinearOrder α] [Fintype α] {W : Fragment α}
         else oddPartner ℓ c₁) := by
     rw [stateOddFlip_left, untwist_apply_odd F κ o x hb₁ hc₁]
     by_cases ht : (cutMatching F κ o).tail ⟨i₁, hb₁⟩ = true
-    · rw [if_pos ht, if_pos ht]
-      show Sum.inr (oddPartner ℓ (oddPartner ℓ c₁)) = Sum.inr c₁
+    · rw [ite_eq_left ht, ite_eq_left ht]
+      change Sum.inr (oddPartner ℓ (oddPartner ℓ c₁)) = Sum.inr c₁
       rw [oddPartner_invol]
-    · rw [if_neg ht, if_neg ht]
+    · rw [ite_eq_right ht, ite_eq_right ht]
       rfl
   have ha₂ : stateOddFlip (untwist F κ o x) i₁ i₂ i₂
       = Sum.inr (if (cutMatching F κ o).tail ⟨i₂, hb₂⟩ then c₂
         else oddPartner ℓ c₂) := by
     rw [stateOddFlip_right, untwist_apply_odd F κ o x hb₂ hc₂]
     by_cases ht : (cutMatching F κ o).tail ⟨i₂, hb₂⟩ = true
-    · rw [if_pos ht, if_pos ht]
-      show Sum.inr (oddPartner ℓ (oddPartner ℓ c₂)) = Sum.inr c₂
+    · rw [ite_eq_left ht, ite_eq_left ht]
+      change Sum.inr (oddPartner ℓ (oddPartner ℓ c₂)) = Sum.inr c₂
       rw [oddPartner_invol]
-    · rw [if_neg ht, if_neg ht]
+    · rw [ite_eq_right ht, ite_eq_right ht]
       rfl
   -- the colouring sum's ledger
   have hVS : F.vertexSum h (untwist F κ (o.portFlip hp) x) hbnd'
@@ -1053,13 +1053,13 @@ theorem tPrime_portFlip [LinearOrder α] [Fintype α] {W : Fragment α}
             then c₂ else oddPartner ℓ c₂) : ℤ) : ℂ) = -1 := by
     rw [ht12]
     cases hcase : (cutMatching F κ o).tail ⟨i₁, hb₁⟩
-    · rw [if_neg (by simp), Bool.not_false, if_pos rfl]
+    · rw [ite_eq_right (by simp), Bool.not_false, ite_eq_left rfl]
       have hB := dualSign_mul_partner (ℓ := ℓ) c₁
       have hA := dualSign_mul_self (ℓ := ℓ) c₂
       push_cast
       linear_combination
         (dualSign ℓ c₂ * ((oddPartnerSign ℓ c₂ : ℤ) : ℂ)) * hB - hA
-    · rw [if_pos rfl, Bool.not_true, if_neg (by simp)]
+    · rw [ite_eq_left rfl, Bool.not_true, ite_eq_right (by simp)]
       have hA := dualSign_mul_self (ℓ := ℓ) c₁
       have hB := dualSign_mul_partner (ℓ := ℓ) c₂
       push_cast
@@ -1240,7 +1240,7 @@ theorem tFull_portFlip_all [LinearOrder α] [Fintype α] {W : Fragment α}
         · exact hnt₁ (hx' ▸ hit)
         · exact hnt₂ (hx' ▸ hit)
       simp only [untwist]
-      rw [dif_pos hbi, dif_pos hbi,
+      rw [dite_eq_left hbi, dite_eq_left hbi,
         tail_portFlip_of_not_mem o hp hb₁ hchord hbi hne]
     by_cases hag : ThroughAgree F (untwist F κ o x) hbnd
     · exact tFull_portFlip F h o hp hb₁ hchord x hc₁ hc₂ hbnd hbnd'
@@ -1348,7 +1348,7 @@ theorem tFullD_congr_through [LinearOrder α] [Fintype α] {W : Fragment α}
         · exact hthr₁
         · exact hthr₂
       · refine hthr b ?_
-        rwa [DirMatching.reverseArc_tail, if_neg hbm] at hb
+        rwa [DirMatching.reverseArc_tail, ite_eq_right hbm] at hb
     rw [ih (M.reverseArc a) M' he
       (fun N hN => hag N hN) hthr' hclo
       hpart hcard', hstep]
@@ -1418,8 +1418,8 @@ theorem partner_of_throughAgree [LinearOrder α] {W : Fragment α}
   cases hb : M.tail a with
   | false =>
     rw [hb] at hs hs'
-    simp only [Bool.false_eq_true, if_false, Bool.not_false,
-      if_true] at hs hs'
+    simp only [Bool.false_eq_true, ite_false, Bool.not_false,
+      ite_true] at hs hs'
     rw [← hs] at hs'
     rcases hxe : x (M.edge a).val with b | d
     · rw [hxe] at hs'
@@ -1429,8 +1429,8 @@ theorem partner_of_throughAgree [LinearOrder α] {W : Fragment α}
       rw [← hd, oddPartner_invol ℓ]
   | true =>
     rw [hb] at hs hs'
-    simp only [if_true, Bool.not_true, Bool.false_eq_true,
-      if_false] at hs hs'
+    simp only [ite_true, Bool.not_true, Bool.false_eq_true,
+      ite_false] at hs hs'
     rw [hs', ← hs]
     rfl
 
@@ -1487,12 +1487,12 @@ theorem throughAgree_of_partner [LinearOrder α] {W : Fragment α}
   rw [untwistD_apply_mem F M.tail x hj, hcj, htf'] at hs'
   cases hb0 : M.tail ⟨F.boundaryLabel hb, hbi⟩ with
   | false =>
-    simp only [hb0, Bool.false_eq_true, if_false, Bool.not_false,
-      if_true, Sum.map_inr, oddPartner_invol] at hs hs'
+    simp only [hb0, Bool.false_eq_true, ite_false, Bool.not_false,
+      ite_true, Sum.map_inr, oddPartner_invol] at hs hs'
     exact (Sum.inr.inj hs').symm.trans (Sum.inr.inj hs)
   | true =>
-    simp only [hb0, if_true, Bool.not_true, Bool.false_eq_true,
-      if_false, Sum.map_inr] at hs hs'
+    simp only [hb0, ite_true, Bool.not_true, Bool.false_eq_true,
+      ite_false, Sum.map_inr] at hs hs'
     exact (Sum.inr.inj hs').symm.trans (Sum.inr.inj hs)
 
 open Classical in
@@ -1730,13 +1730,13 @@ theorem exists_eulerianPosition {t : ℕ} {W₁ W₂ : Fragment (Fin t)}
       ((cutMatching F₂ κ₂ o₂).map e.symm)
   refine ⟨A, B.map e, fun a => ?_, fun b => ?_, fun a => ?_⟩
   · exact congrArg Subtype.val (congrFun hAe a)
-  · show (e (B.edge (e.symm b))).val = _
+  · change (e (B.edge (e.symm b))).val = _
     rw [congrFun hBe (e.symm b)]
-    show (e (e.symm ((cutMatching F₂ κ₂ o₂).edge
+    change (e (e.symm ((cutMatching F₂ κ₂ o₂).edge
       (e (e.symm b))))).val = _
     rw [e.apply_symm_apply, e.apply_symm_apply]
     rfl
-  · show B.tail (e.symm (e a)) = _
+  · change B.tail (e.symm (e a)) = _
     rw [e.symm_apply_apply]
     exact hAB a
 
@@ -1804,11 +1804,11 @@ theorem exists_sum_sum_superForm_tFull {t : ℕ}
   refine sum_sum_superForm_tFullD F₁ F₂ h o₁' M₁ o₂' M₂ m hcard₁
     hcard₂ hused (fun i hi => ?_)
   have hi₂ : W₂.boundaryFlag i ∈ F₂.boundaryFlags := (hused i).mp hi
-  show (if hb : W₂.boundaryFlag i ∈ F₂.boundaryFlags then
+  change (if hb : W₂.boundaryFlag i ∈ F₂.boundaryFlags then
       M₂.tail ⟨i, hb⟩ else false)
     = !(if hb : W₁.boundaryFlag i ∈ F₁.boundaryFlags then
       M₁.tail ⟨i, hb⟩ else false)
-  rw [dif_pos hi₂, dif_pos hi]
+  rw [dite_eq_left hi₂, dite_eq_left hi]
   exact halt ⟨i, hi⟩
 
 /-! ### The fragment's tensor

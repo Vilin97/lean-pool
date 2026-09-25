@@ -89,7 +89,7 @@ theorem braidNatLeft_label (s t k : ℕ) :
       _root_.Equiv.trans_apply,
       finSumFinEquiv_symm_apply_castAdd,
       _root_.Equiv.trans_apply]
-    show (finSumFinEquiv (Sum.inl (Fin.natAdd s
+    change (finSumFinEquiv (Sum.inl (Fin.natAdd s
       ⟨x.val, h1⟩))).val = (finSumFinEquiv (Sum.inl
       ((transposeEquiv s k).symm (Fin.castAdd s
         ⟨x.val, h1⟩)))).val
@@ -102,7 +102,7 @@ theorem braidNatLeft_label (s t k : ℕ) :
   · rcases Nat.lt_or_ge x.val (k + s) with h2 | h2
     · conv_lhs => rw [show x = Fin.castAdd (k + t)
           (Fin.natAdd k ⟨x.val - k, by omega⟩) from Fin.ext (by
-          show x.val = k + (x.val - k)
+          change x.val = k + (x.val - k)
           omega),
         _root_.Equiv.trans_apply,
         tensorSwapEquiv_in_right s t k k ⟨x.val - k, by omega⟩,
@@ -111,12 +111,12 @@ theorem braidNatLeft_label (s t k : ℕ) :
         _root_.Equiv.trans_apply]
       conv_rhs => rw [show x = Fin.castAdd (k + t)
           (Fin.natAdd k ⟨x.val - k, by omega⟩) from Fin.ext (by
-          show x.val = k + (x.val - k)
+          change x.val = k + (x.val - k)
           omega),
         _root_.Equiv.trans_apply,
         finSumFinEquiv_symm_apply_castAdd,
         _root_.Equiv.trans_apply]
-      show (finSumFinEquiv (Sum.inl (Fin.castAdd k
+      change (finSumFinEquiv (Sum.inl (Fin.castAdd k
         ⟨x.val - k, by omega⟩))).val = (finSumFinEquiv (Sum.inl
         ((transposeEquiv s k).symm (Fin.natAdd k
           ⟨x.val - k, by omega⟩)))).val
@@ -132,7 +132,7 @@ theorem braidNatLeft_label (s t k : ℕ) :
       · conv_lhs => rw [show x = Fin.natAdd (k + s)
             (Fin.castAdd t ⟨x.val - (k + s), by omega⟩) from
             Fin.ext (by
-            show x.val = (k + s) + (x.val - (k + s))
+            change x.val = (k + s) + (x.val - (k + s))
             omega),
           _root_.Equiv.trans_apply,
           tensorSwapEquiv_out_left s t k k
@@ -143,12 +143,12 @@ theorem braidNatLeft_label (s t k : ℕ) :
         conv_rhs => rw [show x = Fin.natAdd (k + s)
             (Fin.castAdd t ⟨x.val - (k + s), by omega⟩) from
             Fin.ext (by
-            show x.val = (k + s) + (x.val - (k + s))
+            change x.val = (k + s) + (x.val - (k + s))
             omega),
           _root_.Equiv.trans_apply,
           finSumFinEquiv_symm_apply_natAdd,
           _root_.Equiv.trans_apply]
-        show (finSumFinEquiv (Sum.inr ((transposeEquiv t k)
+        change (finSumFinEquiv (Sum.inr ((transposeEquiv t k)
           (Fin.natAdd t ⟨x.val - (k + s), by omega⟩)))).val =
           (finSumFinEquiv (Sum.inr (Fin.castAdd t
             ⟨x.val - (k + s), by omega⟩))).val
@@ -163,7 +163,7 @@ theorem braidNatLeft_label (s t k : ℕ) :
       · conv_lhs => rw [show x = Fin.natAdd (k + s)
             (Fin.natAdd k ⟨x.val - ((k + s) + k), by omega⟩)
             from Fin.ext (by
-            show x.val = (k + s) + (k + (x.val - ((k + s) + k)))
+            change x.val = (k + s) + (k + (x.val - ((k + s) + k)))
             omega),
           _root_.Equiv.trans_apply,
           tensorSwapEquiv_out_right s t k k
@@ -174,12 +174,12 @@ theorem braidNatLeft_label (s t k : ℕ) :
         conv_rhs => rw [show x = Fin.natAdd (k + s)
             (Fin.natAdd k ⟨x.val - ((k + s) + k), by omega⟩)
             from Fin.ext (by
-            show x.val = (k + s) + (k + (x.val - ((k + s) + k)))
+            change x.val = (k + s) + (k + (x.val - ((k + s) + k)))
             omega),
           _root_.Equiv.trans_apply,
           finSumFinEquiv_symm_apply_natAdd,
           _root_.Equiv.trans_apply]
-        show (finSumFinEquiv (Sum.inr ((transposeEquiv t k)
+        change (finSumFinEquiv (Sum.inr ((transposeEquiv t k)
           (Fin.castAdd k
             ⟨x.val - ((k + s) + k), by omega⟩)))).val =
           (finSumFinEquiv (Sum.inr (Fin.natAdd k
@@ -237,7 +237,7 @@ theorem braidNatRight_label (s t k : ℕ) :
       _root_.Equiv.trans_apply,
       finSumFinEquiv_symm_apply_castAdd,
       _root_.Equiv.trans_apply]
-    show (finSumFinEquiv (Sum.inl (Fin.natAdd k
+    change (finSumFinEquiv (Sum.inl (Fin.natAdd k
       ⟨x.val, h1⟩))).val = (finSumFinEquiv (Sum.inl
       ((transposeEquiv k s).symm (Fin.castAdd k
         ⟨x.val, h1⟩)))).val
@@ -250,7 +250,7 @@ theorem braidNatRight_label (s t k : ℕ) :
   · rcases Nat.lt_or_ge x.val (s + k) with h2 | h2
     · conv_lhs => rw [show x = Fin.castAdd (t + k)
           (Fin.natAdd s ⟨x.val - s, by omega⟩) from Fin.ext (by
-          show x.val = s + (x.val - s)
+          change x.val = s + (x.val - s)
           omega),
         _root_.Equiv.trans_apply,
         tensorSwapEquiv_in_right k k s t ⟨x.val - s, by omega⟩,
@@ -259,12 +259,12 @@ theorem braidNatRight_label (s t k : ℕ) :
         _root_.Equiv.trans_apply]
       conv_rhs => rw [show x = Fin.castAdd (t + k)
           (Fin.natAdd s ⟨x.val - s, by omega⟩) from Fin.ext (by
-          show x.val = s + (x.val - s)
+          change x.val = s + (x.val - s)
           omega),
         _root_.Equiv.trans_apply,
         finSumFinEquiv_symm_apply_castAdd,
         _root_.Equiv.trans_apply]
-      show (finSumFinEquiv (Sum.inl (Fin.castAdd s
+      change (finSumFinEquiv (Sum.inl (Fin.castAdd s
         ⟨x.val - s, by omega⟩))).val = (finSumFinEquiv (Sum.inl
         ((transposeEquiv k s).symm (Fin.natAdd s
           ⟨x.val - s, by omega⟩)))).val
@@ -280,7 +280,7 @@ theorem braidNatRight_label (s t k : ℕ) :
       · conv_lhs => rw [show x = Fin.natAdd (s + k)
             (Fin.castAdd k ⟨x.val - (s + k), by omega⟩) from
             Fin.ext (by
-            show x.val = (s + k) + (x.val - (s + k))
+            change x.val = (s + k) + (x.val - (s + k))
             omega),
           _root_.Equiv.trans_apply,
           tensorSwapEquiv_out_left k k s t
@@ -291,12 +291,12 @@ theorem braidNatRight_label (s t k : ℕ) :
         conv_rhs => rw [show x = Fin.natAdd (s + k)
             (Fin.castAdd k ⟨x.val - (s + k), by omega⟩) from
             Fin.ext (by
-            show x.val = (s + k) + (x.val - (s + k))
+            change x.val = (s + k) + (x.val - (s + k))
             omega),
           _root_.Equiv.trans_apply,
           finSumFinEquiv_symm_apply_natAdd,
           _root_.Equiv.trans_apply]
-        show (finSumFinEquiv (Sum.inr ((transposeEquiv k t)
+        change (finSumFinEquiv (Sum.inr ((transposeEquiv k t)
           (Fin.natAdd k ⟨x.val - (s + k), by omega⟩)))).val =
           (finSumFinEquiv (Sum.inr (Fin.castAdd k
             ⟨x.val - (s + k), by omega⟩))).val
@@ -311,7 +311,7 @@ theorem braidNatRight_label (s t k : ℕ) :
       · conv_lhs => rw [show x = Fin.natAdd (s + k)
             (Fin.natAdd t ⟨x.val - ((s + k) + t), by omega⟩)
             from Fin.ext (by
-            show x.val = (s + k) + (t + (x.val - ((s + k) + t)))
+            change x.val = (s + k) + (t + (x.val - ((s + k) + t)))
             omega),
           _root_.Equiv.trans_apply,
           tensorSwapEquiv_out_right k k s t
@@ -322,12 +322,12 @@ theorem braidNatRight_label (s t k : ℕ) :
         conv_rhs => rw [show x = Fin.natAdd (s + k)
             (Fin.natAdd t ⟨x.val - ((s + k) + t), by omega⟩)
             from Fin.ext (by
-            show x.val = (s + k) + (t + (x.val - ((s + k) + t)))
+            change x.val = (s + k) + (t + (x.val - ((s + k) + t)))
             omega),
           _root_.Equiv.trans_apply,
           finSumFinEquiv_symm_apply_natAdd,
           _root_.Equiv.trans_apply]
-        show (finSumFinEquiv (Sum.inr ((transposeEquiv k t)
+        change (finSumFinEquiv (Sum.inr ((transposeEquiv k t)
           (Fin.castAdd t
             ⟨x.val - ((s + k) + t), by omega⟩)))).val =
           (finSumFinEquiv (Sum.inr (Fin.natAdd t

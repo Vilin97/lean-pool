@@ -58,7 +58,7 @@ import Mathlib.CategoryTheory.Subobject.Lattice
 import Mathlib.CategoryTheory.Subobject.Limits
 import Mathlib.Combinatorics.Enumerative.Partition.Basic
 import Mathlib.Combinatorics.Young.YoungDiagram
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Data.Fin.Embedding
 import Mathlib.Data.Fin.Tuple.Sort
 import Mathlib.Data.Finset.Card

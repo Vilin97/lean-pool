@@ -30,7 +30,7 @@ theorem isSemisimpleRing_of_trace {A : Type u} [Ring A] [Algebra ℂ A]
     (hnil : ∀ x : A, IsNilpotent x → τ x = 0)
     (hnondeg : ∀ a : A, (∀ b : A, τ (b * a) = 0) → a = 0) :
     IsSemisimpleRing A := by
-  haveI : IsArtinianRing A := isArtinian_of_tower ℂ inferInstance
+  have : IsArtinianRing A := isArtinian_of_tower ℂ inferInstance
   -- ═══════ The radical vanishes ═══════
   obtain ⟨n, hn⟩ := IsArtinianRing.isNilpotent_jacobson_bot (R := A)
   have hJbot : Ring.jacobson A = ⊥ := by

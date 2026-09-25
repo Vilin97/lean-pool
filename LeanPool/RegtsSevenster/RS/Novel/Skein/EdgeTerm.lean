@@ -22,8 +22,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Classical
-
+open Fragment
 variable {L : Type}
 
 /-- Transporting the colouring sum along an equality of subsets. -/
@@ -66,7 +65,7 @@ theorem edgeTermAt_eq_zero_of_not_closed [LinearOrder L] {V : Fragment L}
     (hc : ¬ ∀ f ∈ s, V.pairing f ∈ s) (C : ℕ) :
     edgeTermAt h 𝒟 st s C = 0 := by
   unfold edgeTermAt
-  rw [dif_neg hc]
+  rw [dite_eq_right hc]
 
 open Classical in
 /-- And off subsets that do not match the boundary state. -/
@@ -78,8 +77,8 @@ theorem edgeTermAt_eq_zero_of_not_matches [LinearOrder L] {V : Fragment L}
     edgeTermAt h 𝒟 st s C = 0 := by
   unfold edgeTermAt
   by_cases hc : ∀ f ∈ s, V.pairing f ∈ s
-  · rw [dif_pos hc, dif_neg hbnd]
-  · rw [dif_neg hc]
+  · rw [dite_eq_left hc, dite_eq_right hbnd]
+  · rw [dite_eq_right hc]
 
 open Classical in
 /-- And off non-Eulerian subsets. -/
@@ -91,10 +90,10 @@ theorem edgeTermAt_eq_zero_of_not_eulerian [LinearOrder L] {V : Fragment L}
     (hE : ¬ (EdgeSubset.mk s hc).Eulerian) (C : ℕ) :
     edgeTermAt h 𝒟 st s C = 0 := by
   unfold edgeTermAt
-  rw [dif_pos hc]
+  rw [dite_eq_left hc]
   by_cases hbnd : genBoundarySubsetMatches V s st
-  · rw [dif_pos hbnd, dif_neg hE]
-  · rw [dif_neg hbnd]
+  · rw [dite_eq_left hbnd, dite_eq_right hE]
+  · rw [dite_eq_right hbnd]
 
 open Classical in
 /-- And off subsets carrying no canonical datum — so the sum runs
@@ -107,13 +106,13 @@ theorem edgeTermAt_eq_zero_of_not_canon [LinearOrder L] {V : Fragment L}
     (hne : ¬ Nonempty (EdgeSubset.mk s hc).CanonData) (C : ℕ) :
     edgeTermAt h 𝒟 st s C = 0 := by
   unfold edgeTermAt
-  rw [dif_pos hc]
+  rw [dite_eq_left hc]
   by_cases hbnd : genBoundarySubsetMatches V s st
-  · rw [dif_pos hbnd]
+  · rw [dite_eq_left hbnd]
     by_cases hE : (EdgeSubset.mk s hc).Eulerian
-    · rw [dif_pos hE, dif_neg hne]
-    · rw [dif_neg hE]
-  · rw [dif_neg hbnd]
+    · rw [dite_eq_left hE, dite_eq_right hne]
+    · rw [dite_eq_right hE]
+  · rw [dite_eq_right hbnd]
 
 open Classical in
 /-- The summand at a good subset. -/
@@ -129,7 +128,7 @@ theorem edgeTermAt_pos [LinearOrder L] {V : Fragment L}
         (EdgeSubset.mk s hc).edgeSum h st hbnd
           (𝒟 s hc hE hne).2 := by
   unfold edgeTermAt
-  rw [dif_pos hc, dif_pos hbnd, dif_pos hE, dif_pos hne]
+  rw [dite_eq_left hc, dite_eq_left hbnd, dite_eq_left hE, dite_eq_left hne]
 
 /-! ## One open cut
 

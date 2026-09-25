@@ -18,8 +18,7 @@ namespace RS
 
 namespace EdgeSubset
 
-open Fragment Classical
-
+open Fragment
 /-- The lexicographic order on the interface's label type. -/
 @[reducible] local instance tripBaseOrder (n : ℕ) :
     LinearOrder (Fin (0 + n) ⊕ Fin (n + 0)) :=
@@ -162,11 +161,11 @@ theorem isOut_unglueDataOpen_congr_at {α : Type} [LinearOrder α]
   by_cases hag : ∀ f ∈ V.dropSubset i j s,
       (V.gluePairOpen i j hij hopen).pairing f
         ∈ V.dropSubset i j s
-  · rw [dif_pos hag, dif_pos hag, isOut_orientOfEq, isOut_orientOfEq]
+  · rw [dite_eq_left hag, dite_eq_left hag, isOut_orientOfEq, isOut_orientOfEq]
     refine Eq.trans (unglueIsOut_of_surviving _ f ⟨h1, h2⟩) ?_
     refine Eq.trans ?_ (unglueIsOut_of_surviving _ f ⟨h1, h2⟩).symm
     exact hm _ _ _ _ (fun ℓ hx => hfb ℓ.val (congrArg Subtype.val hx))
-  · rw [dif_neg hag, dif_neg hag]
+  · rw [dite_eq_right hag, dite_eq_right hag]
 
 open Classical in
 /-- **One subset is enough for the directions**, at a closing
@@ -274,7 +273,7 @@ theorem isOut_stepDataDown_congr_at_open (n : ℕ)
     (stepDataDown n V 𝒟₁ s hc hE hne).2.isOut f
       = (stepDataDown n V 𝒟₂ s hc hE hne).2.isOut f := by
   unfold stepDataDown
-  rw [dif_neg hop, dif_neg hop]
+  rw [dite_eq_right hop, dite_eq_right hop]
   refine isOut_unglueDataOpen_congr_at (cutL_ne_cutR n) hop _ _
     ?_ hc hE hne f hfb
   intro hct hEt hnet g hgb
@@ -310,7 +309,7 @@ theorem isOut_stepDataDown_congr_at_closed (n : ℕ)
     (stepDataDown n V 𝒟₁ s hc hE hne).2.isOut f
       = (stepDataDown n V 𝒟₂ s hc hE hne).2.isOut f := by
   unfold stepDataDown
-  rw [dif_pos hcl, dif_pos hcl]
+  rw [dite_eq_left hcl, dite_eq_left hcl]
   refine isOut_unglueDataClosed_congr_at (cutL_ne_cutR n) hcl _ _
     ?_ hc hE hne f hfb
   intro hct hEt hnet g hgb
@@ -399,7 +398,7 @@ open Classical in
 /-- **The upward glue respects matching equality.**  At an internal
 flag the glued system's partner is the base system's, so two systems
 that agree there glue to systems that agree. -/
-theorem glueOpen_matchEq {α : Type} [LinearOrder α] {W : Fragment α}
+theorem glueOpen_matchEq {α : Type} {W : Fragment α}
     {i j : α} (hij : i ≠ j)
     (hopen : W.pairing (W.boundaryFlag i) ≠ W.boundaryFlag j)
     (s' : Finset (SurvivingFlag W i j))
@@ -420,7 +419,7 @@ open Classical in
 /-- **The closing glue respects matching equality.**  It keeps every
 internal flag's partner, so two systems that agree there glue to
 systems that agree. -/
-theorem glueClosed_matchEq {α : Type} [LinearOrder α]
+theorem glueClosed_matchEq {α : Type}
     {W : Fragment α} {i j : α}
     (hclosed : W.pairing (W.boundaryFlag i) = W.boundaryFlag j)
     (b : Bool) (s' : Finset (SurvivingFlag W i j))
@@ -440,8 +439,8 @@ theorem glueClosed_matchEq {α : Type} [LinearOrder α]
 
 /-- **The upward relabel respects matching equality.**  It keeps the
 partner map and only renames the labels. -/
-theorem relabelTransUp_matchEq {α' β' : Type} [LinearOrder α']
-    [LinearOrder β'] (ee : α' ≃ β') {W' : Fragment α'}
+theorem relabelTransUp_matchEq {α' β' : Type}
+    (ee : α' ≃ β') {W' : Fragment α'}
     (F : EdgeSubset W') {κ₁ κ₂ : F.RelTransitionSystem}
     (hm : κ₁.MatchEq κ₂) :
     (relabelTransUp ee F κ₁).MatchEq (relabelTransUp ee F κ₂) :=
@@ -481,7 +480,7 @@ theorem match_glueDataOpen_stepDataOpen (n : ℕ)
         (liftSubsetOpen_stepFlags_pairing_mem n V D hop)
         (relOfEq (sub_eq_liftSubsetOpen n V D hop) D.rel)) := by
   unfold glueDataOpen
-  rw [dif_pos (hag _ _ _)]
+  rw [dite_eq_left (hag _ _ _)]
   refine glueOpen_matchEq (cutL_ne_cutR n) hop (stepFlags n V D) hct
     (liftSubsetOpen_stepFlags_pairing_mem n V D hop) ?_
   intro f hf
@@ -606,10 +605,10 @@ theorem match_stepDataUp_stepData_open (n : ℕ)
         (relabelDataUp (stepIso n)
           (glueDataOpen (cutL_ne_cutR n) hop 𝒟)) := by
     unfold stepDataUp
-    rw [dif_neg hop, relabelDataUp_dataOfEq]
+    rw [dite_eq_right hop, relabelDataUp_dataOfEq]
     rfl
   revert hct hEt hnet
-  rw [show stepData n V D = _ from dif_neg hop, hup]
+  rw [show stepData n V D = _ from dite_eq_right hop, hup]
   intro hct hEt hnet
   exact match_dataOfEq_stageDataOfEq
     (congrArg (fun X => X.relabel (interfaceStepEquiv 0 n 0))
@@ -722,10 +721,10 @@ theorem match_stepDataUp_stepData_closed (n : ℕ)
         (relabelDataUp (stepIso n)
           (glueDataClosed hcl (stepBit n V D) 𝒟)) := by
     unfold stepDataUp
-    rw [dif_pos hcl, relabelDataUp_dataOfEq]
+    rw [dite_eq_left hcl, relabelDataUp_dataOfEq]
     rfl
   revert hct hEt hnet
-  rw [show stepData n V D = _ from dif_pos hcl, hup]
+  rw [show stepData n V D = _ from dite_eq_left hcl, hup]
   intro hct hEt hnet
   exact match_dataOfEq_stageDataOfEq
     (congrArg (fun X => X.relabel (interfaceStepEquiv 0 n 0))
@@ -809,7 +808,7 @@ theorem isOut_stepDataUp_open (n : ℕ)
         (dataOfEq (gluePair_eq_open n V hop).symm
           (glueDataOpen (cutL_ne_cutR n) hop 𝒟)) := by
     unfold stepDataUp
-    rw [dif_neg hop]
+    rw [dite_eq_right hop]
   have hEg : (EdgeSubset.mk (flagsOfEq _ _
       (gluePair_eq_open n V hop) u) hct :
       EdgeSubset (V.gluePair (cutL n) (cutR n)
@@ -886,7 +885,7 @@ theorem isOut_stepDataUp_closed (n : ℕ)
         (dataOfEq (gluePair_eq_closed n V hcl).symm
           (glueDataClosed hcl b 𝒟)) := by
     unfold stepDataUp
-    rw [dif_pos hcl]
+    rw [dite_eq_left hcl]
   have hEg : (EdgeSubset.mk (flagsOfEq _ _
       (gluePair_eq_closed n V hcl) u) hct :
       EdgeSubset (V.gluePair (cutL n) (cutR n)
@@ -944,7 +943,7 @@ pairing flipping at every boundary flag and the cut's own two ends
 oppositely directed, the rewired partner of a surviving label carries
 the direction the base's partner carried: crossing the cut costs two
 flips, and two flips are none. -/
-theorem isOut_rewire_eq {α : Type} [LinearOrder α] {W : Fragment α}
+theorem isOut_rewire_eq {α : Type} {W : Fragment α}
     {F : EdgeSubset W} {κ : F.RelTransitionSystem}
     (o : κ.Orientation) {i j : α}
     (hopen : W.pairing (W.boundaryFlag i) ≠ W.boundaryFlag j)
@@ -958,7 +957,7 @@ theorem isOut_rewire_eq {α : Type} [LinearOrder α] {W : Fragment α}
       = o.isOut (W.pairing (W.boundaryFlag ℓ)) := by
   by_cases hi : W.pairing (W.boundaryFlag ℓ) = W.boundaryFlag i
   · rw [Fragment.rewire_eq_partnerSurvJ hopen _ hi]
-    show o.isOut (W.pairing (W.boundaryFlag j)) = _
+    change o.isOut (W.pairing (W.boundaryFlag j)) = _
     rw [halign, hi, hflip i, Bool.not_not]
   · by_cases hj : W.pairing (W.boundaryFlag ℓ) = W.boundaryFlag j
     · have h3 : o.isOut (W.pairing (W.boundaryFlag i))
@@ -966,7 +965,7 @@ theorem isOut_rewire_eq {α : Type} [LinearOrder α] {W : Fragment α}
         rw [← Bool.not_not (o.isOut (W.pairing (W.boundaryFlag i))),
           ← halign, hflip j, Bool.not_not]
       rw [Fragment.rewire_eq_partnerSurvI hopen _ hi hj]
-      show o.isOut (W.pairing (W.boundaryFlag i)) = _
+      change o.isOut (W.pairing (W.boundaryFlag i)) = _
       rw [hj, h3]
     · rw [Fragment.rewire_val_of_ne hopen _ hi hj]
 
@@ -1409,7 +1408,7 @@ theorem cutExtend_of_ne (n : ℕ)
     cutExtend n V hop hL1 hR1 hR2 c' f
       = c' (stageFlag n V hop f h1 h2) := by
   unfold cutExtend
-  rw [dif_neg h1, dif_neg h2]
+  rw [dite_eq_right h1, dite_eq_right h2]
 
 open Classical in
 /-- At the cut's left flag the extension is the opposite of its
@@ -1429,7 +1428,7 @@ theorem cutExtend_cutL (n : ℕ)
       = !c' (stageFlag n V hop
         (V.pairing (V.boundaryFlag (cutL n))) hL1 hop) := by
   unfold cutExtend
-  rw [dif_pos rfl]
+  rw [dite_eq_left rfl]
 
 open Classical in
 /-- At the cut's right flag the extension is the opposite of its
@@ -1449,8 +1448,8 @@ theorem cutExtend_cutR (n : ℕ)
       = !c' (stageFlag n V hop
         (V.pairing (V.boundaryFlag (cutR n))) hR1 hR2) := by
   unfold cutExtend
-  rw [dif_neg (fun hx => cutL_ne_cutR n
-      (V.boundaryFlag_injective hx).symm), dif_pos rfl]
+  rw [dite_eq_right (fun hx => cutL_ne_cutR n
+      (V.boundaryFlag_injective hx).symm), dite_eq_left rfl]
 
 /-- Stage flags at equal base flags agree. -/
 theorem stageFlagClosed_congr (n : ℕ)
@@ -1494,7 +1493,7 @@ theorem cutExtendClosed_of_ne (n : ℕ)
     cutExtendClosed n V hcl c' f
       = c' (stageFlagClosed n V hcl f h1 h2) := by
   unfold cutExtendClosed
-  rw [dif_neg h1, dif_neg h2]
+  rw [dite_eq_right h1, dite_eq_right h2]
 
 open Classical in
 /-- At the cut's left flag the extension is `true`. -/
@@ -1505,7 +1504,7 @@ theorem cutExtendClosed_cutL (n : ℕ)
     (c' : (stepFragment n V).Flag → Bool) :
     cutExtendClosed n V hcl c' (V.boundaryFlag (cutL n)) = true := by
   unfold cutExtendClosed
-  rw [dif_pos rfl]
+  rw [dite_eq_left rfl]
 
 open Classical in
 /-- At the cut's right flag the extension is `false`. -/
@@ -1517,8 +1516,8 @@ theorem cutExtendClosed_cutR (n : ℕ)
     cutExtendClosed n V hcl c' (V.boundaryFlag (cutR n))
       = false := by
   unfold cutExtendClosed
-  rw [dif_neg (fun hx => cutL_ne_cutR n
-      (V.boundaryFlag_injective hx).symm), dif_pos rfl]
+  rw [dite_eq_right (fun hx => cutL_ne_cutR n
+      (V.boundaryFlag_injective hx).symm), dite_eq_left rfl]
 
 /-- The stage flag does not depend on which proof of survival it is
 given. -/

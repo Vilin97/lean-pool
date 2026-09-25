@@ -18,7 +18,7 @@ noncomputable section
 
 namespace RS
 
-open scoped Classical
+
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.MonoidalCategory
 open CategoryTheory.Limits CategoryTheory.MonoidalPreadditive
@@ -50,6 +50,7 @@ variable {C : Type u}
       :
     (f ⊗ₘ g : M₁ ⊗ M₂ ⟶ N₁ ⊗ N₂) (i₁, i₂) (j₁, j₂) = f i₁ j₁ ⊗ₘ g i₂ j₂ := rfl
 
+open scoped Classical in
 @[simp] private theorem mat_assocHom_apply
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M N K : Mat_ C)
@@ -60,6 +61,7 @@ variable {C : Type u}
           (K.X k')).hom
       else 0 else 0 else 0 := rfl
 
+open scoped Classical in
 @[simp] private theorem mat_assocInv_apply
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M N K : Mat_ C)
@@ -74,6 +76,7 @@ variable {C : Type u}
 
 section Braided
 
+open scoped Classical in
 private def matBraidHom [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [BraidedCategory C]
     (M N : Mat_ C) : (M ⊗ N : Mat_ C) ⟶ (N ⊗ M : Mat_ C) :=
@@ -84,6 +87,7 @@ private def matBraidHom [Category.{v} C] [Preadditive C] [MonoidalCategory C]
       else 0
     else 0
 
+open scoped Classical in
 private def matBraidInv [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [BraidedCategory C]
     (M N : Mat_ C) : (N ⊗ M : Mat_ C) ⟶ (M ⊗ N : Mat_ C) :=
@@ -94,6 +98,7 @@ private def matBraidInv [Category.{v} C] [Preadditive C] [MonoidalCategory C]
       else 0
     else 0
 
+open scoped Classical in
 @[simp] private theorem matBraidHom_apply
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [BraidedCategory C]
@@ -104,6 +109,7 @@ private def matBraidInv [Category.{v} C] [Preadditive C] [MonoidalCategory C]
         eqToHom (by subst hi; subst hj; rfl) ≫ (β_ (M.X j₂) (N.X j₁)).hom
       else 0 else 0 := rfl
 
+open scoped Classical in
 @[simp] private theorem matBraidInv_apply
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [BraidedCategory C]
@@ -441,7 +447,7 @@ instance matSymmetric [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [MonoidalPreadditive C] [SymmetricCategory C] :
     SymmetricCategory (Mat_ C) where
   symmetry X Y := by
-    show matBraidHom X Y ≫ matBraidHom Y X = 𝟙 _
+    change matBraidHom X Y ≫ matBraidHom Y X = 𝟙 _
     apply Mat_.hom_ext; intro ⟨ix, iy⟩ ⟨jx, jy⟩
     rw [mat_comp_tensor_apply, Mat_.id_apply]
     simp only [matBraidHom_apply]

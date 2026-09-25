@@ -77,7 +77,7 @@ theorem evenBasisVec_split {a b : ℕ}
   -- An even first half puts both halves in the even blocks, an odd
   -- one in the odd blocks; each is then checked coordinatewise.
   by_cases h : MixedColouring.IsEven c.firstHalf
-  · rw [dif_pos h]
+  · rw [dite_eq_left h]
     rw [show ((colourPowerEquiv k ℓ (a + b)).evenEquiv
         (((powMerge (stdSuperPair k ℓ) a b) :
           SuperVect.Hom _ _).evenMap
@@ -94,7 +94,7 @@ theorem evenBasisVec_split {a b : ℕ}
           ⟨c'.secondHalf, c'.secondHalf_isEven hc' h'⟩
       else 0) from colourMerge_coord a b _ _ c' hc']
     by_cases h' : MixedColouring.IsEven c'.firstHalf
-    · rw [dif_pos h']
+    · rw [dite_eq_left h']
       rw [show (colourPowerEquiv k ℓ a).evenEquiv
           (evenBasisVec ⟨c.firstHalf, h⟩) =
         Pi.single ⟨c.firstHalf, h⟩ 1 from
@@ -125,10 +125,10 @@ theorem evenBasisVec_split {a b : ℕ}
         · rw [single_val_ne ⟨c.firstHalf, h⟩
             ⟨c'.firstHalf, h'⟩ hf]
           rw [zero_mul]
-    · rw [dif_neg h']
+    · rw [dite_eq_right h']
       have hne : c' ≠ c := fun he => h' (he ▸ h)
       rw [single_val_ne ⟨c, hc⟩ ⟨c', hc'⟩ hne]
-  · rw [dif_neg h]
+  · rw [dite_eq_right h]
     rw [show ((colourPowerEquiv k ℓ (a + b)).evenEquiv
         (((powMerge (stdSuperPair k ℓ) a b) :
           SuperVect.Hom _ _).evenMap
@@ -151,10 +151,10 @@ theorem evenBasisVec_split {a b : ℕ}
             c'.secondHalf_not_isEven' hc' h'⟩) from
       colourMerge_coord_oddPair a b _ _ c' hc']
     by_cases h' : MixedColouring.IsEven c'.firstHalf
-    · rw [dif_pos h']
+    · rw [dite_eq_left h']
       have hne : c' ≠ c := fun he => h (he ▸ h')
       rw [single_val_ne ⟨c, hc⟩ ⟨c', hc'⟩ hne]
-    · rw [dif_neg h']
+    · rw [dite_eq_right h']
       rw [show (colourPowerEquiv k ℓ a).oddEquiv
           (oddBasisVec ⟨c.firstHalf, h⟩) =
         Pi.single ⟨c.firstHalf, h⟩ 1 from

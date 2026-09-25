@@ -56,7 +56,7 @@ theorem coeff_mul_split (P Q : MvPolynomial (Fin k) ℂ)
       have := hn a
       omega
     · intro a
-      show p.2 a ≤ α a
+      change p.2 a ≤ α a
       have := hpt a
       omega
   · -- backward membership
@@ -80,18 +80,18 @@ theorem coeff_mul_split (P Q : MvPolynomial (Fin k) ℂ)
       rw [Finsupp.add_apply, sum_single_apply] at h1
       exact h1
     refine Prod.ext ?_ ?_
-    · show (∑ a, Finsupp.single a (α a - p.2 a)) = p.1
+    · change (∑ a, Finsupp.single a (α a - p.2 a)) = p.1
       ext a
       rw [sum_single_apply]
       have := hpt a
       omega
-    · show (∑ a, Finsupp.single a (p.2 a)) = p.2
+    · change (∑ a, Finsupp.single a (p.2 a)) = p.2
       ext a
       rw [sum_single_apply]
   · -- right inverse
     intro w hw
     funext a
-    show (∑ b, Finsupp.single b (w b)) a = w a
+    change (∑ b, Finsupp.single b (w b)) a = w a
     rw [sum_single_apply]
   · -- value transfer
     intro p hp
@@ -105,7 +105,7 @@ theorem coeff_mul_split (P Q : MvPolynomial (Fin k) ℂ)
     · congr 1
       ext a
       rw [sum_single_apply]
-      show p.1 a = α a - p.2 a
+      change p.1 a = α a - p.2 a
       have := hpt a
       omega
     · congr 1

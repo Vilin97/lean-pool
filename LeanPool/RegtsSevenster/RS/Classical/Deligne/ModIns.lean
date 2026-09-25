@@ -49,22 +49,22 @@ theorem append_pair_slot_cases
   rcases post.eq_nil_or_concat with h | ⟨post', q, rfl⟩
   · subst h
     have := congrArg List.reverse hd
-    simp at this
+    simp? at this
     obtain ⟨h1, h2, h3⟩ := this
     exact Or.inr (Or.inr ⟨rfl, h2.symm, h1.symm, by
       simpa using congrArg List.reverse h3⟩)
   · rcases post'.eq_nil_or_concat with h | ⟨post'', q', rfl⟩
     · subst h
       have := congrArg List.reverse hd
-      simp at this
+      simp? at this
       obtain ⟨h1, h2, h3⟩ := this
       refine Or.inr (Or.inl ⟨by simp [List.concat, h1],
         h2.symm, ?_⟩)
       have h4 := congrArg List.reverse h3
-      simp at h4
+      simp? at h4
       rw [h4]
     · have := congrArg List.reverse hd
-      simp at this
+      simp? at this
       obtain ⟨h1, h2, h3⟩ := this
       refine Or.inl ⟨post'', ⟨by
         rw [show (post''.concat q').concat q =
@@ -100,7 +100,7 @@ theorem window_contract3Fold
       (N.X ◁ ((ρ_ ((M'.X ⊗ A) ⊗ M.X)).hom ≫ w ≫
           modTensorπ A M' M ≫ p)) ≫
         actRight A N.X ≫ (ρ_ N.X).inv ≫ modMultiπ A [N] := by
-  show (N.X ◁ ((w ▷ (𝟙_ D)) ≫ (α_ M'.X M.X (𝟙_ D)).hom)) ≫
+  change (N.X ◁ ((w ▷ (𝟙_ D)) ≫ (α_ M'.X M.X (𝟙_ D)).hom)) ≫
       (N.X ◁ ((M'.X ◁ (ρ_ M.X).hom) ≫
         modTensorπ A M' M ≫ p)) ≫
       actRight A N.X ≫ (ρ_ N.X).inv ≫ modMultiπ A [N] = _
@@ -130,7 +130,7 @@ theorem contract3Fold_boundary_cond
     (N : Mod D A) :
     modMultiLegM A [] N M' [M] ≫ contract3Fold A p N =
       modMultiLegN A [] N M' [M] ≫ contract3Fold A p N := by
-  show (((actRight A N.X ▷ M'.X) ▷ (M.X ⊗ 𝟙_ D)) ≫
+  change (((actRight A N.X ▷ M'.X) ▷ (M.X ⊗ 𝟙_ D)) ≫
       (α_ N.X M'.X (M.X ⊗ 𝟙_ D)).hom) ≫
       (N.X ◁ ((M'.X ◁ (ρ_ M.X).hom) ≫
         modTensorπ A M' M ≫ p)) ≫
@@ -238,7 +238,7 @@ noncomputable def modMultiContract3
               contract3Fold A p N =
             modMultiLegN A [N] M' M [] ≫
               contract3Fold A p N := by
-          show (N.X ◁ ((modTensorLegM A M' M ▷ modList A []) ≫
+          change (N.X ◁ ((modTensorLegM A M' M ▷ modList A []) ≫
               (α_ M'.X M.X (modList A [])).hom)) ≫
               contract3Fold A p N =
             (N.X ◁ ((modTensorLegN A M' M ▷ modList A []) ≫

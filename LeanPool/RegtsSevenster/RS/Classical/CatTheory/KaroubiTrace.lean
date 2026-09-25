@@ -37,7 +37,7 @@ theorem karoubiEnd_isSemisimpleRing_of_trace {C : Type*} [Category C]
     (hcyc : ∀ a b : End P.X, τ (a ≫ b) = τ (b ≫ a))
     (hnd : ∀ a : End P.X, (∀ b : End P.X, τ (a ≫ b) = 0) → a = 0) :
     IsSemisimpleRing (End P) := by
-  haveI : FiniteDimensional ℂ (End P) :=
+  have : FiniteDimensional ℂ (End P) :=
     FiniteDimensional.of_injective
       (show End P →ₗ[ℂ] End P.X from karoubiHomLinearMap P P)
       (fun _ _ h => Karoubi.Hom.ext h)

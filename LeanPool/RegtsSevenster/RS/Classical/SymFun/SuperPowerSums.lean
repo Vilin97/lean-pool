@@ -201,7 +201,7 @@ theorem powerSums_zero_of_eventually_zero
   set w : Fin n → ℂ := fun i => c (γ i)
   have hvan_all : ∀ m, M ≤ m → ∑ i : Fin n, w i * γ i ^ m = 0 := by
     intro m hm
-    show ∑ i : Fin n, c (γ i) * γ i ^ m = 0
+    change ∑ i : Fin n, c (γ i) * γ i ^ m = 0
     rw [← hsum_conv (fun a => c a * a ^ m)]
     have : t m = 0 := hN₀ m (le_trans (le_max_left _ _) hm)
     rw [htS m (le_trans (le_max_right _ _) hm)] at this

@@ -55,7 +55,7 @@ namespace RS
 
 open Finset MonoidAlgebra
 
-open scoped Classical
+
 
 /-! ## All-even colourings -/
 
@@ -139,11 +139,11 @@ private theorem coordOf_basis_allEven (k ℓ n : ℕ)
       (allEvenEmb k ℓ n f) =
     if f = g then 1 else 0 := by
   unfold coordOf
-  rw [dif_pos (allEvenEmb_isEven k ℓ n f)]
+  rw [dite_eq_left (allEvenEmb_isEven k ℓ n f)]
   rw [evenCoord_basis]
   by_cases h : f = g
-  · subst h; rw [if_pos rfl, if_pos rfl]
-  · rw [if_neg h, if_neg (fun hh => h
+  · subst h; rw [ite_eq_left rfl, ite_eq_left rfl]
+  · rw [ite_eq_right h, ite_eq_right (fun hh => h
       (allEvenEmb_injective k ℓ n (congrArg Subtype.val hh)))]
 
 /-! ## The even sector trace -/
@@ -191,6 +191,7 @@ noncomputable def evenSectorTr (k ℓ n : ℕ) :
 
 /-! ## Fixed-point count -/
 
+open scoped Classical in
 /-- The sum over `if f ∘ σ = f then 1 else 0` equals `cycleProd (const m)`. -/
 theorem fixedCount_eq_cycleProd (n m : ℕ) (σ : Equiv.Perm (Fin n)) :
     (∑ f : Fin n → Fin m,
@@ -220,7 +221,7 @@ theorem evenSectorTr_perm (k ℓ n : ℕ) (σ : Equiv.Perm (Fin n)) :
           (superPow (stdSuperPair k ℓ) n)).evenMap) =
       cycleProd (fun _ => (k : ℂ)) σ := by
   -- Unfold evenSectorTr
-  show ∑ f : Fin n → Fin k,
+  change ∑ f : Fin n → Fin k,
     (colourPowerEquiv k ℓ n).evenEquiv
       (((modelPermMap σ : SuperVect.Hom _ _).evenMap)
         (evenBasis k ℓ n
@@ -238,7 +239,7 @@ theorem evenSectorTr_perm (k ℓ n : ℕ) (σ : Equiv.Perm (Fin n)) :
           ⟨allEvenEmb k ℓ n f, allEvenEmb_isEven k ℓ n f⟩))
         (allEvenEmb k ℓ n f) := fun f => by
     unfold coordOf
-    rw [dif_pos (allEvenEmb_isEven k ℓ n f)]
+    rw [dite_eq_left (allEvenEmb_isEven k ℓ n f)]
   rw [Finset.sum_congr rfl (fun f _ => hstep f)]
   -- Apply coordOf_modelPermMap'
   have hcoord : ∀ f : Fin n → Fin k,
@@ -328,7 +329,7 @@ private theorem wordSign_allOdd {n : ℕ} (w : List (Fin n))
   induction w generalizing g with
   | nil => simp [wordSign]
   | cons i w ih =>
-    show adjSign (allOddEmb k ℓ (n + 1) g)
+    change adjSign (allOddEmb k ℓ (n + 1) g)
         ⟨i.val, by omega⟩ ⟨i.val + 1, by omega⟩ *
       wordSign w (allOddEmb k ℓ (n + 1) g ∘
         Equiv.swap ⟨i.val, by omega⟩ ⟨i.val + 1, by omega⟩) =
@@ -336,7 +337,7 @@ private theorem wordSign_allOdd {n : ℕ} (w : List (Fin n))
     have hadj : adjSign (allOddEmb k ℓ (n + 1) g)
         ⟨i.val, by omega⟩ ⟨i.val + 1, by omega⟩ = -1 := by
       unfold adjSign allOddEmb
-      rw [if_pos ⟨by simp [Sum.isRight], by simp [Sum.isRight]⟩]
+      rw [ite_eq_left ⟨by simp [Sum.isRight], by simp [Sum.isRight]⟩]
     rw [hadj]
     have hswap : allOddEmb k ℓ (n + 1) g ∘
         Equiv.swap (⟨i.val, by omega⟩ : Fin (n + 1))
@@ -440,11 +441,11 @@ private theorem coordOf_basis_allOdd (k ℓ n : ℕ) (hn : Even n)
       (allOddEmb k ℓ n g₁) =
     if g₁ = g₂ then 1 else 0 := by
   unfold coordOf
-  rw [dif_pos (allOddEmb_isEven k ℓ n hn g₁)]
+  rw [dite_eq_left (allOddEmb_isEven k ℓ n hn g₁)]
   rw [evenCoord_basis]
   by_cases h : g₁ = g₂
-  · subst h; rw [if_pos rfl, if_pos rfl]
-  · rw [if_neg h, if_neg (fun hh => h
+  · subst h; rw [ite_eq_left rfl, ite_eq_left rfl]
+  · rw [ite_eq_right h, ite_eq_right (fun hh => h
       (allOddEmb_injective k ℓ n (congrArg Subtype.val hh)))]
 
 /-- **Odd character formula (even-n case)**: the odd sector trace
@@ -458,7 +459,7 @@ theorem oddSectorTr_perm (k ℓ n : ℕ) (hn : Even n)
       ((Equiv.Perm.sign σ : ℤ) : ℂ) *
         cycleProd (fun _ => ((2 * ℓ : ℕ) : ℂ)) σ := by
   -- Unfold
-  show ∑ g : Fin n → Fin (2 * ℓ),
+  change ∑ g : Fin n → Fin (2 * ℓ),
     (colourPowerEquiv k ℓ n).evenEquiv
       (((modelPermMap σ : SuperVect.Hom _ _).evenMap)
         (evenBasis k ℓ n
@@ -476,7 +477,7 @@ theorem oddSectorTr_perm (k ℓ n : ℕ) (hn : Even n)
           ⟨allOddEmb k ℓ n g, allOddEmb_isEven k ℓ n hn g⟩))
         (allOddEmb k ℓ n g) := fun g => by
     unfold coordOf
-    rw [dif_pos (allOddEmb_isEven k ℓ n hn g)]
+    rw [dite_eq_left (allOddEmb_isEven k ℓ n hn g)]
   rw [Finset.sum_congr rfl (fun g _ => hstep g)]
   -- Apply coordOf_modelPermMap'
   have hcoord : ∀ g : Fin n → Fin (2 * ℓ),

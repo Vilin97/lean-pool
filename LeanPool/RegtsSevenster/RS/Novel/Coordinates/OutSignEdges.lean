@@ -17,7 +17,7 @@ and non-participating edges contribute 1 on both sides.
 
 namespace RS
 
-open Classical Finset
+open Finset
 
 variable (W : ClosedFragment) (F : EdgeSubset W) {ℓ : ℕ}
   {κ : F.TransitionSystem} (o : κ.Orientation) (φ : F.OddColouring ℓ)
@@ -32,11 +32,11 @@ private noncomputable def outSignFun (x : W.Flag) : ℤ :=
 private theorem outSignFun_of_mem {x : W.Flag} (hx : x ∈ F.flags) :
     outSignFun W F o φ x =
       if o.isOut x = true then oddPartnerSign ℓ (φ.val ⟨x, hx⟩) else 1 :=
-  dif_pos hx
+  dite_eq_left hx
 
 private theorem outSignFun_of_not_mem {x : W.Flag} (hx : x ∉ F.flags) :
     outSignFun W F o φ x = 1 :=
-  dif_neg hx
+  dite_eq_right hx
 
 /-- The subtype product over F.flags equals the full product of the
 totalized function. -/
@@ -78,24 +78,24 @@ private theorem edge_factor (i : Fin (edgeCount W)) :
     have hflip : o.isOut f₁ = !o.isOut f₀ :=
       hpair ▸ o.pairing_flip _ hmem
     rw [outSignFun_of_mem W F o φ hmem,
-      outSignFun_of_mem W F o φ hmem₁, dif_pos hmem]
+      outSignFun_of_mem W F o φ hmem₁, dite_eq_left hmem]
     by_cases hb : o.isOut f₀ = true
     · -- f₀ outgoing, f₁ incoming
       have hb₁ : ¬ o.isOut f₁ = true := by
         rw [hflip, hb]; decide
-      rw [if_pos hb, if_neg hb₁, mul_one]
+      rw [ite_eq_left hb, ite_eq_right hb₁, mul_one]
     · -- f₀ incoming, f₁ outgoing
       have hb₁ : o.isOut f₁ = true := by
         have ho : o.isOut f₀ = false :=
           Bool.eq_false_iff.mpr (by simpa using hb)
         rw [hflip, ho]; rfl
-      rw [if_neg hb, if_pos hb₁, one_mul]
+      rw [ite_eq_right hb, ite_eq_left hb₁, one_mul]
       exact congrArg (oddPartnerSign ℓ) hφeq
   · -- Neither flag participates
     have hmem₁ : f₁ ∉ F.flags := hpair ▸ F.pairing_not_mem hmem
     rw [outSignFun_of_not_mem W F o φ hmem,
       outSignFun_of_not_mem W F o φ hmem₁,
-      dif_neg hmem, mul_one]
+      dite_eq_right hmem, mul_one]
 
 /-- Each participating edge has exactly one outgoing flag; the
 subtype product of odd-partner signs equals the edge-indexed

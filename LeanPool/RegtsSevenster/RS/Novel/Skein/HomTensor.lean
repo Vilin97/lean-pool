@@ -30,7 +30,7 @@ noncomputable def homTensorAux (s t u v : ℕ)
       (tensorFinsupp s t u v x))
     (fun y hy => by
       refine LinearMap.mem_ker.mpr ?_
-      show (LinearMap.ker (connectionMap f.val
+      change (LinearMap.ker (connectionMap f.val
         ((s + u) + (t + v)))).mkQ
         (tensorFinsupp s t u v x y) = 0
       rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
@@ -56,7 +56,7 @@ noncomputable def HomSpace.tensor (s t u v : ℕ) :
       map_add' := fun x₁ x₂ => by
         refine LinearMap.ext fun q => ?_
         obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ q
-        show homTensorAux f s t u v (x₁ + x₂)
+        change homTensorAux f s t u v (x₁ + x₂)
             ((LinearMap.ker (connectionMap f.val (u + v))).mkQ
               y) = _
         rw [homTensorAux_mk, map_add, LinearMap.add_apply,
@@ -65,7 +65,7 @@ noncomputable def HomSpace.tensor (s t u v : ℕ) :
       map_smul' := fun c x => by
         refine LinearMap.ext fun q => ?_
         obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ q
-        show homTensorAux f s t u v (c • x)
+        change homTensorAux f s t u v (c • x)
             ((LinearMap.ker (connectionMap f.val (u + v))).mkQ
               y) = _
         rw [homTensorAux_mk, map_smul, LinearMap.smul_apply,
@@ -75,7 +75,7 @@ noncomputable def HomSpace.tensor (s t u v : ℕ) :
       rw [LinearMap.mem_ker]
       refine LinearMap.ext fun q => ?_
       obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ q
-      show homTensorAux f s t u v x
+      change homTensorAux f s t u v x
           ((LinearMap.ker (connectionMap f.val (u + v))).mkQ
             y) = 0
       rw [homTensorAux_mk]
@@ -99,7 +99,7 @@ theorem HomSpace.tensor_ofFragment (s t u v : ℕ)
     HomSpace.tensor f s t u v (HomSpace.ofFragment f.val F)
         (HomSpace.ofFragment f.val G) =
       HomSpace.ofFragment f.val (tensorFragment F G) := by
-  show HomSpace.tensor f s t u v
+  change HomSpace.tensor f s t u v
       ((LinearMap.ker (connectionMap f.val (s + t))).mkQ
         (Finsupp.single F 1))
       ((LinearMap.ker (connectionMap f.val (u + v))).mkQ

@@ -24,6 +24,7 @@ open CategoryTheory MonoidalCategory
 variable {R : ℕ} (f : EdgeRankParameter R)
 
 /-- The exact self-pairing at every arity. -/
+@[instance_reducible]
 noncomputable def strandPairingAll :
     (n : ℕ) →
       ExactPairing (SkeinObj.mk (f := f) n) (SkeinObj.mk n)
