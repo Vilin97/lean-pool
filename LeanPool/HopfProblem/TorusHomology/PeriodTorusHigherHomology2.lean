@@ -489,7 +489,8 @@ private theorem PeriodTorusHigherHomology.sumElim_homology_inl_mo1973_4520 {X : 
         (SingularMayerVietoris.singularHomologyMap (sumInlMap X Y) n a) =
       SingularMayerVietoris.singularHomologyMap f n a := by
   have h :=
-    ((AlgebraicTopology.singularHomologyFunctor.{0} (ModuleCat.{0} ℤ) n).obj (ModuleCat.of ℤ ℤ)).map_comp
+    ((AlgebraicTopology.singularHomologyFunctor.{0}
+      (ModuleCat.{0} ℤ) n).obj (ModuleCat.of ℤ ℤ)).map_comp
       (TopCat.ofHom (sumInlMap X Y)) (TopCat.ofHom (sumElimMap f g))
   exact (LinearMap.congr_fun (congrArg ModuleCat.Hom.hom h) a).symm
 
@@ -500,7 +501,8 @@ private theorem PeriodTorusHigherHomology.sumElim_homology_inr_mo1973_4521 {X : 
         (SingularMayerVietoris.singularHomologyMap (sumInrMap X Y) n a) =
       SingularMayerVietoris.singularHomologyMap g n a := by
   have h :=
-    ((AlgebraicTopology.singularHomologyFunctor.{0} (ModuleCat.{0} ℤ) n).obj (ModuleCat.of ℤ ℤ)).map_comp
+    ((AlgebraicTopology.singularHomologyFunctor.{0}
+      (ModuleCat.{0} ℤ) n).obj (ModuleCat.of ℤ ℤ)).map_comp
       (TopCat.ofHom (sumInrMap X Y)) (TopCat.ofHom (sumElimMap f g))
   exact (LinearMap.congr_fun (congrArg ModuleCat.Hom.hom h) a).symm
 
@@ -508,7 +510,8 @@ private theorem PeriodTorusHigherHomology.disjointHomology_id_apply_mo1973_4522 
     [TopologicalSpace X] (n : ℕ) (a : SingularMayerVietoris.SingularHomology X n) :
     SingularMayerVietoris.singularHomologyMap (ContinuousMap.id X) n a = a := by
   have h :=
-    ((AlgebraicTopology.singularHomologyFunctor.{0} (ModuleCat.{0} ℤ) n).obj (ModuleCat.of ℤ ℤ)).map_id
+    ((AlgebraicTopology.singularHomologyFunctor.{0}
+      (ModuleCat.{0} ℤ) n).obj (ModuleCat.of ℤ ℤ)).map_id
       (TopCat.of X)
   exact LinearMap.congr_fun (congrArg ModuleCat.Hom.hom h) a
 

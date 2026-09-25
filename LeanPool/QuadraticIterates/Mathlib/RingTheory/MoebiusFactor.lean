@@ -341,7 +341,9 @@ theorem moebiusFactorR_isRelPrime {c : ℕ → R} (hc : ∀ d ≥ 1, c d ≠ 0)
       1 ≤ factorization (moebiusFactorR c k) p := by
     have h1 : (1 : ℕ∞) ≤ emultiplicity q (moebiusFactorR c k) := by
       rw [← pow_one q] at hdvd
-      exact pow_dvd_iff_le_emultiplicity.mp (by rw [pow_one] at hdvd ⊢ <;> assumption) |>.trans_eq rfl
+      exact pow_dvd_iff_le_emultiplicity.mp (by
+        rw [pow_one] at hdvd ⊢
+        assumption) |>.trans_eq rfl
     rw [emultiplicity_eq_count_normalizedFactors hq.irreducible
       (moebiusFactorR_ne_zero hc hsd k hk)] at h1
     rw [factorization_eq_count]

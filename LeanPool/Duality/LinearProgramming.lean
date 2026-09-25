@@ -623,7 +623,8 @@ lemma ValidELP.unbounded_of_feasible_of_neg (P : ValidELP I J F) (hP : P.IsFeasi
       | ⊥ =>
         refine ⟨⊥, ⟨xₚ, hxₚ, ?_⟩, bot_le⟩
         change hcx₀ to P.c ᵥ⬝ x₀ = ⊥
-        rw [←dotWeig_eq_bot] at hcx₀ ⊢ <;> assumption
+        rw [←dotWeig_eq_bot] at hcx₀ ⊢
+        assumption
       | ⊤ =>
         exfalso
         rw [hcx₀] at hx₀

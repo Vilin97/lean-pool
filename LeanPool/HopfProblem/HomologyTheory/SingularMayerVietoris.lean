@@ -1079,7 +1079,8 @@ private theorem
 private theorem FirstHurewicz.inducedHomology_id {X : Type} [TopologicalSpace X] :
     inducedHomology (ContinuousMap.id X) = LinearMap.id := by
   have h :=
-    ((AlgebraicTopology.singularHomologyFunctor.{0} (ModuleCat.{0} ℤ) 1).obj (ModuleCat.of ℤ ℤ)).map_id
+    ((AlgebraicTopology.singularHomologyFunctor.{0}
+      (ModuleCat.{0} ℤ) 1).obj (ModuleCat.of ℤ ℤ)).map_id
       (TopCat.of X)
   exact congrArg ModuleCat.Hom.hom h
 
@@ -1087,7 +1088,8 @@ private theorem FirstHurewicz.inducedHomology_comp {X Y Z : Type} [TopologicalSp
     [TopologicalSpace Y] [TopologicalSpace Z] (f : C(X, Y)) (g : C(Y, Z)) :
     inducedHomology (g.comp f) = (inducedHomology g).comp (inducedHomology f) := by
   have h :=
-    ((AlgebraicTopology.singularHomologyFunctor.{0} (ModuleCat.{0} ℤ) 1).obj (ModuleCat.of ℤ ℤ)).map_comp
+    ((AlgebraicTopology.singularHomologyFunctor.{0}
+      (ModuleCat.{0} ℤ) 1).obj (ModuleCat.of ℤ ℤ)).map_comp
       (TopCat.ofHom f) (TopCat.ofHom g)
   exact congrArg ModuleCat.Hom.hom h
 
