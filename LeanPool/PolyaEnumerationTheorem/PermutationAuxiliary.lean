@@ -16,7 +16,7 @@ import Mathlib.Tactic.Positivity.Finset
 # Auxiliary results on permutations
 -/
 
-@[expose] public section
+public section
 
 universe u
 

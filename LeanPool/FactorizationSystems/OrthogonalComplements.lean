@@ -15,7 +15,7 @@ import Mathlib.Tactic.SetLike
 # LeanPool.FactorizationSystems.OrthogonalComplements
 -/
 
-@[expose] public section
+public section
 
 namespace CategoryTheory
 universe u v
@@ -24,13 +24,13 @@ variable {C : Type u} [Category.{v} C]
 
 /- The right orthogonal complement of a class of morphisms W in a category C -/
 /-- Imported FactorizationSystems declaration. -/
-def rightOrthogonalComplement : (W : MorphismProperty C) → MorphismProperty C := by
+@[expose] def rightOrthogonalComplement : (W : MorphismProperty C) → MorphismProperty C := by
   intro W _ _ f
   exact ∀ ⦃A B : C ⦄ (g : A ⟶ B) (p : W g) , (homOrthogonal g f)
 
 /- The left orthogonal complement of a class of morphisms W in a category C-/
 /-- Imported FactorizationSystems declaration. -/
-def leftOrthogonalComplement : (W : MorphismProperty C) → MorphismProperty C := by
+@[expose] def leftOrthogonalComplement : (W : MorphismProperty C) → MorphismProperty C := by
   intro W _ _ f
   exact ∀ ⦃A B : C⦄ (g : A ⟶ B) (p : W g) , (homOrthogonal f g)
 

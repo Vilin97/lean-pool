@@ -31,7 +31,7 @@ Using the factorial number system (`FactBase`), `factSum S = 2^m` is impossible 
   small `m`). Both are `sorry`-free and depend only on `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos403
 

@@ -24,4 +24,4 @@ Tags: category-theory, factorization-systems, orthogonality
 MSC: 18A32, 18A40
 -/
 
-@[expose] public section
+public section

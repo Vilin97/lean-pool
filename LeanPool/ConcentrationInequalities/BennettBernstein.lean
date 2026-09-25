@@ -43,7 +43,7 @@ This file develops that from scratch, Mathlib-only:
 Sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Real
 
@@ -55,7 +55,7 @@ variable {Ω : Type*} {mΩ : MeasurableSpace Ω} {μ : Measure Ω}
 `mgf X μ t ≤ exp(V t²/(2(1−ct)))` for `0 ≤ t` and `ct < 1`. This is the variance-based
 (Bernstein) analogue of `HasSubgaussianMGF`; when `c = 0`, every nonnegative parameter is in the
 effective domain. It is the martingale-summable object underlying Freedman's inequality. -/
-def HasSubgammaMGF (X : Ω → ℝ) (V c : ℝ) (μ : Measure Ω) : Prop :=
+@[expose] def HasSubgammaMGF (X : Ω → ℝ) (V c : ℝ) (μ : Measure Ω) : Prop :=
   ∀ t : ℝ, 0 ≤ t → c * t < 1 → mgf X μ t ≤ Real.exp (V * t ^ 2 / (2 * (1 - c * t)))
 
 /-- **Bernstein tail from the sub-gamma MGF.** If `X` has a sub-gamma MGF with `V > 0`,

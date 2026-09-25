@@ -16,7 +16,7 @@ import Mathlib.Tactic.IntervalCases
 # LeanPool.RamanujanTauMissesPrimes.Solution
 -/
 
-@[expose] public section
+public section
 
 open Filter Asymptotics
 

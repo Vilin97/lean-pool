@@ -35,7 +35,7 @@ example (e : Election 4) : e.votes[0] ≤ 15 + e.votes[1] := by
 ```
 -/
 
-@[expose] public section
+public section
 
 open Plausible
 

@@ -28,7 +28,7 @@ The proof lifts the unconditional Hoeffding bound through the conditional-expect
 Sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 

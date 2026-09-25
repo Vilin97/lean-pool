@@ -18,4 +18,4 @@ Tags: combinatorics, distance-sets, polynomial-method
 MSC: 52C10, 05B30
 -/
 
-@[expose] public section
+public section

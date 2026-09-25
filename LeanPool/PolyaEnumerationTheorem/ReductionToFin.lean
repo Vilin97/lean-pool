@@ -21,7 +21,7 @@ colors in `Y` under the induced group action of `G` on `Fin n`. This allows us t
 instead of more complex types when working with numbers of distinct colorings.
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 

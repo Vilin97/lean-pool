@@ -57,7 +57,7 @@ The development is `sorry`-free and uses only the standard axioms
 `propext`, `Classical.choice`, `Quot.sound`.
 -/
 
-@[expose] public section
+public section
 
 namespace Contrib.MaxFlowMinCut
 

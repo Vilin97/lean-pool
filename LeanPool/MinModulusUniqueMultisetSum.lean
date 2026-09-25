@@ -27,4 +27,4 @@ Tags: additive-combinatorics, multiset-sums, finite-groups, permanent
 MSC: 11B75, 05D99
 -/
 
-@[expose] public section
+public section

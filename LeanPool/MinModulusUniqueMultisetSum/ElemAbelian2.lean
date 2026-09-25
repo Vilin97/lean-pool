@@ -20,7 +20,7 @@ the all-ones multiset — then `n - 1 ≤ k`
 the elementary-abelian case of the minimum-modulus problem.
 -/
 
-@[expose] public section
+public section
 
 namespace MinModulus
 

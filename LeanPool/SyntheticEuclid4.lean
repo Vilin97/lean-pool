@@ -24,7 +24,7 @@ Tags: euclidean-geometry, synthetic-geometry, pythagorean-theorem
 MSC: 51M04
 -/
 
-@[expose] public section
+public section
 
 /-!
 A formalization of Book I of Euclid's *Elements* in Lean 4, built on Avigad,
