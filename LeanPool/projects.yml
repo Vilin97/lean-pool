@@ -10256,7 +10256,6 @@ projects:
       - '11E12'
       - '11E08'
       - '11E88'
-
   - slug: egz-formal-proof
     title: Convex geometry and the Erdős–Ginzburg–Ziv problem
     summary: For every fixed positive dimension d, the Erdős–Ginzburg–Ziv constant of
