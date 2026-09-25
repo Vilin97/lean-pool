@@ -3,11 +3,13 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.AccessibleJoin
-import LeanPool.Schoenflies.CrosscutCells
-import LeanPool.Schoenflies.JordanSeparates
-import LeanPool.Schoenflies.TwoArcs
-import LeanPool.Schoenflies.Graph.K33Land
+module
+
+public import LeanPool.Schoenflies.AccessibleJoin
+public import LeanPool.Schoenflies.CrosscutCells
+public import LeanPool.Schoenflies.JordanSeparates
+public import LeanPool.Schoenflies.TwoArcs
+public import LeanPool.Schoenflies.Graph.K33Land
 
 /-!
 # The Jordan curve theorem
@@ -86,6 +88,8 @@ blueprint's `Q_j` never appears: only the parameter blocks `[t 0 j, t 2 j]` do.
 * `Schoenflies.subset_closure_of_accessible_dense`, `Schoenflies.IsJordanCurve.isSeparating` —
   `thm:jordan`.
 -/
+
+@[expose] public section
 
 open Bornology Metric Set unitInterval
 

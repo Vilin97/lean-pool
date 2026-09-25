@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
 
-import LeanPool.Kurosh.Deck
-import LeanPool.Kurosh.IndexFormula
-import LeanPool.Kurosh.KuroshSolution
-import LeanPool.Kurosh.KuroshFreeCorollary
+module
+
+public import LeanPool.Kurosh.Deck
+public import LeanPool.Kurosh.IndexFormula
+public import LeanPool.Kurosh.KuroshSolution
+public import LeanPool.Kurosh.KuroshFreeCorollary
 
 /-!
 # Kurosh and Schreier subgroup theorems via covering graphs

@@ -3,10 +3,14 @@ Copyright (c) 2026 Haowei Lin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Haowei Lin, Shanda Li
 -/
-import LeanPool.SumDifferenceExponent.Construction
-import LeanPool.SumDifferenceExponent.Basic
+module
+
+public import LeanPool.SumDifferenceExponent.Construction
+public import LeanPool.SumDifferenceExponent.Basic
 
 /-! The asymptotic lower bound for the explicit construction. -/
+
+@[expose] public section
 
 open scoped BigOperators Pointwise
 open Filter Topology

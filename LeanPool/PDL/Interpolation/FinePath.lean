@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Flip
-import LeanPool.PDL.KeepRight
+module
+
+public import LeanPool.PDL.Flip
+public import LeanPool.PDL.KeepRight
 
 /-! # Fine paths in local tableaux and in tableaux
 
@@ -16,6 +18,8 @@ The two main definitions are `LocalPathIn`, for paths to arbitrary (also interme
 of a `LocalTableau`, and `FinePathIn`, for the nodes of a whole `Tableau` in the *fine* sense,
 i.e. including those nodes inside a local tableau that a `loc` step jumps over.
 -/
+
+@[expose] public section
 
 namespace PDL
 

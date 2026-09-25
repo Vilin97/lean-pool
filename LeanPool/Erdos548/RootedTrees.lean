@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tom Adamczewski
 -/
 
-import LeanPool.Erdos548.Words
-import Mathlib.Combinatorics.SimpleGraph.Acyclic
-import Mathlib.Combinatorics.SimpleGraph.Copy
+module
+
+public import LeanPool.Erdos548.Words
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
+public import Mathlib.Combinatorics.SimpleGraph.Copy
 
 /-!
 # Rooted tree copies supported on word prefixes
@@ -28,6 +30,8 @@ least two splits a finite tree into two strictly smaller rooted trees meeting on
 `rooted_word_tree_bound`: the adjacency-marked cut permutation words of a repetition-free host
 word `l₀` number at most those supporting a rooted copy of the tree plus `(t - 2) · |l₀|!`.
 -/
+
+@[expose] public section
 
 open SimpleGraph
 

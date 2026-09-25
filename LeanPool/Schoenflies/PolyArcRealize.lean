@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.ArcCollars
-import LeanPool.Schoenflies.GeneralCrosscut
-import LeanPool.Schoenflies.Realization
+module
+
+public import LeanPool.Schoenflies.ArcCollars
+public import LeanPool.Schoenflies.GeneralCrosscut
+public import LeanPool.Schoenflies.Realization
 
 /-!
 # Realizing a simple polygonal arc as a `PolyArc`
@@ -95,6 +97,8 @@ There is no blueprint label for this statement: like the closed-curve realizatio
 * `Schoenflies.IsCrosscut.hasArcCollars`, `Schoenflies.crosscut_at_most_two_of_isPolygonal` — the
   same at the call site of `thm:general-crosscut`.
 -/
+
+@[expose] public section
 
 open Metric Set unitInterval
 

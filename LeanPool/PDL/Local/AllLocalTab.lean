@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Data.List.ReduceOption
+module
 
-import LeanPool.PDL.Local.Tableau
+public import Mathlib.Data.List.ReduceOption
+
+public import LeanPool.PDL.Local.Tableau
 
 /-! # Generating all Local Tableaux
 
@@ -14,6 +16,8 @@ We show that for any `X` the type `LocalTableau` is finite.
 
 This is needed to define `BuildTree` as a finite tree.
 -/
+
+@[expose] public section
 
 namespace PDL
 

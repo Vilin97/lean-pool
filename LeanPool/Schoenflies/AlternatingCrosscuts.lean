@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.PolygonalCrosscut
-import LeanPool.Schoenflies.Subarc
+module
+
+public import LeanPool.Schoenflies.PolygonalCrosscut
+public import LeanPool.Schoenflies.Subarc
 
 /-!
 # Corollary 2.9: alternating crosscuts intersect
@@ -90,6 +92,8 @@ those particular sets the realization has to reproduce.
   `…_outside` — the blueprint's literal cases (a) and (b).
 * `alternating_crosscuts` — `cor:alternating-crosscuts`, bundled.
 -/
+
+@[expose] public section
 
 open Set unitInterval
 

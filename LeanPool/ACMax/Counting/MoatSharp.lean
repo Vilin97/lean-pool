@@ -3,8 +3,10 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Counting.CompactCell
-import LeanPool.ACMax.Counting.Moats
+module
+
+public import LeanPool.ACMax.Counting.CompactCell
+public import LeanPool.ACMax.Counting.Moats
 
 /-!
 # The bulk-credited master-cycle moat (`master_cycle_fires_sharp`)
@@ -30,6 +32,8 @@ the forbidden cycle length rises from `(n+8)/9` to `(2n − X)/12`, a factor `1.
 Everything else — the slice bound, the moat cap `|F| ≤ Σ_{S₁}(deg − 2)`, the two-cluster tie — is
 verbatim `master_cycle_fires`; only the ledger and the threshold change.
 -/
+
+@[expose] public section
 
 namespace ACMax
 
