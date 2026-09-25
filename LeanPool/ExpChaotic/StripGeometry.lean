@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lasse Rempe
 -/
 
-import LeanPool.ExpChaotic.Expansion
-import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.Data.Nat.Nth
-import Mathlib.Order.CompletePartialOrder
+module
+
+public import LeanPool.ExpChaotic.Expansion
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import Mathlib.Data.Nat.Nth
+public import Mathlib.Order.CompletePartialOrder
 
 /-!
 # Strip geometry and the negative real axis
@@ -19,6 +21,8 @@ with generative AI assistance including Copilot, Claude, and particularly ChatGP
 The initial proof architecture uses John Harrison's HOL Light formalisation.
 See `LeanPool.ExpChaotic` for attribution and the upstream source.
 -/
+
+@[expose] public section
 
 open Function Filter Set Metric
 open scoped Topology NNReal Uniformity

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Discon
+module
+
+public import LeanPool.PDL.Discon
 
 /-! # Q-formulas and their normal form (Definitions 9.15, 9.16 and Fact 9.17)
 
@@ -24,6 +26,8 @@ stand for. This is done by `QFormula.subst σ` where `σ : Var → Formula`. Tak
 the paper, but the extra generality is exactly what is needed later: in the correctness
 proof the internal variables get replaced by other formulas.
 -/
+
+@[expose] public section
 
 namespace PDL
 

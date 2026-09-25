@@ -3,11 +3,13 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Graph.VertexSquares
-import LeanPool.Schoenflies.Graph.CycleJordan
-import LeanPool.Schoenflies.PolyLocal
-import LeanPool.Schoenflies.Polygonal
-import LeanPool.Schoenflies.Concatenate
+module
+
+public import LeanPool.Schoenflies.Graph.VertexSquares
+public import LeanPool.Schoenflies.Graph.CycleJordan
+public import LeanPool.Schoenflies.PolyLocal
+public import LeanPool.Schoenflies.Polygonal
+public import LeanPool.Schoenflies.Concatenate
 
 /-!
 # The polygonal redrawing of a finite plane graph
@@ -64,6 +66,8 @@ Bricks B7 and B8 of `lem:polygonal-redrawing` (H6), and the lemma itself.
   proof: the `ε` making the tubes about the cores pairwise disjoint, the component `U e` of
   the core inside its tube, and the assembly of radial, replacement path and radial.
 -/
+
+@[expose] public section
 
 open Metric Set unitInterval
 open scoped Graph

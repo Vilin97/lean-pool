@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Algebra.Order.BigOperators.Group.List
+module
 
-import LeanPool.PDL.Vocab
+public import Mathlib.Algebra.Order.BigOperators.Group.List
+
+public import LeanPool.PDL.Vocab
 
 /-! # Fischer-Ladner Closure
 
@@ -23,6 +25,8 @@ An alternative version following the proof of Theorem 3.2 in [FL1979]
 but unfinished is in `Unused/FischerLadnerViaPreForms.lean`.
 
 -/
+
+@[expose] public section
 
 namespace PDL
 

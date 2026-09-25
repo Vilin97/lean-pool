@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The FLT Project, √2
 -/
 
-import LeanPool.Odlyzko
+module
+
+public import LeanPool.Odlyzko
 
 /-!
 # Solution: Odlyzko bound for root discriminants
@@ -22,6 +24,8 @@ agree, which is what makes the verdict independent of the statement file.
 /-!
 # Solution to the Odlyzko root-discriminant challenge
 -/
+
+public section
 
 namespace Challenge.Odlyzko
 

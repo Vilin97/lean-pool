@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
 
-import LeanPool.ACMax.UpperBound
-import LeanPool.ACMax.Reduction.GapReduction
+module
+
+public import LeanPool.ACMax.UpperBound
+public import LeanPool.ACMax.Reduction.GapReduction
 
 /-!
 # Kolokolnikov's ACMAX conjecture
@@ -28,6 +30,8 @@ bipartite graph `K_{2,n-2}` (whose algebraic connectivity equals `2`).
 The statement decomposes into the equality clause (`algConn_completeBipartite_two`)
 and the universal upper-bound clause (`algConn_le_two_of_card`).
 -/
+
+@[expose] public section
 
 namespace ACMax
 

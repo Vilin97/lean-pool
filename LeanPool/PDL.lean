@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Beth
+module
+
+public import LeanPool.PDL.Beth
 
 /-!
 # Craig interpolation and Beth definability for propositional dynamic logic
