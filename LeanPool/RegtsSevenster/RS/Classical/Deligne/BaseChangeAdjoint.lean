@@ -278,11 +278,6 @@ theorem splitCoevalCoreDual_cover
     refine whisker_eq _ ?_
     simp only [← MonoidalCategory.whiskerLeft_comp_assoc]
     rw [whisker_exchange_assoc]
-  have hbk : (B ◁ (modTensorπ A M' M ≫ d.pair ≫ φ)) ≫ μ[B] =
-      (β_ B (M'.X ⊗ M.X)).hom ≫
-        ((modTensorπ A M' M ≫ d.pair ≫ φ) ▷ B) ≫ μ[B] := by
-    rw [← BraidedCategory.braiding_naturality_right_assoc,
-      IsCommMonObj.mul_comm]
   have hLform : ((v ▷ M'.X) ▷ (B ⊗ M.X)) ≫
       tensorμ B M'.X B M.X ≫ (μ[B] ▷ (M'.X ⊗ M.X)) ≫
       (B ◁ (modTensorπ A M' M ≫ d.pair ≫ φ)) ≫ μ[B] =

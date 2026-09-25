@@ -77,7 +77,7 @@ private lemma Nat_lcm_pow_n (n a b : ℕ) (ha : a ≠ 0) (hb : b ≠ 0) :
   rw [Nat.factorization_pow, Nat.factorization_lcm ha hb,
     Nat.factorization_lcm (pow_ne_zero n ha) (pow_ne_zero n hb), Nat.factorization_pow,
     Nat.factorization_pow]
-  simp_all
+  simp only [Finsupp.smul_apply, Finsupp.sup_apply, nsmul_eq_mul, Nat.mul_max_mul_left]
 
 theorem Nat_lcm_pow_two (a b : ℕ) : (Nat.lcm a b) ^ 2 = Nat.lcm (a ^ 2) (b ^ 2) := by
   by_cases ha : a = 0
@@ -120,7 +120,7 @@ theorem fin_d_neq_zero (n : ℕ) : d (Finset.Icc 1 n) > 0 := by
 theorem lcm_factorization (m n p : ℕ) (hm : m ≠ 0) (hn : n ≠ 0) :
     (m.lcm n).factorization p = max (m.factorization p) (n.factorization p) := by
   rw [Nat.factorization_lcm hm hn]
-  aesop
+  rfl
 
 theorem d_factorization (s : Finset ℕ) (hs : s.Nonempty) (p : ℕ) (hs₁ : 0 ∉ s) :
     (d s).factorization p =

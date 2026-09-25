@@ -105,9 +105,7 @@ theorem periodicFlag_iterWalk (κ : F.RelTransitionSystem)
 
 /-- Reduce a walk index modulo a period. -/
 theorem iterWalk_mod (κ : F.RelTransitionSystem) {f : W.Flag}
-    {n : ℕ} (_ : 1 ≤ n)
-    (hcont : ∀ t, t < n →
-      W.pairing (iterWalk κ f t) ∈ F.internalFlags)
+    {n : ℕ}
     (hper : iterWalk κ f n = f) (a : ℕ) :
     iterWalk κ f a = iterWalk κ f (a % n) := by
   have hmod : ∀ q r, iterWalk κ f (n * q + r) = iterWalk κ f r := by
@@ -117,7 +115,7 @@ theorem iterWalk_mod (κ : F.RelTransitionSystem) {f : W.Flag}
     | succ q ih =>
       intro r
       rw [show n * (q + 1) + r = n + (n * q + r) from by ring,
-        iterWalk_add_period κ f n (n * q + r) hper hcont]
+        iterWalk_add_period κ f n (n * q + r) hper]
       exact ih r
   conv_lhs =>
     rw [show a = n * (a / n) + a % n from (Nat.div_add_mod a n).symm]
@@ -186,17 +184,15 @@ theorem RelTransitionSystem.pathMatch_congr
     κ.pathMatch b hb = κ.pathMatch b' hb' := by
   subst h; rfl
 
-/-- Flags strictly inside a boundary-terminated chain segment are
-not periodic. -/
+/-- Flags along a boundary-terminated chain segment are not periodic. -/
 theorem not_periodic_of_chain_segment (κ : F.RelTransitionSystem)
     {b : W.Flag} {k : ℕ}
     (hcont : ∀ t, t < k →
       W.pairing (iterWalk κ b t) ∈ F.internalFlags)
     (hterm : W.pairing (iterWalk κ b k) ∈ F.boundaryFlags)
-    {m : ℕ} (hm1 : 1 ≤ m) (hmk : m ≤ k) :
+    {m : ℕ} (hmk : m ≤ k) :
     ¬ κ.PeriodicFlag (iterWalk κ b m) := by
   apply not_periodic_of_boundary_chain κ _
-    (iterWalk_mem_internal κ k hm1 hmk hcont)
   refine ⟨(k - m) + 1,
     W.pairing (iterWalk κ (iterWalk κ b m) (k - m)), ?_⟩
   apply traceChain_forward κ (iterWalk κ b m) (k := k - m)
@@ -866,7 +862,7 @@ theorem splice_val_not_periodic : ∀ t, t < k →
   rw [splice_walk_val hij hopen s' hc' hc κ' x b hxb k hk1 hcont t ht] at hper
   exact not_periodic_of_chain_segment
     (RelTransitionSystem.unglueOpen hij hopen s' hc' hc κ') hcont
-    (by rw [hterm]; exact hbo) (by omega : 1 ≤ t + 1)
+    (by rw [hterm]; exact hbo)
     (by omega : t + 1 ≤ k) hper
 
 omit hbo hyo hryx hterm in
@@ -899,9 +895,7 @@ theorem splice_mod : ∀ c,
     iterWalk κ' (κ'.match_ x) c = iterWalk κ' (κ'.match_ x) (c % k)
     := by
   intro c
-  exact iterWalk_mod κ' hk1
-    (splice_pairing_internal hij hopen s' hc' hc κ' x y b bo
-      hxb hyo hryx k hk1 hcont hterm)
+  exact iterWalk_mod κ'
     (splice_period hij hopen s' hc' hc κ' x y b bo hxb hyo
       hryx k hk1 hcont hterm) c
 

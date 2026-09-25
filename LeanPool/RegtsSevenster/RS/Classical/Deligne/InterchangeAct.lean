@@ -81,20 +81,7 @@ theorem interchange_actLeft
         (modTensorAct A N₁ P₁ ▷ modTensor A N₂ P₂) ≫
         modTensorπ A (modTensorMod A N₁ P₁)
           (modTensorMod A N₂ P₂) := by
-    have hTpin : (MonoidalCategory.whiskerLeft A
-        (Y₁ := modTensor A N₁ P₁ ⊗ modTensor A N₂ P₂)
-        (modTensorπ A (modTensorMod A N₁ P₁)
-          (modTensorMod A N₂ P₂))) ≫
-        modTensorAct A (modTensorMod A N₁ P₁)
-          (modTensorMod A N₂ P₂) =
-        ((α_ A (modTensor A N₁ P₁)
-            (modTensor A N₂ P₂)).inv ≫
-          modTensorAct A N₁ P₁ ▷ modTensor A N₂ P₂) ≫
-        modTensorπ A (modTensorMod A N₁ P₁)
-          (modTensorMod A N₂ P₂) :=
-      whiskerLeft_modTensorπ_act A
-        (modTensorMod A N₁ P₁) (modTensorMod A N₂ P₂)
-    erw [MonoidalCategory.whiskerLeft_comp, Category.assoc, hTpin]
+    erw [MonoidalCategory.whiskerLeft_comp, Category.assoc, hT]
     repeat' erw [Category.assoc]
   conv_rhs => rw [associator_naturality_middle_assoc,
     associator_naturality_right_assoc,

@@ -200,20 +200,16 @@ noncomputable def RelTransitionSystem.internalWalk {F : EdgeSubset W}
     (κ : F.RelTransitionSystem) (f : W.Flag) : W.Flag :=
   κ.match_ (W.pairing f)
 
-/-- If the pairing of an internal flag is also internal, the walk
-stays within internal flags. -/
+/-- If a flag's pairing is internal, its walk successor is internal. -/
 theorem RelTransitionSystem.internalWalk_mem {F : EdgeSubset W}
     (κ : F.RelTransitionSystem) {f : W.Flag}
-    (_hf : f ∈ F.internalFlags)
     (hp : W.pairing f ∈ F.internalFlags) :
     κ.internalWalk f ∈ F.internalFlags :=
   κ.match_mem _ hp
 
-/-- The walk map is injective on internal flags (when pairings stay
-internal). -/
+/-- The walk map is injective on flags whose pairings are internal. -/
 theorem RelTransitionSystem.internalWalk_injOn {F : EdgeSubset W}
     (κ : F.RelTransitionSystem) {f g : W.Flag}
-    (_hf : f ∈ F.internalFlags) (_hg : g ∈ F.internalFlags)
     (hpf : W.pairing f ∈ F.internalFlags)
     (hpg : W.pairing g ∈ F.internalFlags)
     (h : κ.internalWalk f = κ.internalWalk g) : f = g := by
@@ -242,7 +238,7 @@ theorem RelTransitionSystem.internalWalk_mem_of_allInternal
     {F : EdgeSubset W} (κ : F.RelTransitionSystem)
     (hall : F.allInternal) {f : W.Flag} (hf : f ∈ F.internalFlags) :
     κ.internalWalk f ∈ F.internalFlags :=
-  κ.internalWalk_mem hf (κ.pairing_internal_of_allInternal hall hf)
+  κ.internalWalk_mem (κ.pairing_internal_of_allInternal hall hf)
 
 /-- When all flags are internal, the walk is injective. -/
 theorem RelTransitionSystem.internalWalk_injOn_of_allInternal
@@ -250,7 +246,7 @@ theorem RelTransitionSystem.internalWalk_injOn_of_allInternal
     (hall : F.allInternal) {f g : W.Flag}
     (hf : f ∈ F.internalFlags) (hg : g ∈ F.internalFlags)
     (h : κ.internalWalk f = κ.internalWalk g) : f = g :=
-  κ.internalWalk_injOn hf hg
+  κ.internalWalk_injOn
     (κ.pairing_internal_of_allInternal hall hf)
     (κ.pairing_internal_of_allInternal hall hg) h
 

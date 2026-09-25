@@ -70,12 +70,10 @@ theorem RelTransitionSystem.PeriodicFlag.mem_internal
 /-! #### Periodicity helpers -/
 
 /-- Shift a period: `iterWalk κ f (n + k) = iterWalk κ f k` when
-`iterWalk κ f n = f` and all intermediate pairings are internal. -/
+`iterWalk κ f n = f`. -/
 theorem iterWalk_add_period (κ : F.RelTransitionSystem)
     (f : W.Flag) (n k : ℕ)
-    (hperiod : iterWalk κ f n = f)
-    (_hcont : ∀ j, j < n →
-      W.pairing (iterWalk κ f j) ∈ F.internalFlags) :
+    (hperiod : iterWalk κ f n = f) :
     iterWalk κ f (n + k) = iterWalk κ f k := by
   induction k with
   | zero => simp [hperiod]
@@ -89,18 +87,18 @@ theorem all_pairings_internal_of_periodic
     (hper : κ.PeriodicFlag f) (j : ℕ) :
     W.pairing (iterWalk κ f j) ∈ F.internalFlags := by
   obtain ⟨_, n, hn1, hcont, hperiod⟩ := hper
-  have hmod : ∀ k, k < n →
+  have hmod : ∀ k,
       iterWalk κ f (n * (j / n) + k) = iterWalk κ f k := by
-    intro k _hkn
+    intro k
     induction j / n with
     | zero => simp
     | succ m ih =>
       rw [show n * (m + 1) + k = n + (n * m + k) from by ring]
-      rw [iterWalk_add_period κ f n (n * m + k) hperiod hcont]
+      rw [iterWalk_add_period κ f n (n * m + k) hperiod]
       exact ih
   rw [show j = n * (j / n) + j % n from
     (Nat.div_add_mod j n).symm]
-  rw [hmod (j % n) (Nat.mod_lt j (by omega))]
+  rw [hmod (j % n)]
   exact hcont (j % n) (Nat.mod_lt j (by omega))
 
 /-- All iterates along a periodic walk are internal. -/
@@ -176,15 +174,13 @@ theorem RelTransitionSystem.internalWalk_injOn_periodic
     (κ : F.RelTransitionSystem) {f g : W.Flag}
     (hf : f ∈ κ.periodicFlags) (hg : g ∈ κ.periodicFlags)
     (h : κ.internalWalk f = κ.internalWalk g) : f = g := by
-  have hfi := κ.periodicFlags_sub hf
-  have hgi := κ.periodicFlags_sub hg
   have hpf : W.pairing f ∈ F.internalFlags :=
     all_pairings_internal_of_periodic κ
       (κ.mem_periodicFlags.mp hf) 0
   have hpg : W.pairing g ∈ F.internalFlags :=
     all_pairings_internal_of_periodic κ
       (κ.mem_periodicFlags.mp hg) 0
-  exact κ.internalWalk_injOn hfi hgi hpf hpg h
+  exact κ.internalWalk_injOn hpf hpg h
 
 /-! ### 3. walkPermPeriodic -/
 
@@ -217,7 +213,7 @@ intermediate pairings internal), then it has period `d` from
 position 0. -/
 theorem iterWalk_period_of_repeat
     (κ : F.RelTransitionSystem) (f : W.Flag)
-    (i d : ℕ) (_hd : 1 ≤ d)
+    (i d : ℕ)
     (hcont : ∀ j, j < i + d →
       W.pairing (iterWalk κ f j) ∈ F.internalFlags)
     (heq : iterWalk κ f i = iterWalk κ f (i + d)) :
@@ -291,12 +287,12 @@ theorem periodic_of_allInternal
   rcases Nat.lt_or_gt_of_ne hne_val with hij | hij
   · exact ⟨j - i, by omega,
       fun k _ => hcont_all k,
-      iterWalk_period_of_repeat κ f i (j - i) (by omega)
+      iterWalk_period_of_repeat κ f i (j - i)
         (fun k _ => hcont_all k)
         (by rw [Nat.add_sub_cancel' hij.le]; exact heq)⟩
   · exact ⟨i - j, by omega,
       fun k _ => hcont_all k,
-      iterWalk_period_of_repeat κ f j (i - j) (by omega)
+      iterWalk_period_of_repeat κ f j (i - j)
         (fun k _ => hcont_all k)
         (by rw [Nat.add_sub_cancel' hij.le]; exact heq.symm)⟩
 
@@ -360,7 +356,6 @@ theorem traceChain_none_of_all_internal_pairings
 /-- A flag whose chain reaches the boundary is not periodic. -/
 theorem not_periodic_of_boundary_chain
     (κ : F.RelTransitionSystem) (f : W.Flag)
-    (_hf : f ∈ F.internalFlags)
     (hterm : ∃ fuel b, traceChain κ fuel f = some b) :
     ¬ κ.PeriodicFlag f := by
   intro hper
@@ -406,12 +401,12 @@ theorem internal_periodic_or_terminates
     rcases Nat.lt_or_gt_of_ne hne_val with hij | hij
     · exact ⟨hf, j - i, by omega,
         fun k _ => hexall k,
-        iterWalk_period_of_repeat κ f i (j - i) (by omega)
+        iterWalk_period_of_repeat κ f i (j - i)
           (fun k _ => hexall k)
           (by rw [Nat.add_sub_cancel' hij.le]; exact heq)⟩
     · exact ⟨hf, i - j, by omega,
         fun k _ => hexall k,
-        iterWalk_period_of_repeat κ f j (i - j) (by omega)
+        iterWalk_period_of_repeat κ f j (i - j)
           (fun k _ => hexall k)
           (by rw [Nat.add_sub_cancel' hij.le];
               exact heq.symm)⟩
