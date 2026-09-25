@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaTrace
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaTrace
 
 /-!
 # Uniqueness of a normalized formal point-count zeta series
@@ -18,6 +20,8 @@ series uniquely.  This gives the formal bridge needed after proving Euler's
 coefficient identity for an effective-divisor zeta series: that series is the
 canonical exponential `formalPointCountZeta`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

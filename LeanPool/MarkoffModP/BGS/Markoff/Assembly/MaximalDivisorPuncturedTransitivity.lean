@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MaximalDivisorLowOrderCount
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MaximalDivisorMiddleGame
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MaximalDivisorLowOrderCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MaximalDivisorMiddleGame
 
 /-!
 # Punctured transitivity from the maximal-divisor frontier
@@ -21,6 +23,8 @@ This is the idea-level endpoint.  A separate arithmetic certificate can
 discharge its two explicit inequalities using the joint `p - 1`, `p + 1`
 square envelope.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

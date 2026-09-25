@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
+public import Mathlib.Tactic
 
 /-!
 # Zero counting from principal-divisor height
@@ -18,6 +20,8 @@ The product formula then identifies that degree with the pole height.
 No point-count estimate is used here.  In particular, the genuinely
 Hasse--Weil input can remain a separate upstream theorem.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors Polynomial BigOperators
 open IsDedekindDomain

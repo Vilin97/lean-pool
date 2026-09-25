@@ -3,16 +3,18 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.AuxiliaryFamilyIndexing
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindCanonicalDifferentScaling
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationDerivationPreservation
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryLocalCases
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPerfectResidueCaseI
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExceptionalSupport
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionExhaustiveGcdDivisorBound
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.AuxiliaryFamilyIndexing
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindCanonicalDifferentScaling
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationDerivationPreservation
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryLocalCases
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPerfectResidueCaseI
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExceptionalSupport
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionExhaustiveGcdDivisorBound
+public import Mathlib.Tactic
 
 /-!
 # Canonical auxiliary bounds at infinity places
@@ -22,6 +24,8 @@ branches above the infinity place of a finite separable extension of `RatFunc K`
 The scaling supplied by the canonical different identifies its local order with
 the coefficient of `finiteExtensionCanonicalDifferentDivisor` at `.inr P`.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

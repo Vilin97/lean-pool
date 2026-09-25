@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSevenBound
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.RightInversionPairing
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSevenBound
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.RightInversionPairing
+public import Mathlib.Tactic
 
 /-!
 # Right-inversion pairing with Euler budget seven
@@ -19,6 +21,8 @@ support by two. The resulting root coefficient has cube
 
 The quotient-by-characteristic coefficient remains exactly `24`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

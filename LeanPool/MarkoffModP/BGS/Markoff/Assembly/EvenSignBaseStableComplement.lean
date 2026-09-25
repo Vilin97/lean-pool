@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EvenSignComplementDivisibility
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EvenSignComplementDivisibility
 
 /-!
 # From base sign-stability to complement divisibility
@@ -13,6 +15,8 @@ Because `Gamma` normalizes the even-sign subgroup, it is enough to connect the
 four sign changes of one base point back to that base component. Every even
 sign change then preserves the whole component and its finite complement.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

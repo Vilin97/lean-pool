@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalDegreeBound
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannRoch
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneOnePointRiemannLower
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalDegreeBound
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannRoch
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneOnePointRiemannLower
 
 /-!
 # Canonical-different genus bridge
@@ -21,6 +23,8 @@ No canonicality premise is hidden in a definition.  The generic theorem
 below takes `FunctionField.Chart.IsCanonical` explicitly, while the plane
 theorem proves the complete degree estimate available below that boundary.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

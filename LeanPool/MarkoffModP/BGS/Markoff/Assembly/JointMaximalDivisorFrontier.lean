@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MaximalDivisorPuncturedTransitivity
-import LeanPool.MarkoffModP.BGS.NumberTheory.JointMaximalDivisorCriterion
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MaximalDivisorPuncturedTransitivity
+public import LeanPool.MarkoffModP.BGS.NumberTheory.JointMaximalDivisorCriterion
 
 /-!
 # Root-free joint maximal-divisor frontier
@@ -14,6 +16,8 @@ The improved arithmetic naturally controls the square of the sum of the two
 maximal-divisor counts.  This module keeps that square envelope intact instead
 of taking an integer square root and losing information.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

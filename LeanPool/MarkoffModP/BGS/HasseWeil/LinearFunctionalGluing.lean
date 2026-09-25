@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.LinearAlgebra.Basis.VectorSpace
-import Mathlib.LinearAlgebra.LinearPMap
+
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
+public import Mathlib.LinearAlgebra.LinearPMap
 
 /-!
 # Gluing and extending linear functionals
@@ -15,6 +17,8 @@ of a Weil functional.  A functional on a subspace `U` which vanishes on
 `U ∩ V` glues with the zero functional on `V`; over a field the glued
 functional then extends to the ambient vector space.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

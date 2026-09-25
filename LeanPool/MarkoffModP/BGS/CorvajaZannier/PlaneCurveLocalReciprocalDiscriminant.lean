@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalReciprocalDiscriminant
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveRatFuncModel
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveDiscriminantBound
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.RingTheory.Localization.LocalizationLocalization
-import Mathlib.RingTheory.Polynomial.ContentIdeal
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalReciprocalDiscriminant
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveRatFuncModel
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveDiscriminantBound
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.RingTheory.Localization.LocalizationLocalization
+public import Mathlib.RingTheory.Polynomial.ContentIdeal
 
 /-!
 # Local reciprocal normalization for an irreducible plane curve
@@ -24,6 +26,8 @@ extension degree over `K(X)`.  The final theorem identifies the minimal
 polynomial of the reciprocal local parameter with the unit-normalized
 reciprocal translate of the localized plane equation.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

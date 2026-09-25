@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionFinitePlaceBridge
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlace
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionFinitePlaceBridge
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
 
 /-!
 # Compatibility of the two finite-place models in a constant extension
@@ -18,6 +20,8 @@ places and their residue fields.  In particular, an `S`-rational place has
 absolute `C`-degree `[S : C]`, in precisely the model used by the
 decomposition-group theorem.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 
@@ -779,7 +783,7 @@ theorem exactConstantExtensionFinitePlace_decompositionGroup_card_of_rational_ba
     letI : Module L (ExactConstantExtension C N S) := Algebra.toModule
     letI : IsScalarTower (RatFunc C) L
         (ExactConstantExtension C N S) :=
-      exactConstantExtensionCompatibility_ratFuncBaseTower C S N hExact L
+      by exact exactConstantExtensionCompatibility_ratFuncBaseTower C S N hExact L
     letI : IsGalois L (ExactConstantExtension C N S) :=
       exactConstantExtension_isGalois C L N S hExact
     let Q := exactConstantExtensionCompatibleBaseFinitePlace

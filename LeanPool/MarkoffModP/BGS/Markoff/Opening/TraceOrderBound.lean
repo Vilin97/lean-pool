@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Data.Nat.GCD.Prime
-import LeanPool.MarkoffModP.BGS.Markoff.Core.ConicParametrization
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.AlgebraicClosureTransport
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicBound
-import LeanPool.MarkoffModP.BGS.Markoff.Core.TraceClassification
+
+public import Mathlib.Data.Nat.GCD.Prime
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.ConicParametrization
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.AlgebraicClosureTransport
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicBound
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.TraceClassification
 
 /-!
 # From residue traces to the concrete cyclotomic opening bound
@@ -16,6 +18,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.Core.TraceClassification
 This file chooses eigenvalues for arbitrary normalized traces over `ZMod p`, including the two
 parabolic traces, and combines their exact orders by an lcm.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

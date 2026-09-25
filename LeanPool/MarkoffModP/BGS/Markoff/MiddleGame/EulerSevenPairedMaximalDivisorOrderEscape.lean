@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorOrderEscape
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedMaximalDivisorCorvajaZannierStep
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorOrderEscape
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedMaximalDivisorCorvajaZannierStep
 
 /-!
 # Euler-seven paired nonparabolic order escape
@@ -13,6 +15,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedMaximalDiviso
 This is the diagonalized-fiber wiring for the exact cube condition
 `189*K^3 < currentOrder`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

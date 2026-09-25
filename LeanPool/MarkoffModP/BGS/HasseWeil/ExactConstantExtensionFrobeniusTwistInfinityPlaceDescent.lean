@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceDegreeTower
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistFinitePlaceUnramified
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceDegreeTower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistFinitePlaceUnramified
 
 /-!
 # Infinity places of Frobenius-twist fields
@@ -22,6 +24,8 @@ by the constant-field degree.  This is obtained from the reciprocal
 normalization presentation, whose equivalence with the actual infinity-place
 type is already exhaustive.
 -/
+
+@[expose] public section
 
 open scoped Pointwise Polynomial TensorProduct
 
@@ -203,6 +207,7 @@ theorem infinityPlaceUnder_degree_eq_one_of_generator_fixed
   apply Nat.eq_of_mul_eq_mul_right (Module.finrank_pos (R := M) (M := T))
   simpa only [one_mul] using htower.symm
 
+omit [FiniteDimensional M T] in
 /-- Every lift of a rational infinity place has top degree equal to the
 relative field degree under the degree-divisibility hypothesis. -/
 theorem rationalInfinityPlace_lift_degree_eq_finrank_of_finrank_dvd_degree
@@ -460,6 +465,7 @@ section ExactConstantExtensionInfinityDegree
 variable (hExact : algebraicClosure C N =
   (⊥ : IntermediateField C N))
 
+omit [DecidableEq C] [DecidableEq (RatFunc C)] [DecidableEq S] [DecidableEq (RatFunc S)] in
 /-- Every infinity place of the exact constant extension, viewed over the
 original constants `C`, has degree divisible by `[S : C]`. -/
 theorem exactConstantExtensionInfinityPlace_finrank_constants_dvd_degree
@@ -526,6 +532,8 @@ end ExactConstantExtensionInfinityDegree
 
 section FrobeniusTwistInfinityUnramified
 
+omit [DecidableEq C] [DecidableEq (RatFunc C)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] [Finite S] [DecidableEq S] [DecidableEq (RatFunc S)] in
 /-- Powers of the ambient twist act on enlarged constants by the
 corresponding powers of finite-field Frobenius. -/
 private theorem exactConstantExtensionFrobeniusTwist_zpow_includeLeft_infinity

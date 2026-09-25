@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorClassRecurrence
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorClassRecurrence
 
 /-!
 # Bounding the Riemann--Roch genus from a one-point inequality
@@ -13,6 +15,8 @@ Once the uniform Riemann--Roch formula is known, any coarse one-point
 Riemann inequality bounds its genus parameter.  This is the bridge that will
 turn the existing bidegree monomial budget into a numerator-degree bound.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Fibers
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Fibers
 
 /-!
 # Small-prime counterexamples to the printed incidence threshold
@@ -12,6 +14,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Fibers
 These kernel-checked examples show that the paper's claim for every prime `p > 10` is false for
 the exact admissible auxiliary-point statement used by its diameter-two argument.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LaurentFrobeniusBasis
-import Mathlib.LinearAlgebra.Basis.Basic
-import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LaurentFrobeniusBasis
+public import Mathlib.LinearAlgebra.Basis.Basic
+public import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
 
 /-!
 # The Laurent-series power basis over exponent dilation
@@ -16,6 +18,8 @@ Together with the residue-class independence theorem, this proves that
 `1, z, ..., z^(q-1)` is a basis of `K((z))` over `K((z^q))` and that the
 extension has degree `q`.
 -/
+
+@[expose] public section
 
 open HahnSeries
 

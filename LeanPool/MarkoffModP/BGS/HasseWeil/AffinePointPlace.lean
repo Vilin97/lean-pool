@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionExhaustiveGcdDivisorBound
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionExhaustiveGcdDivisorBound
 
 /-!
 # Finite places centered at affine rational points
@@ -18,6 +20,8 @@ The construction records the affine center through equality of valuation
 subrings.  It deliberately makes no residue-degree-one claim: above a
 singular rational point, a chosen normalization branch need not be rational.
 -/
+
+@[expose] public section
 
 open IsDedekindDomain
 open Multiplicative WithZero

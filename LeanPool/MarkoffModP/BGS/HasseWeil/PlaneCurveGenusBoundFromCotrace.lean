@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentLocalMaximality
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneConstantField
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentLocalMaximality
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneConstantField
 
 /-!
 # Plane-curve genus bound from direct cotrace canonicality
@@ -16,6 +18,8 @@ different divisor as canonical.  The established bidegree estimate for that
 divisor therefore gives the intrinsic genus bound without a separately
 assumed Riemann--Hurwitz degree identity.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

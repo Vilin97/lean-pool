@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryLocalCases
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalDerivationExtension
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationOrder
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveLocalReciprocalDiscriminant
-import Mathlib.NumberTheory.FunctionField
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryLocalCases
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalDerivationExtension
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationOrder
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveLocalReciprocalDiscriminant
+public import Mathlib.NumberTheory.FunctionField
 
 /-!
 # Auxiliary Wronskian bounds at finite plane-curve places
@@ -20,6 +22,8 @@ ground field `K`; the Wronskian derivation may subsequently be obtained by
 restricting scalars from the Frobenius constant field.  Thus no algebra map
 from the Frobenius constant field to a nontrivial DVR is required.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors Polynomial BigOperators
 open IsDedekindDomain

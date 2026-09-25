@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicMaximalDivisorConcreteCount
-import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotient
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicMaximalDivisorConcreteCount
+public import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotient
 
 /-!
 # Exact-order root budgets for nonparabolic traces
@@ -14,6 +16,8 @@ The old maximal-divisor estimate replaces each exact-order fiber by a common
 worst-case size.  Here the cyclic fibers remain disjoint and contribute their
 exact root counts `φ(e)`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 
@@ -47,6 +51,7 @@ section CyclicTrace
 variable {G T : Type*} [Group G] [Fintype G] [DecidableEq G]
   [DecidableEq T] [IsCyclic G]
 
+omit [IsCyclic G] in
 theorem nonTwoTorsionBoundedOrderTraceSet_succ_eq_exactOrderImage
     (trace : G → T) (bound : ℕ) :
     nonTwoTorsionBoundedOrderTraceSet trace (bound + 1) =

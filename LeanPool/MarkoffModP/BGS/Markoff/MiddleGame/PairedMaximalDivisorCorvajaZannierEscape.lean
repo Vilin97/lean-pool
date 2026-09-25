@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.Diagonalization
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.PairedMaximalDivisorOrderEscape
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.TraceCurveWeights
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.Diagonalization
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.PairedMaximalDivisorOrderEscape
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.TraceCurveWeights
 
 /-!
 # Unconditional paired maximal-divisor middle-game escape
@@ -16,6 +18,8 @@ Markoff fiber is admissible for the in-repository general Corvaja--Zannier
 theorem.  Thus the paired maximal-order escape applies with no additional
 geometric hypothesis.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

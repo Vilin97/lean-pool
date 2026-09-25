@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalWronskian
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityDifferentDegree
-import Mathlib.RingTheory.RamificationInertia.Basic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalWronskian
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityDifferentDegree
+public import Mathlib.RingTheory.RamificationInertia.Basic
 
 /-!
 # The canonical different divisor of a finite function-field extension
@@ -17,6 +19,8 @@ exponent at a finite place and `different exponent - 2 * ramification index`
 above infinity.  The weighted degree is therefore the total different degree
 minus twice the extension degree.
 -/
+
+@[expose] public section
 
 open scoped BigOperators nonZeroDivisors Polynomial
 open IsDedekindDomain

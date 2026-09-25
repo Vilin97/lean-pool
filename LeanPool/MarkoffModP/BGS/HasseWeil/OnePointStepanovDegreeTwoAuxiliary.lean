@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointSectionSelection
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStepanovBasisGrid
-import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovParameters
-import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovRestrictionMaps
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointSectionSelection
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStepanovBasisGrid
+public import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovParameters
+public import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovRestrictionMaps
+public import Mathlib.Tactic
 
 /-!
 # Stepanov auxiliaries at places of degree at most two
@@ -24,6 +26,8 @@ With `ell = #K - 1` and `m = #K + 2g`, the same large-field hypothesis as in
 the degree-one construction makes the coefficient dimension exceed the
 second restriction target for every place degree `r ≤ 2`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

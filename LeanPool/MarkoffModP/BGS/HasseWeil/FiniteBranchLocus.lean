@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindDifferentDivisor
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceTower
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindDifferentDivisor
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceTower
 
 /-!
 # Finiteness of the branch locus
@@ -23,6 +25,8 @@ sum.  Passing from this closed-place bound to a uniform count of geometric
 branch points after constant-field extension still requires an explicit
 closed-place/geometric-point comparison.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open IsDedekindDomain
@@ -329,6 +333,7 @@ theorem mem_finiteExtensionBranchLocusSupport_iff
       P ∈ finiteExtensionBranchLocus K M L := by
   simp [finiteExtensionBranchLocusSupport]
 
+omit [DecidableEq K] in
 /-- The support finset represents exactly the finite branch locus. -/
 theorem finiteExtensionBranchLocusSupport_coe :
     (finiteExtensionBranchLocusSupport K M L :
@@ -337,6 +342,7 @@ theorem finiteExtensionBranchLocusSupport_coe :
   ext P
   simp
 
+omit [DecidableEq K] in
 /-- In set form, the exact branch support is finite. -/
 theorem finiteExtensionBranchLocusSupport_finite :
     ((finiteExtensionBranchLocusSupport K M L :
@@ -356,6 +362,7 @@ def finiteExtensionBranchLocusSelectedSupport
   classical
   exact (finiteExtensionBranchLocusSupport K M L).filter isSelected
 
+omit [DecidableEq K] in
 @[simp]
 theorem mem_finiteExtensionBranchLocusSelectedSupport_iff
     (isSelected : FiniteExtensionPlace K M → Prop)

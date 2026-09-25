@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceSplittingMultiplicity
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionInfinityDifferent
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceSplittingMultiplicity
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionInfinityDifferent
 
 /-!
 # Compatibility of infinity places with exact constant extension
@@ -17,6 +19,8 @@ infinity. Consequently, the explicit upstairs infinity prime contracts to the
 explicit downstairs infinity prime under the canonical algebra on infinity
 normalizations.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 
@@ -90,6 +94,7 @@ private theorem
   subst b
   rfl
 
+omit [FiniteDimensional (RatFunc C) N] [Algebra.IsSeparable (RatFunc C) N] in
 /-- The reciprocal affine normalization equivalence sends the old
 normalization embedded in the right tensor factor to the same element of the
 ambient exact constant extension. -/
@@ -238,6 +243,7 @@ private theorem exactConstantExtensionInfinityAffineLocalizationSquare_coe
           (eAff (Algebra.TensorProduct.includeRight
             (R := C) (A := S) (B := R0) x)) : B) : E) := rfl
 
+omit [FiniteDimensional (RatFunc C) N] [Algebra.IsSeparable (RatFunc C) N] in
 /-- The extended reciprocal affine prime contracts to the reciprocal affine
 prime obtained from the old normalization. -/
 private theorem exactConstantExtensionInfinityAffinePrime_under
@@ -299,6 +305,8 @@ private theorem exactConstantExtensionInfinityAffinePrime_under
         (R := C) (A := S) (B := R0) x ∈ q.1.asIdeal
   rw [eAff.symm_apply_apply]
 
+omit [FiniteDimensional (RatFunc C) N] [Algebra.IsSeparable (RatFunc C) N]
+  [FiniteDimensional C S] [IsGalois C S] [Fintype C] [Finite S] in
 private theorem
     exactConstantExtensionDownstairsInfinityMappedIdeal_isMaximal
     (q : ExactConstantExtensionPresentedInfinityPlace C S N) :

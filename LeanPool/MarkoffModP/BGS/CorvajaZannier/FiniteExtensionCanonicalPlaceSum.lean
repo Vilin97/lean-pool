@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianWeightedPlaceSum
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalWronskian
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianWeightedPlaceSum
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalWronskian
+public import Mathlib.Tactic
 
 /-!
 # Canonical Wronskian sums over all places
@@ -14,6 +16,8 @@ import Mathlib.Tactic
 Sum the local Wronskian inequalities with residue-degree weights, separating exceptional places
 from the outside pole height.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

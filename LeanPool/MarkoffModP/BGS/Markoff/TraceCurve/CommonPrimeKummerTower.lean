@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Algebra.KummerEigencharacterDescent
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.OddCommonPrimeIndependence
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.PositiveCoprimeIrreducibility
+
+public import LeanPool.MarkoffModP.BGS.Algebra.KummerEigencharacterDescent
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.OddCommonPrimeIndependence
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.PositiveCoprimeIrreducibility
 
 /-!
 # The split trace Kummer tower for arbitrary positive exponents
@@ -17,6 +19,8 @@ radicand remains non-power after adjoining an arbitrary positive root of the fir
 Consequently the second Kummer polynomial is irreducible without a coprimality assumption, under
 the explicit roots-of-unity hypotheses used by the descent.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

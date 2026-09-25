@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.ParameterizedBound
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.ParameterizedBound
+public import Mathlib.Tactic
 
 /-!
 # Enlarging the degree data in Corvaja--Zannier Proposition 2
@@ -20,6 +22,8 @@ pair of degrees: its Euler term already dominates the first degree.
 This is the exact numerical bridge needed between a Proposition 2 proof at
 the curve's actual degrees and the public min/max degree convention.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

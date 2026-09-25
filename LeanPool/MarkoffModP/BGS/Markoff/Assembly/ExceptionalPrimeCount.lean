@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Order.Interval.Set.Nat
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.DivisibleOrbitTransitivity
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.GiantOrbit
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.TransitivitySurjectivity
+
+public import Mathlib.Order.Interval.Set.Nat
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.DivisibleOrbitTransitivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.GiantOrbit
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.TransitivitySurjectivity
 
 /-!
 # Exceptional-prime consequences of Chen orbit divisibility
@@ -17,6 +19,8 @@ upgrades the giant-orbit half of Theorem 1 to strong approximation at every suff
 prime.  This file records the resulting finite exceptional-prime set and derives the subpower
 exceptional-prime bound of Theorem 2.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

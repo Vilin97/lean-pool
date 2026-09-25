@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.BivariateResultant
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBidegreeBridge
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.BivariateResultant
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBidegreeBridge
 
 /-!
 # A sharp degree bound for a bivariate discriminant
@@ -19,6 +21,8 @@ Mathlib's modified Sylvester matrix for the derivative.
 This is the algebraic degree estimate needed in the Corvaja--Zannier canonical/divisor
 calculation.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePoweredHeightBounds
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
-import LeanPool.MarkoffModP.BGS.HasseWeil.PoleDivisor
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePoweredHeightBounds
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PoleDivisor
+public import Mathlib.Tactic
 
 /-!
 # A controlled pole place for the first plane coordinate
@@ -20,6 +22,8 @@ nontrivial) place degree is bounded by that second-variable degree.
 
 No rationality assertion is made about the selected place.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -108,6 +112,7 @@ theorem finiteExtensionDivisorDegree_planeCurveFirstCoordinate_poleDivisor
   rw [finiteExtensionDivisorDegree_poleDivisor,
     finiteExtensionHeight_planeCurveFirstCoordinate hf hpartialSecond]
 
+omit [Fintype K] in
 /-- A positive coefficient of an effective divisor contributes at least the
 degree of its place to the total divisor degree. -/
 theorem finiteExtensionPlaceDegree_le_divisorDegree_of_effective_of_pos

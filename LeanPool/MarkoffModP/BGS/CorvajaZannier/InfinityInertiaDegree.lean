@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityPlace
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityPlace
+public import Mathlib.Tactic
 
 /-!
 # Residue degree one above the rational-function place at infinity
@@ -17,6 +19,8 @@ residue field at every prime above infinity in a finite separable extension of
 `K(X)` is therefore the same field, so the corresponding inertia degree is
 one.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors Polynomial
 open IsDedekindDomain Multiplicative WithZero

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPlaceOrder
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PerfectConstants
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPlaceOrder
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PerfectConstants
+public import Mathlib.Tactic
 
 /-!
 # Leading-term cancellation at a Dedekind DVR place
@@ -22,6 +24,8 @@ in Corvaja--Zannier case (i).  The surjectivity hypothesis is stated directly
 on the residue field, so the theorem can be applied independently of how the
 constant field is presented.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors
 open IsDedekindDomain Multiplicative WithZero

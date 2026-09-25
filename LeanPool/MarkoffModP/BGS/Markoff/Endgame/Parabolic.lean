@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveOrbitWiring
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.Diagonalization
-import LeanPool.MarkoffModP.BGS.Markoff.Core.ParabolicFibers
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveOrbitWiring
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.Diagonalization
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.ParabolicFibers
 
 /-!
 # The parabolic branch of the endgame
@@ -15,6 +17,8 @@ The two parabolic fibers are affine lines.  Their explicit rotation formulas mak
 coordinate run through the whole base field, so in particular through the trace of a generator
 of the split torus.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

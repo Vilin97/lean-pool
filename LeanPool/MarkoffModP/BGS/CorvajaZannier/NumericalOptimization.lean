@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
 
 /-!
 # Numerical optimization in Corvaja--Zannier Theorem 2
@@ -28,6 +30,8 @@ This file isolates that corrected real-arithmetic argument.  Its theorem takes
 the parameterized Theorem-4 estimate as an ordinary hypothesis, so it can be
 applied directly once the curve-theoretic part of Theorem 4 is formalized.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

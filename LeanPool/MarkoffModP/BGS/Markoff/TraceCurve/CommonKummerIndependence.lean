@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Kummer
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.CoordinateRing
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Kummer
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.CoordinateRing
 
 /-!
 # Kummer-class independence for common cover primes
@@ -18,6 +20,8 @@ trace curve, it proves that the product of the two torus coordinates remains non
 The odd common-prime classes and the roots-of-unity eigencharacter descent are deliberately not
 assumed here; they remain the next noncoprime wall.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

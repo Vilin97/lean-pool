@@ -3,14 +3,18 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.WeilBoundAssumption
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Boundary
+
+public import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.WeilBoundAssumption
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Boundary
 
 /-!
 # Applying the general affine Hasse--Weil theorem to split trace covers
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

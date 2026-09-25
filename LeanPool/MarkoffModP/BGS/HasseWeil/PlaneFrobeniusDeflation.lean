@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCoordinateShear
-import Mathlib.Algebra.MvPolynomial.Equiv
-import Mathlib.Algebra.Polynomial.Expand
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCoordinateShear
+public import Mathlib.Algebra.MvPolynomial.Equiv
+public import Mathlib.Algebra.Polynomial.Expand
+public import Mathlib.Tactic
 
 /-!
 # Frobenius deflation for affine plane curves
@@ -23,6 +25,8 @@ Unlike a coordinate shear, this operation does not enlarge the other
 coordinate degree, and it strictly lowers the actual first coordinate degree
 whenever that degree is positive.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -275,6 +279,7 @@ variable (p : ℕ) [Fact p.Prime] [CharP K p]
 def planeFirstFrobeniusPointEquiv : K × K ≃ K × K :=
   (frobeniusEquiv K p).toEquiv.prodCongr (Equiv.refl K)
 
+omit [DecidableEq K] in
 @[simp] theorem planeFirstFrobeniusPointEquiv_apply (z : K × K) :
     planeFirstFrobeniusPointEquiv K p z = (z.1 ^ p, z.2) := by
   rcases z with ⟨x, y⟩

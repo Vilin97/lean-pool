@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Geometry
-import Mathlib.Algebra.CharP.Lemmas
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Geometry
+public import Mathlib.Algebra.CharP.Lemmas
 
 /-!
 # The characteristic restriction in the split trace-cover lemma
@@ -18,6 +20,8 @@ This file records the obstruction directly on the polynomial used by the endgame
 separate from the positive Kummer descent: the theorem below is a counterexample to an omitted
 hypothesis, not another assumption on which downstream formalization may rely.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

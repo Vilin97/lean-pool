@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePropositionTwoGeometric
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePropositionTwoDegreeBridge
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageIndexBound
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePropositionTwoGeometric
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePropositionTwoDegreeBridge
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageIndexBound
 
 /-!
 # The general Corvaja--Zannier plane-curve theorem
@@ -15,6 +17,8 @@ This file is the final public assembly.  Its first theorem isolates the sole
 powered-image index input, so that the geometric index theorem can be audited
 independently; the unconditional endpoint below instantiates that input.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

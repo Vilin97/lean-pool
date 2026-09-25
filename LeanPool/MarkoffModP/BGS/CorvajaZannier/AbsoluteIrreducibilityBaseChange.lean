@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PerfectConstants
-import Mathlib.Algebra.MvPolynomial.Nilpotent
-import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
-import Mathlib.RingTheory.Nullstellensatz
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PerfectConstants
+public import Mathlib.Algebra.MvPolynomial.Nilpotent
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import Mathlib.RingTheory.Nullstellensatz
 
 /-!
 # Base change of absolutely irreducible multivariate polynomials
@@ -24,6 +26,8 @@ the inverse relations ensure that both specialized factors remain nonunits.
 The final theorem supplies the exact constant-field base-change step used in
 Corvaja--Zannier's auxiliary-family argument.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -214,7 +218,7 @@ theorem irreducible_map_of_irreducible_map_isAlgClosed
           simpa only [θ, MvPolynomial.eval₂Hom_X'] using hqGE
         exact left_ne_zero_of_mul_eq_one hprod
       have hcoeffFormula : gE.coeff mg = x (gVar mg) := by
-        simp [gE, G, MvPolynomial.coeff_sum,
+        simp [gE, G, 
           MvPolynomial.coeff_monomial, hmgMem, θ]
       rw [hcoeffFormula]
       exact hxG
@@ -237,7 +241,7 @@ theorem irreducible_map_of_irreducible_map_isAlgClosed
           simpa only [θ, MvPolynomial.eval₂Hom_X'] using hqHE
         exact left_ne_zero_of_mul_eq_one hprod
       have hcoeffFormula : hE'.coeff mh = x (hVar mh) := by
-        simp [hE', H, MvPolynomial.coeff_sum,
+        simp [hE', H, 
           MvPolynomial.coeff_monomial, hmhMem, θ]
       rw [hcoeffFormula]
       exact hxH

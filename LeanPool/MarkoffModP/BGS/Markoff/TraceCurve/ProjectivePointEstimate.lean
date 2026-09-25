@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.BiprojectiveClosure
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.BiprojectiveClosure
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # The exact projective-to-torus point-count bridge
@@ -22,6 +24,8 @@ module therefore starts at the first honest arithmetic interface:
 The conclusion is the desired `O(sqrt (#K) * d * e)` estimate for the actual
 Laurent trace-solution finset.  No target estimate is hidden in a typeclass.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

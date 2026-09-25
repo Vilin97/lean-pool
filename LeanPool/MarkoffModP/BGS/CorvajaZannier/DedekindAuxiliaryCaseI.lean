@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryWronskian
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLeadingTermCancellation
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalAuxiliaryCaseI
-import Mathlib.LinearAlgebra.Matrix.Transvection
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryWronskian
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLeadingTermCancellation
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalAuxiliaryCaseI
+public import Mathlib.LinearAlgebra.Matrix.Transvection
 
 /-!
 # Corvaja--Zannier case (i) at a Dedekind DVR place
@@ -26,6 +28,8 @@ gives the source bound `q * ord(rho)` for the full auxiliary family.
 Source provenance: published pages 1935--1936; checked semantic reconstruction
 `Papers/CorvajaZannier2013/CorvajaZannier2013.tex`, lines 640--685.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 
@@ -48,6 +52,7 @@ def dedekindPoleDepth (v : HeightOneSpectrum R) (x : L) : ℕ :=
 def dedekindPoleWeight {k : ℕ} (v : HeightOneSpectrum R) (f : Fin k → L) : ℕ :=
   ∑ i, dedekindPoleDepth v (f i)
 
+omit [IsDiscreteValuationRing R] in
 @[simp]
 theorem dedekindPoleDepth_zero (v : HeightOneSpectrum R) :
     dedekindPoleDepth (L := L) v 0 = 0 := by
@@ -60,6 +65,7 @@ def NegativeFinitePlaceOrdersPairwiseDistinct {ι : Type*}
     finitePlaceOrderTop v (f j) < 0 →
     finitePlaceOrderTop v (f i) = finitePlaceOrderTop v (f j) → i = j
 
+omit [IsDiscreteValuationRing R] in
 @[simp]
 theorem dedekindPoleDepth_pos_iff (v : HeightOneSpectrum R) (x : L) :
     0 < dedekindPoleDepth v x ↔ finitePlaceOrderTop v x < 0 := by
@@ -69,6 +75,7 @@ theorem dedekindPoleDepth_pos_iff (v : HeightOneSpectrum R) (x : L) :
   · rw [finitePlaceOrderTop_eq_coe v x hx]
     simp [dedekindPoleDepth, hx]
 
+omit [IsDiscreteValuationRing R] in
 @[simp]
 theorem dedekindPoleDepth_eq_zero_iff (v : HeightOneSpectrum R) (x : L) :
     dedekindPoleDepth v x = 0 ↔ 0 ≤ finitePlaceOrderTop v x := by
@@ -566,6 +573,7 @@ theorem finitePlaceOrderTop_indexedDedekindLocalWronskian_caseI_q_lower_bound
       mul_le_mul_of_nonpos_right hepsilonQ' hrho
     _ = rhoOrder * (epsilon + 1 : ℕ) := by push_cast; ring
 
+omit [IsDiscreteValuationRing R] in
 /-- Pairwise-distinct negative finite-place orders bounded below by a
 nonpositive integer are no more numerous than its pole depth. -/
 theorem card_negativeFinitePlaceOrders_le_neg

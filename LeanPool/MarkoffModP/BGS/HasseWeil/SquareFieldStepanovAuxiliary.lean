@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStepanovDegreeTwoAuxiliary
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneStepanovAuxiliary
-import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovRestriction
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStepanovDegreeTwoAuxiliary
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneStepanovAuxiliary
+public import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovRestriction
+public import Mathlib.Tactic
 
 /-!
 # A sharp one-point Stepanov auxiliary over a square constant field
@@ -18,6 +20,8 @@ The function field is defined over the full square field `S`, so an
 scale.  This keeps both the Riemann-space dimension count and the final pole
 height sharp.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

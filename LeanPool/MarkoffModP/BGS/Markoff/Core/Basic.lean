@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Data.Fintype.Sigma
-import Mathlib.Tactic
-import Mathlib.Tactic.Ring.Basic
+
+public import Mathlib.Data.Fintype.Sigma
+public import Mathlib.Tactic
+public import Mathlib.Tactic.Ring.Basic
 
 /-!
 # The elementary Markoff surface
@@ -16,6 +18,8 @@ Bourgain--Gamburd--Sarnak, arXiv:1607.01530v1. Later parts of the paper use
 trace coordinates obtained by multiplying each coordinate by three; that
 normalization is deliberately kept separate.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionHasseBoundFromEvenConstantExtensions
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineHasseWeilFromZeta
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneConstantField
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCurveGenusBoundAutomatic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionHasseBoundFromEvenConstantExtensions
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineHasseWeilFromZeta
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneConstantField
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCurveGenusBoundAutomatic
 
 /-!
 # Affine plane Hasse bounds from the even-extension error
@@ -18,6 +20,8 @@ with the automatic zeta package and the two-sided affine/normalization
 comparison.  The sole remaining premise is therefore the even constant-field
 extension error used by the spectral argument.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

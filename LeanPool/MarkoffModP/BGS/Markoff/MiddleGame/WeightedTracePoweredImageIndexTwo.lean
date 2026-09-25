@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageExactSupportIndexBound
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierFromGeneral
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageExactSupportIndexBound
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierFromGeneral
+public import Mathlib.Tactic
 
 /-!
 # Powered-image index two for the weighted trace curve
@@ -16,6 +18,8 @@ exponents `(1,0)`, `(2,1)`, and `(0,1)`. Their support determinant is `2`.
 Retaining this exact sparse-support certificate lowers the source-to-powered
 image index bound from the generic bidegree value `8` to `2`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

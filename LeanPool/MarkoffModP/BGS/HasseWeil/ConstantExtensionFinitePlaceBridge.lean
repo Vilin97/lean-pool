@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldConstantExtensionResidue
-import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceNormalizationTransport
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldConstantField
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncExactConstantExtension
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldConstantExtensionResidue
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceNormalizationTransport
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldConstantField
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncExactConstantExtension
 
 /-!
 # Finite places in an exact constant extension
@@ -23,6 +25,8 @@ constant-extension residue formula as
 
 No maximality or residue-finiteness hypothesis is left to downstream users.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 

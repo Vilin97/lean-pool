@@ -3,14 +3,16 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryIndependence
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageCurve
-import LeanPool.MarkoffModP.BGS.HasseWeil.PoleDivisor
-import Mathlib.Algebra.Polynomial.Basis
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.RingTheory.AlgebraTower
-import Mathlib.RingTheory.Finiteness.Basic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryIndependence
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageCurve
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PoleDivisor
+public import Mathlib.Algebra.Polynomial.Basis
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.RingTheory.AlgebraTower
+public import Mathlib.RingTheory.Finiteness.Basic
 
 /-!
 # Plane monomial spaces for the Stepanov construction
@@ -31,6 +33,8 @@ the twisted products
 are independent over the constant field.  No Frobenius endomorphism is
 introduced or assumed.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

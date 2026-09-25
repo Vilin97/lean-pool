@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FrobeniusRestriction
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStepanovGrid
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FrobeniusRestriction
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStepanovGrid
+public import Mathlib.Tactic
 
 /-!
 # One-point Stepanov grids from a full Riemann-space basis
@@ -25,6 +27,8 @@ The digits `d i < #K` are distinct, so these orders remain distinct modulo
 `#K`, independently of the orders of the rows.  A unique least-order term
 then rules out a nontrivial relation.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

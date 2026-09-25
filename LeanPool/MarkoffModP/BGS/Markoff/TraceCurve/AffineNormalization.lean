@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedOddCoprimeIrreducibility
-import Mathlib.AlgebraicGeometry.Normalization
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedOddCoprimeIrreducibility
+public import Mathlib.AlgebraicGeometry.Normalization
 
 /-!
 # Affine normalization of the weighted trace cover
@@ -18,6 +20,8 @@ This is only the affine normalization.  The endgame still requires compatible no
 the other three biprojective charts, their gluing into a proper curve, the boundary-branch labels,
 and the genus and Hasse--Weil estimates.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

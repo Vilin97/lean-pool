@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.DescendedTraceCurve
-import LeanPool.MarkoffModP.BGS.Algebra.ClearedLinearFractionalSubstitution
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.DescendedTraceCurve
+public import LeanPool.MarkoffModP.BGS.Algebra.ClearedLinearFractionalSubstitution
 
 /-!
 # Absolute irreducibility of the descended nonsplit trace curve
@@ -14,6 +16,8 @@ The descended coordinates are `(z, u)`, whereas the split cover uses `(u, w)`.  
 keep `u` as the outer polynomial variable and treat the Cayley change `w = (z-δ^p)/(z-δ)` as
 an automorphism of the rational function coefficient field.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

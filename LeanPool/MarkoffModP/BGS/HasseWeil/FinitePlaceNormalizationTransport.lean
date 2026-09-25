@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldFinitePlaceDegree
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldFinitePlaceDegree
 
 /-!
 # Transporting normalization ideals to finite places
@@ -22,6 +24,8 @@ The algebra-map bridge below turns a pointwise compatibility theorem into an
 equivalence with `RatFuncFiniteIntegralClosure S T`; it does not assume the
 two structures are definitionally equal.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 

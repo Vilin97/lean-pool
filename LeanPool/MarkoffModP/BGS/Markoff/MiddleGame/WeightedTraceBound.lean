@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierSeparability
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierSourceBound
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierSeparability
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierSourceBound
 
 /-!
 # The weighted-trace torsion-intersection bound
@@ -23,6 +25,8 @@ The conclusion is the safe coefficient-`48` envelope used by the downstream midd
 permits the genuine degree-only Euler bound `χ ≤ 8` for a general bidegree-`(2,2)` torus curve; no
 unsupported genus-one identification is built into the interface.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPlaceOrder
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.WronskianChangeParameter
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPlaceOrder
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.WronskianChangeParameter
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
 /-!
 # Wronskian order estimates at a Dedekind DVR place
@@ -16,6 +18,8 @@ field equipped with a height-one-place order.  It avoids passage to Laurent
 series: the only local input is a DVR-preserving derivation which sends a
 chosen uniformizer to one.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

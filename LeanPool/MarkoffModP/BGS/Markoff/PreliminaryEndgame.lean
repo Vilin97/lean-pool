@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.ExplicitEndgame
-import LeanPool.MarkoffModP.BGS.Markoff.PreliminaryNumerics
+
+public import LeanPool.MarkoffModP.BGS.Markoff.ExplicitEndgame
+public import LeanPool.MarkoffModP.BGS.Markoff.PreliminaryNumerics
 
 /-!
 # Endgame wrappers for the elementary preliminary route
@@ -14,6 +16,8 @@ The geometry and incidence estimates are the already proved explicit endgame
 and cage theorems.  This file supplies them with the smaller preliminary-route
 numerical certificates.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

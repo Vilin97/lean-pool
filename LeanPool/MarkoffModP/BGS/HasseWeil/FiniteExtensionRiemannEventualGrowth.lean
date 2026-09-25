@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralFiniteExtensionRiemannLower
-import Mathlib.Order.OrderIsoNat
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralFiniteExtensionRiemannLower
+public import Mathlib.Order.OrderIsoNat
+public import Mathlib.Tactic
 
 /-!
 # Eventual exact growth of one-point Riemann spaces
@@ -25,6 +27,8 @@ eventually exactly `deg(P)`.
 This is the elementary stabilization input used in the divisor-class proof
 of zeta rationality; it does not assume Riemann--Roch or a zeta theorem.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.ExplicitEstimates
-import LeanPool.MarkoffModP.BGS.Markoff.ExplicitNumericCertificates
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveOrbitWiring
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.Connectivity
+
+public import LeanPool.MarkoffModP.BGS.Markoff.ExplicitEstimates
+public import LeanPool.MarkoffModP.BGS.Markoff.ExplicitNumericCertificates
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveOrbitWiring
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.Connectivity
 
 /-!
 # Explicit endgame and cage connectivity
@@ -17,6 +19,8 @@ certificates.  The structural lemmas below consume the exact primitive-trace
 inequalities at a fixed prime; the final wrappers discharge those inequalities
 from `explicitStrongApproximationCutoff`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

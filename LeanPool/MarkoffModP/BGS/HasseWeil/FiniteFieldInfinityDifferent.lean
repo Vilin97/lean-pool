@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncInfinityLocalization
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldInfinityBase
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldPolynomialDifferent
-import Mathlib.Algebra.Polynomial.Eval.Subring
-import Mathlib.Algebra.Polynomial.GroupRingAction
-import Mathlib.FieldTheory.Galois.Basic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncInfinityLocalization
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldInfinityBase
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldPolynomialDifferent
+public import Mathlib.Algebra.Polynomial.Eval.Subring
+public import Mathlib.Algebra.Polynomial.GroupRingAction
+public import Mathlib.FieldTheory.Galois.Basic
 
 /-!
 # The different of a finite coefficient extension at infinity
@@ -23,6 +25,8 @@ This localization description transports finiteness and formal
 unramifiedness from `C[X] → S[X]`.  Consequently the local different of the
 coefficient extension at infinity is the unit ideal.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct nonZeroDivisors
 

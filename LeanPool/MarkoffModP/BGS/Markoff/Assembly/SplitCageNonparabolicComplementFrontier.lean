@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.SplitCageEvenSignBase
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EvenSignBaseStableComplement
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicComplementFrontier
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.SplitCageEvenSignBase
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EvenSignBaseStableComplement
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicComplementFrontier
 
 /-!
 # Split-cage nonparabolic complement frontier
@@ -16,6 +18,8 @@ even-sign factor four: every signed image of the base point returns to its
 Gamma component. This module discharges both sign-invariance hypotheses of
 the nonparabolic complement frontier automatically.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

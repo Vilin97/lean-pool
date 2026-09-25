@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveFunctionField
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveFunctionField
+public import Mathlib.Tactic
 
 /-!
 # Rank-two support certificates for a plane curve
@@ -19,6 +21,8 @@ The bound is characteristic-free.  In the high-characteristic range used by
 the Corvaja--Zannier endpoint, every nonzero such determinant is automatically
 nonzero modulo the characteristic.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

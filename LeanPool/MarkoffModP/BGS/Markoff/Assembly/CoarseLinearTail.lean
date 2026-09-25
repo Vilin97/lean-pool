@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MaximalDivisorLowOrderCount
-import LeanPool.MarkoffModP.BGS.Markoff.PreliminaryNumerics
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MaximalDivisorLowOrderCount
+public import LeanPool.MarkoffModP.BGS.Markoff.PreliminaryNumerics
 
 /-!
 # Coarse automatic linear tail
@@ -14,6 +16,8 @@ The simultaneous tenth-moment bound makes the linear middle-game condition
 automatic at a cutoff far below the paper scale.  No divisor-table tuning is
 used here.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

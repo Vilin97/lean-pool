@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Combinatorics.ProductOfChainsGrid
+
+public import LeanPool.MarkoffModP.BGS.Combinatorics.ProductOfChainsGrid
 
 /-!
 # The rectangle symmetric-chain equivalence
@@ -14,6 +16,8 @@ finite, self-contained transport boundary separate lets product decompositions
 be assembled from standard equivalence combinators.
 -/
 
+@[expose] public section
+
 namespace BGS.Combinatorics
 
 abbrev gridChainKey (m n : ℕ) :=
@@ -22,7 +26,8 @@ abbrev gridChainKey (m n : ℕ) :=
 abbrev gridChainLength (m n : ℕ) (key : gridChainKey m n) :=
   m + n - 2 * key
 
-private def gridChainEncode (m n : ℕ)
+/-- Encode a point of a finite rectangle by its symmetric chain and position. -/
+def gridChainEncode (m n : ℕ)
     (point : Fin (m + 1) × Fin (n + 1)) :
     Σ key : gridChainKey m n, Fin (gridChainLength m n key + 1) := by
   have hx : (point.1 : ℕ) ≤ m :=
@@ -35,7 +40,8 @@ private def gridChainEncode (m n : ℕ)
     ⟨⟨key, Nat.lt_succ_iff.mpr (gridKey_le_min hx hy)⟩,
       ⟨position, Nat.lt_succ_iff.mpr (gridPosition_le hx hy)⟩⟩
 
-private def gridChainDecode (m n : ℕ)
+/-- Recover a point of a finite rectangle from its symmetric chain and position. -/
+def gridChainDecode (m n : ℕ)
     (point :
       Σ key : gridChainKey m n, Fin (gridChainLength m n key + 1)) :
     Fin (m + 1) × Fin (n + 1) := by
@@ -87,7 +93,7 @@ def gridChainEquiv (m n : ℕ) :
       Σ key : gridChainKey m n, Fin (gridChainLength m n key + 1) where
   toFun := gridChainEncode m n
   invFun := gridChainDecode m n
-  left_inv := gridChainDecode_encode m n
-  right_inv := gridChainEncode_decode m n
+  left_inv := by exact gridChainDecode_encode m n
+  right_inv := by exact gridChainEncode_decode m n
 
 end BGS.Combinatorics

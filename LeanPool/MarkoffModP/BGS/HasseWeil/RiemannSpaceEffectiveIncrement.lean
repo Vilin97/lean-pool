@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointDivisorSplit
-import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceInfinityPlaceIncrement
-import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceConstants
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointDivisorSplit
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceInfinityPlaceIncrement
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceConstants
+public import Mathlib.Tactic
 
 /-!
 # Effective increments of exhaustive Riemann spaces
@@ -21,6 +23,8 @@ The final statements split an effective divisor at one selected place.  They
 are the linear-algebraic codimension estimates needed to pass from a
 many-pole auxiliary space to a one-point Riemann space.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

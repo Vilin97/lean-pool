@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorOrderCover
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorOrderCover
 
 /-!
 # Nonparabolic witnesses in maximal right-order subgroups
@@ -14,6 +16,8 @@ inside a divisibility-maximal right subgroup.  This module records the extra
 fact needed for inversion pairing: the representing eigenvalue is not fixed
 by inversion.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

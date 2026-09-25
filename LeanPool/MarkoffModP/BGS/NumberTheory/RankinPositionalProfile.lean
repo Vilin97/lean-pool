@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinCanonicalProfile
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeCoverage
-import Mathlib.Analysis.SpecialFunctions.Pow.NthRootLemmas
-import Mathlib.Algebra.Order.Floor.Div
-import Mathlib.NumberTheory.PrimeCounting
-import Mathlib.Data.List.Indexes
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinCanonicalProfile
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeCoverage
+public import Mathlib.Analysis.SpecialFunctions.Pow.NthRootLemmas
+public import Mathlib.Algebra.Order.Floor.Div
+public import Mathlib.NumberTheory.PrimeCounting
+public import Mathlib.Data.List.Indexes
 
 /-!
 # Positional Rankin profiles
@@ -24,6 +26,8 @@ floor `q`, the numerator is one more than the integral twelfth root of
 `ceil(D^12 / q)`.  The extra one makes the required twelfth-power inequality
 immediate and keeps the checker independent of floating-point arithmetic.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

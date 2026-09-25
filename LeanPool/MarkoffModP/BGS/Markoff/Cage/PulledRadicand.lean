@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.ShiftedTraceCurveIrreducibility
-import Mathlib.FieldTheory.IsAlgClosed.Basic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.ShiftedTraceCurveIrreducibility
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
 
 /-!
 # Pulled-back cage radicands
@@ -20,6 +22,8 @@ Hasse--Weil model.  In particular, the off-diagonal argument is not hidden
 behind a geometric-integrality assumption: the two pulled radicands are
 proved squarefree and coprime explicitly.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

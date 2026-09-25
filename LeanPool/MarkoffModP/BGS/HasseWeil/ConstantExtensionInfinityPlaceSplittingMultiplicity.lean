@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.Localization.AtPrime.Extension
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionPlaceSplittingMultiplicity
+
+public import Mathlib.RingTheory.Localization.AtPrime.Extension
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionPlaceSplittingMultiplicity
 
 /-!
 # Splitting multiplicity at infinity in an exact extension of constants
@@ -18,6 +20,8 @@ The comparison is noncircular: reciprocal affine normalizations are first
 compared over `C[X]`, and only then localized to the valuation ring at
 infinity.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct nonZeroDivisors
 
@@ -181,6 +185,9 @@ local instance infinitySplittingPresentedSPolynomialSMul :
 local instance infinitySplittingPresentedCPolynomialSMul :
     SMul C[X] (TensorProduct C S (integralClosure C[X] N)) := Algebra.toSMul
 
+omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] [FiniteDimensional C S] [IsGalois C S] in
 /-- The reciprocal polynomial actions on the exact constant extension form
 the expected scalar tower. -/
 theorem exactConstantExtensionReciprocalPolynomialTower :
@@ -212,6 +219,7 @@ noncomputable def exactConstantExtensionPresentedToCReciprocalNormalizationRingE
   let eC := exactConstantExtensionReciprocalIntegralClosureTowerEquiv C S N
   exact eS.toRingEquiv.trans eC.symm
 
+omit [Fintype C] [Finite S] [FiniteDimensional C S] [IsGalois C S] in
 /-- Coefficient extension commutes with evaluation in the reciprocal
 coordinate. -/
 private theorem ratFuncCoefficientAlgHom_reciprocalPolynomialRingHom
@@ -269,6 +277,8 @@ private theorem ratFuncExtensionReciprocalPolynomialAlgebra_map
   exact IsScalarTower.algebraMap_apply
     (RatFuncInfinityIntegers K) (RatFunc K) L _
 
+omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq (RatFunc C)]
+  [FiniteDimensional (RatFunc C) N] [Algebra.IsSeparable (RatFunc C) N] in
 /-- Version of reciprocal polynomial compatibility elaborated with the
 instances used in this file. -/
 private theorem exactConstantExtensionSReciprocalPolynomialAlgebra_eq :
@@ -500,6 +510,9 @@ noncomputable def exactConstantExtensionCReciprocalPrimesEquivInfinityPlace :
     (IsLocalRing.maximalIdeal V).primesOver B
   exact (IsDedekindDomain.primesOverEquivPrimesOver o V B ho).toEquiv
 
+omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] [FiniteDimensional C S] [IsGalois C S] in
 private theorem exactConstantExtensionPresentedReciprocalPolynomialTower :
     IsScalarTower C[X] S[X]
       (S ⊗[C] integralClosure C[X] N) := by
@@ -555,6 +568,8 @@ private theorem
   rw [polynomialTensorCancel_tmul]
   simp
 
+omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional C S] [IsGalois C S] in
 /-- The reciprocal origin is the unique prime of `S[X]` above the reciprocal
 origin of `C[X]`. -/
 private theorem primeUnderReciprocalOrigin_eq_origin
@@ -868,6 +883,7 @@ noncomputable def exactConstantExtensionPresentedInfinityPlaceEquiv :
       (exactConstantExtensionCReciprocalPrimesEquivInfinityPlace
         C S N hExact))
 
+omit [DecidableEq C] [DecidableEq (RatFunc C)] in
 /-- The reciprocal presentation equivalence respects restriction to the
 original function field. -/
 @[simp]
@@ -1153,6 +1169,8 @@ local instance infinitySplittingInfinityBaseNTower :
     IsScalarTower (RatFuncInfinityIntegers C) (RatFunc C) N :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+omit [Fintype C] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc S)]
+  [Algebra.IsSeparable (RatFunc C) N] in
 /-- Galois action on the infinity normalization restricts to the expected
 constant-field quotient action. -/
 theorem exactConstantExtensionConstantQuotient_action_on_infinityNormalization :

@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Normalization
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Normalization
 
 /-!
 # The real compactness lemma in the opening
@@ -13,6 +15,8 @@ The published opening rules out finite characteristic-zero orbits by first placi
 normalized trace coordinates in `[-2, 2]`.  The elementary real inequality used at that point is
 proved here independently of the later cyclotomic lifting argument.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

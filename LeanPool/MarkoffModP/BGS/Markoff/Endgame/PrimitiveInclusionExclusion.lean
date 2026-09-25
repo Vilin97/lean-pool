@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveTraceCount
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.DivisorRange
-import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveTraceCount
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.DivisorRange
+public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 
 /-!
 # Möbius inclusion--exclusion for primitive endgame traces
@@ -16,6 +18,8 @@ finite cyclic right group, it partitions trace coincidences by the exact order o
 element, applies Möbius inversion, and identifies the cumulative order-divisibility count with the
 corresponding right power-map image.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.Diagonalization
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorOrderEscape
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.TraceCurveWeights
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceBound
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.Diagonalization
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorOrderEscape
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.TraceCurveWeights
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceBound
 
 /-!
 # Feeding the weighted trace bound into maximal-divisor escape
@@ -16,6 +18,8 @@ The general Corvaja--Zannier theorem already provides a uniform estimate for
 all finite multiplicative subgroups.  This adapter applies it only to the
 divisibility-maximal right subgroups required by the improved middle game.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

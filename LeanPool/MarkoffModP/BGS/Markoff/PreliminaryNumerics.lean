@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.ExplicitNumericCertificates
-import LeanPool.MarkoffModP.BGS.NumberTheory.PreliminaryDivisorBound
+
+public import LeanPool.MarkoffModP.BGS.Markoff.ExplicitNumericCertificates
+public import LeanPool.MarkoffModP.BGS.NumberTheory.PreliminaryDivisorBound
 
 /-!
 # Elementary numerical certificates for the paper's preliminary route
@@ -16,6 +18,8 @@ Corvaja--Zannier route using a completely elementary tenth-moment estimate.
 The resulting cutoff is somewhat larger, but every numerical input is checked
 inside Lean.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

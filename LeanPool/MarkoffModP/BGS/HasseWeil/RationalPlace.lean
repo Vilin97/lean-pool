@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
-import Mathlib.RingTheory.Polynomial.DegreeLT
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
+public import Mathlib.RingTheory.Polynomial.DegreeLT
 
 /-!
 # Degree-one places of a finite function field
@@ -17,6 +19,8 @@ finite family of linear base primes together with their finite lying-over
 fibers, while the places above infinity already form a finite lying-over
 fiber.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 
@@ -156,12 +160,14 @@ def finiteExtensionRationalPlaceEquivSubtype :
 def finiteExtensionRationalPlaceCount : ℕ :=
   Nat.card (FiniteExtensionRationalPlace K L)
 
+omit [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 theorem finiteExtensionRationalPlaceCount_eq_natCard_subtype :
     finiteExtensionRationalPlaceCount K L =
       Nat.card {P : FiniteExtensionPlace K L //
         finiteExtensionPlaceDegree K L P = 1} :=
   Nat.card_congr (finiteExtensionRationalPlaceEquivSubtype K L)
 
+omit [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 private theorem rationalFinitePlace_baseDegree_eq_one
     (Q : FiniteExtensionRationalFinitePlace K L) :
     ratFuncFinitePlaceDegree (HeightOneSpectrum.under K[X] Q.1) = 1 := by
@@ -179,7 +185,7 @@ def rationalFinitePlaceToBaseFiber
     Σ P : RatFuncRationalFinitePlace K,
       P.1.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L) :=
   ⟨⟨HeightOneSpectrum.under K[X] Q.1,
-      rationalFinitePlace_baseDegree_eq_one K L Q⟩,
+      by exact rationalFinitePlace_baseDegree_eq_one K L Q⟩,
     ⟨Q.1.asIdeal, Q.1.isPrime, ⟨rfl⟩⟩⟩
 
 theorem rationalFinitePlaceToBaseFiber_injective :

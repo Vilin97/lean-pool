@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageCurve
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageCurve
 
 /-!
 # The source-to-powered-image degree factor
@@ -15,6 +17,8 @@ source curve.  The discrepancy is exactly the degree of the finite map from
 the source curve to its powered image.  These tower identities expose that
 factor explicitly.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

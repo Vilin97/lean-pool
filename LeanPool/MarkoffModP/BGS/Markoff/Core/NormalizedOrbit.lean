@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Action
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Normalization
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Action
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Normalization
 
 /-!
 # Markoff components in normalized coordinates
@@ -15,6 +17,8 @@ permutations and component relation through `normalizationSurfaceEquiv`.  It als
 specific group word for the fundamental rotation and proves that every iterate of the normalized
 rotation stays in the same transported component.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

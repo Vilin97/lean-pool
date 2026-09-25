@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Logic.Relation
-import Mathlib.Data.Nat.Order.Lemmas
-import Mathlib.Tactic
+
+public import Mathlib.Logic.Relation
+public import Mathlib.Data.Nat.Order.Lemmas
+public import Mathlib.Tactic
 
 /-!
 # Escape by a strictly increasing measure
@@ -14,6 +16,8 @@ import Mathlib.Tactic
 Iterate admissible transitions to reach a prescribed lower bound for a strictly increasing
 measure.
 -/
+
+@[expose] public section
 
 namespace BGS
 

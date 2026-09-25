@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlace
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlace
 
 /-!
 # Actual finite-place auxiliary orders in the exhaustive divisor model
@@ -14,6 +16,8 @@ This file keeps the local DVR construction independent of the heavier
 exhaustive-place infrastructure, then identifies its normalized order with
 the coefficient used by the global principal divisor.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 open IsDedekindDomain

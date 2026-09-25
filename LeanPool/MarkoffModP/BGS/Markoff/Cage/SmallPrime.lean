@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.PowerCover
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.PowerCover
 
 /-!
 # The small prime in the cage estimate
@@ -13,6 +15,8 @@ The geometric cage proof starts at `p = 7`.  The target interface also asks
 for `p = 5`; this file handles that one finite field by a transparent ambient
 cardinality bound, not by applying an inapplicable irreducibility statement.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

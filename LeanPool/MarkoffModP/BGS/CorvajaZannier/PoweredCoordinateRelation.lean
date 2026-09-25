@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredCoordinates
-import Mathlib.Algebra.Polynomial.RingDivision
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredCoordinates
+public import Mathlib.Algebra.Polynomial.RingDivision
 
 /-!
 # An explicit relation between powered plane-curve coordinates
@@ -23,6 +25,8 @@ Corvaja--Zannier resultant argument, and vanishes at `(u,v)`.  The final
 theorem feeds these facts into Proposition 1 without leaving an unspecified
 relation polynomial as a hypothesis.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

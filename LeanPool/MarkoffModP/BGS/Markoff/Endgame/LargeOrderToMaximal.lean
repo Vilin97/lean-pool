@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Parabolic
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.FiniteOrbit
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Parabolic
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.FiniteOrbit
 
 /-!
 # Large order in any coordinate reaches a maximal rotation
@@ -13,6 +15,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.Opening.FiniteOrbit
 This packages the first-coordinate endgame with the normalized coordinate permutations and the
 Markoff-component relation.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

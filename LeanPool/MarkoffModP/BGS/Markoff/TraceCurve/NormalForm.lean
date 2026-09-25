@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Localization
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Localization
 
 /-!
 # Normal forms in the split trace-cover Kummer tower
@@ -18,6 +20,8 @@ This basis statement only uses that the two defining binomials are monic.  Irred
 in `TraceCurveKummer`, is needed later to regard the same rings as fields, but is not smuggled into
 the normal-form interface.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

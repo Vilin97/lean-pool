@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.RotationOrbitCard
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.TraceOrderBound
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.RotationOrbitCard
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.TraceOrderBound
 
 /-!
 # Bounding the opening orders by the full Gamma orbit
@@ -14,6 +16,8 @@ The nonzero semisimple fibers use the existing conic parametrizations.  Trace ze
 parabolic traces are handled explicitly, since the generic parametrizations deliberately exclude
 those values.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 
@@ -267,10 +271,10 @@ theorem prime_le_twenty_pow_normalizedGammaOrbit_ncard_cube
     (p : ℕ) [Fact p.Prime] (hpTwo : p ≠ 2) (hpThree : p ≠ 3)
     (x : NormalizedMarkoffSurface (ZMod p)) (hxne : x.1 ≠ normalizedOrigin) :
     p ≤ 20 ^ (letI : Invertible (3 : ZMod p) :=
-      invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
+      invertibleOfNonzero (by exact three_ne_zero_zmod_of_prime_ne_three p hpThree)
       normalizedGammaOrbit x).ncard ^ 3 := by
   let : Invertible (3 : ZMod p) :=
-    invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
+    invertibleOfNonzero (by exact three_ne_zero_zmod_of_prime_ne_three p hpThree)
   obtain ⟨W₁, W₂, W₃, htrace₁, htrace₂, htrace₃, _hfin₁, _hfin₂, _hfin₃,
       _hcoprime₁, _hcoprime₂, _hcoprime₃, hpBound⟩ :=
     exists_exact_eigenvalue_orders_with_cyclotomic_bound p hpTwo x.1 x.property hxne
@@ -352,7 +356,7 @@ theorem prime_le_twenty_pow_gammaOrbit_ncard_cube
     (x : MarkoffSurface (ZMod p)) (hxne : x.1 ≠ origin) :
     p ≤ 20 ^ (gammaOrbit x).ncard ^ 3 := by
   let : Invertible (3 : ZMod p) :=
-    invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
+    invertibleOfNonzero (by exact three_ne_zero_zmod_of_prime_ne_three p hpThree)
   let xn := normalizationSurfaceEquiv (ZMod p) x
   have hxnNe : xn.1 ≠ normalizedOrigin := by
     intro hzero

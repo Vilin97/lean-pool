@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageHeightFactor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageIndex
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TranscendentalPowerDegree
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageHeightFactor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageIndex
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TranscendentalPowerDegree
 
 /-!
 # Exact source-height factorization through the powered image
@@ -16,6 +18,8 @@ Corvaja--Zannier Proposition 2.  The first factor is the relevant degree of
 the powered-image relation and the second is the common source-to-image
 index.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

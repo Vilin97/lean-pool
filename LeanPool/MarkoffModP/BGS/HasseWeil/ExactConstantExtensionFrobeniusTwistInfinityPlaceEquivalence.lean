@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistInfinityPlaceDescent
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistInfinityPlaceDescent
 
 /-!
 # Exact Frobenius-twist descent for infinity places
@@ -14,6 +16,8 @@ constant extension.  It identifies rational infinity places of the
 Frobenius-twist fixed field with degree-`[S : C]` infinity places upstairs
 fixed by the ambient Frobenius twist.
 -/
+
+@[expose] public section
 
 open scoped Pointwise Polynomial TensorProduct
 

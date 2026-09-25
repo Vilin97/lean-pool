@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneMonomialSpace
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCoordinatePoleAtInfinity
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneConstantField
-import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceEffectiveIncrement
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStrictLevels
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneMonomialSpace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCoordinatePoleAtInfinity
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneConstantField
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceEffectiveIncrement
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStrictLevels
 
 /-!
 # One-point Riemann-space lower bounds for plane curves
@@ -31,6 +33,8 @@ theorem combines this estimate with the one-place increment bound and the
 exact constant field to force at least `m - g` strict levels in the one-point
 Riemann filtration, where `g` is the displayed bidegree budget.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

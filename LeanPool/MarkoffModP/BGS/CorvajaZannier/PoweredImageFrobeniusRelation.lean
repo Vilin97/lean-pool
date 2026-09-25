@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageCurve
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.AbsoluteIrreducibilityBaseChange
-import Mathlib.RingTheory.TensorProduct.MvPolynomial
-import Mathlib.RingTheory.TensorProduct.Quotient
-import Mathlib.RingTheory.Flat.Basic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageCurve
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.AbsoluteIrreducibilityBaseChange
+public import Mathlib.RingTheory.TensorProduct.MvPolynomial
+public import Mathlib.RingTheory.TensorProduct.Quotient
+public import Mathlib.RingTheory.Flat.Basic
 
 /-!
 # Powered-image relations over the Frobenius constant field
@@ -19,6 +21,8 @@ It then transports that equation to the Frobenius constant field and applies
 the relation criterion to obtain the auxiliary-family linear independence
 used in the Corvaja--Zannier Wronskian argument.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct Polynomial
 

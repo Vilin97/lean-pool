@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.CommonPrimeKummerTower
-import Mathlib.FieldTheory.IsAlgClosed.Basic
-import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.CommonPrimeKummerTower
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 
 /-!
 # Absolute irreducibility of weighted odd-coprime split trace covers
@@ -17,6 +19,8 @@ closure choose `c` with `c ^ e = alpha`; the reversible coordinate scaling `y â†
 normalized cover with `sigma = alpha * beta` to `alpha` times the weighted cover.  Thus no new
 irreducibility assumption is introduced at the normalization step.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

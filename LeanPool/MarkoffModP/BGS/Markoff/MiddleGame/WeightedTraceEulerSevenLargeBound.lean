@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSevenPropositionTwo
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveExhaustiveGcdEndpoint
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.NumericalCorollary
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSevenPropositionTwo
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveExhaustiveGcdEndpoint
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.NumericalCorollary
+public import Mathlib.Tactic
 
 /-!
 # The Euler-seven weighted trace bound above the elementary range
@@ -15,6 +17,8 @@ import Mathlib.Tactic
 This module converts the exact χ≤7 Proposition Two result into its numerical
 torsion-intersection estimate when `48 < p`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

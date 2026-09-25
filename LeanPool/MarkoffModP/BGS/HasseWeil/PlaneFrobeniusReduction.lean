@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFrobeniusDegenerate
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFrobeniusDegenerate
 
 /-!
 # Closed Frobenius reduction for affine plane curves
@@ -16,6 +18,8 @@ case its affine point count is exactly the field cardinality, or it admits a
 same-count equation with both coordinate partial derivatives nonzero and no
 larger supplied bidegree bounds.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -84,11 +88,11 @@ theorem hasBidegreeAtMost_planeSwapAlgEquiv
   have hd := hdegree n hn
   have hzero :
       Finsupp.mapDomain (Equiv.swap (0 : Fin 2) 1) n 0 = n 1 := by
-    simpa using Finsupp.mapDomain_apply
+    simp using Finsupp.mapDomain_apply
       (Equiv.swap (0 : Fin 2) 1).injective n (1 : Fin 2)
   have hone :
       Finsupp.mapDomain (Equiv.swap (0 : Fin 2) 1) n 1 = n 0 := by
-    simpa using Finsupp.mapDomain_apply
+    simp using Finsupp.mapDomain_apply
       (Equiv.swap (0 : Fin 2) 1).injective n (0 : Fin 2)
   simpa [hzero, hone] using And.intro hd.2 hd.1
 

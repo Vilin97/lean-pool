@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionEffectiveDivisorSplit
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionEffectiveDivisorSplit
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
 
 /-!
 # The total effective different divisor
@@ -18,6 +20,8 @@ Unlike the canonical divisor attached to `dX`, this effective divisor records
 the total different itself: its infinity coefficients do not contain the
 additional `-2e` correction coming from the pole of `dX`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators nonZeroDivisors Polynomial
 

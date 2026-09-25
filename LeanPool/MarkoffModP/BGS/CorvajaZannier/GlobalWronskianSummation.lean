@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.ParameterizedBound
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.ParameterizedBound
 
 /-!
 # Global Wronskian summation for Corvaja--Zannier Proposition 2
@@ -15,6 +17,8 @@ proved optimization stage.  The remaining geometric theorem must supply the
 displayed summed Wronskian inequality; it is not assumed as an axiom or hidden
 in a typeclass.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaRationality
-import Mathlib.RingTheory.PowerSeries.Substitution
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaRationality
+public import Mathlib.RingTheory.PowerSeries.Substitution
 
 /-!
 # An ordinary-extension specialization of the degree-index argument
@@ -30,6 +32,8 @@ extended zeta series is deliberately stronger than indexed rationality and is
 not used to close the geometric F. K. Schmidt argument.  The noncircular
 indexed-to-indexed theorem is in `FormalZetaDegreeIndexOneIndexed`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

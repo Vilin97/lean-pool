@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FrobeniusRestriction
-import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovRestrictionMaps
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLeadingTermCancellation
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlaceCases
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlacePrincipalDivisor
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FrobeniusRestriction
+public import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovRestrictionMaps
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLeadingTermCancellation
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlaceCases
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlacePrincipalDivisor
+public import Mathlib.Tactic
 
 /-!
 # The quadratic Frobenius vanishing step
@@ -29,6 +31,8 @@ The square-Frobenius identity is an explicit hypothesis.  In particular,
 this file does not assert that every normalization place above a quadratic
 extension point has residue degree at most two.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

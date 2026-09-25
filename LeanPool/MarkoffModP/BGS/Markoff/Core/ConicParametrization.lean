@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.ParabolicFibers
-import LeanPool.MarkoffModP.BGS.Markoff.Core.TraceClassification
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.ParabolicFibers
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.TraceClassification
 
 /-!
 # Explicit parametrizations of normalized Markoff fibers
@@ -15,6 +17,8 @@ Bourgain--Gamburd--Sarnak.  The trace-zero fiber is deliberately kept visible: a
 rotation is semisimple, its conic is singular, so the paper's claimed single-torus
 parametrization needs the additional hypothesis that the fixed normalized trace is nonzero.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 
@@ -94,7 +98,8 @@ theorem splitFiberPoint_mem (w s : Fˣ) (hw : (w : F) ^ 2 ≠ 1) :
     rw [splitFiberProduct, splitTorusTrace_sq_sub_four]
     have hdifference := splitEigenvalueDifference_ne_zero w hw
     field_simp
-    simp [splitTorusTrace]
+    simp only [Units.val_inv_eq_inv_val, ne_eq, Units.ne_zero, not_false_eq_true, mul_inv_cancel_right₀, mul_zero,
+      mul_eq_zero, OfNat.ofNat_ne_zero, pow_eq_zero_iff]
     right
     field_simp
     ring

@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotientRankin
-import Mathlib.NumberTheory.ArithmeticFunction.Zeta
-import Mathlib.NumberTheory.ArithmeticFunction.Misc
-import Mathlib.Data.Nat.Factorization.Basic
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotientRankin
+public import Mathlib.NumberTheory.ArithmeticFunction.Zeta
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
+public import Mathlib.Data.Nat.Factorization.Basic
+public import Mathlib.Tactic
 
 /-!
 # Rankin factorization of weighted totient sums
@@ -16,6 +18,8 @@ import Mathlib.Tactic
 Express the multiplicative weighted totient sum as a product over prime powers and bound its
 local Rankin factors.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 
@@ -96,7 +100,7 @@ def coarseRankinPrimePowerFactor
   1 + ∑ index ∈ Finset.range exponent, weight ^ (index + 1)
 
 theorem rankinPrimePowerFactor_nonneg
-    {prime exponent : ℕ} (hprime : prime.Prime)
+    {prime exponent : ℕ} (_hprime : prime.Prime)
     {weight : ℚ} (hweight : 0 ≤ weight) :
     0 ≤ rankinPrimePowerFactor prime exponent weight := by
   simp only [rankinPrimePowerFactor]

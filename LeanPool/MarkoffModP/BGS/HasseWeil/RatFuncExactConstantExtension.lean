@@ -3,14 +3,16 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionAutomorphism
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldConstantExtensionNormalization
-import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceNormalizationTransport
-import LeanPool.MarkoffModP.BGS.HasseWeil.PolynomialTensorCancel
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncConstantExtension
-import Mathlib.FieldTheory.RatFunc.AsPolynomial
-import Mathlib.RingTheory.Flat.Stability
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionAutomorphism
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldConstantExtensionNormalization
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceNormalizationTransport
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PolynomialTensorCancel
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncConstantExtension
+public import Mathlib.FieldTheory.RatFunc.AsPolynomial
+public import Mathlib.RingTheory.Flat.Stability
 
 /-!
 # The rational-function field in an exact constant extension
@@ -25,6 +27,8 @@ For finite Galois `N / C(X)`, the tensor product is finite and separable over
 constant extension with the normalization used by the project's finite-place
 model.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct nonZeroDivisors
 
@@ -140,11 +144,12 @@ noncomputable def ratFuncToExactConstantExtension :
     RatFunc S →ₐ[S] ExactConstantExtension C N S := by
   letI : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
-  let hpoly := targetPolynomialAlgebraMap_injective C S N
   exact RatFunc.liftAlgHom
     (Polynomial.aeval
       (polynomialTensorCancelEvaluationPoint C S N))
-    (nonZeroDivisors_le_comap_nonZeroDivisors_of_injective _ hpoly)
+    (by
+      apply nonZeroDivisors_le_comap_nonZeroDivisors_of_injective
+      exact targetPolynomialAlgebraMap_injective C S N)
 
 theorem ratFuncToExactConstantExtension_injective :
     Function.Injective
@@ -336,6 +341,7 @@ variable [Algebra.IsSeparable (RatFunc C) N]
 
 include hExact
 
+omit [FiniteDimensional (RatFunc C) N] in
 /-- For a finite separable `N / C(X)`, the exact constant extension remains
 separable over the original rational function field `C(X)`. -/
 theorem isSeparable_exactConstantExtension_over_baseRatFunc :
@@ -366,6 +372,7 @@ theorem isSeparable_exactConstantExtension_over_baseRatFunc :
   exact Algebra.IsSeparable.trans
     (RatFunc C) N (ExactConstantExtension C N S)
 
+omit [FiniteDimensional (RatFunc C) N] in
 /-- For a finite separable `N / C(X)`, the exact constant extension is separable
 over the enlarged rational function field `S(X)`. -/
 theorem isSeparable_over_extendedRatFunc :

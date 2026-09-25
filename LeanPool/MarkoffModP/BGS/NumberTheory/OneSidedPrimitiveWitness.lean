@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveInclusionExclusion
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PowerCoverCounting
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveInclusionExclusion
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PowerCoverCounting
 
 /-!
 # One-sided primitive extraction with witness multiplicities
@@ -14,6 +16,8 @@ The cage fiber-product count has an arbitrary finite witness type on the left
 and a cyclic multiplicative group on the right.  This file performs Möbius
 inversion without erasing the left witness.
 -/
+
+@[expose] public section
 
 namespace BGS
 

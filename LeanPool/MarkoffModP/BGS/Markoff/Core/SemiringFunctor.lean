@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Action
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Action
 
 /-!
 # The Markoff surface on commutative semirings
@@ -19,6 +21,8 @@ This file defines that solution type over every commutative semiring and its cov
 semiring homomorphisms.  It also records the canonical reduction from `ℕ` to `ZMod p` and compares
 the semiring definition with the existing ring-level `MarkoffSurface`.
 -/
+
+@[expose] public section
 
 open CategoryTheory
 

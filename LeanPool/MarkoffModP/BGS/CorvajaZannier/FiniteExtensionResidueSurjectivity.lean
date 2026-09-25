@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
 
 /-!
 # Constants surject onto residue fields of all function-field places
@@ -18,6 +20,8 @@ function infinity place.  Thus constants surject onto every residue field.
 This is the exact coefficient-lifting input used by Corvaja--Zannier case (i):
 equal negative leading terms can be cancelled by a genuine constant.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors Polynomial
 open IsDedekindDomain

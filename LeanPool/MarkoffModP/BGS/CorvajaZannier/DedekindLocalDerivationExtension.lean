@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.Etale.Kaehler
-import Mathlib.RingTheory.DedekindDomain.Different
-import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.Smooth.Fiber
+
+public import Mathlib.RingTheory.Etale.Kaehler
+public import Mathlib.RingTheory.DedekindDomain.Different
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Smooth.Fiber
 
 /-!
 # Extending derivations through local Dedekind rings
@@ -15,6 +17,8 @@ import Mathlib.RingTheory.Smooth.Fiber
 Lift derivations uniquely through formally etale maps and apply this to unramified localizations
 and primes away from the different.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

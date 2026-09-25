@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSharedOriginBoundary
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryIndependence
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierFromGeneral
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Boundary
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedBidegree
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSharedOriginBoundary
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryIndependence
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierFromGeneral
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Boundary
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedBidegree
+public import Mathlib.Tactic
 
 /-!
 # Euler budget seven for the weighted trace curve
@@ -23,6 +25,8 @@ log-canonical degree budget from `8` to `7`.
 This is deliberately weaker than the paper's unsupported value `3`, but it
 uses only the normalization-place machinery proved in the repository.
 -/
+
+@[expose] public section
 
 open scoped Polynomial BigOperators
 

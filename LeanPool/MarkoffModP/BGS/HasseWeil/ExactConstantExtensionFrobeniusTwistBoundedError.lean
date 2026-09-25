@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistRationalPlaceAverage
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistRationalPlaceAverage
 
 /-!
 # Two-sided Frobenius-twist errors from the bounded average
@@ -17,6 +19,8 @@ all twists, suffices by finite averaging.
 This is the direct function-field specialization of
 `abs_le_of_uniform_upper_and_abs_sum_le`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindDifferentKaehler
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindRamifiedDerivationScaling
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindDifferentKaehler
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindRamifiedDerivationScaling
 
 /-!
 # Canonical different scalings at Dedekind places
@@ -22,6 +24,8 @@ annihilates relative Kähler differentials then makes `δ` a derivation-clearing
 factor.  No local power basis or finiteness assertion for a map between two
 independently localized rings is used.
 -/
+
+@[expose] public section
 
 attribute [local instance] FractionRing.liftAlgebra
   FractionRing.isScalarTower_liftAlgebra

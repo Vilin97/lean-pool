@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinProfileCertificate
-import Mathlib.NumberTheory.ArithmeticFunction.Misc
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinProfileCertificate
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Matching an actual neighboring factorization to a Rankin profile
@@ -16,6 +18,8 @@ one globally increasing support list.  A matching assignment records, at each
 actual prime, its side, exact exponent, and a rational weight cap whose lower
 prime is no larger than the actual prime.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 
@@ -186,7 +190,7 @@ private theorem oddDivisorCount_map_assignment
       simp only [List.map_cons, RankinNeighborProfile.oddDivisorCount,
         List.prod_cons]
       rw [ih htail]
-      simp [RankinOddFactor.Matches] at hhead
+      simp only [ite_mul, one_mul] at hhead
       rw [hhead.1, hhead.2.1]
 
 private theorem odd_prime_not_mem_both_neighbors
@@ -552,7 +556,7 @@ private theorem oddCoarseEulerProduct_map_assignment
         RankinNeighborProfile.oddCoarseEulerProduct,
         List.prod_cons]
       rw [ih htail]
-      simp [RankinOddFactor.Matches] at hhead
+      simp only [ite_mul, one_mul] at hhead
       rw [hhead.1, hhead.2.1]
 
 private theorem jointOddPrimeList_coarse_product_minus

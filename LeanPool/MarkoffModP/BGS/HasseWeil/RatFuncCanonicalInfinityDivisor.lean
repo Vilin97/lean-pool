@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.RamificationInertia.Basic
-import Mathlib.LinearAlgebra.Dimension.Localization
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannRoch
+
+public import Mathlib.RingTheory.RamificationInertia.Basic
+public import Mathlib.LinearAlgebra.Dimension.Localization
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannRoch
 
 /-!
 # The canonical divisor `-2∞` on the rational function field
@@ -17,6 +19,8 @@ divisor supported there with coefficient `-2` as canonical.  The proof uses
 the in-repository Riemann--Roch theorem and the proved genus-zero theorem for
 `RatFunc K`; it does not assume a base canonical divisor.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.PairedMaximalDivisorTraceCount
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.PairedMaximalDivisorTraceCount
 
 /-!
 # Fixed-point-free maximal-divisor trace pairing
@@ -15,6 +17,8 @@ additive exceptional term.  Applying this on each maximal-divisor piece gives
 
 `2 * |non-two-torsion bounded traces| ≤ (bound - 1) * M`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 
@@ -27,6 +31,7 @@ section FixedPointFreeInvolutionImage
 variable {G T : Type*} [Group G] [Fintype G] [DecidableEq G]
   [DecidableEq T] [IsCyclic G]
 
+omit [Fintype G] [IsCyclic G] in
 /-- An inversion-invariant map has at most half as many values as inputs when
 inversion has no fixed point on the source. -/
 theorem two_mul_card_image_le_card_of_inv_invariant_of_no_fixed
@@ -75,6 +80,7 @@ theorem two_mul_card_image_le_card_of_inv_invariant_of_no_fixed
 def nonTwoTorsionElementsWithPowOne (m : ℕ) : Finset G :=
   (elementsWithPowOne G m).filter fun x => x ^ 2 ≠ 1
 
+omit [IsCyclic G] in
 @[simp]
 theorem mem_nonTwoTorsionElementsWithPowOne_iff
     {m : ℕ} {x : G} :

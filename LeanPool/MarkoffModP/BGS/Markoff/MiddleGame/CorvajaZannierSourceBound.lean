@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.UnionBound
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.UnionBound
 
 /-!
 # The source-faithful Corvaja--Zannier numerical specialization
@@ -17,6 +19,8 @@ dominated by the coefficient-`48` envelope used by the Markoff middle game.
 This is only the numerical specialization.  It does not postulate or prove the geometric
 torsion-intersection estimate.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

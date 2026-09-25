@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicComplementFrontier
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenPairedMaximalDivisorMiddleGame
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicComplementFrontier
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenPairedMaximalDivisorMiddleGame
 
 /-!
 # Euler-seven nonparabolic complement frontier
@@ -13,6 +15,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenPairedMaximalDivisorM
 This is the complement-maximal argument with the exact paired
 Euler-characteristic middle-game condition `189 * M^3 < d`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

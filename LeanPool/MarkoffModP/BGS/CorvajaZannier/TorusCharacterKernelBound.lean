@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSupportDeterminant
-import Mathlib.Data.Int.GCD
-import Mathlib.RingTheory.RootsOfUnity.Basic
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSupportDeterminant
+public import Mathlib.Data.Int.GCD
+public import Mathlib.RingTheory.RootsOfUnity.Basic
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.Tactic
 
 /-!
 # Rank-two character kernels in a two-dimensional torus
@@ -23,6 +25,8 @@ Applied to three monomials in the support of a plane curve, this bounds the
 diagonal support stabilizer by the corresponding support determinant and
 hence by twice the product of the two coordinate degrees.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

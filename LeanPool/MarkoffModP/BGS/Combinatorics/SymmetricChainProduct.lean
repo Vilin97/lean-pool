@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Combinatorics.SymmetricChainBasic
-import LeanPool.MarkoffModP.BGS.Combinatorics.SymmetricChainRectangle
+
+public import LeanPool.MarkoffModP.BGS.Combinatorics.SymmetricChainBasic
+public import LeanPool.MarkoffModP.BGS.Combinatorics.SymmetricChainRectangle
 
 /-!
 # Products of symmetric-chain decompositions
@@ -14,6 +16,8 @@ The product with one more finite chain is obtained by composing four standard
 equivalences: the old chain code, sigma-product distribution, the explicit
 rectangle decomposition on each old chain, and sigma associativity.
 -/
+
+@[expose] public section
 
 namespace BGS.Combinatorics
 
@@ -45,7 +49,8 @@ def productStart
     (key : decomposition.productKey a) : ℕ :=
   decomposition.start key.1 + key.2
 
-private def productEquiv
+/-- Reindex a product with a finite chain by its rectangular symmetric chains. -/
+def productEquiv
     (decomposition : SymmetricChainDecomposition P rank total)
     (a : ℕ) :
     P × Fin (a + 1) ≃

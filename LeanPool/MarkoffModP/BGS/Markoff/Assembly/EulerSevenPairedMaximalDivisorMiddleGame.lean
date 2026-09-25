@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MiddleGameThenEndgame
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedMaximalDivisorCorvajaZannierEscape
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MiddleGameThenEndgame
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedMaximalDivisorCorvajaZannierEscape
 
 /-!
 # Euler-seven paired maximal-divisor middle-game assembly
@@ -13,6 +15,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedMaximalDiviso
 This lifts the exact `189 * K^3 < d` paired escape from a chosen coordinate
 to the maximum of the three coordinate rotation orders.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorusCharacterKernelBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveLogarithmicGauss
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorusCharacterKernelBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveLogarithmicGauss
+public import Mathlib.Tactic
 
 /-!
 # Diagonal stabilizers of plane curves
@@ -14,6 +16,8 @@ import Mathlib.Tactic
 Describe diagonal scaling through polynomial coefficients and relate curve stabilizers to
 characters of the support.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 noncomputable section
@@ -32,11 +36,11 @@ theorem coeff_diagonalScale {F : Type*} [Field F]
       f.coeff m * (z.1 : F) ^ m 0 * (z.2 : F) ^ m 1 := by
   classical
   by_cases hm : m ∈ f.support
-  · simp [diagonalScale, MvPolynomial.coeff_sum,
+  · simp [diagonalScale, 
       MvPolynomial.coeff_monomial, hm]
   · have hcoeff : f.coeff m = 0 :=
       MvPolynomial.notMem_support_iff.mp hm
-    simp [diagonalScale, MvPolynomial.coeff_sum,
+    simp [diagonalScale, 
       MvPolynomial.coeff_monomial, hm, hcoeff]
 
 theorem support_diagonalScale {F : Type*} [Field F]

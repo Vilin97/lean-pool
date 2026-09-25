@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.RiemannRoch.SeparableRelNorm
-import Mathlib.FieldTheory.IsSepClosed
+
+public import LeanPool.MarkoffModP.RiemannRoch.SeparableRelNorm
+public import Mathlib.FieldTheory.IsSepClosed
 
 /-!
 # Finite-extension norm and place-count formula
@@ -21,6 +23,8 @@ field product formula to a finite function-field extension.  The final theorem
 clears a denominator to extend the identity to arbitrary elements of the
 fraction field.  Places at infinity are treated separately.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors
 open IsDedekindDomain UniqueFactorizationMonoid

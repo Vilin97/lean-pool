@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Algebra.DifferentialWronskian
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FrobeniusSubfield
+
+public import LeanPool.MarkoffModP.BGS.Algebra.DifferentialWronskian
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FrobeniusSubfield
 
 /-!
 # Frobenius constants and ordinary Wronskians
@@ -15,6 +17,8 @@ field is the Frobenius subfield.  Combining that construction with the
 ordinary differential-field Wronskian criterion gives the algebraic
 Wronskian boundary used in the Corvaja--Zannier argument.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

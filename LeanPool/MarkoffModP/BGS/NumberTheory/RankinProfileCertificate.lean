@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotientRankinFactorization
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotientRankinFactorization
 
 /-!
 # Certificates for neighboring Rankin profiles
@@ -12,6 +14,8 @@ import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotientRankinFactoriz
 Define rational weight caps and finite profile checks, and connect the Boolean checks with their
 mathematical validity predicates.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

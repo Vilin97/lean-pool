@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointIncrement
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStepanovGrid
-import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceConstants
-import Mathlib.Data.Fintype.EquivFin
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointIncrement
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStepanovGrid
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceConstants
+public import Mathlib.Data.Fintype.EquivFin
 
 /-!
 # Selecting one-point sections with distinct pole orders
@@ -17,6 +19,8 @@ many strict levels of the pole filtration.  Choosing one section at each
 strict level, and adjoining the constant section, produces a linearly
 independent family with distinct pole-order digits in a prescribed range.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

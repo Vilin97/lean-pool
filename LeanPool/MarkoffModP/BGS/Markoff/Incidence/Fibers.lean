@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.FiniteField.QuadraticCharacter
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Geometry
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.PointCount
+
+public import LeanPool.MarkoffModP.BGS.FiniteField.QuadraticCharacter
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Geometry
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.PointCount
 
 /-!
 # Incidence of Markoff conic fibers
@@ -16,6 +18,8 @@ This file formalizes the algebra behind Proposition 6 of Bourgain--Gamburd--Sarn
 integrality is proved in `BGS.Markoff.IncidenceCoordinateRing`; the independent Hasse point-count
 gap is isolated in `BGS.FiniteField.EllipticCharacterSum`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

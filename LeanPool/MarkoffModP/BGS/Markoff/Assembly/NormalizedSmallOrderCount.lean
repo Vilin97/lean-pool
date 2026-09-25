@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NormalizationCount
-import LeanPool.MarkoffModP.BGS.Markoff.Core.ConicParametrization
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NormalizationCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.ConicParametrization
 
 /-!
 # The elementary small-order point count
@@ -14,6 +16,8 @@ This module connects matrix rotation order to the concrete split/nonsplit trace 
 the normalized fixed-fiber bound.  It is the counting step omitted from the paper's final
 assembly; no dynamical assertion about escaping to the cage is assumed here.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

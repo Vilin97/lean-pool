@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveDiscriminantBound
-import Mathlib.RingTheory.RootsOfUnity.Basic
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveDiscriminantBound
+public import Mathlib.RingTheory.RootsOfUnity.Basic
+public import Mathlib.Tactic
 
 /-!
 # Bidegree bounds for finite torus-curve intersections
@@ -21,6 +23,8 @@ The irreducibility and positive-coordinate-degree hypotheses are essential:
 a polynomial with a vertical or horizontal component can contain an entire row
 or column of the torsion grid.
 -/
+
+@[expose] public section
 
 open Polynomial
 

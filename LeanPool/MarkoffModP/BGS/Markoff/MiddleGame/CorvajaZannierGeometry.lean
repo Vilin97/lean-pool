@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEquation
-import Mathlib.FieldTheory.IsAlgClosed.Basic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEquation
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
 
 /-!
 # The geometric Corvaja--Zannier interface for the middle game
@@ -26,6 +28,8 @@ Corvaja--Zannier Corollary 2.  For the `(2,2)` trace curve, the `12 d₁ d₂ / 
 gives `48 m₁ m₂ / p`.  Accordingly the source-backed envelope in this module has constant
 `48`; obtaining `20` requires a separate argument.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

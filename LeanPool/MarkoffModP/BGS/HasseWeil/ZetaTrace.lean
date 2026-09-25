@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Analysis.CStarAlgebra.Classes
-import Mathlib.Tactic
+
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Tactic
 
 /-!
 # From zeta-function spectral data to the Hasse--Weil estimate
@@ -19,6 +21,8 @@ The zeta-function construction and the proof of the spectral bound are kept
 separate: they are the substantive preceding stages of the
 Corvaja--Zannier/Bombieri argument.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorDegreeIndex
-import LeanPool.MarkoffModP.BGS.HasseWeil.ClosedPlaceEulerRecurrence
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaConstantExtensionIdentity
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorDegreeIndex
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ClosedPlaceEulerRecurrence
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaConstantExtensionIdentity
 
 /-!
 # Degree support and the constant-extension zeta identity
@@ -15,6 +17,8 @@ This file specializes the formal constant-extension identity to the exhaustive
 closed-place point-count sequence.  The divisor-degree index itself supplies
 the required divisibility support.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

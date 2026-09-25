@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LaurentFrobeniusBasis
-import Mathlib.FieldTheory.LinearDisjoint
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LaurentFrobeniusBasis
+public import Mathlib.FieldTheory.LinearDisjoint
 
 /-!
 # The completion linear-disjointness bridge
@@ -31,6 +33,8 @@ must come from curve geometry:
 No assertion here constructs a completion map or proves these compatibility
 conditions for a plane curve.
 -/
+
+@[expose] public section
 
 open HahnSeries
 open Module

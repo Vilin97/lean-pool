@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ChartLocalization
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ChartLocalization
 
 /-!
 # Jacobian control on the Laurent trace cover
@@ -17,6 +19,8 @@ nonzero and the paper's parameter condition `alpha * beta ≠ 1` holds.
 The proof exposes the characteristic assumptions and gives an explicit ideal calculation.  It does
 not assume smoothness or normality as a structure field.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

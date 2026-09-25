@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicDefect
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.PeriodicSemisimple
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicDefect
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.PeriodicSemisimple
 
 /-!
 # Torsion eigenvalue traces force the complex Markoff origin
@@ -14,6 +16,8 @@ This is the characteristic-zero contradiction at the heart of the opening.  Once
 coordinate of a complex normalized Markoff point is represented by a torsion eigenvalue and its
 reciprocal, the unit-circle defect argument forces all three coordinates to vanish.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

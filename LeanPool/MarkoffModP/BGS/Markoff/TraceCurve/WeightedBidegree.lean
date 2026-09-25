@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedIrreducibility
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedIrreducibility
 
 /-!
 # Exact bidegree of the weighted middle-game trace curve
@@ -16,6 +18,8 @@ the explicit `Fin 2` multivariate-to-iterated-polynomial equivalence already
 used in the irreducibility proof; swapping the two polynomial variables
 computes the second coordinate degree.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlace
-import Mathlib.RingTheory.Localization.Integral
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlace
+public import Mathlib.RingTheory.Localization.Integral
+public import Mathlib.Tactic
 
 /-!
 # The sharp finite different bound for a plane curve
@@ -18,6 +20,8 @@ The key local step chooses a reciprocal primitive element separately at each
 base prime; a prime-unit denominator-clearing argument then compares its
 minimal-polynomial discriminant with the global different.
 -/
+
+@[expose] public section
 
 open scoped Polynomial nonZeroDivisors BigOperators
 open Polynomial IsDedekindDomain
@@ -76,7 +80,7 @@ theorem powerBasis_discr_smul_eq_diagonal_det_sq_mul
       (P.map (algebraMap K L)).mulVec (fun i => pbz.basis (e i)) := by
     funext i
     rw [show pbx.basis i = pbx.gen ^ (i : ℕ) by
-      simpa only [PowerBasis.coe_basis] using congrFun (PowerBasis.coe_basis pbx) i]
+      simp only [PowerBasis.coe_basis] using congrFun (PowerBasis.coe_basis pbx) i]
     rw [show P.map (algebraMap K L) =
         Matrix.diagonal (fun i : Fin pbx.dim =>
           algebraMap K L (r ^ (i : ℕ))) by
@@ -85,7 +89,7 @@ theorem powerBasis_discr_smul_eq_diagonal_det_sq_mul
       split <;> simp_all]
     rw [Matrix.mulVec_diagonal]
     rw [show pbz.basis (e i) = pbz.gen ^ ((e i : Fin pbz.dim) : ℕ) by
-      simpa only [PowerBasis.coe_basis] using
+      simp only [PowerBasis.coe_basis] using
         congrFun (PowerBasis.coe_basis pbz) (e i)]
     rw [hgenX, hgenZ]
     have hei : ((e i : Fin pbz.dim) : ℕ) = (i : ℕ) := by simp [e]
@@ -171,7 +175,7 @@ theorem finitePlaceOrder_algebraMap_unit_eq_zero
     finitePlaceOrder v (algebraMap R F (u : R)) = 0 := by
   have h := finitePlaceOrderTop_algebraMap_unit (A := R) (K := F) v u
   have hu : algebraMap R F (u : R) ≠ 0 :=
-    by simpa using (IsFractionRing.injective R F).ne u.ne_zero
+    by simp using (IsFractionRing.injective R F).ne u.ne_zero
   rw [finitePlaceOrderTop_eq_coe v _ hu] at h
   exact_mod_cast h
 
@@ -473,6 +477,7 @@ theorem finiteExtensionFiniteDifferentDegree_le_polynomialDegree_of_localBounds
       _ = (Δ.natDegree : ℤ) := RatFunc.intDegree_polynomial
   exact_mod_cast hcast
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 theorem finiteExtensionFiniteDifferentDivisorBelow_apply_le_minpolyDiscr_of_localPrimitive
     (hDifferent : differentIdeal K[X]
       (RatFuncFiniteIntegralClosure K L) ≠ ⊥)

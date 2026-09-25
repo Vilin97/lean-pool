@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Geometry
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Geometry
 
 /-!
 # Affine boundary of the split trace cover
@@ -15,6 +17,8 @@ stated for an affine or projective model, so the points introduced on the coordi
 accounted for explicitly.  For positive covering exponents and nonzero second weight, the affine
 model adds exactly the origin and no other coordinate-axis point.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityInertiaDegree
-import Mathlib.Algebra.Polynomial.Reverse
-import Mathlib.RingTheory.Localization.AtPrime.Basic
-import Mathlib.RingTheory.Localization.Integral
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityInertiaDegree
+public import Mathlib.Algebra.Polynomial.Reverse
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Mathlib.RingTheory.Localization.Integral
 
 /-!
 # The infinity valuation ring as a reciprocal localization
@@ -21,6 +23,8 @@ using the reversed numerator and denominator.  This localization model is
 the bridge needed to transport polynomial normalization under finite constant
 extension to places above infinity.
 -/
+
+@[expose] public section
 
 open scoped Polynomial nonZeroDivisors
 

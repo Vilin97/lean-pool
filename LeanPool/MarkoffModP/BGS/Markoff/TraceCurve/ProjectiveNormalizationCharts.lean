@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.AlgebraicGeometry.ConstantOpenGlueData
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.LaurentNormalization
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ProjectiveChart
-import Mathlib.AlgebraicGeometry.OpenImmersion
+
+public import LeanPool.MarkoffModP.BGS.AlgebraicGeometry.ConstantOpenGlueData
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.LaurentNormalization
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ProjectiveChart
+public import Mathlib.AlgebraicGeometry.OpenImmersion
 
 /-!
 # Affine normalization charts and their overlap immersions
@@ -21,6 +23,8 @@ The four-chart `Scheme.GlueData` is deliberately not asserted here: Mathlib requ
 on pullbacks of triple overlaps.  The objects, open immersions, transition isomorphisms, and their
 ring-level cocycle constructed below are the inputs for that remaining categorical assembly.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

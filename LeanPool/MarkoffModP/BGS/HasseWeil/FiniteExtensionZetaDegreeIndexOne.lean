@@ -3,14 +3,16 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceCount
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionConstants
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionIndexedZetaRationalityAutomatic
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeExtensionIdentity
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaNumeratorNoncancellation
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaDegreeIndexOneIndexed
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncExactConstantExtension
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceCount
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionConstants
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionIndexedZetaRationalityAutomatic
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeExtensionIdentity
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaNumeratorNoncancellation
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaDegreeIndexOneIndexed
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncExactConstantExtension
 
 /-!
 # The geometric F. K. Schmidt composition
@@ -22,6 +24,8 @@ constant extension.  The extension is never assumed to have degree index one.
 The only geometric input left explicit is the closed-place count identity for
 the constant extension whose degree is the original divisor-degree index.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

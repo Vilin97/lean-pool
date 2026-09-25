@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PowerSum
-import LeanPool.MarkoffModP.BGS.HasseWeil.ZetaTrace
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PowerSum
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ZetaTrace
 
 /-!
 # Spectral bounds from even power-sum asymptotics
@@ -19,6 +21,8 @@ the positive cardinalities of their fibers, so the weighted power-sum lemma
 from `BGS.HasseWeil.PowerSum` applies without an injectivity assumption on the
 original family of parameters.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.NatConnectivity
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Statements
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.NatConnectivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Statements
 
 /-!
 # Punctured finite-field transitivity and reduction surjectivity
@@ -14,6 +16,8 @@ The Markoff equation defines a functor on commutative semirings.  This file iden
 finite-field transitivity statement used by the dynamical proof with the source-faithful
 arithmetic statement that reduction from natural-number Markoff solutions is surjective.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Normalization
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Rotation
-import Mathlib.NumberTheory.LegendreSymbol.Basic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Normalization
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Rotation
+public import Mathlib.NumberTheory.LegendreSymbol.Basic
 
 /-!
 # Parabolic fibers of the normalized Markoff surface
@@ -16,6 +18,8 @@ Bourgain--Gamburd--Sarnak.  The parameter fixed in the first coordinate is a nor
 so the exceptional values are `2` and `-2`, not the original-coordinate values `2 / 3` and
 `-2 / 3`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

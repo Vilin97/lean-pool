@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOne
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineHasseWeilFromZeta
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOne
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineHasseWeilFromZeta
 
 /-!
 # Rational-place count of an exact constant extension
@@ -15,6 +17,8 @@ the complete rational-place count of the scalar-extended function field.
 This small bridge keeps the instance choices used by the global splitting
 formula explicit.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -35,6 +39,7 @@ local instance rationalCountBaseConstantTower :
     IsScalarTower C (RatFunc C) N :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+omit [Fintype C] [DecidableEq C] [DecidableEq (RatFunc C)] in
 /-- The packaged level-one exact-extension count is the complete rational
 place count of the extended function field. -/
 theorem exactConstantExtensionClosedPlaceExtensionCount_one_eq_rationalPlaceCount

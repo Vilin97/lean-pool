@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.RightInversionPairing
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.RightInversionPairing
 
 /-!
 # Finite unions of nonparabolic trace supports
@@ -15,6 +17,8 @@ This module packages that logical split before any numerical estimate is
 inserted.  In particular, the inversion-pairing factor can be applied to each
 right subgroup without counting its two fixed points.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

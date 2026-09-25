@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageNonparabolicComplementFrontier
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.JointMaximalDivisorFrontier
-import LeanPool.MarkoffModP.BGS.NumberTheory.NonparabolicComplementCriterion
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageNonparabolicComplementFrontier
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.JointMaximalDivisorFrontier
+public import LeanPool.MarkoffModP.BGS.NumberTheory.NonparabolicComplementCriterion
 
 /-!
 # Root-free Euler-seven split-cage square-envelope frontier
@@ -20,6 +22,8 @@ because `35721 = 189^2`.  The linear branch is independently reduced to
 
 `24^2 * S * d^2 < p^2`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

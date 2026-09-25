@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.LinearAlgebra.Basis.VectorSpace
-import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
-import Mathlib.LinearAlgebra.FreeModule.Finite.Basic
+
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
+public import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
+public import Mathlib.LinearAlgebra.FreeModule.Finite.Basic
 
 /-!
 # Finite-dimensionality from uniform finite independence bounds
@@ -17,6 +19,8 @@ finite linearly independent family than to exhibit one global finite set of
 generators.  The lemma below packages the standard basis argument converting
 that uniform bound into finite-dimensionality and a `finrank` estimate.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

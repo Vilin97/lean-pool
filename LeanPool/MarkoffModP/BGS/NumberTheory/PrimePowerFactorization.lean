@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Defs
-import Mathlib.Data.Nat.Prime.Defs
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Nat.Prime.Defs
+public import Mathlib.Tactic
 
 /-!
 # Prime-power factorization data
@@ -15,6 +17,8 @@ This module contains the certificate-independent data and executable
 recurrences used to describe a finite prime-power factorization and the ranks
 of its divisor lattice.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

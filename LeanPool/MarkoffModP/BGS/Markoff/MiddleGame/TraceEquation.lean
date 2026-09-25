@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.TraceClassification
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.TraceClassification
 
 /-!
 # The middle-game trace equation
@@ -13,6 +15,8 @@ This module gives the exact finite solution set for equation (41) and proves the
 quadratic-fiber bound used when one subgroup is small.  The genuinely deep uniform power-saving
 estimate remains a separate Blueprint input.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionAffineIdealDivisor
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
-import Mathlib.Data.Finsupp.Fintype
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionAffineIdealDivisor
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
+public import Mathlib.Data.Finsupp.Fintype
 
 /-!
 # Splitting effective exhaustive divisors at infinity
@@ -22,6 +24,8 @@ to the repository's integer-valued effective divisors, and the resulting
 fixed-degree convolution.  The finite component is also identified with a
 nonzero ideal in the normalization of `K[X]`.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors Polynomial BigOperators
 
@@ -224,12 +228,13 @@ private local instance effectiveDivisorInfinityClosureDedekind :
   IsIntegralClosure.isDedekindDomain (RatFuncInfinityIntegers K)
     (RatFunc K) L (RatFuncInfinityIntegralClosure K L)
 
-private noncomputable local instance effectiveDivisorInfinityPlaceFintype :
-    Fintype (FiniteExtensionInfinityPlace K L) :=
-  Set.Finite.fintype
+local instance effectiveDivisorInfinityPlaceFinite :
+    Finite (FiniteExtensionInfinityPlace K L) := by
+  letI := Set.Finite.fintype
     (IsDedekindDomain.primesOver_finite
       (ratFuncInfinityPlace K).asIdeal
       (RatFuncInfinityIntegralClosure K L))
+  infer_instance
 
 /-- Every infinity coefficient is bounded by the weighted degree. -/
 theorem finiteExtensionEffectiveInfinityDivisor_apply_le_degree

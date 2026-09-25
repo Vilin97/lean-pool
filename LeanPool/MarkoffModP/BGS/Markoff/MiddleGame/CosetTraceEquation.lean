@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEquation
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEquation
 
 /-!
 # The coset form of the middle-game trace equation
@@ -23,6 +25,8 @@ where `g` ranges over the coset `alpha * H₁`.  In particular, this change of v
 turn the coset into a subgroup.  Any Corvaja--Zannier input used for an arbitrary starting point
 must therefore cover these multiplicative cosets.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

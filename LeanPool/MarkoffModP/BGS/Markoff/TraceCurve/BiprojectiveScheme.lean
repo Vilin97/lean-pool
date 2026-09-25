@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.AlgebraicGeometry.ConstantOpenGlueData
-import LeanPool.MarkoffModP.BGS.AlgebraicGeometry.SpecRingEquiv
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ChartLocalization
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ProjectiveChart
-import Mathlib.AlgebraicGeometry.OpenImmersion
+
+public import LeanPool.MarkoffModP.BGS.AlgebraicGeometry.ConstantOpenGlueData
+public import LeanPool.MarkoffModP.BGS.AlgebraicGeometry.SpecRingEquiv
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ChartLocalization
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ProjectiveChart
+public import Mathlib.AlgebraicGeometry.OpenImmersion
 
 /-!
 # The biprojective trace curve as a glued scheme
@@ -17,6 +19,8 @@ The published trace curve has four standard affine charts.  This module glues th
 affine hypersurface schemes along their common Laurent torus, using the explicit coordinate
 inversions already proved for the chart rings.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

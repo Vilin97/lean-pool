@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSmoothPointNormalization
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSquareFieldStepanovCount
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSmoothPointNormalization
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSquareFieldStepanovCount
+public import Mathlib.Tactic
 
 /-!
 # The square-field Stepanov bound on the smooth affine chart
@@ -21,6 +23,8 @@ hypotheses.  The resulting error term is honestly `(2 * genusBudget + 1) *
 #K`, together with the second-coordinate critical locus; no sharp Hasse--Weil
 constant is claimed here.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

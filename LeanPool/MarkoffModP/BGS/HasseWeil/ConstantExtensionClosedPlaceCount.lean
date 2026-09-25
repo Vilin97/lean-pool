@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ClosedPlaceEulerRecurrence
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionFinitePlaceBridge
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceBridge
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ClosedPlaceEulerRecurrence
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionFinitePlaceBridge
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceBridge
 
 /-!
 # Closed places and rational places after extension of constants
@@ -27,6 +29,8 @@ fiber over a downstairs place of degree `d` must have cardinality
 `gcd([S : C], d)`.  That multiplicity is not supplied by the current
 finite/infinity bridge APIs, so no global count equality is asserted here.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 

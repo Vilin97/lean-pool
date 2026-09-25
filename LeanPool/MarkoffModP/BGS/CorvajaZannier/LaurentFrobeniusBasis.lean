@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.Adjoin.PowerBasis
-import Mathlib.RingTheory.LaurentSeries
+
+public import Mathlib.RingTheory.Adjoin.PowerBasis
+public import Mathlib.RingTheory.LaurentSeries
 
 /-!
 # Exponent dilation on Laurent series
@@ -13,6 +15,8 @@ import Mathlib.RingTheory.LaurentSeries
 This file isolates the *parameter* map `z |-> z^q` on `K((z))`.  It is not
 the coefficientwise Frobenius: coefficients are left unchanged.
 -/
+
+@[expose] public section
 
 open HahnSeries
 

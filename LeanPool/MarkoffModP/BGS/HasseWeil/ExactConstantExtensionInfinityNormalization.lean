@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncExactConstantExtension
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncInfinityLocalization
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncExactConstantExtension
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncInfinityLocalization
 
 /-!
 # Normalization at infinity in an exact constant extension
@@ -21,6 +23,8 @@ reciprocal affine normalization over `S`.  Localizing away from the origin
 gives a ring equivalence with the actual infinity integral closure.  Thus no
 comparison with the finite-place coordinate is used or assumed.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 

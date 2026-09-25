@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.JointNeighborDivisorBound
-import Mathlib.GroupTheory.SpecificGroups.Cyclic.Basic
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.JointNeighborDivisorBound
+public import Mathlib.GroupTheory.SpecificGroups.Cyclic.Basic
 
 /-!
 # Maximal-divisor bounds
@@ -13,6 +15,8 @@ import Mathlib.GroupTheory.SpecificGroups.Cyclic.Basic
 This file proves the finite-poset cover behind the paper's maximal-divisor
 improvement and combines it with the new joint `p - 1`, `p + 1` estimate.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 
@@ -150,7 +154,7 @@ theorem maximalDivisorCounts_product_pow_ten_le
       Nat.pow_le_pow_left (Nat.mul_le_mul hminus hplus) 10
     _ ≤ 2 ^ 456 * (p ^ 2 - 1) :=
       card_divisors_pred_mul_card_divisors_succ_pow_ten_le hp hpTwo
-    _ ≤ 2 ^ 457 * (p ^ 2 - 1) := by gcongr <;> norm_num
+    _ ≤ 2 ^ 457 * (p ^ 2 - 1) := by gcongr; norm_num
 
 /-- The new square envelope for the sum of the two maximal-divisor counts. -/
 theorem maximalDivisorCounts_add_sq_le

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovSquareVanishing
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovSquareVanishing
+public import Mathlib.Tactic
 
 /-!
 # Stepanov restrictions over a square constant field
@@ -20,6 +22,8 @@ by that automorphism.  This is the semilinear point which is lost if an
 This file packages the coefficient transform and proves the local residue
 identity.  It makes no point-count or smoothness assertion.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

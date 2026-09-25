@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.JointNeighborDivisorBound
-import LeanPool.MarkoffModP.BGS.NumberTheory.WeightedDivisorMoment
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.JointNeighborDivisorBound
+public import LeanPool.MarkoffModP.BGS.NumberTheory.WeightedDivisorMoment
 
 /-!
 # A weighted joint divisor bound for neighboring integers
@@ -17,6 +19,8 @@ also controls the product of their divisor counts.  Splitting into balanced
 and dominant cases then gives a twentieth moment for their sum whose leading
 constant is still `2^796`.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

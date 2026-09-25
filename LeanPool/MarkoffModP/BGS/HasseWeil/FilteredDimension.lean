@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # Dimension growth in a one-point filtration
@@ -15,6 +17,8 @@ subspace is congruent modulo the preceding subspace to a scalar multiple of
 one pivot, then adjoining that pivot generates the larger subspace.  Hence a
 single filtration step increases dimension by at most one.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

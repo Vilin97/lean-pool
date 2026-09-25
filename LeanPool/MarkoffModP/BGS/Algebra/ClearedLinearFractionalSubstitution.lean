@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Algebra.RatFuncLinearFractionalEquiv
+
+public import LeanPool.MarkoffModP.BGS.Algebra.RatFuncLinearFractionalEquiv
 
 /-!
 # Cleared linear-fractional substitution
@@ -15,6 +17,8 @@ For a polynomial `f` of degree `n`, this file studies the polynomial obtained fr
 The degree assumption in the irreducibility theorem is essential: inversion sends the
 linear polynomial `X` to the unit polynomial `1` after clearing its denominator.
 -/
+
+@[expose] public section
 
 namespace BGS
 

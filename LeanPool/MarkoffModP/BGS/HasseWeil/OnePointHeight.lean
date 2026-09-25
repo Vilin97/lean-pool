@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
 
 /-!
 # Heights and zero counts in a one-point Riemann space
@@ -19,6 +21,8 @@ order is at most `n`.  Unfolding `finiteExtensionHeight` therefore gives the
 bound `height(x) ≤ n * deg(P)`.  Combining this with the existing positive-order
 place count gives the corresponding Tao-style zero-count estimate.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

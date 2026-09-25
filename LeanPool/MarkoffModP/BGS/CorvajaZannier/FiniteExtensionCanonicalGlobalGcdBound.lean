@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGcdBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalPlaceSum
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExceptionalPlaceBounds
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGcdBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalPlaceSum
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExceptionalPlaceBounds
+public import Mathlib.Tactic
 
 /-!
 # Canonical placewise bounds imply the exhaustive gcd estimate
@@ -19,6 +21,8 @@ exceptional set, discharges all support bookkeeping, performs the exhaustive
 weighted place sum, and then converts the resulting Wronskian inequality into
 the numerical gcd estimate.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

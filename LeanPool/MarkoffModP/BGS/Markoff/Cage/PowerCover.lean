@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.PlaneHasseWeil
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.WitnessEquations
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.PlaneHasseWeil
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.WitnessEquations
 
 /-!
 # The one-sided power cover of the cage witness equations
@@ -14,6 +16,8 @@ This file identifies the exact `d`-fold cover counted before passage to the
 power-map range with the two pulled radicand equations.  Both incidence roots
 remain part of the data.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

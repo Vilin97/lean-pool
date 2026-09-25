@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ZetaExtensionTrace
-import Mathlib.Analysis.Complex.Polynomial.Basic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ZetaExtensionTrace
+public import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # Spectral parameters from a zeta numerator
@@ -20,6 +22,8 @@ The substantive arithmetic input remains the construction of the zeta
 numerator and its logarithmic-derivative point-count identity.  No spectral
 norm estimate is used here.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

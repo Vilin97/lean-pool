@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.JointMaximalDivisorCriterion
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.JointMaximalDivisorCriterion
 
 /-!
 # Arithmetic criterion for the nonparabolic complement route
@@ -17,6 +19,8 @@ integer obstruction `8 * p ≤ 189 ^ 2 * M ^ 8`.
 A root-free square envelope `M ^ 2 ≤ S` then gives
 `8 * p ≤ 35721 * S ^ 4`.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

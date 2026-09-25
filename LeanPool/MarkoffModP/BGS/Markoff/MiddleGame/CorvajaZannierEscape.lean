@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.Diagonalization
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceBound
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.TraceCurveWeights
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.Diagonalization
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceBound
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.TraceCurveWeights
 
 /-!
 # Feeding the geometric Corvaja--Zannier estimate into a Markoff move
@@ -19,6 +21,8 @@ Given those premises, Lean returns a natural iterate of the Markoff rotation wit
 neighboring rotation order.  No independent weighted-finset estimate remains between the cited
 curve theorem and the dynamical conclusion.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

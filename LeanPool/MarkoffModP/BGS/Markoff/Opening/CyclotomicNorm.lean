@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicDefect
-import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
-import Mathlib.RingTheory.Ideal.Int
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicDefect
+public import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
+public import Mathlib.RingTheory.Ideal.Int
 
 /-!
 # The norm and reduction bridge in the cyclotomic opening
@@ -20,6 +22,8 @@ The construction of simultaneous compatible lifts and of the prime ideal realizi
 finite-field reduction is deliberately not assumed here.  Those are the remaining inputs needed
 before `prime_dvd_integerNorm_of_quotient_eq_zero` can be applied to the defect.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

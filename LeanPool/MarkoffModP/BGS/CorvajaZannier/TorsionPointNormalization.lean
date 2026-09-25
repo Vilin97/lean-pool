@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FinitePlaceCompletion
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSeparability
-import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
-import Mathlib.RingTheory.Ideal.GoingUp
-import Mathlib.RingTheory.Localization.Integral
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FinitePlaceCompletion
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSeparability
+public import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
+public import Mathlib.RingTheory.Ideal.GoingUp
+public import Mathlib.RingTheory.Localization.Integral
 
 /-!
 # Affine centers and normalization of torsion points
@@ -16,6 +18,8 @@ import Mathlib.RingTheory.Localization.Integral
 Construct coordinate-ring evaluations and their maximal ideals, and compare affine torsion
 points with normalization places.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 
@@ -299,7 +303,7 @@ theorem second_torsionFunction_mem_normalizationBranch
 
 /-- An integral-closure model of the plane-curve function field has that
 function field as its fraction field. -/
-private noncomputable instance planeCurveIntegralClosureIsFractionRing
+noncomputable instance planeCurveIntegralClosureIsFractionRing
     {B : Type*} [CommRing B] [IsDomain B]
     [Algebra (PlaneCurveCoordinateRing f) B]
     [Algebra B (PlaneCurveFunctionField f)]

@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
-import Mathlib.Algebra.MvPolynomial.Monad
-import Mathlib.Algebra.MvPolynomial.PDeriv
-import Mathlib.RingTheory.MvPolynomial.Expand
+
+public import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
+public import Mathlib.Algebra.MvPolynomial.Monad
+public import Mathlib.Algebra.MvPolynomial.PDeriv
+public import Mathlib.RingTheory.MvPolynomial.Expand
 
 /-!
 # A separating coordinate shear for affine plane curves
@@ -23,6 +25,8 @@ here: over a finite field it requires the separate characteristic-`p`
 argument that an absolutely irreducible nonconstant polynomial cannot be a
 polynomial in `x^p` and `y^p`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

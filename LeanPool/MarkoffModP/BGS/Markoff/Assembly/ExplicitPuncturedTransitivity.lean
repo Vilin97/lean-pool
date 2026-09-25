@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.GiantOrbit
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.OrbitDivisibility
-import LeanPool.MarkoffModP.BGS.Markoff.ExplicitEndgame
-import LeanPool.MarkoffModP.BGS.Markoff.ExplicitNumericCertificates
-import LeanPool.MarkoffModP.BGS.Markoff.PreliminaryEndgame
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.GiantOrbit
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.OrbitDivisibility
+public import LeanPool.MarkoffModP.BGS.Markoff.ExplicitEndgame
+public import LeanPool.MarkoffModP.BGS.Markoff.ExplicitNumericCertificates
+public import LeanPool.MarkoffModP.BGS.Markoff.PreliminaryEndgame
 
 /-!
 # Explicit punctured transitivity
@@ -18,6 +20,8 @@ punctured-transitivity proof. The only geometric input is a stated
 large-order-to-base-component hypothesis; the middle-game step is the proved
 Corvaja--Zannier escape theorem.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

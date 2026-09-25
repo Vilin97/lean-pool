@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPolynomialHeight
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPolynomialHeight
+public import Mathlib.Tactic
 
 /-!
 # Exceptional-place bookkeeping for Corvaja--Zannier
@@ -31,6 +33,8 @@ reconstruction `Papers/CorvajaZannier2013/CorvajaZannier2013.tex`, lines
 731--779.  The earlier Proposition 2 source gives the same bookkeeping in
 `Papers/arXiv-math-0512074v3/jag_rivisto2.tex`, lines 618--653.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors Polynomial BigOperators
 open IsDedekindDomain
@@ -558,7 +562,8 @@ section ExceptionalSet
 
 variable {A : Type*} [Fintype A]
 
-private def finiteExtensionFamilyMemberSupportEmbedding
+/-- Embed the divisor support of one function into the common support of its family. -/
+def finiteExtensionFamilyMemberSupportEmbedding
     (f : A → L) (a : A) :
     {w // w ∈ (finiteExtensionPrincipalDivisor K L (f a)).support} ↪
       FiniteExtensionFamilyPlace K L f where

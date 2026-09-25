@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
 
 /-!
 # Pole divisors in the exhaustive finite-extension place model
@@ -16,6 +18,8 @@ coefficients of the principal divisor and changing their signs, proves that
 it makes the original function a section, and identifies its divisor degree
 with the existing height.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -45,6 +49,7 @@ def finiteExtensionPoleDivisor (x : L) : FiniteExtensionDivisor K L :=
     let D := finiteExtensionPrincipalDivisor K L x
     exact -(D.filter (fun v => D v < 0))
 
+omit [Fintype K] [DecidableEq K] in
 @[simp]
 theorem finiteExtensionPoleDivisor_apply (x : L)
     (v : FiniteExtensionPlace K L) :
@@ -79,6 +84,7 @@ theorem mem_finiteExtensionRiemannSpace_poleDivisor
   exact Or.inr ⟨hx,
     finiteExtensionPrincipal_add_poleDivisor_effective K L x⟩
 
+omit [Fintype K] in
 /-- The degree of the pole divisor is the previously defined pole height. -/
 theorem finiteExtensionDivisorDegree_poleDivisor
     (x : L) :

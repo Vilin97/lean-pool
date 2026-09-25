@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindRamifiedDerivationScaling
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
-import LeanPool.MarkoffModP.BGS.HasseWeil.PoleDivisor
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindRamifiedDerivationScaling
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PoleDivisor
+public import Mathlib.Tactic
 
 /-!
 # The rational parameter's pole divisor in a finite extension
@@ -21,6 +23,8 @@ ramification--inertia degree formula.
 
 These statements do not require the constant field `K` to be finite.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

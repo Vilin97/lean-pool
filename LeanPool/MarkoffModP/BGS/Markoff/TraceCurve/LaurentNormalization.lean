@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.AlgebraicGeometry.SpecRingEquiv
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ChartLocalization
-import Mathlib.RingTheory.Localization.Integral
+
+public import LeanPool.MarkoffModP.BGS.AlgebraicGeometry.SpecRingEquiv
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ChartLocalization
+public import Mathlib.RingTheory.Localization.Integral
 
 /-!
 # Normalized Laurent overlap transitions
@@ -20,6 +22,8 @@ The final cocycle is proved first in the fraction fields and then in the integra
 domain hypotheses are precisely the domain instances obtained from the already-proved
 irreducibility of the two affine chart equations.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,8 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.AlgebraicGeometry.Gluing
+
+public import Mathlib.AlgebraicGeometry.Gluing
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Mono
 
 /-!
 # Gluing schemes along one common open per chart
@@ -14,6 +17,8 @@ chart is the same open subscheme.  The triple-overlap pullbacks are therefore se
 open immersion.  Their projections are isomorphisms because open immersions are monomorphisms,
 which makes the required pullback-level cocycle explicit.
 -/
+
+@[expose] public section
 
 open CategoryTheory CategoryTheory.Limits
 
@@ -44,8 +49,9 @@ def constantOpenGlueDataAux
   f_mono := by intros; infer_instance
   f_hasPullback := by intros; infer_instance
   t i j _ := t i j
-  t' i j _ _ _ _ :=
-    pullback.fst (f i) (f i) ≫ t i j ≫ inv (pullback.fst (f j) (f j))
+  t' i j _ _ _ _ := by
+    let : IsIso (pullback.fst (f j) (f j)) := isIso_fst_of_mono (f j)
+    exact pullback.fst (f i) (f i) ≫ t i j ≫ inv (pullback.fst (f j) (f j))
   t_fac i j k _ _ _ := by
     rw [← fst_eq_snd_of_mono_eq (f j)]
     simp
@@ -138,7 +144,7 @@ def constantOpenGlueDataOfCommonTargetMap
         CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f',
         constantOpenGlueDataAux]
       simp only [dite_eq_right hij, dite_eq_right (Ne.symm hij)]
-      simp
+      simp only [dite_eq_ite, Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
       congr 1
       simp only [← Category.assoc]
       rw [h i]

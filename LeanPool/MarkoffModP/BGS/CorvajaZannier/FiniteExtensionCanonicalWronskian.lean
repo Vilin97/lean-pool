@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindDifferentDivisor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalWronskian
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPolynomialHeight
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindDifferentDivisor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalWronskian
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPolynomialHeight
+public import Mathlib.Tactic
 
 /-!
 # The global Wronskian divisor and the finite different degree
@@ -34,6 +36,8 @@ identification of the correction divisor at the places above infinity, or a
 plane-curve genus/boundary estimate.  Those are the remaining geometric
 inputs needed to derive the final bound `canonicalDegree + |S| <= 2ab`.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors Polynomial
 open IsDedekindDomain
@@ -202,6 +206,7 @@ theorem finiteDifferentDegree_le_minpolyDerivativeDegree
     K L d hd] at hcast'
   simpa only [d] using hcast'
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 private theorem ratFunc_intDegree_neg_one_pow (m : ℕ) :
     ((-1 : RatFunc K) ^ m).intDegree = 0 := by
   induction m with
@@ -349,6 +354,7 @@ def finiteExtensionLocalWronskianDivisor {n : ℕ}
     finiteExtensionPrincipalDivisor K L
       (finiteExtensionGlobalWronskian L D g)
 
+omit [DecidableEq K] in
 @[simp] theorem finiteExtensionLocalWronskianDivisor_apply {n : ℕ}
     (D : Derivation C L L) (g : Fin n → L)
     (canonicalDivisor : FiniteExtensionPlace K L →₀ ℤ)

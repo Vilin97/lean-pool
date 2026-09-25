@@ -3,14 +3,16 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Data.Int.Star
-import Mathlib.Tactic
-import Mathlib.Tactic.Linarith.Lemmas
-import Mathlib.Tactic.NormNum.Ineq
-import Mathlib.Tactic.Ring.Basic
-import Mathlib.Tactic.Zify
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Data.Int.Star
+public import Mathlib.Tactic
+public import Mathlib.Tactic.Linarith.Lemmas
+public import Mathlib.Tactic.NormNum.Ineq
+public import Mathlib.Tactic.Ring.Basic
+public import Mathlib.Tactic.Zify
 
 /-!
 # Numerical parameters for the Bombieri--Stepanov argument
@@ -25,6 +27,8 @@ when the square-root field size `s` is at least `(g + 1) * (g + 2)`.
 These parameters satisfy the three inequalities needed by the one-point
 Riemann-space argument, and give the same `O(g * s)` error term.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

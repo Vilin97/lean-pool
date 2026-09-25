@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseSupportTail
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseSupportTail
 
 /-!
 # Endgame and cage wrappers at the unified coarse support cutoff
@@ -13,6 +15,8 @@ The geometric endgame is unchanged.  This module feeds it the simultaneous
 tenth-moment estimates proved in `CoarseSupportTail`, so every non-cubic
 support condition follows from the single hypothesis `2^756 < p`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinPositionalSupportBound
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinPositionalSupportBound
 
 /-!
 # Concrete positional data below `2^1248`
@@ -15,6 +17,8 @@ strictly larger than `2^2496`.  Hence the joint odd support of every
 a coarse starting choice; later certificate generation may increase it
 without changing the support argument.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

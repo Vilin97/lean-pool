@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceTower
-import Mathlib.FieldTheory.Galois.GaloisClosure
-import Mathlib.FieldTheory.IsSepClosed
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceTower
+public import Mathlib.FieldTheory.Galois.GaloisClosure
+public import Mathlib.FieldTheory.IsSepClosed
 
 /-!
 # A finite Galois closure for a one-variable function field
@@ -20,6 +22,8 @@ This is the field-theoretic Galois-closure layer required by the twisted
 fixed-field argument.  It does not identify the algebraic constant field of
 the closure or construct any Frobenius complements.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

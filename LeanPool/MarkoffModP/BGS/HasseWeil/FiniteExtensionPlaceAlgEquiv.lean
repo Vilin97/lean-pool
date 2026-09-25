@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceNormalizationTransport
-import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlace
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceNormalizationTransport
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlace
 
 /-!
 # Transporting function-field places across algebra equivalences
@@ -16,6 +18,8 @@ exhaustive places and records preservation of absolute place degree.  In
 particular, rational-place counts depend only on the `K(X)`-algebra up to
 equivalence, not on its chosen field presentation.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 
@@ -289,6 +293,7 @@ theorem finiteExtensionFinitePlace_degree_eq_residue_finrank
   rw [ratFuncFinitePlaceDegree_eq_finrank_residueField K P]
   rw [mul_comm, Module.finrank_mul_finrank]
 
+omit [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 /-- The absolute degree of an infinity place is the dimension of its residue
 field over the constant field. -/
 theorem finiteExtensionInfinityPlace_degree_eq_residue_finrank
@@ -335,6 +340,7 @@ theorem finiteExtensionFinitePlaceEquivOfAlgEquiv_degree
     _ = finiteExtensionPlaceDegree K L (.inl Q) :=
       (finiteExtensionFinitePlace_degree_eq_residue_finrank K L Q).symm
 
+omit [DecidableEq K] [FiniteDimensional (RatFunc K) L] [FiniteDimensional (RatFunc K) M] in
 @[simp]
 theorem finiteExtensionInfinityPlaceEquivOfAlgEquiv_asIdeal
     (e : L ≃ₐ[RatFunc K] M) (P : FiniteExtensionInfinityPlace K L) :

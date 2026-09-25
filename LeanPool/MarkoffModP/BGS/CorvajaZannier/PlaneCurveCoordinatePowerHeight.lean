@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPolynomialHeight
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveRatFuncModel
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPolynomialHeight
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveRatFuncModel
 
 /-!
 # Exact heights of powered plane-curve coordinates
@@ -15,6 +17,8 @@ variable `RatFunc.X` with the corresponding coordinate function.  Combining
 those models with the polynomial-height formula computes the positive degree
 of the principal divisor of `x ^ m - 1` and `y ^ n - 1` exactly.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

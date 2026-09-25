@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
-import LeanPool.MarkoffModP.BGS.HasseWeil.FixedPointAverage
-import Mathlib.NumberTheory.RamificationInertia.Galois
-import Mathlib.RingTheory.Invariant.Galois
-import Mathlib.RingTheory.RamificationInertia.Basic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FixedPointAverage
+public import Mathlib.NumberTheory.RamificationInertia.Galois
+public import Mathlib.RingTheory.Invariant.Galois
+public import Mathlib.RingTheory.RamificationInertia.Basic
 
 /-!
 # Restriction of function-field places in a finite tower
@@ -22,6 +24,8 @@ height-one prime through the integral closures.
 The construction is intrinsic to the field tower.  It assumes no point-count
 bound, zeta theorem, or Hasse--Weil statement.
 -/
+
+@[expose] public section
 
 open scoped BigOperators nonZeroDivisors Pointwise Polynomial
 open IsDedekindDomain
@@ -486,6 +490,7 @@ theorem finiteIntegralClosure_relative_finrank_eq_field_finrank :
     (RatFuncFiniteIntegralClosure K M) M
     (RatFuncFiniteIntegralClosure K L) L).symm
 
+omit [DecidableEq K] [Algebra.IsSeparable (RatFunc K) M] [Algebra.IsSeparable (RatFunc K) L] in
 /-- The infinity integral-closure model has the same relative rank, namely
 the degree of the field extension. -/
 theorem infinityIntegralClosure_relative_finrank_eq_field_finrank :
@@ -508,6 +513,7 @@ noncomputable def finitePlaceRelativeInertiaDeg
     (Q : FiniteExtensionFinitePlace K L) : ℕ :=
   Q.asIdeal.inertiaDeg (RatFuncFiniteIntegralClosure K M)
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- The fundamental equality for the finite-place restriction fiber. -/
 theorem sum_finitePlaceUnderFiber_ramification_inertia_eq_finrank
     (P : FiniteExtensionFinitePlace K M) :
@@ -550,6 +556,7 @@ noncomputable def infinityPlaceRelativeInertiaDeg
     (Q : FiniteExtensionInfinityPlace K L) : ℕ :=
   Q.1.inertiaDeg (RatFuncInfinityIntegralClosure K M)
 
+omit [DecidableEq K] in
 /-- The fundamental equality for the restriction fiber above infinity. -/
 theorem sum_infinityPlaceUnderFiber_ramification_inertia_eq_finrank
     (P : FiniteExtensionInfinityPlace K M) :
@@ -1122,6 +1129,7 @@ section FiniteConstants
 
 variable [Fintype K]
 
+omit [DecidableEq (RatFunc K)] in
 private theorem ratFuncFinitePlaceResidueField_finite
     (p : HeightOneSpectrum K[X]) : Finite p.asIdeal.ResidueField := by
   let r := finitePlaceNormalizedPrime p

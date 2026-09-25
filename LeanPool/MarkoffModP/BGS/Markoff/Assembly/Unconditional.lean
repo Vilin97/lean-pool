@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralBivariateAffineHasseWeil
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExceptionalPrimeCount
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralBivariateAffineHasseWeil
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExceptionalPrimeCount
 
 /-!
 # Unconditional BGS assembly
@@ -14,6 +16,8 @@ The closed function-field Hasse--Weil theorem now supplies the general affine
 plane-curve estimate used by the split, nonsplit, and cage arguments.  These
 short wrappers close the final parameter of the existing BGS assembly.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

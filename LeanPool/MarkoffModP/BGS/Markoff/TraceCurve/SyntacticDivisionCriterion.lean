@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.SyntacticDivisionObstruction
-import Mathlib.RingTheory.UniqueFactorizationDomain.Basic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.SyntacticDivisionObstruction
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Basic
 
 /-!
 # An exact criterion for the remaining split trace-cover division theorem
@@ -16,6 +18,8 @@ and injectivity of the comparison map after inverting the two coordinates.  The 
 uses primeness to prove that localization has not killed an affine class.  Thus the `sigma = 1`
 counterexample cannot be hidden by moving to the Laurent model.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

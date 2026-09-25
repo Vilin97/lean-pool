@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierGeometry
-import Mathlib.FieldTheory.Separable
-import Mathlib.RingTheory.Derivation.Basic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierGeometry
+public import Mathlib.FieldTheory.Separable
+public import Mathlib.RingTheory.Derivation.Basic
 
 /-!
 # Prime-to-characteristic torsion exponents for Corvaja--Zannier
@@ -23,6 +25,8 @@ raising a nonzero coordinate with nonzero differential to either exponent preser
 nonzero differential.  Thus inseparability is not part of the remaining
 Corvaja--Zannier wall.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

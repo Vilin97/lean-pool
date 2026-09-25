@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Data.Nat.Totient
-import Mathlib.Data.Nat.GCD.Basic
+
+public import Mathlib.Data.Nat.Totient
+public import Mathlib.Data.Nat.GCD.Basic
 
 /-!
 # Arithmetic bounds for three torsion orders
@@ -13,6 +15,8 @@ import Mathlib.Data.Nat.GCD.Basic
 Bound the least common multiple of three orders by the cube of their maximum and transfer the
 resulting modulus estimate.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

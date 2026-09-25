@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.BivariateGauss
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.AbsoluteIrreducibilityBaseChange
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PerfectConstants
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSeparability
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.SeparatingCoordinateNotFrobenius
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.BivariateGauss
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.AbsoluteIrreducibilityBaseChange
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PerfectConstants
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSeparability
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.SeparatingCoordinateNotFrobenius
 
 /-!
 # The plane-curve auxiliary family over the Frobenius subfield
@@ -30,6 +32,8 @@ Source provenance: published pages 1933--1934; checked semantic reconstruction
 specialization with Frobenius exponent `p` and no auxiliary twists is the
 linear-independence input cited on published page 1940.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

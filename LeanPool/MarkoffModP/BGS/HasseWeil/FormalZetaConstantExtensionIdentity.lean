@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaDegreeIndexOne
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaUniqueness
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaDegreeIndexOne
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaUniqueness
 
 /-!
 # Formal zeta identity under a constant extension
@@ -24,6 +26,8 @@ The proof does not assume this identity.  It reindexes the logarithmic
 derivative series and then applies the already proved uniqueness theorem for
 normalized formal differential equations.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

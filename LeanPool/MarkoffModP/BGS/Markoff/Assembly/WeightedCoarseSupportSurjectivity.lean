@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseSupportSurjectivity
-import LeanPool.MarkoffModP.BGS.NumberTheory.WeightedNeighborDivisorBound
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseSupportSurjectivity
+public import LeanPool.MarkoffModP.BGS.NumberTheory.WeightedNeighborDivisorBound
 
 /-!
 # Weighted certificate-free coarse-support surjectivity
@@ -15,6 +17,8 @@ counts into the Euler-seven coarse-support obstruction.  It improves the
 tenth-moment checkpoint without changing the geometric frontier and without
 introducing a divisor table or a finite maximal-divisor certificate.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

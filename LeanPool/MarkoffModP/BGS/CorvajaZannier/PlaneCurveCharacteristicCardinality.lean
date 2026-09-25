@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSeparability
-import Mathlib.Algebra.CharP.CharAndCard
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSeparability
+public import Mathlib.Algebra.CharP.CharAndCard
+public import Mathlib.Tactic
 
 /-!
 # Plane-curve degrees versus finite-field cardinality
@@ -15,6 +17,8 @@ This file converts the characteristic bound used in the
 Corvaja--Zannier argument into the finite-field cardinality bounds required
 by the local reciprocal-discriminant and canonical Euler estimates.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

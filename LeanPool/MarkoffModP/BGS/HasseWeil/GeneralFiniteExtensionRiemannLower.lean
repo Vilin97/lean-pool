@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneInfinityRiemannLower
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFinitePlaceRiemannLower
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncParameterPole
-import Mathlib.FieldTheory.PrimitiveElement
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneInfinityRiemannLower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFinitePlaceRiemannLower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncParameterPole
+public import Mathlib.FieldTheory.PrimitiveElement
+public import Mathlib.Tactic
 
 /-!
 # A coarse Riemann inequality for arbitrary function fields
@@ -23,6 +25,8 @@ infinity and hence a coarse, but uniform-for-`L`, Riemann inequality.  The
 finite-place approximation theorem then transfers this inequality to every
 one-point divisor at a finite place.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

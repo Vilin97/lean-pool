@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.ParabolicFibers
-import LeanPool.MarkoffModP.BGS.Markoff.Core.RotationTorus
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.ParabolicFibers
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.RotationTorus
 
 /-!
 # Finite-order Markoff rotations have torsion eigenvalues
@@ -19,6 +21,8 @@ The passage from a finite orbit of a *point* to finite order of the rotation
 matrix is deliberately not assumed here.  It is a separate geometric step,
 and is delicate at the parabolic traces `2` and `-2`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

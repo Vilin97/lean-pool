@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldRatFuncCompatibility
-import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlaceTower
-import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldRatFuncCompatibility
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlaceTower
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
 
 /-!
 # Finite places under constant-field extension
@@ -24,6 +26,8 @@ types based on `K(X)` and `E(X)`.
 This file concerns only finite places.  The valuation rings at infinity and
 the comparison of place degrees are separate boundaries.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 

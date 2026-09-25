@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.DedekindDomain.Different
-import Mathlib.RingTheory.DedekindDomain.Factorization
-import Mathlib.RingTheory.DedekindDomain.AdicValuation
+
+public import Mathlib.RingTheory.DedekindDomain.Different
+public import Mathlib.RingTheory.DedekindDomain.Factorization
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation
 
 /-!
 # Local traces and the different
@@ -14,6 +16,8 @@ import Mathlib.RingTheory.DedekindDomain.AdicValuation
 Relate different multiplicities to the trace-dual lattice and clear the finitely many bad
 valuation bounds by a base multiplier.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors
 
@@ -42,7 +46,7 @@ theorem le_iff_count_ge {I J : FractionalIdeal R⁰ K} (hI : I ≠ 0) (hJ : J �
         simpa only [Filter.eventually_cofinite] using finite_factors (K := K) A
       exact hcount.subset fun v hv hzero ↦ by
         apply hv
-        simpa [hzero]
+        simp [hzero]
     apply finprod_le_finprod
     · exact hfinite I
     · exact hfinite J
@@ -83,6 +87,7 @@ variable [Algebra.IsIntegral A B]
 
 namespace HeightOneSpectrum
 
+omit [IsIntegrallyClosed A] [Module.IsTorsionFree A B] in
 theorem algebraMap_mem_pow_of_mem_under_pow
     (q : HeightOneSpectrum B) (c : A) (n : ℕ)
     (hc : c ∈ (q.under A).asIdeal ^ n) :
@@ -96,6 +101,7 @@ theorem algebraMap_mem_pow_of_mem_under_pow
     (Ideal.map_le_iff_le_comap.mpr (show
       (q.under A).asIdeal ≤ q.asIdeal.comap (algebraMap A B) from le_rfl)) n) hmap
 
+omit [IsIntegralClosure B A L] in
 theorem natCast_le_count_spanSingleton_algebraMap_of_mem_under_pow
     (q : HeightOneSpectrum B) (c : A) (n : ℕ) (hc0 : c ≠ 0)
     (hc : c ∈ (q.under A).asIdeal ^ n) :
@@ -125,6 +131,7 @@ end HeightOneSpectrum
 
 namespace BGS.HasseWeil
 
+omit [Algebra.IsIntegral A B] in
 theorem count_dual_one_eq_neg_different_multiplicity
     (q : HeightOneSpectrum B) :
     FractionalIdeal.count L q

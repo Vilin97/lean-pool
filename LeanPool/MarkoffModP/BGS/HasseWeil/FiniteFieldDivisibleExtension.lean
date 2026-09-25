@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.FieldTheory.Finite.Extension
+
+public import Mathlib.FieldTheory.Finite.Extension
 
 /-!
 # Nested canonical finite-field extensions
@@ -14,6 +16,8 @@ degree-`a` extension into the chosen degree-`b` extension.  This file fixes
 one such embedding and records the scalar-tower and degree consequences used
 by the constant-extension Hasse--Weil argument.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

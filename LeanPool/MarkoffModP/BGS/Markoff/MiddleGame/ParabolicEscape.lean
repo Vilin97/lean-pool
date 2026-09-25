@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.ConicParametrization
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.RightSubgroups
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.ConicParametrization
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.RightSubgroups
 
 /-!
 # The parabolic middle-game branch
@@ -19,6 +21,8 @@ parametrizations to the concrete rotation cycles through every point on the two 
 For primes congruent to three modulo four those fibers are empty by the existing results in
 `ParabolicFibers`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

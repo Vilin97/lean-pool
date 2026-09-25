@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.AffinePointPlace
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExtensionPointCount
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
-import Mathlib.FieldTheory.Finite.GaloisField
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.AffinePointPlace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExtensionPointCount
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
+public import Mathlib.FieldTheory.Finite.GaloisField
+public import Mathlib.Tactic
 
 /-!
 # Quadratic-extension affine points and base-field places
@@ -26,6 +28,8 @@ residue field at a singular point.  This only strengthens the weighted
 count.  The final estimate bounds all quadratic-extension affine points by
 the positive divisor degree, and by the height for a nonzero function.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

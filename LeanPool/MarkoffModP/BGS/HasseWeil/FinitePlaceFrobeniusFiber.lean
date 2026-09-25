@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceTower
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceTower
 
 /-!
 # Local place actions in a Frobenius fiber
@@ -22,6 +24,8 @@ acts on places of any prescribed degree.  On each finite or infinity
 restriction fiber, the stabilizer of a point is identified with the existing
 decomposition group.
 -/
+
+@[expose] public section
 
 open scoped Pointwise Polynomial
 

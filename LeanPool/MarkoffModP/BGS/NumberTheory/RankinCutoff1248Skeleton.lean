@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinCutoff1248Data
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinCutoff1248Data
 
 /-!
 # Finite exponent skeletons below `2^1248`
@@ -15,6 +17,8 @@ records an executable admissibility predicate.  Every actual prime below the
 target cutoff satisfies it, including the strong global product budget
 `jointLowerNeighborProduct < 2^2496`.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

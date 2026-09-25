@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
 
 /-!
 # The Markoff group action
@@ -17,6 +19,8 @@ two adjacent coordinate transpositions.
 The origin is fixed by every generator, hence by all of `Gamma`.  Consequently the same group
 acts on the punctured surface; this is the action used in finite-field transitivity statements.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,616 +3,618 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS
-import LeanPool.MarkoffModP.BGS.Algebra.ClearedLinearFractionalSubstitution
-import LeanPool.MarkoffModP.BGS.Algebra.DifferentialWronskian
-import LeanPool.MarkoffModP.BGS.Algebra.KummerEigencharacterDescent
-import LeanPool.MarkoffModP.BGS.Algebra.RatFuncLinearFractionalEquiv
-import LeanPool.MarkoffModP.BGS.AlgebraicGeometry.ConstantOpenGlueData
-import LeanPool.MarkoffModP.BGS.AlgebraicGeometry.SpecRingEquiv
-import LeanPool.MarkoffModP.BGS.Combinatorics.DivisorExponentCoefficient
-import LeanPool.MarkoffModP.BGS.Combinatorics.DivisorExponentSpernerBridge
-import LeanPool.MarkoffModP.BGS.Combinatorics.ProductOfChainsGrid
-import LeanPool.MarkoffModP.BGS.Combinatorics.ProductOfChainsSperner
-import LeanPool.MarkoffModP.BGS.Combinatorics.SymmetricChainBasic
-import LeanPool.MarkoffModP.BGS.Combinatorics.SymmetricChainProduct
-import LeanPool.MarkoffModP.BGS.Combinatorics.SymmetricChainRectangle
-import LeanPool.MarkoffModP.BGS.CorvajaZannier
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.AbsoluteIrreducibilityBaseChange
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.AuxiliaryFamily
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.AuxiliaryFamilyIndexing
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.BivariateGauss
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.BivariateResultant
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.CompletionLinearDisjointness
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryCaseI
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryLocalCases
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryWronskian
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindCanonicalDifferentScaling
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindDifferentDivisor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindDifferentKaehler
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLeadingTermCancellation
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalDerivationExtension
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalWronskian
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationDerivationPreservation
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationOrder
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPerfectResidueCaseI
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPlaceOrder
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindRamifiedDerivationScaling
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.ElementaryFiniteFieldBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.EndpointComposition
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalAuxiliaryFinitePlace
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalAuxiliaryFinitePlaceNormalized
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalAuxiliaryInfinityPlace
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGcdBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGlobalGcdBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGlobalNormalized
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGlobalNormalizedAutomatic
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalPlaceSum
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalPlacewiseScaling
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalWronskian
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExceptionalPlaceBounds
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExceptionalSupport
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExhaustiveProductFormula
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionGcdOutsideHeight
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionOneSubGcdHeight
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPolynomialHeight
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPositiveDegreePower
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionProductFormula
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionResidueSurjectivity
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteFunctionFieldDegree
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FinitePlaceCompletion
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FrobeniusSubfield
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FrobeniusWronskian
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FunctionFieldProductFormula
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.GeneralCorvajaZannier
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianPlaceSum
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianSummation
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianWeightedPlaceSum
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityInertiaDegree
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityPlace
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LaurentFrobeniusBasis
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LaurentFrobeniusPowerBasis
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalAuxiliaryCaseI
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalAuxiliaryWronskian
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalDerivative
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalMonogenicity
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalReciprocalDiscriminant
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalWronskian
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.NumericalCorollary
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.NumericalOptimization
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.ParameterizedBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PerfectConstants
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlace
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlaceCases
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlacePrincipalDivisor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryIndependence
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBidegreeBridge
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBoundarySupport
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalDegreeBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalEulerBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalGcdBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCharacteristicCardinality
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCoordinatePowerHeight
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveDiagonalStabilizer
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveDiscriminantBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveExhaustiveGcdEndpoint
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveFiniteDifferentBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveFunctionField
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityComplement
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityDifferentBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityDifferentDegree
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveLocalReciprocalDiscriminant
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveLogarithmicGauss
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePoweredHeightBounds
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePoweredImageDegreeBudget
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePropositionTwoAssembly
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePropositionTwoDegreeBridge
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePropositionTwoGeometric
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveRatFuncModel
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSeparability
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSharedOriginBoundary
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSupportDeterminant
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSupportRank
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredCoordinateRelation
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredCoordinates
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageBaseChange
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageCurve
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageExactSupportIndexBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageFrobeniusRelation
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageFrobeniusRelationSwapped
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageGaloisBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageHeightFactor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageIndex
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageIndexBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PropositionTwoDegreeMonotonicity
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.RatFuncExhaustiveProductFormula
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.SeparatingCoordinateNotFrobenius
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionBidegreeCount
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionExhaustiveGcdDivisorBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionGcdDivisorBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionPointNormalization
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorusCharacterKernelBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TranscendentalPowerDegree
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.WronskianChangeParameter
-import LeanPool.MarkoffModP.BGS.Dynamics.FiniteForwardOrbit
-import LeanPool.MarkoffModP.BGS.Dynamics.StrictMeasureEscape
-import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
-import LeanPool.MarkoffModP.BGS.FiniteField.EllipticCharacterSum
-import LeanPool.MarkoffModP.BGS.FiniteField.HasseFrobenius
-import LeanPool.MarkoffModP.BGS.FiniteField.QuadraticCharacter
-import LeanPool.MarkoffModP.BGS.HasseWeil.AffinePointPlace
-import LeanPool.MarkoffModP.BGS.HasseWeil.CechRiemannLinearAlgebra
-import LeanPool.MarkoffModP.BGS.HasseWeil.ClosedPlaceEulerRecurrence
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceCount
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceSplittingFormula
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionFinitePlaceBridge
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceBridge
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceDegreeTower
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceSplittingMultiplicity
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionPlaceSplittingMultiplicity
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionRationalPlace
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldAutomorphism
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldFinitePlace
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldFinitePlaceDegree
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldInfinityBase
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldRatFuncCompatibility
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantTensorResidue
-import LeanPool.MarkoffModP.BGS.HasseWeil.DVRLocalPoleOrder
-import LeanPool.MarkoffModP.BGS.HasseWeil.DedekindDifferentLocalTrace
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtension
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionAutomorphism
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionConstants
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionDifferentCoefficient
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFiniteDifferent
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlace
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlaceCompatibility
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlaceFrobeniusAverage
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwist
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistBoundedError
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistConstants
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistDegree
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistFinitePlaceAverage
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistFinitePlaceBridge
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistFinitePlaceUnramified
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistGenus
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistInfinityPlaceDescent
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistInfinityPlaceEquivalence
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistMultiplication
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistRationalPlaceAverage
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistRiemannLower
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistStepanovUpper
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionGenusDegree
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionGenusInvariance
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionInfinityDifferent
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionInfinityNormalization
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionInfinityPlaceCompatibility
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionIntermediateFrobeniusTwistFinitePlaceAverage
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionIntermediateFrobeniusTwistHasseBound
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionIntermediateFrobeniusTwistRationalPlaceAverage
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionNormalClosureTower
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionQuotient
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionRationalPlaceCount
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionRegularity
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionTotalDifferentDegree
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionTower
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExtensionEvenDegreeStepanovBound
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExtensionPointCount
-import LeanPool.MarkoffModP.BGS.HasseWeil.FilteredDimension
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteBranchLocus
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionAffineIdealDegree
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionAffineIdealDivisor
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentCanonicalityCriterion
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentCotrace
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentCotraceCanonicality
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentGenusBound
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentLocalMaximality
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionClosedPlaceAlgEquiv
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCotraceLocalTraceImage
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisibleErrorFromConstantBase
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorClassRecurrence
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorDegreeIndex
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionEffectiveDivisorSplit
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionGenusBound
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionHasseBoundFromEvenConstantExtensions
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionHasseWeil
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionIndexedZetaRationality
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionIndexedZetaRationalityAutomatic
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionLocalPoleQuotient
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionLocalPoleSpace
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceAlgEquiv
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceDegreeFiniteness
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceTower
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPrincipalParts
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannEventualGrowth
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannLowerFromGenus
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannRoch
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannShiftedEventualGrowth
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpaceProjectivization
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionStandardZetaRationality
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionTotalDifferentEffectiveDivisor
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeExtensionIdentity
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOne
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOneAutomatic
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOneFromAllCounts
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaNumeratorNoncancellation
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaSimplePole
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldCompositum
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldConstantExtensionNormalization
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldConstantExtensionResidue
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldDivisibleExtension
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldInfinityDifferent
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldPolynomialDifferent
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldPolynomialNormalization
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldSubfield
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteLinearIndependenceBound
-import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceApproximation
-import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceFrobeniusFiber
-import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceNormalizationTransport
-import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePrincipalParts
-import LeanPool.MarkoffModP.BGS.HasseWeil.FinsuppWeightedFiber
-import LeanPool.MarkoffModP.BGS.HasseWeil.FixedPointAverage
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaConstantExtensionIdentity
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaDegreeIndexOne
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaDegreeIndexOneIndexed
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaEuler
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaEulerDegree
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaHasseBound
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaRationality
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaRationalityDegree
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaTrace
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaUniqueness
-import LeanPool.MarkoffModP.BGS.HasseWeil.FrobeniusPlaceCardinality
-import LeanPool.MarkoffModP.BGS.HasseWeil.FrobeniusRestriction
-import LeanPool.MarkoffModP.BGS.HasseWeil.FrobeniusTwistGroup
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldConstantExtension
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldConstantField
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosure
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureConstantBase
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureConstants
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureOriginalCompositum
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureOriginalField
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureRatFuncBase
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureRatFuncEquiv
-import LeanPool.MarkoffModP.BGS.HasseWeil.GaloisAverage
-import LeanPool.MarkoffModP.BGS.HasseWeil.GaloisTowerFactorialDegree
-import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralBivariateAffineHasseWeil
-import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralFiniteExtensionRiemannLower
-import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralSquareFieldStepanovCount
-import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralSquareFieldStepanovCountAutomatic
-import LeanPool.MarkoffModP.BGS.HasseWeil.IdealMultiplicityMap
-import LeanPool.MarkoffModP.BGS.HasseWeil.LinearFunctionalGluing
-import LeanPool.MarkoffModP.BGS.HasseWeil.LocalPoleCumulativeQuotient
-import LeanPool.MarkoffModP.BGS.HasseWeil.LocalPoleFiltration
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointBase
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointDivisorSplit
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointHeight
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointIncrement
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointPoleSemigroup
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointSectionSelection
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStepanovBasisGrid
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStepanovDegreeTwoAuxiliary
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStepanovGrid
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStrictLevels
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineCountTransfer
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineFiberBound
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineHasseWeilFromEvenError
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineHasseWeilFromZeta
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineRationalPlaceComparison
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneConstantField
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCoordinatePole
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCoordinatePoleAtInfinity
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCoordinateShear
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCurveGenusBoundAutomatic
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCurveGenusBoundFromCotrace
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCurveGenusBoundFromCotraceDegree
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFinitePlaceRiemannLower
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFrobeniusDeflation
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFrobeniusDegenerate
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFrobeniusReduction
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneInfinityRiemannLower
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneMonomialSpace
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneOnePointRiemannLower
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneRationalPlaceAffineComparison
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneRegularPointCount
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSingularPointBound
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSmoothPointNormalization
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSquareFieldStepanovCount
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSquareFieldStepanovCountAutomatic
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneStepanovAuxiliary
-import LeanPool.MarkoffModP.BGS.HasseWeil.PoleDivisor
-import LeanPool.MarkoffModP.BGS.HasseWeil.PolynomialSpectral
-import LeanPool.MarkoffModP.BGS.HasseWeil.PolynomialTensorCancel
-import LeanPool.MarkoffModP.BGS.HasseWeil.PowerSum
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncCanonicalInfinityDivisor
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncConstantExtension
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncExactConstantExtension
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncInfinityLocalization
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncParameterPole
-import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlace
-import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlaceTower
-import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceConstants
-import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceEffectiveIncrement
-import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceFinitePlaceIncrement
-import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceInfinityPlaceIncrement
-import LeanPool.MarkoffModP.BGS.HasseWeil.SpectralFromAsymptotic
-import LeanPool.MarkoffModP.BGS.HasseWeil.SquareExtensionAffinePlaces
-import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldResidue
-import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovAuxiliary
-import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovRestriction
-import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovZeroCount
-import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovLinearAlgebra
-import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovParameters
-import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovRestrictionMaps
-import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovSquareVanishing
-import LeanPool.MarkoffModP.BGS.HasseWeil.TensorRestriction
-import LeanPool.MarkoffModP.BGS.HasseWeil.ZetaExtensionTrace
-import LeanPool.MarkoffModP.BGS.HasseWeil.ZetaNumeratorSpectral
-import LeanPool.MarkoffModP.BGS.HasseWeil.ZetaTrace
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.Asymptotics
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseEndgame
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseLinearTail
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseSupportSurjectivity
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseSupportTail
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.DivisibleOrbitTransitivity
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ElementaryCounts
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenCoarseSupportFrontier
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenNonparabolicComplementFrontier
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenPairedMaximalDivisorMiddleGame
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageCoarseLinearTail
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageNonparabolicComplementFrontier
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageSquareEnvelopeFrontier
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageSquareEnvelopeSurjectivity
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EvenSignBaseStableComplement
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EvenSignComplementDivisibility
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EvenSignOrbitDivisibility
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderComplementObstruction
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderEulerSevenComplementObstruction
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderPuncturedSmallOrderCount
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderRankinEnvelope
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderTraceBudget
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExceptionalPrimeCount
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.FixedPointFreeMaximalDivisorTraceCount
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.GiantOrbit
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.JointMaximalDivisorFrontier
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MaximalDivisorLowOrderCount
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MaximalDivisorMiddleGame
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MaximalDivisorPuncturedTransitivity
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MiddleGameThenEndgame
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicBadComponent
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicComplementFrontier
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicMaximalDivisorConcreteCount
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicPuncturedSmallOrderCount
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NormalizationCount
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NormalizedSmallOrderCount
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.OrbitDivisibility
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.PairedMaximalDivisorLowOrderCount
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.PairedMaximalDivisorMiddleGame
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.PairedMaximalDivisorTraceCount
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.PuncturedSmallOrderCount
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.RankinJointAntichainSperner
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.RankinJointAntichainWidth
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.RankinWidthEnvelope
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ReductionSurjectivity
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.SplitCageEvenSignBase
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.SplitCageNonparabolicComplementFrontier
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.TransitivitySurjectivity
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.Unconditional
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.WeightedCoarseSupportSurjectivity
-import LeanPool.MarkoffModP.BGS.Markoff.Cage
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.AxisEquivalence
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.BiquadraticPrimitiveQuartic
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.Connectivity
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.EstimateFromPlane
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.HasseWeilAssumption
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.IncidenceGeometry
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.PlaneCountComparison
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.PlaneHasseWeil
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.PlaneModels
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.PowerCover
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.PulledRadicand
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.ShiftedTraceCurveIrreducibility
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.SmallPrime
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.WitnessEquations
-import LeanPool.MarkoffModP.BGS.Markoff.Core
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Action
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
-import LeanPool.MarkoffModP.BGS.Markoff.Core.ConicParametrization
-import LeanPool.MarkoffModP.BGS.Markoff.Core.EvenSignAction
-import LeanPool.MarkoffModP.BGS.Markoff.Core.FiniteRotationEigenvalues
-import LeanPool.MarkoffModP.BGS.Markoff.Core.NatConnectivity
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Normalization
-import LeanPool.MarkoffModP.BGS.Markoff.Core.NormalizedOrbit
-import LeanPool.MarkoffModP.BGS.Markoff.Core.ParabolicFibers
-import LeanPool.MarkoffModP.BGS.Markoff.Core.PuncturedNormalization
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Rotation
-import LeanPool.MarkoffModP.BGS.Markoff.Core.RotationTorus
-import LeanPool.MarkoffModP.BGS.Markoff.Core.SemiringFunctor
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Statements
-import LeanPool.MarkoffModP.BGS.Markoff.Core.TraceClassification
-import LeanPool.MarkoffModP.BGS.Markoff.Diophantine
-import LeanPool.MarkoffModP.BGS.Markoff.Diophantine.CoordinateCoprimeProduct
-import LeanPool.MarkoffModP.BGS.Markoff.Diophantine.CoordinateZeroPatternCounts
-import LeanPool.MarkoffModP.BGS.Markoff.Diophantine.LocalCounts
-import LeanPool.MarkoffModP.BGS.Markoff.Diophantine.PrimewiseCRT
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.LargeOrderToMaximal
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.CayleyParametrization
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.DescendedIrreducibility
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.DescendedTraceCurve
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.HasseFromGeneral
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.SeededCover
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Parabolic
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PowerCoverCounting
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveInclusionExclusion
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveOrbitWiring
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveTraceCount
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.WeilBoundAssumption
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.WeilFromGeneralHasse
-import LeanPool.MarkoffModP.BGS.Markoff.ExplicitEndgame
-import LeanPool.MarkoffModP.BGS.Markoff.ExplicitEstimates
-import LeanPool.MarkoffModP.BGS.Markoff.ExplicitNumericCertificates
-import LeanPool.MarkoffModP.BGS.Markoff.ExplicitNumerics
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.CoordinateRing
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Counterexamples
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Fibers
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Geometry
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.NormalizedGraph
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.PointCount
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierEscape
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierFromGeneral
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierGeometry
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierSeparability
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierSourceBound
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierStep
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CosetTraceEquation
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.Diagonalization
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.DivisorRange
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedCorvajaZannierBound
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedMaximalDivisorCorvajaZannierEscape
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedMaximalDivisorCorvajaZannierStep
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedMaximalDivisorOrderEscape
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorCorvajaZannierEscape
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorCorvajaZannierStep
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorNonparabolicOrderCover
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorOrderCover
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorOrderEscape
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MoveWiring
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.NonparabolicUnionBound
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.OrderEscape
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.PairedCorvajaZannierBound
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.PairedMaximalDivisorCorvajaZannierEscape
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.PairedMaximalDivisorCorvajaZannierStep
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.PairedMaximalDivisorOrderEscape
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.ParabolicEscape
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.RightInversionPairing
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.RightSubgroups
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.TraceCurveWeights
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.TraceEquation
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.UnionBound
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceBound
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEquation
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSeven
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSevenBound
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSevenLargeBound
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSevenPropositionTwo
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTracePoweredImageIndexTwo
-import LeanPool.MarkoffModP.BGS.Markoff.Opening
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.AlgebraicClosureTransport
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.CompatibleRoots
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicBound
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicDefect
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicNorm
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicReduction
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.EveryOrbitLarge
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.FiniteOrbit
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.OrbitCardBound
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.OrderArithmetic
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.ParabolicPeriodicity
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.PeriodicSemisimple
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.RotationOrbitCard
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.TorsionTraces
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.TraceOrderBound
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.UnitCircle
-import LeanPool.MarkoffModP.BGS.Markoff.PreliminaryEndgame
-import LeanPool.MarkoffModP.BGS.Markoff.PreliminaryNumerics
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.AffineNormalization
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.BiprojectiveClosure
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.BiprojectiveScheme
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Boundary
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Characteristic
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ChartLocalization
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.CommonKummerIndependence
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.CommonPrimeKummerTower
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Geometry
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.IrreducibilityObstructions
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Kummer
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.LaurentComparisonInjectivity
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.LaurentJacobian
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.LaurentNormalization
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.LaurentSmooth
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Localization
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.NormalForm
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.OddCommonPrimeIndependence
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.OddCoprimeIrreducibility
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.PositiveCoprimeIrreducibility
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ProjectiveChart
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ProjectiveNormalizationCharts
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ProjectiveNormalizationMorphism
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ProjectivePointEstimate
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.SemanticNormalForm
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.SyntacticDivisionCriterion
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.SyntacticDivisionObstruction
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.SyntacticNormalForm
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedBidegree
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedEllipticModel
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedIrreducibility
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedNotSubtorus
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedOddCoprimeIrreducibility
-import LeanPool.MarkoffModP.BGS.NumberTheory.DivisorBound
-import LeanPool.MarkoffModP.BGS.NumberTheory.ExplicitDivisorBound
-import LeanPool.MarkoffModP.BGS.NumberTheory.JointMaximalDivisorCertificate
-import LeanPool.MarkoffModP.BGS.NumberTheory.JointMaximalDivisorCriterion
-import LeanPool.MarkoffModP.BGS.NumberTheory.JointNeighborDivisorBound
-import LeanPool.MarkoffModP.BGS.NumberTheory.MaximalDivisorBounds
-import LeanPool.MarkoffModP.BGS.NumberTheory.NonparabolicComplementCriterion
-import LeanPool.MarkoffModP.BGS.NumberTheory.OneSidedPrimitiveWitness
-import LeanPool.MarkoffModP.BGS.NumberTheory.PreliminaryDivisorBound
-import LeanPool.MarkoffModP.BGS.NumberTheory.PrimePowerFactorization
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinCanonicalProfile
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinCutoff1248Data
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinCutoff1248Profile
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinCutoff1248Skeleton
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeCertificate
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeCoverage
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeSummaryCoverage
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinPositionalCoverage
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinPositionalProfile
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinPositionalSupportBound
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinProfileCertificate
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinProfileMatching
-import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotient
-import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotientRankin
-import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotientRankinFactorization
-import LeanPool.MarkoffModP.BGS.NumberTheory.WeightedDivisorMoment
-import LeanPool.MarkoffModP.BGS.NumberTheory.WeightedNeighborDivisorBound
-import LeanPool.MarkoffModP.Comparator.Solution
-import LeanPool.MarkoffModP.RiemannRoch.AdeleSpace.Basic
-import LeanPool.MarkoffModP.RiemannRoch.AdeleSpace.FilterChain
-import LeanPool.MarkoffModP.RiemannRoch.AxiomCheck
-import LeanPool.MarkoffModP.RiemannRoch.Basic
-import LeanPool.MarkoffModP.RiemannRoch.CoordinateFree.AdeleSpace
-import LeanPool.MarkoffModP.RiemannRoch.CoordinateFree.AlgEquiv
-import LeanPool.MarkoffModP.RiemannRoch.CoordinateFree.Divisor
-import LeanPool.MarkoffModP.RiemannRoch.CoordinateFree.RiemannRoch
-import LeanPool.MarkoffModP.RiemannRoch.CoordinateFree.WeilDifferential
-import LeanPool.MarkoffModP.RiemannRoch.Divisor
-import LeanPool.MarkoffModP.RiemannRoch.FunctionField.Divisor
-import LeanPool.MarkoffModP.RiemannRoch.Genus.AdeleQuotient
-import LeanPool.MarkoffModP.RiemannRoch.Genus.Basic
-import LeanPool.MarkoffModP.RiemannRoch.Genus.Polar
-import LeanPool.MarkoffModP.RiemannRoch.Genus.Ramification
-import LeanPool.MarkoffModP.RiemannRoch.LinearKneser
-import LeanPool.MarkoffModP.RiemannRoch.LocalResidue
-import LeanPool.MarkoffModP.RiemannRoch.Place
-import LeanPool.MarkoffModP.RiemannRoch.PlaceEquiv
-import LeanPool.MarkoffModP.RiemannRoch.RRspace.Basic
-import LeanPool.MarkoffModP.RiemannRoch.RiemannRochTheorem.Basic
-import LeanPool.MarkoffModP.RiemannRoch.RiemannRochTheorem.Corollaries
-import LeanPool.MarkoffModP.RiemannRoch.SeparableRelNorm
-import LeanPool.MarkoffModP.RiemannRoch.WeilDifferential
-import LeanPool.MarkoffModP.RiemannRoch.WeilDifferential.Basic
+
+public import LeanPool.MarkoffModP.BGS
+public import LeanPool.MarkoffModP.BGS.Algebra.ClearedLinearFractionalSubstitution
+public import LeanPool.MarkoffModP.BGS.Algebra.DifferentialWronskian
+public import LeanPool.MarkoffModP.BGS.Algebra.KummerEigencharacterDescent
+public import LeanPool.MarkoffModP.BGS.Algebra.RatFuncLinearFractionalEquiv
+public import LeanPool.MarkoffModP.BGS.AlgebraicGeometry.ConstantOpenGlueData
+public import LeanPool.MarkoffModP.BGS.AlgebraicGeometry.SpecRingEquiv
+public import LeanPool.MarkoffModP.BGS.Combinatorics.DivisorExponentCoefficient
+public import LeanPool.MarkoffModP.BGS.Combinatorics.DivisorExponentSpernerBridge
+public import LeanPool.MarkoffModP.BGS.Combinatorics.ProductOfChainsGrid
+public import LeanPool.MarkoffModP.BGS.Combinatorics.ProductOfChainsSperner
+public import LeanPool.MarkoffModP.BGS.Combinatorics.SymmetricChainBasic
+public import LeanPool.MarkoffModP.BGS.Combinatorics.SymmetricChainProduct
+public import LeanPool.MarkoffModP.BGS.Combinatorics.SymmetricChainRectangle
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.AbsoluteIrreducibilityBaseChange
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.AuxiliaryFamily
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.AuxiliaryFamilyIndexing
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.BivariateGauss
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.BivariateResultant
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.CompletionLinearDisjointness
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryCaseI
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryLocalCases
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryWronskian
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindCanonicalDifferentScaling
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindDifferentDivisor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindDifferentKaehler
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLeadingTermCancellation
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalDerivationExtension
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalWronskian
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationDerivationPreservation
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationOrder
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPerfectResidueCaseI
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPlaceOrder
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindRamifiedDerivationScaling
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.ElementaryFiniteFieldBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.EndpointComposition
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalAuxiliaryFinitePlace
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalAuxiliaryFinitePlaceNormalized
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalAuxiliaryInfinityPlace
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGcdBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGlobalGcdBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGlobalNormalized
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGlobalNormalizedAutomatic
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalPlaceSum
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalPlacewiseScaling
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalWronskian
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExceptionalPlaceBounds
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExceptionalSupport
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExhaustiveProductFormula
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionGcdOutsideHeight
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionOneSubGcdHeight
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPolynomialHeight
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPositiveDegreePower
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionProductFormula
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionResidueSurjectivity
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteFunctionFieldDegree
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FinitePlaceCompletion
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FrobeniusSubfield
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FrobeniusWronskian
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FunctionFieldProductFormula
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.GeneralCorvajaZannier
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianPlaceSum
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianSummation
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianWeightedPlaceSum
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityInertiaDegree
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityPlace
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LaurentFrobeniusBasis
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LaurentFrobeniusPowerBasis
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalAuxiliaryCaseI
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalAuxiliaryWronskian
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalDerivative
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalMonogenicity
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalReciprocalDiscriminant
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalWronskian
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.NumericalCorollary
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.NumericalOptimization
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.ParameterizedBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PerfectConstants
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlace
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlaceCases
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlacePrincipalDivisor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryIndependence
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBidegreeBridge
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBoundarySupport
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalDegreeBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalEulerBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalGcdBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCharacteristicCardinality
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCoordinatePowerHeight
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveDiagonalStabilizer
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveDiscriminantBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveExhaustiveGcdEndpoint
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveFiniteDifferentBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveFunctionField
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityComplement
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityDifferentBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityDifferentDegree
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveLocalReciprocalDiscriminant
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveLogarithmicGauss
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePoweredHeightBounds
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePoweredImageDegreeBudget
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePropositionTwoAssembly
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePropositionTwoDegreeBridge
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePropositionTwoGeometric
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveRatFuncModel
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSeparability
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSharedOriginBoundary
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSupportDeterminant
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSupportRank
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredCoordinateRelation
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredCoordinates
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageBaseChange
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageCurve
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageExactSupportIndexBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageFrobeniusRelation
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageFrobeniusRelationSwapped
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageGaloisBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageHeightFactor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageIndex
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageIndexBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PropositionTwoDegreeMonotonicity
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.RatFuncExhaustiveProductFormula
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.SeparatingCoordinateNotFrobenius
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionBidegreeCount
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionExhaustiveGcdDivisorBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionGcdDivisorBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionPointNormalization
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorusCharacterKernelBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TranscendentalPowerDegree
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.WronskianChangeParameter
+public import LeanPool.MarkoffModP.BGS.Dynamics.FiniteForwardOrbit
+public import LeanPool.MarkoffModP.BGS.Dynamics.StrictMeasureEscape
+public import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
+public import LeanPool.MarkoffModP.BGS.FiniteField.EllipticCharacterSum
+public import LeanPool.MarkoffModP.BGS.FiniteField.HasseFrobenius
+public import LeanPool.MarkoffModP.BGS.FiniteField.QuadraticCharacter
+public import LeanPool.MarkoffModP.BGS.HasseWeil.AffinePointPlace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.CechRiemannLinearAlgebra
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ClosedPlaceEulerRecurrence
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceCount
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceSplittingFormula
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionFinitePlaceBridge
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceBridge
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceDegreeTower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceSplittingMultiplicity
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionPlaceSplittingMultiplicity
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionRationalPlace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldAutomorphism
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldFinitePlace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldFinitePlaceDegree
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldInfinityBase
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldRatFuncCompatibility
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantTensorResidue
+public import LeanPool.MarkoffModP.BGS.HasseWeil.DVRLocalPoleOrder
+public import LeanPool.MarkoffModP.BGS.HasseWeil.DedekindDifferentLocalTrace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtension
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionAutomorphism
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionConstants
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionDifferentCoefficient
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFiniteDifferent
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlaceCompatibility
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlaceFrobeniusAverage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwist
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistBoundedError
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistConstants
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistDegree
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistFinitePlaceAverage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistFinitePlaceBridge
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistFinitePlaceUnramified
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistGenus
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistInfinityPlaceDescent
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistInfinityPlaceEquivalence
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistMultiplication
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistRationalPlaceAverage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistRiemannLower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistStepanovUpper
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionGenusDegree
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionGenusInvariance
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionInfinityDifferent
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionInfinityNormalization
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionInfinityPlaceCompatibility
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionIntermediateFrobeniusTwistFinitePlaceAverage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionIntermediateFrobeniusTwistHasseBound
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionIntermediateFrobeniusTwistRationalPlaceAverage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionNormalClosureTower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionQuotient
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionRationalPlaceCount
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionRegularity
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionTotalDifferentDegree
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionTower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExtensionEvenDegreeStepanovBound
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExtensionPointCount
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FilteredDimension
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteBranchLocus
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionAffineIdealDegree
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionAffineIdealDivisor
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentCanonicalityCriterion
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentCotrace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentCotraceCanonicality
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentGenusBound
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentLocalMaximality
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionClosedPlaceAlgEquiv
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCotraceLocalTraceImage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisibleErrorFromConstantBase
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorClassRecurrence
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorDegreeIndex
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionEffectiveDivisorSplit
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionGenusBound
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionHasseBoundFromEvenConstantExtensions
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionHasseWeil
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionIndexedZetaRationality
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionIndexedZetaRationalityAutomatic
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionLocalPoleQuotient
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionLocalPoleSpace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceAlgEquiv
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceDegreeFiniteness
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceTower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPrincipalParts
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannEventualGrowth
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannLowerFromGenus
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannRoch
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannShiftedEventualGrowth
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpaceProjectivization
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionStandardZetaRationality
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionTotalDifferentEffectiveDivisor
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeExtensionIdentity
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOne
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOneAutomatic
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOneFromAllCounts
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaNumeratorNoncancellation
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaSimplePole
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldCompositum
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldConstantExtensionNormalization
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldConstantExtensionResidue
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldDivisibleExtension
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldInfinityDifferent
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldPolynomialDifferent
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldPolynomialNormalization
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldSubfield
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteLinearIndependenceBound
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceApproximation
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceFrobeniusFiber
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceNormalizationTransport
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePrincipalParts
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FinsuppWeightedFiber
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FixedPointAverage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaConstantExtensionIdentity
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaDegreeIndexOne
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaDegreeIndexOneIndexed
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaEuler
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaEulerDegree
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaHasseBound
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaRationality
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaRationalityDegree
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaTrace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaUniqueness
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FrobeniusPlaceCardinality
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FrobeniusRestriction
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FrobeniusTwistGroup
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldConstantExtension
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldConstantField
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosure
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureConstantBase
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureConstants
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureOriginalCompositum
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureOriginalField
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureRatFuncBase
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureRatFuncEquiv
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GaloisAverage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GaloisTowerFactorialDegree
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralBivariateAffineHasseWeil
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralFiniteExtensionRiemannLower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralSquareFieldStepanovCount
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralSquareFieldStepanovCountAutomatic
+public import LeanPool.MarkoffModP.BGS.HasseWeil.IdealMultiplicityMap
+public import LeanPool.MarkoffModP.BGS.HasseWeil.LinearFunctionalGluing
+public import LeanPool.MarkoffModP.BGS.HasseWeil.LocalPoleCumulativeQuotient
+public import LeanPool.MarkoffModP.BGS.HasseWeil.LocalPoleFiltration
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointBase
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointDivisorSplit
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointHeight
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointIncrement
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointPoleSemigroup
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointSectionSelection
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStepanovBasisGrid
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStepanovDegreeTwoAuxiliary
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStepanovGrid
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStrictLevels
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineCountTransfer
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineFiberBound
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineHasseWeilFromEvenError
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineHasseWeilFromZeta
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineRationalPlaceComparison
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneConstantField
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCoordinatePole
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCoordinatePoleAtInfinity
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCoordinateShear
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCurveGenusBoundAutomatic
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCurveGenusBoundFromCotrace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCurveGenusBoundFromCotraceDegree
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFinitePlaceRiemannLower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFrobeniusDeflation
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFrobeniusDegenerate
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFrobeniusReduction
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneInfinityRiemannLower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneMonomialSpace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneOnePointRiemannLower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneRationalPlaceAffineComparison
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneRegularPointCount
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSingularPointBound
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSmoothPointNormalization
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSquareFieldStepanovCount
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSquareFieldStepanovCountAutomatic
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneStepanovAuxiliary
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PoleDivisor
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PolynomialSpectral
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PolynomialTensorCancel
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PowerSum
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncCanonicalInfinityDivisor
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncConstantExtension
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncExactConstantExtension
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncInfinityLocalization
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncParameterPole
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlaceTower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceConstants
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceEffectiveIncrement
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceFinitePlaceIncrement
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceInfinityPlaceIncrement
+public import LeanPool.MarkoffModP.BGS.HasseWeil.SpectralFromAsymptotic
+public import LeanPool.MarkoffModP.BGS.HasseWeil.SquareExtensionAffinePlaces
+public import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldResidue
+public import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovAuxiliary
+public import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovRestriction
+public import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovZeroCount
+public import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovLinearAlgebra
+public import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovParameters
+public import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovRestrictionMaps
+public import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovSquareVanishing
+public import LeanPool.MarkoffModP.BGS.HasseWeil.TensorRestriction
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ZetaExtensionTrace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ZetaNumeratorSpectral
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ZetaTrace
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.Asymptotics
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseEndgame
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseLinearTail
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseSupportSurjectivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseSupportTail
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.DivisibleOrbitTransitivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ElementaryCounts
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenCoarseSupportFrontier
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenNonparabolicComplementFrontier
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenPairedMaximalDivisorMiddleGame
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageCoarseLinearTail
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageNonparabolicComplementFrontier
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageSquareEnvelopeFrontier
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageSquareEnvelopeSurjectivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EvenSignBaseStableComplement
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EvenSignComplementDivisibility
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EvenSignOrbitDivisibility
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderComplementObstruction
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderEulerSevenComplementObstruction
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderPuncturedSmallOrderCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderRankinEnvelope
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderTraceBudget
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExceptionalPrimeCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.FixedPointFreeMaximalDivisorTraceCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.GiantOrbit
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.JointMaximalDivisorFrontier
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MaximalDivisorLowOrderCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MaximalDivisorMiddleGame
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MaximalDivisorPuncturedTransitivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MiddleGameThenEndgame
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicBadComponent
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicComplementFrontier
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicMaximalDivisorConcreteCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicPuncturedSmallOrderCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NormalizationCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NormalizedSmallOrderCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.OrbitDivisibility
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.PairedMaximalDivisorLowOrderCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.PairedMaximalDivisorMiddleGame
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.PairedMaximalDivisorTraceCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.PuncturedSmallOrderCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.RankinJointAntichainSperner
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.RankinJointAntichainWidth
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.RankinWidthEnvelope
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ReductionSurjectivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.SplitCageEvenSignBase
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.SplitCageNonparabolicComplementFrontier
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.TransitivitySurjectivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.Unconditional
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.WeightedCoarseSupportSurjectivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.AxisEquivalence
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.BiquadraticPrimitiveQuartic
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.Connectivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.EstimateFromPlane
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.HasseWeilAssumption
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.IncidenceGeometry
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.PlaneCountComparison
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.PlaneHasseWeil
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.PlaneModels
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.PowerCover
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.PulledRadicand
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.ShiftedTraceCurveIrreducibility
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.SmallPrime
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.WitnessEquations
+public import LeanPool.MarkoffModP.BGS.Markoff.Core
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Action
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.ConicParametrization
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.EvenSignAction
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.FiniteRotationEigenvalues
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.NatConnectivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Normalization
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.NormalizedOrbit
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.ParabolicFibers
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.PuncturedNormalization
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Rotation
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.RotationTorus
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.SemiringFunctor
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Statements
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.TraceClassification
+public import LeanPool.MarkoffModP.BGS.Markoff.Diophantine
+public import LeanPool.MarkoffModP.BGS.Markoff.Diophantine.CoordinateCoprimeProduct
+public import LeanPool.MarkoffModP.BGS.Markoff.Diophantine.CoordinateZeroPatternCounts
+public import LeanPool.MarkoffModP.BGS.Markoff.Diophantine.LocalCounts
+public import LeanPool.MarkoffModP.BGS.Markoff.Diophantine.PrimewiseCRT
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.LargeOrderToMaximal
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.CayleyParametrization
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.DescendedIrreducibility
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.DescendedTraceCurve
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.HasseFromGeneral
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.SeededCover
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Parabolic
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PowerCoverCounting
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveInclusionExclusion
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveOrbitWiring
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveTraceCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.WeilBoundAssumption
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.WeilFromGeneralHasse
+public import LeanPool.MarkoffModP.BGS.Markoff.ExplicitEndgame
+public import LeanPool.MarkoffModP.BGS.Markoff.ExplicitEstimates
+public import LeanPool.MarkoffModP.BGS.Markoff.ExplicitNumericCertificates
+public import LeanPool.MarkoffModP.BGS.Markoff.ExplicitNumerics
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.CoordinateRing
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Counterexamples
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Fibers
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Geometry
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.NormalizedGraph
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.PointCount
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierEscape
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierFromGeneral
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierGeometry
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierSeparability
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierSourceBound
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierStep
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CosetTraceEquation
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.Diagonalization
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.DivisorRange
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedCorvajaZannierBound
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedMaximalDivisorCorvajaZannierEscape
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedMaximalDivisorCorvajaZannierStep
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedMaximalDivisorOrderEscape
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorCorvajaZannierEscape
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorCorvajaZannierStep
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorNonparabolicOrderCover
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorOrderCover
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorOrderEscape
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MoveWiring
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.NonparabolicUnionBound
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.OrderEscape
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.PairedCorvajaZannierBound
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.PairedMaximalDivisorCorvajaZannierEscape
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.PairedMaximalDivisorCorvajaZannierStep
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.PairedMaximalDivisorOrderEscape
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.ParabolicEscape
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.RightInversionPairing
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.RightSubgroups
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.TraceCurveWeights
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.TraceEquation
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.UnionBound
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceBound
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEquation
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSeven
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSevenBound
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSevenLargeBound
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSevenPropositionTwo
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTracePoweredImageIndexTwo
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.AlgebraicClosureTransport
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.CompatibleRoots
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicBound
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicDefect
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicNorm
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicReduction
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.EveryOrbitLarge
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.FiniteOrbit
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.OrbitCardBound
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.OrderArithmetic
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.ParabolicPeriodicity
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.PeriodicSemisimple
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.RotationOrbitCard
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.TorsionTraces
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.TraceOrderBound
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.UnitCircle
+public import LeanPool.MarkoffModP.BGS.Markoff.PreliminaryEndgame
+public import LeanPool.MarkoffModP.BGS.Markoff.PreliminaryNumerics
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.AffineNormalization
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.BiprojectiveClosure
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.BiprojectiveScheme
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Boundary
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Characteristic
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ChartLocalization
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.CommonKummerIndependence
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.CommonPrimeKummerTower
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Geometry
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.IrreducibilityObstructions
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Kummer
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.LaurentComparisonInjectivity
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.LaurentJacobian
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.LaurentNormalization
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.LaurentSmooth
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Localization
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.NormalForm
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.OddCommonPrimeIndependence
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.OddCoprimeIrreducibility
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.PositiveCoprimeIrreducibility
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ProjectiveChart
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ProjectiveNormalizationCharts
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ProjectiveNormalizationMorphism
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ProjectivePointEstimate
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.SemanticNormalForm
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.SyntacticDivisionCriterion
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.SyntacticDivisionObstruction
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.SyntacticNormalForm
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedBidegree
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedEllipticModel
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedIrreducibility
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedNotSubtorus
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedOddCoprimeIrreducibility
+public import LeanPool.MarkoffModP.BGS.NumberTheory.DivisorBound
+public import LeanPool.MarkoffModP.BGS.NumberTheory.ExplicitDivisorBound
+public import LeanPool.MarkoffModP.BGS.NumberTheory.JointMaximalDivisorCertificate
+public import LeanPool.MarkoffModP.BGS.NumberTheory.JointMaximalDivisorCriterion
+public import LeanPool.MarkoffModP.BGS.NumberTheory.JointNeighborDivisorBound
+public import LeanPool.MarkoffModP.BGS.NumberTheory.MaximalDivisorBounds
+public import LeanPool.MarkoffModP.BGS.NumberTheory.NonparabolicComplementCriterion
+public import LeanPool.MarkoffModP.BGS.NumberTheory.OneSidedPrimitiveWitness
+public import LeanPool.MarkoffModP.BGS.NumberTheory.PreliminaryDivisorBound
+public import LeanPool.MarkoffModP.BGS.NumberTheory.PrimePowerFactorization
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinCanonicalProfile
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinCutoff1248Data
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinCutoff1248Profile
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinCutoff1248Skeleton
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeCertificate
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeCoverage
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeSummaryCoverage
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinPositionalCoverage
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinPositionalProfile
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinPositionalSupportBound
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinProfileCertificate
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinProfileMatching
+public import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotient
+public import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotientRankin
+public import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotientRankinFactorization
+public import LeanPool.MarkoffModP.BGS.NumberTheory.WeightedDivisorMoment
+public import LeanPool.MarkoffModP.BGS.NumberTheory.WeightedNeighborDivisorBound
+public import LeanPool.MarkoffModP.Comparator.Solution
+public import LeanPool.MarkoffModP.RiemannRoch.AdeleSpace.Basic
+public import LeanPool.MarkoffModP.RiemannRoch.AdeleSpace.FilterChain
+public import LeanPool.MarkoffModP.RiemannRoch.AxiomCheck
+public import LeanPool.MarkoffModP.RiemannRoch.Basic
+public import LeanPool.MarkoffModP.RiemannRoch.CoordinateFree.AdeleSpace
+public import LeanPool.MarkoffModP.RiemannRoch.CoordinateFree.AlgEquiv
+public import LeanPool.MarkoffModP.RiemannRoch.CoordinateFree.Divisor
+public import LeanPool.MarkoffModP.RiemannRoch.CoordinateFree.RiemannRoch
+public import LeanPool.MarkoffModP.RiemannRoch.CoordinateFree.WeilDifferential
+public import LeanPool.MarkoffModP.RiemannRoch.Divisor
+public import LeanPool.MarkoffModP.RiemannRoch.FunctionField.Divisor
+public import LeanPool.MarkoffModP.RiemannRoch.Genus.AdeleQuotient
+public import LeanPool.MarkoffModP.RiemannRoch.Genus.Basic
+public import LeanPool.MarkoffModP.RiemannRoch.Genus.Polar
+public import LeanPool.MarkoffModP.RiemannRoch.Genus.Ramification
+public import LeanPool.MarkoffModP.RiemannRoch.LinearKneser
+public import LeanPool.MarkoffModP.RiemannRoch.LocalResidue
+public import LeanPool.MarkoffModP.RiemannRoch.Place
+public import LeanPool.MarkoffModP.RiemannRoch.PlaceEquiv
+public import LeanPool.MarkoffModP.RiemannRoch.RRspace.Basic
+public import LeanPool.MarkoffModP.RiemannRoch.RiemannRochTheorem.Basic
+public import LeanPool.MarkoffModP.RiemannRoch.RiemannRochTheorem.Corollaries
+public import LeanPool.MarkoffModP.RiemannRoch.SeparableRelNorm
+public import LeanPool.MarkoffModP.RiemannRoch.WeilDifferential
+public import LeanPool.MarkoffModP.RiemannRoch.WeilDifferential.Basic
 
 /-!
 # Markoff mod p

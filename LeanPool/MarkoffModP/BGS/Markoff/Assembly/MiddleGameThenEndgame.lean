@@ -3,14 +3,18 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.Connectivity
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierEscape
-import LeanPool.MarkoffModP.BGS.Dynamics.StrictMeasureEscape
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.Connectivity
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierEscape
+public import LeanPool.MarkoffModP.BGS.Dynamics.StrictMeasureEscape
 
 /-!
 # Iterating the middle-game escape to the cage
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

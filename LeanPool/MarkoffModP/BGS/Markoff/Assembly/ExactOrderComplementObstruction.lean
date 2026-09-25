@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderPuncturedSmallOrderCount
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicComplementFrontier
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderPuncturedSmallOrderCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicComplementFrontier
 
 /-!
 # Exact-order root obstruction from a nontransitive complement
@@ -18,6 +20,8 @@ inversion gives `2 * |trace values| ≤ R`.  The two-coordinate Markoff fiber
 bound and the factor-four complement divisibility therefore force
 `8 * p ≤ R^2` whenever the complement survives below the endgame threshold.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

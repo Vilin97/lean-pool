@@ -3,10 +3,12 @@ Copyright (c) 2026 University of Washington Math AI Lab. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bianca Viray, Bryan Boehnke, Grant Yang, George Peykanu, Tianshuo Wang
 -/
+module
 
-import Mathlib.RingTheory.LocalRing.Etale
-import Mathlib.RingTheory.RingHom.Etale
-import Mathlib.RingTheory.Ideal.Height
+
+public import Mathlib.RingTheory.LocalRing.Etale
+public import Mathlib.RingTheory.RingHom.Etale
+public import Mathlib.RingTheory.Ideal.Height
 
 /-!
 # Monogenicity from étale height-one quotients
@@ -38,6 +40,8 @@ closed, `S` a UFD, and there exists a height-one prime `q ⊆ S` such that `R/(q
 
 étale, monogenic, local ring, height one, UFD
 -/
+
+@[expose] public section
 
 open Polynomial Function RingHom IsLocalRing
 

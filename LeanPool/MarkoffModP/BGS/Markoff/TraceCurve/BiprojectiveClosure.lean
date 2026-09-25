@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Algebra.MvPolynomial.PDeriv
-import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Boundary
-import Mathlib.FieldTheory.KummerExtension
+
+public import Mathlib.Algebra.MvPolynomial.PDeriv
+public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Boundary
+public import Mathlib.FieldTheory.KummerExtension
 
 /-!
 # Explicit biprojective closure of the trace cover
@@ -16,6 +18,8 @@ This uses `Option K` as the standard affine chart plus the point at infinity of 
 It controls the raw closure in `P^1 × P^1`; it does not identify that generally singular closure
 with its normalization.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

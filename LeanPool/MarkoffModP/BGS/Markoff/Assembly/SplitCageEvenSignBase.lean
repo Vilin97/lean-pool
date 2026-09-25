@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.GiantOrbit
-import LeanPool.MarkoffModP.BGS.Markoff.Core.EvenSignAction
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.GiantOrbit
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.EvenSignAction
 
 /-!
 # Even-sign stability of a split-cage base component
@@ -20,6 +22,8 @@ Every even sign change preserves or negates each normalized coordinate.
 Consequently, under the usual large-order-to-base hypothesis, all four even
 sign images of a split-cage base lie in its Gamma orbit.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

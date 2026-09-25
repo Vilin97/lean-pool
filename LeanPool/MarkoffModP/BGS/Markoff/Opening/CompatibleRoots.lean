@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
+
+public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 
 /-!
 # Compatible powers of a common primitive root
@@ -12,6 +14,8 @@ import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 Represent several torsion elements as powers of one primitive root under the required order
 divisibility conditions.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

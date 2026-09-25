@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Basic
+
+public import Mathlib.FieldTheory.Galois.Basic
 
 /-!
 # A common factorial degree for Galois groups in a field tower
@@ -15,6 +17,8 @@ factorial of the top degree.  This supplies one auxiliary constant-extension
 degree that works simultaneously for the rational base and the original
 compositum in the Frobenius-twist argument.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

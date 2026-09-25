@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Algebra.Polynomial.AlgebraMap
-import Mathlib.RingTheory.PolynomialAlgebra
-import Mathlib.RingTheory.TensorProduct.Maps
+
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Mathlib.RingTheory.PolynomialAlgebra
+public import Mathlib.RingTheory.TensorProduct.Maps
 
 /-!
 # Cancelling a polynomial ring in a tensor product
@@ -20,6 +22,8 @@ equivalence
 
 and records its values on pure tensors in both directions.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 
@@ -45,16 +49,15 @@ local instance coefficientPolynomialTower : IsScalarTower C C[X] S[X] :=
     intro c
     simp [Polynomial.algebraMap_def])
 
-private abbrev PolynomialTensor := TensorProduct C[X] S[X] A
-private abbrev ConstantTensor := TensorProduct C S A
 
 /-- The image of the polynomial variable in the constant tensor product. -/
 noncomputable def polynomialTensorCancelEvaluationPoint :
     TensorProduct C S A :=
   Algebra.TensorProduct.includeRight (algebraMap C[X] A Polynomial.X)
 
-private noncomputable def constantTensorPolynomialAlgHom :
-    C[X] →ₐ[C] ConstantTensor C S A :=
+/-- Evaluate base polynomials in the constant tensor product. -/
+noncomputable def constantTensorPolynomialAlgHom :
+    C[X] →ₐ[C] (TensorProduct C S A) :=
   Polynomial.aeval (polynomialTensorCancelEvaluationPoint C S A)
 
 /-- The `C[X]`-algebra structure on `S ⊗[C] A` obtained by evaluating `X`
@@ -65,7 +68,7 @@ noncomputable def polynomialTensorCancelTargetPolynomialAlgebra :
   (constantTensorPolynomialAlgHom C S A).toAlgebra
 
 local instance constantTensorPolynomialAlgebra :
-    Algebra C[X] (ConstantTensor C S A) :=
+    Algebra C[X] ((TensorProduct C S A)) :=
   polynomialTensorCancelTargetPolynomialAlgebra C S A
 
 /-- The `S[X]`-algebra structure on `S ⊗[C] A` obtained by evaluating `X`
@@ -77,11 +80,11 @@ noncomputable def polynomialTensorCancelTargetPolynomialExtensionAlgebra :
     (polynomialTensorCancelEvaluationPoint C S A)).toAlgebra
 
 local instance constantTensorPolynomialExtensionAlgebra :
-    Algebra S[X] (ConstantTensor C S A) :=
+    Algebra S[X] ((TensorProduct C S A)) :=
   polynomialTensorCancelTargetPolynomialExtensionAlgebra C S A
 
 local instance constantTensorPolynomialTower :
-    IsScalarTower C C[X] (ConstantTensor C S A) :=
+    IsScalarTower C C[X] ((TensorProduct C S A)) :=
   IsScalarTower.of_algebraMap_eq' (by
     apply RingHom.ext
     intro c
@@ -91,11 +94,11 @@ local instance constantTensorPolynomialTower :
 
 private theorem includeRight_algebraMap_polynomial (p : C[X]) :
     (Algebra.TensorProduct.includeRight :
-      A →ₐ[C] ConstantTensor C S A) (algebraMap C[X] A p) =
+      A →ₐ[C] (TensorProduct C S A)) (algebraMap C[X] A p) =
       constantTensorPolynomialAlgHom C S A p := by
   have h :
       (Algebra.TensorProduct.includeRight :
-          A →ₐ[C] ConstantTensor C S A).comp
+          A →ₐ[C] (TensorProduct C S A)).comp
           (IsScalarTower.toAlgHom C C[X] A) =
         constantTensorPolynomialAlgHom C S A := by
     ext
@@ -104,14 +107,16 @@ private theorem includeRight_algebraMap_polynomial (p : C[X]) :
   simpa [Polynomial.algebraMap_def, coefficientPolynomialAlgHom] using
     DFunLike.congr_fun h p
 
-private noncomputable def rightFactorToConstantTensor :
-    A →ₐ[C[X]] ConstantTensor C S A where
+/-- Include the algebra factor in the constant tensor product over the polynomial base. -/
+noncomputable def rightFactorToConstantTensor :
+    A →ₐ[C[X]] (TensorProduct C S A) where
   __ := (Algebra.TensorProduct.includeRight :
-    A →ₐ[C] ConstantTensor C S A).toRingHom
-  commutes' := includeRight_algebraMap_polynomial C S A
+    A →ₐ[C] (TensorProduct C S A)).toRingHom
+  commutes' := by exact includeRight_algebraMap_polynomial C S A
 
-private noncomputable def leftFactorToConstantTensorOverS :
-    S[X] →ₐ[S] ConstantTensor C S A :=
+/-- Evaluate coefficient polynomials in the constant tensor product. -/
+noncomputable def leftFactorToConstantTensorOverS :
+    S[X] →ₐ[S] (TensorProduct C S A) :=
   Polynomial.aeval (polynomialTensorCancelEvaluationPoint C S A)
 
 omit [IsScalarTower C C[X] A] in
@@ -128,41 +133,47 @@ private theorem leftFactorToConstantTensor_compatible (p : C[X]) :
       polynomialTensorCancelEvaluationPoint, coefficientPolynomialAlgHom]
   exact DFunLike.congr_fun h p
 
-private noncomputable def leftFactorToConstantTensor :
-    S[X] →ₐ[C[X]] ConstantTensor C S A where
+/-- Evaluate coefficient polynomials as an algebra map over the polynomial base. -/
+noncomputable def leftFactorToConstantTensor :
+    S[X] →ₐ[C[X]] (TensorProduct C S A) where
   __ := (leftFactorToConstantTensorOverS C S A).toRingHom
-  commutes' := leftFactorToConstantTensor_compatible C S A
+  commutes' := by exact leftFactorToConstantTensor_compatible C S A
 
-private noncomputable def polynomialTensorToConstantTensorOverPolynomial :
-    PolynomialTensor C S A →ₐ[C[X]] ConstantTensor C S A :=
+/-- Cancel polynomial base change as an algebra homomorphism over the base polynomial ring. -/
+noncomputable def polynomialTensorToConstantTensorOverPolynomial :
+    (TensorProduct C[X] S[X] A) →ₐ[C[X]] (TensorProduct C S A) :=
   Algebra.TensorProduct.lift
     (leftFactorToConstantTensor C S A)
     (rightFactorToConstantTensor C S A)
     (fun _ _ ↦ Commute.all _ _)
 
-private noncomputable def polynomialTensorToConstantTensor :
-    PolynomialTensor C S A →ₐ[S] ConstantTensor C S A where
+/-- Cancel polynomial base change as an algebra homomorphism over the coefficient ring. -/
+noncomputable def polynomialTensorToConstantTensor :
+    (TensorProduct C[X] S[X] A) →ₐ[S] (TensorProduct C S A) where
   __ := (polynomialTensorToConstantTensorOverPolynomial C S A).toRingHom
   commutes' s := by
     change polynomialTensorToConstantTensorOverPolynomial C S A
         ((Algebra.TensorProduct.includeLeft :
-          S[X] →ₐ[S] PolynomialTensor C S A) (Polynomial.C s)) =
-      algebraMap S (ConstantTensor C S A) s
+          S[X] →ₐ[S] (TensorProduct C[X] S[X] A)) (Polynomial.C s)) =
+      algebraMap S ((TensorProduct C S A)) s
     simp [polynomialTensorToConstantTensorOverPolynomial,
       leftFactorToConstantTensor, leftFactorToConstantTensorOverS]
 
-private noncomputable def constantsToPolynomialTensor :
-    S →ₐ[S] PolynomialTensor C S A :=
+/-- Include coefficient scalars in the polynomial tensor product. -/
+noncomputable def constantsToPolynomialTensor :
+    S →ₐ[S] (TensorProduct C[X] S[X] A) :=
   (Algebra.TensorProduct.includeLeft :
-      S[X] →ₐ[S] PolynomialTensor C S A).comp Polynomial.CAlgHom
+      S[X] →ₐ[S] (TensorProduct C[X] S[X] A)).comp Polynomial.CAlgHom
 
-private noncomputable def rightFactorToPolynomialTensor :
-    A →ₐ[C] PolynomialTensor C S A :=
+/-- Include the algebra factor in the polynomial tensor product over the constant base. -/
+noncomputable def rightFactorToPolynomialTensor :
+    A →ₐ[C] (TensorProduct C[X] S[X] A) :=
   (Algebra.TensorProduct.includeRight :
-      A →ₐ[C[X]] PolynomialTensor C S A).restrictScalars C
+      A →ₐ[C[X]] (TensorProduct C[X] S[X] A)).restrictScalars C
 
-private noncomputable def constantTensorToPolynomialTensor :
-    ConstantTensor C S A →ₐ[S] PolynomialTensor C S A :=
+/-- Extend constant tensors to the polynomial tensor product. -/
+noncomputable def constantTensorToPolynomialTensor :
+    (TensorProduct C S A) →ₐ[S] (TensorProduct C[X] S[X] A) :=
   Algebra.TensorProduct.lift
     (constantsToPolynomialTensor C S A)
     (rightFactorToPolynomialTensor C S A)
@@ -172,7 +183,7 @@ private theorem constantTensorToPolynomialTensor_comp_leftFactor :
     (constantTensorToPolynomialTensor C S A).comp
         (leftFactorToConstantTensorOverS C S A) =
       (Algebra.TensorProduct.includeLeft :
-        S[X] →ₐ[S] PolynomialTensor C S A) := by
+        S[X] →ₐ[S] (TensorProduct C[X] S[X] A)) := by
   ext
   simp [constantTensorToPolynomialTensor,
     leftFactorToConstantTensorOverS,
@@ -181,9 +192,9 @@ private theorem constantTensorToPolynomialTensor_comp_leftFactor :
 private theorem constantTensorToPolynomialTensor_commutes_polynomial
     (p : C[X]) :
     constantTensorToPolynomialTensor C S A
-        (algebraMap C[X] (ConstantTensor C S A) p) =
-      algebraMap C[X] (PolynomialTensor C S A) p := by
-  rw [show algebraMap C[X] (ConstantTensor C S A) p =
+        (algebraMap C[X] ((TensorProduct C S A)) p) =
+      algebraMap C[X] ((TensorProduct C[X] S[X] A)) p := by
+  rw [show algebraMap C[X] ((TensorProduct C S A)) p =
       leftFactorToConstantTensorOverS C S A
         (algebraMap C[X] S[X] p) by
     exact (leftFactorToConstantTensor_compatible C S A p).symm]
@@ -197,25 +208,28 @@ private theorem constantTensorToPolynomialTensor_commutes_polynomial
   rw [hp]
   rfl
 
-private noncomputable def constantTensorToPolynomialTensorOverPolynomial :
-    ConstantTensor C S A →ₐ[C[X]] PolynomialTensor C S A where
+/-- Extend constant tensors as an algebra homomorphism over the base polynomial ring. -/
+noncomputable def constantTensorToPolynomialTensorOverPolynomial :
+    (TensorProduct C S A) →ₐ[C[X]] (TensorProduct C[X] S[X] A) where
   __ := (constantTensorToPolynomialTensor C S A).toRingHom
-  commutes' := constantTensorToPolynomialTensor_commutes_polynomial C S A
+  commutes' := by exact constantTensorToPolynomialTensor_commutes_polynomial C S A
 
-private noncomputable def polynomialTensorToConstantTensorOverCoefficientPolynomial :
-    PolynomialTensor C S A →ₐ[S[X]] ConstantTensor C S A where
+/-- Cancel polynomial tensors over the coefficient polynomial ring. -/
+noncomputable def polynomialTensorToConstantTensorOverCoefficientPolynomial :
+    (TensorProduct C[X] S[X] A) →ₐ[S[X]] (TensorProduct C S A) where
   __ := (polynomialTensorToConstantTensor C S A).toRingHom
   commutes' p := by
     change polynomialTensorToConstantTensor C S A
         ((Algebra.TensorProduct.includeLeft :
-          S[X] →ₐ[S[X]] PolynomialTensor C S A) p) =
+          S[X] →ₐ[S[X]] (TensorProduct C[X] S[X] A)) p) =
       leftFactorToConstantTensorOverS C S A p
     simp [polynomialTensorToConstantTensor,
       polynomialTensorToConstantTensorOverPolynomial,
       leftFactorToConstantTensor]
 
-private noncomputable def constantTensorToPolynomialTensorOverCoefficientPolynomial :
-    ConstantTensor C S A →ₐ[S[X]] PolynomialTensor C S A where
+/-- Extend constant tensors over the coefficient polynomial ring. -/
+noncomputable def constantTensorToPolynomialTensorOverCoefficientPolynomial :
+    (TensorProduct C S A) →ₐ[S[X]] (TensorProduct C[X] S[X] A) where
   __ := (constantTensorToPolynomialTensor C S A).toRingHom
   commutes' p := by
     have hp := AlgHom.congr_fun
@@ -223,13 +237,13 @@ private noncomputable def constantTensorToPolynomialTensorOverCoefficientPolynom
     change constantTensorToPolynomialTensor C S A
         (leftFactorToConstantTensorOverS C S A p) =
       (Algebra.TensorProduct.includeLeft :
-        S[X] →ₐ[S[X]] PolynomialTensor C S A) p
+        S[X] →ₐ[S[X]] (TensorProduct C[X] S[X] A)) p
     exact hp
 
 private theorem constantTensorToPolynomialTensor_leftInverse :
     (constantTensorToPolynomialTensor C S A).comp
         (polynomialTensorToConstantTensor C S A) =
-      AlgHom.id S (PolynomialTensor C S A) := by
+      AlgHom.id S ((TensorProduct C[X] S[X] A)) := by
   apply AlgHom.ext
   intro z
   induction z using TensorProduct.inductionOn with
@@ -252,7 +266,7 @@ private theorem constantTensorToPolynomialTensor_leftInverse :
 private theorem constantTensorToPolynomialTensor_rightInverse :
     (polynomialTensorToConstantTensor C S A).comp
         (constantTensorToPolynomialTensor C S A) =
-      AlgHom.id S (ConstantTensor C S A) := by
+      AlgHom.id S ((TensorProduct C S A)) := by
   apply Algebra.TensorProduct.ext
   · apply AlgHom.ext
     intro s
@@ -268,7 +282,7 @@ private theorem constantTensorToPolynomialTensor_rightInverse :
 private theorem constantTensorToPolynomialTensorOverPolynomial_leftInverse :
     (constantTensorToPolynomialTensorOverPolynomial C S A).comp
         (polynomialTensorToConstantTensorOverPolynomial C S A) =
-      AlgHom.id C[X] (PolynomialTensor C S A) := by
+      AlgHom.id C[X] ((TensorProduct C[X] S[X] A)) := by
   apply AlgHom.ext
   intro z
   exact DFunLike.congr_fun
@@ -277,7 +291,7 @@ private theorem constantTensorToPolynomialTensorOverPolynomial_leftInverse :
 private theorem constantTensorToPolynomialTensorOverPolynomial_rightInverse :
     (polynomialTensorToConstantTensorOverPolynomial C S A).comp
         (constantTensorToPolynomialTensorOverPolynomial C S A) =
-      AlgHom.id C[X] (ConstantTensor C S A) := by
+      AlgHom.id C[X] ((TensorProduct C S A)) := by
   apply AlgHom.ext
   intro z
   exact DFunLike.congr_fun
@@ -287,7 +301,7 @@ private theorem
     constantTensorToPolynomialTensorOverCoefficientPolynomial_leftInverse :
     (constantTensorToPolynomialTensorOverCoefficientPolynomial C S A).comp
         (polynomialTensorToConstantTensorOverCoefficientPolynomial C S A) =
-      AlgHom.id S[X] (PolynomialTensor C S A) := by
+      AlgHom.id S[X] ((TensorProduct C[X] S[X] A)) := by
   apply AlgHom.ext
   intro z
   exact DFunLike.congr_fun
@@ -297,7 +311,7 @@ private theorem
     constantTensorToPolynomialTensorOverCoefficientPolynomial_rightInverse :
     (polynomialTensorToConstantTensorOverCoefficientPolynomial C S A).comp
         (constantTensorToPolynomialTensorOverCoefficientPolynomial C S A) =
-      AlgHom.id S[X] (ConstantTensor C S A) := by
+      AlgHom.id S[X] ((TensorProduct C S A)) := by
   apply AlgHom.ext
   intro z
   exact DFunLike.congr_fun
@@ -310,8 +324,8 @@ noncomputable def polynomialTensorCancelOverPolynomial :
   AlgEquiv.ofAlgHom
     (polynomialTensorToConstantTensorOverPolynomial C S A)
     (constantTensorToPolynomialTensorOverPolynomial C S A)
-    (constantTensorToPolynomialTensorOverPolynomial_rightInverse C S A)
-    (constantTensorToPolynomialTensorOverPolynomial_leftInverse C S A)
+    (by exact constantTensorToPolynomialTensorOverPolynomial_rightInverse C S A)
+    (by exact constantTensorToPolynomialTensorOverPolynomial_leftInverse C S A)
 
 /-- Polynomial tensor cancellation as an `S[X]`-algebra equivalence, where
 the target uses `polynomialTensorCancelTargetPolynomialExtensionAlgebra`. -/
@@ -320,10 +334,8 @@ noncomputable def polynomialTensorCancelOverCoefficientPolynomial :
   AlgEquiv.ofAlgHom
     (polynomialTensorToConstantTensorOverCoefficientPolynomial C S A)
     (constantTensorToPolynomialTensorOverCoefficientPolynomial C S A)
-    (constantTensorToPolynomialTensorOverCoefficientPolynomial_rightInverse
-      C S A)
-    (constantTensorToPolynomialTensorOverCoefficientPolynomial_leftInverse
-      C S A)
+    (by exact constantTensorToPolynomialTensorOverCoefficientPolynomial_rightInverse C S A)
+    (by exact constantTensorToPolynomialTensorOverCoefficientPolynomial_leftInverse C S A)
 
 /-- Cancelling the polynomial base change in a tensor product. -/
 noncomputable def polynomialTensorCancel :
@@ -331,8 +343,8 @@ noncomputable def polynomialTensorCancel :
   AlgEquiv.ofAlgHom
     (polynomialTensorToConstantTensor C S A)
     (constantTensorToPolynomialTensor C S A)
-    (constantTensorToPolynomialTensor_rightInverse C S A)
-    (constantTensorToPolynomialTensor_leftInverse C S A)
+    (by exact constantTensorToPolynomialTensor_rightInverse C S A)
+    (by exact constantTensorToPolynomialTensor_leftInverse C S A)
 
 @[simp]
 theorem polynomialTensorCancelOverPolynomial_apply

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageFrobeniusRelation
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredCoordinateRelation
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageFrobeniusRelation
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredCoordinateRelation
+public import Mathlib.Tactic
 
 /-!
 # The powered-image auxiliary family with exchanged coordinates
@@ -17,6 +19,8 @@ so this module supplies the equally canonical orientation `(y^n,x^m)`.
 It uses the untransposed powered-image equation and the first-coordinate
 Frobenius power basis.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 

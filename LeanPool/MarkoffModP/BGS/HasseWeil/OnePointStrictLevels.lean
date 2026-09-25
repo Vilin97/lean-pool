@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FilteredDimension
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FilteredDimension
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
 
 /-!
 # Strict levels in one-point filtrations
@@ -21,6 +23,8 @@ For the one-point Riemann filtration, a section that first appears at level
 at every strict level gives a pairwise-distinct family of exact pole orders,
 with no hypothesis on the degree of the distinguished place.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionIndexedZetaRationality
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannRoch
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaEulerDegree
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionIndexedZetaRationality
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannRoch
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaEulerDegree
 
 /-!
 # Unconditional indexed zeta rationality from exact constants
@@ -15,6 +17,8 @@ This file discharges the uniform Riemann--Roch premise of the indexed zeta
 composition by transporting the vendored Riemann--Roch theorem to the
 exhaustive BGS divisor model.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

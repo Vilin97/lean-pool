@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceApproximation
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionLocalPoleQuotient
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneInfinityRiemannLower
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPrincipalParts
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceApproximation
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionLocalPoleQuotient
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneInfinityRiemannLower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPrincipalParts
+public import Mathlib.Tactic
 
 /-!
 # Riemann's inequality at finite plane-curve places
@@ -23,6 +25,8 @@ The infinity-supported bidegree Riemann inequality and the effective-divisor
 increment upper bound then cancel the auxiliary infinity divisor.  This gives
 Riemann's inequality for `L(N q)` at every finite exhaustive place.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinProfileMatching
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeCertificate
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinProfileMatching
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeCertificate
 
 /-!
 # Canonical Rankin profile attached to a neighboring factorization
@@ -15,6 +17,8 @@ mathematical coverage map independently of those choices: every odd prime in
 the globally sorted support is sent to its actual side and exponent, while the
 cap assignment and the twelfth-root cap remain explicit parameters.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

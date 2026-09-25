@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionIndexedZetaRationality
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaSimplePole
-import Mathlib.Algebra.Polynomial.Expand
-import Mathlib.RingTheory.PowerSeries.Expand
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionIndexedZetaRationality
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaSimplePole
+public import Mathlib.Algebra.Polynomial.Expand
+public import Mathlib.RingTheory.PowerSeries.Expand
 
 /-!
 # Noncancellation of the indexed zeta numerator
@@ -17,6 +19,8 @@ uncancelled factor `1 - T^d` in the indexed zeta denominator.  This file
 proves the formal coefficient statement and then specializes it to the
 finite-extension effective-divisor series.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

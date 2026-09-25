@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Diophantine.CoordinateCoprimeProduct
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Diophantine.CoordinateCoprimeProduct
 
 /-!
 # Exact coordinate-zero patterns over a squarefree modulus
@@ -13,6 +15,8 @@ This file continues the elementary finite counting in published Section 7.  It c
 whose first coordinate vanishes at exactly a prescribed collection of prime factors.  The result
 is an exact finite product; no real asymptotic estimate is used.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

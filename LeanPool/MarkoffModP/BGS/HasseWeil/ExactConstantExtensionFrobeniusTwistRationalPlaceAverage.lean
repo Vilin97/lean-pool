@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistDegree
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistFinitePlaceAverage
-import LeanPool.MarkoffModP.BGS.HasseWeil.GaloisAverage
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistDegree
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistFinitePlaceAverage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GaloisAverage
 
 /-!
 # Complete rational-place averaging for Frobenius twists
@@ -21,6 +23,8 @@ This file records both the exact aggregate identity and the resulting uniform
 bound for the centered aggregate error.  No branch-locus estimate is needed at
 this boundary.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -86,6 +90,7 @@ noncomputable def frobeniusTwistFieldRationalPlaceCount
   frobeniusTwistFieldRationalFinitePlaceCount C S N hExact g +
     frobeniusTwistFieldRationalInfinityPlaceCount C S N hExact g
 
+omit [Finite S] [DecidableEq S] [DecidableEq (RatFunc S)] in
 /-- The split definition is the actual complete degree-one place count of
 the twist field. -/
 theorem frobeniusTwistFieldRationalPlaceCount_eq_finiteExtensionRationalPlaceCount
@@ -153,6 +158,7 @@ theorem frobeniusTwistFieldRationalPlaceCount_eq_finiteExtensionRationalPlaceCou
       FiniteExtensionRationalInfinityPlace C F)
   exact Nat.card_sum.symm
 
+omit [DecidableEq S] [DecidableEq (RatFunc S)] in
 /-- The infinity contribution of each twist is bounded by the degree of the
 original function field, independently of the auxiliary constant extension.
 -/

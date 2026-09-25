@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.AuxiliaryFamily
-import Mathlib.Algebra.Polynomial.BigOperators
-import Mathlib.Algebra.Polynomial.Bivariate
-import Mathlib.FieldTheory.Minpoly.Field
-import Mathlib.RingTheory.Polynomial.Resultant.Basic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.AuxiliaryFamily
+public import Mathlib.Algebra.Polynomial.BigOperators
+public import Mathlib.Algebra.Polynomial.Bivariate
+public import Mathlib.FieldTheory.Minpoly.Field
+public import Mathlib.RingTheory.Polynomial.Resultant.Basic
 
 /-!
 # Degree bounds for bivariate resultants
@@ -25,6 +27,8 @@ bound for determinants: each determinant term uses exactly one entry from
 every Sylvester column, so the coefficient bounds add with the correct
 multiplicities.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceSplittingFormula
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionHasseBoundFromEvenConstantExtensions
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceSplittingFormula
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionHasseBoundFromEvenConstantExtensions
 
 /-!
 # Divisible-even errors from one enlarged constant field
@@ -17,6 +19,8 @@ closed-place count of `C F` at level `m` with the count of `F` at level
 the levels `2 H n` is therefore exactly such an estimate for `F` along the
 fixed divisible-even subsequence `2 (r H) n`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

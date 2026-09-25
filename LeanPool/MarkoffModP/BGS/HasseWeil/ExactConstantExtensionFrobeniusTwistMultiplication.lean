@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistConstants
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistDegree
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistConstants
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistDegree
 
 /-!
 # Multiplication presentation of Frobenius-twist constant extensions
@@ -19,6 +21,8 @@ This is the field-level transport needed to compare the differents, genera,
 and Riemann budgets of all twists without identifying the twist fields over
 `C(X)` themselves.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionPlaceSplittingMultiplicity
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlaceFrobeniusAverage
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistFinitePlaceUnramified
-import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlaceTower
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionPlaceSplittingMultiplicity
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlaceFrobeniusAverage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistFinitePlaceUnramified
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlaceTower
 
 /-!
 # Finite-place Frobenius-twist averaging over an intermediate base
@@ -15,6 +17,8 @@ import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlaceTower
 This file proves the finite-place part of Stichtenoth's Frobenius-twist
 average for `C(X) \subseteq L \subseteq N`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Pointwise Polynomial TensorProduct
 
@@ -107,6 +111,11 @@ local instance intermediateAverageConstantTower : IsScalarTower C L N := by
 local instance intermediateAverageRationalFinitePlaceFintype :
     Fintype (FiniteExtensionRationalFinitePlace C L) := Fintype.ofFinite _
 
+omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] [Algebra (RatFunc C) L]
+  [FiniteDimensional (RatFunc C) L] [Algebra.IsSeparable (RatFunc C) L]
+  [IsScalarTower (RatFunc C) L N] [IsGalois L N] in
 /-- The exact constant extension is finite-dimensional over every
 intermediate function field `L`. -/
 private theorem finiteDimensional_exactConstantExtension_over_intermediateBase
@@ -135,6 +144,11 @@ private theorem finiteDimensional_exactConstantExtension_over_intermediateBase
   let : Module.Finite L T := Module.Finite.trans N T
   infer_instance
 
+omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] [FiniteDimensional C S] [IsGalois C S]
+  [FiniteDimensional (RatFunc C) L] [Algebra.IsSeparable (RatFunc C) L]
+  [FiniteDimensional L N] [IsGalois L N] in
 /-- Compatibility of the rational-function and intermediate-base algebra
 maps on the exact constant extension. -/
 private theorem exactConstantExtensionIntermediate_ratFuncBaseTower :
@@ -405,6 +419,8 @@ omit [FiniteDimensional (RatFunc C) L]
   [FiniteDimensional (RatFunc C) N]
   [Algebra.IsSeparable (RatFunc C) N]
   [FiniteDimensional L N] [IsGalois L N] in
+omit [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] in
 /-- A power of the generic intermediate-base twist acts on the enlarged
 constants by the same power of finite-field Frobenius. -/
 private theorem intermediateFrobeniusTwist_zpow_includeLeft
@@ -958,6 +974,10 @@ theorem exactConstantExtensionFinitePlace_frobeniusFiber_fixedPoint_sum_of_under
   exact exactConstantExtensionFinitePlace_frobeniusFiber_fixedPoint_sum
     C S N hExact L q hBaseQ hDegreeDiv
 
+omit [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] [FiniteDimensional (RatFunc C) L]
+  [Algebra.IsSeparable (RatFunc C) L] in
 /-- The Frobenius-fiber parametrization sends `g` to the ambient twist
 `(Frob, g)` over the intermediate field. -/
 @[simp]
@@ -1517,6 +1537,10 @@ theorem sum_intermediateFrobeniusTwistFieldRationalFinitePlaceCount_eq_card_galo
     _ = Nat.card (N ≃ₐ[L] N) *
           Nat.card (FiniteExtensionRationalFinitePlace C L) := Nat.mul_comm _ _
 
+omit [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] [FiniteDimensional (RatFunc C) L]
+  [Algebra.IsSeparable (RatFunc C) L] [FiniteDimensional L N] [IsGalois L N] in
 /-- Viewing an intermediate-base Frobenius twist over `C(X)` does not change
 its underlying automorphism of the exact constant extension. -/
 theorem exactConstantExtensionFrobeniusTwist_restrictScalars_apply

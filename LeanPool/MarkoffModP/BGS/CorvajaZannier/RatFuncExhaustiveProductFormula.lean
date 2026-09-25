@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FunctionFieldProductFormula
-import Mathlib.RingTheory.UniqueFactorizationDomain.Finsupp
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FunctionFieldProductFormula
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Finsupp
 
 /-!
 # The exhaustive finite-place product formula for the rational function field
@@ -17,6 +19,8 @@ so the degree-weighted sum can be reindexed to normalized polynomial
 factorization.  The resulting exhaustive finite-place sum is `f.intDegree`;
 after adding Mathlib's order at infinity, the total is zero.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors
 open IsDedekindDomain Polynomial UniqueFactorizationMonoid

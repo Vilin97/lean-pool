@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPlaceOrder
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPlaceOrder
+public import Mathlib.Tactic
 
 /-!
 # Height of a polynomial in a finite rational-function extension
@@ -23,6 +25,8 @@ nonpositive.  The positive part is therefore exactly the finite-place degree
 sum, which is evaluated by the norm and the rational-function product formula.
 No algebraic-closedness hypothesis on the constant field is needed.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors Polynomial
 open IsDedekindDomain Multiplicative WithZero

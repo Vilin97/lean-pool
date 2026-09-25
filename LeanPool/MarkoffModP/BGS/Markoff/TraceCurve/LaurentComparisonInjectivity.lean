@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.SyntacticDivisionCriterion
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedIrreducibility
-import Mathlib.FieldTheory.RatFunc.IntermediateField
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.SyntacticDivisionCriterion
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedIrreducibility
+public import Mathlib.FieldTheory.RatFunc.IntermediateField
 
 /-!
 # Injectivity of the Laurent comparison from cover irreducibility
@@ -18,6 +20,8 @@ parameter in a rational-function field.  An irreducible cleared cover polynomial
 minimal polynomial of the `xi` coordinate, so evaluation has exactly the expected principal
 kernel.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 
@@ -153,7 +157,8 @@ theorem finTwoToIteratedPolynomial_aeval
         finTwoToIteratedPolynomial_X_one]
   exact DFunLike.congr_fun heq p
 
-private def splitTraceEtaPolynomialEvaluation
+/-- Evaluate a coefficient polynomial at the transcendental Kummer eta coordinate. -/
+def splitTraceEtaPolynomialEvaluation
     (sigma : K) (e d : ℕ) :
     K[X] →ₐ[K] SplitTraceXiFunctionField K sigma e d :=
   Polynomial.aeval (splitTraceEtaRootInXiField sigma e d)
@@ -166,7 +171,8 @@ private theorem splitTraceEtaPolynomialEvaluation_injective
     (splitTraceEtaRootInXiField_transcendental
       sigma hsigma e d heOdd hdOdd hde)
 
-private def splitTraceEtaRatFuncEvaluation
+/-- Specialize rational functions at the transcendental Kummer eta coordinate. -/
+def splitTraceEtaRatFuncEvaluation
     (sigma : K) (hsigma : sigma ≠ 0) (e d : ℕ)
     (heOdd : Odd e) (hdOdd : Odd d) (hde : d.Coprime e) :
     RatFunc K →ₐ[K] SplitTraceXiFunctionField K sigma e d := by
@@ -183,8 +189,9 @@ private def splitTraceEtaRatFuncEvaluation
     (L := SplitTraceXiFunctionField K sigma e d)
     (splitTraceEtaPolynomialEvaluation sigma e d)
     (nonZeroDivisors_le_comap_nonZeroDivisors_of_injective _
-      (splitTraceEtaPolynomialEvaluation_injective
-        sigma hsigma e d heOdd hdOdd hde))
+      (by
+        exact splitTraceEtaPolynomialEvaluation_injective
+          sigma hsigma e d heOdd hdOdd hde))
 
 private theorem splitTraceEtaRatFuncEvaluation_algebraMap
     (sigma : K) (hsigma : sigma ≠ 0) (e d : ℕ)

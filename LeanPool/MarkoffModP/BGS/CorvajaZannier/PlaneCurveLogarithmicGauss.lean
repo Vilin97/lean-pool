@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSupportDeterminant
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSupportDeterminant
+public import Mathlib.Tactic
 
 /-!
 # The logarithmic Gauss direction of a plane curve
@@ -21,6 +23,8 @@ constant field.  Hence the logarithmic Gauss ratio cannot be constant on the
 curve.  This isolates the high-characteristic input needed by the
 logarithmic-Gauss route to the powered-image index bound.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

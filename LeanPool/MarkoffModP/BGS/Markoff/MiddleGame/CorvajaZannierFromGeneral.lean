@@ -3,17 +3,21 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.WeilFromGeneralHasse
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceBound
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedIrreducibility
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedNotSubtorus
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.GeneralCorvajaZannier
+
+public import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.WeilFromGeneralHasse
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceBound
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedIrreducibility
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedNotSubtorus
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.GeneralCorvajaZannier
 
 /-!
 # Applying general Corvaja--Zannier to the weighted trace curve
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

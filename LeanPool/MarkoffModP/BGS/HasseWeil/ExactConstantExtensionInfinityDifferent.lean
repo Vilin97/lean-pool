@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFiniteDifferent
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldInfinityDifferent
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFiniteDifferent
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldInfinityDifferent
 
 /-!
 # The infinity different after exact constant extension
@@ -17,6 +19,8 @@ linearly disjoint, while the coefficient extension of infinity valuation
 rings has unit different. The linear-disjoint different theorem therefore
 identifies the new infinity different with the extension of the old one.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 
@@ -41,196 +45,11 @@ local instance exactConstantExtensionInfinityDifferentDecidableEqBaseRatFunc :
 local instance exactConstantExtensionInfinityDifferentDecidableEqExtendedRatFunc :
     DecidableEq (RatFunc S) := Classical.decEq _
 
-@[reducible] private noncomputable def
-    exactConstantExtensionInfinityDifferentCanonicalFractionRingAlgebra
-    (R : Type*) [CommRing R] [IsDomain R] :
-    Algebra R (FractionRing R) := inferInstance
-
-private theorem exactConstantExtensionInfinityDifferentCanonicalFractionRing
-    (R : Type*) [CommRing R] [IsDomain R] :
-    let := exactConstantExtensionInfinityDifferentCanonicalFractionRingAlgebra R
-    IsFractionRing R (FractionRing R) := by
-  let := exactConstantExtensionInfinityDifferentCanonicalFractionRingAlgebra R
-  infer_instance
-
-private theorem different_eq_map_of_disjoint_fields
-    (A B R₁ R₂ K L : Type*)
-    [CommRing A] [IsDomain A] [IsIntegrallyClosed A]
-    [CommRing B] [IsDedekindDomain B]
-    [CommRing R₁] [IsDedekindDomain R₁]
-    [CommRing R₂] [IsDedekindDomain R₂] [Field K] [Field L]
-    [Algebra A K] [IsFractionRing A K] [Algebra B L] [IsFractionRing B L]
-    [Algebra A L] [Algebra K L] [FiniteDimensional K L] [Algebra.IsSeparable K L]
-    [IsScalarTower A K L] [Algebra A B] [IsScalarTower A B L]
-    [FaithfulSMul A B] [Module.Finite A B] [Module.IsTorsionFree A B]
-    [Algebra A R₁] [Algebra A R₂] [Algebra R₁ B] [Algebra R₂ B]
-    [Algebra R₁ L] [Algebra R₂ L]
-    [IsScalarTower A R₁ L] [IsScalarTower R₁ B L] [IsScalarTower R₂ B L]
-    [Module.Finite A R₁] [Module.Finite A R₂] [Module.Free A R₂]
-    [Module.Finite R₁ B] [Module.Finite R₂ B]
-    [IsScalarTower A R₁ B] [IsScalarTower A R₂ B]
-    [Module.IsTorsionFree A R₁] [Module.IsTorsionFree A R₂]
-    [Module.IsTorsionFree R₁ B] [Module.IsTorsionFree R₂ B]
-    [IsIntegralClosure B R₁ L]
-    (F₁ F₂ : IntermediateField K L)
-    [Algebra R₁ F₁] [Algebra R₂ F₂] [Module.IsTorsionFree R₁ F₁]
-    [IsFractionRing R₁ F₁] [IsFractionRing R₂ F₂]
-    [IsScalarTower A F₂ L] [IsScalarTower A R₂ F₂]
-    [IsScalarTower R₁ F₁ L] [IsScalarTower R₂ F₂ L]
-    [Algebra.IsSeparable K F₂] [Algebra.IsSeparable F₁ L]
-    [IsLocalization (Algebra.algebraMapSubmonoid R₂ (nonZeroDivisors A)) F₂]
-    (hdisjoint : F₁.LinearDisjoint F₂) (hsup : F₁ ⊔ F₂ = ⊤)
-    (hcoprime : IsCoprime
-      ((differentIdeal A R₁).map (algebraMap R₁ B))
-      ((differentIdeal A R₂).map (algebraMap R₂ B))) :
-    differentIdeal R₁ B = Ideal.map (algebraMap R₂ B) (differentIdeal A R₂) := by
-  let : Algebra A (FractionRing A) := exactConstantExtensionInfinityDifferentCanonicalFractionRingAlgebra A
-  let : SMul A (FractionRing A) := Algebra.toSMul
-  let : IsFractionRing A (FractionRing A) := exactConstantExtensionInfinityDifferentCanonicalFractionRing A
-  let : Algebra B (FractionRing B) := exactConstantExtensionInfinityDifferentCanonicalFractionRingAlgebra B
-  let : SMul B (FractionRing B) := Algebra.toSMul
-  let : IsFractionRing B (FractionRing B) := exactConstantExtensionInfinityDifferentCanonicalFractionRing B
-  let : Algebra A (FractionRing B) :=
-    RingHom.toAlgebra ((algebraMap B (FractionRing B)).comp (algebraMap A B))
-  let : SMul A (FractionRing B) := Algebra.toSMul
-  let : IsScalarTower A B (FractionRing B) := IsScalarTower.of_algebraMap_eq' rfl
-  let : FaithfulSMul A (FractionRing B) := by
-    rw [faithfulSMul_iff_algebraMap_injective]
-    change Function.Injective
-      ((algebraMap B (FractionRing B)).comp (algebraMap A B))
-    exact (IsFractionRing.injective B (FractionRing B)).comp
-      (FaithfulSMul.algebraMap_injective A B)
-  let : Algebra (FractionRing A) (FractionRing B) := FractionRing.liftAlgebra A (FractionRing B)
-  let : SMul (FractionRing A) (FractionRing B) := Algebra.toSMul
-  let : IsScalarTower A (FractionRing A) (FractionRing B) :=
-    FractionRing.isScalarTower_liftAlgebra A (FractionRing B)
-  let : Algebra.IsSeparable (FractionRing A) (FractionRing B) := by
-    refine Algebra.IsSeparable.of_equiv_equiv
-      (FractionRing.algEquiv A K).symm.toRingEquiv
-      (FractionRing.algEquiv B L).symm.toRingEquiv ?_
-    ext z
-    exact IsFractionRing.algEquiv_commutes
-      (FractionRing.algEquiv A K).symm (FractionRing.algEquiv B L).symm z
-  exact IsDedekindDomain.differentIdeal_eq_map_differentIdeal
-    (K := K) (L := L) (F₁ := F₁) (F₂ := F₂) A B R₁ R₂ hdisjoint hsup hcoprime
-
-private theorem finite_torsionFree_of_integral_base_change
-    (A R₁ R₂ B K L : Type*)
-    [CommRing A] [CommRing R₁] [CommRing R₂] [CommRing B] [Field K] [Field L]
-    [IsDedekindDomain R₂]
-    [Algebra A R₁] [Algebra A R₂] [Algebra A L]
-    [Algebra R₁ L] [Algebra R₂ L] [Algebra B L] [Algebra R₂ B]
-    [Algebra R₂ K] [IsFractionRing R₂ K] [Algebra K L]
-    [IsScalarTower R₂ K L] [IsScalarTower R₂ B L] [Module.IsTorsionFree R₂ L]
-    [IsScalarTower A R₁ L] [IsScalarTower A R₂ L]
-    [Algebra.IsIntegral A R₁] [Algebra.IsIntegral A R₂]
-    [FiniteDimensional K L] [Algebra.IsSeparable K L]
-    [IsIntegralClosure B R₁ L] :
-    Module.Finite R₂ B ∧ Module.IsTorsionFree R₂ B := by
-  let : IsIntegralClosure B R₂ L := by
-    refine ⟨IsIntegralClosure.algebraMap_injective B R₁ L, ?_⟩
-    intro x
-    constructor
-    · intro hx
-      have hxA : IsIntegral A x := isIntegral_trans (R := A) x hx
-      exact (IsIntegralClosure.isIntegral_iff (A := B) (R := R₁)).mp hxA.tower_top
-    · intro hx
-      have hxR₁ : IsIntegral R₁ x :=
-        (IsIntegralClosure.isIntegral_iff (A := B) (R := R₁)).mpr hx
-      exact (isIntegral_trans (R := A) x hxR₁).tower_top
-  exact ⟨IsIntegralClosure.finite R₂ K L B, IsIntegralClosure.isTorsionFree R₂ L⟩
-
-private theorem different_eq_map_of_disjoint_ranges
-    (A R₁ R₂ B K K₁ K₂ L : Type*)
-    [CommRing A] [IsDomain A] [IsPrincipalIdealRing A]
-    [CommRing R₁] [IsDedekindDomain R₁]
-    [CommRing R₂] [IsDedekindDomain R₂] [CommRing B] [IsDedekindDomain B]
-    [Field K] [Field K₁] [Field K₂] [Field L]
-    [Algebra A K] [IsFractionRing A K]
-    [Algebra K K₁] [Algebra K K₂] [Algebra K L]
-    [Algebra K₁ L] [Algebra K₂ L] [Algebra A K₂]
-    [IsScalarTower K K₁ L] [IsScalarTower K K₂ L] [IsScalarTower A K K₂]
-    [Algebra A R₁] [Algebra A R₂] [Algebra A B] [Algebra A L]
-    [Algebra R₁ K₁] [IsFractionRing R₁ K₁]
-    [Algebra R₂ K₂] [IsFractionRing R₂ K₂]
-    [Algebra R₁ B] [Algebra R₂ B] [Algebra R₁ L] [Algebra R₂ L] [Algebra B L]
-    [IsScalarTower A K L] [IsScalarTower A K₂ L]
-    [IsScalarTower R₁ K₁ L] [IsScalarTower R₂ K₂ L]
-    [IsScalarTower A R₂ K₂] [IsScalarTower A R₁ L] [IsScalarTower A R₂ L]
-    [IsScalarTower A R₁ B] [IsScalarTower A R₂ B]
-    [IsScalarTower R₁ B L] [IsScalarTower R₂ B L] [IsScalarTower A B L]
-    [FiniteDimensional K K₂] [FiniteDimensional K L] [Algebra.IsSeparable K L]
-    [Module.Finite A R₁] [Module.Finite A R₂] [Module.Free A R₂]
-    [Module.IsTorsionFree A R₁] [Module.IsTorsionFree A R₂]
-    [Module.IsTorsionFree R₁ L] [Module.IsTorsionFree R₂ L]
-    [Module.IsTorsionFree R₁ B]
-    [IsIntegralClosure R₂ A K₂] [IsIntegralClosure B R₁ L]
-    (hdisjoint : (IsScalarTower.toAlgHom K K₁ L).fieldRange.LinearDisjoint
-      (IsScalarTower.toAlgHom K K₂ L).fieldRange)
-    (hsup : (IsScalarTower.toAlgHom K K₁ L).fieldRange ⊔
-      (IsScalarTower.toAlgHom K K₂ L).fieldRange = ⊤)
-    (hcoprime : IsCoprime ((differentIdeal A R₁).map (algebraMap R₁ B))
-      ((differentIdeal A R₂).map (algebraMap R₂ B))) :
-    differentIdeal R₁ B = Ideal.map (algebraMap R₂ B) (differentIdeal A R₂) := by
-  let f₁ := IsScalarTower.toAlgHom K K₁ L
-  let f₂ := IsScalarTower.toAlgHom K K₂ L
-  let F₁ := f₁.fieldRange
-  let F₂ := f₂.fieldRange
-  let e₁ := f₁.equivFieldRange
-  let e₂ := f₂.equivFieldRange
-  let : Algebra R₁ F₁ :=
-    RingHom.toAlgebra (e₁.toRingHom.comp (algebraMap R₁ K₁))
-  let e₁inf : K₁ ≃ₐ[R₁] F₁ := { e₁.toRingEquiv with commutes' := fun _ => rfl }
-  let : IsFractionRing R₁ F₁ := IsFractionRing.of_algEquiv e₁inf
-  let : Module.IsTorsionFree R₁ F₁ := by
-    rw [Module.isTorsionFree_iff_algebraMap_injective]
-    exact IsFractionRing.injective R₁ F₁
-  let : IsScalarTower R₁ F₁ L := IsScalarTower.of_algebraMap_eq (fun z => by
-    change algebraMap R₁ L z = algebraMap K₁ L (algebraMap R₁ K₁ z)
-    exact IsScalarTower.algebraMap_apply R₁ K₁ L z)
-  let : Algebra R₂ F₂ :=
-    RingHom.toAlgebra (e₂.toRingHom.comp (algebraMap R₂ K₂))
-  let e₂norm : K₂ ≃ₐ[R₂] F₂ := { e₂.toRingEquiv with commutes' := fun _ => rfl }
-  let : IsFractionRing R₂ F₂ := IsFractionRing.of_algEquiv e₂norm
-  let : IsScalarTower R₂ F₂ L := IsScalarTower.of_algebraMap_eq (fun z => by
-    change algebraMap R₂ L z = algebraMap K₂ L (algebraMap R₂ K₂ z)
-    exact IsScalarTower.algebraMap_apply R₂ K₂ L z)
-  let : Algebra A F₂ := IntermediateField.algebra' F₂
-  let : IsScalarTower A R₂ F₂ := IsScalarTower.of_algebraMap_eq (fun z => by
-    apply Subtype.ext
-    change algebraMap A L z = algebraMap K₂ L (algebraMap R₂ K₂ (algebraMap A R₂ z))
-    rw [← IsScalarTower.algebraMap_apply A R₂ K₂,
-      ← IsScalarTower.algebraMap_apply A K₂ L])
-  let : IsScalarTower A F₂ L := IsScalarTower.of_algebraMap_eq' rfl
-  let : IsLocalization (Algebra.algebraMapSubmonoid R₂ (nonZeroDivisors A)) K₂ :=
-    IsIntegralClosure.isLocalization A K K₂ R₂
-  let : IsLocalization (Algebra.algebraMapSubmonoid R₂ (nonZeroDivisors A)) F₂ :=
-    IsLocalization.isLocalization_of_algEquiv _ e₂norm
-  have hnormalization := finite_torsionFree_of_integral_base_change A R₁ R₂ B F₂ L
-  let : Module.Finite R₂ B := hnormalization.1
-  let : Module.IsTorsionFree R₂ B := hnormalization.2
-  let : Module.Finite R₁ B := IsIntegralClosure.finite R₁ F₁ L B
-  let : Module.Finite A B := Module.Finite.trans R₂ B
-  let : Module.IsTorsionFree A B := by
-    rw [Module.isTorsionFree_iff_algebraMap_injective]
-    have hR₂B := Module.isTorsionFree_iff_algebraMap_injective.mp
-      (show Module.IsTorsionFree R₂ B from inferInstance)
-    have hAR₂ := Module.isTorsionFree_iff_algebraMap_injective.mp
-      (show Module.IsTorsionFree A R₂ from inferInstance)
-    intro x y hxy
-    apply hAR₂
-    apply hR₂B
-    exact (IsScalarTower.algebraMap_apply A R₂ B x).symm.trans
-      (hxy.trans (IsScalarTower.algebraMap_apply A R₂ B y))
-  let : IsFractionRing B L :=
-    IsIntegralClosure.isFractionRing_of_finite_extension R₁ F₁ L B
-  exact different_eq_map_of_disjoint_fields A B R₁ R₂ K L F₁ F₂ hdisjoint hsup hcoprime
-
 variable (hExact : algebraicClosure C N =
   (⊥ : IntermediateField C N))
 
-private noncomputable def
-    exactConstantExtensionInfinityDifferentNormalizationRingHom
+/-- The ambient constant-extension embedding restricts to the infinity integral closures. -/
+noncomputable def exactConstantExtensionInfinityDifferentNormalizationRingHom
     [Fintype C] [Finite S] :
     let L := ExactConstantExtension C N S
     let : Field L := exactConstantExtensionField C N S hExact
@@ -638,7 +457,7 @@ theorem exactConstantExtension_infinityDifferent_eq_map
       ((differentIdeal A R₂).map (algebraMap R₂ B)) := by
     rw [ratFuncInfinityIntegers_coefficient_differentIdeal_eq_top C S, Ideal.map_top]
     exact Ideal.isCoprime_iff_sup_eq.mpr (top_sup_eq _)
-  exact different_eq_map_of_disjoint_ranges A R₁ R₂ B (RatFunc C) (RatFunc S) N L
+  exact different_eq_map_of_linearlyDisjoint_fieldRanges A R₁ R₂ B (RatFunc C) (RatFunc S) N L
     hranges.1 hranges.2 hcoprime
 
 end

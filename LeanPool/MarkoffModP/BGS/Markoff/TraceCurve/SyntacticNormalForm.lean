@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.SemanticNormalForm
-import Mathlib.RingTheory.Ideal.Quotient.Operations
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.SemanticNormalForm
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
 
 /-!
 # Syntactic monomial reduction for the split trace cover
@@ -15,6 +17,8 @@ Euclidean division of `i` by `d` and `j` by `e`.  Its rectangular basis index is
 `(j % e, i % d)`, and its coefficient in the quadratic base function field is
 `u^(i / d) * v^(i / d + j / e)`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureConstantBase
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureConstantBase
 
 /-!
 # Regular constant extensions
@@ -21,6 +23,8 @@ the Hasse--Weil development.  They concern the proved constant base `C(t)`;
 they do not assert compatibility with the not-yet-defined compositum `C F` of
 an arbitrary intermediate function field `F`.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 
@@ -116,6 +120,7 @@ variable (K F S : Type*) [Field K] [Field F] [Field S]
   [FiniteDimensional (FunctionFieldNormalClosureConstantField K F) S]
   [IsGalois (FunctionFieldNormalClosureConstantField K F) S]
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] [FiniteDimensional (RatFunc K) F] in
 /-- A finite Galois extension of the exact constants has field-valued tensor
 product with the function-field normal closure. -/
 theorem functionFieldNormalClosureConstantExtensionTensor_isField :
@@ -127,6 +132,9 @@ theorem functionFieldNormalClosureConstantExtensionTensor_isField :
     (FunctionFieldNormalClosure K F) S
     (functionFieldNormalClosureConstantField_isExact K F)
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] [FiniteDimensional (RatFunc K) F]
+  [FiniteDimensional (↥(FunctionFieldNormalClosureConstantField K F)) S]
+  [IsGalois (↥(FunctionFieldNormalClosureConstantField K F)) S] in
 /-- The constant extension has the expected degree over the original normal
 closure. -/
 theorem functionFieldNormalClosureConstantExtension_finrank_over_normalClosure :
@@ -148,6 +156,7 @@ theorem functionFieldNormalClosureConstantExtension_finrank_over_normalClosure :
     (FunctionFieldNormalClosureConstantField K F)
     (FunctionFieldNormalClosure K F) S
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- The normal closure remains Galois over its proved constant base after a
 finite Galois extension of the exact constants. -/
 theorem functionFieldNormalClosureConstantExtension_isGalois_over_constantBase :

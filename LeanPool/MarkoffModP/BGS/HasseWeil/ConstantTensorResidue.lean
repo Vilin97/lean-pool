@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldCompositum
-import Mathlib.RingTheory.LocalRing.ResidueField.Fiber
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldCompositum
+public import Mathlib.RingTheory.LocalRing.ResidueField.Fiber
 
 /-!
 # Residue fields of constant tensor extensions
@@ -21,6 +23,8 @@ degree is therefore the least common multiple of the degrees of `S` and
 constant extension additionally requires identifying the normalization after
 base change with the corresponding tensor ring.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

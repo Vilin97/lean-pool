@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageBaseChange
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBidegreeBridge
-import Mathlib.FieldTheory.RatFunc.Luroth
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageBaseChange
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBidegreeBridge
+public import Mathlib.FieldTheory.RatFunc.Luroth
 
 /-!
 # Constants in an absolutely irreducible plane-curve function field
@@ -19,6 +21,8 @@ of the second coordinate over the first-coordinate rational subfield.
 
 No geometric Hasse--Weil statement is assumed here.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

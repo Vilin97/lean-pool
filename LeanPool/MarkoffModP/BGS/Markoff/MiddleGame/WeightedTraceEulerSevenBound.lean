@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSevenLargeBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.ElementaryFiniteFieldBound
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSevenLargeBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.ElementaryFiniteFieldBound
+public import Mathlib.Tactic
 
 /-!
 # The exact Euler-seven weighted trace bound
@@ -15,6 +17,8 @@ Above the elementary range this is the χ≤7 Proposition Two endpoint. Below
 that range the roots-of-unity count lands directly in the unchanged
 quotient-by-characteristic branch.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

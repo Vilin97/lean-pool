@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldSubfield
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldSubfield
 
 /-!
 # Composita of finite fields
@@ -22,6 +24,8 @@ Generation is expressed by surjectivity of the canonical tensor-product map.
 This formulation is designed to apply directly to residue fields after a
 constant extension.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.ConicParametrization
-import LeanPool.MarkoffModP.BGS.Markoff.Core.FiniteRotationEigenvalues
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.ConicParametrization
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.FiniteRotationEigenvalues
 
 /-!
 # Periodic points on semisimple fibers
@@ -15,6 +17,8 @@ matrix order from periodicity of a single vector.  Instead it uses the explicit 
 parametrization: on a nonparabolic fiber, rotation multiplies the eigen-coordinate by a chosen
 matrix eigenvalue, so a positive return forces that eigenvalue to be torsion.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

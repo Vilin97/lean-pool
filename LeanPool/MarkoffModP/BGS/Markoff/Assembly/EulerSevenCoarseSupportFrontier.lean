@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseEndgame
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageCoarseLinearTail
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseEndgame
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageCoarseLinearTail
 
 /-!
 # Euler-seven frontier with all support tails discharged
@@ -16,6 +18,8 @@ and half-order comparison.  The only remaining arithmetic certificate is a
 square envelope for the joint maximal-divisor count together with its exact
 Euler-seven cubic inequality.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

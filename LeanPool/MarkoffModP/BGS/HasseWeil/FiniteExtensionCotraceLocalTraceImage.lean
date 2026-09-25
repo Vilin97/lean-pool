@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentCotrace
-import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceApproximation
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentCotrace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceApproximation
 
 /-!
 # Local trace image for cotrace maximality
@@ -16,6 +18,8 @@ the complementary module at an offending extension place; trace duality then
 shows that any prescribed base element of order `-1` is a trace without losing
 the required lower bounds at the places over the chosen base place.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -47,6 +51,7 @@ def heightOneOfPrimesOverFinset (p : HeightOneSpectrum A)
   exact ⟨Q, hQover.1,
     Ideal.ne_bot_of_mem_primesOver p.ne_bot hQover⟩
 
+omit [Algebra.IsIntegral A B] in
 @[simp]
 theorem heightOneOfPrimesOverFinset_asIdeal (p : HeightOneSpectrum A)
     (Q : Ideal B) (hQ : Q ∈ IsDedekindDomain.primesOverFinset p.asIdeal B) :
@@ -69,6 +74,7 @@ theorem mem_primesOverFinset_iff_under_eq (p : HeightOneSpectrum A)
     rw [Ideal.liesOver_iff]
     exact (congrArg HeightOneSpectrum.asIdeal h).symm
 
+omit [Algebra.IsIntegral A B] in
 /-- Every ideal selected by `primesOverFinset` is prime in the factorization
 monoid sense required by the weak-approximation theorem. -/
 theorem prime_of_mem_primesOverFinset (p : HeightOneSpectrum A)
@@ -94,6 +100,7 @@ theorem le_count_spanSingleton_of_valuation_le_exp_neg
   have := WithZero.exp_le_exp.mp hval
   omega
 
+omit [Algebra A L] [IsScalarTower A B L] [IsIntegralClosure B A L] in
 /-- Weak approximation realizes simultaneous lower order bounds over one
 base prime and realizes a prescribed negative order exactly at one chosen
 prime. -/

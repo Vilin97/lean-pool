@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Combinatorics.SymmetricChainProduct
-import LeanPool.MarkoffModP.BGS.NumberTheory.PrimePowerFactorization
+
+public import LeanPool.MarkoffModP.BGS.Combinatorics.SymmetricChainProduct
+public import LeanPool.MarkoffModP.BGS.NumberTheory.PrimePowerFactorization
 
 /-!
 # Sperner bounds for divisor exponent boxes
@@ -15,6 +17,8 @@ chains.  The explicit symmetric-chain product construction therefore bounds
 every antichain by the central coefficient of
 `∏ (1 + X + ... + X^e)`.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

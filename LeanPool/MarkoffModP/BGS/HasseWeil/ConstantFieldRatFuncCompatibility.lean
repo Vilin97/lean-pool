@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldAutomorphism
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageBaseChange
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveRatFuncModel
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncConstantExtension
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldAutomorphism
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageBaseChange
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveRatFuncModel
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncConstantExtension
 
 /-!
 # Rational-function models under constant extension
@@ -29,6 +31,8 @@ applied to `K(C) ⊂ E(C_E)`.
 
 No fixed-point or rational-place correspondence is asserted here.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct Polynomial
 
@@ -61,8 +65,7 @@ theorem planeCurveCoordinateRingBaseChangeAlgEquiv_includeRight
   simp [Φ, planeCurveCoordinateRingBaseChangeAlgEquiv,
     planeCurveCoordinateRingMap]
   erw [Ideal.quotientEquivAlg_mk]
-  simp only [MvPolynomial.algebraTensorAlgEquiv_tmul, one_smul]
-  rfl
+  simp only [MvPolynomial.algebraTensorAlgEquiv_tmul, one_smul, MvPolynomial.map_X]
 
 theorem planeCurveFunctionFieldBaseChangeAlgHom_function
     (hf : Irreducible f)

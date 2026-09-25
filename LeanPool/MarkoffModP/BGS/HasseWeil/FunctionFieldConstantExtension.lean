@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveFunctionField
-import Mathlib.FieldTheory.LinearDisjoint
-import Mathlib.RingTheory.Flat.Basic
-import Mathlib.RingTheory.Localization.BaseChange
-import Mathlib.RingTheory.TensorProduct.MvPolynomial
-import Mathlib.RingTheory.TensorProduct.Quotient
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveFunctionField
+public import Mathlib.FieldTheory.LinearDisjoint
+public import Mathlib.RingTheory.Flat.Basic
+public import Mathlib.RingTheory.Localization.BaseChange
+public import Mathlib.RingTheory.TensorProduct.MvPolynomial
+public import Mathlib.RingTheory.TensorProduct.Quotient
 
 /-!
 # Constant extensions of plane-curve function fields
@@ -26,6 +28,8 @@ It then transports this fraction field through the explicit base-change
 equivalence for the plane-curve coordinate ring.  No Galois, Frobenius, place,
 or point-counting assertion is made here.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct nonZeroDivisors
 

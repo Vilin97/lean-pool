@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageCurve
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionGcdDivisorBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionBidegreeCount
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.NumericalCorollary
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.ElementaryFiniteFieldBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBidegreeBridge
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageCurve
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionGcdDivisorBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionBidegreeCount
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.NumericalCorollary
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.ElementaryFiniteFieldBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBidegreeBridge
 
 /-!
 # Composition of the Corvaja--Zannier plane-curve endpoint
@@ -28,6 +30,8 @@ torsion points, satisfies the trivial degree bound, and satisfies the
 Corvaja--Zannier Proposition 2 alternatives.  No axiom or typeclass hides this
 geometric obligation.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

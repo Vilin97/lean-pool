@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.LaurentComparisonInjectivity
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.LaurentComparisonInjectivity
 
 /-!
 # Irreducibility of the odd coprime split trace cover
@@ -21,6 +23,8 @@ that the original polynomial is divisible by the `(d,e)` cover equation.  This p
 source-division theorem without assuming the target irreducibility or either comparison-map
 injectivity statement.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FinitePlaceCompletion
-import Mathlib.RingTheory.DiscreteValuationRing.Basic
-import Mathlib.RingTheory.Derivation.Basic
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FinitePlaceCompletion
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.Derivation.Basic
+public import Mathlib.Tactic
 
 /-!
 # Orders at Dedekind places
@@ -15,6 +17,8 @@ import Mathlib.Tactic
 Extend local orders to zero using a top value and prove their arithmetic and derivation
 estimates through uniformizers.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors
 open IsDedekindDomain Multiplicative WithZero

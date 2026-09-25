@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.HasseWeilAssumption
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.HasseWeilAssumption
 
 /-!
 # Witness-preserving equations for the cage fiber product
@@ -13,6 +15,8 @@ This file gives the exact algebraic bridge for the canonical pair of axes.
 It deliberately retains the two intersection witnesses.  No point-count or
 irreducibility assertion is made here.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

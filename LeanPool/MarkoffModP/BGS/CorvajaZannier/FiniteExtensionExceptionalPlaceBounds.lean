@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExceptionalSupport
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionOneSubGcdHeight
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExceptionalSupport
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionOneSubGcdHeight
+public import Mathlib.Tactic
 
 /-!
 # Direct weighted bounds on exhaustive exceptional places
@@ -17,6 +19,8 @@ sum of finite and infinite places.  This file records the corresponding
 subset lower bound and specializes it to the one-minus quotient used in
 Proposition 2.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

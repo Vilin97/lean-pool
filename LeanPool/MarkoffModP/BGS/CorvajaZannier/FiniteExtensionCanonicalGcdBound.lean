@@ -3,16 +3,20 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionOneSubGcdHeight
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianSummation
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionOneSubGcdHeight
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianSummation
+public import Mathlib.Tactic
 
 /-!
 # A gcd bound from the canonical Wronskian inequality
 
 Deduce the finite-extension gcd estimate from the residue-weighted canonical Wronskian bound.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

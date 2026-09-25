@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageHeightFactor
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageHeightFactor
+public import Mathlib.Tactic
 
 /-!
 # The common source-to-powered-image index
@@ -20,6 +22,8 @@ These statements do not identify image-curve degrees with source heights.
 The missing exponent-independent bound on the common index is a genuinely
 additional logarithmic-geometric input.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

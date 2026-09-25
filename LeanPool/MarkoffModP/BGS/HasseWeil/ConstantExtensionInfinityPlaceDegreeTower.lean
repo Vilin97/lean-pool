@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceSplittingMultiplicity
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceSplittingMultiplicity
 
 /-!
 # Absolute degrees of constant-extension places at infinity
@@ -14,6 +16,8 @@ field presentation with its degree after extending the constants.  Both
 degrees are computed from the same reciprocal-normalization residue field, so
 the comparison is just the residue-field dimension tower.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct nonZeroDivisors
 
@@ -110,6 +114,7 @@ local instance infinityDegreeTowerBaseRatFuncTower :
 variable (hExact : algebraicClosure C N =
   (⊥ : IntermediateField C N))
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)] in
 /-- The degree over the original constants of a presented infinity place is
 the constant-field degree times the degree of its upstairs `S`-place. -/
 theorem exactConstantExtensionPresentedInfinityPlace_degree_baseChange
@@ -219,6 +224,7 @@ theorem exactConstantExtensionPresentedInfinityPlace_degree_baseChange
     _ = Module.finrank C S * Module.finrank S QS.1.ResidueField := by
       rw [hS]
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)] in
 /-- The relative residue degree over the original function field is the
 constant extension degree divided by the same gcd that controls splitting. -/
 theorem exactConstantExtensionPresentedInfinityPlace_relativeInertiaDeg_eq_div_gcd
@@ -320,6 +326,7 @@ theorem exactConstantExtensionPresentedInfinityPlace_relativeInertiaDeg_eq_div_g
   exact eq_div_gcd_of_mul_eq_mul_div_gcd r d _ hd
     (hTower.symm.trans hTop)
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)] in
 /-- A downstairs infinity place of degree `d` has exactly
 `gcd([S : C], d)` places above it in an exact extension of constants. -/
 theorem exactConstantExtensionInfinityPlace_fiber_card_eq_gcd
@@ -510,6 +517,7 @@ noncomputable def exactConstantExtensionPresentedInfinityPlaceFiberEquiv :
 
 include hExact
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)] in
 /-- The presented reciprocal infinity fiber itself has the standard gcd
 cardinality.  This is the presentation-level exhaustiveness form of the
 constant-extension splitting law at infinity. -/

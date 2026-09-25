@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.ConicParametrization
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.ConicParametrization
 
 /-!
 # Parabolic fibers are aperiodic in characteristic zero
@@ -13,6 +15,8 @@ Finite periodicity of a point does not imply finite order of the ambient rotatio
 opening therefore needs a point-level argument at normalized traces `2` and `-2`.  The explicit
 parabolic-line translations give that argument in characteristic zero.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

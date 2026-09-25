@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.OrbitCardBound
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Statements
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.OrbitCardBound
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Statements
 
 /-!
 # The logarithmic lower-bound half of Theorem 1
@@ -14,6 +16,8 @@ The opening proves the exact inequality `p ≤ 20 ^ m ^ 3` for every punctured o
 `m`.  This file performs the analytic conversion that the paper calls immediate and packages it
 with the quantifiers of `EveryOrbitLargeAt` and `TheoremOneStatement`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

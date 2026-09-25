@@ -3,14 +3,16 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePropositionTwoAssembly
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalGcdBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalEulerBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCharacteristicCardinality
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.EndpointComposition
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageFrobeniusRelation
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageFrobeniusRelationSwapped
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePropositionTwoAssembly
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalGcdBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalEulerBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCharacteristicCardinality
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.EndpointComposition
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageFrobeniusRelation
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageFrobeniusRelationSwapped
 
 /-!
 # Geometric Proposition 2 for a plane curve
@@ -20,6 +22,8 @@ Wronskian estimate are assembled here.  The source-to-image index remains an
 explicit premise of the two orientation lemmas; the following endpoint module
 discharges it from the non-subtorus hypothesis.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalAuxiliaryFinitePlaceNormalized
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGlobalGcdBound
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalAuxiliaryFinitePlaceNormalized
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGlobalGcdBound
 
 /-!
 # Global canonical bound from a normalized derivation
@@ -15,6 +17,8 @@ the canonical clearing scalar, and the four local estimates are selected after
 splitting the exhaustive place type.  This module leaves only the four
 corresponding infinity statements as explicit inputs.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

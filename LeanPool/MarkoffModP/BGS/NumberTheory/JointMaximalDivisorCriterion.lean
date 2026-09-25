@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.JointMaximalDivisorCertificate
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.JointMaximalDivisorCertificate
 
 /-!
 # Arithmetic core of the joint maximal-divisor algorithm
@@ -13,6 +15,8 @@ The paper's independent `2C` estimate is replaced by a certified square
 envelope `M^2 ≤ S`. This removes square roots and division from both the
 connectivity test and the rank-refinement bound.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

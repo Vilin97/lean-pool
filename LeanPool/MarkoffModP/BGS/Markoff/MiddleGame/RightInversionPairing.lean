@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEquation
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEquation
 
 /-!
 # The right-coordinate inversion pairing
@@ -15,6 +17,8 @@ with a distinct partner having the same left coordinate.  This gives a genuine
 factor of two for the nonparabolic left support, while leaving the existing
 parabolic escape branch responsible for the two fixed points.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

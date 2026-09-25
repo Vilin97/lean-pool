@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlace
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPerfectResidueCaseI
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.RatFuncExhaustiveProductFormula
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlace
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPerfectResidueCaseI
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.RatFuncExhaustiveProductFormula
 
 /-!
 # Cases I and II at actual finite extension places
@@ -15,6 +17,8 @@ This file supplies the regular-element lifting, finite/perfect residue-field
 bridge, and scaled-derivation forms of the first two local
 Corvaja--Zannier Wronskian estimates.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors Polynomial BigOperators
 open IsDedekindDomain

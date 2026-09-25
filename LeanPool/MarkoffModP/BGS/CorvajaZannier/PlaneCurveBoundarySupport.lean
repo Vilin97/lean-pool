@@ -3,14 +3,16 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityInertiaDegree
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationOrder
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCoordinatePowerHeight
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlaceCases
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionOneSubGcdHeight
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityInertiaDegree
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationOrder
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCoordinatePowerHeight
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlaceCases
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionOneSubGcdHeight
+public import Mathlib.Tactic
 
 /-!
 # Weighted boundary support for a plane curve
@@ -26,6 +28,8 @@ positive-divisor sums.
 The final theorem is stated directly for the zero/pole boundary
 `propositionTwoExceptionalPlaces` of positive coordinate powers.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 open IsDedekindDomain Multiplicative WithZero
@@ -106,6 +110,7 @@ private noncomputable def probeFiniteExtensionPlaceValuation
   | .inl q => q.valuation L
   | .inr P => (primeOverHeightOne (ratFuncInfinityPlace K) P).valuation L
 
+omit [DecidableEq K] in
 private theorem probeFiniteExtensionPlaceValuation_surjective
     (w : FiniteExtensionPlace K L) :
     Function.Surjective (probeFiniteExtensionPlaceValuation K L w) := by
@@ -144,6 +149,7 @@ private theorem probeFiniteExtensionPlaceValuation_eq_exp_neg_order
       exact valuation_eq_exp_neg_finitePlaceOrder
         (primeOverHeightOne (ratFuncInfinityPlace K) P) x hx
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 private theorem probe_finiteExtensionFinitePlace_X_le_one
     (q : FiniteExtensionFinitePlace K L) :
     q.valuation L (algebraMap (RatFunc K) L RatFunc.X) ≤ 1 := by
@@ -152,6 +158,7 @@ private theorem probe_finiteExtensionFinitePlace_X_le_one
     (RatFuncFiniteIntegralClosure K L) L]
   exact q.valuation_le_one _
 
+omit [DecidableEq K] in
 private theorem probe_finiteExtensionInfinityPlace_X_gt_one
     (P : FiniteExtensionInfinityPlace K L) :
     1 < (primeOverHeightOne (ratFuncInfinityPlace K) P).valuation L
@@ -374,12 +381,14 @@ private def valuationCenterIdeal
   Ideal.comap (integralClosureToValuationSubring (S := S) V hbase)
     (IsLocalRing.maximalIdeal V)
 
+omit [IsDomain R] [IsDedekindDomain S] [IsFractionRing S F] in
 private theorem valuationCenterIdeal_isPrime
     (V : ValuationSubring F)
     (hbase : ∀ r : R, algebraMap R F r ∈ V) :
     (valuationCenterIdeal (S := S) V hbase).IsPrime := by
   exact Ideal.comap_isPrime _ _
 
+omit [IsDomain R] [IsDedekindDomain S] in
 private theorem valuationCenterIdeal_ne_bot_of_mem_nonunits
     (V : ValuationSubring F)
     (hbase : ∀ r : R, algebraMap R F r ∈ V)
@@ -464,6 +473,8 @@ private theorem valuationSubringAt_valuationCenterPlace_eq
 end ValuationCenter
 
 include L in
+omit [DecidableEq (RatFunc K)] [Field L] [Algebra (RatFunc K) L]
+  [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 private theorem probe_ratFuncFinitePlaceDegree_eq_finrank_residue
     (p : HeightOneSpectrum K[X]) :
     Module.finrank K p.asIdeal.ResidueField = ratFuncFinitePlaceDegree p := by
@@ -512,6 +523,7 @@ private theorem probe_finiteExtensionPlaceDegree_inl_eq_finrank_residue
   rw [← probe_ratFuncFinitePlaceDegree_eq_finrank_residue K L p]
   rw [mul_comm, Module.finrank_mul_finrank]
 
+omit [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 private theorem probe_finiteExtensionPlaceDegree_inr_eq_finrank_residue
     (P : FiniteExtensionInfinityPlace K L) :
     finiteExtensionPlaceDegree K L (.inr P) =
@@ -573,6 +585,7 @@ private theorem weightedSum_le_of_injective
   rw [← imageSum]
   exact Finset.sum_le_sum_of_subset imageSubset
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 private theorem finitePlace_of_valuation_positive
     [Algebra K L] [IsScalarTower K (RatFunc K) L]
     (y : L) (hy0 : y ≠ 0) (hpolyX : algebraMap K[X] L Polynomial.X = y)

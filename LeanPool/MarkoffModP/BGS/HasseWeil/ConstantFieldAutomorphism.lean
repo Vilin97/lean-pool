@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldConstantExtension
-import Mathlib.FieldTheory.Finite.Extension
-import Mathlib.FieldTheory.Galois.Basic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldConstantExtension
+public import Mathlib.FieldTheory.Finite.Extension
+public import Mathlib.FieldTheory.Galois.Basic
 
 /-!
 # Automorphisms of plane-curve constant extensions
@@ -24,6 +26,8 @@ acts with exact order `[E : K]` on the base-changed function field.
 This file does not identify fixed points or rational places; those are the
 next local-geometric layer.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

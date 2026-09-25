@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.FieldTheory.RatFunc.IntermediateField
+
+public import Mathlib.FieldTheory.RatFunc.IntermediateField
 
 /-!
 # Linear-fractional automorphisms of a rational function field
@@ -13,6 +15,8 @@ An invertible matrix `((a, b), (c, d))` acts on `K(X)` by sending
 `X` to `(aX+b)/(cX+d)`.  This file constructs that action as a `K`-algebra
 equivalence and records its action on `X` and on embedded polynomials.
 -/
+
+@[expose] public section
 
 namespace BGS.Algebra
 

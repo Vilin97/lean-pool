@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOneAutomatic
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaHasseBound
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOneAutomatic
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaHasseBound
 
 /-!
 # Hasse bounds from even exact constant-extension estimates
@@ -20,6 +22,8 @@ The geometric two-sided estimate itself is deliberately left as an explicit
 hypothesis.  Proving it is the remaining Galois-twist boundary; no one-sided
 Stepanov estimate can replace it.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

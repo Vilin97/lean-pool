@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.DivisorBound
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.DivisorBound
 
 /-!
 # An explicit divisor-counting bound
@@ -14,6 +16,8 @@ little-oh argument.  This file keeps the same elementary factorization proof but
 uses a concrete polynomial-versus-exponential estimate.  Its specialization at
 `k = 32` is the numerical input for explicit strong approximation.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

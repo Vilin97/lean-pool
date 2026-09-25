@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistConstants
-import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralFiniteExtensionRiemannLower
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistConstants
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralFiniteExtensionRiemannLower
 
 /-!
 # A common Riemann budget for Frobenius-twist fields
@@ -20,6 +22,8 @@ This file also records that the same twist fields have exact constant field
 `C`, so the common budget and the constant-field input needed by the intrinsic
 Stepanov estimate are available at the same boundary.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

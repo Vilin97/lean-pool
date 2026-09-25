@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.UnitCircle
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Complex.Norm
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.UnitCircle
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Complex.Norm
 
 /-!
 # The cyclotomic defect in the opening
@@ -16,6 +18,8 @@ eigenvalues have been lifted to roots of unity.  The difficult number-field redu
 is not assumed here: given three complex unit-circle lifts, we define the symmetric defect,
 prove its uniform archimedean bound, and prove that it cannot vanish unless all three traces do.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.FieldTheory.LinearDisjoint
-import Mathlib.LinearAlgebra.Dimension.OrzechProperty
+
+public import Mathlib.FieldTheory.LinearDisjoint
+public import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 
 /-!
 # Exact constants and finite constant extensions
@@ -21,6 +23,8 @@ needed here: only the Galois field on the left must be finite.  This is the
 algebraic foundation for the constant-extension twists in Stichtenoth,
 Proposition 5.2.8.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

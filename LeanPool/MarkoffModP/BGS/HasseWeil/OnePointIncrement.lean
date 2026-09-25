@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointBase
-import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceFinitePlaceIncrement
-import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceInfinityPlaceIncrement
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointBase
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceFinitePlaceIncrement
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceInfinityPlaceIncrement
 
 /-!
 # Successive growth of one-point Riemann spaces
@@ -15,6 +17,8 @@ The local residue argument bounds the jump from `L(nP)` to `L((n+1)P)` by
 the degree of `P`. Iterating from `L(0)` also supplies finite-dimensionality
 at every level of the one-point filtration.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

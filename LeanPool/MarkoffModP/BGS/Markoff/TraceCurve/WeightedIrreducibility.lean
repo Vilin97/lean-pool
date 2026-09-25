@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierGeometry
-import Mathlib.Algebra.MvPolynomial.Equiv
-import Mathlib.Algebra.Polynomial.Bivariate
-import Mathlib.RingTheory.Polynomial.GaussLemma
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierGeometry
+public import Mathlib.Algebra.MvPolynomial.Equiv
+public import Mathlib.Algebra.Polynomial.Bivariate
+public import Mathlib.RingTheory.Polynomial.GaussLemma
 
 /-!
 # Absolute irreducibility of the weighted middle-game trace curve
@@ -19,6 +21,8 @@ birational coordinate `u = x / y` is used after passage to the coefficient fract
 The resulting polynomial is the Eisenstein polynomial already proved irreducible in
 `TraceCurveGeometry`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

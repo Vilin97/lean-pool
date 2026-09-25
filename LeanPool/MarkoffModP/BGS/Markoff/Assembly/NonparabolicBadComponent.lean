@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.GiantOrbit
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.ParabolicEscape
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.GiantOrbit
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.ParabolicEscape
 
 /-!
 # Nonparabolic coordinates outside the endgame component
@@ -15,6 +17,8 @@ rotation order at least `p ^ (5 / 6)`. Consequently, once every point at that
 threshold is connected to a fixed base point, every point outside the base
 component has nonparabolic coordinates.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

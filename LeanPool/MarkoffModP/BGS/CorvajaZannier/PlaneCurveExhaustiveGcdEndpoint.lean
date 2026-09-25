@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.EndpointComposition
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionExhaustiveGcdDivisorBound
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.EndpointComposition
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionExhaustiveGcdDivisorBound
 
 /-!
 # Exhaustive gcd divisor at the plane-curve endpoint
@@ -16,6 +18,8 @@ bidegree fiber count supplies the certificate's elementary upper bound, while
 the injection of rational torsion points into the exhaustive divisor lets us
 transfer Proposition 2 downward to the actual torsion-point cardinality.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

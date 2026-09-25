@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceSplittingFormula
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOneFromAllCounts
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionStandardZetaRationality
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceSplittingFormula
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOneFromAllCounts
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionStandardZetaRationality
 
 /-!
 # Automatic divisor-degree index one
@@ -15,6 +17,8 @@ The exact constant-extension splitting formula supplies the sole geometric
 hypothesis of the noncircular F. K. Schmidt argument.  Consequently a finite
 separable function field with exact constants has divisor-degree index one.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 

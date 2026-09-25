@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.LinearAlgebra.Isomorphisms
+
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import Mathlib.LinearAlgebra.Isomorphisms
 
 /-!
 # The linear-algebra inequality in the Cech proof of Riemann's inequality
@@ -27,6 +29,8 @@ finite-dimensional; the ambient space `V` and the subspaces themselves may
 be infinite-dimensional.  This is the abstract finite-dimensional step used
 by the Cech proof of Riemann's inequality.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

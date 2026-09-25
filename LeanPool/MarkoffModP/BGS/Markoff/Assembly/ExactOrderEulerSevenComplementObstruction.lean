@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderComplementObstruction
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenPairedMaximalDivisorMiddleGame
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderComplementObstruction
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenPairedMaximalDivisorMiddleGame
 
 /-!
 # Exact-order obstruction with the Euler-seven cap
@@ -14,6 +16,8 @@ The exact-order root budget and the Euler-seven middle-game cap must concern
 the same maximal bad rotation order.  This file keeps that common witness
 visible instead of composing two unrelated existential statements.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

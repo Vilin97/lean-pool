@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.Derivation.Basic
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
-import Mathlib.LinearAlgebra.Finsupp.LinearCombination
-import Mathlib.Tactic.LinearCombination
+
+public import Mathlib.RingTheory.Derivation.Basic
+public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
+public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
+public import Mathlib.Tactic.LinearCombination
 
 /-!
 # Ordinary Wronskians over differential fields
@@ -21,6 +23,8 @@ The reverse implication is the difficult direction. Its proof normalizes a nonze
 vector, differentiates the resulting row relations, deletes the normalized coordinate, and
 applies induction to the smaller Wronskian.
 -/
+
+@[expose] public section
 
 namespace BGS.Algebra
 

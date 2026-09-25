@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PolynomialSpectral
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PolynomialSpectral
 
 /-!
 # From a zeta numerator to a rank-bounded spectral formula
@@ -19,6 +21,8 @@ polynomial: its reciprocal-root power sums are the extension point-count
 errors.  The zeta-function construction must prove that property; it is not
 an assumed theorem or a replacement for Hasse--Weil.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

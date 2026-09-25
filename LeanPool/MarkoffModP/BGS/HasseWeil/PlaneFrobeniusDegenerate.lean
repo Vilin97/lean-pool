@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFrobeniusDeflation
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFrobeniusDeflation
 
 /-!
 # The zero-coordinate-degree case of Frobenius reduction
@@ -16,6 +18,8 @@ polynomial to have degree one.  Consequently it has one rational root over
 the original field and its affine plane zero set has exactly one point above
 each value of the absent coordinate.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

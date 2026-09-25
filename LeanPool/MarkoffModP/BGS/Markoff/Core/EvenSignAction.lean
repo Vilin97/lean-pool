@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Action
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Action
 
 /-!
 # Even sign changes on the Markoff surface
@@ -14,6 +16,8 @@ The four transformations form a Klein four-group. Vieta involutions commute
 with them, and coordinate transpositions permute them. Thus `Gamma` normalizes
 the even-sign subgroup.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

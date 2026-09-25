@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.DedekindDomain.Different
-import Mathlib.RingTheory.PolynomialAlgebra
-import Mathlib.RingTheory.Unramified.Field
+
+public import Mathlib.RingTheory.DedekindDomain.Different
+public import Mathlib.RingTheory.PolynomialAlgebra
+public import Mathlib.RingTheory.Unramified.Field
 
 /-!
 # The different of a separable coefficient extension
@@ -24,6 +26,8 @@ maximal ideal from the support of the different.
 The final corollary specializes this to arbitrary extensions of finite fields;
 their finiteness and separability are supplied by typeclass inference.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 

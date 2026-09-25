@@ -3,14 +3,16 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSupportDeterminant
-import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
-import Mathlib.GroupTheory.Archimedean
-import Mathlib.Algebra.Polynomial.Homogenize
-import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
-import Mathlib.FieldTheory.IsAlgClosed.Basic
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSupportDeterminant
+public import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
+public import Mathlib.GroupTheory.Archimedean
+public import Mathlib.Algebra.Polynomial.Homogenize
+public import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.Tactic
 
 /-!
 # Absolute irreducibility forces rank-two torus support
@@ -24,6 +26,8 @@ forces that univariate polynomial to have degree one, so a nonzero torus
 character is constant on the curve.  This contradicts the semantic
 `TorusCurveNotSubtorusTranslate` hypothesis.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 
@@ -167,7 +171,8 @@ private theorem integerVectorLine_cyclic {d : Fin 2 → ℤ} (hd : d ≠ 0) :
     simpa [vL] using hk.symm
   exact congrArg Subtype.val heq
 
-private def planeExponentDifference
+/-- The signed coordinate difference between two plane monomial exponents. -/
+def planeExponentDifference
     (r s : Fin 2 →₀ ℕ) : Fin 2 → ℤ :=
   fun i => (s i : ℤ) - (r i : ℤ)
 
@@ -306,7 +311,7 @@ private theorem directionalHomogenization_not_isUnit
         (∑ k ∈ S, g k).coeff e = ∑ k ∈ S, (g k).coeff e := by
       induction S using Finset.induction_on with
       | empty => simp
-      | @insert a S ha ih => simp [ha, ih]
+      | @insert a S ha ih => simp [ha]
     exact coeff_finset_sum _ _
   have htop : q.coeff N ≠ 0 := by
     rw [← hqdeg]
@@ -440,11 +445,11 @@ private theorem exists_directionalPolynomial_representation
   have index_cast : ∀ s ∈ F.support, (index s : ℤ) = parameter s - lo := by
     intro s hs
     rw [show (index s : ℤ) = max (parameter s - lo) 0 by
-      simpa [index] using Int.ofNat_toNat (parameter s - lo)]
+      simp [index] using Int.ofNat_toNat (parameter s - lo)]
     simp [parameter_bounds s hs |>.1]
   have N_cast : (N : ℤ) = hi - lo := by
     rw [show (N : ℤ) = max (hi - lo) 0 by
-      simpa [N] using Int.ofNat_toNat (hi - lo)]
+      simp [N] using Int.ofNat_toNat (hi - lo)]
     have hlohi : lo ≤ hi := Finset.min'_le P hi hhi_mem
     simp [hlohi]
   have index_le : ∀ s ∈ F.support, index s ≤ N := by
@@ -487,7 +492,7 @@ private theorem exists_directionalPolynomial_representation
     rw [show q.coeff (index s) =
         ∑ t ∈ F.support,
           (Polynomial.monomial (index t) (F.coeff t)).coeff (index s) by
-      simpa [q] using coeff_finset_sum (index s) F.support
+      simp [q] using coeff_finset_sum (index s) F.support
         (fun t => Polynomial.monomial (index t) (F.coeff t))]
     rw [Finset.sum_eq_single s]
     · rw [Polynomial.coeff_monomial, ite_eq_left rfl]
@@ -514,7 +519,7 @@ private theorem exists_directionalPolynomial_representation
     rw [show q.coeff n =
         ∑ s ∈ F.support,
           (Polynomial.monomial (index s) (F.coeff s)).coeff n by
-      simpa [q] using coeff_finset_sum n F.support
+      simp [q] using coeff_finset_sum n F.support
         (fun s => Polynomial.monomial (index s) (F.coeff s))]
     simp only [Polynomial.coeff_monomial]
     apply Finset.sum_eq_zero

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveFiniteDifferentBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionBidegreeCount
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveFiniteDifferentBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionBidegreeCount
+public import Mathlib.Tactic
 
 /-!
 # A coarse affine singular-point bound for plane curves
@@ -25,6 +27,8 @@ nonzero second partial derivative make the resultant nonzero, and elementary
 root and fiber counts then bound all affine singular points by
 `((2 * secondDegree - 1) * firstDegree) * secondDegree`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -81,7 +85,7 @@ theorem secondCoordinateCriticalResultant_natDegree_le
         Polynomial.natDegree_mul_le
       _ ≤ firstDegree + 0 :=
         Nat.add_le_add (hFcoeff (i + 1)) (by
-          simpa using
+          simp using
             (Polynomial.natDegree_natCast (R := K) (i + 1)).le)
       _ = firstDegree := Nat.add_zero _
   have hresultant :=

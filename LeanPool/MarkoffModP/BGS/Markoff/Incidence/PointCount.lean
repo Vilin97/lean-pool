@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
-import LeanPool.MarkoffModP.BGS.FiniteField.EllipticCharacterSum
-import LeanPool.MarkoffModP.BGS.FiniteField.QuadraticCharacter
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
+public import LeanPool.MarkoffModP.BGS.FiniteField.EllipticCharacterSum
+public import LeanPool.MarkoffModP.BGS.FiniteField.QuadraticCharacter
 
 /-!
 # Point-count algebra for the incidence auxiliary curve
@@ -14,6 +16,8 @@ import LeanPool.MarkoffModP.BGS.FiniteField.QuadraticCharacter
 This file reduces the off-diagonal auxiliary-curve count to the exact Hasse character sum exposed
 in `BGS.FiniteField.EllipticCharacterSum`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

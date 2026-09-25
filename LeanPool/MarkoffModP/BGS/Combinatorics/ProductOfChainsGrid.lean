@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Tactic
+
+public import Mathlib.Tactic
 
 /-!
 # Symmetric chains in a rectangle
@@ -15,6 +17,8 @@ used in the product-of-chains proof.  A point `(x,y)` in
 The decoder is inverse to the encoder, preserves rank, and is monotone along
 each chain.
 -/
+
+@[expose] public section
 
 namespace BGS.Combinatorics
 
@@ -108,7 +112,7 @@ theorem gridDecodeY_le
 
 theorem gridKey_decode
     {m n k t : ℕ} (hk : k ≤ min m n)
-    (ht : t ≤ m + n - 2 * k) :
+    (_ht : t ≤ m + n - 2 * k) :
     gridKey m n (gridDecodeX m n k t)
         (gridDecodeY m n k t) = k := by
   have hkm : k ≤ m := hk.trans (min_le_left _ _)
@@ -131,7 +135,7 @@ theorem gridKey_decode
 
 theorem gridDecode_rank
     {m n k t : ℕ} (hk : k ≤ min m n)
-    (ht : t ≤ m + n - 2 * k) :
+    (_ht : t ≤ m + n - 2 * k) :
     gridDecodeX m n k t + gridDecodeY m n k t = k + t := by
   have hkm : k ≤ m := hk.trans (min_le_left _ _)
   have hkn : k ≤ n := hk.trans (min_le_right _ _)
@@ -169,7 +173,7 @@ theorem gridDecode_encode_x
         rw [Nat.sub_sub_self hx]
         omega
       simp [gridDecodeX, gridPosition, gridKey, hmn, hshort,
-        min_eq_right hreverse, hdecode, Nat.sub_sub_self hx]
+        min_eq_right hreverse,  Nat.sub_sub_self hx]
   · by_cases hshort : x ≤ n - y
     · have hdecode : y ≤ n - x := by omega
       simp [gridDecodeX, gridPosition, gridKey, hmn,
@@ -180,8 +184,8 @@ theorem gridDecode_encode_x
         rw [Nat.sub_sub_self hy]
         omega
       have hsum : ¬x + y ≤ y + (n - y) := by omega
-      simp [gridDecodeX, gridPosition, gridKey, hmn, hshort,
-        min_eq_right hreverse, hdecode, hsum, Nat.sub_sub_self hy]
+      simp [gridDecodeX, gridPosition, gridKey, hmn, 
+        min_eq_right hreverse,  hsum, Nat.sub_sub_self hy]
       omega
 
 theorem gridDecode_encode_y
@@ -199,7 +203,7 @@ theorem gridDecode_encode_y
         rw [Nat.sub_sub_self hx]
         omega
       simp [gridDecodeY, gridPosition, gridKey, hmn, hshort,
-        min_eq_right hreverse, hdecode, Nat.sub_sub_self hx]
+        min_eq_right hreverse,  Nat.sub_sub_self hx]
       omega
   · by_cases hshort : x ≤ n - y
     · have hdecode : y ≤ n - x := by omega
@@ -210,8 +214,8 @@ theorem gridDecode_encode_y
           ¬x + y - (n - y) ≤ n - (n - y) := by
         rw [Nat.sub_sub_self hy]
         omega
-      simp [gridDecodeY, gridPosition, gridKey, hmn, hshort,
-        min_eq_right hreverse, hdecode, Nat.sub_sub_self hy]
+      simp [gridDecodeY, gridPosition, gridKey, hmn, 
+        min_eq_right hreverse,  Nat.sub_sub_self hy]
       omega
 
 theorem gridDecode_mono

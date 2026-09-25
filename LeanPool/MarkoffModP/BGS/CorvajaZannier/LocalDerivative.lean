@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.LaurentSeries
+
+public import Mathlib.RingTheory.LaurentSeries
 
 /-!
 # Local derivative estimates for Corvaja--Zannier
@@ -17,6 +19,8 @@ order by at most `r`.
 The statements use `HahnSeries.orderTop`, rather than `HahnSeries.order`, so
 that they remain valid when the derivative vanishes.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

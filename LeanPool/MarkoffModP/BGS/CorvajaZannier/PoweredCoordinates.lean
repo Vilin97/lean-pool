@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryIndependence
-import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
-import Mathlib.RingTheory.Coprime.Lemmas
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryIndependence
+public import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
+public import Mathlib.RingTheory.Coprime.Lemmas
 
 /-!
 # Prime-to-characteristic powers of plane-curve coordinates
@@ -25,6 +27,8 @@ powers is supplied.  Constructing that elimination relation, and controlling
 its bidegrees, remains a separate algebraic-geometric step; it is not assumed
 implicitly here.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

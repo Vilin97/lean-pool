@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExhaustiveProductFormula
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityInertiaDegree
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalReciprocalDiscriminant
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveDiscriminantBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveLocalReciprocalDiscriminant
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExhaustiveProductFormula
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityInertiaDegree
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalReciprocalDiscriminant
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveDiscriminantBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveLocalReciprocalDiscriminant
+public import Mathlib.Tactic
 
 /-!
 # The discriminant budget at infinity for a plane curve
@@ -36,6 +38,8 @@ infinity valuation ring.  Identifying a reciprocal translate of that
 polynomial with a primitive element of the plane-curve function field is the
 remaining local normalization step.
 -/
+
+@[expose] public section
 
 open scoped Polynomial nonZeroDivisors
 open Multiplicative WithZero Polynomial IsDedekindDomain

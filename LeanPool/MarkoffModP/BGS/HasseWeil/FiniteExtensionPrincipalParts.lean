@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionLocalPoleQuotient
-import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePrincipalParts
-import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceConstants
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionLocalPoleQuotient
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePrincipalParts
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceConstants
 
 /-!
 # Principal parts of an effective exhaustive divisor
@@ -23,6 +25,8 @@ Consequently `L(D) / L(0)` is finite-dimensional and has dimension at most
 `deg D`.  Under the exact-constant-field hypothesis, the denominator is the
 space of constants.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

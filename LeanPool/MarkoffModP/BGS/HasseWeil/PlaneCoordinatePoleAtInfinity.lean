@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCoordinatePole
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCoordinatePole
 
 /-!
 # The first plane coordinate only has poles above infinity
@@ -18,6 +20,8 @@ Combining this support statement with the previously constructed controlled
 pole place shows that the selected pole may be taken above the rational-
 function place at infinity, without changing its place-degree bound.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

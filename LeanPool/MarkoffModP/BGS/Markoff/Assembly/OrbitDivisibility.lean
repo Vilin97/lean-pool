@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Action
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Action
 
 /-!
 # Divisibility of Markoff orbit cardinalities
@@ -18,6 +20,8 @@ field.  Over `ZMod p`, this says that `p` divides the cardinality.
 The result is stated only for `3 < p`.  This is the range used in Martin's proof and is necessary:
 at `p = 3` the eight points with all coordinates in `{1, -1}` form one Vieta component.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 
@@ -65,7 +69,7 @@ private theorem first_ne_zero_of_third_eq_zero
   intro hx1
   have hx2 : x.1.1.x2 = 0 := by
     have hmark := x.1.2
-    simp [IsMarkoff, markoffPolynomial, hx1, hx3] at hmark
+    simp only [ne_eq] at hmark
     exact hmark
   apply x.2
   apply Subtype.ext
@@ -77,7 +81,7 @@ private theorem second_ne_zero_of_first_eq_zero
   intro hx2
   have hx3 : x.1.1.x3 = 0 := by
     have hmark := x.1.2
-    simp [IsMarkoff, markoffPolynomial, hx1, hx2] at hmark
+    simp only [ne_eq] at hmark
     exact hmark
   apply x.2
   apply Subtype.ext
@@ -89,7 +93,7 @@ private theorem second_ne_zero_of_third_eq_zero
   intro hx2
   have hx1 : x.1.1.x1 = 0 := by
     have hmark := x.1.2
-    simp [IsMarkoff, markoffPolynomial, hx2, hx3] at hmark
+    simp only [ne_eq] at hmark
     exact hmark
   apply x.2
   apply Subtype.ext
@@ -101,7 +105,7 @@ private theorem third_ne_zero_of_first_eq_zero
   intro hx3
   have hx2 : x.1.1.x2 = 0 := by
     have hmark := x.1.2
-    simp [IsMarkoff, markoffPolynomial, hx1, hx3] at hmark
+    simp only [ne_eq] at hmark
     exact hmark
   apply x.2
   apply Subtype.ext
@@ -113,7 +117,7 @@ private theorem third_ne_zero_of_second_eq_zero
   intro hx3
   have hx1 : x.1.1.x1 = 0 := by
     have hmark := x.1.2
-    simp [IsMarkoff, markoffPolynomial, hx2, hx3] at hmark
+    simp only [ne_eq] at hmark
     exact hmark
   apply x.2
   apply Subtype.ext

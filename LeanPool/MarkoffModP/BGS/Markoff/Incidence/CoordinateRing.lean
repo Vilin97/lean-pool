@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Fibers
-import Mathlib.FieldTheory.KummerPolynomial
-import Mathlib.RingTheory.TensorProduct.MvPolynomial
-import Mathlib.RingTheory.TensorProduct.Quotient
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Fibers
+public import Mathlib.FieldTheory.KummerPolynomial
+public import Mathlib.RingTheory.TensorProduct.MvPolynomial
+public import Mathlib.RingTheory.TensorProduct.Quotient
 
 /-!
 # Geometric integrality of the incidence auxiliary coordinate ring
@@ -15,6 +17,8 @@ import Mathlib.RingTheory.TensorProduct.Quotient
 This module proves the missing coordinate-ring algebra by an explicit base change and rank-four
 biquadratic normal form.  Every declaration is proved; there are no placeholder axioms.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

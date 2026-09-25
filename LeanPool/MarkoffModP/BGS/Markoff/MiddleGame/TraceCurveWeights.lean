@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.OrderEscape
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedIrreducibility
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedNotSubtorus
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.OrderEscape
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedIrreducibility
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedNotSubtorus
 
 /-!
 # Nondegeneracy of the actual middle-game trace-curve coefficients
@@ -16,6 +18,8 @@ proves that the two weights coming from every nonzero nonparabolic Markoff fiber
 that their product is not one.  These are the exact coefficient hypotheses used by the subsequent
 absolute-irreducibility and non-subtorus proofs.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

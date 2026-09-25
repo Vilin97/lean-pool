@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderTraceBudget
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicPuncturedSmallOrderCount
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderTraceBudget
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicPuncturedSmallOrderCount
 
 /-!
 # Exact-order square bound for punctured small-order points
@@ -14,6 +16,8 @@ The root-sum convention is retained: `combinedTruncatedOrderTotientSum` counts
 eigenvalue roots, not traces.  Inversion pairing supplies the factor two
 before the two-coordinate Markoff fiber estimate is squared.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

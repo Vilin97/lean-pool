@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierStep
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Geometry
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierStep
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Geometry
 
 /-!
 # The weighted middle-game trace equation
@@ -19,6 +21,8 @@ the elementary quadratic-fiber bound, and the complete bad-order union and pigeo
 The deep weighted Corvaja--Zannier estimate is an explicit theorem hypothesis; it is not encoded
 as an axiom, class, or structure field.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

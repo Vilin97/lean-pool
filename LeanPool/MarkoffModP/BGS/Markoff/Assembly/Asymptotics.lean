@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.PuncturedSmallOrderCount
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.PuncturedSmallOrderCount
 
 /-!
 # The elementary asymptotic in the giant-orbit assembly
@@ -13,6 +15,8 @@ The concrete small-order count is `2 * (2 + 2 * B^2)^2`.  This file proves that 
 `B ≤ p^(ε/5)` makes that count at most `p^ε` for all sufficiently large `p`.  No dynamical
 claim about the cage complement is used here.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

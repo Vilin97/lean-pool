@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSupportRank
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBidegreeBridge
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageBaseChange
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageGaloisBound
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSupportRank
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBidegreeBridge
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageBaseChange
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageGaloisBound
+public import Mathlib.Tactic
 
 /-!
 # The Corvaja--Zannier source-to-powered-image index bound
@@ -18,6 +20,8 @@ constants back to the original constant field.  Absolute irreducibility makes
 the powered-image degree invariant under this extension of constants, while
 the semantic non-subtorus hypothesis supplies the rank-two support determinant.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

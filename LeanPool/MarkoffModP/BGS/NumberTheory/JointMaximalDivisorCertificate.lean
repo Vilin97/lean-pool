@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.MaximalDivisorBounds
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.MaximalDivisorBounds
 
 /-!
 # Exact certificate at the paper's terminal obstruction
@@ -21,6 +23,8 @@ integer `J` is an exact tenth-root upper certificate.
 
 All comparisons below are closed integer computations checked by Lean.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

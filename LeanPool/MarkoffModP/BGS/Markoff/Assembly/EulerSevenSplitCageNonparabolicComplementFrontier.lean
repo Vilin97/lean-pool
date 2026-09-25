@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.SplitCageNonparabolicComplementFrontier
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenNonparabolicComplementFrontier
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.SplitCageNonparabolicComplementFrontier
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenNonparabolicComplementFrontier
 
 /-!
 # Split-cage Euler-seven nonparabolic complement frontier
@@ -13,6 +15,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenNonparabolicComplemen
 The split-cage base discharges the even-sign inputs, while the middle game
 uses the exact paired coefficient `189`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

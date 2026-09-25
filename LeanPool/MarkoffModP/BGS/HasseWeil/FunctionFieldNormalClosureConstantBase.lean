@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureConstants
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionQuotient
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureConstants
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionQuotient
 
 /-!
 # The constant-base field inside the function-field normal closure
@@ -21,6 +23,8 @@ Every element of `C` lies in that fixed field, so it gives a genuine tower
 constant-extension and Frobenius-quotient theorems can therefore be applied
 directly to the normal closure used by the Hasse--Weil proof.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -141,6 +145,7 @@ noncomputable def functionFieldNormalClosureConstantExtensionAutMulEquiv :
     (FunctionFieldNormalClosure K L) S
     (functionFieldNormalClosureConstantField_isExact K L)
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- The specialized constant quotient is onto. -/
 theorem functionFieldNormalClosureConstantExtensionQuotient_surjective :
     let := exactConstantExtensionBaseAlgebra

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EvenSignOrbitDivisibility
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicComplementFrontier
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EvenSignOrbitDivisibility
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicComplementFrontier
 
 /-!
 # Even-sign divisibility for component complements
@@ -13,6 +15,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicComplementFrontier
 This file specializes the free even-sign action to the finite complement used
 by the nonparabolic complement frontier.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

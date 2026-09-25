@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderRankinEnvelope
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderRankinEnvelope
 
 /-!
 # A width-sensitive exact-order Rankin envelope
@@ -18,6 +20,8 @@ the same side-erased Rankin product.
 This is the interface needed for a joint-antichain or symmetric-chain width
 certificate.  It does not assume such a certificate.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

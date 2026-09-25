@@ -3,15 +3,17 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionPlaceSplittingMultiplicity
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionRationalPlace
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlaceFrobeniusAverage
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistFinitePlaceUnramified
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentCotrace
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneRationalPlaceAffineComparison
-import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlaceTower
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionPlaceSplittingMultiplicity
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionRationalPlace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlaceFrobeniusAverage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistFinitePlaceUnramified
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentCotrace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneRationalPlaceAffineComparison
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlaceTower
 
 /-!
 # Global finite-place averaging for Frobenius twists
@@ -20,6 +22,8 @@ This file removes the presentation choice from the local Frobenius-coset
 fixed-point identity and assembles the rational finite places of all
 Frobenius-twist fields without duplication.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct BigOperators
 
@@ -416,6 +420,8 @@ theorem exactConstantExtensionFinitePlace_frobeniusFiber_fixedPoint_sum_of_under
   exact exactConstantExtensionFinitePlace_frobeniusFiber_fixedPoint_sum
     C S N hExact (RatFunc C) q hBaseQ hDegreeDiv
 
+omit [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] in
 /-- The Frobenius-fiber parametrization sends `g` to the ambient
 Frobenius-twist automorphism `(Frob, g)`. -/
 @[simp]

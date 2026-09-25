@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceCount
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceCount
 
 /-!
 # Weighted degree cancellation over finite-support fibers
@@ -14,6 +16,8 @@ finitely supported multiplicities.  The ambient types need not be finite: a
 nonzero downstairs coefficient forces every point in its fiber into the
 finite upstairs support, so the relevant fiber can be counted there.
 -/
+
+@[expose] public section
 
 namespace Finsupp
 

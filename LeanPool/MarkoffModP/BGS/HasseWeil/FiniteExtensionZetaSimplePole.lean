@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorClassRecurrence
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorClassRecurrence
 
 /-!
 # A discrete simple-pole witness for the divisor zeta series
@@ -15,6 +17,8 @@ effective divisors than multiplication by the corresponding power of the
 constant-field cardinality.  This is the coefficient-level noncancellation
 behind the simple pole at `T = 1`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

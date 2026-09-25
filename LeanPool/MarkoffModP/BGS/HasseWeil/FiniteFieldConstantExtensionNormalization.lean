@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldPolynomialNormalization
-import LeanPool.MarkoffModP.BGS.HasseWeil.PolynomialTensorCancel
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldPolynomialNormalization
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PolynomialTensorCancel
 
 /-!
 # Normalization in a finite constant extension
@@ -21,6 +23,8 @@ contractions of height-one primes to the polynomial base.  Its restriction
 to `S` is retained for residue-field dimension calculations.  The values of
 both equivalences on pure tensors are recorded explicitly.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 
@@ -130,9 +134,10 @@ noncomputable def finiteFieldConstantExtensionIntegralClosureAlgEquiv
         (integralClosure C[X] N)).symm.toRingEquiv.trans e with
       commutes' := fun s => by
         apply Subtype.ext
-        simp [e, finiteFieldPolynomialIntegralClosureBaseChangeAlgEquiv,
-          polynomialIntegralClosureBaseChangeAlgEquiv,
-          TensorProduct.toIntegralClosure]
+        simp only [AlgEquiv.symm_toRingEquiv, RingEquiv.symm_mk, AlgEquiv.toEquiv_eq_coe,
+          AlgEquiv.symm_toEquiv_eq_symm, RingEquiv.toEquiv_eq_coe, Algebra.TensorProduct.algebraMap_apply,
+          Algebra.algebraMap_self, RingHom.id_apply, Equiv.toFun_as_coe, EquivLike.coe_coe, RingEquiv.coe_trans,
+          RingEquiv.coe_mk, Function.comp_apply, polynomialTensorCancel_symm_tmul, SetLike.coe_eq_coe]
         change s ⊗ₜ[C] (1 : N) =
           algebraMap S[X] (S ⊗[C] N) (Polynomial.C s)
         change s ⊗ₜ[C] (1 : N) =

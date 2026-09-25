@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaEuler
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaRationalityDegree
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaEuler
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaRationalityDegree
 
 /-!
 # Euler composition with numerator-degree bounds
@@ -14,6 +16,8 @@ This file combines the marked-divisor Euler recurrence with the truncation
 degree bounds.  It is the degree-aware version of the compositions in
 `FormalZetaEuler`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

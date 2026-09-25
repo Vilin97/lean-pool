@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindDifferentDivisor
-import Mathlib.Algebra.Polynomial.Reverse
-import Mathlib.RingTheory.Polynomial.Resultant.Basic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindDifferentDivisor
+public import Mathlib.Algebra.Polynomial.Reverse
+public import Mathlib.RingTheory.Polynomial.Resultant.Basic
 
 /-!
 # Reciprocal normalization at a finite base place
@@ -24,6 +26,8 @@ coefficient-reversal discriminant formula needed for a nonmonic relation was
 not previously available in Mathlib in this form.
 -/
 
+@[expose] public section
+
 namespace BGS.CorvajaZannier
 
 open IsDedekindDomain Polynomial
@@ -32,7 +36,8 @@ noncomputable section
 
 variable {R : Type*} [CommRing R]
 
-private def reflectSylvesterEquiv (m n : ℕ) : Fin (n + m) ≃ Fin (m + n) :=
+/-- Reverse and exchange the two index blocks of a Sylvester matrix. -/
+def reflectSylvesterEquiv (m n : ℕ) : Fin (n + m) ≃ Fin (m + n) :=
   (finCongr (Nat.add_comm n m)).trans Fin.revPerm
 
 @[simp]

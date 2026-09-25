@@ -3,14 +3,16 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionConstants
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionRationalPlaceCount
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionTower
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceSplittingFormula
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionClosedPlaceAlgEquiv
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOne
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureOriginalCompositum
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionConstants
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionRationalPlaceCount
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionTower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceSplittingFormula
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionClosedPlaceAlgEquiv
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOne
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureOriginalCompositum
 
 /-!
 # The exact constant-extension tower of a function-field normal closure
@@ -28,6 +30,8 @@ degree and the two rational-function-field degrees.  This is a structural
 consumer of the exact constant-extension API; it deliberately does not use
 the genus-invariance layer.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 
@@ -883,7 +887,7 @@ theorem functionFieldNormalClosureConstantExtension_card_aut_eq
 /-- The rational-place count of the extended original compositum is the
 packaged level-one exact constant-extension count of that compositum. -/
 theorem
-    functionFieldNormalClosureOriginalCompositumConstantExtension_rationalPlaceCount_eq_exactConstantExtensionCount
+    normalClosureOriginalCompositum_rationalPlaceCount_eq_exactExtensionCount
     (hExact : algebraicClosure K F = (⊥ : IntermediateField K F)) :
     let C := FunctionFieldNormalClosureConstantField K F
     let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
@@ -956,7 +960,7 @@ theorem
 with the packaged exact-extension count of the original function field at
 level `[S : C]`. -/
 theorem
-    functionFieldNormalClosureOriginalCompositumConstantExtension_rationalPlaceCount_eq_originalExactConstantExtensionCount
+    normalClosureOriginalCompositum_rationalPlaceCount_eq_originalExactExtensionCount
     (hExact : algebraicClosure K F = (⊥ : IntermediateField K F)) :
     let N := FunctionFieldNormalClosure K F
     let : Algebra K N := functionFieldNormalClosureConstantAlgebra K F

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityPlace
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.RatFuncExhaustiveProductFormula
-import Mathlib.NumberTheory.FunctionField
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityPlace
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.RatFuncExhaustiveProductFormula
+public import Mathlib.NumberTheory.FunctionField
 
 /-!
 # Exhaustive product formula in a finite extension of `K(X)`
@@ -21,6 +23,8 @@ The final theorem sums the residue-degree-weighted orders at every prime
 above every finite place, with the finite-place degree factor, and at every
 prime above infinity.  The total is zero.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors Polynomial
 open IsDedekindDomain Multiplicative WithZero

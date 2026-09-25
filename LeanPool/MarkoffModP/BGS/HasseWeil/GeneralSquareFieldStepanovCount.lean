@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlace
-import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldResidue
-import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovZeroCount
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldResidue
+public import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovZeroCount
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
+public import Mathlib.Tactic
 
 /-!
 # A square-field Stepanov bound for arbitrary function fields
@@ -24,6 +26,8 @@ The rational places above infinity contribute at most the degree of the
 function-field extension, by the fundamental ramification-inertia equality.
 This gives a uniform estimate suitable for the Frobenius fixed-field twists.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

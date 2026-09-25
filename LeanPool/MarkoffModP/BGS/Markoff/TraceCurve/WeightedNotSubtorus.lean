@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierGeometry
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierGeometry
 
 /-!
 # The weighted trace curve is not a subtorus translate
@@ -13,6 +15,8 @@ This module proves the non-specialness condition needed by the
 Corvaja--Zannier torsion-point bound.  The proof uses the two deck involutions
 of the weighted trace curve and keeps all degenerate parameters explicit.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Algebra.MvPolynomial.PDeriv
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierSourceBound
-import Mathlib.FieldTheory.IsAlgClosed.Basic
-import Mathlib.RingTheory.MvPolynomial.Basic
+
+public import Mathlib.Algebra.MvPolynomial.PDeriv
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierSourceBound
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.MvPolynomial.Basic
 
 /-!
 # General curve-theorem interfaces
@@ -19,6 +21,8 @@ then apply one of these two general statements.  Both interfaces now have
 in-repository inhabitants; keeping the propositions separate makes their
 Markoff-specific applications explicit.
 -/
+
+@[expose] public section
 
 namespace BGS.External
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Statements
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.OrbitDivisibility
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Statements
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.OrbitDivisibility
 
 /-!
 # From a giant divisible orbit to transitivity
@@ -15,6 +17,8 @@ punctured Markoff surface if every orbit cardinality is divisible by `p`.  This 
 finite-orbit argument and combines it with Chen's component-divisibility theorem, using Martin's
 later elementary proof.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

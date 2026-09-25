@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryCaseI
-import Mathlib.FieldTheory.Perfect
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryCaseI
+public import Mathlib.FieldTheory.Perfect
 
 /-!
 # Corvaja--Zannier case (i) over a perfect residue field
@@ -23,6 +25,8 @@ elimination from `DedekindAuxiliaryCaseI` with coefficients in the Frobenius
 subfield.  No algebra structure from the whole Frobenius subfield to the DVR
 is asserted: such a structure would be false at a nontrivial place.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 
@@ -69,7 +73,7 @@ theorem exists_frobeniusSubfield_regular_unit_sub_mul_mem_of_perfect_residue
     rw [map_sub, map_mul, hbMap]
     dsimp [ratio]
     rw [← map_mul]
-    simp
+    simp only [Units.inv_mul_cancel_right]
     change algebraMap R κ (u : R) - algebraMap R κ (u : R) = 0
     exact sub_self _
   have hbFrob : algebraMap R L b ∈ frobeniusSubfield L p := by

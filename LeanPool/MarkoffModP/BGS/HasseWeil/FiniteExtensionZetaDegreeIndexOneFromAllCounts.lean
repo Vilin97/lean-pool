@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOne
-import Mathlib.FieldTheory.Finite.Extension
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaDegreeIndexOne
+public import Mathlib.FieldTheory.Finite.Extension
 
 /-!
 # Choosing the constant extension of divisor-index degree
@@ -17,6 +19,8 @@ extension in every positive degree.  This file isolates that final choice:
 if the closed-place splitting identity is available for every finite Galois
 constant extension, then the divisor-degree index is one.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

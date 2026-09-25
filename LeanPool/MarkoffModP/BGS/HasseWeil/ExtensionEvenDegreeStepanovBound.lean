@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExtensionPointCount
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSquareFieldStepanovCountAutomatic
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExtensionPointCount
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSquareFieldStepanovCountAutomatic
+public import Mathlib.Tactic
 
 /-!
 # A Stepanov upper bound along the even-degree extension sequence
@@ -21,6 +23,8 @@ square-field Stepanov estimate applies directly to the canonical degree
 This is only a one-sided affine estimate.  It does not assert the missing
 lower bound, the sharp Hasse--Weil constant, or a two-sided zeta estimate.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureConstantBase
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncConstantExtension
-import Mathlib.FieldTheory.RatFunc.AsPolynomial
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureConstantBase
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncConstantExtension
+public import Mathlib.FieldTheory.RatFunc.AsPolynomial
 
 /-!
 # The rational-function constant base of the normal closure
@@ -17,6 +19,8 @@ is exactly the fixed field of the automorphisms acting trivially on `C`.
 This is the Galois-theoretic identification of that fixed field with the
 constant extension `C(t)`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -48,6 +52,7 @@ def functionFieldNormalClosureConstantCompositum :
   IntermediateField.adjoin (RatFunc K)
     (Set.range (fun c : FunctionFieldNormalClosureConstantField K L => c.1))
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] [FiniteDimensional (RatFunc K) L] in
 /-- The subgroup fixing the constant compositum is precisely the kernel of
 restriction to the algebraic constant field. -/
 theorem functionFieldNormalClosureConstantCompositum_fixingSubgroup :
@@ -101,6 +106,7 @@ noncomputable instance functionFieldNormalClosureConstantBase_constantTower :
   ext k
   rfl
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] [FiniteDimensional (RatFunc K) L] in
 /-- The original parameter remains transcendental after adjoining all
 algebraic constants of the normal closure. -/
 theorem functionFieldNormalClosureConstantBaseX_transcendental :

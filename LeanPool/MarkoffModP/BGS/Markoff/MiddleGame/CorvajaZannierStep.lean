@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.UnionBound
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.UnionBound
 
 /-!
 # The Corvaja--Zannier middle-game escape step
@@ -20,6 +22,8 @@ are kept in the statement:
 The theorem below reduces the paper-specific order-increase step to one visible numerical
 inequality.  It does not postulate the Corvaja--Zannier theorem.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

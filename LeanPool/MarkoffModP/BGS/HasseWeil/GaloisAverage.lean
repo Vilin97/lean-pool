@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FixedPointAverage
-import Mathlib.Algebra.CharP.Defs
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Asymptotics.Defs
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FixedPointAverage
+public import Mathlib.Algebra.CharP.Defs
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.Asymptotics.Defs
+public import Mathlib.Tactic
 
 /-!
 # The finite averaging step in the Corvaja--Zannier Hasse--Weil argument
@@ -18,6 +20,8 @@ terms.  Every twist has the same upper bound, while their sum is small.  The
 elementary lemma below converts those facts into a two-sided bound for each
 individual twist.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -118,7 +122,7 @@ when the family cardinality is fixed. -/
 theorem abs_base_sub_center_le_of_average_and_pointwise
     {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
     (x : ι → ℝ) (base center A B : ℝ)
-    (hA : 0 ≤ A) (hB : 0 ≤ B)
+    (_hA : 0 ≤ A) (_hB : 0 ≤ B)
     (haverage : |∑ i, x i - (Fintype.card ι : ℝ) * base| ≤ A)
     (hpointwise : ∀ i, |x i - center| ≤ B) :
     |base - center| ≤ A + (Fintype.card ι : ℝ) * B := by

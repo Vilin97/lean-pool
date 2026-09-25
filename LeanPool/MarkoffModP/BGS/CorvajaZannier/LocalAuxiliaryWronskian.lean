@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.AuxiliaryFamily
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalWronskian
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.AuxiliaryFamily
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalWronskian
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
 /-!
 # Local auxiliary-family Wronskian estimates
@@ -31,6 +33,8 @@ Source provenance: published pages 1935--1936; checked semantic reconstruction
 `Papers/CorvajaZannier2013/CorvajaZannier2013.tex`, lines 636--732.  Case (ii)
 is lines 689--691, and the case-(iii) column operation is lines 694--719.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

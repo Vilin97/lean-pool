@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.FiniteField.EllipticCharacterSum
-import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
-import Mathlib.FieldTheory.Finite.Basic
+
+public import LeanPool.MarkoffModP.BGS.FiniteField.EllipticCharacterSum
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import Mathlib.FieldTheory.Finite.Basic
 
 /-!
 # Frobenius setup for the explicit Hasse bound
@@ -16,6 +18,8 @@ This work file develops the Frobenius--norm route to Hasse's bound for the expli
 to isolate, in Mathlib's actual elliptic-point API, the first geometric degree calculation that is
 still missing.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -262,7 +266,7 @@ theorem legendreFrobeniusMinusIdentity_baseChange (u v : F)
   cases P with
   | zero => rfl
   | some x y h =>
-      simp only [legendrePointBaseChange, WeierstrassCurve.Affine.Point.neg_some]
+      simp only [legendrePointBaseChange]
       exact WeierstrassCurve.Affine.Point.add_of_Y_eq rfl
         (WeierstrassCurve.Affine.negY_negY _ _).symm
 

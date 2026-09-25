@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Algebra.Polynomial.Eval.Defs
-import Mathlib.Analysis.CStarAlgebra.Classes
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Algebra.Polynomial.Eval.Defs
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.SpecificLimits.Normed
+public import Mathlib.Tactic
 
 /-!
 # Growth of finite weighted power sums
@@ -23,6 +25,8 @@ have norm at most `ρ`.  The proof uses an isolation polynomial: applying a
 polynomial that vanishes at all the other members of `s` expresses the chosen
 geometric progression as a fixed linear combination of shifted power sums.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

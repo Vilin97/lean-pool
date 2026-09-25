@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldFinitePlace
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldFinitePlace
 
 /-!
 # The rational-function place at infinity under coefficient extension
@@ -18,6 +20,8 @@ contracts to the original maximal ideal.
 This is the base-place comparison.  It does not identify the integral
 closures of these valuation rings inside a further function field.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 

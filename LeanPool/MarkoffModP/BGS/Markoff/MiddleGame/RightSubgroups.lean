@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEquation
-import LeanPool.MarkoffModP.BGS.Markoff.Core.TraceClassification
-import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEquation
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.TraceClassification
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 
 /-!
 # Concrete right subgroups for the middle game
@@ -19,6 +21,8 @@ extension.  Candidate divisibility by `p - 1` or `p + 1` implies that this subgr
 Parabolic traces are deliberately excluded from the representation theorem: their rotation
 orders are `p` or `2 * p`, not semisimple torus orders dividing `p - 1` or `p + 1`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

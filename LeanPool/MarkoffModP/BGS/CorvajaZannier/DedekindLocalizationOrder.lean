@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPlaceOrder
-import Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPlaceOrder
+public import Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing
+public import Mathlib.Tactic
 
 /-!
 # Compatibility of global and localized Dedekind orders
@@ -16,6 +18,8 @@ valuation of its localization at that height-one prime have the same
 normalization.  This file proves equality, rather than equivalence up to an
 unspecified rescaling, and transfers the associated principal-ideal orders.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors
 open IsDedekindDomain Multiplicative WithZero
@@ -58,13 +62,13 @@ theorem valuation_eq_of_isEquiv_of_surjective
     rw [← exp_lt_exp, ← hπw]
     have hvlt : v π < v 1 := by
       rw [hπv, map_one]
-      simpa using (WithZero.exp_lt_exp.mpr (show (-1 : ℤ) < 0 by omega))
+      simp using (WithZero.exp_lt_exp.mpr (show (-1 : ℤ) < 0 by omega))
     simpa using h.lt_iff_lt.mp hvlt
   have hb : b < 0 := by
     rw [← exp_lt_exp, ← hρv]
     have hwlt : w ρ < w 1 := by
       rw [hρw, map_one]
-      simpa using (WithZero.exp_lt_exp.mpr (show (-1 : ℤ) < 0 by omega))
+      simp using (WithZero.exp_lt_exp.mpr (show (-1 : ℤ) < 0 by omega))
     simpa using h.lt_iff_lt.mpr hwlt
   have hwEq : w π = w (ρ ^ (-a)) := by
     rw [hπw, map_zpow₀, hρw, ← exp_zsmul]

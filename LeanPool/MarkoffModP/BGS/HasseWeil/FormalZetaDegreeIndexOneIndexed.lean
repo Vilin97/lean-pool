@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaDegreeIndexOne
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaDegreeIndexOne
 
 /-!
 # The noncircular indexed F. K. Schmidt argument
@@ -25,6 +27,8 @@ of the left side vanishes to order at least two.  The right side has a simple
 zero there when `P(1) ≠ 0`.  This contradiction proves `d = 1` without
 assuming the conclusion for the constant extension.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

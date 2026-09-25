@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalEulerBound
-import LeanPool.MarkoffModP.BGS.HasseWeil.AffinePointPlace
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalEulerBound
+public import LeanPool.MarkoffModP.BGS.HasseWeil.AffinePointPlace
+public import Mathlib.Tactic
 
 /-!
 # Saving one boundary degree at a shared affine origin
@@ -21,6 +23,8 @@ This argument does not assert that a branch above an arbitrary singular
 rational point has residue degree one.  Positivity of the selected place
 degree is sufficient for the one-unit saving.
 -/
+
+@[expose] public section
 
 open scoped Polynomial BigOperators
 

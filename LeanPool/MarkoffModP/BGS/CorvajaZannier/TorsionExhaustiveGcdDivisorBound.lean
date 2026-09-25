@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionGcdDivisorBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveRatFuncModel
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationOrder
-import Mathlib.RingTheory.Valuation.LocalSubring
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionGcdDivisorBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPrincipalDivisor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveRatFuncModel
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationOrder
+public import Mathlib.RingTheory.Valuation.LocalSubring
 
 /-!
 # Torsion points and the exhaustive gcd divisor
@@ -27,6 +29,8 @@ exhaustive place type.  Each selected place contributes at least one to the
 degree-weighted positive gcd divisor used by the global Wronskian argument.
 -/
 
+@[expose] public section
+
 open IsDedekindDomain
 open Multiplicative WithZero
 
@@ -40,7 +44,7 @@ variable {A L : Type*} [CommRing A] [IsDomain A] [Field L]
   [Algebra A L] [IsFractionRing A L]
 
 /-- The fraction-field embedding, with codomain restricted to its range. -/
-private noncomputable def fractionEmbeddingRangeEquiv :
+noncomputable def fractionEmbeddingRangeEquiv :
     A ≃+* (algebraMap A L).range :=
   RingEquiv.ofBijective (algebraMap A L).rangeRestrict
     ⟨fun x y hxy => IsFractionRing.injective A L (congrArg Subtype.val hxy),
@@ -49,7 +53,7 @@ private noncomputable def fractionEmbeddingRangeEquiv :
         exact ⟨x, Subtype.ext hx⟩⟩
 
 /-- The image of a maximal ideal inside the embedded copy of `A` in `L`. -/
-private noncomputable def maximalIdealInFractionEmbeddingRange
+noncomputable def maximalIdealInFractionEmbeddingRange
     (m : MaximalSpectrum A) : Ideal (algebraMap A L).range :=
   m.asIdeal.map (fractionEmbeddingRangeEquiv (A := A) (L := L)).toRingHom
 
@@ -82,14 +86,14 @@ noncomputable def dominatingValuationSubring (m : MaximalSpectrum A) :
     ValuationSubring L :=
   Classical.choose (Ideal.image_subset_nonunits_valuationSubring
     (maximalIdealInFractionEmbeddingRange (A := A) (L := L) m)
-    (maximalIdealInFractionEmbeddingRange_ne_top m))
+    (by exact maximalIdealInFractionEmbeddingRange_ne_top m))
 
 theorem range_le_dominatingValuationSubring (m : MaximalSpectrum A) :
     (algebraMap A L).range ≤
       (dominatingValuationSubring (A := A) (L := L) m).toSubring :=
   (Classical.choose_spec (Ideal.image_subset_nonunits_valuationSubring
     (maximalIdealInFractionEmbeddingRange (A := A) (L := L) m)
-    (maximalIdealInFractionEmbeddingRange_ne_top m))).1
+    (by exact maximalIdealInFractionEmbeddingRange_ne_top m))).1
 
 theorem algebraMap_mem_dominatingValuationSubring_nonunits_of_mem
     (m : MaximalSpectrum A) (r : A) (hr : r ∈ m.asIdeal) :
@@ -102,7 +106,7 @@ theorem algebraMap_mem_dominatingValuationSubring_nonunits_of_mem
   have hnonunits :=
     (Classical.choose_spec (Ideal.image_subset_nonunits_valuationSubring
       (maximalIdealInFractionEmbeddingRange (A := A) (L := L) m)
-      (maximalIdealInFractionEmbeddingRange_ne_top m))).2
+      (by exact maximalIdealInFractionEmbeddingRange_ne_top m))).2
   apply hnonunits
   refine ⟨e r, himage, ?_⟩
   rfl

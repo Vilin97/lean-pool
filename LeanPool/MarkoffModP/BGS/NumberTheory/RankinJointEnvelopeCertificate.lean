@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinProfileCertificate
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinProfileCertificate
 
 /-!
 # Side-erased joint Rankin envelopes
@@ -19,6 +21,8 @@ appearing in the exact-order obstruction are controlled by these products.
 This is the proof-facing arithmetic layer for a substantially smaller finite
 profile search.  It contains no generated data and no coverage assumption.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

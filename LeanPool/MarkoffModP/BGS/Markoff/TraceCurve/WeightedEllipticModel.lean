@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Geometry
-import Mathlib.AlgebraicGeometry.EllipticCurve.Weierstrass
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Geometry
+public import Mathlib.AlgebraicGeometry.EllipticCurve.Weierstrass
 
 /-!
 # An explicit elliptic model for the weighted trace curve
@@ -30,6 +32,8 @@ the project still needs an in-repository bridge from this nonsingular
 Weierstrass model to the genus and Euler-characteristic data used by
 Corvaja--Zannier.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

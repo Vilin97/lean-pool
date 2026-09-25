@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalAuxiliaryInfinityPlace
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGlobalNormalized
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalDerivationExtension
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PerfectConstants
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalAuxiliaryInfinityPlace
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGlobalNormalized
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalDerivationExtension
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PerfectConstants
+public import Mathlib.Tactic
 
 /-!
 # Normalized global derivations for the canonical argument
@@ -16,6 +18,8 @@ import Mathlib.Tactic
 Construct the rational-function derivations and reciprocal-chart estimates used to normalize the
 global canonical Wronskian argument.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 
@@ -73,6 +77,7 @@ theorem probeRatFuncDerivation_eq (x : RatFunc K) :
   rw [map_sub, map_mul, map_mul]
   simp only [Algebra.smul_def, Algebra.algebraMap_self_apply]
 
+omit [DecidableEq (RatFunc K)] in
 private theorem natDegree_derivativeNumerator_le
     (p q : K[X]) (hp : p ≠ 0) (hq : q ≠ 0)
     (hN : q * p.derivative - p * q.derivative ≠ 0) :
@@ -377,6 +382,7 @@ local instance probeFrobeniusConstantTower :
     IsScalarTower K (frobeniusSubfield L p) L :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+omit [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 theorem probe_normalizedDerivation_comp_ratFunc
     (D : Derivation (frobeniusSubfield L p) L L)
     (hDX : D (algebraMap (RatFunc K) L RatFunc.X) = 1) :
@@ -462,6 +468,7 @@ theorem probeAmbientReciprocalDerivation_extends
       (probeRatFuncReciprocalDerivation K (r : RatFunc K))
   rw [probeRatFuncReciprocalDerivation_apply, map_mul, map_neg, map_pow]
 
+omit [DecidableEq K] [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 theorem probeAmbientReciprocalDerivation_changeParameter
     (D : Derivation (frobeniusSubfield L p) L L) :
     D.restrictScalars K =

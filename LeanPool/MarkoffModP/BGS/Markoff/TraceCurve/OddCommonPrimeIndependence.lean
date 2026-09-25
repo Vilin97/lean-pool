@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.CommonKummerIndependence
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.CommonKummerIndependence
 
 /-!
 # Odd common-prime Kummer classes on the split trace curve
@@ -17,6 +19,8 @@ independence of the two degree-one trace-coordinate classes modulo an odd prime.
 Turning this base-field class calculation into irreducibility for noncoprime covers still requires
 the roots-of-unity eigencharacter descent in the first Kummer extension.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

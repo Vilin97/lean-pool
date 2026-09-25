@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceTower
-import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlace
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceTower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlace
 
 /-!
 # Restriction of rational places in a function-field tower
@@ -15,6 +17,8 @@ of the top field restricts to a degree-one place of every intermediate field,
 and its relative residue degree is one.  This file packages that consequence
 for the repository's exhaustive finite/infinity place type.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

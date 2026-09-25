@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaNumeratorNoncancellation
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionIndexedZetaRationalityAutomatic
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaRationalityDegree
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaTrace
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZetaNumeratorNoncancellation
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionIndexedZetaRationalityAutomatic
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaRationalityDegree
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaTrace
 
 /-!
 # Standard zeta rationality after proving degree index one
@@ -18,6 +20,8 @@ automatic indexed zeta rational form becomes the standard curve denominator
 `(1 - T) (1 - qT)`.  The Riemann--Roch construction also retains a concrete
 numerator-degree bound and numerator noncancellation at `T = 1`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

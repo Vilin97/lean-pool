@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MoveWiring
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.ParabolicEscape
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.RightSubgroups
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEquation
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MoveWiring
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.ParabolicEscape
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.RightSubgroups
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEquation
 
 /-!
 # The nonparabolic middle-game order-escape step
@@ -16,6 +18,8 @@ This module composes the weighted finite escape, the concrete roots-of-unity rig
 the split/nonsplit trace classification, and the weighted coset coordinate identity.  The only
 deep input is the weighted Corvaja--Zannier cardinal estimate on the actual solution finsets.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

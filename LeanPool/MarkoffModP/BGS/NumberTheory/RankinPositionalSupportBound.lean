@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinPositionalCoverage
-import Mathlib.Algebra.Order.BigOperators.Group.List
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinPositionalCoverage
+public import Mathlib.Algebra.Order.BigOperators.Group.List
 
 /-!
 # Product bounds for finite positional prime ladders
@@ -16,6 +18,8 @@ pointwise no larger than any support of the same length.  Combining these two
 facts turns one exact primorial comparison into a uniform bound on the number
 of exponent slots below a power cutoff.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

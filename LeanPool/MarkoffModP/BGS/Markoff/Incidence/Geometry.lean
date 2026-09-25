@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
 
 /-!
 # Square classes for the incidence auxiliary curve
@@ -13,6 +15,8 @@ This file proves the polynomial and rational-function-field algebra behind geome
 of the off-diagonal incidence curve.  The remaining coordinate-ring normal-form argument is
 stated separately in `BGS.Markoff.Incidence`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

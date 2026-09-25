@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlaceCompatibility
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlaceCompatibility
 
 /-!
 # Frobenius-coset averaging at finite places of an exact constant extension
@@ -16,6 +18,8 @@ cardinality at that place.  Transitivity of the relative Galois action and
 cyclicity of the finite-field Galois group propagate surjectivity of the
 constant quotient to every stabilizer in the same restriction fiber.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 
@@ -93,6 +97,11 @@ local instance averageConstantIntermediateTopTower :
       (algebraMap (RatFunc C) L (algebraMap C (RatFunc C) c))
   exact IsScalarTower.algebraMap_apply (RatFunc C) L N _
 
+omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] [FiniteDimensional C S] [IsGalois C S]
+  [FiniteDimensional (RatFunc C) L] [Algebra.IsSeparable (RatFunc C) L]
+  [FiniteDimensional L N] [IsGalois L N] in
 /-- The rational-function base, the intermediate field, and the exact
 constant extension form the tower used by the finite-place action. -/
 private theorem exactConstantExtensionFrobeniusAverage_ratFuncBaseTower :
@@ -126,6 +135,11 @@ private theorem exactConstantExtensionFrobeniusAverage_ratFuncBaseTower :
   congr 1
   exact IsScalarTower.algebraMap_apply (RatFunc C) L N x
 
+omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] [Algebra (RatFunc C) L]
+  [FiniteDimensional (RatFunc C) L] [Algebra.IsSeparable (RatFunc C) L]
+  [IsScalarTower (RatFunc C) L N] [IsGalois L N] in
 /-- The exact constant extension is finite-dimensional over the chosen
 intermediate field. -/
 private theorem finiteDimensional_exactConstantExtension_over_intermediate

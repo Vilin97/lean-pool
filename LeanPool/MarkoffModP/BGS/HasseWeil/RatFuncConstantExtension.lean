@@ -3,14 +3,16 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Algebra.Polynomial.Module.TensorProduct
-import Mathlib.FieldTheory.RatFunc.Basic
-import Mathlib.LinearAlgebra.Dimension.Localization
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.RingTheory.DedekindDomain.Instances
-import Mathlib.RingTheory.Localization.LocalizationLocalization
-import Mathlib.RingTheory.TensorProduct.Finite
+
+public import Mathlib.Algebra.Polynomial.Module.TensorProduct
+public import Mathlib.FieldTheory.RatFunc.Basic
+public import Mathlib.LinearAlgebra.Dimension.Localization
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+public import Mathlib.RingTheory.DedekindDomain.Instances
+public import Mathlib.RingTheory.Localization.LocalizationLocalization
+public import Mathlib.RingTheory.TensorProduct.Finite
 
 /-!
 # Constant extensions of rational function fields
@@ -24,6 +26,8 @@ nonzero polynomials in `K[X]`, prove that this localization is a field, and
 identify it with `S(X)`.  This is the rational-function-field base-change
 input needed for the later constant extension of a general function field.
 -/
+
+@[expose] public section
 
 open scoped Polynomial nonZeroDivisors
 
@@ -60,19 +64,19 @@ private theorem ratFuncCoefficientPolynomialAlgHom_nonZeroDivisors :
 /-- The canonical coefficient extension `K(X) → S(X)`. -/
 noncomputable def ratFuncCoefficientAlgHom : RatFunc K →ₐ[K] RatFunc S :=
   RatFunc.mapAlgHom (ratFuncCoefficientPolynomialAlgHom K S)
-    (ratFuncCoefficientPolynomialAlgHom_nonZeroDivisors K S)
+    (by exact ratFuncCoefficientPolynomialAlgHom_nonZeroDivisors K S)
 
 theorem ratFuncCoefficientAlgHom_injective :
     Function.Injective (ratFuncCoefficientAlgHom K S) :=
   RatFunc.map_injective (ratFuncCoefficientPolynomialAlgHom K S)
-    (ratFuncCoefficientPolynomialAlgHom_nonZeroDivisors K S)
+    (by exact ratFuncCoefficientPolynomialAlgHom_nonZeroDivisors K S)
     (ratFuncCoefficientPolynomialAlgHom_injective K S)
 
 theorem ratFuncCoefficientAlgHom_algebraMap (p : K[X]) :
     ratFuncCoefficientAlgHom K S (algebraMap K[X] (RatFunc K) p) =
       algebraMap S[X] (RatFunc S) (algebraMap K[X] S[X] p) := by
   change RatFunc.map (ratFuncCoefficientPolynomialAlgHom K S)
-      (ratFuncCoefficientPolynomialAlgHom_nonZeroDivisors K S)
+      (by exact ratFuncCoefficientPolynomialAlgHom_nonZeroDivisors K S)
         (algebraMap K[X] (RatFunc K) p) = _
   rw [show algebraMap K[X] (RatFunc K) p =
       algebraMap K[X] (RatFunc K) p / algebraMap K[X] (RatFunc K) 1 by simp]
@@ -158,7 +162,8 @@ private theorem ratFuncConstantLocalizationSubmonoid_le :
   simpa only [Algebra.algebraMapSubmonoid] using
     algebraMapSubmonoid_le_nonZeroDivisors_of_faithfulSMul S[X] le_rfl
 
-private noncomputable def ratFuncConstantLocalizationToRatFunc
+/-- Map the localization at nonzero base polynomials into the rational function field. -/
+noncomputable def ratFuncConstantLocalizationToRatFunc
     [FiniteDimensional K S] :
     RatFuncConstantLocalization K S →+* RatFunc S :=
   IsLocalization.map
@@ -185,12 +190,14 @@ private theorem ratFuncConstantLocalizationToRatFunc_algebraMap
     algebraMap S[X] (RatFunc S) p
   simpa only [RingHom.comp_apply, RingHom.id_apply] using h
 
-private noncomputable def ratFuncToConstantLocalization
+/-- Embed rational functions into the constant-extension localization. -/
+noncomputable def ratFuncToConstantLocalization
     [FiniteDimensional K S] :
     RatFunc S →+* RatFuncConstantLocalization K S :=
   IsFractionRing.lift (IsLocalization.injective
     (RatFuncConstantLocalization K S)
-    (ratFuncConstantLocalizationSubmonoid_le K S))
+    (show Submonoid.map (algebraMap K[X] S[X]) K[X]⁰ ≤ S[X]⁰ from by
+      exact ratFuncConstantLocalizationSubmonoid_le K S))
 
 private theorem ratFuncToConstantLocalization_algebraMap
     [FiniteDimensional K S] (p : S[X]) :

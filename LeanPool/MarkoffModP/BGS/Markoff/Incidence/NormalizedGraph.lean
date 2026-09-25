@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Fibers
-import LeanPool.MarkoffModP.BGS.Markoff.Core.ParabolicFibers
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.Fibers
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.ParabolicFibers
 
 /-!
 # The normalized incidence graph and its parabolic vertices
@@ -17,6 +19,8 @@ normalized trace coordinates back into the original Markoff coordinates.
 The key fact is stronger than mere connectivity: after choosing `i² = -1`, a fiber whose
 normalized coordinate is `2` or `-2` meets every fiber on either different coordinate axis.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.AffineNormalization
-import Mathlib.RingTheory.Localization.Away.Basic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.AffineNormalization
+public import Mathlib.RingTheory.Localization.Away.Basic
 
 /-!
 # Localized transition maps for the weighted trace-cover charts
@@ -19,6 +21,8 @@ These are coordinate-ring isomorphisms, not merely equivalences of torus-valued 
 geometric wall is to identify these localizations with overlap opens in the affine normalizations
 and use the maps in a scheme-gluing datum.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

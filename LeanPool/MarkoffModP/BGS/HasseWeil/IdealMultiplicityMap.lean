@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.RamificationInertia.Ramification
+
+public import Mathlib.RingTheory.RamificationInertia.Ramification
 
 /-!
 # Multiplicity after extending an ideal
@@ -14,6 +16,8 @@ statement.  This file records the `Nat`-valued wrapper used by the
 exact-constant genus transport, first for a specified pair of height-one
 places and then with the lower place chosen by `under`.
 -/
+
+@[expose] public section
 
 open IsDedekindDomain
 

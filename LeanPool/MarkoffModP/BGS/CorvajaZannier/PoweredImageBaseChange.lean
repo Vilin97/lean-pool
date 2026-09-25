@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageFrobeniusRelation
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageHeightFactor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePoweredImageDegreeBudget
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageFrobeniusRelation
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageHeightFactor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePoweredImageDegreeBudget
+public import Mathlib.Tactic
 
 /-!
 # Constant-field base change for the powered-image index
@@ -18,6 +20,8 @@ curves then shows that the source-to-powered-image finrank is invariant under
 extension of constants.  This is the descent bridge from the algebraically
 closed stabilizer argument to the original constant field.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct Polynomial
 open Polynomial
@@ -76,9 +80,6 @@ classes. -/
       planeCurveCoordinate (MvPolynomial.map (algebraMap K E) f) i := by
   simp [planeCurveCoordinateRingMap, planeCurveCoordinate,
     planeCurveQuotientMap]
-  change Ideal.Quotient.mk (Ideal.span {MvPolynomial.map (algebraMap K E) f})
-    (MvPolynomial.map (algebraMap K E) (MvPolynomial.X i)) = _
-  rw [MvPolynomial.map_X]
 
 /-- The coefficient base change of the canonical powered-image relation
 vanishes on the generic powered coordinates of the base-changed curve. -/

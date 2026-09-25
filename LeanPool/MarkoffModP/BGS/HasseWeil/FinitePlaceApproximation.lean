@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.DedekindDomain.AdicValuation
-import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
-import Mathlib.RingTheory.Localization.Integer
-import Mathlib.Tactic
+
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+public import Mathlib.RingTheory.Localization.Integer
+public import Mathlib.Tactic
 
 /-!
 # Weak approximation at finite places
@@ -29,6 +31,8 @@ Mathlib's multiplicative adic valuation is `exp (-order)`.  Thus
 `v.valuation L (z - x) ≤ exp (-n)` means that `z - x` has additive order at
 least `n`, while `v.valuation L z ≤ 1` means that `z` is regular at `v`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

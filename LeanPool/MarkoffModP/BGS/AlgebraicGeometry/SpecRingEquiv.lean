@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.AlgebraicGeometry.GammaSpecAdjunction
+
+public import Mathlib.AlgebraicGeometry.GammaSpecAdjunction
 
 /-!
 # Concrete `Spec` isomorphisms from ring equivalences
@@ -13,6 +15,8 @@ The concrete constructor `AlgebraicGeometry.Spec` and the functor `Scheme.Spec` 
 equivalent objects, but mixing them introduces equality transports in later compositions.  This
 module keeps affine scheme isomorphisms in the concrete `Spec` presentation used by the project.
 -/
+
+@[expose] public section
 
 namespace BGS
 

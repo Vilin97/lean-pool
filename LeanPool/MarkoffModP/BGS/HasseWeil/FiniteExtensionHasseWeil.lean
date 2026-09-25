@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionIntermediateFrobeniusTwistHasseBound
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionGenusDegree
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionNormalClosureTower
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisibleErrorFromConstantBase
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldDivisibleExtension
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionIntermediateFrobeniusTwistHasseBound
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionGenusDegree
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionNormalClosureTower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisibleErrorFromConstantBase
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldDivisibleExtension
 
 /-!
 # Hasse--Weil for finite separable function-field extensions
@@ -21,10 +23,41 @@ form.  Exact constant-extension splitting and the spectral argument then
 transport that estimate back to the original function field.
 -/
 
+@[expose] public section
+
 namespace BGS.HasseWeil
 
 noncomputable section
 
+
+section GenusBridge
+
+variable (C S N : Type*) [Field C] [Field S] [Field N]
+  [Fintype C] [Finite S]
+  [Algebra (RatFunc C) N] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N]
+  [Algebra C S] [FiniteDimensional C S] [IsGalois C S]
+local instance : Algebra C N := bridgeBaseConstantAlgebra C N
+local instance : IsScalarTower C (RatFunc C) N := IsScalarTower.of_algebraMap_eq' rfl
+
+/-- Constant extension preserves genus for the induced rational-function-field algebra. -/
+private theorem exactConstantExtension_genus_eq_for_ratFunc
+    (hExact : algebraicClosure C N = (⊥ : IntermediateField C N)) :
+    let E := ExactConstantExtension C N S
+    let : Field E := exactConstantExtensionField C N S hExact
+    let : Algebra (RatFunc S) E := ratFuncExactConstantExtensionAlgebra C S N hExact
+    @FunctionField.genus S E _ _ (bridgeBaseConstantAlgebra S E) = FunctionField.genus C N := by
+  intro E fieldStructure rationalAlgebra
+  have hConstantAlgebra : (Algebra.TensorProduct.leftAlgebra : Algebra S E) =
+      bridgeBaseConstantAlgebra S E := by
+    apply Algebra.algebra_ext
+    intro s
+    exact (ratFuncToExactConstantExtension C S N hExact).commutes s |>.symm
+  rw [← hConstantAlgebra]
+  exact exactConstantExtension_genus_eq C S N hExact
+
+
+end GenusBridge
 
 variable (K F : Type*) [Field K] [Fintype K] [DecidableEq K]
   [DecidableEq (RatFunc K)] [Field F] [Algebra (RatFunc K) F]
@@ -188,14 +221,10 @@ theorem exactConstantExtensionClosedPlaceError_le_normalClosureConstants
   let g := functionFieldNormalClosureGenus K F
   let H := functionFieldNormalClosureStepanovThreshold K F
   let D := functionFieldNormalClosureRatFuncDegree K F
-  have hH : 0 < H := by
-    exact functionFieldNormalClosureStepanovThreshold_pos K F
-  have hD : 0 < D := by
-    exact functionFieldNormalClosureRatFuncDegree_pos K F
+  have hH : 0 < H := functionFieldNormalClosureStepanovThreshold_pos K F
+  have hD : 0 < D := functionFieldNormalClosureRatFuncDegree_pos K F
   let p := ringChar C
-  letI : CharP C p := by
-    dsimp only [p]
-    exact ringChar.charP C
+  let : CharP C p := ringChar.charP C
   letI : Fact p.Prime := ⟨CharP.char_is_prime C p⟩
   letI : NeZero (H * n) := ⟨Nat.mul_pos hH hn |>.ne'⟩
   letI : NeZero (2 * (H * n)) := ⟨by positivity⟩
@@ -286,33 +315,21 @@ theorem exactConstantExtensionClosedPlaceError_le_normalClosureConstants
     exactConstantExtension_isGalois C (RatFunc C) N Cbig hExactN
   letI : IsGalois (RatFunc Cbig) E_N :=
     IsGalois.tower_top_of_isGalois (RatFunc C) (RatFunc Cbig) E_N
-  have hConstantAlgebra :
-      (Algebra.TensorProduct.leftAlgebra : Algebra Cbig E_N) =
-        bridgeBaseConstantAlgebra Cbig E_N := by
-    apply Algebra.algebra_ext
-    intro s
-    exact (ratFuncToExactConstantExtension C Cbig N hExactN).commutes s |>.symm
-  have hgenusTensor :
-      @FunctionField.genus Cbig E_N _ _
-        (Algebra.TensorProduct.leftAlgebra : Algebra Cbig E_N) = g := by
-    simpa only [E_N, g, functionFieldNormalClosureGenus] using
-      exactConstantExtension_genus_eq C Cbig N hExactN
   have hExactEN :
       @algebraicClosure Cbig E_N _ _ (bridgeBaseConstantAlgebra Cbig E_N) =
         (⊥ : @IntermediateField Cbig E_N _ _
-          (bridgeBaseConstantAlgebra Cbig E_N)) := by
-    exact exactConstantExtension_extended_algebraicClosure_eq_bot
+          (bridgeBaseConstantAlgebra Cbig E_N)) :=
+    exactConstantExtension_extended_algebraicClosure_eq_bot
       C Cbig N hExactN
   have hgenusEN :
       @FunctionField.genus Cbig E_N _ _
         (bridgeBaseConstantAlgebra Cbig E_N) = g := by
-    rw [← hConstantAlgebra]
-    exact hgenusTensor
-  have hdegreeEN : Module.finrank (RatFunc Cbig) E_N = D := by
-    exact exactConstantExtension_finrank_over_extendedRatFunc_eq
+    simpa only [E_N, g, functionFieldNormalClosureGenus] using
+      exactConstantExtension_genus_eq_for_ratFunc C Cbig N hExactN
+  have hdegreeEN : Module.finrank (RatFunc Cbig) E_N = D :=
+    exactConstantExtension_finrank_over_extendedRatFunc_eq
       C Cbig N hExactN
-  have hHg : H = (g + 1) * (g + 2) := by
-    rfl
+  have hHg : H = (g + 1) * (g + 2) := rfl
   have hlarge :
       (@FunctionField.genus Cbig E_N _ _
           (bridgeBaseConstantAlgebra Cbig E_N) + 1) *
@@ -334,11 +351,11 @@ theorem exactConstantExtensionClosedPlaceError_le_normalClosureConstants
       Module.finrank Cbig U := by
     rw [hauxDegree, IsGalois.card_aut_eq_finrank, hdegreeEN]
     exact Nat.dvd_factorial hD le_rfl
-  have hdivMOriginal : Nat.card (N ≃ₐ[M] N) ∣ D.factorial := by
-    exact natCard_aut_dvd_finrank_factorial_of_tower (RatFunc C) M N
+  have hdivMOriginal : Nat.card (N ≃ₐ[M] N) ∣ D.factorial :=
+    natCard_aut_dvd_finrank_factorial_of_tower (RatFunc C) M N
   have hcardTower : Nat.card (E_N ≃ₐ[E_M] E_N) =
-      Nat.card (N ≃ₐ[M] N) := by
-    exact functionFieldNormalClosureConstantExtension_card_aut_eq
+      Nat.card (N ≃ₐ[M] N) :=
+    functionFieldNormalClosureConstantExtension_card_aut_eq
       K F Cbig hExact
   have hdivL : Nat.card (E_N ≃ₐ[E_M] E_N) ∣
       Module.finrank Cbig U := by
@@ -350,7 +367,7 @@ theorem exactConstantExtensionClosedPlaceError_le_normalClosureConstants
   have hcount : finiteExtensionRationalPlaceCount Cbig E_M =
       exactConstantExtensionClosedPlaceExtensionCount
         K C F hExact (2 * H * n) := by
-    rw [functionFieldNormalClosureOriginalCompositumConstantExtension_rationalPlaceCount_eq_originalExactConstantExtensionCount
+    rw [normalClosureOriginalCompositum_rationalPlaceCount_eq_originalExactExtensionCount
       K F Cbig hExact]
     congr 2
     simpa only [Cbig, Nat.mul_assoc] using
@@ -387,8 +404,7 @@ theorem finiteExtensionClosedPlaceHasseWeil
   let D := functionFieldNormalClosureRatFuncDegree K F
   let A : ℝ := 2 * (D : ℝ) ^ 2 + 2 * (D : ℝ) ^ 3
   let B : ℝ := (D : ℝ) ^ 2 * (2 * g + 1)
-  have hH : 0 < H := by
-    exact functionFieldNormalClosureStepanovThreshold_pos K F
+  have hH : 0 < H := functionFieldNormalClosureStepanovThreshold_pos K F
   have hA : 0 ≤ A := by
     dsimp only [A]
     positivity

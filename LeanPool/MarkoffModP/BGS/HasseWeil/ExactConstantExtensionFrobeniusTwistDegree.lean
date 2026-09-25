@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistRiemannLower
-import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralSquareFieldStepanovCount
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistRiemannLower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralSquareFieldStepanovCount
 
 /-!
 # Degrees of exact-constant Frobenius twists
@@ -16,6 +18,8 @@ fixed field has the same degree over `C(X)` as the original function field
 Hasse--Weil averaging argument and combines it with the general bound on
 rational places above infinity.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

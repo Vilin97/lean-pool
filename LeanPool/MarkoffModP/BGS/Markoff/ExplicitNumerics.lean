@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.ExplicitDivisorBound
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.DivisorRange
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveInclusionExclusion
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.ExplicitDivisorBound
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.DivisorRange
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveInclusionExclusion
 
 /-!
 # Closed numerical bounds for explicit strong approximation
@@ -14,6 +16,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.Endgame.PrimitiveInclusionExclusion
 All constants in this file are closed natural-number expressions.  In
 particular, no witness is extracted from an eventual or asymptotic theorem.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

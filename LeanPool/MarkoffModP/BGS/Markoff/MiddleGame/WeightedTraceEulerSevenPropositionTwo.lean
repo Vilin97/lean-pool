@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSeven
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTracePoweredImageIndexTwo
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePropositionTwoGeometric
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTraceEulerSeven
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.WeightedTracePoweredImageIndexTwo
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePropositionTwoGeometric
+public import Mathlib.Tactic
 
 /-!
 # Proposition Two with Euler budget seven for the weighted trace curve
@@ -17,6 +19,8 @@ trace curve, the common affine origin saves one boundary degree, while the
 sparse support determinant bounds the powered-image index by `2`. This module
 feeds both exact inputs into the natural and swapped Proposition Two proofs.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

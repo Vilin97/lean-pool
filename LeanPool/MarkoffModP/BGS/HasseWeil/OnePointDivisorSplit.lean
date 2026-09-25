@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
+public import Mathlib.Tactic
 
 /-!
 # Splitting an effective divisor at one place
@@ -15,6 +17,8 @@ plane monomials, then removes every allowed pole except the distinguished
 one.  This file records the elementary divisor identities needed for that
 comparison.  The actual codimension estimate is kept separate.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -34,12 +38,16 @@ def finiteExtensionDivisorAway
     FiniteExtensionDivisor K L :=
   D - Finsupp.single P (D P)
 
+omit [Fintype K] [DecidableEq K] [FiniteDimensional (RatFunc K) L]
+  [Algebra.IsSeparable (RatFunc K) L] in
 @[simp]
 theorem finiteExtensionDivisorAway_apply_self
     (D : FiniteExtensionDivisor K L) (P : FiniteExtensionPlace K L) :
     finiteExtensionDivisorAway K L D P P = 0 := by
   simp [finiteExtensionDivisorAway]
 
+omit [Fintype K] [DecidableEq K] [FiniteDimensional (RatFunc K) L]
+  [Algebra.IsSeparable (RatFunc K) L] in
 @[simp]
 theorem finiteExtensionDivisorAway_apply_of_ne
     (D : FiniteExtensionDivisor K L) (P v : FiniteExtensionPlace K L)
@@ -68,6 +76,7 @@ theorem finiteExtensionDivisorAway_effective
     simp
   · simpa [finiteExtensionDivisorAway, hv] using hD v
 
+omit [Fintype K] [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 /-- The degree of a divisor supported at one place. -/
 @[simp]
 theorem finiteExtensionDivisorDegree_single
@@ -108,6 +117,8 @@ theorem finiteExtensionDivisorDegree_away
   rw [finiteExtensionDivisorAway, finiteExtensionDivisorDegree_sub,
     finiteExtensionDivisorDegree_single]
 
+omit [Fintype K] [DecidableEq K] [FiniteDimensional (RatFunc K) L]
+  [Algebra.IsSeparable (RatFunc K) L] in
 /-- For an effective divisor, its one-place part is coefficientwise below it. -/
 theorem single_coeff_le_of_effective
     (D : FiniteExtensionDivisor K L) (P : FiniteExtensionPlace K L)

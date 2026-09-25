@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentCanonicalityCriterion
-import LeanPool.MarkoffModP.BGS.HasseWeil.DedekindDifferentLocalTrace
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncCanonicalInfinityDivisor
-import LeanPool.MarkoffModP.BGS.HasseWeil.LinearFunctionalGluing
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentCanonicalityCriterion
+public import LeanPool.MarkoffModP.BGS.HasseWeil.DedekindDifferentLocalTrace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncCanonicalInfinityDivisor
+public import LeanPool.MarkoffModP.BGS.HasseWeil.LinearFunctionalGluing
 
 /-!
 # Cotrace construction for the finite-extension canonical different
@@ -17,6 +19,8 @@ the trace codifferent bounds to build a nonzero Weil differential whose
 maximal vanishing divisor contains the explicit finite-extension different.
 Nothing in this file is an assumption.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -42,6 +46,7 @@ def ratFuncFiniteBaseRingEquivChart :
   (IsIntegralClosure.equiv K[X] K[X] (RatFunc K)
     (FunctionField.ringOfIntegers K (RatFunc K))).toRingEquiv
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] in
 @[simp]
 theorem ratFuncFiniteBaseRingEquivChart_algebraMap
     (r : K[X]) :
@@ -62,6 +67,7 @@ def ratFuncInfinityBaseRingEquivChart :
       (FunctionField.Chart.inftyValuationSubring K) (RatFunc K)
       (FunctionField.Chart.infiniteIntegers K (RatFunc K))).toRingEquiv
 
+omit [Fintype K] [DecidableEq K] in
 @[simp]
 theorem ratFuncInfinityBaseRingEquivChart_algebraMap
     (r : RatFuncInfinityIntegers K) :
@@ -350,6 +356,7 @@ def finiteExtensionUnderPlace :
   | .inl q => .inl (q.under K[X])
   | .inr _ => .inr (ratFuncInfinityPlace K)
 
+omit [Fintype K] [DecidableEq K] in
 /-- Every rational-function place has an extension place above it. -/
 theorem finiteExtensionUnderPlace_surjective :
     Function.Surjective (finiteExtensionUnderPlace K L) := by
@@ -394,6 +401,7 @@ theorem finiteExtensionUnderPlace_surjective :
     simp only [finiteExtensionUnderPlace]
     exact congrArg Sum.inr hpEq.symm
 
+omit [Fintype K] [DecidableEq K] in
 /-- Every fiber of the exhaustive place map is finite. -/
 theorem finiteExtensionUnderPlace_finite_preimage_singleton
     (p : RatFuncExhaustivePlace K) :
@@ -600,6 +608,7 @@ def finiteExtensionAdeleExceptionalSet
     Set (FunctionField.Chart.PlaceA K L) :=
   {q | a.1 q ∉ FunctionField.Chart.placeValuationSubring K L q}
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] in
 theorem finiteExtensionAdeleExceptionalSet_finite
     (a : FunctionField.Chart.AdeleSpace K L) :
     (finiteExtensionAdeleExceptionalSet K L a).Finite := by
@@ -673,6 +682,7 @@ theorem finiteExtensionCotraceBadBaseSet_finite
         (finiteExtensionUnderPlaceChart K L)
   · exact Set.finite_singleton _
 
+omit [Fintype K] [DecidableEq K] in
 /-- The infinity component of the rational-function chart contains only the
 place transported from the BGS infinity valuation ring. -/
 theorem ratFunc_infinite_chart_place_eq

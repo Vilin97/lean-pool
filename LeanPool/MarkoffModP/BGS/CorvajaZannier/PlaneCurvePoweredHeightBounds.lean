@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPositiveDegreePower
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionOneSubGcdHeight
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBoundarySupport
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionPositiveDegreePower
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionOneSubGcdHeight
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBoundarySupport
+public import Mathlib.Tactic
 
 /-!
 # Powered coordinate heights in the first-coordinate place model
@@ -16,6 +18,8 @@ The canonical place summation uses the first-coordinate `RatFunc` model.
 This module records the exact first-coordinate height and the transported
 upper bound for the second-coordinate height, including positive powers.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 
@@ -26,6 +30,7 @@ open scoped Polynomial
 variable {K : Type*} [Field K] [Fintype K] [DecidableEq K]
   [DecidableEq (RatFunc K)]
 
+omit [Fintype K] in
 /-- In the first-coordinate place model, `x^m` has its expected exact
 positive divisor degree. -/
 theorem finiteExtensionPositiveDegree_planeCurveFirstCoordinate_pow
@@ -187,6 +192,7 @@ theorem finiteExtensionGcdWeightedDegree_one_sub_planeCurvePowers_le
         hf hpartialFirst hpartialSecond n
   omega
 
+omit [Fintype K] in
 /-- The exhaustive gcd degree is symmetric in its two arguments. -/
 theorem finiteExtensionGcdWeightedDegree_comm
     {L : Type*} [Field L] [Algebra (RatFunc K) L]
@@ -202,6 +208,7 @@ theorem finiteExtensionGcdWeightedDegree_comm
   intro w _hw
   rw [min_comm]
 
+omit [Fintype K] in
 /-- Simultaneously changing the signs of the two functions does not change
 their exhaustive gcd divisor degree. -/
 theorem finiteExtensionGcdWeightedDegree_neg_neg
@@ -223,6 +230,7 @@ theorem finiteExtensionGcdWeightedDegree_neg_neg
     finiteExtensionGcdSupport
   rw [hdivx, hdivy]
 
+omit [DecidableEq (RatFunc K)] in
 /-- The torsion gcd used by the endpoint is exactly the `1-u`, `1-v` gcd
 used by the canonical Wronskian estimate. -/
 theorem planeCurveExhaustiveTorsionGcdWeightedDegree_eq_one_sub

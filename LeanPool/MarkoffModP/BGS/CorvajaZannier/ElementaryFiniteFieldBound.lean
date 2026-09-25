@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
-import Mathlib.RingTheory.RootsOfUnity.Basic
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
+public import Mathlib.RingTheory.RootsOfUnity.Basic
+public import Mathlib.Tactic
 
 /-!
 # Elementary finite-field torsion bounds
@@ -15,6 +17,8 @@ This file records the part of the finite-field Corvaja--Zannier estimate that
 uses only the fact that a nonzero polynomial has at most its degree many roots.
 It does not use curve geometry or the Corvaja--Zannier Wronskian argument.
 -/
+
+@[expose] public section
 
 namespace BGS.External
 

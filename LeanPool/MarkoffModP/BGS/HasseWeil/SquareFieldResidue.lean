@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlaceCases
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlaceCases
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
+public import Mathlib.Tactic
 
 /-!
 # Degree-one residues over a square constant field
@@ -16,6 +18,8 @@ degree one has residue field of cardinality `#S`.  If `#S = (#K)^2`, every
 residue therefore satisfies the half-Frobenius square identity used by the
 semilinear Stepanov restriction.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -49,6 +53,7 @@ local instance squareFieldResidueFiniteConstantTower :
     IsScalarTower S S[X] (RatFuncFiniteIntegralClosure S L) :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+omit [Field K] in
 /-- A degree-one finite place over a square constant field has the quadratic
 half-Frobenius identity in its residue field. -/
 theorem finiteExtensionFinitePlace_residue_squareFrobenius_of_degree_one

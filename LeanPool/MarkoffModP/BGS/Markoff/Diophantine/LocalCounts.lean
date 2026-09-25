@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.FiniteField.QuadraticCharacter
-import LeanPool.MarkoffModP.BGS.Markoff.Diophantine.PrimewiseCRT
-import LeanPool.MarkoffModP.BGS.Markoff.Core.PuncturedNormalization
+
+public import LeanPool.MarkoffModP.BGS.FiniteField.QuadraticCharacter
+public import LeanPool.MarkoffModP.BGS.Markoff.Diophantine.PrimewiseCRT
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.PuncturedNormalization
 
 /-!
 # Elementary local counts on the Markoff surface
@@ -16,6 +18,8 @@ Bourgain--Gamburd--Sarnak paper.  The full surface count is reduced to an explic
 character sum, including the exceptional fibers at normalized traces `0`, `2`, and `-2`.
 Coordinatewise normalization then transports the results back to the original Markoff surface.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

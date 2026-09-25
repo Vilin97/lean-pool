@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionGenusBound
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannRoch
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneConstantField
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFinitePlaceRiemannLower
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionGenusBound
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannRoch
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneConstantField
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFinitePlaceRiemannLower
 
 /-!
 # Automatic bidegree genus bound for plane curves
@@ -23,6 +25,8 @@ monomial budget.  The proof combines three already formalized ingredients:
 The finite place needed by the one-point comparison is constructed above the
 prime `(X)` of `K[X]`, so it is not an additional hypothesis.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -56,6 +60,7 @@ local instance automaticGenusPolynomialTorsionFree :
   Module.IsTorsionFree.trans_faithfulSMul K[X] (RatFunc K) L
 
 omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] in
+omit [FiniteDimensional (RatFunc K) L] in
 /-- A finite separable extension of `K(X)` has an exhaustive finite place.
 We select a prime of the finite integral closure lying above `(X)`. -/
 theorem finiteExtensionFinitePlace_nonempty :

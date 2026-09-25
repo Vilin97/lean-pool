@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.OrderEscape
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.OrderEscape
 
 /-!
 # Diagonalizing an arbitrary nonzero nonparabolic Markoff fiber
@@ -17,6 +19,8 @@ The trace-zero fiber is excluded explicitly.  Its conic is singular and the exis
 `splitFiberEquiv` / `quadraticNormFiberEquiv` APIs correctly require nonzero trace; no false torus
 parametrization is introduced for that branch.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

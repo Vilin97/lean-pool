@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaTrace
-import Mathlib.RingTheory.PowerSeries.Trunc
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaTrace
+public import Mathlib.RingTheory.PowerSeries.Trunc
 
 /-!
 # Formal zeta rationality from an eventual coefficient recurrence
@@ -18,6 +20,8 @@ therefore an actual polynomial numerator.
 
 No geometric or point-count hypothesis is used here.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

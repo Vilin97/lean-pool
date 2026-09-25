@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionIntermediateFrobeniusTwistFinitePlaceAverage
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistRationalPlaceAverage
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionIntermediateFrobeniusTwistFinitePlaceAverage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistRationalPlaceAverage
 
 /-!
 # Complete rational-place averaging over an intermediate base
@@ -15,6 +17,8 @@ counts differ from it only at infinity, and both the twists and `L` have at
 most the original degree `[N : C(X)]` rational infinity places.  This gives a
 uniform aggregate error independent of the auxiliary constant extension.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

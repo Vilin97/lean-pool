@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalDerivative
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.RingTheory.HahnSeries.Valuation
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalDerivative
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.RingTheory.HahnSeries.Valuation
 
 /-!
 # Local Wronskian order estimates
@@ -21,6 +23,8 @@ the completion-level inequality in the source argument; embedding a curve's
 function field in these completions and summing the resulting orders remain
 separate global geometric obligations.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

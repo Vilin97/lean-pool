@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.FieldTheory.Finite.GaloisField
+
+public import Mathlib.FieldTheory.Finite.GaloisField
 
 /-!
 # Finite subfields in a common overfield
@@ -19,6 +21,8 @@ already supplies `#B` roots of `X ^ (#B) - X`; the polynomial has at most
 `#B` roots.  Divisibility of extension degrees then shows that every element
 of the image of `A` is another root of the same polynomial.
 -/
+
+@[expose] public section
 
 open Polynomial
 

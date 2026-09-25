@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindCanonicalDifferentScaling
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationDerivationPreservation
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PerfectConstants
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlace
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindCanonicalDifferentScaling
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationDerivationPreservation
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalDifferentDivisor
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PerfectConstants
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlace
+public import Mathlib.Tactic
 
 /-!
 # Canonical derivation scalings at finite extension places
@@ -21,6 +23,8 @@ coefficient of the canonical different divisor.  The quotient-rule bridge then
 shows that the scaled derivation preserves the complete localized DVR used by
 the finite-place Wronskian estimates.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

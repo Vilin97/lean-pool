@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.EvenSignAction
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.EvenSignAction
 
 /-!
 # Divisibility from the free even-sign action
@@ -13,6 +15,8 @@ For odd characteristic, the Klein four-group of even sign changes acts freely
 on the punctured Markoff surface. Consequently every finite sign-invariant set
 is a disjoint union of four-element sign orbits.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 
@@ -62,7 +66,7 @@ theorem evenSign_eq_one_of_smul_eq
         eq_zero_of_neg_eq htwo (congrArg Point.x3 fixedPoint)
       have hsecond : x.1.1.x2 = 0 := by
         have hmarkoff := x.1.2
-        simp [IsMarkoff, markoffPolynomial, hfirst, hthird] at hmarkoff
+        simp only [ne_eq] at hmarkoff
         exact hmarkoff
       exfalso
       apply x.2
@@ -75,7 +79,7 @@ theorem evenSign_eq_one_of_smul_eq
         eq_zero_of_neg_eq htwo (congrArg Point.x3 fixedPoint)
       have hfirst : x.1.1.x1 = 0 := by
         have hmarkoff := x.1.2
-        simp [IsMarkoff, markoffPolynomial, hsecond, hthird] at hmarkoff
+        simp only [ne_eq] at hmarkoff
         exact hmarkoff
       exfalso
       apply x.2

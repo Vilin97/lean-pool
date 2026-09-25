@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveDiagonalStabilizer
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageIndex
-import Mathlib.FieldTheory.Galois.Basic
-import Mathlib.FieldTheory.KummerExtension
-import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveDiagonalStabilizer
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageIndex
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.FieldTheory.KummerExtension
+public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
+public import Mathlib.Tactic
 
 /-!
 # The source-to-powered-image index over algebraically closed constants
@@ -20,6 +22,8 @@ coordinates.  Its automorphisms act diagonally on the two coordinates.  The
 resulting pair of roots of unity lies in the support-character stabilizer, so
 a rank-two support determinant bounds the extension degree.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 noncomputable section

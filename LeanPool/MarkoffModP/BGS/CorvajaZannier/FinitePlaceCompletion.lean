@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.DedekindDomain.AdicValuation
-import Mathlib.RingTheory.DedekindDomain.Factorization
+
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation
+public import Mathlib.RingTheory.DedekindDomain.Factorization
 
 /-!
 # Finite places and their adic completions
@@ -24,6 +26,8 @@ divisor infrastructure needed in the Corvaja--Zannier Wronskian argument.
 It does not add the places above infinity, a degree map on divisors, or the
 canonical-divisor degree formula.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors
 open IsDedekindDomain Multiplicative WithZero

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceCount
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlaceCompatibility
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceCount
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlaceCompatibility
 
 /-!
 # Splitting multiplicity in an exact extension of constants
@@ -17,6 +19,8 @@ the embedded enlarged constant field, computes the relative residue degree
 from the already established absolute degree formula, and applies the Galois
 fiber identity.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 

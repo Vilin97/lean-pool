@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderEulerSevenComplementObstruction
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinProfileCertificate
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinProfileMatching
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeCertificate
-import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotientRankinFactorization
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderEulerSevenComplementObstruction
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinProfileCertificate
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinProfileMatching
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeCertificate
+public import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotientRankinFactorization
 
 /-!
 # Exact-order Rankin envelope for the Markoff obstruction
@@ -18,6 +20,8 @@ Euler product.  The deliberately coarse first endpoint uses the total numbers
 of divisors of `p - 1` and `p + 1`; the already formalized Sperner width can
 replace this envelope later without changing the Rankin layer.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

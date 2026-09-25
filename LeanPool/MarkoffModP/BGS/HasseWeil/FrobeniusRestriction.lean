@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PoleDivisor
-import LeanPool.MarkoffModP.BGS.HasseWeil.TensorRestriction
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PoleDivisor
+public import LeanPool.MarkoffModP.BGS.HasseWeil.TensorRestriction
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.Tactic
 
 /-!
 # Frobenius restriction over a finite constant field
@@ -22,6 +24,8 @@ linear map, specializes the two tensor-restriction orientations, and records
 the principal-divisor and pole-budget identities needed by the Stepanov
 restriction argument.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionAutomorphism
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureRatFuncEquiv
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncExactConstantExtension
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionAutomorphism
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosureRatFuncEquiv
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncExactConstantExtension
 
 /-!
 # The original function field after enlarging the normal-closure constants
@@ -21,6 +23,8 @@ This file constructs that image as an intermediate field, equips it with the
 two structural facts needed downstream: `N / CF` is finite Galois and `C` is
 the exact constant field of `CF`.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 
@@ -74,6 +78,7 @@ noncomputable def functionFieldNormalClosureOriginalMultiplication :
     ((functionFieldToNormalClosure K F).restrictScalars K)
     (fun _ _ => Commute.all _ _)
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] [FiniteDimensional (RatFunc K) F] in
 @[simp]
 theorem functionFieldNormalClosureOriginalMultiplication_tmul
     (c : FunctionFieldNormalClosureConstantField K F) (x : F) :
@@ -117,6 +122,7 @@ theorem functionFieldNormalClosureConstant_mem_originalCompositum
       (FunctionFieldNormalClosureConstantField K F) hExact
   exact ⟨c ⊗ₜ[K] (1 : F), by simp⟩
 
+omit [DecidableEq (RatFunc K)] in
 /-- The original rational-function field belongs to `CF`. -/
 theorem functionFieldNormalClosureRatFunc_mem_originalCompositum
     (hExact : algebraicClosure K F = (⊥ : IntermediateField K F))

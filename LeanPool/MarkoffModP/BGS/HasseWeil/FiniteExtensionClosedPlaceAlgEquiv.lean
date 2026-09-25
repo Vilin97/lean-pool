@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ClosedPlaceEulerRecurrence
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceAlgEquiv
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ClosedPlaceEulerRecurrence
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceAlgEquiv
 
 /-!
 # Closed-place counts across function-field equivalences
@@ -14,6 +16,8 @@ The closed-place extension-count sequence is a weighted sum depending only
 on absolute place degrees.  Hence the degree-preserving place equivalence
 induced by a `K(X)`-algebra equivalence preserves the entire sequence.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorNonparabolicOrderCover
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.NonparabolicUnionBound
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.PairedCorvajaZannierBound
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorNonparabolicOrderCover
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.NonparabolicUnionBound
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.PairedCorvajaZannierBound
 
 /-!
 # Paired Corvaja--Zannier escape over maximal candidate orders
@@ -22,6 +24,8 @@ where `K` is the number of divisibility-maximal candidate orders.
 
 No Euler-characteristic improvement is used in this module.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

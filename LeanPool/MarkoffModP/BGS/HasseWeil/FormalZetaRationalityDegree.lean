@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaRationality
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaRationality
 
 /-!
 # Degree bounds in formal zeta rationality
@@ -13,6 +15,8 @@ The recurrence construction in `FormalZetaRationality` chooses its numerator
 as a finite truncation.  This file exposes the resulting degree bound, which
 is needed to turn a Riemann--Roch threshold into a uniform Hasse coefficient.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

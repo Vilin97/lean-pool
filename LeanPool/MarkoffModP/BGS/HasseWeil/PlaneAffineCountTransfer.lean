@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Tactic
 
 /-!
 # Numerical transfer from normalization counts to affine counts
@@ -15,6 +17,8 @@ is naturally expressed by two inequalities between natural-number
 cardinalities.  This file isolates the real absolute-value bookkeeping needed
 to combine those inequalities with the closed Hasse--Weil bound.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

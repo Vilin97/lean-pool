@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.PolynomialAlgebra
-import Mathlib.RingTheory.Smooth.Field
-import Mathlib.RingTheory.Smooth.IntegralClosure
+
+public import Mathlib.RingTheory.PolynomialAlgebra
+public import Mathlib.RingTheory.Smooth.Field
+public import Mathlib.RingTheory.Smooth.IntegralClosure
 
 /-!
 # Normalization after finite constant extension
@@ -19,6 +21,8 @@ The first declaration records the general smooth statement.  The second
 specializes it to finite fields: finiteness makes `S / C` finite type, while
 the perfectness of `C` supplies formal smoothness.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 

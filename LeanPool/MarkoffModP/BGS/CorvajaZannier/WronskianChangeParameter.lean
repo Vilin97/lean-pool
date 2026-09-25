@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Algebra.DifferentialWronskian
-import Mathlib.LinearAlgebra.Matrix.Block
+
+public import LeanPool.MarkoffModP.BGS.Algebra.DifferentialWronskian
+public import Mathlib.LinearAlgebra.Matrix.Block
 
 /-!
 # Change of parameter for ordinary Wronskians
@@ -16,6 +18,8 @@ If two derivations on a field satisfy `D = a • E`, then the `i`-th iterate of
 matrix whose diagonal is `1, a, a^2, ...`.  This file records that argument;
 in particular it does not make the false simplification `(a • E)^i = a^i • E^i`.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

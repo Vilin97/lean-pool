@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlaceFrobeniusAverage
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistRiemannLower
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFinitePlaceFrobeniusAverage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistRiemannLower
 
 /-!
 # Finite places of Frobenius-twist fields
@@ -28,6 +30,8 @@ reverse implication for an arbitrary twist-fixed top place additionally
 requires the unramified residue-field descent for the constant extension;
 that result is not hidden in the interface below.
 -/
+
+@[expose] public section
 
 open scoped Pointwise Polynomial TensorProduct
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionHasseWeil
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineHasseWeilFromZeta
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneConstantField
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCurveGenusBoundAutomatic
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFrobeniusReduction
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionHasseWeil
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineHasseWeilFromZeta
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneConstantField
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneCurveGenusBoundAutomatic
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFrobeniusReduction
 
 /-!
 # The general affine bivariate Hasse--Weil theorem
@@ -21,6 +23,8 @@ coefficient `8`.  Frobenius deflation then removes both separating-coordinate
 hypotheses without changing the affine point count or increasing the supplied
 bidegree bounds.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

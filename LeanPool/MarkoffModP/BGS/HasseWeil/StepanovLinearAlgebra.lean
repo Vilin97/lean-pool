@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointHeight
-import Mathlib.LinearAlgebra.Dimension.Finite
-import Mathlib.LinearAlgebra.Dimension.Constructions
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointHeight
+public import Mathlib.LinearAlgebra.Dimension.Finite
+public import Mathlib.LinearAlgebra.Dimension.Constructions
 
 /-!
 # Linear-algebra core of the Bombieri--Stepanov argument
@@ -19,6 +21,8 @@ nonzero under the first.  Once the first restriction is known to lie in a
 one-point Riemann space and to vanish at every rational intersection point,
 the exhaustive divisor zero count bounds the number of those points.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

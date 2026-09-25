@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Analysis.Complex.Polynomial.Basic
-import LeanPool.MarkoffModP.BGS.Dynamics.FiniteForwardOrbit
-import LeanPool.MarkoffModP.BGS.Markoff.Core.NormalizedOrbit
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.ParabolicPeriodicity
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.PeriodicSemisimple
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.TorsionTraces
+
+public import Mathlib.Analysis.Complex.Polynomial.Basic
+public import LeanPool.MarkoffModP.BGS.Dynamics.FiniteForwardOrbit
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.NormalizedOrbit
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.ParabolicPeriodicity
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.PeriodicSemisimple
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.TorsionTraces
 
 /-!
 # Torsion traces forced by finite Markoff orbits
@@ -17,6 +19,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.Opening.TorsionTraces
 Use returns of coordinate rotations to obtain torsion traces and rule out finite complex orbits
 away from the origin.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

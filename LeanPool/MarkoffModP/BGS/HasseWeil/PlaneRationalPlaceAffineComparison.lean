@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineRationalPlaceComparison
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncParameterPole
-import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralSquareFieldStepanovCount
-import Mathlib.Algebra.Polynomial.RingDivision
-import Mathlib.NumberTheory.RamificationInertia.Basic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineRationalPlaceComparison
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncParameterPole
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralSquareFieldStepanovCount
+public import Mathlib.Algebra.Polynomial.RingDivision
+public import Mathlib.NumberTheory.RamificationInertia.Basic
 
 /-!
 # Rational normalization places and affine exceptional fibers
@@ -29,6 +31,8 @@ not detect degree drop after specialization, especially in positive
 characteristic.
 -/
 
+@[expose] public section
+
 open scoped Polynomial
 
 namespace BGS.HasseWeil
@@ -39,7 +43,8 @@ open BGS.CorvajaZannier Polynomial
 
 variable (K : Type*) [Field K] [DecidableEq K]
 
-private def linearNormalizedPrime (a : K) : NormalizedPrimePolynomial K :=
+/-- The normalized prime polynomial corresponding to the affine coordinate `a`. -/
+def linearNormalizedPrime (a : K) : NormalizedPrimePolynomial K :=
   ⟨Polynomial.X - Polynomial.C a, Polynomial.prime_X_sub_C a,
     (Polynomial.monic_X_sub_C a).normalize_eq_self⟩
 
@@ -787,17 +792,17 @@ noncomputable def planeCurveGoodRationalFinitePlaceCenter
   have hb : algebraMap K m.ResidueField b =
       algebraMap V m.ResidueField yv := Classical.choose_spec
         (hresidue (algebraMap V m.ResidueField yv))
-  refine ⟨(a, b), ?_⟩
-  apply eval_pair_eq_zero_of_residue V m f xv yv a b ha hb
-  rw [hxv]
-  change MvPolynomial.eval₂ (algebraMap K E)
-    ![planeCurveFunction f 0, planeCurveFunction f 1] f = 0
-  have hcoordinates : planeCurveFunction f =
-      ![planeCurveFunction f 0, planeCurveFunction f 1] := by
-    funext i
-    fin_cases i <;> rfl
-  rw [← hcoordinates]
-  exact eval₂_planeCurveFunction_eq_zero f
+  exact ⟨(a, b), by
+    apply eval_pair_eq_zero_of_residue V m f xv yv a b ha hb
+    rw [hxv]
+    change MvPolynomial.eval₂ (algebraMap K E)
+      ![planeCurveFunction f 0, planeCurveFunction f 1] f = 0
+    have hcoordinates : planeCurveFunction f =
+        ![planeCurveFunction f 0, planeCurveFunction f 1] := by
+      funext i
+      fin_cases i <;> rfl
+    rw [← hcoordinates]
+    exact eval₂_planeCurveFunction_eq_zero f⟩
 
 omit [Fintype K] in
 /-- The first coordinate of the affine residue center is the base coordinate

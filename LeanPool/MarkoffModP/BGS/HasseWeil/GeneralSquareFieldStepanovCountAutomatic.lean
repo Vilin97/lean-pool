@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralFiniteExtensionRiemannLower
-import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralSquareFieldStepanovCount
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralFiniteExtensionRiemannLower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralSquareFieldStepanovCount
 
 /-!
 # Automatic intrinsic Stepanov bounds
@@ -16,6 +18,8 @@ for every finite separable function field.  This file composes those results,
 leaving only the explicit large-square-field inequality for the constructed
 budget.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

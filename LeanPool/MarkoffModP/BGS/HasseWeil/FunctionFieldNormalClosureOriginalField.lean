@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceAlgEquiv
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionClosedPlaceAlgEquiv
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosure
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceAlgEquiv
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionClosedPlaceAlgEquiv
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosure
 
 /-!
 # The original field inside its chosen normal closure
@@ -16,6 +18,8 @@ closure has a field range.  This file names that intermediate field, records
 the tautological algebra equivalence with the original presentation, and
 transports exact constants and rational-place counts across it.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -74,6 +78,7 @@ local instance originalFieldImageConstantTower :
     (R := K) (S := RatFunc K)
       (A := FunctionFieldNormalClosureOriginalField K F) rfl
 
+omit [FiniteDimensional (RatFunc K) F] in
 /-- Exactness of the constant field is unchanged when the original function
 field is replaced by its embedded image in the normal closure. -/
 theorem functionFieldNormalClosureOriginalField_algebraicClosure_eq_bot

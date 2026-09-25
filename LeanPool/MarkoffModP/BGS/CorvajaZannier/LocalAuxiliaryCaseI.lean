@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalAuxiliaryWronskian
-import Mathlib.Algebra.Order.Group.Int.Sum
-import Mathlib.LinearAlgebra.Matrix.Transvection
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.LocalAuxiliaryWronskian
+public import Mathlib.Algebra.Order.Group.Int.Sum
+public import Mathlib.LinearAlgebra.Matrix.Transvection
 
 /-!
 # Corvaja--Zannier local case (i)
@@ -27,6 +29,8 @@ this sharpens the ordinary Wronskian order to
 Source provenance: published pages 1935--1936; checked semantic reconstruction
 `Papers/CorvajaZannier2013/CorvajaZannier2013.tex`, lines 640--685.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

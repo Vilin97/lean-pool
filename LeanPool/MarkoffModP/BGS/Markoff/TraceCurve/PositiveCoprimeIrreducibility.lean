@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.OddCoprimeIrreducibility
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.OddCoprimeIrreducibility
 
 /-!
 # Irreducibility of positive coprime split trace covers
@@ -17,6 +19,8 @@ tower to the actual affine cover polynomial and proves its principal ideal prime
 The coprimality restriction is still real in this proof: common prime divisors require a separate
 Kummer-class independence argument and are not hidden here.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

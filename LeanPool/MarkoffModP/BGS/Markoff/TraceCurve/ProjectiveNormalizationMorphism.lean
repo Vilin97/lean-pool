@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.BiprojectiveScheme
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ProjectiveNormalizationCharts
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.BiprojectiveScheme
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.ProjectiveNormalizationCharts
 
 /-!
 # The normalization morphism on trace-curve charts
@@ -15,6 +17,8 @@ point is the explicit principal-open square: localization of the affine normaliz
 with normalization of the Laurent chart.  The coordinate inversions are then checked to commute
 with the raw-to-normalized Laurent map.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

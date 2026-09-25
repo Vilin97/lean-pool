@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionGcdOutsideHeight
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExceptionalSupport
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionGcdOutsideHeight
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExceptionalSupport
+public import Mathlib.Tactic
 
 /-!
 # The gcd height of a function and its complement
@@ -14,6 +16,8 @@ import Mathlib.Tactic
 Control the common divisor of a function and one minus that function using local orders,
 exceptional places, and outside height.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

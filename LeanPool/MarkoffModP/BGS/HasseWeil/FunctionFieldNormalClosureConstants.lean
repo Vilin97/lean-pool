@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldConstantField
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneConstantField
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldConstantField
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneConstantField
 
 /-!
 # Constants and restriction for the function-field Galois closure
@@ -19,6 +21,8 @@ is fixed by the full Galois group over `K(t)`, hence lies in `K(t)`; because it
 is algebraic over `K`, the exact constant-field theorem for `K(t)` puts it in
 `K`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

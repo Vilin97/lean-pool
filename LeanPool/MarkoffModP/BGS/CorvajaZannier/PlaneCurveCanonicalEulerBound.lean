@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalDegreeBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBoundarySupport
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalDegreeBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveBoundarySupport
+public import Mathlib.Tactic
 
 /-!
 # The log-canonical degree budget for a plane curve
@@ -15,6 +17,8 @@ This module combines the canonical-different estimate with the weighted
 zero/pole boundary estimate.  It is the exact geometric input `chi = 2ab`
 used by the exhaustive-place form of Corvaja--Zannier Proposition 2.
 -/
+
+@[expose] public section
 
 open scoped Polynomial BigOperators
 

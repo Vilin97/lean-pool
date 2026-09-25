@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneOnePointRiemannLower
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneOnePointRiemannLower
+public import Mathlib.Tactic
 
 /-!
 # Riemann's inequality for divisors supported above infinity
@@ -21,6 +23,8 @@ degree, so the same inequality descends to the original infinity-supported
 divisor.
 -/
 
+@[expose] public section
+
 namespace BGS.HasseWeil
 
 open BGS.CorvajaZannier
@@ -34,6 +38,8 @@ variable (L : Type*) [Field L] [Algebra (RatFunc K) L]
   [FiniteDimensional (RatFunc K) L]
   [Algebra.IsSeparable (RatFunc K) L]
 
+omit [Fintype K] [DecidableEq K] [FiniteDimensional (RatFunc K) L]
+  [Algebra.IsSeparable (RatFunc K) L] in
 /-- An effective divisor supported above infinity is dominated by a natural
 multiple of any effective divisor that is positive at every infinity
 place. -/

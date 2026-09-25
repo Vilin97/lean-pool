@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionPointNormalization
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionPointNormalization
 
 /-!
 # Torsion points contribute to the normalization gcd divisor
@@ -16,6 +18,8 @@ give distinct branches, both torsion functions have positive order there, and
 therefore the number of torsion points is bounded by the sum of the local gcd
 multiplicities.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 
@@ -44,6 +48,7 @@ def liftedTorsionPointNormalizationBranch
     (S := B) (torsionPointMaximalIdeal f firstOrder secondOrder z).asIdeal
   exact ⟨Classical.choose hex, (Classical.choose_spec hex).1⟩
 
+omit [IsDomain (PlaneCurveCoordinateRing f)] in
 theorem liftedTorsionPointNormalizationBranch_liesOver
     {B : Type*} [CommRing B] [IsDedekindDomain B]
     [Algebra (PlaneCurveCoordinateRing f) B]

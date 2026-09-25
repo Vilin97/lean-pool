@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.WeightedCoarseSupportSurjectivity
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.TransitivitySurjectivity
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.WeightedCoarseSupportSurjectivity
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.TransitivitySurjectivity
 
 /-!
 # Explicit strong approximation
@@ -14,6 +16,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.Assembly.TransitivitySurjectivity
 The explicit punctured-transitivity theorem, together with natural Markoff connectivity,
 gives surjectivity of reduction from natural-number Markoff solutions.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

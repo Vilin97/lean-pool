@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFiniteDifferent
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionInfinityDifferent
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionInfinityPlaceCompatibility
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionGenusInvariance
-import LeanPool.MarkoffModP.BGS.HasseWeil.IdealMultiplicityMap
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFiniteDifferent
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionInfinityDifferent
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionInfinityPlaceCompatibility
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionGenusInvariance
+public import LeanPool.MarkoffModP.BGS.HasseWeil.IdealMultiplicityMap
 
 /-!
 # Local different coefficients under exact constant extension
@@ -19,6 +21,8 @@ has ramification index one, their multiplicities agree place by place.  This
 discharges the local hypothesis of the global different-degree and genus
 transport theorems.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 

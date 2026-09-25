@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Algebra.Algebra.Basic
-import Mathlib.Algebra.Polynomial.OfFn
-import Mathlib.Algebra.Polynomial.Eval.Degree
-import Mathlib.LinearAlgebra.LinearIndependent.Defs
-import Mathlib.Tactic.FieldSimp
+
+public import Mathlib.Algebra.Algebra.Basic
+public import Mathlib.Algebra.Polynomial.OfFn
+public import Mathlib.Algebra.Polynomial.Eval.Degree
+public import Mathlib.LinearAlgebra.LinearIndependent.Defs
+public import Mathlib.Tactic.FieldSimp
 
 /-!
 # The Corvaja--Zannier auxiliary family
@@ -33,6 +35,8 @@ Source provenance: published pages 1933--1934; checked semantic reconstruction
 `Papers/CorvajaZannier2013/CorvajaZannier2013.tex`, lines 518--570.  The
 dependence-to-relation step formalized here is lines 518--545.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

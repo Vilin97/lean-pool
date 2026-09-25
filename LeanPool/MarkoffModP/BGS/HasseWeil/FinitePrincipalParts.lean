@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.CechRiemannLinearAlgebra
-import LeanPool.MarkoffModP.BGS.HasseWeil.LocalPoleFiltration
-import Mathlib.LinearAlgebra.Dimension.Constructions
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.CechRiemannLinearAlgebra
+public import LeanPool.MarkoffModP.BGS.HasseWeil.LocalPoleFiltration
+public import Mathlib.LinearAlgebra.Dimension.Constructions
 
 /-!
 # Finite principal parts
@@ -27,6 +29,8 @@ regular at every chosen place.  Thus, once the all-place function-field layer
 identifies that regular subspace with the constants, the quotient by constants
 embeds in this finite-dimensional principal-parts space.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

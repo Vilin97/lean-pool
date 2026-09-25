@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalWronskian
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FrobeniusWronskian
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.AuxiliaryFamily
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalWronskian
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FrobeniusWronskian
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.AuxiliaryFamily
+public import Mathlib.Tactic
 
 /-!
 # Indexing the auxiliary Wronskian family
@@ -15,6 +17,8 @@ import Mathlib.Tactic
 Enumerate the auxiliary family and its derivative orders, then transport determinant
 nonvanishing through that indexing.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 
@@ -94,9 +98,7 @@ theorem indexedAuxiliaryWronskian_det_eq_derivationWronskian_det
         Matrix.reindex e.symm e.symm
           (BGS.Algebra.derivationWronskian D g) := by
     ext i j
-    simp [indexedDedekindLocalWronskian,
-      auxiliaryFamilyDerivativeOrder, BGS.Algebra.derivationWronskian,
-      Matrix.reindex_apply, Matrix.submatrix, g, e]
+    simp only [Matrix.reindex_apply, Equiv.symm_symm, Matrix.submatrix_apply]
     exact (Module.End.pow_apply D.toLinearMap _ (f j)).symm
   rw [hmatrix, Matrix.det_reindex_self]
 

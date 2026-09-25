@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExhaustiveProductFormula
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianWeightedPlaceSum
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityInertiaDegree
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExhaustiveProductFormula
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianWeightedPlaceSum
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.InfinityInertiaDegree
+public import Mathlib.Tactic
 
 /-!
 # Principal divisors on the exhaustive places of a finite function field
@@ -24,6 +26,8 @@ degree / pole-height decomposition.  Over an algebraically closed constant
 field, all finite and above-infinity residue degrees are proved equal to one,
 so the ordinary-order specialization has no residual place-degree hypothesis.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors Polynomial
 open IsDedekindDomain
@@ -128,6 +132,7 @@ def finiteExtensionFinitePrincipalDivisor (x : L) :
   finitePrincipalDivisor
     ((ratFuncFiniteIntegralClosureFractionRingEquiv K L).symm x)
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 @[simp] theorem finiteExtensionFinitePrincipalDivisor_apply
     (x : L) (q : FiniteExtensionFinitePlace K L) :
     finiteExtensionFinitePrincipalDivisor K L x q =
@@ -141,6 +146,7 @@ def finiteExtensionInfinityPrincipalDivisor (x : L) :
     finitePlaceOrder (primeOverHeightOne (ratFuncInfinityPlace K) P)
       ((ratFuncInfinityIntegralClosureFractionRingEquiv K L).symm x))
 
+omit [DecidableEq K] in
 @[simp] theorem finiteExtensionInfinityPrincipalDivisor_apply
     (x : L) (P : FiniteExtensionInfinityPlace K L) :
     finiteExtensionInfinityPrincipalDivisor K L x P =
@@ -491,6 +497,7 @@ def finiteExtensionFamilyWeightedOrder (f : A → L) (a : A)
   finiteExtensionFamilyOrder K L f a v *
     (finiteExtensionPlaceDegree K L v.1 : ℤ)
 
+omit [DecidableEq K] in
 theorem finiteExtensionPrincipalDivisor_support_subset_familySupport
     (f : A → L) (a : A) :
     (finiteExtensionPrincipalDivisor K L (f a)).support ⊆
@@ -500,6 +507,7 @@ theorem finiteExtensionPrincipalDivisor_support_subset_familySupport
     Finset.mem_univ, true_and]
   exact ⟨a, hv⟩
 
+omit [DecidableEq K] in
 theorem finiteExtensionFamilyOrder_eq_zero_of_not_mem_support
     (f : A → L) (a : A) (v : FiniteExtensionFamilyPlace K L f)
     (hv : v.1 ∉ (finiteExtensionPrincipalDivisor K L (f a)).support) :
@@ -835,6 +843,7 @@ noncomputable def ratFuncFinitePlaceResidueEquiv (p : HeightOneSpectrum K[X]) :
       p.asIdeal.bijective_algebraMap_quotient_residueField
   exact eResidue.symm.trans eQuot
 
+omit [DecidableEq (RatFunc K)] in
 theorem ratFuncFinitePlaceDegree_eq_one (p : HeightOneSpectrum K[X]) :
     ratFuncFinitePlaceDegree p = 1 := by
   let r := finitePlaceNormalizedPrime p
@@ -843,6 +852,7 @@ theorem ratFuncFinitePlaceDegree_eq_one (p : HeightOneSpectrum K[X]) :
   rw [ratFuncFinitePlaceDegree]
   exact Polynomial.natDegree_eq_of_degree_eq_some hrdegree
 
+omit [DecidableEq (RatFunc K)] in
 theorem finiteExtensionFinitePlace_inertiaDeg_eq_one
     (q : FiniteExtensionFinitePlace K L) :
     q.asIdeal.inertiaDeg K[X] = 1 := by

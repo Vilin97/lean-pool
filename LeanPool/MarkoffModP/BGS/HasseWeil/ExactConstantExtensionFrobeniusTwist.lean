@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionQuotient
-import LeanPool.MarkoffModP.BGS.HasseWeil.FrobeniusTwistGroup
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionQuotient
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FrobeniusTwistGroup
 
 /-!
 # Fixed fields of Frobenius twists
@@ -29,6 +31,8 @@ in addition, stability of relative algebraic closedness under finite
 separable base change; that separate regular-base-change lemma is not
 assumed here.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

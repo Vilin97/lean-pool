@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneRegularPointCount
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSmoothPointNormalization
-import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlace
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneRegularPointCount
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSmoothPointNormalization
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RationalPlace
+public import Mathlib.Tactic
 
 /-!
 # Affine plane points and rational normalization places
@@ -19,6 +21,8 @@ give distinct places.  Consequently the regular affine locus injects into the
 rational finite places, and adding the explicit critical locus compares all
 affine rational points with the full rational-place count.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

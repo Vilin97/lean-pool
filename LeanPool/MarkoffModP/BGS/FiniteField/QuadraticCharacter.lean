@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.NumberTheory.JacobiSum.Basic
-import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
+
+public import Mathlib.NumberTheory.JacobiSum.Basic
+public import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
 
 /-!
 # Quadratic character sums and conic points
@@ -13,6 +15,8 @@ import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
 Evaluate quadratic character sums and use them to find conic points avoiding a prescribed small
 exceptional set.
 -/
+
+@[expose] public section
 
 namespace BGS.FiniteField
 

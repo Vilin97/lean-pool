@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionQuotient
-import LeanPool.MarkoffModP.BGS.HasseWeil.FrobeniusPlaceCardinality
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionQuotient
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FrobeniusPlaceCardinality
 
 /-!
 # Finite places of an exact constant extension
@@ -16,6 +18,8 @@ compatible with the resulting Galois action.  Consequently, at every finite
 place whose residue field has degree one over the enlarged constants, the
 kernel of constant restriction on the decomposition group is exactly inertia.
 -/
+
+@[expose] public section
 
 open scoped Pointwise Polynomial TensorProduct
 
@@ -79,8 +83,8 @@ noncomputable def exactConstantExtensionConstantToFiniteIntegralClosureRingHom :
     RingHom.toAlgebra
       ((algebraMap (RatFunc C) (ExactConstantExtension C N S)).comp
         (algebraMap C[X] (RatFunc C)))
-  letI : IsScalarTower C C[X] (ExactConstantExtension C N S) :=
-    exactConstantExtension_polynomialTower C N S
+  letI : IsScalarTower C C[X] (ExactConstantExtension C N S) := by
+    exact exactConstantExtension_polynomialTower C N S
   let f : S →ₐ[C] ExactConstantExtension C N S :=
     Algebra.TensorProduct.includeLeft
   exact
@@ -162,8 +166,8 @@ theorem exactConstantExtensionConstantQuotient_action_on_finiteNormalization
     letI : Algebra L (ExactConstantExtension C N S) :=
       exactConstantExtensionBaseAlgebra C L N S
     letI : IsScalarTower (RatFunc C) L
-        (ExactConstantExtension C N S) :=
-      exactConstantExtension_ratFuncBaseTower C N S L
+        (ExactConstantExtension C N S) := by
+      exact exactConstantExtension_ratFuncBaseTower C N S L
     letI : IsGalois L (ExactConstantExtension C N S) :=
       exactConstantExtension_isGalois C L N S hExact
     letI : Algebra S (RatFuncFiniteIntegralClosure C
@@ -186,8 +190,8 @@ theorem exactConstantExtensionConstantQuotient_action_on_finiteNormalization
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
   let : Algebra L (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C L N S
-  let : IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) :=
-    exactConstantExtension_ratFuncBaseTower C N S L
+  let : IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) := by
+    exact exactConstantExtension_ratFuncBaseTower C N S L
   let : Algebra C[X] L :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc C) L).comp (algebraMap C[X] (RatFunc C)))
@@ -285,8 +289,8 @@ theorem exactConstantExtensionFinitePlace_stabilizerRestriction_ker_eq_inertia
     letI : Algebra L (ExactConstantExtension C N S) :=
       exactConstantExtensionBaseAlgebra C L N S
     letI : IsScalarTower (RatFunc C) L
-        (ExactConstantExtension C N S) :=
-      exactConstantExtension_ratFuncBaseTower C N S L
+        (ExactConstantExtension C N S) := by
+      exact exactConstantExtension_ratFuncBaseTower C N S L
     letI : IsGalois L (ExactConstantExtension C N S) :=
       exactConstantExtension_isGalois C L N S hExact
     letI : Algebra S (RatFuncFiniteIntegralClosure C
@@ -312,8 +316,8 @@ theorem exactConstantExtensionFinitePlace_stabilizerRestriction_ker_eq_inertia
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
   let : Algebra L (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C L N S
-  let : IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) :=
-    exactConstantExtension_ratFuncBaseTower C N S L
+  let : IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) := by
+    exact exactConstantExtension_ratFuncBaseTower C N S L
   let : IsGalois L (ExactConstantExtension C N S) :=
     exactConstantExtension_isGalois C L N S hExact
   let : Algebra S (RatFuncFiniteIntegralClosure C
@@ -372,8 +376,8 @@ theorem exactConstantExtensionFinitePlace_decompositionGroup_card
     letI : Algebra L (ExactConstantExtension C N S) :=
       exactConstantExtensionBaseAlgebra C L N S
     letI : IsScalarTower (RatFunc C) L
-        (ExactConstantExtension C N S) :=
-      exactConstantExtension_ratFuncBaseTower C N S L
+        (ExactConstantExtension C N S) := by
+      exact exactConstantExtension_ratFuncBaseTower C N S L
     letI : IsGalois L (ExactConstantExtension C N S) :=
       exactConstantExtension_isGalois C L N S hExact
     letI : Algebra S (RatFuncFiniteIntegralClosure C
@@ -402,8 +406,8 @@ theorem exactConstantExtensionFinitePlace_decompositionGroup_card
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
   let : Algebra L (ExactConstantExtension C N S) :=
     exactConstantExtensionBaseAlgebra C L N S
-  let : IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) :=
-    exactConstantExtension_ratFuncBaseTower C N S L
+  let : IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) := by
+    exact exactConstantExtension_ratFuncBaseTower C N S L
   let : IsGalois L (ExactConstantExtension C N S) :=
     exactConstantExtension_isGalois C L N S hExact
   let : Algebra S (RatFuncFiniteIntegralClosure C

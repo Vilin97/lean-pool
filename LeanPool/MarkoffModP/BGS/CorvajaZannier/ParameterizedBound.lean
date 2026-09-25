@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Tactic
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Tactic
 
 /-!
 # The parameterized numerical bound in Corvaja--Zannier Theorem 4
@@ -23,6 +25,8 @@ The source chooses
 The proof below retains that choice and checks the small-`k`, degree-
 alternative, parameter-admissibility, and numerical-bound cases separately.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 
@@ -149,7 +153,6 @@ private theorem propositionTwo_numerical_bound
   let xK : ℝ := t * kScale
   let h : ℕ := ⌊xH⌋₊ - 1
   let k : ℕ := ⌊xK⌋₊ - 1
-
   0 < k → k ≤ h →
     G ≤ (((h + 2 * k : ℕ) : ℝ) / ((h * k + h + k : ℕ) : ℝ)) * A +
       ((k : ℝ) / ((h * k + h + k : ℕ) : ℝ)) * B +
@@ -175,7 +178,6 @@ private theorem propositionTwo_numerical_bound
     simpa [kScale] using rpow_one_third_cube hkRadicandPos.le
   have hxHPos : 0 < xH := by dsimp [xH]; positivity
   have hxKPos : 0 < xK := by dsimp [xK]; positivity
-
   have hAdivKScale : A / kScale = baseRoot := by
     apply (pow_left_inj₀ (by positivity) hbaseRootPos.le
       (by norm_num : (3 : ℕ) ≠ 0)).mp
@@ -194,7 +196,6 @@ private theorem propositionTwo_numerical_bound
     rw [mul_pow, mul_pow, hhScaleCube, hkScaleCube, hbaseRootCube]
     dsimp [base]
     field_simp [hAPos.ne', hBPos.ne', hCPos.ne']
-
   have hhPos : 0 < h := lt_of_lt_of_le hkPos hkh
   have hkFloorOne : 1 ≤ ⌊xK⌋₊ := by
     dsimp [k] at hkPos
@@ -315,7 +316,6 @@ theorem theoremFour_parameterizedBound_of_propositionTwo
   let xK : ℝ := t * kScale
   let h : ℕ := ⌊xH⌋₊ - 1
   let k : ℕ := ⌊xK⌋₊ - 1
-
   have hAPos : 0 < A := by dsimp [A]; exact_mod_cast ha
   have hANonnegFromG : 0 ≤ A := hGNonneg.trans (by simpa [A] using hGTrivial)
   have hBPos : 0 < B := by
@@ -341,7 +341,6 @@ theorem theoremFour_parameterizedBound_of_propositionTwo
     simpa [kScale] using rpow_one_third_cube hkRadicandPos.le
   have hxHPos : 0 < xH := by dsimp [xH]; positivity
   have hxKPos : 0 < xK := by dsimp [xK]; positivity
-
   have hscaledDegrees : A * hScale = B * kScale := by
     apply (pow_left_inj₀ (by positivity) (by positivity) (by norm_num : (3 : ℕ) ≠ 0)).mp
     rw [mul_pow, mul_pow, hhScaleCube, hkScaleCube]
@@ -367,7 +366,6 @@ theorem theoremFour_parameterizedBound_of_propositionTwo
   have hkh : k ≤ h := by
     dsimp [h, k]
     exact Nat.sub_le_sub_right (Nat.floor_mono hxKLeXH) 1
-
   have hSizeCross :
       ((A * B) ^ 2) * (8 * t ^ 3) < (P + A + B) ^ 3 * C := by
     have hdenPos : 0 < 8 * t ^ 3 := by positivity
@@ -385,7 +383,6 @@ theorem theoremFour_parameterizedBound_of_propositionTwo
       _ < (P + A + B) ^ 3 := hdiv
   have hCommonLt : 2 * t * (A * hScale) < P + A + B :=
     lt_of_pow_lt_pow_left₀ 3 (by positivity) hCommonCubeLt
-
   by_cases hkSmall : k < 1
   · have hkZero : k = 0 := by omega
     have hxKTwo : xK < 2 := by

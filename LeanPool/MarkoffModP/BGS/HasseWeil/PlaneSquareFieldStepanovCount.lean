@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneRegularPointCount
-import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldResidue
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFinitePlaceRiemannLower
-import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovAuxiliary
-import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovZeroCount
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneRegularPointCount
+public import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldResidue
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneFinitePlaceRiemannLower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovAuxiliary
+public import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovZeroCount
+public import Mathlib.Tactic
 
 /-!
 # A conditional square-field Stepanov bound for plane curves
@@ -31,6 +33,8 @@ The degree-one hypothesis is deliberately explicit.  It is precisely the
 normalization input that must later be discharged by the local smooth-point
 theorem; no degree-one assertion is made for arbitrary singular points.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

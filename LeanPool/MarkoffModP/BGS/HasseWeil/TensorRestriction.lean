@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.LinearAlgebra.Dimension.Finite
-import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import Mathlib.LinearAlgebra.TensorProduct.Submodule
-import Mathlib.RingTheory.TensorProduct.Finite
+
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.LinearAlgebra.Dimension.Finite
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.LinearAlgebra.TensorProduct.Submodule
+public import Mathlib.RingTheory.TensorProduct.Finite
 
 /-!
 # Tensor restriction maps
@@ -23,6 +25,8 @@ The final lemmas record the finite-generation and finrank consequences that
 are needed when such a tensor restriction map is used as a target map in a
 rank-nullity argument.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

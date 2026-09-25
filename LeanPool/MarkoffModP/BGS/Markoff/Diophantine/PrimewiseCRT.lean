@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Action
-import Mathlib.Data.ZMod.QuotientRing
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Action
+public import Mathlib.Data.ZMod.QuotientRing
 
 /-!
 # Primewise puncturing and the Chinese remainder theorem
@@ -22,6 +24,8 @@ two different punctures on these objects:
 This file keeps those carriers distinct and proves that CRT and all five standard Markoff moves
 respect the primewise carrier.  No point-counting result is included here.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

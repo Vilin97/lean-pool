@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExhaustiveProductFormula
-import Mathlib.NumberTheory.ClassNumber.FunctionField
-import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExhaustiveProductFormula
+public import Mathlib.NumberTheory.ClassNumber.FunctionField
+public import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients
 
 /-!
 # Affine ideal degrees in a finite function field
@@ -27,6 +29,8 @@ affine degree is then the `K`-dimension of the quotient by `I`.  Consequently
 and Mathlib's bounded-quotient-cardinality theorem makes the ideals of each
 fixed degree into a finite type.  No Riemann--Roch or Hasse--Weil input is used.
 -/
+
+@[expose] public section
 
 open scoped Polynomial nonZeroDivisors
 

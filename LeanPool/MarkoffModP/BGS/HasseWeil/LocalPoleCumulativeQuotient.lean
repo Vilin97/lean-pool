@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.LocalPoleFiltration
-import Mathlib.RingTheory.LocalRing.Length
-import Mathlib.RingTheory.LocalRing.Quotient
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.LocalPoleFiltration
+public import Mathlib.RingTheory.LocalRing.Length
+public import Mathlib.RingTheory.LocalRing.Quotient
 
 /-!
 # Cumulative local principal parts
@@ -16,6 +18,8 @@ For a DVR uniformizer `π`, the quotient of functions with pole order at most
 of its maximal ideal.  Over a finite constant field its dimension is
 therefore `n` times the residue-field degree.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

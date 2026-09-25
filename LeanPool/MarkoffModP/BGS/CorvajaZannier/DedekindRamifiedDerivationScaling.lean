@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindDifferentDivisor
-import Mathlib.RingTheory.Conductor
-import Mathlib.RingTheory.Derivation.MapCoeffs
-import Mathlib.RingTheory.RamificationInertia.Ramification
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindDifferentDivisor
+public import Mathlib.RingTheory.Conductor
+public import Mathlib.RingTheory.Derivation.MapCoeffs
+public import Mathlib.RingTheory.RamificationInertia.Ramification
 
 /-!
 # Scaling derivations at ramified Dedekind places
@@ -23,6 +25,8 @@ comparison between the trace different and the Kähler annihilator is retained
 as an explicit hypothesis; mathlib does not currently supply it in the needed
 generality.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors Polynomial
 open IsDedekindDomain

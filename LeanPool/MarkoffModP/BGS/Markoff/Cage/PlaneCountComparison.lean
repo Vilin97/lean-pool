@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.PowerCover
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.PowerCover
 
 /-!
 # Comparing the pulled cage cover with its affine plane models
@@ -14,6 +16,8 @@ requires `t ≠ 0`.  On the diagonal the plane model also forgets the choice
 between the two equal radicand roots.  This file isolates those two losses
 and bounds them by the roots of explicit univariate polynomials.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.ExplicitNumerics
+
+public import LeanPool.MarkoffModP.BGS.Markoff.ExplicitNumerics
 
 /-!
 # Numerical certificates for the explicit strong-approximation cutoff
@@ -12,6 +14,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.ExplicitNumerics
 This file packages the closed real-power and natural-power calculations used
 by the explicit middle game, endgame, cage, and small-order argument.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

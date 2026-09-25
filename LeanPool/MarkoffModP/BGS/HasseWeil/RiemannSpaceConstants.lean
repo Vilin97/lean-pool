@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointBase
-import Mathlib.FieldTheory.AlgebraicClosure
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointBase
+public import Mathlib.FieldTheory.AlgebraicClosure
 
 /-!
 # The zero-divisor Riemann space and the exact constant field
@@ -16,6 +18,8 @@ algebraic over the constant field.  When the relative algebraic closure of
 the constants is trivial, this identifies `L(0)` with the image of the
 constant field and gives its finrank exactly equal to one.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

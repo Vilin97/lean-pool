@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionDifferentCoefficient
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistMultiplication
-import LeanPool.MarkoffModP.RiemannRoch.CoordinateFree.AlgEquiv
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionDifferentCoefficient
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistMultiplication
+public import LeanPool.MarkoffModP.RiemannRoch.CoordinateFree.AlgEquiv
 
 /-!
 # Genus of Frobenius-twist fixed fields
@@ -17,6 +19,8 @@ constants therefore identifies the genus of every twist with the genus of
 the original function field.  This is Proposition 5.2.8(b) in the form used
 by the uniform Stepanov estimate.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -38,6 +42,7 @@ local instance twistGenusBaseConstantTower :
     IsScalarTower C (RatFunc C) N :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)] in
 /-- Every canonical Frobenius-twist fixed field has the genus of the
 original exact-constant Galois function field.  The equality is independent
 of the auxiliary constant extension. -/

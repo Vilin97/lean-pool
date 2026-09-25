@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointBase
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlaceCases
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlacePrincipalDivisor
-import Mathlib.RingTheory.Finiteness.Finsupp
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointBase
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlaceCases
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlacePrincipalDivisor
+public import Mathlib.RingTheory.Finiteness.Finsupp
+public import Mathlib.Tactic
 
 /-!
 # Riemann-space increments at finite places
@@ -17,6 +19,8 @@ import Mathlib.Tactic
 Use a normalized local lift and its leading residue to bound the dimension increase when one
 finite place is added to a divisor.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -40,6 +44,8 @@ variable (hregular : ∀ x : T, ∃ r : R, a * x.1 = algebraMap R L r)
 noncomputable def localNormalizedLift (x : T) : R :=
   Classical.choose (hregular x)
 
+omit [IsDedekindDomain R] [IsDiscreteValuationRing R] [Algebra K R] [IsScalarTower K R L]
+  [IsFractionRing R L] in
 theorem localNormalizedLift_spec (x : T) :
     a * x.1 = algebraMap R L (localNormalizedLift T a hregular x) :=
   Classical.choose_spec (hregular x)

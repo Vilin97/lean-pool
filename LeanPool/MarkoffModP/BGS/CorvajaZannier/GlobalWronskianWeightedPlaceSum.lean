@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianPlaceSum
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianPlaceSum
+public import Mathlib.Tactic
 
 /-!
 # Degree-weighted Corvaja--Zannier Wronskian summation
@@ -18,6 +20,8 @@ replacing a place of weight `e` by `e` identical copies and applying
 This is the finite combinatorial form of the weighted divisor summation in
 Corvaja--Zannier, Proposition 2 (published reconstruction, pp. 15--16).
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

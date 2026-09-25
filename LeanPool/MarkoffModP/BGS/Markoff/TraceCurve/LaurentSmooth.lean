@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.LaurentJacobian
-import Mathlib.RingTheory.Smooth.Locus
-import Mathlib.RingTheory.Smooth.StandardSmooth
-import Mathlib.RingTheory.Smooth.StandardSmoothCotangent
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.LaurentJacobian
+public import Mathlib.RingTheory.Smooth.Locus
+public import Mathlib.RingTheory.Smooth.StandardSmooth
+public import Mathlib.RingTheory.Smooth.StandardSmoothCotangent
 
 /-!
 # Smoothness of the Laurent trace cover
@@ -20,6 +22,8 @@ spectrum using `weightedSplitTraceLaurentPartials_span_top`.
 The construction is explicit: no smoothness or normality assumption is stored in a structure or
 passed as an opaque typeclass premise.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

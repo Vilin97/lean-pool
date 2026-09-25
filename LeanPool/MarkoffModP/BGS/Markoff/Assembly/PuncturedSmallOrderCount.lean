@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.PuncturedNormalization
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NormalizedSmallOrderCount
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.PuncturedNormalization
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NormalizedSmallOrderCount
 
 /-!
 # Small-order counts on the punctured Markoff surface
@@ -14,6 +16,8 @@ This module transports the normalized small-order set through the core punctured
 equivalence.  Keeping these finite-set estimates here prevents the core equivalence module from
 depending on the giant-orbit counting layer.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionEffectiveDivisorSplit
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceDegreeFiniteness
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaEuler
-import Mathlib.Data.Finsupp.Weight
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionEffectiveDivisorSplit
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceDegreeFiniteness
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaEuler
+public import Mathlib.Data.Finsupp.Weight
 
 /-!
 # The closed-place Euler recurrence
@@ -22,6 +24,8 @@ This file proves that recurrence by an explicit bijection.  It then uses the
 local finiteness of bounded-degree places to apply the finite combinatorial
 result to all exhaustive places of a finite extension of `K(X)`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

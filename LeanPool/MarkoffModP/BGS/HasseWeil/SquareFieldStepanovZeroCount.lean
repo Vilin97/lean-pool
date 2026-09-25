@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointHeight
-import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovAuxiliary
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointHeight
+public import LeanPool.MarkoffModP.BGS.HasseWeil.SquareFieldStepanovAuxiliary
+public import Mathlib.Tactic
 
 /-!
 # The square-field Stepanov zero count
@@ -23,6 +25,8 @@ at every selected place.  Its pole budget is `ell + (#K) * m`, so the
 degree-one one-point height bound controls the cardinality of the family by
 that same number.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

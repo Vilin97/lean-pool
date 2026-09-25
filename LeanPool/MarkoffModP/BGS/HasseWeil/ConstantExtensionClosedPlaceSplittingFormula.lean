@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceDegreeTower
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionInfinityPlaceDegreeTower
 
 /-!
 # Closed-place splitting formula for an exact extension of constants
@@ -16,6 +18,8 @@ The finite branch is recorded first, then the reciprocal-infinity branch is
 transported to actual places.  Their exact sum-branch fiber equivalence gives
 the global gcd splitting law and the closed-place degree-extension identity.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldFinitePlace
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantFieldFinitePlace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
 
 /-!
 # Finite-place degrees under constant-field extension
@@ -21,6 +23,8 @@ from `Q` after replacing `K` by `E`, then
 This is the arithmetic content missing from a bare equivalence of finite-place
 types: an `E`-rational place is a place of degree `[E : K]` over `K`.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 

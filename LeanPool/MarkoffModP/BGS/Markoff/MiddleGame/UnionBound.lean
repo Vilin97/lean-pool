@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.TraceEquation
-import LeanPool.MarkoffModP.BGS.NumberTheory.DivisorBound
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.TraceEquation
+public import LeanPool.MarkoffModP.BGS.NumberTheory.DivisorBound
 
 /-!
 # The middle-game bad-order union
@@ -19,6 +21,8 @@ This file formalizes that finite combinatorial wiring.  It deliberately does not
 Corvaja--Zannier estimate: the estimate appears below as an ordinary theorem hypothesis on the
 actual trace-equation solution finsets.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

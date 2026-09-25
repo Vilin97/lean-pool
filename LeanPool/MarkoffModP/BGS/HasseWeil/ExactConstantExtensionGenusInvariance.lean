@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionGenusDegree
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionTotalDifferentDegree
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionGenusDegree
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionTotalDifferentDegree
 
 /-!
 # Genus invariance under exact constant extension
@@ -14,6 +16,8 @@ Equality of the presented total-different multiplicities preserves the total
 different degree.  Riemann--Hurwitz and preservation of the rational-function
 extension degree then identify the two chart genera.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 

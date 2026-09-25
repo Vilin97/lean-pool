@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.GroupTheory.SpecificGroups.Cyclic
-import Mathlib.Tactic
+
+public import Mathlib.GroupTheory.SpecificGroups.Cyclic
+public import Mathlib.Tactic
 
 /-!
 # Exact truncated order budgets in finite cyclic groups
@@ -14,6 +16,8 @@ For a cyclic group of order `N`, the number of elements of exact order `e`
 is `φ(e)` when `e ∣ N`.  Summing only the non-two-torsion orders at most a
 cutoff gives the exact root budget used by the improved Markoff count.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveFunctionField
-import Mathlib.FieldTheory.Separable
-import Mathlib.FieldTheory.SeparableDegree
-import Mathlib.RingTheory.Polynomial.GaussLemma
-import Mathlib.RingTheory.AlgebraicIndependent.Adjoin
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveFunctionField
+public import Mathlib.FieldTheory.Separable
+public import Mathlib.FieldTheory.SeparableDegree
+public import Mathlib.RingTheory.Polynomial.GaussLemma
+public import Mathlib.RingTheory.AlgebraicIndependent.Adjoin
 
 /-!
 # Separability of a plane-curve coordinate extension
@@ -18,6 +20,8 @@ this file proves that the function field is a finite separable extension of the 
 the first coordinate. The proof passes through the iterated-polynomial presentation and Gauss's
 lemma.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

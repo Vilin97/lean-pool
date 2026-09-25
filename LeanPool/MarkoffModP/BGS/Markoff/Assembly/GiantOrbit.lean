@@ -3,14 +3,16 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MiddleGameThenEndgame
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.Asymptotics
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.EveryOrbitLarge
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.WeilFromGeneralHasse
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.HasseFromGeneral
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierFromGeneral
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.EstimateFromPlane
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.MiddleGameThenEndgame
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.Asymptotics
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.EveryOrbitLarge
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.WeilFromGeneralHasse
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.HasseFromGeneral
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierFromGeneral
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.EstimateFromPlane
 
 /-!
 # Assembly of the giant orbit
@@ -22,6 +24,8 @@ the reusable general Hasse--Weil interface.  The interface is inhabited in
 `BGS.HasseWeil.GeneralBivariateAffineHasseWeil`; the parameter-free endpoint is
 exported by `BGS.Markoff.Assembly.Unconditional`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

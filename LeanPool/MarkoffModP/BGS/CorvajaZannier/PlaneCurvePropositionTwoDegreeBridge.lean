@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveExhaustiveGcdEndpoint
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalDegreeBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PropositionTwoDegreeMonotonicity
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveExhaustiveGcdEndpoint
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveCanonicalDegreeBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PropositionTwoDegreeMonotonicity
+public import Mathlib.Tactic
 
 /-!
 # From actual plane-curve degrees to the public Proposition 2 certificate
@@ -18,6 +20,8 @@ arbitrary declared bidegree bounds.  This file performs that last change of
 degree data without asserting the false monotonicity of Proposition 2's degree
 alternative.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

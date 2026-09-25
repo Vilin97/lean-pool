@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStrictLevels
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStrictLevels
+public import Mathlib.Tactic
 
 /-!
 # One-point Stepanov grids
@@ -17,6 +19,8 @@ mixed-radix encoding gives the one-point Stepanov grid.
 
 The distinguished place is not assumed to have degree one.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -53,6 +57,7 @@ theorem finiteExtensionPrincipalDivisor_smul_apply
     finiteExtensionPrincipalDivisor_algebraMap_constant K L c hc]
   simp
 
+omit [Fintype K] [DecidableEq K] in
 /-- If one summand has strictly smaller order than the other, then the sum is
 nonzero and has the smaller order. -/
 theorem finiteExtensionPrincipalDivisor_add_eq_left_of_lt
@@ -89,6 +94,7 @@ theorem finiteExtensionPrincipalDivisor_add_eq_left_of_lt
   rw [min_eq_left hsumLeY] at hreverse
   exact ⟨hxy, le_antisymm hreverse hlower⟩
 
+omit [Fintype K] [DecidableEq K] in
 /-- If every summand has order strictly above `a`, then their finite sum is
 either zero or also has order strictly above `a`. -/
 theorem finiteExtensionPrincipalDivisor_sum_eq_zero_or_gt
@@ -236,6 +242,7 @@ theorem onePointStepanovMixedOrder_injective
     exact Nat.eq_of_mul_eq_mul_left hs hmul
   exact Prod.ext rfl (he heEq)
 
+omit [Fintype K] in
 /-- Exact order of a product in the one-point Stepanov grid. -/
 theorem onePointStepanovGrid_order
     {ι κ : Type*} (P : FiniteExtensionPlace K L)

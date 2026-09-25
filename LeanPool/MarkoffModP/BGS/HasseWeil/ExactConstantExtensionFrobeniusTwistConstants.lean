@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionConstants
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwist
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionConstants
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwist
 
 /-!
 # Exact constants of Frobenius-twist fields
@@ -22,6 +24,8 @@ by Frobenius and hence belongs to `C`.
 The order calculation for `(Frob, g)` is not needed for this descent, so the
 result is stronger than the version with the usual divisibility hypothesis.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 

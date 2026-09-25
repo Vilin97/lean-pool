@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannRoch
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointDivisorSplit
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannRoch
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointDivisorSplit
 
 /-!
 # One-point Riemann lower bounds from the intrinsic genus
@@ -14,6 +16,8 @@ Riemann's inequality gives the intrinsic function-field genus itself as a
 simultaneous budget for every one-point Riemann space.  This applies to the
 exhaustive BGS place type, including both finite and infinity places.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

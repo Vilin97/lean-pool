@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinCutoff1248Skeleton
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeSummaryCoverage
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinCutoff1248Skeleton
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeSummaryCoverage
 
 /-!
 # Certified actual Rankin profiles below `2^1248`
@@ -16,6 +18,8 @@ the side-erased witness cap.  It then proves that the actual positional
 profile is structurally valid, matches `p`, and is dominated by the exact
 scalar summary of its skeleton representative.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

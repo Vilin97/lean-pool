@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Algebra.MvPolynomial.Nilpotent
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Characteristic
-import Mathlib.FieldTheory.Perfect
+
+public import Mathlib.Algebra.MvPolynomial.Nilpotent
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Characteristic
+public import Mathlib.FieldTheory.Perfect
 
 /-!
 # Exact obstructions to the published trace-cover irreducibility statement
@@ -18,6 +20,8 @@ positive characteristic, every normalized coefficient has a Frobenius root, so s
 multiplying both cover exponents by the characteristic makes the normalized cover a Frobenius
 power.  This remains true when `sigma` is nonzero and different from one.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

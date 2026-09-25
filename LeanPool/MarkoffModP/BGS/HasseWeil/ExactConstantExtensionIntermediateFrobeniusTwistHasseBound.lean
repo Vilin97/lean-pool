@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionIntermediateFrobeniusTwistRationalPlaceAverage
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistStepanovUpper
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceAlgEquiv
-import LeanPool.MarkoffModP.BGS.HasseWeil.GaloisTowerFactorialDegree
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionIntermediateFrobeniusTwistRationalPlaceAverage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistStepanovUpper
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceAlgEquiv
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GaloisTowerFactorialDegree
 
 /-!
 # A fixed-tower Hasse bound from intermediate Frobenius twists
@@ -15,6 +17,8 @@ import LeanPool.MarkoffModP.BGS.HasseWeil.GaloisTowerFactorialDegree
 The complete intermediate-base twist average is combined with the uniform
 square-field Stepanov estimate for the corresponding rational-base twists.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorCorvajaZannierStep
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorCorvajaZannierStep
 
 /-!
 # Nonparabolic order escape using maximal divisors
@@ -13,6 +15,8 @@ This is the geometric middle-game step with the maximal-divisor cover wired
 all the way through.  The Corvaja--Zannier hypothesis and both numerical
 inequalities are required only for divisibility-maximal candidate orders.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

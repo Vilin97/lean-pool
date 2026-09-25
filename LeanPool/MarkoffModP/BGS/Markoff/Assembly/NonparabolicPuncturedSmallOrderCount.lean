@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicMaximalDivisorConcreteCount
-import LeanPool.MarkoffModP.BGS.Markoff.Core.PuncturedNormalization
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.NonparabolicMaximalDivisorConcreteCount
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.PuncturedNormalization
 
 /-!
 # Fixed-point-free small-order counts on the punctured surface
@@ -16,6 +18,8 @@ punctured set satisfies
 
 `2 * |small nonparabolic points| ≤ ((bound - 1) * M) ^ 2`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

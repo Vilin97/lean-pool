@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityDifferentBound
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityDifferentBound
 
 /-!
 # The degree of the different at infinity
@@ -12,6 +14,8 @@ import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityDifferentBound
 Bound the different at infinity using a primitive element, its discriminant, and the normalized
 reciprocal polynomial.
 -/
+
+@[expose] public section
 
 open Polynomial
 

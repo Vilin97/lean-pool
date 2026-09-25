@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCotraceLocalTraceImage
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentCanonicalityCriterion
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCotraceLocalTraceImage
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentCanonicalityCriterion
 
 /-!
 # Local maximality of the canonical different by cotrace
@@ -17,6 +19,8 @@ bounded by the trace-different divisor.  Applied to the glued cotrace Weil
 functional, this proves that the trace-different divisor is its exact maximal
 vanishing divisor, without assuming a Riemann--Hurwitz degree identity.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

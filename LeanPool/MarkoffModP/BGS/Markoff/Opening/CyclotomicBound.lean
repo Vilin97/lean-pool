@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicReduction
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicReduction
 
 /-!
 # The concrete cyclotomic opening bound
@@ -12,6 +14,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicReduction
 This file evaluates the integral cyclotomic defect at the compatible residue prime and connects
 that vanishing to the archimedean norm estimate.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

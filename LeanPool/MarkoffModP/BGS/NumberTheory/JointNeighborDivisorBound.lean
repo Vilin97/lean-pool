@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.PreliminaryDivisorBound
-import Mathlib.NumberTheory.ArithmeticFunction.Misc
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.PreliminaryDivisorBound
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Joint divisor bounds for neighboring even integers
@@ -20,6 +22,8 @@ a joint estimate with one copy, rather than two copies, of the prime-factor
 penalty. This is the arithmetic input for improving the maximal-divisor
 cutoff.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

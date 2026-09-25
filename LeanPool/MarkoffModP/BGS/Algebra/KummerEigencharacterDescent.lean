@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.FieldTheory.KummerExtension
+
+public import Mathlib.FieldTheory.KummerExtension
 
 /-!
 # Eigencharacter descent in a cyclic Kummer extension
@@ -15,6 +17,8 @@ proof constructs the root-scaling automorphism and compares coefficients in the 
 basis.  This is the generic descent needed before applying trace-curve Kummer-class independence
 at primes dividing both cover exponents.
 -/
+
+@[expose] public section
 
 open Polynomial AdjoinRoot
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.WitnessEquations
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.CoordinateRing
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.Diagonalization
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.WitnessEquations
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.CoordinateRing
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.Diagonalization
 
 /-!
 # Geometry of the normalized cage incidence curve
@@ -22,6 +24,8 @@ existing biquadratic coordinate-ring proof.  It does not assert geometric
 integrality of the subsequent power-trace pullback; that is the next Kummer
 obligation in the cage Hasse--Weil argument.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

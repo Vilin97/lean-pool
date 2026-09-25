@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseLinearTail
-import LeanPool.MarkoffModP.BGS.Markoff.ExplicitEndgame
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseLinearTail
+public import LeanPool.MarkoffModP.BGS.Markoff.ExplicitEndgame
 
 /-!
 # Coarse support tails below the paper scale
@@ -14,6 +16,8 @@ The single clean threshold `2^756 < p`, together with the simultaneous
 tenth-moment divisor estimate, discharges the non-cubic middle-game,
 primitive-endgame, cage, and split-sign support inequalities.
 -/
+
+@[expose] public section
 
 
 namespace BGS.Markoff

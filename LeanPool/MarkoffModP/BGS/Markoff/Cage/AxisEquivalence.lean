@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.HasseWeilAssumption
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.HasseWeilAssumption
 
 /-!
 # Coordinate-axis invariance of cage witnesses
@@ -16,6 +18,8 @@ they may be permuted independently while their common bridge coordinate is
 sent to the third coordinate.  This file records that symmetry as an actual
 equivalence, retaining the common trace exactly.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

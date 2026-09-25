@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FrobeniusSubfield
-import Mathlib.FieldTheory.Perfect
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FrobeniusSubfield
+public import Mathlib.FieldTheory.Perfect
 
 /-!
 # Perfect constants inside the Frobenius subfield
@@ -15,6 +17,8 @@ constant field.  Consequently every constant, after embedding in the curve
 function field, is a `p`-th power and belongs to the Frobenius subfield.
 This file records that compatibility without identifying the two fields.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

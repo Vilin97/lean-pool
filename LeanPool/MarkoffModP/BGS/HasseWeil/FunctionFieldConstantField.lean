@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosure
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
-import Mathlib.FieldTheory.Finite.GaloisField
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FunctionFieldNormalClosure
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
+public import Mathlib.FieldTheory.Finite.GaloisField
 
 /-!
 # The algebraic constant field of a finite function field
@@ -20,6 +22,8 @@ The finiteness proof is place-theoretic.  Algebraic constants are integral over
 height-one prime is injective on the constant field, because it is a field.
 Choosing a prime above `(X)` embeds the constants into a finite quotient.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 

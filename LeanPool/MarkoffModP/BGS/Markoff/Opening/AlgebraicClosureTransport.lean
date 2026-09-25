@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Opening.FiniteOrbit
-import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Opening.FiniteOrbit
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
 
 /-!
 # Transporting the characteristic-zero opening through an algebraic closure
@@ -15,6 +17,8 @@ algebraic closure of `ℚ`.  This file records the missing functorial step.  A f
 normalized Markoff points coordinatewise and intertwines the five generators.  Closure induction
 on `Gamma` then shows that a finite orbit over the source field has finite image orbit over `ℂ`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

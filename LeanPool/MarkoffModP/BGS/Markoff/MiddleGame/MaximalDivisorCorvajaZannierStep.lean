@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorOrderCover
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorOrderCover
 
 /-!
 # Corvaja--Zannier escape over maximal candidate orders
@@ -18,6 +20,8 @@ This file performs the finite union and its numerical reduction. The deep
 Corvaja--Zannier estimate remains an explicit hypothesis about the actual
 weighted trace-equation solution sets.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

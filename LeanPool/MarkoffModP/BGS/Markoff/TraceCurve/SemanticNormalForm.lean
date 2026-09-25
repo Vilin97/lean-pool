@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.NormalForm
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.NormalForm
 
 /-!
 # Semantic normal forms for the split trace cover
@@ -17,6 +19,8 @@ those coefficients recovers the comparison-map image exactly.
 This does not identify two source classes with the same semantic normal form.  That remaining
 injectivity statement is the syntactic quotient-division wall and is kept explicit below.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 
@@ -102,10 +106,10 @@ def splitTraceAffineSemanticNormalForm
   adjoinRootTowerSemanticNormalForm
     (splitTraceEtaKummerPolynomial sigma e)
     (splitTraceEtaKummerPolynomial_monic sigma e
-      (etaExponent_ne_zero e heOdd))
+      (by exact etaExponent_ne_zero e heOdd))
     (splitTraceXiKummerPolynomial sigma e d)
     (splitTraceXiKummerPolynomial_monic sigma e d
-      (xiExponent_ne_zero d hdOdd))
+      (by exact xiExponent_ne_zero d hdOdd))
     (splitTraceAffineToKummerTop sigma hsigma e d heOdd hdOdd hde a)
 
 /-- Evaluating the affine semantic normal form recovers the affine comparison-map image. -/
@@ -114,10 +118,10 @@ theorem splitTraceAffineSemanticNormalForm_evaluation
     adjoinRootTowerSemanticNormalFormEvaluation
         (splitTraceEtaKummerPolynomial sigma e)
         (splitTraceEtaKummerPolynomial_monic sigma e
-          (etaExponent_ne_zero e heOdd))
+          (by exact etaExponent_ne_zero e heOdd))
         (splitTraceXiKummerPolynomial sigma e d)
         (splitTraceXiKummerPolynomial_monic sigma e d
-          (xiExponent_ne_zero d hdOdd))
+          (by exact xiExponent_ne_zero d hdOdd))
         (splitTraceAffineSemanticNormalForm sigma hsigma e d heOdd hdOdd hde a) =
       splitTraceAffineToKummerTop sigma hsigma e d heOdd hdOdd hde a := by
   exact adjoinRootTowerSemanticNormalForm_evaluation _ _ _ _ _
@@ -128,9 +132,9 @@ theorem splitTraceAffineSemanticNormalForm_eq_zero_iff
     splitTraceAffineSemanticNormalForm sigma hsigma e d heOdd hdOdd hde a = 0 ↔
       splitTraceAffineToKummerTop sigma hsigma e d heOdd hdOdd hde a = 0 := by
   let f := splitTraceEtaKummerPolynomial sigma e
-  let hf := splitTraceEtaKummerPolynomial_monic sigma e (etaExponent_ne_zero e heOdd)
+  let hf := splitTraceEtaKummerPolynomial_monic sigma e (by exact etaExponent_ne_zero e heOdd)
   let g := splitTraceXiKummerPolynomial sigma e d
-  let hg := splitTraceXiKummerPolynomial_monic sigma e d (xiExponent_ne_zero d hdOdd)
+  let hg := splitTraceXiKummerPolynomial_monic sigma e d (by exact xiExponent_ne_zero d hdOdd)
   change adjoinRootTowerSemanticNormalForm f hf g hg
       (splitTraceAffineToKummerTop sigma hsigma e d heOdd hdOdd hde a) = 0 ↔ _
   constructor
@@ -151,9 +155,9 @@ theorem splitTraceAffineSemanticNormalForm_injective_iff :
       Function.Injective
         (splitTraceAffineToKummerTop sigma hsigma e d heOdd hdOdd hde) := by
   let f := splitTraceEtaKummerPolynomial sigma e
-  let hf := splitTraceEtaKummerPolynomial_monic sigma e (etaExponent_ne_zero e heOdd)
+  let hf := splitTraceEtaKummerPolynomial_monic sigma e (by exact etaExponent_ne_zero e heOdd)
   let g := splitTraceXiKummerPolynomial sigma e d
-  let hg := splitTraceXiKummerPolynomial_monic sigma e d (xiExponent_ne_zero d hdOdd)
+  let hg := splitTraceXiKummerPolynomial_monic sigma e d (by exact xiExponent_ne_zero d hdOdd)
   change Function.Injective
       (fun a ↦ adjoinRootTowerSemanticNormalForm f hf g hg
         (splitTraceAffineToKummerTop sigma hsigma e d heOdd hdOdd hde a)) ↔ _
@@ -180,10 +184,10 @@ def splitTraceLaurentSemanticNormalForm
   exact adjoinRootTowerSemanticNormalForm
     (splitTraceEtaKummerPolynomial sigma e)
     (splitTraceEtaKummerPolynomial_monic sigma e
-      (etaExponent_ne_zero e heOdd))
+      (by exact etaExponent_ne_zero e heOdd))
     (splitTraceXiKummerPolynomial sigma e d)
     (splitTraceXiKummerPolynomial_monic sigma e d
-      (xiExponent_ne_zero d hdOdd))
+      (by exact xiExponent_ne_zero d hdOdd))
     (splitTraceLaurentToKummerTop sigma hsigma e d heOdd hdOdd hde a)
 
 /-- Evaluating the Laurent semantic normal form recovers the Laurent comparison-map image. -/
@@ -198,10 +202,10 @@ theorem splitTraceLaurentSemanticNormalForm_evaluation
     adjoinRootTowerSemanticNormalFormEvaluation
         (splitTraceEtaKummerPolynomial sigma e)
         (splitTraceEtaKummerPolynomial_monic sigma e
-          (etaExponent_ne_zero e heOdd))
+          (by exact etaExponent_ne_zero e heOdd))
         (splitTraceXiKummerPolynomial sigma e d)
         (splitTraceXiKummerPolynomial_monic sigma e d
-          (xiExponent_ne_zero d hdOdd))
+          (by exact xiExponent_ne_zero d hdOdd))
         (splitTraceLaurentSemanticNormalForm sigma hsigma e d heOdd hdOdd hde a) =
       splitTraceLaurentToKummerTop sigma hsigma e d heOdd hdOdd hde a := by
   let hBaseIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
@@ -235,9 +239,9 @@ theorem splitTraceLaurentSemanticNormalForm_injective_iff :
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
   let : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   let f := splitTraceEtaKummerPolynomial sigma e
-  let hf := splitTraceEtaKummerPolynomial_monic sigma e (etaExponent_ne_zero e heOdd)
+  let hf := splitTraceEtaKummerPolynomial_monic sigma e (by exact etaExponent_ne_zero e heOdd)
   let g := splitTraceXiKummerPolynomial sigma e d
-  let hg := splitTraceXiKummerPolynomial_monic sigma e d (xiExponent_ne_zero d hdOdd)
+  let hg := splitTraceXiKummerPolynomial_monic sigma e d (by exact xiExponent_ne_zero d hdOdd)
   change Function.Injective
       (fun a ↦ adjoinRootTowerSemanticNormalForm f hf g hg
         (splitTraceLaurentToKummerTop sigma hsigma e d heOdd hdOdd hde a)) ↔ _

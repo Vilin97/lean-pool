@@ -3,15 +3,17 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.SquareExtensionAffinePlaces
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlaceCases
-import Mathlib.RingTheory.DiscreteValuationRing.TFAE
-import Mathlib.RingTheory.Smooth.StandardSmoothCotangent
-import Mathlib.RingTheory.Localization.LocalizationLocalization
-import Mathlib.LinearAlgebra.TensorProduct.Basis
-import Mathlib.RingTheory.Etale.Field
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.SquareExtensionAffinePlaces
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlaceCases
+public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
+public import Mathlib.RingTheory.Smooth.StandardSmoothCotangent
+public import Mathlib.RingTheory.Localization.LocalizationLocalization
+public import Mathlib.LinearAlgebra.TensorProduct.Basis
+public import Mathlib.RingTheory.Etale.Field
+public import Mathlib.Tactic
 
 /-!
 # Smooth affine centres and normalization residue fields
@@ -32,6 +34,8 @@ The file also records that nonvanishing of the second partial derivative at
 a quadratic-extension point is exactly non-membership of that derivative in
 the corresponding affine maximal ideal.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

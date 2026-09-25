@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ElementaryCounts
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Normalization
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ElementaryCounts
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Normalization
 
 /-!
 # Finite counts in normalized Markoff coordinates
@@ -14,6 +16,8 @@ This module transports the canonical two-point bound for a fixed pair of origina
 coordinates across `normalizationEquiv`.  It then sums that bound over a finite set of possible
 first and second normalized coordinates.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

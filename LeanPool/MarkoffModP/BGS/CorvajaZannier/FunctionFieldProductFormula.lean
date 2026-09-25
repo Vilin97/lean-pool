@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.NumberTheory.RatFunc.Ostrowski
-import Mathlib.RingTheory.DedekindDomain.Factorization
-import Mathlib.RingTheory.Ideal.IsPrincipal
-import Mathlib.RingTheory.UniqueFactorizationDomain.NormalizedFactors
-import Mathlib.Algebra.Polynomial.BigOperators
+
+public import Mathlib.NumberTheory.RatFunc.Ostrowski
+public import Mathlib.RingTheory.DedekindDomain.Factorization
+public import Mathlib.RingTheory.Ideal.IsPrincipal
+public import Mathlib.RingTheory.UniqueFactorizationDomain.NormalizedFactors
+public import Mathlib.Algebra.Polynomial.BigOperators
 
 /-!
 # A normalized-factor product formula for the rational function field
@@ -28,6 +30,8 @@ does **not** yet supply the corresponding formula for a finite extension of
 the integral closure, nor the global finite-place identity combining
 ramification and residue degrees over each base place.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors
 open IsDedekindDomain Polynomial UniqueFactorizationMonoid

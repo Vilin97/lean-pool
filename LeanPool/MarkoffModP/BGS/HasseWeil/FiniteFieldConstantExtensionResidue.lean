@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantTensorResidue
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldConstantExtensionNormalization
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantTensorResidue
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteFieldConstantExtensionNormalization
 
 /-!
 # Residue degrees after finite constant extension
@@ -24,6 +26,8 @@ and hence
 In particular, `q` is rational over `S` whenever the downstairs residue
 degree divides `[S : C]`.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 

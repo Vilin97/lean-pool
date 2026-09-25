@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.PlaneCountComparison
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.AxisEquivalence
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.SmallPrime
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.PlaneCountComparison
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.AxisEquivalence
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.SmallPrime
 
 /-!
 # Transferring plane estimates to the cage witness count
@@ -15,6 +17,8 @@ This file combines the geometric Hasse--Weil estimates, the explicit plane
 comparison, the exact `d`-fold power-cover multiplicity, and the all-axis
 equivalence.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

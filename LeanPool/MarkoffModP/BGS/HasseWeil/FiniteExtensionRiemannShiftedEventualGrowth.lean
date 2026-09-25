@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannEventualGrowth
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannEventualGrowth
+public import Mathlib.Tactic
 
 /-!
 # Eventual growth after an effective divisor shift
@@ -23,6 +25,8 @@ exactly `deg(P)` at every subsequent step.  Over a finite constant field this
 also gives an exact formula for the cardinalities of the shifted Riemann
 spaces.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

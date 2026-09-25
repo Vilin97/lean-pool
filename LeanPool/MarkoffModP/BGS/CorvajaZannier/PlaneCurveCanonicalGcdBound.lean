@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGlobalNormalizedAutomatic
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePoweredHeightBounds
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredCoordinates
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalGlobalNormalizedAutomatic
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurvePoweredHeightBounds
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredCoordinates
+public import Mathlib.Tactic
 
 /-!
 # The canonical Corvaja--Zannier bound for powered plane coordinates
@@ -18,6 +20,8 @@ the auxiliary family supplies the Wronskian nonvanishing, while the two
 powered-coordinate height theorems replace abstract positive divisor degrees
 by the actual bidegree budgets.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

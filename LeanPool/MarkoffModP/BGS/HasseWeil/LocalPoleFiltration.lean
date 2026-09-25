@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceFinitePlaceIncrement
-import Mathlib.LinearAlgebra.Isomorphisms
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceFinitePlaceIncrement
+public import Mathlib.LinearAlgebra.Isomorphisms
 
 /-!
 # The local pole filtration of a discrete valuation ring
@@ -19,6 +21,8 @@ field of `R`.
 Unlike the corresponding global Riemann-space increment, this calculation is
 an equality: locally every leading residue has a lift.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -82,7 +86,7 @@ def localPoleLeadingResidueMap (π : R) (n : ℕ) :
   localLeadingResidueLinearMap
     (localPoleSpace (K := K) (L := L) π n)
     (algebraMap R L (π ^ n))
-    (localPoleSpace_regular (K := K) (L := L) π n)
+    (by exact localPoleSpace_regular (K := K) (L := L) π n)
 
 private theorem localPoleNormalizedLift_eq
     (π : R) (n : ℕ)

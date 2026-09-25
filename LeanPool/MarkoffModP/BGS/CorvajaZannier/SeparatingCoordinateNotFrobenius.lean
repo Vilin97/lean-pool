@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FrobeniusSubfield
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSeparability
-import Mathlib.FieldTheory.PurelyInseparable.PerfectClosure
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FrobeniusSubfield
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSeparability
+public import Mathlib.FieldTheory.PurelyInseparable.PerfectClosure
 
 /-!
 # Separating coordinates are not Frobenius powers
@@ -20,6 +22,8 @@ The last step is made explicit in the one-variable rational function field:
 if `(a / b) ^ p = X`, then `a ^ p = X * b ^ p`, whose degrees would satisfy
 `p * degree(a) = 1 + p * degree(b)`.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

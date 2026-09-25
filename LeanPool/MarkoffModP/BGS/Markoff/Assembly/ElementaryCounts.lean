@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
-import Mathlib.GroupTheory.SpecificGroups.Cyclic
+
+public import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
+public import Mathlib.GroupTheory.SpecificGroups.Cyclic
 
 /-!
 # Elementary counts for the giant-orbit assembly
@@ -21,6 +23,8 @@ The cyclicity hypothesis in the second count is essential: the analogous stateme
 finite groups is false (an elementary abelian `2`-group can have more than two elements of order
 two).  The split and norm-one tori to which this count will eventually be applied are cyclic.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

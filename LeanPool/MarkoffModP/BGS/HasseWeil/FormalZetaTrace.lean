@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ZetaNumeratorSpectral
-import Mathlib.RingTheory.PowerSeries.Derivative
-import Mathlib.RingTheory.PowerSeries.Exp
-import Mathlib.RingTheory.PowerSeries.Inverse
-import Mathlib.RingTheory.PowerSeries.Substitution
-import Mathlib.RingTheory.PowerSeries.WellKnown
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ZetaNumeratorSpectral
+public import Mathlib.RingTheory.PowerSeries.Derivative
+public import Mathlib.RingTheory.PowerSeries.Exp
+public import Mathlib.RingTheory.PowerSeries.Inverse
+public import Mathlib.RingTheory.PowerSeries.Substitution
+public import Mathlib.RingTheory.PowerSeries.WellKnown
 
 /-!
 # Formal logarithmic derivatives of zeta functions
@@ -17,6 +19,8 @@ import Mathlib.RingTheory.PowerSeries.WellKnown
 Recover point-count coefficients from logarithmic derivatives of formal zeta series and their
 linear factors.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

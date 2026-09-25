@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.BivariateResultant
-import Mathlib.RingTheory.Polynomial.GaussLemma
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.BivariateResultant
+public import Mathlib.RingTheory.Polynomial.GaussLemma
 
 /-!
 # Gauss descent for the Corvaja--Zannier bivariate resultant
@@ -16,6 +18,8 @@ Gauss' lemma to descend that divisibility to the bivariate polynomial ring.
 This descent is what permits reading off *both* coordinate degrees, rather
 than only the degree in the eliminated variable.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

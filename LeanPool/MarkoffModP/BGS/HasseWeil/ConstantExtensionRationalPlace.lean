@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionFinitePlaceBridge
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionFinitePlaceBridge
 
 /-!
 # Rational finite places after exact constant extension
@@ -18,6 +20,8 @@ lifted place rational.
 This is the numerical-to-geometric bridge used when Stichtenoth chooses the
 constant-extension degree to be divisible by the Galois-group order.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Logic.Function.Iterate
+
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Logic.Function.Iterate
 
 /-!
 # Finite forward orbits of injective maps
@@ -13,6 +15,8 @@ import Mathlib.Logic.Function.Iterate
 An injective self-map cannot have a finite forward orbit with a nonperiodic initial point.  The
 injectivity hypothesis is what lets us cancel the transient part of a repeated pair of iterates.
 -/
+
+@[expose] public section
 
 namespace BGS
 

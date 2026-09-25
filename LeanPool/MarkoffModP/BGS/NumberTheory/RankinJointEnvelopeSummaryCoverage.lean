@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeCoverage
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.RankinJointEnvelopeCoverage
 
 /-!
 # Scalar summaries for Rankin-envelope coverage
@@ -19,6 +21,8 @@ The generated list remains pure data.  Lean checks every terminal inequality,
 while a separate coverage theorem must prove that an actual profile is
 dominated by one of the summaries.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

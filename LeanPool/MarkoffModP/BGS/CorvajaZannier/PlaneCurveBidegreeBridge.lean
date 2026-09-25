@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.AbsoluteIrreducibilityBaseChange
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSeparability
-import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.AbsoluteIrreducibilityBaseChange
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSeparability
+public import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
 
 /-!
 # From the public bidegree interface to function-field degrees
@@ -17,6 +19,8 @@ development uses `MvPolynomial.degreeOf` and the degrees of the two coordinate
 projections.  This file records the exact, assumption-free bridge between
 those two presentations.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

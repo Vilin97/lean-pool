@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Basic
 
 /-!
 # The normalized Markoff rotation
@@ -13,6 +15,8 @@ This file isolates the elementary two-dimensional linear algebra behind the fund
 rotation. The parameter of `rho` is a normalized trace coordinate. Thus the rotation fixing an
 original Markoff coordinate `x.x1` is obtained by specializing the parameter to `3 * x.x1`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 
@@ -83,7 +87,7 @@ def movingCoordinates (x : Point R) : Fin 2 → R :=
 /-- The fundamental rotation is the action of `rho(3 * x.x1)` on the moving coordinates. -/
 theorem rho_mulVec_movingCoordinates (x : Point R) :
     rho (3 * x.x1) *ᵥ movingCoordinates x = movingCoordinates (rotate1 x) := by
-  simpa [movingCoordinates, rotate1] using rho_mulVec (3 * x.x1) x.x2 x.x3
+  simp [movingCoordinates, rotate1] using rho_mulVec (3 * x.x1) x.x2 x.x3
 
 /-- The normalized trace parameter for the fundamental rotation is `3 * x.x1`. -/
 theorem rho_trace_fundamentalRotation (x : Point R) : (rho (3 * x.x1)).trace = 3 * x.x1 := by
@@ -97,9 +101,9 @@ theorem rotate1_eq_rho (x : Point R) :
         (rho (3 * x.x1) *ᵥ movingCoordinates x) 1⟩ := by
   ext
   · rfl
-  · simpa [rotate1, movingCoordinates] using
+  · simp [rotate1, movingCoordinates] using
       congrFun (rho_mulVec_movingCoordinates x).symm 0
-  · simpa [rotate1, movingCoordinates] using
+  · simp [rotate1, movingCoordinates] using
       congrFun (rho_mulVec_movingCoordinates x).symm 1
 
 end

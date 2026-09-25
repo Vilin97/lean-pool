@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.DescendedIrreducibility
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.WeilBoundAssumption
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.DescendedIrreducibility
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.WeilBoundAssumption
 
 /-!
 # The nonsplit endgame estimate from the general affine Hasse--Weil theorem
@@ -14,6 +16,8 @@ This file applies the single permitted general Hasse--Weil input to the explicit
 plane curve.  The identity point omitted by the Cayley chart is kept visible and bounded
 separately; it is not folded into a specialized estimate assumption.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

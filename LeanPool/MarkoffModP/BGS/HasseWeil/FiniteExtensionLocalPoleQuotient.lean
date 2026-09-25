@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.DVRLocalPoleOrder
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionLocalPoleSpace
-import LeanPool.MarkoffModP.BGS.HasseWeil.LocalPoleCumulativeQuotient
-import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceInfinityPlaceIncrement
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.DVRLocalPoleOrder
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionLocalPoleSpace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.LocalPoleCumulativeQuotient
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RiemannSpaceInfinityPlaceIncrement
 
 /-!
 # Exact local principal-part dimensions at exhaustive places
@@ -17,6 +19,8 @@ both the finite and infinity places of a finite separable extension of
 `K(X)`.  Thus every successive local pole layer has dimension exactly the
 degree of the corresponding exhaustive place.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

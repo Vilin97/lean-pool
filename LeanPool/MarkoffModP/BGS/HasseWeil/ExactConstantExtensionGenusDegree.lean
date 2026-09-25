@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentLocalMaximality
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionConstants
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncExactConstantExtension
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionCanonicalDifferentLocalMaximality
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionConstants
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncExactConstantExtension
 
 /-!
 # Genus and extension degree under exact constant extension
@@ -18,6 +20,8 @@ with the Riemann--Hurwitz expression.  Second, extending the constants from
 `C` to `S` preserves the degree over the corresponding rational function
 field.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 

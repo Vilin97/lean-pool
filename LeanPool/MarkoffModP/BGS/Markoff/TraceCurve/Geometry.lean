@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.RotationTorus
-import Mathlib.RingTheory.Polynomial.Eisenstein.Basic
-import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.RotationTorus
+public import Mathlib.RingTheory.Polynomial.Eisenstein.Basic
+public import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
 
 /-!
 # Split trace curves: an exact polynomial model and the first irreducibility wall
@@ -24,6 +26,8 @@ gives an irreducibility proof that survives every field extension.  The higher p
 required by the paper is deliberately not encoded in this theorem: irreducibility of the quotient
 curve does not imply irreducibility after adjoining the two power roots.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

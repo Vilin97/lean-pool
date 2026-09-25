@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorClassRecurrence
-import LeanPool.MarkoffModP.RiemannRoch.CoordinateFree.RiemannRoch
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorClassRecurrence
+public import LeanPool.MarkoffModP.RiemannRoch.CoordinateFree.RiemannRoch
 
 /-!
 # Riemann--Roch for the exhaustive finite-extension place model
@@ -22,6 +24,8 @@ construct the same valuation subring using different `DecidableEq` instances.
 We therefore record the identity-on-elements ring equivalence explicitly and
 transport the integral closure and its height-one primes across it.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -134,6 +138,7 @@ def finiteExtensionInfinityBaseRingEquiv :
   map_mul' _ _ := rfl
   map_add' _ _ := rfl
 
+omit [Fintype K] [DecidableEq K] in
 @[simp]
 theorem finiteExtensionInfinityBaseRingEquiv_apply_coe
     (x : RatFuncInfinityIntegers K) :
@@ -141,6 +146,8 @@ theorem finiteExtensionInfinityBaseRingEquiv_apply_coe
       FunctionField.Chart.inftyValuationSubring K) : RatFunc K) = x :=
   rfl
 
+omit [Fintype K] [DecidableEq K] [FiniteDimensional (RatFunc K) L]
+  [Algebra.IsSeparable (RatFunc K) L] in
 private theorem isIntegral_infinityBase_iff (x : L) :
     IsIntegral (RatFuncInfinityIntegers K) x ↔
       IsIntegral (FunctionField.Chart.inftyValuationSubring K) x := by
@@ -471,6 +478,7 @@ theorem finiteExtensionDivisorDegree_eq_chart
         Finsupp.equivMapDomain_single,
         finiteExtensionPlaceDegree_eq_chart]
 
+omit [Fintype K] in
 /-- The valuation of a nonzero function is the exponential of the negative
 coefficient of its exhaustive principal divisor. -/
 theorem finiteExtensionPlaceValuation_eq_exp_neg_principalDivisor

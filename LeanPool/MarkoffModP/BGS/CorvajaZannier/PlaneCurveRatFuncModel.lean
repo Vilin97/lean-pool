@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageCurve
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSeparability
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredImageCurve
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveSeparability
 
 /-!
 # A rational-function-field model for a plane curve
@@ -20,6 +22,8 @@ This is the model required by the exhaustive finite-plus-infinity divisor
 formalization: its base is literally `RatFunc K`, and `X` specializes to the
 first coordinate function.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

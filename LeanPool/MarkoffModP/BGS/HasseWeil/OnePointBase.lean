@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalAuxiliaryInfinityPlace
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalAuxiliaryInfinityPlace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
 
 /-!
 # Finiteness of the height-zero one-point Riemann space
@@ -21,6 +23,8 @@ positive order at the chosen branch and nonnegative order everywhere else.
 The degree-weighted product formula rules this out unless the difference is
 zero.  Thus the height-zero space injects into a finite residue field.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

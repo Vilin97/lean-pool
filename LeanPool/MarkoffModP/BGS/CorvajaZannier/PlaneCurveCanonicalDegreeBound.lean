@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveFiniteDifferentBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityComplement
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveFiniteDifferentBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityComplement
+public import Mathlib.Tactic
 
 /-!
 # The canonical different degree of a plane function field
@@ -20,6 +22,8 @@ The result is the expected first-projection canonical bound
 
 No algebraic closure of the constant field is assumed.
 -/
+
+@[expose] public section
 
 open scoped Polynomial nonZeroDivisors BigOperators
 open Polynomial IsDedekindDomain

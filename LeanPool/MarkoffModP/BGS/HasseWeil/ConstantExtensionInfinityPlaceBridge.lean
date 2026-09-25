@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantTensorResidue
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionInfinityNormalization
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantTensorResidue
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionInfinityNormalization
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
 
 /-!
 # Infinity places in an exact constant extension
@@ -20,6 +22,8 @@ above the reciprocal origin gives actual places above infinity in both the
 extended function field and the original function field.  Their residue
 degrees satisfy the usual division-by-gcd formula.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct nonZeroDivisors
 
@@ -134,7 +138,8 @@ end ReciprocalFractionField
 
 section LocalizationHelpers
 
-private noncomputable def heightOneResidueFieldRingEquiv
+/-- A ring equivalence transports the residue field of a height-one prime. -/
+noncomputable def heightOneResidueFieldRingEquiv
     {A B : Type*} [CommRing A] [CommRing B]
     (e : A ≃+* B) (q : HeightOneSpectrum A) :
     q.asIdeal.ResidueField ≃+*
@@ -145,7 +150,8 @@ private noncomputable def heightOneResidueFieldRingEquiv
       change q.asIdeal = (q.asIdeal.comap e.symm).comap e
       exact (Ideal.comap_of_equiv e).symm)
 
-private theorem mappedPrimeCompl_disjoint_of_under_eq
+/-- A prime is disjoint from the image of the complement of its contracted prime. -/
+theorem mappedPrimeCompl_disjoint_of_under_eq
     (R A : Type*) [CommRing R] [CommRing A] [Algebra R A]
     (p : Ideal R) [p.IsPrime] (q : Ideal A)
     (hq : q.under R = p) :
@@ -157,7 +163,8 @@ private theorem mappedPrimeCompl_disjoint_of_under_eq
   obtain ⟨r, hr, rfl⟩ := hxM
   exact hr (hq ▸ hxq)
 
-private theorem localizationMap_liesOver_maximalIdeal
+/-- Localizing a prime over the base prime gives a prime over the local maximal ideal. -/
+theorem localizationMap_liesOver_maximalIdeal
     (R V A B : Type*)
     [CommRing R] [CommRing V] [CommRing A] [CommRing B]
     [Algebra R V] [Algebra R A] [Algebra R B]
@@ -185,7 +192,8 @@ private theorem localizationMap_liesOver_maximalIdeal
       (congrArg (Ideal.under R) hQA).symm.trans (Ideal.under_under Q)
     _ = (Q.under V).under R := Ideal.under_under Q |>.symm
 
-private noncomputable def localizationResidueFieldAlgEquiv
+/-- Localizing away from a prime preserves its residue field as an algebra over the base field. -/
+noncomputable def localizationResidueFieldAlgEquiv
     (K A B : Type*)
     [Field K] [CommRing A] [CommRing B]
     [Algebra K A] [Algebra K B] [Algebra A B]
@@ -209,7 +217,8 @@ private noncomputable def localizationResidueFieldAlgEquiv
   exact (RingHom.surjectiveOnStalks_of_isLocalization M B)
     |>.residueFieldMap_bijective q Q hcomap
 
-private noncomputable def localizationResidueFieldRingEquiv
+/-- Localizing away from a prime preserves its residue field as a ring. -/
+noncomputable def localizationResidueFieldRingEquiv
     (A B : Type*) [CommRing A] [CommRing B] [Algebra A B]
     (M : Submonoid A) [IsLocalization M B]
     (q : Ideal A) [q.IsPrime]

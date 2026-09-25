@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ClosedPlaceEulerRecurrence
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorClassRecurrence
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaEuler
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ClosedPlaceEulerRecurrence
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorClassRecurrence
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaEuler
 
 /-!
 # Indexed zeta rationality for an exact-constant function field
@@ -17,6 +19,8 @@ uniform Riemann--Roch formula for arbitrary divisors.  The denominator still
 uses the divisor-degree index; replacing it by the standard degree-one
 denominator is a separate constant-field theorem.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

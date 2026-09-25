@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.NumberTheory.OneSidedPrimitiveWitness
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.NormalizedGraph
+
+public import LeanPool.MarkoffModP.BGS.NumberTheory.OneSidedPrimitiveWitness
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.NormalizedGraph
 
 /-!
 # Explicit Hasse--Weil interface for the cage
@@ -13,6 +15,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.Incidence.NormalizedGraph
 The external input is a point-count estimate on the actual finite set used by the cage
 inclusion--exclusion.  Connectivity and primitive extraction are not assumed here.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.GroupTheory.GroupAction.Quotient
-import Mathlib.GroupTheory.Index
-import Mathlib.SetTheory.Cardinal.Finite
+
+public import Mathlib.GroupTheory.GroupAction.Quotient
+public import Mathlib.GroupTheory.Index
+public import Mathlib.SetTheory.Cardinal.Finite
 
 /-!
 # Fixed-point averaging for finite transitive actions
@@ -14,6 +16,8 @@ import Mathlib.SetTheory.Cardinal.Finite
 This file isolates the Burnside-counting identity used in the fixed-field
 part of the Hasse--Weil argument.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

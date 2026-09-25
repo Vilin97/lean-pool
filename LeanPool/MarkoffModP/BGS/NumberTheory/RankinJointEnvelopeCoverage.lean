@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderRankinEnvelope
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ExactOrderRankinEnvelope
 
 /-!
 # Finite coverage for side-erased Rankin envelopes
@@ -20,6 +22,8 @@ separate coverage theorem must exhibit a dominating row for the actual
 profile.  Thus generated arithmetic and mathematical exhaustiveness remain
 distinct proof obligations.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

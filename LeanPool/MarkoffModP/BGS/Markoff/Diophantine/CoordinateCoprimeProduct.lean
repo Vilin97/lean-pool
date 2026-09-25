@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Diophantine.LocalCounts
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Diophantine.LocalCounts
 
 /-!
 # Exact first-coordinate product formula
@@ -14,6 +16,8 @@ published Section 7.  A first coordinate is coprime to the squarefree product mo
 when it is nonzero in every prime factor.  The carrier below records that local condition
 directly; no real-valued comparison with `exp (-2 * L)` is asserted here.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

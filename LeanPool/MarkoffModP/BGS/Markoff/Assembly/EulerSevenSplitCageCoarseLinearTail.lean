@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseLinearTail
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageSquareEnvelopeSurjectivity
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.CoarseLinearTail
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageSquareEnvelopeSurjectivity
 
 /-!
 # Euler-seven split-cage frontier with automatic linear tail
@@ -13,6 +15,8 @@ import LeanPool.MarkoffModP.BGS.Markoff.Assembly.EulerSevenSplitCageSquareEnvelo
 Above `24^15 * 2^687`, the tenth-moment estimate discharges the full linear
 middle-game family.  Only the square-envelope cube obstruction remains.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

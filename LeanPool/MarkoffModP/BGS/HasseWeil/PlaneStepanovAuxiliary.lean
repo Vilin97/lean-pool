@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneOnePointRiemannLower
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointSectionSelection
-import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovRestrictionMaps
-import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovParameters
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneOnePointRiemannLower
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointSectionSelection
+public import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovRestrictionMaps
+public import LeanPool.MarkoffModP.BGS.HasseWeil.StepanovParameters
 
 /-!
 # The degree-one plane Stepanov auxiliary
@@ -32,6 +34,8 @@ The degree-one hypothesis is deliberately an implication in the final
 theorem.  This module does **not** assert that the controlled infinity place
 has degree one, and it does not count square-extension points.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryWronskian
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindAuxiliaryWronskian
 
 /-!
 # Uniformizer-free Dedekind auxiliary cases
@@ -14,6 +16,8 @@ DVR-preserving derivation.  The uniformizer needed by the determinant estimate
 is chosen internally.  In particular, callers do not need an algebra map from
 the derivation's constant field into the local DVR.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

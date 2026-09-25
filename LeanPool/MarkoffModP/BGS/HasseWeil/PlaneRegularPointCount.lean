@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.AffinePointPlace
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSingularPointBound
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.AffinePointPlace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSingularPointBound
+public import Mathlib.Tactic
 
 /-!
 # Regular affine points in the second-coordinate direction
@@ -20,6 +22,8 @@ are bounded by `affineSecondCoordinateCriticalPoints_card_le`.
 This file contains only the finite-set bookkeeping.  The local normalization
 statement and the Stepanov zero count are proved in separate modules.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

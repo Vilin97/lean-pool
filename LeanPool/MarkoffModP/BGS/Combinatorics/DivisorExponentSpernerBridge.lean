@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Combinatorics.DivisorExponentCoefficient
+
+public import LeanPool.MarkoffModP.BGS.Combinatorics.DivisorExponentCoefficient
 
 /-!
 # The divisor-antichain central-coefficient bound
@@ -13,6 +15,8 @@ This is the semantic bridge missing from a purely executable factorization
 payload: the recomputed central coefficient really bounds every antichain in
 the represented divisor exponent lattice.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 

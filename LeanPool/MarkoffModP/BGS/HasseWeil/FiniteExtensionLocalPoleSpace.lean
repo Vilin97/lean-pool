@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
 
 /-!
 # Local and away-regular subspaces of a function field
@@ -14,6 +16,8 @@ of two elementary subspaces: functions with a bounded pole at `P`, and
 functions regular at every place away from `P`.  This is the two-open-cover
 decomposition used by the Cech form of Riemann's inequality.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

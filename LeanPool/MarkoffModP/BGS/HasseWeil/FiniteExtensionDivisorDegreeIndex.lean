@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalWronskian
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
-import Mathlib.GroupTheory.Archimedean
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalWronskian
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionZeroCounting
+public import Mathlib.GroupTheory.Archimedean
 
 /-!
 # The divisor-degree index
@@ -28,6 +30,8 @@ from exact constants to `δ = 1` is asserted here: doing so at this stage would
 make the intended zeta proof circular.  The exact missing conclusion is
 isolated by the degree-one criterion at the end of the file.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -90,9 +94,10 @@ def finiteExtensionDivisorDegreeHom :
     (FiniteExtensionPlace K L →₀ ℤ) →+ ℤ where
   toFun := finiteExtensionDivisorDegree K L
   map_zero' := by simp [finiteExtensionDivisorDegree]
-  map_add' := finiteExtensionDivisorDegree_add_index K L
+  map_add' := by exact finiteExtensionDivisorDegree_add_index K L
 
-private noncomputable def finiteExtensionDivisorDegreeGenerator : ℤ :=
+/-- A cyclic generator of the image of divisor degree in the integers. -/
+noncomputable def finiteExtensionDivisorDegreeGenerator : ℤ :=
   Classical.choose
     (Int.subgroup_cyclic (finiteExtensionDivisorDegreeHom K L).range)
 

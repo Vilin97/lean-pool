@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceTower
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionPlaceTower
 
 /-!
 # Finiteness of bounded-degree places
@@ -20,6 +22,8 @@ places, finite places in an extension, and the exhaustive finite-plus-infinity
 place type.  These are the local-finiteness inputs needed to define effective
 divisor counts and Euler products without assuming zeta rationality.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 

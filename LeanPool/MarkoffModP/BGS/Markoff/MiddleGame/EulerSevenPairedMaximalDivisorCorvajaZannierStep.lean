@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorNonparabolicOrderCover
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.NonparabolicUnionBound
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedCorvajaZannierBound
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.MaximalDivisorNonparabolicOrderCover
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.NonparabolicUnionBound
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.EulerSevenPairedCorvajaZannierBound
+public import Mathlib.Tactic
 
 /-!
 # Euler-seven paired escape over maximal candidate orders
@@ -20,6 +22,8 @@ The exact χ≤7 paired bound gives two sufficient inequalities:
 Here `K` is the number of divisibility-maximal candidate orders. The first
 coefficient is exact: it is the cube of the paired χ≤7 root coefficient.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

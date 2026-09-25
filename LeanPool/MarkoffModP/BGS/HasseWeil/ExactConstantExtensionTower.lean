@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionAutomorphism
-import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncExactConstantExtension
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionAutomorphism
+public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncExactConstantExtension
 
 /-!
 # Towers of exact constant extensions
@@ -21,6 +23,8 @@ constant-extension place and Frobenius APIs.  It proves that the extended
 top is finite Galois over the extended intermediate field, with the same
 degree and hence the same Galois-group cardinality as `N / M`.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 
@@ -56,6 +60,7 @@ noncomputable def exactConstantExtensionTowerAlgHom :
   Algebra.TensorProduct.map (AlgHom.id C S)
     (IsScalarTower.toAlgHom C M N)
 
+omit [FiniteDimensional C S] [IsGalois C S] in
 @[simp]
 theorem exactConstantExtensionTowerAlgHom_tmul (s : S) (m : M) :
     exactConstantExtensionTowerAlgHom C M N S (s ⊗ₜ[C] m) =
@@ -133,6 +138,7 @@ section Galois
 
 variable [FiniteDimensional M N] [IsGalois M N]
 
+omit [IsGalois M N] in
 /-- The extended top is finite-dimensional over the extended intermediate
 field. -/
 theorem exactConstantExtensionTower_finiteDimensional

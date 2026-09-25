@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
-import LeanPool.MarkoffModP.BGS.Markoff.Incidence.CoordinateRing
+
+public import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
+public import LeanPool.MarkoffModP.BGS.Markoff.Incidence.CoordinateRing
 
 /-!
 # A primitive quartic for a biquadratic extension
@@ -18,6 +20,8 @@ extension.  Its minimal polynomial is
 
 This file packages that calculation as a reusable irreducibility theorem.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

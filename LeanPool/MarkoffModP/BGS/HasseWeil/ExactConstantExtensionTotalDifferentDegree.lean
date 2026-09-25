@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceSplittingFormula
-import LeanPool.MarkoffModP.BGS.HasseWeil.FinsuppWeightedFiber
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionTotalDifferentEffectiveDivisor
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ConstantExtensionClosedPlaceSplittingFormula
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FinsuppWeightedFiber
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionTotalDifferentEffectiveDivisor
 
 /-!
 # Total different degree under exact constant extension
@@ -23,6 +25,8 @@ the total finite-plus-infinity different degrees.  The remaining pointwise
 hypothesis is intended to be discharged branchwise by the finite and
 reciprocal-infinity different-map theorems.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 

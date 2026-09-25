@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.NumberTheory.ArithmeticFunction.Misc
+
+public import Mathlib.Analysis.SpecificLimits.Normed
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Subpolynomial growth of the divisor-counting function
@@ -15,6 +17,8 @@ This module develops the analytic-number-theory input used by the BGS
 middle- and end-game union bounds.  The public target is an eventual real
 power bound for `Nat.divisors.card`.
 -/
+
+@[expose] public section
 
 namespace BGS.NumberTheory
 
@@ -34,7 +38,7 @@ private lemma exists_pow_succ_le_constant_mul_two_pow (k : ℕ) :
   by_cases ha : N ≤ a + 1
   · have hreal := hN (a + 1) ha
     simp only [Real.norm_eq_abs, one_mul, abs_pow] at hreal
-    simp at hreal
+    simp only [ge_iff_le] at hreal
     have hnat : (a + 1) ^ k ≤ 2 ^ (a + 1) := by exact_mod_cast hreal
     calc
       (a + 1) ^ k ≤ 2 ^ (a + 1) := hnat

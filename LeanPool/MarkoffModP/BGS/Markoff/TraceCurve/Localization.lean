@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Kummer
-import Mathlib.RingTheory.Localization.Away.Basic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Kummer
+public import Mathlib.RingTheory.Localization.Away.Basic
 
 /-!
 # The Laurent split trace cover inside its Kummer function field
@@ -15,6 +17,8 @@ trace-cover coordinate ring, localized away from the two coordinate axes, and th
 odd-coprime Kummer tower.  Injectivity is kept as the visible remaining wall; it is not encoded as
 an axiom or typeclass field.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

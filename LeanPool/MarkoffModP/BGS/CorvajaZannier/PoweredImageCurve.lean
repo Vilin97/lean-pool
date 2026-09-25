@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredCoordinateRelation
-import Mathlib.FieldTheory.RatFunc.AsPolynomial
-import Mathlib.RingTheory.Polynomial.GaussLemma
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PoweredCoordinateRelation
+public import Mathlib.FieldTheory.RatFunc.AsPolynomial
+public import Mathlib.RingTheory.Polynomial.GaussLemma
 
 /-!
 # The actual powered-coordinate image curve
@@ -23,6 +25,8 @@ Consequently its degree in `y^n` is at most `m * degreeOf 1 f`, while its
 degree in `x^m` is at most `n * degreeOf 0 f`.  This is the source-sensitive
 elimination input needed for the Corvaja--Zannier middle game.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 
@@ -311,7 +315,8 @@ theorem ratFuncSpecialization_comp_polynomial_algebraMap
       Polynomial.eval₂RingHom (algebraMap K L) u := by
   apply Polynomial.ringHom_ext
   · intro c
-    simp [ratFuncSpecialization]
+    simp only [RingHom.coe_comp, Function.comp_apply, RatFunc.algebraMap_C, Polynomial.coe_eval₂RingHom,
+      Polynomial.eval₂_C]
     rw [← RatFunc.algebraMap_eq_C,
       (RatFunc.algEquivOfTranscendental u hu).commutes]
     rfl

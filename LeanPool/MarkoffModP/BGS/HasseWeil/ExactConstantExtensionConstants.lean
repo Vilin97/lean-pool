@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionAutomorphism
-import Mathlib.FieldTheory.Finite.Extension
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionAutomorphism
+public import Mathlib.FieldTheory.Finite.Extension
 
 /-!
 # Exact constants after a finite constant extension
@@ -21,6 +23,8 @@ divides `[S : C]`.  The finite-field embedding criterion supplies an embedding
 into `S`; uniqueness of the roots of `X ^ #K - X` inside the common
 compositum then shows that the original element already belongs to `S`.
 -/
+
+@[expose] public section
 
 open scoped Polynomial TensorProduct
 

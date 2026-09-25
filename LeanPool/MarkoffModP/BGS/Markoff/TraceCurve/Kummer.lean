@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Geometry
-import Mathlib.FieldTheory.KummerExtension
-import Mathlib.FieldTheory.RatFunc.Degree
-import Mathlib.RingTheory.Norm.Basic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Geometry
+public import Mathlib.FieldTheory.KummerExtension
+public import Mathlib.FieldTheory.RatFunc.Degree
+public import Mathlib.RingTheory.Norm.Basic
 
 /-!
 # Kummer descent for the split trace power cover
@@ -21,6 +23,8 @@ two-stage Kummer construction explicit.  Oddness is imposed because Mathlib's co
 criterion currently covers odd exponents; coprimality of `d` and `e` is used in the second norm
 argument.  Neither hypothesis is hidden in a structure field.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 
@@ -188,7 +192,7 @@ lemma norm_splitTraceBaseRoot
   change Algebra.norm (RatFunc K) pb.gen = -splitTraceRadicand sigma
   rw [Algebra.PowerBasis.norm_gen_eq_coeff_zero_minpoly, hdim,
     AdjoinRoot.minpoly_powerBasis_gen_of_monic]
-  · simp [pb, splitTraceBaseKummerPolynomial]
+  · simp [ splitTraceBaseKummerPolynomial]
   · exact monic_X_pow_sub_C _ (by norm_num)
 
 /-- A prime-power root of the base coordinate `v` cannot already lie in the quadratic base

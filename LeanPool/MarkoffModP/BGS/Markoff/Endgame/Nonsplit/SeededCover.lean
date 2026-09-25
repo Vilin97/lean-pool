@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.TraceCurveWeights
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Geometry
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedOddCoprimeIrreducibility
+
+public import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.TraceCurveWeights
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Geometry
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedOddCoprimeIrreducibility
 
 /-!
 # The seeded nonsplit endgame cover
@@ -15,6 +17,8 @@ The endgame curve is not the trace of a bare norm-one element.  A fixed seed `s`
 nontrivial norm fibre is multiplied by the varying norm-one coordinate.  After scalar extension
 the two weights are `s` and `s^p`; their product is `Norm(s)`, not one.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

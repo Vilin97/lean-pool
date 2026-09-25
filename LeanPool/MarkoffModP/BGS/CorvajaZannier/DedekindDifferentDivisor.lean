@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalDerivationExtension
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPlaceOrder
-import Mathlib.RingTheory.Discriminant
-import Mathlib.Data.Finsupp.Order
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalDerivationExtension
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindPlaceOrder
+public import Mathlib.RingTheory.Discriminant
+public import Mathlib.Data.Finsupp.Order
 
 /-!
 # The different divisor and the primitive-element derivative
@@ -26,6 +28,8 @@ Thus all ramified finite-place contributions represented by the different are
 controlled by one principal divisor. No canonical-divisor or genus estimate is
 assumed here.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors
 open IsDedekindDomain Polynomial

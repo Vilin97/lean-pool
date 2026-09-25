@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceFrobeniusFiber
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FinitePlaceFrobeniusFiber
 
 /-!
 # Cardinalities of Frobenius place stabilizers
@@ -28,6 +30,8 @@ finite places and places above infinity are covered, first for the underlying
 decomposition groups and then in the restriction-fiber actions used by
 `sum_card_fixedBy_quotientFiber_eq_card_ker_of_stabilizer_card`.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSingularPointBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionBidegreeCount
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionPointNormalization
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneSingularPointBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionBidegreeCount
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionPointNormalization
 
 /-!
 # Elementary affine plane-curve fiber bounds
@@ -21,6 +23,8 @@ These estimates handle the large-bidegree branch of the final affine
 Hasse--Weil theorem, where a trivial fiber count is stronger than carrying
 normalization error terms.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -106,6 +110,7 @@ def affinePlaneCurvePointEquivSwap (f : MvPolynomial (Fin 2) K) :
     apply Subtype.ext
     rfl
 
+omit [Fintype K] [DecidableEq K] in
 /-- Coordinate swapping preserves irreducibility. -/
 theorem irreducible_swapPlaneCurveCoordinates
     {f : MvPolynomial (Fin 2) K} (hf : Irreducible f) :
@@ -114,6 +119,7 @@ theorem irreducible_swapPlaneCurveCoordinates
     (MvPolynomial.renameEquiv K (Equiv.swap (0 : Fin 2) 1) f)
   exact hf.map (MvPolynomial.renameEquiv K (Equiv.swap (0 : Fin 2) 1))
 
+omit [Fintype K] [DecidableEq K] in
 /-- After swapping, the second-coordinate degree is the original
 first-coordinate degree. -/
 theorem degreeOf_second_swapPlaneCurveCoordinates

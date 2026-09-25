@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedOddCoprimeIrreducibility
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Boundary
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.SeededCover
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedOddCoprimeIrreducibility
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.Boundary
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.SeededCover
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # The explicit endgame Weil-bound assumption
@@ -30,6 +32,8 @@ classical projective Hasse--Weil theorem is one route to proving this assumption
 are intentionally not part of the downstream interface: they belong to a proof of the accepted
 external theorem, not to each use of it.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

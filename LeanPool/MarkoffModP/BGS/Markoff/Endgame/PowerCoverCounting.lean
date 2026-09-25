@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.GroupTheory.SpecificGroups.Cyclic
-import Mathlib.GroupTheory.Coset.Basic
+
+public import Mathlib.GroupTheory.SpecificGroups.Cyclic
+public import Mathlib.GroupTheory.Coset.Basic
 
 /-!
 # Exact power-cover multiplicities in the endgame
@@ -15,6 +17,8 @@ that step exactly for finite cyclic groups: a cover solution is a target trace s
 with one point in each power-map fiber, and every such fiber is equivalent to the corresponding
 kernel.  No asymptotic or geometric estimate enters this multiplicity identity.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

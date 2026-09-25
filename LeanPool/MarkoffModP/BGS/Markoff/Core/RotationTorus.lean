@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ElementaryCounts
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Rotation
-import Mathlib.FieldTheory.Finite.Trace
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.ElementaryCounts
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Rotation
+public import Mathlib.FieldTheory.Finite.Trace
 
 /-!
 # Split-torus traces and normalized Markoff rotations
@@ -15,6 +17,8 @@ This module makes explicit the elementary diagonalization used when a normalized
 split characteristic polynomial.  The two parabolic parameters are excluded by the mathematical
 hypothesis `w ^ 2 ≠ 1`; at those parameters the matrix need not have the same order as `w`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

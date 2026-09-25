@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.Derivation.Basic
-import Mathlib.RingTheory.Localization.Basic
-import Mathlib.RingTheory.Localization.FractionRing
-import Mathlib.Tactic
+
+public import Mathlib.RingTheory.Derivation.Basic
+public import Mathlib.RingTheory.Localization.Basic
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.Tactic
 
 /-!
 # Derivations preserving localizations
@@ -17,6 +19,8 @@ localization into itself.  The statement deliberately does not require an
 algebra structure from the derivation's constant ring to the localized ring;
 that structure need not exist in the Frobenius-constant application.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 
@@ -94,7 +98,7 @@ theorem ambientDerivation_preserves_localizationAtPrime_of_preserves
           (algebraMap R (Localization.AtPrime q) 1) := by
             rw [show invD * algebraMap R (Localization.AtPrime q) d =
               algebraMap R (Localization.AtPrime q) 1 by
-                simpa [invD, dSub] using hspec]
+                simp [invD, dSub] using hspec]
       _ = 1 := by simp
   refine ⟨z', ?_⟩
   apply mul_right_cancel₀ hdU

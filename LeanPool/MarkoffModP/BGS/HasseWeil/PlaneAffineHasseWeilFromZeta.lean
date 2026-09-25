@@ -3,14 +3,16 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionStandardZetaRationality
-import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaHasseBound
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineCountTransfer
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineFiberBound
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineRationalPlaceComparison
-import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneRationalPlaceAffineComparison
-import Mathlib.Tactic
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionStandardZetaRationality
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FormalZetaHasseBound
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineCountTransfer
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineFiberBound
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneAffineRationalPlaceComparison
+public import LeanPool.MarkoffModP.BGS.HasseWeil.PlaneRationalPlaceAffineComparison
+public import Mathlib.Tactic
 
 /-!
 # Affine plane Hasse bounds from the standard zeta package
@@ -24,6 +26,8 @@ even-extension square-root estimate.  Constructing those data, and removing
 the separating-coordinate restriction without losing the original bidegree
 scale, remain separate upstream tasks.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 

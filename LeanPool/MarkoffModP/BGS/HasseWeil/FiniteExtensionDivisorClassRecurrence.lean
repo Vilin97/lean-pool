@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorDegreeIndex
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionEffectiveDivisorSplit
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpaceProjectivization
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionDivisorDegreeIndex
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionEffectiveDivisorSplit
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpaceProjectivization
 
 /-!
 # Divisor classes and the indexed eventual recurrence
@@ -25,6 +27,8 @@ divisor class group is assumed: it follows, in every sufficiently large
 degree, from the uniform formula and the already proved finiteness of the
 effective divisors of that degree.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -70,6 +74,7 @@ def finiteExtensionDivisorClassMap :
     FiniteExtensionDivisor K L →+ FiniteExtensionDivisorClass K L :=
   QuotientAddGroup.mk' (finiteExtensionPrincipalDivisorSubgroup K L)
 
+omit [Fintype K] in
 @[simp]
 theorem finiteExtensionDivisorClassMap_principal
     (x : L) (hx : x ≠ 0) :
@@ -113,6 +118,7 @@ def finiteExtensionDivisorClassRepresentative
     (c : FiniteExtensionDivisorClass K L) : FiniteExtensionDivisor K L :=
   Quotient.out c
 
+omit [Fintype K] in
 @[simp]
 theorem finiteExtensionDivisorClassMap_representative
     (c : FiniteExtensionDivisorClass K L) :
@@ -383,6 +389,7 @@ def finiteExtensionDivisorIndexRepresentative :
     FiniteExtensionDivisor K L :=
   Classical.choose (exists_finiteExtensionDivisor_degree_eq_index K L)
 
+omit [Fintype K] [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 @[simp]
 theorem finiteExtensionDivisorIndexRepresentative_degree :
     finiteExtensionDivisorDegree K L

@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
-import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStrictLevels
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLeadingTermCancellation
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationOrder
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionResidueSurjectivity
-import Mathlib.FieldTheory.Finiteness
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannSpace
+public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointStrictLevels
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLeadingTermCancellation
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationOrder
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionResidueSurjectivity
+public import Mathlib.FieldTheory.Finiteness
 
 /-!
 # Leading coefficients at a single place
@@ -17,6 +19,8 @@ import Mathlib.FieldTheory.Finiteness
 Compare residue-field degrees and lift constant residues through the local rings of finite and
 infinite places.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 
@@ -389,7 +393,7 @@ local instance onePointCancellationInfinityIsFractionRing :
     IsFractionRing (RatFuncInfinityIntegralClosure K L) L :=
   integralClosure.isFractionRing_of_finite_extension (RatFunc K) L
 
-local instance onePointCancellationInfinityCanonicalFractionAlgebra :
+private local instance onePointCancellationInfinityCanonicalFractionAlgebra :
     Algebra (RatFuncInfinityIntegralClosure K L)
       (FractionRing (RatFuncInfinityIntegralClosure K L)) :=
   canonicalFractionRingAlgebra (RatFuncInfinityIntegralClosure K L)

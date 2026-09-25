@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.PulledRadicand
-import LeanPool.MarkoffModP.BGS.Markoff.Cage.BiquadraticPrimitiveQuartic
-import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedIrreducibility
-import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.PulledRadicand
+public import LeanPool.MarkoffModP.BGS.Markoff.Cage.BiquadraticPrimitiveQuartic
+public import LeanPool.MarkoffModP.BGS.Markoff.TraceCurve.WeightedIrreducibility
+public import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
 
 /-!
 # Direct affine-plane models for the cage
@@ -17,6 +19,8 @@ is the power parameter.  Passing through `finTwoToIteratedPolynomial` makes
 the defining equations polynomials in the root coordinate with coefficients
 in the parameter polynomial ring.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

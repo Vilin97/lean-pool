@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Action
-import LeanPool.MarkoffModP.BGS.Markoff.Core.Normalization
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Action
+public import LeanPool.MarkoffModP.BGS.Markoff.Core.Normalization
 
 /-!
 # Normalization on the punctured Markoff surface
@@ -14,6 +16,8 @@ Scaling every original Markoff coordinate by three gives an equivalence with the
 punctured surface when three is invertible.  The assembly-specific small-order sets transported
 through this equivalence are defined in `BGS.Markoff.Assembly.PuncturedSmallOrderCount`.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.ParameterizedBound
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.NumericalOptimization
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.ParameterizedBound
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.NumericalOptimization
 
 /-!
 # The numerical Corvaja--Zannier Theorem 2 bound
@@ -15,6 +17,8 @@ one-parameter optimization in `NumericalOptimization`.  Its only substantive
 hypothesis is the ordinary Proposition 2 alternative for every admissible
 pair of natural parameters.
 -/
+
+@[expose] public section
 
 namespace BGS.CorvajaZannier
 

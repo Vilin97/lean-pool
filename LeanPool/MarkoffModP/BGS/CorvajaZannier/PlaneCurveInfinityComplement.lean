@@ -3,8 +3,10 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityDifferentDegree
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityDifferentDegree
 
 /-!
 # The complementary different bound above infinity
@@ -17,6 +19,8 @@ weighted different contribution above infinity is bounded by
 Together with the finite-place discriminant bound, this gives the sharp total
 different budget used in the Corvaja--Zannier plane-curve estimate.
 -/
+
+@[expose] public section
 
 open scoped Polynomial nonZeroDivisors
 open Multiplicative WithZero Polynomial IsDedekindDomain

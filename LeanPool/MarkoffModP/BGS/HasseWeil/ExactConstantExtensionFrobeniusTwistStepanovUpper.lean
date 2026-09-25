@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistDegree
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistBoundedError
-import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistGenus
-import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannLowerFromGenus
-import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralSquareFieldStepanovCount
+
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistDegree
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistBoundedError
+public import LeanPool.MarkoffModP.BGS.HasseWeil.ExactConstantExtensionFrobeniusTwistGenus
+public import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannLowerFromGenus
+public import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralSquareFieldStepanovCount
 
 /-!
 # A uniform Stepanov upper bound for exact-constant Frobenius twists
@@ -24,6 +26,8 @@ This is the uniform upper estimate used in the fixed-field averaging route to
 Hasse--Weil.  It does not require a separate genus-invariance hypothesis: the
 common Riemann budget is the exact input consumed by the Stepanov theorem.
 -/
+
+@[expose] public section
 
 namespace BGS.HasseWeil
 
@@ -55,6 +59,7 @@ local instance (priority := 10000) twistStepanovFieldDecidableEq
 local instance (priority := 10001) twistStepanovRatFuncDecidableEq
     (F : Type*) [Field F] : DecidableEq (RatFunc F) := Classical.decEq _
 
+omit [IsGalois (RatFunc C) N] in
 /-- A single Stepanov budget gives the square-field rational-place upper
 bound for every Frobenius-twist fixed field.  The final degree term is uniform:
 it is the degree of the original function field `N / C(X)`.

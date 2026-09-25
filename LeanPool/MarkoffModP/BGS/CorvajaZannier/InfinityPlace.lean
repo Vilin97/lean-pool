@@ -3,13 +3,15 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionProductFormula
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FinitePlaceCompletion
-import LeanPool.MarkoffModP.BGS.CorvajaZannier.FunctionFieldProductFormula
-import Mathlib.RingTheory.DiscreteValuationRing.TFAE
-import Mathlib.RingTheory.Valuation.Archimedean
-import Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing
+
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionProductFormula
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FinitePlaceCompletion
+public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FunctionFieldProductFormula
+public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
+public import Mathlib.RingTheory.Valuation.Archimedean
+public import Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing
 
 /-!
 # The place at infinity and its primes in finite extensions
@@ -26,6 +28,8 @@ theorem specializes the finite-extension norm/count formula to the unique
 base prime, producing the residue-degree-weighted sum over all primes above
 infinity.
 -/
+
+@[expose] public section
 
 open scoped nonZeroDivisors
 open IsDedekindDomain Multiplicative WithZero

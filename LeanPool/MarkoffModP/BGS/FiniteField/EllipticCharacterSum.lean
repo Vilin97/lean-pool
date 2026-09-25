@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
-import Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Point
-import Mathlib.SetTheory.Cardinal.NatCard
+
+public import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
+public import Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Point
+public import Mathlib.SetTheory.Cardinal.NatCard
 
 /-!
 # The explicit elliptic character sum needed by the incidence argument
@@ -15,6 +17,8 @@ This file reduces the needed Legendre character-sum estimate to a narrow
 point-cardinality target.  The target is an explicit proposition parameter,
 not a `sorry` or axiom; the selected Theorem 1 route does not use it.
 -/
+
+@[expose] public section
 
 namespace BGS.FiniteField
 

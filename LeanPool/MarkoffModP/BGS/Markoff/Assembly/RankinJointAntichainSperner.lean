@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Assembly.RankinJointAntichainWidth
-import LeanPool.MarkoffModP.BGS.Combinatorics.SymmetricChainBasic
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Assembly.RankinJointAntichainWidth
+public import LeanPool.MarkoffModP.BGS.Combinatorics.SymmetricChainBasic
 
 /-!
 # Sperner handoff for the joint maximal-order antichain
@@ -16,6 +18,8 @@ into any finite ranked poset with a symmetric-chain decomposition, in such a
 way that comparison of encoded points implies divisibility of the original
 orders.  The joint antichain then has cardinality at most the central rank.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

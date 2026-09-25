@@ -3,12 +3,14 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.CayleyParametrization
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.SeededCover
-import LeanPool.MarkoffModP.BGS.Markoff.Endgame.WeilBoundAssumption
-import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
-import Mathlib.Algebra.Polynomial.Eval.Degree
+
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.CayleyParametrization
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.Nonsplit.SeededCover
+public import LeanPool.MarkoffModP.BGS.Markoff.Endgame.WeilBoundAssumption
+public import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
+public import Mathlib.Algebra.Polynomial.Eval.Degree
 
 /-!
 # The descended seeded nonsplit trace curve
@@ -18,6 +20,8 @@ the base field.  This file constructs that polynomial, proves the scalar-extensi
 its bidegree bounds, and compares its base-field solutions exactly with the original torus
 solutions.  Absolute irreducibility is deliberately a theorem to be proved, not an assumption.
 -/
+
+@[expose] public section
 
 namespace BGS.Markoff
 

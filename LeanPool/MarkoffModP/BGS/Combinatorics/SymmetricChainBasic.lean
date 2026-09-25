@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.Data.Fintype.Card
-import Mathlib.Order.Antichain
-import Mathlib.Tactic
+
+public import Mathlib.Data.Fintype.Card
+public import Mathlib.Order.Antichain
+public import Mathlib.Tactic
 
 /-!
 # Finite symmetric-chain decompositions
@@ -19,6 +21,8 @@ The main abstract consequence is the Sperner injection: an antichain meets
 each chain at most once, so mapping every point to the central point of its
 chain injects the antichain into the central rank.
 -/
+
+@[expose] public section
 
 namespace BGS.Combinatorics
 
@@ -104,29 +108,29 @@ private theorem key_injective_on_antichain
         decomposition.decode_mono kx ix iy hxy
       have hxback : decomposition.equiv.symm ⟨kx, ix⟩ = x.1 := by
         apply decomposition.equiv.injective
-        simpa [hxcode]
+        simp [hxcode]
       have hyback : decomposition.equiv.symm ⟨kx, iy⟩ = y.1 := by
         apply decomposition.equiv.injective
-        simpa [hycode]
+        simp [hycode]
       simpa [hxback, hyback] using hdecode
     by_contra hne
     exact
-      (hantichain (by simpa using x.2)
-        (by simpa using y.2) hne) hle
+      (hantichain (by simp using x.2)
+        (by simp using y.2) hne) hle
   · have hle : y.1 ≤ x.1 := by
       have hdecode :=
         decomposition.decode_mono kx iy ix hyx
       have hxback : decomposition.equiv.symm ⟨kx, ix⟩ = x.1 := by
         apply decomposition.equiv.injective
-        simpa [hxcode]
+        simp [hxcode]
       have hyback : decomposition.equiv.symm ⟨kx, iy⟩ = y.1 := by
         apply decomposition.equiv.injective
-        simpa [hycode]
+        simp [hycode]
       simpa [hxback, hyback] using hdecode
     by_contra hne
     exact
-      (hantichain (by simpa using y.2)
-        (by simpa using x.2) (Ne.symm hne)) hle
+      (hantichain (by simp using y.2)
+        (by simp using x.2) (Ne.symm hne)) hle
 
 /-- Every antichain injects into the central rank of a finite ranked poset
 equipped with an explicit symmetric-chain decomposition. -/

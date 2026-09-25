@@ -3,11 +3,13 @@ Copyright (c) 2026 Yuma Mizuno. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
+module
 
-import Mathlib.RingTheory.DedekindDomain.Different
-import Mathlib.RingTheory.Kaehler.Basic
-import Mathlib.RingTheory.TensorProduct.Maps
-import Mathlib.LinearAlgebra.TensorProduct.Basis
+
+public import Mathlib.RingTheory.DedekindDomain.Different
+public import Mathlib.RingTheory.Kaehler.Basic
+public import Mathlib.RingTheory.TensorProduct.Maps
+public import Mathlib.LinearAlgebra.TensorProduct.Basis
 
 /-!
 # The trace different annihilates Kähler differentials
@@ -27,6 +29,8 @@ lies in `B ⊗[A] B`, has product `d`, and is killed by the kernel of the
 multiplication map.  It follows that multiplication by `d` sends this kernel
 into its square, hence kills its cotangent module `I / I² = Ω[B⁄A]`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators TensorProduct
 open Polynomial Module
