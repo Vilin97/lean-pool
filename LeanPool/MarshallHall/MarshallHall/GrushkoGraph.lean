@@ -3,9 +3,12 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.GrushkoFold
-import Mathlib.Combinatorics.Quiver.Cast
-import Mathlib.Combinatorics.Quiver.Symmetric
+module
+
+public import LeanPool.MarshallHall.MarshallHall.GrushkoFold
+public import Mathlib.Combinatorics.Quiver.Cast
+public import Mathlib.Combinatorics.Quiver.Symmetric
+
 
 /-!
 ## Labelled paths for the Grushko fold argument
@@ -17,6 +20,8 @@ path has an explicit list of factor labels.  The graph-fold construction can
 therefore use these operations without introducing a second, informal notion
 of path evaluation.
 -/
+
+@[expose] public section
 
 
 

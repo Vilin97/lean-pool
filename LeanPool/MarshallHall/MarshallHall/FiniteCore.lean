@@ -3,8 +3,11 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.PartialAction
-import Mathlib.GroupTheory.FreeGroup.Reduce
+module
+
+public import LeanPool.MarshallHall.MarshallHall.PartialAction
+public import Mathlib.GroupTheory.FreeGroup.Reduce
+
 
 /-!
 ## Finite word states
@@ -14,6 +17,8 @@ state set therefore records suffix products.  This is the same finite core
 that appears in the usual folded covering-graph proof, but expressed directly
 in the free group.
 -/
+
+@[expose] public section
 
 open Function
 

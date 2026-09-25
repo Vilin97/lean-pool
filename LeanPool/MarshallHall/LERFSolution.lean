@@ -3,7 +3,10 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall
+module
+
+public import LeanPool.MarshallHall.MarshallHall
+
 
 /-!
 # Checked finite separator solution
@@ -13,6 +16,8 @@ The selected theorem is obtained from the finite suffix-state completion in
 the Challenge boundary so the Comparator sees the explicit finite action,
 not only its finite-index stabilizer corollary.
 -/
+
+@[expose] public section
 
 noncomputable section
 

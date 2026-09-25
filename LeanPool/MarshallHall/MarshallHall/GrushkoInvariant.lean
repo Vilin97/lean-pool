@@ -3,8 +3,11 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.GrushkoRose
-import LeanPool.MarshallHall.MarshallHall.GrushkoEdge
+module
+
+public import LeanPool.MarshallHall.MarshallHall.GrushkoRose
+public import LeanPool.MarshallHall.MarshallHall.GrushkoEdge
+
 
 /-!
 ## The Euler bound for the marked graph
@@ -18,6 +21,8 @@ by the fold induction is therefore the rank-one Euler bound
 This file establishes that bound for the initial rose and records the exact
 cardinalities needed to transport it through a fold.
 -/
+
+@[expose] public section
 
 
 

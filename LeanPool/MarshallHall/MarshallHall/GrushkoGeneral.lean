@@ -3,12 +3,15 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.Grushko
-import Mathlib.GroupTheory.Coprod.Basic
-import Mathlib.GroupTheory.CoprodI
-import Mathlib.GroupTheory.Finiteness
-import Mathlib.GroupTheory.Rank
-import Mathlib.Tactic
+module
+
+public import LeanPool.MarshallHall.MarshallHall.Grushko
+public import Mathlib.GroupTheory.Coprod.Basic
+public import Mathlib.GroupTheory.CoprodI
+public import Mathlib.GroupTheory.Finiteness
+public import Mathlib.GroupTheory.Rank
+public import Mathlib.Tactic
+
 
 /-!
 ## General free-product rank infrastructure
@@ -22,6 +25,8 @@ two factors can be projected back to each factor.  The remaining, genuinely
 Grushko-specific step is to reduce an arbitrary generating tuple to this
 separated form without increasing its length.
 -/
+
+@[expose] public section
 
 
 

@@ -3,10 +3,15 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.FiniteCore
-import Mathlib.GroupTheory.Finiteness
+module
+
+public import LeanPool.MarshallHall.MarshallHall.FiniteCore
+public import Mathlib.GroupTheory.Finiteness
+
 
 /-! The finite state set used in the separation argument. -/
+
+@[expose] public section
 
 open Set Function
 

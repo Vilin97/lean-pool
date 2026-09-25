@@ -3,18 +3,21 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.Hall
-import LeanPool.MarshallHall.MarshallHall.GrushkoGeneral
-import LeanPool.MarshallHall.MarshallHall.GrushkoReduction
-import LeanPool.MarshallHall.MarshallHall.GrushkoFold
-import LeanPool.MarshallHall.MarshallHall.GrushkoGraph
-import LeanPool.MarshallHall.MarshallHall.GrushkoFoldStep
-import LeanPool.MarshallHall.MarshallHall.GrushkoRose
-import LeanPool.MarshallHall.MarshallHall.GrushkoEdge
-import LeanPool.MarshallHall.MarshallHall.GrushkoUnfold
-import LeanPool.MarshallHall.MarshallHall.GrushkoInvariant
-import LeanPool.MarshallHall.MarshallHall.GrushkoReductionChain
-import LeanPool.MarshallHall.MarshallHall.GrushkoFull
+module
+
+public import LeanPool.MarshallHall.MarshallHall.Hall
+public import LeanPool.MarshallHall.MarshallHall.GrushkoGeneral
+public import LeanPool.MarshallHall.MarshallHall.GrushkoReduction
+public import LeanPool.MarshallHall.MarshallHall.GrushkoFold
+public import LeanPool.MarshallHall.MarshallHall.GrushkoGraph
+public import LeanPool.MarshallHall.MarshallHall.GrushkoFoldStep
+public import LeanPool.MarshallHall.MarshallHall.GrushkoRose
+public import LeanPool.MarshallHall.MarshallHall.GrushkoEdge
+public import LeanPool.MarshallHall.MarshallHall.GrushkoUnfold
+public import LeanPool.MarshallHall.MarshallHall.GrushkoInvariant
+public import LeanPool.MarshallHall.MarshallHall.GrushkoReductionChain
+public import LeanPool.MarshallHall.MarshallHall.GrushkoFull
+
 
 /-!
 # Marshall Hall's theorem through finite cores
@@ -25,6 +28,8 @@ repository also contains the LERF consequence, the binary and finite-indexed
 free-group Grushko rank calculations, and the factorwise infrastructure for
 the arbitrary-factor theorem.
 -/
+
+@[expose] public section
 
 
 

@@ -3,9 +3,12 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import Mathlib.CategoryTheory.Action
-import Mathlib.GroupTheory.FreeGroup.NielsenSchreier
-import Mathlib.Tactic
+module
+
+public import Mathlib.CategoryTheory.Action
+public import Mathlib.GroupTheory.FreeGroup.NielsenSchreier
+public import Mathlib.Tactic
+
 
 /-!
 ## The labelled Schreier graph and its spanning-tree basis
@@ -15,6 +18,8 @@ are labelled by the original free generators.  This is the finite graph that
 the core construction uses; the generic Nielsen--Schreier instance instead
 uses the whole free group as a generator synonym.
 -/
+
+@[expose] public section
 
 open Set Function
 open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver FreeGroup

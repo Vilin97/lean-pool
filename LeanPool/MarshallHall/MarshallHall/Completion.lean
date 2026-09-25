@@ -3,8 +3,11 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.CoreSupport
-import LeanPool.MarshallHall.MarshallHall.FiniteCore
+module
+
+public import LeanPool.MarshallHall.MarshallHall.CoreSupport
+public import LeanPool.MarshallHall.MarshallHall.FiniteCore
+
 
 /-!
 ## The finite core as an embedded labelled graph
@@ -15,6 +18,8 @@ labelled edges of the action groupoid which still agree with the original
 left-coset action.  The resulting graph is the finite core used in the
 completion argument.
 -/
+
+@[expose] public section
 
 open Set Function
 open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver FreeGroup

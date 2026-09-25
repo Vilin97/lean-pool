@@ -3,7 +3,10 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.GrushkoEdge
+module
+
+public import LeanPool.MarshallHall.MarshallHall.GrushkoEdge
+
 
 /-!
 ## The local source unfold
@@ -20,6 +23,8 @@ choose a new marking or perform the subsequent monochromatic-vertex
 contraction.  The main certified fact here is that the old copy is
 monochromatic, exactly the invariant needed by that contraction.
 -/
+
+@[expose] public section
 
 
 

@@ -3,18 +3,23 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import Mathlib.GroupTheory.FreeGroup.NielsenSchreier
-import Mathlib.GroupTheory.Coset.Basic
-import Mathlib.Algebra.Group.Action.Hom
-import Mathlib.GroupTheory.GroupAction.Basic
-import Mathlib.GroupTheory.Index
-import Mathlib.Logic.Equiv.Fintype
+module
+
+public import Mathlib.GroupTheory.FreeGroup.NielsenSchreier
+public import Mathlib.GroupTheory.Coset.Basic
+public import Mathlib.Algebra.Group.Action.Hom
+public import Mathlib.GroupTheory.GroupAction.Basic
+public import Mathlib.GroupTheory.Index
+public import Mathlib.Logic.Equiv.Fintype
+
 
 /-!
 The right action of a group on the quotient by the right-coset relation is
 available even when the subgroup is not normal.  We record it explicitly
 because this is the finite-state action used by the Hall construction.
 -/
+
+@[expose] public section
 
 open Function
 

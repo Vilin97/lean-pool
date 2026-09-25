@@ -3,9 +3,12 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.GrushkoUnfold
-import LeanPool.MarshallHall.MarshallHall.GrushkoRemove
-import LeanPool.MarshallHall.MarshallHall.GrushkoInvariant
+module
+
+public import LeanPool.MarshallHall.MarshallHall.GrushkoUnfold
+public import LeanPool.MarshallHall.MarshallHall.GrushkoRemove
+public import LeanPool.MarshallHall.MarshallHall.GrushkoInvariant
+
 
 /-!
 ## The unsafe-fold branch
@@ -15,6 +18,8 @@ source.  After the subsequent safe fold, the old copy remains a
 monochromatic vertex and can be contracted explicitly.  This file contains
 the bridge from that local construction to the removal operation.
 -/
+
+@[expose] public section
 
 
 
@@ -288,7 +293,7 @@ theorem foldedUnfoldOld_incident_color {n : ℕ}
 branch. -/
 
 omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
-private theorem unfoldOld_ne_vertexAt_of_ne_source
+theorem unfoldOld_ne_vertexAt_of_ne_source
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     (e₀ : AllArrow (V := V)) {b : V} (hb : b ≠ allArrowSource e₀) :
     unfoldOld (allArrowSource e₀) ≠

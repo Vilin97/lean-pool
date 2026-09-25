@@ -3,9 +3,12 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.GrushkoGraph
-import Mathlib.Data.Fintype.Card
-import Mathlib.Tactic
+module
+
+public import LeanPool.MarshallHall.MarshallHall.GrushkoGraph
+public import Mathlib.Data.Fintype.Card
+public import Mathlib.Tactic
+
 
 /-!
 ## The finite quotient underlying one graph fold
@@ -15,6 +18,8 @@ non-loop and removes the corresponding geometric edge.  This file starts the
 construction at the type level.  The path substitution and its label theorem
 will be added on top of these finite quotient and deletion primitives.
 -/
+
+@[expose] public section
 
 
 

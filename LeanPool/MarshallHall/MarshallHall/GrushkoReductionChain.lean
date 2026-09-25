@@ -3,7 +3,10 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.GrushkoInvariant
+module
+
+public import LeanPool.MarshallHall.MarshallHall.GrushkoInvariant
+
 
 /-!
 ## Termination of the safe-fold reduction
@@ -15,6 +18,8 @@ existence of a safe complementary path at every non-terminal stage.  Thus the
 remaining combinatorial issue is isolated precisely to the unfold case of
 the classical proof.
 -/
+
+@[expose] public section
 
 
 

@@ -3,8 +3,11 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.GraphBasis
-import LeanPool.MarshallHall.MarshallHall.FreeFactor
+module
+
+public import LeanPool.MarshallHall.MarshallHall.GraphBasis
+public import LeanPool.MarshallHall.MarshallHall.FreeFactor
+
 
 /-!
 ## Core-supported words in a spanning-tree basis
@@ -13,6 +16,8 @@ The finite-core argument produces paths whose labelled edges belong to a fixed
 finite set of generator edges.  The lemmas below make that geometric fact
 visible in the free basis supplied by a spanning tree.
 -/
+
+@[expose] public section
 
 open Set Function
 open CategoryTheory CategoryTheory.SingleObj Quiver FreeGroup

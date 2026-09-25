@@ -3,9 +3,12 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.Grushko
-import Mathlib.GroupTheory.FreeGroup.IsFreeGroup
-import Mathlib.Logic.Equiv.Set
+module
+
+public import LeanPool.MarshallHall.MarshallHall.Grushko
+public import Mathlib.GroupTheory.FreeGroup.IsFreeGroup
+public import Mathlib.Logic.Equiv.Set
+
 
 /-!
 ## Inclusion-compatible free factors
@@ -15,6 +18,8 @@ the ambient group.  This prevents an abstract isomorphism from being mistaken
 for the free-factor conclusion: the left coproduct injection must be the
 subgroup inclusion itself.
 -/
+
+@[expose] public section
 
 universe u
 

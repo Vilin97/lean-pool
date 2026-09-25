@@ -3,8 +3,11 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.GrushkoReductionChain
-import LeanPool.MarshallHall.MarshallHall.GrushkoUnsafe
+module
+
+public import LeanPool.MarshallHall.MarshallHall.GrushkoReductionChain
+public import LeanPool.MarshallHall.MarshallHall.GrushkoUnsafe
+
 
 /-!
 ## The full arbitrary-factor reduction
@@ -14,6 +17,8 @@ strong induction needed for the Grushko--Neumann theorem.  The first layer is
 the change-of-basepoint transport used when the monochromatic run begins away
 from the marked base.
 -/
+
+@[expose] public section
 
 
 

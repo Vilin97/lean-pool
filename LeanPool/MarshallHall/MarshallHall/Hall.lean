@@ -3,11 +3,16 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.Completion
-import LeanPool.MarshallHall.MarshallHall.Separation
+module
+
+public import LeanPool.MarshallHall.MarshallHall.Completion
+public import LeanPool.MarshallHall.MarshallHall.Separation
+
 
 /-! The finite-core completion argument.  Its conclusion records the actual
 inclusion of the original subgroup into the finite-index subgroup. -/
+
+@[expose] public section
 
 open Set Function
 open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver FreeGroup

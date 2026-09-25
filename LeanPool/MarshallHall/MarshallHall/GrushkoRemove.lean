@@ -3,7 +3,10 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.GrushkoEdge
+module
+
+public import LeanPool.MarshallHall.MarshallHall.GrushkoEdge
+
 
 /-!
 ## Removing a monochromatic vertex
@@ -14,6 +17,8 @@ labels are products inside that one factor, so the operation stays within the
 binary labelling format.  This is the marking-preserving contraction used in
 the unsafe source-unfold branch of the Grushko proof.
 -/
+
+@[expose] public section
 
 
 

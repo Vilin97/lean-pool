@@ -3,7 +3,10 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.GrushkoGeneral
+module
+
+public import LeanPool.MarshallHall.MarshallHall.GrushkoGeneral
+
 
 /-!
 ## Reduced words for the binary free product
@@ -14,6 +17,8 @@ so this file supplies the small, explicit bridge needed by the Grushko
 reduction argument.  In particular, the reduced-word object below is tied to
 the actual inclusions `Monoid.Coprod.inl` and `Monoid.Coprod.inr`.
 -/
+
+@[expose] public section
 
 
 

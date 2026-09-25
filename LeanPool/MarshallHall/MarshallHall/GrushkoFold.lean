@@ -3,8 +3,11 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.GrushkoReduction
-import Mathlib.Data.List.SplitBy
+module
+
+public import LeanPool.MarshallHall.MarshallHall.GrushkoReduction
+public import Mathlib.Data.List.SplitBy
+
 
 /-! ### Alternating runs in a factor word
 
@@ -14,6 +17,8 @@ runs has trivial label.  We first package the list-theoretic part of that
 argument.  The proof is deliberately phrased using `List.splitBy`, so the
 maximality and the alternating boundary conditions are explicit.
 -/
+
+@[expose] public section
 
 open Function Monoid.Coprod
 

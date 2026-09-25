@@ -3,13 +3,16 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import Mathlib.GroupTheory.Coprod.Basic
-import Mathlib.GroupTheory.FreeGroup.GeneratorEquiv
-import Mathlib.GroupTheory.Rank
-import Mathlib.GroupTheory.Finiteness
-import Mathlib.LinearAlgebra.Dimension.Finite
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.Tactic
+module
+
+public import Mathlib.GroupTheory.Coprod.Basic
+public import Mathlib.GroupTheory.FreeGroup.GeneratorEquiv
+public import Mathlib.GroupTheory.Rank
+public import Mathlib.GroupTheory.Finiteness
+public import Mathlib.LinearAlgebra.Dimension.Finite
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.Tactic
+
 
 /-!
 ## Binary free products and the Grushko rank calculation
@@ -19,6 +22,8 @@ group on the disjoint union of their bases.  The lower bound in the rank
 calculation is obtained from abelianization, so the result is not merely a
 cardinality calculation transported through an unproved presentation.
 -/
+
+@[expose] public section
 
 universe u
 

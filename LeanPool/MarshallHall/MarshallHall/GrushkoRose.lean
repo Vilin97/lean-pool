@@ -3,7 +3,10 @@ Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. A
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
-import LeanPool.MarshallHall.MarshallHall.GrushkoFoldStep
+module
+
+public import LeanPool.MarshallHall.MarshallHall.GrushkoFoldStep
+
 
 /-!
 ## The canonical subdivided rose
@@ -15,6 +18,8 @@ construction is intentionally independent of the fold operation, so the
 later induction can use it as a genuine finite marked graph rather than as a
 picture of a word.
 -/
+
+@[expose] public section
 
 
 
