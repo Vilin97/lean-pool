@@ -29,14 +29,16 @@ noncomputable section
 universe u
 
 /-- A type together with the ring structure used at the next Ore stage. -/
-private structure RingStage where
+structure RingStage where
+  /-- The carrier of the current Ore stage. -/
   carrier : Type u
+  /-- The ring structure used for the next coordinate-momentum extension. -/
   ring : Ring carrier
 
 variable (B : Type u) [Ring B]
 
 /-- The recursively constructed ring data after adjoining `n` Weyl pairs. -/
-private def iteratedPairData : Nat → RingStage
+def iteratedPairData : Nat → RingStage
   | 0 => ⟨B, inferInstance⟩
   | n + 1 =>
       let previous := iteratedPairData n

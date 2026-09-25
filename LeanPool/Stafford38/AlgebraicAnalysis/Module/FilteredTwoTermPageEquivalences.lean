@@ -39,7 +39,8 @@ private abbrev targetDenominator (r : ℕ) (p : ℤ) :
     Submodule k (K.G p) :=
   (K.boundaries r p).comap (K.G p).subtype
 
-private def sourceSuccInclusion (r : ℕ) (p : ℤ) :
+/-- Include cycles surviving the next page into the current cycle numerator. -/
+def sourceSuccInclusion (r : ℕ) (p : ℤ) :
     K.cycles (r + 1) p →ₗ[k] K.cycles r p :=
   Submodule.inclusion (K.cycles_succ_le r p)
 
@@ -53,7 +54,7 @@ private theorem sourceSuccInclusion_denominator (r : ℕ) (p : ℤ) :
 def sourceSuccMap (r : ℕ) (p : ℤ) :
     K.SourcePage (r + 1) p →ₗ[k] K.SourcePage r p :=
   Submodule.mapQ _ _ (K.sourceSuccInclusion r p)
-    (K.sourceSuccInclusion_denominator r p)
+    (by exact K.sourceSuccInclusion_denominator r p)
 
 @[simp]
 theorem sourceSuccMap_mk (r : ℕ) (p : ℤ)
@@ -75,7 +76,7 @@ private theorem drop_sourceSuccMap_eq_zero (r : ℕ) (p : ℤ)
 def sourceSuccKernelMap (r : ℕ) (p : ℤ) :
     K.SourcePage (r + 1) p →ₗ[k] LinearMap.ker (K.drop r p) :=
   (K.sourceSuccMap r p).codRestrict (LinearMap.ker (K.drop r p))
-    (K.drop_sourceSuccMap_eq_zero r p)
+    (by exact K.drop_sourceSuccMap_eq_zero r p)
 
 private theorem sourceSuccMap_injective (r : ℕ) (p : ℤ) :
     Function.Injective (K.sourceSuccMap r p) := by
@@ -114,8 +115,9 @@ differential. -/
 noncomputable def sourceSuccEquivKerDrop (r : ℕ) (p : ℤ) :
     K.SourcePage (r + 1) p ≃ₗ[k] LinearMap.ker (K.drop r p) :=
   LinearEquiv.ofBijective (K.sourceSuccKernelMap r p)
-    ⟨fun _ _ h => K.sourceSuccMap_injective r p (congrArg Subtype.val h),
-      K.sourceSuccKernelMap_surjective r p⟩
+    (by
+      exact ⟨fun _ _ h => K.sourceSuccMap_injective r p (congrArg Subtype.val h),
+        K.sourceSuccKernelMap_surjective r p⟩)
 
 /-- The quotient map from a target page to its successor page. -/
 def targetSuccMap (r : ℕ) (p : ℤ) :
@@ -196,20 +198,20 @@ theorem ker_targetSuccMap_eq_range_drop (r : ℕ) (p : ℤ) :
     LinearMap.ker (K.targetSuccMap r (p + r)) =
       LinearMap.range (K.drop r p) :=
   le_antisymm (K.ker_targetSuccMap_le_range_drop r p)
-    (K.range_drop_le_ker_targetSuccMap r p)
+    (by exact K.range_drop_le_ker_targetSuccMap r p)
 
 /-- The map from the cokernel of `d_r` to the next target page. -/
 def targetCokernelMap (r : ℕ) (p : ℤ) :
     (K.TargetPage r (p + r) ⧸ LinearMap.range (K.drop r p)) →ₗ[k]
       K.TargetPage (r + 1) (p + r) :=
   (LinearMap.range (K.drop r p)).liftQ (K.targetSuccMap r (p + r))
-    (K.range_drop_le_ker_targetSuccMap r p)
+    (by exact K.range_drop_le_ker_targetSuccMap r p)
 
 private theorem targetCokernelMap_injective (r : ℕ) (p : ℤ) :
     Function.Injective (K.targetCokernelMap r p) := by
   rw [← LinearMap.ker_eq_bot]
   exact Submodule.ker_liftQ_eq_bot _ _
-    (K.range_drop_le_ker_targetSuccMap r p)
+    (by exact K.range_drop_le_ker_targetSuccMap r p)
     (K.ker_targetSuccMap_eq_range_drop r p).le
 
 private theorem targetCokernelMap_surjective (r : ℕ) (p : ℤ) :
@@ -224,8 +226,9 @@ noncomputable def targetSuccEquivCokerDrop (r : ℕ) (p : ℤ) :
     K.TargetPage (r + 1) (p + r) ≃ₗ[k]
       K.TargetPage r (p + r) ⧸ LinearMap.range (K.drop r p) :=
   (LinearEquiv.ofBijective (K.targetCokernelMap r p)
-    ⟨K.targetCokernelMap_injective r p,
-      K.targetCokernelMap_surjective r p⟩).symm
+    (by
+      exact ⟨K.targetCokernelMap_injective r p,
+        K.targetCokernelMap_surjective r p⟩)).symm
 
 
 end FilteredTwoTerm

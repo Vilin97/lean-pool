@@ -115,7 +115,7 @@ private theorem sourceRestricted_denominator (r : ℕ) (p : ℤ) :
 def sourceMap (r : ℕ) (p : ℤ) :
     K.SourcePage r p →ₗ[k] K.SourcePage r (p - d) :=
   Submodule.mapQ _ _ (P.sourceRestricted r p)
-    (P.sourceRestricted_denominator r p)
+    (by exact P.sourceRestricted_denominator r p)
 
 @[simp]
 theorem sourceMap_mk (r : ℕ) (p : ℤ) (x : K.cycles r p) :
@@ -172,7 +172,7 @@ private theorem targetRestricted_denominator (r : ℕ) (p : ℤ) :
 def targetMap (r : ℕ) (p : ℤ) :
     K.TargetPage r p →ₗ[k] K.TargetPage r (p - d) :=
   Submodule.mapQ _ _ (P.targetRestricted p)
-    (P.targetRestricted_denominator r p)
+    (by exact P.targetRestricted_denominator r p)
 
 @[simp]
 theorem targetMap_mk (r : ℕ) (p : ℤ) (x : K.G p) :
@@ -194,7 +194,8 @@ theorem targetPageCast_mk (r : ℕ) {p q : ℤ} (h : p = q)
   subst q
   rfl
 
-private def targetRestrictedAtDrop (r : ℕ) (p : ℤ) :
+/-- Restrict the operator to the target filtration at a page differential. -/
+def targetRestrictedAtDrop (r : ℕ) (p : ℤ) :
     K.G (p + r) →ₗ[k] K.G (p - d + r) :=
   (P.g.comp (K.G (p + r)).subtype).codRestrict (K.G (p - d + r)) (by
     intro x
@@ -216,7 +217,7 @@ the identity `(p+r)-d = (p-d)+r`. -/
 def targetMapAtDrop (r : ℕ) (p : ℤ) :
     K.TargetPage r (p + r) →ₗ[k] K.TargetPage r (p - d + r) :=
   Submodule.mapQ _ _ (P.targetRestrictedAtDrop r p)
-    (P.targetRestrictedAtDrop_denominator r p)
+    (by exact P.targetRestrictedAtDrop_denominator r p)
 
 @[simp]
 theorem targetMapAtDrop_mk (r : ℕ) (p : ℤ) (x : K.G (p + r)) :

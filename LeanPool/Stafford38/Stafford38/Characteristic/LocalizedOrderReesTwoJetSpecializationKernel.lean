@@ -46,7 +46,8 @@ universe u
 variable (k : Type u) [Field k]
 variable {n : ℕ}
 
-private abbrev concreteData
+/-- The concrete two-jet trace data associated with the filtered quotient. -/
+abbrev concreteData
     (I : RightIdeal (PresentedWeyl k n)) :=
   filteredQuotientTwoJetTraceData k I
 
