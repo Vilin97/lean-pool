@@ -19,7 +19,7 @@ This file develops the iterated jump operator, the sets `∅⁽ⁿ⁾`, and the 
 `Δ⁰ₙ` of the arithmetical hierarchy relative to oracle computability.
 -/
 
-@[expose] public section
+public section
 
 namespace Computability
 

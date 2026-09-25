@@ -14,4 +14,4 @@ import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 # Tactics for the Selberg sieve import
 -/
 
-@[expose] public section
+public section

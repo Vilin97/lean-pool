@@ -20,4 +20,4 @@ public import LeanPool.SelbergSieve4.Tactic.Multiplicativity
 Imported Lean Pool material for `LeanPool.SelbergSieve4.ForArithmeticFunction`.
 -/
 
-@[expose] public section
+public section

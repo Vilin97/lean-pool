@@ -18,4 +18,4 @@ import Mathlib.Tactic.Positivity.Finset
 # Applications of the Selberg sieve
 -/
 
-@[expose] public section
+public section

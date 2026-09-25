@@ -20,7 +20,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.SelbergSieve4.SieveLemmas
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -61,22 +61,20 @@ local notation3 "X" => Sieve.totalMass s
 local notation3 "A" => Sieve.support s
 
 /-- Weighted count of support elements divisible by `d`. -/
-@[simp]
-def multSum (d : ℕ) : ℝ :=
+@[expose, simp] def multSum (d : ℕ) : ℝ :=
   ∑ n ∈ A, if d ∣ n then a n else 0
 
 local notation3 "𝒜" => Sieve.multSum s
 
 -- A_d = ν (d)/d X + R_d
 /-- Remainder term after subtracting the expected main term from `multSum`. -/
-@[simp]
-def rem (d : ℕ) : ℝ :=
+@[expose, simp] def rem (d : ℕ) : ℝ :=
   𝒜 d - ν d * X
 
 local notation3 "R" => Sieve.rem s
 
 /-- Weighted count of support elements coprime to the sieve modulus. -/
-def siftedSum : ℝ :=
+@[expose] def siftedSum : ℝ :=
   ∑ d ∈ A, if Coprime P d then a d else 0
 
 open scoped ArithmeticFunction
@@ -100,7 +98,7 @@ def mainSum (μPlus : ℕ → ℝ) : ℝ :=
   ∑ d ∈ divisors P, μPlus d * ν d
 
 /-- Error contribution of an upper-bound sieve weight. -/
-def errSum (μPlus : ℕ → ℝ) : ℝ :=
+@[expose] def errSum (μPlus : ℕ → ℝ) : ℝ :=
   ∑ d ∈ divisors P, |μPlus d| * |R d|
 
 section SieveLemmas
@@ -283,6 +281,7 @@ end SieveLemmas
 section LambdaSquared
 
 /-- Lambda-squared upper-bound weights generated from a function on divisors. -/
+@[expose]
 def _root_.Sieve.lambdaSquared (weights : ℕ → ℝ) : ℕ → ℝ := fun d =>
   ∑ d1 ∈ d.divisors, ∑ d2 ∈ d.divisors, if d = Nat.lcm d1 d2 then weights d1 * weights d2 else 0
 

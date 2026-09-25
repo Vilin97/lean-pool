@@ -26,7 +26,7 @@ if `f : ℕ →. ℕ`, then `dom f : Set ℕ` is `{n | n ∈ f.Dom}`. These are 
 theorems are stated.
 -/
 
-@[expose] public section
+public section
 
 open scoped Computability
 

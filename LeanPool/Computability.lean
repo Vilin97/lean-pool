@@ -28,7 +28,7 @@ Tags: computability, oracle-computability, turing-degrees, recursion-theory, ari
 MSC: 03D30, 03D28
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview
