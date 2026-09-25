@@ -559,8 +559,9 @@ theorem hamiltonIvey_ode_pinching_of_scalar_barrier
   exact (hamiltonIvey_reaction_coercive hK ht.1 (hlm t ht) (hmn t ht)
     (hnuNeg t ht) (hscalar t ht) hwt).2.2
 
-/-- ODE Hamilton--Ivey pinching from the standard initial least-eigenvalue
-bound; the scalar barrier is derived internally. -/
+/-- ODE Hamilton--Ivey pinching for ordered eigenvalue curves whose least eigenvalue
+stays strictly negative on the whole time interval. The standard initial lower bound
+on that eigenvalue implies the pinching estimate; the scalar barrier is derived internally. -/
 theorem hamiltonIvey_ode_pinching
     {K T : ℝ} {lambda mu nu : ℝ → ℝ}
     (hK : 0 < K)

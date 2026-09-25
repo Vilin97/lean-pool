@@ -10181,11 +10181,15 @@ projects:
     - HamiltonIveyReaction.hamiltonIvey_ode_pinching
     main_results:
     - declaration: HamiltonIveyReaction.hamiltonIvey_reaction_coercive
-      informal: The Hamilton–Ivey reaction term obeys the coercivity estimate at a negative minimum
-        of the pinching quantity.
+      informal: For K > 0, t ≥ 0, and ordered curvature eigenvalues lambda ≥ mu ≥ nu with
+        nu < 0, assume the scalar lower barrier R ≥ -3K/(1+Kt). If the Hamilton–Ivey
+        defect is negative, then -nu > K/(1+Kt) and the reaction term is at least
+        (-nu)/9 and strictly positive.
     - declaration: HamiltonIveyReaction.hamiltonIvey_ode_pinching
-      informal: The eigenvalue reaction ODE preserves the Hamilton–Ivey pinching inequality under the
-        stated initial bounds.
+      informal: For K > 0 and T ≥ 0, ordered differentiable eigenvalue curves solving
+        the curvature-reaction ODE on [0,T], with nu(t) < 0 throughout that interval
+        and nu(0) ≥ -K, have nonnegative Hamilton–Ivey defect throughout [0,T].
+        The scalar lower barrier is derived internally from the initial bound.
     tags:
     - riemannian-geometry
     - curvature
