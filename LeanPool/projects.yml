@@ -10256,7 +10256,6 @@ projects:
       - '11E12'
       - '11E08'
       - '11E88'
-
   - slug: salem-theorem
     title: Every Pisot number is a two-sided limit of Salem numbers
     summary: Proves Salem’s two-sided approximation theorem for Pisot numbers, preserving both the polynomial
