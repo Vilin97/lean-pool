@@ -92,25 +92,25 @@ theorem finrank_double_finiteFieldExtension :
   rw [finrank_finiteFieldExtension_of_dvd K p a (2 * a) ⟨2, by omega⟩]
   simpa [Nat.mul_comm] using Nat.mul_div_cancel_left 2 (NeZero.pos a)
 
+omit [Fintype K] in
 /-- Cardinality of the degree-`2a` extension is the square of the
 degree-`a` extension's cardinality. -/
-theorem natCard_double_finiteFieldExtension_eq_sq :
+theorem natCard_double_finiteFieldExtension_eq_sq [Finite K] :
     Nat.card (FiniteField.Extension K p (2 * a)) =
       Nat.card (FiniteField.Extension K p a) ^ 2 := by
   rw [FiniteField.natCard_extension K p (2 * a),
     FiniteField.natCard_extension K p a]
   ring
 
+omit [Fintype K] in
 /-- A positive multiple of the extension degree is already large enough to
 dominate that degree.  This elementary growth estimate is what makes one
 fixed multiple work uniformly in the Stepanov construction. -/
-theorem degree_le_natCard_finiteFieldExtension_mul
+theorem degree_le_natCard_finiteFieldExtension_mul [Finite K]
     (d n : ℕ) [NeZero (d * n)] (hn : 0 < n) :
     d ≤ Nat.card (FiniteField.Extension K p (d * n)) := by
   rw [FiniteField.natCard_extension K p (d * n)]
-  have hcard : 1 < Nat.card K := by
-    simpa only [Nat.card_eq_fintype_card] using
-      (Fintype.one_lt_card : 1 < Fintype.card K)
+  have hcard : 1 < Nat.card K := Finite.one_lt_card
   have hdPow : d ≤ Nat.card K ^ d :=
     (Nat.lt_pow_self hcard).le
   exact hdPow.trans (Nat.pow_le_pow_right (Nat.card_pos)

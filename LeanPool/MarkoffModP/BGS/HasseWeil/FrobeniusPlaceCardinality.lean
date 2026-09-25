@@ -52,10 +52,11 @@ variable (L : Type*) [Field L] [Algebra (RatFunc C) L]
 variable (S : Type*) [Field S] [Algebra C S]
   [FiniteDimensional C S] [IsGalois C S]
 
+omit [Fintype C] in
 /-- A finite place of degree `[S : C]` above a degree-one place has the
 decomposition-group cardinality required by Frobenius-coset averaging, once
 the restricted constant quotient kernel is identified with inertia. -/
-theorem finitePlaceDecompositionGroup_card_eq_restrictedKernel_mul_card_constantAut
+theorem finitePlaceDecompositionGroup_card_eq_restrictedKernel_mul_card_constantAut [Finite C]
     (π : Gal(L/M) →* (S ≃ₐ[C] S))
     (Q : FiniteExtensionFinitePlace C L)
     (hTop : finiteExtensionPlaceDegree C L (.inl Q) = Module.finrank C S)
@@ -69,6 +70,7 @@ theorem finitePlaceDecompositionGroup_card_eq_restrictedKernel_mul_card_constant
       Nat.card
           (π.comp (finitePlaceDecompositionGroup C M L Q).subtype).ker *
         Nat.card (S ≃ₐ[C] S) := by
+  let : Fintype C := Fintype.ofFinite C
   let := finiteIntegralClosureGalAction C M L
   have hrelative :
       finitePlaceRelativeInertiaDeg C M L Q = Module.finrank C S := by
@@ -97,9 +99,10 @@ theorem finitePlaceDecompositionGroup_card_eq_restrictedKernel_mul_card_constant
   rw [finitePlaceDecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg,
     ← hkernel, hrelative, ← IsGalois.card_aut_eq_finrank C S]
 
+omit [Fintype C] in
 /-- The corresponding decomposition-group cardinality identity for a place
 above infinity. -/
-theorem infinityPlaceDecompositionGroup_card_eq_restrictedKernel_mul_card_constantAut
+theorem infinityPlaceDecompositionGroup_card_eq_restrictedKernel_mul_card_constantAut [Finite C]
     (π : Gal(L/M) →* (S ≃ₐ[C] S))
     (Q : FiniteExtensionInfinityPlace C L)
     (hTop : finiteExtensionPlaceDegree C L (.inr Q) = Module.finrank C S)
@@ -113,6 +116,7 @@ theorem infinityPlaceDecompositionGroup_card_eq_restrictedKernel_mul_card_consta
       Nat.card
           (π.comp (infinityPlaceDecompositionGroup C M L Q).subtype).ker *
         Nat.card (S ≃ₐ[C] S) := by
+  let : Fintype C := Fintype.ofFinite C
   let := infinityIntegralClosureGalAction C M L
   have hrelative :
       infinityPlaceRelativeInertiaDeg C M L Q = Module.finrank C S := by
@@ -141,10 +145,11 @@ theorem infinityPlaceDecompositionGroup_card_eq_restrictedKernel_mul_card_consta
   rw [infinityPlaceDecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg,
     ← hkernel, hrelative, ← IsGalois.card_aut_eq_finrank C S]
 
+omit [Fintype C] in
 /-- Restriction-fiber form of the finite-place cardinality identity.  Its
 conclusion is exactly the stabilizer hypothesis consumed by the cardinality
 form of Frobenius-coset Burnside averaging. -/
-theorem finitePlaceUnderFiber_stabilizer_card_eq_restrictedKernel_mul_card_constantAut
+theorem finitePlaceUnderFiber_stabilizer_card_eq_restrictedKernel_mul_card_constantAut [Finite C]
     (π : Gal(L/M) →* (S ≃ₐ[C] S))
     (P : FiniteExtensionFinitePlace C M)
     (Q : FinitePlaceUnderFiber C M L P)
@@ -161,6 +166,7 @@ theorem finitePlaceUnderFiber_stabilizer_card_eq_restrictedKernel_mul_card_const
       Nat.card
           (π.comp (MulAction.stabilizer Gal(L/M) Q).subtype).ker *
         Nat.card (S ≃ₐ[C] S) := by
+  let : Fintype C := Fintype.ofFinite C
   let := finiteIntegralClosureGalAction C M L
   let := finitePlaceUnderFiberGalAction C M L P
   have hBase' : finiteExtensionPlaceDegree C M
@@ -173,8 +179,9 @@ theorem finitePlaceUnderFiber_stabilizer_card_eq_restrictedKernel_mul_card_const
   exact finitePlaceDecompositionGroup_card_eq_restrictedKernel_mul_card_constantAut
     C M L S π Q.1 hTop hBase' hker
 
+omit [Fintype C] in
 /-- Restriction-fiber form of the infinity-place cardinality identity. -/
-theorem infinityPlaceUnderFiber_stabilizer_card_eq_restrictedKernel_mul_card_constantAut
+theorem infinityPlaceUnderFiber_stabilizer_card_eq_restrictedKernel_mul_card_constantAut [Finite C]
     (π : Gal(L/M) →* (S ≃ₐ[C] S))
     (P : FiniteExtensionInfinityPlace C M)
     (Q : InfinityPlaceUnderFiber C M L P)
@@ -191,6 +198,7 @@ theorem infinityPlaceUnderFiber_stabilizer_card_eq_restrictedKernel_mul_card_con
       Nat.card
           (π.comp (MulAction.stabilizer Gal(L/M) Q).subtype).ker *
         Nat.card (S ≃ₐ[C] S) := by
+  let : Fintype C := Fintype.ofFinite C
   let := infinityIntegralClosureGalAction C M L
   let := infinityPlaceUnderFiberGalAction C M L P
   have hBase' : finiteExtensionPlaceDegree C M

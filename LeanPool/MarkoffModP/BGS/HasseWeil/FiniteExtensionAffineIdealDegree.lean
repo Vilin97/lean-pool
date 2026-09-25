@@ -152,11 +152,13 @@ theorem finiteExtensionAffineIdeal_cardQuot_eq_card_pow_degree
     ← Nat.card_eq_fintype_card]
   exact Module.natCard_eq_pow_finrank
 
+omit [Fintype K] in
 /-- An affine ideal has degree zero exactly when it is the unit ideal. -/
-theorem finiteExtensionAffineIdealDegree_eq_zero_iff
+theorem finiteExtensionAffineIdealDegree_eq_zero_iff [Finite K]
     (I : FiniteExtensionAffineIdeal K L) :
     finiteExtensionAffineIdealDegree K L I = 0 ↔
       (I : Ideal (RatFuncFiniteIntegralClosure K L)) = ⊤ := by
+  let : Fintype K := Fintype.ofFinite K
   constructor
   · intro hdegree
     apply Submodule.cardQuot_eq_one_iff.mp
@@ -177,11 +179,13 @@ theorem finiteExtensionAffineIdealDegree_eq_zero_iff
     rw [finiteExtensionAffineIdealDegree, hI]
     exact Module.finrank_zero_of_subsingleton
 
+omit [Fintype K] in
 /-- There are only finitely many nonzero affine ideals of any prescribed
 degree. -/
-theorem finite_setOf_finiteExtensionAffineIdealDegree_eq (n : ℕ) :
+theorem finite_setOf_finiteExtensionAffineIdealDegree_eq [Finite K] (n : ℕ) :
     {I : FiniteExtensionAffineIdeal K L |
       finiteExtensionAffineIdealDegree K L I = n}.Finite := by
+  let : Fintype K := Fintype.ofFinite K
   let : Ring.HasFiniteQuotients (RatFuncFiniteIntegralClosure K L) :=
     ratFuncFiniteIntegralClosure_hasFiniteQuotients K L
   apply Set.Finite.of_injOn

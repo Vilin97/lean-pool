@@ -257,7 +257,7 @@ theorem basisPoleBound_nonneg {ι : Type*} [Fintype ι] (f : ι → K) :
     0 ≤ basisPoleBound k K f := by
   intro v
   change 0 ≤ (basisPoleBound k K f) v
-  simp [basisPoleBound, Finset.sum_apply]
+  simp only [basisPoleBound, Finsupp.coe_finsetSum, Finset.sum_apply]
   exact Finset.sum_nonneg fun i _ => polarDivisor_nonneg k K (f i) v
 
 omit [Algebra k K] [IsScalarTower k k[X] K] [IsFullConstantField k K] in

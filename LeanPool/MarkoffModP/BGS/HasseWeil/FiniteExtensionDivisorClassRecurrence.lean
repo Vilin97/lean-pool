@@ -100,6 +100,7 @@ def finiteExtensionDivisorClassDegree :
     (finiteExtensionDivisorDegreeHom K L)
     (by exact finiteExtensionPrincipalDivisorSubgroup_le_degreeKernel K L)
 
+omit [Fintype K] in
 @[simp]
 theorem finiteExtensionDivisorClassDegree_mk
     (D : FiniteExtensionDivisor K L) :
@@ -107,6 +108,7 @@ theorem finiteExtensionDivisorClassDegree_mk
         (finiteExtensionDivisorClassMap K L D) =
       finiteExtensionDivisorDegree K L D :=
   by
+    classical
     rfl
 
 /-- Divisor classes of a prescribed integer degree. -/
@@ -127,10 +129,12 @@ theorem finiteExtensionDivisorClassMap_representative
         (finiteExtensionDivisorClassRepresentative K L c) = c :=
   Quotient.out_eq c
 
+omit [Fintype K] in
 theorem finiteExtensionDivisorClassRepresentative_degree
     {n : ℤ} (c : FiniteExtensionDivisorClassOfDegree K L n) :
     finiteExtensionDivisorDegree K L
         (finiteExtensionDivisorClassRepresentative K L c.1) = n := by
+  classical
   calc
     finiteExtensionDivisorDegree K L
         (finiteExtensionDivisorClassRepresentative K L c.1) =
@@ -178,11 +182,13 @@ abbrev FiniteExtensionEffectiveDivisorClassFiber (n : ℕ)
       finiteExtensionEffectiveDivisorDegree K L D = n} //
     finiteExtensionEffectiveDivisorClassOfDegree K L n D = c}
 
+omit [Fintype K] [DecidableEq K] in
 private theorem finiteExtensionEffectiveDivisorToDivisor_of_symm
     (D : {D : FiniteExtensionDivisor K L // ∀ P, 0 ≤ D P}) :
     finiteExtensionEffectiveDivisorToDivisor K L
         ((finiteExtensionEffectiveDivisorEquivEffectiveIntegralDivisor K L).symm D) =
       D.1 := by
+  classical
   exact congrArg Subtype.val
     ((finiteExtensionEffectiveDivisorEquivEffectiveIntegralDivisor K L).apply_symm_apply D)
 
@@ -400,25 +406,28 @@ theorem finiteExtensionDivisorIndexRepresentative_degree :
       (finiteExtensionDivisorDegreeIndex K L : ℤ) :=
   Classical.choose_spec (exists_finiteExtensionDivisor_degree_eq_index K L)
 
+omit [Fintype K] in
 /-- Translation by the signed index representative preserves the number of
 classes when the degree is advanced by the index. -/
 theorem finiteExtensionDivisorClassOfDegree_natCard_add_index (n : ℕ) :
     Nat.card (FiniteExtensionDivisorClassOfDegree K L (n : ℤ)) =
       Nat.card (FiniteExtensionDivisorClassOfDegree K L
         ((n + finiteExtensionDivisorDegreeIndex K L : ℕ) : ℤ)) := by
+  classical
   let e := finiteExtensionDivisorClassOfDegreeTranslateEquiv K L
     (finiteExtensionDivisorIndexRepresentative K L)
     (n : ℤ) (finiteExtensionDivisorDegreeIndex K L : ℤ)
     (finiteExtensionDivisorIndexRepresentative_degree K L)
   have h := Nat.card_congr e
-  convert h using 1 <;> norm_num
+  convert h using 1
+  norm_num
 
 private theorem geomSum_add (q a b : ℕ) :
     (∑ i ∈ Finset.range (a + b), q ^ i) =
       (∑ i ∈ Finset.range a, q ^ i) +
         q ^ a * ∑ i ∈ Finset.range b, q ^ i := by
   rw [Finset.sum_range_add, Finset.mul_sum]
-  apply congrArg₂ (.+.) rfl
+  apply congrArg₂ (· + ·) rfl
   apply Finset.sum_congr rfl
   intro i _
   rw [pow_add]

@@ -139,7 +139,6 @@ private theorem residue_finrank_le_of_dominating_valuation
         apply congrArg (IsLocalRing.residue R)
         apply Subtype.ext
         rw [hψcoe]
-        change algebraMap A E (algebraMap K A c) = (algebraMap K R c : E)
         rw [← IsScalarTower.algebraMap_apply K A E]
         exact (hscalar c).symm }
   have hker : m.asIdeal = RingHom.ker θ := by

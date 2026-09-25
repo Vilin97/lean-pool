@@ -239,10 +239,11 @@ noncomputable def localizationResidueFieldRingEquiv
     |>.residueFieldMap_bijective q Q hcomap
 
 private theorem finrank_eq_of_finite_ringEquiv
-    (K E F : Type*) [Field K] [Fintype K]
+    (K E F : Type*) [Field K] [Finite K]
     [Field E] [Field F] [Algebra K E] [Algebra K F]
     [Finite E] [Finite F] (e : E ≃+* F) :
     Module.finrank K E = Module.finrank K F := by
+  let : Fintype K := Fintype.ofFinite K
   let : Fintype E := Fintype.ofFinite E
   let : Fintype F := Fintype.ofFinite F
   have hcard : Fintype.card E = Fintype.card F :=
@@ -255,7 +256,7 @@ private theorem finrank_eq_of_finite_ringEquiv
 private theorem actualInfinityPlaceResidueField_finite
     (K L : Type*) [Field K] [Field L]
     [DecidableEq K] [DecidableEq (RatFunc K)]
-    [Fintype K] [Algebra (RatFunc K) L]
+    [Finite K] [Algebra (RatFunc K) L]
     [FiniteDimensional (RatFunc K) L]
     [Algebra.IsSeparable (RatFunc K) L]
     (P : FiniteExtensionInfinityPlace K L) :
@@ -760,12 +761,14 @@ theorem exactConstantExtensionUpstairsInfinityResidueField_finite
 
 include hExact
 
+omit [Fintype C] in
 /-- The residue field of the reciprocal tensor-normalization prime is finite. -/
-theorem exactConstantExtensionInfinityTensorResidueField_finite
+theorem exactConstantExtensionInfinityTensorResidueField_finite [Finite C]
     (q : HeightOneSpectrum (S ⊗[C] integralClosure C[X] N))
     (hqOrigin : q.asIdeal.under S[X] =
       Ideal.span ({Polynomial.X} : Set S[X])) :
     Finite q.asIdeal.ResidueField := by
+  let : Fintype C := Fintype.ofFinite C
   let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
   let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
@@ -779,13 +782,15 @@ theorem exactConstantExtensionInfinityTensorResidueField_finite
     C S N hExact q hqOrigin
   exact Finite.of_injective e e.injective
 
+omit [Fintype C] in
 /-- A reciprocal tensor-normalization height-one prime above the origin is
 maximal; no maximality hypothesis is left to the residue calculation. -/
-theorem exactConstantExtensionInfinityTensorIdeal_isMaximal
+theorem exactConstantExtensionInfinityTensorIdeal_isMaximal [Finite C]
     (q : HeightOneSpectrum (S ⊗[C] integralClosure C[X] N))
     (hqOrigin : q.asIdeal.under S[X] =
       Ideal.span ({Polynomial.X} : Set S[X])) :
     q.asIdeal.IsMaximal := by
+  let : Fintype C := Fintype.ofFinite C
   let : Finite q.asIdeal.ResidueField :=
     exactConstantExtensionInfinityTensorResidueField_finite
       C S N hExact q hqOrigin

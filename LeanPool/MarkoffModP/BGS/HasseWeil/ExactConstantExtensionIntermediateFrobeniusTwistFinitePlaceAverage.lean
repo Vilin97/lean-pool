@@ -896,7 +896,8 @@ theorem exactConstantExtensionFinitePlace_degree_eq_finrank_of_under_intermediat
 
 /-- Presentation-free local Frobenius-coset identity over a rational finite
 place of the intermediate field `L`. -/
-theorem exactConstantExtensionFinitePlace_frobeniusFiber_fixedPoint_sum_of_under_intermediate_rational
+theorem
+  exactConstantExtensionFinitePlace_frobeniusFiber_fixedPoint_sum_of_under_intermediate_rational
     (hDegreeDiv : Module.finrank L N ∣ Module.finrank C S) :
     letI : Field (ExactConstantExtension C N S) :=
       exactConstantExtensionField C N S hExact

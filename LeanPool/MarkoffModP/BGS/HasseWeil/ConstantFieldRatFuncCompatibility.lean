@@ -62,8 +62,11 @@ theorem planeCurveCoordinateRingBaseChangeAlgEquiv_includeRight
   apply Ideal.Quotient.algHom_ext K
   apply MvPolynomial.algHom_ext
   intro i
-  simp [Φ, planeCurveCoordinateRingBaseChangeAlgEquiv,
-    planeCurveCoordinateRingMap]
+  simp only [planeCurveCoordinateRingBaseChangeAlgEquiv, AlgEquiv.toAlgHom_restrictScalars,
+    AlgHom.coe_comp, AlgHom.coe_restrictScalars', AlgEquiv.coe_toAlgHom, AlgEquiv.coe_trans,
+    Ideal.Quotient.mkₐ_eq_mk, Function.comp_apply, Algebra.TensorProduct.includeRight_apply,
+    Algebra.TensorProduct.tensorQuotientEquiv_apply_tmul, planeCurveCoordinateRingMap,
+    Ideal.quotient_map_mkₐ, AlgHom.coe_mk, MvPolynomial.map_X, Φ]
   erw [Ideal.quotientEquivAlg_mk]
   simp only [MvPolynomial.algebraTensorAlgEquiv_tmul, one_smul, MvPolynomial.map_X]
 

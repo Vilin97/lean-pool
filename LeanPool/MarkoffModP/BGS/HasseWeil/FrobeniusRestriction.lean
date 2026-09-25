@@ -139,15 +139,18 @@ local instance frobeniusRestrictionConstantTower :
     IsScalarTower K (RatFunc K) L :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+omit [DecidableEq K] in
 /-- Raising to `(#K) ^ n` scales every exhaustive place order by that
 integer. -/
 theorem finiteExtensionPrincipalDivisor_powCardLinearMap
     (x : L) (hx : x ≠ 0) (n : ℕ) :
     finiteExtensionPrincipalDivisor K L (powCardLinearMap K L n x) =
       (Fintype.card K ^ n) • finiteExtensionPrincipalDivisor K L x := by
+  classical
   rw [powCardLinearMap_apply,
     finiteExtensionPrincipalDivisor_pow K L x hx]
 
+omit [DecidableEq K] in
 /-- Pointwise form of the Frobenius order-scaling identity. -/
 theorem finiteExtensionPrincipalDivisor_powCardLinearMap_apply
     (x : L) (hx : x ≠ 0) (n : ℕ)
@@ -155,9 +158,11 @@ theorem finiteExtensionPrincipalDivisor_powCardLinearMap_apply
     finiteExtensionPrincipalDivisor K L (powCardLinearMap K L n x) v =
       ((Fintype.card K ^ n : ℕ) : ℤ) *
         finiteExtensionPrincipalDivisor K L x v := by
+  classical
   rw [finiteExtensionPrincipalDivisor_powCardLinearMap K L x hx n]
   simp only [Finsupp.smul_apply, nsmul_eq_mul]
 
+omit [DecidableEq K] in
 /-- The pole divisor is scaled by the same power of the constant-field
 cardinality under iterated Frobenius. -/
 theorem finiteExtensionPoleDivisor_powCardLinearMap

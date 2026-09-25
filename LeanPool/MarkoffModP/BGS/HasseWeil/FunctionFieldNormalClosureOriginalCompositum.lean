@@ -111,6 +111,7 @@ noncomputable def exactConstantExtensionOriginalCompositumAlgEquiv
   exact AlgEquiv.ofInjectiveField
     (functionFieldNormalClosureOriginalMultiplication K F)
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- Every algebraic constant of the normal closure belongs to `CF`. -/
 theorem functionFieldNormalClosureConstant_mem_originalCompositum
     (hExact : algebraicClosure K F = (⊥ : IntermediateField K F))
@@ -122,7 +123,7 @@ theorem functionFieldNormalClosureConstant_mem_originalCompositum
       (FunctionFieldNormalClosureConstantField K F) hExact
   exact ⟨c ⊗ₜ[K] (1 : F), by simp⟩
 
-omit [DecidableEq (RatFunc K)] in
+omit [DecidableEq (RatFunc K)] [DecidableEq K] in
 /-- The original rational-function field belongs to `CF`. -/
 theorem functionFieldNormalClosureRatFunc_mem_originalCompositum
     (hExact : algebraicClosure K F = (⊥ : IntermediateField K F))
@@ -228,12 +229,14 @@ noncomputable instance
   ext r
   rfl
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- The constant base `C(t)` inside `N` is contained in the larger compositum
 `CF`. -/
 theorem functionFieldNormalClosureConstantBase_le_originalCompositum
     (hExact : algebraicClosure K F = (⊥ : IntermediateField K F))
     (b : FunctionFieldNormalClosureConstantBase K F) :
     b.1 ∈ FunctionFieldNormalClosureOriginalCompositum K F hExact := by
+  classical
   have hb : b.1 ∈ functionFieldNormalClosureConstantCompositum K F := by
     rw [← functionFieldNormalClosureConstantBase_eq_compositum K F]
     exact b.2
@@ -328,6 +331,7 @@ noncomputable instance
   ext k
   rfl
 
+omit [DecidableEq K] in
 /-- The chosen normal closure is finite over the original compositum `CF`. -/
 noncomputable instance
     functionFieldNormalClosure_finiteDimensional_over_originalCompositum
@@ -335,6 +339,7 @@ noncomputable instance
     FiniteDimensional
       (FunctionFieldNormalClosureOriginalCompositum K F hExact)
       (FunctionFieldNormalClosure K F) := by
+  classical
   let : Module.Finite
       (FunctionFieldNormalClosureOriginalCompositum K F hExact)
       (FunctionFieldNormalClosure K F) :=
@@ -343,12 +348,14 @@ noncomputable instance
       (FunctionFieldNormalClosure K F)
   infer_instance
 
+omit [DecidableEq K] in
 /-- The chosen normal closure remains Galois after enlarging the base from
 `K(t)` to the intermediate field `CF`. -/
 noncomputable instance functionFieldNormalClosure_isGalois_over_originalCompositum
     (hExact : algebraicClosure K F = (⊥ : IntermediateField K F)) :
     IsGalois (FunctionFieldNormalClosureOriginalCompositum K F hExact)
       (FunctionFieldNormalClosure K F) := by
+  classical
   exact IsGalois.tower_top_of_isGalois (RatFunc K)
     (FunctionFieldNormalClosureOriginalCompositum K F hExact)
     (FunctionFieldNormalClosure K F)

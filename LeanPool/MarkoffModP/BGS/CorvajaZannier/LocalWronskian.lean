@@ -104,18 +104,20 @@ theorem laurentSeriesWronskian_det_columnCombination_of_det_eq_one {n : ℕ}
       _ = 1 := by rw [hA, map_one]
   rw [hdetmap, mul_one]
 
-private theorem addVal_prod {ι : Type*} [DecidableEq ι]
+private theorem addVal_prod {ι : Type*}
     (s : Finset ι) (g : ι → LaurentSeries K) :
     HahnSeries.addVal ℤ K (∏ i ∈ s, g i) =
       ∑ i ∈ s, HahnSeries.addVal ℤ K (g i) := by
+  classical
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih => simp [ha, ih, AddValuation.map_mul]
 
-private theorem coe_sum_int_finset {ι : Type*} [DecidableEq ι]
+private theorem coe_sum_int_finset {ι : Type*}
     (s : Finset ι) (g : ι → ℤ) :
     (((∑ i ∈ s, g i : ℤ) : ℤ) : WithTop ℤ) =
       ∑ i ∈ s, ((g i : ℤ) : WithTop ℤ) := by
+  classical
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih => simp [ha, ih, WithTop.coe_add]

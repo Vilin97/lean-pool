@@ -97,10 +97,11 @@ theorem finiteExtensionFinitePlace_exists_local_lift_of_orderTop_nonnegative
 
 variable {C : Type*} [Field C] [Algebra C L]
 
-omit [DecidableEq (RatFunc K)] in
-theorem ratFuncFinitePlace_residueField_finite [Fintype K]
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
+theorem ratFuncFinitePlace_residueField_finite [Finite K]
     (p : HeightOneSpectrum K[X]) :
     Finite p.asIdeal.ResidueField := by
+  classical
   let r := finitePlaceNormalizedPrime p
   have hr0 : (r : K[X]) ≠ 0 := r.property.1.ne_zero
   have hrmonic : (r : K[X]).Monic :=
@@ -118,10 +119,11 @@ theorem ratFuncFinitePlace_residueField_finite [Fintype K]
     Module.finite_of_finite K
   infer_instance
 
-omit [DecidableEq (RatFunc K)] in
-theorem finiteExtensionFinitePlace_residueField_finite [Fintype K]
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
+theorem finiteExtensionFinitePlace_residueField_finite [Finite K]
     (q : PlaneCurveExtensionFinitePlace K L) :
     Finite q.asIdeal.ResidueField := by
+  classical
   let p := HeightOneSpectrum.under K[X] q
   let : Finite p.asIdeal.ResidueField :=
     ratFuncFinitePlace_residueField_finite p
@@ -135,8 +137,8 @@ theorem finiteExtensionFinitePlace_residueField_finite [Fintype K]
     inferInstance
   exact Module.finite_of_finite p.asIdeal.ResidueField
 
-omit [DecidableEq (RatFunc K)] in
-theorem finiteExtensionFinitePlaceLocal_residueField_perfect [Fintype K]
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
+theorem finiteExtensionFinitePlaceLocal_residueField_perfect [Finite K]
     (q : PlaneCurveExtensionFinitePlace K L) :
     letI : IsDiscreteValuationRing
       (FiniteExtensionFinitePlaceLocalRing K L q) :=
@@ -146,6 +148,7 @@ theorem finiteExtensionFinitePlaceLocal_residueField_perfect [Fintype K]
     PerfectField
       (IsDiscreteValuationRing.maximalIdeal
         (FiniteExtensionFinitePlaceLocalRing K L q)).asIdeal.ResidueField := by
+  classical
   let : Finite q.asIdeal.ResidueField :=
     finiteExtensionFinitePlace_residueField_finite q
   let : Finite (HasQuotient.Quotient
@@ -261,9 +264,9 @@ theorem finiteExtensionFinitePlace_auxiliaryFamily_caseII_nonnegative_of_scaled_
 
 variable {p : ℕ} [Fact p.Prime] [CharP L p]
 
-omit [DecidableEq (RatFunc K)] in
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 theorem finiteExtensionFinitePlace_auxiliaryFamily_caseI_q_wronskian_bound_of_scaled_preserves
-    [Fintype K]
+    [Finite K]
     (q : PlaneCurveExtensionFinitePlace K L)
     (h k : ℕ) {n : ℕ}
     (e : Sum (Fin k) (Fin (k + 1) × Fin h) ≃ Fin n)
@@ -300,6 +303,7 @@ theorem finiteExtensionFinitePlace_auxiliaryFamily_caseI_q_wronskian_bound_of_sc
         finiteExtensionFinitePlaceLocalOrderTop (K := K) (L := L) q
           (indexedDedekindLocalWronskian D epsilonOrder
             (auxiliaryFamily u v h k)).det := by
+  classical
   let := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
   let := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
   let : IsDiscreteValuationRing

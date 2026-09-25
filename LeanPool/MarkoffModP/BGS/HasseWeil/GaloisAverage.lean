@@ -32,11 +32,12 @@ open Filter Asymptotics
 sum has absolute value at most `A`, then every term has a two-sided bound.
 This is the numerical core of the Galois-twist averaging step. -/
 theorem abs_le_of_uniform_upper_and_abs_sum_le
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {ι : Type*} [Fintype ι]
     (E : ι → ℝ) (i : ι) (A B : ℝ)
     (hB : 0 ≤ B) (hupper : ∀ j, E j ≤ B)
     (hsum : |∑ j, E j| ≤ A) :
     |E i| ≤ A + (Fintype.card ι - 1 : ℕ) * B := by
+  classical
   have hA : 0 ≤ A := (abs_nonneg _).trans hsum
   have hcard : 1 ≤ Fintype.card ι := Fintype.card_pos_iff.mpr ⟨i⟩
   have heraseCard : (Finset.univ.erase i).card = Fintype.card ι - 1 := by
@@ -77,12 +78,13 @@ theorem abs_le_of_uniform_upper_and_abs_sum_le
 for all twists, together with a bounded total error, gives the same geometric
 growth rate as a two-sided bound for every twist. -/
 theorem abs_twistError_le_geometric_of_uniform_upper_and_abs_sum_le
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {ι : Type*} [Fintype ι]
     (E : ℕ → ι → ℝ) (i : ι) (A B rho : ℝ)
     (hA : 0 ≤ A) (hB : 0 ≤ B) (hrho : 1 ≤ rho)
     (hupper : ∀ n j, E n j ≤ B * rho ^ n)
     (hsum : ∀ n, |∑ j, E n j| ≤ A) (n : ℕ) :
     |E n i| ≤ (A + (Fintype.card ι - 1 : ℕ) * B) * rho ^ n := by
+  classical
   have hrhoPow : 1 ≤ rho ^ n := one_le_pow₀ hrho
   have hgeometricNonneg : 0 ≤ B * rho ^ n := by positivity
   have hraw := abs_le_of_uniform_upper_and_abs_sum_le
@@ -97,12 +99,13 @@ theorem abs_twistError_le_geometric_of_uniform_upper_and_abs_sum_le
 /-- The finite averaging estimate gives the geometric `O(rho ^ n)` bound
 needed by the zeta-function power-sum argument. -/
 theorem twistError_isBigO_geometric_of_uniform_upper_and_abs_sum_le
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {ι : Type*} [Fintype ι]
     (E : ℕ → ι → ℝ) (i : ι) (A B rho : ℝ)
     (hA : 0 ≤ A) (hB : 0 ≤ B) (hrho : 1 ≤ rho)
     (hupper : ∀ n j, E n j ≤ B * rho ^ n)
     (hsum : ∀ n, |∑ j, E n j| ≤ A) :
     (fun n : ℕ ↦ E n i) =O[atTop] fun n : ℕ ↦ rho ^ n := by
+  classical
   let C : ℝ := A + ((Fintype.card ι - 1 : ℕ) : ℝ) * B
   have hC : 0 ≤ C := by
     dsimp [C]
@@ -120,12 +123,13 @@ is close to `card · base`, then `base` is close to `center`.  The deliberately
 division-free bound is convenient for integral point counts and is uniform
 when the family cardinality is fixed. -/
 theorem abs_base_sub_center_le_of_average_and_pointwise
-    {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
+    {ι : Type*} [Fintype ι] [Nonempty ι]
     (x : ι → ℝ) (base center A B : ℝ)
     (_hA : 0 ≤ A) (_hB : 0 ≤ B)
     (haverage : |∑ i, x i - (Fintype.card ι : ℝ) * base| ≤ A)
     (hpointwise : ∀ i, |x i - center| ≤ B) :
     |base - center| ≤ A + (Fintype.card ι : ℝ) * B := by
+  classical
   have hcardNat : 1 ≤ Fintype.card ι :=
     Fintype.card_pos_iff.mpr inferInstance
   have hcard : (1 : ℝ) ≤ Fintype.card ι := by

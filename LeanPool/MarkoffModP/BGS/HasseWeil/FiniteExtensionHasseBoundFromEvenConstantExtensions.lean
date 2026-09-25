@@ -122,7 +122,7 @@ theorem finiteExtensionClosedPlaceEvenError_isBigO_of_exactConstantExtension_bou
       (finiteExtensionClosedPlaceExtensionCount C N (2 * n) : ℂ) -
         (Nat.card C : ℂ) ^ (2 * n) - 1) =O[atTop]
       fun n : ℕ ↦ (Nat.card C : ℝ) ^ n := by
-  apply evenExtensionError_isBigO_of_pointwise_bound
+  apply evenExtensionError_isBigO_of_pointwise_bound (A := A)
   intro n hn
   let : NeZero (2 * n) := ⟨by omega⟩
   let S := FiniteField.Extension C p (2 * n)
@@ -198,7 +198,7 @@ theorem
     exists_finiteExtensionClosedPlaceZeta_trace_with_degree_budget_of_exactConstants
       C N budget hExact hgenus
   have hbound :=
-    abs_pointCount_sub_card_sub_one_le_of_formalPointCountZeta_rational_and_divisibleEvenError_isBigO
+   abs_pointCount_sub_card_sub_one_le_of_formalPointCountZeta_rational_and_divisibleEvenError_isBigO
       (Nat.card C) δ (finiteExtensionClosedPlaceExtensionCount C N) P
         Nat.card_pos hδ hPzero hPrational herror
   calc

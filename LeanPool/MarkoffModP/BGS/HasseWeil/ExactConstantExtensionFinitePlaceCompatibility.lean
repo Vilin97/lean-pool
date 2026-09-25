@@ -332,9 +332,9 @@ theorem exactConstantExtensionUpstairsFinitePlace_eq_compatibleNormalizationTran
       ((eNorm z : RatFuncFiniteIntegralClosure S E) : E) =
         ((finiteFieldConstantExtensionIntegralClosurePolynomialAlgEquiv
           C S N z : integralClosure S[X] E) : E) := by
-    simp [eNorm, exactConstantExtensionNormalizationAlgEquiv,
+    simp only [exactConstantExtensionNormalizationAlgEquiv,
       normalizationAlgEquivRatFuncFiniteOfAlgebraMap,
-      integralClosureAlgEquivRatFuncFiniteOfAlgebraMap]
+      integralClosureAlgEquivRatFuncFiniteOfAlgebraMap, AlgEquiv.trans_apply, eNorm]
     rw [integralClosureAlgEquivRatFuncFiniteOfEq_coe]
   apply IsDedekindDomain.HeightOneSpectrum.ext
   have hActualIdeal :
@@ -643,9 +643,9 @@ theorem exactConstantExtensionCompatibleBaseFinitePlace_under_original
           C S N z : integralClosure S[X]
             (ExactConstantExtension C N S)) :
           ExactConstantExtension C N S) := by
-    simp [eNorm, exactConstantExtensionNormalizationAlgEquiv,
+    simp only [exactConstantExtensionNormalizationAlgEquiv,
       normalizationAlgEquivRatFuncFiniteOfAlgebraMap,
-      integralClosureAlgEquivRatFuncFiniteOfAlgebraMap]
+      integralClosureAlgEquivRatFuncFiniteOfAlgebraMap, AlgEquiv.trans_apply, eNorm]
     rw [integralClosureAlgEquivRatFuncFiniteOfEq_coe]
   have hNormalizationMapsAgree
       (z : S ⊗[C] integralClosure C[X] N) :

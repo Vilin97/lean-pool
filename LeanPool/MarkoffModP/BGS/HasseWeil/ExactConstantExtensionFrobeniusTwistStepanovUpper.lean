@@ -99,13 +99,13 @@ theorem exists_uniform_frobeniusTwistField_squareFieldStepanov_budget
             Fintype.card C + (2 * budget + 1) * Fintype.card K +
               Module.finrank (RatFunc C) N := by
   let T := ExactConstantExtension C N S
-  letI : Field T := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) T :=
+  let : Field T := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) T :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) T := Algebra.toSMul
-  letI : Module (RatFunc C) T := Algebra.toModule
-  letI : DistribMulAction (RatFunc C) T := Module.toDistribMulAction
-  letI : MulAction (RatFunc C) T := DistribMulAction.toMulAction
+  let : SMul (RatFunc C) T := Algebra.toSMul
+  let : Module (RatFunc C) T := Algebra.toModule
+  let : DistribMulAction (RatFunc C) T := Module.toDistribMulAction
+  let : MulAction (RatFunc C) T := DistribMulAction.toMulAction
   obtain ⟨budget, hbudget⟩ :=
     exists_common_frobeniusTwistField_exactConstants_and_riemann_budget
       C N S hExact
@@ -114,17 +114,17 @@ theorem exists_uniform_frobeniusTwistField_squareFieldStepanov_budget
   dsimp only
   let F := exactConstantExtensionFrobeniusTwistField
     C (RatFunc C) N S hExact g
-  letI : Algebra (RatFunc C) F :=
+  let : Algebra (RatFunc C) F :=
     SubalgebraClass.toAlgebra F.toSubalgebra
-  letI : SMul (RatFunc C) F := Algebra.toSMul
-  letI : Module (RatFunc C) F := Algebra.toModule
-  letI : FiniteDimensional (RatFunc C) F :=
+  let : SMul (RatFunc C) F := Algebra.toSMul
+  let : Module (RatFunc C) F := Algebra.toModule
+  let : FiniteDimensional (RatFunc C) F :=
     finiteDimensional_frobeniusTwistField_over_ratFunc
       C N S hExact g
-  letI : Algebra.IsSeparable (RatFunc C) F :=
+  let : Algebra.IsSeparable (RatFunc C) F :=
     isSeparable_frobeniusTwistField_over_ratFunc
       C N S hExact g
-  letI : Algebra C F := Algebra.restrictScalars C (RatFunc C) F
+  let : Algebra C F := Algebra.restrictScalars C (RatFunc C) F
   intro hlarge
   have hstepanov :=
     finiteExtensionRationalPlaceCount_le_squareFieldStepanov_of_finitePlaceRiemann
@@ -159,30 +159,30 @@ theorem frobeniusTwistFieldRationalPlaceCount_le_squareField_of_genus
       Fintype.card C + (2 * FunctionField.genus C N + 1) *
         Fintype.card K + Module.finrank (RatFunc C) N := by
   let T := ExactConstantExtension C N S
-  letI : Field T := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) T :=
+  let : Field T := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) T :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) T := Algebra.toSMul
-  letI : Module (RatFunc C) T := Algebra.toModule
-  letI : DistribMulAction (RatFunc C) T := Module.toDistribMulAction
-  letI : MulAction (RatFunc C) T := DistribMulAction.toMulAction
+  let : SMul (RatFunc C) T := Algebra.toSMul
+  let : Module (RatFunc C) T := Algebra.toModule
+  let : DistribMulAction (RatFunc C) T := Module.toDistribMulAction
+  let : MulAction (RatFunc C) T := DistribMulAction.toMulAction
   let F := exactConstantExtensionFrobeniusTwistField
     C (RatFunc C) N S hExact g
-  letI : Algebra (RatFunc C) F := SubalgebraClass.toAlgebra F.toSubalgebra
-  letI : SMul (RatFunc C) F := Algebra.toSMul
-  letI : Module (RatFunc C) F := Algebra.toModule
-  letI : FiniteDimensional (RatFunc C) F :=
+  let : Algebra (RatFunc C) F := SubalgebraClass.toAlgebra F.toSubalgebra
+  let : SMul (RatFunc C) F := Algebra.toSMul
+  let : Module (RatFunc C) F := Algebra.toModule
+  let : FiniteDimensional (RatFunc C) F :=
     finiteDimensional_frobeniusTwistField_over_ratFunc C N S hExact g
-  letI : Algebra.IsSeparable (RatFunc C) F :=
+  let : Algebra.IsSeparable (RatFunc C) F :=
     isSeparable_frobeniusTwistField_over_ratFunc C N S hExact g
-  letI : Algebra C F := Algebra.restrictScalars C (RatFunc C) F
-  letI : IsScalarTower C (RatFunc C) F :=
+  let : Algebra C F := Algebra.restrictScalars C (RatFunc C) F
+  let : IsScalarTower C (RatFunc C) F :=
     IsScalarTower.of_algebraMap_eq' rfl
   have hExactF : algebraicClosure C F =
       (⊥ : IntermediateField C F) :=
     exactConstantExtensionFrobeniusTwistField_algebraicClosure_eq_bot
       C (RatFunc C) N S hExact g
-  letI : FunctionField.IsFullConstantField C F :=
+  let : FunctionField.IsFullConstantField C F :=
     (FunctionField.isFullConstantField_iff_algebraicClosure_eq_bot C F).2
       hExactF
   have hgenus : FunctionField.genus C F = FunctionField.genus C N :=

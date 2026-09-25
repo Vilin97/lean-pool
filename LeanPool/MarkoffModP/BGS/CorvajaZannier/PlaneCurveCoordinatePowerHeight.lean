@@ -65,7 +65,8 @@ theorem finiteExtensionPositiveDegree_planeCurveFirstCoordinate_pow_sub_one
       algebraMap (RatFunc K) (PlaneCurveFunctionField f)
           (algebraMap (Polynomial K) (RatFunc K) P) =
         (planeCurveFunction f 0) ^ m - 1 := by
-    simp [P]
+    simp only [map_sub, map_pow, RatFunc.algebraMap_X, map_one,
+      planeCurveFirstCoordinateRatFuncAlgebra_algebraMap_apply, Fin.isValue, sub_left_inj, P]
     rw [show ratFuncSpecialization (planeCurveFunction f 0) hx RatFunc.X =
       planeCurveFunction f 0 by
         exact planeCurveFirstCoordinateRatFuncAlgebra_X f hx]

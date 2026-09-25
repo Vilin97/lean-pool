@@ -122,6 +122,7 @@ private theorem probeFiniteExtensionPlaceValuation_surjective
       exact (primeOverHeightOne
         (ratFuncInfinityPlace K) P).valuation_surjective L z
 
+omit [DecidableEq K] in
 private theorem probeFiniteExtensionPlaceValuation_eq_exp_neg_order
     (w : FiniteExtensionPlace K L) (x : L) (hx : x ≠ 0) :
     probeFiniteExtensionPlaceValuation K L w x =
@@ -323,10 +324,11 @@ private noncomputable def heightOneSpectrumResidueFieldRingEquivOfComapEq
 end ResidueTransport
 
 private theorem finrank_eq_of_ringEquiv_of_finite_base
-    {k E F : Type*} [Field k] [Fintype k]
+    {k E F : Type*} [Field k] [Finite k]
     [Field E] [Field F] [Algebra k E] [Algebra k F]
     [FiniteDimensional k E] [FiniteDimensional k F]
     (e : E ≃+* F) : Module.finrank k E = Module.finrank k F := by
+  let : Fintype k := Fintype.ofFinite k
   apply Nat.pow_right_injective (a := Nat.card k) (by
     rw [Nat.card_eq_fintype_card]
     exact Nat.succ_le_iff.mpr Fintype.one_lt_card)
@@ -338,7 +340,7 @@ private theorem finrank_eq_of_ringEquiv_of_finite_base
 
 /-- Equal normalized valuations have residue fields of the same degree over a finite base. -/
 private theorem residueFinrank_eq_of_valuation_eq
-    {k R S F : Type*} [Field k] [Fintype k]
+    {k R S F : Type*} [Field k] [Finite k]
     [CommRing R] [IsDedekindDomain R] [CommRing S] [IsDedekindDomain S]
     [Field F] [Algebra R F] [IsFractionRing R F]
     [Algebra S F] [IsFractionRing S F]
@@ -462,6 +464,7 @@ private theorem valuationSubringAt_valuationCenterPlace_le
   rw [ht]
   exact t.property
 
+omit [IsDomain R] in
 private theorem valuationSubringAt_valuationCenterPlace_eq
     (V : ValuationSubring F)
     (hbase : ∀ r : R, algebraMap R F r ∈ V)

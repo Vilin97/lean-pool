@@ -32,10 +32,11 @@ open BGS.CorvajaZannier IsDedekindDomain
 preserves their dimensions, even when it is not presented as an algebra
 equivalence. -/
 private theorem finrank_eq_of_finite_ringEquiv
-    (K E F : Type*) [Field K] [Fintype K]
+    (K E F : Type*) [Field K] [Finite K]
     [Field E] [Field F] [Algebra K E] [Algebra K F]
     [Finite E] [Finite F] (e : E ≃+* F) :
     Module.finrank K E = Module.finrank K F := by
+  let : Fintype K := Fintype.ofFinite K
   let : Fintype E := Fintype.ofFinite E
   let : Fintype F := Fintype.ofFinite F
   have hcard : Fintype.card E = Fintype.card F :=

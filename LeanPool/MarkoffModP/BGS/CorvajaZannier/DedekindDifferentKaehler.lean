@@ -223,9 +223,11 @@ variable {A B κ : Type*}
   [Algebra.IsSeparable (FractionRing A) (FractionRing B)]
   [Fintype κ] [DecidableEq κ]
 
+omit [DecidableEq κ] in
 private theorem mem_kaehlerAnnihilator_of_mem_differentIdeal_of_basis
     (bA : Basis κ A B) (d : B) (hd : d ∈ differentIdeal A B) :
     d ∈ Module.annihilator B Ω[B⁄A] := by
+  classical
   let : IsIntegralClosure B A (FractionRing B) :=
     IsIntegralClosure.of_isIntegrallyClosed B A (FractionRing B)
   let : Algebra.IsAlgebraic (FractionRing A) (FractionRing B) :=

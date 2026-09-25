@@ -103,6 +103,7 @@ theorem finiteExtensionDivisorDegree_neg
   rw [hzero] at h
   omega
 
+omit [Fintype K] [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 /-- Divisor degree respects subtraction. -/
 theorem finiteExtensionDivisorDegree_sub
     (D E : FiniteExtensionDivisor K L) :
@@ -113,6 +114,7 @@ theorem finiteExtensionDivisorDegree_sub
     finiteExtensionDivisorDegree_neg]
   rfl
 
+omit [Fintype K] [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 /-- Degree bookkeeping for the divisor away from the selected place. -/
 theorem finiteExtensionDivisorDegree_away
     (D : FiniteExtensionDivisor K L) (P : FiniteExtensionPlace K L) :

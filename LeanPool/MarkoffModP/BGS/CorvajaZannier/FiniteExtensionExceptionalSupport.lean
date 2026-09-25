@@ -245,7 +245,7 @@ theorem finiteExtensionPrincipalDivisor_auxiliaryGridProduct
     exact mul_ne_zero (pow_ne_zero _ hu) (pow_ne_zero _ hv)
 
 private theorem weightedSupportDegree_le_positive_add_negative
-    {ι : Type*} [DecidableEq ι] (D : ι →₀ ℤ) (weight : ι → ℕ) :
+    {ι : Type*} (D : ι →₀ ℤ) (weight : ι → ℕ) :
     ∑ i ∈ D.support, weight i ≤
       (∑ i ∈ D.support.filter (fun i => 0 < D i),
         (D i).toNat * weight i) +
@@ -335,7 +335,7 @@ private theorem finsuppWeightedNegativeDegree_eq_filter
     _ = _ := by simp
 
 private theorem finsuppWeightedPositiveDegree_eq_filter
-    {ι : Type*} [DecidableEq ι] (D : ι →₀ ℤ) (weight : ι → ℕ) :
+    {ι : Type*} (D : ι →₀ ℤ) (weight : ι → ℕ) :
     (∑ i ∈ D.support, (D i).toNat * weight i) =
       ∑ i ∈ D.support.filter (fun i => 0 < D i),
         (D i).toNat * weight i := by
@@ -637,12 +637,14 @@ def finiteExtensionExceptionalSet (f : A → L) (iU iV : A) :
   exact finiteExtensionFamilyMemberSupport K L f iU ∪
     finiteExtensionFamilyMemberSupport K L f iV
 
+omit [DecidableEq K] in
 @[simp]
 theorem mem_finiteExtensionExceptionalSet_iff
     (f : A → L) (iU iV : A) (w : FiniteExtensionFamilyPlace K L f) :
     w ∈ finiteExtensionExceptionalSet K L f iU iV ↔
       w.1 ∈ (finiteExtensionPrincipalDivisor K L (f iU)).support ∨
         w.1 ∈ (finiteExtensionPrincipalDivisor K L (f iV)).support := by
+  classical
   simp [finiteExtensionExceptionalSet]
 
 /-- Residue-degree-weighted boundary bound for the exceptional set. -/
@@ -832,11 +834,13 @@ theorem finiteExtensionFamilyOrder_v_eq_zero_outsideExceptionalSet
   apply finiteExtensionFamilyOrder_eq_zero_of_not_mem_support K L f iV w
   exact (not_or.mp ((mem_finiteExtensionExceptionalSet_iff K L f iU iV w).not.mp hw)).2
 
+omit [DecidableEq K] in
 /-- Every positive-order place of `v` lies in the exceptional set. -/
 theorem finiteExtensionFamilyOrder_v_positive_mem_exceptionalSet
     (f : A → L) (iU iV : A) (w : FiniteExtensionFamilyPlace K L f)
     (hw : 0 < finiteExtensionFamilyOrder K L f iV w) :
     w ∈ finiteExtensionExceptionalSet K L f iU iV := by
+  classical
   rw [mem_finiteExtensionExceptionalSet_iff]
   right
   rw [Finsupp.mem_support_iff]

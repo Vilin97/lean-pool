@@ -130,6 +130,7 @@ theorem functionFieldNormalClosureConstantBaseX_transcendental :
     simpa [functionFieldNormalClosureConstantBaseX] using hxIntegralK
   exact RatFunc.transcendental_X hxRatFunc.isAlgebraic
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- The kernel fixed field is generated over the full constant field by the
 original rational parameter. -/
 theorem functionFieldNormalClosureConstantBase_adjoin_X :

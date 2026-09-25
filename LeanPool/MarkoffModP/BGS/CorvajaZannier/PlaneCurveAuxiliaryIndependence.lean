@@ -242,7 +242,8 @@ theorem evalBivariate_planeCurveFrobeniusRelation
           (planeCurveToBivariate F (MvPolynomial.C (ι c))) =
         rhs (MvPolynomial.C c)
       rw [planeCurveToBivariate_C]
-      simp [evalIterated, rhs, ι, F]
+      simp only [Polynomial.coe_eval₂RingHom, Polynomial.eval₂_C, MvPolynomial.eval₂Hom_C, F,
+        evalIterated, ι, rhs]
       change
         (((perfectConstantsToFrobeniusSubfield
           (K := K) (L := L) (p := p) c : frobeniusSubfield L p) : L)) =

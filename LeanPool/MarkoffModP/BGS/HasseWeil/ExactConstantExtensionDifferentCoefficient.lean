@@ -131,8 +131,8 @@ private def idealMapMulEquiv {R T : Type*} [CommSemiring R] [CommSemiring T]
     (e : R ≃+* T) : Ideal R ≃* Ideal T where
   toFun I := I.map e
   invFun I := I.map e.symm
-  left_inv I := Ideal.map_of_equiv e
-  right_inv I := Ideal.map_of_equiv e.symm
+  left_inv _ := Ideal.map_of_equiv e
+  right_inv _ := Ideal.map_of_equiv e.symm
   map_mul' I J := Ideal.map_mul e I J
 
 private theorem finiteNormalization_multiplicity_map_eq
@@ -633,12 +633,16 @@ private theorem different_ne_bot_of_fraction_fields
     [Algebra A L] [Algebra K L] [Algebra.IsSeparable K L]
     [IsScalarTower A K L] [Algebra A B] [IsScalarTower A B L]
     [Module.Finite A B] [Module.IsTorsionFree A B] : differentIdeal A B ≠ ⊥ := by
-  let : Algebra A (FractionRing A) := exactConstantDifferentCoefficientCanonicalFractionRingAlgebra A
+  let : Algebra A (FractionRing A) :=
+    exactConstantDifferentCoefficientCanonicalFractionRingAlgebra A
   let : SMul A (FractionRing A) := Algebra.toSMul
-  let : IsFractionRing A (FractionRing A) := exactConstantDifferentCoefficientCanonicalFractionRing A
-  let : Algebra B (FractionRing B) := exactConstantDifferentCoefficientCanonicalFractionRingAlgebra B
+  let : IsFractionRing A (FractionRing A) :=
+    exactConstantDifferentCoefficientCanonicalFractionRing A
+  let : Algebra B (FractionRing B) :=
+    exactConstantDifferentCoefficientCanonicalFractionRingAlgebra B
   let : SMul B (FractionRing B) := Algebra.toSMul
-  let : IsFractionRing B (FractionRing B) := exactConstantDifferentCoefficientCanonicalFractionRing B
+  let : IsFractionRing B (FractionRing B) :=
+    exactConstantDifferentCoefficientCanonicalFractionRing B
   let : Algebra A (FractionRing B) :=
     RingHom.toAlgebra ((algebraMap B (FractionRing B)).comp (algebraMap A B))
   let : SMul A (FractionRing B) := Algebra.toSMul
@@ -805,7 +809,7 @@ private theorem exactConstantExtension_presented_totalDifferentMultiplicity_eq_f
         exact exactConstantExtensionPresentedFinitePlace_ramificationIdx_eq_one
           C S N hExact q
       rw [hRam]
-      simpa only [one_mul]
+      simp only [one_mul]
 
 
 private theorem exactConstantExtension_presented_totalDifferentMultiplicity_eq_infinity
@@ -957,7 +961,7 @@ private theorem exactConstantExtension_presented_totalDifferentMultiplicity_eq_i
         exactConstantExtensionPresentedInfinityPlace_ramificationIdx_eq_one
           C S N hExact q
       rw [hRam]
-      simpa only [one_mul]
+      simp only [one_mul]
 
 
 /-- Exact constant extension preserves the total-different coefficient at
@@ -1005,8 +1009,12 @@ theorem exactConstantExtension_presented_totalDifferentMultiplicity_eq
         (exactConstantExtensionPresentedDownstairsPlace
           C S N hExact q) := by
   cases q with
-  | inl q => exact exactConstantExtension_presented_totalDifferentMultiplicity_eq_finite C S N hExact q
-  | inr q => exact exactConstantExtension_presented_totalDifferentMultiplicity_eq_infinity C S N hExact q
+  | inl q =>
+    exact exactConstantExtension_presented_totalDifferentMultiplicity_eq_finite
+      C S N hExact q
+  | inr q =>
+    exact exactConstantExtension_presented_totalDifferentMultiplicity_eq_infinity
+      C S N hExact q
 
 /-- Exact finite extension of the full constant field preserves intrinsic
 function-field genus. -/

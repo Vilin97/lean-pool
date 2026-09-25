@@ -647,6 +647,8 @@ theorem finiteExtensionPlaceDegree_inr_eq_mul_relativeInertiaDeg
     infinityPlaceRelativeInertiaDeg]
   exact Ideal.inertiaDeg_tower P.1 Q.1
 
+omit [FiniteDimensional (RatFunc K) M] [Algebra.IsSeparable (RatFunc K) M]
+  [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 /-- Exhaustive place degree is multiplicative under restriction through an
 intermediate function field. -/
 theorem finiteExtensionPlaceDegree_eq_under_mul_relativeInertiaDeg
@@ -929,6 +931,8 @@ noncomputable def infinityPlaceGalAction :
         change (g * h) • P.1 = g • h • P.1
         rw [mul_smul] }
 
+omit [DecidableEq K] [Algebra.IsSeparable (RatFunc K) M] [FiniteDimensional (RatFunc K) L]
+  [Algebra.IsSeparable (RatFunc K) L] in
 /-- Relative Galois conjugation does not change the restricted infinity
 place. -/
 @[simp]
@@ -1043,6 +1047,8 @@ theorem sum_card_infinityPlaceUnderFiberFixedBy_eq_card_galoisGroup
   exact sum_card_fixedBy_eq_card_group_of_isPretransitive
     Gal(L/M) (InfinityPlaceUnderFiber K M L P)
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] [Algebra.IsSeparable (RatFunc K) M]
+  [Algebra.IsSeparable (RatFunc K) L] in
 /-- Ramification index and inertia degree are constant on each finite-place
 restriction fiber in a Galois tower. -/
 theorem finitePlaceRelative_ramificationIdx_inertiaDeg_eq_of_same_under
@@ -1064,6 +1070,7 @@ theorem finitePlaceRelative_ramificationIdx_inertiaDeg_eq_of_same_under
   · unfold finitePlaceRelativeInertiaDeg
     rw [hg, Ideal.inertiaDeg_smul]
 
+omit [DecidableEq K] [Algebra.IsSeparable (RatFunc K) L] in
 /-- Ramification index and inertia degree are constant on each restriction
 fiber above infinity in a Galois tower. -/
 theorem infinityPlaceRelative_ramificationIdx_inertiaDeg_eq_of_same_under

@@ -217,7 +217,7 @@ theorem finite_badDifferentCount_set (hdiff : differentIdeal A B ≠ ⊥) (y : L
   simp
 
 omit [IsIntegralClosure B A L] in
-omit [IsIntegrallyClosed A] in
+omit [IsIntegrallyClosed A] [IsDomain A] in
 theorem exists_base_multiplier_clearing_different_counts
     [IsDedekindDomain A]
     (hdiff : differentIdeal A B ≠ ⊥)
@@ -274,7 +274,8 @@ theorem exists_base_multiplier_clearing_different_counts
     intro hcP
     have hone : (1 : A) ∈ p.asIdeal := by
       have hsub := p.asIdeal.sub_mem hcP hcp
-      convert hsub using 1 <;> ring
+      convert hsub using 1
+      ring
     exact p.isPrime.ne_top ((Ideal.eq_top_iff_one p.asIdeal).mpr hone)
   have hc0 : c ≠ 0 := fun hcZero => hcnot (hcZero.symm ▸ p.asIdeal.zero_mem)
   refine ⟨c, hcnot, ?_⟩
@@ -336,6 +337,7 @@ theorem exists_base_multiplier_clearing_different_counts
         (A := A) (B := B) (L := L) q c 0 hc0 (by simp)
     omega
 
+omit [IsDomain A] [IsIntegrallyClosed A] in
 theorem valuation_trace_le_one_of_different_count_bounds_over
     [IsDedekindDomain A]
     (p : HeightOneSpectrum A) {y : L} (hy : y ≠ 0)

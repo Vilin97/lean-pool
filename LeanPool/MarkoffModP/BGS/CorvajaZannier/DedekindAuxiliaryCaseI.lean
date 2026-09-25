@@ -116,29 +116,29 @@ theorem exists_constant_dedekindPoleDepth_sub_mul_lt
     exists_constant_finitePlaceOrder_sub_mul_eq_zero_or_lt
       v hresidue x y hx hy horder'
   · refine ⟨c, ?_, ?_⟩
-    rw [hz]
-    have hxdepth : 0 < dedekindPoleDepth v x :=
-      (dedekindPoleDepth_pos_iff v x).2 hxneg
-    simpa only [dedekindPoleDepth_zero] using hxdepth
-    rw [hz, finitePlaceOrderTop_eq_coe v x hx]
-    simp
-  · by_cases hz : x - algebraMap C L c * y = 0
-    · refine ⟨c, ?_, ?_⟩
-      rw [hz]
+    · rw [hz]
       have hxdepth : 0 < dedekindPoleDepth v x :=
         (dedekindPoleDepth_pos_iff v x).2 hxneg
       simpa only [dedekindPoleDepth_zero] using hxdepth
-      rw [hz, finitePlaceOrderTop_eq_coe v x hx]
+    · rw [hz, finitePlaceOrderTop_eq_coe v x hx]
       simp
+  · by_cases hz : x - algebraMap C L c * y = 0
     · refine ⟨c, ?_, ?_⟩
-      simp only [dedekindPoleDepth, hx, hz, ite_false]
-      have hxorderneg : finitePlaceOrder v x < 0 := by
-        rw [finitePlaceOrderTop_eq_coe v x hx] at hxneg
-        exact_mod_cast hxneg
-      omega
-      rw [finitePlaceOrderTop_eq_coe v x hx,
-        finitePlaceOrderTop_eq_coe v _ hz]
-      exact_mod_cast hlt
+      · rw [hz]
+        have hxdepth : 0 < dedekindPoleDepth v x :=
+          (dedekindPoleDepth_pos_iff v x).2 hxneg
+        simpa only [dedekindPoleDepth_zero] using hxdepth
+      · rw [hz, finitePlaceOrderTop_eq_coe v x hx]
+        simp
+    · refine ⟨c, ?_, ?_⟩
+      · simp only [dedekindPoleDepth, hx, hz, ite_false]
+        have hxorderneg : finitePlaceOrder v x < 0 := by
+          rw [finitePlaceOrderTop_eq_coe v x hx] at hxneg
+          exact_mod_cast hxneg
+        omega
+      · rw [finitePlaceOrderTop_eq_coe v x hx,
+          finitePlaceOrderTop_eq_coe v _ hz]
+        exact_mod_cast hlt
 
 private theorem indexedDedekindLocalColumnCombination_transvection_same
     {k : ℕ} (f : Fin k → L) (i j : Fin k) (c : C) :

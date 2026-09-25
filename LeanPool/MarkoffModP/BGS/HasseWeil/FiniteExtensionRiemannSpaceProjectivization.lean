@@ -37,17 +37,19 @@ noncomputable section
 variable (K : Type*) [Field K] [Fintype K]
 variable (V : Type*) [AddCommGroup V] [Module K V]
 
+omit [Fintype K] in
 /-- One-dimensional subspaces of a finite vector space over `K` are counted
 by the geometric sum in the dimension. -/
-theorem finiteVectorSpace_oneDimensionalSubspace_card_eq_geomSum :
+theorem finiteVectorSpace_oneDimensionalSubspace_card_eq_geomSum [Finite K] :
     Nat.card {W : Submodule K V // Module.finrank K W = 1} =
       ∑ i ∈ Finset.range (Module.finrank K V), Nat.card K ^ i := by
   rw [Nat.card_congr (Projectivization.equivSubmodule K V).symm]
   exact Projectivization.card_of_finrank K V rfl
 
+omit [Fintype K] in
 /-- The orbit quotient of nonzero vectors by nonzero scalar multiplication is
 counted by the same geometric sum. -/
-theorem finiteVectorSpace_nonzeroScalarOrbitQuotient_card_eq_geomSum :
+theorem finiteVectorSpace_nonzeroScalarOrbitQuotient_card_eq_geomSum [Finite K] :
     Nat.card
         (Quotient
           (MulAction.orbitRel Kˣ {v : V // v ≠ 0})) =
@@ -57,8 +59,9 @@ theorem finiteVectorSpace_nonzeroScalarOrbitQuotient_card_eq_geomSum :
 
 variable [Module.Finite K V]
 
+omit [Fintype K] in
 /-- Division form of the projective-space cardinality formula. -/
-theorem finiteVectorSpace_nonzeroScalarOrbitQuotient_card_eq_div :
+theorem finiteVectorSpace_nonzeroScalarOrbitQuotient_card_eq_div [Finite K] :
     Nat.card
         (Quotient
           (MulAction.orbitRel Kˣ {v : V // v ≠ 0})) =
@@ -170,12 +173,15 @@ theorem projectiveRiemannSectionToEffectiveDivisorInPrincipalClass_surjective
   change finiteExtensionPrincipalDivisor K L x + D = E.1
   exact hE.symm
 
+omit [Fintype K] [DecidableEq K] in
 /-- Under exact constants, a nonzero function has zero exhaustive principal
 divisor exactly when it is a nonzero base-field constant. -/
-theorem finiteExtensionPrincipalDivisor_eq_zero_iff_isBaseConstant
+theorem finiteExtensionPrincipalDivisor_eq_zero_iff_isBaseConstant [Finite K]
     (hconstants : algebraicClosure K L = ⊥) (x : L) (hx0 : x ≠ 0) :
     finiteExtensionPrincipalDivisor K L x = 0 ↔
       ∃ c : K, c ≠ 0 ∧ algebraMap K L c = x := by
+  classical
+  let : Fintype K := Fintype.ofFinite K
   constructor
   · intro hx
     have hxmem : x ∈ finiteExtensionRiemannSpace K L 0 := by
@@ -190,14 +196,17 @@ theorem finiteExtensionPrincipalDivisor_eq_zero_iff_isBaseConstant
   · rintro ⟨c, hc, rfl⟩
     exact finiteExtensionPrincipalDivisor_algebraMap_constant K L c hc
 
+omit [Fintype K] [DecidableEq K] in
 /-- With exact constants, two nonzero functions have the same exhaustive
 principal divisor exactly when they differ by a base-field scalar. -/
-theorem finiteExtensionPrincipalDivisor_eq_iff_exists_smul
+theorem finiteExtensionPrincipalDivisor_eq_iff_exists_smul [Finite K]
     (hconstants : algebraicClosure K L = ⊥)
     (x y : L) (hx0 : x ≠ 0) (hy0 : y ≠ 0) :
     finiteExtensionPrincipalDivisor K L x =
         finiteExtensionPrincipalDivisor K L y ↔
       ∃ c : K, c • y = x := by
+  classical
+  let : Fintype K := Fintype.ofFinite K
   constructor
   · intro hxy
     have hquot : finiteExtensionPrincipalDivisor K L (x / y) = 0 := by
@@ -316,12 +325,15 @@ theorem effectiveRiemannSpace_nonzeroScalarOrbitQuotient_card_eq_div
   exact finiteVectorSpace_nonzeroScalarOrbitQuotient_card_eq_div
     K (finiteExtensionRiemannSpace K L D)
 
+omit [Fintype K] [DecidableEq K] in
 /-- Under exact constants, an effective divisor class represented by an
 effective `D` is finite. -/
-theorem effectiveDivisorInPrincipalClass_finite
+theorem effectiveDivisorInPrincipalClass_finite [Finite K]
     (D : FiniteExtensionDivisor K L) (hD : ∀ v, 0 ≤ D v)
     (hconstants : algebraicClosure K L = ⊥) :
     Finite (EffectiveDivisorInPrincipalClass K L D) := by
+  classical
+  let : Fintype K := Fintype.ofFinite K
   let : Module.Finite K (finiteExtensionRiemannSpace K L D) :=
     finiteExtensionRiemannSpace_effective_moduleFinite K L D hD
   let : Finite (finiteExtensionRiemannSpace K L D) :=

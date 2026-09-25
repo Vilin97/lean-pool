@@ -292,7 +292,7 @@ theorem planeCurveConstantAutOverBaseHom_injective :
   exact DFunLike.congr_fun h x
 
 theorem planeCurveFunctionFieldBaseChange_isGalois
-    [Fintype K] [Finite E] :
+    [Finite K] [Finite E] :
     letI : IsDomain (PlaneCurveCoordinateRing f) :=
       planeCurveCoordinateRing_isDomain hf
     letI : IsDomain (PlaneCurveCoordinateRing
@@ -301,6 +301,7 @@ theorem planeCurveFunctionFieldBaseChange_isGalois
     letI := planeCurveFunctionFieldBaseChangeAlgebra K E f hf hfE
     IsGalois (PlaneCurveFunctionField f)
       (PlaneCurveFunctionField (MvPolynomial.map (algebraMap K E) f)) := by
+  let : Fintype K := Fintype.ofFinite K
   let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let : IsDomain (PlaneCurveCoordinateRing

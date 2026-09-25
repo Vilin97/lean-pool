@@ -34,10 +34,11 @@ variable {R L : Type*} [CommRing R] [IsDedekindDomain R]
 /-- The order of a finite product is the sum of the orders, including zero
 factors via `WithTop`. -/
 theorem finitePlaceOrderTop_finset_prod
-    {ι : Type*} [DecidableEq ι] (v : HeightOneSpectrum R)
+    {ι : Type*} (v : HeightOneSpectrum R)
     (s : Finset ι) (g : ι → L) :
     finitePlaceOrderTop v (∏ i ∈ s, g i) =
       ∑ i ∈ s, finitePlaceOrderTop v (g i) := by
+  classical
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih =>
@@ -48,10 +49,11 @@ theorem finitePlaceOrderTop_finset_prod
 order at least `b`.  This is the cancellation step in the determinant
 estimate. -/
 theorem le_finitePlaceOrderTop_finset_sum_of_forall
-    {ι : Type*} [DecidableEq ι] (v : HeightOneSpectrum R)
+    {ι : Type*} (v : HeightOneSpectrum R)
     (b : WithTop ℤ) (s : Finset ι) (g : ι → L)
     (h : ∀ i ∈ s, b ≤ finitePlaceOrderTop v (g i)) :
     b ≤ finitePlaceOrderTop v (∑ i ∈ s, g i) := by
+  classical
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih =>
@@ -81,9 +83,10 @@ theorem finitePlaceOrderTop_le_intCast_mul
       add_le_add hz le_rfl
 
 private theorem coe_sum_int_finset
-    {ι : Type*} [DecidableEq ι] (s : Finset ι) (g : ι → ℤ) :
+    {ι : Type*} (s : Finset ι) (g : ι → ℤ) :
     (((∑ i ∈ s, g i : ℤ) : ℤ) : WithTop ℤ) =
       ∑ i ∈ s, ((g i : ℤ) : WithTop ℤ) := by
+  classical
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih => simp [ha, ih, WithTop.coe_add]
@@ -128,13 +131,14 @@ private theorem derivation_iterate_sum_smul
 
 /-- Constant column operations commute with the indexed DVR Wronskian. -/
 theorem indexedDedekindLocalWronskian_columnCombination
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {ι : Type*} [Fintype ι]
     (D : Derivation C L L) (ε : ι → ℕ) (f : ι → L)
     (A : Matrix ι ι C) :
     indexedDedekindLocalWronskian D ε
         (indexedDedekindLocalColumnCombination f A) =
       indexedDedekindLocalWronskian D ε f *
         A.map (algebraMap C L) := by
+  classical
   apply Matrix.ext
   intro i j
   rw [Matrix.mul_apply]

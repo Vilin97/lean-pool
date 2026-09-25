@@ -142,6 +142,7 @@ theorem pow_mul_pow_mem_poleDivisor_budget
     (finiteExtensionRiemannSpace_pow_mem K L
       (mem_finiteExtensionRiemannSpace_poleDivisor K L y hy) j)
 
+omit [Fintype K] in
 /-- The degree of the monomial pole budget is the corresponding linear
 combination of the two coordinate heights. -/
 theorem finiteExtensionDivisorDegree_pow_mul_pow_budget

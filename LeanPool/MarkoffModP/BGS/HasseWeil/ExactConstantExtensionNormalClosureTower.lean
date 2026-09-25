@@ -1003,7 +1003,8 @@ theorem
       exactConstantExtensionClosedPlaceExtensionCount
         K C F hExact (Module.finrank C S) := by
   intro N model1 C model3 model4 model5 M model7 model8 hExactM E_M
-    model11 model12 model13 model14 model15 model16 model17 model18 model19 model20 model21 model22 model23
+    model11 model12 model13 model14 model15 model16 model17 model18 model19
+    model20 model21 model22 model23
   classical
   let : Module (RatFunc C) M := model7.toModule
   let : FiniteDimensional (RatFunc C) M :=

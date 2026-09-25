@@ -223,7 +223,7 @@ theorem infinityNormalizedIntegralPolynomial_map
   rw [coeff_map]
   simp only [infinityNormalizedIntegralPolynomial, coeff_sum,
     coeff_monomial]
-  simp [Polynomial.sum]
+  simp only [sum, Finset.sum_ite_eq', mem_support_iff, ne_eq, ite_not]
   by_cases hzero : F.coeff i = 0
   · simp [hzero, infinityNormalizedPolynomial, coeff_C_mul]
   · rw [ite_eq_right hzero]

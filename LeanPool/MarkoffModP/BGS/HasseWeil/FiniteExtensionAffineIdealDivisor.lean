@@ -392,13 +392,16 @@ theorem finiteExtensionAffineIdealEffectiveDivisorEquiv_symm_coe
       effectiveDivisorIdeal D := by
   simp [finiteExtensionAffineIdealEffectiveDivisorEquiv]
 
+omit [Fintype K] in
 /-- The affine ideal degree of the ideal represented by an effective finite
 divisor is its residue-degree-weighted divisor degree. -/
-theorem finiteExtensionAffineIdealDegree_equiv_symm
+theorem finiteExtensionAffineIdealDegree_equiv_symm [Finite K]
     (D : FiniteExtensionFinitePlace K L →₀ ℕ) :
     finiteExtensionAffineIdealDegree K L
         ((finiteExtensionAffineIdealEffectiveDivisorEquiv K L).symm D) =
       finiteExtensionEffectiveFiniteDivisorDegree K L D := by
+  classical
+  let : Fintype K := Fintype.ofFinite K
   apply Nat.pow_right_injective (by
     simpa [Nat.succ_le_iff] using Fintype.one_lt_card (α := K))
   calc
@@ -415,9 +418,10 @@ theorem finiteExtensionAffineIdealDegree_equiv_symm
         finiteExtensionEffectiveFiniteDivisorDegree K L D :=
       effectiveDivisorIdeal_cardQuot_eq_card_pow_degree K L D
 
+omit [Fintype K] in
 /-- The degree of a nonzero affine ideal is the residue-degree-weighted sum of
 its finite-place prime multiplicities. -/
-theorem finiteExtensionAffineIdealDegree_eq_divisorDegree
+theorem finiteExtensionAffineIdealDegree_eq_divisorDegree [Finite K]
     (I : FiniteExtensionAffineIdeal K L) :
     finiteExtensionAffineIdealDegree K L I =
       finiteExtensionEffectiveFiniteDivisorDegree K L
@@ -425,8 +429,9 @@ theorem finiteExtensionAffineIdealDegree_eq_divisorDegree
   simpa using finiteExtensionAffineIdealDegree_equiv_symm K L
     (finiteExtensionAffineIdealEffectiveDivisorEquiv K L I)
 
+omit [Fintype K] in
 /-- Expanded pointwise form of the affine ideal degree formula. -/
-theorem finiteExtensionAffineIdealDegree_eq_sum_multiplicity_mul_residueDegree
+theorem finiteExtensionAffineIdealDegree_eq_sum_multiplicity_mul_residueDegree [Finite K]
     (I : FiniteExtensionAffineIdeal K L) :
     finiteExtensionAffineIdealDegree K L I =
       (finiteExtensionAffineIdealEffectiveDivisorEquiv K L I).sum

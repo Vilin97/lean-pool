@@ -131,6 +131,7 @@ theorem idealMultiplicityWeightedDegree_eq_finiteExtensionFiniteDirectDegreeSum
     finiteExtensionFinitePrincipalDivisor_algebraMap_eq_mapRange K L d hd,
     Finsupp.sum_mapRange_index (fun q => by simp)]
 
+omit [DecidableEq (RatFunc K)] in
 /-- The finite different degree is bounded by the finite degree of the
 minimal-polynomial derivative of an integral primitive element. -/
 theorem finiteDifferentDegree_le_minpolyDerivativeDegree
@@ -146,6 +147,7 @@ theorem finiteDifferentDegree_le_minpolyDerivativeDegree
       finiteExtensionFiniteDirectDegreeSum K L
         (algebraMap (RatFuncFiniteIntegralClosure K L) L
           (Polynomial.aeval x (Polynomial.derivative (minpoly K[X] x)))) := by
+  classical
   let d : RatFuncFiniteIntegralClosure K L :=
     Polynomial.aeval x (Polynomial.derivative (minpoly K[X] x))
   have hd : d ≠ 0 := by
@@ -216,6 +218,7 @@ private theorem ratFunc_intDegree_neg_one_pow (m : ℕ) :
       rw [pow_succ, RatFunc.intDegree_mul (pow_ne_zero m (by simp)) (by simp), ih]
       simp
 
+omit [DecidableEq (RatFunc K)] in
 /-- The finite degree of the integral minimal-polynomial derivative is exactly
 the rational-function degree of the associated power-basis discriminant. -/
 theorem finiteExtensionMinpolyDerivativeDegree_eq_powerBasisDiscriminantDegree
@@ -229,6 +232,7 @@ theorem finiteExtensionMinpolyDerivativeDegree_eq_powerBasisDiscriminantDegree
         (PowerBasis.ofAdjoinEqTop'
           (Algebra.IsIntegral.isIntegral
             (algebraMap (RatFuncFiniteIntegralClosure K L) L x)) hx).basis).intDegree := by
+  classical
   let d : RatFuncFiniteIntegralClosure K L :=
     Polynomial.aeval x (Polynomial.derivative (minpoly K[X] x))
   let y : L := algebraMap (RatFuncFiniteIntegralClosure K L) L d
@@ -258,6 +262,7 @@ theorem finiteExtensionMinpolyDerivativeDegree_eq_powerBasisDiscriminantDegree
     ratFunc_intDegree_neg_one_pow K] at hdegree
   omega
 
+omit [DecidableEq (RatFunc K)] in
 /-- The finite different degree is bounded by the power-basis discriminant
 degree of any integral primitive element. -/
 theorem finiteDifferentDegree_le_powerBasisDiscriminantDegree
@@ -274,6 +279,7 @@ theorem finiteDifferentDegree_le_powerBasisDiscriminantDegree
         (PowerBasis.ofAdjoinEqTop'
           (Algebra.IsIntegral.isIntegral
             (algebraMap (RatFuncFiniteIntegralClosure K L) L x)) hx).basis).intDegree := by
+  classical
   calc
     _ ≤ finiteExtensionFiniteDirectDegreeSum K L
         (algebraMap (RatFuncFiniteIntegralClosure K L) L
@@ -396,6 +402,7 @@ theorem finiteExtensionLocalWronskianDivisor_degree
   intro v hv
   ring
 
+omit [DecidableEq K] in
 /-- Over algebraically closed constants every place has degree one, so the
 global canonical identity becomes the ordinary unweighted sum of local
 Wronskian orders used by Corvaja--Zannier. -/
@@ -407,6 +414,7 @@ theorem finiteExtensionLocalWronskianDivisor_sum
     (finiteExtensionLocalWronskianDivisor K L D g canonicalDivisor).sum
         (fun _ e => e) =
       (n.choose 2 : ℤ) * canonicalDivisor.sum (fun _ e => e) := by
+  classical
   have hdegree := finiteExtensionLocalWronskianDivisor_degree
     K L D g canonicalDivisor hW
   simpa only [finiteExtensionDivisorDegree,

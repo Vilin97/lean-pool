@@ -121,6 +121,7 @@ noncomputable def coordinateRingToDominatingValuationSubring
   (Subring.inclusion (range_le_dominatingValuationSubring m)).comp
     (algebraMap A L).rangeRestrict
 
+omit [IsDomain A] in
 theorem pointIdeal_eq_comap_dominatingValuationSubring_maximalIdeal
     (m : MaximalSpectrum A) :
     m.asIdeal = Ideal.comap (coordinateRingToDominatingValuationSubring m)
@@ -168,6 +169,7 @@ section IntegralClosure
 
 variable {P : Type*} [CommRing P] [Algebra P L]
 
+omit [IsDomain A] in
 theorem integralClosure_le_dominatingValuationSubring
     (m : MaximalSpectrum A)
     (hbase : ∀ p : P, algebraMap P L p ∈ (algebraMap A L).range) :

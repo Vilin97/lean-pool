@@ -97,11 +97,14 @@ theorem finiteExtensionDivisorDegree_nonnegative_of_effective
   intro v
   exact mul_nonneg (hD v) (by positivity)
 
+omit [Fintype K] [DecidableEq K] in
 /-- Nonzero elements of the finite constant field have trivial exhaustive
 principal divisor. -/
-theorem finiteExtensionPrincipalDivisor_algebraMap_constant
+theorem finiteExtensionPrincipalDivisor_algebraMap_constant [Finite K]
     (c : K) (hc : c ≠ 0) :
     finiteExtensionPrincipalDivisor K L (algebraMap K L c) = 0 := by
+  classical
+  let : Fintype K := Fintype.ofFinite K
   let n := Fintype.card K - 1
   have hn : 0 < n := by
     dsimp [n]

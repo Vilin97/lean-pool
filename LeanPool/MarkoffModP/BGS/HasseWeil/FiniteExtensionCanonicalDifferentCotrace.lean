@@ -427,7 +427,7 @@ theorem finiteExtensionUnderPlace_finite_preimage_singleton
       simpa only [Set.mem_preimage, Set.mem_singleton_iff,
         finiteExtensionUnderPlace, Sum.inl.injEq] using hq
     · simp only [Set.mem_preimage, Set.mem_singleton_iff,
-        finiteExtensionUnderPlace, Sum.inr.injEq, reduceCtorEq] at hq
+        finiteExtensionUnderPlace, reduceCtorEq] at hq
   · let : Finite (FiniteExtensionInfinityPlace K L) :=
       Set.finite_coe_iff.mpr
         (IsDedekindDomain.primesOver_finite
@@ -438,7 +438,7 @@ theorem finiteExtensionUnderPlace_finite_preimage_singleton
     intro q hq
     rcases q with q | q
     · simp only [Set.mem_preimage, Set.mem_singleton_iff,
-        finiteExtensionUnderPlace, Sum.inl.injEq, reduceCtorEq] at hq
+        finiteExtensionUnderPlace, reduceCtorEq] at hq
     · exact Set.mem_range_self q
 
 omit [Fintype K] [DecidableEq K] in

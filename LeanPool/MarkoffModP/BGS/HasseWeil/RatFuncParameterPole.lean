@@ -108,11 +108,13 @@ local instance ratFuncParameterInfinityPlaceFintype :
       (ratFuncInfinityPlace K).asIdeal
       (RatFuncInfinityIntegralClosure K L))
 
+omit [DecidableEq K] in
 /-- The rational parameter `X` is integral at every finite place. -/
 theorem finiteExtensionPrincipalDivisor_ratFuncX_inl_nonnegative
     (q : FiniteExtensionFinitePlace K L) :
     0 ≤ finiteExtensionPrincipalDivisor K L
       (algebraMap (RatFunc K) L RatFunc.X) (.inl q) := by
+  classical
   let S := RatFuncFiniteIntegralClosure K L
   let e := ratFuncFiniteIntegralClosureFractionRingEquiv K L
   let s : S := algebraMap K[X] S Polynomial.X
@@ -130,10 +132,12 @@ theorem finiteExtensionPrincipalDivisor_ratFuncX_inl_nonnegative
   rw [finiteExtensionPrincipalDivisor_inl, hrepr]
   exact finitePlaceOrder_algebraMap_nonnegative q s hs
 
+omit [DecidableEq K] in
 private theorem finiteExtensionPrincipalDivisor_inr_eq_order
     (x : L) (P : FiniteExtensionInfinityPlace K L) :
     finiteExtensionPrincipalDivisor K L x (.inr P) =
       finitePlaceOrder (primeOverHeightOne (ratFuncInfinityPlace K) P) x := by
+  classical
   rw [finiteExtensionPrincipalDivisor_inr]
   symm
   simpa [ratFuncInfinityIntegralClosureFractionRingEquiv] using
@@ -142,6 +146,7 @@ private theorem finiteExtensionPrincipalDivisor_inr_eq_order
       (primeOverHeightOne (ratFuncInfinityPlace K) P)
       ((ratFuncInfinityIntegralClosureFractionRingEquiv K L).symm x)
 
+omit [DecidableEq K] in
 /-- At a place `P` above infinity, the rational parameter has order exactly
 the negative ramification index. -/
 theorem finiteExtensionPrincipalDivisor_ratFuncX_inr_eq_neg_ramificationIdx
@@ -149,6 +154,7 @@ theorem finiteExtensionPrincipalDivisor_ratFuncX_inr_eq_neg_ramificationIdx
     finiteExtensionPrincipalDivisor K L
         (algebraMap (RatFunc K) L RatFunc.X) (.inr P) =
       -(P.1.ramificationIdx (RatFuncInfinityIntegers K) : ℤ) := by
+  classical
   let q := primeOverHeightOne (ratFuncInfinityPlace K) P
   let pi := ratFuncInfinityUniformizer K
   let : q.asIdeal.LiesOver (ratFuncInfinityPlace K).asIdeal := by
@@ -184,17 +190,20 @@ theorem finiteExtensionPrincipalDivisor_ratFuncX_inr_eq_neg_ramificationIdx
   change finitePlaceOrder q (algebraMap (RatFunc K) L RatFunc.X) = _
   omega
 
+omit [DecidableEq K] in
 /-- The pole divisor of the rational parameter vanishes at finite places. -/
 theorem finiteExtensionPoleDivisor_ratFuncX_inl_eq_zero
     (q : FiniteExtensionFinitePlace K L) :
     finiteExtensionPoleDivisor K L
       (algebraMap (RatFunc K) L RatFunc.X) (.inl q) = 0 := by
+  classical
   simp only [finiteExtensionPoleDivisor, Finsupp.neg_apply,
     Finsupp.filter_apply]
   rw [ite_eq_right (not_lt_of_ge
     (finiteExtensionPrincipalDivisor_ratFuncX_inl_nonnegative K L q))]
   simp
 
+omit [DecidableEq K] in
 /-- Above infinity, the pole coefficient of the rational parameter is exactly
 the ramification index. -/
 theorem finiteExtensionPoleDivisor_ratFuncX_inr_eq_ramificationIdx
@@ -202,6 +211,7 @@ theorem finiteExtensionPoleDivisor_ratFuncX_inr_eq_ramificationIdx
     finiteExtensionPoleDivisor K L
         (algebraMap (RatFunc K) L RatFunc.X) (.inr P) =
       (P.1.ramificationIdx (RatFuncInfinityIntegers K) : ℤ) := by
+  classical
   have he : 0 < P.1.ramificationIdx (RatFuncInfinityIntegers K) :=
     P.1.ramificationIdx_pos (RatFuncInfinityIntegers K)
   simp only [finiteExtensionPoleDivisor, Finsupp.neg_apply,
@@ -211,6 +221,7 @@ theorem finiteExtensionPoleDivisor_ratFuncX_inr_eq_ramificationIdx
   rw [ite_eq_left (by exact_mod_cast he)]
   simp
 
+omit [DecidableEq K] in
 /-- Pointwise description of the complete pole divisor of the rational
 parameter: it is zero at finite places and has coefficient `e(P)` at every
 place above infinity. -/
@@ -222,11 +233,13 @@ theorem finiteExtensionPoleDivisor_ratFuncX_apply
       | .inl _ => 0
       | .inr P => (P.1.ramificationIdx
           (RatFuncInfinityIntegers K) : ℤ) := by
+  classical
   cases v with
   | inl q => exact finiteExtensionPoleDivisor_ratFuncX_inl_eq_zero K L q
   | inr P =>
       exact finiteExtensionPoleDivisor_ratFuncX_inr_eq_ramificationIdx K L P
 
+omit [DecidableEq K] in
 /-- The support of the pole divisor of the rational parameter consists
 exactly of the places above infinity. -/
 theorem finiteExtensionPoleDivisor_ratFuncX_support :
@@ -247,6 +260,7 @@ theorem finiteExtensionPoleDivisor_ratFuncX_support :
       rw [Finsupp.mem_support_iff, finiteExtensionPoleDivisor_ratFuncX_inr_eq_ramificationIdx]
       simp [Nat.ne_of_gt he]
 
+omit [DecidableEq K] in
 /-- The negative support of the principal divisor of the rational parameter
 consists exactly of the places above infinity. -/
 theorem finiteExtensionPrincipalDivisor_ratFuncX_negativeSupport :

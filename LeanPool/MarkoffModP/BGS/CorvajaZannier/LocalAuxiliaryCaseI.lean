@@ -260,10 +260,11 @@ theorem exists_det_one_columnMatrix_negativeOrdersPairwiseDistinct
           exact hBlower
 
 /-- Sharp lower sum bound for distinct integers bounded below. -/
-theorem sum_range_add_le_sum_of_injOn {ι : Type*} [DecidableEq ι]
+theorem sum_range_add_le_sum_of_injOn {ι : Type*}
     (s : Finset ι) (w : ι → ℤ) (a : ℤ)
     (hinj : Set.InjOn w (s : Set ι)) (hlower : ∀ i ∈ s, a ≤ w i) :
     (∑ n ∈ Finset.range s.card, (a + n : ℤ)) ≤ ∑ i ∈ s, w i := by
+  classical
   have hcard : (s.image w).card = s.card := Finset.card_image_iff.mpr hinj
   have hbound := Finset.sum_range_le_sum
     (s := s.image w) (c := a) (by
@@ -275,11 +276,12 @@ theorem sum_range_add_le_sum_of_injOn {ι : Type*} [DecidableEq ι]
   simpa [Finset.sum_image hinj] using hbound
 
 /-- Sharp upper sum bound for distinct natural numbers bounded above. -/
-theorem sum_le_sum_range_sub_of_injOn {ι : Type*} [DecidableEq ι]
+theorem sum_le_sum_range_sub_of_injOn {ι : Type*}
     (s : Finset ι) (e : ι → ℕ) (epsilon : ℕ)
     (hinj : Set.InjOn e (s : Set ι)) (hupper : ∀ i ∈ s, e i ≤ epsilon) :
     (∑ i ∈ s, (e i : ℤ)) ≤
       ∑ n ∈ Finset.range s.card, ((epsilon : ℤ) - n) := by
+  classical
   let w : ι → ℤ := fun i => e i
   have hinjw : Set.InjOn w (s : Set ι) := by
     intro i hi j hj hij
@@ -295,18 +297,20 @@ theorem sum_le_sum_range_sub_of_injOn {ι : Type*} [DecidableEq ι]
   rw [hcard] at hbound
   simpa [w, Finset.sum_image hinjw] using hbound
 
-private theorem caseI_addVal_prod {ι : Type*} [DecidableEq ι]
+private theorem caseI_addVal_prod {ι : Type*}
     (s : Finset ι) (g : ι → LaurentSeries K) :
     HahnSeries.addVal ℤ K (∏ i ∈ s, g i) =
       ∑ i ∈ s, HahnSeries.addVal ℤ K (g i) := by
+  classical
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih => simp [ha, ih, AddValuation.map_mul]
 
-private theorem caseI_coe_sum_int_finset {ι : Type*} [DecidableEq ι]
+private theorem caseI_coe_sum_int_finset {ι : Type*}
     (s : Finset ι) (g : ι → ℤ) :
     (((∑ i ∈ s, g i : ℤ) : ℤ) : WithTop ℤ) =
       ∑ i ∈ s, ((g i : ℤ) : WithTop ℤ) := by
+  classical
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih => simp [ha, ih, WithTop.coe_add]
@@ -482,11 +486,12 @@ theorem orderTop_indexedWronskian_det_caseI_q_lower_bound
 /-- Pairwise-distinct negative integers bounded below by a nonpositive integer
 are no more numerous than its pole depth. -/
 theorem card_negativeOrders_le_neg
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {ι : Type*} [Fintype ι]
     (g : ι → LaurentSeries K) (a : ℤ) (ha : a ≤ 0)
     (hgdistinct : NegativeOrdersPairwiseDistinct g)
     (hglower : ∀ i, a ≤ (g i).order) :
     a ≤ -((Finset.univ.filter fun i => (g i).order < 0).card : ℤ) := by
+  classical
   let poles : Finset ι := Finset.univ.filter fun i => (g i).order < 0
   let w : ι → ℤ := fun i => (g i).order
   have hinj : Set.InjOn w (poles : Set ι) := by

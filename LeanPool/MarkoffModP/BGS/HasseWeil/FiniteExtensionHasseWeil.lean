@@ -161,6 +161,199 @@ theorem functionFieldNormalClosureStepanovThreshold_pos :
   unfold functionFieldNormalClosureStepanovThreshold
   positivity
 
+section GenericGaloisTowerBound
+
+variable (C M N : Type*) [Field C] [Fintype C] [DecidableEq C]
+  [DecidableEq (RatFunc C)] [Field M] [Field N]
+  [Algebra (RatFunc C) M] [Algebra (RatFunc C) N]
+  [Algebra M N] [IsScalarTower (RatFunc C) M N]
+  [FiniteDimensional (RatFunc C) M] [FiniteDimensional (RatFunc C) N]
+  [FiniteDimensional M N]
+  [IsGalois (RatFunc C) N] [IsGalois M N]
+  [Algebra.IsSeparable (RatFunc C) M]
+
+/-- Restrict the intermediate rational-function-field algebra to the constants. -/
+local instance genericGaloisTowerConstantAlgebraM : Algebra C M :=
+  exactConstantExtensionTowerCanonicalConstantAlgebra C M
+
+/-- Restrict the top rational-function-field algebra to the constants. -/
+local instance genericGaloisTowerConstantAlgebraN : Algebra C N :=
+  exactConstantExtensionTowerCanonicalConstantAlgebra C N
+
+private local instance genericGaloisTowerConstantTower : IsScalarTower C M N :=
+  exactConstantExtensionTowerCanonicalConstantScalarTower C M N
+
+private local instance genericGaloisTowerRationalConstantTowerM :
+    IsScalarTower C (RatFunc C) M := IsScalarTower.of_algebraMap_eq' rfl
+
+private local instance genericGaloisTowerRationalConstantTowerN :
+    IsScalarTower C (RatFunc C) N := IsScalarTower.of_algebraMap_eq' rfl
+
+private local instance genericGaloisTowerTopSeparable : Algebra.IsSeparable (RatFunc C) N :=
+  (isGalois_iff.mp (inferInstance : IsGalois (RatFunc C) N)).1
+
+omit [DecidableEq C] [DecidableEq (RatFunc C)] in
+/-- A finite Galois function-field tower over exact finite constants satisfies the
+square-field error bound after a sufficiently divisible even constant extension. -/
+private theorem exactConstantExtensionClosedPlaceError_le_galoisTowerConstants
+    (hExactM : algebraicClosure C M = (⊥ : IntermediateField C M))
+    (hExactN : algebraicClosure C N = (⊥ : IntermediateField C N))
+    (n : ℕ) (hn : 0 < n) :
+    let g := FunctionField.genus C N
+    let H := (g + 1) * (g + 2)
+    let D := Module.finrank (RatFunc C) N
+    let p := ringChar C
+    let : CharP C p := ringChar.charP C
+    let : Fact p.Prime := ⟨CharP.char_is_prime C p⟩
+    let : NeZero (2 * (H * n)) := ⟨by positivity⟩
+    let Cbig := FiniteField.Extension C p (2 * (H * n))
+    let : Fintype Cbig := Fintype.ofFinite Cbig
+    |(exactConstantExtensionClosedPlaceExtensionCount C Cbig M hExactM 1 : ℝ) -
+        (Nat.card C : ℝ) ^ (2 * H * n) - 1| ≤
+      2 * (D : ℝ) ^ 2 + 2 * (D : ℝ) ^ 3 +
+        (D : ℝ) ^ 2 * (2 * g + 1) * (Nat.card C : ℝ) ^ (H * n) := by
+  classical
+  intro g H D p charP primeP neBig Cbig fintypeBig
+  have hH : 0 < H := by positivity
+  have hD : 0 < D := Module.finrank_pos
+  let : NeZero (H * n) := ⟨Nat.mul_pos hH hn |>.ne'⟩
+  let Ksmall := FiniteField.Extension C p (H * n)
+  let : Fintype Ksmall := Fintype.ofFinite Ksmall
+  let : DecidableEq Cbig := Classical.decEq Cbig
+  let : DecidableEq (RatFunc Cbig) := Classical.decEq (RatFunc Cbig)
+  let : Algebra C Ksmall :=
+    FiniteField.instAlgebraExtension C p (H * n)
+  let : Algebra C Cbig :=
+    FiniteField.instAlgebraExtension C p (2 * (H * n))
+  let : SMul C Ksmall := Algebra.toSMul
+  let : Module C Ksmall := Algebra.toModule
+  let : SMul C Cbig := Algebra.toSMul
+  let : Module C Cbig := Algebra.toModule
+  let : CharP Cbig p :=
+    charP_of_injective_algebraMap (algebraMap C Cbig).injective p
+  let : Algebra Ksmall Cbig :=
+    finiteFieldExtensionAlgebraOfDvd C p (H * n) (2 * (H * n))
+      ⟨2, by omega⟩
+  let : SMul Ksmall Cbig := Algebra.toSMul
+  let : Module Ksmall Cbig := Algebra.toModule
+  let : IsScalarTower C Ksmall Cbig :=
+    finiteFieldExtension_isScalarTower_of_dvd C p
+      (H * n) (2 * (H * n)) ⟨2, by omega⟩
+  have hcard : Fintype.card Cbig = Fintype.card Ksmall ^ 2 := by
+    simpa only [Fintype.card_eq_nat_card] using
+      natCard_double_finiteFieldExtension_eq_sq C p (H * n)
+  have hlargeBase : H ≤ Fintype.card Ksmall := by
+    simpa only [Fintype.card_eq_nat_card] using
+      degree_le_natCard_finiteFieldExtension_mul C p H n hn
+  let E_N := ExactConstantExtension C N Cbig
+  let E_M := ExactConstantExtension C M Cbig
+  let : Field E_N :=
+    exactConstantExtensionField C N Cbig hExactN
+  let : Field E_M :=
+    exactConstantExtensionField C M Cbig hExactM
+  let : Algebra (RatFunc Cbig) E_N :=
+    ratFuncExactConstantExtensionAlgebra C Cbig N hExactN
+  let : Algebra (RatFunc Cbig) E_M :=
+    ratFuncExactConstantExtensionAlgebra C Cbig M hExactM
+  let : Module (RatFunc Cbig) E_N := Algebra.toModule
+  let : Module (RatFunc Cbig) E_M := Algebra.toModule
+  let : FiniteDimensional (RatFunc Cbig) E_N :=
+    finiteDimensional_over_extendedRatFunc C Cbig N hExactN
+  let : FiniteDimensional (RatFunc Cbig) E_M :=
+    finiteDimensional_over_extendedRatFunc C Cbig M hExactM
+  let : Algebra.IsSeparable (RatFunc Cbig) E_N :=
+    isSeparable_over_extendedRatFunc C Cbig N hExactN
+  let : Algebra.IsSeparable (RatFunc Cbig) E_M :=
+    isSeparable_over_extendedRatFunc C Cbig M hExactM
+  let : Algebra E_M E_N :=
+    exactConstantExtensionTowerRatFuncAlgebra C M N Cbig
+  let : SMul (RatFunc Cbig) E_M := Algebra.toSMul
+  let : SMul (RatFunc Cbig) E_N := Algebra.toSMul
+  let : SMul E_M E_N := Algebra.toSMul
+  let : Module E_M E_N := Algebra.toModule
+  let : IsScalarTower (RatFunc Cbig) E_M E_N :=
+    exactConstantExtensionTower_ratFuncScalarTower C M N Cbig hExactN
+  let : Module.Finite E_M E_N :=
+    exactConstantExtensionTower_finiteDimensional C M N Cbig hExactN
+  let : IsGalois E_M E_N :=
+    exactConstantExtensionTower_isGalois C M N Cbig hExactN
+  let : Algebra (RatFunc C) (RatFunc Cbig) :=
+    ratFuncCoefficientAlgebra C Cbig
+  let : Algebra (RatFunc C) E_N :=
+    exactConstantExtensionBaseAlgebra C (RatFunc C) N Cbig
+  let : SMul (RatFunc C) (RatFunc Cbig) := Algebra.toSMul
+  let : SMul (RatFunc C) E_N := Algebra.toSMul
+  let : Module (RatFunc C) E_N := Algebra.toModule
+  let : IsScalarTower (RatFunc C) (RatFunc Cbig) E_N :=
+    rationalBase_scalarTower C Cbig N hExactN
+  let : IsGalois (RatFunc C) E_N :=
+    exactConstantExtension_isGalois C (RatFunc C) N Cbig hExactN
+  let : IsGalois (RatFunc Cbig) E_N :=
+    IsGalois.tower_top_of_isGalois (RatFunc C) (RatFunc Cbig) E_N
+  have hExactEN :
+      @algebraicClosure Cbig E_N _ _ (bridgeBaseConstantAlgebra Cbig E_N) =
+        (⊥ : @IntermediateField Cbig E_N _ _
+          (bridgeBaseConstantAlgebra Cbig E_N)) :=
+    exactConstantExtension_extended_algebraicClosure_eq_bot
+      C Cbig N hExactN
+  have hgenusEN :
+      @FunctionField.genus Cbig E_N _ _
+        (bridgeBaseConstantAlgebra Cbig E_N) = g := by
+    simpa only [E_N, g] using
+      exactConstantExtension_genus_eq_for_ratFunc C Cbig N hExactN
+  have hdegreeEN : Module.finrank (RatFunc Cbig) E_N = D :=
+    exactConstantExtension_finrank_over_extendedRatFunc_eq
+      C Cbig N hExactN
+  have hHg : H = (g + 1) * (g + 2) := rfl
+  have hlarge :
+      (@FunctionField.genus Cbig E_N _ _
+          (bridgeBaseConstantAlgebra Cbig E_N) + 1) *
+        (@FunctionField.genus Cbig E_N _ _
+          (bridgeBaseConstantAlgebra Cbig E_N) + 2) ≤
+          Fintype.card Ksmall := by
+    simpa only [hgenusEN, hHg] using hlargeBase
+  let : NeZero D.factorial := ⟨Nat.factorial_ne_zero D⟩
+  let U := FiniteField.Extension Cbig p D.factorial
+  let : DecidableEq U := Classical.decEq U
+  let : DecidableEq (RatFunc U) := Classical.decEq (RatFunc U)
+  let : Algebra Cbig U :=
+    FiniteField.instAlgebraExtension Cbig p D.factorial
+  let : SMul Cbig U := Algebra.toSMul
+  let : Module Cbig U := Algebra.toModule
+  have hauxDegree : Module.finrank Cbig U = D.factorial := by
+    simpa only [U] using FiniteField.finrank_extension Cbig p D.factorial
+  have hdivBase : Nat.card (E_N ≃ₐ[RatFunc Cbig] E_N) ∣
+      Module.finrank Cbig U := by
+    rw [hauxDegree, IsGalois.card_aut_eq_finrank, hdegreeEN]
+    exact Nat.dvd_factorial hD le_rfl
+  have hdivMOriginal : Nat.card (N ≃ₐ[M] N) ∣ D.factorial :=
+    natCard_aut_dvd_finrank_factorial_of_tower (RatFunc C) M N
+  have hcardTower : Nat.card (E_N ≃ₐ[E_M] E_N) =
+      Nat.card (N ≃ₐ[M] N) :=
+    exactConstantExtensionTower_card_aut_eq C M N Cbig hExactN
+  have hdivL : Nat.card (E_N ≃ₐ[E_M] E_N) ∣
+      Module.finrank Cbig U := by
+    rw [hauxDegree, hcardTower]
+    exact hdivMOriginal
+  have hfixed :=
+    abs_intermediateBaseRationalPlaceError_le_squareField_of_genus
+      Ksmall Cbig U E_N E_M hcard hExactEN hdivL hdivBase hlarge
+  have hcount : exactConstantExtensionClosedPlaceExtensionCount C Cbig M hExactM 1 =
+      finiteExtensionRationalPlaceCount Cbig E_M :=
+    exactConstantExtensionClosedPlaceExtensionCount_one_eq_rationalPlaceCount
+      C Cbig M hExactM
+  have hcardBig : Nat.card Cbig = Nat.card C ^ (2 * H * n) := by
+    simpa only [Cbig, Nat.mul_assoc] using
+      FiniteField.natCard_extension C p (2 * (H * n))
+  have hcardSmall : Fintype.card Ksmall = Nat.card C ^ (H * n) := by
+    rw [Fintype.card_eq_nat_card,
+      FiniteField.natCard_extension C p (H * n)]
+  rw [← hcount, hcardBig, hdegreeEN, hgenusEN, hcardSmall] at hfixed
+  push_cast at hfixed
+  simpa only [mul_assoc] using hfixed
+
+end GenericGaloisTowerBound
+
 /-- The normal-closure constant field gives a uniform square-root-scale bound
 for the packaged exact constant extensions of the original function field.
 
@@ -185,202 +378,73 @@ theorem exactConstantExtensionClosedPlaceError_le_normalClosureConstants
   classical
   intro n hn
   let C := FunctionFieldNormalClosureConstantField K F
-  letI : Fintype C :=
+  let : Fintype C :=
     finiteExtensionHasseNormalClosureConstantFintype K F
-  letI : DecidableEq C :=
+  let : DecidableEq C :=
     finiteExtensionHasseNormalClosureConstantDecidableEq K F
-  letI : DecidableEq (RatFunc C) :=
+  let : DecidableEq (RatFunc C) :=
     finiteExtensionHasseNormalClosureRatFuncDecidableEq K F
   let N := FunctionFieldNormalClosure K F
   let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
-  letI : Algebra (RatFunc C) M :=
+  let : Algebra (RatFunc C) M :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncAlgebra
       K F hExact
-  letI : SMul (RatFunc C) M := Algebra.toSMul
-  letI : Module (RatFunc C) M := Algebra.toModule
-  letI : Algebra C M :=
+  let : SMul (RatFunc C) M := Algebra.toSMul
+  let : Module (RatFunc C) M := Algebra.toModule
+  let : Algebra C M :=
     exactConstantExtensionTowerCanonicalConstantAlgebra C M
-  letI : IsScalarTower (RatFunc C) M N :=
+  let : IsScalarTower (RatFunc C) M N :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncTower
       K F hExact
-  letI : FiniteDimensional (RatFunc C) M :=
+  let : FiniteDimensional (RatFunc C) M :=
     functionFieldNormalClosureOriginalCompositum_finiteDimensional_over_constantRatFunc
       K F hExact
-  letI : FiniteDimensional M N :=
+  let : FiniteDimensional M N :=
     functionFieldNormalClosure_finiteDimensional_over_originalCompositum
       K F hExact
-  letI : IsGalois M N :=
+  let : IsGalois M N :=
     functionFieldNormalClosure_isGalois_over_originalCompositum K F hExact
-  letI : Algebra.IsSeparable (RatFunc C) M :=
+  let : Algebra.IsSeparable (RatFunc C) M :=
     functionFieldNormalClosureOriginalCompositum_isSeparable_over_constantRatFunc
       K F hExact
-  letI : IsGalois (RatFunc C) N :=
+  let normalClosureGalois : IsGalois (RatFunc C) N :=
     functionFieldNormalClosure_isGalois_over_constantRatFunc K F
-  letI : Algebra.IsSeparable (RatFunc C) N :=
-    Algebra.IsSeparable.trans (RatFunc C) M N
+  let : Algebra.IsSeparable (RatFunc C) N :=
+    (isGalois_iff.mp normalClosureGalois).1
   let g := functionFieldNormalClosureGenus K F
   let H := functionFieldNormalClosureStepanovThreshold K F
   let D := functionFieldNormalClosureRatFuncDegree K F
   have hH : 0 < H := functionFieldNormalClosureStepanovThreshold_pos K F
-  have hD : 0 < D := functionFieldNormalClosureRatFuncDegree_pos K F
-  let p := ringChar C
-  let : CharP C p := ringChar.charP C
-  letI : Fact p.Prime := ⟨CharP.char_is_prime C p⟩
-  letI : NeZero (H * n) := ⟨Nat.mul_pos hH hn |>.ne'⟩
-  letI : NeZero (2 * (H * n)) := ⟨by positivity⟩
-  let Ksmall := FiniteField.Extension C p (H * n)
-  let Cbig := FiniteField.Extension C p (2 * (H * n))
-  letI : Fintype Ksmall := Fintype.ofFinite Ksmall
-  letI : Fintype Cbig := Fintype.ofFinite Cbig
-  letI : DecidableEq Cbig := Classical.decEq Cbig
-  letI : DecidableEq (RatFunc Cbig) := Classical.decEq (RatFunc Cbig)
-  letI : Algebra C Ksmall :=
-    FiniteField.instAlgebraExtension C p (H * n)
-  letI : Algebra C Cbig :=
-    FiniteField.instAlgebraExtension C p (2 * (H * n))
-  letI : SMul C Ksmall := Algebra.toSMul
-  letI : Module C Ksmall := Algebra.toModule
-  letI : SMul C Cbig := Algebra.toSMul
-  letI : Module C Cbig := Algebra.toModule
-  letI : CharP Cbig p :=
-    charP_of_injective_algebraMap (algebraMap C Cbig).injective p
-  letI : Algebra Ksmall Cbig :=
-    finiteFieldExtensionAlgebraOfDvd C p (H * n) (2 * (H * n))
-      ⟨2, by omega⟩
-  letI : SMul Ksmall Cbig := Algebra.toSMul
-  letI : Module Ksmall Cbig := Algebra.toModule
-  letI : IsScalarTower C Ksmall Cbig :=
-    finiteFieldExtension_isScalarTower_of_dvd C p
-      (H * n) (2 * (H * n)) ⟨2, by omega⟩
-  have hcard : Fintype.card Cbig = Fintype.card Ksmall ^ 2 := by
-    simpa only [Fintype.card_eq_nat_card] using
-      natCard_double_finiteFieldExtension_eq_sq C p (H * n)
-  have hlargeBase : H ≤ Fintype.card Ksmall := by
-    simpa only [Fintype.card_eq_nat_card] using
-      degree_le_natCard_finiteFieldExtension_mul C p H n hn
-  have hExactN : algebraicClosure C N =
-      (⊥ : IntermediateField C N) :=
+  have hExactN : algebraicClosure C N = (⊥ : IntermediateField C N) :=
     functionFieldNormalClosureConstantField_isExact_for_constantRatFunc K F
-  have hExactM : algebraicClosure C M =
-      (⊥ : IntermediateField C M) :=
+  have hExactM : algebraicClosure C M = (⊥ : IntermediateField C M) :=
     functionFieldNormalClosureOriginalCompositumConstantField_isExact_for_constantRatFunc
       K F hExact
-  let E_N := ExactConstantExtension C N Cbig
-  let E_M := ExactConstantExtension C M Cbig
-  letI : Field E_N :=
-    functionFieldNormalClosureConstantExtensionFieldForTower K F Cbig
-  letI : Field E_M :=
-    functionFieldNormalClosureOriginalCompositumConstantExtensionField
-      K F Cbig hExact
-  letI : Algebra (RatFunc Cbig) E_N :=
-    functionFieldNormalClosureConstantExtensionRatFuncAlgebraForTower
-      K F Cbig
-  letI : Algebra (RatFunc Cbig) E_M :=
-    functionFieldNormalClosureOriginalCompositumConstantExtensionRatFuncAlgebra
-      K F Cbig hExact
-  letI : Module (RatFunc Cbig) E_N := Algebra.toModule
-  letI : Module (RatFunc Cbig) E_M := Algebra.toModule
-  letI : FiniteDimensional (RatFunc Cbig) E_N :=
-    finiteDimensional_over_extendedRatFunc C Cbig N hExactN
-  letI : FiniteDimensional (RatFunc Cbig) E_M :=
-    finiteDimensional_over_extendedRatFunc C Cbig M hExactM
-  letI : Algebra.IsSeparable (RatFunc Cbig) E_N :=
-    isSeparable_over_extendedRatFunc C Cbig N hExactN
-  letI : Algebra.IsSeparable (RatFunc Cbig) E_M :=
-    isSeparable_over_extendedRatFunc C Cbig M hExactM
-  letI : Algebra E_M E_N :=
-    functionFieldNormalClosureConstantExtensionTowerAlgebra K F Cbig hExact
-  letI : SMul (RatFunc Cbig) E_M := Algebra.toSMul
-  letI : SMul (RatFunc Cbig) E_N := Algebra.toSMul
-  letI : SMul E_M E_N := Algebra.toSMul
-  letI : Module E_M E_N := Algebra.toModule
-  letI : IsScalarTower (RatFunc Cbig) E_M E_N :=
-    functionFieldNormalClosureConstantExtension_ratFuncScalarTower
-      K F Cbig hExact
-  letI : Module.Finite E_M E_N :=
-    functionFieldNormalClosureConstantExtension_finiteDimensional
-      K F Cbig hExact
-  letI : IsGalois E_M E_N :=
-    functionFieldNormalClosureConstantExtension_isGalois K F Cbig hExact
-  letI : Algebra (RatFunc C) (RatFunc Cbig) :=
-    ratFuncCoefficientAlgebra C Cbig
-  letI : Algebra (RatFunc C) E_N :=
-    exactConstantExtensionBaseAlgebra C (RatFunc C) N Cbig
-  letI : SMul (RatFunc C) (RatFunc Cbig) := Algebra.toSMul
-  letI : SMul (RatFunc C) E_N := Algebra.toSMul
-  letI : Module (RatFunc C) E_N := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) (RatFunc Cbig) E_N :=
-    rationalBase_scalarTower C Cbig N hExactN
-  letI : IsGalois (RatFunc C) E_N :=
-    exactConstantExtension_isGalois C (RatFunc C) N Cbig hExactN
-  letI : IsGalois (RatFunc Cbig) E_N :=
-    IsGalois.tower_top_of_isGalois (RatFunc C) (RatFunc Cbig) E_N
-  have hExactEN :
-      @algebraicClosure Cbig E_N _ _ (bridgeBaseConstantAlgebra Cbig E_N) =
-        (⊥ : @IntermediateField Cbig E_N _ _
-          (bridgeBaseConstantAlgebra Cbig E_N)) :=
-    exactConstantExtension_extended_algebraicClosure_eq_bot
-      C Cbig N hExactN
-  have hgenusEN :
-      @FunctionField.genus Cbig E_N _ _
-        (bridgeBaseConstantAlgebra Cbig E_N) = g := by
-    simpa only [E_N, g, functionFieldNormalClosureGenus] using
-      exactConstantExtension_genus_eq_for_ratFunc C Cbig N hExactN
-  have hdegreeEN : Module.finrank (RatFunc Cbig) E_N = D :=
-    exactConstantExtension_finrank_over_extendedRatFunc_eq
-      C Cbig N hExactN
-  have hHg : H = (g + 1) * (g + 2) := rfl
-  have hlarge :
-      (@FunctionField.genus Cbig E_N _ _
-          (bridgeBaseConstantAlgebra Cbig E_N) + 1) *
-        (@FunctionField.genus Cbig E_N _ _
-          (bridgeBaseConstantAlgebra Cbig E_N) + 2) ≤
-          Fintype.card Ksmall := by
-    simpa only [hgenusEN, hHg] using hlargeBase
-  letI : NeZero D.factorial := ⟨Nat.factorial_ne_zero D⟩
-  let U := FiniteField.Extension Cbig p D.factorial
-  letI : DecidableEq U := Classical.decEq U
-  letI : DecidableEq (RatFunc U) := Classical.decEq (RatFunc U)
-  letI : Algebra Cbig U :=
-    FiniteField.instAlgebraExtension Cbig p D.factorial
-  letI : SMul Cbig U := Algebra.toSMul
-  letI : Module Cbig U := Algebra.toModule
-  have hauxDegree : Module.finrank Cbig U = D.factorial := by
-    simpa only [U] using FiniteField.finrank_extension Cbig p D.factorial
-  have hdivBase : Nat.card (E_N ≃ₐ[RatFunc Cbig] E_N) ∣
-      Module.finrank Cbig U := by
-    rw [hauxDegree, IsGalois.card_aut_eq_finrank, hdegreeEN]
-    exact Nat.dvd_factorial hD le_rfl
-  have hdivMOriginal : Nat.card (N ≃ₐ[M] N) ∣ D.factorial :=
-    natCard_aut_dvd_finrank_factorial_of_tower (RatFunc C) M N
-  have hcardTower : Nat.card (E_N ≃ₐ[E_M] E_N) =
-      Nat.card (N ≃ₐ[M] N) :=
-    functionFieldNormalClosureConstantExtension_card_aut_eq
-      K F Cbig hExact
-  have hdivL : Nat.card (E_N ≃ₐ[E_M] E_N) ∣
-      Module.finrank Cbig U := by
-    rw [hauxDegree, hcardTower]
-    exact hdivMOriginal
-  have hfixed :=
-    abs_intermediateBaseRationalPlaceError_le_squareField_of_genus
-      Ksmall Cbig U E_N E_M hcard hExactEN hdivL hdivBase hlarge
-  have hcount : finiteExtensionRationalPlaceCount Cbig E_M =
-      exactConstantExtensionClosedPlaceExtensionCount
-        K C F hExact (2 * H * n) := by
-    rw [normalClosureOriginalCompositum_rationalPlaceCount_eq_originalExactExtensionCount
-      K F Cbig hExact]
-    congr 2
+  let p := ringChar C
+  let : CharP C p := ringChar.charP C
+  let : Fact p.Prime := ⟨CharP.char_is_prime C p⟩
+  let : NeZero (2 * (H * n)) := ⟨by positivity⟩
+  let Cbig := FiniteField.Extension C p (2 * (H * n))
+  let : Fintype Cbig := Fintype.ofFinite Cbig
+  let : Algebra C Cbig := FiniteField.instAlgebraExtension C p (2 * (H * n))
+  have hfixed := exactConstantExtensionClosedPlaceError_le_galoisTowerConstants
+    C M N hExactM hExactN n hn
+  have hcount : exactConstantExtensionClosedPlaceExtensionCount C Cbig M hExactM 1 =
+      exactConstantExtensionClosedPlaceExtensionCount K C F hExact (2 * H * n) := by
+    have htransport :=
+      (normalClosureOriginalCompositum_rationalPlaceCount_eq_exactExtensionCount
+        K F Cbig hExact).symm.trans
+        (normalClosureOriginalCompositum_rationalPlaceCount_eq_originalExactExtensionCount
+          K F Cbig hExact)
+    convert htransport using 2
     simpa only [Cbig, Nat.mul_assoc] using
-      FiniteField.finrank_extension C p (2 * (H * n))
-  have hcardBig : Nat.card Cbig = Nat.card C ^ (2 * H * n) := by
-    simpa only [Cbig, Nat.mul_assoc] using
-      FiniteField.natCard_extension C p (2 * (H * n))
-  have hcardSmall : Fintype.card Ksmall = Nat.card C ^ (H * n) := by
-    rw [Fintype.card_eq_nat_card,
-      FiniteField.natCard_extension C p (H * n)]
-  rw [hcount, hcardBig, hdegreeEN, hgenusEN, hcardSmall] at hfixed
-  push_cast at hfixed
-  simpa only [C, g, H, D, mul_assoc] using hfixed
+      (FiniteField.finrank_extension C p (2 * (H * n))).symm
+  change |(exactConstantExtensionClosedPlaceExtensionCount C Cbig M hExactM 1 : ℝ) -
+      (Nat.card C : ℝ) ^ (2 * H * n) - 1| ≤
+    2 * (D : ℝ) ^ 2 + 2 * (D : ℝ) ^ 3 +
+      (D : ℝ) ^ 2 * (2 * g + 1) * (Nat.card C : ℝ) ^ (H * n) at hfixed
+  rw [hcount] at hfixed
+  exact hfixed
 
 /-- The closed Hasse--Weil bound for a finite separable extension of `K(X)`
 with exact constant field `K`. -/
@@ -393,11 +457,11 @@ theorem finiteExtensionClosedPlaceHasseWeil
         Real.sqrt (Nat.card K) := by
   classical
   let C := FunctionFieldNormalClosureConstantField K F
-  letI : Fintype C :=
+  let : Fintype C :=
     finiteExtensionHasseNormalClosureConstantFintype K F
-  letI : DecidableEq C :=
+  let : DecidableEq C :=
     finiteExtensionHasseNormalClosureConstantDecidableEq K F
-  letI : DecidableEq (RatFunc C) :=
+  let : DecidableEq (RatFunc C) :=
     finiteExtensionHasseNormalClosureRatFuncDecidableEq K F
   let g := functionFieldNormalClosureGenus K F
   let H := functionFieldNormalClosureStepanovThreshold K F

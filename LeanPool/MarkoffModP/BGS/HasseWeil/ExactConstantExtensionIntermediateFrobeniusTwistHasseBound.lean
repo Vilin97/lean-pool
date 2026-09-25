@@ -76,14 +76,14 @@ private theorem intermediateHasseRatFuncBaseTower :
     letI : Module L (ExactConstantExtension C N S) := Algebra.toModule
     IsScalarTower (RatFunc C) L (ExactConstantExtension C N S) := by
   let T := ExactConstantExtension C N S
-  letI : Algebra (RatFunc C) T :=
+  let : Algebra (RatFunc C) T :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) T := Algebra.toSMul
-  letI : Module (RatFunc C) T := Algebra.toModule
-  letI : Algebra L T := exactConstantExtensionBaseAlgebra C L N S
-  letI : Algebra N T := exactConstantExtensionAlgebra C N S
-  letI : SMul L T := Algebra.toSMul
-  letI : Module L T := Algebra.toModule
+  let : SMul (RatFunc C) T := Algebra.toSMul
+  let : Module (RatFunc C) T := Algebra.toModule
+  let : Algebra L T := exactConstantExtensionBaseAlgebra C L N S
+  let : Algebra N T := exactConstantExtensionAlgebra C N S
+  let : SMul L T := Algebra.toSMul
+  let : Module L T := Algebra.toModule
   apply IsScalarTower.of_algebraMap_eq'
   ext x
   change (1 : S) ⊗ₜ algebraMap (RatFunc C) N x =
@@ -99,41 +99,41 @@ theorem intermediateFrobeniusTwistFieldRationalPlaceCount_eq_rationalBase
       frobeniusTwistFieldRationalPlaceCount C S N hExact
         (g.restrictScalars (RatFunc C)) := by
   let T := ExactConstantExtension C N S
-  letI : Field T := exactConstantExtensionField C N S hExact
-  letI : Algebra (RatFunc C) T :=
+  let : Field T := exactConstantExtensionField C N S hExact
+  let : Algebra (RatFunc C) T :=
     exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  letI : SMul (RatFunc C) T := Algebra.toSMul
-  letI : Module (RatFunc C) T := Algebra.toModule
-  letI : Algebra L T := exactConstantExtensionBaseAlgebra C L N S
-  letI : SMul L T := Algebra.toSMul
-  letI : Module L T := Algebra.toModule
-  letI : IsScalarTower (RatFunc C) L T :=
+  let : SMul (RatFunc C) T := Algebra.toSMul
+  let : Module (RatFunc C) T := Algebra.toModule
+  let : Algebra L T := exactConstantExtensionBaseAlgebra C L N S
+  let : SMul L T := Algebra.toSMul
+  let : Module L T := Algebra.toModule
+  let : IsScalarTower (RatFunc C) L T :=
     intermediateHasseRatFuncBaseTower C S N L
   let Fₗ := exactConstantExtensionFrobeniusTwistField C L N S hExact g
   let Fᵣ := exactConstantExtensionFrobeniusTwistField
     C (RatFunc C) N S hExact (g.restrictScalars (RatFunc C))
-  letI : Algebra L Fₗ := SubalgebraClass.toAlgebra Fₗ.toSubalgebra
-  letI : SMul L Fₗ := Algebra.toSMul
-  letI : Module L Fₗ := Algebra.toModule
-  letI : Algebra (RatFunc C) Fₗ :=
+  let : Algebra L Fₗ := SubalgebraClass.toAlgebra Fₗ.toSubalgebra
+  let : SMul L Fₗ := Algebra.toSMul
+  let : Module L Fₗ := Algebra.toModule
+  let : Algebra (RatFunc C) Fₗ :=
     intermediateFrobeniusTwistFieldRatFuncAlgebra C S N hExact L g
-  letI : SMul (RatFunc C) Fₗ := Algebra.toSMul
-  letI : Module (RatFunc C) Fₗ := Algebra.toModule
-  letI : FiniteDimensional (RatFunc C) Fₗ :=
+  let : SMul (RatFunc C) Fₗ := Algebra.toSMul
+  let : Module (RatFunc C) Fₗ := Algebra.toModule
+  let : FiniteDimensional (RatFunc C) Fₗ :=
     finiteDimensional_intermediateFrobeniusTwistField_over_ratFunc
       C S N hExact L g
-  letI : Algebra.IsSeparable (RatFunc C) Fₗ :=
+  let : Algebra.IsSeparable (RatFunc C) Fₗ :=
     isSeparable_intermediateFrobeniusTwistField_over_ratFunc
       C S N hExact L g
-  letI : Algebra (RatFunc C) Fᵣ := SubalgebraClass.toAlgebra Fᵣ.toSubalgebra
-  letI : SMul (RatFunc C) Fᵣ := Algebra.toSMul
-  letI : Module (RatFunc C) Fᵣ := Algebra.toModule
+  let : Algebra (RatFunc C) Fᵣ := SubalgebraClass.toAlgebra Fᵣ.toSubalgebra
+  let : SMul (RatFunc C) Fᵣ := Algebra.toSMul
+  let : Module (RatFunc C) Fᵣ := Algebra.toModule
   let e :=
     intermediateFrobeniusTwistField_algEquiv_rationalBaseFrobeniusTwistField
       C S N hExact L g
-  letI : FiniteDimensional (RatFunc C) Fᵣ :=
+  let : FiniteDimensional (RatFunc C) Fᵣ :=
     Module.Finite.equiv (e.toLinearEquiv : Fₗ ≃ₗ[RatFunc C] Fᵣ)
-  letI : Algebra.IsSeparable (RatFunc C) Fᵣ :=
+  let : Algebra.IsSeparable (RatFunc C) Fᵣ :=
     isSeparable_frobeniusTwistField_over_ratFunc
       C N S hExact (g.restrictScalars (RatFunc C))
   calc
@@ -166,7 +166,7 @@ theorem abs_intermediateBaseRationalPlaceError_le_squareField_of_genus_exact
             (Nat.card (N ≃ₐ[RatFunc C] N) - 1 : ℕ) *
               (((2 * FunctionField.genus C N + 1) * Fintype.card K +
                 Module.finrank (RatFunc C) N : ℕ) : ℝ)) := by
-  letI : DecidableEq (N ≃ₐ[L] N) := Classical.decEq _
+  let : DecidableEq (N ≃ₐ[L] N) := Classical.decEq _
   let A : ℝ := 2 * (Module.finrank (RatFunc C) N : ℝ) ^ 2
   let B : ℝ :=
     (Nat.card (N ≃ₐ[RatFunc C] N) : ℝ) *

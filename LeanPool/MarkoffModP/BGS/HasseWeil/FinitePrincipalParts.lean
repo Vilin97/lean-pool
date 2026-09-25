@@ -120,6 +120,7 @@ theorem localPrincipalPartInclusion_injective (π : R) (n : ℕ) :
   rw [Submodule.Quotient.mk_eq_zero, Submodule.Quotient.mk_eq_zero]
   rfl
 
+omit [IsDedekindDomain R] [IsDiscreteValuationRing R] [IsFractionRing R L] in
 theorem range_localPrincipalPartInclusion_eq_ker_layerMap
     (π : R) (n : ℕ) :
     LinearMap.range

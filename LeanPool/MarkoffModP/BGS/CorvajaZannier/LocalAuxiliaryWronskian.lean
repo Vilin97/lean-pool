@@ -73,12 +73,13 @@ private theorem indexed_derivative_iterate_sum_smul {ι : Type*} [Fintype ι]
 
 /-- Constant column operations commute with the indexed ordinary Wronskian. -/
 theorem indexedLaurentSeriesWronskian_columnCombination
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {ι : Type*} [Fintype ι]
     (ε : ι → ℕ) (f : ι → LaurentSeries K) (A : Matrix ι ι K) :
     indexedLaurentSeriesWronskian ε
         (indexedLaurentSeriesColumnCombination f A) =
       indexedLaurentSeriesWronskian ε f *
         A.map (algebraMap K (LaurentSeries K)) := by
+  classical
   apply Matrix.ext
   intro i j
   rw [Matrix.mul_apply]
@@ -119,18 +120,20 @@ theorem indexedLaurentSeriesWronskian_det_columnCombination_of_det_eq_one
       _ = 1 := by rw [hA, map_one]
   rw [hdetmap, mul_one]
 
-private theorem indexed_addVal_prod {ι : Type*} [DecidableEq ι]
+private theorem indexed_addVal_prod {ι : Type*}
     (s : Finset ι) (g : ι → LaurentSeries K) :
     HahnSeries.addVal ℤ K (∏ i ∈ s, g i) =
       ∑ i ∈ s, HahnSeries.addVal ℤ K (g i) := by
+  classical
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih => simp [ha, ih, AddValuation.map_mul]
 
-private theorem indexed_coe_sum_int_finset {ι : Type*} [DecidableEq ι]
+private theorem indexed_coe_sum_int_finset {ι : Type*}
     (s : Finset ι) (g : ι → ℤ) :
     (((∑ i ∈ s, g i : ℤ) : ℤ) : WithTop ℤ) =
       ∑ i ∈ s, ((g i : ℤ) : WithTop ℤ) := by
+  classical
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih => simp [ha, ih, WithTop.coe_add]
