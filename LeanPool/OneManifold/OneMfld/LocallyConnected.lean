@@ -18,7 +18,7 @@ Supporting results for the classification of compact one-dimensional manifolds.
 
 @[expose] public section
 
-instance : LocallyConnectedSpace Real := by infer_instance
+namespace OneMfld
 
 instance : LocallyConnectedSpace NNReal := by
   rw [locallyConnectedSpace_iff_connected_subsets]
@@ -170,3 +170,5 @@ instance : LocallyConnectedSpace NNReal := by
     apply ul_t
     rw [Set.Ioo]
     exact aV
+
+end OneMfld

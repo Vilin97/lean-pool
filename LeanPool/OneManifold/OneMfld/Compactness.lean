@@ -18,6 +18,8 @@ Supporting results for the classification of compact one-dimensional manifolds.
 
 @[expose] public section
 
+namespace OneMfld
+
 variable
   {M : Type*}
   [TopologicalSpace M]
@@ -111,3 +113,5 @@ lemma noncompact_target (ht : FinitelyIntervalChartedSpace M) (z : M) (a : OpenP
       simp only [Set.mem_Iio] at hz'
       have hx : 0 < x := by exact pos_of_gt hz'
       apply noncompact_iio x hx
+
+end OneMfld

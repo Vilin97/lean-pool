@@ -26,6 +26,8 @@ Two results feed the gluing construction:
 
 @[expose] public section
 
+namespace OneMfld
+
 open Set Filter Topology
 
 /-- A strictly antitone map of `Ioo p v` onto `Ioo q w` tends to `q` at the top end. -/
@@ -270,3 +272,5 @@ theorem overlap_anti [T2Space M] (a b : OpenPartialHomeomorph M NNReal)
   · intro x hx y hy hxy
     have h := hanti (hacoord x hx) (hacoord y hy) hxy
     rwa [hkey x hx, hkey y hy] at h
+
+end OneMfld

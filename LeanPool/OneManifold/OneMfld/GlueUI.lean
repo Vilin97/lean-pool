@@ -25,6 +25,8 @@ point `m := b.symm μ` (that is, `k/(ρ+k) = μ/2` where `ρ := a m`). Glue with
 
 @[expose] public section
 
+namespace OneMfld
+
 open Set
 
 /-- The half-scale and Möbius charts cover the unit interval across their common split level. -/
@@ -337,3 +339,5 @@ theorem glue_hh_ui {M : Type*} [TopologicalSpace M] [T2Space M]
   · change (b.trans eb).target ∩ tset ∪ e'.target \ tset = univ
     exact half_mobius_target_cover a b eb e' hat hbt hbs hbt' he'src μ ρ k
       hkR hμR hμ1R hρ1R hρkR hkeyR he'f
+
+end OneMfld

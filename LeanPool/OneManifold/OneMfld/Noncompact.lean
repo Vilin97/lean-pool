@@ -17,6 +17,8 @@ Supporting results for the classification of compact one-dimensional manifolds.
 
 @[expose] public section
 
+namespace OneMfld
+
 open Set
 
 /-- `[0, ∞) ⊆ ℝ` is not compact. -/
@@ -89,3 +91,5 @@ theorem not_compactSpace_NNReal : ¬ CompactSpace NNReal := by
     simpa [hImage_eq] using hImage
   -- Contradiction with the previous lemma.
   exact not_isCompact_Ici_zero_real hIci0
+
+end OneMfld

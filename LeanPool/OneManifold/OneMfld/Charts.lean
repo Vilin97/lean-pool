@@ -17,6 +17,8 @@ half-open target `Iio x` (a boundary chart); an `IChart` is either.
 
 @[expose] public section
 
+namespace OneMfld
+
 /-- A one-dimensional chart with an open bounded interval as target. -/
 structure OChart (M : Type*) [TopologicalSpace M]
   extends OpenPartialHomeomorph M NNReal where
@@ -103,3 +105,5 @@ lemma IChart.connected_source (a : IChart M) (h : a.source.Nonempty) :
     exact isConnected_Ioo (Set.nonempty_Ioo.mp hne)
   · rw [←hx] at hne ⊢
     exact ⟨hne, isPreconnected_Iio⟩
+
+end OneMfld

@@ -18,6 +18,8 @@ Supporting results for the classification of compact one-dimensional manifolds.
 
 @[expose] public section
 
+namespace OneMfld
+
 /-- A space equipped with a finite atlas of interval charts. -/
 class FinitelyIntervalChartedSpace (M : Type*) [TopologicalSpace M] extends IntervalChartedSpace
     M where
@@ -42,3 +44,5 @@ variable
             apply c2
             exact hx
          }
+
+end OneMfld

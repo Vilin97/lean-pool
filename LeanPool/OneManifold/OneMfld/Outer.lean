@@ -25,6 +25,8 @@ closure to escape into `V.source \ U.source`.
 
 @[expose] public section
 
+namespace OneMfld
+
 open Set
 
 variable {M : Type*} [TopologicalSpace M]
@@ -367,3 +369,5 @@ theorem overlap_component_outer_Ioo [T2Space M]
   exact eq_end_segment_of_closure_not_subset_Ioo (hUt ▸ hAsub) hAo hAc hesc
 
 end Outer
+
+end OneMfld

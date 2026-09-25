@@ -22,6 +22,8 @@ interior endpoint is not in the image of the *full* overlap.
 
 @[expose] public section
 
+namespace OneMfld
+
 open Set Filter Topology
 
 /-- A strictly antitone map of `Ioo p v` onto `Ioo q w` tends to `w` at the bottom end. -/
@@ -446,3 +448,5 @@ theorem two_components_other_chart [T2Space M] (a b : OpenPartialHomeomorph M NN
     obtain ⟨t, ht1, ht2⟩ := exists_between (lt_min hs₀0 hs₁0)
     exact hcommon t (hbW₀ ▸ mem_Ioo.mpr ⟨ht1, ht2.trans_le (min_le_left _ _)⟩)
       (hbW₁ ▸ mem_Ioo.mpr ⟨ht1, ht2.trans_le (min_le_right _ _)⟩)
+
+end OneMfld

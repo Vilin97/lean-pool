@@ -18,6 +18,8 @@ Supporting results for the classification of compact one-dimensional manifolds.
 
 @[expose] public section
 
+namespace OneMfld
+
 lemma partial_homeo_connected {X : Type*} {Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
   (h : OpenPartialHomeomorph X Y) (conn : IsConnected h.source) : (IsConnected h.target) := by
   have ht : h.target = h.toFun '' h.source
@@ -60,3 +62,5 @@ lemma restrOpen_symm_image_target {X : Type*} {Y : Type*} [TopologicalSpace X] [
   · intro hz
     simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_image]
     exact ⟨ht hz, z, hz, rfl⟩
+
+end OneMfld

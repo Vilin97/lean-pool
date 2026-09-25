@@ -17,6 +17,8 @@ Supporting results for the classification of compact one-dimensional manifolds.
 
 @[expose] public section
 
+namespace OneMfld
+
 variable {H : Type*} [TopologicalSpace H] {M : Type*} [TopologicalSpace M]
 
 variable
@@ -68,3 +70,5 @@ noncomputable def chooseCharts [CompactSpace M] [ht : ChartedSpace H M] : { ht' 
   · exact Set.toFinite (ht.chartAt '' ↑t)
   · intro x hx
     simp only [Set.mem_preimage, chart_mem_atlas]
+
+end OneMfld

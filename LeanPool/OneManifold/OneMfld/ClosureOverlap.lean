@@ -17,6 +17,8 @@ Supporting results for the classification of compact one-dimensional manifolds.
 
 @[expose] public section
 
+namespace OneMfld
+
 open Set TopologicalSpace
 
 universe u
@@ -80,3 +82,5 @@ lemma nonempty_closure_inter_diff
   have nonemptyVAB : (V ∩ (A ∩ B)).Nonempty := hVconn' A B openA openB coverAB nonemptyVA nonemptyVB
   rw [disjointAB] at nonemptyVAB
   simp only [inter_empty, Set.not_nonempty_empty] at nonemptyVAB
+
+end OneMfld

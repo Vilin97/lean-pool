@@ -29,6 +29,8 @@ public import Mathlib.Topology.Instances.ZMultiples
 
 @[expose] public section
 
+namespace OneMfld
+
 open Set
 
 noncomputable section
@@ -301,3 +303,5 @@ lemma addCircle_arc_union_covers {c d : ℝ} (hcd : c ≤ d) (hlen : d < c + 1) 
 end AddCircleArith
 
 end
+
+end OneMfld

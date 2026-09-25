@@ -24,6 +24,8 @@ Supporting results for the classification of compact one-dimensional manifolds.
 
 @[expose] public section
 
+namespace OneMfld
+
 variable
   {M : Type*}
   [TopologicalSpace M]
@@ -403,3 +405,5 @@ noncomputable def classification [T2Space M] [CompactSpace M] (ht : ChartedSpace
   let ht' := nicelyCharted ht
   let ht'' := intervalCharted ht'
   classification' (finitelyIntervalCharted ht'')
+
+end OneMfld

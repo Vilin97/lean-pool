@@ -12,7 +12,6 @@ public import LeanPool.OneManifold.OneMfld.FiniteIntervalCharts
 public import LeanPool.OneManifold.OneMfld.IntervalCharts
 public import LeanPool.OneManifold.OneMfld.NiceCharts
 public import LeanPool.OneManifold.OneMfld.ClosureOverlap
-public import LeanPool.OneManifold.OneMfld.RealIntervals
 public import LeanPool.OneManifold.OneMfld.PartialHomeomorphHelpers
 public import LeanPool.OneManifold.OneMfld.Charts
 public import LeanPool.OneManifold.OneMfld.Outer
@@ -34,6 +33,8 @@ Supporting results for the classification of compact one-dimensional manifolds.
 -/
 
 @[expose] public section
+
+namespace OneMfld
 
 open Set
 
@@ -465,3 +466,5 @@ noncomputable def handleOO (a : OChart M) (b : OChart M) (h : Overlap a.source b
   by_cases hc : IsConnected (a.source ∩ b.source)
   · exact Sum.inr ⟨(exists_glue_o_o a b h hc).choose, (exists_glue_o_o a b h hc).choose_spec⟩
   · exact Sum.inl (circleOfDisconnectedOverlap a b h hc)
+
+end OneMfld

@@ -20,6 +20,8 @@ Supporting results for the classification of compact one-dimensional manifolds.
 
 @[expose] public section
 
+namespace OneMfld
+
 open Function
 open Set
 
@@ -1393,3 +1395,5 @@ theorem classify_connected_nnreal_interval (U : Set NNReal) (hu : IsOpen U) (hc 
         rw [relu_zero] at this
         assumption
       exact h0u0 this'
+
+end OneMfld

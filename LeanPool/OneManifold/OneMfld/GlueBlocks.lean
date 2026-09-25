@@ -27,6 +27,8 @@ Two overlapping boundary charts glue to a *closed* interval, so the glued chart 
 
 @[expose] public section
 
+namespace OneMfld
+
 open Set Topology
 
 noncomputable section
@@ -214,3 +216,7 @@ lemma reflect_image_Ioo_lower {q : NNReal} (_hq0 : 0 < q) (hq1 : q ≤ 1) :
     refine ⟨1 - z, ⟨tsub_pos_of_lt hz1, ?_⟩, tsub_tsub_cancel_of_le hz1.le⟩
     rw [tsub_lt_iff_right hz1.le]
     exact (tsub_lt_iff_left hq1).mp hzq
+
+end
+
+end OneMfld

@@ -20,6 +20,8 @@ another sends ends to ends.
 
 @[expose] public section
 
+namespace OneMfld
+
 open Set Filter Topology
 
 /-- A continuous injective function on an open interval of `ℝ≥0` is strictly monotone or
@@ -54,3 +56,5 @@ theorem tendsto_bot_of_strictMonoOn_image {p v q w : NNReal} (hpv : p < v)
   have hbdd : BddBelow (f '' Ioo p v) := himg ▸ bddBelow_Ioo
   have h := MonotoneOn.tendsto_nhdsWithin_Ioo_right hne hm.monotoneOn hbdd
   rwa [himg, csInf_Ioo hqw] at h
+
+end OneMfld

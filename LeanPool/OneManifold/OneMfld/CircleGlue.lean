@@ -26,6 +26,8 @@ whose frontier is the two split points. The result is a chart of `M` onto the wh
 
 @[expose] public section
 
+namespace OneMfld
+
 open Set
 
 /-! ### Small helpers -/
@@ -986,3 +988,5 @@ theorem exists_circle_chart {M : Type*} [TopologicalSpace M] [T2Space M]
   obtain ⟨f, hfs, hft⟩ := circle_chart_of_normalized A B W₀ W₁ r p s q hAt hBt hunion
     himgA₀ himgA₁ himgB₀ himgB₁ hr0 hrp hp1 hr4 hs0 hsq hq1 hs4
   exact ⟨f, by rw [hfs, hAs, hBs], hft⟩
+
+end OneMfld

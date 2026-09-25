@@ -21,6 +21,8 @@ is `Ioo 0 1`, and an `OChart` with target `Ioo 0 1` can be orientation-reversed
 
 @[expose] public section
 
+namespace OneMfld
+
 open Set
 
 noncomputable section
@@ -187,3 +189,5 @@ def OChart.flip (a : OChart M) (h01 : a.target = Ioo 0 1) :
   exact hef _ hmem
 
 end
+
+end OneMfld

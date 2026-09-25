@@ -20,6 +20,8 @@ Supporting results for the classification of compact one-dimensional manifolds.
 
 @[expose] public section
 
+namespace OneMfld
+
 variable
   {M : Type*}
   [TopologicalSpace M]
@@ -215,3 +217,5 @@ class NicelyChartedSpace (H : Type*) [TopologicalSpace H] [Bornology H] (M : Typ
     rcases h with ⟨y, hy⟩
     rw [←hy]
     apply nice_chart_connected
+
+end OneMfld

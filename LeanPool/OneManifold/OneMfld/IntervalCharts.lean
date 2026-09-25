@@ -18,6 +18,8 @@ Supporting results for the classification of compact one-dimensional manifolds.
 
 @[expose] public section
 
+namespace OneMfld
+
 /-- A space charted on the half-line with interval targets. -/
 class IntervalChartedSpace (M : Type*) [TopologicalSpace M] extends ChartedSpace NNReal M where
   is_interval (φ : OpenPartialHomeomorph M NNReal) (h : φ ∈ atlas) : (∃ x y, (Set.Ioo x y =
@@ -69,3 +71,5 @@ theorem univ_unbounded : ¬ Bornology.IsBounded (Set.univ : Set NNReal) := by
       apply univ_unbounded
       rw [←h]
       exact bounded
+
+end OneMfld

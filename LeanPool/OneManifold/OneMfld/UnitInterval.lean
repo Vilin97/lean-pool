@@ -18,6 +18,8 @@ Supporting results for the classification of compact one-dimensional manifolds.
 
 @[expose] public section
 
+namespace OneMfld
+
 /-- The closed unit interval in the real line. -/
 def UnitInterval : Set Real := { x : Real | 0 ≤ x ∧ x ≤ 1 }
 
@@ -34,3 +36,5 @@ instance : CompactSpace UnitInterval :=
 
 instance : Nonempty UnitInterval :=
   ⟨⟨0, le_refl 0, zero_le_one⟩⟩
+
+end OneMfld

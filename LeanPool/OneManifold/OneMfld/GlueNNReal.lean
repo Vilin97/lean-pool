@@ -24,6 +24,8 @@ All the frontier conditions come from `IsImage.frontier` and `frontier_Iic`.
 
 @[expose] public section
 
+namespace OneMfld
+
 open Set
 
 /-- **NNReal gluing.** Given charts `a` (target `Ioo 0 1`, overlap image the lower
@@ -211,3 +213,5 @@ theorem glue_nnreal {M : Type*} [TopologicalSpace M] [T2Space M]
       exact ⟨h3, h2⟩
     · rintro ⟨h1, h2⟩
       exact ⟨⟨lt_of_le_of_lt (zero_le : (0 : NNReal) ≤ μ) h1, h2⟩, h1⟩
+
+end OneMfld
