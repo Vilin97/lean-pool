@@ -37,11 +37,13 @@ section ClosedFace
 variable {n p : ℕ} (C : Core n p)
 variable (hDeg : ∀ w : Fin n, 3 ≤ slotValence C w)
 
-private abbrev N := 2 * (p - n)
-private abbrev Q := 3 * (p - n)
+/-- Number of vertices in the trivalent centipede expansion. -/
+abbrev expandedVertexCount := 2 * (p - n)
+/-- Number of edge slots in the trivalent centipede expansion. -/
+abbrev expandedSlotCount := 3 * (p - n)
 
 /-- The distinguished first vertex of each centipede fibre. -/
-noncomputable def firstVertex (w : Fin n) : Fin (N (n := n) (p := p)) :=
+noncomputable def firstVertex (w : Fin n) : Fin (expandedVertexCount (n := n) (p := p)) :=
   vEquiv C hDeg ⟨w, ⟨0, by have := hDeg w; omega⟩⟩
 
 @[simp] theorem data_fib_firstVertex (w : Fin n) :
@@ -54,19 +56,19 @@ theorem firstVertex_injective : Function.Injective (firstVertex C hDeg) := by
   exact congrArg Sigma.fst h
 
 /-- The retraction choosing the first vertex in each centipede fibre. -/
-noncomputable def firstRep (v : Fin (N (n := n) (p := p))) :
-    Fin (N (n := n) (p := p)) :=
+noncomputable def firstRep (v : Fin (expandedVertexCount (n := n) (p := p))) :
+    Fin (expandedVertexCount (n := n) (p := p)) :=
   firstVertex C hDeg ((data C hDeg).fib v)
 
 @[simp] theorem firstRep_firstVertex (w : Fin n) :
     firstRep C hDeg (firstVertex C hDeg w) = firstVertex C hDeg w := by
   simp [firstRep]
 
-theorem firstRep_idem (v : Fin (N (n := n) (p := p))) :
+theorem firstRep_idem (v : Fin (expandedVertexCount (n := n) (p := p))) :
     firstRep C hDeg (firstRep C hDeg v) = firstRep C hDeg v := by
   simp [firstRep]
 
-theorem firstRep_eq_iff_fib_eq (a b : Fin (N (n := n) (p := p))) :
+theorem firstRep_eq_iff_fib_eq (a b : Fin (expandedVertexCount (n := n) (p := p))) :
     firstRep C hDeg a = firstRep C hDeg b ↔
       (data C hDeg).fib a = (data C hDeg).fib b := by
   exact (firstVertex_injective C hDeg).eq_iff
@@ -94,7 +96,7 @@ theorem card_image_firstRep :
 /-- The closed length vector: centipede edges vanish and carrier slots retain
 the lengths of the original subdivision. -/
 noncomputable def closedLength (small : Spec n p)
-    (e : Fin (Q (n := n) (p := p))) : ℕ :=
+    (e : Fin (expandedSlotCount (n := n) (p := p))) : ℕ :=
   match (eEquiv C hDeg).symm e with
   | Sum.inl _ => 0
   | Sum.inr j => small.length j
@@ -120,10 +122,10 @@ theorem zeroSlots_closedLength (small : Spec n p) :
       exact iff_of_false (Nat.ne_of_gt (small.length_pos j)) (by simp)
 
 theorem card_contractedSlots :
-    (data C hDeg).contractedSlots.card = N (n := n) (p := p) - n := by
+    (data C hDeg).contractedSlots.card = expandedVertexCount (n := n) (p := p) - n := by
   classical
   let internal := Σ w : Fin n, Fin (slotValence C w - 3)
-  let embed : internal → Fin (Q (n := n) (p := p)) :=
+  let embed : internal → Fin (expandedSlotCount (n := n) (p := p)) :=
     fun x => eEquiv C hDeg (Sum.inl x)
   have hEmbed : Function.Injective embed := by
     intro a b hab
@@ -184,7 +186,7 @@ theorem closedLength_not_isLoopy
 /-- The canonical closed face of the centipede expansion. -/
 noncomputable def closedFace (small : Spec n p)
     (hLoop : ∀ e : Fin p, C.tail e ≠ C.head e) :
-    DegSpec (N (n := n) (p := p)) (Q (n := n) (p := p)) :=
+    DegSpec (expandedVertexCount (n := n) (p := p)) (expandedSlotCount (n := n) (p := p)) :=
   faceSpec (data C hDeg).bigCore
     (Nat.zero_lt_of_lt (firstVertex C hDeg ⟨0, small.core_nonempty⟩).isLt)
     (closedLength C hDeg small)
@@ -201,7 +203,7 @@ noncomputable def closedFace (small : Spec n p)
 
 theorem closedFace_rep (small : Spec n p)
     (hLoop : ∀ e : Fin p, C.tail e ≠ C.head e)
-    (v : Fin (N (n := n) (p := p))) :
+    (v : Fin (expandedVertexCount (n := n) (p := p))) :
     (closedFace C hDeg small hLoop).rep v =
       compFold (data C hDeg).bigCore (data C hDeg).contractedSlots v := by
   unfold closedFace faceSpec
@@ -278,7 +280,7 @@ theorem bnExists_of_closedPencil
     (hCore : small.core = C)
     (hLoop : ∀ e : Fin p, C.tail e ≠ C.head e)
     {r degree : ℤ}
-    (closed : ∀ (length : Fin (Q (n := n) (p := p)) → ℕ)
+    (closed : ∀ (length : Fin (expandedSlotCount (n := n) (p := p)) → ℕ)
       (hForest : IsForest (data C hDeg).bigCore (zeroSlots length))
       (hNotLoopy : ¬ IsLoopy (data C hDeg).bigCore (zeroSlots length)),
       BNExists

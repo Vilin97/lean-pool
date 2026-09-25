@@ -29,7 +29,7 @@ private theorem singleton_noConsecutive (i : ℤ) :
 
 /-- The adjacent reflection interchanging positions `i` and `i + 1`. -/
 noncomputable def simpleReflection (i : ℤ) : AspPerm :=
-  Transpositions.sigma {i} (singleton_noConsecutive i)
+  Transpositions.sigma {i} (by exact singleton_noConsecutive i)
 
 @[simp] theorem simpleReflection_chi (i : ℤ) : (simpleReflection i).χ = 0 := by
   exact Transpositions.sigma_chi {i} (singleton_noConsecutive i)
@@ -68,7 +68,8 @@ private theorem simpleReflection_lt_of_lt_of_ne
     apply hne
     apply Prod.ext <;> omega
 
-private noncomputable def swapPair (i : ℤ) (p : ℤ × ℤ) : ℤ × ℤ :=
+/-- Apply the adjacent reflection to both coordinates of an inversion pair. -/
+noncomputable def swapPair (i : ℤ) (p : ℤ × ℤ) : ℤ × ℤ :=
   (simpleReflection i p.1, simpleReflection i p.2)
 
 @[simp] private theorem swapPair_involutive (i : ℤ) (p : ℤ × ℤ) :
@@ -97,19 +98,17 @@ noncomputable def invSetEraseSimpleEquiv (τ : AspPerm) (i : ℤ) :
     {p // p ∈ invSet (AspPerm.mul τ (simpleReflection i)) \
       ({(i, i + 1)} : Set (ℤ × ℤ))} ≃
       {p // p ∈ invSet τ \ ({(i, i + 1)} : Set (ℤ × ℤ))} where
-  toFun p := by
+  toFun p := ⟨swapPair i p.val, by
     rcases p with ⟨⟨a, b⟩, hp⟩
-    refine ⟨swapPair i (a, b), ?_⟩
     rcases hp with ⟨⟨hab, hτ⟩, hne⟩
     constructor
     · refine ⟨simpleReflection_lt_of_lt_of_ne i a b hab ?_, ?_⟩
       · simpa only [Set.mem_singleton_iff] using hne
       · simpa only [mul_simple_apply] using hτ
     · simpa only [Set.mem_singleton_iff] using
-        swapPair_ne_exceptional_of_lt i a b hab
-  invFun p := by
+        swapPair_ne_exceptional_of_lt i a b hab⟩
+  invFun p := ⟨swapPair i p.val, by
     rcases p with ⟨⟨a, b⟩, hp⟩
-    refine ⟨swapPair i (a, b), ?_⟩
     rcases hp with ⟨⟨hab, hτ⟩, hne⟩
     constructor
     · refine ⟨simpleReflection_lt_of_lt_of_ne i a b hab ?_, ?_⟩
@@ -118,7 +117,7 @@ noncomputable def invSetEraseSimpleEquiv (τ : AspPerm) (i : ℤ) :
           τ (simpleReflection i (simpleReflection i a))
         simpa only [simpleReflection_involutive] using hτ
     · simpa only [Set.mem_singleton_iff] using
-        swapPair_ne_exceptional_of_lt i a b hab
+        swapPair_ne_exceptional_of_lt i a b hab⟩
   left_inv p := by
     apply Subtype.ext
     exact swapPair_involutive i p.1

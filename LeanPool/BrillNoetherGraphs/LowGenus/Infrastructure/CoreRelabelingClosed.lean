@@ -114,7 +114,8 @@ theorem rep_eq_iff (u v : Fin n) :
         compFold source (zeroSlots length) v := by
   rw [compFold_iff, compFold_iff, reach_map_iff r length]
 
-private noncomputable def classEquiv :
+/-- Relabeling transports canonical representatives of zero-edge connected components. -/
+noncomputable def classEquiv :
     {v : Fin n // compFold source (zeroSlots length) v = v} ≃
       {v : Fin n // compFold target (zeroSlots (r.reindexedLength length)) v = v} :=
   Equiv.ofBijective
@@ -218,7 +219,8 @@ theorem isLoopy_iff :
         simp [hr'] at ht hh
         simpa [ht, hh] using htarget
 
-private noncomputable def faceClassEquiv
+/-- The induced equivalence of contracted vertex classes in the corresponding closed faces. -/
+noncomputable def faceClassEquiv
     (source_nonempty : 0 < n)
     (hForest : IsForest source (zeroSlots length))
     (hNotLoopy : ¬ IsLoopy source (zeroSlots length)) :

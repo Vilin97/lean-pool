@@ -100,7 +100,9 @@ def rowKey (rows : List (List ℕ)) : ℕ :=
 /-- The number of payload buckets. -/
 def bucketCount : ℕ := 251
 
-private def payloadBucketPart0 : List (List (ℕ × Payload)) :=
+/-- Buckets 0 through 19 of the canonical genus-five classifier, storing row-key
+and payload associations for connected canonical leaves. -/
+def payloadBucketPart0 : List (List (ℕ × Payload)) :=
   [[
     (26414401459200, (6, [6, 5, 2, 0, 3, 1, 7, 4])),
     (92433165864960, (13, [0, 3, 7, 5, 1, 6, 2, 4])),
@@ -186,7 +188,9 @@ private def payloadBucketPart0 : List (List (ℕ × Payload)) :=
     (26478574325760, (0, [0, 4, 7, 3, 5, 6, 2, 1])),
     (26749094334720, (7, [0, 5, 6, 4, 2, 7, 3, 1]))]]
 
-private def payloadBucketPart1 : List (List (ℕ × Payload)) :=
+/-- Buckets 20 through 39 of the canonical genus-five classifier, storing row-key
+and payload associations for connected canonical leaves. -/
+def payloadBucketPart1 : List (List (ℕ × Payload)) :=
   [[
     (26491635373056, (19, [6, 1, 5, 3, 0, 2, 7, 4])),
     (92771331362880, (0, [2, 7, 1, 5, 6, 0, 3, 4])),
@@ -275,7 +279,9 @@ private def payloadBucketPart1 : List (List (ℕ × Payload)) :=
     (92703937271040, (11, [0, 6, 2, 7, 1, 3, 4, 5]))],
    []]
 
-private def payloadBucketPart2 : List (List (ℕ × Payload)) :=
+/-- Buckets 40 through 59 of the canonical genus-five classifier, storing row-key
+and payload associations for connected canonical leaves. -/
+def payloadBucketPart2 : List (List (ℕ × Payload)) :=
   [[
     (26479077425412, (7, [1, 2, 7, 6, 5, 3, 4, 0])),
     (92498030755860, (6, [2, 4, 5, 7, 6, 3, 1, 0])),
@@ -373,7 +379,9 @@ private def payloadBucketPart2 : List (List (ℕ × Payload)) :=
     (92429982253056, (1, [1, 7, 5, 4, 6, 3, 2, 0])),
     (93802355295489, (15, [3, 5, 7, 6, 0, 1, 4, 2]))]]
 
-private def payloadBucketPart3 : List (List (ℕ × Payload)) :=
+/-- Buckets 60 through 79 of the canonical genus-five classifier, storing row-key
+and payload associations for connected canonical leaves. -/
+def payloadBucketPart3 : List (List (ℕ × Payload)) :=
   [[
     (93802088169744, (8, [0, 3, 7, 4, 5, 1, 2, 6]))],
    [
@@ -470,7 +478,9 @@ private def payloadBucketPart3 : List (List (ℕ × Payload)) :=
     (93802091511828, (18, [6, 0, 3, 1, 2, 7, 4, 5])),
     (93802371023169, (12, [0, 5, 6, 7, 1, 4, 2, 3]))]]
 
-private def payloadBucketPart4 : List (List (ℕ × Payload)) :=
+/-- Buckets 80 through 99 of the canonical genus-five classifier, storing row-key
+and payload associations for connected canonical leaves. -/
+def payloadBucketPart4 : List (List (ℕ × Payload)) :=
   [[
     (26491644821760, (7, [1, 7, 3, 2, 5, 6, 4, 0])),
     (92430397604112, (7, [4, 0, 7, 6, 3, 5, 2, 1])),
@@ -554,7 +564,9 @@ private def payloadBucketPart4 : List (List (ℕ × Payload)) :=
     (26749597385988, (7, [0, 5, 6, 7, 2, 4, 3, 1])),
     (92497841782788, (7, [4, 7, 3, 0, 6, 2, 1, 5]))]]
 
-private def payloadBucketPart5 : List (List (ℕ × Payload)) :=
+/-- Buckets 100 through 119 of the canonical genus-five classifier, storing row-key
+and payload associations for connected canonical leaves. -/
+def payloadBucketPart5 : List (List (ℕ × Payload)) :=
   [[
     (92381878157313, (18, [4, 5, 0, 1, 2, 3, 6, 7])),
     (92498043093072, (17, [3, 1, 6, 7, 2, 4, 5, 0])),
@@ -636,7 +648,9 @@ private def payloadBucketPart5 : List (List (ℕ × Payload)) :=
     (92704000246017, (15, [2, 0, 6, 5, 1, 7, 3, 4])),
     (93802088121360, (8, [0, 3, 7, 4, 5, 2, 1, 6]))]]
 
-private def payloadBucketPart6 : List (List (ℕ × Payload)) :=
+/-- Buckets 120 through 139 of the canonical genus-five classifier, storing row-key
+and payload associations for connected canonical leaves. -/
+def payloadBucketPart6 : List (List (ℕ × Payload)) :=
   [[
     (92771362881552, (6, [0, 5, 6, 1, 7, 2, 3, 4])),
     (93802622616072, (16, [0, 5, 6, 7, 4, 1, 3, 2]))],
@@ -722,7 +736,9 @@ private def payloadBucketPart6 : List (List (ℕ × Payload)) :=
     (92381862428688, (18, [4, 5, 0, 1, 2, 6, 7, 3])),
     (93802103849040, (15, [3, 5, 0, 7, 6, 4, 2, 1]))]]
 
-private def payloadBucketPart7 : List (List (ℕ × Payload)) :=
+/-- Buckets 140 through 159 of the canonical genus-five classifier, storing row-key
+and payload associations for connected canonical leaves. -/
+def payloadBucketPart7 : List (List (ℕ × Payload)) :=
   [[
     (92703748800513, (8, [0, 4, 7, 5, 3, 6, 2, 1])),
     (93802153971984, (15, [3, 5, 6, 0, 7, 4, 2, 1]))],
@@ -803,7 +819,9 @@ private def payloadBucketPart7 : List (List (ℕ × Payload)) :=
     (26749157261313, (17, [1, 4, 7, 3, 5, 6, 0, 2])),
     (93802157314068, (12, [2, 6, 4, 5, 7, 3, 0, 1]))]]
 
-private def payloadBucketPart8 : List (List (ℕ × Payload)) :=
+/-- Buckets 160 through 179 of the canonical genus-five classifier, storing row-key
+and payload associations for connected canonical leaves. -/
+def payloadBucketPart8 : List (List (ℕ × Payload)) :=
   [[
     (26491710624000, (0, [0, 6, 5, 3, 4, 7, 2, 1])),
     (93802169652225, (12, [0, 5, 6, 1, 7, 4, 2, 3]))],
@@ -872,7 +890,9 @@ private def payloadBucketPart8 : List (List (ℕ × Payload)) :=
     (92497779163137, (8, [1, 6, 5, 3, 7, 4, 2, 0])),
     (92703733071888, (15, [3, 6, 0, 7, 5, 4, 2, 1]))]]
 
-private def payloadBucketPart9 : List (List (ℕ × Payload)) :=
+/-- Buckets 180 through 199 of the canonical genus-five classifier, storing row-key
+and payload associations for connected canonical leaves. -/
+def payloadBucketPart9 : List (List (ℕ × Payload)) :=
   [[
     (26749194813444, (7, [0, 5, 6, 2, 7, 4, 3, 1])),
     (92771303358468, (17, [4, 1, 7, 0, 2, 3, 6, 5]))],
@@ -948,7 +968,9 @@ private def payloadBucketPart9 : List (List (ℕ × Payload)) :=
     (92433401643264, (9, [4, 0, 5, 7, 2, 6, 1, 3])),
     (93802153923600, (15, [3, 5, 6, 0, 7, 2, 4, 1]))]]
 
-private def payloadBucketPart10 : List (List (ℕ × Payload)) :=
+/-- Buckets 200 through 219 of the canonical genus-five classifier, storing row-key
+and payload associations for connected canonical leaves. -/
+def payloadBucketPart10 : List (List (ℕ × Payload)) :=
   [[
     (26427336507456, (1, [0, 3, 5, 2, 6, 4, 1, 7])),
     (26478775636224, (7, [1, 5, 6, 3, 2, 7, 4, 0]))],
@@ -1027,7 +1049,9 @@ private def payloadBucketPart10 : List (List (ℕ × Payload)) :=
     (92433618572544, (9, [3, 1, 7, 6, 2, 5, 0, 4])),
     (93802169651280, (15, [3, 5, 7, 0, 6, 2, 4, 1]))]]
 
-private def payloadBucketPart11 : List (List (ℕ × Payload)) :=
+/-- Buckets 220 through 239 of the canonical genus-five classifier, storing row-key
+and payload associations for connected canonical leaves. -/
+def payloadBucketPart11 : List (List (ℕ × Payload)) :=
   [[
     (26414385792000, (6, [6, 5, 0, 2, 3, 1, 7, 4])),
     (92433150197760, (10, [0, 3, 5, 6, 7, 4, 2, 1])),
@@ -1111,7 +1135,9 @@ private def payloadBucketPart11 : List (List (ℕ × Payload)) :=
     (92703673548804, (17, [4, 0, 7, 1, 2, 5, 6, 3])),
     (92771331608577, (17, [4, 1, 7, 0, 2, 6, 5, 3]))]]
 
-private def payloadBucketPart12 : List (List (ℕ × Payload)) :=
+/-- Buckets 240 through 250 of the canonical genus-five classifier, storing row-key
+and payload associations for connected canonical leaves. -/
+def payloadBucketPart12 : List (List (ℕ × Payload)) :=
   [[
     (26414401519680, (6, [6, 5, 2, 3, 0, 1, 7, 4])),
     (92430183563520, (7, [3, 1, 5, 7, 4, 6, 2, 0])),

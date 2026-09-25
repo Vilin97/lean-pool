@@ -50,7 +50,9 @@ One `def` per `LEAF` witness and per `REDUCE CUTVERTEX` node of the `.rpf`, in
 depth-first order.  They are split out rather than inlined into `tree` because
 `maxHeartbeats` is charged per declaration..
 -/
-private def w0 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w0 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -99,7 +101,9 @@ private def w0 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w1 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w1 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -148,7 +152,9 @@ private def w1 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w2 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w2 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -197,7 +203,9 @@ private def w2 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w3 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w3 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -246,7 +254,9 @@ private def w3 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w4 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w4 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -295,7 +305,9 @@ private def w4 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w5 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w5 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -344,7 +356,9 @@ private def w5 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w6 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w6 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -393,7 +407,9 @@ private def w6 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w7 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w7 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -442,7 +458,9 @@ private def w7 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w8 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w8 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -491,7 +509,9 @@ private def w8 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w9 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w9 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -540,7 +560,9 @@ private def w9 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w10 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w10 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -589,7 +611,9 @@ private def w10 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w11 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w11 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -638,7 +662,9 @@ private def w11 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w12 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w12 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -687,7 +713,9 @@ private def w12 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w13 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w13 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -736,7 +764,9 @@ private def w13 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w14 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w14 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -785,7 +815,9 @@ private def w14 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w15 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w15 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -834,7 +866,9 @@ private def w15 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w16 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w16 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -883,7 +917,9 @@ private def w16 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w17 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w17 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -932,7 +968,9 @@ private def w17 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w18 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w18 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -981,7 +1019,9 @@ private def w18 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w19 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w19 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -1030,7 +1070,9 @@ private def w19 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w20 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w20 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -1079,7 +1121,9 @@ private def w20 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w21 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w21 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -1128,7 +1172,9 @@ private def w21 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w22 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w22 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -1177,7 +1223,9 @@ private def w22 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w23 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w23 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -1226,7 +1274,9 @@ private def w23 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w24 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w24 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -1275,7 +1325,9 @@ private def w24 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w25 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w25 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -1324,7 +1376,9 @@ private def w25 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w26 : Witness :=
+/-- Single-block leaf data for row 099: core divisor `[0, 0, 0, 1, 1, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w26 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -1381,85 +1435,139 @@ in the closed root domain extended by its entry forms; the `use` citations in
 listed alongside the body in `proof.subs` below.
 -/
 
-private def sub0 : PTree :=
+/-- Named chamber leaf using `w0` for row 099; its entry inequalities occupy position 0 in
+`proof.subs`. -/
+def sub0 : PTree :=
   .leaf w0
 
-private def sub1 : PTree :=
+/-- Named chamber leaf using `w1` for row 099; its entry inequalities occupy position 1 in
+`proof.subs`. -/
+def sub1 : PTree :=
   .leaf w1
 
-private def sub2 : PTree :=
+/-- Named chamber leaf using `w2` for row 099; its entry inequalities occupy position 2 in
+`proof.subs`. -/
+def sub2 : PTree :=
   .leaf w2
 
-private def sub3 : PTree :=
+/-- Named chamber leaf using `w3` for row 099; its entry inequalities occupy position 3 in
+`proof.subs`. -/
+def sub3 : PTree :=
   .leaf w3
 
-private def sub4 : PTree :=
+/-- Named chamber leaf using `w4` for row 099; its entry inequalities occupy position 4 in
+`proof.subs`. -/
+def sub4 : PTree :=
   .leaf w4
 
-private def sub5 : PTree :=
+/-- Named chamber leaf using `w5` for row 099; its entry inequalities occupy position 5 in
+`proof.subs`. -/
+def sub5 : PTree :=
   .leaf w5
 
-private def sub6 : PTree :=
+/-- Named chamber leaf using `w6` for row 099; its entry inequalities occupy position 6 in
+`proof.subs`. -/
+def sub6 : PTree :=
   .leaf w6
 
-private def sub7 : PTree :=
+/-- Named chamber leaf using `w7` for row 099; its entry inequalities occupy position 7 in
+`proof.subs`. -/
+def sub7 : PTree :=
   .leaf w7
 
-private def sub8 : PTree :=
+/-- Named chamber leaf using `w8` for row 099; its entry inequalities occupy position 8 in
+`proof.subs`. -/
+def sub8 : PTree :=
   .leaf w8
 
-private def sub9 : PTree :=
+/-- Named chamber leaf using `w9` for row 099; its entry inequalities occupy position 9 in
+`proof.subs`. -/
+def sub9 : PTree :=
   .leaf w9
 
-private def sub10 : PTree :=
+/-- Named chamber leaf using `w10` for row 099; its entry inequalities occupy position 10 in
+`proof.subs`. -/
+def sub10 : PTree :=
   .leaf w10
 
-private def sub11 : PTree :=
+/-- Named chamber leaf using `w11` for row 099; its entry inequalities occupy position 11 in
+`proof.subs`. -/
+def sub11 : PTree :=
   .leaf w11
 
-private def sub12 : PTree :=
+/-- Named chamber leaf using `w12` for row 099; its entry inequalities occupy position 12 in
+`proof.subs`. -/
+def sub12 : PTree :=
   .leaf w12
 
-private def sub13 : PTree :=
+/-- Named chamber leaf using `w13` for row 099; its entry inequalities occupy position 13 in
+`proof.subs`. -/
+def sub13 : PTree :=
   .leaf w13
 
-private def sub14 : PTree :=
+/-- Named chamber leaf using `w14` for row 099; its entry inequalities occupy position 14 in
+`proof.subs`. -/
+def sub14 : PTree :=
   .leaf w14
 
-private def sub15 : PTree :=
+/-- Named chamber leaf using `w15` for row 099; its entry inequalities occupy position 15 in
+`proof.subs`. -/
+def sub15 : PTree :=
   .leaf w15
 
-private def sub16 : PTree :=
+/-- Named chamber leaf using `w16` for row 099; its entry inequalities occupy position 16 in
+`proof.subs`. -/
+def sub16 : PTree :=
   .leaf w16
 
-private def sub17 : PTree :=
+/-- Named chamber leaf using `w17` for row 099; its entry inequalities occupy position 17 in
+`proof.subs`. -/
+def sub17 : PTree :=
   .leaf w17
 
-private def sub18 : PTree :=
+/-- Named chamber leaf using `w18` for row 099; its entry inequalities occupy position 18 in
+`proof.subs`. -/
+def sub18 : PTree :=
   .leaf w18
 
-private def sub19 : PTree :=
+/-- Named chamber leaf using `w19` for row 099; its entry inequalities occupy position 19 in
+`proof.subs`. -/
+def sub19 : PTree :=
   .leaf w19
 
-private def sub20 : PTree :=
+/-- Named chamber leaf using `w20` for row 099; its entry inequalities occupy position 20 in
+`proof.subs`. -/
+def sub20 : PTree :=
   .leaf w20
 
-private def sub21 : PTree :=
+/-- Named chamber leaf using `w21` for row 099; its entry inequalities occupy position 21 in
+`proof.subs`. -/
+def sub21 : PTree :=
   .leaf w21
 
-private def sub22 : PTree :=
+/-- Named chamber leaf using `w22` for row 099; its entry inequalities occupy position 22 in
+`proof.subs`. -/
+def sub22 : PTree :=
   .leaf w22
 
-private def sub23 : PTree :=
+/-- Named chamber leaf using `w23` for row 099; its entry inequalities occupy position 23 in
+`proof.subs`. -/
+def sub23 : PTree :=
   .leaf w23
 
-private def sub24 : PTree :=
+/-- Named chamber leaf using `w24` for row 099; its entry inequalities occupy position 24 in
+`proof.subs`. -/
+def sub24 : PTree :=
   .leaf w24
 
-private def sub25 : PTree :=
+/-- Named chamber leaf using `w25` for row 099; its entry inequalities occupy position 25 in
+`proof.subs`. -/
+def sub25 : PTree :=
   .leaf w25
 
-private def sub26 : PTree :=
+/-- Named chamber leaf using `w26` for row 099; its entry inequalities occupy position 26 in
+`proof.subs`. -/
+def sub26 : PTree :=
   .leaf w26
 
 /-- The proof of the `.rpf`, verbatim: the named subtrees with their entry

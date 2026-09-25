@@ -50,7 +50,9 @@ One `def` per `LEAF` witness and per `REDUCE CUTVERTEX` node of the `.rpf`, in
 depth-first order.  They are split out rather than inlined into `tree` because
 `maxHeartbeats` is charged per declaration..
 -/
-private def rw0 : RichWitness :=
+/-- Multiple-block leaf data for row 096: core divisor `[1, 0, 0, 0, 0, 1]`, 1 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def rw0 : RichWitness :=
   { divisorCore := [1, 0, 0, 0, 0, 1]
     chips := [(3, [0, 1, 0, 0, 0, 0, 0, 0, 0, -1], 1)]
     anchors := [
@@ -111,7 +113,9 @@ private def rw0 : RichWitness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w1 : Witness :=
+/-- Single-block leaf data for row 096: core divisor `[1, 0, 0, 1, 0, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w1 : Witness :=
   { divisorCore := [1, 0, 0, 1, 0, 1]
     chips := []
     anchors := [
@@ -160,7 +164,9 @@ private def w1 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def rw2 : RichWitness :=
+/-- Multiple-block leaf data for row 096: core divisor `[1, 0, 0, 0, 0, 1]`, 1 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def rw2 : RichWitness :=
   { divisorCore := [1, 0, 0, 0, 0, 1]
     chips := [(6, [0, -1, 0, 0, 1, 0, 0, 1, 0, 1], 1)]
     anchors := [
@@ -221,7 +227,9 @@ private def rw2 : RichWitness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def rw3 : RichWitness :=
+/-- Multiple-block leaf data for row 096: core divisor `[1, 0, 0, 0, 0, 1]`, 1 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def rw3 : RichWitness :=
   { divisorCore := [1, 0, 0, 0, 0, 1]
     chips := [(6, [0, 0, 0, 0, 0, 0, 0, 1, -1], 1)]
     anchors := [
@@ -282,7 +290,9 @@ private def rw3 : RichWitness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def rw4 : RichWitness :=
+/-- Multiple-block leaf data for row 096: core divisor `[1, 0, 0, 0, 0, 1]`, 1 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def rw4 : RichWitness :=
   { divisorCore := [1, 0, 0, 0, 0, 1]
     chips := [(6, [0, 0, 0, 0, 0, 0, 0, 1, -1], 1)]
     anchors := [
@@ -343,7 +353,9 @@ private def rw4 : RichWitness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def rw5 : RichWitness :=
+/-- Multiple-block leaf data for row 096: core divisor `[1, 0, 0, 0, 0, 1]`, 1 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def rw5 : RichWitness :=
   { divisorCore := [1, 0, 0, 0, 0, 1]
     chips := [(6, [0, 0, 0, 0, 0, 0, 0, 1, -1], 1)]
     anchors := [
@@ -404,7 +416,9 @@ private def rw5 : RichWitness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w6 : Witness :=
+/-- Single-block leaf data for row 096: core divisor `[1, 0, 0, 1, 0, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w6 : Witness :=
   { divisorCore := [1, 0, 0, 1, 0, 1]
     chips := []
     anchors := [
@@ -453,7 +467,9 @@ private def w6 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w7 : Witness :=
+/-- Single-block leaf data for row 096: core divisor `[1, 0, 0, 1, 0, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w7 : Witness :=
   { divisorCore := [1, 0, 0, 1, 0, 1]
     chips := []
     anchors := [
@@ -502,7 +518,9 @@ private def w7 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w8 : Witness :=
+/-- Single-block leaf data for row 096: core divisor `[1, 0, 0, 1, 0, 1]`, 0 positioned chip
+terms, and six anchor firing plans with exact entailment receipts. -/
+def w8 : Witness :=
   { divisorCore := [1, 0, 0, 1, 0, 1]
     chips := []
     anchors := [
@@ -559,53 +577,82 @@ in the closed root domain extended by its entry forms; the `use` citations in
 listed alongside the body in `proof.subs` below.
 -/
 
-private def sub0 : PTree :=
+/-- Named chamber leaf using `rw0` for row 096; its entry inequalities occupy position 0 in
+`proof.subs`. -/
+def sub0 : PTree :=
   .richLeaf rw0
 
-private def sub1 : PTree :=
+/-- Named chamber leaf using `w1` for row 096; its entry inequalities occupy position 1 in
+`proof.subs`. -/
+def sub1 : PTree :=
   .leaf w1
 
-private def sub2 : PTree :=
+/-- Named chamber leaf using `rw2` for row 096; its entry inequalities occupy position 2 in
+`proof.subs`. -/
+def sub2 : PTree :=
   .richLeaf rw2
 
-private def sub3 : PTree :=
+/-- Named chamber leaf using `rw3` for row 096; its entry inequalities occupy position 3 in
+`proof.subs`. -/
+def sub3 : PTree :=
   .richLeaf rw3
 
-private def sub4 : PTree :=
+/-- Named chamber leaf using `rw4` for row 096; its entry inequalities occupy position 4 in
+`proof.subs`. -/
+def sub4 : PTree :=
   .richLeaf rw4
 
-private def sub5 : PTree :=
+/-- Named chamber leaf using `rw5` for row 096; its entry inequalities occupy position 5 in
+`proof.subs`. -/
+def sub5 : PTree :=
   .richLeaf rw5
 
-private def sub6 : PTree :=
+/-- Named chamber leaf using `w6` for row 096; its entry inequalities occupy position 6 in
+`proof.subs`. -/
+def sub6 : PTree :=
   .leaf w6
 
-private def sub7 : PTree :=
+/-- Named chamber leaf using `w7` for row 096; its entry inequalities occupy position 7 in
+`proof.subs`. -/
+def sub7 : PTree :=
   .leaf w7
 
-private def sub8 : PTree :=
+/-- Named chamber leaf using `w8` for row 096; its entry inequalities occupy position 8 in
+`proof.subs`. -/
+def sub8 : PTree :=
   .leaf w8
 
-private def sub9 : PTree :=
+/-- Chamber subtree for row 096, first splitting on `length[0] - 2*length[3] - length[7] -
+length[8] ≥ 0`, then citing earlier subtree indices 3, 4, 5. The other branch uses the integer
+complement of the split inequality. -/
+def sub9 : PTree :=
   .split [0, 1, 0, 0, -2, 0, 0, 0, -1, -1]
     (.split [0, -1, 0, 0, 2, 1, 0, 0, 1, 1]
       (.use 4 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(16, 1)], [], 0⟩, ⟨1, [(17, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩])
       (.use 5 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(17, 1)], [], 1⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩]))
     (.use 3 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [(16, 1)], [], 1⟩, ⟨1, [(15, 1)], [], 0⟩])
 
-private def sub10 : PTree :=
+/-- Chamber subtree for row 096, first splitting on `length[0] - 2*length[3] - length[7] -
+length[8] ≥ 0`, then citing earlier subtree indices 6, 7, 8. The other branch uses the integer
+complement of the split inequality. -/
+def sub10 : PTree :=
   .split [0, 1, 0, 0, -2, 0, 0, 0, -1, -1]
     (.split [0, -1, 0, 0, 2, 1, 0, 0, 1, 1]
       (.use 7 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(16, 1)], [], 0⟩, ⟨1, [(17, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩])
       (.use 8 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(17, 1)], [], 1⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩]))
     (.use 6 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [(16, 1)], [], 1⟩, ⟨1, [(15, 1)], [], 0⟩])
 
-private def sub11 : PTree :=
+/-- Chamber subtree for row 096, first splitting on `-1 + length[7] ≥ 0`, then citing earlier
+subtree indices 9, 10. The other branch uses the integer complement of the split inequality. -/
+def sub11 : PTree :=
   .split [-1, 0, 0, 0, 0, 0, 0, 0, 1]
     (.use 9 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩])
     (.use 10 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩])
 
-private def sub12 : PTree :=
+/-- Chamber subtree for row 096, first splitting on `length[0] - length[3] - length[7] - length[8]
+≥ 0`, then citing earlier subtree indices 2, 11. The other branch uses the integer complement
+of the split inequality. -/
+def sub12 : PTree :=
   .split [0, 1, 0, 0, -1, 0, 0, 0, -1, -1]
     (.split [0, 0, 0, 0, 0, -1, 1]
       (.use 11 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩])
@@ -613,7 +660,10 @@ private def sub12 : PTree :=
         (.use 11 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 1⟩])))
     (.use 2 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩])
 
-private def sub13 : PTree :=
+/-- Chamber subtree for row 096, first splitting on `-length[0] + length[3] + length[8] ≥ 0`, then
+citing earlier subtree indices 0, 1, 12. The other branch uses the integer complement of the
+split inequality. -/
+def sub13 : PTree :=
   .split [0, -1, 0, 0, 1, 0, 0, 0, 0, 1]
     (.split [-1, -1, 0, 0, 1, 0, 0, 0, 0, 1]
       (.use 0 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩])

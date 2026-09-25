@@ -32,7 +32,8 @@ open Utilities
 open Utilities Certificate SubdivisionGraph
 open Utilities.Certificate.SubdivisionGraph.Spec
 
-private noncomputable def rankSlipFunction (M : TwiceMarked) (D : CFDiv M.graph) :
+/-- Divisor rank after adding chips at the first mark and removing them at the second, plus one. -/
+noncomputable def rankSlipFunction (M : TwiceMarked) (D : CFDiv M.graph) :
     ℤ → ℤ → ℤ :=
   fun a b => rank M.graph (D + a • oneChip M.u - b • oneChip M.v) + 1
 
