@@ -5,8 +5,7 @@ Authors: Samuel Schlesinger
 -/
 
 module
-public import
-  LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.Instruction.DenseDirect
+public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.Instruction.DenseDirect
 
 /-!
 # Dense-overlay indirect store

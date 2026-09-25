@@ -433,7 +433,8 @@ private theorem sndBlockTM_scan_loop :
             rfl, ?_⟩
           rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
               = c1.output from by
-                rw [writeAndMove_readBack c1.output houtne1, idleDir, ite_eq_right houtne1, Tape.move]]
+                rw [writeAndMove_readBack c1.output houtne1, idleDir,
+                  ite_eq_right houtne1, Tape.move]]
           have : sndBlock (true :: false :: rest) = [] := by simp [sndBlock, unpair?]
           rw [this]; simpa using! hpre1.hasOutput
 

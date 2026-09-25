@@ -49,7 +49,8 @@ theorem idleDir_right_of_start {head : Γ} (h : head = Γ.start) : idleDir head 
 
 /-- If the head reads `▷`, then `moveLeftDir` moves right — the shape of the
     `δ_right_of_start` obligation for tapes being rewound. -/
-theorem moveLeftDir_right_of_start {head : Γ} (h : head = Γ.start) : moveLeftDir head = Dir3.right :=
+theorem moveLeftDir_right_of_start {head : Γ}
+    (h : head = Γ.start) : moveLeftDir head = Dir3.right :=
   by subst h; rfl
 
 /-- Write back the same symbol read from a tape, preserving cell contents.

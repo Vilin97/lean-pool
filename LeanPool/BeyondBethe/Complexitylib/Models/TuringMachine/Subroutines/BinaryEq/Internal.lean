@@ -181,10 +181,12 @@ private theorem binaryEq_terminal_reachesIn {n : ℕ}
   · rw [hdecision]
     cases result with
     | false =>
-        simpa [Γ.ofBool, transitionTape, Γw.toΓ, c', binaryEqResultCfg, binaryEqResultWork, Γw.ofBool] using
+        simpa [Γ.ofBool, transitionTape, Γw.toΓ, c', binaryEqResultCfg,
+          binaryEqResultWork, Γw.ofBool] using
           Tape.hasBinaryPrefix_write_bit false hresult
     | true =>
-        simpa [Γ.ofBool, transitionTape, Γw.toΓ, c', binaryEqResultCfg, binaryEqResultWork, Γw.ofBool] using
+        simpa [Γ.ofBool, transitionTape, Γw.toΓ, c', binaryEqResultCfg,
+          binaryEqResultWork, Γw.ofBool] using
           Tape.hasBinaryPrefix_write_bit true hresult
   · change (Function.update work₀ resultIdx _ lhsIdx).cells = _
     rw [Function.update_of_ne hdistinct.lhs_result]

@@ -96,7 +96,8 @@ def machineUnaryGridGeneratorPayload (state : List Bool) : List Bool :=
 @[simp] theorem machineUnaryGridGeneratorAccumulator_pack
     (row column accumulator bound done payload : List Bool) :
     machineUnaryGridGeneratorAccumulator
-        (machineUnaryGridGeneratorPack row column accumulator bound done payload) = accumulator := by
+        (machineUnaryGridGeneratorPack row column accumulator bound done payload) =
+        accumulator := by
   simp [machineUnaryGridGeneratorAccumulator, machineUnaryGridGeneratorPack]
 
 @[simp] theorem machineUnaryGridGeneratorBound_pack

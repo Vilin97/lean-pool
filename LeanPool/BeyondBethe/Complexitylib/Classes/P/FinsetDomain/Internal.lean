@@ -251,7 +251,8 @@ private theorem lookup_read_bit_step (p : List Bool) (b : Bool)
   · have hp' : p ++ [b] ∉ S.prefixes := fun h =>
       hp (Finset.mem_prefixes_of_prefix (List.prefix_append p [b]) h)
     cases b <;>
-      simp [TM.step, lookupTM, hstate, hread, readState, haltState, dite_eq_right hp, dite_eq_right hp',
+      simp [TM.step, lookupTM, hstate, hread, readState, haltState, dite_eq_right hp,
+        dite_eq_right hp',
         Γ.ofBool]
 
 /-- Writing back the (blank) symbol under an idle output head keeps the output

@@ -467,7 +467,8 @@ theorem anariRezaeiPhiThree_le_boundary
     have hx' : s < x ∧ x < 11/25 := by simpa using hx
     have hx0 : 0 < x := lt_of_le_of_lt (hq0.trans hqs) hx'.1
     have hx1 : x < 1 := hx'.2.trans (by norm_num)
-    exact (hasDerivAt_anariRezaeiPhiThree_right hq1 hx0 hx1 hq0).differentiableAt.differentiableWithinAt
+    exact (hasDerivAt_anariRezaeiPhiThree_right hq1 hx0 hx1
+      hq0).differentiableAt.differentiableWithinAt
   have hmono : MonotoneOn (anariRezaeiPhiThree q)
       (Set.Icc s (11/25)) :=
     monotoneOn_of_deriv_nonneg (convex_Icc s (11/25)) hcont hdiff fun x hx => by

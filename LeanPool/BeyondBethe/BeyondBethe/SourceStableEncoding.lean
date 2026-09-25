@@ -326,13 +326,16 @@ theorem pairTableComplexEval_eq_boolDoubleSum :
       change pairTableComplexEval (n + 1) c y z =
         y 0 * z 0 *
               (∑ S, ∑ T, (pairTableSection c true true S T : ℂ) *
-                complexBoolMonomial (fun i ↦ y i.succ) S * complexBoolMonomial (fun i ↦ z i.succ) T) +
+                complexBoolMonomial (fun i ↦ y i.succ) S *
+                  complexBoolMonomial (fun i ↦ z i.succ) T) +
           z 0 *
               (∑ S, ∑ T, (pairTableSection c false true S T : ℂ) *
-                complexBoolMonomial (fun i ↦ y i.succ) S * complexBoolMonomial (fun i ↦ z i.succ) T) +
+                complexBoolMonomial (fun i ↦ y i.succ) S *
+                  complexBoolMonomial (fun i ↦ z i.succ) T) +
         (y 0 *
               (∑ S, ∑ T, (pairTableSection c true false S T : ℂ) *
-                complexBoolMonomial (fun i ↦ y i.succ) S * complexBoolMonomial (fun i ↦ z i.succ) T) +
+                complexBoolMonomial (fun i ↦ y i.succ) S *
+                  complexBoolMonomial (fun i ↦ z i.succ) T) +
           (∑ S, ∑ T, (pairTableSection c false false S T : ℂ) *
             complexBoolMonomial (fun i ↦ y i.succ) S * complexBoolMonomial (fun i ↦ z i.succ) T))
       rw [← ih (pairTableSection c true true) (fun i ↦ y i.succ) (fun i ↦ z i.succ),

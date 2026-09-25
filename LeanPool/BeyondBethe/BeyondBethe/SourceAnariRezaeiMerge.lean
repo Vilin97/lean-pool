@@ -166,7 +166,8 @@ theorem anariRezaeiMergePsi_nonpos_ordered
   have hClt : C < 1 := hC.trans_lt (by norm_num)
   have hcont : ContinuousOn (anariRezaeiMergePsiAlong C) (Set.Icc 0 r) := by
     intro x hx
-    exact (hasDerivAt_anariRezaeiMergePsiAlong hx.1 (hx.2.trans hrC) hClt).continuousAt.continuousWithinAt
+    exact (hasDerivAt_anariRezaeiMergePsiAlong hx.1 (hx.2.trans hrC)
+      hClt).continuousAt.continuousWithinAt
   have hdiff : DifferentiableOn ℝ (anariRezaeiMergePsiAlong C)
       (interior (Set.Icc 0 r)) := by
     intro x hx
@@ -373,7 +374,8 @@ theorem anariRezaeiMergeGap_le_stationary
       intro x hx
       have hx' : q < x ∧ x < anariRezaeiMergeQStar r s := by simpa using hx
       exact (hasDerivAt_anariRezaeiMergeGapAlong hr hs
-        (hq0.trans hx'.1.le) (by linarith [hcapStar, hx'.2.le])).differentiableAt.differentiableWithinAt
+        (hq0.trans hx'.1.le)
+        (by linarith [hcapStar, hx'.2.le])).differentiableAt.differentiableWithinAt
     have hmono := monotoneOn_of_deriv_nonneg
       (convex_Icc q (anariRezaeiMergeQStar r s)) hcont hdiff fun x hx ↦ by
         have hx' : q < x ∧ x < anariRezaeiMergeQStar r s := by simpa using hx
@@ -392,7 +394,8 @@ theorem anariRezaeiMergeGap_le_stationary
       intro x hx
       have hx' : anariRezaeiMergeQStar r s < x ∧ x < q := by simpa using hx
       exact (hasDerivAt_anariRezaeiMergeGapAlong hr hs
-        (hqstar0.trans hx'.1.le) (by linarith [ht0, hx'.2.le])).differentiableAt.differentiableWithinAt
+        (hqstar0.trans hx'.1.le)
+        (by linarith [ht0, hx'.2.le])).differentiableAt.differentiableWithinAt
     have hanti := antitoneOn_of_deriv_nonpos
       (convex_Icc (anariRezaeiMergeQStar r s) q) hcont hdiff fun x hx ↦ by
         have hx' : anariRezaeiMergeQStar r s < x ∧ x < q := by simpa using hx

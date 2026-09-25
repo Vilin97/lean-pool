@@ -69,7 +69,8 @@ private theorem pairInputWorkTM_first_loop {n : ℕ} (firstIdx : Fin n) :
       have hotherKeep₁ (i) (hi : i ≠ firstIdx) : c₁.work i = c.work i := by
         simpa [c₁] using transitionTape_eq_self (hother i hi)
       have houtput₁ : c₁.output.HasBinaryPrefix (emitted ++ [false]) := by
-        simpa [Γ.ofBool, transitionTape, Γw.toΓ, c₁] using Tape.hasBinaryPrefix_write_bit false houtput
+        simpa [Γ.ofBool, transitionTape, Γw.toΓ, c₁] using
+          Tape.hasBinaryPrefix_write_bit false houtput
       let c₂ : Cfg n (pairInputWorkTM firstIdx).Q :=
         { state := PairInputWorkPhase.second
           input := transitionInput c₁.input
@@ -165,7 +166,8 @@ private theorem pairInputWorkTM_first_loop {n : ℕ} (firstIdx : Fin n) :
               exact hother i hi)
           houtput₂
       refine ⟨c', ?_, hstate', ?_, hsource', ?_, ?_, ?_⟩
-      · simpa [Nat.mul_add, Nat.add_assoc] using! TM.reachesIn.step hstep₁ (TM.reachesIn.step hstep₂ hreach)
+      · simpa [Nat.mul_add, Nat.add_assoc] using!
+          TM.reachesIn.step hstep₁ (TM.reachesIn.step hstep₂ hreach)
       · exact hinput'.trans hinputKeep₂
       · rw [hsourceCells', hsourceMove, Tape.move_cells]
       · intro i hi

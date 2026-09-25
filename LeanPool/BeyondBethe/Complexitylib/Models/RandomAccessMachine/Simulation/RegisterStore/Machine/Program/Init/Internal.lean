@@ -5,8 +5,7 @@ Authors: Samuel Schlesinger
 -/
 
 module
-public import
-  LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.Program.Init.Defs
+public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.Program.Init.Defs
 public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryEncode
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators.WorkBranch
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.BinaryCopy
@@ -965,7 +964,8 @@ theorem initialOneBitTM_hoareTime_internal
   · omega
   · change (initialOneBitTM tapes).halted finalCfg
     unfold initialOneBitTM
-    exact (TM.phase2Wrap_halted_iff (rewindEntryEncodeRestoreTM (initialBitEntryTapes tapes)).retargetOutput
+    exact (TM.phase2Wrap_halted_iff
+      (rewindEntryEncodeRestoreTM (initialBitEntryTapes tapes)).retargetOutput
     (TM.seqTM (TM.binarySuccTM tapes.lifted.data.update.remaining)
       (TM.binarySuccTM tapes.liftedLhs)) tailFinal).mpr htailHalt
   · refine ⟨?_, ?_, ?_⟩

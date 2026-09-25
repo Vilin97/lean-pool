@@ -670,7 +670,8 @@ private theorem inputLengthPlusOneCounterTM_start_step
   · have hcounter_read : (work counterIdx).read = Γ.start := by
       rw [hcounter]
       simp [Tape.read, Tape.init]
-    simpa [idleDir, Tape.read, Tape.init, counterPreserveWork, counterIdleDirs, hcounter, hcounter_read,
+    simpa [idleDir, Tape.read, Tape.init, counterPreserveWork, counterIdleDirs,
+      hcounter, hcounter_read,
       Tape.writeAndMove, Tape.write] using
       Tape.init_nil_move_right_hasUnaryPrefix_zero
   · simp [counterIdleDirs, hcounter, Tape.writeAndMove, Tape.move_cells,

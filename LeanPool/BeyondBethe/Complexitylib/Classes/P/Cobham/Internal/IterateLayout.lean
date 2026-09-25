@@ -444,14 +444,17 @@ theorem iterFinish_hoareTime (M : TM k) (H : ℕ)
   have hW₀vin : W₀ vinIdx = parkedBlank := by
     rw [hW₀]
     dsimp only
-    rw [ite_eq_right (fun h => resIdx_ne_vinIdx h.symm), ite_eq_right (fun h => rfIdx_ne_appIdx _ h.symm),
-      ite_eq_right (fun h => junkIdx_ne_appIdx _ h.symm), ite_eq_right (fun h => wfIdx_ne_appIdx _ h.symm)]
+    rw [ite_eq_right (fun h => resIdx_ne_vinIdx h.symm),
+      ite_eq_right (fun h => rfIdx_ne_appIdx _ h.symm),
+      ite_eq_right (fun h => junkIdx_ne_appIdx _ h.symm),
+      ite_eq_right (fun h => wfIdx_ne_appIdx _ h.symm)]
   have hW₀app : ∀ j : Fin (k + 2), appIdx j ≠ resIdx → W₀ (appIdx j) = parkedBlank := by
     intro j hj
     rw [hW₀]
     dsimp only
     rw [ite_eq_right hj, ite_eq_right (fun h => rfIdx_ne_appIdx _ h.symm),
-      ite_eq_right (fun h => junkIdx_ne_appIdx _ h.symm), ite_eq_right (fun h => wfIdx_ne_appIdx _ h.symm)]
+      ite_eq_right (fun h => junkIdx_ne_appIdx _ h.symm),
+      ite_eq_right (fun h => wfIdx_ne_appIdx _ h.symm)]
   have hW₀rf : W₀ rfIdx = rfT := by
     rw [hW₀]
     dsimp only

@@ -1954,7 +1954,8 @@ theorem copyWorkToWorkTM_hoareTime_frame_of_binaryString {n : ℕ}
       have hother_keep : ∀ i, i ≠ src → i ≠ dst → c1.work i = work i := by
         intro i hi_src hi_dst
         simpa [c1, hi_src, hi_dst, hw_c i hi_src hi_dst] using
-          copyWorkToWork_idleTape (work i) (hother_wf i hi_src hi_dst).1 (hother_wf i hi_src hi_dst).2
+          copyWorkToWork_idleTape (work i) (hother_wf i hi_src hi_dst).1
+            (hother_wf i hi_src hi_dst).2
       have hsrc_keep : c1.work src = c.work src := by
         have hsrc_ne : (c.work src).read ≠ Γ.start := by
           rw [hsrc_read]
