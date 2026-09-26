@@ -114,11 +114,12 @@ private theorem controlCopy_entryScannerReady
         exact hcontrolResult.ready.lookup.scanner.resultStart
       parked := hfinalParked
       frame := by intro i _ _ _ _ _ _ _ _ _; rfl }
-  change (finalWork source).HasBinarySuffix []
-  refine ⟨by omega, ?_, ?_, ?_⟩
+  change (finalWork tapes.liftedSource).HasBinarySuffix []
+  refine ⟨by rw [hsourceFinalHead]; omega, ?_, ?_, ?_⟩
   · intro i hi
     simp at hi
-  · simpa [hsourceFinalHead, Nat.add_comm] using! hsourceFinalOutput.2
+  · rw [hsourceFinalHead]
+    simpa only [List.length_nil, Nat.add_zero, Nat.add_comm] using hsourceFinalOutput.2
   · intro j hj
     rw [hsourceCells]
     exact hsourceSuffix.2.2.2 j hj
