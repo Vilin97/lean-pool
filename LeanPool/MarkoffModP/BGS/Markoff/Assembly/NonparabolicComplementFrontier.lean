@@ -191,7 +191,7 @@ theorem
       (p : ℝ) ^ (5 / 6 : ℝ) ≤
           maximalCoordinateRotationOrder z.1 →
       SameNormalizedComponent
-        (normalizedPuncturedPointNonparabolicComplement c) z)
+        (normalizedSurfaceOfPunctured (puncturedNormalizationEquiv (ZMod p) c)) z)
     (hsign : ∀ (s : EvenSign)
         (x : PuncturedMarkoffSurface (ZMod p)),
       s • x ∈ puncturedComponentComplementFinset p c ↔
