@@ -360,10 +360,6 @@ theorem exists_removed_of_unfold_fold {n : ℕ}
             (show V from b) (unfoldEdgeColor M.labeling e₀))) n :=
       foldedMarkedGraphSymm
         (unfoldedMarkedGraphNew M e₀ ha) e₁ ha₁ q₁ hq₁
-    let hab : unfoldNew (allArrowSource e₀) ≠
-        unfoldVertexAt M.labeling (allArrowSource e₀) e₀
-          (show V from b) (unfoldEdgeColor M.labeling e₀) :=
-      unfoldNew_ne_vertexAt_of_ne_source M.labeling e₀ hb
     let holdb : unfoldOld (allArrowSource e₀) ≠
         unfoldVertexAt M.labeling (allArrowSource e₀) e₀
           (show V from b) (unfoldEdgeColor M.labeling e₀) :=
@@ -380,29 +376,6 @@ theorem exists_removed_of_unfold_fold {n : ℕ}
       intro e he
       dsimp [N]
       exact foldedUnfoldOld_incident_color M e₀ ha hb e₁ e he
-    let hfreeU : ∀ e : @AllArrow (UnfoldVertex (allArrowSource e₀))
-        (unfoldQuiver M.labeling e₀), allArrowReverse e ≠ e :=
-      unfold_allArrow_reverse_ne M.labeling e₀ hfree
-    let _hfreeN : ReverseFree (V :=
-        foldVertex (unfoldNew (allArrowSource e₀))
-          (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
-            (show V from b) (unfoldEdgeColor M.labeling e₀))) :=
-      fold_allArrow_reverse_ne e₁ hfreeU
-    let hEulerU :
-        Fintype.card (@AllArrow (UnfoldVertex (allArrowSource e₀))
-          (unfoldQuiver M.labeling e₀)) ≤
-          2 * (n + Fintype.card (UnfoldVertex (allArrowSource e₀)) - 1) :=
-      unfold_euler_bound M.labeling e₀ hEuler
-    let _hEulerN :
-        Fintype.card (@AllArrow
-          (foldVertex (unfoldNew (allArrowSource e₀))
-            (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
-              (show V from b) (unfoldEdgeColor M.labeling e₀)))
-          (foldQuiver e₁)) ≤
-          2 * (n + Fintype.card (foldVertex (unfoldNew (allArrowSource e₀))
-            (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
-              (show V from b) (unfoldEdgeColor M.labeling e₀)) ) - 1) :=
-      foldAllArrow_card_le_euler e₁ hab hfreeU hEulerU
     ∀ (_hgen₁ :
       @MarkedBinaryGraph.IsGenerating n G H
         (foldVertex (unfoldNew (allArrowSource e₀))
