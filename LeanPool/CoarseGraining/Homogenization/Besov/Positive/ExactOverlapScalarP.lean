@@ -53,7 +53,7 @@ noncomputable def exactOverlapScalarPParameters (s : FractionalOrder)
   s := s.1
   p := p.exponent.toReal
   q := p.exponent.toReal
-  admissible := ⟨s.2.1, s.2.2, p.one_le_toReal, p.one_le_toReal⟩
+  admissible := by exact ⟨s.2.1, s.2.2, p.one_le_toReal, p.one_le_toReal⟩
 
 private theorem exactOverlapScalarPIntegrableOfMemLp {d : ℕ} (Q : TriadicCube d)
     (p : FiniteLpExponent) {u : Vec d → ℝ}
@@ -100,7 +100,8 @@ private theorem exactOverlapLocalOscillation_p_eq_ofReal {d : ℕ}
     hmem.sub (memLp_const (exactOverlapLocalMean S u hu))
   rw [exactOverlapLocalOscillation_eq, ← ENNReal.ofReal_toReal hsub.eLpNorm_ne_top]
   unfold cubeBesovOverlapOscillation ScalarOverlap.cubeLpNorm
-  rw [hmean]
+  rw [hmean] at hsub ⊢
+  rw [Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _ hsub.aestronglyMeasurable]
 
 private theorem exactOverlapDepthAverage_p_eq_ofReal {d : ℕ}
     (Q : TriadicCube d) (p : FiniteLpExponent) (u : Vec d → ℝ)

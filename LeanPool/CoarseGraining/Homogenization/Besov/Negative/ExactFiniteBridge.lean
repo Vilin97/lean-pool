@@ -158,7 +158,8 @@ theorem exactOverlapLocalOscillation_eq_ofReal_cubeBesovOverlapOscillation
     hmem.sub (MeasureTheory.memLp_const (exactOverlapLocalMean S u hu))
   rw [exactOverlapLocalOscillation_eq, ← ENNReal.ofReal_toReal hsub.eLpNorm_ne_top]
   unfold cubeBesovOverlapOscillation ScalarOverlap.cubeLpNorm
-  rw [exactOverlapLocalMean_eq_scalarOverlapCubeAverage]
+  rw [exactOverlapLocalMean_eq_scalarOverlapCubeAverage] at hsub ⊢
+  rw [Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _ hsub.aestronglyMeasurable]
 
 /-- At a finite source exponent, the certified exact overlap depth average is
 the `ENNReal` embedding of the legacy finite overlap average. -/

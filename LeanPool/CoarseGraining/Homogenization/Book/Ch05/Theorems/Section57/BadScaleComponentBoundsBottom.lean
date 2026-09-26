@@ -410,36 +410,9 @@ theorem measureReal_shiftedHighBottomPairEvent_quenchedProbeEnvelope_le_weighted
         P.real (highBottomPairEvent Hshift K a t αbad q m n) ≤
           ((S.card : ℝ) * w ^ q) *
             (w ^ r * Real.exp (-((A * ρ ^ r) ^ τ))) := by
-  intro t αbad P hP hStruct hΓ hσ_eq hparams q r j
-  dsimp only
-  intro ht_pos hαt hαb hαharm hA_one
+  intro t αbad P hP hStruct hΓ hσ_eq hparams q r j K N0 Hshift S b L c τ w A ρ m n
+    ht_pos hαt hαb hαharm hA_one
   let : IsProbabilityMeasure P := hP.isProbability
-  let K : ℝ := quenchedProbeEnvelopeConst d
-  let N0 : ℕ :=
-    annealedAlgebraicEntryScale P
-      hΓ.toQuantitativeCoarseGrainedEllipticity Centry
-  let Hshift : ℕ → ℕ → RegCoeffField d → ℝ :=
-    fun M N aω =>
-      quenchedProbeEnvelope hP hStruct (N0 + M) (N0 + N) aω
-  let S : Finset (NormalizedProbeIndex d) := Finset.univ
-  let b : ℝ := (d : ℝ) / 2
-  let L : ℝ :=
-    (a * Real.log 3)⁻¹ * Real.log (max (2 * K) 1)
-  let c : ℝ :=
-    min t
-      (min b
-        (min (t - αbad)
-          (min (b - αbad)
-            (min ((t - αbad) * (1 + b / a))
-              (b - αbad * (1 + b / a))))))
-  let τ : ℝ := min σ 2
-  let w : ℝ := ((3 ^ d : ℕ) : ℝ)
-  let A : ℝ :=
-    (3 : ℝ) ^ (c * (q : ℝ) - b * (L + 1)) /
-      (2 * K * Cfluct * hΓ.thetaHat ^ (2 : ℕ))
-  let ρ : ℝ := (3 : ℝ) ^ c
-  let m : ℕ := q + r
-  let n : ℕ := q - j.val
   let x : ℝ :=
     αbad * ((m - q : ℕ) : ℝ) - t * ((m - n : ℕ) : ℝ)
   let ℓ : ℕ :=

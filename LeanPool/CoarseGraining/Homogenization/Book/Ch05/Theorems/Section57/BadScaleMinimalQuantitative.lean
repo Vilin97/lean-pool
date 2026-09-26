@@ -129,36 +129,9 @@ theorem exists_quantitative_shifted_quenchedLocalizedEstimate_interpolated
       (d := d) (σ := σ) hσ_pos params
   refine ⟨Cfluct, Ccrude, Centry, a,
     hCfluct, hCcrude, hCentry, ha, ?_⟩
-  intro t αbad
-  dsimp only
-  intro ht htb hα_nonneg hαt hαb hαharm hαa
+  intro t αbad K S b L ctop τ η w ρtop ρbottom ρcrude Cbottom Ctop Kbottom Kcrude
+    W M ρgap C₀ ht htb hα_nonneg hαt hαb hαharm hαa
   classical
-  let K : ℝ := quenchedProbeEnvelopeConst d
-  let S : Finset (NormalizedProbeIndex d) := Finset.univ
-  let b : ℝ := (d : ℝ) / 2
-  let L : ℝ := (a * Real.log 3)⁻¹ * Real.log (max (2 * K) 1)
-  let ctop : ℝ :=
-    min (t - αbad)
-      (min (b - αbad)
-        (min ((t - αbad) * (1 + b / a))
-          (b - αbad * (1 + b / a))))
-  let τ : ℝ := finiteQuenchedTailTau σ
-  let η : ℝ := finiteQuenchedTailExponent d σ t
-  let w : ℝ := ((3 ^ d : ℕ) : ℝ)
-  let ρtop : ℝ := (3 : ℝ) ^ ctop
-  let ρbottom : ℝ := (3 : ℝ) ^ (τ * (t - αbad) / η)
-  let ρcrude : ℝ := (3 : ℝ) ^ (t - αbad)
-  let Cbottom : ℝ := Real.exp 1 * max 1 (S.card : ℝ)
-  let Ctop : ℝ :=
-    (S.card : ℝ) * weightedLinearExpKernelConst w (ρtop ^ τ)
-  let Kbottom : ℝ := weightedGeometricExpKernelConst w (ρbottom ^ η)
-  let Kcrude : ℝ := weightedGeometricExpKernelConst w (ρcrude ^ σ)
-  let W : ℝ := max 1 w
-  let M : ℝ :=
-    max 1 (max 0 Ctop + max 0 (Cbottom * Kbottom) +
-      max 0 ((S.card : ℝ) * Kcrude))
-  let ρgap : ℝ := (3 : ℝ) ^ η
-  let C₀ : ℝ := 2 + Real.log W
   obtain ⟨R, hR, hbadR⟩ :=
     hbad (t := t) (αbad := αbad)
       ht htb hα_nonneg hαt hαb hαharm hαa

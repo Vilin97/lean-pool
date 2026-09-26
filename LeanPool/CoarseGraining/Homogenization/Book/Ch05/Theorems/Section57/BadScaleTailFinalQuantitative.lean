@@ -319,36 +319,9 @@ theorem exists_quantitative_threshold_shiftedBadScaleEvent_quenchedProbeEnvelope
   obtain ⟨Cfluct, Ccrude, hCfluct, hCcrude, htail⟩ :=
     htailBase hσ_pos
   refine ⟨Cfluct, Ccrude, hCfluct, hCcrude, ?_⟩
-  intro t αbad
-  dsimp only
-  intro ht htb hα_nonneg hαt hαb hαharm hαa
+  intro t αbad K S b L ctop τ η w ρtop ρbottom ρcrude Cbottom Ctop Kbottom Kcrude
+    W M ρgap C₀ ht htb hα_nonneg hαt hαb hαharm hαa
   classical
-  let K : ℝ := quenchedProbeEnvelopeConst d
-  let S : Finset (NormalizedProbeIndex d) := Finset.univ
-  let b : ℝ := (d : ℝ) / 2
-  let L : ℝ := (a * Real.log 3)⁻¹ * Real.log (max (2 * K) 1)
-  let ctop : ℝ :=
-    min (t - αbad)
-      (min (b - αbad)
-        (min ((t - αbad) * (1 + b / a))
-          (b - αbad * (1 + b / a))))
-  let τ : ℝ := finiteQuenchedTailTau σ
-  let η : ℝ := finiteQuenchedTailExponent d σ t
-  let w : ℝ := ((3 ^ d : ℕ) : ℝ)
-  let ρtop : ℝ := (3 : ℝ) ^ ctop
-  let ρbottom : ℝ := (3 : ℝ) ^ (τ * (t - αbad) / η)
-  let ρcrude : ℝ := (3 : ℝ) ^ (t - αbad)
-  let Cbottom : ℝ := Real.exp 1 * max 1 (S.card : ℝ)
-  let Ctop : ℝ :=
-    (S.card : ℝ) * weightedLinearExpKernelConst w (ρtop ^ τ)
-  let Kbottom : ℝ := weightedGeometricExpKernelConst w (ρbottom ^ η)
-  let Kcrude : ℝ := weightedGeometricExpKernelConst w (ρcrude ^ σ)
-  let W : ℝ := max 1 w
-  let M : ℝ :=
-    max 1 (max 0 Ctop + max 0 (Cbottom * Kbottom) +
-      max 0 ((S.card : ℝ) * Kcrude))
-  let ρgap : ℝ := (3 : ℝ) ^ η
-  let C₀ : ℝ := 2 + Real.log W
   have hη_pos : 0 < η := by
     simpa [η] using finiteQuenchedTailExponent_pos
       (d := d) (σ := σ) (t := t) hσ_pos ht
@@ -362,29 +335,8 @@ theorem exists_quantitative_threshold_shiftedBadScaleEvent_quenchedProbeEnvelope
       (w := w) (η := η) hη_pos hw_nonneg
   refine ⟨R, ?_, ?_⟩
   · simpa [ρgap, W, C₀, w, η] using hR
-  intro P hP hStruct hΓ hσ_eq hparams
-  let N0 : ℕ :=
-    annealedAlgebraicEntryScale P
-      hΓ.toQuantitativeCoarseGrainedEllipticity Centry
-  let Hshift : ℕ → ℕ → RegCoeffField d → ℝ :=
-    fun M N aω =>
-      quenchedProbeEnvelope hP hStruct (N0 + M) (N0 + N) aω
-  let Dhigh : ℝ := 2 * K * Cfluct * hΓ.thetaHat ^ (2 : ℕ)
-  let Dcrude : ℝ := K * Ccrude * hΓ.thetaHat ^ (2 : ℕ)
-  let Den : ℝ := mixedBottomTailDenominator Dhigh Dcrude η τ σ
-  let Ohigh : ℝ := (τ * b * (L + 1)) / η
-  let Ocrude : ℝ := (σ * t * (L + 1)) / η
-  let Blead : ℝ :=
-    max (Den * (3 : ℝ) ^ Ohigh) (Den * (3 : ℝ) ^ Ocrude)
-  let Btail : ℝ := 2 * Blead
-  let cgap : ℝ := Blead ^ (-η) - Btail ^ (-η)
-  let Qpref : ℕ :=
-    max (Nat.ceil (max 0 (Real.log M)))
-      (max R (Nat.ceil ((2 * max 0 (-(Real.log cgap))) / Real.log ρgap)))
-  let Qlead : ℕ := Nat.ceil (Real.log Blead / Real.log 3)
-  let Qcut : ℕ := Nat.ceil ((L + 1) / (1 - αbad / a) + 1)
-  let Q : ℕ := max Qpref (max Qlead Qcut)
-  intro q hQq
+  intro P hP hStruct hΓ hσ_eq hparams N0 Hshift Dhigh Dcrude Den Ohigh Ocrude
+    Blead Btail cgap Qpref Qlead Qcut Q q hQq
   have hDen_pos : 0 < Den := by
     simpa [Den] using
       mixedBottomTailDenominator_pos

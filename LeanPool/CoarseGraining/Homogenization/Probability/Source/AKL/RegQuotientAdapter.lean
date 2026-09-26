@@ -44,6 +44,8 @@ def regularGlobalSigma (d : ℕ) (Θ : ℝ) : MeasurableSpace (RegularAKLCarrier
 
 private theorem aestronglyMeasurable_regularField {d : ℕ} (a : RegCoeffField d) :
     AEStronglyMeasurable (fun x : Vec d => a x) volume := by
+  letI : TopologicalSpace.PseudoMetrizableSpace (Mat d) :=
+    inferInstanceAs (TopologicalSpace.PseudoMetrizableSpace (Fin d → Fin d → ℝ))
   have hmeas : @Measurable (Vec d) (Mat d) _ _ (fun x => a x) :=
     measurable_matrix_of_entries (fun i j => a.entry_measurable i j)
   exact hmeas.aestronglyMeasurable
@@ -63,7 +65,7 @@ private theorem ae_elliptic_aeeqFun_mk {d : ℕ} {Θ : ℝ}
 class. -/
 def regularToAKL {d : ℕ} {Θ : ℝ} : RegularAKLCarrier d Θ → Carrier d Θ :=
   fun a => ⟨AEEqFun.mk (fun x : Vec d => a.1 x)
-    (aestronglyMeasurable_regularField a.1), ae_elliptic_aeeqFun_mk a⟩
+    (by exact aestronglyMeasurable_regularField a.1), by exact ae_elliptic_aeeqFun_mk a⟩
 
 /-- The quotient realization agrees almost everywhere with the regular field. -/
 theorem regularToAKL_ae_eq {d : ℕ} {Θ : ℝ} (a : RegularAKLCarrier d Θ) :

@@ -484,6 +484,13 @@ private theorem exists_sigmaTailScaleConstant
             simp [Ctail]
             ring
 
+/-- A quarter-sized improvement from an initial bound of three reaches the target accuracy. -/
+private theorem quarter_step_le_one_add_of_le_three
+    {x y sigma : ℝ} (hstep : x ≤ 1 + (sigma / 4) * y)
+    (hy : y ≤ 3) (hsigma : 0 ≤ sigma) : x ≤ 1 + sigma := by
+  have hmul := mul_le_mul_of_nonneg_left hy (by positivity : 0 ≤ sigma / 4)
+  nlinarith only [hstep, hmul, hsigma]
+
 /-- Proposition `p.annealed.convergence.homogenization.scale`.
 
 The constant is chosen from the parameter record before the law and the target
@@ -684,34 +691,8 @@ theorem annealedPerturbativeEntry_homogenizationScale
         (by
           simpa [W, hdiff_tail] using htail_gap_real)
   have hfinal :
-      thetaAtScale hP hStruct (N : ℤ) ≤ 1 + sigma := by
-    calc
-      thetaAtScale hP hStruct (N : ℤ)
-          ≤ 1 + (sigma / 4) * thetaAtScale hP hStruct (Nentry : ℤ) :=
-            hfinal_step
-      _ ≤ 1 + (sigma / 4) * 3 := by
-            have hmul :=
-              mul_le_mul_of_nonneg_left hentry_theta_le_three
-                (by positivity : 0 ≤ sigma / 4)
-            calc
-              1 + (sigma / 4) * thetaAtScale hP hStruct (Nentry : ℤ) =
-                  (sigma / 4) * thetaAtScale hP hStruct (Nentry : ℤ) + 1 := by ring
-              _ ≤ (sigma / 4) * 3 + 1 := add_le_add_left hmul 1
-              _ = 1 + (sigma / 4) * 3 := by ring
-      _ ≤ 1 + sigma := by
-            have hsigma_nonneg : 0 ≤ sigma := hsigma_pos.le
-            have hmul :
-                sigma / 4 * 3 ≤ sigma := by
-              calc
-                sigma / 4 * 3 = (3 / 4 : ℝ) * sigma := by ring
-                _ ≤ 1 * sigma :=
-                  mul_le_mul_of_nonneg_right (by norm_num : (3 / 4 : ℝ) ≤ 1)
-                    hsigma_nonneg
-                _ = sigma := by ring
-            calc
-              1 + sigma / 4 * 3 = sigma / 4 * 3 + 1 := by ring
-              _ ≤ sigma + 1 := add_le_add_left hmul 1
-              _ = 1 + sigma := by ring
+      thetaAtScale hP hStruct (N : ℤ) ≤ 1 + sigma :=
+    quarter_step_le_one_add_of_le_three hfinal_step hentry_theta_le_three hsigma_pos.le
   simpa [N] using hfinal
 
 end

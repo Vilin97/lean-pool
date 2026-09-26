@@ -235,35 +235,12 @@ theorem measureReal_shiftedHighTopBadScaleEvent_quenchedProbeEnvelope_le_interpo
         P.real (highTopBadScaleEvent Hshift K a t αbad q) ≤
           (S.card : ℝ) *
             (Real.exp (-(A ^ η)) * weightedLinearExpKernelConst w (ρ ^ τ)) := by
-  intro t αbad Den P hP hStruct hΓ hσ_eq hparams q
-  dsimp only
-  intro ht htb hαt hαb hαharm hDen hDen_high hA_one
+  intro t αbad Den P hP hStruct hΓ hσ_eq hparams q K N0 Hshift S b L c τ η w Dhigh A ρ
+    ht htb hαt hαb hαharm hDen hDen_high hA_one
   classical
   let : IsProbabilityMeasure P := hP.isProbability
-  let K : ℝ := quenchedProbeEnvelopeConst d
-  let N0 : ℕ :=
-    annealedAlgebraicEntryScale P
-      hΓ.toQuantitativeCoarseGrainedEllipticity Centry
-  let Hshift : ℕ → ℕ → RegCoeffField d → ℝ :=
-    fun M N aω =>
-      quenchedProbeEnvelope hP hStruct (N0 + M) (N0 + N) aω
-  let S : Finset (NormalizedProbeIndex d) := Finset.univ
-  let b : ℝ := (d : ℝ) / 2
-  let L : ℝ := (a * Real.log 3)⁻¹ * Real.log (max (2 * K) 1)
-  let c : ℝ :=
-    min (t - αbad)
-      (min (b - αbad)
-        (min ((t - αbad) * (1 + b / a))
-          (b - αbad * (1 + b / a))))
-  let τ : ℝ := finiteQuenchedTailTau σ
-  let η : ℝ := finiteQuenchedTailExponent d σ t
-  let w : ℝ := ((3 ^ d : ℕ) : ℝ)
-  let Dhigh : ℝ := 2 * K * Cfluct * hΓ.thetaHat ^ (2 : ℕ)
   let Aold : ℝ :=
     (3 : ℝ) ^ (b * (q : ℝ) - b * (L + 1)) / Dhigh
-  let A : ℝ :=
-    (3 : ℝ) ^ ((q : ℝ) - (τ * b * (L + 1)) / η) / Den
-  let ρ : ℝ := (3 : ℝ) ^ c
   have hη_pos : 0 < η := by
     simpa [η] using finiteQuenchedTailExponent_pos
       (d := d) (σ := σ) (t := t) hσ_pos ht

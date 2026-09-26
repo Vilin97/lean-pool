@@ -153,77 +153,34 @@ private theorem sigmaHat_mul_barSigmaStar_inv_zero_le_of_good
     _ ≤ (1 + delta) * Real.sqrt (thetaAtScale hP hStruct 0) :=
       mul_le_mul_of_nonneg_left hsqrt_m0 hfactor_nonneg
 
-/-- Section 5.4 good-scale parameter bounds.  At a scale where both scalar
-coefficient chains are nearly stationary, the special vectors have controlled
-centering, response, and additivity defect bounds. -/
-theorem goodScaleParameterBounds_homogenizationScale
+/-- Nearly stationary scalar chains control both rescaled coefficient differences at any
+nonnegative comparison scale. This estimate is independent of the chosen special vectors. -/
+private theorem scaled_scalar_differences_le_of_good
     {d : ℕ} [NeZero d] {P : Ch04.RestrictionCoeffLaw d}
     (hP : Ch04.RestrictionLawCarrier P) (hStruct : Ch04.RestrictionStructuralLaw P)
     (hP4 : QuantitativeCoarseGrainedEllipticity P)
-    {delta : ℝ} (hdelta_pos : 0 < delta) (hdelta_le : delta ≤ 1 / 2)
-    (m : ℕ)
+    {delta : ℝ} (hdelta_pos : 0 < delta) (m k : ℕ)
     (hgood_upper :
       hP.barSigmaAtScale hStruct 0 ≤
         (1 + delta) * hP.barSigmaAtScale hStruct (m : ℤ))
     (hgood_lower :
       (hP.barSigmaStarAtScale hStruct 0)⁻¹ ≤
-        (1 + delta) * (hP.barSigmaStarAtScale hStruct (m : ℤ))⁻¹)
-    (e : Vec d) (he : Ch02.vecNorm e = 1) :
-    let p_e := specialPAtScale hP hStruct (m : ℤ) e
-    let q_e := specialQAtScale hP hStruct (m : ℤ) e
-    let p0_e := (hP.barSigmaStarAtScale hStruct (m : ℤ))⁻¹ • q_e - p_e
-    let q0_e := q_e - hP.barSigmaAtScale hStruct (m : ℤ) • p_e
-    Ch02.vecNorm
-        (Real.rpow (sigmaHatAtScale hP hStruct (m : ℤ)) (1 / 2 : ℝ) • p0_e) =
-      |Real.sqrt (thetaAtScale hP hStruct (m : ℤ)) - 1| ∧
-    Ch02.vecNorm
-        (Real.rpow (sigmaHatAtScale hP hStruct (m : ℤ)) (-(1 / 2 : ℝ)) • q0_e) =
-      |Real.sqrt (thetaAtScale hP hStruct (m : ℤ)) - 1| ∧
-    |Real.sqrt (thetaAtScale hP hStruct (m : ℤ)) - 1| ≤
-      Real.sqrt (thetaAtScale hP hStruct 0) ∧
-    (sigmaHatAtScale hP hStruct (m : ℤ))⁻¹ *
-        hP.barSigmaAtScale hStruct 0 ≤
-      (1 + delta) * Real.sqrt (thetaAtScale hP hStruct 0) ∧
-    sigmaHatAtScale hP hStruct (m : ℤ) *
-        (hP.barSigmaStarAtScale hStruct 0)⁻¹ ≤
-      (1 + delta) * Real.sqrt (thetaAtScale hP hStruct 0) ∧
-    (∀ k : ℕ, k ≤ m →
-      Ch04.annealedResponseJAtScale P (k : ℤ) p_e q_e ≤
-        (1 + delta) * Real.sqrt (thetaAtScale hP hStruct 0) ∧
-      tauAtScale P (m : ℤ) (k : ℤ) p_e q_e ≤
-        delta * Real.sqrt (thetaAtScale hP hStruct 0)) := by
-  classical
-  dsimp only
-  have hp_norm :=
-    scaled_specialP_centering_vecNorm_eq_of_P4 hP hStruct hP4 m e he
-  have hq_norm :=
-    scaled_specialQ_centering_vecNorm_eq_of_P4 hP hStruct hP4 m e he
-  have hcenter_bound :=
-    abs_sqrt_theta_sub_one_le_sqrt_theta_zero_of_P4 hP hStruct hP4 m
-  have hcompare_upper :=
-    sigmaHat_inv_mul_barSigma_zero_le_of_good hP hStruct hP4 hdelta_pos m hgood_upper
-  have hcompare_lower :=
-    sigmaHat_mul_barSigmaStar_inv_zero_le_of_good hP hStruct hP4 hdelta_pos m hgood_lower
-  refine ⟨hp_norm, hq_norm, hcenter_bound, hcompare_upper, hcompare_lower, ?_⟩
-  intro k hk
-  let p_e := specialPAtScale hP hStruct (m : ℤ) e
-  let q_e := specialQAtScale hP hStruct (m : ℤ) e
-  let sigma := sigmaHatAtScale hP hStruct (m : ℤ)
-  let sqrtTheta0 := Real.sqrt (thetaAtScale hP hStruct 0)
-  have heSq : vecNormSq e = 1 := vecNormSq_eq_one_of_vecNorm_eq_one he
+        (1 + delta) * (hP.barSigmaStarAtScale hStruct (m : ℤ))⁻¹) :
+    let sigma := sigmaHatAtScale hP hStruct (m : ℤ)
+    let sqrtTheta0 := Real.sqrt (thetaAtScale hP hStruct 0)
+    sigma⁻¹ *
+        (hP.barSigmaAtScale hStruct (k : ℤ) -
+          hP.barSigmaAtScale hStruct (m : ℤ)) ≤ delta * sqrtTheta0 ∧
+      sigma *
+        ((hP.barSigmaStarAtScale hStruct (k : ℤ))⁻¹ -
+          (hP.barSigmaStarAtScale hStruct (m : ℤ))⁻¹) ≤ delta * sqrtTheta0 := by
+  intro sigma sqrtTheta0
   have hchain_k0 := Pigeonhole.scalarChain_of_P4 hP hStruct hP4 (Nat.zero_le k)
-  have hchain_mk := Pigeonhole.scalarChain_of_P4 hP hStruct hP4 hk
   have hsigma_pos : 0 < sigma := by
     simpa [sigma] using sigmaHatAtScale_pos_of_P4 hP hStruct hP4 m
   have hsigma_inv_nonneg : 0 ≤ sigma⁻¹ := (inv_pos.mpr hsigma_pos).le
   have hsigma_nonneg : 0 ≤ sigma := hsigma_pos.le
-  have hfactor_nonneg : 0 ≤ 1 + delta := by linarith
   have hdelta_nonneg : 0 ≤ delta := hdelta_pos.le
-  have hsqrtTheta0_nonneg : 0 ≤ sqrtTheta0 := by
-    dsimp [sqrtTheta0]
-    exact Real.sqrt_nonneg _
-  have hB_nonneg : 0 ≤ (1 + delta) * sqrtTheta0 :=
-    mul_nonneg hfactor_nonneg hsqrtTheta0_nonneg
   have hbar_k_le_zero :
       hP.barSigmaAtScale hStruct (k : ℤ) ≤
         hP.barSigmaAtScale hStruct 0 := by
@@ -232,53 +189,6 @@ theorem goodScaleParameterBounds_homogenizationScale
       (hP.barSigmaStarAtScale hStruct (k : ℤ))⁻¹ ≤
         (hP.barSigmaStarAtScale hStruct 0)⁻¹ := by
     simpa using hchain_k0.2.1
-  have hbar_m_le_k :
-      hP.barSigmaAtScale hStruct (m : ℤ) ≤
-        hP.barSigmaAtScale hStruct (k : ℤ) := by
-    simpa using hchain_mk.2.2
-  have hstarInv_m_le_k :
-      (hP.barSigmaStarAtScale hStruct (m : ℤ))⁻¹ ≤
-        (hP.barSigmaStarAtScale hStruct (k : ℤ))⁻¹ := by
-    simpa using hchain_mk.2.1
-  have hscaled_bar_k :
-      sigma⁻¹ * hP.barSigmaAtScale hStruct (k : ℤ) ≤
-        (1 + delta) * sqrtTheta0 := by
-    calc
-      sigma⁻¹ * hP.barSigmaAtScale hStruct (k : ℤ) ≤
-          sigma⁻¹ * hP.barSigmaAtScale hStruct 0 :=
-        mul_le_mul_of_nonneg_left hbar_k_le_zero hsigma_inv_nonneg
-      _ ≤ (1 + delta) * sqrtTheta0 := by simpa [sigma, sqrtTheta0] using hcompare_upper
-  have hscaled_star_k :
-      sigma * (hP.barSigmaStarAtScale hStruct (k : ℤ))⁻¹ ≤
-        (1 + delta) * sqrtTheta0 := by
-    calc
-      sigma * (hP.barSigmaStarAtScale hStruct (k : ℤ))⁻¹ ≤
-          sigma * (hP.barSigmaStarAtScale hStruct 0)⁻¹ :=
-        mul_le_mul_of_nonneg_left hstarInv_k_le_zero hsigma_nonneg
-      _ ≤ (1 + delta) * sqrtTheta0 := by simpa [sigma, sqrtTheta0] using hcompare_lower
-  have hJ_formula :
-      Ch04.annealedResponseJAtScale P (k : ℤ) p_e q_e =
-        (1 / 2 : ℝ) * sigma⁻¹ * hP.barSigmaAtScale hStruct (k : ℤ) +
-          (1 / 2 : ℝ) * sigma *
-            (hP.barSigmaStarAtScale hStruct (k : ℤ))⁻¹ - 1 := by
-    have hBlock_k :
-        Integrable (Ch04.coarseFullBlockMatrixAtCube (originCube d (k : ℤ))) P :=
-      Section52.originBlockIntegrableAtScale_from_P4 hP hStruct hP4 k
-    calc
-      Ch04.annealedResponseJAtScale P (k : ℤ) p_e q_e =
-          expectedJScalarFormula hP hStruct (k : ℤ) p_e q_e := by
-        rw [Section52.annealedResponseJAtScale_eq_expectedJScalarFormula
-          hP hStruct (k : ℤ) p_e q_e hBlock_k]
-      _ = (1 / 2 : ℝ) * sigma⁻¹ * hP.barSigmaAtScale hStruct (k : ℤ) +
-            (1 / 2 : ℝ) * sigma *
-              (hP.barSigmaStarAtScale hStruct (k : ℤ))⁻¹ - 1 := by
-        simpa [p_e, q_e, sigma] using
-          expectedJScalarFormula_special_eq_of_P4 hP hStruct hP4 m k e heSq
-  have hJ_bound :
-      Ch04.annealedResponseJAtScale P (k : ℤ) p_e q_e ≤
-        (1 + delta) * sqrtTheta0 := by
-    rw [hJ_formula]
-    nlinarith [hscaled_bar_k, hscaled_star_k, hB_nonneg]
   have hbar_diff_le :
       hP.barSigmaAtScale hStruct (k : ℤ) -
           hP.barSigmaAtScale hStruct (m : ℤ) ≤
@@ -350,6 +260,127 @@ theorem goodScaleParameterBounds_homogenizationScale
       _ = delta * Real.sqrt theta_m := by rw [hscaled_star_m_eq]
       _ ≤ delta * sqrtTheta0 :=
         mul_le_mul_of_nonneg_left hsqrt_m0 hdelta_nonneg
+  exact ⟨hscaled_bar_diff, hscaled_star_diff⟩
+
+/-- Section 5.4 good-scale parameter bounds.  At a scale where both scalar
+coefficient chains are nearly stationary, the special vectors have controlled
+centering, response, and additivity defect bounds. -/
+theorem goodScaleParameterBounds_homogenizationScale
+    {d : ℕ} [NeZero d] {P : Ch04.RestrictionCoeffLaw d}
+    (hP : Ch04.RestrictionLawCarrier P) (hStruct : Ch04.RestrictionStructuralLaw P)
+    (hP4 : QuantitativeCoarseGrainedEllipticity P)
+    {delta : ℝ} (hdelta_pos : 0 < delta) (hdelta_le : delta ≤ 1 / 2)
+    (m : ℕ)
+    (hgood_upper :
+      hP.barSigmaAtScale hStruct 0 ≤
+        (1 + delta) * hP.barSigmaAtScale hStruct (m : ℤ))
+    (hgood_lower :
+      (hP.barSigmaStarAtScale hStruct 0)⁻¹ ≤
+        (1 + delta) * (hP.barSigmaStarAtScale hStruct (m : ℤ))⁻¹)
+    (e : Vec d) (he : Ch02.vecNorm e = 1) :
+    let p_e := specialPAtScale hP hStruct (m : ℤ) e
+    let q_e := specialQAtScale hP hStruct (m : ℤ) e
+    let p0_e := (hP.barSigmaStarAtScale hStruct (m : ℤ))⁻¹ • q_e - p_e
+    let q0_e := q_e - hP.barSigmaAtScale hStruct (m : ℤ) • p_e
+    Ch02.vecNorm
+        (Real.rpow (sigmaHatAtScale hP hStruct (m : ℤ)) (1 / 2 : ℝ) • p0_e) =
+      |Real.sqrt (thetaAtScale hP hStruct (m : ℤ)) - 1| ∧
+    Ch02.vecNorm
+        (Real.rpow (sigmaHatAtScale hP hStruct (m : ℤ)) (-(1 / 2 : ℝ)) • q0_e) =
+      |Real.sqrt (thetaAtScale hP hStruct (m : ℤ)) - 1| ∧
+    |Real.sqrt (thetaAtScale hP hStruct (m : ℤ)) - 1| ≤
+      Real.sqrt (thetaAtScale hP hStruct 0) ∧
+    (sigmaHatAtScale hP hStruct (m : ℤ))⁻¹ *
+        hP.barSigmaAtScale hStruct 0 ≤
+      (1 + delta) * Real.sqrt (thetaAtScale hP hStruct 0) ∧
+    sigmaHatAtScale hP hStruct (m : ℤ) *
+        (hP.barSigmaStarAtScale hStruct 0)⁻¹ ≤
+      (1 + delta) * Real.sqrt (thetaAtScale hP hStruct 0) ∧
+    (∀ k : ℕ, k ≤ m →
+      Ch04.annealedResponseJAtScale P (k : ℤ) p_e q_e ≤
+        (1 + delta) * Real.sqrt (thetaAtScale hP hStruct 0) ∧
+      tauAtScale P (m : ℤ) (k : ℤ) p_e q_e ≤
+        delta * Real.sqrt (thetaAtScale hP hStruct 0)) := by
+  classical
+  dsimp only
+  have hp_norm :=
+    scaled_specialP_centering_vecNorm_eq_of_P4 hP hStruct hP4 m e he
+  have hq_norm :=
+    scaled_specialQ_centering_vecNorm_eq_of_P4 hP hStruct hP4 m e he
+  have hcenter_bound :=
+    abs_sqrt_theta_sub_one_le_sqrt_theta_zero_of_P4 hP hStruct hP4 m
+  have hcompare_upper :=
+    sigmaHat_inv_mul_barSigma_zero_le_of_good hP hStruct hP4 hdelta_pos m hgood_upper
+  have hcompare_lower :=
+    sigmaHat_mul_barSigmaStar_inv_zero_le_of_good hP hStruct hP4 hdelta_pos m hgood_lower
+  refine ⟨hp_norm, hq_norm, hcenter_bound, hcompare_upper, hcompare_lower, ?_⟩
+  intro k _hk
+  let p_e := specialPAtScale hP hStruct (m : ℤ) e
+  let q_e := specialQAtScale hP hStruct (m : ℤ) e
+  let sigma := sigmaHatAtScale hP hStruct (m : ℤ)
+  let sqrtTheta0 := Real.sqrt (thetaAtScale hP hStruct 0)
+  have heSq : vecNormSq e = 1 := vecNormSq_eq_one_of_vecNorm_eq_one he
+  have hchain_k0 := Pigeonhole.scalarChain_of_P4 hP hStruct hP4 (Nat.zero_le k)
+  have hsigma_pos : 0 < sigma := by
+    simpa [sigma] using sigmaHatAtScale_pos_of_P4 hP hStruct hP4 m
+  have hsigma_inv_nonneg : 0 ≤ sigma⁻¹ := (inv_pos.mpr hsigma_pos).le
+  have hsigma_nonneg : 0 ≤ sigma := hsigma_pos.le
+  have hfactor_nonneg : 0 ≤ 1 + delta := by linarith
+  have hsqrtTheta0_nonneg : 0 ≤ sqrtTheta0 := by
+    dsimp [sqrtTheta0]
+    exact Real.sqrt_nonneg _
+  have hB_nonneg : 0 ≤ (1 + delta) * sqrtTheta0 :=
+    mul_nonneg hfactor_nonneg hsqrtTheta0_nonneg
+  have hbar_k_le_zero :
+      hP.barSigmaAtScale hStruct (k : ℤ) ≤
+        hP.barSigmaAtScale hStruct 0 := by
+    simpa using hchain_k0.2.2
+  have hstarInv_k_le_zero :
+      (hP.barSigmaStarAtScale hStruct (k : ℤ))⁻¹ ≤
+        (hP.barSigmaStarAtScale hStruct 0)⁻¹ := by
+    simpa using hchain_k0.2.1
+  have hscaled_bar_k :
+      sigma⁻¹ * hP.barSigmaAtScale hStruct (k : ℤ) ≤
+        (1 + delta) * sqrtTheta0 := by
+    calc
+      sigma⁻¹ * hP.barSigmaAtScale hStruct (k : ℤ) ≤
+          sigma⁻¹ * hP.barSigmaAtScale hStruct 0 :=
+        mul_le_mul_of_nonneg_left hbar_k_le_zero hsigma_inv_nonneg
+      _ ≤ (1 + delta) * sqrtTheta0 := by simpa [sigma, sqrtTheta0] using hcompare_upper
+  have hscaled_star_k :
+      sigma * (hP.barSigmaStarAtScale hStruct (k : ℤ))⁻¹ ≤
+        (1 + delta) * sqrtTheta0 := by
+    calc
+      sigma * (hP.barSigmaStarAtScale hStruct (k : ℤ))⁻¹ ≤
+          sigma * (hP.barSigmaStarAtScale hStruct 0)⁻¹ :=
+        mul_le_mul_of_nonneg_left hstarInv_k_le_zero hsigma_nonneg
+      _ ≤ (1 + delta) * sqrtTheta0 := by simpa [sigma, sqrtTheta0] using hcompare_lower
+  have hJ_formula :
+      Ch04.annealedResponseJAtScale P (k : ℤ) p_e q_e =
+        (1 / 2 : ℝ) * sigma⁻¹ * hP.barSigmaAtScale hStruct (k : ℤ) +
+          (1 / 2 : ℝ) * sigma *
+            (hP.barSigmaStarAtScale hStruct (k : ℤ))⁻¹ - 1 := by
+    have hBlock_k :
+        Integrable (Ch04.coarseFullBlockMatrixAtCube (originCube d (k : ℤ))) P :=
+      Section52.originBlockIntegrableAtScale_from_P4 hP hStruct hP4 k
+    calc
+      Ch04.annealedResponseJAtScale P (k : ℤ) p_e q_e =
+          expectedJScalarFormula hP hStruct (k : ℤ) p_e q_e := by
+        rw [Section52.annealedResponseJAtScale_eq_expectedJScalarFormula
+          hP hStruct (k : ℤ) p_e q_e hBlock_k]
+      _ = (1 / 2 : ℝ) * sigma⁻¹ * hP.barSigmaAtScale hStruct (k : ℤ) +
+            (1 / 2 : ℝ) * sigma *
+              (hP.barSigmaStarAtScale hStruct (k : ℤ))⁻¹ - 1 := by
+        simpa [p_e, q_e, sigma] using
+          expectedJScalarFormula_special_eq_of_P4 hP hStruct hP4 m k e heSq
+  have hJ_bound :
+      Ch04.annealedResponseJAtScale P (k : ℤ) p_e q_e ≤
+        (1 + delta) * sqrtTheta0 := by
+    rw [hJ_formula]
+    nlinarith [hscaled_bar_k, hscaled_star_k, hB_nonneg]
+  obtain ⟨hscaled_bar_diff, hscaled_star_diff⟩ :=
+    scaled_scalar_differences_le_of_good hP hStruct hP4 hdelta_pos m k
+      hgood_upper hgood_lower
   have htau_formula :
       tauAtScale P (m : ℤ) (k : ℤ) p_e q_e =
         (1 / 2 : ℝ) * sigma⁻¹ *

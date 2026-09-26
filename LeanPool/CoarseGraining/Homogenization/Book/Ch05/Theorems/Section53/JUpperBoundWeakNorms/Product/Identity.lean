@@ -59,11 +59,9 @@ theorem cutoffProductTermOnCube_eq_neg_half_cubeAverage_fluxDefect_potentialDefe
   let uφ : H1Function U := u.mulContDiffHasCompactSupport hφ hφ_compact
   have hφ_sub_U : tsupport φ ⊆ U := by
     simpa [U, Ch02.cubeDomain_coe] using hφ_sub
-  rcases
-      (show MemH10 U (fun x => φ x * u x) from
-        memH10_mul_of_contDiff_hasCompactSupport
-          (Ch02.cubeDomain Q).isDomain hφ hφ_compact hφ_sub_U u.memH1) with
-    ⟨ψ, hψ_toFun⟩
+  let ψ : H10Function U :=
+    u.mulContDiffHasCompactSupportToH10
+      (Ch02.cubeDomain Q).isDomain hφ hφ_compact hφ_sub_U
   have hflux_mem : MemVectorL2 U flux := by
     simpa [U, flux, v, canonicalMaximizerSolutionOnCube] using
       Ch02.Solution.flux_memVectorL2 (canonicalMaximizerSolutionOnCube Q a p q)
@@ -93,35 +91,12 @@ theorem cutoffProductTermOnCube_eq_neg_half_cubeAverage_fluxDefect_potentialDefe
       MeasureTheory.IntegrableOn
         (fun x => vecDot (fluxDef x) (uφ.grad x)) U :=
     integrableOn_vecDot_of_memVectorL2 hfluxDef_mem uφ.grad_memVectorL2
-  have hcoord_ae :
-      ∀ i : Fin d,
-        (fun x => ψ.toH1Function.grad x i) =ᵐ[MeasureTheory.volume.restrict U]
-          (fun x => uφ.grad x i) := by
-    intro i
-    have hψ_loc :
-        MeasureTheory.LocallyIntegrableOn (fun x => ψ.toH1Function.grad x i)
-          U MeasureTheory.volume :=
-      MeasureTheory.locallyIntegrableOn_of_locallyIntegrable_restrict
-        ((ψ.toH1Function.gradMemL2 i).locallyIntegrable
-          (by norm_num : (1 : ENNReal) ≤ 2))
-    have huφ_loc :
-        MeasureTheory.LocallyIntegrableOn (fun x => uφ.grad x i)
-          U MeasureTheory.volume :=
-      MeasureTheory.locallyIntegrableOn_of_locallyIntegrable_restrict
-        ((uφ.gradMemL2 i).locallyIntegrable
-          (by norm_num : (1 : ENNReal) ≤ 2))
-    have hψ_weak :
-        HasWeakPartialDerivOn U i (fun x => φ x * u x)
-          (fun x => ψ.toH1Function.grad x i) := by
-      simpa [hψ_toFun] using ψ.toH1Function.hasWeakGradient i
-    have huφ_weak :
-        HasWeakPartialDerivOn U i (fun x => φ x * u x)
-          (fun x => uφ.grad x i) := by
-      simpa [uφ, H1Function.mulContDiffHasCompactSupport_toFun] using
-        uφ.hasWeakGradient i
-    exact
-      HasWeakPartialDerivOn.ae_eq (Ch02.cubeDomain Q).isOpen
-        hψ_loc huφ_loc hψ_weak huφ_weak
+  have hgrad_ae :
+      (fun x => ψ.toH1Function.grad x) =ᵐ[MeasureTheory.volume.restrict U]
+        (fun x => uφ.grad x) := by
+    simpa only [ψ, uφ, H1Function.mulContDiffHasCompactSupport_grad] using
+      WeakPoissonEquationOn.mulContDiffHasCompactSupportToH10_grad_ae
+        u (Ch02.cubeDomain Q).isDomain hφ hφ_compact hφ_sub_U
   have hsol_ψ :
       ∫ x in U, vecDot (fluxDef x) (ψ.toH1Function.grad x)
           ∂MeasureTheory.volume = 0 := by
@@ -142,54 +117,13 @@ theorem cutoffProductTermOnCube_eq_neg_half_cubeAverage_fluxDefect_potentialDefe
           (canonicalMaximizerSolutionOnCube Q a p q).isHarmonic.2 ψ
   have hsol_uφ :
       ∫ x in U, vecDot (fluxDef x) (uφ.grad x) ∂MeasureTheory.volume = 0 := by
-    have hcoord_int_uφ :
-        ∀ i : Fin d,
-          MeasureTheory.Integrable
-            (fun x => fluxDef x i * uφ.grad x i)
-            (MeasureTheory.volume.restrict U) := by
-      intro i
-      exact
-        (memScalarL2_coord_of_memVectorL2 hfluxDef_mem i).integrable_mul
-          (uφ.gradMemL2 i)
-    have hcoord_int_ψ :
-        ∀ i : Fin d,
-          MeasureTheory.Integrable
-            (fun x => fluxDef x i * ψ.toH1Function.grad x i)
-            (MeasureTheory.volume.restrict U) := by
-      intro i
-      exact
-        (memScalarL2_coord_of_memVectorL2 hfluxDef_mem i).integrable_mul
-          (ψ.toH1Function.gradMemL2 i)
     calc
-      ∫ x in U, vecDot (fluxDef x) (uφ.grad x) ∂MeasureTheory.volume
-          =
-        ∑ i, ∫ x in U, fluxDef x i * uφ.grad x i ∂MeasureTheory.volume := by
-            rw [show
-              (fun x => vecDot (fluxDef x) (uφ.grad x)) =
-                fun x => ∑ i, fluxDef x i * uφ.grad x i by
-                  funext x
-                  simp [vecDot]]
-            rw [MeasureTheory.integral_finsetSum]
-            intro i hi
-            exact hcoord_int_uφ i
-      _ = ∑ i, ∫ x in U,
-            fluxDef x i * ψ.toH1Function.grad x i ∂MeasureTheory.volume := by
-            refine Finset.sum_congr rfl ?_
-            intro i hi
-            apply MeasureTheory.integral_congr_ae
-            filter_upwards [hcoord_ae i] with x hx
-            simp [hx]
-      _ = ∫ x in U, vecDot (fluxDef x) (ψ.toH1Function.grad x)
+      ∫ x in U, vecDot (fluxDef x) (uφ.grad x) ∂MeasureTheory.volume =
+          ∫ x in U, vecDot (fluxDef x) (ψ.toH1Function.grad x)
             ∂MeasureTheory.volume := by
-            symm
-            rw [show
-              (fun x => vecDot (fluxDef x) (ψ.toH1Function.grad x)) =
-                fun x => ∑ i, fluxDef x i * ψ.toH1Function.grad x i by
-                  funext x
-                  simp [vecDot]]
-            rw [MeasureTheory.integral_finsetSum]
-            intro i hi
-            exact hcoord_int_ψ i
+              apply MeasureTheory.integral_congr_ae
+              filter_upwards [hgrad_ae] with x hx
+              rw [hx]
       _ = 0 := hsol_ψ
   let first : Vec d → ℝ :=
     fun x => φ x * vecDot (fluxDef x) (u.grad x)

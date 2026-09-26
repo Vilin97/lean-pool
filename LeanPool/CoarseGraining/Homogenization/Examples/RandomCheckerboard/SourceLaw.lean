@@ -255,7 +255,8 @@ private theorem adjoint_checkerCarrier {d : ℕ} {lam Lam : ℝ}
   exact congrArg (fun a : RegCoeffField d => a x i j)
     (adjointReg_checkerRegField (lam := lam) (Lam := Lam) ω)
 
-private def baseLaw (d : ℕ) (lam Lam : ℝ) (hlam : 0 < lam) (hle : lam ≤ Lam)
+/-- The Bernoulli checkerboard measure before spatial refinement. -/
+def baseLaw (d : ℕ) (lam Lam : ℝ) (hlam : 0 < lam) (hle : lam ≤ Lam)
     (p : ℝ≥0) (hp : p ≤ 1) : Measure (Source.Coarse.Carrier d) :=
   Measure.map (checkerCarrier lam Lam hlam hle) (sampleMeasure d p hp)
 
