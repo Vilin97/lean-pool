@@ -402,6 +402,15 @@ def closeByTransfer (type : Expr) (lhsQ rhsQ : Quoted) (atoms : Array Expr) (asL
   let (_, goal) ← (← (← getMainGoal).assert transferName proofType proof).intro1P
   setGoals [goal]
   let hIdent := mkIdent transferName
+  if hasSigns then
+    let savedState ← saveState
+    try
+      evalTactic (← `(tactic|
+        simpa [*, LLexpr.eval_zero, LLexpr.eval_var, LLexpr.eval_add, LLexpr.eval_smul,
+          LLexpr.eval_sup, LLexpr.eval_inf, posPart_def, negPart_def, abs, sub_eq_add_neg,
+          neg_one_smul, add_assoc, add_comm, add_left_comm] using $hIdent:ident))
+      return
+    catch _ => savedState.restore
   if !hasSigns then
     if asLe then
       evalTactic (← `(tactic|
@@ -450,6 +459,9 @@ def closeByTransfer (type : Expr) (lhsQ rhsQ : Quoted) (atoms : Array Expr) (asL
 
 /-- Implementation of the user-facing `llarith` tactic. -/
 def evalLlarith : TacticM Unit := withMainContext do
+  let goal ← getMainGoal
+  evalTactic (← `(tactic| try rfl))
+  if ← goal.isAssigned then return
   let target ← instantiateMVars (← getMainTarget)
   let targetWhnf ← whnf target
   if let some (_, lhs, rhs) := targetWhnf.eq? <|> target.eq? then
@@ -499,6 +511,33 @@ end Tactic
 
 end LLexpr
 
+end
+
 section Tests
+
+variable {E : Type*} [AddCommGroup E] [Lattice E] [IsOrderedAddMonoid E]
+  [VectorLattice E]
+
+example (x y : E) : (x ⊔ y) + (x ⊓ y) = x + y := by llarith
+
+example (x y : E) : |x + y| ≤ |x| + |y| := by llarith
+
+example (x y : E) : (2 : ℝ) • (x ⊔ y) = (2 : ℝ) • x ⊔ (2 : ℝ) • y := by llarith
+
+example (x : E) (hx : 0 ≤ x) : |x| = x := by llarith
+
+example (x : E) (hx : x ≤ 0) : |x| = -x := by llarith
+
+example (x : E) (hx : 0 < x) : |x| = x := by llarith
+
+example (x : E) (hx : x < 0) : |x| = -x := by llarith
+
+example (x y : E) (hx : 0 ≤ x) (hy : y ≤ 0) : |x - y| = x - y := by llarith
+
+example (x y : E) (hx : 0 ≤ x) (hy : y ≤ 0) : y ≤ x := by llarith
+
+example (x : E) : x⁺ - x⁻ = x := by llarith
+
+example : (0 : E) = 0 := by llarith
 
 end Tests

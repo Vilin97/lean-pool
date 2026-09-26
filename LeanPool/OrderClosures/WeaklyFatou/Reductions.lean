@@ -194,147 +194,6 @@ def FremlinProperty : Prop :=
     (∃ K, HasWeakFatouProperty p K) →
       ∃ q : PaperLatticeNorm X, HasFatouProperty q ∧ EquivalentNorms p q
 
-/-- Promotes the sequential weak Nakano estimate to directed sets in a
-separable normed lattice; the paper-norm version below reduces to this lemma. -/
-theorem weakNakano_of_weakSequentialNakano
-    {Y : Type u} [NormedAddCommGroup Y] [Lattice Y] [IsOrderedAddMonoid Y]
-    [NormedVectorLattice Y] [TopologicalSpace.SeparableSpace Y]
-    {K : ℝ} (hseq : IsWeakSequentialNakanoConstant (X := Y) norm K) :
-    IsWeakNakanoConstant (X := Y) norm K := by
-  refine ⟨hseq.1, ?_⟩
-  intro A hApos hAdir hAbdd hAnorm ε hε
-  classical
-  by_cases hAempty : A = ∅
-  · subst A
-    refine ⟨0, le_rfl, ?_, ?_⟩
-    · simp
-    · norm_num
-      linarith [hseq.1]
-  have hAne : A.Nonempty := Set.nonempty_iff_ne_empty.mpr hAempty
-  let : Nonempty ↥A := ⟨⟨Classical.choose hAne, Classical.choose_spec hAne⟩⟩
-  let : TopologicalSpace.SeparableSpace ↥A := inferInstance
-  obtain ⟨d, hdense⟩ := TopologicalSpace.exists_dense_seq ↥A
-  let join : ↥A → ↥A → ↥A := fun a b ↦
-    ⟨Classical.choose (hAdir a.1 a.2 b.1 b.2),
-      (Classical.choose_spec (hAdir a.1 a.2 b.1 b.2)).1⟩
-  have hjoin_left (a b : ↥A) : a.1 ≤ (join a b).1 :=
-    (Classical.choose_spec (hAdir a.1 a.2 b.1 b.2)).2.1
-  have hjoin_right (a b : ↥A) : b.1 ≤ (join a b).1 :=
-    (Classical.choose_spec (hAdir a.1 a.2 b.1 b.2)).2.2
-  let z : ℕ → ↥A := fun m ↦
-    Nat.rec (d 0) (fun k a ↦ join a (d (k + 1))) m
-  have hz_succ (m : ℕ) : z (m + 1) = join (z m) (d (m + 1)) := by
-    simp [z]
-  have hzmono : Monotone (fun m ↦ (z m).1) := by
-    apply monotone_nat_of_le_succ
-    intro m
-    rw [hz_succ]
-    exact hjoin_left _ _
-  have hd_le_z : ∀ m, (d m).1 ≤ (z m).1 := by
-    intro m
-    cases m with
-    | zero => simp [z]
-    | succ m =>
-        rw [hz_succ]
-        exact hjoin_right _ _
-  have hzpos : ∀ m, 0 ≤ (z m).1 := fun m ↦ hApos (z m).2
-  have hzbdd : BddAbove (Set.range fun m ↦ (z m).1) := by
-    rcases hAbdd with ⟨b, hb⟩
-    exact ⟨b, by rintro _ ⟨m, rfl⟩; exact hb (z m).2⟩
-  have hznorm : ∀ m, ‖(z m).1‖ ≤ 1 := fun m ↦ hAnorm _ (z m).2
-  obtain ⟨y, hypos, hyupper, hynorm⟩ :=
-    hseq.2 (fun m ↦ (z m).1) hzmono hzpos hzbdd hznorm ε hε
-  refine ⟨y, hypos, ?_, hynorm⟩
-  have hd_upper : ∀ m, (d m).1 ≤ y :=
-    fun m ↦ (hd_le_z m).trans (hyupper m)
-  have hclosed : IsClosed {a : ↥A | a.1 ≤ y} :=
-    isClosed_Iic.preimage continuous_subtype_val
-  have hclosure : closure (Set.range d) ⊆ {a : ↥A | a.1 ≤ y} := by
-    apply closure_minimal
-    · rintro _ ⟨m, rfl⟩
-      exact hd_upper m
-    · exact hclosed
-  intro x hx
-  let xA : ↥A := ⟨x, hx⟩
-  exact hclosure (by rw [hdense.closure_eq]; exact Set.mem_univ xA)
-
-/-- Converts the directed weak Nakano estimate into the weak Fatou inequality
-for an ambient norm; reused after transporting a paper lattice norm. -/
-theorem weakFatou_of_weakNakano_norm
-    {Y : Type u} [NormedAddCommGroup Y] [Lattice Y] [IsOrderedAddMonoid Y]
-    [NormedVectorLattice Y] {K : ℝ}
-    (hNak : IsWeakNakanoConstant (X := Y) norm K) :
-    HasWeakFatouProperty (norm : Y → ℝ) K := by
-  refine ⟨hNak.1, ?_⟩
-  intro ι _ _ _ f x hfmono hfpos hflub c hfc
-  classical
-  let i₀ : ι := Classical.choice inferInstance
-  have hc : 0 ≤ c := (norm_nonneg (f i₀)).trans (hfc i₀)
-  by_cases hc0 : c = 0
-  · subst c
-    have hfzero : ∀ i, f i = 0 := by
-      intro i
-      exact norm_eq_zero.mp (le_antisymm (hfc i) (norm_nonneg _))
-    have hxzero : x = 0 := by
-      apply le_antisymm
-      · apply hflub.2
-        rintro _ ⟨i, rfl⟩
-        simp [hfzero i]
-      · simpa [hfzero i₀] using hflub.1 ⟨i₀, rfl⟩
-    simp [hxzero]
-  have hcpos : 0 < c := lt_of_le_of_ne hc (Ne.symm hc0)
-  apply le_of_forall_pos_le_add
-  intro δ hδ
-  let A : Set Y := Set.range fun i ↦ c⁻¹ • f i
-  have hApos : A ⊆ Set.Ici 0 := by
-    rintro _ ⟨i, rfl⟩
-    exact smul_nonneg (inv_nonneg.mpr hc) (hfpos i)
-  have hAdir : DirectedOn (· ≤ ·) A := by
-    rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩
-    obtain ⟨k, hik, hjk⟩ := directed_of (· ≤ ·) i j
-    refine ⟨c⁻¹ • f k, ⟨k, rfl⟩, ?_, ?_⟩
-    · exact smul_le_smul_of_nonneg_left (hfmono hik) (inv_nonneg.mpr hc)
-    · exact smul_le_smul_of_nonneg_left (hfmono hjk) (inv_nonneg.mpr hc)
-  have hAbdd : BddAbove A := by
-    refine ⟨c⁻¹ • x, ?_⟩
-    rintro _ ⟨i, rfl⟩
-    exact smul_le_smul_of_nonneg_left (hflub.1 ⟨i, rfl⟩) (inv_nonneg.mpr hc)
-  have hAnorm : ∀ z ∈ A, ‖z‖ ≤ 1 := by
-    rintro _ ⟨i, rfl⟩
-    rw [norm_smul, Real.norm_eq_abs, abs_of_pos (inv_pos.mpr hcpos)]
-    have hi := hfc i
-    rw [inv_mul_le_one₀ hcpos]
-    exact hi
-  obtain ⟨y, hypos, hyupper, hynorm⟩ :=
-    hNak.2 A hApos hAdir hAbdd hAnorm (δ / c) (div_pos hδ hcpos)
-  have hxy : x ≤ c • y := by
-    apply hflub.2
-    rintro _ ⟨i, rfl⟩
-    have hi := hyupper (c⁻¹ • f i) ⟨i, rfl⟩
-    have := smul_le_smul_of_nonneg_left hi hc
-    simpa [smul_smul, hc0] using this
-  have hxpos : 0 ≤ x := (hfpos i₀).trans (hflub.1 ⟨i₀, rfl⟩)
-  have hcyp : 0 ≤ c • y := smul_nonneg hc hypos
-  have hnormxy : ‖x‖ ≤ ‖c • y‖ := by
-    apply norm_le_norm_of_abs_le_abs
-    simpa [abs_of_nonneg hxpos, abs_of_nonneg hcyp] using hxy
-  calc
-    ‖x‖ ≤ ‖c • y‖ := hnormxy
-    _ = c * ‖y‖ := by rw [norm_smul, Real.norm_eq_abs, abs_of_pos hcpos]
-    _ ≤ c * (K + δ / c) := mul_le_mul_of_nonneg_left hynorm hc
-    _ = K * c + δ := by field_simp
-
-/-- Paper Proposition `prop:separable-reduction`. -/
-theorem separable_weakSequentialNakano_implies_weakNakano
-    {Y : Type u} [NormedAddCommGroup Y] [Lattice Y] [IsOrderedAddMonoid Y]
-    [NormedVectorLattice Y] [TopologicalSpace.SeparableSpace Y]
-    {K : ℝ} (_hK : 1 ≤ K)
-    (hseq : IsWeakSequentialNakanoConstant (X := Y) norm K) :
-    IsWeakNakanoConstant (X := Y) norm K ∧
-      HasWeakFatouProperty (norm : Y → ℝ) K := by
-  have hNak := weakNakano_of_weakSequentialNakano hseq
-  exact ⟨hNak, weakFatou_of_weakNakano_norm hNak⟩
-
 /-- Extends the separable sequential-to-directed reduction to an arbitrary
 `PaperLatticeNorm`; used to prove `component_weakFatou`. -/
 theorem weakNakano_of_weakSequentialNakano_p
@@ -460,6 +319,36 @@ theorem weakFatou_of_weakNakano_p
     _ = c * p y := by rw [p.smul, abs_of_pos hcpos]
     _ ≤ c * (K + δ / c) := mul_le_mul_of_nonneg_left hyp hc
     _ = K * c + δ := by field_simp
+
+/-- Promotes the sequential weak Nakano estimate to directed sets in a
+separable normed lattice, by specializing the paper-norm reduction. -/
+theorem weakNakano_of_weakSequentialNakano
+    {Y : Type u} [NormedAddCommGroup Y] [Lattice Y] [IsOrderedAddMonoid Y]
+    [NormedVectorLattice Y] [TopologicalSpace.SeparableSpace Y]
+    {K : ℝ} (hseq : IsWeakSequentialNakanoConstant (X := Y) norm K) :
+    IsWeakNakanoConstant (X := Y) norm K := by
+  exact weakNakano_of_weakSequentialNakano_p ambientLatticeNorm hseq
+
+/-- Converts the directed weak Nakano estimate into the weak Fatou inequality
+for an ambient norm, by specializing the paper-norm reduction. -/
+theorem weakFatou_of_weakNakano_norm
+    {Y : Type u} [NormedAddCommGroup Y] [Lattice Y] [IsOrderedAddMonoid Y]
+    [NormedVectorLattice Y] {K : ℝ}
+    (hNak : IsWeakNakanoConstant (X := Y) norm K) :
+    HasWeakFatouProperty (norm : Y → ℝ) K := by
+  exact weakFatou_of_weakNakano_p ambientLatticeNorm hNak
+
+/-- Paper Proposition `prop:separable-reduction`. -/
+theorem separable_weakSequentialNakano_implies_weakNakano
+    {Y : Type u} [NormedAddCommGroup Y] [Lattice Y] [IsOrderedAddMonoid Y]
+    [NormedVectorLattice Y] [TopologicalSpace.SeparableSpace Y]
+    {K : ℝ} (_hK : 1 ≤ K)
+    (hseq : IsWeakSequentialNakanoConstant (X := Y) norm K) :
+    IsWeakNakanoConstant (X := Y) norm K ∧
+      HasWeakFatouProperty (norm : Y → ℝ) K := by
+  have hNak := weakNakano_of_weakSequentialNakano hseq
+  exact ⟨hNak, weakFatou_of_weakNakano_norm hNak⟩
+
 
 end Reductions
 
