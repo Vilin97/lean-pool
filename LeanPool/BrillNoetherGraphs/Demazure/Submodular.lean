@@ -377,7 +377,7 @@ Its minimum is $s_{\alpha \star \beta}(a,b)$, and its rightmost minimizer is
 the $M_{\alpha \star \beta}(a,b)$ of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227). In Lean that rightmost
 minimizer is `(aspValley α β a b).M`. *Definition 4.6 of
-[An extended Demazure product](https://arxiv.org/abs/2206.14227), unlabeled in source.* 
+[An extended Demazure product](https://arxiv.org/abs/2206.14227), unlabeled in source.*
 
  The valley of the sum of the two ASP slipfaces along the intermediate integer. -/
 noncomputable def aspValley (α β : AspPerm) (a b : ℤ) : Valley where
