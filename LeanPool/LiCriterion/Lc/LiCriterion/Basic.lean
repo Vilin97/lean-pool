@@ -3058,7 +3058,8 @@ lemma eventually_le_norm_of_summable_inv_norm_sq_withMultiplicity
 theorem summable_Li_paired_summand_withMultiplicity_of_genus_one
     (hgenus : Summable (fun i : XiZeroWithMultiplicity => (1 : ℝ) / ‖i.1.val‖ ^ 2)) (n : ℕ) :
     Summable (fun i : XiZeroWithMultiplicity => liPairedSummand n i.1) := by
-  exact summable_Li_paired_summand_comp_of_genus_one (fun i => i.1) hgenus n
+  exact summable_Li_paired_summand_comp_of_genus_one
+    (ι := XiZeroWithMultiplicity) (fun i => i.1) hgenus n
 
 theorem tsum_Li_paired_summand_withMultiplicity_eq_weighted_tsum
     (n : ℕ)
