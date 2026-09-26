@@ -10307,41 +10307,42 @@ projects:
     msc:
       - '12F05'
       - '13F25'
-  - slug: lean-snumbers
-    title: Pietsch s-numbers and the maximal difference theorem
-    summary: Formalizes the five classical s-number sequences, their comparison inequalities, the maximal
-      difference theorem, compact-operator singular value decomposition, John ellipsoids, entropy numbers,
-      and compactness characterizations.
+
+  - slug: lean-spectral-theory
+    title: lean-spectral-theory
+    summary: The spectral theorem for possibly unbounded self-adjoint operators on complex Hilbert
+      spaces, formalized through the Cayley transform and real projection-valued measures. The
+      selected spectral theorem constructs a PVM whose scalar measures give the exact finite-second-moment
+      domain and first-moment quadratic form, with measurable-set uniqueness, and is proved
+      equivalent to equality with the unbounded coordinate spectral integral. The selected Stone
+      theorem proves both that strongly continuous one-parameter unitary groups have self-adjoint
+      generators and that every self-adjoint operator generates such a group.
     branch: functional analysis
-    entry_module: LeanPool.SNumbers
+    entry_module: LeanPool.SpectralTheory
     authors:
-    - Mario Ullrich
+    - Ezzeri Esa
     source:
-      url: https://github.com/mario-ullrich/lean-snumbers
-      github_repo: mario-ullrich/lean-snumbers
-      commit: d984f39b53eb1579920fe987de10382dcf553f4e
+      url: https://github.com/savarin/lean-spectral-theory
+      github_repo: savarin/lean-spectral-theory
+      commit: d19e279f0ab244657f02ce678e8d67fa69e2f407
     license: Apache-2.0
     status: verified
-    provenance: AI
     main_declarations:
-    - SNumbers.approximationNumber_le_e_mul_hilbertNumber
+    - PalomarSpectralStone.spectral_theorem_intrinsic
     main_results:
-    - declaration: SNumbers.approximationNumber_le_e_mul_hilbertNumber
-      informal: For a bounded operator, its nth approximation number is at most e times (n+1) times its
-        nth Hilbert number.
-    - declaration: SNumbers.allSNumbers_eq_on_HilbertSpace
-      informal: Every s-number sequence agrees with the approximation numbers on operators between Hilbert
-        spaces.
-    - declaration: John.john_decomposition
-      informal: In John position, the identity decomposes into a positive weighted sum of rank-one operators
-        from contact points.
+    - declaration: PalomarSpectralStone.spectral_theorem_intrinsic
+      informal: Every self-adjoint partial linear operator on a complex Hilbert space has a
+        real projection-valued measure representing its domain and scalar moments, unique on
+        Borel sets.
+    - declaration: PalomarSpectralStone.stone_theorem_intrinsic
+      informal: Every strongly continuous one-parameter unitary group has a self-adjoint
+        generator, and every self-adjoint operator generates such a group.
     tags:
     - functional-analysis
-    - operator-theory
-    - s-numbers
     msc:
-    - 47B06
-    - 46B20
+    - 47A10
+    - 47B15
+    provenance: AI
   - slug: nemytskii-lebesgue
     title: Nemytskii operators on Lebesgue spaces
     summary: >-
@@ -10439,3 +10440,39 @@ projects:
       - 47H30
       - 46E30
       - 47J05
+
+  - slug: lean-snumbers
+    title: Pietsch s-numbers and the maximal difference theorem
+    summary: Formalizes the five classical s-number sequences, their comparison inequalities, the maximal
+      difference theorem, compact-operator singular value decomposition, John ellipsoids, entropy numbers,
+      and compactness characterizations.
+    branch: functional analysis
+    entry_module: LeanPool.SNumbers
+    authors:
+    - Mario Ullrich
+    source:
+      url: https://github.com/mario-ullrich/lean-snumbers
+      github_repo: mario-ullrich/lean-snumbers
+      commit: d984f39b53eb1579920fe987de10382dcf553f4e
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - SNumbers.approximationNumber_le_e_mul_hilbertNumber
+    main_results:
+    - declaration: SNumbers.approximationNumber_le_e_mul_hilbertNumber
+      informal: For a bounded operator, its nth approximation number is at most e times (n+1) times its
+        nth Hilbert number.
+    - declaration: SNumbers.allSNumbers_eq_on_HilbertSpace
+      informal: Every s-number sequence agrees with the approximation numbers on operators between Hilbert
+        spaces.
+    - declaration: John.john_decomposition
+      informal: In John position, the identity decomposes into a positive weighted sum of rank-one operators
+        from contact points.
+    tags:
+    - functional-analysis
+    - operator-theory
+    - s-numbers
+    msc:
+    - 47B06
+    - 46B20
