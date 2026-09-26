@@ -59,7 +59,7 @@ private abbrev orderDecomposition (n : ℕ) :=
   MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n)
 
 /-- The weighted graded-algebra structure on the order-symbol decomposition. -/
-local instance orderGradedAlgebraInstance (n : ℕ) :
+private local instance orderGradedAlgebraInstance (n : ℕ) :
     GradedAlgebra (orderDecomposition k n) :=
   MvPolynomial.weightedGradedAlgebra k (@orderWeight n)
 

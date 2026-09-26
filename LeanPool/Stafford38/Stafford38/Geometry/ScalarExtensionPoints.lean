@@ -304,7 +304,7 @@ private abbrev orderDecompositionExtension :=
   MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n)
 
 /-- The order-weight grading on the polynomial algebra after coefficient extension. -/
-local instance orderGradedAlgebraExtensionInstance :
+private local instance orderGradedAlgebraExtensionInstance :
     GradedAlgebra (orderDecompositionExtension (k := k) (n := n)) :=
   MvPolynomial.weightedGradedAlgebra k (@orderWeight n)
 

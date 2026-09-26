@@ -51,7 +51,8 @@ variable [OreLocalization.OreSet
   (OppositeDenominators (filteredQuotientTwoJetTraceData k I) S)]
 variable [IsLocalRing (Localization S)]
 
-private abbrev concreteData := filteredQuotientTwoJetTraceData k I
+/-- The order-Rees two-jet data underlying the concrete localized special fibre. -/
+abbrev concreteData := filteredQuotientTwoJetTraceData k I
 
 local notation "D" => concreteData k I
 local notation "Cₗ" =>

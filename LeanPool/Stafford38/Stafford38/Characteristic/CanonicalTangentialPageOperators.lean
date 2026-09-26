@@ -145,20 +145,20 @@ def tangentialCoordinatePageOperator
     (n N : ℕ) (d : PresentedWeyl k (n + 1))
     (i : Fin n) :
     PageOperator k n N d 0 := by
-  apply tangentialPageOperator k n N d
+  exact tangentialPageOperator k n N d
     (oldGenerator k n (.inl i)) 0
-  · simpa using oldGenerator_mem_orderPiece k n (.inl i)
-  · exact (presentedCoordinate_commutes_oldGenerator k n (.inl i)).symm
+    (by simpa using oldGenerator_mem_orderPiece k n (.inl i))
+    (by exact (presentedCoordinate_commutes_oldGenerator k n (.inl i)).symm)
 
 /-- The degree-one page operator induced by a tangential momentum generator. -/
 def tangentialMomentumPageOperator
     (n N : ℕ) (d : PresentedWeyl k (n + 1))
     (i : Fin n) :
     PageOperator k n N d 1 := by
-  apply tangentialPageOperator k n N d
+  exact tangentialPageOperator k n N d
     (oldGenerator k n (.inr i)) 1
-  · simpa using oldGenerator_mem_orderPiece k n (.inr i)
-  · exact (presentedCoordinate_commutes_oldGenerator k n (.inr i)).symm
+    (by simpa using oldGenerator_mem_orderPiece k n (.inr i))
+    (by exact (presentedCoordinate_commutes_oldGenerator k n (.inr i)).symm)
 
 
 /-- The order degree of a tangential generator: zero for positions and one for momenta. -/

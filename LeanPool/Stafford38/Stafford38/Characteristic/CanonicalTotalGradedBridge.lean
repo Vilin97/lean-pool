@@ -85,55 +85,57 @@ noncomputable def nonpositiveDirectSumLinearEquiv
     (e : ∀ m : ℕ, A (negIndex m) ≃ₗ[k] B m)
     (hpos : ∀ p, 0 < p → Subsingleton (A p)) :
     DirectSum ℤ A ≃ₗ[k] DirectSum ℕ B := by
-  refine LinearEquiv.ofLinearMap (nonpositiveDirectSumToNat k e)
-    (natDirectSumToNonpositive k e) ?_ ?_
-  · apply DirectSum.linearMap_ext k
-    intro m
-    apply LinearMap.ext
-    intro x
-    change nonpositiveDirectSumToNat k e
-        (natDirectSumToNonpositive k e (DirectSum.lof k ℕ B m x)) =
-      DirectSum.lof k ℕ B m x
-    rw [natDirectSumToNonpositive_lof]
-    cases m with
-    | zero =>
-        rw [nonpositiveDirectSumToNat, DirectSum.toModule_lof]
-        change DirectSum.lof k ℕ B 0 (e 0 ((e 0).symm x)) = _
-        rw [(e 0).apply_symm_apply]
-    | succ m =>
-        rw [nonpositiveDirectSumToNat, DirectSum.toModule_lof]
-        change DirectSum.lof k ℕ B (m + 1)
-            (e (m + 1) ((e (m + 1)).symm x)) = _
-        rw [(e (m + 1)).apply_symm_apply]
-  · apply DirectSum.linearMap_ext k
-    intro p
-    apply LinearMap.ext
-    intro x
-    change natDirectSumToNonpositive k e
-        (nonpositiveDirectSumToNat k e (DirectSum.lof k ℤ A p x)) =
-      DirectSum.lof k ℤ A p x
-    cases p with
-    | ofNat n =>
-        cases n with
-        | zero =>
-            rw [nonpositiveDirectSumToNat, DirectSum.toModule_lof]
-            change natDirectSumToNonpositive k e
-                (DirectSum.lof k ℕ B 0 (e 0 x)) = DirectSum.lof k ℤ A 0 x
-            rw [natDirectSumToNonpositive_lof]
-            congr 1
-            exact (e 0).symm_apply_apply (show A (negIndex 0) from x)
-        | succ n =>
-            have := hpos (Int.ofNat (n + 1)) (by simp)
-            simp [nonpositiveDirectSumToNat, Subsingleton.elim x 0]
-    | negSucc n =>
-        rw [nonpositiveDirectSumToNat, DirectSum.toModule_lof]
-        change natDirectSumToNonpositive k e
-            (DirectSum.lof k ℕ B (n + 1) (e (n + 1) x)) =
-          DirectSum.lof k ℤ A (Int.negSucc n) x
-        rw [natDirectSumToNonpositive_lof]
-        congr 1
-        exact (e (n + 1)).symm_apply_apply
-          (show A (negIndex (n + 1)) from x)
+  exact LinearEquiv.ofLinearMap (nonpositiveDirectSumToNat k e)
+    (natDirectSumToNonpositive k e)
+    (by
+      apply DirectSum.linearMap_ext k
+      intro m
+      apply LinearMap.ext
+      intro x
+      change nonpositiveDirectSumToNat k e
+          (natDirectSumToNonpositive k e (DirectSum.lof k ℕ B m x)) =
+        DirectSum.lof k ℕ B m x
+      rw [natDirectSumToNonpositive_lof]
+      cases m with
+      | zero =>
+          rw [nonpositiveDirectSumToNat, DirectSum.toModule_lof]
+          change DirectSum.lof k ℕ B 0 (e 0 ((e 0).symm x)) = _
+          rw [(e 0).apply_symm_apply]
+      | succ m =>
+          rw [nonpositiveDirectSumToNat, DirectSum.toModule_lof]
+          change DirectSum.lof k ℕ B (m + 1)
+              (e (m + 1) ((e (m + 1)).symm x)) = _
+          rw [(e (m + 1)).apply_symm_apply])
+    (by
+      apply DirectSum.linearMap_ext k
+      intro p
+      apply LinearMap.ext
+      intro x
+      change natDirectSumToNonpositive k e
+          (nonpositiveDirectSumToNat k e (DirectSum.lof k ℤ A p x)) =
+        DirectSum.lof k ℤ A p x
+      cases p with
+      | ofNat n =>
+          cases n with
+          | zero =>
+              rw [nonpositiveDirectSumToNat, DirectSum.toModule_lof]
+              change natDirectSumToNonpositive k e
+                  (DirectSum.lof k ℕ B 0 (e 0 x)) = DirectSum.lof k ℤ A 0 x
+              rw [natDirectSumToNonpositive_lof]
+              congr 1
+              exact (e 0).symm_apply_apply (show A (negIndex 0) from x)
+          | succ n =>
+              have := hpos (Int.ofNat (n + 1)) (by simp)
+              simp [nonpositiveDirectSumToNat, Subsingleton.elim x 0]
+      | negSucc n =>
+          rw [nonpositiveDirectSumToNat, DirectSum.toModule_lof]
+          change natDirectSumToNonpositive k e
+              (DirectSum.lof k ℕ B (n + 1) (e (n + 1) x)) =
+            DirectSum.lof k ℤ A (Int.negSucc n) x
+          rw [natDirectSumToNonpositive_lof]
+          congr 1
+          exact (e (n + 1)).symm_apply_apply
+            (show A (negIndex (n + 1)) from x))
 
 @[simp]
 private theorem nonpositiveDirectSumLinearEquiv_lof
