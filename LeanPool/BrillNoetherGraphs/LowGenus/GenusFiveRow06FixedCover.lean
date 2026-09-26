@@ -4752,7 +4752,9 @@ theorem base_holds (length : Fin 12 → ℕ) (hChamber : Chamber length) :
   obtain ⟨⟨q0, q1, q2⟩, r0, r1, r2⟩ := hChamber
   intro form hForm
   simp only [base, List.mem_cons, List.not_mem_nil, or_false] at hForm
-  rcases hForm with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+  rcases hForm with
+    rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl |
+    rfl | rfl
   all_goals simp [aff,
     _root_.Utilities.Certificate.AffineCover.AffineForm.Holds,
     _root_.Utilities.Certificate.AffineCover.AffineForm.eval,

@@ -377,7 +377,8 @@ theorem level1_1 :
     simp only [Bool.not_true, Bool.false_or]
     have hCanonical : canonicalPrefix [[0, 0, 0, 0, 0, 1, 2], part] = true := by
       simpa using hAccept
-    rcases row1Branches1 part hPart hCanonical with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    rcases row1Branches1 part hPart hCanonical with
+      rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
     · exact chunk03
     · exact chunk04
     · exact chunk05
@@ -403,7 +404,8 @@ theorem level1_2 :
     simp only [Bool.not_true, Bool.false_or]
     have hCanonical : canonicalPrefix [[0, 0, 0, 0, 1, 1, 1], part] = true := by
       simpa using hAccept
-    rcases row1Branches2 part hPart hCanonical with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    rcases row1Branches2 part hPart hCanonical with
+      rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
     · exact chunk13
     · exact chunk14
     · exact chunk15
@@ -469,102 +471,122 @@ theorem decode (rows : List (List ℕ)) (hLeaf : leafDecide rows = true)
       fin_cases idx
       · refine ⟨GenusFiveCubicAtlas.row01, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row00 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row02, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row01 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row03, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row02 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row04, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row03 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row05, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row04 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row06, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row05 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row07, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row06 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row08, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row07 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row09, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row08 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row10, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row09 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row11, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row10 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row12, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row11 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row13, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row12 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row14, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row13 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row15, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row14 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.row16, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row15 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.rootDouble, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row16 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.oneChord, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row17 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.square, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row18 (permOf p i) (permOf p j)
       · refine ⟨GenusFiveCubicAtlas.doubleMatching, ?_,
           Equiv.ofBijective (permOf p) hBij, fun i j => ?_⟩
-        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas, GenusFiveCubicAtlas.bridgeAtlas]
+        · simp [GenusFiveCubicAtlas.atlas, GenusFiveCubicAtlas.arAtlas,
+            GenusFiveCubicAtlas.bridgeAtlas]
         · rw [hMatch i j]
           exact atlasEntry_row19 (permOf p i) (permOf p j)
 
