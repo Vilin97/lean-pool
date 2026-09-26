@@ -38,7 +38,7 @@ local notation "towerAbsoluteUnits" => intrinsicAbsoluteUnits
 
 local notation "towerAbstractBase" => intrinsicAbstractBase
 
-private def towerLowerEmbedding
+def towerLowerEmbedding
     (K E L : Type)
     [Field K] [Field E] [Field L]
     [Algebra K E] [Algebra E L] [Algebra K L]

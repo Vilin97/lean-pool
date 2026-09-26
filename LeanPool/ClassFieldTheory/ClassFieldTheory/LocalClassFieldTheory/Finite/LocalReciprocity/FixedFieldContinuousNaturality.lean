@@ -34,7 +34,7 @@ variable (k Ω : Type) [Field k] [Field Ω] [Algebra k Ω] [IsGalois k Ω]
 /-- The quotient topology on the algebraic abelianization.  Its underlying
 quotient is opaque to typeclass search, so expose the canonical topology
 locally while constructing the continuous finite maps. -/
-private local instance abelianizationQuotientTopologicalSpace
+local instance abelianizationQuotientTopologicalSpace
     (G : Type*) [Group G] [TopologicalSpace G] :
     TopologicalSpace (Abelianization G) := by
   change TopologicalSpace (G ⧸ commutator G)

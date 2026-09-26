@@ -48,10 +48,7 @@ private instance equalCharacteristicDirectBracketLevelCharP
     [CharP K F.residueCharacteristic] (n : ℕ) :
     CharP (equalCharacteristicCompletedLevelField F n)
       F.residueCharacteristic :=
-  charP_of_injective_algebraMap
-    (algebraMap (equalCharacteristicCompletedUnramifiedField F.residueField)
-      (equalCharacteristicCompletedLevelField F n)).injective
-    F.residueCharacteristic
+  equalCharacteristicDirectThetaCompletedLevelCharP F n
 
 noncomputable local instance equalCharacteristicDirectBracketBaseValuationIsNontrivial
     (F : LocalField.{u, v} K) :

@@ -386,7 +386,8 @@ theorem finiteGaloisAbstractUnramifiedFrobenius_eq_arithmeticFrobenius :
         ((localResidueDatum K).unramifiedFrobenius
           (finiteResidueAbstractBase K)
           (finiteGaloisAbstractExtensionOfEmbedding K L i).field
-          (finiteGaloisAbstractExtensionOfEmbedding K L i).below) =
+          (finiteGaloisAbstractExtensionOfEmbedding K L i).below
+          (hnormal := by exact (finiteGaloisAbstractExtensionOfEmbedding K L i).normal)) =
       arithmeticFrobeniusOfUnramifiedValuation K L := by
   let phi := abstractBaseFrobeniusLift K
   let q : Gal(L/K) :=

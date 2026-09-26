@@ -120,7 +120,7 @@ theorem card_normQuotient_eq_finrank_of_isAbelianGalois
     [IsNonarchimedeanLocalField K]
     [Field L] [Algebra K L] [FiniteDimensional K L] [IsAbelianGalois K L] :
     letI : Finite (NormQuotient K L) :=
-      normQuotientFiniteOfIsAbelianGalois K L
+      by exact normQuotientFiniteOfIsAbelianGalois K L
     Nat.card (NormQuotient K L) = Module.finrank K L := by
   let : Finite (NormQuotient K L) :=
     normQuotientFiniteOfIsAbelianGalois K L

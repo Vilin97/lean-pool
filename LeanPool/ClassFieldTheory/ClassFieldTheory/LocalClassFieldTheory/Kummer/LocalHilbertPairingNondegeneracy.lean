@@ -139,7 +139,7 @@ theorem localHilbertSymbol_right_kernel
   · intro h a
     rw [localHilbertSymbol_skew K n hnK hmu a b, h a, inv_one]
 
-private noncomputable def localHilbertRightPowerClassHom
+noncomputable def localHilbertRightPowerClassHom
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty) (a : Kˣ) :
     (Kˣ ⧸ (powMonoidHom (n : ℕ) : Kˣ →* Kˣ).range) →*

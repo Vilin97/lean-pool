@@ -67,10 +67,7 @@ private instance equalCharacteristicDirectTargetLevelCharP
     [CharP K F.residueCharacteristic] (n : ℕ) :
     CharP (equalCharacteristicCompletedLevelField F n)
       F.residueCharacteristic :=
-  charP_of_injective_algebraMap
-    (algebraMap (equalCharacteristicCompletedUnramifiedField F.residueField)
-      (equalCharacteristicCompletedLevelField F n)).injective
-    F.residueCharacteristic
+  equalCharacteristicDirectThetaCompletedLevelCharP F n
 
 /-- The direct analytic target parameter is exactly the image of the
 changed Laurent uniformizer `uT`. -/

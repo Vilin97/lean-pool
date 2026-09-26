@@ -1151,7 +1151,7 @@ theorem fullLogLattice_herbrandQuotient_eq_stabilizerProduct_div_card
               (SUnitGroup.LogPlace (K := L) S),
           Fintype (permutationOrbitStabilizer ω) :=
       fun _ => Fintype.ofFinite _
-    ∃ h :
+    ∃ _ :
         HerbrandQuotientDefined
           (L ≃ₐ[K] L)
           (Multiplicative
@@ -1353,7 +1353,7 @@ theorem sUnit_herbrandQuotient_eq_stabilizerProduct_div_card
               (SUnitGroup.LogPlace (K := L) S),
           Fintype (permutationOrbitStabilizer ω) :=
       fun _ => Fintype.ofFinite _
-    ∃ h :
+    ∃ _ :
         HerbrandQuotientDefined
           (L ≃ₐ[K] L)
           (SUnitGroup (K := L) S) σ,
@@ -1748,7 +1748,7 @@ theorem sUnit_herbrandQuotient_eq_localDegreeProduct_div_card
               (SUnitGroup.LogPlace (K := L) S),
           Fintype (permutationOrbitStabilizer ω) :=
       fun _ => Fintype.ofFinite _
-    ∃ h :
+    ∃ _ :
         HerbrandQuotientDefined
           (L ≃ₐ[K] L)
           (SUnitGroup (K := L) S) σ,

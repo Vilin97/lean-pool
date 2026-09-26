@@ -241,6 +241,10 @@ theorem infinitePlaceTensorRingEquivAbove_tmul
   dsimp only [infinitePlaceAboveToExtension]
   rw [completionTensorDecomposition_left_tmul_apply, map_mul]
   congr 1
+  apply InfinitePlace.Completion.ext
+  exact DFunLike.congr_fun
+    (infinitePlaceCompletionAlgEquiv_algebraMap
+      (K := K) (L := L) w W.1 W.2) a
 
 /-- Flatten the products over finite base places and places above them
 to the product over all finite places of the extension field. -/

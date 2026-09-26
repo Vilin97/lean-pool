@@ -33,6 +33,10 @@ variable (i : L →ₐ[K] SeparableClosure K)
 
 local notation "Eᵢ" => finiteGaloisAbstractExtensionOfEmbedding K L i
 
+/-- The intrinsic absolute Galois group has its canonical Hausdorff Krull topology. -/
+local instance concretePrimeNormAbsoluteGaloisT2Space : T2Space (intrinsicAbsoluteGalois K) :=
+  krullTopology_t2 (K := K) (L := SeparableClosure K)
+
 /-- The concrete local norm-residue symbol evaluated on the norm of a prime
 element in the fixed field of a positive Frobenius lift.
 
