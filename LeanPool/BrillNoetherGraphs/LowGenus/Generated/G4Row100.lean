@@ -56,59 +56,175 @@ def rw0 : RichWitness :=
   { divisorCore := [0, 0, 0, 1, 1, 0]
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
-      { potential := [[], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1]]
-        blocks := [[⟨[0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], 1, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0,
+          0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1]]
+        blocks := [[⟨[0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 0, 1, 0, 0, 0,
+          -1], 0, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], 1, 1⟩, ⟨[0, 0, 0,
+          1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1,
+          [(1, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1, 0, -1], 1, 1⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0,
+          0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1, 0, -1], 1, 1⟩,
+          ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0,
+          0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [(10, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1,
+          [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [],
+          0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -119,59 +235,175 @@ def rw1 : RichWitness :=
   { divisorCore := [0, 0, 0, 1, 1, 0]
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
-      { potential := [[], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1]]
-        blocks := [[⟨[0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], 1, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0,
+          0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1]]
+        blocks := [[⟨[0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 0, 1, 0, 0, 0,
+          -1], 0, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], 1, 1⟩, ⟨[0, 0, 0,
+          1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1,
+          [(1, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 1, 0, 0, 1], [], [0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 1, 0, 0, 1], [], [0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0,
+          0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 0, 0, 1],
+          [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 0, 1⟩], [⟨[0,
+          0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(14,
+          1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)],
+          [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -182,59 +414,175 @@ def rw2 : RichWitness :=
   { divisorCore := [0, 0, 0, 1, 1, 0]
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
-      { potential := [[], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1]]
-        blocks := [[⟨[0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], 1, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0,
+          0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1]]
+        blocks := [[⟨[0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 0, 1, 0, 0, 0,
+          -1], 0, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], 1, 1⟩, ⟨[0, 0, 0,
+          1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1,
+          [(1, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 1, 1], [], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 1, 1], [], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1,
+          1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0,
+          0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩, ⟨[0, 0,
+          0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0,
+          0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [(5, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩,
+          ⟨1, [(14, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -246,58 +594,173 @@ def rw3 : RichWitness :=
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
       { potential := [[], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]]
-        blocks := [[⟨[0, 1], [0, 1], 1, 1⟩], [⟨[0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [0, 1], 0, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [0, 1], 1, 1⟩], [⟨[0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0,
+          -1], [0, 1], 0, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [(0, 1)],
+          [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1, 0, -1], 1, 1⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0,
+          0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1, 0, -1], 1, 1⟩,
+          ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0,
+          0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [(10, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1,
+          [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [],
+          0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -309,58 +772,173 @@ def rw4 : RichWitness :=
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
       { potential := [[], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]]
-        blocks := [[⟨[0, 1], [0, 1], 1, 1⟩], [⟨[0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [0, 1], 0, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [0, 1], 1, 1⟩], [⟨[0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0,
+          -1], [0, 1], 0, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [(0, 1)],
+          [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 1, 0, 0, 1], [], [0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 1, 0, 0, 1], [], [0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0,
+          0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 0, 0, 1],
+          [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 0, 1⟩], [⟨[0,
+          0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(14,
+          1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)],
+          [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -372,58 +950,173 @@ def rw5 : RichWitness :=
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
       { potential := [[], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]]
-        blocks := [[⟨[0, 1], [0, 1], 1, 1⟩], [⟨[0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [0, 1], 0, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [0, 1], 1, 1⟩], [⟨[0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0,
+          -1], [0, 1], 0, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [(0, 1)],
+          [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 1, 1], [], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 1, 1], [], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1,
+          1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0,
+          0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩, ⟨[0, 0,
+          0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0,
+          0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [(5, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩,
+          ⟨1, [(14, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -435,58 +1128,173 @@ def rw6 : RichWitness :=
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
       { potential := [[], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]]
-        blocks := [[⟨[0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 1, 0,
+          0, 0, -1], [0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1,
+          [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [(1, 1)],
+          [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1, 0, -1], 1, 1⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0,
+          0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1, 0, -1], 1, 1⟩,
+          ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0,
+          0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [(10, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1,
+          [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [],
+          0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -498,58 +1306,173 @@ def rw7 : RichWitness :=
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
       { potential := [[], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]]
-        blocks := [[⟨[0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 1, 0,
+          0, 0, -1], [0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1,
+          [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [(1, 1)],
+          [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 1, 0, 0, 1], [], [0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 1, 0, 0, 1], [], [0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0,
+          0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 0, 0, 1],
+          [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 0, 1⟩], [⟨[0,
+          0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(14,
+          1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)],
+          [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -561,58 +1484,173 @@ def rw8 : RichWitness :=
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
       { potential := [[], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]]
-        blocks := [[⟨[0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 1, 0,
+          0, 0, -1], [0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩⟩], [⟨⟨1,
+          [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [(1, 1)],
+          [], 0⟩, ⟨1, [(12, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 1, 1], [], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 1, 1], [], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1,
+          1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0,
+          0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩, ⟨[0, 0,
+          0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0,
+          0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [(5, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩,
+          ⟨1, [(14, 1)], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1],
+          [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 0, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(4, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩],
+          [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]],
+          [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]]]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1, 0, 0, 0, -1], [],
+          0, 0⟩, ⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], -1, -1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩],
+          [⟨[0, 0, 0, 0, 0, 1, 0, -1], [], 0, 0⟩, ⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+          0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩]]
         headSlack := [0, 0, 1, 0, 1, 0, 0, 0, 0]
         tailSlack := [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩]]
-        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
-        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
+        blockCert := [[⟨⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(1, 1)], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(9, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [],
+          0⟩⟩, ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(3, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩,
+          ⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(5, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1,
+          [(7, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩⟩], [⟨⟨1, [(8, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩⟩]]
+        tailSlackCert := [Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt,
+          Cert.dflt, Cert.dflt, Cert.dflt]
+        headSlackCert := [Cert.dflt, Cert.dflt, ⟨1, [(15, 1)], [], 0⟩, Cert.dflt, ⟨1, [(15, 1)],
+          [], 0⟩, Cert.dflt, Cert.dflt, Cert.dflt, Cert.dflt]
+        separationCert := [[[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt,
+          Cert.dflt], [Cert.dflt, Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt,
+          Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt],
+          [Cert.dflt, Cert.dflt]], [[Cert.dflt, Cert.dflt], [Cert.dflt, Cert.dflt]]]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -623,47 +1661,85 @@ def w9 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
-      { potential := [[], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1]]
-        blocks := [[⟨[0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 1, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0,
+          0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1]]
+        blocks := [[⟨[0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 0, 1, 0, 0, 0,
+          -1], 0, 1⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 1, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0,
+          0, 1], [0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -674,47 +1750,85 @@ def w10 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
-      { potential := [[], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1]]
-        blocks := [[⟨[0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 1, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0,
+          0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1]]
+        blocks := [[⟨[0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 0, 1, 0, 0, 0,
+          -1], 0, 1⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 1, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 1, 0, 0, 1], [], [0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 1, 0, 0, 1], [], [0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0,
+          0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 1], [0,
+          0, 0, 0, 1, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0,
+          0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(3, 1), (6, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(3,
+          1), (6, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(14,
+          1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -725,47 +1839,85 @@ def w11 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
-      { potential := [[], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1]]
-        blocks := [[⟨[0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 1, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0,
+          0, -1], [0, 0, 0, 1, 0, 0, 0, -1], [0, 0, 0, 1, 0, 0, 0, -1]]
+        blocks := [[⟨[0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 0, 1, 0, 0, 0,
+          -1], 0, 1⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 1, 0, 0, 0, -1], 1, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(9, 1)], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [(11, 1)], [], 0⟩, ⟨1, [(12, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [],
+          0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 1, 1], [], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 1, 1], [], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1,
+          1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0,
+          1], [0, 0, 0, 0, 0, 0, 1, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(5, 1), (6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1,
+          [(5, 1), (6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1,
+          [(14, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -777,46 +1929,82 @@ def w12 : Witness :=
     chips := []
     anchors := [
       { potential := [[], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]]
-        blocks := [[⟨[0, 1], [0, 1], 1, 1⟩], [⟨[0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [0, 1], 1, 1⟩], [⟨[0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 1], [0, 1],
+          0, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(6, 1), (12, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(6, 1), (12, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0,
+          0, 1], [0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -828,46 +2016,82 @@ def w13 : Witness :=
     chips := []
     anchors := [
       { potential := [[], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]]
-        blocks := [[⟨[0, 1], [0, 1], 1, 1⟩], [⟨[0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [0, 1], 1, 1⟩], [⟨[0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 1], [0, 1],
+          0, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(6, 1), (12, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(6, 1), (12, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 1, 0, 0, 1], [], [0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 1, 0, 0, 1], [], [0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0,
+          0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 1], [0,
+          0, 0, 0, 1, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0,
+          0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(3, 1), (6, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(3,
+          1), (6, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(14,
+          1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -879,46 +2103,82 @@ def w14 : Witness :=
     chips := []
     anchors := [
       { potential := [[], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]]
-        blocks := [[⟨[0, 1], [0, 1], 1, 1⟩], [⟨[0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [0, 1], 1, 1⟩], [⟨[0, 0, 1], [0, 1], 0, 1⟩], [⟨[0, 0, 0, 1], [0, 1],
+          0, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0,
+          1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(6, 1), (12, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [(0, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩, ⟨1, [(6, 1), (12, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 1, 1], [], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 1, 1], [], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1,
+          1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0,
+          1], [0, 0, 0, 0, 0, 0, 1, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(5, 1), (6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1,
+          [(5, 1), (6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1,
+          [(14, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -930,46 +2190,82 @@ def w15 : Witness :=
     chips := []
     anchors := [
       { potential := [[], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]]
-        blocks := [[⟨[0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 1], [0,
+          0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [(11, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1), (12, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [(11, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1), (12, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0, 1⟩], [⟨[0, 0, 0, 0,
+          0, 1], [0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1, 0, -1], 0,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -981,46 +2277,82 @@ def w16 : Witness :=
     chips := []
     anchors := [
       { potential := [[], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]]
-        blocks := [[⟨[0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 1], [0,
+          0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [(11, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1), (12, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [(11, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1), (12, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 1, 0, 0, 1], [], [0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 1, 0, 0, 1], [], [0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 1], [0,
+          0, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 1], [0,
+          0, 0, 0, 1, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0,
+          0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(3, 1), (6, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(3,
+          1), (6, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(14,
+          1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
@@ -1032,46 +2364,82 @@ def w17 : Witness :=
     chips := []
     anchors := [
       { potential := [[], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]]
-        blocks := [[⟨[0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [0, 0, 1], 0, 1⟩], [⟨[0, 0, 1], [0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 1], [0,
+          0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [(11, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1), (12, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1,
+          [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [(11, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1), (12, 1)], [], 0⟩, ⟨1, [],
+          [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 1, 1], [], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1]]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 1, 1], [], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1,
+          1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0,
+          1], [0, 0, 0, 0, 0, 0, 1, 1], 0, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1], 1,
+          1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0,
+          0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(5, 1), (6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1,
+          [(5, 1), (6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 0⟩, ⟨1,
+          [(14, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
       { potential := [[], [], [], [], [], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [], 0, 0⟩], [⟨[0,
+          0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [],
+          0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0,
+          0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩,
+          ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       },
-      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], []]
-        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩]]
+      { potential := [[0, 0, 0, 0, 0, 0, 0, 1], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], []]
+        blocks := [[⟨[0, 1], [], 0, 0⟩], [⟨[0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, -1], 0, 0⟩], [⟨[0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0,
+          0, 0, 1], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+          0, 0, 0, 0, 0, 1], 1, 1⟩], [⟨[0, 0, 0, 0, 0, 0, 0, 0, 1], [], 0, 0⟩], [⟨[0, 0, 0, 0, 0,
+          0, 0, 0, 0, 1], [], 0, 0⟩]]
         headSlack := []
         tailSlack := []
-        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
-        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        loCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
+        hiCert := [⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [(15,
+          1)], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩, ⟨1, [], [], 0⟩]
       }
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
