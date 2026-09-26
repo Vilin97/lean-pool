@@ -180,11 +180,11 @@ theorem rosenthal_bennett_kernel_integral_le
   have hsmall :
       IntegrableOn f (Set.Ioc (0 : ℝ) 1) volume := by
     change Integrable f (volume.restrict (Set.Ioc (0 : ℝ) 1))
-    exact hsmall_Icc.mono_measure (Measure.restrict_mono Ioc_subset_Icc_self le_rfl)
+    exact hsmall_Icc.mono_set Ioc_subset_Icc_self
   have hmid :
       IntegrableOn f (Set.Ioc (1 : ℝ) (Real.exp 2)) volume := by
     change Integrable f (volume.restrict (Set.Ioc (1 : ℝ) (Real.exp 2)))
-    exact hmid_Icc.mono_measure (Measure.restrict_mono Ioc_subset_Icc_self le_rfl)
+    exact hmid_Icc.mono_set Ioc_subset_Icc_self
   have htail :
       IntegrableOn f (Set.Ioi (Real.exp 2)) volume := by
     simpa [IntegrableOn] using htail_Ioi
@@ -337,11 +337,11 @@ theorem integrableOn_rosenthal_bennett_kernel
   have hsmall :
       IntegrableOn f (Set.Ioc (0 : ℝ) 1) volume := by
     change Integrable f (volume.restrict (Set.Ioc (0 : ℝ) 1))
-    exact hsmall_Icc.mono_measure (Measure.restrict_mono Ioc_subset_Icc_self le_rfl)
+    exact hsmall_Icc.mono_set Ioc_subset_Icc_self
   have hmid :
       IntegrableOn f (Set.Ioc (1 : ℝ) (Real.exp 2)) volume := by
     change Integrable f (volume.restrict (Set.Ioc (1 : ℝ) (Real.exp 2)))
-    exact hmid_Icc.mono_measure (Measure.restrict_mono Ioc_subset_Icc_self le_rfl)
+    exact hmid_Icc.mono_set Ioc_subset_Icc_self
   have htail :
       IntegrableOn f (Set.Ioi (Real.exp 2)) volume := by
     simpa [IntegrableOn] using htail_Ioi

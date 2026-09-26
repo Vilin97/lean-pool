@@ -86,7 +86,8 @@ private theorem exactOverlapLocalOscillation_two_eq_ofReal {d : ℕ}
     show ENNReal.ofReal (2 : ℝ) = (2 : ℝ≥0∞) by norm_num]
   rw [← ENNReal.ofReal_toReal hsub.eLpNorm_ne_top]
   unfold cubeBesovOverlapOscillation ScalarOverlap.cubeLpNorm
-  rw [hmean]
+  rw [hmean] at hsub ⊢
+  rw [Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _ hsub.aestronglyMeasurable]
 
 private theorem exactOverlapDepthAverage_two_eq_ofReal {d : ℕ}
     (Q : TriadicCube d) (u : Vec d → ℝ)

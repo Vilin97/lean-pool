@@ -478,6 +478,7 @@ theorem tendsto_cubeBesovPairing_projection_left_of_memLp {d : ℕ}
       MeasureTheory.MemLp (fun x => g x - h x) q (normalizedCubeMeasure Q) :=
     hg.sub hmem
   have hdiffNorm : cubeLpNorm Q q (fun x => g x - h x) ≤ δ := by
+    rw [cubeLpNorm_eq_eLpNorm_toReal Q q _ hdiffMem.aestronglyMeasurable]
     change (MeasureTheory.eLpNorm (g - ⇑h) q (normalizedCubeMeasure Q)).toReal ≤ δ
     calc
       (MeasureTheory.eLpNorm (g - ⇑h) q (normalizedCubeMeasure Q)).toReal

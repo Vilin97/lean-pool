@@ -65,11 +65,11 @@ private theorem deriv_memScalarL2 (φ : H1WeakTestFunction U) (i : Fin d) :
 
 /-- The scalar `L²(U)` class of a test function. -/
 noncomputable def toScalarL2 (φ : H1WeakTestFunction U) : ScalarL2 U :=
-  Homogenization.toScalarL2 (by exact φ.memScalarL2)
+  Homogenization.toScalarL2 (u := φ) (by exact φ.memScalarL2)
 
 /-- The scalar `L²(U)` class of the `i`th derivative of a test function. -/
 noncomputable def derivToScalarL2 (φ : H1WeakTestFunction U) (i : Fin d) : ScalarL2 U :=
-  Homogenization.toScalarL2 (by exact φ.deriv_memScalarL2 i)
+  Homogenization.toScalarL2 (u := φ.deriv i) (by exact φ.deriv_memScalarL2 i)
 
 @[simp] theorem coeFn_toScalarL2 (φ : H1WeakTestFunction U) :
     φ.toScalarL2 =ᵐ[volumeMeasureOn U] φ :=

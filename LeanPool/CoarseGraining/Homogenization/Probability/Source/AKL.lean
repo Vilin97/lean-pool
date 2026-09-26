@@ -7,7 +7,7 @@ module
 
 
 public import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
-public import Mathlib.Analysis.Calculus.ContDiff.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
 public import Mathlib.Analysis.Normed.Lp.SmoothApprox
 public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 public import Mathlib.MeasureTheory.Function.AEEqFun

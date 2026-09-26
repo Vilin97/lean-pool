@@ -22,7 +22,8 @@ namespace Homogenization.Book.Ch04
 
 open MeasureTheory
 
-private instance instMeasurableSpaceMat (d : ℕ) : MeasurableSpace (Mat d) :=
+/-- Matrices use the product measurable space of their real entries. -/
+instance instMeasurableSpaceMat (d : ℕ) : MeasurableSpace (Mat d) :=
   inferInstanceAs (MeasurableSpace (Fin d → Fin d → ℝ))
 
 /-- A random variable local for the exact coarse source sigma algebra. -/

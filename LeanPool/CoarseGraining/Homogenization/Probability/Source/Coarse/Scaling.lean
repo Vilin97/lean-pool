@@ -281,8 +281,8 @@ noncomputable def Carrier.rescaleMeasurableEquiv {d : ℕ} (k : ℕ) :
   toEquiv :=
     { toFun := Carrier.rescale k
       invFun := Carrier.dilateNat k
-      left_inv := Carrier.smul_dilateNat_rescale k
-      right_inv := Carrier.smul_rescale_dilateNat k }
+      left_inv := by exact Carrier.smul_dilateNat_rescale k
+      right_inv := by exact Carrier.smul_rescale_dilateNat k }
   measurable_toFun := measurable_rescale_globalSigma k
   measurable_invFun := measurable_dilateNat_globalSigma k
 

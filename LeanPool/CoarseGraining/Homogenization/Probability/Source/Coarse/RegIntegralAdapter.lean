@@ -53,7 +53,7 @@ private theorem locallyIntegrable_coarse_entry {d : ℕ} (a : Carrier d)
 def coarseToRegular {d : ℕ} (a : Carrier d) : RegCoeffField d where
   toFun := a
   entry_measurable := a.2.1
-  entry_locInt := locallyIntegrable_coarse_entry a
+  entry_locInt := by exact locallyIntegrable_coarse_entry a
 
 /-- The coarse-to-regular realization preserves every literal field value. -/
 @[simp] theorem coarseToRegular_apply {d : ℕ} (a : Carrier d) (x : Vec d) :

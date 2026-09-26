@@ -186,7 +186,8 @@ theorem meanZeroNegativeSobolevAbsSeminorm_eq_iSup (p : ENNReal) (hp_one : 1 < p
 
 /-! ## Test-class symmetry -/
 
-private noncomputable def negW1pFunction {p : ENNReal} (u : W1pFunction U p) :
+/-- Negate a Sobolev function and its weak gradient on the same domain. -/
+noncomputable def negW1pFunction {p : ENNReal} (u : W1pFunction U p) :
     W1pFunction U p :=
   { toFun := -u.toFun
     grad := -u.grad
