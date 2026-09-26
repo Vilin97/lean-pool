@@ -3013,44 +3013,28 @@ theorem order_Q_le_lam_of_factorization
   linarith [hQrR, hQR]
 
 /-!
-## Main theorem: Hadamard factorization, general finite order
+## Hadamard factorization for a function nonzero at the origin
 
-**Conway Chapter XI, Theorem 3.4** (PNG `p289_pdf300.png`): every entire
-function of finite order `λ` has finite genus `μ ≤ λ` and admits the
-factorization
-  `f(z) = z^m · exp(g(z)) · ∏ Eₚ(z / aₙ)`
-with `p = ⌊λ⌋`, `g` polynomial of degree `≤ p`, and the product over
-non-zero zeros with multiplicity.
-
-Here we state the theorem via `ZeroSetMultiplicity` so that the zero
-enumeration, the zero at origin `m`, and the multiplicity tracking are
-explicit.
+The following declaration proves the `f 0 ≠ 0` case of Conway, Chapter XI, Theorem 3.4
+(pages 289–290). The hypotheses `h_zeros_only` and `h_z_ne_zero` force this restriction:
+all zeros are enumerated by `Z`, and every enumerated zero is nonzero.
+Conway handles a zero of multiplicity `m` at the origin by first dividing out `z^m`;
+that reduction is not part of this declaration. Multiplicities of the nonzero zeros
+are recorded by `ZeroSetMultiplicity`.
 -/
 
--- This final assembly theorem combines several large bounds
--- and exceeds the default heartbeat limit.
-/-- **Hadamard Factorization Theorem (general finite order, multiplicity-aware).**
+/-- Hadamard factorization of general finite order, in the `f 0 ≠ 0` case.
 
-Let `f : ℂ → ℂ` be an entire function of finite order `λ ≥ 0`. Let
-`p := ⌊λ⌋` and let `Z` enumerate the non-zero zeros of `f` with their
-multiplicities. Let `m := analyticOrderNatAt f 0` be the multiplicity of
-the zero of `f` at the origin. Then there exists a polynomial `g` of
-degree `≤ p` such that
+For an entire function of order at most `lam ≥ 0`, let `Z` enumerate all its zeros,
+with their multiplicities, and assume every enumerated zero is nonzero. There is a
+polynomial `g` of degree at most `⌊lam⌋` such that
 ```
-f(z) = z^m · Complex.exp (g.eval z) · ∏' i : Z.ZeroWithMultiplicity,
-          Hadamard.weierstrassE p (z / Z.zWithMultiplicity i)
+f z = Complex.exp (g.eval z) * canonicalProductZeroSetMultiplicityRank Z (Nat.floor lam) z.
 ```
-for all `z : ℂ`.
-
-**Conway reference.** Chapter XI, Theorem 3.4 (page 289, PNG
-`p289_pdf300.png`). This is the multiplicity-aware, any-finite-order form
-of Hadamard's factorization theorem. The classical statement in Conway
-uses an enumeration `{aₙ}` of zeros counted with multiplicity; we
-equivalently use a `ZeroSetMultiplicity` which bundles the distinct
-indexing plus the multiplicity function.
-
-**Proof path.** Borel–Carathéodory + growth bounds + Cauchy's estimate.
-Does not use Poisson–Jensen. -/
+The assumptions imply `f 0 ≠ 0`, so the formula has no factor for an origin zero.
+This is the corresponding special case of Conway, Chapter XI, Theorem 3.4 (page 289),
+with a multiplicity-indexed product. The proof combines Borel–Carathéodory, growth bounds,
+and Cauchy's estimate. -/
 theorem hadamard_factorization_general
     (f : ℂ → ℂ)
     (hf_entire : Differentiable ℂ f)

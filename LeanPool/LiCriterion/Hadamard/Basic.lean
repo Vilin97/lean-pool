@@ -622,29 +622,23 @@ Let M = max_{|z|=R} Re f(z). We want to show max_{|z|≤r} |f(z)| ≤ 2rM/(R-r).
 
 
 --------------------------------------------------------------------------------
-### Borel-Carathéodory Theorem - Titchmarsh §3.9
+### Borel–Carathéodory and Titchmarsh §3.9
 
-**KEY REFERENCE**: Titchmarsh pages 56-57, Lemma α/β/γ
-**SCREENSHOT**:
+Titchmarsh, The Theory of the Riemann Zeta-Function, §3.9 (pages 56–57), uses
+Borel–Carathéodory in the proof of Lemma α, referring to Theory of Functions §5.5.
+Lemma β is a subsequent logarithmic-derivative bound under Lemma α's hypotheses and
+an additional zero-free half-disk condition; its constant is written `AM/r`.
 
-This inequality is essential for proving zero-free regions of ζ(s).
-
-TITCHMARSH LEMMA β states: "If f has no zeros in right-half of circle |s-s₀| ≤ r,
-then -R{f'(s₀)/f(s₀)} < 2M/r"
-
-The proof uses Borel-Carathéodory on h(s) = log{g(s)/g(s₀)} via max modulus on exp∘h.
-
-Our formalization: For analytic g on ‖z‖ ≤ R with 0 < r < R:
-  ‖g z‖ ≤ (2r/(R-r)) · (⨆_{‖ζ‖=R} Re g(ζ)) + ‖g 0‖
-
-Proof: (1) Max modulus on f=exp∘g (2) Möbius transform (3) Schwarz lemma
+The alias below exports the pointwise Borel–Carathéodory inequality proved in
+`FunctionsOfOneComplexVariable/BorelCaratheodory.lean`. For `0 < r < R`, its bound is
+`‖g z‖ ≤ (2*r/(R-r)) * (boundaryRealSup g R - (g 0).re) + ‖g 0‖` on `‖z‖ ≤ r`.
+The reference to §3.9 records an application of this inequality, rather than identifying
+it with Lemma β.
 --------------------------------------------------------------------------------
 -/
 
-/- Borel-Carathéodory inequality (pointwise).
-   Corresponds to Titchmarsh Lemma β (page 57).
-
-   The full proof is in Rh/BorelCaratheodory.lean. -/
+/-- Pointwise Borel–Carathéodory inequality, used as an ingredient in the
+logarithmic-derivative estimates of Titchmarsh §3.9. -/
 alias borel_caratheodory_point := LZCBorelCaratheodory.borel_caratheodory_point
 
 /-- Cauchy estimates at the origin for higher derivatives.
