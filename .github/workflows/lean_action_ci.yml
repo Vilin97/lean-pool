@@ -34,6 +34,7 @@ on:
       - 'Challenge/challenges.yml'
       - 'python/lean_pool/challenge.py'
       - 'python/lean_pool/quality.py'
+      - 'python/lean_pool/validation_cache.py'
       - 'python/lean_pool/ci_artifacts.py'
       - 'python/pyproject.toml'
       - 'python/uv.lock'
@@ -61,6 +62,7 @@ on:
       - 'Challenge/challenges.yml'
       - 'python/lean_pool/challenge.py'
       - 'python/lean_pool/quality.py'
+      - 'python/lean_pool/validation_cache.py'
       - 'python/lean_pool/ci_artifacts.py'
       - 'python/pyproject.toml'
       - 'python/uv.lock'
@@ -229,9 +231,11 @@ jobs:
       # Publish once compilation succeeds, so docs can overlap the later
       # linters/quality checks without compiling the same PR a second time.
       - name: Package build for documentation
+        if: github.event_name != 'pull_request'
         run: PYTHONPATH=python python3 -m lean_pool.ci_artifacts pack
 
       - name: Share build with documentation
+        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: lean-pool-build
@@ -240,9 +244,24 @@ jobs:
           compression-level: 0
           retention-days: 1
 
+      # Actions scopes PR caches to refs/pull/<n>/merge: updates to the same
+      # PR can reuse receipts, while main and other PRs cannot read them.
+      - name: Restore project validation
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: .lake/validation-cache/v1
+          key: LeanValidation-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
+          restore-keys: |
+            LeanValidation-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
+
+      - name: Install validation dependencies
+        run: cd python && uv sync --locked
+
       - name: Lint
         run: |
-          ~/.elan/bin/lake exe runLinter LeanPool
+          cd python
+          uv run python -m lean_pool.validation_cache lint --repo ..
+          cd ..
           ~/.elan/bin/lake exe runLinter Challenge
           ~/.elan/bin/lake exe runLinter Solution
 
@@ -255,8 +274,14 @@ jobs:
       - name: Repository quality checks
         run: |
           cd python
-          uv sync --locked
-          uv run python -m lean_pool.quality --repo ..
+          uv run python -m lean_pool.validation_cache quality --repo ..
+
+      - name: Save project validation
+        # Successful receipts are tiny; retain PR results across registry rebases.
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: .lake/validation-cache/v1
+          key: LeanValidation-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
 
       - name: Save Lean dependencies
         if: always() && github.ref == 'refs/heads/main' && steps.mathlib-cache.outcome == 'success' && steps.dependency-cache.outputs.cache-hit != 'true'
@@ -465,9 +490,11 @@ jobs:
       # Publish once compilation succeeds, so docs can overlap the later
       # linters/quality checks without compiling the same PR a second time.
       - name: Package build for documentation
+        if: github.event_name != 'pull_request'
         run: PYTHONPATH=python python3 -m lean_pool.ci_artifacts pack
 
       - name: Share build with documentation
+        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: lean-pool-build
@@ -476,9 +503,24 @@ jobs:
           compression-level: 0
           retention-days: 1
 
+      # Actions scopes PR caches to refs/pull/<n>/merge: updates to the same
+      # PR can reuse receipts, while main and other PRs cannot read them.
+      - name: Restore project validation
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: .lake/validation-cache/v1
+          key: LeanValidation-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
+          restore-keys: |
+            LeanValidation-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
+
+      - name: Install validation dependencies
+        run: cd python && uv sync --locked
+
       - name: Lint
         run: |
-          ~/.elan/bin/lake exe runLinter LeanPool
+          cd python
+          uv run python -m lean_pool.validation_cache lint --repo ..
+          cd ..
           ~/.elan/bin/lake exe runLinter Challenge
           ~/.elan/bin/lake exe runLinter Solution
 
@@ -491,8 +533,14 @@ jobs:
       - name: Repository quality checks
         run: |
           cd python
-          uv sync --locked
-          uv run python -m lean_pool.quality --repo ..
+          uv run python -m lean_pool.validation_cache quality --repo ..
+
+      - name: Save project validation
+        # Successful receipts are tiny; retain PR results across registry rebases.
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: .lake/validation-cache/v1
+          key: LeanValidation-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
 
       - name: Save Lean dependencies
         if: always() && github.ref == 'refs/heads/main' && steps.mathlib-cache.outcome == 'success' && steps.dependency-cache.outputs.cache-hit != 'true'
