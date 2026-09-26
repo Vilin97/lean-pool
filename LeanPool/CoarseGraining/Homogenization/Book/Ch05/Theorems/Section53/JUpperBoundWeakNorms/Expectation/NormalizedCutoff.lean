@@ -398,6 +398,21 @@ theorem section53_linearCutoffCoeff_origin_le_dimensional
           ((8 * quantitativeCubeCutoffGradientConst d + 1) * (2 : ℝ) ^ d)) := by
           simp
 
+/-- A weighted bound and a bound on a nonnegative factor remain valid after
+multiplication by the same nonnegative scalar coefficients. -/
+private theorem scalar_product_le_of_weighted_bound
+    {A K P n x X v w z : ℝ}
+    (hweighted : A * (v * w * z) ≤ K) (hx : x ≤ X)
+    (hx_nonneg : 0 ≤ x) (hK_nonneg : 0 ≤ K)
+    (hP_nonneg : 0 ≤ P) (hn_nonneg : 0 ≤ n) :
+    A * P * (n * (x * v)) * w * z ≤ K * P * (n * X) := by
+  have hproduct := mul_le_mul hweighted hx hx_nonneg hK_nonneg
+  calc
+    A * P * (n * (x * v)) * w * z = (P * n) * ((A * (v * w * z)) * x) := by ring
+    _ ≤ (P * n) * (K * X) :=
+      mul_le_mul_of_nonneg_left hproduct (mul_nonneg hP_nonneg hn_nonneg)
+    _ = K * P * (n * X) := by ring
+
 /-- The concrete cutoff-product coefficient is bounded by a dimension-only
 constant on origin cubes in the Section 5.3 exponent range.  The proof keeps
 the scale cancellation explicit:
@@ -496,20 +511,12 @@ theorem section53CutoffProductCoeff_origin_le_dimensional
   have hA_weight_le :
       A * cubeBesovScaleWeight (-(1 - s - t)) Q ≤ Kcut := by
     calc
-      A * cubeBesovScaleWeight (-(1 - s - t)) Q ≤
-          (Kcut * cubeBesovScaleWeight 1 Q) *
-            cubeBesovScaleWeight (-(1 - s - t)) Q := by
-            exact mul_le_mul_of_nonneg_right hA_le hWneg_nonneg
-      _ =
-          Kcut * cubeBesovScaleWeight (s + t) Q := by
-            rw [show Kcut * cubeBesovScaleWeight 1 Q *
-                cubeBesovScaleWeight (-(1 - s - t)) Q =
-                  Kcut * (cubeBesovScaleWeight 1 Q *
-                    cubeBesovScaleWeight (-(1 - s - t)) Q) by ring]
-            rw [hWprod]
-      _ ≤ Kcut * 1 := by
-            exact mul_le_mul_of_nonneg_left hWst_le hKcut_nonneg
-      _ = Kcut := by ring
+      _ ≤ (Kcut * cubeBesovScaleWeight 1 Q) *
+          cubeBesovScaleWeight (-(1 - s - t)) Q :=
+        mul_le_mul_of_nonneg_right hA_le hWneg_nonneg
+      _ = Kcut * cubeBesovScaleWeight (s + t) Q := by rw [mul_assoc, hWprod]
+      _ ≤ Kcut := by
+        simpa only [mul_one] using mul_le_mul_of_nonneg_left hWst_le hKcut_nonneg
   have hpow_flux :
       (3 : ℝ) ^ ((d : ℝ) + (1 - s)) ≤ (3 : ℝ) ^ ((d : ℝ) + 1) := by
     refine Real.rpow_le_rpow_of_exponent_le (by norm_num : (1 : ℝ) ≤ 3) ?_
@@ -531,40 +538,12 @@ theorem section53CutoffProductCoeff_origin_le_dimensional
       A * Poinc * Flux ≤
         Kcut * Poinc *
           ((Fintype.card (Fin d) : ℝ) * (3 : ℝ) ^ ((d : ℝ) + 1)) := by
-    have hflux_part :
-        A *
-            ((3 : ℝ) ^ ((d : ℝ) + (1 - s)) *
-              cubeBesovScaleWeight (-(1 - s - t)) Q) ≤
-          Kcut * (3 : ℝ) ^ ((d : ℝ) + 1) := by
-      calc
-        A *
-            ((3 : ℝ) ^ ((d : ℝ) + (1 - s)) *
-              cubeBesovScaleWeight (-(1 - s - t)) Q)
-            =
-          (A * cubeBesovScaleWeight (-(1 - s - t)) Q) *
-            (3 : ℝ) ^ ((d : ℝ) + (1 - s)) := by ring
-        _ ≤ Kcut * (3 : ℝ) ^ ((d : ℝ) + 1) := by
-            exact mul_le_mul hA_weight_le hpow_flux hpow_flux_nonneg hKcut_nonneg
-    calc
-      A * Poinc * Flux =
-          Poinc *
-            ((Fintype.card (Fin d) : ℝ) *
-              (A *
-                ((3 : ℝ) ^ ((d : ℝ) + (1 - s)) *
-                  cubeBesovScaleWeight (-(1 - s - t)) Q))) := by
-            dsimp [Flux]
-            ring
-      _ ≤
-          Poinc *
-            ((Fintype.card (Fin d) : ℝ) *
-              (Kcut * (3 : ℝ) ^ ((d : ℝ) + 1))) := by
-            exact mul_le_mul_of_nonneg_left
-              (mul_le_mul_of_nonneg_left hflux_part (Nat.cast_nonneg _))
-              hPoinc_nonneg
-      _ =
-          Kcut * Poinc *
-            ((Fintype.card (Fin d) : ℝ) * (3 : ℝ) ^ ((d : ℝ) + 1)) := by
-            ring
+    have hbound := scalar_product_le_of_weighted_bound
+      (A := A) (K := Kcut) (v := cubeBesovScaleWeight (-(1 - s - t)) Q)
+      (w := 1) (z := 1) (by simpa only [mul_one] using hA_weight_le)
+      hpow_flux hpow_flux_nonneg hKcut_nonneg hPoinc_nonneg
+      (Nat.cast_nonneg (Fintype.card (Fin d)))
+    simpa only [Flux, mul_one] using hbound
   have hdim :
       Kcut * Poinc *
           ((Fintype.card (Fin d) : ℝ) * (3 : ℝ) ^ ((d : ℝ) + 1)) =
@@ -584,87 +563,35 @@ theorem section53CutoffProductCoeff_origin_le_dimensional
           cubeBesovScaleWeight (-(1 - s - t)) Q *
           cubeBesovScaleWeight (-s) Q *
           cubeBesovScaleWeight (-t) Q = 1 := by
-    calc
-      cubeBesovScaleWeight 1 Q *
-          cubeBesovScaleWeight (-(1 - s - t)) Q *
-          cubeBesovScaleWeight (-s) Q *
-          cubeBesovScaleWeight (-t) Q
-          =
-        (cubeBesovScaleWeight 1 Q *
-            cubeBesovScaleWeight (-(1 - s - t)) Q) *
-          (cubeBesovScaleWeight (-s) Q *
-            cubeBesovScaleWeight (-t) Q) := by ring
-      _ =
-        cubeBesovScaleWeight (s + t) Q *
-          cubeBesovScaleWeight (-(s + t)) Q := by
-          rw [cubeBesovScaleWeight_mul_eq_scaleWeight_add]
-          rw [cubeBesovScaleWeight_mul_eq_scaleWeight_add]
-          congr 2 <;> ring
-      _ = 1 := by
-          simpa [mul_comm] using cubeBesovScaleWeight_neg_mul_cubeBesovScaleWeight Q (s + t)
+    rw [cubeBesovScaleWeight_mul_eq_scaleWeight_add,
+      cubeBesovScaleWeight_mul_eq_scaleWeight_add,
+      cubeBesovScaleWeight_mul_eq_scaleWeight_add]
+    rw [show (1 : ℝ) + -(1 - s - t) + -s + -t = 0 by ring]
+    simp [cubeBesovScaleWeight]
   have hcore_scaled :
       A * Poinc * Flux *
           cubeBesovScaleWeight (-s) Q * cubeBesovScaleWeight (-t) Q ≤
         Kcut * Poinc *
           ((Fintype.card (Fin d) : ℝ) * (3 : ℝ) ^ ((d : ℝ) + 1)) := by
-    have hfactor_nonneg :
-        0 ≤ ((3 : ℝ) ^ ((d : ℝ) + (1 - s)) *
-              cubeBesovScaleWeight (-(1 - s - t)) Q) *
-            cubeBesovScaleWeight (-s) Q * cubeBesovScaleWeight (-t) Q := by
-      exact mul_nonneg
-        (mul_nonneg (mul_nonneg hpow_flux_nonneg hWneg_nonneg) hW_s_nonneg)
-        hW_t_nonneg
-    have hflux_part :
-        A *
-            (((3 : ℝ) ^ ((d : ℝ) + (1 - s)) *
-                cubeBesovScaleWeight (-(1 - s - t)) Q) *
-              cubeBesovScaleWeight (-s) Q * cubeBesovScaleWeight (-t) Q) ≤
-          Kcut * (3 : ℝ) ^ ((d : ℝ) + 1) := by
+    have hweight_nonneg :
+        0 ≤ cubeBesovScaleWeight (-(1 - s - t)) Q *
+          cubeBesovScaleWeight (-s) Q * cubeBesovScaleWeight (-t) Q :=
+      mul_nonneg (mul_nonneg hWneg_nonneg hW_s_nonneg) hW_t_nonneg
+    have hweighted :
+        A * (cubeBesovScaleWeight (-(1 - s - t)) Q *
+          cubeBesovScaleWeight (-s) Q * cubeBesovScaleWeight (-t) Q) ≤ Kcut := by
       calc
-        A *
-            (((3 : ℝ) ^ ((d : ℝ) + (1 - s)) *
-                cubeBesovScaleWeight (-(1 - s - t)) Q) *
-              cubeBesovScaleWeight (-s) Q * cubeBesovScaleWeight (-t) Q)
-            ≤
-          (Kcut * cubeBesovScaleWeight 1 Q) *
-            (((3 : ℝ) ^ ((d : ℝ) + (1 - s)) *
-                cubeBesovScaleWeight (-(1 - s - t)) Q) *
-              cubeBesovScaleWeight (-s) Q * cubeBesovScaleWeight (-t) Q) := by
-            exact mul_le_mul_of_nonneg_right hA_le hfactor_nonneg
-        _ =
-          Kcut *
-            (cubeBesovScaleWeight 1 Q *
-              cubeBesovScaleWeight (-(1 - s - t)) Q *
-              cubeBesovScaleWeight (-s) Q *
-              cubeBesovScaleWeight (-t) Q) *
-            (3 : ℝ) ^ ((d : ℝ) + (1 - s)) := by ring
-        _ = Kcut * (3 : ℝ) ^ ((d : ℝ) + (1 - s)) := by
-            rw [hweights_cancel]
-            ring
-        _ ≤ Kcut * (3 : ℝ) ^ ((d : ℝ) + 1) :=
-            mul_le_mul_of_nonneg_left hpow_flux hKcut_nonneg
-    calc
-      A * Poinc * Flux *
-          cubeBesovScaleWeight (-s) Q * cubeBesovScaleWeight (-t) Q =
-        Poinc *
-          ((Fintype.card (Fin d) : ℝ) *
-            (A *
-              (((3 : ℝ) ^ ((d : ℝ) + (1 - s)) *
-                  cubeBesovScaleWeight (-(1 - s - t)) Q) *
-                cubeBesovScaleWeight (-s) Q * cubeBesovScaleWeight (-t) Q))) := by
-          dsimp [Flux]
-          ring
-      _ ≤
-        Poinc *
-          ((Fintype.card (Fin d) : ℝ) *
-            (Kcut * (3 : ℝ) ^ ((d : ℝ) + 1))) := by
-          exact mul_le_mul_of_nonneg_left
-            (mul_le_mul_of_nonneg_left hflux_part (Nat.cast_nonneg _))
-            hPoinc_nonneg
-      _ =
-        Kcut * Poinc *
-          ((Fintype.card (Fin d) : ℝ) * (3 : ℝ) ^ ((d : ℝ) + 1)) := by
-          ring
+        _ ≤ (Kcut * cubeBesovScaleWeight 1 Q) *
+            (cubeBesovScaleWeight (-(1 - s - t)) Q *
+              cubeBesovScaleWeight (-s) Q * cubeBesovScaleWeight (-t) Q) :=
+          mul_le_mul_of_nonneg_right hA_le hweight_nonneg
+        _ = Kcut * (cubeBesovScaleWeight 1 Q *
+            cubeBesovScaleWeight (-(1 - s - t)) Q *
+            cubeBesovScaleWeight (-s) Q * cubeBesovScaleWeight (-t) Q) := by ring
+        _ = Kcut := by rw [hweights_cancel, mul_one]
+    simpa only [Flux] using
+      scalar_product_le_of_weighted_bound hweighted hpow_flux hpow_flux_nonneg
+        hKcut_nonneg hPoinc_nonneg (Nat.cast_nonneg (Fintype.card (Fin d)))
   have hinside :
       cutoffProductScaledWeakNormCoeff Q s t (section53CutoffDerivativeBound Q)
           (scalarCutoffGradientField (section53NormalizedCutoff Q)) *

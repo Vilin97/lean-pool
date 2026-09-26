@@ -199,19 +199,9 @@ theorem integral_jUpperWeakNormManuscriptPointwiseRHSAtScale_le_manuscriptExpect
         (2 * C) *
           (Real.sqrt (tauAtScale P m k p q) *
             Real.sqrt (Ch04.expectedResponseJCubeSet P (originCube d k) p q)) := by
-    have htwoC_nonneg : 0 ≤ 2 * C := by nlinarith
-    calc
-      ∫ a, addPoint a ∂P =
-          (2 * C) *
-            ∫ a,
-              Real.sqrt (responseJAdditivityDefectAtScale m k p q a) *
-                Real.sqrt (childAverage a) ∂P := by
-            simp [addPoint, integral_const_mul]
-      _ ≤
-          (2 * C) *
-            (Real.sqrt (tauAtScale P m k p q) *
-              Real.sqrt (Ch04.expectedResponseJCubeSet P (originCube d k) p q)) :=
-            mul_le_mul_of_nonneg_left hSqrtBound htwoC_nonneg
+    dsimp only [addPoint]
+    rw [integral_const_mul]
+    exact mul_le_mul_of_nonneg_left hSqrtBound (mul_nonneg (by norm_num) hC)
   have hOscIntegral :
       ∫ a, oscPoint a ∂P =
         Cosc * scaleSep * Ch04.expectedResponseJCubeSet P Q p q := by
@@ -242,15 +232,9 @@ theorem integral_jUpperWeakNormManuscriptPointwiseRHSAtScale_le_manuscriptExpect
         Cprod *
           (Real.sqrt (∫ a, (scaledGrad a) ^ 2 ∂P) *
             Real.sqrt (∫ a, (scaledFlux a) ^ 2 ∂P)) := by
-    calc
-      ∫ a, productPoint a ∂P =
-          Cprod * ∫ a, scaledGrad a * scaledFlux a ∂P := by
-            simp [productPoint, integral_const_mul]
-      _ ≤
-          Cprod *
-            (Real.sqrt (∫ a, (scaledGrad a) ^ 2 ∂P) *
-              Real.sqrt (∫ a, (scaledFlux a) ^ 2 ∂P)) :=
-            mul_le_mul_of_nonneg_left hCauchy hCprod
+    dsimp only [productPoint]
+    rw [integral_const_mul]
+    exact mul_le_mul_of_nonneg_left hCauchy hCprod
   calc
     ∫ a,
         jUpperWeakNormManuscriptPointwiseRHSAtScale m k s t
@@ -266,18 +250,11 @@ theorem integral_jUpperWeakNormManuscriptPointwiseRHSAtScale_le_manuscriptExpect
             Real.sqrt (Ch04.expectedResponseJCubeSet P (originCube d k) p q)) +
         (∫ a, oscPoint a ∂P +
           ((∫ a, gradPoint a ∂P + ∫ a, fluxPoint a ∂P) +
-            ∫ a, productPoint a ∂P)) := by
-          exact add_le_add hAddBound (le_refl _)
-    _ ≤
-      (2 * C) *
-          (Real.sqrt (tauAtScale P m k p q) *
-            Real.sqrt (Ch04.expectedResponseJCubeSet P (originCube d k) p q)) +
-        (∫ a, oscPoint a ∂P +
-          ((∫ a, gradPoint a ∂P + ∫ a, fluxPoint a ∂P) +
             Cprod *
               (Real.sqrt (∫ a, (scaledGrad a) ^ 2 ∂P) *
                 Real.sqrt (∫ a, (scaledFlux a) ^ 2 ∂P)))) := by
-          gcongr
+          exact add_le_add hAddBound
+            (add_le_add_left (add_le_add_left hProductBound _) _)
     _ =
         jUpperWeakNormManuscriptExpectedRHSAtScale P m k s t
           C Cosc scaleSep BφS BφT Cprod p q p0 q0 := by
