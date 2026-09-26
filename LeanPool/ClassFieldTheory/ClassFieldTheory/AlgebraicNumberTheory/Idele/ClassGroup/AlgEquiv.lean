@@ -429,7 +429,7 @@ noncomputable def finitePlaceAdicCompletionCongrHom
   exact
     finitePlaceAdicCompletionMap K M
       ((finitePlaceCongr e).symm W)
-      ⟨W, finitePlaceBelow_eq_finitePlaceCongr_symm e W⟩
+      ⟨W, by exact finitePlaceBelow_eq_finitePlaceCongr_symm e W⟩
 
 /-- On finite coordinates, canonical adelic transport is the completion
 map at the corresponding finite places. -/

@@ -44,7 +44,6 @@ private noncomputable instance : Module.Finite 𝒪[K] 𝒪[L] :=
 
 open _root_.LocalFieldTheory
   (galoisGroupResidueAlgEquivHomOfIsIntegralClosure_injective_of_unramifiedValuation) in
-
 /-- The residue `q`-power action characterizes the canonical local Artin
 image of an inverse uniformizer in an unramified finite abelian extension. -/
 theorem finiteAbelianLocalArtinMap_inverseUniformizer_residue_pow_iff

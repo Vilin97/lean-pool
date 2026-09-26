@@ -43,7 +43,7 @@ open RamificationTheory.HilbertRamification.ValuationSubring
 local notation "finiteFixedField" =>
   (fun (K : Type) [Field K]
       (H : FiniteAbstractField (Gal(SeparableClosure K/K))) =>
-    abstractFixedField K (SeparableClosure K) H.field)
+    abstractFixedField K (SeparableClosure K) (FiniteAbstractField.field H))
 
 /-- The separable closure of a finite fixed field is an algebra over that fixed field. -/
 local instance finiteFixedFieldSeparableClosureAlgebra
@@ -341,7 +341,7 @@ theorem localSeparableDecompositionGroup_eq_top_finiteExtensionEquiv
   simpa [sigmaF, AlgEquiv.autCongr_apply] using hx.to_iff
 
 @[implicit_reducible]
-private noncomputable def finiteExtensionDecompositionResidueFintype
+noncomputable def finiteExtensionDecompositionResidueFintype
     (K F : Type)
     [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
@@ -1142,7 +1142,7 @@ private theorem finite_absoluteFixingQuotient_fieldRange
     (Equiv.cast (congrArg Q hBase))
 
 /-- A semilinear equivalence transports automorphisms fixing the corresponding base fields. -/
-private def semilinearGaloisTransport
+def semilinearGaloisTransport
     {k f Ω Ω' : Type} [Field k] [Field f] [Field Ω] [Field Ω']
     [Algebra k Ω] [Algebra f Ω'] (phi : k ≃+* f) (c : Ω ≃+* Ω')
     (hc : ∀ x : k, c (algebraMap k Ω x) = algebraMap f Ω' (phi x))
@@ -1184,7 +1184,7 @@ theorem
             extensionSubgroup
               (baseField (Gal(SeparableClosure K/K)))
               H₀ (le_baseField H₀)) :=
-        finite_absoluteFixingQuotient_fieldRange K F i
+        by exact finite_absoluteFixingQuotient_fieldRange K F i
       let H : FiniteAbstractField
           (Gal(SeparableClosure K/K)) :=
         ⟨H₀, hHabsolute⟩

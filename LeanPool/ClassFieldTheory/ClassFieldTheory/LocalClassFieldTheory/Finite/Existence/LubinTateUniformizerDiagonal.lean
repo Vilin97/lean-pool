@@ -75,8 +75,8 @@ theorem lubinTateLevel_spectral_inertiaDeg_eq_one
       finiteExtensionSpectralValuation_hasExtension K T
     letI :
         (LocalFieldTheory.localCompleteDVF K).valuation.HasExtension
-          (LocalFieldTheory.localCompleteDVF T).valuation :=
-      explicitLocalCompleteDVFValuation_hasExtension K T
+          (LocalFieldTheory.localCompleteDVF T).valuation := by
+      exact explicitLocalCompleteDVFValuation_hasExtension K T
     (LocalFieldTheory.localCompleteDVF T).maximalIdeal.inertiaDeg
       (LocalFieldTheory.localCompleteDVF K).valuationSubring = 1 := by
   let T := standardLubinTateLevelField hπ n

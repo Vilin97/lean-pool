@@ -43,12 +43,31 @@ private theorem infinitePlaceCompletionMap_isometry
     Isometry
       (NumberField.LiesOver.completionMap
         (v := v₀) (w := W)) := by
-  unfold NumberField.LiesOver.completionMap
-  exact
+  let f : v₀.Completion → W.Completion := fun x =>
+    (InfinitePlace.Completion.isometryEquivCompletion W).symm
+      (UniformSpace.Completion.mapRingHom
+        (algebraMap (WithAbs v₀.1) (WithAbs W.1))
+        (InfinitePlace.LiesOver.isometry_algebraMap W v₀).continuous
+        ((InfinitePlace.Completion.isometryEquivCompletion v₀) x))
+  have hf : Isometry f :=
     (InfinitePlace.Completion.isometryEquivCompletion W).symm.isometry.comp
       ((UniformSpace.Completion.isometry_mapRingHom
           (InfinitePlace.LiesOver.isometry_algebraMap W v₀)).comp
         (InfinitePlace.Completion.isometryEquivCompletion v₀).isometry)
+  have heq :
+      (NumberField.LiesOver.completionMap (v := v₀) (w := W) :
+        v₀.Completion → W.Completion) = f := by
+    apply (InfinitePlace.Completion.denseRange_coe v₀).equalizer
+    · exact NumberField.LiesOver.continuous_completionMap
+    · exact hf.continuous
+    · funext x
+      change NumberField.LiesOver.completionMap (x : v₀.Completion) = f (x : v₀.Completion)
+      rw [NumberField.LiesOver.completionMap_coe]
+      apply InfinitePlace.Completion.ext
+      exact (UniformSpace.Completion.mapRingHom_coe
+        (InfinitePlace.LiesOver.isometry_algebraMap W v₀).continuous x).symm
+  rw [heq]
+  exact hf
 
 omit [NumberField L] in
 open scoped Classical in

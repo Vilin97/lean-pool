@@ -694,12 +694,12 @@ theorem normUnitsMap_toMonoidHom
 /-- The vertical abelianized restriction arrow as a continuous
 homomorphism. -/
 noncomputable def abelianizedRestrictionMap
-    (T : LocalFixedFieldNormRestrictionSquare k) := by
+    (T : LocalFixedFieldNormRestrictionSquare k) :=
   letI := T.lowerNormal
   letI := T.upperNormal
   letI := T.upperFinite
   letI := upperAbsoluteFinite T
-  exact abstractFixedFieldAbelianizedRestrictionMap
+  abstractFixedFieldAbelianizedRestrictionMap
     k (SeparableClosure k)
     T.lowerBase T.upperBase T.lowerTop T.upperTop
     T.lowerTop_le_lowerBase T.upperTop_le_upperBase
@@ -927,11 +927,11 @@ theorem unitsInclusionMap_toMonoidHom
 
 /-- The vertical abelianized transfer arrow as a continuous homomorphism. -/
 noncomputable def abelianizedTransferMap
-    (T : LocalFixedFieldTransferTower k) := by
+    (T : LocalFixedFieldTransferTower k) :=
   letI := T.totalNormal
   letI := T.totalFinite
   letI := T.baseAbsoluteFinite
-  exact abstractFixedFieldAbelianizedTransferMap
+  abstractFixedFieldAbelianizedTransferMap
     k (SeparableClosure k)
     T.base T.intermediate T.top
     T.top_le_intermediate T.intermediate_le_base

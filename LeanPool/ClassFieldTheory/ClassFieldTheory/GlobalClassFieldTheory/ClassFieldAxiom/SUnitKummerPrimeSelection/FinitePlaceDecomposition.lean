@@ -29,7 +29,6 @@ section
 namespace GlobalClassFieldTheory.ClassFieldAxiom
 
 open scoped Classical in
-
 open _root_.HilbertRamification
   (decompositionGroupRestriction_mem_absoluteValueDecompositionGroup_restrictScalars_iff) in
 /-- Full relative decomposition above `q` puts every
