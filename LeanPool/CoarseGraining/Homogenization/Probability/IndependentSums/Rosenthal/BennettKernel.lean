@@ -89,23 +89,19 @@ theorem bennettKernel_le_rpowTail
           congr 1
           ring
 
-/-- A universal bound for the Bennett kernel integral appearing in the
-tail-integration step of Rosenthal's inequality. -/
-noncomputable def rosenthalBennettIntegralConst : ℝ :=
-  4 * Real.exp 2
-
-theorem rosenthal_bennett_kernel_integral_le
+private theorem bennett_kernel_integrable_regions
     {p : ℝ} (hp : 2 ≤ p) :
-    p * ∫ r in Set.Ioi (0 : ℝ),
-      r ^ (p - 1) * Real.exp (-(p * bennettBeta (r ^ (2 : ℕ)))) ≤
-        rosenthalBennettIntegralConst ^ p := by
+    let f : ℝ → ℝ := fun r =>
+      r ^ (p - 1) * Real.exp (-(p * bennettBeta (r ^ (2 : ℕ))))
+    IntegrableOn f (Set.Icc (0 : ℝ) 1) volume ∧
+      IntegrableOn f (Set.Icc (1 : ℝ) (Real.exp 2)) volume ∧
+      IntegrableOn (fun r : ℝ => r ^ (-p / 2 - 1)) (Set.Ioi (Real.exp 2)) volume ∧
+      IntegrableOn f (Set.Ioi (Real.exp 2)) volume := by
   let f : ℝ → ℝ := fun r =>
     r ^ (p - 1) * Real.exp (-(p * bennettBeta (r ^ (2 : ℕ))))
   have hp_pos : 0 < p := lt_of_lt_of_le zero_lt_two hp
   have hp_nonneg : 0 ≤ p := hp_pos.le
   have hp_sub_nonneg : 0 ≤ p - 1 := by linarith
-  have h_one_exp_two : (1 : ℝ) ≤ Real.exp 2 := by
-    exact le_of_lt ((Real.one_lt_exp_iff).2 (by norm_num))
   have hf_meas : Measurable f := by
     dsimp [f]
     have hpow_meas : Measurable (fun r : ℝ => r ^ (p - 1)) :=
@@ -161,6 +157,26 @@ theorem rosenthal_bennett_kernel_integral_le
       dsimp [f]
       exact mul_nonneg (Real.rpow_nonneg hr_nonneg _) (by positivity)
     simpa [Real.norm_eq_abs, abs_of_nonneg hnonneg] using hfr_le
+  exact ⟨hsmall_Icc, hmid_Icc, htail_dom, htail_Ioi⟩
+
+/-- A universal bound for the Bennett kernel integral appearing in the
+tail-integration step of Rosenthal's inequality. -/
+noncomputable def rosenthalBennettIntegralConst : ℝ :=
+  4 * Real.exp 2
+
+theorem rosenthal_bennett_kernel_integral_le
+    {p : ℝ} (hp : 2 ≤ p) :
+    p * ∫ r in Set.Ioi (0 : ℝ),
+      r ^ (p - 1) * Real.exp (-(p * bennettBeta (r ^ (2 : ℕ)))) ≤
+        rosenthalBennettIntegralConst ^ p := by
+  let f : ℝ → ℝ := fun r =>
+    r ^ (p - 1) * Real.exp (-(p * bennettBeta (r ^ (2 : ℕ))))
+  have hp_pos : 0 < p := lt_of_lt_of_le zero_lt_two hp
+  have hp_nonneg : 0 ≤ p := hp_pos.le
+  have h_one_exp_two : (1 : ℝ) ≤ Real.exp 2 := by
+    exact le_of_lt ((Real.one_lt_exp_iff).2 (by norm_num))
+  obtain ⟨hsmall_Icc, hmid_Icc, htail_dom, htail_Ioi⟩ :=
+    bennett_kernel_integrable_regions hp
   have hsmall :
       IntegrableOn f (Set.Ioc (0 : ℝ) 1) volume := by
     change Integrable f (volume.restrict (Set.Ioc (0 : ℝ) 1))
@@ -314,66 +330,10 @@ theorem integrableOn_rosenthal_bennett_kernel
       (Set.Ioi (0 : ℝ)) volume := by
   let f : ℝ → ℝ := fun r =>
     r ^ (p - 1) * Real.exp (-(p * bennettBeta (r ^ (2 : ℕ))))
-  have hp_pos : 0 < p := lt_of_lt_of_le zero_lt_two hp
-  have hp_nonneg : 0 ≤ p := hp_pos.le
-  have hp_sub_nonneg : 0 ≤ p - 1 := by linarith
   have h_one_exp_two : (1 : ℝ) ≤ Real.exp 2 := by
     exact le_of_lt ((Real.one_lt_exp_iff).2 (by norm_num))
-  have hf_meas : Measurable f := by
-    dsimp [f]
-    have hpow_meas : Measurable (fun r : ℝ => r ^ (p - 1)) :=
-      (Real.continuous_rpow_const hp_sub_nonneg).measurable
-    have hbeta_meas : Measurable (fun r : ℝ => bennettBeta (r ^ (2 : ℕ))) := by
-      dsimp [bennettBeta, bennettH]
-      measurability
-    exact hpow_meas.mul (Real.measurable_exp.comp ((measurable_const.mul hbeta_meas).neg))
-  have hsmall_const :
-      Integrable (fun _ : ℝ => (1 : ℝ)) (volume.restrict (Set.Icc (0 : ℝ) 1)) := by
-    exact integrableOn_const (μ := volume) (s := Set.Icc (0 : ℝ) 1) (C := (1 : ℝ))
-      isCompact_Icc.measure_ne_top
-  have hsmall_Icc :
-      Integrable f (volume.restrict (Set.Icc (0 : ℝ) 1)) := by
-    refine Integrable.mono' hsmall_const hf_meas.aestronglyMeasurable ?_
-    filter_upwards [self_mem_ae_restrict measurableSet_Icc] with r hr
-    have hfr_le : f r ≤ r ^ (p - 1) := bennettKernel_le_rpow hp_nonneg hr.1
-    have hrpow_le_one : r ^ (p - 1) ≤ 1 := Real.rpow_le_one hr.1 hr.2 hp_sub_nonneg
-    have hnonneg : 0 ≤ f r := by
-      dsimp [f]
-      exact mul_nonneg (Real.rpow_nonneg hr.1 _) (by positivity)
-    simpa [Real.norm_eq_abs, abs_of_nonneg hnonneg] using hfr_le.trans hrpow_le_one
-  have hmid_const :
-      Integrable (fun _ : ℝ => (Real.exp 2) ^ (p - 1))
-        (volume.restrict (Set.Icc (1 : ℝ) (Real.exp 2))) := by
-    exact integrableOn_const (μ := volume) (s := Set.Icc (1 : ℝ) (Real.exp 2))
-      (C := (Real.exp 2) ^ (p - 1)) isCompact_Icc.measure_ne_top
-  have hmid_Icc :
-      Integrable f (volume.restrict (Set.Icc (1 : ℝ) (Real.exp 2))) := by
-    refine Integrable.mono' hmid_const hf_meas.aestronglyMeasurable ?_
-    filter_upwards [self_mem_ae_restrict measurableSet_Icc] with r hr
-    have hr_nonneg : 0 ≤ r := le_trans zero_le_one hr.1
-    have hfr_le : f r ≤ r ^ (p - 1) := bennettKernel_le_rpow hp_nonneg hr_nonneg
-    have hrpow_le :
-        r ^ (p - 1) ≤ (Real.exp 2) ^ (p - 1) := by
-      exact Real.rpow_le_rpow hr_nonneg hr.2 hp_sub_nonneg
-    have hnonneg : 0 ≤ f r := by
-      dsimp [f]
-      exact mul_nonneg (Real.rpow_nonneg hr_nonneg _) (by positivity)
-    simpa [Real.norm_eq_abs, abs_of_nonneg hnonneg] using hfr_le.trans hrpow_le
-  have htail_dom :
-      Integrable (fun r : ℝ => r ^ (-p / 2 - 1))
-        (volume.restrict (Set.Ioi (Real.exp 2))) := by
-    simpa using!
-      (integrableOn_Ioi_rpow_of_lt (a := -p / 2 - 1) (by linarith) (by positivity : 0 < Real.exp 2))
-  have htail_Ioi :
-      Integrable f (volume.restrict (Set.Ioi (Real.exp 2))) := by
-    refine Integrable.mono' htail_dom hf_meas.aestronglyMeasurable ?_
-    filter_upwards [self_mem_ae_restrict measurableSet_Ioi] with r hr
-    have hfr_le : f r ≤ r ^ (-p / 2 - 1) := bennettKernel_le_rpowTail hp (le_of_lt hr)
-    have hr_nonneg : 0 ≤ r := le_trans (le_of_lt (by positivity : 0 < Real.exp 2)) (le_of_lt hr)
-    have hnonneg : 0 ≤ f r := by
-      dsimp [f]
-      exact mul_nonneg (Real.rpow_nonneg hr_nonneg _) (by positivity)
-    simpa [Real.norm_eq_abs, abs_of_nonneg hnonneg] using hfr_le
+  obtain ⟨hsmall_Icc, hmid_Icc, _htail_dom, htail_Ioi⟩ :=
+    bennett_kernel_integrable_regions hp
   have hsmall :
       IntegrableOn f (Set.Ioc (0 : ℝ) 1) volume := by
     change Integrable f (volume.restrict (Set.Ioc (0 : ℝ) 1))

@@ -230,6 +230,21 @@ instance {d : ℕ} {U : Set (Vec d)} : SMul ℕ (H1Function U) where
 instance {d : ℕ} {U : Set (Vec d)} : SMul ℤ (H1Function U) where
   smul n u := (n : ℝ) • u
 
+/-- Evaluate the derivative of two smooth scalar multipliers in an arbitrary direction.
+Both bounded and compactly supported `H¹` multiplication use this product rule. -/
+theorem smoothScalarProduct_fderiv_apply {d : ℕ} {φ ψ : Vec d → ℝ}
+    (hφ : ContDiff ℝ (⊤ : ℕ∞) φ) (hψ : ContDiff ℝ (⊤ : ℕ∞) ψ)
+    (x e : Vec d) :
+    (fderiv ℝ (fun y => φ y * ψ y) x) e =
+      φ x * (fderiv ℝ ψ x) e + ψ x * (fderiv ℝ φ x) e := by
+  have hφ_diff : DifferentiableAt ℝ φ x :=
+    (hφ.contDiffAt).differentiableAt (by simp)
+  have hψ_diff : DifferentiableAt ℝ ψ x :=
+    (hψ.contDiffAt).differentiableAt (by simp)
+  change (fderiv ℝ (φ * ψ) x) e = _
+  rw [fderiv_mul hφ_diff hψ_diff]
+  simp [smul_eq_mul]
+
 theorem toFunGrad_injective {d : ℕ} {U : Set (Vec d)} :
     Function.Injective (fun u : H1Function U => (u.toFun, u.grad)) := by
   intro u v h
@@ -368,14 +383,8 @@ noncomputable def mulContDiffMemLpTop {d : ℕ} {U : Set (Vec d)}
       simpa [smul_eq_mul, μU, mul_assoc, mul_left_comm, mul_comm] using
         hu_loc.integrable_smul_right_of_hasCompactSupport hmul2_cont hmul2_compact
     have hprod_deriv :
-        ∀ x, (fderiv ℝ ψφ x) ei = φ x * dψ x + ψ x * dφ x := by
-      intro x
-      have hφ_diff : DifferentiableAt ℝ φ x :=
-        (hφ.contDiffAt).differentiableAt (by simp)
-      have hψ_diff : DifferentiableAt ℝ ψ x :=
-        (hψ_smooth.contDiffAt).differentiableAt (by simp)
-      rw [show ψφ = φ * ψ by rfl, fderiv_mul hφ_diff hψ_diff]
-      simp [dφ, dψ, ei, smul_eq_mul]
+        ∀ x, (fderiv ℝ ψφ x) ei = φ x * dψ x + ψ x * dφ x :=
+      fun x => smoothScalarProduct_fderiv_apply hφ hψ_smooth x ei
     have hleft_eq :
         ∫ x, (φ x * u x) * dψ x ∂μU =
           ∫ x, u x * (φ x * dψ x) ∂μU := by
@@ -558,14 +567,8 @@ noncomputable def mulContDiffHasCompactSupport {d : ℕ} {U : Set (Vec d)}
       simpa [smul_eq_mul, μU, mul_assoc, mul_left_comm, mul_comm] using
         hu_loc.integrable_smul_right_of_hasCompactSupport hmul2_cont hmul2_compact
     have hprod_deriv :
-        ∀ x, (fderiv ℝ ψφ x) ei = φ x * dψ x + ψ x * dφ x := by
-      intro x
-      have hφ_diff : DifferentiableAt ℝ φ x :=
-        (hφ.contDiffAt).differentiableAt (by simp)
-      have hψ_diff : DifferentiableAt ℝ ψ x :=
-        (hψ_smooth.contDiffAt).differentiableAt (by simp)
-      rw [show ψφ = φ * ψ by rfl, fderiv_mul hφ_diff hψ_diff]
-      simp [dφ, dψ, ei, smul_eq_mul]
+        ∀ x, (fderiv ℝ ψφ x) ei = φ x * dψ x + ψ x * dφ x :=
+      fun x => smoothScalarProduct_fderiv_apply hφ hψ_smooth x ei
     have hleft_eq :
         ∫ x, (φ x * u x) * dψ x ∂μU =
           ∫ x, u x * (φ x * dψ x) ∂μU := by
