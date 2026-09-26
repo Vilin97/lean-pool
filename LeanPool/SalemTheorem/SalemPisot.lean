@@ -206,76 +206,9 @@ polynomial the number is a root of.  The statements below re-run the
 same assemblies keeping both, so that each construction can be compared
 as a construction. -/
 
-/-- `PdtSalemEndgame.exists_salem_below` with the index `m ≥ 2` and the
-root equation `(X^m·Pr + Qc)(τ) = 0` kept in the conclusion. -/
-lemma exists_salem_below_root (alpha : ℝ) (halpha : 1 < alpha)
-    (Pr G Qc : Polynomial ℝ)
-    (hfacR : Pr = (X - Polynomial.C alpha) * G)
-    (hG : ∀ x : ℝ, 1 ≤ x → 0 < G.eval x)
-    (hQca : 0 < Qc.eval alpha)
-    (cert : ∀ m : ℕ, 2 ≤ m → ∀ tau : ℝ, 1 < tau →
-      (X ^ m * Pr + Qc).eval tau = 0 →
-      (∀ n : ℤ, tau ≠ (n : ℝ)) → (∀ n : ℤ, tau + tau⁻¹ ≠ (n : ℝ)) →
-      SalemEndgame.IsSalem tau)
-    (eps : ℝ) (heps : 0 < eps) :
-    ∃ m : ℕ, 2 ≤ m ∧ ∃ tau : ℝ, SalemEndgame.IsSalem tau ∧
-      (X ^ m * Pr + Qc).eval tau = 0 ∧ alpha - eps < tau ∧ tau < alpha := by
-  obtain ⟨c, hc1, hca, hwin⟩ := SalemEndgame.window_below Qc halpha hQca
-  obtain ⟨M, lam, hprops, htend⟩ :=
-    PisotLadder.pisot_ladder_family Pr G Qc alpha c halpha hc1 hca hfacR hG hwin
-  have hstep : ∀ m, M ≤ m → lam m < lam (m + 1) := fun m hm => (hprops m hm).2.2.2
-  have hinj : Set.InjOn lam (Set.Ici M) :=
-    SalemEndgame.injOn_of_strict_mono_step lam M hstep
-  have hbounds : ∀ m, M ≤ m → 1 < lam m ∧ lam m < alpha := fun m hm =>
-    ⟨lt_trans hc1 (hprops m hm).1.1, (hprops m hm).1.2⟩
-  obtain ⟨M', _hMM', hnd⟩ :=
-    SalemEndgame.eventually_nondegenerate lam M alpha hinj hbounds
-  have hev1 : ∀ᶠ m : ℕ in Filter.atTop, alpha - eps < lam m :=
-    (tendsto_order.mp htend).1 (alpha - eps) (by linarith)
-  obtain ⟨m, hm1, hm2⟩ :=
-    (hev1.and (Filter.eventually_ge_atTop (max M (max M' 2)))).exists
-  have hmM : M ≤ m := le_trans (le_max_left _ _) hm2
-  have hmM' : M' ≤ m := le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hm2
-  have hm2' : 2 ≤ m := le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hm2
-  obtain ⟨⟨hgtc, hlta⟩, hroot, -, -⟩ := hprops m hmM
-  obtain ⟨hτZ, hτtr⟩ := hnd m hmM'
-  exact ⟨m, hm2', lam m, cert m hm2' (lam m) (lt_trans hc1 hgtc) hroot hτZ hτtr,
-    hroot, hm1, hlta⟩
+export SalemEndgame (exists_salem_below_root)
 
-/-- `PdtSalemEndgame.exists_salem_above` with the index `m ≥ 2` and the
-root equation `(X^m·Pr + Qc)(τ) = 0` kept in the conclusion. -/
-lemma exists_salem_above_root (alpha : ℝ) (halpha : 1 < alpha)
-    (Pr G Qc : Polynomial ℝ)
-    (hfacR : Pr = (X - Polynomial.C alpha) * G)
-    (hG : ∀ x : ℝ, 1 ≤ x → 0 < G.eval x)
-    (hQca : Qc.eval alpha < 0)
-    (cert : ∀ m : ℕ, 2 ≤ m → ∀ tau : ℝ, 1 < tau →
-      (X ^ m * Pr + Qc).eval tau = 0 →
-      (∀ n : ℤ, tau ≠ (n : ℝ)) → (∀ n : ℤ, tau + tau⁻¹ ≠ (n : ℝ)) →
-      SalemEndgame.IsSalem tau)
-    (eps : ℝ) (heps : 0 < eps) :
-    ∃ m : ℕ, 2 ≤ m ∧ ∃ tau : ℝ, SalemEndgame.IsSalem tau ∧
-      (X ^ m * Pr + Qc).eval tau = 0 ∧ alpha < tau ∧ tau < alpha + eps := by
-  obtain ⟨M, mu, hprops, htend⟩ :=
-    SalemEndgame.pisot_ladder_above Pr G Qc alpha halpha hfacR hG hQca
-  have hstep : ∀ m, M ≤ m → mu (m + 1) < mu m := fun m hm => (hprops m hm).2.2.2
-  have hinj : Set.InjOn mu (Set.Ici M) :=
-    SalemEndgame.injOn_of_strict_anti_step mu M hstep
-  have hbounds : ∀ m, M ≤ m → 1 < mu m ∧ mu m < alpha + 1 := fun m hm =>
-    ⟨lt_trans halpha (hprops m hm).1.1, (hprops m hm).1.2⟩
-  obtain ⟨M', _hMM', hnd⟩ :=
-    SalemEndgame.eventually_nondegenerate mu M (alpha + 1) hinj hbounds
-  have hev1 : ∀ᶠ m : ℕ in Filter.atTop, mu m < alpha + eps :=
-    (tendsto_order.mp htend).2 (alpha + eps) (by linarith)
-  obtain ⟨m, hm1, hm2⟩ :=
-    (hev1.and (Filter.eventually_ge_atTop (max M (max M' 2)))).exists
-  have hmM : M ≤ m := le_trans (le_max_left _ _) hm2
-  have hmM' : M' ≤ m := le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hm2
-  have hm2' : 2 ≤ m := le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hm2
-  obtain ⟨⟨hgta, _⟩, hroot, -, -⟩ := hprops m hmM
-  obtain ⟨hτZ, hτtr⟩ := hnd m hmM'
-  exact ⟨m, hm2', mu m, cert m hm2' (mu m) (lt_trans halpha hgta) hroot hτZ hτtr,
-    hroot, hgta, hm1⟩
+export SalemEndgame (exists_salem_above_root)
 
 /-- Evaluation of the mapped signed family `X^m·Pz + e·Pz.reverse`. -/
 lemma eval_signed_family (Pz : Polynomial ℤ) (e : ℤ) (m : ℕ) (tau : ℝ) :
