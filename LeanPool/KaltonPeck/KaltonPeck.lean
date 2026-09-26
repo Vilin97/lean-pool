@@ -135,22 +135,22 @@ abbrev coordinates (p : RealKaltonPeckPresentation X) : X →ₗ[ℝ] (ℕ → �
   Support.RealKaltonPeckPresentation.coordinates p
 
 /-- The coordinate map is injective. -/
-abbrev coordinates_injective (p : RealKaltonPeckPresentation X) :
+theorem coordinates_injective (p : RealKaltonPeckPresentation X) :
     Function.Injective p.coordinates :=
   Support.RealKaltonPeckPresentation.coordinates_injective p
 
 /-- Every coordinate pair is admissible. -/
-abbrev coordinates_mem (p : RealKaltonPeckPresentation X) :
+theorem coordinates_mem (p : RealKaltonPeckPresentation X) :
     ∀ z, IsAdmissiblePair (p.coordinates z) :=
   Support.RealKaltonPeckPresentation.coordinates_mem p
 
 /-- Every admissible coordinate pair is represented by a vector. -/
-abbrev coordinates_surjective (p : RealKaltonPeckPresentation X) :
+theorem coordinates_surjective (p : RealKaltonPeckPresentation X) :
     ∀ q, IsAdmissiblePair q → ∃ z, p.coordinates z = q :=
   Support.RealKaltonPeckPresentation.coordinates_surjective p
 
 /-- The coordinate quasi-norm and the norm of the space are equivalent. -/
-abbrev norm_equivalent (p : RealKaltonPeckPresentation X) :
+theorem norm_equivalent (p : RealKaltonPeckPresentation X) :
     ∃ c C : ℝ, 0 < c ∧ 0 < C ∧ ∀ z,
       c * kaltonPeckQuasiNorm (p.coordinates z) ≤ ‖z‖ ∧
         ‖z‖ ≤ C * kaltonPeckQuasiNorm (p.coordinates z) :=
