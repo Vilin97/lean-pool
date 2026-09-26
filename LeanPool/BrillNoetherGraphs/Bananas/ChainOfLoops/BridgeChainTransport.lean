@@ -247,7 +247,7 @@ noncomputable def contractBridgeTransport (M N : MarkedGraph.{u}) :
   mapDiv := bridgePushforward M.graph N.graph M.right N.left
   map_sub := by intro D E; exact map_sub _ D E
   map_zsmul := by intro n D; exact AddMonoidHom.map_zsmul _ n D
-  map_one_chip := bridgePushforward_one_chip_left M N
+  map_one_chip := by exact bridgePushforward_one_chip_left M N
   deg_map := deg_bridgePushforward M.graph N.graph M.right N.left
   rank_map := rank_bridgePushforward M.graph N.graph M.right N.left
   genus_eq := by
