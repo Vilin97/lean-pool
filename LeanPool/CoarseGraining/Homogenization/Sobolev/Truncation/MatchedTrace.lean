@@ -32,6 +32,39 @@ subsequence of `φ_n → h`, both `Ψ_n → T` and `∇Ψ_n → ∇T` in `L²` (
 term vanishes), so the `H¹₀`-limit lemma concludes.
 -/
 
+private theorem tendsto_eLpNorm_matchedPositiveParts {d : ℕ}
+    (μ : Measure (Vec d)) (a b : Vec d → ℝ) (f : ℕ → Vec d → ℝ) (c : ℝ)
+    (hconv : Tendsto (fun n => eLpNorm (fun x => f n x - (a x - b x)) 2 μ)
+      atTop (nhds 0)) :
+    Tendsto (fun n => eLpNorm (fun x =>
+      (max (a x - c) 0 - max (b x - c) 0) -
+        (max ((b x + f n x) - c) 0 - max (b x - c) 0)) 2 μ) atTop (nhds 0) := by
+  have hlip : ∀ A B : ℝ, |max A 0 - max B 0| ≤ |A - B| := by
+    intro A B
+    calc |max A 0 - max B 0| ≤ max |A - B| |(0 : ℝ) - 0| :=
+        abs_max_sub_max_le_max A 0 B 0
+      _ = |A - B| := by
+        rw [sub_self, abs_zero]
+        exact max_eq_left (abs_nonneg _)
+  have hub : Tendsto (fun n => eLpNorm (fun x => (a x - b x) - f n x) 2 μ)
+      atTop (nhds 0) := by
+    have hswap : ∀ n,
+        eLpNorm (fun x => (a x - b x) - f n x) 2 μ =
+          eLpNorm (fun x => f n x - (a x - b x)) 2 μ :=
+      fun n => eLpNorm_sub_swap _ _
+    simp_rw [hswap]
+    exact hconv
+  refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hub
+    (fun n => zero_le) (fun n => ?_)
+  refine eLpNorm_mono (fun x => ?_)
+  rw [Real.norm_eq_abs, Real.norm_eq_abs,
+    show max (a x - c) 0 - max (b x - c) 0 -
+        (max ((b x + f n x) - c) 0 - max (b x - c) 0) =
+      max (a x - c) 0 - max ((b x + f n x) - c) 0 from by ring]
+  refine (hlip _ _).trans (le_of_eq ?_)
+  congr 1
+  ring
+
 /-- **Matched-trace truncation.**  If `w₁ − w₂ ∈ H¹₀(U)` then the truncated
 difference `(w₁ − c)₊ − (w₂ − c)₊` is again in `H¹₀(U)`. -/
 theorem memH10_max_sub_matched {d : ℕ} {U : Set (Vec d)}
@@ -118,39 +151,15 @@ theorem memH10_max_sub_matched {d : ℕ} {U : Set (Vec d)}
       hWconv).exists_seq_tendsto_ae
   -- Assemble via the `H¹₀`-limit lemma.
   refine memH10_of_tendsto_H1 hU T (fun n => V1 (σ n) - V2) (fun n => hΨmem (σ n)) ?_ ?_
-  · -- Function convergence.
-    have hlip : ∀ A B : ℝ, |max A 0 - max B 0| ≤ |A - B| := by
-      intro A B
-      calc |max A 0 - max B 0| ≤ max |A - B| |(0:ℝ) - 0| := abs_max_sub_max_le_max A 0 B 0
-        _ = |A - B| := by rw [sub_self, abs_zero]; exact max_eq_left (abs_nonneg _)
-    have hub : Tendsto
-        (fun n => eLpNorm (fun x => h.toFun x - W.approx (σ n) x) 2 (volumeMeasureOn U))
-        atTop (nhds 0) := by
-      have hswap : ∀ n,
-          eLpNorm (fun x => h.toFun x - W.approx (σ n) x) 2 (volumeMeasureOn U)
-            = eLpNorm (fun x => W.approx (σ n) x - h.toFun x) 2 (volumeMeasureOn U) :=
-        fun n => eLpNorm_sub_swap _ _
-      simp_rw [hswap]
-      exact hWconv.comp hσ_mono.tendsto_atTop
-    refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds hub
-      (fun n => zero_le) (fun n => ?_)
-    refine eLpNorm_mono (fun x => ?_)
-    have hTx : T.toFun x = max (w₁.toFun x - c) 0 - max (w₂.toFun x - c) 0 := congrFun hTtf x
-    have hΨx : (V1 (σ n) - V2).toFun x
-        = max ((S (σ n)).toFun x - c) 0 - max (w₂.toFun x - c) 0 := by
-      rw [H1Function.sub_toFun]
-      show (V1 (σ n)).toFun x - V2.toFun x = _
-      rw [congrFun (hV1f (σ n)) x, congrFun hV2f x]
-    rw [hTx, hΨx, Real.norm_eq_abs, Real.norm_eq_abs,
-      show max (w₁.toFun x - c) 0 - max (w₂.toFun x - c) 0 -
-            (max ((S (σ n)).toFun x - c) 0 - max (w₂.toFun x - c) 0)
-          = max (w₁.toFun x - c) 0 - max ((S (σ n)).toFun x - c) 0 from by ring]
-    refine (hlip _ _).trans (le_of_eq ?_)
-    rw [show (w₁.toFun x - c) - ((S (σ n)).toFun x - c) = h.toFun x - W.approx (σ n) x from by
-      have hSrfl : (S (σ n)).toFun x = w₂.toFun x + W.approx (σ n) x := rfl
-      rw [hSrfl, show h.toFun x = w₁.toFun x - w₂.toFun x from
-        congrFun (H1Function.sub_toFun w₁ w₂) x]
-      ring]
+  · -- Function convergence follows from the scalar truncation contraction.
+    have hconv : Tendsto (fun n => eLpNorm
+        (fun x => W.approx (σ n) x - (w₁.toFun x - w₂.toFun x))
+        2 (volumeMeasureOn U)) atTop (nhds 0) := by
+      simpa only [hh_def, H1Function.sub_toFun] using
+        hWconv.comp hσ_mono.tendsto_atTop
+    simpa only [hTtf, H1Function.sub_toFun, hV1f, hV2f] using
+      tendsto_eLpNorm_matchedPositiveParts (volumeMeasureOn U)
+        w₁.toFun w₂.toFun (fun n => W.approx (σ n)) c hconv
   · -- Gradient convergence (coordinatewise).
     intro i
     have haesm_ind' :
