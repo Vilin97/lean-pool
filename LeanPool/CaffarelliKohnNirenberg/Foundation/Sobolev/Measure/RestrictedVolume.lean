@@ -17,7 +17,7 @@ permission. This port keeps the common restricted-volume abbreviations and
 drops domain regularity predicates that are not needed by weak derivatives.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 

@@ -40,7 +40,7 @@ The physical partition scale is `Q n * q_normalized`; finite low bands retain
 their partition factor.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -788,7 +788,7 @@ the actual error vanishes on the central Gaussian plateau and retains
 the exact square-root edge weight at every decay exponent.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1086,7 +1086,7 @@ change are evaluated on the literal intermediate states.  No estimate of
 the post-temporal debt is supplied as a premise.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1284,7 +1284,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

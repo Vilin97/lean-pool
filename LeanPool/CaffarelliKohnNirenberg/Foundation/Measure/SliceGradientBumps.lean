@@ -20,7 +20,7 @@ integrable function therefore applies: for any `g`, the functions
 `mollify g (sliceRadius n) _` converge to `g` almost everywhere.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Filter Topology
 

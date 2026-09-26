@@ -26,7 +26,7 @@ Definitions (`degree`, `codegree`) come from `LeanPool.AsymptoticTrianglePacking
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -35,11 +35,11 @@ namespace Hypergraph
 variable {V : Type*} [DecidableEq V]
 
 /-- `H` is `(1 ± μ)`-nearly `d`-regular: every degree lies in `[(1-μ)d, (1+μ)d]`. -/
-def NearlyRegular (H : Finset (Finset V)) (d μ : ℝ) : Prop :=
+@[expose] def NearlyRegular (H : Finset (Finset V)) (d μ : ℝ) : Prop :=
   ∀ v : V, (1 - μ) * d ≤ (degree H v : ℝ) ∧ (degree H v : ℝ) ≤ (1 + μ) * d
 
 /-- `H` has codegree bounded by `C`: every distinct pair lies in at most `C` edges. -/
-def CodegreeBounded (H : Finset (Finset V)) (C : ℝ) : Prop :=
+@[expose] def CodegreeBounded (H : Finset (Finset V)) (C : ℝ) : Prop :=
   ∀ x y : V, x ≠ y → (codegree H x y : ℝ) ≤ C
 
 /-- **A4 — degree-sum squeeze.** If `H` is `(1±μ)`-nearly `d`-regular on a finite vertex type,

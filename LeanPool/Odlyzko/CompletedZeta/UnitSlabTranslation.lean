@@ -9,7 +9,7 @@ public import LeanPool.Odlyzko.CompletedZeta.UnitFundamentalDomain
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -24,7 +24,7 @@ variable {K : Type*} [Field K] [NumberField K]
 
 open Classical in
 /-- An unit coordinate shift hom used in the Odlyzko-bound argument. -/
-noncomputable def unitCoordinateShiftHom :
+@[expose] noncomputable def unitCoordinateShiftHom :
     ({w : InfinitePlace K // w ≠ w₀} → ℤ) →+
       mixedEmbedding.realSpace K where
   toFun := unitCoordinateShift
@@ -44,7 +44,7 @@ theorem unitCoordinateShiftHom_apply
 
 open Classical in
 /-- An unit coordinate lattice used in the Odlyzko-bound argument. -/
-noncomputable def unitCoordinateLattice :
+@[expose] noncomputable def unitCoordinateLattice :
     AddSubgroup (mixedEmbedding.realSpace K) :=
   (unitCoordinateShiftHom (K := K)).range
 

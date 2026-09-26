@@ -14,16 +14,16 @@ This module collects order-theoretic lemmas about infima and suprema in conditio
 complete lattices, in particular closure under bounded infima and suprema.
 -/
 
-@[expose] public section
+public section
 
 open Function OrderDual Set
 
 variable {α β : Type*} [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β]
 
 /-- The `sInfClosed` declaration. -/
-def sInfClosed (S : Set α) := ∀ s ⊆ S, s.Nonempty → BddBelow s → sInf s ∈ S
+@[expose] def sInfClosed (S : Set α) := ∀ s ⊆ S, s.Nonempty → BddBelow s → sInf s ∈ S
 /-- The `sSupClosed` declaration. -/
-def sSupClosed (S : Set α) := ∀ s ⊆ S, s.Nonempty → BddAbove s → sSup s ∈ S
+@[expose] def sSupClosed (S : Set α) := ∀ s ⊆ S, s.Nonempty → BddAbove s → sSup s ∈ S
 
 lemma sInfClosed_top : sInfClosed (⊤ : Set α) := by simp [sInfClosed]
 lemma sInfClosed_Ici (x : α) : sInfClosed (Ici x) := fun _ hsub hne _ => le_csInf hne hsub

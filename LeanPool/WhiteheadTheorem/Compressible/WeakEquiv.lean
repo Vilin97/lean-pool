@@ -26,7 +26,7 @@ hence the definition `TopCat.LiftStructUpToRelHomotopy` can be weakened (?)
 * T. tom Dieck, *Algebraic topology*. Theorem 8.4.3.
 -/
 
-@[expose] public section
+public section
 
 
 universe u

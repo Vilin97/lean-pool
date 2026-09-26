@@ -15,7 +15,7 @@ import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Subfield.FiniteDimensional`.
 -/
 
-@[expose] public section
+public section
 
 namespace SubField
 variable {K A : Type*} [Field K] [Ring A] [Algebra K A] {L : SubField K A}

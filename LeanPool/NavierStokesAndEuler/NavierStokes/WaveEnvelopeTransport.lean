@@ -18,7 +18,7 @@ of the padded native rectangle identifies the one copy met by a slot path.
 The source itself is not assumed periodic on the native torus.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

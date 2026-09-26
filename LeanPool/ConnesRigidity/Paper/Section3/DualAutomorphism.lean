@@ -17,7 +17,7 @@ and proves continuity and Haar preservation. It is the common §3 input for
 the crossed-action conjugacy and the §4 spectral detector.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperDualAutomorphism

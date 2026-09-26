@@ -19,7 +19,7 @@ terminal edge.  Constants are chosen after the outgoing profile and before
 the entrance radius.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -525,23 +525,23 @@ theorem realize_parameter_derivative {f : Raw → ℝ} (hf : ContDiff ℝ ∞ f)
       (uniqueDiffOn_Icc (by norm_num) p.2 hp)
 
 /-- The actual angular velocity in the fixed logarithmic coordinate. -/
-noncomputable def logE (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def logE (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   HeatedOutgoing.E F XR c (XR * Real.exp p.1, p.2)
 
 /-- Incoming histories are retained. Only the integrals of the actual
 changes beginning at the reserved patch are added. -/
-noncomputable def logI (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def logI (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   OutgoingHistories.I F.reset p + ∫ t in OutgoingDilation.patchClock F..p.1,
     Real.exp (3 * t / 2) * (logE F XR c (t, p.2) - F.logE (t, p.2))
 
 /-- Log S, constructed using `OutgoingHistories.S`. -/
-noncomputable def logS (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def logS (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   OutgoingHistories.S F.reset F.amp p - (1 / 2 : ℝ) *
     ∫ t in OutgoingDilation.patchClock F..p.1,
       Real.exp t * (logE F XR c (t, p.2) ^ 2 - F.logE (t, p.2) ^ 2)
 
 /-- Log pi, constructed using `OutgoingHistories.Pi`. -/
-noncomputable def logPi (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def logPi (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   OutgoingHistories.Pi F.reset p + (1 / 2 : ℝ) *
     ∫ t in OutgoingDilation.patchClock F..p.1,
       logE F XR c (t, p.2) ^ 2 - F.logE (t, p.2) ^ 2
@@ -812,7 +812,7 @@ theorem logPi_eq_canonical (F : Profile) {XR C : ℝ}
   linarith
 
 /-- Qs as an element of `ℝ`. -/
-noncomputable def Qs (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def Qs (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   -OutgoingHistories.W F.data F.amp p +
     ((1 - F.data.h) * logI F XR c p - axialExponent F.data.h * p.2 *
       derivWithin (fun eta => logI F XR c (p.1, eta)) HeatedOutgoing.parameterDomain p.2 -
@@ -821,7 +821,7 @@ noncomputable def Qs (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : 
         (Real.exp (3 * p.1 / 2) * logE F XR c p)
 
 /-- Ns as an element of `ℝ`. -/
-noncomputable def Ns (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def Ns (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   -OutgoingHistories.W F.data F.amp p * F.logU p +
     axialExponent F.data.h * (OutgoingHistories.M F.data F.amp p -
       p.2 * OutgoingHistories.dEta (OutgoingHistories.M F.data F.amp) p) / Real.exp p.1 +
@@ -832,22 +832,22 @@ noncomputable def Ns (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : 
         HeatedOutgoing.parameterDomain p.2
 
 /-- Radial A, given by `1 - 2 * deriv (fun y => logE F XR c (y, p.2)) p.1 / logE F XR c p`. -/
-noncomputable def radialA (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def radialA (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   1 - 2 * deriv (fun y => logE F XR c (y, p.2)) p.1 / logE F XR c p
 /-- Radial B, given by `2 * OutgoingHistories.dY F.logU p / logE F XR c p`. -/
 noncomputable def radialB (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   2 * OutgoingHistories.dY F.logU p / logE F XR c p
 /-- Ratio, given by `Ns F XR c p / (logE F XR c p * Qs F XR c p)`. -/
-noncomputable def ratio (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def ratio (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   Ns F XR c p / (logE F XR c p * Qs F XR c p)
 /-- Source C, given by `1 - radialB F XR c p * ratio F XR c p / radialA F XR c p`. -/
-noncomputable def sourceC (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def sourceC (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   1 - radialB F XR c p * ratio F XR c p / radialA F XR c p
 /-- Source J, given by `ratio F XR c p + radialB F XR c p / radialA F XR c p`. -/
-noncomputable def sourceJ (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def sourceJ (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   ratio F XR c p + radialB F XR c p / radialA F XR c p
 /-- Normal V, given by `radialA F XR c p * (1 + (radialB F XR c p / radialA F XR c p) ^ 2)`. -/
-noncomputable def normalV (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def normalV (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   radialA F XR c p * (1 + (radialB F XR c p / radialA F XR c p) ^ 2)
 /-- Leading gap, given by `2 * sourceC F XR c p ^ 2 - (normalV F XR c p - 2) * sourceJ F XR c p
 ^ 2`. -/
@@ -1052,18 +1052,18 @@ theorem compensated_source_margins (F : Profile) {anchor left : ℝ}
       _ ≤ T := by dsimp [T]; linarith [le_max_right (1 : ℝ) (M + 1)]
 
 /-- Stress scale, given by `XR * Real.exp p.1 * Qs F XR c p / CoordinateAlgebra.L F.data.h p.2`. -/
-noncomputable def stressScale (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def stressScale (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   XR * Real.exp p.1 * Qs F XR c p / CoordinateAlgebra.L F.data.h p.2
 /-- Normal P, given by `stressScale F XR c p * sourceC F XR c p`. -/
-noncomputable def normalP (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def normalP (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   stressScale F XR c p * sourceC F XR c p
 /-- Normal J, given by `stressScale F XR c p * sourceJ F XR c p`. -/
-noncomputable def normalJ (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def normalJ (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
   stressScale F XR c p * sourceJ F XR c p
 
 /-- The strict true cone, expressed in the same normalized stress coordinates
 as the clean outgoing theorem. -/
-def TrueAt (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : Prop :=
+@[expose] def TrueAt (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : Prop :=
   0 < Qs F XR c p ∧ 0 < radialA F XR c p ∧ 2 < normalV F XR c p ∧
   2 < normalP F XR c p ∧ normalV F XR c p < ConeAlgebra.coneBound (normalP F XR c p) (normalJ F XR
       c p)

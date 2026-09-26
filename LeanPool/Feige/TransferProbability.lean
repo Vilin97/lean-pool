@@ -16,7 +16,7 @@ rate-one exponential measure.  In particular, the strict and non-strict
 tails agree, since this measure has no atoms.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real Set
 open scoped ENNReal

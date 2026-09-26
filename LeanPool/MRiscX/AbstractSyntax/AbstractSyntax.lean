@@ -14,7 +14,7 @@ public import LeanPool.MRiscX.AbstractSyntax.Instr
 This module provides core abstract-syntax types of the MRiscX assembly language.
 -/
 
-@[expose] public section
+public section
 open Nat
 open Lean Lean.Elab
 /--
@@ -61,7 +61,7 @@ is the instruction Instr.Panic.
 IM := {uint64_1 ↦ instr_1, uint64_2 ↦ instr_2, ..., uint64_n ↦ instr_n}
 / default:  Instr.IPanic
 -/
-def InstructionMap := TMap InstructionIndex Instr
+@[expose] def InstructionMap := TMap InstructionIndex Instr
 deriving Repr, Inhabited
 
 instance : ToString InstructionMap where
@@ -78,7 +78,7 @@ to an unsigned 64-bit integers.
 
 LM := {l_1 ↦ uint64_1, l_2 ↦ uint64_2, ..., l_n ↦ uint64_n}
 -/
-def LabelMap := PMap String UInt64
+@[expose] def LabelMap := PMap String UInt64
 deriving Repr, Inhabited
 
 instance : ToString LabelMap where
@@ -156,7 +156,7 @@ end Code
 Definiton of the registers
 R := {r_1 ↦ w_1, … , r_k ↦ w_k}
 -/
-def Registers := TMap Register UInt64
+@[expose] def Registers := TMap Register UInt64
   deriving Repr
 
 /--
@@ -170,7 +170,7 @@ def EmptyRegisters : Registers := TMap.empty 0
 Definiton of the memory
 M := {m_1 ↦ w_1, … , m_k ↦ w_k}
 -/
-def Memory := TMap MemoryAddress UInt64
+@[expose] def Memory := TMap MemoryAddress UInt64
   deriving Repr
 
 

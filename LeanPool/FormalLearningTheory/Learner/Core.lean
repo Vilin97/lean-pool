@@ -28,7 +28,7 @@ This is intentional: a common parent would erase the structural properties
 that make each paradigm's theorems non-trivial.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

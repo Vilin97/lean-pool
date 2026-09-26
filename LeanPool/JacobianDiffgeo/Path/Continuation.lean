@@ -27,7 +27,7 @@ Main declarations:
 * `RS.pathIntegral_add/smul/zero_form`, `RS.pathIntegralₗ`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology unitInterval
 open IsManifold Metric Set Filter
@@ -43,7 +43,7 @@ variable {x y z : X}
 /-! ### The real-line clamp to `[0,1]` -/
 
 /-- Clamp a real number into `[0,1]`. -/
-def clampI (u : ℝ) : ℝ := max 0 (min u 1)
+@[expose] def clampI (u : ℝ) : ℝ := max 0 (min u 1)
 
 theorem clampI_mem (u : ℝ) : clampI u ∈ Icc (0 : ℝ) 1 :=
   ⟨le_max_left _ _, max_le zero_le_one (min_le_right _ _)⟩
@@ -77,6 +77,7 @@ theorem extend_clampI (γ : Path x y) (u : ℝ) : γ.extend (clampI u) = γ.exte
 /-! ### `IsPrimitiveAlong`, existence, `pathIntegral` -/
 
 /-- `F` is a primitive of `η` along the path `γ`. -/
+@[expose]
 def IsPrimitiveAlong (γ : Path x y) (η : Form1 X) (F : ℝ → ℂ) : Prop :=
   IsPrimitiveAlongMap γ.extend η F Set.univ
 
@@ -344,7 +345,7 @@ theorem pathIntegral_zero_form (γ : Path x y) : pathIntegral γ (0 : Form1 X) =
   ring
 
 /-- The integral of a fixed path, as a ℂ-linear map on 1-forms. -/
-noncomputable def pathIntegralₗ (γ : Path x y) : Form1 X →ₗ[ℂ] ℂ where
+@[expose] noncomputable def pathIntegralₗ (γ : Path x y) : Form1 X →ₗ[ℂ] ℂ where
   toFun η := pathIntegral γ η
   map_add' := pathIntegral_add γ
   map_smul' c η := by simpa using pathIntegral_smul γ c η

@@ -18,7 +18,7 @@ The resulting compatible characters separate points and realize the nonzero ultr
 attached to every injective rational sequence.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 
@@ -82,7 +82,7 @@ theorem globalCharacter_admissible
     (localCharacter_admissible x) a
 
 /-- The complete character package for the rational direct sum of rank continuum. -/
-def fullCharacterPackage : FullCharacterPackage ContinuumRationalGroup where
+@[expose] def fullCharacterPackage : FullCharacterPackage ContinuumRationalGroup where
   Code := ContinuumIndex
   codeEquiv := rationalSequenceCodeEquiv
   subsequence := selector N hN M

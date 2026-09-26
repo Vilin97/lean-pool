@@ -17,7 +17,7 @@ section
 
 /-! Products of actual normalized fields use only the pointwise ratio of their time profiles. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -150,7 +150,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

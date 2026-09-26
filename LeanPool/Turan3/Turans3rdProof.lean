@@ -21,7 +21,7 @@ upper bound `(1/2)(1 - 1/(p-1)) n²` on the number of edges.
 All declarations live in the `Turan3` namespace.
 -/
 
-@[expose] public section
+public section
 
 namespace Turan3
 

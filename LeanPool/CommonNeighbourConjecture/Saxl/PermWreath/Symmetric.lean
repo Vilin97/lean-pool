@@ -16,12 +16,12 @@ Only the distinguishing-word facts used by the every-base construction are
 included here.
 -/
 
-@[expose] public section
+public section
 
 namespace Saxl
 
 /-- A colour word has trivial stabilizer under contravariant reindexing. -/
-def WordDistinguishing (Q : Type*) {ι C : Type*} [Group Q] [MulAction Q ι]
+@[expose] def WordDistinguishing (Q : Type*) {ι C : Type*} [Group Q] [MulAction Q ι]
     (word : ι → C) : Prop :=
   ∀ q : Q, (∀ i, word (q⁻¹ • i) = word i) → q = 1
 

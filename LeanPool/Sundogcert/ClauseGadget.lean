@@ -55,7 +55,7 @@ public import LeanPool.Sundogcert.VarWheel
   AXIOM-CLEAN (no `Lean.ofReduceBool`; we use `decide`, never `native_decide`).
 -/
 
-@[expose] public section
+public section
 
 open Sundog.SATNPHard Sundog.VarWheel
 
@@ -65,7 +65,7 @@ variable {n : ℕ}
 
 /-- The clause gadget's internal pair `s1_k, s2_k` is coverable iff AT LEAST ONE of the three
     slots' tips is free.  `free k` records whether the slot-`k` tip is free. -/
-def clauseCoverable (free : Fin 3 → Bool) : Prop := ∃ k : Fin 3, free k = true
+@[expose] def clauseCoverable (free : Fin 3 → Bool) : Prop := ∃ k : Fin 3, free k = true
 
 /-- `clauseCoverable` is an `∃` over `Fin 3` of a decidable `Prop`; register the instance
     explicitly so `decide` fires at the `def` level (and for the downstream milestones 5–8). -/

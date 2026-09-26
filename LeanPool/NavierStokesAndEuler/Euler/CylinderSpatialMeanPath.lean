@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
 
 /-! Continuous-time and same-radius word estimates for the actual spatial mean. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -58,7 +58,7 @@ omit [CompactSpace K] in
 
 /-- Spatial path translation, given by `(EulerLpTranslation.translation
 a).toContinuousLinearMap.compLeftContinuous ℝ K`. -/
-def spatialPathTranslation (a : Space) : C(K,SpatialL2 V) →L[ℝ] C(K,SpatialL2 V) :=
+@[expose] def spatialPathTranslation (a : Space) : C(K,SpatialL2 V) →L[ℝ] C(K,SpatialL2 V) :=
   (EulerLpTranslation.translation a).toContinuousLinearMap.compLeftContinuous ℝ K
 
 omit [CompactSpace K] in

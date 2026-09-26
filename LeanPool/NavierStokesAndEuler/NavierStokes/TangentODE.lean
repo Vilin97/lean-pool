@@ -20,7 +20,7 @@ has a solution on the whole prescribed interval, without a small-time
 assumption. Continuous linear coefficients provide the required bound.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.TangentODE
@@ -54,7 +54,8 @@ namespace IntervalSystem
 variable (v : IntervalSystem E)
 
 /-- Proj, given by `projIcc v.left v.right v.ordered`. -/
-def proj : ℝ → Icc v.left v.right := projIcc v.left v.right v.ordered
+@[expose] def proj : ℝ → Icc v.left v.right :=
+  projIcc v.left v.right v.ordered
 
 theorem proj_of_mem {t : ℝ} (ht : t ∈ Icc v.left v.right) :
     (v.proj t : ℝ) = t := by simp only [proj, projIcc_of_mem v.ordered ht]
@@ -64,7 +65,7 @@ theorem proj_coe (t : Icc v.left v.right) : v.proj t = t := projIcc_val _ _
 theorem continuous_proj : Continuous v.proj := continuous_projIcc
 
 /-- Compose field, given by `v.field (v.proj t) (f (v.proj t))`. -/
-def composeField (f : C(Icc v.left v.right, E)) (t : ℝ) : E :=
+@[expose] def composeField (f : C(Icc v.left v.right, E)) (t : ℝ) : E :=
   v.field (v.proj t) (f (v.proj t))
 
 theorem continuous_composeField (f : C(Icc v.left v.right, E)) :
@@ -94,7 +95,7 @@ def next (f : C(Icc v.left v.right, E)) : C(Icc v.left v.right, E) :=
       (v.hasDerivAt_integralCurve f t).continuousAt)).comp continuous_subtype_val⟩
 
 theorem next_apply (f : C(Icc v.left v.right, E)) (t : Icc v.left v.right) :
-    v.next f t = v.initial + ∫ s in v.left..t, v.composeField f s := rfl
+    v.next f t = v.initial + ∫ s in v.left..t, v.composeField f s := by rfl
 
 theorem dist_next_apply_le_of_le {f g : C(Icc v.left v.right, E)} {n : ℕ} {d : ℝ}
     (h : ∀ t, dist (f t) (g t) ≤ (v.lip * |t.1 - v.left|) ^ n / n ! * d)

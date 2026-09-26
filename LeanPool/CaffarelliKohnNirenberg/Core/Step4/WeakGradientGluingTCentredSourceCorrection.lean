@@ -16,7 +16,7 @@ and spatial-mean terms. Linearity transports this explicit correction to
 the completed spatial Riesz operators.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators
@@ -25,6 +25,7 @@ noncomputable section
 namespace CKN.Core.Step4
 
 /-- The cutoff and mean correction relative to a raw source on `B`. -/
+@[expose]
 def centredRawSourceCorrection (B : Set Vec3)
     (η : Vec3 → ℝ) (dη : Fin 3 → Vec3 → ℝ)
     (u f : Vec3 → Vec3) (Du : Vec3 → Fin 3 → Vec3) (c : Vec3)

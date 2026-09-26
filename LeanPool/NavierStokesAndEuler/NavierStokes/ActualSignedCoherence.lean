@@ -19,7 +19,7 @@ the periodized amplitude and the curl correction are then compared in
 the actual charts.  No coherence of a signed output is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

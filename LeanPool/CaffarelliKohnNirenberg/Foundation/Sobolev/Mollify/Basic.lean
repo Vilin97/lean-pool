@@ -20,13 +20,14 @@ regularity, and approximate-identity convergence. This direct port keeps the
 kernel and convolution API independent of the sibling geometry layer.
 -/
 
-@[expose] public section
+public section
 
 open scoped Convolution Topology
 
 namespace CKN
 
 /-- A smooth bump centered at zero with outer radius `ε`. -/
+@[expose]
 noncomputable def standardMollifier {d : ℕ} (ε : ℝ) (hε : 0 < ε) :
     ContDiffBump (0 : Vec d) :=
   { rIn := ε / 2
@@ -35,6 +36,7 @@ noncomputable def standardMollifier {d : ℕ} (ε : ℝ) (hε : 0 < ε) :
     rIn_lt_rOut := half_lt_self hε }
 
 /-- The normalized scalar kernel associated with `standardMollifier`. -/
+@[expose]
 noncomputable def mollifier {d : ℕ} (ε : ℝ) (hε : 0 < ε) : Vec d → ℝ :=
   (standardMollifier ε hε).normed MeasureTheory.volume
 
@@ -60,6 +62,7 @@ theorem mollifier_locallyIntegrable {d : ℕ} {ε : ℝ} (hε : 0 < ε) :
   exact (mollifier_contDiff (d := d) hε (n := 0)).continuous.locallyIntegrable
 
 /-- Convolution of `u` with the normalized radius-`ε` kernel. -/
+@[expose]
 noncomputable def mollify {d : ℕ} (u : Vec d → ℝ) (ε : ℝ) (hε : 0 < ε) :
     Vec d → ℝ :=
   MeasureTheory.convolution (mollifier (d := d) ε hε) u

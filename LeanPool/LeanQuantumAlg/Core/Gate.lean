@@ -27,7 +27,7 @@ Pinned Mathlib API: `Matrix.mulVec` (and `mulVec_add/smul/single_one`,
 `Matrix.permMatrix_one`), `Finset.sum_ite_eq'`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -41,7 +41,7 @@ section
 variable {n : ℕ}
 
 /-- A Hilbert operator acts on a raw state vector by matrix-vector multiplication. -/
-noncomputable def applyVec (A : HilbertOperator n) (ψ : StateVector n) : StateVector n :=
+@[expose] noncomputable def applyVec (A : HilbertOperator n) (ψ : StateVector n) : StateVector n :=
   WithLp.toLp 2 (A.mulVec ψ.ofLp)
 
 @[simp]
@@ -192,13 +192,13 @@ theorem ext {G K : Gate n} (h : ∀ i j, G i j = K i j) : G = K := by
       simp_all
 
 /-- Build a gate from a unitary Hilbert operator. -/
-def ofUnitary (U : HilbertOperator n)
+@[expose] def ofUnitary (U : HilbertOperator n)
     (hU : U ∈ Matrix.unitaryGroup (Fin (2 ^ n)) ℂ) : Gate n := ⟨U, hU⟩
 
 @[simp]
 theorem coe_ofUnitary (U : HilbertOperator n)
     (hU : U ∈ Matrix.unitaryGroup (Fin (2 ^ n)) ℂ) :
-    ((ofUnitary U hU : Gate n) : HilbertOperator n) = U := rfl
+    ((ofUnitary U hU : Gate n) : HilbertOperator n) = U := by rfl
 
 instance : Monoid (Gate n) where
   one := ofUnitary 1 (one_mem _)
@@ -219,14 +219,15 @@ instance : Monoid (Gate n) where
     rw [Matrix.mul_assoc]
 
 @[simp]
-theorem coe_one : (((1 : Gate n) : HilbertOperator n)) = 1 := rfl
+theorem coe_one : (((1 : Gate n) : HilbertOperator n)) = 1 := by rfl
 
 @[simp]
 theorem coe_mul (G K : Gate n) :
     (((G * K : Gate n) : HilbertOperator n))
-      = (G : HilbertOperator n) * (K : HilbertOperator n) := rfl
+      = (G : HilbertOperator n) * (K : HilbertOperator n) := by rfl
 
 /-- Conjugate transpose of a unitary gate, again as a gate. -/
+@[expose]
 def conjTranspose (G : Gate n) : Gate n :=
   ofUnitary ((G : HilbertOperator n).conjTranspose) (by
     rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose,
@@ -238,13 +239,14 @@ instance : Inv (Gate n) := ⟨conjTranspose⟩
 @[simp]
 theorem coe_conjTranspose (G : Gate n) :
     ((G.conjTranspose : Gate n) : HilbertOperator n)
-      = (G : HilbertOperator n).conjTranspose := rfl
+      = (G : HilbertOperator n).conjTranspose := by rfl
 
 /-- A gate acts on a raw vector by its underlying Hilbert operator. -/
-def applyVec (G : Gate n) (ψ : StateVector n) : StateVector n :=
+@[expose] def applyVec (G : Gate n) (ψ : StateVector n) : StateVector n :=
   HilbertOperator.applyVec (G : HilbertOperator n) ψ
 
 /-- A gate evolves a pure state to a pure state. -/
+@[expose]
 def apply (G : Gate n) (ψ : PureState n) : PureState n :=
   PureState.ofVec (G.applyVec (ψ : StateVector n)) (by
     change ‖HilbertOperator.applyVec (G : HilbertOperator n) (ψ : StateVector n)‖ = 1
@@ -330,6 +332,7 @@ theorem apply_ket (G : Gate n) (x : Fin (2 ^ n)) (i : Fin (2 ^ n)) :
 
 /-- The gate permuting the computational basis by `σ`:
 `(ofPerm σ).apply (ket x) = ket (σ⁻¹ x)`. Unitary by construction. -/
+@[expose]
 def ofPerm (σ : Equiv.Perm (Fin (2 ^ n))) : Gate n :=
   ofUnitary (σ.permMatrix ℂ) (by
     rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose,

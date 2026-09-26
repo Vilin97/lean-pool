@@ -19,7 +19,7 @@ Spatial a.e. uniqueness preserves the complete quantitative majorant. Time
 windows are restricted only along an explicit subset inclusion.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

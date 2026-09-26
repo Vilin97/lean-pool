@@ -21,7 +21,7 @@ retained separately from the two auxiliary torus coordinates. The pressure
 correction uses a constructed smooth bump of integral one.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -46,7 +46,7 @@ noncomputable def meanBump (a b : ℝ) (hab : a < b) : ContDiffBump ((a + b) / 2
   rIn_lt_rOut := by linarith
 
 /-- The actual radial density has integral one, with no normalization premise. -/
-noncomputable def rho (a b : ℝ) (hab : a < b) : ℝ → ℝ :=
+@[expose] noncomputable def rho (a b : ℝ) (hab : a < b) : ℝ → ℝ :=
   (meanBump a b hab).normed volume
 
 theorem rho_contDiff (a b : ℝ) (hab : a < b) : ContDiff ℝ ∞ (rho a b hab) :=
@@ -77,11 +77,11 @@ section Average
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
 /-- Torus inner, given by `∫ x in (0 : ℝ)..1, f (p.1.1, (p.1.2, (x, p.2)))`. -/
-noncomputable def torusInner (f : Lift S → ℝ) (p : (ℝ × S) × ℝ) : ℝ :=
+@[expose] noncomputable def torusInner (f : Lift S → ℝ) (p : (ℝ × S) × ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..1, f (p.1.1, (p.1.2, (x, p.2)))
 
 /-- The bar averages only the auxiliary torus, preserving every slow parameter. -/
-noncomputable def torusAverage (f : Lift S → ℝ) (p : ℝ × S) : ℝ :=
+@[expose] noncomputable def torusAverage (f : Lift S → ℝ) (p : ℝ × S) : ℝ :=
   ∫ y in (0 : ℝ)..1, torusInner f (p, y)
 
 theorem torusInner_contDiff {f : Lift S → ℝ} (hf : ContDiff ℝ ∞ f) :
@@ -133,7 +133,7 @@ theorem torusAverage_sub_slow {f : Lift S → ℝ} (hf : ContDiff ℝ ∞ f)
   simp
 
 /-- Pressure mass, given by `∫ r, torusAverage f (r, s)`. -/
-noncomputable def pressureMass (f : Lift S → ℝ) (s : S) : ℝ :=
+@[expose] noncomputable def pressureMass (f : Lift S → ℝ) (s : S) : ℝ :=
   ∫ r, torusAverage f (r, s)
 
 theorem torusAverage_slice_integrable {a b : ℝ} {f : Lift S → ℝ}
@@ -167,7 +167,7 @@ theorem pressureMass_contDiff {a b : ℝ} {f : Lift S → ℝ}
     ((torusAverage_contDiff hf).comp (contDiff_snd.prodMk contDiff_fst)) a b
 
 /-- Pressure source, given by `f p - rho a b hab p.1 * pressureMass f p.2.1`. -/
-noncomputable def pressureSource (a b : ℝ) (hab : a < b) (f : Lift S → ℝ)
+@[expose] noncomputable def pressureSource (a b : ℝ) (hab : a < b) (f : Lift S → ℝ)
     (p : Lift S) : ℝ := f p - rho a b hab p.1 * pressureMass f p.2.1
 
 theorem pressureSource_contDiff {a b : ℝ} (hab : a < b) {f : Lift S → ℝ}
@@ -210,16 +210,16 @@ section Graph
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Radial vector, given by `(1, k p.1 • v)`. -/
-noncomputable def radialVector (k : ℝ → ℝ) (v : E) (p : ℝ × E) : ℝ × E :=
+@[expose] noncomputable def radialVector (k : ℝ → ℝ) (v : E) (p : ℝ × E) : ℝ × E :=
   (1, k p.1 • v)
 
 /-- The exact radial graph derivative. The directions are fixed; only its
 radial speed is allowed to vary with the slow radius. -/
-noncomputable def graphDr (k : ℝ → ℝ) (v : E) (f : ℝ × E → ℝ) (p : ℝ × E) : ℝ :=
+@[expose] noncomputable def graphDr (k : ℝ → ℝ) (v : E) (f : ℝ × E → ℝ) (p : ℝ × E) : ℝ :=
   fderiv ℝ f p (radialVector k v p)
 
 /-- A fixed axial graph direction may include both slow and torus directions. -/
-noncomputable def graphDz (w : E) (f : ℝ × E → ℝ) (p : ℝ × E) : ℝ :=
+@[expose] noncomputable def graphDz (w : E) (f : ℝ × E → ℝ) (p : ℝ × E) : ℝ :=
   fderiv ℝ f p (0, w)
 
 theorem graphDz_contDiff {f : ℝ × E → ℝ} (hf : ContDiff ℝ ∞ f) (w : E) :
@@ -261,7 +261,7 @@ theorem graphDr_graphDz_comm {f : ℝ × E → ℝ} {k : ℝ → ℝ} (v w : E)
   simpa using (hf.isSymmSndFDerivAt (by norm_num)).eq (radialVector k v p) (0, w)
 
 /-- Divide radius, given by `f p / p.1`. -/
-noncomputable def divideRadius (f : ℝ × E → ℝ) (p : ℝ × E) : ℝ := f p / p.1
+@[expose] noncomputable def divideRadius (f : ℝ × E → ℝ) (p : ℝ × E) : ℝ := f p / p.1
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] in
 theorem divideRadius_supported {a b : ℝ} {f : ℝ × E → ℝ}
@@ -326,11 +326,11 @@ theorem graphDr_divideRadius {f : ℝ × E → ℝ} (k : ℝ → ℝ) (v : E) {p
   field_simp; ring
 
 /-- Stream beta, defined pointwise by `-graphDz w Ψ p`. -/
-noncomputable def streamBeta (w : E) (Ψ : ℝ × E → ℝ) : ℝ × E → ℝ :=
+@[expose] noncomputable def streamBeta (w : E) (Ψ : ℝ × E → ℝ) : ℝ × E → ℝ :=
   fun p => -graphDz w Ψ p
 
 /-- Stream gamma, defined pointwise by `graphDr k v Ψ p + divideRadius Ψ p`. -/
-noncomputable def streamGamma (k : ℝ → ℝ) (v : E) (Ψ : ℝ × E → ℝ) : ℝ × E → ℝ :=
+@[expose] noncomputable def streamGamma (k : ℝ → ℝ) (v : E) (Ψ : ℝ × E → ℝ) : ℝ × E → ℝ :=
   fun p => graphDr k v Ψ p + divideRadius Ψ p
 
 /-- Graph divergence, given by `graphDr k v β p + β p / p.1 + graphDz w γ p`. -/
@@ -386,7 +386,7 @@ theorem graphDr_contDiff_of_support {a b : ℝ} (ha : 0 < a)
       (contDiffAt_const.prodMk (((hk p.1 hp).comp p contDiffAt_fst).smul contDiffAt_const))
 
 /-- Physical speed, given by `RadialPullback.radialJacobian d r * M`. -/
-noncomputable def physicalSpeed (d M r : ℝ) : ℝ := RadialPullback.radialJacobian d r * M
+@[expose] noncomputable def physicalSpeed (d M r : ℝ) : ℝ := RadialPullback.radialJacobian d r * M
 
 theorem physicalSpeed_smooth (d M : ℝ) {r : ℝ} (hr : r ≠ 0) :
     ContDiffAt ℝ ∞ (physicalSpeed d M) r :=
@@ -402,7 +402,7 @@ section Pressure
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
 /-- Formula (33), with the exact physical shifted primitive. -/
-noncomputable def meanPressure (d a b M : ℝ) (hab : a < b) (v : Plane)
+@[expose] noncomputable def meanPressure (d a b M : ℝ) (hab : a < b) (v : Plane)
     (f : Lift S → ℝ) : Lift S → ℝ :=
   RadialPullback.physicalCompact d a b M (0, v) (pressureSource a b hab f)
 
@@ -445,7 +445,7 @@ section Stream
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Weighted source, given by `p.1 * γd p`. -/
-noncomputable def weightedSource (γd : ℝ × E → ℝ) (p : ℝ × E) : ℝ := p.1 * γd p
+@[expose] noncomputable def weightedSource (γd : ℝ × E → ℝ) (p : ℝ × E) : ℝ := p.1 * γd p
 
 theorem weightedSource_contDiff {γd : ℝ × E → ℝ} (hγ : ContDiff ℝ ∞ γd) :
     ContDiff ℝ ∞ (weightedSource γd) := contDiff_fst.mul hγ
@@ -460,7 +460,7 @@ theorem weightedSource_supported {a b : ℝ} {γd : ℝ × E → ℝ}
   exact hp (by simp [weightedSource, hγ])
 
 /-- The actual physical stream `r⁻¹ Ic(r γd)`. -/
-noncomputable def streamPotential (d a b M : ℝ) (v : E) (γd : ℝ × E → ℝ) : ℝ × E → ℝ :=
+@[expose] noncomputable def streamPotential (d a b M : ℝ) (v : E) (γd : ℝ × E → ℝ) : ℝ × E → ℝ :=
   divideRadius (RadialPullback.physicalCompact d a b M v (weightedSource γd))
 
 theorem streamPotential_contDiff {d a b M : ℝ} (ha : 0 < a) (hab : a < b) (hd : 0 < d)
@@ -803,7 +803,7 @@ theorem streamGamma_eq_desired_sub_alias_global {d a b M : ℝ}
     simp
 
 /-- The total physical radial integral, written in normalized transport coordinates. -/
-noncomputable def physicalTotal (d a M : ℝ) (v : E) (g : ℝ × E → ℝ) (p : ℝ × E) : ℝ :=
+@[expose] noncomputable def physicalTotal (d a M : ℝ) (v : E) (g : ℝ × E → ℝ) (p : ℝ × E) : ℝ :=
   totalIntegral M v (RadialPullback.normalizeSource d a g)
     (RadialPullback.liftChart (RadialPullback.powerChart d a) p)
 

@@ -39,7 +39,7 @@ inverting the prime-to-3 isogeny factor `G` on `E(K)` directly
 preimage over `AlgebraicClosure K`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open KasamiCyclicAdditive.FermatCubic KasamiCyclicAdditive.PointFrobenius WeierstrassCurve

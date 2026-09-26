@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderField
 /-! The actual smooth cylinder paths produced by the packet construction
 give coherent continuous Sobolev realizations at every finite order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

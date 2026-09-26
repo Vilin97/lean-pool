@@ -17,7 +17,7 @@ import Mathlib.Data.Nat.Choose.Multinomial
 # LeanPool.Clawristotle.CoulombSpatialTransport
 -/
 
-@[expose] public section
+public section
 
 /-\!
 # Spatial Transport: Measurability, Joint Integrability, and Continuity

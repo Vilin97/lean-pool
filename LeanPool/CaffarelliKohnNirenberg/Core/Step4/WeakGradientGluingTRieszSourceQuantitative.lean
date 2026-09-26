@@ -19,7 +19,7 @@ A uniform endpoint coefficient puts the localized divergence source into the
 affine cell budget; the source contains both convection and force.
 -/
 
-@[expose] public section
+public section
 
 section
 

@@ -18,7 +18,7 @@ import Mathlib.Data.Nat.SuccPred
 # LeanPool.ABCExceptions.ForMathlib.Misc
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

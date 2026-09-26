@@ -25,4 +25,4 @@ public import LeanPool.LeanQuantumAlg.Algorithms.AmplitudeEstimation
 This module re-exports the algorithm endpoints.
 -/
 
-@[expose] public section
+public section

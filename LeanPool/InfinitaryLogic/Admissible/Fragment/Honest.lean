@@ -25,7 +25,7 @@ This does **not** wrap the legacy `AdmissibleFragmentCore`, which an honest HF f
 cannot instantiate: its `closed_iInf`/`closed_iSup` are *upward* over arbitrary external ℕ-families.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

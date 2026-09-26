@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProduct
 The crossed product transport component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace CrossedProduct
@@ -51,7 +51,7 @@ def crossedHaarHilbertEquiv
     {Y : HaarProbabilityAction K Ξ}
     (e : EquivariantHaarEquiv X Y)
     (ξ : crossedHilbert X) (k : K) :
-    crossedHaarHilbertEquiv e ξ k = crossedBaseHaarEquiv e (ξ k) := rfl
+    crossedHaarHilbertEquiv e ξ k = crossedBaseHaarEquiv e (ξ k) := by rfl
 
 /- Constant one is preserved by measure-preserving base transport.
 Paper: §3. -/

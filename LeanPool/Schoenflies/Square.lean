@@ -30,7 +30,7 @@ whereas the outside of a disk would need the polar decomposition this developmen
   face of a plane graph unbounded.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -51,10 +51,10 @@ theorem continuous_coord (i : Fin 2) : Continuous fun x : Plane => x i :=
 /-! ### The sup norm -/
 
 /-- The sup norm `‖x‖∞ = max |x₁| |x₂|`. -/
-noncomputable def supNorm (x : Plane) : ℝ := max |x 0| |x 1|
+@[expose] noncomputable def supNorm (x : Plane) : ℝ := max |x 0| |x 1|
 
 /-- The sup distance. -/
-noncomputable def supDist (x y : Plane) : ℝ := supNorm (x - y)
+@[expose] noncomputable def supDist (x y : Plane) : ℝ := supNorm (x - y)
 
 theorem supNorm_nonneg (x : Plane) : 0 ≤ supNorm x :=
   le_trans (abs_nonneg _) (le_max_left _ _)
@@ -161,10 +161,10 @@ theorem isOpen_coord_gt (i : Fin 2) (r : ℝ) : IsOpen {x : Plane | r < x i} :=
 /-! ### Axis-parallel squares -/
 
 /-- The closed axis-parallel square of radius `r` about `c`. -/
-def closedSquare (c : Plane) (r : ℝ) : Set Plane := {x | supDist x c ≤ r}
+@[expose] def closedSquare (c : Plane) (r : ℝ) : Set Plane := {x | supDist x c ≤ r}
 
 /-- The open axis-parallel square of radius `r` about `c`. -/
-def openSquare (c : Plane) (r : ℝ) : Set Plane := {x | supDist x c < r}
+@[expose] def openSquare (c : Plane) (r : ℝ) : Set Plane := {x | supDist x c < r}
 
 theorem closedSquare_eq_inter (c : Plane) (r : ℝ) :
     closedSquare c r =
@@ -213,7 +213,7 @@ theorem isClosed_closedSquare (c : Plane) (r : ℝ) : IsClosed (closedSquare c r
 /-! ### The outside of a square -/
 
 /-- The plane outside the closed square of radius `r` about the origin. -/
-def beyondSquare (r : ℝ) : Set Plane := {x | r < |x 0| ∨ r < |x 1|}
+@[expose] def beyondSquare (r : ℝ) : Set Plane := {x | r < |x 0| ∨ r < |x 1|}
 
 /-- The outside of a square is connected.
 

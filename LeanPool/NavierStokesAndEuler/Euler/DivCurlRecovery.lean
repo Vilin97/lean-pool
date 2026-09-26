@@ -22,7 +22,7 @@ supported scalar cutoff. In particular, they do not assume that derivatives of
 the velocity are globally square integrable.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

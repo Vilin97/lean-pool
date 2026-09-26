@@ -78,7 +78,7 @@ harmless, because the additive forms (`weight_le_weight_mul_add`, `weight_le_wei
 are proved first and the subtractive ones are derived from them.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -94,7 +94,7 @@ identity, `(1,0)` is `X`-type, `(0,1)` is `Z`-type, `(1,1)` is `Y`-type.
 These are labels up to phase, which is all the weight needs. At phase zero the `(1,1)` factor is
 literally `X Z = −i Y`, not `Y`; which of `Y`, `−Y` or a non-Hermitian multiple it is depends on
 the string's global phase, and the weight cannot see that (`weight_phaseMul`). -/
-def site (s : PauliString n) (i : Fin n) : ZMod 2 × ZMod 2 := (s.x i, s.z i)
+@[expose] def site (s : PauliString n) (i : Fin n) : ZMod 2 × ZMod 2 := (s.x i, s.z i)
 
 @[simp] lemma site_mul (s t : PauliString n) (i : Fin n) :
     site (s * t) i = site s i + site t i := rfl
@@ -110,14 +110,14 @@ def site (s : PauliString n) (i : Fin n) : ZMod 2 × ZMod 2 := (s.x i, s.z i)
 This is the support of a *single* Pauli string. `def:support` builds the support of a general
 operator from it, as the union of the supports of the Pauli strings that carry a non-zero
 coefficient. -/
-def support (s : PauliString n) : Finset (Fin n) :=
+@[expose] def support (s : PauliString n) : Finset (Fin n) :=
   Finset.univ.filter (fun i => site s i ≠ 0)
 
 @[simp] lemma mem_support : i ∈ support s ↔ site s i ≠ 0 := by simp [support]
 
 /-- **The weight** `|s|` of a Pauli string, `def:pauli_weight`: the number of
 qubits on which it acts non-trivially. -/
-def weight (s : PauliString n) : ℕ := (support s).card
+@[expose] def weight (s : PauliString n) : ℕ := (support s).card
 
 @[simp] lemma weight_one : weight (1 : PauliString n) = 0 := by
   simp [weight, support]

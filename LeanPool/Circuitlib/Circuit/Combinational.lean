@@ -17,7 +17,7 @@ public import LeanPool.Circuitlib.Circuit.Basic
 
 -/
 
-@[expose] public section
+public section
 
 namespace Circuit
 

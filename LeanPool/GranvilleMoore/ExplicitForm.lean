@@ -41,7 +41,7 @@ proved from `Nat.choose_succ_succ` rather than `Nat.choose_two_right`, whose div
 is gratuitous here.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

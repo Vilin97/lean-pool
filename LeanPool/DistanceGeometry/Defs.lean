@@ -45,7 +45,7 @@ only needs `Fintype` and `DecidableEq`.
 * I. J. Schoenberg, *Remarks to Maurice Fréchet's article ...*, 1935.
 -/
 
-@[expose] public section
+public section
 
 namespace DistanceGeometry
 
@@ -61,11 +61,11 @@ noncomputable def sqDistMatrix (x : Fin n → EuclideanSpace ℝ (Fin k)) :
 
 @[simp]
 theorem sqDistMatrix_apply (x : Fin n → EuclideanSpace ℝ (Fin k)) (i j : Fin n) :
-    sqDistMatrix x i j = dist (x i) (x j) ^ 2 := rfl
+    sqDistMatrix x i j = dist (x i) (x j) ^ 2 := by rfl
 
 /-- `D` is the squared-distance matrix of the configuration `x` when every entry
 `D i j` equals the squared Euclidean distance between points `x i` and `x j`. -/
-def IsSqDistMatrix (D : Matrix (Fin n) (Fin n) ℝ)
+@[expose] def IsSqDistMatrix (D : Matrix (Fin n) (Fin n) ℝ)
     (x : Fin n → EuclideanSpace ℝ (Fin k)) : Prop :=
   ∀ i j, D i j = dist (x i) (x j) ^ 2
 
@@ -88,7 +88,7 @@ theorem IsSqDistMatrix.hollow {D : Matrix (Fin n) (Fin n) ℝ}
 
 /-- `D` is embeddable in dimension `k` when it is the squared-distance matrix of
 some configuration of points in `EuclideanSpace ℝ (Fin k)`. -/
-def EmbedsIn (D : Matrix (Fin n) (Fin n) ℝ) (k : ℕ) : Prop :=
+@[expose] def EmbedsIn (D : Matrix (Fin n) (Fin n) ℝ) (k : ℕ) : Prop :=
   ∃ x : Fin n → EuclideanSpace ℝ (Fin k), IsSqDistMatrix D x
 
 /-- `IsPreDistMatrix` is this project's name for the symmetric-and-hollow structural
@@ -123,7 +123,7 @@ noncomputable def centeredGram [NeZero n] (D : Matrix (Fin n) (Fin n) ℝ) :
 
 @[simp]
 theorem centeredGram_apply [NeZero n] (D : Matrix (Fin n) (Fin n) ℝ) (i j : Fin n) :
-    centeredGram D i j = (D 0 i + D 0 j - D i j) / 2 := rfl
+    centeredGram D i j = (D 0 i + D 0 j - D i j) / 2 := by rfl
 
 /-- The basepoint-centered Gram matrix of a symmetric matrix is symmetric. -/
 theorem centeredGram_symm [NeZero n] {D : Matrix (Fin n) (Fin n) ℝ}

@@ -24,7 +24,7 @@ Tags: number-theory, quadratic-forms, geometry-of-numbers
 MSC: 11E25, 11H06
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

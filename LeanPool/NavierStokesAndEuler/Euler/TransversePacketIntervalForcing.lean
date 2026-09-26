@@ -18,7 +18,7 @@ section
 /-! Time restriction and changes of time variable commute with actual smooth cylinder
 representatives. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -89,7 +89,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

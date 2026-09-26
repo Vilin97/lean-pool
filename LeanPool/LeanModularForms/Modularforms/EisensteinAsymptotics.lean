@@ -16,7 +16,7 @@ import Mathlib.Analysis.Real.Pi.Bounds
 /-! # EisensteinAsymptotics -/
 
 
-@[expose] public section
+public section
 
 /-!
 # Asymptotic Behavior of Eisenstein Series

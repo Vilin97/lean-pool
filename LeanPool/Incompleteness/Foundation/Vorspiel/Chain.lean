@@ -15,7 +15,7 @@ import Mathlib.Data.Fintype.List
 
 /-! # Chain -/
 
-@[expose] public section
+public section
 
 
 namespace List

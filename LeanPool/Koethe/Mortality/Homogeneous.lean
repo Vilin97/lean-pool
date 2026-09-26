@@ -22,7 +22,7 @@ ring is a multivariate polynomial ring whose variables are grouped into
 independent triples.  The zero polynomial is homogeneous of every degree.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -36,7 +36,7 @@ abbrev HoleRing (k : Type*) [CommSemiring k] (N : ℕ) :=
   MvPolynomial (Fin N × Fin 3) k
 
 /-- The multidegree contributed by one occurrence of block `b`. -/
-def blockUnit {N : ℕ} (b : Fin N) : Fin N → ℕ := fun c => if c = b then 1 else 0
+@[expose] def blockUnit {N : ℕ} (b : Fin N) : Fin N → ℕ := fun c => if c = b then 1 else 0
 
 section Homogeneity
 
@@ -44,6 +44,7 @@ variable {k : Type*} [CommRing k] {N : ℕ}
 
 /-- The coefficients in the central parameter are all multihomogeneous of
 one and the same specified multidegree. -/
+@[expose]
 def CoeffHom (p : Polynomial (HoleRing k N)) (e : Fin N → ℕ) : Prop :=
   ∀ j, IsMultiHomogeneous (p.coeff j) e
 
@@ -132,6 +133,7 @@ theorem CoeffHom.prod {ι : Type*} (s : Finset ι)
       (ih (fun j hj => hf j (Finset.mem_insert_of_mem hj)))
 
 /-- The common multidegree of every coefficient of every matrix entry. -/
+@[expose]
 def MatrixCoeffHom {m n : Type*} (A : Matrix m n (Polynomial (HoleRing k N)))
     (e : Fin N → ℕ) : Prop := ∀ i j, CoeffHom (A i j) e
 

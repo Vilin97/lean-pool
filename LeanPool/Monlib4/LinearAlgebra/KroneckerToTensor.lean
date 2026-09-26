@@ -20,7 +20,7 @@ This file contains the definition of `tensorToKronecker` and
 
 -/
 
-@[expose] public section
+public section
 
 
 open scoped TensorProduct BigOperators Kronecker
@@ -126,14 +126,12 @@ theorem Matrix.kroneckerToTensorProduct_hMul (x y : Matrix m m R) (z w : Matrix 
     Algebra.TensorProduct.tmul_mul_tmul]
 
 /-- Algebra equivalence from the tensor product of matrix algebras to Kronecker matrices. -/
-@[simps!]
-noncomputable def tensorToKronecker :
+@[expose, simps!] noncomputable def tensorToKronecker :
     Matrix m m R ⊗[R] Matrix n n R ≃ₐ[R] Matrix (m × n) (m × n) R :=
   Matrix.kroneckerAlgEquiv m n R
 
 /-- Algebra equivalence from Kronecker matrices to the tensor product of matrix algebras. -/
-@[simps!]
-noncomputable def kroneckerToTensor :
+@[expose, simps!] noncomputable def kroneckerToTensor :
     Matrix (m × n) (m × n) R ≃ₐ[R] Matrix m m R ⊗[R] Matrix n n R :=
   (Matrix.kroneckerAlgEquiv m n R).symm
 
@@ -147,13 +145,13 @@ theorem Matrix.kroneckerToTensorProduct_star {R m n : Type _} [Field R] [StarRin
 theorem kroneckerToTensor_toLinearMap_eq :
     (kroneckerToTensor : Matrix (n × m) (n × m) R ≃ₐ[R] _).toLinearMap =
       (kroneckerToTensorProduct : Matrix (n × m) (n × m) R →ₗ[R] Matrix n n R ⊗[R] Matrix m m R) :=
-  rfl
+  by rfl
 
 theorem tensorToKronecker_toLinearMap_eq :
     ((@tensorToKronecker R m n _ _ _ _ _ :
         Matrix m m R ⊗[R] Matrix n n R ≃ₐ[R] _).toLinearMap :
         Matrix m m R ⊗[R] Matrix n n R →ₗ[R] Matrix (m × n) (m × n) R) =
       (TensorProduct.toKronecker : Matrix m m R ⊗[R] Matrix n n R →ₗ[R] Matrix (m × n) (m × n) R) :=
-  rfl
+  by rfl
 
 end

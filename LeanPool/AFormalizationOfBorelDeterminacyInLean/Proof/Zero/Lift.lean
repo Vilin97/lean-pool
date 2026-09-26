@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame.BorelDet.Zero
@@ -474,7 +474,7 @@ attribute [simp_lengths] x'_coe
 section «Section3»
 variable (hp : IsPosition H.x.val Player.zero)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def a : ExtensionsAt h.x' := h.2.strat h.x' (by have := H.hlvl; synthIsPosition)
+@[expose] def a : ExtensionsAt h.x' := h.2.strat h.x' (by have := H.hlvl; synthIsPosition)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def extension : ExtensionsAt H.x where
   val := (h.a hp).val

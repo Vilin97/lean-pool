@@ -15,7 +15,7 @@ exponent is uniform. It makes the exterior source scales summable after
 their spatial masses have been integrated in time.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators

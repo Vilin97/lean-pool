@@ -18,7 +18,7 @@ product equivalence. The smooth inverse-function theorem constructs a local
 solver; no solution branch or its regularity is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

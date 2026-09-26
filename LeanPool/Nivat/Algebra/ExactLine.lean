@@ -63,7 +63,7 @@ monomial unit extends coefficient divisibility to all Laurent filters.
 Finally, exponent reindexing transports the equality through the lattice basis.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.Algebra
 

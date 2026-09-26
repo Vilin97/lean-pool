@@ -60,7 +60,7 @@ section
 three-dimensional flow, with inverse and the projected differential
 equation. Graph invariance follows from a conserved linear functional. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -161,7 +161,7 @@ section
 as its three-dimensional graph restriction. This identifies the
 volume-preservation hypothesis for the actual physical-label flow. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -213,7 +213,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -325,7 +325,7 @@ section
 actual flow. Displacement, material velocity and material acceleration
 are the literal dilations of the corresponding original fields. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -436,7 +436,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -579,7 +579,7 @@ section
 /-! Periodicity of the prescribed velocity gives exact translation
 equivariance of the constructed global flow, by ODE uniqueness. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -602,7 +602,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -691,7 +691,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -782,7 +782,7 @@ section
 /-! Actual L² composition of any smooth periodic field with the
 constructed cylinder flow. The outer amplitude is retained. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -876,7 +876,7 @@ section
 small source amplitudes retained. The product term uses one bounded
 derivative coefficient and one L² velocity factor. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1038,7 +1038,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1125,7 +1125,7 @@ section
 equation. The real covering displacement is periodic, so its descent is
 a vector-valued field, including its angular displacement component. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1285,7 +1285,7 @@ may be a periodic cylinder.  The output is the actual time integral of
 the finite Taylor composition; identifying it with the displacement jet
 uses the already constructed flow's differentiated integral equation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1338,7 +1338,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1467,7 +1467,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

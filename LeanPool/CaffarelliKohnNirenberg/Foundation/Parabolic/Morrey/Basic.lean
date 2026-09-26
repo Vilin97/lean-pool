@@ -20,7 +20,7 @@ metric-ball version is kept alongside it; the two versions are compared by
 the inclusions between cylinders and metric balls.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Metric
 open scoped ENNReal NNReal Topology
@@ -34,16 +34,19 @@ namespace CKN.Foundation.Parabolic.Morrey
 abbrev Q := (5 : ℝ)
 
 /-- The integral part of a Morrey cell on a parabolic cylinder. -/
+@[expose]
 def cylinderPowerIntegral (p : ℝ) (f : ParabolicPoint → ℝ)
     (z : ParabolicPoint) (r : ℝ) : ℝ≥0∞ :=
   ∫⁻ w in parabolicCylinder z.1 z.2 r, ENNReal.ofReal |f w| ^ p
 
 /-- The integral part of a Morrey cell on a metric ball. -/
+@[expose]
 def ballPowerIntegral (p : ℝ) (f : ParabolicPoint → ℝ)
     (z : ParabolicPoint) (r : ℝ) : ℝ≥0∞ :=
   ∫⁻ w in Metric.ball z r, ENNReal.ofReal |f w| ^ p
 
 /-- The Morrey cell attached to a positive-radius cylinder. -/
+@[expose]
 def morreyCell (p q : ℝ) (f : ParabolicPoint → ℝ)
     (z : ParabolicPoint) (r : ℝ) : ℝ≥0∞ :=
   (ENNReal.ofReal r) ^ (-(Q * (1 - p / q) / p)) *
@@ -58,16 +61,19 @@ theorem morreyCell_eq (p q : ℝ) (f : ParabolicPoint → ℝ)
   rfl
 
 /-- The Morrey cell attached to a positive-radius metric ball. -/
+@[expose]
 def morreyBallCell (p q : ℝ) (f : ParabolicPoint → ℝ)
     (z : ParabolicPoint) (r : ℝ) : ℝ≥0∞ :=
   (ENNReal.ofReal r) ^ (-(Q * (1 - p / q) / p)) *
     (ballPowerIntegral p f z r) ^ (1 / p)
 
 /-- The parabolic Morrey seminorm, with homogeneous dimension `Q = 5`. -/
+@[expose]
 def morreyNorm (p q : ℝ) (f : ParabolicPoint → ℝ) : ℝ≥0∞ :=
   ⨆ z : ParabolicPoint, ⨆ r : {r : ℝ // 0 < r}, morreyCell p q f z r.1
 
 /-- The metric-ball version of the parabolic Morrey seminorm. -/
+@[expose]
 def morreyBallNorm (p q : ℝ) (f : ParabolicPoint → ℝ) : ℝ≥0∞ :=
   ⨆ z : ParabolicPoint, ⨆ r : {r : ℝ // 0 < r}, morreyBallCell p q f z r.1
 

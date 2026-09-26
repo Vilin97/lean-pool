@@ -33,7 +33,7 @@ public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
                     weight `m` YET `colWeightLb (denseScheme m) = 0`.  Anti-scaling-law: gap = m.
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 
@@ -188,7 +188,7 @@ theorem hHG_dense (m : ℕ) :
 /-! ### TIER 2/1 — the dense scheme. -/
 
 /-- The DENSE scheme: same `n,k,m,G,τ` as `projScheme`, but `H := denseH m` (row-equivalent). -/
-def denseScheme (m : ℕ) : Scheme (ZMod 2) where
+@[expose] def denseScheme (m : ℕ) : Scheme (ZMod 2) where
   n := 2 * m
   k := m
   m := m

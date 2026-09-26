@@ -21,7 +21,7 @@ those descriptions.
   edge arcs under the parameter-matching homeomorphism are polygonal target edge arcs.
 -/
 
-@[expose] public section
+public section
 
 open Set unitInterval
 

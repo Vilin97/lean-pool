@@ -19,7 +19,7 @@ connectives (destroys countability), syntactic substitution closure (subsumed by
 parameters), and formal-negation closure (an NNF concern, #14).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

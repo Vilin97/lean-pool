@@ -15,7 +15,7 @@ For `g = (f, q)` the action on `ι → Δ` is
 `(g • x) i = f i • x (q⁻¹ • i)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Saxl
 

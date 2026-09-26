@@ -37,7 +37,7 @@ lifted variable embedding `ctxLiftEmb` (no term relabeling of built formulas).
 * The nested-formula pilot `R(f(g(x), h(c)))`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -70,7 +70,7 @@ def relGraph {k : ℕ} (R : L.Relations k) (ts : Fin k → L.Term (α ⊕ Fin n)
 
 /-- Relationalize a formula: atoms via their term-graph flattenings (`equalGraph`/`relGraph`),
 connectives and quantifiers structurally. -/
-def relationalizeFormula : ∀ {n : ℕ}, L.BoundedFormulaω α n →
+@[expose] def relationalizeFormula : ∀ {n : ℕ}, L.BoundedFormulaω α n →
     (graphLanguage L).BoundedFormulaω α n
   | _, .falsum => .falsum
   | _, .equal t u => equalGraph t u

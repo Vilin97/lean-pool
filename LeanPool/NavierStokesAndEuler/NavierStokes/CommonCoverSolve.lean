@@ -19,7 +19,7 @@ The source is evaluated on the lifted copy path. Only periodicity on the
 coarsest torus is used; finer native periodicity is not an input.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,7 +40,7 @@ theorem coverEquiv_apply (Y : Plane) : coverEquiv Y = SlotGeometry.cover Y := by
 
 /-- Cover power as an element of `ℕ → Plane ≃L[ℝ] Plane | 0 => ContinuousLinearEquiv.refl ℝ
 Plane | d + 1 => (coverPower d).trans coverEquiv`. -/
-noncomputable def coverPower : ℕ → Plane ≃L[ℝ] Plane
+@[expose] noncomputable def coverPower : ℕ → Plane ≃L[ℝ] Plane
   | 0 => ContinuousLinearEquiv.refl ℝ Plane
   | d + 1 => (coverPower d).trans coverEquiv
 
@@ -57,7 +57,7 @@ noncomputable def indexMap (k : Frequency) : Frequency :=
   (3 * k.1 + k.2, k.1 + 5 * k.2)
 
 /-- Cover index, given by `indexMap^[d] k`. -/
-noncomputable def coverIndex (d : ℕ) (k : Frequency) : Frequency := indexMap^[d] k
+@[expose] noncomputable def coverIndex (d : ℕ) (k : Frequency) : Frequency := indexMap^[d] k
 
 theorem coverEquiv_lattice (k : Frequency) :
     coverEquiv (TorusAverages.latticePoint k) = TorusAverages.latticePoint (indexMap k) := by
@@ -100,12 +100,12 @@ variable (g : Geometry)
 
 /-- Coordinates, given by `g.basis.symm (coverPower g.gap Y - g.center -
 TorusAverages.latticePoint k)`. -/
-noncomputable def coordinates (k : Frequency) (Y : Plane) : Plane :=
+@[expose] noncomputable def coordinates (k : Frequency) (Y : Plane) : Plane :=
   g.basis.symm (coverPower g.gap Y - g.center - TorusAverages.latticePoint k)
 
 /-- Point, given by `(coverPower g.gap).symm (g.center + TorusAverages.latticePoint k + g.basis
 z)`. -/
-noncomputable def point (k : Frequency) (z : Plane) : Plane :=
+@[expose] noncomputable def point (k : Frequency) (z : Plane) : Plane :=
   (coverPower g.gap).symm (g.center + TorusAverages.latticePoint k + g.basis z)
 
 theorem coordinates_point (k : Frequency) (z : Plane) :
@@ -129,7 +129,7 @@ theorem point_add (k : Frequency) (z h : Plane) :
   simp only [point, map_add, add_assoc]
 
 /-- Path, given by `g.point k ((g.coordinates k Y).1, eta)`. -/
-noncomputable def path (k : Frequency) (Y : Plane) (eta : ℝ) : Plane :=
+@[expose] noncomputable def path (k : Frequency) (Y : Plane) (eta : ℝ) : Plane :=
   g.point k ((g.coordinates k Y).1, eta)
 
 theorem coordinates_path (k : Frequency) (Y : Plane) (eta : ℝ) :
@@ -226,12 +226,12 @@ namespace LinearData
 variable (d : LinearData P V E) (g : Geometry)
 
 /-- Coefficient along, given by `d.coefficient (w.1.1, ((g.coordinates k w.1.2).1, w.2))`. -/
-noncomputable def coefficientAlong (k : Frequency) (w : (P × Plane) × ℝ) : E →L[ℝ] E :=
+@[expose] noncomputable def coefficientAlong (k : Frequency) (w : (P × Plane) × ℝ) : E →L[ℝ] E :=
   d.coefficient (w.1.1, ((g.coordinates k w.1.2).1, w.2))
 
 /-- Forcing along, given by `d.forcingMap (w.1.1, ((g.coordinates k w.1.2).1, w.2)) (d.source
 (w.1.1, g.path k w.1.2 w.2))`. -/
-noncomputable def forcingAlong (k : Frequency) (w : (P × Plane) × ℝ) : E :=
+@[expose] noncomputable def forcingAlong (k : Frequency) (w : (P × Plane) × ℝ) : E :=
   d.forcingMap (w.1.1, ((g.coordinates k w.1.2).1, w.2))
     (d.source (w.1.1, g.path k w.1.2 w.2))
 
@@ -285,20 +285,20 @@ variable [CompleteSpace E] {a b : ℝ}
 variable (d : LinearData P V E) (g : Geometry) (hab : a ≤ b)
 
 /-- Coefficient path, given by `SmoothPathFamily.pathFamily (d.coefficientAlong g k) p`. -/
-noncomputable def coefficientPath (k : Frequency) (p : P × Plane) :
+@[expose] noncomputable def coefficientPath (k : Frequency) (p : P × Plane) :
     ParametricODE.Coefficient a b E := SmoothPathFamily.pathFamily (d.coefficientAlong g k) p
 
 /-- Forcing path, given by `SmoothPathFamily.pathFamily (d.forcingAlong g k) p`. -/
-noncomputable def forcingPath (k : Frequency) (p : P × Plane) :
+@[expose] noncomputable def forcingPath (k : Frequency) (p : P × Plane) :
     ParametricODE.Curve a b E := SmoothPathFamily.pathFamily (d.forcingAlong g k) p
 
 /-- The genuine Volterra solution, with zero entry data, evaluated along the
 copy path anchored at the current common coordinate. -/
-noncomputable def anchoredSolve (k : Frequency) (p : P × Plane) (s : ℝ) : E :=
+@[expose] noncomputable def anchoredSolve (k : Frequency) (p : P × Plane) (s : ℝ) : E :=
   ParametricODE.solutionExtension hab (d.coefficientPath g k p) 0 (d.forcingPath g k p) s
 
 /-- Value of the constructed solution at the current native slot coordinate. -/
-noncomputable def copySolve (k : Frequency) (p : P × Plane) : E :=
+@[expose] noncomputable def copySolve (k : Frequency) (p : P × Plane) : E :=
   d.anchoredSolve g hab k p (g.coordinates k p.2).2
 
 omit [CompleteSpace E] in
@@ -582,12 +582,12 @@ variable [CompleteSpace E] {a b : ℝ}
 variable (d : LinearData P V E) (g : Geometry) (hab : a ≤ b)
 
 /-- Localized copy, given by `κ (g.coordinates k p.2) • d.copySolve g hab k p`. -/
-noncomputable def localizedCopy (κ : Plane → ℝ) (k : Frequency) (p : P × Plane) : E :=
+@[expose] noncomputable def localizedCopy (κ : Plane → ℝ) (k : Frequency) (p : P × Plane) : E :=
   κ (g.coordinates k p.2) • d.copySolve g hab k p
 
 /-- The actual sum of localized copy solves. Sources in different native
 copies are evaluated at their own absolute-lift points. -/
-noncomputable def commonSolve (κ : Plane → ℝ) (p : P × Plane) : E :=
+@[expose] noncomputable def commonSolve (κ : Plane → ℝ) (p : P × Plane) : E :=
   ∑' k : Frequency, d.localizedCopy g hab κ k p
 
 omit [NormedSpace ℝ P] in
@@ -851,7 +851,7 @@ noncomputable def coordinateLinear : Plane →L[ℝ] Plane :=
 
 /-- Point linear, given by `((coverPower g.gap).symm : Plane →L[ℝ] Plane).comp (g.basis : Plane
 →L[ℝ] Plane)`. -/
-noncomputable def pointLinear : Plane →L[ℝ] Plane :=
+@[expose] noncomputable def pointLinear : Plane →L[ℝ] Plane :=
   ((coverPower g.gap).symm : Plane →L[ℝ] Plane).comp (g.basis : Plane →L[ℝ] Plane)
 
 /-- Horizontal, given by `(ContinuousLinearMap.fst ℝ ℝ ℝ).prod 0`. -/
@@ -1049,7 +1049,7 @@ variable {P H : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   (t : TangentData P H) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
 
 /-- Linear data, bundling `coefficient`, `forcingMap`, `source`. -/
-noncomputable def linearData : LinearData P H H where
+@[expose] noncomputable def linearData : LinearData P H H where
   coefficient z := TangentODE.projectedOperator (t.normal z) (t.normalDot z)
     (t.action z) (t.damping z)
   forcingMap z := negativeTangentProjection (t.normal z)

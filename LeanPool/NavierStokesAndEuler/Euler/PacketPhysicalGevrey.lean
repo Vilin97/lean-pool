@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 correction. All spatial derivatives are actual derivatives of κF e
 evaluated on the phase graph and pulled through the inverse parent flow. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -50,7 +50,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (he : ∀ t x, ContDiff ℝ ∞ (localFieldLift P (e t) x))
 
 /-- Graph reconstruction, given by `κ • D.F.field t x (physicalField P k D.m₀ (e t) x)`. -/
-def graphReconstruction (t : Icc (0 : ℝ) D.T) (x : Space) : Space :=
+@[expose] def graphReconstruction (t : Icc (0 : ℝ) D.T) (x : Space) : Space :=
   κ • D.F.field t x (physicalField P k D.m₀ (e t) x)
 
 include he in
@@ -99,7 +99,7 @@ def physicalReconstruction (t : Icc (0 : ℝ) D.T) (x : Space) : Space :=
   graphReconstruction D P κ k e t (Y t x)
 
 /-- Physical radius, given by `sourceInverseRadius C R*(9*C^2*(R+frequencyFactor k D.m₀*S)+2)`. -/
-def physicalRadius : ℝ :=
+@[expose] def physicalRadius : ℝ :=
   sourceInverseRadius C R*(9*C^2*(R+frequencyFactor k D.m₀*S)+2)
 
 include he hR hC hA hS hF hb hX hY hXY hdet in

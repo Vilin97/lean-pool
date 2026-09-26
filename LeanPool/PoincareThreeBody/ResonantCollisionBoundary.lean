@@ -17,26 +17,26 @@ primary before the parabolic limit.  This file identifies the boundary eccentric
 time, and orientation at which the limiting ellipse meets the primary exactly.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 open Filter Topology
 
 /-- Semimajor axis of the normalized Kepler ellipse at the `(p,q)` resonance. -/
-noncomputable def resonantSemimajorAxis (p q : ℕ) : ℝ :=
+@[expose] noncomputable def resonantSemimajorAxis (p q : ℕ) : ℝ :=
   resonantFirstAction p q ^ 2
 
 /-- Eccentricity at which the resonant apoapsis reaches radius one. -/
-noncomputable def resonantCollisionEccentricity (p q : ℕ) : ℝ :=
+@[expose] noncomputable def resonantCollisionEccentricity (p q : ℕ) : ℝ :=
   1 / resonantSemimajorAxis p q - 1
 
 /-- The first time at which the resonant orbit reaches apoapsis. -/
-noncomputable def resonantApoapsisTime (p q : ℕ) : ℝ :=
+@[expose] noncomputable def resonantApoapsisTime (p q : ℕ) : ℝ :=
   Real.pi * p / q
 
 /-- Orientation which places that apoapsis at the unit primary. -/
-noncomputable def resonantCollisionOrientation (p q : ℕ) : ℝ :=
+@[expose] noncomputable def resonantCollisionOrientation (p q : ℕ) : ℝ :=
   resonantApoapsisTime p q - Real.pi
 
 theorem resonantSemimajorAxis_pos {p q : ℕ} (hp : 0 < p) (hq : 0 < q) :

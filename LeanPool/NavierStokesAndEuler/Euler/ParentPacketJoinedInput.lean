@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketLabelData
 the complete joined-packet input at one common radius. The history
 Jacobi law, inverse coefficients and all coefficient matches are proved. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

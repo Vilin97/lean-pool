@@ -45,7 +45,7 @@ section
 physical frame and its scalar parameters unchanged. The source strain
 and time interval are the actual fields of the same parent. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -128,7 +128,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -273,7 +273,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -495,7 +495,7 @@ section
 Only the first geometric step needs coupling and tilt bounds. All later
 step lengths are nonnegative independently of any future frame invariant. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -645,7 +645,7 @@ section
 amplification stage. Its new ray and velocity start exactly in the old
 frame, so only the actual strain's spatial variation enters the error. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -783,7 +783,7 @@ section
 majorant under fixed degree and constant guards. Thus the small support
 scale discharges the literal neighbor comparison in the geometry step. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -884,7 +884,7 @@ section
 The history reciprocal is derived from the initial geometric step, and
 the only parent size input is the already constructed parent's label bound. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1027,7 +1027,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

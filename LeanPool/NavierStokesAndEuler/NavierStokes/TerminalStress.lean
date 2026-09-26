@@ -21,7 +21,7 @@ stress is defined independently of the separate global moment condition that
 identifies it with an axis-based stress primitive.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,18 +37,18 @@ theorem contDiffAt_deriv {f : ℝ → ℝ} {r : ℝ} {m n : WithTop ℕ∞}
   (hf.fderiv_right hmn).clm_apply contDiffAt_const
 
 /-- Radial-viscosity terms left after cancelling the heat equation for `K`. -/
-noncomputable def viscousResidual (K f : ℝ → ℝ) (r : ℝ) : ℝ :=
+@[expose] noncomputable def viscousResidual (K f : ℝ → ℝ) (r : ℝ) : ℝ :=
   -K r * (deriv (deriv f) r + deriv f r / r) - 2 * deriv K r * deriv f r
 
 /-- Boundary, given by `r ^ 2 * K r * deriv f r`. -/
 noncomputable def boundary (K f : ℝ → ℝ) (r : ℝ) : ℝ := r ^ 2 * K r * deriv f r
 
 /-- Correction, given by `(r * K r - r ^ 2 * deriv K r) * deriv f r`. -/
-noncomputable def correction (K f : ℝ → ℝ) (r : ℝ) : ℝ :=
+@[expose] noncomputable def correction (K f : ℝ → ℝ) (r : ℝ) : ℝ :=
   (r * K r - r ^ 2 * deriv K r) * deriv f r
 
 /-- Backward stress, given by `(∫ u in Ioi r, u ^ 2 * R u) / r ^ 2`. -/
-noncomputable def backwardStress (R : ℝ → ℝ) (r : ℝ) : ℝ :=
+@[expose] noncomputable def backwardStress (R : ℝ → ℝ) (r : ℝ) : ℝ :=
   (∫ u in Ioi r, u ^ 2 * R u) / r ^ 2
 
 theorem boundary_hasDerivAt {K f : ℝ → ℝ} {r : ℝ} (hr : r ≠ 0)
@@ -159,7 +159,7 @@ theorem backwardStress_ge_mass {K f T : ℝ → ℝ} {r c : ℝ} (hr : 0 < r)
     _ ≤ _ := le_add_of_nonneg_left hb0
 
 /-- The heat carrier with the manuscript's arbitrary fixed normalization. -/
-noncomputable def heatAmplitude (C a t r : ℝ) : ℝ :=
+@[expose] noncomputable def heatAmplitude (C a t r : ℝ) : ℝ :=
   C * RadialHeatProfile.radialProfile a (1 - t) r
 
 theorem heatAmplitude_pos {C a t r : ℝ} (hC : 0 < C) (ha : 1 < a)
@@ -241,10 +241,10 @@ abbrev PhysicalPoint := SimilarityProfile.PhysicalPoint
 abbrev PhysicalProfile := SimilarityProfile.PhysicalProfile
 
 /-- Radius point, given by `(t, (r ^ 2 / 2, z))`. -/
-noncomputable def radiusPoint (t r z : ℝ) : PhysicalPoint := (t, (r ^ 2 / 2, z))
+@[expose] noncomputable def radiusPoint (t r z : ℝ) : PhysicalPoint := (t, (r ^ 2 / 2, z))
 
 /-- Radial slice, given by `G (radiusPoint t r z)`. -/
-noncomputable def radialSlice (G : PhysicalProfile) (t z : ℝ) (r : ℝ) : ℝ :=
+@[expose] noncomputable def radialSlice (G : PhysicalProfile) (t z : ℝ) (r : ℝ) : ℝ :=
   G (radiusPoint t r z)
 
 theorem radiusPoint_contDiff (t z : ℝ) : ContDiff ℝ ∞ (fun r => radiusPoint t r z) :=
@@ -307,7 +307,7 @@ theorem angular_radial_operator {F : PhysicalProfile} {t r z : ℝ} (hr : r ≠ 
   field_simp [hr]; ring
 
 /-- The terminal flattening factor is an actual function of logarithmic `X`. -/
-noncomputable def flattening (h : ℝ) (f : ℝ → ℝ) (p : PhysicalPoint) : ℝ :=
+@[expose] noncomputable def flattening (h : ℝ) (f : ℝ → ℝ) (p : PhysicalPoint) : ℝ :=
   f (Real.log (SimilarityProfile.X h p))
 
 theorem flattening_contDiffAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
@@ -385,11 +385,11 @@ theorem terminal_radial_residual (C : ℝ) {h t r z : ℝ} (hh : 0 < h) (hh1 : h
   exact he
 
 /-- The angular heat carrier expressed in the regular coordinate `s`. -/
-noncomputable def physicalHeat (C a : ℝ) (p : PhysicalPoint) : ℝ :=
+@[expose] noncomputable def physicalHeat (C a : ℝ) (p : PhysicalPoint) : ℝ :=
   C * RadialHeatProfile.spatialProfile a (1 - p.1) p.2.1
 
 /-- The regular Cartesian swirl coefficient: the physical angular velocity is `r F`. -/
-noncomputable def swirlCoefficient (C h : ℝ) (f : ℝ → ℝ) (p : PhysicalPoint) : ℝ :=
+@[expose] noncomputable def swirlCoefficient (C h : ℝ) (f : ℝ → ℝ) (p : PhysicalPoint) : ℝ :=
   physicalHeat C (1 + h) p * flattening h f p / Real.sqrt (2 * p.2.1)
 
 theorem physicalHeat_contDiffAt (C : ℝ) {a : ℝ} (ha : 1 < a) {p : PhysicalPoint}
@@ -445,7 +445,7 @@ theorem regular_leading_residual {F : PhysicalProfile} {t r z : ℝ} (hr : r ≠
   ring
 
 /-- Leading residual, constructed using `heatAmplitude`. -/
-noncomputable def leadingResidual (C h : ℝ) (f : ℝ → ℝ) (t r z : ℝ) : ℝ :=
+@[expose] noncomputable def leadingResidual (C h : ℝ) (f : ℝ → ℝ) (t r z : ℝ) : ℝ :=
   heatAmplitude C (1 + h) t r *
     (deriv f (Real.log (SimilarityProfile.X h (radiusPoint t r z))) /
       (SimilarityProfile.q h (radiusPoint t r z) *
@@ -477,7 +477,7 @@ theorem swirlCoefficient_leading_residual (C : ℝ) {h t r z : ℝ}
   exact terminal_radial_residual C hh hh1 ht hr hf
 
 /-- Canonical pressure, normalized at infinity, in the regular coordinate. -/
-noncomputable def canonicalPressure (F : PhysicalProfile) (p : PhysicalPoint) : ℝ :=
+@[expose] noncomputable def canonicalPressure (F : PhysicalProfile) (p : PhysicalPoint) : ℝ :=
   -∫ s in Ioi p.2.1, F (p.1, (s, p.2.2)) ^ 2
 
 theorem neg_tailIntegral_hasDerivAt {g : ℝ → ℝ} {a b : ℝ} (hab : a < b)
@@ -512,7 +512,7 @@ theorem canonicalPressure_partialS {F : PhysicalProfile} {p : PhysicalPoint} {a 
 
 /-- Residual coefficient, given by `partialT F p - 2 * p.2.1 * partialS (partialS F) p - 4 *
 partialS F p - partialZ (partialZ F) p`. -/
-noncomputable def residualCoefficient (F : PhysicalProfile) (p : PhysicalPoint) : ℝ :=
+@[expose] noncomputable def residualCoefficient (F : PhysicalProfile) (p : PhysicalPoint) : ℝ :=
   partialT F p - 2 * p.2.1 * partialS (partialS F) p - 4 * partialS F p - partialZ (partialZ F) p
 
 /-- The actual Cartesian residual of a purely angular velocity. -/
@@ -680,7 +680,7 @@ noncomputable def timeDenominator (h t z : ℝ) : ℝ :=
 
 /-- Time residual, given by `heatAmplitude C (1 + h) t r * deriv f (Real.log
 (SimilarityProfile.X h (radiusPoint t r z))) / timeDenominator h t z`. -/
-noncomputable def timeResidual (C h : ℝ) (f : ℝ → ℝ) (t z r : ℝ) : ℝ :=
+@[expose] noncomputable def timeResidual (C h : ℝ) (f : ℝ → ℝ) (t z r : ℝ) : ℝ :=
   heatAmplitude C (1 + h) t r * deriv f (Real.log (SimilarityProfile.X h (radiusPoint t r z))) /
     timeDenominator h t z
 
@@ -757,7 +757,7 @@ theorem timeResidual_lower_comparison {C h t r u R z : ℝ}
   exact div_nonneg (mul_nonneg (by norm_num) hfpos) hu.le
 
 /-- Terminal stress, given by `backwardStress (fun u => leadingResidual C h f t u z) r`. -/
-noncomputable def terminalStress (C h : ℝ) (f : ℝ → ℝ) (t z r : ℝ) : ℝ :=
+@[expose] noncomputable def terminalStress (C h : ℝ) (f : ℝ → ℝ) (t z r : ℝ) : ℝ :=
   backwardStress (fun u => leadingResidual C h f t u z) r
 
 theorem flattening_radial_contDiffAt {h t r z : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)

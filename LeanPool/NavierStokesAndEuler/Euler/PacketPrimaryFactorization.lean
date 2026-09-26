@@ -17,7 +17,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPressure
 interval. This follows from uniqueness for its genuine homogeneous linear
 ODE, whose coefficients are independent of the angle. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -133,7 +133,7 @@ theorem referenceValue_pos (δ : ℝ) (hδ : 0 < δ) : 0 < referenceValue δ := 
 
 /-- The envelope is retained in this actual velocity. On the core it agrees
 with the unmultiplied history, and its definition is valid for every time. -/
-def envelopedVelocity (δ : ℝ) (hδ : 0 < δ) (ξ : U)
+@[expose] def envelopedVelocity (δ : ℝ) (hδ : 0 < δ) (ξ : U)
     (hs : tsupport innerCutoff ⊆ D.support) (t : ℝ) (x : Space) : Space :=
   (referenceValue δ)⁻¹ •
     vector τ hτ hτT B (initialData D δ hδ ξ hs) (t,(x,Real.pi/2))
@@ -185,7 +185,7 @@ theorem envelopedVelocity_independent_profile (δ δ' : ℝ) (hδ : 0 < δ) (hδ
     (envelopedVelocity_history τ hτ hτT B δ' hδ' ξ hs ⟨0,le_rfl,hτ.le⟩ x).symm
 
 /-- Canonical velocity, given by `envelopedVelocity τ hτ hτT B 1 zero_lt_one ξ hs t x`. -/
-def canonicalVelocity (ξ : U) (hs : tsupport innerCutoff ⊆ D.support)
+@[expose] def canonicalVelocity (ξ : U) (hs : tsupport innerCutoff ⊆ D.support)
     (t : ℝ) (x : Space) : Space :=
   envelopedVelocity τ hτ hτT B 1 zero_lt_one ξ hs t x
 

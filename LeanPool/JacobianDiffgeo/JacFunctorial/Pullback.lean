@@ -34,7 +34,7 @@ Main declarations:
   `RS.tangentCoord_mfderiv_comp`, reading the target through its own preferred chart.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Bundle
 open Set IsManifold
@@ -235,7 +235,7 @@ noncomputable def Form1.pullback (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(�
     ring)
 
 @[simp] theorem Form1.pullback_apply (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) (η : Form1 Y) :
-    Form1.pullback f hf η = pullbackForm f hf η := rfl
+    Form1.pullback f hf η = pullbackForm f hf η := by rfl
 
 /-- The preferred-chart coefficient formula, restated for `Form1.pullback`. -/
 theorem coeffAt_pullback (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) (η : Form1 Y) (x : X) :

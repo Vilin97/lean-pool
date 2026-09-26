@@ -45,7 +45,7 @@ Byproducts stated for downstream use (Kummer/PicardFuchs and MainTheorem):
 * pointwise raw-derivative forms `deriv_comp_ofComplex_E2`/`_E₄`/`_E₆`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

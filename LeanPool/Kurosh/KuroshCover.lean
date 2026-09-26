@@ -19,7 +19,7 @@ commit `911707126c8b9bb0c764bf853008fe1053c0aad9`: imports, API compatibility,
 and proof organization were revised.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory
@@ -58,7 +58,7 @@ abbrev CoverEdge {ι : Type v} (G : ι → Type u)
   Σ a b : RawBassSerreOrbitVertex G H, a ⟶ b
 
 /-- The based loop of a quotient edge included in the free factor of the covering group. -/
-noncomputable def coverEdgeLetter {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def coverEdgeLetter {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (e : CoverEdge G H) : CoverSource G H :=
   treeKuroshFreeInclusion G H (quotientEdgeLoop G H e.2.2)
@@ -272,7 +272,7 @@ noncomputable def coverEdgeMap {ι : Type v} (G : ι → Type u)
     (rawBassSerreEdgeAction G h.1 base)
 
 /-- Construct an auxiliary covering vertex from a quotient vertex and a group element. -/
-def coverVertexMk {ι : Type v} (G : ι → Type u)
+@[expose] def coverVertexMk {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (a : RawBassSerreOrbitVertex G H) (p : CoverSource G H) :
     CoverVertex G H :=
@@ -329,7 +329,7 @@ def coverGraphLabelPrefunctor {ι : Type v} (G : ι → Type u)
     (coverEdgeLetter G H (coverBaseEdge G H e))⁻¹
 
 /-- Interpret a raw symmetrified quotient path in its free groupoid. -/
-def coverFreeGroupoidPathHom {ι : Type v} (G : ι → Type u)
+@[expose] def coverFreeGroupoidPathHom {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {a : RawBassSerreOrbitVertex G H} :
     ∀ {b : RawBassSerreOrbitVertex G H},
@@ -519,7 +519,7 @@ theorem coverPathValue_neg {ι : Type v} (G : ι → Type u)
   rfl
 
 /-- The free-part loop determined by a path based at the quotient root. -/
-noncomputable def coverPathFreeLoop {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def coverPathFreeLoop {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {a : RawBassSerreOrbitVertex G H}
     (p : @Quiver.Path (Quiver.Symmetrify (RawBassSerreOrbitVertex G H))
@@ -684,7 +684,7 @@ theorem coverPathLift_value {ι : Type v} (G : ι → Type u)
           rw [mul_assoc]
 
 /-- The projection from the auxiliary covering quiver to the Bass-Serre quiver. -/
-noncomputable def coverPrefunctor {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def coverPrefunctor {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     CoverVertex G H ⥤q RawBassSerreVertex G where
   obj := coverVertexMap G H

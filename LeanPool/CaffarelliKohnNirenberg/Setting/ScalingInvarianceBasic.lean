@@ -16,7 +16,7 @@ public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology Pointwise
@@ -28,23 +28,28 @@ noncomputable section
 namespace CKN
 
 /-- Spatial part of the parabolic change of variables. -/
+@[expose]
 def scalingSpace (μ : ℝ) (x₀ : Vec3) : Vec3 → Vec3 :=
   fun y => x₀ + μ • y
 
 /-- Temporal part of the parabolic change of variables. -/
+@[expose]
 def scalingTime (μ : ℝ) (t₀ : ℝ) : ℝ → ℝ :=
   fun s => t₀ + μ ^ 2 * s
 
 /-- Parabolic dilation followed by space-time translation. -/
+@[expose]
 def scalingParabolic (μ : ℝ) (z₀ : ParabolicPoint) :
     ParabolicPoint → ParabolicPoint :=
   fun z => parabolicTranslate z₀.1 z₀.2 (parabolicScale μ z)
 
 /-- Spatial domain pulled back under the parabolic change of variables. -/
+@[expose]
 def rescaledSpace (μ : ℝ) (x₀ : Vec3) (Ω : Set Vec3) : Set Vec3 :=
   scalingSpace μ x₀ ⁻¹' Ω
 
 /-- Time domain pulled back under the parabolic change of variables. -/
+@[expose]
 def rescaledTime (μ : ℝ) (t₀ : ℝ) (I : Set ℝ) : Set ℝ :=
   scalingTime μ t₀ ⁻¹' I
 

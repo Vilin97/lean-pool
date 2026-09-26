@@ -17,7 +17,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 -/
 
-@[expose] public section
+public section
 
 namespace KrafftSieve
 

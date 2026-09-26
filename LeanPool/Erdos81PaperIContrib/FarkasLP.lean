@@ -31,7 +31,7 @@ specialization built directly from the finitely generated cone closedness theore
 
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -40,7 +40,7 @@ namespace LeanPool.Erdos81PaperIContrib
 variable {ι κ : Type*}
 
 /-- A real vector viewed in `EuclideanSpace ℝ ι` by its coordinates. -/
-noncomputable def toE (f : ι → ℝ) : EuclideanSpace ℝ ι :=
+@[expose] noncomputable def toE (f : ι → ℝ) : EuclideanSpace ℝ ι :=
   (WithLp.equiv 2 (ι → ℝ)).symm f
 
 @[simp] lemma toE_apply (f : ι → ℝ) (i : ι) : toE f i = f i := rfl

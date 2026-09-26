@@ -16,7 +16,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Caccioppoli.RawI4
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

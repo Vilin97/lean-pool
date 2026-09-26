@@ -14,4 +14,4 @@ import Mathlib.Tactic.Positivity.Finset
 # Auxiliary lemmas for Mathlib
 -/
 
-@[expose] public section
+public section

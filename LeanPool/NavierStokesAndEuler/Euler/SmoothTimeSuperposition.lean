@@ -19,7 +19,7 @@ second-derivative remainder proves Fréchet differentiability in the path
 sup norm, and iteration gives smoothness at every order.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -17,15 +17,15 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.QuantumSet.Subset`.
 -/
 
-@[expose] public section
+public section
 
 /-- Type synonym for a quantum set with its modular exponent shifted to `k`. -/
-def QuantumSet.toSubset (k : ℝ) (A : Type*) : Type _ :=
+@[expose] def QuantumSet.toSubset (k : ℝ) (A : Type*) : Type _ :=
   let _ : ℝ := k
   A
 
 /-- The tautological equivalence from a type to its shifted quantum-set synonym. -/
-def QuantumSet.toSubsetEquiv (k : ℝ) {A : Type*} :
+@[expose] def QuantumSet.toSubsetEquiv (k : ℝ) {A : Type*} :
   A ≃ QuantumSet.toSubset k A := Equiv.refl _
 
 /-- Abbreviation for the shifted quantum-set type synonym. -/
@@ -42,7 +42,7 @@ instance {A : Type*} [Star A] [SMul ℂ A] [h : StarModule ℂ A] :
     StarModule ℂ (QuantumSet.subset new_k A) := h
 
 /-- The tautological algebra equivalence from a type to its shifted quantum-set synonym. -/
-def QuantumSet.toSubsetAlgEquiv (k : ℝ) {A : Type*} [Ring A] [Algebra ℂ A] :
+@[expose] def QuantumSet.toSubsetAlgEquiv (k : ℝ) {A : Type*} [Ring A] [Algebra ℂ A] :
     A ≃ₐ[ℂ] QuantumSet.subset k A :=
   AlgEquiv.refl
 lemma QuantumSet.toSubsetAlgEquiv_eq_toSubsetEquiv {A : Type*} [Ring A] [Algebra ℂ A]
@@ -74,7 +74,7 @@ lemma QuantumSet.subsetStarAlgebra_modAut_apply'' (r : ℝ) (x : QuantumSet.subs
     ((ha.modAut r ((toSubsetEquiv new_k).symm x : A)) : A) := rfl
 
 /-- The normed additive group structure induced by shifting the quantum-set inner product. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def QuantumSet.subsetNormedAddCommGroup [hA : QuantumSet A]
   (new_k : ℝ) :
     letI : starAlgebra (QuantumSet.subset new_k A) := QuantumSet.subsetStarAlgebra new_k
@@ -97,7 +97,7 @@ noncomputable def QuantumSet.subsetNormedAddCommGroup [hA : QuantumSet A]
     add_left := fun _ _ _ => by simp only [← inner_add_left]; rfl
     smul_left := fun _ _ _ => by simp only [← inner_smul_left]; rfl }
 /-- The inner product space structure induced by shifting the quantum-set inner product. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def QuantumSet.subsetInnerProductSpace (hA : QuantumSet A) (new_k : ℝ) :
   letI := hA.subsetNormedAddCommGroup new_k
   InnerProductSpace ℂ (subset new_k A) :=
@@ -106,7 +106,7 @@ InnerProductSpace.ofCore _
 
 
 /-- The inner product algebra structure induced by shifting the quantum-set inner product. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def QuantumSet.subsetInnerProductAlgebra (hA : QuantumSet A)
   (new_k : ℝ) :
   letI : starAlgebra (subset new_k A) := QuantumSet.subsetStarAlgebra new_k
@@ -127,7 +127,7 @@ lemma QuantumSet.subset_inner_eq [hA : QuantumSet A] (new_k : ℝ) (x y : subset
   (hA.subsetInnerProductAlgebra new_k).inner x y
     = hA.inner ((toSubsetEquiv new_k).symm x : A)
       (ha.modAut (new_k + -hA.k) ((toSubsetEquiv new_k).symm y)) :=
-rfl
+by rfl
 lemma QuantumSet.inner_eq_subset_inner [hA : QuantumSet A] (new_k : ℝ) (x y : A) :
   letI : starAlgebra (subset new_k A) := QuantumSet.subsetStarAlgebra _
   hA.inner x y
@@ -138,8 +138,8 @@ lemma QuantumSet.inner_eq_subset_inner [hA : QuantumSet A] (new_k : ℝ) (x y : 
 
 open scoped InnerProductSpace
 /-- A shifted quantum-set synonym inherits a quantum-set structure with exponent `new_k`. -/
-@[reducible]
-noncomputable def QuantumSet.instSubset (hA : QuantumSet A) (new_k : ℝ) :
+@[expose, reducible] noncomputable def QuantumSet.instSubset
+    (hA : QuantumSet A) (new_k : ℝ) :
     letI : starAlgebra (subset new_k A) := QuantumSet.subsetStarAlgebra _
     QuantumSet (subset new_k A) :=
 letI st : starAlgebra (subset new_k A) := QuantumSet.subsetStarAlgebra _
@@ -256,7 +256,7 @@ theorem QuantumSet.toSubsetAlgEquiv_symm_adjoint [hA : QuantumSet A] (sk₁ : �
 open QuantumSet in
 lemma LinearMap.toSubsetQuantumSet_apply {B : Type*} [starAlgebra B]
   [QuantumSet A] [QuantumSet B] (f : A →ₗ[ℂ] B) (sk₁ sk₂ : ℝ) (x : subset sk₁ A) :
-  f.toSubsetQuantumSet sk₁ sk₂ x = toSubsetEquiv sk₂ (f ((toSubsetEquiv sk₁).symm x)) := rfl
+  f.toSubsetQuantumSet sk₁ sk₂ x = toSubsetEquiv sk₂ (f ((toSubsetEquiv sk₁).symm x)) := by rfl
 
 open QuantumSet in
 theorem LinearMap.toSubsetQuantumSet_adjoint_apply {B : Type*} [hb : starAlgebra B]
@@ -323,13 +323,13 @@ theorem rankOne_ofSubsetQuantumSet {B : Type*} [starAlgebra B]
 theorem QuantumSet.subset_k {A : Type*} [starAlgebra A] [h : QuantumSet A] (r : ℝ) :
   letI := QuantumSet.instSubset h r
   k (QuantumSet.subset r A) = r :=
-rfl
+by rfl
 
 @[simp]
 theorem QuantumSet.subset_n {A : Type*} [starAlgebra A] [h : QuantumSet A] (r : ℝ) :
   letI := QuantumSet.instSubset h r
   n (QuantumSet.subset r A) = n A :=
-rfl
+by rfl
 
 open scoped TensorProduct
 /-- The tautological algebra equivalence between tensor products of shifted synonyms. -/
@@ -345,14 +345,14 @@ theorem QuantumSet.subsetTensorAlgEquiv_tmul {A B : Type*} [starAlgebra A] [star
   (QuantumSet.subsetTensorAlgEquiv (A := A) (B := B) r) (x ⊗ₜ[ℂ] y)
     = QuantumSet.toSubsetAlgEquiv r
       ((QuantumSet.toSubsetAlgEquiv r).symm x ⊗ₜ[ℂ] (QuantumSet.toSubsetAlgEquiv r).symm y) :=
-rfl
+by rfl
 theorem QuantumSet.subsetTensorAlgEquiv_symm_tmul {A B : Type*} [starAlgebra A] [starAlgebra B]
   (r : ℝ) (a : A) (b : B) :
   (QuantumSet.subsetTensorAlgEquiv (A := A) (B := B) r).symm
     (QuantumSet.toSubsetAlgEquiv r (a ⊗ₜ[ℂ] b))
     = (QuantumSet.toSubsetAlgEquiv r)
       ((QuantumSet.toSubsetAlgEquiv r a) ⊗ₜ[ℂ] (QuantumSet.toSubsetAlgEquiv r b)) :=
-rfl
+by rfl
 
 theorem LinearMap.mul'_quantumSet_subset_eq {A : Type*} [starAlgebra A] [QuantumSet A]
     (r : ℝ) :

@@ -17,7 +17,7 @@ Differentiability and derivative formulas for the maps `t ↦ f⁽ᵏ⁾(t · x)
 finite sums, used to differentiate the exponential factors in Niven's argument.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open Complex

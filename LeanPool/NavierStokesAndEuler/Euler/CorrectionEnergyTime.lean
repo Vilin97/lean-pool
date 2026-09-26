@@ -27,7 +27,7 @@ section
 /-! Actual coercive projected sources have precisely the signed energy forcing required by the
 differentiated equation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -114,7 +114,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -187,7 +187,7 @@ section
 /-! Actual representatives of linear source, transport, and pressure combinations in Bochner time
 spaces. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -228,7 +228,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -311,7 +311,7 @@ section
 /-! The constructed Bochner correction source is literally the higher-order nonlinear correction
 almost everywhere. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -369,7 +369,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -404,6 +404,7 @@ def velocityPath {q : ℕ} {T : ℝ} (D : CorrectionData period (q + 1) (Icc (0 
   (truncateOperator period (q+1)).compLeftContinuous ℝ (Icc (0 : ℝ) T) D.approximation + e
 
 /-- The actual continuous order-zero source along the original energy-level solution. -/
+@[expose]
 def lowerOrderPath {q : ℕ} (hq : 6 ≤ q + 1) {T : ℝ} (D : CorrectionData period (q + 1) (Icc (0 : ℝ)
     T))
     (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) : C(Icc (0 : ℝ) T, SobolevSpace period
@@ -459,7 +460,7 @@ def weightedCorrectionForcing {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (hT : 0 ≤
 
 /-- The seven literal spatial correction terms evaluated on an actual higher Sobolev representative.
 -/
-def correctionArray {q : ℕ} (hq : 6 ≤ q + 1) {T : ℝ}
+@[expose] def correctionArray {q : ℕ} (hq : 6 ≤ q + 1) {T : ℝ}
     (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
     (K6 : ∀ t, CoefficientJet period standardDirection 6 (D.metric.coefficient t))
     (N : ℕ) (hN : N + 6 ≤ q + 1) (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))

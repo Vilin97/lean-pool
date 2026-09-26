@@ -18,7 +18,7 @@ assembled into the finite-stage obligations of the mixed diagonal theorem.
 No estimate of the output physical residual is an input.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -291,7 +291,7 @@ end CycleInputs
 
 /-- The initialized background loss is fixed before the number of
 correction stages is chosen. -/
-noncomputable def backgroundLoss (waveAlpha waveShift : ℝ) : ℕ → ℝ :=
+@[expose] noncomputable def backgroundLoss (waveAlpha waveShift : ℝ) : ℕ → ℝ :=
   MixedFiniteBackground.initialBackgroundLoss
     (InitializedPhysicalBackground.initialLoss h waveAlpha waveShift
       (1 - ChartScales.kappa) (9 / 10))

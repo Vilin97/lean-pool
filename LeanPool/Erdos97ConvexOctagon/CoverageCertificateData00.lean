@@ -13,11 +13,12 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Sharded flat coverage-certificate data -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
 /-- Coverage claims for branch (1, 4), group 00. -/
+@[expose]
 def branchClaims1And4Group00 : Array NodeClaim :=
   #[⟨4, 7401666836966878494, 36240593415372030, 36028935270069478,
       4, 0, 0, 0, #[]⟩,
@@ -183,6 +184,7 @@ def branchClaims1And4Group00 : Array NodeClaim :=
       37, 0, 0, 0, #[]⟩]
 
 /-- Coverage claims for branch (1, 4), group 01. -/
+@[expose]
 def branchClaims1And4Group01 : Array NodeClaim :=
   #[⟨3, 5116090043776314654, 36240044724911358, 36028797019518062,
       36, 25769803776, 0, 17179869184, #[⟨6, [], [354], [63], []⟩]⟩,
@@ -319,10 +321,12 @@ def branchClaims1And4Group01 : Array NodeClaim :=
         ⟨6, [7, 6], [], [78, 87, 100], []⟩]⟩]
 
 /-- Flat postorder claims for branch (1, 4). -/
+@[expose]
 def branchClaims1Row4 : BranchClaims :=
   ⟨#[branchClaims1And4Group00, branchClaims1And4Group01], 102, 101⟩
 
 /-- Coverage claims for branch (1, 5), group 00. -/
+@[expose]
 def branchClaims1And5Group00 : Array NodeClaim :=
   #[⟨4, 7401666836432104734, 36240868293278974, 140738300507366,
       70, 0, 0, 0, #[]⟩,
@@ -522,6 +526,7 @@ def branchClaims1And5Group00 : Array NodeClaim :=
       119, 32768, 0, 0, #[⟨3, [], [], [], [6]⟩]⟩]
 
 /-- Coverage claims for branch (1, 5), group 01. -/
+@[expose]
 def branchClaims1And5Group01 : Array NodeClaim :=
   #[⟨3, 8646912155160096030, 36240869362818174, 414199601152,
       118, 512, 8, 0, #[⟨0, [5], [], [], []⟩,
@@ -675,10 +680,12 @@ def branchClaims1And5Group01 : Array NodeClaim :=
         ⟨6, [7], [], [68, 81, 86, 99], []⟩]⟩]
 
 /-- Flat postorder claims for branch (1, 5). -/
+@[expose]
 def branchClaims1Row5 : BranchClaims :=
   ⟨#[branchClaims1And5Group00, branchClaims1And5Group01], 101, 100⟩
 
 /-- Coverage claims for branch (1, 6), group 00. -/
+@[expose]
 def branchClaims1And6Group00 : Array NodeClaim :=
   #[⟨4, 8410473151893548318, 36240868293278974, 71056752120038,
       149, 268435456, 0, 0, #[⟨5, [], [], [], [38]⟩]⟩,
@@ -872,6 +879,7 @@ def branchClaims1And6Group00 : Array NodeClaim :=
         ⟨6, [], [177], [], []⟩]⟩]
 
 /-- Coverage claims for branch (1, 6), group 01. -/
+@[expose]
 def branchClaims1And6Group01 : Array NodeClaim :=
   #[⟨4, 5456111916882799902, 36240869358623998, 211794236283114,
       166, 33554432, 0, 33554432, #[⟨5, [], [370], [], []⟩]⟩,
@@ -1074,10 +1082,12 @@ def branchClaims1And6Group01 : Array NodeClaim :=
         ⟨6, [6], [], [77, 92, 103, 119], []⟩]⟩]
 
 /-- Flat postorder claims for branch (1, 6). -/
+@[expose]
 def branchClaims1Row6 : BranchClaims :=
   ⟨#[branchClaims1And6Group00, branchClaims1And6Group01], 121, 120⟩
 
 /-- Coverage claims for branch (1, 7), group 00. -/
+@[expose]
 def branchClaims1And7Group00 : Array NodeClaim :=
   #[⟨3, 8358681756980948254, 36100128657439998, 70368752046310,
       73, 17448304640, 0, 17448304640, #[⟨5, [], [1302], [], []⟩,
@@ -1278,6 +1288,7 @@ def branchClaims1And7Group00 : Array NodeClaim :=
         ⟨6, [], [], [61, 62], []⟩]⟩]
 
 /-- Coverage claims for branch (1, 7), group 01. -/
+@[expose]
 def branchClaims1And7Group01 : Array NodeClaim :=
   #[⟨2, 849134955806, 36240591267855598, 12058724,
       257, 18119393280, 67108880, 18119393280, #[⟨0, [6], [], [], []⟩,
@@ -1475,10 +1486,12 @@ def branchClaims1And7Group01 : Array NodeClaim :=
         ⟨6, [7], [], [78, 87, 98, 113], []⟩]⟩]
 
 /-- Flat postorder claims for branch (1, 7). -/
+@[expose]
 def branchClaims1Row7 : BranchClaims :=
   ⟨#[branchClaims1And7Group00, branchClaims1And7Group01], 115, 114⟩
 
 /-- Coverage claims for branch (1, 8), group 00. -/
+@[expose]
 def branchClaims1And8Group00 : Array NodeClaim :=
   #[⟨3, 7638105815532121374, 36240180024769790, 537426150,
       5, 8589934592, 0, 8589934592, #[⟨6, [], [880], [], []⟩]⟩,
@@ -1684,6 +1697,7 @@ def branchClaims1And8Group00 : Array NodeClaim :=
         ⟨6, [], [], [62], []⟩]⟩]
 
 /-- Coverage claims for branch (1, 8), group 01. -/
+@[expose]
 def branchClaims1And8Group01 : Array NodeClaim :=
   #[⟨3, 5404320535631047966, 36240729780583662, 36169534509996074,
       316, 0, 16384, 0, #[⟨2, [5], [], [], []⟩]⟩,
@@ -1908,6 +1922,7 @@ def branchClaims1And8Group01 : Array NodeClaim :=
         ⟨6, [], [449, 438], [], []⟩]⟩]
 
 /-- Coverage claims for branch (1, 8), group 02. -/
+@[expose]
 def branchClaims1And8Group02 : Array NodeClaim :=
   #[⟨4, 5446259766498372894, 36240867219537150, 211655992044718,
       366, 0, 0, 0, #[]⟩,
@@ -1985,10 +2000,12 @@ def branchClaims1And8Group02 : Array NodeClaim :=
         ⟨6, [6], [], [93, 104, 122, 144], []⟩]⟩]
 
 /-- Flat postorder claims for branch (1, 8). -/
+@[expose]
 def branchClaims1Row8 : BranchClaims :=
   ⟨#[branchClaims1And8Group00, branchClaims1And8Group01, branchClaims1And8Group02], 146, 145⟩
 
 /-- Coverage claims for branch (1, 9), group 00. -/
+@[expose]
 def branchClaims1And9Group00 : Array NodeClaim :=
   #[⟨4, 6460977595537370398, 36240319611206910, 36169535315294330,
       12, 0, 0, 0, #[]⟩,
@@ -2213,6 +2230,7 @@ def branchClaims1And9Group00 : Array NodeClaim :=
       12, 0, 0, 0, #[]⟩]
 
 /-- Coverage claims for branch (1, 9), group 01. -/
+@[expose]
 def branchClaims1And9Group01 : Array NodeClaim :=
   #[⟨3, 3674938294325685534, 36240319602818302, 36099303742640162,
       18, 131072, 0, 0, #[⟨3, [], [], [63], []⟩]⟩,
@@ -2436,6 +2454,7 @@ def branchClaims1And9Group01 : Array NodeClaim :=
       327, 65536, 0, 65536, #[⟨3, [], [473], [], []⟩]⟩]
 
 /-- Coverage claims for branch (1, 9), group 02. -/
+@[expose]
 def branchClaims1And9Group02 : Array NodeClaim :=
   #[⟨4, 7681171356460985630, 36240869362826494, 36240453815299208,
       444, 8192, 0, 0, #[⟨2, [], [], [], [78]⟩]⟩,
@@ -2506,10 +2525,12 @@ def branchClaims1And9Group02 : Array NodeClaim :=
         ⟨6, [], [], [66, 74, 99, 117, 142], []⟩]⟩]
 
 /-- Flat postorder claims for branch (1, 9). -/
+@[expose]
 def branchClaims1Row9 : BranchClaims :=
   ⟨#[branchClaims1And9Group00, branchClaims1And9Group01, branchClaims1And9Group02], 144, 143⟩
 
 /-- Coverage claims for branch (1, 16), group 00. -/
+@[expose]
 def branchClaims1And16Group00 : Array NodeClaim :=
   #[⟨4, 7397726186491686174, 36240868293278974, 70369287912692,
       449, 17179869184, 0, 0, #[⟨6, [], [], [], [16]⟩]⟩,
@@ -2725,6 +2746,7 @@ def branchClaims1And16Group00 : Array NodeClaim :=
         ⟨5, [], [144], [], []⟩]⟩]
 
 /-- Coverage claims for branch (1, 16), group 01. -/
+@[expose]
 def branchClaims1And16Group01 : Array NodeClaim :=
   #[⟨4, 5155215197915393310, 36240869367012606, 211246359514222,
       473, 536870912, 0, 536870912, #[⟨5, [], [264], [], []⟩]⟩,
@@ -2844,10 +2866,12 @@ def branchClaims1And16Group01 : Array NodeClaim :=
         ⟨6, [7], [17], [70, 82, 90], []⟩]⟩]
 
 /-- Flat postorder claims for branch (1, 16). -/
+@[expose]
 def branchClaims1Row16 : BranchClaims :=
   ⟨#[branchClaims1And16Group00, branchClaims1And16Group01], 92, 91⟩
 
 /-- Coverage claims for branch (1, 17), group 00. -/
+@[expose]
 def branchClaims1And17Group00 : Array NodeClaim :=
   #[⟨4, 7397726185422138654, 36240868293278974, 140738032073972,
       83, 17179869184, 0, 17179869184, #[⟨6, [], [708], [], []⟩]⟩,
@@ -3046,6 +3070,7 @@ def branchClaims1And17Group00 : Array NodeClaim :=
       506, 0, 64, 0, #[⟨1, [5], [], [], []⟩]⟩]
 
 /-- Coverage claims for branch (1, 17), group 01. -/
+@[expose]
 def branchClaims1And17Group01 : Array NodeClaim :=
   #[⟨3, 5404320535631965470, 36240867219528958, 36170084265777192,
       507, 0, 8, 0, #[⟨0, [5], [], [], []⟩]⟩,
@@ -3265,6 +3290,7 @@ def branchClaims1And17Group01 : Array NodeClaim :=
       298, 17179869184, 0, 17179869184, #[⟨6, [], [249], [], []⟩]⟩]
 
 /-- Coverage claims for branch (1, 17), group 02. -/
+@[expose]
 def branchClaims1And17Group02 : Array NodeClaim :=
   #[⟨3, 5980780764251368734, 36240867219504382, 211106772047920,
       98, 8, 0, 0, #[⟨0, [], [], [127], []⟩]⟩,
@@ -3311,10 +3337,12 @@ def branchClaims1And17Group02 : Array NodeClaim :=
         ⟨6, [6], [24], [106, 120, 136], []⟩]⟩]
 
 /-- Flat postorder claims for branch (1, 17). -/
+@[expose]
 def branchClaims1Row17 : BranchClaims :=
   ⟨#[branchClaims1And17Group00, branchClaims1And17Group01, branchClaims1And17Group02], 138, 137⟩
 
 /-- Coverage claims for branch (1, 18), group 00. -/
+@[expose]
 def branchClaims1And18Group00 : Array NodeClaim :=
   #[⟨4, 5167881543939599646, 36240868284890366, 36170222507947126,
       165, 0, 0, 0, #[]⟩,
@@ -3572,6 +3600,7 @@ def branchClaims1And18Group00 : Array NodeClaim :=
         ⟨6, [], [], [62], []⟩]⟩]
 
 /-- Coverage claims for branch (1, 18), group 01. -/
+@[expose]
 def branchClaims1And18Group01 : Array NodeClaim :=
   #[⟨4, 3714063290319580446, 36240868284890366, 36099578083719354,
       97, 0, 0, 0, #[]⟩,
@@ -3730,10 +3759,12 @@ def branchClaims1And18Group01 : Array NodeClaim :=
         ⟨6, [], [29, 29], [75, 94, 104], []⟩]⟩]
 
 /-- Flat postorder claims for branch (1, 18). -/
+@[expose]
 def branchClaims1Row18 : BranchClaims :=
   ⟨#[branchClaims1And18Group00, branchClaims1And18Group01], 106, 105⟩
 
 /-- Coverage claims for branch (1, 19), group 00. -/
+@[expose]
 def branchClaims1And19Group00 : Array NodeClaim :=
   #[⟨3, 7638105682392198430, 36240180020575486, 211106772057184,
       102, 147456, 0, 147456, #[⟨2, [], [1209], [], []⟩,
@@ -3944,6 +3975,7 @@ def branchClaims1And19Group00 : Array NodeClaim :=
       616, 0, 0, 0, #[]⟩]
 
 /-- Coverage claims for branch (1, 19), group 01. -/
+@[expose]
 def branchClaims1And19Group01 : Array NodeClaim :=
   #[⟨3, 7638105821458541854, 36240592341630188, 36239903800445984,
       615, 131328, 0, 256, #[⟨1, [], [425], [], []⟩,
@@ -4115,10 +4147,12 @@ def branchClaims1And19Group01 : Array NodeClaim :=
         ⟨6, [], [31, 31], [59, 85, 115], []⟩]⟩]
 
 /-- Flat postorder claims for branch (1, 19). -/
+@[expose]
 def branchClaims1Row19 : BranchClaims :=
   ⟨#[branchClaims1And19Group00, branchClaims1And19Group01], 117, 116⟩
 
 /-- Coverage claims for branch (1, 26), group 00. -/
+@[expose]
 def branchClaims1And26Group00 : Array NodeClaim :=
   #[⟨4, 6463792214034230558, 36240867219537150, 141150085722348,
       627, 268435456, 0, 0, #[⟨5, [], [], [], [20]⟩]⟩,
@@ -4334,6 +4368,7 @@ def branchClaims1And26Group00 : Array NodeClaim :=
       634, 0, 0, 0, #[]⟩]
 
 /-- Coverage claims for branch (1, 26), group 01. -/
+@[expose]
 def branchClaims1And26Group01 : Array NodeClaim :=
   #[⟨3, 5116089910619680030, 36240318529076462, 211106769960036,
       641, 131072, 0, 131072, #[⟨3, [], [1215], [], []⟩]⟩,
@@ -4504,6 +4539,7 @@ def branchClaims1And26Group01 : Array NodeClaim :=
         ⟨6, [7], [17], [88, 100, 115], []⟩]⟩]
 
 /-- Flat postorder claims for branch (1, 26). -/
+@[expose]
 def branchClaims1Row26 : BranchClaims :=
   ⟨#[branchClaims1And26Group00, branchClaims1And26Group01], 117, 116⟩
 

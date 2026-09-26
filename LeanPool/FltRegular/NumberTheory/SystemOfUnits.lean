@@ -14,7 +14,7 @@ public import LeanPool.FltRegular.NumberTheory.CyclotomicRing
 This file develops linearly independent systems of units in cyclotomic modules.
 -/
 
-@[expose] public section
+public section
 
 open FiniteDimensional
 open NumberField

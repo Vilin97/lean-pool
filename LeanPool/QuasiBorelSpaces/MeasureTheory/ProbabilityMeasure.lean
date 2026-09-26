@@ -15,7 +15,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.ProbabilityMeasure`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace MeasureTheory

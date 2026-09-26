@@ -36,7 +36,7 @@ None of these mentions any block length `g` (or the concrete `B`/`W`/`overlap` o
 are proved once here and reused verbatim downstream.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos137
 
@@ -189,11 +189,11 @@ lemma div_le_factorization_factorial {k p : ℕ} (hp : p.Prime) :
 /-! ## The primorial-type quantities `P k` and `L k` -/
 
 /-- `P k = ∏_{p ∈ primesBelow k} p` — the product of the primes `< k` (the primorial of `k`). -/
-def P (k : ℕ) : ℕ := ∏ p ∈ Nat.primesBelow k, p
+@[expose] def P (k : ℕ) : ℕ := ∏ p ∈ Nat.primesBelow k, p
 
 /-- `L k = ∏_{p ∈ primesBelow k} p ^ (k / p)` — the smooth-part lower bound (`L ∣ k!` by Legendre,
 `L = (k!)^{1-o(1)}`). -/
-def L (k : ℕ) : ℕ := ∏ p ∈ Nat.primesBelow k, p ^ (k / p)
+@[expose] def L (k : ℕ) : ℕ := ∏ p ∈ Nat.primesBelow k, p ^ (k / p)
 
 lemma P_pos (k : ℕ) : 1 ≤ P k :=
   Finset.one_le_prod fun _p hp => (Nat.prime_of_mem_primesBelow hp).one_le

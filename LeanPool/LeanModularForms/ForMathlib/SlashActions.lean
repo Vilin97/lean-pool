@@ -14,7 +14,7 @@ public import Mathlib.NumberTheory.ModularForms.SlashActions
 
 /-! # SlashActions -/
 
-@[expose] public section
+public section
 
 
 local notation "GL(" n ", " R ")" "⁺" => @Matrix.GLPos (Fin n) R (instDecidableEqFin n)

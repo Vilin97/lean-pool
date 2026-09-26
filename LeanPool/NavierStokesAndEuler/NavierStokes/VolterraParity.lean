@@ -42,7 +42,7 @@ The functions and radial integrals here are genuine functions and Bochner
 integrals. The parameter derivative is the actual complex derivative.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -60,20 +60,20 @@ abbrev Coeff := ℝ → ℂ → Matrix (Fin 6) (Fin 6) ℂ
 
 /-- The singular diagonal in the transformed axis equations is
 (0, 0, 2, 0, 3, 1), with zero-based component indices. -/
-noncomputable def exponent (i : Fin 6) : ℕ :=
+@[expose] noncomputable def exponent (i : Fin 6) : ℕ :=
   if i.val = 2 then 2 else if i.val = 4 then 3 else if i.val = 5 then 1 else 0
 
 /-- Parameter derivative, defined pointwise by `deriv (fun w : ℂ => F r w i) z`. -/
-noncomputable def parameterDeriv (F : Field) : Field :=
+@[expose] noncomputable def parameterDeriv (F : Field) : Field :=
   fun r z i => deriv (fun w : ℂ => F r w i) z
 
 /-- Normalized form of the regular inverse. It includes r = 0 without
 division by the radial coordinate. -/
-noncomputable def radialInverse (F : Field) : Field :=
+@[expose] noncomputable def radialInverse (F : Field) : Field :=
   fun r z i => r • ∫ t : ℝ in (0)..(1), (t ^ exponent i) • F (t * r) z i
 
 /-- Matrix action, defined pointwise by `(A r z).mulVec (F r z)`. -/
-noncomputable def matrixAction (A : Coeff) (F : Field) : Field :=
+@[expose] noncomputable def matrixAction (A : Coeff) (F : Field) : Field :=
   fun r z => (A r z).mulVec (F r z)
 
 /-- False is the multiplication letter; true is the parameter-derivative letter. -/
@@ -86,7 +86,7 @@ noncomputable def word (A₀ A₁ : Coeff) : List Bool → Field → Field
   | b :: w, F => letter A₀ A₁ b (word A₀ A₁ w F)
 
 /-- Only the last two rows and first four columns may be nonzero. -/
-def DerivativeShape (A : Coeff) : Prop :=
+@[expose] def DerivativeShape (A : Coeff) : Prop :=
   ∀ r z (i j : Fin 6), (i.val < 4 ∨ 4 ≤ j.val) → A r z i j = 0
 
 /-- Vanishing of the first four components as actual functions. -/
@@ -639,7 +639,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -653,11 +653,11 @@ section RadialInverse
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The normalized integral in the regular inverse of `d/dξ+c/ξ`. -/
-def weightedMean (c : ℕ) (f : ℝ → E) (ξ : ℝ) : E :=
+@[expose] def weightedMean (c : ℕ) (f : ℝ → E) (ξ : ℝ) : E :=
   ∫ t in (0 : ℝ)..1, (t ^ c) • f (t * ξ)
 
 /-- The genuine zero-axis Volterra inverse. -/
-def regularPrimitive (c : ℕ) (f : ℝ → E) (ξ : ℝ) : E :=
+@[expose] def regularPrimitive (c : ℕ) (f : ℝ → E) (ξ : ℝ) : E :=
   ξ • weightedMean c f ξ
 
 theorem weightedMean_continuous (c : ℕ) {f : ℝ → E} (hf : Continuous f) :
@@ -860,7 +860,7 @@ def pathInverse {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ) : Path R →L[ℂ] 
 theorem pathInverse_apply {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
     (f : Path R) (ξ : Icc (0 : ℝ) R) (i : Fin 6) :
     pathInverse hR c f ξ i =
-      (ξ : ℝ) • ∫ t in (0 : ℝ)..1, (t ^ c i) • extendPath hR f (t * ξ) i := rfl
+      (ξ : ℝ) • ∫ t in (0 : ℝ)..1, (t ^ c i) • extendPath hR f (t * ξ) i := by rfl
 
 /-- Coefficient action value, given by `⟨fun ξ => A ξ (f ξ), A.continuous.clm_apply
 f.continuous⟩`. -/
@@ -895,7 +895,7 @@ def coefficientAction {R : ℝ} : CoefficientPath R →L[ℂ] Path R →L[ℂ] P
       simpa only [one_mul] using norm_coefficientActionValue_le A f)
 
 theorem coefficientAction_apply {R : ℝ} (A : CoefficientPath R) (f : Path R)
-    (ξ : Icc (0 : ℝ) R) : coefficientAction A f ξ = A ξ (f ξ) := rfl
+    (ξ : Icc (0 : ℝ) R) : coefficientAction A f ξ = A ξ (f ξ) := by rfl
 
 /-- Path letter, defined pointwise by `pathInverse hR c (if b then coefficientAction (A₁ z)
 (deriv F z) else coefficientAction (A₀ z) (F z))`. -/
@@ -939,7 +939,7 @@ def pathEvaluation {R : ℝ} (ξ : Icc (0 : ℝ) R) (i : Fin 6) : Path R →L[�
   (ContinuousLinearMap.proj i).comp (ContinuousMap.evalCLM ℂ ξ)
 
 theorem pathEvaluation_apply {R : ℝ} (ξ : Icc (0 : ℝ) R) (i : Fin 6) (f : Path R) :
-    pathEvaluation ξ i f = f ξ i := rfl
+    pathEvaluation ξ i f = f ξ i := by rfl
 
 /-- Coordinate evaluation commutes with the genuine complex derivative. -/
 theorem pathEvaluation_deriv {R : ℝ} {F : ℂ → Path R} {z : ℂ}
@@ -1427,7 +1427,7 @@ theorem liftedField_eq_trace {R : ℝ} (hR : 0 ≤ R)
   rfl
 
 /-- Equation RHS as an element of `VolterraAnalyticBounds.Field`. -/
-def equationRHS (A₀ A₁ : VolterraAnalyticBounds.Coeff)
+@[expose] def equationRHS (A₀ A₁ : VolterraAnalyticBounds.Coeff)
     (f W : VolterraAnalyticBounds.Field) : VolterraAnalyticBounds.Field :=
   fun r z => f r z + (VolterraAnalyticBounds.matrixAction A₀ W r z +
     VolterraAnalyticBounds.matrixAction A₁ (VolterraAnalyticBounds.parameterDeriv W) r z)
@@ -1722,7 +1722,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1734,7 +1734,7 @@ open VolterraAnalyticBounds
 open NilpotentVolterra (equationRHS)
 
 /-- Parity sign, with branches according to `i.val < 4`. -/
-noncomputable def paritySign (i : Fin 6) : ℂ := if i.val < 4 then 1 else -1
+@[expose] noncomputable def paritySign (i : Fin 6) : ℂ := if i.val < 4 then 1 else -1
 
 /-- Parity vector, given by `ContinuousLinearMap.pi (fun i => paritySign i •
 ContinuousLinearMap.proj i)`. -/
@@ -1742,7 +1742,7 @@ noncomputable def parityVec : Vec →L[ℂ] Vec :=
   ContinuousLinearMap.pi (fun i => paritySign i • ContinuousLinearMap.proj i)
 
 @[simp] theorem parityVec_apply (v : Vec) (i : Fin 6) :
-    parityVec v i = paritySign i * v i := rfl
+    parityVec v i = paritySign i * v i := by rfl
 
 @[simp] theorem paritySign_mul_self (i : Fin 6) : paritySign i * paritySign i = 1 := by
   by_cases hi : i.val < 4 <;> simp [paritySign, hi]
@@ -1753,21 +1753,21 @@ noncomputable def parityVec : Vec →L[ℂ] Vec :=
 
 /-- Coefficient parity on, given by `∀ r ∈ S, ∀ z ∈ U, ∀ i j, A (-r) z i j = -(paritySign i *
 paritySign j) * A r z i j`. -/
-def CoefficientParityOn (S : Set ℝ) (U : Set ℂ) (A : Coeff) : Prop :=
+@[expose] def CoefficientParityOn (S : Set ℝ) (U : Set ℂ) (A : Coeff) : Prop :=
   ∀ r ∈ S, ∀ z ∈ U, ∀ i j,
     A (-r) z i j = -(paritySign i * paritySign j) * A r z i j
 
 /-- Forcing parity on, given by `∀ r ∈ S, ∀ z ∈ U, ∀ i, f (-r) z i = -(paritySign i) * f r z i`. -/
-def ForcingParityOn (S : Set ℝ) (U : Set ℂ) (f : Field) : Prop :=
+@[expose] def ForcingParityOn (S : Set ℝ) (U : Set ℂ) (f : Field) : Prop :=
   ∀ r ∈ S, ∀ z ∈ U, ∀ i, f (-r) z i = -(paritySign i) * f r z i
 
 /-- Coefficient parity, given by `∀ r z i j, A (-r) z i j = -(paritySign i * paritySign j) * A r
 z i j`. -/
-def CoefficientParity (A : Coeff) : Prop :=
+@[expose] def CoefficientParity (A : Coeff) : Prop :=
   ∀ r z i j, A (-r) z i j = -(paritySign i * paritySign j) * A r z i j
 
 /-- Forcing parity, given by `∀ r z i, f (-r) z i = -(paritySign i) * f r z i`. -/
-def ForcingParity (f : Field) : Prop :=
+@[expose] def ForcingParity (f : Field) : Prop :=
   ∀ r z i, f (-r) z i = -(paritySign i) * f r z i
 
 /-- Reflect field, defined pointwise by `W (-r) z`. -/
@@ -1793,7 +1793,7 @@ noncomputable def reflectedForcing (f : Field) : Field := fun r z => -f (-r) z
   simp [reflectedForcing]
 
 @[simp] theorem parameterDeriv_reflect (W : Field) :
-    parameterDeriv (reflectField W) = reflectField (parameterDeriv W) := rfl
+    parameterDeriv (reflectField W) = reflectField (parameterDeriv W) := by rfl
 
 theorem equationRHS_reflect (A₀ A₁ : Coeff) (f W : Field) :
     equationRHS (reflectCoeff A₀) (reflectCoeff A₁) (reflectedForcing f) (reflectField W) =
@@ -1818,7 +1818,8 @@ theorem radialInverse_equationRHS_reflect (A₀ A₁ : Coeff) (f W : Field) :
   rw [equationRHS_reflect, radialInverse_reflect]
 
 /-- The actual regular integral equation on a specified radial set. -/
-def IntegralEquationOn (S : Set ℝ) (U : Set ℂ) (A₀ A₁ : Coeff) (f W : Field) : Prop :=
+@[expose] def IntegralEquationOn (S : Set ℝ) (U : Set ℂ) (A₀ A₁ : Coeff)
+    (f W : Field) : Prop :=
   ∀ r ∈ S, ∀ z ∈ U, W r z = radialInverse (equationRHS A₀ A₁ f W) r z
 
 theorem IntegralEquationOn.reflect {S : Set ℝ} {U : Set ℂ}
@@ -2009,13 +2010,13 @@ theorem sideData_holomorphic {R : ℝ} {E : Type*}
   exact (signedRestriction (E := E) hR b).differentiable.comp_differentiableOn hF
 
 /-- Symmetric raw field, defined pointwise by `F z (projIcc (-R) R (by linarith) r)`. -/
-noncomputable def symmetricRawField {R : ℝ} (hR : 0 ≤ R)
+@[expose] noncomputable def symmetricRawField {R : ℝ} (hR : 0 ≤ R)
     (F : ℂ → SymmetricPath R Vec) : Field :=
   fun r z => F z (projIcc (-R) R (by linarith) r)
 
 /-- Symmetric raw coefficient, defined pointwise by `LinearMap.toMatrix' (A z (projIcc (-R) R
 (by linarith) r)).toLinearMap`. -/
-noncomputable def symmetricRawCoefficient {R : ℝ} (hR : 0 ≤ R)
+@[expose] noncomputable def symmetricRawCoefficient {R : ℝ} (hR : 0 ≤ R)
     (A : ℂ → SymmetricCoefficientPath R) : Coeff :=
   fun r z => LinearMap.toMatrix' (A z (projIcc (-R) R (by linarith) r)).toLinearMap
 
@@ -2110,7 +2111,7 @@ theorem positive_equation_change_data {R : ℝ} {U : Set ℂ}
   simp only [equationRHS, matrixAction, h₀ _ htr _ hz, h₁ _ htr _ hz, hf _ htr _ hz]
 
 /-- Side solution, constructed using `NilpotentVolterra.liftedField`. -/
-noncomputable def sideSolution {R : ℝ} (hR : 0 ≤ R) (b : Bool)
+@[expose] noncomputable def sideSolution {R : ℝ} (hR : 0 ≤ R) (b : Bool)
     (A₀ A₁ : ℂ → SymmetricCoefficientPath R) (f : ℂ → SymmetricPath R Vec) : Field :=
   NilpotentVolterra.liftedField hR (sideData hR b A₀) (sideData hR b A₁) (sideData hR b f)
     (NilpotentVolterra.integralSolution hR
@@ -2118,7 +2119,7 @@ noncomputable def sideSolution {R : ℝ} (hR : 0 ≤ R) (b : Bool)
 
 /-- Two independently solved half-intervals are glued at their common zero
 axis trace. No parity of the output occurs in this definition. -/
-noncomputable def symmetricSolution {R : ℝ} (hR : 0 ≤ R)
+@[expose] noncomputable def symmetricSolution {R : ℝ} (hR : 0 ≤ R)
     (A₀ A₁ : ℂ → SymmetricCoefficientPath R) (f : ℂ → SymmetricPath R Vec) : Field :=
   glue (sideSolution hR false A₀ A₁ f) (sideSolution hR true A₀ A₁ f)
 
@@ -2221,7 +2222,7 @@ noncomputable def parityPath (R : ℝ) :
   ContinuousLinearMap.compLeftContinuous ℂ (Icc (0 : ℝ) R) parityVec
 
 @[simp] theorem parityPath_apply {R : ℝ} (W : NilpotentVolterra.Path R)
-    (r : Icc (0 : ℝ) R) : parityPath R W r = parityVec (W r) := rfl
+    (r : Icc (0 : ℝ) R) : parityPath R W r = parityVec (W r) := by rfl
 
 @[simp] theorem parityPath_involutive {R : ℝ} (W : NilpotentVolterra.Path R) :
     parityPath R (parityPath R W) = W := by

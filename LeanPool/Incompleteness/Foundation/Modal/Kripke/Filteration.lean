@@ -12,7 +12,7 @@ import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
 /-! # Filteration -/
 
-@[expose] public section
+public section
 
 universe u v
 

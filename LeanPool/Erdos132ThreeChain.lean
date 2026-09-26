@@ -26,4 +26,4 @@ Tags: discrete-geometry, distance-geometry, erdos-problems
 MSC: 52C10, 52C35, 05C69
 -/
 
-@[expose] public section
+public section

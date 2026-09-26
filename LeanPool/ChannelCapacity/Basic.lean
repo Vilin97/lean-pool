@@ -31,7 +31,7 @@ measures, so this file provides the subtype-level wrapper needed by the strict-c
 uniqueness arguments.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory
@@ -45,7 +45,7 @@ variable {Ω : Type*} [MeasurableSpace Ω]
 
 This is a subtype-level wrapper around convex combinations of measures. It exists because Mathlib
 does not currently provide an affine-space structure on `ProbabilityMeasure Ω`. -/
-noncomputable def convexCombination (μ ν : ProbabilityMeasure Ω) (t : NNReal)
+@[expose] noncomputable def convexCombination (μ ν : ProbabilityMeasure Ω) (t : NNReal)
     (ht : t ≤ (1 : NNReal)) :
     ProbabilityMeasure Ω :=
   ⟨t • μ.toMeasure + ((1 : NNReal) - t) • ν.toMeasure, by
@@ -84,6 +84,7 @@ namespace ChannelCapacity
 variable {α β : Type*} [MeasurableSpace α] [MeasurableSpace β]
 
 /-- The output prior induced by pushing a prior through a Markov kernel. -/
+@[expose]
 noncomputable def outputPrior (k : Kernel α β) [IsMarkovKernel k] (p : ProbabilityMeasure α) :
     ProbabilityMeasure β :=
   ⟨k ∘ₘ p.toMeasure, by infer_instance⟩
@@ -94,7 +95,8 @@ lemma outputPrior_toMeasure (k : Kernel α β) [IsMarkovKernel k] (p : Probabili
   rfl
 
 /-- The joint law `p ⊗ k` on `α × β`. -/
-noncomputable def jointLaw (k : Kernel α β) [IsMarkovKernel k] (p : ProbabilityMeasure α) :
+@[expose] noncomputable def jointLaw
+    (k : Kernel α β) [IsMarkovKernel k] (p : ProbabilityMeasure α) :
     ProbabilityMeasure (α × β) :=
   ⟨p.toMeasure ⊗ₘ k, by infer_instance⟩
 
@@ -104,7 +106,7 @@ lemma jointLaw_toMeasure (k : Kernel α β) [IsMarkovKernel k] (p : ProbabilityM
   rfl
 
 /-- The independent coupling with the same input prior and induced output prior. -/
-noncomputable def independentJointLaw (k : Kernel α β) [IsMarkovKernel k]
+@[expose] noncomputable def independentJointLaw (k : Kernel α β) [IsMarkovKernel k]
     (p : ProbabilityMeasure α) : ProbabilityMeasure (α × β) :=
   let q := outputPrior k p
   ⟨p.toMeasure ⊗ₘ Kernel.const α q.toMeasure, by infer_instance⟩
@@ -117,7 +119,7 @@ lemma independentJointLaw_toMeasure (k : Kernel α β) [IsMarkovKernel k]
   rfl
 
 /-- Shannon mutual information between an input prior and a Markov kernel. -/
-noncomputable def mutualInformation (p : ProbabilityMeasure α) (k : Kernel α β)
+@[expose] noncomputable def mutualInformation (p : ProbabilityMeasure α) (k : Kernel α β)
     [IsMarkovKernel k] : ℝ :=
   (InformationTheory.klDiv (jointLaw k p).toMeasure (independentJointLaw k p).toMeasure).toReal
 

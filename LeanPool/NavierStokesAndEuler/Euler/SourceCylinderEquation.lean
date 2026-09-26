@@ -20,7 +20,7 @@ derivative. The projected equation and normal pressure balance are derived
 on the actual L² representatives, not assumed as properties of a solver.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

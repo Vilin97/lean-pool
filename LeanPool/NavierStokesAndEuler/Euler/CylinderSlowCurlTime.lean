@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.LpCylinderFullTime
 
 /-! Actual within-time differentiation and bounds for the constructed slow-curl path. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

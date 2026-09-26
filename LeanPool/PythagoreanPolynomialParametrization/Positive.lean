@@ -22,7 +22,7 @@ This file contains the positive-triple remark and the unrestricted 16-parameter
 substitution obtained from the four-square theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PythagoreanPolynomialParametrization
 

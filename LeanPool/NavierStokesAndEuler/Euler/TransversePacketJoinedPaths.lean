@@ -20,7 +20,7 @@ the junction, and its mixed translation orbit is smooth in the uniform
 time-path topology.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

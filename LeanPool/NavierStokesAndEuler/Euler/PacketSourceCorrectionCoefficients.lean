@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketForcing
 The order-zero terms have the positive sign of the transformed equation;
 the correction source subsequently applies the negative pressure projection. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,15 +29,15 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U)
 
 /-- Raw frame, given by `D.F.field (D.clamp z.1) z.2.1`. -/
-def rawFrame (z : Domain) : Space →L[ℝ] Space :=
+@[expose] def rawFrame (z : Domain) : Space →L[ℝ] Space :=
   D.F.field (D.clamp z.1) z.2.1
 
 /-- Raw frame time, given by `D.F₁.field (D.clamp z.1) z.2.1`. -/
-def rawFrameTime (z : Domain) : Space →L[ℝ] Space :=
+@[expose] def rawFrameTime (z : Domain) : Space →L[ℝ] Space :=
   D.F₁.field (D.clamp z.1) z.2.1
 
 /-- Raw inverse, given by `D.FInv.field (D.clamp z.1) z.2.1`. -/
-def rawInverse (z : Domain) : Space →L[ℝ] Space :=
+@[expose] def rawInverse (z : Domain) : Space →L[ℝ] Space :=
   D.FInv.field (D.clamp z.1) z.2.1
 
 /-- Frame coefficient, bundling `path`, `orbit`, `raw_eq`. -/
@@ -67,12 +67,12 @@ def rawInverseMetric (z : Domain) : Space →L[ℝ] Space :=
   (rawFrame D z).adjoint.comp (rawFrame D z)
 
 /-- Raw linear, given by `(2 : ℝ) • (rawInverse D z).comp (rawFrameTime D z)`. -/
-def rawLinear (z : Domain) : Space →L[ℝ] Space :=
+@[expose] def rawLinear (z : Domain) : Space →L[ℝ] Space :=
   (2 : ℝ) • (rawInverse D z).comp (rawFrameTime D z)
 
 /-- Raw quadratic, given by `κ • (rawInverse D z).comp (fderiv ℝ (fun x => rawFrame D
 (z.1,(x,z.2.2))) z.2.1 (EuclideanSpace.single i 1))`. -/
-def rawQuadratic (κ : ℝ) (i : Fin 3) (z : Domain) : Space →L[ℝ] Space :=
+@[expose] def rawQuadratic (κ : ℝ) (i : Fin 3) (z : Domain) : Space →L[ℝ] Space :=
   κ • (rawInverse D z).comp
     (fderiv ℝ (fun x => rawFrame D (z.1,(x,z.2.2))) z.2.1
       (EuclideanSpace.single i 1))
@@ -88,7 +88,7 @@ def inverseMetricCoefficient : MatrixCoefficient D.T (rawInverseMetric D) :=
 
 /-- Linear coefficient, given by `((inverseCoefficient D).comp (frameTimeCoefficient D)).smul
 2`. -/
-def linearCoefficient : MatrixCoefficient D.T (rawLinear D) :=
+@[expose] def linearCoefficient : MatrixCoefficient D.T (rawLinear D) :=
   ((inverseCoefficient D).comp (frameTimeCoefficient D)).smul 2
 
 /-- Quadratic coefficient, given by `((inverseCoefficient D).comp ((frameCoefficient
@@ -135,7 +135,7 @@ def linearTower : CoefficientTower P D.T :=
   (linearCoefficient D).toCoefficientTower P
 
 /-- Quadratic tower, given by `(quadraticCoefficient D κ i).toCoefficientTower P`. -/
-def quadraticTower (κ : ℝ) (i : Fin 3) : CoefficientTower P D.T :=
+@[expose] def quadraticTower (κ : ℝ) (i : Fin 3) : CoefficientTower P D.T :=
   (quadraticCoefficient D κ i).toCoefficientTower P
 
 @[simp] theorem metricTower_apply (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) :

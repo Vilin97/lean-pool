@@ -21,7 +21,7 @@ lives in the pure math layer. This file adds the measurability certificate.
 - Monad laws: inherited from ReaderSel, verified at evaluation level
 -/
 
-@[expose] public section
+public section
 
 universe u
 

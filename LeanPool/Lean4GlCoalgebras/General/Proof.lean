@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.Pow
 Here we define the GL-proof system along with finitization and basic properties.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 
@@ -36,7 +36,7 @@ inductive RuleApp
   | box : (Δ : Sequent) → (φ : Formula) → (□ φ) ∈ Δ → RuleApp
 
 /-- Endofunctor for the GL-proof system. -/
-@[simp] def T : (CategoryTheory.Functor Type Type) where
+@[expose, simp] def T : (CategoryTheory.Functor Type Type) where
   obj := fun X ↦ (RuleApp × List X)
   map := fun {X Y} f ↦
     TypeCat.ofHom fun x ↦
@@ -54,7 +54,7 @@ def fₚ : RuleApp → Sequent
   | RuleApp.box _ A _ => {□ A}
 
 /-- Given a RuleApp, obtain the sequent. -/
-def f : RuleApp → Sequent
+@[expose] def f : RuleApp → Sequent
   | RuleApp.top Δ _ => Δ
   | RuleApp.ax Δ _ _ => Δ
   | RuleApp.and Δ _ _ _ => Δ
@@ -79,18 +79,18 @@ lemma fₙ_sub_f {r : RuleApp} : fₙ r ⊆ f r := by
   cases r <;> simp_all [fₙ, f]
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def RuleApp.isBox : RuleApp → Bool
+@[expose] def RuleApp.isBox : RuleApp → Bool
   | RuleApp.box _ _ _ => true
   | _ => false
 
 /-- Get RuleApp of a node (first projection). -/
-def r {X : Type} (α : X → T.obj X) (x : X) := (α x).1
+@[expose] def r {X : Type} (α : X → T.obj X) (x : X) := (α x).1
 
 /-- Get premises of a node (second projection). -/
-def p {X : Type} (α : X → T.obj X) (x : X) := (α x).2
+@[expose] def p {X : Type} (α : X → T.obj X) (x : X) := (α x).2
 
 /-- Edge relation induced by `p`. -/
-def edge {X : Type} (α : X → T.obj X) (x y : X) : Prop := y ∈ p α x
+@[expose] def edge {X : Type} (α : X → T.obj X) (x y : X) : Prop := y ∈ p α x
 
 /-- Definition of GL-proof. -/
 structure Proof where
@@ -114,9 +114,9 @@ def Proof.toCoalgebra (𝕏 : Proof) : CategoryTheory.Endofunctor.Coalgebra T wh
   str := TypeCat.ofHom 𝕏.α
 
 /-- A proof `𝕏` proves sequent `Δ` if some node of `𝕏` has sequent `Δ` as its sequent. -/
-def proves (𝕏 : Proof) (Δ : Sequent) : Prop := ∃ x : 𝕏.X, f (r 𝕏.α x) = Δ
+@[expose] def proves (𝕏 : Proof) (Δ : Sequent) : Prop := ∃ x : 𝕏.X, f (r 𝕏.α x) = Δ
 /-- A sequent is provable if there exists a GL-proof of it. -/
-def Sequent.isTrue (Δ : Sequent) : Prop := ∃ 𝕏 : Proof, proves 𝕏 Δ
+@[expose] def Sequent.isTrue (Δ : Sequent) : Prop := ∃ 𝕏 : Proof, proves 𝕏 Δ
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
 infixr:6 "⊢" => proves
@@ -198,7 +198,7 @@ lemma path_in_FL {𝕏 : Proof} {x y : 𝕏.X}
     List.pmap (fun x y ↦ ⟨x, y⟩) (𝕐.α y.1).2 (fun _ z_in ↦ Relation.ReflTransGen.tail y.2 z_in)⟩
 
 /-- Point Generated Proof. -/
-def pointGeneratedProof (𝕐 : Proof) (x : 𝕐.X) : Proof where
+@[expose] def pointGeneratedProof (𝕐 : Proof) (x : 𝕐.X) : Proof where
   X := {y : 𝕐.X // Relation.ReflTransGen (edge 𝕐.α) x y }
   α := αPoint 𝕐 x
   step := by

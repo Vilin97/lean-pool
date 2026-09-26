@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
 
 /-! Smooth high-regularity approximations converging contractively in the original Sobolev order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

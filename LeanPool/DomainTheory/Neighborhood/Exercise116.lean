@@ -40,7 +40,7 @@ classification lemmas are not choice-free; the *constructions* (`ofExcluded`,
 are `[propext, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

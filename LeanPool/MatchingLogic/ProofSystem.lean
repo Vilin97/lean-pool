@@ -52,7 +52,7 @@ import Mathlib.Data.Set.Insert
 # MatchingLogic.ProofSystem
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -68,16 +68,16 @@ inductive PForm where
   deriving DecidableEq
 
 /-- Boolean evaluation under an assignment to the atoms. -/
-def PForm.eval (v : Nat → Bool) : PForm → Bool
+@[expose] def PForm.eval (v : Nat → Bool) : PForm → Bool
   | .atom n => v n
   | .bot => false
   | .imp a b => !(a.eval v) || b.eval v
 
 /-- A propositional tautology. -/
-def PForm.Taut (p : PForm) : Prop := ∀ v, p.eval v = true
+@[expose] def PForm.Taut (p : PForm) : Prop := ∀ v, p.eval v = true
 
 /-- Substituting patterns for the propositional atoms. -/
-def PForm.subst (θ : Nat → Pattern S Var) : PForm → Pattern S Var
+@[expose] def PForm.subst (θ : Nat → Pattern S Var) : PForm → Pattern S Var
   | .atom n => θ n
   | .bot => .bot
   | .imp a b => .imp (PForm.subst θ a) (PForm.subst θ b)
@@ -86,7 +86,7 @@ def PForm.subst (θ : Nat → Pattern S Var) : PForm → Pattern S Var
 
 /-- `φ[y/x]`, replacing the element variable `x` by `y`. Naive: it stops at a
 binder for `x`, but does not itself avoid capture of `y`. -/
-def substVar (x y : Var) : Pattern S Var → Pattern S Var
+@[expose] def substVar (x y : Var) : Pattern S Var → Pattern S Var
   | .var z => if z = x then .var y else .var z
   | .bot => .bot
   | .app σ f => .app σ (fun i => substVar x y (f i))
@@ -109,7 +109,7 @@ strictly TOO STRONG: it rejected genuinely capture-safe substitutions, which
 would have made rule (3) weaker than Figure 2 and could have left Corollary 15
 unprovable, with nothing failing to compile anywhere. See
 `captureFree_needs_notFree` below for a substitution the old version rejected. -/
-def CaptureFree (x y : Var) : Pattern S Var → Prop
+@[expose] def CaptureFree (x y : Var) : Pattern S Var → Prop
   | .var _ => True
   | .bot => True
   | .app _ f => ∀ i, CaptureFree x y (f i)
@@ -135,7 +135,7 @@ inductive AppCtx (S : Signature) (Var : Type) where
       (Fin (S.arity σ) → Pattern S Var) → AppCtx S Var → AppCtx S Var
 
 /-- `C[φ]`. -/
-def AppCtx.plug : AppCtx S Var → Pattern S Var → Pattern S Var
+@[expose] def AppCtx.plug : AppCtx S Var → Pattern S Var → Pattern S Var
   | .hole, φ => φ
   | .node σ i args c, φ => .app σ (Function.update args i (c.plug φ))
 
@@ -299,7 +299,7 @@ theorem necessitation {Γ : Set (Pattern S Var)} {ψ : Pattern S Var}
 /-! ### The two black boxes -/
 
 /-- Finite conjunction, `⋀ l`. -/
-def conj : List (Pattern S Var) → Pattern S Var
+@[expose] def conj : List (Pattern S Var) → Pattern S Var
   | [] => Pattern.tp
   | φ :: l => Pattern.and φ (conj l)
 
@@ -319,14 +319,14 @@ statement; strong local completeness is Theorem 3.7 (Theorem 83 of Chen and
 Rosu, *Matching μ-Logic*, 2019 technical report,
 https://hdl.handle.net/2142/102281).  See
 `FINDINGS.md`. -/
-def StrongLocalCompleteness (S : Signature) (Var : Type) [DecidableEq Var] : Prop :=
+@[expose] def StrongLocalCompleteness (S : Signature) (Var : Type) [DecidableEq Var] : Prop :=
   ∀ (Δ : Set (Pattern S Var)) (φ : Pattern S Var), LocalCons Δ φ →
     ∃ l : List (Pattern S Var), (∀ δ ∈ l, δ ∈ Δ) ∧
       Provable (∅ : Set (Pattern S Var)) (.imp (conj l) φ)
 
 /-- **(S) Soundness.**  `Γ ⊢ φ` implies `Γ ⊨ φ`.  The paper uses this as a
 black box too, but unlike (L) it is within reach here: see `soundness` below. -/
-def Soundness (S : Signature) (Var : Type) [DecidableEq Var] : Prop :=
+@[expose] def Soundness (S : Signature) (Var : Type) [DecidableEq Var] : Prop :=
   ∀ (Γ : Set (Pattern S Var)) (φ : Pattern S Var), Provable Γ φ → GlobalCons Γ φ
 
 end MatchingLogic

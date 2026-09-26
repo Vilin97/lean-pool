@@ -10,7 +10,7 @@ public import Mathlib.Data.PFunctor.Univariate.M
 
 /-! # ----------------------------------------------------------------------- -/
 
-@[expose] public section
+public section
 /-! # --------------------Start Vector3 Utilities---------------------------- -/
 /-! # ----------------------------------------------------------------------- -/
 
@@ -27,6 +27,7 @@ def elim0 {α : Sort u} (i : ULift (Fin2 0)) : α :=
   i.down.elim0 (C := fun _ => α)
 
 /-- The constant function `ULift (Fin2 1) → α` returning `v` at the unique index. -/
+@[expose]
 def fin1Const {α} (v : α) :=
   fun (i : ULift (Fin2 1)) =>
     match i.down with | .ofNat' 0 => v

@@ -20,7 +20,7 @@ This file contains no declaration block recorded as a code transfer; its
 public code dependencies are attributed in their defining modules.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace Construction
@@ -63,7 +63,7 @@ noncomputable instance tensorAACountable : Countable TensorAA := by
 def flip : TensorAA ≃ₗ[k] TensorAA := TensorProduct.comm k A A
 
 /-- Flip-fixed symmetric tensor module. Paper: §2. -/
-def C : Submodule k TensorAA where
+@[expose] def C : Submodule k TensorAA where
   carrier := {x | flip x = x}
   zero_mem' := by simp [flip]
   add_mem' := by
@@ -76,7 +76,7 @@ def C : Submodule k TensorAA where
     rw [map_smul, hx]
 
 /-- Diagonal element of the paper's symmetric tensor module. Paper: §2. -/
-def diagonal (a : A) : C :=
+@[expose] def diagonal (a : A) : C :=
   ⟨a ⊗ₜ[k] a, by simp [flip, C]⟩
 
 /-- Matrix-indexed finite symplectic module. Paper: §2. -/
@@ -173,7 +173,7 @@ def coordHadamardLinear : A →ₗ[k] A →ₗ[k] A where
 def deltaTensor : TensorAA →ₗ[k] A := TensorProduct.lift coordHadamardLinear
 
 /-- Equivariant-retraction candidate on the flip-fixed tensor module. Paper: §2. -/
-def delta : C →ₗ[k] A := deltaTensor.domRestrict C
+@[expose] def delta : C →ₗ[k] A := deltaTensor.domRestrict C
 
 /-- The retraction returns the original vector on diagonal tensors. Paper: §2. -/
 theorem delta_diagonal (a : A) : delta (diagonal a) = a := by

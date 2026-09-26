@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeMap
 
 /-! The L² derivative-field construction is a contraction between the actual Banach spaces. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,11 +31,13 @@ def bundlingLinear : Lp (P →L[ℝ] V) 2 μ →ₗ[ℝ] (P →L[ℝ] Lp V 2 μ)
   map_add' D E := by
     apply ContinuousLinearMap.ext
     intro a
-    exact ((ContinuousLinearMap.apply ℝ V a).compLpL 2 μ).map_add D E
+    simpa only [derivativeMap_apply, applyDerivative, add_apply] using
+      ((ContinuousLinearMap.apply ℝ V a).compLpL 2 μ).map_add D E
   map_smul' c D := by
     apply ContinuousLinearMap.ext
     intro a
-    exact ((ContinuousLinearMap.apply ℝ V a).compLpL 2 μ).map_smul c D
+    simpa only [derivativeMap_apply, applyDerivative, smul_apply, RingHom.id_apply] using
+      ((ContinuousLinearMap.apply ℝ V a).compLpL 2 μ).map_smul c D
 
 /-- Derivative bundling, bundling `toLinearMap`, `cont`. -/
 def derivativeBundling : Lp (P →L[ℝ] V) 2 μ →L[ℝ] (P →L[ℝ] Lp V 2 μ) where
@@ -46,7 +48,8 @@ def derivativeBundling : Lp (P →L[ℝ] V) 2 μ →L[ℝ] (P →L[ℝ] Lp V 2 �
       simpa only [one_mul] using derivativeMap_norm_le μ D)
 
 @[simp] theorem derivativeBundling_apply (D : Lp (P →L[ℝ] V) 2 μ) :
-    derivativeBundling μ D = derivativeMap μ D := rfl
+    derivativeBundling μ D = derivativeMap μ D := by
+  rfl
 
 theorem derivativeBundling_norm_le_one : ‖derivativeBundling (P := P) (V := V) μ‖ ≤ 1 :=
   (derivativeBundling (P := P) (V := V) μ).opNorm_le_bound zero_le_one (fun D => by

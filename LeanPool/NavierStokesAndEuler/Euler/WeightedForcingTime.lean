@@ -16,7 +16,7 @@ section
 
 /-! Actual L²-time convergence of finite Hilbert forcing norms. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -85,7 +85,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

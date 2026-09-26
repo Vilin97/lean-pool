@@ -16,7 +16,7 @@ with filtered colimits on Noetherian spaces, building on the presheaf-boundary a
 successor-stage infrastructure in `PresheafFilteredColimitCore`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

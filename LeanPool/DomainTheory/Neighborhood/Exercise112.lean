@@ -40,7 +40,7 @@ a finite `fin n`
   is constructive.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise112
 

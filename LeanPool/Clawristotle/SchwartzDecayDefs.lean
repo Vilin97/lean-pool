@@ -20,7 +20,7 @@ and proves basic integrability lemmas. This is the standard regularity assumptio
 for kinetic theory used throughout the Coulomb concrete theorem files.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

@@ -13,7 +13,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.FormalizationOfBoundedArithmetic.Algebra
 -/
 
-@[expose] public section
+public section
 
 -- INSTANCES!
 

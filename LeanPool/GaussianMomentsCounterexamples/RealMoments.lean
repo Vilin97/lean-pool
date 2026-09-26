@@ -13,7 +13,7 @@ import Mathlib.Tactic.NormNum
 
 /-! All-order Gaussian moments from integration by parts. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open MeasureTheory ProbabilityTheory

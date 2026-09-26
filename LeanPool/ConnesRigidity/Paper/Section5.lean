@@ -16,4 +16,4 @@ The section endpoint supplies the concrete orbit and displacement
 certificates for the two semidirect products.
 -/
 
-@[expose] public section
+public section

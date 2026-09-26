@@ -16,7 +16,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.OrderPQ.IsCyclic
 -/
 
-@[expose] public section
+public section
 
 section MulEquiv
 namespace IsCyclic

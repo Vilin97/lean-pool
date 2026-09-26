@@ -26,7 +26,7 @@ With this, "the Gram–Schmidt coefficients are real" becomes a fact about the a
 what lets the process stay inside `symmetricSubspace`.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

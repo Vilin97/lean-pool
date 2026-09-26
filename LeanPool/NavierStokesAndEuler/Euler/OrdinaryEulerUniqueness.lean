@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OrdinaryGradientStability
 /-! Uniqueness of actual smooth ordinary Euler evolutions, including
 their pressure force. No assumed energy inequality is needed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -21,7 +21,7 @@ while preserving a validity-bundled normalization chain.  If the final pair is t
 the result is the agreed ordinary-valid two-monogon sphere presentation.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -194,7 +194,7 @@ noncomputable def nonOrientableNormalizationResultOfSignedRotated
       edgeRelabeling rotated)
 
 /-- The two possible signed spellings of an adjacent inverse pair. -/
-def inversePair {Edge : Type} (a : Edge) : Bool → List (SignedDart Edge)
+@[expose] def inversePair {Edge : Type} (a : Edge) : Bool → List (SignedDart Edge)
   | false => [.pos a, .neg a]
   | true => [.neg a, .pos a]
 
@@ -629,7 +629,7 @@ def dartNegative {α : Type*} : SignedDart α → Bool
   | .neg _ => true
 
 /-- An edge equivalence equipped with an explicit source-orientation normalization function. -/
-def signedRelabeling {α β : Type*}
+@[expose] def signedRelabeling {α β : Type*}
     (edgeEquiv : α ≃ β) (reverse : α → Bool) :
     EdgeRelabeling α β where
   edgeEquiv := edgeEquiv
@@ -695,7 +695,7 @@ theorem signedRelabeling_mapDart_dart_not_self {α β : Type*}
       dart, hnegative]
 
 /-- Exact signed spelling of one boundary loop before final edge-name and sign normalization. -/
-def boundaryLoopWord {α : Type*}
+@[expose] def boundaryLoopWord {α : Type*}
     (carrier hole : α)
     (carrierNegative holeNegative : Bool) :
     List (SignedDart α) :=
@@ -1452,7 +1452,7 @@ namespace ActionablePairReductionFeature
 
 /-- Delete the darts of the extracted block, retaining the exact residual order produced by the
 proof-generating rewrite endpoint. -/
-def residualWord {n : ℕ} {word : List (SignedDart (Fin n))} :
+@[expose] def residualWord {n : ℕ} {word : List (SignedDart (Fin n))} :
     ActionablePairReductionFeature word →
       List (SignedDart (Fin n))
   | .boundary _ form =>
@@ -1784,13 +1784,13 @@ inductive ExtractedBlock (n : ℕ)
 namespace ExtractedBlock
 
 /-- Ambient edge names consumed by an extracted block. -/
-def edges {n : ℕ} : ExtractedBlock n → List (Fin n)
+@[expose] def edges {n : ℕ} : ExtractedBlock n → List (Fin n)
   | .boundary a _ => [a]
   | .crosscap a _ => [a]
   | .handle a b => [a, b]
 
 /-- Exact signed word contributed by an extracted block. -/
-def word {n : ℕ} : ExtractedBlock n →
+@[expose] def word {n : ℕ} : ExtractedBlock n →
     List (SignedDart (Fin n))
   | .boundary a negative => [dart a negative]
   | .crosscap a negative =>
@@ -2040,7 +2040,7 @@ inductive CompletedBlock (n : ℕ)
 namespace CompletedBlock
 
 /-- Exact signed word represented by a completed block. -/
-def word {n : ℕ} : CompletedBlock n →
+@[expose] def word {n : ℕ} : CompletedBlock n →
     List (SignedDart (Fin n))
   | .crosscap a negative =>
       [dart a negative, dart a negative]
@@ -2051,14 +2051,14 @@ def word {n : ℕ} : CompletedBlock n →
         carrierNegative holeNegative
 
 /-- Ambient edge names used by a completed block. -/
-def edges {n : ℕ} : CompletedBlock n → List (Fin n)
+@[expose] def edges {n : ℕ} : CompletedBlock n → List (Fin n)
   | .crosscap a _ => [a]
   | .handle a b => [a, b]
   | .boundary carrier hole _ _ => [carrier, hole, carrier]
 
 /-- Distinct-name spine of a completed block.  Unlike `edges`, this records a boundary carrier
 once rather than once per dart occurrence. -/
-def names {n : ℕ} : CompletedBlock n → List (Fin n)
+@[expose] def names {n : ℕ} : CompletedBlock n → List (Fin n)
   | .crosscap a _ => [a]
   | .handle a b => [a, b]
   | .boundary carrier hole _ _ => [carrier, hole]
@@ -2275,7 +2275,7 @@ theorem sequenceWord_append {n : ℕ}
   simp [sequenceWord]
 
 /-- Concatenate the distinct-name spines owned by a completed block sequence. -/
-def sequenceNames {n : ℕ}
+@[expose] def sequenceNames {n : ℕ}
     (blocks : List (CompletedBlock n)) :
     List (Fin n) :=
   (blocks.map names).flatten
@@ -2294,21 +2294,21 @@ theorem sequenceNames_cons {n : ℕ}
   simp [sequenceNames]
 
 /-- Number of completed crosscap blocks. -/
-def crosscapCount {n : ℕ} :
+@[expose] def crosscapCount {n : ℕ} :
     List (CompletedBlock n) → ℕ
   | [] => 0
   | .crosscap _ _ :: blocks => 1 + crosscapCount blocks
   | _ :: blocks => crosscapCount blocks
 
 /-- Number of completed handle blocks. -/
-def handleCount {n : ℕ} :
+@[expose] def handleCount {n : ℕ} :
     List (CompletedBlock n) → ℕ
   | [] => 0
   | .handle _ _ :: blocks => 1 + handleCount blocks
   | _ :: blocks => handleCount blocks
 
 /-- Number of completed boundary-loop blocks. -/
-def boundaryCount {n : ℕ} :
+@[expose] def boundaryCount {n : ℕ} :
     List (CompletedBlock n) → ℕ
   | [] => 0
   | .boundary _ _ _ _ :: blocks =>
@@ -2316,7 +2316,7 @@ def boundaryCount {n : ℕ} :
   | _ :: blocks => boundaryCount blocks
 
 /-- Normal-form parameters selected by a completed block sequence. -/
-def normalForm {n : ℕ}
+@[expose] def normalForm {n : ℕ}
     (blocks : List (CompletedBlock n)) : NormalForm :=
   if crosscapCount blocks = 0 then
     .orientable (handleCount blocks) (boundaryCount blocks)
@@ -2364,7 +2364,7 @@ end CompletedBlock
 namespace BoundaryBlockCommute
 
 /-- A completed positive-carrier boundary loop lying inside an opposite residual pair. -/
-def sourceWord {n : ℕ}
+@[expose] def sourceWord {n : ℕ}
     (outer carrier hole : Fin n)
     (outerNegative holeNegative : Bool)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
@@ -2378,7 +2378,7 @@ def sourceWord {n : ℕ}
 
 /-- Move the completed loop outside the residual pair, leaving the residual pair around the
 strictly shorter protected interval. -/
-def targetWord {n : ℕ}
+@[expose] def targetWord {n : ℕ}
     (outer carrier hole : Fin n)
     (outerNegative holeNegative : Bool)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
@@ -2391,7 +2391,7 @@ def targetWord {n : ℕ}
     outsideTail
 
 /-- The same contextual loop with its carrier displayed negative first. -/
-def negativeSourceWord {n : ℕ}
+@[expose] def negativeSourceWord {n : ℕ}
     (outer carrier hole : Fin n)
     (outerNegative holeNegative : Bool)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
@@ -2404,7 +2404,7 @@ def negativeSourceWord {n : ℕ}
     outsideTail
 
 /-- Negative-carrier target spelling. -/
-def negativeTargetWord {n : ℕ}
+@[expose] def negativeTargetWord {n : ℕ}
     (outer carrier hole : Fin n)
     (outerNegative holeNegative : Bool)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
@@ -2983,7 +2983,7 @@ end BoundarySingletonClosure
 namespace BoundaryAtomRotate
 
 /-- A raw boundary atom followed by a nonempty protected interval inside an opposite pair. -/
-def sourceWord {n : ℕ}
+@[expose] def sourceWord {n : ℕ}
     (carrier hole : Fin n)
     (carrierNegative holeNegative : Bool)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
@@ -2995,7 +2995,7 @@ def sourceWord {n : ℕ}
     outsideTail
 
 /-- Move the raw boundary atom to the end of the protected interval, exposing its next atom. -/
-def targetWord {n : ℕ}
+@[expose] def targetWord {n : ℕ}
     (carrier hole : Fin n)
     (carrierNegative holeNegative : Bool)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
@@ -3184,7 +3184,7 @@ def positiveTargetWord {n : ℕ}
     insideTail ++ .pos carrier :: inverseWord outsideTail
 
 /-- Contextual crosscap source with arbitrary orientations on both distinguished edges. -/
-def sourceWord {n : ℕ}
+@[expose] def sourceWord {n : ℕ}
     (outer carrier : Fin n)
     (outerNegative carrierNegative : Bool)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
@@ -3196,7 +3196,7 @@ def sourceWord {n : ℕ}
       outsideTail
 
 /-- Arbitrarily oriented contextual crosscap target. -/
-def targetWord {n : ℕ}
+@[expose] def targetWord {n : ℕ}
     (outer carrier : Fin n)
     (outerNegative carrierNegative : Bool)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
@@ -3667,7 +3667,7 @@ end CrosscapBlockCommute
 namespace HandleBlockCommute
 
 /-- A completed handle at the head of a positive/negative residual pair. -/
-def positiveSourceWord {n : ℕ}
+@[expose] def positiveSourceWord {n : ℕ}
     (outer first second : Fin n)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
     List (SignedDart (Fin n)) :=
@@ -3675,7 +3675,7 @@ def positiveSourceWord {n : ℕ}
     insideTail ++ .neg outer :: outsideTail
 
 /-- The same completed handle commuted outside the residual pair. -/
-def positiveTargetWord {n : ℕ}
+@[expose] def positiveTargetWord {n : ℕ}
     (outer first second : Fin n)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
     List (SignedDart (Fin n)) :=
@@ -3683,7 +3683,7 @@ def positiveTargetWord {n : ℕ}
     insideTail ++ .neg outer :: outsideTail
 
 /-- The contextual handle source with its residual carrier displayed negative first. -/
-def negativeSourceWord {n : ℕ}
+@[expose] def negativeSourceWord {n : ℕ}
     (outer first second : Fin n)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
     List (SignedDart (Fin n)) :=
@@ -3691,7 +3691,7 @@ def negativeSourceWord {n : ℕ}
     insideTail ++ .pos outer :: outsideTail
 
 /-- Negative-residual-carrier target spelling. -/
-def negativeTargetWord {n : ℕ}
+@[expose] def negativeTargetWord {n : ℕ}
     (outer first second : Fin n)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
     List (SignedDart (Fin n)) :=
@@ -3699,7 +3699,7 @@ def negativeTargetWord {n : ℕ}
     insideTail ++ .pos outer :: outsideTail
 
 /-- Contextual handle source with arbitrary residual-carrier orientation. -/
-def sourceWord {n : ℕ}
+@[expose] def sourceWord {n : ℕ}
     (outer first second : Fin n)
     (outerNegative : Bool)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
@@ -3719,7 +3719,7 @@ private theorem sourceWord_false {n : ℕ} (outer first second : Fin n)
   simp [sourceWord]
 
 /-- Contextual handle target with arbitrary residual-carrier orientation. -/
-def targetWord {n : ℕ}
+@[expose] def targetWord {n : ℕ}
     (outer first second : Fin n)
     (outerNegative : Bool)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
@@ -4225,7 +4225,7 @@ end HandleBlockCommute
 namespace BoundaryPairContraction
 
 /-- Two consecutive extracted boundary darts with arbitrary independent orientations. -/
-def sourceWord {n : ℕ}
+@[expose] def sourceWord {n : ℕ}
     (first second : Fin (n + 1))
     (firstNegative secondNegative : Bool)
     (tail : List (SignedDart (Fin (n + 1)))) :
@@ -4234,7 +4234,7 @@ def sourceWord {n : ℕ}
     dart second secondNegative] ++ tail
 
 /-- Contract the second boundary edge and retain one positively normalized boundary dart. -/
-def targetWord {n : ℕ}
+@[expose] def targetWord {n : ℕ}
     (first second : Fin (n + 1))
     (hfirstSecond : first ≠ second)
     (tail : List (SignedDart (Fin (n + 1)))) :
@@ -4512,7 +4512,7 @@ def carrier (n : ℕ) : Fin (n + 1) :=
   P1.freshEdge n
 
 /-- Enclose a retained word in a fresh positively oriented carrier pair. -/
-def targetWord {n : ℕ} (word : List (SignedDart (Fin n))) :
+@[expose] def targetWord {n : ℕ} (word : List (SignedDart (Fin n))) :
     List (SignedDart (Fin (n + 1))) :=
   [.pos (carrier n)] ++ P2.retainWord word ++
     [.neg (carrier n)]
@@ -4836,7 +4836,7 @@ inductive ProtectedAtom (n : ℕ)
 namespace ProtectedAtom
 
 /-- Exact signed word represented by one classified protected atom. -/
-def word {n : ℕ} : ProtectedAtom n →
+@[expose] def word {n : ℕ} : ProtectedAtom n →
     List (SignedDart (Fin n))
   | .boundary hole negative =>
       [dart hole negative]
@@ -4849,7 +4849,7 @@ def edges {n : ℕ} : ProtectedAtom n → List (Fin n)
   | .completed block => block.edges
 
 /-- Distinct protected names owned by one classified atom. -/
-def names {n : ℕ} : ProtectedAtom n → List (Fin n)
+@[expose] def names {n : ℕ} : ProtectedAtom n → List (Fin n)
   | .boundary hole _ => [hole]
   | .completed block => block.names
 
@@ -5175,7 +5175,7 @@ inductive ReductionToken (n : ℕ)
 namespace ReductionToken
 
 /-- Embed a classified protected atom as one marked token. -/
-def ofProtectedAtom {n : ℕ} :
+@[expose] def ofProtectedAtom {n : ℕ} :
     ProtectedAtom n → ReductionToken n
   | .boundary hole negative =>
       .extracted (.boundary hole negative)
@@ -5183,7 +5183,7 @@ def ofProtectedAtom {n : ℕ} :
       .completed block
 
 /-- Number of still-raw boundary singleton tokens in a marked word. -/
-def rawBoundaryCount {n : ℕ} :
+@[expose] def rawBoundaryCount {n : ℕ} :
     List (ReductionToken n) → ℕ
   | [] => 0
   | .extracted (.boundary _ _) :: tokens =>
@@ -6052,7 +6052,7 @@ theorem Cancellation.lowerTail_append {n : ℕ}
   simp [Cancellation.lowerTail, Cancellation.renamedTail]
 
 /-- Lower every token in a marked word which avoids the removed edge. -/
-def lowerTokensAvoiding {n : ℕ} (a : Fin (n + 1)) :
+@[expose] def lowerTokensAvoiding {n : ℕ} (a : Fin (n + 1)) :
     (tokens : List (ReductionToken (n + 1))) →
       a ∉ (expand tokens).map edgeOfDart →
       List (ReductionToken n)

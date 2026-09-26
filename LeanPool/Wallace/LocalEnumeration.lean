@@ -13,7 +13,7 @@ public import Mathlib.Data.Finsupp.Encodable
 # Enumeration of a countable local direct sum
 -/
 
-@[expose] public section
+public section
 
 namespace Wallace
 

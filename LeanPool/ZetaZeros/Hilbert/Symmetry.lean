@@ -20,7 +20,7 @@ Everything here follows from one computation, `conj_fz`: conjugating `fz eta z` 
 argument and conjugates the twist.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

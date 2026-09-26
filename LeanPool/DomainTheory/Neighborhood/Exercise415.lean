@@ -49,7 +49,7 @@ like Exercise
 1.24; the `chainUnion` construction itself is choice-free.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

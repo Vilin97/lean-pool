@@ -11,7 +11,7 @@ import Mathlib.RingTheory.Flat.TorsionFree
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -57,7 +57,7 @@ theorem pi_restrict_Ioi_eq_volume_restrict_positiveOrthant :
 
 open Classical in
 /-- A complex place radial jacobian used in the Odlyzko-bound argument. -/
-noncomputable def complexPlaceRadialJacobian
+@[expose] noncomputable def complexPlaceRadialJacobian
     (q : InfinitePlace K → ℝ) : ℝ :=
   mixedEmbedding.norm (mixedSpaceOfRealSpace q) *
     (∏ w : {w : InfinitePlace K // IsComplex w}, q w.1)⁻¹ *
@@ -131,7 +131,7 @@ theorem complexPlaceRadialJacobian_expMapBasis_pos
 
 open Classical in
 /-- A radial mellin gaussian used in the Odlyzko-bound argument. -/
-noncomputable def radialMellinGaussian
+@[expose] noncomputable def radialMellinGaussian
     (x : K) (s : ℂ) (y : realSpace K) : ℂ :=
   complexPlaceRadialJacobian K (expMapBasis y) •
     complexPlaceMellinGaussian K x s (expMapBasis y)

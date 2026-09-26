@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.GevreyRadiusReduction
 
 /-! Actual weighted correction and derivative bounds at a fixed positive radius. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ variable {T : ℝ} {hT : 0 < T} {A : Data period T}
 def Budget.reducedRadius (B : Budget period hT A) : ℝ := B.initialRadius/4
 
 /-- The actual target-error envelope converted from metric energy to the fixed H⁶ word norm. -/
-def Budget.correctionSize (B : Budget period hT A) : ℝ :=
+@[expose] def Budget.correctionSize (B : Budget period hT A) : ℝ :=
   metricAmplification B.metric.c*(B.delta/2)
 
 theorem Budget.growth_pos (B : Budget period hT A) : 0 < B.growthCoefficient :=

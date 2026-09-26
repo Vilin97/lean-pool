@@ -16,7 +16,7 @@ sumset obstruction, and the abstract exact-base-size counterexample theorem.
 All seed and finite-colour hypotheses are exposed by the imported structures.
 -/
 
-@[expose] public section
+public section
 
 namespace SaxlCounterexamples.EveryBase
 

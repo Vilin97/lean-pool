@@ -14,7 +14,7 @@ The backward test function used in the local energy calculation is recorded
 together with its nonnegativity.
 -/
 
-@[expose] public section
+public section
 
 open scoped Topology
 
@@ -26,6 +26,7 @@ namespace CKN.Foundation.Heat
 open CKN.Foundation.Parabolic
 
 /-- Rescaled backward heat test function centered at time `r ^ 2`. -/
+@[expose]
 def backwardHeatTestFunction (r : ℝ) (x : Vec3) (t : ℝ) : ℝ :=
   r ^ 2 * heatKernel x (r ^ 2 - t)
 

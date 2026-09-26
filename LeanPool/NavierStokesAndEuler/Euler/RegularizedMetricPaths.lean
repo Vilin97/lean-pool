@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.WeightedCylinderEnergy
 
 /-! Literal metric, loss, and forcing paths for the actual full-order word regularization. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

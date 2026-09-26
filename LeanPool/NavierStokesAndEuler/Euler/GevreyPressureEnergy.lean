@@ -15,7 +15,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! The actual pressure commutators occurring in the Gevrey energy estimate. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,13 +32,13 @@ open MeasureTheory InnerProductSpace EulerLiftedGradientSpace EulerCylinderSobol
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The actual weighted H⁶ external pressure commutator norm. -/
-def externalPressureNorm {s : ℕ} {A : SmoothCoefficient period}
+@[expose] def externalPressureNorm {s : ℕ} {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (N : ℕ) (ρ : ℝ) (p : SobolevSpace period s) : ℝ :=
   ∑ n ∈ Finset.range (N+1), weight ρ n * commutatorBlock K (toJet period p) 6 n
 
 /-- The actual weighted L² base pressure commutator norm. -/
-def basePressureNorm {s : ℕ} {A : SmoothCoefficient period}
+@[expose] def basePressureNorm {s : ℕ} {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection 6 A)
     (N : ℕ) (hN : N + 6 ≤ s) (ρ : ℝ) (p : SobolevSpace period s) : ℝ :=
   ∑ n : Fin (N+1), weight ρ n.val * basePressureBlock period K (toJet period p) n.val (by

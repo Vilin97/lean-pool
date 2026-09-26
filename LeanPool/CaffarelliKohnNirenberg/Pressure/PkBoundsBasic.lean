@@ -16,7 +16,7 @@ public import Mathlib.Analysis.Real.Pi.Bounds
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -30,7 +30,7 @@ namespace CKN
 /-! Common annular and time-integration facts for the pressure terms. -/
 
 /-- Spatial annulus supporting derivatives of the pressure cutoff. -/
-def pressureAnnulus (x₀ : Vec3) (ρ : ℝ) : Set Vec3 :=
+@[expose] def pressureAnnulus (x₀ : Vec3) (ρ : ℝ) : Set Vec3 :=
   vec3Ball x₀ (3 * ρ / 4) \ vec3Ball x₀ (13 * ρ / 20)
 
 theorem pressure_annulus_subset_ball {x₀ : Vec3} {ρ : ℝ} {y : Vec3}
@@ -211,6 +211,7 @@ theorem pressure_cylinder_eLpNorm_le {P : Vec3 × ℝ → ℝ} {G : ℝ → ℝ}
       simp [μx, μt]
 
 /-- Euclidean tensor norm of the partially centered pressure source. -/
+@[expose]
 def pressureUTensorNorm (u : ParabolicPoint → Vec3) (c : ℝ → Vec3)
     (s : ℝ) (y : Vec3) : ℝ :=
   Real.sqrt (∑ i : Fin 3, ∑ j : Fin 3,

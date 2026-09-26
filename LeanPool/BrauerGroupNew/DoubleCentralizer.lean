@@ -32,7 +32,7 @@ import Mathlib.RingTheory.SimpleRing.Matrix
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.DoubleCentralizer`.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -303,7 +303,7 @@ instance : FiniteDimensional (Subalgebra.center F B) B :=
 
 variable (F B) in
 /-- The subalgebra of endomorphisms given by left multiplication. -/
-@[simps]
+@[simps, expose]
 def Module.End.leftMul : Subalgebra F (Module.End F B) where
   carrier := Set.range <| LinearMap.mulLeft F
   mul_mem' := by
@@ -415,7 +415,7 @@ lemma centralizer_mulLeft :
 end lemma2
 
 /-- The conjugate of a subalgebra by a unit. -/
-@[simps]
+@[simps, expose]
 def Subalgebra.conj (B : Subalgebra F A) (x : Aˣ) : Subalgebra F A where
   carrier := {y | ∃ b ∈ B, y = x * b * x⁻¹}
   mul_mem' := by
@@ -439,7 +439,7 @@ lemma Subalgebra.mem_conj {B : Subalgebra F A} {x : Aˣ} {y : A} :
   rfl
 
 /-- The algebra homomorphism from a subalgebra to its conjugate. -/
-@[simps]
+@[simps, expose]
 def Subalgebra.toConj (B : Subalgebra F A) (x : Aˣ) : B →ₐ[F] B.conj x where
   toFun b := ⟨x * b * x⁻¹, by simp [Subalgebra.mem_conj]⟩
   map_one' := by
@@ -463,7 +463,7 @@ def Subalgebra.toConj (B : Subalgebra F A) (x : Aˣ) : B →ₐ[F] B.conj x wher
     simp only [Units.mul_inv, mul_one]
 
 /-- The algebra homomorphism from a conjugate subalgebra back to the original subalgebra. -/
-@[simps]
+@[simps, expose]
 def Subalgebra.fromConj (B : Subalgebra F A) (x : Aˣ) : B.conj x →ₐ[F] B where
   toFun b := ⟨x⁻¹ * b * x, by
     rcases b with ⟨_, ⟨b, hb, rfl⟩⟩

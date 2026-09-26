@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.GevreyStabilityBudget
 /-! Actual finite correction families and input comparison bounds, independent of any Gevrey
 radius-loss budget. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

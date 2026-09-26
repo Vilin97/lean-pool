@@ -13,7 +13,7 @@ public import Lean.Meta.Basic
 This module provides small utilities shared by the MRiscX tactics.
 -/
 
-@[expose] public section
+public section
 open Lean Meta
 
 /-- Find the type of the local hypothesis named `n` in `ctx`, if present. -/

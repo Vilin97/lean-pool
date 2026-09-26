@@ -10,7 +10,7 @@ public import Mathlib.Analysis.Convex.SpecificFunctions.Pow
 
 /-! # Quantum parallel repetition, part 04 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -403,13 +403,13 @@ open scoped BigOperators
 attribute [local instance] Classical.propDecidable
 
 /-- The exact left construction used in the quantum parallel-repetition argument. -/
-def exactLeft
+@[expose] def exactLeft
     {M : Type*} [Fintype M] [DecidableEq M]
     (coordinate : M) (partition : M → Bool) : Finset M :=
   Finset.univ.filter fun j => j ≠ coordinate ∧ partition j = false
 
 /-- The exact right construction used in the quantum parallel-repetition argument. -/
-def exactRight
+@[expose] def exactRight
     {M : Type*} [Fintype M] [DecidableEq M]
     (coordinate : M) (partition : M → Bool) : Finset M :=
   Finset.univ.filter fun j => j ≠ coordinate ∧ partition j = true
@@ -453,7 +453,7 @@ abbrev ExactRemainingSeed
   ExactForwardSeed (SourceRemainingCoordinate D)
 
 /-- The rank map for exact left. -/
-def exactLeftRank
+@[expose] def exactLeftRank
     {M : Type*} [Fintype M] [DecidableEq M]
     (seed : ExactForwardSeed M) :
     {j : M // j ∈ exactLeft seed.coordinate seed.partition} ≃
@@ -462,7 +462,7 @@ def exactLeftRank
     (Finset.equivFin (exactLeft seed.coordinate seed.partition))
 
 /-- The rank map for exact right. -/
-def exactRightRank
+@[expose] def exactRightRank
     {M : Type*} [Fintype M] [DecidableEq M]
     (seed : ExactForwardSeed M) :
     {j : M // j ∈ exactRight seed.coordinate seed.partition} ≃
@@ -509,7 +509,7 @@ theorem exactRightPrefix_subset
   exact ha ▸ a.property
 
 /-- The probability weight for exact seed. -/
-def exactSeedWeight
+@[expose] def exactSeedWeight
     {M : Type*} [Fintype M] [DecidableEq M]
     (seed : ExactForwardSeed M) : ℝ :=
   (1 / (Fintype.card M : ℝ)) *
@@ -1168,7 +1168,7 @@ abbrev ExactFullQuestion
   (Fin n → X) × (Fin n → Y)
 
 /-- The finite encoding of exact reveal. -/
-def exactRevealCode
+@[expose] def exactRevealCode
     {n : ℕ} (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
     (q : ExactFullQuestion X Y n) :
@@ -1181,7 +1181,7 @@ def exactRevealCode
   aliceRightPrefix j := q.1 j.val.val
 
 /-- The probability weight for exact prior question. -/
-def exactPriorQuestionWeight
+@[expose] def exactPriorQuestionWeight
     (G : Game X Y A B) (n : ℕ)
     (q : ExactFullQuestion X Y n) : ℝ :=
   (G.repeat n).questionWeight q.1 q.2
@@ -1200,7 +1200,7 @@ theorem exactPriorQuestionWeight_sum
     Fintype.sum_prod_type] using (G.repeat n).weight_normalized
 
 /-- The total probability mass of exact reveal. -/
-def exactRevealMass
+@[expose] def exactRevealMass
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -1236,7 +1236,7 @@ theorem exactRevealMass_sum
   exact exactPriorQuestionWeight_sum G n
 
 /-- The total probability mass of exact alice question. -/
-def exactAliceQuestionMass
+@[expose] def exactAliceQuestionMass
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -1249,7 +1249,7 @@ def exactAliceQuestionMass
     else 0
 
 /-- The total probability mass of exact bob question. -/
-def exactBobQuestionMass
+@[expose] def exactBobQuestionMass
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -1262,7 +1262,7 @@ def exactBobQuestionMass
     else 0
 
 /-- The total probability mass of exact joint question. -/
-def exactJointQuestionMass
+@[expose] def exactJointQuestionMass
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -1304,7 +1304,7 @@ theorem exactBobQuestionMass_nonneg
   · exact le_rfl
 
 /-- The spectral filter for exact alice question. -/
-def exactAliceQuestionFilter
+@[expose] def exactAliceQuestionFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -1321,7 +1321,7 @@ def exactAliceQuestionFilter
     else 0
 
 /-- The spectral filter for exact bob question. -/
-def exactBobQuestionFilter
+@[expose] def exactBobQuestionFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -1378,7 +1378,7 @@ theorem exactBobQuestionFilter_posSemidef
   · exact Matrix.PosSemidef.zero
 
 /-- The spectral filter for exact alice mean. -/
-def exactAliceMeanFilter
+@[expose] def exactAliceMeanFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -1389,7 +1389,7 @@ def exactAliceMeanFilter
     exactAliceQuestionFilter G n S D seed history answer x
 
 /-- The spectral filter for exact bob mean. -/
-def exactBobMeanFilter
+@[expose] def exactBobMeanFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -2045,7 +2045,7 @@ abbrev ExactPaddedLocalIndex
       ExactBobLocalIndex G n S D r)
 
 /-- The state vector representing exact padded. -/
-def exactPaddedVector
+@[expose] def exactPaddedVector
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D)
@@ -2114,7 +2114,7 @@ theorem exactPaddedDefault_norm
   simp only [exactPaddedDefault, PiLp.norm_single, norm_one]
 
 /-- The exact psi construction used in the quantum parallel-repetition argument. -/
-def exactPsi
+@[expose] def exactPsi
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D)
@@ -2753,7 +2753,7 @@ theorem pureVectorWinningProbability_eq
     (pureVerifierEffect G z hz PA PB x y)
 
 /-- The probability weight for flagged question. -/
-def flaggedQuestionWeight
+@[expose] def flaggedQuestionWeight
     (G : Game X Y A B) (flagWeight : J → ℝ)
     (ω : J × (X × Y)) : ℝ :=
   flagWeight ω.1 * G.questionWeight ω.2.1 ω.2.2
@@ -2787,18 +2787,18 @@ open Filter
 open scoped Topology
 
 /-- A universal upper bound for the accumulated rounding error. -/
-def universalErrorCeiling (K₀ : ℝ) : ℝ :=
+@[expose] def universalErrorCeiling (K₀ : ℝ) : ℝ :=
   K₀ * (1 + (2 : ℝ) ^ (1 / 6 : ℝ)) + 2
 
 /-- The combined information-theoretic loss from the sampling steps. -/
-def totalSamplingLoss (K₀ α η lam : ℝ) : ℝ :=
+@[expose] def totalSamplingLoss (K₀ α η lam : ℝ) : ℝ :=
   5 * lam +
     2 * (K₀ * (α ^ (1 / 12 : ℝ) +
         (32 * η) ^ (1 / 12 : ℝ)) +
       Real.sqrt (8 * η) + universalErrorCeiling K₀ * lam)
 
 /-- The numerical bound for rounded winning lower. -/
-def roundedWinningLowerBound (ε K₀ α η lam : ℝ) : ℝ :=
+@[expose] def roundedWinningLowerBound (ε K₀ α η lam : ℝ) : ℝ :=
   1 - ε / 2 - totalSamplingLoss K₀ α η lam
 
 theorem totalSamplingLoss_tendsto_zero
@@ -3334,7 +3334,7 @@ open scoped BigOperators ComplexConjugate ComplexOrder Kronecker MatrixOrder
   Matrix.Norms.L2Operator InnerProductSpace
 
 /-- The state vector representing normalized pure. -/
-def normalizedPureVector
+@[expose] def normalizedPureVector
     {d : Type*} [Fintype d]
     (z : EuclideanSpace ℂ d) : EuclideanSpace ℂ d :=
   ((‖z‖⁻¹ : ℝ) : ℂ) • z
@@ -3654,7 +3654,7 @@ section FiniteSamples
 variable {ι Ω : Type*} [Fintype ι] [DecidableEq ι] [Fintype Ω]
 
 /-- The total probability mass of postselection. -/
-def postselectionMass
+@[expose] def postselectionMass
     (law : FiniteEventLaw Ω) (wins : ι → Ω → Bool)
     (C : Finset ι) : ℝ :=
   law.eventMass (FiniteEventLaw.winEvent wins C)
@@ -3681,14 +3681,14 @@ theorem postselectionMass_le_one
 The conditional coordinate failure construction used in the quantum parallel-repetition
 argument.
 -/
-def conditionalCoordinateFailure
+@[expose] def conditionalCoordinateFailure
     (law : FiniteEventLaw Ω) (wins : ι → Ω → Bool)
     (C : Finset ι) (i : ι) : ℝ :=
   FiniteEventLaw.failureMass law wins C i /
     postselectionMass law wins C
 
 /-- The uniform remaining failure construction used in the quantum parallel-repetition argument. -/
-def uniformRemainingFailure
+@[expose] def uniformRemainingFailure
     (law : FiniteEventLaw Ω) (wins : ι → Ω → Bool)
     (C : Finset ι) : ℝ :=
   (∑ i ∈ Finset.univ \ C,
@@ -3722,7 +3722,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The total probability mass of repeated postselection. -/
-def repeatedPostselectionMass
+@[expose] def repeatedPostselectionMass
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n)) (C : Finset (Fin n)) : ℝ :=
   postselectionMass (strategyEventLaw (G.repeat n) S)
@@ -3834,20 +3834,20 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The postselection log cost construction used in the quantum parallel-repetition argument. -/
-def postselectionLogCost
+@[expose] def postselectionLogCost
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) : ℝ :=
   Real.log (1 / repeatedPostselectionMass G n S D)
 
 /-- The answer log cost construction used in the quantum parallel-repetition argument. -/
-def answerLogCost
+@[expose] def answerLogCost
     {A B : Type*} [Fintype A] [Fintype B]
     {n : ℕ} (D : Finset (Fin n)) : ℝ :=
   (D.card : ℝ) *
     Real.log ((Fintype.card A : ℝ) * (Fintype.card B : ℝ))
 
 /-- The error rate associated with martingale. -/
-def martingaleRate
+@[expose] def martingaleRate
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) : ℝ :=
   (postselectionLogCost G n S D +
@@ -4913,7 +4913,7 @@ abbrev LocalQuestionContext
   SourceRemainingCoordinate D × (X × Y)
 
 /-- The probability weight for local question. -/
-def localQuestionWeight
+@[expose] def localQuestionWeight
     (G : Game X Y A B) (n : ℕ) (D : Finset (Fin n))
     (c : LocalQuestionContext X Y D) : ℝ :=
   G.questionWeight c.2.1 c.2.2 /
@@ -4949,7 +4949,7 @@ theorem localQuestionWeight_sum
       exact div_self hcard
 
 /-- The probability distribution for conditioned event. -/
-def conditionedEventDistribution
+@[expose] def conditionedEventDistribution
     {Ω : Type*} [Fintype Ω]
     (law : FiniteEventLaw Ω) (event : Finset Ω) : Ω → ℝ :=
   fun ω => if ω ∈ event then law.weight ω / law.eventMass event else 0
@@ -5062,7 +5062,7 @@ theorem conditionedEventDistribution_projection_relativeEntropy_le
         law event positive
 
 /-- The finite probability law for repeated conditioned outcome. -/
-def repeatedConditionedOutcomeLaw
+@[expose] def repeatedConditionedOutcomeLaw
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) :
     StrategyOutcome
@@ -5385,7 +5385,7 @@ theorem groupedMass_id
   simp only [sum_singleton]
 
 /-- The finite prefix mask construction used in the quantum parallel-repetition argument. -/
-def finitePrefixMask
+@[expose] def finitePrefixMask
     {Ω Y : Type*} {h : ℕ} (base : Y)
     (k : Fin (h + 1)) :
     (Ω × (Fin h → Y)) → (Ω × (Fin h → Y)) :=
@@ -5651,7 +5651,7 @@ theorem exactRemainingSeedWeight_sum
   simpa only [Fintype.card_coe, card_pos] using remaining
 
 /-- The finite probability law for exact postselected joint. -/
-def exactPostselectedJointLaw
+@[expose] def exactPostselectedJointLaw
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (q : ExactJointOutcome X Y A B D) : ℝ :=
@@ -5703,7 +5703,7 @@ theorem exactPostselectedJointLaw_sum
     _ = 1 := exactRemainingSeedWeight_sum D remaining
 
 /-- The exact source pushforward construction used in the quantum parallel-repetition argument. -/
-def exactSourcePushforward
+@[expose] def exactSourcePushforward
     {K : Type*}
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
@@ -5762,7 +5762,7 @@ abbrev ExactLocallySampleableTuple
     (X × (Y × ExactHistoryFlag X Y A B D))
 
 /-- The finite encoding of exact history. -/
-def exactHistoryCode
+@[expose] def exactHistoryCode
     {n : ℕ} (D : Finset (Fin n))
     (q : ExactJointOutcome X Y A B D) :
     ExactHistoryFlag X Y A B D where
@@ -5772,7 +5772,7 @@ def exactHistoryCode
   bobAnswer := fun j => q.2.2.2.2 j.val
 
 /-- The finite encoding of exact locally sampleable. -/
-def exactLocallySampleableCode
+@[expose] def exactLocallySampleableCode
     {n : ℕ} (D : Finset (Fin n))
     (q : ExactJointOutcome X Y A B D) :
     ExactLocallySampleableTuple X Y A B D :=
@@ -5782,7 +5782,7 @@ def exactLocallySampleableCode
     exactHistoryCode D q)
 
 /-- The finite probability law for exact locally sampleable. -/
-def exactLocallySampleableLaw
+@[expose] def exactLocallySampleableLaw
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) :
     ExactLocallySampleableTuple X Y A B D → ℝ :=
@@ -5888,7 +5888,7 @@ theorem exactBobLocalMass_nonneg
 /--
 The exact alice local conditional construction used in the quantum parallel-repetition argument.
 -/
-def exactAliceLocalConditional
+@[expose] def exactAliceLocalConditional
     {n : ℕ} (D : Finset (Fin n))
     (base : ExactHistoryFlag X Y A B D)
     (Q : ExactLocallySampleableTuple X Y A B D → ℝ)
@@ -5903,7 +5903,7 @@ def exactAliceLocalConditional
 /--
 The exact bob local conditional construction used in the quantum parallel-repetition argument.
 -/
-def exactBobLocalConditional
+@[expose] def exactBobLocalConditional
     {n : ℕ} (D : Finset (Fin n))
     (base : ExactHistoryFlag X Y A B D)
     (Q : ExactLocallySampleableTuple X Y A B D → ℝ)
@@ -6372,7 +6372,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The probability weight for exact conditional question. -/
-def exactConditionalQuestionWeight
+@[expose] def exactConditionalQuestionWeight
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -6558,7 +6558,7 @@ theorem exactJointCoordinateFilter_born
       G n S D bobAnswer ys seed.coordinate.val b)
 
 /-- The total probability mass of exact joint conditional winning. -/
-def exactJointConditionalWinningMass
+@[expose] def exactJointConditionalWinningMass
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)

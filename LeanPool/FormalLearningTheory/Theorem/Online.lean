@@ -22,7 +22,7 @@ Main results:
 - `optimal_mistake_bound_eq_ldim`: OptimalMistakeBound = LittlestoneDim (for nonempty C)
 -/
 
-@[expose] public section
+public section
 
 -- ============================================================
 -- FORWARD DIRECTION: OnlineLearnable → LittlestoneDim < ⊤

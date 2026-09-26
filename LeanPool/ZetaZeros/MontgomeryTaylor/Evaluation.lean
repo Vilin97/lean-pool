@@ -16,7 +16,7 @@ import Mathlib.Analysis.Real.Pi.Bounds
 `G 0 = f_0 0 + integral of |v| f_0 v`, elementary by parts, and the trigonometry collapses.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

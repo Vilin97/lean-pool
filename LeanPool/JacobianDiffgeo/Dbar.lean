@@ -36,4 +36,4 @@ API summary (see `docs/design/dbar-solvability.md`). Zero sorries throughout.
   included (see the file's docstring and the build log for the honest scope note).
 -/
 
-@[expose] public section
+public section

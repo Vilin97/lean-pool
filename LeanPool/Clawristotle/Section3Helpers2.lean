@@ -16,7 +16,7 @@ import Mathlib.Data.Nat.Choose.Multinomial
 # LeanPool.Clawristotle.Section3Helpers2
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

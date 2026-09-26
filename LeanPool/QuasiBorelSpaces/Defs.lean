@@ -16,7 +16,7 @@ import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
 This file defines the concept of a quasi-borel space, as given by [HeunenKSY17].
 -/
 
-@[expose] public section
+public section
 
 open scoped MeasureTheory
 
@@ -69,7 +69,7 @@ inductive IsHom (f : A → B) : Prop where
 scoped notation "IsHom[" inst₁ ", " inst₂ "]" => @IsHom _ _ inst₁ inst₂
 
 /-- Every `MeasurableSpace` induces a `QuasiBorelSpace`. -/
-@[reducible] def ofMeasurableSpace [MeasurableSpace A] : QuasiBorelSpace A where
+@[expose, reducible] def ofMeasurableSpace [MeasurableSpace A] : QuasiBorelSpace A where
   IsVar φ := Measurable φ
   isVar_const x := measurable_const
   isVar_comp := by fun_prop
@@ -116,7 +116,7 @@ Every `QuasiBorelSpace` induces a `MeasurableSpace`.
 
 See [HeunenKSY17], Proposition 14.
 -/
-@[reducible] def toMeasurableSpace : MeasurableSpace A where
+@[expose, reducible] def toMeasurableSpace : MeasurableSpace A where
   MeasurableSet' X := ∀{φ : ℝ → A}, IsHom φ → MeasurableSet (φ ⁻¹' X)
   measurableSet_empty hφ := by
     simp only [Set.preimage_empty, MeasurableSet.empty]
@@ -126,7 +126,7 @@ See [HeunenKSY17], Proposition 14.
     simpa only [Set.preimage_iUnion] using MeasurableSet.iUnion fun n ↦ hf n hφ
 
 /-- We can lift a `QuasiBorelSpace` from one type to another. -/
-@[reducible] def lift (f : B → A) : QuasiBorelSpace B where
+@[expose, reducible] def lift (f : B → A) : QuasiBorelSpace B where
   IsVar φ := IsVar fun x ↦ f (φ x)
   isVar_const x := isVar_const (f x)
   isVar_comp := isVar_comp

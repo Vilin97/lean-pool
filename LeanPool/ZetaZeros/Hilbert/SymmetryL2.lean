@@ -24,7 +24,7 @@ the structure the Gram–Schmidt argument needs, since its coefficients are real
 `inner_symmetric_im_eq_zero` and so it never leaves the subspace.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 
@@ -47,11 +47,11 @@ theorem ae_restrict_Ioo_neg {P : ℝ → Prop}
   exact ⟨by linarith, by linarith⟩
 
 /-- Almost-everywhere symmetry for an element of `L²`. -/
-def IsSymmetricL2 (f : L2Interval lam) : Prop :=
+@[expose] def IsSymmetricL2 (f : L2Interval lam) : Prop :=
   ∀ᵐ u ∂(volume.restrict (Set.Ioo (-lam) lam)), (starRingEnd ℂ) (f u) = f (-u)
 
 /-- The symmetric elements form an `ℝ`-subspace of `L²`. -/
-noncomputable def symmetricSubspace (lam : ℝ) : Submodule ℝ (L2Interval lam) where
+@[expose] noncomputable def symmetricSubspace (lam : ℝ) : Submodule ℝ (L2Interval lam) where
   carrier := {f | IsSymmetricL2 f}
   zero_mem' := by
     have hz := Lp.coeFn_zero ℂ 2 (volume.restrict (Set.Ioo (-lam) lam))

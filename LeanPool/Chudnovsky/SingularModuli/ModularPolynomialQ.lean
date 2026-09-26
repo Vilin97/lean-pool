@@ -62,7 +62,7 @@ The whole file is **sorry-free**. The gated pieces, with routes, are documented 
    documented at `PhiQ`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -199,6 +199,7 @@ The generating polynomial of the orbit; its coefficients are (up to sign) the el
 symmetric functions of `{f_i τ}`, which are `SL(2,ℤ)`-invariant and holomorphic. -/
 
 /-- The orbit polynomial `∏_i (X − f_i τ) ∈ ℂ[X]`. -/
+@[expose]
 def orbitPoly (m : ℕ) [NeZero m] (τ : ℍ) : Polynomial ℂ :=
   ∏ i : Option (ZMod m), (X - C (f m i τ))
 
@@ -514,6 +515,7 @@ identity. -/
 
 /-- Specialization of a `ℚ[Y][X]`-polynomial at `Y = Y₀ ∈ ℂ`: map each `ℚ[Y]`-coefficient to
 its value at `Y₀`, landing in `ℂ[X]`. Applied at `Y₀ = j τ` this is `Φ_m(X, j τ)`. -/
+@[expose]
 def specializeY (Y₀ : ℂ) : Polynomial (Polynomial ℚ) →+* Polynomial ℂ :=
   Polynomial.mapRingHom (Polynomial.aeval Y₀).toRingHom
 
@@ -841,6 +843,7 @@ series. -/
 variable {m : ℕ}
 
 /-- The subring `ℚ ⊆ ℂ` (image of the rational cast). -/
+@[expose]
 def RQ : Subring ℂ := (Rat.castHom ℂ).range
 
 lemma intCast_mem_RQ (n : ℤ) : (n : ℂ) ∈ RQ := intCast_mem RQ n

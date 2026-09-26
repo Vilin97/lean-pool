@@ -33,7 +33,7 @@ Nothing here is specific to Malitz interpolation (issue #15) or to end extension
 consume it.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

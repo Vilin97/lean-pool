@@ -29,7 +29,7 @@ element as an integer lattice automorphism:
   as a conjugate.  Equivalently, the Coxeter element and its inverse share a charpoly.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial Matrix
 

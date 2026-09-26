@@ -18,7 +18,7 @@ transferred to that plane complex and the ordinary plane one-skeleton approximat
 be applied at an arbitrary tolerance.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

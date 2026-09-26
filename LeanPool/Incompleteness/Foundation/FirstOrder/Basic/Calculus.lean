@@ -11,7 +11,7 @@ import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
 
 /-! # Calculus -/
 
-@[expose] public section
+public section
 
 namespace LO
 

@@ -17,7 +17,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalPrimaryBudget
 
 /-! Uniform recursive packet bounds with the literal primary initialization discharged. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,7 +36,7 @@ variable (M : EulerMeanPacketProvider.Data)
 
 /-- Initialized profiles, given by `joinedSourceProfiles period M D τ hτ hτT B
 (joinedTerminalPrimary period M D τ hτ hτT B (initialData D δ hδ (α • ξ) hs))`. -/
-def initializedProfiles : ℕ → Profile :=
+@[expose] def initializedProfiles : ℕ → Profile :=
   joinedSourceProfiles period M D τ hτ hτT B
     (joinedTerminalPrimary period M D τ hτ hτT B (initialData D δ hδ (α • ξ) hs))
 

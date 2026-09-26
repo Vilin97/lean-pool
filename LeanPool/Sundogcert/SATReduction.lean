@@ -64,7 +64,7 @@ public import LeanPool.Sundogcert.MatchingNPHard
   `[propext, Classical.choice, Quot.sound]` on the four audited results.
 -/
 
-@[expose] public section
+public section
 
 open Sundog.SATNPHard Sundog.MatchingNPHard
 
@@ -110,7 +110,7 @@ instance instDecidableEqTripleIdx : DecidableEq (TripleIdx n m) :=
 /-! ### The triple function — faithful to the milestone-2/3 gadgets. -/
 
 /-- The triple map `TripleIdx → Tip × XNode × YNode`: each index slot emits its gadget triple. -/
-def tripleFn (φ : Formula n m) : TripleIdx n m → Tip n m × XNode n m × YNode n m
+@[expose] def tripleFn (φ : Formula n m) : TripleIdx n m → Tip n m × XNode n m × YNode n m
   | Sum.inl (i, j)                      => ((i, j, true),  Sum.inl (i, j),       Sum.inl (i, j))
   | Sum.inr (Sum.inl (i, j))            => ((i, j, false), Sum.inl (i, j + 1),   Sum.inl (i, j))
   | Sum.inr (Sum.inr (Sum.inl (k, slot))) =>
@@ -123,7 +123,7 @@ def tripleFn (φ : Formula n m) : TripleIdx n m → Tip n m × XNode n m × YNod
 /-- **The reduction.**  Re-index the gadget triple map along the canonical finite equiv, giving the
     `Fin s → Tip × XNode × YNode` shape the matching problem wants (`s = card TripleIdx`).
     `noncomputable` because `Fintype.equivFin` is. -/
-noncomputable def reduce (φ : Formula n m) :
+@[expose] noncomputable def reduce (φ : Formula n m) :
     Fin (Fintype.card (TripleIdx n m)) → Tip n m × XNode n m × YNode n m :=
   fun i => tripleFn φ ((Fintype.equivFin _).symm i)
 

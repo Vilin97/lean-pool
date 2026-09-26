@@ -18,7 +18,7 @@ triangular frontier onto a simple polygonal circle. Polygonal Schoenflies fills 
 finite PL homeomorphism without changing its shared-edge boundary values.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

@@ -59,7 +59,7 @@ Verma module, Lie algebra, representation
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 
@@ -160,13 +160,13 @@ noncomputable def weightHW (η : weight tri) (i : tri.cartan ⊕ tri.upper) :
   | Sum.inr E => ⟨ιUEA 𝕜 E, 0⟩
 
 /-- The Verma module of highest weight η. -/
-def VermaHW (η : weight tri) :=
+@[expose] def VermaHW (η : weight tri) :=
   VermaModule (weightHW η)
 
 variable (η : weight tri)
 
 /-- The highest weight vector of the Verma module of highest weight η. -/
-noncomputable def _root_.VirasoroProject.TriangularDecomposition.VermaHW.hwVec
+@[expose] noncomputable def _root_.VirasoroProject.TriangularDecomposition.VermaHW.hwVec
     (η : weight tri) : VermaHW η :=
   VermaModule.hwVec _
 
@@ -216,7 +216,7 @@ lemma _root_.VirasoroProject.TriangularDecomposition.VermaHW.cartan_smul_hwVec
 
 /-- The universal map from a Verma module to any module with a vector of the given
 highest weight. -/
-noncomputable def _root_.VirasoroProject.TriangularDecomposition.VermaHW.universalMap
+@[expose] noncomputable def _root_.VirasoroProject.TriangularDecomposition.VermaHW.universalMap
     (η : weight tri)
     (M : Type*) [AddCommGroup M] [Module (𝓤 𝕜 𝓰) M] {hwv : M}
     (hwv_cartan : ∀ {H} (hH : H ∈ tri.cartan),

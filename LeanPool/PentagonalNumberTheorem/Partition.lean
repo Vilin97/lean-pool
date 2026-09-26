@@ -21,7 +21,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.PentagonalNumberTheorem.Partition`.
 -/
 
-@[expose] public section
+public section
 
 theorem two_pentagonal (k : ℤ) : 2 * (k * (3 * k - 1) / 2) = k * (3 * k - 1) := by
   refine Int.two_mul_ediv_two_of_even ?_

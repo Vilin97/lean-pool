@@ -17,7 +17,7 @@ The base coefficients are identified through their common physical field
 before the native material cancellation is used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -446,7 +446,7 @@ theorem chart_phase_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
   rw [view_slot]
 
 /-- Defect as an element of `FullPoint → ℝ`. -/
-noncomputable def defect (j : Fin 2) (L : Label B N0) (n : ℕ) : FullPoint → ℝ :=
+@[expose] noncomputable def defect (j : Fin 2) (L : Label B N0) (n : ℕ) : FullPoint → ℝ :=
   (chartCoefficients j L).defect
     (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal standardRegion))
     (PrimaryResidualClass.directions (commonContext B)) n
@@ -679,7 +679,7 @@ theorem materialWeight_normal (L : Label B N0) (n : ℕ) :
 
 /-- Material weight bound, given by `2*ActualSignedGeometry.powerBound (h/2+1/2) *
 ActualSignedGeometry.powerBound (CoordinateAlgebra.A h-h)`. -/
-noncomputable def materialWeightBound : ℝ :=
+@[expose] noncomputable def materialWeightBound : ℝ :=
   2*ActualSignedGeometry.powerBound (h/2+1/2) *
     ActualSignedGeometry.powerBound (CoordinateAlgebra.A h-h)
 

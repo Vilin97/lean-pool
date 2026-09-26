@@ -14,7 +14,7 @@ import LeanPool.QuasiBorelSpaces.Basic
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.ENNReal`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace QuasiBorelSpace.ENNReal

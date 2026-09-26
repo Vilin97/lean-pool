@@ -17,18 +17,20 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
 namespace OddEvenSorting
 
 /-- Sort each disjoint consecutive pair of list entries. -/
+@[expose]
 def pairPhase {α : Type*} [LinearOrder α] : List α → List α
   | a :: b :: xs => min a b :: max a b :: pairPhase xs
   | xs => xs
 
 /-- Apply a comparator layer, optionally leaving the first entry fixed. -/
+@[expose]
 def phase {α : Type*} [LinearOrder α] (shifted : Bool) (xs : List α) : List α :=
   if shifted then
     match xs with
@@ -249,6 +251,7 @@ def countTrue (xs : List Bool) : ℕ := xs.count true
   simp [phaseN]
 
 /-- Iterate alternating comparator layers starting with round q. -/
+@[expose]
 def evolve {α : Type*} [LinearOrder α] (q : ℕ) (xs : List α) : ℕ → List α
   | 0 => xs
   | t + 1 => phaseN (q + t) (evolve q xs t)
@@ -846,11 +849,11 @@ theorem permOfList_finRange {n : ℕ} :
   simpa using permOfList_map_finRange (Equiv.refl (Fin n))
 
 /-- The image of an initial rank segment under a permutation. -/
-def PrefixSet2 {n : ℕ} (σ : Equiv.Perm (Fin n)) (i : Fin (n + 1)) : Set (Fin n) :=
+@[expose] def PrefixSet2 {n : ℕ} (σ : Equiv.Perm (Fin n)) (i : Fin (n + 1)) : Set (Fin n) :=
   σ '' {j | j.castSucc < i}
 
 /-- A layer preserves prefix sets at every inactive rank. -/
-def OrderingStep2 {n : ℕ} (s : Fin n)
+@[expose] def OrderingStep2 {n : ℕ} (s : Fin n)
     (σ τ : Equiv.Perm (Fin n)) : Prop :=
   ∀ i : Fin (n + 1), i.val % 2 ≠ (s.val + 1) % 2 → PrefixSet2 σ i = PrefixSet2 τ i
 

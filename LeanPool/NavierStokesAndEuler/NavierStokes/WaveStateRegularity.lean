@@ -18,7 +18,7 @@ domination of its genuine parameter derivatives. No covariance
 regularity or covariance formula is an input.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedSupport
 
 /-! Genuine mean and high constraints for the joined recursively constructed family. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -16,7 +16,7 @@ import Mathlib.NumberTheory.EulerProduct.Basic
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

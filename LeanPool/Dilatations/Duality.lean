@@ -15,7 +15,7 @@ https://arxiv.org/abs/2608.09305, and `rndmx/DilCat` at commit
 `604559654c948566675da3f7709b8ad3126bd487` (Apache-2.0).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -107,7 +107,7 @@ structure Cocenter (C : Type u) [Category.{v} C] where
 
 /-- The center on `Cᵒᵖ` obtained by regarding `{[Vᵢ,dᵢ]}_{i∈I}` as `{[Vᵢ,(dᵢ)ᵒᵖ]}_{i∈I}`
 (Fact 4.2). -/
-def Cocenter.toCenterOp (co : Cocenter C) : Center Cᵒᵖ where
+@[expose] def Cocenter.toCenterOp (co : Cocenter C) : Center Cᵒᵖ where
   I := co.I
   nonempty := co.nonempty
   dom := fun i => Opposite.op (co.cod i)
@@ -128,7 +128,7 @@ def Cocenter.toCenter (co : Cocenter C) : Center C where
 
 /-- **Definition 4.3.** The codilatation of `C` with cocenter `{[Vᵢ,dᵢ]}_{i∈I}`:
 `C[{Vᵢ∘(dᵢ)⁻¹}_{i∈I}] := (Cᵒᵖ[{(dᵢ)⁻¹∘Vᵢ}_{i∈I}])ᵒᵖ`. -/
-def Codila (co : Cocenter C) : Type u := (Dila (co.toCenterOp))ᵒᵖ
+@[expose] def Codila (co : Cocenter C) : Type u := (Dila (co.toCenterOp))ᵒᵖ
 
 instance instCategoryCodila (co : Cocenter C) : Category (Codila co) := by
   unfold Codila; infer_instance
@@ -212,7 +212,7 @@ theorem Cocenter.Upsilon_isSigmaRegular (co : Cocenter C) :
 `Θ` post-composed with `G.rightOp`. This is the key bridge letting factorizations through
 `Codila co` be transported to (and from) factorizations through `Dila (co.toCenterOp)`. -/
 lemma Cocenter.comp_Upsilon_op (co : Cocenter C) (G : Codila co ⥤ D) :
-    (co.Upsilon ⋙ G).op = CatToDila (co.toCenterOp) ⋙ G.rightOp := rfl
+    (co.Upsilon ⋙ G).op = CatToDila (co.toCenterOp) ⋙ G.rightOp := by rfl
 
 /-- `ImageCenterMorphismProperty` for `(co.toCenterOp, F.op)` is exactly the `.op` of
 `ImageCenterMorphismProperty` for `(co.toCenter, F)`. -/

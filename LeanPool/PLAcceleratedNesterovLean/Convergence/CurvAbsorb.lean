@@ -12,4 +12,4 @@ public import LeanPool.PLAcceleratedNesterovLean.Convergence.CurvAbsorb.Assembly
 # Curvature absorption estimates
 -/
 
-@[expose] public section
+public section

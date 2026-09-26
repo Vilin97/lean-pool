@@ -59,7 +59,7 @@ inclusion `Ω† ⊆ Wᵢ`, which is a hypothesis here. A consumer supplies it b
   because the bundled form carries the hypotheses of both indices at once.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Set
 

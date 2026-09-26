@@ -26,7 +26,7 @@ Two classical specializations of the Cauchy identity:
 * `QSeries.euler_second_identity` — the second Euler identity.
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 open scoped Topology

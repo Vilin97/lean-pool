@@ -16,7 +16,7 @@ agreement with velocity is needed only on the target cylinder. Consequently
 no bound or representation for the truncated velocity at future times is used.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal

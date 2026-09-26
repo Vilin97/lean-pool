@@ -31,7 +31,7 @@ Bookkeeping for the optimality proof, one layer above `Jump.lean`.
   tree, and every generator it records is a genuine automorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon

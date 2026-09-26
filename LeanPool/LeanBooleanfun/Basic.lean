@@ -43,7 +43,7 @@ conventions in the context of Boolean functions, and the simplicity of working w
 * `⋆` denotes convolution
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.LeanBooleanfun.BooleanFun
 
@@ -79,7 +79,7 @@ lemma sum_translate (a : Fin n → Fin 2) : ∑ x, f x = ∑ x, f (x + a) := by
 
 /-- The expectation of a Boolean function is its average value with respect to the uniform
 probability measure on `Fin n → Fin 2`. -/
-def expectation : BooleanFunc n →ₗ[ℝ] ℝ where
+@[expose] def expectation : BooleanFunc n →ₗ[ℝ] ℝ where
   toFun := fun f ↦ (1 / 2) ^ n * ∑ i, f i
   map_add' := by
     intro f g
@@ -235,9 +235,9 @@ theorem walsh_mul_eq : χ S * χ S' = χ (symmDiff S S') := by
     intro _ ha _ _ _ _ h
     simp_all
 
-lemma inner_eq_expectation : ⟪f, g⟫ = 𝐄 (f * g) := rfl
+lemma inner_eq_expectation : ⟪f, g⟫ = 𝐄 (f * g) := by rfl
 
-lemma fourier_eq_inner : 𝓕 f S = ⟪χ S, f⟫ := rfl
+lemma fourier_eq_inner : 𝓕 f S = ⟪χ S, f⟫ := by rfl
 
 /-- Flip the `i₀`th bit of `x`. -/
 def flipAt (i₀ : Fin n) (x : Fin n → Fin 2) : Fin n → Fin 2 :=

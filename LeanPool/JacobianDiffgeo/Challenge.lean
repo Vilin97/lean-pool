@@ -75,7 +75,7 @@ otherwise the gist's, and the (overwhelmingly common) same-universe uses — inc
 in `Type 0` — elaborate verbatim.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff -- for ω notation
 

@@ -21,7 +21,7 @@ public import LeanPool.ConnesRigidity.Core
 The crossed product component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace CrossedProduct
@@ -94,7 +94,7 @@ def refl (X : HaarProbabilityAction K Ω) : EquivariantHaarEquiv X X where
 
 /-- Equivariant Haar equivalences are closed under inverse. Paper: §3.
 -/
-def symm
+@[expose] def symm
     {X : HaarProbabilityAction K Ω}
     {Y : HaarProbabilityAction K Ξ}
     (e : EquivariantHaarEquiv X Y) :
@@ -219,7 +219,7 @@ def crossedFiberwiseOperator
     {K : Type u} {H : Type v}
     [NormedAddCommGroup H] [NormedSpace ℂ H]
     (T : H →L[ℂ] H) (ξ : lp (fun _ : K ↦ H) 2) (k : K) :
-    crossedFiberwiseOperator T ξ k = T (ξ k) := rfl
+    crossedFiberwiseOperator T ξ k = T (ξ k) := by rfl
 
 /-- Base multipliers are lifted fiberwise to the crossed Hilbert space.
 Paper: §3.
@@ -237,12 +237,12 @@ def crossedMultiplier
     [AddCommGroup Ω] [TopologicalSpace Ω] [MeasurableSpace Ω]
     (X : HaarProbabilityAction K Ω)
     (f : crossedCoefficient X) (ξ : crossedHilbert X) (k : K) :
-    crossedMultiplier X f ξ k = crossedBaseMultiplier X f (ξ k) := rfl
+    crossedMultiplier X f ξ k = crossedBaseMultiplier X f (ξ k) := by rfl
 
 /-- A fiberwise linear isometry is lifted to the crossed Hilbert space.
 Paper: §3.
 -/
-def crossedFiberwiseEquiv
+@[expose] def crossedFiberwiseEquiv
     {K : Type u} {H : Type v} {J : Type w}
     [NormedAddCommGroup H] [NormedSpace ℂ H]
     [NormedAddCommGroup J] [NormedSpace ℂ J]
@@ -293,7 +293,7 @@ def crossedFiberwiseEquiv
     [NormedAddCommGroup H] [NormedSpace ℂ H]
     [NormedAddCommGroup J] [NormedSpace ℂ J]
     (e : H ≃ₗᵢ[ℂ] J) (ξ : lp (fun _ : K ↦ H) 2) (k : K) :
-    crossedFiberwiseEquiv e ξ k = e (ξ k) := rfl
+    crossedFiberwiseEquiv e ξ k = e (ξ k) := by rfl
 
 /-- The crossed Hilbert space reindexes under a group equivalence. Paper: §3.
 -/
@@ -334,12 +334,12 @@ def crossedIndexEquiv
     {K : Type u} {H : Type v}
     [NormedAddCommGroup H] [NormedSpace ℂ H]
     (e : K ≃ K) (ξ : lp (fun _ : K ↦ H) 2) (k : K) :
-    crossedIndexEquiv e ξ k = ξ (e.symm k) := rfl
+    crossedIndexEquiv e ξ k = ξ (e.symm k) := by rfl
 
 /-- The base Haar equivalence acts fiberwise on the crossed Hilbert space.
 Paper: §3.
 -/
-def crossedBaseHaarEquiv
+@[expose] def crossedBaseHaarEquiv
     {K : Type u} {Ω : Type v} {Ξ : Type w} [Group K]
     [AddCommGroup Ω] [TopologicalSpace Ω] [MeasurableSpace Ω]
     [AddCommGroup Ξ] [TopologicalSpace Ξ] [MeasurableSpace Ξ]
@@ -390,12 +390,12 @@ def crossedBaseHaarEquiv
     (e : EquivariantHaarEquiv X Y) (f : crossedBaseHilbert X) :
     crossedBaseHaarEquiv e f =
       Lp.compMeasurePreserving e.toMeasurableEquiv.symm
-        (EquivariantHaarEquiv.symm e).measure_preserving f := rfl
+        (EquivariantHaarEquiv.symm e).measure_preserving f := by rfl
 
 /-- The crossed-product group unitary implements the action on the base.
 Paper: §3.
 -/
-def crossedActionL2Equiv
+@[expose] def crossedActionL2Equiv
     {K : Type u} {Ω : Type v} [Group K]
     [AddCommGroup Ω] [TopologicalSpace Ω] [MeasurableSpace Ω]
     (X : HaarProbabilityAction K Ω) (k : K) :
@@ -441,7 +441,7 @@ def crossedActionL2Equiv
     (f : crossedBaseHilbert X) :
     crossedActionL2Equiv X k f =
       Lp.compMeasurePreserving (X.action k⁻¹)
-        (X.action_preserves_measure k⁻¹) f := rfl
+        (X.action_preserves_measure k⁻¹) f := by rfl
 
 /-- The crossed-product group unitary on the indexed Hilbert space.
 Paper: §3.
@@ -460,7 +460,7 @@ def crossedGroupUnitary
     (X : HaarProbabilityAction K Ω) (k : K)
     (ξ : crossedHilbert X) (h : K) :
     crossedGroupUnitary X k ξ h =
-      crossedActionL2Equiv X k (ξ (k⁻¹ * h)) := rfl
+      crossedActionL2Equiv X k (ξ (k⁻¹ * h)) := by rfl
 
 /-- The standard two-family crossed-product generator set.
 Paper: §3.
@@ -477,7 +477,7 @@ def crossedGeneratorSet
 /-- The crossed-product vacuum is the constant base vector at the identity.
 Paper: §3.
 -/
-def crossedVacuum
+@[expose] def crossedVacuum
     {K : Type u} {Ω : Type v} [Group K]
     [AddCommGroup Ω] [TopologicalSpace Ω] [MeasurableSpace Ω]
     (X : HaarProbabilityAction K Ω) : crossedHilbert X := by

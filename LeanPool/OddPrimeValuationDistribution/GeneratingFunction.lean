@@ -18,7 +18,7 @@ denominator-cleared, subtraction-free form of
 `(1 - X * T) / (1 - (half + 1) * (1 + X) * T + p * X * T ^ 2)`.
 -/
 
-@[expose] public section
+public section
 
 namespace OddPrimeValuationDistribution
 

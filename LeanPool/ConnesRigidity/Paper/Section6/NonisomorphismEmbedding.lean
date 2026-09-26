@@ -18,7 +18,7 @@ import Mathlib.Algebra.Algebra.ZMod
 The nonisomorphism embedding component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperNonisomorphism

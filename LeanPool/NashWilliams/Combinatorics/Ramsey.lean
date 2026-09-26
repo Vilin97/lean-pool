@@ -9,4 +9,4 @@ public import LeanPool.NashWilliams.Combinatorics.Ramsey.Infinite
 
 /-! Infinite Ramsey theory for finite colorings. -/
 
-@[expose] public section
+public section

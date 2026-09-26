@@ -24,7 +24,7 @@ model extraction involved:
   strict-order hypotheses, so `RelEmbedding.natGT` is deliberately not used).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

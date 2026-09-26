@@ -17,4 +17,4 @@ unit disc, including the classes `S` and `Σ`, the square-root transform of clas
 and the connection between them.
 -/
 
-@[expose] public section
+public section

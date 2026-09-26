@@ -22,7 +22,7 @@ are changed. The extra lower bound can include the actual terminal-wave
 radius, before the recursive solve begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -38,32 +38,32 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   (L : EulerTransversePacketJoin.Budget D τ hτ hτT B ι q)
 
 /-- Weak radius as an element of `ℝ`. -/
-def weakRadius : ℝ :=
+@[expose] def weakRadius : ℝ :=
   2*blockCost ι q τ L.Rc L.C₀ L.C₁ L.CH (D.initial τ hτ hτT.le).frameLower
     (endpointForcingCost ι q τ L.Rc L.C₁)*(sobolevCoefficientRadius ι L.Rc+1)
 
 /-- Strong radius as an element of `ℝ`. -/
-def strongRadius : ℝ :=
+@[expose] def strongRadius : ℝ :=
   2*gramBlockCost ι q (D.initial τ hτ hτT.le).frameLower L.Rc L.C₀
     (accelerationBlockAmplitude ι q L.Rc L.C₀ L.C₁ (endpointForcingCost ι q τ L.Rc L.C₁) 1) *
       (sobolevCoefficientRadius ι L.Rc+1)
 
 /-- Uniform radius as an element of `ℝ`. -/
-def uniformRadius : ℝ :=
+@[expose] def uniformRadius : ℝ :=
   2*gramBlockCost ι q (D.initial τ hτ hτT.le).frameLower L.Rc L.C₀
     (accelerationBlockAmplitude ι q L.Rc L.C₀ L.C₁ (endpointForcingCost ι q τ L.Rc L.C₁) (traceCost
         τ)) *
       (sobolevCoefficientRadius ι L.Rc+1)
 
 /-- Forward radius as an element of `ℝ`. -/
-def forwardRadius : ℝ :=
+@[expose] def forwardRadius : ℝ :=
   2*forwardSobolevCost ι q (D.T-τ) L.C (τ⁻¹+traceCost τ)
     (forcingCost ι q L.Ri L.C₀*0) (18*L.Ri*L.C₀*L.C₁) (4*L.Ri) *
       (sobolevCoefficientRadius ι (4*L.Ri)+1)
 
 /-- Required radius, given by `max extra (max L.R (max (weakRadius L) (max (strongRadius L) (max
 (uniformRadius L) (forwardRadius L)))))`. -/
-def requiredRadius (extra : ℝ) : ℝ :=
+@[expose] def requiredRadius (extra : ℝ) : ℝ :=
   max extra (max L.R (max (weakRadius L) (max (strongRadius L) (max (uniformRadius L)
       (forwardRadius L)))))
 
@@ -111,7 +111,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -128,7 +128,7 @@ variable {P : ℝ}
   (C : ℝ)
 
 /-- Grade radius, constructed using `max`. -/
-def gradeRadius : ℝ :=
+@[expose] def gradeRadius : ℝ :=
   max L.R (max (H.commonCost*C) (max (H.correctorAmplitude (P := P) N*C)
     (max (H.correctorTimeAmplitude (P := P) N*C) (3*H.pressureAmplitude (P := P) N*C))))
 

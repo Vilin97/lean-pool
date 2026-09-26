@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerDifference
 Sobolev evolution used by the H³ stability estimate. The solenoidal
 constraint at the endpoints follows by L² continuity from the interior. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -16,7 +16,7 @@ This file continues the development of `Pdl.ClusterItp` with
 * Lemma 10.3: `Γ₁ ⊨ θ_r`.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

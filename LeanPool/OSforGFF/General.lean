@@ -28,4 +28,4 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 Import aggregator for the `General` directory.
 -/
 
-@[expose] public section
+public section

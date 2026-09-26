@@ -9,12 +9,12 @@ public import LeanPool.Erdos97ConvexOctagon.Certificates
 
 /-! # Fast validation of certificates against packed incidence tables -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 
 /-- Validate the tail of a mutual-edge tree directly against a packed table. -/
-def packedExtendsTreeB
+@[expose] def packedExtendsTreeB
     (code : UInt64) (reached : Finset Vertex) : List Vertex → Bool
   | [] => true
   | vertex :: remaining =>
@@ -25,20 +25,20 @@ def packedExtendsTreeB
         packedExtendsTreeB code (insert vertex reached) remaining
 
 /-- Validate a mutual-edge spanning tree directly against a packed table. -/
-def packedComponentTreeB
+@[expose] def packedComponentTreeB
     (code : UInt64) (root : Vertex) : List Vertex → Bool
   | [] => false
   | first :: remaining =>
       decide (first = root) && packedExtendsTreeB code {root} remaining
 
 /-- Test whether a packed code selects an edge incident to the given component. -/
-def packedTreeLabelledEdgeB
+@[expose] def packedTreeLabelledEdgeB
     (code : UInt64) (component : List Vertex) (a b : Vertex) : Bool :=
   (decide (a ∈ component) && packedSelectsB code a b) ||
     (decide (b ∈ component) && packedSelectsB code b a)
 
 /-- Check the residual certificate encoded by a packed code and payload. -/
-def packedResidualValidB (code payload : UInt64) : Bool :=
+@[expose] def packedResidualValidB (code payload : UInt64) : Bool :=
   let classIndex := payloadClass payload
   let forward := decodeMap (payloadForwardCode payload)
   let inverse := decodeMap (payloadInverseCode payload)
@@ -52,7 +52,7 @@ def packedResidualValidB (code payload : UInt64) : Bool :=
             (residualRepresentative (Fin.ofNat 13 classIndex)).targets (forward vertex))))
 
 /-- Kernel-check a certificate without first materializing eight finite sets. -/
-def Certificate.validPackedB (code : UInt64) : Certificate → Bool
+@[expose] def Certificate.validPackedB (code : UInt64) : Certificate → Bool
   | .k4 root component a b c d =>
       packedComponentTreeB code root component && decide [a, b, c, d].Nodup &&
         packedTreeLabelledEdgeB code component a b &&

@@ -24,7 +24,7 @@ import Mathlib.Topology.ContinuousMap.StoneWeierstrass
 The factor closure component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperFactorClosure

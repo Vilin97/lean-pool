@@ -13,4 +13,4 @@ public import LeanPool.RlTheoryInLean.MeasureTheory.MeasurableSpace.Construction
 Import-only index for the `MeasurableSpace` directory of the RL-theory-in-Lean import.
 -/
 
-@[expose] public section
+public section

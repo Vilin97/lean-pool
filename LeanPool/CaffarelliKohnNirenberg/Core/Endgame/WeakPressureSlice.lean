@@ -14,7 +14,7 @@ The particular gradient is supplied as a measurable field with its weak
 identity. Only the test functions are differentiated classically.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal

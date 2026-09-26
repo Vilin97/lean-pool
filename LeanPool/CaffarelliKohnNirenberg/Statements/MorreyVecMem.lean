@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Morrey.Basic
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal
@@ -24,7 +24,7 @@ open CKN.Foundation.Parabolic.Morrey
 namespace CKN
 
 /-- Componentwise parabolic Morrey membership used by paper label `def:parabolic-morrey`. -/
-def morreyVecMem (P τ : ℝ) (S : Set ParabolicPoint)
+@[expose] def morreyVecMem (P τ : ℝ) (S : Set ParabolicPoint)
     (u : ParabolicPoint → Vec3) : Prop :=
   ∀ i : Fin 3,
     morreyBallNorm P τ (S.indicator (fun z => u z i)) < ∞

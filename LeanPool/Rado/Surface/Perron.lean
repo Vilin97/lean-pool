@@ -24,7 +24,7 @@ upper envelope of a Perron family is harmonic
 Prop. 1.2.3).
 -/
 
-@[expose] public section
+public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex Filter
 

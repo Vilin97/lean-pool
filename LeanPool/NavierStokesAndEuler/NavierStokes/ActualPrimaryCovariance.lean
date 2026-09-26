@@ -17,7 +17,7 @@ those of `CorrectionInitialization.ActualPrimary`.  The finite family is
 assembled before averaging.  The fixed starting threshold is retained.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -144,7 +144,7 @@ theorem physicalTangentMode_eq_slot (j : Fin 2) (L : Label B N0) (p : Slow)
 /-! ## The same physical point in each fixed label's native coordinates -/
 
 /-- Native point, given by `nativeSlow L (toAbsolute n x)`. -/
-noncomputable def nativePoint (n : ℕ) (x : Point) (L : Label B N0) : Slow :=
+@[expose] noncomputable def nativePoint (n : ℕ) (x : Point) (L : Label B N0) : Slow :=
   nativeSlow L (toAbsolute n x)
 
 theorem nativePoint_auxiliary (n : ℕ) (x : Point) (L : Label B N0) (Y : Plane) :
@@ -279,7 +279,7 @@ theorem signedLabelOf_injective : Function.Injective (signedLabelOf (B := B) (N0
   rfl
 
 /-- View tangent, constructed using `physicalTangentMode`. -/
-noncomputable def viewTangent (n : ℕ) (x : Point) (l : Label B N0 × Fin 2)
+@[expose] noncomputable def viewTangent (n : ℕ) (x : Point) (l : Label B N0 × Fin 2)
     (Y : Plane) (theta : ℝ) : Fin 3 → ℝ :=
   physicalTangentMode l.2 l.1 (nativePoint n x l.1)
     ((CommonCoverSolve.coverPower (CorrectionInitialization.CommonWindow.index h n)).symm Y) theta
@@ -579,13 +579,13 @@ theorem physicalScale_tail (B N0 : ℕ) {n : ℕ} (hn : (choice B N0).prepared.N
 
 /-- Tangent sum, defined pointwise by `∑ l ∈ activeLabels standardRegion B N0 n, (piece
 standardRegion l.2 l.1).tangentVelocity n z i`. -/
-noncomputable def tangentSum (B N0 : ℕ) : CorrectionState.Oscillation Point :=
+@[expose] noncomputable def tangentSum (B N0 : ℕ) : CorrectionState.Oscillation Point :=
   fun n z i => ∑ l ∈ activeLabels standardRegion B N0 n,
     (piece standardRegion l.2 l.1).tangentVelocity n z i
 
 /-- Tangent covariance, given by `CorrectionState.bilinearCovariance (tangentSum B N0)
 (tangentSum B N0) i j`. -/
-noncomputable def tangentCovariance (B N0 : ℕ) (i j : Fin 3) :
+@[expose] noncomputable def tangentCovariance (B N0 : ℕ) (i j : Fin 3) :
     CorrectionState.ScalarField Point :=
   CorrectionState.bilinearCovariance (tangentSum B N0) (tangentSum B N0) i j
 
@@ -1105,7 +1105,7 @@ theorem physicalWindow_continuousOn (n : ℕ) :
 
 /-- Cut amplitude, given by `((chartCoefficients j L).withCutoff (chartCutoff j L)).amplitude
 n`. -/
-noncomputable def cutAmplitude (j : Fin 2) (L : Label B N0) (n : ℕ) :
+@[expose] noncomputable def cutAmplitude (j : Fin 2) (L : Label B N0) (n : ℕ) :
     FullPoint → HarmonicCalculus.ComplexVector :=
   ((chartCoefficients j L).withCutoff (chartCutoff j L)).amplitude n
 

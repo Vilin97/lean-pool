@@ -43,7 +43,7 @@ Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
 -/
 
-@[expose] public section
+public section
 
 /-! ### Minkowski's inequality
 
@@ -87,9 +87,11 @@ section Blocks
 variable {W V : Type*}
 
 /-- The `w`-th block of an input of `comp f g`, i.e. `x` viewed as a `W`-indexed family. -/
+@[expose]
 def blk (x : Input (W × V)) : W → Input V := Function.curry x
 
 /-- The string of block values `w ↦ g (blk x w)`, which `comp f g` feeds into `f`. -/
+@[expose]
 def topBits (g : Input V → Bool) (x : Input (W × V)) : Input W := fun w ↦ g (blk x w)
 
 /-- `comp f g` is `f` applied to the top bits. -/
@@ -103,6 +105,7 @@ theorem blk_injective : Function.Injective (blk : Input (W × V) → W → Input
 variable [DecidableEq W]
 
 /-- `setBlk x w z` replaces the `w`-th block of `x` by `z`. -/
+@[expose]
 def setBlk (x : Input (W × V)) (w : W) (z : Input V) : Input (W × V) :=
   Function.uncurry (Function.update (blk x) w z)
 

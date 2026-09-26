@@ -15,7 +15,7 @@ public import Mathlib.RingTheory.Derivation.Basic
 Mickelsson operators, interlacing schedules, and canonical projected-axis witnesses.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -35,7 +35,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRankLowerRowBranching
 open MetricCodes.Spherical.HigherHarmonicYoung.AllRankArbitraryRowBranchingOperator
 
 /-- The upper polarization path commutator used in the spherical-code argument. -/
-def upperPolarizationPathCommutator {r n : ℕ}
+@[expose] def upperPolarizationPathCommutator {r n : ℕ}
     (a b : Fin (r + 1)) :
     List (Fin (r + 1)) →
       (PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n)
@@ -4147,7 +4147,7 @@ section
 open scoped BigOperators InnerProductSpace
 
 /-- The young ambient casimir used in the spherical-code argument. -/
-def youngAmbientCasimir {r n : ℕ} (lam : Fin (r + 1) → ℕ) :
+@[expose] def youngAmbientCasimir {r n : ℕ} (lam : Fin (r + 1) → ℕ) :
     HarmonicYoungSpace (n := n) lam →ₗ[ℝ]
       HarmonicYoungSpace (n := n) lam :=
   (2 : ℝ)⁻¹ •
@@ -4790,7 +4790,7 @@ open scoped BigOperators InnerProductSpace
 open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRankLowerRowBranching
 
 /-- The all rank casimir eigenvalue used in the spherical-code argument. -/
-def allRankCasimirEigenvalue {r : ℕ}
+@[expose] def allRankCasimirEigenvalue {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) : ℝ :=
   ∑ i : Fin (r + 1),
     (lam i : ℝ) * ((lam i : ℝ) + (n : ℝ) - 2 - 2 * (i.val : ℝ))
@@ -5929,7 +5929,7 @@ variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 /-- The adjacent normalized axis coefficient used in the spherical-code argument. -/
-def adjacentNormalizedAxisCoefficient
+@[expose] def adjacentNormalizedAxisCoefficient
     (sourceGram targetGram coefficient : ℝ) : ℝ :=
   coefficient * Real.sqrt targetGram / Real.sqrt sourceGram
 
@@ -6848,7 +6848,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung.BGGRootComplex
 open MetricCodes.Spherical.HigherYoungInternalRowPolarizationDescent
 
 /-- The lowered internal young weight used in the spherical-code argument. -/
-def loweredInternalYoungWeight {r : ℕ}
+@[expose] def loweredInternalYoungWeight {r : ℕ}
     (lam : Fin (r + 1) → ℕ) (a : Fin (r + 1)) :
     Fin (r + 1) → ℕ :=
   Function.update lam a (lam a - 1)

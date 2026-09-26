@@ -42,7 +42,7 @@ The trivial front is `{[]}` (rank `0`). For a front, `[] ∉ F`, `F ≠ {[]}`, `
 (see `IsFront.nil_not_mem_iff`).
 -/
 
-@[expose] public section
+public section
 
 open Set List
 
@@ -96,7 +96,7 @@ variable {F : Set (List ℕ)}
 
 /-- `F after a` (the *ray* of `F` at `a`): strip the leading `a` from the elements of `F` that
 start with `a`. -/
-def ray (F : Set (List ℕ)) (a : ℕ) : Set (List ℕ) := {t | a :: t ∈ F}
+@[expose] def ray (F : Set (List ℕ)) (a : ℕ) : Set (List ℕ) := {t | a :: t ∈ F}
 
 /-- Density transported: any strictly monotone subsequence of `M` has an initial segment in `F`. -/
 theorem exists_frontElem_isInit (hF : IsFront F M) {N : ℕ → ℕ} (hN : StrictMono N)

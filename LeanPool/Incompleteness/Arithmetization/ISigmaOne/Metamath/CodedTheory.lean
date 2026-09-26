@@ -12,7 +12,7 @@ import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # CodedTheory -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -34,7 +34,7 @@ variable {L : Language}
 variable {M : Type*} [Structure L M]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def curve (σ : Semisentence L 1) : Set M := {x | M ⊧/![x] σ}
+@[expose] def curve (σ : Semisentence L 1) : Set M := {x | M ⊧/![x] σ}
 
 variable {σ π : Semisentence L 1}
 
@@ -67,7 +67,7 @@ class Delta1Definable (T : Theory L) extends Arith.LDef.TDef L.lDef where
   isDelta1 : ch.ProvablyProperOn 𝐈Sg1
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def tDef (T : Theory L) [d : T.Delta1Definable] : L.lDef.TDef := d.toTDef
+@[expose] def tDef (T : Theory L) [d : T.Delta1Definable] : L.lDef.TDef := d.toTDef
 
 @[simp] lemma _root_.LO.FirstOrder.Theory.Delta1Definable.mem_iff' (T : Theory L) [d :
     T.Delta1Definable] :
@@ -103,7 +103,7 @@ instance tDef_defined : (T.codeIn V).Defined T.tDef where
 variable (T V)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def tCodeIn (T : Theory L) [T.Delta1Definable] : (L.codeIn V).TTheory where
+@[expose] def tCodeIn (T : Theory L) [T.Delta1Definable] : (L.codeIn V).TTheory where
   thy := T.codeIn V
   pthy := T.tDef
 

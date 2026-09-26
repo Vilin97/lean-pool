@@ -21,7 +21,7 @@ smoothness follows from inversion at units of that algebra. No smoothness
 of a pre-existing inverse is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -63,7 +63,7 @@ theorem gramInversePath_eq_ringInverse :
   (Ring.inverse_unit (M₀ := C(Icc (0 : ℝ) T,U →L[ℝ] U)) (gramPathUnit T Q c hc hQ)).symm
 
 /-- The actual inverse acting on continuous forcing paths. -/
-def solve : C(Icc (0 : ℝ) T,U) →L[ℝ] C(Icc (0 : ℝ) T,U) :=
+@[expose] def solve : C(Icc (0 : ℝ) T,U) →L[ℝ] C(Icc (0 : ℝ) T,U) :=
   multiplier (gramInversePath T Q c hc hQ)
 
 /-- The continuous solution satisfies the actual coefficient equation. -/

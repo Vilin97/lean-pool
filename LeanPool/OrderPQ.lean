@@ -31,7 +31,7 @@ Tags: group-theory, finite-groups, semidirect-products
 MSC: 20D20, 20E22, 20D60
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Provenance and scope

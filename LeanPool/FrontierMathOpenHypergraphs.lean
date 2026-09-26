@@ -24,4 +24,4 @@ Tags: combinatorics, hypergraphs, ramsey-theory, extremal-combinatorics, frontie
 MSC: 05C65, 05D10, 03E02
 -/
 
-@[expose] public section
+public section

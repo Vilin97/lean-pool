@@ -19,7 +19,7 @@ improper radial integral.  Its regularity is obtained by separating the pure
 heat tail from a compact taper correction.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,7 +31,7 @@ namespace NavierStokes.TerminalPressure
 
 
 /-- The exponent of the physical angular heat amplitude. -/
-noncomputable def amplitudeExponent (h : ℝ) : ℝ := 1 / 2 + h
+@[expose] noncomputable def amplitudeExponent (h : ℝ) : ℝ := 1 / 2 + h
 
 /-- Derivatives with respect to the actual scaled heat parameter. -/
 noncomputable def heatJet (h : ℝ) (n : ℕ) (ν v : ℝ) : ℝ :=
@@ -42,7 +42,7 @@ noncomputable def heatJetBound (h : ℝ) (n : ℕ) : ℝ :=
   2 ^ n * ParametricHeatTail.heatJetBound h n
 
 /-- Pressure weight, given by `v ^ (-2 * amplitudeExponent h - 1)`. -/
-noncomputable def pressureWeight (h v : ℝ) : ℝ :=
+@[expose] noncomputable def pressureWeight (h v : ℝ) : ℝ :=
   v ^ (-2 * amplitudeExponent h - 1)
 
 /-- Heat pressure jet, given by `pressureWeight h v * ParametricHeatTail.jetProduct (fun i =>
@@ -170,7 +170,7 @@ theorem heatPressureFactor_contDiffOn {h : ℝ} (hh : 0 < h) :
 
 /-- Heat density, given by `pressureWeight h v * RadialHeatProfile.profile (1 + h) (2 * ν / v) ^
 2`. -/
-noncomputable def heatDensity (h ν v : ℝ) : ℝ :=
+@[expose] noncomputable def heatDensity (h ν v : ℝ) : ℝ :=
   pressureWeight h v * RadialHeatProfile.profile (1 + h) (2 * ν / v) ^ 2
 
 /-- Tapered density, given by `heatDensity h p.1 v * f (p.2 + Real.log v) ^ 2`. -/
@@ -864,7 +864,7 @@ theorem logScaleDerivative_bound {h : ℝ} {p : SimilarityProfile.PhysicalPoint}
 /-! ## The actual outgoing taper and its terminal edge estimate -/
 
 /-- Outgoing taper, given by `OutgoingTail.tailShape d (y - y0)`. -/
-noncomputable def outgoingTaper (d : OutgoingTail.TailData) (y0 y : ℝ) : ℝ :=
+@[expose] noncomputable def outgoingTaper (d : OutgoingTail.TailData) (y0 y : ℝ) : ℝ :=
   OutgoingTail.tailShape d (y - y0)
 
 theorem outgoingTaper_contDiff (d : OutgoingTail.TailData) (y0 : ℝ) :
@@ -892,7 +892,7 @@ theorem outgoingTaper_plateau (d : OutgoingTail.TailData) (y0 y : ℝ) (hy : y0 
 
 /-- Outgoing pressure, given by `TerminalStress.canonicalPressure
 (TerminalStress.swirlCoefficient C d.h (outgoingTaper d y0))`. -/
-noncomputable def outgoingPressure (C : ℝ) (d : OutgoingTail.TailData) (y0 : ℝ) :
+@[expose] noncomputable def outgoingPressure (C : ℝ) (d : OutgoingTail.TailData) (y0 : ℝ) :
     SimilarityProfile.PhysicalProfile :=
   TerminalStress.canonicalPressure (TerminalStress.swirlCoefficient C d.h (outgoingTaper d y0))
 
@@ -1103,7 +1103,7 @@ theorem canonicalPressure_partialZ_contDiffAt (C : ℝ) {h Y : ℝ} {f : ℝ →
 
 /-- Since `ds = r dr`, this is the cylindrical backward primitive with weight
 `r`. It uses the actual axial derivative of the canonical pressure. -/
-noncomputable def axialBackwardStress (C h : ℝ) (f : ℝ → ℝ) (t z r : ℝ) : ℝ :=
+@[expose] noncomputable def axialBackwardStress (C h : ℝ) (f : ℝ → ℝ) (t z r : ℝ) : ℝ :=
   (∫ s in Ioi (r ^ 2 / 2), SimilarityProfile.partialZ (TerminalStress.canonicalPressure
     (TerminalStress.swirlCoefficient C h f)) (t, (s, z))) / r
 
@@ -1343,7 +1343,7 @@ theorem outgoingAmplitude_suppressed (d : OutgoingTail.TailData) :
 
 /-- The normalization is exactly the physical carrier normalization in
 `ParametricHeatTail.physicalEdit_heat_carrier`. -/
-noncomputable def releasedNormalization (d : OutgoingTail.TailData) (K : ℝ) : ℝ :=
+@[expose] noncomputable def releasedNormalization (d : OutgoingTail.TailData) (K : ℝ) : ℝ :=
   HeatTailEdit.outgoingAmplitude d * K ^ amplitudeExponent d.h
 
 theorem releasedNormalization_pos (d : OutgoingTail.TailData) {K : ℝ} (hK : 0 < K) :

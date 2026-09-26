@@ -35,7 +35,7 @@ These are now thin wrappers around:
 * Mathlib `MeromorphicAt`, `meromorphicOrderAt`
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval

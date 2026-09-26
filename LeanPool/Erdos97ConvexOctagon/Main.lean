@@ -28,4 +28,4 @@ This is the eight-point convex case only. It does not prove the general open
 problem.
 -/
 
-@[expose] public section
+public section

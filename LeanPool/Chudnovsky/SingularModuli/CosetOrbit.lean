@@ -53,7 +53,7 @@ with `c n = jqInt.coeff n ∈ ℤ` the integer `j`-coefficients. The `b`-depende
 `(B3)`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -78,9 +78,9 @@ def Acol (m : ℕ) [NeZero m] (b : ℤ) : GL (Fin 2) ℝ :=
   .mkOfDetNeZero !![1, (b : ℝ); 0, (m : ℝ)] (by
     simp [Matrix.det_fin_two_of, Nat.cast_ne_zero.mpr (NeZero.ne m)])
 
-@[simp] lemma val_AInf [NeZero m] : (AInf m).val = !![(m : ℝ), 0; 0, 1] := rfl
+@[simp] lemma val_AInf [NeZero m] : (AInf m).val = !![(m : ℝ), 0; 0, 1] := by rfl
 
-@[simp] lemma val_Acol [NeZero m] (b : ℤ) : (Acol m b).val = !![1, (b : ℝ); 0, (m : ℝ)] := rfl
+@[simp] lemma val_Acol [NeZero m] (b : ℤ) : (Acol m b).val = !![1, (b : ℝ); 0, (m : ℝ)] := by rfl
 
 lemma det_AInf_pos [NeZero m] : 0 < (AInf m).det.val := by
   rw [Matrix.GeneralLinearGroup.val_det_apply, val_AInf, Matrix.det_fin_two_of]
@@ -109,10 +109,10 @@ def f (m : ℕ) [NeZero m] : Option (ZMod m) → ℍ → ℂ
   | none, τ => j (AInf m • τ)
   | some b, τ => j (Acol m b.val • τ)
 
-@[simp] lemma f_none [NeZero m] (τ : ℍ) : f m none τ = j (AInf m • τ) := rfl
+@[simp] lemma f_none [NeZero m] (τ : ℍ) : f m none τ = j (AInf m • τ) := by rfl
 
 @[simp] lemma f_some [NeZero m] (b : ZMod m) (τ : ℍ) :
-    f m (some b) τ = j (Acol m b.val • τ) := rfl
+    f m (some b) τ = j (Acol m b.val • τ) := by rfl
 
 /-- Each orbit function is holomorphic on `ℍ`. -/
 lemma mdifferentiable_f [NeZero m] (i : Option (ZMod m)) : MDiff (f m i) := by
@@ -157,8 +157,8 @@ private lemma dvd_val_add [NeZero m] (b : ZMod m) (c : ℤ) :
 /-- The permutation of the orbit induced by `T`: rotation `some b ↦ some (b+1)`, `none` fixed. -/
 def σT (m : ℕ) : Equiv.Perm (Option (ZMod m)) := Equiv.optionCongr (Equiv.addRight (1 : ZMod m))
 
-@[simp] lemma σT_none : σT m none = none := rfl
-@[simp] lemma σT_some (b : ZMod m) : σT m (some b) = some (b + 1) := rfl
+@[simp] lemma σT_none : σT m none = none := by rfl
+@[simp] lemma σT_some (b : ZMod m) : σT m (some b) = some (b + 1) := by rfl
 
 /-- **`T`-permutation**: `f i (T • τ) = f (σT i) τ`, i.e. `f i (τ + 1) = f (σT i) τ`. -/
 lemma f_T_smul [NeZero m] (i : Option (ZMod m)) (τ : ℍ) :
@@ -220,7 +220,7 @@ lemma sSfun_involutive [Fact m.Prime] : Function.Involutive (sSfun m) := by
 /-- The `S`-permutation as an `Equiv.Perm`. -/
 def σS (m : ℕ) [Fact m.Prime] : Equiv.Perm (Option (ZMod m)) := sSfun_involutive.toPerm
 
-@[simp] lemma σS_apply [Fact m.Prime] (i : Option (ZMod m)) : σS m i = sSfun m i := rfl
+@[simp] lemma σS_apply [Fact m.Prime] (i : Option (ZMod m)) : σS m i = sSfun m i := by rfl
 
 /-- **`S`-permutation**: `f i (S • τ) = f (σS i) τ`, i.e. `f i (-1/τ) = f (σS i) τ`.
 This is what makes the elementary symmetric functions of the orbit `SL(2,ℤ)`-invariant. -/
@@ -280,10 +280,10 @@ and composing `JFunction`'s integer expansion `hasSum_j_mul_q` yields the coeffi
 
 /-- The base variable `w = exp(2πiτ/m)`: an honest holomorphic function of `τ`
 (no `q^{1/m}`), with `w^m = q τ`. -/
-def wParam (m : ℕ) (τ : ℍ) : ℂ := Complex.exp (2 * π * Complex.I * (τ : ℂ) / m)
+@[expose] def wParam (m : ℕ) (τ : ℍ) : ℂ := Complex.exp (2 * π * Complex.I * (τ : ℂ) / m)
 
 /-- The `m`-th root of unity `ζ = exp(2πi/m)`. -/
-def zetaM (m : ℕ) : ℂ := Complex.exp (2 * π * Complex.I / m)
+@[expose] def zetaM (m : ℕ) : ℂ := Complex.exp (2 * π * Complex.I / m)
 
 lemma wParam_ne_zero (τ : ℍ) : wParam m τ ≠ 0 := Complex.exp_ne_zero _
 

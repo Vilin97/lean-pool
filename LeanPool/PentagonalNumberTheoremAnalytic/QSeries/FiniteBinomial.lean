@@ -19,7 +19,7 @@ $$\prod_{k=0}^{n-1}(1 + z q^k) = \sum_{k=0}^{n} q^{\binom{k}{2}} \binom{n}{k}_q 
 * `QSeries.prod_one_add_mul_pow_eq_sum_qBinom` — the finite q-binomial theorem.
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 open scoped Topology

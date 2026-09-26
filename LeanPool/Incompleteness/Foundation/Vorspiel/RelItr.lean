@@ -14,11 +14,11 @@ import Mathlib.Tactic.SetLike
 
 /-! # RelItr -/
 
-@[expose] public section
+public section
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Rel.iterate (R : Rel α α) : ℕ → α → α → Prop
+@[expose] def Rel.iterate (R : Rel α α) : ℕ → α → α → Prop
   | 0 => (· = ·)
   | n + 1 => fun x y ↦ ∃ z, R x z ∧ R.iterate n z y
 

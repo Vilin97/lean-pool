@@ -24,7 +24,7 @@ This module is quantum-free: it only knows about `ℂ`, finite sums, the real pa
 `⟨ω, x⟩ = ∑ i, ω i * x i`, and real one-variable trigonometric identities.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -33,7 +33,7 @@ open Complex BigOperators
 variable {k : ℕ}
 
 /-- The real pairing `⟨ω, x⟩ = ∑ i, ω i * x i` of a frequency vector with a data point. -/
-def freqDot (ω x : Fin k → ℝ) : ℝ := ∑ i, ω i * x i
+@[expose] def freqDot (ω x : Fin k → ℝ) : ℝ := ∑ i, ω i * x i
 
 /-- An **trigonometric polynomial** in `k` real variables: the function
 `x ↦ ∑_{ω ∈ freqs} coeff ω · exp(i⟨ω, x⟩)`. The data is a finite set of
@@ -45,7 +45,7 @@ structure TrigPolynomial (k : ℕ) where
   coeff : (Fin k → ℝ) → ℂ
 
 /-- Evaluate an trigonometric polynomial at a data point `x`. -/
-noncomputable def TrigPolynomial.eval (f : TrigPolynomial k) (x : Fin k → ℝ) : ℂ :=
+@[expose] noncomputable def TrigPolynomial.eval (f : TrigPolynomial k) (x : Fin k → ℝ) : ℂ :=
   ∑ ω ∈ f.freqs, f.coeff ω * Complex.exp (Complex.I * (freqDot ω x : ℂ))
 
 /-- The pairing is additive in the frequency argument. -/
@@ -76,6 +76,7 @@ def TrigPolynomial.zero : TrigPolynomial k where
   simp [TrigPolynomial.eval, TrigPolynomial.zero]
 
 /-- Scale an trigonometric polynomial by a complex constant. -/
+@[expose]
 def TrigPolynomial.smul (c : ℂ) (f : TrigPolynomial k) : TrigPolynomial k where
   freqs := f.freqs
   coeff := fun ω => c * f.coeff ω
@@ -99,6 +100,7 @@ theorem TrigPolynomial.eval_add (f g : TrigPolynomial k) (x : Fin k → ℝ) :
 
 /-- Multiply an trigonometric polynomial by the character `e^{i⟨a,x⟩}`: shifts every frequency
 by `a` and leaves the coefficients (re-indexed) unchanged. -/
+@[expose]
 noncomputable def TrigPolynomial.expMul (a : Fin k → ℝ) (f : TrigPolynomial k) :
     TrigPolynomial k where
   freqs := f.freqs.image (fun ω => ω + a)
@@ -117,6 +119,7 @@ theorem TrigPolynomial.eval_expMul (a : Fin k → ℝ) (f : TrigPolynomial k)
 
 /-- A finite sum of trigonometric polynomials: frequencies union over the index,
 with coefficients added. -/
+@[expose]
 noncomputable def TrigPolynomial.sum {ι : Type*} (s : Finset ι)
     (F : ι → TrigPolynomial k) : TrigPolynomial k where
   freqs := s.biUnion (fun i => (F i).freqs)
@@ -134,6 +137,7 @@ theorem TrigPolynomial.eval_sum {ι : Type*} (s : Finset ι) (F : ι → TrigPol
 
 /-- Product of two trigonometric polynomials: realised as the sum, over `f`'s frequencies, of `g`
 shifted by that frequency and scaled by `f`'s coefficient. -/
+@[expose]
 noncomputable def TrigPolynomial.mul (f g : TrigPolynomial k) : TrigPolynomial k :=
   TrigPolynomial.sum f.freqs (fun ω => (g.expMul ω).smul (f.coeff ω))
 
@@ -148,6 +152,7 @@ theorem TrigPolynomial.eval_mul (f g : TrigPolynomial k) (x : Fin k → ℝ) :
   rfl
 
 /-- Complex conjugate of an trigonometric polynomial: negate frequencies, conjugate coefficients. -/
+@[expose]
 noncomputable def TrigPolynomial.conj (f : TrigPolynomial k) : TrigPolynomial k where
   freqs := f.freqs.image (fun ω => -ω)
   coeff := fun ω => (starRingEnd ℂ) (f.coeff (-ω))
@@ -200,6 +205,7 @@ theorem exp_I_real_inj {a b : ℝ}
 
 /-- The character `x ↦ exp(i⟨ω,x⟩)` as a monoid homomorphism from the additive group of
 data points (written multiplicatively) to `ℂ`. -/
+@[expose]
 noncomputable def chiHom (ω : Fin k → ℝ) : Multiplicative (Fin k → ℝ) →* ℂ where
   toFun := fun y => Complex.exp (Complex.I * (freqDot ω (Multiplicative.toAdd y) : ℂ))
   map_one' := by
@@ -321,11 +327,13 @@ theorem freqDot_append_right (ω : Fin n → ℝ) (x : Fin m → ℝ) (y : Fin n
     zero_mul, Finset.sum_const_zero, zero_add]
 
 /-- Embed an `m`-variable trigonometric polynomial into `m + n` variables on the first block. -/
+@[expose]
 noncomputable def TrigPolynomial.embedL (f : TrigPolynomial m) : TrigPolynomial (m + n) where
   freqs := f.freqs.image (fun ω => Fin.append ω (0 : Fin n → ℝ))
   coeff := fun σ => f.coeff (fun i => σ (Fin.castAdd n i))
 
 /-- Embed an `n`-variable trigonometric polynomial into `m + n` variables on the second block. -/
+@[expose]
 noncomputable def TrigPolynomial.embedR (f : TrigPolynomial n) : TrigPolynomial (m + n) where
   freqs := f.freqs.image (fun ω => Fin.append (0 : Fin m → ℝ) ω)
   coeff := fun σ => f.coeff (fun i => σ (Fin.natAdd m i))

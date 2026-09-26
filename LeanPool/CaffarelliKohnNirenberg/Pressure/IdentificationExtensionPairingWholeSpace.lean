@@ -22,7 +22,7 @@ The result is the identity tested against every compactly supported smooth `ψ`,
 which is the form the Liouville identification consumes.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

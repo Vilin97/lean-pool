@@ -11,7 +11,7 @@ import LeanPool.Erdos97ConvexOctagon.CayleyMenger
 
 /-! # Erdős 97 convex-octagon formalization: Residual Algebra08 -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 

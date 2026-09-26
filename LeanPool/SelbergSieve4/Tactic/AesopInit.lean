@@ -13,7 +13,7 @@ import Aesop.Frontend.Command
 Imported Lean Pool material for `LeanPool.SelbergSieve4.Tactic.AesopInit`.
 -/
 
-@[expose] public section
+public section
 
 declare_aesop_rule_sets [Divisibility]
 

@@ -17,7 +17,7 @@ L² time derivative. Terminal-primitive uniqueness identifies this path with
 the physical velocity already constructed by the strong mean inverse.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

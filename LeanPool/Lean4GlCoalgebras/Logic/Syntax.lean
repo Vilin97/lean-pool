@@ -23,7 +23,7 @@ import Mathlib.Tactic.NormNum.OfScientific
 Here we supply basic definitions, abbreviations, and lemmas about the syntax of BML.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 
@@ -61,7 +61,7 @@ infixr:6 "v" => or
 @[simp] instance instTop : Top (Formula) where top := Formula.top
 
 /-- Negation of a BML Formula. -/
-@[simp] def neg : Formula → Formula
+@[expose, simp] def neg : Formula → Formula
   | ⊥ => ⊤
   | ⊤ => ⊥
   | at n => na n
@@ -93,7 +93,7 @@ def isNegAtomic : Formula → Bool
   | _ => false
 
 /-- Returns `true` if the formula is a diamond formula `◇ φ`. -/
-def isDiamond : Formula → Bool
+@[expose] def isDiamond : Formula → Bool
   | ◇ _ => true
   | _ => false
 
@@ -110,7 +110,7 @@ def unDi (φ : Formula) (h : φ.isDiamond) : Formula := match φ with
   | ◇ φ => φ
 
 /-- Returns `true` if the formula is a box formula `□ φ`. -/
-def isBox : Formula → Bool
+@[expose] def isBox : Formula → Bool
   | □ _ => true
   | _ => false
 
@@ -128,7 +128,7 @@ lemma neg_neg_eq (φ : Formula) : (~~φ) = φ := by
   induction φ <;> simp_all [Formula.neg] <;> rfl
 
 /-- Length of a BML Formula. -/
-def length : Formula → Nat
+@[expose] def length : Formula → Nat
   | ⊥ => 0
   | ⊤ => 0
   | at _ => 1
@@ -140,7 +140,7 @@ def length : Formula → Nat
 
 
 /-- Vocab of a BML Formula. Expressed as underlying natural numbers. -/
-def vocab : Formula → Finset Nat
+@[expose] def vocab : Formula → Finset Nat
   | ⊥ => ∅
   | ⊤ => ∅
   | at n => {n}
@@ -173,7 +173,7 @@ def lit : Formula → Finset (Nat ⊕ Nat)
   | ◇ φ => lit φ
 
 /-- Get a fresh variable not occuring in a BML Formula. -/
-def freshVar : Formula → Nat
+@[expose] def freshVar : Formula → Nat
   | ⊤  => 0
   | ⊥  => 0
   | at n  => n + 1
@@ -184,7 +184,7 @@ def freshVar : Formula → Nat
   | ◇ φ  => freshVar φ
 
 /-- Fischer-Ladner closure of a BML Formula. -/
-def FL : Formula → Sequent
+@[expose] def FL : Formula → Sequent
   | ⊥ => {⊥}
   | ⊤ => {⊤}
   | at n => {at n}
@@ -226,11 +226,11 @@ namespace Sequent
 
 /-! # Basic operations and simp lemmas for Sequents -/
 /-- Length of a sequent. -/
-def length (Γ : Sequent) : Nat := Finset.sum Γ Formula.length
+@[expose] def length (Γ : Sequent) : Nat := Finset.sum Γ Formula.length
 
 /- Vocabulary of a sequent. -/
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def vocab (Γ : Sequent) : Finset Nat := Finset.biUnion Γ Formula.vocab
+@[expose] def vocab (Γ : Sequent) : Finset Nat := Finset.biUnion Γ Formula.vocab
 
 /- Literals of a sequent. -/
 /-- Auxiliary declaration used in the GL coalgebra development. -/
@@ -242,13 +242,13 @@ def neg (Γ : Sequent) : Finset Formula := Finset.biUnion Γ (fun φ ↦ {Formul
 
 /- Given a sequent `Γ`, finds a variable not in `Γ`-/
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def freshVar (Γ : Finset Formula) : Nat :=
+@[expose] def freshVar (Γ : Finset Formula) : Nat :=
   if h : Γ = {} then 0 else Finset.max' (Γ.image (Formula.freshVar)) (by
     by_contra con
     simp_all)
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def D (Γ : Sequent) : Sequent := Finset.filter (
+@[expose] def D (Γ : Sequent) : Sequent := Finset.filter (
   fun x => decide (Formula.isDiamond x)) Γ
        ∪ Finset.filterMap Formula.opUnDi Γ (by
   simp_all)
@@ -257,7 +257,7 @@ lemma form_in_seq_size_le {A : Formula} {Δ : Sequent} : A ∈ Δ → A.length �
   fun A_in ↦ Finset.sum_le_sum_of_subset_of_nonneg (Finset.singleton_subset_iff.2 A_in) (by simp)
 
 /-- Fischer-Ladner closure of a sequent. -/
-def FL : Sequent → Sequent := fun Δ ↦ Finset.biUnion Δ Formula.FL
+@[expose] def FL : Sequent → Sequent := fun Δ ↦ Finset.biUnion Δ Formula.FL
 
 /-! # Lemmas about FL Closure of Sequents -/
 
@@ -293,7 +293,7 @@ abbrev SplitSequent := Finset SplitFormula
 
 namespace SplitFormula
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def isDiamond : SplitFormula → Bool
+@[expose] def isDiamond : SplitFormula → Bool
   | Sum.inl (◇ _) => true
   | Sum.inr (◇ _) => true
   | _ => false
@@ -307,13 +307,13 @@ def opUnDi (φ : SplitFormula) : Option SplitFormula := match φ with
 
 /- Length of a Split Formula (i.e. length of underlying BML Fornula). -/
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def length : (Formula ⊕ Formula) → Nat
+@[expose] def length : (Formula ⊕ Formula) → Nat
   | Sum.inl φ => φ.length
   | Sum.inr φ => φ.length
 
 /- Fischer-Ladner closure of a Split Formula (preserving the formula annotation). -/
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def FL : SplitFormula → SplitSequent
+@[expose] def FL : SplitFormula → SplitSequent
   | Sum.inl ⊥ => {Sum.inl ⊥}
   | Sum.inr ⊥ => {Sum.inr ⊥}
   | Sum.inl ⊤ => {Sum.inl ⊤}
@@ -387,7 +387,7 @@ namespace SplitSequent
 
 /-! # Lemmas about FL Closure of Split Sequents -/
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def FL : SplitSequent → SplitSequent := fun Δ ↦ Finset.biUnion Δ SplitFormula.FL
+@[expose] def FL : SplitSequent → SplitSequent := fun Δ ↦ Finset.biUnion Δ SplitFormula.FL
 
 /-- Fischer-Ladner Closure is reflexive. -/
 lemma FL_refl {Δ : SplitSequent} : Δ ⊆ FL Δ := by
@@ -410,7 +410,7 @@ lemma FL_idem {Δ : SplitSequent} : FL (FL Δ) = FL Δ := by
   · exact FL_mon FL_refl
 
 /-- □₄⁻¹ operator for Split Sequents. -/
-def D (Γ : SplitSequent) : SplitSequent
+@[expose] def D (Γ : SplitSequent) : SplitSequent
   := Finset.filter (fun x => decide (SplitFormula.isDiamond x)) Γ
                          ∪ Finset.filterMap SplitFormula.opUnDi Γ (by
   intro φ ψ C C_in_A C_in_B
@@ -424,10 +424,10 @@ def D (Γ : SplitSequent) : SplitSequent
 /-! # Basic operations and simp lemmas for Split Sequents -/
 
 /-- Find underlying Sequent of a Split Sequent. -/
-def toSequent (Δ : SplitSequent) : Sequent := Finset.image (Sum.elim id id) Δ
+@[expose] def toSequent (Δ : SplitSequent) : Sequent := Finset.image (Sum.elim id id) Δ
 
 /-- Length of a Split Sequent. -/
-def length (Δ : SplitSequent) : Nat := Finset.sum Δ (SplitFormula.length)
+@[expose] def length (Δ : SplitSequent) : Nat := Finset.sum Δ (SplitFormula.length)
 
 @[simp]
 lemma opUnDi_eqₗₗ {φ ψ : Formula} :
@@ -448,28 +448,26 @@ lemma opUnDi_eqᵣₗ {φ ψ : Formula} : ¬ (SplitFormula.opUnDi (Sum.inr φ) =
   cases φ <;> simp [SplitFormula.opUnDi]
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-@[simp]
-noncomputable def filterLeft : SplitSequent → SplitSequent := @Finset.filter _
+@[expose, simp] noncomputable def filterLeft : SplitSequent → SplitSequent := @Finset.filter _
   (fun | Sum.inl _ => true | Sum.inr _ => false)
   (fun | Sum.inl _ => isTrue (by simp) | Sum.inr _ => isFalse (by simp))
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-@[simp]
-noncomputable def filterRight : SplitSequent → SplitSequent := @Finset.filter _
+@[expose, simp] noncomputable def filterRight : SplitSequent → SplitSequent := @Finset.filter _
   (fun | Sum.inl _ => false | Sum.inr _ => true)
   (fun | Sum.inl _ => isFalse (by simp) | Sum.inr _ => isTrue (by simp))
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def left (Γ : SplitSequent) : Sequent := Γ.filterMap (Sum.getLeft?) (by aesop)
+@[expose] def left (Γ : SplitSequent) : Sequent := Γ.filterMap (Sum.getLeft?) (by aesop)
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def right (Γ : SplitSequent) : Sequent := Γ.filterMap (Sum.getRight?) (by aesop)
+@[expose] def right (Γ : SplitSequent) : Sequent := Γ.filterMap (Sum.getRight?) (by aesop)
 
 end SplitSequent
 
 /-! # Properties of Substitutions -/
 
 /-- Substiting `p` with `ψ` in `φ` (`φ[ψ/p]`). -/
-def single (n : Nat) (ψ : Formula) : Formula → Formula
+@[expose] def single (n : Nat) (ψ : Formula) : Formula → Formula
   | ⊥ => ⊥
   | ⊤ => ⊤
   | at k => if k == n then ψ else at k
@@ -498,6 +496,7 @@ lemma single_identity (n : ℕ) (φ : Formula) : (single n (at n) φ) = φ := by
   induction φ <;> simp_all [single] <;> rfl
 
 /-- Simultaneous substitution for `p` meeting criteria `c`. -/
+@[expose]
 def partial_ {c : Nat → Prop} [DecidablePred c] (σ : Subtype c → Formula) : Formula → Formula
   | ⊥ => ⊥
   | ⊤ => ⊤

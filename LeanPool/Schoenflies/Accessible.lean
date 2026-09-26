@@ -37,7 +37,7 @@ through `C = ∂D`, i.e. through the Jordan curve theorem, which is not yet avai
 is played by Proposition 8.5, which is stated with `C ⊆ closure D` as a hypothesis.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

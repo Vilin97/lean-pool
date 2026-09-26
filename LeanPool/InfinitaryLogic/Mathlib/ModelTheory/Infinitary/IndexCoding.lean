@@ -30,7 +30,7 @@ infinitary formulas are transported between carriers (`Infinitary/Reindex.lean`)
 - `IndexCoding.toEmbedding`: the underlying embedding (`decode_encode` forces injectivity).
 -/
 
-@[expose] public section
+public section
 
 universe uι uκ uμ uν
 

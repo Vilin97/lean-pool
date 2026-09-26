@@ -31,7 +31,7 @@ independence selector from `Wallace.TriangularPreprocess`.
 No topology or character is assumed.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Cardinal
@@ -54,7 +54,7 @@ abbrev RationalInjectiveSequences :=
   {s : ℕ → ContinuumRationalGroup // Function.Injective s}
 
 /-- The triangular support condition for rational-valued finitely supported sequences. -/
-def RationalSupportedBelow (s : ℕ → ContinuumRationalGroup) (i : ContinuumIndex) : Prop :=
+@[expose] def RationalSupportedBelow (s : ℕ → ContinuumRationalGroup) (i : ContinuumIndex) : Prop :=
   ∀ n j, j ∈ (s n).support → j < i
 
 theorem mk_continuumIndex : #ContinuumIndex = 𝔠 :=
@@ -105,7 +105,7 @@ def rationalSequenceCodeEquiv : ContinuumIndex ≃ RationalInjectiveSequences :=
     mk_continuumIndex.trans mk_rationalInjectiveSequences.symm
 
 /-- The injective rational sequence represented by the code `a`. -/
-def codedSequence (a : ContinuumIndex) : ℕ → ContinuumRationalGroup :=
+@[expose] def codedSequence (a : ContinuumIndex) : ℕ → ContinuumRationalGroup :=
   (rationalSequenceCodeEquiv a).1
 
 theorem codedSequence_injective (a : ContinuumIndex) :
@@ -146,7 +146,7 @@ theorem codedSequence_supportedBelow (a : ContinuumIndex) :
     (TriangularPreprocess.freshIndex_spec supportBound a).1
 
 /-- The rational basis point assigned to a code. -/
-def codeBasisVector (a : ContinuumIndex) : ContinuumRationalGroup :=
+@[expose] def codeBasisVector (a : ContinuumIndex) : ContinuumRationalGroup :=
   Finsupp.single (codeIndex a) 1
 
 /-- The translated sequence used for bounded-independence preprocessing. -/

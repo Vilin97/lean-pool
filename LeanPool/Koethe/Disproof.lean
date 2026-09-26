@@ -39,7 +39,7 @@ the conjecture as originally stated. That implication is a standard argument and
 of this formal development.
 -/
 
-@[expose] public section
+public section
 
 open Ideal TwoSidedIdeal Polynomial
 

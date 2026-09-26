@@ -24,7 +24,7 @@ lattice copy of the origin. No residual identity or residual limit after
 periodization is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -55,7 +55,7 @@ theorem cutResidual_smoothOn {A : VelocityField} {p : PressureField} {U : Set Sp
     (SpatialLocalization.spatialCutoff_contDiff.comp contDiff_snd).contDiffOn.smul hA
   have huc : ContDiffOn ℝ ∞ (SpatialLocalization.cutVelocity A) U := by
     intro z hz
-    exact (SpatialCurl.contDiffAt_spatialCurl
+    exact (SpatialCurl.contDiffAt_spatialCurl (m := ∞) (n := ∞)
       (hAc.contDiffAt (hU.mem_nhds hz)) (by simp)).contDiffWithinAt
   exact ResidualRegularity.contDiffOn_residual hU huc
     ((SpatialLocalization.spatialCutoff_contDiff.comp contDiff_snd).contDiffOn.mul hp)

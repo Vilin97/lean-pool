@@ -41,7 +41,7 @@ it is about `ℤ`. For `x : ℤ` its right-hand side is `x * fermatUnit p x ^ fr
 `fermatUnit` being reducible.
 -/
 
-@[expose] public section
+public section
 
 namespace GranvilleMoore
 

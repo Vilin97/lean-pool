@@ -17,7 +17,7 @@ second copy through cosine `31/32` makes the remaining endpoints unit-adjacent,
 contradicting a proper four-coloring.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

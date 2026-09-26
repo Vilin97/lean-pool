@@ -32,7 +32,7 @@ Contents:
   sentence holds in the sublanguage reduct of `d` iff its decoding holds in `codeReduct d`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

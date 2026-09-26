@@ -11,7 +11,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientOrigin
 
 /-! # The cubic regularity criterion for suitable weak solutions -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators

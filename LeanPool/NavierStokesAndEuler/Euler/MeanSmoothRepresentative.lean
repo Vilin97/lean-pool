@@ -23,7 +23,7 @@ section
 /-! An isometric embedding of ordinary R³ L² into the angle-independent part of the unit cylinder.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -97,7 +97,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

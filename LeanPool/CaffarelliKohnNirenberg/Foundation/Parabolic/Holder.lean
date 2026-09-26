@@ -14,7 +14,7 @@ This module names the seminorm used by the space-time regularity statements.
 The measure-theoretic representative predicate records agreement on a set.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 
@@ -26,6 +26,7 @@ noncomputable section
 namespace CKN.Foundation.Parabolic
 
 /-- Pointwise Hölder seminorm bound with respect to parabolic distance. -/
+@[expose]
 def ParabolicHolderSeminormLE
     (U : Set ParabolicPoint) (g : ParabolicPoint → ℝ)
     (α K : ℝ) : Prop :=

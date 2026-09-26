@@ -17,7 +17,7 @@ are restricted to the signed phase cells before applying the native-copy
 localization and periodization estimates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ open scoped ContDiff Topology BigOperators
 variable {B N0 : ℕ}
 
 /-- Copies, given by `(parameters l).copyData ActualPrimaryBounds.strip request`. -/
-noncomputable def copies (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
+@[expose] noncomputable def copies (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
     (l : SignedLabel B N0) : PeriodizedWaveBounds.CopyData FullPoint Frequency :=
   (parameters l).copyData ActualPrimaryBounds.strip request
 
@@ -302,7 +302,7 @@ theorem actual_block_bounds (G : SignedMeanGain.Geometry)
 
 /-- The cut native vector-potential coefficient before restoring the
 carrier or applying the physical coordinate prefactor. -/
-noncomputable def localPotential (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
+@[expose] noncomputable def localPotential (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
     (l : SignedLabel B N0) (n : ℕ) (k : Frequency) (x : FullPoint) :
     HarmonicCalculus.ComplexVector :=
   CurlClassBounds.inverseCarrier ((copies request l).background.frequency n) •

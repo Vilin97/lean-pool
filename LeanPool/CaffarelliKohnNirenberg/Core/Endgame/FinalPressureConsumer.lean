@@ -22,7 +22,7 @@ the pressure gradient, not a uniform bound at later times, is used to
 justify that representation.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal Topology

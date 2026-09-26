@@ -19,7 +19,7 @@ semidefinite and positive definite matrices.  The definitions are stated in
 terms of the current Mathlib Hermitian spectral theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace Matrix
 
@@ -56,7 +56,7 @@ lemma _root_.Matrix.PosDef.rpow_eq {Q : Matrix n n 𝕜} (hQ : Q.PosDef) (r : �
     hQ.rpow r =
       Matrix.innerAut hQ.1.eigenvectorUnitary
         (Matrix.diagonal (RCLike.ofReal ∘ (hQ.1.eigenvalues ^ r : n → ℝ) : n → 𝕜)) :=
-  rfl
+  by rfl
 
 theorem _root_.Matrix.PosSemidef.rpow_mul_rpow (r₁ r₂ : NNRealˣ) {Q : Matrix n n 𝕜}
     (hQ : PosSemidef Q) :

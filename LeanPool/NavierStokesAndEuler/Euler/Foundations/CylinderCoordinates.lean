@@ -12,7 +12,7 @@ import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 
 /-! Measure-preserving Euclidean coordinates and the actual L² bridge to the cylinder. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -50,10 +50,10 @@ noncomputable def coordinateEquiv : Domain 4 ≃L[ℝ] LiftTangent :=
   coordinateLinearEquiv.toContinuousLinearEquiv
 
 @[simp] theorem coordinateEquiv_apply (z : Domain 4) :
-    coordinateEquiv z = (WithLp.toLp 2 (fun i : Fin 3 => z i.succ), z 0) := rfl
+    coordinateEquiv z = (WithLp.toLp 2 (fun i : Fin 3 => z i.succ), z 0) := by rfl
 
 @[simp] theorem coordinateEquiv_symm_apply (p : LiftTangent) :
-    coordinateEquiv.symm p = WithLp.toLp 2 (Fin.cons p.2 (fun i => p.1 i)) := rfl
+    coordinateEquiv.symm p = WithLp.toLp 2 (Fin.cons p.2 (fun i => p.1 i)) := by rfl
 
 /-- The coordinate change preserves the genuine product Lebesgue measure exactly. -/
 theorem coordinateEquiv_measurePreserving :
@@ -81,11 +81,11 @@ theorem covering_fundamental_measurePreserving (a : ℝ) :
       period a)
 
 /-- Euclidean coordinates for the actual quotient covering map. -/
-noncomputable def euclideanCover : Domain 4 → LiftDomain period :=
+@[expose] noncomputable def euclideanCover : Domain 4 → LiftDomain period :=
   coveringMap period ∘ coordinateEquiv
 
 /-- Euclidean measure restricted to one fundamental angular strip. -/
-noncomputable def stripMeasure (a : ℝ) : Measure (Domain 4) :=
+@[expose] noncomputable def stripMeasure (a : ℝ) : Measure (Domain 4) :=
   volume.restrict {z : Domain 4 | z 0 ∈ Set.Ioc a (a + period)}
 
 omit [Fact (0 < period)] in

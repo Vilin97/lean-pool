@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.Pow
 TODO: Use `Pointed` (the category of pointed types) in Mathlib.
 -/
 
-@[expose] public section
+public section
 
 
 /- A pointed map from `(X, x₀)` to `(Y, y₀)` is a function `f : X → Y` such that `f x₀ = y₀`. -/

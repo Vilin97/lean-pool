@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientTimeRestricti
 /-! Restriction of a genuine smooth time field preserves the spatial
 jets and the actual one-sided time derivative on a shorter interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

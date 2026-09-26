@@ -22,7 +22,7 @@ section
 jets, so a parent satisfying (21) supplies every outer L² input needed
 by the volume-preserving composition estimate. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -84,7 +84,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -133,15 +133,15 @@ namespace Data
 variable (G : Data)
 
 /-- Inner, given by `x+G.displacement.field x`. -/
-def inner (x : Space) : Space := x+G.displacement.field x
+@[expose] def inner (x : Space) : Space := x+G.displacement.field x
 /-- Composition radius, given by `(1+G.rad)*((1+G.amp)*s+2)`. -/
-def compositionRadius (s : ℝ) : ℝ := (1+G.rad)*((1+G.amp)*s+2)
+@[expose] def compositionRadius (s : ℝ) : ℝ := (1+G.rad)*((1+G.amp)*s+2)
 /-- Radius, given by `G.compositionRadius (16*G.K)+G.rad`. -/
 def radius : ℝ := G.compositionRadius (16*G.K)+G.rad
 /-- First amplitude, given by `(embeddingCost*G.K)*G.K`. -/
-def firstAmplitude : ℝ := (embeddingCost*G.K)*G.K
+@[expose] def firstAmplitude : ℝ := (embeddingCost*G.K)*G.K
 /-- Second amplitude, given by `G.firstAmplitude*(4*G.K)`. -/
-def secondAmplitude : ℝ := G.firstAmplitude*(4*G.K)
+@[expose] def secondAmplitude : ℝ := G.firstAmplitude*(4*G.K)
 /-- Amplitude, given by `G.K+G.amp+9*G.firstAmplitude*G.amp+9*G.secondAmplitude*G.amp^2`. -/
 def amplitude : ℝ := G.K+G.amp+9*G.firstAmplitude*G.amp+9*G.secondAmplitude*G.amp^2
 

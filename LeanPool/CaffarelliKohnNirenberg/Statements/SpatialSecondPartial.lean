@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Statements.SpatialPartial
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open CKN.Foundation.Parabolic
 
@@ -23,6 +23,7 @@ noncomputable section
 namespace CKN
 
 /-- The iterated spatial derivative used in the local energy inequality. -/
+@[expose]
 def spatialSecondPartial (g : ParabolicPoint → ℝ) (i j : Fin 3)
     (z : ParabolicPoint) : ℝ :=
   spatialPartial (fun w => spatialPartial g i w) j z

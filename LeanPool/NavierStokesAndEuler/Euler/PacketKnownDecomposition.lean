@@ -13,7 +13,7 @@ Exact finite A/B/C decomposition of the known force.  The only fast products
 retained are BA, BC, CA and CC.  This is raw algebra on the actual sliced jets.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -57,7 +57,7 @@ theorem sum_knownTerm {E : Type*} [AddCommMonoid E] (f : KnownTerm → E) :
 namespace KnownTerm
 
 /-- Raw as an element of `VectorField`. -/
-def raw (k : KnownTerm) (O : Operators) (p : ℕ) (a : ℕ → Profile)
+@[expose] def raw (k : KnownTerm) (O : Operators) (p : ℕ) (a : ℕ → Profile)
     (i j : ℕ) : VectorField := fun z =>
   match k with
   | .previousLinear => if i=0 ∧ j=0 then
@@ -80,13 +80,13 @@ def raw (k : KnownTerm) (O : Operators) (p : ℕ) (a : ℕ → Profile)
           a z j) else 0
 
 /-- These two families have zero angular mean by periodicity. -/
-def zeroMean (k : KnownTerm) : Bool :=
+@[expose] def zeroMean (k : KnownTerm) : Bool :=
   match k with
   | .fastMeanHigh | .fastMeanCorrector => true
   | _ => false
 
 /-- The pure mean slow product is constant in angle. -/
-def meanOnly (k : KnownTerm) : Bool :=
+@[expose] def meanOnly (k : KnownTerm) : Bool :=
   match k with
   | .slow .mean .mean => true
   | _ => false

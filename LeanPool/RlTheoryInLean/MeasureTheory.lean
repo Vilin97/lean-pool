@@ -15,4 +15,4 @@ public import LeanPool.RlTheoryInLean.MeasureTheory.Measure
 Import-only index for the `MeasureTheory` directory of the RL-theory-in-Lean import.
 -/
 
-@[expose] public section
+public section

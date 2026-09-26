@@ -32,7 +32,7 @@ the Bessel K₁ asymptotics: (m/4π²|x|)K₁(m|x|) is locally integrable in 4D.
 - `gaussianFreeField_satisfies_OS1_revised`
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex BigOperators SchwartzMap Real QFT
 open scoped MeasureTheory ENNReal
@@ -68,6 +68,7 @@ theorem fourier_plancherel_schwartz (g : TestFunctionℂ) :
     a limit (using `limUnder`), properly avoiding DiracDelta. For the GFF specifically,
     we use this direct definition for computational convenience.
 -/
+@[expose]
 noncomputable def schwingerTwoPointFunctionGFF (m : ℝ) [hm : Fact (0 < m)] (x : SpaceTime) : ℝ :=
   let _ := hm
   freeCovarianceKernel m x

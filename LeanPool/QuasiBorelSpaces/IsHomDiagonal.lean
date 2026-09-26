@@ -15,7 +15,7 @@ import LeanPool.QuasiBorelSpaces.Prop
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.IsHomDiagonal`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuasiBorelSpace
 

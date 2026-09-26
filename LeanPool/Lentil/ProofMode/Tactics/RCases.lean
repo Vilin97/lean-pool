@@ -16,7 +16,7 @@ import LeanPool.Lentil.Rules.Basic
 import LeanPool.Lentil.Util
 import Std.Tactic.BVDecide.Normalize.Prop
 
-@[expose] public section
+public section
 
 namespace TLA.ProofMode
 

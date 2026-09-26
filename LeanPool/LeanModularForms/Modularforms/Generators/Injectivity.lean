@@ -23,7 +23,7 @@ the algebra isomorphism `modularFormsEquivMvPolynomial` and the generation
 theorem `E₄E₆_generate`.
 -/
 
-@[expose] public section
+public section
 
 open ModularForm hiding E₄ E₆
 open EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral

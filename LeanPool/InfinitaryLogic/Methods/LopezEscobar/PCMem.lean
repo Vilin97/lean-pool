@@ -21,7 +21,7 @@ membership in `codeReduct '' ModelsOf Θ`.  This freezes the PC-class interface 
 of López–Escobar's tree machinery.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

@@ -14,7 +14,7 @@ The physical normal field is pointwise; it is never treated as one L²
 vector. All equations below are for genuine cylinder representatives.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

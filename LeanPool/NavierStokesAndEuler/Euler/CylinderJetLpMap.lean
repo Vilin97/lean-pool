@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 L² classes. In particular the small normal component is retained in the
 four-dimensional transport estimate. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

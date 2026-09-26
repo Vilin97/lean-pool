@@ -22,7 +22,7 @@ an edge discrepancy bound of `36 * √t`.
 `Hypergraph.exists_isColouring_forall_abs_finsum_le` states it as a vertex colouring.
 -/
 
-@[expose] public section
+public section
 
 namespace Hypergraph
 
@@ -38,6 +38,7 @@ open Classical in
 /-- The incidence matrix of a hypergraph with finitely many vertices: its rows are indexed by
 the edges, its columns by the vertices, and an entry is `1` when the vertex lies in the edge
 and `0` otherwise. -/
+@[expose]
 noncomputable def incidenceMatrix (H : Hypergraph α) (hV : V(H).Finite) :
     Matrix (edgeSet_finite hV).toFinset hV.toFinset ℝ :=
   Matrix.of fun e x ↦ if (x : α) ∈ (e : Set α) then 1 else 0

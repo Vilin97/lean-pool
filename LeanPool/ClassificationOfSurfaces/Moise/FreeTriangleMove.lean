@@ -15,7 +15,7 @@ This file transports the normalized thin-kite move to an arbitrary plane triangl
 supplies the small positive thickness required by the relative polygonal Schoenflies theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

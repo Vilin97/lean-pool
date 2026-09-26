@@ -47,7 +47,7 @@ Pauli evolution in `Lean4LPD/Pauli/LayerError.lean`.
   `chain (k+1) m ≤ C · R^{m-(k+1)} · W m · C(m-1, k)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD.MultiLadder
 

@@ -22,7 +22,7 @@ This file constructs the ideal and unit data that turn a Case II solution into t
 solution in the induction.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors NumberField
 open Polynomial IsCyclotomicExtension.Rat

@@ -10,7 +10,7 @@ public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Basic
 
 /-! # Basic -/
 
-@[expose] public section
+public section
 
 
 namespace LO

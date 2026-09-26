@@ -24,7 +24,7 @@ volume gain on a cell of radius `r` beats the Morrey normalisation by
 `r^{1/10}`, uniformly over all cells and both large and small radii.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal BigOperators

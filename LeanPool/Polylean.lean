@@ -43,4 +43,4 @@ Tags: algebra, group-theory, ring-theory, unit-conjecture
 MSC: 16S34, 20F65
 -/
 
-@[expose] public section
+public section

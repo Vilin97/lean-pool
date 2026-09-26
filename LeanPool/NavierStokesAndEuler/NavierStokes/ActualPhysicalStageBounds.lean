@@ -34,7 +34,7 @@ velocity is its actual leading angular field. In the far exterior it is the
 physical heat field. The final rate is on the full open-past endpoint filter.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -631,7 +631,7 @@ increment bounds it controls every finite prefix with one derivative-loss
 function, independent of the number of correction stages.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -772,7 +772,7 @@ theorem uncutVelocity_eq_stagePrefix {U : Set SpaceTime} (hU : IsOpen U)
 
 /-- This version only needs a bound for the initialized physical velocity.
 It imposes no growth assumption on the gauge of the initial potential. -/
-noncomputable def initialBackgroundLoss (Lzero LA LB : ℕ → ℝ) (m : ℕ) : ℝ :=
+@[expose] noncomputable def initialBackgroundLoss (Lzero LA LB : ℕ → ℝ) (m : ℕ) : ℝ :=
   max (Lzero m) (max (LA (m + 1)) (LB m))
 
 theorem mixed_background_from_initial {l : Filter SpaceTime} {q : SpaceTime → ℝ}
@@ -822,7 +822,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1142,7 +1142,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2040,21 +2040,21 @@ open CorrectionStep CorrectionState
 
 /-- The constructed initialization families, with their proved native
 classes and common band choice. No native estimate is left as an input. -/
-noncomputable def actualInitialTemporalInput (B N0 N : ℕ) (hN : 4 ≤ N) :
+@[expose] noncomputable def actualInitialTemporalInput (B N0 N : ℕ) (hN : 4 ≤ N) :
     MeanInput h (CoordinateAlgebra.A h - 1 / 2) :=
   MeanInput.ofMoving standardRegion rfl (initialTemporalFamily B N0 N) hN
     (PrimaryTargetBounds.leftRadius_pos nominal) (PrimaryTargetBounds.radii_ordered nominal)
     (initialTemporal_moving B N0) (initialTemporal_nativeJets B N0 N (by omega))
 
 /-- Actual initial rank input, constructed using `MeanInput.ofMoving`. -/
-noncomputable def actualInitialRankInput (B N0 N : ℕ) (hN : 4 ≤ N) :
+@[expose] noncomputable def actualInitialRankInput (B N0 N : ℕ) (hN : 4 ≤ N) :
     MeanInput h (CoordinateAlgebra.A h - 1 / 2) :=
   MeanInput.ofMoving standardRegion rfl (initialRankFamily B N0 N) hN
     (PrimaryTargetBounds.leftRadius_pos nominal) (PrimaryTargetBounds.radii_ordered nominal)
     (initialRank_moving B N0) (initialRank_nativeJets B N0 N (by omega))
 
 /-- Actual initial angular input, constructed using `MeanInput.ofMoving`. -/
-noncomputable def actualInitialAngularInput (B N0 N : ℕ) (hN : 4 ≤ N) :
+@[expose] noncomputable def actualInitialAngularInput (B N0 N : ℕ) (hN : 4 ≤ N) :
     MeanInput h (CoordinateAlgebra.A h) :=
   MeanInput.ofMoving standardRegion rfl (initialAngularFamily B N0 N) hN
     (PrimaryTargetBounds.leftRadius_pos nominal) (PrimaryTargetBounds.radii_ordered nominal)

@@ -25,7 +25,7 @@ section
 velocity update. Odd particle displacements fix the origin, and the two
 literal velocity laws identify the source matrices there. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -113,7 +113,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -230,7 +230,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

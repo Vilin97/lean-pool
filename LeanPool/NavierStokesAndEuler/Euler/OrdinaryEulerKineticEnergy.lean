@@ -15,7 +15,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! Exact conservation of kinetic energy for the ordinary smooth Euler
 class, using the genuine noncompact transport and pressure cancellations. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

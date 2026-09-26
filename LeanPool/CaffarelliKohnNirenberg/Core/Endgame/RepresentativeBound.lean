@@ -16,7 +16,7 @@ oscillation against the original velocity. No average of the heat potential
 outside the region of almost-everywhere agreement is required.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 open MeasureTheory Set

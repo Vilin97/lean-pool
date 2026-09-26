@@ -23,7 +23,7 @@ including the von Neumann hierarchy and foundational lemmas used throughout the 
 inconsistency development.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -106,7 +106,7 @@ class ToV (α : Type*) where
 open ToV
 
 /-- The `toZFSet` declaration. -/
-def toZFSet {α} [ToV α] (x : α) : ZFSet.{0} := (toV x).val
+@[expose] def toZFSet {α} [ToV α] (x : α) : ZFSet.{0} := (toV x).val
 
 /-- The `↓_` notation. -/
 prefix:max "↓" => toV
@@ -287,7 +287,7 @@ lemma lt_iff_le_and_exists {x y : M} : x < y ↔ x ≤ y ∧ ∃ z ∈ y, z ∉ 
 
 attribute [formula_builder_pre, formula_builder] Set.mem_setOf_eq
 /-- The `IsSet` declaration. -/
-@[formula_builder_pre] def IsSet (C : Set M) := ∃! x : M, ∀ y, y ∈ x ↔ y ∈ C
+@[expose, formula_builder_pre] def IsSet (C : Set M) := ∃! x : M, ∀ y, y ∈ x ↔ y ∈ C
 
 lemma isSet_iff_exists_set {C : Set M} : IsSet C ↔ ∃ x : M, ∀ y, y ∈ x ↔ y ∈ C := by
   refine ⟨fun | ⟨x, hx⟩ => ⟨x, hx.1⟩, fun | ⟨x, hx⟩ => ⟨x, hx, fun y hy => ?_⟩⟩
@@ -312,7 +312,7 @@ lemma exists_separate (x : M) (p : M → Prop) : IsSet {y | y ∈ x ∧ p y} := 
       ⟨ZFSet.sep (fun x => p (↓x)) x, fun _ => ZFSet.mem_sep⟩
 
 /-- The `separate` declaration. -/
-def separate (x : M) (p : M → Prop) := (exists_separate x p).choose
+@[expose] def separate (x : M) (p : M → Prop) := (exists_separate x p).choose
 
 @[simp] lemma mem_separate_iff {x : M} {p : M → Prop} : ∀ z, z ∈ separate x p ↔ z ∈ x ∧ p z :=
   (exists_separate x p).choose_spec.1
@@ -531,7 +531,7 @@ lemma exists_minimal {p : M → Prop} : (∃! x, IsGLB {x | p x} x) ↔ ∃ x : 
   · refine ⟨_, fun y hy => hy _ ht⟩
 
 /-- The `IsTransitive` declaration. -/
-@[realize] def IsTransitive (X : M) := ∀ ⦃x⦄, x ∈ X → x ⊆ X
+@[expose, realize] def IsTransitive (X : M) := ∀ ⦃x⦄, x ∈ X → x ⊆ X
 
 @[toV_simps] lemma IsTransitive.toV (α : M) : IsTransitive ↓α ↔ IsTransitive α := by
   simp only [IsTransitive, toV_simps]
@@ -660,7 +660,7 @@ instance instOrderBotM : OrderBot M where
 notation "⸨"a ", " b "⸩" => pair a b
 
 /-- The `IsPair` declaration. -/
-@[realize] def IsPair (z : M) := ∃ x, ∃ y, z = ⸨x, y⸩
+@[expose, realize] def IsPair (z : M) := ∃ x, ∃ y, z = ⸨x, y⸩
 
 @[simp] lemma isPair_pair {x y : M} : IsPair ⸨x, y⸩ := by simp [IsPair]
 
@@ -718,9 +718,9 @@ lemma unordered_pair_mem_pair (x y : M) : {x, y} ∈ ⸨x, y⸩ := by simp [pair
 attribute [simp] Pairs.spec
 
 /-- The `IsRelation` declaration. -/
-@[realize] def IsRelation (r : M) := ∀ ⦃x⦄, x ∈ r → IsPair x
+@[expose, realize] def IsRelation (r : M) := ∀ ⦃x⦄, x ∈ r → IsPair x
 /-- The `IsFunc` declaration. -/
-@[realize] def IsFunc (f : M) := IsRelation f ∧ ∀ ⦃x y z⦄, ⸨x, y⸩ ∈ f → ⸨x, z⸩ ∈ f → y = z
+@[expose, realize] def IsFunc (f : M) := IsRelation f ∧ ∀ ⦃x y z⦄, ⸨x, y⸩ ∈ f → ⸨x, z⸩ ∈ f → y = z
 
 @[realize] lemma Dom.eu (f : M) : IsSet {x | ∃ y, ⸨x, y⸩ ∈ f} := by
   rw [isSet_iff]
@@ -759,10 +759,11 @@ lemma func_sub_pairs {A B f : M} (hf : IsFunc f ∧ Dom f = A ∧ Ran f ⊆ B) :
   exact ⟨y, hy, fun z hz => (hf.2 hy hz).symm⟩
 
 /-- The `PreserveMem` declaration. -/
-@[realize] def PreserveMem (f : M) := ∀ x ∈ Dom f, ∀ y ∈ Dom f, x ∈ y → apply f x ∈ apply f y
+@[expose, realize] def PreserveMem (f : M) :=
+  ∀ x ∈ Dom f, ∀ y ∈ Dom f, x ∈ y → apply f x ∈ apply f y
 
 /-- The `funcToSet` declaration. -/
-def funcToSet {A B : M} (f : A → B) : M :=
+@[expose] def funcToSet {A B : M} (f : A → B) : M :=
   separate (Pairs A B) fun x => ∃ hx : fst x ∈ A, (f ⟨fst x, hx⟩).1 = snd x
 
 @[simp] lemma isFunc_funcToSet {A B : M} {f : A → B} : IsFunc (funcToSet f) := by
@@ -840,7 +841,7 @@ lemma funcToSet_setToFunc {A B : M} (f : (Func A B : M)) : funcToSet (setToFunc 
     simp only [fst_mem_A, apply.eq_iff _ _ hf.1 fst_mem_dom, eta, hx, and_true]
 
 /-- The `funcEquiv` declaration. -/
-def funcEquiv {A B : M} : (Func A B : M) ≃ (A → B) where
+@[expose] def funcEquiv {A B : M} : (Func A B : M) ≃ (A → B) where
   toFun f := setToFunc f
   invFun f := ⟨funcToSet f, funcToSet_mem_Func f⟩
   left_inv := by simp [LeftInverse, funcToSet_setToFunc]
@@ -881,7 +882,7 @@ lemma ext_func {f g : M} (hf : IsFunc f) (hg : IsFunc g)
   simp [sInf]
 
 /-- The `IsInjective` declaration. -/
-@[realize] def IsInjective (f : M) :=
+@[expose, realize] def IsInjective (f : M) :=
   IsFunc f ∧ ∀ x ∈ Dom f, ∀ y ∈ Dom f, apply f x = apply f y → x = y
 
 @[simp] lemma isInjective_funcToSet {A B : M} {f : A → B} :
@@ -895,11 +896,11 @@ lemma nonempty_iff (x : M) : Nonempty x ↔ x ≠ ∅ := by
   simp only [not_forall, not_not]
 
 /-- The `cardLE` declaration. -/
-@[realize] def cardLE (x y : M) := ∃ f ∈ Func x y, IsInjective f
+@[expose, realize] def cardLE (x y : M) := ∃ f ∈ Func x y, IsInjective f
 /-- The `cardEq` declaration. -/
-@[realize] def cardEq (x y : M) := ∃ f ∈ Func x y, IsInjective f ∧ Ran f = y
+@[expose, realize] def cardEq (x y : M) := ∃ f ∈ Func x y, IsInjective f ∧ Ran f = y
 /-- The `cardLT` declaration. -/
-@[realize] def cardLT (x y : M) := cardLE x y ∧ ¬cardEq x y
+@[expose, realize] def cardLT (x y : M) := cardLE x y ∧ ¬cardEq x y
 
 lemma cardLE_iff (x y : M) : cardLE x y ↔ #x ≤ #y := by
   simpa only [cardLE, exists_func, isInjective_funcToSet, le_def]

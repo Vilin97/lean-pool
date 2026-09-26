@@ -13,20 +13,20 @@ public import Mathlib.Tactic.ToDual
 
 /-! Uniform shift room for the recursive packet estimates in the manuscript. -/
 
-@[expose] public section
+public section
 
 
 
 namespace EulerPacketShiftArithmetic
 
 /-- High shift, given by `100*p-80`. -/
-def highShift (p : ℕ) : ℕ := 100*p-80
+@[expose] def highShift (p : ℕ) : ℕ := 100*p-80
 /-- Mean shift, given by `100*p-140`. -/
-def meanShift (p : ℕ) : ℕ := 100*p-140
+@[expose] def meanShift (p : ℕ) : ℕ := 100*p-140
 /-- High force shift, given by `highShift p-10`. -/
-def highForceShift (p : ℕ) : ℕ := highShift p-10
+@[expose] def highForceShift (p : ℕ) : ℕ := highShift p-10
 /-- Mean force shift, given by `meanShift p-10`. -/
-def meanForceShift (p : ℕ) : ℕ := meanShift p-10
+@[expose] def meanForceShift (p : ℕ) : ℕ := meanShift p-10
 
 theorem primary_shift : highShift 1=20 := rfl
 

@@ -22,7 +22,7 @@ The proof reduces the moment generating function to a Gaussian integral via
 mathlib's `integral_gaussian`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Real
 open scoped ENNReal NNReal
@@ -30,7 +30,7 @@ open scoped ENNReal NNReal
 namespace JL
 
 /-- The standard Gaussian measure `N(0,1)` on `ℝ`. -/
-noncomputable def stdGaussian : Measure ℝ := gaussianReal 0 1
+@[expose] noncomputable def stdGaussian : Measure ℝ := gaussianReal 0 1
 
 instance : IsProbabilityMeasure stdGaussian := by
   unfold stdGaussian; infer_instance

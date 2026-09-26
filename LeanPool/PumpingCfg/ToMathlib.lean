@@ -14,7 +14,7 @@ Small facts about `ChomskyNormalFormRule.Rewrites` and `ChomskyNormalFormGrammar
 intended for upstreaming into Mathlib alongside the Chomsky-normal-form development.
 -/
 
-@[expose] public section
+public section
 
 universe uT uN
 variable {T : Type uT}

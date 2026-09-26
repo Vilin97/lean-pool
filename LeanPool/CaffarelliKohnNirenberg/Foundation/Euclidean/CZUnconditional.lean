@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Pressure.IdentificationExtension
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -35,10 +35,12 @@ the endpoint estimate.
 -/
 
 /-- The explicit constant for the selected vector-valued gradient operator. -/
+@[expose]
 def czGradientOperatorConstant : ℝ :=
   3 * czGradientComponentConstant rieszSecondWeakTypeConstant 1
 
 /-- The explicit component constant at exponent `3 / 2`. -/
+@[expose]
 def czP1OperatorConstant : ℝ :=
   czP1Constant rieszSecondWeakTypeConstant 1
 

@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryGuards
 input used by the source packet budgets.  The only bridge hypotheses are
 literal interval, strain, and normal identities. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

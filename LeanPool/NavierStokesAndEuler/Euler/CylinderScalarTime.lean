@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
 
 /-! Jointly continuous scalar representatives of actual smooth cylinder L² paths. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

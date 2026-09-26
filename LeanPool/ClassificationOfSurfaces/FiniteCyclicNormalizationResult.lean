@@ -20,7 +20,7 @@ A result lands only at the existing `NormalForm.canonicalPresentation`; it canno
 second project-owned spelling of the Eval representatives.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

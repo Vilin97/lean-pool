@@ -20,7 +20,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketActivationInitial
 normal and stationary primary.  Only the older homogeneous frame, parent
 center remainder, low source bounds and numerical guards are inputs. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -75,35 +75,35 @@ namespace ParentFrame
 variable (P : ParentFrame D τ)
 
 /-- A, given by `normalizedCoupling (P.B τ) (P.m τ) (P.v τ)`. -/
-def a : ℝ := normalizedCoupling (P.B τ) (P.m τ) (P.v τ)
+@[expose] def a : ℝ := normalizedCoupling (P.B τ) (P.m τ) (P.v τ)
 /-- Sigma, given by `Real.sqrt (normalizedTilt (P.B τ) (P.m τ) (P.v τ))`. -/
-def sigma : ℝ := Real.sqrt (normalizedTilt (P.B τ) (P.m τ) (P.v τ))
+@[expose] def sigma : ℝ := Real.sqrt (normalizedTilt (P.B τ) (P.m τ) (P.v τ))
 /-- Shear, given by `primaryShear P.c P.m P.v τ`. -/
 def shear : ℝ := primaryShear P.c P.m P.v τ
 /-- Epsilon, given by `Real.sqrt (P.a/P.shear)`. -/
-def epsilon : ℝ := Real.sqrt (P.a/P.shear)
+@[expose] def epsilon : ℝ := Real.sqrt (P.a/P.shear)
 /-- Horizon, given by `P.a*(D.T-τ)/P.epsilon`. -/
-def horizon : ℝ := P.a*(D.T-τ)/P.epsilon
+@[expose] def horizon : ℝ := P.a*(D.T-τ)/P.epsilon
 /-- Ray scale, given by `activationRayScale (D.deformationEquiv ⟨τ,hτ.le,hτT.le⟩ 0) (cross (unit
 (P.m τ)) (unit (P.v τ)))`. -/
 def rayScale (hτ : 0 < τ) (hτT : τ < D.T) : ℝ :=
   activationRayScale (D.deformationEquiv ⟨τ,hτ.le,hτT.le⟩ 0)
     (cross (unit (P.m τ)) (unit (P.v τ)))
 /-- Terminal bound, given by `8*(activationConstant CM CH+1)*D.inverseBound/P.shear`. -/
-def terminalBound (CM CH : ℝ) : ℝ :=
+@[expose] def terminalBound (CM CH : ℝ) : ℝ :=
   8*(activationConstant CM CH+1)*D.inverseBound/P.shear
 
 variable [CompleteSpace U] (hτ : 0 < τ) (hτT : τ < D.T)
   (H : HistoryData (D.initial τ hτ hτT.le))
 
 /-- Neighbor cost as an element of `ℝ`. -/
-def neighborCost (CM CH : ℝ) : ℝ :=
+@[expose] def neighborCost (CM CH : ℝ) : ℝ :=
   ‖D.M.derivative.field‖+
     3*‖D.normal.derivative.field‖/(P.rayScale hτ hτT*P.epsilon) +
     2*historyLabelDifferenceCost H*P.terminalBound CM CH/P.epsilon
 
 /-- Total error, given by `P.error+P.neighborCost hτ hτT H CM CH*ρ`. -/
-def totalError (CM CH ρ : ℝ) : ℝ :=
+@[expose] def totalError (CM CH ρ : ℝ) : ℝ :=
   P.error+P.neighborCost hτ hτT H CM CH*ρ
 
 end ParentFrame

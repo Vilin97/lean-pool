@@ -23,7 +23,7 @@ occurrence-aware congruence `realize_congr_symbolsIn`, the exact occurrence iden
 `relationsIn_relationalizeFormula`, and Unit 4's `realize_relationalizeFormula`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

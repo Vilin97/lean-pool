@@ -40,7 +40,7 @@ avoids composing `cPoly` with `-X` to get there.
 for it, and in particular no `Finset.sum_range_id_eq_choose_two`, which does not exist.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

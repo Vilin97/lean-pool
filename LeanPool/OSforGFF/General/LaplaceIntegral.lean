@@ -35,7 +35,7 @@ This is a special case of the modified Bessel function K_{1/2} identity.
 - Glasser, M.L. "A remarkable property of definite integrals" (1983)
 -/
 
-@[expose] public section
+public section
 
 open Real Set MeasureTheory Filter Topology
 open scoped ENNReal NNReal

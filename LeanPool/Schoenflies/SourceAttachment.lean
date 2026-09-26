@@ -26,7 +26,7 @@ outer curve separate.
   transfer.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

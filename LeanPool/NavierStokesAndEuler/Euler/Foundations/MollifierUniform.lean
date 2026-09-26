@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
 
 /-! Uniform control of every classical derivative word by actual strong Sobolev jets. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

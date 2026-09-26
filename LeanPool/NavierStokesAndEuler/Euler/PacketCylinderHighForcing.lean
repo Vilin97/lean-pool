@@ -17,7 +17,7 @@ section
 
 /-! Genuine nonlinear cylinder products preserve support of their multiplying factor. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -105,7 +105,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -33,7 +33,7 @@ preserving the pressure integral exactly. The actual two-row derivative matrix
 is proved nonsingular, and the small smooth nonlinear branch is constructed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -178,7 +178,7 @@ def linearEquiv (lam : ℝ) (hlam : 0 < lam) : Coeff ≃L[ℝ] Coeff :=
           (isUnit_iff_ne_zero.mpr (linearMatrix_det_ne_zero lam hlam)), Matrix.one_mulVec] }
 
 /-- Relative, given by `c 0 * bump 0 y + c 1 * bump 1 y`. -/
-def relative (c : Coeff) (y : ℝ) : ℝ := c 0 * bump 0 y + c 1 * bump 1 y
+@[expose] def relative (c : Coeff) (y : ℝ) : ℝ := c 0 * bump 0 y + c 1 * bump 1 y
 
 theorem relative_contDiff (c : Coeff) : ContDiff ℝ ∞ (relative c) :=
   (contDiff_const.mul (bump_contDiff 0)).add (contDiff_const.mul (bump_contDiff 1))
@@ -230,11 +230,11 @@ def quadraticCLM (lam : ℝ) : Coeff →L[ℝ] Coeff →L[ℝ] Coeff :=
       (quadraticBilin lam))
 
 theorem linearEquiv_apply (lam : ℝ) (hlam : 0 < lam) (c : Coeff) :
-    linearEquiv lam hlam c = (linearMatrix lam).mulVec c := rfl
+    linearEquiv lam hlam c = (linearMatrix lam).mulVec c := by rfl
 
 theorem quadraticCLM_apply (lam : ℝ) (c d : Coeff) :
     quadraticCLM lam c d =
-      ![0, quadraticMoment lam 0 * c 0 * d 0 + quadraticMoment lam 1 * c 1 * d 1] := rfl
+      ![0, quadraticMoment lam 0 * c 0 * d 0 + quadraticMoment lam 1 * c 1 * d 1] := by rfl
 
 theorem weighted_relative_integrable (s : ℝ) (c : Coeff) :
     Integrable (fun y => Real.exp (s * y) * relative c y) :=
@@ -496,10 +496,10 @@ def resetBranch (lam : ℝ) (hlam : 0 < lam) : ResetBranch lam :=
 /-! ## Actual modified angular fields -/
 
 /-- Base E, given by `e0 * Real.exp ((-1 / 2 - lam) * y)`. -/
-def baseE (lam e0 y : ℝ) : ℝ := e0 * Real.exp ((-1 / 2 - lam) * y)
+@[expose] def baseE (lam e0 y : ℝ) : ℝ := e0 * Real.exp ((-1 / 2 - lam) * y)
 
 /-- The first bump is centered at `y0`, and the second at `y0 + 2`. -/
-def modifiedE (lam e0 y0 : ℝ) (c : Coeff) (y : ℝ) : ℝ :=
+@[expose] def modifiedE (lam e0 y0 : ℝ) (c : Coeff) (y : ℝ) : ℝ :=
   baseE lam e0 y * (1 + relative c (y - y0))
 
 /-- Radius X, given by `X0 * Real.exp y`. -/
@@ -868,7 +868,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -935,7 +935,7 @@ def linearEquivNonneg (lam : ℝ) (hlam : 0 ≤ lam) : Coeff ≃L[ℝ] Coeff :=
           (isUnit_iff_ne_zero.mpr (linearMatrix_det_ne_zero_nonneg lam hlam)), Matrix.one_mulVec] }
 
 theorem linearEquivNonneg_coe (lam : ℝ) (hlam : 0 ≤ lam) :
-    (linearEquivNonneg lam hlam).toContinuousLinearMap = linearCLM lam := rfl
+    (linearEquivNonneg lam hlam).toContinuousLinearMap = linearCLM lam := by rfl
 
 theorem continuous_linearCLM : Continuous linearCLM := by
   let L : (Matrix (Fin 2) (Fin 2) ℝ) →ₗ[ℝ] (Coeff →L[ℝ] Coeff) :=
@@ -1037,11 +1037,11 @@ section SmoothUniformInverse
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Quadratic map, given by `B c + A c c`. -/
-def quadraticMap (B : E ≃L[ℝ] E) (A : E →L[ℝ] E →L[ℝ] E) (c : E) : E :=
+@[expose] def quadraticMap (B : E ≃L[ℝ] E) (A : E →L[ℝ] E →L[ℝ] E) (c : E) : E :=
   B c + A c c
 
 /-- Tangent, given by `B.toContinuousLinearMap + A c + A.flip c`. -/
-def tangent (B : E ≃L[ℝ] E) (A : E →L[ℝ] E →L[ℝ] E) (c : E) : E →L[ℝ] E :=
+@[expose] def tangent (B : E ≃L[ℝ] E) (A : E →L[ℝ] E →L[ℝ] E) (c : E) : E →L[ℝ] E :=
   B.toContinuousLinearMap + A c + A.flip c
 
 theorem quadraticMap_contDiff (B : E ≃L[ℝ] E) (A : E →L[ℝ] E →L[ℝ] E) :
@@ -1303,7 +1303,7 @@ section ActualHistory
 open NavierStokes.OutgoingSchedule NavierStokes.OutgoingTail
 
 /-- The factor `sqrt 2` cancels in every angular-history ratio. -/
-def baseWeight (d : TailData) (y : ℝ) : ℝ :=
+@[expose] def baseWeight (d : TailData) (y : ℝ) : ℝ :=
   Real.exp (3 * y / 2) * radialAmplitude d.core.P d.core.dropLength d.core.lam y
 
 /-- Base history, given by `(5 / 8) * d.core.P + OutgoingSchedule.primitive (baseWeight d) y`. -/
@@ -1467,7 +1467,7 @@ theorem flatHistory_contDiff (d : TailData) {y : ℝ} (hy : 0 ≤ y) :
 
 /-- Eta rate, given by `(sigma ((y - d.core.endpoint) / flattenLength) - 1) * (2 * eta / (1 +
 eta ^ 2))`. -/
-def etaRate (d : TailData) (eta y : ℝ) : ℝ :=
+@[expose] def etaRate (d : TailData) (eta y : ℝ) : ℝ :=
   (sigma ((y - d.core.endpoint) / flattenLength) - 1) * (2 * eta / (1 + eta ^ 2))
 
 theorem logShape_hasDerivAt (eta : ℝ) :
@@ -1896,7 +1896,7 @@ theorem exists_scheduled_reset :
     · exact hv.2.trans (hb.trans hδsmall)
 
 /-- Correction center, given by `d.releaseStart - 3`. -/
-def correctionCenter (d : TailData) : ℝ := d.releaseStart - 3
+@[expose] def correctionCenter (d : TailData) : ℝ := d.releaseStart - 3
 
 /-- Reference amplitude, given by `(radialAmplitude d.core.P d.core.dropLength d.core.lam
 d.flattenEnd / 2) * Real.exp ((1 / 2 + d.core.lam) * d.flattenEnd)`. -/
@@ -1961,7 +1961,7 @@ theorem relative_zero_outside (d : TailData) (c : Coeff) {y : ℝ}
   constructor <;> linarith [hs.1, hs.2]
 
 /-- The actual complete outgoing angular field after the two relative bumps. -/
-def correctedAngular (d : TailData) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
+@[expose] def correctedAngular (d : TailData) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
   finalAngular d p * (1 + relative (c p.2) (p.1 - correctionCenter d))
 
 theorem correctedAngular_contDiff (d : TailData) (c : ℝ → Coeff) (hc : ContDiff ℝ ∞ c) :

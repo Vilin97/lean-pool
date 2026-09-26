@@ -12,7 +12,7 @@ import Mathlib.Tactic.TautoSet
 
 /-! # Completeness -/
 
-@[expose] public section
+public section
 
 
 namespace LO

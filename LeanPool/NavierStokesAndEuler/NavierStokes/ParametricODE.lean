@@ -20,7 +20,7 @@ Volterra operator. Smooth inversion then gives parameter dependence without
 assuming smoothness of a pre-existing family of solutions.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.ParametricODE
@@ -42,7 +42,7 @@ abbrev Coefficient (a b : ℝ) (E : Type*) [NormedAddCommGroup E] [NormedSpace �
 variable {a b : ℝ} (hab : a ≤ b)
 
 /-- Extend, given by `f (projIcc a b hab t)`. -/
-def extend (f : Curve a b E) (t : ℝ) : E := f (projIcc a b hab t)
+@[expose] def extend (f : Curve a b E) (t : ℝ) : E := f (projIcc a b hab t)
 
 omit [NormedSpace ℝ E] [CompleteSpace E] in
 theorem continuous_extend (f : Curve a b E) : Continuous (extend hab f) :=
@@ -93,9 +93,10 @@ def integrator : Curve a b E →L[ℝ] Curve a b E :=
   } (b - a) (norm_integralPath_le hab)
 
 theorem integrator_apply (f : Curve a b E) (t : Icc a b) :
-    integrator hab f t = ∫ s in a..(t : ℝ), extend hab f s := rfl
+    integrator hab f t = ∫ s in a..(t : ℝ), extend hab f s := by rfl
 
 /-- Apply coefficient, given by `⟨fun t => A t (u t), A.continuous.clm_apply u.continuous⟩`. -/
+@[expose]
 noncomputable def applyCoefficient (A : Coefficient a b E) (u : Curve a b E) : Curve a b E :=
   ⟨fun t => A t (u t), A.continuous.clm_apply u.continuous⟩
 
@@ -129,7 +130,13 @@ def coefficientAction : Coefficient a b E →L[ℝ] Curve a b E →L[ℝ] Curve 
 
 omit [CompleteSpace E] in
 theorem coefficientAction_apply (A : Coefficient a b E) (u : Curve a b E) (t : Icc a b) :
-    coefficientAction (E := E) A u t = A t (u t) := rfl
+    coefficientAction (E := E) A u t = A t (u t) := by rfl
+
+omit [CompleteSpace E] in
+theorem coefficientAction_apply_curve (A : Coefficient a b E) (u : Curve a b E) :
+    coefficientAction (E := E) A u = applyCoefficient A u := by
+  ext t
+  exact coefficientAction_apply A u t
 
 /-- Volterra, given by `((ContinuousLinearMap.compL ℝ (Curve a b E) (Curve a b E) (Curve a b E))
 (integrator hab)).comp (coefficientAction (E := E))`. -/
@@ -139,7 +146,7 @@ def volterra : Coefficient a b E →L[ℝ] Curve a b E →L[ℝ] Curve a b E :=
 
 theorem volterra_apply (A : Coefficient a b E) (u : Curve a b E) (t : Icc a b) :
     volterra (E := E) hab A u t =
-      ∫ s in a..(t : ℝ), extend hab A s (extend hab u s) := rfl
+      ∫ s in a..(t : ℝ), extend hab A s (extend hab u s) := by rfl
 
 theorem norm_volterra_apply_le (A : Coefficient a b E) (u : Curve a b E) :
     ‖volterra (E := E) hab A u‖ ≤ (b - a) * ‖A‖ * ‖u‖ := by
@@ -149,7 +156,7 @@ theorem norm_volterra_apply_le (A : Coefficient a b E) (u : Curve a b E) :
       (sub_nonneg.mpr hab)).trans_eq (mul_assoc _ _ _).symm)
 
 /-- Homogeneous system as an element of `TangentODE.IntervalSystem E`. -/
-def homogeneousSystem (A : Coefficient a b E) : TangentODE.IntervalSystem E := {
+@[expose] def homogeneousSystem (A : Coefficient a b E) : TangentODE.IntervalSystem E := {
   left := a
   right := b
   ordered := hab
@@ -166,6 +173,8 @@ theorem volterra_eq_next (A : Coefficient a b E) :
     (volterra (E := E) hab A : Curve a b E → Curve a b E) = (homogeneousSystem hab A).next := by
   funext u
   ext t
+  dsimp only [homogeneousSystem]
+  rw [TangentODE.IntervalSystem.next_apply, volterra_apply]
   change (∫ s in a..(t : ℝ), extend hab A s (extend hab u s)) =
     0 + ∫ s in a..(t : ℝ), extend hab A (projIcc a b hab s) (u (projIcc a b hab s))
   simp only [zero_add, extend, projIcc_val]
@@ -230,15 +239,20 @@ theorem contDiff_inverse_family {X Q : Type*}
 
 /-- Equation operator, given by `ContinuousLinearMap.id ℝ (Curve a b E) - volterra (E := E) hab
 A`. -/
-def equationOperator (A : Coefficient a b E) : Curve a b E →L[ℝ] Curve a b E :=
+@[expose] def equationOperator (A : Coefficient a b E) : Curve a b E →L[ℝ] Curve a b E :=
   ContinuousLinearMap.id ℝ (Curve a b E) - volterra (E := E) hab A
+
+theorem equationOperator_apply_curve (A : Coefficient a b E) (u : Curve a b E) :
+    equationOperator hab A u = u - integrator hab (applyCoefficient A u) := by
+  change u - integrator hab (coefficientAction A u) = _
+  rw [coefficientAction_apply_curve]
 
 theorem equationOperator_isInvertible (A : Coefficient a b E) :
     (equationOperator hab A).IsInvertible :=
   id_sub_isInvertible _ (volterra_contracting_iterate hab A)
 
 /-- Resolvent of the actual Volterra integral equation on the full finite interval. -/
-def resolvent (A : Coefficient a b E) : Curve a b E →L[ℝ] Curve a b E :=
+@[expose] def resolvent (A : Coefficient a b E) : Curve a b E →L[ℝ] Curve a b E :=
   (equationOperator hab A).inverse
 
 theorem contDiff_resolvent : ContDiff ℝ ∞ (resolvent (E := E) hab) := by
@@ -264,11 +278,11 @@ def constantCurve : E →L[ℝ] Curve a b E :=
         (fun _ => le_rfl))
 
 /-- Source, given by `constantCurve x₀ + integrator hab f`. -/
-def source (x₀ : E) (f : Curve a b E) : Curve a b E :=
+@[expose] def source (x₀ : E) (f : Curve a b E) : Curve a b E :=
   constantCurve x₀ + integrator hab f
 
 /-- The constructed solution as a continuous path, not an assumed solution family. -/
-def solution (A : Coefficient a b E) (x₀ : E) (f : Curve a b E) : Curve a b E :=
+@[expose] def solution (A : Coefficient a b E) (x₀ : E) (f : Curve a b E) : Curve a b E :=
   resolvent hab A (source hab x₀ f)
 
 theorem resolvent_equation (A : Coefficient a b E) (g : Curve a b E) :
@@ -299,7 +313,7 @@ theorem solution_initial (A : Coefficient a b E) (x₀ : E) (f : Curve a b E) :
 
 /-- Solution extension, given by `x₀ + ∫ s in a..t, extend hab (applyCoefficient A (solution hab
 A x₀ f) + f) s`. -/
-def solutionExtension (A : Coefficient a b E) (x₀ : E) (f : Curve a b E) (t : ℝ) : E :=
+@[expose] def solutionExtension (A : Coefficient a b E) (x₀ : E) (f : Curve a b E) (t : ℝ) : E :=
   x₀ + ∫ s in a..t, extend hab (applyCoefficient A (solution hab A x₀ f) + f) s
 
 theorem solutionExtension_coe (A : Coefficient a b E) (x₀ : E)

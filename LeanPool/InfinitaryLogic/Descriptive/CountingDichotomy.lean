@@ -31,7 +31,7 @@ The isomorphism relation `isoSetoid` this file counts is defined in
   among coded ℕ-models is either ≤ ℵ₀ or exactly 2^ℵ₀.
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 
@@ -44,7 +44,7 @@ open Cardinal Ordinal
 /-- The Silver–Burgess dichotomy for Borel equivalence relations:
 on a standard Borel space, a Borel equivalence relation has either
 at most countably many classes or exactly continuum-many. -/
-def SilverBurgessDichotomy : Prop :=
+@[expose] def SilverBurgessDichotomy : Prop :=
   ∀ {X : Type w} [MeasurableSpace X] [StandardBorelSpace X]
     (r : Setoid X),
     MeasurableSet {p : X × X | r.r p.1 p.2} →

@@ -20,7 +20,7 @@ This module exposes the frozen algebraic predicate and combines the prepared
 quotient power basis with the genuine local proper finite-projection theorem.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology
@@ -57,7 +57,7 @@ def hypersurfaceBaseRingHom {n : ℕ}
 
 /-- A noncircular finite-free rank-`d` predicate with the explicit power
 basis `1,w,...,w^(d-1)`. -/
-def IsFiniteFreeOfRankOverBase {n : ℕ}
+@[expose] def IsFiniteFreeOfRankOverBase {n : ℕ}
     (f : HolomorphicGerm (n + 1)) (d : ℕ) : Prop :=
   let q := Ideal.Quotient.mk (hypersurfaceIdeal f)
   letI : Algebra (HolomorphicGerm n) (HypersurfaceQuotient f) :=

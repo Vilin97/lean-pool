@@ -18,7 +18,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
 finite pressure's Hessian plus the Hessian of its actual correction.
 The normalization of the scalar potential does not affect this identity. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

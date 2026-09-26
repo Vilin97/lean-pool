@@ -22,7 +22,7 @@ has the localized H3 bound and the true fixed-Hq mixed external-word
 estimate at the same input/output radius.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

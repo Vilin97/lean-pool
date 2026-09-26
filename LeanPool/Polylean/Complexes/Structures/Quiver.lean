@@ -5,7 +5,7 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 module
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 
@@ -85,7 +85,7 @@ abbrev snoc : {A B C : V} → Path A B → (B ⟶ C) → Path A C
 abbrev snoc' (A B C : V) : Path A B → (B ⟶ C) → Path A C := Path.snoc
 
 /-- Concatenation of paths. -/
-def append : {A B C : V} → Path A B → Path B C → Path A C
+@[expose] def append : {A B C : V} → Path A B → Path B C → Path A C
   | _, _, _, .nil, p => p
   | _, _, _, .cons e p', p => cons e (append p' p)
 
@@ -138,7 +138,7 @@ theorem length_append {A B C : V} : (p : Path A B) → (q : Path B C) → (appen
     simpa [Nat.succ_add] using congrArg Nat.succ (length_append p' q)
 
 /-- The end-point of the first edge in the path. -/
-def first : Path A B → V
+@[expose] def first : Path A B → V
   | .nil' v => v
   | .cons' _ v _ _ _ => v
 

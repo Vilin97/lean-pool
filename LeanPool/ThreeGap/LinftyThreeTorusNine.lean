@@ -38,7 +38,7 @@ three
 coordinates; everything is exact modular arithmetic — no square roots.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.LinftyRecords3
 

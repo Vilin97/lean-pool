@@ -12,7 +12,7 @@ public import Mathlib.Tactic.Choose
 # Eventually unbounded positive closure and bounded witnesses
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 

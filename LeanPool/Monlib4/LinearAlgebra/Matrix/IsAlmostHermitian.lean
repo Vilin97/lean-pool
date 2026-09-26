@@ -20,7 +20,7 @@ import Mathlib.Tactic.Positivity.Finset
  We say a matrix `x` is `is_almost_hermitian` if there exists some scalar `α ∈ ℂ`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace Matrix
@@ -32,7 +32,7 @@ open scoped Matrix
 /--
 a matrix $x \in M_n(\mathbb{k})$ is ``almost Hermitian'' if there exists some $\alpha\in\mathbb{k}$
   and $y\in M_n(\mathbb{k})$ such that $\alpha y = x$ and $y$ is Hermitian -/
-def IsAlmostHermitian [Star 𝕜] [SMul 𝕜 (Matrix n n 𝕜)] (x : Matrix n n 𝕜) : Prop :=
+@[expose] def IsAlmostHermitian [Star 𝕜] [SMul 𝕜 (Matrix n n 𝕜)] (x : Matrix n n 𝕜) : Prop :=
   ∃ (α : 𝕜) (y : Matrix n n 𝕜), α • y = x ∧ y.IsHermitian
 
 open scoped Kronecker

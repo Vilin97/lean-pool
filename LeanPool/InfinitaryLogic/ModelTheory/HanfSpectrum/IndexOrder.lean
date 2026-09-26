@@ -23,7 +23,7 @@ use to interpret indices as ordinals:
   discharged for every `α < ω₁`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

@@ -18,7 +18,7 @@ import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Strat
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame

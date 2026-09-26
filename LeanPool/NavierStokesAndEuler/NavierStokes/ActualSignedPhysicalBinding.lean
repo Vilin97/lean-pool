@@ -35,7 +35,7 @@ its original torus while the primary wave uses native fast coordinates.
 Freezing the band index preserves every actual derivative and average.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -344,7 +344,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -376,7 +376,7 @@ noncomputable def reference (l : Label B N0) : ℕ := BaseChartJets.cellBand l.1
 
 /-- Domain, given by `ActualParticularStageControls.reindexDomain
 (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N) (fun _ => l.1)`. -/
-noncomputable def domain (l : Label B N0) : PhaseJetBounds.Domain ℕ Slow :=
+@[expose] noncomputable def domain (l : Label B N0) : PhaseJetBounds.Domain ℕ Slow :=
   ActualParticularStageControls.reindexDomain
     (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N) (fun _ => l.1)
 
@@ -391,7 +391,7 @@ noncomputable def pulse (l : Label B N0) (j : Fin 2) :
 
 /-- Spatial label, given by `PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label
 nominal l.1) l.2`. -/
-noncomputable def spatialLabel (l : Label B N0) : SlotColoring.Label :=
+@[expose] noncomputable def spatialLabel (l : Label B N0) : SlotColoring.Label :=
   PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label nominal l.1) l.2
 
 /-- Geometry, given by `ActualSignedGeometry.slotGeometry slots vectors_det (spatialLabel l) 0`. -/
@@ -688,7 +688,7 @@ theorem label_large (l : Label B N0) : 4 ≤ (spatialLabel l).1 :=
 
 /-- Layout, given by `ActualSignedPhysicalData.layout slots outgoing.data.h_pos.le (spatialLabel
 l) (label_large l) 0`. -/
-noncomputable def layout (l : Label B N0) : ActualPeriodizedSignedRealization.Layout :=
+@[expose] noncomputable def layout (l : Label B N0) : ActualPeriodizedSignedRealization.Layout :=
   ActualSignedPhysicalData.layout slots outgoing.data.h_pos.le (spatialLabel l) (label_large l) 0
 
 @[simp] theorem layout_geometry (l : Label B N0) (n : ℕ) :
@@ -915,7 +915,7 @@ theorem nativeView_target (l : Label B N0) :
   rfl
 
 /-- Native coefficients, constructed using `SignedWaveUpdate.coefficients`. -/
-noncomputable def nativeCoefficients (l : Label B N0)
+@[expose] noncomputable def nativeCoefficients (l : Label B N0)
     (R : ℕ → Cylinder → SignedWaveUpdate.Vec2) (k : TorusInverse.Frequency) :
     LinearWaveBounds.WaveCoefficients Cylinder :=
   SignedWaveUpdate.coefficients (primary l).base (primary l).strip (primary l).directions
@@ -973,6 +973,7 @@ variable (l : Label B N0) (P : SignedStressPrimitive.Patch) (u : State Point)
     (hp : GaugeMomentBalances.MovingField standardRegion P.a P.b u.pressure)
 
 /-- Reference copies, constructed using `ActualSignedPhysicalData.dynamicCopyData`. -/
+@[expose]
 noncomputable def referenceCopies : PeriodizedWaveBounds.CopyData Cylinder TorusInverse.Frequency :=
   ActualSignedPhysicalData.dynamicCopyData slots outgoing.data.h_pos.le (spatialLabel l)
     (label_large l) 0 (primary l) (nativeViews l) (nativeStateData l P u H hp).referenceRequest l.2

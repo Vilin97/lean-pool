@@ -17,7 +17,7 @@ are derived before updating the state.  No new residual regularity or
 quantitative estimate is an input to preservation.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.MeanStageRegularity

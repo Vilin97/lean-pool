@@ -18,7 +18,7 @@ argument is the same connected-side argument used in Moise Chapter 6: an edge ca
 polygonal boundary only where the corresponding abstract edge meets the face.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

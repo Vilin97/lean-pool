@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # Auxiliary -/
 
-@[expose] public section
+public section
 
 
 open scoped BigOperators
@@ -37,27 +37,27 @@ only paper-facing definitions.
 -/
 
 /-- `explicitGaussianDensity`: explicit Gaussian Density. -/
-def explicitGaussianDensity (d : Nat) (z : Fin d -> ℂ) : ℝ :=
+@[expose] def explicitGaussianDensity (d : Nat) (z : Fin d -> ℂ) : ℝ :=
   (1 / Real.pi ^ d) * Real.exp (-Finset.sum Finset.univ (fun q : Fin d => ‖z q‖ ^ 2))
 
 /-- `explicitGamma`: explicit Gamma. -/
-def explicitGamma (d : Nat) : MeasureTheory.Measure (Fin d -> ℂ) :=
+@[expose] def explicitGamma (d : Nat) : MeasureTheory.Measure (Fin d -> ℂ) :=
   MeasureTheory.volume.withDensity fun z => ENNReal.ofReal (explicitGaussianDensity d z)
 
 /-- `explicitComplexHermite`: explicit Complex Hermite. -/
-def explicitComplexHermite (m n : Nat) (z : ℂ) : ℂ :=
+@[expose] def explicitComplexHermite (m n : Nat) (z : ℂ) : ℂ :=
   Finset.sum (Finset.range (min m n + 1)) fun j =>
     ((-1 : ℂ) ^ j) * (Nat.factorial j : ℂ) *
       (Nat.choose m j : ℂ) * (Nat.choose n j : ℂ) *
       z ^ (m - j) * (star z) ^ (n - j)
 
 /-- `explicitPhi1D`: explicit Phi1 D. -/
-def explicitPhi1D (k n : Nat) (z : ℂ) : ℂ :=
+@[expose] def explicitPhi1D (k n : Nat) (z : ℂ) : ℂ :=
   (((Real.sqrt ((Nat.factorial n : ℝ) * (Nat.factorial k : ℝ))) : ℂ)⁻¹) *
     explicitComplexHermite n k z
 
 /-- `explicitPhi`: explicit Phi. -/
-def explicitPhi {d : Nat} (kappa alpha : Fin d -> Nat) (z : Fin d -> ℂ) : ℂ :=
+@[expose] def explicitPhi {d : Nat} (kappa alpha : Fin d -> Nat) (z : Fin d -> ℂ) : ℂ :=
   Finset.prod Finset.univ fun q : Fin d => explicitPhi1D (kappa q) (alpha q) (z q)
 
 /-- `explicitPkappaNorm`: explicit Pkappa Norm. -/
@@ -65,7 +65,7 @@ def explicitPkappaNorm {d : Nat} (F : Finsupp (Fin d -> Nat) ℂ) : ℝ :=
   Real.sqrt (Finset.sum F.support fun alpha => ‖F alpha‖ ^ 2)
 
 /-- `explicitEvalPkappa`: explicit Eval Pkappa. -/
-def explicitEvalPkappa {d : Nat} (kappa : Fin d -> Nat) (F : Finsupp (Fin d -> Nat) ℂ) :
+@[expose] def explicitEvalPkappa {d : Nat} (kappa : Fin d -> Nat) (F : Finsupp (Fin d -> Nat) ℂ) :
     (Fin d -> ℂ) -> ℂ :=
   fun z => F.sum fun alpha c => c * explicitPhi kappa alpha z
 
@@ -303,12 +303,12 @@ theorem stablePhaseRetrievalExplicitRange
 /-! ## Closure upgrade -/
 
 /-- `explicitGaussianL2DistanceSq`: explicit Gaussian L2 Distance Sq. -/
-def explicitGaussianL2DistanceSq
+@[expose] def explicitGaussianL2DistanceSq
     {d : ℕ} (P Q : (Fin d -> ℂ) -> ℂ) : ℝ :=
   ∫ z, ‖P z - Q z‖ ^ 2 ∂ explicitGamma d
 
 /-- `explicitModulusDistanceSq`: explicit Modulus Distance Sq. -/
-def explicitModulusDistanceSq
+@[expose] def explicitModulusDistanceSq
     {d : ℕ} (P Q : (Fin d -> ℂ) -> ℂ) : ℝ :=
   ∫ z, (‖P z‖ - ‖Q z‖) ^ 2 ∂ explicitGamma d
 
@@ -372,7 +372,7 @@ private theorem memLp_of_explicitHermitePoly
   exact memLp_two_evalPkappa hd κ F
 
 /-- `UnitPhase`: Unit Phase. -/
-def UnitPhase : Type :=
+@[expose] def UnitPhase : Type :=
   { θ : ℂ // ‖θ‖ = 1 }
 
 instance : TopologicalSpace UnitPhase :=

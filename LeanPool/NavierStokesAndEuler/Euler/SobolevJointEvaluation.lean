@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointEvaluation
 
 /-! Joint continuity of evaluation of genuine cylinder Sobolev fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

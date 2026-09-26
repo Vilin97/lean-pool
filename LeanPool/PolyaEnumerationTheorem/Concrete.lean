@@ -16,7 +16,7 @@ import Mathlib.Tactic.Positivity.Finset
 # Numbers of distinct colorings for some concrete examples
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

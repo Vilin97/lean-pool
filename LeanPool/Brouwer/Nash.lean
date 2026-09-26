@@ -23,7 +23,7 @@ simplices, and `ExistsNashEq` derives the existence of a mixed Nash equilibrium 
 every finite game from Brouwer's fixed-point theorem on a product of simplices.
 -/
 
-@[expose] public section
+public section
 
 open Brouwer (standardSimplex)
 
@@ -237,7 +237,7 @@ def mapSimplex {n m : Type*} [Fintype n] [Fintype m] (e : n ≃ m) :
 @[simp]
 lemma map_simplex_apply {n m : Type*} [Fintype n] [Fintype m] (e : n ≃ m) (x : standardSimplex ℝ n)
     (i : m) :
-    (mapSimplex e x).1 i = x.1 (e.symm i) := rfl
+    (mapSimplex e x).1 i = x.1 (e.symm i) := by rfl
 
 /-- The simplex map induced by an equivalence is itself an equivalence. -/
 def mapSimplexEquiv {n m : Type*} [Fintype n] [Fintype m] (e : n ≃ m) :

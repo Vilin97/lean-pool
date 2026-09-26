@@ -17,7 +17,7 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Corollaries
 
 /-! # Second -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»

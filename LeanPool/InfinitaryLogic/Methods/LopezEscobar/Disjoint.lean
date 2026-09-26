@@ -28,7 +28,7 @@ Endpoints: `pcMem_disjoint` and `pcSentences_entails_not`, the latter being exac
 Unit 5 feeds to `craig_pcSeparation_relational`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

@@ -16,7 +16,7 @@ tight-band nibble proof.  It deliberately contains no historical majority-only
 or round-oracle development: the global degree ceiling is part of every input.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 
@@ -54,7 +54,7 @@ theorem nibbleTheoremMostCeil_of_adaptiveOracleCeil (h : AdaptiveOracleExistsCei
   exact exists_matching_of_oracle_seq_lt hSubset hUniform hrOne hNonnegative T hProduct hRound
 
 /-- A one-round ceiling oracle which can be iterated into the adaptive oracle. -/
-def RoundOracleExistsCeil : Prop :=
+@[expose] def RoundOracleExistsCeil : Prop :=
   ∀ (r : ℕ), 2 ≤ r → ∀ (β : ℝ), 0 < β →
     ∃ μ : ℝ, 0 < μ ∧ ∃ η : ℝ, 0 < η ∧ ∃ d₀ : ℝ, 0 < d₀ ∧ ∃ c : ℝ,
       0 < c ∧ c ≤ 1 ∧

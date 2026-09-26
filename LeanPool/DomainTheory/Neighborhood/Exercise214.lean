@@ -48,7 +48,7 @@ X' ∈ 𝒟₀`).
 order-theoretic proofs of
 `rel_ofIso_iff`/`phi_inter` are otherwise choice-free (`propext`, `Quot.sound`). -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

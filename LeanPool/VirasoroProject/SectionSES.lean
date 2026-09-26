@@ -43,7 +43,7 @@ short exact sequence
 
 -/
 
-@[expose] public section
+public section
 
 section group_section
 

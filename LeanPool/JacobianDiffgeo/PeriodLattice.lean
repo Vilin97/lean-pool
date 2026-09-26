@@ -113,4 +113,4 @@ direct interest to `abel-theorem`'s `ofCurve_inj`/`ofCurve_eq_of_path` consumers
 `.topologicalClosure` from `Jac₀`'s defining quotient once discreteness is unconditional.
 -/
 
-@[expose] public section
+public section

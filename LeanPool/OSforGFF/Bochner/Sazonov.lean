@@ -38,7 +38,7 @@ whenever √⟪x-y, S(x-y)⟫ < 1.
 * Da Prato-Zabczyk, "Stochastic Equations in Infinite Dimensions", §1.2
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex Filter Topology Set InnerProductSpace
 open scoped Real
@@ -57,10 +57,17 @@ def IsPositiveTraceClass (S : H →L[ℝ] H) : Prop :=
   ∃ (ι : Type) (b : HilbertBasis ι ℝ H),
     Summable (fun i => @inner ℝ H _ (b i) (S (b i)))
 
+omit [CompleteSpace H] in
+theorem isPositiveTraceClass_iff (S : H →L[ℝ] H) :
+    IsPositiveTraceClass S ↔
+      S.IsPositive ∧
+        ∃ (ι : Type) (b : HilbertBasis ι ℝ H),
+          Summable (fun i => @inner ℝ H _ (b i) (S (b i))) := by rfl
+
 /-! ## Quadratic Form and Seminorm -/
 
 /-- The quadratic form associated to an operator: x ↦ ⟪x, Sx⟫. -/
-def quadForm (S : H →L[ℝ] H) (x : H) : ℝ := @inner ℝ H _ x (S x)
+@[expose] def quadForm (S : H →L[ℝ] H) (x : H) : ℝ := @inner ℝ H _ x (S x)
 
 section QuadFormLemmas
 

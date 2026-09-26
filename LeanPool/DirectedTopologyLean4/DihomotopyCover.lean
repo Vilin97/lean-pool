@@ -13,7 +13,7 @@ public import LeanPool.DirectedTopologyLean4.CoverLemma
 # LeanPool.DirectedTopologyLean4.DihomotopyCover
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the definition of a (n, m)-covered (dipath) dihomotopy, covered by X₁ and X₂:
@@ -389,7 +389,7 @@ lemma range_right_subset (F : Dihomotopy γ₁ γ₂) : range γ₂ ⊆ range F 
 
 /-- A dihomotopy of directed paths is covered if its image lies entirely in X₀ or in X₁.
 -/
-def covered (hX : X₀ ∪ X₁ = univ) (F : Dihomotopy γ₁ γ₂) : Prop :=
+@[expose] def covered (hX : X₀ ∪ X₁ = univ) (F : Dihomotopy γ₁ γ₂) : Prop :=
   let _ : X₀ ∪ X₁ = univ := hX
   range F ⊆ X₀ ∨ range F ⊆ X₁
 

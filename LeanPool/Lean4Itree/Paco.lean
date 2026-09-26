@@ -18,4 +18,4 @@ the parameterized least fixed point `plfp` and its accumulation principle
 (`Paco`).
 -/
 
-@[expose] public section
+public section

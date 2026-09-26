@@ -21,7 +21,7 @@ whose constants precede the band, copy, and source.  No native periodicity of
 the source is used.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.CommonCoverClass
@@ -184,7 +184,7 @@ theorem sourceArgument_smooth (g : CCS) (k : Frequency) :
 
 /-- One common affine cost for both maps. Its value is independent of the
 copy index and of the slow parameter space. -/
-noncomputable def argumentCost (g : CCS) : ℝ :=
+@[expose] noncomputable def argumentCost (g : CCS) : ℝ :=
   1 + ‖g.coordinateLinear‖ + ‖g.pointLinear‖ * (1 + ‖g.coordinateLinear‖)
 
 theorem one_le_argumentCost (g : CCS) : 1 ≤ argumentCost g := by
@@ -328,7 +328,7 @@ theorem norm_inverse_scaledBasis_le (B : Plane ≃L[ℝ] Plane) (ci : ℝ) (hci 
     (mul_le_mul_of_nonneg_right (norm_inverse_transverseChart_le ci hci) (norm_nonneg _))
 
 /-- Band geometry, bundling `gap`, `basis`, `center`. -/
-noncomputable def bandGeometry (B : Plane ≃L[ℝ] Plane) (h : ℝ) (n gap : ℕ)
+@[expose] noncomputable def bandGeometry (B : Plane ≃L[ℝ] Plane) (h : ℝ) (n gap : ℕ)
     (center : Plane) : CCS where
   gap := gap
   basis := scaledBasis B (ChartScales.timeCoefficient h n) (ChartScales.timeCoefficient_pos h n).ne'
@@ -431,7 +431,7 @@ variable {P V : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Reinsert the actual current slot time after solving the joint equation. -/
-noncomputable def currentArgument (g : CCS) (k : Frequency) (p : P × Plane) : Joint P :=
+@[expose] noncomputable def currentArgument (g : CCS) (k : Frequency) (p : P × Plane) : Joint P :=
   (p, (g.coordinates k p.2).2)
 
 /-- Current linear as an element of `P × Plane →L[ℝ] Joint P`. -/
@@ -855,7 +855,7 @@ theorem memClass_affine_transport
 
 /-- A strip over a linear parameter projection. Its weights are the actual
 base weights, so retaining the parameter preserves them exactly. -/
-noncomputable def parameterStrip (s : WeightedClasses.StripData Y) (L : X →L[ℝ] Y) :
+@[expose] noncomputable def parameterStrip (s : WeightedClasses.StripData Y) (L : X →L[ℝ] Y) :
     WeightedClasses.StripData X where
   domain := L ⁻¹' s.domain
   isOpen_domain := s.isOpen_domain.preimage L.continuous
@@ -944,7 +944,7 @@ section CommonBandChanges
 
 /-- Either direction of a bounded covering change. The inverse is a map on
 the universal cover; no extra periodicity is imposed on its input. -/
-noncomputable def coverChange (forward : Bool) (d : ℕ) : Plane →L[ℝ] Plane :=
+@[expose] noncomputable def coverChange (forward : Bool) (d : ℕ) : Plane →L[ℝ] Plane :=
   if forward then (CommonCoverSolve.coverPower d : Plane →L[ℝ] Plane)
   else ((CommonCoverSolve.coverPower d).symm : Plane →L[ℝ] Plane)
 

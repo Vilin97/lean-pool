@@ -21,7 +21,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.Coalgebra.FiniteDimensional`.
 -/
 
-@[expose] public section
+public section
 
 variable {R A : Type*}
 local notation "lT" => LinearMap.lTensor
@@ -36,8 +36,9 @@ open scoped TensorProduct
 
 lemma algebraMapCLM_eq_ket_one {R A : Type*} [RCLike R] [NormedAddCommGroupOfRing A]
   [InnerProductSpace R A] [SMulCommClass R A A] [IsScalarTower R A A] :
-  algebraMapCLM R A = ket R 1 :=
-rfl
+  algebraMapCLM R A = ket R 1 := by
+  ext
+  simp only [algebraMapCLM_apply, ket_apply_apply, Algebra.smul_def, mul_one]
 
 lemma algebraMapCLM_adjoint_eq_bra_one {R A : Type*} [RCLike R] [NormedAddCommGroupOfRing A]
   [InnerProductSpace R A] [SMulCommClass R A A] [IsScalarTower R A A] [CompleteSpace A] :
@@ -106,13 +107,13 @@ lemma Coalgebra.comul_eq_mul_adjoint
   Coalgebra.comul =
     (LinearMap.adjoint (LinearMap.mul' R A : (A ⊗[R] A) →ₗ[R] A) :
       A →ₗ[R] A ⊗[R] A) :=
-rfl
+by rfl
 -- open scoped ofFiniteDimensionalHilbertAlgebra in
 lemma Coalgebra.counit_eq_unit_adjoint
   [RCLike R] [NormedAddCommGroupOfRing A] [InnerProductSpace R A]
   [SMulCommClass R A A] [IsScalarTower R A A] [FiniteDimensional R A] :
   Coalgebra.counit = (LinearMap.adjoint (Algebra.linearMap R A : R →ₗ[R] A) : A →ₗ[R] R) :=
-rfl
+by rfl
 
 open scoped InnerProductSpace
 -- open scoped ofFiniteDimensionalHilbertAlgebra in
@@ -186,8 +187,7 @@ theorem Coalgebra.lTensor_mul_comp_rTensor_mul_adjoint_of
 Coalgebra.lTensor_mul_comp_rTensor_comul_of h
 
 /-- Construct the Frobenius algebra structure from finite-dimensional Hilbert-algebra data. -/
-@[reducible]
-noncomputable def FiniteDimensionalCoAlgebraIsFrobeniusAlgebraOf
+@[reducible, expose] noncomputable def FiniteDimensionalCoAlgebraIsFrobeniusAlgebraOf
   [RCLike R] [NormedAddCommGroupOfRing A] [InnerProductSpace R A]
   [SMulCommClass R A A] [IsScalarTower R A A] [FiniteDimensional R A]
   (h : ∃ σ : A → A, ∀ x y z : A, ⟪x * y, z⟫_R = ⟪y, σ x * z⟫_R) :

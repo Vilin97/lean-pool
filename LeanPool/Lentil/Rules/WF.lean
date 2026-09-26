@@ -20,7 +20,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 
 /-! Theorems about weak-fairness. -/
 
-@[expose] public section
+public section
 
 open Classical
 

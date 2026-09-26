@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketCoefficientControl
 
 /-! Normalized coefficient motion from genuine one-sided time derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

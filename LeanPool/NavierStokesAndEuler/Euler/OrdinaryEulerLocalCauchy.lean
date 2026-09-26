@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
 data. A fixed tail member supplies the reference solution; the actual
 stability theorem supplies the uniform H3 bound needed by the limit. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

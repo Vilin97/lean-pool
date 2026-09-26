@@ -47,7 +47,7 @@ pairing round-trips (`unpair_pair'`, `pair_unpair'`) choice-free here.
 Everything in this file is `⊆ {propext, Quot.sound}`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Recursive
 
@@ -317,7 +317,7 @@ theorem primrec_sub₂ {f g : ℕ → ℕ} (hf : Nat.Primrec f) (hg : Nat.Primre
 /-- Choice-free primitive-recursive **selection**: `selectFn c a b = a` if `c =
 1`, `= b` if `c = 0`
 (for a `{0,1}`-valued `c`), via `c * a + (1 - c) * b`. -/
-def selectFn (c a b : ℕ) : ℕ := c * a + (1 - c) * b
+@[expose] def selectFn (c a b : ℕ) : ℕ := c * a + (1 - c) * b
 
 @[simp] theorem selectFn_one (a b : ℕ) : selectFn 1 a b = a := by simp [selectFn]
 
@@ -351,16 +351,19 @@ let us derive the
 inclusion- and equality-deciders. All choice-free. -/
 
 /-- A unary predicate `p : ℕ → Prop` is **recursively decidable**. -/
+@[expose]
 def RecDecidable (p : ℕ → Prop) : Prop :=
   ∃ f : ℕ → ℕ, Nat.Primrec f ∧ ∀ n, p n ↔ f n = 1
 
 /-- A binary relation is recursively decidable when its `Nat.pair`-coding is. -/
+@[expose]
 def RecDecidable₂ (r : ℕ → ℕ → Prop) : Prop :=
   RecDecidable fun t => r t.unpair.1 t.unpair.2
 
 /-- A ternary relation is recursively decidable when its `Nat.pair`-coding (`pair
 n (pair m k)`)
 is. -/
+@[expose]
 def RecDecidable₃ (r : ℕ → ℕ → ℕ → Prop) : Prop :=
   RecDecidable fun t => r t.unpair.1 t.unpair.2.unpair.1 t.unpair.2.unpair.2
 
@@ -472,10 +475,12 @@ equivalence (`REPred.of_iff`). All choice-free. -/
 /-- A unary predicate `p : ℕ → Prop` is **recursively enumerable**: it is the
 projection of a
 recursively decidable relation, `p n ↔ ∃ i, q (Nat.pair i n)`. -/
+@[expose]
 def REPred (p : ℕ → Prop) : Prop :=
   ∃ q : ℕ → Prop, RecDecidable q ∧ ∀ n, p n ↔ ∃ i, q (Nat.pair i n)
 
 /-- A binary relation is recursively enumerable when its `Nat.pair`-coding is. -/
+@[expose]
 def REPred₂ (r : ℕ → ℕ → Prop) : Prop :=
   REPred fun t => r t.unpair.1 t.unpair.2
 
@@ -635,6 +640,7 @@ theorem le_pair_right (a b : ℕ) : b ≤ Nat.pair a b := by
 /-- Encode a list of naturals as a single natural: `[] ↦ 0`, `a :: l ↦ pair a
 (encodeList l) + 1`.
 The `+1` keeps the empty list (code `0`) distinguishable from any nonempty list. -/
+@[expose]
 def encodeList : List ℕ → ℕ
   | [] => 0
   | a :: l => Nat.pair a (encodeList l) + 1
@@ -910,7 +916,7 @@ recursively decidable —
 choice-free, via an explicit `Nat.rec` fold of the `{0,1}` indicator. -/
 
 /-- Indicator of `v = 1`, as a `{0,1}`-valued primitive-recursive function. -/
-def isOne (v : ℕ) : ℕ := 1 - ((v - 1) + (1 - v))
+@[expose] def isOne (v : ℕ) : ℕ := 1 - ((v - 1) + (1 - v))
 
 theorem isOne_le_one (v : ℕ) : isOne v ≤ 1 := by unfold isOne; omega
 
@@ -925,7 +931,7 @@ theorem primrec_isOne : Nat.Primrec isOne :=
 /-- The `{0,1}`-valued bounded-`∀` indicator: `1` iff `g (pair i n) = 1` for all
 `i < N`. Folded
 right-to-left with `selectFn` so the result stays in `{0,1}`. -/
-def bForallFn (g : ℕ → ℕ) (n N : ℕ) : ℕ :=
+@[expose] def bForallFn (g : ℕ → ℕ) (n N : ℕ) : ℕ :=
   Nat.rec (motive := fun _ => ℕ) 1 (fun i ih => selectFn ih (isOne (g (Nat.pair i n))) 0) N
 
 theorem bForallFn_le_one (g : ℕ → ℕ) (n N : ℕ) : bForallFn g n N ≤ 1 := by

@@ -77,7 +77,7 @@ realization a polygonal drawing and accepts *any* drawing back. This restriction
 interface that lets the two cut points be interior to edges of `C`.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies unitInterval
 open scoped Graph

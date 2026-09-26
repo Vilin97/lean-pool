@@ -27,7 +27,7 @@ terms and an exact chord identity for a cubic polynomial.  This replaces the fiv
 ratio certificates formerly used by `Band.Assembly`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

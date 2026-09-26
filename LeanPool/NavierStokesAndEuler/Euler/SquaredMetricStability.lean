@@ -18,7 +18,7 @@ import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-! Squared metric stability with a viscosity-sized source, including zero energy. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

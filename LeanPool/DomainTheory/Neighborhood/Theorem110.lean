@@ -42,7 +42,7 @@ Everything is constructive (`[propext, Quot.sound]`): `[X]`-membership is just
 filter laws mirror the constructive proofs for `principal`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -54,7 +54,7 @@ variable {α : Type*} (V : NeighborhoodSystem α)
 neighbourhood `X`.
 (This is the `basicOpen X` of Exercise 1.22, repeated here to avoid the topology
 dependency.) -/
-def bracket (X : Set α) : Set V.Element := {x | x.mem X}
+@[expose] def bracket (X : Set α) : Set V.Element := {x | x.mem X}
 
 @[simp] theorem mem_bracket {X : Set α} {x : V.Element} : x ∈ V.bracket X ↔ x.mem X := Iff.rfl
 
@@ -121,7 +121,7 @@ laws reduce to facts about `[·]`: the master `[Δ] = |𝒟|` is the whole space
 consistency
 witness `[W]` for `[X] ∩ [Y]` yields `W ⊆ X ∩ Y` (via `↑W`), so `X ∩ Y ∈ 𝒟` and
 `[X] ∩ [Y] = [X ∩ Y]`. -/
-def tokenSystem : NeighborhoodSystem V.Element where
+@[expose] def tokenSystem : NeighborhoodSystem V.Element where
   mem S := ∃ X, V.mem X ∧ S = V.bracket X
   master := Set.univ
   master_mem := ⟨V.master, V.master_mem, V.bracket_master.symm⟩
@@ -138,7 +138,7 @@ def tokenSystem : NeighborhoodSystem V.Element where
 
 /-- The element of `|{[X]}|` corresponding to `x ∈ |𝒟|`: the filter `{[X] ∣ X ∈
 x}`. -/
-def toToken (x : V.Element) : V.tokenSystem.Element where
+@[expose] def toToken (x : V.Element) : V.tokenSystem.Element where
   mem S := ∃ X, x.mem X ∧ S = V.bracket X
   sub := by rintro S ⟨X, hX, rfl⟩; exact ⟨X, x.sub hX, rfl⟩
   master_mem := ⟨V.master, x.master_mem, V.bracket_master.symm⟩
@@ -152,7 +152,7 @@ def toToken (x : V.Element) : V.tokenSystem.Element where
 
 /-- The element of `|𝒟|` corresponding to `y ∈ |{[X]}|`: the filter `{X ∣ [X] ∈
 y}`. -/
-def ofToken (y : V.tokenSystem.Element) : V.Element where
+@[expose] def ofToken (y : V.tokenSystem.Element) : V.Element where
   mem X := V.mem X ∧ y.mem (V.bracket X)
   sub h := h.1
   master_mem := ⟨V.master_mem, by rw [V.bracket_master]; exact y.master_mem⟩
@@ -174,7 +174,7 @@ def ofToken (y : V.tokenSystem.Element) : V.Element where
 /-- **Theorem 1.10 (the isomorphism).** `X ↦ [X]` induces an order-isomorphism
 `|𝒟| ≃o |{[X]}|`:
 `toToken` and `ofToken` are mutually inverse and preserve/reflect `⊑`. -/
-def tokenIso : V.Element ≃o V.tokenSystem.Element where
+@[expose] def tokenIso : V.Element ≃o V.tokenSystem.Element where
   toFun := V.toToken
   invFun := V.ofToken
   left_inv := by

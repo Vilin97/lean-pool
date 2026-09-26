@@ -67,7 +67,7 @@ domain `T`
 Theorem 4.1.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Theorem56
 

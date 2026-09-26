@@ -29,7 +29,7 @@ Rewritings `LO.FirstOrder.Rew` is naturally converted to formula Rewritings by
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 
@@ -90,13 +90,14 @@ lemma func'' {k} (f : L.Func k) (v : Fin k → Semiterm L ξ₁ n₁) :
 lemma ext' {ω₁ ω₂ : Rew L ξ₁ n₁ ξ₂ n₂} (h : ω₁ = ω₂) (t) : ω₁ t = ω₂ t := by simp[h]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected def id : Rew L ξ n ξ n where
+@[expose] protected def id : Rew L ξ n ξ n where
   toFun := id
   func' := fun _ _ => rfl
 
 @[simp] lemma id_app (t : Semiterm L ξ n) : Rew.id t = t := rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 protected def comp (ω₂ : Rew L ξ₂ n₂ ξ₃ n₃) (ω₁ : Rew L ξ₁ n₁ ξ₂ n₂) : Rew L ξ₁ n₁ ξ₃ n₃ where
   toFun := fun t => ω₂ (ω₁ t)
   func' := fun f v => by simp[func'']; rfl
@@ -109,32 +110,33 @@ lemma comp_app (ω₂ : Rew L ξ₂ n₂ ξ₃ n₃) (ω₁ : Rew L ξ₁ n₁ �
 @[simp] lemma comp_id (ω : Rew L ξ₁ n₁ ξ₂ n₂) : ω.comp Rew.id = ω := by ext <;> simp[comp_app]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def bindAux (b : Fin n₁ → Semiterm L ξ₂ n₂) (e : ξ₁ → Semiterm L ξ₂ n₂) :
+@[expose] def bindAux (b : Fin n₁ → Semiterm L ξ₂ n₂) (e : ξ₁ → Semiterm L ξ₂ n₂) :
     Semiterm L ξ₁ n₁ → Semiterm L ξ₂ n₂
   | (#x)       => b x
   | (&x)       => e x
   | (func f v) => func f (fun i => bindAux b e (v i))
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def bind (b : Fin n₁ → Semiterm L ξ₂ n₂) (e : ξ₁ → Semiterm L ξ₂ n₂) : Rew L ξ₁ n₁ ξ₂ n₂ where
   toFun := bindAux b e
   func' := fun _ _ => rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def rewrite (f : ξ₁ → Semiterm L ξ₂ n) : Rew L ξ₁ n ξ₂ n := bind Semiterm.bvar f
+@[expose] def rewrite (f : ξ₁ → Semiterm L ξ₂ n) : Rew L ξ₁ n ξ₂ n := bind Semiterm.bvar f
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def rewriteMap (e : ξ₁ → ξ₂) : Rew L ξ₁ n ξ₂ n := rewrite (fun m => &(e m))
+@[expose] def rewriteMap (e : ξ₁ → ξ₂) : Rew L ξ₁ n ξ₂ n := rewrite (fun m => &(e m))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def map (b : Fin n₁ → Fin n₂) (e : ξ₁ → ξ₂) : Rew L ξ₁ n₁ ξ₂ n₂ :=
+@[expose] def map (b : Fin n₁ → Fin n₂) (e : ξ₁ → ξ₂) : Rew L ξ₁ n₁ ξ₂ n₂ :=
   bind (fun n => #(b n)) (fun m => &(e m))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def substs {n'} (v : Fin n → Semiterm L ξ n') : Rew L ξ n ξ n' := bind v fvar
+@[expose] def substs {n'} (v : Fin n → Semiterm L ξ n') : Rew L ξ n ξ n' := bind v fvar
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def emb {o : Type v₁} [h : IsEmpty o] {ξ : Type v₂} {n} : Rew L o n ξ n := map id h.elim
+@[expose] def emb {o : Type v₁} [h : IsEmpty o] {ξ : Type v₂} {n} : Rew L o n ξ n := map id h.elim
 
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev embs {o : Type v₁} [IsEmpty o] {n} : Rew L o n ℕ n := emb
@@ -143,19 +145,19 @@ abbrev embs {o : Type v₁} [IsEmpty o] {n} : Rew L o n ℕ n := emb
 def empty {o : Type v₁} [h : IsEmpty o] {ξ : Type v₂} {n} : Rew L o 0 ξ n := map Fin.elim0 h.elim
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def bShift : Rew L ξ n ξ (n + 1) := map Fin.succ id
+@[expose] def bShift : Rew L ξ n ξ (n + 1) := map Fin.succ id
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def bShiftAdd (m : ℕ) : Rew L ξ n ξ (n + m) := map (Fin.addNat · m) id
+@[expose] def bShiftAdd (m : ℕ) : Rew L ξ n ξ (n + m) := map (Fin.addNat · m) id
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def cast {n n' : ℕ} (h : n = n') : Rew L ξ n ξ n' := map (Fin.cast h) id
+@[expose] def cast {n n' : ℕ} (h : n = n') : Rew L ξ n ξ n' := map (Fin.cast h) id
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def castLE {n n' : ℕ} (h : n ≤ n') : Rew L ξ n ξ n' := map (Fin.castLE h) id
+@[expose] def castLE {n n' : ℕ} (h : n ≤ n') : Rew L ξ n ξ n' := map (Fin.castLE h) id
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def toS : Rew L (Fin n) 0 Empty n := Rew.bind ![] (#·)
+@[expose] def toS : Rew L (Fin n) 0 Empty n := Rew.bind ![] (#·)
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def toF : Rew L Empty n (Fin n) 0 := Rew.bind (&·) Empty.elim
@@ -164,7 +166,7 @@ def toF : Rew L Empty n (Fin n) 0 := Rew.bind (&·) Empty.elim
 def embSubsts (v : Fin k → Semiterm L ξ n) : Rew L Empty k ξ n := Rew.bind v Empty.elim
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected def q (ω : Rew L ξ₁ n₁ ξ₂ n₂) : Rew L ξ₁ (n₁ + 1) ξ₂ (n₂ + 1) :=
+@[expose] protected def q (ω : Rew L ξ₁ n₁ ξ₂ n₂) : Rew L ξ₁ (n₁ + 1) ξ₂ (n₂ + 1) :=
   bind (#0 :> bShift ∘ ω ∘ bvar) (bShift ∘ ω ∘ fvar)
 
 lemma eq_id_of_eq {ω : Rew L ξ n ξ n} (hb : ∀ x, ω #x = #x) (he : ∀ x, ω &x = &x) (t) :
@@ -173,7 +175,7 @@ lemma eq_id_of_eq {ω : Rew L ξ n ξ n} (hb : ∀ x, ω #x = #x) (he : ∀ x, �
   simp[this]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qpow (ω : Rew L ξ₁ n₁ ξ₂ n₂) : (k : ℕ) → Rew L ξ₁ (n₁ + k) ξ₂ (n₂ + k)
+@[expose] def qpow (ω : Rew L ξ₁ n₁ ξ₂ n₂) : (k : ℕ) → Rew L ξ₁ (n₁ + k) ξ₂ (n₂ + k)
   | 0     => ω
   | k + 1 => (ω.qpow k).q
 
@@ -521,7 +523,7 @@ section «lp_section_14»
 -/
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def shift : SyntacticRew L n n := map id Nat.succ
+@[expose] def shift : SyntacticRew L n n := map id Nat.succ
 
 /-
   #0 #1 ... #(n - 1) #n &0 &1 ...
@@ -530,9 +532,10 @@ def shift : SyntacticRew L n n := map id Nat.succ
  -/
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def free : SyntacticRew L (n + 1) n := bind (bvar <: &0) (fun m => &(Nat.succ m))
+@[expose] def free : SyntacticRew L (n + 1) n := bind (bvar <: &0) (fun m => &(Nat.succ m))
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def fix : SyntacticRew L n (n + 1) := bind (fun x => #(Fin.castSucc x)) (#(Fin.last n) :>ₙ fvar)
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -963,7 +966,7 @@ abbrev free [Rewriting L ℕ F ℕ F] (φ : F (n + 1)) : F n := @Rew.free L n �
 abbrev fix [Rewriting L ℕ F ℕ F] (φ : F n) : F (n + 1) := @Rew.fix L n ▹ φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def shifts [Rewriting L ℕ F ℕ F] (Γ : List (F n)) : List (F n) := Γ.map Rewriting.shift
+@[expose] def shifts [Rewriting L ℕ F ℕ F] (Γ : List (F n)) : List (F n) := Γ.map Rewriting.shift
 
 /-- Imported declaration from the Incompleteness formalization. -/
 scoped[LO.FirstOrder] postfix:max "⁺" => FirstOrder.Rewriting.shifts
@@ -1113,7 +1116,7 @@ lemma rewrite_free_eq_subst (t : SyntacticTerm L) (φ : S 1) :
   simpa [←comp_app] using smul_ext' <| by ext x <;> simp [Rew.comp_app, Fin.fin_one_eq_zero]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def shiftEmb : S n ↪ S n where
+@[expose] def shiftEmb : S n ↪ S n where
   toFun := shift
   inj' := shift_injective
 

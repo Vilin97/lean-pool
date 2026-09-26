@@ -35,7 +35,7 @@ compared therefore start in three different universes, so every bound is stated 
 same-universe form, where those lifts are identities.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

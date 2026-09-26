@@ -14,7 +14,7 @@ import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KT
 
 /-! # Completeness -/
 
-@[expose] public section
+public section
 
 
 namespace LO

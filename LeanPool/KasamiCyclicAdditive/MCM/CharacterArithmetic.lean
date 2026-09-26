@@ -23,7 +23,7 @@ cubic. This is the exceptional branch complementary to the generic Dickson
 permutation argument.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive
 

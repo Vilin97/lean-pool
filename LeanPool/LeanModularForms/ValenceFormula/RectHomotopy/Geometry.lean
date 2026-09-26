@@ -23,7 +23,7 @@ the winding number of `fdBoundary` around interior points is -1.
 * `RectHomotopyProof.HHeight` — height parameter (= `heightCutoff`)
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval
@@ -33,13 +33,13 @@ noncomputable section
 namespace RectHomotopyProof
 
 /-- The elliptic point ρ = e^{2πi/3} = -1/2 + √3/2 · i -/
-def rho : ℂ := -1/2 + Real.sqrt 3 / 2 * I
+@[expose] def rho : ℂ := -1/2 + Real.sqrt 3 / 2 * I
 
 /-- The elliptic point ρ' = e^{πi/3} = 1/2 + √3/2 · i -/
-def rho' : ℂ := 1/2 + Real.sqrt 3 / 2 * I
+@[expose] def rho' : ℂ := 1/2 + Real.sqrt 3 / 2 * I
 
 /-- The elliptic point i -/
-def iPoint : ℂ := I
+@[expose] def iPoint : ℂ := I
 
 lemma rho_norm : ‖rho‖ = 1 := by
   rw [Complex.norm_eq_sqrt_sq_add_sq]
@@ -69,7 +69,7 @@ lemma outside_closed_unit_ball (z : ℂ) (hz : ‖z‖ > 1) :
     z ∉ closedBall (0 : ℂ) 1 := by simpa only [mem_closedBall, dist_zero_right, not_le] using hz
 
 /-- The chord (straight line segment) from z₁ to z₂. -/
-def chordSegment (z₁ z₂ : ℂ) : ℝ → ℂ :=
+@[expose] def chordSegment (z₁ z₂ : ℂ) : ℝ → ℂ :=
   fun t => (1 - t) • z₁ + t • z₂
 
 lemma chordSegment_in_convex {z₁ z₂ : ℂ} {S : Set ℂ} (hS : Convex ℝ S) (hz₁ : z₁ ∈ S) (hz₂ : z₂ ∈ S)
@@ -145,7 +145,7 @@ lemma arc2_in_closed_unit_ball (t : ℝ) (_ : t ∈ Icc 0 1) :
   simp only [mem_closedBall, dist_zero_right, arc2_on_unit_circle, le_refl]
 
 /-- The straight chord from `ρ'` to `i`. -/
-def chord1 : ℝ → ℂ := chordSegment rho' iPoint
+@[expose] def chord1 : ℝ → ℂ := chordSegment rho' iPoint
 /-- The straight chord from `i` to `ρ`. -/
 def chord2 : ℝ → ℂ := chordSegment iPoint rho
 
@@ -179,12 +179,12 @@ lemma circleIntegral_winding (p : ℂ) (ε : ℝ) (hε : 0 < ε) :
   circleIntegral.integral_sub_inv_of_mem_ball (Metric.mem_ball_self hε)
 
 /-- Height parameter H = √3/2 + 1 for FD boundary. -/
-noncomputable def HHeight : ℝ := Real.sqrt 3 / 2 + 1
+@[expose] noncomputable def HHeight : ℝ := Real.sqrt 3 / 2 + 1
 
-lemma H_height_eq_heightCutoff : HHeight = heightCutoff := rfl
+lemma H_height_eq_heightCutoff : HHeight = heightCutoff := by rfl
 
 /-- Polygon: FD boundary with arcs replaced by chords. -/
-noncomputable def fdPolygon : ℝ → ℂ := fun t =>
+@[expose] noncomputable def fdPolygon : ℝ → ℂ := fun t =>
   if t ≤ 1 then
     1/2 + (HHeight - t * (HHeight -
       Real.sqrt 3 / 2)) * I
@@ -198,7 +198,7 @@ noncomputable def fdPolygon : ℝ → ℂ := fun t =>
 
 /-- The FD boundary curve (local copy matching clean
 folder's `fdBoundary`). -/
-noncomputable def fdBoundary : ℝ → ℂ := fun t =>
+@[expose] noncomputable def fdBoundary : ℝ → ℂ := fun t =>
   if t ≤ 1 then
     1/2 + (HHeight - t * (HHeight -
       Real.sqrt 3 / 2)) * I
@@ -213,7 +213,7 @@ noncomputable def fdBoundary : ℝ → ℂ := fun t =>
 /-- The homotopy from FD boundary (s=0) to
 polygon (s=1). Segments 1,4,5 unchanged;
 segments 2,3 use arc-to-chord interpolation. -/
-noncomputable def fdBoundaryToPolygonHomotopy :
+@[expose] noncomputable def fdBoundaryToPolygonHomotopy :
     ℝ × ℝ → ℂ := fun (t, s) =>
   if t ≤ 1 then
     1/2 + (HHeight - t * (HHeight -

@@ -21,7 +21,7 @@ sample space is `(Fin n → Fin (n + 1))`, with its uniform law.  Coordinate
 every coordinate has the two-point law used in the proof outline.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal
 open MeasureTheory Set
@@ -68,7 +68,7 @@ theorem allLowEmbedding_injective (n : ℕ) :
   exact Fin.succ_inj.mp (congrFun h i)
 
 /-- The good event consists precisely of choices with no zero digit. -/
-def extremalGood (n : ℕ) : Set (ExtremalSpace n) :=
+@[expose] def extremalGood (n : ℕ) : Set (ExtremalSpace n) :=
   Set.range (allLowEmbedding n)
 
 instance (n : ℕ) : Fintype (extremalGood n) :=

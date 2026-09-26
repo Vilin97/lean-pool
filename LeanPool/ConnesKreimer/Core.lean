@@ -15,7 +15,7 @@ import Mathlib.RingTheory.HopfAlgebra.Convolution
     Combinatorial core (List.Perm) proven below verbatim from `Coassoc.lean`; the Mathlib bridge
     lifts it to equality of linear maps. LOCAL — not part of the published godsil tree. -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 
@@ -38,10 +38,10 @@ def tmul (x y : Tens) : Tens :=
 
 mutual
   /-- The Connes-Kreimer coproduct on one rooted tree, as a formal list of tensor terms. -/
-  def coprodTree : RTree → Tens
+  @[expose] def coprodTree : RTree → Tens
     | .node F => ([RTree.node F], []) :: (coprodForest F).map (fun (p, r) => (p, [RTree.node r]))
   /-- The multiplicative extension of the coproduct from trees to forests. -/
-  def coprodForest : Forest → Tens
+  @[expose] def coprodForest : Forest → Tens
     | []      => [([], [])]
     | t :: ts => tmul (coprodTree t) (coprodForest ts)
 end
@@ -357,7 +357,7 @@ theorem _root_.CK.coassoc_map :
 /-! ### Counit. -/
 
 /-- Counit monoid hom: every generator ↦ 0, so a word ↦ `0 ^ len` = indicator of empty. -/
-def _root_.CK.εmon : FreeMonoid RTree →* k := FreeMonoid.lift (fun _ => (0 : k))
+@[expose] def _root_.CK.εmon : FreeMonoid RTree →* k := FreeMonoid.lift (fun _ => (0 : k))
 
 @[simp] theorem _root_.CK.εmon_nil : εmon k ([] : Forest) = 1 := map_one _
 
@@ -373,11 +373,11 @@ theorem _root_.CK.εmon_append (p p' : Forest) : εmon k (p ++ p') = εmon k p *
   | cons a as ih => simp
 
 /-- Counit as an algebra hom, then linear. -/
-noncomputable def _root_.CK.εalg : H k →ₐ[k] k :=
+@[expose] noncomputable def _root_.CK.εalg : H k →ₐ[k] k :=
   MonoidAlgebra.lift k k (FreeMonoid RTree) (εmon k)
 
 /-- The Connes-Kreimer counit as a linear map. -/
-noncomputable def _root_.CK.ε : H k →ₗ[k] k := (εalg k).toLinearMap
+@[expose] noncomputable def _root_.CK.ε : H k →ₗ[k] k := (εalg k).toLinearMap
 
 theorem _root_.CK.ε_single (f : Forest) (b : k) :
     ε k (MonoidAlgebra.single f b) = b * εmon k f := by
@@ -1054,7 +1054,7 @@ noncomputable def _root_.CK.adamsUnit : (WithConv (H k →ₗ[k] H k))ˣ where
   inv_val := antipode_convMul_id k
 
 /-- `Ψ₋₁ = S`: the inverse of the Adams unit `Ψ₁` is the antipode. -/
-theorem _root_.CK.adamsUnit_inv_val : (adamsUnit k)⁻¹.val = WithConv.toConv (antipode k) := rfl
+theorem _root_.CK.adamsUnit_inv_val : (adamsUnit k)⁻¹.val = WithConv.toConv (antipode k) := by rfl
 
 /-! ### Part 2 — local nilpotency of `J = id − u∘ε` (the connected-graded engine for `log_⋆`).
 

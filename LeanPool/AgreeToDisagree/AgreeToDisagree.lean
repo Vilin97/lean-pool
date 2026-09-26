@@ -16,7 +16,7 @@ This file develops information partitions and conditional probabilities needed
 for Aumann's agreement theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace AgreeToDisagree
 
@@ -57,7 +57,7 @@ lemma Partition.le_iff {P Q : Partition α} : P ≤ Q ↔ ∀ s ∈ P, ∃ t ∈
     exact hs'.2 <| hab t ht hat
 
 /-- We call a partition of a measurable space measurable if it consists of measurable sets. -/
-protected def Partition.Measurable [MeasurableSpace Ω] (P : Partition Ω) :=
+@[expose] protected def Partition.Measurable [MeasurableSpace Ω] (P : Partition Ω) :=
   ∀ s ∈ P, MeasurableSet s
 
 /-- If a countable partition is measurable, every partition it refines is measurable too.

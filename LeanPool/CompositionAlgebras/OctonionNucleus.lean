@@ -36,7 +36,7 @@ relation `c.coords m = -c.coords m`. Three triples cover all seven imaginary ind
 discharged by kernel-external evaluation, so nothing below rests on the compiler.
 -/
 
-@[expose] public section
+public section
 namespace Octonion
 
 theorem coord_eq {a b : Octonion} (hab : a = b) (k : Fin 8) : a.coords k = b.coords k := by

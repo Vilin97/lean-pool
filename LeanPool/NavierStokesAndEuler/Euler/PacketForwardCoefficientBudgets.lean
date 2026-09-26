@@ -15,7 +15,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
 /-! The actual forward source coefficients supply both the nonlinear-profile
 budget and the all-order correction coefficient budget. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

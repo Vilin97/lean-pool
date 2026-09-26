@@ -69,7 +69,7 @@ Exercises 1.18/1.27 are the only constructions used and are themselves
 choice-free.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

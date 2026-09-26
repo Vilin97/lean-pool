@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketProvider
 
 /-! The concrete mean inverse in the literal jets used by the packet recursion. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

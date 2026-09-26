@@ -16,7 +16,7 @@ import Mathlib.MeasureTheory.Covering.Besicovitch
 # LeanPool.RiemannMappingTheorem.Defs
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 
@@ -24,14 +24,14 @@ variable {u : ℂ} {U V W : Set ℂ}
 
 /-- The collection of compact subsets of `U`. Used as the index for the
 compact-open topology `𝓒 U`. -/
-def compacts (U : Set ℂ) : Set (Set ℂ) := {K ⊆ U | IsCompact K}
+@[expose] def compacts (U : Set ℂ) : Set (Set ℂ) := {K ⊆ U | IsCompact K}
 
 @[simp] lemma union_compacts : ⋃₀ compacts U = U :=
   subset_antisymm (fun _ ⟨_, hK, hz⟩ => hK.1 hz)
     (fun z hz => ⟨{z}, ⟨singleton_subset_iff.2 hz, isCompact_singleton⟩, mem_singleton z⟩)
 
 /-- The open unit disk `{z : ℂ | ‖z‖ < 1}`. -/
-def 𝔻 : Set ℂ := ball 0 1
+@[expose] def 𝔻 : Set ℂ := ball 0 1
 
 lemma mem_𝔻_iff : u ∈ 𝔻 ↔ ‖u‖ < 1 :=
   mem_ball_zero_iff
@@ -84,7 +84,7 @@ instance {U V : Set ℂ} : CoeFun (embedding U V) (fun _ => ℂ → ℂ) := ⟨e
   maps_to := fun _ hx => hUV ▸ hx
 
 /-- Composition of embeddings: `(f ∘ g) : embedding U W`. -/
-@[simp] def embedding.comp (f : embedding V W) (g : embedding U V) : embedding U W where
+@[expose, simp] def embedding.comp (f : embedding V W) (g : embedding U V) : embedding U W where
   toFun := f ∘ g
   is_diff := f.is_diff.comp g.is_diff g.maps_to
   is_inj := f.is_inj.comp g.is_inj g.maps_to

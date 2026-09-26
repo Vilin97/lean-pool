@@ -70,7 +70,7 @@ Neither is a restatement of anything proved here.
   and the only new fact about arcs this module needs.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Set unitInterval
 

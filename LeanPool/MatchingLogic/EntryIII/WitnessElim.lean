@@ -24,7 +24,7 @@ import LeanPool.MatchingLogic.Soundness
 # MatchingLogic.EntryIII.WitnessElim
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

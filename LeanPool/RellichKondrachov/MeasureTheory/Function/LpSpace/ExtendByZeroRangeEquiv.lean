@@ -23,7 +23,7 @@ This is used in the manifold Rellich glue to transport compactness on `volume` t
 fixed compact supports.
 -/
 
-@[expose] public section
+public section
 
 namespace MeasureTheory
 

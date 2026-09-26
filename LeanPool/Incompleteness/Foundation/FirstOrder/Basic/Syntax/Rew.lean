@@ -31,7 +31,7 @@ Rewritings `LO.FirstOrder.Rew` is naturally converted to formula Rewritings by
 
 -/
 
-@[expose] public section
+public section
 
 namespace Finset
 
@@ -53,7 +53,7 @@ namespace FirstOrder
 namespace Semiformula
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def rewAux ⦃n₁ n₂ : ℕ⦄ (ω : Rew L ξ₁ n₁ ξ₂ n₂) : Semiformula L ξ₁ n₁ → Semiformula L ξ₂ n₂
+@[expose] def rewAux ⦃n₁ n₂ : ℕ⦄ (ω : Rew L ξ₁ n₁ ξ₂ n₂) : Semiformula L ξ₁ n₁ → Semiformula L ξ₂ n₂
   | ⊤        => ⊤
   | ⊥        => ⊥
   | rel r v  => rel r (ω ∘ v)
@@ -70,7 +70,7 @@ lemma ext_rewAux' {ω₁ ω₂ : Rew L ξ₁ n₁ ξ₂ n₂} (h : ω₁ = ω₂
     rewAux ω₁ φ = rewAux ω₂ φ:= by simp [h]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def rew (ω : Rew L ξ₁ n₁ ξ₂ n₂) : Semiformula L ξ₁ n₁ →ˡᶜ Semiformula L ξ₂ n₂ where
+@[expose] def rew (ω : Rew L ξ₁ n₁ ξ₂ n₂) : Semiformula L ξ₁ n₁ →ˡᶜ Semiformula L ξ₂ n₂ where
   toTr := rewAux ω
   map_top'   := by rfl
   map_bot'   := by rfl
@@ -496,6 +496,7 @@ private lemma «not_fvar?_fixitr_fvSup» (φ : SyntacticFormula L) :
   simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def close (φ : SyntacticFormula L) : SyntacticFormula L := ∀* (@Rew.fixitr L 0 φ.fvSup ▹ φ)
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -517,7 +518,7 @@ lemma close_eq_self_of (φ : SyntacticFormula L) (h : φ.freeVariables = ∅) : 
   close_eq_self_of (∀∀φ) (by simp)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def toEmpty [DecidableEq ξ] {n : ℕ} : (φ :
+@[expose] def toEmpty [DecidableEq ξ] {n : ℕ} : (φ :
     Semiformula L ξ n) → φ.freeVariables = ∅ → Semisentence L n
   | rel R v,  h =>
     rel R fun i ↦ (v i).toEmpty (by

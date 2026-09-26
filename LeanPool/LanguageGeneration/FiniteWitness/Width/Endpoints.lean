@@ -13,16 +13,17 @@ public import Mathlib.Basic.Denumerable
 # Endpoint examples and realization of the entire width range
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 
 variable {α : Type*}
 
 /-- The family of all infinite subsets of a universe. -/
+@[expose]
 def allInfinite (α : Type*) : Set (Set α) := {L | L.Infinite}
 /-- The family of subsets with finite complement. -/
-def cofinite (α : Type*) : Set (Set α) := {L | Lᶜ.Finite}
+@[expose] def cofinite (α : Type*) : Set (Set α) := {L | Lᶜ.Finite}
 
 theorem allInfinite_uus : Generic.UUS (allInfinite α) := fun _ h => h
 

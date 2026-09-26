@@ -32,7 +32,7 @@ including the Hungerbühler-Wasem angle-based approach.
 * `angleAtCrossing_translate` — translation invariance of crossing angle
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval
@@ -43,7 +43,7 @@ noncomputable section
 /-- The angle at a crossing point where γ passes through z₀.
 `arg(L_out) - arg(-L_in)` where L_in and L_out are one-sided derivative
 limits. At smooth points (not in partition), returns π. -/
-def angleAtCrossing (γ : PiecewiseC1Immersion) (t₀ : ℝ)
+@[expose] def angleAtCrossing (γ : PiecewiseC1Immersion) (t₀ : ℝ)
     (ht₀ : t₀ ∈ Ioo γ.a γ.b) : ℝ :=
   if h : t₀ ∈ γ.toPiecewiseC1Curve.partition then
     let L_left :=
@@ -59,7 +59,7 @@ theorem angleAtCrossing_smooth (γ : PiecewiseC1Immersion)
     angleAtCrossing γ t₀ ht₀ = Real.pi := by simp only [angleAtCrossing, hsmooth, ↓reduceDIte]
 
 /-- Winding number via explicit angle sum at crossings. -/
-def windingNumberWithAngles'
+@[expose] def windingNumberWithAngles'
     (γ : PiecewiseC1Immersion) (z₀ : ℂ)
     (crossings : Finset ℝ)
     (hcrossings_in : ∀ t ∈ crossings, t ∈ Ioo γ.a γ.b)
@@ -143,7 +143,7 @@ theorem integral_inv_real_axis (r ε : ℝ) (hr : 0 < r)
     Complex.ofReal_log hr.le, Complex.ofReal_log hε.le]
 
 /-- Translate a piecewise C¹ immersion by a constant. -/
-def PiecewiseC1Immersion.translate
+@[expose] def PiecewiseC1Immersion.translate
     (γ : PiecewiseC1Immersion) (c : ℂ) :
     PiecewiseC1Immersion where
   toFun := fun t => γ.toFun t + c
@@ -194,7 +194,7 @@ of the modified curve Λ that detours around z₀ (H-W Proposition 2.2).
 
 The decomposition is `n_{z₀}(γ) = N - α/(2π)`, so `N = n_{z₀}(γ) + α/(2π)`.
 When `N = 0`, the generalized winding number equals `-α/(2π)`. -/
-def externalWindingContribution (γ : PiecewiseC1Immersion)
+@[expose] def externalWindingContribution (γ : PiecewiseC1Immersion)
     (z₀ : ℂ) (t₀ : ℝ) (ht₀ : t₀ ∈ Ioo γ.a γ.b) : ℂ :=
   generalizedWindingNumber' γ.toFun γ.a γ.b z₀ +
     (angleAtCrossing γ t₀ ht₀ : ℂ) / (2 * Real.pi)

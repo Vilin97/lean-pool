@@ -13,4 +13,4 @@ public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.LinearIndependent.De
 Import index for the Brauer group formalization.
 -/
 
-@[expose] public section
+public section

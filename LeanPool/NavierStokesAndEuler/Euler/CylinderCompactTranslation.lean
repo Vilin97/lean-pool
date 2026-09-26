@@ -21,7 +21,7 @@ The compact support argument controls every small covering translation,
 including its angular component, before dominated L² differentiation.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

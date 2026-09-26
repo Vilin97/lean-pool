@@ -22,7 +22,7 @@ public import Mathlib.Basic.Denumerable
 # MatchingLogic.EntryIII.Renaming
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -31,7 +31,7 @@ variable {S : Signature} {Var Var' Var'' : Type}
 namespace Pattern
 
 /-- Rename every free and bound element-variable occurrence. -/
-def rename (f : Var → Var') : Pattern S Var → Pattern S Var'
+@[expose] def rename (f : Var → Var') : Pattern S Var → Pattern S Var'
   | .var x => .var (f x)
   | .app σ args => .app σ (fun i => (args i).rename f)
   | .imp φ ψ => .imp (φ.rename f) (ψ.rename f)

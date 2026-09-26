@@ -26,7 +26,7 @@ Also provides helper lemmas about the equilibrium Maxwellian:
 - `equilibriumMaxwellian_log_bound`: polynomial log growth
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

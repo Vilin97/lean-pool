@@ -30,7 +30,7 @@ variable. Pressure reconstruction, the temporal inverse and the rank repair
 are the literal operations in `CorrectionStep.CycleState.step`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -775,7 +775,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

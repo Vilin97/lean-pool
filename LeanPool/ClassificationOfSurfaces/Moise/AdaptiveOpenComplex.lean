@@ -17,7 +17,7 @@ Their edges need not yet form a conforming simplicial complex: a coarse edge may
 edges of finer adjacent tiles.  The next layer resolves precisely those hanging vertices.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -957,7 +957,7 @@ theorem mem_boundaryEdgeVertices_iff (hU : IsOpen U) (t : K.AdaptiveFace U)
   exact Finset.mem_filter
 
 /-- Barycentric parameter along a cyclic level-face edge, from vertex `i` to vertex `i+1`. -/
-noncomputable def levelFaceEdgeParameter {n : ℕ} (t : K.LevelFace n)
+@[expose] noncomputable def levelFaceEdgeParameter {n : ℕ} (t : K.LevelFace n)
     (i : ZMod 3) (p : K.realization) : ℝ :=
   ((K.safeSubdivision n).homeo.symm p).1
     ((K.safeSubdivision n).refined.faceVertex t (i + 1))
@@ -1527,7 +1527,7 @@ abbrev AdaptiveEdgeInterval (hU : IsOpen U) (t : K.AdaptiveFace U) (i : ZMod 3) 
   Fin ((K.boundaryEdgeVertexList U hU t i).length - 1)
 
 /-- First endpoint of a resolved adaptive-edge interval. -/
-noncomputable def adaptiveEdgeIntervalFirst (hU : IsOpen U)
+@[expose] noncomputable def adaptiveEdgeIntervalFirst (hU : IsOpen U)
     (t : K.AdaptiveFace U) (i : ZMod 3)
     (j : K.AdaptiveEdgeInterval U hU t i) : K.realization :=
   (K.boundaryEdgeVertexList U hU t i).get
@@ -1536,7 +1536,7 @@ noncomputable def adaptiveEdgeIntervalFirst (hU : IsOpen U)
       omega⟩
 
 /-- Second endpoint of a resolved adaptive-edge interval. -/
-noncomputable def adaptiveEdgeIntervalSecond (hU : IsOpen U)
+@[expose] noncomputable def adaptiveEdgeIntervalSecond (hU : IsOpen U)
     (t : K.AdaptiveFace U) (i : ZMod 3)
     (j : K.AdaptiveEdgeInterval U hU t i) : K.realization :=
   (K.boundaryEdgeVertexList U hU t i).get
@@ -1733,7 +1733,7 @@ theorem mem_adaptiveFanFacesOver_iff (hU : IsOpen U)
     exact ⟨f.2, by simp, rfl⟩
 
 /-- The `adaptiveFanFaceVertices` declaration. -/
-noncomputable def adaptiveFanFaceVertices (hU : IsOpen U)
+@[expose] noncomputable def adaptiveFanFaceVertices (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) : Finset K.realization :=
   {K.adaptiveFaceCenter U f.1,
     K.adaptiveEdgeIntervalFirst U hU f.1 f.2.1 f.2.2,

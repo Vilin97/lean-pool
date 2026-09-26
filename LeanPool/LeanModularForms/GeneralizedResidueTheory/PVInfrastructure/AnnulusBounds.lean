@@ -29,7 +29,7 @@ crossing points, used in the dyadic PV convergence proof.
     bound on singular annulus integral
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

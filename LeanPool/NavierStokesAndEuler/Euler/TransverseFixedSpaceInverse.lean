@@ -17,7 +17,7 @@ coercive inverse are constructed here and identified with the original physical
 transverse solve. This is the fixed-space starting point for parameter estimates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -71,7 +71,7 @@ variable (c : ℝ) (hc : 0 < c) (hQ : ∀ t x, c * ‖x‖ ^ 2 ≤ ‖Q t x‖ ^
   (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
 
 /-- A polynomial quantitative coercivity constant on the fixed coordinate space. -/
-def fixedCoercivity : ℝ := (transportCost T Q Q₁ c)⁻¹ ^ 2 / 2
+@[expose] def fixedCoercivity : ℝ := (transportCost T Q Q₁ c)⁻¹ ^ 2 / 2
 
 omit [CompleteSpace U] [CompleteSpace E] in
 include hT hc in

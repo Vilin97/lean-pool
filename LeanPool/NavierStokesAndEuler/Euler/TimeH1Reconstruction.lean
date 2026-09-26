@@ -22,7 +22,7 @@ of `p` with derivative `q`, this is that representative. Thus parameter
 derivatives and all-order bounds pass through one fixed bounded linear map.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,7 +38,7 @@ open Set MeasureTheory ContinuousLinearMap EulerTimeLp EulerTerminalTimePrimitiv
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- The actual time average, expressed using the terminal primitive's initial trace. -/
-def mean (T : ℝ) (hT : 0 ≤ T) : TimeLp T E →L[ℝ] E :=
+@[expose] def mean (T : ℝ) (hT : 0 ≤ T) : TimeLp T E →L[ℝ] E :=
   (-T)⁻¹ • initialTrace T hT
 
 /-- The constant part of the reconstruction. -/
@@ -60,7 +60,7 @@ omit [CompleteSpace E] in
 theorem reconstruction_apply (T : ℝ) (hT : 0 ≤ T) (p q : TimeLp T E)
     (t : Icc (0 : ℝ) T) :
     reconstruction T hT (p,q) t =
-      mean T hT p + (terminalPrimitive T hT q t - mean T hT (primitiveTimeLp T hT q)) := rfl
+      mean T hT p + (terminalPrimitive T hT q t - mean T hT (primitiveTimeLp T hT q)) := by rfl
 
 /-- Constant fields have their actual value as time average. -/
 theorem mean_constantField (T : ℝ) (hT : 0 < T) (v : E) :

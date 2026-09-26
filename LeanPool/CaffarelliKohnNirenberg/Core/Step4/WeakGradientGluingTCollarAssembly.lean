@@ -21,7 +21,7 @@ bounds to one measurable field. The only external analytic input is the
 fixed harmonic and far-force remainder's temporal majorant.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology BigOperators

@@ -17,4 +17,4 @@ import Mathlib.Tactic.SetLike
 Import index for the Brauer group formalization.
 -/
 
-@[expose] public section
+public section

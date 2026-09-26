@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevPointMultiplication
 /-! The exact Sobolev equation is the literal pointwise normalized equation
 for the canonical smooth representatives. No pointwise PDE is assumed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,7 +41,7 @@ private theorem coefficient_value_ae (C : SmoothCoefficient P)
   exact hc.trans (congrArg (C.coefficient x) hf)
 
 /-- Point nonlinearity as an element of `Vector3`. -/
-def pointNonlinearity (A : Data P T) (Z : FieldTower P T)
+@[expose] def pointNonlinearity (A : Data P T) (Z : FieldTower P T)
     (t : Icc (0 : ℝ) T) (x : LiftDomain P) : Vector3 :=
   (A.linear.coefficient t).coefficient x (Z.pointField t x) +
     fieldFDeriv P (Z.pointField t) x (transportDirection A.κ A.direction (Z.pointField t x)) +

@@ -15,7 +15,7 @@ import Mathlib.Analysis.Matrix.PosDef
 `psd_resolvent_trace_bound`: `tr((U⁻¹ - B)⁻¹) ≤ tr(U) + tr(B·U²) / (1 - tr(B·U))`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Matrix BigOperators
 

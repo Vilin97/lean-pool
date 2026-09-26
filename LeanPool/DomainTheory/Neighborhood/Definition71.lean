@@ -75,7 +75,7 @@ inhabitant
 (`unitSys_isEffectivelyGiven`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -175,6 +175,7 @@ end ComputablePresentation
 /-- **Definition 7.1 (Scott 1981, PRG-19) — effectively given.** A neighbourhood
 system is
 *effectively given* when it admits a computable presentation. -/
+@[expose]
 def NeighborhoodSystem.IsEffectivelyGiven (V : NeighborhoodSystem α) : Prop :=
   Nonempty (ComputablePresentation V)
 

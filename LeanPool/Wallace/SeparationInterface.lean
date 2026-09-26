@@ -21,7 +21,7 @@ No topology on the free Abelian group and no compactness conclusion is stored in
 `SeparationPackage`; both are derived below from its algebraic and filter-theoretic fields.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 
@@ -32,7 +32,7 @@ namespace Wallace
 noncomputable section
 
 /-- An injective sequence bundled with the proof of injectivity. -/
-def InjectiveSequence' (G : Type u) :=
+@[expose] def InjectiveSequence' (G : Type u) :=
   {s : ℕ → G // Function.Injective s}
 
 /--
@@ -70,7 +70,7 @@ namespace SeparationPackage
 variable {I : Type u}
 
 /-- Simultaneous evaluation by all compatible separating characters. -/
-def evaluation (C : SeparationPackage I) :
+@[expose] def evaluation (C : SeparationPackage I) :
     (I →₀ ℤ) →+ ({x : I →₀ ℤ // x ≠ 0} → UnitAddCircle) where
   toFun y x := C.character x y
   map_zero' := by
@@ -81,7 +81,7 @@ def evaluation (C : SeparationPackage I) :
     exact map_add (C.character z) x y
 
 /-- The initial topology induced by the compatible separating characters. -/
-@[reducible] def initialTopology (C : SeparationPackage I) :
+@[expose, reducible] def initialTopology (C : SeparationPackage I) :
     TopologicalSpace (I →₀ ℤ) :=
   TopologicalSpace.induced C.evaluation inferInstance
 

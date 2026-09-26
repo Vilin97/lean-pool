@@ -18,7 +18,7 @@ section
 
 /-! Zero angular mean of the actual transverse potential, corrector, and time derivatives. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -83,7 +83,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -136,7 +136,7 @@ theorem curlCorrector_eq (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
   rw [Data.curlCorrector, Data.clamp_coe, he, coverField_fderiv, G.corrector_formula I t x θ]
 
 /-- The literal recursion operator has the already-constructed continuous L² witness. -/
-def curlCorrectorField : Field P D.T (D.curlCorrector P (G.vector I)) where
+@[expose] def curlCorrectorField : Field P D.T (D.curlCorrector P (G.vector I)) where
   path := G.correctorPath I
   orbit := G.correctorPath_orbit I
   raw_eq t x θ := (G.curlCorrector_eq I t x θ).trans ((G.correctorField I).raw_eq t x θ)

@@ -15,7 +15,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCostMonotone
 costs and the final radius are explicit finite polynomials in those jets,
 the initial boundary size, and an upper bound for the inverse time length. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,20 +28,20 @@ open Set Real EulerSmoothLimit EulerMeanCoefficients EulerPacketPiola EulerPacke
   EulerTimeLpGramSobolev EulerPacketParentMeanCoercivity
 
 /-- Curvature amplitude, given by `27*C^2*C₂`. -/
-def curvatureAmplitude (C C₂ : ℝ) : ℝ := 27*C^2*C₂
+@[expose] def curvatureAmplitude (C C₂ : ℝ) : ℝ := 27*C^2*C₂
 
 /-- Operator cost, given by `operatorBlockAmplitude (Fin 4) q T R C C₁ (curvatureAmplitude C C₂)
 C₁ scaledBoundaryOperatorAmplitude L`. -/
-def operatorCost (q : ℕ) (T R C C₁ C₂ L : ℝ) : ℝ :=
+@[expose] def operatorCost (q : ℕ) (T R C C₁ C₂ L : ℝ) : ℝ :=
   operatorBlockAmplitude (Fin 4) q T R C C₁ (curvatureAmplitude C C₂) C₁
     scaledBoundaryOperatorAmplitude L
 
 /-- Forcing cost, given by `forcingBlockAmplitude (Fin 4) q T R C C₁ 1`. -/
-def forcingCost (q : ℕ) (T R C C₁ : ℝ) : ℝ :=
+@[expose] def forcingCost (q : ℕ) (T R C C₁ : ℝ) : ℝ :=
   forcingBlockAmplitude (Fin 4) q T R C C₁ 1
 
 /-- Weak cost as an element of `ℝ`. -/
-def weakCost (q : ℕ) (T R C C₁ C₂ L : ℝ) : ℝ :=
+@[expose] def weakCost (q : ℕ) (T R C C₁ C₂ L : ℝ) : ℝ :=
   1+sobolevInverseCost (inverseEnvelope C C₁) (operatorCost q T R C C₁ C₂ L) q *
     (operatorCost q T R C C₁ C₂ L+forcingCost q T R C C₁)
 
@@ -53,7 +53,7 @@ def gramCost (q : ℕ) (R C C₁ V : ℝ) : ℝ :=
 
 /-- Radius, given by `1+2*(weakCost q T R C C₁ C₂ L+gramCost q R C C₁ 1+gramCost q R C C₁
 (Ti+2)) * (sobolevCoefficientRadius (Fin 4) R+1)`. -/
-def radius (q : ℕ) (T Ti R C C₁ C₂ L : ℝ) : ℝ :=
+@[expose] def radius (q : ℕ) (T Ti R C C₁ C₂ L : ℝ) : ℝ :=
   1+2*(weakCost q T R C C₁ C₂ L+gramCost q R C C₁ 1+gramCost q R C C₁ (Ti+2)) *
     (sobolevCoefficientRadius (Fin 4) R+1)
 

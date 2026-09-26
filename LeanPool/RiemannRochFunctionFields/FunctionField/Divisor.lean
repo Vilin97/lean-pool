@@ -26,7 +26,7 @@ The partial order on `DivisorA` is the pointwise order on `Finsupp` from Mathlib
 (`Finsupp.le_def`); no new order instance is introduced here.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc
 
@@ -43,6 +43,7 @@ variable (k K : Type*) [Field k] [Field K]
 local instance instDecidableEqRatFuncDivisorFile : DecidableEq k⟮X⟯ := Classical.decEq _
 
 /-- The degree of a coordinate place: the residue field dimension over `k`. -/
+@[expose]
 noncomputable def placeDegree (v : PlaceA k K) : ℕ :=
   match v with
   | Sum.inl w =>
@@ -553,11 +554,11 @@ theorem infinitePrincipalDegree_eq_neg_intDegree_norm (x : Kˣ) :
   ring
 
 /-- The valuation subring at a coordinate place. -/
-noncomputable def placeValuationSubring (v : PlaceA k K) : ValuationSubring K :=
+@[expose] noncomputable def placeValuationSubring (v : PlaceA k K) : ValuationSubring K :=
   (placeValuation k K v).valuationSubring
 
 /-- The global degree of a divisor. -/
-noncomputable def deg (D : DivisorA k K) : ℤ :=
+@[expose] noncomputable def deg (D : DivisorA k K) : ℤ :=
   D.sum fun v n => (n : ℤ) * (placeDegree k K v : ℤ)
 
 /-- Product formula: the global degree of a principal divisor is zero. -/
@@ -569,7 +570,7 @@ theorem deg_principalDivisorA_eq_zero (x : Kˣ) :
     (R := infiniteIntegers k K) (K := K) (Additive.ofMul x)
   have hdiv : principalDivisorA k K (Additive.ofMul x) = Dfin.sumElim Dinf := by
     rw [Finsupp.sumElim_eq_add]
-    rfl
+    exact principalDivisorA_apply k K (Additive.ofMul x)
   rw [deg, hdiv, Finsupp.sum_sumElim]
   change
     Dfin.sum (fun v n => n * (placeDegree k K (Sum.inl v) : ℤ)) +
@@ -582,6 +583,7 @@ theorem deg_principalDivisorA_eq_zero (x : Kˣ) :
 def support (D : DivisorA k K) : Finset (PlaceA k K) := D.support
 
 /-- A divisor is effective when all coefficients are nonnegative. -/
+@[expose]
 def IsEffective (D : DivisorA k K) : Prop :=
   ∀ v, 0 ≤ D v
 

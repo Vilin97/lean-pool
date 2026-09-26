@@ -20,7 +20,7 @@ annulus estimates; once those are instantiated, this theorem is the formal
 recursion step used in the upper bound.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 

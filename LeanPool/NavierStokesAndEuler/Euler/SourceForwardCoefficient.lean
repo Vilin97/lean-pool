@@ -40,7 +40,7 @@ The resulting time path and its parameter regularity are therefore proved in
 the uniform spatial norm, not merely at each fixed spatial label.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -246,7 +246,7 @@ section
 
 /-! Actual factorial estimates for the uniformly bounded space-time Gram inverse. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -438,7 +438,7 @@ coefficient (Q*Q)⁻¹Q*. Spatial translation covariance and coefficient estimat
 are proved for these actual fields.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -606,7 +606,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -682,10 +682,10 @@ local instance instSourceForwardCoefficient18 : NormedSpace ℝ (C(K,Space →�
     inferInstance
 
 /-- The actual bounded continuous source generator. -/
-def sourceGenerator : C(K,Space →ᵇ U →L[ℝ] U) := generatorPath c hc Q.field Q₁.field hQ
+@[expose] def sourceGenerator : C(K,Space →ᵇ U →L[ℝ] U) := generatorPath c hc Q.field Q₁.field hQ
 
 /-- The actual bounded continuous projected-forcing coefficient. -/
-def sourceForcing : C(K,Space →ᵇ E →L[ℝ] U) := leftInversePath c hc Q.field hQ
+@[expose] def sourceForcing : C(K,Space →ᵇ E →L[ℝ] U) := leftInversePath c hc Q.field hQ
 
 include hQ in
 omit [CompleteSpace U] [CompleteSpace E] in

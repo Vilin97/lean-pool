@@ -30,7 +30,7 @@ Lipschitz constants are derived from smoothness and compactness on sets with
 positive angular field and radius. No stock error estimate is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -374,7 +374,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -385,10 +385,11 @@ open scoped Topology ContDiff
 open ParametricModulation
 
 /-- The actual angular shear of an angular profile `E`. -/
-noncomputable def angularShear (E : RadialParameter → ℝ) (p : RadialParameter) : ℝ :=
+@[expose] noncomputable def angularShear (E : RadialParameter → ℝ) (p : RadialParameter) : ℝ :=
   1 - 2 * p.1 * deriv (fun X => E (X, p.2)) p.1 / E p
 
 /-- The signed axial shear, in the `C = -b` convention of `TrueConeLoop`. -/
+@[expose]
 noncomputable def signedAxialShear (E U : RadialParameter → ℝ) (p : RadialParameter) : ℝ :=
   -(2 * p.1 * deriv (fun X => U (X, p.2)) p.1 / E p)
 

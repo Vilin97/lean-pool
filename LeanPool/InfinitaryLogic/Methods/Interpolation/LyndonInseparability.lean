@@ -39,7 +39,7 @@ equation.  `SentBndPol`, the one-sided closure suite, and the paired family are 
   López–Escobar 1965, Theorem 4.0(.4).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -52,7 +52,7 @@ variable {L : Language.{0, 0}}
 /-- **Polarity-refined support-parameterized inseparability**: no separator whose base function
 symbols lie in `F`, whose base **positively** occurring relations lie in `P` and **negatively**
 occurring ones in `N`, whose constant support lies in `A`, entailed by `Γ` and refuted on `Δ`. -/
-def LyndonInsepAt (F : Set (Σ n, L.Functions n)) (P N : Set (Σ n, L.Relations n))
+@[expose] def LyndonInsepAt (F : Set (Σ n, L.Functions n)) (P N : Set (Σ n, L.Relations n))
     (A : Finset ℕ) (Γ Δ : Set L[[ℕ]].Sentenceω) : Prop :=
   ¬ ∃ σ : L[[ℕ]].Sentenceω,
     σ.baseFunctionsIn ⊆ F ∧ σ.basePositiveRelations ⊆ P ∧ σ.baseNegativeRelations ⊆ N ∧

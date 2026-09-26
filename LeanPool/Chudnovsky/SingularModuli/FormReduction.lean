@@ -30,7 +30,7 @@ The bridge from these form-level facts to the statement *"every CM point of disc
 with `BQF.act`; that analytic bookkeeping is deferred (see the closing `TODO`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -310,8 +310,8 @@ theorem isRoot_smul {f g : BQF} {p q r s : ℤ} (hdet : p * s - q * r = 1)
 /-- `τ₁₆₃` is the root of the reduced form `(1, −1, 41)` (`41 − τ + τ² = 0`). -/
 theorem isRoot_τ₁₆₃ : IsRoot ⟨1, -1, 41⟩ Chudnovsky.τ₁₆₃ := by
   simp only [IsRoot]
-  have hre : Chudnovsky.τ₁₆₃.re = 1 / 2 := rfl
-  have him : Chudnovsky.τ₁₆₃.im = Real.sqrt 163 / 2 := rfl
+  have hre : Chudnovsky.τ₁₆₃.re = 1 / 2 := Chudnovsky.τ₁₆₃_re
+  have him : Chudnovsky.τ₁₆₃.im = Real.sqrt 163 / 2 := Chudnovsky.τ₁₆₃_im
   have hτ : (Chudnovsky.τ₁₆₃ : ℂ)
       = ((1 / 2 : ℝ) : ℂ) + ((Real.sqrt 163 / 2 : ℝ) : ℂ) * Complex.I := by
     apply Complex.ext <;> simp [hre, him]
@@ -331,7 +331,8 @@ theorem cm_disc_neg163_smul_eq_τ₁₆₃ {f : BQF} (hpd : IsPosDef f) (hdisc :
   · obtain ⟨N, hN⟩ := isRoot_smul hdet hact hroot
     exact ⟨N, root_unique posdef_1m141 hN isRoot_τ₁₆₃⟩
   · obtain ⟨N, hN⟩ := isRoot_smul hdet hact hroot
-    have hTact : act (⟨1, 1, 41⟩ : BQF) 1 (-1) 0 1 = ⟨1, -1, 41⟩ := by decide
+    have hTact : act (⟨1, 1, 41⟩ : BQF) 1 (-1) 0 1 = ⟨1, -1, 41⟩ := by
+      ext <;> norm_num
     obtain ⟨N', hN'⟩ := isRoot_smul (by ring : (1 : ℤ) * 1 - (-1) * 0 = 1) hTact hN
     refine ⟨N' * N, ?_⟩
     rw [mul_smul]

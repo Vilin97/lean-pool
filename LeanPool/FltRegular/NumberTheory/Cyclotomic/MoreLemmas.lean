@@ -17,7 +17,7 @@ This file proves divisibility results for cyclotomic integers, traces, and norms
 the surrounding FLT development.
 -/
 
-@[expose] public section
+public section
 
 variable {K : Type*} {p : ℕ} [hpri : Fact p.Prime] [Field K] [CharZero K]
   [IsCyclotomicExtension {p} ℚ K]

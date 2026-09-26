@@ -62,7 +62,7 @@ Modeling decisions, local to this file:
   degré donné d'un corps local*, C. R. Acad. Sci. Paris **286** (1978), Série A, 1031–1036.
 -/
 
-@[expose] public section
+public section
 
 open ValuativeRel MeasureTheory Module
 open scoped ENNReal Pointwise
@@ -224,7 +224,7 @@ theorem card_quotient_range {n : ℕ} (M : Matrix (Fin n) (Fin n) 𝒪[K]) (hdet
 variable (K) in
 /-- The integer box of the coefficient space—the normalizing set of the paper's measure, which
 gives `𝒪[K]` volume `1` coordinatewise ([Serre 1978, p.1032][Serre1978]). -/
-def integerBox (n : ℕ) : Set (Fin n → K) :=
+@[expose] def integerBox (n : ℕ) : Set (Fin n → K) :=
   Set.univ.pi fun _ => (𝒪[K] : Set K)
 
 /-- The image lattice `M · 𝒪^n` of an integral matrix, inside the coefficient space. -/
@@ -243,14 +243,14 @@ def box {n : ℕ} (π : 𝒪[K]) (e : Fin n → ℕ) : Set (Fin n → K) :=
 
 /-- The coordinatewise inclusion of the integer box into the coefficient space, as an additive
 monoid homomorphism—the integral picture of the box. -/
-def toCoeff {n : ℕ} : (Fin n → 𝒪[K]) →+ (Fin n → K) where
+@[expose] def toCoeff {n : ℕ} : (Fin n → 𝒪[K]) →+ (Fin n → K) where
   toFun y := fun i => (y i : K)
   map_zero' := by funext i; simp
   map_add' y z := by funext i; simp
 
 omit [UniformSpace K] [IsUniformAddGroup K] [IsNonarchimedeanLocalField K] in
 lemma toCoeff_apply {n : ℕ} (y : Fin n → 𝒪[K]) (i : Fin n) :
-    toCoeff y i = (y i : K) := rfl
+    toCoeff y i = (y i : K) := by rfl
 
 omit [UniformSpace K] [IsUniformAddGroup K] [IsNonarchimedeanLocalField K] in
 lemma toCoeff_injective {n : ℕ} : Function.Injective (toCoeff (K := K) (n := n)) := by

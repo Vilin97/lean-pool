@@ -17,7 +17,7 @@ suitable-solution data. The resulting quantitative slice estimate is in the
 form used to transfer a doubled-scale bound to cell data.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

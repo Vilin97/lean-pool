@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MildEquationBridge
 
 /-! Actual highest derivative words preserve the gained-derivative heat mild formula. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

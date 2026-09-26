@@ -20,7 +20,7 @@ This file defines coordinate up/down compression operations on Boolean-cube
 families and proves basic neighborhood monotonicity and slice-pair facts.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Finset
@@ -29,13 +29,13 @@ namespace BooleanIsoperimetry
 
 /-- A faithful relation for the Up compression of a family along a coordinate `i`.
 It pushes elements missing `i` to have `i`, provided the target is not already present. -/
-def IsCoordinateUp {N : ℕ} (i : Fin N) (A A' : Finset (Cube N)) : Prop :=
+@[expose] def IsCoordinateUp {N : ℕ} (i : Fin N) (A A' : Finset (Cube N)) : Prop :=
   A'.card = A.card ∧
   ∀ x, x ∈ A' ↔ (x ∈ A ∧ (i ∈ x ∨ insert i x ∈ A)) ∨ (i ∈ x ∧ x ∉ A ∧ x.erase i ∈ A)
 
 /-- A faithful relation for the Down compression of a family along a coordinate `i`.
 It pushes elements containing `i` to miss `i`, provided the target is not already present. -/
-def IsCoordinateDown {N : ℕ} (i : Fin N) (B B' : Finset (Cube N)) : Prop :=
+@[expose] def IsCoordinateDown {N : ℕ} (i : Fin N) (B B' : Finset (Cube N)) : Prop :=
   B'.card = B.card ∧
   ∀ x, x ∈ B' ↔ (x ∈ B ∧ (i ∉ x ∨ x.erase i ∈ B)) ∨ (i ∉ x ∧ x ∉ B ∧ insert i x ∈ B)
 
@@ -391,7 +391,7 @@ lemma neighborhood_coordinateDown_subset {N : ℕ} {i : Fin N} {A : Finset (Cube
 the sum of simplicial ranks of all vertices in the family.  Coordinate and
 within-layer shifts are expected to strictly reduce this potential unless they
 are already fixed points. -/
-noncomputable def compressionPotential {N : ℕ} (A : Finset (Cube N)) : ℕ :=
+@[expose] noncomputable def compressionPotential {N : ℕ} (A : Finset (Cube N)) : ℕ :=
   ∑ x ∈ A, rank x
 
 /-- The paired version of `compressionPotential`, matching the two-slice
@@ -407,7 +407,7 @@ def IsCoordinateUpFixed {N : ℕ} (A : Finset (Cube N)) : Prop :=
   ∀ i : Fin N, IsCoordinateUp i A A
 
 /-- A family is fixed by all currently formalized Down-compressions. -/
-def IsCoordinateDownFixed {N : ℕ} (A : Finset (Cube N)) : Prop :=
+@[expose] def IsCoordinateDownFixed {N : ℕ} (A : Finset (Cube N)) : Prop :=
   ∀ i : Fin N, IsCoordinateDown i A A
 
 lemma coordinateUp_card_eq {N : ℕ} {i : Fin N} {A A' : Finset (Cube N)}
@@ -566,13 +566,13 @@ lemma coordinateDown_potential_lt_of_ne {N : ℕ} (i : Fin N) (A : Finset (Cube 
 
 /-- Within-layer colexicographic shift. It moves an element to a strictly earlier
 element in the same layer (same cardinality), provided the target is not already in the family. -/
-def IsColexShift {N : ℕ} (A A' : Finset (Cube N)) : Prop :=
+@[expose] def IsColexShift {N : ℕ} (A A' : Finset (Cube N)) : Prop :=
   A'.card = A.card ∧
   ∃ (x y : Cube N), x ∈ A ∧ y ∉ A ∧ x.card = y.card ∧ simplicialLt y x ∧
     A' = insert y (A.erase x)
 
 /-- A family is stable under all within-layer colex shifts. -/
-def IsColexShiftFixed {N : ℕ} (A : Finset (Cube N)) : Prop :=
+@[expose] def IsColexShiftFixed {N : ℕ} (A : Finset (Cube N)) : Prop :=
   ∀ A', ¬IsColexShift A A'
 
 /-- The missing level-saturation condition in the PDF compression route: once
@@ -580,7 +580,7 @@ the compression process keeps a vertex of a given Hamming level, every lower
 Hamming level is already completely filled.  Coordinate Down-compressions alone
 only fill coordinate subfaces of a present vertex; they do not imply this global
 saturation across a whole level. -/
-def IsLowerLevelSaturated {N : ℕ} (A : Finset (Cube N)) : Prop :=
+@[expose] def IsLowerLevelSaturated {N : ℕ} (A : Finset (Cube N)) : Prop :=
   ∀ ⦃x y : Cube N⦄, x.card < y.card → y ∈ A → x ∈ A
 
 lemma lowerLevelSaturated_colexFixed_is_downClosed {N : ℕ} (A : Finset (Cube N))

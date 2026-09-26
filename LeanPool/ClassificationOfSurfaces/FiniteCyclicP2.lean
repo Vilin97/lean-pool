@@ -33,7 +33,7 @@ it does not claim to preserve the old positive stored orientation. This conventi
 reversing a cut exchange the two children exactly.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -107,7 +107,7 @@ theorem canonical_last_right {P : FiniteCyclicPresentation} (face : P.OrientedFa
   simp [canonical]
 
 /-- Move the cyclic cut point to the other end of the two pieces. -/
-def swap {P : FiniteCyclicPresentation} (cut : P2Cut P) : P2Cut P where
+@[expose] def swap {P : FiniteCyclicPresentation} (cut : P2Cut P) : P2Cut P where
   face := cut.face
   left := cut.right
   right := cut.left
@@ -176,16 +176,16 @@ end P2Cut
 namespace P2
 
 /-- The fresh cutting edge. -/
-def freshEdge (P : FiniteCyclicPresentation) : Fin (P.edgeCount + 1) :=
+@[expose] def freshEdge (P : FiniteCyclicPresentation) : Fin (P.edgeCount + 1) :=
   P1.freshEdge P.edgeCount
 
 /-- Retain an old boundary word in the enlarged edge type. -/
-def retainWord {n : ℕ} (word : List (SignedDart (Fin n))) :
+@[expose] def retainWord {n : ℕ} (word : List (SignedDart (Fin n))) :
     List (SignedDart (Fin (n + 1))) :=
   word.map P1.castSuccDart
 
 /-- Store a displayed oriented boundary in the presentation's positive orientation. -/
-def storedWord {α : Type*} (orientation : Bool)
+@[expose] def storedWord {α : Type*} (orientation : Bool)
     (word : List (SignedDart α)) : List (SignedDart α) :=
   if orientation then inverseWord word else word
 
@@ -247,27 +247,27 @@ theorem contractWord_retainWord {n : ℕ}
       exact congrArg (List.cons d) ih
 
 /-- The first displayed child boundary. -/
-def selectedOrientedBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
+@[expose] def selectedOrientedBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     List (SignedDart (Fin (P.edgeCount + 1))) :=
   retainWord cut.left ++ [.pos (freshEdge P)]
 
 /-- The second displayed child boundary. -/
-def rightOrientedBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
+@[expose] def rightOrientedBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     List (SignedDart (Fin (P.edgeCount + 1))) :=
   .neg (freshEdge P) :: retainWord cut.right
 
 /-- The first child boundary in its stored orientation. -/
-def selectedBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
+@[expose] def selectedBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     List (SignedDart (Fin (P.edgeCount + 1))) :=
   storedWord cut.face.orientation (selectedOrientedBoundary P cut)
 
 /-- The second child boundary in its stored orientation. -/
-def rightBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
+@[expose] def rightBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     List (SignedDart (Fin (P.edgeCount + 1))) :=
   storedWord cut.face.orientation (rightOrientedBoundary P cut)
 
 /-- The word stored at a target face index. -/
-def faceWord (P : FiniteCyclicPresentation) (cut : P2Cut P) :
+@[expose] def faceWord (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     Fin (P.faces.length + 1) → List (SignedDart (Fin (P.edgeCount + 1))) :=
   Fin.lastCases (rightBoundary P cut) fun f ↦
     if f = cut.face.face then
@@ -291,17 +291,17 @@ theorem split_faces_length (P : FiniteCyclicPresentation) (cut : P2Cut P) :
   simp [split]
 
 /-- Identify the explicit target indexing type with the presentation's face type. -/
-def faceEquiv (P : FiniteCyclicPresentation) (cut : P2Cut P) :
+@[expose] def faceEquiv (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     Fin (P.faces.length + 1) ≃ (split P cut).Face :=
   finCongr (split_faces_length P cut).symm
 
 /-- The target face occupying an old source-face position. -/
-def oldFace (P : FiniteCyclicPresentation) (cut : P2Cut P) (f : P.Face) :
+@[expose] def oldFace (P : FiniteCyclicPresentation) (cut : P2Cut P) (f : P.Face) :
     (split P cut).Face :=
   faceEquiv P cut f.castSucc
 
 /-- The fresh second child face. -/
-def rightFace (P : FiniteCyclicPresentation) (cut : P2Cut P) :
+@[expose] def rightFace (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     (split P cut).Face :=
   faceEquiv P cut (Fin.last P.faces.length)
 

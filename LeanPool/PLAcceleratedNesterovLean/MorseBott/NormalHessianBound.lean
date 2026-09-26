@@ -41,7 +41,7 @@ These are equal for C² functions because:
 - PLMB/HessianPL.lean: `hessian_coercive_on_orthogonal_of_MuPL_impl`
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Submodule InnerProductSpace
 
@@ -58,25 +58,25 @@ variable {E : Type*}
 -- ════════════════════════════════════════════════════════════════════════════
 
 /-- The set of global minimizers of `f`. (PLAcceleratedNesterovLean: `argminSet`) -/
-def ExternalThm3.argminSet (f : E → ℝ) : Set E := {x | ∀ y, f x ≤ f y}
+@[expose] def ExternalThm3.argminSet (f : E → ℝ) : Set E := {x | ∀ y, f x ≤ f y}
 
 /-- The global infimum of `f`. (PLAcceleratedNesterovLean: `fStar`) -/
-def ExternalThm3.fStar (f : E → ℝ) : ℝ := ⨅ x, f x
+@[expose] def ExternalThm3.fStar (f : E → ℝ) : ℝ := ⨅ x, f x
 
 /-- The Polyak–Łojasiewicz condition on a set `U`.
     Uses `‖fderiv ℝ f x‖` which equals `‖gradient f x‖` by Riesz representation.
     (PLAcceleratedNesterovLean: `PolyakLojasiewicz`) -/
-def ExternalThm3.PolyakLojasiewicz (f : E → ℝ) (μ : ℝ) (U : Set E) : Prop :=
+@[expose] def ExternalThm3.PolyakLojasiewicz (f : E → ℝ) (μ : ℝ) (U : Set E) : Prop :=
   0 < μ ∧ ∀ x ∈ U, ‖fderiv ℝ f x‖ ^ 2 ≥ 2 * μ * (f x - ExternalThm3.fStar f)
 
 /-- The gradient of `f` at `x`, as the Riesz representative of `fderiv ℝ f x`.
     Matches Mathlib's `gradient` from `Analysis.Calculus.Gradient.Basic`. -/
-def ExternalThm3.gradient (f : E → ℝ) (x : E) : E :=
+@[expose] def ExternalThm3.gradient (f : E → ℝ) (x : E) : E :=
   (toDual ℝ E).symm (fderiv ℝ f x)
 
 /-- PLAcceleratedNesterovLean's Hessian quadratic form: `⟨D(∇f)(x)·ξ, ξ⟩`.
     Here `gradient f` is the Riesz representative of `fderiv ℝ f`. -/
-def ExternalThm3.hessianQuadForm (f : E → ℝ) (x ξ : E) : ℝ :=
+@[expose] def ExternalThm3.hessianQuadForm (f : E → ℝ) (x ξ : E) : ℝ :=
   @inner ℝ E _ (fderiv ℝ (ExternalThm3.gradient f) x ξ) ξ
 
 -- ════════════════════════════════════════════════════════════════════════════

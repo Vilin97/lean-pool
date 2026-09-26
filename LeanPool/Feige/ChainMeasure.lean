@@ -16,7 +16,7 @@ packages its expectation and relates the indicator of a threshold rejection
 event to `rejectedMass`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -28,7 +28,7 @@ variable {m : ℕ} (C : CalibratedChain m)
 
 /-- Expectation of a payoff on the `m + 1` genuine levels of a calibrated
 chain. -/
-noncomputable def expectation (g : ℕ → ℝ) : ℝ :=
+@[expose] noncomputable def expectation (g : ℕ → ℝ) : ℝ :=
   ∑ j ∈ Finset.range (m + 1), chainMass C.K j * g j
 
 theorem expectation_one : C.expectation (fun _ ↦ 1) = 1 := by
@@ -67,7 +67,7 @@ end CalibratedChain
 section BooleanChain
 
 /-- Expectation `E_{ν_C} g` for the auxiliary maximal-chain law. -/
-noncomputable def booleanChainExpectation {m : ℕ}
+@[expose] noncomputable def booleanChainExpectation {m : ℕ}
     (γ β : Fin m → ℝ) (σ : Equiv.Perm (Fin m))
     (hγ : ∀ i, 0 ≤ γ i) (hβ : ∀ i, 0 ≤ β i)
     (g : Finset (Fin m) → ℝ) : ℝ :=
@@ -76,7 +76,7 @@ noncomputable def booleanChainExpectation {m : ℕ}
       if hj : j < m + 1 then g (chainState σ ⟨j, hj⟩) else 0)
 
 /-- Increasing rejection payoff on the Boolean lattice. -/
-noncomputable def booleanRejectionPayoff {m : ℕ}
+@[expose] noncomputable def booleanRejectionPayoff {m : ℕ}
     (γ β : Fin m → ℝ) (α : ℝ) (S : Finset (Fin m)) : ℝ :=
   if twoPointKFinset γ β S ≤ α then 1 else 0
 

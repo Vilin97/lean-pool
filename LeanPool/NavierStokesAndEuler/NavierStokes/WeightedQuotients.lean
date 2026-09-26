@@ -31,7 +31,7 @@ bound proves that its derivative at the edge is zero, using
 `δ ≤ ‖(p,δ) - (p₀,0)‖`. No pointwise-to-joint limit inference is used.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -269,7 +269,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

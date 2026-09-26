@@ -21,7 +21,7 @@ to have the same color.  Color renamings and central inversion reduce every
 case to the independently checked normalized trees.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

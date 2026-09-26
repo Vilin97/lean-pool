@@ -41,7 +41,7 @@ orthogonality and string recovery for Bernstein-Vazirani).
   with `finalJointState_eq_finalState_tensor` factoring off the `|−⟩` target.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -61,7 +61,7 @@ abbrev Oracle (n : ℕ) : Type := Fin (2 ^ n) → Bool
 abbrev oracleGate (f : Oracle n) : Gate (n + 1) := Gate.xorOracle f
 
 /-- The phase `(-1)^{f x}`, written as a complex scalar. -/
-def phaseSign (f : Oracle n) (x : Fin (2 ^ n)) : ℂ :=
+@[expose] def phaseSign (f : Oracle n) (x : Fin (2 ^ n)) : ℂ :=
   if f x then -1 else 1
 
 /-! ### The Walsh-Hadamard transform -/
@@ -69,14 +69,15 @@ def phaseSign (f : Oracle n) (x : Fin (2 ^ n)) : ℂ :=
 /-- The bit of a basis label used in the Walsh-Hadamard character. The bit
 order only affects nonzero rows; the zero row used by Deutsch-Jozsa is
 independent of it. -/
+@[expose]
 def bit (x : Fin (2 ^ n)) (k : Fin n) : Bool := x.val.testBit k.val
 
 /-- Parity of the bitwise inner product of two basis labels. -/
-def dotParity (x y : Fin (2 ^ n)) : Bool :=
+@[expose] def dotParity (x y : Fin (2 ^ n)) : Bool :=
   Odd ((Finset.univ.filter fun k : Fin n => bit x k && bit y k).card)
 
 /-- The Walsh-Hadamard sign `(-1)^{x · y}`. -/
-def walshSign (x y : Fin (2 ^ n)) : ℂ := if dotParity x y then -1 else 1
+@[expose] def walshSign (x y : Fin (2 ^ n)) : ℂ := if dotParity x y then -1 else 1
 
 /-- `(√(2^n))⁻¹`, the normalization scalar of the `n`-qubit Hadamard layer. -/
 def invSqrtCard (n : ℕ) : ℂ := (Real.sqrt ((2 ^ n : ℕ) : ℝ) : ℂ)⁻¹
@@ -270,7 +271,7 @@ theorem norm_phaseSign (f : Oracle n) (x : Fin (2 ^ n)) :
   by_cases h : f x <;> simp [h]
 
 /-- Raw `n`-qubit Hadamard layer in Walsh-Hadamard closed form. -/
-def hadamardLayerOp (n : ℕ) : HilbertOperator n :=
+@[expose] def hadamardLayerOp (n : ℕ) : HilbertOperator n :=
   fun y x => invSqrtCard n * walshSign y x
 
 /-- The Walsh-Hadamard closed-form matrix is unitary. -/
@@ -300,7 +301,7 @@ theorem hadamardLayerOp_mem_unitaryGroup (n : ℕ) :
           · rw [ite_eq_right hys, Matrix.one_apply_ne hys, mul_zero]
 
 /-- The `n`-qubit Hadamard layer as a unitary gate. -/
-def hadamardLayer (n : ℕ) : Gate n :=
+@[expose] def hadamardLayer (n : ℕ) : Gate n :=
   Gate.ofUnitary (hadamardLayerOp n) (hadamardLayerOp_mem_unitaryGroup n)
 
 /-- Raw uniform input-register vector produced by the first Hadamard layer. -/
@@ -317,8 +318,7 @@ def uniformState (n : ℕ) : PureState n :=
   PureState.ofVec (uniformStateVec n) (norm_uniformStateVec n)
 
 @[simp]
-theorem uniformState_apply (x : Fin (2 ^ n)) : uniformState n x = invSqrtCard n :=
-  rfl
+theorem uniformState_apply (x : Fin (2 ^ n)) : uniformState n x = invSqrtCard n := by rfl
 
 /-- The first Hadamard layer sends `|0^n⟩` to the uniform superposition. -/
 theorem hadamardLayer_apply_zero :
@@ -350,7 +350,7 @@ def postOracleState (f : Oracle n) : PureState (n + 1) :=
 
 /-- The input-register state after rewriting the oracle query by phase
 kickback: `(√(2^n))⁻¹ ∑ x, (-1)^{f x}|x⟩`. -/
-def afterPhaseQueryVec (f : Oracle n) : StateVector n :=
+@[expose] def afterPhaseQueryVec (f : Oracle n) : StateVector n :=
   WithLp.toLp 2 fun x => invSqrtCard n * phaseSign f x
 
 /-- The phase-query vector has unit norm. -/
@@ -359,7 +359,7 @@ theorem norm_afterPhaseQueryVec (f : Oracle n) : ‖afterPhaseQueryVec f‖ = 1 
   simp_all
 
 /-- The input register after the XOR oracle has been converted into a phase query. -/
-def afterPhaseQuery (f : Oracle n) : PureState n :=
+@[expose] def afterPhaseQuery (f : Oracle n) : PureState n :=
   PureState.ofVec (afterPhaseQueryVec f) (norm_afterPhaseQueryVec f)
 
 /-- The actual XOR-oracle query on the uniform input register and `|−⟩`
@@ -378,6 +378,7 @@ theorem postOracleState_eq_afterPhaseQuery_tensor (f : Oracle n) :
 
 /-- The final input-register state after the second Hadamard layer, in the
 phase-query view. -/
+@[expose]
 def finalState (f : Oracle n) : PureState n :=
   (hadamardLayer n).apply (afterPhaseQuery f)
 

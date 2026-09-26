@@ -18,7 +18,7 @@ no estimate at an irrational argument: five terms bound the first from above, fo
 from below, and the gap to `1.3275` is about `7 · 10⁻⁷`.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 
@@ -28,7 +28,7 @@ open Filter Finset
 open scoped Nat
 
 /-- The Montgomery–Taylor constant `1/2 + (1/√2) cot(1/√2) = 1.3274992963…`. -/
-@[zz_tag "def_C_MT"]
+@[expose, zz_tag "def_C_MT"]
 noncomputable def montgomeryTaylorConst : ℝ :=
   1 / 2 + (1 / Real.sqrt 2) * Real.cot (1 / Real.sqrt 2)
 

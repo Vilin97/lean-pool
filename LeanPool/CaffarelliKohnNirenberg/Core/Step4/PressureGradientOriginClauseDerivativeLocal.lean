@@ -17,7 +17,7 @@ specializes the same-repository fixed-source Morrey estimates to this geometry.
 The selected derivative is retained in the signed Riesz and remainder identity.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology BigOperators

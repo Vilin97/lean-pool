@@ -18,7 +18,7 @@ have nonempty interior.  `FullDimensionalConvexBody` records precisely that
 standard convention.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 
@@ -80,13 +80,13 @@ theorem volume_ne_top {d : ℕ} (C : FullDimensionalConvexBody d) :
   C.isCompact.measure_lt_top.ne
 
 /-- The volume centroid of a full-dimensional convex body. -/
-noncomputable def centroid {d : ℕ} (C : FullDimensionalConvexBody d) : Euc d :=
+@[expose] noncomputable def centroid {d : ℕ} (C : FullDimensionalConvexBody d) : Euc d :=
   ⨍ x in (C : Set (Euc d)), x ∂volume
 
 end FullDimensionalConvexBody
 
 /-- The closed halfspace cut out by `ℓ x ≤ a`. -/
-def closedHalfspace {d : ℕ} (ℓ : Euc d →L[ℝ] ℝ) (a : ℝ) : Set (Euc d) :=
+@[expose] def closedHalfspace {d : ℕ} (ℓ : Euc d →L[ℝ] ℝ) (a : ℝ) : Set (Euc d) :=
   ℓ ⁻¹' Iic a
 
 /-- A (proper) closed halfspace, represented by a nonzero continuous linear
@@ -119,13 +119,13 @@ theorem isClosed {d : ℕ} (H : ClosedHalfspace d) :
 end ClosedHalfspace
 
 /-- The normalized volume of a body's intersection with a closed halfspace. -/
-noncomputable def halfspaceVolumeRatio {d : ℕ} (C : FullDimensionalConvexBody d)
+@[expose] noncomputable def halfspaceVolumeRatio {d : ℕ} (C : FullDimensionalConvexBody d)
     (ℓ : Euc d →L[ℝ] ℝ) (a : ℝ) : ℝ :=
   (volume ((C : Set (Euc d)) ∩ closedHalfspace ℓ a) /
     volume (C : Set (Euc d))).toReal
 
 /-- The sharp constant `(n / (n + 1)) ^ n` in dimension `n = d + 1`. -/
-noncomputable def grunbaumConstant (d : ℕ) : ℝ :=
+@[expose] noncomputable def grunbaumConstant (d : ℕ) : ℝ :=
   (((d + 1 : ℕ) : ℝ) / (d + 2 : ℕ)) ^ (d + 1)
 
 end Grunbaum

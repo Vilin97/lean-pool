@@ -20,7 +20,7 @@ expressions in `MeanIncrementBounds`.  The three sorts of excluded additive
 errors are retained as fields on the same space as the oscillations.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -65,14 +65,14 @@ structure ExcludedErrors (D : Type) where
 namespace ExcludedErrors
 
 /-- Zero, given by `⟨0, 0, 0⟩`. -/
-noncomputable def zero : ExcludedErrors D := ⟨0, 0, 0⟩
+@[expose] noncomputable def zero : ExcludedErrors D := ⟨0, 0, 0⟩
 
 /-- Total, given by `e.base + e.gaussian + e.aliasError`. -/
-noncomputable def total (e : ExcludedErrors D) : Oscillation D :=
+@[expose] noncomputable def total (e : ExcludedErrors D) : Oscillation D :=
   e.base + e.gaussian + e.aliasError
 
 /-- Add, given by `⟨e.base + f.base, e.gaussian + f.gaussian, e.aliasError + f.aliasError⟩`. -/
-noncomputable def add (e f : ExcludedErrors D) : ExcludedErrors D :=
+@[expose] noncomputable def add (e f : ExcludedErrors D) : ExcludedErrors D :=
   ⟨e.base + f.base, e.gaussian + f.gaussian, e.aliasError + f.aliasError⟩
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -100,10 +100,11 @@ structure State (D : Type) where
   errors : ExcludedErrors D
 
 /-- The angular normalization agrees with the physical mean over one period. -/
-noncomputable def angularAverage (f : OscillatoryScalar D) : ScalarField D :=
+@[expose] noncomputable def angularAverage (f : OscillatoryScalar D) : ScalarField D :=
   fun n x => (∫ θ in (0 : ℝ)..2 * Real.pi, f n (x, θ)) / (2 * Real.pi)
 
 /-- Bilinear covariance, given by `angularAverage (fun n p => u n p i * v n p j)`. -/
+@[expose]
 noncomputable def bilinearCovariance (u v : Oscillation D) (i j : Fin 3) : ScalarField D :=
   angularAverage (fun n p => u n p i * v n p j)
 
@@ -127,41 +128,41 @@ theorem bilinearCovariance_comm (u v : Oscillation D) (i j : Fin 3) :
 namespace State
 
 /-- Covariance, given by `bilinearCovariance s.oscillation s.oscillation i j`. -/
-noncomputable def covariance (s : State D) (i j : Fin 3) : ScalarField D :=
+@[expose] noncomputable def covariance (s : State D) (i j : Fin 3) : ScalarField D :=
   bilinearCovariance s.oscillation s.oscillation i j
 
 /-- Total velocity as an element of `Oscillation D`. -/
-noncomputable def totalVelocity (s : State D) (c : Context D) : Oscillation D :=
+@[expose] noncomputable def totalVelocity (s : State D) (c : Context D) : Oscillation D :=
   fun n p => ![c.base.radial n p.1 + s.mean.radial n p.1 + s.oscillation n p 0,
     c.base.angular n p.1 + s.mean.angular n p.1 + s.oscillation n p 1,
     c.base.axial n p.1 + s.mean.axial n p.1 + s.oscillation n p 2]
 
 /-- This is the pressure increment; the fixed base pressure is not part of a stage. -/
-noncomputable def totalPressureIncrement (s : State D) : OscillatoryScalar D :=
+@[expose] noncomputable def totalPressureIncrement (s : State D) : OscillatoryScalar D :=
   fun n p => s.pressure n p.1 + s.oscillatoryPressure n p
 
 /-- Theta residual, given by `MeanIncrementBounds.thetaResidual c.operators c.base s.mean
 s.covariance c.virtualTheta`. -/
-noncomputable def thetaResidual (s : State D) (c : Context D) : ScalarField D :=
+@[expose] noncomputable def thetaResidual (s : State D) (c : Context D) : ScalarField D :=
   MeanIncrementBounds.thetaResidual c.operators c.base s.mean s.covariance c.virtualTheta
 
 /-- Axial residual, given by `MeanIncrementBounds.axialResidual c.operators c.base s.mean
 s.covariance s.pressure c.virtualAxial`. -/
-noncomputable def axialResidual (s : State D) (c : Context D) : ScalarField D :=
+@[expose] noncomputable def axialResidual (s : State D) (c : Context D) : ScalarField D :=
   MeanIncrementBounds.axialResidual c.operators c.base s.mean s.covariance
     s.pressure c.virtualAxial
 
 /-- Gr, given by `MeanIncrementBounds.gr c.operators c.base s.mean s.covariance`. -/
-noncomputable def gr (s : State D) (c : Context D) : ScalarField D :=
+@[expose] noncomputable def gr (s : State D) (c : Context D) : ScalarField D :=
   MeanIncrementBounds.gr c.operators c.base s.mean s.covariance
 
 /-- Radial residual, given by `c.operators.dr s.pressure - s.gr c`. -/
-noncomputable def radialResidual (s : State D) (c : Context D) : ScalarField D :=
+@[expose] noncomputable def radialResidual (s : State D) (c : Context D) : ScalarField D :=
   c.operators.dr s.pressure - s.gr c
 
 /-- Reduced mean residual, defined pointwise by `![s.radialResidual c n x, s.thetaResidual c n
 x, s.axialResidual c n x]`. -/
-noncomputable def reducedMeanResidual (s : State D) (c : Context D) : MeanVector D :=
+@[expose] noncomputable def reducedMeanResidual (s : State D) (c : Context D) : MeanVector D :=
   fun n x => ![s.radialResidual c n x, s.thetaResidual c n x, s.axialResidual c n x]
 
 /-- Mean base error, defined pointwise by `angularAverage (fun k p => s.errors.base k p i) n x`. -/
@@ -190,7 +191,7 @@ theorem covariance_symm (s : State D) (i j : Fin 3) :
   bilinearCovariance_comm _ _ _ _
 
 /-- Addition of actual fields.  No estimate or cancellation is part of this definition. -/
-noncomputable def addIncrement (s : State D) (m : Triple D) (p : ScalarField D)
+@[expose] noncomputable def addIncrement (s : State D) (m : Triple D) (p : ScalarField D)
     (u : Oscillation D) (q : OscillatoryScalar D) (e : ExcludedErrors D) : State D where
   mean := updated s.mean m
   pressure := s.pressure + p
@@ -226,13 +227,13 @@ namespace HarmonicBlock
 
 /-- Oscillation, defined pointwise by `(HarmonicFields.field (b.velocity n i) (b.frequency n)
 (b.phase n) (b.angularFrequency n) p).re`. -/
-noncomputable def oscillation (b : HarmonicBlock D) : Oscillation D :=
+@[expose] noncomputable def oscillation (b : HarmonicBlock D) : Oscillation D :=
   fun n p i => (HarmonicFields.field (b.velocity n i) (b.frequency n)
     (b.phase n) (b.angularFrequency n) p).re
 
 /-- Oscillatory pressure, defined pointwise by `(HarmonicFields.field (b.pressure n)
 (b.frequency n) (b.phase n) (b.angularFrequency n) p).re`. -/
-noncomputable def oscillatoryPressure (b : HarmonicBlock D) : OscillatoryScalar D :=
+@[expose] noncomputable def oscillatoryPressure (b : HarmonicBlock D) : OscillatoryScalar D :=
   fun n p => (HarmonicFields.field (b.pressure n) (b.frequency n)
     (b.phase n) (b.angularFrequency n) p).re
 
@@ -278,33 +279,34 @@ section Moments
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
 /-- Actual radial moment of the full auxiliary torus mean. -/
+@[expose]
 noncomputable def radialMoment (k : ℕ) (f : ScalarField (PressureStream.Lift S)) : ScalarField S :=
   fun n p => PressureStream.pressureMass (fun x => x.1 ^ k * f n x) p
 
 /-- Pressure defect, given by `radialMoment 0 (u.gr c)`. -/
-noncomputable def pressureDefect (c : Context (PressureStream.Lift S))
+@[expose] noncomputable def pressureDefect (c : Context (PressureStream.Lift S))
     (u : State (PressureStream.Lift S)) : ScalarField S := radialMoment 0 (u.gr c)
 
 /-- Theta defect, given by `radialMoment 2 (thetaAxial c.base u.mean + u.covariance 2 1)`. -/
-noncomputable def thetaDefect (c : Context (PressureStream.Lift S))
+@[expose] noncomputable def thetaDefect (c : Context (PressureStream.Lift S))
     (u : State (PressureStream.Lift S)) : ScalarField S :=
   radialMoment 2 (thetaAxial c.base u.mean + u.covariance 2 1)
 
 /-- Axial defect, given by `radialMoment 1 (axialAxial c.base u.mean + u.covariance 2 2) - (1 /
 2 : ℝ) • radialMoment 2 (u.gr c)`. -/
-noncomputable def axialDefect (c : Context (PressureStream.Lift S))
+@[expose] noncomputable def axialDefect (c : Context (PressureStream.Lift S))
     (u : State (PressureStream.Lift S)) : ScalarField S :=
   radialMoment 1 (axialAxial c.base u.mean + u.covariance 2 2) -
     (1 / 2 : ℝ) • radialMoment 2 (u.gr c)
 
 /-- The row order is exactly `(P, Jθ, Jz)`, as in `MeanRankUpdate`. -/
-noncomputable def debt (c : Context (PressureStream.Lift S))
+@[expose] noncomputable def debt (c : Context (PressureStream.Lift S))
     (u : State (PressureStream.Lift S)) : ℕ → S → Fin 3 → ℝ :=
   fun n x => ![pressureDefect c u n x, thetaDefect c u n x, axialDefect c u n x]
 
 /-- Defect bounds, given by `∀ i : Fin 3, UnweightedClass s (1 + σ) (fun n x => debt c u n x
 i)`. -/
-def DefectBounds (s : StripData S) (σ : ℝ) (c : Context (PressureStream.Lift S))
+@[expose] def DefectBounds (s : StripData S) (σ : ℝ) (c : Context (PressureStream.Lift S))
     (u : State (PressureStream.Lift S)) : Prop :=
   ∀ i : Fin 3, UnweightedClass s (1 + σ) (fun n x => debt c u n x i)
 
@@ -336,13 +338,13 @@ variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 abbrev Lift (S : Type) := PressureStream.Lift S
 
 /-- Recompute (33) from the current actual radial source. -/
-noncomputable def reconstructPressure (r : ReconstructionData) (c : Context (Lift S))
+@[expose] noncomputable def reconstructPressure (r : ReconstructionData) (c : Context (Lift S))
     (u : State (Lift S)) : State (Lift S) :=
   { u with pressure := (fun n => PressureStream.meanPressure r.exponent r.inner r.outer
       (r.frequency n) r.inner_lt_outer r.radialDirection (u.gr c n)) }
 
 /-- The pressure alias has the sign with which it occurs in the radial residual. -/
-noncomputable def pressureAlias (r : ReconstructionData) (c : Context (Lift S))
+@[expose] noncomputable def pressureAlias (r : ReconstructionData) (c : Context (Lift S))
     (u : State (Lift S)) : Oscillation (Lift S) :=
   fun n p => ![-PressureStream.pressureAlias r.exponent r.inner r.outer (r.frequency n)
     r.inner_lt_outer r.radialDirection (u.gr c n) p.1, 0, 0]
@@ -355,7 +357,7 @@ noncomputable def pressureAlias (r : ReconstructionData) (c : Context (Lift S))
     (reconstructPressure r c u).covariance = u.covariance := rfl
 
 /-- Explicit graph operators with the pressure primitive's radial direction. -/
-noncomputable def graphOperators (r : ReconstructionData) (epsilon fast : ℕ → ℝ)
+@[expose] noncomputable def graphOperators (r : ReconstructionData) (epsilon fast : ℕ → ℝ)
     (axial slowTime : S × PressureStream.Plane) (temporal : PressureStream.Plane) :
     MeanIncrementBounds.Operators (Lift S) where
   epsilon := epsilon
@@ -439,7 +441,7 @@ noncomputable def temporalIncrement (r : ReconstructionData) (h : ℝ)
     (r.frequency n) r.radialDirection h n (u.axialResidual c n)
 
 /-- The exact remaining axial fast-time error, not its asymptotic estimate. -/
-noncomputable def temporalAlias (r : ReconstructionData) (h : ℝ)
+@[expose] noncomputable def temporalAlias (r : ReconstructionData) (h : ℝ)
     (c : Context (Lift S)) (u : State (Lift S)) : Oscillation (Lift S) :=
   fun n p => ![0, 0, -TemporalMeanUpdate.fastDerivative h n
     (TemporalMeanUpdate.axialAlias r.exponent r.inner r.outer (r.frequency n)
@@ -447,7 +449,7 @@ noncomputable def temporalAlias (r : ReconstructionData) (h : ℝ)
 
 /-- Temporal stage, given by `reconstructPressure r c (u.addIncrement (temporalIncrement r h
 axial c u) 0 0 0 ⟨0, 0, temporalAlias r h c u⟩)`. -/
-noncomputable def temporalStage (r : ReconstructionData) (h : ℝ)
+@[expose] noncomputable def temporalStage (r : ReconstructionData) (h : ℝ)
     (axial : S × PressureStream.Plane) (c : Context (Lift S)) (u : State (Lift S)) :
     State (Lift S) :=
   reconstructPressure r c (u.addIncrement (temporalIncrement r h axial c u) 0 0 0
@@ -526,7 +528,7 @@ noncomputable def rankIncrement (p : ReconstructionData) (r : RankData S)
 
 /-- Rank stage, given by `reconstructPressure p c (u.addIncrement (rankIncrement p r axial c u)
 0 0 0 ExcludedErrors.zero)`. -/
-noncomputable def rankStage (p : ReconstructionData) (r : RankData S)
+@[expose] noncomputable def rankStage (p : ReconstructionData) (r : RankData S)
     (axial : S × PressureStream.Plane) (c : Context (Lift S)) (u : State (Lift S)) :
     State (Lift S) :=
   reconstructPressure p c (u.addIncrement (rankIncrement p r axial c u) 0 0 0 ExcludedErrors.zero)

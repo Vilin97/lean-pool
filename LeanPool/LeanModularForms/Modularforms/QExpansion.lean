@@ -16,7 +16,7 @@ import Mathlib.Analysis.Normed.Group.Tannery
 /-! # QExpansion -/
 
 
-@[expose] public section
+public section
 
 /-!
 # Limits at infinity

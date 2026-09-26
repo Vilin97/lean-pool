@@ -27,13 +27,14 @@ permission.  This file keeps the bounded convex-domain and affine-segment
 interfaces needed by the ball estimate while using the established CKN carriers.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 
 open MeasureTheory
 
 /-- A coordinatewise bounded domain in the native finite-dimensional carrier. -/
+@[expose]
 def IsBoundedDomain {d : ℕ} (U : Set (Vec d)) : Prop :=
   ∃ R : ℝ, 0 < R ∧ ∀ x ∈ U, ∀ i, |x i| ≤ R
 
@@ -57,6 +58,7 @@ theorem IsBoundedDomain.isFiniteMeasure_restrict_volume
   infer_instance
 
 /-- The average of a scalar function over a restricted volume measure. -/
+@[expose]
 noncomputable def integralAverage {d : ℕ} (U : Set (Vec d)) (u : Vec d → ℝ) : ℝ :=
   MeasureTheory.average (MeasureTheory.volume.restrict U) u
 
@@ -86,7 +88,7 @@ theorem isFiniteMeasure_restrict_volume {d : ℕ} {U : Set (Vec d)}
 end IsSobolevRegularDomain
 
 /-- An open bounded convex domain in the native carrier. -/
-def IsOpenBoundedConvexDomain {d : ℕ} (U : Set (Vec d)) : Prop :=
+@[expose] def IsOpenBoundedConvexDomain {d : ℕ} (U : Set (Vec d)) : Prop :=
   IsOpen U ∧ IsBoundedDomain U ∧ Convex ℝ U
 
 namespace IsOpenBoundedConvexDomain
@@ -139,6 +141,7 @@ theorem IsBoundedDomain.norm_sub_le_two_mul_choose {d : ℕ} {U : Set (Vec d)}
     _ = 2 * Classical.choose hU := by ring
 
 /-- Translate a set by a vector in the native finite-dimensional carrier. -/
+@[expose]
 def translateSet {d : ℕ} (z : Vec d) (U : Set (Vec d)) : Set (Vec d) :=
   {x | ∃ y ∈ U, x = y + z}
 
@@ -232,10 +235,12 @@ theorem isOpenBoundedConvexDomain_ball {d : ℕ} (x₀ : Vec d) {r : ℝ} (hr : 
     linarith only [hxi, hx', hnorm]
 
 /-- The affine map which sends the unit ball to the ball of radius `r`. -/
+@[expose]
 def ballAffineMap {d : ℕ} (x₀ : Vec d) (r : ℝ) (x : Vec d) : Vec d :=
   x₀ + r • x
 
 /-- The point on the segment from `y` to `x` with parameter `t`. -/
+@[expose]
 noncomputable def segmentBlend {d : ℕ} (x : Vec d) (t : ℝ) (y : Vec d) : Vec d :=
   AffineMap.lineMap y x t
 

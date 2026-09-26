@@ -23,7 +23,7 @@ Finite-dimensional continuity then gives a single positive rectangle radius,
 including padding and injectivity modulo the integer lattice.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

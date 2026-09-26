@@ -35,7 +35,7 @@ Infrastructure lemmas needed to apply `generalizedResidueTheorem'` to
 * `residueSimplePole_logDeriv_eq_zero_at_nonzero` — residue = 0 at non-zeros
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

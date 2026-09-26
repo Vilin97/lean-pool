@@ -17,7 +17,7 @@ to the debt derivative. Smoothness at the ends of a compact parameter range
 is relative smoothness; all endpoint derivatives are actual `derivWithin`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -449,7 +449,7 @@ theorem scaled_triple_first_jet_bound {S : Set ℝ} {K B : ℝ} {p e i : ℝ →
   exact scaled_triple_norm_bound hK hB hpb.2 heb.2 hib.2
 
 /-- The actual three physical debts use the diffusion parameter `1-η²`. -/
-noncomputable def physicalDebt (T : OutgoingTail.TailData) (K η : ℝ) : Coeff :=
+@[expose] noncomputable def physicalDebt (T : OutgoingTail.TailData) (K η : ℝ) : Coeff :=
   ![ParametricHeatTail.physicalPressure T K η,
     ParametricHeatTail.physicalEnergy T K η,
     ParametricHeatTail.physicalAngular T K η]

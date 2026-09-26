@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryPressur
 /-! The actual terminal-data primary supplies the grade-one profile and all
 regularity/locality data required by the recursive packet construction. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

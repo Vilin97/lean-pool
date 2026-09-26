@@ -20,7 +20,7 @@ incidences land in three two-vertex groups.  If too few pairs are repeated
 inside the groups and across the first group, the six columns cannot exist.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

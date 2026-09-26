@@ -22,7 +22,7 @@ public import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory Filter Topology
 open scoped ENNReal Convolution Pointwise

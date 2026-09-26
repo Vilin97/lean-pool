@@ -10,7 +10,7 @@ public import LeanPool.Odlyzko.CompletedZeta.UnitSlabTranslation
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -26,7 +26,7 @@ variable (K : Type*) [Field K] [NumberField K] [IsTotallyComplex K]
 
 open Classical in
 /-- A logarithmic mellin weight used in the Odlyzko-bound argument. -/
-noncomputable def logarithmicMellinWeight
+@[expose] noncomputable def logarithmicMellinWeight
     (s : ℂ) (y : mixedEmbedding.realSpace K) : ℂ :=
   Complex.exp
     (((y w₀ * (Module.finrank ℚ K : ℝ) : ℝ) : ℂ) * s)

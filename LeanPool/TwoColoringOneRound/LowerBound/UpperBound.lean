@@ -27,7 +27,7 @@ The coloring used here is the simple rounding-based local rule from the report:
 * apply a fixed local rule `g` to the rounded bits.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 

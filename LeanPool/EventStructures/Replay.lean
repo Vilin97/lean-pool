@@ -20,7 +20,7 @@ existence is established relative to a computation compatible with the log that
 reaches the corresponding replay set, not unconditionally.
 -/
 
-@[expose] public section
+public section
 
 namespace EventStructures
 

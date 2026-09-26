@@ -16,7 +16,7 @@ The coefficient operations below reconstruct genuine differential fields.
 Excluded errors remain explicit inputs with field-evaluation witnesses.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,14 +36,14 @@ abbrev Coefficients (D : Type) := HarmonicFields.Coefficients D
 abbrev VectorCoefficients (D : Type) := Fin 3 → Coefficients D
 
 /-- Lift domain, given by `U ×ˢ univ`. -/
-noncomputable def liftDomain (U : Set D) : Set (D × ℝ) := U ×ˢ univ
+@[expose] noncomputable def liftDomain (U : Set D) : Set (D × ℝ) := U ×ˢ univ
 
 omit [NormedSpace ℝ D] in
 theorem liftDomain_open {U : Set D} (hU : IsOpen U) : IsOpen (liftDomain U) :=
   hU.prod isOpen_univ
 
 /-- Lift direction, given by `(V p.1, 0)`. -/
-noncomputable def liftDirection (V : D → D) (p : D × ℝ) : D × ℝ := (V p.1, 0)
+@[expose] noncomputable def liftDirection (V : D → D) (p : D × ℝ) : D × ℝ := (V p.1, 0)
 /-- Angular direction, given by `(0, 1)`. -/
 noncomputable def angularDirection (_p : D × ℝ) : D × ℝ := (0, 1)
 
@@ -188,10 +188,11 @@ structure Frame (D : Type) where
   viscosity : ℝ
 
 /-- Vector field, defined pointwise by `field (a i) k Φ kp p`. -/
-noncomputable def vectorField (a : VectorCoefficients D) (k : ℝ) (Φ : D → ℝ)
+@[expose] noncomputable def vectorField (a : VectorCoefficients D) (k : ℝ) (Φ : D → ℝ)
     (kp : ℤ) (p : D × ℝ) : ComplexVector := fun i => field (a i) k Φ kp p
 
 /-- Rotate, given by `![-a 1, a 0, 0]`. -/
+@[expose]
 noncomputable def rotate (a : VectorCoefficients D) : VectorCoefficients D := ![-a 1, a 0, 0]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -202,7 +203,7 @@ omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
   fin_cases i <;> simp [vectorField, rotate, angularGenerator]
 
 /-- Scalar laplacian, constructed using `differentiate`. -/
-noncomputable def scalarLaplacian (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
+@[expose] noncomputable def scalarLaplacian (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (c : Coefficients D) : Coefficients D :=
   differentiate g.radial k Φ (differentiate g.radial k Φ c) +
     constantCoefficient (fun x => ((g.radius x)⁻¹ : ℝ) : D → ℂ) * differentiate g.radial k Φ c +
@@ -211,7 +212,7 @@ noncomputable def scalarLaplacian (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp :
     differentiate g.axial k Φ (differentiate g.axial k Φ c)
 
 /-- Vector laplacian as an element of `VectorCoefficients D`. -/
-noncomputable def vectorLaplacian (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
+@[expose] noncomputable def vectorLaplacian (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (a : VectorCoefficients D) : VectorCoefficients D := fun i =>
   scalarLaplacian g k Φ kp (a i) +
     constantCoefficient (fun x => (((g.radius x) ^ 2)⁻¹ : ℝ) : D → ℂ) *
@@ -220,7 +221,7 @@ noncomputable def vectorLaplacian (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp :
         rotate (rotate a) i)
 
 /-- Transport as an element of `VectorCoefficients D`. -/
-noncomputable def transport (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
+@[expose] noncomputable def transport (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (a b : VectorCoefficients D) : VectorCoefficients D := fun i =>
   a 0 * differentiate g.radial k Φ (b i) +
     (a 1 * constantCoefficient (fun x => ((g.radius x : ℂ)⁻¹))) *
@@ -228,14 +229,14 @@ noncomputable def transport (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     a 2 * differentiate g.axial k Φ (b i)
 
 /-- Gradient as an element of `VectorCoefficients D`. -/
-noncomputable def gradient (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
+@[expose] noncomputable def gradient (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (p : Coefficients D) : VectorCoefficients D :=
   ![differentiate g.radial k Φ p,
     constantCoefficient (fun x => ((g.radius x)⁻¹ : ℝ) : D → ℂ) * angularDifferentiate kp p,
     differentiate g.axial k Φ p]
 
 /-- Literal coefficient formula for the differentiated linearized PDE. -/
-noncomputable def linearResidual (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
+@[expose] noncomputable def linearResidual (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (B a : VectorCoefficients D) (p : Coefficients D) : VectorCoefficients D := fun i =>
   differentiate g.time k Φ (a i) + transport g k Φ kp B a i + transport g k Φ kp a B i +
     gradient g k Φ kp p i -
@@ -243,7 +244,7 @@ noncomputable def linearResidual (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : 
 
 /-- Nonlinear residual, defined pointwise by `linearResidual g k Φ kp B a p i + transport g k Φ
 kp a a i`. -/
-noncomputable def nonlinearResidual (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
+@[expose] noncomputable def nonlinearResidual (g : Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (B a : VectorCoefficients D) (p : Coefficients D) : VectorCoefficients D := fun i =>
   linearResidual g k Φ kp B a p i + transport g k Φ kp a a i
 
@@ -534,7 +535,7 @@ theorem SmoothCoefficients.realCoefficients {U : Set D} {c : Coefficients D}
   (smoothCoefficients_constant contDiffOn_const).mul (hc.add hc.conjugateReverse)
 
 /-- Extraction is integration against the conjugate carrier, including its slow phase. -/
-noncomputable def extract (f : D × ℝ → ℂ) (k : ℝ) (Φ : D → ℝ) (kp j : ℤ)
+@[expose] noncomputable def extract (f : D × ℝ → ℂ) (k : ℝ) (Φ : D → ℝ) (kp j : ℤ)
     (x : D) : ℂ :=
   angularMean (fun θ => f (x, θ) *
     field (AddMonoidAlgebra.single (-j) (fun _ : D => (1 : ℂ))) k Φ kp (x, θ))
@@ -558,7 +559,7 @@ theorem coefficients_unique {c d : Coefficients D} (k : ℝ) (Φ : D → ℝ)
   rw [← extract_field c k Φ hkp j x, he, extract_field d k Φ hkp j x]
 
 /-- Nonconstant, given by `c.erase 0`. -/
-noncomputable def nonconstant (c : Coefficients D) : Coefficients D := c.erase 0
+@[expose] noncomputable def nonconstant (c : Coefficients D) : Coefficients D := c.erase 0
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem nonconstant_eq_sub (c : Coefficients D) :
@@ -725,7 +726,7 @@ theorem linearResidual_add {U : Set D} (hU : IsOpen U) (ε : ℝ) (R : D → ℝ
 
 /-- Exact residual of a perturbation of a fixed base, before the virtual
 stress and the separately retained base residual are added. -/
-noncomputable def nonlinearResidual (ε : ℝ) (R : D → ℝ) (Vr Vθ Vz Vt : D → D)
+@[expose] noncomputable def nonlinearResidual (ε : ℝ) (R : D → ℝ) (Vr Vθ Vz Vt : D → D)
     (B a : D → ComplexVector) (p : D → ℂ) (x : D) : ComplexVector :=
   LinearWaveResidual.linearResidual ε R Vr Vθ Vz Vt B a p x + LinearWaveResidual.transport R Vr Vθ
       Vz a a x
@@ -990,7 +991,7 @@ theorem smooth_nonlinearResidual {U : Set D} (hU : IsOpen U) {g : Frame D} (hg :
     (smooth_transport hU hg hΦ k kp ha ha i)
 
 /-- Constant vector, defined pointwise by `constantCoefficient (fun x => a x i)`. -/
-noncomputable def constantVector (a : D → ComplexVector) : VectorCoefficients D :=
+@[expose] noncomputable def constantVector (a : D → ComplexVector) : VectorCoefficients D :=
   fun i => constantCoefficient (fun x => a x i)
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -1066,19 +1067,19 @@ noncomputable def meanCoefficients (g : Frame D) (B M : D → ComplexVector) (p 
   nonlinearResidual g 0 (fun _ => 0) 1 (constantVector B) (constantVector M) (constantCoefficient p)
 
 /-- Gaussian and alias fields are subtracted after the actual nonlinear differential residual. -/
-noncomputable def LabelData.residualCoefficients (d : LabelData D) (g : Frame D)
+@[expose] noncomputable def LabelData.residualCoefficients (d : LabelData D) (g : Frame D)
     (B M : D → ComplexVector) : VectorCoefficients D := fun i =>
   realCoefficients (nonlinearResidual g d.frequency d.phase d.angularFrequency
     (constantVector (B + M)) d.velocity d.pressure i - d.gaussian i - d.aliasError i)
 
 /-- Wave residual coefficients, defined pointwise by `nonconstant (d.residualCoefficients g B M
 i)`. -/
-noncomputable def LabelData.waveResidualCoefficients (d : LabelData D) (g : Frame D)
+@[expose] noncomputable def LabelData.waveResidualCoefficients (d : LabelData D) (g : Frame D)
     (B M : D → ComplexVector) : VectorCoefficients D := fun i =>
   nonconstant (d.residualCoefficients g B M i)
 
 /-- Good residual as an element of `ℝ`. -/
-noncomputable def goodResidual {ι : Type*} (labels : Finset ι) (data : ι → LabelData D)
+@[expose] noncomputable def goodResidual {ι : Type*} (labels : Finset ι) (data : ι → LabelData D)
     (g : Frame D) (B M : D → ComplexVector) (p : D → ℂ) (virtual : D → Fin 3 → ℝ)
     (x : D × ℝ) (i : Fin 3) : ℝ :=
   (Actual.nonlinearResidual g.viscosity (fun y => g.radius y.1)
@@ -1265,7 +1266,7 @@ theorem LabelData.extract_residual (d : LabelData D) (g : Frame D)
   extract_field _ _ _ hkp _ _
 
 /-- Real angular mean, given by `(∫ θ in (0 : ℝ)..period, f θ) / period`. -/
-noncomputable def realAngularMean (f : ℝ → ℝ) : ℝ :=
+@[expose] noncomputable def realAngularMean (f : ℝ → ℝ) : ℝ :=
   (∫ θ in (0 : ℝ)..period, f θ) / period
 
 theorem realAngularMean_const (a : ℝ) : realAngularMean (fun _ => a) = a := by
@@ -1300,6 +1301,7 @@ theorem realAngularMean_field (c : Coefficients D) (k : ℝ) (Φ : D → ℝ)
 
 /-- Mean residual value, given by `(meanCoefficients g B M p i 0 x).re + virtual x i + ∑ l ∈
 labels, (data l |>.residualCoefficients g B M i 0 x).re`. -/
+@[expose]
 noncomputable def meanResidualValue {ι : Type*} (labels : Finset ι) (data : ι → LabelData D)
     (g : Frame D) (B M : D → ComplexVector) (p : D → ℂ) (virtual : D → Fin 3 → ℝ)
     (x : D) (i : Fin 3) : ℝ :=
@@ -1372,7 +1374,7 @@ theorem goodWaveResidual_grouped {ι : Type*} (labels : Finset ι) (data : ι �
 
 /-- Context frame, bundling `radius`, `radial`, `axial`, `time` and the required compatibility
 proofs. -/
-noncomputable def contextFrame (c : CorrectionState.Context D) (n : ℕ) : Frame D where
+@[expose] noncomputable def contextFrame (c : CorrectionState.Context D) (n : ℕ) : Frame D where
   radius := c.operators.radius
   radial := fun x => c.operators.eR +
     (c.operators.radialFrequency n * c.operators.radialProfile x) • c.operators.vR
@@ -1383,11 +1385,13 @@ noncomputable def contextFrame (c : CorrectionState.Context D) (n : ℕ) : Frame
 
 /-- Context base, given by `![(c.base.radial n x : ℂ), (c.base.angular n x : ℂ), (c.base.axial n
 x : ℂ)]`. -/
+@[expose]
 noncomputable def contextBase (c : CorrectionState.Context D) (n : ℕ) (x : D) : ComplexVector :=
   ![(c.base.radial n x : ℂ), (c.base.angular n x : ℂ), (c.base.axial n x : ℂ)]
 
 /-- State mean, given by `![(s.mean.radial n x : ℂ), (s.mean.angular n x : ℂ), (s.mean.axial n x
 : ℂ)]`. -/
+@[expose]
 noncomputable def stateMean (s : CorrectionState.State D) (n : ℕ) (x : D) : ComplexVector :=
   ![(s.mean.radial n x : ℂ), (s.mean.angular n x : ℂ), (s.mean.axial n x : ℂ)]
 
@@ -1417,11 +1421,13 @@ noncomputable def stateFullResidual (c : CorrectionState.Context D) (s : Correct
     contextVirtual c n x.1 i + s.errors.base n x i
 
 /-- State good residual, given by `stateFullResidual c s - s.errors.total`. -/
+@[expose]
 noncomputable def stateGoodResidual (c : CorrectionState.Context D) (s : CorrectionState.State D) :
     CorrectionState.Oscillation D := stateFullResidual c s - s.errors.total
 
 /-- State good wave residual, given by `stateGoodResidual c s n x i -
 CorrectionState.angularAverage (fun m y => stateGoodResidual c s m y i) n x.1`. -/
+@[expose]
 noncomputable def stateGoodWaveResidual (c : CorrectionState.Context D) (s : CorrectionState.State
     D)
     (n : ℕ) (x : D × ℝ) (i : Fin 3) : ℝ :=
@@ -1433,7 +1439,7 @@ abbrev BlockCoefficients (D : Type) := ℕ → VectorCoefficients D
 
 /-- Input blocks are interpreted as their actual real fields. The real projection
 does not enlarge the largest harmonic value and is the identity for conjugate data. -/
-noncomputable def ofBlock (b : CorrectionState.HarmonicBlock D)
+@[expose] noncomputable def ofBlock (b : CorrectionState.HarmonicBlock D)
     (gaussian aliasError : BlockCoefficients D) (n : ℕ) : LabelData D where
   frequency := b.frequency n
   phase := b.phase n
@@ -1534,6 +1540,7 @@ theorem BlockRepresentation.goodResidual_eq {ι : Type*} {labels : ℕ → Finse
 
 /-- Residual block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def residualBlock (c : CorrectionState.Context D) (s : CorrectionState.State D)
     (b : CorrectionState.HarmonicBlock D) (gaussian aliasError : BlockCoefficients D) :
     CorrectionState.HarmonicBlock D where

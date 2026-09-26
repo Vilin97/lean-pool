@@ -44,7 +44,7 @@ Pinned Mathlib API: `Equiv.permCongr` (`permCongr_apply`), `Fin.rev`
 `Equiv.symm_apply_eq`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -68,12 +68,12 @@ def xorPerm (f : Fin (2 ^ n) → Bool) :
 @[simp]
 theorem xorPerm_apply (f : Fin (2 ^ n) → Bool) (p : Fin (2 ^ n) × Fin (2 ^ 1)) :
     xorPerm f p = (p.1, if f p.1 then p.2.rev else p.2) :=
-  rfl
+  by rfl
 
 /-- The XOR oracle is an involution. -/
 @[simp]
 theorem xorPerm_symm (f : Fin (2 ^ n) → Bool) : (xorPerm f).symm = xorPerm f :=
-  rfl
+  by rfl
 
 /-- The XOR (bit-flip) oracle of `f`, as a permutation gate on `n + 1`
 qubits: `U_f |x⟩|b⟩ = |x⟩|b ⊕ f(x)⟩` (input register first/most significant,

@@ -24,4 +24,4 @@ that declaration is available in current Mathlib from
 import-compatible shim.
 -/
 
-@[expose] public section
+public section

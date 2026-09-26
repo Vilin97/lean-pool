@@ -19,7 +19,7 @@ the nonempty collision band therefore extends to the entire connected interior f
 interval.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

@@ -40,7 +40,7 @@ instantiating the Nash-Williams theorem at the uniform front `[M]^k`. Both are k
 file imports the other: they share only the generic helpers in `NashWilliams.Data`.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

@@ -61,7 +61,7 @@ what upstream proves.  Upstream declaration names are kept so that the two
 developments can be compared side by side.  See the repository NOTICE file.
 -/
 
-@[expose] public section
+public section
 
 namespace HasseMinkowski
 

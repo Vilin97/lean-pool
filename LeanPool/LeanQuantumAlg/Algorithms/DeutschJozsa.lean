@@ -41,7 +41,7 @@ nonzero decides the promise problem exactly.
   constant.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -193,11 +193,11 @@ def timedFinalJointState (f : WalshHadamard.Oracle n) : Timed (PureState (n + 1)
 
 @[simp]
 theorem timedFinalJointState_ret (f : WalshHadamard.Oracle n) :
-    (timedFinalJointState f).ret = WalshHadamard.finalJointState f := rfl
+    (timedFinalJointState f).ret = WalshHadamard.finalJointState f := by rfl
 
 @[simp]
 theorem timedFinalJointState_time (f : WalshHadamard.Oracle n) :
-    (timedFinalJointState f).time = 1 := rfl
+    (timedFinalJointState f).time = 1 := by rfl
 
 /-- Public resource profile for the Deutsch-Jozsa circuit:
 one oracle query and two `n`-qubit Hadamard layers plus the target Hadamard. -/
@@ -218,11 +218,11 @@ def profiledFinalJointState (f : WalshHadamard.Oracle n) :
 
 @[simp]
 theorem profiledFinalJointState_ret (f : WalshHadamard.Oracle n) :
-    (profiledFinalJointState f).ret = WalshHadamard.finalJointState f := rfl
+    (profiledFinalJointState f).ret = WalshHadamard.finalJointState f := by rfl
 
 @[simp]
 theorem profiledFinalJointState_resources (f : WalshHadamard.Oracle n) :
-    (profiledFinalJointState f).resources = resourceProfile n := rfl
+    (profiledFinalJointState f).resources = resourceProfile n := by rfl
 
 /-- The TimeM return value is the same final state used by the amplitude test. -/
 theorem reportsConstant_iff_timedFinalJointState

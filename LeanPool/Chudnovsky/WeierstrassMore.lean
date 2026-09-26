@@ -29,7 +29,7 @@ characterisation of the zeros of `℘'` use the third Liouville theorem (from
 `LeanPool.Chudnovsky.Liouville`) as a pinned interface.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

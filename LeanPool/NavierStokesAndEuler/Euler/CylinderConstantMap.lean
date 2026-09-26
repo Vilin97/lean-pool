@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTranslation
 
 /-! Fixed bounded maps on actual cylinder L² classes and continuous paths. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -66,7 +66,7 @@ def pathMap (L : E →L[ℝ] F) : C(K,CylinderL2 period E) →L[ℝ] C(K,Cylinde
 
 omit [CompactSpace K] in
 @[simp] theorem pathMap_apply (L : E →L[ℝ] F) (u : C(K, CylinderL2 period E)) (t : K) :
-    pathMap period L u t = map period L (u t) := rfl
+    pathMap period L u t = map period L (u t) := by rfl
 
 theorem pathMap_norm (L : E →L[ℝ] F) : ‖pathMap (K := K) period L‖ ≤ ‖L‖ := by
   apply opNorm_le_bound _ (norm_nonneg L)
@@ -82,7 +82,7 @@ theorem pathMap_translation (L : E →L[ℝ] F) (a : LiftTangent) (u : C(K, Cyli
     pathMap period L (pathTranslate period a u) = pathTranslate period a (pathMap period L u) := by
   apply ContinuousMap.ext
   intro t
-  exact map_translation period L a (u t)
+  simpa only [pathMap_apply, pathTranslate_apply] using map_translation period L a (u t)
 
 theorem pathMap_orbit_contDiff (L : E →L[ℝ] F) (u : C(K, CylinderL2 period E))
     (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a u)) :

@@ -57,7 +57,7 @@ reverse-transfer stage.
   — the accessible clean overlay performs the complete reverse finite transfer.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

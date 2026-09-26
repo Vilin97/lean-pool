@@ -80,7 +80,7 @@ report.
   "spanning 2-connected subgraph" form the assembly needs.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph

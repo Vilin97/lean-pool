@@ -35,7 +35,7 @@ Recon / context: MATH CONTEXT block in the run prompt; #376 recon at
 DO NOT reprove Kummer — reuse the imports below.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75
 
@@ -48,7 +48,7 @@ This is the Kummer no-carry condition for doubling `n` in base `p`
 (`p ∤ C(2n,n)`). For an **odd** prime `p`, `d ≤ (p-1)/2 ↔ 2*d < p`, so it is
 the same predicate as #376's `LowDoubleDigits p n := ∀ d ∈ digits p n, 2*d < p`
 (see `lowDigits_iff_lowDoubleDigits` below). -/
-def LowDigits (p n : ℕ) : Prop := ∀ d ∈ Nat.digits p n, d ≤ (p - 1) / 2
+@[expose] def LowDigits (p n : ℕ) : Prop := ∀ d ∈ Nat.digits p n, d ≤ (p - 1) / 2
 
 /-- For an **odd** prime `p`, the per-digit bound `2*d < p` (the #376 form, i.e.
 "doubling produces no carry") is equivalent to `d ≤ (p-1)/2` (the `LowDigits`

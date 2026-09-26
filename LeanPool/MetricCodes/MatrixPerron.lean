@@ -18,7 +18,7 @@ bounds. It requires no coding-theory definitions. Positivity is propagated along
 positive matrix entries, allowing arbitrary finite index sets rather than just tridiagonal grids.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -39,15 +39,15 @@ structure ConnectedNonnegativeMatrix (A : Matrix I I ℝ) : Prop where
     ⟨fun i j => PLift (0 < A i j)⟩
 
 /-- The linear operator associated to a real matrix. -/
-def operator (A : Matrix I I ℝ) : Space I →ₗ[ℝ] Space I :=
+@[expose] def operator (A : Matrix I I ℝ) : Space I →ₗ[ℝ] Space I :=
   Matrix.toEuclideanLin A
 
 /-- The continuous linear operator associated to a finite real matrix. -/
-def continuousOperator (A : Matrix I I ℝ) : Space I →L[ℝ] Space I :=
+@[expose] def continuousOperator (A : Matrix I I ℝ) : Space I →L[ℝ] Space I :=
   LinearMap.toContinuousLinearMap (operator A)
 
 /-- The Rayleigh quotient of the matrix operator. -/
-def rayleigh (A : Matrix I I ℝ) (x : Space I) : ℝ :=
+@[expose] def rayleigh (A : Matrix I I ℝ) (x : Space I) : ℝ :=
   (continuousOperator A).rayleighQuotient x
 
 omit [Nonempty I] in
@@ -60,7 +60,7 @@ theorem rayleigh_bddAbove (A : Matrix I I ℝ) :
     ((continuousOperator A).rayleighQuotient_le_norm x)
 
 /-- The supremum of the Rayleigh quotient over nonzero vectors. -/
-def topEigenvalue (A : Matrix I I ℝ) : ℝ :=
+@[expose] def topEigenvalue (A : Matrix I I ℝ) : ℝ :=
   ⨆ x : {x : Space I // x ≠ 0}, rayleigh A x
 
 omit [Nonempty I] in
@@ -93,7 +93,7 @@ theorem exists_topEigenvector (A : Matrix I I ℝ)
   exact ⟨x, hx.2, hx.apply_eq_smul⟩
 
 /-- Take the absolute value of each coordinate. -/
-def coordinateAbs (x : Space I) : Space I :=
+@[expose] def coordinateAbs (x : Space I) : Space I :=
   WithLp.toLp 2 fun i : I => |x i|
 
 omit [DecidableEq I] [Nonempty I] in

@@ -22,7 +22,7 @@ explicit open physical domain where those profiles have been constructed.
 No assertion about the regularity of the final Navier--Stokes force is made.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

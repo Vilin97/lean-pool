@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketShiftArithmetic
 
 /-! Uniform shifts and actual time profiles for the three known pieces of every grade. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

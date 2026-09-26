@@ -17,7 +17,7 @@ one prescribed control neighborhood.  Quantitative chart approximation can there
 the neighborhoods first and reuse the conforming triangulation unchanged.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

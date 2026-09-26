@@ -10,12 +10,12 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryDataTypes
 
 /-! # Lightweight coverage summaries, buckets 24–31 -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 
 /-- Lightweight monotone-obstruction summaries for this hash-bucket group. -/
-def patternSummaryBuckets03 : Array (List PatternSummary) := #[
+@[expose] def patternSummaryBuckets03 : Array (List PatternSummary) := #[
   [
     ⟨24, 1157645568⟩,
     ⟨1560, 79165414075392⟩,
@@ -74,7 +74,7 @@ def patternSummaryBuckets03 : Array (List PatternSummary) := #[
 ]
 
 /-- Lightweight exact-table summaries for this hash-bucket group. -/
-def hardSummaryBuckets03 : Array (List HardSummary) := #[
+@[expose] def hardSummaryBuckets03 : Array (List HardSummary) := #[
   [
     ⟨24, 7184589160277617950⟩,
     ⟨792, 5420528452980860190⟩,

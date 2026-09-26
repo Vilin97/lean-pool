@@ -21,7 +21,7 @@ Tags: projective-geometry, incidence-geometry, geometry
 MSC: 51A05, 51A30
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

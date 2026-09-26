@@ -15,7 +15,7 @@ public import Mathlib.Analysis.Calculus.ContDiff.Operations
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Set Filter
 open scoped ENNReal NNReal Topology
@@ -28,6 +28,7 @@ noncomputable section
 namespace CKN
 
 /-- The globally defined product used for the backward heat test. -/
+@[expose]
 def backwardHeatCutoff (η : Vec3 × ℝ → ℝ) (x₀ : Vec3) (t₀ r : ℝ)
     (z : Vec3 × ℝ) : ℝ :=
   η z * if z.2 - t₀ < r ^ 2 then

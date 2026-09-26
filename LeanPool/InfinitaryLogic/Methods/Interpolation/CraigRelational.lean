@@ -41,7 +41,7 @@ semantic contraposition — contradiction.  Feeding the inseparable root pair to
 gives one model with `M ⊨ r₁` and `¬ M ⊨ r₂`; its base reduct contradicts `r₁ ⊨ r₂`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

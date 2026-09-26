@@ -17,7 +17,7 @@ The weight is constructed by coordinate multiplication on Schwartz space.
 Consequently the resulting Fourier expressions belong to ordinary `L²`.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -77,12 +77,12 @@ theorem weightedSchwartz_injective : Function.Injective weightedSchwartz := by
     exact_mod_cast (sq_pos_of_pos (show (0 : ℝ) < 1 + ‖ξ‖ ^ 2 by positivity)).ne') hξ
 
 /-- Weighted Fourier embedding of tests into ordinary complex `L²`. -/
-def BCLM : ComplexTest →L[ℂ] Lp ℂ 2 (volume : Measure Space) :=
+@[expose] def BCLM : ComplexTest →L[ℂ] Lp ℂ 2 (volume : Measure Space) :=
   (SchwartzMap.toLpCLM ℂ ℂ 2 volume).comp
     (weightedSchwartz.comp EulerSobolev.schwartzFourierCLM)
 
 /-- The linear map underlying the continuous weighted Fourier embedding. -/
-def B : ComplexTest →ₗ[ℂ] Lp ℂ 2 (volume : Measure Space) :=
+@[expose] def B : ComplexTest →ₗ[ℂ] Lp ℂ 2 (volume : Measure Space) :=
   BCLM.toLinearMap
 
 theorem continuous_B : Continuous B := BCLM.continuous

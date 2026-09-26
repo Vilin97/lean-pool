@@ -25,7 +25,7 @@ Utility lemmas for the Apportionment library: a positivity criterion for the sum
 vector of natural numbers, and a closed form for the sum of a length-four vector.
 -/
 
-@[expose] public section
+public section
 
 /-- A vector of natural numbers has positive sum iff at least one component is positive. -/
 lemma sum_pos_iff_exists_pos {n : ℕ} {v : Vector ℕ n} :

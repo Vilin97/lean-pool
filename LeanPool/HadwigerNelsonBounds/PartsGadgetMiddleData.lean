@@ -14,12 +14,12 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Aggregation of the generated `Middle` certificate. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
 /-- The checked `Middle` contradiction tree. -/
-def partsGadgetMiddleCertificate : PartsGadgetCertificate := {
+@[expose] def partsGadgetMiddleCertificate : PartsGadgetCertificate := {
   roots := [⟨5, 0⟩, ⟨31, 3⟩, ⟨18, 1⟩]
   nodeCount := 17
   nodes := #[

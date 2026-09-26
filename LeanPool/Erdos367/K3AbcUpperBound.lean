@@ -21,7 +21,7 @@ We formalize:
   6. The main theorem:  B₂(n) · B₂(n+1) · B₂(n+2) ≤ C'_ε · n^{2+ε}
 -/
 
-@[expose] public section
+public section
 
 open Finset BigOperators Nat
 

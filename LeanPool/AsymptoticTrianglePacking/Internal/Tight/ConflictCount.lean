@@ -36,7 +36,7 @@ Proof.  Writing `S = ∑_{h ∈ H} a(h)·b(h)` with `a(h) = #{f ∋ u : h ∈ co
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 

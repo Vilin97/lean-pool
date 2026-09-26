@@ -35,7 +35,7 @@ functional needs). All PUBLIC lemmas are stated at the `MForm`/`laurentCoeffAt` 
 * `resMap`/`resMap_injective`: the induced map `Ω(-D) →ₗ Dual(H1Tail D)`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace Filter Topology

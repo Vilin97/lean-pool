@@ -78,7 +78,7 @@ subset of the plane supplies a `b` as close to `x` as asked, inside `D`.
 * `Schoenflies.tendsto_two_pow_neg`, `.two_pow_neg_pos` — `ε_n = 2^{-n}`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Metric Set
 

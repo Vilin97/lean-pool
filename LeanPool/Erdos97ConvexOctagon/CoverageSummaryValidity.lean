@@ -9,17 +9,17 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData
 
 /-! # Soundness of lightweight coverage-summary audits -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 
 /-- A pattern summary denotes a checked obstruction with the advertised fields. -/
-def PatternSummary.Valid (summary : PatternSummary) : Prop :=
+@[expose] def PatternSummary.Valid (summary : PatternSummary) : Prop :=
   ∃ entry : PatternEntry, entry.origin = summary.origin ∧
     entry.mask = summary.mask ∧ entry.validB = true
 
 /-- An exact-table summary denotes a checked obstruction with the advertised fields. -/
-def HardSummary.Valid (summary : HardSummary) : Prop :=
+@[expose] def HardSummary.Valid (summary : HardSummary) : Prop :=
   ∃ entry : HardEntry, entry.origin = summary.origin ∧
     entry.code = summary.code ∧ entry.validB = true
 

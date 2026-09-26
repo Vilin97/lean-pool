@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
 physical coordinates. Its gradient is exactly the inverse-transpose
 reconstruction used in the quantitative correction estimates. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

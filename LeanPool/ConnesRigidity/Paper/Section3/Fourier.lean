@@ -25,7 +25,7 @@ import Mathlib.Topology.Metrizable.Urysohn
 The fourier component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperFourier

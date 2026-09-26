@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Basic
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open CKN.Foundation.Parabolic
 
@@ -21,6 +21,7 @@ open CKN.Foundation.Parabolic
 namespace CKN
 
 /-- The squared spatial-gradient density used by paper label `def:sws`. -/
+@[expose]
 def spatialGradientSq (_u : ParabolicPoint → Vec3)
     (Du : ParabolicPoint → Fin 3 → Vec3) (z : ParabolicPoint) : ℝ :=
   ∑ i, ∑ j, (Du z i j) ^ (2 : ℕ)

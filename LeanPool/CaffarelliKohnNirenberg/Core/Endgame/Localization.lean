@@ -19,7 +19,7 @@ A ball compactly inside the space-time domain admits a smooth cutoff and
 a compactly interior product box containing its support.
 -/
 
-@[expose] public section
+public section
 
 open Set Metric
 open scoped Topology

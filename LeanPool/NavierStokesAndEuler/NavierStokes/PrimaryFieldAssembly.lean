@@ -17,7 +17,7 @@ complex harmonic use the same `PairData` as the covariance calculation.
 The exact curl correction remains a separate field.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -123,7 +123,7 @@ noncomputable def coveredVector {U : UnsignedLabel} (P : PairData sys U)
 
 /-- The square roots, signed-label mask, and physical outer factor are
 literal; no fresh choice of amplitudes is made when assembling the field. -/
-noncomputable def slotAmplitude {U : UnsignedLabel} (P : PairData sys U)
+@[expose] noncomputable def slotAmplitude {U : UnsignedLabel} (P : PairData sys U)
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : ℝ) (T : Vec2)
     (q : ℝ) (x : SlotColoring.Position) (j : Fin 2) (Y : Plane) : ComplexVector :=
   fun i => ((outer * amplitude ε (mask D U q x) P.matrix T j *
@@ -575,7 +575,7 @@ theorem pulseVector_eq (j : Fin 2) (z : Plane) :
 
 /-- The source vector is evaluated from `cutoffPulse`, rather than from
 arbitrarily supplied radial and tangent component functions. -/
-noncomputable def nativeSource (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
+@[expose] noncomputable def nativeSource (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (j : Fin 2) : Plane → Vector :=
   TorusAverages.nativeField (TorusAverages.slotChart vr vt hdet)
     (slotCenter h (signedLabel U j))
@@ -591,7 +591,7 @@ theorem nativeSource_eq (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (j : Fin 2) :
 
 /-- The native complex coefficient has the literal inverse-square-root
 amplitude and a single local Gaussian cutoff. -/
-noncomputable def nativeCoefficient (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
+@[expose] noncomputable def nativeCoefficient (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (outer ε : ℝ) (T : Vec2) (q : ℝ) (x : SlotColoring.Position)
     (j : Fin 2) (Y : Plane) : ComplexVector :=
   fun i => ((outer * amplitude ε (mask D U q x) A.sourceMatrix T j *
@@ -599,7 +599,7 @@ noncomputable def nativeCoefficient (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
 
 /-- Actual amplitude, given by `TorusAverages.periodize (A.nativeCoefficient hdet outer ε T q x
 j) ((SlotGeometry.cover ^ SlotColoring.nativeIndex h U.1) Y)`. -/
-noncomputable def actualAmplitude (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
+@[expose] noncomputable def actualAmplitude (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (outer ε : ℝ) (T : Vec2) (q : ℝ) (x : SlotColoring.Position)
     (j : Fin 2) (Y : Plane) : ComplexVector :=
   TorusAverages.periodize (A.nativeCoefficient hdet outer ε T q x j)
@@ -640,7 +640,7 @@ theorem actualAmplitude_eq (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
 
 /-- Actual velocity, defined pointwise by `(vectorMode 1 (slotPhase A.pairData j) (fun z =>
 A.actualAmplitude hdet outer ε T q x j z.1) (Y, θ) i).re`. -/
-noncomputable def actualVelocity (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
+@[expose] noncomputable def actualVelocity (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (outer ε : ℝ) (T : Vec2) (q : ℝ) (x : SlotColoring.Position)
     (j : Fin 2) (Y : Plane) (θ : ℝ) : Vector :=
   fun i => (vectorMode 1 (slotPhase A.pairData j)

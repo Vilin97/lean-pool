@@ -20,7 +20,7 @@ import LeanPool.ConnesRigidity.Porting.CoreTransfer
 The property t transfer component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 

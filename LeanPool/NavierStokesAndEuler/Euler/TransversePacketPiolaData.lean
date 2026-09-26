@@ -15,7 +15,7 @@ section
 
 /-! The actual high/corrector pair, with all potential regularity derived from the high field. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -85,7 +85,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

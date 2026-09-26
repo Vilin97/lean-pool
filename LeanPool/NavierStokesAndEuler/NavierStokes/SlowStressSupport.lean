@@ -30,7 +30,7 @@ proves that all five actual moment increments are linear, including pressure
 with the known previous-order radial residual retained.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,11 +47,11 @@ abbrev History := ℕ → Profile
 abbrev Debt := Fin 5 → ℝ
 
 /-- Cauchy, given by `PositiveAxisSystem.convolution n (fun i j => u i R * v j R)`. -/
-noncomputable def cauchy (n : ℕ) (u v : History) (R : ℝ) : ℝ :=
+@[expose] noncomputable def cauchy (n : ℕ) (u v : History) (R : ℝ) : ℝ :=
   PositiveAxisSystem.convolution n (fun i j => u i R * v j R)
 
 /-- Increment, given by `Function.update u n (fun R => u n R + du R)`. -/
-noncomputable def increment (u : History) (n : ℕ) (du : Profile) : History :=
+@[expose] noncomputable def increment (u : History) (n : ℕ) (du : Profile) : History :=
   Function.update u n (fun R => u n R + du R)
 
 theorem increment_lower (u : History) {n j : ℕ} (du : Profile) (hj : j < n) :
@@ -73,7 +73,7 @@ theorem cauchy_increment {n : ℕ} (hn : 0 < n) (u v : History) (du dv : Profile
   ring
 
 /-- The actual R-pressure equation: Ω is the fixed order-(n-1) source. -/
-noncomputable def pressureGradient (n : ℕ) (e : History) (omega : Profile) (R : ℝ) : ℝ :=
+@[expose] noncomputable def pressureGradient (n : ℕ) (e : History) (omega : Profile) (R : ℝ) : ℝ :=
   (cauchy n e e R - omega R) / R
 
 /-- The angular similarity coefficient in (22), reconstructed from E. -/
@@ -99,7 +99,7 @@ theorem pressureGradient_eq_X_equation (n : ℕ) (C : ℝ) (e : History) (omega 
   field_simp
 
 /-- The five densities in (23), in the order printed there. -/
-noncomputable def rowDensity (n : ℕ) (u e : History) (omega : Profile) (R : ℝ) : Debt :=
+@[expose] noncomputable def rowDensity (n : ℕ) (u e : History) (omega : Profile) (R : ℝ) : Debt :=
   ![R * u n R, R ^ 2 * e n R, pressureGradient n e omega R,
     R ^ 2 * cauchy n u e R,
     R * cauchy n u u R - R ^ 2 / 2 * pressureGradient n e omega R]
@@ -108,7 +108,7 @@ noncomputable def rowDensity (n : ℕ) (u e : History) (omega : Profile) (R : �
 noncomputable def positiveIntegral (f : Profile) : ℝ := ∫ R in Ioi (0 : ℝ), f R
 
 /-- Moments, defined pointwise by `positiveIntegral (fun R => rowDensity n u e omega R i)`. -/
-noncomputable def moments (n : ℕ) (u e : History) (omega : Profile) : Debt :=
+@[expose] noncomputable def moments (n : ℕ) (u e : History) (omega : Profile) : Debt :=
   fun i => positiveIntegral (fun R => rowDensity n u e omega R i)
 
 /-- Linear density, given by `![R * du R, R ^ 2 * de R, 2 * e₀ R * de R / R, R ^ 2 * (u₀ R * de
@@ -471,7 +471,7 @@ abbrev JointProfile := ℝ × ℝ → ℝ
 abbrev JointHistory := ℕ → JointProfile
 
 /-- Slice, defined pointwise by `f j (R, eta)`. -/
-noncomputable def slice (f : JointHistory) (eta : ℝ) : History := fun j R => f j (R, eta)
+@[expose] noncomputable def slice (f : JointHistory) (eta : ℝ) : History := fun j R => f j (R, eta)
 
 /-- Joint increment, given by `Function.update u n (fun w => u n w + du w)`. -/
 noncomputable def jointIncrement (u : JointHistory) (n : ℕ) (du : JointProfile) : JointHistory :=
@@ -527,10 +527,11 @@ theorem positiveIntegral_eq_primitive {f : Profile} {B R : ℝ} (hB : 0 ≤ B) (
 
 /-- Joint pressure gradient, given by `pressureGradient n (slice e w.2) (fun R => omega (R,
 w.2)) w.1`. -/
-noncomputable def jointPressureGradient (n : ℕ) (e : JointHistory) (omega : JointProfile)
+@[expose] noncomputable def jointPressureGradient (n : ℕ) (e : JointHistory) (omega : JointProfile)
     (w : ℝ × ℝ) : ℝ := pressureGradient n (slice e w.2) (fun R => omega (R, w.2)) w.1
 
 /-- Pressure is recomputed from its actual radial gradient, with zero axis datum. -/
+@[expose]
 noncomputable def pressureHistory (n : ℕ) (e : JointHistory) (omega : JointProfile) : JointProfile
     :=
   ProfileHistories.primitive (jointPressureGradient n e omega)
@@ -566,7 +567,7 @@ theorem pressureHistory_exterior_of_moments {n : ℕ} {u e : JointHistory} {omeg
   exact congrFun (hm eta) 2
 
 /-- Weighted axial, given by `w.1 * u w`. -/
-noncomputable def weightedAxial (u : JointProfile) (w : ℝ × ℝ) : ℝ := w.1 * u w
+@[expose] noncomputable def weightedAxial (u : JointProfile) (w : ℝ × ℝ) : ℝ := w.1 * u w
 
 /-- Mass history, given by `ProfileHistories.primitive (weightedAxial u)`. -/
 noncomputable def massHistory (u : JointProfile) : JointProfile :=
@@ -578,12 +579,12 @@ noncomputable def parameterMassHistory (u : JointProfile) : JointProfile :=
   ProfileHistories.primitive (ProfileHistories.parameterPartial (weightedAxial u))
 
 /-- The R-coordinate version of (21), with both histories given by actual integrals. -/
-noncomputable def fluxHistory (h lam : ℝ) (u : JointProfile) (w : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def fluxHistory (h lam : ℝ) (u : JointProfile) (w : ℝ × ℝ) : ℝ :=
   (w.2 * w.1 ^ 2 * u w - 2 * w.2 * (PositiveAxisSystem.dScale h + lam) * massHistory u w -
     PositiveAxisSystem.edge w.2 * parameterMassHistory u w) / PositiveAxisSystem.ell h w.2
 
 /-- Radial Z as an element of `ℝ`. -/
-noncomputable def radialZ (h power : ℝ) (u : JointProfile) (w : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def radialZ (h power : ℝ) (u : JointProfile) (w : ℝ × ℝ) : ℝ :=
   (2 * w.2 * power * u w + PositiveAxisSystem.edge w.2 * ProfileHistories.parameterPartial u w -
     w.2 * w.1 * ProfileHistories.radialPartial u w) / PositiveAxisSystem.ell h w.2
 
@@ -1024,7 +1025,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1038,9 +1039,9 @@ abbrev Field := ℝ × ℝ → ℝ
 /-- History: an abbreviation for `ℕ → Field`. -/
 abbrev History := ℕ → Field
 /-- Dr, given by `ProfileHistories.radialPartial`. -/
-noncomputable def dr := ProfileHistories.radialPartial
+@[expose] noncomputable def dr := ProfileHistories.radialPartial
 /-- De, given by `ProfileHistories.parameterPartial`. -/
-noncomputable def de := ProfileHistories.parameterPartial
+@[expose] noncomputable def de := ProfileHistories.parameterPartial
 /-- Region: an abbreviation for `(univ : Set ℝ) ×ˢ S`. -/
 abbrev region (S : Set ℝ) := (univ : Set ℝ) ×ˢ S
 /-- Smooth: an abbreviation for `ContDiffOn ℝ ∞ f (region S)`. -/
@@ -1054,23 +1055,23 @@ noncomputable def exterior (B : ℝ) (S : Set ℝ) (f : Field) : Prop :=
 noncomputable def weighted (m : ℕ) (f : Field) (w : ℝ × ℝ) : ℝ := w.1 ^ m * f w
 
 /-- Moment, given by `∫ R in (0 : ℝ)..B, R ^ m * f (R, eta)`. -/
-noncomputable def moment (B : ℝ) (m : ℕ) (f : Field) (eta : ℝ) : ℝ :=
+@[expose] noncomputable def moment (B : ℝ) (m : ℕ) (f : Field) (eta : ℝ) : ℝ :=
   ∫ R in (0 : ℝ)..B, R ^ m * f (R, eta)
 
 /-- Time op, given by `(-b * f w + PositiveAxisSystem.dScale h * w.2 * de f w + w.1 / 2 * dr f
 w) / PositiveAxisSystem.ell h w.2`. -/
-noncomputable def timeOp (h b : ℝ) (f : Field) (w : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def timeOp (h b : ℝ) (f : Field) (w : ℝ × ℝ) : ℝ :=
   (-b * f w + PositiveAxisSystem.dScale h * w.2 * de f w + w.1 / 2 * dr f w) /
     PositiveAxisSystem.ell h w.2
 
 /-- Axial op, given by `(2 * w.2 * b * f w + PositiveAxisSystem.edge w.2 * de f w - w.2 * w.1 *
 dr f w) / PositiveAxisSystem.ell h w.2`. -/
-noncomputable def axialOp (h b : ℝ) (f : Field) (w : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def axialOp (h b : ℝ) (f : Field) (w : ℝ × ℝ) : ℝ :=
   (2 * w.2 * b * f w + PositiveAxisSystem.edge w.2 * de f w - w.2 * w.1 * dr f w) /
     PositiveAxisSystem.ell h w.2
 
 /-- Axial Op2, given by `axialOp h (b - PositiveAxisSystem.dScale h) (axialOp h b f)`. -/
-noncomputable def axialOp2 (h b : ℝ) (f : Field) : Field :=
+@[expose] noncomputable def axialOp2 (h b : ℝ) (f : Field) : Field :=
   axialOp h (b - PositiveAxisSystem.dScale h) (axialOp h b f)
 
 theorem smooth_dr {S : Set ℝ} (hS : IsOpen S) {f : Field} (hf : Smooth S f) :
@@ -1329,12 +1330,12 @@ theorem moment_axialOp2_zero {S : Set ℝ} (hS : IsOpen S) {f : Field} (hf : Smo
       (fun z hz => hs z hz B le_rfl) hm hz) heta
 
 /-- Order exponent, given by `-PositiveAxisSystem.a h + SlowExpansionResidual.slowOrder h n`. -/
-noncomputable def orderExponent (h : ℝ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def orderExponent (h : ℝ) (n : ℕ) : ℝ :=
   -PositiveAxisSystem.a h + SlowExpansionResidual.slowOrder h n
 
 /-- Pressure exponent, given by `-2 * PositiveAxisSystem.a h + SlowExpansionResidual.slowOrder h
 n`. -/
-noncomputable def pressureExponent (h : ℝ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def pressureExponent (h : ℝ) (n : ℕ) : ℝ :=
   -2 * PositiveAxisSystem.a h + SlowExpansionResidual.slowOrder h n
 
 theorem orderExponent_pair (h : ℝ) {i j n : ℕ} (hij : i + j = n) :
@@ -1351,7 +1352,7 @@ theorem physical_product_power {q : ℝ} (hq : 0 < q) (h b c : ℝ)
   rw [SlowExpansionResidual.rpow_product_order hq, hij]
 
 /-- Conv, given by `∑ i ∈ Finset.range (n + 1), u i w * v (n - i) w`. -/
-noncomputable def conv (n : ℕ) (u v : History) (w : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def conv (n : ℕ) (u v : History) (w : ℝ × ℝ) : ℝ :=
   ∑ i ∈ Finset.range (n + 1), u i w * v (n - i) w
 
 theorem conv_eq_actual (n : ℕ) (u v : History) (w : ℝ × ℝ) :
@@ -1466,7 +1467,7 @@ theorem dr_axialViscousFlux {S : Set ℝ} (hS : IsOpen S) {u : Field} (hu : Smoo
   ring
 
 /-- Angular weighted, constructed using `w.1`. -/
-noncomputable def angularWeighted (h : ℝ) (n : ℕ) (v u e : History) (w : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def angularWeighted (h : ℝ) (n : ℕ) (v u e : History) (w : ℝ × ℝ) : ℝ :=
   w.1 ^ 2 * timeOp h (orderExponent h n) (e n) w +
     (∑ j ∈ Finset.range (n + 1),
       (w.1 * v j w * dr (e (n - j)) w + v j w * e (n - j) w +
@@ -1475,6 +1476,7 @@ noncomputable def angularWeighted (h : ℝ) (n : ℕ) (v u e : History) (w : ℝ
     w.1 ^ 2 * axialOp2 h (orderExponent h (n - 1)) (e (n - 1)) w
 
 /-- Axial weighted, constructed using `w.1`. -/
+@[expose]
 noncomputable def axialWeighted (h : ℝ) (n : ℕ) (v u : History) (p : Field) (w : ℝ × ℝ) : ℝ :=
   w.1 * timeOp h (orderExponent h n) (u n) w +
     (∑ j ∈ Finset.range (n + 1),
@@ -1775,7 +1777,7 @@ theorem axial_integral_zero {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
 
 /-- The negative weighted radial primitive. The definition is zero on
 nonpositive radii; vanishing of the source near the axis makes this smooth. -/
-noncomputable def stress (m : ℕ) (F : Field) (w : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def stress (m : ℕ) (F : Field) (w : ℝ × ℝ) : ℝ :=
   if 0 < w.1 then -ProfileHistories.primitive F w / w.1 ^ m else 0
 
 theorem stress_of_pos (m : ℕ) (F : Field) {w : ℝ × ℝ} (hw : 0 < w.1) :

@@ -35,7 +35,7 @@ used in Corollary `cor:one-round`, the positivity and upper bound
 the exponent identities `2 - 5/θ₀ = 1 - 5/θ₁ = γ` of `eq:q0q1`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -85,7 +85,7 @@ theorem bootstrap_gain_at_tau₂ : 1 / stepTau₂ - stepVarpi = 1 / 25 := by
 
 /-- The integrability parameter `σ = 3 - 5/q` of `eq:standing`, a function of
 the force exponent `q`. -/
-def stepSigma (q : ℝ) : ℝ := 3 - 5 / q
+@[expose] def stepSigma (q : ℝ) : ℝ := 3 - 5 / q
 
 /-- `eq:standing` records `σ = 3 - 5/q > 1` under `q > 5/2`. -/
 theorem one_lt_stepSigma {q : ℝ} (hq : (5 : ℝ) / 2 < q) : 1 < stepSigma q := by
@@ -112,7 +112,7 @@ theorem iterationEpsilon_lt_stepSigma {q : ℝ} (hq : (5 : ℝ) / 2 < q) :
 
 /-- The Hölder exponent `γ₀(q) = min {2 - 5/q, 1/5}` of `eq:gamma-value` in
 Theorem `thm:endgame`. -/
-def stepGamma₀ (q : ℝ) : ℝ := min (2 - 5 / q) (1 / 5)
+@[expose] def stepGamma₀ (q : ℝ) : ℝ := min (2 - 5 / q) (1 / 5)
 
 /-- `eq:gamma-value` records `γ₀ > 0` because `q > 5/2`. -/
 theorem stepGamma₀_pos {q : ℝ} (hq : (5 : ℝ) / 2 < q) : 0 < stepGamma₀ q := by
@@ -142,11 +142,11 @@ theorem stepGamma₀_lt_one (q : ℝ) : stepGamma₀ q < 1 := by
 
 /-- The Morrey exponent `θ₀ = 5/(2 - γ)` of `eq:q0q1`, as a function of the
 Hölder exponent `γ`. -/
-def stepTheta₀ (γ : ℝ) : ℝ := 5 / (2 - γ)
+@[expose] def stepTheta₀ (γ : ℝ) : ℝ := 5 / (2 - γ)
 
 /-- The Morrey exponent `θ₁ = 5/(1 - γ)` of `eq:q0q1`, as a function of the
 Hölder exponent `γ`. -/
-def stepTheta₁ (γ : ℝ) : ℝ := 5 / (1 - γ)
+@[expose] def stepTheta₁ (γ : ℝ) : ℝ := 5 / (1 - γ)
 
 /-- The first identity of `eq:q0q1`: `1/θ₀ = (2 - γ)/5`. -/
 theorem stepTheta₀_inv (γ : ℝ) : 1 / stepTheta₀ γ = (2 - γ) / 5 := by

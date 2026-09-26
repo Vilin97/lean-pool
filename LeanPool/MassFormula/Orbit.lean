@@ -43,7 +43,7 @@ of the class is itself a corollary of the count.
   degré donné d'un corps local*, C. R. Acad. Sci. Paris **286** (1978), Série A, 1031–1036.
 -/
 
-@[expose] public section
+public section
 
 open ValuativeRel
 

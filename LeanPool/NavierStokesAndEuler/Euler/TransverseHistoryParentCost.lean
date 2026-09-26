@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryPolynomialCos
 /-! The actual zeroth-order history costs are bounded by fixed scalar
 polynomials in the parent coefficient bounds and reciprocal horizon. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

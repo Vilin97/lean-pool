@@ -44,7 +44,7 @@ entropy integral bound.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool
 

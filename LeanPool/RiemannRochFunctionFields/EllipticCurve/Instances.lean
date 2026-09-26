@@ -19,7 +19,7 @@ Weierstrass generator in every characteristic, and (over an algebraically closed
 `IsFullConstantField k K`.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 
@@ -133,7 +133,7 @@ section AbstractRatFuncAlgebra
 variable [Algebra k⟮X⟯ K] [IsScalarTower k[X] k⟮X⟯ K]
 
 /-- The coordinate function `y ∈ K`, the image of the `AdjoinRoot` generator. -/
-def yCoord : K := algebraMap W.CoordinateRing K (CoordinateRing.mk W Y)
+@[expose] def yCoord : K := algebraMap W.CoordinateRing K (CoordinateRing.mk W Y)
 
 /-- The `{1, y}` basis of `K` over `k⟮X⟯`, localized from `CoordinateRing.basis`. -/
 def basisRatFunc : Module.Basis (Fin 2) k⟮X⟯ K :=

@@ -15,7 +15,7 @@ public import Mathlib.Topology.Separation.Regular
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open CKN.Foundation.Parabolic

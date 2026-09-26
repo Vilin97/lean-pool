@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketSourceData
 and pressure Hessian. The only matching data are the literal Lagrangian
 velocity and acceleration laws, not separate coefficient identities. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ namespace Parent
 variable (G : Parent)
 
 /-- Position, given by `x+G.displacement.field t x`. -/
-def position (t : Icc (0 : ℝ) G.T) (x : Space) : Space :=
+@[expose] def position (t : Icc (0 : ℝ) G.T) (x : Space) : Space :=
   x+G.displacement.field t x
 
 @[simp] theorem position_initial (x : Space) : G.position G.zeroTime x=x := by

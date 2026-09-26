@@ -18,7 +18,7 @@ import Mathlib.Tactic.SetLike
 tower uses this generic construction for its function and relation symbols.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -26,11 +26,11 @@ namespace FirstOrder.Language
 
 /-- The sequential colimit of a tower of types `F 0 → F 1 → …` along maps `φ`, as the quotient of
 `Σ k, F k` identifying `⟨k, x⟩` with `⟨k+1, φ k x⟩`. -/
-def DirectedColim (F : ℕ → Type) (φ : ∀ k, F k → F (k + 1)) : Type :=
+@[expose] def DirectedColim (F : ℕ → Type) (φ : ∀ k, F k → F (k + 1)) : Type :=
   Quot (fun a b : Σ k, F k => b = ⟨a.1 + 1, φ a.1 a.2⟩)
 
 /-- The canonical inclusion of stage `k` into the colimit. -/
-def DirectedColim.incl {F : ℕ → Type} {φ : ∀ k, F k → F (k + 1)} (k : ℕ) (x : F k) :
+@[expose] def DirectedColim.incl {F : ℕ → Type} {φ : ∀ k, F k → F (k + 1)} (k : ℕ) (x : F k) :
     DirectedColim F φ :=
   Quot.mk _ ⟨k, x⟩
 

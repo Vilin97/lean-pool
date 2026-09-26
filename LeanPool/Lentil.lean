@@ -26,7 +26,7 @@ Tags: temporal-logic, tla, formal-verification, proof-mode
 MSC: 03B44, 68Q60
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Lentil: Temporal Logic of Actions (TLA) in Lean 4

@@ -35,7 +35,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000IntersectionCounting
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -59,6 +59,7 @@ abbrev V := Vertex n
 abbrev DirIdx := N1000000StructureConstants.DirIdx
 
 /-- The actual intersection fiber: vertices `v` with base-type `a` and relative-type `d` to `u`. -/
+@[expose]
 def Inter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx) : Type :=
   { v : V // dirMask baseVertex v = maskAt a ∧ dirMask v u.1 = maskAt d }
 
@@ -68,7 +69,7 @@ noncomputable instance {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx) : Fintype (
 
 /-- Free coordinates for the intersection number `N[k][a][d]`: positions `j` where `v_j` is neither
 a base symbol (`a`) nor a reused symbol from `u` (`d`). -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 def FreeCoord (a d : DirIdx) : Type :=
   { j : Fin 3 // colMatch (maskAt a) j = none ∧ rowMatch (maskAt d) j = none }
 
@@ -122,7 +123,7 @@ private lemma card_usedSet {k : DirIdx} (u : BaseOrbit k) :
 
 /-- Available symbols for new coordinates: those not in `baseSet` and not used by `u` on
 its free columns. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 def AvailFor {k : DirIdx} (u : BaseOrbit k) : Type :=
   { x : SymN // x ∉ (baseSet ∪ freeSyms (k := k) u) }
 

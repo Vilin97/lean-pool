@@ -19,7 +19,7 @@ strip retains the same domain, edge distance, and vanishing weight.  Every
 constant is chosen before both the original band and the label.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,7 +37,7 @@ variable {ι E F G : Type*} {D : Type}
 
 /-- Only the discrete scales are reindexed. The spatial edge geometry and
 its possibly vanishing weight are exactly the original ones. -/
-noncomputable def reindexedStrip (s : StripData D) (e : ℕ → ℕ × ι) : StripData D where
+@[expose] noncomputable def reindexedStrip (s : StripData D) (e : ℕ → ℕ × ι) : StripData D where
   domain := s.domain
   isOpen_domain := s.isOpen_domain
   epsilon k := s.epsilon (e k).1

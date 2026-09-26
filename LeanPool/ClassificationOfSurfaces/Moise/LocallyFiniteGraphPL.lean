@@ -19,7 +19,7 @@ replacement edge as support. It is the edge-level input for assembling polygonal
 boundaries in a common arrangement.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

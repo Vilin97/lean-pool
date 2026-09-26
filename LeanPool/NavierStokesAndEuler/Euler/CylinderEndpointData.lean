@@ -20,7 +20,7 @@ the same coercive form as the forced history inverse. In particular, no
 spatially constant nonzero vector is silently treated as L² data.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -23,7 +23,7 @@ endpoints on the frontier.  It is the face-to-face lemma behind the cone extensi
 on a triangle boundary.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -408,7 +408,7 @@ theorem active_position_image (s : Finset K.ActiveVertex) :
   simp [activeEmbedding]
 
 /-- Delete all unused vertices without changing the support or any face geometry. -/
-noncomputable def active : PlaneComplex where
+@[expose] noncomputable def active : PlaneComplex where
   Vertex := K.ActiveVertex
   position := fun v => K.position v.1
   position_injective := fun v w h => Subtype.ext (K.position_injective h)
@@ -560,7 +560,7 @@ theorem used_position_image (s : Finset K.UsedVertex) :
   simp [usedEmbedding]
 
 /-- Delete vertices unused by every face, without changing the represented complex. -/
-noncomputable def used : PlaneComplex where
+@[expose] noncomputable def used : PlaneComplex where
   Vertex := K.UsedVertex
   position := fun v => K.position v.1
   position_injective := fun v w h => Subtype.ext (K.position_injective h)
@@ -745,7 +745,7 @@ theorem exists_affineMap_eqOn_affineIndependent {ι : Type*} [Nonempty ι]
 
 /-- Map a one-dimensional complex by a function affine on every face and injective on its
 support. -/
-noncomputable def mapGraph (f : Plane → Plane)
+@[expose] noncomputable def mapGraph (f : Plane → Plane)
     (hvertex : ∀ v, K.position v ∈ K.support)
     (hinj : Set.InjOn f K.support)
     (hgraph : ∀ s ∈ K.simplexes, s.card ≤ 2)
@@ -1085,7 +1085,7 @@ theorem sum_coneWeights (z : K.Vertex → ℝ) :
   simp
 
 /-- Lift a base face to the non-cone vertices. -/
-def liftFace (s : Finset K.Vertex) : Finset (Option K.Vertex) :=
+@[expose] def liftFace (s : Finset K.Vertex) : Finset (Option K.Vertex) :=
   s.map Function.Embedding.some
 
 /-- Remove the cone vertex from a cone face. -/

@@ -9,7 +9,7 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummarySound
 
 /-! # Canonical audits for dense certificate summaries -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

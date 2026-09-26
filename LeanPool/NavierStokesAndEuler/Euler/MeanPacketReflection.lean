@@ -37,7 +37,7 @@ section
 
 /-! Genuine spatial reflection on the mean time Hilbert spaces. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -131,7 +131,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -216,7 +216,7 @@ trace, and nonlocal boundary form. Uniqueness of the actual coercive inverse
 then transports reflection without an assumed symmetry of a solution.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -376,7 +376,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -11,7 +11,7 @@ public import LeanPool.LanguageGeneration.FiniteWitness.Width.AnchoredLower
 # Witness assignments attaining the anchored lower bounds
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness.Anchored
 

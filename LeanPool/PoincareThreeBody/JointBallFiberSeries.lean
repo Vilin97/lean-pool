@@ -18,14 +18,14 @@ radius on any smaller time slab.  These are the local pieces used in the compact
 parameter-integral theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 open Filter Set Topology
 
 /-- The isometric inclusion of the analytic parameter as the first product coordinate. -/
-def parameterInclusion : ℝ →L[ℝ] ℝ × ℝ :=
+@[expose] def parameterInclusion : ℝ →L[ℝ] ℝ × ℝ :=
   ContinuousLinearMap.inl ℝ ℝ ℝ
 
 @[simp]
@@ -37,7 +37,7 @@ theorem norm_parameterInclusion : ‖parameterInclusion‖ = 1 := by
   exact ContinuousLinearMap.norm_inl ℝ ℝ ℝ
 
 /-- Restrict a changed-origin joint series to displacement in the first coordinate. -/
-noncomputable def jointBallFiberSeries
+@[expose] noncomputable def jointBallFiberSeries
     (jointSeries : FormalMultilinearSeries ℝ (ℝ × ℝ) ℝ)
     (centerTime time : ℝ) : FormalMultilinearSeries ℝ ℝ ℝ :=
   (jointSeries.changeOrigin (0, time - centerTime)).compContinuousLinearMap

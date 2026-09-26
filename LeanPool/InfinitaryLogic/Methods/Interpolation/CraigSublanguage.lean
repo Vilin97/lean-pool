@@ -30,7 +30,7 @@ craig_interpolation_relational [L.IsRelational] :
 ```
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

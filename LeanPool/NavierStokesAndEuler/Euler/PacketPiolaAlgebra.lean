@@ -14,7 +14,7 @@ The finite-dimensional algebra in the curl Piola identity.  Antisymmetrizing
 determinant-one change of variables transforms curl by `F⁻¹`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,7 +41,7 @@ theorem matrixAntisym_congruence (F A : Mat3) :
     ring
 
 /-- Operator matrix, defined pointwise by `(A (EuclideanSpace.single j 1)) i`. -/
-def operatorMatrix (A : Space →L[ℝ] Space) : Mat3 :=
+@[expose] def operatorMatrix (A : Space →L[ℝ] Space) : Mat3 :=
   fun i j => (A (EuclideanSpace.single j 1)) i
 
 theorem operatorMatrix_apply (A : Space →L[ℝ] Space) (x : Space) (i : Fin 3) :

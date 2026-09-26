@@ -18,29 +18,29 @@ frame makes `p` revolutions during the common period `2πp`. This file construct
 proves its periodicity exactly.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 /-- Mean motion on the `(p,q)` Kepler resonance. -/
-noncomputable def resonantMeanMotion (p q : ℕ) : ℝ :=
+@[expose] noncomputable def resonantMeanMotion (p q : ℕ) : ℝ :=
   (q : ℝ) / (p : ℝ)
 
 /-- Common period of the inertial ellipse and rotating frame. -/
-noncomputable def resonantOrbitPeriod (p : ℕ) : ℝ :=
+@[expose] noncomputable def resonantOrbitPeriod (p : ℕ) : ℝ :=
   2 * Real.pi * p
 
 /-- Mean anomaly along a resonant unperturbed orbit. -/
-noncomputable def resonantMeanAnomaly (p q : ℕ) (time : ℝ) : ℝ :=
+@[expose] noncomputable def resonantMeanAnomaly (p q : ℕ) (time : ℝ) : ℝ :=
   resonantMeanMotion p q * time
 
 /-- Eccentric anomaly along a resonant unperturbed orbit. -/
-noncomputable def resonantEccentricAnomaly
+@[expose] noncomputable def resonantEccentricAnomaly
     (p q : ℕ) (eccentricity time : ℝ) : ℝ :=
   eccentricAnomaly eccentricity (resonantMeanAnomaly p q time)
 
 /-- Position of the resonant Kepler ellipse in the rotating frame. -/
-noncomputable def resonantRotatingEllipsePosition
+@[expose] noncomputable def resonantRotatingEllipsePosition
     (p q : ℕ) (eccentricity time : ℝ) : ActionSpace :=
   rotatingEllipsePosition (resonantFirstAction p q) eccentricity
     (resonantEccentricAnomaly p q eccentricity time) time

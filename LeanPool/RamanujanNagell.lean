@@ -22,7 +22,7 @@ Tags: number-theory, diophantine-equations, quadratic-integers
 MSC: 11D61, 11D45, 11R11
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

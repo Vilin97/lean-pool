@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedFieldParity
 /-! The actual initialized correction data have all the joint parities
 required by the drift-aware correction and pressure construction. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

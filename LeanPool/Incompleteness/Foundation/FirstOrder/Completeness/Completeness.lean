@@ -13,7 +13,7 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Ultraproduct
 
 /-! # Completeness -/
 
-@[expose] public section
+public section
 
 
 namespace LO

@@ -14,7 +14,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 /-! The literal base horizon and core radius satisfy the local-existence
 and localized coercivity guards after the final choice of the base scale. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,14 +26,14 @@ open Filter Real EulerPacketBaseScales EulerPacketSourceScaleSequence
 open scoped Topology
 
 /-- Base horizon, given by `6*(J : ℝ)^2*X^(-498 : ℝ)`. -/
-def baseHorizon (J : ℕ) (X : ℝ) : ℝ := 6*(J : ℝ)^2*X^(-498 : ℝ)
+@[expose] def baseHorizon (J : ℕ) (X : ℝ) : ℝ := 6*(J : ℝ)^2*X^(-498 : ℝ)
 
 /-- Base radius, given by `X^(-1000 : ℝ)`. -/
-def baseRadius (X : ℝ) : ℝ := X^(-1000 : ℝ)
+@[expose] def baseRadius (X : ℝ) : ℝ := X^(-1000 : ℝ)
 
 /-- Base guard cost, given by `K*(baseHorizon J X^2/2)+Be*baseHorizon J X +
 Cboundary*(CM*X^1000+2)*baseRadius X^3*baseHorizon J X`. -/
-def baseGuardCost (J : ℕ) (K Be CM Cboundary X : ℝ) : ℝ :=
+@[expose] def baseGuardCost (J : ℕ) (K Be CM Cboundary X : ℝ) : ℝ :=
   K*(baseHorizon J X^2/2)+Be*baseHorizon J X +
     Cboundary*(CM*X^1000+2)*baseRadius X^3*baseHorizon J X
 

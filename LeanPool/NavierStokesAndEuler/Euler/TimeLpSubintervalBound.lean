@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! Actual L² forcing bounds imply continuous scalar integral majorants on every time subinterval.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

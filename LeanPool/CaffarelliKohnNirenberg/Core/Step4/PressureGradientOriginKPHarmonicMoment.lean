@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientHGClos
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal
@@ -30,6 +30,7 @@ def originHarmonicSliceMajorant (C ρ : ℝ) (x : Vec3)
       (∫⁻ y in vec3Ball x ρ, ENNReal.ofReal |p (y,s)|)
 
 /-- The explicit coefficient of the harmonic majorant's time moment. -/
+@[expose]
 def originHarmonicMomentConstant (C ρ : ℝ) (x : Vec3) : ℝ≥0∞ :=
   16 * volume (vec3Ball x ρ) ^ (1/2 : ℝ) *
     (fixedRemainderCoefficients C ρ 0 ^ (3/2 : ℝ) +
@@ -203,6 +204,7 @@ theorem origin_harmonic_majorant_clipped_time_of_sws
 
 /-- A collar-independent moment coefficient for source radii between `1/8`
 and `1`. It is an explicit function of the absolute harmonic coefficient. -/
+@[expose]
 def originHarmonicAbsoluteMomentConstant (C : ℝ) : ℝ≥0∞ :=
   16 * ENNReal.ofReal (Real.pi*4/3)^(1/2 : ℝ) *
     ((ENNReal.ofReal (4096*C))^(3/2 : ℝ) +

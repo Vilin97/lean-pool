@@ -56,7 +56,7 @@ plan flagged as "the ONLY file gated on finiteness-and-chi" can finally be writt
   instantiated at all; D9 supplies it).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology

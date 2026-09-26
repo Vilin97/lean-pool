@@ -23,7 +23,7 @@ of its data. This identifies the parameterized continuous solve with the
 genuine spatial orbit of the acceleration, including endpoint times.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -83,7 +83,7 @@ variable (T : ℝ) (F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
   (v : C(Icc (0 : ℝ) T, solenoidalSpace)) (f : C(Icc (0 : ℝ) T, L2))
 
 /-- The continuous mean acceleration constructed at each actual time. -/
-def meanAccelerationPath : C(Icc (0 : ℝ) T,solenoidalSpace) :=
+@[expose] def meanAccelerationPath : C(Icc (0 : ℝ) T,solenoidalSpace) :=
   accelerationPath T (solenoidalFrame T F) (solenoidalFrame T F₁) c hc hLower v f
 
 /-- The genuine spatial orbit equals the actual solve with translated data. -/

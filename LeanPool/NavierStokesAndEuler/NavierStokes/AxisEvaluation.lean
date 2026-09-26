@@ -20,7 +20,7 @@ Its mixed derivative series are proved convergent before their derivatives
 and smoothness are established.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,7 +32,7 @@ open NavierStokes.AxisCoefficientSpace NavierStokes.AxisWeightEstimates
 namespace NavierStokes.AxisEvaluation
 
 /-- Polynomial jet, given by `(n.descFactorial k : ℝ) * Y ^ (n - k)`. -/
-def polynomialJet (n k : ℕ) (Y : ℝ) : ℝ :=
+@[expose] def polynomialJet (n k : ℕ) (Y : ℝ) : ℝ :=
   (n.descFactorial k : ℝ) * Y ^ (n - k)
 
 theorem polynomialJet_hasDerivAt (n k : ℕ) (Y : ℝ) :
@@ -46,15 +46,15 @@ theorem polynomialJet_hasDerivAt (n k : ℕ) (Y : ℝ) :
   ring
 
 /-- Term, given by `polynomialJet n k p.1 * jet I (weight ε) A.1 n m p.2`. -/
-def term (I : Window) (ε : ℝ) (A : AxisSpace I ε) (k m n : ℕ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def term (I : Window) (ε : ℝ) (A : AxisSpace I ε) (k m n : ℕ) (p : ℝ × ℝ) : ℝ :=
   polynomialJet n k p.1 * jet I (weight ε) A.1 n m p.2
 
 /-- Mixed series, given by `∑' n : ℕ, term I ε A k m n p`. -/
-def mixedSeries (I : Window) (ε : ℝ) (A : AxisSpace I ε) (k m : ℕ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def mixedSeries (I : Window) (ε : ℝ) (A : AxisSpace I ε) (k m : ℕ) (p : ℝ × ℝ) : ℝ :=
   ∑' n : ℕ, term I ε A k m n p
 
 /-- Profile, given by `∑' n : ℕ, p.1 ^ n * coefficient I (weight ε) A n p.2`. -/
-def profile (I : Window) (ε : ℝ) (A : AxisSpace I ε) (p : ℝ × ℝ) : ℝ :=
+@[expose] def profile (I : Window) (ε : ℝ) (A : AxisSpace I ε) (p : ℝ × ℝ) : ℝ :=
   ∑' n : ℕ, p.1 ^ n * coefficient I (weight ε) A n p.2
 
 theorem mixedSeries_zero (I : Window) (ε : ℝ) (A : AxisSpace I ε) :
@@ -163,7 +163,7 @@ theorem mixedSeries_uniform (I : Window) {ε R : ℝ} (hε : 0 < ε) (hR20 : R <
       (hp.trans (le_max_right 1 R)))
 
 /-- Strip, given by `Ioo (-R) R ×ˢ Ioo I.left I.right`. -/
-def strip (I : Window) (R : ℝ) : Set (ℝ × ℝ) :=
+@[expose] def strip (I : Window) (R : ℝ) : Set (ℝ × ℝ) :=
   Ioo (-R) R ×ˢ Ioo I.left I.right
 
 theorem strip_isOpen (I : Window) (R : ℝ) : IsOpen (strip I R) :=
@@ -435,7 +435,7 @@ def evaluationCLM (I : Window) {ε R : ℝ} (hε : 0 < ε)
 @[simp] theorem evaluationCLM_apply (I : Window) {ε R : ℝ} (hε : 0 < ε)
     (hR : 1 ≤ R) (hR20 : R < 20) (k m : ℕ) (p : ℝ × ℝ) (hp : |p.1| ≤ R)
     (A : AxisSpace I ε) :
-    evaluationCLM I hε hR hR20 k m p hp A = mixedSeries I ε A k m p := rfl
+    evaluationCLM I hε hR hR20 k m p hp A = mixedSeries I ε A k m p := by rfl
 
 /-- Norm convergence in the coefficient space controls every evaluated jet
 uniformly throughout a smaller radial interval. -/

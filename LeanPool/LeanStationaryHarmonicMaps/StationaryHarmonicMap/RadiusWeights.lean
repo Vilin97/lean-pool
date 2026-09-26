@@ -15,7 +15,7 @@ import Mathlib.MeasureTheory.Covering.Besicovitch
 # Radius Weights
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -128,7 +128,7 @@ theorem radiusWeightOn_finset_sum_indicator_const_Ioo
 /-- Pointwise finite interval-step approximation by uniformly bounded radius
 weights.  This is the concrete approximation package needed to pass the
 finite-interval formula to a limiting radius weight by dominated convergence. -/
-def RadiusWeightFiniteIntervalStepApprox (R0 : ℝ) (c : ℝ → ℝ) : Prop :=
+@[expose] def RadiusWeightFiniteIntervalStepApprox (R0 : ℝ) (c : ℝ → ℝ) : Prop :=
   ∃ C : ℝ, 0 ≤ C ∧
     ∃ s : ℕ → Finset ℕ, ∃ a b k : ℕ → ℕ → ℝ,
       (∀ N i, i ∈ s N → 0 ≤ a N i) ∧
@@ -148,7 +148,7 @@ def RadiusWeightFiniteIntervalStepApprox (R0 : ℝ) (c : ℝ → ℝ) : Prop :=
 convergence is required on `(0, R0)` away from a countable set of bad radii.
 This matches the grid-partition approximations used for continuous weights,
 where all possible partition boundaries form a countable exceptional set. -/
-def RadiusWeightFiniteIntervalStepApproxAE (R0 : ℝ) (c : ℝ → ℝ) : Prop :=
+@[expose] def RadiusWeightFiniteIntervalStepApproxAE (R0 : ℝ) (c : ℝ → ℝ) : Prop :=
   ∃ C : ℝ, 0 ≤ C ∧
     ∃ bad : Set ℝ, bad.Countable ∧
       ∃ s : ℕ → Finset ℕ, ∃ a b k : ℕ → ℕ → ℝ,

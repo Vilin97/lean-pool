@@ -17,7 +17,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
 /-! Genuine metric transport energy on finite Sobolev fields, obtained by smooth convolution limits.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,7 +32,7 @@ open scoped Topology ContDiff ENNReal NNReal
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- Actual lifted transport is a bounded map H¹→L² for each fixed Hq velocity, q≥3. -/
-def transportOperator {q : ℕ} (hq : 3 ≤ q) (κ : ℝ) (m : Vector3)
+@[expose] def transportOperator {q : ℕ} (hq : 3 ≤ q) (κ : ℝ) (m : Vector3)
     (z : SobolevSpace period q) : SobolevSpace period 1 →L[ℝ] LiftL2 period :=
   ∑ i : Fin 4, (scalarProductBilinear period hq (velocityComponents κ m i) z).comp
     ((valueOperator period 0).comp (derivativeOperator period 0 i))

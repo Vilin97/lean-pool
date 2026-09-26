@@ -22,7 +22,7 @@ actual angular mean. The remaining terms use only the already supported
 prefix high fields, correctors and physical pressure gradients.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -110,7 +110,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

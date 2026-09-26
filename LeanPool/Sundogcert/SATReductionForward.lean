@@ -53,7 +53,7 @@ public import LeanPool.Sundogcert.ThreeDMReindex
   Axiom-clean (no `native_decide`, no `decide`).  Expect `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Sundog.SATReduction Sundog.SATNPHard
 open Sundog.SATReductionIncidence Sundog.ThreeDMReindex

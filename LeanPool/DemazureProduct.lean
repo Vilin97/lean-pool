@@ -33,7 +33,7 @@ Tags: algebraic-combinatorics, demazure-product, bruhat-order, permutations
 MSC: 05E05, 20F55
 -/
 
-@[expose] public section
+public section
 
 /-!
 This project formalizes the extended Demazure product on almost-sign-preserving

@@ -15,7 +15,7 @@ import Mathlib.Data.Finsupp.Encodable
 # The special-linear carrier in Zhou's construction
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace SpecialLinear

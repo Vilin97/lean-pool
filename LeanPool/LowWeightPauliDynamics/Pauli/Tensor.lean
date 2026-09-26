@@ -46,7 +46,7 @@ binary or lexicographic ordering of the bit strings.
 * `bitsMatrixEquiv_star`: the change of index type preserves the adjoint.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD.PauliString
 
@@ -124,6 +124,7 @@ theorem yPhase_succ {n : ℕ} (x z : Bits (n + 1)) :
 
 /-- Iterated, genuine Kronecker product of the independently specified one-qubit Paulis.
 The empty tensor is the one-by-one identity (`def:pauli_basis`). -/
+@[expose]
 noncomputable def tensorPauli : (n : ℕ) → Bits n → Bits n → Matrix (Bits n) (Bits n) ℂ
   | 0, _, _ => 1
   | n + 1, x, z =>
@@ -211,6 +212,7 @@ theorem toMatrix_eq_phase_tensor : ∀ {n : ℕ} (s : PauliString n),
 
 /-- The positive tensor representative of a signless class, as in `def:pauli_basis`. Unlike
 `herm`, its phase is the full count of `Y` sites modulo four, not only the parity. -/
+@[expose]
 def tensorRepresentative {n : ℕ} (p : PauliIndex n) : PauliString n :=
   ⟨p.1, p.2, yPhase p.1 p.2⟩
 
@@ -285,6 +287,7 @@ noncomputable def bitsEquivFin (n : ℕ) : Bits n ≃ Fin (2 ^ n) :=
 
 /-- The bit-indexed and dimension-indexed matrix algebras are isomorphic, the type-level
 bridge needed by `def:pauli_basis`. -/
+@[expose]
 noncomputable def bitsMatrixEquiv (n : ℕ) :
     Matrix (Bits n) (Bits n) ℂ ≃ₐ[ℂ] Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℂ :=
   Matrix.reindexAlgEquiv ℂ ℂ (bitsEquivFin n)

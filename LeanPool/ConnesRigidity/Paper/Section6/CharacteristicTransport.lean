@@ -15,7 +15,7 @@ Zhou-shaped nonisomorphism argument. It is independently written from the
 cited public mathematical source.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperCharacteristicTransport

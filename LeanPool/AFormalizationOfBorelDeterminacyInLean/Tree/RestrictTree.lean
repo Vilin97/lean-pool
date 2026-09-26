@@ -26,7 +26,7 @@ import Mathlib.Tactic.NormNum.OfScientific
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace Descriptive.Tree
@@ -36,7 +36,7 @@ noncomputable section «Section1»
 variable {S T U : Trees} {k m n : ℕ}
 
 /-- Remove all nodes of a tree beyond level k -/
-@[simps! obj_fst] def res (k : ℕ) : Trees ⥤ Trees where
+@[expose] def res (k : ℕ) : Trees ⥤ Trees where
   obj S := @id Trees ⟨S.1, {
     val := {x | x ∈ S.2 ∧ x.length ≤ k}
     property := by as_aux_lemma =>
@@ -51,16 +51,25 @@ variable {S T U : Trees} {k m n : ℕ}
   map_id _ := rfl
   map_comp _ _ := rfl
 
+@[simp] theorem res_obj_fst (S : Trees) : ((res k).obj S).fst = S.fst := by rfl
+
 @[ext] lemma res_ext (x y : (res k).obj S) (h : x.val = y.val) : x = y := Subtype.ext h
 @[simp] lemma mem_res_obj (x : List T.1) :
   Membership.mem (γ := tree T.1) ((Tree.res k).obj T).2 x ↔ x ∈ T.2 ∧ x.length ≤ k :=
   Iff.rfl
 /-- Remove all nodes of a tree not on level exactly k -/
-@[simps map] def resEq (k : ℕ) : Trees ⥤ Type* where
+@[expose] def resEq (k : ℕ) : Trees ⥤ Type* where
   obj := fun S ↦ {x | x ∈ S.2 ∧ x.length = k}
   map := fun f ↦ TypeCat.ofHom fun x ↦ ⟨(f ⟨x.val, x.prop.1⟩).val, by simp [x.prop.2]⟩
   map_id _ := rfl
   map_comp _ _ := rfl
+
+@[simp] theorem resEq_map (f : S ⟶ T) :
+    (resEq k).map f = TypeCat.ofHom (fun x : (resEq k).obj S ↦
+      ⟨(f ⟨x.val, x.prop.1⟩).val, by simp [x.prop.2]⟩) := by rfl
+
+@[simp] theorem resEq_map_val (f : S ⟶ T) (x : (resEq k).obj S) :
+    ((resEq k).map f x).val = (f ⟨x.val, x.prop.1⟩).val := by rfl
 @[ext] lemma resEq_ext (x y : (resEq k).obj S) (h : x.val = y.val) : x = y := Subtype.ext h
 lemma resEq_ext_hEq (x : (resEq k).obj T) (y : (resEq m).obj T) (h' : x.val = y.val) :
   HEq x y := by
@@ -71,7 +80,8 @@ lemma resEq_ext_hEq (x : (resEq k).obj T) (y : (resEq m).obj T) (h' : x.val = y.
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simp] lemma res_mem (x : (res k).obj S) : x.val ∈ S.2 := x.prop.1
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def res.val' (x : (res k).obj S) : S := ⟨_, res_mem x⟩
+@[expose] def res.val' (x : (res k).obj S) : S := ⟨_, res_mem x⟩
+@[simp] theorem res.val'_coe (x : (res k).obj S) : (res.val' x).val = x.val := by rfl
 lemma res.ext_val' {x y : (res k).obj S} (h : res.val' x = res.val' y) : x = y := by
   apply_fun Subtype.val at h; ext1; exact h
 @[simp] lemma res_val (f : S ⟶ T) (k : ℕ) x :
@@ -83,7 +93,8 @@ lemma res.ext_val' {x y : (res k).obj S} (h : res.val' x = res.val' y) : x = y :
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simp] lemma resEq_mem (x : (resEq k).obj S) : x.val ∈ S.2 := x.prop.1
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def resEq.val' (x : (resEq k).obj S) : S := ⟨_, resEq_mem x⟩
+@[expose] def resEq.val' (x : (resEq k).obj S) : S := ⟨_, resEq_mem x⟩
+@[simp] theorem resEq.val'_coe (x : (resEq k).obj S) : (resEq.val' x).val = x.val := by rfl
 lemma resEq.ext_val' {x y : (resEq k).obj S} (h : resEq.val' x = resEq.val' y) : x = y := by
   apply_fun Subtype.val at h; ext1; exact h
 lemma resEq_val (f : S ⟶ T) (k : ℕ) x :

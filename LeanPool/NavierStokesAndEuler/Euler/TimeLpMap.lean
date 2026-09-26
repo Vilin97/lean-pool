@@ -11,7 +11,7 @@ import Mathlib.Algebra.Order.Ring.Star
 
 /-! Exact bounded-map compatibility for the actual continuous-path to Bochner L² inclusion. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

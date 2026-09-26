@@ -25,7 +25,7 @@ branch cut crossing on segment 4, constructs a lifted angle that tracks the full
 * `winding_fdPolygon_center_invariant` — winding number preserved under center translation
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Metric Filter Topology
 
@@ -165,7 +165,7 @@ lemma arg_Q2 (z : ℂ) (hz_re : z.re < 0) (hz_im : 0 < z.im) :
   · exact (Complex.arg_mem_Ioc z).2
 
 /-- The unique time on seg4 where (fdPolygon t - p) crosses the negative real axis. -/
-noncomputable def tL (p : ℂ) : ℝ :=
+@[expose] noncomputable def tL (p : ℂ) : ℝ :=
   3 + (p.im - Real.sqrt 3 / 2) / (HHeight - Real.sqrt 3 / 2)
 
 /-- tL is in (3, 4) for interior points. -/
@@ -285,7 +285,7 @@ lemma fdPolygonRadialCircle_angle_eq_arg (p : ℂ) (t : ℝ) (hne : fdPolygon t 
   exact arg_normalize_eq dir (sub_ne_zero.mpr hne)
 
 /-- Lifted angle function that accounts for branch cut crossing. -/
-noncomputable def fdPolygonRadialCircleAngleLifted (p : ℂ) :
+@[expose] noncomputable def fdPolygonRadialCircleAngleLifted (p : ℂ) :
     ℝ → ℝ := fun t =>
   if t < tL p then Complex.arg (fdPolygon t - p)
   else Complex.arg (fdPolygon t - p) - 2 * Real.pi

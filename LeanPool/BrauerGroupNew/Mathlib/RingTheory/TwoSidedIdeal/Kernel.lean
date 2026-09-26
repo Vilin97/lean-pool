@@ -13,7 +13,7 @@ public import Mathlib.RingTheory.TwoSidedIdeal.Kernel
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Kernel`.
 -/
 
-@[expose] public section
+public section
 
 variable {R S : Type*} [Ring R] [Ring S]
 

@@ -40,7 +40,7 @@ the all-ones weight. The zero angle `a = 0` is therefore included, which a state
   bounds with the paper's entry constant `1 + 4eβ` in place of `1 + 2β`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -49,6 +49,7 @@ open Finset
 /-- The all-ones chain weight `a^m ∏_{ν=2}^{m+1} w_ν`, with value `1` at `m = 0`. It is the
 weight of the chain of `m` single jumps in `apd:eq:composition_majorant`, and the reference
 weight `W` of `chain_le_weighted_choose` in `apd:eq:total_high_weight_norm`. -/
+@[expose]
 noncomputable def chainWeight (kh1 c a : ℝ) (m : ℕ) : ℝ :=
   a ^ m * ∏ i ∈ range m, rungW kh1 c (i + 2)
 

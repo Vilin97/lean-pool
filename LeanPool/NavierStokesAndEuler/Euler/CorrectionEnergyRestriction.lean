@@ -31,7 +31,7 @@ section
 /-! The constructed higher nonlinear source and pressure restrict exactly to the actual lower mild
 equation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -131,7 +131,7 @@ section
 /-! Actual finite-Sobolev viscous PDE energy with continuous scalar majorants, requiring no
 measurability of coefficient-bound witnesses. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -266,7 +266,7 @@ section
 
 /-! Actual PDE energy passage with continuous scalar majorants on every time subinterval. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -376,7 +376,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

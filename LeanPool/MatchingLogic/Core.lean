@@ -45,7 +45,7 @@ import Mathlib.Data.Set.Lattice.Order
 # MatchingLogic.Core
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -122,12 +122,12 @@ variable {S : Signature}
 /-- The pointwise extension of a symbol to sets:
 `σ_M(A₁,…,Aₙ) = ⋃ {σ_M(a₁,…,aₙ) | aᵢ ∈ Aᵢ}`.
 It is `∅` as soon as some `Aᵢ` is (paper, Section 2). -/
-def app (M : Model S) (σ : S.Sym) (A : Fin (S.arity σ) → Set M.carrier) :
+@[expose] def app (M : Model S) (σ : S.Sym) (A : Fin (S.arity σ) → Set M.carrier) :
     Set M.carrier :=
   {u | ∃ a : Fin (S.arity σ) → M.carrier, (∀ i, a i ∈ A i) ∧ u ∈ M.interp σ a}
 
 /-- The denotation `ρ(φ) ⊆ M` (paper, Section 2). -/
-def denote {Var : Type} [DecidableEq Var] (M : Model S) :
+@[expose] def denote {Var : Type} [DecidableEq Var] (M : Model S) :
     (Var → M.carrier) → Pattern S Var → Set M.carrier
   | ρ, .var x => {ρ x}
   | _, .bot => ∅
@@ -183,12 +183,12 @@ variable {S : Signature} (M : Model S)
 /-- One backward step: `u ⇝ v` when `u ∈ σ_M(a₁,…,aₙ)` for some tuple `a` with
 `v = a i` (paper, Definition 2).  Constants contribute no steps, since
 `Fin 0` is empty. -/
-def Step (u v : M.carrier) : Prop :=
+@[expose] def Step (u v : M.carrier) : Prop :=
   ∃ (σ : S.Sym) (a : Fin (S.arity σ) → M.carrier) (i : Fin (S.arity σ)),
     u ∈ M.interp σ a ∧ v = a i
 
 /-- `C` is backward closed when `⇝[C] ⊆ C` (paper, Definition 2). -/
-def BackwardClosed (C : Set M.carrier) : Prop :=
+@[expose] def BackwardClosed (C : Set M.carrier) : Prop :=
   ∀ ⦃u⦄, u ∈ C → ∀ ⦃v⦄, M.Step u v → v ∈ C
 
 /-- The concrete form used in the proofs: if a point of `C` is produced by a

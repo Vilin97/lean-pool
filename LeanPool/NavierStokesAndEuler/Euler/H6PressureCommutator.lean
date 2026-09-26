@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.H6Pressure
 
 /-! Positive external-order commutators in actual fixed-order Sobolev blocks. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -53,7 +53,7 @@ def commutatorJet {s q n : ℕ} {A : SmoothCoefficient period} {f : LiftL2 perio
       (SpatialJet.derivativeJet J w h))
 
 /-- Sum of the actual base Sobolev norms of the external product commutators. -/
-def commutatorBlock {s : ℕ} {A : SmoothCoefficient period} {f : LiftL2 period}
+@[expose] def commutatorBlock {s : ℕ} {A : SmoothCoefficient period} {f : LiftL2 period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period directions s A)
     (J : EulerSpatialSobolevInverse.SpatialJet period directions s f) (q n : ℕ) : ℝ :=
   ∑ w : Fin n → Fin 4, sobolevSize period (directions := directions) q

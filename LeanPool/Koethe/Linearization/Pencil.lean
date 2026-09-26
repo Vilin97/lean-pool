@@ -20,7 +20,7 @@ root column gives `q = 1 + X * C(x) * q`. The coefficients of this polynomial
 are `x^n`, and their eventual vanishing proves nilpotence of `x`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

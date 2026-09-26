@@ -38,7 +38,7 @@ section
 has a source-dependent Gevrey bound uniform in the truncation frequency.
 The time derivative of the inverse deformation is included explicitly. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -151,7 +151,7 @@ section
 the physical shear and pressure errors, and the three flow fields. Only
 the displayed numerical frequency margins are independent extra guards. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -393,7 +393,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -532,7 +532,7 @@ section
 /-! The positive-history packet at the fixed frequency constructs the
 actual next parent, with the same errors and the k^80 label bound. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -627,7 +627,7 @@ section
 /-! Initial-data convergence for the very same correction witnesses used
 in the exact packets. No correction is chosen again for this conclusion. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -652,6 +652,7 @@ abbrev correctionBudget (k : ℝ) (hk : 4 ≤ k) (hn : 1 ≤ truncation k) :=
           hk)
 
 /-- Exact initial, constructed using `scale`. -/
+@[expose]
 def exactInitial (k : ℝ) (hk : 4 ≤ k) (hn : 1 ≤ truncation k) (Q : A.correctionBudget k hk hn) :
     Space → Space :=
   scale A.parent.ell
@@ -711,7 +712,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

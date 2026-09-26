@@ -26,7 +26,7 @@ import LeanPool.Monlib4.Preq.Finset
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.Basic`.
 -/
 
-@[expose] public section
+public section
 
 local notation x " ⊗ₘ " y => TensorProduct.map x y
 

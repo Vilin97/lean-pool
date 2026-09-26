@@ -21,7 +21,7 @@ level is a countable union of earlier levels (`CardinalBounds.mk_iUnion_le_of_co
 The top clause then bounds the whole model by `|U_⊤| ≤ ℶ_{α+1}`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

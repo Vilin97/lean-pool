@@ -23,7 +23,7 @@ conjugation-invariant and `hz` anti-invariant. So the cross terms cancel in pair
 This is the step that lets the source's factor of two over conjugate pairs disappear entirely.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

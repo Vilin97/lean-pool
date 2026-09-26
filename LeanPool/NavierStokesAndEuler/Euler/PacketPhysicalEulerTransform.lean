@@ -15,7 +15,7 @@ import Mathlib.Analysis.Calculus.Deriv.Prod
 flow. These identities convert the normalized lifted equation into the
 ordinary Euler momentum residual of the physical perturbation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,14 +27,14 @@ open Set InnerProductSpace ContinuousLinearMap EulerGraphPullback EulerLagrangia
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Space time graph, given by `(fst ℝ ℝ E).prod ((graphMap k m).comp (snd ℝ ℝ E))`. -/
-def spaceTimeGraph (k : ℝ) (m : E) : (ℝ × E) →L[ℝ] (ℝ × (E × ℝ)) :=
+@[expose] def spaceTimeGraph (k : ℝ) (m : E) : (ℝ × E) →L[ℝ] (ℝ × (E × ℝ)) :=
   (fst ℝ ℝ E).prod ((graphMap k m).comp (snd ℝ ℝ E))
 
 theorem spaceTimeGraph_apply (k : ℝ) (m : E) (q : ℝ × E) :
     spaceTimeGraph k m q = (q.1,(q.2,k*⟪m,q.2⟫_ℝ)) := rfl
 
 /-- Graph velocity, given by `κ • F q (z (spaceTimeGraph k m q))`. -/
-def graphVelocity (κ k : ℝ) (m : E) (F : ℝ × E → E →L[ℝ] E)
+@[expose] def graphVelocity (κ k : ℝ) (m : E) (F : ℝ × E → E →L[ℝ] E)
     (z : ℝ × (E × ℝ) → E) (q : ℝ × E) : E :=
   κ • F q (z (spaceTimeGraph k m q))
 
@@ -129,15 +129,15 @@ theorem euler_residual_of_pullback
     hXtime hu hw htime hp hq hparent,hwX t x,hadv,hpress]
 
 /-- Inverse coordinates, given by `(q.1,Y q)`. -/
-def inverseCoordinates (Y : ℝ × E → E) (q : ℝ × E) : ℝ × E := (q.1,Y q)
+@[expose] def inverseCoordinates (Y : ℝ × E → E) (q : ℝ × E) : ℝ × E := (q.1,Y q)
 
 /-- Physical velocity, defined pointwise by `graphVelocity κ k m F z (inverseCoordinates Y q)`. -/
-def physicalVelocity (κ k : ℝ) (m : E) (F : ℝ × E → E →L[ℝ] E)
+@[expose] def physicalVelocity (κ k : ℝ) (m : E) (F : ℝ × E → E →L[ℝ] E)
     (z : ℝ × (E × ℝ) → E) (Y : ℝ × E → E) : ℝ × E → E :=
   fun q => graphVelocity κ k m F z (inverseCoordinates Y q)
 
 /-- Physical pressure, defined pointwise by `Q (inverseCoordinates Y q)`. -/
-def physicalPressure (Q : ℝ × E → ℝ) (Y : ℝ × E → E) : ℝ × E → ℝ :=
+@[expose] def physicalPressure (Q : ℝ × E → ℝ) (Y : ℝ × E → E) : ℝ × E → ℝ :=
   fun q => Q (inverseCoordinates Y q)
 
 /-- The physical perturbation is defined by the actual inverse flow. The

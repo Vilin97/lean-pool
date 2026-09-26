@@ -17,7 +17,7 @@ All slice inputs to the unconditional gradient selector are supplied by
 solution, and the source is the force-free centred tensor source.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

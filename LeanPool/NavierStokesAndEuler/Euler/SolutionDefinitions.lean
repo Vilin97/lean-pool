@@ -48,7 +48,7 @@ These definitions reproduce the independent reference exactly. This module
 contains no challenge theorem or proof placeholder and does not import `Euler`.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -143,11 +143,11 @@ noncomputable def vorticity (v : ℝ³ → ℝ³) (x : ℝ³) : ℝ³ :=
       (fderiv ℝ v x (EuclideanSpace.single (i + 2) 1)) (i + 1))
 
 /-- The sum of the spatial suprema of the velocity norm and derivative operator norm. -/
-noncomputable def velocityC1Norm (v : ℝ³ → ℝ³) : ℝ≥0∞ :=
+@[expose] noncomputable def velocityC1Norm (v : ℝ³ → ℝ³) : ℝ≥0∞ :=
   (⨆ x, ENNReal.ofReal ‖v x‖) + (⨆ x, ENNReal.ofReal ‖fderiv ℝ v x‖)
 
 /-- The spatial supremum of the Euclidean norm of the actual vorticity. -/
-noncomputable def vorticityNorm (v : ℝ³ → ℝ³) : ℝ≥0∞ :=
+@[expose] noncomputable def vorticityNorm (v : ℝ³ → ℝ³) : ℝ≥0∞ :=
   ⨆ x, ENNReal.ofReal ‖vorticity v x‖
 
 

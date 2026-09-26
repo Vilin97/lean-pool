@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketActivationInitial
 activation time.  The initial matching statements concern the actual
 source history and its continuation, with no normal-choice premise. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

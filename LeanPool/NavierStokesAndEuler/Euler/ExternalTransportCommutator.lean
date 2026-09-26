@@ -26,7 +26,7 @@ section
 /-! Mixed derivative product estimates with only five total derivatives, for the base transport
 commutator. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -167,7 +167,7 @@ section
 
 /-! Actual outer derivatives of mixed products, with a fixed total derivative budget. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -241,7 +241,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -381,7 +381,7 @@ section
 /-! Actual fixed-H⁶ external scalar multiplication commutators with positive-order binomial bounds.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -543,7 +543,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

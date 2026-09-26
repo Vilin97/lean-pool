@@ -32,7 +32,7 @@ The bridge between the two is `ofOracle_congr`: an automorphism `γ` of `G` sati
 `IsoGraph.Canon.Equivariance` into a statement about the action of `Aut G` on the tree.
 -/
 
-@[expose] public section
+public section
 
 
 namespace IsoGraph

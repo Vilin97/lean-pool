@@ -18,4 +18,4 @@ Index file for the `LeanPool.AndersonConjecture.QuasiCompleteRing` directory:
 Anderson's Theorems 3–5 characterising (weak) quasi-completeness.
 -/
 
-@[expose] public section
+public section

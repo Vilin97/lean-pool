@@ -22,7 +22,7 @@ is the spatial orbit of the original acceleration. The final identification
 uses the already proved strong equation of the actual variational solution.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

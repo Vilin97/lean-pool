@@ -17,7 +17,7 @@ public import LeanPool.WhiteheadTheorem.HEP.Cube
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.HEP.Retract`.
 -/
 
-@[expose] public section
+public section
 
 
 open TopCat

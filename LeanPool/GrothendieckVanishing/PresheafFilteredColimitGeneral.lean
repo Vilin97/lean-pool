@@ -24,7 +24,7 @@ finite-cover separation, eventual vanishing, compatible representative extractio
 finite-subcover gluing in cocone points.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

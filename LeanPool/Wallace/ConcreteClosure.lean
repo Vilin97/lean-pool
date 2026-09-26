@@ -24,7 +24,7 @@ countable, contains the support of `x`, and has exactly the closure property req
 transfinite character extension.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

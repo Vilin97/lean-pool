@@ -27,7 +27,7 @@ The analytic crux is reduced to two scalar logarithmic inequalities, proven by
 the monotonicity of an explicit auxiliary function.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Real
 open scoped ENNReal NNReal
@@ -144,6 +144,7 @@ lemma scalar_lower {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1) :
 /-! ## The chi-squared random variable and its MGF -/
 
 /-- The product Gaussian measure on `Fin k → ℝ`: `k` i.i.d. `N(0,1)` coordinates. -/
+@[expose]
 noncomputable def gaussianVec (k : ℕ) : Measure (Fin k → ℝ) :=
   Measure.pi (fun _ => stdGaussian)
 
@@ -152,7 +153,7 @@ instance (k : ℕ) : IsProbabilityMeasure (gaussianVec k) := by
 
 /-- The chi-squared random variable with `k` degrees of freedom: the sum of the
 squared coordinates. -/
-noncomputable def chiSq (k : ℕ) : (Fin k → ℝ) → ℝ := fun ω => ∑ i, (ω i) ^ 2
+@[expose] noncomputable def chiSq (k : ℕ) : (Fin k → ℝ) → ℝ := fun ω => ∑ i, (ω i) ^ 2
 
 /-- **Chi-squared MGF.** For `t < 1/2`, `E[exp (t · S)] = ((1 - 2t)^(-1/2))^k`. -/
 theorem chiSq_mgf (k : ℕ) {t : ℝ} (ht : t < 1 / 2) :

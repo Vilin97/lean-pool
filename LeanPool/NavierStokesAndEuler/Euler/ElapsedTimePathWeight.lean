@@ -21,7 +21,7 @@ continuous profile on the elapsed forward interval. Normalization commutes
 with the actual join, without estimating either extremum of the profile.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

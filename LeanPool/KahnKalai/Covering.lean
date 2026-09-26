@@ -13,7 +13,7 @@ import Mathlib.Tactic.Positivity.Finset
 Tran–Vu Theorem 2.3: the covering theorem.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

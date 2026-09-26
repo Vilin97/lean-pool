@@ -17,7 +17,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.Neukirch.ExtensionOfDedekindDomains`.
 -/
 
-@[expose] public section
+public section
 
 open IsDedekindDomain Algebra UniqueFactorizationMonoid Ideal.IsDedekindDomain Multiset
   Module

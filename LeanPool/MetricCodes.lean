@@ -18,7 +18,7 @@ Tags: coding-theory, spherical-codes, kissing-number, harmonic-analysis, asympto
 MSC: 94B65, 52C17, 41A60
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Provenance

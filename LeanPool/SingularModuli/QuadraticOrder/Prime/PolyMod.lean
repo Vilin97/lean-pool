@@ -39,7 +39,7 @@ iso), `Inert.lean`, `Split.lean`, and `Ramified.lean`.
 `Prime/` directory; the other `Prime/*` files import this one and inherit it.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 
@@ -49,7 +49,7 @@ variable (d : ℤ) (p : ℕ)
 
 /-- Reduction of the defining polynomial `poly d` modulo `p`, as a
 polynomial in `(ZMod p)[X]`. -/
-noncomputable def polyMod : (ZMod p)[X] :=
+@[expose] noncomputable def polyMod : (ZMod p)[X] :=
   (poly d).map (Int.castRingHom (ZMod p))
 
 /-- Explicit form: `polyMod d p = X² - d·X + ((d² - d)/4)` over `ZMod p`. -/

@@ -18,7 +18,7 @@ section
 
 /-! The constructed recursive forcing equals the full nonlinear coefficient forcing. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -37,6 +37,7 @@ theorem slicedJet_zero {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   simp [slicedJet, joinDerivative]
 
 /-- Assembled jets, constructed using `assemble`. -/
+@[expose]
 def assembledJets (O : Operators) (N : ℕ) (a : ℕ → Profile) (z : Domain) : ℕ → VectorJet :=
   assemble N (fun i => slicedJet O.interval (a i).high z+slicedJet O.interval (a i).mean z)
     (fun i => slicedJet O.interval (a i).corrector z)
@@ -140,7 +141,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -150,20 +151,21 @@ open EulerSmoothLimit EulerPacketPointJets EulerFiniteGrades EulerPacketResidual
 
 /-- Assembled velocity, given by `assemble N (fun i => (a i).high+(a i).mean) (fun i => (a
 i).corrector)`. -/
-def assembledVelocity (N : ℕ) (a : ℕ → Profile) : ℕ → VectorField :=
+@[expose] def assembledVelocity (N : ℕ) (a : ℕ → Profile) : ℕ → VectorField :=
   assemble N (fun i => (a i).high+(a i).mean) (fun i => (a i).corrector)
 
 /-- Assembled pressure, given by `assemble N (fun i => (a i).meanPressure) (fun i => (a
 i).highPressure)`. -/
-def assembledPressure (N : ℕ) (a : ℕ → Profile) : ℕ → ScalarField :=
+@[expose] def assembledPressure (N : ℕ) (a : ℕ → Profile) : ℕ → ScalarField :=
   assemble N (fun i => (a i).meanPressure) (fun i => (a i).highPressure)
 
 /-- Pressure jets, given by `assemble N (fun i => pressureJet (a i).meanPressure z) (fun i =>
 pressureJet (a i).highPressure z)`. -/
-def pressureJets (N : ℕ) (a : ℕ → Profile) (z : Domain) : ℕ → ScalarJet :=
+@[expose] def pressureJets (N : ℕ) (a : ℕ → Profile) (z : Domain) : ℕ → ScalarJet :=
   assemble N (fun i => pressureJet (a i).meanPressure z) (fun i => pressureJet (a i).highPressure z)
 
 /-- Recursive grade, constructed using `coefficient`. -/
+@[expose]
 def recursiveGrade (O : Operators) (N : ℕ) (a : ℕ → Profile) (z : Domain) (p : ℕ) : Space :=
   coefficient (N+1) (linearPart (O.strain z)) (slowPressure (O.inverseFrame z))
     (fastPressure (O.normal z)) (slowAdvection (O.inverseFrame z)) (fastAdvection (O.normal z))

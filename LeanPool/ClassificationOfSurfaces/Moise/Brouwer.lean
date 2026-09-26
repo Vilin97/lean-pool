@@ -26,7 +26,7 @@ sphere that root is `1`, so the construction would be a retraction of the disk o
 contradicting `no_retraction_planeClosedUnitBall`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

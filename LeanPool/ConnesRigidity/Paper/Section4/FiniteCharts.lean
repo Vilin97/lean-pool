@@ -17,7 +17,7 @@ import Mathlib.Algebra.Algebra.ZMod
 The finite charts component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperFiniteCharts
@@ -99,13 +99,13 @@ theorem polynomialChart_mono {N M : ℕ} (hNM : N ≤ M) :
 
 /-- The cyclic coordinate order used for the three paper charts. Paper: Lemma 4.2.
 -/
-def next (s : Fin 3) : Fin 3 :=
+@[expose] def next (s : Fin 3) : Fin 3 :=
   ⟨(s.val + 1) % 3, Nat.mod_lt _ (by decide)⟩
 
 /--
 The `nextNext` construction used in the Connes rigidity formalization.
 -/
-def nextNext (s : Fin 3) : Fin 3 := next (next s)
+@[expose] def nextNext (s : Fin 3) : Fin 3 := next (next s)
 
 theorem next_ne (s : Fin 3) : next s ≠ s := by
   fin_cases s <;> decide
@@ -118,11 +118,11 @@ theorem next_nextNext_ne (s : Fin 3) : next s ≠ nextNext s := by
 
 /-- The standard basis vector in A. Paper: Lemma 4.2.
 -/
-def basisVector (s : Fin 3) : A := Pi.single s 1
+@[expose] def basisVector (s : Fin 3) : A := Pi.single s 1
 
 /-- A point in one of the three finite charts. Paper: Lemma 4.2.
 -/
-def chartVector (s : Fin 3) (f h : R) : A :=
+@[expose] def chartVector (s : Fin 3) (f h : R) : A :=
   basisVector s + f • basisVector (next s) + h • basisVector (nextNext s)
 
 /--
@@ -133,13 +133,13 @@ abbrev ChartIndex (N : ℕ) := Fin 3 × (Fin N → F) × (Fin N → F)
 /--
 The `chartPoint` construction used in the Connes rigidity formalization.
 -/
-def chartPoint (N : ℕ) (i : ChartIndex N) : A :=
+@[expose] def chartPoint (N : ℕ) (i : ChartIndex N) : A :=
   chartVector i.1 (Polynomial.ofFn N i.2.1) (Polynomial.ofFn N i.2.2)
 
 /--
 The `chartSquare` construction used in the Connes rigidity formalization.
 -/
-def chartSquare (N : ℕ) (i : ChartIndex N) : C :=
+@[expose] def chartSquare (N : ℕ) (i : ChartIndex N) : C :=
   PaperKernel.diagonal (chartPoint N i)
 
 /-- The chart span C_N. Paper: Lemma 4.2.
@@ -169,7 +169,7 @@ abbrev CoeffIndex (N : ℕ) := Fin N ⊕ Fin N
 /--
 The `coefficientVector` construction used in the Connes rigidity formalization.
 -/
-def coefficientVector (N : ℕ) (s : Fin 3) : CoeffIndex N → A
+@[expose] def coefficientVector (N : ℕ) (s : Fin 3) : CoeffIndex N → A
   | Sum.inl i => polynomialBasis N i • basisVector (next s)
   | Sum.inr i => polynomialBasis N i • basisVector (nextNext s)
 

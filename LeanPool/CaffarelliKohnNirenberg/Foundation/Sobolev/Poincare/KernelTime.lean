@@ -16,7 +16,7 @@ public import Mathlib.MeasureTheory.Measure.WithDensity
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 

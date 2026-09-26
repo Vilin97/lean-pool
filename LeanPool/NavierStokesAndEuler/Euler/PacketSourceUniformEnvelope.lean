@@ -17,7 +17,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedParameterBounds
 /-! The chosen geometric profile contributes only another fixed
 polynomial in the source primitives, including the target shear. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

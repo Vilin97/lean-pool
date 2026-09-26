@@ -24,4 +24,4 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 Import aggregator for the `Spacetime` directory.
 -/
 
-@[expose] public section
+public section

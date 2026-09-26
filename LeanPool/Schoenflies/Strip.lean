@@ -78,7 +78,7 @@ sufficiently small disk about a point of the curve meets the complement in exact
 components, one in each side), and part **(b)**, the arc case.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -255,7 +255,7 @@ by the two arcs are exactly the two components of the ball minus the two inciden
 segments, which is what makes the labelling at a vertex well defined. -/
 
 /-- The open sector of radius `ρ` about `v` spanned by the set `A` of directions. -/
-def cone (v : Plane) (A : Set Plane) (ρ : ℝ) : Set Plane := {x | x - v ∈ A} ∩ ball v ρ
+@[expose] def cone (v : Plane) (A : Set Plane) (ρ : ℝ) : Set Plane := {x | x - v ∈ A} ∩ ball v ρ
 
 theorem mem_cone_iff {v : Plane} {A : Set Plane} :
     x ∈ cone v A ρ ↔ x - v ∈ A ∧ dist x v < ρ := Iff.rfl
@@ -297,7 +297,7 @@ progress along the edge and `coordAcross` the signed distance to its line. Both 
 the block is an intersection of four open half-planes — open and convex at a glance. -/
 
 /-- Progress along the directed edge that starts at `a` with unit tangent `u`. -/
-noncomputable def coordAlong (a u x : Plane) : ℝ := inner ℝ u (x - a)
+@[expose] noncomputable def coordAlong (a u x : Plane) : ℝ := inner ℝ u (x - a)
 
 /-- Signed distance from `x` to the line of the directed edge that starts at `a` with unit
 tangent `u`; positive on the left. -/
@@ -373,7 +373,7 @@ theorem abs_coordAcross_sub_le (hu : IsDirection u) (a x y : Plane) :
 
 /-- The open block around the directed edge from `a` with unit tangent `u`: the points whose
 progress lies in `(t₁, t₂)` and whose signed distance lies in `(s₁, s₂)`. -/
-def strip (a u : Plane) (t₁ t₂ s₁ s₂ : ℝ) : Set Plane :=
+@[expose] def strip (a u : Plane) (t₁ t₂ s₁ s₂ : ℝ) : Set Plane :=
   {x | t₁ < coordAlong a u x ∧ coordAlong a u x < t₂ ∧
     s₁ < coordAcross a u x ∧ coordAcross a u x < s₂}
 
@@ -482,25 +482,25 @@ theorem vertex_ne : P.vertex i ≠ P.vertex (i + 1) := fun h =>
 /-! ### Edges, in their own frame -/
 
 /-- The length of the edge leaving vertex `i`. -/
-noncomputable def len : ℝ := ‖P.vertex (i + 1) - P.vertex i‖
+@[expose] noncomputable def len : ℝ := ‖P.vertex (i + 1) - P.vertex i‖
 
 /-- The unit tangent of the edge leaving vertex `i`, which is also the outgoing ray at `i`. -/
 noncomputable def tang : Plane := dir (P.vertex (i + 1) - P.vertex i)
 
 /-- The incoming ray at vertex `i`: the direction back along the edge that arrives there. -/
-noncomputable def rayIn : Plane := dir (P.vertex (i - 1) - P.vertex i)
+@[expose] noncomputable def rayIn : Plane := dir (P.vertex (i - 1) - P.vertex i)
 
 /-- The point of the plane at progress `t` and signed offset `s` in the frame of edge `i`. -/
-noncomputable def off : Plane := P.vertex i + t • P.tang i + s • perp (P.tang i)
+@[expose] noncomputable def off : Plane := P.vertex i + t • P.tang i + s • perp (P.tang i)
 
 /-- The point of edge `i` at distance `c` from its initial vertex. -/
-noncomputable def pt : Plane := P.off i c 0
+@[expose] noncomputable def pt : Plane := P.off i c 0
 
 /-- The edge leaving vertex `i`. -/
-def edge : Set Plane := segment ℝ (P.vertex i) (P.vertex (i + 1))
+@[expose] def edge : Set Plane := segment ℝ (P.vertex i) (P.vertex (i + 1))
 
 /-- The carrier of the polygon: the union of its edges. -/
-def carrier : Set Plane := ⋃ i, P.edge i
+@[expose] def carrier : Set Plane := ⋃ i, P.edge i
 
 variable {P i j c t s}
 
@@ -679,30 +679,30 @@ theorem rho_lt_R : D.rho < D.R := by
 /-! ### The four families of blocks -/
 
 /-- The left block of edge `i`. -/
-def blockL (i : ZMod (m + 3)) : Set Plane :=
+@[expose] def blockL (i : ZMod (m + 3)) : Set Plane :=
   strip (P.vertex i) (P.tang i) D.lam (P.len i - D.lam) 0 D.rho
 
 /-- The right block of edge `i`. -/
-def blockR (i : ZMod (m + 3)) : Set Plane :=
+@[expose] def blockR (i : ZMod (m + 3)) : Set Plane :=
   strip (P.vertex i) (P.tang i) D.lam (P.len i - D.lam) (-D.rho) 0
 
 /-- The left sector at vertex `i`: the arc `arcCCW (tang i) (rayIn i)` is the one carrying both
 left germs, by `Plane.germs_split'`. -/
-def sectorL (i : ZMod (m + 3)) : Set Plane :=
+@[expose] def sectorL (i : ZMod (m + 3)) : Set Plane :=
   cone (P.vertex i) (arcCCW (P.tang i) (P.rayIn i)) D.R
 
 /-- The right sector at vertex `i`. -/
-def sectorR (i : ZMod (m + 3)) : Set Plane :=
+@[expose] def sectorR (i : ZMod (m + 3)) : Set Plane :=
   cone (P.vertex i) (arcCCW (P.rayIn i) (P.tang i)) D.R
 
 /-- The left side of the collar. -/
-def sideL : Set Plane := ⋃ i, (D.sectorL i ∪ D.blockL i)
+@[expose] def sideL : Set Plane := ⋃ i, (D.sectorL i ∪ D.blockL i)
 
 /-- The right side of the collar. -/
-def sideR : Set Plane := ⋃ i, (D.sectorR i ∪ D.blockR i)
+@[expose] def sideR : Set Plane := ⋃ i, (D.sectorR i ∪ D.blockR i)
 
 /-- The collar itself. -/
-def nbhd : Set Plane := D.sideL ∪ D.sideR ∪ P.carrier
+@[expose] def nbhd : Set Plane := D.sideL ∪ D.sideR ∪ P.carrier
 
 theorem mem_blockL_iff : x ∈ D.blockL i ↔
     D.lam < coordAlong (P.vertex i) (P.tang i) x ∧

@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJets
 /-! The complete constructed transverse path satisfies the literal packet equation on the whole
 closed interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

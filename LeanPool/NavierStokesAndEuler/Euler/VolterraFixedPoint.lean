@@ -11,7 +11,7 @@ import Mathlib.Topology.MetricSpace.Contracting
 
 /-! Banach's theorem applied to the actual singular Volterra integral on continuous paths. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,9 +34,7 @@ theorem convolution_sub (f g : C(Icc (0 : ℝ) T, Y)) :
     convolution T hT K k hK hk hk0 hbound (f - g) =
       convolution T hT K k hK hk hk0 hbound f - convolution T hT K k hK hk hk0 hbound g := by
   ext t
-  change (∫ r in Ioc 0 T, causalIntegrand T hT K (f - g) t r) =
-    (∫ r in Ioc 0 T, causalIntegrand T hT K f t r) -
-      ∫ r in Ioc 0 T, causalIntegrand T hT K g t r
+  simp only [ContinuousMap.sub_apply, convolution_apply]
   rw [← integral_sub (causalIntegrand_integrable T hT K k hK hk hk0 hbound f t)
     (causalIntegrand_integrable T hT K k hK hk hk0 hbound g t)]
   apply integral_congr_ae
@@ -52,7 +50,7 @@ theorem convolution_sub_bound (f g : C(Icc (0 : ℝ) T, Y)) :
   exact convolution_bound T hT K k hK hk hk0 hbound (f - g)
 
 /-- Pointwise application of an actual continuous time-dependent nonlinearity to a path. -/
-def pathNonlinearity (F : Icc (0 : ℝ) T → X → Y)
+@[expose] def pathNonlinearity (F : Icc (0 : ℝ) T → X → Y)
     (hF : Continuous (fun p : Icc (0 : ℝ) T × X => F p.1 p.2))
     (u : C(Icc (0 : ℝ) T, X)) : C(Icc (0 : ℝ) T, Y) where
   toFun t := F t (u t)

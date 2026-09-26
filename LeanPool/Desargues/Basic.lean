@@ -24,7 +24,7 @@ Defines the projective-geometry axioms, the line operator, and central
 projection between lines in an axiomatic projective geometry.
 -/
 
-@[expose] public section
+public section
 
 open Set
 
@@ -152,7 +152,7 @@ variable [DecidableEq G]
 
 /-- The line operator `⋆`: `star ell a b` is the line through `a` and `b`,
 defined as `{c | ell a b c}` when `a ≠ b` and as `{a}` when `a = b`. -/
-@[simp]
+@[expose, simp]
 def star
   (ell : G → G → G → Prop)
   (a b : G) :

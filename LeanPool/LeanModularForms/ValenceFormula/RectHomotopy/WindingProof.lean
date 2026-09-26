@@ -26,7 +26,7 @@ using FTC with lifted angle functions and S1 curve comparisons.
 * `winding_fdPolygon_eq_circleParamCW` — matches circleParamCW winding
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Metric Filter Topology MeasureTheory
 

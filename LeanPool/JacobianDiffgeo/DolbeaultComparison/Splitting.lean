@@ -30,7 +30,7 @@ each splitting's PDE data as a `DbarGlueData` (via `GlueForm01.lean`), whose glu
   `dolbForm_mem_range_of_mem_B1`, `dolbForm_res_sub_mem`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech
@@ -42,7 +42,7 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(
 /-! ### `Z1.repr`: pointwise holomorphic representatives -/
 
 /-- Pointwise holomorphic representative of a component of a `D = 0` cocycle. -/
-noncomputable def Z1.repr {𝒰 : FinCover (⊤ : Opens X)} (f : Z1 (0 : RS.Divisor X) 𝒰)
+@[expose] noncomputable def Z1.repr {𝒰 : FinCover (⊤ : Opens X)} (f : Z1 (0 : RS.Divisor X) 𝒰)
     (p : Fin 𝒰.n × Fin 𝒰.n) : X → ℂ :=
   RS.MeroGermOn.holoRepr
     ((f : C1 (0 : RS.Divisor X) 𝒰) p : RS.MeroGermOn X (𝒰.U p.1 ⊓ 𝒰.U p.2 : Set X))
@@ -259,7 +259,7 @@ theorem exists_smoothSplitting [T2Space X] [CompactSpace X] (𝒰 : FinCover (�
 /-! ### `SmoothSplitting.glueData`, `dolbForm` -/
 
 /-- The glue data of a splitting on a GOOD cover, and its glued form (design §6.2). -/
-noncomputable def SmoothSplitting.glueData {𝒰 : FinCover (⊤ : Opens X)} (h𝒰 : 𝒰.IsGood)
+@[expose] noncomputable def SmoothSplitting.glueData {𝒰 : FinCover (⊤ : Opens X)} (h𝒰 : 𝒰.IsGood)
     {f : Z1 (0 : RS.Divisor X) 𝒰} (s : SmoothSplitting 𝒰 f) : DbarGlueData X where
   n := 𝒰.n
   V := 𝒰.U
@@ -278,7 +278,7 @@ noncomputable def SmoothSplitting.glueData {𝒰 : FinCover (⊤ : Opens X)} (h�
 
 /-- The glued form of a chosen splitting of `f` on a good cover: the comparison map's core
 per-cover output (design §6.2). -/
-noncomputable def dolbForm [T2Space X] [CompactSpace X] {𝒰 : FinCover (⊤ : Opens X)}
+@[expose] noncomputable def dolbForm [T2Space X] [CompactSpace X] {𝒰 : FinCover (⊤ : Opens X)}
     (h𝒰 : 𝒰.IsGood) (f : Z1 (0 : RS.Divisor X) 𝒰) : Form01 X :=
   ((exists_smoothSplitting 𝒰 f).some.glueData h𝒰).form
 

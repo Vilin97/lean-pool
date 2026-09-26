@@ -49,7 +49,7 @@ Next layers (subsequent chunks): the `skolemNeedSymbol` witness-term transport a
 family-membership-carrying restricted truth lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -292,7 +292,7 @@ theorem locDeepInterp_snoc (d : ℕ) (S : Finset J) {n : ℕ}
 /-- **Eventual deep equality**: closed terms `t, u` are identified when, for all sufficiently deep
 interpretations of their **combined** skeleton support, they evaluate equally in `M`. (The combined
 support means both terms are read against the same ordered finite skeleton.) -/
-def LocalEMEq (t u : Λ[[J]].Term Empty) : Prop :=
+@[expose] def LocalEMEq (t u : Λ[[J]].Term Empty) : Prop :=
   ∀ᶠ d in Filter.atTop,
     locDeepInterp Λ J a d (locJSupport Λ J t ∪ locJSupport Λ J u) t =
       locDeepInterp Λ J a d (locJSupport Λ J t ∪ locJSupport Λ J u) u

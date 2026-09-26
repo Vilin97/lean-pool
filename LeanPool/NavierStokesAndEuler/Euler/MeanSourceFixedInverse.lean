@@ -22,7 +22,7 @@ coordinate solver is identified with the original source mean solver, and its
 spatial translation regularity follows from the constructed coefficient families.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

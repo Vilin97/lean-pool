@@ -14,7 +14,7 @@ public import LeanPool.Rupert.Basic
 Imported Lean Pool material for `LeanPool.Rupert.Icosahedron`.
 -/
 
-@[expose] public section
+public section
 
 namespace Icosahedron
 

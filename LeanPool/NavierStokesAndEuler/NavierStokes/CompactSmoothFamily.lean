@@ -19,7 +19,7 @@ compact subset of a real normed space. The Fréchet derivative in the
 supremum norm is proved by a uniform mean-value remainder estimate.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.CompactSmoothFamily
@@ -37,7 +37,7 @@ variable {P Z E : Type u} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- The actual slice when continuous, with a zero fallback outside the domain
 where the hypotheses guarantee continuity. -/
-noncomputable def family (K : Set Z) (F : P × Z → E) (p : P) : C(K, E) := by
+@[expose] noncomputable def family (K : Set Z) (F : P × Z → E) (p : P) : C(K, E) := by
   classical
   exact if h : Continuous (fun z : K => F (p, z)) then ⟨_, h⟩ else 0
 
@@ -99,7 +99,7 @@ noncomputable def flipCLM (K : Set Z) [CompactSpace K] :
 omit [NormedSpace ℝ Z] in
 theorem flipCLM_apply (K : Set Z) [CompactSpace K]
     (g : C(K, P →L[ℝ] E)) (v : P) (z : K) :
-    flipCLM (P := P) (E := E) K g v z = g z v := rfl
+    flipCLM (P := P) (E := E) K g v z = g z v := by rfl
 
 omit [NormedSpace ℝ Z] in
 /-- Actual slice derivatives and their joint continuity give the Fréchet

@@ -38,7 +38,7 @@ Averaging over a duplicate-free list exhausting `ι` turns `f` into the constant
 telescoping sum of the second bullet is exactly the statement.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -56,6 +56,7 @@ def wtc (i : ι) (p : ℝ) (ω : ι → Bool) : ℝ :=
   ∏ j ∈ Finset.univ.erase i, (if ω j then p else 1 - p)
 
 /-- The expectation of `f` on the Bernoulli(`p`) cube. -/
+@[expose]
 def Exp (p : ℝ) (f : (ι → Bool) → ℝ) : ℝ := ∑ ω, wt p ω * f ω
 
 omit [DecidableEq ι] in
@@ -82,6 +83,7 @@ theorem wtc_update (i : ι) (p : ℝ) (ω : ι → Bool) (b : Bool) :
 /-! ## The one-coordinate averaging operator -/
 
 /-- The discrete derivative of `f` in coordinate `i`. -/
+@[expose]
 def D (i : ι) (f : (ι → Bool) → ℝ) (ω : ι → Bool) : ℝ :=
   f (Function.update ω i true) - f (Function.update ω i false)
 

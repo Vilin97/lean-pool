@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTimeWeight
 /-! Pressure-gradient bounds after literal time-profile division, with no profile extrema or time
 derivative. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

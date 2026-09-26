@@ -18,7 +18,7 @@ orbifold coefficients, the order of vanishing, and the canonical fundamental dom
 We use `ModularGroup.fd` (notation `𝒟`) from mathlib for the standard fundamental domain.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular
@@ -28,13 +28,13 @@ attribute [local instance] Classical.propDecidable
 noncomputable section
 
 /-- The elliptic point i as an element of ℍ. -/
-def ellipticPointI' : UpperHalfPlane := ⟨I, by simp [Complex.I_im]⟩
+@[expose] def ellipticPointI' : UpperHalfPlane := ⟨I, by simp [Complex.I_im]⟩
 
 /-- The elliptic point `i` as a complex number. -/
 abbrev ellipticPointI : ℂ := (ellipticPointI' : ℂ)
 
 /-- The elliptic point ρ = e^{2πi/3} = -1/2 + (√3/2)i as an element of ℍ. -/
-def ellipticPointRho' : UpperHalfPlane :=
+@[expose] def ellipticPointRho' : UpperHalfPlane :=
   ⟨-1/2 + (Real.sqrt 3 / 2) * I, by
     simp_all⟩
 
@@ -42,7 +42,7 @@ def ellipticPointRho' : UpperHalfPlane :=
 abbrev ellipticPointRho : ℂ := (ellipticPointRho' : ℂ)
 
 /-- The T-translate ρ+1 = e^{πi/3} = 1/2 + (√3/2)i. -/
-def ellipticPointRhoPlusOne' : UpperHalfPlane :=
+@[expose] def ellipticPointRhoPlusOne' : UpperHalfPlane :=
   ⟨1/2 + (Real.sqrt 3 / 2) * I, by
     simp_all⟩
 
@@ -98,10 +98,11 @@ lemma ellipticPointI_ne_rho : ellipticPointI' ≠ ellipticPointRho' := by
   simp only [ellipticPointI', ellipticPointRho'] at h1; norm_num at h1
 
 /-- Order of vanishing of f at a point in ℍ. -/
-def orderOfVanishingAt' (f : UpperHalfPlane → ℂ) (z : UpperHalfPlane) : ℤ :=
+@[expose] def orderOfVanishingAt' (f : UpperHalfPlane → ℂ) (z : UpperHalfPlane) : ℤ :=
   (meromorphicOrderAt (fun w : ℂ => if h : 0 < w.im then f ⟨w, h⟩ else 0) (z : ℂ)).untop₀
 
 /-- The order of vanishing at the cusp (in the q-expansion). -/
+@[expose]
 noncomputable def orderAtCusp' {k : ℤ} (f : ModularForm (CongruenceSubgroup.Gamma 1) k) : ℤ :=
   (UpperHalfPlane.qExpansion 1 f).order.toNat
 

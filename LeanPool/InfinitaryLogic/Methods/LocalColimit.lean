@@ -39,7 +39,7 @@ Next chunks (not here): the local atom/deForm seed and its countability, then th
 re-base over `localColim`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -164,7 +164,7 @@ variable {M : Type} [s₀.Lang.Structure M] [Nonempty M]
 /-- The **stage-`k` structure** on a fixed `s₀.Lang`-model `M`: stage `0` is `M`'s own structure,
 and each successor stage adds the Hilbert-choice interpretation of the new *local* Skolem symbols
 (`localSkolemStructure`) on top of the previous stage, via the sum structure. -/
-@[implicit_reducible] noncomputable def localStageStructure :
+@[expose, implicit_reducible] noncomputable def localStageStructure :
     (k : ℕ) → (Llocal s₀ k).Structure M
   | 0 => ‹s₀.Lang.Structure M›
   | k + 1 =>

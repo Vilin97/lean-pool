@@ -20,14 +20,14 @@ with `Komlos.sum_gridF_sub_sq_le` and Weierstrass' product inequality gives
 `shiftDist (cubeP d N) h ^ 2 ≤ (∑ k, (h k / N) ^ 2) / 12`.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 
 open Finset Finsupp
 
 /-- The `d`-dimensional product weight on the integer grid. -/
-noncomputable def cubeF (d N : ℕ) (g : Fin d → ℤ) : ℝ := ∏ k, gridF N (g k)
+@[expose] noncomputable def cubeF (d N : ℕ) (g : Fin d → ℤ) : ℝ := ∏ k, gridF N (g k)
 
 lemma support_cubeF_sub_subset {d N : ℕ} {a : Fin d → ℤ} {K : Finset ℤ}
     (hK : ∀ k, Function.support (fun j ↦ gridF N (j - a k)) ⊆ K) :

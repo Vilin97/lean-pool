@@ -21,7 +21,7 @@ Defines muGFF m as a ProbabilityMeasure and proves two OS axioms for general Gau
 - OS2 (Euclidean invariance): Z[gf] = Z[f] when covariance is E(4)-invariant
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex
 open TopologicalSpace SchwartzMap
@@ -159,6 +159,7 @@ def CovarianceEuclideanInvariant (dμ_config : ProbabilityMeasure FieldConfigura
     SchwingerFunction₂ dμ_config f h
 
 /-- Assumption: The complex covariance is invariant under Euclidean transformations -/
+@[expose]
 def CovarianceEuclideanInvariantℂ (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (g : QFT.E) (f h : TestFunctionℂ),
     SchwingerFunctionℂ₂ dμ_config (QFT.euclideanAction g f) (QFT.euclideanAction g h) =

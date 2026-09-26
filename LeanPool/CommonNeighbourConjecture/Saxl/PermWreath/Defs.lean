@@ -19,7 +19,7 @@ reindexing, so that
 Unlike `RegularWreathProduct`, the action of `Q` on `ι` need not be regular.
 -/
 
-@[expose] public section
+public section
 
 namespace Saxl
 
@@ -27,7 +27,7 @@ variable (X Q ι : Type*) [Group X] [Group Q] [MulAction Q ι]
 
 /-- The action of `Q` on the base group `ι → X` by contravariant
 reindexing. -/
-def reindexAut : Q →* MulAut (ι → X) where
+@[expose] def reindexAut : Q →* MulAut (ι → X) where
   toFun q := MulEquiv.arrowCongr (MulAction.toPerm q) (MulEquiv.refl X)
   map_one' := by
     ext f i
@@ -38,7 +38,7 @@ def reindexAut : Q →* MulAut (ι → X) where
 
 @[simp]
 theorem reindexAut_apply (q : Q) (f : ι → X) (i : ι) :
-    reindexAut X Q ι q f i = f (q⁻¹ • i) := rfl
+    reindexAut X Q ι q f i = f (q⁻¹ • i) := by rfl
 
 /-- The permutation wreath product `X wr_ι Q`, with base group `ι → X`
 and the specified action of `Q` on `ι`. -/
@@ -57,16 +57,16 @@ def top : Q →* PermWreath X Q ι :=
   SemidirectProduct.inr
 
 @[simp]
-theorem base_left (f : ι → X) : (base X Q ι f).left = f := rfl
+theorem base_left (f : ι → X) : (base X Q ι f).left = f := by rfl
 
 @[simp]
-theorem base_right (f : ι → X) : (base X Q ι f).right = 1 := rfl
+theorem base_right (f : ι → X) : (base X Q ι f).right = 1 := by rfl
 
 @[simp]
-theorem top_left (q : Q) : (top X Q ι q).left = 1 := rfl
+theorem top_left (q : Q) : (top X Q ι q).left = 1 := by rfl
 
 @[simp]
-theorem top_right (q : Q) : (top X Q ι q).right = q := rfl
+theorem top_right (q : Q) : (top X Q ι q).right = q := by rfl
 
 /-- Extensionality in the base and top coordinates. -/
 theorem ext {g h : PermWreath X Q ι} (hbase : g.left = h.left)

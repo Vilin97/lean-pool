@@ -18,7 +18,7 @@ ordinary solenoidal coordinate velocity. Its divergence therefore vanishes
 pointwise. The actual initial boundary condition supplies compact support.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

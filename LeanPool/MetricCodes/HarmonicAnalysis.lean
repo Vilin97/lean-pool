@@ -17,7 +17,7 @@ public import Mathlib.Topology.MetricSpace.CoveringNumbers
 Harmonic polynomial, Gegenbauer, Perron, and adjacent-channel constructions.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -52,7 +52,7 @@ structure SphericalCode (n : ℕ) (s : ℝ) where
   inner_le : IsSphericalCode s points
 
 /-- The spherical code number used in the metric-code argument. -/
-def sphericalCodeNumber (n : ℕ) (s : ℝ) : ℕ∞ :=
+@[expose] def sphericalCodeNumber (n : ℕ) (s : ℝ) : ℕ∞ :=
   ⨆ C : SphericalCode n s, (C.points.card : ℕ∞)
 
 theorem sphericalCodeNumber_le {n : ℕ} {s : ℝ} {B : ℕ∞}
@@ -753,7 +753,7 @@ theorem directionalDerivative_mul
             ring
 
 /-- The axis polynomial used in the spherical-code argument. -/
-def axisPolynomial (n : ℕ) (x : Euclidean n) :
+@[expose] def axisPolynomial (n : ℕ) (x : Euclidean n) :
     MvPolynomial (Fin n) ℝ :=
   ∑ i : Fin n, MvPolynomial.C (x i) * MvPolynomial.X i
 
@@ -923,7 +923,7 @@ abbrev CoefficientSpace (n m : ℕ) :=
     Finsupp.degree_eq_sum]
 
 /-- The multi factorial used in the spherical-code argument. -/
-def multiFactorial {n : ℕ} (a : MultiIndex n) : ℝ :=
+@[expose] def multiFactorial {n : ℕ} (a : MultiIndex n) : ℝ :=
   ∏ i : Fin n, (a i).factorial
 
 theorem multiFactorial_pos {n : ℕ} (a : MultiIndex n) :
@@ -1004,7 +1004,7 @@ theorem coeff_pderiv (n : ℕ) (i : Fin n) (a : MultiIndex n)
       ring
 
 /-- The polynomial inner used in the spherical-code argument. -/
-def polynomialInner (n : ℕ)
+@[expose] def polynomialInner (n : ℕ)
     (p q : MvPolynomial (Fin n) ℝ) : ℝ :=
   Finsupp.sum (AddMonoidAlgebra.coeff p) fun a c =>
     multiFactorial a * c * q.coeff a
@@ -2966,7 +2966,7 @@ open scoped BigOperators
 namespace NumericalCertificate
 
 /-- The binary entropy used in the spherical-code argument. -/
-def binaryEntropy (u : ℝ) : ℝ :=
+@[expose] def binaryEntropy (u : ℝ) : ℝ :=
   ((1 + u) * Real.log (1 + u) - u * Real.log u) / Real.log 2
 
 /-- The gamma used in the spherical-code argument. -/
@@ -2988,11 +2988,11 @@ namespace Spherical
 section
 
 /-- The boundary quadratic used in the spherical-code argument. -/
-def boundaryQuadratic (s a : ℝ) : ℝ :=
+@[expose] def boundaryQuadratic (s a : ℝ) : ℝ :=
   a * (1 + a) - (s / 2) * (1 + 2 * a) * Real.sqrt (a * (1 + a))
 
 /-- The boundary degree used in the spherical-code argument. -/
-def boundaryDegree (s a : ℝ) : ℝ :=
+@[expose] def boundaryDegree (s a : ℝ) : ℝ :=
   (Real.sqrt (1 + 4 * boundaryQuadratic s a) - 1) / 2
 
 theorem spectral_iff_quadratic {s a b : ℝ} (ha : 0 < a) :
@@ -3459,7 +3459,7 @@ theorem truncatedHarmonicDimension_le_successor
       Gegenbauer.harmonicDimension_branch_sum hn L
 
 /-- The truncated dimension quotient used in the spherical-code argument. -/
-def truncatedDimensionQuotient (a b : ℝ) (n : ℕ) : ℝ :=
+@[expose] def truncatedDimensionQuotient (a b : ℝ) (n : ℕ) : ℝ :=
   (truncatedHarmonicDimension n
     ⌊b * (n : ℝ)⌋₊ ⌊a * (n : ℝ)⌋₊ : ℝ) /
     (Gegenbauer.fibreDimension n ⌊b * (n : ℝ)⌋₊ : ℝ)
@@ -3698,7 +3698,7 @@ theorem tendsto_floored_ratio {a : ℝ} (ha : 0 ≤ a) :
     (tendsto_nat_floor_mul_div_atTop ha).comp (tendsto_natCast_atTop_atTop (R := ℝ))
 
 /-- The normalized coefficient used in the spherical-code argument. -/
-def normalizedCoefficient (x y z : ℝ) : ℝ :=
+@[expose] def normalizedCoefficient (x y z : ℝ) : ℝ :=
   ((x - y + z) * (x + y + 1 - 2 * z)) /
     Real.sqrt
       ((x + z) * (x + 1 - 2 * z) *

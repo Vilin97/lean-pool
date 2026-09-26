@@ -20,7 +20,7 @@ separated by the constructed padded slots.  A signed square is retained as
 a separate term; it is not included in the linear covariance identity.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -39,7 +39,7 @@ abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
 abbrev Plane := TorusInverse.Plane
 
 /-- The numerator is the actual inverse-matrix solve. -/
-noncomputable def increment (H : Mat2) (T R : Vec2) (j : Fin 2) : ℝ :=
+@[expose] noncomputable def increment (H : Mat2) (T R : Vec2) (j : Fin 2) : ℝ :=
   (H⁻¹.mulVec R) j / (2 * SmoothCovariance.amplitudes H T j)
 
 theorem increment_eq_inverse (H : Mat2) (T R : Vec2)
@@ -150,14 +150,14 @@ theorem PairData.bilinear_diagonal {D h : ℝ} {vr vt : Plane} {sys : SlotSystem
 
 /-- Radial with, given by `wave (outer * (Real.sqrt ε * a j * mask D U q x))
 (SlotColoring.nativeIndex h U.1) (P.rawRadial hdet j) (P.modes j) (P.phases j)`. -/
-noncomputable def radialWith {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt}
+@[expose] noncomputable def radialWith {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt}
     {U : UnsignedLabel} (P : PairData sys U) (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (outer ε : ℝ) (a : Vec2) (q : ℝ) (x : SlotColoring.Position) (j : Fin 2) : Plane → ℝ → ℝ :=
   wave (outer * (Real.sqrt ε * a j * mask D U q x))
     (SlotColoring.nativeIndex h U.1) (P.rawRadial hdet j) (P.modes j) (P.phases j)
 
 /-- Tangent with, constructed using `wave`. -/
-noncomputable def tangentWith {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt}
+@[expose] noncomputable def tangentWith {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt}
     {U : UnsignedLabel} (P : PairData sys U) (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (outer ε : ℝ) (a : Vec2) (q : ℝ) (x : SlotColoring.Position) (j i : Fin 2) : Plane → ℝ → ℝ :=
   wave (outer * (Real.sqrt ε * a j * mask D U q x))
@@ -236,6 +236,7 @@ theorem finite_bilinear_covariance {D h : ℝ} {vr vt : Plane} (sys : SlotSystem
 
 /-- Assembled radial with, given by `∑ᶠ v : UnsignedLabel × Fin 2, radialWith (P v.1) hdet
 (outer v.1) (ε v.1) (a v.1) q x v.2 Y θ`. -/
+@[expose]
 noncomputable def assembledRadialWith {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt} {N : ℕ}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : UnsignedLabel → ℝ)
@@ -244,6 +245,7 @@ noncomputable def assembledRadialWith {D h : ℝ} {vr vt : Plane} {sys : SlotSys
 
 /-- Assembled tangent with, given by `∑ᶠ v : UnsignedLabel × Fin 2, tangentWith (P v.1) hdet
 (outer v.1) (ε v.1) (a v.1) q x v.2 i Y θ`. -/
+@[expose]
 noncomputable def assembledTangentWith {D h : ℝ} {vr vt : Plane} {sys : SlotSystem D h vr vt} {N :
     ℕ}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
@@ -549,7 +551,7 @@ theorem class_input_envelope {s : StripData E} {w g r : ℕ → E → ℝ}
 
 /-- Signed jet cost, given by `WeightedQuotients.chooseSum j * WeightedQuotients.orderBound (-(1
 / 2 : ℝ)) j / 2`. -/
-noncomputable def signedJetCost (j : ℕ) : ℝ :=
+@[expose] noncomputable def signedJetCost (j : ℕ) : ℝ :=
   WeightedQuotients.chooseSum j * WeightedQuotients.orderBound (-(1 / 2 : ℝ)) j / 2
 
 /-- Prefix jet cost, given by `1 + ∑ j ∈ Finset.range (m + 1), |signedJetCost j|`. -/

@@ -44,7 +44,7 @@ L(t) = Z[f_re + t·f_im] and R(t) = exp(-½ Q(t)), show L = R on ℝ (from
 - `gaussianFreeField_satisfies_OS0`
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

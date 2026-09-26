@@ -18,7 +18,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Caccioppoli.FinitenessCompon
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter CKN.Foundation.Parabolic CKN.Foundation.Parabolic.Integration
 open scoped ENNReal NNReal Topology

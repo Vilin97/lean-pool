@@ -19,7 +19,7 @@ Advice reduction, meta-learning lower-bound infrastructure, and separation
 results for compression and SQ dimension.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

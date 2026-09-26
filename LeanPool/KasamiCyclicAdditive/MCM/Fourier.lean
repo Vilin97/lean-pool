@@ -28,7 +28,7 @@ For the complementary case of a nonprincipal cubic `χ` and odd `k`, the MCM map
 is invisible to `χ`: `χ(M_k s) = χ(s)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
@@ -37,11 +37,12 @@ namespace KasamiCyclicAdditive
 variable {K : Type*} [Field K] [Fintype K] [DecidableEq K] [CharP K 2]
 
 /-- Untwisted MCM character sum.  Multiplicative characters vanish at zero. -/
-noncomputable def mcmCharSum (k : ℕ) (χ : MulChar K ℂ) : ℂ :=
+@[expose] noncomputable def mcmCharSum (k : ℕ) (χ : MulChar K ℂ) : ℂ :=
   ∑ s : K, χ (mcmMap k s)
 
 /-- Additively twisted MCM character sum. -/
-noncomputable def mcmTwistedCharSum (k : ℕ) (ψ : AddChar K ℂ) (χ : MulChar K ℂ) : ℂ :=
+@[expose] noncomputable def mcmTwistedCharSum (k : ℕ) (ψ : AddChar K ℂ)
+    (χ : MulChar K ℂ) : ℂ :=
   ∑ s : K, ψ s * χ (mcmMap k s)
 
 /-! ### Characteristic-two preliminaries -/

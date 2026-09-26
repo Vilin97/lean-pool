@@ -19,7 +19,7 @@ Cartesian angular representation.  Native annulus support gives a positive
 inner radius and the common shrinking outer support.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

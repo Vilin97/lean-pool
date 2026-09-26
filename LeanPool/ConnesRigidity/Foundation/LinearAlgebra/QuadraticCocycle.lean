@@ -20,7 +20,7 @@ public import Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
 The quadratic cocycle component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace OpenAIPort
@@ -49,7 +49,7 @@ instance : Fintype ModTwoSymplecticGroup :=
 /--
 The `reducedSymplecticHom` construction used in the Connes rigidity formalization.
 -/
-def reducedSymplecticHom :
+@[expose] def reducedSymplecticHom :
     IntegralSymplecticGroup →* ModTwoSymplecticGroup where
   toFun g :=
     ⟨(g.1 : Matrix SymplecticIndex SymplecticIndex ℤ).map
@@ -66,7 +66,7 @@ def reducedSymplecticHom :
 /-- Evaluation of matrix reduction. Paper: §2. -/
 @[simp] theorem reducedSymplecticHom_coe (g : IntegralSymplecticGroup) :
     (reducedSymplecticHom g : Matrix SymplecticIndex SymplecticIndex (ZMod 2)) =
-      reducedMatrixHom g := rfl
+      reducedMatrixHom g := by rfl
 
 instance : DistribMulAction ModTwoSymplecticGroup ModTwoSpace :=
   DistribMulAction.compHom ModTwoSpace
@@ -77,7 +77,7 @@ instance : DistribMulAction ModTwoSymplecticGroup ModTwoSpace :=
 /--
 The `modTwoBasis` construction used in the Connes rigidity formalization.
 -/
-def modTwoBasis (i : SymplecticIndex) : ModTwoSpace :=
+@[expose] def modTwoBasis (i : SymplecticIndex) : ModTwoSpace :=
   Pi.single i 1
 
 /-- The source-shaped quadratic cocycle. Paper: §2.
@@ -254,7 +254,7 @@ def integralQuadraticCocycle (g : IntegralSymplecticGroup) : ModTwoSpace :=
 /- Reduction and integral actions agree on the finite carrier. Paper: §2. -/
 theorem reducedSymplecticHom_smul
     (g : IntegralSymplecticGroup) (w : ModTwoSpace) :
-    reducedSymplecticHom g • w = g • w := rfl
+    reducedSymplecticHom g • w = g • w := by rfl
 
 /- The integral cocycle has the quadratic defining identity. Paper: §2. -/
 theorem integralQuadraticCocycle_defining_identity

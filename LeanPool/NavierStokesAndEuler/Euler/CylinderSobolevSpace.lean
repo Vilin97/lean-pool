@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureJetIdentities
 
 /-! A complete cylinder Sobolev space constructed from closed graphs of actual L² derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,31 +31,32 @@ abbrev SobolevWord (q : ℕ) := Σ n : Fin (q + 1), Fin n.val → Fin 4
 abbrev SobolevEdge (q : ℕ) := Σ n : Fin q, (Fin n.val → Fin 4) × Fin 4
 
 /-- The empty derivative word. -/
-def emptyWord (q : ℕ) : SobolevWord q := ⟨⟨0, Nat.zero_lt_succ q⟩, Fin.elim0⟩
+@[expose] def emptyWord (q : ℕ) : SobolevWord q := ⟨⟨0, Nat.zero_lt_succ q⟩, Fin.elim0⟩
 
 /-- The lower endpoint of a derivative edge. -/
-def edgeParent {q : ℕ} (e : SobolevEdge q) : SobolevWord q :=
+@[expose] def edgeParent {q : ℕ} (e : SobolevEdge q) : SobolevWord q :=
   ⟨⟨e.1.val, Nat.lt_succ_of_lt e.1.isLt⟩, e.2.1⟩
 
 /-- The upper endpoint obtained by prepending one derivative direction. -/
-def edgeChild {q : ℕ} (e : SobolevEdge q) : SobolevWord q :=
+@[expose] def edgeChild {q : ℕ} (e : SobolevEdge q) : SobolevWord q :=
   ⟨⟨e.1.val + 1, Nat.succ_lt_succ e.1.isLt⟩, Fin.cons e.2.2 e.2.1⟩
 
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The closed graph of the actual strong translation derivative. -/
+@[expose]
 def closedDerivativeGraph (a : LiftTangent) : ClosedSubmodule ℝ (LiftL2 period × LiftL2 period)
     where
   toSubmodule := translationDerivativeGraph period a
   isClosed' := translationDerivativeGraph_closed period a
 
 /-- Evaluation of the two endpoints of a derivative edge is continuous linear. -/
-def edgeEvaluation {q : ℕ} (e : SobolevEdge q) :
+@[expose] def edgeEvaluation {q : ℕ} (e : SobolevEdge q) :
     (SobolevWord q → LiftL2 period) →L[ℝ] (LiftL2 period × LiftL2 period) :=
   (ContinuousLinearMap.proj (edgeParent e)).prod (ContinuousLinearMap.proj (edgeChild e))
 
 /-- The closed linear space of finite arrays satisfying every genuine derivative compatibility. -/
-def sobolevSubspace (q : ℕ) : ClosedSubmodule ℝ (SobolevWord q → LiftL2 period) :=
+@[expose] def sobolevSubspace (q : ℕ) : ClosedSubmodule ℝ (SobolevWord q → LiftL2 period) :=
   ⨅ e : SobolevEdge q,
     (closedDerivativeGraph period (standardDirection e.2.2)).comap (edgeEvaluation period e)
 
@@ -75,10 +76,12 @@ instance sobolevNormedSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) 
 theorem sobolev_complete (q : ℕ) : CompleteSpace (SobolevSpace period q) := inferInstance
 
 /-- The underlying L² field of a Sobolev derivative array. -/
-def value {q : ℕ} (u : SobolevSpace period q) : LiftL2 period := u.val (emptyWord q)
+@[expose] def value {q : ℕ} (u : SobolevSpace period q) : LiftL2 period :=
+  u.val (emptyWord q)
 
 /-- A valid derivative word in the array. -/
-def word {q n : ℕ} (u : SobolevSpace period q) (hn : n ≤ q) (w : Fin n → Fin 4) : LiftL2 period :=
+@[expose] def word {q n : ℕ} (u : SobolevSpace period q) (hn : n ≤ q)
+    (w : Fin n → Fin 4) : LiftL2 period :=
   u.val ⟨⟨n, Nat.lt_succ_of_le hn⟩, w⟩
 
 /-- The defining compatibility is a genuine strong derivative of an L² translation orbit. -/

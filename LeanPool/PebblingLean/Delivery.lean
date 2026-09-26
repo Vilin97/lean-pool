@@ -21,7 +21,7 @@ bound: a pile of size `T * 2^d` at one end of a length-`d` path can deliver `T`
 pebbles to the other end.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 
@@ -39,7 +39,7 @@ inductive Walk : V → V → Type u where
 namespace Walk
 
 /-- Length of a walk. -/
-def length {u v : V} : G.Walk u v → ℕ
+@[expose] def length {u v : V} : G.Walk u v → ℕ
   | nil _ => 0
   | cons _ tail => tail.length + 1
 
@@ -80,7 +80,7 @@ namespace Pebbling
 variable {V : Type u}
 
 /-- A distribution with `k` pebbles at one vertex and none elsewhere. -/
-def single [DecidableEq V] (v : V) (k : ℕ) : Pebbling V :=
+@[expose] def single [DecidableEq V] (v : V) (k : ℕ) : Pebbling V :=
   fun x => if x = v then k else 0
 
 @[simp]

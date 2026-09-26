@@ -71,7 +71,7 @@ of `GranvilleMoore.VandermondeReduction`.
   Fermat quotients*.
 -/
 
-@[expose] public section
+public section
 
 open Finset Matrix
 

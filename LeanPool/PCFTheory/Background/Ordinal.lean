@@ -15,7 +15,7 @@ Auxiliary results about ordinals and recursion on bounded ordinals used in the
 PCF-theory formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -39,7 +39,7 @@ theorem succ_Iio {α : Type*} [PartialOrder α] [SuccOrder α] {a : α} (h : IsS
   Subtype.val_inj.mp <| coe_succ_Iio h
 
 /-- The order isomorphism between ℕ and the first ω ordinals. -/
-@[simps! apply]
+@[expose, simps! apply]
 def relIsoNatOmega0 : ℕ ≃o Iio ω where
   toFun n := ⟨n, natCast_lt_omega0 n⟩
   invFun n := Classical.choose (lt_omega0.1 n.2)

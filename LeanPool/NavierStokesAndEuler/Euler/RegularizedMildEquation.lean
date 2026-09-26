@@ -15,7 +15,7 @@ section
 
 /-! Exact heat commutation with the genuine Sobolev derivatives and Laplacian. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -51,7 +51,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

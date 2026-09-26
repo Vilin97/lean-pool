@@ -14,7 +14,7 @@ This file contains the `NormedAddCommGroupOfRing` class, which bundles the
 ring structure together with the normed additive commutative group structure.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -26,7 +26,7 @@ attribute [instance] NormedAddCommGroupOfRing.toRing
 attribute [instance] NormedAddCommGroupOfRing.toNorm
 
 /-- The algebra structure coming from compatible scalar multiplication and multiplication. -/
-@[reducible]
+@[expose, reducible]
 def Algebra.ofIsScalarTowerSmulCommClass {R A : Type*} [CommSemiring R] [Semiring A]
     [Module R A] [SMulCommClass R A A] [IsScalarTower R A A] : Algebra R A :=
   Algebra.ofModule smul_mul_assoc mul_smul_comm

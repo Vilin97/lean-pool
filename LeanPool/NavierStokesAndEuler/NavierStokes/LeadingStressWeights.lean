@@ -18,7 +18,7 @@ Its edge factors are transported through the literal finite modulation and
 the five restored profile histories.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,6 +32,7 @@ open ProfileHistories
 
 
 /-- Stress, given by `(LeadingStress.theta P h p, LeadingStress.axial P h p)`. -/
+@[expose]
 noncomputable def stress {D : RadialDomain} (P : Profiles D) (h : ℝ) (p : Point) : ℝ × ℝ :=
   (LeadingStress.theta P h p, LeadingStress.axial P h p)
 
@@ -79,11 +80,12 @@ theorem stress_smooth {D : RadialDomain} (P : Profiles D) (h : ℝ) :
   fun _ hp => (stress_contDiffAt P h hp.1 hp.2.1 hp.2.2.1 hp.2.2.2).contDiffWithinAt
 
 /-- Log point, given by `(Real.exp p.2, p.1)`. -/
-noncomputable def logPoint (p : ℝ × ℝ) : Point := (Real.exp p.2, p.1)
+@[expose] noncomputable def logPoint (p : ℝ × ℝ) : Point := (Real.exp p.2, p.1)
 
 theorem logPoint_smooth : ContDiff ℝ ∞ logPoint := contDiff_snd.exp.prodMk contDiff_fst
 
 /-- Log stress, given by `stress P h ∘ logPoint`. -/
+@[expose]
 noncomputable def logStress {D : RadialDomain} (P : Profiles D) (h : ℝ) : (ℝ × ℝ) → ℝ × ℝ :=
   stress P h ∘ logPoint
 
@@ -321,9 +323,9 @@ section OuterCollar
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
 /-- Left edge, given by `Real.log (NominalConeAssembly.activeLeft W)`. -/
-noncomputable def leftEdge : ℝ := Real.log (NominalConeAssembly.activeLeft W)
+@[expose] noncomputable def leftEdge : ℝ := Real.log (NominalConeAssembly.activeLeft W)
 /-- Right edge, given by `Real.log (NominalConeAssembly.activeRight W)`. -/
-noncomputable def rightEdge : ℝ := Real.log (NominalConeAssembly.activeRight W)
+@[expose] noncomputable def rightEdge : ℝ := Real.log (NominalConeAssembly.activeRight W)
 
 theorem rightEdge_eq : rightEdge W = Real.log W.controls.radius + OutgoingTail.tailEnd F.data := by
   unfold rightEdge NominalConeAssembly.activeRight
@@ -581,19 +583,19 @@ end WholeAnnulus
 section ShearIdentities
 
 /-- Log shear A, given by `ActivationContinuation.shearA P (logPoint p)`. -/
-noncomputable def logShearA {D : RadialDomain} (P : Profiles D) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def logShearA {D : RadialDomain} (P : Profiles D) (p : ℝ × ℝ) : ℝ :=
   ActivationContinuation.shearA P (logPoint p)
 
 /-- Log shear B, given by `ActivationContinuation.shearB P (logPoint p)`. -/
-noncomputable def logShearB {D : RadialDomain} (P : Profiles D) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def logShearB {D : RadialDomain} (P : Profiles D) (p : ℝ × ℝ) : ℝ :=
   ActivationContinuation.shearB P (logPoint p)
 
 /-- Log speed, given by `ActivationContinuation.shearSize (logShearA P p) (logShearB P p)`. -/
-noncomputable def logSpeed {D : RadialDomain} (P : Profiles D) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def logSpeed {D : RadialDomain} (P : Profiles D) (p : ℝ × ℝ) : ℝ :=
   ActivationContinuation.shearSize (logShearA P p) (logShearB P p)
 
 /-- Log slope, given by `logShearB P p / logShearA P p`. -/
-noncomputable def logSlope {D : RadialDomain} (P : Profiles D) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def logSlope {D : RadialDomain} (P : Profiles D) (p : ℝ × ℝ) : ℝ :=
   logShearB P p / logShearA P p
 
 theorem shearSize_eq (a b : ℝ) : ActivationContinuation.shearSize a b = a + b ^ 2 / a := by

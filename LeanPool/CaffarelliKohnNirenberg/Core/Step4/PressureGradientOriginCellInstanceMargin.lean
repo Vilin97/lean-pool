@@ -19,7 +19,7 @@ slice estimate in `eq:pressure-gradient-morrey` bounds the power integral of
 one fixed measurable gradient, as used in `prop:bootstrap`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology

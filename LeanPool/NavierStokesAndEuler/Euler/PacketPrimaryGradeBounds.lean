@@ -44,7 +44,7 @@ Unit-terminal-data estimates for the actual joined primary. The same
 external radius controls its history, actual trace, and weighted future.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -182,7 +182,7 @@ section
 
 /-! Unit-data estimates extend to arbitrary actual terminal amplitudes at the same radius. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -273,7 +273,7 @@ length and the genuine propagator bound. Arbitrary terminal amplitude is
 restored by the proved exact homogeneity of the constructed solution.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -321,7 +321,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -476,15 +476,15 @@ theorem derivativeCost_nonneg : 0 ≤ H.derivativeCost := by
 /-- Common cost, given by `H.velocityCost+H.derivativeCost`. -/
 def commonCost : ℝ := H.velocityCost+H.derivativeCost
 /-- Pressure amplitude, given by `P*pressureCost (Fin 4) q N.Ri N.C N.C 0 H.commonCost`. -/
-def pressureAmplitude : ℝ := P*pressureCost (Fin 4) q N.Ri N.C N.C 0 H.commonCost
+@[expose] def pressureAmplitude : ℝ := P*pressureCost (Fin 4) q N.Ri N.C N.C 0 H.commonCost
 /-- Potential amplitude, given by `3*N.blockAmplitude*(P*H.commonCost)`. -/
 def potentialAmplitude : ℝ := 3*N.blockAmplitude*(P*H.commonCost)
 /-- Potential time amplitude, given by `6*N.blockAmplitude*(P*H.commonCost)`. -/
 def potentialTimeAmplitude : ℝ := 6*N.blockAmplitude*(P*H.commonCost)
 /-- Corrector amplitude, given by `27*N.blockAmplitude^2*(P*H.commonCost)`. -/
-def correctorAmplitude : ℝ := 27*N.blockAmplitude^2*(P*H.commonCost)
+@[expose] def correctorAmplitude : ℝ := 27*N.blockAmplitude^2*(P*H.commonCost)
 /-- Corrector time amplitude, given by `108*N.blockAmplitude^2*(P*H.commonCost)`. -/
-def correctorTimeAmplitude : ℝ := 108*N.blockAmplitude^2*(P*H.commonCost)
+@[expose] def correctorTimeAmplitude : ℝ := 108*N.blockAmplitude^2*(P*H.commonCost)
 
 theorem commonCost_nonneg : 0 ≤ H.commonCost := add_nonneg H.velocityCost_nonneg
     H.derivativeCost_nonneg
@@ -639,7 +639,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

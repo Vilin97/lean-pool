@@ -17,7 +17,7 @@ parameter derivatives of time-dependent coefficients give actual operator-norm
 derivatives, rather than an assumed regular family of solution operators.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -65,16 +65,18 @@ theorem timeMultiplier_smul (r : ℝ) (A : C(Icc (0 : ℝ) T, E →L[ℝ] F)) :
 /-- The operator norm is bounded by the actual uniform coefficient norm. -/
 theorem timeMultiplier_norm (A : C(Icc (0 : ℝ) T, E →L[ℝ] F)) :
     ‖timeMultiplier T hT A‖ ≤ ‖A‖ :=
-  ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg A) (timeApply_bound T hT A)
+  timeMultiplier_norm_le T hT A
 
 /-- The actual bounded linear coefficient-to-Bochner-multiplier map. -/
-def coefficientLinear : C(Icc (0 : ℝ) T, E →L[ℝ] F) →ₗ[ℝ] (TimeLp T E →L[ℝ] TimeLp T F) where
+@[expose] def coefficientLinear :
+    C(Icc (0 : ℝ) T, E →L[ℝ] F) →ₗ[ℝ] (TimeLp T E →L[ℝ] TimeLp T F) where
   toFun := timeMultiplier T hT
   map_add' := timeMultiplier_add T hT
   map_smul' := timeMultiplier_smul T hT
 
 /-- The coefficient map is bounded for the actual uniform and operator norms. -/
-def coefficientMap : C(Icc (0 : ℝ) T, E →L[ℝ] F) →L[ℝ] (TimeLp T E →L[ℝ] TimeLp T F) where
+@[expose] def coefficientMap : C(Icc (0 : ℝ) T, E →L[ℝ] F) →L[ℝ]
+    (TimeLp T E →L[ℝ] TimeLp T F) where
   toLinearMap := coefficientLinear T hT
   cont := AddMonoidHomClass.continuous_of_bound (coefficientLinear T hT) 1 (fun A => by
     change ‖timeMultiplier T hT A‖ ≤ (1 : ℝ) * ‖A‖

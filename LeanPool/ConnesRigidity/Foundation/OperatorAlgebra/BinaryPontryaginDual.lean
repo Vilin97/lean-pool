@@ -21,7 +21,7 @@ import Mathlib.Algebra.Module.StablyFree.Basic
 The binary pontryagin dual component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace BinaryPontryaginDual
@@ -58,11 +58,11 @@ def binaryRootsEquiv : Multiplicative F ≃* rootsOfUnity 2 Circle :=
 
 @[simp] theorem binaryRootsEquiv_apply (a : F) :
     binaryRootsEquiv (Multiplicative.ofAdd a) =
-      ZMod.rootsOfUnityAddChar 2 a := rfl
+      ZMod.rootsOfUnityAddChar 2 a := by rfl
 
 @[simp] theorem binaryRootsEquiv_val (a : Multiplicative F) :
     ((binaryRootsEquiv a).val : Circle) =
-      ZMod.toCircle (Multiplicative.toAdd a) := rfl
+      ZMod.toCircle (Multiplicative.toAdd a) := by rfl
 
 /-- Binary characters have order dividing two. Paper: §3. -/
 theorem character_sq (M : Type*) [AddCommGroup M] [Module F M]
@@ -263,7 +263,7 @@ def continuousBinaryBidualEvaluation (M : Type*) [AddCommGroup M] [Module F M] :
     (M : Type*) [AddCommGroup M] [Module F M]
     (m : M) (ℓ : M →ₗ[F] F) :
     (continuousBinaryBidualEvaluation M m :
-      (M →ₗ[F] F) →ₗ[F] F) ℓ = ℓ m := rfl
+      (M →ₗ[F] F) →ₗ[F] F) ℓ = ℓ m := by rfl
 
 /-- The binary Pontryagin dual of a linear dual is its evaluation module. Paper: §3.
 -/
@@ -286,7 +286,7 @@ def pointwiseEvaluationCharacter
     (M : Type*) [AddCommGroup M] [Module F M]
     (m : M) (ℓ : M →ₗ[F] F) :
     pointwiseEvaluationCharacter M m (Multiplicative.ofAdd ℓ) =
-      ZMod.toCircle (ℓ m) := rfl
+      ZMod.toCircle (ℓ m) := by rfl
 
 /--
 The `pointwiseEvaluationHom` construction used in the Connes rigidity formalization.
@@ -347,7 +347,7 @@ def pointwisePontryaginDualEquiv
 
 @[simp] theorem pointwisePontryaginDualEquiv_symm_apply
     (M : Type*) [AddCommGroup M] [Module F M] (m : M) :
-    (pointwisePontryaginDualEquiv M).symm m = pointwiseEvaluationHom M m := rfl
+    (pointwisePontryaginDualEquiv M).symm m = pointwiseEvaluationHom M m := by rfl
 
 @[simp] theorem pointwisePontryaginDualEquiv_apply_character
     (M : Type*) [AddCommGroup M] [Module F M]

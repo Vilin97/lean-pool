@@ -13,7 +13,7 @@ public import Mathlib.RingTheory.MatrixAlgebra
 This file restores an upstream matrix/tensor equivalence in the opposite direction.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 
@@ -27,4 +27,4 @@ def matrixEquivTensor' (n R A : Type*) [CommSemiring R] [CommSemiring A]
 
 @[simp] lemma matrixEquivTensor'_symm_apply (n R A : Type*) [CommSemiring R] [CommSemiring A]
     [Algebra R A] [Fintype n] [DecidableEq n] (a : A) (m : Matrix n n R) :
-    (matrixEquivTensor' n R A).symm (a ⊗ₜ m) = a • (m.map (algebraMap R A)) := rfl
+    (matrixEquivTensor' n R A).symm (a ⊗ₜ m) = a • (m.map (algebraMap R A)) := by rfl

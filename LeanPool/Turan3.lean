@@ -19,4 +19,4 @@ Tags: graph-theory, combinatorics, turan-theorem, extremal-graph-theory
 MSC: 05C35
 -/
 
-@[expose] public section
+public section

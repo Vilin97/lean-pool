@@ -30,7 +30,7 @@ This module defines the permitted residue classes $localInterval$ and the global
 as well as the indicator function $f(x)$ for survivors in the Krafft Sieve.
 -/
 
-@[expose] public section
+public section
 
 namespace KrafftSieve
 
@@ -66,7 +66,7 @@ Definition of the indicator function f.
 Define the indicator function $f : \mathbb{Z}/q\mathbb{Z} \to \mathbb{R}$ such that
 $f(x) = 1$ if $x \in A$, and $f(x) = 0$ otherwise.
 -/
-noncomputable def f (n : ℕ) (r : Fin (w n) → ℕ) (x : ZMod (q n)) : ℝ :=
+@[expose] noncomputable def f (n : ℕ) (r : Fin (w n) → ℕ) (x : ZMod (q n)) : ℝ :=
   if x ∈ A n r then 1 else 0
 
 /-
@@ -334,7 +334,7 @@ theorem weighted_existence_principle (n : ℕ) (W : ZMod (q n) → ℝ) (hW : �
 Definition of the Krafft Sufficiency condition
 Existence of a weight function $W$ such that $sum2(n, W) < sum1(n, W)$.
 -/
-def KrafftSufficiency (n : ℕ) : Prop :=
+@[expose] def KrafftSufficiency (n : ℕ) : Prop :=
   ∃ W : ZMod (q n) → ℝ, (∀ x, W x ≥ 0) ∧
   (∀ x : ZMod (q n), x.val ∉ evalInterval n → W x = 0) ∧
   sum2 n W < sum1 n W

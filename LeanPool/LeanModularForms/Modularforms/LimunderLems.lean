@@ -12,7 +12,7 @@ import LeanPool.LeanModularForms.Modularforms.IccIcoLems
 /-! # LimunderLems -/
 
 
-@[expose] public section
+public section
 
 open TopologicalSpace Set
   Metric Filter Function Complex

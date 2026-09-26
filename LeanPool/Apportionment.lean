@@ -20,7 +20,7 @@ Tags: social-choice-theory, combinatorics
 MSC: 91B12, 91B14
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

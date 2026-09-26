@@ -17,7 +17,7 @@ order comparison in forms intended for pointwise use along an insertion
 chain.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real Set
 open scoped ENNReal
@@ -29,31 +29,31 @@ namespace Lemma43
 open TransferStein TransferTestFunctions ProbabilityTheory
 
 /-- The probability quantities attached to one law. -/
-noncomputable def F (ν : Measure ℝ) : ℝ :=
+@[expose] noncomputable def F (ν : Measure ℝ) : ℝ :=
   ENNReal.toReal (ν (Ici 0))
 
 /-- The upper transfer-test expectation for `ν`. -/
-noncomputable def A (ν : Measure ℝ) (d : ℝ) : ℝ :=
+@[expose] noncomputable def A (ν : Measure ℝ) (d : ℝ) : ℝ :=
   ∫ z, transferPhi d z ∂ν
 
 /-- The lower transfer-test expectation for `ν`. -/
-noncomputable def B (ν : Measure ℝ) (c : ℝ) : ℝ :=
+@[expose] noncomputable def B (ν : Measure ℝ) (c : ℝ) : ℝ :=
   ∫ z, transferPsi c z ∂ν
 
 /-- The upper crossing probability for `ν`. -/
-noncomputable def u (ν : Measure ℝ) (d : ℝ) : ℝ :=
+@[expose] noncomputable def u (ν : Measure ℝ) (d : ℝ) : ℝ :=
   uProbability ν d
 
 /-- The lower crossing probability for `ν`. -/
-noncomputable def v (ν : Measure ℝ) (c : ℝ) : ℝ :=
+@[expose] noncomputable def v (ν : Measure ℝ) (c : ℝ) : ℝ :=
   vProbability ν c
 
 /-- The sum of the upper and lower crossing probabilities. -/
-noncomputable def w (ν : Measure ℝ) (c d : ℝ) : ℝ :=
+@[expose] noncomputable def w (ν : Measure ℝ) (c d : ℝ) : ℝ :=
   u ν d + v ν c
 
 /-- The upper crossing probability normalized by total crossing mass. -/
-noncomputable def theta (ν : Measure ℝ) (c d : ℝ) : ℝ :=
+@[expose] noncomputable def theta (ν : Measure ℝ) (c d : ℝ) : ℝ :=
   u ν d / w ν c d
 
 theorem w_pos
@@ -88,6 +88,7 @@ theorem w_pos
 
 /-- Explicit, auditable identification between the actual tail
 probabilities of two laws and the four likelihood-ratio integrals. -/
+@[expose]
 def DensityIdentification
     (f : ℝ → ℝ≥0∞) (νP νM : Measure ℝ)
     (a b c d : ℝ) : Prop :=
@@ -102,6 +103,7 @@ def DensityIdentification
 
 /-- The four elementary relations among `A,B,F,u,v,w`, kept as an
 explicit proposition so that no probability identification is hidden. -/
+@[expose]
 def ProbabilityRelations
     (νP νM : Measure ℝ) (c d : ℝ) : Prop :=
   B νP c = A νP d + w νP c d ∧

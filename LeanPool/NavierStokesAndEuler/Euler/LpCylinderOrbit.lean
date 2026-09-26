@@ -11,7 +11,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-! Actual mixed translation orbits are smooth everywhere as soon as they are smooth at zero. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ omit [CompactSpace K] in
     by
   apply ContinuousMap.ext
   intro t
-  exact translate_zero period (f t)
+  simpa only [pathTranslate_apply] using translate_zero period (f t)
 
 omit [CompactSpace K] in
 /-- The true uniform-time mixed translations obey the group law. -/
@@ -38,7 +38,7 @@ theorem pathTranslate_add (a b : LiftTangent) (f : C(K, CylinderL2 period V)) :
     pathTranslate period a (pathTranslate period b f) = pathTranslate period (a+b) f := by
   apply ContinuousMap.ext
   intro t
-  exact translate_add period a b (f t)
+  simpa only [pathTranslate_apply] using translate_add period a b (f t)
 
 /-- Local smoothness at zero propagates to the whole genuine mixed translation orbit. -/
 theorem pathOrbit_contDiff_of_zero (f : C(K, CylinderL2 period V))

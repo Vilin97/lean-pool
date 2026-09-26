@@ -46,7 +46,7 @@ The project was developed at https://github.com/leanprover-community/lean-sensit
 archived at https://github.com/leanprover-community/mathlib/blob/master/archive/sensitivity.lean
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPoolSensitivity.Huang
 
@@ -109,7 +109,7 @@ theorem succ_n_eq (p q : Q n.succ) : p = q ↔ p 0 = q 0 ∧ π p = π q := by
 
 /-- The adjacency relation defining the graph structure on `Q n`:
 `p.adjacent q` if there is an edge from `p` to `q` in `Q n`. -/
-def adjacent {n : ℕ} (p : Q n) : Set (Q n) := { q | ∃! i, p i ≠ q i }
+@[expose] def adjacent {n : ℕ} (p : Q n) : Set (Q n) := { q | ∃! i, p i ≠ q i }
 
 /-- In `Q 0`, no two vertices are adjacent. -/
 theorem not_adjacent_zero (p q : Q 0) : q ∉ p.adjacent := by rintro ⟨v, _⟩; apply finZeroElim v
@@ -196,7 +196,7 @@ noncomputable def e : ∀ {n}, Q n → V n
 
 @[simp]
 theorem e_zero_apply (x : Q 0) : e x = (1 : ℝ) :=
-  rfl
+  by rfl
 
 /-- The dual basis to `e`, defined inductively. -/
 noncomputable def ε : ∀ {n : ℕ}, Q n → V n →ₗ[ℝ] ℝ
@@ -276,7 +276,7 @@ The next two lemmas unbury them. -/
 
 @[simp]
 theorem f_zero : f 0 = 0 :=
-  rfl
+  by rfl
 
 theorem f_succ_apply (v : V n.succ) : f n.succ v = (f n v.1 + v.2, v.1 - f n v.2) := by
   cases v

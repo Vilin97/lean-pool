@@ -20,7 +20,7 @@ integer cutoff scales and sum actual cutoff monomials. All derivative bounds,
 convergence, smoothness, support, and prescribed derivatives at zero are proved.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,7 +36,7 @@ private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ := by
   exact_mod_cast (le_top : (n : ℕ∞) ≤ ⊤)
 
 /-- Monomial, given by `(s ^ j / (j.factorial : ℝ)) • v`. -/
-def monomial (j : ℕ) (v : E) (s : ℝ) : E := (s ^ j / (j.factorial : ℝ)) • v
+@[expose] def monomial (j : ℕ) (v : E) (s : ℝ) : E := (s ^ j / (j.factorial : ℝ)) • v
 
 theorem monomial_contDiff (j : ℕ) (v : E) : ContDiff ℝ ∞ (monomial j v) := by
   exact ((contDiff_id.pow j).div_const _).smul contDiff_const
@@ -88,7 +88,7 @@ theorem iteratedDeriv_monomial_zero (n j : ℕ) (v : E) :
           simp
 
 /-- The actual summand, with no smooth extension supplied as an input. -/
-def term (b : ℝ) (j : ℕ) (v : E) (s : ℝ) : E :=
+@[expose] def term (b : ℝ) (j : ℕ) (v : E) (s : ℝ) : E :=
   SmoothCutoffs.cutoff (b * s) • monomial j v s
 
 /-- Template, given by `SmoothCutoffs.cutoff s • monomial j v s`. -/

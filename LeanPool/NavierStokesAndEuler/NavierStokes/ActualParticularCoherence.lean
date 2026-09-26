@@ -32,7 +32,7 @@ exactly those paths, including their endpoints. No continuation of the raw
 tangent data or source outside the interval is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -582,7 +582,7 @@ source. Both terms are transported from their primitive data before the
 copy sum is taken.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1105,7 +1105,7 @@ motion, base action, and damping. Only the native slow point and finite
 clock interval enter its regularity; the transverse coordinate is free.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1354,7 +1354,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1371,7 +1371,7 @@ variable {B N0 : ℕ}
 abbrev Label := ActualParticularStageControls.Label
 
 /-- The unchanged current-state copy construction. -/
-noncomputable def copyData (x : CorrectionStep.CycleState (Label B N0))
+@[expose] noncomputable def copyData (x : CorrectionStep.CycleState (Label B N0))
     (l : Label B N0) (j : ℤ) : PeriodizedWaveBounds.CopyData WaveSpace Frequency :=
   (ActualParticularStageControls.parameters x l).copyData
     (ActualParticularStageControls.assembly x l).context

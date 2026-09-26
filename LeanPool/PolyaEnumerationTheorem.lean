@@ -26,7 +26,7 @@ Tags: combinatorics, group-theory, enumeration
 MSC: 05A15, 20B30
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

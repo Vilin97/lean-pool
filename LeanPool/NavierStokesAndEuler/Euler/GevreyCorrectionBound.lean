@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! The actual nonlinear correction forcing with explicit constants independent of the derivative
 cutoff. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,14 +32,14 @@ open MeasureTheory InnerProductSpace EulerLiftedGradientSpace EulerCylinderSobol
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The coefficient multiplying the actual order-zero forcing. -/
-def sourceConstant (B M : ℝ) : ℝ := 1+2*M*(3136*B+1)
+@[expose] def sourceConstant (B M : ℝ) : ℝ := 1+2*M*(3136*B+1)
 
 /-- The coefficient for actual base transport and the lower-order nonlinear pressure commutator. -/
-def transportConstant (B M : ℝ) : ℝ :=
+@[expose] def transportConstant (B M : ℝ) : ℝ :=
   5461*baseTransportConstant period + 2688*B*(8*M*(5460*lowerProductConstant period 3))
 
 /-- The coefficient for the actual external radius loss. -/
-def lossConstant (M : ℝ) : ℝ := (4+32*M)*productConstant period 3
+@[expose] def lossConstant (M : ℝ) : ℝ := (4+32*M)*productConstant period 3
 
 omit [Fact (0 < period)] in
 theorem sourceConstant_nonneg {B M : ℝ} (hB : 0 ≤ B) (hM : 0 ≤ M) : 0 ≤ sourceConstant B M := by

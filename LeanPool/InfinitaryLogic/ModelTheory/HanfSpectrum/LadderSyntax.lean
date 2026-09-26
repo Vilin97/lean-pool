@@ -36,7 +36,7 @@ equivalent to the six named clause predicates bundled in `IsLadderModel` — dow
 never unfold binders, `ciInf`/`ciSup`, or valuation bookkeeping again.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 
@@ -77,7 +77,7 @@ noncomputable instance (α : Ordinal.{0}) : OrderTop (Index α) where
 
 /-- The ladder language: `ℕ` constants, `Index α`-indexed unary level predicates, one binary
 relation. `Language.{0,0}` for every `α`. -/
-def ladderLang (α : Ordinal.{0}) : Language.{0, 0} :=
+@[expose] def ladderLang (α : Ordinal.{0}) : Language.{0, 0} :=
   ⟨fun n => match n with
     | 0 => ℕ
     | _ => Empty,
@@ -176,11 +176,11 @@ def constVal (n : ℕ) : M :=
   Structure.funMap (L := ladderLang α) (show (ladderLang α).Functions 0 from n) Fin.elim0
 
 /-- The level predicate `U_i`. -/
-def Level (i : Index α) (x : M) : Prop :=
+@[expose] def Level (i : Index α) (x : M) : Prop :=
   Structure.RelMap (L := ladderLang α) (show (ladderLang α).Relations 1 from i) (fun _ => x)
 
 /-- The edge relation `E`. -/
-def Edge (x y : M) : Prop :=
+@[expose] def Edge (x y : M) : Prop :=
   Structure.RelMap (L := ladderLang α) (show (ladderLang α).Relations 2 from ()) ![x, y]
 
 /-- **The six clauses of a ladder model** — the interface every semantic file works with. -/

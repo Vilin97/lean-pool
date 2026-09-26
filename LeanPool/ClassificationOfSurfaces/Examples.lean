@@ -20,7 +20,7 @@ The examples are concrete one-face boundary-word presentations in the shared `Su
 API. Their topology is supplied by the faithful polygonal quotient layer.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

@@ -13,7 +13,7 @@ public import Mathlib.Topology.UnitInterval
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.UnitInterval.AssocProd`.
 -/
 
-@[expose] public section
+public section
 
 
 open scoped unitInterval
@@ -21,7 +21,6 @@ open scoped unitInterval
 namespace unitInterval
 
 /-- Helper function for `choose_assoc` -/
-@[simps]
 noncomputable def assocProd (p q : I) : I where
   val := (σ p * q) / σ (p * q)
   property := by
@@ -36,6 +35,9 @@ noncomputable def assocProd (p q : I) : I where
     · simp only [not_or, not_lt] at h
       have h₁ : (p : ℝ) = 1 := le_antisymm p.property.2 h.1
       simp_all
+
+@[simp] lemma assocProd_coe (p q : I) :
+    (assocProd p q : ℝ) = (σ p : ℝ) * (q : ℝ) / (σ (p * q) : ℝ) := by rfl
 
 @[inherit_doc]
 scoped infixr:80 " ⍟ " => assocProd

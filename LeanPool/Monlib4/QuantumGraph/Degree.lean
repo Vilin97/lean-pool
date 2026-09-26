@@ -19,7 +19,7 @@ import LeanPool.Monlib4.Preq.RCLikeLe
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.Degree`.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace ComplexOrder
 

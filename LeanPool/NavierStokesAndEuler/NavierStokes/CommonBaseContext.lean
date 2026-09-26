@@ -18,7 +18,7 @@ Only the integer cover used in the graph operators changes. The forward
 real-lift map is the genuine integer covering matrix, with its actual norm.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -60,11 +60,11 @@ theorem IndexBounds.commonRatio {h : ℝ} {index : ℕ → ℕ} {K : ℕ}
 
 /-- Radial frequency, given by `ChartScales.Lambda ^ index n * ChartScales.Q n ^
 (ChartScales.radialExponent h / 2)`. -/
-noncomputable def radialFrequency (h : ℝ) (index : ℕ → ℕ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def radialFrequency (h : ℝ) (index : ℕ → ℕ) (n : ℕ) : ℝ :=
   ChartScales.Lambda ^ index n * ChartScales.Q n ^ (ChartScales.radialExponent h / 2)
 
 /-- Fast coefficient, given by `ChartScales.Tg ^ index n * ChartScales.Q n ^ (1 + h)`. -/
-noncomputable def fastCoefficient (h : ℝ) (index : ℕ → ℕ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def fastCoefficient (h : ℝ) (index : ℕ → ℕ) (n : ℕ) : ℝ :=
   ChartScales.Tg ^ index n * ChartScales.Q n ^ (1 + h)
 
 theorem radialFrequency_pos (h : ℝ) (index : ℕ → ℕ) (n : ℕ) : 0 < radialFrequency h index n :=
@@ -135,7 +135,7 @@ theorem fastCoefficient_inverse_bound {h : ℝ} {index : ℕ → ℕ} {K : ℕ}
 
 /-- Reconstruction, bundling `exponent`, `inner`, `outer`, `inner_lt_outer` and the required
 compatibility proofs. -/
-noncomputable def reconstruction (h : ℝ) (index : ℕ → ℕ) (a b : ℝ) (hab : a < b) :
+@[expose] noncomputable def reconstruction (h : ℝ) (index : ℕ → ℕ) (a b : ℝ) (hab : a < b) :
     CorrectionState.ReconstructionData where
   exponent := ChartScales.radialExponent h
   inner := a
@@ -145,7 +145,7 @@ noncomputable def reconstruction (h : ℝ) (index : ℕ → ℕ) (a b : ℝ) (ha
   radialDirection := TorusInverse.vector .radial
 
 /-- Operators, constructed using `CorrectionState.graphOperators`. -/
-noncomputable def operators (h : ℝ) (index : ℕ → ℕ) (a b : ℝ) (hab : a < b) :
+@[expose] noncomputable def operators (h : ℝ) (index : ℕ → ℕ) (a b : ℝ) (hab : a < b) :
     MeanIncrementBounds.Operators Point :=
   CorrectionState.graphOperators (reconstruction h index a b hab) (ChartScales.epsilon h)
     (fastCoefficient h index) ((0,1),0) ((1,0),0) (TorusInverse.vector .temporal)
@@ -501,7 +501,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
   (v : ModulatedProfileAssembly.Witness ld) (upper : ℝ) (B : ℕ)
 
 /-- Same actual base and stress; only the graph's integer index changes. -/
-noncomputable def context (index : ℕ → ℕ) : CorrectionState.Context Point :=
+@[expose] noncomputable def context (index : ℕ → ℕ) : CorrectionState.Context Point :=
   { BaseContextAssembly.nativeContext H v upper B with
     operators := operators F.data.h index (PrimaryTargetBounds.leftRadius W)
         (PrimaryTargetBounds.rightRadius W)

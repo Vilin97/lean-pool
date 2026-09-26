@@ -30,7 +30,7 @@ forces a vertex of degree `≤ 2`.  The open core is exactly the graphs with min
 degree `≥ 3` (possible only for `n ≥ 8`).
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

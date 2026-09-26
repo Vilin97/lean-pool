@@ -24,7 +24,7 @@ This file contains the paper's impossibility result for a single triple of
 integer-coefficient polynomials.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PythagoreanPolynomialParametrization
 

@@ -15,7 +15,7 @@ Newtonian potentials of compactly supported data.  Nothing measure-theoretic is
 involved: each statement is a triangle-inequality estimate on `Vec3`.
 -/
 
-@[expose] public section
+public section
 
 open CKN.Foundation.Parabolic
 noncomputable section

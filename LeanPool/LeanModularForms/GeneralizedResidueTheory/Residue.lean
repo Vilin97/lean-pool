@@ -35,7 +35,7 @@ generalized residue theorem for piecewise C¹ immersions.
 * `pv_integral_simple_pole` — PV of c/(z-s) = 2πi · winding · c
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval
@@ -43,14 +43,14 @@ open scoped Real Interval
 noncomputable section
 
 /-- Multi-point PV integrand: zero near any s in S, else f(γ(t))·γ'(t). -/
-def cauchyPrincipalValueIntegrandOn
+@[expose] def cauchyPrincipalValueIntegrandOn
     (S : Finset ℂ) (f : ℂ → ℂ) (γ : ℝ → ℂ)
     (ε : ℝ) (t : ℝ) : ℂ :=
   if ∃ s ∈ S, ‖γ t - s‖ ≤ ε then 0
   else f (γ t) * deriv γ t
 
 /-- The multi-point Cauchy principal value. -/
-def cauchyPrincipalValueOn
+@[expose] def cauchyPrincipalValueOn
     (S : Finset ℂ) (f : ℂ → ℂ) (γ : ℝ → ℂ)
     (a b : ℝ) : ℂ :=
   limUnder (𝓝[>] (0 : ℝ)) fun ε =>
@@ -58,7 +58,7 @@ def cauchyPrincipalValueOn
       cauchyPrincipalValueIntegrandOn S f γ ε t
 
 /-- Existence of the multi-point PV. -/
-def CauchyPrincipalValueExistsOn
+@[expose] def CauchyPrincipalValueExistsOn
     (S : Finset ℂ) (f : ℂ → ℂ) (γ : ℝ → ℂ)
     (a b : ℝ) : Prop :=
   ∃ L : ℂ, Tendsto (fun ε =>
@@ -68,7 +68,7 @@ def CauchyPrincipalValueExistsOn
 
 /-- Residue of f at z₀ via the limit formula
 `lim_{z → z₀} (z - z₀) · f(z)`. -/
-def residueSimplePole (f : ℂ → ℂ) (z₀ : ℂ) : ℂ :=
+@[expose] def residueSimplePole (f : ℂ → ℂ) (z₀ : ℂ) : ℂ :=
   limUnder (𝓝[≠] z₀) fun z => (z - z₀) * f z
 
 /-- Simple pole decomposition: f(z) = c/(z-z₀) + g(z) near z₀

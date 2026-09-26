@@ -23,7 +23,7 @@ norm of the gradient.  These steps contribute respectively
 `(4π/3)^(1/3) r` and `√3` to the constant.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

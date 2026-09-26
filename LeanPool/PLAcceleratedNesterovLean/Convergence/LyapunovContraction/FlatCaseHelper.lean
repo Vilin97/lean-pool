@@ -14,7 +14,7 @@ Provides norm expansions, Pythagorean decompositions, inner product
 decompositions, and cross-term vanishing for orthogonal projectors.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -23,7 +23,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # BasisLocalization -/
 
-@[expose] public section
+public section
 
 
 open Complex MeasureTheory Real Finset

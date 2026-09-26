@@ -14,4 +14,4 @@ public import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Basic
 Import-only index for Lie algebra support modules used by the Virasoro Project.
 -/
 
-@[expose] public section
+public section

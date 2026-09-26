@@ -17,7 +17,7 @@ import LeanPool.NavierStokesAndEuler.Euler.UnshiftedProducts
 
 /-! Actual coefficient and pressure operators on finite weighted Sobolev sums. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,11 +35,11 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The truncated Gevrey sum of genuine fixed-order Sobolev blocks. -/
-def weightedNorm {s : ℕ} (q N : ℕ) (ρ : ℝ) (u : SobolevSpace period s) : ℝ :=
+@[expose] def weightedNorm {s : ℕ} (q N : ℕ) (ρ : ℝ) (u : SobolevSpace period s) : ℝ :=
   ∑ n ∈ Finset.range (N+1), weight ρ n * blockNorm period (toJet period u) q n
 
 /-- Weighted coefficient derivative bounds in the same fixed base norm. -/
-def weightedCoefficient {s : ℕ} {A : SmoothCoefficient period}
+@[expose] def weightedCoefficient {s : ℕ} {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A) (q N : ℕ) (ρ : ℝ)
         : ℝ :=
   ∑ n ∈ Finset.range (N+1), weight ρ n * coefficientBlock period K q n

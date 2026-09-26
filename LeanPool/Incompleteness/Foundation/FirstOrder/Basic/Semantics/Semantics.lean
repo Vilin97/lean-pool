@@ -17,7 +17,7 @@ definition.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 
@@ -100,7 +100,7 @@ variable
   {ε : ξ → M} {ε₁ : μ₁ → M} {ε₂ : μ₂ → M}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def val (s : Structure L M) (e : Fin n → M) (ε : ξ → M) : Semiterm L ξ n → M
+@[expose] def val (s : Structure L M) (e : Fin n → M) (ε : ξ → M) : Semiterm L ξ n → M
   | #x       => e x
   | &x       => ε x
   | func f v => s.func f (fun i => (v i).val s e ε)

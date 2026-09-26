@@ -21,7 +21,7 @@ The state here uses the same active primary labels, physical base error,
 common gauge, and actual temporal/rank constructors as initialization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.ActualInitialCoherence
@@ -53,12 +53,12 @@ noncomputable def baseError (B : ℕ) : Oscillation Point :=
           CorrectionInitialization.ActualPrimary.upper B
 
 /-- Seed, constructed using `CorrectionInitialization.bandSeed`. -/
-noncomputable def seed (B N0 : ℕ) : State Point :=
+@[expose] noncomputable def seed (B N0 : ℕ) : State Point :=
   CorrectionInitialization.bandSeed (CorrectionInitialization.ActualPrimary.activeLabels
       CorrectionInitialization.ActualPrimary.standardRegion B N0) (pieces B N0) (baseError B)
 
 /-- Primary, constructed using `CorrectionInitialization.GaugeInitialization.primaryBands`. -/
-noncomputable def primary (B N0 : ℕ) : State Point :=
+@[expose] noncomputable def primary (B N0 : ℕ) : State Point :=
   CorrectionInitialization.GaugeInitialization.primaryBands
       CorrectionInitialization.ActualPrimary.commonGauge
           (CorrectionInitialization.ActualPrimary.commonContext B)
@@ -653,7 +653,7 @@ noncomputable def angularMode (l : Label B N0 × Fin 2) (_n : ℕ) : ℤ :=
   PrimaryGeometryAssembly.angularMode certificate modulation (choice B N0).prepared l.2 l.1
 
 /-- Primary block, given by `(pieces B N0 l).harmonicBlock (phase l) (angularMode l)`. -/
-noncomputable def primaryBlock (l : Label B N0 × Fin 2) : HarmonicBlock Point :=
+@[expose] noncomputable def primaryBlock (l : Label B N0 × Fin 2) : HarmonicBlock Point :=
   (pieces B N0 l).harmonicBlock (phase l) (angularMode l)
 
 /-- Gaussian block, given by `(pieces B N0 l).excludedBlock (phase l) (angularMode l)`. -/

@@ -26,7 +26,7 @@ backwards, exactly as in Gallier--Xu's derivation. The broader
 ordinary signed edge relabeling.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -37,14 +37,14 @@ open SurfaceCellComplex
 namespace Crosscap
 
 /-- The source spelling with two equally oriented occurrences of `a`. -/
-@[reducible]
+@[expose, reducible]
 def source {n : ℕ} (a : Fin n)
     (X Y : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=
   Dyck.oneFace (([.pos a] ++ X) ++ ([.pos a] ++ Y))
 
 /-- A cyclic spelling of the target cross-cap word `a a Y⁻¹ X`. -/
-@[reducible]
+@[expose, reducible]
 def target {n : ℕ} (a : Fin n)
     (X Y : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=

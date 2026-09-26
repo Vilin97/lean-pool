@@ -66,7 +66,7 @@ Heisenberg algebra, Fock space
 
 -/
 
-@[expose] public section
+public section
 
 
 

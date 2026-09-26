@@ -20,7 +20,7 @@ statement is the form in which a comparison against an explicit majorant
 stated at the carrier radius is transported down to the margin scale.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal

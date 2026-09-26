@@ -34,7 +34,7 @@ Part of the formalization of M. Stoll, *Galois groups over ℚ of some iterated 
 Arch. Math. **59** (1992), 239-244; see `QuadraticIterates.ArchMath1992`.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped ArithmeticFunction.Moebius

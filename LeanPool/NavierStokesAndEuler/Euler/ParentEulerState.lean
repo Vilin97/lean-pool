@@ -18,7 +18,7 @@ section
 /-! Spatial smoothness of the actual physical particle inverse follows
 from its inverse identities and the genuine determinant-one Jacobian. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -55,7 +55,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

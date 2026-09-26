@@ -14,7 +14,7 @@ import Mathlib.Analysis.Calculus.Deriv.Prod
 /-! Time regularity of the full genuine covering derivative, reconstructed from its four directions.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

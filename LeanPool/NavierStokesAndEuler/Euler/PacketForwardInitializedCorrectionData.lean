@@ -28,7 +28,7 @@ section
 /-! Actual finite velocity, normal drift and residual estimates for the
 zero-history recursion initialized by the literal compact periodic wave. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -113,7 +113,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -144,7 +144,7 @@ def forwardInitializedNormalizedResidualField (Cagree : SourceCoefficientAgreeme
 
 /-- Forward initialized correction data, constructed using
 `EulerPacketCorrectionCoefficients.correctionDataOfFields`. -/
-def forwardInitializedCorrectionData (Cagree : SourceCoefficientAgreement M D)
+@[expose] def forwardInitializedCorrectionData (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k) :
     EulerAllOrderCorrectionData.Data period D.T :=
   EulerPacketCorrectionCoefficients.correctionDataOfFields D period k⁻¹

@@ -66,7 +66,7 @@ Declarations:
   with `realizeHomeo_toFun` / `realizeHomeo_invFun` / `realizeHomeo_eqOn`.
 -/
 
-@[expose] public section
+public section
 
 open Set unitInterval
 open scoped Graph

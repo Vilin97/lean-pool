@@ -27,7 +27,7 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.6,
   `finite_setOf_ord_neg/pos`, `eventually_ord_eq_zero`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology
@@ -201,7 +201,7 @@ noncomputable def divisorOn [T1Space X] [IsManifold 𝓘(ℂ) ω X] (φ : MeroGe
       rw [hempty]; exact Set.finite_empty
 
 @[simp] theorem divisorOn_apply [T1Space X] [IsManifold 𝓘(ℂ) ω X] (φ : MeroGermOn X U) (x : X) :
-    φ.divisorOn x = (φ.ord x).untop₀ := rfl
+    φ.divisorOn x = (φ.ord x).untop₀ := by rfl
 
 end MeroGermOn
 
@@ -209,7 +209,7 @@ end MeroGermOn
 noncomputable abbrev divisor [T1Space X] [IsManifold 𝓘(ℂ) ω X] (φ : ℳ X) : Divisor X := φ.divisorOn
 
 @[simp] theorem divisor_apply [T1Space X] [IsManifold 𝓘(ℂ) ω X] (φ : ℳ X) (x : X) :
-    divisor φ x = (φ.ord x).untop₀ := rfl
+    divisor φ x = (φ.ord x).untop₀ := by rfl
 
 @[simp] theorem divisor_zero [T1Space X] [IsManifold 𝓘(ℂ) ω X] :
     divisor (0 : ℳ X) = 0 := by

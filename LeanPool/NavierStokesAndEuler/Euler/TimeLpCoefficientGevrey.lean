@@ -20,7 +20,7 @@ path. These are bounds on genuine parameter derivatives of that operator,
 including the H¹ moving-frame transport used in the variational inverse.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

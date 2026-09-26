@@ -38,7 +38,7 @@ solution to coincide with `p₁` or `p₂`.
   independent centers in `EuclideanSpace ℝ (Fin 3)`.
 -/
 
-@[expose] public section
+public section
 
 namespace DistanceGeometry
 

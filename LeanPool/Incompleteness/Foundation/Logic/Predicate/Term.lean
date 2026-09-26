@@ -22,7 +22,7 @@ variables of `ξ`.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 
@@ -102,7 +102,7 @@ instance : DecidableEq (Semiterm L ξ n) := hasDecEq
 end «lp_section_2»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def complexity : Semiterm L ξ n → ℕ
+@[expose] def complexity : Semiterm L ξ n → ℕ
   | #_       => 0
   | &_       => 0
   | func _ v => Finset.sup Finset.univ (fun i ↦ complexity (v i)) + 1
@@ -124,7 +124,7 @@ lemma complexity_func {k} (f : L.Func k) (v : Fin k → Semiterm L ξ n) :
 abbrev «func!» (k) (f : L.Func k) (v : Fin k → Semiterm L ξ n) := func f v
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def bv : Semiterm L ξ n → Finset (Fin n)
+@[expose] def bv : Semiterm L ξ n → Finset (Fin n)
   | #x       => {x}
   | &_       => ∅
   | func _ v => .biUnion .univ fun i ↦ bv (v i)
@@ -140,7 +140,7 @@ lemma bv_func {k} (f : L.Func k) (v : Fin k → Semiterm L ξ n) :
 @[simp] lemma bv_constant (f : L.Func 0) (v : Fin 0 → Semiterm L ξ n) : (func f v).bv = ∅ := rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Positive (t : Semiterm L ξ (n + 1)) : Prop := ∀ x ∈ t.bv, 0 < x
+@[expose] def Positive (t : Semiterm L ξ (n + 1)) : Prop := ∀ x ∈ t.bv, 0 < x
 
 namespace Positive
 
@@ -173,7 +173,7 @@ section «lp_section_3»
 variable [DecidableEq ξ]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def freeVariables : Semiterm L ξ n → Finset ξ
+@[expose] def freeVariables : Semiterm L ξ n → Finset ξ
   | #_       => ∅
   | &x       => {x}
   | func _ v => .biUnion .univ fun i ↦ freeVariables (v i)
@@ -209,7 +209,7 @@ section «lp_section_4»
 variable (Φ : L₁ →ᵥ L₂)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def lMap (Φ : L₁ →ᵥ L₂) : Semiterm L₁ ξ n → Semiterm L₂ ξ n
+@[expose] def lMap (Φ : L₁ →ᵥ L₂) : Semiterm L₁ ξ n → Semiterm L₂ ξ n
   | #x       => #x
   | &x       => &x
   | func f v => func (Φ.func f) (fun i => lMap Φ (v i))

@@ -37,7 +37,7 @@ edge counts, exactly what the campaign's counting machinery produces.
   quotient data of the degree partition `{3}/{4}/{≥5}` in ledger terms.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

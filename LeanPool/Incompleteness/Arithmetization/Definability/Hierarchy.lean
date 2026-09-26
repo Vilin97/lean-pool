@@ -24,7 +24,7 @@ This file defines the $\Sigma_n / \Pi_n / \Delta_n$ formulas of arithmetic of fi
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 namespace FirstOrder
@@ -234,7 +234,7 @@ lemma _root_.LO.FirstOrder.Arith.HierarchySymbol.Semiformula.ProvablyProperOn.pr
 end «lp_section_1»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def rew (ω : Rew ℒₒᵣ ξ₁ n₁ ξ₂ n₂) : {Γ :
+@[expose] def rew (ω : Rew ℒₒᵣ ξ₁ n₁ ξ₂ n₂) : {Γ :
     HierarchySymbol} → Γ.Semiformula ξ₁ n₁ → Γ.Semiformula ξ₂ n₂
   | Sg-[_], mkSigma φ hp => mkSigma (ω ▹ φ) (by simpa using hp)
   | Pg-[_], mkPi φ hp    => mkPi (ω ▹ φ) (by simpa using hp)
@@ -329,6 +329,7 @@ def ofZero {Γ'} (φ : Γ'-[0].Semiformula ξ k) : (Γ : HierarchySymbol) → Γ
   | Dlt-[_] => mkDelta (mkSigma φ.val φ.sigmaZero.of_zero) (mkPi φ.val φ.sigmaZero.of_zero)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def ofDeltaOne (φ : Dlt1.Semiformula ξ k) : (Γ : SigmaPiDelta) → (m : ℕ) → Γ-[m+1].Semiformula ξ k
   | Sg, m => mkSigma φ.sigma.val (φ.sigma.sigma_prop.mono (by simp))
   | Pg, m => mkPi φ.pi.val (φ.pi.pi_prop.mono (by simp))
@@ -572,7 +573,7 @@ lemma _root_.LO.FirstOrder.Arith.HierarchySymbol.Semiformula.ProperWithParamOn.b
   intro e; simp [Semiformula.bex, hp.iff]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def graphDelta (φ : Sg-[m].Semiformula ξ (k + 1)) : Dlt-[m].Semiformula ξ (k + 1) :=
+@[expose] def graphDelta (φ : Sg-[m].Semiformula ξ (k + 1)) : Dlt-[m].Semiformula ξ (k + 1) :=
   match m with
   | 0     => φ.ofZero _
   | m + 1 => mkDelta φ (mkPi “x. ∀ y, !φ.val y ⋯ → y = x” (by simp))

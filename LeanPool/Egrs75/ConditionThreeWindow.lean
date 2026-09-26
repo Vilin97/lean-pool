@@ -54,7 +54,7 @@ Reuses (does not reprove) the imported base-`q` digit machinery.  Formalizes the
 theorem EGRS75 (1975).  Three primes is Erdős #376 (OPEN) — not attempted.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.P4
 
@@ -154,7 +154,7 @@ of range they read `0 < B` for `q ≥ 3`).  We expose it via `Nat.find`, supplyi
 existence proof. -/
 
 /-- The strictly-good base-`q` digit predicate at index `i`: `n / q^i % q < (q-1)/2`. -/
-def StrictGoodAt (q i n : ℕ) : Prop := n / q ^ i % q < (q - 1) / 2
+@[expose] def StrictGoodAt (q i n : ℕ) : Prop := n / q ^ i % q < (q - 1) / 2
 
 instance (q i n : ℕ) : Decidable (StrictGoodAt q i n) := by
   unfold StrictGoodAt; infer_instance
@@ -180,6 +180,12 @@ theorem exists_strictGood_above {q n : ℕ} (hq : 3 ≤ q) (_hbad : 0 < badCount
 defined for `q ≥ 3` and a positive bad count.  Carries the existence witness. -/
 noncomputable def leastGoodAbove {q n : ℕ} (hq : 3 ≤ q) (hbad : 0 < badCountQ q n) : ℕ :=
   Nat.find (exists_strictGood_above hq hbad)
+
+/-- Any strictly good index above the top bad index bounds the least such index. -/
+theorem leastGoodAbove_le {q n k : ℕ} (hq : 3 ≤ q) (hbad : 0 < badCountQ q n)
+    (h_top : topBadIndex q n < k) (h_good : StrictGoodAt q k n) :
+    leastGoodAbove hq hbad ≤ k :=
+  Nat.find_min' _ ⟨h_top, h_good⟩
 
 /-- `leastGoodAbove` lies strictly above the top bad index (KERNEL-CLEAN). -/
 theorem topBad_lt_leastGoodAbove {q n : ℕ} (hq : 3 ≤ q) (hbad : 0 < badCountQ q n) :

@@ -32,7 +32,7 @@ agrees with the naive restriction and eigenvectors lift back to eigenvectors of 
 - `CompactSelfAdjoint.invariant_orthogonalComplement_eigenspace_of_isSelfAdjoint`
 -/
 
-@[expose] public section
+public section
 
 namespace CompactSelfAdjoint
 

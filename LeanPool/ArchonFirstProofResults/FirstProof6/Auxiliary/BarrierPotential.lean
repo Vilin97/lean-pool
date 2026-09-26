@@ -31,7 +31,7 @@ unitary conjugation, and the Neumann-Loewner trace bound.
 - `Problem6.eigenvalue_le_trace_of_posSemidef`: eigenvalue-trace bound
 -/
 
-@[expose] public section
+public section
 
 open Finset Matrix BigOperators
 
@@ -43,7 +43,7 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 
 /-- The upper barrier potential Φ_u(M) = tr((uI - M)⁻¹), defined for symmetric M
     with eigenvalues < u. -/
-def barrierPotential (u : ℝ) (M : Matrix V V ℝ) : ℝ :=
+@[expose] def barrierPotential (u : ℝ) (M : Matrix V V ℝ) : ℝ :=
   (u • (1 : Matrix V V ℝ) - M)⁻¹.trace
 
 /-- Real form of the spectral theorem: a real Hermitian matrix equals

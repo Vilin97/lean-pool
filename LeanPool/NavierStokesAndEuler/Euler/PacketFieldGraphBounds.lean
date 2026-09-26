@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketFieldSobolev
 /-! Pointwise physical graph bounds for the actual packet fields. The
 estimates use the constructed Sobolev tower and its canonical representative. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -35,7 +35,7 @@ superhomogeneous in `|C_CZ| + 1`, so both are absorbed by requiring
 centre of the given cell is arbitrary and its radius is arbitrary.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal BigOperators

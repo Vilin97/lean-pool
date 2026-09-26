@@ -15,7 +15,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.Monsky.MonskyEven`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Monsky
 

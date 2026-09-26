@@ -19,16 +19,16 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 namespace NumberField.Odlyzko
 
 /-- An archimedean integrand used in the Odlyzko-bound argument. -/
-noncomputable def archimedeanIntegrand (y x : ℝ) : ℝ :=
+@[expose] noncomputable def archimedeanIntegrand (y x : ℝ) : ℝ :=
   (1 - Tartar.testFunction (y * x)) / Real.sinh x
 
 /-- An archimedean integral used in the Odlyzko-bound argument. -/
-noncomputable def archimedeanIntegral (y : ℝ) : ℝ :=
+@[expose] noncomputable def archimedeanIntegral (y : ℝ) : ℝ :=
   ∫ x in Set.Ioi (0 : ℝ), archimedeanIntegrand y x
 
 theorem archimedeanIntegrand_le_one_div_sinh {y x : ℝ} (hx : 0 < x) :

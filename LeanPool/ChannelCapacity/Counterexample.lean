@@ -14,7 +14,7 @@ public import LeanPool.ChannelCapacity.NonDegeneracy
 A finite counterexample showing that row separation does not imply injective prior pushforward.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory

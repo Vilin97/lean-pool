@@ -15,7 +15,7 @@ public import Mathlib.Analysis.Calculus.FDeriv.Measurable
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped ENNReal NNReal Topology
@@ -329,10 +329,12 @@ private lemma pressure_potential_pairing_of_compact
       ring
 
 /-- The Newtonian potential with the paper's sign convention `N = -newtonianKernel`. -/
+@[expose]
 def pressureNewtonianPotential (g : Vec3 → ℝ) (x : Vec3) : ℝ :=
   ∫ y, (-newtonianKernel (x-y)) * g y
 
 /-- The first derivative potential, written as `-∂ⱼN * g = ∂ⱼ(newtonianKernel) * g`. -/
+@[expose]
 def pressureNewtonianDerivativePotential (i : Fin 3) (g : Vec3 → ℝ) (x : Vec3) : ℝ :=
   ∫ y, CKN.spatialDeriv newtonianKernel i (x-y) * g y
 

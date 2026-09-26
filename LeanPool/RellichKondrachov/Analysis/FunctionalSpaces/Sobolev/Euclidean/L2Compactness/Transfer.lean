@@ -23,7 +23,7 @@ This file transfers the Arzelà–Ascoli compactness of the `BoundedContinuousFu
 Tracking: Beads `lean-103.5.2.26.5.3.2.2.1.2`.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis

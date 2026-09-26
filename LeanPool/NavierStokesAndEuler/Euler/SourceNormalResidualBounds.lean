@@ -29,7 +29,7 @@ section
 
 /-! Actual normal pressure residuals preserve the fixed-Sobolev mixed-word radius. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -116,7 +116,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -139,7 +139,7 @@ def sourceResidual : C(K,CylinderL2 P ℝ) :=
   normalResidualPath P (normalFunctional m cm hcm hm) M.field f v
 
 /-- Source pressure, given by `pathPrimitive P (sourceResidual P M m cm hcm hm f v)`. -/
-def sourcePressure : C(K,CylinderL2 P ℝ) :=
+@[expose] def sourcePressure : C(K,CylinderL2 P ℝ) :=
   pathPrimitive P (sourceResidual P M m cm hcm hm f v)
 
 theorem sourceResidual_contDiff
@@ -156,7 +156,7 @@ theorem sourcePressure_contDiff
   pathPrimitive_orbit_contDiff P _ (sourceResidual_contDiff P M m cm hcm hm f v hf hv)
 
 /-- An explicit fixed-order coefficient polynomial for the pressure source. -/
-def pressureCost (ι : Type*) [Fintype ι] (q : ℕ) (Ri Cm CM Df Dv : ℝ) : ℝ :=
+@[expose] def pressureCost (ι : Type*) [Fintype ι] (q : ℕ) (Ri Cm CM Df Dv : ℝ) : ℝ :=
   3*sobolevCoefficientAmplitude ι q (4*Ri) (3*Ri*Cm) *
     (Df+6*sobolevCoefficientAmplitude ι q (4*Ri) CM*Dv)
 

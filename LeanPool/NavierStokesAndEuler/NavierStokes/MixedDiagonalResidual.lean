@@ -32,7 +32,7 @@ logarithmic factors are combined before applying the proved cutoff estimates.
 The initial stage is retained explicitly in every resulting full sum.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -398,7 +398,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

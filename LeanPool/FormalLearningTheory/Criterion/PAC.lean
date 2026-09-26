@@ -43,7 +43,7 @@ function xs ↦ D{x | L(S(xs)) x ≠ c x} to be measurable  -  a deep technical
 condition that specific proofs (Hoeffding, Sauer-Shelah) will establish.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -53,6 +53,7 @@ universe u v
     Sample space: Fin m → X with i.i.d. product measure D^m.
     Labels: derived deterministically from target concept c (realizable case).
     Error: D-probability of disagreement between learner output and c. -/
+@[expose]
 def PACLearnable (X : Type u) [MeasurableSpace X]
     (C : ConceptClass X Bool) : Prop :=
   ∃ (L : BatchLearner X Bool) (mf : ℝ → ℝ → ℕ),

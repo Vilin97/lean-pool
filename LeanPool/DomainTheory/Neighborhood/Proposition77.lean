@@ -43,7 +43,7 @@ This file builds the construction in milestones:
   `surj` (every `𝒟^§`-neighbourhood is some `V k`), nonemptiness. All choice-free.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -386,7 +386,7 @@ def rtbl (step : ℕ → ℕ) : ℕ → ℕ
 /-- The course-of-values value at `w`: `g w = step (pair w (table of g below w))`. -/
 def gOf (step : ℕ → ℕ) (w : ℕ) : ℕ := step (Nat.pair w (rtbl step w))
 
-theorem gOf_def (step : ℕ → ℕ) (w : ℕ) : gOf step w = step (Nat.pair w (rtbl step w)) := rfl
+theorem gOf_def (step : ℕ → ℕ) (w : ℕ) : gOf step w = step (Nat.pair w (rtbl step w)) := by rfl
 
 /-- The reverse list of memo values `[g(w-1), …, g 0]`. -/
 def gList (step : ℕ → ℕ) : ℕ → List ℕ

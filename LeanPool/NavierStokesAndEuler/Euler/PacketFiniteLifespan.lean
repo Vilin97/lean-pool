@@ -28,7 +28,7 @@ section
 positive-time Euler solution for its limiting datum. Only the already
 proved common packet interval and actual stability are used. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -113,7 +113,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

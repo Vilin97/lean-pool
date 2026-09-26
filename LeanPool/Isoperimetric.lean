@@ -23,7 +23,7 @@ Tags: measure-theory, geometric-inequalities
 MSC: 28A75, 52A40, 49Q20
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

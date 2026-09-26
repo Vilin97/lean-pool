@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.GevreyLowNorms
 
 /-! Actual metric Gevrey energies, fixed norm conversion, and nonlinear scalar growth bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,17 +28,17 @@ open MeasureTheory InnerProductSpace EulerLiftedGradientSpace EulerCylinderSobol
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The actual fixed-base metric Gevrey energy of one complete Sobolev field. -/
-def energyNorm {s : ℕ} (N : ℕ) (hN : N + 6 ≤ s) (ρ : ℝ)
+@[expose] def energyNorm {s : ℕ} (N : ℕ) (hN : N + 6 ≤ s) (ρ : ℝ)
     (K : LiftL2 period →L[ℝ] LiftL2 period) (u : SobolevSpace period s) : ℝ :=
   weightedMetricSum ρ (fun I : ExternalWord N => I.1.val) K (energyValues period 6 N hN u)
 
 /-- The actual metric radius-loss quantity at the same cutoff. -/
-def energyLoss {s : ℕ} (N : ℕ) (hN : N + 6 ≤ s) (ρ : ℝ)
+@[expose] def energyLoss {s : ℕ} (N : ℕ) (hN : N + 6 ≤ s) (ρ : ℝ)
     (K : LiftL2 period →L[ℝ] LiftL2 period) (u : SobolevSpace period s) : ℝ :=
   weightedMetricLoss ρ (fun I : ExternalWord N => I.1.val) K (energyValues period 6 N hN u)
 
 /-- A fixed conversion factor, with no external derivative cutoff in its definition. -/
-def metricAmplification (c : ℝ) : ℝ := 1+Real.sqrt 5461/c
+@[expose] def metricAmplification (c : ℝ) : ℝ := 1+Real.sqrt 5461/c
 
 theorem energyNorm_nonneg {s : ℕ} (N : ℕ) (hN : N + 6 ≤ s) (ρ : ℝ) (hρ : 0 < ρ)
     (K : LiftL2 period →L[ℝ] LiftL2 period) (u : SobolevSpace period s) : 0 ≤ energyNorm period N

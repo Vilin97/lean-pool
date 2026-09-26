@@ -19,7 +19,7 @@ section
 /-! The actual scalar pressure of the corrected source packet has the
 constructed continuous physical pressure force, at every time. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -169,7 +169,7 @@ section
 normalized packet uses the parent's genuine determinant-one Jacobian,
 and the final physical rescaling preserves divergence exactly. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -300,7 +300,7 @@ section
 velocity, and its acceleration is minus the actual constructed pressure
 force. Both matches are derived from the existing parent law and Euler. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -374,7 +374,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

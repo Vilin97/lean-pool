@@ -23,7 +23,7 @@ least `L² / (L + ε)² ≥ (1 + ε)⁻² > 1 - 2ε` (`lt_maximalFunction_smeare
 Aldaz (2000, Lemma 1.1), adapted to weighted atoms.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -36,7 +36,7 @@ namespace LeanPool.CenteredMaximal.Lattice
 def atom (p : ℤ × ℤ) : Fin 2 → ℝ := ![p.1 * hgap, p.2 * vgap]
 
 /-- The atoms kept at scale `N`: columns `-2N-2, …, 2N+2` and rows `-N-1, …, N+1`. -/
-def atomBox (N : ℕ) : Finset (ℤ × ℤ) :=
+@[expose] def atomBox (N : ℕ) : Finset (ℤ × ℤ) :=
   Icc (-2 * (N : ℤ) - 2) (2 * N + 2) ×ˢ Icc (-(N : ℤ) - 1) (N + 1)
 
 /-- The truncated lattice with each atom smeared over the closed square of side `ε`. -/

@@ -15,7 +15,7 @@ The smooth decaying shear satisfies every clause of the suitable weak-solution
 definition on all space and the time interval (0,1), with zero pressure and force.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open CKN.Foundation.Parabolic

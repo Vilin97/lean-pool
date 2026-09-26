@@ -31,7 +31,7 @@ map satisfying `f(1x)=true`, `f(01x)=false`, `f(00x)=f(x)` — is an
 equational-uniqueness statement
 left to a later pass.) Constructive (`#print axioms ⊆ {propext, Quot.sound}`). -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise216
 

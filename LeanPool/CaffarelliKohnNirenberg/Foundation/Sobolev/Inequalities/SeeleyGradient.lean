@@ -18,7 +18,7 @@ The chain rule and the operator-norm estimates from `SeeleyBounds` are
 combined with the pullback estimates from `SeeleyEnergy`.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal

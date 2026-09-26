@@ -21,7 +21,7 @@ nonincident edges and all other vertices.  Local finiteness makes the two obstac
 closed, which is the only compactness input needed for this pointwise construction.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -444,11 +444,11 @@ theorem vertexImage_not_mem_nonincidentEdgeImage (v : K.Vertex) :
       ⟨K.vertexPoint v, K.vertexPoint_mem_support v⟩)
 
 /-- Singleton chart images of the global vertices. -/
-def vertexImageCarrier (v : K.Vertex) : Set Plane :=
+@[expose] def vertexImageCarrier (v : K.Vertex) : Set Plane :=
   {G.vertexImage v}
 
 /-- A singleton vertex image in the open chart range. -/
-def vertexImageCarrierInRange (v : K.Vertex) : Set G.region :=
+@[expose] def vertexImageCarrierInRange (v : K.Vertex) : Set G.region :=
   {q | q.1 ∈ G.vertexImageCarrier v}
 
 /-- Local finiteness of vertex images transported to the chart plane.  It follows from edge

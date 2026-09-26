@@ -15,7 +15,7 @@ import Mathlib.Topology.UniformSpace.Ascoli
 # LeanPool.RiemannMappingTheorem.Montel
 -/
 
-@[expose] public section
+public section
 
 open Set Function Metric UniformConvergence Complex
 

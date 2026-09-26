@@ -15,7 +15,7 @@ import Mathlib.Data.Nat.Choose.Cast
 
 /-! The actual pressure inverse in unshifted Gevrey-weighted fixed Sobolev blocks. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

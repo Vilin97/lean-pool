@@ -30,7 +30,7 @@ another. The registered `bell-state-prep` target is `bell_state_prep` here.
 - `LeanPool.LeanQuantumAlg.norm_bell` — the Bell state is normalized.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -40,7 +40,7 @@ noncomputable section
 
 /-- Raw Bell-state vector `( |00⟩ + |11⟩ ) / √2` [dW19, qcnotes.tex:622].
 In the big-endian basis labelling, `|00⟩ = ket 0` and `|11⟩ = ket 3`. -/
-def bellVec : StateVector 2 :=
+@[expose] def bellVec : StateVector 2 :=
   invSqrt2 • ((ket 0 : PureState 2) + (ket 3 : PureState 2) : StateVector 2)
 
 /-- The raw Bell-state vector has unit norm. -/
@@ -61,7 +61,7 @@ theorem norm_bellVec : ‖bellVec‖ = 1 := by
   rw [h, inv_mul_cancel₀ (Real.sqrt_ne_zero'.mpr (by norm_num))]
 
 /-- The Bell state (EPR-pair) as a normalized pure state. -/
-def bell : PureState 2 := ofVec bellVec norm_bellVec
+@[expose] def bell : PureState 2 := ofVec bellVec norm_bellVec
 
 /-- The Bell state in per-qubit tensor form: `(|0⟩⊗|0⟩ + |1⟩⊗|1⟩)/√2`. -/
 theorem bell_eq_tensor :

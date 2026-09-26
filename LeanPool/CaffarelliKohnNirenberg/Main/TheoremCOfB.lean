@@ -28,7 +28,7 @@ suitable-solution class; the class-equivalence bridge supplies this version
 when assembling Theorem C.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

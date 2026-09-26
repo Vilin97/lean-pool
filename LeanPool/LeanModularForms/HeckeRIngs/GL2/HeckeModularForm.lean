@@ -26,7 +26,7 @@ proving holomorphicity, linearity, and boundedness at cusps.
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, §3.4
 -/
 
-@[expose] public section
+public section
 
 open Matrix Matrix.SpecialLinearGroup Subgroup.Commensurable Pointwise
 open HeckeRing DoubleCoset HeckeRing.GLn HeckeRing.GL2

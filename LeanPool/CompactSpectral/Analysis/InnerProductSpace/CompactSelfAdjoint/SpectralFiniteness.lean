@@ -32,7 +32,7 @@ These are standard ingredients for spectral-iteration proofs and compact-resolve
 - `CompactSelfAdjoint.tendsto_norm_of_injective_hasEigenvalue_of_isCompactOperator_of_isSelfAdjoint`
 -/
 
-@[expose] public section
+public section
 
 namespace CompactSelfAdjoint
 

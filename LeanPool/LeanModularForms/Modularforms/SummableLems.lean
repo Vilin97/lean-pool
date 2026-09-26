@@ -24,7 +24,7 @@ import Mathlib.Topology.Separation.CompletelyRegular
 /-! # SummableLems -/
 
 
-@[expose] public section
+public section
 
 
 open EisensteinSeries UpperHalfPlane TopologicalSpace Set

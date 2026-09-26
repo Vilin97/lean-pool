@@ -22,7 +22,7 @@ quotient by an exponentially small factor. The statements below keep those
 obligations separate.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,16 +34,16 @@ open NavierStokes.FlatCutoff
 namespace NavierStokes.FlatPrimitive
 
 /-- Integrand, given by `(edge c x / x ^ j) * b x`. -/
-def integrand (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x : ℝ) : ℝ :=
+@[expose] def integrand (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x : ℝ) : ℝ :=
   (edge c x / x ^ j) * b x
 
 /-- Primitive, given by `∫ u in (0 : ℝ)..x, integrand c j b u`. -/
-def primitive (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x : ℝ) : ℝ :=
+@[expose] def primitive (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x : ℝ) : ℝ :=
   ∫ u in (0 : ℝ)..x, integrand c j b u
 
 /-- The expected factor `exp(-c/x²) x^(3-j)`, written without truncated
 natural subtraction and defined smoothly at zero. -/
-def scale (c : ℝ) (j : ℕ) (x : ℝ) : ℝ :=
+@[expose] def scale (c : ℝ) (j : ℕ) (x : ℝ) : ℝ :=
   (edge c x / x ^ j) * x ^ 3
 
 theorem integrand_contDiff {c : ℝ} (hc : 0 < c) (j : ℕ)

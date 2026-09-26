@@ -19,7 +19,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 This module provides the per-instruction lemmas of the One-Time-Pad proof.
 -/
 
-@[expose] public section
+public section
 
 attribute [local implicit_reducible] Registers Memory
 
@@ -35,7 +35,7 @@ in the very long proof took quite a while on every change.
 
 /-- The precondition shared by the per-instruction One-Time-Pad proofs,
 constraining the plaintext `p`, key `k`, ciphertext `c`, and length `l` addresses. -/
-def iPre' (p k c l : UInt64) :=
+@[expose] def iPre' (p k c l : UInt64) :=
   p < k ∧ k < c ∧
   c.toNat + l.toNat < UInt64.size ∧
   (p + l - 1 < k ∧ k + l - 1 < c)
@@ -122,7 +122,7 @@ theorem help_I_pre''''' : ∀ (p k c l i x: UInt64),
 
 /-- The One-Time-Pad program, parameterised by the plaintext `p`, key `k`,
 ciphertext `c`, and length `l` memory addresses. -/
-def otpCode (p k c l : UInt64) :=
+@[expose] def otpCode (p k c l : UInt64) :=
     mriscx
       main:
           la x 0, p
@@ -273,6 +273,12 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
       h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
     rw [show ({10} : Set UInt64) = {9 + 1} by simp]
+    have h_step : p + (l - x) + 1 = p + (l - (x - 1)) := by
+      have h_sub : (l - x) + 1 = l - (x - 1) := by
+        rw [UInt64.sub_eq_add_neg l x, UInt64.sub_eq_add_neg l (x - 1),
+          UInt64.neg_sub, UInt64.sub_eq_add_neg 1 x]
+        ac_rfl
+      simpa only [UInt64.add_assoc] using congrArg (p + ·) h_sub
     apply specification_Increment (dst := 0)
     · simp
     · simp
@@ -280,9 +286,13 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
     · simpCurrInstr
     · exact h_pc
     · repeat (constructor <;> try assumption)
-      · simp at *
-        grind
       · simp_all
+      · have h_index : p + (l - x) = p + (l - (x - 1)) - 1 := by
+          calc
+            p + (l - x) = (p + (l - x) + 1) - 1 :=
+              (UInt64.add_sub_cancel _ _).symm
+            _ = p + (l - (x - 1)) - 1 := by rw [h_step]
+        simp_all
 
 
 

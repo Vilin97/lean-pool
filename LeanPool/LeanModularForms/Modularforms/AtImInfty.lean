@@ -11,7 +11,7 @@ public import Mathlib.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
 /-! # AtImInfty -/
 
 
-@[expose] public section
+public section
 
 /-
 Probably put this at Analysis/Complex/UpperHalfPlane/FunctionsBoundedAtInfty.lean

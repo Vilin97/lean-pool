@@ -17,7 +17,7 @@ is represented by the reflected vector test `-φ(-x)`, so both curl signs
 cancel.  No covariance or parity of an inverse operator is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -53,7 +53,7 @@ def gradientReflection : GradientTensor ≃ₗᵢ[ℝ] GradientTensor :=
   LinearIsometryEquiv.piLpCongrRight 2 (fun _ : Fin 3 => l2ReflectionEquiv)
 
 theorem gradientReflection_apply (G : GradientTensor) (i : Fin 3) :
-    gradientReflection G i = reflection (G i) := rfl
+    gradientReflection G i = reflection (G i) := by rfl
 
 theorem gradientReflection_involutive (G : GradientTensor) :
     gradientReflection (gradientReflection G) = G := by
@@ -70,7 +70,7 @@ theorem testGradient_reflected (f : Test) :
     EulerMeanGradientTest.testGradient (reflectedTest f) =
       gradientReflection (EulerMeanGradientTest.testGradient f) := by
   ext i : 1
-  change derivativeColumn (reflectedTest f) i = reflection (derivativeColumn f i)
+  simp only [testGradient_apply, gradientReflection_apply]
   apply Lp.ext
   filter_upwards [derivativeColumn_ae (reflectedTest f) i,
     reflection_ae (derivativeColumn f i),
@@ -99,7 +99,7 @@ def homogeneousReflection : homogeneousSpace →ₗᵢ[ℝ] homogeneousSpace whe
   norm_map' u := gradientReflection.norm_map (u : GradientTensor)
 
 theorem homogeneousReflection_coe (u : homogeneousSpace) :
-    (homogeneousReflection u : GradientTensor) = gradientReflection (u : GradientTensor) := rfl
+    (homogeneousReflection u : GradientTensor) = gradientReflection (u : GradientTensor) := by rfl
 
 theorem homogeneousReflection_involutive (u : homogeneousSpace) :
     homogeneousReflection (homogeneousReflection u) = u := by

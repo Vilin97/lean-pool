@@ -16,32 +16,32 @@ action, eccentricity, mean anomaly, and rotating periapsis angle.  The angles ar
 to real numbers; periodicity will allow the chart to descend to the angle torus.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 
 /-- Eccentric anomaly in the lifted Delaunay chart. -/
-noncomputable def liftedDelaunayEccentricAnomaly
+@[expose] noncomputable def liftedDelaunayEccentricAnomaly
     (eccentricity meanAnomaly : ℝ) : ℝ :=
   eccentricAnomaly eccentricity meanAnomaly
 
 /-- Position in rotating Cartesian coordinates in the lifted Delaunay chart. -/
-noncomputable def liftedDelaunayPosition
+@[expose] noncomputable def liftedDelaunayPosition
     (firstAction eccentricity meanAnomaly periapsisAngle : ℝ) : ActionSpace :=
   positionInRotatingFrame (-periapsisAngle)
     (inertialEllipsePosition firstAction eccentricity
       (liftedDelaunayEccentricAnomaly eccentricity meanAnomaly))
 
 /-- Canonical rotating-frame momentum in the lifted Delaunay chart. -/
-noncomputable def liftedDelaunayMomentum
+@[expose] noncomputable def liftedDelaunayMomentum
     (firstAction eccentricity meanAnomaly periapsisAngle : ℝ) : ActionSpace :=
   positionInRotatingFrame (-periapsisAngle)
     (inertialEllipseVelocity firstAction eccentricity (1 / firstAction ^ 3)
       (liftedDelaunayEccentricAnomaly eccentricity meanAnomaly))
 
 /-- Full phase-space point in lifted Delaunay variables. -/
-noncomputable def liftedDelaunayPhasePoint
+@[expose] noncomputable def liftedDelaunayPhasePoint
     (firstAction eccentricity meanAnomaly periapsisAngle : ℝ) : PhaseSpace :=
   positionMomentumPhasePoint
     (liftedDelaunayPosition firstAction eccentricity meanAnomaly periapsisAngle)
@@ -117,7 +117,7 @@ lemma liftedDelaunayPhasePoint_add_periapsis_period
 
 /-- Along the unperturbed flow, the first Delaunay angle advances with frequency `I₁⁻³` and the
 rotating periapsis angle decreases with unit speed. -/
-noncomputable def liftedDelaunayFlowLine
+@[expose] noncomputable def liftedDelaunayFlowLine
     (firstAction eccentricity meanAnomaly periapsisAngle time : ℝ) : PhaseSpace :=
   liftedDelaunayPhasePoint firstAction eccentricity
     (meanAnomaly + time / firstAction ^ 3) (periapsisAngle - time)

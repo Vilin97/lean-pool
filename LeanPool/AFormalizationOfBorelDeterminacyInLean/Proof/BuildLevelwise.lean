@@ -23,7 +23,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame
@@ -181,7 +181,7 @@ lemma eval_val_congr' (S S' : ResStrategy T p k) (h : S = S')
   subst h h'
   rfl
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def res (h : m ≤ k) (S : ResStrategy T p k) : ResStrategy T p m :=
+@[expose] def res (h : m ≤ k) (S : ResStrategy T p k) : ResStrategy T p m :=
   fun x hp hl ↦ S x hp (by omega)
 @[simp] lemma res_refl (S : ResStrategy T p k) : S.res le_rfl = S := rfl
 @[simp] lemma res_trans (m n k) (S : ResStrategy T p k) (mn : m ≤ n) (nk : n ≤ k) :

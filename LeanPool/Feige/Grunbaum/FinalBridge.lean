@@ -11,7 +11,7 @@ public import LeanPool.Feige.Grunbaum.TruncationConcavity
 # From truncation concavity to the Grünbaum volume bound
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 

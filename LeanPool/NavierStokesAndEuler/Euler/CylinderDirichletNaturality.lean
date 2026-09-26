@@ -41,7 +41,7 @@ commute with the constructed coercive solve. This covers translations and
 spatial support projections on actual L², not just pointwise model solutions.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -158,7 +158,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -287,7 +287,7 @@ section
 
 /-! Compatible spatial maps commute with the genuine positive Gram inverse. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -353,7 +353,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

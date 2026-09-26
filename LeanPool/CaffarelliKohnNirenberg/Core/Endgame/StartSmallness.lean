@@ -15,7 +15,7 @@ size. Its admissible threshold depends only on the numerical constants,
 before any solution or domain is chosen.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology
@@ -27,6 +27,7 @@ namespace CKN
 
 /-- The numerical upper bound for the initial theta quantity in
 `lem:thmA-start`. -/
+@[expose]
 def theoremAStartBound (q κ C₂₅ C₂₆ C₃₂ ε₀ : ℝ) : ℝ :=
       C₂₅ * (κ * (16 * ε₀) ^ (1 / 3 : ℝ) +
           κ ^ (-1 : ℝ) * (16 * ε₀) ^ (1 / 2 : ℝ) +

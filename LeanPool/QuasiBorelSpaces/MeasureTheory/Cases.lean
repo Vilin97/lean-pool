@@ -13,7 +13,7 @@ public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.Cases`.
 -/
 
-@[expose] public section
+public section
 
 
 open scoped MeasureTheory

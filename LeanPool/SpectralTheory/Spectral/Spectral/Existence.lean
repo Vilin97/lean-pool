@@ -28,7 +28,7 @@ inverse Cayley coordinate, and proves that its unbounded coordinate integral is 
 self-adjoint operator.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open CompactlySupported

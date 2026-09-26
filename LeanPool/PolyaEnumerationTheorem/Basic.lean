@@ -43,7 +43,7 @@ For additional information, refer to
 <https://en.wikipedia.org/wiki/P%C3%B3lya_enumeration_theorem>.
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 

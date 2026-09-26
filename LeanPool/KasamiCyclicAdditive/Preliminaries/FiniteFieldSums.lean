@@ -21,7 +21,7 @@ over the whole field. This module is deliberately below the character-sum
 and MCM layers so that both can use the same finite-field infrastructure.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

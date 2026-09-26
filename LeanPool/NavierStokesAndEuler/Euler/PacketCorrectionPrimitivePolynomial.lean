@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! Fixed polynomials majorize all primitive coefficient constants of the
 packet correction. The pressure inverse is the genuine fixed-order recursion. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,17 +31,17 @@ def linearEnvelope (X : ℝ) : ℝ := correctionLinearEnvelope X X X
 /-- Quadratic envelope, given by `correctionQuadraticEnvelope X X X`. -/
 def quadraticEnvelope (X : ℝ) : ℝ := correctionQuadraticEnvelope X X X
 /-- Radius envelope, given by `1+(1+metricEnvelope X)*(64*X)+64*X`. -/
-def radiusEnvelope (X : ℝ) : ℝ := 1+(1+metricEnvelope X)*(64*X)+64*X
+@[expose] def radiusEnvelope (X : ℝ) : ℝ := 1+(1+metricEnvelope X)*(64*X)+64*X
 /-- Pressure envelope, given by `1+pressureCost ((1+X)^2)⁻¹ (metricEnvelope X) 5 + pressureCost
 ((1+X)^2)⁻¹ (metricEnvelope X) 6`. -/
-def pressureEnvelope (X : ℝ) : ℝ :=
+@[expose] def pressureEnvelope (X : ℝ) : ℝ :=
   1+pressureCost ((1+X)^2)⁻¹ (metricEnvelope X) 5 +
     pressureCost ((1+X)^2)⁻¹ (metricEnvelope X) 6
 /-- Multiplier envelope, given by `3*sobolevCoefficientAmplitude (Fin 4) 6 X X`. -/
 def multiplierEnvelope (X : ℝ) : ℝ := 3*sobolevCoefficientAmplitude (Fin 4) 6 X X
 /-- Term envelope, given by `2*(1+multiplierEnvelope X+9*productBlockConstant
 P*multiplierEnvelope X)`. -/
-def termEnvelope (P : ℝ) [Fact (0 < P)] (X : ℝ) : ℝ :=
+@[expose] def termEnvelope (P : ℝ) [Fact (0 < P)] (X : ℝ) : ℝ :=
   2*(1+multiplierEnvelope X+9*productBlockConstant P*multiplierEnvelope X)
 /-- Primitive envelope as an element of `ℝ`. -/
 def primitiveEnvelope (P : ℝ) [Fact (0 < P)] (X : ℝ) : ℝ :=

@@ -17,7 +17,7 @@ This file proves germ-level uniqueness of the analytic quotient and the
 finite-degree remainder coefficients.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology

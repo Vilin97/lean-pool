@@ -28,7 +28,7 @@ exactly under the congruence hypothesis. The general form
 `tau_sub_tauConj_sq` is a Lean-only artifact with no thesis counterpart.
 -/
 
-@[expose] public section
+public section
 
 namespace QuadraticOrder
 

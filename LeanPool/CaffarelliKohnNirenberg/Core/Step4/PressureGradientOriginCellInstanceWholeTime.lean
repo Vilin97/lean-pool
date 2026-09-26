@@ -16,7 +16,7 @@ integrable in time at a fixed interior origin radius, on every local box of
 the solution interval.
 -/
 
-@[expose] public section
+public section
 
 section
 

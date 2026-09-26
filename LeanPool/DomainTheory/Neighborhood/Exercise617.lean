@@ -82,7 +82,7 @@ reuses the project's
 established machinery.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -145,7 +145,7 @@ genuine three-way
 separated sum `𝟙 + D + D` (Example 6.2's `sum3`, with `𝟙 = unitSys`), again
 `∅`-free by
 `sum3_nonempty`. -/
-def tcObj (D : StrictDomainObj.{w}) : StrictDomainObj.{w} where
+@[expose] def tcObj (D : StrictDomainObj.{w}) : StrictDomainObj.{w} where
   carrier := Option (Unit ⊕ D.carrier ⊕ D.carrier)
   sys := sum3 unitSys D.sys D.sys Example62C.unitSys_nonempty D.nonempty D.nonempty
   nonempty := sum3_nonempty
@@ -677,7 +677,7 @@ open Example62C in
 /-- The morphism action of `T`: `T(f) = I_𝟙 + f + f` (identity on the terminator,
 `f` on each
 successor copy). Always strict (`isStrict_sumMap3`). -/
-def tcMapHom {D E : StrictDomainObj.{w}} (f : Category.Hom D E) :
+@[expose] def tcMapHom {D E : StrictDomainObj.{w}} (f : Category.Hom D E) :
     Category.Hom (tcObj D) (tcObj E) :=
   ⟨sumMap3 (h₀ := Example62C.unitSys_nonempty) (h₁ := D.nonempty) (h₂ := D.nonempty)
       (h₀' := Example62C.unitSys_nonempty) (h₁' := E.nonempty) (h₂' := E.nonempty)
@@ -689,7 +689,7 @@ domains and
 strict
 maps. On objects, `T(D) = 𝟙 + D + D` (Example 6.2's three-way sum); on maps, `T(f)
 = I_𝟙 + f + f`. -/
-def Tc : Endofunctor StrictDomainObj.{w} where
+@[expose] def Tc : Endofunctor StrictDomainObj.{w} where
   obj := tcObj
   map := tcMapHom
   map_id D := Subtype.ext (by
@@ -724,7 +724,7 @@ theorem isStrict_ofIso {α β : Type*} {V₀ : NeighborhoodSystem α} {V₁ : Ne
 open Example44 Example62C ExampleB in
 /-- `C` (Example 4.4: finite-or-infinite binary sequences) as an object of the
 `∅`-free category. -/
-def Cobj : StrictDomainObj.{0} := ⟨Str, C, C_nonempty⟩
+@[expose] def Cobj : StrictDomainObj.{0} := ⟨Str, C, C_nonempty⟩
 
 open Example44 Example62C in
 /-- **The `T`-algebra structure on `C`.** `(tcObj Cobj).sys = 𝟙 + C + C`
@@ -735,7 +735,7 @@ domain-equation isomorphism
 `ccEquiv` (Example 6.2), realised as an approximable map by `ofIso`; it is strict
 by `isStrict_ofIso`.
 Concretely `i` sends the terminator to `Λ̂` and each `b`-copy of `x` to `b·x`. -/
-def cStr : Category.Hom (Tc.obj Cobj) Cobj :=
+@[expose] def cStr : Category.Hom (Tc.obj Cobj) Cobj :=
   ⟨ofIso (by exact ccEquiv.symm), isStrict_ofIso _⟩
 
 open Example44 Example62C in
@@ -859,7 +859,7 @@ def descE : B.carrier.sys.Element :=
 /-- The `b`-th successor operation `f_b = k ∘ inj_b`: `f₀` via the `0`-copy
 (`inj₁`), `f₁` via the
 `1`-copy (`inj₂`). -/
-def descF (b : Bool) (y : B.carrier.sys.Element) : B.carrier.sys.Element :=
+@[expose] def descF (b : Bool) (y : B.carrier.sys.Element) : B.carrier.sys.Element :=
   B.str.1.toElementMap (cond b
     (sinj2 (h₀ := Example62C.unitSys_nonempty) (h₁ := B.carrier.nonempty) (
       h₂ := B.carrier.nonempty) y)
@@ -868,7 +868,7 @@ def descF (b : Bool) (y : B.carrier.sys.Element) : B.carrier.sys.Element :=
 
 /-- The recursion `φ(Λ)=z`, `φ(b·σ)=f_b(φ(σ))` on a finite string, with base value
 `z`. -/
-def descVal (z : B.carrier.sys.Element) : Str → B.carrier.sys.Element
+@[expose] def descVal (z : B.carrier.sys.Element) : Str → B.carrier.sys.Element
   | [] => z
   | b :: σ => descF B b (descVal z σ)
 

@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketLowGrades
 
 /-! The coefficient equations of the literal assembled packet give the force in (14). -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

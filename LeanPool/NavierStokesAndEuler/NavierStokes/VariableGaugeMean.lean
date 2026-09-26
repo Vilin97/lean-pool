@@ -26,7 +26,7 @@ The common torus index and its bounded gap from the native index remain
 explicit.  This module does not assert arbitrary-power alias decay.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.VariableGaugeMean
@@ -66,6 +66,7 @@ section Gauge
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
 /-- Radial ratio, given by `z.1 / ell z.2.1`. -/
+@[expose]
 noncomputable def radialRatio (ell : S → ℝ) (z : PressureStream.Lift S) : ℝ := z.1 / ell z.2.1
 
 /-- Cutoff, given by `RadialPullback.physicalCutoff d a b (radialRatio ell z)`. -/
@@ -73,7 +74,7 @@ noncomputable def cutoff (d a b : ℝ) (ell : S → ℝ) (z : PressureStream.Lif
   RadialPullback.physicalCutoff d a b (radialRatio ell z)
 
 /-- Density, given by `(ell z.2.1)⁻¹ * PressureStream.rho a b hab (radialRatio ell z)`. -/
-noncomputable def density (a b : ℝ) (hab : a < b) (ell : S → ℝ)
+@[expose] noncomputable def density (a b : ℝ) (hab : a < b) (ell : S → ℝ)
     (z : PressureStream.Lift S) : ℝ :=
   (ell z.2.1)⁻¹ * PressureStream.rho a b hab (radialRatio ell z)
 
@@ -84,13 +85,13 @@ noncomputable def SupportedGauge (a b : ℝ) (ell : S → ℝ) (U : Set S)
   ∀ z, z.2.1 ∈ U → f z ≠ 0 → z.1 ∈ Icc (ell z.2.1 * a) (ell z.2.1 * b)
 
 /-- Genuine integral with the actual endpoints on this slow fiber. -/
-noncomputable def compactPrimitive (d a b M : ℝ) (ell : S → ℝ) (v : PressureStream.Plane)
+@[expose] noncomputable def compactPrimitive (d a b M : ℝ) (ell : S → ℝ) (v : PressureStream.Plane)
     (f : PressureStream.Lift S → ℝ) (z : PressureStream.Lift S) : ℝ :=
   RadialPullback.physicalCompact d (ell z.2.1 * a) (ell z.2.1 * b) M ((0 : S), v) f z
 
 /-- Pressure source, given by `f z - density a b hab ell z * PressureStream.pressureMass f
 z.2.1`. -/
-noncomputable def pressureSource (a b : ℝ) (hab : a < b) (ell : S → ℝ)
+@[expose] noncomputable def pressureSource (a b : ℝ) (hab : a < b) (ell : S → ℝ)
     (f : PressureStream.Lift S → ℝ) (z : PressureStream.Lift S) : ℝ :=
   f z - density a b hab ell z * PressureStream.pressureMass f z.2.1
 
@@ -101,13 +102,13 @@ noncomputable def meanPressure (d a b M : ℝ) (hab : a < b) (ell : S → ℝ)
 
 /-- Stream potential, given by `PressureStream.divideRadius (compactPrimitive d a b M ell v
 (PressureStream.weightedSource f))`. -/
-noncomputable def streamPotential (d a b M : ℝ) (ell : S → ℝ) (v : PressureStream.Plane)
+@[expose] noncomputable def streamPotential (d a b M : ℝ) (ell : S → ℝ) (v : PressureStream.Plane)
     (f : PressureStream.Lift S → ℝ) : PressureStream.Lift S → ℝ :=
   PressureStream.divideRadius (compactPrimitive d a b M ell v (PressureStream.weightedSource f))
 
 /-- Compact alias, given by `RadialPullback.physicalAlias d (ell z.2.1 * a) (ell z.2.1 * b) M
 ((0 : S), v) f z`. -/
-noncomputable def compactAlias (d a b M : ℝ) (ell : S → ℝ) (v : PressureStream.Plane)
+@[expose] noncomputable def compactAlias (d a b M : ℝ) (ell : S → ℝ) (v : PressureStream.Plane)
     (f : PressureStream.Lift S → ℝ) (z : PressureStream.Lift S) : ℝ :=
   RadialPullback.physicalAlias d (ell z.2.1 * a) (ell z.2.1 * b) M ((0 : S), v) f z
 
@@ -192,7 +193,7 @@ section ActualQ
 open TorusInverse
 
 /-- Slow variables in this module follow the rank/domain convention `(T,Z)`. -/
-noncomputable def qLength (coord : ℝ) (s : Plane) : ℝ :=
+@[expose] noncomputable def qLength (coord : ℝ) (s : Plane) : ℝ :=
   Real.sqrt (SimilarityCoordinates.coordinateQ coord s)
 
 theorem qLength_pos {coord : ℝ} (hc : 0 < coord) (hc1 : coord < 1)
@@ -542,7 +543,7 @@ structure GaugeData (S : Type) where
   length : ℕ → S → ℝ
 
 /-- The actual similarity gauge in every normalized chart. -/
-noncomputable def similarityGauge (h d a b M : ℝ) (hab : a < b) (index : ℕ → ℕ) :
+@[expose] noncomputable def similarityGauge (h d a b M : ℝ) (hab : a < b) (index : ℕ → ℕ) :
     GaugeData PressureStream.Plane where
   radial :=
     { exponent := d, inner := a, outer := b, inner_lt_outer := hab,
@@ -553,7 +554,7 @@ noncomputable def similarityGauge (h d a b M : ℝ) (hab : a < b) (index : ℕ �
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
 /-- Reconstruct state as an element of `CorrectionState.State (PressureStream.Lift S)`. -/
-noncomputable def reconstructState (g : GaugeData S)
+@[expose] noncomputable def reconstructState (g : GaugeData S)
     (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) : CorrectionState.State
         (PressureStream.Lift S) :=
@@ -563,7 +564,7 @@ noncomputable def reconstructState (g : GaugeData S)
         g.radial.inner_lt_outer (g.length n) g.radial.radialDirection (u.gr c n) }
 
 /-- Pressure alias state as an element of `CorrectionState.Oscillation (PressureStream.Lift S)`. -/
-noncomputable def pressureAliasState (g : GaugeData S)
+@[expose] noncomputable def pressureAliasState (g : GaugeData S)
     (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) : CorrectionState.Oscillation
         (PressureStream.Lift S) :=
@@ -573,7 +574,7 @@ noncomputable def pressureAliasState (g : GaugeData S)
         p.1, 0, 0]
 
 /-- Temporal potential, constructed using `streamPotential`. -/
-noncomputable def temporalPotential (g : GaugeData S) (h : ℝ) (index : ℕ → ℕ)
+@[expose] noncomputable def temporalPotential (g : GaugeData S) (h : ℝ) (index : ℕ → ℕ)
     (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) (n : ℕ) : PressureStream.Lift S → ℝ :=
   streamPotential g.radial.exponent g.radial.inner g.radial.outer (g.radial.frequency n)
@@ -581,7 +582,7 @@ noncomputable def temporalPotential (g : GaugeData S) (h : ℝ) (index : ℕ →
         (u.axialResidual c n))
 
 /-- Temporal increment state, bundling `radial`, `angular`, `axial`. -/
-noncomputable def temporalIncrementState (g : GaugeData S) (h : ℝ) (index : ℕ → ℕ)
+@[expose] noncomputable def temporalIncrementState (g : GaugeData S) (h : ℝ) (index : ℕ → ℕ)
     (axial : S × PressureStream.Plane) (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) : MeanIncrementBounds.Triple
         (PressureStream.Lift S) where
@@ -604,7 +605,7 @@ noncomputable def temporalAxialDifference (g : GaugeData S) (h : ℝ) (index : �
 
 /-- Temporal alias state, defined pointwise by `![0, 0, -c.operators.fastTime
 (temporalAxialDifference g h index c u) n p.1]`. -/
-noncomputable def temporalAliasState (g : GaugeData S) (h : ℝ) (index : ℕ → ℕ)
+@[expose] noncomputable def temporalAliasState (g : GaugeData S) (h : ℝ) (index : ℕ → ℕ)
     (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) : CorrectionState.Oscillation
         (PressureStream.Lift S) :=
@@ -612,7 +613,7 @@ noncomputable def temporalAliasState (g : GaugeData S) (h : ℝ) (index : ℕ �
 
 /-- Temporal stage state, given by `reconstructState g c (u.addIncrement (temporalIncrementState
 g h index axial c u) 0 0 0 ⟨0, 0, temporalAliasState g h index c u⟩)`. -/
-noncomputable def temporalStageState (g : GaugeData S) (h : ℝ) (index : ℕ → ℕ)
+@[expose] noncomputable def temporalStageState (g : GaugeData S) (h : ℝ) (index : ℕ → ℕ)
     (axial : S × PressureStream.Plane) (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) : CorrectionState.State
         (PressureStream.Lift S) :=
@@ -620,7 +621,7 @@ noncomputable def temporalStageState (g : GaugeData S) (h : ℝ) (index : ℕ �
     ⟨0, 0, temporalAliasState g h index c u⟩)
 
 /-- Rank potential, constructed using `streamPotential`. -/
-noncomputable def rankPotential (g : GaugeData S) (r : CorrectionState.RankData S)
+@[expose] noncomputable def rankPotential (g : GaugeData S) (r : CorrectionState.RankData S)
     (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) (n : ℕ) : PressureStream.Lift S → ℝ :=
   streamPotential g.radial.exponent g.radial.inner g.radial.outer (g.radial.frequency n)
@@ -628,7 +629,7 @@ noncomputable def rankPotential (g : GaugeData S) (r : CorrectionState.RankData 
         (CorrectionState.rankDesiredAxial r c u n))
 
 /-- Rank increment state, bundling `radial`, `angular`, `axial`. -/
-noncomputable def rankIncrementState (g : GaugeData S) (r : CorrectionState.RankData S)
+@[expose] noncomputable def rankIncrementState (g : GaugeData S) (r : CorrectionState.RankData S)
     (axial : S × PressureStream.Plane) (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) : MeanIncrementBounds.Triple
         (PressureStream.Lift S) where
@@ -642,7 +643,7 @@ noncomputable def rankIncrementState (g : GaugeData S) (r : CorrectionState.Rank
 
 /-- Rank stage state, given by `reconstructState g c (u.addIncrement (rankIncrementState g r
 axial c u) 0 0 0 CorrectionState.ExcludedErrors.zero)`. -/
-noncomputable def rankStageState (g : GaugeData S) (r : CorrectionState.RankData S)
+@[expose] noncomputable def rankStageState (g : GaugeData S) (r : CorrectionState.RankData S)
     (axial : S × PressureStream.Plane) (c : CorrectionState.Context (PressureStream.Lift S))
     (u : CorrectionState.State (PressureStream.Lift S)) : CorrectionState.State
         (PressureStream.Lift S) :=

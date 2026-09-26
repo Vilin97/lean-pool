@@ -26,7 +26,7 @@ of translations.
   inequality on `L²` norms), under a right-invariant measure.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis

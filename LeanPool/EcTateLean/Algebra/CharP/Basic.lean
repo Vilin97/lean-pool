@@ -14,7 +14,7 @@ import Mathlib.Algebra.CharP.Lemmas
 Imported Lean Pool material for `LeanPool.EcTateLean.Algebra.CharP.Basic`.
 -/
 
-@[expose] public section
+public section
 
 lemma ringChar_is_zero_or_prime (R : Type _) [NonAssocSemiring R] [NoZeroDivisors R]
     [Nontrivial R] : ringChar R = 0 ∨ Nat.Prime (ringChar R) :=

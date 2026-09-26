@@ -25,7 +25,7 @@ orders any countable index type by an injection into `ℕ` and applies the stand
 deletion.  Each label loses only finitely many points.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

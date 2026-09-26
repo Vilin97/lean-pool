@@ -34,7 +34,7 @@ spectrum on the unit circle ⟹ roots of unity ⟹ finite order, versus one eige
 the circle ⟹ infinite order — with Lehmer's number as the first exit.
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 

@@ -29,7 +29,7 @@ products of those columns yield a completely positive `C₀` (EL12). The
 remainder is the `T`-Schur complement of `E` and is PSD (EL13–EL14).
 -/
 
-@[expose] public section
+public section
 
 open Matrix Function
 
@@ -1222,12 +1222,12 @@ lemma MX_isSymm (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
   isHermitian_iff_isSymm.mp (MX_isHermitian s t ρ x)
 
 /-- `E`-embedding: `none` is `z₀`, `some i` is `zᵢ`. -/
-def elimEEmbed : Option (Fin k) → ConfigIdx k p
+@[expose] def elimEEmbed : Option (Fin k) → ConfigIdx k p
   | none => idxZ0
   | some i => idxZ i
 
 /-- `T`-embedding: the `y`-indices. -/
-def elimT : Fin p → ConfigIdx k p := idxY
+@[expose] def elimT : Fin p → ConfigIdx k p := idxY
 
 lemma elimEEmbed_none : elimEEmbed (p := p) (none : Option (Fin k)) = idxZ0 := rfl
 lemma elimEEmbed_some (i : Fin k) : elimEEmbed (p := p) (some i) = idxZ i := rfl
@@ -1252,29 +1252,29 @@ lemma elimEEmbed_ne_elimT (a : Option (Fin k)) (j : Fin p) :
 
 /-- The `E`-block of `M (Xconfig s t ρ x)`: rows and columns indexed by the axis vector and the left
 vectors through `elimEEmbed`. -/
-def elimEE (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
+@[expose] def elimEE (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
     Matrix (Option (Fin k)) (Option (Fin k)) ℝ :=
   (M (Xconfig s t ρ x)).submatrix elimEEmbed elimEEmbed
 
 /-- The block of `M (Xconfig s t ρ x)` with `E`-rows (via `elimEEmbed`) and right-vector columns
 (via `elimT`). -/
-def elimET (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
+@[expose] def elimET (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
     Matrix (Option (Fin k)) (Fin p) ℝ :=
   (M (Xconfig s t ρ x)).submatrix elimEEmbed elimT
 
 /-- The block of `M (Xconfig s t ρ x)` with right-vector rows (via `elimT`) and `E`-columns (via
 `elimEEmbed`). -/
-def elimTE (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
+@[expose] def elimTE (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
     Matrix (Fin p) (Option (Fin k)) ℝ :=
   (M (Xconfig s t ρ x)).submatrix elimT elimEEmbed
 
 /-- The right-vector block of `M (Xconfig s t ρ x)`: rows and columns indexed through `elimT`. -/
-def elimTT (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
+@[expose] def elimTT (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
     Matrix (Fin p) (Fin p) ℝ :=
   (M (Xconfig s t ρ x)).submatrix elimT elimT
 
 lemma elimEE_none_none (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
-    elimEE s t ρ x none none = M (Xconfig s t ρ x) idxZ0 idxZ0 := rfl
+    elimEE s t ρ x none none = M (Xconfig s t ρ x) idxZ0 idxZ0 := by rfl
 
 lemma elimEE_none_some (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) (i : Fin k) :
     elimEE s t ρ x none (some i) = 0 :=
@@ -1286,7 +1286,7 @@ lemma elimEE_some_none (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) (i : Fin k) 
 
 lemma elimEE_some_some (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) (i h : Fin k) :
     elimEE s t ρ x (some i) (some h) =
-      M (Xconfig s t ρ x) (idxZ i) (idxZ h) := rfl
+      M (Xconfig s t ρ x) (idxZ i) (idxZ h) := by rfl
 
 lemma elimEE_isHermitian (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
     (elimEE s t ρ x).IsHermitian :=
@@ -1363,7 +1363,7 @@ lemma M_submatrix_sumElim (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
   cases i <;> cases j <;> rfl
 
 /-- Schur complement of the `E`-block in the `T`-block. -/
-def elimSchurR (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
+@[expose] def elimSchurR (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
     Matrix (Fin p) (Fin p) ℝ :=
   elimTT s t ρ x - elimTE s t ρ x * (elimEE s t ρ x)⁻¹ * elimET s t ρ x
 

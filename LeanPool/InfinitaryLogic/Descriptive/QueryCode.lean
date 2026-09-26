@@ -33,7 +33,7 @@ This is the stop/go gate's first half; the analytic tree normal form (Unit 0b) b
 cylinder tree in `(ℕ → Bool) × (ℕ → ℕ)` on top of it.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

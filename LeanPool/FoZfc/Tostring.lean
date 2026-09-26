@@ -17,7 +17,7 @@ strings, with two flavors (with and without depth information).
 
 -/
 
-@[expose] public section
+public section
 
 open FirstOrder
 open FirstOrder.Language

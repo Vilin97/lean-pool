@@ -37,7 +37,7 @@ The field estimated here is `FinalSlowBase.error`, which is the actual
 Navier--Stokes residual minus its virtual stress force.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -274,7 +274,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

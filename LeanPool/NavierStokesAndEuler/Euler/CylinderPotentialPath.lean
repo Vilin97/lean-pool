@@ -29,7 +29,7 @@ section
 
 /-! Same-radius mixed-word and continuous-time estimates for the actual angular operator. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -124,7 +124,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -216,7 +216,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -235,7 +235,7 @@ variable (P : ℝ) [Fact (0 < P)]
   (p : C(K, LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
 /-- Potential path, given by `fullMultiplierMap P B (pathPrimitive P p)`. -/
-def potentialPath : C(K,LiftL2 P) := fullMultiplierMap P B (pathPrimitive P p)
+@[expose] def potentialPath : C(K,LiftL2 P) := fullMultiplierMap P B (pathPrimitive P p)
 
 include hB hp in
 theorem potentialPath_orbit :

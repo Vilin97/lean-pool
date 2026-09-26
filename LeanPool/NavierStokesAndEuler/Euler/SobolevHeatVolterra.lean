@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.VolterraFixedPoint
 
 /-! The actual cylinder heat kernel in the singular Volterra existence theorem. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

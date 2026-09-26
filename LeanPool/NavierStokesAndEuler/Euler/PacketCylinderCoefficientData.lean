@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldCalculus
 
 /-! Actual bounded coefficient paths identified with the raw packet coefficients. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

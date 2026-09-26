@@ -40,7 +40,7 @@ first-differing bit, averaging, and the relabeling-after-removal
 bound — lives in `Circ.Internal.Valiant`.
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity.Valiant
 

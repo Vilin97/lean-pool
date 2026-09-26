@@ -71,7 +71,7 @@ sectors in aggregate — as one `Plane.cone` over all free directions at once.
   exterior inside a local disk lies, minus `x`, in that point's face.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph

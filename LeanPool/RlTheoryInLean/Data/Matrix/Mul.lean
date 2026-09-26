@@ -14,7 +14,7 @@ import Mathlib.Tactic.Ring.RingNF
 # LeanPool.RlTheoryInLean.Data.Matrix.Mul
 -/
 
-@[expose] public section
+public section
 
 open Finset Real
 

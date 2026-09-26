@@ -18,7 +18,7 @@ are unchanged. The spatial mask is replaced by its actual native grid factor.
 All estimates are on the original native control cells.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -331,7 +331,7 @@ theorem own_phaseCell_or_zero (request : ℕ → Full → SignedWaveUpdate.Vec2)
 
 /-- The band index is frozen only discretely, at the original label's own
 reference. This is not an extension of a fixed reference to all bands. -/
-noncomputable def ownField {E : Type} [Zero E]
+@[expose] noncomputable def ownField {E : Type} [Zero E]
     (f : Label B N0 → Copy → ℕ → Full → E)
     (i : Label B N0 × Copy) (n : ℕ) (x : Full) : E :=
   if n = reference i.1 then f i.1 i.2 n x else 0

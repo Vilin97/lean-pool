@@ -48,7 +48,7 @@ and the cube's uniform probability measure. They are the elementary counting
 steps in Section 4 of arXiv:2609.19123.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -60,7 +60,7 @@ namespace Family
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- The real-valued indicator `𝟙_B` of a family, used in Section 4. -/
-def indicator (B : Family ι) (x : Finset ι) : ℝ := if x ∈ B then 1 else 0
+@[expose] def indicator (B : Family ι) (x : Finset ι) : ℝ := if x ∈ B then 1 else 0
 
 omit [Fintype ι] in
 /-- Evaluating the Section 4 indicator at a member of its family. -/
@@ -310,7 +310,7 @@ theorem influence_le_four_covariance_iff {D B : Family ι}
 omit [Fintype ι] in
 /-- The star property asserted for each hereditary family in Theorem 1.1:
 every intersecting subfamily is no larger than some star. -/
-def HasStarProperty (D : Family ι) : Prop :=
+@[expose] def HasStarProperty (D : Family ι) : Prop :=
   ∀ A : Family ι, A ⊆ D → A.IsIntersecting → ∃ i : ι, A.card ≤ (D.star i).card
 
 end Family
@@ -321,7 +321,7 @@ variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 coordinate attaining a bound instead of a finite minimum. On a nonempty ground
 type this is exactly `Cov(f,g) ≥ (1/4) min_i Inf_i[f]`. This is a proposition,
 not an assumption introduced into the logical environment. -/
-def AntipodalCorrelationBound (ι : Type*) [Fintype ι] [DecidableEq ι] : Prop :=
+@[expose] def AntipodalCorrelationBound (ι : Type*) [Fintype ι] [DecidableEq ι] : Prop :=
   ∀ f g : Finset ι → ℝ, IsBoolean f → Monotone f → IsBoolean g → Monotone g →
     dual g = g → ∃ i : ι, influence f i ≤ 4 * covariance f g
 

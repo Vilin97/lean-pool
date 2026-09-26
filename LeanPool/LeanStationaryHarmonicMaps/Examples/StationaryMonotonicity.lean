@@ -18,7 +18,7 @@ the public API and apply both the witness-style stationary Sobolev monotonicity
 formula/theorem and the older componentwise convenience wrappers.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -34,7 +34,7 @@ nodes as there are distinct real exponents. Taking logarithms gives the
 generalized-power evaluation-matrix part of manuscript Lemma 3.6.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -267,7 +267,7 @@ theorem intervalMomentMatrix_det_ne_zero {n : ℕ} (a l u : Fin n → ℝ)
   exact sub_eq_zero.mp hcoeff
 
 /-- The manuscript's matrix of ordinary Lebesgue integrals against bump profiles. -/
-def bumpMomentMatrix {n : ℕ} (a : Fin n → ℝ) (β : Fin n → ℝ → ℝ) :
+@[expose] def bumpMomentMatrix {n : ℕ} (a : Fin n → ℝ) (β : Fin n → ℝ → ℝ) :
     Matrix (Fin n) (Fin n) ℝ := fun i j => ∫ t, t ^ a i * β j t
 
 /--
@@ -333,7 +333,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -343,12 +343,12 @@ open Set Function MeasureTheory
 namespace NavierStokes.LocalizedMomentRepair
 
 /-- Inner lower, given by `(3 * l + u) / 4`. -/
-def innerLower (l u : ℝ) : ℝ := (3 * l + u) / 4
+@[expose] def innerLower (l u : ℝ) : ℝ := (3 * l + u) / 4
 /-- Inner upper, given by `(l + 3 * u) / 4`. -/
-def innerUpper (l u : ℝ) : ℝ := (l + 3 * u) / 4
+@[expose] def innerUpper (l u : ℝ) : ℝ := (l + 3 * u) / 4
 
 /-- A concrete smooth bump in the middle half of `(l,u)`. -/
-def bump (l u : ℝ) (t : ℝ) : ℝ :=
+@[expose] def bump (l u : ℝ) (t : ℝ) : ℝ :=
   SmoothCutoffs.cutoff ((t - (l + u) / 2) / ((u - l) / 4))
 
 theorem bump_contDiff (l u : ℝ) : ContDiff ℝ ∞ (bump l u) :=
@@ -398,7 +398,7 @@ section Family
 variable {n : ℕ}
 
 /-- A fixed compact set, independent of the moment debt. -/
-def repairRegion (l u : Fin n → ℝ) : Set ℝ :=
+@[expose] def repairRegion (l u : Fin n → ℝ) : Set ℝ :=
   ⋃ j, Icc (innerLower (l j) (u j)) (innerUpper (l j) (u j))
 
 theorem repairRegion_isCompact (l u : Fin n → ℝ) : IsCompact (repairRegion l u) :=
@@ -411,7 +411,7 @@ theorem repairRegion_subset_open (l u : Fin n → ℝ) (hlu : ∀ j, l j < u j) 
   exact mem_iUnion.mpr ⟨j, innerInterval_subset_open _ _ (hlu j) hj⟩
 
 /-- The actual generalized-power moment matrix of the constructed profiles. -/
-def matrix (a l u : Fin n → ℝ) : Matrix (Fin n) (Fin n) ℝ :=
+@[expose] def matrix (a l u : Fin n → ℝ) : Matrix (Fin n) (Fin n) ℝ :=
   PowerMomentMatrix.bumpMomentMatrix a (fun j => bump (l j) (u j))
 
 theorem matrix_det_ne_zero (a l u : Fin n → ℝ) (ha : Injective a)
@@ -434,10 +434,10 @@ theorem matrix_det_ne_zero (a l u : Fin n → ℝ) (ha : Injective a)
   · exact fun j => bump_support_subset _ _ (hlu j)
 
 /-- Coefficients are computed from the proved nonsingular moment matrix. -/
-def coefficients (a l u d : Fin n → ℝ) : Fin n → ℝ := (matrix a l u)⁻¹.mulVec d
+@[expose] def coefficients (a l u d : Fin n → ℝ) : Fin n → ℝ := (matrix a l u)⁻¹.mulVec d
 
 /-- The constructed smooth correction for the prescribed finite vector of debts. -/
-def repair (a l u d : Fin n → ℝ) (t : ℝ) : ℝ :=
+@[expose] def repair (a l u d : Fin n → ℝ) (t : ℝ) : ℝ :=
   ∑ j, coefficients a l u d j * bump (l j) (u j) t
 
 theorem repair_contDiff (a l u d : Fin n → ℝ) : ContDiff ℝ ∞ (repair a l u d) := by
@@ -535,6 +535,7 @@ theorem repair_sub (a l u d e : Fin n → ℝ) :
   simp only [repair, coefficients, Matrix.mulVec_sub, Pi.sub_apply, sub_mul, Finset.sum_sub_distrib]
 
 /-- The fixed-interval, fixed-exponent repair depends linearly on the moment debt. -/
+@[expose]
 def repairLinearMap (a l u : Fin n → ℝ) : (Fin n → ℝ) →ₗ[ℝ] (ℝ → ℝ) where
   toFun := repair a l u
   map_add' := repair_add a l u

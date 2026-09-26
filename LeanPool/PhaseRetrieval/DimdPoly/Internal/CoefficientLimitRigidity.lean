@@ -19,7 +19,7 @@ import Mathlib.Topology.MetricSpace.Sequences
 
 /-! # CoefficientLimitRigidity -/
 
-@[expose] public section
+public section
 
 
 open scoped BigOperators

@@ -47,4 +47,4 @@ planar-stokes-atoms; the residue functional `H¹(Ω) → ℂ` of Serre duality l
 serre-duality-cech/tails. Neither is built here.
 -/
 
-@[expose] public section
+public section

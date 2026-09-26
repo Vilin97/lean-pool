@@ -24,7 +24,7 @@ import Mathlib.Tactic.Ring.RingNF
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Main.CapCup`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

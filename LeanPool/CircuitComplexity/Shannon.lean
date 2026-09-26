@@ -48,7 +48,7 @@ When `Basis.andOr2` is known to be complete, this yields a
 Together these establish that worst-case circuit complexity is `Θ(2^N / N)`.
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 

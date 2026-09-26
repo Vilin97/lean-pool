@@ -45,7 +45,7 @@ twins turns the honest excess into `t₉ = n − 4 − X − 3h = Θ(n)` (`X = e
   `GirthExcessBound`) and a `119`-fold giant credit in `heavy_full_budget`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 
@@ -67,7 +67,7 @@ theorem mem_v9Set {n : ℕ} {G : SimpleGraph (Fin n)} {v : Fin n} :
 open Classical in
 /-- **Ordered adjacent pairs within `V₉`** (twice the number of internal tier-9 edges);
 `2·|V₉| < v9Pairs G` is the density row "average tier-9 degree `> 2`". -/
-noncomputable def v9Pairs {n : ℕ} (G : SimpleGraph (Fin n)) : ℕ :=
+@[expose] noncomputable def v9Pairs {n : ℕ} (G : SimpleGraph (Fin n)) : ℕ :=
   ((v9Set G ×ˢ v9Set G).filter (fun q => G.Adj q.1 q.2)).card
 
 open Classical in
@@ -172,7 +172,7 @@ inequality after discarding the `|S|(2r+1)` ball term, weakening the level floor
 import-free floor from `n ≥ 1071` to `n ≥ 379`. Threaded through intermediate bounds and
 discharged by `girth_excess_bound_holds` below.
 The separate AHL strength reaches further down the band. -/
-def GirthExcessBound (n : ℕ) (G : SimpleGraph (Fin n)) : Prop :=
+@[expose] def GirthExcessBound (n : ℕ) (G : SimpleGraph (Fin n)) : Prop :=
   ∀ (S : Finset (Fin n)) (t r : ℕ), S.Nonempty → 1 ≤ t → 1 ≤ r →
     2 * S.card + 2 * t ≤ ((S ×ˢ S).filter (fun q => G.Adj q.1 q.2)).card →
     S.card ^ 2 < S.card * (2 * r + 1) + t * (3 * r ^ 2 - r) →

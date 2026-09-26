@@ -15,7 +15,7 @@ ball and the same cylinder scale. No symmetric enlargement of the time window
 or additional pressure estimate is needed.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators

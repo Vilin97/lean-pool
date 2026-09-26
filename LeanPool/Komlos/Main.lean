@@ -24,7 +24,7 @@ has discrepancy at most `36 + η` for the original matrix. Letting `η` tend to 
 bound.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 

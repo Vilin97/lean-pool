@@ -18,7 +18,7 @@ Proof that `fderiv ℝ π m = V.starProjection` at each `m ∈ S`, and
 the main theorem assembling all 10 properties of the projection.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric NNReal
 

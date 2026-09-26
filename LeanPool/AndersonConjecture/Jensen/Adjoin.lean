@@ -22,4 +22,4 @@ Index file for the `LeanPool.AndersonConjecture.Jensen.Adjoin` directory:
 adjoining elements to N-subrings (Loepp, Jensen, Heitmann).
 -/
 
-@[expose] public section
+public section

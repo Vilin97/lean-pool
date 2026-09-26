@@ -45,7 +45,7 @@ The OR of two Boolean functions has circuit complexity bounded by the sum
 of their complexities plus one, using `ShannonUpper.binopCircuit`.
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 

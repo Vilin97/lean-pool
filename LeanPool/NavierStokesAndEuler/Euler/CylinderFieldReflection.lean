@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
 /-! Joint reflection for arbitrary Hilbert-valued cylinder fields and their actual supported spaces.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

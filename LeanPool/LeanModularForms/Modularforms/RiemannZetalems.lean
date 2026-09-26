@@ -12,7 +12,7 @@ public import Mathlib.NumberTheory.LSeries.RiemannZeta
 /-! # RiemannZetalems -/
 
 
-@[expose] public section
+public section
 
 open TopologicalSpace Set MeasureTheory intervalIntegral
   Metric Filter Function Complex

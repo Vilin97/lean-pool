@@ -14,7 +14,7 @@ If a non-unital ring `R` has an element `e` that is both a left and a right
 identity, then `R` admits a (unital) ring structure with `1 = e`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 
@@ -22,8 +22,7 @@ variable {R : Type*} [NonUnitalRing R]
 variable (e : R)
 
 /-- Designate `e` as the `1` element when building a unital `Ring` structure on `R`. -/
-@[reducible]
-def eOne : One R := ⟨e⟩
+@[reducible, expose] def eOne : One R := ⟨e⟩
 
 variable (is_left_unit : ∀ x : R, e * x = x)
 variable (is_right_unit : ∀ x : R, x * e = x)
@@ -36,8 +35,7 @@ The additive structure is inherited verbatim from the `NonUnitalRing R` instance
 `AddCommMonoid R` carried by the result is the one already in scope; rebuilding it (as
 `Ring.ofMinimalAxioms` would) yields `nsmulRec`/`zsmulRec` instead and makes the two
 incomparable during instance synthesis. -/
-@[reducible]
-def nonUnitalWEIsRing : Ring R where
+@[reducible, expose] def nonUnitalWEIsRing : Ring R where
   __ := (inferInstance : NonUnitalRing R)
   __ := eOne e
   one_mul := is_left_unit

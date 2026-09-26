@@ -18,7 +18,7 @@ import Mathlib.Tactic.Positivity.Finset
 Public entry point for the Ulm-theorem track of the project.
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 

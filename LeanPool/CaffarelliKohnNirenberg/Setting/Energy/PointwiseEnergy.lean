@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Statements.SuitableWeakSolutionIn
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology
@@ -25,19 +25,23 @@ noncomputable section
 namespace CKN
 
 /-- The time derivative on the explicit space-time product carrier. -/
+@[expose]
 def timePartialProd (g : Vec3 × ℝ → ℝ) (z : Vec3 × ℝ) : ℝ :=
   timePartial (show ParabolicPoint → ℝ from g) z
 
 /-- The spatial derivative on the explicit space-time product carrier. -/
+@[expose]
 def spatialPartialProd (g : Vec3 × ℝ → ℝ) (i : Fin 3) (z : Vec3 × ℝ) : ℝ :=
   spatialPartial (show ParabolicPoint → ℝ from g) i z
 
 /-- The iterated spatial derivative on the explicit product carrier. -/
+@[expose]
 def spatialSecondPartialProd (g : Vec3 × ℝ → ℝ)
     (i j : Fin 3) (z : Vec3 × ℝ) : ℝ :=
   spatialSecondPartial (show ParabolicPoint → ℝ from g) i j z
 
 /-- The right-hand energy density in the local energy inequality. -/
+@[expose]
 def localEnergyRhs
     (u : Vec3 × ℝ → Vec3) (p : Vec3 × ℝ → ℝ)
     (f : Vec3 × ℝ → Vec3) (ψ : Vec3 × ℝ → ℝ)

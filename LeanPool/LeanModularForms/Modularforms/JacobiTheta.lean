@@ -23,7 +23,7 @@ import Mathlib.Order.CompletePartialOrder
 /-! # JacobiTheta -/
 
 
-@[expose] public section
+public section
 
 /-!
 # Jacobi theta functions

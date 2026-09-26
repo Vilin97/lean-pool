@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part04
 
 /-! # GapCVP proof, part 05 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -411,7 +411,7 @@ open GapCVP.CNFFlatSourceGridDescriptorTM GapCVP.CNFUnaryPairIndexTM
 open GapCVP.CNFUnaryPairIndexTotalRuntimeCert
 
 /-- GapCVP reduction support. -/
-def pairedAccumulatorSignedLiteralDescriptorWord
+@[expose] def pairedAccumulatorSignedLiteralDescriptorWord
     (sign : Bool) (input : List Bool) : List Bool :=
   accumulatorSignedLiteralDescriptorWord sign
     (unarySourcePairOutput input)
@@ -446,7 +446,7 @@ namespace CNFSourcePairPrefixWorkerTM
 open Computability Turing GapCVP.BinaryEncoding GapCVP.CNFUnaryPairIndexTM
 
 /-- GapCVP reduction support. -/
-def sourcePairPrefixOutput (input : List Bool) : List Bool :=
+@[expose] def sourcePairPrefixOutput (input : List Bool) : List Bool :=
   match readUnaryPrefix input with
   | none => []
   | some (first, remaining) =>

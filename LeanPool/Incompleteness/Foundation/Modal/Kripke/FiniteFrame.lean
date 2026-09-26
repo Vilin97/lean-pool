@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Basic
 
 /-! # FiniteFrame -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -61,7 +61,7 @@ namespace Formula
 namespace Kripke
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ValidOnFiniteFrame (F : Kripke.FiniteFrame) (φ : Formula ℕ) := F.toFrame ⊧ φ
+@[expose] def ValidOnFiniteFrame (F : Kripke.FiniteFrame) (φ : Formula ℕ) := F.toFrame ⊧ φ
 
 namespace ValidOnFiniteFrame
 

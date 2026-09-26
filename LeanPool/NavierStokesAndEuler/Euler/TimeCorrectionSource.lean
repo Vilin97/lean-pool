@@ -19,7 +19,7 @@ section
 
 /-! Exact restriction and time continuity of the actual order-zero correction source. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -126,7 +126,7 @@ section
 /-! Strong actual heat approximation and time-dependent operator commutators in Bochner Sobolev
 spaces. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -191,7 +191,7 @@ section
 /-! Actual derivative-losing transport on continuous coefficients and square-integrable higher
 Sobolev states. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -256,7 +256,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -285,7 +285,7 @@ local instance timeCorrectionPathAdd (T : ℝ) (q : ℕ) :
     Add C(Icc (0 : ℝ) T, SobolevSpace period q) := inferInstance
 
 /-- The actual order-zero source is a continuous path on the energy Sobolev level. -/
-def orderZeroPath {s : ℕ} (hs : 6 ≤ s) (T : ℝ)
+@[expose] def orderZeroPath {s : ℕ} (hs : 6 ≤ s) (T : ℝ)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (C0 : C(Icc (0 : ℝ) T, SobolevSpace period s →L[ℝ] SobolevSpace period s))
     (C : Fin 3 → C(Icc (0 : ℝ) T, SobolevSpace period s →L[ℝ] SobolevSpace period s))

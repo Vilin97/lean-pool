@@ -28,7 +28,7 @@ import Mathlib.Data.Nat.SuccPred
 # MatchingLogic.EntryIII.Regression
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic.EntryIIIRegression
 

@@ -36,7 +36,7 @@ see through it. We provide the intermediate instances explicitly.
 - Analogous instances for the pair space `StructureSpace L × StructureSpace L`.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

@@ -21,7 +21,7 @@ periodic Kepler flow.  Its first term becomes a time derivative, so its integral
 period vanishes.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
@@ -35,7 +35,7 @@ noncomputable def resonantCandidateCorrection
     (orientedResonantKeplerPhasePoint p q eccentricity orientation time)
 
 /-- The remaining forcing term in the first homological equation, restricted to the same orbit. -/
-noncomputable def resonantCandidateForcing
+@[expose] noncomputable def resonantCandidateForcing
     (F : ℝ → PhaseSpace → ℝ) (p q : ℕ) (eccentricity orientation time : ℝ) : ℝ :=
   poissonBracket (F 0) firstMassPerturbation
     (orientedResonantKeplerPhasePoint p q eccentricity orientation time)

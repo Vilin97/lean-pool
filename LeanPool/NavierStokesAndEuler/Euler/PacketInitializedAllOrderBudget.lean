@@ -29,7 +29,7 @@ section
 /-! Cutoff-independent background, derivative, drift and residual budgets
 for the actual initialized correction data. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -128,7 +128,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -270,7 +270,7 @@ section
 /-! The initialized approximation satisfies the actual lifted divergence
 constraint whenever the source deformation is a volume-preserving Jacobian. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -329,7 +329,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

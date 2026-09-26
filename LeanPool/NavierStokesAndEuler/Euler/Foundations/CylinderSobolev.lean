@@ -17,7 +17,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-! Actual derivative-word Sobolev norms on R³ × T and compact localizations. -/
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 
@@ -32,7 +32,7 @@ open scoped SchwartzMap ENNReal NNReal ContDiff Topology LineDeriv
 
 
 /-- The four coordinate directions, with angle first and the spatial coordinates following. -/
-noncomputable def standardDirection (i : Fin 4) : LiftTangent :=
+@[expose] noncomputable def standardDirection (i : Fin 4) : LiftTangent :=
   coordinateEquiv (EuclideanSpace.single i 1)
 
 @[simp] theorem standardDirection_zero : standardDirection 0 = (0,1) := by
@@ -62,15 +62,15 @@ noncomputable def iteratedFieldDerivative : {n : ℕ} → (Fin n → Fin 4) →
       (iteratedFieldDerivative (Fin.tail w) f)
 
 @[simp] theorem iteratedFieldDerivative_zero (w : Fin 0 → Fin 4) (f : LiftDomain period → F) :
-    iteratedFieldDerivative period w f = f := rfl
+    iteratedFieldDerivative period w f = f := by rfl
 
 @[simp] theorem iteratedFieldDerivative_succ {n : ℕ} (w : Fin (n + 1) → Fin 4)
     (f : LiftDomain period → F) :
     iteratedFieldDerivative period w f = fieldDerivative period (standardDirection (w 0))
-      (iteratedFieldDerivative period (Fin.tail w) f) := rfl
+      (iteratedFieldDerivative period (Fin.tail w) f) := by rfl
 
 /-- A concrete norm: the sum of L² norms of all ordered coordinate derivatives up to order `s`. -/
-noncomputable def liftSobolevNorm (s : ℕ) (f : LiftDomain period → F)
+@[expose] noncomputable def liftSobolevNorm (s : ℕ) (f : LiftDomain period → F)
     [Fact (0 < period)] : ℝ :=
   Finset.sum (Finset.range (s+1)) (fun n => ∑ w : Fin n → Fin 4,
     (eLpNorm (iteratedFieldDerivative period w f) 2 (liftMeasure period)).toReal)
@@ -84,6 +84,7 @@ theorem iteratedFieldDerivative_smooth {n : ℕ} (w : Fin n → Fin 4)
     exact fieldDerivative_smooth period _ _ (ih (Fin.tail w))
 
 /-- The actual field lifted to Euclidean coordinates centered at a cylinder point. -/
+@[expose]
 noncomputable def euclideanLift (f : LiftDomain period → F) (x : LiftDomain period) : Domain 4 → F
     :=
   localFieldLift period f x ∘ coordinateEquiv
@@ -107,6 +108,7 @@ theorem euclideanLift_fieldDerivative (f : LiftDomain period → F)
   have hchain := ((hf x).differentiable (by simp) (coordinateEquiv z)).hasFDerivAt.comp z
     coordinateEquiv.hasFDerivAt
   rw [euclideanLift, localFieldLift_fieldDerivative]
+  simp only [directionalDerivative, Function.comp_apply]
   change fderiv ℝ (localFieldLift period f x) (coordinateEquiv z) (coordinateEquiv v) = _
   rw [show fderiv ℝ (euclideanLift period f x) z =
       (fderiv ℝ (localFieldLift period f x) (coordinateEquiv z)).comp
@@ -141,7 +143,8 @@ theorem euclideanLift_tensor_norm_le (n : ℕ) (f : LiftDomain period → F)
   simpa only [euclideanLift_iteratedFieldDerivative period _ f hf] using h
 
 /-- Sum of the norms of all coordinate words of one fixed order. -/
-noncomputable def wordMagnitude (n : ℕ) (f : LiftDomain period → F) (x : LiftDomain period) : ℝ :=
+@[expose] noncomputable def wordMagnitude (n : ℕ) (f : LiftDomain period → F)
+    (x : LiftDomain period) : ℝ :=
   ∑ w : Fin n → Fin 4, ‖iteratedFieldDerivative period w f x‖
 
 theorem wordMagnitude_nonneg (n : ℕ) (f : LiftDomain period → F) (x : LiftDomain period) :
@@ -168,7 +171,7 @@ variable [Fact (0 < period)]
 variable {F : Type*} [NormedAddCommGroup F]
 
 /-- Translation of an actual cylinder function. -/
-noncomputable def translated (f : LiftDomain period → F) (x : LiftDomain period) :
+@[expose] noncomputable def translated (f : LiftDomain period → F) (x : LiftDomain period) :
     LiftDomain period → F := fun y => f (y + x)
 
 theorem eLpNorm_translated (f : LiftDomain period → F)
@@ -295,7 +298,7 @@ noncomputable def localized (f : LiftDomain period → ℂ)
 
 @[simp] theorem localized_apply (f : LiftDomain period → ℂ)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x)) (x : LiftDomain period) (z : Domain 4) :
-    localized period f hf x z = localBump period z • euclideanLift period f x z := rfl
+    localized period f hf x z = localBump period z • euclideanLift period f x z := by rfl
 
 theorem localized_zero (f : LiftDomain period → ℂ)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x)) (x : LiftDomain period) :

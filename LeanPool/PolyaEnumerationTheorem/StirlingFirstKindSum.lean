@@ -22,7 +22,7 @@ For additional information, refer to
 <https://en.wikipedia.org/wiki/Stirling_numbers_of_the_first_kind>.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PolyaEnumerationTheorem
 

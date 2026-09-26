@@ -38,7 +38,7 @@ Hypothesis note: D8 needs only `[T1Space X] [ConnectedSpace X]` (the design list
 `[T2Space X]`, which is not required — the dichotomy and `Mero.ord_ne_top` are `T1`-level).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology
@@ -183,7 +183,7 @@ theorem exists_smul_eq {Θ₀ : MForm X} (h₀ : Θ₀ ≠ 0) (Θ : MForm X) :
       ((chartAt ℂ x).open_target.mem_nhds (mem_chart_target ℂ x))
   filter_upwards [hnz, hq, htarget] with z h1 h2 h3
   simp only [Function.comp_apply] at h2
-  change θ.coeffAt x z = h.holoRepr ((chartAt ℂ x).symm z) * θ₀.coeffAt x z
+  rw [MFormData.coeffAt_smul_meromorphic]
   rw [h2]
   have hqz : q x ((chartAt ℂ x).symm z) = θ.coeffAt x z / θ₀.coeffAt x z := by
     change θ.coeffAt x (chartAt ℂ x ((chartAt ℂ x).symm z)) /

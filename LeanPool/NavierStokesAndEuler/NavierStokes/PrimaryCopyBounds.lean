@@ -18,7 +18,7 @@ constant is chosen before that label, its band, and the lattice copy.  The
 square-root estimates retain the vanishing flat weight.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -369,7 +369,7 @@ variable {V : JetDomain ι D} {U : Domain ι PhaseCalculus.Slow}
 
 /-- Pulse matrix, defined pointwise by `primaryCovariance pref (fun j => (F j).frame) (fun j =>
 (F j).lam) (fun j => (F j).u) (fun j => (F j).L) i (χ i x).1`. -/
-noncomputable def pulseMatrix (F : Fin 2 → PhaseConstruction U)
+@[expose] noncomputable def pulseMatrix (F : Fin 2 → PhaseConstruction U)
     (pref : Fin 2 → ι → ℝ) (χ : ι → D → PhaseCalculus.Slow × ℝ) :
     ι → D → SmoothCovariance.Mat2 := fun i x =>
   primaryCovariance pref (fun j => (F j).frame) (fun j => (F j).lam)
@@ -389,7 +389,7 @@ noncomputable def pulseEnvelope (F : Fin 2 → PhaseConstruction U)
 
 /-- Primary velocity, defined pointwise by `PartitionedCovariance.amplitude (ε i) (mask i x)
 (pulseMatrix F pref χ i x) (T i x) j • pulseVector F χ j i x`. -/
-noncomputable def primaryVelocity (F : Fin 2 → PhaseConstruction U)
+@[expose] noncomputable def primaryVelocity (F : Fin 2 → PhaseConstruction U)
     (pref : Fin 2 → ι → ℝ) (χ : ι → D → PhaseCalculus.Slow × ℝ) (ε : ι → ℝ)
     (T : ι → D → SmoothCovariance.Vec2) (mask : ι → D → ℝ) (j : Fin 2) :
     ι → D → ProblemStatement.Space := fun i x =>
@@ -584,12 +584,12 @@ section NativePressure
 variable {V : JetDomain ι D} {U : Domain ι PhaseCalculus.Slow}
 
 /-- The actual phase is evaluated at the physical native time `L*tau`. -/
-noncomputable def phasePoint (p : PhaseConstruction U)
+@[expose] noncomputable def phasePoint (p : PhaseConstruction U)
     (χ : ι → D → PhaseCalculus.Slow × ℝ) : ι → D → PhaseCalculus.Slow × ℝ :=
   fun i x => ((χ i x).1, p.L i * (χ i x).2)
 
 /-- Phase pressure as an element of `ι → D → ℂ`. -/
-noncomputable def phasePressure (p : PhaseConstruction U)
+@[expose] noncomputable def phasePressure (p : PhaseConstruction U)
     (χ : ι → D → PhaseCalculus.Slow × ℝ) (frequency : ι → ℝ)
     (u : ι → D → ProblemStatement.Space) : ι → D → ℂ := fun i =>
   ParticularWaveBounds.projectedPressure (frequency i)

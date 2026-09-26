@@ -62,7 +62,7 @@ The clock weights and bounded exponents are fixed input functions. Regularity
 of the pressure is deduced from the integral, not assumed as an input.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -72,10 +72,10 @@ open MeasureTheory Set Filter Metric
 open scoped Topology ContDiff
 
 /-- Real form of `(1 + η²)^(-2a)`. -/
-def kernel (a η : ℝ) : ℝ := Real.exp (-2 * a * Real.log (1 + η ^ 2))
+@[expose] def kernel (a η : ℝ) : ℝ := Real.exp (-2 * a * Real.log (1 + η ^ 2))
 
 /-- Pressure, given by `-(1 / 2 : ℝ) * ∫ y, g y * kernel (a y) η`. -/
-def pressure (g a : ℝ → ℝ) (η : ℝ) : ℝ :=
+@[expose] def pressure (g a : ℝ → ℝ) (η : ℝ) : ℝ :=
   -(1 / 2 : ℝ) * ∫ y, g y * kernel (a y) η
 
 /-- Sufficient hypotheses on the fixed clock data. No pressure derivatives occur here. -/
@@ -511,7 +511,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -521,27 +521,27 @@ open Set
 open scoped ContDiff Topology
 
 /-- D, given by `1 / 2 - h`. -/
-def D (h : ℝ) : ℝ := 1 / 2 - h
+@[expose] def D (h : ℝ) : ℝ := 1 / 2 - h
 /-- A, given by `1 / 2 + h`. -/
-def A (h : ℝ) : ℝ := 1 / 2 + h
+@[expose] def A (h : ℝ) : ℝ := 1 / 2 + h
 /-- D, given by `1 - η ^ 2`. -/
-def d (η : ℝ) : ℝ := 1 - η ^ 2
+@[expose] def d (η : ℝ) : ℝ := 1 - η ^ 2
 /-- L, given by `1 - 2 * h * η ^ 2`. -/
-def L (h η : ℝ) : ℝ := 1 - 2 * h * η ^ 2
+@[expose] def L (h η : ℝ) : ℝ := 1 - 2 * h * η ^ 2
 /-- U, given by `4 * η + j`. -/
-def U (j η : ℝ) : ℝ := 4 * η + j
+@[expose] def U (j η : ℝ) : ℝ := 4 * η + j
 /-- H, given by `D h * η + d η * U j η`. -/
-def H (h j η : ℝ) : ℝ := D h * η + d η * U j η
+@[expose] def H (h j η : ℝ) : ℝ := D h * η + d η * U j η
 /-- W, given by `1 - 4 * d η - 2 * D h * η * U j η`. -/
-def W (h j η : ℝ) : ℝ := 1 - 4 * d η - 2 * D h * η * U j η
+@[expose] def W (h j η : ℝ) : ℝ := 1 - 4 * d η - 2 * D h * η * U j η
 /-- Z, given by `-A h * (1 - 2 * η * U j η) * U j η - H h j η * 4 - d η * deriv P η + 4 * A h *
 η * P η`. -/
-def Z (h j : ℝ) (P : ℝ → ℝ) (η : ℝ) : ℝ :=
+@[expose] def Z (h j : ℝ) (P : ℝ → ℝ) (η : ℝ) : ℝ :=
   -A h * (1 - 2 * η * U j η) * U j η - H h j η * 4 -
     d η * deriv P η + 4 * A h * η * P η
 
 /-- Chi, given by `(H h j η) ^ 2 / ((H h j η) ^ 2 + σ ^ 2)`. -/
-def chi (h j σ η : ℝ) : ℝ := (H h j η) ^ 2 / ((H h j η) ^ 2 + σ ^ 2)
+@[expose] def chi (h j σ η : ℝ) : ℝ := (H h j η) ^ 2 / ((H h j η) ^ 2 + σ ^ 2)
 
 /-- A concrete range of choices permitted by the manuscript's smallness order. -/
 structure SmallParameters (h j : ℝ) : Prop where
@@ -900,7 +900,7 @@ parameter interval. Cauchy's integral formula supplies bounds on actual
 derivatives; the derivative bounds are not hypotheses of the construction.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1264,7 +1264,7 @@ then applying the real fundamental theorem of calculus along the segment.
 No disk containing the entire domain and no assumed primitive are required.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1522,7 +1522,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1533,7 +1533,7 @@ open scoped Topology ContDiff BigOperators
 open AxisCoefficientSpace AnalyticCoefficientBounds
 
 /-- A fixed, slightly enlarged real parameter interval. -/
-def window : Window := ⟨-11 / 10, 11 / 10, by norm_num⟩
+@[expose] def window : Window := ⟨-11 / 10, 11 / 10, by norm_num⟩
 
 theorem original_interval_interior :
     Icc (-1 : ℝ) 1 ⊆ Ioo window.left window.right := by
@@ -1546,7 +1546,7 @@ def complexD (z : ℂ) : ℂ := 1 - z ^ 2
 /-- Complex L, given by `1 - 2 * (h : ℂ) * z ^ 2`. -/
 def complexL (h : ℝ) (z : ℂ) : ℂ := 1 - 2 * (h : ℂ) * z ^ 2
 /-- Complex U, given by `4 * z + (j : ℂ)`. -/
-def complexU (j : ℝ) (z : ℂ) : ℂ := 4 * z + (j : ℂ)
+@[expose] def complexU (j : ℝ) (z : ℂ) : ℂ := 4 * z + (j : ℂ)
 /-- Complex H, given by `(NaturalAxisData.D h : ℂ) * z + complexD z * complexU j z`. -/
 def complexH (h j : ℝ) (z : ℂ) : ℂ :=
   (NaturalAxisData.D h : ℂ) * z + complexD z * complexU j z
@@ -1568,7 +1568,7 @@ def complexGradient (h j σ : ℝ) (z : ℂ) : ℂ :=
   -complexL h z * complexH h j z / denominator h j σ z
 /-- Real gradient, given by `-NaturalAxisData.L h x * NaturalAxisData.H h j x /
 (NaturalAxisData.H h j x ^ 2 + σ ^ 2)`. -/
-def realGradient (h j σ x : ℝ) : ℝ :=
+@[expose] def realGradient (h j σ x : ℝ) : ℝ :=
   -NaturalAxisData.L h x * NaturalAxisData.H h j x /
     (NaturalAxisData.H h j x ^ 2 + σ ^ 2)
 
@@ -1669,6 +1669,15 @@ def realField (h j σ : ℝ) (P : ℝ → ℝ) : Field → ℝ → ℝ
   | .zStar => NaturalAxisData.Z h j P
   | .chi => NaturalAxisData.chi h j σ
   | .gradient => realGradient h j σ
+
+theorem realField_chi (h j σ : ℝ) (P : ℝ → ℝ) (η : ℝ) :
+    realField h j σ P .chi η = NaturalAxisData.chi h j σ η := by rfl
+
+theorem realField_inverseL (h j σ : ℝ) (P : ℝ → ℝ) (η : ℝ) :
+    realField h j σ P .inverseL η = (NaturalAxisData.L h η)⁻¹ := by rfl
+
+theorem realField_zStar (h j σ : ℝ) (P : ℝ → ℝ) (η : ℝ) :
+    realField h j σ P .zStar η = NaturalAxisData.Z h j P η := by rfl
 
 theorem deriv_complexPressure_ofReal {g a : ℝ → ℝ} {cap : ℝ}
     (hp : PressureDatum.Admissible g a cap) (x : ℝ) :
@@ -1909,6 +1918,12 @@ def CoefficientFamily.axisData {h j σ : ℝ} {P : ℝ → ℝ}
   normalizedGradient := v.elements .gradient
   zStar := v.elements .zStar
 
+theorem CoefficientFamily.axisData_inverseL {h j σ : ℝ} {P : ℝ → ℝ}
+    (v : CoefficientFamily h j σ P) : v.axisData.inverseL = v.elements .inverseL := by rfl
+
+theorem CoefficientFamily.axisData_zStar {h j σ : ℝ} {P : ℝ → ℝ}
+    (v : CoefficientFamily h j σ P) : v.axisData.zStar = v.elements .zStar := by rfl
+
 theorem CoefficientFamily.radiallyConstant {h j σ : ℝ} {P : ℝ → ℝ}
     (v : CoefficientFamily h j σ P) (k : Field) :
     NaturalAxisBridge.RadiallyConstant window v.epsilon (v.elements k) := by
@@ -2038,7 +2053,7 @@ theorem AnalyticInputs.realPhase_hasDerivAt {h j σ : ℝ} {P : ℝ → ℝ}
     (d.phase_derivative (x : ℂ) (d.real_mem_compact hx)).real_of_complex
 
 /-- Real amplitude, given by `Real.exp (Λ * realPhase h j σ x) / C`. -/
-def realAmplitude (h j σ Λ C x : ℝ) : ℝ := Real.exp (Λ * realPhase h j σ x) / C
+@[expose] def realAmplitude (h j σ Λ C x : ℝ) : ℝ := Real.exp (Λ * realPhase h j σ x) / C
 
 theorem AnalyticInputs.realAmplitude_hasDerivAt {h j σ : ℝ} {P : ℝ → ℝ}
     (d : AnalyticInputs h j σ P) (Λ C : ℝ) {x : ℝ} (hx : x ∈ window.interval) :
@@ -2064,7 +2079,7 @@ theorem AnalyticInputs.realAmplitude_logDerivative {h j σ : ℝ} {P : ℝ → �
 
 /-- Normalization threshold, given by `Real.exp (Λ * realPartSup (axisPhase h j σ)
 d.compactSet)`. -/
-def AnalyticInputs.normalizationThreshold {h j σ : ℝ} {P : ℝ → ℝ}
+@[expose] def AnalyticInputs.normalizationThreshold {h j σ : ℝ} {P : ℝ → ℝ}
     (d : AnalyticInputs h j σ P) (Λ : ℝ) : ℝ :=
   Real.exp (Λ * realPartSup (axisPhase h j σ) d.compactSet)
 
@@ -2122,7 +2137,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2132,21 +2147,21 @@ open Set Filter NaturalAxisBridge NaturalAxisCoefficients
 open scoped Topology ContDiff
 
 /-- Rescale point, given by `(Λ * p.1, p.2)`. -/
-def rescalePoint (Λ : ℝ) (p : ℝ × ℝ) : ℝ × ℝ := (Λ * p.1, p.2)
+@[expose] def rescalePoint (Λ : ℝ) (p : ℝ × ℝ) : ℝ × ℝ := (Λ * p.1, p.2)
 
 /-- Domain, given by `rescalePoint Λ ⁻¹' AxisEvaluation.strip window 20`. -/
-def domain (Λ : ℝ) : Set (ℝ × ℝ) :=
+@[expose] def domain (Λ : ℝ) : Set (ℝ × ℝ) :=
   rescalePoint Λ ⁻¹' AxisEvaluation.strip window 20
 
 /-- Pullback, given by `F (rescalePoint Λ p)`. -/
-def pullback (Λ : ℝ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ := F (rescalePoint Λ p)
+@[expose] def pullback (Λ : ℝ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ := F (rescalePoint Λ p)
 
 /-- Affine profile, given by `b p.2 + c * pullback Λ F p`. -/
-def affineProfile (b : ℝ → ℝ) (c Λ : ℝ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def affineProfile (b : ℝ → ℝ) (c Λ : ℝ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   b p.2 + c * pullback Λ F p
 
 /-- Angular profile, given by `a p.2 * pullback Λ Φ p`. -/
-def angularProfile (a : ℝ → ℝ) (Λ : ℝ) (Φ : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def angularProfile (a : ℝ → ℝ) (Λ : ℝ) (Φ : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   a p.2 * pullback Λ Φ p
 
 theorem contDiff_rescalePoint (Λ : ℝ) : ContDiff ℝ ∞ (rescalePoint Λ) := by
@@ -2204,7 +2219,7 @@ theorem pullback_partialY {F : ℝ × ℝ → ℝ}
   (pullback_hasDerivAt_Y hF Λ hp).deriv
 
 theorem pullback_partialEta (Λ : ℝ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) :
-    partialEta (pullback Λ F) p = partialEta F (rescalePoint Λ p) := rfl
+    partialEta (pullback Λ F) p = partialEta F (rescalePoint Λ p) := by rfl
 
 theorem pullback_second_Y {F : ℝ × ℝ → ℝ}
     (hF : ContDiffOn ℝ ∞ F (AxisEvaluation.strip window 20))
@@ -2301,7 +2316,7 @@ theorem angularProfile_radialDifferential {Φ : ℝ × ℝ → ℝ}
   ring
 
 /-- The fixed polynomial and pressure fields, interpreted as real functions. -/
-def actualData (h j σ : ℝ) (P0 : ℝ → ℝ) : ParameterData where
+@[expose] def actualData (h j σ : ℝ) (P0 : ℝ → ℝ) : ParameterData where
   A := NaturalAxisData.A h
   D := NaturalAxisData.D h
   h := h
@@ -2374,11 +2389,11 @@ theorem uStar_smooth (j : ℝ) : ContDiff ℝ ∞ (NaturalAxisData.U j) := by
   exact (contDiff_const.mul contDiff_id).add contDiff_const
 
 /-- The natural transport coefficient recovered from the true radial average. -/
-def transportW (h : ℝ) (V : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def transportW (h : ℝ) (V : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   1 - 2 * NaturalAxisData.D h * p.2 * V p - NaturalAxisData.d p.2 * partialEta V p
 
 /-- Transport H, given by `NaturalAxisData.D h * p.2 + NaturalAxisData.d p.2 * U p`. -/
-def transportH (h : ℝ) (U : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def transportH (h : ℝ) (U : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   NaturalAxisData.D h * p.2 + NaturalAxisData.d p.2 * U p
 
 theorem transportW_reconstruct {h j σ Λ : ℝ} (P0 : ℝ → ℝ) {B : ℝ × ℝ → ℝ}
@@ -2671,7 +2686,7 @@ theorem angularProfile_log_slope_at_four {Λ : ℝ} (hΛ : 0 < Λ)
   field_simp; ring
 
 /-- Profile error constant, constructed using `errorConstant`. -/
-def profileErrorConstant {h j σ : ℝ} {P0 : ℝ → ℝ}
+@[expose] def profileErrorConstant {h j σ : ℝ} {P0 : ℝ → ℝ}
     (d : AnalyticInputs h j σ P0) : ℝ :=
   errorConstant window d.coefficients.epsilon_pos (d.coefficients.elements .chi)
     d.coefficients.axisData d.amplitudeBound d.amplitudeBound_nonneg
@@ -2709,22 +2724,22 @@ structure ProfileFamily {h j σ : ℝ} {P0 : ℝ → ℝ}
         angularProfile (realAmplitude h j σ Λ C) Λ phi (4 / Λ, η)
 
 /-- F, given by `angularProfile (realAmplitude h j σ Λ C) Λ F.phi`. -/
-def ProfileFamily.f {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
+@[expose] def ProfileFamily.f {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
     (F : ProfileFamily d Λ C) : ℝ × ℝ → ℝ :=
   angularProfile (realAmplitude h j σ Λ C) Λ F.phi
 
 /-- U, given by `affineProfile (NaturalAxisData.U j) (1 / Λ) Λ F.u`. -/
-def ProfileFamily.U {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
+@[expose] def ProfileFamily.U {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
     (F : ProfileFamily d Λ C) : ℝ × ℝ → ℝ :=
   affineProfile (NaturalAxisData.U j) (1 / Λ) Λ F.u
 
 /-- Ubar, given by `affineProfile (NaturalAxisData.U j) (1 / Λ) Λ F.average`. -/
-def ProfileFamily.Ubar {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
+@[expose] def ProfileFamily.Ubar {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
     (F : ProfileFamily d Λ C) : ℝ × ℝ → ℝ :=
   affineProfile (NaturalAxisData.U j) (1 / Λ) Λ F.average
 
 /-- Pi, given by `affineProfile P0 (1 / Λ) Λ F.pressure`. -/
-def ProfileFamily.Pi {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
+@[expose] def ProfileFamily.Pi {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
     (F : ProfileFamily d Λ C) : ℝ × ℝ → ℝ :=
   affineProfile P0 (1 / Λ) Λ F.pressure
 

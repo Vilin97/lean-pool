@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Statements.LocalLp
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open CKN.Foundation.Parabolic
 
@@ -21,6 +21,7 @@ open CKN.Foundation.Parabolic
 namespace CKN
 
 /-- Componentwise local vector `Lp` membership used by paper label `def:sws`. -/
+@[expose]
 def localVecLp (E : Set ParabolicPoint) (p : ℝ)
     (g : ParabolicPoint → Vec3) : Prop :=
   ∀ i : Fin 3, localLp E p (fun z => g z i)

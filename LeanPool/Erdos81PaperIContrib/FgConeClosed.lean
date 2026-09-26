@@ -36,7 +36,7 @@ inner product; they are ported here to an arbitrary real normed space `E`
 
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

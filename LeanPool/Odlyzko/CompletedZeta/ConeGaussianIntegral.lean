@@ -10,7 +10,7 @@ public import LeanPool.Odlyzko.CompletedZeta.UnitAveragedGaussian
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -25,7 +25,7 @@ open mixedEmbedding fundamentalCone
 variable (K : Type*) [Field K] [NumberField K]
 
 /-- An ideal set element used in the Odlyzko-bound argument. -/
-noncomputable def idealSetElement
+@[expose] noncomputable def idealSetElement
     (J : (Ideal (𝓞 K))⁰) (a : idealSet K J) : K :=
   (preimageOfMemIntegerSet (idealSetEquiv K J a).val : 𝓞 K)
 

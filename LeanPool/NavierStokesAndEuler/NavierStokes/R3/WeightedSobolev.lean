@@ -18,7 +18,7 @@ The derivative estimate is local: the unweighted velocity only needs to be in
 `L²`. No integrability assumption is made on its unweighted derivative.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -32,7 +32,7 @@ namespace NavierStokesR3.WeightedSobolev
 open ProblemStatement Comparison
 
 /-- The fixed whole-space `H¹ → L⁶` Sobolev constant in dimension three. -/
-def sobolevConstant : ℝ :=
+@[expose] def sobolevConstant : ℝ :=
   (eLpNormLESNormFDerivOfEqInnerConst (volume : Measure Space) 2 : ℝ)
 
 theorem sobolevConstant_nonneg : 0 ≤ sobolevConstant := NNReal.coe_nonneg _
@@ -102,7 +102,7 @@ theorem norm_fderiv_cutoff_four_le {φ : Space → ℝ} {w : Space → Space}
     _ = _ := by simp [Real.norm_eq_abs, abs_of_nonneg hφ0]
 
 /-- The pointwise magnitude of the weighted coordinate gradient. -/
-def cutoffGradientAmplitude (φ : Space → ℝ) (w : Space → Space) (x : Space) : ℝ :=
+@[expose] def cutoffGradientAmplitude (φ : Space → ℝ) (w : Space → Space) (x : Space) : ℝ :=
   φ x ^ 4 * Real.sqrt (gradientSq w x)
 
 theorem cutoffGradientAmplitude_nonneg (φ : Space → ℝ) (w : Space → Space) (x : Space) :

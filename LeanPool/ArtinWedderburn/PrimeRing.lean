@@ -24,7 +24,7 @@ elementwise version `aRb = 0 → a = 0 ∨ b = 0` and to the two-sided ideal ver
 Concludes that simple rings are prime.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 

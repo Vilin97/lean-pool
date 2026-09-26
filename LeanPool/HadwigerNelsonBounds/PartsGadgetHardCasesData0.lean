@@ -15,7 +15,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Generated hard-case certificates, data group 0. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

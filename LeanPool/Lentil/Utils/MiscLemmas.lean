@@ -9,7 +9,7 @@ public import Std.Data.HashSet.Basic
 import Std.Data.DTreeMap.Internal.Operations
 import Std.Tactic.BVDecide.Normalize.Prop
 
-@[expose] public section
+public section
 
 namespace LentilLib
 
@@ -60,7 +60,7 @@ theorem findFindIdx {α : Type u} {l : List α} {p : α → Bool} {res : α}
     · rw [List.findIdx?_eq_some_iff_getElem]; grind
 
 /-- Right-fold a non-empty list, returning the default `d` on the empty list. -/
-def foldrD {β : Type v} (f : β → β → β) (d : β) : List β → β
+@[expose] def foldrD {β : Type v} (f : β → β → β) (d : β) : List β → β
   | [a] => a
   | a :: as => f a (foldrD f d as)
   | [] => d

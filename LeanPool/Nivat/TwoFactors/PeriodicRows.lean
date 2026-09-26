@@ -49,18 +49,18 @@ mixed-difference direction gives a difference vanishing on a full transverse
 fundamental strip; its transverse period then makes it vanish everywhere.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.TwoFactors
 
 /-- A row has a positive integer period in the horizontal basis direction. Lemma 5.8
 (`lem:row-lifting`). -/
-def RowPeriodic {A : Type*} (x : ℤ × ℤ → A) (j : ℤ) : Prop :=
+@[expose] def RowPeriodic {A : Type*} (x : ℤ × ℤ → A) (j : ℤ) : Prop :=
   ∃ p : ℕ, 0 < p ∧ Function.Periodic (fun i : ℤ => x (i, j)) (p : ℤ)
 
 /-- Equal occurring interior patterns and equal first `k` boundary values determine the next
 boundary value, the rule in equation `eq:boundary-rule`. Lemma 5.5 (`lem:boundary-window`). -/
-def BoundaryRule {A : Type*} (x : ℤ × ℤ → A) (C : Finset (ℤ × ℤ)) (k : ℕ) : Prop :=
+@[expose] def BoundaryRule {A : Type*} (x : ℤ × ℤ → A) (C : Finset (ℤ × ℤ)) (k : ℕ) : Prop :=
   ∀ z z' : ℤ × ℤ,
     (∀ u ∈ C, x (u + z) = x (u + z')) →
     (∀ r : Fin k, x (z + (((r : ℕ) : ℤ), 0)) = x (z' + (((r : ℕ) : ℤ), 0))) →

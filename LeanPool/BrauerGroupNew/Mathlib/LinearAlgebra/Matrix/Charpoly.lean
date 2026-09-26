@@ -13,4 +13,4 @@ public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix.Charpoly.Basi
 Import index for the Brauer group formalization.
 -/
 
-@[expose] public section
+public section

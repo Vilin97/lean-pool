@@ -31,7 +31,7 @@ Gaussian errors retain the original carrier and its conjugate, while actual
 mean aliases occupy the zero mode. No full-residual identity is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -129,7 +129,7 @@ theorem pairedBlock_evaluation {D : Type} (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ 
 
 /-- Zero block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required
 compatibility proofs. -/
-noncomputable def zeroBlock {D : Type} (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ)
+@[expose] noncomputable def zeroBlock {D : Type} (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ)
     (a : MeanVector D) : HarmonicBlock D where
   velocity n i := constantCoefficient (fun x => (a n x i : ℂ))
   pressure _ := 0
@@ -203,7 +203,7 @@ theorem slot_cutoff_angleIndependent {s : WeightedClasses.StripData (D × ℝ)}
   exact congrArg GaussianTailFlat.profile (slot_coordinate_angleIndependent g hangle n x θ)
 
 /-- The retained Gaussian term as a literal real carrier field. -/
-noncomputable def gaussianField (d : LinearWaveBounds.GraphDirections (D × ℝ))
+@[expose] noncomputable def gaussianField (d : LinearWaveBounds.GraphDirections (D × ℝ))
     (ψ : ℕ → D × ℝ → ℝ) (a source : ℕ → D × ℝ → HarmonicCalculus.ComplexVector)
     (j : ℤ) (k : ℕ → ℝ) (Ψ : ℕ → D × ℝ → ℝ) : Oscillation D :=
   fun n p i => (HarmonicCalculus.vectorMode (k n * (j : ℝ)) (Ψ n)
@@ -426,7 +426,7 @@ theorem symmetric_sum {D ι : Type} (s : Finset ι) (a : ι → Coefficients D)
 
 /-- Accumulation is coefficient addition within one fixed label. Distinct
 labels are left distinct even if their numerical carriers coincide. -/
-noncomputable def sumBlock {D ι : Type} (s : Finset ι)
+@[expose] noncomputable def sumBlock {D ι : Type} (s : Finset ι)
     (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ) (b : ι → HarmonicBlock D) :
     HarmonicBlock D where
   velocity n i := ∑ l ∈ s, (b l).velocity n i
@@ -809,7 +809,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -972,13 +972,13 @@ end CovarianceControl
 
 /-- Signed scalar, defined pointwise by `Real.sqrt (s.epsilon n) * SignedCovariance.increment (H
 n x) (T n x) (R n x) j * mask n x`. -/
-noncomputable def signedScalar (s : StripData D) (H : ℕ → D → Mat2)
+@[expose] noncomputable def signedScalar (s : StripData D) (H : ℕ → D → Mat2)
     (T R : ℕ → D → Vec2) (mask : ℕ → D → ℝ) (j : Fin 2) : ℕ → D → ℝ :=
   fun n x => Real.sqrt (s.epsilon n) * SignedCovariance.increment (H n x) (T n x) (R n x) j * mask
       n x
 
 /-- Signed vector, defined pointwise by `signedScalar s H T R mask j n x • v n x`. -/
-noncomputable def signedVector (s : StripData D) (H : ℕ → D → Mat2)
+@[expose] noncomputable def signedVector (s : StripData D) (H : ℕ → D → Mat2)
     (T R : ℕ → D → Vec2) (mask : ℕ → D → ℝ) (v : ℕ → D → Space) (j : Fin 2) :
     ℕ → D → Space := fun n x => signedScalar s H T R mask j n x • v n x
 
@@ -1011,7 +1011,7 @@ theorem signedVector_class {s : StripData D} {H : ℕ → D → Mat2} {T R : ℕ
 /-! ## The same homogeneous fundamental and its constructed pressure -/
 
 /-- Homogeneous coefficients as an element of `LinearWaveBounds.WaveCoefficients D`. -/
-noncomputable def homogeneousCoefficients (a : LinearWaveBounds.WaveCoefficients D)
+@[expose] noncomputable def homogeneousCoefficients (a : LinearWaveBounds.WaveCoefficients D)
     (s : StripData D) (d : LinearWaveBounds.GraphDirections D)
     (v Ndot : ℕ → D → Space) (A : ℕ → D → Space →L[ℝ] Space) :
     LinearWaveBounds.WaveCoefficients D :=
@@ -1022,7 +1022,7 @@ noncomputable def homogeneousCoefficients (a : LinearWaveBounds.WaveCoefficients
 
 /-- Coefficients, given by `homogeneousCoefficients a s d (signedVector s H T R mask v j) Ndot
 A`. -/
-noncomputable def coefficients (a : LinearWaveBounds.WaveCoefficients D)
+@[expose] noncomputable def coefficients (a : LinearWaveBounds.WaveCoefficients D)
     (s : StripData D) (d : LinearWaveBounds.GraphDirections D)
     (H : ℕ → D → Mat2) (T R : ℕ → D → Vec2) (mask : ℕ → D → ℝ)
     (v Ndot : ℕ → D → Space) (A : ℕ → D → Space →L[ℝ] Space) (j : Fin 2) :
@@ -1158,7 +1158,7 @@ theorem coefficients_principal_zero
 
 /-- Phase matrix, given by `PrimaryPulseBounds.chartCovariance pref (fun j => (F j).frame) (fun
 j => (F j).lam) (fun j => (F j).u) (fun j => (F j).L) χ`. -/
-noncomputable def phaseMatrix {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
+@[expose] noncomputable def phaseMatrix {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
     (F : Fin 2 → PrimaryPulseBounds.PhaseConstruction U) (pref : Fin 2 → ℕ → ℝ)
     (χ : ℕ → D → PhaseCalculus.Slow × ℝ) : ℕ → D → Mat2 :=
   PrimaryPulseBounds.chartCovariance pref (fun j => (F j).frame)
@@ -1166,7 +1166,7 @@ noncomputable def phaseMatrix {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
 
 /-- Phase fundamental, defined pointwise by `PrimaryPulseBounds.normalizedPulse ((F j).frame n)
 ((F j).lam n) ((F j).u n) ((F j).L n) (χ n x)`. -/
-noncomputable def phaseFundamental {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
+@[expose] noncomputable def phaseFundamental {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
     (F : Fin 2 → PrimaryPulseBounds.PhaseConstruction U)
     (χ : ℕ → D → PhaseCalculus.Slow × ℝ) (j : Fin 2) : ℕ → D → Space :=
   fun n x => PrimaryPulseBounds.normalizedPulse ((F j).frame n)
@@ -1174,7 +1174,7 @@ noncomputable def phaseFundamental {U : PhaseJetBounds.Domain ℕ PhaseCalculus.
 
 /-- Phase envelope, defined pointwise by `PrimaryPulseBounds.referenceP ((F j).lam n) ((F j).u
 n) ((F j).L n) ((F j).L n * (χ n x).2)`. -/
-noncomputable def phaseEnvelope {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
+@[expose] noncomputable def phaseEnvelope {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
     (F : Fin 2 → PrimaryPulseBounds.PhaseConstruction U)
     (χ : ℕ → D → PhaseCalculus.Slow × ℝ) (j : Fin 2) : ℕ → D → ℝ :=
   fun n x => PrimaryPulseBounds.referenceP ((F j).lam n) ((F j).u n)
@@ -1369,7 +1369,7 @@ theorem coefficientBlock_classes {s : StripData D} {P : ℕ → D → ℝ} {α �
 /-- The full cylindrical construction is evaluated at angle zero to obtain
 the coefficient algebra. Its physical angle is reintroduced by the unchanged
 integer carrier, as proved in `blockOfCoefficients_represents`. -/
-noncomputable def blockOfCoefficients (a : LinearWaveBounds.WaveCoefficients (D × ℝ))
+@[expose] noncomputable def blockOfCoefficients (a : LinearWaveBounds.WaveCoefficients (D × ℝ))
     (kp : ℕ → ℤ) : CorrectionState.HarmonicBlock D :=
   coefficientBlock a.frequency (fun n x => a.phase n (x,0)) kp
     (fun n x => a.amplitude n (x,0)) (fun n x => a.pressure n (x,0))
@@ -2005,7 +2005,7 @@ noncomputable def nativeUnit {D h : ℝ} {vr vt : TorusInverse.Plane}
     covered (SlotColoring.nativeIndex h U.1) (P.rawTangent hdet j 1) Y]
 
 /-- Native tangent block, constructed using `coefficientBlock`. -/
-noncomputable def nativeTangentBlock {D h : ℝ} {vr vt : TorusInverse.Plane}
+@[expose] noncomputable def nativeTangentBlock {D h : ℝ} {vr vt : TorusInverse.Plane}
     {sys : SlotSystem D h vr vt} {U : UnsignedLabel} (P : PairData sys U)
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : ℝ) (a : Vec2)
     (q : ℝ) (x : SlotColoring.Position) (j : Fin 2) :
@@ -2047,7 +2047,7 @@ theorem nativeTangentBlock_tangent {D h : ℝ} {vr vt : TorusInverse.Plane}
 
 /-- Native assembly, defined pointwise by `∑ᶠ v : UnsignedLabel × Fin 2, (nativeTangentBlock (P
 v.1) hdet (outer v.1) (ε v.1) (a v.1) q x v.2).oscillation 0 (Y,θ) i`. -/
-noncomputable def nativeAssembly {D h : ℝ} {vr vt : TorusInverse.Plane}
+@[expose] noncomputable def nativeAssembly {D h : ℝ} {vr vt : TorusInverse.Plane}
     {sys : SlotSystem D h vr vt} {N : ℕ}
     (P : (U : UnsignedLabel) → PairData sys (tailLabel N U))
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : UnsignedLabel → ℝ)

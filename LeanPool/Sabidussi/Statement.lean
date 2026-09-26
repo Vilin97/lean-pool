@@ -16,7 +16,7 @@ the trusted import boundary for `leanprover/comparator`; proof modules build on 
 import them.
 -/
 
-@[expose] public section
+public section
 
 namespace Sabidussi
 
@@ -33,16 +33,17 @@ variable {V E : Type*} [Fintype V] [Fintype E] [DecidableEq V]
 abbrev HalfEdge (E : Type*) := E × Fin 2
 
 /-- The endpoint vertex of a half-edge. -/
-def vertex (G : LoopMultigraph V E) (h : HalfEdge E) : V := G.endAt h.1 h.2
+@[expose] def vertex (G : LoopMultigraph V E) (h : HalfEdge E) : V := G.endAt h.1 h.2
 
 /-- Half-edges incident with a vertex. A loop contributes both of its numbered ends. -/
-def halfEdgesAt (G : LoopMultigraph V E) (v : V) :=
+@[expose] def halfEdgesAt (G : LoopMultigraph V E) (v : V) :=
   {h : HalfEdge E // G.vertex h = v}
 
 instance (G : LoopMultigraph V E) (v : V) : Fintype (G.halfEdgesAt v) :=
   Subtype.fintype fun h : HalfEdge E ↦ G.vertex h = v
 
 /-- Degree counted in half-edge incidences. -/
+@[expose]
 def degree (G : LoopMultigraph V E) (v : V) : ℕ :=
   Fintype.card (G.halfEdgesAt v)
 
@@ -69,10 +70,10 @@ variable [DecidableEq V] {G : LoopMultigraph V E} (T : G.EulerTour)
 abbrev Pos := Fin (T.n + 1)
 
 /-- The next edge position. -/
-def next (i : T.Pos) : T.Pos := finRotate (T.n + 1) i
+@[expose] def next (i : T.Pos) : T.Pos := finRotate (T.n + 1) i
 
 /-- The previous edge position. -/
-def prev (i : T.Pos) : T.Pos := (finRotate (T.n + 1)).symm i
+@[expose] def prev (i : T.Pos) : T.Pos := (finRotate (T.n + 1)).symm i
 
 end EulerTour
 
@@ -81,22 +82,24 @@ variable {V E : Type*} [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
 
 /-- The ordinary natural-number degree of `v` in an edge set. Edge ends are counted, so this
 definition also has the standard behavior for multigraphs. -/
-def degreeIn (F : Finset E) (v : V) : ℕ :=
+@[expose] def degreeIn (F : Finset E) (v : V) : ℕ :=
   ((F ×ˢ (Finset.univ : Finset (Fin 2))).filter fun h ↦ G.endAt h.1 h.2 = v).card
 
 /-- Two labelled edges meet if some numbered end of one has the same endpoint as some numbered
 end of the other. An edge meets itself, and parallel edges meet at both endpoints. -/
+@[expose]
 def EdgeAdjacent (e f : E) : Prop :=
   ∃ i j : Fin 2, G.endAt e i = G.endAt f j
 
 /-- Edge-chain connectivity of a nonempty edge-supported subgraph. -/
+@[expose]
 def EdgeConnected (F : Finset E) : Prop :=
   ∃ root ∈ F, ∀ e ∈ F,
     Relation.ReflTransGen
       (fun x y : E ↦ x ∈ F ∧ y ∈ F ∧ G.EdgeAdjacent x y) root e
 
 /-- The vertices incident with at least one edge of `F`. -/
-def edgeSupport (F : Finset E) : Finset V :=
+@[expose] def edgeSupport (F : Finset E) : Finset V :=
   Finset.univ.filter fun v ↦ ∃ e ∈ F, ∃ i : Fin 2, G.endAt e i = v
 
 /-- An ordinary circuit: a nonempty connected edge-supported subgraph in which every supported
@@ -119,6 +122,7 @@ structure OrdinaryCircuitDecomposition where
   coveredOnce : ∀ e : E, (circuits.filter fun C ↦ e ∈ C.edges).length = 1
 
 /-- Compatibility stated for ordinary circuits. -/
+@[expose]
 def OrdinaryCircuitDecomposition.Compatible {G : LoopMultigraph V E}
     (S : G.OrdinaryCircuitDecomposition) (T : G.EulerTour) : Prop :=
   ∀ (i : T.Pos) (C : G.OrdinaryCircuit), C ∈ S.circuits →

@@ -30,7 +30,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-! # BlockDecomposition -/
 
-@[expose] public section
+public section
 
 
 open Finset Nat Real MeasureTheory
@@ -46,7 +46,7 @@ Note: `|I_ℓ| = 2ℓ + 1`.
 -/
 
 /-- The frequency block `I_ℓ = [ℓ², (ℓ+1)² − 1]`. -/
-def freqBlock (ℓ : ℕ) : Finset ℕ :=
+@[expose] def freqBlock (ℓ : ℕ) : Finset ℕ :=
   Finset.Icc (ℓ ^ 2) ((ℓ + 1) ^ 2 - 1)
 
 /-! ## Def 5.2: Block polynomials
@@ -55,7 +55,7 @@ def freqBlock (ℓ : ℕ) : Finset ℕ :=
 -/
 
 /-- The block polynomial: restriction of `U` to frequencies in `I_ℓ`. -/
-def blockPoly {D : ℕ} (a : Fin D → ℂ) (ℓ : ℕ) (z : ℂ) : ℂ :=
+@[expose] def blockPoly {D : ℕ} (a : Fin D → ℂ) (ℓ : ℕ) (z : ℂ) : ℂ :=
   ∑ k : Fin D, if (k.val + 1) ∈ freqBlock ℓ then a k * z ^ (k.val + 1) else 0
 
 /-! ## Def 5.3: Maximum block index
@@ -64,7 +64,7 @@ def blockPoly {D : ℕ} (a : Fin D → ℂ) (ℓ : ℕ) (z : ℂ) : ℂ :=
 -/
 
 /-- `Λ = Nat.sqrt D` — the index of the last complete block. -/
-def maxBlockIndex (D : ℕ) : ℕ := Nat.sqrt D
+@[expose] def maxBlockIndex (D : ℕ) : ℕ := Nat.sqrt D
 
 /-! ## Def 5.4: Local and remainder pieces
 
@@ -74,12 +74,12 @@ For fixed `M ≥ 1` and `j : ℕ`:
 -/
 
 /-- The local polynomial around annulus `j`, collecting blocks within distance `M`. -/
-def localPoly {D : ℕ} (a : Fin D → ℂ) (M j : ℕ) (z : ℂ) : ℂ :=
+@[expose] def localPoly {D : ℕ} (a : Fin D → ℂ) (M j : ℕ) (z : ℂ) : ℂ :=
   ∑ ℓ ∈ Finset.Icc (max 1 (j - M)) (min (maxBlockIndex D) (j + M)),
     blockPoly a ℓ z
 
 /-- The remainder polynomial: `R_j = U − V_j`. -/
-def remainderPoly {D : ℕ} (a : Fin D → ℂ) (M j : ℕ) (z : ℂ) : ℂ :=
+@[expose] def remainderPoly {D : ℕ} (a : Fin D → ℂ) (M j : ℕ) (z : ℂ) : ℂ :=
   polyEval a z - localPoly a M j z
 
 /-! ### Helper lemmas -/

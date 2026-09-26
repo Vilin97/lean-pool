@@ -26,7 +26,7 @@ by its (positive) integral.
 Tracking: Beads `lean-103.5.2.26.5.3.2.2.5`.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis

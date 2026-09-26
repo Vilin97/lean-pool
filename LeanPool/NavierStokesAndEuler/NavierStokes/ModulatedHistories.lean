@@ -21,7 +21,7 @@ The normalized angular field is modulated multiplicatively, so the unchanged
 axis germ is retained. All history differences below are actual integrals.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -64,7 +64,7 @@ noncomputable def densityAt (X f U : ℝ) : Debt :=
   ![U, 2 * X * f, U * (2 * X * f), U ^ 2 - X * f ^ 2, f ^ 2]
 
 /-- Density, given by `densityAt p.1 (f p) (U p)`. -/
-noncomputable def density (f U : Field) (p : Point) : Debt := densityAt p.1 (f p) (U p)
+@[expose] noncomputable def density (f U : Field) (p : Point) : Debt := densityAt p.1 (f p) (U p)
 
 theorem density_contDiff (f U : Field) (hf : ContDiff ℝ ∞ f) (hU : ContDiff ℝ ∞ U)
     (i : Fin 5) : ContDiff ℝ ∞ (fun p => density f U p i) := by
@@ -103,12 +103,12 @@ theorem density_eq_physical (X f U : ℝ) (hX : 0 < X) :
 variable {a m p₁ p₂ : Point → ℝ} {K B : Set Point}
 
 /-- Raw F, given by `ParametricModulation.realizedE r f N p.1 p.2`. -/
-noncomputable def rawF (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B)
+@[expose] noncomputable def rawF (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B)
     (f : Field) (N : ℝ) (p : Point) : ℝ :=
   ParametricModulation.realizedE r f N p.1 p.2
 
 /-- Raw U, given by `ParametricModulation.realizedU r E U N p.1 p.2`. -/
-noncomputable def rawU (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B)
+@[expose] noncomputable def rawU (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B)
     (E U : Field) (N : ℝ) (p : Point) : ℝ :=
   ParametricModulation.realizedU r E U N p.1 p.2
 
@@ -326,7 +326,7 @@ theorem historyDifference_jets (W : Window)
 /-! ## Localization and genuine axis histories -/
 
 /-- Splice, with branches according to `p.1 ∈ Ioc W.left W.right`. -/
-noncomputable def splice (W : Window) (base actual : Field) (p : Point) : ℝ :=
+@[expose] noncomputable def splice (W : Window) (base actual : Field) (p : Point) : ℝ :=
   if p.1 ∈ Ioc W.left W.right then actual p else base p
 
 theorem splice_eq_before (W : Window) (base actual : Field) {p : Point}
@@ -385,12 +385,12 @@ theorem splice_contDiffOn (W : Window) {base actual : Field} {Ω : Set ℝ}
       exact splice_eq_after W base actual hq
 
 /-- Localized F, given by `splice W f (rawF r f N)`. -/
-noncomputable def localizedF (W : Window)
+@[expose] noncomputable def localizedF (W : Window)
     (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B)
     (f : Field) (N : ℝ) : Field := splice W f (rawF r f N)
 
 /-- Localized U, given by `splice W U (rawU r E U N)`. -/
-noncomputable def localizedU (W : Window)
+@[expose] noncomputable def localizedU (W : Window)
     (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B)
     (E U : Field) (N : ℝ) : Field := splice W U (rawU r E U N)
 
@@ -450,7 +450,7 @@ theorem densityDifference_continuousOn (W : Window)
   exact hc.continuousAt.continuousWithinAt
 
 /-- Axis history, defined pointwise by `∫ s in (0 : ℝ)..p.1, density f U (s, p.2) i`. -/
-noncomputable def axisHistory (f U : Field) (p : Point) : Debt :=
+@[expose] noncomputable def axisHistory (f U : Field) (p : Point) : Debt :=
   fun i => ∫ s in (0 : ℝ)..p.1, density f U (s, p.2) i
 
 theorem axisHistory_localized_sub (W : Window)
@@ -662,7 +662,7 @@ noncomputable def stripDomain (Ω : Set ℝ) (hΩ : IsOpen Ω) : ProfileHistorie
   scale_mem := fun _ hp _ _ => ⟨mem_univ _, hp.2⟩
 
 /-- Profiles, bundling `f`, `U`, `f_smooth`, `U_smooth` and the required compatibility proofs. -/
-noncomputable def profiles (Ω : Set ℝ) (hΩ : IsOpen Ω) (f U : Field) (P0 : ℝ → ℝ)
+@[expose] noncomputable def profiles (Ω : Set ℝ) (hΩ : IsOpen Ω) (f U : Field) (P0 : ℝ → ℝ)
     (hf : ContDiffOn ℝ ∞ f (univ ×ˢ Ω)) (hU : ContDiffOn ℝ ∞ U (univ ×ˢ Ω))
     (hP0 : ContDiffOn ℝ ∞ P0 Ω) : ProfileHistories.Profiles (stripDomain Ω hΩ) where
   f := f
@@ -843,11 +843,11 @@ noncomputable def editE (P : FiveProfileMoments.Patch) (A : ℝ → ℝ)
     (c : ℝ → Coeff) (p : Point) : ℝ := A p.2 * FiveProfileMoments.e P (c p.2) p.1
 
 /-- Edit F, given by `editE P A c p / Real.sqrt (2 * p.1)`. -/
-noncomputable def editF (P : FiveProfileMoments.Patch) (A : ℝ → ℝ)
+@[expose] noncomputable def editF (P : FiveProfileMoments.Patch) (A : ℝ → ℝ)
     (c : ℝ → Coeff) (p : Point) : ℝ := editE P A c p / Real.sqrt (2 * p.1)
 
 /-- Apply repair F, given by `f p + editF P A c p`. -/
-noncomputable def applyRepairF (P : FiveProfileMoments.Patch) (A : ℝ → ℝ)
+@[expose] noncomputable def applyRepairF (P : FiveProfileMoments.Patch) (A : ℝ → ℝ)
     (c : ℝ → Coeff) (f : Field) (p : Point) : ℝ := f p + editF P A c p
 
 /-- Apply repair U, given by `U p + editU P A c p`. -/

@@ -32,7 +32,7 @@ assigned distinct indices strictly above every coordinate in the sequence.  The 
 the file constructs a genuine subsequence whose prescribed finite blocks are bounded-independent.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Cardinal
@@ -101,7 +101,7 @@ def sequenceCodeEquiv : ContinuumIndex ≃ InjectiveSequences :=
   Classical.choice <| Cardinal.eq.mp <| mk_continuumIndex.trans mk_injectiveSequences.symm
 
 /-- The sequence represented by a code. -/
-def codedSequence (a : ContinuumIndex) : ℕ → ContinuumFreeGroup :=
+@[expose] def codedSequence (a : ContinuumIndex) : ℕ → ContinuumFreeGroup :=
   (sequenceCodeEquiv a).1
 
 theorem codedSequence_injective (a : ContinuumIndex) :
@@ -495,7 +495,7 @@ theorem blockOf_spec (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (n : ℕ) :
       simpa only [hb] using Nat.le_of_not_gt hminimal
 
 /-- The finite interval `I_l = [S_l, S_l + N_l)` used in the paper. -/
-def blockPositions (N : ℕ → ℕ) (_hN : ∀ l, 0 < N l) (l : ℕ) : Finset ℕ :=
+@[expose] def blockPositions (N : ℕ → ℕ) (_hN : ∀ l, 0 < N l) (l : ℕ) : Finset ℕ :=
   Finset.Ico (blockStart N l) (blockStart N (l + 1))
 
 theorem mem_blockPositions_iff
@@ -554,7 +554,7 @@ theorem exists_boundedIndependent_subsequence_for_sizes
 /-! ## The paper's shifted coded sequences -/
 
 /-- The basis vector attached to a code's fresh index. -/
-def codeBasisVector (a : ContinuumIndex) : ContinuumFreeGroup :=
+@[expose] def codeBasisVector (a : ContinuumIndex) : ContinuumFreeGroup :=
   Finsupp.single (codeIndex a) 1
 
 /-- The sequence to which finite bounded-independence extraction is applied. -/

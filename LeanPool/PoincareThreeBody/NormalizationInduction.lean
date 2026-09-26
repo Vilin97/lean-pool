@@ -21,14 +21,14 @@ expansions then express the original candidate as a function of the Hamiltonian 
 arbitrarily high power of the mass parameter.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 
 /-- The sequence obtained by repeatedly subtracting a chosen energy function and dividing by the
 mass parameter. -/
-noncomputable def iteratedMassNormalization
+@[expose] noncomputable def iteratedMassNormalization
     (F : ℝ → PhaseSpace → ℝ) (energyFunction : ℕ → ℝ → ℝ) :
     ℕ → ℝ → PhaseSpace → ℝ
   | 0 => F
@@ -442,7 +442,7 @@ theorem not_isIndependentSomewhere_of_iterated_normalizations
 /-- The remaining classical input, isolated as an induction principle: every analytic first
 integral admits energy functions which cancel all successive Kepler-limit coefficients while the
 normalized remainders remain jointly analytic. -/
-def ClassicalNormalizationPrinciple : Prop :=
+@[expose] def ClassicalNormalizationPrinciple : Prop :=
   ∀ {δ : ℝ} {F : ℝ → PhaseSpace → ℝ},
     0 < δ → IsJointlyAnalytic δ F → IsFirstIntegralFamily δ F →
       ∃ energyFunction : ℕ → ℝ → ℝ,

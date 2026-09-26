@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatSmoothing
 
 /-! The genuine four-coordinate cylinder heat semigroup and simultaneous derivative gain. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -152,7 +152,7 @@ theorem heatList_one_derivative (directions : List LiftTangent) (a : LiftTangent
       exact (lineHeat_norm_le period b v g).trans hgb
 
 /-- The four actual commuting standard coordinate directions on R³×T. -/
-def cylinderDirections : List LiftTangent := List.ofFn standardDirection
+@[expose] def cylinderDirections : List LiftTangent := List.ofFn standardDirection
 
 /-- The actual cylinder heat semigroup, parameterized by Gaussian variance. -/
 def cylinderHeat (v : ℝ≥0) : LiftL2 period →L[ℝ] LiftL2 period :=

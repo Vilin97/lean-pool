@@ -21,7 +21,7 @@ import Mathlib.Data.Set.Basic
 # MatchingLogic.Sanity
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 namespace Model

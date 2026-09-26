@@ -8,7 +8,7 @@ module
 meta import Lean.Parser.Term
 import Lean.Parser.Term
 
-@[expose] public section
+public section
 
 open Lean
 

@@ -50,7 +50,7 @@ which would turn `Vs ≈ 2γ³Δ²` into `Vs = O(γ⁴Δ²)`.
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable

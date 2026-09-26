@@ -25,7 +25,7 @@ The indexed cells are also compact. The instance is transported through the exis
 homeomorphism with the closed unit disk, keeping this fact tied to the actual polygon carrier.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

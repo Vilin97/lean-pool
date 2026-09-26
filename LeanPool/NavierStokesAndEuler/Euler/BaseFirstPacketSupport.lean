@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParentChoiceInitialSupport
 supported: it is the compact smooth datum plus its first packet's
 literal compact initial increment. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

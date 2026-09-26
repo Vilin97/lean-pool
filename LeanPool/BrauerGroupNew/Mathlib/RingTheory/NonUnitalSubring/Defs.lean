@@ -13,7 +13,7 @@ public import Mathlib.RingTheory.NonUnitalSubring.Defs
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Mathlib.RingTheory.NonUnitalSubring.Defs`.
 -/
 
-@[expose] public section
+public section
 
 variable {R : Type*} [NonUnitalRing R]
 

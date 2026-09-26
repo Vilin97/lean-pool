@@ -58,7 +58,7 @@ The data constructions (`C`, `consMap`) are **choice-free** (`#print axioms ⊆
 Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Example44
 
@@ -80,7 +80,7 @@ theorem prepend_mono (σ : Str) {X X' : Set Str} (h : X' ⊆ X) : prepend σ X' 
 /-! ### The neighbourhood system `C`. -/
 
 /-- Membership in `C`: a neighbourhood is a cone `σΣ*` or a singleton `{σ}`. -/
-def memC (X : Set Str) : Prop := (∃ σ, X = cone σ) ∨ (∃ σ, X = {σ})
+@[expose] def memC (X : Set Str) : Prop := (∃ σ, X = cone σ) ∨ (∃ σ, X = {σ})
 
 theorem memC_cone (σ : Str) : memC (cone σ) := Or.inl ⟨σ, rfl⟩
 
@@ -116,21 +116,21 @@ theorem nestedOrDisjoint : NestedOrDisjoint memC := by
 /-- **Example 4.4 (Scott 1981, PRG-19).** The neighbourhood system `C` of finite
 or infinite binary
 sequences on `Δ = Σ*`. -/
-def C : NeighborhoodSystem Str :=
+@[expose] def C : NeighborhoodSystem Str :=
   NeighborhoodSystem.ofNestedOrDisjoint memC Set.univ (Or.inl ⟨[], cone_nil.symm⟩) nestedOrDisjoint
     (fun _ => Set.subset_univ _)
 
 @[simp] theorem C_mem {X : Set Str} : C.mem X ↔ memC X := Iff.rfl
 
-@[simp] theorem C_master : C.master = (Set.univ : Set Str) := rfl
+@[simp] theorem C_master : C.master = (Set.univ : Set Str) := by rfl
 
 /-! ### Elements of `C`: `σ` (total) and `σ⊥` (partial). -/
 
 /-- Scott's partial element `σ⊥ = ↑σΣ*` ("the sequence starts with `σ`"). -/
-def strBot (σ : Str) : C.Element := C.principal (C_mem.mpr (memC_cone σ))
+@[expose] def strBot (σ : Str) : C.Element := C.principal (C_mem.mpr (memC_cone σ))
 
 /-- Scott's total element `σ = ↑{σ}` (the finite sequence `σ`, completed). -/
-def strElem (σ : Str) : C.Element := C.principal (C_mem.mpr (memC_singleton σ))
+@[expose] def strElem (σ : Str) : C.Element := C.principal (C_mem.mpr (memC_singleton σ))
 
 /-! ### The successor maps `x ↦ bx`. -/
 
@@ -152,7 +152,7 @@ bit `b`:
 `X (bx) Y ↔ bX ⊆ Y`. Approximable because `bX` is again a neighbourhood
 (`memC_prepend`) and
 prepending is monotone. -/
-def consMap (b : Bool) : ApproximableMap C C where
+@[expose] def consMap (b : Bool) : ApproximableMap C C where
   rel X Y := memC X ∧ memC Y ∧ prepend [b] X ⊆ Y
   rel_dom h := h.1
   rel_cod h := h.2.1

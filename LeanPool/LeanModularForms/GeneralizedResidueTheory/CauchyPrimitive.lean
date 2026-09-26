@@ -24,7 +24,7 @@ open set S via the segment integral F(z) = ∫₀¹ f(c + t(z-c))·(z-c) dt.
 * `holomorphic_convex_primitive` — holomorphic on convex open ⇒ has primitive
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

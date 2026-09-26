@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordConstraints
 The pressure term vanishes exactly. The constant uses only the reference
 H⁴ norm and the H³ norm of the difference. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

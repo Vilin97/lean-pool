@@ -14,7 +14,7 @@ import Mathlib.Tactic.Positivity.Finset
 Tran–Vu Lemma 2.4 (double counting of large minimals `G_W`).
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -25,7 +25,7 @@ variable {α : Type*} [DecidableEq α] [Fintype α]
 noncomputable section
 
 /-- `w = ⌊0.1 L p N⌋`. -/
-noncomputable def coveringWidth (p : ℝ) (N : ℕ) : ℕ :=
+@[expose] noncomputable def coveringWidth (p : ℝ) (N : ℕ) : ℕ :=
   ⌊((1 : ℝ) / 10) * coveringConstant * p * N⌋₊
 
 lemma coveringWidth_eq (p : ℝ) (N : ℕ) :

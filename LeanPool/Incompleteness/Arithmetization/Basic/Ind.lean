@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Sub.Basic
 
 /-! # Ind -/
 
-@[expose] public section
+public section
 
 
 namespace LO

@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.EulerCorrectionEquation
 /-! Exact transport/order-zero splitting of the constructed correction source and its actual
 pressure. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -24,14 +24,14 @@ import Mathlib.Analysis.InnerProductSpace.StarOrder
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.PosMapIsReal`.
 -/
 
-@[expose] public section
+public section
 
 variable {A : Type _} [Ring A] [StarRing A] [Algebra ℂ A] [StarModule ℂ A] [PartialOrder A]
   [_root_.StarOrderedRing A]
 
 /-- we say a map $f \colon M_1 \to M_2$ is a positive map
   if for all positive $x \in M_1$, we also get $f(x)$ is positive -/
-def LinearMap.IsPosMap
+@[expose] def LinearMap.IsPosMap
   {M₁ M₂ : Type*} [Zero M₁] [Zero M₂] [PartialOrder M₁] [PartialOrder M₂]
   {F : Type*} [FunLike F M₁ M₂] (f : F) : Prop :=
 ∀ ⦃x : M₁⦄, 0 ≤ x → 0 ≤ f x
@@ -115,14 +115,14 @@ lemma ContinuousLinearMap.toLinearMapAlgEquiv_apply
   [InnerProductSpace 𝕜 B] [FiniteDimensional 𝕜 B]
   (f : B →L[𝕜] B) :
   ContinuousLinearMap.toLinearMapAlgEquiv f = f.toLinearMap :=
-rfl
+by rfl
 
 lemma ContinuousLinearMap.toLinearMapAlgEquiv_symm_apply
   {𝕜 B : Type*} [RCLike 𝕜] [NormedAddCommGroup B]
   [InnerProductSpace 𝕜 B] [FiniteDimensional 𝕜 B]
   (f : B →ₗ[𝕜] B) :
   ContinuousLinearMap.toLinearMapAlgEquiv.symm f = LinearMap.toContinuousLinearMap f :=
-rfl
+by rfl
 
 theorem ContinuousLinearMap.spectrum_coe {𝕜 B : Type*} [RCLike 𝕜] [NormedAddCommGroup B]
   [InnerProductSpace 𝕜 B] [FiniteDimensional 𝕜 B] (T : B →L[𝕜] B) :

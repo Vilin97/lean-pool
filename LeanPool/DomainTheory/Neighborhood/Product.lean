@@ -55,7 +55,7 @@ substitution
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -66,6 +66,7 @@ variable {α β γ δ : Type*}
 /-- The product neighbourhood `X ∪ Y` over the disjoint union `Δ₀ ∪ Δ₁`, modelled
 on `α ⊕ β` as
 `Sum.inl '' X ∪ Sum.inr '' Y`. -/
+@[expose]
 def prodNbhd (X : Set α) (Y : Set β) : Set (α ⊕ β) := Sum.inl '' X ∪ Sum.inr '' Y
 
 @[simp] theorem mem_prodNbhd_inl {X : Set α} {Y : Set β} {a : α} :
@@ -117,6 +118,7 @@ neighbourhoods are
 (`prodNbhd_inter`) together with the factors' closure; the consistency witness `Z
 ⊆ (X∪Y) ∩ (X'∪Y')`
 splits into witnesses `Z₀ ⊆ X ∩ X'`, `Z₁ ⊆ Y ∩ Y'` by `prodNbhd_subset_iff`. -/
+@[expose]
 def prod (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) : NeighborhoodSystem (α ⊕ β) where
   mem W := ∃ X Y, V₀.mem X ∧ V₁.mem Y ∧ W = prodNbhd X Y
   master := prodNbhd V₀.master V₁.master
@@ -138,12 +140,13 @@ variable {V₀ : NeighborhoodSystem α} {V₁ : NeighborhoodSystem β}
 theorem prod_mem_prodNbhd {X : Set α} {Y : Set β} (hX : V₀.mem X) (hY : V₁.mem Y) :
     (prod V₀ V₁).mem (prodNbhd X Y) := ⟨X, Y, hX, hY, rfl⟩
 
-@[simp] theorem prod_master : (prod V₀ V₁).master = prodNbhd V₀.master V₁.master := rfl
+@[simp] theorem prod_master : (prod V₀ V₁).master = prodNbhd V₀.master V₁.master := by rfl
 
 /-! ### Projections of an element (Scott's `z₀`, `z₁`). -/
 
 /-- Scott's `z₀ = {X ∈ 𝒟₀ ∣ X ∪ Δ₁ ∈ z}`: the first component of a product
 element. -/
+@[expose]
 def NeighborhoodSystem.Element.fst (z : (prod V₀ V₁).Element) : V₀.Element where
   mem X := V₀.mem X ∧ z.mem (prodNbhd X V₁.master)
   sub h := h.1
@@ -162,6 +165,7 @@ def NeighborhoodSystem.Element.fst (z : (prod V₀ V₁).Element) : V₀.Element
 
 /-- Scott's `z₁ = {Y ∈ 𝒟₁ ∣ Δ₀ ∪ Y ∈ z}`: the second component of a product
 element. -/
+@[expose]
 def NeighborhoodSystem.Element.snd (z : (prod V₀ V₁).Element) : V₁.Element where
   mem Y := V₁.mem Y ∧ z.mem (prodNbhd V₀.master Y)
   sub h := h.1
@@ -207,6 +211,7 @@ theorem prod_mem_split {z : (prod V₀ V₁).Element} {X : Set α} {Y : Set β}
 /-- **Definition 3.1 (Scott 1981, PRG-19).** The element pairing `⟨x, y⟩ = {X ∪ Y
 ∣ X ∈ x, Y ∈
 y}`. -/
+@[expose]
 def pair (x : V₀.Element) (y : V₁.Element) : (prod V₀ V₁).Element where
   mem W := ∃ X Y, x.mem X ∧ y.mem Y ∧ W = prodNbhd X Y
   sub := by rintro W ⟨X, Y, hX, hY, rfl⟩; exact prod_mem_prodNbhd (x.sub hX) (y.sub hY)
@@ -280,7 +285,7 @@ theorem pair_fst_snd (z : (prod V₀ V₁).Element) : pair z.fst z.snd = z := by
 
 /-- **Proposition 3.2 (Scott 1981, PRG-19).** The order-isomorphism `|𝒟₀ × 𝒟₁| ≃o
 |𝒟₀| × |𝒟₁|`. -/
-def prodEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
+@[expose] def prodEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
     (prod V₀ V₁).Element ≃o V₀.Element × V₁.Element where
   toFun z := (z.fst, z.snd)
   invFun p := pair p.1 p.2
@@ -299,10 +304,10 @@ def prodEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
       exact ⟨fun X ⟨hX, hzX⟩ => ⟨hX, h _ hzX⟩, fun Y ⟨hY, hzY⟩ => ⟨hY, h _ hzY⟩⟩
 
 @[simp] theorem prodEquiv_apply (z : (prod V₀ V₁).Element) :
-    prodEquiv V₀ V₁ z = (z.fst, z.snd) := rfl
+    prodEquiv V₀ V₁ z = (z.fst, z.snd) := by rfl
 
 @[simp] theorem prodEquiv_symm_apply (p : V₀.Element × V₁.Element) :
-    (prodEquiv V₀ V₁).symm p = pair p.1 p.2 := rfl
+    (prodEquiv V₀ V₁).symm p = pair p.1 p.2 := by rfl
 
 /-! ### Definition 3.3 / Proposition 3.4 — projections and pairing of maps. -/
 
@@ -360,6 +365,7 @@ def proj₁ (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
 /-- **Definition 3.3 (Scott 1981, PRG-19).** The paired mapping `⟨f, g⟩ : 𝒟₂ → 𝒟₀
 × 𝒟₁`,
 `Z ⟨f, g⟩ (X ∪ Y) ↔ Z f X ∧ Z g Y`. -/
+@[expose]
 def paired (f : ApproximableMap V₂ V₀) (g : ApproximableMap V₂ V₁) :
     ApproximableMap V₂ (prod V₀ V₁) where
   rel Z P := (prod V₀ V₁).mem P ∧ f.rel Z (Sum.inl ⁻¹' P) ∧ g.rel Z (Sum.inr ⁻¹' P)
@@ -481,6 +487,7 @@ theorem prod_mem_prodNbhd_iff {X : Set α} {Y : Set β} :
 
 /-- **Lemma 3.6 (Scott 1981, PRG-19).** The constant map at `b : |𝒟₁|`: `X b Y ↔ Y
 ∈ b`. -/
+@[expose]
 def constMap (V₀ : NeighborhoodSystem α) (b : V₁.Element) : ApproximableMap V₀ V₁ where
   rel X Y := V₀.mem X ∧ b.mem Y
   rel_dom h := h.1
@@ -531,7 +538,7 @@ def toMap₂ (f : ApproximableMap (prod V₀ V₁) V₂) : ApproximableMap₂ V�
 
 /-- **Theorem 3.5 (←) (Scott 1981, PRG-19).** A two-variable mapping induces a
 joint mapping. -/
-def ofMap₂ (f : ApproximableMap₂ V₀ V₁ V₂) : ApproximableMap (prod V₀ V₁) V₂ where
+@[expose] def ofMap₂ (f : ApproximableMap₂ V₀ V₁ V₂) : ApproximableMap (prod V₀ V₁) V₂ where
   rel W Z := (prod V₀ V₁).mem W ∧ f.rel (Sum.inl ⁻¹' W) (Sum.inr ⁻¹' W) Z
   rel_dom h := h.1
   rel_cod h := f.rel_cod h.2

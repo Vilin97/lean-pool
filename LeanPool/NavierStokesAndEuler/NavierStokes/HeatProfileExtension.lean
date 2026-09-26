@@ -34,7 +34,7 @@ right Taylor--Borel construction in Lemmas 11.5--11.6. It does not construct a
 right branch with arbitrary prescribed jets.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -199,7 +199,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -377,7 +377,7 @@ theorem extension_positive_on_collar {a : ℝ} (ha : 1 < a) :
 
 /-- Diffusion-parametrized profile; negative diffusion uses only the Borel
 extension, never the original gamma-integral expression. -/
-noncomputable def scaledProfile (a X ν : ℝ) : ℝ := extension a (2 * ν / X)
+@[expose] noncomputable def scaledProfile (a X ν : ℝ) : ℝ := extension a (2 * ν / X)
 
 theorem scaledProfile_contDiffOn {a : ℝ} (ha : 1 < a) :
     ContDiffOn ℝ ∞ (fun p : ℝ × ℝ => scaledProfile a p.1 p.2)
@@ -425,7 +425,7 @@ theorem scaledProfile_sub_one_bound {a : ℝ} (ha : 1 < a) {X : ℝ} (hX : 0 < X
       ring
 
 /-- Physical profile, given by `scaledProfile a X (1 - η ^ 2)`. -/
-noncomputable def physicalProfile (a X η : ℝ) : ℝ := scaledProfile a X (1 - η ^ 2)
+@[expose] noncomputable def physicalProfile (a X η : ℝ) : ℝ := scaledProfile a X (1 - η ^ 2)
 
 /-- The physical profile now has an ordinary smooth neighborhood beyond
 both endpoints `eta = ±1`, for every positive radius coordinate. -/

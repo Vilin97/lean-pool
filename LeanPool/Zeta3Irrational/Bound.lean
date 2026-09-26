@@ -12,7 +12,7 @@ import Mathlib.Algebra.Order.Star.Real
 # LeanPool.Zeta3Irrational.Bound
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Zeta3Irrational
 

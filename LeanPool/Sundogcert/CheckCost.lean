@@ -32,7 +32,7 @@ public import LeanPool.Sundogcert.Certificate
   Given that audited model, the polynomial bound is a THEOREM (kernel-checked, `sorry`-free).
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 

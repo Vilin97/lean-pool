@@ -44,7 +44,7 @@ the shape of the legacy `Methods/Henkin/Construction.lean` truth lemma: from `(a
 discharges the universal (dually for the negated universal via `neg_all_witness`).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

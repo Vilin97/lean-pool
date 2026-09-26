@@ -22,7 +22,7 @@ These results concern the full actual sum, including stage zero. They do
 not assume that its away-from-origin extensions have already been built.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

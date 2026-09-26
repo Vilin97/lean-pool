@@ -13,4 +13,4 @@ public import LeanPool.RlTheoryInLean.Probability.MarkovChain.Finite.Defs
 Import-only index for the `Finite` directory of the RL-theory-in-Lean import.
 -/
 
-@[expose] public section
+public section

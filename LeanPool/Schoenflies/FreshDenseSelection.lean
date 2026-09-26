@@ -33,7 +33,7 @@ Any connected set avoiding all selected anchors must therefore have the required
   target stars have diameter less than twice the selected mesh scale.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set Topology
 open scoped Graph

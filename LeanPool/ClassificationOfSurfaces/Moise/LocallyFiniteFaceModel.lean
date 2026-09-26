@@ -18,7 +18,7 @@ chosen cyclic `Fin 3` ordering and identifies the result with the standard close
 triangle. The cyclic sides are carried exactly to the corresponding standard polygon sides.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -102,7 +102,7 @@ noncomputable def standardSimplexToRealization (z : stdSimplex ℝ (Fin 3)) :
   ⟨z.1, z.2, ⟨Finset.univ, standardTriangle_univ_mem_cells, by simp⟩⟩
 
 /-- Forget the vacuous one-face support witness in the standard intrinsic realization. -/
-noncomputable def standardRealizationToSimplex
+@[expose] noncomputable def standardRealizationToSimplex
     (z : standardTrianglePlaneComplex.toIntrinsic.realization) :
     stdSimplex ℝ (Fin 3) :=
   ⟨z.1, z.2.1⟩

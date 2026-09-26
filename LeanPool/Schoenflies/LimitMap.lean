@@ -93,7 +93,7 @@ All of the following live in `Schoenflies.CellStructure`.
   `LimitTower.tgtStar_subset_of_mem_cellNbhd`.
 -/
 
-@[expose] public section
+public section
 
 open Set Metric Bornology Filter
 open scoped Graph

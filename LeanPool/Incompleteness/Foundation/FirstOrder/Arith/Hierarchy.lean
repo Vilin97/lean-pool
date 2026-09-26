@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Basic
 
 /-! # Hierarchy -/
 
-@[expose] public section
+public section
 
 
 namespace LO

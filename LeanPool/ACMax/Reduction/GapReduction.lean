@@ -17,7 +17,7 @@ public import LeanPool.ACMax.Spectral.AlgConnK2
 The complete all-order theorem is assembled separately in `Band.Final`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

@@ -37,7 +37,7 @@ Direct transfinite induction on `α` matching `BFEquiv`'s definition:
 - **Limit β**: `⋂_{γ < β} IH` — countable intersection (since `β < ω₁`).
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -58,7 +58,7 @@ instance : MeasurableSpace (StructurePairSpace L) :=
   MeasurableSpace.prod inferInstance inferInstance
 
 /-- The set of code pairs where `BFEquiv α n a b` holds. -/
-def BFEquivSet (α : Ordinal.{0}) (n : ℕ)
+@[expose] def BFEquivSet (α : Ordinal.{0}) (n : ℕ)
     (a : Fin n → ℕ) (b : Fin n → ℕ) :
     Set (StructurePairSpace L) :=
   {p | @BFEquiv L ℕ p.1.toStructure ℕ p.2.toStructure α n a b}

@@ -20,4 +20,4 @@ them via the relevant Mathlib import so existing import sites continue to
 resolve.
 -/
 
-@[expose] public section
+public section

@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketGradeAbsorption
 
 /-! Comparison of the actual time profiles and absorption of a finite family at a fixed radius. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

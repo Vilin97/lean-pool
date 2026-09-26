@@ -9,7 +9,7 @@ public import LeanPool.SumDifferenceExponent.Limit
 
 /-! The complete sharp-supremum theorem. -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Pointwise
 open Filter Topology

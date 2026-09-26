@@ -14,7 +14,7 @@ Spatial Hölder converts the `L^1` mass of a source on a ball into its
 then makes the source's Morrey bound available for exterior kernel terms.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

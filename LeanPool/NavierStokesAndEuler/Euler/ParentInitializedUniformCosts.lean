@@ -18,7 +18,7 @@ section
 in the parent-to-packet constructor. All three source budgets share one
 radius and retain the growth profile derived from that geometry. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -58,7 +58,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

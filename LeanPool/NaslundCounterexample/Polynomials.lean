@@ -26,7 +26,7 @@ square-freeness argument needs: a polynomial of degree at most `2` vanishing on 
 and `P` divides any polynomial vanishing on `F_3`.
 -/
 
-@[expose] public section
+public section
 
 namespace NaslundCounterexample
 
@@ -36,7 +36,7 @@ open Polynomial
 noncomputable def P : (ZMod 3)[X] := X ^ 3 - X
 
 /-- `Q = P^2 = T^6 + T^4 + T^2`, the multiplier of the lift. -/
-noncomputable def Q : (ZMod 3)[X] := P ^ 2
+@[expose] noncomputable def Q : (ZMod 3)[X] := P ^ 2
 
 /-- The interpolant `V_s = s_0 + (s_2 - s_1) T - (s_0 + s_1 + s_2) T^2`, whose value at `c` is
 `s_c` for `c = 0, 1, 2`. -/

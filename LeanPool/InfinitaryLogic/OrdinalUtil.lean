@@ -19,7 +19,7 @@ Both shapes of the countability statement are provided: `Set.Countable (Set.Iio 
 at each site is noise.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

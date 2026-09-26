@@ -54,7 +54,7 @@ depends only
 on `propext`/`Quot.sound` (no `Classical.choice`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -97,6 +97,7 @@ family `𝒟`
 is **nested-or-disjoint** when any two of its members are either nested (one
 included in the
 other) or disjoint. -/
+@[expose]
 def NestedOrDisjoint {α : Type*} (mem : Set α → Prop) : Prop :=
   ∀ ⦃X Y : Set α⦄, mem X → mem Y → X ⊆ Y ∨ Y ⊆ X ∨ X ∩ Y = ∅
 
@@ -115,6 +116,7 @@ smaller (already in `𝒟`); if they are disjoint then the consistency witness `
 forces `Z = ∅`, whence `X ∩ Y = ∅ = Z ∈ 𝒟`. The caller supplies `sub_master`
 (Scott's
 `𝒟 ⊆ 𝒫(Δ)`) directly. -/
+@[expose]
 def NeighborhoodSystem.ofNestedOrDisjoint {α : Type*} (mem : Set α → Prop) (master : Set α)
     (master_mem : mem master) (hnd : NestedOrDisjoint mem)
     (sub_master : ∀ {X : Set α}, mem X → X ⊆ master) : NeighborhoodSystem α where
@@ -134,6 +136,7 @@ neighbourhood
 system is *positive* when Scott's (ii) is strengthened to the biconditional
 **(ii′)**: for
 `X, Y ∈ 𝒟`, the intersection `X ∩ Y` is a neighbourhood **iff** it is non-empty. -/
+@[expose]
 def NeighborhoodSystem.IsPositive {α : Type*} (V : NeighborhoodSystem α) : Prop :=
   ∀ ⦃X Y : Set α⦄, V.mem X → V.mem Y → (V.mem (X ∩ Y) ↔ (X ∩ Y).Nonempty)
 
@@ -146,6 +149,7 @@ consistency
 witness `Z ⊆ X ∩ Y` with `Z ∈ 𝒟` is itself non-empty (apply (ii′) to `Z ∩ Z = Z`),
 so
 `X ∩ Y ⊇ Z` is non-empty, whence `X ∩ Y ∈ 𝒟` by (ii′). Choice-free. -/
+@[expose]
 def NeighborhoodSystem.ofPositive {α : Type*} (mem : Set α → Prop) (master : Set α)
     (master_mem : mem master) (sub_master : ∀ {X : Set α}, mem X → X ⊆ master)
     (pos : ∀ ⦃X Y : Set α⦄, mem X → mem Y → (mem (X ∩ Y) ↔ (X ∩ Y).Nonempty)) :
@@ -180,6 +184,7 @@ neighbourhoods, defined by Scott's recursive convention (**Factoid 1.1a / 1.1b**
 
 (See `interUpTo_zero` and `interUpTo_succ` for the two defining equations as
 lemmas.) -/
+@[expose]
 def interUpTo (V : NeighborhoodSystem α) (X : ℕ → Set α) : ℕ → Set α
   | 0 => V.master
   | (n + 1) => interUpTo V X n ∩ X n
@@ -219,6 +224,7 @@ n} Xᵢ`
 (equivalently, contained in every `Xⱼ`, `j < n`). This is Scott's notion of
 consistency,
 generalized from pairs to finite sequences. -/
+@[expose]
 def Consistent (X : ℕ → Set α) (n : ℕ) : Prop :=
   ∃ Z, V.mem Z ∧ Z ⊆ V.interUpTo X n
 
@@ -388,6 +394,7 @@ These are Scott's *finite elements* of `|𝒟|`. The four filter conditions:
 the
   consistency witness for `V.inter_mem`;
 * `up_mem` is transitivity of `⊆`. -/
+@[expose]
 def principal {X : Set α} (hX : V.mem X) : V.Element where
   mem Y := V.mem Y ∧ X ⊆ Y
   sub h := h.1
@@ -447,6 +454,7 @@ theorem eq_iUnion_principal (x : V.Element) {Z : Set α} :
 {Δ}`,
 "read: *bottom*". It is the principal filter of the master neighbourhood `Δ`: `⊥ =
 ↑Δ`. -/
+@[expose]
 def bot : V.Element := V.principal V.master_mem
 
 /-- **Definition 1.8 — `⊥ = {Δ}` literally.** Scott's `⊥` is the *singleton*
@@ -490,6 +498,7 @@ maximal: any
 *existence* of total
 elements above a given `x` (Exercise 1.24) is choice-dependent and out of scope
 here. -/
+@[expose]
 def IsTotal (x : V.Element) : Prop := ∀ y, x ≤ y → y ≤ x
 
 /-- **Factoid 1.8b (Scott 1981, PRG-19) — "Examples 1.2–1.5 revisited".** "Any
@@ -534,6 +543,7 @@ abbrev DomainIso {α β : Type*} (V₀ : NeighborhoodSystem α) (V₁ : Neighbor
   V₀.Element ≃o V₁.Element
 
 /-- Scott's `𝒟₀ ≅ 𝒟₁`: the domains are isomorphic (there *exists* a `DomainIso`). -/
+@[expose]
 def Isomorphic {α β : Type*} (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) : Prop :=
   Nonempty (DomainIso V₀ V₁)
 

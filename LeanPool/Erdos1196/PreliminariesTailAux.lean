@@ -28,7 +28,7 @@ be computed exactly.
 * `integral_Ioi_two_inv_log_cube`
 -/
 
-@[expose] public section
+public section
 
 open scoped ArithmeticFunction BigOperators Topology
 open Filter MeasureTheory

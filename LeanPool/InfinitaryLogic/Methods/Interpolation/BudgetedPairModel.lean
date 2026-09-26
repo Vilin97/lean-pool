@@ -27,7 +27,7 @@ This is the countermodel that contradicts `r₁ ⊨ r₂` in the final interpola
   seeded; the negative direction of the truth lemma is discarded, so no polarity argument is needed.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

@@ -40,7 +40,7 @@ the Jacobian factor" atom on top.
   identities, now UNCONDITIONALLY PROVABLE (mtrace's P6 landed, see `docs/build-log.md`).
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 
@@ -50,12 +50,13 @@ variable {h g : ℂ → ℂ} {k : ℕ}
 
 /-- The Jacobian-weighted planar trace atom: divides the `k·v^{k-1}` Jacobian factor of
 `F^*(dz)` back out before applying `RS.MTrace.traceZk`. -/
+@[expose]
 noncomputable def traceZkForm (h : ℂ → ℂ) (k : ℕ) (w : ℂ) : ℂ :=
   RS.MTrace.traceZk (fun v => h v * ((k : ℂ) * v ^ ((k : ℤ) - 1))⁻¹) k w
 
 theorem traceZkForm_def (h : ℂ → ℂ) (k : ℕ) (w : ℂ) :
     traceZkForm h k w = RS.MTrace.traceZk (fun v => h v * ((k : ℂ) * v ^ ((k : ℤ) - 1))⁻¹) k w :=
-  rfl
+  by rfl
 
 /-- The cancellation identity (task item 2's core step), `w ≠ 0` form (see the module docstring
 for why the design's unconditional claim is false at `w = 0`). -/

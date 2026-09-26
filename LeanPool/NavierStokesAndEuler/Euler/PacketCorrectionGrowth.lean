@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.NonlinearEnergyConstants
 /-! The exact nonlinear energy constant is a fixed source quantity,
 independent of the Sobolev order, truncation and oscillation frequency. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (Kc : CorrectionCoefficientBudget D P)
 
 /-- Growth coefficient as an element of `ℝ`. -/
-def growthCoefficient (B0 B1 : ℝ) : ℝ :=
+@[expose] def growthCoefficient (B0 B1 : ℝ) : ℝ :=
   let c := D.inverseBound⁻¹
   let first := inverseMetricFirstBound D
   energyConstant P

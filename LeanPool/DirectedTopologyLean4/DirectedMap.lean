@@ -11,7 +11,7 @@ public import LeanPool.DirectedTopologyLean4.DirectedSpace
 # LeanPool.DirectedTopologyLean4.DirectedMap
 -/
 
-@[expose] public section
+public section
 
 /-
   # Definition of directed maps
@@ -27,7 +27,7 @@ public import LeanPool.DirectedTopologyLean4.DirectedSpace
 namespace DirectedMap
 
 /-- A continuous map between two directed spaces is `Directed` if it maps dipaths to dipaths. -/
-def Directed {α β : Type*} [DirectedSpace α] [DirectedSpace β] (f : C(α, β)) : Prop :=
+@[expose] def Directed {α β : Type*} [DirectedSpace α] [DirectedSpace β] (f : C(α, β)) : Prop :=
   ∀ ⦃x y : α⦄ (γ : Path x y), IsDipath γ → IsDipath (γ.map f.continuous_toFun)
 
 end DirectedMap
@@ -87,41 +87,41 @@ instance : Coe D(α,β) C(α, β) := ⟨fun f => f.toContinuousMap⟩
 @[simp] lemma toFun_eq_coe {f : D(α,β)} : f.toFun = (f : α → β) := rfl
 @[simp] lemma coe_to_continuous_map (f : D(α,β)) : ⇑f.toContinuousMap = f := rfl
 @[simp] protected lemma coe_coe {F : Type*} [FunLike F α β] [DirectedMapClass F α β] (f : F)
-    : ⇑(f : D(α,β)) = f := rfl
+    : ⇑(f : D(α,β)) = f := by rfl
 
 @[ext] theorem ext {f g : D(α,β)} (h : ∀ x, f x = g x) : f = g := DFunLike.ext f g h
 
 variable (α)
 
 /-- The identity map is directed -/
-protected def id : D(α,α) where
+@[expose] protected def id : D(α,α) where
   toFun := id
   directed_toFun := fun x y γ γ_path => γ_path
 
-@[simp] lemma coe_id : ⇑(DirectedMap.id α) = id := rfl
+@[simp] lemma coe_id : ⇑(DirectedMap.id α) = id := by rfl
 
 /-- Constant maps are directed -/
-def const (b : β) : D(α,β) where
+@[expose] def const (b : β) : D(α,β) where
   toFun := fun _ : α => b
   directed_toFun := fun x y γ _ => isDipath_constant b
 
-@[simp] lemma coe_const (b : β) : ⇑(const α b) = Function.const α b := rfl
+@[simp] lemma coe_const (b : β) : ⇑(const α b) = Function.const α b := by rfl
 
 variable {α}
 
 /-- The composition of directed maps is directed -/
-def comp (f : D(β,γ)) (g : D(α,β)) : D(α,γ) where
+@[expose] def comp (f : D(β,γ)) (g : D(α,β)) : D(α,γ) where
   toFun := f ∘ g
   directed_toFun := fun x y p hp => f.directed_toFun (p.map g.continuous_toFun)
       (g.directed_toFun p hp)
 
 
-@[simp] lemma id_apply (a : α) : DirectedMap.id α a = a := rfl
-@[simp] lemma const_apply (b : β) (a : α) : const α b a = b := rfl
-@[simp] lemma coe_comp (f : D(β,γ)) (g : D(α,β)) : ⇑(f.comp g) = f ∘ g := rfl
-@[simp] lemma comp_apply (f : D(β,γ)) (g : D(α,β)) (a : α) : f.comp g a = f (g a) := rfl
+@[simp] lemma id_apply (a : α) : DirectedMap.id α a = a := by rfl
+@[simp] lemma const_apply (b : β) (a : α) : const α b a = b := by rfl
+@[simp] lemma coe_comp (f : D(β,γ)) (g : D(α,β)) : ⇑(f.comp g) = f ∘ g := by rfl
+@[simp] lemma comp_apply (f : D(β,γ)) (g : D(α,β)) (a : α) : f.comp g a = f (g a) := by rfl
 @[simp] lemma comp_assoc (f : D(γ,δ)) (g : D(β,γ)) (h : D(α,β)) :
-  (f.comp g).comp h = f.comp (g.comp h) := rfl
+  (f.comp g).comp h = f.comp (g.comp h) := by rfl
 @[simp] lemma id_comp (f : D(α,β)) : (DirectedMap.id β).comp f = f := ext fun _ => rfl
 @[simp] lemma comp_id (f : D(α,β)) : f.comp (DirectedMap.id α) = f := ext fun _ => rfl
 @[simp] lemma const_comp (c : γ) (f : D(α,β)) : (const β c).comp f = const α c

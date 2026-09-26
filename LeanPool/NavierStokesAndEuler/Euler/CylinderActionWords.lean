@@ -29,7 +29,7 @@ independent of the translation parameter, with constant one and no radius
 change. This applies equally to spatial L² and its time-function spaces.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -152,7 +152,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

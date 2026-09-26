@@ -15,7 +15,7 @@ near/far decomposition. Away from the support its exterior formula gives a
 pointwise bound by the source's spatial `L^1` norm.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

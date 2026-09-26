@@ -29,7 +29,7 @@ Geometrically, `t + √a` has norm `t ^ 2 - a = b * b'` in `k(√a)`, so if `b` 
 `(b, a)_k = 1` exactly when `b` is a norm from `k(√a)`, the two symbols agree.
 -/
 
-@[expose] public section
+public section
 
 namespace HasseMinkowski
 

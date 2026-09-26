@@ -21,7 +21,7 @@ This follows from the kernel description for evaluation on a
 finitely generated adic completion.
 -/
 
-@[expose] public section
+public section
 
 open scoped Pointwise
 open AdicCompletion

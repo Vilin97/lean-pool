@@ -26,7 +26,7 @@ section
 
 /-! A uniform positive restart time for bounded data in the actual viscous Sobolev equation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -97,7 +97,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -179,7 +179,7 @@ section
 /-! Pasting actual high-order viscous mild solutions preserves the derivative-gaining Duhamel
 formula. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -244,7 +244,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

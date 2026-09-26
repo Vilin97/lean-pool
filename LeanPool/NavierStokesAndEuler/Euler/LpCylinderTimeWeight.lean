@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeWeight
 /-! Actual scalar time weighting commutes with cylinder inclusion, translations, and rectangular
 multiplication. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -20,7 +20,7 @@ translations are actual pointwise translations, and pressure translation
 covariance follows from the uniquely constructed projected equation.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -179,7 +179,7 @@ section LiftedTranslation
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- Pointwise coefficient translation on the actual cylinder. -/
-def translatedCoefficient (a : LiftDomain period)
+@[expose] def translatedCoefficient (a : LiftDomain period)
     (A : LiftDomain period → Vector3 →L[ℝ] Vector3) (x : LiftDomain period) := A (x + a)
 
 theorem translatedCoefficient_measurable (a : LiftDomain period)
@@ -189,7 +189,7 @@ theorem translatedCoefficient_measurable (a : LiftDomain period)
   hA.comp_measurePreserving (measurePreserving_translation period a)
 
 /-- The one-parameter spatial/angular translation determined by a covering-space direction. -/
-def translationPath (a : LiftTangent) (t : ℝ) : LiftDomain period :=
+@[expose] def translationPath (a : LiftTangent) (t : ℝ) : LiftDomain period :=
   coveringMap period (t • a)
 
 omit [Fact (0 < period)] in
@@ -198,7 +198,7 @@ theorem translationPath_zero (a : LiftTangent) : translationPath period a 0 = 0 
   simp [translationPath, coveringMap]
 
 /-- The actual directional derivative of the translated coefficient field. -/
-def translatedCoefficientDerivative (a : LiftTangent)
+@[expose] def translatedCoefficientDerivative (a : LiftTangent)
     (A : LiftDomain period → Vector3 →L[ℝ] Vector3) (t : ℝ) (x : LiftDomain period) :=
   fderiv ℝ (localFieldLift period A x) (t • a) a
 
@@ -267,7 +267,7 @@ theorem coefficientOperator_translation (a : LiftDomain period)
   rfl
 
 /-- The concrete coercive pressure solution, viewed in ambient L². -/
-def liftedPressure (κ : ℝ) (m : Vector3)
+@[expose] def liftedPressure (κ : ℝ) (m : Vector3)
     (A : LiftDomain period → Vector3 →L[ℝ] Vector3)
     (hA : AEStronglyMeasurable A (liftMeasure period))
     (C : ℝ≥0) (hAb : ∀ x, ‖A x‖ ≤ C) (c : ℝ) (hc : 0 < c)
@@ -439,10 +439,25 @@ theorem pressure_translation_derivative_norm (κ : ℝ) (m : Vector3) (a : LiftT
     (coefficientOperator_coercive A hA C hAb c hpos) _).trans ?_
   apply mul_le_mul_of_nonneg_left _ (inv_nonneg.mpr hc.le)
   refine (norm_sub_le _ _).trans (add_le_add_right ?_ ‖f'‖)
-  exact coefficientApply_norm_le (translatedCoefficientDerivative period a A 0)
-    (translatedCoefficientDerivative_measurable period a A hAs) (D * ‖a‖₊)
-    (fun x => translatedCoefficientDerivative_bound period a A D hDA x)
-    (liftedPressure period κ m A hA C hAb c hc hpos f)
+  calc
+    ‖coefficientOperator (translatedCoefficientDerivative period a A 0)
+        (translatedCoefficientDerivative_measurable period a A hAs) (D * ‖a‖₊)
+        (fun x => translatedCoefficientDerivative_bound period a A D hDA x)
+        (liftedPressure period κ m A hA C hAb c hc hpos f)‖ ≤
+      ‖coefficientOperator (translatedCoefficientDerivative period a A 0)
+        (translatedCoefficientDerivative_measurable period a A hAs) (D * ‖a‖₊)
+        (fun x => translatedCoefficientDerivative_bound period a A D hDA x)‖ *
+        ‖liftedPressure period κ m A hA C hAb c hc hpos f‖ :=
+      (coefficientOperator (translatedCoefficientDerivative period a A 0)
+        (translatedCoefficientDerivative_measurable period a A hAs) (D * ‖a‖₊)
+        (fun x => translatedCoefficientDerivative_bound period a A D hDA x)).le_opNorm _
+    _ ≤ ↑(D * ‖a‖₊) * ‖liftedPressure period κ m A hA C hAb c hc hpos f‖ :=
+      mul_le_mul_of_nonneg_right
+        (coefficientOperator_norm_le (translatedCoefficientDerivative period a A 0)
+          (translatedCoefficientDerivative_measurable period a A hAs) (D * ‖a‖₊)
+          (fun x => translatedCoefficientDerivative_bound period a A D hDA x)) (norm_nonneg _)
+    _ = (D : ℝ) * ‖a‖ * ‖liftedPressure period κ m A hA C hAb c hc hpos f‖ := by
+      simp only [NNReal.coe_mul, coe_nnnorm]
 
 end LiftedTranslation
 

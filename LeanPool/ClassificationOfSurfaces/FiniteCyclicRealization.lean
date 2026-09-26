@@ -29,7 +29,7 @@ legacy cell-complex predicate. It therefore supplies the complete occurrence-pai
 needed by this construction.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -54,7 +54,7 @@ def dart {P : FiniteCyclicPresentation} (o : P.BoundaryOccurrence) : P.Dart :=
   (P.boundary o.1).get o.2
 
 /-- The unoriented edge stored at a boundary occurrence. -/
-def edge {P : FiniteCyclicPresentation} (o : P.BoundaryOccurrence) : P.Edge :=
+@[expose] def edge {P : FiniteCyclicPresentation} (o : P.BoundaryOccurrence) : P.Edge :=
   edgeOfDart o.dart
 
 @[simp]
@@ -73,7 +73,7 @@ theorem edge_mk (P : FiniteCyclicPresentation) (f : P.Face)
 end BoundaryOccurrence
 
 /-- The polygon side indexed by a boundary occurrence. -/
-def occurrenceSide (P : FiniteCyclicPresentation) (o : P.BoundaryOccurrence) :
+@[expose] def occurrenceSide (P : FiniteCyclicPresentation) (o : P.BoundaryOccurrence) :
     PolygonGluing.Side P.Face fun f => (P.boundary f).length :=
   ⟨o.1, o.2⟩
 
@@ -260,7 +260,7 @@ end IsSurfaceValid
 namespace BoundaryPairing
 
 /-- The polygon-side identification associated to a compatible occurrence pairing. -/
-def identification {P : FiniteCyclicPresentation} (pairing : P.BoundaryPairing) :
+@[expose] def identification {P : FiniteCyclicPresentation} (pairing : P.BoundaryPairing) :
     PolygonGluing.Identification P.Face fun f => (P.boundary f).length where
   source := P.occurrenceSide pairing.source
   target := P.occurrenceSide pairing.target

@@ -26,7 +26,7 @@ $\{3n\} \cup \{3n-2\} \cup \{3n-1\} = \mathbb{Z}_{\geq 1}$.
 * `QSeries.euler_pentagonal_number` — the pentagonal number theorem.
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 open scoped Topology

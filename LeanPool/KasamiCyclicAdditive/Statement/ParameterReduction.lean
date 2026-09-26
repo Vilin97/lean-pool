@@ -27,7 +27,7 @@ cardinality `2^n`.  Thus the normalization used by the proof is a theorem,
 not an extra hypothesis in the statement.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

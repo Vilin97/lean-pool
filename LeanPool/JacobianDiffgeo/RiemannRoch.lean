@@ -39,4 +39,4 @@ and Serre-duality export bank; no new mathematics, no reference to `T D`/`pairT`
   `l(single P 1) ≥ 2`, extracting a function with a single simple pole).
 -/
 
-@[expose] public section
+public section

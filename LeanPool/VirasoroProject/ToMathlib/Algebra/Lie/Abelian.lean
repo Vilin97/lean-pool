@@ -11,7 +11,7 @@ public import Mathlib.Algebra.Lie.Abelian
 # LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Abelian
 -/
 
-@[expose] public section
+public section
 
 instance _root_.CommRing.isLieAbelian (R : Type*) [CommRing R] : IsLieAbelian R where
   trivial c₁ c₂ := by

@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderHighMean
 /-! The recursive mean forcing is sent to the actual source inverse, then returned as a true
 cylinder field. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

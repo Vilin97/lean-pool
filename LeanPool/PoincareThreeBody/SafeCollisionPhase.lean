@@ -17,12 +17,12 @@ Shifting the aligned orientation by `π/q` puts it halfway between the possible 
 The exclusion is ultimately the parity contradiction `1 + 2ql = 2pk`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 /-- An orientation halfway between resonant collision phases. -/
-noncomputable def resonantSafeOrientation (p q : ℕ) : ℝ :=
+@[expose] noncomputable def resonantSafeOrientation (p q : ℕ) : ℝ :=
   resonantCollisionOrientation p q + Real.pi / q
 
 theorem resonantCollisionEccentricity_apoapsis_identity

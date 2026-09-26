@@ -18,7 +18,7 @@ State increment.  A fixed containing shell is used only to estimate the
 integral; the final class retains the original moving profile weight.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.RankStateBounds

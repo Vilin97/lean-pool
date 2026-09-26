@@ -20,7 +20,7 @@ floating-point numbers, its rational interpretation, rounding to subnormals, and
 the validity and error properties of subnormal rounding.
 -/
 
-@[expose] public section
+public section
 
 variable {C : FloatCfg}
 
@@ -32,20 +32,20 @@ structure SubnormRep (C : FloatCfg) where
   m : ℕ
 
 /-- Negate a subnormal representation by flipping its sign bit. -/
-def SubnormRep.neg (f : SubnormRep C) : SubnormRep C :=
+@[expose] def SubnormRep.neg (f : SubnormRep C) : SubnormRep C :=
   ⟨¬f.s, f.m⟩
 
 lemma neg_subnorm_involutive : Function.Involutive (@SubnormRep.neg C) := by
   simp [Function.Involutive, SubnormRep.neg]
 
 /-- A subnormal representation is nonzero when its mantissa is nonzero. -/
-def SubnormRep.nonzero (f : SubnormRep C) : Prop := f.m ≠ 0
+@[expose] def SubnormRep.nonzero (f : SubnormRep C) : Prop := f.m ≠ 0
 
 lemma subnorm_neg_nonzero {f : SubnormRep C} (h : f.nonzero) :
   (f.neg).nonzero := h
 
 /-- The rational value represented by a subnormal representation. -/
-def subnormalToQ : SubnormRep C →  ℚ
+@[expose] def subnormalToQ : SubnormRep C →  ℚ
 | ⟨b, m⟩ =>
   let s := if b then -1 else 1
   s * (m / C.prec) * 2^C.emin
@@ -77,7 +77,7 @@ lemma subnormal_to_q_nonzero (s : SubnormRep C) :
 
 
 /-- Round a rational to a subnormal representation using the rounder `r`. -/
-def subnormalRound (r : IntRounder) (q : ℚ) : SubnormRep C :=
+@[expose] def subnormalRound (r : IntRounder) (q : ℚ) : SubnormRep C :=
   ⟨q < 0, r (q < 0) (|q| * 2^(-C.emin) * C.prec)⟩
 
 lemma neg_subnormal_round (r : IntRounder) {q : ℚ} (h : q ≠ 0) :
@@ -215,7 +215,7 @@ lemma subnormal_exp_small {q : ℚ} (q_nonneg : q ≠ 0)
 
 /-- A subnormal rounding map is valid if it never overflows the precision on
 inputs below the smallest normal magnitude. -/
-def ValidSubnormalRounding (f : ℚ → SubnormRep C) : Prop :=
+@[expose] def ValidSubnormalRounding (f : ℚ → SubnormRep C) : Prop :=
   ∀ q : ℚ, q ≠ 0 → Int.log 2 |q| < C.emin → (f q).2 ≤ C.prec
 
 lemma subnormal_round_valid (r : IntRounder) [rh : ValidRounder r] :

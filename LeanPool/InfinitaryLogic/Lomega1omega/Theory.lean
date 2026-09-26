@@ -35,7 +35,7 @@ in Lω₁ω (countable infinitary logic with countable conjunctions/disjunctions
 - [KK04]
 -/
 
-@[expose] public section
+public section
 
 universe u v w w'
 
@@ -57,7 +57,7 @@ namespace Theoryω
 variable {T T' : L.Theoryω} {φ : L.Sentenceω}
 
 /-- A structure M is a model of theory T if it satisfies all sentences in T. -/
-def Model (T : L.Theoryω) (M : Type w) [L.Structure M] : Prop :=
+@[expose] def Model (T : L.Theoryω) (M : Type w) [L.Structure M] : Prop :=
   ∀ φ ∈ T, Sentenceω.Realize φ M
 
 /-- The empty theory has every structure as a model. -/
@@ -75,12 +75,12 @@ The final universe parameter is part of the semantic specification:
 `IsSatisfiableIn.{u, v, w} T` asks for a model whose carrier lies in `Type w`, independently of the
 universes `u`, `v` of the language.  Use this form when a construction chooses the model universe;
 the older `IsSatisfiable` below is its universe-zero specialization. -/
-def IsSatisfiableIn (T : L.Theoryω) : Prop :=
+@[expose] def IsSatisfiableIn (T : L.Theoryω) : Prop :=
   ∃ (M : Type w) (_ : L.Structure M) (_ : Nonempty M), T.Model M
 
 /-- **Finite satisfiability in a selected carrier universe** — every ordinarily finite subtheory
 has a model in `Type w`. -/
-def IsFinitelySatisfiableIn (T : L.Theoryω) : Prop :=
+@[expose] def IsFinitelySatisfiableIn (T : L.Theoryω) : Prop :=
   ∀ T₀ ⊆ T, T₀.Finite → IsSatisfiableIn.{u, v, w} T₀
 
 /-- **Satisfiability**, named rather than written out.  The existential-model statement was
@@ -90,13 +90,13 @@ satisfiability with the `A`-finite kind, which are different hypotheses.  Named 
 
 This published predicate retains its original universe-zero meaning.  Constructions that select a
 different model universe should use `IsSatisfiableIn`. -/
-def IsSatisfiable (T : L.Theoryω) : Prop :=
+@[expose] def IsSatisfiable (T : L.Theoryω) : Prop :=
   ∃ (M : Type) (_ : L.Structure M) (_ : Nonempty M), T.Model M
 
 /-- **Finite satisfiability** — every *ordinarily* finite subtheory has a model.  Contrast
 `AFinitelySatisfiable`, the Barwise premise, which quantifies over `A`-finite subtheories
 instead; at `A = HF` the two coincide, and nowhere else. -/
-def IsFinitelySatisfiable (T : L.Theoryω) : Prop :=
+@[expose] def IsFinitelySatisfiable (T : L.Theoryω) : Prop :=
   ∀ T₀ ⊆ T, T₀.Finite → T₀.IsSatisfiable
 
 /-- Satisfiability in a fixed carrier universe is monotone under shrinking the theory. -/
@@ -157,7 +157,7 @@ theorem BoundedFormulaω.realize_equiv {M N : Type w} [L.Structure M] [L.Structu
 /-! ### Lω₁ω Elementary Equivalence -/
 
 /-- Two structures are Lω₁ω-elementarily equivalent if they satisfy the same Lω₁ω sentences. -/
-def LomegaEquiv (L : Language) (M N : Type*) [L.Structure M] [L.Structure N] : Prop :=
+@[expose] def LomegaEquiv (L : Language) (M N : Type*) [L.Structure M] [L.Structure N] : Prop :=
   ∀ φ : L.Sentenceω, Sentenceω.Realize φ M ↔ Sentenceω.Realize φ N
 
 namespace LomegaEquiv

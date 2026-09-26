@@ -11,7 +11,7 @@ public import Mathlib.Analysis.Normed.Module.Basic
 # LeanPool.SardMoreira.NormedSpace
 -/
 
-@[expose] public section
+public section
 
 namespace NNReal
 

@@ -21,4 +21,4 @@ Tags: abelian-groups, p-groups, classification-theorems, ordinal-filtrations, ul
 MSC: 20K10
 -/
 
-@[expose] public section
+public section

@@ -26,7 +26,7 @@ Hilbert space.
   a compact self-adjoint operator admits a `HilbertBasis` consisting of eigenvectors.
 -/
 
-@[expose] public section
+public section
 
 namespace CompactSelfAdjoint
 

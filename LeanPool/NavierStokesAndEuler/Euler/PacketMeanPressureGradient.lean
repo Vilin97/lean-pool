@@ -32,7 +32,7 @@ section
 /-! Actual scalar pressures whose lifted gradients are smooth L² fields.
 The witnesses below are closed under the literal finite packet assembly. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -230,7 +230,7 @@ section
 spaces.  Compact ordinary scalar tests give compact cylinder scalar tests,
 and the bounded embedding carries their closures into one another. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -317,7 +317,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -390,7 +390,7 @@ section
 This discharges the approximation equation, using the source coefficients
 and the genuine packet Fields rather than an assumed residual equation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -497,7 +497,7 @@ variable (k : ℝ) (hk : k ≠ 0) (hκ : |k⁻¹| ≤ 1)
 
 /-- The data used for cancellation has the literal normalized packet field
 and residual. Its coefficients are the original deformation coefficients. -/
-def coordinateData : EulerAllOrderCorrectionData.Data P D.T :=
+@[expose] def coordinateData : EulerAllOrderCorrectionData.Data P D.T :=
   correctionDataOfFields D P k⁻¹ hκ (coordinateField D G k) R
 
 include hk hW in

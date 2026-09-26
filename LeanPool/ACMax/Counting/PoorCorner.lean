@@ -46,7 +46,7 @@ bounds algebraic connectivity by `2`.
   assembled from the three results above.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

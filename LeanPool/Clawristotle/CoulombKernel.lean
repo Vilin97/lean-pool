@@ -16,7 +16,7 @@ Defines `coulombKernel` (Psi(r) = r^{-3} for r > 0) and proves basic properties:
 strict positivity, Schwartz uniform bounds, and `inv_norm_schwartz_integrable`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 
@@ -27,7 +27,7 @@ namespace VML
     The value at r ≤ 0 is irrelevant since landauMatrix Ψ 0 = 0 always
     (the projection |z|²I - zz^T vanishes at z = 0). Setting it to 1 ensures
     ∀ r, 0 < Ψ r, which the abstract theorem requires. -/
-def coulombKernel (r : ℝ) : ℝ :=
+@[expose] def coulombKernel (r : ℝ) : ℝ :=
   if r ≤ 0 then 1 else r ^ (-3 : ℝ)
 
 lemma coulombKernel_pos : ∀ r, 0 < coulombKernel r := by

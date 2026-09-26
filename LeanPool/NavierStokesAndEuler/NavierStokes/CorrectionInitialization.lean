@@ -22,7 +22,7 @@ the squared partition.  Quantitative initialization is assembled below from
 the estimates on these same operations.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -108,7 +108,7 @@ structure PrimaryPiece (X : Type) [NormedAddCommGroup X] [NormedSpace ℝ X] whe
 namespace PrimaryPiece
 
 /-- Exact coefficients, given by `p.coefficients.corrected p.strip p.directions p.cutoff`. -/
-noncomputable def exactCoefficients (p : PrimaryPiece X) : WaveCoefficients X :=
+@[expose] noncomputable def exactCoefficients (p : PrimaryPiece X) : WaveCoefficients X :=
   p.coefficients.corrected p.strip p.directions p.cutoff
 
 /-- Velocity, defined pointwise by `(vectorMode (p.coefficients.frequency n)
@@ -125,17 +125,17 @@ noncomputable def tangentVelocity (p : PrimaryPiece X) : ℕ → X → Fin 3 →
 
 /-- Pressure, defined pointwise by `(mode (p.coefficients.frequency n) (p.coefficients.phase n)
 (p.exactCoefficients.pressure n) x).re`. -/
-noncomputable def pressure (p : PrimaryPiece X) : ℕ → X → ℝ :=
+@[expose] noncomputable def pressure (p : PrimaryPiece X) : ℕ → X → ℝ :=
   fun n x => (mode (p.coefficients.frequency n) (p.coefficients.phase n)
     (p.exactCoefficients.pressure n) x).re
 
 /-- Excluded as an element of `ℕ → X → Fin 3 → ℝ`. -/
-noncomputable def excluded (p : PrimaryPiece X) : ℕ → X → Fin 3 → ℝ :=
+@[expose] noncomputable def excluded (p : PrimaryPiece X) : ℕ → X → Fin 3 → ℝ :=
   fun n x i => (vectorMode (p.coefficients.frequency n) (p.coefficients.phase n)
     (excludedSlotError p.directions p.cutoff p.coefficients.amplitude 0 n) x i).re
 
 /-- Linear good, given by `p.coefficients.constructedGood p.strip p.directions p.cutoff`. -/
-noncomputable def linearGood (p : PrimaryPiece X) : ℕ → X → ComplexVector :=
+@[expose] noncomputable def linearGood (p : PrimaryPiece X) : ℕ → X → ComplexVector :=
   p.coefficients.constructedGood p.strip p.directions p.cutoff
 
 /-- Linear good field, defined pointwise by `(vectorMode (p.coefficients.frequency n)
@@ -1132,7 +1132,7 @@ noncomputable def seed (labels : Finset ι) (pieces : ι → PrimaryPiece (D × 
 
 /-- The active labels may depend on the chart band. No bound on their total
 cardinality is inserted into the construction or its class estimates. -/
-noncomputable def bandSeed (labels : ℕ → Finset ι) (pieces : ι → PrimaryPiece (D × ℝ))
+@[expose] noncomputable def bandSeed (labels : ℕ → Finset ι) (pieces : ι → PrimaryPiece (D × ℝ))
     (baseError : Oscillation D) : State D where
   mean := ⟨0, 0, 0⟩
   pressure := 0
@@ -1321,6 +1321,7 @@ noncomputable def afterRank (g : GaugeData S) (r : RankData S) (h : ℝ) (index 
 
 /-- Retain pressure alias, given by `{ u with errors := ⟨u.errors.base, u.errors.gaussian,
 u.errors.aliasError + pressureAliasState g c u⟩ }`. -/
+@[expose]
 noncomputable def retainPressureAlias (g : GaugeData S) (c : Context (PressureStream.Lift S))
     (u : State (PressureStream.Lift S)) : State (PressureStream.Lift S) :=
   { u with errors := ⟨u.errors.base, u.errors.gaussian,
@@ -1386,7 +1387,7 @@ open VariableGaugeMean
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S] {ι : Type}
 
 /-- Primary bands, given by `reconstructState g c (bandSeed labels pieces baseError)`. -/
-noncomputable def primaryBands (g : GaugeData S) (c : Context (PressureStream.Lift S))
+@[expose] noncomputable def primaryBands (g : GaugeData S) (c : Context (PressureStream.Lift S))
     (labels : ℕ → Finset ι) (pieces : ι → PrimaryPiece (PressureStream.Lift S × ℝ))
     (baseError : Oscillation (PressureStream.Lift S)) : State (PressureStream.Lift S) :=
   reconstructState g c (bandSeed labels pieces baseError)
@@ -1409,6 +1410,7 @@ noncomputable def rankBands (g : GaugeData S) (r : RankData S) (h : ℝ) (index 
 
 /-- Initialized bands, given by `retainPressureAlias g c (rankBands g r h index axial c labels
 pieces baseError)`. -/
+@[expose]
 noncomputable def initializedBands (g : GaugeData S) (r : RankData S) (h : ℝ) (index : ℕ → ℕ)
     (axial : S × PressureStream.Plane) (c : Context (PressureStream.Lift S))
     (labels : ℕ → Finset ι) (pieces : ι → PrimaryPiece (PressureStream.Lift S × ℝ))
@@ -1693,7 +1695,7 @@ open WeightedClasses HarmonicFields
 variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- A primary mode and its pressure, with the actual conjugate negative mode. -/
-noncomputable def block (a : LinearWaveBounds.WaveCoefficients (D × ℝ))
+@[expose] noncomputable def block (a : LinearWaveBounds.WaveCoefficients (D × ℝ))
     (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ) : HarmonicBlock D where
   velocity n i := ErrorHarmonics.conjugatePair 1 (fun x => a.amplitude n (x, 0) i)
   pressure n := ErrorHarmonics.conjugatePair 1 (fun x => a.pressure n (x, 0))
@@ -1785,7 +1787,7 @@ variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 namespace PrimaryPiece
 
 /-- Harmonic block, given by `PrimaryHarmonics.block p.exactCoefficients Φ kp`. -/
-noncomputable def harmonicBlock (p : PrimaryPiece (D × ℝ))
+@[expose] noncomputable def harmonicBlock (p : PrimaryPiece (D × ℝ))
     (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ) : HarmonicBlock D :=
   PrimaryHarmonics.block p.exactCoefficients Φ kp
 
@@ -4216,23 +4218,24 @@ noncomputable def position (L : Label B N0) (p : PhaseCalculus.Slow) : SlotColor
 
 /-- Similarity scale, given by `ChartScales.Q (BaseChartJets.cellBand L) *
 SimilarityCoordinates.coordinateQ (2 * h) (p.2.2, p.2.1)`. -/
-noncomputable def similarityScale (L : Label B N0) (p : PhaseCalculus.Slow) : ℝ :=
+@[expose] noncomputable def similarityScale (L : Label B N0) (p : PhaseCalculus.Slow) : ℝ :=
   ChartScales.Q (BaseChartJets.cellBand L) *
     SimilarityCoordinates.coordinateQ (2 * h) (p.2.2, p.2.1)
 
 /-- Spatial mask, given by `PartitionedCovariance.mask (CoordinateAlgebra.D h)
 (PrimaryGeometryAssembly.label nominal L) (similarityScale L p) (position L p)`. -/
-noncomputable def spatialMask (L : Label B N0) (p : PhaseCalculus.Slow) : ℝ :=
+@[expose] noncomputable def spatialMask (L : Label B N0) (p : PhaseCalculus.Slow) : ℝ :=
   PartitionedCovariance.mask (CoordinateAlgebra.D h) (PrimaryGeometryAssembly.label nominal L)
     (similarityScale L p) (position L p)
 
 /-- Pulse coordinates, given by `(x.1, x.2.2 / (phases B N0 0).L L)`. -/
+@[expose]
 noncomputable def pulseCoordinates (L : Label B N0) (x : PhaseCalculus.Slow × TorusInverse.Plane) :
     PhaseCalculus.Slow × ℝ :=
   (x.1, x.2.2 / (phases B N0 0).L L)
 
 /-- Raw velocity, constructed using `PartitionedCovariance.amplitude`. -/
-noncomputable def rawVelocity (j : Fin 2) (L : Label B N0)
+@[expose] noncomputable def rawVelocity (j : Fin 2) (L : Label B N0)
     (x : PhaseCalculus.Slow × TorusInverse.Plane) : ProblemStatement.Space :=
   PartitionedCovariance.amplitude (ChartScales.epsilon h (BaseChartJets.cellBand L))
     (spatialMask L x.1 * PartitionedCovariance.cutoff slots.radius x.2.1)
@@ -4241,15 +4244,17 @@ noncomputable def rawVelocity (j : Fin 2) (L : Label B N0)
       ((phases B N0 j).u L) ((phases B N0 j).L L) (pulseCoordinates L x)
 
 /-- Gaussian, given by `GaussianTailFlat.profile (pulseCoordinates L x).2`. -/
+@[expose]
 noncomputable def gaussian (L : Label B N0) (x : PhaseCalculus.Slow × TorusInverse.Plane) : ℝ :=
   GaussianTailFlat.profile (pulseCoordinates L x).2
 
 /-- Cut velocity, given by `gaussian L x • rawVelocity j L x`. -/
-noncomputable def cutVelocity (j : Fin 2) (L : Label B N0)
+@[expose] noncomputable def cutVelocity (j : Fin 2) (L : Label B N0)
     (x : PhaseCalculus.Slow × TorusInverse.Plane) : ProblemStatement.Space :=
   gaussian L x • rawVelocity j L x
 
 /-- Phase point, given by `(x.1, x.2.2)`. -/
+@[expose]
 noncomputable def phasePoint (_L : Label B N0) (x : PhaseCalculus.Slow × TorusInverse.Plane) :
     PhaseCalculus.Slow × ℝ := (x.1, x.2.2)
 
@@ -4270,7 +4275,7 @@ noncomputable def cutPressure (j : Fin 2) (L : Label B N0)
   gaussian L x • rawPressure j L x
 
 /-- Geometry, bundling `gap`, `basis`, `center`. -/
-noncomputable def geometry (j : Fin 2) (L : Label B N0) : CommonCoverSolve.Geometry where
+@[expose] noncomputable def geometry (j : Fin 2) (L : Label B N0) : CommonCoverSolve.Geometry where
   gap := ChartScales.nativeIndex h (BaseChartJets.cellBand L)
   basis := (TorusAverages.transverseChart (ChartScales.timeCoefficient h (BaseChartJets.cellBand L))
     (ChartScales.timeCoefficient_pos h (BaseChartJets.cellBand L)).ne').trans
@@ -4287,7 +4292,7 @@ noncomputable def clockWindow (L : Label B N0) : PeriodicPhaseAssembly.ClockWind
   padding_pos := div_pos (lt_min slots.radius_pos ((phases B N0 0).L_pos L)) (by norm_num)
 
 /-- Periodic phase as an element of `ℝ`. -/
-noncomputable def periodicPhase (j : Fin 2) (L : Label B N0)
+@[expose] noncomputable def periodicPhase (j : Fin 2) (L : Label B N0)
     (p : PhaseCalculus.Slow) (Y : TorusInverse.Plane) : ℝ :=
   (phases B N0 j).phase.pz L / (phases B N0 j).phase.epsilon L * p.2.1 +
     (phases B N0 j).phase.x0 L * p.1 -
@@ -4449,7 +4454,7 @@ variable {B N0 : ℕ}
 
 /-- Common amplitude, given by `∑' k : TorusInverse.Frequency, CurlClassBounds.complexify
 (cutVelocity j L (p, (geometry j L).coordinates k Y))`. -/
-noncomputable def commonAmplitude (j : Fin 2) (L : Label B N0)
+@[expose] noncomputable def commonAmplitude (j : Fin 2) (L : Label B N0)
     (p : PhaseCalculus.Slow) (Y : TorusInverse.Plane) : HarmonicCalculus.ComplexVector :=
   ∑' k : TorusInverse.Frequency, CurlClassBounds.complexify (cutVelocity j L (p, (geometry j
       L).coordinates k Y))
@@ -4522,11 +4527,12 @@ end AmplitudeIdentity
 
 /-- Common context, given by `CommonBaseContext.context certificate modulation upper B
 (CommonWindow.index h)`. -/
+@[expose]
 noncomputable def commonContext (B : ℕ) : CorrectionState.Context LocalSignedRequest.Point :=
   CommonBaseContext.context certificate modulation upper B (CommonWindow.index h)
 
 /-- Common gauge, bundling `radial`, `length`. -/
-noncomputable def commonGauge : VariableGaugeMean.GaugeData TorusInverse.Plane where
+@[expose] noncomputable def commonGauge : VariableGaugeMean.GaugeData TorusInverse.Plane where
   radial := CommonBaseContext.reconstruction h (CommonWindow.index h)
     (PrimaryTargetBounds.leftRadius nominal) (PrimaryTargetBounds.rightRadius nominal)
     (PrimaryTargetBounds.radii_ordered nominal)
@@ -4915,7 +4921,7 @@ open PartitionedCovariance PrimaryFieldAssembly
 variable {B N0 : ℕ}
 
 /-- Tangent mode as an element of `Fin 3 → ℝ`. -/
-noncomputable def tangentMode (j : Fin 2) (L : Label B N0) (p : PhaseCalculus.Slow)
+@[expose] noncomputable def tangentMode (j : Fin 2) (L : Label B N0) (p : PhaseCalculus.Slow)
     (Y : TorusInverse.Plane) (theta : ℝ) : Fin 3 → ℝ :=
   fun i => (HarmonicCalculus.vectorMode 1
     (fun z : TorusInverse.Plane × ℝ =>
@@ -5066,13 +5072,13 @@ open scoped ContDiff Topology
 abbrev AbsolutePoint := PhaseCalculus.Slow × TorusInverse.Plane
 
 /-- To absolute as an element of `AbsolutePoint`. -/
-noncomputable def toAbsolute (n : ℕ) (x : LocalSignedRequest.Point) : AbsolutePoint :=
+@[expose] noncomputable def toAbsolute (n : ℕ) (x : LocalSignedRequest.Point) : AbsolutePoint :=
   ((Real.sqrt (ChartScales.Q n) * x.1,
     (ChartScales.Q n ^ CoordinateAlgebra.D h * x.2.1.2, ChartScales.Q n * x.2.1.1)),
       (CommonCoverSolve.coverPower (CommonWindow.index h n)).symm x.2.2)
 
 /-- From absolute as an element of `LocalSignedRequest.Point`. -/
-noncomputable def fromAbsolute (n : ℕ) (x : AbsolutePoint) : LocalSignedRequest.Point :=
+@[expose] noncomputable def fromAbsolute (n : ℕ) (x : AbsolutePoint) : LocalSignedRequest.Point :=
   (x.1.1 / Real.sqrt (ChartScales.Q n),
     ((x.1.2.2 / ChartScales.Q n, x.1.2.1 / ChartScales.Q n ^ CoordinateAlgebra.D h),
       CommonCoverSolve.coverPower (CommonWindow.index h n) x.2))
@@ -5110,6 +5116,7 @@ variable {B N0 : ℕ}
 
 /-- Chart geometry, given by `{ geometry j L with gap := ChartScales.nativeIndex h
 (BaseChartJets.cellBand L) - CommonWindow.index h n }`. -/
+@[expose]
 noncomputable def chartGeometry (n : ℕ) (j : Fin 2) (L : Label B N0) : CommonCoverSolve.Geometry :=
   { geometry j L with gap := ChartScales.nativeIndex h (BaseChartJets.cellBand L) -
       CommonWindow.index h n }
@@ -5144,25 +5151,26 @@ variable {B N0 : ℕ}
 
 /-- Outer raw velocity, given by `PrimaryCopyBounds.outerCutoff (pulseCoordinates L x).2 •
 rawVelocity j L x`. -/
-noncomputable def outerRawVelocity (j : Fin 2) (L : Label B N0)
+@[expose] noncomputable def outerRawVelocity (j : Fin 2) (L : Label B N0)
     (x : ActualSignedGeometry.Native) : ProblemStatement.Space :=
   PrimaryCopyBounds.outerCutoff (pulseCoordinates L x).2 • rawVelocity j L x
 
 /-- Attached raw velocity, given by `WaveEdgeExtension.nativeExtension nominal (outerRawVelocity
 j L)`. -/
-noncomputable def attachedRawVelocity (j : Fin 2) (L : Label B N0) :
+@[expose] noncomputable def attachedRawVelocity (j : Fin 2) (L : Label B N0) :
     ActualSignedGeometry.Native → ProblemStatement.Space :=
   WaveEdgeExtension.nativeExtension nominal (outerRawVelocity j L)
 
 /-- Uncut amplitude, given by `∑' k : TorusInverse.Frequency, CurlClassBounds.complexify
 (attachedRawVelocity j L (p, (geometry j L).coordinates k Y))`. -/
-noncomputable def uncutAmplitude (j : Fin 2) (L : Label B N0)
+@[expose] noncomputable def uncutAmplitude (j : Fin 2) (L : Label B N0)
     (p : PhaseCalculus.Slow) (Y : TorusInverse.Plane) : HarmonicCalculus.ComplexVector :=
   ∑' k : TorusInverse.Frequency,
     CurlClassBounds.complexify (attachedRawVelocity j L (p, (geometry j L).coordinates k Y))
 
 /-- Periodic gaussian, given by `GaussianTailFlat.profile (PeriodicPhaseAssembly.periodicClock
 (geometry j L) (clockWindow L).cutoff Y / (phases B N0 0).L L)`. -/
+@[expose]
 noncomputable def periodicGaussian (j : Fin 2) (L : Label B N0) (Y : TorusInverse.Plane) : ℝ :=
   GaussianTailFlat.profile
     (PeriodicPhaseAssembly.periodicClock (geometry j L) (clockWindow L).cutoff Y / (phases B N0
@@ -5271,19 +5279,19 @@ theorem periodic_cutoff_amplitude (j : Fin 2) (L : Label B N0) (p : PhaseCalculu
 
 /-- Outer raw pressure, given by `PrimaryCopyBounds.outerCutoff (pulseCoordinates L x).2 •
 rawPressure j L x`. -/
-noncomputable def outerRawPressure (j : Fin 2) (L : Label B N0)
+@[expose] noncomputable def outerRawPressure (j : Fin 2) (L : Label B N0)
     (x : ActualSignedGeometry.Native) : ℂ :=
   PrimaryCopyBounds.outerCutoff (pulseCoordinates L x).2 • rawPressure j L x
 
 /-- Attached raw pressure, given by `WaveEdgeExtension.nativeExtension nominal (outerRawPressure
 j L)`. -/
-noncomputable def attachedRawPressure (j : Fin 2) (L : Label B N0) :
+@[expose] noncomputable def attachedRawPressure (j : Fin 2) (L : Label B N0) :
     ActualSignedGeometry.Native → ℂ :=
   WaveEdgeExtension.nativeExtension nominal (outerRawPressure j L)
 
 /-- Uncut pressure, given by `∑' k : TorusInverse.Frequency, attachedRawPressure j L (p,
 (geometry j L).coordinates k Y)`. -/
-noncomputable def uncutPressure (j : Fin 2) (L : Label B N0)
+@[expose] noncomputable def uncutPressure (j : Fin 2) (L : Label B N0)
     (p : PhaseCalculus.Slow) (Y : TorusInverse.Plane) : ℂ :=
   ∑' k : TorusInverse.Frequency, attachedRawPressure j L (p, (geometry j L).coordinates k Y)
 
@@ -5525,7 +5533,7 @@ variable {B N0 : ℕ}
 
 /-- Standard region, given by `ActualSignedGeometry.standardSlowRegion outgoing.data.h_pos
 outgoing.data.h_lt_half`. -/
-noncomputable def standardRegion : LocalSignedRequest.SlowRegion (2 * h) :=
+@[expose] noncomputable def standardRegion : LocalSignedRequest.SlowRegion (2 * h) :=
   ActualSignedGeometry.standardSlowRegion outgoing.data.h_pos outgoing.data.h_lt_half
 
 /-- Physical position, given by `![Real.sqrt (ChartScales.Q n) * x.1, ChartScales.Q n ^
@@ -5623,7 +5631,7 @@ variable {B N0 : ℕ}
 abbrev FullPoint := LocalSignedRequest.Point × ℝ
 
 /-- Native slow as an element of `PhaseCalculus.Slow`. -/
-noncomputable def nativeSlow (L : Label B N0) (x : AbsolutePoint) : PhaseCalculus.Slow :=
+@[expose] noncomputable def nativeSlow (L : Label B N0) (x : AbsolutePoint) : PhaseCalculus.Slow :=
   (x.1.1 / Real.sqrt (ChartScales.Q (BaseChartJets.cellBand L)),
     (x.1.2.1 / ChartScales.Q (BaseChartJets.cellBand L) ^ CoordinateAlgebra.D h,
       x.1.2.2 / ChartScales.Q (BaseChartJets.cellBand L)))
@@ -5643,18 +5651,19 @@ theorem nativeSlow_toAbsolute (L : Label B N0) (x : LocalSignedRequest.Point) :
 
 /-- Absolute amplitude, given by `ChartScales.Q (BaseChartJets.cellBand L) ^
 (-CoordinateAlgebra.A h) • uncutAmplitude j L (nativeSlow L x) x.2`. -/
-noncomputable def absoluteAmplitude (j : Fin 2) (L : Label B N0) (x : AbsolutePoint) :
+@[expose] noncomputable def absoluteAmplitude (j : Fin 2) (L : Label B N0) (x : AbsolutePoint) :
     HarmonicCalculus.ComplexVector :=
   ChartScales.Q (BaseChartJets.cellBand L) ^ (-CoordinateAlgebra.A h) •
     uncutAmplitude j L (nativeSlow L x) x.2
 
 /-- Absolute pressure, given by `ChartScales.Q (BaseChartJets.cellBand L) ^ (-(2 *
 CoordinateAlgebra.A h)) • uncutPressure j L (nativeSlow L x) x.2`. -/
-noncomputable def absolutePressure (j : Fin 2) (L : Label B N0) (x : AbsolutePoint) : ℂ :=
+@[expose] noncomputable def absolutePressure (j : Fin 2) (L : Label B N0) (x : AbsolutePoint) : ℂ :=
   ChartScales.Q (BaseChartJets.cellBand L) ^ (-(2 * CoordinateAlgebra.A h)) •
     uncutPressure j L (nativeSlow L x) x.2
 
 /-- Absolute phase as an element of `ℝ`. -/
+@[expose]
 noncomputable def absolutePhase (j : Fin 2) (L : Label B N0) (x : AbsolutePoint × ℝ) : ℝ :=
   (PrimaryGeometryAssembly.angularMode certificate modulation (choice B N0).prepared j L : ℝ) * x.2
       +
@@ -5662,7 +5671,7 @@ noncomputable def absolutePhase (j : Fin 2) (L : Label B N0) (x : AbsolutePoint 
 
 /-- Chart coefficients, bundling `radius`, `radialBase`, `frequencyBase`, `axialBase` and the
 required compatibility proofs. -/
-noncomputable def chartCoefficients (j : Fin 2) (L : Label B N0) :
+@[expose] noncomputable def chartCoefficients (j : Fin 2) (L : Label B N0) :
     LinearWaveBounds.WaveCoefficients FullPoint where
   radius _ x := x.1.1
   radialBase n x := BaseContextAssembly.radialBase certificate modulation upper B n x.1
@@ -5676,10 +5685,11 @@ noncomputable def chartCoefficients (j : Fin 2) (L : Label B N0) :
   frequency n := (ChartScales.carrier h n : ℝ)
 
 /-- Chart cutoff, given by `periodicGaussian j L (toAbsolute n x.1).2`. -/
-noncomputable def chartCutoff (j : Fin 2) (L : Label B N0) (n : ℕ) (x : FullPoint) : ℝ :=
+@[expose] noncomputable def chartCutoff (j : Fin 2) (L : Label B N0) (n : ℕ) (x : FullPoint) : ℝ :=
   periodicGaussian j L (toAbsolute n x.1).2
 
 /-- Piece, bundling `strip`, `directions`, `coefficients`, `cutoff`. -/
+@[expose]
 noncomputable def piece (U : LocalSignedRequest.SlowRegion (2 * h)) (j : Fin 2) (L : Label B N0) :
     PrimaryPiece FullPoint where
   strip := HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal U)
@@ -5752,6 +5762,7 @@ theorem chartCoefficients_carrier (j : Fin 2) (L : Label B N0) (n : ℕ) (x : Fu
 
 /-- Absolute tangent, defined pointwise by `(HarmonicCalculus.vectorMode 1 (absolutePhase j L)
 (fun z => periodicGaussian j L z.1.2 • absoluteAmplitude j L z.1) x i).re`. -/
+@[expose]
 noncomputable def absoluteTangent (j : Fin 2) (L : Label B N0) (x : AbsolutePoint × ℝ) : Fin 3 → ℝ
     :=
   fun i => (HarmonicCalculus.vectorMode 1 (absolutePhase j L)
@@ -5759,6 +5770,7 @@ noncomputable def absoluteTangent (j : Fin 2) (L : Label B N0) (x : AbsolutePoin
 
 /-- Absolute pressure mode, given by `(HarmonicCalculus.mode 1 (absolutePhase j L) (fun z =>
 periodicGaussian j L z.1.2 • absolutePressure j L z.1) x).re`. -/
+@[expose]
 noncomputable def absolutePressureMode (j : Fin 2) (L : Label B N0) (x : AbsolutePoint × ℝ) : ℝ :=
   (HarmonicCalculus.mode 1 (absolutePhase j L)
     (fun z => periodicGaussian j L z.1.2 • absolutePressure j L z.1) x).re

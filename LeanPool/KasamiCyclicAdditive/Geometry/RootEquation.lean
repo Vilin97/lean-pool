@@ -32,14 +32,14 @@ It lives in its own file so that `Geometry/EvenCase.lean`, which proves
 `Assembly/GeometricChain.lean` without an import cycle.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive
 
 /-- Solvability of the twisted root equation: at every affine Fermat target
 `(p, q)` with `p, q ≠ 0` there are `w, z` with `w + z = 1` and
 `w ^ m + p * z ^ m = q`. -/
-def RootEqSolvable (m : ℕ) (K : Type*) [Field K] : Prop :=
+@[expose] def RootEqSolvable (m : ℕ) (K : Type*) [Field K] : Prop :=
   ∀ p q : K, p ≠ 0 → q ≠ 0 → p ^ 3 + q ^ 3 = 1 →
     ∃ w z : K, w + z = 1 ∧ w ^ m + p * z ^ m = q
 

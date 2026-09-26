@@ -21,7 +21,7 @@ boundary and radius statements so the proof can be checked modularly, but they
 are not intended as the public API of the project.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -42,7 +42,7 @@ def BoundaryIdentity {n m : ℕ} (u : Domain n → Target m) (a : Domain n) (R0 
 
 /-- Weak a.e. boundary identity, stated directly in terms of the weak gradient
 energy and weak radial energy. -/
-def WeakBoundaryIdentity {n m : ℕ}
+@[expose] def WeakBoundaryIdentity {n m : ℕ}
     (Du : Domain n → Gradient n m) (a : Domain n) (R0 : ℝ) : Prop :=
   ∀ᵐ rho ∂(volume.restrict (Ioo (0 : ℝ) R0)),
     rho * deriv (weakBallEnergy Du a) rho - ((n : ℝ) - 2) * weakBallEnergy Du a rho
@@ -66,7 +66,7 @@ def WeakSharpCutoffRadiusIdentityAt {n m : ℕ}
   -(2 * rho * deriv (weakBallRadialEnergy Du a) rho)
 
 /-- The scalar defect whose vanishing is the sharp-cutoff radius identity. -/
-def weakSharpCutoffDefect {n m : ℕ}
+@[expose] def weakSharpCutoffDefect {n m : ℕ}
     (Du : Domain n → Gradient n m) (a : Domain n) (rho : ℝ) : ℝ :=
   ((n : ℝ) - 2) * weakBallEnergy Du a rho
       - rho * deriv (weakBallEnergy Du a) rho
@@ -101,7 +101,7 @@ def WeakSharpCutoffLimitIdentity {n m : ℕ}
 
 /-- Distributional form of the sharp-cutoff limit: the sharp-cutoff defect pairs
 to zero against every compactly supported smooth test function in `(0, R0)`. -/
-def WeakSharpCutoffDistributionIdentity {n m : ℕ}
+@[expose] def WeakSharpCutoffDistributionIdentity {n m : ℕ}
     (Du : Domain n → Gradient n m) (a : Domain n) (R0 : ℝ) : Prop :=
   ∀ g : ℝ → ℝ,
     ContDiff ℝ (⊤ : ℕ∞) g →
@@ -177,19 +177,19 @@ theorem weakSharpCutoffLimitIdentity_iff_boundaryIdentity {n m : ℕ}
 
 /-- The analytic cutoff-limit step still to be supplied: approximate the sharp
 radial cutoff in the weak radial stationarity identity and pass to a.e. radii. -/
-def WeakRadialCutoffLimitStep {n m : ℕ}
+@[expose] def WeakRadialCutoffLimitStep {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   WeakRadialStationarityIdentity Du R0 →
     WeakSharpCutoffLimitIdentity Du (0 : Domain n) R0
 
 /-- Main one-dimensional radial integrand after applying coarea. -/
-def weakRadialOneDimensionalMainIntegrand {n m : ℕ}
+@[expose] def weakRadialOneDimensionalMainIntegrand {n m : ℕ}
     (Du : Domain n → Gradient n m) (phi : ℝ → ℝ) (rho : ℝ) : ℝ :=
   (((n : ℝ) - 2) * phi rho + rho * deriv phi rho) *
     deriv (weakBallEnergy Du (0 : Domain n)) rho
 
 /-- Radial-energy one-dimensional integrand after applying coarea. -/
-def weakRadialOneDimensionalRhsIntegrand {n m : ℕ}
+@[expose] def weakRadialOneDimensionalRhsIntegrand {n m : ℕ}
     (Du : Domain n → Gradient n m) (phi : ℝ → ℝ) (rho : ℝ) : ℝ :=
   (rho * deriv phi rho) *
     deriv (weakBallRadialEnergy Du (0 : Domain n)) rho
@@ -387,7 +387,7 @@ theorem radiusWeightOn_indicator_thetaFactor {n : ℕ} {R0 s r : ℝ}
 
 /-- Radius-integration formula for weak energy density.  This is the exact
 coarea/ball-derivative statement needed for the energy part. -/
-def WeakEnergyRadiusIntegralFormula {n m : ℕ}
+@[expose] def WeakEnergyRadiusIntegralFormula {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   ∀ c : ℝ → ℝ,
     (∫ x in Metric.ball (0 : Domain n) R0, c ‖x‖ * weakEnergyDensity Du x)
@@ -397,7 +397,7 @@ def WeakEnergyRadiusIntegralFormula {n m : ℕ}
 
 /-- Radius-integration formula for weak energy density, restricted to
 measurable essentially bounded radius weights. -/
-def WeakEnergyRadiusIntegralFormulaForWeights {n m : ℕ}
+@[expose] def WeakEnergyRadiusIntegralFormulaForWeights {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   ∀ c : ℝ → ℝ,
     RadiusWeightOn R0 c →
@@ -407,7 +407,7 @@ def WeakEnergyRadiusIntegralFormulaForWeights {n m : ℕ}
         c rho * deriv (weakBallEnergy Du (0 : Domain n)) rho)
 
 /-- Radius-integration formula for weak radial-energy density. -/
-def WeakRadialEnergyRadiusIntegralFormula {n m : ℕ}
+@[expose] def WeakRadialEnergyRadiusIntegralFormula {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   ∀ c : ℝ → ℝ,
     (∫ x in Metric.ball (0 : Domain n) R0,
@@ -418,7 +418,7 @@ def WeakRadialEnergyRadiusIntegralFormula {n m : ℕ}
 
 /-- Radius-integration formula for weak radial-energy density, restricted to
 measurable essentially bounded radius weights. -/
-def WeakRadialEnergyRadiusIntegralFormulaForWeights {n m : ℕ}
+@[expose] def WeakRadialEnergyRadiusIntegralFormulaForWeights {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   ∀ c : ℝ → ℝ,
     RadiusWeightOn R0 c →
@@ -430,13 +430,13 @@ def WeakRadialEnergyRadiusIntegralFormulaForWeights {n m : ℕ}
 
 /-- The two radius-derivative/coarea formulas needed for the weak
 monotonicity argument, bundled as a single reusable analytic input. -/
-def WeakRadiusIntegralFormulas {n m : ℕ}
+@[expose] def WeakRadiusIntegralFormulas {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   WeakEnergyRadiusIntegralFormula Du R0 ∧
     WeakRadialEnergyRadiusIntegralFormula Du R0
 
 /-- The restricted-weight version of the bundled radius formulas. -/
-def WeakRadiusIntegralFormulasForWeights {n m : ℕ}
+@[expose] def WeakRadiusIntegralFormulasForWeights {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   WeakEnergyRadiusIntegralFormulaForWeights Du R0 ∧
     WeakRadialEnergyRadiusIntegralFormulaForWeights Du R0

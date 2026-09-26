@@ -30,7 +30,7 @@ The Frobenius-twist hypothesis is stated as `pi^n Q = Q + C` with `C = ptInf c` 
 the three points at infinity are the three points of `K0 = ker (1+pi)`, cf. `neg_ptInf`.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 
@@ -91,7 +91,7 @@ section Group
 variable [DecidableEq K]
 
 /-- The `3`-torsion point `t3 = (1,0)`. -/
-def t3 (K : Type*) [Field K] [CharP K 2] : (fer K).toAffine.Point :=
+@[expose] def t3 (K : Type*) [Field K] [CharP K 2] : (fer K).toAffine.Point :=
   pt 1 0 (by exact t3_fermat)
 
 /-- `t3 = (1,0)` is `3`-torsion. -/
@@ -113,7 +113,7 @@ lemma neg_add_t3 {x y d : K} (hx : x ≠ 0) (hy : y ≠ 0) (hd : d ≠ 0)
     field_simp
 
 /-- `phi k Q = -(Q + pi^k Q) + t3`. -/
-def phi (k : ℕ) (W T : K) (h : W ^ 3 + T ^ 3 = 1) : (fer K).toAffine.Point :=
+@[expose] def phi (k : ℕ) (W T : K) (h : W ^ 3 + T ^ 3 = 1) : (fer K).toAffine.Point :=
   -(pt W T h + pt (W ^ 2 ^ k) (T ^ 2 ^ k) (frob_fermat h k)) + t3 K
 
 /-- If `Q + pi^k Q` is `3`-torsion then so is `Phi_k(Q)`. -/

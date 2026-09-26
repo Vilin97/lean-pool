@@ -19,7 +19,7 @@ constructed vector primitive to scalar pressure. Its mixed-translation
 commutation and fixed-Hq external-word bound have no radius loss.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,7 +37,7 @@ def unitVector : Space := EuclideanSpace.single 0 1
 theorem unitVector_norm : ‖unitVector‖ = 1 := by simp [unitVector]
 
 /-- Scalar embed, given by `toSpanSingleton ℝ unitVector`. -/
-def scalarEmbed : ℝ →L[ℝ] Space := toSpanSingleton ℝ unitVector
+@[expose] def scalarEmbed : ℝ →L[ℝ] Space := toSpanSingleton ℝ unitVector
 /-- Scalar project, given by `innerSL ℝ unitVector`. -/
 def scalarProject : Space →L[ℝ] ℝ := innerSL ℝ unitVector
 

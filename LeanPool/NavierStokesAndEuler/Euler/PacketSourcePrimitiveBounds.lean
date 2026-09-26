@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardCoefficientBudget
 /-! The actual joined and forward source budgets retain the polynomial
 correction envelope. Only their original coefficient leaves enter it. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -19,7 +19,7 @@ and proves some basic properties specific to Boolean-valued functions.
 * `almost_character` -- a theorem on BLR linearity testing
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -165,7 +165,7 @@ lemma eq_character_of_eq_sum_degree_one (hn : n > 0)
       have : ∀ i, 𝓕 g {i} = 𝓕 f {i₀.succAbove i} := by
         intro i
         calc
-          _ = ⟪χ {i}, g⟫       := by rfl
+          _ = ⟪χ {i}, g⟫       := by rw [fourier_eq_inner]
           _ = ⟪χ {i}, ∑ i, 𝓕 f {i₀.succAbove i} • χ {i}⟫ := by rw [hgeq]
           _ = ∑ i', 𝓕 f {i₀.succAbove i'} * ⟪χ {i}, χ {i'}⟫ := by
             rw [inner_sum]; conv => enter[1, 2, i']; rw [inner_smul_right]

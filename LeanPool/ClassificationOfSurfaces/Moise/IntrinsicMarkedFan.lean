@@ -19,7 +19,7 @@ the two incident face charts can introduce incompatible auxiliary points.  This 
 that global finite edge order and its consecutive intervals.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

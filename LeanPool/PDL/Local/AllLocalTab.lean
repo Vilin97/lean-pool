@@ -17,7 +17,7 @@ We show that for any `X` the type `LocalTableau` is finite.
 This is needed to define `BuildTree` as a finite tree.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -85,6 +85,7 @@ lemma pair_neg_cases {φ a b : Formula} (h : ({φ, ~φ} : Finset Formula) = {a, 
 /-! ## All one-sided local rules -/
 
 /-- Transport a `OneSidedLocalRule` along an equality of preconditions. -/
+@[expose]
 def osrCast {L L' B} (h : L = L') (r : OneSidedLocalRule L' B) : OneSidedLocalRule L B := by
   rw [h]; exact r
 
@@ -93,6 +94,7 @@ lemma osrCast_self {L B} (h : L = L) (r : OneSidedLocalRule L B) : osrCast h r =
 
 /-- Given the sorted list of the formulas in `L`, is there a `OneSidedLocalRule` for `L`?
 The pair case comes first so that the equations below hold by `rfl`. -/
+@[expose]
 def OneSidedLocalRule.ofSorted : (L : Finset Formula) → (l : List Formula) → L.pdlSort = l →
     Option (Σ B, OneSidedLocalRule L B)
   | _, [a, b], h     => if hb : b = ~a
@@ -143,6 +145,7 @@ lemma ofSorted_dia {L α φ} (h : L.pdlSort = [~⌈α⌉φ]) :
         then some ⟨_, osrCast (pdlSort_eq_singleton h) (.dia α φ notAtm)⟩ else none := rfl
 
 /-- Is there a `OneSidedLocalRule` applicable to `L`? -/
+@[expose]
 def all (L : Finset Formula) : Option (Σ B, OneSidedLocalRule L B) := ofSorted L L.pdlSort rfl
 
 lemma all_eq_ofSorted {L l} (h : L.pdlSort = l) : all L = ofSorted L l h := by cases h; rfl
@@ -205,14 +208,14 @@ instance LoadRule.fintype {nχ ress} : Fintype (LoadRule nχ ress) :=
 /-! ## All local rules -/
 
 /-- Transport a `LocalRule` along an equality of the conditions. -/
-def lrCast {c c' ress} (h : c = c') (r : LocalRule c' ress) : LocalRule c ress := by
+@[expose] def lrCast {c c' ress} (h : c = c') (r : LocalRule c' ress) : LocalRule c ress := by
   rw [h]; exact r
 
 @[simp]
 lemma lrCast_self {c ress} (h : c = c) (r : LocalRule c ress) : lrCast h r = r := rfl
 
 /-- Helper for `LocalRule.all`, dealing with the two closing rules `LRnegL` and `LRnegR`. -/
-def LocalRule.negPairOf : (L R : Finset Formula) → (lL lR : List Formula) →
+@[expose] def LocalRule.negPairOf : (L R : Finset Formula) → (lL lR : List Formula) →
     L.pdlSort = lL → R.pdlSort = lR → Option (Σ ress, LocalRule (L, R, none) ress)
   | _, _, [φ1], [φ2], hL, hR =>
       if h : φ2 = ~φ1 then
@@ -234,7 +237,7 @@ lemma LocalRule.negPairOf_singletons {L R φ1 φ2} (hL : L.pdlSort = [φ1]) (hR 
 
 /-- Given a subsequent `cond` to be replaced, is there an applicable local rule?
 Note that `cond` are only the principal formulas, not the whole sequent. -/
-def LocalRule.all : (cond : Sequent) → Option (Σ ress, LocalRule cond ress)
+@[expose] def LocalRule.all : (cond : Sequent) → Option (Σ ress, LocalRule cond ress)
   | (L, R, none) =>
       if hR : R = ∅ then
         (OneSidedLocalRule.all L).map

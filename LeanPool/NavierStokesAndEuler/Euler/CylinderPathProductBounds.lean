@@ -43,7 +43,7 @@ section
 
 /-! The finite sum of nested genuine derivative words is the corresponding longer word sum. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -81,7 +81,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -184,7 +184,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -320,7 +320,7 @@ section
 
 /-! Literal bounded bilinear nonlinearities preserve smooth continuous cylinder L² paths. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -332,7 +332,7 @@ open Set MeasureTheory ContinuousLinearMap Finset EulerSmoothLimit EulerLiftedGr
 open scoped ContDiff
 
 /-- Component, given by `EuclideanSpace.proj i`. -/
-def component (i : Fin 3) : Space →L[ℝ] ℝ := EuclideanSpace.proj i
+@[expose] def component (i : Fin 3) : Space →L[ℝ] ℝ := EuclideanSpace.proj i
 
 theorem component_norm (i : Fin 3) : ‖component i‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
@@ -341,7 +341,7 @@ theorem component_norm (i : Fin 3) : ‖component i‖ ≤ 1 := by
   simpa only [one_mul] using PiLp.norm_apply_le u i
 
 /-- Basis vector, given by `EuclideanSpace.single i 1`. -/
-def basisVector (i : Fin 3) : Space := EuclideanSpace.single i 1
+@[expose] def basisVector (i : Fin 3) : Space := EuclideanSpace.single i 1
 
 theorem sum_components (u : Space) : (∑ i : Fin 3, component i u • basisVector i) = u := by
   ext i
@@ -369,7 +369,7 @@ theorem bilinearTerm_orbit (i : Fin 3) :
     (scalarProductPath_orbit P (component i) (component_norm i) p q hp hq)
 
 /-- An arbitrary fixed bilinear vector operation on the actual L² paths. -/
-def bilinearProductPath : C(K,LiftL2 P) := ∑ i : Fin 3, bilinearTerm P B p q hp hq i
+@[expose] def bilinearProductPath : C(K,LiftL2 P) := ∑ i : Fin 3, bilinearTerm P B p q hp hq i
 
 theorem bilinearProductPath_orbit :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (bilinearProductPath P B p q hp hq)) :=

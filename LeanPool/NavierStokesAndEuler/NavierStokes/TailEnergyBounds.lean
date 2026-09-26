@@ -19,7 +19,7 @@ The long release plateau is retained in the estimates; bounding the release
 only by its terminal slope would give an incorrect uniformity claim in `h`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,7 +31,7 @@ open NavierStokes.OutgoingSchedule NavierStokes.OutgoingTail
 namespace NavierStokes.TailEnergyBounds
 
 /-- Energy density, given by `Real.exp y * finalAngular d (y, eta) ^ 2`. -/
-noncomputable def energyDensity (d : TailData) (eta y : ℝ) : ℝ :=
+@[expose] noncomputable def energyDensity (d : TailData) (eta y : ℝ) : ℝ :=
   Real.exp y * finalAngular d (y, eta) ^ 2
 
 theorem energyDensity_pos (d : TailData) (eta y : ℝ) :
@@ -351,7 +351,7 @@ theorem energyDensity_integrable_postPulse (d : TailData) (eta : ℝ) :
     ⟨(energyDensity_continuous d eta).integrableOn_Ioc, energyDensity_integrable_release d eta⟩
 
 /-- Post pulse energy, given by `∫ y in Ioi d.core.endpoint, energyDensity d eta y`. -/
-noncomputable def postPulseEnergy (d : TailData) (eta : ℝ) : ℝ :=
+@[expose] noncomputable def postPulseEnergy (d : TailData) (eta : ℝ) : ℝ :=
   ∫ y in Ioi d.core.endpoint, energyDensity d eta y
 
 theorem postPulseEnergy_nonneg (d : TailData) (eta : ℝ) : 0 ≤ postPulseEnergy d eta :=
@@ -624,7 +624,7 @@ theorem normalized_deriv_postPulseEnergy_le (d : TailData) (eta : ℝ) (heta : e
 
 /-- Normalized post pulse energy, given by `d.core.lam * postPulseEnergy d eta / (Real.exp
 d.core.pulseStart * pulseAmplitude d.core ^ 2 * shape eta ^ 2)`. -/
-noncomputable def normalizedPostPulseEnergy (d : TailData) (eta : ℝ) : ℝ :=
+@[expose] noncomputable def normalizedPostPulseEnergy (d : TailData) (eta : ℝ) : ℝ :=
   d.core.lam * postPulseEnergy d eta /
     (Real.exp d.core.pulseStart * pulseAmplitude d.core ^ 2 * shape eta ^ 2)
 

@@ -87,7 +87,7 @@ singularities directly:
   residue theorem." arXiv:1808.00997v2.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Filter Topology MeasureTheory
 open scoped Interval

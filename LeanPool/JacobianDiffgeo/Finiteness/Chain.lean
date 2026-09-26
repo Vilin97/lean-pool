@@ -50,7 +50,7 @@ not built here): the two `IsCompactOperator` assembly lemmas of design §4.4
 Nothing here uses the forbidden tactic.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold BoundedContinuousFunction
 open Set Filter Topology TopologicalSpace Metric RS.Cech
@@ -125,28 +125,28 @@ theorem covers_Ustar (x : X) : ∃ i, x ∈ T.Ustar i :=
 /-- The four `FinCover ⊤`s induced by a `ShrinkChain`. Reducible: their fields must unfold at
 `implicit` transparency, or applications like `C1 D T.coverW` are not type-correct there and
 every rewrite in such a goal fails. -/
-@[reducible] noncomputable def coverW : FinCover (⊤ : Opens X) where
+@[reducible, expose] noncomputable def coverW : FinCover (⊤ : Opens X) where
   n := T.n
   U := T.W
   le_base _ := le_top
   covers x _ := T.covers_W x
 
 /-- The cover of `X` by the `V`-level opens. -/
-@[reducible] noncomputable def coverV : FinCover (⊤ : Opens X) where
+@[reducible, expose] noncomputable def coverV : FinCover (⊤ : Opens X) where
   n := T.n
   U := T.V
   le_base _ := le_top
   covers x _ := T.covers_V x
 
 /-- The cover of `X` by the `U`-level opens. -/
-@[reducible] noncomputable def coverU : FinCover (⊤ : Opens X) where
+@[reducible, expose] noncomputable def coverU : FinCover (⊤ : Opens X) where
   n := T.n
   U := T.U
   le_base _ := le_top
   covers x _ := T.covers_U x
 
 /-- The cover of `X` by the outermost `Ustar`-level opens. -/
-@[reducible] noncomputable def coverStar : FinCover (⊤ : Opens X) where
+@[reducible, expose] noncomputable def coverStar : FinCover (⊤ : Opens X) where
   n := T.n
   U := T.Ustar
   le_base _ := le_top
@@ -222,13 +222,13 @@ abbrev NC1 : Type _ := ∀ p : Fin T.n × Fin T.n, BddHoloOn (P p.1 ⊓ P p.2)
 
 /-- `(δ⁰f)_{ij} = f_j − f_i` (after restriction to `P i ⊓ P j`); the Banach-layer analogue of
 `Cech.d0`. -/
-noncomputable def deltaCLM : NC0 T P →L[ℂ] NC1 T P :=
+@[expose] noncomputable def deltaCLM : NC0 T P →L[ℂ] NC1 T P :=
   ContinuousLinearMap.pi fun p : Fin T.n × Fin T.n =>
     (restrictCLM (inf_le_right : P p.1 ⊓ P p.2 ≤ P p.2)).comp (ContinuousLinearMap.proj p.2)
     - (restrictCLM (inf_le_left : P p.1 ⊓ P p.2 ≤ P p.1)).comp (ContinuousLinearMap.proj p.1)
 
 @[simp] theorem deltaCLM_apply (f : NC0 T P) (p : Fin T.n × Fin T.n) :
-    deltaCLM T P f p = restrictCLM inf_le_right (f p.2) - restrictCLM inf_le_left (f p.1) := rfl
+    deltaCLM T P f p = restrictCLM inf_le_right (f p.2) - restrictCLM inf_le_left (f p.1) := by rfl
 
 /-- The `1`-to-`2`-cochain coboundary at level `P`, purely internal (used only to package `NZ1`
 as a continuous-kernel submodule — no `NC2` is ever exported). -/
@@ -251,10 +251,10 @@ closedness proof needed. -/
     d1NC T P f t =
       restrictCLM (le_inf (inf_le_left.trans inf_le_right) inf_le_right) (f (t.2.1, t.2.2))
       - restrictCLM (le_inf (inf_le_left.trans inf_le_left) inf_le_right) (f (t.1, t.2.2))
-      + restrictCLM inf_le_left (f (t.1, t.2.1)) := rfl
+      + restrictCLM inf_le_left (f (t.1, t.2.1)) := by rfl
 
 /-- The norm-bounded cocycles at level `P`: the kernel of the bounded coboundary `d1NC`. -/
-noncomputable def NZ1 : Submodule ℂ (NC1 T P) := (d1NC T P).ker
+@[expose] noncomputable def NZ1 : Submodule ℂ (NC1 T P) := (d1NC T P).ker
 
 instance : CompleteSpace (NZ1 T P) := ContinuousLinearMap.completeSpace_ker (d1NC T P)
 
@@ -295,12 +295,12 @@ noncomputable def resNC0 (h : ∀ i, P' i ≤ P i) : NC0 T P →L[ℂ] NC0 T P' 
   ContinuousLinearMap.pi fun i => (restrictCLM (h i)).comp (ContinuousLinearMap.proj i)
 
 /-- Restriction of `1`-cochains along a same-index shrinking `P' ≤ P`. -/
-noncomputable def resNC1 (h : ∀ i, P' i ≤ P i) : NC1 T P →L[ℂ] NC1 T P' :=
+@[expose] noncomputable def resNC1 (h : ∀ i, P' i ≤ P i) : NC1 T P →L[ℂ] NC1 T P' :=
   ContinuousLinearMap.pi fun p : Fin T.n × Fin T.n =>
     (restrictCLM (inf_le_inf (h p.1) (h p.2))).comp (ContinuousLinearMap.proj p)
 
 @[simp] theorem resNC1_apply (h : ∀ i, P' i ≤ P i) (f : NC1 T P) (p : Fin T.n × Fin T.n) :
-    resNC1 T P P' h f p = restrictCLM (inf_le_inf (h p.1) (h p.2)) (f p) := rfl
+    resNC1 T P P' h f p = restrictCLM (inf_le_inf (h p.1) (h p.2)) (f p) := by rfl
 
 /-- Restriction takes bounded cocycles to bounded cocycles (naturality of `d1NC`, via the
 `NZ1.rel_res` workhorse — mirrors `Cech.Refinement`'s `resC1_mem_Z1`). -/
@@ -315,7 +315,7 @@ theorem resNC1_mapsTo_NZ1 (h : ∀ i, P' i ≤ P i) {f : NC1 T P} (hf : f ∈ NZ
     (le_inf (le_inf hkh hlh) hmh) (le_inf hlh hmh) (le_inf hkh hmh) (le_inf hkh hlh)
 
 /-- Restriction of bounded cocycles between same-index levels. -/
-noncomputable def resZ (h : ∀ i, P' i ≤ P i) : NZ1 T P →L[ℂ] NZ1 T P' :=
+@[expose] noncomputable def resZ (h : ∀ i, P' i ≤ P i) : NZ1 T P →L[ℂ] NZ1 T P' :=
   ((resNC1 T P P' h).comp (NZ1 T P).subtypeL).codRestrict (NZ1 T P')
     (fun f => resNC1_mapsTo_NZ1 T P P' h f.2)
 
@@ -342,7 +342,7 @@ noncomputable def tradeDefect :
     tradeDefect T x p =
       restrictCLM (inf_le_inf (T.W_le_U p.1) (T.W_le_U p.2)) ((x.1 : NC1 T T.U) p)
       - restrictCLM (inf_le_inf (T.W_le_V p.1) (T.W_le_V p.2)) ((x.2.1 : NC1 T T.V) p)
-      - (restrictCLM inf_le_right (x.2.2 p.2) - restrictCLM inf_le_left (x.2.2 p.1)) := rfl
+      - (restrictCLM inf_le_right (x.2.2 p.2) - restrictCLM inf_le_left (x.2.2 p.1)) := by rfl
 
 /-- **Forster's subspace `L`** (14.6(b)): triples `(ζ, ξ, η)` with `ζ = ξ + δη` on `𝔚`,
 packaged as `ContinuousLinearMap.ker` (closed, hence complete for free). -/
@@ -381,23 +381,23 @@ noncomputable instance : NormedSpace ℂ (tradeSpace T) :=
 surjectivity = the qualitative trade, proved in `TradeBounded.lean` as `tradePi_surjective`;
 the norm constant of 14.6(b) is recovered inside `schwartz_finite_cospan` by
 `exists_preimage_norm_le` — design §5 step 7). -/
-noncomputable def tradePi : tradeSpace T →L[ℂ] NZ1 T T.V :=
+@[expose] noncomputable def tradePi : tradeSpace T →L[ℂ] NZ1 T T.V :=
   (ContinuousLinearMap.fst ℂ (NZ1 T T.V) (NC0 T T.W)).comp
     ((ContinuousLinearMap.snd ℂ (NZ1 T T.U) (NZ1 T T.V × NC0 T T.W)).comp
       (tradeSpace T).subtypeL)
 
 /-- **The compact leg** `v : L →L Z¹(𝔙)`, `(ζ, ξ, η) ↦ ζ|𝔙` (compactness = Montel, assembled
 from `isCompactOperator_restrictCLM` — deferred, see the end-of-file note). -/
-noncomputable def tradeCompact : tradeSpace T →L[ℂ] NZ1 T T.V :=
+@[expose] noncomputable def tradeCompact : tradeSpace T →L[ℂ] NZ1 T T.V :=
   (resZ T T.U T.V T.V_le_U).comp
     ((ContinuousLinearMap.fst ℂ (NZ1 T T.U) (NZ1 T T.V × NC0 T T.W)).comp
       (tradeSpace T).subtypeL)
 
 @[simp] theorem tradePi_apply (x : tradeSpace T) :
-    tradePi T x = x.1.2.1 := rfl
+    tradePi T x = x.1.2.1 := by rfl
 
 @[simp] theorem tradeCompact_apply (x : tradeSpace T) :
-    tradeCompact T x = resZ T T.U T.V T.V_le_U x.1.1 := rfl
+    tradeCompact T x = resZ T T.U T.V T.V_le_U x.1.1 := by rfl
 
 /- NOTE (resolution of the former `TODO(blocker)`; recorded for future units). The four trade
 declarations above were blocked by what looked like an `IsTopologicalAddGroup`-on-`NZ1`

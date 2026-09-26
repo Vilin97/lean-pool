@@ -15,7 +15,7 @@ Key infrastructure for the dynamic BSS coloring:
 pseudo-inverse pullback, projection identity, normalized monochromatic PSD.
 -/
 
-@[expose] public section
+public section
 
 open Finset Matrix BigOperators
 

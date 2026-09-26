@@ -10,7 +10,7 @@ public import LeanPool.MRiscX.Parser.AssemblySyntax
 Syntax for hoare terms
 -/
 
-@[expose] public section
+public section
 /-- Syntax category for a full MRiscX Hoare triple together with its program. -/
 declare_syntax_cat hoareTerm
 

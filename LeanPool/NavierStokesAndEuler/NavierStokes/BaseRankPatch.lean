@@ -18,7 +18,7 @@ have already been cut off there.  The full summed tangential base therefore
 has the exact shaped power required by the five-row mean inverse.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

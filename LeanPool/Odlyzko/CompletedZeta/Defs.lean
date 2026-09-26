@@ -10,7 +10,7 @@ public import Mathlib.NumberTheory.NumberField.DedekindZeta
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -21,15 +21,15 @@ namespace NumberField.Odlyzko
 variable (K : Type*) [Field K] [NumberField K]
 
 /-- A discriminant factor used in the Odlyzko-bound argument. -/
-def CompletedZeta.discriminantFactor (s : ℂ) : ℂ :=
+@[expose] def CompletedZeta.discriminantFactor (s : ℂ) : ℂ :=
   ((|(discr K : ℝ)| : ℝ) : ℂ) ^ (s / 2)
 
 /-- An archimedean factor used in the Odlyzko-bound argument. -/
-def CompletedZeta.archimedeanFactor (s : ℂ) : ℂ :=
+@[expose] def CompletedZeta.archimedeanFactor (s : ℂ) : ℂ :=
   Complex.Gammaℝ s ^ nrRealPlaces K * (Complex.Gammaℂ s / 2) ^ nrComplexPlaces K
 
 /-- A completed used in the Odlyzko-bound argument. -/
-def CompletedZeta.completed (s : ℂ) : ℂ :=
+@[expose] def CompletedZeta.completed (s : ℂ) : ℂ :=
   CompletedZeta.discriminantFactor K s * CompletedZeta.archimedeanFactor K s * dedekindZeta K s
 
 theorem discr_abs_pos : 0 < |(discr K : ℝ)| := by

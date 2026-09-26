@@ -16,7 +16,7 @@ inner product space structure now lives in Mathlib.
 
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct BigOperators
 

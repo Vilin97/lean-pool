@@ -10,7 +10,7 @@ public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArc
 
 /-! # PL segment models for polygonal arcs -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

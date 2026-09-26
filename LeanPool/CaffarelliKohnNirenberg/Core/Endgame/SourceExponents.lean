@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.BallDisplays
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal

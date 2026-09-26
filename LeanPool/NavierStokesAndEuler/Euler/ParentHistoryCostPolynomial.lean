@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryParentCost
 /-! One fixed polynomial controls the complete history sensitivity
 envelope for all parent label constants and reciprocal time bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

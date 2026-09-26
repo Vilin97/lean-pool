@@ -14,7 +14,7 @@ import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
 /-! The ordinary closed L² gradient space has zero distributional curl.
 For smooth representatives this gives actual pointwise symmetry of the derivative. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

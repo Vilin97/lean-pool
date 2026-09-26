@@ -29,7 +29,7 @@ connectedness that the rest of the development uses without comment.
 Lemma 1.5 (closure and diameter) is `Metric.diam_closure` in Mathlib.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -50,10 +50,10 @@ abbrev mk (x y : ℝ) : Plane := !₂[x, y]
 
 /-- The orientation form `det (a, b) = a₁b₂ - a₂b₁`. It is positive exactly when `b` lies
 counterclockwise of `a`. -/
-def det (a b : Plane) : ℝ := a 0 * b 1 - a 1 * b 0
+@[expose] def det (a b : Plane) : ℝ := a 0 * b 1 - a 1 * b 0
 
 /-- `u` turned counterclockwise through a right angle. -/
-def perp (u : Plane) : Plane := mk (-u 1) (u 0)
+@[expose] def perp (u : Plane) : Plane := mk (-u 1) (u 0)
 
 @[simp] theorem perp_zero (u : Plane) : perp u 0 = -u 1 := rfl
 @[simp] theorem perp_one (u : Plane) : perp u 1 = u 0 := rfl

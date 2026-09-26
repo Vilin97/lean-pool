@@ -18,7 +18,7 @@ branch.  The extension below is built from that branch and agrees with all
 actual physical coordinate jets at every point with `t<1`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.MollifierUniform
 
 /-! Actual continuous representatives and point evaluation as bounded linear maps on cylinder H3. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -14,7 +14,7 @@ Throughout, `d : ℕ` is the spatial dimension.  Single-particle physical space 
 (position × velocity).  These are the shared ambient types that both the
 optimal-transport layer and the kinetic (Vlasov) layer are built over. -/
 
-@[expose] public section
+public section
 
 namespace Vlasov
 

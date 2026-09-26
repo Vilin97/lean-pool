@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParentForwardInitialSupport
 compact high and mean increments used in the initial-data convergence
 proof. Restriction to a shorter horizon preserves these equalities. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

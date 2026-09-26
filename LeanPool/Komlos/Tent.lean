@@ -28,7 +28,7 @@ The latter follows by expressing a shift as a sum of one-step differences and ap
 Cauchy–Schwarz.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 

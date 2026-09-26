@@ -17,4 +17,4 @@ Import-only index for the `LinearAlgebra/Coalgebra` directory of the monlib4
 import.
 -/
 
-@[expose] public section
+public section

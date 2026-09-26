@@ -5,7 +5,7 @@ Authors: Julius Marx
 -/
 module
 
-@[expose] public section
+public section
 
 /--
 Definition of the Instructions.

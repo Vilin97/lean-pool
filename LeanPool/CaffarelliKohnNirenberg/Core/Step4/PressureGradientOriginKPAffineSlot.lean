@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientOneSid
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal
@@ -79,6 +79,7 @@ velocity-gradient source.
 /-- The enlarged small-cell budget for the origin pressure-gradient
 estimate. With `c = |C_CZ| + 1` and `X = 3·KU·KD + forceSourceMorreyBound q ε`
 it is `c·3X + (c·3X)^{6/5} + c·128·ε^{4/5}`. -/
+@[expose]
 def originKPAffineASlot (q C_CZ ε : ℝ) (KU KD : ℝ≥0∞) : ℝ≥0∞ :=
   ENNReal.ofReal (|C_CZ| + 1) * (3 * (3 * KU * KD + forceSourceMorreyBound q ε)) +
     (ENNReal.ofReal (|C_CZ| + 1) *
@@ -88,7 +89,7 @@ def originKPAffineASlot (q C_CZ ε : ℝ) (KU KD : ℝ≥0∞) : ℝ≥0∞ :=
 /-- The enlarged origin pressure-gradient majorant: the small-cell budget
 `originKPAffineASlot` together with the whole-carrier budget of
 `oneSidedPressureGradientKP'`, which carries the clipped-scale inflation. -/
-def oneSidedPressureGradientKPAffine
+@[expose] def oneSidedPressureGradientKPAffine
     (q τ C_CZ R₀ R₁ ε : ℝ) (KU KD : ℝ≥0∞) : ℝ≥0∞ :=
   oneSidedMorreyBound (6 / 5) (min ((1 / τ + 8 / 25)⁻¹) q) R₁
     (originKPAffineASlot q C_CZ ε KU KD)

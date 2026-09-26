@@ -34,7 +34,7 @@ For B = A^k with all entries strictly positive (from `exists_pos_power`):
 - Seneta, *Non-negative Matrices and Markov Chains*, Springer, 2006
 -/
 
-@[expose] public section
+public section
 
 open Matrix BigOperators Finset MeasureTheory
 
@@ -54,6 +54,7 @@ periodic irreducible matrices (e.g., the permutation matrix of a 2-cycle
 of A^k strictly positive.
 
 This definition therefore characterizes *primitive* nonneg matrices. -/
+@[expose]
 def Matrix.IsIrreducible (A : Matrix n n ℝ) : Prop :=
   A.Nonneg ∧ (∀ i j : n, ∃ k : ℕ, 0 < k ∧ 0 < (A ^ k) i j) ∧ (∃ i : n, 0 < A i i)
 

@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevMaximalRegularity
 /-! Genuine Sobolev derivative words and time fields are independent of harmless order reindexing.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

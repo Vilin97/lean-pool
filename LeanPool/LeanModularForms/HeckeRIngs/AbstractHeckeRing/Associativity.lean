@@ -22,7 +22,7 @@ which is equivalent to associativity of multiplication in the Hecke ring. This i
 Proposition 3.4.
 -/
 
-@[expose] public section
+public section
 
 open MulOpposite Set DoubleCoset Subgroup Subgroup.Commensurable
 

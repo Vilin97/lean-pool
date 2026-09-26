@@ -19,7 +19,7 @@ All identities are algebraic identities of genuine continuous L² paths.
 They use no derivative, extremum, or reciprocal bound for the time profile.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

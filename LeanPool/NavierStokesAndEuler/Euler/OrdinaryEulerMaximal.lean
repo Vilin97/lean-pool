@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
 chosen on intermediate horizons, and genuine Euler uniqueness removes
 the dependence on that choice. No continuation criterion is assumed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

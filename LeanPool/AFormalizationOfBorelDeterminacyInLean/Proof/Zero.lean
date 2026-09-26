@@ -21,4 +21,4 @@ import Mathlib.Tactic.NormNum.Pow
 Import-only index for the player-zero lift and strategy construction modules.
 -/
 
-@[expose] public section
+public section

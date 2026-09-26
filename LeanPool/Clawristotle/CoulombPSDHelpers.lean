@@ -19,7 +19,7 @@ Proves the Landau quadratic form bound, continuity of the PSD integrand
 These are building blocks for the integrability and Fubini results in CoulombPSD.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

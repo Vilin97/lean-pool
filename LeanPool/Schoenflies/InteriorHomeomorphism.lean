@@ -17,7 +17,7 @@ the construction of the nested stage sequence and therefore obtains the limit ho
 between the inside of an arbitrary Jordan curve and the open square.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

@@ -11,7 +11,7 @@ import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Geach
 
 /-! # K5 -/
 
-@[expose] public section
+public section
 
 
 namespace LO

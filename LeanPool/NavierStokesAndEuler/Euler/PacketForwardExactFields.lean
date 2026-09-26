@@ -27,7 +27,7 @@ section
 /-! Source budgets and the actual zero-history initialized residual construct exact
 corrected lifted packets at every sufficiently large frequency. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -106,7 +106,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

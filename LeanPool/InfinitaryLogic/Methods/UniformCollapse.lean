@@ -31,7 +31,7 @@ supplied generically (`realize_mapLanguage`) and smallness descends by
   of the collapsed sentence.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

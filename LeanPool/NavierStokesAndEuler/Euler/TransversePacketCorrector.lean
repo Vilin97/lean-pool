@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketProvider
 /-! The potential and slow curl of the actual transverse solution, with their genuine time
 derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

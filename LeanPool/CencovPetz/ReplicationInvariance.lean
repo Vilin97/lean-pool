@@ -22,7 +22,7 @@ For a monotone metric family (Čencov setting), replication maps `α → α × F
 they have a deterministic left inverse (coarsening), so monotonicity holds in both directions.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

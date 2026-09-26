@@ -23,7 +23,7 @@ equivalence between `Lp` spaces, and compactness of operators can be transported
 Tracking: Beads `lean-103.5.2.26.5.3.3.1`.
 -/
 
-@[expose] public section
+public section
 
 namespace MeasureTheory
 

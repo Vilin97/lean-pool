@@ -15,7 +15,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.Randomization`.
 -/
 
-@[expose] public section
+public section
 
 
 open scoped unitInterval

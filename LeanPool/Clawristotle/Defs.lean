@@ -20,7 +20,7 @@ small auxiliary lemmas about the definitions. Derived FlatTorus3 lemmas are in
 `FlatTorus3Lemmas.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 
@@ -33,7 +33,7 @@ namespace VML
 -- ============================================================================
 
 /-- Squared Euclidean norm: ‖z‖² = z · z = ∑ᵢ zᵢ² -/
-def normSq (z : Fin 3 → ℝ) : ℝ := dotProduct z z
+@[expose] def normSq (z : Fin 3 → ℝ) : ℝ := dotProduct z z
 
 @[simp]
 lemma normSq_zero : normSq (0 : Fin 3 → ℝ) = 0 := by
@@ -58,7 +58,7 @@ lemma normSq_neg (z : Fin 3 → ℝ) : normSq (-z) = normSq z := by
   simp [normSq, dotProduct, Pi.neg_apply]
 
 /-- Euclidean norm: |z| = √(z · z) -/
-def eucNorm (z : Fin 3 → ℝ) : ℝ := Real.sqrt (normSq z)
+@[expose] def eucNorm (z : Fin 3 → ℝ) : ℝ := Real.sqrt (normSq z)
 
 lemma eucNorm_nonneg (z : Fin 3 → ℝ) : 0 ≤ eucNorm z := Real.sqrt_nonneg _
 
@@ -74,12 +74,12 @@ lemma eucNorm_sq (z : Fin 3 → ℝ) : eucNorm z ^ 2 = normSq z := by
 
 /-- The inner part of the Landau matrix: B(z) = |z|² I₃ - z zᵀ.
     This is the matrix that appears inside the scalar factor Ψ(|z|). -/
-def innerLandauMatrix (z : Fin 3 → ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
+@[expose] def innerLandauMatrix (z : Fin 3 → ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
   normSq z • (1 : Matrix (Fin 3) (Fin 3) ℝ) - vecMulVec z z
 
 /-- The Landau collision matrix: A(z) = Ψ(|z|) · (|z|² I₃ - z zᵀ).
     Reference: Definition 2 (def:landau_matrix) -/
-def landauMatrix (Ψ : ℝ → ℝ) (z : Fin 3 → ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
+@[expose] def landauMatrix (Ψ : ℝ → ℝ) (z : Fin 3 → ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
   Ψ (eucNorm z) • innerLandauMatrix z
 
 lemma innerLandauMatrix_apply (z : Fin 3 → ℝ) (i j : Fin 3) :
@@ -93,7 +93,7 @@ lemma innerLandauMatrix_apply (z : Fin 3 → ℝ) (i j : Fin 3) :
 
 /-- A Maxwellian distribution: log-quadratic with c₀ < 0 (ensuring integrability).
     Specifically: ∃ a₀ b c₀, c₀ < 0 ∧ f(v) = exp(a₀ + b · v + c₀ |v|²) -/
-def IsMaxwellian (f : (Fin 3 → ℝ) → ℝ) : Prop :=
+@[expose] def IsMaxwellian (f : (Fin 3 → ℝ) → ℝ) : Prop :=
   ∃ (a₀ : ℝ) (b : Fin 3 → ℝ) (c₀ : ℝ),
     c₀ < 0 ∧ ∀ v, f v = Real.exp (a₀ + dotProduct b v + c₀ * normSq v)
 
@@ -140,7 +140,7 @@ lemma _root_.VML.IsMaxwellian.contDiff (hM : IsMaxwellian f) : ContDiff ℝ ⊤ 
 
 /-- The equilibrium Maxwellian (zero drift, density = ρIon):
     f∞(v) = ρIon/(2πT∞)^(3/2) · exp(-|v|²/(2T∞)) -/
-def equilibriumMaxwellian (ρIon T : ℝ) (v : Fin 3 → ℝ) : ℝ :=
+@[expose] def equilibriumMaxwellian (ρIon T : ℝ) (v : Fin 3 → ℝ) : ℝ :=
   ρIon / (2 * π * T) ^ ((3 : ℝ) / 2) *
     Real.exp (-(normSq v) / (2 * T))
 
@@ -191,15 +191,15 @@ lemma equilibriumMaxwellian_pos (ρ T : ℝ) (hρ : 0 < ρ) (hT : 0 < T) (v : Fi
 
 /-- Velocity gradient: ∇ᵥf(v), the vector of partial derivatives of f at v.
     Uses Fréchet derivative from Mathlib. -/
-def vGrad (f : (Fin 3 → ℝ) → ℝ) (v : Fin 3 → ℝ) : Fin 3 → ℝ :=
+@[expose] def vGrad (f : (Fin 3 → ℝ) → ℝ) (v : Fin 3 → ℝ) : Fin 3 → ℝ :=
   fun i => fderiv ℝ f v (Pi.single i 1)
 
 /-- Velocity divergence: ∇ᵥ · F(v) = ∑ᵢ ∂Fᵢ/∂vᵢ -/
-def vDiv (F : (Fin 3 → ℝ) → (Fin 3 → ℝ)) (v : Fin 3 → ℝ) : ℝ :=
+@[expose] def vDiv (F : (Fin 3 → ℝ) → (Fin 3 → ℝ)) (v : Fin 3 → ℝ) : ℝ :=
   ∑ i : Fin 3, fderiv ℝ (fun w => F w i) v (Pi.single i 1)
 
 /-- Cross product in ℝ³: a × b -/
-def cross (a b : Fin 3 → ℝ) : Fin 3 → ℝ :=
+@[expose] def cross (a b : Fin 3 → ℝ) : Fin 3 → ℝ :=
   ![a 1 * b 2 - a 2 * b 1, a 2 * b 0 - a 0 * b 2, a 0 * b 1 - a 1 * b 0]
 
 /-- Velocity-space integration by parts on ℝ³.
@@ -247,14 +247,14 @@ lemma velocity_ibp
     Reference: Definition 3 (def:landau_operator)
 
     Q(f,f)(v) = ∇ᵥ · ∫_{ℝ³} A(v-w) [f(w)∇ᵥf(v) - f(v)∇_wf(w)] dw -/
-def LandauOperator (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → ℝ) (v : Fin 3 → ℝ) : ℝ :=
+@[expose] def LandauOperator (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → ℝ) (v : Fin 3 → ℝ) : ℝ :=
   vDiv (fun v' =>
     ∫ w, mulVec (landauMatrix Ψ (v' - w))
       (f w • vGrad f v' - f v' • vGrad f w)) v
 
 /-- The entropy dissipation functional: D(f) = ∫ Q(f,f)(v) log f(v) dv.
     Reference: Definition in Lemma 5 (lem:entropy_dissipation) -/
-def entropyDissipation (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → ℝ) : ℝ :=
+@[expose] def entropyDissipation (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → ℝ) : ℝ :=
   ∫ v, LandauOperator Ψ f v * Real.log (f v)
 
 /-- IBP for the Landau collision operator: ∫ Q(g,g)(v) · log g(v) dv equals
@@ -323,7 +323,7 @@ lemma landau_ibp (Ψ : ℝ → ℝ) (g : (Fin 3 → ℝ) → ℝ)
 /-- The PSD integrand: g(v,w) = f(v)·f(w)·⟨Δ(v,w), A(v-w) Δ(v,w)⟩
     where Δ(v,w) = ∇log f(v) - ∇log f(w).
     This appears in the entropy dissipation formula (Lemma 5). -/
-def PSDIntegrand (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → ℝ) (v w : Fin 3 → ℝ) : ℝ :=
+@[expose] def PSDIntegrand (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → ℝ) (v w : Fin 3 → ℝ) : ℝ :=
   f v * f w *
     dotProduct (vGrad (Real.log ∘ f) v - vGrad (Real.log ∘ f) w)
       (mulVec (landauMatrix Ψ (v - w))

@@ -15,7 +15,7 @@ distance-preserving rotations.  The two exact cosines are the angles used in
 Parts' doubled wheel and spindle.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
@@ -181,7 +181,7 @@ lemma partsPatchRotation_displacement_sq (p : R2) :
   planeRotation_zero _ _
 
 /-- Apply the doubled-wheel rotation exactly when selecting its second patch. -/
-noncomputable def partsApplyPatch (rotated : Bool) (p : R2) : R2 :=
+@[expose] noncomputable def partsApplyPatch (rotated : Bool) (p : R2) : R2 :=
   if rotated then partsPatchRotation p else p
 
 lemma partsApplyPatch_dist_eq (rotated : Bool) (p q : R2) :

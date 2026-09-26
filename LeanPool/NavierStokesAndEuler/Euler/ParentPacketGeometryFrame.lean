@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryShearIdentity
 Its matrix derivative is derived from the parent curvature, and its ray
 and primary velocity are the constructed source trajectories. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

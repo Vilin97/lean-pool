@@ -15,7 +15,7 @@ section
 
 /-! The graded expansion and tail estimate for the actual normalized momentum expression. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -83,7 +83,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

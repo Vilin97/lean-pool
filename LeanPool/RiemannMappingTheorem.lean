@@ -21,7 +21,7 @@ Tags: complex-analysis, conformal-maps, schwarz-lemma
 MSC: 30C35, 30C20
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

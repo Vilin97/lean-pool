@@ -43,7 +43,7 @@ for `exists_lyndon_paired_model_neg`.
 Root inseparability itself is **not** proved here; that (and interpolation) is Unit 5.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

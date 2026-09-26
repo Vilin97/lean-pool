@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialMultiplier
 This realizes the cofactor as an actual bounded bilinear map; its estimates
 therefore require no derivatives or norm bounds for a separately given inverse. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -56,7 +56,7 @@ def basis (i : Fin 3) : Space := EuclideanSpace.single i 1
   simp [basis]
 
 /-- Row linear, bundling `toFun`, `map_add`, `map_smul`. -/
-def rowLinear (i : Fin 3) : Space →ₗ[ℝ] EndSpace where
+@[expose] def rowLinear (i : Fin 3) : Space →ₗ[ℝ] EndSpace where
   toFun a := (innerSL ℝ a).smulRight (basis i)
   map_add' a b := by
     apply ContinuousLinearMap.ext
@@ -78,7 +78,7 @@ theorem rowLinear_norm (i : Fin 3) (a : Space) : ‖rowLinear i a‖ ≤ ‖a‖
 
 /-- Row operator, given by `(rowLinear i).mkContinuous 1 (fun a => by simpa only [one_mul] using
 rowLinear_norm i a)`. -/
-def rowOperator (i : Fin 3) : Space →L[ℝ] EndSpace :=
+@[expose] def rowOperator (i : Fin 3) : Space →L[ℝ] EndSpace :=
   (rowLinear i).mkContinuous 1 (fun a => by simpa only [one_mul] using rowLinear_norm i a)
 
 @[simp] theorem rowOperator_apply (i : Fin 3) (a v : Space) :
@@ -88,14 +88,14 @@ theorem rowOperator_norm (i : Fin 3) (a : Space) : ‖rowOperator i a‖ ≤ ‖
   rowLinear_norm i a
 
 /-- Cofactor value, constructed using `rowOperator`. -/
-def cofactorValue (A B : EndSpace) : EndSpace :=
+@[expose] def cofactorValue (A B : EndSpace) : EndSpace :=
   rowOperator 0 (crossOperator (A (basis 1)) (B (basis 2))) +
   rowOperator 1 (crossOperator (A (basis 2)) (B (basis 0))) +
   rowOperator 2 (crossOperator (A (basis 0)) (B (basis 1)))
 
 /-- Cofactor linear, bundling `toFun`, `map_add`, `map_smul`, `map_add` and the required
 compatibility proofs. -/
-def cofactorLinear : EndSpace →ₗ[ℝ] EndSpace →ₗ[ℝ] EndSpace where
+@[expose] def cofactorLinear : EndSpace →ₗ[ℝ] EndSpace →ₗ[ℝ] EndSpace where
   toFun A :=
     { toFun := cofactorValue A
       map_add' B C := by
@@ -119,7 +119,7 @@ theorem cofactorValue_norm (A B : EndSpace) : ‖cofactorValue A B‖ ≤ 3*‖A
   have h (i j k : Fin 3) :
       ‖rowOperator i (crossOperator (A (basis j)) (B (basis k)))‖ ≤ ‖A‖*‖B‖ := by
     apply (rowOperator_norm i _).trans
-    change ‖cross (A (basis j)) (B (basis k))‖ ≤ ‖A‖*‖B‖
+    simp only [crossOperator_apply, crossLeft_apply]
     exact (cross_norm_le _ _).trans (mul_le_mul
       (by simpa only [basis_norm,mul_one] using A.le_opNorm (basis j))
       (by simpa only [basis_norm,mul_one] using B.le_opNorm (basis k))
@@ -132,7 +132,7 @@ theorem cofactorValue_norm (A B : EndSpace) : ‖cofactorValue A B‖ ≤ 3*‖A
     _ ≤ 3*‖A‖*‖B‖ := by nlinarith [h 0 1 2,h 1 2 0,h 2 0 1]
 
 /-- Cofactor bilinear, given by `cofactorLinear.mkContinuous₂ 3 cofactorValue_norm`. -/
-def cofactorBilinear : EndSpace →L[ℝ] EndSpace →L[ℝ] EndSpace :=
+@[expose] def cofactorBilinear : EndSpace →L[ℝ] EndSpace →L[ℝ] EndSpace :=
   cofactorLinear.mkContinuous₂ 3 cofactorValue_norm
 
 @[simp] theorem cofactorBilinear_apply (A B : EndSpace) : cofactorBilinear A B = cofactorValue A B

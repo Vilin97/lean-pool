@@ -10,7 +10,7 @@ public import Mathlib.Algebra.MvPolynomial.CommRing
 
 /-! Invertible coordinate substitutions, polynomial degree and explicit formulas. -/
 
-@[expose] public section
+public section
 noncomputable section
 namespace GaussianMomentsCounterexamples
 open MvPolynomial

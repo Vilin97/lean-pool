@@ -13,12 +13,12 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Sharded repeated-pair row-mask covers -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
 /-- Conflict-cover data group 16. -/
-def conflictCovers16 : Array ConflictCover :=
+@[expose] def conflictCovers16 : Array ConflictCover :=
   #[⟨5, 550830099472, 34359705599, [4, 10, 11, 14, 19, 30, 39]⟩,
   ⟨7, 275146887168, 34359435227, [12, 14, 19, 28, 38]⟩,
   ⟨7, 275148967936, 34091040151, [12, 19, 21, 28, 38]⟩,
@@ -87,7 +87,7 @@ theorem conflictCovers16_valid :
   decide
 
 /-- Conflict-cover data group 17. -/
-def conflictCovers17 : Array ConflictCover :=
+@[expose] def conflictCovers17 : Array ConflictCover :=
   #[⟨5, 36029347044263940, 34359738239, [2, 11, 20, 28, 39, 55]⟩,
   ⟨6, 268964900, 25501368255, [2, 5, 10, 12, 19, 28]⟩,
   ⟨5, 277025395780, 34359738367, [2, 6, 10, 12, 31, 38]⟩,
@@ -156,7 +156,7 @@ theorem conflictCovers17_valid :
   decide
 
 /-- Conflict-cover data group 18. -/
-def conflictCovers18 : Array ConflictCover :=
+@[expose] def conflictCovers18 : Array ConflictCover :=
   #[⟨7, 537395236, 25039863471, [2, 5, 19, 29]⟩,
   ⟨6, 140737757315236, 34334572543, [2, 5, 7, 19, 28, 47]⟩,
   ⟨5, 1593488, 17179869183, [4, 7, 12, 14, 19, 20]⟩,
@@ -228,7 +228,7 @@ theorem conflictCovers18_valid :
   decide
 
 /-- Conflict-cover data group 19. -/
-def conflictCovers19 : Array ConflictCover :=
+@[expose] def conflictCovers19 : Array ConflictCover :=
   #[⟨6, 140738026804224, 34359607231, [10, 12, 19, 20, 29, 47]⟩,
   ⟨6, 140738026800160, 34225389231, [5, 10, 19, 20, 29, 47]⟩,
   ⟨5, 549765267464, 34359738367, [3, 14, 20, 23, 39]⟩,

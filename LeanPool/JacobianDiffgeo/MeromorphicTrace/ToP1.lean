@@ -41,7 +41,7 @@ surface hypotheses throughout (`CONVENTIONS.md`).
   nonconstant `toP1 f`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 open Filter Set Function Topology
@@ -268,6 +268,7 @@ theorem invChart_toP1_holoRepr_eventuallyEq_of_neg (hf : MeromorphicOnX f Set.un
 /-- The natural raw-function nonconstancy hypothesis: `f` is not codiscretely equal to any single
 constant. (What callers holding `ℳ X` nonzero-ness will have once that field is in hand; stated
 here germ-level so we do not need it.) -/
+@[expose]
 def NotEventuallyConstX (f : X → ℂ) : Prop := ∀ c : ℂ, ¬ (fun x => f x - c) =ᶠ[codiscrete X] 0
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X] in

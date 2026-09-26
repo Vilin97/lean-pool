@@ -17,7 +17,7 @@ This file restores the finite-product quantum set instance from upstream
 `Monlib.LinearAlgebra.QuantumSet.Pi`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators InnerProductSpace
 
@@ -81,9 +81,9 @@ noncomputable def Pi.modAut (r : ℝ) : PiQ A ≃ₐ[ℂ] PiQ A :=
 @[simp]
 lemma Pi.modAut_apply (r : ℝ) (x : PiQ A) (i : ι) :
     Pi.modAut r x i = (hA i).modAut r (x i) :=
-  rfl
+  by rfl
 
-@[reducible, instance]
+@[expose, reducible, instance]
 noncomputable def piStarAlgebra : starAlgebra (PiQ A) where
   modAut r := Pi.modAut r
   modAut_trans r s := by
@@ -96,14 +96,15 @@ noncomputable def piStarAlgebra : starAlgebra (PiQ A) where
 @[simp]
 lemma piStarAlgebra_modAut_apply (r : ℝ) (x : PiQ A) (i : ι) :
     piStarAlgebra.modAut r x i = (hA i).modAut r (x i) :=
-  rfl
+  by rfl
 
 variable [hQ : (i : ι) -> QuantumSet (A i)]
 variable [Fintype ι]
 
-noncomputable instance piInnerProductAlgebra : InnerProductAlgebra (PiQ A) where
-  norm_smul_le := norm_smul_le
-  norm_sq_eq_inner := norm_sq_eq_re_inner
+@[expose, instance_reducible] noncomputable def piInnerProductAlgebra :
+    InnerProductAlgebra (PiQ A) where
+  norm_smul_le c x := NormedSpace.norm_smul_le (𝕜 := ℂ) (E := PiQ A) c x
+  norm_sq_eq_inner x := norm_sq_eq_re_inner (𝕜 := ℂ) x
   dist_eq x y := by
     rw [dist_eq_norm']
     congr 1
@@ -112,6 +113,8 @@ noncomputable instance piInnerProductAlgebra : InnerProductAlgebra (PiQ A) where
   conj_symm := inner_conj_symm
   add_left := inner_add_left
   smul_left := inner_smul_left
+
+attribute [instance] piInnerProductAlgebra
 
 theorem piInnerProductAlgebra_inner_apply (a b : PiQ A) :
     ⟪a, b⟫_ℂ = ∑ i, ⟪a i, b i⟫_ℂ := by
@@ -122,6 +125,7 @@ theorem piInnerProductAlgebra.inner_apply (a b : PiQ A) :
   piInnerProductAlgebra_inner_apply a b
 
 noncomputable instance Pi.quantumSet [Fact (∀ i, (hQ i).k = 0)] : QuantumSet (PiQ A) where
+  toInnerProductAlgebra := piInnerProductAlgebra
   modAut_isSymmetric r x y := by
     rw [piInnerProductAlgebra_inner_apply, piInnerProductAlgebra_inner_apply]
     simp_all

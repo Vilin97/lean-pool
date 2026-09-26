@@ -14,7 +14,7 @@ public import Mathlib.Analysis.Normed.Lp.PiLp
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 

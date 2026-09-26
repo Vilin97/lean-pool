@@ -28,7 +28,7 @@ this module; `coefficient_form_nat_of_slope_form` is what carries the assembled
 slope theorem back to the coefficient form of the original conjecture.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

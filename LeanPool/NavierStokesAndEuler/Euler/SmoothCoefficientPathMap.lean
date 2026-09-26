@@ -12,7 +12,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-! Bounded linear images of genuine uniformly smooth coefficient paths. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

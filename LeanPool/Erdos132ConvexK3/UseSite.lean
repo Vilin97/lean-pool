@@ -24,7 +24,7 @@ impossible.
 The use-site package keeps only the data consumed by the branch proofs.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -48,7 +48,7 @@ structure ErLVAtVertexUseSite
     (firstCounterclockwiseNeighbor P d₁ d₂ d₃ (cyclicAdvance x 3))
 
 /-- Package an actual contradiction-branch use site. -/
-noncomputable def erlvAtVertexUseSiteOfHighDegree
+@[expose] noncomputable def erlvAtVertexUseSiteOfHighDegree
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (hConvex : CyclicStrictConvex P)
     (hClasses : HasTopThreeDistanceClasses P d₁ d₂ d₃)
@@ -72,19 +72,19 @@ noncomputable def erlvAtVertexUseSiteOfHighDegree
 namespace ErLVAtVertexUseSite
 
 /-- The exceptional branch with inner endpoint move counts `(1,2)`. -/
-def Case12
+@[expose] def Case12
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (S : ErLVAtVertexUseSite P d₁ d₂ d₃) : Prop :=
   S.pair.first.rightMoves = 1 ∧ S.pair.second.leftMoves = 2
 
 /-- The exceptional branch with inner endpoint move counts `(2,1)`. -/
-def Case21
+@[expose] def Case21
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (S : ErLVAtVertexUseSite P d₁ d₂ d₃) : Prop :=
   S.pair.first.rightMoves = 2 ∧ S.pair.second.leftMoves = 1
 
 /-- The exceptional branch with inner endpoint move counts `(2,2)`. -/
-def Case22
+@[expose] def Case22
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (S : ErLVAtVertexUseSite P d₁ d₂ d₃) : Prop :=
   S.pair.first.rightMoves = 2 ∧ S.pair.second.leftMoves = 2
@@ -109,7 +109,7 @@ def ErLVAtVertexCase21Impossible : Prop :=
     ∀ S : ErLVAtVertexUseSite P d₁ d₂ d₃, S.Case21 → False
 
 /-- The `(2,2)` exceptional branch is impossible at the use site. -/
-def ErLVAtVertexCase22Impossible : Prop :=
+@[expose] def ErLVAtVertexCase22Impossible : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     ∀ S : ErLVAtVertexUseSite P d₁ d₂ d₃, S.Case22 → False
 
@@ -508,7 +508,7 @@ theorem erlv_exceptional_use_site_localization_avoids_five_rows
   omega
 
 /-- The two exact color subcases left at the shared tip in `(1,2)`. -/
-def ErLVAtVertexCase12OtherD1Impossible : Prop :=
+@[expose] def ErLVAtVertexCase12OtherD1Impossible : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     ∀ S : ErLVAtVertexUseSite P d₁ d₂ d₃, S.Case12 →
       sqDist
@@ -517,7 +517,7 @@ def ErLVAtVertexCase12OtherD1Impossible : Prop :=
         (P (cyclicAdvance S.x 1)) = d₁ → False
 
 /-- The remaining `d₂` terminal color is impossible in the `(1,2)` branch. -/
-def ErLVAtVertexCase12OtherD2Impossible : Prop :=
+@[expose] def ErLVAtVertexCase12OtherD2Impossible : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     ∀ S : ErLVAtVertexUseSite P d₁ d₂ d₃, S.Case12 →
       sqDist
@@ -537,7 +537,7 @@ theorem erlv_at_vertex_case12_impossible_of_terminal_colors
   · exact hD2 P d₁ d₂ d₃ S h12 hOtherD2
 
 /-- The mirror terminal-color split left at the shared tip in `(2,1)`. -/
-def ErLVAtVertexCase21OtherD1Impossible : Prop :=
+@[expose] def ErLVAtVertexCase21OtherD1Impossible : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     ∀ S : ErLVAtVertexUseSite P d₁ d₂ d₃, S.Case21 →
       sqDist (P (cyclicAdvance S.x 2))
@@ -546,7 +546,7 @@ def ErLVAtVertexCase21OtherD1Impossible : Prop :=
           S.pair.second.rightMoves)) = d₁ → False
 
 /-- The remaining `d₂` terminal color is impossible in the `(2,1)` branch. -/
-def ErLVAtVertexCase21OtherD2Impossible : Prop :=
+@[expose] def ErLVAtVertexCase21OtherD2Impossible : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     ∀ S : ErLVAtVertexUseSite P d₁ d₂ d₃, S.Case21 →
       sqDist (P (cyclicAdvance S.x 2))
@@ -568,21 +568,21 @@ theorem erlv_at_vertex_case21_impossible_of_terminal_colors
 /-- Four exact top-two cross-color subcases left in `(2,2)`.  The `d₂`
 subcases are the only ones even color-compatible with the terminal `d₂`
 cage; the `d₁` subcases require a different full-two-rung adapter. -/
-def ErLVAtVertexCase22ZTD1Impossible : Prop :=
+@[expose] def ErLVAtVertexCase22ZTD1Impossible : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     ∀ S : ErLVAtVertexUseSite P d₁ d₂ d₃, S.Case22 →
       sqDist (P (firstClockwiseNeighbor P d₁ d₂ d₃ S.x))
         (P (cyclicAdvance S.x 3)) = d₁ → False
 
 /-- The `zt = d₂` cross-color subcase is impossible in the `(2,2)` branch. -/
-def ErLVAtVertexCase22ZTD2Impossible : Prop :=
+@[expose] def ErLVAtVertexCase22ZTD2Impossible : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     ∀ S : ErLVAtVertexUseSite P d₁ d₂ d₃, S.Case22 →
       sqDist (P (firstClockwiseNeighbor P d₁ d₂ d₃ S.x))
         (P (cyclicAdvance S.x 3)) = d₂ → False
 
 /-- The `xu = d₁` cross-color subcase is impossible in the `(2,2)` branch. -/
-def ErLVAtVertexCase22XUD1Impossible : Prop :=
+@[expose] def ErLVAtVertexCase22XUD1Impossible : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     ∀ S : ErLVAtVertexUseSite P d₁ d₂ d₃, S.Case22 →
       sqDist (P S.x)
@@ -590,7 +590,7 @@ def ErLVAtVertexCase22XUD1Impossible : Prop :=
           (cyclicAdvance S.x 3))) = d₁ → False
 
 /-- The `xu = d₂` cross-color subcase is impossible in the `(2,2)` branch. -/
-def ErLVAtVertexCase22XUD2Impossible : Prop :=
+@[expose] def ErLVAtVertexCase22XUD2Impossible : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     ∀ S : ErLVAtVertexUseSite P d₁ d₂ d₃, S.Case22 →
       sqDist (P S.x)

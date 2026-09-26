@@ -17,7 +17,7 @@ import Mathlib.RingTheory.LittleWedderburn
 This file proves that the Brauer group of a finite field is trivial.
 -/
 
-@[expose] public section
+public section
 
 variable (K : Type*) [Field K] [Finite K]
 

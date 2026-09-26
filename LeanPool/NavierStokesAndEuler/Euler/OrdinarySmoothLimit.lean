@@ -14,7 +14,7 @@ every Sobolev order has a single genuine smooth limit path. All its
 tensor jets are continuous in time and are the strong limits of the
 corresponding jets of the sequence. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

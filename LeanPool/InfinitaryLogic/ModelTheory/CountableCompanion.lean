@@ -23,7 +23,7 @@ Still language-general (countable function symbols only — relationality first 
 BF/Scott packaging boundary, per the frozen audit).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 
@@ -37,7 +37,7 @@ variable {L : Language.{u, v}} {M : Type w} [L.Structure M]
 
 /-- The controlling seed: all isolators, and the existential closures of all isolators of one
 higher arity. -/
-def isolatorSeed (hsmall : Lomega1omegaSmall (L := L) M) :
+@[expose] def isolatorSeed (hsmall : Lomega1omegaSmall (L := L) M) :
     Set (Σ n, L.BoundedFormulaω Empty n) :=
   (⋃ n : ℕ, (fun p : Set (L.BoundedFormulaω Empty n) =>
       (⟨n, isolatingFormula (hsmall n) p⟩ : Σ n, L.BoundedFormulaω Empty n)) ''

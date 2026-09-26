@@ -14,7 +14,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # BinaryRelations -/
 
-@[expose] public section
+public section
 
 
 
@@ -24,38 +24,38 @@ variable {α : Type u} (rel : α → α → Prop)
 local infix:50 " ≺ " => rel
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def IsSymmetric := ∀ ⦃x y⦄, x ≺ y → y ≺ x
+@[expose] def IsSymmetric := ∀ ⦃x y⦄, x ≺ y → y ≺ x
 
 -- NOTE: Another convention uses `x ≺ y → x ≺ z → y ≺ z`.
 /-- Imported declaration from the Incompleteness formalization. -/
-def Euclidean := ∀ ⦃x y z⦄, x ≺ y → x ≺ z → z ≺ y
+@[expose] def Euclidean := ∀ ⦃x y z⦄, x ≺ y → x ≺ z → z ≺ y
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Serial := ∀ x, ∃ y, x ≺ y
+@[expose] def Serial := ∀ x, ∃ y, x ≺ y
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Confluent := ∀ ⦃x y z⦄, ((x ≺ y ∧ x ≺ z) → ∃ w, (y ≺ w ∧ z ≺ w))
+@[expose] def Confluent := ∀ ⦃x y z⦄, ((x ≺ y ∧ x ≺ z) → ∃ w, (y ≺ w ∧ z ≺ w))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.RelDense := ∀ ⦃x y⦄, x ≺ y → ∃z, x ≺ z ∧ z ≺ y
+@[expose] def _root_.RelDense := ∀ ⦃x y⦄, x ≺ y → ∃z, x ≺ z ∧ z ≺ y
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Connected := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y ≺ z ∨ z ≺ y
+@[expose] def Connected := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y ≺ z ∨ z ≺ y
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Functional := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y = z
+@[expose] def Functional := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y = z
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def RightConvergent := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y ≺ z ∨ z ≺ y ∨ y = z
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Coreflexive := ∀ ⦃x y⦄, x ≺ y → x = y
+@[expose] def Coreflexive := ∀ ⦃x y⦄, x ≺ y → x = y
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def Equality := ∀ ⦃x y⦄, x ≺ y ↔ x = y
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Isolated := ∀ ⦃x y⦄, ¬(x ≺ y)
+@[expose] def Isolated := ∀ ⦃x y⦄, ¬(x ≺ y)
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def Assymetric := ∀ ⦃x y⦄, (x ≺ y) → ¬(y ≺ x)
@@ -158,7 +158,7 @@ lemma WellFounded.trivial_wellfounded : WellFounded (α := α) (fun _ _ => False
   ⟨fun a => ⟨a, fun _ h => h.elim⟩⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Relation.IrreflGen (R : α → α → Prop) := fun x y => x ≠ y ∧ R x y
+@[expose] def Relation.IrreflGen (R : α → α → Prop) := fun x y => x ≠ y ∧ R x y
 
 
 /-- Imported declaration from the Incompleteness formalization. -/

@@ -46,7 +46,7 @@ manifold content, independent of `ToP1`/`OrderMultiplicity`/`ArgumentPrinciple`.
   monomials, and residue-calculus's presentation-independent `laurentCoeffAt` characterization.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology Metric Function
 
@@ -62,7 +62,7 @@ noncomputable def traceZk (h : ℂ → ℂ) (k : ℕ) (w : ℂ) : ℂ :=
   ∑ᶠ z ∈ {z : ℂ | z ^ k = w}, h z
 
 theorem traceZk_def (h : ℂ → ℂ) (k : ℕ) (w : ℂ) :
-    traceZk h k w = ∑ᶠ z ∈ {z : ℂ | z ^ k = w}, h z := rfl
+    traceZk h k w = ∑ᶠ z ∈ {z : ℂ | z ^ k = w}, h z := by rfl
 
 /-- Master conversion to a `Finset` sum, valid for every `w` (the root set is always finite once
 `k ≠ 0`, regardless of `w`). -/

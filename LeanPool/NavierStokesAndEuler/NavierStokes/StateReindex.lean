@@ -18,7 +18,7 @@ Vector directions are transported by `e.symm`.  The final specialization is
 the existing associator from `PressureStream.Lift S` to `((ℝ × S) × Plane)`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -45,7 +45,7 @@ noncomputable def cylinder (e : D ≃ₗᵢ[ℝ] E) : (D × ℝ) ≃ₗᵢ[ℝ] 
     (cylinder e).symm x = (e.symm x.1, x.2) := rfl
 
 /-- Vector, given by `ParticularWaveBounds.reindexVector e V`. -/
-noncomputable def vector (e : D ≃ₗᵢ[ℝ] E) (V : E → E) : D → D :=
+@[expose] noncomputable def vector (e : D ≃ₗᵢ[ℝ] E) (V : E → E) : D → D :=
   ParticularWaveBounds.reindexVector e V
 
 theorem fderiv_pull (e : D ≃ₗᵢ[ℝ] E) (f : E → F) (x v : D) :
@@ -110,7 +110,7 @@ noncomputable def context (e : D ≃ₗᵢ[ℝ] E) (c : CorrectionState.Context 
   virtualAxial := field e c.virtualAxial
 
 /-- Oscillation, defined pointwise by `u n (cylinder e x)`. -/
-noncomputable def oscillation (e : D ≃ₗᵢ[ℝ] E) (u : CorrectionState.Oscillation E) :
+@[expose] noncomputable def oscillation (e : D ≃ₗᵢ[ℝ] E) (u : CorrectionState.Oscillation E) :
     CorrectionState.Oscillation D := fun n x => u n (cylinder e x)
 
 /-- Errors, given by `⟨oscillation e a.base, oscillation e a.gaussian, oscillation e
@@ -297,7 +297,7 @@ theorem nonconstant_pull (e : D ≃ₗᵢ[ℝ] E) (a : HarmonicFields.Coefficien
 
 /-- Block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required compatibility
 proofs. -/
-noncomputable def block (e : D ≃ₗᵢ[ℝ] E) (b : CorrectionState.HarmonicBlock E) :
+@[expose] noncomputable def block (e : D ≃ₗᵢ[ℝ] E) (b : CorrectionState.HarmonicBlock E) :
     CorrectionState.HarmonicBlock D where
   velocity n i := coefficients e (b.velocity n i)
   pressure n := coefficients e (b.pressure n)
@@ -324,6 +324,7 @@ theorem block_pressure (e : D ≃ₗᵢ[ℝ] E) (b : CorrectionState.HarmonicBlo
 /-! ## The actual coefficient residual -/
 
 /-- Frame, bundling `radius`, `radial`, `axial`, `time` and the required compatibility proofs. -/
+@[expose]
 noncomputable def frame (e : D ≃ₗᵢ[ℝ] E) (g : HarmonicResidual.Frame E) : HarmonicResidual.Frame D
     where
   radius := fun x => g.radius (e x)
@@ -647,7 +648,7 @@ theorem context_roundtrip (e : D ≃ₗᵢ[ℝ] E) (c : CorrectionState.Context 
 /-! ## The same weighted classes, without loss of exponents -/
 
 /-- Strip, given by `ParticularWaveBounds.reindexStrip e s`. -/
-noncomputable def strip (e : D ≃ₗᵢ[ℝ] E) (s : WeightedClasses.StripData E) :
+@[expose] noncomputable def strip (e : D ≃ₗᵢ[ℝ] E) (s : WeightedClasses.StripData E) :
     WeightedClasses.StripData D := ParticularWaveBounds.reindexStrip e s
 
 theorem memClass_pull (e : D ≃ₗᵢ[ℝ] E) {s : WeightedClasses.StripData E}

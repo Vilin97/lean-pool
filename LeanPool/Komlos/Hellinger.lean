@@ -20,7 +20,7 @@ The file also proves Weierstrass' product inequality, used to compare product di
 in `Komlos.Cube`.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 

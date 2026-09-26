@@ -17,7 +17,7 @@ All probabilistic, analytic, and geometric inputs for the `δ = 1`
 specialization of Theorem 1.1 are discharged here.
 -/
 
-@[expose] public section
+public section
 
 namespace Feige
 

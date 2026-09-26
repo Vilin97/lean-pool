@@ -15,7 +15,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 Definitions and basic structure for Stichtenoth's adele space.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 open Filter
@@ -37,6 +37,7 @@ local instance instDecidableEqPlaceAAdele : DecidableEq (PlaceA k K) := Classica
 
 /-- The `k`-submodule of the full product consisting of tuples integral at all but finitely many
 places. -/
+@[expose]
 def adeleSubmodule : Submodule k (PlaceA k K → K) where
   carrier := {α | ∀ᶠ v in cofinite, α v ∈ placeValuationSubring k K v}
   zero_mem' := by simp
@@ -78,7 +79,7 @@ theorem eventually_mem_placeValuationSubring (f : K) :
 abbrev AdeleSpace := adeleSubmodule k K
 
 /-- Pointwise multiplication of an adele by an element of `K`. -/
-def smulAdele (x : K) (a : AdeleSpace k K) : AdeleSpace k K := ⟨fun v => x * a.val v, by
+@[expose] def smulAdele (x : K) (a : AdeleSpace k K) : AdeleSpace k K := ⟨fun v => x * a.val v, by
   have hx := eventually_mem_placeValuationSubring k K x
   have ha := a.property
   change ∀ᶠ v : PlaceA k K in cofinite, a.val v ∈ placeValuationSubring k K v at ha
@@ -95,7 +96,7 @@ instance : Module K (AdeleSpace k K) :=
     (fun _ => Subtype.ext <| funext fun _ => one_mul _)
 
 /-- Multiplication by `x ∈ K` as a `k`-linear endomorphism of the adele space. -/
-def mulAdeleLinear (x : K) : AdeleSpace k K →ₗ[k] AdeleSpace k K where
+@[expose] def mulAdeleLinear (x : K) : AdeleSpace k K →ₗ[k] AdeleSpace k K where
   toFun a := x • a
   map_add' _ _ := smul_add x _ _
   map_smul' c a := by
@@ -106,10 +107,11 @@ def mulAdeleLinear (x : K) : AdeleSpace k K →ₗ[k] AdeleSpace k K where
 
 /-- An adele lies in the filtration piece `A(D)` when its component at every place `v` has
 valuation at most `WithZero.exp (D v)`. -/
-def memAdeleFilt (D : DivisorA k K) (α : AdeleSpace k K) : Prop :=
+@[expose] def memAdeleFilt (D : DivisorA k K) (α : AdeleSpace k K) : Prop :=
   ∀ v, placeValuation k K v (α.val v) ≤ WithZero.exp (D v)
 
 /-- The filtration piece `A(D)` of the adele space. -/
+@[expose]
 def adeleFilt (D : DivisorA k K) : Submodule k (AdeleSpace k K) where
   carrier := {a | memAdeleFilt k K D a}
   zero_mem' := fun v => by simp
@@ -128,7 +130,7 @@ def adeleFilt (D : DivisorA k K) : Submodule k (AdeleSpace k K) where
       (one_mul _)
 
 /-- The diagonal embedding `K → A_K` of principal adeles. -/
-def diagonal : K →ₗ[k] AdeleSpace k K where
+@[expose] def diagonal : K →ₗ[k] AdeleSpace k K where
   toFun f := ⟨fun _ => f, by
     simpa [adeleSubmodule] using
       eventually_mem_placeValuationSubring k K f⟩
@@ -136,6 +138,7 @@ def diagonal : K →ₗ[k] AdeleSpace k K where
   map_smul' _ _ := rfl
 
 /-- The image `diag(K)` of the diagonal embedding. -/
+@[expose]
 def diagonalSubmodule : Submodule k (AdeleSpace k K) := LinearMap.range (diagonal k K)
 
 theorem adeleFilt_inf_diagonal (D : DivisorA k K) :
@@ -160,6 +163,7 @@ def adeleFiltWithin (D D' : DivisorA k K) :
   Submodule.comap (adeleFilt k K D').subtype (adeleFilt k K D)
 
 /-- Finite-rank increment `finrank k (A(D') ⧸ A(D))`. -/
+@[expose]
 noncomputable def finrankAdeleFiltDiff (D D' : DivisorA k K) : ℕ := by
   letI : AddCommGroup (adeleFilt k K D') := Submodule.addCommGroup _
   letI : Module k (adeleFilt k K D') := Submodule.module _
@@ -168,6 +172,7 @@ noncomputable def finrankAdeleFiltDiff (D D' : DivisorA k K) : ℕ := by
       Submodule.comap (adeleFilt k K D').subtype (adeleFilt k K D)
 
 /-- Rank of `(A(D') + diag(K)) ⧸ (A(D) + diag(K))` from the sandwich bookkeeping. -/
+@[expose]
 noncomputable def sandwichRank (D D' : DivisorA k K) : ℤ :=
   by
   letI : AddCommGroup (adeleFilt k K D' + diagonalSubmodule k K) :=
@@ -179,7 +184,7 @@ noncomputable def sandwichRank (D D' : DivisorA k K) : ℤ :=
         (adeleFilt k K D + diagonalSubmodule k K))
 
 /-- Component update for adele surgery (`A(D₁ ⊔ D₂) = A(D₁) + A(D₂)`). -/
-def adeleUpdate (α : AdeleSpace k K) (v : PlaceA k K) (a : K) : AdeleSpace k K :=
+@[expose] def adeleUpdate (α : AdeleSpace k K) (v : PlaceA k K) (a : K) : AdeleSpace k K :=
   ⟨Function.update α.val v a, by
     change ∀ᶠ w : PlaceA k K in cofinite,
       Function.update α.val v a w ∈ placeValuationSubring k K w

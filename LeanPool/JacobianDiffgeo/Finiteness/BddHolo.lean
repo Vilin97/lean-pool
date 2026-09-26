@@ -35,7 +35,7 @@ three named maps; the Banach files (`Chain.lean`, `CompactRestrict.lean`) never 
 `MeroGermOn` internals directly, and the germ files never touch `→ᵇ` internals.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold BoundedContinuousFunction
 open Set Filter Topology TopologicalSpace Metric
@@ -80,7 +80,7 @@ theorem contMDiffOn_const_smul {U : Set X} (hU : IsOpen U) (c : ℂ) {g : X → 
 
 /-- Bounded-holomorphic elements: BCF on the open subtype agreeing with a holomorphic function
 on `S`. -/
-noncomputable def BddHoloOn (S : Opens X) : Submodule ℂ (↥(S : Set X) →ᵇ ℂ) where
+@[expose] noncomputable def BddHoloOn (S : Opens X) : Submodule ℂ (↥(S : Set X) →ᵇ ℂ) where
   carrier :=
       {f | ∃ g : X → ℂ, ContMDiffOn 𝓘(ℂ) 𝓘(ℂ) ω g (S : Set X) ∧ ∀ z : ↥(S : Set X), f z = g z}
   zero_mem' := ⟨fun _ => 0, contMDiffOn_const, fun _ => rfl⟩
@@ -151,7 +151,7 @@ instance instCompleteSpaceBddHoloOn (S : Opens X) : CompleteSpace (BddHoloOn S) 
 /-! ### `restrictCLM` -/
 
 /-- The underlying restricted bounded continuous function. -/
-noncomputable def restrictFun {S' S : Opens X} (h : S' ≤ S) (f : BddHoloOn S) :
+@[expose] noncomputable def restrictFun {S' S : Opens X} (h : S' ≤ S) (f : BddHoloOn S) :
     ↥(S' : Set X) →ᵇ ℂ :=
   BoundedContinuousFunction.ofNormedAddCommGroup
     (fun z => (f : ↥(S : Set X) →ᵇ ℂ) (Set.inclusion h z))
@@ -180,6 +180,7 @@ theorem restrictFun_smul {S' S : Opens X} (h : S' ≤ S) (c : ℂ) (f : BddHoloO
   rfl
 
 /-- Restriction, norm `≤ 1`. -/
+@[expose]
 noncomputable def restrictCLM {S' S : Opens X} (h : S' ≤ S) : BddHoloOn S →L[ℂ] BddHoloOn S' :=
   LinearMap.mkContinuous
     { toFun := fun f => ⟨restrictFun h f, restrictFun_mem h f⟩
@@ -192,7 +193,7 @@ noncomputable def restrictCLM {S' S : Opens X} (h : S' ≤ S) : BddHoloOn S →L
 
 theorem restrictCLM_apply_coe {S' S : Opens X} (h : S' ≤ S) (f : BddHoloOn S)
     (z : ↥(S' : Set X)) :
-    (restrictCLM h f : ↥(S' : Set X) →ᵇ ℂ) z = (f : ↥(S : Set X) →ᵇ ℂ) (Set.inclusion h z) := rfl
+    (restrictCLM h f : ↥(S' : Set X) →ᵇ ℂ) z = (f : ↥(S : Set X) →ᵇ ℂ) (Set.inclusion h z) := by rfl
 
 /-- Presheaf law: restrictions compose (the analogue of `MeroGermOn.restrict_restrict` /
 `LinSysOn.restrictL_restrictL`, needed for the cochain-level naturality of `resNC1`). -/
@@ -255,8 +256,7 @@ named `toGerm` application on their own). -/
 theorem toGerm_eq_mk {S : Opens X} (f : BddHoloOn S) :
     toGerm S f = MeroGermOn.mk f.2.choose
       (fun _x hx => RS.ContMDiffAt.meromorphicAtX (f.2.choose_spec.1.contMDiffAt (S.2.mem_nhds
-          hx))) :=
-  rfl
+          hx))) := by rfl
 
 omit [T1Space X] in
 theorem toGerm_mem_linSysOn {S : Opens X} (f : BddHoloOn S) :
@@ -333,7 +333,7 @@ omit [T1Space X] [T2Space X] in
 theorem restrictGerm_apply {S' S : Opens X} (hc : closure (S' : Set X) ⊆ (S : Set X))
     (φ : RS.LinSysOn (0 : RS.Divisor X) (S : Set X)) (z : ↥(S' : Set X)) :
     (restrictGerm hc φ : ↥(S' : Set X) →ᵇ ℂ) z
-      = RS.MeroGermOn.holoRepr (φ : RS.MeroGermOn X (S : Set X)) z := rfl
+      = RS.MeroGermOn.holoRepr (φ : RS.MeroGermOn X (S : Set X)) z := by rfl
 
 omit [T2Space X] [T1Space X] in
 theorem toGerm_restrictGerm {S' S : Opens X} (hc : closure (S' : Set X) ⊆ (S : Set X))

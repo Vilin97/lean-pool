@@ -10,7 +10,7 @@ public import Mathlib.Data.Nat.Nth
 
 /-! First-k checkpoints, exactly as in the simplified manuscript. -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness.Simplified
 

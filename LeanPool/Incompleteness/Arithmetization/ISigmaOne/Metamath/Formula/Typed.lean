@@ -16,7 +16,7 @@ import Mathlib.Algebra.Order.Sub.Basic
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section «lp_nc_section_1»
 
@@ -150,7 +150,7 @@ lemma imp_def (p q : L.Semiformula n) : p ==> q = ∼p ⋎ q := by ext; simp [im
 def shift (p : L.Semiformula n) : L.Semiformula n := ⟨L.shift p.val, p.prop.shift⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def substs (p : L.Semiformula n) (w : L.SemitermVec n m) : L.Semiformula m :=
+@[expose] def substs (p : L.Semiformula n) (w : L.SemitermVec n m) : L.Semiformula m :=
   ⟨L.substs w.val p.val, p.prop.substs w.prop⟩
 
 @[simp] lemma val_shift (p : L.Semiformula n) : p.shift.val = L.shift p.val := rfl

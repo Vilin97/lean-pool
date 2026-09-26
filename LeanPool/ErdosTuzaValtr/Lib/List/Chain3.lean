@@ -13,7 +13,7 @@ public import LeanPool.ErdosTuzaValtr.Lib.List.Defs
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Lib.List.Chain3`.
 -/
 
-@[expose] public section
+public section
 
 variable {α : Type _} {R : α → α → α → Prop}
 

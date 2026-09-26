@@ -22,7 +22,7 @@ Compactness bounds the derivatives of the smooth coefficient; the full
 Fréchet product rule then gives estimates for all joint derivative tensors.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -175,7 +175,7 @@ theorem compact_coefficient_jets {F : Type*} [NormedAddCommGroup F] [NormedSpace
     exact (hbound i (p, x) ⟨hp, hx⟩).trans (by linarith)
 
 /-- Weighted, given by `(FlatCutoff.edge c y.2 / y.2 ^ j) * B y`. -/
-noncomputable def weighted (c : ℝ) (j : ℕ) (B : E × ℝ → ℝ) (y : E × ℝ) : ℝ :=
+@[expose] noncomputable def weighted (c : ℝ) (j : ℕ) (B : E × ℝ → ℝ) (y : E × ℝ) : ℝ :=
   (FlatCutoff.edge c y.2 / y.2 ^ j) * B y
 
 theorem weighted_contDiff {c : ℝ} (hc : 0 < c) (j : ℕ) {B : E × ℝ → ℝ}

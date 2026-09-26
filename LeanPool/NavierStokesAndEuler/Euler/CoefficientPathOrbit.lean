@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 /-! A genuinely smooth bounded-coefficient translation orbit supplies
 actual bounded spatial derivatives, continuously over the time parameter. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

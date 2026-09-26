@@ -69,7 +69,7 @@ minimum positive degree at least two, so a path of maximal length closes up into
 * `Finset.edgeSupport`: the set of vertices incident with an edge of a finite edge set.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -78,7 +78,7 @@ namespace List
 variable {V : Type*}
 
 /-- The list of edges of the walk `l`: the pairs of consecutive vertices of `l`. -/
-def pathEdges : List V → List (Sym2 V)
+@[expose] def pathEdges : List V → List (Sym2 V)
   | [] => []
   | [_] => []
   | a :: b :: l => s(a, b) :: pathEdges (b :: l)

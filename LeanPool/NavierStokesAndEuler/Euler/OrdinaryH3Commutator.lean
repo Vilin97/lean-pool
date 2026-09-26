@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Products
 
 /-! The actual ordinary H³ transport commutator, without derivative loss. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

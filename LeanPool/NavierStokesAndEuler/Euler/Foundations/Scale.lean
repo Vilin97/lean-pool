@@ -16,7 +16,7 @@ The sequence is reindexed so that `x 0 = x_{J-1}` and
 `x (n+1) = (J+n)^2 x n`; hence `J+n` is the stage index in the source.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -323,7 +323,8 @@ noncomputable def sourceParameterExponent (J : ℕ) (Cbase Cstar : ℝ) (x : ℕ
     Real.log (x n)] i
 
 /-- The sum of precisely those eight positive parameter terms. -/
-noncomputable def sourceParameterAggregate (J : ℕ) (Cbase Cstar : ℝ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def sourceParameterAggregate (J : ℕ) (Cbase Cstar : ℝ)
+    (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   ∑ i : Fin 8, Real.exp (sourceParameterExponent J Cbase Cstar x i n)
 
 theorem sourceParameterExponent_nonneg (J : ℕ) (hJ : 2 ≤ J)

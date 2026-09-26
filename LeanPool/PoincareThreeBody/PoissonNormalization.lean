@@ -21,7 +21,7 @@ shows that the mass-normalized candidate remains a first integral for nonzero ma
 zeroth coefficient cancellation holds locally in phase space.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

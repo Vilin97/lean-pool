@@ -18,7 +18,7 @@ particle-map displacement and its two time derivatives. The inverse is
 the polynomial cofactor, and the strain and Jacobi curvature are their
 literal products; no separate inverse or coefficient evolution is assumed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -57,7 +57,7 @@ namespace Parent
 variable (G : Parent)
 
 /-- Zero time, given by `⟨0,le_rfl,G.T_pos.le⟩`. -/
-def zeroTime : Icc (0 : ℝ) G.T := ⟨0,le_rfl,G.T_pos.le⟩
+@[expose] def zeroTime : Icc (0 : ℝ) G.T := ⟨0,le_rfl,G.T_pos.le⟩
 
 /-- Frame as an element of `SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace`. -/
 def frame : SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace :=

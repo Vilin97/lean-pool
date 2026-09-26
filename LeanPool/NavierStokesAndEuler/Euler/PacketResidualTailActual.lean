@@ -15,7 +15,7 @@ only finite velocity regularity. No regularity of the lower scalar pressures
 is needed, because their coefficients are already outside the tail support.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

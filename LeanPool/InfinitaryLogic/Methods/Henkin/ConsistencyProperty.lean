@@ -24,7 +24,7 @@ of sentences satisfying closure conditions that guarantee model existence.
 - [Kei71]
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

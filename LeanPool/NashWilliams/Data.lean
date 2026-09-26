@@ -13,4 +13,4 @@ import Mathlib.Tactic.SetLike
 
 /-! Supporting results for finite types and natural numbers. -/
 
-@[expose] public section
+public section

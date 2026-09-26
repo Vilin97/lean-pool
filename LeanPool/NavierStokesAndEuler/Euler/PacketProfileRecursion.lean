@@ -28,7 +28,7 @@ section
 
 /-! Which unknown coefficients can enter the slow and fast quadratic terms. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -93,7 +93,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -111,7 +111,7 @@ theorem fastAdvection_angleConstant_right (m : Space) (J K : VectorJet)
 
 /-- Nonlinear grade, given by `convolution M (slowAdvection FInv) u u p + convolution M
 (fastAdvection m) u u (p+1)`. -/
-def nonlinearGrade (M p : ℕ) (FInv : Space →L[ℝ] Space) (m : Space)
+@[expose] def nonlinearGrade (M p : ℕ) (FInv : Space →L[ℝ] Space) (m : Space)
     (u : ℕ → VectorJet) : Space :=
   convolution M (slowAdvection FInv) u u p + convolution M (fastAdvection m) u u (p+1)
 
@@ -152,7 +152,7 @@ section
 
 /-! The known forcing at a recursive grade uses only previously constructed coefficients. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -161,6 +161,7 @@ namespace EulerPacketPointJets
 open EulerSmoothLimit EulerFiniteGrades InnerProductSpace
 
 /-- History, with branches according to `i<p`. -/
+@[expose]
 def history (p : ℕ) (u : ℕ → VectorJet) (previousCorrector : VectorJet) (i : ℕ) : VectorJet :=
   if i<p then u i else if i=p then previousCorrector else 0
 
@@ -203,7 +204,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -253,27 +254,27 @@ structure Operators where
   curlCorrector : VectorField → VectorField
 
 /-- Literal angular averaging at each time and spatial label. -/
-def angleMean (P : ℝ) (f : VectorField) : VectorField :=
+@[expose] def angleMean (P : ℝ) (f : VectorField) : VectorField :=
   fun z => P⁻¹ • ∫ θ in 0..P, f (z.1,(z.2.1,θ))
 
 /-- The stored coefficients determine the jets of V_i=A_i+B_i+C_{i-1}. -/
-def velocityJet (s : Set ℝ) (a : ℕ → Profile) (z : Domain) (i : ℕ) : VectorJet :=
+@[expose] def velocityJet (s : Set ℝ) (a : ℕ → Profile) (z : Domain) (i : ℕ) : VectorJet :=
   if i=0 then 0 else slicedJet s (a i).high z+slicedJet s (a i).mean z +
     slicedJet s (a (i-1)).corrector z
 
 /-- Known jets, given by `history p (velocityJet O.interval a z) (slicedJet O.interval (a
 (p-1)).corrector z)`. -/
-def knownJets (O : Operators) (p : ℕ) (a : ℕ → Profile) (z : Domain) : ℕ → VectorJet :=
+@[expose] def knownJets (O : Operators) (p : ℕ) (a : ℕ → Profile) (z : Domain) : ℕ → VectorJet :=
   history p (velocityJet O.interval a z) (slicedJet O.interval (a (p-1)).corrector z)
 
 /-- All terms of the grade-p forcing that are already determined. -/
-def knownForce (O : Operators) (p : ℕ) (a : ℕ → Profile) : VectorField :=
+@[expose] def knownForce (O : Operators) (p : ℕ) (a : ℕ → Profile) : VectorField :=
   fun z => -(linearPart (O.strain z) (slicedJet O.interval (a (p-1)).corrector z) +
     slowPressure (O.inverseFrame z) (pressureJet (a (p-1)).highPressure z) +
     nonlinearGrade (p+1) p (O.inverseFrame z) (O.normal z) (knownJets O p a z))
 
 /-- Mean force, given by `angleMean O.period (knownForce O p a)`. -/
-def meanForce (O : Operators) (p : ℕ) (a : ℕ → Profile) : VectorField :=
+@[expose] def meanForce (O : Operators) (p : ℕ) (a : ℕ → Profile) : VectorField :=
   angleMean O.period (knownForce O p a)
 
 /-- Mean result, given by `O.meanSolve (meanForce O p a)`. -/
@@ -281,7 +282,7 @@ def meanResult (O : Operators) (p : ℕ) (a : ℕ → Profile) : VectorField × 
   O.meanSolve (meanForce O p a)
 
 /-- The sole new mean-primary interaction is added after solving the mean. -/
-def highForce (O : Operators) (p : ℕ) (a : ℕ → Profile) : VectorField :=
+@[expose] def highForce (O : Operators) (p : ℕ) (a : ℕ → Profile) : VectorField :=
   fun z => knownForce O p a z-meanForce O p a z -
     fastAdvection (O.normal z) (slicedJet O.interval (meanResult O p a).1 z)
       (slicedJet O.interval (a 1).high z)

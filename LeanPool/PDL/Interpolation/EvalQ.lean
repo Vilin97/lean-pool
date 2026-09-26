@@ -33,7 +33,7 @@ and hence all distances, untouched, which is exactly the "`M` and `M'` have the 
 relational structure" of the paper.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -228,16 +228,16 @@ namespace Sequent
 
 /-- The loaded formula of a sequent, split into its list of programs and its final,
 unloaded formula. For a free sequent we return `([], ⊥)`, which is never used. -/
-def loadedSplit : Sequent → List Program × Formula
+@[expose] def loadedSplit : Sequent → List Program × Formula
   | ⟨_, _, none⟩ => ([], ⊥)
   | ⟨_, _, some (Sum.inl (~'χ))⟩ => χ.split
   | ⟨_, _, some (Sum.inr (~'χ))⟩ => χ.split
 
 /-- The programs `δ_x` of the loaded formula `¬⌊δ_x⌋ψ_x`. -/
-def loadedProgs (X : Sequent) : List Program := X.loadedSplit.1
+@[expose] def loadedProgs (X : Sequent) : List Program := X.loadedSplit.1
 
 /-- The unloaded formula `ψ_x` of the loaded formula `¬⌊δ_x⌋ψ_x`. -/
-def loadedFma (X : Sequent) : Formula := X.loadedSplit.2
+@[expose] def loadedFma (X : Sequent) : Formula := X.loadedSplit.2
 
 /-- The sequent has its loaded formula on the right, as all `Δ ∈ Λ₂[C]` do. -/
 def isRightLoaded (X : Sequent) : Prop := ∃ nlf, X.O = some (Sum.inr nlf)
@@ -279,7 +279,7 @@ Note that `witDist` does not depend on the valuation of the internal variables �
 the paper's observation that `M` and `M'` have the same relational structure. -/
 
 /-- The witness distance `wd_M(v,x)` of Lemma 10.7, as a function of the label `Δ_x`. -/
-noncomputable def witDist {W : Type} (M : KripkeModel W) (v : W) (Δ : Sequent) : ℕ∞ :=
+@[expose] noncomputable def witDist {W : Type} (M : KripkeModel W) (v : W) (Δ : Sequent) : ℕ∞ :=
   ⨅ w : {w : W // evaluate M w (~ Δ.loadedFma)}, distanceList M v w Δ.loadedProgs
 
 lemma witDist_congr {W : Type} {M : KripkeModel W} {v : W} {Δ Y : Sequent}

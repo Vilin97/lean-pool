@@ -13,7 +13,7 @@ import Mathlib.Tactic.Positivity.Finset
 Kernel-checked shard 6 of 8 for the exhaustive Sp₄(𝔽₂) detector.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace Sp4

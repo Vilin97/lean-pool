@@ -27,7 +27,7 @@ recovered `z=FInv η` is continuous here; its H¹ regularity additionally uses t
 source's C¹-in-time inverse deformation.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -52,6 +52,12 @@ def meanDerivatives (T : ℝ) (hT : 0 ≤ T)
   smul_mem' := by
     intro a u hu t
     simpa only [map_smul, ContinuousMap.smul_apply] using solenoidalSpace.smul_mem a (hu t)
+
+@[simp] theorem mem_meanDerivatives (T : ℝ) (hT : 0 ≤ T)
+    (FInv : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (u : TimeLp T L2) :
+    u ∈ meanDerivatives T hT FInv ↔
+      ∀ t, FInv t (terminalPrimitive T hT u t) ∈ solenoidalSpace := by
+  rfl
 
 /-- Every genuine absolutely continuous terminal-zero path with an L² derivative
 and the label-solenoidal constraint is represented in this Hilbert space. -/
@@ -84,13 +90,13 @@ instance meanDerivatives_complete (T : ℝ) (hT : 0 ≤ T)
   (meanDerivatives_closed T hT FInv).completeSpace_coe
 
 /-- The actual displacement primitive, restricted to the mean constraint space. -/
-def meanPrimitive (T : ℝ) (hT : 0 ≤ T)
+@[expose] def meanPrimitive (T : ℝ) (hT : 0 ≤ T)
     (FInv : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) :
     meanDerivatives T hT FInv →L[ℝ] TimeLp T L2 :=
   (primitiveTimeLp T hT).comp (meanDerivatives T hT FInv).subtypeL
 
 /-- The actual initial trace on that same constraint space. -/
-def meanTrace (T : ℝ) (hT : 0 ≤ T)
+@[expose] def meanTrace (T : ℝ) (hT : 0 ≤ T)
     (FInv : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) :
     meanDerivatives T hT FInv →L[ℝ] L2 :=
   (initialTrace T hT).comp (meanDerivatives T hT FInv).subtypeL

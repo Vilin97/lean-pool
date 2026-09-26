@@ -21,7 +21,7 @@ coordinate derivatives. A smooth orbit of a continuous-time path supplies
 continuity of every tensor jet in time.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -43,7 +43,7 @@ This is a concrete finite computation (`fin_cases`/`simp`); footprint
 `[propext, Classical.choice, Quot.sound]` — same as Examples 1.2/1.3.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Example14
 

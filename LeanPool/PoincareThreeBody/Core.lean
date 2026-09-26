@@ -18,7 +18,7 @@ establishes their elementary structural properties. It deliberately does not imp
 module: the solution and challenge environments must remain separately exportable for comparator.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
@@ -28,36 +28,36 @@ open Set
 abbrev PhaseSpace := Fin 4 → ℝ
 
 /-- Squared distance from the primary of mass `μ` at `(1 - μ, 0)`. -/
-def firstPrimaryDistanceSq (μ : ℝ) (s : PhaseSpace) : ℝ :=
+@[expose] def firstPrimaryDistanceSq (μ : ℝ) (s : PhaseSpace) : ℝ :=
   (s 0 - 1 + μ) ^ 2 + (s 1) ^ 2
 
 /-- Squared distance from the primary of mass `1 - μ` at `(-μ, 0)`. -/
-def secondPrimaryDistanceSq (μ : ℝ) (s : PhaseSpace) : ℝ :=
+@[expose] def secondPrimaryDistanceSq (μ : ℝ) (s : PhaseSpace) : ℝ :=
   (s 0 + μ) ^ 2 + (s 1) ^ 2
 
 /-- The collision-free joint mass-parameter/phase-space domain. -/
-def collisionFree : Set (ℝ × PhaseSpace) :=
+@[expose] def collisionFree : Set (ℝ × PhaseSpace) :=
   {z | firstPrimaryDistanceSq z.1 z.2 ≠ 0 ∧ secondPrimaryDistanceSq z.1 z.2 ≠ 0}
 
 /-- The collision-free domain with the mass parameter restricted to `|μ| < δ`. -/
-def parameterDomain (δ : ℝ) : Set (ℝ × PhaseSpace) :=
+@[expose] def parameterDomain (δ : ℝ) : Set (ℝ × PhaseSpace) :=
   {z | |z.1| < δ ∧ z ∈ collisionFree}
 
 /-- The Newtonian potential in the rotating frame. -/
-noncomputable def potential (μ : ℝ) (s : PhaseSpace) : ℝ :=
+@[expose] noncomputable def potential (μ : ℝ) (s : PhaseSpace) : ℝ :=
   μ / Real.sqrt (firstPrimaryDistanceSq μ s) +
     (1 - μ) / Real.sqrt (secondPrimaryDistanceSq μ s)
 
 /-- The planar circular restricted three-body Hamiltonian in rotating canonical coordinates. -/
-noncomputable def hamiltonian (μ : ℝ) (s : PhaseSpace) : ℝ :=
+@[expose] noncomputable def hamiltonian (μ : ℝ) (s : PhaseSpace) : ℝ :=
   ((s 2) ^ 2 + (s 3) ^ 2) / 2 + s 2 * s 1 - s 3 * s 0 - potential μ s
 
 /-- The coordinate basis vector in the concrete phase space. -/
-def coordinateVector (i : Fin 4) : PhaseSpace :=
+@[expose] def coordinateVector (i : Fin 4) : PhaseSpace :=
   fun j ↦ if j = i then 1 else 0
 
 /-- The canonical Poisson bracket in coordinates `(x, y, pₓ, pᵧ)`. -/
-noncomputable def poissonBracket (F G : PhaseSpace → ℝ) (s : PhaseSpace) : ℝ :=
+@[expose] noncomputable def poissonBracket (F G : PhaseSpace → ℝ) (s : PhaseSpace) : ℝ :=
   let dF := fderiv ℝ F s
   let dG := fderiv ℝ G s
   dF (coordinateVector 0) * dG (coordinateVector 2) -
@@ -66,15 +66,16 @@ noncomputable def poissonBracket (F G : PhaseSpace → ℝ) (s : PhaseSpace) : �
       dF (coordinateVector 3) * dG (coordinateVector 1))
 
 /-- Joint real analyticity in the mass parameter and phase variables. -/
-def IsJointlyAnalytic (δ : ℝ) (F : ℝ → PhaseSpace → ℝ) : Prop :=
+@[expose] def IsJointlyAnalytic (δ : ℝ) (F : ℝ → PhaseSpace → ℝ) : Prop :=
   AnalyticOnNhd ℝ (Function.uncurry F) (parameterDomain δ)
 
 /-- A first-integral family Poisson-commutes with the Hamiltonian throughout the domain. -/
-noncomputable def IsFirstIntegralFamily (δ : ℝ) (F : ℝ → PhaseSpace → ℝ) : Prop :=
+@[expose] noncomputable def IsFirstIntegralFamily (δ : ℝ)
+    (F : ℝ → PhaseSpace → ℝ) : Prop :=
   ∀ z ∈ parameterDomain δ, poissonBracket (F z.1) (hamiltonian z.1) z.2 = 0
 
 /-- Functional independence of the phase differentials at some point. -/
-noncomputable def IsIndependentSomewhere (δ : ℝ) (F : ℝ → PhaseSpace → ℝ) : Prop :=
+@[expose] noncomputable def IsIndependentSomewhere (δ : ℝ) (F : ℝ → PhaseSpace → ℝ) : Prop :=
   ∃ z ∈ parameterDomain δ,
     LinearIndependent ℝ
       ![fderiv ℝ (hamiltonian z.1) z.2, fderiv ℝ (F z.1) z.2]

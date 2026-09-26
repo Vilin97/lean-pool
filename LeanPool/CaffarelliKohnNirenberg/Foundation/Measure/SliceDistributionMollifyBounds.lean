@@ -19,7 +19,7 @@ throughout the Caffarelli–Kohn–Nirenberg argument.
   beyond the closed `ε`-neighbourhood of its topological support.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric
 

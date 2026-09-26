@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.Deriv.Add
 
 /-! Addition of actual smooth bounded fields and their genuine time jets. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -32,7 +32,7 @@ after the relevant definitions, by `IsCompactOperator.comp_clm`/`.clm_comp` comp
 lemma (per §6.3 step 5) — no mathematical content moves, only the file boundary.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold BoundedContinuousFunction
 open Set Filter Topology TopologicalSpace Metric

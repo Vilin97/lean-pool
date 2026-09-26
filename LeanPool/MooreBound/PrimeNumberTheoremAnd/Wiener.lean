@@ -31,7 +31,7 @@ Wiener and Consequences retain the PNT and prime-interval dependency closure;
 unrelated later developments and LeanArchitect annotations are omitted.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -446,6 +446,7 @@ section nabla
 variable {α E : Type*} [OfNat α 1] [Add α] [Sub α] {u : α → ℂ}
 
 /-- The sum of the sequence over indices strictly below n. -/
+@[expose]
 def cumsum [AddCommMonoid E] (u : ℕ → E) (n : ℕ) : E := ∑ i ∈ Finset.range n, u i
 
 /-- The forward difference u(n+1)-u(n). -/

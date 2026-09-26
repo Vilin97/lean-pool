@@ -20,7 +20,7 @@ facewise affine formulas and subordination to old faces.  Thus an arbitrary home
 be installed as a subdivision by bookkeeping alone.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -97,6 +97,7 @@ theorem realization_eq_iUnion_faceCarrier :
   · exact Set.subset_univ _
 
 /-- The intrinsic subcomplex obtained by retaining a selected family of maximal faces. -/
+@[expose]
 def restrictFaces (p : Finset K.Vertex → Prop) [DecidablePred p] : IntrinsicTwoComplex where
   Vertex := K.Vertex
   faces := K.faces.filter p
@@ -108,7 +109,7 @@ def restrictFaces (p : Finset K.Vertex → Prop) [DecidablePred p] : IntrinsicTw
     (K.restrictFaces p).faces = K.faces.filter p := rfl
 
 /-- The canonical inclusion of a face restriction into the old realization. -/
-def restrictFacesInclusion (p : Finset K.Vertex → Prop)
+@[expose] def restrictFacesInclusion (p : Finset K.Vertex → Prop)
     [decidablePred : DecidablePred p] :
     (K.restrictFaces p).realization → K.realization :=
   fun x => ⟨x.1, x.2.1, by
@@ -117,7 +118,7 @@ def restrictFacesInclusion (p : Finset K.Vertex → Prop)
 
 @[simp] theorem restrictFacesInclusion_val (p : Finset K.Vertex → Prop) [DecidablePred p]
     (x : (K.restrictFaces p).realization) :
-    (K.restrictFacesInclusion p x).1 = x.1 := rfl
+    (K.restrictFacesInclusion p x).1 = x.1 := by rfl
 
 theorem isEmbedding_restrictFacesInclusion (p : Finset K.Vertex → Prop)
     [decidablePred : DecidablePred p] :
@@ -207,7 +208,7 @@ noncomputable def faceVertexEquiv (t : K.Face) : Fin 3 ≃ t.1 :=
     rw [Fintype.card_fin, Fintype.card_coe, K.faces_card t.1 t.2])
 
 /-- Cyclically indexed vertices of a maximal face. -/
-noncomputable def faceVertex (t : K.Face) (i : ZMod 3) : K.Vertex :=
+@[expose] noncomputable def faceVertex (t : K.Face) (i : ZMod 3) : K.Vertex :=
   (K.faceVertexEquiv t ((ZMod.finEquiv 3).symm i)).1
 
 theorem faceVertex_mem (t : K.Face) (i : ZMod 3) : K.faceVertex t i ∈ t.1 :=
@@ -255,7 +256,7 @@ noncomputable def faceEdge (t : K.Face) (i : ZMod 3) : K.Edge := by
   · simp [K.faceVertex_ne_next t i]
 
 @[simp] theorem faceEdge_val (t : K.Face) (i : ZMod 3) :
-    (K.faceEdge t i).1 = {K.faceVertex t i, K.faceVertex t (i + 1)} := rfl
+    (K.faceEdge t i).1 = {K.faceVertex t i, K.faceVertex t (i + 1)} := by rfl
 
 /-- The consecutive face edges share exactly their common cyclic vertex. -/
 theorem faceEdge_inter_next (t : K.Face) (i : ZMod 3) :
@@ -296,7 +297,7 @@ theorem faceEdge_ne_next (t : K.Face) (i : ZMod 3) :
 abbrev UsedVertex : Type := {v : K.Vertex // ∃ t ∈ K.faces, v ∈ t}
 
 /-- A cyclic face vertex with explicit evidence that it occurs in the complex. -/
-noncomputable def faceUsedVertex (t : K.Face) (i : ZMod 3) : K.UsedVertex :=
+@[expose] noncomputable def faceUsedVertex (t : K.Face) (i : ZMod 3) : K.UsedVertex :=
   ⟨K.faceVertex t i, t.1, t.2, K.faceVertex_mem t i⟩
 
 /-- A chosen maximal face containing a used vertex. -/
@@ -392,11 +393,11 @@ theorem edgeVertexPoint_eq_vertexPoint (e : K.Edge) (v : K.Vertex) (hv : v ∈ e
   rfl
 
 /-- Canonical first endpoint in the barycentric realization. -/
-noncomputable def edgeFirstPoint (e : K.Edge) : K.realization :=
+@[expose] noncomputable def edgeFirstPoint (e : K.Edge) : K.realization :=
   K.edgeVertexPoint e (K.edgeFirst e) (K.edgeFirst_mem e)
 
 /-- Canonical second endpoint in the barycentric realization. -/
-noncomputable def edgeSecondPoint (e : K.Edge) : K.realization :=
+@[expose] noncomputable def edgeSecondPoint (e : K.Edge) : K.realization :=
   K.edgeVertexPoint e (K.edgeSecond e) (K.edgeSecond_mem e)
 
 /-- The first endpoint as a used vertex. -/
@@ -774,11 +775,11 @@ noncomputable def refl : K.Subdivision where
     intro t ht
     exact ⟨t, ht, fun x hx => hx⟩
 
-@[simp] theorem refl_refined : (refl K).refined = K := rfl
+@[simp] theorem refl_refined : (refl K).refined = K := by rfl
 
 
 /-- Faithful intrinsic subdivisions compose. -/
-noncomputable def trans {K : IntrinsicTwoComplex}
+@[expose] noncomputable def trans {K : IntrinsicTwoComplex}
     (R : K.Subdivision) (Q : R.refined.Subdivision) : K.Subdivision where
   refined := Q.refined
   homeo := Q.homeo.trans R.homeo
@@ -799,11 +800,11 @@ noncomputable def trans {K : IntrinsicTwoComplex}
     exact ⟨s, hs, fun x hx => hus (Q.homeo x) (htu x hx)⟩
 
 @[simp] theorem trans_refined (R : K.Subdivision) (Q : R.refined.Subdivision) :
-    (R.trans Q).refined = Q.refined := rfl
+    (R.trans Q).refined = Q.refined := by rfl
 
 theorem trans_homeo_apply (R : K.Subdivision) (Q : R.refined.Subdivision)
     (x : Q.refined.realization) :
-    (R.trans Q).homeo x = R.homeo (Q.homeo x) := rfl
+    (R.trans Q).homeo x = R.homeo (Q.homeo x) := by rfl
 
 end Subdivision
 
@@ -890,7 +891,7 @@ noncomputable def refl : K.PLHomeomorph K where
     intro x hx
     rfl
 
-@[simp] theorem refl_apply (x : K.realization) : (refl K).toHomeomorph x = x := rfl
+@[simp] theorem refl_apply (x : K.realization) : (refl K).toHomeomorph x = x := by rfl
 
 end PLHomeomorph
 

@@ -20,7 +20,7 @@ Supporting material for the folded additive lemma: the images `T₁,…,T₄` of
 four-set union bound `case2_bound`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

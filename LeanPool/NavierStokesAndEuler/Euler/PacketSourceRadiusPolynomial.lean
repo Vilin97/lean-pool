@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRadiusPolynomial
 canonical primary/common enlargement. The boundary coefficient L is an
 explicit primitive input. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

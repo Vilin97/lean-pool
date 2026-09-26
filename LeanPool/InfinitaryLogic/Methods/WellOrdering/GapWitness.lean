@@ -32,7 +32,7 @@ the uniform insertion lemma) needs the chain to be long enough to contain rank `
 `GapWitness.mono` is the downward closure in `α` consumed by the `ω₁` fiber argument (C4).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -43,7 +43,7 @@ variable {L : Language.{0, 0}}
 /-! ## The base diagram -/
 
 /-- The positive order atom `d_q < d_r` (over the rational constants of the coding layer). -/
-def ratLtAtom (lt : L.Relations 2) (q r : ℚ) : L[[ℕ]].Sentenceω :=
+@[expose] def ratLtAtom (lt : L.Relations 2) (q r : ℚ) : L[[ℕ]].Sentenceω :=
   relInst lt ![ratConstIdx q, ratConstIdx r]
 
 /-- **The base diagram** `Bφ = {φ} ∪ {d_q < d_r : q < r}`: the lifted sentence together with

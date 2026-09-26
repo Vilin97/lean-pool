@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevScaling
 /-! The literal compact initial wave supplies the seven-field primary
 budget for the direct-forward, zero-history packet construction. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

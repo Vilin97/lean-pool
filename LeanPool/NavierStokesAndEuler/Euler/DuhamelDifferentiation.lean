@@ -14,7 +14,7 @@ import Mathlib.Analysis.Calculus.ParametricIntegral
 
 /-! Differentiation of the actual heat Duhamel integral in L² from finite Sobolev forcing. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -63,7 +63,7 @@ theorem shiftedHeat_continuous {q : ℕ} (ν T : ℝ) (hT : 0 ≤ T)
     (f := fun s : ℝ => (t - s, extendPath T hT f s)) (heatFlow_joint_continuous period q ν) hp
 
 /-- The ordinary, actual Sobolev heat Duhamel integral. -/
-def duhamel {q : ℕ} (ν T : ℝ) (hT : 0 ≤ T)
+@[expose] def duhamel {q : ℕ} (ν T : ℝ) (hT : 0 ≤ T)
     (f : C(Icc (0 : ℝ) T, SobolevSpace period q)) (t : ℝ) : SobolevSpace period q :=
   ∫ s in (0 : ℝ)..t, heatFlow period q ν (t - s) (extendPath T hT f s)
 

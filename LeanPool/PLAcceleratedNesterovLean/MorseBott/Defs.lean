@@ -30,7 +30,7 @@ Formalization of definitions from:
 - `IsMuMB`              : μ-Morse–Bott property
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Submodule
 
@@ -48,7 +48,7 @@ variable {E : Type*}
 /-- The set of local minimizers of `f` at the same function value as `x₀`.
     This is S from equation (4) in the paper:
       S = {x ∈ M : x is a local minimum of f and f(x) = f_S} -/
-def localMinSet (f : E → ℝ) (x₀ : E) : Set E :=
+@[expose] def localMinSet (f : E → ℝ) (x₀ : E) : Set E :=
   {x | IsLocalMin f x ∧ f x = f x₀}
 
 omit [InnerProductSpace ℝ E] [FiniteDimensional ℝ E] in
@@ -68,7 +68,7 @@ theorem self_mem_localMinSet {f : E → ℝ} {x₀ : E} (hmin : IsLocalMin f x�
 /-- The μ-Polyak–Łojasiewicz condition (Definition 1.2 in the paper):
       ∀ x near x₀, f(x) − f(x₀) ≤ (2μ)⁻¹ ‖Df(x)‖²
     where ‖Df(x)‖ = ‖fderiv ℝ f x‖ equals the gradient norm by Riesz. -/
-def MuPL (f : E → ℝ) (μ : ℝ) (x₀ : E) : Prop :=
+@[expose] def MuPL (f : E → ℝ) (μ : ℝ) (x₀ : E) : Prop :=
   ∀ᶠ x in 𝓝 x₀, f x - f x₀ ≤ (2 * μ)⁻¹ * ‖fderiv ℝ f x‖ ^ 2
 
 -- ════════════════════════════════════════════════════════════════════════════
@@ -103,7 +103,7 @@ def MuQG (f : E → ℝ) (μ : ℝ) (x₀ : E) (S : Set E) : Prop :=
     - `φ(0) = 0` ensures the graph passes through `x₀`, i.e., `x₀ ∈ S`.
     - `Dφ(0) = 0` ensures the tangent space to the graph at `x₀` is exactly `T`.
     - `ContDiffAt ℝ 1 φ 0` gives C¹ regularity of the chart near the origin. -/
-def IsLocalSubmanifoldAt (S : Set E) (x₀ : E) (T : Submodule ℝ E) : Prop :=
+@[expose] def IsLocalSubmanifoldAt (S : Set E) (x₀ : E) (T : Submodule ℝ E) : Prop :=
   x₀ ∈ S ∧
   ∃ (U : Set E) (_ : U ∈ 𝓝 x₀)
     (φ : T → T.orthogonal),
@@ -126,7 +126,7 @@ abbrev hessian (f : E → ℝ) (x : E) : E →L[ℝ] (E →L[ℝ] ℝ) :=
   fderiv ℝ (fderiv ℝ f) x
 
 /-- The kernel of the Hessian at `x`, as a submodule of E. -/
-def hessianKer (f : E → ℝ) (x : E) : Submodule ℝ E :=
+@[expose] def hessianKer (f : E → ℝ) (x : E) : Submodule ℝ E :=
   LinearMap.ker (hessian f x).toLinearMap
 
 -- ════════════════════════════════════════════════════════════════════════════
@@ -140,7 +140,7 @@ def hessianKer (f : E → ℝ) (x : E) : Submodule ℝ E :=
          space T = ker(Hess f(x₀)),
       2. The Hessian is μ-coercive on the normal space T⊥:
          D²f(x₀)(v,v) ≥ μ ‖v‖² for all v ∈ T⊥. -/
-def IsMuMB (f : E → ℝ) (μ : ℝ) (x₀ : E) : Prop :=
+@[expose] def IsMuMB (f : E → ℝ) (μ : ℝ) (x₀ : E) : Prop :=
   let H := hessian f x₀
   let T := hessianKer f x₀
   0 < μ ∧

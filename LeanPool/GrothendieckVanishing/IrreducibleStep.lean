@@ -45,7 +45,7 @@ neighbourhood by minimality.
 * `irreducible_pos_vanishing` — the headline assembly.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -420,12 +420,10 @@ theorem closedComplementVanishing
     sheaf_isZero_of_zero_stalks X S.X₁.property (fun x a ↦ by
       by_cases hxY : x ∈ Y
       · have : IsIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.g.hom) := by
-          change IsIso
-            ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u}
-              ((ConcreteCategory.hom (TopCat.closedIncl hYcl)) ⟨x, hxY⟩)).map S.g.hom)
-          simpa [S, closedImmersionSES, closedIncl, Csh] using
-            (TopCat.closedIncl_unit_stalk_isIso (C := AddCommGrpCat.{u})
-              (hs := hYcl) Csh ⟨x, hxY⟩)
+          have hi := TopCat.closedIncl_unit_stalk_isIso (C := AddCommGrpCat.{u})
+            (hs := hYcl) Csh ⟨x, hxY⟩
+          erw [TopCat.closedIncl_apply hYcl ⟨x, hxY⟩] at hi
+          simpa [S, closedImmersionSES, closedIncl, Csh] using hi
         exact stalk_zero_of_ses_g_iso S hSE x inferInstance a
       · exact stalk_zero_of_shortExact_kernel S hSE x
           (fun b ↦ hStalksOnV x (by rwa [Set.mem_compl_iff, not_not] at hxY) b)

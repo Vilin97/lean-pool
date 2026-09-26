@@ -28,7 +28,7 @@ coercive solve.  Full-range frame transport proves exact equality with the
 physical endpoint solution, rather than introducing a second unrelated solve.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -176,7 +176,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -269,7 +269,7 @@ section AffineTrial
 variable (A A₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
 
 /-- The exact derivative of `(t/T) Q(t) ξT`. -/
-def affineTrial : U →L[ℝ] TimeLp T E :=
+@[expose] def affineTrial : U →L[ℝ] TimeLp T E :=
   (initialProductDerivative T hT A A₁).comp
     ((constantFieldOperator T hT).comp (T⁻¹ • ContinuousLinearMap.id ℝ U))
 

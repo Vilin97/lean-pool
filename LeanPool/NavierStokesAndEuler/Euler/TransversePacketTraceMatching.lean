@@ -28,7 +28,7 @@ Its source Hessian need not satisfy a smallness condition on the full
 history-plus-forward time interval.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -59,7 +59,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -83,7 +83,7 @@ def pastVelocity : C(Icc (0 : ℝ) τ,LiftL2 P) :=
 
 /-- Future velocity, given by `includePath P D.support D.support_measurable ((G.tail τ hτ.le
 hτT).velocityPath (forwardInitial τ hτ hτT B G))`. -/
-def futureVelocity : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
+@[expose] def futureVelocity : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
   includePath P D.support D.support_measurable
     ((G.tail τ hτ.le hτT).velocityPath (forwardInitial τ hτ hτT B G))
 
@@ -93,7 +93,7 @@ def pastDerivative : C(Icc (0 : ℝ) τ,LiftL2 P) :=
 
 /-- Future derivative, given by `includePath P D.support D.support_measurable ((G.tail τ hτ.le
 hτT).derivativePath (forwardInitial τ hτ hτT B G))`. -/
-def futureDerivative : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
+@[expose] def futureDerivative : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
   includePath P D.support D.support_measurable
     ((G.tail τ hτ.le hτT).derivativePath (forwardInitial τ hτ hτT B G))
 
@@ -162,7 +162,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -12,7 +12,7 @@ import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
 
 /-! Full spatial-parameter smoothness of the actual localized Newtonian operators. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -64,7 +64,7 @@ def cutoffDirectionalMap (L : Cutoff → E)
 @[simp] theorem cutoffDirectionalMap_apply (L : Cutoff → E)
     (hadd : ∀ χ ψ, L (χ.add ψ) = L χ + L ψ)
     (hsmul : ∀ χ c, L (χ.scale c) = c • L χ) (χ : Cutoff) (a : Space) :
-    cutoffDirectionalMap L hadd hsmul χ a = L (χ.directional a) := rfl
+    cutoffDirectionalMap L hadd hsmul χ a = L (χ.directional a) := by rfl
 
 theorem cutoffOperation_differenceError (L : Cutoff → E)
     (hsmul : ∀ χ c, L (χ.scale c) = c • L χ)

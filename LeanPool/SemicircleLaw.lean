@@ -21,7 +21,7 @@ Tags: probability, random-matrix-theory, distributions
 MSC: 60B20, 60E05
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

@@ -58,7 +58,7 @@ feeding `c'` to the arity-`(n+1)` inductive hypothesis homogenizes `G` outright.
   (abstract well-ordered source); **regression**: `pairER_from_endHomogeneous`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -75,7 +75,7 @@ variable {I : Type*} [LinearOrder I] {n : ℕ}
 /-- Append a strict upper bound `x` to an `(n+1)`-tuple `s`, giving an `(n+2)`-tuple.
 The underlying function is `Fin.snoc s x`; the `<`-proof `hx` enters only the
 strict-monotonicity argument, so the embedding's data depends on `s` and `x` alone. -/
-def appendLastOE (s : Fin (n + 1) ↪o I) (x : I) (hx : ∀ k, s k < x) :
+@[expose] def appendLastOE (s : Fin (n + 1) ↪o I) (x : I) (hx : ∀ k, s k < x) :
     Fin (n + 2) ↪o I :=
   OrderEmbedding.ofStrictMono (Fin.snoc (⇑s) x) (by
     intro p q hpq

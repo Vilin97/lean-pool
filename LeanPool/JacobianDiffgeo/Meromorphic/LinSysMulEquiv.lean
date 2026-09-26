@@ -17,7 +17,7 @@ multiplication by `φ` is a `ℂ`-linear equivalence `L(D) ≃ₗ L(D - divisor 
 vocabulary; riemann-roch's lattice tool).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology
@@ -29,8 +29,9 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X] [T1Space X] [IsMa
 theorem mul_mem_linSys_sub_divisor [ConnectedSpace X] {φ : ℳ X} (hφ : φ ≠ 0) {D : Divisor X}
     {ψ : ℳ X} (hψ : ψ ∈ LinSys D) : φ * ψ ∈ LinSys (D - divisor φ) := by
   intro x
-  have hφx : ((divisor φ x : ℤ) : WithTop ℤ) = φ.ord x :=
-    WithTop.coe_untop₀_of_ne_top (Mero.ord_ne_top hφ x)
+  have hφx : ((divisor φ x : ℤ) : WithTop ℤ) = φ.ord x := by
+    simpa only [divisor_apply] using
+      WithTop.coe_untop₀_of_ne_top (Mero.ord_ne_top hφ x)
   rw [MeroGermOn.ord_mul isOpen_univ (mem_univ x), Divisor.sub_apply]
   have hz : (-(D x - divisor φ x) : ℤ) = divisor φ x + -(D x) := by ring
   have hrw : ((-(D x - divisor φ x) : ℤ) : WithTop ℤ) = φ.ord x + ((-(D x) : ℤ) : WithTop ℤ) := by

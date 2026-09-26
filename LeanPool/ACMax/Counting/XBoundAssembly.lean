@@ -24,7 +24,7 @@ linearly in the number of *usable* (unsuppressed, `sigS ≤ 2`) degree-3 vertice
    (`compact_covering_eleven_halves`).
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

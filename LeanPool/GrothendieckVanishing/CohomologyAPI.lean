@@ -61,7 +61,7 @@ calculations internal so downstream files never need to unfold `Sheaf.H` directl
   surjective morphisms
 -/
 
-@[expose] public section
+public section
 
 universe w' w v u
 
@@ -219,7 +219,7 @@ private theorem sheafH_comp_extClass_naturality {X : TopCat.{u}}
   exact congrArg (fun t ↦ y.comp t rfl) (extClass_naturality hS₁ hS₂ φ).symm
 
 /-- Successor connecting morphism attached to a short exact sequence of sheaves. -/
-noncomputable def sheafHSuccMap {X : TopCat.{u}}
+@[expose] noncomputable def sheafHSuccMap {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
     (hS : S.ShortExact)
     (n : ℕ) :
@@ -593,7 +593,7 @@ theorem sheafH_subsingleton_of_isEmpty {X : TopCat.{u}} [IsEmpty X]
 
 /-- The sheaf cohomology functor `H^n : Sheaf(X, Ab) ⥤ Ab`, defined as the covariant
     Ext functor `Ext^n(ℤ_X, −)` where `ℤ_X` is the constant sheaf of integers. -/
-noncomputable def sheafCohomologyFunctor (X : TopCat.{u}) (n : ℕ) :
+@[expose] noncomputable def sheafCohomologyFunctor (X : TopCat.{u}) (n : ℕ) :
     TopCat.Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
   extFunctorObj ((constantSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj
     (AddCommGrpCat.of (ULift.{u} ℤ))) n
@@ -666,6 +666,7 @@ theorem sheafH1_cokernel_iso_of_subsingleton_middle_natural {X : TopCat.{u}}
       ((sheafH0EquivSections S₁.X₃).symm s)).symm
 
 /-- The degree-`0` sheaf cohomology functor is naturally isomorphic to taking sections on `⊤`. -/
+@[expose]
 noncomputable def sheafH0NatIsoSections {X : TopCat.{u}} :
     sheafCohomologyFunctor X 0 ≅
       sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u} ⋙

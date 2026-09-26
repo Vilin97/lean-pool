@@ -20,7 +20,7 @@ sum itself is smooth and divergence-free on the whole preterminal region.
 No global smooth replacement of the raw scalar is chosen.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

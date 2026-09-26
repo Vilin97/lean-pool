@@ -57,7 +57,7 @@ incident with one unique current source face.
   and direction-(b) theorem assuming only that combinatorial invariant.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

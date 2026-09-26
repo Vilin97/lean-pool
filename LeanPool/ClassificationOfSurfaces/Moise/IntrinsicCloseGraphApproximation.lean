@@ -18,7 +18,7 @@ embedding to this model and applying the plane graph approximation theorem gives
 arbitrarily close second replacement.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardExactFields
 from the literal primary normal tensor by its proved finite tail and
 the Hessian of the same actual correction. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

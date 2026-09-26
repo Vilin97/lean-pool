@@ -32,7 +32,7 @@ Positive jets have a fixed `Q^(-2h)` loss, uniformly before the label and
 band are selected. No bound on the unbounded phase value is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -240,7 +240,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -623,7 +623,7 @@ end Carrier
 /-! ## The current physical graph, with no copy-family premise -/
 
 /-- Current loss, given by `degree + ρ * m + PhysicalGraphBounds.graphLoss m + 1`. -/
-noncomputable def currentLoss (degree ρ : ℝ) (m : ℕ) : ℝ :=
+@[expose] noncomputable def currentLoss (degree ρ : ℝ) (m : ℕ) : ℝ :=
   degree + ρ * m + PhysicalGraphBounds.graphLoss m + 1
 
 private theorem mode_majorant_factorization {Q : ℝ} (hQ : 0 < Q)

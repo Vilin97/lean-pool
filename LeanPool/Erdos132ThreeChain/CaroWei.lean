@@ -31,7 +31,7 @@ bound into a lower bound on the independence number, and integrality upgrades `n
 independent set of size `5` once `n ≥ 13`.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos132ThreeChain
 
@@ -40,7 +40,7 @@ open Finset
 variable {α : Type*}
 
 /-- The degree of `v` in the graph that `adj` induces on the vertex set `V`. -/
-def degree (adj : α → α → Prop) [DecidableRel adj] (V : Finset α) (v : α) : ℕ :=
+@[expose] def degree (adj : α → α → Prop) [DecidableRel adj] (V : Finset α) (v : α) : ℕ :=
   (V.filter (adj v)).card
 
 theorem degree_mono {adj : α → α → Prop} [DecidableRel adj] {V W : Finset α} (h : W ⊆ V)

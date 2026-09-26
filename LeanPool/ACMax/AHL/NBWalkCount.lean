@@ -34,7 +34,7 @@ over `fun v => Finset (G.Walk x v)` is not type-correct — the fibers must be t
 endpoint first, which is exactly what `nbWalksFrom` does).
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 
@@ -126,7 +126,7 @@ theorem card_nbWalksFrom [Fintype V] [DecidableEq V] [DecidableRel G.Adj] (x : V
 
 /-- The one-edge non-backtracking extensions of a bundled walk `s = ⟨u, p⟩`: for each neighbour `t`
 of `u` other than the penultimate vertex of `p`, the walk `p.concat _`. -/
-def nbExtend (G : SimpleGraph V) [Fintype V] [DecidableEq V] [DecidableRel G.Adj] (x : V)
+@[expose] def nbExtend (G : SimpleGraph V) [Fintype V] [DecidableEq V] [DecidableRel G.Adj] (x : V)
     (s : Σ v : V, G.Walk x v) : Finset (Σ v : V, G.Walk x v) :=
   (G.neighborFinset s.1 \ {s.2.penultimate}).image fun t =>
     if h : G.Adj s.1 t then ⟨t, s.2.concat h⟩ else ⟨x, Walk.nil⟩

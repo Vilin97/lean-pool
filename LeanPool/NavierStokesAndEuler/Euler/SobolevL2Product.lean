@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOperators
 
 /-! Actual pointwise multiplication as a bounded bilinear map Hq × L² → L². -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

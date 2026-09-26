@@ -34,7 +34,7 @@ actual finite tails.  The resulting coefficient functions contain no division
 by `X`; their finite indices and powers of `q` are unchanged.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -490,7 +490,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -691,7 +691,7 @@ open ProblemStatement
 
 /-- Cartesian monomial, given by `SimilarityProfile.pullback h b f
 (AxisymmetricFields.profilePoint z.1 z.2)`. -/
-noncomputable def cartesianMonomial (h b : ℝ) (f : Inner → ℝ) (z : SpaceTime) : ℝ :=
+@[expose] noncomputable def cartesianMonomial (h b : ℝ) (f : Inner → ℝ) (z : SpaceTime) : ℝ :=
   SimilarityProfile.pullback h b f (AxisymmetricFields.profilePoint z.1 z.2)
 
 theorem cartesianMonomial_smoothAt {h b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
@@ -1110,6 +1110,7 @@ noncomputable def prefixPotential (J : ℕ) (h C : ℝ) (d : Coefficients) : Vel
 
 /-- Summed potential, given by `AxisymmetricFields.potential (streamFactor a h C d)
 (swirlPotential a h C d)`. -/
+@[expose]
 noncomputable def summedPotential (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   AxisymmetricFields.potential (streamFactor a h C d) (swirlPotential a h C d)
 
@@ -1526,7 +1527,7 @@ section StressOperator
 open ProblemStatement DiagonalResidual
 
 /-- The manuscript's tangential radial stress operator. -/
-noncomputable def stressForce (theta axial : Chart → ℝ) (z : SpaceTime) : Space :=
+@[expose] noncomputable def stressForce (theta axial : Chart → ℝ) (z : SpaceTime) : Space :=
   SlowResidualMatching.tangentialStressForce theta axial z.1 z.2
 
 /-- Lift profile, given by `F (AxisymmetricFields.profilePoint z.1 z.2)`. -/
@@ -1698,6 +1699,7 @@ noncomputable def baseStressForce (a : ℕ → ℕ) (h C : ℝ) (d : Coefficient
 
 /-- Prefix stress force, given by `stressForce (prefixStressTheta J h C d) (prefixStressAxial J
 h C d)`. -/
+@[expose]
 noncomputable def prefixStressForce (J : ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   stressForce (prefixStressTheta J h C d) (prefixStressAxial J h C d)
 
@@ -1825,7 +1827,7 @@ noncomputable def radialVector (z : SpaceTime) : Space :=
   z.2 0 • coordinateVector 0 + z.2 1 • coordinateVector 1
 
 /-- Angular vector, given by `-z.2 1 • coordinateVector 0 + z.2 0 • coordinateVector 1`. -/
-noncomputable def angularVector (z : SpaceTime) : Space :=
+@[expose] noncomputable def angularVector (z : SpaceTime) : Space :=
   -z.2 1 • coordinateVector 0 + z.2 0 • coordinateVector 1
 
 theorem radialVector_smooth : ContDiff ℝ ∞ radialVector :=
@@ -2593,14 +2595,14 @@ noncomputable def swapInner : Inner ≃ₗᵢ[ℝ] Inner where
   norm_map' := by intro w; exact max_comm _ _
 
 /-- Active window, given by `Ioo (Real.exp a) (Real.exp b) ×ˢ Icc (-1) 1`. -/
-noncomputable def activeWindow (a b : ℝ) : Set Inner :=
+@[expose] noncomputable def activeWindow (a b : ℝ) : Set Inner :=
   Ioo (Real.exp a) (Real.exp b) ×ˢ Icc (-1) 1
 
 /-- Active zeta, given by `radialWeight c a b w.1`. -/
-noncomputable def activeZeta (c a b : ℝ) (w : Inner) : ℝ := radialWeight c a b w.1
+@[expose] noncomputable def activeZeta (c a b : ℝ) (w : Inner) : ℝ := radialWeight c a b w.1
 
 /-- Active delta, given by `edgeDistance a b (Real.log w.1)`. -/
-noncomputable def activeDelta (a b : ℝ) (w : Inner) : ℝ := edgeDistance a b (Real.log w.1)
+@[expose] noncomputable def activeDelta (a b : ℝ) (w : Inner) : ℝ := edgeDistance a b (Real.log w.1)
 
 theorem activeZeta_smooth {c : ℝ} (hc : 0 < c) (a b : ℝ) :
     ContDiff ℝ ∞ (activeZeta c a b) := (radialWeight_smooth hc a b).comp contDiff_fst

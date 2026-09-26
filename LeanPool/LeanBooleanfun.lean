@@ -22,7 +22,7 @@ Tags: boolean-functions, fourier-analysis, social-choice
 MSC: 06E30, 42C10, 91B14
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

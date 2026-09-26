@@ -46,7 +46,7 @@ cut, so any disjoint `3`-block `P` with `2·e(P,N) + leak(P) ≤ 7` closes.
   `Δ ≤ 4`, `e(M) = 2` regime for every `n ≥ 18`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 
@@ -494,7 +494,7 @@ theorem residualCore_cherry (n : ℕ) (G : SimpleGraph (Fin n)) (h : ResidualCor
 
 open Classical in
 /-- The **cherry-touching hubs**: hubs adjacent to a cherry vertex. -/
-noncomputable def cherryHubs (G : SimpleGraph V) (x z y : V) : Finset V :=
+@[expose] noncomputable def cherryHubs (G : SimpleGraph V) (x z y : V) : Finset V :=
   (hubSet G).filter (fun w => G.Adj w z ∨ G.Adj w x ∨ G.Adj w y)
 
 open Classical in
@@ -610,7 +610,7 @@ theorem mem_richLowHubs {G : SimpleGraph V} {w : V} :
 open Classical in
 /-- The **bad neighbours** of an apex `t` against a cherry: neighbours of degree `≥ 5`
 or touching the cherry — the vertices that block the SingleVertex pair selection. -/
-noncomputable def badApexNbrs (G : SimpleGraph V) (x z y t : V) : Finset V :=
+@[expose] noncomputable def badApexNbrs (G : SimpleGraph V) (x z y t : V) : Finset V :=
   (G.neighborFinset t).filter (fun w => 5 ≤ G.degree w ∨ w ∈ cherryHubs G x z y)
 
 open Classical in
@@ -753,7 +753,7 @@ private theorem mem_hubTwins {G : SimpleGraph V} {g t : V} :
 open Classical in
 /-- The **iso-twin neighbours** of a hub, as a pinned `def` so that its instances stay
 stable across the `Fin n` / generic-`V` boundary. -/
-noncomputable def isoNbrs (G : SimpleGraph V) (g : V) : Finset V :=
+@[expose] noncomputable def isoNbrs (G : SimpleGraph V) (g : V) : Finset V :=
   G.neighborFinset g ∩ isoTwins G
 
 open Classical in

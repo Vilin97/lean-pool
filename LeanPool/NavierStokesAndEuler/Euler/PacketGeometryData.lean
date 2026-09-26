@@ -24,7 +24,7 @@ section
 
 /-! Bounds for the actual source choice of the packet amplitude. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -100,7 +100,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -210,57 +210,58 @@ namespace PhysicalGeometryData
 variable {α : Type*}
 
 /-- Error, given by `16*(D.ε*D.Θ*(4*D.G)^2+D.d)`. -/
-def error (D : PhysicalGeometryData α) : ℝ := 16*(D.ε*D.Θ*(4*D.G)^2+D.d)
+@[expose] def error (D : PhysicalGeometryData α) : ℝ := 16*(D.ε*D.Θ*(4*D.G)^2+D.d)
 
 /-- Target, given by `D.y⁻¹/D.σ`. -/
-def target (D : PhysicalGeometryData α) : ℝ := D.y⁻¹/D.σ
+@[expose] def target (D : PhysicalGeometryData α) : ℝ := D.y⁻¹/D.σ
 
 /-- Time, given by `physicalTime D.t₀ D.a D.ε τ`. -/
-def time (D : PhysicalGeometryData α) (τ : ℝ) : ℝ := physicalTime D.t₀ D.a D.ε τ
+@[expose] def time (D : PhysicalGeometryData α) (τ : ℝ) : ℝ :=
+  physicalTime D.t₀ D.a D.ε τ
 
 /-- Target time, given by `D.time D.target`. -/
-def targetTime (D : PhysicalGeometryData α) : ℝ := D.time D.target
+@[expose] def targetTime (D : PhysicalGeometryData α) : ℝ := D.time D.target
 
 /-- Ray, given by `scaledRay D.m D.v (D.r ξ) D.s₀ D.t₀ D.a D.ε τ`. -/
-def ray (D : PhysicalGeometryData α) (ξ : α) (τ : ℝ) : Fin 3 → ℝ :=
+@[expose] def ray (D : PhysicalGeometryData α) (ξ : α) (τ : ℝ) : Fin 3 → ℝ :=
   scaledRay D.m D.v (D.r ξ) D.s₀ D.t₀ D.a D.ε τ
 
 /-- Velocity, given by `scaledVelocity D.m D.v (D.w ξ) D.t₀ D.a D.ε τ`. -/
-def velocity (D : PhysicalGeometryData α) (ξ : α) (τ : ℝ) : Fin 3 → ℝ :=
+@[expose] def velocity (D : PhysicalGeometryData α) (ξ : α) (τ : ℝ) : Fin 3 → ℝ :=
   scaledVelocity D.m D.v (D.w ξ) D.t₀ D.a D.ε τ
 
 /-- Size, given by `‖D.r ξ (D.time τ)‖*‖D.w ξ (D.time τ)‖`. -/
-def size (D : PhysicalGeometryData α) (ξ : α) (τ : ℝ) : ℝ :=
+@[expose] def size (D : PhysicalGeometryData α) (ξ : α) (τ : ℝ) : ℝ :=
   ‖D.r ξ (D.time τ)‖*‖D.w ξ (D.time τ)‖
 
 /-- Target size, given by `D.size D.center D.target`. -/
-def targetSize (D : PhysicalGeometryData α) : ℝ := D.size D.center D.target
+@[expose] def targetSize (D : PhysicalGeometryData α) : ℝ := D.size D.center D.target
 
 /-- Amplitude, given by `primaryAmplitude D.δ D.hchild (D.r D.center) (D.w D.center)
 D.targetTime`. -/
-def amplitude (D : PhysicalGeometryData α) : ℝ :=
+@[expose] def amplitude (D : PhysicalGeometryData α) : ℝ :=
   primaryAmplitude D.δ D.hchild (D.r D.center) (D.w D.center) D.targetTime
 
 /-- Next coupling, given by `normalizedCoupling (D.M D.center D.targetTime) (D.r D.center
 D.targetTime) (D.w D.center D.targetTime)`. -/
-def nextCoupling (D : PhysicalGeometryData α) : ℝ :=
+@[expose] def nextCoupling (D : PhysicalGeometryData α) : ℝ :=
   normalizedCoupling (D.M D.center D.targetTime)
     (D.r D.center D.targetTime) (D.w D.center D.targetTime)
 
 /-- Next tilt, given by `normalizedTilt (D.M D.center D.targetTime) (D.r D.center D.targetTime)
 (D.w D.center D.targetTime)`. -/
-def nextTilt (D : PhysicalGeometryData α) : ℝ :=
+@[expose] def nextTilt (D : PhysicalGeometryData α) : ℝ :=
   normalizedTilt (D.M D.center D.targetTime)
     (D.r D.center D.targetTime) (D.w D.center D.targetTime)
 
 /-- Next compression, given by `normalizedCoupling (D.M D.center D.targetTime) (D.r D.center
 D.targetTime) (D.r D.center D.targetTime)`. -/
-def nextCompression (D : PhysicalGeometryData α) : ℝ :=
+@[expose] def nextCompression (D : PhysicalGeometryData α) : ℝ :=
   normalizedCoupling (D.M D.center D.targetTime)
     (D.r D.center D.targetTime) (D.r D.center D.targetTime)
 
 /-- Target shear, given by `primaryShear D.c D.m D.v D.targetTime`. -/
-def targetShear (D : PhysicalGeometryData α) : ℝ :=
+@[expose] def targetShear (D : PhysicalGeometryData α) : ℝ :=
   primaryShear D.c D.m D.v D.targetTime
 
 end PhysicalGeometryData

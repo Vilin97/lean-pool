@@ -20,7 +20,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.FriezePatterns.Chapter2`.
 -/
 
-@[expose] public section
+public section
 ---- n-Flutes ----
 
 /-- An `n`-flute: a positive integer sequence `a` with `a 0 = 1`, periodic with period
@@ -53,7 +53,7 @@ def fluteSet (n : ℕ) : Set (flute n) :=
   Set.univ
 
 /-- The underlying sequence of the Fibonacci-maximal `(2k+1)`-flute. -/
-def aOdd (k i : ℕ) : ℕ :=
+@[expose] def aOdd (k i : ℕ) : ℕ :=
   if k = 0 then
     1
   else if i ≥ 2 * k then
@@ -180,7 +180,7 @@ def fibFluteOdd (k : ℕ) : flute (2*k+1) := by
   exact ⟨aOdd k, pos, hd, period, div⟩
 
 /-- The underlying sequence of the Fibonacci-maximal `(2k+2)`-flute. -/
-def aEven (k i : ℕ) : ℕ :=
+@[expose] def aEven (k i : ℕ) : ℕ :=
   if i ≥ 2 * k + 1 then
     aEven k (i - 2 * k - 1)
   else if i < k + 1 then
@@ -856,3 +856,14 @@ theorem FluteBounded (n : ℕ) (hn : n > 0) (f : flute n) :
           · simp [hj, add_assoc] at hf₁; omega
       · have := key₁ i hi hij
         exact ⟨(by omega), (by omega)⟩
+
+/-- The Fibonacci-maximal odd flute has underlying sequence `aOdd`. -/
+lemma fibFluteOdd_a (k i : ℕ) : (fibFluteOdd k).a i = aOdd k i := by
+  by_cases hk : k = 0
+  · subst k
+    simp [fibFluteOdd, aOdd]
+  · simp only [fibFluteOdd, hk, ↓reduceDIte]
+
+/-- The Fibonacci-maximal even flute has underlying sequence `aEven`. -/
+lemma fibFluteEven_a (k i : ℕ) : (fibFluteEven k).a i = aEven k i := by
+  rfl

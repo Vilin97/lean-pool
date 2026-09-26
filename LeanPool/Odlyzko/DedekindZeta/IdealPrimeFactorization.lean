@@ -13,7 +13,7 @@ import Mathlib.Tactic.Continuity.Init
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -37,7 +37,7 @@ noncomputable def idealPrimeFactors (I : NonzeroIdeal K) :
     prime_of_normalized_factor
 
 /-- An ideal of prime factors used in the Odlyzko-bound argument. -/
-noncomputable def idealOfPrimeFactors
+@[expose] noncomputable def idealOfPrimeFactors
     (m : Multiset (HeightOneSpectrum (𝓞 K))) : NonzeroIdeal K :=
   ⟨(m.map HeightOneSpectrum.asIdeal).prod, by
     exact Multiset.prod_ne_zero fun h ↦
@@ -92,7 +92,7 @@ theorem idealPrimeFactors_idealOfPrimeFactors
   simp_all
 
 /-- A nonzero ideal equiv prime factors used in the Odlyzko-bound argument. -/
-noncomputable def nonzeroIdealEquivPrimeFactors :
+@[expose] noncomputable def nonzeroIdealEquivPrimeFactors :
     NonzeroIdeal K ≃ Multiset (HeightOneSpectrum (𝓞 K)) where
   toFun := idealPrimeFactors K
   invFun := idealOfPrimeFactors K

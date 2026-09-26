@@ -19,7 +19,7 @@ Tags: extremal-combinatorics, extremal-graph-theory, degenerate-graphs, countere
 MSC: 05C35, 05C75
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Counterexamples in extremal graph theory

@@ -57,7 +57,7 @@ high-weight
 norm before the cut. The two are related in `LayerError.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -157,6 +157,7 @@ theorem layer_factor_eq_epsJump {ko kh m : ℕ} (hkh : 2 ≤ kh) (hm : 1 ≤ m)
 `Ls T` and then project onto the retained set `S T`. The trajectory is defined at operator
 level; its rung masses `layerN` are computed from it, and their recurrence is a theorem
 (`layerN_step`). -/
+@[expose]
 noncomputable def layerTraj (Ls : ℕ → List (PauliString n × ℝ))
     (S : ℕ → Finset (PauliIndex n)) (O : Matrix (Bits n) (Bits n) ℂ) :
     ℕ → Matrix (Bits n) (Bits n) ℂ
@@ -360,6 +361,16 @@ noncomputable def pauliMultiLadder (Ls : ℕ → List (PauliString n × ℝ))
   nonneg := layerN_nonneg Ls S O ko kh
   init := layerN_init Ls S hloc
   step := layerN_step Ls S O hkh hL hherm ha hsin hb
+
+/-- The Pauli ladder records the rung masses of the kept layer trajectory. -/
+@[simp] theorem pauliMultiLadder_N (Ls : ℕ → List (PauliString n × ℝ))
+    (S : ℕ → Finset (PauliIndex n)) (O : Matrix (Bits n) (Bits n) ℂ) {ko kh : ℕ}
+    (hkh : 2 ≤ kh) (hL : ∀ T, IsLayer kh ((Ls T).map Prod.fst))
+    (hherm : ∀ T, ∀ g ∈ Ls T, IsSelfAdjoint g.1) {a : ℝ} (ha : 0 ≤ a)
+    (hsin : ∀ T, ∀ g ∈ Ls T, |Real.sin g.2| ≤ a)
+    (hb : betaOf (kh - 1 : ℕ) ((ko : ℝ) / (kh - 1 : ℕ)) a < 1)
+    (hloc : ∀ p : PauliIndex n, ko < wt p → coeff O p = 0) :
+    (pauliMultiLadder Ls S O hkh hL hherm ha hsin hb hloc).N = layerN Ls S O ko kh := by rfl
 
 /-- **The first-passage majorant for truncated Pauli layers.** The abstract bound
 `MultiLadder.le_majorant` (`apd:eq:composition_majorant`) applied to `pauliMultiLadder`: the

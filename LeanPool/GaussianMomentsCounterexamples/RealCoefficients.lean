@@ -12,7 +12,7 @@ public import Mathlib.MeasureTheory.Measure.OpenPos
 
 /-! A real-coefficient polynomial whose Gaussian second moment vanishes is zero. -/
 
-@[expose] public section
+public section
 noncomputable section
 open MeasureTheory ProbabilityTheory MvPolynomial
 namespace GaussianMomentsCounterexamples

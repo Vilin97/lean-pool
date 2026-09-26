@@ -19,7 +19,7 @@ The complete majorant in `eq:pressure-gradient-morrey` is retained when
 constructing the local pressure gradient on one interior cylinder.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -30,6 +30,7 @@ namespace CKN.Core.Step4
 
 /-- The explicit source, harmonic, and force majorant of
 `eq:pressure-gradient-morrey` on one interior cylinder. -/
+@[expose]
 def originSliceGradientMajorant
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3)
     (p : ParabolicPoint → ℝ) (f : ParabolicPoint → Vec3)

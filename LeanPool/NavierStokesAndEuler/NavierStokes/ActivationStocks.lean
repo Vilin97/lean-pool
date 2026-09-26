@@ -28,7 +28,7 @@ All error factors below are actual transformed integrals and are smooth at
 `T = 0`. Compactness therefore gives width-uniform parameter-jet estimates.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -122,7 +122,7 @@ theorem scaledDomain_open {J : Set ℝ} (hJ : IsOpen J) : IsOpen (scaledDomain J
   isOpen_univ.prod (isOpen_univ.prod hJ)
 
 /-- The auxiliary parameters are `(κ,T)` and the point is `(u,η)`. -/
-noncomputable def rescale (F : Field) (q : ScaledPoint) : ℝ :=
+@[expose] noncomputable def rescale (F : Field) (q : ScaledPoint) : ℝ :=
   F (q.1.2 * q.2.1, q.2.2)
 
 theorem rescale_smooth {J : Set ℝ} (hJ : IsOpen J) {F : Field}
@@ -132,7 +132,7 @@ theorem rescale_smooth {J : Set ℝ} (hJ : IsOpen J) {F : Field}
     (fun _ hp => ⟨mem_univ _, hp.2.2⟩)
 
 /-- Scaled distance, given by `q.1.2 * q.2.1 * activation 1 q.1.1 q.2.1`. -/
-noncomputable def scaledDistance (q : ScaledPoint) : ℝ :=
+@[expose] noncomputable def scaledDistance (q : ScaledPoint) : ℝ :=
   q.1.2 * q.2.1 * activation 1 q.1.1 q.2.1
 
 theorem scaledDistance_smooth : ContDiff ℝ ∞ scaledDistance := by
@@ -207,7 +207,7 @@ theorem controlled_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
   ring
 
 /-- Controlled value, given by `rescale F q + scaledDistance q * controlledErrorFactor F q`. -/
-noncomputable def controlledValue (F : Field) (q : ScaledPoint) : ℝ :=
+@[expose] noncomputable def controlledValue (F : Field) (q : ScaledPoint) : ℝ :=
   rescale F q + scaledDistance q * controlledErrorFactor F q
 
 theorem controlledValue_smooth {J : Set ℝ} (hJ : IsOpen J) {F : Field}
@@ -225,7 +225,7 @@ theorem controlledValue_eq {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
   linarith
 
 /-- Angular value, defined pointwise by `Real.exp (controlledValue L q)`. -/
-noncomputable def angularValue (L : Field) : ScaledPoint → ℝ :=
+@[expose] noncomputable def angularValue (L : Field) : ScaledPoint → ℝ :=
   fun q => Real.exp (controlledValue L q)
 
 /-- Relative error factor, given by `controlledErrorFactor L q * meanExp (scaledDistance q *
@@ -771,7 +771,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -781,23 +781,23 @@ open Set Filter ProfileHistories StressActivation
 open scoped Topology ContDiff
 
 /-- Mass flux, given by `X - 2 * NaturalAxisData.D h * η * M - NaturalAxisData.d η * Mη`. -/
-noncomputable def massFlux (h X η M Mη : ℝ) : ℝ :=
+@[expose] noncomputable def massFlux (h X η M Mη : ℝ) : ℝ :=
   X - 2 * NaturalAxisData.D h * η * M - NaturalAxisData.d η * Mη
 
 /-- Angular remainder, given by `(1 - h) * I - NaturalAxisData.D h * η * Iη - NaturalAxisData.d
 η * Jη + 2 * (h - NaturalAxisData.D h) * η * J`. -/
-noncomputable def angularRemainder (h η I Iη J Jη : ℝ) : ℝ :=
+@[expose] noncomputable def angularRemainder (h η I Iη J Jη : ℝ) : ℝ :=
   (1 - h) * I - NaturalAxisData.D h * η * Iη - NaturalAxisData.d η * Jη +
     2 * (h - NaturalAxisData.D h) * η * J
 
 /-- Stock one, given by `(-massFlux h X η M Mη + angularRemainder h η I Iη J Jη / (2 * X * f)) /
 NaturalAxisData.L h η`. -/
-noncomputable def stockOne (h X η f M Mη I Iη J Jη : ℝ) : ℝ :=
+@[expose] noncomputable def stockOne (h X η f M Mη I Iη J Jη : ℝ) : ℝ :=
   (-massFlux h X η M Mη + angularRemainder h η I Iη J Jη / (2 * X * f)) /
     NaturalAxisData.L h η
 
 /-- Stock two as an element of `ℝ`. -/
-noncomputable def stockTwo (h X η f U M Mη S Sη P Pη : ℝ) : ℝ :=
+@[expose] noncomputable def stockTwo (h X η f U M Mη S Sη P Pη : ℝ) : ℝ :=
   (-massFlux h X η M Mη * U + NaturalAxisData.D h * (M - η * Mη) +
     4 * h * η * S - NaturalAxisData.d η * Sη +
     X * (4 * NaturalAxisData.A h * η * P - NaturalAxisData.d η * Pη)) /
@@ -808,7 +808,7 @@ noncomputable def profileStockOne {D : RadialDomain} (P : Profiles D) (h : ℝ)
     (p : Point) : ℝ := p.1 * P.angularLag h p / NaturalAxisData.L h p.2
 
 /-- Profile stock two, given by `p.1 * P.axialLag h p / (NaturalAxisData.L h p.2 * P.E p)`. -/
-noncomputable def profileStockTwo {D : RadialDomain} (P : Profiles D) (h : ℝ)
+@[expose] noncomputable def profileStockTwo {D : RadialDomain} (P : Profiles D) (h : ℝ)
     (p : Point) : ℝ := p.1 * P.axialLag h p / (NaturalAxisData.L h p.2 * P.E p)
 
 theorem profile_massFlux {D : RadialDomain} (P : Profiles D) (h : ℝ)

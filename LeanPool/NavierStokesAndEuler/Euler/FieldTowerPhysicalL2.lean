@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderPhysicalTensorLp
 /-! Canonical spatial fields and all their actual derivative tensors are
 in physical L². Their bounds have only explicit polynomial frequency loss. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -23,7 +23,7 @@ open InnerProductSpace EulerLiftedGradientSpace EulerMetricTransport
   EulerCylinderCoordinates
 
 /-- Physical phase, given by `(k*inner ℝ m x : ℝ)`. -/
-def physicalPhase (P k : ℝ) (m : Vector3) (x : Vector3) : AddCircle P :=
+@[expose] def physicalPhase (P k : ℝ) (m : Vector3) (x : Vector3) : AddCircle P :=
   (k*inner ℝ m x : ℝ)
 
 theorem physicalPhase_continuous (P k : ℝ) (m : Vector3) :
@@ -51,7 +51,7 @@ variable {P T : ℝ} [Fact (0 < P)] (A : EulerAllOrderCorrectionData.FieldTower 
   (k : ℝ) (m : Vector3)
 
 /-- Physical point field, given by `physicalField P k m (A.pointField t)`. -/
-def physicalPointField (t : Icc (0 : ℝ) T) : Vector3 → Vector3 :=
+@[expose] def physicalPointField (t : Icc (0 : ℝ) T) : Vector3 → Vector3 :=
   physicalField P k m (A.pointField t)
 
 theorem physicalPointField_smooth (t : Icc (0 : ℝ) T) :

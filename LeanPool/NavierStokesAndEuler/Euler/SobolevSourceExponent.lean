@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 radius. Explicit coarse powers leave room for the source exponent
 C*=10(s+2), including the sum of all three particle-map fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

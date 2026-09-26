@@ -17,7 +17,7 @@ shift distance. These results allow the integer-lattice distribution to be mappe
 real grid by `g ↦ g / N` when `N > 0`.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 

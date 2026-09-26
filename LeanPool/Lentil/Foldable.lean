@@ -12,7 +12,7 @@ A small typeclass abstracting collections that can be folded with a
 commutative-associative operation, used to give big-conjunction and
 big-disjunction TLA operators a uniform definition. -/
 
-@[expose] public section
+public section
 
 namespace TLA
 

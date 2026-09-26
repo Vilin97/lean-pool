@@ -18,7 +18,7 @@ import LeanPool.ConnesRigidity.Paper.Section3.DualShearMeasure
 The fourier coordinates component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperFourierCoordinates

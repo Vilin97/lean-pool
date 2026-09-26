@@ -42,7 +42,7 @@ Proposition 2.2 (vi) and (vii) fall straight out of the open-set axioms.
 This is the classical/topological version of the theory, so we reason classically.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.ContinuousLattice
 
@@ -53,6 +53,7 @@ upper set and
 is inaccessible by suprema of non-empty directed sets: if a non-empty directed `S`
 has its
 supremum in `U`, then some member of `S` already lies in `U`. -/
+@[expose]
 def ScottOpen (U : Set D) : Prop :=
   IsUpperSet U ∧
     ∀ ⦃S : Set D⦄, S.Nonempty → DirectedOn (· ≤ ·) S → sSup S ∈ U → (S ∩ U).Nonempty
@@ -82,6 +83,7 @@ theorem scottOpen_sUnion {C : Set (Set D)} (hC : ∀ U ∈ C, ScottOpen U) :
 interior of the
 principal up-set `Set.Ici x` for the induced topology, witnessed by a Scott-open
 neighbourhood of `y` contained in `Set.Ici x`. -/
+@[expose]
 def WayBelow (x y : D) : Prop :=
   ∃ U : Set D, ScottOpen U ∧ y ∈ U ∧ U ⊆ Set.Ici x
 
@@ -163,6 +165,7 @@ theorem wayBelow_sSup_iff {x : D} {S : Set D} (hS : S.Nonempty)
 /-- **Scott 1972, Definition 2.3.** A complete lattice `D` is a *continuous
 lattice* when every
 element is the supremum of the elements way below it: `y = ⊔ {x | x ≪ y}`. -/
+@[expose]
 def IsContinuousLattice (D : Type*) [CompleteLattice D] : Prop :=
   ∀ y : D, IsLUB {x | x ≪ y} y
 

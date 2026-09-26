@@ -19,7 +19,7 @@ section
 /-! Fixed source constants in the smaller-radius estimates for the actual
 initialized all-order correction. They do not depend on the cutoff or frequency. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -33,7 +33,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (Kc : CorrectionCoefficientBudget D P)
 
 /-- Correction base, given by `metricAmplification D.inverseBound⁻¹/2`. -/
-def correctionBase : ℝ := metricAmplification D.inverseBound⁻¹/2
+@[expose] def correctionBase : ℝ := metricAmplification D.inverseBound⁻¹/2
 
 /-- Correction source cost, constructed using `sourceBound`. -/
 def correctionSourceCost (R H C : ℝ) : ℝ :=
@@ -54,7 +54,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

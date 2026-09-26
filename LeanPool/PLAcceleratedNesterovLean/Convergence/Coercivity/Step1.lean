@@ -21,7 +21,7 @@ Then from u_n = P⊥v_n + √μ' e_n (triangle inequality):
 And T_n := ‖P v_n‖ ≤ √(L_n/λ).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

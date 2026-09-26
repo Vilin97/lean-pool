@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.BallDisplays
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology
@@ -26,7 +26,7 @@ noncomputable section
 namespace CKN.Core.Step4
 
 /-- Origin used for the normalized pressure-gradient estimate. -/
-def oneSidedPressureGradientOrigin : ParabolicPoint := ((0 : Vec3), 0)
+@[expose] def oneSidedPressureGradientOrigin : ParabolicPoint := ((0 : Vec3), 0)
 
 /-! The cell is carried by the inner half of a symmetric parabolic ball. -/
 
@@ -51,7 +51,7 @@ cylinder; the Morrey seminorm is recovered as the supremum of the cells.
 -/
 
 /-- Componentwise Morrey-cell bound for the gradient restricted to the normalized cylinder. -/
-def oneSidedPressureGradientOriginCellOutput
+@[expose] def oneSidedPressureGradientOriginCellOutput
     (R₁ κ : ℝ) (KP : ℝ≥0∞) (Dp : ParabolicPoint → Vec3) : Prop :=
   ∀ i : Fin 3, ∀ z : ParabolicPoint, ∀ r : {r : ℝ // 0 < r},
     morreyCell (6 / 5 : ℝ) κ

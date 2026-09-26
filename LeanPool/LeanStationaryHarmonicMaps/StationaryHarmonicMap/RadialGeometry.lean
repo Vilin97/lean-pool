@@ -13,7 +13,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 # Radial Geometry
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -28,17 +28,17 @@ def coordUnit {n : ℕ} (i : Fin n) : Domain n :=
   domainCoordUnit i
 
 /-- The classical coordinate derivative `∂ᵢ u`, in the smooth model. -/
-def partialDerivative {n m : ℕ} (u : Domain n → Target m) (i : Fin n)
+@[expose] def partialDerivative {n m : ℕ} (u : Domain n → Target m) (i : Fin n)
     (x : Domain n) : Target m :=
   fderiv ℝ u x (coordUnit i)
 
 /-- Coordinate derivative of a vector field component: `∂ᵢ Xⱼ`. -/
-def vectorFieldPartial {n : ℕ} (X : Domain n → Domain n) (i j : Fin n)
+@[expose] def vectorFieldPartial {n : ℕ} (X : Domain n → Domain n) (i j : Fin n)
     (x : Domain n) : ℝ :=
   partialDerivative X i x j
 
 /-- Divergence of a smooth vector field in coordinates: `div X = ∑ᵢ ∂ᵢ Xᵢ`. -/
-def divergence {n : ℕ} (X : Domain n → Domain n) (x : Domain n) : ℝ :=
+@[expose] def divergence {n : ℕ} (X : Domain n → Domain n) (x : Domain n) : ℝ :=
   ∑ i : Fin n, vectorFieldPartial X i i x
 
 /-- The radial unit vector based at `a`.  At `x = a` this definition gives `0`,
@@ -47,12 +47,12 @@ def radialUnit {n : ℕ} (a x : Domain n) : Domain n :=
   (‖x - a‖)⁻¹ • (x - a)
 
 /-- Pointwise Hilbert-Schmidt energy of a gradient matrix. -/
-def gradientEnergy {n m : ℕ} (A : Gradient n m) : ℝ :=
+@[expose] def gradientEnergy {n m : ℕ} (A : Gradient n m) : ℝ :=
   ∑ i : Fin n, ‖A i‖ ^ 2
 
 /-- Radial derivative associated to a pointwise gradient matrix, evaluated in the
 radial direction from the origin to `x`. -/
-def gradientRadialDerivative {n m : ℕ} (A : Gradient n m) (x : Domain n) : Target m :=
+@[expose] def gradientRadialDerivative {n m : ℕ} (A : Gradient n m) (x : Domain n) : Target m :=
   SMul.smul (‖x‖⁻¹) (∑ i : Fin n, SMul.smul (x i) (A i))
 
 /-- Radial energy associated to a pointwise gradient matrix. -/
@@ -64,16 +64,16 @@ def smoothGradient {n m : ℕ} (u : Domain n → Target m) (x : Domain n) : Grad
   fun i => partialDerivative u i x
 
 /-- Energy density built from an arbitrary gradient field. -/
-def weakEnergyDensity {n m : ℕ} (Du : Domain n → Gradient n m) (x : Domain n) : ℝ :=
+@[expose] def weakEnergyDensity {n m : ℕ} (Du : Domain n → Gradient n m) (x : Domain n) : ℝ :=
   gradientEnergy (Du x)
 
 /-- Radial derivative built from an arbitrary gradient field. -/
-def weakRadialDerivative {n m : ℕ}
+@[expose] def weakRadialDerivative {n m : ℕ}
     (Du : Domain n → Gradient n m) (a x : Domain n) : Target m :=
   gradientRadialDerivative (Du x) (x - a)
 
 /-- Radial energy density built from an arbitrary gradient field. -/
-def weakRadialEnergyDensity {n m : ℕ}
+@[expose] def weakRadialEnergyDensity {n m : ℕ}
     (Du : Domain n → Gradient n m) (a x : Domain n) : ℝ :=
   ‖weakRadialDerivative Du a x‖ ^ 2
 
@@ -93,7 +93,7 @@ def radialEnergyDensity {n m : ℕ} (u : Domain n → Target m) (a x : Domain n)
   ‖radialDerivative u a x‖ ^ 2
 
 /-- The radial test vector field `X(x) = φ(|x|) x`, centered at the origin. -/
-def radialVectorField {n : ℕ} (phi : ℝ → ℝ) (x : Domain n) : Domain n :=
+@[expose] def radialVectorField {n : ℕ} (phi : ℝ → ℝ) (x : Domain n) : Domain n :=
   phi ‖x‖ • x
 
 /-- The differential of the Euclidean norm away from the origin:
@@ -184,7 +184,7 @@ theorem radialVectorFieldDerivativeFormula {n : ℕ} {phi : ℝ → ℝ}
 
 /-- Divergence formula for the radial vector field:
 `div X = n φ(r) + r φ'(r)`. -/
-def RadialVectorFieldDivergenceFormula {n : ℕ} (phi : ℝ → ℝ) : Prop :=
+@[expose] def RadialVectorFieldDivergenceFormula {n : ℕ} (phi : ℝ → ℝ) : Prop :=
   ∀ x : Domain n, x ≠ 0 →
     divergence (radialVectorField phi) x =
       (n : ℝ) * phi ‖x‖ + ‖x‖ * deriv phi ‖x‖
@@ -564,7 +564,7 @@ theorem radialDerivative_zero_eq_sum {n m : ℕ}
 @[simp]
 theorem gradientEnergy_smoothGradient {n m : ℕ}
     (u : Domain n → Target m) (x : Domain n) :
-    gradientEnergy (smoothGradient u x) = energyDensity u x := rfl
+    gradientEnergy (smoothGradient u x) = energyDensity u x := by rfl
 
 theorem gradientRadialDerivative_smoothGradient_zero {n m : ℕ}
     (u : Domain n → Target m) (x : Domain n) :

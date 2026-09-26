@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyMargin
 /-! The only eventual frequency conditions left after the uniform source
 cost comparison form one fixed, parent-independent numerical record. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

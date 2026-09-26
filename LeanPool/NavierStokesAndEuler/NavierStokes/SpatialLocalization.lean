@@ -37,7 +37,7 @@ Consequently every smoothness order is preserved. The construction agrees with
 the original field on an explicit cube whenever the other translates vanish.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -54,7 +54,7 @@ def lattice (n : Lattice) : Space :=
   (WithLp.equiv 2 (Fin 3 → ℝ)).symm (fun i => (n i : ℝ))
 
 @[simp] theorem lattice_apply (n : Lattice) (i : Fin 3) :
-    lattice n i = (n i : ℝ) := rfl
+    lattice n i = (n i : ℝ) := by rfl
 
 @[simp] theorem lattice_zero : lattice 0 = 0 := by
   ext i
@@ -233,7 +233,7 @@ theorem unitSpatialPeriodsOn_periodize (f : SpaceTime → V) (times : Set ℝ) :
   simpa only [lattice_single] using periodize_add_lattice f t x (Pi.single i 1)
 
 /-- The open spatial cube on which other copies are excluded. -/
-def innerCube (r : ℝ) : Set Space := {x | ∀ i : Fin 3, |x i| < 1 - r}
+@[expose] def innerCube (r : ℝ) : Set Space := {x | ∀ i : Fin 3, |x i| < 1 - r}
 
 /-- In this cube, a nonzero translate must be the zero lattice translate. -/
 theorem translate_eq_zero_on_innerCube {r : ℝ} {f : SpaceTime → V}
@@ -319,7 +319,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 namespace NavierStokes.SpatialLocalization
 
@@ -333,7 +333,7 @@ private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   (ENat.natCast_lt_of_coe_top_le_withTop le_rfl n).le
 
 /-- Squared distance to the symmetry axis, with no square-root singularity. -/
-noncomputable def radialSquare (x : Space) : ℝ := (x 0) ^ 2 + (x 1) ^ 2
+@[expose] noncomputable def radialSquare (x : Space) : ℝ := (x 0) ^ 2 + (x 1) ^ 2
 
 theorem radialSquare_nonneg (x : Space) : 0 ≤ radialSquare x :=
   add_nonneg (sq_nonneg _) (sq_nonneg _)
@@ -350,7 +350,7 @@ theorem cutoffProfile_contDiff : ContDiff ℝ ∞ cutoffProfile :=
     (SmoothCutoffs.cutoff_contDiff.comp (contDiff_const.mul contDiff_snd))
 
 /-- The explicit spatial cutoff used in both the potential and the pressure. -/
-noncomputable def spatialCutoff (x : Space) : ℝ :=
+@[expose] noncomputable def spatialCutoff (x : Space) : ℝ :=
   cutoffProfile (radialSquare x, x 2)
 
 theorem spatialCutoff_contDiff : ContDiff ℝ ∞ spatialCutoff :=
@@ -466,15 +466,15 @@ theorem plateau_subset_innerCube : plateau ⊆ PeriodicLocalization.innerCube (1
   linarith
 
 /-- Multiplication of the actual Cartesian potential, before any curl. -/
-noncomputable def cutPotential (A : VelocityField) : VelocityField :=
+@[expose] noncomputable def cutPotential (A : VelocityField) : VelocityField :=
   fun z => spatialCutoff z.2 • A z
 
 /-- Cut pressure, defined pointwise by `spatialCutoff z.2 * p z`. -/
-noncomputable def cutPressure (p : PressureField) : PressureField :=
+@[expose] noncomputable def cutPressure (p : PressureField) : PressureField :=
   fun z => spatialCutoff z.2 * p z
 
 /-- Cut velocity, given by `SpatialCurl.spatialCurl (cutPotential A)`. -/
-noncomputable def cutVelocity (A : VelocityField) : VelocityField :=
+@[expose] noncomputable def cutVelocity (A : VelocityField) : VelocityField :=
   SpatialCurl.spatialCurl (cutPotential A)
 
 theorem cutPotential_supported (A : VelocityField) :
@@ -688,11 +688,11 @@ theorem periodicVelocity_origin_blowup (A : VelocityField)
 
 /-- The previously constructed time switch is applied to the spatially
 localized fields.  It is independent of the spatial variables. -/
-noncomputable def localizedVelocity (A : VelocityField) : VelocityField :=
+@[expose] noncomputable def localizedVelocity (A : VelocityField) : VelocityField :=
   TimeLocalization.activatedVelocity (periodicVelocity A)
 
 /-- Localized pressure, given by `TimeLocalization.activatedPressure (periodicPressure p)`. -/
-noncomputable def localizedPressure (p : PressureField) : PressureField :=
+@[expose] noncomputable def localizedPressure (p : PressureField) : PressureField :=
   TimeLocalization.activatedPressure (periodicPressure p)
 
 /-- The same time activation can be performed on the actual potential. -/

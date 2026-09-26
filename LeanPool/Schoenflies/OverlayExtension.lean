@@ -19,7 +19,7 @@ The resulting overlay is automatically a plane subdivision of the old overlay.  
 finite straight-line engine needed before the wild outer graph and the joining ear are glued.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

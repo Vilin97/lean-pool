@@ -21,7 +21,7 @@ negative angles using `Fin.rev` and integral periodicity. The resulting theorems
 five canonical pairing families into the corresponding trusted equivalence closure.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces.NormalForm
 

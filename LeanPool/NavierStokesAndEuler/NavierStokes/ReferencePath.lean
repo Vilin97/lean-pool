@@ -20,7 +20,7 @@ radius. A smooth cutoff damps those slopes to zero; no radial reparametrization
 is substituted for the prescribed differential equation.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -69,12 +69,12 @@ theorem slopeCutoff_zero {δ t : ℝ} (hδ : 0 < δ) (ht : 2 * δ ≤ t) : slope
     ((le_div_iff₀ hδ).2 (by linarith)), sub_self]
 
 /-- Damped slope, defined pointwise by `slopeCutoff δ p.1 * radialPartial G p`. -/
-def dampedSlope (δ : ℝ) (G : Field) : Field :=
+@[expose] def dampedSlope (δ : ℝ) (G : Field) : Field :=
   fun p => slopeCutoff δ p.1 * radialPartial G p
 
 /-- The prescribed continuation, defined by an actual integral of the
 same-time natural derivative. -/
-def continuation (δ : ℝ) (G : Field) : Field :=
+@[expose] def continuation (δ : ℝ) (G : Field) : Field :=
   fun p => G (0, p.2) + primitive (dampedSlope δ G) p
 
 theorem dampedSlope_smooth {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2 * δ < T)
@@ -347,13 +347,13 @@ theorem continuation_parameter_jet_close {T : ℝ} (hT : 0 < T) {J : Set ℝ} (h
 
 /-- Parameter interval, given by `Ioo NaturalAxisCoefficients.window.left
 NaturalAxisCoefficients.window.right`. -/
-def parameterInterval : Set ℝ :=
+@[expose] def parameterInterval : Set ℝ :=
   Ioo NaturalAxisCoefficients.window.left NaturalAxisCoefficients.window.right
 
 theorem parameterInterval_open : IsOpen parameterInterval := isOpen_Ioo
 
 /-- Ramp limit, given by `Real.log (41 / 40 : ℝ)`. -/
-def rampLimit : ℝ := Real.log (41 / 40 : ℝ)
+@[expose] def rampLimit : ℝ := Real.log (41 / 40 : ℝ)
 
 theorem rampLimit_pos : 0 < rampLimit := Real.log_pos (by norm_num)
 
@@ -383,7 +383,7 @@ structure Input where
     scale * p.1 ≤ 41 / 10 → 0 < f p
 
 /-- Of natural, bundling `scale`, `scale_pos`, `f`, `U` and the required compatibility proofs. -/
-def Input.ofNatural {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
+@[expose] def Input.ofNatural {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
     {d : NaturalAxisCoefficients.AnalyticInputs h j σ P0}
     (hΛ : 0 < Λ) (F : NaturalProfile.ProfileFamily d Λ C) : Input where
   scale := Λ
@@ -399,7 +399,7 @@ namespace Input
 variable (N : Input)
 
 /-- Endpoint, given by `4 / N.scale`. -/
-def endpoint : ℝ := 4 / N.scale
+@[expose] def endpoint : ℝ := 4 / N.scale
 
 theorem endpoint_pos : 0 < N.endpoint := div_pos (by norm_num) N.scale_pos
 
@@ -408,9 +408,9 @@ theorem scale_endpoint : N.scale * N.endpoint = 4 := by
   field_simp [N.scale_pos.ne']
 
 /-- From log, given by `(N.endpoint * Real.exp p.1, p.2)`. -/
-def fromLog (p : Point) : Point := (N.endpoint * Real.exp p.1, p.2)
+@[expose] def fromLog (p : Point) : Point := (N.endpoint * Real.exp p.1, p.2)
 /-- Log time, given by `Real.log (X / N.endpoint)`. -/
-def logTime (X : ℝ) : ℝ := Real.log (X / N.endpoint)
+@[expose] def logTime (X : ℝ) : ℝ := Real.log (X / N.endpoint)
 /-- Log F, defined pointwise by `Real.log (N.f (N.fromLog p))`. -/
 def logF : Field := fun p => Real.log (N.f (N.fromLog p))
 /-- Log U, defined pointwise by `N.U (N.fromLog p)`. -/
@@ -504,12 +504,12 @@ theorem natural_mem_of_le_endpoint {p : Point} (hp : p ∈ N.radialDomain.carrie
 
 /-- Ref F, defined pointwise by `if p.1 ≤ N.endpoint then N.f p else Real.exp (continuation δ
 N.logF (N.logTime p.1, p.2))`. -/
-def refF (δ : ℝ) : Field := fun p => if p.1 ≤ N.endpoint then N.f p else
+@[expose] def refF (δ : ℝ) : Field := fun p => if p.1 ≤ N.endpoint then N.f p else
   Real.exp (continuation δ N.logF (N.logTime p.1, p.2))
 
 /-- Ref U, defined pointwise by `if p.1 ≤ N.endpoint then N.U p else continuation δ N.logU
 (N.logTime p.1, p.2)`. -/
-def refU (δ : ℝ) : Field := fun p => if p.1 ≤ N.endpoint then N.U p else
+@[expose] def refU (δ : ℝ) : Field := fun p => if p.1 ≤ N.endpoint then N.U p else
   continuation δ N.logU (N.logTime p.1, p.2)
 
 theorem refF_eq_natural_initial (δ : ℝ) {p : Point} (hp : p.1 ≤ N.endpoint) :
@@ -867,7 +867,7 @@ theorem ref_field_error_jet_close {K : Set ℝ} (hK : IsCompact K)
   exact hb
 
 /-- Xbig, given by `100`. -/
-def Xbig : ℝ := 100
+@[expose] def Xbig : ℝ := 100
 /-- Xi, given by `110`. -/
 def Xi : ℝ := 110
 

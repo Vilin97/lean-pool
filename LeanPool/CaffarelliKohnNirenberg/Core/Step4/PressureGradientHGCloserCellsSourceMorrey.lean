@@ -19,7 +19,7 @@ term uses two velocity factors. Bounded cutoff coefficients and the
 bounded source carrier preserve finiteness at the target exponent.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators

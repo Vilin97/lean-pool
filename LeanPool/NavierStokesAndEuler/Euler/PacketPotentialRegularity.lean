@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialMultiplier
 
 /-! Spatial smoothness of the source vector potential, derived from its literal integral. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,8 @@ def curlLinear : (Space →L[ℝ] Space) →ₗ[ℝ] Space where
 /-- Curl operator, given by `curlLinear.toContinuousLinearMap`. -/
 def curlOperator : (Space →L[ℝ] Space) →L[ℝ] Space := curlLinear.toContinuousLinearMap
 
-@[simp] theorem curlOperator_apply (A : Space →L[ℝ] Space) : curlOperator A = curlMatrix A := rfl
+@[simp] theorem curlOperator_apply (A : Space →L[ℝ] Space) :
+    curlOperator A = curlMatrix A := by rfl
 
 theorem coveringPotential_contDiff (P : ℝ) (hP : 0 ≤ P)
     (m : Space → Space) (A : LiftTangent → Space)

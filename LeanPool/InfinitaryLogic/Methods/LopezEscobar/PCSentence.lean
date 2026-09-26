@@ -36,7 +36,7 @@ Acceptance gates (audit v2, Unit 2b):
   `pcSentence_relationsIn_inter` is the two-presentation intersection bound.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

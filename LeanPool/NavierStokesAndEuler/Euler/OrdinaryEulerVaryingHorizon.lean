@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.BreakdownCriterion
 /-! H³ stability on varying initial horizons. The comparison constant
 uses only the original reference Euler solution and its full horizon. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

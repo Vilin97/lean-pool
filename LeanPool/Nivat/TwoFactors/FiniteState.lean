@@ -52,7 +52,7 @@ A complexity plateau supplies a finite-state presentation of a word; a periodic
 parameter is handled by recording its phase together with the finite memory.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.TwoFactors
 
@@ -199,12 +199,12 @@ theorem periodic_of_periodic_forcing {A F : Type*} (a : ℤ → A) (f : ℤ → 
 
 /-- The length-`k` word beginning at an arbitrary integer index of a bilateral sequence.
 Corollary 5.3 (`cor:morse`). -/
-def word {A : Type*} (a : ℤ → A) (k : ℕ) (i : ℤ) : Fin k → A :=
+@[expose] def word {A : Type*} (a : ℤ → A) (k : ℕ) (i : ℤ) : Fin k → A :=
   fun r => a (i + (r : ℕ))
 
 /-- The number of distinct length-`k` words over all integer starting indices; finite range
 ensures that the counted set is finite. Corollary 5.3 (`cor:morse`). -/
-noncomputable def wordComplexity {A : Type*} (a : ℤ → A) (k : ℕ) : ℕ :=
+@[expose] noncomputable def wordComplexity {A : Type*} (a : ℤ → A) (k : ℕ) : ℕ :=
   (Set.range (word a k)).ncard
 
 /-- A finite alphabet gives only finitely many occurring words of any fixed finite length.

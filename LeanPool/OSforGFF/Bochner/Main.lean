@@ -69,7 +69,7 @@ avoiding the Riesz-Markov-Kakutani theorem entirely:
 - G.B. Folland, *A Course in Abstract Harmonic Analysis*, CRC Press (2016), §4.2
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex Filter Topology
 open scoped Real InnerProductSpace FourierTransform

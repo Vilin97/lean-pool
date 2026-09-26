@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MildEquationBridge
 /-! Every available finite derivative word of the actual viscous mild solution satisfies its
 differentiated L² equation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

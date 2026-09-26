@@ -42,7 +42,7 @@ The degree-weighted lower bound on the *number* of non-backtracking walks and th
 assembly into the Moore bound are the follow-up counting node; this file lands the foundation only.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 
@@ -51,7 +51,7 @@ open SimpleGraph
 /-- A walk is **non-backtracking** when it never immediately reverses a step: for every position
 `i` with `i + 2 ≤ w.length`, the vertex two steps ahead differs from the current one.  (For `nil`
 and single-edge walks the condition is vacuous.) -/
-def IsNonBacktracking {V : Type*} {G : SimpleGraph V} {u v : V} (w : G.Walk u v) : Prop :=
+@[expose] def IsNonBacktracking {V : Type*} {G : SimpleGraph V} {u v : V} (w : G.Walk u v) : Prop :=
   ∀ i : ℕ, i + 2 ≤ w.length → w.getVert (i + 2) ≠ w.getVert i
 
 /-- Any walk of length at most `1` (in particular `nil` and a single edge) is non-backtracking:

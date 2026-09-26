@@ -48,7 +48,7 @@ Turing reducibility. This gives a concrete representation of degrees as equivale
 Computability, Turing Degrees, Reducibility, Equivalence Relation
 -/
 
-@[expose] public section
+public section
 
 
 namespace Computability
@@ -133,7 +133,7 @@ abbrev TuringDegree :=
   Antisymmetrization _ TuringReducible
 
 /-- The preorder on partial functions induced by Turing reducibility. -/
-@[instance_reducible] def turingPreorder : Preorder (ℕ →. ℕ) where
+@[expose, instance_reducible] def turingPreorder : Preorder (ℕ →. ℕ) where
   le := TuringReducible
   le_refl := .refl
   le_trans _ _ _ := TuringReducible.trans
@@ -475,7 +475,7 @@ theorem join_congr {f f' g g' : ℕ →. ℕ} (hf : f ≡ᵀ f') (hg : g ≡ᵀ 
   ⟨join_mono hf.1 hg.1, join_mono hf.2 hg.2⟩
 
 /-- The supremum operation on Turing degrees, induced by the Turing join. -/
-def sup : TuringDegree → TuringDegree → TuringDegree :=
+@[expose] def sup : TuringDegree → TuringDegree → TuringDegree :=
   Quotient.lift₂
     (fun f g => toAntisymmetrization TuringReducible (f ⊕ g))
     (fun _ _ _ _ hf hg => Quotient.sound (join_congr hf hg))
@@ -483,16 +483,18 @@ def sup : TuringDegree → TuringDegree → TuringDegree :=
 theorem sup_mk (f g : ℕ →. ℕ) :
     TuringDegree.sup (toAntisymmetrization TuringReducible f)
         (toAntisymmetrization TuringReducible g) =
-    toAntisymmetrization TuringReducible (f ⊕ g) := rfl
+    toAntisymmetrization TuringReducible (f ⊕ g) := by rfl
 
 theorem le_sup_left (a b : TuringDegree) : a ≤ TuringDegree.sup a b := by
   induction a using Quotient.inductionOn'
   induction b using Quotient.inductionOn'
+  change _ ≤ᵀ (_ ⊕ _)
   exact left_le_join _ _
 
 theorem le_sup_right (a b : TuringDegree) : b ≤ TuringDegree.sup a b := by
   induction a using Quotient.inductionOn'
   induction b using Quotient.inductionOn'
+  change _ ≤ᵀ (_ ⊕ _)
   exact right_le_join _ _
 
 theorem sup_le {a b c : TuringDegree} (ha : a ≤ c) (hb : b ≤ c) :
@@ -500,6 +502,8 @@ theorem sup_le {a b c : TuringDegree} (ha : a ≤ c) (hb : b ≤ c) :
   induction a using Quotient.inductionOn'
   induction b using Quotient.inductionOn'
   induction c using Quotient.inductionOn'
+  change _ ≤ᵀ _ at ha hb
+  change (_ ⊕ _) ≤ᵀ _
   exact join_le _ _ _ ha hb
 
 instance instSemilatticeSup : SemilatticeSup TuringDegree where
@@ -512,7 +516,7 @@ instance instSemilatticeSup : SemilatticeSup TuringDegree where
 @[simp]
 lemma sup_def (f g : ℕ →. ℕ) :
     (toAntisymmetrization TuringReducible f) ⊔ (toAntisymmetrization TuringReducible g) =
-    toAntisymmetrization TuringReducible (f ⊕ g) := rfl
+    toAntisymmetrization TuringReducible (f ⊕ g) := by rfl
 
 end TuringDegree
 

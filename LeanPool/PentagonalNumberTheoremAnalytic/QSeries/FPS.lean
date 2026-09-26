@@ -40,7 +40,7 @@ convergence hypotheses are needed.
   (proved in `QSeries.FPSAlgebra`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -55,7 +55,7 @@ variable {R : Type*} [CommRing R]
 
 /-- **Finite q-Pochhammer symbol** in `R⟦X⟧`.
 `(a; X)_n = ∏_{k=0}^{n-1} (1 - a · X^k)` where `a ∈ R⟦X⟧`. -/
-def qPochhammer (a : R⟦X⟧) (n : ℕ) : R⟦X⟧ :=
+@[expose] def qPochhammer (a : R⟦X⟧) (n : ℕ) : R⟦X⟧ :=
   ∏ k ∈ range n, (1 - a * X ^ k)
 
 /-- The empty finite q-Pochhammer product `(a; X)_0 = 1`. -/
@@ -118,7 +118,7 @@ theorem multipliable_one_sub_mul_pow (a : R⟦X⟧) :
 
 /-- **Infinite q-Pochhammer symbol** `(a; X)_∞ = ∏_{k ≥ 0} (1 - a · X^k)`.
 Well-defined in `R⟦X⟧` with the pi topology. -/
-def qPochhammerInf (a : R⟦X⟧) : R⟦X⟧ :=
+@[expose] def qPochhammerInf (a : R⟦X⟧) : R⟦X⟧ :=
   ∏' k : ℕ, (1 - a * X ^ k)
 
 /-- The `d`-th coefficient of `(a; X)_∞` equals the `d`-th coefficient of `(a; X)_{d+1}`. -/
@@ -195,19 +195,19 @@ abbrev laurentZ : A⟦X⟧ := PS (LaurentPolynomial.T 1)
 abbrev laurentZInv : A⟦X⟧ := PS (LaurentPolynomial.T (-1))
 
 /-- `(q; q)_∞` in `A⟦X⟧`. -/
-def qPochhammerInfX : A⟦X⟧ := qPochhammerInf X
+@[expose] def qPochhammerInfX : A⟦X⟧ := qPochhammerInf X
 
 /-- `(-z; q)_∞` in `A⟦X⟧`. -/
-def qPochhammerInfNegZ : A⟦X⟧ := qPochhammerInf (-laurentZ)
+@[expose] def qPochhammerInfNegZ : A⟦X⟧ := qPochhammerInf (-laurentZ)
 
 /-- `(-q/z; q)_∞` in `A⟦X⟧`. -/
-def qPochhammerInfNegXMulZInv : A⟦X⟧ := qPochhammerInf (-X * laurentZInv)
+@[expose] def qPochhammerInfNegXMulZInv : A⟦X⟧ := qPochhammerInf (-X * laurentZInv)
 
 /-- The **Jacobi triple product** (LHS) as an element of `A⟦X⟧`. -/
-def jacobiProd : A⟦X⟧ := qPochhammerInfX * qPochhammerInfNegZ * qPochhammerInfNegXMulZInv
+@[expose] def jacobiProd : A⟦X⟧ := qPochhammerInfX * qPochhammerInfNegZ * qPochhammerInfNegXMulZInv
 
 /-- The **bilateral theta series** (RHS). -/
-def jacobiBilateral : A⟦X⟧ :=
+@[expose] def jacobiBilateral : A⟦X⟧ :=
   (∑' n : ℕ, PS (LaurentPolynomial.T (n : ℤ)) * X ^ n.choose 2) +
   (∑' m : ℕ, PS (LaurentPolynomial.T (-(↑m + 1))) * X ^ (m + 2).choose 2)
 

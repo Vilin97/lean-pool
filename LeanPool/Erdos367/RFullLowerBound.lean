@@ -30,7 +30,7 @@ Main theorem: for odd r ≥ 1 and q ≥ 2, with n = (q^r - 1)^r,
   (iv)  (B_r(n) · B_r(n+1))^r > n^{r+1}.
 -/
 
-@[expose] public section
+public section
 
 namespace RFullOdd
 

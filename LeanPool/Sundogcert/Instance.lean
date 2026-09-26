@@ -23,7 +23,7 @@ public import Mathlib.LinearAlgebra.Matrix.Notation -- !![; ] matrix literal not
   NOT general tightness.
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 

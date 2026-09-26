@@ -21,7 +21,7 @@ Appendix A.3.  The vectors are in an arbitrary real inner-product space;
 existence, size, or differentiated estimates of a pulse is made here.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.TangentProjection
@@ -33,14 +33,14 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 open scoped InnerProductSpace
 
 /-- Orthogonal projection onto the hyperplane perpendicular to `n`, for `n ≠ 0`. -/
-def tangentProj (n f : E) : E := f - (⟪n, f⟫_ℝ / ⟪n, n⟫_ℝ) • n
+@[expose] def tangentProj (n f : E) : E := f - (⟪n, f⟫_ℝ / ⟪n, n⟫_ℝ) • n
 
 /-- The right-hand side of equation (27), with the viscous coefficient `δ`. -/
-def projectedRhs (n n' t Kt f : E) (δ : ℝ) : E :=
+@[expose] def projectedRhs (n n' t Kt f : E) (δ : ℝ) : E :=
   -Kt + ((⟪n, Kt⟫_ℝ - ⟪n', t⟫_ℝ) / ⟪n, n⟫_ℝ) • n - δ • t - tangentProj n f
 
 /-- The real coefficient of the normal vector canceled by pressure. -/
-def pressureCoefficient (n n' t Kt f : E) : ℝ :=
+@[expose] def pressureCoefficient (n n' t Kt f : E) : ℝ :=
   (⟪n, Kt⟫_ℝ - ⟪n', t⟫_ℝ + ⟪n, f⟫_ℝ) / ⟪n, n⟫_ℝ
 
 theorem tangentProj_normal {n : E} (hn : n ≠ 0) (f : E) :

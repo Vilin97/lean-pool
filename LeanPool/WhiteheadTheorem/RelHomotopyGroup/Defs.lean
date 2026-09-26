@@ -15,13 +15,13 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs`.
 -/
 
-@[expose] public section
+public section
 
 open scoped unitInterval Topology Topology.Homotopy
 
 
 /-- relative generalized loops -/
-def RelGenLoop (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :
+@[expose] def RelGenLoop (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :
     Set C(I^ Fin n, X) :=
   {f | (∀ y ∈ ∂I^n, f y ∈ A) ∧ ∀ y ∈ ⊔I^n, f y = a}
 
@@ -31,7 +31,7 @@ namespace RelGenLoop
 variable {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
 
 /-- The constant `RelGenLoop` at `a`. -/
-def const : RelGenLoop n X A a :=
+@[expose] def const : RelGenLoop n X A a :=
   ⟨ContinuousMap.const (I^ Fin n) a, ⟨by simp, by simp⟩⟩
 
 instance inhabited : Inhabited (RelGenLoop n X A a) :=
@@ -92,7 +92,7 @@ end RelGenLoop
 
 /-- We have defined relative homotopy "groups" as mere sets.
 The group structure is not needed for the Whitehead theorem. -/
-def RelHomotopyGroup (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :=
+@[expose] def RelHomotopyGroup (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :=
   Quotient (RelGenLoop.Homotopic.setoid n X A a)
 
 -- scoped[Topology] notation "π_" => RelHomotopyGroup
@@ -235,7 +235,7 @@ variable {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
 /-- Let `g` be a continuous function from `I^ Fin n` to `X`.
 If `g` is homotopic rel `∂I^n` to some `f : RelGenLoop n X A a`,
 then `g` itself can be regarded as a `RelGenLoop`. -/
-def ofHomotopyRel {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
+@[expose] def ofHomotopyRel {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
     (f : RelGenLoop n X A a) (g : C(I^Fin n, X))
     (H : ContinuousMap.HomotopyRel f g (∂I^n)) : RelGenLoop n X A a :=
   let g_bd : ∀ y ∈ ∂I^n, g y = f.val y :=  -- g maps `∂I^n` in the same way `f` does.

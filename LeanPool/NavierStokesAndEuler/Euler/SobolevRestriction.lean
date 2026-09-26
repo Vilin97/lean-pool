@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDerivatives
 
 /-! Genuine restrictions between any two finite cylinder Sobolev orders. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

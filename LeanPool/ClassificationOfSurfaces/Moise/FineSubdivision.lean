@@ -17,7 +17,7 @@ support by small balls and, around every center, cut by two vertical and two hor
 Every chamber meeting the corresponding smaller ball is trapped in the resulting rectangle.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

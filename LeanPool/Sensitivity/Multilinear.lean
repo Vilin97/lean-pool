@@ -26,7 +26,7 @@ of that representation and the multilinear degree of `f`.
 * `LeanPoolSensitivity.BoolFun.degree` — the multilinear degree of `f`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPoolSensitivity
 
@@ -34,7 +34,7 @@ variable {n : ℕ}
 
 /-- The Boolean assignment that is `true` on coordinates in `S` and `false`
 elsewhere. -/
-def indicator (S : Finset (Fin n)) : Fin n → Bool :=
+@[expose] def indicator (S : Finset (Fin n)) : Fin n → Bool :=
   fun i => decide (i ∈ S)
 
 @[simp]
@@ -48,7 +48,7 @@ theorem indicator_not_mem {S : Finset (Fin n)} {i : Fin n} :
   simp [indicator]
 
 /-- Integer encoding of a Boolean value: `true ↦ 1` and `false ↦ 0`. -/
-def boolToInt (b : Bool) : ℤ := if b then 1 else 0
+@[expose] def boolToInt (b : Bool) : ℤ := if b then 1 else 0
 
 @[simp] theorem boolToInt_true : boolToInt true = 1 := rfl
 @[simp] theorem boolToInt_false : boolToInt false = 0 := rfl
@@ -59,7 +59,7 @@ namespace BoolFun
 `∏_{i ∈ S} x_i` in the unique multilinear polynomial representing `f`,
 computed by inclusion–exclusion as
 `c_S(f) = ∑_{T ⊆ S} (-1)^{|S|-|T|} f(1_T)`. -/
-def moebius (f : BoolFun n) (S : Finset (Fin n)) : ℤ :=
+@[expose] def moebius (f : BoolFun n) (S : Finset (Fin n)) : ℤ :=
   ∑ T ∈ S.powerset,
     (-1) ^ (S.card - T.card) * boolToInt (f (indicator T))
 

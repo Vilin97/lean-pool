@@ -19,7 +19,7 @@ part.  No continuity of the totalized similarity coordinate at time zero is
 used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ClosedTranslationGraph
 
 /-! Gaussian averaging genuinely gains one strong derivative for every cylinder L² datum. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -56,7 +56,7 @@ def lineHeatDerivativeOperator (a : LiftTangent) (v : ℝ≥0) : LiftL2 period �
     ((v : ℝ)⁻¹ * gaussianAbsMoment v) (lineHeatDerivative_norm_le period a v)
 
 @[simp] theorem lineHeatDerivativeOperator_apply (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) :
-    lineHeatDerivativeOperator period a v f = lineHeatDerivative period a v f := rfl
+    lineHeatDerivativeOperator period a v f = lineHeatDerivative period a v f := by rfl
 
 /-- Genuine cylinder mollifications are differentiable along every one-parameter translation orbit.
 -/
@@ -90,10 +90,11 @@ theorem lineHeat_hasDerivAt (a : LiftTangent) {v : ℝ≥0} (hv : 0 < v) (f : Li
     exact h
   have hlim : Filter.Tendsto (fun n => (lineHeat period a v (fn n), lineHeatDerivative period a v
       (fn n)))
-      Filter.atTop (𝓝 (lineHeat period a v f, lineHeatDerivative period a v f)) :=
-    ((lineHeatOperator period a v).continuous.continuousAt.tendsto.comp (mollify_tendsto period
-        f)).prodMk_nhds
-      ((lineHeatDerivativeOperator period a v).continuous.continuousAt.tendsto.comp
+      Filter.atTop (𝓝 (lineHeat period a v f, lineHeatDerivative period a v f)) := by
+    simpa only [Function.comp_def, lineHeatOperator_apply, lineHeatDerivativeOperator_apply] using
+      ((lineHeatOperator period a v).continuous.continuousAt.tendsto.comp
+        (mollify_tendsto period f)).prodMk_nhds
+        ((lineHeatDerivativeOperator period a v).continuous.continuousAt.tendsto.comp
           (mollify_tendsto period f))
   exact (translationDerivativeGraph_closed period a).mem_of_tendsto hlim
       (Filter.Eventually.of_forall hmem)

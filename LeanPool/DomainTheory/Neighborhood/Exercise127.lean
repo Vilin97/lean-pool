@@ -48,7 +48,7 @@ this is a
 *proof*, so the construction stays choice-free.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -59,6 +59,7 @@ variable {α : Type*} (V : NeighborhoodSystem α)
 /-- **Exercise 1.27 — bounded set of elements.** `X ⊆ |𝒟|` is *bounded* iff it has
 an upper
 bound `y ∈ |𝒟|`: `x ⊑ y` for all `x ∈ X`. -/
+@[expose]
 def Bounded (X : Set V.Element) : Prop := ∃ y : V.Element, ∀ x ∈ X, x ≤ y
 
 /-- The family of upper bounds of `X`: `{y ∣ x ⊑ y for all x ∈ X}`. -/

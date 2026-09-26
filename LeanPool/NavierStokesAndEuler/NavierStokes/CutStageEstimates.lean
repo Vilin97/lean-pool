@@ -20,7 +20,7 @@ ordinary Fréchet derivatives on an open smooth domain; the estimate carrier
 itself need not be open.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

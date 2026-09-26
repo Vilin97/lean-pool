@@ -51,7 +51,7 @@ back through both coordinate changes. The parallel case uses bounded finite
 differences. The final corollary treats sums of two periodic configurations.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.TwoFactors
 

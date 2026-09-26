@@ -26,7 +26,7 @@ is an isometry for the metric family.
 This is the abstract lemma behind permutation invariance and replication invariance.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

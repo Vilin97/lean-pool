@@ -44,7 +44,7 @@ fully expanded statement and is proved by the public finite-alphabet theorem.
 It does not import the Challenge or its deliberate proof hole.
 -/
 
-@[expose] public section
+public section
 
 namespace NivatSubmission
 

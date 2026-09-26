@@ -25,7 +25,7 @@ sentence, read a branch off it, and land the base reduct back in `B` — **the o
   `codeReduct '' ModelsOf (pcSentence side T) = B`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

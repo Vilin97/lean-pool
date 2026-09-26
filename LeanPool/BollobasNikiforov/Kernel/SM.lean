@@ -17,7 +17,7 @@ The rank-one update `𝒦 = (𝒜 + VVᵀ/γ)⁻¹` expands as
 `𝒜⁻¹ - e₀ e₀ᵀ / (γ + a₀)`, using `𝒜⁻¹ V = e₀` and `V 0 = a₀`.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 

@@ -15,7 +15,7 @@ public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.FlatReal`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open MeasureSpace

@@ -28,7 +28,7 @@ induction on generator count with GCD complexity as a
 well-founded measure (Heitmann, 1993, Lemma 4).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

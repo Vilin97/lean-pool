@@ -17,7 +17,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardCoefficientGevrey
 enlargement obey the same fixed polynomial envelope as the joined branch.
 The homogeneous growth constant is arbitrary and remains an input. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

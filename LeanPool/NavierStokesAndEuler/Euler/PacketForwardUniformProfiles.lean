@@ -35,7 +35,7 @@ section
 /-! Every forced direct-forward grade starts from zero and obeys the genuine
 five-field grade budget at the common radius. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -87,7 +87,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -236,7 +236,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

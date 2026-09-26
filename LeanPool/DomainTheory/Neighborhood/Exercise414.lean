@@ -42,7 +42,7 @@ Both constructions use **only monotonicity** and the complete-lattice structure 
 entirely **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise414
 
@@ -86,6 +86,7 @@ theorem gfpSet_greatest (f : Set A → Set A) {y : Set A} (hy : f y = y) :
 monotone `f : P A →
 P A`,
 as the intersection of all pre-fixed points `⋂ {x ∣ f(x) ⊆ x}`. -/
+@[expose]
 def lfpSet (f : Set A → Set A) : Set A := {a | ∀ x : Set A, f x ⊆ x → a ∈ x}
 
 /-- `lfpSet f ⊆ x` for every pre-fixed point `f(x) ⊆ x`. -/

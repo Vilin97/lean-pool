@@ -14,7 +14,7 @@ constant is the same explicit q-dependent constant as in Caccioppoli.
 Neither constant depends on the domain or the solution.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open CKN.Foundation.Parabolic
@@ -23,7 +23,7 @@ noncomputable section
 namespace CKN.Core.Endgame
 
 /-- A common constant for the three velocity/pressure terms of the gamma estimate. -/
-def startGammaConstant : ℝ :=
+@[expose] def startGammaConstant : ℝ :=
   Real.sqrt (max
     (6000 * ((Real.pi * 4 / 3) ^ (1 / 3 : ℝ) *
       ((32 + 3 * cutoffSecondDerivativeConstant) * 8000000 +

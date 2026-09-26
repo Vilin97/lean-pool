@@ -16,7 +16,7 @@ negative scaled exponential.  This file packages those factors and applies
 the finite-convolution TP2 theorem to the common part of any genuine edge.
 -/
 
-@[expose] public section
+public section
 
 namespace Feige
 namespace LikelihoodRatio
@@ -24,7 +24,7 @@ namespace LikelihoodRatio
 noncomputable section
 
 /-- The signed exponential contributed by coordinate `i` in state `S`. -/
-def stateFactor {ι : Type*} [DecidableEq ι]
+@[expose] def stateFactor {ι : Type*} [DecidableEq ι]
     (γ β : ι → ℝ) (hγ : ∀ i, 0 < γ i) (hβ : ∀ i, 0 < β i)
     (S : Finset ι) (i : ι) : SignedExpFactor :=
   if i ∈ S then
@@ -40,7 +40,7 @@ def stateFactor {ι : Type*} [DecidableEq ι]
 All signed exponential factors shared by the two endpoints of the edge
 which changes `changed`.
 -/
-def commonFactors {ι : Type*} [Fintype ι] [DecidableEq ι]
+@[expose] def commonFactors {ι : Type*} [Fintype ι] [DecidableEq ι]
     (γ β : ι → ℝ) (hγ : ∀ i, 0 < γ i) (hβ : ∀ i, 0 < β i)
     (S : Finset ι) (changed : ι) : List SignedExpFactor :=
   (Finset.univ.erase changed).toList.map

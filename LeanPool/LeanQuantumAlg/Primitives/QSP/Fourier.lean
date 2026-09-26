@@ -60,7 +60,7 @@ Pinned Mathlib API: `Polynomial.reflect`, `Polynomial.divX`,
 `Set.Ioo.infinite`, `List.reverseRecOn`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -154,7 +154,7 @@ def qspYZY (θ₀ : ℝ) (θs : List ℝ) (x : ℝ) : Gate 1 :=
   θs.foldl (fun U θ => U * (rotZStd x * rotY θ)) (rotY θ₀)
 
 @[simp]
-theorem qspYZY_nil (θ₀ : ℝ) (x : ℝ) : qspYZY θ₀ [] x = rotY θ₀ := rfl
+theorem qspYZY_nil (θ₀ : ℝ) (x : ℝ) : qspYZY θ₀ [] x = rotY θ₀ := by rfl
 
 theorem qspYZY_concat (θ₀ : ℝ) (θs : List ℝ) (θ : ℝ) (x : ℝ) :
     qspYZY θ₀ (θs ++ [θ]) x = qspYZY θ₀ θs x * (rotZStd x * rotY θ) := by
@@ -169,7 +169,7 @@ def qspYZZYZ (φ θ₀ φ₀ : ℝ) (ps : List (ℝ × ℝ)) (x : ℝ) : Gate 1 
 
 @[simp]
 theorem qspYZZYZ_nil (φ θ₀ φ₀ : ℝ) (x : ℝ) :
-    qspYZZYZ φ θ₀ φ₀ [] x = rotZStd φ * (rotY θ₀ * rotZStd φ₀) := rfl
+    qspYZZYZ φ θ₀ φ₀ [] x = rotZStd φ * (rotY θ₀ * rotZStd φ₀) := by rfl
 
 theorem qspYZZYZ_concat (φ θ₀ φ₀ : ℝ) (ps : List (ℝ × ℝ)) (p : ℝ × ℝ)
     (x : ℝ) :

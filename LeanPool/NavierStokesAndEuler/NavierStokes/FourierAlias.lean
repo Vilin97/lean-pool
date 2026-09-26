@@ -18,7 +18,7 @@ The compactification defect is retained as an actual function. Its averaging
 and integration-by-parts identities concern genuine Bochner integrals.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,15 +38,16 @@ section Averages
 variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Integer translation invariance of an actual function on the universal cover. -/
-noncomputable def TorusPeriodic (f : Plane → F) : Prop :=
+@[expose] noncomputable def TorusPeriodic (f : Plane → F) : Prop :=
   ∀ Y : Plane, ∀ k : Frequency, f (Y + ((k.1 : ℝ), (k.2 : ℝ))) = f Y
 
 /-- The actual normalized unit-square average. -/
-noncomputable def torusMean (f : Plane → F) : F :=
+@[expose] noncomputable def torusMean (f : Plane → F) : F :=
   ∫ y in (0 : ℝ)..1, ∫ x in (0 : ℝ)..1, f (x, y)
 
 /-- Slice mean, given by `torusMean (fun Y => f (U, Y))`. -/
-noncomputable def sliceMean (f : State → F) (U : ℝ) : F := torusMean (fun Y => f (U, Y))
+@[expose] noncomputable def sliceMean (f : State → F) (U : ℝ) : F :=
+  torusMean (fun Y => f (U, Y))
 
 /-- The exact defect in `D Ic = f - cutoffAlias`. -/
 noncomputable def cutoffAlias (χ : ℝ → ℝ) (M : ℝ) (v : Plane) (f : State → F) (z : State) : F :=
@@ -503,7 +504,7 @@ theorem cutoffAlias_eq_nonbarPart {a b M : ℝ} {v : Plane} {f : State → ℂ}
   rw [totalIntegral_nonbarPart hf hs hm]
 
 /-- The successive slow derivatives of actual directional Fourier inverses. -/
-noncomputable def fourierSourceJet (d : Direction) (f : State → ℂ) (p : ℕ) : State → ℂ :=
+@[expose] noncomputable def fourierSourceJet (d : Direction) (f : State → ℂ) (p : ℕ) : State → ℂ :=
   RadialAlias.sourceJet (inverse d) f p
 
 /-- The interleaved construction is exactly the manuscript's slow derivative
@@ -512,7 +513,8 @@ theorem fourierSourceJet_eq_parameterJet (d : Direction) {f : State → ℂ}
     (hf : ContDiff ℝ ∞ f) (hp : ParametricTorusInverse.Periodic f) (p : ℕ) :
     fourierSourceJet d f p = parameterJet p (iterateInverse d p f) := by
   induction p with
-  | zero => rfl
+  | zero => simp only [fourierSourceJet, RadialAlias.sourceJet_zero, parameterJet_zero,
+      iterateInverse_zero]
   | succ p ih =>
     have heq : fourierSourceJet d f (p + 1) = parameterPartial (inverse d (fourierSourceJet d f p))
         :=
@@ -616,7 +618,9 @@ theorem cutoffAlias_arbitrary_order_of_integratedMean_zero (d : Direction)
 /-- The square average is the normalized Haar average of the actual descent. -/
 theorem torusMean_eq_haar {f : Plane → ℂ} (hf : Continuous f) (hp : TorusPeriodic f) :
     torusMean f = ∫ z, SmoothFourierData.descendContinuous f hf hp z ∂torusMeasure := by
-  rw [← SmoothFourierData.coefficient_zero_eq_mean]
+  change SmoothFourierData.UnitPeriodic f at hp
+  rw [← SmoothFourierData.coefficient_zero_eq_mean,
+    SmoothFourierData.torusLift_descendContinuous]
   exact (SmoothFourierData.coefficient_zero_eq_integral f).symm
 
 theorem cutoffAlias_haar_zero (d : Direction) {a b M : ℝ} {f : State → ℂ}

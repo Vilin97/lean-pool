@@ -15,7 +15,7 @@ import Mathlib.Probability.Kernel.Composition.IntegralCompProd
 # LeanPool.RlTheoryInLean.Probability.MarkovChain.Finite.Defs
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure ProbabilityTheory.Kernel ProbabilityTheory
 open Finset NNReal ENNReal Preorder Function StochasticMatrix Filter

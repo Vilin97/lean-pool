@@ -24,7 +24,7 @@ Banach-algebra fundamental fields. Its H3 bound is used only on spatial
 support; no angular regularity or global extension of H3 is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

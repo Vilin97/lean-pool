@@ -16,7 +16,7 @@ public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Topology
 open Filter MeasureTheory
@@ -94,6 +94,7 @@ theorem spatialDeriv_radialInverse {x : CKN.Vec 3} (hx : x ≠ 0)
   ring_nf
 
 /-- First derivative formula for the inverse Euclidean radius. -/
+@[expose]
 def firstFormula (i : Fin 3) (x : CKN.Vec 3) : ℝ :=
   -x i * q x ^ (-(3 : ℝ) / 2)
 
@@ -167,6 +168,7 @@ private theorem spatialDeriv_second_radialInverse {x : CKN.Vec 3} (hx : x ≠ 0)
   · simp [h']
 
 /-- Second derivative formula for the inverse Euclidean radius. -/
+@[expose]
 def secondFormula (i j : Fin 3) (x : CKN.Vec 3) : ℝ :=
   3 * x i * x j * q x ^ (-(5 : ℝ) / 2) -
     (if i = j then 1 else 0) * q x ^ (-(3 : ℝ) / 2)
@@ -322,6 +324,7 @@ private theorem q_rpow_neg_nine {x : CKN.Vec 3} (hx : x ≠ 0) :
 
 /-- The third derivative of the inverse Euclidean radius, in the convention
 used by the Newtonian kernel. -/
+@[expose]
 def inverseThirdFormula (m j l : Fin 3) (x : CKN.Vec 3) : ℝ :=
   -15 * x m * x j * x l * (CKN.vecEuclideanNorm x ^ 7)⁻¹ +
     3 * ((if m = l then 1 else 0) * x j +
@@ -401,10 +404,12 @@ private theorem hasFDerivAt_inverseThirdFormulaQ {x : CKN.Vec 3} (hx : x ≠ 0)
     ring
 
 /-- The Newtonian potential and its third-derivative kernel. -/
+@[expose]
 def newtonianPotential (x : CKN.Vec 3) : ℝ :=
   -(4 * Real.pi)⁻¹ * radialInverse x
 
 /-- Normalized third Newtonian derivative kernel used in the commutator estimates. -/
+@[expose]
 def newtonianKernel (m j l : Fin 3) (x : CKN.Vec 3) : ℝ :=
   -(4 * Real.pi)⁻¹ * inverseThirdFormula m j l x
 

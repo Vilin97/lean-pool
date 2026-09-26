@@ -16,7 +16,7 @@ properties of the distinguished-variable slice.  The deeper comparison with
 analytic order is developed separately from these edge-case lemmas.
 -/
 
-@[expose] public section
+public section
 
 open scoped Topology
 

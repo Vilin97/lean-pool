@@ -15,7 +15,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 
 /-! Basic theorems about TLA. -/
 
-@[expose] public section
+public section
 
 open Classical LentilLib
 

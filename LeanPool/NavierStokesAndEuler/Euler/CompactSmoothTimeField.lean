@@ -14,7 +14,7 @@ import Mathlib.Topology.Algebra.Module.PerfectSpace
 The compact support is common to the time slices, so compact joint continuity
 upgrades to continuity in the uniform spatial norm at every derivative order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

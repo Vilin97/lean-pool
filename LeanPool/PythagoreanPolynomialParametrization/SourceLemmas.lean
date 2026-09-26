@@ -17,7 +17,7 @@ kept separate from the explicit polynomial witnesses so each proof obligation ha
 small, source-located target.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PythagoreanPolynomialParametrization
 
@@ -26,22 +26,23 @@ namespace LeanPool.PythagoreanPolynomialParametrization
 /-- The rational map
 T(a,b,c) = (c(a²-b²)/2, cab, c(a²+b²)/2)
 used in the proof of the main parametrization theorem. -/
-def TMap (a b c : ℤ) : ℚ × ℚ × ℚ :=
+@[expose] def TMap (a b c : ℤ) : ℚ × ℚ × ℚ :=
   ((c : ℚ) * ((a : ℚ) ^ 2 - (b : ℚ) ^ 2) / 2,
     (c : ℚ) * (a : ℚ) * (b : ℚ),
     (c : ℚ) * ((a : ℚ) ^ 2 + (b : ℚ) ^ 2) / 2)
 
 /-- A value of `TMap` is integral when all three rational coordinates are integers. -/
+@[expose]
 def IsIntegralTValue (a b c : ℤ) : Prop :=
   ∃ x y z : ℤ, TMap a b c = ((x : ℚ), (y : ℚ), (z : ℚ))
 
 /-- The paper's parity condition for `T(a,b,c)` to have integer coordinates:
 `c` is even or `a` and `b` have the same parity. -/
-def PaperParityCondition (a b c : ℤ) : Prop :=
+@[expose] def PaperParityCondition (a b c : ℤ) : Prop :=
   Even c ∨ Even (a - b)
 
 /-- Positive parameters for the paper's positive-triple variant of `T(a,b,c)`. -/
-def PositiveTParameters (a b c : ℤ) : Prop :=
+@[expose] def PositiveTParameters (a b c : ℤ) : Prop :=
   0 < a ∧ 0 < b ∧ 0 < c ∧ b < a ∧ PaperParityCondition a b c
 
 /-- The introductory source claim: every Pythagorean triple is covered by one of two

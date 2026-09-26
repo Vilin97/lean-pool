@@ -37,7 +37,7 @@ integral equation and hence its strong derivative when the right-hand side is
 continuous.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -235,7 +235,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -21,7 +21,7 @@ import LeanPool.MatchingLogic.EntryIII.MCSAlpha
 # MatchingLogic.EntryIII.CanonicalCore
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -37,7 +37,7 @@ local instance instDecidableEqPatternNatCanonicalCore : DecidableEq (Pattern S N
 
 /-- A point of the canonical model is a maximal locally consistent set with
 fresh Henkin witnesses.  The ordinary witnessed interface is recovered below. -/
-def CanonicalCarrier (S : Signature) :=
+@[expose] def CanonicalCarrier (S : Signature) :=
   {Gamma : Set (Pattern S Nat) // IsMCS Gamma ∧ FreshWitnessed Gamma}
 
 instance CanonicalCarrier.coeSet :
@@ -89,7 +89,7 @@ theorem CanonicalCarrier.exists_var_mem (Gamma : CanonicalCarrier S) :
 /-- Source Definition 72: `Gamma` is an output of `sigma` at component worlds
 `components` exactly when every pointwise choice of patterns from those worlds
 forms a `sigma`-application belonging to `Gamma`. -/
-def canonicalInterp (sigma : S.Sym)
+@[expose] def canonicalInterp (sigma : S.Sym)
     (components : Fin (S.arity sigma) → CanonicalCarrier S) :
     Set (CanonicalCarrier S) :=
   {Gamma | ∀ args : Fin (S.arity sigma) → Pattern S Nat,

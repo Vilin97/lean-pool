@@ -15,7 +15,7 @@ Only its sources at times at most zero contribute on the target cylinder.
 Consequently the numerical bounds below concern the truncated sources only.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal

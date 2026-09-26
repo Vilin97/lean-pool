@@ -17,7 +17,7 @@ Here we also use them to state and prove `localLoadedDiamondList`, a local versi
 of the `loadedDiamondPaths` lemma that is part of the Soundness proof in Section 6.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -103,7 +103,7 @@ theorem star_relate_of_Chain : List.IsChain (relate M α) (w :: l ++ [v]) → re
 
 open Classical in
 /-- The recursively weighted distance of a program between two worlds. -/
-noncomputable def distance {W} (M : KripkeModel W) (α : Program) (w v : W) : ℕ∞ :=
+@[expose] noncomputable def distance {W} (M : KripkeModel W) (α : Program) (w v : W) : ℕ∞ :=
   match α with
   | ·_ => ite (relate M α w v) 1 ⊤
   | ?'_ => ite (relate M α w v) 0 ⊤

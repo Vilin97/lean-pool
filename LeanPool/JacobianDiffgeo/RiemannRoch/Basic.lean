@@ -29,7 +29,7 @@ Serre-duality export bank (`l_sub_eq_h1T`, `h1T_zero_eq_genus`, `h1T_zero_eq_l_K
   `genus-zero-headline` (#30) consumes.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

@@ -34,7 +34,7 @@ large natural logarithmic gradient is retained in the growing term rather
 than estimated by an absolute constant.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1074,7 +1074,7 @@ cap is intersected with the existing reset and energy thresholds before any
 profile is constructed. The actual core is then fixed before choosing h.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1214,7 +1214,7 @@ The clean cone below belongs to the unedited outgoing profile. Identification
 with the complete edited nominal stress is a separate construction.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1339,7 +1339,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1664,7 +1664,7 @@ end Witness
 /-! ## Literal physical moments in the logarithmic chart -/
 
 /-- Chart, given by `(XR * Real.exp p.1, p.2)`. -/
-noncomputable def chart (XR : ℝ) (p : Point) : Point := (XR * Real.exp p.1, p.2)
+@[expose] noncomputable def chart (XR : ℝ) (p : Point) : Point := (XR * Real.exp p.1, p.2)
 
 theorem chart_positive {XR : ℝ} (hXR : 0 < XR) (p : Point) : 0 < (chart XR p).1 :=
   mul_pos hXR (Real.exp_pos _)
@@ -2697,10 +2697,11 @@ end Initial
 /-! ## The active annulus and one common ordered choice -/
 
 /-- Active left, given by `4 / W.axis.scale`. -/
+@[expose]
 noncomputable def activeLeft {F : Profile} (W : NominalProfile.Witness F) : ℝ := 4 / W.axis.scale
 
 /-- Active right, given by `W.controls.radius * Real.exp (OutgoingTail.tailEnd F.data)`. -/
-noncomputable def activeRight {F : Profile} (W : NominalProfile.Witness F) : ℝ :=
+@[expose] noncomputable def activeRight {F : Profile} (W : NominalProfile.Witness F) : ℝ :=
   W.controls.radius * Real.exp (OutgoingTail.tailEnd F.data)
 
 theorem activeLeft_pos {F : Profile} (W : NominalProfile.Witness F) : 0 < activeLeft W :=

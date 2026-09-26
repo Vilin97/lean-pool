@@ -16,7 +16,7 @@ import LeanPool.MatchingLogic.EntryIII.WitnessElim
 # MatchingLogic.EntryIII.CanonicalConstruction
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

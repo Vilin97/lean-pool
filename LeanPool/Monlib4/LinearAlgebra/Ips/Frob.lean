@@ -20,7 +20,7 @@ import LeanPool.Monlib4.Preq.Ites
  This file contains the proof of the Frobenius equations.
 -/
 
-@[expose] public section
+public section
 
 
 variable {n p : Type _} [Fintype n] [Fintype p] [DecidableEq n] [DecidableEq p]

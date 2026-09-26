@@ -66,7 +66,7 @@ This file does not identify those columns with the exact model, or prove the
 Gaussian, parameter-derivative, or flat-edge estimates.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -80,7 +80,7 @@ def signedMatrix (a b scaleMinus scalePlus : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :
      -b * scaleMinus,  b * scalePlus]
 
 /-- The stress target in normal and transverse coordinates. -/
-def target (m t : ℝ) : Fin 2 → ℝ := ![-m, t]
+@[expose] def target (m t : ℝ) : Fin 2 → ℝ := ![-m, t]
 
 /-- Explicit squared amplitudes for the two signed slots. -/
 def coefficients (a b scaleMinus scalePlus m t : ℝ) : Fin 2 → ℝ :=
@@ -274,7 +274,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -302,11 +302,11 @@ local instance instSmoothCovariance2 : NormedSpace ℝ Mat2 :=
 abbrev Datum := Mat2 × Vec2
 
 /-- Oriented areas obtained by replacing each column by the target. -/
-def cramerNumerator (H : Mat2) (T : Vec2) : Vec2 :=
+@[expose] def cramerNumerator (H : Mat2) (T : Vec2) : Vec2 :=
   ![T 0 * H 1 1 - H 0 1 * T 1, H 0 0 * T 1 - T 0 * H 1 0]
 
 /-- Cramer's explicit formula, including Lean's total division convention. -/
-def weights (H : Mat2) (T : Vec2) : Vec2 :=
+@[expose] def weights (H : Mat2) (T : Vec2) : Vec2 :=
   fun i => cramerNumerator H T i / H.det
 
 /-- Both target-column oriented areas have the same nonzero orientation as
@@ -316,7 +316,7 @@ def StrictCone (H : Mat2) (T : Vec2) : Prop :=
   0 < cramerNumerator H T 1 * H.det
 
 /-- Amplitudes, defined pointwise by `Real.sqrt (weights H T i)`. -/
-def amplitudes (H : Mat2) (T : Vec2) : Vec2 :=
+@[expose] def amplitudes (H : Mat2) (T : Vec2) : Vec2 :=
   fun i => Real.sqrt (weights H T i)
 
 theorem StrictCone.det_ne_zero {H : Mat2} {T : Vec2} (h : StrictCone H T) :
@@ -659,7 +659,7 @@ The coefficient quotients are proved smooth from these formulas. Their
 smoothness across the singular matrix at the edge is not assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -671,31 +671,31 @@ open FlatCutoff (edge)
 open scoped ContDiff Topology
 
 /-- Multiplication of column `j` by its scalar factor `c j`. -/
-def columns (G : Mat2) (c : Vec2) : Mat2 := fun i j => c j * G i j
+@[expose] def columns (G : Mat2) (c : Vec2) : Mat2 := fun i j => c j * G i j
 
 /-- Scaled target, defined pointwise by `r * T i`. -/
-def scaledTarget (r : ℝ) (T : Vec2) : Vec2 := fun i => r * T i
+@[expose] def scaledTarget (r : ℝ) (T : Vec2) : Vec2 := fun i => r * T i
 
 /-- The actual edge-degenerate covariance matrix. -/
-def edgeMatrix (κ : Vec2) (G : ℝ → Mat2) (x : ℝ) : Mat2 :=
+@[expose] def edgeMatrix (κ : Vec2) (G : ℝ → Mat2) (x : ℝ) : Mat2 :=
   columns (G x) (fun j => edge (κ j) x)
 
 /-- Edge target, given by `scaledTarget (edge σ x) (T x)`. -/
-def edgeTarget (σ : ℝ) (T : ℝ → Vec2) (x : ℝ) : Vec2 :=
+@[expose] def edgeTarget (σ : ℝ) (T : ℝ → Vec2) (x : ℝ) : Vec2 :=
   scaledTarget (edge σ x) (T x)
 
 /-- The actual matrix-inverse solve, also defined at the zero edge. -/
-def inverseCoefficients (σ : ℝ) (κ : Vec2) (G : ℝ → Mat2) (T : ℝ → Vec2)
+@[expose] def inverseCoefficients (σ : ℝ) (κ : Vec2) (G : ℝ → Mat2) (T : ℝ → Vec2)
     (x : ℝ) : Vec2 :=
   (edgeMatrix κ G x)⁻¹.mulVec (edgeTarget σ T x)
 
 /-- Primary amplitude, defined pointwise by `Real.sqrt (inverseCoefficients σ κ G T x i)`. -/
-def primaryAmplitude (σ : ℝ) (κ : Vec2) (G : ℝ → Mat2) (T : ℝ → Vec2)
+@[expose] def primaryAmplitude (σ : ℝ) (κ : Vec2) (G : ℝ → Mat2) (T : ℝ → Vec2)
     (x : ℝ) : Vec2 :=
   fun i => Real.sqrt (inverseCoefficients σ κ G T x i)
 
 /-- The signed covariance update divides by the fixed positive primary. -/
-def signedAmplitude (σ τ : ℝ) (κ : Vec2) (G : ℝ → Mat2)
+@[expose] def signedAmplitude (σ τ : ℝ) (κ : Vec2) (G : ℝ → Mat2)
     (T R : ℝ → Vec2) (x : ℝ) : Vec2 :=
   fun i => inverseCoefficients τ κ G R x i / (2 * primaryAmplitude σ κ G T x i)
 
@@ -1234,7 +1234,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1512,7 +1512,7 @@ theorem core_weight_lower {v : ℝ}
       (mul_pos h.lower_pos (gaussian_pos _ _ _ _)).le hx 2
 
 /-- Lower mass constant, given by `a ^ 2 * Real.exp (-B / 18) / 3`. -/
-noncomputable def lowerMassConstant (a B : ℝ) : ℝ := a ^ 2 * Real.exp (-B / 18) / 3
+@[expose] noncomputable def lowerMassConstant (a B : ℝ) : ℝ := a ^ 2 * Real.exp (-B / 18) / 3
 
 theorem lowerMassConstant_pos : 0 < lowerMassConstant a B := by
   unfold lowerMassConstant
@@ -1697,7 +1697,7 @@ abbrev Vec2 := SmoothCovariance.Vec2
 abbrev Mat2 := SmoothCovariance.Mat2
 
 /-- Radius profile, given by `Real.sqrt (1 + s ^ 2)`. -/
-noncomputable def radiusProfile (s : ℝ) : ℝ := Real.sqrt (1 + s ^ 2)
+@[expose] noncomputable def radiusProfile (s : ℝ) : ℝ := Real.sqrt (1 + s ^ 2)
 
 theorem radiusProfile_pos (s : ℝ) : 0 < radiusProfile s := by
   apply Real.sqrt_pos.mpr
@@ -1729,7 +1729,7 @@ theorem radiusProfile_lipschitz (s t : ℝ) :
 
 /-- Coordinates in the fixed tangent frame `(N,K)` of `h N - s K`, where
 `h = c₀ sqrt(1+s²)`. -/
-noncomputable def modelDirection (c₀ s : ℝ) : Vec2 := ![c₀ * radiusProfile s, -s]
+@[expose] noncomputable def modelDirection (c₀ s : ℝ) : Vec2 := ![c₀ * radiusProfile s, -s]
 
 theorem modelDirection_lipschitz (c₀ s t : ℝ) (i : Fin 2) :
     |modelDirection c₀ s i - modelDirection c₀ t i| ≤ (|c₀| + 1) * |s - t| := by
@@ -1779,7 +1779,7 @@ theorem modelDirection_affine_drift (c₀ s₀ slope r v : ℝ) (i : Fin 2) :
   exact hi.trans_eq (by ring)
 
 /-- Actual column, defined pointwise by `ci * ∫ v : ℝ, ψ v ^ 2 * x v * t v i`. -/
-noncomputable def actualColumn (ci : ℝ) (ψ x : ℝ → ℝ) (t : ℝ → Vec2) : Vec2 :=
+@[expose] noncomputable def actualColumn (ci : ℝ) (ψ x : ℝ → ℝ) (t : ℝ → Vec2) : Vec2 :=
   fun i => ci * ∫ v : ℝ, ψ v ^ 2 * x v * t v i
 
 /-- Normalized column, defined pointwise by `averagedDirection ψ x (fun v => t v i / x v)`. -/
@@ -1887,10 +1887,10 @@ structure TangentPulse (r a A b B c₀ s₀ slope E : ℝ) where
       E / r ^ 2
 
 /-- Signed slopes, given by `![u, -u]`. -/
-noncomputable def signedSlopes (u : ℝ) : Vec2 := ![u, -u]
+@[expose] noncomputable def signedSlopes (u : ℝ) : Vec2 := ![u, -u]
 
 /-- Signed model, defined pointwise by `modelDirection c₀ (signedSlopes u j) i`. -/
-noncomputable def signedModel (c₀ u : ℝ) : Mat2 :=
+@[expose] noncomputable def signedModel (c₀ u : ℝ) : Mat2 :=
   fun i j => modelDirection c₀ (signedSlopes u j) i
 
 theorem signedModel_eq_covariance (c₀ u : ℝ) :
@@ -1925,7 +1925,7 @@ abbrev SignedPulsePair (r a A b B c₀ u E : ℝ) :=
 
 /-- Actual matrix, defined pointwise by `actualColumn (ci j) (pulses j).cutoff (pulses
 j).component (pulses j).tangent i`. -/
-noncomputable def actualMatrix {r a A b B c₀ u E : ℝ}
+@[expose] noncomputable def actualMatrix {r a A b B c₀ u E : ℝ}
     (pulses : SignedPulsePair r a A b B c₀ u E) (ci : Vec2) : Mat2 :=
   fun i j => actualColumn (ci j) (pulses j).cutoff (pulses j).component (pulses j).tangent i
 
@@ -2089,7 +2089,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2111,11 +2111,12 @@ local instance planeVolumeHaar : Measure.IsAddHaarMeasure (volume : Measure Plan
   infer_instance
 
 /-- Quotient point, given by `((z.1 : UnitAddCircle), (z.2 : UnitAddCircle))`. -/
-noncomputable def quotientPoint (z : Plane) : Torus := ((z.1 : UnitAddCircle), (z.2 :
+@[expose] noncomputable def quotientPoint (z : Plane) : Torus :=
+  ((z.1 : UnitAddCircle), (z.2 :
     UnitAddCircle))
 
 /-- The manuscript's real covering matrix `[[3,1],[1,5]]`. -/
-noncomputable def covering (z : Plane) : Plane := (3 * z.1 + z.2, z.1 + 5 * z.2)
+@[expose] noncomputable def covering (z : Plane) : Plane := (3 * z.1 + z.2, z.1 + 5 * z.2)
 
 /-- Torus covering, bundling `toFun`, `map_zero`, `map_add`. -/
 noncomputable def torusCovering : Torus →+ Torus where
@@ -2178,7 +2179,7 @@ theorem integral_torusCovering_iterate {V : Type*} [NormedAddCommGroup V]
   rw [← integral_map hp.measurable.aemeasurable hf.aestronglyMeasurable, hp.map_eq]
 
 /-- Square average, given by `∫ y in (0 : ℝ)..1, ∫ x in (0 : ℝ)..1, f (x, y)`. -/
-noncomputable def squareAverage {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+@[expose] noncomputable def squareAverage {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (f : Plane → V) : V := ∫ y in (0 : ℝ)..1, ∫ x in (0 : ℝ)..1, f (x, y)
 
 theorem squareAverage_torusLift (f : C(Torus, ℂ)) :
@@ -2196,8 +2197,9 @@ theorem squareAverage_covering_iterate {f : Plane → ℂ}
     funext z
     change g (torusCovering^[n] (quotientPoint z)) = f (covering^[n] z)
     rw [← quotient_covering_iterate]
-    rfl
-  have hg : squareAverage f = ∫ z, g z ∂torusMeasure := squareAverage_torusLift g
+    exact congrFun (torusLift_descendContinuous f hf hp) (covering^[n] z)
+  have hg : squareAverage f = ∫ z, g z ∂torusMeasure := by
+    simpa only [g, torusLift_descendContinuous] using squareAverage_torusLift g
   rw [← heq, squareAverage_torusLift]
   exact (integral_torusCovering_iterate g g.continuous n).trans hg.symm
 
@@ -2219,7 +2221,7 @@ theorem squareAverage_covering_iterate_real {f : Plane → ℝ}
 /-! ## Lattice periodization and its actual integral -/
 
 /-- Lattice point, given by `((k.1 : ℝ), (k.2 : ℝ))`. -/
-noncomputable def latticePoint (k : Frequency) : Plane := ((k.1 : ℝ), (k.2 : ℝ))
+@[expose] noncomputable def latticePoint (k : Frequency) : Plane := ((k.1 : ℝ), (k.2 : ℝ))
 
 theorem latticePoint_add (k l : Frequency) :
     latticePoint (k + l) = latticePoint k + latticePoint l := by
@@ -2333,7 +2335,7 @@ theorem fundamentalSquare_isAddFundamentalDomain :
     · omega
 
 /-- The periodization is the actual sum over integer translates. -/
-noncomputable def periodize {V : Type*} [NormedAddCommGroup V] (f : Plane → V)
+@[expose] noncomputable def periodize {V : Type*} [NormedAddCommGroup V] (f : Plane → V)
     (z : Plane) : V := ∑' k : Frequency, f (latticePoint k + z)
 
 /-- A compactly supported field has only finitely many active translates on
@@ -2502,7 +2504,7 @@ theorem squareAverage_periodize_covering_real {f : Plane → ℝ}
 /-! ## Native coordinates and the determinant prefactor -/
 
 /-- A native field placed at `center` in the linear coordinate chart `L`. -/
-noncomputable def nativeField {V : Type*} (L : Plane ≃L[ℝ] Plane) (center : Plane)
+@[expose] noncomputable def nativeField {V : Type*} (L : Plane ≃L[ℝ] Plane) (center : Plane)
     (f : Plane → V) (z : Plane) : V := f (L.symm (z - center))
 
 theorem nativeField_continuous {V : Type*} [TopologicalSpace V]
@@ -2606,6 +2608,7 @@ theorem det_transverseChart (ci : ℝ) (hci : ci ≠ 0) :
   simp
 
 /-- `η = ci * v - r0`, written as the field in the native `(ξ,η)` coordinates. -/
+@[expose]
 noncomputable def transverseStretch {V : Type*} (ci r0 : ℝ) (f : Plane → V) (z : Plane) : V :=
   f (z.1, (z.2 + r0) / ci)
 
@@ -2681,7 +2684,7 @@ theorem squareAverage_covered_product (vr vt center : Plane)
   ring
 
 /-- The native covariance coefficient before angular averaging. -/
-noncomputable def pulseProfile (χ ψ x : ℝ → ℝ) (t : ℝ → PulseCovariance.Vec2)
+@[expose] noncomputable def pulseProfile (χ ψ x : ℝ → ℝ) (t : ℝ → PulseCovariance.Vec2)
     (i : Fin 2) (z : Plane) : ℝ := χ z.1 ^ 2 * (ψ z.2 ^ 2 * x z.2 * t z.2 i)
 
 theorem squareAverage_covered_pulseColumn (vr vt center : Plane)

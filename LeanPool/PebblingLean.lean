@@ -39,4 +39,4 @@ Tags: combinatorics, pebbling, hypercube
 MSC: 05C57
 -/
 
-@[expose] public section
+public section

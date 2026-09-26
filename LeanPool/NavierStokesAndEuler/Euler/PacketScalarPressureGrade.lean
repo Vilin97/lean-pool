@@ -28,7 +28,7 @@ section
 bounds. Its norm-one embedding supplies genuine vector-valued Sobolev
 evaluation, without changing the radius or the time profile. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -264,7 +264,7 @@ section
 as the mean velocity. This estimate was already proved by the source
 solver but is not a field of the velocity-oriented ProfileBudget. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

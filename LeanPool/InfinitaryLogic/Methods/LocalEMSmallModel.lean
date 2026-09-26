@@ -32,7 +32,7 @@ realized types (`lomega1omegaSmall` on the `localColim` reduct, descended to the
 by `Lomega1omegaSmall.of_expansion`).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

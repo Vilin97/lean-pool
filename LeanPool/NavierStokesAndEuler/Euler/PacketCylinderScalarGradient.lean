@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
 
 /-! The literal spatial gradient of an actual scalar cylinder path is an actual vector path. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

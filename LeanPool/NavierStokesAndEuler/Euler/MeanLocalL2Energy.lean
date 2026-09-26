@@ -14,7 +14,7 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
 /-! Local energies of actual L² fields, including the decomposition estimate. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -19,7 +19,7 @@ force integral. Their finite time moments follow from local suitability on
 one fixed cylinder, without a pressure oscillation estimate on smaller cells.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology BigOperators

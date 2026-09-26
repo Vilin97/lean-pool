@@ -17,7 +17,7 @@ derivatives are actual Fréchet derivatives. Pulling Cartesian fields back
 through this chart avoids choosing a global inverse angular coordinate.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.CylindricalResidual
@@ -34,7 +34,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- The three arguments are `r`, `theta`, and `z`, respectively. -/
-noncomputable def chart (q : Space) : Space :=
+@[expose] noncomputable def chart (q : Space) : Space :=
   pack (q 0 * Real.cos (q 1)) (q 0 * Real.sin (q 1)) (q 2)
 
 /-- Horizontal, given by `packDerivative (projection 0) (projection 1) 0`. -/
@@ -50,7 +50,7 @@ noncomputable def vertical : Space →L[ℝ] Space :=
   packDerivative 0 0 (projection 2)
 
 /-- Frame, given by `Real.cos θ • horizontal + Real.sin θ • connection + vertical`. -/
-noncomputable def frame (θ : ℝ) : Space →L[ℝ] Space :=
+@[expose] noncomputable def frame (θ : ℝ) : Space →L[ℝ] Space :=
   Real.cos θ • horizontal + Real.sin θ • connection + vertical
 
 theorem frame_apply (θ : ℝ) (v : Space) :
@@ -105,16 +105,16 @@ theorem contDiff_chart {n : WithTop ℕ∞} : ContDiff ℝ n chart := by
     ((projection 2).contDiff.smul contDiff_const)
 
 /-- D coord, given by `fderiv ℝ f q (coordinateVector i)`. -/
-noncomputable def dCoord (i : Fin 3) (f : Space → E) (q : Space) : E :=
+@[expose] noncomputable def dCoord (i : Fin 3) (f : Space → E) (q : Space) : E :=
   fderiv ℝ f q (coordinateVector i)
 
 /-- Euclidean laplacian, given by `∑ i : Fin 3, dCoord i (dCoord i f) x`. -/
-noncomputable def euclideanLaplacian (f : Space → E) (x : Space) : E :=
+@[expose] noncomputable def euclideanLaplacian (f : Space → E) (x : Space) : E :=
   ∑ i : Fin 3, dCoord i (dCoord i f) x
 
 /-- Scalar laplacian, given by `dCoord 0 (dCoord 0 f) q + (q 0)⁻¹ • dCoord 0 f q + ((q 0) ^ 2)⁻¹
 • dCoord 1 (dCoord 1 f) q + dCoord 2 (dCoord 2 f) q`. -/
-noncomputable def scalarLaplacian (f : Space → E) (q : Space) : E :=
+@[expose] noncomputable def scalarLaplacian (f : Space → E) (q : Space) : E :=
   dCoord 0 (dCoord 0 f) q + (q 0)⁻¹ • dCoord 0 f q +
     ((q 0) ^ 2)⁻¹ • dCoord 1 (dCoord 1 f) q + dCoord 2 (dCoord 2 f) q
 
@@ -345,7 +345,7 @@ theorem dCoord_dCoord_encode {w : Space → Space} {q : Space}
   module
 
 /-- Vector Laplacian of physical components in the moving cylindrical basis. -/
-noncomputable def vectorLaplacian (w : Space → Space) (q : Space) : Space :=
+@[expose] noncomputable def vectorLaplacian (w : Space → Space) (q : Space) : Space :=
   scalarLaplacian w q + (2 / (q 0) ^ 2) • connection (dCoord 1 w q) +
     ((q 0) ^ 2)⁻¹ • connection (connection (w q))
 
@@ -363,7 +363,7 @@ theorem scalarLaplacian_encode {w : Space → Space} {q : Space}
   module
 
 /-- Cylindrical components of an arbitrary Cartesian vector field. -/
-noncomputable def components (f : Space → Space) (q : Space) : Space :=
+@[expose] noncomputable def components (f : Space → Space) (q : Space) : Space :=
   frame (-(q 1)) (f (chart q))
 
 theorem encode_components (f : Space → Space) :
@@ -407,7 +407,7 @@ theorem cartesianDerivative_components {f : Space → Space} {q : Space}
 
 /-- Vector advection, given by `w q 0 • dCoord 0 w q + (w q 1 / q 0) • (dCoord 1 w q +
 connection (w q)) + w q 2 • dCoord 2 w q`. -/
-noncomputable def vectorAdvection (w : Space → Space) (q : Space) : Space :=
+@[expose] noncomputable def vectorAdvection (w : Space → Space) (q : Space) : Space :=
   w q 0 • dCoord 0 w q + (w q 1 / q 0) • (dCoord 1 w q + connection (w q)) +
     w q 2 • dCoord 2 w q
 
@@ -427,7 +427,7 @@ noncomputable def euclideanDivergence (f : Space → Space) (x : Space) : ℝ :=
 
 /-- Vector divergence, given by `(dCoord 0 w q) 0 + w q 0 / q 0 + (dCoord 1 w q) 1 / q 0 +
 (dCoord 2 w q) 2`. -/
-noncomputable def vectorDivergence (w : Space → Space) (q : Space) : ℝ :=
+@[expose] noncomputable def vectorDivergence (w : Space → Space) (q : Space) : ℝ :=
   (dCoord 0 w q) 0 + w q 0 / q 0 + (dCoord 1 w q) 1 / q 0 + (dCoord 2 w q) 2
 
 theorem trace_rotation (A : Space →L[ℝ] Space) (θ : ℝ) :
@@ -447,11 +447,11 @@ theorem cartesianDivergence_components {f : Space → Space} {q : Space}
   ring
 
 /-- Euclidean gradient, given by `∑ i : Fin 3, dCoord i f x • coordinateVector i`. -/
-noncomputable def euclideanGradient (f : Space → ℝ) (x : Space) : Space :=
+@[expose] noncomputable def euclideanGradient (f : Space → ℝ) (x : Space) : Space :=
   ∑ i : Fin 3, dCoord i f x • coordinateVector i
 
 /-- Scalar gradient, given by `pack (dCoord 0 f q) (dCoord 1 f q / q 0) (dCoord 2 f q)`. -/
-noncomputable def scalarGradient (f : Space → ℝ) (q : Space) : Space :=
+@[expose] noncomputable def scalarGradient (f : Space → ℝ) (q : Space) : Space :=
   pack (dCoord 0 f q) (dCoord 1 f q / q 0) (dCoord 2 f q)
 
 theorem cartesianGradient_pullback {f : Space → ℝ} {q : Space}
@@ -474,15 +474,15 @@ theorem cartesianGradient_pullback {f : Space → ℝ} {q : Space}
       pack, dCoord, coordinateVector]
 
 /-- Pullback of a time-dependent velocity into the moving cylindrical frame. -/
-noncomputable def velocityComponents (u : VelocityField) : VelocityField :=
+@[expose] noncomputable def velocityComponents (u : VelocityField) : VelocityField :=
   fun tq => components (fun x => u (tq.1, x)) tq.2
 
 /-- Pressure pullback, defined pointwise by `p (tq.1, chart tq.2)`. -/
-noncomputable def pressurePullback (p : PressureField) : PressureField :=
+@[expose] noncomputable def pressurePullback (p : PressureField) : PressureField :=
   fun tq => p (tq.1, chart tq.2)
 
 /-- Cylindrical residual, constructed using `temporalDerivative`. -/
-noncomputable def cylindricalResidual (w : VelocityField) (p : PressureField)
+@[expose] noncomputable def cylindricalResidual (w : VelocityField) (p : PressureField)
     (t : ℝ) (q : Space) : Space :=
   temporalDerivative w t q + vectorAdvection (fun y => w (t, y)) q -
     vectorLaplacian (fun y => w (t, y)) q + scalarGradient (fun y => p (t, y)) q

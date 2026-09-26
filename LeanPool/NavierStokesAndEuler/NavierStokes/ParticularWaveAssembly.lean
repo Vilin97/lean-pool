@@ -18,7 +18,7 @@ All signed nonzero harmonics are retained inside their original spatial
 label. A fixed reference solve supplies the compatible band views.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ open HarmonicCalculus WeightedClasses
 open scoped BigOperators Topology ContDiff ComplexConjugate
 
 /-- One finite signed harmonic range, without the mean coefficient. -/
-noncomputable def modes (N : ℕ) : Finset ℤ := (Finset.Icc (-(N : ℤ)) N).erase 0
+@[expose] noncomputable def modes (N : ℕ) : Finset ℤ := (Finset.Icc (-(N : ℤ)) N).erase 0
 
 @[simp] theorem mem_modes (N : ℕ) (j : ℤ) :
     j ∈ modes N ↔ j ≠ 0 ∧ j.natAbs ≤ N := by
@@ -86,7 +86,7 @@ theorem signed_pairs_reconstruct {D : Type} (c : Coefficients D) (N : ℕ)
     simp only [ite_eq_right hm, hz, Pi.zero_apply, map_zero, add_zero]
 
 /-- The actual source coefficient, with no convention-dependent scaling. -/
-noncomputable def residualSource {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
+@[expose] noncomputable def residualSource {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
     (c : Context D) (u : State D) (b : HarmonicBlock D)
     (G A : HarmonicResidual.BlockCoefficients D) (j : ℤ) (n : ℕ) (x : D) : ComplexVector :=
   fun i => (HarmonicResidual.residualBlock c u b G A).velocity n i j x
@@ -105,7 +105,7 @@ theorem residualSource_conjugate {D : Type} [NormedAddCommGroup D] [NormedSpace 
   HarmonicResidual.residualBlock_conjugate c u b G A n i j x
 
 /-- A pair at the original label's carrier, for both velocity and pressure. -/
-noncomputable def modeBlock {D : Type} (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ)
+@[expose] noncomputable def modeBlock {D : Type} (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ)
     (kp : ℕ → ℤ) (v : ℕ → D → ComplexVector) (p : ℕ → D → ℂ) : HarmonicBlock D where
   velocity n i := conjugatePair j (fun x => v n x i)
   pressure n := conjugatePair j (p n)
@@ -170,7 +170,7 @@ theorem modeBlock_classes {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- Assembled block, given by `sumBlock (modes N) k Φ kp (fun j => modeBlock j k Φ kp (v j) (p
 j))`. -/
-noncomputable def assembledBlock {D : Type} (N : ℕ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ)
+@[expose] noncomputable def assembledBlock {D : Type} (N : ℕ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ)
     (kp : ℕ → ℤ) (v : ℤ → ℕ → D → ComplexVector) (p : ℤ → ℕ → D → ℂ) : HarmonicBlock D :=
   sumBlock (modes N) k Φ kp (fun j => modeBlock j k Φ kp (v j) (p j))
 
@@ -558,7 +558,7 @@ structure BandCharts (P : Type) where
 
 /-- Reference velocity, given by `commonVelocity (r.tangent j) (residualSource c u b G A j
 r.band) r.geometry r.length_pos.le r.cutoff`. -/
-noncomputable def referenceVelocity (r : Reference P)
+@[expose] noncomputable def referenceVelocity (r : Reference P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ) : P × Plane → ComplexVector :=
   commonVelocity (r.tangent j) (residualSource c u b G A j r.band) r.geometry
@@ -961,7 +961,7 @@ theorem complexCopyPressure_angle (t : TangentData P ProblemStatement.Space)
 
 /-- Frequency and phase are constructed from the original residual block.
 Only the background fields of `base` are retained. -/
-noncomputable def actualCarrier (base : WaveCoefficients ((P × ℝ) × Plane))
+@[expose] noncomputable def actualCarrier (base : WaveCoefficients ((P × ℝ) × Plane))
     (b : HarmonicBlock (P × Plane)) (j : ℤ) : WaveCoefficients ((P × ℝ) × Plane) :=
   { base with
     phase := fun n z => b.phase n (z.1.1,z.2) + (b.angularFrequency n : ℝ) / b.frequency n * z.1.2
@@ -1163,7 +1163,7 @@ noncomputable def nativeCutoff (r : Reference P) (charts : BandCharts P) (copy :
 
 /-- The common coefficient already contains its single native cutoff.
 Its correction is the actual cylindrical curl correction of that coefficient. -/
-noncomputable def actualCorrectedCommon (r : Reference P) (charts : BandCharts P)
+@[expose] noncomputable def actualCorrectedCommon (r : Reference P) (charts : BandCharts P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ)
     (base : WaveCoefficients ((P × ℝ) × Plane)) (s : StripData ((P × ℝ) × Plane))

@@ -21,7 +21,7 @@ norm, and the original force smallness. The formula includes the pressure
 gradient in the order-two slot. No potential or Hölder estimate is assumed.
 -/
 
-@[expose] public section
+public section
 
 section
 

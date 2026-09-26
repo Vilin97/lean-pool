@@ -12,7 +12,7 @@ import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Bit -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»

@@ -21,14 +21,14 @@ This file supplies the consumer-shaped definition. Existence results via ordered
 `HighlyTransitiveField.lean` and `HighlyTransitiveExistence.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 
 /-- A linear order is **highly order-transitive** when every isomorphism between two finite
 increasing tuples extends to an order automorphism: for all `n` and increasing `n`-tuples
 `s, t`, some `e : J ≃o J` has `e (s i) = t i` for all `i`. -/
-def HighlyOrderTransitive (J : Type*) [LinearOrder J] : Prop :=
+@[expose] def HighlyOrderTransitive (J : Type*) [LinearOrder J] : Prop :=
   ∀ (n : ℕ) (s t : Fin n ↪o J), ∃ e : J ≃o J, ∀ i, e (s i) = t i
 
 end FirstOrder

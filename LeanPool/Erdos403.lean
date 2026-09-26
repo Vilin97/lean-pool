@@ -26,4 +26,4 @@ Tags: number-theory, factorials, erdos-problems
 MSC: 11B83
 -/
 
-@[expose] public section
+public section

@@ -14,7 +14,7 @@ The local norm data of `def:sws` give compactly supported `L^{6/5}` sources
 and the explicit centred majorant used in `eq:pressure-gradient-decomposition`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -26,7 +26,7 @@ namespace CKN.Core.Step4
 
 /-- The global componentwise source majorant in `eq:pressure-gradient-decomposition`,
 including the constant-mean correction and the localized force norm. -/
-def centredSWSCentredMajorant (x : Vec3) (ρ q : ℝ)
+@[expose] def centredSWSCentredMajorant (x : Vec3) (ρ q : ℝ)
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3)
     (f : ParabolicPoint → Vec3) (s : ℝ) : ℝ≥0∞ :=
   let μ := volume.restrict (vec3Ball x ρ)

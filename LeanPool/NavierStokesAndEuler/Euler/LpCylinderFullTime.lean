@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-! Genuine time derivatives for the full-cylinder rectangular products. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

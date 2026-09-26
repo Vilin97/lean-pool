@@ -28,7 +28,7 @@ restriction $\|z\| < 1$).
   $\|q\| < 1$ and $z \neq 0$.
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 open scoped Topology

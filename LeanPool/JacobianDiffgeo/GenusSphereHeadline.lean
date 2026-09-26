@@ -33,4 +33,4 @@ direction's finisher: `RS.homeoSphere_of_exists_simple_pole`). **Unit COMPLETE**
   be needed to slot it into the challenge file.
 -/
 
-@[expose] public section
+public section

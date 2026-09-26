@@ -21,7 +21,7 @@ import LeanPool.ConnesRigidity.Paper.Section4.FiniteExtensions
 The spectral property t component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperSpectralPropertyT

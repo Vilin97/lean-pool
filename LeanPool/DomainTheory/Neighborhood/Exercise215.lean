@@ -61,7 +61,7 @@ Choice-free (`#print axioms ⊆ {propext, Quot.sound}`) apart from the
 `eq_of_toElementMap_principal`
 uniqueness step inherited from Exercise 2.8. -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise215
 
@@ -89,7 +89,7 @@ def O : NeighborhoodSystem (Fin 1) :=
   NeighborhoodSystem.ofNestedOrDisjoint memO Set.univ (Or.inl rfl) nestedOrDisjoint_O subMaster_O
 
 @[simp] theorem O_mem {X : Set (Fin 1)} : O.mem X ↔ memO X := Iff.rfl
-@[simp] theorem O_master : O.master = (Set.univ : Set (Fin 1)) := rfl
+@[simp] theorem O_master : O.master = (Set.univ : Set (Fin 1)) := by rfl
 
 theorem O_mem_empty : O.mem (∅ : Set (Fin 1)) := Or.inr rfl
 theorem O_mem_univ : O.mem (Set.univ : Set (Fin 1)) := Or.inl rfl

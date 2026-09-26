@@ -19,7 +19,7 @@ analyticity and the first-integral equation—classical choice and primitive rec
 orders automatically.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
@@ -38,7 +38,7 @@ def ClassicalNormalizationStep : Prop :=
 
 /-- Celestial-mechanics half of one normalization step: the mass-zero coefficient of every
 analytic first integral is a globally analytic function of the Kepler Hamiltonian. -/
-def ClassicalZerothCoefficientPrinciple : Prop :=
+@[expose] def ClassicalZerothCoefficientPrinciple : Prop :=
   ∀ {δ : ℝ} {F : ℝ → PhaseSpace → ℝ},
     0 < δ → IsJointlyAnalytic δ F → IsFirstIntegralFamily δ F →
       ∃ energyFunction : ℝ → ℝ,
@@ -59,7 +59,7 @@ def JointAnalyticMassDivisionPrinciple : Prop :=
 /-- Pointwise form of analytic Hadamard division on the only nontrivial slice.  Ordinary
 division already handles every point with nonzero mass, so this is equivalent to the global
 joint-analytic division principle above. -/
-def MassZeroAnalyticDivisionPrinciple : Prop :=
+@[expose] def MassZeroAnalyticDivisionPrinciple : Prop :=
   ∀ {δ : ℝ} {F : ℝ → PhaseSpace → ℝ} {energyFunction : ℝ → ℝ},
     0 < δ → IsJointlyAnalytic δ F →
       (∀ energy, AnalyticAt ℝ energyFunction energy) →

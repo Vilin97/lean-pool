@@ -13,7 +13,7 @@ import Mathlib.LinearAlgebra.Basis.Basic
 # LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.FinsumRepr
 -/
 
-@[expose] public section
+public section
 
 lemma smul_support_subset_left {R M ι : Type*} [Semiring R]
     [AddCommGroup M] [Module R M] (v : ι → M) (cf : ι → R) :

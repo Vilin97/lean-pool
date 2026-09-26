@@ -17,7 +17,7 @@ import Mathlib.Analysis.Calculus.Deriv.Pow
 # Packet Bridge
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -28,7 +28,7 @@ namespace EulerPacketBridge
 open EulerPacketPerturbation EulerPacketRay
 
 /-- The first component of the ideal normalized velocity vector field. -/
-noncomputable def idealVelocityFirst (β t U V : ℝ) : ℝ :=
+@[expose] noncomputable def idealVelocityFirst (β t U V : ℝ) : ℝ :=
   -2 * V + 2 * (β * t ^ 2) * (((β * t ^ 2) + β) * V + (-2 * β * t) * U) /
     (1 + (β * t ^ 2) ^ 2)
 

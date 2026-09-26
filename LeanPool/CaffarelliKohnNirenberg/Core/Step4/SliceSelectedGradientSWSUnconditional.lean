@@ -28,7 +28,7 @@ discharges the third from the force data of the solution alone: the bound
 gains the `ρ^{-1/2}`-weighted force term `sliceForceGradientBound`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

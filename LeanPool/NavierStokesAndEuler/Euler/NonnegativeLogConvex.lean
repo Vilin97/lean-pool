@@ -14,7 +14,7 @@ import Mathlib.Tactic.Ring.RingNF
 sequence are bounded by the corresponding endpoint product.  The
 proof also covers zero entries and uses no logarithm or division. -/
 
-@[expose] public section
+public section
 
 
 namespace EulerNonnegativeLogConvex

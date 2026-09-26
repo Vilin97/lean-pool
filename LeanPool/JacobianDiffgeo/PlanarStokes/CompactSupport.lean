@@ -24,7 +24,7 @@ corollary (`integral_wirtingerDbar_mul_eq_zero_of_differentiableOn`, Atom 1b) is
 this chart" case residue-theorem needs for every PoU piece that misses every pole.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set
 

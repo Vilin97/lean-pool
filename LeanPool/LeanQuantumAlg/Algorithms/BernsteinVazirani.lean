@@ -50,7 +50,7 @@ disagree).
   circuit is exactly `|s⟩ ⊗ |−⟩`: one query recovers the hidden string.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -236,11 +236,11 @@ def timedFinalJointState (s : Fin (2 ^ n)) : Timed (PureState (n + 1)) :=
 
 @[simp]
 theorem timedFinalJointState_ret (s : Fin (2 ^ n)) :
-    (timedFinalJointState s).ret = WalshHadamard.finalJointState (oracle s) := rfl
+    (timedFinalJointState s).ret = WalshHadamard.finalJointState (oracle s) := by rfl
 
 @[simp]
 theorem timedFinalJointState_time (s : Fin (2 ^ n)) :
-    (timedFinalJointState s).time = 1 := rfl
+    (timedFinalJointState s).time = 1 := by rfl
 
 /-- Public resource profile for the Bernstein-Vazirani circuit:
 one oracle query and two `n`-qubit Hadamard layers plus the target Hadamard. -/
@@ -252,15 +252,15 @@ def resourceProfile (n : ℕ) : ResourceProfile where
 
 @[simp]
 theorem resourceProfile_oracleQueries (n : ℕ) :
-    (resourceProfile n).oracleQueries = 1 := rfl
+    (resourceProfile n).oracleQueries = 1 := by rfl
 
 @[simp]
 theorem resourceProfile_hadamardGates (n : ℕ) :
-    (resourceProfile n).hadamardGates = 2 * n + 1 := rfl
+    (resourceProfile n).hadamardGates = 2 * n + 1 := by rfl
 
 @[simp]
 theorem resourceProfile_elementaryGates (n : ℕ) :
-    (resourceProfile n).elementaryGates = 2 * n + 1 := rfl
+    (resourceProfile n).elementaryGates = 2 * n + 1 := by rfl
 
 theorem resourceProfile_exact (n : ℕ) :
     ResourceProfile.HasExactCounts (resourceProfile n) 1 (2 * n + 1) (2 * n + 1) 0 := by
@@ -272,11 +272,11 @@ def profiledFinalJointState (s : Fin (2 ^ n)) : Profiled (PureState (n + 1)) :=
 
 @[simp]
 theorem profiledFinalJointState_ret (s : Fin (2 ^ n)) :
-    (profiledFinalJointState s).ret = WalshHadamard.finalJointState (oracle s) := rfl
+    (profiledFinalJointState s).ret = WalshHadamard.finalJointState (oracle s) := by rfl
 
 @[simp]
 theorem profiledFinalJointState_resources (s : Fin (2 ^ n)) :
-    (profiledFinalJointState s).resources = resourceProfile n := rfl
+    (profiledFinalJointState s).resources = resourceProfile n := by rfl
 
 /-- **Bernstein-Vazirani correctness**: running the Deutsch-Jozsa circuit
 with the inner-product oracle of hidden string `s` leaves the joint register

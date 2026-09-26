@@ -29,7 +29,7 @@ section
 
 /-! Actual ordered derivative sums depend only on the local function germ. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -63,7 +63,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -97,7 +97,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

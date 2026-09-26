@@ -18,7 +18,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.OrderPQ.PrimeOrder
 -/
 
-@[expose] public section
+public section
 
 lemma ne_iff_eq_of_or_and_ne {α : Type*} {a b c : α} (h1 : a = b ∨ a = c) (h2 : b ≠ c) :
     a ≠ b ↔ a = c :=

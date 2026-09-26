@@ -20,7 +20,7 @@ section
 /-! Polynomial Gevrey bounds for the actual inverse, strain and curvature
 recovered from a determinant-one deformation and its first two time jets. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -163,7 +163,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -30,7 +30,7 @@ multiplier of the form `s / L^j` with `L` a prime outside the finite set is `p`-
 integral for every `p` in the set while being dense in `ℝ`.  This gives the real approximation.
 -/
 
-@[expose] public section
+public section
 
 namespace Rat
 

@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Hierarchy
 
 /-! # Theory -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -21,7 +21,7 @@ open Arith
 variable {L : Language} [L.ORing] {ξ : Type*} [DecidableEq ξ]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def succInd {ξ} (φ : Semiformula L ξ 1) :
+@[expose] def succInd {ξ} (φ : Semiformula L ξ 1) :
     Formula L ξ := “!φ 0 → (∀ x, !φ x → !φ (x + 1)) → ∀ x, !φ x”
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -119,7 +119,7 @@ notation "𝐏𝐀⁻" => PeanoMinus
 variable (L)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def indScheme (Γ : Semiformula L ℕ 1 → Prop) : Theory L :=
+@[expose] def indScheme (Γ : Semiformula L ℕ 1 → Prop) : Theory L :=
   { ψ | ∃ φ : Semiformula L ℕ 1, Γ φ ∧ ψ = succInd φ }
 
 /-- Imported declaration from the Incompleteness formalization. -/

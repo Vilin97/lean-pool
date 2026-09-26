@@ -23,7 +23,7 @@ Starting from the finite support of a vector, close under the supports of every 
 sequence whose code coordinate has entered the set.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

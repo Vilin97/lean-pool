@@ -27,7 +27,7 @@ depends only on the time coordinates.
 * Folland, "Real Analysis", Chapter 2 (Fubini-Tonelli theorem)
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureSpace FiniteDimensional Real
 
@@ -38,10 +38,12 @@ open MeasureTheory MeasureSpace FiniteDimensional Real
 -/
 lemma spacetimeDecomp_symm_norm_ge (t : ℝ) (v : SpatialCoords) :
     ‖spacetimeDecomp.symm (t, v)‖ ≥ ‖v‖ := by
-  have h_spatial : spatialPart (spacetimeDecomp.symm (t, v)) = v :=
-    congr_arg Prod.snd (spacetimeDecomp.apply_symm_apply (t, v))
-  have h_time : (spacetimeDecomp.symm (t, v)) 0 = t :=
-    congr_arg Prod.fst (spacetimeDecomp.apply_symm_apply (t, v))
+  have h_spatial : spatialPart (spacetimeDecomp.symm (t, v)) = v := by
+    simpa only [spacetimeDecomp_apply] using
+      congr_arg Prod.snd (spacetimeDecomp.apply_symm_apply (t, v))
+  have h_time : (spacetimeDecomp.symm (t, v)) 0 = t := by
+    simpa only [spacetimeDecomp_apply] using
+      congr_arg Prod.fst (spacetimeDecomp.apply_symm_apply (t, v))
   have h_decomp := spacetime_norm_sq_decompose (spacetimeDecomp.symm (t, v))
   rw [h_time, h_spatial] at h_decomp
   have h_sq_ge : ‖spacetimeDecomp.symm (t, v)‖^2 ≥ ‖v‖^2 := by
@@ -139,7 +141,8 @@ theorem schwartz_tonelli_spacetime
     have : G = (G ∘ spacetimeDecomp.symm) ∘ spacetimeDecomp := by
       ext x; simp [Function.comp, MeasurableEquiv.symm_apply_apply]
     rw [this]
-    exact h_comp (G ∘ spacetimeDecomp.symm)
+    simpa only [Function.comp, MeasurableEquiv.apply_symm_apply] using
+      h_comp (G ∘ spacetimeDecomp.symm)
   rw [h_comp_symm]
   conv_lhs => arg 2; ext p₁; rw [h_comp_symm]
   simp only [MeasurableEquiv.apply_symm_apply]

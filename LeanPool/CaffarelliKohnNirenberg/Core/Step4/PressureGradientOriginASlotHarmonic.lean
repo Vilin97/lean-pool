@@ -40,7 +40,7 @@ absolute constant survives, so the estimate is compatible with a vanishing
 slot at vanishing data.
 -/
 
-@[expose] public section
+public section
 
 section
 

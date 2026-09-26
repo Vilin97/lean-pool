@@ -31,7 +31,7 @@ no dependency on the quantum framework:
 These are upstream candidates for Mathlib; nothing here mentions `Gate`/`PureState`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -41,6 +41,7 @@ open Polynomial Complex
 
 /-- `conjP P` conjugates every coefficient of `P : ℂ[X]`; this is the `P*` of
 the QSP literature (for real `x`, `(conjP P).eval x = conj (P.eval x)`). -/
+@[expose]
 noncomputable def conjP (P : ℂ[X]) : ℂ[X] := P.map (starRingEnd ℂ)
 
 @[simp]

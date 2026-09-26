@@ -26,7 +26,7 @@ keystone for order conditions, and verifies Euler, Heun, RK4, Dormand-Prince,
 and Gauss-Legendre certificates.
 -/
 
-@[expose] public section
+public section
 
 namespace RungeKuttaOrderConditions
 

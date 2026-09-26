@@ -30,7 +30,7 @@ oriented monogons instead of using `PolygonCell 0`. Keeping that choice out of t
 prevents a side-free disk from silently acquiring the wrong topology.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -72,14 +72,14 @@ theorem castHomeomorph_val {m n : ℕ} (h : m = n) (x : PolygonCell m) :
   rfl
 
 /-- The unit circle included in a polygonal cell. -/
-def ofCircle (n : ℕ) : C(Circle, PolygonCell n) where
+@[expose] def ofCircle (n : ℕ) : C(Circle, PolygonCell n) where
   toFun z := ⟨z, by
     rw [Metric.mem_closedBall]
     exact z.property.le⟩
   continuous_toFun := continuous_induced_rng.2 continuous_subtype_val
 
 /-- The angle swept out by side `i` at parameter `t`. -/
-noncomputable def sideAngle {n : ℕ} (i : Fin n) (t : unitInterval) : ℝ :=
+@[expose] noncomputable def sideAngle {n : ℕ} (i : Fin n) (t : unitInterval) : ℝ :=
   2 * Real.pi * ((i.val : ℝ) + t) / n
 
 theorem continuous_sideAngle {n : ℕ} (i : Fin n) : Continuous (sideAngle i) := by
@@ -87,7 +87,7 @@ theorem continuous_sideAngle {n : ℕ} (i : Fin n) : Continuous (sideAngle i) :=
   fun_prop
 
 /-- Side `i` of an `n`-sided cell, parameterized in boundary order. -/
-noncomputable def side {n : ℕ} (i : Fin n) : C(unitInterval, PolygonCell n) where
+@[expose] noncomputable def side {n : ℕ} (i : Fin n) : C(unitInterval, PolygonCell n) where
   toFun t := ofCircle n (Circle.exp (sideAngle i t))
   continuous_toFun :=
     (ofCircle n).continuous.comp (Circle.exp.continuous.comp (continuous_sideAngle i))
@@ -99,7 +99,7 @@ noncomputable def reversedSide {n : ℕ} (i : Fin n) : C(unitInterval, PolygonCe
 
 theorem reversedSide_apply {n : ℕ} (i : Fin n) (t : unitInterval) :
     reversedSide i t = side i (unitInterval.symm t) :=
-  rfl
+  by rfl
 
 theorem castHomeomorph_side {m n : ℕ} (h : m = n) (i : Fin m)
     (t : unitInterval) :
@@ -220,7 +220,7 @@ structure Side (Face : Type u) (sideCount : Face → ℕ) where
 namespace Side
 
 /-- A point on a labelled side, included in the disjoint union. -/
-noncomputable def point {Face : Type u} {sideCount : Face → ℕ}
+@[expose] noncomputable def point {Face : Type u} {sideCount : Face → ℕ}
     (s : Side Face sideCount) (t : unitInterval) : PreRealization Face sideCount :=
   ⟨s.face, PolygonCell.side s.index t⟩
 
@@ -240,18 +240,18 @@ def homeomorph : ParameterDirection → (unitInterval ≃ₜ unitInterval)
   | opposite => unitInterval.symmHomeomorph
 
 theorem homeomorph_same : homeomorph same = Homeomorph.refl unitInterval :=
-  rfl
+  by rfl
 
 theorem homeomorph_opposite : homeomorph opposite = unitInterval.symmHomeomorph :=
-  rfl
+  by rfl
 
 @[simp]
 theorem homeomorph_same_apply (t : unitInterval) : homeomorph same t = t :=
-  rfl
+  by rfl
 
 theorem homeomorph_opposite_apply (t : unitInterval) :
     homeomorph opposite t = unitInterval.symm t :=
-  rfl
+  by rfl
 
 end ParameterDirection
 
@@ -267,19 +267,19 @@ structure Identification (Face : Type u) (sideCount : Face → ℕ) where
 namespace Identification
 
 /-- The affine parameter homeomorphism of a side identification. -/
-def parameter {Face : Type u} {sideCount : Face → ℕ}
+@[expose] def parameter {Face : Type u} {sideCount : Face → ℕ}
     (identification : Identification Face sideCount) : unitInterval ≃ₜ unitInterval :=
   identification.direction.homeomorph
 
 /-- Identify two sides with the same parameter direction. -/
-def sameDirection {Face : Type u} {sideCount : Face → ℕ}
+@[expose] def sameDirection {Face : Type u} {sideCount : Face → ℕ}
     (source target : Side Face sideCount) : Identification Face sideCount where
   source := source
   target := target
   direction := .same
 
 /-- Identify two sides with the parameter direction reversed. -/
-def oppositeDirection {Face : Type u} {sideCount : Face → ℕ}
+@[expose] def oppositeDirection {Face : Type u} {sideCount : Face → ℕ}
     (source target : Side Face sideCount) : Identification Face sideCount where
   source := source
   target := target
@@ -289,13 +289,13 @@ def oppositeDirection {Face : Type u} {sideCount : Face → ℕ}
 theorem parameter_sameDirection {Face : Type u} {sideCount : Face → ℕ}
     (source target : Side Face sideCount) :
     (sameDirection source target).parameter = Homeomorph.refl unitInterval :=
-  rfl
+  by rfl
 
 @[simp]
 theorem parameter_oppositeDirection {Face : Type u} {sideCount : Face → ℕ}
     (source target : Side Face sideCount) :
     (oppositeDirection source target).parameter = unitInterval.symmHomeomorph :=
-  rfl
+  by rfl
 
 end Identification
 

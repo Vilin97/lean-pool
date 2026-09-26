@@ -64,7 +64,7 @@ Pinned Mathlib API: `Polynomial.coeff_X_mul`, `Polynomial.coeff_mul`,
 `Set.Icc.infinite`, `List.reverseRecOn`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -88,7 +88,7 @@ def qspO (φ₀ : ℝ) (φs : List ℝ) (x : ℝ) : HilbertOperator 1 :=
   φs.foldl (fun U φ => U * (signalO x * rotZ φ)) (rotZ φ₀ : HilbertOperator 1)
 
 @[simp]
-theorem qspO_nil (φ₀ : ℝ) (x : ℝ) : qspO φ₀ [] x = rotZ φ₀ := rfl
+theorem qspO_nil (φ₀ : ℝ) (x : ℝ) : qspO φ₀ [] x = rotZ φ₀ := by rfl
 
 theorem qspO_concat (φ₀ : ℝ) (φs : List ℝ) (φ : ℝ) (x : ℝ) :
     qspO φ₀ (φs ++ [φ]) x = qspO φ₀ φs x * (signalO x * rotZ φ) := by
@@ -622,7 +622,7 @@ def qspW (φ₀ : ℝ) (φs : List ℝ) (x : ℝ) : HilbertOperator 1 :=
   φs.foldl (fun U φ => U * (signalW x * rotZ φ)) (rotZ φ₀ : HilbertOperator 1)
 
 @[simp]
-theorem qspW_nil (φ₀ : ℝ) (x : ℝ) : qspW φ₀ [] x = rotZ φ₀ := rfl
+theorem qspW_nil (φ₀ : ℝ) (x : ℝ) : qspW φ₀ [] x = rotZ φ₀ := by rfl
 
 theorem qspW_concat (φ₀ : ℝ) (φs : List ℝ) (φ : ℝ) (x : ℝ) :
     qspW φ₀ (φs ++ [φ]) x = qspW φ₀ φs x * (signalW x * rotZ φ) := by

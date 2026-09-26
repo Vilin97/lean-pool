@@ -28,7 +28,7 @@ every multiplicative-character sum, restrict it to the unit group and apply the
 additive criterion to `Additive Kˣ`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open scoped BigOperators

@@ -28,7 +28,7 @@ compact, cancellative on both sides, a topological semigroup, and not a group.
 Every declaration in this file is proved from its explicitly stated hypotheses.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 
@@ -47,7 +47,7 @@ def IsWallaceSemigroup (S : Type u) [TopologicalSpace S] [AddMonoid S] : Prop :=
 
 /-- A convenient unbundled form of the accumulation-point criterion used for countable
 compactness. -/
-def HasInfiniteSetAccumulationProperty
+@[expose] def HasInfiniteSetAccumulationProperty
     (X : Type u) [TopologicalSpace X] : Prop :=
   ∀ B : Set X, B.Infinite → ∃ x : X, AccPt x (Filter.principal B)
 
@@ -84,7 +84,7 @@ theorem accPt_range_of_free_ultrafilter_limit
 
 Every injective sequence contained in `P` has a genuine subsequence (`StrictMono φ`) converging
 to a point of `P` along a free ultrafilter. -/
-def HasWallaceLimitProperty
+@[expose] def HasWallaceLimitProperty
     {F : Type u} [TopologicalSpace F] [AddZeroClass F]
     (P : AddSubmonoid F) : Prop :=
   ∀ s : ℕ → F, Function.Injective s → (∀ n, s n ∈ P) →

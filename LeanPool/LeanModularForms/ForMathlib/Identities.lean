@@ -14,7 +14,7 @@ public import LeanPool.LeanModularForms.ForMathlib.CongruenceSubgrps
 Collection of useful identities of modular forms.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -15,7 +15,7 @@ import Mathlib.Tactic.FinCases
 Imported Lean Pool material for `LeanPool.Rupert.FinCases`.
 -/
 
-@[expose] public section
+public section
 
 /--
 Lemma for helping with goals such as

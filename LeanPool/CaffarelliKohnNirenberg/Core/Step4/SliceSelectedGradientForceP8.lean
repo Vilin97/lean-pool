@@ -28,7 +28,7 @@ measured in the Euclidean norm, is controlled by the `L¹` size of the annular
 density with a constant that is uniform in the ball and its centre.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

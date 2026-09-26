@@ -17,7 +17,7 @@ positive jets of the chart map.  Native coefficients need smoothness only
 on a neighborhood of the evaluation point.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

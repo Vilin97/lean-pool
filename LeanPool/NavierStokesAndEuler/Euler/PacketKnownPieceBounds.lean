@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
 
 /-! Quantitative bounds on the actual masked fields used in the known forcing. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

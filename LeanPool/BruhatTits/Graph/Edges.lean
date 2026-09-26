@@ -43,7 +43,7 @@ sense of `inv`, is one.
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 
@@ -62,6 +62,7 @@ variable [IsDiscreteValuationRing R] [IsFractionRing R K]
 
 /-- Two vertices `x` and `y` in the Bruhat-Tits tree are neighbours if `inv L M = 1`.
 For a common alternative definition see `BruhatTits.isNeighbour_iff`. -/
+@[expose]
 def IsNeighbour (x y : Vertices R) : Prop := inv x y = 1
 
 lemma isNeighbour_def (x y : Vertices R) :
@@ -153,8 +154,8 @@ lemma isNeighbour_of_isStandardNeighbour {M L : Lattice R} (h : IsStandardNeighb
   have : f 1 = 0 ∧ f 0 = 1 := by omega
   rw [this.left, this.right] at hdiff
   simp at hdiff
-  change dist _ _ = 1
-  rw [dist_symm]
+  apply (isNeighbour_def (Vertices.mk _) (Vertices.mk _)).mpr
+  rw [inv_mk, dist_symm]
   omega
 
 lemma exists_basis_eq_ntwist_of_isNeighbour (M : Lattice R) (L : Vertices R)

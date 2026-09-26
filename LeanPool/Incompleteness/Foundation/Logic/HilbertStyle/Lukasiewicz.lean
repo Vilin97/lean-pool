@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Basic
 
 /-! # Lukasiewicz -/
 
-@[expose] public section
+public section
 
 
 namespace LO

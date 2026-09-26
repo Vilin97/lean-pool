@@ -57,7 +57,7 @@ duplicate the ~90-line proof or require importing residue-theorem back into cano
 (`import Jacobian.CanonicalForms.Existence`, above) — the call site below is unchanged.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter Topology OnePoint Function

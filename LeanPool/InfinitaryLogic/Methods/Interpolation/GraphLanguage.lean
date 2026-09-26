@@ -33,7 +33,7 @@ computation.
 * `relSym` and the intersection identity `relSym_inter`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -59,7 +59,7 @@ to be type-correct at `implicit` transparency before `rw`/`simp` will act, that 
 identification has to hold there too; otherwise every generic lemma about `graphLanguage`
 formulas needs a specialized copy with the symbol spelled `GraphRelation.base`/`.graph`. This is
 a direct structure literal with no proof content, so reducibility costs nothing. -/
-@[reducible] def graphLanguage (L : Language.{0, 0}) : Language.{0, 0} where
+@[expose, reducible] def graphLanguage (L : Language.{0, 0}) : Language.{0, 0} where
   Functions _ := Empty
   Relations n := GraphRelation L n
 
@@ -99,12 +99,12 @@ def graphRelMap (M : Type) [L.Structure M] :
 /-- Embed an original relation symbol as a base graph-language relation symbol. (Codomain uses
 `GraphRelation L n`, definitionally `(graphLanguage L).Relations n`, so the constructor's
 injectivity/no-confusion lemmas apply directly.) -/
-def baseRelSym (L : Language.{0, 0}) :
+@[expose] def baseRelSym (L : Language.{0, 0}) :
     (Σ n, L.Relations n) → (Σ n, GraphRelation L n) :=
   fun p => ⟨p.1, GraphRelation.base p.2⟩
 
 /-- Embed an original `n`-ary function symbol as its `(n+1)`-ary graph relation symbol. -/
-def graphRelSym (L : Language.{0, 0}) :
+@[expose] def graphRelSym (L : Language.{0, 0}) :
     (Σ n, L.Functions n) → (Σ n, GraphRelation L n) :=
   fun p => ⟨p.1 + 1, GraphRelation.graph p.2⟩
 
@@ -162,7 +162,8 @@ theorem baseRelSym_preimage_graph_singleton (q : Σ n, L.Functions n) :
 
 /-- The relation symbols of the relationalization coming from a function-symbol set `F` and a
 relation-symbol set `R`: base relations from `R`, graph relations from `F`. -/
-def relSym (L : Language.{0, 0}) (F : Set (Σ n, L.Functions n)) (R : Set (Σ n, L.Relations n)) :
+@[expose] def relSym (L : Language.{0, 0}) (F : Set (Σ n, L.Functions n))
+    (R : Set (Σ n, L.Relations n)) :
     Set (Σ n, GraphRelation L n) :=
   baseRelSym L '' R ∪ graphRelSym L '' F
 

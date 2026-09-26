@@ -25,7 +25,7 @@ contraction), yielding a Noetherian local domain with prescribed
 completion (Jensen, 2006, Corollary 2.4).
 -/
 
-@[expose] public section
+public section
 
 universe u
 

@@ -65,7 +65,7 @@ overlap-freeness) are real combinatorics-on-words and are left as a separate
 follow-up.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise516
 
@@ -89,7 +89,7 @@ theorem flip_flip (σ : Str) : flip (flip σ) = σ := by
 theorem flip_prefix {σ τ : Str} (h : σ <+: τ) : flip σ <+: flip τ := h.map _
 
 /-- Double every bit of a finite string: `double (b :: σ) = b :: b :: double σ`. -/
-def double : Str → Str
+@[expose] def double : Str → Str
   | [] => []
   | b :: σ => b :: b :: double σ
 
@@ -289,7 +289,7 @@ the partial order between them (`SLe`), and the interleaving value function
 
 /-- The neighbourhood of the tagged string `(b, σ)`: `{σ}` if total, `cone σ` if
 partial. -/
-def shape : Bool → Str → Set Str
+@[expose] def shape : Bool → Str → Set Str
   | true, σ => {σ}
   | false, σ => cone σ
 
@@ -299,7 +299,7 @@ theorem memC_shape : ∀ (b : Bool) (σ : Str), memC (shape b σ)
 
 /-- The element of the tagged string `(b, σ)`: total `σ` if `b`, partial `σ⊥`
 otherwise. -/
-def shapeElem (b : Bool) (σ : Str) : C.Element := C.principal (memC_shape b σ)
+@[expose] def shapeElem (b : Bool) (σ : Str) : C.Element := C.principal (memC_shape b σ)
 
 @[simp] theorem shapeElem_true (σ : Str) : shapeElem true σ = strElem σ := rfl
 @[simp] theorem shapeElem_false (σ : Str) : shapeElem false σ = strBot σ := rfl
@@ -330,7 +330,7 @@ of the tagged
 strings `(b₀, σ)` and `(b₁, τ)` as a tagged string. Boundary convention (the only
 monotone one):
 `merge(Λ, y) = Λ`, `merge(⊥, y) = ⊥`, and `merge(εx, y) = ε⊥` once `y` runs out. -/
-def mergeVal : Str → Bool → Str → Bool → Str × Bool
+@[expose] def mergeVal : Str → Bool → Str → Bool → Str × Bool
   | [], b₀, _, _ => ([], b₀)
   | a :: _, _, [], _ => ([a], false)
   | a :: σ, b₀, b :: τ, b₁ => (a :: b :: (mergeVal σ b₀ τ b₁).1, (mergeVal σ b₀ τ b₁).2)
@@ -344,7 +344,7 @@ def mergeVal : Str → Bool → Str → Bool → Str × Bool
       (a :: b :: (mergeVal σ b₀ τ b₁).1, (mergeVal σ b₀ τ b₁).2) := rfl
 
 /-- The element produced by interleaving `(b₀, σ)` and `(b₁, τ)`. -/
-def mergeElem (σ : Str) (b₀ : Bool) (τ : Str) (b₁ : Bool) : C.Element :=
+@[expose] def mergeElem (σ : Str) (b₀ : Bool) (τ : Str) (b₁ : Bool) : C.Element :=
   shapeElem (mergeVal σ b₀ τ b₁).2 (mergeVal σ b₀ τ b₁).1
 
 /-! #### The monotonicity of `mergeVal` (the crux of approximability). -/

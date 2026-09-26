@@ -20,7 +20,7 @@ not with a compact subset of a physical chart.  The compensation witness is
 arbitrary throughout.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,6 +31,7 @@ open scoped Topology ContDiff
 namespace NavierStokes.TerminalCone
 
 /-- The clock at which the heat switch is complete. -/
+@[expose]
 noncomputable def terminalStart (d : OutgoingTail.TailData) : ℝ := OutgoingTail.tailStart d + 1 / 2
 
 /-- Normalization, given by `TerminalPressure.releasedNormalization F.data
@@ -43,11 +44,11 @@ noncomputable def shift (F : OutgoingProfile.Profile) (XR : ℝ) : ℝ :=
   Real.log (OutgoingDilation.switchRadius F XR) - 1 / 5
 
 /-- Edge distance, given by `OutgoingTail.tailEnd F.data - y`. -/
-noncomputable def edgeDistance (F : OutgoingProfile.Profile) (y : ℝ) : ℝ :=
+@[expose] noncomputable def edgeDistance (F : OutgoingProfile.Profile) (y : ℝ) : ℝ :=
   OutgoingTail.tailEnd F.data - y
 
 /-- Profile point, given by `(eta, edgeDistance F y)`. -/
-noncomputable def profilePoint (F : OutgoingProfile.Profile) (y eta : ℝ) : ℝ × ℝ :=
+@[expose] noncomputable def profilePoint (F : OutgoingProfile.Profile) (y eta : ℝ) : ℝ × ℝ :=
   (eta, edgeDistance F y)
 
 /-- The release time and release amplitude depend on the core schedule before
@@ -69,7 +70,7 @@ noncomputable def releaseBudget (c : OutgoingSchedule.Parameters) : ℝ :=
 
 /-- The order is explicit: these bounds use only the already fixed core
 schedule, then constrain `h`; the entrance radius is chosen afterwards. -/
-def SmallTail (d : OutgoingTail.TailData) : Prop :=
+@[expose] def SmallTail (d : OutgoingTail.TailData) : Prop :=
   d.h ≤ 1 / 4 ∧ d.h ≤ 1 / (1 + releaseBudget d.core)
 
 theorem releaseAmplitude_eq (d : OutgoingTail.TailData) :

@@ -24,7 +24,7 @@ It corresponds to Theorem 2.13 of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DemazureProduct
 
@@ -190,6 +190,7 @@ lemma AspSet_InvSet_of_AspPerm (τ : AspPerm) : AspSet_prop (invSet τ) := by
   · exact τ.inset_finite
 
 /-- The abstract inversion set associated to an ASP permutation. -/
+@[expose]
 def ofAspPerm (τ : AspPerm) : AspSet :=
   ⟨invSet τ, AspSet_InvSet_of_AspPerm τ⟩
 
@@ -658,6 +659,7 @@ theorem func_asp : isAsp (asps.recon χ) := by
 
 /-- Package the function reconstructed from an ASP set and a shift as an
 `AspPerm`. -/
+@[expose]
 noncomputable def toAspPerm : AspPerm :=
   ⟨asps.recon χ, (by exact func_bijective asps χ), (by exact func_asp asps χ)⟩
 
@@ -724,10 +726,10 @@ noncomputable def aspPermEquivAspSet :
     · simpa using chi_of_toAspPerm asps χ
 
 @[simp] lemma AspPerm_equiv_AspSet_toFun_fst (τ : AspPerm) :
-    ((aspPermEquivAspSet τ).1 : Set (ℤ × ℤ)) = invSet τ := rfl
+    ((aspPermEquivAspSet τ).1 : Set (ℤ × ℤ)) = invSet τ := by rfl
 
 @[simp] lemma AspPerm_equiv_AspSet_toFun_snd (τ : AspPerm) :
-    (aspPermEquivAspSet τ).2 = τ.χ := rfl
+    (aspPermEquivAspSet τ).2 = τ.χ := by rfl
 
 @[simp] lemma inv_set_AspPerm_equiv_AspSet_invFun (asps : AspSet) (χ : ℤ) :
     invSet (aspPermEquivAspSet.symm (asps, χ)) = asps :=

@@ -22,7 +22,7 @@ Finally, we show that that the `ZFInt` type is isomorphic to the type of element
 `ZFSet.Int` type using the Schröder-Bernstein theorem.
 -/
 
-@[expose] public section
+public section
 universe u
 
 namespace ZFSet
@@ -51,7 +51,7 @@ protected instance instSetoidZFNatZFNat : Setoid (ZFNat × ZFNat) where
 abbrev ZFInt := Quotient ZFSet.instSetoidZFNatZFNat
 namespace ZFInt
 /-- Imported ZFLean declaration. -/
-def mk : ZFNat × ZFNat → ZFInt := Quotient.mk''
+@[expose] def mk : ZFNat × ZFNat → ZFInt := Quotient.mk''
 @[simp]
 theorem mk_eq (x : ZFNat × ZFNat) : @Eq ZFInt ⟦x⟧ (mk x) := rfl
 @[simp]

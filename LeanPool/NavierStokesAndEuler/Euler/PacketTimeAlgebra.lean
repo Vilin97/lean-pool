@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-! Genuine within-interval time derivatives commute with the finite packet algebra. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

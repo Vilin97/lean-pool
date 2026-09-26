@@ -13,7 +13,7 @@ import Mathlib.Tactic.SetLike
 # LeanPool.FactorizationSystems.Examples
 -/
 
-@[expose] public section
+public section
 
 namespace CategoryTheory
 universe u v
@@ -62,7 +62,7 @@ lemma monomorphismsClosedUnderComp : is_closed_comp (MorphismProperty.monomorphi
 
 /- The image of a function of sets -/
 /-- Imported FactorizationSystems declaration. -/
-def imageSet {X Y : Type u} (f : X ⟶ Y) : Type u := {y : Y // ∃ x : X , f x = y}
+@[expose] def imageSet {X Y : Type u} (f : X ⟶ Y) : Type u := {y : Y // ∃ x : X , f x = y}
 
 /- Left map of the image factorization of a map -/
 /-- Imported FactorizationSystems declaration. -/

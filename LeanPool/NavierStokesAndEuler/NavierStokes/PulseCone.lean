@@ -28,7 +28,7 @@ The resulting remainder is controlled by the actual second derivative of
 the forcing, with constants uniform in the pulse duration.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -853,7 +853,7 @@ The history and its parameter derivative retain the actual incoming prefix.
 Bounds come from their source integrals and the explicit pulse energy weight.
 -/
 
-@[expose] public section
+public section
 
 namespace NavierStokes.PulseEnergyHistory
 
@@ -1343,7 +1343,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

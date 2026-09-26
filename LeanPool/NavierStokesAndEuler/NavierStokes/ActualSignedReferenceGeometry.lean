@@ -26,7 +26,7 @@ fields below come from these primitive identities; no equality of output
 physical fields or native regularity is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -219,7 +219,7 @@ They hold on the whole native coordinate space, before any smoothness claim
 or own-band/harmonic gate is applied.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -518,7 +518,7 @@ then proves smoothness and vanishing of all jets of the literal product,
 without assigning new values to the unmasked factor outside the band.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -781,7 +781,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

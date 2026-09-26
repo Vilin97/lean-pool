@@ -18,7 +18,7 @@ This file defines small products of quasi-borel spaces by giving a
 See [HeunenKSY17], Proposition 16.
 -/
 
-@[expose] public section
+public section
 
 namespace QuasiBorelSpace.Pi
 

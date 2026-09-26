@@ -32,7 +32,7 @@ section
 /-! The genuine zero Euler solution rules out zero initial data for a
 positive finite maximal lifespan. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -90,7 +90,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

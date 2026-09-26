@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Step3.ThetaDecay
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

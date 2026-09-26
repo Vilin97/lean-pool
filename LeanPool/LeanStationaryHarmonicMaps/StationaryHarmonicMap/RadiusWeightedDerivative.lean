@@ -18,7 +18,7 @@ This module upgrades interval-indicator radius derivative formulas to general
 radius weights and identifies the radial derivative density.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -27,7 +27,7 @@ section
 The compact terminal wave supplies the odd input without an additional
 assumption on the constructed solution. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -101,7 +101,7 @@ section
 /-! Every initialized profile inherits reflection parity from the actual
 terminal wave and the prescribed source coefficient symmetries. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -141,7 +141,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -13,7 +13,7 @@ public import Mathlib.LinearAlgebra.Eigenspace.Basic
 This file contains some obvious lemmas on `module.End`.
 -/
 
-@[expose] public section
+public section
 
 
 open scoped BigOperators

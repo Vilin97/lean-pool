@@ -17,7 +17,7 @@ This module contains primitive, increment, annulus, and interval-indicator
 forms of the radius derivative calculus.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -31,7 +31,7 @@ namespace StationaryHarmonicMap
 both ball-energy functions are equal to their interval primitive of the stated
 derivative.  This is the exact one-dimensional FTC statement extracted from
 coarea/radius differentiation. -/
-def WeakEnergyRadiusPrimitiveFormula {n m : ℕ}
+@[expose] def WeakEnergyRadiusPrimitiveFormula {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   (∀ {a b : ℝ}, 0 ≤ a → a ≤ b → b ≤ R0 →
     IntervalIntegrable (deriv (weakBallEnergy Du (0 : Domain n))) volume a b ∧
@@ -52,7 +52,7 @@ def WeakEnergyRadiusPrimitiveFormula {n m : ℕ}
 
 /-- Increment form of the radius calculus: the two ball-energy functions satisfy
 the fundamental theorem of calculus on every subinterval of `[0, R0]`. -/
-def WeakEnergyRadiusIncrementFormula {n m : ℕ}
+@[expose] def WeakEnergyRadiusIncrementFormula {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   (∀ {a b : ℝ}, 0 ≤ a → a ≤ b → b ≤ R0 →
     IntervalIntegrable (deriv (weakBallEnergy Du (0 : Domain n))) volume a b ∧
@@ -69,7 +69,7 @@ def WeakEnergyRadiusIncrementFormula {n m : ℕ}
 
 /-- Interval integrability of the two radius derivatives on every subinterval
 of `[0, R0]`. -/
-def WeakEnergyRadiusDerivativeIntegrability {n m : ℕ}
+@[expose] def WeakEnergyRadiusDerivativeIntegrability {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   (∀ {a b : ℝ}, 0 ≤ a → a ≤ b → b ≤ R0 →
     IntervalIntegrable (deriv (weakBallEnergy Du (0 : Domain n))) volume a b) ∧
@@ -270,7 +270,7 @@ theorem weakEnergyRadiusDerivativeIntegrability_of_radiusIncrement {n m : ℕ}
 
 /-- Annulus form of the ball-energy increments.  The open annulus is enough:
 the missing boundary spheres are null in the eventual geometric proof. -/
-def WeakEnergyAnnulusFormula {n m : ℕ}
+@[expose] def WeakEnergyAnnulusFormula {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   (∀ {a b : ℝ}, 0 ≤ a → a ≤ b → b ≤ R0 →
       weakBallEnergy Du (0 : Domain n) b -

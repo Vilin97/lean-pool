@@ -20,4 +20,4 @@ import Mathlib.Data.Nat.Choose.Multinomial
 Import aggregator for the `Measure` directory.
 -/
 
-@[expose] public section
+public section

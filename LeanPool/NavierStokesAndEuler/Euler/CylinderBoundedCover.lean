@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
 continuous. This construction uses the cylinder norm, never an L² norm on
 the full real covering space. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

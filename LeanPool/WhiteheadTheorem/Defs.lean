@@ -15,7 +15,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Defs`.
 -/
 
-@[expose] public section
+public section
 
 
 open CategoryTheory
@@ -39,6 +39,6 @@ lemma isIso_inducedPointedHom_of_isWeakHomotopyEquiv
   rwa [HomotopyGroup.inducedMap] at this
 
 /-- `IsHomotopyEquiv` -/
-def IsHomotopyEquiv {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
+@[expose] def IsHomotopyEquiv {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
     (f : C(X, Y)) : Prop :=
   ∃ equiv : X ≃ₕ Y, equiv.toFun = f

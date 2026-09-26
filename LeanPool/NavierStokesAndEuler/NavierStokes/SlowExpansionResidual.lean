@@ -30,7 +30,7 @@ All quotient derivatives in this file are genuine Fréchet derivatives,
 and their hypotheses are local at a point with positive `s`.
 -/
 
-@[expose] public section
+public section
 
 namespace NavierStokes.RadialFluxResidual
 
@@ -275,7 +275,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -286,7 +286,7 @@ open SimilarityProfile (InnerProfile InnerPoint pullback partialX T Z)
 open scoped BigOperators Topology ContDiff
 
 /-- The manuscript's slow order `λ_n=2nh`. -/
-def slowOrder (h : ℝ) (n : ℕ) : ℝ := 2 * (n : ℝ) * h
+@[expose] def slowOrder (h : ℝ) (n : ℕ) : ℝ := 2 * (n : ℝ) * h
 
 @[simp] theorem slowOrder_zero (h : ℝ) : slowOrder h 0 = 0 := by simp [slowOrder]
 theorem slowOrder_add (h : ℝ) (i j : ℕ) :
@@ -299,7 +299,7 @@ theorem slowOrder_succ (h : ℝ) (n : ℕ) :
   ring
 
 /-- Finite series, given by `∑ n ∈ Finset.range (N + 1), q ^ (b + slowOrder h n) * a n`. -/
-def finiteSeries (N : ℕ) (q h b : ℝ) (a : ℕ → ℝ) : ℝ :=
+@[expose] def finiteSeries (N : ℕ) (q h b : ℝ) (a : ℕ → ℝ) : ℝ :=
   ∑ n ∈ Finset.range (N + 1), q ^ (b + slowOrder h n) * a n
 
 /-- Pairs, given by `Finset.range (N + 1) ×ˢ Finset.range (N + 1)`. -/
@@ -307,7 +307,7 @@ noncomputable def pairs (N : ℕ) : Finset (ℕ × ℕ) :=
   Finset.range (N + 1) ×ˢ Finset.range (N + 1)
 
 /-- Convolution, given by `∑ ij ∈ Finset.antidiagonal n, K ij.1 ij.2`. -/
-def convolution (K : ℕ → ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] def convolution (K : ℕ → ℕ → ℝ) (n : ℕ) : ℝ :=
   ∑ ij ∈ Finset.antidiagonal n, K ij.1 ij.2
 
 /-- Finite convolution, given by `∑ ij ∈ (pairs N).filter (fun ij => ij.1 + ij.2 = n), K ij.1
@@ -317,11 +317,11 @@ def finiteConvolution (N : ℕ) (K : ℕ → ℕ → ℝ) (n : ℕ) : ℝ :=
 
 /-- Pair tail, given by `∑ ij ∈ (pairs N).filter (fun ij => N < ij.1 + ij.2), w (ij.1 + ij.2) *
 K ij.1 ij.2`. -/
-def pairTail (N : ℕ) (w : ℕ → ℝ) (K : ℕ → ℕ → ℝ) : ℝ :=
+@[expose] def pairTail (N : ℕ) (w : ℕ → ℝ) (K : ℕ → ℕ → ℝ) : ℝ :=
   ∑ ij ∈ (pairs N).filter (fun ij => N < ij.1 + ij.2), w (ij.1 + ij.2) * K ij.1 ij.2
 
 /-- Previous as an element of `ℕ → ℝ | 0 => 0 | n + 1 => a n`. -/
-noncomputable def previous (a : ℕ → ℝ) : ℕ → ℝ
+@[expose] noncomputable def previous (a : ℕ → ℝ) : ℕ → ℝ
   | 0 => 0
   | n + 1 => a n
 
@@ -479,7 +479,7 @@ theorem shifted_sum (N : ℕ) (w a : ℕ → ℝ) :
       linarith
 
 /-- Recurrence, given by `L n + convolution K n - previous A n`. -/
-def recurrence (L : ℕ → ℝ) (K : ℕ → ℕ → ℝ) (A : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] def recurrence (L : ℕ → ℝ) (K : ℕ → ℕ → ℝ) (A : ℕ → ℝ) (n : ℕ) : ℝ :=
   L n + convolution K n - previous A n
 
 /-- Universal finite-order recurrence identity used by the angular, axial,
@@ -510,11 +510,11 @@ theorem recurrence_truncation_of_zero (N : ℕ) (w L A : ℕ → ℝ) (K : ℕ �
   rw [hs, zero_add]
 
 /-- Transport linear, given by `gt n - 2 * (X * gxx n + m * gx n) + source n`. -/
-def transportLinear (X m : ℝ) (gt gx gxx source : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] def transportLinear (X m : ℝ) (gt gx gxx source : ℕ → ℝ) (n : ℕ) : ℝ :=
   gt n - 2 * (X * gxx n + m * gx n) + source n
 
 /-- Transport pair, given by `v i * (gx j + α * g j / X) + u i * gz j`. -/
-def transportPair (X α : ℝ) (v u g gx gz : ℕ → ℝ) (i j : ℕ) : ℝ :=
+@[expose] def transportPair (X α : ℝ) (v u g gx gz : ℕ → ℝ) (i j : ℕ) : ℝ :=
   v i * (gx j + α * g j / X) + u i * gz j
 
 /-- Scalar transport/diffusion for arbitrary finite jets, with all product
@@ -590,7 +590,7 @@ theorem secondAlong_sum {ι : Type*} (s : Finset ι) (f : ι → Profile)
 
 /-- Finite profile, defined pointwise by `∑ n ∈ Finset.range (N + 1), pullback h (b + slowOrder
 h n) (f n) p`. -/
-def finiteProfile (N : ℕ) (h b : ℝ) (f : ℕ → InnerProfile) : Profile :=
+@[expose] def finiteProfile (N : ℕ) (h b : ℝ) (f : ℕ → InnerProfile) : Profile :=
   fun p => ∑ n ∈ Finset.range (N + 1), pullback h (b + slowOrder h n) (f n) p
 
 @[simp] theorem finiteProfile_order_zero (h b : ℝ) (f : ℕ → InnerProfile) :
@@ -653,7 +653,7 @@ theorem partialZ_finiteProfile {h b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     b - CoordinateAlgebra.D h + slowOrder h n by ring]
 
 /-- Z2, given by `Z h (b - CoordinateAlgebra.D h) (Z h b f)`. -/
-def Z2 (h b : ℝ) (f : InnerProfile) : InnerProfile :=
+@[expose] def Z2 (h b : ℝ) (f : InnerProfile) : InnerProfile :=
   Z h (b - CoordinateAlgebra.D h) (Z h b f)
 
 theorem partialSS_finiteProfile {h b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
@@ -692,14 +692,14 @@ theorem partialZZ_finiteProfile {h b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   rfl
 
 /-- Transport residual, constructed using `AxisymmetricResidual.partialT`. -/
-def transportResidual (α m : ℝ) (V U G source : Profile) (p : ProfilePoint) : ℝ :=
+@[expose] def transportResidual (α m : ℝ) (V U G source : Profile) (p : ProfilePoint) : ℝ :=
   AxisymmetricResidual.partialT G p + V p * (partialS G p + α * (G p / p.2.1)) +
     U p * partialZ G p -
     (2 * p.2.1 * partialS (partialS G) p + 2 * m * partialS G p + partialZ (partialZ G) p) +
     source p
 
 /-- Transport coefficient, constructed using `recurrence`. -/
-def transportCoefficient (h e α m : ℝ) (v u f source : ℕ → InnerProfile)
+@[expose] def transportCoefficient (h e α m : ℝ) (v u f source : ℕ → InnerProfile)
     (n : ℕ) (w : InnerPoint) : ℝ :=
   recurrence
     (transportLinear w.1 m (fun j => T h (e + slowOrder h j) (f j) w)
@@ -709,7 +709,7 @@ def transportCoefficient (h e α m : ℝ) (v u f source : ℕ → InnerProfile)
     (fun j => Z2 h (e + slowOrder h j) (f j) w) n
 
 /-- Transport tail, constructed using `pairTail`. -/
-def transportTail (N : ℕ) (q h e α : ℝ) (v u f : ℕ → InnerProfile) (w : InnerPoint) : ℝ :=
+@[expose] def transportTail (N : ℕ) (q h e α : ℝ) (v u f : ℕ → InnerProfile) (w : InnerPoint) : ℝ :=
   pairTail N (fun n => q ^ (e - 1 + slowOrder h n))
     (transportPair w.1 α (fun j => v j w) (fun j => u j w) (fun j => f j w)
       (fun j => partialX (f j) w) (fun j => Z h (e + slowOrder h j) (f j) w)) -
@@ -824,9 +824,9 @@ theorem transportResidual_scale (c α m : ℝ) (V U : Profile) {G : Profile} {p 
   ring
 
 /-- Angular exponent, given by `-CoordinateAlgebra.A h - 1 / 2`. -/
-def angularExponent (h : ℝ) : ℝ := -CoordinateAlgebra.A h - 1 / 2
+@[expose] def angularExponent (h : ℝ) : ℝ := -CoordinateAlgebra.A h - 1 / 2
 /-- Axial exponent, given by `-CoordinateAlgebra.A h`. -/
-def axialExponent (h : ℝ) : ℝ := -CoordinateAlgebra.A h
+@[expose] def axialExponent (h : ℝ) : ℝ := -CoordinateAlgebra.A h
 /-- Pressure exponent, given by `-2 * CoordinateAlgebra.A h`. -/
 def pressureExponent (h : ℝ) : ℝ := -2 * CoordinateAlgebra.A h
 
@@ -842,28 +842,28 @@ structure SlowProfiles where
   pressure : ℕ → InnerProfile
 
 /-- Slow flux, given by `finiteProfile N h 0 f.flux`. -/
-def slowFlux (N : ℕ) (h : ℝ) (f : SlowProfiles) : Profile := finiteProfile N h 0 f.flux
+@[expose] def slowFlux (N : ℕ) (h : ℝ) (f : SlowProfiles) : Profile := finiteProfile N h 0 f.flux
 /-- Slow swirl, defined pointwise by `C⁻¹ * finiteProfile N h (angularExponent h) f.phi p`. -/
-def slowSwirl (N : ℕ) (h C : ℝ) (f : SlowProfiles) : Profile :=
+@[expose] def slowSwirl (N : ℕ) (h C : ℝ) (f : SlowProfiles) : Profile :=
   fun p => C⁻¹ * finiteProfile N h (angularExponent h) f.phi p
 /-- Slow axial, given by `finiteProfile N h (axialExponent h) f.axial`. -/
-def slowAxial (N : ℕ) (h : ℝ) (f : SlowProfiles) : Profile :=
+@[expose] def slowAxial (N : ℕ) (h : ℝ) (f : SlowProfiles) : Profile :=
   finiteProfile N h (axialExponent h) f.axial
 /-- Slow pressure, given by `finiteProfile N h (pressureExponent h) f.pressure`. -/
 def slowPressure (N : ℕ) (h : ℝ) (f : SlowProfiles) : Profile :=
   finiteProfile N h (pressureExponent h) f.pressure
 
 /-- Axial pressure source, given by `Z h (pressureExponent h + slowOrder h n) (f.pressure n)`. -/
-def axialPressureSource (h : ℝ) (f : SlowProfiles) (n : ℕ) : InnerProfile :=
+@[expose] def axialPressureSource (h : ℝ) (f : SlowProfiles) (n : ℕ) : InnerProfile :=
   Z h (pressureExponent h + slowOrder h n) (f.pressure n)
 
 /-- Angular coefficient, given by `transportCoefficient h (angularExponent h) 1 2 f.flux f.axial
 f.phi (fun _ _ => 0) n`. -/
-def angularCoefficient (h : ℝ) (f : SlowProfiles) (n : ℕ) : InnerProfile :=
+@[expose] def angularCoefficient (h : ℝ) (f : SlowProfiles) (n : ℕ) : InnerProfile :=
   transportCoefficient h (angularExponent h) 1 2 f.flux f.axial f.phi (fun _ _ => 0) n
 /-- Axial coefficient, given by `transportCoefficient h (axialExponent h) 0 1 f.flux f.axial
 f.axial (axialPressureSource h f) n`. -/
-def axialCoefficient (h : ℝ) (f : SlowProfiles) (n : ℕ) : InnerProfile :=
+@[expose] def axialCoefficient (h : ℝ) (f : SlowProfiles) (n : ℕ) : InnerProfile :=
   transportCoefficient h (axialExponent h) 0 1 f.flux f.axial f.axial (axialPressureSource h f) n
 /-- Omega coefficient, given by `transportCoefficient h 0 (-(1 / 2)) 0 f.flux f.axial f.flux
 (fun _ _ => 0) n`. -/
@@ -874,7 +874,7 @@ n) (f.axial n) w`. -/
 def divergenceCoefficient (h : ℝ) (f : SlowProfiles) (n : ℕ) (w : InnerPoint) : ℝ :=
   partialX (f.flux n) w + Z h (axialExponent h + slowOrder h n) (f.axial n) w
 /-- Pressure coefficient, constructed using `partialX`. -/
-def pressureCoefficient (h C : ℝ) (f : SlowProfiles) (n : ℕ) (w : InnerPoint) : ℝ :=
+@[expose] def pressureCoefficient (h C : ℝ) (f : SlowProfiles) (n : ℕ) (w : InnerPoint) : ℝ :=
   partialX (f.pressure n) w - C⁻¹ ^ 2 * convolution (fun i j => f.phi i w * f.phi j w) n +
     previous (fun j => omegaCoefficient h f j w) n / (2 * w.1)
 
@@ -1029,7 +1029,7 @@ theorem pressure_series_identity {q X : ℝ} (hq : 0 < q) (hX : X ≠ 0)
   ring
 
 /-- Pressure tail, constructed using `transportTail`. -/
-def pressureTail (N : ℕ) (q h C : ℝ) (f : SlowProfiles) (w : InnerPoint) : ℝ :=
+@[expose] def pressureTail (N : ℕ) (q h C : ℝ) (f : SlowProfiles) (w : InnerPoint) : ℝ :=
   transportTail N q h 0 (-(1 / 2)) f.flux f.axial f.flux w +
     q ^ (pressureExponent h + slowOrder h (N + 1)) * omegaCoefficient h f N w -
     2 * w.1 * C⁻¹ ^ 2 * pairTail N (fun n => q ^ (pressureExponent h + slowOrder h n))
@@ -1239,20 +1239,20 @@ theorem divergence_slowVelocity_eq_zero {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   exact finiteSeries_eq_zero _ _ _ _ _ hdiv
 
 /-- Angular expansion as an element of `ℝ`. -/
-noncomputable def angularExpansion (N : ℕ) (q h C : ℝ) (f : SlowProfiles)
+@[expose] noncomputable def angularExpansion (N : ℕ) (q h C : ℝ) (f : SlowProfiles)
     (w : InnerPoint) : ℝ :=
   C⁻¹ * (finiteSeries N q h (angularExponent h - 1) (fun n => angularCoefficient h f n w) +
     transportTail N q h (angularExponent h) 1 f.flux f.axial f.phi w)
 
 /-- Axial expansion, constructed using `finiteSeries`. -/
-noncomputable def axialExpansion (N : ℕ) (q h : ℝ) (f : SlowProfiles)
+@[expose] noncomputable def axialExpansion (N : ℕ) (q h : ℝ) (f : SlowProfiles)
     (w : InnerPoint) : ℝ :=
   finiteSeries N q h (axialExponent h - 1) (fun n => axialCoefficient h f n w) +
     transportTail N q h (axialExponent h) 0 f.flux f.axial f.axial w
 
 /-- Radial flux expansion, given by `2 * w.1 * finiteSeries N q h (pressureExponent h) (fun n =>
 pressureCoefficient h C f n w) + pressureTail N q h C f w`. -/
-noncomputable def radialFluxExpansion (N : ℕ) (q h C : ℝ) (f : SlowProfiles)
+@[expose] noncomputable def radialFluxExpansion (N : ℕ) (q h C : ℝ) (f : SlowProfiles)
     (w : InnerPoint) : ℝ :=
   2 * w.1 * finiteSeries N q h (pressureExponent h) (fun n => pressureCoefficient h C f n w) +
     pressureTail N q h C f w
@@ -1317,7 +1317,7 @@ theorem navierStokesResidual_slowVelocity {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 
 /-- The explicit forcing left by truncation once all retained coefficient
 equations hold. This includes omitted quadratic interactions and the final
 axial-viscosity and radial-acceleration terms. -/
-noncomputable def truncationResidual (N : ℕ) (h C : ℝ) (f : SlowProfiles)
+@[expose] noncomputable def truncationResidual (N : ℕ) (h C : ℝ) (f : SlowProfiles)
     (t : ℝ) (x : ProblemStatement.Space) : ProblemStatement.Space :=
   let q := SimilarityProfile.q h (profilePoint t x)
   let w := SimilarityProfile.inner h (profilePoint t x)

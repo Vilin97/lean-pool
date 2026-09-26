@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketRay
 
 /-! Exact finite-dimensional algebra of the source ray/velocity scaling. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -21,7 +21,7 @@ namespace EulerPacketMovingFrame
 open EulerPacketRay
 
 /-- Velocity scale, with branches according to `i = 1`. -/
-def velocityScale (ε : ℝ) (i : Fin 3) : ℝ := if i = 1 then 1 else ε
+@[expose] def velocityScale (ε : ℝ) (i : Fin 3) : ℝ := if i = 1 then 1 else ε
 
 theorem velocityScale_ne_zero {ε : ℝ} (hε : ε ≠ 0) (i : Fin 3) : velocityScale ε i ≠ 0 := by
   unfold velocityScale
@@ -63,6 +63,7 @@ theorem scaling_velocity_rate {a ε s₀ D : ℝ}
     field_simp
 
 /-- Scaled velocity rhs as an element of `ℝ`. -/
+@[expose]
 def scaledVelocityRhs (A C : Fin 3 → Fin 3 → ℝ) (ε : ℝ) (R V : Fin 3 → ℝ) (i : Fin 3) : ℝ :=
   -(∑ j : Fin 3, C i j*V j) + 2*(rayScale ε i)^2*R i *
     velocityNumerator A (R 0) (R 1) (R 2) (V 0) (V 1) (V 2) /

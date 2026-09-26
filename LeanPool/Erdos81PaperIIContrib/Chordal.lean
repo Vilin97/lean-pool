@@ -34,7 +34,7 @@ self-contained and depends only on Mathlib.
   graph has two non-adjacent simplicial vertices
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 

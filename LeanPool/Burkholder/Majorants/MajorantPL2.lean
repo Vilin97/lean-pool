@@ -17,7 +17,7 @@ Constructs and verifies the Burkholder majorant in the regime `1 < p < 2`,
 including the explicit derivatives, concavity, and tangent estimates.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

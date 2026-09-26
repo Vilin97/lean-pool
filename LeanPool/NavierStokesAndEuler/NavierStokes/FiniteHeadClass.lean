@@ -16,7 +16,7 @@ Only the band exponent changes.  The weight, domain, polynomial degree,
 and finite band cutoff are preserved, including at the spatial edges.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

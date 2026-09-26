@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientData
 /-! The literal linear, pressure and nonlinear jet expressions have actual cylinder-path witnesses.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -55,7 +55,7 @@ def fastAdvection {normal : VectorField} (N : VectorCoefficient T normal)
 end SpatialJetField
 
 /-- The actual spatial pressure gradient encoded by the pressure-only jet. -/
-def pressureGradient (p : ScalarField) : VectorField := fun z =>
+@[expose] def pressureGradient (p : ScalarField) : VectorField := fun z =>
   (toDual ℝ Space).symm ((pressureJet p z).2.comp spatialInjection)
 
 namespace Field

@@ -47,7 +47,7 @@ applied to the part of the symmetric difference inside each child cylinder). A c
 `(prependWord (s ++ [false]) x, prependWord (s ++ [true]) x)` inside `B`.
 -/
 
-@[expose] public section
+public section
 
 open Set Filter Topology
 
@@ -164,7 +164,7 @@ private theorem wordCylinder_wordOf (x : ℕ → Bool) (n : ℕ) :
 
 /-- The graph `G_S(2^ℕ)` on Cantor space associated to a set `S` of finite binary words:
 edges connect `s ⌢ i ⌢ x` and `s ⌢ !i ⌢ x` for `s ∈ S`. -/
-def GSGraph (S : Set (List Bool)) (y z : ℕ → Bool) : Prop :=
+@[expose] def GSGraph (S : Set (List Bool)) (y z : ℕ → Bool) : Prop :=
   ∃ s ∈ S, ∃ i : Bool, ∃ x : ℕ → Bool,
     y = prependWord (s ++ [i]) x ∧ z = prependWord (s ++ [!i]) x
 
@@ -212,7 +212,7 @@ theorem length_canonicalWord (n : ℕ) : (canonicalWord n).length = canonicalLen
   length_padTo (le_canonicalLen n)
 
 /-- The canonical dense and sparse set of finite binary words. -/
-def canonicalS : Set (List Bool) := Set.range canonicalWord
+@[expose] def canonicalS : Set (List Bool) := Set.range canonicalWord
 
 theorem denseWords_canonicalS : DenseWords canonicalS := by
   intro r

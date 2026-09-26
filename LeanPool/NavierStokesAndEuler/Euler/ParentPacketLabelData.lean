@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PhysicalChildParent
 The constructed child inherits this interface from its proved three-field
 estimate; frame and coefficient identifications are not extra hypotheses. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

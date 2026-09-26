@@ -10,7 +10,7 @@ import Mathlib.Topology.MetricSpace.Pseudo.Real
 
 /-! ### Auxiliary lemmas -/
 
-@[expose] public section
+public section
 
 /-
   This file contains two applications of the Lebesgue Number Lemma:

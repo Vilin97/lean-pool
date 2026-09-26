@@ -28,7 +28,7 @@ Lean-reading hints for beginners:
   `defs`, then close the goal by `h`.
 -/
 
-@[expose] public section
+public section
 noncomputable section
 
 open scoped BigOperators
@@ -1108,14 +1108,14 @@ structure CorrectorStepGuarantee {n : Nat}
 
 
 /-- The tight neighborhood parameter used in the YTM proof. -/
-def ytmBetaTight : ℝ := 1 / 4
+@[expose] def ytmBetaTight : ℝ := 1 / 4
 
 /-- The wide neighborhood parameter used in the YTM proof. -/
-def ytmBetaWide : ℝ := 1 / 2
+@[expose] def ytmBetaWide : ℝ := 1 / 2
 
 /-- The predictor step-size constant appearing in YTM Theorem 6.
 Mathematically this is `8^{-2.5}`. -/
-def ytmStepConstant : ℝ := 1 / ((8 : ℝ) ^ 2 * Real.sqrt 8)
+@[expose] def ytmStepConstant : ℝ := 1 / ((8 : ℝ) ^ 2 * Real.sqrt 8)
 
 
 /-! ### Corrector local estimate

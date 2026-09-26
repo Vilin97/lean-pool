@@ -19,7 +19,7 @@ This file completes the chart-induction framework developed in `ChartInductionCo
 the crossing weld, packages the one-chart induction step, and assembles the final triangulation.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold
 

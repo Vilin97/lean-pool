@@ -46,7 +46,7 @@ conclusion only grows).
 to Helper 1, `vlasov_window_confinement`).
 -/
 
-@[expose] public section
+public section
 
 namespace IsPicardLindelof
 

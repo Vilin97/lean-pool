@@ -19,7 +19,7 @@ acceleration. Consequently its uniform-time spatial derivatives have the
 same fixed H¹ trace bound as the physical velocity.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

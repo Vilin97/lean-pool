@@ -21,7 +21,7 @@ import Mathlib.Topology.Algebra.Module.Cardinality
 
 /-! # ExactModulusRecovery -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

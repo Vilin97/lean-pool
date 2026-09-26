@@ -27,7 +27,7 @@ measure-preserving homeomorphism transports that closure. The homeomorphism is
 not required to preserve the addition on either compact group.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace CrossedProduct

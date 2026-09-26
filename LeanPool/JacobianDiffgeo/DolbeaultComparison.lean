@@ -46,4 +46,4 @@ No Weyl lemma, no elliptic regularity, no harmonic theory anywhere: the only PDE
 consumed is dbar-solvability's `exists_dbar_solution_chart_ball`/disk acyclicity.
 -/
 
-@[expose] public section
+public section

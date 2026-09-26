@@ -24,4 +24,4 @@ For a Noetherian topological space `X` of dimension `n` and a sheaf `F` of abeli
 on `X`, the imports below assemble `Hⁱ(X, F) = 0` for all `i > n`.
 -/
 
-@[expose] public section
+public section

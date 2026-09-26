@@ -18,7 +18,7 @@ label path, with a constructed Bochner L² derivative.  Conversely, each genuine
 solenoidal terminal primitive yields an admissible physical test through F.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -46,7 +46,8 @@ def labelPath (u : meanDerivatives T hT FInv) : ℝ → L2 :=
 theorem labelPath_solenoidal (u : meanDerivatives T hT FInv) (t : ℝ)
     (ht : t ∈ Icc (0 : ℝ) T) : labelPath T hT FInv u t ∈ solenoidalSpace := by
   change FInv (projIcc 0 T hT t) (realPrimitive T (u : TimeLp T L2) t) ∈ solenoidalSpace
-  simpa only [projIcc_of_mem hT ht, terminalPrimitive_apply] using u.property ⟨t, ht⟩
+  simpa only [projIcc_of_mem hT ht, terminalPrimitive_apply] using
+    ((mem_meanDerivatives T hT FInv (u : TimeLp T L2)).mp u.property) ⟨t, ht⟩
 
 variable (hFInv : ∀ t : Icc (0 : ℝ) T,
   HasDerivWithinAt (extendPath T hT FInv) (FInv' t) (Icc (0 : ℝ) T) t)
@@ -109,7 +110,7 @@ theorem labelDerivative_norm_sq_le (u : meanDerivatives T hT FInv) :
 variable (F F' : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
 
 /-- Restrict the physical deformation to actual solenoidal label fields. -/
-def solenoidalFrame : C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2) :=
+@[expose] def solenoidalFrame : C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2) :=
   ⟨fun t => (F t).comp solenoidalSpace.subtypeL,
     F.continuous.clm_comp continuous_const⟩
 
@@ -136,6 +137,7 @@ include hF hInv in
 theorem productDerivative_mem_mean (v : TimeLp T solenoidalSpace) :
     productDerivative T hT (solenoidalFrame T F) (solenoidalFrame T F') v ∈
       meanDerivatives T hT FInv := by
+  rw [mem_meanDerivatives]
   intro t
   rw [terminalPrimitive_productDerivative T hT (solenoidalFrame T F)
     (solenoidalFrame T F') (solenoidalFrame_hasDerivWithinAt T hT F F' hF) v t]
@@ -151,7 +153,7 @@ def meanTestMap : TimeLp T solenoidalSpace →L[ℝ] meanDerivatives T hT FInv :
 /-- The test derivative is the actual product-rule L² field. -/
 @[simp] theorem meanTestMap_coe (v : TimeLp T solenoidalSpace) :
     (meanTestMap T hT FInv F F' hF hInv v : TimeLp T L2) =
-      productDerivative T hT (solenoidalFrame T F) (solenoidalFrame T F') v := rfl
+      productDerivative T hT (solenoidalFrame T F) (solenoidalFrame T F') v := by rfl
 
 /-- Its displacement primitive is the actual physical test `F b`. -/
 theorem meanTestMap_primitive (v : TimeLp T solenoidalSpace) :

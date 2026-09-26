@@ -24,4 +24,4 @@ Tags: number-theory, analytic-number-theory, sieve-theory, prime-counting
 MSC: 11N35, 11N05, 11N13
 -/
 
-@[expose] public section
+public section

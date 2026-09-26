@@ -22,7 +22,7 @@ SU(2)/unit-circle parameterizations (`mul_conj_eq_norm_sq`, `exists_unit_mul`,
 These are upstream candidates for Mathlib; nothing here mentions `Gate`/`PureState`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

@@ -21,7 +21,7 @@ section
 half-open maximal Euler interval. All quantities agree exactly with
 the genuine smooth solutions on every shorter closed interval. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -165,7 +165,7 @@ its extended integral on the half-open interval to be infinite. Local
 integrability is explicit, so no totalized real integral is used as a
 substitute for an improper integral. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -204,7 +204,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

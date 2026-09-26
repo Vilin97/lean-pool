@@ -15,7 +15,7 @@ import Mathlib.Algebra.Order.Star.Real
 the velocity. Its actual norm is therefore unchanged by the normal factor.
 A short interval controlled by the low strain norm supplies H3 with g=1. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -42,7 +42,7 @@ component are mutually exclusive because the three forms of a sum-neighbourhood
 copy, right copy) are mutually exclusive (Exercise 3.18, using non-emptiness).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise326
 

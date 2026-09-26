@@ -35,7 +35,7 @@ due to Bennett and Wiesner (1992).
   `decode (encode a b |Φ⁺⟩) = |b a⟩`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

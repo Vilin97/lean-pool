@@ -29,7 +29,7 @@ The tensor-product object `Q.baseChange A` is Mathlib's `QuadraticForm.baseChang
 on `A ⊗[ℚ] V`.
 -/
 
-@[expose] public section
+public section
 
 open Module QuadraticMap TensorProduct
 
@@ -99,6 +99,7 @@ variable {V : Type*} [AddCommGroup V] [Module ℚ V]
 
 /-- A quadratic form over `ℚ` is *everywhere locally isotropic* if it is isotropic over every
 completion of `ℚ`: over `ℝ` and over every `p`-adic field `ℚ_[p]`. -/
+@[expose]
 def EverywhereLocallyIsotropic (Q : QuadraticForm ℚ V) : Prop :=
   (∀ (p : ℕ) [Fact (Nat.Prime p)], Isotropic (QuadraticForm.baseChange ℚ_[p] Q)) ∧
     Isotropic (QuadraticForm.baseChange ℝ Q)

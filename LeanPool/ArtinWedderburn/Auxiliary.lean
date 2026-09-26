@@ -25,7 +25,7 @@ Mathlib's `DivisionRing`, and shows that an isomorphism of rings transports the
 division-ring property.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 
@@ -33,13 +33,13 @@ variable {R : Type*} [Ring R]
 
 /-- `S` is a division subring with identity `e` when it contains a nonzero element
 and every nonzero member has a left inverse inside `S` equal to `e`. -/
-def IsDivisionSubring (S : NonUnitalSubring R) (e : R) : Prop :=
+@[expose] def IsDivisionSubring (S : NonUnitalSubring R) (e : R) : Prop :=
   (∃ x : R, x ∈ S ∧ x ≠ 0) ∧
     (∀ x : R, x ∈ S → x ≠ 0 → ∃ y : R, y ∈ S ∧ y * x = e)
 
 /-- A ring `R` is a division ring when it is nontrivial and every nonzero element has
 a two-sided multiplicative inverse. -/
-def IsDivisionRing (R : Type*) [Ring R] : Prop :=
+@[expose] def IsDivisionRing (R : Type*) [Ring R] : Prop :=
   (∃ x : R, x ≠ 0) ∧ (∀ x : R, x ≠ 0 → ∃ y : R, y * x = 1 ∧ x * y = 1)
 
 -- if every nonzero element has a left inverse then the ring is a division ring

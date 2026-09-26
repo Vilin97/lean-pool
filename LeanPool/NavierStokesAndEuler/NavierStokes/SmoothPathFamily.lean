@@ -18,7 +18,7 @@ Continuity into the supremum-norm path space follows from compact-open currying.
 All path derivatives are constructed from genuine parameter derivatives.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.SmoothPathFamily
@@ -97,7 +97,7 @@ noncomputable def flipPath : C(Icc a b, P →L[ℝ] E) →L[ℝ] P →L[ℝ] C(I
       simpa only [one_mul] using norm_flipLinear_le g v)
 
 theorem flipPath_apply (g : C(Icc a b, P →L[ℝ] E)) (v : P) (t : Icc a b) :
-    flipPath (P := P) (E := E) g v t = g t v := rfl
+    flipPath (P := P) (E := E) g v t = g t v := by rfl
 
 /-- The key uniform differentiability theorem. Joint continuity of the actual
 slice derivative supplies a common remainder estimate for every time point. -/
@@ -249,7 +249,7 @@ variable [CompleteSpace E] (hab : a ≤ b)
 
 /-- The actual finite-interval ODE solution for the supplied joint coefficient
 and forcing families. -/
-noncomputable def odeFamily (A : P × ℝ → E →L[ℝ] E) (x₀ : P → E)
+@[expose] noncomputable def odeFamily (A : P × ℝ → E →L[ℝ] E) (x₀ : P → E)
     (f : P × ℝ → E) (p : P) : C(Icc a b, E) :=
   ParametricODE.solution hab (pathFamily A p) (x₀ p) (pathFamily f p)
 

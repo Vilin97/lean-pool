@@ -14,7 +14,7 @@ import LeanPool.LeanModularForms.Modularforms.Upperhalfplane
 /-! # Eta -/
 
 
-@[expose] public section
+public section
 
 
 open ModularForm EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral

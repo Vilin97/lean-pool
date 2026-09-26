@@ -27,7 +27,7 @@ nonvanishing facts. Primitive-character nontriviality is supplied by
 `Phase/AdditiveCharacter.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

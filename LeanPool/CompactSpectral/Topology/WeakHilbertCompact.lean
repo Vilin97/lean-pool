@@ -24,7 +24,7 @@ This lemma is a key building block for developing compact/self-adjoint spectral 
 Hilbert setting while keeping `packages/mathlib_extensions/` mathlib-only.
 -/
 
-@[expose] public section
+public section
 
 namespace CompactSpectral
 
@@ -42,7 +42,7 @@ noncomputable scoped instance instNormWeakSpace :
 
 /-- The Riesz map `E → E*` viewed as a function from the weak topology on `E`
 (`WeakSpace 𝕜 E`) to the weak-star topology on the dual (`WeakDual 𝕜 E`). -/
-noncomputable def weakToWeakDual : WeakSpace 𝕜 E → WeakDual 𝕜 E :=
+@[expose] noncomputable def weakToWeakDual : WeakSpace 𝕜 E → WeakDual 𝕜 E :=
   fun x => StrongDual.toWeakDual ((InnerProductSpace.toDual 𝕜 E) (x : E))
 
 /-- The inverse Riesz map `E* → E` viewed as a function from the weak-star dual (`WeakDual 𝕜 E`)
@@ -139,7 +139,7 @@ lemma continuous_weakDualToWeak : Continuous (weakDualToWeak (𝕜 := 𝕜) (E :
 /-! ### Closed balls -/
 
 /-- The norm-closed ball, viewed as a subset of `WeakSpace 𝕜 E`. -/
-noncomputable def weakClosedBall (r : ℝ) : Set (WeakSpace 𝕜 E) :=
+@[expose] noncomputable def weakClosedBall (r : ℝ) : Set (WeakSpace 𝕜 E) :=
   Metric.closedBall (α := E) (0 : E) r
 
 /-- The (weak-*) closed ball in the dual, as a subset of `WeakDual 𝕜 E`. -/

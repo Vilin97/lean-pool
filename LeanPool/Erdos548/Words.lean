@@ -39,14 +39,14 @@ the gluing inequality to full words, and `full_word_transfer_count` bounds one f
 through the cut-reversal involution `reverseCutPair`, losing at most one first cut per word.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos548
 
 /-! Reversible prefix-block rotation for finite marked-word counting. -/
 
 /-- A nonempty marked last letter. -/
-def MarkedEnd {α : Type*} (N : α → Prop) (l : List α) : Prop :=
+@[expose] def MarkedEnd {α : Type*} (N : α → Prop) (l : List α) : Prop :=
   ∃ a, l.getLast? = some a ∧ N a
 
 lemma markedEnd_not_nil {α : Type*} {N : α → Prop} {l : List α}
@@ -393,7 +393,7 @@ attribute [local instance] Classical.propDecidable
 
 /-- The first letter is a distinguished root, and a marked cut is taken in
 the remaining word. The family is allowed to depend on that root. -/
-def FullWordQualifies {α : Type*} [DecidableEq α]
+@[expose] def FullWordQualifies {α : Type*} [DecidableEq α]
     (N : α → α → Prop) (A : α → Finset α → Prop) (l : List α) (k : ℕ) : Prop :=
   ∃ b q, l = b::q ∧ MarkedEnd (N b) (q.take k) ∧ A b (q.take k).toFinset
 
@@ -415,9 +415,13 @@ noncomputable def fullGoodWordCuts {α : Type*} [DecidableEq α]
     (fun p => FullWordQualifies N A p.1 p.2)
 
 /-- The number of qualifying cut permutation words of `l₀`. -/
-noncomputable def fullWordCount {α : Type*} [DecidableEq α]
+@[expose] noncomputable def fullWordCount {α : Type*} [DecidableEq α]
     (l₀ : List α) (N : α → α → Prop) (A : α → Finset α → Prop) : ℕ :=
   (fullGoodWordCuts l₀ N A).card
+
+theorem fullWordCount_eq_card {α : Type*} [DecidableEq α]
+    (l₀ : List α) (N : α → α → Prop) (A : α → Finset α → Prop) :
+    fullWordCount l₀ N A = (fullGoodWordCuts l₀ N A).card := by rfl
 
 lemma mem_fullGoodWordCuts {α : Type*} [DecidableEq α]
     (l₀ : List α) (N : α → α → Prop) (A : α → Finset α → Prop) (l : List α) (k : ℕ) :

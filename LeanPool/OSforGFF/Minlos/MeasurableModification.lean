@@ -49,7 +49,7 @@ P : (E → ℝ) → WeakDual ℝ E that agrees with the identity on "good paths"
 - Minlos, "Generalized random processes and their extension to measures" (1959)
 -/
 
-@[expose] public section
+public section
 
 open BigOperators MeasureTheory Complex TopologicalSpace Finsupp
 
@@ -74,7 +74,7 @@ private lemma continuous_finset_sup_seminorm (p : ℕ → Seminorm ℝ E)
     underlying function. This is measurable (but NOT a MeasurableEmbedding
     when E is uncountable-dimensional).
 -/
-def weakDualEmbed (E : Type*) [AddCommGroup E] [Module ℝ E]
+@[expose] def weakDualEmbed (E : Type*) [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [hAdd : IsTopologicalAddGroup E] [hSmul : ContinuousSMul ℝ E] :
     WeakDual ℝ E → (E → ℝ) :=
   let _ := hAdd

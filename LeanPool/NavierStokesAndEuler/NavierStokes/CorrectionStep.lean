@@ -36,7 +36,7 @@ not treated as independent black-box state transitions.  Every old/new cross
 term is retained in the displayed residual differences.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -406,7 +406,7 @@ noncomputable def fullGoodResidual (c : Context D) (u : State D) : Oscillation D
   fullResidual c u - u.errors.total
 
 /-- Angular mean vector, defined pointwise by `angularAverage (fun k p => f k p i) n x`. -/
-noncomputable def angularMeanVector (f : Oscillation D) : MeanVector D :=
+@[expose] noncomputable def angularMeanVector (f : Oscillation D) : MeanVector D :=
   fun n x i => angularAverage (fun k p => f k p i) n x
 
 /-- Angular nonconstant, defined pointwise by `f n x i - angularMeanVector f n x.1 i`. -/
@@ -1581,7 +1581,7 @@ noncomputable def meanDivergence (c : Context D) (m : Triple D) : ScalarField D 
     c.operators.dz m.axial n x
 
 /-- Full divergence as an element of `OscillatoryScalar D`. -/
-noncomputable def fullDivergence (c : Context D) (u : State D) : OscillatoryScalar D :=
+@[expose] noncomputable def fullDivergence (c : Context D) (u : State D) : OscillatoryScalar D :=
   fun n => LiftedMeanResidual.realDivergence (fun x => c.operators.radius x.1)
     (radialDirection c n) angularDirection (axialDirection c n) (u.totalVelocity c n)
 
@@ -3584,7 +3584,7 @@ structure SignedParameters (D : Type) [NormedAddCommGroup D] [NormedSpace ℝ D]
   column : Fin 2
 
 /-- Coefficients, constructed using `SignedWaveUpdate.coefficients`. -/
-noncomputable def SignedParameters.coefficients (p : SignedParameters D) (s : StripData D)
+@[expose] noncomputable def SignedParameters.coefficients (p : SignedParameters D) (s : StripData D)
     (request : ℕ → D × ℝ → SignedWaveUpdate.Vec2) : LinearWaveBounds.WaveCoefficients (D × ℝ) :=
   SignedWaveUpdate.coefficients p.base (HarmonicWaveInteraction.productStrip s) p.directions
     p.matrix p.target request p.mask p.fundamental p.normalMotion p.action p.column
@@ -3826,6 +3826,7 @@ open CorrectionState
 
 /-- The actual real linearized cylindrical residual of a block, evaluated
 with the carrier of the old spatial label. -/
+@[expose]
 noncomputable def linearBlockField (c : Context D) (a b : HarmonicBlock D) : Oscillation D :=
   fun n x i => (LinearWaveResidual.linearResidual (c.operators.epsilon n)
     (fun y : D × ℝ => c.operators.radius y.1) (radialDirection c n) angularDirection
@@ -5035,7 +5036,7 @@ variable (p : PeriodizedSignedParameters D I)
 
 /-- Native, bundling `base`, `directions`, `matrix`, `target` and the required compatibility
 proofs. -/
-noncomputable def native (i : I) : SignedParameters D where
+@[expose] noncomputable def native (i : I) : SignedParameters D where
   base := p.base
   directions := p.directions
   matrix := p.matrix i
@@ -5050,6 +5051,7 @@ noncomputable def native (i : I) : SignedParameters D where
 
 /-- The native fields are evaluated from the signed quotient and projected
 homogeneous pressure before the one native cutoff is applied. -/
+@[expose]
 noncomputable def copyData (s : StripData D) (request : ℕ → D × ℝ → SignedWaveUpdate.Vec2) :
     PeriodizedWaveBounds.CopyData (D × ℝ) I where
   background := p.base
@@ -5070,6 +5072,7 @@ noncomputable def exactBlock (s : StripData D) (request : ℕ → D × ℝ → S
 
 /-- Tangent block, given by `SignedWaveUpdate.blockOfCoefficients (p.copyData s request).common
 p.angularFrequency`. -/
+@[expose]
 noncomputable def tangentBlock (s : StripData D) (request : ℕ → D × ℝ → SignedWaveUpdate.Vec2) :
     HarmonicBlock D :=
   SignedWaveUpdate.blockOfCoefficients (p.copyData s request).common p.angularFrequency
@@ -5151,7 +5154,7 @@ variable (p : ParticularParameters P)
 
 /-- Copy data, bundling `background`, `amplitude`, `pressure`, `cutoff` and the required
 compatibility proofs. -/
-noncomputable def copyData (c : Context (P × TorusInverse.Plane)) (u : State (P ×
+@[expose] noncomputable def copyData (c : Context (P × TorusInverse.Plane)) (u : State (P ×
     TorusInverse.Plane))
     (b : HarmonicBlock (P × TorusInverse.Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × TorusInverse.Plane)) (j : ℤ) :
@@ -5186,7 +5189,7 @@ noncomputable def wave (s : StripData (P × TorusInverse.Plane))
   (p.copyData c u b G A j).commonCorrected (nativeStrip s) p.directions
 
 /-- Update block, constructed using `ParticularWaveAssembly.assembledBlock`. -/
-noncomputable def updateBlock (s : StripData (P × TorusInverse.Plane))
+@[expose] noncomputable def updateBlock (s : StripData (P × TorusInverse.Plane))
     (c : Context (P × TorusInverse.Plane)) (u : State (P × TorusInverse.Plane))
     (b : HarmonicBlock (P × TorusInverse.Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × TorusInverse.Plane)) (N : ℕ) : HarmonicBlock (P
@@ -5206,7 +5209,7 @@ noncomputable def goodBlock (s : StripData (P × TorusInverse.Plane))
       (ParticularWaveAssembly.angleShuffle (x,0))) (fun _ _ _ => 0)
 
 /-- Gaussian block, constructed using `ParticularWaveAssembly.assembledBlock`. -/
-noncomputable def gaussianBlock
+@[expose] noncomputable def gaussianBlock
     (c : Context (P × TorusInverse.Plane)) (u : State (P × TorusInverse.Plane))
     (b : HarmonicBlock (P × TorusInverse.Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × TorusInverse.Plane)) (N : ℕ) : HarmonicBlock (P
@@ -5250,7 +5253,7 @@ abbrev CyclePoint := LocalSignedRequest.Point
 abbrev CycleSlow := ℝ × PressureStream.Plane
 
 /-- Cycle assoc, given by `ParticularWaveBounds.liftAssoc PressureStream.Plane`. -/
-noncomputable def cycleAssoc : CyclePoint ≃ₗᵢ[ℝ] (CycleSlow × TorusInverse.Plane) :=
+@[expose] noncomputable def cycleAssoc : CyclePoint ≃ₗᵢ[ℝ] (CycleSlow × TorusInverse.Plane) :=
   ParticularWaveBounds.liftAssoc PressureStream.Plane
 
 /-- Finite labeled coefficient data of the current fields. Correct
@@ -5298,7 +5301,7 @@ variable {ι : Type} (p : CycleParameters ι) (v : CycleCoefficients ι)
     (c : Context CyclePoint) (u : State CyclePoint)
 
 /-- Particular block, constructed using `StateReindex.block`. -/
-noncomputable def particularBlock (l : ι) : HarmonicBlock CyclePoint :=
+@[expose] noncomputable def particularBlock (l : ι) : HarmonicBlock CyclePoint :=
   StateReindex.block cycleAssoc ((p.particular l).updateBlock
     (ParticularWaveBounds.reindexStrip cycleAssoc.symm p.strip)
     (StateReindex.context cycleAssoc.symm c) (StateReindex.state cycleAssoc.symm u)
@@ -5307,7 +5310,7 @@ noncomputable def particularBlock (l : ι) : HarmonicBlock CyclePoint :=
     (StateReindex.blockCoefficients cycleAssoc.symm (v.aliasCoefficients l)) v.residualBand)
 
 /-- Particular gaussian block, constructed using `StateReindex.block`. -/
-noncomputable def particularGaussianBlock (l : ι) : HarmonicBlock CyclePoint :=
+@[expose] noncomputable def particularGaussianBlock (l : ι) : HarmonicBlock CyclePoint :=
   StateReindex.block cycleAssoc ((p.particular l).gaussianBlock
     (StateReindex.context cycleAssoc.symm c) (StateReindex.state cycleAssoc.symm u)
     (StateReindex.block cycleAssoc.symm (v.blocks l))
@@ -5316,7 +5319,7 @@ noncomputable def particularGaussianBlock (l : ι) : HarmonicBlock CyclePoint :=
 
 /-- Particular velocity, given by `LabelSumBounds.fieldSum v.labels (fun l => (p.particularBlock
 v c u l).oscillation)`. -/
-noncomputable def particularVelocity : Oscillation CyclePoint :=
+@[expose] noncomputable def particularVelocity : Oscillation CyclePoint :=
   LabelSumBounds.fieldSum v.labels (fun l => (p.particularBlock v c u l).oscillation)
 
 /-- Particular pressure, defined pointwise by `∑ l ∈ v.labels n, (p.particularBlock v c u
@@ -5341,7 +5344,7 @@ noncomputable def signedRequest : ℕ → CyclePoint × ℝ → SignedWaveUpdate
   LocalSignedRequest.fullRequest p.strip p.patch p.coordinate c (p.afterParticular v c u)
 
 /-- Signed block, given by `(p.signed l).exactBlock p.strip (p.signedRequest v c u)`. -/
-noncomputable def signedBlock (l : ι) : HarmonicBlock CyclePoint :=
+@[expose] noncomputable def signedBlock (l : ι) : HarmonicBlock CyclePoint :=
   (p.signed l).exactBlock p.strip (p.signedRequest v c u)
 
 /-- Signed gaussian block, given by `(p.signed l).gaussianBlock p.strip (p.signedRequest v c
@@ -5351,12 +5354,12 @@ noncomputable def signedGaussianBlock (l : ι) : HarmonicBlock CyclePoint :=
 
 /-- Signed velocity, given by `LabelSumBounds.fieldSum v.labels (fun l => (p.signedBlock v c u
 l).oscillation)`. -/
-noncomputable def signedVelocity : Oscillation CyclePoint :=
+@[expose] noncomputable def signedVelocity : Oscillation CyclePoint :=
   LabelSumBounds.fieldSum v.labels (fun l => (p.signedBlock v c u l).oscillation)
 
 /-- Signed pressure, defined pointwise by `∑ l ∈ v.labels n, (p.signedBlock v c u
 l).oscillatoryPressure n x`. -/
-noncomputable def signedPressure : OscillatoryScalar CyclePoint :=
+@[expose] noncomputable def signedPressure : OscillatoryScalar CyclePoint :=
   fun n x => ∑ l ∈ v.labels n, (p.signedBlock v c u l).oscillatoryPressure n x
 
 /-- Signed gaussian, given by `LabelSumBounds.fieldSum v.labels (fun l => (p.signedGaussianBlock
@@ -5371,17 +5374,17 @@ noncomputable def afterSigned : State CyclePoint :=
 
 /-- Temporal increment, given by `temporalIncrementState p.gauge p.timeExponent p.commonIndex
 p.axial c (p.afterSigned v c u)`. -/
-noncomputable def temporalIncrement : Triple CyclePoint :=
+@[expose] noncomputable def temporalIncrement : Triple CyclePoint :=
   temporalIncrementState p.gauge p.timeExponent p.commonIndex p.axial c (p.afterSigned v c u)
 
 /-- After temporal, given by `temporalStageState p.gauge p.timeExponent p.commonIndex p.axial c
 (p.afterSigned v c u)`. -/
-noncomputable def afterTemporal : State CyclePoint :=
+@[expose] noncomputable def afterTemporal : State CyclePoint :=
   temporalStageState p.gauge p.timeExponent p.commonIndex p.axial c (p.afterSigned v c u)
 
 /-- Rank increment, given by `rankIncrementState p.gauge p.rank p.axial c (p.afterTemporal v c
 u)`. -/
-noncomputable def rankIncrement : Triple CyclePoint :=
+@[expose] noncomputable def rankIncrement : Triple CyclePoint :=
   rankIncrementState p.gauge p.rank p.axial c (p.afterTemporal v c u)
 
 /-- After rank, given by `rankStageState p.gauge p.rank p.axial c (p.afterTemporal v c u)`. -/
@@ -6055,7 +6058,7 @@ variable {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
     (G A : HarmonicResidual.BlockCoefficients (Q × Plane)) (j : ℤ)
 
 /-- Native tangent, defined pointwise by `ParticularWaveAssembly.angleTangent (p.tangent j n)`. -/
-noncomputable def nativeTangent : ℕ → TangentData (Q × ℝ) ProblemStatement.Space :=
+@[expose] noncomputable def nativeTangent : ℕ → TangentData (Q × ℝ) ProblemStatement.Space :=
   fun n => ParticularWaveAssembly.angleTangent (p.tangent j n)
 
 /-- Input bounds for the actual complex Volterra solve on all of its
@@ -7235,7 +7238,7 @@ abbrev AxisymmetricAlias := ℕ → CyclePoint → Fin 3 → ℝ
 
 /-- Coefficient field, defined pointwise by `(HarmonicFields.field (a n i) (b.frequency n)
 (b.phase n) (b.angularFrequency n) x).re`. -/
-noncomputable def coefficientField (b : HarmonicBlock CyclePoint)
+@[expose] noncomputable def coefficientField (b : HarmonicBlock CyclePoint)
     (a : HarmonicResidual.BlockCoefficients CyclePoint) : Oscillation CyclePoint :=
   fun n x i => (HarmonicFields.field (a n i) (b.frequency n) (b.phase n) (b.angularFrequency n)
       x).re
@@ -7417,7 +7420,7 @@ noncomputable def step (p : CycleParameters ι) (c : Context CyclePoint) (u : Cy
 
 /-- Iterate as an element of `ℕ → CycleState ι | 0 => seed | n + 1 => (iterate p c seed n).step
 (p n) c`. -/
-noncomputable def iterate (p : ℕ → CycleParameters ι) (c : Context CyclePoint)
+@[expose] noncomputable def iterate (p : ℕ → CycleParameters ι) (c : Context CyclePoint)
     (seed : CycleState ι) : ℕ → CycleState ι
   | 0 => seed
   | n + 1 => (iterate p c seed n).step (p n) c
@@ -8464,7 +8467,7 @@ theorem common_pressure (p : ParticularParameters P)
 
 /-- Every target band uses the same chosen reference tangent, geometry,
 clock interval and cutoff. Only the current HR source is supplied at solve time. -/
-noncomputable def fromReference
+@[expose] noncomputable def fromReference
     (D : AssemblyData PhysicalParticularWave.Parameter) (h : ℝ) (gap : ℕ → ℕ) :
     ParticularParameters PhysicalParticularWave.Parameter where
   tangent j n := ScaledTangentTransport.transportTangent (D.reference.tangent j)

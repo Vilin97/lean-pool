@@ -19,7 +19,7 @@ This file completes the recursive reduction developed in
 normalization and the connected-presentation result.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -7526,14 +7526,14 @@ structure TerminalCompletedWord where
 namespace TerminalCompletedWord
 
 /-- Validity-bundled finite-cyclic presentation displayed by a terminal completed-block word. -/
-def validPresentation (terminal : TerminalCompletedWord) :
+@[expose] def validPresentation (terminal : TerminalCompletedWord) :
     ValidPresentation :=
   ⟨Dyck.oneFace
       (CompletedBlock.sequenceWord terminal.blocks),
     terminal.valid⟩
 
 /-- Exact canonical normal form selected by the completed block counts. -/
-def normalForm (terminal : TerminalCompletedWord) :
+@[expose] def normalForm (terminal : TerminalCompletedWord) :
     NormalForm :=
   CompletedBlock.normalForm terminal.blocks
 

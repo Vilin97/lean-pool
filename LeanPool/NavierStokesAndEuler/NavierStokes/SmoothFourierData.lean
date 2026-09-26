@@ -42,7 +42,7 @@ integer by its conjugate, proves that the resulting integer is nonzero using
 irrationality of `sqrt 2`, and bounds the conjugate explicitly.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -315,7 +315,7 @@ theorem graph_directions_diophantine (k : ℤ × ℤ) (hk : k ≠ 0) :
   · simpa only [timeSymbol_formula] using time_diophantine k.1 k.2 hmn
 
 /-- The integer matrix `[[3,1],[1,5]]` acting on a frequency. -/
-def coveringFrequency (k : ℤ × ℤ) : ℤ × ℤ :=
+@[expose] def coveringFrequency (k : ℤ × ℤ) : ℤ × ℤ :=
   (3 * k.1 + k.2, k.1 + 5 * k.2)
 
 theorem coveringFrequency_injective : Function.Injective coveringFrequency := by
@@ -359,7 +359,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -380,7 +380,7 @@ theorem weight_pos (k : Frequency) : 0 < weight k := by
   positivity
 
 /-- Polynomially weighted absolute summability of every order. -/
-def Rapid (a : Frequency → ℂ) : Prop :=
+@[expose] def Rapid (a : Frequency → ℂ) : Prop :=
   ∀ p : ℕ, Summable (fun k => weight k ^ p * ‖a k‖)
 
 theorem Rapid.summable_norm {a : Frequency → ℂ} (ha : Rapid a) :
@@ -405,28 +405,28 @@ theorem Rapid.mul_linear {a b : Frequency → ℂ} (ha : Rapid a) (C : ℝ)
 def omega : ℂ := 2 * Real.pi * Complex.I
 
 /-- Freq X, given by `omega * (k.1 : ℂ)`. -/
-def freqX (k : Frequency) : ℂ := omega * (k.1 : ℂ)
+@[expose] def freqX (k : Frequency) : ℂ := omega * (k.1 : ℂ)
 /-- Freq Y, given by `omega * (k.2 : ℂ)`. -/
-def freqY (k : Frequency) : ℂ := omega * (k.2 : ℂ)
+@[expose] def freqY (k : Frequency) : ℂ := omega * (k.2 : ℂ)
 
 /-- Dx, given by `ContinuousLinearMap.fst ℝ ℝ ℝ`. -/
-def dx : Plane →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ ℝ
+@[expose] def dx : Plane →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ ℝ
 /-- Dy, given by `ContinuousLinearMap.snd ℝ ℝ ℝ`. -/
-def dy : Plane →L[ℝ] ℝ := ContinuousLinearMap.snd ℝ ℝ ℝ
+@[expose] def dy : Plane →L[ℝ] ℝ := ContinuousLinearMap.snd ℝ ℝ ℝ
 
 /-- Lift X, given by `ContinuousLinearMap.smulRightL ℝ Plane ℂ dx`. -/
-def liftX : ℂ →L[ℝ] (Plane →L[ℝ] ℂ) := ContinuousLinearMap.smulRightL ℝ Plane ℂ dx
+@[expose] def liftX : ℂ →L[ℝ] (Plane →L[ℝ] ℂ) := ContinuousLinearMap.smulRightL ℝ Plane ℂ dx
 /-- Lift Y, given by `ContinuousLinearMap.smulRightL ℝ Plane ℂ dy`. -/
-def liftY : ℂ →L[ℝ] (Plane →L[ℝ] ℂ) := ContinuousLinearMap.smulRightL ℝ Plane ℂ dy
+@[expose] def liftY : ℂ →L[ℝ] (Plane →L[ℝ] ℂ) := ContinuousLinearMap.smulRightL ℝ Plane ℂ dy
 
-@[simp] theorem liftX_apply (c : ℂ) (x : Plane) : liftX c x = x.1 • c := rfl
-@[simp] theorem liftY_apply (c : ℂ) (x : Plane) : liftY c x = x.2 • c := rfl
+@[simp] theorem liftX_apply (c : ℂ) (x : Plane) : liftX c x = x.1 • c := by rfl
+@[simp] theorem liftY_apply (c : ℂ) (x : Plane) : liftY c x = x.2 • c := by rfl
 
 /-- Phase, given by `liftX (freqX k) + liftY (freqY k)`. -/
-def phase (k : Frequency) : Plane →L[ℝ] ℂ := liftX (freqX k) + liftY (freqY k)
+@[expose] def phase (k : Frequency) : Plane →L[ℝ] ℂ := liftX (freqX k) + liftY (freqY k)
 
 /-- Mode, given by `Complex.exp (phase k x)`. -/
-def mode (k : Frequency) (x : Plane) : ℂ := Complex.exp (phase k x)
+@[expose] def mode (k : Frequency) (x : Plane) : ℂ := Complex.exp (phase k x)
 
 theorem phase_formula (k : Frequency) (x : Plane) :
     phase k x = omega * ((k.1 : ℂ) * (x.1 : ℂ) + (k.2 : ℂ) * (x.2 : ℂ)) := by
@@ -467,7 +467,7 @@ theorem Rapid.derivY {a : Frequency → ℂ} (ha : Rapid a) : Rapid (derivY a) :
   ha.mul_linear ‖omega‖ norm_freqY_le
 
 /-- Series, given by `∑' k, a k * mode k x`. -/
-def series (a : Frequency → ℂ) (x : Plane) : ℂ := ∑' k, a k * mode k x
+@[expose] def series (a : Frequency → ℂ) (x : Plane) : ℂ := ∑' k, a k * mode k x
 
 theorem summable_terms {a : Frequency → ℂ} (ha : Rapid a) (x : Plane) :
     Summable (fun k => a k * mode k x) := by
@@ -561,7 +561,7 @@ inductive Direction
 
 /-- Vector as an element of `Direction → Plane | .radial => (1, 1 - Real.sqrt 2) | .temporal =>
 (Real.sqrt 2 - 1, 1)`. -/
-def vector : Direction → Plane
+@[expose] def vector : Direction → Plane
   | .radial => (1, 1 - Real.sqrt 2)
   | .temporal => (Real.sqrt 2 - 1, 1)
 
@@ -618,9 +618,9 @@ theorem omega_ne_zero : omega ≠ 0 := by
     (Complex.ofReal_ne_zero.mpr Real.pi_ne_zero)) Complex.I_ne_zero
 
 /-- Multiplier, given by `(omega * (symbol d k : ℂ))⁻¹`. -/
-def multiplier (d : Direction) (k : Frequency) : ℂ := (omega * (symbol d k : ℂ))⁻¹
+@[expose] def multiplier (d : Direction) (k : Frequency) : ℂ := (omega * (symbol d k : ℂ))⁻¹
 /-- Inverse coefficient, given by `multiplier d k * a k`. -/
-def inverseCoeff (d : Direction) (a : Frequency → ℂ) (k : Frequency) : ℂ :=
+@[expose] def inverseCoeff (d : Direction) (a : Frequency → ℂ) (k : Frequency) : ℂ :=
   multiplier d k * a k
 
 @[simp] theorem symbol_zero (d : Direction) : symbol d 0 = 0 := by
@@ -673,7 +673,7 @@ theorem coefficient_cancel (d : Direction) {a : Frequency → ℂ} (hzero : a 0 
     rw [← mul_assoc, mul_inv_cancel₀ hd, one_mul]
 
 /-- Directional inverse, given by `series (inverseCoeff d a)`. -/
-def directionalInverse (d : Direction) (a : Frequency → ℂ) : Plane → ℂ :=
+@[expose] def directionalInverse (d : Direction) (a : Frequency → ℂ) : Plane → ℂ :=
   series (inverseCoeff d a)
 
 theorem contDiff_directionalInverse (d : Direction) {a : Frequency → ℂ} (ha : Rapid a) :
@@ -716,7 +716,7 @@ local instance instTorusInverse1 : Fact ((0 : ℝ) < 1) := ⟨by norm_num⟩
 abbrev Torus := UnitAddCircle × UnitAddCircle
 
 /-- Torus measure as an element of `Measure Torus`. -/
-def torusMeasure : Measure Torus :=
+@[expose] def torusMeasure : Measure Torus :=
   (AddCircle.haarAddCircle : Measure UnitAddCircle).prod AddCircle.haarAddCircle
 
 instance : IsProbabilityMeasure torusMeasure := by
@@ -724,7 +724,7 @@ instance : IsProbabilityMeasure torusMeasure := by
   infer_instance
 
 /-- Torus mode, bundling `toFun`, `continuous_toFun`. -/
-def torusMode (k : Frequency) : C(Torus, ℂ) where
+@[expose] def torusMode (k : Frequency) : C(Torus, ℂ) where
   toFun z := fourier k.1 z.1 * fourier k.2 z.2
   continuous_toFun := ((fourier k.1).continuous.comp continuous_fst).mul
     ((fourier k.2).continuous.comp continuous_snd)
@@ -733,7 +733,8 @@ theorem norm_torusMode (k : Frequency) (z : Torus) : ‖torusMode k z‖ = 1 := 
   simp [torusMode, fourier_apply, Circle.norm_coe]
 
 /-- Torus series, given by `∑' k, a k * torusMode k z`. -/
-def torusSeries (a : Frequency → ℂ) (z : Torus) : ℂ := ∑' k, a k * torusMode k z
+@[expose] def torusSeries (a : Frequency → ℂ) (z : Torus) : ℂ :=
+  ∑' k, a k * torusMode k z
 
 theorem mode_eq_torusMode (k : Frequency) (x : Plane) :
     mode k x = torusMode k ((x.1 : UnitAddCircle), (x.2 : UnitAddCircle)) := by
@@ -801,7 +802,7 @@ theorem integral_torusSeries {a : Frequency → ℂ} (ha : Rapid a) :
   simp
 
 /-- Weighted absolute Fourier coefficient seminorm. -/
-def coeffSeminorm (p : ℕ) (a : Frequency → ℂ) : ℝ :=
+@[expose] def coeffSeminorm (p : ℕ) (a : Frequency → ℂ) : ℝ :=
   ∑' k, weight k ^ p * ‖a k‖
 
 theorem inverseCoeff_seminorm_le (d : Direction) {a : Frequency → ℂ}
@@ -826,7 +827,7 @@ def coordinateCoeff (j : Bool) (a : Frequency → ℂ) : Frequency → ℂ :=
   if j then derivY a else derivX a
 
 /-- Coordinate partial, given by `fderiv ℝ f x (if j then (0, 1) else (1, 0))`. -/
-def coordinatePartial (j : Bool) (f : Plane → ℂ) (x : Plane) : ℂ :=
+@[expose] def coordinatePartial (j : Bool) (f : Plane → ℂ) (x : Plane) : ℂ :=
   fderiv ℝ f x (if j then (0, 1) else (1, 0))
 
 /-- Coefficient word as an element of `js, a => coordinateCoeff j (coefficientWord js a)`. -/
@@ -835,7 +836,7 @@ def coefficientWord : List Bool → (Frequency → ℂ) → Frequency → ℂ
   | j :: js, a => coordinateCoeff j (coefficientWord js a)
 
 /-- Derivative word as an element of `js, f => coordinatePartial j (derivativeWord js f)`. -/
-def derivativeWord : List Bool → (Plane → ℂ) → Plane → ℂ
+@[expose] def derivativeWord : List Bool → (Plane → ℂ) → Plane → ℂ
   | [], f => f
   | j :: js, f => coordinatePartial j (derivativeWord js f)
 
@@ -994,7 +995,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1042,14 +1043,14 @@ theorem unitCoeff_of_hasDerivAt {f f' : ℝ → ℂ} {n : ℤ} (hn : n ≠ 0)
     Complex.ofReal_zero, one_mul, zero_sub, hden, one_div, inv_neg, neg_mul_neg] using h
 
 /-- Unit-periodicity in both coordinates, expressed on the universal cover. -/
-def UnitPeriodic (f : Plane → ℂ) : Prop :=
+@[expose] def UnitPeriodic (f : Plane → ℂ) : Prop :=
   ∀ z : Plane, ∀ k : Frequency, f (z + ((k.1 : ℝ), (k.2 : ℝ))) = f z
 
 /-- The genuine first coordinate derivative. -/
-noncomputable def partialX (f : Plane → ℂ) (z : Plane) : ℂ := fderiv ℝ f z (1, 0)
+@[expose] noncomputable def partialX (f : Plane → ℂ) (z : Plane) : ℂ := fderiv ℝ f z (1, 0)
 
 /-- X jet, given by `partialX^[p] f`. -/
-noncomputable def xJet (p : ℕ) (f : Plane → ℂ) : Plane → ℂ := partialX^[p] f
+@[expose] noncomputable def xJet (p : ℕ) (f : Plane → ℂ) : Plane → ℂ := partialX^[p] f
 
 @[simp] theorem xJet_zero (f : Plane → ℂ) : xJet 0 f = f := rfl
 
@@ -1088,7 +1089,7 @@ theorem hasDerivAt_slice {f : Plane → ℂ} {x y : ℝ}
     ((hasDerivAt_id x).prodMk (hasDerivAt_const x y))
 
 /-- The actual two-dimensional Fourier coefficient, with the first coordinate integrated first. -/
-def coefficient (f : Plane → ℂ) (k : Frequency) : ℂ :=
+@[expose] def coefficient (f : Plane → ℂ) (k : Frequency) : ℂ :=
   unitCoeff (fun y => unitCoeff (fun x => f (x, y)) k.1) k.2
 
 theorem coefficient_norm_le {f : Plane → ℂ} {C : ℝ} (k : Frequency)
@@ -1131,7 +1132,7 @@ theorem coefficient_decay_first {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)
   exact mul_le_mul_of_nonneg_left (coefficient_norm_le k hb) (pow_nonneg (norm_nonneg _) p)
 
 /-- The negative Fourier character on the unit square. -/
-def kernel (k : Frequency) (z : Plane) : ℂ :=
+@[expose] def kernel (k : Frequency) (z : Plane) : ℂ :=
   fourier (-k.1) (z.1 : UnitAddCircle) * fourier (-k.2) (z.2 : UnitAddCircle)
 
 theorem kernel_continuous (k : Frequency) : Continuous (kernel k) :=
@@ -1164,7 +1165,8 @@ theorem integral_square_swap {f : Plane → ℂ} (hf : Continuous f) :
       (Set.prod_mono Ioc_subset_Icc_self Ioc_subset_Icc_self)
 
 /-- Swap function, defined pointwise by `f (z.2, z.1)`. -/
-noncomputable def swapFunction (f : Plane → ℂ) : Plane → ℂ := fun z => f (z.2, z.1)
+@[expose] noncomputable def swapFunction (f : Plane → ℂ) : Plane → ℂ :=
+  fun z => f (z.2, z.1)
 
 theorem swapFunction_smooth {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f) :
     ContDiff ℝ ∞ (swapFunction f) := hf.comp (contDiff_snd.prodMk contDiff_fst)
@@ -1374,7 +1376,7 @@ theorem coefficient_seminorm_bound {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)
 /-! ## Identification with the actual torus Fourier coefficients -/
 
 /-- Torus lift, given by `f ((x.1 : UnitAddCircle), (x.2 : UnitAddCircle))`. -/
-noncomputable def torusLift (f : Torus → ℂ) (x : Plane) : ℂ :=
+@[expose] noncomputable def torusLift (f : Torus → ℂ) (x : Plane) : ℂ :=
   f ((x.1 : UnitAddCircle), (x.2 : UnitAddCircle))
 
 theorem torusLift_periodic (f : Torus → ℂ) : UnitPeriodic (torusLift f) := by
@@ -1516,7 +1518,7 @@ noncomputable def descend (f : Plane → ℂ) (hp : UnitPeriodic f) (z : Torus) 
   (firstLift_periodic f hp z.1).lift z.2
 
 @[simp] theorem descend_coe (f : Plane → ℂ) (hp : UnitPeriodic f) (x y : ℝ) :
-    descend f hp ((x : UnitAddCircle), (y : UnitAddCircle)) = f (x, y) := rfl
+    descend f hp ((x : UnitAddCircle), (y : UnitAddCircle)) = f (x, y) := by rfl
 
 theorem descend_continuous {f : Plane → ℂ} (hf : Continuous f) (hp : UnitPeriodic f) :
     Continuous (descend f hp) := by
@@ -1532,7 +1534,7 @@ noncomputable def descendContinuous (f : Plane → ℂ) (hf : Continuous f)
   continuous_toFun := descend_continuous hf hp
 
 @[simp] theorem torusLift_descendContinuous (f : Plane → ℂ) (hf : Continuous f)
-    (hp : UnitPeriodic f) : torusLift (descendContinuous f hf hp) = f := rfl
+    (hp : UnitPeriodic f) : torusLift (descendContinuous f hf hp) = f := by rfl
 
 /-- Pointwise reconstruction for an arbitrary actual smooth unit-periodic
 function on the plane; neither rapid decay nor reconstruction is a premise. -/

@@ -17,7 +17,7 @@ import Mathlib.RingTheory.Coalgebra.CoassocSimps
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.Coalgebra.MulOpposite`.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 
@@ -40,7 +40,7 @@ lemma TensorProduct.opLinearEquiv_tmul
   (x : A) (y : B) :
   opLinearEquiv (MulOpposite.op (x ⊗ₜ[R] y))
     = MulOpposite.op x ⊗ₜ[R] MulOpposite.op y :=
-rfl
+by rfl
 @[simp]
 lemma TensorProduct.opLinearEquiv_symm_tmul
   {R A B : Type*} [CommSemiring R]
@@ -49,7 +49,7 @@ lemma TensorProduct.opLinearEquiv_symm_tmul
   (x : Aᵐᵒᵖ) (y : Bᵐᵒᵖ) :
   opLinearEquiv.symm (x ⊗ₜ[R] y)
     = MulOpposite.op (x.unop ⊗ₜ[R] y.unop) :=
-rfl
+by rfl
 
 noncomputable instance MulOpposite.coalgebraStruct
   {R A : Type*} [CommSemiring R]
@@ -74,7 +74,7 @@ lemma MulOpposite.comul_def'
     (TensorProduct.map (MulOpposite.opLinearEquiv R).toLinearMap
       (MulOpposite.opLinearEquiv R).toLinearMap) ∘ₗ
       CoalgebraStruct.comul ∘ₗ (MulOpposite.opLinearEquiv R).symm.toLinearMap :=
-rfl
+by rfl
 lemma MulOpposite.counit_def
   {R A : Type*} [CommSemiring R]
   [AddCommMonoid A] [Module R A]

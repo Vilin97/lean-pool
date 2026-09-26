@@ -29,7 +29,7 @@ We also give an alternative description via moves, which is more convenient for 
 properties.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 
@@ -70,7 +70,7 @@ The definition of coordinate functions is in two steps. We first define the coor
 -/
 
 /-- Coordinates for a formal sum with one term. -/
-def monomCoeff (R X : Type _) [Ring R] [DecidableEq X] (x₀ : X) (nx : R × X) : R :=
+@[expose] def monomCoeff (R X : Type _) [Ring R] [DecidableEq X] (x₀ : X) (nx : R × X) : R :=
   match (nx.2 == x₀) with
   | true => nx.1
   | false => 0
@@ -98,7 +98,7 @@ theorem monom_coords_at_zero (x₀ x : X) : monomCoeff R X x₀ (0, x) = 0 := by
   cases x == x₀ <;> rfl
 
 /-- The coordinates for a formal sum. -/
-def _root_.LeanPool.Polylean.FormalSum.coords : FormalSum R X → X → R
+@[expose] def _root_.LeanPool.Polylean.FormalSum.coords : FormalSum R X → X → R
   | [], _ => 0
   | h :: t, x₀ => monomCoeff R X x₀ h + coords t x₀
 
@@ -261,7 +261,7 @@ end FormalSum
 * We show this is an equivalence relation and define the quotient
 -/
 /-- Relation by equal coordinates. -/
-def eqlCoords (R X : Type) [Ring R] [DecidableEq X] (s₁ s₂ : FormalSum R X) : Prop :=
+@[expose] def eqlCoords (R X : Type) [Ring R] [DecidableEq X] (s₁ s₂ : FormalSum R X) : Prop :=
   s₁.coords = s₂.coords
 
 namespace eqlCoords
@@ -540,7 +540,7 @@ theorem append_equiv (s₁ s₂ t₁ t₂ : FormalSum R X) :
 end FormalSum
 
 /-- Addition of elements in the free module. -/
-def _root_.LeanPool.Polylean.FreeModule.add : R[X] → R[X] → R[X] := by
+@[expose] def _root_.LeanPool.Polylean.FreeModule.add : R[X] → R[X] → R[X] := by
   let f : FormalSum R X → FormalSum R X → R[X] := fun s₁ s₂ => ⟦s₁ ++ s₂⟧
   apply Quotient.lift₂ f
   intro a₁ b₁ a₂ b₂
@@ -644,7 +644,7 @@ theorem addn_assoc (x₁ x₂ x₃ : R[X]) : (x₁ + x₂) + x₃ = x₁ + (x₂
   apply add_assoc_aux
 
 /-- The zero element of the free module. -/
-def zero : R[X] := ⟦[]⟧
+@[expose] def zero : R[X] := ⟦[]⟧
 
 /-- adding zero -/
 theorem addn_zero (x : R[X]) : x + zero = x := by
@@ -1132,7 +1132,7 @@ theorem monom_coeff_eq_of_coord_eq (x : X) (a₀ a₁ : R) :
 
 
 /-- For `x: X`, the functions `a : R ↦ ⟦[(a, x)]⟧` -/
-def coeffInclusion (x₀ : X) : R → R[X] :=
+@[expose] def coeffInclusion (x₀ : X) : R → R[X] :=
   fun a₀ => ⟦[(a₀, x₀)]⟧
 
 /-- Injectivity of `coeffInclusion` -/
@@ -1145,7 +1145,7 @@ theorem coeffInclusion_injective (x₀ : X)
   exact monom_coeff_eq_of_coord_eq x₀ a₀ a₁ hyp
 
 /-- For `a: A`, the function `x: X ↦ ⟦[(a, x)]⟧` -/
-def baseInclusion (a₀ : R) : X → R[X] :=
+@[expose] def baseInclusion (a₀ : R) : X → R[X] :=
   fun x₀ => ⟦[(a₀, x₀)]⟧
 
 /-- Injectivity of `baseInclusion a` give `a ≠0` -/

@@ -21,7 +21,7 @@ The coordinate equation, tangency, initial trace and physical pressure balance
 are proved at every time, including within-interval endpoint derivatives.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,23 +41,23 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖Q t v‖ ^ 2)
 
 /-- The actual ordinary coefficient `-2 K⁻¹ Q* Q₁` in equation (12). -/
-def generator : C(Icc (0 : ℝ) T,V →L[ℝ] V) :=
+@[expose] def generator : C(Icc (0 : ℝ) T,V →L[ℝ] V) :=
   ⟨fun t => (-2 : ℝ) • (gramInversePath T Q c hc hQ t).comp ((Q t).adjoint.comp (Q₁ t)),
     ((gramInversePath T Q c hc hQ).continuous.clm_comp
       ((adjointPath T Q).continuous.clm_comp Q₁.continuous)).const_smul (-2 : ℝ)⟩
 
 /-- The actual projected forcing `K⁻¹ Q* f`, as a bounded continuous-path map. -/
-def forcingOperator : C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,V) :=
+@[expose] def forcingOperator : C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,V) :=
   multiplier (frameLeftInversePath T Q c hc hQ)
 
 variable (U : Evolution T hT (generator T Q Q₁ c hc hQ))
 
 /-- The forward coordinate is the actual forced Duhamel path. -/
-def coordinates (f : C(Icc (0 : ℝ) T, E)) (a₀ : V) : C(Icc (0 : ℝ) T,V) :=
+@[expose] def coordinates (f : C(Icc (0 : ℝ) T, E)) (a₀ : V) : C(Icc (0 : ℝ) T,V) :=
   U.solution (forcingOperator T Q c hc hQ f) a₀
 
 /-- Its derivative is the literal ordinary right hand side. -/
-def coordinateDerivative (f : C(Icc (0 : ℝ) T, E)) (a₀ : V) : C(Icc (0 : ℝ) T,V) :=
+@[expose] def coordinateDerivative (f : C(Icc (0 : ℝ) T, E)) (a₀ : V) : C(Icc (0 : ℝ) T,V) :=
   multiplier (generator T Q Q₁ c hc hQ) (coordinates T hT Q Q₁ c hc hQ U f a₀) +
     forcingOperator T Q c hc hQ f
 

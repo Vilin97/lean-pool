@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteSumBounds
 
 /-! Quantitative bounds for the literal finite approximate velocity and its time derivative. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

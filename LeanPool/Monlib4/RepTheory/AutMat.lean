@@ -19,7 +19,7 @@ corollaries package the implementing matrix as a linear equivalence or as an
 element of the general linear group.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Matrix
 
@@ -188,7 +188,7 @@ def autInner {R E : Type _} [CommSemiring R] [Semiring E]
 theorem autInner_apply {R E : Type _} [CommSemiring R] [Semiring E]
     [Algebra R E] (x : E) [Invertible x] (y : E) :
     (autInner x : E ≃ₐ[R] E) y = x * y * ⅟ x :=
-  rfl
+  by rfl
 
 end Algebra
 
@@ -290,12 +290,12 @@ abbrev autInner {R E : Type _} [CommSemiring R] [Semiring E]
 theorem autInner_apply {R E : Type _} [CommSemiring R] [Semiring E]
     [Algebra R E] (x : E) [Invertible x] (y : E) :
     (autInner x : E ≃ₐ[R] E) y = x * y * ⅟ x :=
-  rfl
+  by rfl
 
 theorem autInner_symm_apply {R E : Type _} [CommSemiring R] [Semiring E]
     [Algebra R E] (x : E) [Invertible x] (y : E) :
     (autInner x : E ≃ₐ[R] E).symm y = ⅟ x * y * x :=
-  rfl
+  by rfl
 
 theorem coe_autInner_eq_rmul_comp_lmul {R E : Type _} [CommSemiring R]
     [Semiring E] [Algebra R E] (x : E) [Invertible x] :
@@ -351,7 +351,6 @@ def IsInner {R E : Type*} [CommSemiring R] [Semiring E]
   ∃ (a : E) (_ : Invertible a), f = Algebra.autInner a
 
 /-- Product of algebra equivalences, acting componentwise on a product algebra. -/
-@[simps]
 def prodMap {K R₁ R₂ R₃ R₄ : Type*} [CommSemiring K]
     [Semiring R₁] [Semiring R₂] [Semiring R₃] [Semiring R₄]
     [Algebra K R₁] [Algebra K R₂] [Algebra K R₃] [Algebra K R₄]
@@ -365,8 +364,19 @@ def prodMap {K R₁ R₂ R₃ R₄ : Type*} [CommSemiring K]
   map_mul' := fun x y => by aesop
   commutes' := fun r => by aesop
 
+@[simp] theorem prodMap_apply {K R₁ R₂ R₃ R₄ : Type*} [CommSemiring K]
+    [Semiring R₁] [Semiring R₂] [Semiring R₃] [Semiring R₄]
+    [Algebra K R₁] [Algebra K R₂] [Algebra K R₃] [Algebra K R₄]
+    (f : R₁ ≃ₐ[K] R₂) (g : R₃ ≃ₐ[K] R₄) (x : R₁ × R₃) :
+    prodMap f g x = (f x.1, g x.2) := by rfl
+
+@[simp] theorem prodMap_symm_apply {K R₁ R₂ R₃ R₄ : Type*} [CommSemiring K]
+    [Semiring R₁] [Semiring R₂] [Semiring R₃] [Semiring R₄]
+    [Algebra K R₁] [Algebra K R₂] [Algebra K R₃] [Algebra K R₄]
+    (f : R₁ ≃ₐ[K] R₂) (g : R₃ ≃ₐ[K] R₄) (x : R₂ × R₄) :
+    (prodMap f g).symm x = (f.symm x.1, g.symm x.2) := by rfl
+
 /-- Dependent-function algebra equivalence induced by pointwise algebra equivalences. -/
-@[simps]
 def Pi {K ι : Type*} [CommSemiring K] {R : ι → Type*}
     [∀ i, Semiring (R i)] [∀ i, Algebra K (R i)]
     (f : Π i, R i ≃ₐ[K] R i) :
@@ -378,6 +388,16 @@ def Pi {K ι : Type*} [CommSemiring K] {R : ι → Type*}
   map_add' := fun x y => funext fun i => _root_.map_add _ (x i) (y i)
   map_mul' := fun x y => funext fun i => _root_.map_mul _ (x i) (y i)
   commutes' := fun r => funext fun i => (f i).commutes r
+
+@[simp] theorem Pi_apply {K ι : Type*} [CommSemiring K] {R : ι → Type*}
+    [∀ i, Semiring (R i)] [∀ i, Algebra K (R i)]
+    (f : Π i, R i ≃ₐ[K] R i) (x : Π i, R i) (i : ι) :
+    Pi f x i = f i (x i) := by rfl
+
+@[simp] theorem Pi_symm_apply {K ι : Type*} [CommSemiring K] {R : ι → Type*}
+    [∀ i, Semiring (R i)] [∀ i, Algebra K (R i)]
+    (f : Π i, R i ≃ₐ[K] R i) (x : Π i, R i) (i : ι) :
+    (Pi f).symm x i = (f i).symm (x i) := by rfl
 
 end AlgEquiv
 
@@ -801,7 +821,7 @@ theorem matrixPiFinAlgEquivPiFinTwo_apply {𝕜 : Type*} [CommSemiring 𝕜]
     [∀ i, Fintype (n i)] [∀ i, DecidableEq (n i)]
     (x : Π i : Fin (k + 1), Mat 𝕜 (n i)) :
     matrixPiFinAlgEquivPiFinTwo x = (x 0, fun j : Fin k => x j.succ) :=
-  rfl
+  by rfl
 
 theorem matrixPiFinAlgEquivPiFinTwo_symm_apply {𝕜 : Type*} [CommSemiring 𝕜]
     {k : ℕ} {n : Fin (k + 1) → Type*}
@@ -845,7 +865,7 @@ theorem matrixPiFinTwoAlgEquivProd_apply {𝕜 : Type*} [CommSemiring 𝕜]
     {n : Fin 2 → Type*} [∀ i, Fintype (n i)] [∀ i, DecidableEq (n i)]
     (x : Π i : Fin 2, Mat 𝕜 (n i)) :
     matrixPiFinTwoAlgEquivProd x = (x 0, x 1) :=
-  rfl
+  by rfl
 
 @[simp]
 theorem matrixPiFinTwoAlgEquivProd_symm_apply {𝕜 : Type*} [CommSemiring 𝕜]
@@ -1077,7 +1097,7 @@ theorem AlgEquiv.matrix_prod_aut' {𝕜 n m : Type*} [Field 𝕜] [Fintype n]
       AlgEquiv.ofProdMap₂₂ f h.2
     use f₁, f₂
     ext1 x
-    simp_rw [AlgEquiv.prodMap_apply, Prod.map_apply']
+    simp_rw [AlgEquiv.prodMap_apply]
     calc
       f x = f (x.1, 0) + f (0, x.2) := by
         rw [← map_add, Prod.fst_add_snd]
@@ -1097,8 +1117,7 @@ theorem AlgEquiv.matrix_prod_aut' {𝕜 n m : Type*} [Field 𝕜] [Fintype n]
       AlgEquiv.ofProdMap₂₁ f h.2
     use g₂, g₁
     ext1 x
-    simp_rw [Function.comp_apply, Prod.swap, AlgEquiv.prodMap_apply,
-      Prod.map_apply]
+    simp_rw [Function.comp_apply, Prod.swap, AlgEquiv.prodMap_apply]
     calc
       f x = f (0, x.2) + f (x.1, 0) := by
         rw [← map_add, add_comm, Prod.fst_add_snd]

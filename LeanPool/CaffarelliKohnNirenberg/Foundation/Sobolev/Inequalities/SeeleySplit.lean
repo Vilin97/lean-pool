@@ -15,7 +15,7 @@ densities.  The resulting theorem is applied only after the density has been
 made opaque at the use site.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal

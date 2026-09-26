@@ -15,7 +15,7 @@ public import Mathlib.Topology.Homotopy.Basic
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Compressible.Defs`.
 -/
 
-@[expose] public section
+public section
 
 
 open CategoryTheory unitInterval
@@ -58,7 +58,7 @@ namespace LiftStructUpToRelHomotopy
 variable {sq : CommSq f ι i F} (l : LiftStructUpToRelHomotopy sq)
 
 /-- `curriedH` -/
-noncomputable def curriedH : X' ⟶ TopCat.of C(I, X) :=
+@[expose] noncomputable def curriedH : X' ⟶ TopCat.of C(I, X) :=
   ofHom l.H.some.toContinuousMap.argSwap.curry
 
 lemma curriedH_apply_zero :

@@ -14,7 +14,7 @@ public import Mathlib.Analysis.InnerProductSpace.Laplacian
 /-! Scalar components of genuine smooth velocity and vorticity fields,
 their exact elliptic identity, and a fixed coordinate operator bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

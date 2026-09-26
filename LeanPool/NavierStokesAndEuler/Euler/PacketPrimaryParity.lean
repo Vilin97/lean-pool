@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureParity
 
 /-! The actual homogeneous primary solution initializes the profile parity induction. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

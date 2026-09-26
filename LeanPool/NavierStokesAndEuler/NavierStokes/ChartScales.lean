@@ -31,7 +31,7 @@ Closed boxes of two mesh widths include the fixed small enlargement of the
 one-mesh supports in the manuscript.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -48,7 +48,7 @@ abbrev Position := Fin 3 → ℝ
 abbrev Label := ℕ × (Grid × Bool)
 
 /-- Dyadic Q, given by `(2 : ℝ) ^ (-(n : ℝ))`. -/
-def dyadicQ (n : ℕ) : ℝ := (2 : ℝ) ^ (-(n : ℝ))
+@[expose] def dyadicQ (n : ℕ) : ℝ := (2 : ℝ) ^ (-(n : ℝ))
 
 /-- Spacing, given by `(2 : ℝ) ^ (-(n : ℝ) * a) / (n : ℝ) ^ 6`. -/
 def spacing (a : ℝ) (n : ℕ) : ℝ := (2 : ℝ) ^ (-(n : ℝ) * a) / (n : ℝ) ^ 6
@@ -108,11 +108,11 @@ theorem spacing_ratio_le (a A : ℝ) {n m : ℕ}
     (Real.rpow_nonneg (by norm_num) _) (by positivity)
 
 /-- Axis exponent, given by `![1 / 2, D, 1]`. -/
-def axisExponent (D : ℝ) : Fin 3 → ℝ := ![1 / 2, D, 1]
+@[expose] def axisExponent (D : ℝ) : Fin 3 → ℝ := ![1 / 2, D, 1]
 /-- Width, given by `spacing (axisExponent D j) n`. -/
-def width (D : ℝ) (j : Fin 3) (n : ℕ) : ℝ := spacing (axisExponent D j) n
+@[expose] def width (D : ℝ) (j : Fin 3) (n : ℕ) : ℝ := spacing (axisExponent D j) n
 /-- Ratio bound, given by `(5 : ℝ) ^ 6 * (2 : ℝ) ^ (4 * (1 + |D|))`. -/
-def ratioBound (D : ℝ) : ℝ := (5 : ℝ) ^ 6 * (2 : ℝ) ^ (4 * (1 + |D|))
+@[expose] def ratioBound (D : ℝ) : ℝ := (5 : ℝ) ^ 6 * (2 : ℝ) ^ (4 * (1 + |D|))
 
 theorem width_pos (D : ℝ) (j : Fin 3) {n : ℕ} (hn : 1 ≤ n) : 0 < width D j n :=
   spacing_pos _ hn
@@ -133,7 +133,7 @@ theorem width_ratio_le (D : ℝ) (j : Fin 3) {n m : ℕ}
 
 /-- Physical box, given by `{x | ∀ j, |x j - width D j L.1 * (L.2.1 j : ℝ)| ≤ 2 * width D j
 L.1}`. -/
-def physicalBox (D : ℝ) (L : Label) : Set Position :=
+@[expose] def physicalBox (D : ℝ) (L : Label) : Set Position :=
   {x | ∀ j, |x j - width D j L.1 * (L.2.1 j : ℝ)| ≤ 2 * width D j L.1}
 
 /-- The exact enlarged-box interaction relation used for coloring. -/
@@ -345,7 +345,7 @@ theorem neighbors_card_le (D : ℝ) (L : Label) : (neighbors D L).card ≤ degre
 theorem label_type_countable : Countable Label := by infer_instance
 
 /-- The expanding eigenvalue of the actual covering matrix. -/
-def coverGrowth : ℝ := 4 + Real.sqrt 2
+@[expose] def coverGrowth : ℝ := 4 + Real.sqrt 2
 
 theorem log_coverGrowth_pos : 0 < Real.log coverGrowth := by
   apply Real.log_pos
@@ -509,7 +509,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -521,27 +521,27 @@ open scoped Topology
 /-- Tg: an abbreviation for `SlotColoring.coverGrowth`. -/
 abbrev Tg : ℝ := SlotColoring.coverGrowth
 /-- Lambda, given by `4 - Real.sqrt 2`. -/
-def Lambda : ℝ := 4 - Real.sqrt 2
+@[expose] def Lambda : ℝ := 4 - Real.sqrt 2
 /-- Rho, given by `Real.log Lambda / Real.log Tg`. -/
 def rho : ℝ := Real.log Lambda / Real.log Tg
 /-- Kappa, given by `1 / 100000`. -/
-def kappa : ℝ := 1 / 100000
+@[expose] def kappa : ℝ := 1 / 100000
 /-- Radial exponent, given by `2 * ((1 + h) * rho - h * kappa)`. -/
 def radialExponent (h : ℝ) : ℝ := 2 * ((1 + h) * rho - h * kappa)
 
 /-- Q: an abbreviation for `SlotColoring.dyadicQ n`. -/
 abbrev Q (n : ℕ) : ℝ := SlotColoring.dyadicQ n
 /-- S, given by `(n : ℝ) ^ 2`. -/
-def S (n : ℕ) : ℝ := (n : ℝ) ^ 2
+@[expose] def S (n : ℕ) : ℝ := (n : ℝ) ^ 2
 /-- Epsilon, given by `Q n ^ h`. -/
-def epsilon (h : ℝ) (n : ℕ) : ℝ := Q n ^ h
+@[expose] def epsilon (h : ℝ) (n : ℕ) : ℝ := Q n ^ h
 /-- Native index: an abbreviation for `SlotColoring.nativeIndex h n`. -/
 abbrev nativeIndex (h : ℝ) (n : ℕ) : ℕ := SlotColoring.nativeIndex h n
 
 /-- Time coefficient, given by `Tg ^ nativeIndex h n * Q n ^ (1 + h)`. -/
-def timeCoefficient (h : ℝ) (n : ℕ) : ℝ := Tg ^ nativeIndex h n * Q n ^ (1 + h)
+@[expose] def timeCoefficient (h : ℝ) (n : ℕ) : ℝ := Tg ^ nativeIndex h n * Q n ^ (1 + h)
 /-- Radial coefficient, given by `Lambda ^ nativeIndex h n * Q n ^ (radialExponent h / 2)`. -/
-def radialCoefficient (h : ℝ) (n : ℕ) : ℝ :=
+@[expose] def radialCoefficient (h : ℝ) (n : ℕ) : ℝ :=
   Lambda ^ nativeIndex h n * Q n ^ (radialExponent h / 2)
 
 theorem sqrt_two_lt_two : Real.sqrt (2 : ℝ) < 2 := by
@@ -741,7 +741,7 @@ theorem timeCoefficient_inv_lower (h : ℝ) (hh : 0 ≤ h) {n : ℕ} (hn : 4 ≤
   simpa only [one_div, inv_inv] using hi
 
 /-- Slot length, given by `2 * r0 / timeCoefficient h n`. -/
-def slotLength (r0 h : ℝ) (n : ℕ) : ℝ := 2 * r0 / timeCoefficient h n
+@[expose] def slotLength (r0 h : ℝ) (n : ℕ) : ℝ := 2 * r0 / timeCoefficient h n
 
 /-- The native slot has length comparable to the actual slow scale `n²`. -/
 theorem slotLength_bounds (r0 h : ℝ) (hr : 0 ≤ r0) (hh : 0 ≤ h) {n : ℕ} (hn : 4 ≤ n) :
@@ -753,7 +753,8 @@ theorem slotLength_bounds (r0 h : ℝ) (hr : 0 ≤ r0) (hh : 0 ≤ h) {n : ℕ} 
     by simpa only [slotLength, div_eq_mul_inv, mul_assoc] using hu⟩
 
 /-- The carrier is the genuine rounded integer frequency used in the manuscript. -/
-def carrier (h : ℝ) (n : ℕ) : ℕ := Scaling.carrierFrequency (epsilon h n)
+@[expose] def carrier (h : ℝ) (n : ℕ) : ℕ :=
+  Scaling.carrierFrequency (epsilon h n)
 
 theorem carrier_viscosity_bounds (h : ℝ) (hh : 0 ≤ h) (n : ℕ) :
     1 ≤ epsilon h n * (carrier h n : ℝ) ^ 2 ∧

@@ -25,7 +25,7 @@ section
 # Terminal Energy
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -171,7 +171,7 @@ section
 # Interval Trace
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -248,7 +248,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -19,7 +19,7 @@ constructed inverse extends the stable branch across its regular zero-time
 face.  The actual mask representatives stay at positive time.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,6 +40,7 @@ noncomputable def positiveTime : Set Slow := {p | 0 < p.2.2}
 /-- Positive part, given by `K ∩ positiveTime`. -/
 noncomputable def positivePart (K : Set Slow) : Set Slow := K ∩ positiveTime
 /-- Active label, given by `PrimaryRepresentatives.ActiveLabel (positivePart K)`. -/
+@[expose]
 noncomputable def ActiveLabel (K : Set Slow) := PrimaryRepresentatives.ActiveLabel (positivePart K)
 /-- Representative, given by `PrimaryRepresentatives.representative (positivePart K) L`. -/
 noncomputable def representative (K : Set Slow) (L : ActiveLabel K) : Slow :=
@@ -618,7 +619,7 @@ theorem compact_jet_bound {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   exact ⟨C, hC, fun p hp => hb _ ⟨p, hp, rfl⟩⟩
 
 /-- Stable pullback, given by `stableQ h p ^ exponent * f (stableInner h p)`. -/
-noncomputable def stablePullback (h exponent : ℝ) (f : (ℝ × ℝ) → ℝ) (p : Slow) : ℝ :=
+@[expose] noncomputable def stablePullback (h exponent : ℝ) (f : (ℝ × ℝ) → ℝ) (p : Slow) : ℝ :=
   stableQ h p ^ exponent * f (stableInner h p)
 
 /-- Physical pullback, given by `SimilarityHomogeneity.chartQ h p ^ exponent * f

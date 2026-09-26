@@ -37,7 +37,7 @@ Implementation-route theorems in the radial/coarea files should normally be
 treated as internal scaffolding.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

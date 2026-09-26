@@ -18,7 +18,7 @@ below are derivatives within the closed parameter domain; no extension to
 negative diffusion is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -132,7 +132,7 @@ end IntegralChain
 /-! ## Explicit algebra of genuine derivative chains -/
 
 /-- Recursive Leibniz product. Its derivative identity is proved below. -/
-noncomputable def jetProduct (a b : ℕ → ℝ) : ℕ → ℝ
+@[expose] noncomputable def jetProduct (a b : ℕ → ℝ) : ℕ → ℝ
   | 0 => a 0 * b 0
   | n + 1 => jetProduct (fun i => a (i + 1)) b n +
       jetProduct a (fun i => b (i + 1)) n
@@ -508,7 +508,7 @@ end Weighted
 open OutgoingTail
 
 /-- Tail weight, with branches according to `square`. -/
-noncomputable def tailWeight (d : TailData) (K : ℝ) (square : Bool) (X : ℝ) : ℝ :=
+@[expose] noncomputable def tailWeight (d : TailData) (K : ℝ) (square : Bool) (X : ℝ) : ℝ :=
   if square then (powerTail d.h (outgoingAmplitude d) K (outgoingShape d) X) ^ 2
   else powerTail d.h (outgoingAmplitude d) K (outgoingShape d) X
 
@@ -597,18 +597,18 @@ theorem nuDebtJet_bound (d : TailData) {K : ℝ} (hK : 1 ≤ K) (square : Bool)
   convert! hb' using 1; unfold nuConstant; ring
 
 /-- Diffusion, given by `1 - eta ^ 2`. -/
-noncomputable def diffusion (eta : ℝ) : ℝ := 1 - eta ^ 2
+@[expose] noncomputable def diffusion (eta : ℝ) : ℝ := 1 - eta ^ 2
 
 /-- Physical pressure, given by `pressureDebt (outgoingProfile d K eta) d.h (diffusion eta) K`. -/
-noncomputable def physicalPressure (d : TailData) (K eta : ℝ) : ℝ :=
+@[expose] noncomputable def physicalPressure (d : TailData) (K eta : ℝ) : ℝ :=
   pressureDebt (outgoingProfile d K eta) d.h (diffusion eta) K
 
 /-- Physical energy, given by `energyDebt (outgoingProfile d K eta) d.h (diffusion eta) K`. -/
-noncomputable def physicalEnergy (d : TailData) (K eta : ℝ) : ℝ :=
+@[expose] noncomputable def physicalEnergy (d : TailData) (K eta : ℝ) : ℝ :=
   energyDebt (outgoingProfile d K eta) d.h (diffusion eta) K
 
 /-- Physical angular, given by `angularDebt (outgoingProfile d K eta) d.h (diffusion eta) K`. -/
-noncomputable def physicalAngular (d : TailData) (K eta : ℝ) : ℝ :=
+@[expose] noncomputable def physicalAngular (d : TailData) (K eta : ℝ) : ℝ :=
   angularDebt (outgoingProfile d K eta) d.h (diffusion eta) K
 
 theorem physicalPressure_eq (d : TailData) {K : ℝ} (hK : 0 < K) (eta : ℝ) :
@@ -966,7 +966,7 @@ theorem physical_debts_zero (d : TailData) (K : ℝ) {eta : ℝ} (hη : diffusio
     hη, squareChange, change, edit, multiplier_zero d.h_pos]
 
 /-- Physical edit, given by `outgoingEdit d (diffusion eta) K eta X`. -/
-noncomputable def physicalEdit (d : TailData) (K eta X : ℝ) : ℝ :=
+@[expose] noncomputable def physicalEdit (d : TailData) (K eta X : ℝ) : ℝ :=
   outgoingEdit d (diffusion eta) K eta X
 
 theorem physicalEdit_pos (d : TailData) (K : ℝ) {eta X : ℝ}

@@ -20,7 +20,7 @@ backward integral with weight `R²`.  The coefficient chart is `(η,δ)`, includ
 both endpoints `η=±1`; its heat carrier uses the genuine smooth heat extension.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -151,7 +151,7 @@ noncomputable def radialSource (C : ℝ) (d : TailData) (y0 η R : ℝ) : ℝ :=
   profileSource C d y0 (η, edgeCoordinate (profileRadius y0 0) R)
 
 /-- The genuine backward weighted radial primitive, with the stress sign convention. -/
-noncomputable def radialStress (C : ℝ) (d : TailData) (y0 η R : ℝ) : ℝ :=
+@[expose] noncomputable def radialStress (C : ℝ) (d : TailData) (y0 η R : ℝ) : ℝ :=
   backwardStress (radialSource C d y0 η) R
 
 /-- Profile stress, given by `radialStress C d y0 y.1 (profileRadius y0 y.2)`. -/
@@ -356,11 +356,11 @@ theorem stressX_jets (C : ℝ) (d : TailData) (y0 : ℝ) (n : ℕ)
   ring
 
 /-- The two logarithmic Gaussian factors specified in (20). -/
-noncomputable def zeta (cL a y0 X : ℝ) : ℝ :=
+@[expose] noncomputable def zeta (cL a y0 X : ℝ) : ℝ :=
   FlatCutoff.edge cL (Real.log (X / a)) * FlatCutoff.edge 4 (y0 + 3 - Real.log X)
 
 /-- Edge distance, given by `min 1 (min (Real.log (X / a)) (y0 + 3 - Real.log X))`. -/
-noncomputable def edgeDistance (a y0 X : ℝ) : ℝ :=
+@[expose] noncomputable def edgeDistance (a y0 X : ℝ) : ℝ :=
   min 1 (min (Real.log (X / a)) (y0 + 3 - Real.log X))
 
 theorem stressX_zero_outside (C : ℝ) (d : TailData) (y0 : ℝ)

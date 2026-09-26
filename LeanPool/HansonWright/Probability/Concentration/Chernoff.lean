@@ -22,7 +22,7 @@ This module introduces no new definitions.
 * `chernoff_bound_subGaussian`: the optimized sub-Gaussian specialization.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool
 

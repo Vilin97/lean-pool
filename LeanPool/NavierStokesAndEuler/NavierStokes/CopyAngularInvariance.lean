@@ -19,7 +19,7 @@ its pressure, and the stripped cylindrical curl inherit those identities.
 The oscillatory carrier retains its separate angular character.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

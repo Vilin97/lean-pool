@@ -29,7 +29,7 @@ formalized here.)
 * `Front.shrink_isFront` : `shrink F (M ∘ E)` is a front on `M ∘ E`.
 -/
 
-@[expose] public section
+public section
 
 open Set List
 
@@ -41,13 +41,13 @@ variable {F : Set (List ℕ)} {M : ℕ → ℕ}
 
 /-- The restriction of `F` to the infinite subset enumerated by `N`: the elements of `F` whose
 entries all lie in `range N`. -/
-def shrink (F : Set (List ℕ)) (N : ℕ → ℕ) : Set (List ℕ) :=
+@[expose] def shrink (F : Set (List ℕ)) (N : ℕ → ℕ) : Set (List ℕ) :=
   {s | s ∈ F ∧ ∀ x ∈ s, x ∈ Set.range N}
 
 /-- The restriction of `F` to a set `X` (the survey's `F ↾ X`): the elements of `F` whose entries
 all lie in `X`. Definitionally `shrink F N = shrinkOn F (Set.range N)`, so the enumeration-based
 `shrink` and this set-based restriction agree on `X = Set.range N`. -/
-def shrinkOn (F : Set (List ℕ)) (X : Set ℕ) : Set (List ℕ) :=
+@[expose] def shrinkOn (F : Set (List ℕ)) (X : Set ℕ) : Set (List ℕ) :=
   {s | s ∈ F ∧ ∀ x ∈ s, x ∈ X}
 
 theorem shrink_eq_shrinkOn_range (F : Set (List ℕ)) (N : ℕ → ℕ) :

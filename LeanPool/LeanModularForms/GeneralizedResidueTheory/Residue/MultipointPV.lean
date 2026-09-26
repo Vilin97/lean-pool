@@ -32,7 +32,7 @@ sums of single-point PVs.
   sum of single-point PVs when regular integral vanishes
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval

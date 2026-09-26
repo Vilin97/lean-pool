@@ -21,7 +21,7 @@ section
 /-! The zero-history normal stage has the same fixed parameter envelope
 as every positive-history stage. Its actual initial coordinate has norm one. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -81,7 +81,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

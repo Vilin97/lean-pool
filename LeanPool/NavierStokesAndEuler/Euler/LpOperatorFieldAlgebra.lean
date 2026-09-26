@@ -20,7 +20,7 @@ rectangular multipliers. Thus support preservation of a variational inverse
 can be proved by its actual uniqueness theorem.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -52,8 +52,8 @@ theorem full_comp (A : α →ᵇ E →L[ℝ] F) (B : α →ᵇ U →L[ℝ] E) :
   rw [hab,ha,hb]
   rfl
 
-theorem full_neg (A : α →ᵇ E →L[ℝ] F) : full μ (-A) = -full μ A :=
-  map_neg (fullMap μ) A
+theorem full_neg (A : α →ᵇ E →L[ℝ] F) : full μ (-A) = -full μ A := by
+  simpa only [fullMap_apply] using map_neg (fullMap μ) A
 
 /-- A literal coefficient identity can be lifted without introducing a new
 operator hypothesis. -/
@@ -110,8 +110,8 @@ theorem full_cutoff (S : Set α) (hS : MeasurableSet S)
   apply Lp.ext
   filter_upwards [full_ae μ A (cutoffOperator μ S hS u),cutoff_ae μ S hS u,
     cutoff_ae μ S hS (full μ A u),full_ae μ A u] with x ha hi ho hu
-  change full μ A (cutoffOperator μ S hS u) x = cutoff μ S hS (full μ A u) x
-  change cutoffOperator μ S hS u x = _ at hi
+  simp only [cutoffOperator_apply] at ha
+  simp only [cutoffOperator_apply]
   rw [ha,hi,ho]
   by_cases hx : x ∈ S
   · simp only [indicator_of_mem hx,hu]
@@ -153,7 +153,7 @@ theorem cutoffOperator_adjoint :
   rw [adjoint_inner_left,L2.inner_def,L2.inner_def]
   apply integral_congr_ae
   filter_upwards [cutoff_ae μ S hS v,cutoff_ae μ S hS u] with x hv hu
-  change ⟪u x,cutoff μ S hS v x⟫_ℝ = ⟪cutoff μ S hS u x,v x⟫_ℝ
+  simp only [cutoffOperator_apply]
   rw [hv,hu]
   by_cases hx : x ∈ S
   · simp only [indicator_of_mem hx]

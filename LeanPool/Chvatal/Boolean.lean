@@ -49,7 +49,7 @@ this makes their Fourier transforms ordinary real-valued transforms. Increasing
 functions use mathlib's `Monotone` predicate on finite subsets ordered by inclusion.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators symmDiff
 
@@ -60,15 +60,15 @@ namespace Chvatal
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- Section 2: a real-valued cube function is Boolean when every value is zero or one. -/
-def IsBoolean (f : Finset ι → ℝ) : Prop := ∀ x, f x = 0 ∨ f x = 1
+@[expose] def IsBoolean (f : Finset ι → ℝ) : Prop := ∀ x, f x = 0 ∨ f x = 1
 
 /-- The sign `2xᵢ - 1` used in the influence identity (6). -/
-def coordinateSign (i : ι) (x : Finset ι) : ℝ := if i ∈ x then 1 else -1
+@[expose] def coordinateSign (i : ι) (x : Finset ι) : ℝ := if i ∈ x then 1 else -1
 
 /-- Section 2: influence, written as mean squared change under a single-coordinate flip.
 For Boolean functions this is the probability that the value changes; see
 `influence_eq_mean_indicator`. -/
-def influence (f : Finset ι → ℝ) (i : ι) : ℝ :=
+@[expose] def influence (f : Finset ι → ℝ) (i : ι) : ℝ :=
   cubeMean (fun x => (f x - f (x ∆ {i})) ^ 2)
 
 /-- The Boolean duality operation of Section 2 preserves Boolean values. -/

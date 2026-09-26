@@ -26,7 +26,7 @@ whose pairwise squared distances lie in a geometric 3-chain, selects a shortest 
 and rescales the chain so that the shortest edge has squared length exactly the new base.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos132ThreeChain
 

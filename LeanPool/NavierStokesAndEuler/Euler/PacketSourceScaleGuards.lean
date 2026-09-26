@@ -20,7 +20,7 @@ section
 # Packet Scale Activation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -82,7 +82,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -196,7 +196,7 @@ theorem scaleSequence_ge_initial (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0 ≤ 
     exact ih.trans (le_mul_of_one_le_left (hX.trans ih) (one_le_pow₀ hj))
 
 /-- Target time, given by `scaleSequence J X (n+1)/sqrt β`. -/
-def targetTime (J : ℕ) (X β : ℝ) (n : ℕ) : ℝ := scaleSequence J X (n+1)/sqrt β
+@[expose] def targetTime (J : ℕ) (X β : ℝ) (n : ℕ) : ℝ := scaleSequence J X (n+1)/sqrt β
 
 /-- Horizon, given by `targetTime J X β n+actualExtraTime J X a n`. -/
 def horizon (J : ℕ) (X a β : ℝ) (n : ℕ) : ℝ := targetTime J X β n+actualExtraTime J X a n

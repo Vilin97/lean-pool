@@ -51,7 +51,7 @@ The quotient-first route to `RootEqSolvable` in even dimension.
    fixed-field descent theorem is needed.
 -/
 
-@[expose] public section
+public section
 
 open KasamiCyclicAdditive.FermatCubic KasamiCyclicAdditive.PointFrobenius WeierstrassCurve
 

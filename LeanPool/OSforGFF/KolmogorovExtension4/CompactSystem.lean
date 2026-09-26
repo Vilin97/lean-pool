@@ -15,7 +15,7 @@ import Mathlib.Topology.IsClosedRestrict
 Auxiliary compact-system lemmas for the Kolmogorov extension construction.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 

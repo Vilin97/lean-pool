@@ -51,7 +51,7 @@ between weak and strong exactness is added, following [PalomaresPukelsheimRamire
 
 -/
 
-@[expose] public section
+public section
 
 /-- An apportionment is a vector of natural numbers representing the number of seats allocated to
 each party (at the corresponding index). -/

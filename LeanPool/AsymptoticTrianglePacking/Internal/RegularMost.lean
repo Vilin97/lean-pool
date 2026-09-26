@@ -27,7 +27,7 @@ that consume this hypothesis.
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -37,7 +37,7 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 
 /-- **Majority near-regularity.** `H` is `(1±μ)`-nearly `d`-regular outside an exceptional set of
 vertices of size at most `η·|V|`. Recovers `NearlyRegular` when the exceptional set is empty. -/
-def NearlyRegularMost (H : Finset (Finset V)) (d μ η : ℝ) : Prop :=
+@[expose] def NearlyRegularMost (H : Finset (Finset V)) (d μ η : ℝ) : Prop :=
   ∃ Exc : Finset V, (Exc.card : ℝ) ≤ η * (Fintype.card V : ℝ) ∧
     ∀ v ∉ Exc, (1 - μ) * d ≤ (degree H v : ℝ) ∧ (degree H v : ℝ) ≤ (1 + μ) * d
 
@@ -70,6 +70,7 @@ def NibbleTheoremMost : Prop :=
 Freedman assembly: in addition to majority near-regularity and codegree boundedness, every vertex
 has
 degree at most `(1+μ)d`. -/
+@[expose]
 def NibbleTheoremMostCeil : Prop :=
   ∀ (r : ℕ), 2 ≤ r → ∀ (β : ℝ), 0 < β → ∃ μ : ℝ, 0 < μ ∧ ∃ η : ℝ, 0 < η ∧ ∃ d₀ : ℝ, 0 < d₀ ∧
     ∀ {V : Type} [Fintype V] [DecidableEq V] (H : Finset (Finset V)) (d : ℝ), 0 < d → d₀ ≤ d →
@@ -82,7 +83,7 @@ def NibbleTheoremMostCeil : Prop :=
 selection needs a uniform way to make the all-vertices bad-event probability small.  The abstract
 hypergraph hypotheses do not bound `|V|` in terms of the regular degree scale `d`; the triangle
 hypergraph application does.  This interface records that missing input explicitly. -/
-def NibbleTheoremMostCeilSized : Prop :=
+@[expose] def NibbleTheoremMostCeilSized : Prop :=
   ∀ (r : ℕ), 2 ≤ r → ∀ (β : ℝ), 0 < β → ∃ μ : ℝ, 0 < μ ∧ ∃ η : ℝ, 0 < η ∧
     ∃ d₀ : ℝ, 0 < d₀ ∧ ∃ K : ℝ, 0 < K ∧
     ∀ {V : Type} [Fintype V] [DecidableEq V] (H : Finset (Finset V)) (d : ℝ), 0 < d → d₀ ≤ d →

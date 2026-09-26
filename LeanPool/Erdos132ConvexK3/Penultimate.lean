@@ -24,7 +24,7 @@ assumed.  The previously implicit P5-4 height constraint is named and used
 explicitly in every distance-subtraction identity.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 

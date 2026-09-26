@@ -43,7 +43,7 @@ phase, including the free angular variable.  All primitive bounds are pulled
 from the actual primary inputs on the same closed support cells.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -385,7 +385,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -759,7 +759,7 @@ follow from the selected phase construction and the polynomial coordinate
 cost, without estimates on a solved velocity or pressure as hypotheses.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1065,7 +1065,7 @@ Only the selected geometry and its closed source support occur here.  No
 property of a solved particular or signed field is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1133,7 +1133,7 @@ theorem slowCore_closed (l : Index B N0) (n : ℕ) : IsClosed (slowCore l n) :=
     (choice B N0).prepared l.1).preimage (slowMap_continuous l n)
 
 /-- Reference length, given by `(phases B N0 l.2).L l.1`. -/
-noncomputable def referenceLength (l : Index B N0) : ℝ :=
+@[expose] noncomputable def referenceLength (l : Index B N0) : ℝ :=
   (phases B N0 l.2).L l.1
 
 theorem referenceLength_pos (l : Index B N0) : 0 < referenceLength l :=
@@ -1160,7 +1160,7 @@ noncomputable def referenceGeometry (l : Index B N0) : Geometry :=
 
 /-- Gap, given by `ChartScales.nativeIndex h (BaseChartJets.cellBand l.1) - CommonWindow.index h
 n`. -/
-noncomputable def gap (l : Index B N0) (n : ℕ) : ℕ :=
+@[expose] noncomputable def gap (l : Index B N0) (n : ℕ) : ℕ :=
   ChartScales.nativeIndex h (BaseChartJets.cellBand l.1) - CommonWindow.index h n
 
 /-- Geometry, given by `CopySolveCompatibility.transportGeometry (referenceGeometry l) (gap l n)
@@ -1376,7 +1376,7 @@ Gaussian-times-padding cutoff. Clock factors only need to be positive
 at each band; no uniform range for the complete clock family is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1398,7 +1398,7 @@ variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- The literal complex Volterra solve and its separately transported
 Gaussian/outer cutoff, without uniform bounds on the clock scalars. -/
-noncomputable def scalarData : CopyData ((P × ℝ) × Plane) Frequency :=
+@[expose] noncomputable def scalarData : CopyData ((P × ℝ) × Plane) Frequency :=
   complexCopyData base t f g (fun _ => 0) (fun n => L n / rate n)
     (fun n => (div_pos (hL n) (hc n)).le)
     (fun n => ActualGaussianCoverage.nativeCutoff (r n) (L n) (hr n) (hL n) (rate n))
@@ -1519,7 +1519,7 @@ therefore transfers the Gaussian clock estimates without assumptions about a
 source, correction state, or modal-control output.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1621,7 +1621,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1648,6 +1648,7 @@ abbrev Label (B N0 : ℕ) := Fin 2 × CorrectionInitialization.ActualPrimary.Lab
 /-! Reindexing retains the selected phase, its frame, and all uniform constants. -/
 
 /-- Reindex domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
+@[expose]
 noncomputable def reindexDomain {ι κ : Type} (D : Domain ι Slow) (e : κ → ι) : Domain κ Slow where
   scale i := D.scale (e i)
   carrier i := D.carrier (e i)
@@ -1738,7 +1739,7 @@ noncomputable def referenceGeometry (l : Label B N0) : Geometry :=
 
 /-- Gap, given by `ChartScales.nativeIndex h (BaseChartJets.cellBand l.2) - CommonWindow.index h
 n`. -/
-noncomputable def gap (l : Label B N0) (n : ℕ) : ℕ :=
+@[expose] noncomputable def gap (l : Label B N0) (n : ℕ) : ℕ :=
   ChartScales.nativeIndex h (BaseChartJets.cellBand l.2) - CommonWindow.index h n
 
 theorem reference_refine (l : Label B N0) (n : ℕ) :
@@ -1778,22 +1779,23 @@ noncomputable def nativeToFull : Native ≃ₗᵢ[ℝ] AP :=
 
 /-- Background, given by `ParticularWaveBounds.reindexCoefficients nativeToFull
 (chartCoefficients l.1 l.2)`. -/
+@[expose]
 noncomputable def background (l : Label B N0) : LinearWaveBounds.WaveCoefficients Native :=
   ParticularWaveBounds.reindexCoefficients nativeToFull (chartCoefficients l.1 l.2)
 
 /-- Directions, given by `ParticularWaveBounds.reindexDirections nativeToFull
 (PrimaryResidualClass.directions (commonContext B))`. -/
-noncomputable def directions : LinearWaveBounds.GraphDirections Native :=
+@[expose] noncomputable def directions : LinearWaveBounds.GraphDirections Native :=
   ParticularWaveBounds.reindexDirections nativeToFull (PrimaryResidualClass.directions
       (commonContext B))
 
 /-- Associated context, given by `StateReindex.context cycleAssoc.symm (commonContext B)`. -/
-noncomputable def associatedContext : Context (Parameter × Plane) :=
+@[expose] noncomputable def associatedContext : Context (Parameter × Plane) :=
   StateReindex.context cycleAssoc.symm (commonContext B)
 
 /-- Associated strip, given by `ParticularWaveBounds.reindexStrip cycleAssoc.symm
 (BaseContextAssembly.nativeStrip nominal standardRegion)`. -/
-noncomputable def associatedStrip : StripData (Parameter × Plane) :=
+@[expose] noncomputable def associatedStrip : StripData (Parameter × Plane) :=
   ParticularWaveBounds.reindexStrip cycleAssoc.symm (BaseContextAssembly.nativeStrip nominal
       standardRegion)
 
@@ -1835,6 +1837,7 @@ theorem parameters_length (x : CycleState (Label B N0)) (l : Label B N0) (n : �
         (ChartScales.Q (BaseChartJets.cellBand l.2)) := rfl
 
 /-- Fixed primitive data for all iterations of the same labeled construction. -/
+@[expose]
 noncomputable def canonicalParameters (l : Label B N0) : ParticularParameters Parameter where
   tangent j n := ScaledTangentTransport.transportTangent ((reference l).tangent j)
     (PhysicalParticularWave.parameterChange h (ChartScales.Q n) (ChartScales.Q (reference l).band))
@@ -2482,7 +2485,7 @@ theorem uniform_to_local {ι I X E : Type} [NormedAddCommGroup X] [NormedSpace �
   exact ⟨K,hK,p,fun l n _ z hz _ => hp l n z hz⟩
 
 /-- The actual computed copy data, with the current residual as source. -/
-noncomputable def data (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ) :=
+@[expose] noncomputable def data (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ) :=
   (parameters x l).copyData (assembly x l).context (assembly x l).state
     (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput j
 
@@ -2696,7 +2699,7 @@ theorem raw_jets (x : CycleState (Label B N0))
 /-! The support geometry is the same canonical scalar-clock geometry. -/
 
 /-- Support label, given by `(l.2,l.1)`. -/
-noncomputable def supportLabel (l : Label B N0) : ActualCarrierTransportBase.Index B N0 :=
+@[expose] noncomputable def supportLabel (l : Label B N0) : ActualCarrierTransportBase.Index B N0 :=
   (l.2,l.1)
 
 theorem support_geometry_eq (x : CycleState (Label B N0)) (l : Label B N0) (n : ℕ) :
@@ -3128,6 +3131,7 @@ abbrev ResidualBounds (x : CycleState (Label B N0)) (α : ℝ) : Prop :=
       (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l))
 
 /-- Associated update as an element of `HarmonicBlock (Parameter × Plane)`. -/
+@[expose]
 noncomputable def associatedUpdate (x : CycleState (Label B N0)) (N : ℕ) (l : Label B N0) :
     HarmonicBlock (Parameter × Plane) :=
   (parameters x l).updateBlock associatedStrip (assembly x l).context (assembly x l).state
@@ -3162,7 +3166,7 @@ theorem associated_assembled_bounds (x : CycleState (Label B N0))
     (fun j hj => (hm j hj).2.2.2.2)
 
 /-- Output block, given by `StateReindex.block cycleAssoc (associatedUpdate x N l)`. -/
-noncomputable def outputBlock (x : CycleState (Label B N0)) (N : ℕ) (l : Label B N0) :
+@[expose] noncomputable def outputBlock (x : CycleState (Label B N0)) (N : ℕ) (l : Label B N0) :
     HarmonicBlock CyclePoint := StateReindex.block cycleAssoc (associatedUpdate x N l)
 
 /-- Output good, given by `StateReindex.block cycleAssoc (associatedGood x N l)`. -/

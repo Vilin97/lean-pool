@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketTimeAlgebra
 
 /-! The literal finite packet and its genuine time derivative are actual cylinder fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -24,7 +24,7 @@ open Set EulerSmoothLimit EulerPacketPointJets EulerPacketProfileRecursion Euler
 
 /-- Raw time derivative, defined pointwise by `derivWithin (fun t => raw (t,z.2)) (Icc (0 : ℝ)
 T) z.1`. -/
-def rawTimeDerivative (T : ℝ) (raw : VectorField) : VectorField := fun z =>
+@[expose] def rawTimeDerivative (T : ℝ) (raw : VectorField) : VectorField := fun z =>
   derivWithin (fun t => raw (t,z.2)) (Icc (0 : ℝ) T) z.1
 
 variable {P T : ℝ} [Fact (0 < P)]

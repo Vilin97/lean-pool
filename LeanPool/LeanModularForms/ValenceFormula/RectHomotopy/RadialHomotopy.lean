@@ -27,7 +27,7 @@ of `PiecewiseCurvesHomotopicAvoiding`.
 * `winding_fdPolygon_eq_radialCircle` — winding numbers are equal
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Metric Filter Topology
 
@@ -35,7 +35,7 @@ namespace RectHomotopyProof
 
 /-- Radial homotopy from polygon to unit circle around p.
     H(t, s) = p + ((1-s)·‖z-p‖ + s) · (z-p)/‖z-p‖ -/
-noncomputable def polygonToCircleRadial (p : ℂ) : ℝ × ℝ → ℂ := fun (t, s) =>
+@[expose] noncomputable def polygonToCircleRadial (p : ℂ) : ℝ × ℝ → ℂ := fun (t, s) =>
   let z := fdPolygon t
   let dir := z - p
   p + ((1 - s) * ‖dir‖ + s) • (dir / ‖dir‖)
@@ -68,7 +68,7 @@ lemma polygonToCircleRadial_avoids (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p
 
 /-- The radial circle around p: normalized projection of fdPolygon onto unit circle around p.
     This is polygonToCircleRadial at s=1. -/
-noncomputable def fdPolygonRadialCircle (p : ℂ) : ℝ → ℂ := fun t =>
+@[expose] noncomputable def fdPolygonRadialCircle (p : ℂ) : ℝ → ℂ := fun t =>
   polygonToCircleRadial p (t, 1)
 
 /-- fdPolygonRadialCircle is on the unit circle around p. -/

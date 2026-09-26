@@ -21,7 +21,7 @@ unblocked color branch.  Certificate soundness remains a theorem of Lean,
 while each small tree is independently reduced by the kernel.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

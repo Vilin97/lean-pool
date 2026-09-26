@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketTargetAmplification
 stationary-history portions of the packet horizon. The amplitude is the
 one selected by its genuine center target size. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,7 +41,7 @@ theorem cutoff_le (x : Space) : innerCutoff x ≤ cutoffBound := by
   exact he.trans (by unfold cutoffBound; linarith)
 
 /-- Good ratio, given by `cutoffBound*(64*Real.exp 6)`. -/
-def goodRatio : ℝ := cutoffBound*(64*Real.exp 6)
+@[expose] def goodRatio : ℝ := cutoffBound*(64*Real.exp 6)
 
 theorem goodRatio_pos : 0 < goodRatio := by unfold goodRatio; positivity [cutoffBound_pos]
 
@@ -217,7 +217,7 @@ theorem early_primary_size (t : Icc (0 : ℝ) D.T)
 /-- This cost is computed from the actual stationary endpoint operator.
 It is used only on the history interval; the good interval keeps its
 sharp universal target-size ratio. -/
-def historySizeCost : ℝ :=
+@[expose] def historySizeCost : ℝ :=
   D.inverseBound*historyLabelSizeCost H*P.terminalBound A.CM A.CH
 
 theorem historySizeCost_nonneg : 0 ≤ A.historySizeCost := by

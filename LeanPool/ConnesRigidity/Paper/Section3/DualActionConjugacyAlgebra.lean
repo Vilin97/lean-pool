@@ -21,7 +21,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 The dual action conjugacy algebra component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperDualActionConjugacyAlgebra

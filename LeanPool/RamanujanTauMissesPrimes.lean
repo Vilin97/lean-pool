@@ -21,7 +21,7 @@ Tags: number-theory, modular-forms
 MSC: 11F30, 11N05
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

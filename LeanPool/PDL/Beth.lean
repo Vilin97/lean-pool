@@ -10,7 +10,7 @@ public import LeanPool.PDL.Interpolation.Theorem
 
 /-! # Beth Definability (Corollary 7.5) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

@@ -12,12 +12,12 @@ import Mathlib.Tactic.Positivity.Finset
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 namespace NumberField.Odlyzko
 
 /-- An odlyzko scale used in the Odlyzko-bound argument. -/
-noncomputable def odlyzkoScale : ℝ :=
+@[expose] noncomputable def odlyzkoScale : ℝ :=
   41 / 50
 
 theorem odlyzkoScale_pos : 0 < odlyzkoScale := by

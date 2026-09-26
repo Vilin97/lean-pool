@@ -16,7 +16,7 @@ import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 /-! # ClogArgLems -/
 
 
-@[expose] public section
+public section
 
 open UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
   Metric Filter Function Complex

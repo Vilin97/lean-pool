@@ -22,7 +22,7 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.1, D2–D4, proof pl
 * `FinCover.IsAdapted`: adapted covers (Miranda IX Ex. 3.6), `exists_adapted_refinement`.
 -/
 
-@[expose] public section
+public section
 
 open Set Filter Topology TopologicalSpace
 
@@ -54,6 +54,7 @@ instance : Nonempty (FinCover Ω) := ⟨FinCover.single Ω⟩
 
 /-- `τ` is a valid refinement index from `𝒰` to `𝒱`: each member of `𝒱` sits inside the
 `τ`-indexed member of `𝒰` (D3). -/
+@[expose]
 def IsRefIdx (𝒰 𝒱 : FinCover Ω) (τ : Fin 𝒱.n → Fin 𝒰.n) : Prop := ∀ k, 𝒱.U k ≤ 𝒰.U (τ k)
 
 instance : Preorder (FinCover Ω) where
@@ -98,12 +99,12 @@ noncomputable instance : DecidableEq (FinCover Ω) := Classical.decEq _
 variable [ChartedSpace ℂ X]
 
 /-- `V` is a chart disk: some chart maps it bijectively onto a round ball (D4). -/
-def IsChartDisk (V : Opens X) : Prop :=
+@[expose] def IsChartDisk (V : Opens X) : Prop :=
   ∃ (x : X) (r : ℝ), 0 < r ∧ x ∈ V ∧ (V : Set X) ⊆ (chartAt ℂ x).source ∧
     chartAt ℂ x '' V = Metric.ball (chartAt ℂ x x) r
 
 /-- A cover all of whose members are chart disks. -/
-def FinCover.IsGood (𝒰 : FinCover Ω) : Prop := ∀ i, IsChartDisk (𝒰.U i)
+@[expose] def FinCover.IsGood (𝒰 : FinCover Ω) : Prop := ∀ i, IsChartDisk (𝒰.U i)
 
 /-- Every neighbourhood of a point contains a chart-disk neighbourhood of it (§6.3). -/
 theorem exists_chartDisk_basis {x : X} {W : Set X} (hW : W ∈ 𝓝 x) :
@@ -233,7 +234,7 @@ theorem exists_good_refinement_closure [CompactSpace X] [T2Space X]
 /-! ### Adapted covers (Miranda IX Ex. 3.6) -/
 
 /-- `𝒰` is adapted to the finite set `S`: each point of `S` lies in exactly one member. -/
-def FinCover.IsAdapted (𝒰 : FinCover Ω) (S : Finset X) : Prop := ∀ p ∈ S, ∃! i, p ∈ 𝒰.U i
+@[expose] def FinCover.IsAdapted (𝒰 : FinCover Ω) (S : Finset X) : Prop := ∀ p ∈ S, ∃! i, p ∈ 𝒰.U i
 
 /-- The open complement of a finite set (`[T1Space X]`). -/
 def compOpens [T1Space X] (T : Finset X) : Opens X := ⟨(T : Set X)ᶜ, T.isClosed.isOpen_compl⟩

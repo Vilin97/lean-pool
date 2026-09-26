@@ -33,7 +33,7 @@ The `GL₂` action is the classical *right* action on forms,
 `BQF.act f p q r s` taking the four entries directly (avoiding matrix-coercion churn).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -53,16 +53,19 @@ triple `(a, b, c)`. -/
 deriving DecidableEq
 
 /-- The discriminant `b² − 4ac`. -/
-def disc (f : BQF) : ℤ := f.b ^ 2 - 4 * f.a * f.c
+@[expose] def disc (f : BQF) : ℤ := f.b ^ 2 - 4 * f.a * f.c
 
 /-- A form is positive definite when `a > 0` and `disc < 0` (then `c > 0` too). -/
+@[expose]
 def IsPosDef (f : BQF) : Prop := 0 < f.a ∧ disc f < 0
 
 /-- A form is primitive when its coefficients have no common non-unit divisor. -/
+@[expose]
 def IsPrimitive (f : BQF) : Prop :=
   ∀ d : ℤ, d ∣ f.a → d ∣ f.b → d ∣ f.c → IsUnit d
 
 /-- The right `GL₂`-action on forms: `(f · ![![p,q],![r,s]])`. -/
+@[expose]
 def act (f : BQF) (p q r s : ℤ) : BQF where
   a := f.a * p ^ 2 + f.b * p * r + f.c * r ^ 2
   b := 2 * f.a * p * q + f.b * (p * s + q * r) + 2 * f.c * r * s
@@ -122,7 +125,7 @@ theorem IsPrimitive.act {f : BQF} (hf : IsPrimitive f) {p q r s : ℤ}
 /-! ## CM points: roots of a form in the upper half-plane -/
 
 /-- `τ ∈ ℍ` is a *root* of the form `f` when `a τ² + b τ + c = 0`. -/
-def IsRoot (f : BQF) (τ : ℍ) : Prop :=
+@[expose] def IsRoot (f : BQF) (τ : ℍ) : Prop :=
   (f.a : ℂ) * (τ : ℂ) ^ 2 + (f.b : ℂ) * (τ : ℂ) + (f.c : ℂ) = 0
 
 /-- A real linear relation `α·τ + β = 0` at a point of `ℍ` forces `α = 0` (and then
@@ -193,7 +196,7 @@ positive-definite form `f = (a,b,c)`, the fixing matrices are exactly `p·I + k�
 §4.2 (C5) and §5.1 step 4. -/
 
 /-- The fixing relation `p τ + q = τ (r τ + s)`, division-free. -/
-def Fixes (p q r s : ℤ) (τ : ℍ) : Prop :=
+@[expose] def Fixes (p q r s : ℤ) (τ : ℍ) : Prop :=
   (p : ℂ) * (τ : ℂ) + (q : ℂ) = (τ : ℂ) * ((r : ℂ) * (τ : ℂ) + (s : ℂ))
 
 /-- A primitive form admits a Bézout relation among its coefficients. -/

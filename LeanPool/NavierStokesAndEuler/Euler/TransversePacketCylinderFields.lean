@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorSupport
 
 /-! Actual cylinder-path witnesses for the constructed transverse solution and corrector. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -25,7 +25,7 @@ zeroth-order potential it follows from local integrability of the kernel, and fo
 the derivative potentials it is the Calderón–Zygmund bound.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology

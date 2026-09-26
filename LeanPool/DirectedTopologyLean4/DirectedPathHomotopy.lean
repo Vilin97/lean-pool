@@ -12,7 +12,7 @@ public import LeanPool.DirectedTopologyLean4.TransRefl
 # LeanPool.DirectedTopologyLean4.DirectedPathHomotopy
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the definition of a directed path homotopy, or `Dipath.Dihomotopy`:

@@ -22,7 +22,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Euclidean.RpowSquares
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 open MeasureTheory Set Filter

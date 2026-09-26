@@ -33,7 +33,7 @@ section
 graph flow. The input fields are the concrete displacement, velocity and
 acceleration constructed from the periodic corrected packet. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -144,7 +144,7 @@ section
 manuscript's C*=10(s+2). This includes the sum of the three actual
 physical-label Hs word norms, not just a separate bound for each field. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -226,7 +226,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -325,7 +325,7 @@ section
 source constants affect only the frequency threshold. The power losses
 can be made arbitrarily small, independently of any truncation order. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -502,7 +502,7 @@ section
 The small lifted displacement controls positive derivatives of the
 physical coordinate change without a physical-frequency Grönwall bound. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -571,7 +571,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -711,7 +711,7 @@ section
 inverse-frequency normalization with an explicit, frequency-independent
 cost. This also applies to the actual inverse-frame time derivative. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

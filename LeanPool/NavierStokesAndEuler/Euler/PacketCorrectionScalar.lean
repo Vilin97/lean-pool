@@ -12,7 +12,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! Explicit scalar choices for the actual drift-aware correction budget.
 The error target is exp(-sqrt X), with X=k^ϑ in the source construction. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -22,13 +22,13 @@ namespace EulerPacketCorrectionScalar
 open Set
 
 /-- Delta, given by `Real.exp (-Real.sqrt X)`. -/
-def delta (X : ℝ) : ℝ := Real.exp (-Real.sqrt X)
+@[expose] def delta (X : ℝ) : ℝ := Real.exp (-Real.sqrt X)
 
 /-- Residual, given by `2*Real.exp (-(7/10)*X*Real.log k)`. -/
 def residual (k X : ℝ) : ℝ := 2*Real.exp (-(7/10)*X*Real.log k)
 
 /-- Initial radius, given by `1/(1+8*R+4*M*Rc+Rc)`. -/
-def initialRadius (R M Rc : ℝ) : ℝ := 1/(1+8*R+4*M*Rc+Rc)
+@[expose] def initialRadius (R M Rc : ℝ) : ℝ := 1/(1+8*R+4*M*Rc+Rc)
 
 theorem delta_pos (X : ℝ) : 0 < delta X := Real.exp_pos _
 

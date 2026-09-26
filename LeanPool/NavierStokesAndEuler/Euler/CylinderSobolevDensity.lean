@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.MollifierRepresent
 
 /-! Smooth mollifications are dense in every actual complete cylinder Sobolev space. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,12 +27,15 @@ variable (period : ℝ) [Fact (0 < period)]
 /-- Actual smooth convolution lifted to the complete Sobolev space. -/
 def sobolevMollifier (q n : ℕ) : SobolevSpace period q →L[ℝ] SobolevSpace period q :=
   liftOperator period q (mollifierOperator period n)
-    (fun a f => (mollify_translation period n a f).symm)
+    (fun a f => by
+      simp only [mollifierOperator_apply]
+      exact (mollify_translation period n a f).symm)
 
 /-- Every derivative coordinate is mollified by the same actual convolution. -/
 @[simp]
 theorem sobolevMollifier_apply {q : ℕ} (n : ℕ) (u : SobolevSpace period q) (w : SobolevWord q) :
-    (sobolevMollifier period q n u).val w = mollify period n (u.val w) := rfl
+    (sobolevMollifier period q n u).val w = mollify period n (u.val w) := by
+  simp only [sobolevMollifier, liftOperator_apply, mollifierOperator_apply]
 
 /-- The smooth convolution is contractive in every complete Sobolev norm. -/
 theorem sobolevMollifier_bound {q : ℕ} (n : ℕ) (u : SobolevSpace period q) :
@@ -47,7 +50,7 @@ theorem sobolevMollifier_tendsto {q : ℕ} (u : SobolevSpace period q) :
   rw [tendsto_subtype_rng]
   apply tendsto_pi_nhds.mpr
   intro w
-  exact mollify_tendsto period (u.val w)
+  simpa only [sobolevMollifier_apply] using mollify_tendsto period (u.val w)
 
 /-- Every Sobolev mollification has the concrete smooth convolution as an almost-everywhere
 representative. -/
@@ -55,7 +58,9 @@ theorem sobolevMollifier_representative {q : ℕ} (n : ℕ) (u : SobolevSpace pe
     (value period (sobolevMollifier period q n u) : LiftDomain period → Vector3) =ᵐ[liftMeasure
         period]
       smoothMollifier period n (value period u) :=
-  mollify_ae_smoothMollifier period n (value period u)
+  by
+    simpa only [value, sobolevMollifier_apply] using
+      mollify_ae_smoothMollifier period n (value period u)
 
 /-- The smooth representative of a Sobolev mollifier has exactly the expected classical derivative
 coordinates. -/
@@ -66,7 +71,7 @@ theorem sobolevMollifier_word_ae {q k : ℕ} (hk : k ≤ q) (n : ℕ) (u : Sobol
       iteratedFieldDerivative period w (smoothMollifier period n (value period u)) := by
   have h := smoothMollifier_word_ae period hk (value period u) (toJet period u) n w
   rw [toJet_word period u hk] at h
-  exact h
+  simpa only [word, sobolevMollifier_apply] using h
 
 /-- Fields with actual smooth cylinder representatives are dense in the complete Sobolev space. -/
 theorem smooth_representatives_dense (q : ℕ) :

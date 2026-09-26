@@ -19,7 +19,7 @@ It is subtracted before integration. Local constancy of the exterior heat
 carrier supplies compact support for every axial derivative of the difference.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -197,7 +197,7 @@ theorem axial_viscosity_moment_zero {u : ℝ × ℝ → ℝ} {reference tail : �
 /-! ## The actual implicit physical coordinates -/
 
 /-- A, given by `1 / 2 + h`. -/
-noncomputable def A (h : ℝ) : ℝ := 1 / 2 + h
+@[expose] noncomputable def A (h : ℝ) : ℝ := 1 / 2 + h
 /-- Q, given by `SimilarityCoordinates.coordinateQ (2 * h) (τ, z)`. -/
 noncomputable def Q (h τ z : ℝ) : ℝ := SimilarityCoordinates.coordinateQ (2 * h) (τ, z)
 /-- Eta, given by `SimilarityCoordinates.coordinateEta (2 * h) (τ, z)`. -/
@@ -751,7 +751,7 @@ theorem xMoment_eq_outgoing_reference (P : OutgoingProfile.Profile) {XR : ℝ} (
   ring
 
 /-- Heat threshold, given by `OutgoingDilation.switchRadius P XR * Real.exp 3`. -/
-noncomputable def heatThreshold (P : OutgoingProfile.Profile) (XR : ℝ) : ℝ :=
+@[expose] noncomputable def heatThreshold (P : OutgoingProfile.Profile) (XR : ℝ) : ℝ :=
   OutgoingDilation.switchRadius P XR * Real.exp 3
 
 theorem heatThreshold_pos (P : OutgoingProfile.Profile) {XR : ℝ} (hXR : 0 < XR) :

@@ -17,7 +17,7 @@ import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 /-! # Iteratedderivs -/
 
 
-@[expose] public section
+public section
 
 open  UpperHalfPlane TopologicalSpace Set
   Metric Filter Function Complex

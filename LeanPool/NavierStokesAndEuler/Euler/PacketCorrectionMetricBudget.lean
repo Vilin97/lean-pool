@@ -20,7 +20,7 @@ section
 /-! The time derivative of the actual inverse pressure metric, first as
 a bounded matrix field and then as its cylinder L² multiplier. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -119,7 +119,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -173,7 +173,7 @@ def inverseMetricBound : ℝ := ‖(inverseMetricCoefficient D).path‖
 
 /-- Inverse metric first bound, given by `‖iteratedFDeriv ℝ 1 (translateCoefficientPath
 (inverseMetricCoefficient D).path) 0‖`. -/
-def inverseMetricFirstBound : ℝ :=
+@[expose] def inverseMetricFirstBound : ℝ :=
   ‖iteratedFDeriv ℝ 1 (translateCoefficientPath (inverseMetricCoefficient D).path) 0‖
 
 /-- Inverse metric time bound, given by `‖(inverseMetricTimeCoefficient D).path‖`. -/

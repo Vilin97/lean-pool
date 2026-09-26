@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Heat.TestFunction
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 
@@ -28,7 +28,7 @@ namespace CKN.Foundation.Heat
 open CKN.Foundation.Parabolic
 
 /-- Spatial-gradient bound for the rescaled backward heat test function. -/
-def backwardHeatTestGradientNorm (r : ℝ) (x : Vec3) (t : ℝ) : ℝ :=
+@[expose] def backwardHeatTestGradientNorm (r : ℝ) (x : Vec3) (t : ℝ) : ℝ :=
   r ^ 2 * heatKernelGradientNorm x (r ^ 2 - t)
 
 private lemma rpow_three_halves_eq_sqrt_cube {y : ℝ} (hy : 0 ≤ y) :

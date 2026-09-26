@@ -18,7 +18,7 @@ polygons containing the chord lie inside the first polygon.  This is the cutting
 the free-triangle induction of Chapter 3.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

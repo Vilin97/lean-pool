@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 /-! Full space-angle derivative tensors are bounded by the actual packet
 word budgets. This includes the scalar pressure via its norm-one embedding. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

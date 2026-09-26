@@ -35,7 +35,7 @@ satisfy the domain equation `D ≅ T(D)`".
 Choice-free (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -46,7 +46,7 @@ variable {Obj : Type u} [Category Obj] {T : Endofunctor Obj}
 /-- For an algebra `A = (D, i)`, the functor turns the structure map into a new
 `T`-algebra
 `(T(D), T(i))`. -/
-@[instance_reducible]
+@[expose, instance_reducible]
 def tStr (A : TAlgebra T) : TAlgebra T where
   carrier := T.obj A.carrier
   str := T.map A.str
@@ -66,13 +66,13 @@ theorem str_comp_desc (A : TAlgebra T) (hA : IsInitial A) :
   have h : (strHom A).comp (hA.desc (tStr A)) = AlgHom.id A := by
     rw [hA.uniq A ((strHom A).comp (hA.desc (tStr A))), hA.uniq A (AlgHom.id A)]
   have := congrArg AlgHom.hom h
-  exact this
+  simpa only [AlgHom.comp_hom, AlgHom.id_hom, strHom] using this
 
 /-- **Proposition 6.7 (Lambek's lemma; Scott 1981, PRG-19).** The structure map `i
 : T(D) → D` of an
 initial `T`-algebra is an isomorphism `T(D) ≅ D`, with inverse the descent
 homomorphism `j`. -/
-def lambek (A : TAlgebra T) (hA : IsInitial A) : Iso (T.obj A.carrier) A.carrier where
+@[expose] def lambek (A : TAlgebra T) (hA : IsInitial A) : Iso (T.obj A.carrier) A.carrier where
   hom := A.str
   inv := (hA.desc (tStr A)).hom
   inv_hom_id := str_comp_desc A hA

@@ -31,7 +31,7 @@ canonical improper-integral pressure. All stream cutoffs are retained until
 their coefficients are shown to vanish in an exterior neighborhood.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -251,12 +251,12 @@ theorem exterior_stream_germ {a : ℕ → ℕ} {h C R : ℝ} {d : Coefficients}
 
 /-- Leading angular, defined pointwise by `C⁻¹ * SimilarityProfile.pullback h
 (-CoordinateAlgebra.A h - 1 / 2) (d.phi 0) p`. -/
-noncomputable def leadingAngular (h C : ℝ) (d : Coefficients) : PhysicalProfile :=
+@[expose] noncomputable def leadingAngular (h C : ℝ) (d : Coefficients) : PhysicalProfile :=
   fun p => C⁻¹ * SimilarityProfile.pullback h (-CoordinateAlgebra.A h - 1 / 2) (d.phi 0) p
 
 /-- Leading pressure, given by `SimilarityProfile.pullback h (-2 * CoordinateAlgebra.A h)
 (d.pressure 0)`. -/
-noncomputable def leadingPressure (h : ℝ) (d : Coefficients) : PhysicalProfile :=
+@[expose] noncomputable def leadingPressure (h : ℝ) (d : Coefficients) : PhysicalProfile :=
   SimilarityProfile.pullback h (-2 * CoordinateAlgebra.A h) (d.pressure 0)
 
 theorem exterior_swirl_derivative {a : ℕ → ℕ} (ha : StrictMono a) {h C R : ℝ}
@@ -807,7 +807,7 @@ primitive of the angular coefficient.  Their curl is identified here with
 the finite slow field, using the actual radial flux formula and FTC.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1211,7 +1211,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1723,16 +1723,16 @@ variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 noncomputable def activeLeft : ℝ := Real.log (nominalInner W / 16)
 
 /-- Terminal shift, given by `TerminalHistoryBridge.shift F W.controls.radius`. -/
-noncomputable def terminalShift : ℝ := TerminalHistoryBridge.shift F W.controls.radius
+@[expose] noncomputable def terminalShift : ℝ := TerminalHistoryBridge.shift F W.controls.radius
 
 /-- Active right, given by `terminalShift W + 3`. -/
-noncomputable def activeRight : ℝ := terminalShift W + 3
+@[expose] noncomputable def activeRight : ℝ := terminalShift W + 3
 
 /-- Active upper, given by `Real.exp (activeRight W)`. -/
-noncomputable def activeUpper : ℝ := Real.exp (activeRight W)
+@[expose] noncomputable def activeUpper : ℝ := Real.exp (activeRight W)
 
 /-- Scale upper, given by `max upper (activeUpper W)`. -/
-noncomputable def scaleUpper (upper : ℝ) : ℝ := max upper (activeUpper W)
+@[expose] noncomputable def scaleUpper (upper : ℝ) : ℝ := max upper (activeUpper W)
 
 theorem exp_activeLeft : Real.exp (activeLeft W) = nominalInner W / 16 :=
   Real.exp_log (div_pos (nominalInner_pos W) (by norm_num))

@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransverseSourceCoefficientPat
 
 /-! Uniform label difference estimates from genuine coefficient derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -19,7 +19,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 /-! # Csqrt -/
 
 
-@[expose] public section
+public section
 
 open UpperHalfPlane TopologicalSpace Set MeasureTheory
   Metric Filter Function Complex
@@ -30,7 +30,7 @@ open ArithmeticFunction
 
 
 /-- The principal complex square root `a ↦ exp ((1 / 2) * log a)`. -/
-noncomputable def csqrt : ℂ → ℂ := (fun a : ℂ => cexp ((1 / (2 : ℂ))* (log a)))
+@[expose] noncomputable def csqrt : ℂ → ℂ := (fun a : ℂ => cexp ((1 / (2 : ℂ))* (log a)))
 
 lemma csqrt_deriv (z : ℍ) : deriv (fun a : ℂ => cexp ((1 / (2 : ℂ))* (log a))) z =
     (2 : ℂ)⁻¹ • (fun a : ℂ => cexp (-(1 / (2 : ℂ)) * (log a))) z:= by

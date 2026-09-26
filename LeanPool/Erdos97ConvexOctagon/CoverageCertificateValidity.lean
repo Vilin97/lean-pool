@@ -107,7 +107,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Assembled coverage-certificate validity facts -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

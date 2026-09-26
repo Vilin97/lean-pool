@@ -20,7 +20,7 @@ i.e. the interpolant for the root of a proper cluster. Counterexamples to Lemma 
 and (d) as stated in the paper are in `Pdl.ClusterCorrection`.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -414,7 +414,7 @@ for the end nodes `Y` of the local tableau at `p`, and they are labelled with `Y
 
 /-- A fine node belongs to the cluster `C` iff its base node is in `C` and either it *is*
 that base node, or one of the children of the base node below it is in `C`. -/
-def memFine (C : LoadedCluster tab) (f : FinePathIn tab) : Prop :=
+@[expose] def memFine (C : LoadedCluster tab) (f : FinePathIn tab) : Prop :=
   f.base ∈ C.CL ∧ ( f.atBigRoot ∨ ∃ q ∈ f.coarseChildrenBelow, q ∈ C.CL )
 
 instance instDecidableMemFine (C : LoadedCluster tab) (f : FinePathIn tab) :
@@ -471,15 +471,15 @@ lemma exists_child_memFine_of_not_isLrep (C : LoadedCluster tab)
   · exact C.exists_child_memFine hf hbr
 
 /-- All fine nodes just outside the cluster `C`, i.e. `C⁺ \ C` at the fine level. -/
-def fineExits (C : LoadedCluster tab) : Finset (FinePathIn tab) :=
+@[expose] def fineExits (C : LoadedCluster tab) : Finset (FinePathIn tab) :=
   (C.fineCL.toFinset.sup FinePathIn.children).filter (fun f => decide (¬ C.memFine f))
 
 /-- The fine version of `C⁺`. -/
-def fineCLplus (C : LoadedCluster tab) : Finset (FinePathIn tab) :=
+@[expose] def fineCLplus (C : LoadedCluster tab) : Finset (FinePathIn tab) :=
   C.fineCL.toFinset ∪ C.fineExits
 
 /-- `Λ₂[C]`, the right components of the fine nodes of the cluster. -/
-def lambdaTwo (C : LoadedCluster tab) : Finset Sequent :=
+@[expose] def lambdaTwo (C : LoadedCluster tab) : Finset Sequent :=
   (C.fineCL.toFinset.image (fun f => f.label.rightOnly))
 
 /-- `Λ₂[C⁺]`, the right components of the fine nodes of the cluster and of its exits. -/
@@ -487,16 +487,16 @@ def lambdaTwoPlus (C : LoadedCluster tab) : Finset Sequent :=
   (C.fineCLplus.image (fun f => f.label.rightOnly))
 
 /-- `C_Δ` from Def 9.6, at the fine level. -/
-def nodesWithFine (C : LoadedCluster tab) (Δ : Sequent) : List (FinePathIn tab) :=
+@[expose] def nodesWithFine (C : LoadedCluster tab) (Δ : Sequent) : List (FinePathIn tab) :=
   C.fineCL.filter (fun f => decide (f.label.rightOnly = Δ))
 
 /-- `C⁺_Δ` from Def 9.6, at the fine level. -/
-def plusNodesWithFine (C : LoadedCluster tab) (Δ : Sequent) :
+@[expose] def plusNodesWithFine (C : LoadedCluster tab) (Δ : Sequent) :
     Finset (FinePathIn tab) :=
   C.fineCLplus.filter (fun f => decide (f.label.rightOnly = Δ))
 
 /-- `C^R_Δ` from Def 9.6: nodes with right component `Δ` where a right rule is applied. -/
-def nodesWithFineRight (C : LoadedCluster tab) (Δ : Sequent) :
+@[expose] def nodesWithFineRight (C : LoadedCluster tab) (Δ : Sequent) :
     List (FinePathIn tab) :=
   (C.nodesWithFine Δ).filter (fun f => f.usesRightRule)
 
@@ -550,7 +550,7 @@ components of its children. By uniformity (which we do not prove here) this does
 depend on the chosen node. When `C^R_Δ` is empty — which by Lemma 9.7 (d) only happens
 when `C_Δ` is empty, i.e. when `Δ ∉ Λ₂[C]` — we return the empty list, but note that the
 construction of `Q` below never uses `stepOf` in that case. -/
-def stepOf (C : LoadedCluster tab) (Δ : Sequent) : Finset Sequent :=
+@[expose] def stepOf (C : LoadedCluster tab) (Δ : Sequent) : Finset Sequent :=
   match (C.nodesWithFineRight Δ).head? with
   | some f => f.children.image (fun g => g.label.rightOnly)
   | none => {}
@@ -575,7 +575,7 @@ lemma stepOf_ne_nil (C : LoadedCluster tab) {Δ : Sequent}
     simp at g_in
 
 /-- The sorted list of sequents produced by a cluster's step operation. -/
-def stepOfL (C : LoadedCluster tab) : (Δ : Sequent) → List Sequent :=
+@[expose] def stepOfL (C : LoadedCluster tab) : (Δ : Sequent) → List Sequent :=
   Finset.pdlSeqSort ∘ C.stepOf
 
 lemma stepOfL_ne_nil (C : LoadedCluster tab) {Δ : Sequent}

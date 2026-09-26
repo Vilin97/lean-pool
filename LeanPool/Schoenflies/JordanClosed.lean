@@ -44,7 +44,7 @@ Discharging the first makes `thm:arc-complement`, and with it `lem:accessible-de
   **`thm:general-crosscut`**.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

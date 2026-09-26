@@ -25,7 +25,7 @@ representative-level `W1pFunction` API.
 * The conversion lemmas preserve values and gradients definitionally.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal
 
@@ -89,6 +89,7 @@ theorem memH1 {d : ℕ} {U : Set (Vec d)} (u : H1Function U) :
   ⟨u, rfl⟩
 
 /-- Regard an `H1Function` as the corresponding `W1pFunction` at `p = 2`. -/
+@[expose]
 def toW1pFunction {d : ℕ} {U : Set (Vec d)}
     (u : H1Function U) : W1pFunction U (2 : ℝ≥0∞) where
   toFun := u.toFun
@@ -120,6 +121,7 @@ end H1Function
 namespace W1pFunction
 
 /-- Regard a `W1pFunction` at `p = 2` as the corresponding `H1Function`. -/
+@[expose]
 def toH1Function {d : ℕ} {U : Set (Vec d)}
     (u : W1pFunction U (2 : ℝ≥0∞)) : H1Function U where
   toFun := u.toFun
@@ -157,6 +159,7 @@ theorem toH1Function_toW1pFunction {d : ℕ} {U : Set (Vec d)}
   apply H1Function.ext <;> rfl
 
 /-- Restrict an `H1Function` to an open subset. -/
+@[expose]
 def restrict {d : ℕ} {U V : Set (Vec d)}
     (u : H1Function U) (hVOpen : IsOpen V) (hVU : V ⊆ U) :
     H1Function V :=

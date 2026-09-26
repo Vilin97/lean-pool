@@ -17,7 +17,7 @@ is assigned to a clockwise-extreme endpoint, and the signed-area lemmas show
 that no endpoint can receive two different edges.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132N14
 
@@ -282,6 +282,7 @@ theorem diameterEdges_card_le
 
 /-- Every fourteen-point planar configuration has a realized distance
 represented by at most fourteen unordered pairs. -/
+@[expose]
 def HopfPannwitzLowMultiplicityDistance14 : Prop :=
   ∀ P : Configuration (Fin 14),
     ∃ d ∈ P.realizedDistances Finset.univ,

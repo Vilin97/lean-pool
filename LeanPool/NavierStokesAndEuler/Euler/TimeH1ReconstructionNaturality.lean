@@ -18,7 +18,7 @@ It is an equality of the constructed operators, independent of any smoothness
 assumption on their inputs.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -14,7 +14,7 @@ import Mathlib.Data.Set.Card.Arithmetic
 # LeanPool.LatticeTriangle.Solution
 -/
 
-@[expose] public section
+public section
 
 /-- The largest prime factor of `n`, or `0` if `n` has no prime factors (i.e. `n ≤ 1`). -/
 def largestPrimeFactor (n : ℕ) : ℕ :=
@@ -30,6 +30,7 @@ def truncatedObtuseRegion (n : ℕ) (η : ℝ) : Set (ℤ × ℤ) :=
     Int.gcd (Int.gcd pq.1 pq.2) (n : ℤ) = 1}
 
 /-- The image in `ZMod n` of the integer interval `{1, …, m}`. -/
+@[expose]
 def intervalSet (n : ℕ) (m : ℕ) : Set (ZMod n) :=
   {x : ZMod n | 1 ≤ ZMod.val x ∧ ZMod.val x ≤ m}
 

@@ -23,7 +23,7 @@ maps identify the generated equivalence relations and descend the one-face carri
 to the canonical quotient spaces.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces.NormalForm
 

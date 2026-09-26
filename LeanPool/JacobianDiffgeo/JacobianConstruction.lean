@@ -85,4 +85,4 @@ abel-theorem, since it already needs period-naturality for its two-point argumen
 final-assembly addendum).
 -/
 
-@[expose] public section
+public section

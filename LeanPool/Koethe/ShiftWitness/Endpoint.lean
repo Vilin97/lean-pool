@@ -19,7 +19,7 @@ nonzero eigenvalue after inverting `1 - a₀`. Squaring puts every entry in the
 nil ideal. No matrix-nilness principle is used.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -35,7 +35,7 @@ variable {R : Type w} [Ring R]
 
 /-- The action of a matrix of represented ring elements on two copies of the
 representation space. -/
-def matrixAction (φ : R →+* Module.End K M) :
+@[expose] def matrixAction (φ : R →+* Module.End K M) :
     Matrix (Fin 2) (Fin 2) R →+* Module.End K (Fin 2 → M) :=
   (endVecRingEquivMatrixEnd (Fin 2) K M).symm.toRingHom.comp φ.mapMatrix
 

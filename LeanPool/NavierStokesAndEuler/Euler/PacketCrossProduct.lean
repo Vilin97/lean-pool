@@ -12,7 +12,7 @@ import Mathlib.Geometry.Euclidean.Angle.Unoriented.CrossProduct
 
 /-! The ordinary Euclidean cross product as an actual bounded linear operator. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -22,7 +22,7 @@ namespace EulerPacketCrossProduct
 open EulerSmoothLimit InnerProductSpace Matrix WithLp
 
 /-- Cross, given by `toLp 2 (crossProduct (ofLp a) (ofLp b))`. -/
-def cross (a b : Space) : Space := toLp 2 (crossProduct (ofLp a) (ofLp b))
+@[expose] def cross (a b : Space) : Space := toLp 2 (crossProduct (ofLp a) (ofLp b))
 
 theorem cross_norm_le (a b : Space) : ‖cross a b‖ ≤ ‖a‖*‖b‖ := by
   rw [cross, InnerProductGeometry.norm_ofLp_crossProduct]
@@ -30,16 +30,16 @@ theorem cross_norm_le (a b : Space) : ‖cross a b‖ ≤ ‖a‖*‖b‖ := by
     (Real.sin_le_one _)
 
 /-- Cross linear, bundling `toFun`, `map_add`, `map_smul`. -/
-def crossLinear (a : Space) : Space →ₗ[ℝ] Space where
+@[expose] def crossLinear (a : Space) : Space →ₗ[ℝ] Space where
   toFun := cross a
   map_add' b c := by simp [cross, map_add]
   map_smul' c b := by simp [cross, map_smul]
 
 /-- Cross left, given by `(crossLinear a).mkContinuous ‖a‖ (cross_norm_le a)`. -/
-def crossLeft (a : Space) : Space →L[ℝ] Space :=
+@[expose] def crossLeft (a : Space) : Space →L[ℝ] Space :=
   (crossLinear a).mkContinuous ‖a‖ (cross_norm_le a)
 
-theorem crossLeft_apply (a b : Space) : crossLeft a b=cross a b := rfl
+theorem crossLeft_apply (a b : Space) : crossLeft a b=cross a b := by rfl
 
 theorem crossLeft_norm_le (a : Space) : ‖crossLeft a‖ ≤ ‖a‖ :=
   ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _) (cross_norm_le a)
@@ -62,11 +62,11 @@ theorem cross_negative_normalized (m a : Space) (hm : m ≠ 0)
   simp only [neg_mul, inv_mul_cancel₀ hnorm, neg_smul, one_smul, neg_neg]
 
 /-- Its normalization is exactly the linear map used inside the angular primitive for Q. -/
-def potentialMultiplier (m : Space) : Space →L[ℝ] Space :=
+@[expose] def potentialMultiplier (m : Space) : Space →L[ℝ] Space :=
   (-((‖m‖^2)⁻¹)) • crossLeft m
 
 theorem potentialMultiplier_apply (m a : Space) :
-    potentialMultiplier m a=(-((‖m‖^2)⁻¹)) • cross m a := rfl
+    potentialMultiplier m a=(-((‖m‖^2)⁻¹)) • cross m a := by rfl
 
 theorem cross_potentialMultiplier (m a : Space) (hm : m ≠ 0)
     (ha : ⟪m, a⟫_ℝ = 0) : cross m (potentialMultiplier m a)=a :=

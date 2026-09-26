@@ -28,12 +28,12 @@ the triangular decompositions of both the Virasoro algebra and the Heisenberg al
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 
 /-- The partition of `Option ℤ` into zero, positive, and negative parts. -/
-def indexTri (ε : SignType) : Set (Option ℤ) := match ε with
+@[expose] def indexTri (ε : SignType) : Set (Option ℤ) := match ε with
   | SignType.zero => {none, some 0}
   | SignType.pos => some '' {n : ℤ | 0 < n}
   | SignType.neg => some '' {n : ℤ | n < 0}

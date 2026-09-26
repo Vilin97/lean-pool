@@ -18,7 +18,7 @@ The native closed-cell equations are joined through the literal common
 copy construction. The complement is handled by actual input zero germs.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

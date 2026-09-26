@@ -52,7 +52,7 @@ element can only lose
 the post-gap information. Hence `f` is one-one (`f_injective`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise317
 

@@ -14,7 +14,7 @@ import Mathlib.Tactic.NormNum.GCD
 # LeanPool.LowDimSolvClassification.InstancesConstructions
 -/
 
-@[expose] public section
+public section
 
 open Module
 open Submodule
@@ -30,6 +30,7 @@ section mkAbelian
 /-- The abelian Lie algebra constructed from a vector space by setting the bracket to zero.
 The unused `Module K V` instance is consumed by `inferInstance` so the `unusedArguments` linter
 accepts the definition; the result is still a synonym for `V`. -/
+@[expose]
 def mkAbelian (K : Type*) [CommRing K] (V : Type*) [AddCommGroup V] [Module K V] : Type _ :=
   (inferInstance : Module K V).toDistribMulAction.toMulAction.toSMul |> fun _ ↦ V
 
@@ -102,17 +103,17 @@ def _root_.LieAlgebra.Abelian.DerivationOfLinearMap (K L : Type*) [CommRing K] [
 @[simp]
 theorem _root_.LieAlgebra.Abelian.DerivationCoeLinearMap {K : Type*} [CommRing K] {L : Type*}
     [LieRing L] [LieAlgebra K L] [IsLieAbelian L] (f : L →ₗ[K] L) :
-    (Abelian.DerivationOfLinearMap K L f).toLinearMap = f := rfl
+    (Abelian.DerivationOfLinearMap K L f).toLinearMap = f := by rfl
 
 @[simp]
 theorem _root_.LieAlgebra.Abelian.DerivationCoeFun {K : Type*} [CommRing K] {L : Type*}
     [LieRing L] [LieAlgebra K L] [IsLieAbelian L] (f : L →ₗ[K] L) :
-    ⇑(Abelian.DerivationOfLinearMap K L f) = ⇑f := rfl
+    ⇑(Abelian.DerivationOfLinearMap K L f) = ⇑f := by rfl
 
 @[simp]
 theorem _root_.LieAlgebra.Abelian.DerivationCoeFun' {K : Type*} [CommRing K] {L : Type*}
     [LieRing L] [LieAlgebra K L] [IsLieAbelian L] (f : L →ₗ[K] L) :
-    ⇑((Abelian.DerivationOfLinearMap K L).toLieHom f) = ⇑f := rfl
+    ⇑((Abelian.DerivationOfLinearMap K L).toLieHom f) = ⇑f := by rfl
 
 end abelianDerivation
 
@@ -123,7 +124,8 @@ variable (K : Type*) [CommRing K] (V : Type*) [AddCommGroup V] [Module K V]
 example : LieAlgebra K (Module.End K V) := inferInstance
 
 /-- TODO. -/
-def _root_.LieAlgebra.ofAffineEquivAux := (Abelian.DerivationOfLinearMap K (mkAbelian K V)).toLieHom
+@[expose] def _root_.LieAlgebra.ofAffineEquivAux :=
+  (Abelian.DerivationOfLinearMap K (mkAbelian K V)).toLieHom
 
 /-- The Lie algebra of the general affine group on a vector space `V`,
     constructed as semidirect product of `V →ₗ[K] V` with the abelian Lie algebra `V`. -/
@@ -143,11 +145,12 @@ variable (K : Type*) [CommRing K] (V : Type*) [AddCommGroup V] [Module K V] (L :
     [LieRing L] [LieAlgebra K L] [IsLieAbelian L]
 
 /-- TODO. -/
-def _root_.LieAlgebra.RealHyperbolicAux' : K →ₗ⁅K⁆ LieDerivation K L L :=
+@[expose] def _root_.LieAlgebra.RealHyperbolicAux' : K →ₗ⁅K⁆ LieDerivation K L L :=
   LieHom.comp (Abelian.DerivationOfLinearMap K L) (LieHom.smulRight (LinearMap.id : End K L))
 
 /-- TODO. -/
-def _root_.LieAlgebra.RealHyperbolicAux : K →ₗ⁅K⁆ LieDerivation K (mkAbelian K V) (mkAbelian K V)
+@[expose] def _root_.LieAlgebra.RealHyperbolicAux :
+    K →ₗ⁅K⁆ LieDerivation K (mkAbelian K V) (mkAbelian K V)
     := RealHyperbolicAux' K (mkAbelian K V)
 
 /-- The almost abelian Lie algebra associated to real hyperbolic space,

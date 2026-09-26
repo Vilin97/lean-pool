@@ -24,7 +24,7 @@ room-door incidences. Following a path in this graph between odd-degree vertices
 is the combinatorial heart of the path-following proof of Scarf's lemma.
 -/
 
-@[expose] public section
+public section
 
 attribute [local instance] Classical.propDecidable
 open Finset
@@ -40,11 +40,13 @@ variable [DecidableEq T] [DecidableEq I] [IST : IndexedLOrder I T]
 abbrev GiCell (T I : Type*) := Finset T × Finset I
 
 /-- The room-type vertices of the graph `G_i`: colorful rooms and typed nearly-colorful rooms. -/
+@[expose]
 def GiRoomVertex (c : T → I) (i : I) (v : GiCell T I) : Prop :=
   IST.isColorful c v.1 v.2 ∨
     (IST.isRoom v.1 v.2 ∧ IST.isTypedNC c i v.1 v.2)
 
 /-- The door-type vertices of the graph `G_i`: typed nearly-colorful doors. -/
+@[expose]
 def GiDoorVertex (c : T → I) (i : I) (v : GiCell T I) : Prop :=
   IST.isDoor v.1 v.2 ∧ IST.isTypedNC c i v.1 v.2
 
@@ -53,6 +55,7 @@ def GiVertex (c : T → I) (i : I) (v : GiCell T I) : Prop :=
   GiRoomVertex (IST := IST) c i v ∨ GiDoorVertex (IST := IST) c i v
 
 /-- Edges of `G_i`: room-door incidence, made symmetric. -/
+@[expose]
 def GiEdge (c : T → I) (i : I) (v w : GiCell T I) : Prop :=
   (GiRoomVertex (IST := IST) c i v ∧
     GiDoorVertex (IST := IST) c i w ∧
@@ -98,12 +101,14 @@ lemma GiEdge.irrefl {c : T → I} {i : I} (v : GiCell T I) :
     exact absurd h.2.1.door.2 (by have := h.1.room.2; omega)
 
 /-- The Mathlib `SimpleGraph` whose vertices and edges are the graph `G_i`. -/
+@[expose]
 def GiGraph (c : T → I) (i : I) : SimpleGraph (GiCell T I) where
   Adj := GiEdge (IST := IST) c i
   symm := ⟨fun _ _ h => GiEdge.symm h⟩
   loopless := ⟨fun v => GiEdge.irrefl (IST := IST) (c := c) (i := i) v⟩
 
 /-- The finite neighbor set of a vertex in `G_i`. -/
+@[expose]
 def GiNeighbors (c : T → I) (i : I) (v : GiCell T I) : Finset (GiCell T I) :=
   (GiGraph (IST := IST) c i).neighborFinset v
 
@@ -113,10 +118,12 @@ lemma mem_GiNeighbors {c : T → I} {i : I} {v w : GiCell T I} :
   exact SimpleGraph.mem_neighborFinset (GiGraph (IST := IST) c i) v w
 
 /-- Degree in `G_i`. -/
+@[expose]
 def GiDegree (c : T → I) (i : I) (v : GiCell T I) : Nat :=
   (GiNeighbors (IST := IST) c i v).card
 
 /-- Endpoint vertices of `G_i`. -/
+@[expose]
 def GiEndpoint (c : T → I) (i : I) (v : GiCell T I) : Prop :=
   GiVertex (IST := IST) c i v ∧ GiDegree (IST := IST) c i v = 1
 
@@ -445,6 +452,7 @@ theorem GiDegree_colorfulRoom {c : T → I} {i : I} {σ : Finset T} {C : Finset 
     simp
 
 /-- A graph has degree at most two at each vertex. -/
+@[expose]
 def simpleGraphDegreeAtMostTwo {α : Type*} [Fintype α] (G : SimpleGraph α) : Prop :=
   ∀ v, G.degree v ≤ 2
 
@@ -471,6 +479,7 @@ The degree characterization of `G_i`: every vertex has degree one or two, and
 the degree-one vertices are exactly the unique outside door of type `i` and
 the colorful rooms.
 -/
+@[expose]
 def GiDegreeCharacterization (c : T → I) (i : I) : Prop :=
   (∀ v, GiVertex (IST := IST) c i v →
     GiDegree (IST := IST) c i v = 1 ∨ GiDegree (IST := IST) c i v = 2) ∧
@@ -518,6 +527,7 @@ theorem GiDegreeCharacterization_holds (c : T → I) (i : I) :
 The path-structure target for `G_i`: degree characterization plus the local
 degree-at-most-two property used by path-following.
 -/
+@[expose]
 def GiPathStructure (c : T → I) (i : I) : Prop :=
   GiDegreeCharacterization (IST := IST) c i ∧
     simpleGraphDegreeAtMostTwo (GiGraph (IST := IST) c i)

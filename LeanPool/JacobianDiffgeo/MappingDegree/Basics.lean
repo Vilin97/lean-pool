@@ -34,7 +34,7 @@ Surface perfectness (`(𝓝[≠] x).NeBot`) is NOT re-proved here: surfaces-and-
 provides the instance `RS.nhdsNE_neBot` for any `ChartedSpace ℂ` space.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Function
 open scoped ContDiff Manifold Topology
@@ -51,11 +51,11 @@ variable {X Y : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
 /-- Total multiplicity of `F` over `y` (the fiber-sum). Junk-free by convention: for
 holomorphic nonconstant `F` on compact `X` the fiber is finite and every summand is `≥ 1`; for
 constant `F` all summands are junk `0` (CC4), so the value is `0`. -/
-noncomputable def fiberMultSum (F : X → Y) (y : Y) : ℕ :=
+@[expose] noncomputable def fiberMultSum (F : X → Y) (y : Y) : ℕ :=
   ∑ᶠ x ∈ F ⁻¹' {y}, multiplicity F x
 
 theorem fiberMultSum_def (F : X → Y) (y : Y) :
-    fiberMultSum F y = ∑ᶠ x ∈ F ⁻¹' {y}, multiplicity F x := rfl
+    fiberMultSum F y = ∑ᶠ x ∈ F ⁻¹' {y}, multiplicity F x := by rfl
 
 theorem fiberMultSum_eq_finset_sum {F : X → Y} {y : Y} (hfin : (F ⁻¹' {y}).Finite) :
     fiberMultSum F y = ∑ x ∈ hfin.toFinset, multiplicity F x :=

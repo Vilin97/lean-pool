@@ -22,7 +22,7 @@ section
 
 /-! Bounds on the actual masked slow and fast products, with zero terms charged no shifts. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -113,7 +113,7 @@ section
 
 /-! Every nonzero known summand fits strictly below its target forcing shift. -/
 
-@[expose] public section
+public section
 
 namespace EulerPacketCylinderField.KnownTerm
 
@@ -195,7 +195,7 @@ section
 
 /-! The time-profile inequalities for every surviving term of the mean and high forces. -/
 
-@[expose] public section
+public section
 
 namespace EulerPacketCylinderField.KnownTerm
 
@@ -272,7 +272,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

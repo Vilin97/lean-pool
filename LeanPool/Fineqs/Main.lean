@@ -23,7 +23,7 @@ import Mathlib.Tactic.Positivity.Finset
 Vendored from `nasqret/fineqs`. See `LeanPool/Fineqs.lean` for the project overview.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Fineqs
 

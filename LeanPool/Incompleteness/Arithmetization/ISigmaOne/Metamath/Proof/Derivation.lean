@@ -12,7 +12,7 @@ import Mathlib.Algebra.Order.Sub.Basic
 
 /-! # Derivation -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»

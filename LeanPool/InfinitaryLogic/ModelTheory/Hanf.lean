@@ -35,7 +35,7 @@ arbitrary language — is proved in `Conditional/MorleyHanfSchemaDischarge.lean`
 - [Mar16], §5
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

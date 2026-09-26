@@ -18,7 +18,7 @@ EX under drift, universal learning, Bayesian criteria (posterior consistency,
 PAC-Bayes, information-theoretic bounds).
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -46,6 +46,7 @@ def EXUnderDrift (X : Type u) (C : ConceptClass X Bool)
     over D^m, the learner's error is at most rate(m).
 
     Γ₄₈ fix: changed from existential Dm to Measure.pi (CNA₁₁ definition repair). -/
+@[expose]
 def UniversalLearnable (X : Type u) [MeasurableSpace X]
     (C : ConceptClass X Bool) : Prop :=
   ∃ (L : BatchLearner X Bool) (rate : ℕ → ℝ),

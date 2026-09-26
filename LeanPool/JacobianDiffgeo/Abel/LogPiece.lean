@@ -41,7 +41,7 @@ pole at `α`), interpolated to `1` across the bump annulus `ρ < rIn ≤ ‖z - 
   (`DiffContOnCl.circleIntegral_sub_inv_smul`) evaluates it.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff
 open Complex Metric Set MeasureTheory Filter Topology

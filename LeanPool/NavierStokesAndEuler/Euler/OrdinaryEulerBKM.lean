@@ -30,7 +30,7 @@ section
 logarithmic gradient estimate bounds the gradient integral using only
 the time integral of its continuous vorticity coefficient. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -190,7 +190,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -238,7 +238,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

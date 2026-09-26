@@ -14,7 +14,7 @@ If planar vectors lie in a closed half-plane, `M` of their Gram matrix is
 completely positive (`thm:matrix`).
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 

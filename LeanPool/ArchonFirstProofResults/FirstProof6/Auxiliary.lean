@@ -27,4 +27,4 @@ Re-exports all auxiliary sub-modules used by `Problem6`:
 - `LoewnerPullback`: Loewner pullback to `ε`-lightness
 -/
 
-@[expose] public section
+public section

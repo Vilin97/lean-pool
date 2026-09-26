@@ -15,7 +15,7 @@ https://arxiv.org/abs/2608.09305, and `rndmx/DilCat` at commit
 `604559654c948566675da3f7709b8ad3126bd487` (Apache-2.0).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -32,6 +32,7 @@ variable {D : Type u} [Category.{v'} D]
 variable (F : C ⥤ D)
 
 /-- **Proposition 3.14, setup.** The restriction of `Z` to a subcollection `K ⊂ Z.I`. -/
+@[expose]
 def Center.restrict (Z : Center C) (K : Set Z.I) (hK : K.Nonempty) : Center C where
   I := K
   nonempty := ⟨⟨hK.choose, hK.choose_spec⟩⟩
@@ -48,6 +49,7 @@ lemma CenterMorphismProperty_restrict_le
   exact ⟨k.1, hk⟩
 
 /-- The localization functor induced by inclusion of a restricted set of denominators. -/
+@[expose]
 def baseRestrictFunctor (Z : Center C) (K : Set Z.I) (hK : K.Nonempty) :
     (CenterMorphismProperty (Z.restrict K hK)).Localization ⥤
       (CenterMorphismProperty Z).Localization :=
@@ -238,10 +240,7 @@ lemma PhiPreimage_id (Z : Center C) (K : Set Z.I) (hK : K.Nonempty) (X' : Genera
   refine ⟨𝟙 _, ?_⟩
   rw [Functor.map_id]
   erw [Functor.map_id]
-  -- `restrictPhi` is now a structural `DilaLift`, so both `eqToHom`s flanking the identity
-  -- are definitionally `𝟙`; strip the two compositions and close by `rfl`.
-  erw [Category.id_comp]
-  erw [Category.id_comp]
+  erw [Category.id_comp, eqToHom_trans]
   rfl
 
 /-- Inductive step : `Φ`-preimages compose. -/
@@ -319,8 +318,8 @@ lemma restrictPhi_map_fraction (Z : Center C) (K : Set Z.I) (hK : K.Nonempty)
   apply (DilaToLoc Z).map_injective
   have hcomp := Functor.congr_hom (restrictPhi_comp_DilaToLoc Z K hK)
       (fractionInDilatation (Z.restrict K hK) ⟨⟨i, hiK⟩, ⟨X0, ⟨n, hn⟩⟩⟩)
-  erw [Functor.comp_map, Functor.comp_map, DilaToLoc_map_fraction,
-    baseRestrictFunctor_map_fraction] at hcomp
+  simp only [Functor.comp_map] at hcomp
+  erw [DilaToLoc_map_fraction, baseRestrictFunctor_map_fraction] at hcomp
   erw [hcomp, Functor.map_comp, Functor.map_comp]
   erw [eqToHom_map, eqToHom_map, DilaToLoc_map_fraction]
   rfl
@@ -354,7 +353,8 @@ lemma PhiPreimage_fraction_mem (Z : Center C) (K : Set Z.I) (hK : K.Nonempty)
             (objEquiv (CenterMorphismProperty Z) (Z.dom i))).symm
   rw [Functor.map_comp, Functor.map_comp,
     restrictPhi_map_fraction Z K hK i hiK X0 n hn]
-  simp only [eqToHom_map]
+  simp only [eqToHom_map, fractionInDilatation, fractionGenerator]
+  erw [Category.assoc, eqToHom_trans_assoc, Category.assoc, eqToHom_trans]
   rfl
 
 /-- Generator case, original morphisms : always has a `Φ`-preimage. -/
@@ -493,6 +493,7 @@ def Center.pushforward (W : Center C) (F : C ⥤ D) : Center D where
 
 /-- Combining two centers `Z` and `W` on the same category `C` into one center indexed by
 `Z.I ⊕ W.I`. -/
+@[expose]
 def Center.sum (Z W : Center C) : Center C where
   I := Z.I ⊕ W.I
   nonempty := ⟨Sum.inl Z.nonempty.some⟩
@@ -876,11 +877,13 @@ For a fixed center `{[Nᵢ,dᵢ]}_{i∈I}` on `C` and an alternative choice of s
 sieves `Nᵢ ∪ N'ᵢ`. -/
 /-- Same generators `{dᵢ}` as `Z`, with an alternative choice of sieves `N'`. Represents
 `{[N'ᵢ,dᵢ]}_{i∈I}`. -/
+@[expose]
 def Center.altSieve (Z : Center C) (N' : ∀ i : Z.I, Sieve (C := C) (Z.cod i)) : Center C :=
   { Z with N := N' }
 
 /-- Same generators as `Z`, with sieves `Nᵢ ∪ N'ᵢ`. Represents `{[N''ᵢ,dᵢ]}_{i∈I}` from
 Proposition 3.18. -/
+@[expose]
 def Center.sieveUnion (Z : Center C) (N' : ∀ i : Z.I, Sieve (C := C) (Z.cod i)) : Center C :=
   { Z with N := fun i => Z.N i ⊔ N' i }
 

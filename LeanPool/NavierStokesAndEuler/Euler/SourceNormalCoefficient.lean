@@ -19,7 +19,7 @@ regularity and factorial multiplier bounds from the normal field and its
 positive lower bound, without assuming regularity of a reciprocal field.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

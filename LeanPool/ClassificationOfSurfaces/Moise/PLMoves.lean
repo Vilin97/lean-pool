@@ -15,7 +15,7 @@ The topological homeomorphisms used by the Chapter 3 ear shelling were construct
 barycentric repositioning.  This file records the missing PL certificates used in Chapter 5.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

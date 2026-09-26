@@ -43,7 +43,7 @@ minimisation compose. The capstone is `partrec_lamDef` and the 1-ary corollary
 `partrec_one`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Theorem56Full
 
@@ -200,7 +200,7 @@ theorem strictGuardN_strict (n : ℕ) (φ : ApproximableMap 𝒩 N) (z : 𝒩.El
 
 /-- `⟨g₀, …, g_{n-1}⟩ : 𝒩 → 𝒩` placing `gᵢ` at coordinate `i` (`< n`) and `⊥`
 beyond. -/
-def tupleMap : (n : ℕ) → (Fin n → ApproximableMap 𝒩 N) → ApproximableMap 𝒩 𝒩
+@[expose] def tupleMap : (n : ℕ) → (Fin n → ApproximableMap 𝒩 N) → ApproximableMap 𝒩 𝒩
   | 0, _ => constMap 𝒩 𝒩.bot
   | n + 1, gs => (push N).comp (paired (gs 0) (tupleMap n (fun i => gs i.succ)))
 

@@ -41,7 +41,7 @@ Jacobi identity, Lie algebra 2-cocycle condition
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 
@@ -56,7 +56,7 @@ variable {V W : Type*}
 Given functions β : V × V → V and φ : V × V → W where W has additive structure,
 `cyclicTripleSum β φ` is the function of three variables on V defined by:
 ⟨x,y,z⟩ ↦ φ(x,β(y,z)) + φ(y,β(z,x)) + φ(z,β(x,y)). -/
-def cyclicTripleSum [Add W] (β : V → V → V) (φ : V → V → W) (x y z : V) : W :=
+@[expose] def cyclicTripleSum [Add W] (β : V → V → V) (φ : V → V → W) (x y z : V) : W :=
   φ x (β y z) + φ y (β z x) + φ z (β x y)
 
 lemma cyclicTripleSum_apply [Add W] (β : V → V → V) (φ : V → V → W) (x y z : V) :
@@ -163,7 +163,7 @@ section cyclicTripleSumBilin
 
 -- TODO: Does a more convenient coercion exist? Should this be made to a literal coercion?
 /-- "Coerce" a bilinear map into a biadditive map. -/
-def _root_.LinearMap.toBiadditive
+@[expose] def _root_.LinearMap.toBiadditive
     {V₁ V₂ V₃ : Type*} [AddCommMonoid V₁] [AddCommMonoid V₂] [AddCommMonoid V₃]
     {R₁ R₂ R₃ : Type*} [CommSemiring R₁] [CommSemiring R₂] [CommSemiring R₃]
     {σ : R₁ →+* R₃} {τ : R₂ →+* R₃}
@@ -186,7 +186,7 @@ variable [Module 𝕜 V] [Module 𝕜 W]
 
 Given bilinear functions β : V × V → V and φ : V × V → W, `cyclicTripleSumHom β φ` is the
 trilinear function on V defined by: ⟨x,y,z⟩ ↦ φ(x,β(y,z)) + φ(y,β(z,x)) + φ(z,β(x,y)). -/
-noncomputable def _root_.VirasoroProject.cyclicTripleSumHom
+@[expose] noncomputable def _root_.VirasoroProject.cyclicTripleSumHom
     (β : V →ₗ[𝕜] V →ₗ[𝕜] V) (φ : V →ₗ[𝕜] V →ₗ[𝕜] W) :
     V →ₗ[𝕜] V →ₗ[𝕜] V →ₗ[𝕜] W where
   toFun := fun x ↦

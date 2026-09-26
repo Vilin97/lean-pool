@@ -34,7 +34,7 @@ channel with counting-measure reference, an explicit `ContinuousPositiveDensity`
 concrete application of `exists_unique_capacity_achieving_prior_discharged`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory

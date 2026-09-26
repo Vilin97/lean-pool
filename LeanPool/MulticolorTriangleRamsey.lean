@@ -24,7 +24,7 @@ Tags: extremal-combinatorics, ramsey-theory, graph-coloring, erdos-problems
 MSC: 05D10, 05C55
 -/
 
-@[expose] public section
+public section
 
 namespace ErdosProblems.MulticolourTriangleRamsey
 

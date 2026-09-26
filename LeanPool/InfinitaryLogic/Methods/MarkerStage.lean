@@ -89,7 +89,7 @@ witness index (enabled by the finite-Henkin-support invariant — see the Layer 
 note), then the Henkin construction/model-existence adapter decision.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -357,7 +357,7 @@ abbrev henkinConstsIn {α : Type} {n : ℕ}
 
 /-- The `J`-constant support of an expansion formula: the `J`-constants sit inside the base
 `L''[[J]]` layer, under `Sum.inl ∘ Sum.inr`. -/
-def expJConstsIn {α : Type} {n : ℕ} (φ : ((L''[[J]])[[ℕ]]).BoundedFormulaω α n) : Set J :=
+@[expose] def expJConstsIn {α : Type} {n : ℕ} (φ : ((L''[[J]])[[ℕ]]).BoundedFormulaω α n) : Set J :=
   {j | (⟨0, (Sum.inl (Sum.inr j) : ((L''[[J]])[[ℕ]]).Functions 0)⟩ :
       Σ n, ((L''[[J]])[[ℕ]]).Functions n) ∈ BoundedFormulaω.functionsIn φ}
 

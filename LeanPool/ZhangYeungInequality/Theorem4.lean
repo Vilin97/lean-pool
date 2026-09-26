@@ -152,7 +152,7 @@ incompleteness, entropic
 region
 -/
 
-@[expose] public section
+public section
 
 namespace ZhangYeung
 
@@ -175,7 +175,7 @@ entropy
 function of a discrete random-variable family (with `F ∅ = 0`), this coincides with
 `I[X_α : X_β]`.
 -/
-def IF (F : Finset (Fin 4) → ℝ) (α β : Finset (Fin 4)) : ℝ :=
+@[expose] def IF (F : Finset (Fin 4) → ℝ) (α β : Finset (Fin 4)) : ℝ :=
   F α + F β - F (α ∪ β)
 
 /--
@@ -185,7 +185,7 @@ Set-function conditional mutual information: `condIF(α; β | γ) = F (α ∪ γ
 coincides
 with `I[X_α : X_β | X_γ]`.
 -/
-def condIF (F : Finset (Fin 4) → ℝ) (α β γ : Finset (Fin 4)) : ℝ :=
+@[expose] def condIF (F : Finset (Fin 4) → ℝ) (α β γ : Finset (Fin 4)) : ℝ :=
   F (α ∪ γ) + F (β ∪ γ) - F (α ∪ β ∪ γ) - F γ
 
 /--
@@ -195,7 +195,7 @@ condIF({i}; {j} | {k}) - condIF({i}; {j} | {l})`. Mirrors `ZhangYeung.delta` at 
 set-function
 level.
 -/
-def deltaF (F : Finset (Fin 4) → ℝ) (i j k l : Fin 4) : ℝ :=
+@[expose] def deltaF (F : Finset (Fin 4) → ℝ) (i j k l : Fin 4) : ℝ :=
   IF F {i} {j} - condIF F {i} {j} {k} - condIF F {i} {j} {l}
 
 /-! ### Shannon and Zhang-Yeung cone predicates -/
@@ -205,7 +205,7 @@ The Shannon outer bound `Γ_4` from [@zhangyeung1998, eq. 11]: a set function li
 `Γ_4` iff it
 vanishes on the empty set, is monotone under subset inclusion, and is submodular.
 -/
-def shannonCone (F : Finset (Fin 4) → ℝ) : Prop :=
+@[expose] def shannonCone (F : Finset (Fin 4) → ℝ) : Prop :=
   F ∅ = 0 ∧
   (∀ α β : Finset (Fin 4), α ⊆ β → F α ≤ F β) ∧
   (∀ α β : Finset (Fin 4), F (α ∪ β) + F (α ∩ β) ≤ F α + F β)
@@ -217,7 +217,7 @@ def shannonCone (F : Finset (Fin 4) → ℝ) : Prop :=
   condIF F {i} {j} {l})`.
 
 This is the set-function-level restatement of `ZhangYeung.zhangYeung`. -/
-def zhangYeungAt (F : Finset (Fin 4) → ℝ) (i j k l : Fin 4) : Prop :=
+@[expose] def zhangYeungAt (F : Finset (Fin 4) → ℝ) (i j k l : Fin 4) : Prop :=
   deltaF F i j k l ≤ (1 / 2) * (IF F {k} {l} + IF F {k} ({i} ∪ {j})
     + condIF F {i} {j} {k} - condIF F {i} {j} {l})
 
@@ -227,7 +227,7 @@ in
 `tildeΓ_4` iff `zhangYeungAt F (π 0) (π 1) (π 2) (π 3)` holds at every permutation `π`
 of `Fin 4`.
 -/
-def zhangYeungHolds (F : Finset (Fin 4) → ℝ) : Prop :=
+@[expose] def zhangYeungHolds (F : Finset (Fin 4) → ℝ) : Prop :=
   ∀ π : Equiv.Perm (Fin 4), zhangYeungAt F (π 0) (π 1) (π 2) (π 3)
 
 /-! ### The paper's `n = 4` counterexample witness
@@ -252,7 +252,7 @@ to `a =
 
 Living over `ℚ` so the witness arithmetic stays exact before the final cast to `ℝ`.
 -/
-def FWitnessℚ : Finset (Fin 4) → ℚ := fun S =>
+@[expose] def FWitnessℚ : Finset (Fin 4) → ℚ := fun S =>
   if S.card = 0 then 0
   else if S.card = 1 then 2
   else if S = ({0, 1} : Finset (Fin 4)) then 4
@@ -264,7 +264,7 @@ The `ℝ`-cast of `FWitnessℚ`, used in the main statements `shannonCone_of_wit
 `not_zhangYeungHolds_witness`, `shannon_incomplete`, `theorem4_finite`, `theorem4`, and
 `theorem4_ge_four`.
 -/
-noncomputable def FWitness : Finset (Fin 4) → ℝ := fun S => (FWitnessℚ S : ℝ)
+@[expose] noncomputable def FWitness : Finset (Fin 4) → ℝ := fun S => (FWitnessℚ S : ℝ)
 
 /--
 Definitional-shape lemma: `FWitness` is the pointwise `ℚ → ℝ` cast of `FWitnessℚ`.

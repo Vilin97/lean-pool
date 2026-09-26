@@ -21,7 +21,7 @@ This file constructs, rather than assumes, the inverse of the actual operator
 primitive estimate.  No inverse, solution, or weak equation is an input.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -11,7 +11,7 @@ public import LeanPool.PDL.Local.Tableau
 
 /-! # Local Lemmas for Soundness (part of Section 6) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

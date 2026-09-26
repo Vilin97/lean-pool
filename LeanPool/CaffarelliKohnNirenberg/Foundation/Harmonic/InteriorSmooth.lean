@@ -14,7 +14,7 @@ public import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology Convolution
 open MeasureTheory MeasureTheory.Measure Set Filter

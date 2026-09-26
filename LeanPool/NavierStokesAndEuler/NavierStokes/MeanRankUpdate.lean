@@ -19,7 +19,7 @@ The update is the constructed power-moment inverse, transported with the
 physical length and velocity scales. Each moment carries its own scale.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,15 +33,15 @@ open scoped BigOperators ContDiff Topology
 abbrev Debt := FiveRowRank.Debt
 
 /-- Scale field, defined pointwise by `U * f (r / ell)`. -/
-noncomputable def scaleField (ell U : ℝ) (f : ℝ → ℝ) : ℝ → ℝ :=
+@[expose] noncomputable def scaleField (ell U : ℝ) (f : ℝ → ℝ) : ℝ → ℝ :=
   fun r => U * f (r / ell)
 
 /-- Pressure, angular moment, and axial moment have distinct length powers. -/
-noncomputable def scaleDebt (ell U : ℝ) (d : Debt) : Debt :=
+@[expose] noncomputable def scaleDebt (ell U : ℝ) (d : Debt) : Debt :=
   ![U ^ 2 * d 0, ell ^ 3 * U ^ 2 * d 1, ell ^ 2 * U ^ 2 * d 2]
 
 /-- Normalize debt, given by `![d 0 / U ^ 2, d 1 / (ell ^ 3 * U ^ 2), d 2 / (ell ^ 2 * U ^ 2)]`. -/
-noncomputable def normalizeDebt (ell U : ℝ) (d : Debt) : Debt :=
+@[expose] noncomputable def normalizeDebt (ell U : ℝ) (d : Debt) : Debt :=
   ![d 0 / U ^ 2, d 1 / (ell ^ 3 * U ^ 2), d 2 / (ell ^ 2 * U ^ 2)]
 
 theorem scale_normalizeDebt {ell U : ℝ} (hell : ell ≠ 0) (hU : U ≠ 0) (d : Debt) :
@@ -163,16 +163,16 @@ theorem fiveRows_scaled {ell : ℝ} (hell : 0 < ell) (U : ℝ) {V G f g : ℝ �
 
 /-- Angular increment, given by `scaleField ell U (FiveRowRank.deltaV lam C a b (normalizeDebt
 ell U d))`. -/
-noncomputable def angularIncrement (lam C a b ell U : ℝ) (d : Debt) : ℝ → ℝ :=
+@[expose] noncomputable def angularIncrement (lam C a b ell U : ℝ) (d : Debt) : ℝ → ℝ :=
   scaleField ell U (FiveRowRank.deltaV lam C a b (normalizeDebt ell U d))
 
 /-- Desired axial increment, given by `scaleField ell U (FiveRowRank.gamma lam C a b
 (normalizeDebt ell U d))`. -/
-noncomputable def desiredAxialIncrement (lam C a b ell U : ℝ) (d : Debt) : ℝ → ℝ :=
+@[expose] noncomputable def desiredAxialIncrement (lam C a b ell U : ℝ) (d : Debt) : ℝ → ℝ :=
   scaleField ell U (FiveRowRank.gamma lam C a b (normalizeDebt ell U d))
 
 /-- Background, given by `scaleField ell U (FiveRowRank.background lam C)`. -/
-noncomputable def background (lam C ell U : ℝ) : ℝ → ℝ :=
+@[expose] noncomputable def background (lam C ell U : ℝ) : ℝ → ℝ :=
   scaleField ell U (FiveRowRank.background lam C)
 
 /-- Equation (35) in physical units, with no assumed rank or inverse. -/
@@ -816,7 +816,7 @@ theorem chartInput_norm_le_one : ‖chartInput‖ ≤ 1 := by
       _ _)))
 
 /-- Chart Q, given by `PhysicalCoordinateBounds.qCoord coord (chartInput p)`. -/
-noncomputable def chartQ (coord : ℝ) (p : ChartPoint) : ℝ :=
+@[expose] noncomputable def chartQ (coord : ℝ) (p : ChartPoint) : ℝ :=
   PhysicalCoordinateBounds.qCoord coord (chartInput p)
 
 /-- Chart eta, given by `PhysicalCoordinateBounds.etaCoord coord (chartInput p)`. -/
@@ -999,7 +999,7 @@ section ConcreteStrip
 
 /-- Normalized domain, given by `{p | chartInput p ∈ PhysicalCoordinateBounds.positiveTime ∧
 chartQ coord p ∈ Ioo qlo qhi ∧ p.1 ∈ Ioo rlo rhi}`. -/
-noncomputable def normalizedDomain (coord qlo qhi rlo rhi : ℝ) : Set ChartPoint :=
+@[expose] noncomputable def normalizedDomain (coord qlo qhi rlo rhi : ℝ) : Set ChartPoint :=
   {p | chartInput p ∈ PhysicalCoordinateBounds.positiveTime ∧
     chartQ coord p ∈ Ioo qlo qhi ∧ p.1 ∈ Ioo rlo rhi}
 
@@ -1020,7 +1020,7 @@ theorem normalizedDomain_isOpen {coord : ℝ} (hc : 0 < coord) (hc1 : coord < 1)
 
 /-- The concrete logarithmic radial weights, restricted to one normalized
 physical `q/Q` strip. The torus variables remain unrestricted. -/
-noncomputable def normalizedStripData (coord qlo qhi rlo rhi cL cR : ℝ)
+@[expose] noncomputable def normalizedStripData (coord qlo qhi rlo rhi cL cR : ℝ)
     (hc : 0 < coord) (hc1 : coord < 1) (hrlo : 0 < rlo) (hcL : 0 < cL) (hcR : 0 < cR)
     (ε S : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hεone : ∀ n, ε n ≤ 1) (hS : ∀ n, 1 ≤ S n) :
     WeightedClasses.StripData ChartPoint :=
@@ -1906,7 +1906,7 @@ noncomputable def actualChartPotential (coord A B lam a b power lo hi M : ℝ)
 
 /-- Actual chart radial, given by `PressureStream.streamBeta w (actualChartPotential coord A B
 lam a b power lo hi M v d)`. -/
-noncomputable def actualChartRadial (coord A B lam a b power lo hi M : ℝ)
+@[expose] noncomputable def actualChartRadial (coord A B lam a b power lo hi M : ℝ)
     (v : PressureStream.Plane) (w : PressureStream.Plane × PressureStream.Plane)
     (d : PressureStream.Plane → Debt) : ChartPoint → ℝ :=
   PressureStream.streamBeta w (actualChartPotential coord A B lam a b power lo hi M v d)

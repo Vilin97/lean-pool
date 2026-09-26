@@ -13,7 +13,7 @@ public import Mathlib.Analysis.RCLike.Basic
  This file contains extra lemmas on `RCLike`.
 -/
 
-@[expose] public section
+public section
 
 namespace RCLike
 

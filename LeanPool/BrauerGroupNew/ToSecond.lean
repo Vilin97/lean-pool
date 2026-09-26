@@ -23,7 +23,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.ToSecond`.
 -/
 
-@[expose] public section
+public section
 
 suppress_compilation
 
@@ -98,7 +98,7 @@ lemma dim_eq' [FiniteDimensional F K] : Module.finrank K A = Module.finrank F K 
 variable (ρ σ τ : Gal(K, F))
 
 /-- A unit implementing the Galois action by conjugation on the embedded splitting field. -/
-def conjFactor (σ : Gal(K, F)) : Type := {a : Aˣ // ∀ x : K, A.ι (σ x) = a * A.ι x * a⁻¹}
+@[expose] def conjFactor (σ : Gal(K, F)) : Type := {a : Aˣ // ∀ x : K, A.ι (σ x) = a * A.ι x * a⁻¹}
 
 /-- A chosen conjugating unit for each Galois automorphism, supplied by Skolem-Noether. -/
 def arbitraryConjFactor : A.conjFactor σ where
@@ -118,7 +118,7 @@ def mul' (x : A.conjFactor σ) (y : A.conjFactor τ) : A.conjFactor (σ * τ) :=
     conjFactor_prop, ← _root_.mul_assoc, conjFactor_prop]⟩
 
 @[simp]
-lemma mul'_coe (x : A.conjFactor σ) (y : A.conjFactor τ) : (mul' x y).1.1 = x.1 * y.1 := rfl
+lemma mul'_coe (x : A.conjFactor σ) (y : A.conjFactor τ) : (mul' x y).1.1 = x.1 * y.1 := by rfl
 
 lemma conjFactor_rel_aux (x y : A.conjFactor σ) :
     ∃ (c : K), x.1 = y.1 * A.ι c := by
@@ -161,7 +161,7 @@ lemma conjFactorTwistCoeff_self (x : A.conjFactor σ) : conjFactorTwistCoeff x x
   Eq.symm <| conjFactorTwistCoeff_unique _ _ _ <| by simp
 
 /-- The twist coefficient packaged as a unit. -/
-@[simps -isSimp]
+@[simps -isSimp, expose]
 def conjFactorTwistCoeffAsUnit (x y : A.conjFactor σ) : Kˣ where
   val := conjFactorTwistCoeff x y
   inv := conjFactorTwistCoeff y x
@@ -213,7 +213,7 @@ def conjFactorCompCoeff (x : A.conjFactor σ) (y : A.conjFactor τ) (z : A.conjF
     σ <| τ <| conjFactorTwistCoeff (mul' x y) z
 
 /-- The composition coefficient packaged as a unit. -/
-@[simps -isSimp]
+@[simps -isSimp, expose]
 def conjFactorCompCoeffAsUnit
     (x : A.conjFactor σ) (y : A.conjFactor τ) (z : A.conjFactor (σ * τ)) : Kˣ where
   val := conjFactorCompCoeff x y z
@@ -423,7 +423,7 @@ def pushConjFactor (x : A.conjFactor σ) : B.conjFactor σ where
 
 @[simp] lemma pushConjFactor_coe (x : A.conjFactor σ) :
     (A.pushConjFactor B x).1.1 = A.isoConjCoeff B * (A.iso B <| x.1) * (A.isoConjCoeff B)⁻¹ :=
-    rfl
+  by rfl
 
 /-- The scalar comparing a transported conjugating unit with a chosen target unit. -/
 def pushConjFactorCoeff (x : A.conjFactor σ) (y : B.conjFactor σ) : K :=
@@ -546,13 +546,13 @@ lemma compare_toCocycles₂' (x_ : Π σ, A.conjFactor σ) (y_ : Π σ, B.conjFa
 end GoodRep
 
 /-- The additive form of a multiplicative-distribution representation. -/
-@[simps!]
+@[simps!, expose]
 def _root_.Amelia.toAdditive (M G : Type 0) [Monoid M] [CommGroup G] [MulDistribMulAction M G] :
   Rep.ofMulDistribMulAction M G ≃+ Additive G := AddEquiv.refl _
 
 variable (F K) in
 /-- The Galois action of `Gal(K/F)` on `Kˣ` as a representation. -/
-noncomputable def galAct : Rep ℤ Gal(K, F) := .ofMulDistribMulAction Gal(K, F) Kˣ
+@[expose] noncomputable def galAct : Rep ℤ Gal(K, F) := .ofMulDistribMulAction Gal(K, F) Kˣ
 
 @[simp] lemma galAct_ρ_apply (σ : Gal(K, F)) (x : Kˣ) :
     (galAct F K).ρ σ (.ofMul x) = .ofMul (x.map σ) := rfl
@@ -871,7 +871,7 @@ lemma fromSnd_wd (a : cocycles₂ (galAct F K)) :
     (fromSnd F K <| Quotient.mk'' a) =
     ⟨Quotient.mk'' (CrossProductAlgebra.asCSA (Additive.toMul ∘ a)),
       mem_relativeBrGroup_iff_nonempty_goodRep.2
-        ⟨_, rfl, CrossProductAlgebra.incl _, CrossProductAlgebra.dim_eq_sq⟩⟩ := rfl
+        ⟨_, rfl, CrossProductAlgebra.incl _, CrossProductAlgebra.dim_eq_sq⟩⟩ := by rfl
 
 /-- Convert a multiplicative two-coboundary witness into an additive cohomology coboundary. -/
 def _root_.Amfix.coboundariesOfIsMulCoboundary₂ {G M : Type} [Group G] [CommGroup M]
@@ -1048,7 +1048,7 @@ lemma fromSnd_toSnd : (fromSnd F K ∘ (H2Iso (galAct F K)).hom) ∘ toSnd = id 
         simp [-GoodRep.conjFactor_prop]
 
 /-- The equivalence between the relative Brauer group and second Galois cohomology. -/
-@[simp]
+@[expose, simp]
 def equivSnd : RelativeBrGroup K F ≃ H2 (galAct F K) where
   toFun := toSnd
   invFun := (fromSnd F K ∘ (H2Iso (galAct F K)).hom)

@@ -34,7 +34,7 @@ many later terms. This file shows that in a WQO every sequence has a regular tai
 * `WellQuasiOrdered.sublistForall₂`: Higman's order is a WQO on `List Q` when `r` is a WQO on `Q`.
 -/
 
-@[expose] public section
+public section
 
 open Set Preorder
 
@@ -47,7 +47,7 @@ if for every `i : ℕ`, the set `{j : ℕ | f i ≤ f j}` is infinite. -/
 namespace Preorder
 
 /-- A sequence is *regular* if every term dominates infinitely many later terms. -/
-def IsRegularSeq {Q : Type*} (r : Q → Q → Prop) (f : ℕ → Q) : Prop :=
+@[expose] def IsRegularSeq {Q : Type*} (r : Q → Q → Prop) (f : ℕ → Q) : Prop :=
   ∀ i : ℕ, {j : ℕ | r (f i) (f j)}.Infinite
 
 /-- A regular sequence has arbitrarily large indices dominating any given index:

@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ShortTimeLinearGrowth
 velocity have absolute size at most two. This gives the first packet's
 size and sign estimates without any amplification-stage hypotheses. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

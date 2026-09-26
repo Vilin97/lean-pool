@@ -12,7 +12,7 @@ public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 /-! The mean of a genuine derivative of a periodic field is zero. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

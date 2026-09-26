@@ -38,7 +38,7 @@ agree to second order, which is exactly what the loose brackets
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable
@@ -51,6 +51,7 @@ variable {V : Type*} [DecidableEq V] {Ω : Type*} [MeasureSpace Ω]
 /-! ## The safe degree -/
 
 /-- **The safe degree.**  The number of edges at `v` whose vertices OTHER than `v` all avoid `C`. -/
+@[expose]
 def safeDegree (H : Finset (Finset V)) (C : Finset V) (v : V) : ℕ :=
   (H.filter (fun e => v ∈ e ∧ Disjoint (e.erase v) C)).card
 
@@ -85,7 +86,7 @@ theorem residual_degree_le_safeDegree {H R : Finset (Finset V)} (v : V) :
 /-! ## The safe-degree indicator and its expectation -/
 
 /-- The indicator that all vertices of `e` other than `v` survive the round. -/
-noncomputable def safeIndicator {H : Finset (Finset V)} {p : ℝ}
+@[expose] noncomputable def safeIndicator {H : Finset (Finset V)} {p : ℝ}
     (ρ : BernoulliRetention (Ω := Ω) H p) (v : V) (e : Finset V) (ω : Ω) : ℝ :=
   if Disjoint (e.erase v) (covered (retainedSet H ρ ω)) then 1 else 0
 

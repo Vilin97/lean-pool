@@ -50,7 +50,7 @@ setting used by PLAcceleratedNesterovLeans (where `E d := EuclideanSpace ℝ (Fi
   `PLAcceleratedNesterovLean/Convergence/LocalGeometry/Main.lean`
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Submodule InnerProductSpace Set
 

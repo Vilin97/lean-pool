@@ -53,7 +53,7 @@ central charge, Sugawara construction
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 
@@ -64,7 +64,7 @@ section central_charge_calculation
 open Finset
 
 /-- A discrete integral of a function on `ℤ`. -/
-def zPrimitive {R : Type*} [AddCommGroup R] (f : ℤ → R) (n : ℤ) : R :=
+@[expose] def zPrimitive {R : Type*} [AddCommGroup R] (f : ℤ → R) (n : ℤ) : R :=
   if 0 ≤ n then ∑ j ∈ range (Int.toNat n), f j else -(∑ j ∈ range (Int.natAbs n), f (-j-1))
 
 @[simp] lemma zPrimitive_zero {R : Type*} [AddCommGroup R] (f : ℤ → R) :

@@ -22,7 +22,7 @@ section
 /-! Restricting the actual parent frame to the next packet horizon,
 and identifying its physical and scaled times with the literal scales. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -161,7 +161,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

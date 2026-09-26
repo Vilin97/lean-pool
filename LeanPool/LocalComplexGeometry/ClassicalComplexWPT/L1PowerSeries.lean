@@ -19,7 +19,7 @@ zero.  The proof packages the coordinate evaluations into an operator-valued
 formal multilinear series with radius at least one.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 noncomputable section
@@ -31,7 +31,7 @@ namespace ClassicalComplexWPT
 abbrev L1Sequence := L1Coeff ℕ
 
 /-- Evaluation of the `k`-th coefficient as a continuous linear functional. -/
-noncomputable def coefficientEval (k : ℕ) : L1Sequence →L[ℂ] ℂ :=
+@[expose] noncomputable def coefficientEval (k : ℕ) : L1Sequence →L[ℂ] ℂ :=
   lp.evalCLM ℂ (fun _ : ℕ ↦ ℂ) 1 k
 
 theorem norm_coefficientEval_le (k : ℕ) : ‖coefficientEval k‖ ≤ 1 := by
@@ -41,7 +41,7 @@ theorem norm_coefficientEval_le (k : ℕ) : ‖coefficientEval k‖ ≤ 1 := by
   simpa using lp.norm_apply_le_norm (by norm_num) a k
 
 /-- The operator-valued series `w ↦ (a ↦ ∑ k, a k * w^k)`. -/
-noncomputable def l1OperatorSeries :
+@[expose] noncomputable def l1OperatorSeries :
     FormalMultilinearSeries ℂ ℂ (L1Sequence →L[ℂ] ℂ) :=
   fun k ↦ (ContinuousMultilinearMap.mkPiAlgebraFin ℂ k ℂ).smulRight (coefficientEval k)
 
@@ -56,7 +56,7 @@ theorem one_le_radius_l1OperatorSeries : 1 ≤ l1OperatorSeries.radius := by
   simpa using norm_l1OperatorSeries_le k
 
 /-- The continuous-linear evaluation operator at `w`. -/
-noncomputable def l1EvalOperator (w : ℂ) : L1Sequence →L[ℂ] ℂ :=
+@[expose] noncomputable def l1EvalOperator (w : ℂ) : L1Sequence →L[ℂ] ℂ :=
   l1OperatorSeries.sum w
 
 theorem analyticAt_l1EvalOperator : AnalyticAt ℂ l1EvalOperator 0 := by
@@ -64,7 +64,7 @@ theorem analyticAt_l1EvalOperator : AnalyticAt ℂ l1EvalOperator 0 := by
     (lt_of_lt_of_le (by norm_num : (0 : ℝ≥0∞) < 1) one_le_radius_l1OperatorSeries)).analyticAt
 
 /-- Evaluate an `ℓ¹` sequence as a one-variable power series. -/
-noncomputable def evalL1PowerSeries (a : L1Sequence) (w : ℂ) : ℂ :=
+@[expose] noncomputable def evalL1PowerSeries (a : L1Sequence) (w : ℂ) : ℂ :=
   l1EvalOperator w a
 
 /-- Evaluation is jointly analytic in the sequence and scalar at scalar coordinate zero. -/

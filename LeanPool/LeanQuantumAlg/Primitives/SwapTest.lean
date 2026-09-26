@@ -17,7 +17,7 @@ run the Hadamard test with the unitary that swaps the two registers
 probability `(1 - |<psi|phi>|^2)/2` [BCWdW01, main.tex:328].
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

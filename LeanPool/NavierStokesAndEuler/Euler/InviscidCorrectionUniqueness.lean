@@ -15,7 +15,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Uniqueness of the actual finite-order inviscid correction equation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

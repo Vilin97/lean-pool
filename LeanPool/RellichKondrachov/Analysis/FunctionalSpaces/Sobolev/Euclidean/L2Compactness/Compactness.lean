@@ -25,7 +25,7 @@ The Arzelà–Ascoli compactness statement for `smoothBCF` lives in
 This is tracked under Beads `lean-103.5.2.26.5.3.2.2.1`.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis
@@ -57,7 +57,7 @@ variable {K : Set E}
 variable {ψ : E → ℝ}
 
 /-- The natural compact codomain for smoothing on `K` by a compactly supported kernel `ψ`. -/
-def Kψ : Set E :=
+@[expose] def Kψ : Set E :=
   K + tsupport ψ
 
 omit [InnerProductSpace ℝ E] [FiniteDimensional ℝ E] in

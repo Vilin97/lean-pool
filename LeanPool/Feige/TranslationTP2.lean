@@ -17,7 +17,7 @@ preservation of log-concavity under convolution.  It is adapted to the
 existing `LikelihoodRatio.densityConvolution` definition.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal
 open MeasureTheory

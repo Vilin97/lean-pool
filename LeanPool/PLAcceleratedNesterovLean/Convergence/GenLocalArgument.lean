@@ -36,7 +36,7 @@ State-based version of `LocalArgument.lean`. The conclusion provides gen bootstr
   iterates stay in Ω ∧ Lyapunov decays geometrically with `nesterovSeqGen`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

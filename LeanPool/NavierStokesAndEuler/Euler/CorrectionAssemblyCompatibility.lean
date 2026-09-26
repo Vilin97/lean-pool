@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.InviscidCorrectionUniqueness
 /-! Compatibility of independently supplied actual finite-order corrections, proved from their
 equations. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

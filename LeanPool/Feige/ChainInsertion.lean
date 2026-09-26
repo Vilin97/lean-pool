@@ -19,14 +19,14 @@ chain with the new element adjoined.  These are the two cases of the
 inserted-chain construction used in the proof of Theorem 2.1.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
 namespace Feige
 
 /-- Lift a Boolean-lattice state to the enlarged ground set. -/
-def liftChainState {n : ℕ} (S : Finset (Fin n)) : Finset (Fin (n + 1)) :=
+@[expose] def liftChainState {n : ℕ} (S : Finset (Fin n)) : Finset (Fin (n + 1)) :=
   S.map Fin.castSuccEmb
 
 @[simp]
@@ -108,7 +108,7 @@ private theorem succAbove_val_lt_succ_of_le {n : ℕ}
 
 /-- The states of the enlarged maximal chain, written directly in the two
 cases before and after the insertion rank. -/
-def insertedChainState {n : ℕ} (σ : Equiv.Perm (Fin n))
+@[expose] def insertedChainState {n : ℕ} (σ : Equiv.Perm (Fin n))
     (J : Fin (n + 1)) (j : Fin (n + 2)) : Finset (Fin (n + 1)) :=
   if h : j.val ≤ J.val then
     liftChainState (chainState σ

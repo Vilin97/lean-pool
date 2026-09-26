@@ -17,7 +17,7 @@ import Mathlib.FieldTheory.Finite.Basic
 This file develops primitive and coprimality reductions used in the regular-prime argument.
 -/
 
-@[expose] public section
+public section
 
 open Int Finset
 

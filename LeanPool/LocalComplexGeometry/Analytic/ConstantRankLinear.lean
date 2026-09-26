@@ -23,7 +23,7 @@ composition, a vertical-kernel criterion, and canonical product coordinates on
 `Fin (r + k) → ℂ`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace LocalComplexGeometry
@@ -32,7 +32,7 @@ noncomputable section
 
 /-- Range dimension for a continuous complex-linear map between arbitrary
 complex normed spaces. -/
-def complexLinearRank
+@[expose] def complexLinearRank
     {E F : Type*}
     [NormedAddCommGroup E] [NormedSpace ℂ E]
     [NormedAddCommGroup F] [NormedSpace ℂ F]

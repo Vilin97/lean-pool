@@ -25,7 +25,7 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.4, proof plans §6.4
 (sheaf-axiom gluing argument via `injPatch`/`exists_injGlue`, no analysis).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech
@@ -38,14 +38,16 @@ variable (D : RS.Divisor X) {Ω : Opens X} {𝒰 𝒱 : FinCover Ω}
 /-! ### Restriction along a refinement index -/
 
 /-- Restriction of `0`-cochains along a refinement index `τ`. -/
+@[expose]
 noncomputable def resC0 (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 𝒱 τ) : C0 D 𝒰 →ₗ[ℂ] C0 D 𝒱 :=
   LinearMap.pi fun k => (LinSysOn.restrictL D (hτ k)).comp (LinearMap.proj (τ k))
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem resC0_apply (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 𝒱 τ) (f : C0 D 𝒰) (k : Fin 𝒱.n) :
-    resC0 D τ hτ f k = LinSysOn.restrictL D (hτ k) (f (τ k)) := rfl
+    resC0 D τ hτ f k = LinSysOn.restrictL D (hτ k) (f (τ k)) := by rfl
 
 /-- Restriction of `1`-cochains along a refinement index `τ`. -/
+@[expose]
 noncomputable def resC1 (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 𝒱 τ) : C1 D 𝒰 →ₗ[ℂ] C1 D 𝒱 :=
   LinearMap.pi fun p : Fin 𝒱.n × Fin 𝒱.n =>
     (LinSysOn.restrictL D (inf_le_inf (hτ p.1) (hτ p.2))).comp (LinearMap.proj (τ p.1, τ p.2))
@@ -53,7 +55,7 @@ noncomputable def resC1 (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 �
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem resC1_apply (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 𝒱 τ) (f : C1 D 𝒰)
     (p : Fin 𝒱.n × Fin 𝒱.n) :
-    resC1 D τ hτ f p = LinSysOn.restrictL D (inf_le_inf (hτ p.1) (hτ p.2)) (f (τ p.1, τ p.2)) :=
+    resC1 D τ hτ f p = LinSysOn.restrictL D (inf_le_inf (hτ p.1) (hτ p.2)) (f (τ p.1, τ p.2)) := by
   rfl
 
 variable (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 𝒱 τ)
@@ -111,15 +113,15 @@ theorem resC1_mem_Z1 {f : C1 D 𝒰} (hf : f ∈ Z1 D 𝒰) : resC1 D τ hτ f �
 /-! ### `resZ1`, `resH1` -/
 
 /-- The induced map on `1`-cocycles. -/
-noncomputable def resZ1 : Z1 D 𝒰 →ₗ[ℂ] Z1 D 𝒱 :=
+@[expose] noncomputable def resZ1 : Z1 D 𝒰 →ₗ[ℂ] Z1 D 𝒱 :=
   LinearMap.restrict (resC1 D τ hτ) (fun _ hf => resC1_mem_Z1 D τ hτ hf)
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem resZ1_apply_coe (f : Z1 D 𝒰) :
-    (resZ1 D τ hτ f : C1 D 𝒱) = resC1 D τ hτ (f : C1 D 𝒰) := rfl
+    (resZ1 D τ hτ f : C1 D 𝒱) = resC1 D τ hτ (f : C1 D 𝒰) := by rfl
 
 /-- The induced map on cover-level `H¹`. -/
-noncomputable def resH1 : H1Cover D 𝒰 →ₗ[ℂ] H1Cover D 𝒱 :=
+@[expose] noncomputable def resH1 : H1Cover D 𝒰 →ₗ[ℂ] H1Cover D 𝒱 :=
   Submodule.mapQ _ _ (resZ1 D τ hτ) (fun z hz => by
     simp only [Submodule.mem_comap] at hz ⊢
     exact resC1_mem_B1 D τ hτ hz)

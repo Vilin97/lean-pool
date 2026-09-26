@@ -18,7 +18,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.BallOrigin
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology
@@ -296,34 +296,34 @@ private lemma lin34_product_aestronglyMeasurable_of_zero_off
 
 /-- The source `g₂` of the centred potential `p₂`: the entry `i j` of the centred
 tensor `eq:Uhat` multiplied by the mixed second derivative `∂_i ∂_j η` of the cut-off. -/
-def lin34CentredTensorHessian (u : ParabolicPoint → Vec3) (x₀ : Vec3) {ρ : ℝ}
+@[expose] def lin34CentredTensorHessian (u : ParabolicPoint → Vec3) (x₀ : Vec3) {ρ : ℝ}
     (hρ : 0 < ρ) (s : ℝ) (i j : Fin 3) : Vec3 → ℝ :=
   fun y => mixedSecond (mollifiedBallCutoff x₀ hρ) i j y *
     pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j
 
 /-- The source of the centred potential `p₃`: the entry `i j` of the centred tensor
 `eq:Uhat` multiplied by the first derivative `∂_i η` of the cut-off. -/
-def lin34CentredTensorGradientI (u : ParabolicPoint → Vec3) (x₀ : Vec3) {ρ : ℝ}
+@[expose] def lin34CentredTensorGradientI (u : ParabolicPoint → Vec3) (x₀ : Vec3) {ρ : ℝ}
     (hρ : 0 < ρ) (s : ℝ) (i j : Fin 3) : Vec3 → ℝ :=
   fun y => pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j *
     spatialDeriv (mollifiedBallCutoff x₀ hρ) i y
 
 /-- The source of the centred potential `p₄`: the entry `i j` of the centred tensor
 `eq:Uhat` multiplied by the first derivative `∂_j η` of the cut-off. -/
-def lin34CentredTensorGradientJ (u : ParabolicPoint → Vec3) (x₀ : Vec3) {ρ : ℝ}
+@[expose] def lin34CentredTensorGradientJ (u : ParabolicPoint → Vec3) (x₀ : Vec3) {ρ : ℝ}
     (hρ : 0 < ρ) (s : ℝ) (i j : Fin 3) : Vec3 → ℝ :=
   fun y => pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j *
     spatialDeriv (mollifiedBallCutoff x₀ hρ) j y
 
 /-- The source of the centred potential `p₅`: the pressure slice multiplied by the
 spatial Laplacian `Δη` of the cut-off. -/
-def lin34CentredPressureLaplacian (p : ParabolicPoint → ℝ) (x₀ : Vec3) {ρ : ℝ}
+@[expose] def lin34CentredPressureLaplacian (p : ParabolicPoint → ℝ) (x₀ : Vec3) {ρ : ℝ}
     (hρ : 0 < ρ) (s : ℝ) : Vec3 → ℝ :=
   fun y => p (y, s) * spatialLaplacian (mollifiedBallCutoff x₀ hρ) y
 
 /-- The source of the centred potential `p₆`: the first derivative `∂_j η` of the
 cut-off multiplied by the pressure slice. -/
-def lin34CentredPressureGradient (p : ParabolicPoint → ℝ) (x₀ : Vec3) {ρ : ℝ}
+@[expose] def lin34CentredPressureGradient (p : ParabolicPoint → ℝ) (x₀ : Vec3) {ρ : ℝ}
     (hρ : 0 < ρ) (s : ℝ) (j : Fin 3) : Vec3 → ℝ :=
   fun y => spatialDeriv (mollifiedBallCutoff x₀ hρ) j y * p (y, s)
 

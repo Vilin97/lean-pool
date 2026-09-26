@@ -14,7 +14,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 Sanity checks on `k(t)` and spot checks for the specialty index table.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 

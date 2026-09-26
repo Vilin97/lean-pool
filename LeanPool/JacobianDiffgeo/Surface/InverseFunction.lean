@@ -32,7 +32,7 @@ The planar input is mathlib's analytic inverse function theorem
 (`AnalyticAt.analyticAt_localInverse`, `HasStrictFDerivAt.toOpenPartialHomeomorph`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology IsManifold

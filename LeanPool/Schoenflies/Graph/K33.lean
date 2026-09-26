@@ -85,7 +85,7 @@ that `exists_two_chords_same_side` wants. It returns two remaining edges on the 
 and `chords_disjoint` says they do not.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies unitInterval
 open scoped Graph
@@ -254,16 +254,18 @@ to the first and one end interior to the second — this is the blueprint's "the
 alternate on the six-cycle". -/
 
 /-- Index pairs of the first of the two paths the ends of `e s (s+1)` cut the six-cycle into. -/
-def arcAPairs (s : Fin 3) : List (Fin 3 × Fin 3) := [(s, s), (s + 1, s), (s + 1, s + 1)]
+@[expose] def arcAPairs (s : Fin 3) : List (Fin 3 × Fin 3) := [(s, s), (s + 1, s), (s + 1, s + 1)]
 
 /-- Index pairs of the second of the two paths. -/
+@[expose]
 def arcBPairs (s : Fin 3) : List (Fin 3 × Fin 3) := [(s, s + 2), (s + 2, s + 2), (s + 2, s + 1)]
 
 /-- The edges of the first path. -/
+@[expose]
 def arcA (e : Fin 3 → Fin 3 → β) (s : Fin 3) : List β := [e s s, e (s + 1) s, e (s + 1) (s + 1)]
 
 /-- The edges of the second path. -/
-def arcB (e : Fin 3 → Fin 3 → β) (s : Fin 3) : List β :=
+@[expose] def arcB (e : Fin 3 → Fin 3 → β) (s : Fin 3) : List β :=
   [e s (s + 2), e (s + 2) (s + 2), e (s + 2) (s + 1)]
 
 theorem arcA_eq_map (e : Fin 3 → Fin 3 → β) (s : Fin 3) :

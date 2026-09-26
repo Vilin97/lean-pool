@@ -24,7 +24,7 @@ Statements from chapter 3 of Milla (arXiv:1809.00533v6, file `080_Lattices.tex`)
 All nontrivial proofs are `sorry`-ed for now; this file pins the statements.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,9 +47,9 @@ instance instSMulUnitsPeriodPair : SMul ℂˣ PeriodPair := ⟨smul⟩
 
 variable (a : ℂˣ) (L : PeriodPair)
 
-@[simp] lemma smul_ω₁ : (a • L).ω₁ = a * L.ω₁ := rfl
+@[simp] lemma smul_ω₁ : (a • L).ω₁ = a * L.ω₁ := by rfl
 
-@[simp] lemma smul_ω₂ : (a • L).ω₂ = a * L.ω₂ := rfl
+@[simp] lemma smul_ω₂ : (a • L).ω₂ = a * L.ω₂ := by rfl
 
 /-- The lattice of `a•L` is the scaled lattice `a·L` (paper ch. 3). -/
 theorem mem_smul_lattice_iff (z : ℂ) :
@@ -75,7 +75,7 @@ def smulLatticeEquiv : L.lattice ≃ (a • L).lattice where
     apply Subtype.ext; simp only; rw [← mul_assoc, mul_inv_cancel₀ a.ne_zero, one_mul]
 
 @[simp] lemma smulLatticeEquiv_coe (l : L.lattice) :
-    ((smulLatticeEquiv a L l : (a • L).lattice) : ℂ) = (a : ℂ) * (l : ℂ) := rfl
+    ((smulLatticeEquiv a L l : (a • L).lattice) : ℂ) = (a : ℂ) * (l : ℂ) := by rfl
 
 /-- Multiplication by `a` as an equivalence between the nonzero lattice points of `L` and
 those of `a•L`. -/
@@ -87,7 +87,7 @@ def smulLatticeEquiv' :
 
 @[simp] lemma smulLatticeEquiv'_coe (l : {l : L.lattice // l ≠ 0}) :
     (((smulLatticeEquiv' a L l).1 : (a • L).lattice) : ℂ) = (a : ℂ) * ((l : L.lattice) : ℂ) :=
-  rfl
+  by rfl
 
 /-! ### Termwise scaling identities (helpers) -/
 
@@ -124,11 +124,11 @@ private lemma sigmaTerm_aux {c : ℂ} (hc : c ≠ 0) (z w : ℂ) :
 /-! ## The discriminant and Klein's absolute invariant (paper Def. `defijdelta`) -/
 
 /-- The discriminant of a lattice, `Δ(L) = g₂(L)³ - 27·g₃(L)²` (paper Def. `defijdelta`). -/
-def discr : ℂ := L.g₂ ^ 3 - 27 * L.g₃ ^ 2
+@[expose] def discr : ℂ := L.g₂ ^ 3 - 27 * L.g₃ ^ 2
 
 /-- Klein's absolute invariant of a lattice,
 `J(L) = g₂(L)³ / (g₂(L)³ - 27·g₃(L)²)` (paper Def. `defijdelta`). -/
-def J : ℂ := L.g₂ ^ 3 / L.discr
+@[expose] def J : ℂ := L.g₂ ^ 3 / L.discr
 
 /-! ## Scaling laws (paper `trafog23`, `etatransf`) -/
 

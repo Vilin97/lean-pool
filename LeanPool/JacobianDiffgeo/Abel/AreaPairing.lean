@@ -48,7 +48,7 @@ single-chart-supported `(0,1)`-data. No independence-of-`PU` statement is ever n
 downstream conclusion is a `Prop` quantified over a single fixed `PU`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set MeasureTheory
@@ -312,7 +312,7 @@ theorem psi_symm_eventually_zero (i : Fin PU.n) {z : ℂ} (hzK : z ∉ PU.K i) :
   · exact Set.indicator_of_notMem hwT _
 
 /-- The complexified partition function read through an arbitrary chart. -/
-def psiC (i : Fin PU.n) (e : OpenPartialHomeomorph X ℂ) : ℂ → ℂ :=
+@[expose] def psiC (i : Fin PU.n) (e : OpenPartialHomeomorph X ℂ) : ℂ → ℂ :=
   fun w => ((PU.ψ i (e.symm w) : ℝ) : ℂ)
 
 omit [T2Space X] [CompactSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
@@ -392,6 +392,7 @@ variable [T2Space X] [CompactSpace X]
 
 /-- The `i`-th planar integrand of the Serre pairing: `ψ_i · σ_i · ω_i` read in the `i`-th
 chart, extended by `0` off the chart target. -/
+@[expose]
 def pairingTerm (PU : SurfPoU X) (σ : RS.Form01 X) (θ : RS.Form1 X) (i : Fin PU.n) : ℂ → ℂ :=
   ((PU.chart i).target).indicator
     (fun z => PU.ψ i ((PU.chart i).symm z) •
@@ -439,6 +440,7 @@ theorem integrable_pairingTerm (PU : SurfPoU X) (σ : RS.Form01 X) (θ : RS.Form
 
 /-- **The Serre area pairing** over the fixed partition datum `PU`:
 `∑ i, ∫ z, ψ_i(z) σ_i(z) ω_i(z) dA(z)`. -/
+@[expose]
 def pairing (PU : SurfPoU X) (σ : RS.Form01 X) (θ : RS.Form1 X) : ℂ :=
   ∑ i, ∫ z : ℂ, pairingTerm PU σ θ i z
 

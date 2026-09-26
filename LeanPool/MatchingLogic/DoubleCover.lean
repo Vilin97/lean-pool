@@ -32,7 +32,7 @@ import Mathlib.Data.Set.Insert
 # MatchingLogic.DoubleCover
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -56,14 +56,14 @@ assumptions in their own signatures -- only `C.Nonempty`, which the carrier
 needs.  Backward closure, and `star ∉ C`, are hypotheses of Lemma 11 instead.
 So `cover` and `proj` are well formed outside the paper's domain, where they
 mean nothing; every theorem about them restores the assumptions. -/
-def cover (hne : C.Nonempty) : Model S where
+@[expose] def cover (hne : C.Nonempty) : Model S where
   carrier := C × Bool
   nonempty := ⟨(⟨hne.choose, hne.choose_spec⟩, false)⟩
   interp := coverInterp M C
 
 /-- The projections `π_i : N → M` of Definition 10: keep copy `i`, and send the
 other copy to a fixed `star ∈ M \ C`. -/
-def proj (star : M.carrier) (i : Bool) (p : C × Bool) : M.carrier :=
+@[expose] def proj (star : M.carrier) (i : Bool) (p : C × Bool) : M.carrier :=
   if p.2 = i then (p.1 : M.carrier) else star
 
 private theorem proj_update (star : M.carrier) (i : Bool)

@@ -13,7 +13,7 @@ import Mathlib.Topology.Order.AtTopBotIxx
 is the pullback of the ordinary left-neighborhood filter, so its meaning
 does not depend on a chosen sequence of sampling times. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

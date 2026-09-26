@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderMollifier
 /-! Continuous operators and exact norm comparisons on the actual complete cylinder Sobolev spaces.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,11 +26,11 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The continuous inclusion of the Sobolev space into its finite derivative array. -/
-def arrayOperator (q : ℕ) : SobolevSpace period q →L[ℝ] (SobolevWord q → LiftL2 period) :=
+@[expose] def arrayOperator (q : ℕ) : SobolevSpace period q →L[ℝ] (SobolevWord q → LiftL2 period) :=
   (sobolevSubspace period q).toSubmodule.subtypeL
 
 /-- Continuous evaluation of the underlying L² field. -/
-def valueOperator (q : ℕ) : SobolevSpace period q →L[ℝ] LiftL2 period :=
+@[expose] def valueOperator (q : ℕ) : SobolevSpace period q →L[ℝ] LiftL2 period :=
   (ContinuousLinearMap.proj (emptyWord q)).comp (arrayOperator period q)
 
 /-- Continuous evaluation of one actual derivative coordinate. -/
@@ -46,7 +46,7 @@ theorem value_norm_le {q : ℕ} (u : SobolevSpace period q) : ‖value period u�
   word_norm_le period u (emptyWord q)
 
 /-- The sum of actual derivative norms, in the source's Sobolev convention. -/
-def sumNorm {q : ℕ} (u : SobolevSpace period q) : ℝ := ∑ w : SobolevWord q, ‖u.val w‖
+@[expose] def sumNorm {q : ℕ} (u : SobolevSpace period q) : ℝ := ∑ w : SobolevWord q, ‖u.val w‖
 
 /-- The complete-array norm is bounded by the source's derivative sum. -/
 theorem norm_le_sumNorm {q : ℕ} (u : SobolevSpace period q) : ‖u‖ ≤ sumNorm period u := by
@@ -99,7 +99,7 @@ def liftOperator (q : ℕ) (A : LiftL2 period →L[ℝ] LiftL2 period)
 theorem liftOperator_apply {q : ℕ} (A : LiftL2 period →L[ℝ] LiftL2 period)
     (hA : ∀ a f, A (translation period a f) = translation period a (A f))
     (u : SobolevSpace period q) (w : SobolevWord q) :
-    (liftOperator period q A hA u).val w = A (u.val w) := rfl
+    (liftOperator period q A hA u).val w = A (u.val w) := by rfl
 
 /-- The lifted Sobolev operator has the same uniform bound as its L² action. -/
 theorem liftOperator_bound {q : ℕ} (A : LiftL2 period →L[ℝ] LiftL2 period)
@@ -121,7 +121,7 @@ theorem norm_liftOperator_le (q : ℕ) (A : LiftL2 period →L[ℝ] LiftL2 perio
 theorem value_liftOperator {q : ℕ} (A : LiftL2 period →L[ℝ] LiftL2 period)
     (hA : ∀ a f, A (translation period a f) = translation period a (A f))
     (u : SobolevSpace period q) : value period (liftOperator period q A hA u) = A (value period u)
-        := rfl
+        := by rfl
 
 /-- Translations commute in the cylinder's additive group. -/
 theorem translations_commute (a b : LiftDomain period) (f : LiftL2 period) :
@@ -130,6 +130,7 @@ theorem translations_commute (a b : LiftDomain period) (f : LiftL2 period) :
   rw [translation_add, translation_add, add_comm a b]
 
 /-- Actual cylinder translation as a bounded operator on the complete Sobolev space. -/
+@[expose]
 def sobolevTranslation (q : ℕ) (a : LiftDomain period) : SobolevSpace period q →L[ℝ] SobolevSpace
     period q :=
   liftOperator period q (translation period a).toContinuousLinearMap (translations_commute period a)

@@ -31,7 +31,7 @@ coordinate velocity at τ is the initial value of the homogeneous forward
 solve. Both the physical velocity and its true derivative match at τ.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -192,7 +192,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -223,7 +223,7 @@ def derivativePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
 
 /-- Pressure path, given by `sourcePressure P D.M D.normal D.normalLower D.normalLower_pos
 D.normal_lower 0 (velocityPath τ hτ hτT B Y)`. -/
-def pressurePath : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) :=
+@[expose] def pressurePath : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) :=
   sourcePressure P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     0 (velocityPath τ hτ hτT B Y)
 

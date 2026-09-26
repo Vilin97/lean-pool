@@ -23,7 +23,7 @@ Rayleigh quotient of `x`, in division-free form
 This is the reusable bridge both clauses of the ACMAX conjecture rely on.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

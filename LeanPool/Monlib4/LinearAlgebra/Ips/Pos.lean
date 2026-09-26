@@ -28,7 +28,7 @@ for linear maps:
 
 -/
 
-@[expose] public section
+public section
 
 open InnerProductSpace RCLike
 
@@ -45,6 +45,7 @@ open scoped ComplexOrder
 
 /-- `T` is (semi-definite) **positive** if `T` is symmetric
 and `∀ x : V, 0 ≤ re ⟪x, T x⟫` -/
+@[expose]
 def IsPositive' (T : E →ₗ[𝕜] E) : Prop :=
   T.IsSymmetric ∧ ∀ x : E, 0 ≤ ⟪x, T x⟫
 
@@ -194,7 +195,7 @@ noncomputable def rePow
 section
 
 /-- Complex functional calculus power of a positive linear map. -/
-noncomputable def cpow [InnerProductSpace ℂ E] [FiniteDimensional ℂ E]
+@[expose] noncomputable def cpow [InnerProductSpace ℂ E] [FiniteDimensional ℂ E]
     (T : E →ₗ[ℂ] E) (hT : T.IsPositive') (c : ℂ) : E →ₗ[ℂ] E
     where
   toFun v := ∑ i, (α hT.1 rfl i ^ c : ℂ) • ⟪e hT.1 rfl i, v⟫_ℂ • e hT.1 rfl i
@@ -213,7 +214,7 @@ end
 theorem _root_.LinearMap.rePow_apply (hT : T.IsSymmetric)
     (r : ℝ) (v : E) :
     T.rePow hT r v = ∑ i, (((α hT rfl i : ℝ) ^ r : ℝ) : 𝕜) • ⟪e hT rfl i, v⟫ • e hT rfl i :=
-  rfl
+  by rfl
 
 /-- the square root of a symmetric linear map can then directly be defined with `re_pow` -/
 noncomputable def _root_.LinearMap.sqrt

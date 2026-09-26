@@ -53,4 +53,4 @@ Tags: analysis, pde, harmonic-maps, monotonicity-formula, sobolev
 MSC: 58E20, 35J50
 -/
 
-@[expose] public section
+public section

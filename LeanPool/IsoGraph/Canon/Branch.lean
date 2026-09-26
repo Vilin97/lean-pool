@@ -36,7 +36,7 @@ the bookkeeping for the third and hardest one, backjumping.
   not already dominated.  This is `jump_sound` fed by `Jmp`.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon

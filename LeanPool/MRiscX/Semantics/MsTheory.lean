@@ -31,7 +31,7 @@ the `@[simp]`. This can shorten proofs because lean
 can apply these theorems with simp automatically.
 -/
 
-@[expose] public section
+public section
 
 
 namespace MState

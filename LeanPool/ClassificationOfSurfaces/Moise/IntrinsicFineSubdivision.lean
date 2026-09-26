@@ -17,7 +17,7 @@ each new face is at most half that of its parent.  This supplies the finite fine
 open-subcomplex extraction used in the compact form of Moise Chapter 8, Theorem 2.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

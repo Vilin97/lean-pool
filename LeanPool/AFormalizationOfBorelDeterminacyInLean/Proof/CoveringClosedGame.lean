@@ -27,7 +27,7 @@ import Mathlib.Topology.Bases
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame.BorelDet
@@ -62,7 +62,7 @@ variable {hyp}
   simp [getTree']
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def LosingCondition (x : List (upA hyp)) (h : x.length = 2 * k + 2) :=
+@[expose] def LosingCondition (x : List (upA hyp)) (h : x.length = 2 * k + 2) :=
   body (pullSub (getTree' hyp x) (x.map Prod.fst)) ∩ G.payoff = ∅ ∧
   ∃ y : subAt (getTree' hyp (x.take (2 * k + 1))) [x[2 * k + 1].1],
     getTree' hyp x = pullSub (subAt G.tree (x.map Prod.fst ++ y)) y

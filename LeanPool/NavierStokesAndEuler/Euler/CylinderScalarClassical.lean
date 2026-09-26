@@ -14,7 +14,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-! The literal periodic scalar pressure primitive, with actual smoothness and normalization. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

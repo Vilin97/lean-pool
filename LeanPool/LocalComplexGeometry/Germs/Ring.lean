@@ -20,7 +20,7 @@ This file packages the constant inclusion, identifies the residue field with
 `ℂ`, and supplies the zero-dimensional base case used by Rückert induction.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology
@@ -31,7 +31,7 @@ namespace LocalComplexGeometry
 noncomputable section
 
 /-- Embed a complex number as a constant holomorphic germ. -/
-def constantGermHom (n : ℕ) : ℂ →+* HolomorphicGerm n where
+@[expose] def constantGermHom (n : ℕ) : ℂ →+* HolomorphicGerm n where
   toFun c := HolomorphicGerm.ofFunction (fun _ ↦ c) analyticAt_const
   map_zero' := by
     apply Subtype.ext
@@ -97,7 +97,7 @@ theorem evalAtOrigin_injective_zero :
   exact hfg0
 
 /-- The zero-dimensional holomorphic germ ring is canonically `ℂ`. -/
-def holomorphicGermZeroEquiv : HolomorphicGerm 0 ≃+* ℂ :=
+@[expose] def holomorphicGermZeroEquiv : HolomorphicGerm 0 ≃+* ℂ :=
   RingEquiv.ofBijective (evalAtOriginHom 0)
     ⟨evalAtOrigin_injective_zero, evalAtOrigin_surjective 0⟩
 

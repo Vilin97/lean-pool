@@ -22,7 +22,7 @@ If `R` is a principal ideal domain, any lattice is a free `R`-module of rank car
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 
@@ -400,6 +400,7 @@ noncomputable def basis (L : BruhatTits.Lattice R) :
 variable (R)
 
 /-- Two `R`-lattices `L` and `N` are similar, if `N` is a `Kˣ`-multiple of `L`. -/
+@[expose]
 def IsSimilar (L N : Lattice R) : Prop := ∃ (a : Kˣ), a • L = N
 
 omit [IsFractionRing R K] [IsPrincipalIdealRing R]

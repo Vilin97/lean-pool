@@ -11,7 +11,7 @@ public import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 /-! # Upperhalfplane -/
 
 
-@[expose] public section
+public section
 
 open UpperHalfPlane TopologicalSpace Set
   Metric Filter Function Complex

@@ -25,7 +25,7 @@ import Mathlib.Combinatorics.Matroid.Init
 
 /-! # Definitions -/
 
-@[expose] public section
+public section
 
 
 open Complex MeasureTheory Real Finset
@@ -36,7 +36,7 @@ noncomputable section
 namespace HermiteLEAN
 
 /-- The circle period used throughout the Hermite development. -/
-def T : ℝ := 2 * Real.pi
+@[expose] def T : ℝ := 2 * Real.pi
 
 lemma T_pos : 0 < T := by
   dsimp [T]
@@ -48,10 +48,10 @@ instance : Fact (0 < T) := ⟨T_pos⟩
 abbrev Circle := AddCircle T
 
 /-- Positive part. -/
-def posPart (x : ℝ) : ℝ := max x 0
+@[expose] def posPart (x : ℝ) : ℝ := max x 0
 
 /-- The signed modulus defect imported from the Fock-space argument. -/
-def rho (w : ℂ) : ℝ := |‖(1 : ℂ) + w‖ - 1|
+@[expose] def rho (w : ℂ) : ℝ := |‖(1 : ℂ) + w‖ - 1|
 
 /-- The distinguished basis vector `Φ₀(z) = \bar z`. -/
 def phi0 (z : ℂ) : ℂ := conj z
@@ -71,27 +71,27 @@ def phi : ℕ → ℂ → ℂ
               Real.sqrt ((Nat.factorial (Nat.succ n) : ℕ) : ℝ)) : ℂ)
 
 /-- The weighted inner product on `L²_γ(ℂ)`. -/
-def weightedInner (F G : ℂ → ℂ) : ℂ :=
+@[expose] def weightedInner (F G : ℂ → ℂ) : ℂ :=
   (1 / Real.pi : ℂ) *
     ∫ z, F z * conj (G z) * (Real.exp (-‖z‖ ^ 2) : ℂ) ∂(volume : Measure ℂ)
 
 /-- The weighted squared norm on `L²_γ(ℂ)`. -/
-def weightedNormSq (F : ℂ → ℂ) : ℝ :=
+@[expose] def weightedNormSq (F : ℂ → ℂ) : ℝ :=
   (1 / Real.pi) * ∫ z, ‖F z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) ∂(volume : Measure ℂ)
 
 /-- The weighted norm on `L²_γ(ℂ)`. -/
-def weightedNorm (F : ℂ → ℂ) : ℝ := Real.sqrt (weightedNormSq F)
+@[expose] def weightedNorm (F : ℂ → ℂ) : ℝ := Real.sqrt (weightedNormSq F)
 
 /-- The pointwise modulus defect relative to a background function `F₀`. -/
-def modulusDefect (F0 G : ℂ → ℂ) (z : ℂ) : ℝ := |‖F0 z + G z‖ - ‖F0 z‖|
+@[expose] def modulusDefect (F0 G : ℂ → ℂ) (z : ℂ) : ℝ := |‖F0 z + G z‖ - ‖F0 z‖|
 
 /-- The weighted squared defect norm relative to a background function `F₀`. -/
-def weightedDefectNormSq (F0 G : ℂ → ℂ) : ℝ :=
+@[expose] def weightedDefectNormSq (F0 G : ℂ → ℂ) : ℝ :=
   (1 / Real.pi) *
     ∫ z, (modulusDefect F0 G z) ^ 2 * Real.exp (-‖z‖ ^ 2) ∂(volume : Measure ℂ)
 
 /-- The weighted defect norm relative to a background function `F₀`. -/
-def weightedDefectNorm (F0 G : ℂ → ℂ) : ℝ := Real.sqrt (weightedDefectNormSq F0 G)
+@[expose] def weightedDefectNorm (F0 G : ℂ → ℂ) : ℝ := Real.sqrt (weightedDefectNormSq F0 G)
 
 /-- The orthogonal complement to `Φ₀`, expressed via the weighted inner product. -/
 def Phi0Perp : Set (ℂ → ℂ) := {F | weightedInner F phi0 = 0}
@@ -105,7 +105,7 @@ def hermiteCoeffNormSq {D : ℕ} (a : Fin D → ℂ) : ℝ :=
   ∑ n : Fin D, ‖a n‖ ^ 2
 
 /-- The unit circle point of radius `r` and argument `t`. -/
-def circlePoint (r : ℝ) (t : Circle) : ℂ := (r : ℂ) * (fourier (1 : ℤ) t : ℂ)
+@[expose] def circlePoint (r : ℝ) (t : Circle) : ℂ := (r : ℂ) * (fourier (1 : ℤ) t : ℂ)
 
 /-- The coefficient appearing in the circle reduction for `Φ_{n+1}`.
 
@@ -122,18 +122,18 @@ def circlePolynomial {D : ℕ} (a : Fin D → ℂ) (r : ℝ) : Circle → ℂ :=
   fun t => ∑ n : Fin D, circleCoeff a r n * fourier ((n.1 + 1 : ℕ) : ℤ) t
 
 /-- A generic positive-frequency trigonometric polynomial. -/
-def positiveTrigonometricPolynomial (E : Finset ℕ) (c : ℕ → ℂ) : Circle → ℂ :=
+@[expose] def positiveTrigonometricPolynomial (E : Finset ℕ) (c : ℕ → ℂ) : Circle → ℂ :=
   fun t => Finset.sum E (fun n => c n * fourier (n : ℤ) t)
 
 /-- Consecutive positive frequencies `[N, N + L - 1]`. -/
-def frequencyBand (N L : ℕ) : Finset ℕ := Finset.Icc N (N + L - 1)
+@[expose] def frequencyBand (N L : ℕ) : Finset ℕ := Finset.Icc N (N + L - 1)
 
 /-- The circle `L²` norm squared with respect to normalized Haar measure. -/
-def circleL2Sq (f : Circle → ℂ) : ℝ :=
+@[expose] def circleL2Sq (f : Circle → ℂ) : ℝ :=
   ∫ t, ‖f t‖ ^ 2 ∂AddCircle.haarAddCircle
 
 /-- The circle defect against the constant `1`. -/
-def circleRhoNormSq (f : Circle → ℂ) : ℝ :=
+@[expose] def circleRhoNormSq (f : Circle → ℂ) : ℝ :=
   ∫ t, (rho (f t)) ^ 2 ∂AddCircle.haarAddCircle
 
 /-- The pointwise circle modulus defect relative to a background function `F₀`. -/
@@ -145,18 +145,18 @@ def circleDefectNormSq (F0 G : Circle → ℂ) : ℝ :=
   ∫ t, (circleModulusDefect F0 G t) ^ 2 ∂AddCircle.haarAddCircle
 
 /-- The annulus `A_j = { z : j ≤ |z| < j + 1 }`. -/
-def annulus (j : ℕ) : Set ℂ := {z | (j : ℝ) ≤ ‖z‖ ∧ ‖z‖ < ((j + 1 : ℕ) : ℝ)}
+@[expose] def annulus (j : ℕ) : Set ℂ := {z | (j : ℝ) ≤ ‖z‖ ∧ ‖z‖ < ((j + 1 : ℕ) : ℝ)}
 
 /-- The weighted squared mass of a function on annulus `A_j`. -/
-def annulusIntegralSq (F : ℂ → ℂ) (j : ℕ) : ℝ :=
+@[expose] def annulusIntegralSq (F : ℂ → ℂ) (j : ℕ) : ℝ :=
   (1 / Real.pi) *
     ∫ z in annulus j, ‖F z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) ∂(volume : Measure ℂ)
 
 /-- The square block `I_ℓ = { n : ℓ² ≤ n < (ℓ + 1)² }`. -/
-def squareBlock (ℓ : ℕ) : Finset ℕ := Finset.Ico (ℓ ^ 2) ((ℓ + 1) ^ 2)
+@[expose] def squareBlock (ℓ : ℕ) : Finset ℕ := Finset.Ico (ℓ ^ 2) ((ℓ + 1) ^ 2)
 
 /-- The block index of a positive Hermite mode. -/
-def blockIndex (n : ℕ) : ℕ := Nat.sqrt n
+@[expose] def blockIndex (n : ℕ) : ℕ := Nat.sqrt n
 
 /-- The `ℓ`-th block of a finite Hermite perturbation. -/
 def blockPiece {D : ℕ} (a : Fin D → ℂ) (ℓ : ℕ) : ℂ → ℂ :=

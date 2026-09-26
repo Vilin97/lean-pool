@@ -30,7 +30,7 @@ any associated prime of height at most one, so the avoidance
 step applies directly.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

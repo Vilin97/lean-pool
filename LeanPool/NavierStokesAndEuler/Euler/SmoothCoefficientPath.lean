@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPath
 
 /-! All-order spatial translation regularity uniformly over a compact parameter interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

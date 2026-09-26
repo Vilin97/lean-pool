@@ -17,12 +17,12 @@ Each oscillator contributes a unit phasor `exp (i θ_k)`, and the main result is
 bound `‖R‖ ≤ 1` where `R = (∑_k exp (i θ_k)) / N`.
 -/
 
-@[expose] public section
+public section
 
 open Complex Finset
 
 /-- The Kuramoto order parameter `R = (∑_k exp (i θ_k)) / N`. -/
-noncomputable def kuramotoR (N : ℕ) (θ : Fin N → ℝ) : ℂ :=
+@[expose] noncomputable def kuramotoR (N : ℕ) (θ : Fin N → ℝ) : ℂ :=
   (∑ k, Complex.exp (θ k * Complex.I)) / N
 
 theorem kuramotoR_norm_le_one (N : ℕ) (hN : 0 < N) (θ : Fin N → ℝ) :

@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.InviscidSobolevEvolution
 
 /-! Continuous all-order realizations of the actual nonlinear source and time derivative. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

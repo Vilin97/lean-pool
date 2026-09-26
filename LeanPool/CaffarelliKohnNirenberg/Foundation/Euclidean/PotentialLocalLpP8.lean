@@ -32,7 +32,7 @@ vanishes off a closed ball.  The exponent range `6/5 ≤ q` contains the pressur
 and the force exponents `q > 5/2` of `def:sws`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology
@@ -74,12 +74,14 @@ theorem neg_sum_memLp_and_lpNorm_growth {F : Fin 3 → Vec3 → ℝ} {C : Fin 3 
 
 /-- The linear-growth constant of `p₈` at time `s`, for data supported in the closed ball of
 radius `R`: the sum over the three components of the Newtonian-potential constants. -/
+@[expose]
 def pressureP8GrowthConstant (η : Vec3 → ℝ) (f : ParabolicPoint → Vec3) (s R : ℝ) : ℝ :=
   ∑ j : Fin 3, newtonianPotentialGrowthConstant
     (fun y => spatialDeriv η j y * f (y, s) j) R
 
 /-- The linear-growth constant of `p₇` at time `s`, for data supported in the closed ball of
 radius `R`: the sum over the three components of the derivative-potential constants. -/
+@[expose]
 def pressureP7GrowthConstant (η : Vec3 → ℝ) (f : ParabolicPoint → Vec3) (s R : ℝ) : ℝ :=
   ∑ j : Fin 3, newtonianDerivativePotentialGrowthConstant j
     (fun y => η y * f (y, s) j) R

@@ -19,16 +19,16 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace NumberField.Odlyzko
 
 /-- An inverse norm power used in the Odlyzko-bound argument. -/
-noncomputable def inverseNormPower (q : ℕ) (s : ℂ) : ℂ :=
+@[expose] noncomputable def inverseNormPower (q : ℕ) (s : ℂ) : ℂ :=
   (q : ℂ) ^ (-s)
 
 /-- A local factor used in the Odlyzko-bound argument. -/
-noncomputable def localFactor (q : ℕ) (s : ℂ) : ℂ :=
+@[expose] noncomputable def localFactor (q : ℕ) (s : ℂ) : ℂ :=
   (1 - inverseNormPower q s)⁻¹
 
 lemma norm_inverseNormPower (q : ℕ) (hq : 0 < q) (s : ℂ) :

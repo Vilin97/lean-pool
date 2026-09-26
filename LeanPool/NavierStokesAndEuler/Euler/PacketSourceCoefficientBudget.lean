@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
 jets of the inverse deformation and strain.  The transported unit normal uses
 the same radius and amplitude. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

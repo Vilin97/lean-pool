@@ -12,7 +12,7 @@ import LeanPool.BruhatTits.Utils.Misc
 # LeanPool.BruhatTits.Utils.ValuationRings
 -/
 
-@[expose] public section
+public section
 
 open Module
 

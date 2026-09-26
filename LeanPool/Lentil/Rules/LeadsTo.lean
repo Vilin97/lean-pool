@@ -14,7 +14,7 @@ import LeanPool.Lentil.Util
 
 /-! Theorems about the leads-to operator. -/
 
-@[expose] public section
+public section
 
 open Classical
 

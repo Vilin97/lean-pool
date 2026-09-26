@@ -13,7 +13,7 @@ public import Mathlib.Data.Finset.Preimage
 # Anchored families and their positive witness geometry
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness.Anchored
 
@@ -21,14 +21,17 @@ namespace GenLimit.FiniteWitness.Anchored
 abbrev Point := ℕ ⊕ ℕ
 
 /-- A full left copy, all right anchors except one, and an arbitrary right tail. -/
+@[expose]
 def leftTarget {k : ℕ} (i : Fin k) (D : Set ℕ) : Set Point :=
   Sum.elim (fun _ => True) (fun n => if n < k then n ≠ i.val else n - k ∈ D)
 
 /-- A full right copy, all left anchors except one, and an arbitrary left tail. -/
+@[expose]
 def rightTarget {k : ℕ} (j : Fin k) (E : Set ℕ) : Set Point :=
   Sum.elim (fun n => if n < k then n ≠ j.val else n - k ∈ E) (fun _ => True)
 
 /-- The union of the left and right anchored target families with k anchors. -/
+@[expose]
 def family (k : ℕ) : Set (Set Point) :=
   Set.range (fun p : Fin k × Set ℕ => leftTarget p.1 p.2) ∪
   Set.range (fun p : Fin k × Set ℕ => rightTarget p.1 p.2)
@@ -147,6 +150,7 @@ theorem card_rightAnchors_le (k : ℕ) (S : Finset Point) : (rightAnchors k S).c
   exact (Finset.card_preimage _ _ _).trans_le (Finset.card_filter_le _ _)
 
 /-- The common tail of all active left targets with a fixed missing anchor. -/
+@[expose]
 def leftCore {k} (T : Set Point → Finset Point) (i : Fin k) (S : Finset Point) : Set ℕ :=
   {n | ∀ D, leftTarget i D ∈ active (family k) T S → n ∈ D}
 

@@ -21,7 +21,7 @@ activation time of the next parent frame. These factories are the checked
 `SmoothState` renewals with the source-selected amplitude and primary;
 all target matching is proved from their definitions. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -251,7 +251,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

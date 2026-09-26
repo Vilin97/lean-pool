@@ -23,7 +23,7 @@ ultrametric multiplication estimates for restricted or Gauss-norm power
 series.
 -/
 
-@[expose] public section
+public section
 
 
 open scoped NNReal ENNReal Topology
@@ -34,7 +34,7 @@ namespace ClassicalComplexWPT
 noncomputable abbrev WeightedSeq := lp (fun _ : ℕ ↦ ℂ) 1
 
 /-- Include the base variables into the ambient space at last coordinate zero. -/
-noncomputable def baseInclusion (n : ℕ) : Base n →L[ℂ] Ambient n :=
+@[expose] noncomputable def baseInclusion (n : ℕ) : Base n →L[ℂ] Ambient n :=
   ContinuousLinearMap.inl ℂ (Base n) ℂ
 
 /-- Evaluate a multilinear form on copies of the last coordinate direction. -/
@@ -410,7 +410,7 @@ theorem weightedCoefficientSeries_sum_apply_lastTaylorCoefficient {n : ℕ}
     weightedCoefficientSeries_sum_apply p r z j hr hzq hzp
 
 /-- The weighted last-direction Taylor coefficients at an ambient point. -/
-noncomputable def weightedLastCoeffs {n : ℕ}
+@[expose] noncomputable def weightedLastCoeffs {n : ℕ}
     (p : FormalMultilinearSeries ℂ (Ambient n) ℂ) (r : ℝ≥0) (x : Ambient n)
     (hr : (r : ℝ≥0∞) < (p.changeOrigin x).radius) : WeightedSeq :=
   ⟨fun k ↦ (r : ℂ) ^ k * p.changeOrigin x k (fun _ ↦ lastDirection n), by

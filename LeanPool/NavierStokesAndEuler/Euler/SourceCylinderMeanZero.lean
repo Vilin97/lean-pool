@@ -18,7 +18,7 @@ section
 
 /-! The actual supported Duhamel solution preserves zero angular mean. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -151,7 +151,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

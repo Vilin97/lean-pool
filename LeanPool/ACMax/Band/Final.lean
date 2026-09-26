@@ -22,7 +22,7 @@ The second range combines the direct incidence-capacity proof on
 orders `48` and `49` is harmless.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

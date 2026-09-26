@@ -17,7 +17,7 @@ This module develops the theory of ordinals inside a von Neumann model of ZF, in
 their order structure and the correspondence with Mathlib's `Ordinal` type.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -28,11 +28,11 @@ variable {M} [ZFStructure M] [hM : IsVonNeumann M]
 namespace SetTheory
 
 /-- The `IsOrdinal` declaration. -/
-@[realize] def IsOrdinal (x : M) := IsTransitive x ∧ ∀ y ∈ x, IsTransitive y
+@[expose, realize] def IsOrdinal (x : M) := IsTransitive x ∧ ∀ y ∈ x, IsTransitive y
 /-- The `IsStrongLimit` declaration. -/
-@[realize] def IsStrongLimit (κ : M) := IsOrdinal κ ∧ ∀ α ∈ κ, cardLT (𝓟 α) κ
+@[expose, realize] def IsStrongLimit (κ : M) := IsOrdinal κ ∧ ∀ α ∈ κ, cardLT (𝓟 α) κ
 /-- The `IsOrdinalValuedFunc` declaration. -/
-@[realize] def IsOrdinalValuedFunc (f : M) := IsFunc f ∧ ∀ x ∈ Ran f, IsOrdinal x
+@[expose, realize] def IsOrdinalValuedFunc (f : M) := IsFunc f ∧ ∀ x ∈ Ran f, IsOrdinal x
 
 @[toV_simps] lemma IsOrdinal.toV (α : M) : IsOrdinal ↓α ↔ IsOrdinal α := by
   simp only [IsOrdinal, toV_simps]
@@ -119,7 +119,7 @@ def rankFunc (x : M) : ((trcl {x}) : M) → (succ (rank x) : M) := by
   rwa [rank_trcl, rank_singleton] at hy
 
 /-- The `IsRankFunction` declaration. -/
-@[realize] def IsRankFunction (x : M) (f : M) :=
+@[expose, realize] def IsRankFunction (x : M) (f : M) :=
   IsOrdinalValuedFunc f ∧ IsTransitive (Dom f) ∧ x ∈ Dom f ∧ PreserveMem f
 
 lemma isRankFunction_rankFunc {x : M} : IsRankFunction x (funcToSet (rankFunc x)) := by
@@ -233,7 +233,7 @@ def toOrdinal : Ordinals M ↪o Ordinal.{0} where
 
 variable (M) in
 /-- The `maxOrdinal` declaration. -/
-def maxOrdinal : WithTop Ordinal.{0} := by
+@[expose] def maxOrdinal : WithTop Ordinal.{0} := by
   split_vonNeumann hM
   · exact .some μ
   · exact ⊤

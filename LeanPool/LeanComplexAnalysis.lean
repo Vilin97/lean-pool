@@ -22,7 +22,7 @@ Tags: complex-analysis, harmonic-functions, poisson-integral, univalent-function
 MSC: 30A99, 31A05, 30C55
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

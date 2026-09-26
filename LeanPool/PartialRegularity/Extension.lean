@@ -20,7 +20,7 @@ import Mathlib.NumberTheory.LSeries.HurwitzZetaValues
 This file proves a variant of the main result with an explicit constant: the count
 of odd primes `p ≤ X` that are not `M_α(p)`-regular is bounded by `10 · X / (log X)^(2α)`. -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PartialRegularity.Extension
 

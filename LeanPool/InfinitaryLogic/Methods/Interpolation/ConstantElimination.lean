@@ -24,7 +24,7 @@ invariance-outside-support congruence (`realize_congr_const`), bridged to arbitr
 separator from constant support `insert c A` back to `A` (the InsepAt C7 step).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

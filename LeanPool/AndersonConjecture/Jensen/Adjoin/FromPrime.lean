@@ -30,7 +30,7 @@ Jensen, "Completions of UFDs with semi-local formal fibers",
 2006, Lemma 2.1 (case P = (0)).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

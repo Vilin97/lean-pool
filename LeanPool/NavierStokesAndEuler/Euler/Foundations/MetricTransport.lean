@@ -15,7 +15,7 @@ supported smooth energy fields are tested against the concrete weak-divergence
 condition; boundary terms are eliminated by that proved weak formulation.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -27,7 +27,7 @@ open scoped ContDiff ENNReal NNReal Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- A field pulled back to real covering coordinates centered at a cylinder point. -/
-def localFieldLift {W : Type*} (f : LiftDomain period → W) (x : LiftDomain period) :
+@[expose] def localFieldLift {W : Type*} (f : LiftDomain period → W) (x : LiftDomain period) :
     LiftTangent → W := fun h => f (x.1 + h.1, x.2 + (h.2 : AddCircle period))
 
 section Fields
@@ -72,15 +72,15 @@ theorem localFDeriv_continuous (f : LiftDomain period → W)
 end Fields
 
 /-- The covering-space direction corresponding to one lifted gradient component. -/
-def coordinateDirection (κ : ℝ) (m : Vector3) (i : Fin 3) : LiftTangent :=
+@[expose] def coordinateDirection (κ : ℝ) (m : Vector3) (i : Fin 3) : LiftTangent :=
   (κ • EuclideanSpace.single i 1, m i)
 
 /-- The actual four dimensional transport vector associated with a lifted velocity. -/
-def transportDirection (κ : ℝ) (m v : Vector3) : LiftTangent :=
+@[expose] def transportDirection (κ : ℝ) (m v : Vector3) : LiftTangent :=
   (κ • v, ⟪m, v⟫_ℝ)
 
 /-- The vector of a scalar differential evaluated on the lifted coordinate directions. -/
-def vectorOfLinear (κ : ℝ) (m : Vector3) (L : LiftTangent →L[ℝ] ℝ) : Vector3 :=
+@[expose] def vectorOfLinear (κ : ℝ) (m : Vector3) (L : LiftTangent →L[ℝ] ℝ) : Vector3 :=
   WithLp.toLp 2 fun i => L (coordinateDirection κ m i)
 
 theorem coordinateDirections_sum (κ : ℝ) (m v : Vector3) :
@@ -127,7 +127,7 @@ theorem liftedGradient_eq_vectorOfLinear (κ : ℝ) (m : Vector3)
   rfl
 
 /-- The pointwise quadratic metric energy of a vector field. -/
-def metricEnergy (K : LiftDomain period → Vector3 →L[ℝ] Vector3)
+@[expose] def metricEnergy (K : LiftDomain period → Vector3 →L[ℝ] Vector3)
     (e : LiftDomain period → Vector3) (x : LiftDomain period) : ℝ :=
   (1 / 2 : ℝ) * ⟪K x (e x), e x⟫_ℝ
 

@@ -20,7 +20,7 @@ chain vertex, turns all crossings and all chain vertices into vertices of one fi
 mesh.  A simple graph path in the resulting one-skeleton is then a loop-free polygonal arc.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

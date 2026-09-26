@@ -15,7 +15,7 @@ about the exact interval integral. They form the narrow interface through which 
 computation can discharge a nonvanishing obligation in the Poincaré argument.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

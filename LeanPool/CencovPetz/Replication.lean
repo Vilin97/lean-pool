@@ -19,7 +19,7 @@ import Mathlib.Tactic.ContinuousFunctionalCalculus
 Replication Markov morphisms `α → α × Fin m` that split each outcome into `m` copies uniformly.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

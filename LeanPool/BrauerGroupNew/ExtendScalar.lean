@@ -13,7 +13,7 @@ public import Mathlib.RingTheory.TensorProduct.Basic
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.ExtendScalar`.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 
@@ -22,7 +22,7 @@ variable (k K L A : Type u) [Field k] [Field K] [Field L] [Algebra k K] [Algebra
   [Algebra k L] [Ring A] [Algebra k A] [IsScalarTower k K L]
 
 /-- Additive map sending `l ⊗ a` to `l ⊗ (1 ⊗ a)` after releasing scalars through `K`. -/
-def releaseAddHom : L ⊗[k] A →+ L ⊗[K] (K ⊗[k] A) :=
+@[expose] def releaseAddHom : L ⊗[k] A →+ L ⊗[K] (K ⊗[k] A) :=
   TensorProduct.liftAddHom
   {
     toFun l := {
@@ -37,7 +37,7 @@ def releaseAddHom : L ⊗[k] A →+ L ⊗[K] (K ⊗[k] A) :=
       repeat rw [TensorProduct.add_tmul]
   } fun r l a ↦ by simp only [AddMonoidHom.coe_mk, ZeroHom.coe_mk, TensorProduct.tmul_smul]; rfl
 /-- Algebra homomorphism releasing an `L ⊗[k] A` tensor through `K`. -/
-def release : L ⊗[k] A →ₐ[L] L ⊗[K] (K ⊗[k] A) where
+@[expose] def release : L ⊗[k] A →ₐ[L] L ⊗[K] (K ⊗[k] A) where
   __ := releaseAddHom k K L A
   map_one' := by simp only [releaseAddHom, Algebra.TensorProduct.one_def, ZeroHom.toFun_eq_coe,
     AddMonoidHom.toZeroHom_coe, TensorProduct.liftAddHom_tmul, AddMonoidHom.coe_mk,
@@ -141,6 +141,7 @@ def absorb : L ⊗[K] (K ⊗[k] A) →ₐ[L] L ⊗[k] A where
 
 /-- Algebra equivalence between direct scalar extension and extension through the intermediate
 field. -/
+@[expose]
 def absorbEqv : L ⊗[k] A ≃ₐ[L] L ⊗[K] (K ⊗[k] A) where
   toFun := release k K L A
   invFun := absorb k K L A
@@ -169,4 +170,4 @@ def absorbEqv : L ⊗[k] A ≃ₐ[L] L ⊗[K] (K ⊗[k] A) where
   commutes' := release k K L A|>.commutes
 
 theorem absorbEqv_apply (l : L) (a : A) : absorbEqv k K L A (l ⊗ₜ a) = l ⊗ₜ[K] (1 ⊗ₜ a) :=
-  rfl
+  by rfl

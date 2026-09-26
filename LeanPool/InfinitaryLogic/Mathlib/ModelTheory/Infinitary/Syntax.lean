@@ -38,7 +38,7 @@ quantifying over a fresh index type at every node. Consequences:
   carrier-generic finitary embedding `BoundedFormula.toInf`.
 -/
 
-@[expose] public section
+public section
 
 universe u v u' uι w
 
@@ -95,12 +95,12 @@ variable {L} {ι : Type uι} {α : Type u'} {n : ℕ}
 namespace BoundedFormulaInf
 
 /-- The negation of an infinitary formula. -/
-@[match_pattern]
+@[expose, match_pattern]
 protected def not (φ : L.BoundedFormulaInf ι α n) : L.BoundedFormulaInf ι α n :=
   φ.imp .falsum
 
 /-- The true formula. -/
-protected def verum : L.BoundedFormulaInf ι α n :=
+@[expose] protected def verum : L.BoundedFormulaInf ι α n :=
   BoundedFormulaInf.not .falsum
 
 instance : Bot (L.BoundedFormulaInf ι α n) :=
@@ -110,7 +110,7 @@ instance : Top (L.BoundedFormulaInf ι α n) :=
   ⟨BoundedFormulaInf.verum⟩
 
 /-- Existential quantification over the last bound variable. -/
-@[match_pattern]
+@[expose, match_pattern]
 protected def ex (φ : L.BoundedFormulaInf ι α (n + 1)) : L.BoundedFormulaInf ι α n :=
   φ.not.all.not
 

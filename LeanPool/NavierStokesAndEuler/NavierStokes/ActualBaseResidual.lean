@@ -17,7 +17,7 @@ The equation is derived from its proved residual identity on the entire
 free auxiliary lift, rather than only on a physical graph.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -167,7 +167,7 @@ noncomputable def cylinderLinear (h Q : ℝ) : Full →L[ℝ] SpaceTime where
 
 /-- Cylinder point, given by `(1 - Q * x.1.2.1.1, AxisymmetricResidual.pack (Real.sqrt Q *
 x.1.1) x.2 (Q ^ CoordinateAlgebra.D h * x.1.2.1.2))`. -/
-noncomputable def cylinderPoint (h Q : ℝ) (x : Full) : SpaceTime :=
+@[expose] noncomputable def cylinderPoint (h Q : ℝ) (x : Full) : SpaceTime :=
   (1 - Q * x.1.2.1.1, AxisymmetricResidual.pack (Real.sqrt Q * x.1.1) x.2
     (Q ^ CoordinateAlgebra.D h * x.1.2.1.2))
 
@@ -194,7 +194,7 @@ theorem cylinderPoint_hasFDerivAt (h Q : ℝ) (x : Full) :
 
 /-- Physical point, given by `((cylinderPoint h Q x).1, CylindricalResidual.chart (cylinderPoint
 h Q x).2)`. -/
-noncomputable def physicalPoint (h Q : ℝ) (x : Full) : SpaceTime :=
+@[expose] noncomputable def physicalPoint (h Q : ℝ) (x : Full) : SpaceTime :=
   ((cylinderPoint h Q x).1, CylindricalResidual.chart (cylinderPoint h Q x).2)
 
 theorem physicalPoint_smooth (h Q : ℝ) : ContDiff ℝ ∞ (physicalPoint h Q) :=
@@ -514,7 +514,7 @@ noncomputable def pressureAtScale (Q : ℝ) (x : Full) : ℝ :=
     FinalSlowBase.pressure H v upper B (physicalPoint F.data.h Q x)
 
 /-- The normalized Cartesian error, expressed in the cylindrical frame. -/
-noncomputable def errorAtScale (Q : ℝ) (x : Full) : Fin 3 → ℝ := fun i =>
+@[expose] noncomputable def errorAtScale (Q : ℝ) (x : Full) : Fin 3 → ℝ := fun i =>
   Q ^ (2 * CoordinateAlgebra.A F.data.h + 1 / 2) *
     CylindricalResidual.frame (-x.2)
       (FinalSlowBase.error H v upper B (physicalPoint F.data.h Q x)) i
@@ -536,7 +536,7 @@ noncomputable def basePressure (n : ℕ) : Full → ℝ :=
   pressureAtScale H v upper B (ChartScales.Q n)
 
 /-- Base error, given by `errorAtScale H v upper B (ChartScales.Q n)`. -/
-noncomputable def baseError (n : ℕ) : Full → Fin 3 → ℝ :=
+@[expose] noncomputable def baseError (n : ℕ) : Full → Fin 3 → ℝ :=
   errorAtScale H v upper B (ChartScales.Q n)
 
 theorem pressureAtScale_smooth {Q : ℝ} (hQ : 0 < Q) :

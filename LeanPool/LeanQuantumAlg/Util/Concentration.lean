@@ -16,7 +16,7 @@ small variance, and hence (by Chebyshev) concentrates exponentially around its m
 Quantum-free; built on Mathlib's `variance` and Chebyshev inequality.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

@@ -41,7 +41,7 @@ Everything is for countable relational vocabularies (`[L.IsRelational]`,
 `[Countable (Σ l, L.Relations l)]`), inherited from the Scott/Karp stack per the frozen audit.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

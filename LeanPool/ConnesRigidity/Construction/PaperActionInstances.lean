@@ -17,7 +17,7 @@ import Mathlib.Algebra.Algebra.ZMod
 The paper action instances component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace Construction
@@ -47,7 +47,7 @@ lemma transvection_action_apply_of_ne_target {i j r : Fin 3} (hij : i ≠ j)
   simp [hri]
 
 /-- The linear action on the first summand of the paper kernel. Paper: §2. -/
-def avStarAction (l : SpecialLinear.SL3) (q : Q) : AVStar ≃ₗ[k] AVStar :=
+@[expose] def avStarAction (l : SpecialLinear.SL3) (q : Q) : AVStar ≃ₗ[k] AVStar :=
   TensorProduct.congr (sl3AAction l) (qVStarActionHom q)
 
 /-- The first-summand action is a homomorphism. Paper: §2. -/
@@ -174,7 +174,7 @@ def sl3CActionHom : SpecialLinear.SL3 →* (C ≃ₗ[k] C) where
     simpa using h
 
 /-- The first Zhou action as a linear equivalence of the kernel. Paper: §2. -/
-def paperThetaOneLinear (h : H) : D ≃ₗ[k] D :=
+@[expose] def paperThetaOneLinear (h : H) : D ≃ₗ[k] D :=
   (avStarAction h.1 h.2).prodCongr (sl3CActionEquiv h.1)
 
 /-- Pointwise form of the first Zhou action on the kernel splitting. -/
@@ -470,7 +470,7 @@ def contractStar (ψ : VStar →ₗ[k] k) : AVStar →ₗ[k] A :=
   rfl
 
 /-- The constant-one polynomial used in the §4 detector and §§5–6 witnesses. -/
-def a0 : A := fun _ => 1
+@[expose] def a0 : A := fun _ => 1
 
 theorem a0_ne_zero : a0 ≠ 0 := by
   intro h

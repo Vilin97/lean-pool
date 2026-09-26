@@ -54,7 +54,7 @@ edge sets.
 
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -133,7 +133,7 @@ lemma mem_familyEdges {P : Finset (Finset V)} {e : Sym2 V} :
   simp [familyEdges]
 
 /-- The number of edges of the edge set `E` that are incident to the vertex `v`. -/
-def edgeDegree (E : Finset (Sym2 V)) (v : V) : ℕ :=
+@[expose] def edgeDegree (E : Finset (Sym2 V)) (v : V) : ℕ :=
   #{e ∈ E | v ∈ e}
 
 end Finset

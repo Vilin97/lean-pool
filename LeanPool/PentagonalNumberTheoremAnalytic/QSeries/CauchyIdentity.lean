@@ -22,7 +22,7 @@ The proof follows Heine's classical functional-equation argument.
 * `QSeries.hasSum_qPochhammer_div_mul_pow` — the Cauchy identity.
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 open scoped Topology

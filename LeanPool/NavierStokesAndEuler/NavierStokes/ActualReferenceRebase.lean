@@ -30,7 +30,7 @@ Volterra solves, and a bijective copy reindexing gives the same symmetry of
 the periodized velocity and pressure.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -356,7 +356,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -570,6 +570,7 @@ noncomputable def pullWave (e : D ≃L[ℝ] E) (a : LinearWaveBounds.WaveCoeffic
 
 /-- Pull directions, bundling `radial`, `auxiliary`, `axial`, `angular` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def pullDirections (e : D ≃L[ℝ] E) (d : LinearWaveBounds.GraphDirections E) :
     LinearWaveBounds.GraphDirections D where
   radial := e.symm d.radial
@@ -599,7 +600,7 @@ end Pullback
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Inverse cover, given by `(ContinuousLinearEquiv.refl ℝ P).prodCongr (coverPower k).symm`. -/
-noncomputable def inverseCover (k : ℕ) : (P × Plane) ≃L[ℝ] (P × Plane) :=
+@[expose] noncomputable def inverseCover (k : ℕ) : (P × Plane) ≃L[ℝ] (P × Plane) :=
   (ContinuousLinearEquiv.refl ℝ P).prodCongr (coverPower k).symm
 
 @[simp] theorem inverseCover_apply (k : ℕ) (x : P × Plane) :

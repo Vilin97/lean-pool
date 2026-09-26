@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanPacketJets
 
 /-! The proved raw-field contract of the concrete admissible mean solver. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

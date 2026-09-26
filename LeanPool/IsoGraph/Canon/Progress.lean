@@ -28,7 +28,7 @@ the *first* child of a node is never orbit-pruned, which holds because the orbit
 empty and is only refreshed when an automorphism has been found — which happens only at a leaf.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon

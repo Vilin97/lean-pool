@@ -20,7 +20,7 @@ Extend Euclidean `L²` translation estimates from `C¹_c` to the closure-based E
   `L²(E)` component in our `H¹ ⊆ L² × L²(E)` model.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis

@@ -14,7 +14,7 @@ import Mathlib.Tactic.FinCases
 # LeanPool.FormalizationOfBoundedArithmetic.Order
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language.Formula
 
@@ -28,13 +28,13 @@ variable {n r} (a b : L.BoundedFormula n r)
 
 
 /-- Existential quantification bounded by a term. -/
-def iBdEx' {α n} (bdTerm : L.Term (α ⊕ Fin 0))
+@[expose] def iBdEx' {α n} (bdTerm : L.Term (α ⊕ Fin 0))
     (φ : L.Formula (α ⊕ (Vars1 n))) : L.Formula α :=
   let bd := (var (.inl (Sum.inr (.fv1)))).le <| bdTerm.relabel (Sum.map .inl id)
   iExs' <| bd ⊓ φ
 
 /-- Universal quantification bounded by a term. -/
-def iBdAll' {α n} (bdTerm : L.Term (α ⊕ Fin 0))
+@[expose] def iBdAll' {α n} (bdTerm : L.Term (α ⊕ Fin 0))
     (φ : L.Formula (α ⊕ (Vars1 n))) : L.Formula α :=
   let bd := (var (.inl (Sum.inr (.fv1)))).le <| bdTerm.relabel (Sum.map .inl id)
   iAlls' <| bd ⟹ φ
@@ -42,7 +42,7 @@ def iBdAll' {α n} (bdTerm : L.Term (α ⊕ Fin 0))
 -- TODO: there should only be Lt constructors in Complexity
 -- and iBd should be an alias to iBdLt with term + 1
 /-- Universal quantification bounded strictly by a term. -/
-def iBdAllLt' {α n} (bdTerm : L.Term (α ⊕ Fin 0))
+@[expose] def iBdAllLt' {α n} (bdTerm : L.Term (α ⊕ Fin 0))
     (φ : L.Formula (α ⊕ (Vars1 n))) : L.Formula α :=
   let bd := (var (.inl (Sum.inr (.fv1)))).lt <| bdTerm.relabel (Sum.map .inl id)
   iAlls' <| bd ⟹ φ
@@ -64,7 +64,7 @@ def iBdExStr'
   iBdEx' bdTerm <| (var <| Sum.inl <| Sum.inr <| .fv1).IsStr ⊓ φ
 
 /-- Universal quantification bounded by a term and guarded as numeric. -/
-def iBdAllNum'
+@[expose] def iBdAllNum'
   {α n}
   (bdTerm : zambella.Term (α ⊕ Fin 0))
   (φ : zambella.Formula (α ⊕ (Vars1 n)))

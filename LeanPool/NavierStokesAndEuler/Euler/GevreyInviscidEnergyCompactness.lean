@@ -24,7 +24,7 @@ section
 
 /-! The actual nonlinear Gevrey bootstrap applies uniformly to every partial correction solution. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -100,7 +100,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -193,7 +193,7 @@ section
 /-! A genuine uniformly bounded viscous approximation family with a uniformly vanishing PDE
 viscosity term. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -255,7 +255,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

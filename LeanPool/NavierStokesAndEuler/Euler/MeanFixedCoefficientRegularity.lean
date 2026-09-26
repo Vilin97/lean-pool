@@ -19,7 +19,7 @@ linear map. The actual time multipliers, H¹ transport, trace, and full mean
 form therefore inherit parameter regularity from the coefficient paths.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

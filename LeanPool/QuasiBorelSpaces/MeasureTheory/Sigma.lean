@@ -14,7 +14,7 @@ import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.Sigma`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace MeasureTheory.Sigma

@@ -19,7 +19,7 @@ proves it is the derivative of the solved coordinate velocity; bounded H¹
 reconstruction then supplies the actual continuous history path.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

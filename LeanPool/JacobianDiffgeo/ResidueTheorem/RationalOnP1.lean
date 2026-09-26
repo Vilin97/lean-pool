@@ -82,7 +82,7 @@ now-known-insufficient `Differentiable ℂ R_mid` hypothesis and would need re-t
 whichever fix is chosen.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter Topology OnePoint Real Complex MeasureTheory
@@ -123,9 +123,10 @@ def formOfCoeFn (R : ℂ → ℂ) (hR : MeromorphicOn R Set.univ)
       | infty =>
         rw [chartAt_infty] at hz ⊢
         simp only [OnePoint.elim_infty]
-        have hval : invChart (invChart.symm z) = z := invChart.right_inv (Set.mem_univ z)
+        have hval : invChart (invChart.symm z) = z :=
+          invChart.right_inv (by rw [invChart_target]; exact Set.mem_univ z)
         have heq : (⇑invChart ∘ ⇑invChart.symm : ℂ → ℂ) = id := by
-          funext w; exact invChart.right_inv (Set.mem_univ w)
+          funext w; exact invChart.right_inv (by rw [invChart_target]; exact Set.mem_univ w)
         rw [hval, heq, deriv_id, one_mul]
       | coe q =>
         rw [chartAt_infty, chartAt_coe] at hz ⊢

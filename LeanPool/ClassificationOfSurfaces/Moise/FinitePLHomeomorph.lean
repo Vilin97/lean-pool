@@ -17,7 +17,7 @@ finite source complex on which an ambient homeomorphism is affine facewise.  Com
 and pullback make these witnesses closed under symmetry and composition.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

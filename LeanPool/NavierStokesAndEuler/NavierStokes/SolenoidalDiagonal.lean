@@ -22,7 +22,7 @@ and divergence-free. No residual estimate or singular endpoint regularity is
 assumed or proved here.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,16 +38,16 @@ variable {X V : Type*} [TopologicalSpace X]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Cut the potential before applying any velocity derivative. -/
-def cutStage (a : ℕ → ℝ) (q : X → ℝ) (A : ℕ → X → V) (j : ℕ) (x : X) : V :=
+@[expose] def cutStage (a : ℕ → ℝ) (q : X → ℝ) (A : ℕ → X → V) (j : ℕ) (x : X) : V :=
   SmoothCutoffs.scaledCutoff (a j) (q x) • A j x
 
 /-- The actual infinite sum; local finiteness below proves it is well behaved
 on the positive-scale domain. -/
-def potentialSum (a : ℕ → ℝ) (q : X → ℝ) (A : ℕ → X → V) (x : X) : V :=
+@[expose] def potentialSum (a : ℕ → ℝ) (q : X → ℝ) (A : ℕ → X → V) (x : X) : V :=
   ∑' j : ℕ, cutStage a q A j x
 
 /-- Partial potential, given by `∑ j ∈ Finset.range N, cutStage a q A j x`. -/
-def partialPotential (a : ℕ → ℝ) (q : X → ℝ) (A : ℕ → X → V)
+@[expose] def partialPotential (a : ℕ → ℝ) (q : X → ℝ) (A : ℕ → X → V)
     (N : ℕ) (x : X) : V :=
   ∑ j ∈ Finset.range N, cutStage a q A j x
 
@@ -195,7 +195,7 @@ open ProblemStatement
 
 /-- The constructed velocity is the actual spatial curl of the summed
 potential, with time held fixed by `SpatialCurl.spatialCurl`. -/
-def velocitySum (a : ℕ → ℝ) (q : SpaceTime → ℝ) (A : ℕ → VelocityField) :
+@[expose] def velocitySum (a : ℕ → ℝ) (q : SpaceTime → ℝ) (A : ℕ → VelocityField) :
     VelocityField :=
   SpatialCurl.spatialCurl (potentialSum a q A)
 

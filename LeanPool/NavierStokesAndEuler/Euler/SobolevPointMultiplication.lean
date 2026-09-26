@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
 /-! Pointwise evaluation of actual smooth coefficient multiplication in finite cylinder Sobolev
 spaces. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

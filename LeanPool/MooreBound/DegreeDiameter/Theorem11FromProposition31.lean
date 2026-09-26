@@ -26,7 +26,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -38,14 +38,13 @@ noncomputable section
 
 /-- A prime, viewed as one of the prime-power field orders used in
 Proposition 3.1. -/
-def proposition31PrimePowerIndexOfPrime (p : ℕ) (hp : p.Prime) :
+@[expose] def proposition31PrimePowerIndexOfPrime (p : ℕ) (hp : p.Prime) :
     PrimePowerIndex :=
   ⟨p, hp.isPrimePow⟩
 
 @[simp]
 theorem proposition31PrimePowerIndexOfPrime_val (p : ℕ) (hp : p.Prime) :
-    (proposition31PrimePowerIndexOfPrime p hp).1 = p :=
-  rfl
+    (proposition31PrimePowerIndexOfPrime p hp).1 = p := by rfl
 
 instance proposition31PrimePowerIndex_nonempty : Nonempty PrimePowerIndex :=
   ⟨proposition31PrimePowerIndexOfPrime 2 Nat.prime_two⟩
@@ -146,7 +145,7 @@ theorem proposition31_eventually_prime_near_nthRoot
   eventually_prime_near_nthRoot (fun hη => prime_between hη) hD hm hη
 
 /-- The root comparison factor used in the lower bound. -/
-def proposition31RootComparison
+@[expose] def proposition31RootComparison
     (D : ℕ → ℕ) (m t : ℕ) (η : ℝ) (d : ℕ) : ℝ :=
   ((Nat.nthRoot m (D d) : ℝ) /
     ((Nat.nthRoot m (D d) : ℝ) + 1) / (1 + η)) ^ (m * t)

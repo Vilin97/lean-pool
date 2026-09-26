@@ -39,7 +39,7 @@ Every `T(a₁,...,aₙ)` factors into a product of p-power `T`-elements via copr
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, §3.2
 -/
 
-@[expose] public section
+public section
 
 open Matrix Subgroup.Commensurable Pointwise HeckeRing DoubleCoset
 
@@ -54,7 +54,7 @@ variable (n : ℕ)
 section PPow
 
 /-- p-power diagonal: entries are `p^(e i)`. -/
-def ppowDiag (p : ℕ) (e : Fin n → ℕ) : Fin n → ℕ :=
+@[expose] def ppowDiag (p : ℕ) (e : Fin n → ℕ) : Fin n → ℕ :=
   fun i => p ^ e i
 
 lemma ppowDiag_pos (p : ℕ) (hp : p.Prime) (e : Fin n → ℕ) :

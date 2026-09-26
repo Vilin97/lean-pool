@@ -30,7 +30,7 @@ a contradiction. The universal sentence is therefore positive, and the truth lem
 into the quotient.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

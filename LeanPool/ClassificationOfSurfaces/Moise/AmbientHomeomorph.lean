@@ -15,7 +15,7 @@ the move fixes the patch frontier, it extends to an ambient homeomorphism by the
 file proves that pasting step independently of the particular triangulated patch.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -80,8 +80,9 @@ theorem coe_repositionHomeomorph_apply_realization (position' : M.Vertex → Pla
         (M.toPlaneComplex.realizationHomeomorph M.toPlaneComplex_isPure2 x) : Plane) =
       (M.reposition position' hposition_injective haffineIndependent
         htriangle_inter).toPlaneComplex.baryEval x.1 := by
-  exact congrArg Subtype.val (M.repositionHomeomorph_apply_realization position'
+  have h := congrArg Subtype.val (M.repositionHomeomorph_apply_realization position'
     hposition_injective haffineIndependent htriangle_inter x)
+  exact h.trans (PlaneComplex.realizationHomeomorph_apply _ _ x)
 
 theorem coe_repositionHomeomorph_apply (position' : M.Vertex → Plane)
     (hposition_injective : Function.Injective position')
@@ -105,7 +106,7 @@ theorem coe_repositionHomeomorph_apply (position' : M.Vertex → Plane)
     (M.reposition position' hposition_injective haffineIndependent
       htriangle_inter).toPlaneComplex.baryEval x.1
   rw [hz, repositionHomeomorph_apply_realization]
-  rfl
+  exact PlaneComplex.realizationHomeomorph_apply _ _ _
 
 theorem coe_repositionHomeomorph_trans_setCongr_apply
     (position' : M.Vertex → Plane)
@@ -218,7 +219,7 @@ variable (M : TriangleMesh)
 
 /-- A repositioning with unchanged support and fixed support frontier extends to an ambient plane
 homeomorphism. -/
-noncomputable def ambientRepositionHomeomorph (position' : M.Vertex → Plane)
+@[expose] noncomputable def ambientRepositionHomeomorph (position' : M.Vertex → Plane)
     (hposition_injective : Function.Injective position')
     (haffineIndependent : ∀ t ∈ M.triangles,
       AffineIndependent ℝ fun v : t => position' v)

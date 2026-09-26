@@ -49,7 +49,7 @@ All moments below are Lebesgue integrals of the actual cosine exponential
 family, not postulated properties of an abstract variance map.
 -/
 
-@[expose] public section
+public section
 
 namespace NavierStokes.LoopVariance
 
@@ -979,7 +979,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 namespace NavierStokes.TrueConeLoop
 
@@ -1832,7 +1832,7 @@ in particular to positive integer frequencies. All derivatives are genuine
 `deriv`/`fderiv` derivatives, rather than formal differential symbols.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1849,7 +1849,7 @@ abbrev BaseProfile := ℝ → ℝ → ℝ
 abbrev PrimitiveProfile := PhasePoint → ℝ
 
 /-- Phase point, given by `(X, η, n * Real.log X)`. -/
-def phasePoint (n X η : ℝ) : PhasePoint := (X, η, n * Real.log X)
+@[expose] def phasePoint (n X η : ℝ) : PhasePoint := (X, η, n * Real.log X)
 /-- Partial X, given by `fderiv ℝ A z (1, 0, 0)`. -/
 def partialX (A : PrimitiveProfile) (z : PhasePoint) : ℝ := fderiv ℝ A z (1, 0, 0)
 /-- Partial eta, given by `fderiv ℝ A z (0, 1, 0)`. -/
@@ -1858,11 +1858,11 @@ def partialEta (A : PrimitiveProfile) (z : PhasePoint) : ℝ := fderiv ℝ A z (
 def partialTheta (A : PrimitiveProfile) (z : PhasePoint) : ℝ := fderiv ℝ A z (0, 0, 1)
 
 /-- Modulated E, given by `E X η * Real.exp (A (phasePoint n X η) / n)`. -/
-def modulatedE (n : ℝ) (E : BaseProfile) (A : PrimitiveProfile) (X η : ℝ) : ℝ :=
+@[expose] def modulatedE (n : ℝ) (E : BaseProfile) (A : PrimitiveProfile) (X η : ℝ) : ℝ :=
   E X η * Real.exp (A (phasePoint n X η) / n)
 
 /-- Modulated U, given by `U X η + B (phasePoint n X η) / n`. -/
-def modulatedU (n : ℝ) (U : BaseProfile) (B : PrimitiveProfile) (X η : ℝ) : ℝ :=
+@[expose] def modulatedU (n : ℝ) (U : BaseProfile) (B : PrimitiveProfile) (X η : ℝ) : ℝ :=
   U X η + B (phasePoint n X η) / n
 
 /-- The logarithmic graph and modulated angular profile are genuinely smooth
@@ -2187,11 +2187,11 @@ theorem uniform_periodic_family_eta_jets
   simpa only [mul_one_div] using h
 
 /-- Angular family, given by `E z.2.1 z.2.2.1 * Real.exp (z.1 * A z.2)`. -/
-def angularFamily (E : BaseProfile) (A : PrimitiveProfile) (z : FamilyPoint) : ℝ :=
+@[expose] def angularFamily (E : BaseProfile) (A : PrimitiveProfile) (z : FamilyPoint) : ℝ :=
   E z.2.1 z.2.2.1 * Real.exp (z.1 * A z.2)
 
 /-- Axial family, given by `U z.2.1 z.2.2.1 + z.1 * B z.2`. -/
-def axialFamily (U : BaseProfile) (B : PrimitiveProfile) (z : FamilyPoint) : ℝ :=
+@[expose] def axialFamily (U : BaseProfile) (B : PrimitiveProfile) (z : FamilyPoint) : ℝ :=
   U z.2.1 z.2.2.1 + z.1 * B z.2
 
 /-- Uniform `O(1/n)` closeness in every fixed actual η derivative of E.
@@ -2254,7 +2254,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2702,7 +2702,7 @@ abbrev RadialParameter := ℝ × ℝ
 
 /-- Reassociation between slow-parameter/angle coordinates and the radial
 modulation module's `(X,η,θ)` coordinates. -/
-def asRadialPrimitive (Q : RadialParameter × ℝ → ℝ) : RadialModulation.PrimitiveProfile :=
+@[expose] def asRadialPrimitive (Q : RadialParameter × ℝ → ℝ) : RadialModulation.PrimitiveProfile :=
   fun z => Q ((z.1, z.2.1), z.2.2)
 
 theorem asRadialPrimitive_contDiff
@@ -2714,14 +2714,14 @@ variable {a m p₁ p₂ : RadialParameter → ℝ} {K B : Set RadialParameter}
 
 /-- Realized E, given by `RadialModulation.modulatedE n (fun X η => E (X, η)) (asRadialPrimitive
 r.angularPrimitive) X η`. -/
-def realizedE (r : TrueConeRealization a m p₁ p₂ K B) (E : RadialParameter → ℝ)
+@[expose] def realizedE (r : TrueConeRealization a m p₁ p₂ K B) (E : RadialParameter → ℝ)
     (n X η : ℝ) : ℝ :=
   RadialModulation.modulatedE n (fun X η => E (X, η))
     (asRadialPrimitive r.angularPrimitive) X η
 
 /-- Realized U, given by `RadialModulation.modulatedU n (fun X η => U (X, η)) (asRadialPrimitive
 (r.axialPrimitive E)) X η`. -/
-def realizedU (r : TrueConeRealization a m p₁ p₂ K B) (E U : RadialParameter → ℝ)
+@[expose] def realizedU (r : TrueConeRealization a m p₁ p₂ K B) (E U : RadialParameter → ℝ)
     (n X η : ℝ) : ℝ :=
   RadialModulation.modulatedU n (fun X η => U (X, η))
     (asRadialPrimitive (r.axialPrimitive E)) X η

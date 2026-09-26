@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerRepresentative
 /-! Actual algebra of coherent all-order fields, including multiplication
 by the genuine coefficient towers of the source deformation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

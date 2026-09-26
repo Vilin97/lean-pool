@@ -32,7 +32,7 @@ public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Kernel.Basic
 
 -/
 
-@[expose] public section
+public section
 
 open Function MeasureTheory Real
 open scoped ENNReal NNReal Topology ProbabilityTheory
@@ -44,8 +44,7 @@ variable {Ω S T U V : Type*} [mΩ : MeasurableSpace Ω]
   {κ : Kernel T S} {μ : Measure T} {X : Ω → S} {Y : Ω → U}
 
 /-- Mutual information of a kernel into a product space with respect to a measure. -/
-noncomputable
-def mutualInfo (κ : Kernel T (S × U)) (μ : Measure T) : ℝ :=
+@[expose] noncomputable def mutualInfo (κ : Kernel T (S × U)) (μ : Measure T) : ℝ :=
   Hk[fst κ, μ] + Hk[snd κ, μ] - Hk[κ, μ]
 
 /-- Mutual information of a kernel into a product space with respect to a measure. -/
@@ -130,7 +129,8 @@ lemma mutualInfo_nonneg' {κ : Kernel T (S × U)} {μ : Measure T} [IsFiniteMeas
   rw [← Finset.sum_add_distrib, ← Finset.sum_sub_distrib]
   simp_rw [← mul_add, ← mul_sub, fst_apply, snd_apply]
   have (x : T) : FiniteSupport (κ x) := ⟨hκ x⟩
-  exact Finset.sum_nonneg fun x _ ↦ mul_nonneg ENNReal.toReal_nonneg measureMutualInfo_nonneg
+  exact Finset.sum_nonneg fun x _ ↦ mul_nonneg ENNReal.toReal_nonneg
+    (by simpa only [measureMutualInfo_def] using (measureMutualInfo_nonneg (μ := κ x)))
 
 lemma mutualInfo_nonneg [Countable T] {κ : Kernel T (S × U)} {μ : Measure T} [IsFiniteMeasure μ]
     [FiniteSupport μ] (hκ : AEFiniteKernelSupport κ μ) :

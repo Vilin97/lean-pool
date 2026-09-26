@@ -77,7 +77,7 @@ by the matrix model.
 `Pauli/Branch.lean` assembles these into the paper's branching rule.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -99,9 +99,10 @@ private lemma pow_mod_of_pow_eq_one {x : ℂ} {N : ℕ} (hx : x ^ N = 1) (m : �
   rw [pow_add, pow_mul, hx, one_pow, one_mul]
 
 /-- `i^k` for an exponent in `ZMod 4`. Well defined because `I ^ 4 = 1`. -/
-noncomputable def iPow (k : ZMod 4) : ℂ := Complex.I ^ k.val
+@[expose] noncomputable def iPow (k : ZMod 4) : ℂ := Complex.I ^ k.val
 
 /-- `(-1)^a` for an exponent in `ZMod 2`. -/
+@[expose]
 noncomputable def negOnePow (a : ZMod 2) : ℂ := (-1 : ℂ) ^ a.val
 
 @[simp] lemma iPow_zero : iPow 0 = 1 := by simp [iPow]
@@ -224,7 +225,7 @@ on bit strings: the entry in row `a`, column `b` is non-zero only when `a = b + 
 
 This is a *definition*. That it deserves the name is `toMatrix_one`, `toMatrix_mul`,
 `toMatrix_star` (it is a `*`-monoid homomorphism) and `toMatrix_injective` (it is faithful). -/
-noncomputable def toMatrix (s : PauliString n) : Matrix (Bits n) (Bits n) ℂ :=
+@[expose] noncomputable def toMatrix (s : PauliString n) : Matrix (Bits n) (Bits n) ℂ :=
   Matrix.of fun a b => if a = b + s.x then iPow s.phase * negOnePow (s.z ⬝ᵥ b) else 0
 
 lemma toMatrix_apply (s : PauliString n) (a b : Bits n) :

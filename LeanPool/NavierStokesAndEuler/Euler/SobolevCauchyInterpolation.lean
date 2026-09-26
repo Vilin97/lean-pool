@@ -22,7 +22,7 @@ section
 
 /-! Strong-derivative interpolation on the actual cylinder Sobolev spaces. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -64,7 +64,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -185,7 +185,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

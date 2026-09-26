@@ -33,7 +33,7 @@ section
 # Packet Source Scales
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -45,29 +45,29 @@ namespace EulerPacketSourceScales
 open Real EulerScale EulerPacketScaleGeometry
 
 /-- A fixed polynomial majorant for the dimensionless stage horizon. -/
-noncomputable def sourceTheta (J : ℕ) (C : ℝ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def sourceTheta (J : ℕ) (C : ℝ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   C * (1 + ((J + n : ℕ) : ℝ) ^ 2 * (x n) ^ 2)
 
 /-- The source upper bound for the square-root inverse parent shear. -/
-noncomputable def sourceEpsilon (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def sourceEpsilon (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   2 * exp (-x n / (2 * ((J - 1 + n : ℕ) : ℝ) ^ 7))
 
 /-- The older gradient bound expressed using the quadratic recurrence. -/
-noncomputable def sourceOlderGradient (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def sourceOlderGradient (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   1 + exp (x n / (((J - 1 + n : ℕ) : ℝ) ^ 2 * ((J - 2 + n : ℕ) : ℝ) ^ 7))
 
 /-- The inverse fourth root of the preceding packet frequency. -/
-noncomputable def sourcePriorError (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def sourcePriorError (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   exp (-x n / (4 * ((J - 1 + n : ℕ) : ℝ) ^ 4))
 
 /-- The neighbor error with the support, frequency, and shear scales of (37). -/
-noncomputable def sourceNeighborError (J : ℕ) (c : ℝ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def sourceNeighborError (J : ℕ) (c : ℝ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   exp (-x n / ((J + n : ℕ) : ℝ) ^ (7 / 2 : ℝ) +
     c * x n / ((J - 1 + n : ℕ) : ℝ) ^ 4 +
     c * x n / ((J - 1 + n : ℕ) : ℝ) ^ 7)
 
 /-- The full coefficient error entering the normalized ray and velocity equations. -/
-noncomputable def sourceCoefficientError (J : ℕ) (C c : ℝ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def sourceCoefficientError (J : ℕ) (C c : ℝ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   16 * (sourceEpsilon J x n * sourceTheta J C x n * sourceOlderGradient J x n ^ 2 +
     sourcePriorError J x n + sourceNeighborError J c x n)
 
@@ -309,7 +309,7 @@ section
 # Packet Source Time
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -347,12 +347,12 @@ noncomputable def sourceTimeWidth (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
     exp (-x n / (2 * ((J - 1 + n : ℕ) : ℝ) ^ 7))
 
 /-- The following time width, using `x_j=j²x_{j-1}` twice. -/
-noncomputable def sourceNextTimeWidth (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def sourceNextTimeWidth (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   3 * (((J + n : ℕ) : ℝ) + 1) ^ 2 * ((J + n : ℕ) : ℝ) ^ 4 * (x n) ^ 2 *
     exp (-x n / (2 * ((J + n : ℕ) : ℝ) ^ 5))
 
 /-- The exact quotient of consecutive time widths. -/
-noncomputable def sourceTimeRatio (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def sourceTimeRatio (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   (((J + n : ℕ) : ℝ) + 1) ^ 2 * ((J + n : ℕ) : ℝ) ^ 2 *
     exp (-x n / (2 * ((J + n : ℕ) : ℝ) ^ 5) +
       x n / (2 * ((J - 1 + n : ℕ) : ℝ) ^ 7))
@@ -522,7 +522,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -532,7 +532,7 @@ open Real EulerPacketSourceScales EulerPacketSourceTime
 
 /-- Monomial cost, given by `C * ((J + n : ℕ) : ℝ)^p * (x n)^q * exp (-b * (x n / ((J + n : ℕ) :
 ℝ)^a) + c * (x n / ((J - d + n : ℕ) : ℝ)^B))`. -/
-def monomialCost (J d B : ℕ) (a b c C : ℝ) (p q : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] def monomialCost (J d B : ℕ) (a b c C : ℝ) (p q : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   C * ((J + n : ℕ) : ℝ)^p * (x n)^q *
     exp (-b * (x n / ((J + n : ℕ) : ℝ)^a) +
       c * (x n / ((J - d + n : ℕ) : ℝ)^B))
@@ -715,7 +715,7 @@ section
 # Packet Uniform Log Bounds
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -818,7 +818,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -955,7 +955,7 @@ section
 # Packet Finite Scale Choice
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1027,7 +1027,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1066,7 +1066,7 @@ structure CostSpec where
   C_pos : 0 < C
 
 /-- Cost, given by `monomialCost J s.d s.B s.a s.b s.c s.C s.p s.q x`. -/
-def CostSpec.cost (s : CostSpec) (J : ℕ) (x : ℕ → ℝ) : ℕ → ℝ :=
+@[expose] def CostSpec.cost (s : CostSpec) (J : ℕ) (x : ℕ → ℝ) : ℕ → ℝ :=
   monomialCost J s.d s.B s.a s.b s.c s.C s.p s.q x
 
 /-- A finite list of literal exponential costs has summable, uniformly
@@ -1174,22 +1174,22 @@ theorem SmallSeries.mono {f g : ℕ → ℝ} {δ : ℝ} (h : SmallSeries f δ)
   exact ⟨hg, hs, (hs.tsum_le_tsum hle h.summable).trans h.total_le⟩
 
 /-- Coefficient cost, given by `sourceCoefficientError J C c x n * sourceTheta J C x n^A`. -/
-def coefficientCost (J : ℕ) (C c : ℝ) (A : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] def coefficientCost (J : ℕ) (C c : ℝ) (A : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   sourceCoefficientError J C c x n * sourceTheta J C x n^A
 
 /-- Extra time cost, given by `2*sqrt (a n*exp (x n/((J-1+n : ℕ) : ℝ)^7))*sourceNextTimeWidth J
 x n * sourceTheta J C x n^A`. -/
-def extraTimeCost (J : ℕ) (C : ℝ) (A : ℕ) (x a : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] def extraTimeCost (J : ℕ) (C : ℝ) (A : ℕ) (x a : ℕ → ℝ) (n : ℕ) : ℝ :=
   2*sqrt (a n*exp (x n/((J-1+n : ℕ) : ℝ)^7))*sourceNextTimeWidth J x n *
     sourceTheta J C x n^A
 
 /-- Parent square ratio, given by `exp (2*x n/((J-1+n : ℕ) : ℝ)^7)/exp (x n/((J+n : ℕ) : ℝ)^5)`. -/
-def parentSquareRatio (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] def parentSquareRatio (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   exp (2*x n/((J-1+n : ℕ) : ℝ)^7)/exp (x n/((J+n : ℕ) : ℝ)^5)
 
 /-- Good cost, given by `exp (-x n/((J+n : ℕ) : ℝ)^3)*exp (x n/((J+n : ℕ) : ℝ)^5) * exp (x
 n/((J-1+n : ℕ) : ℝ)^7)`. -/
-def goodCost (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] def goodCost (J : ℕ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   exp (-x n/((J+n : ℕ) : ℝ)^3)*exp (x n/((J+n : ℕ) : ℝ)^5) *
     exp (x n/((J-1+n : ℕ) : ℝ)^7)
 
@@ -1271,7 +1271,7 @@ theorem source_uniform_choice (C c : ℝ) (hC : 1 ≤ C) (hc : 0 ≤ c) (A : ℕ
     exact sourceGoodCost_bound J hJ x n (hxp n)
 
 /-- The sequence in (37), now constructed rather than supplied. -/
-def scaleSequence (J : ℕ) (X : ℝ) : ℕ → ℝ
+@[expose] def scaleSequence (J : ℕ) (X : ℝ) : ℕ → ℝ
   | 0 => X
   | n+1 => ((J+n : ℕ) : ℝ)^2*scaleSequence J X n
 
@@ -1298,7 +1298,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1310,39 +1310,39 @@ open Real Filter EulerScale EulerPacketSourceScales EulerPacketSourceTime
 open scoped Topology
 
 /-- Shear, given by `exp (scaleSequence J X n/((J+n : ℕ) : ℝ)^5)`. -/
-def shear (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
+@[expose] def shear (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
   exp (scaleSequence J X n/((J+n : ℕ) : ℝ)^5)
 
 /-- Frequency, given by `exp (scaleSequence J X n/((J+n : ℕ) : ℝ)^2)`. -/
-def frequency (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
+@[expose] def frequency (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
   exp (scaleSequence J X n/((J+n : ℕ) : ℝ)^2)
 
 /-- Spike, given by `exp (-scaleSequence J X n/((J+n : ℕ) : ℝ)^3)`. -/
-def spike (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
+@[expose] def spike (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
   exp (-scaleSequence J X n/((J+n : ℕ) : ℝ)^3)
 
 /-- Support scale, given by `exp (-scaleSequence J X n/((J+n : ℕ) : ℝ)^(7/2 : ℝ))`. -/
-def supportScale (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
+@[expose] def supportScale (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
   exp (-scaleSequence J X n/((J+n : ℕ) : ℝ)^(7/2 : ℝ))
 
 /-- Previous shear as an element of `ℕ → ℝ | 0 => X^1000 | n+1 => shear J X n`. -/
-def previousShear (J : ℕ) (X : ℝ) : ℕ → ℝ
+@[expose] def previousShear (J : ℕ) (X : ℝ) : ℕ → ℝ
   | 0 => X^1000
   | n+1 => shear J X n
 
 /-- Previous frequency as an element of `ℕ → ℝ | 0 => X^D | n+1 => frequency J X n`. -/
-def previousFrequency (J D : ℕ) (X : ℝ) : ℕ → ℝ
+@[expose] def previousFrequency (J D : ℕ) (X : ℝ) : ℕ → ℝ
   | 0 => X^D
   | n+1 => frequency J X n
 
 /-- Older shear as an element of `ℕ → ℝ | 0 => 1 | n+1 => previousShear J X n`. -/
-def olderShear (J : ℕ) (X : ℝ) : ℕ → ℝ
+@[expose] def olderShear (J : ℕ) (X : ℝ) : ℕ → ℝ
   | 0 => 1
   | n+1 => previousShear J X n
 
 /-- Time width, given by `3*scaleSequence J X (n+1)*scaleSequence J X n/sqrt (previousShear J X
 n)`. -/
-def timeWidth (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
+@[expose] def timeWidth (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
   3*scaleSequence J X (n+1)*scaleSequence J X n/sqrt (previousShear J X n)
 
 theorem previousShear_pos (J : ℕ) {X : ℝ} (hX : 0 < X) (n : ℕ) :

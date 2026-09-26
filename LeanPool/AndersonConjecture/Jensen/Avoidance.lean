@@ -24,7 +24,7 @@ the uncountable case uses a cardinality argument.
 Heitmann, "Characterization of completions of UFDs", 1993, Lemmas 2--3.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

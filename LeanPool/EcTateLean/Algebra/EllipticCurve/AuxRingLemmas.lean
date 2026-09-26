@@ -15,7 +15,7 @@ import Mathlib.Tactic.Ring.RingNF
 Imported Lean Pool material for `LeanPool.EcTateLean.Algebra.EllipticCurve.AuxRingLemmas`.
 -/
 
-@[expose] public section
+public section
 
 
 section ring_lemmas

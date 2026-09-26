@@ -22,7 +22,7 @@ right-hand side lifts through the injective Sobolev inclusion and yields the
 actual pointwise within-time derivative, including both interval endpoints.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,7 +38,7 @@ variable (period : ℝ) [Fact (0 < period)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- The genuine representative obtained by bounded H3 point evaluation. -/
-def pointField (p : C(K, LiftL2 period))
+@[expose] def pointField (p : C(K, LiftL2 period))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a p))
     (t : K) (x : LiftDomain period) : Space :=
   EulerSobolevPointEvaluation.pointEvaluation period x (sobolevPath period 3 p hp t)

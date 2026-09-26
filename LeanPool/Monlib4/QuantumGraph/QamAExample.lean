@@ -16,7 +16,7 @@ import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.QamAExample`.
 -/
 
-@[expose] public section
+public section
 
 section
 

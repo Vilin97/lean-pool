@@ -28,7 +28,7 @@ which leaf is *best*.
   invariant "the incumbent's path does not go down a branch we have not explored yet".
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon

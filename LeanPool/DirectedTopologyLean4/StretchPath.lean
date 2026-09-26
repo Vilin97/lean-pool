@@ -14,7 +14,7 @@ import Mathlib.CategoryTheory.Category.Init
 # LeanPool.DirectedTopologyLean4.StretchPath
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains definitions about stretching a (directed) path in `I` in two ways:

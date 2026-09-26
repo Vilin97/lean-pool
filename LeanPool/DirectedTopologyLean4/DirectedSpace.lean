@@ -11,7 +11,7 @@ public import Mathlib.Topology.Path
 # LeanPool.DirectedTopologyLean4.DirectedSpace
 -/
 
-@[expose] public section
+public section
 
 /-
   # Definition of directed spaces
@@ -47,7 +47,7 @@ variable {α : Type u} {x y z : α} [DirectedSpace α] {γ : Path x y} {γ' : Pa
   {f : Path t₀ t₁}
 
 /-- A path in a directed space is a dipath if it satisfies the directed-space predicate. -/
-def IsDipath : (Path x y) → Prop :=
+@[expose] def IsDipath : (Path x y) → Prop :=
   DirectedSpace.IsDipath
 
 /-- The constant path at any point of a directed space is directed. -/

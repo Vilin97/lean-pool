@@ -18,7 +18,7 @@ The coefficients are the integrals of the given function. Local uniform
 decay is obtained from genuine derivatives on compact parameter intervals.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,13 +35,13 @@ abbrev Point := ℝ × Plane
 abbrev Source := Point → ℂ
 
 /-- Slice, defined pointwise by `f (p, Y)`. -/
-noncomputable def slice (f : Source) (p : ℝ) : Plane → ℂ := fun Y => f (p, Y)
+@[expose] noncomputable def slice (f : Source) (p : ℝ) : Plane → ℂ := fun Y => f (p, Y)
 
 /-- Periodic, given by `∀ p, SmoothFourierData.UnitPeriodic (slice f p)`. -/
-def Periodic (f : Source) : Prop := ∀ p, SmoothFourierData.UnitPeriodic (slice f p)
+@[expose] def Periodic (f : Source) : Prop := ∀ p, SmoothFourierData.UnitPeriodic (slice f p)
 
 /-- Parameter partial, given by `fderiv ℝ f z (1, 0)`. -/
-noncomputable def parameterPartial (f : Source) (z : Point) : ℂ :=
+@[expose] noncomputable def parameterPartial (f : Source) (z : Point) : ℂ :=
   fderiv ℝ f z (1, 0)
 
 /-- Torus X partial, given by `fderiv ℝ f z (0, (1, 0))`. -/
@@ -58,20 +58,21 @@ noncomputable def torusXJet : ℕ → Source → Source
   | n + 1, f => torusXPartial (torusXJet n f)
 
 /-- Swap torus, defined pointwise by `f (z.1, (z.2.2, z.2.1))`. -/
-noncomputable def swapTorus (f : Source) : Source := fun z => f (z.1, (z.2.2, z.2.1))
+@[expose] noncomputable def swapTorus (f : Source) : Source :=
+  fun z => f (z.1, (z.2.2, z.2.1))
 
 /-- Coefficient, given by `SmoothFourierData.coefficient (slice f p) k`. -/
-noncomputable def coefficient (f : Source) (p : ℝ) (k : Frequency) : ℂ :=
+@[expose] noncomputable def coefficient (f : Source) (p : ℝ) (k : Frequency) : ℂ :=
   SmoothFourierData.coefficient (slice f p) k
 
 /-- Mean, given by `coefficient f p 0`. -/
-noncomputable def mean (f : Source) (p : ℝ) : ℂ := coefficient f p 0
+@[expose] noncomputable def mean (f : Source) (p : ℝ) : ℂ := coefficient f p 0
 
 /-- Zero mean, given by `∀ p, mean f p = 0`. -/
-def ZeroMean (f : Source) : Prop := ∀ p, mean f p = 0
+@[expose] def ZeroMean (f : Source) : Prop := ∀ p, mean f p = 0
 
 /-- Inverse, given by `directionalInverse d (coefficient f z.1) z.2`. -/
-noncomputable def inverse (d : Direction) (f : Source) (z : Point) : ℂ :=
+@[expose] noncomputable def inverse (d : Direction) (f : Source) (z : Point) : ℂ :=
   directionalInverse d (coefficient f z.1) z.2
 
 /-- Iterate inverse, given by `(inverse d)^[n] f`. -/
@@ -274,13 +275,15 @@ theorem exists_uniform_coefficient_bound {f : Source} (hf : ContDiff ℝ ∞ f)
     exact (h₂ (p, (x, y)) ⟨hparam, hx, hy⟩).trans hC₂
 
 /-- Polynomial growth, given by `∃ s : ℕ, ∃ C : ℝ, 0 ≤ C ∧ ∀ k, ‖m k‖ ≤ C * weight k ^ s`. -/
-def PolynomialGrowth (m : Frequency → ℂ) : Prop :=
+@[expose] def PolynomialGrowth (m : Frequency → ℂ) : Prop :=
   ∃ s : ℕ, ∃ C : ℝ, 0 ≤ C ∧ ∀ k, ‖m k‖ ≤ C * weight k ^ s
 
 /-- Multiplier X, given by `freqX k * m k`. -/
-noncomputable def multiplierX (m : Frequency → ℂ) (k : Frequency) : ℂ := freqX k * m k
+@[expose] noncomputable def multiplierX (m : Frequency → ℂ) (k : Frequency) : ℂ :=
+  freqX k * m k
 /-- Multiplier Y, given by `freqY k * m k`. -/
-noncomputable def multiplierY (m : Frequency → ℂ) (k : Frequency) : ℂ := freqY k * m k
+@[expose] noncomputable def multiplierY (m : Frequency → ℂ) (k : Frequency) : ℂ :=
+  freqY k * m k
 
 theorem PolynomialGrowth.mulX {m : Frequency → ℂ} (hm : PolynomialGrowth m) :
     PolynomialGrowth (multiplierX m) := by
@@ -349,11 +352,11 @@ theorem uniform_multiplied_coeff_bound {m : Frequency → ℂ} (hm : PolynomialG
   exact ⟨M * B, mul_nonneg hM hB, fun p hp k => multiplied_coeff_bound hM hm (hbound p hp) k⟩
 
 /-- Apply multiplier, given by `series (fun k => m k * coefficient f z.1 k) z.2`. -/
-noncomputable def applyMultiplier (m : Frequency → ℂ) (f : Source) (z : Point) : ℂ :=
+@[expose] noncomputable def applyMultiplier (m : Frequency → ℂ) (f : Source) (z : Point) : ℂ :=
   series (fun k => m k * coefficient f z.1 k) z.2
 
 theorem inverse_eq_applyMultiplier (d : Direction) (f : Source) :
-    inverse d f = applyMultiplier (multiplier d) f := rfl
+    inverse d f = applyMultiplier (multiplier d) f := by rfl
 
 theorem multiplied_coeff_rapid {m : Frequency → ℂ} (hm : PolynomialGrowth m)
     {f : Source} (hf : ContDiff ℝ ∞ f) (hp : Periodic f) (p : ℝ) :
@@ -361,30 +364,31 @@ theorem multiplied_coeff_rapid {m : Frequency → ℂ} (hm : PolynomialGrowth m)
   hm.rapid_mul (SmoothFourierData.rapid_coefficient (slice_smooth hf p) (hp p))
 
 /-- Joint DP, given by `ContinuousLinearMap.fst ℝ ℝ Plane`. -/
-noncomputable def jointDP : Point →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ Plane
+@[expose] noncomputable def jointDP : Point →L[ℝ] ℝ :=
+  ContinuousLinearMap.fst ℝ ℝ Plane
 /-- Joint DX, given by `TorusInverse.dx.comp (ContinuousLinearMap.snd ℝ ℝ Plane)`. -/
-noncomputable def jointDX : Point →L[ℝ] ℝ :=
+@[expose] noncomputable def jointDX : Point →L[ℝ] ℝ :=
   TorusInverse.dx.comp (ContinuousLinearMap.snd ℝ ℝ Plane)
 /-- Joint DY, given by `TorusInverse.dy.comp (ContinuousLinearMap.snd ℝ ℝ Plane)`. -/
-noncomputable def jointDY : Point →L[ℝ] ℝ :=
+@[expose] noncomputable def jointDY : Point →L[ℝ] ℝ :=
   TorusInverse.dy.comp (ContinuousLinearMap.snd ℝ ℝ Plane)
 
 /-- Joint lift P, given by `ContinuousLinearMap.smulRightL ℝ Point ℂ jointDP`. -/
-noncomputable def jointLiftP : ℂ →L[ℝ] (Point →L[ℝ] ℂ) :=
+@[expose] noncomputable def jointLiftP : ℂ →L[ℝ] (Point →L[ℝ] ℂ) :=
   ContinuousLinearMap.smulRightL ℝ Point ℂ jointDP
 /-- Joint lift X, given by `ContinuousLinearMap.smulRightL ℝ Point ℂ jointDX`. -/
-noncomputable def jointLiftX : ℂ →L[ℝ] (Point →L[ℝ] ℂ) :=
+@[expose] noncomputable def jointLiftX : ℂ →L[ℝ] (Point →L[ℝ] ℂ) :=
   ContinuousLinearMap.smulRightL ℝ Point ℂ jointDX
 /-- Joint lift Y, given by `ContinuousLinearMap.smulRightL ℝ Point ℂ jointDY`. -/
-noncomputable def jointLiftY : ℂ →L[ℝ] (Point →L[ℝ] ℂ) :=
+@[expose] noncomputable def jointLiftY : ℂ →L[ℝ] (Point →L[ℝ] ℂ) :=
   ContinuousLinearMap.smulRightL ℝ Point ℂ jointDY
 
-@[simp] theorem jointLiftP_apply (c : ℂ) (v : Point) : jointLiftP c v = v.1 • c := rfl
-@[simp] theorem jointLiftX_apply (c : ℂ) (v : Point) : jointLiftX c v = v.2.1 • c := rfl
-@[simp] theorem jointLiftY_apply (c : ℂ) (v : Point) : jointLiftY c v = v.2.2 • c := rfl
+@[simp] theorem jointLiftP_apply (c : ℂ) (v : Point) : jointLiftP c v = v.1 • c := by rfl
+@[simp] theorem jointLiftX_apply (c : ℂ) (v : Point) : jointLiftX c v = v.2.1 • c := by rfl
+@[simp] theorem jointLiftY_apply (c : ℂ) (v : Point) : jointLiftY c v = v.2.2 • c := by rfl
 
 /-- Multiplier term derivative, constructed using `jointLiftP`. -/
-noncomputable def multiplierTermDerivative (m : Frequency → ℂ) (f : Source)
+@[expose] noncomputable def multiplierTermDerivative (m : Frequency → ℂ) (f : Source)
     (k : Frequency) (z : Point) : Point →L[ℝ] ℂ :=
   jointLiftP (m k * coefficient (parameterPartial f) z.1 k * mode k z.2) +
   jointLiftX (multiplierX m k * coefficient f z.1 k * mode k z.2) +
@@ -561,7 +565,7 @@ theorem inverse_zeroMean (d : Direction) {f : Source} (hf : ContDiff ℝ ∞ f)
   exact TorusInverse.inverse_zero_mean d ha
 
 /-- Directional partial, given by `fderiv ℝ f z (0, vector d)`. -/
-noncomputable def directionalPartial (d : Direction) (f : Source) (z : Point) : ℂ :=
+@[expose] noncomputable def directionalPartial (d : Direction) (f : Source) (z : Point) : ℂ :=
   fderiv ℝ f z (0, vector d)
 
 /-- Exact inversion for the given function, with the derivative taken in the
@@ -586,7 +590,7 @@ theorem inverse_preserves_parameter_support (d : Direction) (f : Source) (S : Se
   simp only [coefficient, SmoothFourierData.coefficient_eq_doubleIntegral, slice,
     hs p hp, mul_zero, intervalIntegral.integral_zero]
 
-@[simp] theorem parameterJet_zero (f : Source) : parameterJet 0 f = f := rfl
+@[simp] theorem parameterJet_zero (f : Source) : parameterJet 0 f = f := by rfl
 
 theorem parameterJet_succ (n : ℕ) (f : Source) :
     parameterJet (n + 1) f = parameterPartial (parameterJet n f) :=
@@ -611,7 +615,7 @@ theorem parameterJet_inverse (d : Direction) {f : Source} (hf : ContDiff ℝ ∞
         (parameterJet_periodic hp n), parameterJet_succ]
 
 @[simp] theorem iterateInverse_zero (d : Direction) (f : Source) :
-    iterateInverse d 0 f = f := rfl
+    iterateInverse d 0 f = f := by rfl
 
 theorem iterateInverse_succ (d : Direction) (n : ℕ) (f : Source) :
     iterateInverse d (n + 1) f = inverse d (iterateInverse d n f) :=
@@ -683,7 +687,7 @@ noncomputable def mixedJet (q : ℕ) (w : List Bool) (f : Source) (z : Point) : 
 
 /-- Mixed loss constant, given by `((6 * ‖omega⁻¹‖) * ‖omega‖ ^ r) * 3 ^ (r + 5) * ∑' k :
 Frequency, (weight k ^ 4)⁻¹`. -/
-noncomputable def mixedLossConstant (r : ℕ) : ℝ :=
+@[expose] noncomputable def mixedLossConstant (r : ℕ) : ℝ :=
   ((6 * ‖omega⁻¹‖) * ‖omega‖ ^ r) * 3 ^ (r + 5) *
     ∑' k : Frequency, (weight k ^ 4)⁻¹
 

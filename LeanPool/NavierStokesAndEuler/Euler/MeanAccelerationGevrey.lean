@@ -22,7 +22,7 @@ translation of the original field. Consequently the estimates below concern
 the real spatial orbit, with no assumed derivatives of the inverse.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

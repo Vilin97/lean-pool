@@ -35,7 +35,7 @@ The extension is the convergent vertical Taylor series of the genuine compatible
 parameter jets. Its Cauchy--Riemann identity follows by termwise differentiation.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -620,7 +620,7 @@ argument and using the fixed-contour holomorphic-family theorem proves joint
 real smoothness of the constructed extension.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -865,7 +865,7 @@ All continuations below are explicit integrals of the actual natural slopes.
 The complex neighborhood is obtained from compactness and real positivity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2207,7 +2207,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

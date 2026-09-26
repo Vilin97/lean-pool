@@ -39,7 +39,7 @@ Unit 4b adds the sixteen consistency-property fields, the Henkin completion, and
 endpoint.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

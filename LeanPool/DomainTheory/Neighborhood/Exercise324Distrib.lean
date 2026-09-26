@@ -49,7 +49,7 @@ extraction lemmas of
 Exercise 3.19.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

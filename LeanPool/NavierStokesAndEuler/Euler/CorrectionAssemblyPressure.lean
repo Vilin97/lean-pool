@@ -20,7 +20,7 @@ section
 
 /-! A common actual smooth lifted correction assembled from finite solves and proved uniqueness. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -91,7 +91,7 @@ theorem FiniteFamily.realizes_common (F : FiniteFamily period hT A) (C : Compari
 
 /-- Bounded H3 evaluation fixes a canonical actual pointwise representative of the common
 correction. -/
-def FiniteFamily.pointField (F : FiniteFamily period hT A)
+@[expose] def FiniteFamily.pointField (F : FiniteFamily period hT A)
     (t : Icc (0 : ℝ) T) (x : LiftDomain period) : Vector3 :=
   pointEvaluation period x (restrictOperator period (by omega : 3 ≤ 7) (F.solution 6 le_rfl t))
 
@@ -138,7 +138,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

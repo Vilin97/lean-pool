@@ -10,7 +10,7 @@ public import Mathlib.Algebra.Polynomial.Inductions
 
 /-! Gaussian coefficient contraction for arbitrary univariate polynomials. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace GaussianMomentsCounterexamples

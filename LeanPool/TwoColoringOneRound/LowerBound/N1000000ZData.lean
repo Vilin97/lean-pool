@@ -7,7 +7,7 @@ module
 
 /-! Auto-generated exact LDLᵀ data for the dual blocks `Z_r`. -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -15,6 +15,7 @@ namespace N1000000ZData
 
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def ZldlDen : Array Nat := #[1,
   1,
   1152921504606846976,
@@ -24,6 +25,7 @@ def ZldlDen : Array Nat := #[1,
   108119210378859631041159824564458405038878301870016480624919969792]
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def ZldlLNum : Array (Array (Array Int)) :=
   #[
     #[#[1, 0, 0], #[0, 1, 0], #[0, 0, 1]],
@@ -68,6 +70,7 @@ def ZldlLNum : Array (Array (Array Int)) :=
   ]
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def ZldlDNum : Array (Array Int) :=
   #[
     #[0, 0, 0],

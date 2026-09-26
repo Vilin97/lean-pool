@@ -20,7 +20,7 @@ import Mathlib.Data.List.OfFn
 # LeanPool.FormalizationOfBoundedArithmetic.IsEnum
 -/
 
-@[expose] public section
+public section
 
 open Lean Elab Parser Term Command
 

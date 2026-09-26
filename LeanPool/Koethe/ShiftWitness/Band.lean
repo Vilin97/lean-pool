@@ -16,7 +16,7 @@ The coefficientwise band identity below retains the pencil's independent formal
 variable. It does not deduce polynomial nilpotence from one specialization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -35,7 +35,7 @@ variable {k : Type u} {K : Type v} [Field k] [Field K] [Algebra k K]
 
 /-- Backward weighted shifts: composition follows the forward chronological
 order of the shared `Pencil.wordProd`. -/
-def backShift (v : ℕ → Triple k) (i : Fin 3) : End K where
+@[expose] def backShift (v : ℕ → Triple k) (i : Fin 3) : End K where
   toFun u n := algebraMap k K (v n i) * u (n + 1)
   map_add' u w := by ext n; simp [mul_add]
   map_smul' c u := by ext n; simp [mul_left_comm]

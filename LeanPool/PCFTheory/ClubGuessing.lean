@@ -38,7 +38,7 @@ There are many existence results on club guessing sequences. The one we need is 
   below `Ϟ`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

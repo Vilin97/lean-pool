@@ -17,7 +17,7 @@ import LeanPool.Rupert.MatrixSimps
 Imported Lean Pool material for `LeanPool.Rupert.Tetrahedron`.
 -/
 
-@[expose] public section
+public section
 
 namespace Tetrahedron
 

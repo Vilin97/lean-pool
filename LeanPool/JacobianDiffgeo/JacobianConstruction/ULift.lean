@@ -31,7 +31,7 @@ continuous maps, so every chart composite involving them cancels by `rfl`. Conse
   analyticity computation.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Pointwise
 open Set Filter Topology Metric
@@ -49,6 +49,7 @@ variable (L : AddSubgroup V) [DiscreteTopology L]
 
 /-- The chart family for `ULift (V ⧸ L)`: `chartAt' L x`, transported through
 `Homeomorph.ulift`. -/
+@[expose]
 def uliftChartAt (x : V) : OpenPartialHomeomorph (ULift.{u} (V ⧸ L)) V :=
   (Homeomorph.ulift (X := V ⧸ L)).toOpenPartialHomeomorph.trans (chartAt' L x)
 
@@ -70,7 +71,7 @@ omit [CompleteSpace V] [NormedSpace ℂ V] in
 /-- `Homeomorph.ulift`'s associated `OpenPartialHomeomorph.symm`, precomposed into a
 `uliftChartAt`, cancels by `rfl` (`PartialEquiv.coe_trans_symm`). -/
 theorem uliftChartAt_symm_apply (x w : V) :
-    (uliftChartAt L x).symm w = ULift.up ((chartAt' L x).symm w) := rfl
+    (uliftChartAt L x).symm w = ULift.up ((chartAt' L x).symm w) := by rfl
 
 omit [CompleteSpace V] [NormedSpace ℂ V] in
 theorem uliftChartAt_target (x : V) : (uliftChartAt L x).target = (chartAt' L x).target := by

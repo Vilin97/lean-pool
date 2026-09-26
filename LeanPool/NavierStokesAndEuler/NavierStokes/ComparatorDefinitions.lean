@@ -43,7 +43,7 @@ Source:
 https://github.com/google-deepmind/formal-conjectures/blob/8bf45ed70d48b2b2a501de9c00b26bfa38c573ee/FormalConjectures/Millenium/NavierStokes.lean
 -/
 
-@[expose] public section
+public section
 
 
 open ContDiff Set InnerProductSpace MeasureTheory
@@ -66,8 +66,8 @@ In coordinates, $\nabla \cdot v = \sum_i \partial v_i / \partial x_i$.
 This is available as the notation `∇⬝ v`. If `v` is not differentiable at `x`, then
 `fderiv` is the zero map, so this definition has the corresponding junk value $0$.
 -/
-noncomputable
-def divergence (v : ℝ^n → ℝ^n) (x : ℝ^n) : ℝ := (fderiv ℝ v x).trace ℝ (ℝ^n)
+@[expose] noncomputable def divergence (v : ℝ^n → ℝ^n) (x : ℝ^n) : ℝ :=
+  (fderiv ℝ v x).trace ℝ (ℝ^n)
 
 @[inherit_doc]
 local notation "∇⬝" => divergence
@@ -107,7 +107,7 @@ A function $f : \mathbb{R}^n \to \alpha$ is 1-periodic if it is periodic in each
 coordinate with period $1$, i.e. $f(x + e_i) = f(x)$ for each unit vector $e_i$.
 This captures functions on the $n$-torus $\mathbb{R}^n/\mathbb{Z}^n$.
 -/
-def IsOnePeriodic {α : Sort*} (f : ℝ^n → α) : Prop :=
+@[expose] def IsOnePeriodic {α : Sort*} (f : ℝ^n → α) : Prop :=
   ∀ x i, f (x + EuclideanSpace.single i 1) = f x
 
 /--

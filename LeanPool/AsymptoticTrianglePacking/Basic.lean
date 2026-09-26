@@ -15,7 +15,7 @@ The public statement records the finite near-regular hypergraph rounding interfa
 the nibble method. The underlying finite definitions are kept in the internal library.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.AsymptoticTrianglePacking
 

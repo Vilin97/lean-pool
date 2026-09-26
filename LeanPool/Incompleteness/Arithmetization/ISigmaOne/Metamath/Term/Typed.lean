@@ -14,7 +14,7 @@ import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section «lp_nc_section_1»
 
@@ -122,7 +122,7 @@ namespace Language
 namespace Semiterm
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def shift (t : L.Semiterm n) : L.Semiterm n :=
+@[expose] def shift (t : L.Semiterm n) : L.Semiterm n :=
   ⟨L.termShift t.val, Language.IsSemiterm.termShift t.prop⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -130,7 +130,7 @@ def bShift (t : L.Semiterm n) : L.Semiterm (n + 1) :=
   ⟨L.termBShift t.val, Language.IsSemiterm.termBShift t.prop⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def substs (t : L.Semiterm n) (w : L.SemitermVec n m) : L.Semiterm m :=
+@[expose] def substs (t : L.Semiterm n) (w : L.SemitermVec n m) : L.Semiterm m :=
   ⟨L.termSubst w.val t.val, w.prop.termSubst t.prop⟩
 
 @[simp] lemma val_shift (t : L.Semiterm n) : t.shift.val = L.termShift t.val := rfl
@@ -157,7 +157,7 @@ def bShift (v : L.SemitermVec k n) : L.SemitermVec k (n + 1) :=
   ⟨L.termBShiftVec k v.val, Language.IsSemitermVec.termBShiftVec v.prop⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def substs (v : L.SemitermVec k n) (w : L.SemitermVec n m) : L.SemitermVec k m :=
+@[expose] def substs (v : L.SemitermVec k n) (w : L.SemitermVec n m) : L.SemitermVec k m :=
   ⟨L.termSubstVec k w.val v.val, Language.IsSemitermVec.termSubstVec w.prop v.prop⟩
 
 @[simp] lemma val_shift (v : L.SemitermVec k n) : v.shift.val = L.termShiftVec k v.val := rfl

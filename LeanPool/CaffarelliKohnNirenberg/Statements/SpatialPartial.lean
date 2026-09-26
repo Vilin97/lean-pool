@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Ambient.Basis
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open CKN.Foundation.Parabolic
 
@@ -26,6 +26,7 @@ namespace CKN
 
 /-- Factor-wise spatial derivative on the ordinary product space described in
   docs/DESIGN_NOTES.md. -/
+@[expose]
 def spatialPartial (g : ParabolicPoint → ℝ) (i : Fin 3) (z : ParabolicPoint) : ℝ :=
   (fderiv ℝ (fun x : Vec3 => g (x, z.2)) z.1) (basisVec i)
 

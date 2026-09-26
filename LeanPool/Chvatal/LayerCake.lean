@@ -51,7 +51,7 @@ be replaced by repeatedly subtracting the smallest positive weight from its
 support. The support is a lower set, and each step strictly shrinks it.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

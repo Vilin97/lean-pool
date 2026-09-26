@@ -17,7 +17,7 @@ import Mathlib.Analysis.InnerProductSpace.Basic
 # Energy Bootstrap
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -24,7 +24,7 @@ constructions.)
 
 -/
 
-@[expose] public section
+public section
 
 
 namespace LieAlgebra

@@ -15,7 +15,7 @@ forcing is bounded for unit terminal data; no terminal amplitude, derivative
 shift, or recursive grade occurs in the radius conditions.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficients EulerGevrey
 open scoped ContDiff BoundedContinuousFunction
 
 /-- Endpoint forcing cost, given by `6*sobolevCoefficientAmplitude ι q Rc C₁*T⁻¹`. -/
-def endpointForcingCost (ι : Type*) [Fintype ι] (q : ℕ) (T Rc C₁ : ℝ) : ℝ :=
+@[expose] def endpointForcingCost (ι : Type*) [Fintype ι] (q : ℕ) (T Rc C₁ : ℝ) : ℝ :=
   6*sobolevCoefficientAmplitude ι q Rc C₁*T⁻¹
 
 variable {T : ℝ} {U E : Type*}
@@ -84,12 +84,12 @@ theorem radius_bounds : 1 ≤ L.R ∧ sobolevCoefficientRadius ι L.Rc ≤ L.R :
     L.C₀_nonneg L.C₁_nonneg L.CH_nonneg L.forcingCost_nonneg L.weak_radius
 
 /-- Coordinate cost, given by `T⁻¹+traceCost T`. -/
-def coordinateCost (_L : EndpointBudget D ι q) : ℝ := T⁻¹+traceCost T
+@[expose] def coordinateCost (_L : EndpointBudget D ι q) : ℝ := T⁻¹+traceCost T
 /-- Velocity cost, given by `3*sobolevCoefficientAmplitude ι q L.Rc L.C₀*L.coordinateCost`. -/
 def velocityCost : ℝ := 3*sobolevCoefficientAmplitude ι q L.Rc L.C₀*L.coordinateCost
 /-- Derivative cost, given by `3*sobolevCoefficientAmplitude ι q L.Rc L.C₁*L.coordinateCost +
 3*sobolevCoefficientAmplitude ι q L.Rc L.C₀`. -/
-def derivativeCost : ℝ := 3*sobolevCoefficientAmplitude ι q L.Rc L.C₁*L.coordinateCost +
+@[expose] def derivativeCost : ℝ := 3*sobolevCoefficientAmplitude ι q L.Rc L.C₁*L.coordinateCost +
   3*sobolevCoefficientAmplitude ι q L.Rc L.C₀
 
 theorem coordinateCost_nonneg : 0 ≤ L.coordinateCost :=

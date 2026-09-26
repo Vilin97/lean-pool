@@ -12,7 +12,7 @@ import Mathlib.MeasureTheory.Integral.Prod
 
 /-! The genuine constant-angle embedding of ordinary spatial L² into cylinder L². -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -104,7 +104,7 @@ def embeddingLinear : SpatialL2 V →ₗ[ℝ] CylinderL2 P V where
 def embedding : SpatialL2 V →L[ℝ] CylinderL2 P V :=
   (embeddingLinear P).mkContinuous (Real.sqrt P) (lift_norm_le P)
 
-@[simp] theorem embedding_apply (u : SpatialL2 V) : embedding P u = lift P u := rfl
+@[simp] theorem embedding_apply (u : SpatialL2 V) : embedding P u = lift P u := by rfl
 
 theorem embedding_norm : ‖embedding (V := V) P‖ ≤ Real.sqrt P :=
   opNorm_le_bound _ (Real.sqrt_nonneg P) (lift_norm_le P)

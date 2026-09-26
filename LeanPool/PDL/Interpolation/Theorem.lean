@@ -13,7 +13,7 @@ public import LeanPool.PDL.Completeness.Theorem
 
 /-! # Interpolation (Section 7) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

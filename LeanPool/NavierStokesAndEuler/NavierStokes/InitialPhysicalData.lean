@@ -33,7 +33,7 @@ holds across its boundary, rather than only inside the native estimate
 domain.  The stripped coefficients are independent of the angular variable.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -216,7 +216,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2007,7 +2007,7 @@ variable {B N0 : ℕ}
 
 /-- Physical X, given by `PhysicalWaveSum.physicalPosition w 0 ^ 2 / (2 *
 PhysicalWaveSum.physicalQ ActualPrimary.h w)`. -/
-noncomputable def physicalX (w : ProblemStatement.SpaceTime) : ℝ :=
+@[expose] noncomputable def physicalX (w : ProblemStatement.SpaceTime) : ℝ :=
   PhysicalWaveSum.physicalPosition w 0 ^ 2 / (2 * PhysicalWaveSum.physicalQ ActualPrimary.h w)
 
 theorem cut_pair_physicalX (l : SignedLabel B N0) (L : PhysicalWaveSum.BandLabel)

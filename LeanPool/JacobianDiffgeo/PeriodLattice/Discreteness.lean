@@ -33,7 +33,7 @@ Main declarations: `RS.exists_isolating_nhds_periodSubgroup`, `RS.discreteTopolo
 `RS.periodSubgroup_topologicalClosure_eq`, `RS.discreteTopology_periodSubgroup_topologicalClosure`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold  Topology
 open Set Filter Metric IsManifold

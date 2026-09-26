@@ -38,7 +38,7 @@ This file states the explicit estimates and `q`-series approximations of Chapter
 All estimates hold on `Chudnovsky.Region = {τ | Im τ > 5/4}`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -60,7 +60,7 @@ them directly. -/
 def E₄trunc (τ : ℍ) : ℂ := 1 + 240 * (q τ + 9 * q τ ^ 2)
 
 /-- The quadratic truncation `Y := E₆⁽²⁾ = 1 - 504(q + 33q²)` of `E₆` (paper Lemma `lemxy`). -/
-def E₆trunc (τ : ℍ) : ℂ := 1 - 504 * (q τ + 33 * q τ ^ 2)
+@[expose] def E₆trunc (τ : ℍ) : ℂ := 1 - 504 * (q τ + 33 * q τ ^ 2)
 
 /-- The quadratic truncation
 `Z := E₂⁽²⁾ - 3/(π·Im τ) = 1 - 24(q + 3q²) - 3/(π·Im τ)` of `E₂*` (paper Lemma `lemxy`). -/
@@ -75,7 +75,7 @@ def Jtilde (τ : ℍ) : ℂ :=
   (1 + 240 * (q τ + 9 * q τ ^ 2)) ^ 3 / (1728 * q τ * (1 - q τ - q τ ^ 2) ^ 24)
 
 lemma Jtilde_eq (τ : ℍ) :
-    Jtilde τ = E₄trunc τ ^ 3 / (1728 * q τ * (1 - q τ - q τ ^ 2) ^ 24) := rfl
+    Jtilde τ = E₄trunc τ ^ 3 / (1728 * q τ * (1 - q τ - q τ ^ 2) ^ 24) := by rfl
 
 /-- `1728·Jtilde` in the normalized form used in the paper and in the numerical phase. -/
 lemma mul_Jtilde_eq (τ : ℍ) :
@@ -89,11 +89,11 @@ lemma mul_Jtilde_eq (τ : ℍ) :
 
 /-- The approximation `stilde₂` of Ramanujan's `s₂` from Theorem `theonaehers2` of the paper:
 `stilde₂(τ) = (1 + 240(q + 9q²))/(1 - 504(q + 33q²)) · (1 - 24(q + 3q²) - 3/(π·Im τ))`. -/
-def s₂tilde (τ : ℍ) : ℂ :=
+@[expose] def s₂tilde (τ : ℍ) : ℂ :=
   (1 + 240 * (q τ + 9 * q τ ^ 2)) / (1 - 504 * (q τ + 33 * q τ ^ 2)) *
     (1 - 24 * (q τ + 3 * q τ ^ 2) - 3 / (π * τ.im))
 
-lemma s₂tilde_eq (τ : ℍ) : s₂tilde τ = E₄trunc τ / E₆trunc τ * E₂starTrunc τ := rfl
+lemma s₂tilde_eq (τ : ℍ) : s₂tilde τ = E₄trunc τ / E₆trunc τ * E₂starTrunc τ := by rfl
 
 /-! ### The σₖ bound (paper Lemma `sigmaschaetz`) -/
 
@@ -527,9 +527,11 @@ lemma norm_sub_E₂starTrunc_le {τ : ℍ} (hτ : τ ∈ Region) :
 /-! ### Klein's `k` and its truncation `ktilde` (paper Lemma `lemk`) -/
 
 /-- The analytic function `k(τ) = (E₄³ - E₆²)/(1728·q) = Δ/q` (paper Lemma `lemk`). -/
+@[expose]
 def kfun (τ : ℍ) : ℂ := (E₄ τ ^ 3 - E₆ τ ^ 2) / (1728 * q τ)
 
 /-- The truncation `ktilde(τ) = (1 - q - q²)²⁴` (paper Lemma `lemk`). -/
+@[expose]
 def ktilde (τ : ℍ) : ℂ := (1 - q τ - q τ ^ 2) ^ 24
 
 lemma q_ne_zero (τ : ℍ) : q τ ≠ 0 := norm_pos_iff.mp (norm_q_pos τ)

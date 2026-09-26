@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Step3.DuhamelAdjoint
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 
@@ -35,6 +35,7 @@ place `p * φ` in the spatial derivative slot and therefore have a different
 Morrey order. -/
 
 /-- Localized scalar heat source after subtracting the cutoff times the weak pressure gradient. -/
+@[expose]
 def localizedGradientSourceG (φ : ParabolicPoint → ℝ)
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3)
     (f : ParabolicPoint → Vec3) (Dp : ParabolicPoint → Vec3) :
@@ -42,12 +43,13 @@ def localizedGradientSourceG (φ : ParabolicPoint → ℝ)
   fun z i => localizedEquationG φ u Du f z i - φ z * Dp z i
 
 /-- Localized divergence source in the pressure-gradient formulation of the heat equation. -/
+@[expose]
 def localizedGradientSourceH (φ : ParabolicPoint → ℝ)
     (u : ParabolicPoint → Vec3) : Fin 3 → ParabolicPoint → Vec3 :=
   localizedEquationH φ u
 
 /-- Componentwise vector heat potential of scalar and divergence sources. -/
-def vectorHeatPotential (F : ParabolicPoint → Vec3)
+@[expose] def vectorHeatPotential (F : ParabolicPoint → Vec3)
     (G : Fin 3 → ParabolicPoint → Vec3) : ParabolicPoint → Vec3 :=
   fun z i => heatPotential (fun w => F w i) (fun j w => G j w i) z
 

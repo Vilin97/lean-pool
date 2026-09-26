@@ -20,7 +20,7 @@ on eccentricity.  We obtain it by applying the analytic inverse-function theorem
 map `(e, E) ↦ (e, E - e sin E)`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

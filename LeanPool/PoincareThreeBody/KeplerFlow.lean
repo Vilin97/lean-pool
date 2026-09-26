@@ -18,13 +18,13 @@ curve and provides the chain-rule interface used to differentiate a candidate fi
 that curve.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 
 /-- Explicit rotating Kepler vector field away from the origin. -/
-noncomputable def rotatingKeplerVectorField (s : PhaseSpace) : PhaseSpace :=
+@[expose] noncomputable def rotatingKeplerVectorField (s : PhaseSpace) : PhaseSpace :=
   ![s 2 + s 1,
     s 3 - s 0,
     s 3 - s 0 / (Real.sqrt (s 0 ^ 2 + s 1 ^ 2)) ^ 3,

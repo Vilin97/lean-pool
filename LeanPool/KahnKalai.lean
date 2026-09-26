@@ -22,7 +22,7 @@ Tags: probabilistic-combinatorics, random-structures, threshold-phenomena, set-s
 MSC: 05C80, 60C05
 -/
 
-@[expose] public section
+public section
 
 namespace KahnKalai
 

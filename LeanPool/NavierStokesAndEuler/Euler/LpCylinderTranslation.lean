@@ -30,7 +30,7 @@ which the translated data lie in one fixed larger supported space. This
 margin is qualitative and does not occur in any operator-norm constant.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -75,7 +75,7 @@ def intoLarger (a : Space) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ : Meas
 @[simp] theorem intoLarger_coe (a : Space) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ :
     MeasurableSet Ω)
     (hsub : shiftedSet a S ⊆ Ω) (u : supportedSpace (V := V) volume S hS) :
-    (intoLarger a S Ω hS hΩ hsub u : L2Space V) = translation a (u : L2Space V) := rfl
+    (intoLarger a S Ω hS hΩ hsub u : L2Space V) = translation a (u : L2Space V) := by rfl
 
 /-- The translated coefficient is the literal original field at `x+a`. -/
 def translatedField (A : Field (α := Space) (V := V)) (a : Space) : Field (α := Space) (V := V) :=
@@ -97,7 +97,7 @@ theorem operator_intertwines (a : Space) (S Ω : Set Space) (hS : MeasurableSet 
   change (full volume (translatedField A a) (translation a (u : L2Space V))) x =
     (translation a (full volume A (u : L2Space V))) x
   rw [hl, hu, hr, ha]
-  rfl
+  simp only [translatedField, EulerMeanCoefficients.translated_apply]
 
 /-- Compactly supported data have a qualitative translation neighborhood
 inside any prescribed larger open support region. -/
@@ -118,7 +118,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -185,7 +185,7 @@ def pathTranslate (a : LiftTangent) : C(K,CylinderL2 period V) →L[ℝ] C(K,Cyl
 
 omit [CompactSpace K] in
 @[simp] theorem pathTranslate_apply (a : LiftTangent) (u : C(K, CylinderL2 period V)) (t : K) :
-    pathTranslate period a u t = translate period a (u t) := rfl
+    pathTranslate period a u t = translate period a (u t) := by rfl
 
 theorem pathTranslate_norm (a : LiftTangent) : ‖pathTranslate (K := K) (V := V) period a‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
@@ -209,7 +209,7 @@ def fieldLift : (Space →ᵇ W) →L[ℝ] (LiftDomain period →ᵇ W) :=
 
 omit [Fact (0 < period)] in
 @[simp] theorem fieldLift_apply (A : Space →ᵇ W) (x : LiftDomain period) :
-    fieldLift period A x = A x.1 := rfl
+    fieldLift period A x = A x.1 := by rfl
 
 omit [Fact (0 < period)] in
 theorem fieldLift_norm : ‖fieldLift (W := W) period‖ ≤ 1 := by
@@ -228,7 +228,7 @@ def fieldPathLift : C(K,Space →ᵇ W) →L[ℝ] C(K,LiftDomain period →ᵇ W
 
 omit [CompactSpace K] [Fact (0 < period)] in
 @[simp] theorem fieldPathLift_apply (A : C(K, Space →ᵇ W)) (t : K) (x : LiftDomain period) :
-    fieldPathLift period A t x = A t x.1 := rfl
+    fieldPathLift period A t x = A t x.1 := by rfl
 
 omit [Fact (0 < period)] in
 theorem fieldPathLift_norm : ‖fieldPathLift (K := K) (W := W) period‖ ≤ 1 := by
@@ -244,7 +244,7 @@ theorem fieldPathLift_norm : ‖fieldPathLift (K := K) (W := W) period‖ ≤ 1 
 end Fields
 
 /-- Support in a set of spatial labels, with arbitrary angular coordinate. -/
-def spatialSet (S : Set Space) : Set (LiftDomain period) := Prod.fst ⁻¹' S
+@[expose] def spatialSet (S : Set Space) : Set (LiftDomain period) := Prod.fst ⁻¹' S
 
 omit [Fact (0 < period)] in
 theorem spatialSet_measurable (S : Set Space) (hS : MeasurableSet S) :
@@ -287,6 +287,14 @@ def intoLarger (a : LiftTangent) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ 
           hΩ))
       (translate_mem period a S Ω hS hΩ hsub)
   norm_map' := fun u => (translate period a).norm_map (u : CylinderL2 period V)
+
+@[simp] theorem intoLarger_coe (a : LiftTangent) (S Ω : Set Space)
+    (hS : MeasurableSet S) (hΩ : MeasurableSet Ω)
+    (hsub : EulerLpSupportedTranslation.shiftedSet a.1 S ⊆ Ω)
+    (u : supportedSpace (V := V) (liftMeasure period) (spatialSet period S)
+      (spatialSet_measurable period S hS)) :
+    (intoLarger period a S Ω hS hΩ hsub u : CylinderL2 period V) =
+      translate period a (u : CylinderL2 period V) := by rfl
 
 end Supported
 

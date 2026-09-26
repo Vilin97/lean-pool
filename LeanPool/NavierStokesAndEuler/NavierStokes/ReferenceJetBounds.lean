@@ -17,7 +17,7 @@ Coefficient-space norm bounds first give constants independent of the
 normalization C. Only afterwards is the short REF transition chosen.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

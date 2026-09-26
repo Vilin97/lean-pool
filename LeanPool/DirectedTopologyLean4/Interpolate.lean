@@ -12,7 +12,7 @@ import Mathlib.CategoryTheory.Category.Init
 # LeanPool.DirectedTopologyLean4.Interpolate
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains definitions about interpolating points in the directed unit interval

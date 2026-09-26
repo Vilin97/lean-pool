@@ -76,4 +76,4 @@ solutions` needs only the function-level `dlog f` case above). See `docs/design/
 for the sketch, should a future unit ever need it.
 -/
 
-@[expose] public section
+public section

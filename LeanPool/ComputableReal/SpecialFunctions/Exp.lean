@@ -19,7 +19,7 @@ functions are executable; the packaged sequence mentions `Real.exp` itself as it
 value, so `exp` and the instances are `noncomputable` Lean terms.
 -/
 
-@[expose] public section
+public section
 
 namespace ComputableℝSeq
 namespace Exp

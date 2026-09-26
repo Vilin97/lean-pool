@@ -18,7 +18,7 @@ to seven canonical orbits.  The small table below records an explicit forward
 and inverse permutation for every row.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 
@@ -58,6 +58,7 @@ structure RowSymmetryCertificate where
   inverseCode : UInt64
 
 /-- Mathematical validity of a row-symmetry certificate. -/
+@[expose]
 def RowSymmetryCertificate.Valid
     (certificate : RowSymmetryCertificate) (sourceMask : UInt64) : Prop :=
   let forward := decodeMap certificate.forwardCode

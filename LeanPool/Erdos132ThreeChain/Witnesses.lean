@@ -24,7 +24,7 @@ one) and the equilateral triangle together with its centroid (three short edges 
 ones).  Both have all six squared distances inside the adjacent pair `{1, 3}`.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos132ThreeChain
 

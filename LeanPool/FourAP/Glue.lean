@@ -21,7 +21,7 @@ The guard on the odd target set is exactly the paper's requirement that all
 normalized odd entries below `h` have been included.
 -/
 
-@[expose] public section
+public section
 
 namespace FourAP
 

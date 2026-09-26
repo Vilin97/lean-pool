@@ -14,7 +14,7 @@ import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-! Actual dilation identities for L² fields and weak harmonic scalar functions. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

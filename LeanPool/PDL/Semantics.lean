@@ -21,7 +21,7 @@ public import LeanPool.PDL.General.ListFinset
 
 /-! # Semantics (Section 2.2) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -44,16 +44,14 @@ def complexityOfQuery {W : Type} :
 
 mutual
   /-- Truth of a PDL formula at a world in a Kripke model. -/
-  @[simp]
-  def evaluate {W : Type} : KripkeModel W → W → Formula → Prop
+  @[expose, simp] def evaluate {W : Type} : KripkeModel W → W → Formula → Prop
     | _, _, ⊥ => False
     | M, w, ·c => M.val w c
     | M, w, ~φ => Not (evaluate M w φ)
     | M, w, φ⋀ψ => evaluate M w φ ∧ evaluate M w ψ
     | M, w, ⌈α⌉ φ => ∀ v : W, relate M α w v → evaluate M v φ
   /-- The binary relation denoted by a PDL program in a Kripke model. -/
-  @[simp]
-  def relate {W : Type} : KripkeModel W → Program → W → W → Prop
+  @[expose, simp] def relate {W : Type} : KripkeModel W → Program → W → W → Prop
     | M, ·c, w, v => M.Rel c w v
     | M, α;'β, w, v => ∃ y, relate M α w y ∧ relate M β y v
     | M, α⋓β, w, v => relate M α w v ∨ relate M β w v
@@ -72,16 +70,15 @@ theorem evalDis {W M f g} {w : W} : evaluate M w (f⋁g) ↔ evaluate M w f ∨ 
   tauto
 
 /-- Evaluate a formula at a pointed Kripke model. -/
-@[simp]
-def evaluatePoint {W : Type} : KripkeModel W × W → Formula → Prop
+@[expose, simp] def evaluatePoint {W : Type} : KripkeModel W × W → Formula → Prop
   | (M, w), ϕ => evaluate M w ϕ
 
 /-- Validity of a formula at every world of every Kripke model. -/
-def tautology (φ : Formula) :=
+@[expose] def tautology (φ : Formula) :=
   ∀ (W : Type) (M : KripkeModel W) w, evaluate M w φ
 
 /-- Falsity of a formula at every world of every Kripke model. -/
-def contradiction (φ : Formula) :=
+@[expose] def contradiction (φ : Formula) :=
   ∀ (W : Type) (M : KripkeModel W) w, ¬evaluate M w φ
 
 /-! ## Satisfiability -/
@@ -115,16 +112,16 @@ def semImpliesSets (X : Finset Formula) (Y : Finset Formula) :=
     (∀ φ ∈ X, evaluate M w φ) → ∀ ψ ∈ Y, evaluate M w ψ
 
 /-- Semantic consequence between lists of formulas. -/
-def semImpliesLists (X : List Formula) (Y : List Formula) :=
+@[expose] def semImpliesLists (X : List Formula) (Y : List Formula) :=
   ∀ (W : Type) (M : KripkeModel W) (w),
     (∀ φ ∈ X, evaluate M w φ) → ∀ ψ ∈ Y, evaluate M w ψ
 
 /-- Agreement of two formulas at every pointed Kripke model. -/
-def semEquiv (φ ψ : Formula) :=
+@[expose] def semEquiv (φ ψ : Formula) :=
   ∀ (W : Type) (M : KripkeModel W) w, evaluate M w φ ↔ evaluate M w ψ
 
 /-- Agreement of two program relations in every Kripke model. -/
-def relEquiv (α β : Program) :=
+@[expose] def relEquiv (α β : Program) :=
   ∀ (W : Type) (M : KripkeModel W) v w, relate M α v w ↔ relate M β v w
 
 theorem notsatisfnotThenTaut : ∀ φ, ¬ satisfiable (~φ) → tautology φ :=
@@ -339,7 +336,7 @@ theorem rel_steps_last {as} : ∀ v w,
       tauto
 
 /-- Relational composition of a list of programs, with equality for the empty list. -/
-def relateSeq {W} (M : KripkeModel W) (δ : List Program) (w v : W) : Prop :=
+@[expose] def relateSeq {W} (M : KripkeModel W) (δ : List Program) (w v : W) : Prop :=
   match δ with
   | [] => w = v
   | (α::as) => ∃ u, relate M α w u ∧ relateSeq M as u v

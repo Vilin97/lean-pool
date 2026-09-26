@@ -17,7 +17,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.Monsky.SegmentTriangle`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Monsky
 
@@ -39,7 +39,7 @@ open Finset
 
 /- 'Determinant' of a triangle. -/
 /-- The determinant (signed area form) attached to a triangle's three vertices. -/
-def det (T : Triangle) : ℝ
+@[expose] def det (T : Triangle) : ℝ
   := (T 0 1 - T 1 1) * (T 2 0) + (T 1 0 - T 0 0) * (T 2 1) + ((T 0 0) * (T 1 1) - (T 1 0) * (T 0 1))
 
 /-- The `2×2` determinant of two plane vectors. -/
@@ -47,30 +47,32 @@ def det₂ (x y : ℝ²) : ℝ := x 0 * y 1 - x 1 * y 0
 
 /- The vector pointing from the start of the segment to the end.-/
 /-- The direction vector of a segment, from its first to its second endpoint. -/
+@[expose]
 noncomputable def segVec (L : Segment) : ℝ² := L 1 - L 0
 
 /-- The sign of the determinant of a triangle, as an element of `ℝ`. -/
-def signSeg (L : Segment) (v : ℝ²) : ℝ := det (fun | 0 => L 0 | 1 => L 1 | 2 => v)
+@[expose] def signSeg (L : Segment) (v : ℝ²) : ℝ := det (fun | 0 => L 0 | 1 => L 1 | 2 => v)
 
 /-- The segment with the two given endpoints. -/
-def toSegment (a b : ℝ²) : Segment := fun | 0 => a | 1 => b
+@[expose] def toSegment (a b : ℝ²) : Segment := fun | 0 => a | 1 => b
 
 /-- The segment with its two endpoints swapped. -/
-def reverseSegment (L : Segment) : Segment := toSegment (L 1) (L 0)
+@[expose] def reverseSegment (L : Segment) : Segment := toSegment (L 1) (L 0)
 
 /-- `colin u v w` states that `v` lies strictly between the distinct points `u` and `w`. -/
+@[expose]
 def colin (u v w : ℝ²) : Prop := u ≠ w ∧ v ∈ openHull (toSegment u w)
 
 /- Tside i defines the 'directed' opposite side of T i.-/
 /-- The `i`-th side of a triangle, as a segment. -/
-def Tside (T : Triangle) : Fin 3 → Segment := fun
+@[expose] def Tside (T : Triangle) : Fin 3 → Segment := fun
   | 0 => (fun | 0 => T 1 | 1 => T 2)
   | 1 => (fun | 0 => T 2 | 1 => T 0)
   | 2 => (fun | 0 => T 0 | 1 => T 1)
 
 /- Barycentric coordinates on triangle T. -/
 /-- The `i`-th barycentric coordinate of a point with respect to a triangle. -/
-noncomputable def Tco (T : Triangle) (x : ℝ²) : Fin 3 → ℝ :=
+@[expose] noncomputable def Tco (T : Triangle) (x : ℝ²) : Fin 3 → ℝ :=
   fun i ↦ (signSeg (Tside T i) x) / det T
 
 /-
@@ -1799,7 +1801,7 @@ lemma open_sub_closed_sub (S L : Segment) (h : openHull S ⊆ openHull L) :
 
 
 /-- A small segment centered at `x` in the direction of a given vector. -/
-noncomputable def segmentAroundX (x y : ℝ²) (ε₁ ε₂ : ℝ)
+@[expose] noncomputable def segmentAroundX (x y : ℝ²) (ε₁ ε₂ : ℝ)
     : Segment := toSegment (x + (1 * ε₁) • y) (x + (-1 * ε₂) • y)
 
 lemma openHull_segment_around {x y : ℝ²} {ε₁ ε₂ : ℝ} (h₁ : 0 < ε₁)

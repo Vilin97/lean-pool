@@ -24,7 +24,7 @@ Tags: interval-arithmetic, real-numbers, cauchy-sequences, special-functions
 MSC: 65G40, 68V20
 -/
 
-@[expose] public section
+public section
 
 /-!
 A framework for verified interval-Cauchy real arithmetic, after Russell O'Connor,

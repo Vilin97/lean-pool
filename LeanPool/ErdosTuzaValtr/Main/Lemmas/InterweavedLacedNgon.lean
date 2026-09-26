@@ -22,7 +22,7 @@ import Mathlib.Tactic.NormNum.Pow
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Main.Lemmas.InterweavedLacedNgon`.
 -/
 
-@[expose] public section
+public section
 
 open OrderDual
 

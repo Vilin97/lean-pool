@@ -26,7 +26,7 @@ import LeanPool.MatchingLogic.Composite
 # MatchingLogic.Completeness
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

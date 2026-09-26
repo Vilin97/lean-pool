@@ -57,7 +57,7 @@ They are assembled here from the distributivity and unit lemmas already proved t
 Substrate, and the non-vacuity witness for `Composition/Defs.lean`'s class.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -73,7 +73,7 @@ instance Real.instCompositionAlgebra : CompositionAlgebra ℝ where
   B_pos x hx := by simp only [LinearMap.mul_apply']; exact mul_self_pos.mpr hx
   B_comp x y := by simp only [LinearMap.mul_apply']; ring
 
-theorem Real.nf_eq (x : ℝ) : nf x = x * x := rfl
+theorem Real.nf_eq (x : ℝ) : nf x = x * x := by rfl
 
 /-! ## `ℂ` -/
 
@@ -88,7 +88,7 @@ def Complex.ipBilin : ℂ →ₗ[ℝ] ℂ →ₗ[ℝ] ℝ :=
       Complex.ofReal_re, Complex.ofReal_im, smul_eq_mul]; ring)
 
 @[simp] theorem Complex.ipBilin_apply (x y : ℂ) :
-    Complex.ipBilin x y = x.re * y.re + x.im * y.im := rfl
+    Complex.ipBilin x y = x.re * y.re + x.im * y.im := by rfl
 
 /-- `ℂ` is a Euclidean composition algebra with `N z = |z|²`. The composition law is the
 two-square identity. -/
@@ -101,7 +101,7 @@ instance Complex.instCompositionAlgebra : CompositionAlgebra ℂ where
   B_comp x y := by
     simp only [Complex.ipBilin_apply, Complex.mul_re, Complex.mul_im]; ring
 
-theorem Complex.nf_eq (z : ℂ) : nf z = z.re * z.re + z.im * z.im := rfl
+theorem Complex.nf_eq (z : ℂ) : nf z = z.re * z.re + z.im * z.im := by rfl
 
 /-! ## `ℍ` -/
 
@@ -137,7 +137,7 @@ def Quaternion.ipBilin : ℍ[ℝ] →ₗ[ℝ] ℍ[ℝ] →ₗ[ℝ] ℝ :=
       Quaternion.imK_smul, smul_eq_mul]; ring)
 
 @[simp] theorem Quaternion.ipBilin_apply (x y : ℍ[ℝ]) :
-    Quaternion.ipBilin x y = x.re * y.re + x.imI * y.imI + x.imJ * y.imJ + x.imK * y.imK := rfl
+    Quaternion.ipBilin x y = x.re * y.re + x.imI * y.imI + x.imJ * y.imJ + x.imK * y.imK := by rfl
 
 theorem Quaternion.ipBilin_self (x : ℍ[ℝ]) : Quaternion.ipBilin x x = Quaternion.normSq x := by
   rw [Quaternion.normSq_def']
@@ -195,7 +195,7 @@ def ipBilin : Octonion →ₗ[ℝ] Octonion →ₗ[ℝ] ℝ :=
     (by intro x y z; exact Octonion.octIp_add_right x y z)
     (by intro c x y; simp [Octonion.octIp_smul_right])
 
-@[simp] theorem ipBilin_apply (x y : Octonion) : ipBilin x y = Octonion.octIp x y := rfl
+@[simp] theorem ipBilin_apply (x y : Octonion) : ipBilin x y = Octonion.octIp x y := by rfl
 
 theorem octIp_self_eq_norm_sq (x : Octonion) : Octonion.octIp x x = Octonion.normSq x := by
   simp only [Octonion.octIp, Octonion.normSq, sq]
@@ -206,7 +206,7 @@ with no reference to composition algebras — after `octIp_self_eq_norm_sq` matc
 form against `normSq`. -/
 instance instCompositionAlgebra : CompositionAlgebra Octonion where
   B := ipBilin
-  B_symm x y := Octonion.octIp_comm x y
+  B_symm x y := by simpa only [ipBilin_apply] using Octonion.octIp_comm x y
   B_pos x hx := by
     simp only [ipBilin_apply]
     refine lt_of_le_of_ne (Octonion.octIp_self_nonneg x) (fun h => hx ?_)

@@ -45,7 +45,7 @@ The three clauses of `Graph.IsDrawing` come out as follows.
 * `polygonal_overlay` — Lemma 3.7 (polygonal overlay), the whole statement.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph
@@ -233,13 +233,13 @@ theorem overlayPieces_disjoint_interiors {pieces : List Piece} {points : List Pl
 /-! ### The graph -/
 
 /-- The ends of a list of pieces. -/
-def endSet (edges : List Piece) : Set Plane := {v | ∃ P ∈ edges, v = P.1 ∨ v = P.2}
+@[expose] def endSet (edges : List Piece) : Set Plane := {v | ∃ P ∈ edges, v = P.1 ∨ v = P.2}
 
 /-- The overlay graph: the oriented deduplicated pieces as edges, their ends as vertices.
 
 An edge links `x` and `y` exactly when they are its two ends in one order or the other, which
 is what makes `eq_or_eq_of_isLink_of_isLink` a case split with no content. -/
-noncomputable def overlayGraph (pieces : List Piece) (points : List Plane) :
+@[expose] noncomputable def overlayGraph (pieces : List Piece) (points : List Plane) :
     Graph Plane Piece where
   vertexSet := endSet (overlayPieces pieces points)
   IsLink P x y := P ∈ overlayPieces pieces points ∧
@@ -286,7 +286,7 @@ A straight edge is drawn by the affine parametrization of its segment, so the ar
 `IsDrawing` is `isArcBetween_segment` and nothing else. -/
 
 /-- Every piece is drawn by the affine parametrization of its segment. -/
-noncomputable def segmentDrawing (P : Piece) : ℝ → Plane := AffineMap.lineMap P.1 P.2
+@[expose] noncomputable def segmentDrawing (P : Piece) : ℝ → Plane := AffineMap.lineMap P.1 P.2
 
 @[simp] theorem edgeArc_segmentDrawing (P : Piece) :
     Graph.edgeArc segmentDrawing P = P.seg :=

@@ -17,7 +17,7 @@ to canonical barycentric realizations.  The target geometry is unchanged: finite
 embedded arcs admit uniform disjoint vertex disks and nonincident edge tubes.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

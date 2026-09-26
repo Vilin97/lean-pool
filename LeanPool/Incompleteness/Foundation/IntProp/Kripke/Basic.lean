@@ -13,7 +13,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # Basic -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -394,7 +394,7 @@ end ValidOnFrame
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ValidOnFrameClass (C : FrameClass) (φ : Formula ℕ) := ∀ F, F ∈ C → F ⊧ φ
+@[expose] def ValidOnFrameClass (C : FrameClass) (φ : Formula ℕ) := ∀ F, F ∈ C → F ⊧ φ
 
 namespace ValidOnFrameClass
 

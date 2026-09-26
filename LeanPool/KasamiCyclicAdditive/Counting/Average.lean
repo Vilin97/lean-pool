@@ -23,7 +23,7 @@ the average.  Both are proved for an arbitrary `Δ : Finset K` and then
 specialized to `derivativeImage k K`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -39,7 +39,7 @@ def slopeTripleCount (Delta : Finset K) (ρ : K) : ℕ :=
     (fun p => p.1 + ρ * p.2.1 + (1 + ρ) * p.2.2 = 0)).card
 
 /-- Walsh coefficient of a finite subset: `∑_{x ∈ Δ} ψ(a x)`. -/
-noncomputable def walshCoefficient (Delta : Finset K) (psi : AddChar K ℂ) (a : K) : ℂ :=
+@[expose] noncomputable def walshCoefficient (Delta : Finset K) (psi : AddChar K ℂ) (a : K) : ℂ :=
   ∑ x ∈ Delta, psi (a * x)
 
 /-! ### Auxiliary lemmas -/

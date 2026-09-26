@@ -17,7 +17,7 @@ public import Mathlib.Tactic.NormNum.RealSqrt
 
 /-! # Quantum parallel repetition, part 01 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -63,11 +63,11 @@ namespace Game
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The first-question marginal of a game. -/
-def marginalX (G : Game X Y A B) (x : X) : ℝ :=
+@[expose] def marginalX (G : Game X Y A B) (x : X) : ℝ :=
   ∑ y : Y, G.questionWeight x y
 
 /-- The second-question marginal of a game. -/
-def marginalY (G : Game X Y A B) (y : Y) : ℝ :=
+@[expose] def marginalY (G : Game X Y A B) (y : Y) : ℝ :=
   ∑ x : X, G.questionWeight x y
 
 theorem marginalX_nonneg (G : Game X Y A B) (x : X) :
@@ -119,7 +119,7 @@ def «repeat» (G : Game X Y A B) (n : ℕ) :
 @[simp] theorem repeat_questionWeight (G : Game X Y A B) (n : ℕ)
     (xs : Fin n → X) (ys : Fin n → Y) :
     (G.repeat n).questionWeight xs ys =
-      ∏ i : Fin n, G.questionWeight (xs i) (ys i) := rfl
+      ∏ i : Fin n, G.questionWeight (xs i) (ys i) := by rfl
 
 @[simp] theorem repeat_predicate_eq_true (G : Game X Y A B) (n : ℕ)
     (xs : Fin n → X) (ys : Fin n → Y)
@@ -183,7 +183,7 @@ variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 variable {G : Game X Y A B}
 
 /-- The tensor product of Alice's and Bob's effects for a joint outcome. -/
-def jointEffect (S : Strategy G) (x : X) (y : Y) (a : A) (b : B) :
+@[expose] def jointEffect (S : Strategy G) (x : X) (y : Y) (a : A) (b : B) :
     Matrix (S.Alice × S.Bob) (S.Alice × S.Bob) ℂ :=
   (S.aliceMeasurement x).effect a ⊗ₖ (S.bobMeasurement y).effect b
 
@@ -193,7 +193,7 @@ private theorem jointEffect_positive (S : Strategy G) (x : X) (y : Y) (a : A) (b
     ((S.bobMeasurement y).positive b)
 
 /-- The Born probability of a question-and-answer outcome. -/
-def outcomeProbability (S : Strategy G) (x : X) (y : Y) (a : A) (b : B) : ℝ :=
+@[expose] def outcomeProbability (S : Strategy G) (x : X) (y : Y) (a : A) (b : B) : ℝ :=
   (Matrix.trace (S.state.matrix * S.jointEffect x y a b)).re
 
 theorem outcomeProbability_nonneg (S : Strategy G)
@@ -231,7 +231,7 @@ theorem outcomeProbability_normalized (S : Strategy G) (x : X) (y : Y) :
     _ = 1 := by rw [S.state.trace_one]; rfl
 
 /-- The winning probability of the strategy. -/
-def winProbability (S : Strategy G) : ℝ :=
+@[expose] def winProbability (S : Strategy G) : ℝ :=
   ∑ x : X, ∑ y : Y, G.questionWeight x y *
     ∑ a : A, ∑ b : B,
       if G.predicate x y a b = true then S.outcomeProbability x y a b else 0
@@ -276,7 +276,7 @@ theorem winProbability_le_one (S : Strategy G) : S.winProbability ≤ 1 := by
 end Strategy
 
 /-- The supremal winning probability over finite-dimensional entangled strategies. -/
-def entangledValue [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
+@[expose] def entangledValue [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) : ℝ :=
   sSup (Set.range (Strategy.winProbability (G := G)))
 
@@ -309,7 +309,7 @@ theorem entangledValue_nonneg [Fintype X] [Fintype Y]
   · rw [Set.not_nonempty_iff_eq_empty.mp h, Real.sSup_empty]
 
 /-- The entangled value of a coordinatewise repeated game. -/
-def repeatedEntangledValue [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
+@[expose] def repeatedEntangledValue [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) : ℝ :=
   entangledValue (G.repeat n)
 
@@ -322,7 +322,7 @@ open scoped BigOperators ComplexConjugate InnerProductSpace
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
 /-- The quadratic expectation construction used in the quantum parallel-repetition argument. -/
-def quadraticExpectation (W : H →L[ℂ] H) (z : H) : ℝ :=
+@[expose] def quadraticExpectation (W : H →L[ℂ] H) (z : H) : ℝ :=
   (⟪z, W z⟫_ℂ).re
 
 theorem positive_quadraticExpectation_nonneg
@@ -852,7 +852,7 @@ theorem pureDensityMatrix_trace_mul
       rfl
 
 /-- The strategy implementing pure vector. -/
-def pureVectorStrategy
+@[expose] def pureVectorStrategy
     {X Y A B : Type*} {dA dB : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     [Fintype dA] [Fintype dB] [DecidableEq dA] [DecidableEq dB]
@@ -940,7 +940,7 @@ namespace FiniteEventLaw
 variable {Ω ι : Type*} [Fintype Ω]
 
 /-- The probability mass of a finite event. -/
-def eventMass (law : FiniteEventLaw Ω) (event : Finset Ω) : ℝ :=
+@[expose] def eventMass (law : FiniteEventLaw Ω) (event : Finset Ω) : ℝ :=
   ∑ ω ∈ event, law.weight ω
 
 theorem eventMass_univ (law : FiniteEventLaw Ω) :
@@ -955,7 +955,7 @@ theorem eventMass_mono
     (fun ω _ _ => law.weight_nonneg ω)
 
 /-- The event on which every selected coordinate wins. -/
-def winEvent
+@[expose] def winEvent
     (wins : ι → Ω → Bool) (D : Finset ι) : Finset Ω :=
   Finset.univ.filter (fun ω => ∀ i ∈ D, wins i ω = true)
 
@@ -990,7 +990,7 @@ theorem allWinMass_le_partial [Fintype ι]
   exact winEvent_antitone wins (Finset.subset_univ D)
 
 /-- The conditional mass of failure at a selected coordinate. -/
-def failureMass [DecidableEq ι]
+@[expose] def failureMass [DecidableEq ι]
     (law : FiniteEventLaw Ω) (wins : ι → Ω → Bool)
     (D : Finset ι) (i : ι) : ℝ :=
   law.eventMass (winEvent wins D) -
@@ -1114,7 +1114,7 @@ abbrev StrategyOutcome (X Y A B : Type*) :=
   X × Y × A × B
 
 /-- The finite probability law for strategy event. -/
-def strategyEventLaw (G : Game X Y A B) (S : Strategy G) :
+@[expose] def strategyEventLaw (G : Game X Y A B) (S : Strategy G) :
     FiniteEventLaw (StrategyOutcome X Y A B) where
   weight ω :=
     G.questionWeight ω.1 ω.2.1 *
@@ -1189,7 +1189,7 @@ private theorem strategyEventLaw_winEvent
   split <;> simp
 
 /-- The repeated coordinate win construction used in the quantum parallel-repetition argument. -/
-def repeatedCoordinateWin (G : Game X Y A B) (n : ℕ)
+@[expose] def repeatedCoordinateWin (G : Game X Y A B) (n : ℕ)
     (i : Fin n)
     (ω : StrategyOutcome
       (Fin n → X) (Fin n → Y) (Fin n → A) (Fin n → B)) : Bool :=
@@ -1748,7 +1748,7 @@ open scoped BigOperators Topology ComplexOrder MatrixOrder Kronecker Matrix.Norm
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 /-- The spectral filter for spectral purification. -/
-def spectralPurificationFilter
+@[expose] def spectralPurificationFilter
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) (s : ℝ) : Matrix d d ℂ :=
   spectralConjugationCLM hF.isHermitian.eigenvectorUnitary
@@ -1812,7 +1812,7 @@ theorem spectralPurificationFilter_gram_integrable
     spectralPurificationGram_integrable F hF
 
 /-- The born trace pairing construction used in the quantum parallel-repetition argument. -/
-def bornTracePairing
+@[expose] def bornTracePairing
     {dA dB : Type*} [Fintype dA] [Fintype dB]
     (ρ : Matrix (dA × dB) (dA × dB) ℂ) :
     Matrix dA dA ℂ →ₗ[ℝ] Matrix dB dB ℂ →ₗ[ℝ] ℝ where
@@ -1866,11 +1866,11 @@ theorem questionWeight_le_marginalY
     (Finset.mem_univ x)
 
 /-- The conditional y given x construction used in the quantum parallel-repetition argument. -/
-def conditionalYGivenX (G : Game X Y A B) (x : X) (y : Y) : ℝ :=
+@[expose] def conditionalYGivenX (G : Game X Y A B) (x : X) (y : Y) : ℝ :=
   G.questionWeight x y / G.marginalX x
 
 /-- The conditional x given y construction used in the quantum parallel-repetition argument. -/
-def conditionalXGivenY (G : Game X Y A B) (y : Y) (x : X) : ℝ :=
+@[expose] def conditionalXGivenY (G : Game X Y A B) (y : Y) (x : X) : ℝ :=
   G.questionWeight x y / G.marginalY y
 
 theorem conditionalYGivenX_nonneg
@@ -1941,12 +1941,12 @@ variable [AddCommGroup U] [Module ℝ U]
 variable [AddCommGroup V] [Module ℝ V]
 
 /-- The finite average of conditional bob. -/
-def conditionalBobAverage
+@[expose] def conditionalBobAverage
     (G : Game X Y A B) (K : Y → V) (x : X) : V :=
   ∑ y : Y, G.conditionalYGivenX x y • K y
 
 /-- The finite average of conditional alice. -/
-def conditionalAliceAverage
+@[expose] def conditionalAliceAverage
     (G : Game X Y A B) (H : X → U) (y : Y) : U :=
   ∑ x : X, G.conditionalXGivenY y x • H x
 
@@ -2043,7 +2043,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The measurement effect for conditioned alice. -/
-def conditionedAliceEffect
+@[expose] def conditionedAliceEffect
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
@@ -2059,7 +2059,7 @@ def conditionedAliceEffect
       else 0
 
 /-- The measurement effect for conditioned bob. -/
-def conditionedBobEffect
+@[expose] def conditionedBobEffect
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
@@ -2176,7 +2176,7 @@ open scoped BigOperators ComplexOrder MatrixOrder
 /--
 The spectral support functional construction used in the quantum parallel-repetition argument.
 -/
-def spectralSupportFunctional
+@[expose] def spectralSupportFunctional
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef)
     (f : ℝ → ℝ) : Matrix d d ℂ :=
@@ -2256,7 +2256,7 @@ private def spectralSupportProjection
   spectralSupportFunctional F hF (fun x => if x = 0 then 0 else 1)
 
 /-- The positive square-root construction for spectral support. -/
-def spectralSupportSqrt
+@[expose] def spectralSupportSqrt
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) : Matrix d d ℂ :=
   spectralSupportFunctional F hF Real.sqrt
@@ -2796,7 +2796,7 @@ open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 
 
 /-- The set of coordinates remaining after full history. -/
-def fullHistoryRemaining (n : ℕ)
+@[expose] def fullHistoryRemaining (n : ℕ)
     (D L : Finset (Fin n)) : Finset (Fin n) :=
   (Finset.univ \ D) \ L
 
@@ -2817,7 +2817,7 @@ def fullHistoryRemaining (n : ℕ)
 /--
 The full history alice question construction used in the quantum parallel-repetition argument.
 -/
-def fullHistoryAliceQuestion
+@[expose] def fullHistoryAliceQuestion
     {X Y : Type*}
     {n : ℕ} {D L : Finset (Fin n)}
     (h : FullSubsetHistory X Y n D L)
@@ -2830,7 +2830,7 @@ def fullHistoryAliceQuestion
       and_self, hiL]⟩
 
 /-- The full history bob question construction used in the quantum parallel-repetition argument. -/
-def fullHistoryBobQuestion
+@[expose] def fullHistoryBobQuestion
     {X Y : Type*}
     {n : ℕ} {D L : Finset (Fin n)}
     (h : FullSubsetHistory X Y n D L)
@@ -2913,7 +2913,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The probability weight for full history. -/
-def fullHistoryWeight
+@[expose] def fullHistoryWeight
     (G : Game X Y A B) {n : ℕ}
     {D L : Finset (Fin n)}
     (h : FullSubsetHistory X Y n D L) : ℝ :=
@@ -2925,7 +2925,7 @@ def fullHistoryWeight
     G.marginalY (h.bobRemaining i))
 
 /-- The probability weight for full history hidden alice. -/
-def fullHistoryHiddenAliceWeight
+@[expose] def fullHistoryHiddenAliceWeight
     (G : Game X Y A B) {n : ℕ}
     {D L : Finset (Fin n)}
     (h : FullSubsetHistory X Y n D L)
@@ -2934,7 +2934,7 @@ def fullHistoryHiddenAliceWeight
     G.conditionalXGivenY (h.bobRemaining i) (hidden i)
 
 /-- The probability weight for full history hidden bob. -/
-def fullHistoryHiddenBobWeight
+@[expose] def fullHistoryHiddenBobWeight
     (G : Game X Y A B) {n : ℕ}
     {D L : Finset (Fin n)}
     (h : FullSubsetHistory X Y n D L)
@@ -3120,7 +3120,7 @@ theorem fullHistoryWeight_mul_hidden
         ← Finset.prod_union hDR, hcover]
 
 /-- The spectral filter for full history alice. -/
-def fullHistoryAliceFilter
+@[expose] def fullHistoryAliceFilter
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n))
     (D L : Finset (Fin n))
@@ -3133,7 +3133,7 @@ def fullHistoryAliceFilter
         (fullHistoryAliceQuestion h hidden)
 
 /-- The spectral filter for full history bob. -/
-def fullHistoryBobFilter
+@[expose] def fullHistoryBobFilter
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n))
     (D L : Finset (Fin n))
@@ -3174,7 +3174,7 @@ theorem fullHistoryBobFilter_posSemidef
       (fullHistoryHiddenBobWeight_nonneg G h hidden)
 
 /-- The indicator function for full history win. -/
-def fullHistoryWinIndicator
+@[expose] def fullHistoryWinIndicator
     (G : Game X Y A B) {n : ℕ}
     {D L : Finset (Fin n)}
     (h : FullSubsetHistory X Y n D L)
@@ -4337,7 +4337,7 @@ private theorem spectralEntropyKernel_eq_scalar_sub_filter
 The weighted spectral filter variance construction used in the quantum parallel-repetition
 argument.
 -/
-def weightedSpectralFilterVariance
+@[expose] def weightedSpectralFilterVariance
     {ι d : Type*} [Fintype ι] [Fintype d] [DecidableEq d]
     (weight : ι → ℝ) (F : ι → Matrix d d ℂ)
     (M : Matrix d d ℂ)
@@ -5039,7 +5039,7 @@ theorem matrixLogEntropy_born_nonpos_right
   exact neg_nonneg.mp hpair
 
 /-- The potential function controlling full history alice entropy. -/
-def fullHistoryAliceEntropyPotential
+@[expose] def fullHistoryAliceEntropyPotential
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) : ℝ :=
@@ -5077,7 +5077,7 @@ theorem fullHistoryAliceEntropyPotential_nonpos
 end HistoryContractions
 
 /-- The finite atom representing positive matrix spectral. -/
-def positiveMatrixSpectralAtom
+@[expose] def positiveMatrixSpectralAtom
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) (i : d) :
     Matrix d d ℂ :=
@@ -5450,7 +5450,7 @@ open WithLp
 open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 
 /-- The quantum state representing raw embezzlement. -/
-def rawEmbezzlementState (n : ℕ) :
+@[expose] def rawEmbezzlementState (n : ℕ) :
     EuclideanSpace ℂ (Fin n × Fin n) :=
   toLp 2 fun q : Fin n × Fin n =>
     if q.1 = q.2 then
@@ -5469,7 +5469,7 @@ theorem rawEmbezzlementState_ne_zero
     Real.sqrt_one, Complex.ofReal_one, inv_one, PiLp.zero_apply, one_ne_zero, j] at hj
 
 /-- The harmonic number construction used in the quantum parallel-repetition argument. -/
-def harmonicNumber (n : ℕ) : ℝ :=
+@[expose] def harmonicNumber (n : ℕ) : ℝ :=
   ∑ j : Fin n, ((j.val : ℝ) + 1)⁻¹
 
 theorem rawEmbezzlementState_norm_sq (n : ℕ) :
@@ -5515,7 +5515,7 @@ theorem rawEmbezzlementState_norm_sq (n : ℕ) :
     _ = ((i.val : ℝ) + 1)⁻¹ := hamp i
 
 /-- The quantum state representing embezzlement. -/
-def embezzlementState (n : ℕ) :
+@[expose] def embezzlementState (n : ℕ) :
     EuclideanSpace ℂ (Fin n × Fin n) :=
   (‖rawEmbezzlementState n‖⁻¹ : ℝ) •
     rawEmbezzlementState n
@@ -5543,7 +5543,7 @@ abbrev BipartiteUnitVector (d : ℕ) :=
   {ξ : EuclideanSpace ℂ (Fin d × Fin d) // ‖ξ‖ = 1}
 
 /-- The overlap quantity for spectral atom. -/
-def spectralAtomOverlap
+@[expose] def spectralAtomOverlap
     {d : Type*} [Fintype d] [DecidableEq d]
     (F G : Matrix d d ℂ)
     (hF : F.PosSemidef) (hG : G.PosSemidef)
@@ -5669,7 +5669,7 @@ theorem rectangularMatrix_norm_sq
       rw [dotProduct_comm]
 
 /-- The finite outcome encoding for coherent binary joint. -/
-def coherentBinaryJointOutcome
+@[expose] def coherentBinaryJointOutcome
     {d e : Type*}
     [Fintype d] [Fintype e] [DecidableEq d] [DecidableEq e]
     (P : POVM Bool d) (Q : POVM Bool e)
@@ -5712,7 +5712,7 @@ theorem coherentBinaryJointOutcome_norm_sq
       (pureDensityMatrix_trace_mul z hz K).symm
 
 /-- The state vector representing finite tensor. -/
-def finiteTensorVector
+@[expose] def finiteTensorVector
     {ι d : Type*} [Fintype ι]
     (v : ι → EuclideanSpace ℂ d) :
     EuclideanSpace ℂ (ι → d) :=
@@ -5887,7 +5887,7 @@ theorem spectralAtomOverlap_schmidtMass_le_one
     _ = 1 := by rw [hf, hg]; norm_num
 
 /-- The probability of binary born. -/
-def binaryBornProbability
+@[expose] def binaryBornProbability
     {d e : Type*}
     [Fintype d] [Fintype e] [DecidableEq d] [DecidableEq e]
     (ρ : DensityMatrix (d × e))
@@ -5937,7 +5937,7 @@ theorem binaryBornProbability_normalized
       rfl
 
 /-- The probability of binary continue. -/
-def binaryContinueProbability
+@[expose] def binaryContinueProbability
     {d e : Type*}
     [Fintype d] [Fintype e] [DecidableEq d] [DecidableEq e]
     (ρ : DensityMatrix (d × e))
@@ -5945,7 +5945,7 @@ def binaryContinueProbability
   binaryBornProbability ρ P Q false false
 
 /-- The probability of binary joint success. -/
-def binaryJointSuccessProbability
+@[expose] def binaryJointSuccessProbability
     {d e : Type*}
     [Fintype d] [Fintype e] [DecidableEq d] [DecidableEq e]
     (ρ : DensityMatrix (d × e))
@@ -5953,7 +5953,7 @@ def binaryJointSuccessProbability
   binaryBornProbability ρ P Q true true
 
 /-- The probability of binary mismatch. -/
-def binaryMismatchProbability
+@[expose] def binaryMismatchProbability
     {d e : Type*}
     [Fintype d] [Fintype e] [DecidableEq d] [DecidableEq e]
     (ρ : DensityMatrix (d × e))
@@ -5995,7 +5995,7 @@ theorem unitVector_distance_of_real_overlap
 /--
 The shared threshold resource raw construction used in the quantum parallel-repetition argument.
 -/
-def sharedThresholdResourceRaw
+@[expose] def sharedThresholdResourceRaw
     {κ d : Type*}
     [DecidableEq κ] [DecidableEq d]
     (τ : κ → ℝ) :
@@ -6044,7 +6044,7 @@ theorem sharedThresholdResourceRaw_ne_zero
   exact hk (by exact_mod_cast hcast)
 
 /-- The auxiliary resource for shared threshold. -/
-def sharedThresholdResource
+@[expose] def sharedThresholdResource
     {κ d : Type*} [Fintype κ] [Fintype d]
     [DecidableEq κ] [DecidableEq d]
     (τ : κ → ℝ) :
@@ -6065,7 +6065,7 @@ theorem sharedThresholdResource_norm
     inv_mul_cancel₀ hnorm]
 
 /-- The positive operator-valued measurement implementing transpose. -/
-def transposePOVM
+@[expose] def transposePOVM
     {ι d : Type*} [Fintype ι] [Fintype d] [DecidableEq d]
     (P : POVM ι d) : POVM ι d where
   effect b := (P.effect b).transpose
@@ -6539,7 +6539,7 @@ private theorem twoSidedSchmidtSpectralEnergy_le
   linarith [sq_nonneg ((inner ℂ ψ φ).re - 1)]
 
 /-- The target object for tensor embezzlement. -/
-def tensorEmbezzlementTarget
+@[expose] def tensorEmbezzlementTarget
     {d n : ℕ} (ξ : BipartiteUnitVector d) :
     EuclideanSpace ℂ (Fin (d * n) × Fin (d * n)) :=
   toLp 2 fun q : Fin (d * n) × Fin (d * n) =>
@@ -6608,7 +6608,7 @@ theorem tensorEmbezzlementTarget_norm
   nlinarith [norm_nonneg (tensorEmbezzlementTarget (n := n) ξ)]
 
 /-- The operator action for local unitary. -/
-def localUnitaryAction {n : ℕ}
+@[expose] def localUnitaryAction {n : ℕ}
     (U V : Matrix.unitaryGroup (Fin n) ℂ)
     (ψ : EuclideanSpace ℂ (Fin n × Fin n)) :
     EuclideanSpace ℂ (Fin n × Fin n) :=
@@ -6668,13 +6668,13 @@ theorem unitary_col_norm_sq_sum
     sub_neg_eq_add, hnorm, Matrix.one_apply_eq, Complex.one_re] using h
 
 /-- The overlap quantity for unitary basis. -/
-def unitaryBasisOverlap
+@[expose] def unitaryBasisOverlap
     {d : Type*} [Fintype d] [DecidableEq d]
     (U V : Matrix.unitaryGroup d ℂ) :
     Matrix.unitaryGroup d ℂ := U⁻¹ * V
 
 /-- The quantum state representing diagonal schmidt. -/
-def diagonalSchmidtState
+@[expose] def diagonalSchmidtState
     {d : Type*} [DecidableEq d]
     (σ : d → ℝ) : EuclideanSpace ℂ (d × d) :=
   toLp 2 fun q : d × d =>
@@ -6699,7 +6699,7 @@ theorem diagonalSchmidtState_norm_sq
   simp only [Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
 
 /-- The state vector representing schmidt. -/
-def schmidtVector
+@[expose] def schmidtVector
     {d : ℕ}
     (σ : Fin d → ℝ)
     (U V : Matrix.unitaryGroup (Fin d) ℂ) :
@@ -7060,7 +7060,7 @@ open Complex Matrix Finset
 section
 
 /-- The unitary operator implementing orthonormal basis. -/
-def orthonormalBasisUnitary
+@[expose] def orthonormalBasisUnitary
     {d : ℕ}
     (b : OrthonormalBasis (Fin d) ℂ
       (EuclideanSpace ℂ (Fin d))) :
@@ -7077,7 +7077,7 @@ def orthonormalBasisUnitary
   rfl
 
 /-- The unitary operator implementing conjugate. -/
-def conjugateUnitary
+@[expose] def conjugateUnitary
     {d : ℕ}
     (U : Matrix.unitaryGroup (Fin d) ℂ) :
     Matrix.unitaryGroup (Fin d) ℂ := by

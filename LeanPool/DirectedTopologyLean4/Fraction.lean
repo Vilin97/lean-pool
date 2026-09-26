@@ -11,7 +11,7 @@ public import Mathlib.Topology.UnitInterval
 # LeanPool.DirectedTopologyLean4.Fraction
 -/
 
-@[expose] public section
+public section
 
 open scoped unitInterval
 noncomputable section
@@ -20,8 +20,7 @@ noncomputable section
 fraction
 `i/n : ℝ` lives in the unit interval
 -/
-@[reducible]
-def Fraction {i n : ℕ} (hn : 0 < n) (hi : i ≤ n) : I :=
+@[reducible, expose] def Fraction {i n : ℕ} (hn : 0 < n) (hi : i ≤ n) : I :=
   ⟨(i : ℝ)/(n : ℝ),
     ⟨div_nonneg (Nat.cast_nonneg i) (Nat.cast_nonneg n),
       (div_le_one ((Nat.cast_pos (α := ℝ)).mpr hn)).mpr (Nat.cast_le.mpr hi)⟩⟩
@@ -30,11 +29,11 @@ namespace Fraction
 
 /-- For any positive number `n : ℕ`, we have the fraction `1/n : ℝ` in the unit interval
 -/
-@[reducible]
+@[reducible, expose]
 def ofPos {n : ℕ} (hn : 0 < n) : I := Fraction hn (Nat.succ_le_iff.mpr hn)
 
 @[simp]
-lemma Fraction_coe {i n : ℕ} (hn : 0 < n) (hi : i ≤ n) : (Fraction hn hi : ℝ) = (i/n : ℝ) := rfl
+lemma Fraction_coe {i n : ℕ} (hn : 0 < n) (hi : i ≤ n) : (Fraction hn hi : ℝ) = (i/n : ℝ) := by rfl
 lemma ofPos_coe {n : ℕ} (hn : 0 < n) : ((ofPos hn) : ℝ) = (1/n : ℝ) := by simp
 
 /-- For any postive `n : ℕ`, we have that `0/n = n`.

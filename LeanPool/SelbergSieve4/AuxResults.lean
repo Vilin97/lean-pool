@@ -16,7 +16,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 # LeanPool.SelbergSieve4.AuxResults
 -/
 
-@[expose] public section
+public section
 
 --import SelbergSieve.AesopDiv
 noncomputable section

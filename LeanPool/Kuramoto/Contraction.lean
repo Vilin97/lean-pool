@@ -16,7 +16,7 @@ The relative velocity of two oscillators and the resulting pairwise contraction:
 phase gap lies in `(0, π)` and the coupling is positive, the gap is contracting.
 -/
 
-@[expose] public section
+public section
 
 open Real Finset
 

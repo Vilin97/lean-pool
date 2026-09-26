@@ -16,7 +16,7 @@ import LeanPool.Monlib4.Preq.RCLikeLe
 Compatibility wrappers for the part of Monlib's matrix-positive API now covered by Mathlib.
 -/
 
-@[expose] public section
+public section
 
 namespace Matrix
 
@@ -204,8 +204,10 @@ theorem _root_.rankOne.EuclideanSpace.toEuclideanLin_symm {𝕜 : Type*} [RCLike
         (Matrix.replicateCol (Fin 1) (y : m → 𝕜))ᴴ := by
   have hrank : (rankOne 𝕜 x y).toLinearMap =
       (InnerProductSpace.rankOne 𝕜 x y).toLinearMap := by
-    ext z i
-    rfl
+    apply LinearMap.ext
+    intro z
+    change rankOne 𝕜 x y z = InnerProductSpace.rankOne 𝕜 x y z
+    simp only [_root_.rankOne_apply, InnerProductSpace.rankOne_apply]
   rw [hrank, InnerProductSpace.symm_toEuclideanLin_rankOne, Matrix.vecMulVec_eq (Fin 1),
     Matrix.conjTranspose_replicateCol]
   rfl

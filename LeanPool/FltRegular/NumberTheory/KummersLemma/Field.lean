@@ -19,7 +19,7 @@ This file constructs Kummer's auxiliary polynomial and proves the associated spl
 unramified.
 -/
 
-@[expose] public section
+public section
 
 open scoped NumberField
 

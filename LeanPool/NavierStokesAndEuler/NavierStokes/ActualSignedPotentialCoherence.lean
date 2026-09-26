@@ -16,7 +16,7 @@ after its native cutoffs and copy sum.  Its scale follows from the actual
 normal, amplitude and carrier identities, before any physical curl is taken.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,6 +36,7 @@ abbrev FullPoint := ActualSignedCoherence.FullPoint
 variable {B N0 : ℕ}
 
 /-- The coefficient of the literal current-band vector potential. -/
+@[expose]
 noncomputable def potentialCoefficient (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (n : ℕ) (x : FullPoint) : ComplexVector :=
   CurlClassBounds.inverseCarrier ((copies l u).common.frequency n) •
@@ -49,7 +50,7 @@ noncomputable def potential (l : SignedLabel B N0) (u : CorrectionState.State Po
   (copies l u).common.curlPotential fullStrip (ActualSignedStageControls.directions B) n
 
 /-- The actual current common pressure, with its carrier retained. -/
-noncomputable def pressureMode (l : SignedLabel B N0) (u : CorrectionState.State Point)
+@[expose] noncomputable def pressureMode (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (n : ℕ) : FullPoint → ℂ :=
   mode ((copies l u).common.frequency n) ((copies l u).common.phase n)
     ((copies l u).common.pressure n)
@@ -146,12 +147,14 @@ theorem pressureMode_of_request (l : SignedLabel B N0) (u : CorrectionState.Stat
   simp only [pressureMode, mode, ha, hc, Complex.real_smul, mul_assoc]
 
 /-- The physical power of the potential, before choosing any physical graph. -/
+@[expose]
 noncomputable def rescaledPotential (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (n : ℕ) (x : FullPoint) : ComplexVector :=
   ChartScales.Q n ^ (-h) • potential l u n x
 
 /-- Rescaled pressure mode, given by `ChartScales.Q n ^ (-(2 * CoordinateAlgebra.A h)) •
 pressureMode l u n x`. -/
+@[expose]
 noncomputable def rescaledPressureMode (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (n : ℕ) (x : FullPoint) : ℂ :=
   ChartScales.Q n ^ (-(2 * CoordinateAlgebra.A h)) • pressureMode l u n x
@@ -312,7 +315,7 @@ theorem rescaled_eq_of_absolute (l : SignedLabel B N0) (u : CorrectionState.Stat
 /-! ## The actual cylindrical graph, with the slow-coordinate swap explicit -/
 
 /-- `commonGraph` uses `(Z,T)`; the correction state uses `(T,Z)`. -/
-noncomputable def nativePoint (n : ℕ) (z : ProblemStatement.SpaceTime) : FullPoint :=
+@[expose] noncomputable def nativePoint (n : ℕ) (z : ProblemStatement.SpaceTime) : FullPoint :=
   PhysicalResidualTZ.swapCylinder
     ((PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (CommonWindow.index h n)).map z)
 
@@ -335,11 +338,13 @@ theorem nativePoint_smoothAt (n : ℕ) (z : ProblemStatement.SpaceTime) (hr : 0 
       (mul_pos (Real.rpow_pos_of_pos (ChartScales.Q_pos n) _) hr).ne')
 
 /-- Cylindrical potential, given by `rescaledPotential l u n (nativePoint n z)`. -/
+@[expose]
 noncomputable def cylindricalPotential (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (n : ℕ) (z : ProblemStatement.SpaceTime) : ComplexVector :=
   rescaledPotential l u n (nativePoint n z)
 
 /-- Cylindrical pressure mode, given by `rescaledPressureMode l u n (nativePoint n z)`. -/
+@[expose]
 noncomputable def cylindricalPressureMode (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (n : ℕ) (z : ProblemStatement.SpaceTime) : ℂ :=
   rescaledPressureMode l u n (nativePoint n z)

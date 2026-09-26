@@ -19,7 +19,7 @@ of chains of incident labelled edges; in particular it does not mention parity o
 Loops and parallel edges need no exceptional representation.
 -/
 
-@[expose] public section
+public section
 
 namespace Sabidussi
 namespace LoopMultigraph
@@ -394,7 +394,7 @@ def Cycle.toOrdinaryCircuit (C : G.Cycle) : G.OrdinaryCircuit where
 omit [DecidableEq E] in
 @[simp]
 theorem Cycle.toOrdinaryCircuit_edges (C : G.Cycle) :
-    C.toOrdinaryCircuit.edges = C.edges := rfl
+    C.toOrdinaryCircuit.edges = C.edges := by rfl
 
 omit [DecidableEq E] in
 /-- An ordinary circuit is an even edge set (including the singleton-loop case). -/

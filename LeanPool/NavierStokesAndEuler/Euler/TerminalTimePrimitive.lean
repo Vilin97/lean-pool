@@ -20,7 +20,7 @@ constructs the continuous representative, its zero terminal trace, and its
 almost-everywhere derivative.  No primitive or evolution solution is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,7 @@ open scoped Topology
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The canonical time representative extended by zero outside the time interval. -/
-def zeroExtension (T : ℝ) (u : TimeLp T E) : ℝ → E :=
+@[expose] def zeroExtension (T : ℝ) (u : TimeLp T E) : ℝ → E :=
   (Icc (0 : ℝ) T).indicator u
 
 omit [NormedSpace ℝ E] in
@@ -56,7 +56,7 @@ theorem zeroExtension_ae (T : ℝ) (u : TimeLp T E) :
   indicator_ae_eq_restrict measurableSet_Icc
 
 /-- The actual real-valued-time representative, with terminal value zero. -/
-def realPrimitive (T : ℝ) (u : TimeLp T E) (t : ℝ) : E :=
+@[expose] def realPrimitive (T : ℝ) (u : TimeLp T E) (t : ℝ) : E :=
   ∫ s in T..t, zeroExtension T u s
 
 /-- The constructed primitive is continuous on all of real time. -/
@@ -102,7 +102,7 @@ theorem realPrimitive_hasDerivAt_ae [CompleteSpace E] (T : ℝ) (u : TimeLp T E)
   simpa only [he] using ht
 
 /-- The genuine continuous path on the prescribed time interval. -/
-def primitivePath (T : ℝ) (u : TimeLp T E) : C(Icc (0 : ℝ) T, E) :=
+@[expose] def primitivePath (T : ℝ) (u : TimeLp T E) : C(Icc (0 : ℝ) T, E) :=
   ⟨fun t => realPrimitive T u t, (realPrimitive_continuous T u).comp continuous_subtype_val⟩
 
 /-- Cauchy--Schwarz for a square-integrable scalar function on an interval. -/
@@ -246,7 +246,7 @@ theorem primitivePath_norm_le (T : ℝ) (_hT : 0 ≤ T) (u : TimeLp T E) :
     (mul_le_mul_of_nonneg_right (Real.sqrt_le_sqrt (sub_le_self T t.property.1)) (norm_nonneg _))
 
 /-- Bounded terminal integration from actual Bochner L² fields to continuous paths. -/
-def terminalPrimitive (T : ℝ) (hT : 0 ≤ T) : TimeLp T E →L[ℝ] C(Icc (0 : ℝ) T, E) :=
+@[expose] def terminalPrimitive (T : ℝ) (hT : 0 ≤ T) : TimeLp T E →L[ℝ] C(Icc (0 : ℝ) T, E) :=
   ({ toFun := primitivePath T
      map_add' := primitivePath_add T
      map_smul' := fun a u => by simpa only [RingHom.id_apply] using primitivePath_smul T a u } :
@@ -266,21 +266,25 @@ theorem terminalPrimitive_apply_norm_sq_le (T : ℝ) (hT : 0 ≤ T) (u : TimeLp 
   realPrimitive_norm_sq_le T u t t.property
 
 /-- Evaluation at any interval point is a continuous linear map of the derivative. -/
-def evaluation (T : ℝ) (hT : 0 ≤ T) (t : Icc (0 : ℝ) T) : TimeLp T E →L[ℝ] E :=
+@[expose] def evaluation (T : ℝ) (hT : 0 ≤ T) (t : Icc (0 : ℝ) T) : TimeLp T E →L[ℝ] E :=
   (ContinuousMap.evalCLM ℝ t).comp (terminalPrimitive T hT)
 
 /-- The initial trace, with its zero-terminal normalization. -/
-def initialTrace (T : ℝ) (hT : 0 ≤ T) : TimeLp T E →L[ℝ] E :=
+@[expose] def initialTrace (T : ℝ) (hT : 0 ≤ T) : TimeLp T E →L[ℝ] E :=
   evaluation T hT ⟨0, le_rfl, hT⟩
 
+@[simp] theorem initialTrace_apply (T : ℝ) (hT : 0 ≤ T) (u : TimeLp T E) :
+    initialTrace T hT u = terminalPrimitive T hT u ⟨0, le_rfl, hT⟩ := by
+  rfl
+
 /-- The bounded primitive regarded as an actual Bochner L² time field. -/
-def primitiveTimeLp (T : ℝ) (hT : 0 ≤ T) : TimeLp T E →L[ℝ] TimeLp T E :=
+@[expose] def primitiveTimeLp (T : ℝ) (hT : 0 ≤ T) : TimeLp T E →L[ℝ] TimeLp T E :=
   (pathLpOperator T hT).comp (terminalPrimitive T hT)
 
 /-- The Bochner primitive is represented by the same continuous real-time function. -/
 theorem primitiveTimeLp_ae (T : ℝ) (hT : 0 ≤ T) (u : TimeLp T E) :
     (primitiveTimeLp T hT u : ℝ → E) =ᵐ[timeMeasure T] realPrimitive T u := by
-  change (pathLp T hT (terminalPrimitive T hT u) : ℝ → E) =ᵐ[timeMeasure T] realPrimitive T u
+  simp only [primitiveTimeLp, ContinuousLinearMap.comp_apply, pathLpOperator_apply]
   filter_upwards [pathLp_ae T hT (terminalPrimitive T hT u),
     ae_restrict_mem measurableSet_Icc] with t ht hmem
   rw [ht]

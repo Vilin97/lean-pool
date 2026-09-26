@@ -32,7 +32,7 @@ section
 derivative of the deformation and the Jacobi equation.  Uniqueness of
 within-interval derivatives includes both endpoints of the interval. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -78,7 +78,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -212,7 +212,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -229,7 +229,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
 def halfBall : Set Space := {x | ‖x‖ ≤ (1/2 : ℝ)}
 
 /-- Physical cost, given by `3*(frameAmplitude K)^3*Cp`. -/
-def physicalCost (K Cp : ℝ) : ℝ := 3*(frameAmplitude K)^3*Cp
+@[expose] def physicalCost (K Cp : ℝ) : ℝ := 3*(frameAmplitude K)^3*Cp
 
 theorem physicalCost_nonneg (K Cp : ℝ) (hCp : 0 ≤ Cp) : 0 ≤ physicalCost K Cp := by
   have h := frameAmplitude_nonneg K

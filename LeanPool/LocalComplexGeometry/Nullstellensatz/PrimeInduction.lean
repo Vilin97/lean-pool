@@ -23,7 +23,7 @@ polynomial.  Coordinate invariance then reduces the prime zero-set theorem to
 the prepared-prime step isolated below.
 -/
 
-@[expose] public section
+public section
 
 
 namespace LocalComplexGeometry

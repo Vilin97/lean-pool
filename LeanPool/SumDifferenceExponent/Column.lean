@@ -14,7 +14,7 @@ public import Mathlib.Data.Nat.Digits.Lemmas
 
 /-! Kernel-friendly base-39 column construction. -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Pointwise
 
@@ -107,7 +107,7 @@ theorem allValues_eq_range (m : ℕ) :
 def ZNat (m : ℕ) : Finset ℕ := digitSet 39 V m
 
 /-- The sparse column set viewed as integers. -/
-def Z (m : ℕ) : Finset ℤ := (ZNat m).image fun n : ℕ => (n : ℤ)
+@[expose] def Z (m : ℕ) : Finset ℤ := (ZNat m).image fun n : ℕ => (n : ℤ)
 
 theorem ZNat_card (m : ℕ) : (ZNat m).card = 12 ^ m := by
   rw [ZNat, digitSet_card (by norm_num : 1 < 39)]

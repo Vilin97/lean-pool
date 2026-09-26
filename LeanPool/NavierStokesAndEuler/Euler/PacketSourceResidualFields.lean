@@ -23,7 +23,7 @@ All profile regularity, tangency, and defining equations in the generic
 algebraic expansion are discharged by the actual recursive source solves.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -83,7 +83,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

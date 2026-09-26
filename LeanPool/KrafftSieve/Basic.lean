@@ -28,7 +28,7 @@ This module provides basic bounds and properties for the primes and the
 primorial $q(n)$ used throughout the Krafft Sieve formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace KrafftSieve
 

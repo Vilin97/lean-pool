@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevWordBlockCoordinates
 /-! Exact concatenated coordinates connecting energy regularization to the actual external/base
 Gevrey forcing. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -19,7 +19,7 @@ This file packages that fact for the coefficient-vector convention used by
 Weierstrass division.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -30,7 +30,7 @@ noncomputable section
 
 /-- A degree-`< d` coefficient vector, evaluated as a polynomial in the last
 variable at a fixed base point. -/
-def remainderPolynomialAt {n d : ℕ}
+@[expose] def remainderPolynomialAt {n d : ℕ}
     (b : Fin d → ComplexEuclidean n → ℂ) (z : ComplexEuclidean n) :
     Polynomial ℂ :=
   ∑ i : Fin d, Polynomial.C (b i z) * Polynomial.X ^ (i : ℕ)

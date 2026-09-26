@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CorrectionStabilityBudget
 
 /-! The already-proved Gevrey budgets supply every actual vanishing-viscosity stability budget. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

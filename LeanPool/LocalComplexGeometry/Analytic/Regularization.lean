@@ -17,7 +17,7 @@ in the last variable.  This is the coordinate-change input required before
 Weierstrass preparation can be applied in Rückert's arguments.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped ENNReal Topology

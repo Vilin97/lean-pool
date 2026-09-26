@@ -22,7 +22,7 @@ exponents: a lowering step for the pair of exponents, and the local
 integrability that a finite Morrey norm supplies.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Metric
 open scoped ENNReal NNReal

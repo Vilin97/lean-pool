@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Poincare.LpCon
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 open MeasureTheory MeasureTheory.Measure Set Filter
@@ -27,6 +27,7 @@ namespace CKN.Foundation.Heat
 
 
 /-- Common coefficient for the displayed harmonic value, gradient and integral estimates. -/
+@[expose]
 noncomputable def harmonicInteriorDisplayConstant : ℝ :=
   max (max weakHarmonicInteriorSupConstant
     (576 * weakHarmonicInteriorSupConstant))

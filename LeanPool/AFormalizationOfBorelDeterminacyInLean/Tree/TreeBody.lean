@@ -22,7 +22,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace Descriptive.Tree
@@ -32,13 +32,16 @@ variable {A : Type*} (S T : tree A)
 
 /-- The body of a tree T, also written [T] in the literature, is the set of infinite branches,
   implemented as `Stream` -/
-def body : Set (Stream' A) := { y | ∀ x, y ∈ principalOpen x → x ∈ T }
+@[expose] def body : Set (Stream' A) := { y | ∀ x, y ∈ principalOpen x → x ∈ T }
 @[gcongr] lemma body_mono {S T : tree A} (h : S ≤ T) : body S ⊆ body T :=
   fun _ h' x y ↦ h (h' x y)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simp] lemma take_mem_body {T : tree A} {x} (h : x ∈ body T) n : x.take n ∈ T := h _ (by simp)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps coe] def body.take {T : tree A} (n : ℕ) (x : body T) : T := ⟨_, take_mem_body x.2 n⟩
+@[expose] def body.take {T : tree A} (n : ℕ) (x : body T) : T :=
+  ⟨_, take_mem_body x.2 n⟩
+@[simp] lemma body.take_coe {T : tree A} (n : ℕ) (x : body T) :
+    (body.take n x : List A) = Stream'.take n x := by rfl
 attribute [simp_lengths] body.take_coe
 lemma mem_body_of_take m (T : tree A) (x : Stream' A) (h : ∀ n ≥ m, x.take n ∈ T) :
   x ∈ body T := by
@@ -78,7 +81,7 @@ def bodyInfHom : sInfHom (tree A) (Set (Stream' A)) where
   · intro h _ _; apply h; simpa
 
 /-- Appending lists to the front of a branch lifts as an operation on bodies -/
-@[simps -fullyApplied coe]
+@[expose, simps -fullyApplied coe]
 def body.append {T : tree A} (x : List A) (y : body (subAt T x)) : body T :=
   ⟨x ++ₛ y.val, by simpa using y.prop⟩
 @[simp] lemma body_append_nil (y : body T) : body.append (T := no_index _) [] y = y := rfl
@@ -94,9 +97,10 @@ lemma body.append_con {T : tree A} (x : List A) : Continuous (@body.append A T x
     exact ⟨by simp, by simpa [subAt_body] using a.prop⟩
   · rintro ⟨⟨b, rfl⟩, ha⟩; use ⟨x ++ₛ b, ha⟩, ⟨⟨b, by simpa⟩, rfl⟩
 /-- Dropping the first elements of a branch lifts as an operation on bodies -/
-@[simps -fullyApplied coe]
 def body.drop {T : tree A} (n : ℕ) (x : body T) : body (subAt T (x.val.take n)) :=
   ⟨x.1.drop n, by simp⟩
+@[simp] lemma body.drop_coe {T : tree A} (n : ℕ) (x : body T) :
+    (body.drop n x : Stream' A) = Stream'.drop n x := by rfl
 
 section «Section1»
 variable {T : tree A} (X : Set (body T)) (x : List A)

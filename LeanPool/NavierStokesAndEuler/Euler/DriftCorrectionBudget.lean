@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevDriftNorm
 
 /-! Genuine correction data with separate full-velocity and transport-drift bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

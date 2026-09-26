@@ -27,7 +27,7 @@ is obsolete by the shorter ones in `PowerSeries.lean` and `Complex.lean`, but I 
 it here to show case how a combinatorial proof can be done.
 -/
 
-@[expose] public section
+public section
 
 open scoped PowerSeries.WithPiTopology
 
@@ -227,7 +227,7 @@ theorem zipIdx_drop {l : List α} {n k : Nat} :
       simp [zipIdx_drop, h]
 
 /-- Returns the number of leading elements satisfying a condition. -/
-def lengthWhile (p : α → Prop) [DecidablePred p] : List α → ℕ
+@[expose] def lengthWhile (p : α → Prop) [DecidablePred p] : List α → ℕ
 | [] => 0
 | x :: xs => if p x then xs.lengthWhile p + 1 else 0
 
@@ -325,7 +325,7 @@ theorem lengthWhile_set
       · simp
 
 /-- Replace the last element `a` with `f a`. -/
-def updateLast (l : List α) (f : α → α) : List α :=
+@[expose] def updateLast (l : List α) (f : α → α) : List α :=
   match l with
   | [] => []
   | x :: xs => (x :: xs).set ((x :: xs).length - 1) (f ((x :: xs).getLast (by simp)))
@@ -653,7 +653,7 @@ theorem diagSize_putLast (hn : 0 < n) (x : FerrersDiagram n) (i : ℕ)
   exact hlast.ne.symm
 
 /-- The criteria to legally move the diagonal down -/
-def IsToDown (hn : 0 < n) (x : FerrersDiagram n) :=
+@[expose] def IsToDown (hn : 0 < n) (x : FerrersDiagram n) :=
   x.diagSize + 1 < x.delta.getLast (x.delta_ne_nil hn)
 
 instance (hn : 0 < n) (x : FerrersDiagram n) : Decidable (x.IsToDown hn) := by

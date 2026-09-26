@@ -24,7 +24,7 @@ conjugation-anti-invariant, so the span is unchanged — and it removes the enum
 `z₁, conj z₁, …, z_k, conj z_k` that the source has to carry.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 
@@ -36,36 +36,36 @@ variable {lam : ℝ} {eta : ℝ → ℝ}
 noncomputable abbrev L2Interval (lam : ℝ) := Lp ℂ 2 (volume.restrict (Set.Ioo (-lam) lam))
 
 /-- The twisted function as an element of `L²`. -/
-noncomputable def fzL2 (h : IsAdmissible lam eta) (z : ℂ) : L2Interval lam :=
+@[expose] noncomputable def fzL2 (h : IsAdmissible lam eta) (z : ℂ) : L2Interval lam :=
   MemLp.toLp _ (memLp_fz h z)
 
 /-- The even part as an element of `L²`. -/
-noncomputable def gzL2 (h : IsAdmissible lam eta) (z : ℂ) : L2Interval lam :=
+@[expose] noncomputable def gzL2 (h : IsAdmissible lam eta) (z : ℂ) : L2Interval lam :=
   MemLp.toLp _ (memLp_gz h z)
 
 /-- The odd part as an element of `L²`. -/
-noncomputable def hzL2 (h : IsAdmissible lam eta) (z : ℂ) : L2Interval lam :=
+@[expose] noncomputable def hzL2 (h : IsAdmissible lam eta) (z : ℂ) : L2Interval lam :=
   MemLp.toLp _ (memLp_hz h z)
 
 /-- The first subspace, spanned by the twisted functions at the multiple real points together with
 the even parts at the non-real points. -/
-@[zz_tag "def_U"]
-noncomputable def subspaceU (h : IsAdmissible lam eta) (Z : Finset ℂ) (m : ℂ → ℕ) :
+@[expose, zz_tag "def_U"] noncomputable def subspaceU
+    (h : IsAdmissible lam eta) (Z : Finset ℂ) (m : ℂ → ℕ) :
     Submodule ℂ (L2Interval lam) :=
   Submodule.span ℂ
     ((fzL2 h '' (multipleRealPart Z m : Set ℂ)) ∪ (gzL2 h '' (nonRealPart Z : Set ℂ)))
 
 /-- The second subspace, adding the twisted functions at the simple real points. -/
-@[zz_tag "def_V"]
-noncomputable def subspaceV (h : IsAdmissible lam eta) (Z : Finset ℂ) (m : ℂ → ℕ) :
+@[expose, zz_tag "def_V"] noncomputable def subspaceV
+    (h : IsAdmissible lam eta) (Z : Finset ℂ) (m : ℂ → ℕ) :
     Submodule ℂ (L2Interval lam) :=
   Submodule.span ℂ
     ((fzL2 h '' ((simpleRealPart Z m ∪ multipleRealPart Z m : Finset ℂ) : Set ℂ))
       ∪ (gzL2 h '' (nonRealPart Z : Set ℂ)))
 
 /-- The third subspace, adding the odd parts at the non-real points. -/
-@[zz_tag "def_W"]
-noncomputable def subspaceW (h : IsAdmissible lam eta) (Z : Finset ℂ) (m : ℂ → ℕ) :
+@[expose, zz_tag "def_W"] noncomputable def subspaceW
+    (h : IsAdmissible lam eta) (Z : Finset ℂ) (m : ℂ → ℕ) :
     Submodule ℂ (L2Interval lam) :=
   Submodule.span ℂ
     ((fzL2 h '' ((simpleRealPart Z m ∪ multipleRealPart Z m : Finset ℂ) : Set ℂ))

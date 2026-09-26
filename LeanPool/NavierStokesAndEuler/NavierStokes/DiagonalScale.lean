@@ -19,7 +19,7 @@ The resulting schedule enforces every requested finite collection of jet bounds.
 It does not construct the analytic increments or prove their PDE estimates.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.DiagonalScale
@@ -30,7 +30,7 @@ open scoped Topology BigOperators
 noncomputable section
 
 /-- The scalar expression whose smallness is needed at each correction stage. -/
-def logPowerWeight (C p r q : ℝ) : ℝ :=
+@[expose] def logPowerWeight (C p r q : ℝ) : ℝ :=
   C * (1 + |Real.log q|) ^ p * q ^ r
 
 /-- Any positive real power beats any fixed real logarithmic power at zero. -/

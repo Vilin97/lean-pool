@@ -11,7 +11,7 @@ public import Mathlib.NumberTheory.ModularForms.BoundedAtCusp
 /-! # ForMathlibCusps -/
 
 
-@[expose] public section
+public section
 
 open scoped MatrixGroups ModularForm UpperHalfPlane
 

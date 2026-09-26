@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
 
 /-! Genuine mixed cutoff Newtonian operators and their quantitative dependence on both cutoffs. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,22 +28,22 @@ open scoped ContDiff
   rfl
 
 /-- Add, given by `⟨χ.field + ψ.field, χ.smooth.add ψ.smooth, χ.compact.add ψ.compact⟩`. -/
-def Cutoff.add (χ ψ : Cutoff) : Cutoff :=
+@[expose] def Cutoff.add (χ ψ : Cutoff) : Cutoff :=
   ⟨χ.field + ψ.field, χ.smooth.add ψ.smooth, χ.compact.add ψ.compact⟩
 
 /-- Scale, given by `⟨c • χ.field, χ.smooth.const_smul c, χ.compact.comp_left (g := fun t : ℝ =>
 c • t) (smul_zero c)⟩`. -/
-def Cutoff.scale (χ : Cutoff) (c : ℝ) : Cutoff :=
+@[expose] def Cutoff.scale (χ : Cutoff) (c : ℝ) : Cutoff :=
   ⟨c • χ.field, χ.smooth.const_smul c,
     χ.compact.comp_left (g := fun t : ℝ => c • t) (smul_zero c)⟩
 
 /-- Sub, given by `⟨χ.field - ψ.field, χ.smooth.sub ψ.smooth, χ.compact.sub ψ.compact⟩`. -/
-def Cutoff.sub (χ ψ : Cutoff) : Cutoff :=
+@[expose] def Cutoff.sub (χ ψ : Cutoff) : Cutoff :=
   ⟨χ.field - ψ.field, χ.smooth.sub ψ.smooth, χ.compact.sub ψ.compact⟩
 
 /-- Translate, given by `⟨fun x => χ.field (x+a), χ.smooth.comp (contDiff_id.add
 contDiff_const), χ.compact.comp_homeomorph (Homeomorph.addRight a)⟩`. -/
-def Cutoff.translate (χ : Cutoff) (a : Space) : Cutoff :=
+@[expose] def Cutoff.translate (χ : Cutoff) (a : Space) : Cutoff :=
   ⟨fun x => χ.field (x+a), χ.smooth.comp (contDiff_id.add contDiff_const),
     χ.compact.comp_homeomorph (Homeomorph.addRight a)⟩
 
@@ -147,7 +147,7 @@ theorem weakPotential_sub (χ ψ : Cutoff) :
   rw [neg_one_smul ℝ, sub_eq_add_neg]
 
 /-- The literal weak `curl χ (-Δ)⁻¹ ψ curl` operator. -/
-def mixedBoundaryOperator (χ ψ : Cutoff) : L2 →L[ℝ] L2 :=
+@[expose] def mixedBoundaryOperator (χ ψ : Cutoff) : L2 →L[ℝ] L2 :=
   (cutoffCurl χ).comp (weakPotential ψ)
 
 theorem mixedBoundaryOperator_diagonal (χ : Cutoff) :

@@ -18,7 +18,7 @@ The genuine coercive inverse therefore preserves odd forcing, including
 its continuous velocity and acceleration representatives.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -13,7 +13,7 @@ import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 
 /-! The Fourier H³ norm is controlled by genuine third directional derivatives in L². -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

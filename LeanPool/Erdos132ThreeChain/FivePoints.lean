@@ -32,7 +32,7 @@ every three-vector Gram matrix in the plane forces each triple product `⟪u i, 
 This is the five-point Gram obstruction in its scale-free form.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos132ThreeChain
 

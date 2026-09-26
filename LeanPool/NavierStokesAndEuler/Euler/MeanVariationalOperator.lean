@@ -17,7 +17,7 @@ actual displacement primitive and `R` its initial trace.  The boundary lower
 bound is required only on the trace image, as in the source's solenoidal space.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -16,7 +16,7 @@ prepared sequence.  Because code indices are injective, closing a countable set 
 whose indices it contains still takes only countably many new coordinates at each finite stage.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

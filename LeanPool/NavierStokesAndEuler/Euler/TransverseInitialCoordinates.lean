@@ -17,7 +17,7 @@ The physical reconstruction and its differentiated identity follow from the
 coefficient left inverse, the H¹ product rule and uniqueness of derivatives.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,7 +41,7 @@ variable (T : ℝ) (hT : 0 ≤ T)
 
 /-- Initial coordinates, given by `extendPath T hT (frameLeftInversePath T Q c hc hQ) t
 (initialRealPrimitive T u t)`. -/
-def initialCoordinates (u : TimeLp T E) (t : ℝ) : U :=
+@[expose] def initialCoordinates (u : TimeLp T E) (t : ℝ) : U :=
   extendPath T hT (frameLeftInversePath T Q c hc hQ) t (initialRealPrimitive T u t)
 
 /-- Initial coordinate field, given by `timeMultiplier T hT (frameLeftInversePath T Q c hc hQ)

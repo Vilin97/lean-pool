@@ -18,7 +18,7 @@ its actual full derivative tensors prove that its literal zero extension
 has all derivatives zero on both moving boundary hypersurfaces.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -126,7 +126,7 @@ theorem hasFDerivAt_extension_boundary {ρ d : D → ℝ} {a b c : ℝ}
     exact mul_nonneg hε.le (norm_nonneg _)
 
 /-- Log coordinate, given by `WeightedRadialPrimitive.logPosition a (ρ x)`. -/
-noncomputable def logCoordinate (ρ : D → ℝ) (a : ℝ) (x : D) : ℝ :=
+@[expose] noncomputable def logCoordinate (ρ : D → ℝ) (a : ℝ) (x : D) : ℝ :=
   WeightedRadialPrimitive.logPosition a (ρ x)
 
 theorem logCoordinate_differentiableAt {ρ : D → ℝ} {a : ℝ} (ha : 0 < a) {x : D}
@@ -298,7 +298,7 @@ noncomputable def flatWeight (ρ : D → ℝ) (a b cL cR : ℝ) (x : D) : ℝ :=
 
 /-- Edge growth, given by `max 1 (WeightedRadialPrimitive.delta
 (WeightedRadialPrimitive.logLength a b) (logCoordinate ρ a x))⁻¹`. -/
-noncomputable def edgeGrowth (ρ : D → ℝ) (a b : ℝ) (x : D) : ℝ :=
+@[expose] noncomputable def edgeGrowth (ρ : D → ℝ) (a b : ℝ) (x : D) : ℝ :=
   max 1 (WeightedRadialPrimitive.delta (WeightedRadialPrimitive.logLength a b) (logCoordinate ρ a
       x))⁻¹
 
@@ -468,7 +468,7 @@ abbrev NativePoint := PhaseCalculus.Slow × TorusInverse.Plane
 noncomputable def nativeSlowDomain : Set NativePoint := {x | 0 < x.1.2.2}
 
 /-- Native radius, given by `PrimaryTargetBounds.profileRadius h x.1`. -/
-noncomputable def nativeRadius (h : ℝ) (x : NativePoint) : ℝ :=
+@[expose] noncomputable def nativeRadius (h : ℝ) (x : NativePoint) : ℝ :=
   PrimaryTargetBounds.profileRadius h x.1
 
 theorem nativeSlowDomain_open : IsOpen nativeSlowDomain :=
@@ -489,6 +489,7 @@ theorem nativeRadius_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) :
 
 /-- Native extension, given by `extension (nativeRadius F.data.h)
 (PrimaryTargetBounds.leftRadius W) (PrimaryTargetBounds.rightRadius W) f`. -/
+@[expose]
 noncomputable def nativeExtension {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
     (f : NativePoint → E) : NativePoint → E :=
   extension (nativeRadius F.data.h) (PrimaryTargetBounds.leftRadius W)

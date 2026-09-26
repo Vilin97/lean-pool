@@ -30,7 +30,7 @@ Main declarations:
   one avoiding `S` entirely.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology unitInterval
 open IsManifold Metric Set Filter

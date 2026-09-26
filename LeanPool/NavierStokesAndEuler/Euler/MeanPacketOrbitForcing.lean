@@ -17,7 +17,7 @@ orbit produce the literal smooth L² slices required by the forcing interface.
 The same construction applies to its actual time derivative and pressure force.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -62,7 +62,7 @@ def vectorDerivativeForcing (G : Forcing D raw) : Forcing D G.vectorDerivative :
 
 /-- Pressure force, defined pointwise by `pathRepresentative D.T G.pressureForcePath
 G.pressureForcePath_orbit (D.clamp z.1) z.2.1`. -/
-def pressureForce (G : Forcing D raw) : VectorField := fun z =>
+@[expose] def pressureForce (G : Forcing D raw) : VectorField := fun z =>
   pathRepresentative D.T G.pressureForcePath G.pressureForcePath_orbit (D.clamp z.1) z.2.1
 
 /-- The physical pressure gradient, rather than the unneeded scalar pressure value, is spatially L².

@@ -24,7 +24,7 @@ and `IsManifold 𝓘(ℂ) ω (OnePoint ℂ)` from two charts:
 literally `id`/`Inv.inv` as total functions (junk values aligned by construction).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter Topology OnePoint
@@ -33,7 +33,7 @@ namespace RS.P1
 
 /-- The identity chart on the finite part of `ℙ¹`: source `{∞}ᶜ`, target `univ`,
 `↑z ↦ z`, junk value `coeChart ∞ = 0`. -/
-noncomputable def coeChart : OpenPartialHomeomorph (OnePoint ℂ) ℂ where
+@[expose] noncomputable def coeChart : OpenPartialHomeomorph (OnePoint ℂ) ℂ where
   toFun p := p.elim 0 id
   invFun := ((↑) : ℂ → OnePoint ℂ)
   source := {(∞ : OnePoint ℂ)}ᶜ
@@ -50,11 +50,11 @@ noncomputable def coeChart : OpenPartialHomeomorph (OnePoint ℂ) ℂ where
     exact (continuousAt_coe.mpr (by exact continuousAt_id)).continuousWithinAt
   continuousOn_invFun := continuous_coe.continuousOn
 
-@[simp] theorem coeChart_apply_coe (z : ℂ) : coeChart (z : OnePoint ℂ) = z := rfl
-@[simp] theorem coeChart_apply_infty : coeChart (∞ : OnePoint ℂ) = 0 := rfl
-@[simp] theorem coeChart_symm_apply (z : ℂ) : coeChart.symm z = (z : OnePoint ℂ) := rfl
-@[simp] theorem coeChart_source : coeChart.source = {(∞ : OnePoint ℂ)}ᶜ := rfl
-@[simp] theorem coeChart_target : coeChart.target = Set.univ := rfl
+@[simp] theorem coeChart_apply_coe (z : ℂ) : coeChart (z : OnePoint ℂ) = z := by rfl
+@[simp] theorem coeChart_apply_infty : coeChart (∞ : OnePoint ℂ) = 0 := by rfl
+@[simp] theorem coeChart_symm_apply (z : ℂ) : coeChart.symm z = (z : OnePoint ℂ) := by rfl
+@[simp] theorem coeChart_source : coeChart.source = {(∞ : OnePoint ℂ)}ᶜ := by rfl
+@[simp] theorem coeChart_target : coeChart.target = Set.univ := by rfl
 
 /-- `inversion` never sends a finite point to `↑(0:ℂ)`. -/
 theorem inversion_coe_ne_coe_zero (w : ℂ) : inversion (w : OnePoint ℂ) ≠ ((0 : ℂ) : OnePoint ℂ) :=
@@ -106,10 +106,10 @@ noncomputable def invChart : OpenPartialHomeomorph (OnePoint ℂ) ℂ where
   change coeChart (inversion ∞) = 0
   simp
 
-@[simp] theorem invChart_symm_apply (w : ℂ) : invChart.symm w = inversion (w : OnePoint ℂ) := rfl
+@[simp] theorem invChart_symm_apply (w : ℂ) : invChart.symm w = inversion (w : OnePoint ℂ) := by rfl
 
-@[simp] theorem invChart_source : invChart.source = {((0 : ℂ) : OnePoint ℂ)}ᶜ := rfl
-@[simp] theorem invChart_target : invChart.target = Set.univ := rfl
+@[simp] theorem invChart_source : invChart.source = {((0 : ℂ) : OnePoint ℂ)}ᶜ := by rfl
+@[simp] theorem invChart_target : invChart.target = Set.univ := by rfl
 
 theorem invChart_comp_coe : ⇑invChart ∘ ((↑) : ℂ → OnePoint ℂ) = Inv.inv := by
   funext z
@@ -132,14 +132,14 @@ noncomputable def chartFamily : Bool → OpenPartialHomeomorph (OnePoint ℂ) �
   | false => coeChart
   | true => invChart
 
-@[simp] theorem chartFamily_false : chartFamily false = coeChart := rfl
-@[simp] theorem chartFamily_true : chartFamily true = invChart := rfl
+@[simp] theorem chartFamily_false : chartFamily false = coeChart := by rfl
+@[simp] theorem chartFamily_true : chartFamily true = invChart := by rfl
 
 /-- Index map: `∞ ↦ true` (use `invChart`), `↑z ↦ false` (use `coeChart`). -/
 def chartIndex : OnePoint ℂ → Bool := fun p => p.elim true (fun _ => false)
 
-@[simp] theorem chartIndex_infty : chartIndex ∞ = true := rfl
-@[simp] theorem chartIndex_coe (z : ℂ) : chartIndex (z : OnePoint ℂ) = false := rfl
+@[simp] theorem chartIndex_infty : chartIndex ∞ = true := by rfl
+@[simp] theorem chartIndex_coe (z : ℂ) : chartIndex (z : OnePoint ℂ) = false := by rfl
 
 theorem mem_chartFamily_source (p : OnePoint ℂ) : p ∈ (chartFamily (chartIndex p)).source := by
   induction p using OnePoint.rec with

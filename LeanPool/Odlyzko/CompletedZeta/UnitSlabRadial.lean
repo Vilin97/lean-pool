@@ -9,7 +9,7 @@ public import LeanPool.Odlyzko.CompletedZeta.UnitSlabTranslation
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -36,7 +36,7 @@ def negativeRadialHalfSpace :
 
 open Classical in
 /-- A positive radial half space used in the Odlyzko-bound argument. -/
-def positiveRadialHalfSpace :
+@[expose] def positiveRadialHalfSpace :
     Set (mixedEmbedding.realSpace K) :=
   {y | 0 < y w₀}
 
@@ -48,13 +48,13 @@ def nonnegativeUnitFundamentalParamSet :
 
 open Classical in
 /-- A negative unit fundamental param set used in the Odlyzko-bound argument. -/
-def negativeUnitFundamentalParamSet :
+@[expose] def negativeUnitFundamentalParamSet :
     Set (mixedEmbedding.realSpace K) :=
   unitFundamentalParamSet K ∩ negativeRadialHalfSpace (K := K)
 
 open Classical in
 /-- A positive unit fundamental param set used in the Odlyzko-bound argument. -/
-def positiveUnitFundamentalParamSet :
+@[expose] def positiveUnitFundamentalParamSet :
     Set (mixedEmbedding.realSpace K) :=
   unitFundamentalParamSet K ∩ positiveRadialHalfSpace (K := K)
 

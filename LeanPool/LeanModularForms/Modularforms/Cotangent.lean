@@ -27,4 +27,4 @@ import the upstream module directly and resolve `cot_series_rep'` and
 `pi_mul_cot_pi_q_exp` against Mathlib's versions.
 -/
 
-@[expose] public section
+public section

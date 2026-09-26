@@ -24,7 +24,7 @@ primitive.
   to a *simple* arc, which needs the finite-graph machinery and is proved with Lemma 1.2.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -42,7 +42,7 @@ theorem isCompact_segment (x y : Plane) : IsCompact (segment ℝ x y) := by
 
 /-- The carrier of a polygonal path: the union of the segments joining consecutive vertices.
 A single vertex carries itself, so that a path may be constant. -/
-def poly : List Plane → Set Plane
+@[expose] def poly : List Plane → Set Plane
   | [] => ∅
   | [v] => {v}
   | u :: v :: rest => segment ℝ u v ∪ poly (v :: rest)

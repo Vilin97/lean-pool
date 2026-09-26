@@ -25,7 +25,7 @@ generators and their equivalence closures. It therefore descends to a homeomorph
 polygonal quotients.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

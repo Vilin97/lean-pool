@@ -26,7 +26,7 @@ hypotheses are needed for these implications; only the denominators have to
 be nonzero.
 -/
 
-@[expose] public section
+public section
 
 namespace Feige
 

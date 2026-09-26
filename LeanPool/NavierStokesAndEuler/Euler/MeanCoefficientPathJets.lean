@@ -14,7 +14,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-! Uniform time-path bounds for actual spatial derivatives of the multiplication operators. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

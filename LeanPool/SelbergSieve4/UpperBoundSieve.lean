@@ -13,14 +13,14 @@ import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 # LeanPool.SelbergSieve4.UpperBoundSieve
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ArithmeticFunction.zeta ArithmeticFunction.Moebius ArithmeticFunction.omega
 
 namespace Sieve
 
 /-- A real-valued divisor weight majorizing the delta function at `1`. -/
-def UpperMoebius (μ_plus : ℕ → ℝ) : Prop :=
+@[expose] def UpperMoebius (μ_plus : ℕ → ℝ) : Prop :=
   ∀ n : ℕ, (if n=1 then 1 else 0) ≤ ∑ d ∈ n.divisors, μ_plus d
 
 /-- Upper-bound sieve weights with their majorization property. -/

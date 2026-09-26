@@ -17,7 +17,7 @@ is bounded by C * (1 + ||v||). Used by `CoulombSpatialTransport` for bounding
 spatial transport integrands.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 

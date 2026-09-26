@@ -27,7 +27,7 @@ Endpoint (`pcMem_glue`): `PCMem ψleft M ∧ PCMem ψright M → ∃ S, Realize 
 the realizations using `S`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

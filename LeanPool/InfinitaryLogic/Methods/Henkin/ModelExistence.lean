@@ -25,7 +25,7 @@ that belongs to a consistency property has a countable model.
 - [Kei71]
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 

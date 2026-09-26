@@ -31,7 +31,7 @@ Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
 -/
 
-@[expose] public section
+public section
 
 namespace BSLambda
 
@@ -51,6 +51,7 @@ abbrev Zeros (f : Input V → Bool) : Type _ := {x : Input V // f x = false}
 
 /-- The biadjacency matrix `M` of the sensitivity graph, rows indexed by `S`,
 columns by `T` (Section 11.1). -/
+@[expose]
 noncomputable def biadj (f : Input V → Bool) : Matrix (Ones f) (Zeros f) ℝ :=
   Matrix.of fun x z => if hammingDist x.1 z.1 = 1 then (1 : ℝ) else 0
 

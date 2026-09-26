@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketNonlinearForcing
 
 /-! The actual scalar pressure gradient is an admissible smooth L² field. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

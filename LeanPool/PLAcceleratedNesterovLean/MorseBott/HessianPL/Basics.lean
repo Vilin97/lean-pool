@@ -18,7 +18,7 @@ approach: the minimum of H(w,w) on the unit sphere of ker(H)⊥ is attained
 at an eigenvector, and PŁ forces this minimum to be ≥ μ.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Submodule Asymptotics
 

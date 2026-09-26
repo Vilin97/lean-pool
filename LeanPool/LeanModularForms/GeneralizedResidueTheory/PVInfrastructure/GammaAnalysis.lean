@@ -25,7 +25,7 @@ used in the dyadic PV limit proof for principal value convergence.
     outside nbhd
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Filter Topology
 open scoped Real

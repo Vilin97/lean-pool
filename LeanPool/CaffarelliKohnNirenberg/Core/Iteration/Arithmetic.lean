@@ -24,7 +24,7 @@ The radius interpolation theorem likewise takes the finiteness hypotheses
 required by the radius monotonicity API.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal NNReal Topology
@@ -39,6 +39,7 @@ namespace CKN
 /-! ### The numerical convention -/
 
 /-- The fixed exponent `ε = 2/5` in `conv:kappa`. -/
+@[expose]
 def iterationEpsilon : ℝ := 2 / 5
 
 /-- The fixed contraction factor in `conv:kappa`. -/
@@ -54,7 +55,7 @@ def iterationEpsilonStar (C₂₇ : ℝ) : ℝ :=
   min 1 ((iterationKappa C₂₇ ^ (5 + iterationEpsilon) / (32 * C₂₇)) ^ 2)
 
 /-- The force coefficient `C₂₉` in `eq:C29`. -/
-def iterationC₂₉ (C₂₇ C₂₈ : ℝ) : ℝ :=
+@[expose] def iterationC₂₉ (C₂₇ C₂₈ : ℝ) : ℝ :=
   2 * C₂₈ ^ 2 * iterationKappa C₂₇ ^ (-1 - 2 * iterationEpsilon)
     + C₂₈ * iterationKappa C₂₇ ^ (-3 - iterationEpsilon)
 

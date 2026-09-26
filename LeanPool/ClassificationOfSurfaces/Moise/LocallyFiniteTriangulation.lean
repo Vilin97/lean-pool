@@ -27,7 +27,7 @@ makes the vertex type finite, and finite closed pasting produces the required ho
 the canonical barycentric realization.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -35,7 +35,7 @@ namespace ClassificationOfSurfaces
 namespace Moise
 
 /-- Extend barycentric coordinates on a finite face by zero to the global vertex type. -/
-def extendFaceCoordinates {V : Type*} [DecidableEq V] (t : Finset V)
+@[expose] def extendFaceCoordinates {V : Type*} [DecidableEq V] (t : Finset V)
     (x : stdSimplex ℝ {v // v ∈ t}) : V → ℝ :=
   fun v ↦ if hv : v ∈ t then x ⟨v, hv⟩ else 0
 

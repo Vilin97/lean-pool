@@ -30,7 +30,7 @@ freshness arguments must CARRY a finite support rather than compute one). Craig 
   transport (the `A = ∅` root gate of the interpolation argument).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -334,7 +334,7 @@ variable {L' : Language.{0, 0}} {J : Type}
 (`functionsIn_countable` — countably-branching connectives); freshness arguments *demand*
 containment in a finite set rather than computing one. Generic in the base language, so it
 also serves iterated expansion layers (`L := L'[[J]]`, constants `ℕ`). -/
-def sentenceJConsts {α : Type} {n : ℕ} (φ : L'[[J]].BoundedFormulaω α n) : Set J :=
+@[expose] def sentenceJConsts {α : Type} {n : ℕ} (φ : L'[[J]].BoundedFormulaω α n) : Set J :=
   {j | (⟨0, (Sum.inr j : L'[[J]].Functions 0)⟩ : Σ n, L'[[J]].Functions n) ∈
     BoundedFormulaω.functionsIn φ}
 
@@ -377,12 +377,12 @@ theorem sentenceJConsts_imp_right {α : Type} {n : ℕ} (φ ψ : L'[[J]].Bounded
   exact Set.mem_union_right _ hj
 
 /-- The constant support of an expansion term. -/
-def Term.jConsts {β : Type} (t : L'[[J]].Term β) : Set J :=
+@[expose] def Term.jConsts {β : Type} (t : L'[[J]].Term β) : Set J :=
   {j | (⟨0, (Sum.inr j : L'[[J]].Functions 0)⟩ : Σ n, L'[[J]].Functions n) ∈
     Term.functionsIn t}
 
 /-- The `j`-th constant of the expansion, as a closed term. -/
-def constTerm (j : J) : L'[[J]].Term Empty :=
+@[expose] def constTerm (j : J) : L'[[J]].Term Empty :=
   Term.func (Sum.inr j : L'[[J]].Functions 0) Fin.elim0
 
 theorem constTerm_functionsIn (j : J) :

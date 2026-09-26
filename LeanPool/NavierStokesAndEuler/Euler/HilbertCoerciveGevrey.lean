@@ -24,7 +24,7 @@ highest-order solution term on the right. The factorial estimate below is
 therefore derived from genuine derivatives of the constructed inverse.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

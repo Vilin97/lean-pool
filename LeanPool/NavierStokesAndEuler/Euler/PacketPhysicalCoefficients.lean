@@ -19,7 +19,7 @@ small scaled matrix errors used in source propagation.  The fixed numerical
 loss absorbs rotation of the normalized frame.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,13 +32,13 @@ open Set EulerSmoothLimit EulerPacketNormalizedPrimary EulerPacketRay
 
 /-- Rescaled frame, given by `frameMatrix (B (physicalTime t₀ a ε τ)) (unit (m (physicalTime t₀
 a ε τ))) (unit (v (physicalTime t₀ a ε τ)))`. -/
-def rescaledFrame (B : ℝ → Space →L[ℝ] Space) (m v : ℝ → Space)
+@[expose] def rescaledFrame (B : ℝ → Space →L[ℝ] Space) (m v : ℝ → Space)
     (t₀ a ε τ : ℝ) : Fin 3 → Fin 3 → ℝ :=
   frameMatrix (B (physicalTime t₀ a ε τ))
     (unit (m (physicalTime t₀ a ε τ))) (unit (v (physicalTime t₀ a ε τ)))
 
 /-- Rescaled shear, given by `primaryShear c m v (physicalTime t₀ a ε τ)`. -/
-def rescaledShear (c : ℝ) (m v : ℝ → Space) (t₀ a ε τ : ℝ) : ℝ :=
+@[expose] def rescaledShear (c : ℝ) (m v : ℝ → Space) (t₀ a ε τ : ℝ) : ℝ :=
   primaryShear c m v (physicalTime t₀ a ε τ)
 
 /-- All three coefficient-error bounds follow from physical norm and time

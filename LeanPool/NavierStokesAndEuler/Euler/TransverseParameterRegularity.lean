@@ -20,7 +20,7 @@ constructed transverse solution. Smoothness of every finite order follows from
 coefficient smoothness; no regularity of a pre-existing inverse is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

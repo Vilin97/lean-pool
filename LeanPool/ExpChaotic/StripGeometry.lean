@@ -22,7 +22,7 @@ The initial proof architecture uses John Harrison's HOL Light formalisation.
 See `LeanPool.ExpChaotic` for attribution and the upstream source.
 -/
 
-@[expose] public section
+public section
 
 open Function Filter Set Metric
 open scoped Topology NNReal Uniformity
@@ -69,6 +69,7 @@ since `cos ((2m+1)π) = -1`. Getting an odd multiple needs an imaginary spread o
 rather than `π`, which both branches of Lemma 4 in fact supply. -/
 
 /-- Some forward image of `V` lands on the negative real axis. -/
+@[expose]
 def EventuallyMeetsNegativeRealAxis (V : Set ℂ) : Prop :=
   ∃ n : ℕ, ∃ z ∈ V, (expIterate n z).im = 0 ∧ (expIterate n z).re < 0
 

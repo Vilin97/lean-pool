@@ -33,7 +33,7 @@ identities. Their propagator norm uses only the pointwise bound on that set,
 so the source's `C g(t)/g(s)` estimate is preserved exactly.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -94,7 +94,7 @@ def operatorPath (T : ℝ) (A : C(Icc (0 : ℝ) T, Field (α := α) (V := V))) :
 
 omit [CompleteSpace V] in
 @[simp] theorem operatorPath_apply (T : ℝ) (A : C(Icc (0 : ℝ) T, Field (α := α) (V := V)))
-    (t : Icc (0 : ℝ) T) : operatorPath μ S hS T A t = operator μ S hS (A t) := rfl
+    (t : Icc (0 : ℝ) T) : operatorPath μ S hS T A t = operator μ S hS (A t) := by rfl
 
 /-- Actual pointwise time derivatives lift to supported-L² operator derivatives. -/
 theorem operatorPath_hasDerivWithinAt (T : ℝ) (hT : 0 ≤ T)
@@ -211,7 +211,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

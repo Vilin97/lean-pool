@@ -14,7 +14,7 @@ public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 
 /-! # UpperHalfPlane -/
 
-@[expose] public section
+public section
 
 
 theorem ModularGroup.modular_S_sq : S * S = -1 := by

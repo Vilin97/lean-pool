@@ -19,7 +19,7 @@ the genuine iterated Fréchet derivative. Fixed bounded maps commute with
 every word and act boundedly on the same sum, without a dimension factor.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,7 +35,7 @@ variable {P E F ι : Type*}
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- A genuine derivative in one prescribed constant direction. -/
-def directional (directions : ι → P) (f : P → E) (i : ι) : P → E :=
+@[expose] def directional (directions : ι → P) (f : P → E) (i : ι) : P → E :=
   fun x => fderiv ℝ f x (directions i)
 
 theorem directional_contDiff (directions : ι → P) (f : P → E) (hf : ContDiff ℝ ∞ f) (i : ι) :

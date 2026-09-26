@@ -24,7 +24,7 @@ diameter.  Subordination to the resulting open cover converts the existing setwi
 graph replacement into a pointwise controlled approximation.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

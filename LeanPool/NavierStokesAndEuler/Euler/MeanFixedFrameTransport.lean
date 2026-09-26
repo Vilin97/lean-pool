@@ -19,7 +19,7 @@ These maps are proved inverse, so no parameter-dependent test space is hidden
 when comparing translated or differentiated coefficients.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

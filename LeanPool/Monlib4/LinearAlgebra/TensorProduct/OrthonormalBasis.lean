@@ -19,7 +19,7 @@ including `OrthonormalBasis.tensorProduct` and its simp lemmas, are already avai
 from current Mathlib through the imports above.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 

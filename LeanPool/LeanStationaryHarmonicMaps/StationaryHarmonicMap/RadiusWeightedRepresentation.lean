@@ -16,7 +16,7 @@ to the measurable, essentially bounded radius weights used by the weak
 monotonicity argument.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

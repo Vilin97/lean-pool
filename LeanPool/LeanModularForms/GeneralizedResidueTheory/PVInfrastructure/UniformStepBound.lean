@@ -28,7 +28,7 @@ annulus bound into a single epsilon-independent estimate.
     with epsilon-independent constant
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

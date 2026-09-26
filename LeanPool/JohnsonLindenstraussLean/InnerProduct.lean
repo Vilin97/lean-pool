@@ -27,7 +27,7 @@ mechanism behind QJL's one-bit guarantee, which instead rests on the asymmetric 
 identity (`JL/QJL.lean`).
 -/
 
-@[expose] public section
+public section
 
 open scoped RealInnerProductSpace
 

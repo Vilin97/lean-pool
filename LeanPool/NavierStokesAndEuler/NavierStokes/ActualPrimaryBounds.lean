@@ -17,7 +17,7 @@ The estimates retain the moving edge weight and the actual pulse envelope.
 Constants precede the orientation, spatial label, band, and lattice copy.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -174,6 +174,7 @@ theorem clock_eq (l : SignedLabel B N0) :
       (BaseChartJets.cellBand l.2) := rfl
 
 /-- Copy point, constructed using `ActualSignedGeometry.copyPoint`. -/
+@[expose]
 noncomputable def copyPoint (l : SignedLabel B N0) (n : ℕ) (k : TorusInverse.Frequency) : Native →
     Native :=
   ActualSignedGeometry.copyPoint ActualPrimary.slots ActualPrimary.vectors_det (spatialLabel l)
@@ -547,7 +548,7 @@ theorem pressure_native_jets :
   exact attached_pressure_signed_jets B N0
 
 /-- Periodized, given by `PeriodizedWaveBounds.copySum (copied a f l n)`. -/
-noncomputable def periodized {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+@[expose] noncomputable def periodized {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (a : ℝ) (f : SignedLabel B N0 → Native → E) (l : SignedLabel B N0) (n : ℕ) : Native → E :=
   PeriodizedWaveBounds.copySum (copied a f l n)
 
@@ -841,14 +842,14 @@ theorem gaussian_polynomial :
 
 /-- Cut native velocity, given by `ActualPrimary.gaussian l.2 x • CurlClassBounds.complexify
 (ActualPrimary.attachedRawVelocity l.1 l.2 x)`. -/
-noncomputable def cutNativeVelocity (l : SignedLabel B N0) (x : Native) :
+@[expose] noncomputable def cutNativeVelocity (l : SignedLabel B N0) (x : Native) :
     HarmonicCalculus.ComplexVector :=
   ActualPrimary.gaussian l.2 x • CurlClassBounds.complexify (ActualPrimary.attachedRawVelocity l.1
       l.2 x)
 
 /-- Cut native pressure, given by `ActualPrimary.gaussian l.2 x •
 ActualPrimary.attachedRawPressure l.1 l.2 x`. -/
-noncomputable def cutNativePressure (l : SignedLabel B N0) (x : Native) : ℂ :=
+@[expose] noncomputable def cutNativePressure (l : SignedLabel B N0) (x : Native) : ℂ :=
   ActualPrimary.gaussian l.2 x • ActualPrimary.attachedRawPressure l.1 l.2 x
 
 theorem cut_native_velocity_jets :
@@ -1018,12 +1019,12 @@ noncomputable def meanEnvelope (l : SignedLabel B N0) (n : ℕ) (x : Point) : �
   fullEnvelope l n (x, 0)
 
 /-- Angular frequency, constructed using `PrimaryGeometryAssembly.angularMode`. -/
-noncomputable def angularFrequency (l : SignedLabel B N0) (_n : ℕ) : ℤ :=
+@[expose] noncomputable def angularFrequency (l : SignedLabel B N0) (_n : ℕ) : ℤ :=
   PrimaryGeometryAssembly.angularMode ActualPrimary.certificate ActualPrimary.modulation
     (ActualPrimary.choice B N0).prepared l.1 l.2
 
 /-- Phase, given by `(ActualPrimary.chartCoefficients l.1 l.2).phase n (x, 0)`. -/
-noncomputable def phase (l : SignedLabel B N0) (n : ℕ) (x : Point) : ℝ :=
+@[expose] noncomputable def phase (l : SignedLabel B N0) (n : ℕ) (x : Point) : ℝ :=
   (ActualPrimary.chartCoefficients l.1 l.2).phase n (x, 0)
 
 theorem tangent_block_uniform :
@@ -1050,7 +1051,7 @@ variable {B N0 : ℕ}
 abbrev CopyIndex (B N0 : ℕ) := SignedLabel B N0 × TorusInverse.Frequency
 
 /-- Full copy, given by `copyPoint l n k (ActualSignedGeometry.meanEquiv.symm x.1)`. -/
-noncomputable def fullCopy (l : SignedLabel B N0) (n : ℕ) (k : TorusInverse.Frequency)
+@[expose] noncomputable def fullCopy (l : SignedLabel B N0) (n : ℕ) (k : TorusInverse.Frequency)
     (x : ActualPrimary.FullPoint) : Native := copyPoint l n k (ActualSignedGeometry.meanEquiv.symm
         x.1)
 
@@ -1503,12 +1504,13 @@ variable {B N0 : ℕ}
 
 /-- Cut coefficients, given by `(ActualPrimary.chartCoefficients l.1 l.2).withCutoff
 (ActualPrimary.chartCutoff l.1 l.2)`. -/
-noncomputable def cutCoefficients (l : SignedLabel B N0) :
+@[expose] noncomputable def cutCoefficients (l : SignedLabel B N0) :
     LinearWaveBounds.WaveCoefficients ActualPrimary.FullPoint :=
   (ActualPrimary.chartCoefficients l.1 l.2).withCutoff (ActualPrimary.chartCutoff l.1 l.2)
 
 /-- Actual family, given by `LocalizedWaveBounds.WaveFamily.ofCoefficients (fun i =>
 cutCoefficients i.1)`. -/
+@[expose]
 noncomputable def actualFamily : LocalizedWaveBounds.WaveFamily ActualPrimary.FullPoint (CopyIndex
     B N0) :=
   LocalizedWaveBounds.WaveFamily.ofCoefficients (fun i => cutCoefficients i.1)

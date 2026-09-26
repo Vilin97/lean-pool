@@ -51,7 +51,7 @@ Let `j₀ := j τ₁₆₃` and `x` an arbitrary complex root of `minpoly ℚ j�
   Vieta relation on the subleading coefficient (a rational) forces `j₀ ∈ ℚ`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -108,7 +108,7 @@ def cmGL (n : ℤ) : GL (Fin 2) ℝ :=
     nlinarith [sq_nonneg (2 * (n : ℝ) + 1)])
 
 @[simp] lemma val_cmGL (n : ℤ) :
-    (cmGL n).val = !![(n : ℝ) + 1, -41; 1, (n : ℝ)] := rfl
+    (cmGL n).val = !![(n : ℝ) + 1, -41; 1, (n : ℝ)] := by rfl
 
 lemma cmGL_det_pos (n : ℤ) : 0 < (cmGL n).det.val := by
   rw [Matrix.GeneralLinearGroup.val_det_apply, val_cmGL, Matrix.det_fin_two_of]

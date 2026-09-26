@@ -22,7 +22,7 @@ simplex onto the product, so a fixed point of a continuous self-map of the produ
 is obtained from the single-simplex theorem.
 -/
 
-@[expose] public section
+public section
 
 open Brouwer (standardSimplex)
 

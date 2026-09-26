@@ -16,7 +16,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.Monsky.SegmentCounting`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Monsky
 
@@ -74,10 +74,10 @@ noncomputable def chainToBigSegment {u v : ℝ²} (C : Chain u v) : Segment :=
   | _ => toSegment u v
 
 lemma chainToBigSegment_join {u v w} (h : colin u v w) (C : Chain v w) :
-    chainToBigSegment (Chain.join h C) = toSegment u w := rfl
+    chainToBigSegment (Chain.join h C) = toSegment u w := by rfl
 
 lemma chainToBigSegment_glue {u v w : ℝ²} (h : colin u v w) (CL : Chain u v)
-    (CR : Chain v w) : chainToBigSegment (glueChains h CL CR) = toSegment u w := rfl
+    (CR : Chain v w) : chainToBigSegment (glueChains h CL CR) = toSegment u w := by rfl
 
 lemma glueChains_assoc {u v w x : ℝ²} (C₁ : Chain u v) (C₂ : Chain v w) (C₃ : Chain w x)
     (h₁ : colin u v w) (h₂ : colin v w x) :

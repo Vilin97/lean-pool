@@ -16,7 +16,7 @@ solve, its transported cutoff, its curl correction, and its finite harmonic
 assembly are retained in the realization.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

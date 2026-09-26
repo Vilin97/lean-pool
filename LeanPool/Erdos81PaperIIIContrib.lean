@@ -23,7 +23,7 @@ Tags: extremal-combinatorics, triangle-packing, cyclic-groups
 MSC: 05B07, 05C70
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

@@ -22,7 +22,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -34,11 +34,12 @@ variable {K V : Type*} [DivisionRing K] [AddCommGroup V] [Module K V]
   {n : ℕ}
 
 /-- Keep the ranks congruent to `parity` modulo two and erase the others. -/
-def flagPart (parity : ℕ) (F : CompleteFlag K V n) :
+@[expose] def flagPart (parity : ℕ) (F : CompleteFlag K V n) :
     Fin (n + 1) → Submodule K V :=
   fun i ↦ if i.val % 2 = parity % 2 then F i else ⊥
 
 /-- Partial complete flags supported on one parity of ranks. -/
+@[expose]
 def PartialFlag (parity : ℕ) :=
   {P : Fin (n + 1) → Submodule K V //
     ∃ F : CompleteFlag K V n, flagPart parity F = P}
@@ -66,7 +67,7 @@ theorem ext {parity : ℕ}
   exact funext h
 
 /-- The partial flag of a complete flag at the selected parity. -/
-def ofComplete (parity : ℕ) (F : CompleteFlag K V n) :
+@[expose] def ofComplete (parity : ℕ) (F : CompleteFlag K V n) :
     PartialFlag (K := K) (V := V) (n := n) parity :=
   ⟨flagPart parity F, F, rfl⟩
 
@@ -78,7 +79,7 @@ end PartialFlag
 
 /-- An even and an odd partial flag are compatible when they are the two
 parts of one complete flag. -/
-def Compatible (P : EvenPartialFlag (K := K) (V := V) (n := n))
+@[expose] def Compatible (P : EvenPartialFlag (K := K) (V := V) (n := n))
     (Q : OddPartialFlag (K := K) (V := V) (n := n)) : Prop :=
   ∃ F : CompleteFlag K V n,
     PartialFlag.ofComplete 0 F = P ∧ PartialFlag.ofComplete 1 F = Q

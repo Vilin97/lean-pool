@@ -44,7 +44,7 @@ the continuous linear equivalence.
 - Thangavelu, "Lectures on Hermite and Laguerre Expansions", Ch. 1
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -198,7 +198,7 @@ noncomputable def toRapidDecay1DCLM : SchwartzMap ℝ ℝ →L[ℝ] RapidDecaySe
     -- Total bound: C * L
     refine ⟨Finset.Iic q, ⟨C * L, by positivity⟩, fun f => ?_⟩
     -- Show: rapidDecaySeminorm k (toRapidDecay1DLM f) ≤ (C * L) • (sup seminorms) f
-    simp only [Seminorm.comp_apply]
+    simp only [Seminorm.comp_apply, RapidDecaySeq.rapidDecaySeminorm_apply]
     set S := (Finset.Iic q).sup (schwartzSeminormFamily ℝ ℝ ℝ) f
     -- Each term bounded by C * S * (1+n)^{-2}
     have h_le : ∀ n : ℕ, |hermiteCoeff1D n f| * (1 + (n : ℝ)) ^ k ≤
@@ -515,6 +515,7 @@ private lemma fromRapidDecay1DLM_bound (k l : ℕ) :
         C * RapidDecaySeq.rapidDecaySeminorm s a := by
   obtain ⟨C, hC, s, hbasis⟩ := schwartzHermiteBasis1D_growth k l
   exact ⟨C, hC, s, fun a => by
+    simp only [RapidDecaySeq.rapidDecaySeminorm_apply]
     calc (SchwartzMap.seminorm ℝ k l) (fromRapidDecay1DLM a)
         ≤ ∑' n, |a.val n| * SchwartzMap.seminorm ℝ k l (schwartzHermiteBasis1D n) :=
           fromRapidDecay1DLM_seminorm_le a k l
@@ -564,7 +565,8 @@ noncomputable def schwartzRapidDecayEquiv1D :
       change hermiteCoeff1D n (∑' m, a.val m • schwartzHermiteBasis1D m) = a.val n
       -- Interchange hermiteCoeff1DCLM (continuous) with tsum
       rw [show hermiteCoeff1D n (∑' m, a.val m • schwartzHermiteBasis1D m) =
-        hermiteCoeff1DCLM n (∑' m, a.val m • schwartzHermiteBasis1D m) from rfl,
+        hermiteCoeff1DCLM n (∑' m, a.val m • schwartzHermiteBasis1D m) from
+          (hermiteCoeff1DCLM_apply n _).symm,
         (hermiteCoeff1DCLM n).map_tsum (rapidDecay_hermite_summable a)]
       -- Now: ∑' m, hermiteCoeff1DCLM n (aₘ • ψₘ) = ∑' m, aₘ * δₙₘ = aₙ
       simp only [hermiteCoeff1DCLM_apply, map_smul, smul_eq_mul,
@@ -1161,6 +1163,7 @@ private lemma hermiteCoeffNd_fubini (d : ℕ)
   simp only [smul_eq_mul] at h_pull
   rw [h_pull]
   congr 1
+  simp only [schwartzSlice_apply]
 
 -- Seminorm control of partial Hermite coefficients with 1D decay (was axiom A4).
 -- Each Schwartz seminorm of schwartzPartialHermiteCoeff d f n (as a function of d+1
@@ -2071,6 +2074,7 @@ private lemma toRapidDecayNdLM_isBounded (d' : ℕ) :
   refine ⟨q, ⟨D * C₁ ^ (k + 2) * L, by positivity⟩, fun f => ?_⟩
   simp only [Seminorm.comp_apply]
   set S := q.sup (schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d' + 1))) ℝ) f
+  simp only [RapidDecaySeq.rapidDecaySeminorm_apply]
   change ∑' n, |hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n) f| * (1 + ↑n) ^ k ≤
     D * C₁ ^ (k + 2) * L * S
   have h_le := hermiteCoeffNd_flat_term_le f k k₁ C₁ D S hC₁ hgrowth (hdecay f)
@@ -2273,6 +2277,7 @@ private lemma fromRapidDecayNdLM_bound (d : ℕ) (k l : ℕ) :
   obtain ⟨C₁, hC₁, s₁, hbasis⟩ := schwartzHermiteBasisNd_growth (d + 1) k l
   obtain ⟨C₂, hC₂, k₂, hsymm⟩ := multiIndexEquiv_symm_growth d
   refine ⟨C₁ * C₂ ^ s₁, by positivity, k₂ * s₁, fun a => ?_⟩
+  simp only [RapidDecaySeq.rapidDecaySeminorm_apply]
   calc SchwartzMap.seminorm ℝ k l (fromRapidDecayNdLM d a)
       ≤ ∑' n, |a.val n| * SchwartzMap.seminorm ℝ k l (flatBasisNd d n) :=
         fromRapidDecayNdLM_seminorm_le d a k l

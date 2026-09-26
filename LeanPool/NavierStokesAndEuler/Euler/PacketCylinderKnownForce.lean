@@ -19,7 +19,7 @@ previous corrector, its scalar-pressure gradient, and the actual coefficient
 paths enter. No equation or cancellation for the new profile is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

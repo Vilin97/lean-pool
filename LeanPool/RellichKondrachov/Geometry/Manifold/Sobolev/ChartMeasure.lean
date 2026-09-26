@@ -17,7 +17,7 @@ on `M` to a measure on the model space `E` using `extChartAt`. This file defines
 measures and records basic finiteness instances needed by the Euclidean Sobolev baseline.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry
@@ -66,7 +66,7 @@ so that the value of `extChartAt` outside its source is irrelevant.
 -/
 
 /-- The pushforward of a measure `μ` on `M` along the extended chart `extChartAt`. -/
-noncomputable def chartMeasure (μ : Measure M) (i : d.ι) : Measure E :=
+@[expose] noncomputable def chartMeasure (μ : Measure M) (i : d.ι) : Measure E :=
   (μ.restrict (extChartAt I (d.center i)).source).map (extChartAt I (d.center i))
 
 section

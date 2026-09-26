@@ -19,7 +19,7 @@ The Faà di Bruno partition estimate gives the fixed output radius
 `R * (B*S + 2)`, independently of the derivative order.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

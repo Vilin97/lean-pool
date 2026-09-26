@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalLowBounds
 Euler state to the next. The only update costs are the initial velocity
 gradient error and the proved upper pressure bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

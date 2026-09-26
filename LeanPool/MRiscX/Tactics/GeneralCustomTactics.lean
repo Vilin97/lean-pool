@@ -14,7 +14,7 @@ import Mathlib.Tactic.Finiteness.Attr
 This module provides general-purpose custom tactics for MRiscX.
 -/
 
-@[expose] public section
+public section
 
 open Lean Elab Tactic Meta
 

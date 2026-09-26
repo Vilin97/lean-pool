@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CorrectionEnergyMajorants
 
 /-! Actual all-order Gevrey input budgets with radius loss controlled by the transport drift. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

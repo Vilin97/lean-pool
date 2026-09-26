@@ -15,7 +15,7 @@ import LeanPool.QuasiBorelSpaces.Hom
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Quotient`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace QuasiBorelSpace.Quotient

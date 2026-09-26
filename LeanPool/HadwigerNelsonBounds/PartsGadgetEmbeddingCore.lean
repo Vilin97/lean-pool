@@ -15,7 +15,7 @@ The 73 descriptors encode two radius-three triangular-lattice patches with a
 common center.  The second patch is rotated through cosine `7/8`.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

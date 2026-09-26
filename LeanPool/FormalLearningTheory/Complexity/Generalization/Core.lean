@@ -20,14 +20,14 @@ The numerical quantities that PAC learning bounds.
 Includes the canonical PAC learner (ERM).
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
 /-- Sample complexity of PAC learning: the minimum number of samples
     needed to achieve (ε,δ)-PAC learning.
     m_C(ε,δ) = sInf{m | ∃ L, ∀ D prob, ∀ c ∈ C, D^m{S : error(L(S)) ≤ ε} ≥ 1-δ}. -/
-noncomputable def SampleComplexity (X : Type u) [MeasurableSpace X]
+@[expose] noncomputable def SampleComplexity (X : Type u) [MeasurableSpace X]
     (C : ConceptClass X Bool) : ℝ → ℝ → ℕ :=
   fun ε δ => sInf { m : ℕ | ∃ (L : BatchLearner X Bool),
     ∀ (D : MeasureTheory.Measure X), MeasureTheory.IsProbabilityMeasure D →
@@ -60,6 +60,7 @@ noncomputable def LabelComplexity (X : Type u)
         L.learnMQ mq = c }
 
 /-- Mistake bound: minimum worst-case mistakes for online learning of C. -/
+@[expose]
 noncomputable def OptimalMistakeBound (X : Type u) (C : ConceptClass X Bool) : WithTop ℕ :=
   ⨅ (M : ℕ) (_ : MistakeBounded X Bool C M), (M : WithTop ℕ)
 
@@ -72,7 +73,7 @@ noncomputable def GeneralizationError (X : Type u) (Y : Type v)
   ∫ p, loss (h p.1) p.2 ∂D
 
 /-- Empirical error: average loss on a finite sample. -/
-noncomputable def EmpiricalError (X : Type u) (Y : Type v)
+@[expose] noncomputable def EmpiricalError (X : Type u) (Y : Type v)
     (h : Concept X Y) {m : ℕ} (S : Fin m → X × Y)
     (loss : LossFunction Y) : ℝ :=
   if m = 0 then 0
@@ -157,14 +158,14 @@ lemmas (e.g., ε-δ bounds with subtraction), swap to:
 
 /-- True error (0-1 loss, realizable case): D-probability of disagreement.
     This is what PACLearnable's success event measures. -/
-noncomputable def TrueError (X : Type u) [MeasurableSpace X]
+@[expose] noncomputable def TrueError (X : Type u) [MeasurableSpace X]
     (h : Concept X Bool) (c : Concept X Bool)
     (D : MeasureTheory.Measure X) : ENNReal :=
   D { x | h x ≠ c x }
 
 /-- True error in ℝ: for use in bounds involving subtraction/absolute value.
     COUNTER-1 of TrueError. The toReal bridge loses information when the measure is ⊤. -/
-noncomputable def TrueErrorReal (X : Type u) [MeasurableSpace X]
+@[expose] noncomputable def TrueErrorReal (X : Type u) [MeasurableSpace X]
     (h : Concept X Bool) (c : Concept X Bool)
     (D : MeasureTheory.Measure X) : ℝ :=
   (TrueError X h c D).toReal
@@ -741,6 +742,7 @@ What is the Lean4 type-theoretic status of this? -/
     making uc_imp_pac unprovable (PACLearnable's mf must be independent of D, c).
     Repaired: ∃ m₀ is now BEFORE ∀ D, ∀ c. This STRENGTHENS the definition
     (A5-valid: adds content, doesn't simplify). -/
+@[expose]
 def HasUniformConvergence (X : Type u) [MeasurableSpace X]
     (H : HypothesisSpace X Bool) : Prop :=
   ∀ (ε δ : ℝ), 0 < ε → 0 < δ →
@@ -1363,7 +1365,7 @@ needs Measure.count normalized by Fintype.card, or a manual Dirac sum.
 /-- Uniform probability measure on a Fintype: (1/|X|) · count.
     This gives each point probability 1/|X|.
     Requires |X| > 0 (nonempty). -/
-noncomputable def uniformMeasure (X : Type u) [MeasurableSpace X] [Fintype X]
+@[expose] noncomputable def uniformMeasure (X : Type u) [MeasurableSpace X] [Fintype X]
     (hne : Nonempty X) : MeasureTheory.Measure X :=
   let _nonemptyWitness := hne
   (1 / (Fintype.card X : ENNReal)) • MeasureTheory.Measure.count

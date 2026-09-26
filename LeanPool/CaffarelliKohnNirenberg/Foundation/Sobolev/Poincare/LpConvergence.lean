@@ -19,7 +19,7 @@ The proof uses interior mollification on compactly contained balls and then
 exhausts the original ball.
 -/
 
-@[expose] public section
+public section
 
 open Function Set Filter MeasureTheory Topology
 open scoped ENNReal Convolution Pointwise

@@ -25,7 +25,7 @@ for the fundamental domain boundary.
 * `fdBoundaryImmersion` — fixed-height boundary as `PiecewiseC1Immersion`
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

@@ -26,7 +26,7 @@ on `𝕋 P ℤ`,
 and the `NonUnitalNonAssocSemiring` instance. Proves that `HeckeCoset.one` is the identity element.
 -/
 
-@[expose] public section
+public section
 
 open MulOpposite Set DoubleCoset Subgroup Subgroup.Commensurable
 
@@ -128,14 +128,14 @@ noncomputable def mulMap (g₁ g₂ : P.Δ)
 
 /-- Shimura's multiplicity (Proposition 3.2): `heckeMultiplicity(g₁, g₂, d)` counts pairs
 `(i,j)` such that `σᵢ τⱼ H = ξ H`. -/
-noncomputable def heckeMultiplicity (g₁ g₂ d : P.Δ) : ℤ :=
+@[expose] noncomputable def heckeMultiplicity (g₁ g₂ d : P.Δ) : ℤ :=
   Nat.card {⟨i, j⟩ : decompQuot P g₁ × decompQuot P g₂ |
     ({(i.out : G) * (g₁ : G)} : Set G) *
       {(j.out : G) * (g₂ : G)} * P.H =
     {(d : G)} * (P.H : Set G)}
 
 /-- The finite set of double cosets appearing in the product `D1 * D2`. -/
-noncomputable def mulSupport (g₁ g₂ : P.Δ) : Finset (HeckeCoset P) :=
+@[expose] noncomputable def mulSupport (g₁ g₂ : P.Δ) : Finset (HeckeCoset P) :=
   Finset.image (mulMap P g₁ g₂) ⊤
 
 /-- If `σ_i τ_j H = ξ H` then the double coset of `σ_i τ_j` equals
@@ -500,7 +500,7 @@ lemma heckeMultiplicity_one_mul (g₁ d : P.Δ) :
 /-- The multiplication finsupp: `m(g₁, g₂)` is the formal sum
 `Σ_d heckeMultiplicity(g₁, g₂, d) · d`
 encoding the product of two double cosets. -/
-noncomputable def m (g₁ g₂ : P.Δ) : (HeckeCoset P) →₀ ℤ :=
+@[expose] noncomputable def m (g₁ g₂ : P.Δ) : (HeckeCoset P) →₀ ℤ :=
   ⟨mulSupport P g₁ g₂,
     fun d => heckeMultiplicity P g₁ g₂ (HeckeCoset.rep d),
     fun a =>

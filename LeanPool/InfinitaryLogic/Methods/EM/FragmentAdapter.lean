@@ -23,7 +23,7 @@ general.  `Realization.lean`'s model-input endpoints are the honest residual ben
 take the model itself, and the oracle factors through them.
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 
@@ -88,7 +88,7 @@ theorem realize_templateSentence_of_structure
 /-! ### Morley–Hanf-oriented corollaries -/
 
 /-- The 2-ary Lω₁ω disequality formula `x₀ ≠ x₁`. -/
-def disEqFormula : L.BoundedFormulaω Empty 2 :=
+@[expose] def disEqFormula : L.BoundedFormulaω Empty 2 :=
   (BoundedFormulaω.equal
     (Term.var (Sum.inr (0 : Fin 2)) : L.Term (Empty ⊕ Fin 2))
     (Term.var (Sum.inr (1 : Fin 2)) : L.Term (Empty ⊕ Fin 2))).not
@@ -100,7 +100,7 @@ The honest tail-template residual quantifies over exactly this seed
 formula sequences: an arbitrary sequence can enumerate `{Pᵢ x}ᵢ ∪ {⋀ᵢ Pᵢ x}` against a "height"
 model, whose tail template is finitely satisfiable but unsatisfiable — a genuine `L_{ω₁ω}`
 compactness failure. -/
-def morleySeed (φ : L.Sentenceω) : ℕ → Σ n, L.BoundedFormulaω Empty n := fun i =>
+@[expose] def morleySeed (φ : L.Sentenceω) : ℕ → Σ n, L.BoundedFormulaω Empty n := fun i =>
   match i with
   | 0 => ⟨0, φ⟩
   | 1 => ⟨2, disEqFormula⟩

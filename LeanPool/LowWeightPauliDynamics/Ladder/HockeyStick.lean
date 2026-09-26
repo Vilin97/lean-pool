@@ -28,7 +28,7 @@ reconciling the index ranges, and avoids `ℕ`-subtraction at `g = 0`.
 * `sum_range_choose_real`: the same identity with both sides cast to `ℝ`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 

@@ -43,7 +43,7 @@ used by Perron's method:
 Here "harmonic" is Mathlib's `InnerProductSpace.HarmonicOnNhd`.
 -/
 
-@[expose] public section
+public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex
 

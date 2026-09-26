@@ -34,7 +34,7 @@ pair `(Γ, Δ)` with `Γ ⊆ SentBnd F₁ R₁`, `Δ ⊆ SentBnd F₂ R₂`, ins
   `M ⊨ r₁ ∧ ¬ M ⊨ r₂`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

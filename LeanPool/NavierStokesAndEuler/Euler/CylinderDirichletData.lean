@@ -21,7 +21,7 @@ Pointwise tangency is encoded by the frame range, not by orthogonality to one
 vector in L². No solution or operator inverse is part of the input data.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

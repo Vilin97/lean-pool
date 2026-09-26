@@ -36,7 +36,7 @@ proved separately, in `RotationExp` and `Pauli/Tensor`.
   operator is `Q`, it is nonzero, and its Pauli norm is one.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD.DiscardWitness
 

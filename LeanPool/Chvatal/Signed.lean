@@ -49,7 +49,7 @@ This file verifies that conversion, the positive-part and Fourier identities,
 and the resulting signed version of the weighted star inequality.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

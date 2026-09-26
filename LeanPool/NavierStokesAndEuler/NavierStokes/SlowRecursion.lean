@@ -35,7 +35,7 @@ explicit positive-order system, and to smooth profiles in the squared radius.
 All existence assertions are obtained from the actual convergent series.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -128,7 +128,7 @@ noncomputable def matrixOperator : Matrix (Fin 6) (Fin 6) ℂ →L[ℂ] (Vec →
     LinearMap.toContinuousLinearMap).toContinuousLinearEquiv.toContinuousLinearMap
 
 @[simp] theorem matrixOperator_apply (A : Matrix (Fin 6) (Fin 6) ℂ) (v : Vec) :
-    matrixOperator A v = A.mulVec v := rfl
+    matrixOperator A v = A.mulVec v := by rfl
 
 @[simp] theorem matrixOperator_toMatrix (A : Matrix (Fin 6) (Fin 6) ℂ) :
     LinearMap.toMatrix' (matrixOperator A).toLinearMap = A :=
@@ -470,7 +470,7 @@ noncomputable def xProfile (W : Field) (i : Fin 6) (p : ℝ × ℝ) : ℝ :=
   ParametricEvenDescent.descend (realRadialComponent W i) (p.2, p.1)
 
 @[simp] theorem xProfile_apply (W : Field) (i : Fin 6) (X eta : ℝ) :
-    xProfile W i (X, eta) = (W (Real.sqrt X) (eta : ℂ) i).re := rfl
+    xProfile W i (X, eta) = (W (Real.sqrt X) (eta : ℂ) i).re := by rfl
 
 theorem realRadialComponent_smooth {R : ℝ} {U : Set ℂ} {W : Field}
     (hW : ContDiffOn ℝ ∞ (fun p : ℝ × ℂ => W p.1 p.2) (radialDomain R ×ˢ U))
@@ -609,13 +609,8 @@ theorem matrixRHS_first_rows {K : Type*} [Field K] (h lam C r eta : K)
     (b : BaseJet K) (s : SourceJet K) (w v : Fin 6 → K) :
     matrixRHS h lam C r eta b s w v 0 = w 4 ∧
       matrixRHS h lam C r eta b s w v 1 = w 5 := by
-  constructor
-  · change dotProduct (![0, 0, 0, 0, 1, 0] : Fin 6 → K) w +
-      dotProduct (![0, 0, 0, 0, 0, 0] : Fin 6 → K) v + 0 = w 4
-    simp [dotProduct, Fin.sum_univ_succ]
-  · change dotProduct (![0, 0, 0, 0, 0, 1] : Fin 6 → K) w +
-      dotProduct (![0, 0, 0, 0, 0, 0] : Fin 6 → K) v + 0 = w 5
-    simp [dotProduct, Fin.sum_univ_succ]
+  exact ⟨PositiveAxisSystem.matrixRHS_zero h lam C r eta b s w v,
+    PositiveAxisSystem.matrixRHS_one h lam C r eta b s w v⟩
 
 theorem RealSixSystem.first_derivative {R : ℝ} {J : Set ℝ} {h lam C : ℝ}
     {G : RealCoefficientData} {w : RealField} (hw : RealSixSystem R J h lam C G w)
@@ -745,7 +740,7 @@ noncomputable def lowerHistoryData (h : ℝ) (n : ℕ) (phi u beta : ℕ → Inn
 
 /-- New beta, defined pointwise by `betaValue h (slowPower h n) w.2 (actualJet u w) (actualJet k
 w)`. -/
-noncomputable def newBeta (h : ℝ) (n : ℕ) (u k : InnerProfile) : InnerProfile :=
+@[expose] noncomputable def newBeta (h : ℝ) (n : ℕ) (u k : InnerProfile) : InnerProfile :=
   fun w => betaValue h (slowPower h n) w.2 (actualJet u w) (actualJet k w)
 
 /-- The original positive-order convolution equations evaluated on the
@@ -976,7 +971,7 @@ This module removes the apparent `1/X` singularities in the radial source
 of equation (22), using the actual differential operators from SimilarityProfile.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -986,7 +981,7 @@ open SimilarityProfile Set Filter
 open scoped BigOperators Topology ContDiff
 
 /-- Axis factor, given by `w.1 * v w`. -/
-noncomputable def axisFactor (v : InnerProfile) (w : InnerPoint) : ℝ := w.1 * v w
+@[expose] noncomputable def axisFactor (v : InnerProfile) (w : InnerPoint) : ℝ := w.1 * v w
 
 theorem partialX_axisFactor {v : InnerProfile} {w : InnerPoint}
     (hv : DifferentiableAt ℝ v w) :
@@ -1067,7 +1062,7 @@ theorem radial_advection_axisFactor {vi vj : InnerProfile} {w : InnerPoint}
     ring
 
 /-- Slow order, given by `2 * (k : ℝ) * h`. -/
-noncomputable def slowOrder (h : ℝ) (k : ℕ) : ℝ := 2 * (k : ℝ) * h
+@[expose] noncomputable def slowOrder (h : ℝ) (k : ℕ) : ℝ := 2 * (k : ℝ) * h
 
 /-- Shifted axial as an element of `ℕ → InnerProfile | 0 => fun _ => 0 | k + 1 => Z2 h
 (slowOrder h k) (V k)`. -/
@@ -1090,6 +1085,7 @@ noncomputable def omega (h : ℝ) (U V : ℕ → InnerProfile) (k : ℕ) (w : In
     2 * w.1 * partialX (partialX (V k)) w - shiftedAxial h V k w
 
 /-- An explicit expression for Ω_k/X with no division by X. -/
+@[expose]
 noncomputable def omegaDivX (h : ℝ) (U v : ℕ → InnerProfile) (k : ℕ) (w : InnerPoint) : ℝ :=
   T h (slowOrder h k - 1) (v k) w +
     (∑ ij ∈ Finset.antidiagonal k,
@@ -1317,10 +1313,10 @@ noncomputable def jetZ2 {K : Type*} [Field K] (h b X e : K) (j : Jet2 K) : K :=
     (1 - e ^ 2) * jetZE h b X e j - 2 * e * X * jetZX h b X e j) / jetL h e
 
 theorem T_eq_jet (h b : ℝ) (v : InnerProfile) (w : InnerPoint) :
-    T h b v w = jetT h b w.1 w.2 (profileJet v w) := rfl
+    T h b v w = jetT h b w.1 w.2 (profileJet v w) := by rfl
 
 theorem Z_eq_jet (h b : ℝ) (v : InnerProfile) (w : InnerPoint) :
-    Z h b v w = jetZ h b w.1 w.2 (profileJet v w) := rfl
+    Z h b v w = jetZ h b w.1 w.2 (profileJet v w) := by rfl
 
 theorem Z_partials_eq_jet (h b : ℝ) {v : InnerProfile} {w : InnerPoint}
     (hv : ContDiffAt ℝ 2 v w) (hL : L h w.2 ≠ 0) :
@@ -1541,7 +1537,7 @@ noncomputable def lowerConvolution (a b : ℕ → InnerProfile) (n : ℕ) (w : I
 
 /-- Previous omega div X as an element of `ℕ → InnerProfile | 0 => fun _ => 0 | k + 1 =>
 omegaDivX h U v k`. -/
-noncomputable def previousOmegaDivX (h : ℝ) (U v : ℕ → InnerProfile) : ℕ → InnerProfile
+@[expose] noncomputable def previousOmegaDivX (h : ℝ) (U v : ℕ → InnerProfile) : ℕ → InnerProfile
   | 0 => fun _ => 0
   | k + 1 => omegaDivX h U v k
 
@@ -1831,7 +1827,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1913,7 +1909,7 @@ noncomputable def realConstant (R : ℝ) (U : Set ℂ) (c : ℝ) : AxisFunction 
   algebraMap ℝ (AxisFunction R U) c
 
 @[simp] theorem realConstant_apply (R : ℝ) (U : Set ℂ) (c : ℝ) (p : ℝ × ℂ) :
-    realConstant R U c p = (c : ℂ) := rfl
+    realConstant R U c p = (c : ℂ) := by rfl
 
 @[simp] theorem add_apply {R : ℝ} {U : Set ℂ} (F G : AxisFunction R U) (p : ℝ × ℂ) :
     (F + G) p = F p + G p := rfl
@@ -1958,7 +1954,7 @@ noncomputable def restrict {R S : ℝ} {U : Set ℂ} (hSR : S ≤ R)
     real := fun r hr eta heta => F.2.real r (interval_mono hSR hr) eta heta }⟩
 
 @[simp] theorem restrict_apply {R S : ℝ} {U : Set ℂ} (hSR : S ≤ R)
-    (F : AxisFunction R U) (p : ℝ × ℂ) : restrict hSR F p = F p := rfl
+    (F : AxisFunction R U) (p : ℝ × ℂ) : restrict hSR F p = F p := by rfl
 
 /-- Inverse as an element of `AxisFunction R U`. -/
 noncomputable def inverse {R : ℝ} {U : Set ℂ} (F : AxisFunction R U)
@@ -2115,7 +2111,7 @@ noncomputable def symmetrize {R : ℝ} {U : Set ℂ} (hU : IsOpen U)
       rfl }⟩
 
 /-- Profile, given by `(F (Real.sqrt p.1, (p.2 : ℂ))).re`. -/
-noncomputable def profile {R : ℝ} {U : Set ℂ} (F : AxisFunction R U)
+@[expose] noncomputable def profile {R : ℝ} {U : Set ℂ} (F : AxisFunction R U)
     (p : ℝ × ℝ) : ℝ := (F (Real.sqrt p.1, (p.2 : ℂ))).re
 
 /-- Complex profile, given by `F (Real.sqrt p.1, p.2)`. -/
@@ -2284,23 +2280,23 @@ noncomputable def axialOperator {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R 
       radialDerivative c.positive c.open_set F) * inverseDenominator c
 
 @[simp] theorem complexProfile_add {R : ℝ} {U : Set ℂ} (F G : AxisFunction R U) (p : ℝ × ℂ) :
-    complexProfile (F + G) p = complexProfile F p + complexProfile G p := rfl
+    complexProfile (F + G) p = complexProfile F p + complexProfile G p := by rfl
 @[simp] theorem complexProfile_sub {R : ℝ} {U : Set ℂ} (F G : AxisFunction R U) (p : ℝ × ℂ) :
-    complexProfile (F - G) p = complexProfile F p - complexProfile G p := rfl
+    complexProfile (F - G) p = complexProfile F p - complexProfile G p := by rfl
 @[simp] theorem complexProfile_mul {R : ℝ} {U : Set ℂ} (F G : AxisFunction R U) (p : ℝ × ℂ) :
-    complexProfile (F * G) p = complexProfile F p * complexProfile G p := rfl
+    complexProfile (F * G) p = complexProfile F p * complexProfile G p := by rfl
 @[simp] theorem complexProfile_neg {R : ℝ} {U : Set ℂ} (F : AxisFunction R U) (p : ℝ × ℂ) :
-    complexProfile (-F) p = -complexProfile F p := rfl
+    complexProfile (-F) p = -complexProfile F p := by rfl
 @[simp] theorem complexProfile_pow {R : ℝ} {U : Set ℂ} (F : AxisFunction R U) (k : ℕ) (p : ℝ × ℂ) :
-    complexProfile (F ^ k) p = complexProfile F p ^ k := rfl
+    complexProfile (F ^ k) p = complexProfile F p ^ k := by rfl
 @[simp] theorem complexProfile_zero {R : ℝ} {U : Set ℂ} (p : ℝ × ℂ) :
-    complexProfile (0 : AxisFunction R U) p = 0 := rfl
+    complexProfile (0 : AxisFunction R U) p = 0 := by rfl
 @[simp] theorem complexProfile_one {R : ℝ} {U : Set ℂ} (p : ℝ × ℂ) :
-    complexProfile (1 : AxisFunction R U) p = 1 := rfl
+    complexProfile (1 : AxisFunction R U) p = 1 := by rfl
 @[simp] theorem complexProfile_realConstant (R : ℝ) (U : Set ℂ) (b : ℝ) (p : ℝ × ℂ) :
-    complexProfile (realConstant R U b) p = (b : ℂ) := rfl
+    complexProfile (realConstant R U b) p = (b : ℂ) := by rfl
 @[simp] theorem complexProfile_parameter (R : ℝ) (U : Set ℂ) (p : ℝ × ℂ) :
-    complexProfile (parameter R U) p = p.2 := rfl
+    complexProfile (parameter R U) p = p.2 := by rfl
 @[simp] theorem complexProfile_squaredRadius (R : ℝ) (U : Set ℂ) {X : ℝ} (hX : 0 ≤ X) (z : ℂ) :
     complexProfile (squaredRadius R U) (X, z) = (X : ℂ) := by
   change ((Real.sqrt X ^ 2 : ℝ) : ℂ) = _
@@ -2866,7 +2862,7 @@ theorem sequence_profile {core buffer : ℝ} {U : Set ℂ} {h : ℝ}
     (c : Domain (radius core buffer 0) U h) (hcore : 0 < core) (hbuffer : 0 < buffer)
     (C : ℝ) (base : Coefficient (radius core buffer 0) U) (n : ℕ) (i : Fin 5) :
     profile (sequence c hcore hbuffer C base n i) = profile (hierarchy c hcore hbuffer C base n i)
-        := rfl
+        := by rfl
 
 theorem sequence_zero {core buffer : ℝ} {U : Set ℂ} {h : ℝ}
     (c : Domain (radius core buffer 0) U h) (hcore : 0 < core) (hbuffer : 0 < buffer)

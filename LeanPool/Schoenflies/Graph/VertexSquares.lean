@@ -57,7 +57,7 @@ Bricks B2, B3 and B4 of `lem:polygonal-redrawing`.
   which is a property of the whole arc.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 

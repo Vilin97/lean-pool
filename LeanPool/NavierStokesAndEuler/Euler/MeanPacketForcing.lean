@@ -42,7 +42,7 @@ section
 
 /-! Smooth parameter dependence in actual L² from square-integrable fiberwise jets. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -154,7 +154,7 @@ section
 
 /-! All-order L² parameter regularity with the original square-integrable derivative bounds. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -228,7 +228,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -324,7 +324,7 @@ automatically square integrable. The continuous and Bochner orbit theorems
 therefore use the same concrete forcing data.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -361,7 +361,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

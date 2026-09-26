@@ -20,13 +20,13 @@ energy.  Consequently the physical mass-zero Hamiltonian pulls back to the displ
 Hamiltonian.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 
 /-- A frequency vector regarded as the corresponding Euclidean action covector. -/
-noncomputable def actionCovector (vector : ActionSpace) : ActionSpace →L[ℝ] ℝ :=
+@[expose] noncomputable def actionCovector (vector : ActionSpace) : ActionSpace →L[ℝ] ℝ :=
   ((ContinuousLinearMap.proj 0 : ActionSpace →L[ℝ] ℝ).smulRight (vector 0)) +
     ((ContinuousLinearMap.proj 1 : ActionSpace →L[ℝ] ℝ).smulRight (vector 1))
 
@@ -36,24 +36,24 @@ lemma actionCovector_apply (vector direction : ActionSpace) :
   simp [actionCovector, mul_comm]
 
 /-- Coordinate tangent vectors in the two-dimensional action space. -/
-def actionCoordinateVector (coordinate : Fin 2) : ActionSpace :=
+@[expose] def actionCoordinateVector (coordinate : Fin 2) : ActionSpace :=
   fun index ↦ if index = coordinate then 1 else 0
 
 /-- Inertial Kepler energy written in rotating Cartesian canonical variables. -/
-noncomputable def cartesianKeplerEnergy (state : PhaseSpace) : ℝ :=
+@[expose] noncomputable def cartesianKeplerEnergy (state : PhaseSpace) : ℝ :=
   ((state 2) ^ 2 + (state 3) ^ 2) / 2 -
     1 / Real.sqrt ((state 0) ^ 2 + (state 1) ^ 2)
 
 /-- The first Delaunay action reconstructed from negative inertial Kepler energy. -/
-noncomputable def cartesianFirstAction (state : PhaseSpace) : ℝ :=
+@[expose] noncomputable def cartesianFirstAction (state : PhaseSpace) : ℝ :=
   1 / Real.sqrt (-2 * cartesianKeplerEnergy state)
 
 /-- The planar angular action `G = x pᵧ - y pₓ`. -/
-def cartesianAngularAction (state : PhaseSpace) : ℝ :=
+@[expose] def cartesianAngularAction (state : PhaseSpace) : ℝ :=
   state 0 * state 3 - state 1 * state 2
 
 /-- Both Cartesian Delaunay actions, ordered as `(L, G)`. -/
-noncomputable def cartesianDelaunayActions (state : PhaseSpace) : ActionSpace :=
+@[expose] noncomputable def cartesianDelaunayActions (state : PhaseSpace) : ActionSpace :=
   ![cartesianFirstAction state, cartesianAngularAction state]
 
 /-- The inertial Kepler energy is analytic away from the central collision. -/

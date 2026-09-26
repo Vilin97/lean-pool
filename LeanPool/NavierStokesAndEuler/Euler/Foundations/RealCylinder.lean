@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderAlgebra
 
 /-! Real-valued forms of the cylinder Sobolev and multiplication estimates. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -37,16 +37,16 @@ theorem iteratedFieldDerivative_postcomp {n : ℕ} (L : F →L[ℝ] G) (w : Fin 
     (f : LiftDomain period → F) (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x)) :
     iteratedFieldDerivative period w (L ∘ f) = L ∘ iteratedFieldDerivative period w f := by
   induction n with
-  | zero => rfl
+  | zero => simp only [iteratedFieldDerivative_zero]
   | succ n ih =>
     rw [iteratedFieldDerivative_succ, ih (Fin.tail w), fieldDerivative_postcomp period L _ _
       (iteratedFieldDerivative_smooth period (Fin.tail w) f hf)]
-    rfl
+    simp only [iteratedFieldDerivative_succ]
 
 end LinearMaps
 
 /-- Isometric complexification of a real scalar cylinder field. -/
-noncomputable def complexField (f : LiftDomain period → ℝ) : LiftDomain period → ℂ :=
+@[expose] noncomputable def complexField (f : LiftDomain period → ℝ) : LiftDomain period → ℂ :=
   Complex.ofRealCLM ∘ f
 
 theorem complexField_smooth (f : LiftDomain period → ℝ)

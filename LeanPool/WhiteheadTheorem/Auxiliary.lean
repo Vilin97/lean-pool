@@ -15,7 +15,7 @@ public import Mathlib.Topology.Category.TopCat.Basic
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Auxiliary`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace CategoryTheory

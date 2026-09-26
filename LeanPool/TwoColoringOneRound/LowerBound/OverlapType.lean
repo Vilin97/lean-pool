@@ -22,7 +22,7 @@ This file provides the core combinatorial operations needed to compute the orbit
 constants for fixed `n` (eventually instantiated to `n = 10^6`).
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -53,7 +53,7 @@ def decodePartialPerm (m : Mask) : Fin 3 → Option (Fin 3) :=
     else none
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def IsPartialPermMask (m : Mask) : Prop :=
+@[expose] def IsPartialPermMask (m : Mask) : Prop :=
   (∀ i : Fin 3, (Finset.filter (fun j : Fin 3 => m.testBit (i.1 * 3 + j.1)) Finset.univ).card ≤ 1) ∧
   (∀ j : Fin 3, (Finset.filter (fun i : Fin 3 => m.testBit (i.1 * 3 + j.1)) Finset.univ).card ≤ 1)
 

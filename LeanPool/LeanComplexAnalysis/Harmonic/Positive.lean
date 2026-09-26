@@ -18,4 +18,4 @@ including Harnack's inequality and the Herglotz–Riesz representation theorem
 (existence and uniqueness).
 -/
 
-@[expose] public section
+public section

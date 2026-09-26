@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.Pow
 Here we supply the semantics of GL.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 
@@ -37,8 +37,7 @@ instance instModelIsIrref {α : Type} (M : Model α) : Std.Irrefl M.R where
   irrefl := fun a con ↦ (WellFounded.irrefl M.con_wf).irrefl a con
 
 /-- Standard semantics for Kripke models. -/
-@[simp]
-def evaluate {α : Type} : Model α × α → Formula → Prop
+@[expose, simp] def evaluate {α : Type} : Model α × α → Formula → Prop
   | (_, _), ⊥ => False
   | (_, _), ⊤ => True
   | (M, w), at n => M.V w n
@@ -62,12 +61,11 @@ lemma evaluate_imp {α : Type} (M : Model α) (u : α) (φ ψ : Formula) :
   tauto
 
 /-- note: sequent are read disjunctively! -/
-@[simp]
-def evaluateSeq {α : Type} : Model α × α → Sequent → Prop :=
+@[expose, simp] def evaluateSeq {α : Type} : Model α × α → Sequent → Prop :=
   fun M_u Γ ↦ ∃ φ ∈ Γ, evaluate M_u φ
 
 /-- note: ignores the left/right annotation. -/
-def evaluateSSeq {α : Type} : Model α × α → SplitSequent → Prop :=
+@[expose] def evaluateSSeq {α : Type} : Model α × α → SplitSequent → Prop :=
   fun M_u Γ ↦ ∃ φ ∈ Γ, evaluate M_u (Sum.elim id id φ)
 
 @[simp]
@@ -78,15 +76,15 @@ lemma not_evaluateSSeq {α : Type} {M_u : Model α × α} {Γ : SplitSequent} :
   simp [evaluateSSeq]
 
 /-- A formula is valid if it holds at every world in every GL model. -/
-def Formula.isValid (φ : Formula) : Prop
+@[expose] def Formula.isValid (φ : Formula) : Prop
   := ∀ (α : Type), ∀ M : Model α, ∀ u : α, evaluate ⟨M, u⟩ φ
 
 /-- A sequent is valid if some formula in it holds at every world in every GL model. -/
-def Sequent.isValid (Δ : Sequent) : Prop
+@[expose] def Sequent.isValid (Δ : Sequent) : Prop
   := ∀ (α : Type), ∀ M : Model α, ∀ u : α, evaluateSeq ⟨M, u⟩ Δ
 
 /-- A split sequent is valid if some formula in it holds at every world in every GL model. -/
-def SplitSequent.isValid (Δ : SplitSequent) : Prop
+@[expose] def SplitSequent.isValid (Δ : SplitSequent) : Prop
   := ∀ (α : Type), ∀ M : Model α, ∀ u : α, evaluateSSeq ⟨M, u⟩ Δ
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
@@ -97,7 +95,7 @@ prefix:40 "⊨" => Sequent.isValid
 prefix:40 "⊨" => SplitSequent.isValid
 
 /-- Two formulas are semantically equivalent if their biconditional is valid. -/
-def semEquiv : Formula → Formula → Prop := fun φ ψ ↦ ⊨ φ ⟷ ψ
+@[expose] def semEquiv : Formula → Formula → Prop := fun φ ψ ↦ ⊨ φ ⟷ ψ
 
 
 /-- Model construction for substitution lemma. -/

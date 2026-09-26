@@ -22,13 +22,13 @@ identities naturally produced by coefficient induction into failure of the chall
 `LinearIndependent` predicate.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 
 /-- A two-by-two coordinate minor of a pair of phase covectors. -/
-def phaseCovectorMinor
+@[expose] def phaseCovectorMinor
     (first second : PhaseSpace →L[ℝ] ℝ) (i j : Fin 4) : ℝ :=
   first (coordinateVector i) * second (coordinateVector j) -
     first (coordinateVector j) * second (coordinateVector i)

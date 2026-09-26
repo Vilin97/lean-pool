@@ -22,7 +22,7 @@ plays an applicable sequent `Γ` in order to construct a counter-model. Prover g
 and plays rule applications `R` in order to construct a proof.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 
@@ -83,7 +83,7 @@ def SplitSequent.ruleApps (Γ : SplitSequent) : Finset RuleApp :=
     exact (source_eq φ_f).trans (source_eq ψ_f).symm)
 
 /-- The sequents possible after a rule application `R`. -/
-def RuleApp.splitSequents (R : RuleApp) : Finset SplitSequent := match R with
+@[expose] def RuleApp.splitSequents (R : RuleApp) : Finset SplitSequent := match R with
   | RuleApp.topₗ _ _ => ∅
   | RuleApp.topᵣ _ _ => ∅
   | RuleApp.axₗₗ _ _ _ => ∅
@@ -420,8 +420,7 @@ lemma matches_finite : WellFounded (Function.swap Move) := by
       cases this
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-@[reducible]
-def coalgebraGame : Game where
+@[expose, reducible] def coalgebraGame : Game where
   Pos := GamePos -- = (SplitSequent ⊕ RuleApp) × List SplitSequent × List RuleApp
   turn
     | ⟨Sum.inl _, _, _⟩ => Prover -- picks RuleApp

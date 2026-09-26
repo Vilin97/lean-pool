@@ -16,7 +16,7 @@ permission.  These identities separate the average bookkeeping from the
 analytic segment estimate.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 

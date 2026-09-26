@@ -23,7 +23,7 @@ Tags: number-theory, asymptotics
 MSC: 11B68, 11N05
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

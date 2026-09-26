@@ -23,7 +23,7 @@ spaces `HeckeCoset` and `HeckeLeftCoset`, the Hecke ring type `𝕋`, and founda
 lemmas.
 -/
 
-@[expose] public section
+public section
 
 open MulOpposite Set DoubleCoset Subgroup Subgroup.Commensurable
 
@@ -77,7 +77,7 @@ structure HeckePair (G : Type*) [Group G] where
   h₁ : Δ ≤ (commensurator H).toSubmonoid
 
 /-- Two elements of `Δ` define the same double coset `HgH = HhH`. -/
-def dcRel (P : HeckePair G) (g h : P.Δ) : Prop :=
+@[expose] def dcRel (P : HeckePair G) (g h : P.Δ) : Prop :=
   DoubleCoset.doubleCoset (g : G) P.H P.H = DoubleCoset.doubleCoset (h : G) P.H P.H
 
 /-- The setoid on `Δ` identifying elements with the same double coset. -/
@@ -92,7 +92,7 @@ abbrev HeckeCoset (P : HeckePair G) := Quotient (dcSetoid P)
 noncomputable instance (P : HeckePair G) : DecidableEq (HeckeCoset P) := Classical.decEq _
 
 /-- Two elements of `Δ` define the same left coset `gH = hH`. -/
-def lcRel (P : HeckePair G) (g h : P.Δ) : Prop :=
+@[expose] def lcRel (P : HeckePair G) (g h : P.Δ) : Prop :=
   ({(g : G)} : Set G) * (P.H : Set G) = {(h : G)} * P.H
 
 /-- The setoid on `Δ` identifying elements with the same left coset. -/
@@ -101,7 +101,7 @@ instance lcSetoid (P : HeckePair G) : Setoid P.Δ where
   iseqv := ⟨fun _ => rfl, Eq.symm, Eq.trans⟩
 
 /-- A Hecke left coset: an equivalence class of `Δ`-elements under `gH = hH`. -/
-def HeckeLeftCoset (P : HeckePair G) := Quotient (lcSetoid P)
+@[expose] def HeckeLeftCoset (P : HeckePair G) := Quotient (lcSetoid P)
 
 noncomputable instance (P : HeckePair G) : DecidableEq (HeckeLeftCoset P) := Classical.decEq _
 
@@ -115,7 +115,7 @@ noncomputable def toSet (D : HeckeCoset P) : Set G :=
     (fun a b (h : @Setoid.r _ (dcSetoid P) a b) => h) D
 
 /-- A representative `g : Δ` (via `Quotient.out`). -/
-noncomputable def rep (D : HeckeCoset P) : P.Δ := Quotient.out D
+@[expose] noncomputable def rep (D : HeckeCoset P) : P.Δ := Quotient.out D
 
 /-- `⟦g⟧ = ⟦h⟧ ↔ HgH = HhH`. -/
 lemma eq_iff (g h : P.Δ) : (⟦g⟧ : HeckeCoset P) = ⟦h⟧ ↔
@@ -124,7 +124,7 @@ lemma eq_iff (g h : P.Δ) : (⟦g⟧ : HeckeCoset P) = ⟦h⟧ ↔
 
 /-- The carrier set of `⟦g⟧` is definitionally `HgH`. -/
 @[simp] lemma toSet_mk (g : P.Δ) :
-    HeckeCoset.toSet (⟦g⟧ : HeckeCoset P) = DoubleCoset.doubleCoset (g : G) P.H P.H := rfl
+    HeckeCoset.toSet (⟦g⟧ : HeckeCoset P) = DoubleCoset.doubleCoset (g : G) P.H P.H := by rfl
 
 /-- Membership in `toSet ⟦g⟧` is membership in the double coset `HgH`. -/
 lemma mem_toSet_mk (g : P.Δ) (x : G) :
@@ -168,7 +168,7 @@ lemma eq_mk_of_mem {g₁ g₂ : P.Δ}
   (eq_iff g₁ g₂).mpr (doubleCoset_eq_of_mem h)
 
 /-- The identity double coset `H1H = H`. -/
-def one (P : HeckePair G) : HeckeCoset P := ⟦⟨1, P.Δ.one_mem⟩⟧
+@[expose] def one (P : HeckePair G) : HeckeCoset P := ⟦⟨1, P.Δ.one_mem⟩⟧
 
 /-- Induction: to prove something for all double cosets, prove it for `⟦g⟧`. -/
 protected lemma ind {motive : HeckeCoset P → Prop}
@@ -200,7 +200,7 @@ noncomputable def toSet (D : HeckeLeftCoset P) : Set G :=
     (fun _ _ (h : lcRel P _ _) => h) D
 
 /-- A representative `g : Δ`. -/
-noncomputable def rep (D : HeckeLeftCoset P) : P.Δ := Quotient.out D
+@[expose] noncomputable def rep (D : HeckeLeftCoset P) : P.Δ := Quotient.out D
 
 /-- The identity left coset `1H = H`. -/
 def one (P : HeckePair G) : HeckeLeftCoset P := ⟦⟨1, P.Δ.one_mem⟩⟧

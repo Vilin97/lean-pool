@@ -16,7 +16,7 @@ import Mathlib.Analysis.Calculus.Deriv.Prod
 # Lagrangian
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

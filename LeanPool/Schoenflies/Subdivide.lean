@@ -36,7 +36,7 @@ Three facts about one cut, each lifted across the piece list and then across the
 * `subdivide` and its three properties — the cutting half of Lemma 3.7 (polygonal overlay).
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -48,18 +48,18 @@ abbrev Piece := Plane × Plane
 namespace Piece
 
 /-- The closed segment a piece occupies. -/
-def seg (P : Piece) : Set Plane := segment ℝ P.1 P.2
+@[expose] def seg (P : Piece) : Set Plane := segment ℝ P.1 P.2
 
 /-- The interior of a piece. -/
-def interior (P : Piece) : Set Plane := openSegment ℝ P.1 P.2
+@[expose] def interior (P : Piece) : Set Plane := openSegment ℝ P.1 P.2
 
 /-- A piece is nondegenerate when its two ends differ. -/
-def Nondeg (P : Piece) : Prop := P.1 ≠ P.2
+@[expose] def Nondeg (P : Piece) : Prop := P.1 ≠ P.2
 
 end Piece
 
 /-- What a list of pieces occupies. -/
-def cover (pieces : List Piece) : Set Plane := ⋃ P ∈ pieces, P.seg
+@[expose] def cover (pieces : List Piece) : Set Plane := ⋃ P ∈ pieces, P.seg
 
 @[simp] theorem cover_nil : cover [] = ∅ := by simp [cover]
 
@@ -83,7 +83,7 @@ theorem cover_flatMap (f : Piece → List Piece) (ps : List Piece) :
 open scoped Classical in
 /-- Cut one piece at one point: two pieces if the point is interior to it, and the piece
 unchanged otherwise. Cutting at a point that is already an endpoint is a no-op. -/
-noncomputable def splitAt (p : Plane) (P : Piece) : List Piece :=
+@[expose] noncomputable def splitAt (p : Plane) (P : Piece) : List Piece :=
   if p ∈ P.interior then [(P.1, p), (p, P.2)] else [P]
 
 theorem splitAt_cover (p : Plane) (P : Piece) : cover (splitAt p P) = P.seg := by
@@ -160,7 +160,7 @@ theorem splitAt_avoids (p : Plane) {P : Piece} (hP : P.Nondeg) :
 /-! ### One cut, across the whole list -/
 
 /-- Cut every piece of the list at one point. -/
-noncomputable def splitAllAt (p : Plane) (pieces : List Piece) : List Piece :=
+@[expose] noncomputable def splitAllAt (p : Plane) (pieces : List Piece) : List Piece :=
   pieces.flatMap (splitAt p)
 
 theorem splitAllAt_cover (p : Plane) (pieces : List Piece) :
@@ -191,7 +191,7 @@ theorem splitAllAt_avoids (p : Plane) {pieces : List Piece} (h : ∀ P ∈ piece
 
 /-- Subdivide a list of pieces at a list of points, recursing on the POINT list: cut every
 current piece at the head, then carry on with the tail. -/
-noncomputable def subdivide (pieces : List Piece) : List Plane → List Piece
+@[expose] noncomputable def subdivide (pieces : List Piece) : List Plane → List Piece
   | [] => pieces
   | p :: ps => subdivide (splitAllAt p pieces) ps
 

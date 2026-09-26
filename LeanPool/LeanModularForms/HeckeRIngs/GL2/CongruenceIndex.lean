@@ -24,7 +24,7 @@ Computes the index `[SL₂(ℤ) : Γ₀(pᵏ)] = pᵏ⁻¹(p + 1)` for prime `p`
 * Shimura, Theorem 3.24
 -/
 
-@[expose] public section
+public section
 
 open Matrix.SpecialLinearGroup Matrix ModularGroup CongruenceSubgroup
 

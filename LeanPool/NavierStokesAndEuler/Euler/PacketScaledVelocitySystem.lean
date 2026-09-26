@@ -24,7 +24,7 @@ flux equation used in amplification.  Only the first two transport rows are
 relevant; the auxiliary third row in the scalar estimate is filled explicitly.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -141,7 +141,7 @@ section
 
 /-! Ray control for the genuine within-interval packet equations. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

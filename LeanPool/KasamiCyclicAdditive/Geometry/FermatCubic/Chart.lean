@@ -26,7 +26,7 @@ model `fer`.  The main results are
   vanishes.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 
@@ -55,7 +55,7 @@ lemma chart_nonsingular {w t : K} (h : w ^ 3 + t ^ 3 = 1) :
   linear_combination h + (-t ^ 3 - w * t ^ 2) * CharTwo.two_eq_zero (R := K)
 
 /-- The affine Fermat point `(w,t)` viewed in the Weierstrass model `fer`. -/
-def pt (w t : K) (h : w ^ 3 + t ^ 3 = 1) : (fer K).toAffine.Point :=
+@[expose] def pt (w t : K) (h : w ^ 3 + t ^ 3 = 1) : (fer K).toAffine.Point :=
   Affine.Point.some _ _ (chart_nonsingular h)
 
 /-- `pt` is injective in its two coordinates. -/

@@ -17,7 +17,7 @@ This files provides some useful and obvious results for linear maps and continuo
 
 -/
 
-@[expose] public section
+public section
 
 theorem _root_.ext_inner_left_iff {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E]
     [InnerProductSpace 𝕜 E] (x y : E) :

@@ -19,7 +19,7 @@ and its determinant-one cofactor identity.  Neither inverse-flow jets nor
 inverse-deformation jets are independent assumptions.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -53,7 +53,7 @@ theorem inverseFlow_contDiff (t : Icc (0 : ℝ) D.T) : ContDiff ℝ ∞ (Y t) :=
     (inverseFlow_fderiv D X Y hX hY hXY t)
 
 /-- Source inverse radius, given by `1 + 18*C^2*R`. -/
-def sourceInverseRadius (C R : ℝ) : ℝ := 1 + 18*C^2*R
+@[expose] def sourceInverseRadius (C R : ℝ) : ℝ := 1 + 18*C^2*R
 
 lemma sourceInverseRadius_eq (C R : ℝ) :
     sourceInverseRadius C R = inverseMapRadius (9*C^2) R := by

@@ -58,7 +58,7 @@ Stern's model-theoretic forcing proof is identified as the semantic dual, but it
 **unverified** — the paper has not been read.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -69,7 +69,7 @@ variable {L : Language.{0, 0}} {M : Type}
 /-! ## The constant support of a labelled side -/
 
 /-- The Henkin constants occurring anywhere in a set of sentences. -/
-def theoryJConsts (T : Set L[[ℕ]].Sentenceω) : Set ℕ :=
+@[expose] def theoryJConsts (T : Set L[[ℕ]].Sentenceω) : Set ℕ :=
   ⋃ σ ∈ T, sentenceJConsts (L' := L) (J := ℕ) σ
 
 variable {T T' : Set L[[ℕ]].Sentenceω} {σ : L[[ℕ]].Sentenceω} {c : ℕ}

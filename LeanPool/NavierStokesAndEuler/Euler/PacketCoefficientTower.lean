@@ -24,7 +24,7 @@ section
 /-! Operator-norm continuity into a finite Sobolev space is equivalent
 to continuity of all its actual derivative-coordinate operators. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -116,7 +116,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -230,7 +230,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

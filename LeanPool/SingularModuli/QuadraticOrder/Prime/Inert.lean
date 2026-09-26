@@ -25,7 +25,7 @@ remains prime in `O_d` exactly when the Legendre symbol `(d/p) = -1`.
 rather than via the thesis's direct index computation in `ℤ/pᵏ[x]/g(x)`.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 

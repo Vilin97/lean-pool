@@ -30,7 +30,7 @@ The universal conjecture remains open because a density-zero failure set need
 not be empty.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 

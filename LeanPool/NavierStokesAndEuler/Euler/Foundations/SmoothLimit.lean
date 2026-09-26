@@ -22,7 +22,7 @@ derivative of the increments. Smoothness and convergence of the limit are proved
 not assumed. The divergence is the usual coordinate trace of the first derivative.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

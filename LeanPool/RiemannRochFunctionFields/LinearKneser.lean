@@ -22,7 +22,7 @@ hypothesis makes the stabilizer-field step direct and avoids a separate finite/i
 split.
 -/
 
-@[expose] public section
+public section
 
 open scoped Pointwise
 

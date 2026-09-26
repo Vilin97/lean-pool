@@ -11,7 +11,7 @@ public import Mathlib.MeasureTheory.Function.L2Space
 
 /-! Actual integral pairings and their strong limits for metric energy passage. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

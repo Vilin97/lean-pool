@@ -16,7 +16,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! Actual packet word bounds give the finite weighted Sobolev budgets
 used by the nonlinear correction, with no change to the spatial radius. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

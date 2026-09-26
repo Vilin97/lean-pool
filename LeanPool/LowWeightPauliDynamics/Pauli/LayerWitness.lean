@@ -82,7 +82,7 @@ layer's supports are disjoint; each contributes at most `k_h` sites, and each of
 least one site of `p`. That is where the sharp factor `k_h` comes from rather than `k_h + 1`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -177,7 +177,7 @@ theorem support_subset_of_mem_branch (hq : q ∈ branch G p) :
 /-- **One layer**, applied generator by generator. The generators of a layer have disjoint
 supports and so commute, which is why the order in the list is immaterial to the result and why
 `branch`'s test can be read off the string entering the layer. -/
-def oneLayer : (L : List (PauliString n)) → (p : PauliString n) → Finset (PauliString n)
+@[expose] def oneLayer : (L : List (PauliString n)) → (p : PauliString n) → Finset (PauliString n)
   | [], p => {p}
   | G :: Gs, p => (branch G p).biUnion (oneLayer Gs)
 
@@ -189,7 +189,7 @@ def oneLayer : (L : List (PauliString n)) → (p : PauliString n) → Finset (Pa
 
 /-- **A sequence of layers**, applied one after another, the head of the list first. One Trotter
 step of the `p`th-order product formula `apd:eq:suzuki` is a sequence of `ΥΓ` layers. -/
-def reachable : (layers : List (List (PauliString n))) → (p : PauliString n) →
+@[expose] def reachable : (layers : List (List (PauliString n))) → (p : PauliString n) →
     Finset (PauliString n)
   | [], p => {p}
   | L :: Ls, p => (oneLayer L p).biUnion (reachable Ls)
@@ -415,9 +415,11 @@ Enough notation to write a concrete brickwork down. Both carry phase `0`, which 
 choice for a string with no `Y` site (`isSelfAdjoint_iff_phase`). -/
 
 /-- The single-site `X_i`. -/
+@[expose]
 def X (i : Fin n) : PauliString n := ⟨fun j => if j = i then 1 else 0, 0, 0⟩
 
 /-- The single-site `Z_i`. -/
+@[expose]
 def Z (i : Fin n) : PauliString n := ⟨0, fun j => if j = i then 1 else 0, 0⟩
 
 end PauliString
@@ -431,9 +433,11 @@ namespace LayerWitness
 open PauliString
 
 /-- The **even** brickwork layer: generators on qubit pairs `(0,1)`, `(2,3)`, `(4,5)`, `(6,7)`. -/
+@[expose]
 def L₁ : List (PauliString 8) := [X 0 * Z 1, X 2 * X 3, Z 4 * X 5, X 6 * X 7]
 
 /-- The **odd** brickwork layer: generators on `(1,2)`, `(3,4)`, `(5,6)`. -/
+@[expose]
 def L₂ : List (PauliString 8) := [X 1 * Z 2, X 3 * X 4, X 5 * X 6]
 
 /-- Both layers are layers of `2`-local generators with disjoint supports: `k_h = 2`. -/
@@ -492,6 +496,7 @@ def P₄ : PauliString 8 := ⟨![0, 1, 1, 0, 1, 0, 0, 0], ![0, 0, 1, 1, 0, 0, 0,
 
 /-- The weight-`6` witness: site types `X Y Y Z Y X` on qubits `0,…,5`. Reachable from `Z₃` in
 `[L₁, L₂, L₁]`; its weight exceeds `w* k_h^Γ = 4`. -/
+@[expose]
 def P₆ : PauliString 8 := ⟨![1, 1, 1, 0, 1, 1, 0, 0], ![0, 1, 1, 1, 1, 0, 0, 0], 3⟩
 
 theorem isSelfAdjoint_P₄ : IsSelfAdjoint P₄ := isSelfAdjoint_iff_phase.2 (by decide)

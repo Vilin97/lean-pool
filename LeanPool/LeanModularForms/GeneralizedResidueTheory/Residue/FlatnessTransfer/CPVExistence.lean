@@ -28,7 +28,7 @@ null-homologous residue theorems.
   with a unique crossing through `z₀`.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology Finset Real
 open scoped Interval

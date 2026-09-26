@@ -13,7 +13,7 @@ public import Mathlib.NumberTheory.NumberField.DedekindZeta
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 open Ideal
 
@@ -22,7 +22,7 @@ namespace NumberField.Odlyzko
 variable (K : Type*) [Field K] [NumberField K]
 
 /-- An ideal norm count used in the Odlyzko-bound argument. -/
-noncomputable def idealNormCount (n : ℕ) : ℕ :=
+@[expose] noncomputable def idealNormCount (n : ℕ) : ℕ :=
   Nat.card {I : Ideal (𝓞 K) // absNorm I = n}
 
 lemma dedekindZeta_eq_LSeries_idealNormCount (s : ℂ) :

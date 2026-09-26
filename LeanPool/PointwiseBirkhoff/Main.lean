@@ -16,7 +16,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.PointwiseBirkhoff.Main
 -/
 
-@[expose] public section
+public section
 
 open scoped MeasureTheory
 

@@ -18,12 +18,12 @@ Mistake-bounded learning, online learnability, and regret bounds.
 Characterized by Littlestone dimension.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
 /-- Count mistakes from an arbitrary online-learner state. -/
-noncomputable def OnlineLearner.mistakesFrom {X : Type u} {Y : Type v} [DecidableEq Y]
+@[expose] noncomputable def OnlineLearner.mistakesFrom {X : Type u} {Y : Type v} [DecidableEq Y]
     (L : OnlineLearner X Y) (state : L.State) (c : Concept X Y) : List X → ℕ
   | [] => 0
   | x :: xs =>
@@ -31,12 +31,13 @@ noncomputable def OnlineLearner.mistakesFrom {X : Type u} {Y : Type v} [Decidabl
       L.mistakesFrom (L.update state x (c x)) c xs
 
 /-- Helper: run an online learner on a sequence, counting mistakes. -/
-noncomputable def OnlineLearner.mistakes {X : Type u} {Y : Type v} [DecidableEq Y]
+@[expose] noncomputable def OnlineLearner.mistakes {X : Type u} {Y : Type v} [DecidableEq Y]
     (L : OnlineLearner X Y) (c : Concept X Y) (seq : List X) : ℕ :=
   L.mistakesFrom L.init c seq
 
 /-- Mistake-bounded learning: the learner makes at most M mistakes on ANY sequence.
     No distribution assumption. Characterized by Littlestone dimension. -/
+@[expose]
 def MistakeBounded (X : Type u) (Y : Type v) [DecidableEq Y]
     (C : ConceptClass X Y) (M : ℕ) : Prop :=
   ∃ (L : OnlineLearner X Y),
@@ -44,6 +45,7 @@ def MistakeBounded (X : Type u) (Y : Type v) [DecidableEq Y]
       ∀ (seq : List X), L.mistakes c seq ≤ M
 
 /-- Online learnable: there exists a finite mistake bound. -/
+@[expose]
 def OnlineLearnable (X : Type u) (Y : Type v) [DecidableEq Y] (C : ConceptClass X Y) : Prop :=
   ∃ (M : ℕ), MistakeBounded X Y C M
 

@@ -18,7 +18,7 @@ mean class follows on the same moving strip, retaining the vanishing edge
 weight and all ordinary slow derivatives.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -17,7 +17,7 @@ public import LeanPool.ConnesRigidity.Paper.Section3.CrossedKernel
 The group factor component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperGroupFactor

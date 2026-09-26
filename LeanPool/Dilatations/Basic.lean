@@ -16,7 +16,7 @@ https://arxiv.org/abs/2608.09305, and `rndmx/DilCat` at commit
 `604559654c948566675da3f7709b8ad3126bd487` (Apache-2.0).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -53,10 +53,12 @@ variable {C : Type u} [Category.{v} C]
 variable (Z : Center C)
 
 /-- Whether a dependent morphism is one of the chosen denominators. -/
+@[expose]
 def IsCenterMor (f : Σ X Y : C, X ⟶ Y) : Prop :=
   ∃ i : Z.I, f = ⟨Z.dom i, Z.cod i, Z.mor i⟩
 
 /-- The MorphismProperty corresponding to IsCenterMor. -/
+@[expose]
 def CenterMorphismProperty : MorphismProperty C := fun X Y f => IsCenterMor Z ⟨X, Y, f⟩
 
 /-- The localized category obtained by formally inverting the morphisms in
@@ -64,17 +66,18 @@ def CenterMorphismProperty : MorphismProperty C := fun X Y f => IsCenterMor Z �
 def CenterLocalization : Type u := (CenterMorphismProperty Z).Localization
 
 /-- The canonical functor from C to the localization. -/
-def LocalizationFunctor : C ⥤ (CenterMorphismProperty Z).Localization :=
+@[expose] def LocalizationFunctor : C ⥤ (CenterMorphismProperty Z).Localization :=
     (CenterMorphismProperty Z).Q
 
 /-- A chosen denominator together with a permitted numerator. -/
-def CenterSievePair : Type (max u v) :=
+@[expose] def CenterSievePair : Type (max u v) :=
   Σ i : Z.I, Σ X : C, { f : X ⟶ Z.cod i // Z.N i f }
 
 /-- The quiver obtained by adjoining formal inverses of the chosen denominators. -/
 def localizationQuiver := LocQuiver (CenterMorphismProperty Z)
 
 /-- The formal inverse of the denominator attached to a numerator. -/
+@[expose]
 def inverseInPath (p : CenterSievePair Z) :
     ιPaths (CenterMorphismProperty Z) (Z.cod p.1) ⟶
     ιPaths (CenterMorphismProperty Z) (Z.dom p.1) :=
@@ -82,6 +85,7 @@ def inverseInPath (p : CenterSievePair Z) :
     (Z.mor p.1) ⟨p.1, rfl⟩
 
 /-- The path consisting of a numerator followed by its formal denominator inverse. -/
+@[expose]
 def fractionInPath (p : CenterSievePair Z) :
     ιPaths (CenterMorphismProperty Z) (p.2.1) ⟶
     ιPaths (CenterMorphismProperty Z) (Z.dom p.1) :=
@@ -89,6 +93,7 @@ def fractionInPath (p : CenterSievePair Z) :
     inverseInPath Z p
 
 /-- A permitted fraction evaluated in the ambient localization. -/
+@[expose]
 def fractionInLocalization (p : CenterSievePair Z) :
 objEquiv (CenterMorphismProperty Z) (p.2.1) ⟶
 objEquiv (CenterMorphismProperty Z) (Z.dom p.1) :=
@@ -156,32 +161,33 @@ inductive GeneratorMorphismData
     GeneratorMorphismData Z f
 
 /-- The quiver of witnessed original and fraction morphisms. -/
-@[instance_reducible]
+@[expose, instance_reducible]
 def GeneratorQuiver : Quiver (CenterMorphismProperty Z).Localization where
   Hom X Y :=
     Σ f : X ⟶ Y, GeneratorMorphismData Z f
 
 /-- Objects of the ambient localization, used to build the generator category. -/
-def GeneratorObjects :=
+@[expose] def GeneratorObjects :=
   (CenterMorphismProperty Z).Localization
 
 instance : Quiver (GeneratorObjects Z) :=
   GeneratorQuiver Z
 
 /-- The free category on the original and fraction generators. -/
-def GeneratedCategory :=
+@[expose] def GeneratedCategory :=
   CategoryTheory.Paths (GeneratorObjects Z)
 
 instance : Category (GeneratedCategory Z) :=
   Paths.categoryPaths _
 
 /-- Forget the witness distinguishing original and fraction generators. -/
+@[expose]
 def forgetGenerator : GeneratorObjects Z ⥤q (CenterMorphismProperty Z).Localization :=
   { obj := id,
     map := fun {_ _} f => f.1 }
 
 /-- Evaluate a path of generators by composition in the localization. -/
-def GeneratedToLocalization :
+@[expose] def GeneratedToLocalization :
     GeneratedCategory Z ⥤ (CenterMorphismProperty Z).Localization :=
          CategoryTheory.Paths.lift (forgetGenerator Z)
 
@@ -195,6 +201,7 @@ def originalFactor
   h.g
 
 /-- Two paths are identified exactly when they evaluate equally in the localization. -/
+@[expose]
 def DilaRel :
     HomRel (GeneratedCategory Z) :=
   fun {_ _} f g =>
@@ -204,13 +211,14 @@ def DilaRel :
 /-- **Definition 2.13 / Fact 2.11.** The dilatation `C[{(dᵢ)⁻¹∘Nᵢ}ᵢ∈I]`: objects are `C`'s
 objects, morphisms are `{[Nᵢ,dᵢ]}`-fractions, composed via `Quotient` (Fact 2.11's associativity
 of fraction composition is `Quotient.category`'s own well-definedness). -/
-def Dila :=
+@[expose] def Dila :=
   CategoryTheory.Quotient (DilaRel Z)
 
 instance : Category (Dila Z) :=
   CategoryTheory.Quotient.category _
 
 /-- The canonical faithful functor from the dilatation to the ambient localization. -/
+@[expose]
 def DilaToLoc :
     Dila Z ⥤ (CenterMorphismProperty Z).Localization :=
   CategoryTheory.Quotient.lift
@@ -268,6 +276,7 @@ lemma DilaToLoc_faithful :
       h)
 
 /-- The quotient functor from generator paths to the dilatation. -/
+@[expose]
 def GeneratedToDila :
     GeneratedCategory Z ⥤ Dila Z :=
   CategoryTheory.Quotient.functor (DilaRel Z)
@@ -278,6 +287,7 @@ instance GeneratedToDila_full :
   infer_instance
 
 /-- The base-category prefunctor sending morphisms to original generators. -/
+@[expose]
 def CToGeneratorQuiver :
     C ⥤q GeneratorObjects Z where
   obj X := objEquiv (CenterMorphismProperty Z) X
@@ -290,6 +300,7 @@ def CToGeneratorQuiver :
       }⟩
 
 /-- **Proposition 3.1 (1).** The canonical functor `Θ : C ⥤ C'`. -/
+@[expose]
 def CatToDila :
     C ⥤ Dila Z where
   obj X :=
@@ -341,6 +352,7 @@ theorem Prop_3_3 (i : Z.I) :
   exact Fact_3_2 (DilaToLoc Z) ((CatToDila Z).map (Z.mor i))
 
 /-- Push a sieve forward along the canonical dilatation functor. -/
+@[expose]
 def CatToDilaSieve
     {X : C} (N : Sieve (C := C) X) :
     Sieve (C := Dila Z) ((CatToDila Z).obj X) :=
@@ -366,6 +378,7 @@ lemma fraction_comp_mor (i : Z.I) (X : C)
     HomRel.CompClosure.intro _ _ (ψ₁ (CenterMorphismProperty Z) m) _ _ (𝟙 _))
 
 /-- The generator corresponding to a single permitted fraction. -/
+@[expose]
 def fractionGenerator (p : CenterSievePair Z) :
     (CToGeneratorQuiver Z).obj p.2.1 ⟶
     (CToGeneratorQuiver Z).obj (Z.dom p.1) :=
@@ -376,6 +389,7 @@ def fractionGenerator (p : CenterSievePair Z) :
 
 /-- **Proposition 3.1 (2), existence.** The fraction `b = dᵢ\n = [n∘l_{dᵢ}]` witnessing the
 unique factorization `[n] = Θ(dᵢ) ∘ b`. -/
+@[expose]
 def fractionInDilatation (p : CenterSievePair Z) :
     (CatToDila Z).obj p.2.1 ⟶
     (CatToDila Z).obj (Z.dom p.1) :=
@@ -473,6 +487,7 @@ variable {D : Type u} [Category.{v'} D]
 variable (F : C ⥤ D)
 
 /-- Morphisms in D obtained as images of the chosen central morphisms of C. -/
+@[expose]
 def IsImageCenterMor
     (F : C ⥤ D)
     (f : Σ X Y : D, X ⟶ Y) : Prop :=
@@ -483,6 +498,7 @@ def IsImageCenterMor
        F.map (Z.mor i)⟩
 
 /-- The morphism property consisting of the images of the chosen denominators. -/
+@[expose]
 def ImageCenterMorphismProperty :
     MorphismProperty D :=
   fun X Y f =>
@@ -490,6 +506,7 @@ def ImageCenterMorphismProperty :
 
 /-- The localization of D obtained by formally inverting
     the images of the central morphisms. -/
+@[expose]
 def ImageCenterLocalization : Type u :=
   (ImageCenterMorphismProperty Z F).Localization
 
@@ -499,6 +516,7 @@ instance instCategoryImageCenterLocalization :
   infer_instance
 
 /-- The canonical functor from D to the localization. -/
+@[expose]
 def ImageCenterLocalizationFunctor :
     D ⥤ ImageCenterLocalization Z F :=
   (ImageCenterMorphismProperty Z F).Q
@@ -644,6 +662,7 @@ theorem localizationMap_comp_Q :
   apply Localization.Construction.fac
 
 /-- The prefunctor interpreting dilatation generators in the target category. -/
+@[expose]
 def generatorImage
     (hfaith :
       (ImageCenterLocalizationFunctor Z F).Faithful)
@@ -662,7 +681,7 @@ def generatorImage
 }
 
 /-- Extend the generator interpretation to paths by the free-category universal property. -/
-def H
+@[expose] def H
     (hfaith :
       (ImageCenterLocalizationFunctor Z F).Faithful)
     (hsieve :
@@ -1301,7 +1320,7 @@ theorem Dila_universal_property
 
 /-- **Definition 3.6.** `F : C ⥤ D` is `Σ`-regular (`F ∈ Cat ^ Σ-reg_C`) if `D → D[F(Σ)⁻¹]` is
 faithful. -/
-def IsSigmaRegular : Prop :=
+@[expose] def IsSigmaRegular : Prop :=
   Functor.Faithful (ImageCenterMorphismProperty Z F).Q
 
 /-- If `p ⋙ e` is faithful, then `p` is faithful. This is the elementary categorical fact behind

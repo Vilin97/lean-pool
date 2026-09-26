@@ -87,7 +87,7 @@ union, not an
 existential witness).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -102,7 +102,7 @@ data) -/
 /-- **The fixed-point token set `Γ = tok(T({Γ}))`**, as the explicit Kleene union
 `⋃ₙ gIter T n`
 (no `Classical.choice`). -/
-def gFix (T : GExpr) : Set Str := ⋃ n, gIter T n
+@[expose] def gFix (T : GExpr) : Set Str := ⋃ n, gIter T n
 
 theorem gFix_nil_mem (T : GExpr) : ([] : Str) ∈ gFix T :=
   Set.mem_iUnion.mpr ⟨0, rfl⟩
@@ -116,7 +116,7 @@ theorem gFix_fixed (T : GExpr) (hT : T.RootedConst) : gFun T (gFix T) = gFix T :
 /-! ## The iterated-functor tower `Tⁿ({Γ})` -/
 
 /-- **The one-point generator `{Γ}`** as an object of the category. -/
-def gGen (T : GExpr) : ScottSys := singletonSys (gFix T) (gFix_nonempty T)
+@[expose] def gGen (T : GExpr) : ScottSys := singletonSys (gFix T) (gFix_nonempty T)
 
 @[simp] theorem gGen_master (T : GExpr) : (gGen T).sys.master = gFix T := rfl
 
@@ -138,7 +138,7 @@ theorem gBase (T : GExpr) (hT : T.RootedConst) : (gGen T).sys ◁ (T.obj (gGen T
 /-- **The tower `Tⁿ({Γ})`** of `∅`-free systems over `Str`: `T⁰({Γ}) = {Γ}`,
 `Tⁿ⁺¹({Γ}) =
 T(Tⁿ({Γ}))`. -/
-def gTower (T : GExpr) : ℕ → ScottSys
+@[expose] def gTower (T : GExpr) : ℕ → ScottSys
   | 0 => gGen T
   | n + 1 => T.obj (gTower T n)
 
@@ -174,7 +174,7 @@ set is a
 neighbourhood exactly when it is a neighbourhood of some level; closure under
 consistent intersection
 uses that the tower is a chain (any finite collection sits inside one level). -/
-def gColim (T : GExpr) (hT : T.RootedConst) : ScottSys where
+@[expose] def gColim (T : GExpr) (hT : T.RootedConst) : ScottSys where
   sys :=
     { mem := fun X => ∃ n, (gTower T n).sys.mem X
       master := gFix T
@@ -268,7 +268,7 @@ over the variable
 domain `N`. The `⊕ N` carries the variables, and the two `(X×X)` summands
 (combined by `+`) carry the
 two binary operation symbols. -/
-def Texp (N : ScottSys) : GExpr :=
+@[expose] def Texp (N : ScottSys) : GExpr :=
   .oplus (.const N) (.sum (.prod .var .var) (.prod .var .var))
 
 /-- `Texp N` is rooted iff the variable domain `N` is (`Λ ∈ tok(N)`, automatic for
@@ -280,7 +280,7 @@ theorem Texp_rooted {N : ScottSys} (hN : ([] : Str) ∈ N.sys.master) : (Texp N)
 /-- **The syntactic domain of expressions** `Exp = ⋃ₙ Texpⁿ({Γ})`, the initial
 solution of
 `Exp ≅ N ⊕ ((Exp×Exp)+(Exp×Exp))`. -/
-def Exp (N : ScottSys) (hN : ([] : Str) ∈ N.sys.master) : ScottSys :=
+@[expose] def Exp (N : ScottSys) (hN : ([] : Str) ∈ N.sys.master) : ScottSys :=
   gColim (Texp N) (Texp_rooted hN)
 
 /-- **The domain equation `Exp ≅ N ⊕ ((Exp×Exp)+(Exp×Exp))`**, realised as an
@@ -334,7 +334,7 @@ instance : Category ScottSys where
 `StrictMap`, which is defeq to the category's `Hom`; this avoids the
 class-projection that blocks the
 anonymous `.1` on `Category.Hom`.) -/
-def gFunctorMap (T : GExpr) {X Y : ScottSys} (f : StrictMap X.sys Y.sys) :
+@[expose] def gFunctorMap (T : GExpr) {X Y : ScottSys} (f : StrictMap X.sys Y.sys) :
     StrictMap (T.obj X).sys (T.obj Y).sys :=
   ⟨T.map f.1, T.map_isStrict f.1 f.2⟩
 
@@ -345,7 +345,7 @@ Functoriality is
 `GExpr.map_id` and `GExpr.map_comp` (the latter needs `g` strict — automatic here,
 since every
 morphism of this category is strict). -/
-def gFunctor (T : GExpr) : Endofunctor ScottSys where
+@[expose] def gFunctor (T : GExpr) : Endofunctor ScottSys where
   obj := T.obj
   map := gFunctorMap T
   map_id X := Subtype.ext (T.map_id X)
@@ -378,7 +378,7 @@ since
 `T(Exp) = Exp`). This realises Scott's "construe the initial solution as a
 syntactic domain of
 expressions": `Exp` is an algebra of `T(X) = N ⊕ ((X×X)+(X×X))`. -/
-@[instance_reducible]
+@[expose, instance_reducible]
 def ExpAlg (N : ScottSys) (hN : ([] : Str) ∈ N.sys.master) : TAlgebra (TexpF N) where
   carrier := Exp N hN
   str := (ExpIso N hN).hom
@@ -450,7 +450,7 @@ variable {N : ScottSys} (hN : ([] : Str) ∈ N.sys.master) (B : TAlgebra (TexpF 
 /-- **The Kleene iterates `valₙ : Exp → D`** of the operator `λh. k ∘ T(h) ∘ j`.
 `val₀ = ⊥`,
 `valₙ₊₁ = k ∘ T(valₙ) ∘ j`. -/
-def descRel : ℕ → ApproximableMap (Exp N hN).sys B.carrier.sys
+@[expose] def descRel : ℕ → ApproximableMap (Exp N hN).sys B.carrier.sys
   | 0 => constMap (Exp N hN).sys B.carrier.sys.bot
   | n + 1 => (algStr B).comp (((Texp N).map (descRel n)).comp (expInv N hN))
 

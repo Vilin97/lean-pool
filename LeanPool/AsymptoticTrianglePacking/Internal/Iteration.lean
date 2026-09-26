@@ -31,7 +31,7 @@ Definitions come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic` /
 `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -41,7 +41,7 @@ variable {V : Type*} [DecidableEq V]
 
 /-- Run `k` nibble rounds from `H` under retention strategy `R`, returning
 `(accumulated matching, current residual)`. -/
-def nibbleIter (R : Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V)) :
+@[expose] def nibbleIter (R : Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V)) :
     ℕ → Finset (Finset V) × Finset (Finset V) :=
   nibbleIterSeq (fun _ => R) H
 
@@ -52,10 +52,12 @@ theorem nibbleIterSeq_const (R : Finset (Finset V) → Finset (Finset V)) (H : F
   rfl
 
 /-- The residual hypergraph after `k` rounds. -/
+@[expose]
 def nibbleResidual (R : Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V)) (k : ℕ) :
     Finset (Finset V) := (nibbleIter R H k).2
 
 /-- The matching accumulated over `k` rounds. -/
+@[expose]
 def nibbleMatching (R : Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V)) (k : ℕ) :
     Finset (Finset V) := (nibbleIter R H k).1
 

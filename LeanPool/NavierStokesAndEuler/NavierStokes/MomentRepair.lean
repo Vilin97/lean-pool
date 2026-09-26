@@ -21,7 +21,7 @@ two-row weighted point-evaluation matrix. No assertion about the existence of
 smooth bumps or the conditioning of their moment matrices is implicit here.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -52,7 +52,7 @@ theorem moments_synthesize (L : ι → V →ₗ[ℝ] ℝ) (b : ι → V) (c : ι
   simp [moments, synthesize, momentMatrix, Matrix.mulVec, dotProduct, mul_comm]
 
 /-- Coefficients obtained using the actual matrix inverse. -/
-def coefficients (B : Matrix ι ι ℝ) (d : ι → ℝ) : ι → ℝ := B⁻¹.mulVec d
+@[expose] def coefficients (B : Matrix ι ι ℝ) (d : ι → ℝ) : ι → ℝ := B⁻¹.mulVec d
 
 theorem matrix_mul_coefficients (B : Matrix ι ι ℝ) (hB : B.det ≠ 0)
     (d : ι → ℝ) : B.mulVec (coefficients B d) = d := by

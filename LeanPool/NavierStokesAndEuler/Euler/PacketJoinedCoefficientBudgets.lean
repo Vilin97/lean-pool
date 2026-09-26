@@ -15,7 +15,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
 /-! Both nonlinear-profile and exact-correction coefficient budgets are
 derived from the original joined-source coefficient bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

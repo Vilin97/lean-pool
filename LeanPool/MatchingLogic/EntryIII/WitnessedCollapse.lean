@@ -17,7 +17,7 @@ import LeanPool.MatchingLogic.Soundness
 # MatchingLogic.EntryIII.WitnessedCollapse
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -103,7 +103,7 @@ abbrev witnessCollapseModel : Model WitnessCollapseSig where
   interp e := Empty.elim e
 
 /-- Variable `0` names `true`; every other variable names `false`. -/
-def witnessCollapseRho : Nat → witnessCollapseModel.carrier := fun n => n = 0
+@[expose] def witnessCollapseRho : Nat → witnessCollapseModel.carrier := fun n => n = 0
 
 /-- The complete pointed theory at `true`. -/
 def witnessCollapseTheory : Set (Pattern WitnessCollapseSig Nat) :=

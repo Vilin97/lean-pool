@@ -27,7 +27,7 @@ potential, direct field, and pressure sums. It does not invoke whole-space
 uniqueness or claim the comparator's nonexistence conclusion.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,7 +47,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

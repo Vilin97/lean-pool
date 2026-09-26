@@ -68,7 +68,7 @@ Recon / context: MATH CONTEXT block in the run prompt; #376 recon at
   ~/Knowledge/Construct/recon/erdos_376.md.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75
 
@@ -83,6 +83,7 @@ Everything else in the assembly is verified. -/
 `p q`, the set of `n` low-digit in BOTH bases is infinite. This is the genuine
 number-theoretic core (`θ_p + θ_q > 1`); it is the ONLY unproven input to the
 target. -/
+@[expose]
 def EgrsCrux (p q : ℕ) : Prop := {n : ℕ | LowDigits p n ∧ LowDigits q n}.Infinite
 
 /-! ## The reduction, SORRY-FREE relative to the crux (KERNEL-CLEAN) -/

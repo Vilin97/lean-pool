@@ -16,7 +16,7 @@ in a fan face.  This no-junk representation is what lets compactness turn local 
 finite intrinsic triangulation.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

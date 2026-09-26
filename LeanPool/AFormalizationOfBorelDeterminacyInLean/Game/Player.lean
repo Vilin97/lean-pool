@@ -32,7 +32,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame
@@ -79,7 +79,7 @@ end «Section1»
 variable {A : Type*} (x : List A) (p q : Player)
 namespace Player
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def toNat : Player → ℕ
+@[expose] def toNat : Player → ℕ
   | zero => 0
   | one => 1
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
@@ -98,15 +98,16 @@ def swap : Player → Player
 @[simp_isPosition] lemma apply_ite_swap (P : Prop) [Decidable P] (a b : Player) :
     swap (if P then a else b) = if P then swap a else swap b := by
   simpa using (apply_ite swap P a b)
-@[simp, simp_isPosition] lemma swap_zero : zero.swap = one := rfl
-@[simp, simp_isPosition] lemma swap_one : one.swap = zero := rfl
+@[simp, simp_isPosition] lemma swap_zero : zero.swap = one := by rfl
+@[simp, simp_isPosition] lemma swap_one : one.swap = zero := by rfl
 
 /-- if `p` moves in position `[]`, then `p.residual x` moves in position `x` -/
-@[simp_isPosition] def residual := if x.length % 2 = 0 then p else p.swap
+@[expose, simp_isPosition] def residual := if x.length % 2 = 0 then p else p.swap
 end Player
 
 /-- is player `p` to move in position `x`? -/
-@[simp_isPosition] def IsPosition (x : List A) (p : Player) : Prop := x.length % 2 = p.toNat
+@[expose, simp_isPosition] def IsPosition (x : List A) (p : Player) : Prop :=
+  x.length % 2 = p.toNat
 
 
 

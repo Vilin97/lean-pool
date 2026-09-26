@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPressureLocality
 /-! A genuine compact scalar cylinder path supplies the actual lifted
 pressure-gradient Field and belongs to the closed lifted gradient space. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,7 +31,7 @@ open scoped ContDiff
 variable (P : ℝ) [Fact (0 < P)] {T : ℝ}
 
 /-- Raw gradient, given by `κ • pressureGradient p z + (pressureJet p z).2 angleDirection • m`. -/
-def rawGradient (κ : ℝ) (m : Space) (p : ScalarField) (z : Domain) : Space :=
+@[expose] def rawGradient (κ : ℝ) (m : Space) (p : ScalarField) (z : Domain) : Space :=
   κ • pressureGradient p z + (pressureJet p z).2 angleDirection • m
 
 omit [Fact (0 < P)] in

@@ -17,7 +17,7 @@ This file supplies the measurable-kernel interface needed to condition on
 the latent two-point parameters in the proof of Theorem 2.1.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Set
 
@@ -35,6 +35,7 @@ theorem measurable_twoPointMeasure_apply {B : Set ℝ} (hB : MeasurableSet B) :
   fun_prop
 
 /-- Admissible parameters `x ≤ 1 ≤ y`, with distinct support points. -/
+@[expose]
 def TwoPointParams :=
   {p : ℝ × ℝ // p.1 ≤ 1 ∧ 1 ≤ p.2 ∧ p.1 < p.2}
 
@@ -52,7 +53,7 @@ noncomputable def twoPointKernel : Kernel TwoPointParams ℝ where
 
 @[simp] theorem twoPointKernel_apply (p : TwoPointParams) :
     twoPointKernel p = twoPointMeasure p.1.1 p.1.2 :=
-  rfl
+  by rfl
 
 instance : IsMarkovKernel twoPointKernel where
   isProbabilityMeasure p :=
@@ -103,7 +104,7 @@ theorem kernelTwoPointMixture_apply_le
     _ = c := by simp
 
 /-- The strict below-above region used for the nondegenerate latent pair. -/
-def strictPairSet : Set (ℝ × ℝ) :=
+@[expose] def strictPairSet : Set (ℝ × ℝ) :=
   {p | p.1 < 1 ∧ 1 < p.2}
 
 theorem measurableSet_strictPairSet : MeasurableSet strictPairSet := by
@@ -122,7 +123,7 @@ local instance : DecidablePred (· ∈ strictPairSet) :=
 /-- A total measurable map into `TwoPointParams`; outside the strict region
 we use the harmless default pair `(0,2)`.  The weighted latent measure below
 is supported on the strict region. -/
-noncomputable def pairToParams (p : ℝ × ℝ) : TwoPointParams :=
+@[expose] noncomputable def pairToParams (p : ℝ × ℝ) : TwoPointParams :=
   if hp : p ∈ strictPairSet then ⟨p, strictPairSet_admissible hp⟩
   else ⟨(0, 2), by norm_num⟩
 
@@ -147,7 +148,7 @@ theorem measurable_pairToParams : Measurable pairToParams := by
 
 /-- The unnormalized product law on a strict below point and a strict above
 point. -/
-noncomputable def belowAboveProduct (μ : Measure ℝ) : Measure (ℝ × ℝ) :=
+@[expose] noncomputable def belowAboveProduct (μ : Measure ℝ) : Measure (ℝ × ℝ) :=
   (μ.restrict (Iio 1)).prod (μ.restrict (Ioi 1))
 
 /-- The density `(y-x)/M` of the latent below/above pair, written in
@@ -161,7 +162,7 @@ theorem measurable_latentPairDensity (M : ℝ) :
   fun_prop
 
 /-- The concrete weighted below×above latent measure. -/
-noncomputable def latentPairMeasure (μ : Measure ℝ) (M : ℝ) :
+@[expose] noncomputable def latentPairMeasure (μ : Measure ℝ) (M : ℝ) :
     Measure (ℝ × ℝ) :=
   (belowAboveProduct μ).withDensity (latentPairDensity M)
 
@@ -192,7 +193,7 @@ instance (μ : Measure ℝ) [SFinite μ] (M : ℝ) :
 
 /-- The weighted pair measure, transported to the admissible parameter
 subtype on which `twoPointKernel` is Markov. -/
-noncomputable def latentParamsMeasure (μ : Measure ℝ) (M : ℝ) :
+@[expose] noncomputable def latentParamsMeasure (μ : Measure ℝ) (M : ℝ) :
     Measure TwoPointParams :=
   (latentPairMeasure μ M).map pairToParams
 
@@ -204,6 +205,7 @@ theorem latentParamsMeasure_apply (μ : Measure ℝ) (M : ℝ)
 
 /-- The resulting genuine kernel mixture of the nondegenerate latent
 component. -/
+@[expose]
 noncomputable def nondegenerateKernelMixture (μ : Measure ℝ) (M : ℝ) :
     Measure ℝ :=
   kernelTwoPointMixture (latentParamsMeasure μ M)
@@ -384,6 +386,7 @@ theorem latentPairMeasure_univ_meanOne
 
 /-- The full kernel mixture: the atom at one plus the nondegenerate latent
 two-point component. -/
+@[expose]
 noncomputable def fullKernelMixture (μ : Measure ℝ) (M : ℝ) : Measure ℝ :=
   μ {1} • Measure.dirac 1 + nondegenerateKernelMixture μ M
 

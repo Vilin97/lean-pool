@@ -12,7 +12,7 @@ public import Mathlib.Algebra.Module.LinearMap.Defs
 # LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
 -/
 
-@[expose] public section
+public section
 
 section
 

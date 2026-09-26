@@ -15,7 +15,7 @@ give finiteness of the extended-real potential almost everywhere, before
 any use of its real-valued conversion.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal

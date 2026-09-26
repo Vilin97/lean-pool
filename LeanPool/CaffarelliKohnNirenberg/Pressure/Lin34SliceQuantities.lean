@@ -16,7 +16,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Pressure.Lin34SlicePointwise
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -39,38 +39,38 @@ quantities `D(z₀, r)` and `D(z₀, ρ)` of `eq:ABCDE`, and `C_hat(z₀, ρ)` o
 
 /-- The spatial `L³` mass of the mean-free velocity on `B_ρ` at time `s`,
 the slice integrand of `C_hat(z₀,ρ)` in `eq:Chat`. -/
-def lin34VelocitySlice (u : ParabolicPoint → Vec3) (z : ParabolicPoint)
+@[expose] def lin34VelocitySlice (u : ParabolicPoint → Vec3) (z : ParabolicPoint)
     (ρ s : ℝ) : ℝ :=
   ∫ y in vec3Ball z.1 ρ, vec3EuclideanNorm (meanFreeVec u z.1 ρ s y) ^ (3 : ℕ)
 
 /-- The spatial `L^{3/2}` mass of the pressure on `B_ρ` at time `s`, the slice
 integrand of `D(z₀,ρ)`. -/
-def lin34PressureSlice (p : ParabolicPoint → ℝ) (z : ParabolicPoint)
+@[expose] def lin34PressureSlice (p : ParabolicPoint → ℝ) (z : ParabolicPoint)
     (ρ s : ℝ) : ℝ :=
   ∫ y in vec3Ball z.1 ρ, |p (y, s)| ^ (3 / 2 : ℝ)
 
 /-- The spatial `L^{3/2}` mass of the force group `p₇ + p₈` on `B_r` at time
 `s`. -/
-def lin34ForceSliceIntegral (f : ParabolicPoint → Vec3) (z : ParabolicPoint)
+@[expose] def lin34ForceSliceIntegral (f : ParabolicPoint → Vec3) (z : ParabolicPoint)
     (ρ r : ℝ) (hρ : 0 < ρ) (s : ℝ) : ℝ :=
   ∫ x in vec3Ball z.1 r, |lin34ForcePart f z.1 ρ hρ s x| ^ (3 / 2 : ℝ)
 
 /-- The left-hand side of `eq:lin34-pointwise`, extended by zero outside
 `J_r = (t₀ - r², t₀)`. -/
-def lin34F (p : ParabolicPoint → ℝ) (z : ParabolicPoint) (r : ℝ) : ℝ → ℝ :=
+@[expose] def lin34F (p : ParabolicPoint → ℝ) (z : ParabolicPoint) (r : ℝ) : ℝ → ℝ :=
   Set.indicator (Ioc (z.2 - r ^ 2) z.2)
     (fun s => r⁻¹ ^ 2 * lin34PressureSlice p z r s)
 
 /-- The velocity term of `eq:lin34-pointwise`. -/
-def lin34G (u : ParabolicPoint → Vec3) (z : ParabolicPoint) (ρ : ℝ) : ℝ → ℝ :=
+@[expose] def lin34G (u : ParabolicPoint → Vec3) (z : ParabolicPoint) (ρ : ℝ) : ℝ → ℝ :=
   fun s => ρ⁻¹ ^ 2 * lin34VelocitySlice u z ρ s
 
 /-- The pressure term of `eq:lin34-pointwise`. -/
-def lin34H (p : ParabolicPoint → ℝ) (z : ParabolicPoint) (ρ : ℝ) : ℝ → ℝ :=
+@[expose] def lin34H (p : ParabolicPoint → ℝ) (z : ParabolicPoint) (ρ : ℝ) : ℝ → ℝ :=
   fun s => ρ⁻¹ ^ 2 * lin34PressureSlice p z ρ s
 
 /-- The force term of `eq:lin34-pointwise`, extended by zero outside `J_r`. -/
-def lin34J (f : ParabolicPoint → Vec3) (z : ParabolicPoint) (ρ r : ℝ)
+@[expose] def lin34J (f : ParabolicPoint → Vec3) (z : ParabolicPoint) (ρ r : ℝ)
     (hρ : 0 < ρ) : ℝ → ℝ :=
   Set.indicator (Ioc (z.2 - r ^ 2) z.2)
     (fun s => r⁻¹ ^ 2 * lin34ForceSliceIntegral f z ρ r hρ s)

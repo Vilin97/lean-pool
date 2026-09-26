@@ -25,7 +25,7 @@ replacing `2 qₙ ≤ qₙ₊₅`; feeding it through Chevallier's count (`cheva
 yields `≤ 4 + 1 = 5` distances. Axiom-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.EuclideanRecords
 

@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketTimeAlgebra
 
 /-! Actual path and time-derivative witnesses for finite coefficient assembly. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-! Actual cylinder Sobolev multiplication at every fixed integer order q ≥ 6. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -266,7 +266,7 @@ theorem product_word_L2_le {q n : ℕ} (hq : 6 ≤ q) (hn : n ≤ q) (w : Fin n 
   exact hB.trans (hC.trans_eq (by ring))
 
 /-- A finite explicit algebra constant for each fixed Sobolev order. -/
-def algebraConstant (q : ℕ) : ℝ :=
+@[expose] def algebraConstant (q : ℕ) : ℝ :=
   (∑ n ∈ Finset.range (q + 1), (4 : ℝ) ^ n) * ((2 : ℝ) ^ q * lowDerivativeConstant period q * 2)
 
 /-- The fixed-order algebra constant is nonnegative. -/

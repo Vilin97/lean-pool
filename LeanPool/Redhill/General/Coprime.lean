@@ -19,7 +19,7 @@ they have no common factor". This is not always true even with the paper's defin
 but can be made so by adding 101 to the factors of `y`.
 -/
 
-@[expose] public section
+public section
 
 namespace GeneralCase
 

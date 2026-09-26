@@ -23,7 +23,7 @@ Here we define the GL-split-proof system along with finitization and basic prope
 namespace Split to distinguish from our general GL-proofs.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 
@@ -47,7 +47,7 @@ inductive RuleApp
   | boxᵣ : (Δ : SplitSequent) → (A : Formula) → Sum.inr (□ A) ∈ Δ → RuleApp
 
 /-- Endofunctor for the GL-split proof system. -/
-@[simp] def T : (CategoryTheory.Functor Type Type) where
+@[expose, simp] def T : (CategoryTheory.Functor Type Type) where
   obj := fun X ↦ (RuleApp × List X)
   map := fun {X Y} f ↦
     TypeCat.ofHom fun x ↦
@@ -72,7 +72,7 @@ def fₚ : RuleApp → SplitSequent
   | RuleApp.boxᵣ _ A _ => {Sum.inr (□ A)}
 
 /-- Given a RuleApp, obtain the split sequent. -/
-def f : RuleApp → SplitSequent
+@[expose] def f : RuleApp → SplitSequent
   | RuleApp.topₗ Δ _ => Δ
   | RuleApp.topᵣ Δ _ => Δ
   | RuleApp.axₗₗ Δ _ _ => Δ
@@ -107,19 +107,19 @@ lemma fₙ_alternate (r : RuleApp) : fₙ r = match r with
 lemma fₙ_sub_f {r : RuleApp} : fₙ r ⊆ f r := by simp [fₙ]
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def RuleApp.isBox : RuleApp → Prop
+@[expose] def RuleApp.isBox : RuleApp → Prop
   | RuleApp.boxₗ _ _ _ => true
   | RuleApp.boxᵣ _ _ _ => true
   | _ => false
 
 /-- Get RuleApp of a node (first projection). -/
-def r {X : Type} (α : X → T.obj X) (x : X) := (α x).1
+@[expose] def r {X : Type} (α : X → T.obj X) (x : X) := (α x).1
 
 /-- Get premises of a node (second projection). -/
-def p {X : Type} (α : X → T.obj X) (x : X) := (α x).2
+@[expose] def p {X : Type} (α : X → T.obj X) (x : X) := (α x).2
 
 /-- Edge relation induced by `p`. -/
-def edge {X : Type} (α : X → T.obj X) (x y : X) : Prop := y ∈ p α x
+@[expose] def edge {X : Type} (α : X → T.obj X) (x y : X) : Prop := y ∈ p α x
 
 /-- Definition of GL-split proof. -/
 structure Proof where
@@ -159,9 +159,9 @@ def Proof.toCoalgebra (𝕏 : Proof) : CategoryTheory.Endofunctor.Coalgebra T wh
   str := TypeCat.ofHom 𝕏.α
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def proves (𝕏 : Proof) (Δ : SplitSequent) : Prop := ∃ x : 𝕏.X, f (r 𝕏.α x) = Δ
+@[expose] def proves (𝕏 : Proof) (Δ : SplitSequent) : Prop := ∃ x : 𝕏.X, f (r 𝕏.α x) = Δ
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def SplitSequent.isTrue (Δ : SplitSequent) : Prop := ∃ (𝕏 : Proof), proves 𝕏 Δ
+@[expose] def SplitSequent.isTrue (Δ : SplitSequent) : Prop := ∃ (𝕏 : Proof), proves 𝕏 Δ
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
 infixr:6 "⊢" => proves
@@ -169,7 +169,7 @@ infixr:6 "⊢" => proves
 prefix:40 "⊢" => SplitSequent.isTrue
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def equiv (φ : Formula) (ψ : Formula) : Prop :=
+@[expose] def equiv (φ : Formula) (ψ : Formula) : Prop :=
   (∃ (𝕏 : Proof), 𝕏 ⊢ {Sum.inl (~ψ), Sum.inr φ}) ∧
     (∃ (𝕏 : Proof), 𝕏 ⊢ {Sum.inr ψ, Sum.inl (~φ)})
 /-- Auxiliary declaration used in the GL coalgebra development. -/
@@ -287,7 +287,7 @@ lemma path_in_FL {𝕏 : Proof} {x y : 𝕏.X} (x_y : Relation.ReflTransGen (edg
       (fun _ z_in ↦ Relation.ReflTransGen.tail y.2 z_in)⟩
 
 /-- Point Generated Split Proof. -/
-def pointGeneratedProof (𝕐 : Proof) (x : 𝕐.X) : Proof where
+@[expose] def pointGeneratedProof (𝕐 : Proof) (x : 𝕐.X) : Proof where
   X := {y : 𝕐.X // Relation.ReflTransGen (edge 𝕐.α) x y }
   α := αPoint 𝕐 x
   step := by
@@ -471,7 +471,7 @@ lemma exists_box_on_loop {𝕏 : Proof} (x : 𝕏.X) : Relation.TransGen (edge �
   fun x_x ↦ exists_box_on_le_path x x x_x (by simp)
 
 /-- Edge relation restricted to nodes satisfying predicate `p`. -/
-def edgeRestr {𝕏 : Proof} (p : 𝕏.X → Prop) : 𝕏.X → 𝕏.X → Prop :=
+@[expose] def edgeRestr {𝕏 : Proof} (p : 𝕏.X → Prop) : 𝕏.X → 𝕏.X → Prop :=
   fun x y ↦ edge 𝕏.α x y ∧ p x ∧ p y
 
 /-- Every restricted path of increasing size has a box rule application. -/

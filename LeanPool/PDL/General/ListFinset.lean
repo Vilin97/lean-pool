@@ -17,15 +17,14 @@ Nothing in this file is about PDL. These are helper definitions and lemmas that 
 used in several places and might also be in (newer versions of) Mathlib.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
 /-! ## Helpers about `List`s and `Finset`s -/
 
 /-- Convert a list of formula-like lists into a finset of finsets. -/
-@[simp]
-def _root_.List.pdlToFinFin [DecidableEq α] : List (List α) → Finset (Finset α )
+@[expose, simp] def _root_.List.pdlToFinFin [DecidableEq α] : List (List α) → Finset (Finset α )
   | LS => (LS.map (fun L => L.toFinset)).toFinset
 
 /-- Turning a mapped list into a `Finset` is the image of the `Finset`. -/

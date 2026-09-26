@@ -25,7 +25,7 @@ section
 /-! The actual lifted gradient and divergence constraints persist under every available strong
 derivative word. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -103,7 +103,7 @@ section
 /-! Every energy-order word of the actual heat-regularized mild solution obeys its genuine L²
 differential equation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -216,7 +216,7 @@ section
 
 /-! Exact bounded observations of genuine higher-order Bochner representatives. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -255,7 +255,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -367,7 +367,7 @@ section
 
 /-! Continuous time-path application and its exact Bochner compatibility. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -407,7 +407,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -525,7 +525,7 @@ section
 /-! The actual energy-order regularized words converge uniformly in time and preserve pressure
 closedness. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -611,7 +611,7 @@ section
 /-! Actual finite families of continuous and Bochner time fields, with exact norm-topology
 compatibility. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -688,7 +688,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

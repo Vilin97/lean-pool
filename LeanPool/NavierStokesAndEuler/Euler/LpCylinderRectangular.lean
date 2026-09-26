@@ -39,7 +39,7 @@ quadratic upper bounds and pointwise composition identities pass to these
 actual L² operators without a support-margin constant.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -216,7 +216,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

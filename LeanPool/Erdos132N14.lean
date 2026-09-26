@@ -19,7 +19,7 @@ Tags: discrete-geometry, few-distance-sets, erdos-problems, planar-configuration
 MSC: 52C10, 05D99
 -/
 
-@[expose] public section
+public section
 
 /-!
 # A conditional fourteen-point case of Erdős Problem 132

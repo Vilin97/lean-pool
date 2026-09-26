@@ -12,7 +12,7 @@ import LeanPool.DirectedTopologyLean4.MonotonePath
 # LeanPool.DirectedTopologyLean4.Constructions
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains constructions of directed spaces such as:
@@ -30,7 +30,7 @@ universe u v
 /-- Any space with a preorder can be equiped with a directedness, by allowing all monotone paths
   as directed paths
 -/
-@[reducible] def DirectedSpace.Preorder (α : Type u) [TopologicalSpace α] [Preorder α] :
+@[reducible, expose] def DirectedSpace.Preorder (α : Type u) [TopologicalSpace α] [Preorder α] :
     DirectedSpace α where
   IsDipath := fun {x y : α} γ => Monotone ↑γ
   isDipath_constant := fun x _ _ _ => le_refl x
@@ -55,7 +55,7 @@ universe u v
 topological space
   creates a directed structure on α by pulling back paths.
 -/
-@[reducible] def DirectedSpace.Induced {α : Type u} {β : Type v} [TopologicalSpace α]
+@[expose, reducible] def DirectedSpace.Induced {α : Type u} {β : Type v} [TopologicalSpace α]
     [hβ : DirectedSpace β] {f : α → β} (hf : Continuous f) : DirectedSpace α where
   IsDipath := fun {x y : α} γ => IsDipath (γ.map hf)
   isDipath_constant := fun x => isDipath_constant (f x)
@@ -151,7 +151,7 @@ def DirectedMap.prodConstFst (F : D(α × β,γ)) (a : α) : D(β,γ) :=
   F.comp (DirectedMap.prodMapMk (DirectedMap.const β a) (DirectedMap.id β))
 
 @[simp] lemma DirectedMap.prod_const_fst_apply (F : D(α × β,γ)) (a : α) (b : β) :
-  DirectedMap.prodConstFst F a b = F (a, b) := rfl
+  DirectedMap.prodConstFst F a b = F (a, b) := by rfl
 
 /-- For every `t : β`, we can convert a directed map `F : α × β → γ` to a directed map `α → γ` by
   sending `a` to `F(a, t)`
@@ -160,6 +160,6 @@ def DirectedMap.prodConstSnd (F : D(α × β,γ)) (t : β) : D(α,γ) :=
   F.comp (DirectedMap.prodMapMk (DirectedMap.id α) (DirectedMap.const α t))
 
 @[simp] lemma DirectedMap.prod_const_snd_apply (F : D(α × β,γ)) (b : β) (a : α) :
-  DirectedMap.prodConstSnd F b a = F (a, b) := rfl
+  DirectedMap.prodConstSnd F b a = F (a, b) := by rfl
 
 end prod

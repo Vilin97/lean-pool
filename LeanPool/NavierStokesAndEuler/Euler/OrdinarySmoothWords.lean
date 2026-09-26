@@ -15,7 +15,7 @@ import Mathlib.Algebra.Order.Star.Real
 The word fields retain all genuine L² derivatives; no Sobolev regularity
 or distributional derivative is postulated. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,7 +27,7 @@ open MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLpTranslation
 open scoped ContDiff ENNReal
 
 /-- Axis, given by `EuclideanSpace.single i 1`. -/
-def axis (i : Fin 3) : Space := EuclideanSpace.single i 1
+@[expose] def axis (i : Fin 3) : Space := EuclideanSpace.single i 1
 
 @[simp] theorem axis_norm (i : Fin 3) : ‖axis i‖ = 1 := by
   simp [axis]
@@ -109,7 +109,7 @@ def wordSize (s : ℕ) (A : SmoothL2Field V) : ℝ :=
   ∑ n ∈ range (s+1), ∑ w : Fin n → Fin 3, ‖(wordField A w).toLp‖
 
 /-- Word energy, given by `∑ n ∈ range (s+1), ∑ w : Fin n → Fin 3, ‖(wordField A w).toLp‖^2`. -/
-def wordEnergy (s : ℕ) (A : SmoothL2Field V) : ℝ :=
+@[expose] def wordEnergy (s : ℕ) (A : SmoothL2Field V) : ℝ :=
   ∑ n ∈ range (s+1), ∑ w : Fin n → Fin 3, ‖(wordField A w).toLp‖^2
 
 /-- Word bound, given by `∀ n ≤ s, ∀ w : Fin n → Fin 3, ‖(wordField A w).toLp‖ ≤ M`. -/

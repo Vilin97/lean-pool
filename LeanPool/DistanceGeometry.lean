@@ -23,7 +23,7 @@ Tags: distance-geometry, euclidean-geometry, linear-algebra, cayley-menger
 MSC: 51K05, 52C99, 15A18
 -/
 
-@[expose] public section
+public section
 
 /-!
 This project develops three parts of finite Euclidean distance geometry: both

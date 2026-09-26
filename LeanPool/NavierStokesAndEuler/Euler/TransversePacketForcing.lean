@@ -18,7 +18,7 @@ continuous cylinder L² path whose mixed translation orbit is smooth. No
 regularity or equation for an output field is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -63,18 +63,18 @@ def InitialData.zero (D : Data U) : InitialData P D where
 namespace Data
 
 /-- Clamp, given by `projIcc 0 D.T D.T_pos.le t`. -/
-def clamp (D : Data U) (t : ℝ) : Icc (0 : ℝ) D.T := projIcc 0 D.T D.T_pos.le t
+@[expose] def clamp (D : Data U) (t : ℝ) : Icc (0 : ℝ) D.T := projIcc 0 D.T D.T_pos.le t
 
 omit [CompleteSpace U] in
 @[simp] theorem clamp_coe (D : Data U) (t : Icc (0 : ℝ) D.T) : D.clamp t = t :=
   projIcc_of_mem D.T_pos.le t.property
 
 /-- Strain, given by `D.M.field (D.clamp z.1) z.2.1`. -/
-def strain (D : Data U) (z : EulerPacketPointJets.Domain) : Space →L[ℝ] Space :=
+@[expose] def strain (D : Data U) (z : EulerPacketPointJets.Domain) : Space →L[ℝ] Space :=
   D.M.field (D.clamp z.1) z.2.1
 
 /-- Normal field, given by `D.normal.field (D.clamp z.1) z.2.1`. -/
-def normalField (D : Data U) (z : EulerPacketPointJets.Domain) : Space :=
+@[expose] def normalField (D : Data U) (z : EulerPacketPointJets.Domain) : Space :=
   D.normal.field (D.clamp z.1) z.2.1
 
 end Data

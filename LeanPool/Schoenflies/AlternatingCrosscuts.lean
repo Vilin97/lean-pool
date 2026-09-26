@@ -93,7 +93,7 @@ those particular sets the realization has to reproduce.
 * `alternating_crosscuts` — `cor:alternating-crosscuts`, bundled.
 -/
 
-@[expose] public section
+public section
 
 open Set unitInterval
 

@@ -15,7 +15,7 @@ public meta import Lean.PrettyPrinter.Delaborator.Basic
 public import Lean.PrettyPrinter.Delaborator.Basic
 public meta import Lean.PrettyPrinter.Parenthesizer
 
-@[expose] public section
+public section
 
 open Lean LentilLib
 
@@ -33,36 +33,41 @@ namespace TLA
 -/
 
 /-- An execution: an infinite sequence of states indexed by `Nat`. -/
-def exec (σ : Type u) := Nat → σ
+@[expose] def exec (σ : Type u) := Nat → σ
 /-- A temporal predicate: a property of executions. -/
-def pred (σ : Type u) := exec σ → Prop
+@[expose] def pred (σ : Type u) := exec σ → Prop
 /-- Lift a state property to the temporal predicate that holds at the first state. -/
-def statePred {σ : Type u} (f : σ → Prop) : pred σ :=
+@[expose] def statePred {σ : Type u} (f : σ → Prop) : pred σ :=
   fun e => f (e 0)
 /-- An action: a binary relation between the current and next state. -/
-def action (σ : Type u) := σ → σ → Prop
+@[expose] def action (σ : Type u) := σ → σ → Prop
 /-- Lift an action to the temporal predicate that holds on the first two states. -/
-def actionPred {σ : Type u} (a : action σ) : pred σ :=
+@[expose] def actionPred {σ : Type u} (a : action σ) : pred σ :=
   fun e => a (e 0) (e 1)
 
 /-- Lift a `Prop` to the temporal predicate that holds iff the `Prop` does. -/
-def purePred {α : Type u} (p : Prop) : pred α := statePred (fun _ => p)
+@[expose] def purePred {α : Type u} (p : Prop) : pred α := statePred (fun _ => p)
 /-- The temporal predicate that always holds. -/
-def tlaTrue {α : Type u} : pred α := purePred True
+@[expose] def tlaTrue {α : Type u} : pred α := purePred True
 /-- The temporal predicate that never holds. -/
-def tlaFalse {α : Type u} : pred α := purePred False
+@[expose] def tlaFalse {α : Type u} : pred α := purePred False
 
 /-- Conjunction of temporal predicates. -/
+@[expose]
 def tlaAnd {α : Type u} (p q : pred α) : pred α := fun σ => p σ ∧ q σ
 /-- Disjunction of temporal predicates. -/
+@[expose]
 def tlaOr {α : Type u} (p q : pred α) : pred α := fun σ => p σ ∨ q σ
 /-- Implication of temporal predicates. -/
+@[expose]
 def tlaImplies {α : Type u} (p q : pred α) : pred α := fun σ => p σ → q σ
 /-- Negation of a temporal predicate. -/
-def tlaNot {α : Type u} (p : pred α) : pred α := fun σ => ¬ p σ
+@[expose] def tlaNot {α : Type u} (p : pred α) : pred α := fun σ => ¬ p σ
 /-- Universal quantification over temporal predicates. -/
+@[expose]
 def tlaForall {α : Sort u} {β : Type v} (p : α → pred β) : pred β := fun σ => ∀ x, p x σ
 /-- Existential quantification over temporal predicates. -/
+@[expose]
 def tlaExists {α : Sort u} {β : Type v} (p : α → pred β) : pred β := fun σ => ∃ x, p x σ
 
 -- NOTE: this all could be automatically lifted, but to avoid dependency circles, we don't do that
@@ -79,40 +84,50 @@ instance {α : Type u} : Std.Associative (@tlaOr α) := by
   constructor; intros; unfold tlaOr; funext e; ac_rfl
 
 /-- Drop the first `k` states of an execution. -/
-def exec.drop {α : Type u} (k : Nat) (σ : exec α) : exec α := λ n => σ (n + k)
+@[expose] def exec.drop {α : Type u} (k : Nat) (σ : exec α) : exec α := λ n => σ (n + k)
 /-- The list of the first `k` states of an execution. -/
 def exec.take {α : Type u} (k : Nat) (σ : exec α) : List α := List.range k |>.map σ
 /-- The list of `k` states of an execution starting at index `start`. -/
 def exec.takeFrom {α : Type u} (start k : Nat) (σ : exec α) : List α := List.range' start k |>.map σ
 
 /-- The `always` (box) modality: `p` holds on every suffix. -/
+@[expose]
 def always {α : Type u} (p : pred α) : pred α := λ σ => ∀ k, p <| σ.drop k
 /-- The `eventually` (diamond) modality: `p` holds on some suffix. -/
+@[expose]
 def eventually {α : Type u} (p : pred α) : pred α := λ σ => ∃ k, p <| σ.drop k
 /-- The `later` (next) modality: `p` holds on the suffix dropping one state. -/
-def later {α : Type u} (p : pred α) : pred α := λ σ => p <| σ.drop 1
+@[expose] def later {α : Type u} (p : pred α) : pred α := λ σ => p <| σ.drop 1
 
 /-- An execution satisfies a temporal predicate. -/
+@[expose]
 def exec.satisfies {α : Type u} (p : pred α) (σ : exec α) : Prop := p σ
 /-- A temporal predicate is valid: it holds on every execution. -/
+@[expose]
 def valid {α : Type u} (p : pred α) : Prop := ∀ (σ : exec α), σ.satisfies p
 /-- Entailment between temporal predicates over all executions. -/
+@[expose]
 def predImplies {α : Type u} (p q : pred α) : Prop := ∀ (σ : exec α), σ.satisfies p → σ.satisfies q
 
 /-- An action is enabled at a state if some successor state exists. -/
+@[expose]
 def enabled {α : Type u} (a : action α) (s : α) : Prop := ∃ s', a s s'
 /-- The temporal predicate asserting that an action is enabled. -/
+@[expose]
 def tlaEnabled {α : Type u} (a : action α) : pred α := statePred (enabled a)
 
 /-- Big conjunction of temporal predicates over a foldable collection. -/
+@[expose]
 def tlaBigwedge {α : Type u} {β : Type v} {c} [Foldable c] (f : β → pred α) (s : c β) : pred α :=
   Foldable.fold tlaAnd tlaTrue f s
 
 /-- Big disjunction of temporal predicates over a foldable collection. -/
+@[expose]
 def tlaBigvee {α : Type u} {β : Type v} {c} [Foldable c] (f : β → pred α) (s : c β) : pred α :=
   Foldable.fold tlaOr tlaFalse f s
 
 /-- The `until` modality: `p` holds until `q` becomes true. -/
+@[expose]
 def tlaUntil {α : Type u} (p q : pred α) : pred α := λ σ => ∃ i, (q <| σ.drop i) ∧ ∀ j < i, (p <| σ.drop j)
 
 end TLA
@@ -213,10 +228,13 @@ macro_rules
 
 -- these definitions are not necessarily required, but for delaboration purposes
 /-- The leads-to operator `p ↝ q`, defined as `□ (p → ◇ q)`. -/
+@[expose]
 def TLA.leadsTo {α : Type u} (p q : TLA.pred α) : TLA.pred α := [tlafml| □ (p → ◇ q) ]
 /-- The always-implies operator `p ⇒ q`, defined as `□ (p → q)`. -/
+@[expose]
 def TLA.alwaysImplies {α : Type u} (p q : TLA.pred α) : TLA.pred α := [tlafml| □ (p → q) ]
 /-- Weak fairness of an action. -/
+@[expose]
 def TLA.weakFairness {α : Type u} (a : action α) : pred α := [tlafml| □ ((□ (Enabled a)) → ◇ ⟨a⟩)]
 
 macro_rules

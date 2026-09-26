@@ -34,7 +34,7 @@ This is inspired by the file https://leanprover-community.github.io/mathlib4_doc
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 
@@ -626,7 +626,7 @@ lemma exists_normalization_of_isMonotoneDiag [IsDiscreteValuationRing R] (g : GL
 
 /-- The cartan diagonal for a tuple of integers `f` is the diagonal matrix
 where the diagonal entries are given by `ϖ ^ f i`. -/
-@[simps! -isSimp]
+@[expose, simps! -isSimp]
 def cartanDiag {k : ℕ} (f : Fin k → ℤ) : GL (Fin k) K :=
   let d (j : Fin k) : Kˣ := {
     val := ϖ ^ f j

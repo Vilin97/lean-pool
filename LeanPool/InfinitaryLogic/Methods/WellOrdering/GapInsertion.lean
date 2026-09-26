@@ -21,7 +21,7 @@ margin obligation is ordinal-rank arithmetic, and the four cases collapse into a
 `Fin.succAbove` case analysis.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

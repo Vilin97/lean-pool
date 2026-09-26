@@ -16,7 +16,7 @@ The definitions work on a selected finite subset of a labelled configuration,
 which makes deletion and insertion statements literal finset identities.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132N14
 
@@ -33,10 +33,11 @@ structure Configuration (ι : Type*) where
 variable {ι κ : Type*} [LinearOrder ι]
 
 /-- The unordered pairs in `S`, represented by their increasing orientation. -/
-def pairs (S : Finset ι) : Finset (ι × ι) :=
+@[expose] def pairs (S : Finset ι) : Finset (ι × ι) :=
   (S ×ˢ S).filter fun e ↦ e.1 < e.2
 
 /-- The increasing representative of the unordered pair containing `v` and `w`. -/
+@[expose]
 def pairWith (v w : ι) : ι × ι :=
   if w < v then (w, v) else (v, w)
 
@@ -144,7 +145,7 @@ theorem pairWith_map_injectiveOn_orderedPairs
 namespace Configuration
 
 /-- The Euclidean length belonging to an indexed pair. -/
-def pairDistance (P : Configuration ι) (e : ι × ι) : ℝ :=
+@[expose] def pairDistance (P : Configuration ι) (e : ι × ι) : ℝ :=
   dist (P.point e.1) (P.point e.2)
 
 /-- The positive distances realized inside `S`. -/
@@ -152,11 +153,12 @@ def realizedDistances (P : Configuration ι) (S : Finset ι) : Finset ℝ :=
   (pairs S).image P.pairDistance
 
 /-- The number of unordered pairs in `S` at distance `d`. -/
+@[expose]
 def distanceMultiplicity (P : Configuration ι) (S : Finset ι) (d : ℝ) : ℕ :=
   ((pairs S).filter fun e ↦ P.pairDistance e = d).card
 
 /-- Realized distances represented by at most `threshold` unordered pairs. -/
-def lowMultiplicityDistances
+@[expose] def lowMultiplicityDistances
     (P : Configuration ι) (S : Finset ι) (threshold : ℕ) : Finset ℝ :=
   (P.realizedDistances S).filter fun d ↦ P.distanceMultiplicity S d ≤ threshold
 
@@ -247,6 +249,7 @@ theorem sum_distanceMultiplicity (P : Configuration ι) (S : Finset ι) :
     _ = (pairs S).card := hsubtype
 
 /-- Number of new edges of length `d` created by inserting `v` into `S`. -/
+@[expose]
 def insertionMultiplicity
     (P : Configuration ι) (v : ι) (S : Finset ι) (d : ℝ) : ℕ :=
   (S.filter fun w ↦ dist (P.point v) (P.point w) = d).card

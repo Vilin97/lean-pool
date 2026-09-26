@@ -22,7 +22,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace Descriptive.Tree
@@ -30,26 +30,32 @@ namespace Descriptive.Tree
 variable {A A' : Type*} (S T : tree A) (x y : List A)
 
 /-- Set of children of node x as elements of T -/
-def ExtensionsAt {T : tree A} (x : T) := { a : A // x.val ++ [a] ∈ T }
+@[expose] def ExtensionsAt {T : tree A} (x : T) := { a : A // x.val ++ [a] ∈ T }
 namespace ExtensionsAt
 variable {S T}
 variable {n : ℕ} {x : T} (a : ExtensionsAt x)
 /-- The underlying list of a child -/
-def val' := x.val ++ [a.val]
+@[expose] def val' := x.val ++ [a.val]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps coe] def valT' : T := ⟨a.val', a.prop⟩
+@[expose] def valT' : T := ⟨a.val', a.prop⟩
+@[simp] lemma valT'_coe : (a.valT' : List A) = a.val' := by rfl
 @[ext] lemma ext {a b : ExtensionsAt x} (h : a.val = b.val) : a = b := Subtype.ext h
 lemma ext_val' {a b : ExtensionsAt x} (h : a.val' = b.val') : a = b := by
   ext; simpa [val'] using h
 lemma ext_valT' {a b : ExtensionsAt x} (h : a.valT' = b.valT') : a = b :=
   ext_val' <| congr_arg Subtype.val h
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def drop {T : tree A} {n : ℕ} {x : T} :
+def drop {T : tree A} {n : ℕ} {x : T} :
   ExtensionsAt x ≃ ExtensionsAt (Tree.drop T n x) where --TODO fix T explicit
   toFun a := ⟨a.val, by simpa [← List.append_assoc] using a.prop⟩
   invFun a := ⟨a.val, by simpa [← List.append_assoc] using a.prop⟩
   left_inv _ := rfl
   right_inv _ := rfl
+@[simp] lemma drop_apply_coe {T : tree A} {n : ℕ} {x : T} (a : ExtensionsAt x) :
+    (drop (n := n) a).val = a.val := by rfl
+@[simp] lemma drop_symm_apply_coe {T : tree A} {n : ℕ}
+    {x : T} (a : ExtensionsAt (Tree.drop T n x)) :
+    ((drop (n := n) (x := x)).symm a).val = a.val := by rfl
 @[simp] lemma val'_length :
   a.val' (A := no_index _).length (α := no_index _) = x.val.length (α := no_index _) + 1 := by
   simp [ExtensionsAt.val']
@@ -72,7 +78,7 @@ lemma valT'_take_of_eq (a : ExtensionsAt x) (h : n = x.val.length) :
 end ExtensionsAt
 
 /-- A tree is pruned if it has no leaves -/
-def IsPruned : Prop := ∀ x : T, Nonempty (ExtensionsAt x)
+@[expose] def IsPruned : Prop := ∀ x : T, Nonempty (ExtensionsAt x)
 lemma IsPruned.sub {T : tree A} (h : IsPruned T) (x : List A) : IsPruned (subAt T x) := by
   intro ⟨y, h'⟩
   simpa only [ExtensionsAt, nonempty_subtype, List.append_assoc, mem_subAt] using h ⟨_, h'⟩

@@ -15,7 +15,7 @@ meta import LeanPool.Lentil.ProofMode.Basic
 meta import LeanPool.Lentil.ProofMode.Location
 public import LeanPool.Lentil.ProofMode.Location
 
-@[expose] public section
+public section
 
 namespace TLA.ProofMode
 

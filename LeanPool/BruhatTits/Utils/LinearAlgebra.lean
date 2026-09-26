@@ -15,7 +15,7 @@ import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 # LeanPool.BruhatTits.Utils.LinearAlgebra
 -/
 
-@[expose] public section
+public section
 
 open Module
 

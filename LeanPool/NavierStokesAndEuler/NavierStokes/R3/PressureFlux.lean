@@ -55,7 +55,7 @@ spatial test is smooth and compactly supported. Consequently all pairings are
 ordinary Lebesgue integrals even when the pressure grows at spatial infinity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -271,7 +271,7 @@ The differential operators commute with this embedding. The pressure identities
 below continue to pair the physical pressure only with compact spatial tests.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -465,7 +465,7 @@ Only the test is approximated by compactly supported functions; no support or
 derivative bound is imposed on the field.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -654,7 +654,7 @@ uniform spatial integral bounds; no time derivative or global spatial
 derivative bound is used.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1188,7 +1188,7 @@ section
 
 /-! # Pointwise recovery from compact temporal tests -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1227,7 +1227,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1672,7 +1672,7 @@ commutator form.  Its estimates use only the unweighted velocity energy and
 the weighted velocity and gradient norms.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2046,7 +2046,7 @@ identification of every compact scalar pressure-gradient pairing. It does not
 assume a pressure-flux formula or any bound on the pressure at infinity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2217,7 +2217,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2284,7 +2284,7 @@ cross terms use `L³` of that velocity and `L²` of the difference; the quadrati
 term uses the cutoff interpolation estimate. All norms remain finite explicitly.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2506,7 +2506,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

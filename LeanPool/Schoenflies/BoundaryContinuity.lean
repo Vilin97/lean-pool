@@ -49,7 +49,7 @@ An earlier version of this docstring listed those as if they were here; they nev
   target crosscut, is in `Schoenflies/BoundaryContinuity2.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set Schoenflies
 open scoped Graph

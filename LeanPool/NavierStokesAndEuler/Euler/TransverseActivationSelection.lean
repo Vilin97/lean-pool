@@ -45,7 +45,7 @@ and `2*L` when `L*T ≥ 1`.  These are the same energy bounds needed for the
 piecewise linear terminal ramp in the activation argument.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -197,7 +197,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -247,7 +247,7 @@ def operatorEvaluation (A : C(Icc (0 : ℝ) T, U →L[ℝ] E)) :
 omit [CompleteSpace E] in
 @[simp] theorem operatorEvaluation_apply
     (A : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (Y : U) (t : Icc (0 : ℝ) T) :
-    operatorEvaluation T A Y t = A t Y := rfl
+    operatorEvaluation T A Y t = A t Y := by rfl
 
 /-- Trial frame, given by `⟨fun t => ramp T L t • P t, ((ramp_continuous T L).comp
 continuous_subtype_val).smul P.continuous⟩`. -/
@@ -458,7 +458,7 @@ The derivative bound depends on the ray equation through `‖m'‖/‖m‖`, and
 therefore costs only the parent matrix norm, with no deformation-gradient loss.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -633,7 +633,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -817,7 +817,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -834,10 +834,10 @@ variable {U E V : Type*}
   [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
 
 /-- Activation constant, given by `4 + 64 * CM ^ 2 + 2 * CH`. -/
-def activationConstant (CM CH : ℝ) : ℝ := 4 + 64 * CM ^ 2 + 2 * CH
+@[expose] def activationConstant (CM CH : ℝ) : ℝ := 4 + 64 * CM ^ 2 + 2 * CH
 
 /-- The actual terminal matrix after subtracting the prescribed shear. -/
-def terminalPerturbation (T : ℝ) (hT : 0 ≤ T) (R : V →ₗᵢ[ℝ] E)
+@[expose] def terminalPerturbation (T : ℝ) (hT : 0 ≤ T) (R : V →ₗᵢ[ℝ] E)
     (M : C(Icc (0 : ℝ) T, E →L[ℝ] E)) (p q : V) (h : ℝ) : V →L[ℝ] V :=
   R.toContinuousLinearMap.adjoint.comp
     ((M ⟨T, hT, le_rfl⟩).comp R.toContinuousLinearMap) - h • rankOne ℝ q p

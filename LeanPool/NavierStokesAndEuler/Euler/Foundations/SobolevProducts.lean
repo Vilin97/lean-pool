@@ -16,7 +16,7 @@ import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 # Sobolev Products
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -63,7 +63,7 @@ theorem directional_eq_iteratedDeriv (d n : ℕ) (v x : Domain d)
     iteratedFDeriv_comp_add_left]
 
 /-- Pointwise multiplication of two complex Schwartz functions. -/
-noncomputable def product (d : ℕ) (f g : 𝓢(Domain d, ℂ)) : 𝓢(Domain d, ℂ) :=
+@[expose] noncomputable def product (d : ℕ) (f g : 𝓢(Domain d, ℂ)) : 𝓢(Domain d, ℂ) :=
   SchwartzMap.pairing (ContinuousLinearMap.mul ℂ ℂ) f g
 
 @[simp] theorem product_apply (d : ℕ) (f g : 𝓢(Domain d, ℂ)) (x : Domain d) :

@@ -25,7 +25,7 @@ univalent functions on the exterior of the closed unit disk with the expansion
 - If `f` is in `classS`, then `g(z) = 1/f(1/z)` is in `classSigma`; `inv_f_inv_in_Sigma`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.LeanComplexAnalysis
 

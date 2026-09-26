@@ -26,7 +26,7 @@ field. This is a qualitative finite-dimensional construction; subsequent
 norm estimates can use the actual tensor equality without a coordinate
 reassembly constant. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -150,7 +150,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

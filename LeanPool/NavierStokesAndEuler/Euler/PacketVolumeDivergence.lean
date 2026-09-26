@@ -15,7 +15,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 formula controls the derivative of the Jacobian, and symmetry of the
 second derivative supplies the Piola cancellation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

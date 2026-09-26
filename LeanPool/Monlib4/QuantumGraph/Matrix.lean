@@ -15,7 +15,7 @@ import LeanPool.Monlib4.Preq.Finset
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.Matrix`.
 -/
 
-@[expose] public section
+public section
 
 open scoped Functional MatrixOrder ComplexOrder TensorProduct Matrix
 

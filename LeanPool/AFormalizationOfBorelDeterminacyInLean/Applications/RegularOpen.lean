@@ -14,7 +14,7 @@ public import Mathlib.Topology.Sets.Opens
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 variable {X : Type*} [tX : TopologicalSpace X] {A B : Set X} {U V : tX.Opens}

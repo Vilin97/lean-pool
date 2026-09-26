@@ -12,7 +12,7 @@ public import Mathlib.CategoryTheory.ConcreteCategory.Basic
 # LeanPool.DirectedTopologyLean4.DTop
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the definition of `dTopCat`, the category of directed spaces.
@@ -40,10 +40,10 @@ instance : CoeSort dTopCat (Type u) := ⟨dTopCat.carrier⟩
 attribute [coe] dTopCat.carrier
 
 /-- Construct a bundled `dTopCat` from the underlying type and the typeclass. -/
-def of (X : Type u) [DirectedSpace X] : dTopCat := ⟨X⟩
+@[expose] def of (X : Type u) [DirectedSpace X] : dTopCat := ⟨X⟩
 
 @[simp]
-lemma coe_of (X : Type u) [DirectedSpace X] : (of X : Type u) = X := rfl
+lemma coe_of (X : Type u) [DirectedSpace X] : (of X : Type u) = X := by rfl
 
 /-- The type of morphisms in `dTopCat`. -/
 @[ext]
@@ -101,12 +101,12 @@ lemma hom_ofHom {X Y : Type u} [DirectedSpace X] [DirectedSpace Y] (f : D(X,Y)) 
 lemma ofHom_hom {X Y : dTopCat} (f : X ⟶ Y) : ofHom (Hom.hom f) = f := rfl
 
 @[simp]
-lemma ofHom_id {X : Type u} [DirectedSpace X] : ofHom (DirectedMap.id X) = 𝟙 (of X) := rfl
+lemma ofHom_id {X : Type u} [DirectedSpace X] : ofHom (DirectedMap.id X) = 𝟙 (of X) := by rfl
 
 @[simp]
 lemma ofHom_comp {X Y Z : Type u} [DirectedSpace X] [DirectedSpace Y] [DirectedSpace Z]
     (f : D(X,Y)) (g : D(Y,Z)) :
-    ofHom (g.comp f) = ofHom f ≫ ofHom g := rfl
+    ofHom (g.comp f) = ofHom f ≫ ofHom g := by rfl
 
 instance subspaceCoe {X : dTopCat} : CoeTC (Set X) dTopCat := ⟨fun s => dTopCat.of s⟩
 

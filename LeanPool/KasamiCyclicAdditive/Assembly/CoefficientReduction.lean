@@ -26,7 +26,7 @@ modulus `|Kˣ|` used by the phase argument, and constructs the inverse exponent
 `D`.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive
 

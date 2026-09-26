@@ -18,7 +18,7 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 oscillating graph, a linear projection and the physical label dilation.
 The resulting bounds apply to the literal derivatives of those fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

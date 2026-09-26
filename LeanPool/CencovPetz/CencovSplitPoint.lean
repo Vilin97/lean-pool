@@ -32,7 +32,7 @@ scalar multiple of Fisher.
 - `CencovPetz.MonotoneMetricFamily.eq_smul_fisher_of_isSplitRepresentable`
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

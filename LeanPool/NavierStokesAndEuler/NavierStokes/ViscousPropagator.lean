@@ -21,7 +21,7 @@ The auxiliary Hilbert-space lemmas derive an estimate from a differential
 equation and an energy inequality; no propagator bound is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.ViscousPropagator
@@ -276,11 +276,15 @@ noncomputable def reflection : Plane →L[ℝ] Plane :=
       ext i
       fin_cases i <;> simp }
 
+theorem reflection_zero (x : Plane) : reflection x 0 = x 0 := by rfl
+
+theorem reflection_one (x : Plane) : reflection x 1 = -x 1 := by rfl
+
 /-- `diag(lam,-lam)` as a genuine continuous linear operator. -/
-noncomputable def diagonal (lam : ℝ) : Plane →L[ℝ] Plane := lam • reflection
+@[expose] noncomputable def diagonal (lam : ℝ) : Plane →L[ℝ] Plane := lam • reflection
 
 /-- The actual diagonalized coefficient, including scalar damping and error. -/
-noncomputable def coefficient (lam damping : ℝ) (E : Plane →L[ℝ] Plane) :
+@[expose] noncomputable def coefficient (lam damping : ℝ) (E : Plane →L[ℝ] Plane) :
     Plane →L[ℝ] Plane :=
   diagonal lam - damping • ContinuousLinearMap.id ℝ Plane + E
 
@@ -426,17 +430,17 @@ theorem homogeneous_viscous_propagator_estimate
   ring
 
 /-- The positive reference eigenvalue appearing in the Gaussian construction. -/
-noncomputable def referenceEigenvalue (lam u ell t : ℝ) : ℝ :=
+@[expose] noncomputable def referenceEigenvalue (lam u ell t : ℝ) : ℝ :=
   lam / Real.sqrt (1 + (PulseGrowth.slotMagnitude u ell t) ^ 2)
 
 /-- The fundamental damping fixed by the manuscript's choice of `B_s`. -/
-noncomputable def referenceViscosity (lam u ell t : ℝ) : ℝ :=
+@[expose] noncomputable def referenceViscosity (lam u ell t : ℝ) : ℝ :=
   lam * (1 + (PulseGrowth.slotMagnitude u ell t) ^ 2) /
     ((1 + u ^ 2) * Real.sqrt (1 + u ^ 2))
 
 theorem reference_rate_split (lam u ell t : ℝ) :
     GaussianEnvelope.referenceRate lam u ell t =
-      referenceEigenvalue lam u ell t - referenceViscosity lam u ell t := rfl
+      referenceEigenvalue lam u ell t - referenceViscosity lam u ell t := by rfl
 
 theorem referenceEigenvalue_nonneg {lam : ℝ} (hlam : 0 ≤ lam) (u ell t : ℝ) :
     0 ≤ referenceEigenvalue lam u ell t :=

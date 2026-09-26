@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Explicit finite-dimensional norm comparisons for the actual H³ energy. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -25,7 +25,7 @@ open MeasureTheory EulerSmoothLimit EulerLpTranslation EulerLpTranslation.Smooth
   EulerSmoothSobolev Finset
 
 /-- Tensor norm, given by `∑ n ∈ range (s+1), ‖A.jetLp n‖`. -/
-def tensorNorm (s : ℕ) (A : SmoothL2Field Space) : ℝ := ∑ n ∈ range (s+1), ‖A.jetLp n‖
+@[expose] def tensorNorm (s : ℕ) (A : SmoothL2Field Space) : ℝ := ∑ n ∈ range (s+1), ‖A.jetLp n‖
 
 theorem tensorNorm_eq (s : ℕ) (A : SmoothL2Field Space) :
     tensorNorm s A=realTensorSobolevNorm 3 s A.field := by

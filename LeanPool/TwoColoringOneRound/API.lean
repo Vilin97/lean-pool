@@ -29,7 +29,7 @@ This is the recommended entry point for humans.
   (bounds on `Distributed2Coloring.ClassicalAlgorithm.pStar`)
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring
 end Distributed2Coloring

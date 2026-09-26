@@ -17,7 +17,7 @@ Only nonzero input harmonics need be localized: a spatially global zero
 mode, such as an axisymmetric pressure alias, does not create a new slot.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -447,7 +447,7 @@ open CommonCoverSolve TorusInverse TorusAverages
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Native union, given by `⋃ k : Frequency, PeriodizedWaveBounds.nativeCell g K k`. -/
-noncomputable def nativeUnion (g : Geometry) (K : Set Plane) : Set (P × Plane) :=
+@[expose] noncomputable def nativeUnion (g : Geometry) (K : Set Plane) : Set (P × Plane) :=
   ⋃ k : Frequency, PeriodizedWaveBounds.nativeCell g K k
 
 omit [NormedSpace ℝ P] in

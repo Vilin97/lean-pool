@@ -21,7 +21,7 @@ maximum-demand capacity bound costs at least 60, and this lower bound is attaine
 Generic coefficient transfer gives refutations over all linearly ordered commutative rings.
 -/
 
-@[expose] public section
+public section
 
 namespace GoemansFlow
 

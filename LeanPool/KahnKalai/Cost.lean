@@ -12,7 +12,7 @@ Cover-cost calculus for Tran–Vu: the infimum is a minimum, subadditivity,
 empty-family / empty-set evaluation, and `⊆`-minimals.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -167,6 +167,7 @@ lemma coverCost_ge_union_sub {p : ℝ} (hp : 0 ≤ p) (A B : Finset (Finset α))
   linarith
 
 /-- The inclusion-minimal members of a finite family. -/
+@[expose]
 def minimals (F : Finset (Finset α)) : Finset (Finset α) :=
   F.filter fun T => ∀ U ∈ F, U ⊆ T → U = T
 
@@ -256,6 +257,7 @@ def largeMinimals (H : Finset (Finset α)) (W : Finset α) (ℓ : ℕ) : Finset 
   (minimals (restrictFamily H W)).filter fun T => ⌊((9 : ℝ) / 10) * ℓ⌋₊ + 1 ≤ T.card
 
 /-- Minimal restricted members whose size is at most `0.9 ℓ`. -/
+@[expose]
 def smallMinimals (H : Finset (Finset α)) (W : Finset α) (ℓ : ℕ) : Finset (Finset α) :=
   (minimals (restrictFamily H W)).filter fun T => T.card ≤ ⌊((9 : ℝ) / 10) * ℓ⌋₊
 

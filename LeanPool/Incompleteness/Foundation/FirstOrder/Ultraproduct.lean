@@ -12,7 +12,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # Ultraproduct -/
 
-@[expose] public section
+public section
 
 
 namespace LO

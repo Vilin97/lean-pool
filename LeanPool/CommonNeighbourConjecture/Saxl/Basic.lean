@@ -18,35 +18,35 @@ Foundational definitions for ordered tuple bases, ordinary and generalized
 Saxl adjacency, exact base size, and common neighbours.
 -/
 
-@[expose] public section
+public section
 
 namespace Saxl
 
 variable (G Ω : Type*) [Group G] [MulAction G Ω]
 
 /-- An ordered tuple whose pointwise stabilizer in `G` is trivial. -/
-def IsBaseTuple {n : Nat} (x : Fin n → Ω) : Prop :=
+@[expose] def IsBaseTuple {n : Nat} (x : Fin n → Ω) : Prop :=
   ∀ g : G, (∀ i, g • x i = x i) → g = 1
 
 /-- An injective ordered tuple corresponding literally to a base as a set. -/
-def IsSetBaseTuple {n : Nat} (x : Fin n → Ω) : Prop :=
+@[expose] def IsSetBaseTuple {n : Nat} (x : Fin n → Ω) : Prop :=
   Function.Injective x ∧ IsBaseTuple G Ω x
 
 /-- Base-two adjacency: the displayed ordered pair has trivial stabilizer. -/
-def Adjacent (x y : Ω) : Prop :=
+@[expose] def Adjacent (x y : Ω) : Prop :=
   IsBaseTuple G Ω (Fin.cons x (Fin.cons y Fin.elim0))
 
 /-- Two vertices extend to an injective base of size `tail + 2`. -/
-def GeneralizedAdjacent (tail : Nat) (x y : Ω) : Prop :=
+@[expose] def GeneralizedAdjacent (tail : Nat) (x y : Ω) : Prop :=
   ∃ z : Fin tail → Ω,
     IsSetBaseTuple G Ω (Fin.cons x (Fin.cons y z))
 
 /-- Two vertices have a common neighbour for a relation `R`. -/
-def HasCommonNeighbour (R : Ω → Ω → Prop) (x y : Ω) : Prop :=
+@[expose] def HasCommonNeighbour (R : Ω → Ω → Prop) (x y : Ω) : Prop :=
   ∃ z, R x z ∧ R z y
 
 /-- Exact base size `n`, stated without a global minimum operator. -/
-def ExactBaseSize (n : Nat) : Prop :=
+@[expose] def ExactBaseSize (n : Nat) : Prop :=
   (∃ x : Fin n → Ω, IsSetBaseTuple G Ω x) ∧
     ∀ m < n, ¬ ∃ x : Fin m → Ω, IsSetBaseTuple G Ω x
 

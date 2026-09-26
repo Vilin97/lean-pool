@@ -17,7 +17,7 @@ import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Config.Mirror`.
 -/
 
-@[expose] public section
+public section
 
 variable {α : Type _} [LinearOrder α] (C : Config α)
 
@@ -26,7 +26,7 @@ open OrderDual
 -- to_dual : α → αᵒᵈ
 -- of_dual : αᵒᵈ → α
 /-- The mirror configuration on the order dual, obtained by reversing the cup relation. -/
-def Config.Mirror : Config (OrderDual α) :=
+@[expose] def Config.Mirror : Config (OrderDual α) :=
   ⟨Mirror3 C.Cup3, C.DecidableCup3.Mirror3⟩
 
 variable {C}

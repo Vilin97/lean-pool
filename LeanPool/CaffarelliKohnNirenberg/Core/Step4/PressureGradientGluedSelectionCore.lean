@@ -15,7 +15,7 @@ overlaps is represented by a single function, and that representative inherits
 local integrability on the union of the pieces.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped Topology

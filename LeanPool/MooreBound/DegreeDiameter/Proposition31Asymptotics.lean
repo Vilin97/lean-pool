@@ -28,7 +28,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -40,12 +40,12 @@ namespace DegreeDiameter
 noncomputable section
 
 /-- The factor `A_q = (q+1)^k` in Proposition 3.1. -/
-def proposition31Amplitude (q k : ℕ) : ℕ :=
+@[expose] def proposition31Amplitude (q k : ℕ) : ℕ :=
   (q + 1) ^ k
 
 /-- The sharp displayed degree cap
 `K_q = (q+1)^k ((q+1)^k-1)`. -/
-def proposition31DegreeCap (q k : ℕ) : ℕ :=
+@[expose] def proposition31DegreeCap (q k : ℕ) : ℕ :=
   proposition31Amplitude q k * (proposition31Amplitude q k - 1)
 
 /-- The order of the concrete graph over the chosen field of order `q`. -/

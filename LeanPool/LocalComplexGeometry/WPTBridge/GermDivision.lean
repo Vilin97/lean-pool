@@ -18,7 +18,7 @@ the coefficients of the prepared divisor; its coefficients are analytic and
 vanish at the origin.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators Topology
@@ -32,7 +32,7 @@ noncomputable section
 
 /-- The prepared polynomial, written in the standard `Fin (n + 1) -> C`
 coordinate model used by `HolomorphicGerm`. -/
-def preparedPolynomialFunction {n d : ℕ}
+@[expose] def preparedPolynomialFunction {n d : ℕ}
     (a : Fin d → Base n → ℂ) : ComplexEuclidean (n + 1) → ℂ :=
   fun x ↦ preparedPolynomial d a (wptAmbientEquiv n x)
 
@@ -55,21 +55,21 @@ theorem analyticAt_preparedPolynomialFunction {n d : ℕ}
       ComplexEuclidean (n + 1) →L[ℂ] Ambient n)) (x := 0)
 
 /-- The germ of a fixed prepared polynomial. -/
-def preparedPolynomialGerm {n d : ℕ}
+@[expose] def preparedPolynomialGerm {n d : ℕ}
     (a : Fin d → Base n → ℂ) (ha : ∀ i, AnalyticAt ℂ (a i) 0) :
     HolomorphicGerm (n + 1) :=
   HolomorphicGerm.ofFunction (preparedPolynomialFunction a)
     (analyticAt_preparedPolynomialFunction a ha)
 
 /-- The degree-`< d` polynomial germ with a prescribed coefficient vector. -/
-def remainderPolynomialGerm {n d : ℕ}
+@[expose] def remainderPolynomialGerm {n d : ℕ}
     (r : Fin d → HolomorphicGerm n) : HolomorphicGerm (n + 1) :=
   ∑ i : Fin d,
     lowerDimensionalInclusion n (r i) * lastCoordinateGerm n ^ (i : ℕ)
 
 /-- A quotient and coefficient vector satisfy Weierstrass division at the
 level of germs. -/
-def IsPreparedGermDivision {n d : ℕ}
+@[expose] def IsPreparedGermDivision {n d : ℕ}
     (a : Fin d → Base n → ℂ) (ha : ∀ i, AnalyticAt ℂ (a i) 0)
     (h q : HolomorphicGerm (n + 1)) (r : Fin d → HolomorphicGerm n) : Prop :=
   h = q * preparedPolynomialGerm a ha + remainderPolynomialGerm r
@@ -374,7 +374,7 @@ def preparedGermDivisionQuotient {n d : ℕ}
   Classical.choose (exists_preparedGermDivision a ha ha0 h)
 
 /-- The canonical coefficient vector of the degree-`< d` remainder. -/
-def preparedGermDivisionRemainder {n d : ℕ}
+@[expose] def preparedGermDivisionRemainder {n d : ℕ}
     (a : Fin d → Base n → ℂ) (ha : ∀ i, AnalyticAt ℂ (a i) 0)
     (ha0 : ∀ i, a i 0 = 0) (h : HolomorphicGerm (n + 1)) :
     Fin d → HolomorphicGerm n :=
@@ -469,7 +469,7 @@ theorem preparedGermDivisionRemainder_smul {n d : ℕ}
 
 /-- The base-linear coefficient-remainder map supplied by analytic
 Weierstrass division. -/
-def preparedGermDivisionRemainderLinearMap {n d : ℕ}
+@[expose] def preparedGermDivisionRemainderLinearMap {n d : ℕ}
     (a : Fin d → Base n → ℂ) (ha : ∀ i, AnalyticAt ℂ (a i) 0)
     (ha0 : ∀ i, a i 0 = 0) :
     HolomorphicGerm (n + 1) →ₗ[HolomorphicGerm n]

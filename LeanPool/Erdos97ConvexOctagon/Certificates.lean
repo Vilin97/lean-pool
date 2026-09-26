@@ -14,7 +14,7 @@ import LeanPool.Erdos97ConvexOctagon.ResidualObstructions
 
 /-! # Erdős 97 convex-octagon formalization: Certificates -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 
@@ -36,12 +36,12 @@ inductive PrefixCertificate where
   deriving DecidableEq
 
 /-- Regard a monotone prefix witness as a general obstruction certificate. -/
-def PrefixCertificate.toCertificate : PrefixCertificate → Certificate
+@[expose] def PrefixCertificate.toCertificate : PrefixCertificate → Certificate
   | .k4 root component a b c d => .k4 root component a b c d
   | .sharedThree a b q1 q2 q3 => .sharedThree a b q1 q2 q3
 
 /-- Validate the tail of an ordered mutual-edge spanning tree. -/
-def extendsTreeB
+@[expose] def extendsTreeB
     (R : RawIncidence) (reached : Finset Vertex) : List Vertex → Bool
   | [] => true
   | v :: todo =>
@@ -50,12 +50,12 @@ def extendsTreeB
         extendsTreeB R (insert v reached) todo
 
 /-- Check that the listed vertices form an ordered mutual-edge spanning tree. -/
-def componentTreeB (R : RawIncidence) (root : Vertex) : List Vertex → Bool
+@[expose] def componentTreeB (R : RawIncidence) (root : Vertex) : List Vertex → Bool
   | [] => false
   | first :: rest => decide (first = root) && extendsTreeB R {root} rest
 
 /-- A selected edge whose selecting endpoint occurs in a validated tree. -/
-def TreeLabelledEdge (R : RawIncidence) (component : List Vertex) (a b : Vertex) : Prop :=
+@[expose] def TreeLabelledEdge (R : RawIncidence) (component : List Vertex) (a b : Vertex) : Prop :=
   (a ∈ component ∧ b ∈ R a) ∨ (b ∈ component ∧ a ∈ R b)
 
 /-- Boolean test for a selected edge incident to the validated tree. -/
@@ -65,19 +65,19 @@ def treeLabelledEdgeB
     (decide (b ∈ component) && decide (a ∈ R b))
 
 /-- The class number stored in a residual-isomorphism payload. -/
-def payloadClass (payload : UInt64) : ℕ :=
+@[expose] def payloadClass (payload : UInt64) : ℕ :=
   (payload &&& 15).toNat
 
 /-- The forward permutation stored in a residual-isomorphism payload. -/
-def payloadForwardCode (payload : UInt64) : UInt64 :=
+@[expose] def payloadForwardCode (payload : UInt64) : UInt64 :=
   (payload >>> 4) &&& 0xffffff
 
 /-- The inverse permutation stored in a residual-isomorphism payload. -/
-def payloadInverseCode (payload : UInt64) : UInt64 :=
+@[expose] def payloadInverseCode (payload : UInt64) : UInt64 :=
   (payload >>> 28) &&& 0xffffff
 
 /-- The mathematical proposition checked for each emitted finite witness. -/
-def Certificate.Valid (R : RawIncidence) : Certificate → Prop
+@[expose] def Certificate.Valid (R : RawIncidence) : Certificate → Prop
   | .k4 root component a b c d =>
       componentTreeB R root component = true ∧ [a, b, c, d].Nodup ∧
         TreeLabelledEdge R component a b ∧ TreeLabelledEdge R component a c ∧
@@ -186,7 +186,7 @@ theorem Certificate.valid_of_validB
         and_assoc] using hvalid
 
 /-- One incidence table extends another when it contains every selected edge. -/
-def Extends (R S : RawIncidence) : Prop :=
+@[expose] def Extends (R S : RawIncidence) : Prop :=
   ∀ centre target, target ∈ R centre → target ∈ S centre
 
 private theorem extendsTreeB_mono {R S : RawIncidence} (hRS : Extends R S) :

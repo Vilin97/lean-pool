@@ -21,7 +21,7 @@ public import LeanPool.MatchingLogic.EntryIII.Generated
 # MatchingLogic.EntryIII.Completion
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -54,7 +54,7 @@ def isStar {root : CanonicalCarrier S} (point : CompletedCarrier root) : Prop :=
 end CompletedCarrier
 
 /-- Embed a generated world into the completed carrier. -/
-def completedEmbed (root : CanonicalCarrier S) (world : GeneratedCarrier root) :
+@[expose] def completedEmbed (root : CanonicalCarrier S) (world : GeneratedCarrier root) :
     CompletedCarrier root :=
   ⟨some world, by simp⟩
 

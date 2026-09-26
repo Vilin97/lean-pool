@@ -14,28 +14,32 @@ public import LeanPool.CaffarelliKohnNirenberg.Statements.ParabolicHolderVecOn
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 open MeasureTheory MeasureTheory.Measure Set Metric Filter
 noncomputable section
 namespace CKN.Foundation.Parabolic
 /-- Normalized Lᵖ oscillation about the mean on a closed parabolic ball. -/
+@[expose]
 def ParabolicBallLpOscillation (f : ParabolicPoint → ℝ) (z : ParabolicPoint)
     (r p : ℝ) : ℝ :=
   (⨍ y in @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r,
     |f y - ⨍ x in @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r, f x| ^ p) ^
       (1 / p)
 /-- Uniform Campanato oscillation bound for balls centered in a given set. -/
+@[expose]
 def ParabolicBallCampanatoBoundOn (f : ParabolicPoint → ℝ) (U : Set ParabolicPoint)
     (R α K p : ℝ) : Prop :=
   ∀ z ∈ U, ∀ {r : ℝ}, 0 < r → r ≤ R →
     ParabolicBallLpOscillation f z r p ≤ K * r ^ α
 /-- Campanato oscillation bound at every point and positive radius. -/
+@[expose]
 def GlobalParabolicBallCampanatoBound (f : ParabolicPoint → ℝ) (α K p : ℝ) : Prop :=
   ∀ z : ParabolicPoint, ∀ {r : ℝ}, 0 < r →
     ParabolicBallLpOscillation f z r p ≤ K * r ^ α
 /-- Local integrability data needed to use ball averages and Lᵖ oscillations. -/
+@[expose]
 def ParabolicBallLpDataOn (f : ParabolicPoint → ℝ) (U : Set ParabolicPoint)
     (R p : ℝ) : Prop :=
   ∀ z ∈ U, ∀ {r : ℝ}, 0 < r → r ≤ R →
@@ -44,6 +48,7 @@ def ParabolicBallLpDataOn (f : ParabolicPoint → ℝ) (U : Set ParabolicPoint)
       @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r, f x| ^ p)
       (@Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r) volume
 /-- Averages over a dyadically shrinking sequence of closed parabolic balls. -/
+@[expose]
 def ParabolicBallMeanSeq (f : ParabolicPoint → ℝ) (R : ℝ) (z : ParabolicPoint)
     (n : ℕ) : ℝ :=
   ⨍ y in @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z (R / (2 : ℝ) ^ n), f y
@@ -452,6 +457,7 @@ theorem abs_parabolicBallRepresentative_sub_meanSeq_le
   unfold parabolicCampanatoTailConstant
   field_simp
 /-- Integrability data for ball averages and oscillations at all points and radii. -/
+@[expose]
 def GlobalParabolicBallLpData
     (f : ParabolicPoint → ℝ) (p : ℝ) : Prop :=
   ∀ z : ParabolicPoint, ∀ {r : ℝ}, 0 < r →
@@ -462,6 +468,7 @@ def GlobalParabolicBallLpData
         @Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r, f x| ^ p)
       (@Metric.closedBall ParabolicPoint parabolicPseudoMetricSpace z r) volume
 /-- Explicit coefficient converting a Campanato bound to a Hölder bound. -/
+@[expose]
 def parabolicCampanatoHolderConstant (α p : ℝ) : ℝ :=
   (2 * parabolicCampanatoTailConstant α + 1) *
     (2 : ℝ) ^ (5 / p) * (8 : ℝ) ^ α

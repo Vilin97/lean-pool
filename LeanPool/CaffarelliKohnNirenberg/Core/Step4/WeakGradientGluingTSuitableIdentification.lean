@@ -17,7 +17,7 @@ Every locally integrable weak pressure derivative agrees with their signed
 completed-operator decomposition on almost every slice.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal BigOperators Topology

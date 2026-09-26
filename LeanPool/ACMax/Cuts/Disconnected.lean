@@ -16,7 +16,7 @@ then the cut is empty, so the weighted-cut certificate gives `algConn G ≤ 2` (
 `algConn G = 0`).  This handles disconnected graphs uniformly for every `n`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

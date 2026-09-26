@@ -21,7 +21,7 @@ go through the `noncomputable` square-root sequences, so `Pi` and the derived
 bounds `piLb`/`piUb` are `noncomputable` Lean terms.
 -/
 
-@[expose] public section
+public section
 
 open scoped QInterval
 
@@ -38,7 +38,7 @@ noncomputable instance instComputableSqrtTwoAddSeries (x : ℝ) [hx : IsComputab
   n.rec hx (fun _ _ ↦ IsComputable.instComputableSqrt _)
 
 /-- Definition of `sqrtTwoAddSeriesN`. -/
-noncomputable def sqrtTwoAddSeriesN : ℕ → ComputableℝSeq :=
+@[expose] noncomputable def sqrtTwoAddSeriesN : ℕ → ComputableℝSeq :=
   fun n ↦ (instComputableSqrtTwoAddSeries 0 n).seq
 
 theorem sqrtTwoAddSeriesN_lb_le (n k : ℕ) : (sqrtTwoAddSeriesN n).lb k ≤ Real.sqrtTwoAddSeries 0
@@ -163,7 +163,7 @@ theorem sqrtTwoAddSeriesN_bounds (n k : ℕ) (hk : 3 ≤ k) :
   linarith
 
 /-- Definition of `sqrtTwoSubSqrtTwoAddSeriesN`. -/
-noncomputable def sqrtTwoSubSqrtTwoAddSeriesN : ℕ → ComputableℝSeq :=
+@[expose] noncomputable def sqrtTwoSubSqrtTwoAddSeriesN : ℕ → ComputableℝSeq :=
   fun n ↦ (inferInstance : IsComputable (Real.sqrt (2 - Real.sqrtTwoAddSeries 0 n))).seq
 
 theorem sqrtTwoSubSqrtTwoAddSeries_eq (n k : ℕ) :

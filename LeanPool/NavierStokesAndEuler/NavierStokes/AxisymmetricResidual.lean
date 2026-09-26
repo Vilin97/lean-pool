@@ -17,7 +17,7 @@ Every derivative below is an ordinary Fréchet derivative. The coordinate is
 `s=(x₀²+x₁²)/2`, so none of the formulas divide by the cylindrical radius.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ open ProblemStatement AxisymmetricFields
 open scoped BigOperators ContDiff
 
 /-- Pack, given by `a • coordinateVector 0 + b • coordinateVector 1 + c • coordinateVector 2`. -/
-def pack (a b c : ℝ) : Space :=
+@[expose] def pack (a b c : ℝ) : Space :=
   a • coordinateVector 0 + b • coordinateVector 1 + c • coordinateVector 2
 
 @[simp] theorem pack_zero (a b c : ℝ) : pack a b c 0 = a := by
@@ -50,7 +50,7 @@ def pack (a b c : ℝ) : Space :=
 
 /-- Pack derivative, given by `a.smulRight (coordinateVector 0) + b.smulRight (coordinateVector
 1) + c.smulRight (coordinateVector 2)`. -/
-def packDerivative {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+@[expose] def packDerivative {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (a b c : E →L[ℝ] ℝ) : E →L[ℝ] Space :=
   a.smulRight (coordinateVector 0) + b.smulRight (coordinateVector 1) +
     c.smulRight (coordinateVector 2)
@@ -73,16 +73,16 @@ theorem fderiv_pack_apply {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   rfl
 
 /-- Direction, given by `fderiv ℝ g x (coordinateVector i)`. -/
-def direction (g : Space → ℝ) (i : Fin 3) (x : Space) : ℝ :=
+@[expose] def direction (g : Space → ℝ) (i : Fin 3) (x : Space) : ℝ :=
   fderiv ℝ g x (coordinateVector i)
 
 /-- Scalar laplacian, given by `∑ i : Fin 3, direction (fun y => direction g i y) i x`. -/
-def scalarLaplacian (g : Space → ℝ) (x : Space) : ℝ :=
+@[expose] def scalarLaplacian (g : Space → ℝ) (x : Space) : ℝ :=
   ∑ i : Fin 3, direction (fun y => direction g i y) i x
 
 /-- Vector laplacian, given by `∑ i : Fin 3, fderiv ℝ (fun y => fderiv ℝ g y (coordinateVector
 i)) x (coordinateVector i)`. -/
-def vectorLaplacian (g : Space → Space) (x : Space) : Space :=
+@[expose] def vectorLaplacian (g : Space → Space) (x : Space) : Space :=
   ∑ i : Fin 3, fderiv ℝ (fun y => fderiv ℝ g y (coordinateVector i)) x (coordinateVector i)
 
 theorem contDiff_direction {g : Space → ℝ} {m n : WithTop ℕ∞}
@@ -185,7 +185,7 @@ theorem vectorLaplacian_pack {a b c : Space → ℝ}
   simp only [pack, direction, Finset.sum_add_distrib, ← Finset.sum_smul, scalarLaplacian]
 
 /-- Lift, given by `G (profilePoint t x)`. -/
-def lift (G : Profile) (t : ℝ) (x : Space) : ℝ := G (profilePoint t x)
+@[expose] def lift (G : Profile) (t : ℝ) (x : Space) : ℝ := G (profilePoint t x)
 
 /-- Joint differentiability is needed only along the spatial slice being evaluated. -/
 def SliceDifferentiable (G : Profile) (t : ℝ) : Prop :=
@@ -214,11 +214,11 @@ theorem contDiff_lift_slice {G : Profile} {t : ℝ} (hG : SliceC2 G t) :
 def partialT (G : Profile) (p : ProfilePoint) : ℝ := fderiv ℝ G p (1, (0, 0))
 /-- Laplace scalar, given by `2 * p.2.1 * partialS (partialS G) p + 2 * partialS G p + partialZ
 (partialZ G) p`. -/
-def laplaceScalar (G : Profile) (p : ProfilePoint) : ℝ :=
+@[expose] def laplaceScalar (G : Profile) (p : ProfilePoint) : ℝ :=
   2 * p.2.1 * partialS (partialS G) p + 2 * partialS G p + partialZ (partialZ G) p
 /-- Laplace weighted, given by `2 * p.2.1 * partialS (partialS G) p + 4 * partialS G p +
 partialZ (partialZ G) p`. -/
-def laplaceWeighted (G : Profile) (p : ProfilePoint) : ℝ :=
+@[expose] def laplaceWeighted (G : Profile) (p : ProfilePoint) : ℝ :=
   2 * p.2.1 * partialS (partialS G) p + 4 * partialS G p + partialZ (partialZ G) p
 
 theorem contDiff_lift {G : Profile} {n : WithTop ℕ∞} (hG : ContDiff ℝ n G) (t : ℝ) :
@@ -302,20 +302,20 @@ theorem scalarLaplacian_weighted_one {G : Profile} {t : ℝ} (hG : SliceC2 G t) 
   ring
 
 /-- Component X, given by `-(x 0 * lift B t x + x 1 * lift F t x)`. -/
-def componentX (B F : Profile) (t : ℝ) (x : Space) : ℝ :=
+@[expose] def componentX (B F : Profile) (t : ℝ) (x : Space) : ℝ :=
   -(x 0 * lift B t x + x 1 * lift F t x)
 /-- Component Y, given by `x 0 * lift F t x - x 1 * lift B t x`. -/
-def componentY (B F : Profile) (t : ℝ) (x : Space) : ℝ :=
+@[expose] def componentY (B F : Profile) (t : ℝ) (x : Space) : ℝ :=
   x 0 * lift F t x - x 1 * lift B t x
 
 /-- Convention: radial velocity `-r B`, angular velocity `r F`, axial velocity `U`. -/
-def velocity (B F U : Profile) : VelocityField :=
+@[expose] def velocity (B F U : Profile) : VelocityField :=
   fun w => pack (componentX B F w.1 w.2) (componentY B F w.1 w.2) (lift U w.1 w.2)
 /-- Pressure, defined pointwise by `lift P w.1 w.2`. -/
-def pressure (P : Profile) : PressureField := fun w => lift P w.1 w.2
+@[expose] def pressure (P : Profile) : PressureField := fun w => lift P w.1 w.2
 
 /-- Velocity jacobian, constructed using `packDerivative`. -/
-def velocityJacobian (B F U : Profile) (t : ℝ) (x : Space) : Space →L[ℝ] Space :=
+@[expose] def velocityJacobian (B F U : Profile) (t : ℝ) (x : Space) : Space →L[ℝ] Space :=
   packDerivative
     (-(x 0 • profileDerivative B t x + lift B t x • projection 0 +
       (x 1 • profileDerivative F t x + lift F t x • projection 1)))
@@ -336,14 +336,14 @@ theorem hasFDerivAt_velocity {B F U : Profile} {t : ℝ}
 
 /-- Advection radial, given by `(B p) ^ 2 - (F p) ^ 2 + 2 * p.2.1 * B p * partialS B p - U p *
 partialZ B p`. -/
-def advectionRadial (B F U : Profile) (p : ProfilePoint) : ℝ :=
+@[expose] def advectionRadial (B F U : Profile) (p : ProfilePoint) : ℝ :=
   (B p) ^ 2 - (F p) ^ 2 + 2 * p.2.1 * B p * partialS B p - U p * partialZ B p
 /-- Advection angular, given by `2 * B p * F p + 2 * p.2.1 * B p * partialS F p - U p * partialZ
 F p`. -/
-def advectionAngular (B F U : Profile) (p : ProfilePoint) : ℝ :=
+@[expose] def advectionAngular (B F U : Profile) (p : ProfilePoint) : ℝ :=
   2 * B p * F p + 2 * p.2.1 * B p * partialS F p - U p * partialZ F p
 /-- Advection axial, given by `-2 * p.2.1 * B p * partialS U p + U p * partialZ U p`. -/
-def advectionAxial (B U : Profile) (p : ProfilePoint) : ℝ :=
+@[expose] def advectionAxial (B U : Profile) (p : ProfilePoint) : ℝ :=
   -2 * p.2.1 * B p * partialS U p + U p * partialZ U p
 
 theorem advection_velocity {B F U : Profile} {t : ℝ}
@@ -432,14 +432,14 @@ theorem pressureGradient_pressure {P : Profile} {t : ℝ}
         one_mul, pack]
 
 /-- Time profile jacobian, given by `(ContinuousLinearMap.id ℝ ℝ).prod (0 : ℝ →L[ℝ] ℝ × ℝ)`. -/
-def timeProfileJacobian : ℝ →L[ℝ] ProfilePoint :=
+@[expose] def timeProfileJacobian : ℝ →L[ℝ] ProfilePoint :=
   (ContinuousLinearMap.id ℝ ℝ).prod (0 : ℝ →L[ℝ] ℝ × ℝ)
 /-- Time profile derivative, given by `(fderiv ℝ G p).comp timeProfileJacobian`. -/
-def timeProfileDerivative (G : Profile) (p : ProfilePoint) : ℝ →L[ℝ] ℝ :=
+@[expose] def timeProfileDerivative (G : Profile) (p : ProfilePoint) : ℝ →L[ℝ] ℝ :=
   (fderiv ℝ G p).comp timeProfileJacobian
 
 @[simp] theorem timeProfileDerivative_one (G : Profile) (p : ProfilePoint) :
-    timeProfileDerivative G p 1 = partialT G p := rfl
+    timeProfileDerivative G p 1 = partialT G p := by rfl
 
 theorem hasFDerivAt_time_lift {G : Profile} {t : ℝ} (hG : SliceDifferentiable G t) (x : Space) :
     HasFDerivAt (fun s => lift G s x) (timeProfileDerivative G (profilePoint t x)) t := by
@@ -472,14 +472,14 @@ theorem temporalDerivative_velocity {B F U : Profile} {t : ℝ}
 
 /-- Residual radial, given by `-partialT B p + advectionRadial B F U p + laplaceWeighted B p +
 partialS P p`. -/
-def residualRadial (B F U P : Profile) (p : ProfilePoint) : ℝ :=
+@[expose] def residualRadial (B F U P : Profile) (p : ProfilePoint) : ℝ :=
   -partialT B p + advectionRadial B F U p + laplaceWeighted B p + partialS P p
 /-- Residual angular, given by `-partialT F p + advectionAngular B F U p + laplaceWeighted F p`. -/
-def residualAngular (B F U : Profile) (p : ProfilePoint) : ℝ :=
+@[expose] def residualAngular (B F U : Profile) (p : ProfilePoint) : ℝ :=
   -partialT F p + advectionAngular B F U p + laplaceWeighted F p
 /-- Residual axial, given by `partialT U p + advectionAxial B U p - laplaceScalar U p + partialZ
 P p`. -/
-def residualAxial (B U P : Profile) (p : ProfilePoint) : ℝ :=
+@[expose] def residualAxial (B U P : Profile) (p : ProfilePoint) : ℝ :=
   partialT U p + advectionAxial B U p - laplaceScalar U p + partialZ P p
 
 /-- Exact physical Navier--Stokes residual, at viscosity one, including radial,

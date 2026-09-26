@@ -12,7 +12,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! Numerical absorption in the sharp gradient and Hessian bounds,
 and the common localized coercivity guard for all nested horizons. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -22,7 +22,7 @@ The planar diameter bound is proved internally. It does not settle Erdős
 Problem 132 in general.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132N14
 

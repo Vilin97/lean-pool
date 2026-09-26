@@ -16,7 +16,7 @@ distances from the minimum, different quadratic curvatures give different restor
 magnitudes.
 -/
 
-@[expose] public section
+public section
 
 open Real
 

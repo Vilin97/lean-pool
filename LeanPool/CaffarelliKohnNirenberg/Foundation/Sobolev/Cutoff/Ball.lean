@@ -41,7 +41,7 @@ explicit Euclidean squared distance.
   `32 / (R - r)`.
 -/
 
-@[expose] public section
+public section
 
 open Set
 
@@ -54,11 +54,12 @@ def euclideanSqDist {d : ℕ} (x y : Vec d) : ℝ :=
   vecNormSq (x - y)
 
 /-- The explicit round Euclidean open ball. -/
+@[expose]
 def euclideanBall {d : ℕ} (x₀ : Vec d) (R : ℝ) : Set (Vec d) :=
   {x | euclideanSqDist x x₀ < R ^ 2}
 
 /-- The explicit round Euclidean closed ball. -/
-def euclideanClosedBall {d : ℕ} (x₀ : Vec d) (R : ℝ) : Set (Vec d) :=
+@[expose] def euclideanClosedBall {d : ℕ} (x₀ : Vec d) (R : ℝ) : Set (Vec d) :=
   {x | euclideanSqDist x x₀ ≤ R ^ 2}
 
 @[simp]

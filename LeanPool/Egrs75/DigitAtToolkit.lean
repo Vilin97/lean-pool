@@ -45,7 +45,7 @@ no circularity. This formalizes the KNOWN 1975 theorem; it is not an open proble
 Imports only kernel-clean material; does NOT modify any existing clean file.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.RepairPaperfaithful
 
@@ -56,7 +56,7 @@ open Egrs75.LeafInduction
 /-! ## Per-index characterization of `LowDigits` -/
 
 /-- The base-`p` digit of `n` at index `i`. -/
-def digitAt (p i n : ℕ) : ℕ := n / p ^ i % p
+@[expose] def digitAt (p i n : ℕ) : ℕ := n / p ^ i % p
 
 /-- `LowDigits p n` iff every indexed base-`p` digit is `≤ (p-1)/2`.
 Out-of-range indices give digit `0 ≤ (p-1)/2`, so the quantifier is over all `i`. -/
@@ -128,7 +128,7 @@ imported clean). A positive count means there is at least one oversized base-`q`
 digit; we extract the highest such index, which is where the EGRS repair acts. -/
 
 /-- A base-`q` digit of `n` is "bad" if it exceeds `(q-1)/2`. -/
-def BadAt (q i n : ℕ) : Prop := (q - 1) / 2 < digitAt q i n
+@[expose] def BadAt (q i n : ℕ) : Prop := (q - 1) / 2 < digitAt q i n
 
 /-- If `badCountQ q n > 0` then some base-`q` digit index is bad, and there is a
 greatest such index. (Bad indices are bounded by the length of the digit list, so

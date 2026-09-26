@@ -44,7 +44,7 @@ Contents:
   no axioms beyond propext / Classical.choice / Quot.sound**
 -/
 
-@[expose] public section
+public section
 
 namespace MinModulus
 

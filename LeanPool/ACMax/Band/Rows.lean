@@ -26,7 +26,7 @@ a degree-`3`-separated obstruction at `n ≥ 48`. Notation:
 Everything is `sorry`-free and axiom-clean (`[propext, Classical.choice, Quot.sound]`).
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

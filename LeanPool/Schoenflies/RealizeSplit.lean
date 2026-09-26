@@ -81,7 +81,7 @@ Three facts about drawings and paths had no home on `main` and are proved here i
   what rules out the returning point that would break `IsArcBetween.concatenate`.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies
 open scoped Graph

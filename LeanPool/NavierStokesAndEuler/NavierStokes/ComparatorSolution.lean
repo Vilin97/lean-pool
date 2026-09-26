@@ -17,7 +17,7 @@ Expose the project's proof adapters under the reference theorem names.
 The adapters import `ComparatorDefinitions`, never the challenge module.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.Comparator

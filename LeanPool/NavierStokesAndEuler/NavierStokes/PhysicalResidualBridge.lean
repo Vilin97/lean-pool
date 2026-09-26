@@ -17,7 +17,7 @@ This file keeps the cylindrical angle separate from the lifted slow and fast
 variables.  Every differential operator is an actual Frechet derivative.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.PhysicalResidualBridge
@@ -34,7 +34,7 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The complete real graph-coordinate residual, including the quadratic
 transport term and the cylindrical connection terms. -/
-noncomputable def graphResidual (ε : ℝ) (R : E → ℝ) (Vr Vθ Vz Vt : E → E)
+@[expose] noncomputable def graphResidual (ε : ℝ) (R : E → ℝ) (Vr Vθ Vz Vt : E → E)
     (a : E → Fin 3 → ℝ) (p : E → ℝ) (x : E) : Fin 3 → ℝ := fun i =>
   along Vt (fun y => a y i) x +
     LinearWaveResidual.realTransport R Vr Vθ Vz a a x i -
@@ -209,7 +209,7 @@ structure ScaledGraph where
 namespace ScaledGraph
 
 /-- Map as an element of `Cylinder`. -/
-noncomputable def map (G : ScaledGraph) (p : SpaceTime) : Cylinder :=
+@[expose] noncomputable def map (G : ScaledGraph) (p : SpaceTime) : Cylinder :=
   ((G.radialScale * p.2 0,
     ((G.radialScale * G.epsilon * p.2 2,
        G.velocityScale * G.radialScale * G.epsilon * (1 - p.1)),
@@ -218,23 +218,23 @@ noncomputable def map (G : ScaledGraph) (p : SpaceTime) : Cylinder :=
     p.2 1)
 
 /-- Radius, given by `x.1.1`. -/
-noncomputable def radius (x : Cylinder) : ℝ := x.1.1
+@[expose] noncomputable def radius (x : Cylinder) : ℝ := x.1.1
 
 /-- Radial, given by `((1, ((0, 0), (G.frequency * GraphCalculus.radialSpeed G.exponent x.1.1) •
 G.radialVector)), 0)`. -/
-noncomputable def radial (G : ScaledGraph) (x : Cylinder) : Cylinder :=
+@[expose] noncomputable def radial (G : ScaledGraph) (x : Cylinder) : Cylinder :=
   ((1, ((0, 0), (G.frequency * GraphCalculus.radialSpeed G.exponent x.1.1) •
     G.radialVector)), 0)
 
 /-- Angular, given by `(0, 1)`. -/
-noncomputable def angular (_x : Cylinder) : Cylinder := (0, 1)
+@[expose] noncomputable def angular (_x : Cylinder) : Cylinder := (0, 1)
 
 /-- Axial, given by `((0, ((G.epsilon, 0), 0)), 0)`. -/
-noncomputable def axial (G : ScaledGraph) (_x : Cylinder) : Cylinder :=
+@[expose] noncomputable def axial (G : ScaledGraph) (_x : Cylinder) : Cylinder :=
   ((0, ((G.epsilon, 0), 0)), 0)
 
 /-- Temporal, given by `((0, ((0, -G.epsilon), G.fastCoefficient • G.temporalVector)), 0)`. -/
-noncomputable def temporal (G : ScaledGraph) (_x : Cylinder) : Cylinder :=
+@[expose] noncomputable def temporal (G : ScaledGraph) (_x : Cylinder) : Cylinder :=
   ((0, ((0, -G.epsilon), G.fastCoefficient • G.temporalVector)), 0)
 
 theorem map_smoothAt (G : ScaledGraph) {p : SpaceTime}
@@ -361,7 +361,7 @@ theorem pullbackData (G : ScaledGraph) (hl : 0 < G.radialScale)
   radius := fun _ _ => rfl
 
 /-- Physical cylindrical velocity obtained from the actual graph. -/
-noncomputable def velocity (G : ScaledGraph) (a : Cylinder → Fin 3 → ℝ) : VelocityField :=
+@[expose] noncomputable def velocity (G : ScaledGraph) (a : Cylinder → Fin 3 → ℝ) : VelocityField :=
   fun p => AxisymmetricResidual.pack (G.velocityScale * a (G.map p) 0)
     (G.velocityScale * a (G.map p) 1) (G.velocityScale * a (G.map p) 2)
 
@@ -370,7 +370,7 @@ noncomputable def velocity (G : ScaledGraph) (a : Cylinder → Fin 3 → ℝ) : 
   fin_cases i <;> simp [velocity]
 
 /-- Pressure, defined pointwise by `G.velocityScale ^ 2 * p (G.map z)`. -/
-noncomputable def pressure (G : ScaledGraph) (p : Cylinder → ℝ) : PressureField :=
+@[expose] noncomputable def pressure (G : ScaledGraph) (p : Cylinder → ℝ) : PressureField :=
   fun z => G.velocityScale ^ 2 * p (G.map z)
 
 theorem velocity_smooth (G : ScaledGraph) (hl : 0 < G.radialScale)
@@ -434,7 +434,7 @@ end ScaledGraph
 
 /-- One arbitrary integer-cover chart; the index is not constrained to the
 native band index. -/
-noncomputable def commonGraph (Q h : ℝ) (i : ℕ) : ScaledGraph where
+@[expose] noncomputable def commonGraph (Q h : ℝ) (i : ℕ) : ScaledGraph where
   radialScale := Q ^ (-(1 / 2 : ℝ))
   velocityScale := Q ^ (-CoordinateAlgebra.A h)
   epsilon := Q ^ h
@@ -675,7 +675,7 @@ theorem fullResidual_eq_graph {U : Set E} (hU : IsOpen U) (ε : ℝ) (R : E → 
   ring
 
 /-- The absolute graph before choosing a band or an integer covering. -/
-noncomputable def absoluteLift (h : ℝ) (p : SpaceTime) : Lift :=
+@[expose] noncomputable def absoluteLift (h : ℝ) (p : SpaceTime) : Lift :=
   (p.2 0, ((p.2 2, 1 - p.1),
     (p.2 0) ^ ChartScales.radialExponent h • PhysicalGraphBounds.radialDirection +
       p.1 • PhysicalGraphBounds.timeDirection))
@@ -746,13 +746,13 @@ theorem MatchesAt.timeDirection {c : CorrectionState.Context Lift} {G : ScaledGr
 
 /-- Base components, given by `![c.base.radial n x.1, c.base.angular n x.1, c.base.axial n
 x.1]`. -/
-noncomputable def baseComponents (c : CorrectionState.Context Lift) (n : ℕ)
+@[expose] noncomputable def baseComponents (c : CorrectionState.Context Lift) (n : ℕ)
     (x : Cylinder) : Fin 3 → ℝ :=
   ![c.base.radial n x.1, c.base.angular n x.1, c.base.axial n x.1]
 
 /-- Increment components, given by `![s.mean.radial n x.1 + s.oscillation n x 0, s.mean.angular
 n x.1 + s.oscillation n x 1, s.mean.axial n x.1 + s.oscillation n x 2]`. -/
-noncomputable def incrementComponents (s : CorrectionState.State Lift) (n : ℕ)
+@[expose] noncomputable def incrementComponents (s : CorrectionState.State Lift) (n : ℕ)
     (x : Cylinder) : Fin 3 → ℝ :=
   ![s.mean.radial n x.1 + s.oscillation n x 0,
     s.mean.angular n x.1 + s.oscillation n x 1,

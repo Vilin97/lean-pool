@@ -20,7 +20,7 @@ This file defines the single-edged quantum graph, and proves that it is a `QAM`.
 
 -/
 
-@[expose] public section
+public section
 
 
 variable {n : Type _} [Fintype n] [DecidableEq n]

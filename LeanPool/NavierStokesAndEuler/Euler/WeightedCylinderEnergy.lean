@@ -18,7 +18,7 @@ import Mathlib.Analysis.SpecialFunctions.Sqrt
 /-! Actual Gevrey-weighted cylinder energy with signed radius derivative and no zero-norm
 differentiation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,15 +37,15 @@ variable {α β H : Type*} [Fintype α] [Fintype β]
   [NormedAddCommGroup H] [InnerProductSpace ℝ H]
 
 /-- The finite external-word Gevrey sum of the source's base-word metric roots. -/
-def weightedMetricSum (ρ : ℝ) (order : α → ℕ) (K : H →L[ℝ] H) (e : α → β → H) : ℝ :=
+@[expose] def weightedMetricSum (ρ : ℝ) (order : α → ℕ) (K : H →L[ℝ] H) (e : α → β → H) : ℝ :=
   ∑ i, weight ρ (order i) * familyMetricNorm K (e i)
 
 /-- The same metric sum with the external derivative count, giving the radius-loss term. -/
-def weightedMetricLoss (ρ : ℝ) (order : α → ℕ) (K : H →L[ℝ] H) (e : α → β → H) : ℝ :=
+@[expose] def weightedMetricLoss (ρ : ℝ) (order : α → ℕ) (K : H →L[ℝ] H) (e : α → β → H) : ℝ :=
   ∑ i, (order i : ℝ) * weight ρ (order i) * familyMetricNorm K (e i)
 
 /-- The actual finite weighted sum of base-word Hilbert forcing norms. -/
-def weightedForcingSum (ρ : ℝ) (order : α → ℕ) (f : α → β → H) : ℝ :=
+@[expose] def weightedForcingSum (ρ : ℝ) (order : α → ℕ) (f : α → β → H) : ℝ :=
   ∑ i, weight ρ (order i) * familyNorm (f i)
 
 end WeightedNorms

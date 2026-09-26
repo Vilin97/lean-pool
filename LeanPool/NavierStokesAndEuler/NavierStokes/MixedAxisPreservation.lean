@@ -24,7 +24,7 @@ common annular radius for all stages, or blow-up of the resulting diagonal
 is postulated.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

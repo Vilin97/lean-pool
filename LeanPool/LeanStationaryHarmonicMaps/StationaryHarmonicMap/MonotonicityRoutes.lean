@@ -23,7 +23,7 @@ code should normally import `MainTheorem.lean` or `API.lean` instead of relying
 on a particular route theorem in this file.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

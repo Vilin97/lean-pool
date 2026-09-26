@@ -22,7 +22,7 @@ Fréchet–Kolmogorov / Riesz–Kolmogorov approach to Euclidean Rellich–Kondr
   a smoothing operator obtained by convolution with a compactly supported continuous kernel `ψ`.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis
@@ -82,7 +82,7 @@ local instance instMeasurableAddSmoothing1 : MeasurableAdd E := by
 variable {K : Set E}
 
 /-- Extend an `L²` function on `K` by zero to a pointwise function on the ambient space. -/
-def extendByZeroFun (u : MeasureTheory.Lp ℝ (2 : ℝ≥0∞) (volume.restrict K)) : E → ℝ :=
+@[expose] def extendByZeroFun (u : MeasureTheory.Lp ℝ (2 : ℝ≥0∞) (volume.restrict K)) : E → ℝ :=
   K.indicator fun x : E => u x
 
 lemma hasCompactSupport_extendByZeroFun (hK : IsCompact K)
@@ -151,7 +151,7 @@ lemma norm_extendByZeroL2 (hKm : MeasurableSet K)
 variable (ψ : E → ℝ)
 
 /-- Smoothing by convolution with a fixed kernel `ψ`, applied to the zero-extension from `K`. -/
-def smoothFun (u : MeasureTheory.Lp ℝ (2 : ℝ≥0∞) (volume.restrict K)) : E → ℝ :=
+@[expose] def smoothFun (u : MeasureTheory.Lp ℝ (2 : ℝ≥0∞) (volume.restrict K)) : E → ℝ :=
   (extendByZeroFun (K := K) u) ⋆[ContinuousLinearMap.lsmul ℝ ℝ, (volume : Measure E)] ψ
 
 lemma continuous_smoothFun

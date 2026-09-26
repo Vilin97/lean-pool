@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParameterWordCalculus
 
 /-! Smoothness and exact concatenation of genuine directional word derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

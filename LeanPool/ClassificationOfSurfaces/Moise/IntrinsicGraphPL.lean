@@ -17,7 +17,7 @@ of the middle PL segment model between its two last-exit parameters.  Marking th
 in the source arrangement makes the closed subsegment an exact finite subcomplex.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -242,7 +242,7 @@ abbrev EdgeBreakpoint (A : K.CentralPolygonalArc hcont hinj D C e) :=
   Option (Option A.parameterization.source.Vertex)
 
 /-- The `edgeBreakpointParameter` declaration. -/
-noncomputable def edgeBreakpointParameter
+@[expose] noncomputable def edgeBreakpointParameter
     (A : K.CentralPolygonalArc hcont hinj D C e) (b : EdgeBreakpoint A) : ℝ :=
   match b with
   | none => 1 / 2

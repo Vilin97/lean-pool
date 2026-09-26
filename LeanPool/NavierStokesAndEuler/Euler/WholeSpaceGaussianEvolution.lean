@@ -24,7 +24,7 @@ section
 
 /-! The literal time derivative of the Gaussian density and local domination. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -131,7 +131,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -178,7 +178,7 @@ theorem average_hasDerivAt_kernel {t : ℝ} (ht : 0 < t)
 
 /-- Second average, given by `∑ i : Fin 3, average t (fun z => fderiv ℝ (fun y => fderiv ℝ f y
 (EuclideanSpace.single i 1)) z (EuclideanSpace.single i 1)) x`. -/
-def secondAverage (t : ℝ) (f : Space → V) (x : Space) : V :=
+@[expose] def secondAverage (t : ℝ) (f : Space → V) (x : Space) : V :=
   ∑ i : Fin 3, average t (fun z =>
     fderiv ℝ (fun y => fderiv ℝ f y (EuclideanSpace.single i 1)) z
       (EuclideanSpace.single i 1)) x
@@ -221,7 +221,7 @@ section
 /-! The low-frequency derivative of the true Gaussian average is controlled
 by the ordinary L² norm of the original field. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

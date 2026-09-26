@@ -15,7 +15,7 @@ fields.  The proof uses actual compact scalar tests and mixed derivative
 symmetry, then passes to the L² closure through continuous inner products.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -108,15 +108,13 @@ theorem fieldDerivatives_commute {W : Type*} [NormedAddCommGroup W] [NormedSpace
   change fderiv ℝ (localFieldLift period (fieldDerivative period b f) x) 0 a =
     fderiv ℝ (localFieldLift period (fieldDerivative period a f) x) 0 b
   rw [localFieldLift_fieldDerivative, localFieldLift_fieldDerivative]
-  change fderiv ℝ (directionalDerivative b (localFieldLift period f x)) 0 a =
-    fderiv ℝ (directionalDerivative a (localFieldLift period f x)) 0 b +
-      fderiv ℝ (localFieldLift period f x) 0 (fderiv ℝ (fun _ : LiftTangent => b) 0 a) at h
+  simp only [directionalDerivative, transport] at h ⊢
   have hc : fderiv ℝ (fun _ : LiftTangent => b) 0 = 0 := by simp
   rw [hc, zero_apply, map_zero, add_zero] at h
   exact h
 
 /-- A compact antisymmetric derivative test field for one lifted curl component. -/
-def curlTest (κ : ℝ) (m : Vector3) (i j : Fin 3) (ψ : LiftDomain period → ℝ)
+@[expose] def curlTest (κ : ℝ) (m : Vector3) (i j : Fin 3) (ψ : LiftDomain period → ℝ)
     (x : LiftDomain period) : Vector3 :=
   fieldDerivative period (coordinateDirection κ m j) ψ x • EuclideanSpace.single i 1 -
     fieldDerivative period (coordinateDirection κ m i) ψ x • EuclideanSpace.single j 1
@@ -153,6 +151,7 @@ theorem liftedGradient_component (κ : ℝ) (m : Vector3) (φ : LiftDomain perio
     (x : LiftDomain period) (i : Fin 3) :
     liftedGradient period κ m φ x i = fieldDerivative period (coordinateDirection κ m i) φ x := by
   rw [liftedGradient_eq_vectorOfLinear]
+  simp [vectorOfLinear, fieldDerivative]
   rfl
 
 theorem scalar_derivative_product_integrable (a b : LiftTangent)
@@ -234,8 +233,9 @@ theorem gradient_curl_pairing (κ : ℝ) (m : Vector3) (i j : Fin 3)
     rw [real_inner_comm]
     exact generator_curl_pairing period κ m i j ψ hψc hψ hg
   have hclosed : IsClosed (L.ker : Set (LiftL2 period)) := L.isClosed_ker
-  have hclosure : gradientSpace period κ m ≤ L.ker :=
-    Submodule.topologicalClosure_minimal _ hspan hclosed
+  have hclosure : gradientSpace period κ m ≤ L.ker := by
+    simpa only [gradientSpace] using
+      (Submodule.topologicalClosure_minimal _ hspan hclosed)
   have h := hclosure hp
   change ⟪curlTestLp period κ m i j ψ hψc hψ, p⟫_ℝ = 0 at h
   rwa [real_inner_comm] at h

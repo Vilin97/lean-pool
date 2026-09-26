@@ -40,7 +40,7 @@ with `queryCode` of the base-reduct code `pulledCode`); the tree pinning as an *
 (`realize_treeDiagram`); and the bundled `functionalTheta T`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

@@ -76,7 +76,7 @@ subgraph can answer differently. `Graph.IsWalk.anti` from `Walk.lean` is the eng
   a cycle"; the form the tree module's longest-path argument consumes.
 -/
 
-@[expose] public section
+public section
 
 open Set
 
@@ -128,7 +128,7 @@ theorem IsWalk.reaches_deleteEdges (h : G.IsWalk u W v) (hW : ∀ f ∈ W, f ∉
 /-- `G.IsCycleThrough e u v D` : the edge `e` links `u` to `v`, and `D` is a path from `u`
 back to `v` that does not use `e`. The cycle is `e` together with `D`; it is presented
 through `e` because that is the edge every question is asked about. -/
-def IsCycleThrough (G : Graph α β) (e : β) (u v : α) (D : List β) : Prop :=
+@[expose] def IsCycleThrough (G : Graph α β) (e : β) (u v : α) (D : List β) : Prop :=
   G.IsLink e u v ∧ G.IsPath u D v ∧ e ∉ D
 
 /-- `G.LiesOnCycle e` : the edge `e` lies on a cycle of `G`. -/

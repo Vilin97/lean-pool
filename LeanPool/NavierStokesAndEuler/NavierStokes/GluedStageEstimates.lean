@@ -47,7 +47,7 @@ identity uses an invertible linear chart and does not require an additional
 smoothness assumption on the phase.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -337,7 +337,7 @@ their actual physical modes. The angle and Cartesian rotation are the same
 at both bands, so the native scale cancels before applying either map.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -404,7 +404,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -785,7 +785,7 @@ The two column choices are retained by the signed-label map and are already
 included in the 2250-color palette.  The finite harmonic sum remains explicit.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1215,7 +1215,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

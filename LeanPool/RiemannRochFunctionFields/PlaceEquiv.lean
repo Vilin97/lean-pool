@@ -30,7 +30,7 @@ integral closure.
 * `FunctionField.placeValuation_isEquiv`: compatibility of normalized valuations.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 
@@ -75,7 +75,7 @@ noncomputable def Place.ofChart (w : PlaceA k K) : Place k K := by
 @[simp]
 theorem Place.ofChart_toValuationSubring (w : PlaceA k K) :
     (Place.ofChart k K w).toValuationSubring =
-      (placeValuation k K w).valuationSubring := rfl
+      (placeValuation k K w).valuationSubring := by rfl
 
 theorem Place.ofChart_valuation_isEquiv (w : PlaceA k K) :
     (placeValuation k K w).IsEquiv (Place.ofChart k K w).valuation := by
@@ -438,6 +438,7 @@ theorem ofChart_toChart (v : Place k K) :
   Classical.choose_spec (exists_chart k K v)
 
 /-- Coordinate places and intrinsic places are equivalent. -/
+@[expose]
 noncomputable def chartToPlaceCore : PlaceA k K ≃ Place k K where
   toFun := Place.ofChart k K
   invFun := toChart k K
@@ -452,7 +453,7 @@ noncomputable abbrev chartToPlace : PlaceA k K ≃ Place k K :=
 
 @[simp]
 theorem chartToPlace_apply (w : PlaceA k K) :
-    chartToPlace k K w = Place.ofChart k K w := rfl
+    chartToPlace k K w = Place.ofChart k K w := by rfl
 
 /-- The coordinate valuation and the normalized intrinsic valuation define the same place. -/
 theorem placeValuation_isEquiv (w : PlaceA k K) :

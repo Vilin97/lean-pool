@@ -16,7 +16,7 @@ of nine to the pressure constant. The suitable-solution slice and residual
 estimates supply every analytic input of the scalar extension estimate.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

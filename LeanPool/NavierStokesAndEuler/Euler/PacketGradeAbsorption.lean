@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! One spare factorial shift pays all finite grade sums without changing the external radius. -/
 
-@[expose] public section
+public section
 
 
 namespace EulerGevrey

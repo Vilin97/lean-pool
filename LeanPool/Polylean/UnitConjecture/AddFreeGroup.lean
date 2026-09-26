@@ -26,7 +26,7 @@ homomorphisms on finitely generated free groups.
 - `prodFree` - a proof that the product of free groups is free.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 

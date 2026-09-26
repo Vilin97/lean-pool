@@ -17,7 +17,7 @@ word. The complete Sobolev norm is bounded by the exact finite word sum, and
 uniform-time mixed orbit regularity yields a continuous Sobolev path.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

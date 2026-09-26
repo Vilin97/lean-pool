@@ -19,7 +19,7 @@ No stationarity or monotonicity theorem is defined here; those live in
 `StationaryMap.lean` and `MainTheorem.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

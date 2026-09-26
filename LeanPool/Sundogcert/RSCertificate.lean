@@ -41,7 +41,7 @@ there is zero) + `det_vandermonde_ne_zero_iff`. A field discharges `[CommRing]+[
 * `Polynomial.eq_of_natDegree_lt_card_of_eval_eq`, `Matrix.det_vandermonde_ne_zero_iff`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sundog.RSCertificate
 

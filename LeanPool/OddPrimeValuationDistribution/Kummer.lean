@@ -19,7 +19,7 @@ This module specializes Kummer's theorem to `Nat.centralBinom`, providing the
 arithmetic bridge used by the odd-prime carry enumerator.
 -/
 
-@[expose] public section
+public section
 
 namespace OddPrimeValuationDistribution
 

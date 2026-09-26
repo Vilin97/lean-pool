@@ -17,7 +17,7 @@ actual stream reconstructions.  Incompressibility and the angular mean
 identity are conclusions for the literal stored states.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

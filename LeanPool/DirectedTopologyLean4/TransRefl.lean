@@ -12,7 +12,7 @@ public import LeanPool.DirectedTopologyLean4.Dipath
 # LeanPool.DirectedTopologyLean4.TransRefl
 -/
 
-@[expose] public section
+public section
 
 /-
   Auxiliary lemmas for the reflTrans and transRefl definitions in directed_path_homotopy.lean.
@@ -56,7 +56,7 @@ lemma directed_transReflReparamAux : DirectedMap.Directed
 
 /-- The auxiliary reparametrization map `I → I` used to show that `p.trans (refl _)` is
 dihomotopic to `p`, packaged as a directed map. -/
-def TransReflReparamAuxMap : D(I,I) where
+@[expose] def TransReflReparamAuxMap : D(I,I) where
   toFun := fun t => ⟨transReflReparamAux t, transReflReparamAux_mem_I t⟩
   continuous_toFun := Continuous.subtype_mk continuous_transReflReparamAux _
   directed_toFun := directed_transReflReparamAux
@@ -70,7 +70,7 @@ lemma trans_refl_reparam_dipath (p : Dipath x₀ x₁) : p.trans (Dipath.refl x�
   rfl
 
 /-- Auxilliary function for `ReflTransReparam` -/
-def ReflTransReparamAux (t : I) : ℝ :=
+@[expose] def ReflTransReparamAux (t : I) : ℝ :=
 if (t : ℝ) ≤ 1/2 then
   0
 else
@@ -111,7 +111,7 @@ lemma directed_ReflTransReparamAux : DirectedMap.Directed
 
 /-- The auxiliary reparametrization map `I → I` used to show that `(refl _).trans p` is
 dihomotopic to `p`, packaged as a directed map. -/
-def ReflTransReparamAuxMap : D(I,I) where
+@[expose] def ReflTransReparamAuxMap : D(I,I) where
   toFun := fun t => ⟨ReflTransReparamAux t, reflTransReparamAux_mem_I t⟩
   continuous_toFun := Continuous.subtype_mk continuous_ReflTransReparamAux _
   directed_toFun := directed_ReflTransReparamAux

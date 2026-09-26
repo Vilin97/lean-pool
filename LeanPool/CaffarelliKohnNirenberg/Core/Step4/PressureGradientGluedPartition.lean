@@ -17,7 +17,7 @@ sum equals `1` on that compact set.  The construction multiplies bump functions
 telescopically, so no manifold partition-of-unity machinery is needed.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 noncomputable section

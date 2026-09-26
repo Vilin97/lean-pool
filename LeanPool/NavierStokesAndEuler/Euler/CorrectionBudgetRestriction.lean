@@ -14,7 +14,7 @@ section
 
 /-! Actual correction coefficient data restricted along continuous time maps. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -74,7 +74,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

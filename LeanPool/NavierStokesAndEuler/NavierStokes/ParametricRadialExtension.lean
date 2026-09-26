@@ -25,7 +25,7 @@ global smooth function of `(X, eta)` with exactly the original physical
 values.  No constant continuation at negative `X` is differentiated.
 -/
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 

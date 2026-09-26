@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderMollifier
 
 /-! A genuine bounded angular primitive on the full cylinder L² space. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -24,7 +24,7 @@ open Set MeasureTheory EulerLiftedGradientSpace EulerCylinderSobolevSpace
 variable (P : ℝ) [Fact (0 < P)]
 
 /-- Angle shift, given by `(0,(s : AddCircle P))`. -/
-def angleShift (s : ℝ) : LiftDomain P := (0,(s : AddCircle P))
+@[expose] def angleShift (s : ℝ) : LiftDomain P := (0,(s : AddCircle P))
 
 omit [Fact (0 < P)] in
 theorem angleShift_continuous : Continuous (angleShift P) :=
@@ -89,7 +89,7 @@ def primitiveLinear : LiftL2 P →ₗ[ℝ] LiftL2 P where
 def primitive : LiftL2 P →L[ℝ] LiftL2 P :=
   (primitiveLinear P).mkContinuous P (kernelIntegral_norm P)
 
-@[simp] theorem primitive_apply (u : LiftL2 P) : primitive P u = kernelIntegral P u := rfl
+@[simp] theorem primitive_apply (u : LiftL2 P) : primitive P u = kernelIntegral P u := by rfl
 
 theorem primitive_norm : ‖primitive P‖ ≤ P :=
   ContinuousLinearMap.opNorm_le_bound _ (le_of_lt (Fact.out : 0 < P)) (kernelIntegral_norm P)

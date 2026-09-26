@@ -20,7 +20,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 open GaleStewartGame

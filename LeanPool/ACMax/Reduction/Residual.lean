@@ -58,7 +58,7 @@ program identified by the investigation of the per-`n` architecture (`n = 12..19
 Everything here is sorry-free and axiom-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 
@@ -238,7 +238,7 @@ cycle vs any sparse block) kill every verified `n ≥ 23` escaper of the 5-const
 Stated for an arbitrary finite vertex type (like the whole spectral base layer), so that
 its instances match `algConn_le_two_of_signed` exactly; at `Fin n` this is the
 `TwoBlockConfig n G` of the residual program. -/
-def TwoBlockConfig {V : Type*} [Fintype V] (G : SimpleGraph V) : Prop :=
+@[expose] def TwoBlockConfig {V : Type*} [Fintype V] (G : SimpleGraph V) : Prop :=
   ∃ P N : Finset V, Disjoint P N ∧ P.card = N.card ∧ 0 < P.card ∧
     2 * (∑ p ∈ P, (G.neighborFinset p ∩ N).card)
       + (∑ p ∈ P, (G.neighborFinset p \ P).card)

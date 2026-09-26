@@ -19,7 +19,7 @@ The finite-cover argument uses the same-repository collar assembly pattern;
 its backward patches include the final time without requiring future Morrey data.
 -/
 
-@[expose] public section
+public section
 
 section
 

@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePrimitiveBounds
 /-! A fixed polynomial bounds all five costs for the literal canonical
 initialized packet radius. No arbitrary radius witness is used. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ open EulerPacketTerminalDatum EulerPacketProfileRecursion EulerPacketCylinderFie
 
 /-- Envelope, given by `1+W+EulerPacketRadiusPolynomial.radiusEnvelope W +
 EulerPacketCorrectionPrimitive.primitiveEnvelope period W`. -/
-def envelope (W : ℝ) : ℝ := 1+W+EulerPacketRadiusPolynomial.radiusEnvelope W +
+@[expose] def envelope (W : ℝ) : ℝ := 1+W+EulerPacketRadiusPolynomial.radiusEnvelope W +
   EulerPacketCorrectionPrimitive.primitiveEnvelope period W
 
 /-- Polynomial, constructed using `Polynomial.C`. -/

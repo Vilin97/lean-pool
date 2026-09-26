@@ -28,7 +28,7 @@ finite harmonic sum, conjugate pairing, and coordinate reindexing.  The
 particular source assumption is made on full native parameter fibers.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -270,7 +270,7 @@ cover. Under this ordering, the actual exact-curl velocity, pressure, and
 retained Gaussian coefficients are invariant under every torus deck shift.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -386,7 +386,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

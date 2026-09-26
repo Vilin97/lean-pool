@@ -17,7 +17,7 @@ orders with differentiated bounded coefficients. This proves continuity of
 the genuine L² jets, including for operator-valued derivatives.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

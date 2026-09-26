@@ -24,7 +24,7 @@ Poincaré–Volterra lemma to the evaluation map on a connected component of the
 ball (`secondCountableTopology_of_riemannSurface`).
 -/
 
-@[expose] public section
+public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex Filter
 

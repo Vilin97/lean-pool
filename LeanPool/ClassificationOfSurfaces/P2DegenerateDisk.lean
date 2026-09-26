@@ -29,7 +29,7 @@ scaled copy receives the monogon, while the other child fills the collar between
 the full teardrop.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

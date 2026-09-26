@@ -27,7 +27,7 @@ section
 
 /-! The actual continuous-time integral agrees with both Bochner primitive constructions. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -132,7 +132,7 @@ need only be orthogonal to the displacement, as for a constrained frame
 equation. No inverse or uniqueness assertion is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -207,7 +207,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -342,7 +342,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

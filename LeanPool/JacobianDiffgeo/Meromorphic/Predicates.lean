@@ -26,7 +26,7 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.1)
   (and back); every other transport lemma in this file is a one-line specialization of it.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology
@@ -37,21 +37,22 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
 variable {f g : X → ℂ} {x : X} {c : ℂ}
 
 /-- CC3 (frozen): meromorphy of the standard-chart composite. Junk-robust. -/
-def MeromorphicAtX (f : X → ℂ) (x : X) : Prop :=
+@[expose] def MeromorphicAtX (f : X → ℂ) (x : X) : Prop :=
   MeromorphicAt (f ∘ (chartAt ℂ x).symm) (chartAt ℂ x x)
 
 /-- Relative CC3 predicate; the frozen global one is `MeromorphicOnX f Set.univ`. -/
-def MeromorphicOnX (f : X → ℂ) (U : Set X) : Prop := ∀ x ∈ U, MeromorphicAtX f x
+@[expose] def MeromorphicOnX (f : X → ℂ) (U : Set X) : Prop := ∀ x ∈ U, MeromorphicAtX f x
 
 theorem meromorphicOnX_univ : MeromorphicOnX f univ ↔ ∀ x, MeromorphicAtX f x := by
   simp [MeromorphicOnX]
 
 /-- CC3 (frozen): the order at `x`, `WithTop ℤ`-valued, junk `0` off meromorphy. -/
+@[expose]
 noncomputable def ordAtX (f : X → ℂ) (x : X) : WithTop ℤ :=
   meromorphicOrderAt (f ∘ (chartAt ℂ x).symm) (chartAt ℂ x x)
 
 theorem ordAtX_def (f : X → ℂ) (x : X) :
-    ordAtX f x = meromorphicOrderAt (f ∘ (chartAt ℂ x).symm) (chartAt ℂ x x) := rfl
+    ordAtX f x = meromorphicOrderAt (f ∘ (chartAt ℂ x).symm) (chartAt ℂ x x) := by rfl
 
 /-! ### The chart-transport workhorse -/
 

@@ -34,7 +34,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # Local -/
 
-@[expose] public section
+public section
 
 
 open FockSPR MeasureTheory Complex Real Polynomial

@@ -19,7 +19,7 @@ its true time derivatives, and all endpoint conditions are constructed by
 the previously proved coercive solve. No solution is an input.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -25,7 +25,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -261,17 +261,17 @@ def oddUpperRank (k : ℕ) (j : Fin k) : Fin ((2 * k + 1) + 1) :=
   ⟨2 * j.val + 3, by omega⟩
 
 @[simp] theorem evenLowerRank_val (k : ℕ) (j : Fin k) :
-    (evenLowerRank k j).val = 2 * j.val := rfl
+    (evenLowerRank k j).val = 2 * j.val := by rfl
 @[simp] theorem oddMiddleRank_val (k : ℕ) (j : Fin k) :
-    (oddMiddleRank k j).val = 2 * j.val + 1 := rfl
+    (oddMiddleRank k j).val = 2 * j.val + 1 := by rfl
 @[simp] theorem evenUpperRank_val (k : ℕ) (j : Fin k) :
-    (evenUpperRank k j).val = 2 * j.val + 2 := rfl
+    (evenUpperRank k j).val = 2 * j.val + 2 := by rfl
 @[simp] theorem oddLowerRank_val (k : ℕ) (j : Fin k) :
-    (oddLowerRank k j).val = 2 * j.val + 1 := rfl
+    (oddLowerRank k j).val = 2 * j.val + 1 := by rfl
 @[simp] theorem evenMiddleRank_val (k : ℕ) (j : Fin k) :
-    (evenMiddleRank k j).val = 2 * j.val + 2 := rfl
+    (evenMiddleRank k j).val = 2 * j.val + 2 := by rfl
 @[simp] theorem oddUpperRank_val (k : ℕ) (j : Fin k) :
-    (oddUpperRank k j).val = 2 * j.val + 3 := rfl
+    (oddUpperRank k j).val = 2 * j.val + 3 := by rfl
 
 omit [FiniteDimensional K V] [Finite K] [Finite V] in
 theorem ofComplete_space_eq_of_mod
@@ -341,7 +341,7 @@ theorem completeFlagOfRankedSpaces_apply {n : ℕ}
     (hstep : ∀ i : Fin n, S i.castSucc ≤ S i.succ)
     (hzero : S 0 = ⊥) (hlast : S (Fin.last n) = ⊤)
     (i : Fin (n + 1)) :
-    completeFlagOfRankedSpaces S hrank hstep hzero hlast i = S i := rfl
+    completeFlagOfRankedSpaces S hrank hstep hzero hlast i = S i := by rfl
 
 /-- The product of the `k` projective-line intervals in which an even
 partial flag can be completed. -/
@@ -403,7 +403,7 @@ theorem evenCompletionCoordinates_space (k : ℕ)
     (x : {Q : OddPartialFlag (K := K) (V := V) (n := 2 * k + 1) // Compatible P Q})
     (j : Fin k) :
     (evenCompletionCoordinates k P x j).space =
-      completeOfEvenCompatibility k P x (oddMiddleRank k j) := rfl
+      completeOfEvenCompatibility k P x (oddMiddleRank k j) := by rfl
 
 omit [FiniteDimensional K V] [Finite K] [Finite V] in
 theorem evenCompletionCoordinates_injective (k : ℕ)
@@ -578,7 +578,7 @@ omit [FiniteDimensional K V] [Finite K] [Finite V] in
 theorem completeFlagOfEvenCoordinates_apply (k : ℕ)
     (P : EvenPartialFlag (K := K) (V := V) (n := 2 * k + 1))
     (c : EvenCompletionCoordinates k P) (i : Fin ((2 * k + 1) + 1)) :
-    completeFlagOfEvenCoordinates k P c i = evenCompletedSpace k P c i := rfl
+    completeFlagOfEvenCoordinates k P c i = evenCompletedSpace k P c i := by rfl
 
 omit [FiniteDimensional K V] [Finite K] [Finite V] in
 theorem completeFlagOfEvenCoordinates_evenPart (k : ℕ)
@@ -715,7 +715,7 @@ theorem oddCompletionCoordinates_space (k : ℕ)
     (x : {P : EvenPartialFlag (K := K) (V := V) (n := 2 * k + 1) // Compatible P Q})
     (j : Fin k) :
     (oddCompletionCoordinates k Q x j).space =
-      completeOfOddCompatibility k Q x (evenMiddleRank k j) := rfl
+      completeOfOddCompatibility k Q x (evenMiddleRank k j) := by rfl
 
 omit [FiniteDimensional K V] [Finite K] [Finite V] in
 theorem oddCompletionCoordinates_injective (k : ℕ)
@@ -889,7 +889,7 @@ omit [FiniteDimensional K V] [Finite K] [Finite V] in
 theorem completeFlagOfOddCoordinates_apply (k : ℕ)
     (Q : OddPartialFlag (K := K) (V := V) (n := 2 * k + 1))
     (c : OddCompletionCoordinates k Q) (i : Fin ((2 * k + 1) + 1)) :
-    completeFlagOfOddCoordinates k Q c i = oddCompletedSpace k Q c i := rfl
+    completeFlagOfOddCoordinates k Q c i = oddCompletedSpace k Q c i := by rfl
 
 omit [FiniteDimensional K V] [Finite K] [Finite V] in
 theorem completeFlagOfOddCoordinates_oddPart (k : ℕ)

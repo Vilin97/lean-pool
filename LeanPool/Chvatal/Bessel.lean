@@ -48,7 +48,7 @@ inner product on Euclidean space. This file transfers mathlib's Bessel inequalit
 and Gram–Schmidt theorem through the explicit normalization by `√|Ω|`.
 -/
 
-@[expose] public section
+public section
 
 namespace Chvatal
 
@@ -60,7 +60,7 @@ variable {Ω : Type*} [Fintype Ω] [Nonempty Ω]
 
 /-- The uniform probability inner product in Section 2, generalized to any nonempty
 finite sample space. -/
-def uniformInner (f g : Ω → ℝ) : ℝ := (∑ x, f x * g x) / Fintype.card Ω
+@[expose] def uniformInner (f g : Ω → ℝ) : ℝ := (∑ x, f x * g x) / Fintype.card Ω
 
 /-- The normalization which identifies the paper's probability inner product with
 mathlib's Euclidean inner product. -/
@@ -71,7 +71,7 @@ noncomputable def uniformEuclidean : (Ω → ℝ) ≃ₗ[ℝ] EuclideanSpace ℝ
 
 /-- Coordinate formula for the normalization used in Theorem 2.1. -/
 @[simp] theorem uniformEuclidean_apply (f : Ω → ℝ) (x : Ω) :
-    uniformEuclidean f x = (Real.sqrt (Fintype.card Ω))⁻¹ * f x := rfl
+    uniformEuclidean f x = (Real.sqrt (Fintype.card Ω))⁻¹ * f x := by rfl
 
 /-- The normalization preserves exactly the probability inner product of Section 2. -/
 theorem inner_uniformEuclidean (f g : Ω → ℝ) :
@@ -89,7 +89,7 @@ theorem inner_uniformEuclidean (f g : Ω → ℝ) :
 
 /-- Orthonormality with respect to uniform probability, as in Theorem 2.1 and
 Corollary 3.2. The index type may be empty. -/
-def UniformOrthonormal {κ : Type*} (u : κ → Ω → ℝ) : Prop := by
+@[expose] def UniformOrthonormal {κ : Type*} (u : κ → Ω → ℝ) : Prop := by
   classical
   exact ∀ i j, uniformInner (u i) (u j) = if i = j then 1 else 0
 

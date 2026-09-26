@@ -34,7 +34,7 @@ The numerical data, strip, gauge, and operators below are the ones used by
 estimates is proved independently of the particular and signed wave choices.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -148,7 +148,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -161,7 +161,7 @@ open scoped BigOperators
 
 /-- Reindex coefficients, bundling `labels`, `blocks`, `gaussian`, `aliasCoefficients` and the
 required compatibility proofs. -/
-noncomputable def reindexCoefficients {ι κ : Type} (e : κ ≃ ι)
+@[expose] noncomputable def reindexCoefficients {ι κ : Type} (e : κ ≃ ι)
     (v : CycleCoefficients ι) : CycleCoefficients κ where
   labels n := (v.labels n).map e.symm.toEmbedding
   blocks l := v.blocks (e l)
@@ -170,7 +170,7 @@ noncomputable def reindexCoefficients {ι κ : Type} (e : κ ≃ ι)
   residualBand := v.residualBand
 
 /-- Reindex state, bundling `state`, `coefficients`, `axisymmetricAlias`. -/
-noncomputable def reindexState {ι κ : Type} (e : κ ≃ ι)
+@[expose] noncomputable def reindexState {ι κ : Type} (e : κ ≃ ι)
     (x : CycleState ι) : CycleState κ where
   state := x.state
   coefficients := reindexCoefficients e x.coefficients
@@ -274,7 +274,7 @@ noncomputable def swap (B N0 : ℕ) : Index B N0 ≃ ParticularIndex B N0 :=
     (swap B N0).symm l = (l.2, l.1) := rfl
 
 /-- Particular state, given by `reindexState (swap B N0).symm x`. -/
-noncomputable def particularState {B N0 : ℕ} (x : CycleState (Index B N0)) :
+@[expose] noncomputable def particularState {B N0 : ℕ} (x : CycleState (Index B N0)) :
     CycleState (ParticularIndex B N0) := reindexState (swap B N0).symm x
 
 @[simp] theorem particularState_state {B N0 : ℕ} (x : CycleState (Index B N0)) :

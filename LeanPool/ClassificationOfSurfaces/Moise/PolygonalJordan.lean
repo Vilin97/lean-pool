@@ -25,7 +25,7 @@ with adjacent segments meeting exactly at their shared vertex and non-adjacent s
 A junk witness cannot satisfy these fields: they force the carrier to be a topological circle.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -60,7 +60,7 @@ instance : NeZero J.n :=
   ⟨by have := J.three_le; omega⟩
 
 /-- The edge from vertex `i` to vertex `i + 1`. -/
-def edgeSegment (i : ZMod J.n) : Set Plane :=
+@[expose] def edgeSegment (i : ZMod J.n) : Set Plane :=
   segment ℝ (J.vertex i) (J.vertex (i + 1))
 
 /-- Two edge indices are nonadjacent when the corresponding edges share no endpoint. -/
@@ -68,7 +68,7 @@ def NonAdjacentEdges (i j : ZMod J.n) : Prop :=
   i ≠ j ∧ i ≠ j + 1 ∧ j ≠ i + 1
 
 /-- The carrier of the polygon: the union of its edges. -/
-def carrier : Set Plane :=
+@[expose] def carrier : Set Plane :=
   ⋃ i, J.edgeSegment i
 
 theorem vertex_mem_carrier (i : ZMod J.n) : J.vertex i ∈ J.carrier :=
@@ -2447,7 +2447,7 @@ Horizontal edges are never crossed. -/
 
 /-- The x-coordinate at height `y` of the line through `v` and `w` (meaningful when the heights
 of `v` and `w` differ, which the crossing condition guarantees at use sites). -/
-noncomputable def crossingX (v w : Plane) (y : ℝ) : ℝ :=
+@[expose] noncomputable def crossingX (v w : Plane) (y : ℝ) : ℝ :=
   v 0 + (y - v 1) / (w 1 - v 1) * (w 0 - v 0)
 
 /-- The leftward horizontal ray from `P` crosses edge `i`, with the half-open height
@@ -2460,7 +2460,7 @@ def EdgeCrossed (i : ZMod J.n) (P : Plane) : Prop :=
 open scoped Classical in
 /-- The Moise index of a point: the parity of the number of edges crossed by its leftward
 horizontal ray. -/
-noncomputable def index (P : Plane) : ℕ :=
+@[expose] noncomputable def index (P : Plane) : ℕ :=
   (Finset.univ.filter fun i : ZMod J.n => J.EdgeCrossed i P).card % 2
 
 theorem index_lt_two (P : Plane) : J.index P < 2 :=
@@ -4099,7 +4099,7 @@ theorem interiorRegion_eq_indexRegion_one : J.interiorRegion = J.indexRegion 1 :
       exact (Set.disjoint_left.mp J.disjoint_indexRegion_zero_one hxExterior hx).elim
 
 /-- The closed region bounded by a polygon: the closure of its interior region. -/
-noncomputable def closedRegion : Set Plane :=
+@[expose] noncomputable def closedRegion : Set Plane :=
   closure J.interiorRegion
 
 theorem closedRegion_eq_union : J.closedRegion = J.interiorRegion ∪ J.carrier := by

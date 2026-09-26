@@ -20,7 +20,7 @@ pressure equals one global bounded cylinder operator applied to the actual
 forcing and velocity. This gives its estimates without any further solve.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

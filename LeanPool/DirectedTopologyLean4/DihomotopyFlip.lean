@@ -12,7 +12,7 @@ public import LeanPool.DirectedTopologyLean4.DTop
 # LeanPool.DirectedTopologyLean4.DihomotopyFlip
 -/
 
-@[expose] public section
+public section
 
 /-
   If we have a dihomotopy `F` from `f : D(I,X)` to `g : D(I,X)`:

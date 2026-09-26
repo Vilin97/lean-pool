@@ -30,7 +30,7 @@ on `M`:
 Pure realization surgery: no `InsepAt`, no interpolation-specific commitments.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

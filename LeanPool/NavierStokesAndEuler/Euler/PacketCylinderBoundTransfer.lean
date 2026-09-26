@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
 
 /-! Transfer quantitative bounds between genuine witnesses of the same raw field on the interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

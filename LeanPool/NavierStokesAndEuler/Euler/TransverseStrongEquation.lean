@@ -21,7 +21,7 @@ Differentiating the momentum identity and using `Q_tt = -H Q` gives the literal
 projected equation (10), with no assumed acceleration or differential inverse.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

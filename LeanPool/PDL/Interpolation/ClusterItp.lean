@@ -18,7 +18,7 @@ This file continues the development of `Pdl.PreInterpolant` with
 Definition 10.2 and Lemma 10.3 are in `Pdl.ClusterRho`.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -60,7 +60,7 @@ variable {Var : Type}
 /-- The ordinary vocabulary of a Q-formula, i.e. the proposition letters and atomic
 programs occurring in it. The internal variables are *not* included; they are given by
 `QFormula.vars`. -/
-def voc : QFormula Var → Vocab
+@[expose] def voc : QFormula Var → Vocab
   | .fma ψ => ψ.voc
   | .var _ => ∅
   | .and ι1 ι2 => ι1.voc ∪ ι2.voc

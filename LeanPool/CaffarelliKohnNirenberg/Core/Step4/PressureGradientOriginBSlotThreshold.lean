@@ -24,7 +24,7 @@ the radius-`1/8` ball, are the geometric inputs of the whole-carrier pressure
 mass.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open CKN.Foundation.Parabolic CKN.Foundation.Parabolic.Integration

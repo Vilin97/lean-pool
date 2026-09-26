@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
 
 /-! Fixed bounded maps preserve the same external-word radius for actual cylinder paths. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

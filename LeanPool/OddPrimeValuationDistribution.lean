@@ -21,4 +21,4 @@ Tags: central-binomial-coefficients, p-adic-valuations, digit-carries, generatin
 MSC: 11A63, 11B65
 -/
 
-@[expose] public section
+public section

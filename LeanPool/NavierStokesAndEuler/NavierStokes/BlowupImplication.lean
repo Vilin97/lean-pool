@@ -19,7 +19,7 @@ The resulting field cannot be bounded near, or continuously extended to, the
 endpoint. No existence theorem for the manuscript's profiles is assumed here.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

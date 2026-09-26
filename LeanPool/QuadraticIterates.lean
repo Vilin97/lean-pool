@@ -42,4 +42,4 @@ Tags: arithmetic-dynamics, galois-theory, iterated-polynomials
 MSC: 11R32, 12F10, 37P05
 -/
 
-@[expose] public section
+public section

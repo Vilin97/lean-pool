@@ -23,7 +23,7 @@ This file develops the increment profile of the Harper boundary function and
 the nested-cascade inequalities used by the final minimization argument.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -965,7 +965,7 @@ inequality (two different splits can have identical prefix masses but distinct
 boundary costs), which is why the cascade profile of `(p, q)` is recorded as
 well.
 -/
-def CascadeInterleaves (n p q a b : ℕ) : Prop :=
+@[expose] def CascadeInterleaves (n p q a b : ℕ) : Prop :=
   CascadeSplit n (a + b) p q ∧
   ∀ l, splitPrefixMass n a b l ≤ splitPrefixMass n p q l
 

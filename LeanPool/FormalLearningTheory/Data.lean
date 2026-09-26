@@ -24,7 +24,7 @@ Also includes query-learning interfaces (MembershipOracle, EquivalenceOracle),
 noisy data, and advice.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

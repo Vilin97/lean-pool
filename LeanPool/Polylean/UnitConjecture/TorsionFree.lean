@@ -34,7 +34,7 @@ Roughly, the steps are as follows (further details can be found in the correspon
 5. Together, these statements show that `P` is torsion-free.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 

@@ -47,7 +47,7 @@ matching.
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 
@@ -271,7 +271,7 @@ currently covered set) which
   still-uncovered vertices and re-establishes the invariant.
 
 This is the per-round (non-iterated) content of the nibble outer loop. -/
-def HasRoundOracle (H : Finset (Finset V)) (c β : ℝ) : Prop :=
+@[expose] def HasRoundOracle (H : Finset (Finset V)) (c β : ℝ) : Prop :=
   ∃ Inv : Finset (Finset V) → Finset V → Prop,
     Inv H ∅ ∧
     ∀ (H' : Finset (Finset V)) (S : Finset V), Inv H' S →

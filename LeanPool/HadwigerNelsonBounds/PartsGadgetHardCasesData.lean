@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Generated aggregation and routing for the hard normalized cases. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
@@ -115,7 +115,7 @@ def partsGadgetHardCaseNodes : Array (PartsGadgetCaseNode 31) := #[
 ]
 
 /-- The complete hard-case routing tree. -/
-def partsGadgetHardCaseTree : PartsGadgetCaseTree 31 := {
+@[expose] def partsGadgetHardCaseTree : PartsGadgetCaseTree 31 := {
   roots := [⟨5, 0⟩, ⟨31, 3⟩, ⟨18, 0⟩, ⟨25, 1⟩]
   nodeCount := 49
   nodes := partsGadgetHardCaseNodes

@@ -26,7 +26,7 @@ The key result `remainder_bounded_of_C2` shows that the remainder
 * `quadratic_approx_of_contDiffAt_two` — quadratic Taylor approximation
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

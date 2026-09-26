@@ -17,7 +17,7 @@ import Mathlib.Analysis.ODE.ExistUnique
 # Packet Existence
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -54,7 +54,7 @@ variable [NormedSpace ℝ E] [CompleteSpace E]
 
 /-- The Volterra map on all continuous curves, without a spatial-radius
 restriction.  Global Lipschitz continuity makes an iterate contractive. -/
-noncomputable def picardStep (x : E) (α : C(Icc a b, E)) : C(Icc a b, E) :=
+@[expose] noncomputable def picardStep (x : E) (α : C(Icc a b, E)) : C(Icc a b, E) :=
   ⟨fun t => x + ∫ s in t₀.1..t.1, f s (extendCurve t₀ α s),
     (continuous_const.add (intervalIntegral.differentiable_integral_of_continuous
       (continuous_comp_extendCurve t₀ hf α)).continuous).comp continuous_subtype_val⟩

@@ -20,7 +20,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace Descriptive.Tree
@@ -28,7 +28,7 @@ open CategoryTheory Descriptive
 
 noncomputable section «Section1»
 /-- A tree with a chosen base node -/
-def PointedTrees := Σ (T : Trees), T
+@[expose] def PointedTrees := Σ (T : Trees), T
 
 /-- a base node preserving morphism of trees -/
 @[ext (flat := false)] structure PointedLenHom (S T : PointedTrees)
@@ -37,7 +37,7 @@ def PointedTrees := Σ (T : Trees), T
 variable {S T : PointedTrees} {n : ℕ}
 namespace PointedLenHom
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def toHom (f : PointedLenHom S T) : S.1 ⟶ T.1 := f.toLenHom
+@[expose] def toHom (f : PointedLenHom S T) : S.1 ⟶ T.1 := f.toLenHom
 instance : FunLike (PointedLenHom S T) S.1 T.1 where
   coe f := f.toHom
   coe_injective _ _ h := PointedLenHom.ext <| LenHom.ext h
@@ -109,7 +109,7 @@ lemma concat_uniq b (hb : (f ⟨x, mem_of_append hx⟩).val ++ [b] = (f ⟨_, hx
 end «Section2»
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def extensions : PointedTrees ⥤ Type* where
+@[expose] def extensions : PointedTrees ⥤ Type* where
   obj T := { a : T.1.1 | T.2.val ++ [a] ∈ T.1.2 }
   map f := TypeCat.ofHom fun a ↦ ⟨concat (forgetPoint.map f) a.prop, by
     dsimp only [Set.mem_ofPred_eq]; erw [← f.hp, ← concat_spec]; apply SetLike.coe_mem⟩
@@ -126,11 +126,13 @@ def extensions : PointedTrees ⥤ Type* where
     simp_all
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def extensions.val' {T : PointedTrees} (a : extensions.obj T) : List T.1.1 :=
+@[expose] def extensions.val' {T : PointedTrees} (a : extensions.obj T) : List T.1.1 :=
   T.2.val ++ [a.val]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def extensions.valT' {T : PointedTrees} (a : extensions.obj T) : T.1 :=
+@[expose] def extensions.valT' {T : PointedTrees} (a : extensions.obj T) : T.1 :=
   ⟨extensions.val' a, a.prop⟩
+@[simp] lemma extensions.valT'_coe {T : PointedTrees} (a : extensions.obj T) :
+    (extensions.valT' a).val = extensions.val' a := by rfl
 @[simp] lemma extensions_map_val' {S T : PointedTrees}
   (f : S ⟶ T) (a : extensions.obj S) :
   extensions.val' (extensions.map f a) = (f.toHom ⟨extensions.val' a, a.prop⟩).val := by
@@ -144,7 +146,7 @@ def extensions.val' {T : PointedTrees} (a : extensions.obj T) : List T.1.1 :=
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev mkPointed {T : Trees} (x : T) : PointedTrees := ⟨T, x⟩
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def mkPointedMor {S T : Trees} (f : S ⟶ T) (x : S) :
+@[expose] def mkPointedMor {S T : Trees} (f : S ⟶ T) (x : S) :
   mkPointed x ⟶ mkPointed (f x) := ⟨f, rfl⟩
 
 namespace ExtensionsAt

@@ -14,7 +14,7 @@ import Mathlib.Data.Nat.Choose.Factorization
 # LeanPool.Zeta3Irrational.D
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Zeta3Irrational
 
@@ -22,7 +22,7 @@ open scoped Nat
 open BigOperators
 
 /-- The least common multiple of a finite set of natural numbers. -/
-def d (s : Finset ℕ) : ℕ := s.lcm id
+@[expose] def d (s : Finset ℕ) : ℕ := s.lcm id
 
 theorem d_insert (s : Finset ℕ) (n : ℕ) : d (insert n s) = Nat.lcm n (d s) := by
   simp only [d, Finset.lcm_insert, id_eq]

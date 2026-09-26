@@ -17,7 +17,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # ProductAnnulusLocalization -/
 
-@[expose] public section
+public section
 
 
 open MeasureTheory

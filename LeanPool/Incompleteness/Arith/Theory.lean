@@ -16,7 +16,7 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Completeness
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 namespace FirstOrder

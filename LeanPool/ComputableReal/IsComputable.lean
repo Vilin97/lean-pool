@@ -29,7 +29,7 @@ rather than recursive data, this is not computability in the computable-analysis
 comparison instances below are classical (`noncomputable`, via sign information on the limit).
 -/
 
-@[expose] public section
+public section
 
 /-- Type class stating that `x : ℝ` carries a `ComputableℝSeq`: an explicit sequence of rational
 interval approximations converging to `x`. Like `Decidable`, it carries data with it, and
@@ -50,13 +50,14 @@ analogous to `decidable_of_iff`, as a way to avoid `Eq.rec` on data-carrying ins
   fun ⟨sx, hsx⟩ ↦ ⟨sx, h ▸ hsx⟩
 
 /-- Definition of `lift`. -/
-@[reducible] def lift (fr : ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq)
+@[expose, reducible] def lift (fr : ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq)
     (h : ∀ a, (fs a).val = fr a.val) :
     IsComputable x → IsComputable (fr x) :=
   fun ⟨sx, hsx⟩ ↦ ⟨fs sx, hsx ▸ h sx⟩
 
 /-- Definition of `lift₂`. -/
-@[reducible] def lift₂ (fr : ℝ → ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq)
+@[expose, reducible]
+def lift₂ (fr : ℝ → ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq)
     (h : ∀ a b, (fs a b).val = fr a.val b.val) :
     IsComputable x → IsComputable y → IsComputable (fr x y) :=
   fun ⟨sx, hsx⟩ ⟨sy, hsy⟩ ↦ ⟨fs sx sy, hsx ▸ hsy ▸ h sx sy⟩
@@ -180,7 +181,7 @@ end IsComputable
 but that only uses neighborhoods within the rationals, which is a strictly
 weaker condition. This uses neighborhoods in the ambient space, the reals.
 -/
-def TendstoLocallyUniformlyWithout (F : ℕ → ℚ → ℚ) (f : ℝ → ℝ) : Prop :=
+@[expose] def TendstoLocallyUniformlyWithout (F : ℕ → ℚ → ℚ) (f : ℝ → ℝ) : Prop :=
   ∀ (ε : ℝ), 0 < ε →
     ∀ (x : ℝ), ∃ t ∈ nhds x, ∃ a, ∀ (b : ℕ), a ≤ b → ∀ (y : ℚ), ↑y ∈ t →
     |f y - ↑(F b y)| < ε
@@ -228,7 +229,7 @@ open scoped QInterval
 namespace ComputableℝSeq
 
 /-- Definition of `ofTendstoLocallyUniformlyContinuous`. -/
-def ofTendstoLocallyUniformlyContinuous
+@[expose] def ofTendstoLocallyUniformlyContinuous
     {f : ℝ → ℝ} (hf : Continuous f)
     (fImpl : ℕ → ℚInterval → ℚInterval)
     (fImpl_l : ℕ → ℚ → ℚ)

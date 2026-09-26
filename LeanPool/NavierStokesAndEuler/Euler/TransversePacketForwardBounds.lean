@@ -40,7 +40,7 @@ section
 
 /-! The bounded time-right-side estimate applies to the actual PDE time derivative divided by g. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -89,7 +89,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -197,7 +197,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -14,7 +14,7 @@ public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal
@@ -24,6 +24,7 @@ open CKN.Foundation.Parabolic
 namespace CKN
 
 /-- Local scalar `Lp` membership used by paper label `def:sws`. -/
+@[expose]
 def localLp (E : Set ParabolicPoint) (p : ℝ) (g : ParabolicPoint → ℝ) : Prop :=
   MeasureTheory.MemLp g (ENNReal.ofReal p) (volume.restrict E)
 

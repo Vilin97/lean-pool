@@ -15,7 +15,7 @@ inclusion uses the triangle inequality and applies without any positivity
 assumption on its radii.
 -/
 
-@[expose] public section
+public section
 
 open Set Metric
 open CKN.Foundation.Parabolic

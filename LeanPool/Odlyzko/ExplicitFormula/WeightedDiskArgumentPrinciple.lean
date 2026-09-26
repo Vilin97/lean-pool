@@ -16,7 +16,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -86,7 +86,7 @@ open Complex Filter Function Metric Topology Set
 namespace NumberField.Odlyzko
 
 /-- A weighted log deriv finite remainder used in the Odlyzko-bound argument. -/
-noncomputable def weightedLogDerivFiniteRemainder
+@[expose] noncomputable def weightedLogDerivFiniteRemainder
     (f h : ℂ → ℂ) (S : Finset ℂ) (order : ℂ → ℤ) : ℂ → ℂ :=
   fun z ↦ h z * logDeriv f z -
     ∑ p ∈ S, (h p * (order p : ℂ)) / (z - p)

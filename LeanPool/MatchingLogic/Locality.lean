@@ -26,7 +26,7 @@ import Mathlib.Data.Set.Insert
 # MatchingLogic.Locality
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -34,7 +34,7 @@ variable {S : Signature} {Var : Type} [DecidableEq Var]
 
 /-- The agreement condition of Lemma 9: on `C` the two valuations coincide, and
 off `C` they are both off `C`. -/
-def AgreeOn {M : Model S} (C : Set M.carrier) (ρ ρ' : Var → M.carrier) : Prop :=
+@[expose] def AgreeOn {M : Model S} (C : Set M.carrier) (ρ ρ' : Var → M.carrier) : Prop :=
   ∀ x, (ρ x = ρ' x ∧ ρ x ∈ C) ∨ (ρ x ∉ C ∧ ρ' x ∉ C)
 
 /-- The concrete identity behind the `app`/symbol case of the paper's proof:

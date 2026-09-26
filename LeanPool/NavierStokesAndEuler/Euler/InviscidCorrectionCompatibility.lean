@@ -16,7 +16,7 @@ section
 
 /-! Actual inviscid corrections agree across compatible Sobolev levels. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -60,7 +60,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

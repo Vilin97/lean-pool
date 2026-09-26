@@ -18,7 +18,7 @@ section
 
 /-! Genuine lifted divergence-free fields remain divergence-free on the oscillating graph. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -75,7 +75,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -89,7 +89,7 @@ variable {P T : ℝ} [Fact (0 < P)] {hT : 0 < T} {A : Data P T} {B : Budget P hT
   (S : ExactLiftedPacket P hT A B)
 
 /-- Graph pressure, given by `A.κ • S.pressure.pointField t (cylinderGraph P k A.direction x)`. -/
-def graphPressure (k : ℝ) (t : Icc (0 : ℝ) T) (x : Vector3) : Vector3 :=
+@[expose] def graphPressure (k : ℝ) (t : Icc (0 : ℝ) T) (x : Vector3) : Vector3 :=
   A.κ • S.pressure.pointField t (cylinderGraph P k A.direction x)
 
 theorem graphPressure_joint_continuous (k : ℝ) :
@@ -131,7 +131,7 @@ theorem graphPotential_gradient (k : ℝ) (hk : k * A.κ = 1)
     (Continuous.uncurry_left t (S.graphPressure_joint_continuous k)) q hq hgrad x
 
 /-- Raw graph potential, given by `S.graphPotential k (projIcc 0 T hT.le q.1) q.2`. -/
-def rawGraphPotential (k : ℝ) (q : ℝ × Vector3) : ℝ :=
+@[expose] def rawGraphPotential (k : ℝ) (q : ℝ × Vector3) : ℝ :=
   S.graphPotential k (projIcc 0 T hT.le q.1) q.2
 
 theorem rawGraphPotential_smooth (k : ℝ) (hk : k * A.κ = 1) (t : ℝ) :

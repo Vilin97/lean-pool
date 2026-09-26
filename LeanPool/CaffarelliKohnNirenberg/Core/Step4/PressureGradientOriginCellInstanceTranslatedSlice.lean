@@ -21,7 +21,7 @@ The slice bound of `eq:pressure-gradient-morrey` therefore holds almost
 everywhere on the full interval, with its source radius unchanged.
 -/
 
-@[expose] public section
+public section
 
 section
 

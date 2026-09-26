@@ -30,7 +30,7 @@ reserved token in the ambient `ContDiff` scope's regularity level and cannot be 
 ordinary identifier.)
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold
@@ -292,7 +292,7 @@ noncomputable def Form01.ofCoeffs {ι : Type*} (Data : Form01CoeffData X ι) : F
   compat _ _ _ hz := Data.rawCoeffAt_trans _ _ hz
 
 @[simp] theorem Form01.coeffAt_ofCoeffs_apply {ι : Type*} (Data : Form01CoeffData X ι) (x : X)
-    (z : ℂ) : (Form01.ofCoeffs Data).coeffAt x z = Data.rawCoeffAt x z := rfl
+    (z : ℂ) : (Form01.ofCoeffs Data).coeffAt x z = Data.rawCoeffAt x z := by rfl
 
 /-- The preferred-chart coefficient of `Form01.ofCoeffs Data` at the chart center of a point of
 the `i`-th data chart's source, via the conjugated transition derivative — the shape

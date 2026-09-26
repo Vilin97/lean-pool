@@ -18,7 +18,7 @@ exponential shifts of the old law.  These are the dimension-change
 identifications used at every chain-insertion edge.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

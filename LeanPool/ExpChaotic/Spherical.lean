@@ -23,7 +23,7 @@ The initial proof architecture uses John Harrison's HOL Light formalisation.
 See `LeanPool.ExpChaotic` for attribution and the upstream source.
 -/
 
-@[expose] public section
+public section
 
 open Function Filter Set Metric
 open scoped Topology NNReal Uniformity
@@ -87,6 +87,7 @@ def riemannSphereUniformEquivUnitSphere :
       uniformContinuous_invFun := CompactSpace.uniformContinuous_of_continuous e.symm.continuous }
 
 /-- The exponential iterates from the Euclidean plane to the Riemann sphere. -/
+@[expose]
 def sphericalExpIterate (n : ℕ) (z : ℂ) : RiemannSphere :=
   (expIterate n z : OnePoint ℂ)
 

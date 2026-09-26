@@ -23,7 +23,7 @@ public import Mathlib.Analysis.VonNeumannAlgebra.Basic
 The core component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 
@@ -49,7 +49,7 @@ attribute [instance] group countable
 end CountableDiscreteGroup
 
 /-- ICC predicate boundary. Paper: §5. -/
-def IsICC (G : CountableDiscreteGroup) : Prop :=
+@[expose] def IsICC (G : CountableDiscreteGroup) : Prop :=
   Infinite G ∧ ∀ g : G, g ≠ 1 → Set.Infinite (conjugatesOf g)
 
 /-- Unitary-representation carrier. Paper: §4. -/
@@ -64,11 +64,11 @@ variable {G : Type u} {H : Type v} [Group G]
   [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
 
 /-- Invariant-vector predicate. Paper: §4. -/
-def IsInvariant (π : UnitaryRepresentation G H) (ξ : H) : Prop :=
+@[expose] def IsInvariant (π : UnitaryRepresentation G H) (ξ : H) : Prop :=
   ∀ g : G, (π g : H →L[ℂ] H) ξ = ξ
 
 /-- Almost-invariant-vector predicate. Paper: §4. -/
-def HasAlmostInvariantUnitVectors (π : UnitaryRepresentation G H) : Prop :=
+@[expose] def HasAlmostInvariantUnitVectors (π : UnitaryRepresentation G H) : Prop :=
   ∀ (K : Finset G) (ε : ℝ), 0 < ε →
     ∃ ξ : H, ‖ξ‖ = 1 ∧ ∀ g ∈ K, ‖(π g : H →L[ℂ] H) ξ - ξ‖ < ε
 
@@ -76,7 +76,7 @@ end UnitaryRepresentation
 
 /-- Property-(T), universe-polymorphic in the representation carrier so concrete
 `Type 0` groups are not restricted to `Type 0` Hilbert spaces. Paper: §4. -/
-def HasKazhdanPropertyT (G : CountableDiscreteGroup.{u}) : Prop :=
+@[expose] def HasKazhdanPropertyT (G : CountableDiscreteGroup.{u}) : Prop :=
   ∀ (H : Type v)
     (_ : NormedAddCommGroup H)
     (_ : InnerProductSpace ℂ H)
@@ -87,7 +87,7 @@ def HasKazhdanPropertyT (G : CountableDiscreteGroup.{u}) : Prop :=
 
 /-- Relative property-(T), universe-polymorphic in the representation carrier so
 concrete `Type 0` groups are not restricted to `Type 0` Hilbert spaces. Paper: §4. -/
-def HasRelativePropertyT
+@[expose] def HasRelativePropertyT
     (G : CountableDiscreteGroup.{u}) (N : Subgroup G) : Prop :=
   ∀ (H : Type v)
     (_ : NormedAddCommGroup H)
@@ -113,7 +113,7 @@ theorem memℓp_reindex {α : Type u} {β : Type v} {E : Type w}
   exact (e.symm.summable_iff).2 ((lp.memℓp f).summable hp)
 
 /-- Reindexing equivalence for group-indexed Hilbert spaces. Paper: §3. -/
-def l2Reindex {α : Type u} {β : Type v} (e : α ≃ β) :
+@[expose] def l2Reindex {α : Type u} {β : Type v} (e : α ≃ β) :
     GroupL2 α ≃ₗᵢ[ℂ] GroupL2 β where
   toLinearEquiv :=
     { toFun := fun f ↦ ⟨(fun j : β ↦ f (e.symm j)), memℓp_reindex e (by norm_num) f⟩
@@ -130,7 +130,7 @@ def l2Reindex {α : Type u} {β : Type v} (e : α ≃ β) :
     exact e.symm.tsum_eq (fun i ↦ ‖f i‖ ^ (2 : ℝ≥0∞).toReal)
 
 /-- Left-regular unitary boundary. Paper: §3. -/
-def leftRegularUnitary {G : Type u} [Group G] (g : G) :
+@[expose] def leftRegularUnitary {G : Type u} [Group G] (g : G) :
     unitary (GroupL2 G →L[ℂ] GroupL2 G) :=
   Unitary.linearIsometryEquiv.symm (l2Reindex (Equiv.mulLeft g))
 
@@ -182,7 +182,7 @@ theorem mem_vonNeumannClosure
   rfl
 
 /-- Group von Neumann algebra boundary. Paper: §3. -/
-def groupVonNeumannAlgebra (G : CountableDiscreteGroup.{u}) :
+@[expose] def groupVonNeumannAlgebra (G : CountableDiscreteGroup.{u}) :
     VonNeumannAlgebra (GroupL2 G) :=
   vonNeumannClosure (Set.range fun g : G ↦
     (leftRegularRepresentation G g : GroupL2 G →L[ℂ] GroupL2 G))
@@ -198,7 +198,7 @@ def delta (G : CountableDiscreteGroup.{u}) (g : G) : GroupL2 G :=
     exact lp.single 2 g 1
 
 /-- Canonical trace boundary. Paper: §3. -/
-def canonicalTrace (G : CountableDiscreteGroup.{u}) :
+@[expose] def canonicalTrace (G : CountableDiscreteGroup.{u}) :
     GroupVonNeumannAlgebra G → ℂ :=
   fun x ↦ inner ℂ (delta G 1) ((x : GroupL2 G →L[ℂ] GroupL2 G) (delta G 1))
 
@@ -349,7 +349,7 @@ structure TracialGroupFactorEquiv
     ∀ x, canonicalTrace H (toStarAlgEquiv x) = canonicalTrace G x
 
 /-- Trace-preserving factor-isomorphism predicate. Paper: §3. -/
-def TracialGroupFactorsIsomorphic
+@[expose] def TracialGroupFactorsIsomorphic
     (G : CountableDiscreteGroup.{u}) (H : CountableDiscreteGroup.{v}) : Prop :=
   Nonempty (TracialGroupFactorEquiv G H)
 

@@ -32,7 +32,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 This file ports the upstream splitting-field infrastructure for central simple algebras.
 -/
 
-@[expose] public section
+public section
 
 suppress_compilation
 
@@ -225,7 +225,7 @@ structure split (A : CSA k) (K : Type*) [Field K] [Algebra k K] where
   (iso : K ⊗[k] A ≃ₐ[K] Matrix (Fin n) (Fin n) K)
 
 /-- A field extension splits an algebra if the scalar extension is a matrix algebra. -/
-def isSplit (L : Type u) [Field L] [Algebra k L] : Prop :=
+@[expose] def isSplit (L : Type u) [Field L] [Algebra k L] : Prop :=
   ∃ (n : ℕ) (_ : NeZero n),
   Nonempty (L ⊗[k] A ≃ₐ[L] Matrix (Fin n) (Fin n) L)
 

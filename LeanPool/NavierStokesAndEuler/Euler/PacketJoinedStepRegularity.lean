@@ -22,7 +22,7 @@ section
 
 /-! Support and zero angular mean of the literal joined corrector and its actual time derivative. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -133,7 +133,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

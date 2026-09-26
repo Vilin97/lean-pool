@@ -44,7 +44,7 @@ spectral radius.
 - Simon, *Trace Ideals*, Ch. 2
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

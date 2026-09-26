@@ -22,7 +22,7 @@ only on their valid domains.  A final adapter accepts individual potential-curl
 realizations, not an assumed equality of finite prefixes.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -101,7 +101,7 @@ noncomputable def stepComponents (n : ℕ) : Components :=
     meanComponents (p.temporalIncrement v c u) n + meanComponents (p.rankIncrement v c u) n
 
 /-- The four actual mean-pressure changes, and the two oscillatory pressures. -/
-noncomputable def stepPressureComponents (n : ℕ) : Cylinder → ℝ :=
+@[expose] noncomputable def stepPressureComponents (n : ℕ) : Cylinder → ℝ :=
   fun x =>
     ((p.afterParticular v c u).pressure n x.1 - u.pressure n x.1) +
     ((p.afterSigned v c u).pressure n x.1 - (p.afterParticular v c u).pressure n x.1) +
@@ -334,11 +334,11 @@ end Prefixes
 /-! ## The actual split into potential and direct angular contributions -/
 
 /-- Meridional components, defined pointwise by `![m.radial n x.1, 0, m.axial n x.1]`. -/
-noncomputable def meridionalComponents (m : Triple CyclePoint) (n : ℕ) : Components :=
+@[expose] noncomputable def meridionalComponents (m : Triple CyclePoint) (n : ℕ) : Components :=
   fun x => ![m.radial n x.1, 0, m.axial n x.1]
 
 /-- Angular components, defined pointwise by `![0, m.angular n x.1, 0]`. -/
-noncomputable def angularComponents (m : Triple CyclePoint) (n : ℕ) : Components :=
+@[expose] noncomputable def angularComponents (m : Triple CyclePoint) (n : ℕ) : Components :=
   fun x => ![0, m.angular n x.1, 0]
 
 theorem meanComponents_split (m : Triple CyclePoint) (n : ℕ) :

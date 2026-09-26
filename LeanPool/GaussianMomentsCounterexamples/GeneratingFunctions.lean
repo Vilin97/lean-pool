@@ -11,7 +11,7 @@ public import LeanPool.GaussianMomentsCounterexamples.Discovery
 /-! Coefficientwise exponential generating functions of genuine Gaussian moments.
 No analytic exponential integrability or infinite-sum/integral interchange is asserted. -/
 
-@[expose] public section
+public section
 noncomputable section
 namespace GaussianMomentsCounterexamples
 

@@ -19,7 +19,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketForwardUniformChild
 /-! The uniform direct-forward source comparison constructs the actual
 next parent and its k^80 labels, with the same global physical errors. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

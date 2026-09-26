@@ -22,7 +22,7 @@ This file constructs the finite pointwise certificate from generic-fibre data
 and closes the prepared-prime induction step.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology

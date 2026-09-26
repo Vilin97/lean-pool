@@ -19,7 +19,7 @@ import LeanPool.ConnesRigidity.Porting.CoreTransfer
 The quotient action component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperQuotientAction

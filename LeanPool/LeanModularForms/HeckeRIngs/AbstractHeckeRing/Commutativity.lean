@@ -23,7 +23,7 @@ Shimura Proposition 3.8: if an arithmetic group pair admits an anti-automorphism
 Hecke ring `𝕋 P ℤ` is commutative.
 -/
 
-@[expose] public section
+public section
 
 open MulOpposite Set DoubleCoset Subgroup Subgroup.Commensurable Finsupp
 
@@ -49,7 +49,7 @@ namespace AntiInvolution
 variable (ι : AntiInvolution P)
 
 /-- The underlying function of the anti-involution, mapping `g` to `ι(g)` viewed in `G`. -/
-def bar (g : G) : G := (ι.toFun g).unop
+@[expose] def bar (g : G) : G := (ι.toFun g).unop
 
 /-- The anti-involution is an involution: `bar(bar(g)) = g`. -/
 @[simp] lemma bar_bar (g : G) : ι.bar (ι.bar g) = g := ι.involutive g

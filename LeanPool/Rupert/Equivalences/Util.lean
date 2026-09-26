@@ -16,12 +16,12 @@ import Mathlib.Algebra.Order.Archimedean.Real.Hom
 Imported Lean Pool material for `LeanPool.Rupert.Equivalences.Util`.
 -/
 
-@[expose] public section
+public section
 open Pointwise
 open Matrix
 
 /-- Projecting from ℝ³ to ℝ² is linear -/
-noncomputable
+@[expose] noncomputable
 def projXyLinear : ℝ³ →ₗ[ℝ] ℝ² :=
   {
    toFun := projXy,
@@ -34,22 +34,19 @@ def projXyLinear : ℝ³ →ₗ[ℝ] ℝ² :=
    }
 
 /-- Rotation by an element of `SO3`, viewed as an affine map. -/
-noncomputable
+@[expose] noncomputable
 def rotationAffine (rot : SO3) : ℝ³ →ᵃ[ℝ] ℝ³ := (Matrix.toEuclideanLin rot).toAffineMap
 
 /-- Translating is affine. -/
-noncomputable
-def offsetAffine (off : E 2) : ℝ² →ᵃ[ℝ] ℝ² :=
+@[expose] noncomputable def offsetAffine (off : E 2) : ℝ² →ᵃ[ℝ] ℝ² :=
   {toFun v := off + v, linear := LinearMap.id, map_vadd' p v := add_vadd_comm v off p }
 
 /-- Projection of a rotated point onto the xy-plane, as an affine map. -/
-noncomputable
-def projXyRotationIsAffine (rot : SO3) : ℝ³ →ᵃ[ℝ] ℝ² :=
+@[expose] noncomputable def projXyRotationIsAffine (rot : SO3) : ℝ³ →ᵃ[ℝ] ℝ² :=
   AffineMap.comp projXyLinear.toAffineMap (rotationAffine rot)
 
 /-- Full affine transform used for projected Rupert shadows. -/
-noncomputable
-def fullTransformAffine (off : E 2) (rot : SO3) : ℝ³ →ᵃ[ℝ] ℝ² :=
+@[expose] noncomputable def fullTransformAffine (off : E 2) (rot : SO3) : ℝ³ →ᵃ[ℝ] ℝ² :=
   AffineMap.comp (offsetAffine off) (projXyRotationIsAffine rot)
 
 proof_wanted affine_rupert_iff_rupert_set

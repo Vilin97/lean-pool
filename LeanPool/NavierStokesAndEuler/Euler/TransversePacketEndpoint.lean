@@ -20,7 +20,7 @@ The actual source history with prescribed compact terminal displacement.
 the constructed affine-endpoint inverse, not imposed as a solution law.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

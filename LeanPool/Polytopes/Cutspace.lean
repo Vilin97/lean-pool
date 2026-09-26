@@ -12,14 +12,14 @@ import LeanPool.Polytopes.Pre
 Cut spaces obtained by intersecting collections of halfspaces.
 -/
 
-@[expose] public section
+public section
 
 open Module
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- The cut space of a set of halfspaces: the intersection of all of them. -/
-def cutSpace (H_ : Set (Halfspace E)) : Set E := ⋂₀ (SetLike.coe '' H_)
+@[expose] def cutSpace (H_ : Set (Halfspace E)) : Set E := ⋂₀ (SetLike.coe '' H_)
 
 lemma Convex_cutSpace (H_ : Set (Halfspace E)) : Convex ℝ (cutSpace H_) := by
   apply convex_sInter

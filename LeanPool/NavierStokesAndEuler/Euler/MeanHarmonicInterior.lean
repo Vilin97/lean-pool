@@ -37,7 +37,7 @@ section
 
 /-! Actual nested smooth cutoffs, with finite derivative bounds independent of the field. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -160,7 +160,7 @@ section
 
 /-! Two local energy steps for smooth harmonic functions on the unit ball. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -247,7 +247,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -359,7 +359,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

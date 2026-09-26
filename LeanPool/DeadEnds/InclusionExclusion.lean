@@ -14,7 +14,7 @@ import Mathlib.Tactic.Positivity.Finset
 
 /-! ## Helper lemmas for inclusion-exclusion -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DeadEnds
 

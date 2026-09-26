@@ -29,7 +29,7 @@ import Mathlib.RingTheory.SimpleRing.Matrix
   `dim_F B = (dim_F K)^2`.
 -/
 
-@[expose] public section
+public section
 
 suppress_compilation
 

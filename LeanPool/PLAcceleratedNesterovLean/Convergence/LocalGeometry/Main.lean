@@ -29,7 +29,7 @@ neighborhood U₊ of m⋆ with U₊ ⊂⊂ U, and ε > 0 with ε ≤ √(μ'/η)
 (d) Hessian lower bound: D²f(x) ≽ -εI
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -20,7 +20,7 @@ decays to `0` at infinity, hence vanishes identically by Liouville; the same tra
 forces `g ≡ 0`. So there are no nonzero holomorphic 1-forms on `ℙ¹` — the sphere has genus 0.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter Topology OnePoint

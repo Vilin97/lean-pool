@@ -55,7 +55,7 @@ The three mechanisms of the assembly are:
 Must be sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 

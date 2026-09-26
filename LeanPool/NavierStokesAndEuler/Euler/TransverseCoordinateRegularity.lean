@@ -19,7 +19,7 @@ and differentiating the reconstructed displacement gives the exact kinetic
 coordinate identity used in the strong transverse equation.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -45,7 +45,7 @@ def coordinatePrimitive (u : TimeLp T E) : ℝ → U :=
   productPrimitive T hT (frameLeftInversePath T Q c hc hQ) u
 
 /-- The actual L² derivative of the canonical coordinates. -/
-def coordinateDerivative (u : TimeLp T E) : TimeLp T U :=
+@[expose] def coordinateDerivative (u : TimeLp T E) : TimeLp T U :=
   productDerivative T hT (frameLeftInversePath T Q c hc hQ)
     (frameLeftInverseDerivativePath T Q Q₁ c hc hQ) u
 
@@ -83,7 +83,9 @@ theorem terminalPrimitive_coordinateDerivative (u : TimeLp T E) (t : Icc (0 : �
 theorem coordinatePrimitive_initial (m : Icc (0 : ℝ) T → E)
     (u : transverseDerivatives T hT m) :
     coordinatePrimitive T hT Q c hc hQ (u : TimeLp T E) 0 = 0 := by
-  have hu : realPrimitive T (u : TimeLp T E) 0 = 0 := u.property.1
+  have hu : realPrimitive T (u : TimeLp T E) 0 = 0 := by
+    simpa only [initialTrace_apply, terminalPrimitive_apply] using
+      ((mem_transverseDerivatives T hT m (u : TimeLp T E)).mp u.property).1
   simp only [coordinatePrimitive, productPrimitive, hu, map_zero]
 
 /-- The terminal coordinate trace vanishes identically. -/
@@ -151,7 +153,7 @@ theorem transverse_range (m : Icc (0 : ℝ) T → E)
     (hRange : ∀ t η, ⟪m t, η⟫_ℝ = 0 → ∃ x : U, Q t x = η)
     (u : transverseDerivatives T hT m) (t : Icc (0 : ℝ) T) :
     ∃ x : U, Q t x = realPrimitive T (u : TimeLp T E) t :=
-  hRange t _ (u.property.2 t)
+  hRange t _ (((mem_transverseDerivatives T hT m (u : TimeLp T E)).mp u.property).2 t)
 
 /-- Canonical coordinates reconstruct every admissible transverse displacement. -/
 theorem coordinatePrimitive_reconstruct (m : Icc (0 : ℝ) T → E)

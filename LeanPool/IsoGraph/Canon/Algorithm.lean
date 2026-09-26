@@ -54,7 +54,7 @@ Two prunings make this fast:
 
 Note that hash collisions can only *weaken* pruning: an invariant path is used solely as the first
 component of a total order on leaves, and any isomorphism-invariant function works there.
--/@[expose] public section
+-/public section
 
 namespace IsoGraph
 namespace Canon
@@ -82,7 +82,7 @@ Written with `Array.ofFn`/`Array.filter` rather than as an imperative fill: the 
 same, but every entry is then definitionally the oracle, which is what makes the lemmas in
 `IsoGraph/Canon/Equivariance.lean` about this function short.  `vs` is shared across the rows so the
 `nbr` pass allocates only the neighbour lists themselves. -/
-def Graph.ofOracle (n : Nat) (f : Nat → Nat → Bool) : Graph :=
+@[expose] def Graph.ofOracle (n : Nat) (f : Nat → Nat → Bool) : Graph :=
   let vs := Array.range n
   { n := n
     adj := Array.ofFn (n := n) fun v => Array.ofFn (n := n) fun w => f v.1 w.1
@@ -134,7 +134,7 @@ structure Part where
   deriving Inhabited
 
 /-- The one-cell (unit) partition of `{0, …, n-1}`. -/
-def Part.unit (n : Nat) : Part :=
+@[expose] def Part.unit (n : Nat) : Part :=
   { lab := Array.range n
     pos := Array.range n
     cst := Array.replicate n 0
@@ -147,13 +147,13 @@ They are written as structural recursions on an explicit fuel rather than as `fo
 everything about them is proved.  `n` is always enough fuel: there are at most `n` cells. -/
 
 /-- Fold the cell sizes from cell start `i` into the hash `h`. -/
-def cenHashFrom (cen : Array Nat) (n : Nat) : Nat → Nat → UInt64 → UInt64
+@[expose] def cenHashFrom (cen : Array Nat) (n : Nat) : Nat → Nat → UInt64 → UInt64
   | 0, _, h => h
   | fuel + 1, i, h =>
     if i ≥ n then h else cenHashFrom cen n fuel cen[i]! (mixN h (cen[i]! - i))
 
 /-- Start of the first non-singleton cell at or after cell start `i`, if any. -/
-def cenTargetFrom (cen : Array Nat) (n : Nat) : Nat → Nat → Option Nat
+@[expose] def cenTargetFrom (cen : Array Nat) (n : Nat) : Nat → Nat → Option Nat
   | 0, _ => none
   | fuel + 1, i =>
     if i ≥ n then none
@@ -161,11 +161,11 @@ def cenTargetFrom (cen : Array Nat) (n : Nat) : Nat → Nat → Option Nat
     else cenTargetFrom cen n fuel cen[i]!
 
 /-- Hash of the sequence of cell sizes.  Isomorphism-invariant. -/
-def Part.shapeHash (p : Part) (n : Nat) : UInt64 := cenHashFrom p.cen n n 0 hashSeed
+@[expose] def Part.shapeHash (p : Part) (n : Nat) : UInt64 := cenHashFrom p.cen n n 0 hashSeed
 
 /-- Start position of the first non-singleton cell, if any.  This is the target cell for
 individualisation; picking the *first* one is an isomorphism-invariant rule. -/
-def Part.targetCell (p : Part) (n : Nat) : Option Nat := cenTargetFrom p.cen n n 0
+@[expose] def Part.targetCell (p : Part) (n : Nat) : Option Nat := cenTargetFrom p.cen n n 0
 
 /-! ## Refinement -/
 
@@ -191,7 +191,7 @@ structure Scratch where
 
 /-- Cleared scratch space for a graph on `n` vertices.  Counts never exceed `n`, so `bc` needs
 `n + 1` entries. -/
-def Scratch.empty (n : Nat) : Scratch :=
+@[expose] def Scratch.empty (n : Nat) : Scratch :=
   { cnt := Array.replicate n 0, hit := Array.replicate n false, bc := Array.replicate (n + 1) 0 }
 
 /-- Bump `cnt[v]` for every `v` in `nbrs[j:]`, pushing each newly-touched vertex onto `touched`.
@@ -200,6 +200,7 @@ Like `cenHashFrom` above this is a structural recursion on an explicit fuel (onl
 `nbrs.size - j`) rather than a `for` loop, so that the equivariance proof can read off the
 resulting count at each index; the `j < nbrs.size` that a `for` loop hides is exactly what the
 proof needs. -/
+@[expose]
 def bumpFrom (nbrs : Array Nat) : Nat → Nat → Array Nat → Array Nat → Array Nat × Array Nat
   | 0, _, cnt, touched => (cnt, touched)
   | fuel + 1, j, cnt, touched =>
@@ -212,7 +213,7 @@ def bumpFrom (nbrs : Array Nat) : Nat → Nat → Array Nat → Array Nat → Ar
 /-- Accumulate into `cnt` the number of neighbours each vertex has among `lab[k:e]`, recording in
 `touched` the vertices whose count became nonzero.  This is phase (1) of `refineStep`, and is the
 hot loop of the whole algorithm: it costs the splitter cell's degree sum. -/
-def countFrom (G : Graph) (lab : Array Nat) (e : Nat) :
+@[expose] def countFrom (G : Graph) (lab : Array Nat) (e : Nat) :
     Nat → Nat → Array Nat → Array Nat → Array Nat × Array Nat
   | 0, _, cnt, touched => (cnt, touched)
   | fuel + 1, k, cnt, touched =>
@@ -229,12 +230,13 @@ the sorted order of the cells and of the counts *is* part of what makes the trac
 this goes through `List.mergeSort`, which does.  The round trip through `List` costs nothing
 measurable on the benchmarks: both call sites sort at most one entry per cell of the partition,
 against a refinement step that already costs the splitter's degree sum. -/
+@[expose]
 def sortNats (a : Array Nat) : Array Nat := (a.toList.mergeSort (fun x y => x ≤ y)).toArray
 
 /-- Collect the distinct cell starts of the vertices in `touched[j:]`, using `hit` to deduplicate.
 Phase (2) of `refineStep`, as a structural recursion on fuel; `fuel` is only ever
 `touched.size - j`. -/
-def collectFrom (pos cst touched : Array Nat) :
+@[expose] def collectFrom (pos cst touched : Array Nat) :
     Nat → Nat → Array Bool → Array Nat → Array Bool × Array Nat
   | 0, _, hit, cells => (hit, cells)
   | fuel + 1, j, hit, cells =>
@@ -247,7 +249,7 @@ def collectFrom (pos cst touched : Array Nat) :
 /-- Bucket the cell `lab[k:ec]` by neighbour count: `bc[t]` counts the members whose count is `t`,
 and `ks` lists the counts that occur, in first-occurrence order.  Phase (3a) of `refineStep`, and
 another fuel recursion in place of a `for` loop; `fuel` is only ever `ec - k`. -/
-def bucketFrom (lab cnt : Array Nat) (ec : Nat) :
+@[expose] def bucketFrom (lab cnt : Array Nat) (ec : Nat) :
     Nat → Nat → Array Nat → Array Nat → Array Nat × Array Nat
   | 0, _, bc, ks => (bc, ks)
   | fuel + 1, k, bc, ks =>
@@ -259,7 +261,7 @@ def bucketFrom (lab cnt : Array Nat) (ec : Nat) :
 
 /-- Turn the bucket sizes into the fragment sizes `sizes[j]` and the bucket *offsets* `bc[ks[j]]`
 (relative to the start of the cell).  `acc` is the running offset.  Phase (3b). -/
-def offsetFrom (ks : Array Nat) :
+@[expose] def offsetFrom (ks : Array Nat) :
     Nat → Nat → Array Nat → Array Nat → Nat → Array Nat × Array Nat
   | 0, _, sizes, bc, _ => (sizes, bc)
   | fuel + 1, j, sizes, bc, acc =>
@@ -271,7 +273,7 @@ def offsetFrom (ks : Array Nat) :
 
 /-- Scatter the cell's vertices into `block` in count order, each bucket keeping the order it had
 in the cell.  Phase (3c). -/
-def scatterFrom (lab cnt : Array Nat) (ec : Nat) :
+@[expose] def scatterFrom (lab cnt : Array Nat) (ec : Nat) :
     Nat → Nat → Array Nat → Array Nat → Array Nat × Array Nat
   | 0, _, block, bc => (block, bc)
   | fuel + 1, k, block, bc =>
@@ -283,13 +285,13 @@ def scatterFrom (lab cnt : Array Nat) (ec : Nat) :
       scatterFrom lab cnt ec fuel (k + 1) (block.set! o v) (bc.set! t (o + 1))
 
 /-- Zero the buckets the cell used, leaving `bc` clear for the next cell.  Phase (3d). -/
-def clearBcFrom (ks : Array Nat) : Nat → Nat → Array Nat → Array Nat
+@[expose] def clearBcFrom (ks : Array Nat) : Nat → Nat → Array Nat → Array Nat
   | 0, _, bc => bc
   | fuel + 1, j, bc =>
     if j ≥ ks.size then bc else clearBcFrom ks fuel (j + 1) (bc.set! ks[j]! 0)
 
 /-- Copy the sorted block back into `lab[c:]`, keeping `pos` its inverse.  Phase (3e). -/
-def writeFrom (block : Array Nat) (c : Nat) :
+@[expose] def writeFrom (block : Array Nat) (c : Nat) :
     Nat → Nat → Array Nat → Array Nat → Array Nat × Array Nat
   | 0, _, lab, pos => (lab, pos)
   | fuel + 1, k, lab, pos =>
@@ -299,6 +301,7 @@ def writeFrom (block : Array Nat) (c : Nat) :
       writeFrom block c fuel (k + 1) (lab.set! (c + k) v) (pos.set! v (c + k))
 
 /-- Write the boundaries of the fragment `[st, en)` into `cst`/`cen`.  Phase (4a). -/
+@[expose]
 def fillBoundsFrom (st en : Nat) : Nat → Nat → Array Nat → Array Nat → Array Nat × Array Nat
   | 0, _, cst, cen => (cst, cen)
   | fuel + 1, i, cst, cen =>
@@ -307,7 +310,7 @@ def fillBoundsFrom (st en : Nat) : Nat → Nat → Array Nat → Array Nat → A
 
 /-- Install the boundaries of every fragment of a split cell, collecting the fragment starts and
 hashing each fragment's size and count into the trace.  Phase (4). -/
-def boundsFrom (ks sizes : Array Nat) :
+@[expose] def boundsFrom (ks sizes : Array Nat) :
     Nat → Nat → Array Nat → Array Nat → Array Nat → Nat → UInt64 →
       Array Nat × Array Nat × Array Nat × UInt64
   | 0, _, cst, cen, starts, _, tr => (cst, cen, starts, tr)
@@ -342,13 +345,13 @@ def markExceptFrom (starts : Array Nat) (bi : Nat) : Nat → Nat → Array Bool 
     else markExceptFrom starts bi fuel (k + 1) (if k != bi then inW.set! starts[k]! true else inW)
 
 /-- Zero the counts of the touched vertices.  Phase (6). -/
-def clearCntFrom (touched : Array Nat) : Nat → Nat → Array Nat → Array Nat
+@[expose] def clearCntFrom (touched : Array Nat) : Nat → Nat → Array Nat → Array Nat
   | 0, _, cnt => cnt
   | fuel + 1, j, cnt =>
     if j ≥ touched.size then cnt else clearCntFrom touched fuel (j + 1) (cnt.set! touched[j]! 0)
 
 /-- Unmark the cells that were collected.  Phase (6). -/
-def clearHitFrom (cells : Array Nat) : Nat → Nat → Array Bool → Array Bool
+@[expose] def clearHitFrom (cells : Array Nat) : Nat → Nat → Array Bool → Array Bool
   | 0, _, hit => hit
   | fuel + 1, j, hit =>
     if j ≥ cells.size then hit else clearHitFrom cells fuel (j + 1) (hit.set! cells[j]! false)
@@ -373,7 +376,7 @@ structure SplitState where
 
 /-- Split the cell starting at position `c` by neighbour count, phases (3) to (5).  Written as a
 chain of `match`es rather than a `do` block for the same reason as the loops above. -/
-def splitCell (cnt : Array Nat) (c : Nat) (st : SplitState) : SplitState :=
+@[expose] def splitCell (cnt : Array Nat) (c : Nat) (st : SplitState) : SplitState :=
   -- Read the cell's extent *before* splitting it; splits stay inside `[c, ec)`, so the cells
   -- collected by phase (2) keep their starts.
   let ec := st.cen[c]!
@@ -407,7 +410,7 @@ def splitCell (cnt : Array Nat) (c : Nat) (st : SplitState) : SplitState :=
                 { lab, pos, cst, cen, inW, tr, bc := clearBcFrom ks ks.size 0 bc }
 
 /-- Split every cell in `cells[j:]`, left to right. -/
-def splitCellsFrom (cnt cells : Array Nat) : Nat → Nat → SplitState → SplitState
+@[expose] def splitCellsFrom (cnt cells : Array Nat) : Nat → Nat → SplitState → SplitState
   | 0, _, st => st
   | fuel + 1, j, st =>
     if j ≥ cells.size then st
@@ -420,6 +423,7 @@ Returns the new partition, the updated worklist (`inW`, indexed by cell start po
 updated trace hash, and the scratch space, restored to its cleared state.  Cells created by a
 split are pushed onto the worklist following Hopcroft's rule: all fragments if the parent was
 queued, otherwise all but a largest fragment. -/
+@[expose]
 def refineStep (G : Graph) (p : Part) (inW : Array Bool) (s : Nat) (tr : UInt64) (sc : Scratch) :
     Part × Array Bool × UInt64 × Scratch :=
   let e := p.cen[s]!
@@ -447,7 +451,7 @@ def refineStep (G : Graph) (p : Part) (inW : Array Bool) (s : Nat) (tr : UInt64)
               bc := st.bc })
 
 /-- Index of the first `true` entry of `a`. -/
-def firstSet (a : Array Bool) : Option Nat := Id.run do
+@[expose] def firstSet (a : Array Bool) : Option Nat := Id.run do
   for j in [0:a.size] do
     if a[j]! then return some j
   return none
@@ -458,7 +462,7 @@ The guard `s < G.n && p.cst[s]! == s` is never false in a real run — only cell
 queued, and a cell start stays one when its cell is split — but checking it costs one array read
 per pop and saves `Equivariance.refineLoop_equiv` from having to carry the worklist invariant.
 Popping a position that is not a cell start simply drops it. -/
-def refineLoop (G : Graph) : Nat → Part → Array Bool → UInt64 → Scratch → Part × UInt64
+@[expose] def refineLoop (G : Graph) : Nat → Part → Array Bool → UInt64 → Scratch → Part × UInt64
   | 0, p, _, tr, _ => (p, tr)
   | fuel + 1, p, inW, tr, sc =>
     match firstSet inW with
@@ -476,11 +480,11 @@ the trace hash of the refinement.
 The fuel `n² + n + 1` is a genuine bound: a cell start enters the worklist once initially and once
 per fragment of each split, there are at most `n - 1` splits, and each split creates at most `n`
 fragments. -/
-def refine (G : Graph) (p : Part) (inW : Array Bool) (tr : UInt64) : Part × UInt64 :=
+@[expose] def refine (G : Graph) (p : Part) (inW : Array Bool) (tr : UInt64) : Part × UInt64 :=
   refineLoop G (G.n * G.n + G.n + 1) p inW tr (Scratch.empty G.n)
 
 /-- Refine from the unit partition: equivalently, the coarsest equitable partition of `G`. -/
-def initialRefine (G : Graph) : Part × UInt64 :=
+@[expose] def initialRefine (G : Graph) : Part × UInt64 :=
   let p := Part.unit G.n
   let inW := if G.n == 0 then #[] else (Array.replicate G.n false).set! 0 true
   refine G p inW hashSeed
@@ -488,7 +492,7 @@ def initialRefine (G : Graph) : Part × UInt64 :=
 /-- Write `c + 1` into `cst[j]` for every `j ∈ [j₀, ec)`, where `j₀` is the second argument.  A
 structural recursion rather than a `for` loop so that `Equivariance.setCstFrom_getElemD` can read
 off each entry; `fuel` is only ever `ec - j₀`, so the work is the same. -/
-def setCstFrom (c ec : Nat) : Nat → Nat → Array Nat → Array Nat
+@[expose] def setCstFrom (c ec : Nat) : Nat → Nat → Array Nat → Array Nat
   | 0, _, cst => cst
   | fuel + 1, j, cst =>
     if j ≥ ec then cst else setCstFrom c ec fuel (j + 1) (cst.set! j (c + 1))
@@ -496,7 +500,7 @@ def setCstFrom (c ec : Nat) : Nat → Nat → Array Nat → Array Nat
 /-- Split the vertex `v` off from its cell, placing it first.  Returns the new partition and the
 position of the new singleton cell `{v}` (which is the only splitter needed to re-refine, since
 the input partition is assumed equitable). -/
-def individualize (p : Part) (v : Nat) : Part × Nat :=
+@[expose] def individualize (p : Part) (v : Nat) : Part × Nat :=
   let i := p.pos[v]!
   let c := p.cst[i]!
   let ec := p.cen[i]!
@@ -510,7 +514,7 @@ def individualize (p : Part) (v : Nat) : Part × Nat :=
 /-! ## Certificates -/
 
 /-- Number of 64-bit words used for one row of a certificate. -/
-def rowWords (n : Nat) : Nat := (n + 63) / 64
+@[expose] def rowWords (n : Nat) : Nat := (n + 63) / 64
 
 /-- An `n × n` bit matrix packed into 64-bit words: row `i` occupies words
 `[i * rowWords n, (i+1) * rowWords n)`, and column `j` of a row is bit `63 - j % 64` of word
@@ -524,7 +528,7 @@ Like the partition walks above, the two loops are structural recursions on fuel 
 `for` loops, so that induction applies to them: `fuel` counts the entries still to do and `j`
 (resp. `i`) the position reached, and `j + fuel = n` is the invariant that gives `j < n` inside
 the body — which is exactly what a proof about the loop needs and what a `for` loop hides. -/
-def certRow (n : Nat) (b : Nat → Bool) :
+@[expose] def certRow (n : Nat) (b : Nat → Bool) :
     Nat → Nat → UInt64 → Nat → Array UInt64 → Array UInt64
   | 0, _, acc, k, out =>
     if n % 64 != 0 then out.set! k (acc <<< UInt64.ofNat (64 - n % 64)) else out
@@ -534,13 +538,12 @@ def certRow (n : Nat) (b : Nat → Bool) :
     else certRow n b fuel (j + 1) acc k out
 
 /-- Pack rows `i, i+1, …` of the matrix, `fuel` of them, into `out`. -/
-def certRowsFrom (n : Nat) (bit : Nat → Nat → Bool) (w : Nat) :
+@[expose] def certRowsFrom (n : Nat) (bit : Nat → Nat → Bool) (w : Nat) :
     Nat → Nat → Array UInt64 → Array UInt64
   | 0, _, out => out
   | fuel + 1, i, out => certRowsFrom n bit w fuel (i + 1) (certRow n (bit i) n 0 0 (i * w) out)
 
-@[inherit_doc certRow]
-def certBits (n : Nat) (bit : Nat → Nat → Bool) : Array UInt64 :=
+@[expose, inherit_doc certRow] def certBits (n : Nat) (bit : Nat → Nat → Bool) : Array UInt64 :=
   certRowsFrom n bit (rowWords n) n 0 (Array.replicate (n * rowWords n) 0)
 
 /-- The adjacency matrix of `G` read off in the order `lab`, packed by `certBits`.
@@ -548,13 +551,13 @@ def certBits (n : Nat) (bit : Nat → Nat → Bool) : Array UInt64 :=
 Packing bits most-significant-first means that comparing the word arrays lexicographically, as
 unsigned integers, compares the bit strings lexicographically.  Two labellings give the same
 certificate exactly when they differ by an automorphism. -/
-def certOf (G : Graph) (lab : Array Nat) : Array UInt64 :=
+@[expose] def certOf (G : Graph) (lab : Array Nat) : Array UInt64 :=
   certBits G.n fun i => let row := G.adj[lab[i]!]!; fun j => row[lab[j]!]!
 
 /-- Lexicographic comparison of `a` and `b` from index `i` on, with `fuel` bounding the number of
 positions still to look at.  Written as a structural recursion rather than a `for` loop so that
 the order lemmas in `IsoGraph.Canon.Search` can be proved by induction on `fuel`. -/
-def lexCmpFrom (a b : Array UInt64) : Nat → Nat → Ordering
+@[expose] def lexCmpFrom (a b : Array UInt64) : Nat → Nat → Ordering
   | 0, _ => compare a.size b.size
   | fuel + 1, i =>
     if i < min a.size b.size then
@@ -564,7 +567,7 @@ def lexCmpFrom (a b : Array UInt64) : Nat → Nat → Ordering
     else compare a.size b.size
 
 /-- Lexicographic comparison of `UInt64` arrays (shorter is smaller on a common prefix). -/
-def lexCmpU64 (a b : Array UInt64) : Ordering := lexCmpFrom a b (min a.size b.size) 0
+@[expose] def lexCmpU64 (a b : Array UInt64) : Ordering := lexCmpFrom a b (min a.size b.size) 0
 
 /-! ## Automorphisms -/
 
@@ -573,7 +576,7 @@ def lexCmpU64 (a b : Array UInt64) : Ordering := lexCmpFrom a b (min a.size b.si
 
 Written as a `foldl` over `List.range n` rather than as a `for` loop so that
 `IsoGraph.Canon.Autos.autoOf_get` can read off each entry; the work is the same. -/
-def autoOf (n : Nat) (σ τ : Array Nat) : Array Nat :=
+@[expose] def autoOf (n : Nat) (σ τ : Array Nat) : Array Nat :=
   (List.range n).foldl (init := Array.replicate n 0) fun g i => g.set! σ[i]! τ[i]!
 
 /-- Whether a permutation moves some point. -/
@@ -584,7 +587,7 @@ def moves (g : Array Nat) : Bool := Id.run do
 
 /-- One step of orbit closure: mark the images of `v` under all generators.  A `foldl` rather
 than a `for` loop so that `IsoGraph.Canon.Orbits` can induct on the generator list. -/
-def closureStep (gens : Array (Array Nat)) (mark : Array Bool) (stack : Array Nat)
+@[expose] def closureStep (gens : Array (Array Nat)) (mark : Array Bool) (stack : Array Nat)
     (v : Nat) : Array Bool × Array Nat :=
   gens.foldl (init := (mark, stack)) fun ms g =>
     let w := g[v]!
@@ -592,7 +595,7 @@ def closureStep (gens : Array (Array Nat)) (mark : Array Bool) (stack : Array Na
 
 /-- Close `mark` under the generators, using `stack` as the frontier.  `fuel` bounds the number of
 pops, which is at most the number of marked points. -/
-def closureLoop (gens : Array (Array Nat)) : Nat → Array Bool → Array Nat → Array Bool
+@[expose] def closureLoop (gens : Array (Array Nat)) : Nat → Array Bool → Array Nat → Array Bool
   | 0, mark, _ => mark
   | fuel + 1, mark, stack =>
     if stack.isEmpty then mark
@@ -602,7 +605,7 @@ def closureLoop (gens : Array (Array Nat)) : Nat → Array Bool → Array Nat �
       closureLoop gens fuel mark stack
 
 /-- The union of the `gens`-orbits of the vertices in `seed`, as a membership array of size `n`. -/
-def orbitClosure (n : Nat) (gens : Array (Array Nat)) (seed : Array Nat) : Array Bool :=
+@[expose] def orbitClosure (n : Nat) (gens : Array (Array Nat)) (seed : Array Nat) : Array Bool :=
   closureLoop gens (n + 1) (seed.foldl (init := Array.replicate n false)
     fun mark v => mark.set! v true) seed
 /-! ## The search -/
@@ -610,7 +613,7 @@ def orbitClosure (n : Nat) (gens : Array (Array Nat)) (seed : Array Nat) : Array
 /-- Scan for the first disagreement at or after `i`, stopping at `m`.  A structural recursion on
 fuel rather than a `for` loop with a `break`, for the same reason as the partition walks above:
 `IsoGraph.Canon.Jump` needs to induct on it. -/
-def commonPrefixFrom (a b : Array Nat) (m : Nat) : Nat → Nat → Nat
+@[expose] def commonPrefixFrom (a b : Array Nat) (m : Nat) : Nat → Nat → Nat
   | 0, i => i
   | fuel + 1, i =>
     if i ≥ m then m
@@ -618,7 +621,7 @@ def commonPrefixFrom (a b : Array Nat) (m : Nat) : Nat → Nat → Nat
     else i
 
 /-- Length of the longest common prefix of two paths. -/
-def commonPrefix (a b : Array Nat) : Nat :=
+@[expose] def commonPrefix (a b : Array Nat) : Nat :=
   let m := min a.size b.size
   commonPrefixFrom a b m m 0
 
@@ -654,7 +657,7 @@ pruning, so this is a pure performance guard. -/
 def maxGens : Nat := 256
 
 /-- Record a newly found automorphism, ignoring the identity and duplicates. -/
-def St.addAuto (st : St) (g : Array Nat) : St :=
+@[expose] def St.addAuto (st : St) (g : Array Nat) : St :=
   if !moves g then st
   else if st.autos.size ≥ maxGens then st
   else if st.autos.any (fun h => h == g) then st
@@ -663,7 +666,7 @@ def St.addAuto (st : St) (g : Array Nat) : St :=
 /-- Invariant pruning at a node.  Returns `none` if the whole subtree is dominated by the current
 best leaf, and otherwise the state to continue with (with the incumbent discarded if the subtree
 is guaranteed to beat it). -/
-def pruneNode (invPath : Array UInt64) (st : St) : Option St :=
+@[expose] def pruneNode (invPath : Array UInt64) (st : St) : Option St :=
   match st.best with
   | none => some st
   | some b =>
@@ -682,7 +685,7 @@ onto `ζ`'s.  Since depth-first search had already *finished* `ζ`'s branch befo
 every leaf still unexplored below `ν`'s branch is a `γ`-image of one already seen, and carries the
 same certificate.  So the whole remainder of that branch can be abandoned: we request a backjump
 to depth `k`. -/
-def leafUpdate (G : Graph) (path : Array Nat) (invPath : Array UInt64) (lab : Array Nat)
+@[expose] def leafUpdate (G : Graph) (path : Array Nat) (invPath : Array UInt64) (lab : Array Nat)
     (st : St) : St := Id.run do
   let cert := certOf G lab
   let leaf : Leaf := { path, invPath, cert, lab }
@@ -732,6 +735,7 @@ mutual
 
 /-- Visit one node of the search tree.  `p` is the (already refined) ordered partition, `path`
 the vertices individualised to reach it, and `invPath` the node invariants along that path. -/
+@[expose]
 def dfsNode (G : Graph) (fuel : Nat) (path : Array Nat) (invPath : Array UInt64) (p : Part)
     (st : St) : St :=
   match fuel with
@@ -754,6 +758,7 @@ def dfsNode (G : Graph) (fuel : Nat) (path : Array Nat) (invPath : Array UInt64)
 
 /-- Visit the remaining children `verts` of a node, skipping those in the orbit of an already
 visited child, and honouring any backjump request coming back from below. -/
+@[expose]
 def dfsChildren (G : Graph) (fuel : Nat) (path : Array Nat) (invPath : Array UInt64) (p : Part)
     (verts : List Nat) (processed : Array Nat) (orb : Orbits) (st : St) : St :=
   match verts with
@@ -808,7 +813,7 @@ structure Result where
 
 `Result.lab` is a permutation of `{0, …, n-1}` such that `Result.cert` depends only on the
 isomorphism class of `G`. -/
-def canonical (G : Graph) : Result :=
+@[expose] def canonical (G : Graph) : Result :=
   let (p, tr) := initialRefine G
   let inv0 : Array UInt64 := #[mix tr (p.shapeHash G.n)]
   let st := dfsNode G (G.n + 1) #[] inv0 p
@@ -826,14 +831,14 @@ def canonicalForm (G : Graph) : Array UInt64 :=
 /-- Positional inverse of `a`: if `a` is a permutation of `{0, …, n-1}` then this is the array
 with `invLab n a` at position `a[i]!` equal to `i`.  Used only to *check* that, so nothing is
 claimed about it when `a` is not a permutation. -/
-def invLab (n : Nat) (a : Array Nat) : Array Nat :=
+@[expose] def invLab (n : Nat) (a : Array Nat) : Array Nat :=
   (List.range n).foldl (init := Array.replicate n 0) fun b i =>
     if a[i]! < n then b.set! a[i]! i else b
 
 /-- Is `a` a permutation of `{0, …, n-1}`?  `O(n)`: build the positional inverse and check that
 it really inverts, which gives injectivity for free (if `a[v]! = a[w]!` then
 `v = b[a[v]!]! = b[a[w]!]! = w`). -/
-def isPermArray (n : Nat) (a : Array Nat) : Bool :=
+@[expose] def isPermArray (n : Nat) (a : Array Nat) : Bool :=
   a.size == n &&
     (let b := invLab n a
      (List.range n).all fun i => a[i]! < n && b[a[i]!]! == i)
@@ -843,7 +848,7 @@ def isPermArray (n : Nat) (a : Array Nat) : Bool :=
 The search's output is checked to be a permutation of `{0, …, n-1}` before being returned, and
 the identity is substituted if it is not.  The check costs `O(n)` against an `Ω(n²)` search, and
 makes the returned array a permutation whatever the search does (`Spec.labellingIsPerm`). -/
-def canonicalLabellingOfOracle (n : Nat) (f : Nat → Nat → Bool) : Array Nat :=
+@[expose] def canonicalLabellingOfOracle (n : Nat) (f : Nat → Nat → Bool) : Array Nat :=
   let a := (canonical (Graph.ofOracle n f)).lab
   if isPermArray n a then a else Array.range n
 

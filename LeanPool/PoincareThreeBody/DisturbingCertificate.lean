@@ -18,7 +18,7 @@ two phases. This file reduces that comparison to a finite trapezoidal sum plus a
 bound on the second time derivative of the integrand difference.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

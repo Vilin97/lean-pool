@@ -13,7 +13,7 @@ public import Mathlib.Order.Filter.AtTopBot.Basic
 # Witness-size divergence in the two-core family
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness.TwoCore
 

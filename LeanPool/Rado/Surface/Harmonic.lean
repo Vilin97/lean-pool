@@ -24,7 +24,7 @@ small circles implies it on all circles, via the maximum principle and
 comparison with the Poisson extension.
 -/
 
-@[expose] public section
+public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex Filter
 
@@ -34,7 +34,7 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
   [IsManifold (modelWithCornersSelf ℂ ℂ) 1 X]
 
 /-- The image of `s` in the chart `e`. -/
-def chartImage (e : OpenPartialHomeomorph X ℂ) (s : Set X) : Set ℂ :=
+@[expose] def chartImage (e : OpenPartialHomeomorph X ℂ) (s : Set X) : Set ℂ :=
   e '' (s ∩ e.source)
 
 omit [ChartedSpace ℂ X] [IsManifold (modelWithCornersSelf ℂ ℂ) 1 X] in
@@ -67,7 +67,7 @@ theorem continuousOn_comp_chart_symm {g : X → ℝ} (e : OpenPartialHomeomorph 
 /-! ## Harmonic and subharmonic functions on a Riemann surface -/
 
 /-- `u : X → ℝ` is harmonic on `s`: every chart representative is harmonic. -/
-def SurfaceHarmonicOn (u : X → ℝ) (s : Set X) : Prop :=
+@[expose] def SurfaceHarmonicOn (u : X → ℝ) (s : Set X) : Prop :=
   ∀ e ∈ riemannAtlas X, HarmonicOnNhd (u ∘ e.symm) (chartImage e s)
 
 /-- `g : X → ℝ` is subharmonic on `s`: continuous, and every chart

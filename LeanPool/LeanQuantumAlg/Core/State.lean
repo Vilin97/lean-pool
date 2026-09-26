@@ -55,7 +55,7 @@ Pinned Mathlib API: `PiLp.single`, `PiLp.single_apply`, `PiLp.norm_single`,
 `EuclideanSpace.norm_eq`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -110,6 +110,7 @@ theorem hSMul_apply (c : ℂ) (ψ : PureState n) (i : Fin (2 ^ n)) :
     (c • ψ : StateVector n) i = c * ψ i := rfl
 
 /-- Build a pure state from a normalized Hilbert-space vector. -/
+@[expose]
 def ofVec (v : StateVector n) (h : ‖v‖ = 1) : PureState n := ⟨v, h⟩
 
 @[simp]
@@ -138,7 +139,7 @@ theorem ext {ψ φ : PureState n} (h : ∀ i, ψ i = φ i) : ψ = φ := by
 
 /-- The computational basis ket `|x⟩ : PureState n`, big-endian (qubit 0 is
 the most significant bit of `x`). -/
-def ket (x : Fin (2 ^ n)) : PureState n :=
+@[expose] def ket (x : Fin (2 ^ n)) : PureState n :=
   ofVec (PiLp.single 2 x 1) (by simp)
 
 @[simp]

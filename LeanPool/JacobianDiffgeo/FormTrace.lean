@@ -77,4 +77,4 @@ residues, chart handling, and residue-trace compatibility (Miranda Lemma 3.2 glo
   own §0.3 audit; unaffected by any of the findings above).
 -/
 
-@[expose] public section
+public section

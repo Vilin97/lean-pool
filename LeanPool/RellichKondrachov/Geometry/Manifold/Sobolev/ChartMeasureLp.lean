@@ -30,7 +30,7 @@ This file provides:
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.chartPullbackL2`
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

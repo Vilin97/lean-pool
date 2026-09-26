@@ -29,7 +29,7 @@ been, so "the outer face" is "the face through any point far enough out".
   the outer face.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set Schoenflies unitInterval
 open scoped Graph

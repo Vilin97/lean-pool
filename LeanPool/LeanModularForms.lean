@@ -197,4 +197,4 @@ Tags: modular-forms, complex-analysis, residue-theorem, valence-formula
 MSC: 11F11, 30E20
 -/
 
-@[expose] public section
+public section

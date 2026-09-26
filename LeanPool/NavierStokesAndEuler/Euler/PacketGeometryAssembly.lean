@@ -45,7 +45,7 @@ section
 
 /-! Tangency is preserved by the actual ray and projected velocity ODEs. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -100,7 +100,7 @@ section
 
 /-! Continuity of the actual rescaled moving-frame matrices. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -172,7 +172,7 @@ center frame.  Its neighboring matrix perturbation is part of the actual
 parent error; all scaled coefficient and ray bounds are derived here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -335,7 +335,7 @@ section
 
 /-! Uniqueness of the actual scalar comparison equation, including its state. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -388,7 +388,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -539,7 +539,7 @@ section
 
 /-! Relative propagator estimates on arbitrary subintervals for actual velocity states. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -641,7 +641,7 @@ section
 
 /-! Polynomial conversion between physical tangent vectors and the two-state system. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -726,7 +726,7 @@ section
 
 /-! Relative growth of the primary scalar reference dominates zero slope. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -779,7 +779,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -858,7 +858,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1048,7 +1048,7 @@ section
 # Packet Stage
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1275,7 +1275,7 @@ condition `1 ≤ σ * Θ` is the source horizon condition; the smallness of the
 matrix and ray errors is converted to smallness relative to `σ^2`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1422,7 +1422,7 @@ target amplitude.  The initial scalar slope cancels, including for
 neighboring initial data controlled by the common reference.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1541,7 +1541,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

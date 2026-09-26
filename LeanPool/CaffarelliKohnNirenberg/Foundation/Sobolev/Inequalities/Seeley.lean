@@ -23,7 +23,7 @@ function across the unit sphere.  The geometric estimates are recorded on the
 closed annulus and the gluing interface is kept independent of the radial maps.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped BigOperators
@@ -36,22 +36,27 @@ noncomputable section
 attribute [local instance] Classical.propDecidable
 
 /-- The open annulus on which both radial reflections are smooth. -/
+@[expose]
 def seeleyAnnulus : Set (Vec 3) :=
   {x | (1 / 2 : ℝ) < vecEuclideanNorm x ∧ vecEuclideanNorm x < 3}
 
 /-- The closed annulus used for the extension estimates. -/
+@[expose]
 def seeleyClosedAnnulus : Set (Vec 3) :=
   {x | 1 ≤ vecEuclideanNorm x ∧ vecEuclideanNorm x ≤ 2}
 
 /-- The first radial reflection, `x ↦ x / |x|²`. -/
+@[expose]
 def seeleyReflectionOne (x : Vec 3) : Vec 3 :=
   (vecNormSq x)⁻¹ • x
 
 /-- The second radial reflection, `x ↦ x / ((2|x| - 1)|x|)`. -/
+@[expose]
 def seeleyReflectionTwo (x : Vec 3) : Vec 3 :=
   ((2 * vecEuclideanNorm x - 1) * vecEuclideanNorm x)⁻¹ • x
 
 /-- The exterior formula in the two-reflection extension. -/
+@[expose]
 def seeleyExterior (v : Vec 3 → ℝ) (x : Vec 3) : ℝ :=
   3 * v (seeleyReflectionOne x) - 2 * v (seeleyReflectionTwo x)
 
@@ -377,6 +382,7 @@ theorem seeley_glue_hasFDerivAt_of_not_mem
   simp only [hyC, ite_false]
 
 /-- The piecewise two-reflection extension, before a cutoff is applied. -/
+@[expose]
 def seeleyExtension (v : Vec 3 → ℝ) (x : Vec 3) : ℝ :=
   if x ∈ euclideanClosedBall (0 : Vec 3) 1 then v x else seeleyExterior v x
 

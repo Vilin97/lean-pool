@@ -15,7 +15,7 @@ public import Mathlib.Order.OmegaCompletePartialOrder
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Option`.
 -/
 
-@[expose] public section
+public section
 
 
 variable {A : Type*} [Preorder A]
@@ -82,7 +82,7 @@ lemma project_coe
   rfl
 
 /-- Turns a `Chain` of `Option`s into an equivalent `Option`al `Chain`. -/
-noncomputable def distrib (c : Chain (Option A)) : Option (Chain A) :=
+@[expose] noncomputable def distrib (c : Chain (Option A)) : Option (Chain A) :=
   open Classical in
   if h : ∃n, (c n).isSome
   then .some (project c h)

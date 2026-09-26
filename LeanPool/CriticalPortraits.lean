@@ -32,7 +32,7 @@ Tags: combinatorics, cycle-lemma, critical-portraits, enumeration
 MSC: 05A15, 37F20
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Full all-`d` proof of `census = C(N,d−1)/d` (Mathlib)

@@ -22,7 +22,7 @@ denominator, every root of the lifted minimal polynomial is therefore a root
 of the certified divisible polynomial.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology

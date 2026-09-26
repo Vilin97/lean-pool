@@ -31,7 +31,7 @@ section
 
 /-! The Gaussian variance generator is one half of the genuine squared translation derivative. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -204,7 +204,7 @@ section
 /-! Differentiation of jointly continuous operator families without operator-norm differentiability.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -304,7 +304,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -458,7 +458,7 @@ section
 
 /-! Exact identification of the Gaussian cylinder generator with the actual strong-jet Laplacian. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -577,7 +577,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -634,7 +634,7 @@ theorem laplacianEvaluation_heat {q : ℕ} (hq : 2 ≤ q) (v : ℝ≥0) (u : Sob
 
 /-- Actual viscous heat on the complete Sobolev space, extended constantly to negative physical
 time. -/
-def heatFlow (q : ℕ) (ν t : ℝ) : SobolevSpace period q →L[ℝ] SobolevSpace period q :=
+@[expose] def heatFlow (q : ℕ) (ν t : ℝ) : SobolevSpace period q →L[ℝ] SobolevSpace period q :=
   heatOperator period q (2 * ν * t).toNNReal
 
 /-- The Sobolev flow has exactly the original genuine L² viscous heat value. -/

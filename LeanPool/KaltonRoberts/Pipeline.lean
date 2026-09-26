@@ -33,7 +33,7 @@ Interfaces connecting weighted collections through mixed intersections and
 expander recombination to the final distance bound.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 

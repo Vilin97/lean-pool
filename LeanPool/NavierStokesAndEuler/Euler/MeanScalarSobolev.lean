@@ -14,7 +14,7 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
 /-! The scalar R³ H² estimate used for harmonic interior control. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

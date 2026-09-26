@@ -13,7 +13,7 @@ import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -217,7 +217,7 @@ theorem inner_dualRealBasis_apply [InnerProductSpace ℝ E] [FiniteDimensional �
     Basis.coe_dualBasis]
 
 /-- A dual lattice used in the Odlyzko-bound argument. -/
-noncomputable def dualLattice [InnerProductSpace ℝ E]
+@[expose] noncomputable def dualLattice [InnerProductSpace ℝ E]
     (L : Submodule ℤ E) : Submodule ℤ E :=
   LinearMap.BilinForm.dualSubmodule (innerₗ E) L
 
@@ -286,7 +286,7 @@ namespace NumberField.Odlyzko
 variable {E : Type*} [NormedAddCommGroup E]
 
 /-- A lattice gaussian used in the Odlyzko-bound argument. -/
-noncomputable def latticeGaussian (a : ℝ) (x : E) : ℂ :=
+@[expose] noncomputable def latticeGaussian (a : ℝ) (x : E) : ℂ :=
   Complex.exp (-(a : ℂ) * (‖x‖ : ℂ) ^ 2)
 
 theorem norm_latticeGaussian (a : ℝ) (x : E) :
@@ -355,7 +355,7 @@ namespace NumberField.Odlyzko
 variable {E : Type*} [NormedAddCommGroup E]
 
 /-- A lattice theta used in the Odlyzko-bound argument. -/
-noncomputable def latticeTheta
+@[expose] noncomputable def latticeTheta
     (L : Submodule ℤ E) (a : ℝ) : ℂ :=
   ∑' x : L, latticeGaussian a (x : E)
 
@@ -381,7 +381,7 @@ theorem summable_latticeTheta [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   summable_latticeGaussian L ha
 
 /-- A dual lattice theta used in the Odlyzko-bound argument. -/
-noncomputable def dualLatticeTheta [InnerProductSpace ℝ E]
+@[expose] noncomputable def dualLatticeTheta [InnerProductSpace ℝ E]
     (L : Submodule ℤ E) (a : ℝ) : ℂ :=
   latticeTheta (dualLattice L) a
 

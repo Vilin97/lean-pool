@@ -23,7 +23,7 @@ its own function
 space* `[D_∞ → D_∞]`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.ContinuousLattice
 
@@ -41,12 +41,12 @@ structure CLat : Type (u + 1) where
 attribute [instance] CLat.str
 
 /-- The tower `D₀, [D₀→D₀], [[D₀→D₀]→[D₀→D₀]], …` as bundled complete lattices. -/
-noncomputable def towerCLat (D₀ : CLat.{u}) : ℕ → CLat.{u}
+@[expose] noncomputable def towerCLat (D₀ : CLat.{u}) : ℕ → CLat.{u}
   | 0 => D₀
   | (n + 1) => ⟨ScottMap (towerCLat D₀ n).carrier (towerCLat D₀ n).carrier⟩
 
 /-- The carrier `Dₙ` of the function-space tower. -/
-def towerType (D₀ : CLat.{u}) (n : ℕ) : Type u := (towerCLat D₀ n).carrier
+@[expose] def towerType (D₀ : CLat.{u}) (n : ℕ) : Type u := (towerCLat D₀ n).carrier
 
 noncomputable instance towerCompleteLattice (D₀ : CLat.{u}) (n : ℕ) :
     CompleteLattice (towerType D₀ n) := (towerCLat D₀ n).str
@@ -59,7 +59,7 @@ theorem towerType_succ (D₀ : CLat.{u}) (n : ℕ) :
 
 /-- View an element of `D_{n+1}` as the Scott map `[Dₙ → Dₙ]` it definitionally
 is. -/
-def towerToMap {D₀ : CLat.{u}} {n : ℕ} (f : towerType D₀ (n + 1)) :
+@[expose] def towerToMap {D₀ : CLat.{u}} {n : ℕ} (f : towerType D₀ (n + 1)) :
     ScottMap (towerType D₀ n) (towerType D₀ n) := f
 
 /-- Apply an element of `D_{n+1}` as a function `Dₙ → Dₙ` (definitional via
@@ -90,6 +90,7 @@ open Set
 variable {Y Z W : Type u} [CompleteLattice Y] [CompleteLattice Z] [CompleteLattice W]
 
 /-- Conjugation `f ↦ post ∘ f ∘ pre` as a bare function `[Y → Y] → [W → Z]`. -/
+@[expose]
 def conjMapFun (post : ScottMap Y Z) (pre : ScottMap W Y) (f : ScottMap Y Y) : ScottMap W Z :=
   post.comp (f.comp pre)
 
@@ -123,7 +124,7 @@ theorem conjMap_preservesDirectedSup_apply (post : ScottMap Y Z) (pre : ScottMap
   rfl
 
 /-- Conjugation `f ↦ post ∘ f ∘ pre` as a Scott map `[Y → Y] → [W → Z]`. -/
-noncomputable def conjMap (post : ScottMap Y Z) (pre : ScottMap W Y) :
+@[expose] noncomputable def conjMap (post : ScottMap Y Z) (pre : ScottMap W Y) :
     ScottMap (ScottMap Y Y) (ScottMap W Z) :=
   ⟨conjMapFun post pre, continuous_of_preservesDirectedSup (conjMap_preservesDirectedSup post pre)⟩
 
@@ -138,7 +139,7 @@ end Conj
 continuous-lattice projection of `D'`, then `[D → D]` is a projection of `[D' →
 D']` via
 `i_{[·]}(f) = i ∘ f ∘ j` and `j_{[·]}(g) = j ∘ g ∘ i`. -/
-noncomputable def IsContinuousLatticeProjection.functionSpace
+@[expose] noncomputable def IsContinuousLatticeProjection.functionSpace
     {A B : Type u} [CompleteLattice A] [CompleteLattice B]
     (P : IsContinuousLatticeProjection A B) :
     IsContinuousLatticeProjection (ScottMap A A) (ScottMap B B) where
@@ -155,7 +156,7 @@ noncomputable def IsContinuousLatticeProjection.functionSpace
 /-- The projection tower `j_{n+1} = [j_n → j_n]`, anchored at a chosen base
 projection
 `j₀ : [D₀ → D₀] → D₀`. -/
-noncomputable def towerProj (D₀ : CLat.{u})
+@[expose] noncomputable def towerProj (D₀ : CLat.{u})
     (j₀ : IsContinuousLatticeProjection D₀.carrier (ScottMap D₀.carrier D₀.carrier)) :
     ∀ n, IsContinuousLatticeProjection (towerType D₀ n) (towerType D₀ (n + 1))
   | 0 => j₀
@@ -226,7 +227,7 @@ where `x_{n+1}` is
 the `(n+1)`-st component of `x ∈ D_∞`. As a map `D_∞ → [D_∞ → D_∞]` it is the
 composite of the
 component projection `j_{∞(n+1)}` with conjugation by `(i_{n∞}, j_{∞n})`. -/
-noncomputable def iInfTerm (n : ℕ) : ScottMap (DInf D₀ j₀) (DInfFn D₀ j₀) :=
+@[expose] noncomputable def iInfTerm (n : ℕ) : ScottMap (DInf D₀ j₀) (DInfFn D₀ j₀) :=
   (conjMap (embInf (towerType D₀) (towerProj D₀ j₀) n)
            (projInf (towerType D₀) (towerProj D₀ j₀) n)).comp
     (projInf (towerType D₀) (towerProj D₀ j₀) (n + 1))
@@ -256,7 +257,7 @@ i_{n∞})`. As a map
 `[D_∞ → D_∞] → D_∞` it is conjugation by `(j_{∞n}, i_{n∞})` (landing in `D_{n+1}`)
 followed by the
 embedding `i_{(n+1)∞}`. -/
-noncomputable def jInfTerm (n : ℕ) : ScottMap (DInfFn D₀ j₀) (DInf D₀ j₀) :=
+@[expose] noncomputable def jInfTerm (n : ℕ) : ScottMap (DInfFn D₀ j₀) (DInf D₀ j₀) :=
   (embInf (towerType D₀) (towerProj D₀ j₀) (n + 1)).comp
     (conjMap (projInf (towerType D₀) (towerProj D₀ j₀) n)
              (embInf (towerType D₀) (towerProj D₀ j₀) n))

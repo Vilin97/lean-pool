@@ -13,12 +13,12 @@ public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 This file restores upstream helper lemmas for block diagonal characteristic polynomials.
 -/
 
-@[expose] public section
+public section
 
 variable {F : Type*} [Field F]
 
 /-- A subtype of a product that depends only on the second component. -/
-@[simps]
+@[expose, simps]
 def Equiv.prodSubtypeSndEquivProdSubtype {α β} {p : β → Prop} :
     {s : α × β // p s.2} ≃ α × {b // p b} where
   toFun x := ⟨x.1.1, x.1.2, x.2⟩
@@ -27,7 +27,7 @@ def Equiv.prodSubtypeSndEquivProdSubtype {α β} {p : β → Prop} :
   right_inv _ := rfl
 
 /-- The fiber of a product projection over a fixed second coordinate. -/
-@[simps!]
+@[expose, simps!]
 def thing' {α β : Type*} (b : β) : {i : α × β // i.2 = b} ≃ α :=
   Equiv.prodSubtypeSndEquivProdSubtype.trans (Equiv.prodUnique α {i : β // i = b})
 

@@ -17,7 +17,7 @@ openness of a quantitative control cell, nor a zero germ at its flat boundary,
 is required.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.ClosedNativeWaveIdentities

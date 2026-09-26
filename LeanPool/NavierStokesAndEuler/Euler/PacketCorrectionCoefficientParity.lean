@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
 /-! The source deformation symmetries imply the literal parity of the
 correction coefficients, including the odd differentiated quadratic term. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.VolterraUniqueness
 
 /-! Positive-time existence for the actual projected quadratic cylinder correction equation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,7 +38,7 @@ synthesis. -/
 local instance sobolevRealSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
 /-- The genuine heat Duhamel expression for continuous projected quadratic coefficients. -/
-def quadraticDuhamel {q : ℕ} (ν : ℝ) (hν : 0 < ν) {S T : ℝ} (hT : 0 ≤ T) (hTS : T ≤ S)
+@[expose] def quadraticDuhamel {q : ℕ} (ν : ℝ) (hν : 0 < ν) {S T : ℝ} (hT : 0 ≤ T) (hTS : T ≤ S)
     (C : Coefficients (Icc (0 : ℝ) S) (SobolevSpace period (q + 1)) (SobolevSpace period q))
     (u₀ : SobolevSpace period (q + 1)) (u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
     (t : Icc (0 : ℝ) T) : SobolevSpace period (q+1) :=

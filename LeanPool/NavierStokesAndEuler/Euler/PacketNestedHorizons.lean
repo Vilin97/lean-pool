@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
 /-! The literal activation times and nested horizons in (38). The same
 positive initial time interval is available to every finite packet state. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -25,7 +25,7 @@ open Finset Real EulerScale EulerPacketScaleGeometry EulerPacketSourceScales
    EulerPacketBaseGuardScales
 
 /-- Step length, given by `scaleSequence J X (n+1)/sqrt (β n*a n*previousShear J X n)`. -/
-def stepLength (J : ℕ) (X : ℝ) (a β : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] def stepLength (J : ℕ) (X : ℝ) (a β : ℕ → ℝ) (n : ℕ) : ℝ :=
   scaleSequence J X (n+1)/sqrt (β n*a n*previousShear J X n)
 
 /-- Activation time, given by `∑ i ∈ range n, stepLength J X a β i`. -/

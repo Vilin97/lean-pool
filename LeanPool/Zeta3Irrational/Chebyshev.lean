@@ -20,7 +20,7 @@ upstream PrimeNumberTheoremAnd development. It gives an eventual bound
 `ψ x ≤ 1.13 x`, enough to control the lcm denominator in Beukers' proof.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Zeta3Irrational
 namespace ChebyshevAux

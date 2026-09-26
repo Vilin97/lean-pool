@@ -18,7 +18,7 @@ base action, and tangency germ therefore apply to either signed column before
 the separate scalar multiplication and compact cutoff.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -51,13 +51,13 @@ noncomputable def unitPulse (j : Fin 2) (L : Label B N0) (n : ℕ)
 
 /-- Unit motion, given by `(normalScale L n * clockScale L n) • (phases B N0 j).phase.velocity L
 (phasePoint L (copyPoint j L n k x))`. -/
-noncomputable def unitMotion (j : Fin 2) (L : Label B N0) (n : ℕ)
+@[expose] noncomputable def unitMotion (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : Space :=
   (normalScale L n * clockScale L n) •
     (phases B N0 j).phase.velocity L (phasePoint L (copyPoint j L n k x))
 
 /-- Unit action, constructed using `clockScale`. -/
-noncomputable def unitAction (j : Fin 2) (L : Label B N0) (n : ℕ)
+@[expose] noncomputable def unitAction (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : Space →L[ℝ] Space :=
   clockScale L n • PrimaryCopyBridge.baseOperator
     ((phases B N0 j).phase.F L (copyPoint j L n k x).1)

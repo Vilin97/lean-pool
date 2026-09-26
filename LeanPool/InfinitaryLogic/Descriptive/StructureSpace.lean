@@ -32,7 +32,7 @@ while `RelQuery L` and `StructureSpace L` specialize to carrier ℕ.
   preserves relation satisfaction.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -46,10 +46,10 @@ variable (L : Language.{u, v})
 
 /-- A carrier-parametric relation query: a choice of relation symbol and a tuple
 of elements from the carrier type α. -/
-def RelQueryOn (α : Type*) := Σ (R : Σ l, L.Relations l), (Fin R.1 → α)
+@[expose] def RelQueryOn (α : Type*) := Σ (R : Σ l, L.Relations l), (Fin R.1 → α)
 
 /-- A relation query for carrier ℕ. -/
-def RelQuery := RelQueryOn L ℕ
+@[expose] def RelQuery := RelQueryOn L ℕ
 
 variable {L}
 
@@ -68,7 +68,7 @@ abbrev StructureSpaceOn (L : Language.{u, v}) (α : Type*) := RelQueryOn L α �
 
 /-- The coding space for countable L-structures on ℕ: for each relation query,
 does the relation hold on that tuple? -/
-def StructureSpace (L : Language.{u, v}) := StructureSpaceOn L ℕ
+@[expose] def StructureSpace (L : Language.{u, v}) := StructureSpaceOn L ℕ
 
 namespace StructureSpaceOn
 
@@ -76,7 +76,7 @@ variable {α : Type*}
 
 /-- Decode a code into an L-structure on carrier α.
 Relations are determined by the code; functions are eliminated by `IsRelational`. -/
-@[reducible] noncomputable def toStructure [L.IsRelational]
+@[expose, reducible] noncomputable def toStructure [L.IsRelational]
     (c : StructureSpaceOn L α) : L.Structure α where
   funMap := fun f => isEmptyElim f
   RelMap := fun {_} R v => c ⟨⟨_, R⟩, v⟩ = true
@@ -90,7 +90,7 @@ theorem relMap_toStructure [L.IsRelational] (c : StructureSpaceOn L α)
 
 /-- Encode an L-structure on carrier α into a code.
 Takes an explicit structure instance rather than using the typeclass. -/
-noncomputable def ofStructure [_isRelational : L.IsRelational]
+@[expose] noncomputable def ofStructure [_isRelational : L.IsRelational]
     (inst : L.Structure α) : StructureSpaceOn L α :=
   fun ⟨⟨_, R⟩, v⟩ => @decide _ (Classical.dec (@Structure.RelMap _ _ inst _ R v))
 
@@ -107,7 +107,7 @@ end StructureSpaceOn
 namespace StructureSpace
 
 /-- Decode a code into an L-structure on ℕ. -/
-@[reducible] noncomputable def toStructure [L.IsRelational]
+@[expose, reducible] noncomputable def toStructure [L.IsRelational]
     (c : StructureSpace L) : L.Structure ℕ :=
   StructureSpaceOn.toStructure c
 
@@ -119,7 +119,7 @@ theorem relMap_toStructure [L.IsRelational] (c : StructureSpace L)
   Iff.rfl
 
 /-- Encode an L-structure on ℕ into a code. -/
-noncomputable def ofStructure [L.IsRelational]
+@[expose] noncomputable def ofStructure [L.IsRelational]
     (inst : L.Structure ℕ) : StructureSpace L :=
   StructureSpaceOn.ofStructure inst
 

@@ -41,7 +41,7 @@ that uniformizer, and that derivative has valuation at least `n - 1` term by ter
 * [Serre1979] J-P. Serre, *Local fields*, Graduate Texts in Mathematics **67**, Springer, 1979.
 -/
 
-@[expose] public section
+public section
 
 open ValuativeRel IntermediateField
 

@@ -14,7 +14,7 @@ import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Directed
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Subfield.Defs`.
 -/
 
-@[expose] public section
+public section
 
 open Function TensorProduct MulOpposite
 
@@ -76,7 +76,7 @@ noncomputable instance _root_.SubField.carrier.instSemifield [Nontrivial A] : Se
   nnqsmul := _
 
 /-- The directed supremum of a set of subfields. -/
-@[simps toSubalgebra]
+@[expose, simps toSubalgebra]
 def dSup (s : Set (SubField R A)) (hs : s.Nonempty) (hsdir : DirectedOn (· ≤ ·) s) :
     SubField R A where
   toSubalgebra := ⨆ L ∈ s, L.1

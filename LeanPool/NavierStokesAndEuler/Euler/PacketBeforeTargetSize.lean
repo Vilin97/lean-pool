@@ -22,7 +22,7 @@ section
 
 /-! Uniform comparison between actual and ideal physical primary sizes. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -139,7 +139,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -23,7 +23,7 @@ into the sublanguage, and `universalSigned_mapLanguage` carries it back out.  Th
 proving those as *exact* equivalences rather than one-way implications.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

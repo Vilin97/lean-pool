@@ -23,7 +23,7 @@ import Mathlib.Tactic.Positivity.Finset
 
 /-! # SafeSquare -/
 
-@[expose] public section
+public section
 
 
 open Real

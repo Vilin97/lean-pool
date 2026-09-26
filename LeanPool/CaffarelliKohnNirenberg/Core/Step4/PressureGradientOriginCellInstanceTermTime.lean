@@ -18,7 +18,7 @@ The sum of source norms and the real tensor energy in
 `eq:pressure-gradient-morrey` are integrable on arbitrary interior time boxes.
 -/
 
-@[expose] public section
+public section
 
 section
 
@@ -235,6 +235,7 @@ noncomputable section
 namespace CKN.Core.Step4
 
 /-- The sum of the three actual global centered-source norms. -/
+@[expose]
 def originCenteredSourceNorm (x : Vec3) {ρ : ℝ} (hρ : 0 < ρ)
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3) (s : ℝ) : ℝ≥0∞ :=
   ∑ i : Fin 3, eLpNorm (fun y => pressureDivergenceCutoffSourceCentredTensor

@@ -36,7 +36,7 @@ Uses α = 6 from the spatial dimension d = 3 (mass gap).
 - `OS4_PolynomialClustering_implies_OS4_Ergodicity`
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real
 open TopologicalSpace
@@ -76,7 +76,7 @@ def os4PrimeErgodicityGenerating (m : ℝ) [Fact (0 < m)] : Prop :=
 /-- OS4'' (Polynomial Clustering): This is exactly os4PolynomialClustering
     specialized to the GFF with decay exponent α = 6.
 -/
-def os4DoublePrimeClustering (m : ℝ) [Fact (0 < m)] : Prop :=
+@[expose] def os4DoublePrimeClustering (m : ℝ) [Fact (0 < m)] : Prop :=
   os4PolynomialClustering (gaussianFreeFieldFree m) 6 (by norm_num)
 
 /-! ## GFF Integrability Lemmas -/
@@ -257,6 +257,8 @@ lemma gff_exp_L2_norm_constant (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) (s
     f)‖^2 ∂μ =
       ∫ ω, ‖Complex.exp (distributionPairingℂReal ω (timeTranslationSchwartzℂ (-s) f))‖^2 ∂μ := by
     congr 1
+    funext ω
+    rw [timeTranslationDistribution_pairingℂ]
   rw [h_lhs_eq]
   -- Convert: ∫ ‖exp(⟨ω, g⟩)‖² = (∫ exp * conj(exp)).re
   have h_int_re_eq : ∀ g : TestFunctionℂ,
@@ -496,8 +498,11 @@ lemma gff_covariance_timeTranslation_continuous (m : ℝ) [Fact (0 < m)]
   · intro s; exact Filter.Eventually.of_forall (h_bdd' s)
   · exact h_bound_int
   · filter_upwards with ⟨x, y⟩
-    exact ((f.continuous.comp (TimeTranslation.continuous_timeShift_param x)).mul
-      continuous_const).mul continuous_const
+    have h_cont : Continuous (fun s : ℝ =>
+        f (timeShift s x) * (freeCovariance m x y : ℂ) * g y) :=
+      ((f.continuous.comp (TimeTranslation.continuous_timeShift_param x)).mul
+        continuous_const).mul continuous_const
+    simpa only [timeTranslationSchwartzℂ_apply] using h_cont
 
 /-- The GFF covariance function (s, u) ↦ E[A_s · conj(A_u)] - E[A]·conj(E[A]) is continuous.
 

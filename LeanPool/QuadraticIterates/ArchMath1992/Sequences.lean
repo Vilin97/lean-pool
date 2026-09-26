@@ -38,7 +38,7 @@ Part of the formalization of M. Stoll, *Galois groups over ℚ of some iterated 
 Arch. Math. **59** (1992), 239-244; see `QuadraticIterates.ArchMath1992`.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped ArithmeticFunction.Moebius
@@ -51,7 +51,7 @@ namespace QuadraticIterates
 /-- The iteration sequence `γ_n` of `g ∈ R[X]` with sign choice `ε`: `γ_1 = ε · g(0)`, `γ_{n+1} =
 g(γ_n)`; the value at index `0` is `0` (chosen so that over `ℤ`, `γ` is a strong divisibility
 sequence). -/
-def gammaSeq {R : Type*} [CommSemiring R] (g : R[X]) (ε : R) : ℕ → R
+@[expose] def gammaSeq {R : Type*} [CommSemiring R] (g : R[X]) (ε : R) : ℕ → R
   | 0 => 0
   | 1 => ε * g.eval 0
   | n + 2 => g.eval (gammaSeq g ε (n + 1))
@@ -59,6 +59,7 @@ def gammaSeq {R : Type*} [CommSemiring R] (g : R[X]) (ε : R) : ℕ → R
 /-- The Möbius factors `β_n = ∏_{d ∣ n} γ_d^{μ(n/d)}` of the `γ`-sequence, as elements of the
 coefficient ring: the unique preimage of the fraction-field Möbius product under
 `R → FractionRing R` (junk when that product is not integral). -/
+@[expose]
 noncomputable def betaSeq {R : Type*} [CommRing R] [IsDomain R] (g : R[X]) (ε : R) (n : ℕ) : R :=
   moebiusFactorR (gammaSeq g ε) n
 
@@ -66,7 +67,8 @@ lemma betaSeq_eq_moebiusFactorR {R : Type*} [CommRing R] [IsDomain R] (g : R[X])
     betaSeq g ε n = moebiusFactorR (gammaSeq g ε) n := rfl
 
 /-- `g` is an even polynomial (`g ∈ R[X²]`): `g = Polynomial.expand R 2 h` for some `h`. -/
-def EvenPoly {R : Type*} [CommSemiring R] (g : R[X]) : Prop := ∃ h : R[X], g = expand R 2 h
+@[expose] def EvenPoly {R : Type*} [CommSemiring R] (g : R[X]) : Prop :=
+  ∃ h : R[X], g = expand R 2 h
 
 /-- An even polynomial takes equal values at points with equal squares. -/
 theorem EvenPoly.eval_congr {R : Type*} [CommSemiring R] {g : R[X]} (hg : EvenPoly g)
@@ -450,7 +452,7 @@ variable (g : ℤ[X])
 /-- The Möbius factor `∏_{d ∣ n} c_d^{μ(n/d)}` of an integer sequence `c`, as a product over the
 divisor antidiagonal of `n`: pairs `(e, d)` with `e * d = n` contribute `c_d ^ μ(e)`. Rational, as
 `μ` can be negative; it is an integer when `c` is a strong divisibility sequence. -/
-noncomputable def moebiusFactor (c : ℕ → ℤ) (n : ℕ) : ℚ :=
+@[expose] noncomputable def moebiusFactor (c : ℕ → ℤ) (n : ℕ) : ℚ :=
   ∏ x ∈ n.divisorsAntidiagonal, (c x.2 : ℚ) ^ (μ x.1)
 
 lemma moebiusFactor_eq_prod (c : ℕ → ℤ) (n : ℕ) :

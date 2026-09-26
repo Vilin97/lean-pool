@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.GevreyOrderZero
 
 /-! The actual asymmetric Sobolev transport map needed for the parabolic source upgrade. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

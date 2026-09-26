@@ -27,7 +27,7 @@ Admissibility at all later grades follows from the genuine nonlinear paths,
 the source mean inverse and the source transverse inverse.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -71,7 +71,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -86,7 +86,7 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
 
 /-- Source profiles, given by `profiles (sourceOperators P M D I) (homogeneousPrimary D Iprimary
 (sourceOperators P M D I))`. -/
-def sourceProfiles : ℕ → Profile :=
+@[expose] def sourceProfiles : ℕ → Profile :=
   profiles (sourceOperators P M D I) (homogeneousPrimary D Iprimary (sourceOperators P M D I))
 
 /-- Source profile witness, given by `constructedProfileWitness M D hT I Iprimary

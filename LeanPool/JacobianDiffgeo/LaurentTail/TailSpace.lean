@@ -32,7 +32,7 @@ own `mulInto` (built directly on `T D`/`TailAt p D` from this file) supersedes `
 is a genuine scope relief, not a shortfall.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace
@@ -54,7 +54,7 @@ noncomputable abbrev TailAt (p : X) (D : RS.Divisor X) : Type _ :=
   RS.MeroGermOn X (chartAt ℂ p).source ⧸ RS.Cech.ordGe p (-(D p))
 
 /-- The quotient map onto `TailAt p D`. -/
-noncomputable def TailAt.mk (p : X) (D : RS.Divisor X) :
+@[expose] noncomputable def TailAt.mk (p : X) (D : RS.Divisor X) :
     RS.MeroGermOn X (chartAt ℂ p).source →ₗ[ℂ] TailAt p D := Submodule.mkQ _
 
 omit [T2Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
@@ -81,7 +81,7 @@ noncomputable def windowAtToTailAt (p : X) (D : RS.Divisor X) (d' : ℤ) :
 
 omit [T2Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem windowAtToTailAt_mk (p : X) (D : RS.Divisor X) (d' : ℤ) (ψ : RS.Cech.ordGe p (-d')) :
-    windowAtToTailAt p D d' (RS.Cech.WindowAt.mk p (D p) d' ψ) = TailAt.mk p D ψ := rfl
+    windowAtToTailAt p D d' (RS.Cech.WindowAt.mk p (D p) d' ψ) = TailAt.mk p D ψ := by rfl
 
 omit [T2Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
 /-- Every tail class is *represented* by some finite window (the union-of-`ordGe` fact): every

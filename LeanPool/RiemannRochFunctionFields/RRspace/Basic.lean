@@ -16,7 +16,7 @@ This file defines the Riemann–Roch space of a divisor on a function field and 
 `ℓ(D)`.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 
@@ -61,7 +61,7 @@ theorem nonempty_placeA : Nonempty (PlaceA k K) := by
 /-- A function belongs to the Riemann–Roch space of `D` when its valuation at every place `v`
 is at most `WithZero.exp (D v)`, i.e. `ord_v f ≥ -D v` in additive notation. The zero function
 belongs trivially since its valuation is `0`. -/
-def memRRspace (D : DivisorA k K) (f : K) : Prop :=
+@[expose] def memRRspace (D : DivisorA k K) (f : K) : Prop :=
   ∀ v, placeValuation k K v f ≤ WithZero.exp (D v)
 
 namespace memRRspace
@@ -120,14 +120,14 @@ theorem pow_mem {D : DivisorA k K} {f : K} (hf : memRRspace k K D f) :
 end memRRspace
 
 /-- The Riemann–Roch space `L(D)`. -/
-def RRspace (D : DivisorA k K) : Submodule k K where
+@[expose] def RRspace (D : DivisorA k K) : Submodule k K where
   carrier := {f | memRRspace k K D f}
   zero_mem' := memRRspace.zero_mem (k := k) (K := K) D
   add_mem' hf hg := memRRspace.add_mem (k := k) (K := K) hf hg
   smul_mem' c _ hf := memRRspace.smul_mem (k := k) (K := K) c hf
 
 /-- The dimension `ℓ(D)`. -/
-noncomputable def ell (D : DivisorA k K) : ℕ :=
+@[expose] noncomputable def ell (D : DivisorA k K) : ℕ :=
   Module.finrank k (RRspace k K D)
 
 @[simp]
@@ -206,6 +206,7 @@ theorem ell_add_principal (D : DivisorA k K) (x : Kˣ) :
   exact (RRspaceAddPrincipalEquiv k K D x).finrank_eq
 
 /-- The rank of the quotient `L(D') / L(D)` (with intersection semantics when unordered). -/
+@[expose]
 noncomputable def finrankRRspaceDiff (D D' : DivisorA k K) : ℕ := by
   letI : AddCommGroup (RRspace k K D') := Submodule.addCommGroup _
   letI : Module k (RRspace k K D') := Submodule.module _

@@ -18,7 +18,7 @@ contravariant pullback homomorphisms on holomorphic germs, the inclusion of
 lower-dimensional base germs, and the resulting algebra structure.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology
@@ -31,7 +31,7 @@ noncomputable section
 /-! ## The standard successor-coordinate splitting -/
 
 /-- Split the last coordinate of `ℂⁿ⁺¹`, as a complex-linear equivalence. -/
-def wptAmbientLinearEquiv (n : ℕ) :
+@[expose] def wptAmbientLinearEquiv (n : ℕ) :
     ComplexEuclidean (n + 1) ≃ₗ[ℂ] ClassicalComplexWPT.Ambient n where
   toFun x := (fun i ↦ x i.castSucc, x (Fin.last n))
   invFun x := Fin.lastCases x.2 x.1
@@ -49,7 +49,7 @@ def wptAmbientLinearEquiv (n : ℕ) :
 
 The codomain is definitionally WPT's `(Fin n → ℂ) × ℂ` ambient space.
 -/
-def wptAmbientEquiv (n : ℕ) :
+@[expose] def wptAmbientEquiv (n : ℕ) :
     ComplexEuclidean (n + 1) ≃L[ℂ] ClassicalComplexWPT.Ambient n :=
   (wptAmbientLinearEquiv n).toContinuousLinearEquiv
 
@@ -120,7 +120,7 @@ theorem eventuallyEq_comp_wptAmbientEquiv_iff (n : ℕ)
 /-! ## Pullback of function germs and holomorphic germs -/
 
 /-- Precomposition of function germs by a continuous linear map fixing the origin. -/
-def functionGermPullbackHom {n m : ℕ}
+@[expose] def functionGermPullbackHom {n m : ℕ}
     (L : ComplexEuclidean n →L[ℂ] ComplexEuclidean m) :
     FunctionGerm m →+* FunctionGerm n where
   toFun φ := φ.compTendsto L (by
@@ -231,7 +231,7 @@ theorem functionGermPullbackHom_rightInverse {n m : ℕ}
   rfl
 
 /-- Pullback of holomorphic germs by a continuous complex-linear map. -/
-def holomorphicGermPullbackHom {n m : ℕ}
+@[expose] def holomorphicGermPullbackHom {n m : ℕ}
     (L : ComplexEuclidean n →L[ℂ] ComplexEuclidean m) :
     HolomorphicGerm m →+* HolomorphicGerm n where
   toFun φ :=
@@ -302,7 +302,7 @@ theorem holomorphicGermPullbackHom_comp {n m k : ℕ}
 The direction is contravariant: an equivalence `L : ℂⁿ ≃L[ℂ] ℂᵐ` induces an
 equivalence from germs on `ℂᵐ` to germs on `ℂⁿ`.
 -/
-def coordinatePullback {n m : ℕ}
+@[expose] def coordinatePullback {n m : ℕ}
     (L : ComplexEuclidean n ≃L[ℂ] ComplexEuclidean m) :
     HolomorphicGerm m ≃+* HolomorphicGerm n where
   toFun := holomorphicGermPullbackHom
@@ -370,7 +370,7 @@ theorem coordinatePullback_symm {n m : ℕ}
 /-! ## Base inclusion and the last coordinate -/
 
 /-- Projection from `ℂⁿ⁺¹` to its first `n` coordinates. -/
-def baseProjectionCLM (n : ℕ) :
+@[expose] def baseProjectionCLM (n : ℕ) :
     ComplexEuclidean (n + 1) →L[ℂ] ComplexEuclidean n :=
   (ContinuousLinearMap.fst ℂ (ComplexEuclidean n) ℂ).comp
     (wptAmbientEquiv n : ComplexEuclidean (n + 1) →L[ℂ]
@@ -398,7 +398,7 @@ theorem baseSectionCLM_last (n : ℕ) (z : ComplexEuclidean n) :
   simp [baseSectionCLM]
 
 /-- Extraction of the last coordinate of `ℂⁿ⁺¹`. -/
-def lastCoordinateCLM (n : ℕ) : ComplexEuclidean (n + 1) →L[ℂ] ℂ :=
+@[expose] def lastCoordinateCLM (n : ℕ) : ComplexEuclidean (n + 1) →L[ℂ] ℂ :=
   (ContinuousLinearMap.snd ℂ (ComplexEuclidean n) ℂ).comp
     (wptAmbientEquiv n : ComplexEuclidean (n + 1) →L[ℂ]
       ClassicalComplexWPT.Ambient n)
@@ -418,7 +418,7 @@ theorem baseProjectionCLM_comp_baseSectionCLM (n : ℕ) :
   simp
 
 /-- Include a base germ as a germ independent of the last coordinate. -/
-def lowerDimensionalInclusion (n : ℕ) :
+@[expose] def lowerDimensionalInclusion (n : ℕ) :
     HolomorphicGerm n →+* HolomorphicGerm (n + 1) :=
   holomorphicGermPullbackHom (baseProjectionCLM n)
 
@@ -483,7 +483,7 @@ theorem lowerDimensionalInclusion_injective (n : ℕ) :
   rfl
 
 /-- The germ of the last coordinate `w` on `ℂⁿ⁺¹`. -/
-def lastCoordinateGerm (n : ℕ) : HolomorphicGerm (n + 1) :=
+@[expose] def lastCoordinateGerm (n : ℕ) : HolomorphicGerm (n + 1) :=
   HolomorphicGerm.ofFunction (lastCoordinateCLM n)
     ((lastCoordinateCLM n).analyticAt 0)
 

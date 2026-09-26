@@ -20,7 +20,7 @@ mean cross term.  The unchanged wave covariance and virtual flux cancel
 only after an exact residual-difference identity.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -45,7 +45,7 @@ structure Triple (D : Type) where
   axial : Field D
 
 /-- Updated, given by `⟨m.radial + h.radial, m.angular + h.angular, m.axial + h.axial⟩`. -/
-noncomputable def updated (m h : Triple D) : Triple D :=
+@[expose] noncomputable def updated (m h : Triple D) : Triple D :=
   ⟨m.radial + h.radial, m.angular + h.angular, m.axial + h.axial⟩
 
 /-- Operators data, collecting `epsilon`, `radialFrequency`, `fastCoefficient`, `radius`,
@@ -75,34 +75,34 @@ structure Operators (D : Type) where
 namespace Operators
 
 /-- Inv radius, defined pointwise by `(o.radius x)⁻¹`. -/
-noncomputable def invRadius (o : Operators D) : Field D := fun _ x => (o.radius x)⁻¹
+@[expose] noncomputable def invRadius (o : Operators D) : Field D := fun _ x => (o.radius x)⁻¹
 
 /-- Dr, given by `graphDerivative o.radialFrequency o.radialProfile o.eR o.vR f`. -/
-noncomputable def dr (o : Operators D) (f : Field D) : Field D :=
+@[expose] noncomputable def dr (o : Operators D) (f : Field D) : Field D :=
   graphDerivative o.radialFrequency o.radialProfile o.eR o.vR f
 
 /-- Dz, defined pointwise by `o.epsilon n * fderiv ℝ (f n) x o.eZ`. -/
-noncomputable def dz (o : Operators D) (f : Field D) : Field D :=
+@[expose] noncomputable def dz (o : Operators D) (f : Field D) : Field D :=
   fun n x => o.epsilon n * fderiv ℝ (f n) x o.eZ
 
 /-- Slow time, defined pointwise by `-(o.epsilon n * fderiv ℝ (f n) x o.eT)`. -/
-noncomputable def slowTime (o : Operators D) (f : Field D) : Field D :=
+@[expose] noncomputable def slowTime (o : Operators D) (f : Field D) : Field D :=
   fun n x => -(o.epsilon n * fderiv ℝ (f n) x o.eT)
 
 /-- Fast time, defined pointwise by `o.fastCoefficient n * fderiv ℝ (f n) x o.vT`. -/
-noncomputable def fastTime (o : Operators D) (f : Field D) : Field D :=
+@[expose] noncomputable def fastTime (o : Operators D) (f : Field D) : Field D :=
   fun n x => o.fastCoefficient n * fderiv ℝ (f n) x o.vT
 
 /-- Time, given by `o.slowTime f + o.fastTime f`. -/
-noncomputable def time (o : Operators D) (f : Field D) : Field D :=
+@[expose] noncomputable def time (o : Operators D) (f : Field D) : Field D :=
   o.slowTime f + o.fastTime f
 
 /-- Radial div, given by `o.dr f + c • (o.invRadius * f)`. -/
-noncomputable def radialDiv (o : Operators D) (c : ℝ) (f : Field D) : Field D :=
+@[expose] noncomputable def radialDiv (o : Operators D) (c : ℝ) (f : Field D) : Field D :=
   o.dr f + c • (o.invRadius * f)
 
 /-- The connection parameter is one for radial/angular velocity, zero axially. -/
-noncomputable def viscosity (o : Operators D) (c : ℝ) (f : Field D) : Field D :=
+@[expose] noncomputable def viscosity (o : Operators D) (c : ℝ) (f : Field D) : Field D :=
   fun n x => o.epsilon n *
     (o.dr (o.dr f) n x + o.invRadius n x * o.dr f n x +
       o.dz (o.dz f) n x - c * (o.invRadius n x * (o.invRadius n x * f n x)))
@@ -348,43 +348,43 @@ theorem viscosity (ho : OperatorBounds s o κ) {f : Field D} (hf : MeanClass s �
 end OperatorBounds
 
 /-- Theta radial, given by `b.radial * m.angular + m.radial * b.angular + m.radial * m.angular`. -/
-noncomputable def thetaRadial (b m : Triple D) : Field D :=
+@[expose] noncomputable def thetaRadial (b m : Triple D) : Field D :=
   b.radial * m.angular + m.radial * b.angular + m.radial * m.angular
 
 /-- Theta axial, given by `b.axial * m.angular + b.angular * m.axial + m.axial * m.angular`. -/
-noncomputable def thetaAxial (b m : Triple D) : Field D :=
+@[expose] noncomputable def thetaAxial (b m : Triple D) : Field D :=
   b.axial * m.angular + b.angular * m.axial + m.axial * m.angular
 
 /-- Axial radial, given by `b.radial * m.axial + m.radial * b.axial + m.radial * m.axial`. -/
-noncomputable def axialRadial (b m : Triple D) : Field D :=
+@[expose] noncomputable def axialRadial (b m : Triple D) : Field D :=
   b.radial * m.axial + m.radial * b.axial + m.radial * m.axial
 
 /-- Axial axial, given by `(2 : ℝ) • (b.axial * m.axial) + m.axial * m.axial`. -/
-noncomputable def axialAxial (b m : Triple D) : Field D :=
+@[expose] noncomputable def axialAxial (b m : Triple D) : Field D :=
   (2 : ℝ) • (b.axial * m.axial) + m.axial * m.axial
 
 /-- Radial radial, given by `(2 : ℝ) • (b.radial * m.radial) + m.radial * m.radial`. -/
-noncomputable def radialRadial (b m : Triple D) : Field D :=
+@[expose] noncomputable def radialRadial (b m : Triple D) : Field D :=
   (2 : ℝ) • (b.radial * m.radial) + m.radial * m.radial
 
 /-- Radial angular, given by `(2 : ℝ) • (b.angular * m.angular) + m.angular * m.angular`. -/
-noncomputable def radialAngular (b m : Triple D) : Field D :=
+@[expose] noncomputable def radialAngular (b m : Triple D) : Field D :=
   (2 : ℝ) • (b.angular * m.angular) + m.angular * m.angular
 
 /-- Theta residual, constructed using `o.time`. -/
-noncomputable def thetaResidual (o : Operators D) (b m : Triple D)
+@[expose] noncomputable def thetaResidual (o : Operators D) (b m : Triple D)
     (W : Fin 3 → Fin 3 → Field D) (T : Field D) : Field D :=
   o.time m.angular + o.radialDiv 2 (thetaRadial b m + W 0 1) +
     o.dz (thetaAxial b m + W 2 1) - o.viscosity 1 m.angular - o.radialDiv 2 T
 
 /-- Axial residual, constructed using `o.time`. -/
-noncomputable def axialResidual (o : Operators D) (b m : Triple D)
+@[expose] noncomputable def axialResidual (o : Operators D) (b m : Triple D)
     (W : Fin 3 → Fin 3 → Field D) (p T : Field D) : Field D :=
   o.time m.axial + o.radialDiv 1 (axialRadial b m + W 0 2) +
     o.dz (axialAxial b m + W 2 2 + p) - o.viscosity 0 m.axial - o.radialDiv 1 T
 
 /-- Gr as an element of `Field D`. -/
-noncomputable def gr (o : Operators D) (b m : Triple D)
+@[expose] noncomputable def gr (o : Operators D) (b m : Triple D)
     (W : Fin 3 → Fin 3 → Field D) : Field D :=
   -(o.time m.radial + o.radialDiv 1 (radialRadial b m + W 0 0) +
     o.dz (axialRadial b m + W 2 0) -
@@ -424,7 +424,7 @@ noncomputable def radialAngularRemainder (m h : Triple D) : Field D :=
   (2 : ℝ) • (m.angular * h.angular) + h.angular * h.angular
 
 /-- Leading radial, given by `o.invRadius * ((2 : ℝ) • (b.angular * h.angular))`. -/
-noncomputable def leadingRadial (o : Operators D) (b h : Triple D) : Field D :=
+@[expose] noncomputable def leadingRadial (o : Operators D) (b h : Triple D) : Field D :=
   o.invRadius * ((2 : ℝ) • (b.angular * h.angular))
 
 /-- Radial remainder as an element of `Field D`. -/

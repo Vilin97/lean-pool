@@ -23,7 +23,7 @@ commit `911707126c8b9bb0c764bf853008fe1053c0aad9`: imports, API compatibility,
 and proof organization were revised.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory
@@ -54,7 +54,7 @@ noncomputable def quotientDeckEndHom (G : Type u) [Group G] (H : Subgroup G)
 @[simp]
 lemma quotientDeckEndHom_mk (G : Type u) [Group G] (H : Subgroup G)
     [H.Normal] [Fintype (G ⧸ H)] (g h : G) :
-    (quotientDeckEndHom G H (g : G ⧸ H)).hom ⟦h⟧ = ⟦h * g⁻¹⟧ := rfl
+    (quotientDeckEndHom G H (g : G ⧸ H)).hom ⟦h⟧ = ⟦h * g⁻¹⟧ := by rfl
 
 @[simp]
 lemma quotientDeckEndHom_apply_one (G : Type u) [Group G] (H : Subgroup G)
@@ -99,7 +99,7 @@ noncomputable def quotientDeckHom (G : Type u) [Group G] (H : Subgroup G)
 
 lemma quotientDeckHom_hom (G : Type u) [Group G] (H : Subgroup G)
     [H.Normal] [Fintype (G ⧸ H)] (q : G ⧸ H) :
-    (quotientDeckHom G H q).hom.hom = (quotientDeckEndHom G H q).hom := rfl
+    (quotientDeckHom G H q).hom.hom = (quotientDeckEndHom G H q).hom := by rfl
 
 @[simp]
 lemma quotientDeckHom_apply_one (G : Type u) [Group G] (H : Subgroup G)

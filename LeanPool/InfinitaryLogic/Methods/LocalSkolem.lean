@@ -25,7 +25,7 @@ This file builds the language, its Hilbert-choice structure, and its countabilit
 recursive language/closure tower is a later chunk.
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 
@@ -38,7 +38,7 @@ for
 each `(n+1)`-ary formula **that lies in `Γ`** (witnessing its last existential), and no relation
 symbols. Unlike `skolem₁ω L` (which Skolemizes *all* formulas and is uncountable), this stays
 countable whenever `Γ` is. -/
-def localSkolem (Γ : Set (Σ n, L.BoundedFormulaω Empty n)) : Language.{0, 0} where
+@[expose] def localSkolem (Γ : Set (Σ n, L.BoundedFormulaω Empty n)) : Language.{0, 0} where
   Functions n := {φ : L.BoundedFormulaω Empty (n + 1) //
     (⟨n + 1, φ⟩ : Σ n, L.BoundedFormulaω Empty n) ∈ Γ}
   Relations _ := Empty

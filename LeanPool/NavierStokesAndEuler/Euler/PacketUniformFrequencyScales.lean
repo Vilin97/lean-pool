@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Star.Real
 costs can be placed in the same finite list as the geometric and pressure
 costs, so the starting stage is chosen only once. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,7 +27,7 @@ open scoped Topology
 
 /-- Parameter envelope, given by `C*((J+n : ℕ) : ℝ)^p*(scaleSequence J X n)^q * exp
 (c*(scaleSequence J X n/((J-1+n : ℕ) : ℝ)^3))`. -/
-def parameterEnvelope (J : ℕ) (C c : ℝ) (p q : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
+@[expose] def parameterEnvelope (J : ℕ) (C c : ℝ) (p q : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
   C*((J+n : ℕ) : ℝ)^p*(scaleSequence J X n)^q *
     exp (c*(scaleSequence J X n/((J-1+n : ℕ) : ℝ)^3))
 

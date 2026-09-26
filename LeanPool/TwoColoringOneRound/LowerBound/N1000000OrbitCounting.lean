@@ -24,7 +24,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -87,7 +87,7 @@ private lemma ge_three_of_ne_base (x : SymN)
                 simp_all
 
 /-- Free columns for a directed type `k`: coordinates not equal to any base symbol. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 def FreeCol (k : DirIdx) : Type :=
   { j : Fin 3 // colMatch (maskAt k) j = none }
 
@@ -113,7 +113,7 @@ private lemma colMatch_unique (k : DirIdx) {j₁ j₂ : Fin 3} {i : Fin 3}
   colMatch_unique' (k := k) _ _ _ h₁ h₂
 
 /-- Vertices in the orbit of the base vertex with directed type `k`. -/
-def BaseOrbit (k : DirIdx) : Type :=
+@[expose] def BaseOrbit (k : DirIdx) : Type :=
   { u : V // dirMask baseVertex u = maskAt k }
 
 noncomputable instance (k : DirIdx) : Fintype (BaseOrbit k) := by
@@ -157,6 +157,7 @@ def encodeBaseOrbit (k : DirIdx) (u : BaseOrbit k) : FreeCol k ↪ AvailFrom3 :=
 private theorem base_val_lt_three (i : Fin 3) : (baseVertex.1 i).1 < 3 := by fin_cases i <;> decide
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 noncomputable def decodeTuple (k : DirIdx) (g : FreeCol k ↪ AvailFrom3) : Tuple 3 n :=
   fun j =>
     if hc : colMatch (maskAt k) j = none then
@@ -226,6 +227,7 @@ private theorem decodeTuple_injective (k : DirIdx) (g : FreeCol k ↪ AvailFrom3
     simp [this]
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 noncomputable def decodeVertex (k : DirIdx) (g : FreeCol k ↪ AvailFrom3) : V :=
   ⟨decodeTuple (k := k) g, by exact decodeTuple_injective (k := k) g⟩
 

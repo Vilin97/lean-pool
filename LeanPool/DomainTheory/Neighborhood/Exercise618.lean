@@ -71,7 +71,7 @@ T(ρₙ) ∘ j`,
 Everything is choice-free where it is data.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -114,7 +114,7 @@ theorem iterProdIso_apply (z : (iterSys V).Element) :
 
 /-- The "cons" of a head `a : |𝒟|` and a tail `b : |𝒟^∞|`, as a sequence `⟨a, b₀,
 b₁, …⟩`. -/
-def consSeq (a : V.Element) (b : (iterSys V).Element) : ℕ → V.Element :=
+@[expose] def consSeq (a : V.Element) (b : (iterSys V).Element) : ℕ → V.Element :=
   fun i => Nat.casesOn i a (fun k => component b k)
 
 @[simp] theorem consSeq_zero (a : V.Element) (b : (iterSys V).Element) : consSeq a b 0 = a := rfl
@@ -527,12 +527,13 @@ theorem isStrict_prodMap {α β α' β' : Type*} {V₀ : NeighborhoodSystem α} 
   exact pair_bot
 
 /-- The fixed domain `𝒟` times an object `X`, again an `∅`-free domain. -/
-def prodObj (Dom X : StrictDomainObj.{w}) : StrictDomainObj.{w} where
+@[expose] def prodObj (Dom X : StrictDomainObj.{w}) : StrictDomainObj.{w} where
   carrier := Dom.carrier ⊕ X.carrier
   sys := prod Dom.sys X.sys
   nonempty := prod_nonempty Dom.nonempty X.nonempty
 
 /-- The morphism action `T(f) = id_𝒟 × f`, strict by `isStrict_prodMap`. -/
+@[expose]
 def prodMapHom (Dom : StrictDomainObj.{w}) {X Y : StrictDomainObj.{w}} (f : Category.Hom X Y) :
     Category.Hom (prodObj Dom X) (prodObj Dom Y) :=
   ⟨prodMap (idMap Dom.sys) f.1, isStrict_prodMap isStrict_idMap f.2⟩
@@ -540,7 +541,7 @@ def prodMapHom (Dom : StrictDomainObj.{w}) {X Y : StrictDomainObj.{w}} (f : Cate
 /-- **The product endofunctor `T(X) = 𝒟 × X`** on `∅`-free domains and strict
 maps, for a fixed
 domain `𝒟`. On objects `T(X) = 𝒟 × X`; on maps `T(f) = id_𝒟 × f`. -/
-def prodFunctor (Dom : StrictDomainObj.{w}) : Endofunctor StrictDomainObj.{w} where
+@[expose] def prodFunctor (Dom : StrictDomainObj.{w}) : Endofunctor StrictDomainObj.{w} where
   obj := prodObj Dom
   map := prodMapHom Dom
   map_id X := Subtype.ext (by
@@ -554,7 +555,7 @@ def prodFunctor (Dom : StrictDomainObj.{w}) : Endofunctor StrictDomainObj.{w} wh
     exact h)
 
 /-- `𝒟^∞` (Exercise 3.16's `iterSys`) as an `∅`-free object. -/
-def iterObj (Dom : StrictDomainObj.{w}) : StrictDomainObj.{w} where
+@[expose] def iterObj (Dom : StrictDomainObj.{w}) : StrictDomainObj.{w} where
   carrier := ℕ × Dom.carrier
   sys := iterSys Dom.sys
   nonempty := iterSys_nonempty Dom.nonempty
@@ -562,14 +563,14 @@ def iterObj (Dom : StrictDomainObj.{w}) : StrictDomainObj.{w} where
 /-- **`𝒟^∞` as a `T`-algebra**, `(𝒟^∞, i)` with `i : 𝒟 × 𝒟^∞ → 𝒟^∞` the "cons" iso
 (`imap`,
 Exercise 3.16's `iterProdIso⁻¹`), strict by `isStrict_imap`. -/
-def iterAlg (Dom : StrictDomainObj.{w}) : TAlgebra (prodFunctor Dom) where
+@[expose] def iterAlg (Dom : StrictDomainObj.{w}) : TAlgebra (prodFunctor Dom) where
   carrier := iterObj Dom
   str := ⟨imap Dom.sys, isStrict_imap⟩
 
 /-- **The descent homomorphism `(𝒟^∞, i) → (E, k)`**: the strict map `descMap k`
 (existence half),
 with the homomorphism square supplied by `descMap_comm`. -/
-def descAlgHom (Dom : StrictDomainObj.{w}) (B : TAlgebra (prodFunctor Dom)) :
+@[expose] def descAlgHom (Dom : StrictDomainObj.{w}) (B : TAlgebra (prodFunctor Dom)) :
     AlgHom (iterAlg Dom) B where
   hom := ⟨descMap B.str.1, descMap_strict B.str.1 B.str.2⟩
   comm := by

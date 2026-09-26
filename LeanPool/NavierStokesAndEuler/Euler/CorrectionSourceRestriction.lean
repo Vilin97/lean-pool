@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevNonlinearCompatibility
 
 /-! The actual nonlinear correction source is identical across compatible Sobolev levels. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

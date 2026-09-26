@@ -16,7 +16,7 @@ fields. On good times only the negative part of f' can increase the
 upper pressure bound; history and early times use the exponentially
 small target ratio. No child low bound is assumed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

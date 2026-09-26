@@ -11,7 +11,7 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.CobhamR0
 
 /-! # Absoluteness -/
 
-@[expose] public section
+public section
 
 
 namespace LO

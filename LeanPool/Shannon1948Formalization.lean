@@ -21,7 +21,7 @@ Tags: information-theory, entropy, probability
 MSC: 94A17, 60C05
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Shannon

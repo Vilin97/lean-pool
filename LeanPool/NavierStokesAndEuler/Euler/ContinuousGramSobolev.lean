@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ContinuousPathCalculus
 
 /-! The actual uniform-time Gram inverse in fixed Sobolev word blocks. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

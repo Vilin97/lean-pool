@@ -30,7 +30,7 @@ sequence `schemaSeq` (the classes of the `d`-constants). No `iSup`, `all`, or tr
 that is checkpoint 5b.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

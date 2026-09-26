@@ -30,7 +30,7 @@ are recorded in `HANDOFF-hilbertpadic.md` as the outstanding work; only `p = 2` 
 scope entirely.
 -/
 
-@[expose] public section
+public section
 
 namespace HasseMinkowski
 
@@ -762,6 +762,7 @@ lemma padicUnit_spec (a : ℚ_[p]) (ha : a ≠ 0) :
     _ = (p : ℚ_[p]) ^ a.valuation * (a * (p : ℚ_[p]) ^ (-(a.valuation))) := by ring
 
 /-- `parityPow b n` is `b ^ n` when `b = ±1`, well defined for negative `n`. -/
+@[expose]
 def parityPow (b n : ℤ) : ℤ := if Even n then 1 else b
 
 -- Theorem: `parityPow b n = 1` when `n` is even.

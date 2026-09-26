@@ -33,7 +33,7 @@ This file proves a small “warm-up” theorem matching the report:
 All proofs are kernel-checked (no `native_decide`).
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -157,7 +157,7 @@ For `n = 9`, every edge participates in exactly `5 * (9-4) = 25` such pairs, hen
 abbrev CyclePairs : Type := Emb5 × Fin 5
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def CycleMonoPairs (f : Coloring9) : Type :=
+@[expose] def CycleMonoPairs (f : Coloring9) : Type :=
   {p : CyclePairs // Edge.monochromatic f (edgeAt p.1 p.2)}
 
 noncomputable instance (f : Coloring9) : Fintype (CycleMonoPairs f) := by

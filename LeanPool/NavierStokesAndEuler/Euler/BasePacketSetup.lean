@@ -19,7 +19,7 @@ section
 state: the physical Euler solution, all Sobolev orders, particle labels,
 and odd symmetry all refer to the same solution. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -43,7 +43,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -79,7 +79,7 @@ open Set InnerProductSpace EulerSmoothLimit EulerParentPacketFrames
   EulerTransverseFrameCoordinates EulerBaseEulerGuards EulerPacketSupport
 
 /-- First normal, given by `EuclideanSpace.single 0 1`. -/
-def firstNormal : Space := EuclideanSpace.single 0 1
+@[expose] def firstNormal : Space := EuclideanSpace.single 0 1
 
 theorem firstNormal_unit : ‖firstNormal‖=1 := by simp [firstNormal]
 

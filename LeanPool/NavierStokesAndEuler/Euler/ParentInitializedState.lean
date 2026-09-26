@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitializedResidu
 physical state. Their residual and parity proofs are supplied by their
 source formulas, not additional hypotheses about the new solution. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,7 @@ variable {A : Parent} (S : SmoothState A) (H : LowBounds A)
   (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
 
 /-- Forward child, constructed using `S.packetChild`. -/
-def forwardChild
+@[expose] def forwardChild
     (Q : Budget period A.T_pos
       (forwardInitializedCorrectionData (A.meanData H) (A.transverseData m hm J support hSupport)
         rfl δ hδ ξ hs α (A.sourceAgreement m hm J support hSupport H) N hN k hk))

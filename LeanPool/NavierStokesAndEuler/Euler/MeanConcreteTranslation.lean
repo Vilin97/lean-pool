@@ -21,7 +21,7 @@ operator. These identities connect the fixed inverse to spatial coefficient
 calculus.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

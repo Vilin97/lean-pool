@@ -30,7 +30,7 @@ map is obtained from the weak equation and the true time primitive.  Its
 continuous representative and derivative are conclusions, not extra data.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -51,7 +51,7 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
 
 /-- The literal derivative of Q*η_t for the homogeneous stationary equation. -/
-def initialMomentumForcing : TimeLp T E →L[ℝ] TimeLp T U :=
+@[expose] def initialMomentumForcing : TimeLp T E →L[ℝ] TimeLp T U :=
   (timeMultiplier T hT Q₁).adjoint -
     (timeMultiplier T hT Q).adjoint.comp
       ((timeMultiplier T hT H).comp (initialPrimitiveTimeLp T hT))
@@ -87,9 +87,7 @@ theorem initialMomentum_weak
       -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp T hT v⟫_ℝ := by
   have ht := hu ⟨productDerivative T hT Q Q₁ v,
     productDerivative_mem_transverse T hT Q Q₁ hd m hm v hv⟩
-  change ⟪u, productDerivative T hT Q Q₁ v⟫_ℝ -
-    ⟪timeMultiplier T hT H (initialPrimitiveTimeLp T hT u),
-      primitiveTimeLp T hT (productDerivative T hT Q Q₁ v)⟫_ℝ = 0 at ht
+  simp only [transversePrimitive_apply] at ht
   rw [primitiveTimeLp_productDerivative T hT Q Q₁ hd] at ht
   simp only [productDerivative, add_apply, comp_apply, inner_add_right] at ht
   simp only [momentum, initialMomentumForcing, sub_apply, comp_apply,
@@ -103,7 +101,7 @@ def terminalMomentum : TimeLp T E →L[ℝ] U :=
       (primitiveTimeLp T hT).comp (initialMomentumForcing T hT Q Q₁ H))
 
 /-- The canonical momentum representative, including both time endpoints. -/
-def momentumPath (u : TimeLp T E) (t : ℝ) : U :=
+@[expose] def momentumPath (u : TimeLp T E) (t : ℝ) : U :=
   realPrimitive T (initialMomentumForcing T hT Q Q₁ H u) t +
     terminalMomentum T hT Q Q₁ H u
 
@@ -192,7 +190,7 @@ All time boundary terms are obtained from absolute continuity and the genuine
 H¹ coordinate reconstruction.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -322,7 +320,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -350,13 +348,13 @@ theorem initialCoordinates_continuous (u : TimeLp T E) :
     (initialRealPrimitive_continuous T u)
 
 /-- Coordinate velocity path, constructed using `extendPath`. -/
-def coordinateVelocityPath (u : TimeLp T E) (t : ℝ) : U :=
+@[expose] def coordinateVelocityPath (u : TimeLp T E) (t : ℝ) : U :=
   extendPath T hT (gramInversePath T Q c hc hQ) t
     (momentumPath T hT Q Q₁ H u t -
       extendPath T hT (mixedPath T Q Q₁) t (initialCoordinates T hT Q c hc hQ u t))
 
 /-- Physical velocity path, constructed using `extendPath`. -/
-def physicalVelocityPath (u : TimeLp T E) (t : ℝ) : E :=
+@[expose] def physicalVelocityPath (u : TimeLp T E) (t : ℝ) : E :=
   extendPath T hT Q₁ t (initialCoordinates T hT Q c hc hQ u t) +
     extendPath T hT Q t (coordinateVelocityPath T hT Q Q₁ c hc hQ H u t)
 

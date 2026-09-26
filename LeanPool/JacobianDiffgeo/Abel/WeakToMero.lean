@@ -36,7 +36,7 @@ Unit: abel-theorem. Namespace `RS.Abel`. Two deliverables:
   imported anywhere in this unit, matching the design's finding (§2.2).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

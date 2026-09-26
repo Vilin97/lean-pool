@@ -23,7 +23,7 @@ Concrete learning processes, algorithms, and scope boundaries:
 - Granger causality (causal inference connection)
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -107,6 +107,7 @@ structure LifelongLearning (X : Type u) (Y : Type v) where
 /-- Background knowledge: domain-specific information that guides learning.
     In ILP: a set of known rules/facts that constrain the hypothesis space.
     Analogous to advice. -/
+@[expose]
 def BackgroundKnowledge (B : Type*) := B
 
 /-- Inductive Logic Programming: learning first-order logic programs

@@ -12,7 +12,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Setting.Energy.Calculus
 
 /-! The spatial-temporal cutoff and its support estimates. -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology
@@ -37,6 +37,7 @@ given a separate outer radius so that its support can be placed inside the
 open time interval. -/
 
 /-- Spatial and temporal cutoff for the centered Caccioppoli estimate. -/
+@[expose]
 def caccioppoliCutoff (x₀ : Vec3) (t₀ ρ R : ℝ) (hρ : 0 < ρ) (_hR : ρ / 2 < R)
     (z : Vec3 × ℝ) : ℝ :=
   mollifiedBallCutoff x₀ hρ z.1 * timeCutoff t₀ (ρ / 2) R z.2

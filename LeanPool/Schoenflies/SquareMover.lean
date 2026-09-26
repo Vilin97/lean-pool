@@ -49,7 +49,7 @@ Supporting material, of independent use: `Plane.tent` and `Plane.bend` with thei
 and `Plane.interior_closedSquare`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -601,7 +601,8 @@ theorem IsSquareMover.eqOn_frontier {M N : Plane → Plane} (h : IsSquareMover c
 /-! ### The mover as a homeomorphism -/
 
 /-- A mover of the square, packaged as a self-homeomorphism of the closed square. -/
-noncomputable def IsSquareMover.homeomorph {M N : Plane → Plane} (h : IsSquareMover c r M N) :
+@[expose] noncomputable def IsSquareMover.homeomorph
+    {M N : Plane → Plane} (h : IsSquareMover c r M N) :
     closedSquare c r ≃ₜ closedSquare c r where
   toFun z := ⟨M z, h.mapsTo z.2⟩
   invFun z := ⟨N z, h.mapsTo_inv z.2⟩

@@ -16,7 +16,7 @@ These bounds use the lower frame constant and coefficient norms. In particular
 no exponential dependence on the undifferentiated coefficient norm is introduced.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

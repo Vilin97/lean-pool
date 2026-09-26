@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketResidualTailFields
 /-! Actual finite packet velocities and residual tails preserve the joint
 odd parity of the constructed profiles. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

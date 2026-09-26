@@ -12,7 +12,7 @@ public import LeanPool.PDL.Local.Tableau
 
 /-! # PDL-Tableaux (Section 4) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -43,7 +43,7 @@ theorem proj : g ∈ projection A X ↔ (⌈·A⌉g) ∈ X :=
     aesop
 
 /-- Collect the continuations of matching atomic boxes in a formula finset. -/
-def _root_.Finset.pdlProjection : Nat → Finset Formula → Finset Formula
+@[expose] def _root_.Finset.pdlProjection : Nat → Finset Formula → Finset Formula
   | A, X => (X.image fun x => (formProjection A x).toFinset).sup id
 
 /-- Membership in the projection of a `Finset` of formulas.
@@ -71,7 +71,7 @@ abbrev History : Type := List Sequent
 
 /-- We have a repeat iff the history contains a node that is `setEqTo` the current node.
 Note that this is a `Prop`, it does not carry a specific number of steps to go back. -/
-def rep (Hist : History) (X : Sequent) : Prop := ∃ Y ∈ Hist, Y = X
+@[expose] def rep (Hist : History) (X : Sequent) : Prop := ∃ Y ∈ Hist, Y = X
 
 instance {H X} : Decidable (rep H X) := by
   unfold rep
@@ -124,7 +124,7 @@ lemma rep.toFin_agrees (rp : rep H X) :
 /-- A lpr means we can go `k` steps back in the history to
 reach an equal node, and all nodes on the way are loaded.
 Note: `k=0` means the first element of `Hist` is the companion. -/
-def LoadedPathRepeat (Hist : History) (X : Sequent) : Type :=
+@[expose] def LoadedPathRepeat (Hist : History) (X : Sequent) : Type :=
   Subtype (fun k => (Hist.get k) = X ∧ ∀ m ≤ k, (Hist.get m).isLoaded)
 
 lemma LoadedPathRepeat.to_rep {H X} (lpr : LoadedPathRepeat H X) : rep H X := by
@@ -232,7 +232,7 @@ lemma FreeRepeat_iff_rep_and_isFree {H X} :
 Note that the negation of this is not the same as `¬ rep` because it will still allow
 loaded repeats that are not loaded-path repeats, at which `Tableau` may continue.
 See also `posOf` that is used to define `tableauGame` later. -/
-@[grind .]
+@[expose, grind .]
 def flprep (H : History) (X : Sequent) : Prop :=
   (rep H X ∧ X.isFree) ∨ Nonempty (LoadedPathRepeat H X)
 
@@ -278,7 +278,7 @@ inductive PdlRule : (X : Sequent) → (Y : Sequent) → Type
 deriving DecidableEq
 
 /-- Whether a PDL rule is one of the two modal rules. -/
-def PdlRule.isModal {X Y} : PdlRule X Y → Prop
+@[expose] def PdlRule.isModal {X Y} : PdlRule X Y → Prop
 | .loadL _ _ _ => False
 | .loadR _ _ _ => False
 | .freeL _ _ => False
@@ -306,7 +306,7 @@ inductive Tableau : History → Sequent → Type
   | lrep {Hist X} (lpr : LoadedPathRepeat Hist X) : Tableau Hist X
 
 /-- The number of nodes in a tableau, including every local-rule continuation. -/
-def Tableau.size {Hist X} : Tableau Hist X → Nat
+@[expose] def Tableau.size {Hist X} : Tableau Hist X → Nat
   | .loc _ _ lt next => 1 + ((endNodesOf lt).attach.sum (fun ⟨Y, Y_in⟩ => (next Y Y_in).size))
   | .pdl _ _ _ next => 1 + next.size
   | .lrep _ => 1
@@ -384,7 +384,7 @@ decreasing_by
   · exact Tableau.size_next_lt_of_pdl tab1_def
 
 /-- Whether a tableau is a loaded-path-repeat leaf. -/
-def Tableau.isLrep {Hist X} : (Tableau Hist X) → Prop
+@[expose] def Tableau.isLrep {Hist X} : (Tableau Hist X) → Prop
   | .loc .. => False
   | .pdl .. => False
   | .lrep .. => True
@@ -395,11 +395,11 @@ inductive provable : Formula → Prop
   | byTableauR {φ : Formula} : Tableau .nil ⟨{}, {~φ}, none⟩ → provable φ
 
 /-- A Sequent is inconsistent if there exists a closed tableau for it. -/
-def inconsistent : Sequent → Prop
+@[expose] def inconsistent : Sequent → Prop
   | LR => Nonempty (Tableau .nil LR)
 
 /-- A `Sequent` is consistent iff it is not inconsistent. -/
-def consistent : Sequent → Prop
+@[expose] def consistent : Sequent → Prop
   | LR => ¬inconsistent LR
 
 end PDL

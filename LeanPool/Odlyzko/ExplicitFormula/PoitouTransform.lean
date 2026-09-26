@@ -16,7 +16,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -25,16 +25,16 @@ open Complex MeasureTheory
 namespace NumberField.Odlyzko
 
 /-- A poitou kernel used in the Odlyzko-bound argument. -/
-noncomputable def poitouKernel (f : ℝ → ℝ) (x : ℝ) : ℝ :=
+@[expose] noncomputable def poitouKernel (f : ℝ → ℝ) (x : ℝ) : ℝ :=
   f x / Real.cosh (x / 2)
 
 /-- A poitou transform integrand used in the Odlyzko-bound argument. -/
-noncomputable def poitouTransformIntegrand
+@[expose] noncomputable def poitouTransformIntegrand
     (f : ℝ → ℝ) (s : ℂ) (x : ℝ) : ℂ :=
   (poitouKernel f x : ℂ) * Complex.exp ((s - 1 / 2) * x)
 
 /-- A poitou transform used in the Odlyzko-bound argument. -/
-noncomputable def poitouTransform (f : ℝ → ℝ) (s : ℂ) : ℂ :=
+@[expose] noncomputable def poitouTransform (f : ℝ → ℝ) (s : ℂ) : ℂ :=
   ∫ x : ℝ, poitouTransformIntegrand f s x
 
 theorem poitouKernel_neg {f : ℝ → ℝ}

@@ -18,7 +18,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.MappingCylinder`.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory
 open scoped unitInterval ContinuousMap
@@ -33,7 +33,7 @@ namespace TopCat
 
 
 /-- The mapping cylinder of a continuous map `f : X ⟶ Y`. -/
-noncomputable def MapCyl : TopCat.{u} := Limits.pushout f (Cyl.i₀ X)
+@[expose] noncomputable def MapCyl : TopCat.{u} := Limits.pushout f (Cyl.i₀ X)
 
 
 namespace MapCyl
@@ -41,12 +41,12 @@ namespace MapCyl
 /-- `inl` -/
 noncomputable abbrev inl : Y ⟶ MapCyl f := Limits.pushout.inl _ _
 /-- `inr` -/
-noncomputable abbrev inr : TopCat.of (X × I) ⟶ MapCyl f := Limits.pushout.inr _ _
+@[expose] noncomputable abbrev inr : TopCat.of (X × I) ⟶ MapCyl f := Limits.pushout.inr _ _
 /-- `condition` -/
 lemma condition : f ≫ inl f = Cyl.i₀ X ≫ inr f := Limits.pushout.condition
 
 /-- Inclusion map from the domain `X` to the mapping cylinder of `f : X ⟶ Y` -/
-noncomputable abbrev domIncl : X ⟶ MapCyl f := Cyl.i₁ X ≫ inr f
+@[expose] noncomputable abbrev domIncl : X ⟶ MapCyl f := Cyl.i₁ X ≫ inr f
 
 /-- Inclusion map from the codomain `Y` to the mapping cylinder of `f : X ⟶ Y` -/
 noncomputable alias codIncl := inl
@@ -77,12 +77,12 @@ theorem isEmbedding_domIncl : Topology.IsEmbedding (domIncl f) := by
 
 /-- The domain `X` of a continuous map `f` is homeomorphic to the top surface of
 the mapping cylinder of `f`. -/
-noncomputable def domHomeoTop : X ≃ₜ top f := (isEmbedding_domIncl f).toHomeomorph
+@[expose] noncomputable def domHomeoTop : X ≃ₜ top f := (isEmbedding_domIncl f).toHomeomorph
 
 /-- `domInclToTop` -/
-noncomputable def domInclToTop : C(X, top f) := toContinuousMap (domHomeoTop f)
+@[expose] noncomputable def domInclToTop : C(X, top f) := toContinuousMap (domHomeoTop f)
 /-- `domInclFromTop` -/
-def domInclFromTop : C(top f, MapCyl f) := ⟨Subtype.val, continuous_subtype_val⟩
+@[expose] def domInclFromTop : C(top f, MapCyl f) := ⟨Subtype.val, continuous_subtype_val⟩
 
 lemma domIncl_hom_eq_domInclFromTop_comp_domInclToTop :
   (domIncl f).hom = (domInclFromTop f).comp (domInclToTop f) := rfl
@@ -120,7 +120,7 @@ and is equal to uncurried form when evaluated at any `t : I`
 (see `curriedDeformRetrEvalAt_eq_deformRetrEvalAt`).
 
 Note: `s * t` uses the instance `unitInterval.continuousMul` in `Shapes/Maps.lean`. -/
-noncomputable def curriedDeformRetr : MapCyl f ⟶ TopCat.of C(I, MapCyl f) :=
+@[expose] noncomputable def curriedDeformRetr : MapCyl f ⟶ TopCat.of C(I, MapCyl f) :=
   Limits.pushout.desc (PathSpace.homToConstPaths (inl f))
     (ofHom <| ContinuousMap.curry
       { toFun := fun ⟨⟨x, s⟩, t⟩ ↦ (inr f).hom ⟨x, s * t⟩
@@ -133,7 +133,7 @@ noncomputable def curriedDeformRetr : MapCyl f ⟶ TopCat.of C(I, MapCyl f) :=
       exact congr_fun (congr_arg (ContinuousMap.toFun ∘ Hom.hom) (condition f)) x )
 
 /-- `curriedDeformRetrEvalAt` -/
-noncomputable def curriedDeformRetrEvalAt (t : I) : MapCyl f ⟶ MapCyl f :=
+@[expose] noncomputable def curriedDeformRetrEvalAt (t : I) : MapCyl f ⟶ MapCyl f :=
   ofHom <| (curriedDeformRetr f).hom.uncurry.curryLeft t
 
 lemma curriedDeformRetrEvalAt_hom_apply (t : I) (z : MapCyl f) :

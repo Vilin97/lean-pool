@@ -56,7 +56,7 @@ import Mathlib.Tactic.SetLike
   by kernel `decide` — AXIOM-CLEAN (no `Lean.ofReduceBool`; we use `decide`, never `native_decide`).
 -/
 
-@[expose] public section
+public section
 
 namespace Sundog.VarWheel
 
@@ -69,7 +69,7 @@ abbrev Selection (m : ℕ) := Fin m → Bool
 /-- The internal node `a j` is covered EXACTLY ONCE: exactly one of
     `σ j = true` (the positive triple `t_j` touches `a j`) and
     `σ (j-1) = false` (the negative triple `t⁻_(j-1)` touches `a j`) holds. -/
-def aCoveredOnce (σ : Selection m) (j : Fin m) : Prop :=
+@[expose] def aCoveredOnce (σ : Selection m) (j : Fin m) : Prop :=
   Xor (σ j = true) (σ (j - 1) = false)
 
 /-- The covered-once exclusive-or collapses to the local agreement `σ j = σ (j-1)`:
@@ -80,7 +80,7 @@ lemma aCoveredOnce_iff (σ : Selection m) (j : Fin m) :
   cases h1 : σ j <;> cases h2 : σ (j - 1) <;> simp [Xor]
 
 /-- A valid internal cover: every internal node `a j` is covered exactly once. -/
-def ValidCover (σ : Selection m) : Prop :=
+@[expose] def ValidCover (σ : Selection m) : Prop :=
   ∀ j : Fin m, aCoveredOnce σ j
 
 /-! ### Decidability.
@@ -141,10 +141,10 @@ theorem validCover_iff_const (_hm : 0 < m) (σ : Selection m) :
     family of tips is left uncovered ("free") and thus available to the clause gadgets. -/
 
 /-- The positive tip `posTip j` is free in state `σ` iff its triple `t_j` was NOT selected. -/
-def posTipFree (σ : Selection m) (j : Fin m) : Prop := σ j = false
+@[expose] def posTipFree (σ : Selection m) (j : Fin m) : Prop := σ j = false
 
 /-- The negative tip `negTip j` is free in state `σ` iff its triple `t⁻_j` was NOT selected. -/
-def negTipFree (σ : Selection m) (j : Fin m) : Prop := σ j = true
+@[expose] def negTipFree (σ : Selection m) (j : Fin m) : Prop := σ j = true
 
 omit [NeZero m] in
 /-- The all-true (one truth value) state frees every negative tip and no positive tip. -/

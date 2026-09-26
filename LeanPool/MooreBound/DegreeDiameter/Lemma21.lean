@@ -25,7 +25,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -62,6 +62,7 @@ theorem ofBasis_reindex_eq_at_of_prefixSet_eq {n : ℕ} (b : Basis (Fin n) K V)
 
 /-- Step `s + 1` may change only ranks with the same parity as `s + 1`.
 Equivalently, every rank of the other parity is frozen. -/
+@[expose]
 def AlternatingStep {n : ℕ} (s : Fin n)
     (F G : CompleteFlag K V n) : Prop :=
   ∀ i : Fin (n + 1), i.val % 2 ≠ (s.val + 1) % 2 → F i = G i

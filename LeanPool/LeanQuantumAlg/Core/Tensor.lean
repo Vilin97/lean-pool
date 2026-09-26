@@ -17,7 +17,7 @@ layers. `PureState.tensor` and `Gate.tensor` wrap these raw tensors with the
 normalization/unitarity proofs needed to stay in their semantic types.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -30,6 +30,7 @@ namespace StateVector
 section
 
 /-- Tensor product of raw Hilbert-space vectors. -/
+@[expose]
 noncomputable def tensor (ψ : StateVector m) (φ : StateVector n) : StateVector (m + n) :=
   WithLp.toLp 2 fun i => ψ (prodEquiv.symm i).1 * φ (prodEquiv.symm i).2
 
@@ -37,7 +38,7 @@ noncomputable def tensor (ψ : StateVector m) (φ : StateVector n) : StateVector
 theorem tensor_apply (ψ : StateVector m) (φ : StateVector n)
     (i : Fin (2 ^ (m + n))) :
     tensor ψ φ i = ψ (prodEquiv.symm i).1 * φ (prodEquiv.symm i).2 :=
-  rfl
+  by rfl
 
 theorem tensor_apply_prod (ψ : StateVector m) (φ : StateVector n)
     (x : Fin (2 ^ m)) (y : Fin (2 ^ n)) :
@@ -154,6 +155,7 @@ namespace PureState
 section
 
 /-- Tensor product of pure states. -/
+@[expose]
 noncomputable def tensor (ψ : PureState m) (φ : PureState n) : PureState (m + n) :=
   ofVec (StateVector.tensor (ψ : StateVector m) (φ : StateVector n)) (by
     rw [StateVector.norm_tensor, ψ.norm_eq_one, φ.norm_eq_one, one_mul])
@@ -254,6 +256,7 @@ namespace HilbertOperator
 section
 
 /-- Tensor product of Hilbert-space operators. -/
+@[expose]
 noncomputable def tensor
     (G : HilbertOperator m) (K : HilbertOperator n) : HilbertOperator (m + n) :=
   Matrix.reindex prodEquiv prodEquiv (G ⊗ₖ K)
@@ -263,7 +266,7 @@ theorem tensor_apply (G : HilbertOperator m) (K : HilbertOperator n)
     (i j : Fin (2 ^ (m + n))) :
     tensor G K i j
       = G (prodEquiv.symm i).1 (prodEquiv.symm j).1
-        * K (prodEquiv.symm i).2 (prodEquiv.symm j).2 := rfl
+        * K (prodEquiv.symm i).2 (prodEquiv.symm j).2 := by rfl
 
 @[simp]
 theorem zero_tensor (K : HilbertOperator n) :
@@ -339,6 +342,7 @@ namespace Gate
 noncomputable section
 
 /-- Tensor product of unitary gates. -/
+@[expose]
 def tensor (G : Gate m) (K : Gate n) : Gate (m + n) :=
   ofUnitary (HilbertOperator.tensor (G : HilbertOperator m) (K : HilbertOperator n))
     (HilbertOperator.tensor_mem_unitaryGroup G.unitary K.unitary)
@@ -348,7 +352,7 @@ theorem tensor_apply (G : Gate m) (K : Gate n)
     (i j : Fin (2 ^ (m + n))) :
     G.tensor K i j
       = G (prodEquiv.symm i).1 (prodEquiv.symm j).1
-        * K (prodEquiv.symm i).2 (prodEquiv.symm j).2 := rfl
+        * K (prodEquiv.symm i).2 (prodEquiv.symm j).2 := by rfl
 
 theorem tensor_mul_tensor (G G' : Gate m) (K K' : Gate n) :
     G.tensor K * G'.tensor K' = tensor (G * G') (K * K') := by

@@ -35,7 +35,7 @@ bounds use |f(x)||f(y)| ≤ C · x₀y₀ / (1+|xbar|²)^N(1+|ybar|²)^N for pos
 test functions, combined with Gaussian moment formulas for the time integrals.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex Real Filter QFT
 open TopologicalSpace
@@ -47,7 +47,7 @@ variable {m : ℝ} [Fact (0 < m)]
 /-! ## Core Definitions -/
 
 /-- Inner product on spatial coordinates: k_spatial · x_spatial = Σᵢ kᵢ xᵢ -/
-noncomputable def spatialDot (k_spatial x_spatial : SpatialCoords) : ℝ :=
+@[expose] noncomputable def spatialDot (k_spatial x_spatial : SpatialCoords) : ℝ :=
   ∑ i, k_spatial i * x_spatial i
 
 /-- Inner product on ℝ equals multiplication. -/

@@ -62,7 +62,7 @@ verified pointwise with `Polynomial.funext`, whose right-hand side is visibly th
 polynomial over `ℤ`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

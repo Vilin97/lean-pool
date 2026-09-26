@@ -15,7 +15,7 @@ import Mathlib.Analysis.Complex.LocallyUniformLimit
 
 /-! # LogDerivLems -/
 
-@[expose] public section
+public section
 
 
 

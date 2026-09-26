@@ -16,7 +16,7 @@ import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Summable
 /-! # BigO -/
 
 
-@[expose] public section
+public section
 
 open EisensteinSeries UpperHalfPlane TopologicalSpace Set
   Metric Filter Function Complex

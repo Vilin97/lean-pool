@@ -30,7 +30,7 @@ valid splits, and split measures. No learning-theory types.
 - Kakade & Tewari, Lecture 19: Symmetrization
 -/
 
-@[expose] public section
+public section
 
 universe u
 

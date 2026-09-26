@@ -21,7 +21,7 @@ sqrt-three triples.  Unary stretches of its coloring trees are stored as
 forced stems, exactly as in the first-stage Parts certificate.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
@@ -205,7 +205,7 @@ def PartsGadgetVerifiesNodeB (nodes : Array (Array PartsGadgetTreeNode)) :
                         (⟨node.vertex, color⟩ :: extended) child
 
 /-- Check a certificate from node zero with enough acyclic-tree fuel. -/
-def PartsGadgetCertificate.Verifies
+@[expose] def PartsGadgetCertificate.Verifies
     (certificate : PartsGadgetCertificate) : Prop :=
   PartsGadgetVerifiesNodeB certificate.nodes (certificate.nodeCount + 1)
     certificate.roots 0 = true

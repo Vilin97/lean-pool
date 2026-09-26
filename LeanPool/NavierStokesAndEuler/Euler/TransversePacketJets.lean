@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketProvider
 
 /-! The constructed forward transverse provider in the literal packet jet equation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

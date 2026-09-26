@@ -41,7 +41,7 @@ Constructive (`[propext, Quot.sound]`): the round trips are equational, the only
 inputs being
 mathlib's `Ideal.span` API. -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

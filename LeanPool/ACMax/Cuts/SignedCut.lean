@@ -32,7 +32,7 @@ and, unlike any bipartition cut, it certifies the `λ₂ = 2` Fiedler-eigenvecto
 `n = 9` (the eigenvectors are `{-1,0,1}`-valued, with the high-degree vertices in `Z`).
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

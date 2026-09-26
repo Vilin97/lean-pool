@@ -14,7 +14,7 @@ public import Mathlib.CategoryTheory.Limits.Shapes.FiniteLimits
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Pushout`.
 -/
 
-@[expose] public section
+public section
 
 /-!
 TODO:
@@ -107,7 +107,7 @@ end TopCat
 namespace TopCat
 
 /-- `pushoutInr'` -/
-noncomputable abbrev pushoutInr' := (pushout.inr f g).hom.restrict (Set.range g)ᶜ
+@[expose] noncomputable abbrev pushoutInr' := (pushout.inr f g).hom.restrict (Set.range g)ᶜ
 
 /--
 In the pushout square below, the map `inr` restricted to `{z | z ∉ Set.range g}` is injective.

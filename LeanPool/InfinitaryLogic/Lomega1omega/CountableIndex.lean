@@ -30,7 +30,7 @@ encoding is noncanonical, so definitional commutation statements would be unplea
 consumers should work through `realize_ciInf`/`realize_ciSup`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

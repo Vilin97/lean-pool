@@ -28,7 +28,7 @@ These are left inverses on simplex points and tangent vectors, and are standard 
 Čencov/Chentsov uniqueness proofs.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

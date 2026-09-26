@@ -16,7 +16,7 @@ are retained. This gives a bound determined by the source bounds, not by a
 new existential constant chosen after the solution.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal

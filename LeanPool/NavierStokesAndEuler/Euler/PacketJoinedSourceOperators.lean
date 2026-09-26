@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedProvider
 
 /-! Literal source operators with the complete positive-history-time high inverse. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

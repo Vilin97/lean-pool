@@ -15,7 +15,7 @@ import Mathlib.LinearAlgebra.Span.Basic
  This file contains some obvious definitions and lemmas on star algebra equivalences.
 -/
 
-@[expose] public section
+public section
 
 
 theorem AlgEquiv.comp_inj {R A B C : Type _} [CommSemiring R] [Semiring A] [Semiring B] [Semiring C]
@@ -29,7 +29,7 @@ theorem AlgEquiv.inj_comp {R A B C : Type _} [CommSemiring R] [Semiring A] [Semi
   simp_all
 
 /-- The linear map underlying a star algebra equivalence. -/
-@[simps]
+@[expose, simps]
 def StarAlgEquiv.toLinearMap {R A B : Type*} [Semiring R] [AddCommMonoid A]
   [AddCommMonoid B]
   [Mul A] [Mul B] [Module R A] [Module R B] [Star A] [Star B]
@@ -64,7 +64,7 @@ theorem StarAlgEquiv.inj_comp {R A B C : Type*} [Semiring R] [AddCommMonoid A]
   simp_all
 
 /-- The linear equivalence underlying a star algebra equivalence. -/
-@[simps]
+@[expose, simps]
 def StarAlgEquiv.toLinearEquiv {R A B : Type*} [Semiring R] [AddCommMonoid A]
   [AddCommMonoid B]
   [Mul A] [Mul B] [Module R A] [Module R B] [Star A] [Star B]
@@ -210,7 +210,7 @@ lemma NonUnitalAlgEquiv.map_span_center {F R A B : Type*} [Semiring R]
 
 /-- Assemble pointwise star algebra equivalences into a star algebra equivalence of dependent
 functions. -/
-@[simps apply]
+@[expose, simps apply]
 def StarAlgEquiv.piCongrRight {R ι : Type*} {A₁ A₂ : ι → Type*}
   [(i : ι) → Add (A₁ i)] [(i : ι) → Add (A₂ i)]
   [(i : ι) → Mul (A₁ i)] [(i : ι) → Mul (A₂ i)]

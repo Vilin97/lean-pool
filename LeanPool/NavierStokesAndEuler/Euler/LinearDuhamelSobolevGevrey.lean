@@ -51,7 +51,7 @@ can use the identity inverse; it never requires a norm for a profile-weighted
 raw time primitive.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -145,7 +145,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -192,7 +192,7 @@ local instance instLinearDuhamelFrozenGevrey8 : NormedSpace ℝ (C(Icc (0 : ℝ)
     inferInstance
 
 /-- The frozen coefficient amplitude is polynomial in the original coefficient and H3 constant. -/
-def frozenAmplitude (T C CB : ℝ) : ℝ := 1+2*C*T*CB
+@[expose] def frozenAmplitude (T C CB : ℝ) : ℝ := 1+2*C*T*CB
 
 /-- Actual derivatives of the frozen coefficient have the stated polynomial bound. -/
 theorem frozenOperator_bound (hB : ContDiff ℝ ∞ B)
@@ -269,7 +269,7 @@ The actual equation and smoothness hold as functions; every quantitative
 hypothesis, including invertibility, is needed only at the evaluation point.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -334,7 +334,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -349,7 +349,7 @@ def forwardSobolevAmplitude (ι : Type*) [Fintype ι] (q : ℕ) (T C CB Rc : ℝ
   sobolevCoefficientAmplitude ι q Rc (frozenAmplitude T C CB)
 
 /-- A fixed polynomial cost for the source's forward Hq external-word estimate. -/
-def forwardSobolevCost (ι : Type*) [Fintype ι] (q : ℕ) (T C A D CB Rc : ℝ) : ℝ :=
+@[expose] def forwardSobolevCost (ι : Type*) [Fintype ι] (q : ℕ) (T C A D CB Rc : ℝ) : ℝ :=
   1+sobolevInverseCost 1 (forwardSobolevAmplitude ι q T C CB Rc) q *
     (forwardSobolevAmplitude ι q T C CB Rc+C*A+C*T*D)
 

@@ -12,7 +12,7 @@ import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-! Jointly continuous positive-time heat kernels with an explicit integrable parabolic bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -106,7 +106,7 @@ theorem heatGain_joint_continuous (q : ℕ) :
   exact (heatGain_tsub period ε z.1.val hε hz.le z.2).symm
 
 /-- The positive real-time heat kernel, with zero chosen at nonpositive time. -/
-def heatKernel (q : ℕ) (ν : ℝ) (hν : 0 < ν) (t : ℝ) :
+@[expose] def heatKernel (q : ℕ) (ν : ℝ) (hν : 0 < ν) (t : ℝ) :
     SobolevSpace period q →L[ℝ] SobolevSpace period (q + 1) :=
   if ht : 0 < t then
     heatGain period q ⟨2 * ν * t, by positivity⟩ (by change (0 : ℝ) < 2 * ν * t; positivity)

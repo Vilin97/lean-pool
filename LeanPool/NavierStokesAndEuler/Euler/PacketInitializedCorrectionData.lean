@@ -52,7 +52,7 @@ section
 
 /-! Every joined high/corrector pair lies in the actual lifted solenoidal space. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -130,7 +130,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -231,7 +231,7 @@ the uncancelled tail.  The primary field and its homogeneous equation are
 inputs; every nonprimary regularity and equation is discharged by construction.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -311,7 +311,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -395,7 +395,7 @@ section
 
 /-! Exponential residual bounds for the actual recursively solved joined packet. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -485,7 +485,7 @@ section
 
 /-! The actual joined packet has a bounded normalized velocity and a small normal drift. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -564,7 +564,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -668,7 +668,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -699,7 +699,7 @@ def initializedNormalizedResidualField (Cagree : SourceCoefficientAgreement M D)
 
 /-- Initialized correction data, constructed using
 `EulerPacketCorrectionCoefficients.correctionDataOfFields`. -/
-def initializedCorrectionData (Cagree : SourceCoefficientAgreement M D)
+@[expose] def initializedCorrectionData (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k) :
     EulerAllOrderCorrectionData.Data period D.T :=
   EulerPacketCorrectionCoefficients.correctionDataOfFields D period k⁻¹

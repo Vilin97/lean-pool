@@ -21,7 +21,7 @@ section
 base interval. The normal and uncut velocity are the constructed source
 trajectories; their equations and the parent Riccati equation give the bound. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -32,7 +32,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerPacketForwardFactorization
 
 /-- First sign rate, given by `4*(3*CM^2+CH)`. -/
-def firstSignRate (CM CH : ℝ) : ℝ := 4*(3*CM^2+CH)
+@[expose] def firstSignRate (CM CH : ℝ) : ℝ := 4*(3*CM^2+CH)
 
 private theorem numerator_derivative_bound (CM CH : ℝ) (hCM : 0 ≤ CM) (hCH : 0 ≤ CH)
     (m m₁ v v₁ : Space) (A A₁ : Space →L[ℝ] Space)
@@ -166,7 +166,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

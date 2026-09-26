@@ -38,7 +38,7 @@ Row certificates and row-specific constructions for the probabilistic expander
 argument used in the Kalton-Roberts bound.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 

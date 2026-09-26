@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MildEquationBridge
 
 /-! Equivalence between genuine gained-derivative and ordinary heat-Duhamel solution formulas. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

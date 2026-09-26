@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.HeatPotential.Far
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 
@@ -48,7 +48,7 @@ theorem measurable_heatPotentialSpatialKernel_translate (i : Fin 3) (w : Parabol
   · exact measurable_const
 
 /-- Far parabolic shell with the six-scale separation used in heat-kernel difference estimates. -/
-def heatPotentialFarShellSet (z : ParabolicPoint) (r : ℝ) (j : ℕ) :
+@[expose] def heatPotentialFarShellSet (z : ParabolicPoint) (r : ℝ) (j : ℕ) :
     Set ParabolicPoint :=
   parabolicRieszShell r (j + 6 : ℤ) z
 theorem measurableSet_heatPotentialFarShellSet (z : ParabolicPoint) (r : ℝ)

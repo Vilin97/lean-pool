@@ -12,7 +12,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-! Actual H⁶ multiplication on the three-dimensional cylinder. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

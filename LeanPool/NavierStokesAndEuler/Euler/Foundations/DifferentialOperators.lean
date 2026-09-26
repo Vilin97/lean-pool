@@ -12,7 +12,7 @@ public import Mathlib.Analysis.Calculus.FDeriv.Basic
 
 /-! Coordinate trace and divergence on the physical three-dimensional Euclidean space. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -22,7 +22,7 @@ namespace EulerSmoothLimit
 abbrev Space := EuclideanSpace ℝ (Fin 3)
 
 /-- The trace of a continuous linear map, written in the standard Euclidean coordinates. -/
-noncomputable def coordinateTrace : (Space →L[ℝ] Space) →L[ℝ] ℝ :=
+@[expose] noncomputable def coordinateTrace : (Space →L[ℝ] Space) →L[ℝ] ℝ :=
   ∑ i : Fin 3, (EuclideanSpace.proj i).comp
     (ContinuousLinearMap.apply ℝ Space (EuclideanSpace.single i 1))
 
@@ -33,7 +33,7 @@ theorem coordinateTrace_eq_linearTrace (A : Space →L[ℝ] Space) :
   simp [coordinateTrace, Matrix.trace, LinearMap.toMatrix_apply]
 
 /-- Classical divergence, defined canonically as the trace of the Fréchet derivative. -/
-noncomputable def divergence (f : Space → Space) (x : Space) : ℝ :=
+@[expose] noncomputable def divergence (f : Space → Space) (x : Space) : ℝ :=
   LinearMap.trace ℝ Space (fderiv ℝ f x).toLinearMap
 
 theorem divergence_eq_coordinate_sum (f : Space → Space) (x : Space) :

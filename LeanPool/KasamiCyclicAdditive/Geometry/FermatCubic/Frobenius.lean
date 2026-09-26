@@ -25,7 +25,7 @@ in the prime field `F_2`.
 No algebraic closedness is needed: `x^2 = x` already forces `x = 0` or `x = 1` in any field.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 

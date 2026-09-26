@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.OneSidedMorreyMonotone
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal
@@ -48,6 +48,7 @@ The adapter direction is from the AE producer stated with `KP` to the larger
 /-- The enlarged pressure-gradient majorant. Its A budget adds the raised
 `6/5` power to the old A budget, and its B budget absorbs the clipped-scale
 inflation, floored at one. -/
+@[expose]
 def oneSidedPressureGradientKP'
     (q τ C_CZ R₀ R₁ ε : ℝ) (KU KD : ℝ≥0∞) : ℝ≥0∞ :=
   let κ := min ((1 / τ + 8 / 25)⁻¹) q

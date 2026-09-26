@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.GevreyCorrectionForcing
 
 /-! Exact spatial differentiation of the actual nonlinear correction equation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

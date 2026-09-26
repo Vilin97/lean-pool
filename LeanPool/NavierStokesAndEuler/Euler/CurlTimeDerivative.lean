@@ -12,7 +12,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 
 /-! Local mixed-derivative commutation for the ordinary spatial curl. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -94,7 +94,7 @@ theorem time_deriv_differentiableAt {u : ℝ × Space → Space} {t : ℝ} {x : 
   exact (hf.clm_apply contDiffAt_const).differentiableAt (by norm_num)
 
 /-- The continuous linear coordinate antisymmetrization defining curl. -/
-def curlMatrixCLM : (Space →L[ℝ] Space) →L[ℝ] Space :=
+@[expose] def curlMatrixCLM : (Space →L[ℝ] Space) →L[ℝ] Space :=
   (show (Space →L[ℝ] Space) →ₗ[ℝ] Space from
     { toFun := curlMatrix
       map_add' := curlMatrix_add

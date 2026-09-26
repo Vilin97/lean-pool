@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part04A
 
 /-! # GapCVP proof, part 04, continuation 02 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -679,7 +679,7 @@ namespace CNFPolynomialRowMarkerTM
 open Computability Turing GapCVP.BinaryEncoding GapCVP.SourceFormulaStructuralDecoder
 
 /-- GapCVP reduction support. -/
-def sourcePreservingPolynomialMarkerWord
+@[expose] def sourcePreservingPolynomialMarkerWord
     (polynomial : Polynomial ℕ)
     (input : List Bool) : List Bool :=
   lengthPrefixedWord input ++
@@ -711,7 +711,7 @@ theorem firstFieldSuffix_sourcePreservingPolynomialMarkerWord
   rw [read_sourcePreservingPolynomialMarkerWord]
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def polynomialRowMarkerHorner
+@[expose] def polynomialRowMarkerHorner
     (polynomial : Polynomial ℕ) (value : ℕ) :
     ℕ → ℕ → ℕ
   | 0, accumulator => accumulator
@@ -755,7 +755,7 @@ abbrev PolynomialRowMarkerStage (polynomial : Polynomial ℕ) :=
   Fin (polynomial.natDegree + 1)
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def polynomialRowMarkerTopStage
+@[expose] def polynomialRowMarkerTopStage
     (polynomial : Polynomial ℕ) :
     PolynomialRowMarkerStage polynomial :=
   ⟨polynomial.natDegree, by omega⟩
@@ -940,7 +940,7 @@ def polynomialRowMarkerRestoreBaseStatement
     (polynomialRowMarkerGoto polynomial 1 stage)
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def polynomialRowMarkerPredStage
+@[expose] def polynomialRowMarkerPredStage
     (polynomial : Polynomial ℕ)
     (stage : PolynomialRowMarkerStage polynomial)
     (_hstage : stage.val ≠ 0) :

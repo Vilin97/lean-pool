@@ -12,14 +12,14 @@ import Mathlib.Analysis.Complex.RemovableSingularity
 # LeanPool.RiemannMappingTheorem.Cindex
 -/
 
-@[expose] public section
+public section
 
 open Real Complex Function TopologicalSpace Filter Topology Metric MeasureTheory Nat
 
 /-- The argument-principle integral
 `(2πi)⁻¹ ∮_{C(z₀, r)} f'(z)/f(z) dz`, which counts zeroes of `f` inside
 the circle of radius `r` around `z₀` (with multiplicity). -/
-noncomputable def cindex (z₀ : ℂ) (r : ℝ) (f : ℂ → ℂ) : ℂ :=
+@[expose] noncomputable def cindex (z₀ : ℂ) (r : ℝ) (f : ℂ → ℂ) : ℂ :=
   (2 * π * I)⁻¹ * ∮ z in C(z₀, r), deriv f z / f z
 
 section circle_integral

@@ -19,7 +19,7 @@ prepared local blocks, proves the density bound for deleted positions, and packa
 resulting separating, locally admissible character.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

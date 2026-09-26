@@ -46,7 +46,7 @@ Stone-Weierstrass approximation, and a measure-theoretic perturbation argument.
   problem", 2011.
 -/
 
-@[expose] public section
+public section
 
 
 namespace LeanEval.Topology.ClassificationOfSurfaces.InvarianceOfDomain

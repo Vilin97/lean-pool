@@ -43,7 +43,7 @@ that time translation acts continuously on Schwartz space (a standard textbook f
 from Reed-Simon V.3 and Hörmander Ch. 7).
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real
 open TopologicalSpace
@@ -140,7 +140,7 @@ lemma timeShift_antilipschitz (s : ℝ) : AntilipschitzWith 1 (timeShift s) :=
   (timeShift_isometry s).antilipschitzWith
 
 /-- The constant vector used to express timeShift as id + const. -/
-def timeShiftConst (s : ℝ) : SpaceTime :=
+@[expose] def timeShiftConst (s : ℝ) : SpaceTime :=
   WithLp.toLp 2 (fun i => if i.val = 0 then s else 0)
 
 /-- timeShift s equals addition of a constant. -/
@@ -218,7 +218,7 @@ def timeTranslationSchwartzℂCLM (s : ℝ) : TestFunctionℂ →L[ℂ] TestFunc
   SchwartzMap.compCLMOfAntilipschitz ℂ (timeShift_hasTemperateGrowth s) (timeShift_antilipschitz s)
 
 /-- Time translation on complex-valued Schwartz functions. -/
-def timeTranslationSchwartzℂ (s : ℝ) (f : TestFunctionℂ) : TestFunctionℂ :=
+@[expose] def timeTranslationSchwartzℂ (s : ℝ) (f : TestFunctionℂ) : TestFunctionℂ :=
   timeTranslationSchwartzℂCLM s f
 
 /-- Time translation evaluated at a point. -/
@@ -807,14 +807,14 @@ for all f ∈ S(ℝ × ℝ³).
 
     Continuity is automatic since composition of continuous linear maps is continuous.
 -/
-def timeTranslationDistribution (s : ℝ) (ω : FieldConfiguration) : FieldConfiguration :=
+@[expose] def timeTranslationDistribution (s : ℝ) (ω : FieldConfiguration) : FieldConfiguration :=
   ω.comp (timeTranslationSchwartzCLM (-s))
 
 /-- The defining property of time translation on distributions. -/
 @[simp]
 lemma timeTranslationDistribution_apply (s : ℝ) (ω : FieldConfiguration)
     (f : OSforGFF.TestFunction) :
-    (timeTranslationDistribution s ω) f = ω (timeTranslationSchwartz (-s) f) := rfl
+    (timeTranslationDistribution s ω) f = ω (timeTranslationSchwartz (-s) f) := by rfl
 
 /-- Time translation on distributions is a group homomorphism: T_{s+t} = T_s ∘ T_t -/
 lemma timeTranslationDistribution_add (s t : ℝ) (ω : FieldConfiguration) :

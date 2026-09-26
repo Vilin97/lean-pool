@@ -12,7 +12,7 @@ import Mathlib.Analysis.SpecificLimits.Normed
 /-! # Tendstolems -/
 
 
-@[expose] public section
+public section
 
 open TopologicalSpace Set
   Metric Filter Function Complex

@@ -21,7 +21,7 @@ and same-half-plane two-circle uniqueness leave at most two tail slots (one
 under the strict anchor).
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 

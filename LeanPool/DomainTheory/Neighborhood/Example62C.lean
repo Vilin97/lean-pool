@@ -50,7 +50,7 @@ order-isomorphism
 All *data* is choice-free (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -197,7 +197,7 @@ theorem j2_injective {Z Z' : Set γ}
 variable (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) (V₂ : NeighborhoodSystem γ)
 
 /-- The master neighbourhood of the three-way sum: `{Λ} ∪ 0Δ₀ ∪ 1Δ₁ ∪ 2Δ₂`. -/
-def master3 : Set (Option (α ⊕ β ⊕ γ)) :=
+@[expose] def master3 : Set (Option (α ⊕ β ⊕ γ)) :=
   insert none (j0 V₀.master ∪ j1 V₁.master ∪ j2 V₂.master)
 
 variable {V₀ V₁ V₂}
@@ -242,6 +242,7 @@ theorem eq_master3_of_subset {W : Set (Option (α ⊕ β ⊕ γ))}
 /-- **Example 6.2 — the three-way separated sum `D₀ + D₁ + D₂`** over `{Λ} ∪ 0Δ₀ ∪
 1Δ₁ ∪ 2Δ₂`,
 under the standing assumption that no neighbourhood of any factor is empty. -/
+@[expose]
 def sum3 (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) (V₂ : NeighborhoodSystem γ)
     (h₀ : ∀ X, V₀.mem X → X.Nonempty) (h₁ : ∀ Y, V₁.mem Y → Y.Nonempty)
     (h₂ : ∀ Z, V₂.mem Z → Z.Nonempty) : NeighborhoodSystem (Option (α ⊕ β ⊕ γ)) where
@@ -405,7 +406,7 @@ theorem sum3_mem_nonempty {W : Set (Option (Unit ⊕ Str ⊕ Str))} (h : CC.mem 
 /-! ### The forward half `toCC : |C| → |𝟙 + C + C|`. -/
 
 /-- **Example 6.2 — forward half of `C ≅ 𝟙 + C + C`.** -/
-def toCC (x : C.Element) : CC.Element where
+@[expose] def toCC (x : C.Element) : CC.Element where
   mem W := W = master3 unitSys C C
     ∨ (W = j0 (Set.univ : Set Unit) ∧ x.mem ({[]} : Set Str))
     ∨ (∃ X, C.mem X ∧ W = j1 X ∧ x.mem (embBit false X))
@@ -520,7 +521,7 @@ theorem toCC_mem_j2 {x : C.Element} {Y : Set Str} (hY : C.mem Y) :
 /-! ### The inverse half `fromCC : |𝟙 + C + C| → |C|`. -/
 
 /-- **Example 6.2 — inverse half of `C ≅ 𝟙 + C + C`.** -/
-def fromCC (s : CC.Element) : C.Element where
+@[expose] def fromCC (s : CC.Element) : C.Element where
   mem W := W = Set.univ
     ∨ (W = ({[]} : Set Str) ∧ s.mem (j0 (Set.univ : Set Unit)))
     ∨ (∃ X, C.mem X ∧ W = embBit false X ∧ s.mem (j1 X))
@@ -670,7 +671,7 @@ theorem toCC_fromCC (s : CC.Element) : toCC (fromCC s) = s := by
 /-! ### The domain equation `C ≅ 𝟙 + C + C`. -/
 
 /-- **Example 6.2 (Scott 1981, PRG-19) — the isomorphism `|C| ≃o |𝟙 + C + C|`.** -/
-def ccEquiv : C.Element ≃o CC.Element where
+@[expose] def ccEquiv : C.Element ≃o CC.Element where
   toFun := toCC
   invFun := fromCC
   left_inv := fromCC_toCC

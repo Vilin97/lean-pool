@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 strong ordinary Sobolev limit. Only a uniform H³ bound is used in the
 product estimate; pressure convergence is a consequence. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -80,7 +80,7 @@ def advectionPath (A : Icc (0 : ℝ) T → SmoothL2Field Space)
 
 /-- Projected rhs path, given by `fieldPath (fun t => projectedRhs (A t))
 (projectedRhs_continuous A hA)`. -/
-def projectedRhsPath (A : Icc (0 : ℝ) T → SmoothL2Field Space)
+@[expose] def projectedRhsPath (A : Icc (0 : ℝ) T → SmoothL2Field Space)
     (hA : ∀ n, Continuous (fun t => (A t).jetLp n)) : C(Icc (0 : ℝ) T,L2) :=
   fieldPath (fun t => projectedRhs (A t)) (projectedRhs_continuous A hA)
 

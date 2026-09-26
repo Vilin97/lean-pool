@@ -22,7 +22,7 @@ same `cases … <;> simp [toLω]` inversion. With them the HF fragment's closure
 one-liners.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

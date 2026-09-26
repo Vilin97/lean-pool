@@ -21,7 +21,7 @@ analytic maps in both directions, carrying `a` to `b`, whose two composites agre
 with the identity on neighborhoods of the relevant base points.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology
@@ -181,7 +181,7 @@ theorem eventually_bijective_fderiv_invFun [CompleteSpace E] [CompleteSpace F]
   e.symm.eventually_bijective_fderiv_toFun
 
 /-- Compose two local biholomorphisms with matching middle base point. -/
-def trans (e : LocalBiholomorphAt E F a b)
+@[expose] def trans (e : LocalBiholomorphAt E F a b)
     (h : LocalBiholomorphAt F G b c) :
     LocalBiholomorphAt E G a c where
   toFun := h.toFun ∘ e.toFun
@@ -221,7 +221,7 @@ def ofContinuousLinearEquiv (e : E ≃L[ℂ] F) (a : E) :
 
 /-- A continuous complex-linear equivalence regarded as a biholomorphic germ
 at the origin in both spaces. -/
-def ofContinuousLinearEquivAtZero (e : E ≃L[ℂ] F) :
+@[expose] def ofContinuousLinearEquivAtZero (e : E ≃L[ℂ] F) :
     LocalBiholomorphAt E F 0 0 where
   toFun := e
   invFun := e.symm
@@ -233,7 +233,7 @@ def ofContinuousLinearEquivAtZero (e : E ≃L[ℂ] F) :
   right_inv := Filter.Eventually.of_forall e.apply_symm_apply
 
 /-- The affine biholomorphism with linear part `e` sending `a` to `b`. -/
-def affine (e : E ≃L[ℂ] F) (a : E) (b : F) :
+@[expose] def affine (e : E ≃L[ℂ] F) (a : E) (b : F) :
     LocalBiholomorphAt E F a b where
   toFun := fun x ↦ e (x - a) + b
   invFun := fun y ↦ e.symm (y - b) + a
@@ -260,7 +260,7 @@ def translation (a b : E) : LocalBiholomorphAt E E a b :=
 
 /-- A triangular analytic change of coordinates on a product, subtracting an
 analytic function from the second coordinate. -/
-def fiberShearAtZero
+@[expose] def fiberShearAtZero
     {X Y : Type*}
     [NormedAddCommGroup X] [NormedSpace ℂ X]
     [NormedAddCommGroup Y] [NormedSpace ℂ Y]
@@ -284,7 +284,7 @@ def fiberShearAtZero
     ext <;> simp
 
 /-- An analytic map with an explicitly invertible derivative is locally biholomorphic. -/
-def ofAnalyticAtOfFDerivEquiv [CompleteSpace E]
+@[expose] def ofAnalyticAtOfFDerivEquiv [CompleteSpace E]
     {f : E → F} {a : E} (hf : AnalyticAt ℂ f a)
     (e : E ≃L[ℂ] F) (he : fderiv ℂ f a = (e : E →L[ℂ] F)) :
     LocalBiholomorphAt E F a (f a) := by

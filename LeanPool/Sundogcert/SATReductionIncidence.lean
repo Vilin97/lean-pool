@@ -38,7 +38,7 @@ public import LeanPool.Sundogcert.SATReduction
   Axiom-clean (no `decide`, no `native_decide`).  Expect `[propext, Quot.sound]` subsets on all six.
 -/
 
-@[expose] public section
+public section
 
 open Sundog.SATReduction Sundog.SATNPHard
 

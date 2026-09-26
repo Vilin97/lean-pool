@@ -23,7 +23,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -40,7 +40,7 @@ abbrev FlagSpace (K : Type u) : ℕ → Type u
 
 /-- The dimension of `FlagSpace`, kept recursive so adjoining its first two
 coordinates remains definitionally transparent. -/
-def flagDim : ℕ → ℕ
+@[expose] def flagDim : ℕ → ℕ
   | 0 => 1
   | k + 1 => flagDim k + 2
 

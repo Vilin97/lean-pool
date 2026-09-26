@@ -25,7 +25,7 @@ and `NormalForm.nonOrientableBoundaryWord`; this file does not introduce another
 the Lean-Eval representatives.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

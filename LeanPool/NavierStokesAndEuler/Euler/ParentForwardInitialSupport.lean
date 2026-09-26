@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitialSupport
 /-! The same forward correction used by the actual child has the
 literal compact initial support when the mean boundary parameter is zero. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

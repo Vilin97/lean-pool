@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.VolterraFixedPoint
 
 /-! The actual pressure-projected quadratic source passes to uniform Sobolev path limits. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

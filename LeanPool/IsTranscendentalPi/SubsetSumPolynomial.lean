@@ -18,7 +18,7 @@ according to the vanishing subset sums, used to track integer divisibility in
 Niven's argument.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open Multiset

@@ -16,7 +16,7 @@ to every L^(3/2) input. Compact support is required only of the test function,
 not of a chosen representative of an Lp class.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology

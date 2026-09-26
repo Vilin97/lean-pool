@@ -17,7 +17,7 @@ The input inverse bound is derived from determinant-one deformation data;
 no inverse solver norm or forcing-dependent constant appears in the final
 radius. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -45,7 +45,7 @@ def accelerationCost (q : ℕ) (R C C₁ V : ℝ) : ℝ :=
     (accelerationBlockAmplitude (Fin 4) q R C C₁ 1 V)
 
 /-- Inverse radius, given by `2*(1+gramInverseEnvelope C*(3*C^2+2))*(R+1)`. -/
-def inverseRadius (R C : ℝ) : ℝ :=
+@[expose] def inverseRadius (R C : ℝ) : ℝ :=
   2*(1+gramInverseEnvelope C*(3*C^2+2))*(R+1)
 
 /-- Forward cost, constructed using `forwardSobolevCost`. -/
@@ -55,7 +55,7 @@ def forwardCost (q : ℕ) (S Ti R C C₁ Cp : ℝ) : ℝ :=
     (18*inverseRadius R C*C*C₁) (4*inverseRadius R C)
 
 /-- Radius as an element of `ℝ`. -/
-def radius (q : ℕ) (T S Ti R C C₁ C₂ Cp : ℝ) : ℝ :=
+@[expose] def radius (q : ℕ) (T S Ti R C C₁ C₂ Cp : ℝ) : ℝ :=
   1+2*(historyCost q T R C C₁ C₂+accelerationCost q R C C₁ 1 +
     accelerationCost q R C C₁ (Ti+2))*(sobolevCoefficientRadius (Fin 4) R+1) +
     sobolevCoefficientRadius (Fin 4) (4*inverseRadius R C) +

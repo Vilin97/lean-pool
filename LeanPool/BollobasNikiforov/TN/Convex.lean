@@ -18,7 +18,7 @@ Lemma `lem:convex` of `docs/sol.tex`: if `f : [0, ∞) → [0, ∞)` is convex a
 totally nonnegative.
 -/
 
-@[expose] public section
+public section
 
 open Function Matrix Set
 
@@ -66,7 +66,7 @@ lemma convexOn_Ici_zero_monotoneOn
 /-! ### TN15: size-one and size-two minors of rows `(1, t, f t)` -/
 
 /-- The feature row `(1, t, f t)`. -/
-def row3 (f : ℝ → ℝ) (t : ℝ) : Fin 3 → ℝ := ![1, t, f t]
+@[expose] def row3 (f : ℝ → ℝ) (t : ℝ) : Fin 3 → ℝ := ![1, t, f t]
 
 @[simp] lemma row3_zero (f : ℝ → ℝ) (t : ℝ) : row3 f t 0 = 1 := rfl
 @[simp] lemma row3_one (f : ℝ → ℝ) (t : ℝ) : row3 f t 1 = t := rfl
@@ -74,7 +74,7 @@ def row3 (f : ℝ → ℝ) (t : ℝ) : Fin 3 → ℝ := ![1, t, f t]
   simp [row3, cons_val_two, vecHead, vecTail]
 
 /-- The `ι × 3` matrix whose `i`th row is `(1, t i, f (t i))`. -/
-def convexRowMatrix {ι : Type*} (f : ℝ → ℝ) (t : ι → ℝ) : Matrix ι (Fin 3) ℝ :=
+@[expose] def convexRowMatrix {ι : Type*} (f : ℝ → ℝ) (t : ι → ℝ) : Matrix ι (Fin 3) ℝ :=
   fun i j ↦ row3 f (t i) j
 
 lemma row3_nonneg (hfnn : ∀ x, 0 ≤ x → 0 ≤ f x) {t : ℝ} (ht : 0 < t) (j : Fin 3) :

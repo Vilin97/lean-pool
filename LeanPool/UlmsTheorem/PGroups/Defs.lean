@@ -26,7 +26,7 @@ Existing imports of `Lib.PGroups.Defs` therefore continue to work while the
 library is migrated to the new layout.
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 

@@ -18,7 +18,7 @@ Exact residual-tail grades. Fast pressure is absent beyond degree N, and
 only degree N+1 retains the linear terminal corrector and slow pressure.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -121,7 +121,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

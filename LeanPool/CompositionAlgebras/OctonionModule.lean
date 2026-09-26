@@ -39,7 +39,7 @@ is no `Module ℝ Octonion` for `CompositionAlgebra Octonion` to be stated over.
 * `Octonion.finrank_eq_eight` -- `finrank ℝ 𝕆 = 8`
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -92,7 +92,7 @@ with the trace form `re (x * conj y)` of `OctonionTrace.lean`, which is how the 
 there reach the trace form on hermitian octonionic matrices. -/
 
 /-- The Euclidean inner product on the octonions. -/
-def octIp (x y : Octonion) : ℝ := ∑ i, x.coords i * y.coords i
+@[expose] def octIp (x y : Octonion) : ℝ := ∑ i, x.coords i * y.coords i
 
 theorem octIp_comm (x y : Octonion) : octIp x y = octIp y x := by
   simp only [octIp]; exact Finset.sum_congr rfl fun i _ => mul_comm _ _

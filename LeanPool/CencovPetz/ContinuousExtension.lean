@@ -27,7 +27,7 @@ identity to all simplex points.
 - `CencovPetz.eq_of_eqOn_dense₂`
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

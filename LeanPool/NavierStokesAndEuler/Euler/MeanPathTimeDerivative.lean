@@ -24,7 +24,7 @@ Sobolev arrays transfer the actual time derivative to the smooth spatial
 representatives.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

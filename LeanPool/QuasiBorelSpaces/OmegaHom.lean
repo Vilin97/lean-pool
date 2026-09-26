@@ -17,7 +17,7 @@ This file defines the function space `OmegaQuasiBorelHom X Y` (written
 itself an ωQBS.
 -/
 
-@[expose] public section
+public section
 
 open QuasiBorelSpace
 open OmegaQuasiBorelSpace
@@ -89,25 +89,34 @@ instance : PartialOrder (X →ω𝒒 Y) :=
   PartialOrder.lift DFunLike.coe DFunLike.coe_injective
 
 /-- Converts an ωQBS Hom to a Poset Hom. -/
-@[simps, coe]
+@[coe]
 def toOrderHom (f : X →ω𝒒 Y) : X →o Y where
   toFun := f
   monotone' := f.monotone_coe
 
+@[simp] theorem toOrderHom_coe (f : X →ω𝒒 Y) (x : X) :
+    toOrderHom f x = f x := by rfl
+
 /-- Converts a ωQBS Hom to an ωCPO Hom. -/
-@[simps, coe]
+@[coe]
 def toContinuousHom (f : X →ω𝒒 Y) : X →𝒄 Y where
   toFun := f
   monotone' := f.monotone_coe
   map_ωSup' := f.ωScottContinuous_coe.map_ωSup
 
+@[simp] theorem toContinuousHom_coe (f : X →ω𝒒 Y) (x : X) :
+    toContinuousHom f x = f x := by rfl
+
 /-- Converts a ωQBS Hom to a quasi-Borel Hom. -/
-@[simps, coe]
+@[coe]
 def toQuasiBorelHom (f : X →ω𝒒 Y) : X →𝒒 Y where
   toFun := f
 
+@[simp] theorem toQuasiBorelHom_coe (f : X →ω𝒒 Y) (x : X) :
+    toQuasiBorelHom f x = f x := by rfl
+
 /-- The underlying pointwise function as an order homomorphism. -/
-def coeOrderHom : (X →ω𝒒 Y) →o (X → Y) where
+@[expose] def coeOrderHom : (X →ω𝒒 Y) →o (X → Y) where
   toFun f := f
   monotone' _ _ h := h
 
@@ -292,49 +301,64 @@ instance : OmegaQuasiBorelSpace (X →ω𝒒 Y) where
 /-! ### Operations -/
 
 /-- Identity `OmegaQuasiBorelHom`s. -/
-@[simps]
-def id : X →ω𝒒 X where
+@[expose] def id : X →ω𝒒 X where
   toFun x := x
 
+@[simp] theorem id_coe (x : X) : (id : X →ω𝒒 X) x = x := by rfl
+
 /-- Function composition for `OmegaQuasiBorelHom`s. -/
-@[simps coe]
-def comp (f : Y →ω𝒒 Z) (g : X →ω𝒒 Y) : X →ω𝒒 Z where
+@[expose] def comp (f : Y →ω𝒒 Z) (g : X →ω𝒒 Y) : X →ω𝒒 Z where
   toFun x := f (g x)
 
+@[simp] theorem comp_coe (f : Y →ω𝒒 Z) (g : X →ω𝒒 Y) (x : X) :
+    comp f g x = f (g x) := by rfl
+
 /-- Product construction as an `OmegaQuasiBorelHom`. -/
-@[simps coe]
 def Prod.mk (f : X →ω𝒒 Y) (g : X →ω𝒒 Z) : X →ω𝒒 Y × Z where
   toFun x := (f x, g x)
 
+@[simp] theorem Prod.mk_coe (f : X →ω𝒒 Y) (g : X →ω𝒒 Z) (x : X) :
+    Prod.mk f g x = (f x, g x) := by rfl
+
 /-- First product projection. -/
-@[simps coe]
 def Prod.fst : X × Y →ω𝒒 X where
   toFun x := x.1
 
+@[simp] theorem Prod.fst_coe (x : X × Y) : (Prod.fst : X × Y →ω𝒒 X) x = x.1 := by rfl
+
 /-- Second product projection. -/
-@[simps coe]
 def Prod.snd : X × Y →ω𝒒 Y where
   toFun x := x.2
 
+@[simp] theorem Prod.snd_coe (x : X × Y) : (Prod.snd : X × Y →ω𝒒 Y) x = x.2 := by rfl
+
 /-- Currying for `OmegaQuasiBorelHom`s. -/
-@[simps coe]
 def curry (f : Z × X →ω𝒒 Y) : Z →ω𝒒 (X →ω𝒒 Y) where
   toFun x := { toFun y := f (x, y) }
 
+@[simp] theorem curry_coe (f : Z × X →ω𝒒 Y) (z : Z) :
+    curry f z = ({ toFun x := f (z, x) } : X →ω𝒒 Y) := by
+  ext x
+  rfl
+
 /-- Function application is an `OmegaQuasiBorelHom`. -/
-@[simps coe]
 def eval : (X →ω𝒒 Y) × X →ω𝒒 Y where
   toFun x := x.1 x.2
 
+@[simp] theorem eval_coe (x : (X →ω𝒒 Y) × X) :
+    (eval : (X →ω𝒒 Y) × X →ω𝒒 Y) x = x.1 x.2 := by rfl
+
 /-- Uncurrying for `OmegaQuasiBorelHom`s. -/
-@[simps!]
 def uncurry (f : X →ω𝒒 Y →ω𝒒 Z) : X × Y →ω𝒒 Z :=
   eval.comp (Prod.mk (comp f Prod.fst) Prod.snd)
 
-@[simp]
-lemma curry_uncurry (f : Z →ω𝒒 (X →ω𝒒 Y)) : curry (uncurry f) = f := rfl
+@[simp] theorem uncurry_coe (f : X →ω𝒒 Y →ω𝒒 Z) (x : X × Y) :
+    uncurry f x = f x.1 x.2 := by rfl
 
 @[simp]
-lemma uncurry_curry (f : Z × X →ω𝒒 Y) : uncurry (curry f) = f := rfl
+lemma curry_uncurry (f : Z →ω𝒒 (X →ω𝒒 Y)) : curry (uncurry f) = f := by rfl
+
+@[simp]
+lemma uncurry_curry (f : Z × X →ω𝒒 Y) : uncurry (curry f) = f := by rfl
 
 end OmegaQuasiBorelHom

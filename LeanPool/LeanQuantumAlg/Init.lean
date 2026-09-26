@@ -15,4 +15,4 @@ public import Mathlib.Data.Nat.Notation
 This module sets up the public QuantumAlg import environment.
 -/
 
-@[expose] public section
+public section

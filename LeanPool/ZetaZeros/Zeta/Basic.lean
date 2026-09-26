@@ -24,7 +24,7 @@ compactly supported in `(-1/2, 1/2)` and even — and then so is the self-convol
 `(-1, 1)`, together with its second derivative.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

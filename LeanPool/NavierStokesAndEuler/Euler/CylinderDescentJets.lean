@@ -16,7 +16,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Operations
 the cylinder. Their composition is the literal finite Taylor composition
 used by the cylinder L² estimate. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -44,7 +44,7 @@ theorem iteratedFDeriv_deck (n : ℕ) (c : AddSubgroup.zmultiples P) (z : LiftTa
   rw [← shift,← iteratedFDeriv_comp_add_right n a z,he]
 
 /-- Jet series, defined pointwise by `descend P (iteratedFDeriv ℝ n f) q`. -/
-def jetSeries (q : LiftDomain P) : FormalMultilinearSeries ℝ LiftTangent W :=
+@[expose] def jetSeries (q : LiftDomain P) : FormalMultilinearSeries ℝ LiftTangent W :=
   fun n => descend P (iteratedFDeriv ℝ n f) q
 
 include hperiod in

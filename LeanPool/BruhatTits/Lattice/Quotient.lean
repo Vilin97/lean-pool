@@ -33,7 +33,7 @@ the two-dimensional `R ⧸ ϖ R`-vector space `L ⧸ ϖ L`.
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 
@@ -47,6 +47,7 @@ namespace BruhatTits
 
 
 /-- The `R ⧸ ϖ R`-module `L ⧸ ϖ L`. We define this in terms of the maximal ideal of `R`. -/
+@[expose]
 def _root_.BruhatTits.Lattice.quotient (L : Lattice R) : Type _ :=
   L.M ⧸ (IsLocalRing.maximalIdeal R • ⊤ : Submodule R L.M)
 
@@ -182,7 +183,8 @@ lemma _root_.Module.Basis.unipotentResidue_mk [IsFractionRing R K]
     (b : Basis (Fin 2) K (Fin 2 → K))
     (x : R) (y : b.toSubmodule (R := R)) :
     (b.unipotentResidue x) (Submodule.Quotient.mk y) =
-      Submodule.Quotient.mk (⟨b.transvectEquiv x y, b.transvectEquiv_apply_mem x y⟩) := by
+      Submodule.Quotient.mk
+        (⟨b.transvectEquiv x y, b.transvectEquiv_apply_mem x y⟩ : (b.toLattice (R := R)).M) := by
   let b' : Basis (Fin 2) R (b.toSubmodule (R := R)) := b.restrict
   have : y ∈ Submodule.span R (Set.range b') := by
     simp_all
@@ -266,6 +268,7 @@ def _root_.BruhatTits.Lattice.mapIntermediateSubmodule
 
 /-- Variant of `Lattice.mapIntermediateSubmodule` where `M` is a second lattice. This is
 the most frequent use case. -/
+@[expose]
 def _root_.BruhatTits.Lattice.mapIntermediate (L M : Lattice R) :
     Submodule (ResidueField R) L.quotient :=
   L.mapIntermediateSubmodule M.M
@@ -320,6 +323,7 @@ lemma _root_.BruhatTits.Lattice.mapIntermediate_inj_of (L M₁ M₂ : Lattice R)
 
 /-- The image of the lattice spanned by `(ϖ • b₀, b₁)` in `L ⧸ ϖ L`
 where `L` is spanned by `(b₀, b₁)`. -/
+@[expose]
 def _root_.Module.Basis.quotientStdLine₀ (b : Basis (Fin 2) K (Fin 2 → K))
     {ϖ : R} (hϖ : Irreducible ϖ) :
     Submodule (ResidueField R) (b.toLattice (R := R)).quotient :=

@@ -24,7 +24,7 @@ section
 
 /-! Odd compact terminal data propagate through the genuine history and forward primary solve. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -112,7 +112,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

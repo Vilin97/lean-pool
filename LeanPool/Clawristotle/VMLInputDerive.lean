@@ -25,7 +25,7 @@ then applies the abstract proof chain (Sections 2-8) to derive the main theorem
 `ConcreteTheorem42` with minimal physical hypotheses.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

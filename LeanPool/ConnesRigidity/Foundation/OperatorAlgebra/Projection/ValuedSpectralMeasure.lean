@@ -20,7 +20,7 @@ public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalFixed
 The valued spectral measure component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 

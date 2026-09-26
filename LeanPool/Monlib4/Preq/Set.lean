@@ -18,4 +18,4 @@ import Mathlib.Tactic.SetLike
 the relevant imports for downstream files.
 -/
 
-@[expose] public section
+public section

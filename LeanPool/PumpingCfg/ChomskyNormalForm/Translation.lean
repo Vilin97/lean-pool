@@ -33,7 +33,7 @@ original language (except for the empty string)
    [Hopcroft et al. 2006]
 -/
 
-@[expose] public section
+public section
 
 universe uN
 

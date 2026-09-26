@@ -46,7 +46,7 @@ The GENERIC semantic (realize) bridges live in `LocalEMContext.lean`; the old
 syntactic.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -104,7 +104,7 @@ def canonDeForm {n : ℕ} (φ : Λ.BoundedFormulaω Empty n) {p : ℕ} (g : Fin 
 
 /-- The **canonical deForm closure** of a base family `Γc`: all canonical deForms of its members,
 over all target arities and term tuples. -/
-def canonDeForms (Γc : Set (Σ n, Λ.BoundedFormulaω Empty n)) :
+@[expose] def canonDeForms (Γc : Set (Σ n, Λ.BoundedFormulaω Empty n)) :
     Set (Σ n, Λ.BoundedFormulaω Empty n) :=
   ⋃ q ∈ Γc, Set.range fun r : Σ p, Fin q.1 → Λ.Term (Fin p) =>
     (⟨r.1, canonDeForm Λ q.2 r.2⟩ : Σ n, Λ.BoundedFormulaω Empty n)
@@ -134,12 +134,12 @@ variable (J : Type) [LinearOrder J]
 
 /-- The `J`-constant carried by a function symbol of `Λ[[J]]`: only an arity-`0` symbol from the
 `constantsOn J` summand is a skeleton constant. -/
-def locJConstOf : {n : ℕ} → Λ[[J]].Functions n → Finset J
+@[expose] def locJConstOf : {n : ℕ} → Λ[[J]].Functions n → Finset J
   | 0, Sum.inr j => {j}
   | _, _ => ∅
 
 /-- The finite set of `J`-constants (skeleton constants) mentioned in a `Λ[[J]]`-term. -/
-def locJSupport {α : Type} : Λ[[J]].Term α → Finset J
+@[expose] def locJSupport {α : Type} : Λ[[J]].Term α → Finset J
   | .var _ => ∅
   | .func f ts => (Finset.univ.biUnion fun i => locJSupport (ts i)) ∪ locJConstOf Λ J f
 
@@ -194,7 +194,7 @@ def locDeTermFin (S : Finset J) (t : Λ[[J]].Term Empty) (hsub : locJSupport Λ 
 
 /-- The **local de-substituted equality atom**: definitionally a canonical equality atom, so its
 membership in `canonEqAtoms` is by construction. -/
-def locDeEqAtom (S : Finset J) (t u : Λ[[J]].Term Empty)
+@[expose] def locDeEqAtom (S : Finset J) (t u : Λ[[J]].Term Empty)
     (ht : locJSupport Λ J t ⊆ S) (hu : locJSupport Λ J u ⊆ S) :
     Λ.BoundedFormulaω Empty S.card :=
   canonEqAtom Λ (locDeTermFin Λ J S t ht) (locDeTermFin Λ J S u hu)

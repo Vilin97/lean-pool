@@ -58,7 +58,7 @@ with record minima at `d = 1, 7, 8, 10, 11` (values `73 > 68 > 61 > 50 > 17`). T
 `five_le_card_image_of_strictAnti_chain` below is the foundational R3 step (axiom-clean).
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.EuclideanRecords
 

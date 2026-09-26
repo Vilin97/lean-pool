@@ -19,7 +19,7 @@ identifies that family with the translation orbit of the constructed field.
 No regularity assumption is imposed on a solved history field.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

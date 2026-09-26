@@ -18,7 +18,7 @@ Finite torus averaging and radial integration preserve these bounds.  All
 derivatives in this file are `iteratedFDeriv` of the actual integral.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.MeanMomentBounds
@@ -104,7 +104,7 @@ theorem norm_iteratedFDeriv_affine_le (L : D →L[ℝ] E) (hL : ‖L‖ ≤ 1)
   exact mul_le_of_le_one_right (norm_nonneg _) (pow_le_one₀ (norm_nonneg L) hL)
 
 /-- The unweighted slow strip keeps precisely the same band scales. -/
-noncomputable def slowStripData (ε S : ℕ → ℝ)
+@[expose] noncomputable def slowStripData (ε S : ℕ → ℝ)
     (hε : ∀ n, 0 < ε n) (hεone : ∀ n, ε n ≤ 1) (hS : ∀ n, 1 ≤ S n) :
     StripData D where
   domain := univ
@@ -294,7 +294,7 @@ noncomputable def auxY : PressureStream.Lift P := (0, (0, (0, 1)))
   ext <;> simp [eraseAuxY, auxY]
 
 /-- Lifted torus average, given by `PressureStream.torusAverage f (x.1, x.2.1)`. -/
-noncomputable def liftedTorusAverage (f : PressureStream.Lift P → ℝ)
+@[expose] noncomputable def liftedTorusAverage (f : PressureStream.Lift P → ℝ)
     (x : PressureStream.Lift P) : ℝ := PressureStream.torusAverage f (x.1, x.2.1)
 
 theorem liftedTorusAverage_eq_affine (f : PressureStream.Lift P → ℝ) :

@@ -14,7 +14,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-! Radial reconstruction of a canonically normalized scalar potential. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -25,7 +25,7 @@ open MeasureTheory Set InnerProductSpace EulerLiftedGradientSpace
 open scoped ContDiff
 
 /-- The scalar radial integral of a spatial vector field, based at the origin. -/
-def radialPotential (V : Vector3 → Vector3) (x : Vector3) : ℝ :=
+@[expose] def radialPotential (V : Vector3 → Vector3) (x : Vector3) : ℝ :=
   ∫ s in (0 : ℝ)..1, ⟪V (s • x), x⟫_ℝ
 
 /-- The radial integral is normalized to vanish at the origin. -/

@@ -19,4 +19,4 @@ Tags: circuits, hardware, category-theory, combinational, sequential
 MSC: 18M05, 68Q60, 94C11
 -/
 
-@[expose] public section
+public section

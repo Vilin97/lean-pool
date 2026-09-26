@@ -21,7 +21,7 @@ import LeanPool.MatchingLogic.EntryIII.MCSAlpha
 # MatchingLogic.EntryIII.CanonicalExistence
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

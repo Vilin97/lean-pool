@@ -20,7 +20,7 @@ simplicial order, initial segments, slicing maps, and the Harper boundary
 function `H`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -30,7 +30,7 @@ namespace BooleanIsoperimetry
 abbrev Cube (n : ℕ) := Finset (Fin n)
 
 /-- The Hamming distance between two Boolean-cube vertices. -/
-noncomputable def hDist {n : ℕ} (x y : Cube n) : ℕ :=
+@[expose] noncomputable def hDist {n : ℕ} (x y : Cube n) : ℕ :=
   (symmDiff x y).card
 
 /-- The closed Hamming `r`-neighborhood of a family of cube vertices. -/
@@ -47,15 +47,15 @@ noncomputable def hammingBall {n : ℕ} (r : ℕ) : Finset (Cube n) :=
   Finset.univ.filter (fun v => v.card ≤ r)
 
 /-- The binary encoding used to break ties in the simplicial order. -/
-noncomputable def cubeToNat {n : ℕ} (x : Cube n) : ℕ :=
+@[expose] noncomputable def cubeToNat {n : ℕ} (x : Cube n) : ℕ :=
   ∑ i ∈ x, 2 ^ (i : ℕ)
 
 /-- The non-strict simplicial order: first by weight, then by reverse binary order. -/
-def simplicialLe {n : ℕ} (x y : Cube n) : Prop :=
+@[expose] def simplicialLe {n : ℕ} (x y : Cube n) : Prop :=
   x.card < y.card ∨ (x.card = y.card ∧ cubeToNat y ≤ cubeToNat x)
 
 /-- The strict simplicial order on Boolean-cube vertices. -/
-def simplicialLt {n : ℕ} (x y : Cube n) : Prop :=
+@[expose] def simplicialLt {n : ℕ} (x y : Cube n) : Prop :=
   simplicialLe x y ∧ ¬simplicialLe y x
 
 -- ==========================================
@@ -202,12 +202,12 @@ lemma simplicialLe_total {n : ℕ} (a b : Cube n) : simplicialLe a b ∨ simplic
 
 open Classical in
 /-- The zero-based position of a vertex in the simplicial order. -/
-noncomputable def rank {n : ℕ} (x : Cube n) : ℕ :=
+@[expose] noncomputable def rank {n : ℕ} (x : Cube n) : ℕ :=
   (Finset.univ.filter (fun y => simplicialLt y x)).card
 
 open Classical in
 /-- The first `k` vertices of the `n`-cube in simplicial order. -/
-noncomputable def simplicialInitSeg (n : ℕ) (k : ℕ) : Finset (Cube n) :=
+@[expose] noncomputable def simplicialInitSeg (n : ℕ) (k : ℕ) : Finset (Cube n) :=
   Finset.univ.filter (fun x => rank x < k)
 
 /-
@@ -291,19 +291,19 @@ lemma card_simplicialInitSeg {n k : ℕ} :
 -- ==========================================
 
 /-- Embed an `n`-cube vertex in dimension `n + 1` with last coordinate zero. -/
-noncomputable def embed0 {n : ℕ} (x : Cube n) : Cube (n + 1) :=
+@[expose] noncomputable def embed0 {n : ℕ} (x : Cube n) : Cube (n + 1) :=
   x.image Fin.castSucc
 
 /-- Embed an `n`-cube vertex in dimension `n + 1` with last coordinate one. -/
-noncomputable def embed1 {n : ℕ} (x : Cube n) : Cube (n + 1) :=
+@[expose] noncomputable def embed1 {n : ℕ} (x : Cube n) : Cube (n + 1) :=
   insert (Fin.last n) (x.image Fin.castSucc)
 
 /-- The lower slice of a family in dimension `n + 1`. -/
-noncomputable def slice0 {n : ℕ} (A : Finset (Cube (n + 1))) : Finset (Cube n) :=
+@[expose] noncomputable def slice0 {n : ℕ} (A : Finset (Cube (n + 1))) : Finset (Cube n) :=
   Finset.univ.filter (fun x => embed0 x ∈ A)
 
 /-- The upper slice of a family in dimension `n + 1`. -/
-noncomputable def slice1 {n : ℕ} (A : Finset (Cube (n + 1))) : Finset (Cube n) :=
+@[expose] noncomputable def slice1 {n : ℕ} (A : Finset (Cube (n + 1))) : Finset (Cube n) :=
   Finset.univ.filter (fun x => embed1 x ∈ A)
 
 /-
@@ -487,7 +487,7 @@ lemma neighborhood_succ {n : ℕ} (A : Finset (Cube (n + 1))) :
 -- ==========================================
 
 /-- The size of the radius-one neighborhood of the simplicial initial segment of size `k`. -/
-noncomputable def H (n k : ℕ) : ℕ :=
+@[expose] noncomputable def H (n k : ℕ) : ℕ :=
   (neighborhood 1 (simplicialInitSeg n k)).card
 
 -- Basic algebraic properties of H
@@ -550,7 +550,7 @@ lemma rank_mono {n : ℕ} {a b : Cube n} (h : simplicialLe a b) : rank a ≤ ran
     exact le_of_lt (rank_strictMono h_lt)
 
 /-- Remove the least active coordinate, giving the lowest-rank vertex in the closed unit ball. -/
-noncomputable def gShift {n : ℕ} (v : Cube n) : Cube n :=
+@[expose] noncomputable def gShift {n : ℕ} (v : Cube n) : Cube n :=
   if h : v.Nonempty then v.erase (v.min' h) else v
 
 /-
@@ -951,11 +951,11 @@ lemma H_succ_slice {n k : ℕ} :
 -- ==========================================
 
 /-- The sum of the first `r` binomial coefficients in row `n`. -/
-def binomPrefix (n r : ℕ) : ℕ :=
+@[expose] def binomPrefix (n r : ℕ) : ℕ :=
   (Finset.range r).sum (fun i => Nat.choose n i)
 
 /-- The binomial coefficient immediately preceding layer `r`, with value zero at `r = 0`. -/
-def choosePred (n r : ℕ) : ℕ :=
+@[expose] def choosePred (n r : ℕ) : ℕ :=
   if r = 0 then 0 else Nat.choose n (r - 1)
 
 end BooleanIsoperimetry

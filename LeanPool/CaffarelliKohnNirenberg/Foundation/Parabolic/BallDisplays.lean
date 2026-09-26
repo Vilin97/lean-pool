@@ -27,7 +27,7 @@ volume of the Euclidean ball in `EuclideanSpace ℝ (Fin 3)` along the
 measure-preserving equivalence `WithLp.toLp 2`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 

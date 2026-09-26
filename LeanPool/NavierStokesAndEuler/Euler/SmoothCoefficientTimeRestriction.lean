@@ -21,7 +21,7 @@ when a source field is restricted to a history interval or shifted to a
 forward interval.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

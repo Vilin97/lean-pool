@@ -27,7 +27,7 @@ Cocycle convention matched to cech's `d0` (`(d0 h)_{ij} = h_j − h_i`) and `Z1.
 (`f_{jk} − f_{ik} + f_{ij} = 0`, i.e. `f i k = f i j + f j k`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

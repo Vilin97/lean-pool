@@ -29,7 +29,7 @@ The native point below uses the actual common-cover index.  The ambient
 germs retain the current solve, its chosen phase, and its Cartesian rotation.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -43,7 +43,7 @@ open scoped Topology ContDiff
 abbrev Label (B N0 : ℕ) := ActualCurrentParticularPhysical.Label B N0
 
 /-- The cover gap of the actual current-band graph. -/
-noncomputable def commonGap (n : ℕ) : ℕ :=
+@[expose] noncomputable def commonGap (n : ℕ) : ℕ :=
   ChartScales.nativeIndex CorrectionInitialization.ActualPrimary.h n -
     CommonWindow.index CorrectionInitialization.ActualPrimary.h n
 
@@ -248,7 +248,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

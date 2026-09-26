@@ -12,7 +12,7 @@ public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Semantics.Sema
 
 /-! # SearchTree -/
 
-@[expose] public section
+public section
 
 
 namespace LO

@@ -15,15 +15,14 @@ obtained from a `BuildTree` (Definition 6.17) and provide the infrastructure tha
 in `Pdl/BuildTreeExistence.lean` to prove the existence lemmas.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
 /-! ## Defining The Model Graph -/
 
 /-- Definition 6.17 to get model graph from strategy tree. -/
-@[simp]
-def BuildTree.toModel {X} (bt : BuildTree [] X) :
+@[expose, simp] def BuildTree.toModel {X} (bt : BuildTree [] X) :
     (Σ W : Finset (Finset Formula), KripkeModel W) :=
   ⟨ bt.collect.attach.image PreState.forms -- W -- NOTE .forms here, not .wforms
   , { val := fun X p => Formula.atom_prop p ∈ X.1 -- valuation V(p)

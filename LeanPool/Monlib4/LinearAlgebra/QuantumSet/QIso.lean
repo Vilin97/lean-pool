@@ -17,7 +17,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.QuantumSet.QIso`.
 -/
 
-@[expose] public section
+public section
 
 local notation "lT" => LinearMap.lTensor
 local notation "rT" => LinearMap.rTensor
@@ -466,13 +466,13 @@ lemma QFun.qBijective.toLinearEquiv_toLinearMap
   {P : (B₁ ⊗[ℂ] H) →ₗ[ℂ] (H ⊗[ℂ] B₂)} [hp : QFun H P]
   (h : hp.qBijective) :
     h.toLinearEquiv.toLinearMap = P :=
-rfl
+by rfl
 
 lemma QFun.qBijective.toLinearEquiv_symm_toLinearMap
   {P : (B₁ ⊗[ℂ] H) →ₗ[ℂ] (H ⊗[ℂ] B₂)} [hp : QFun H P]
   (h : hp.qBijective) :
     h.toLinearEquiv.symm.toLinearMap = LinearMap.adjoint P :=
-rfl
+by rfl
 
 theorem QFun.qBijective_iso_id
   {P : (B₁ ⊗[ℂ] H) →ₗ[ℂ] (H ⊗[ℂ] B₂)} [hp : QFun H P] (h : hp.qBijective) :

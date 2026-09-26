@@ -23,4 +23,4 @@ public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.QuantumSet`.
 -/
 
-@[expose] public section
+public section

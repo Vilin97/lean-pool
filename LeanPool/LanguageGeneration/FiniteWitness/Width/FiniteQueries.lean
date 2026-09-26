@@ -12,7 +12,7 @@ public import Mathlib.Data.Finset.Prod
 # Finite history domains and query bounds for normalization
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 

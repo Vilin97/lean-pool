@@ -18,7 +18,7 @@ transported together.  Velocity and pressure below are outputs of the
 actual copy-path Volterra inverse, with no output compatibility hypothesis.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -100,7 +100,7 @@ variable {P Q H : Type} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
 /-- The velocity scale is `amplitude`.  The actual source scale is
 `rate * amplitude`, and the moving normal acquires both normal and clock
 scales in its slot derivative. -/
-noncomputable def transportTangent (t : TangentData P H) (parameter : Q → P)
+@[expose] noncomputable def transportTangent (t : TangentData P H) (parameter : Q → P)
     (gap : ℕ) (shift rate amplitude normalScale : ℝ) : TangentData Q H where
   normal z := normalScale • t.normal (parameter z.1, CopySolveCompatibility.nativeTimeMap shift
       rate z.2)
@@ -112,7 +112,7 @@ noncomputable def transportTangent (t : TangentData P H) (parameter : Q → P)
 
 /-- The ambient complex source undergoes the same rate and velocity
 scalings as the real tangent source. -/
-noncomputable def transportSource (f : P × Plane → ComplexVector) (parameter : Q → P)
+@[expose] noncomputable def transportSource (f : P × Plane → ComplexVector) (parameter : Q → P)
     (gap : ℕ) (rate amplitude : ℝ) : Q × Plane → ComplexVector :=
   fun z => (rate * amplitude) • f (parameter z.1, coverPower gap z.2)
 

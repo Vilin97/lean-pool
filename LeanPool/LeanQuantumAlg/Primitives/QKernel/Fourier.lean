@@ -25,7 +25,7 @@ applying a constant matrix and a diagonal phase gate), hence the overlap and its
 modulus are `TrigPolynomial`s; collecting by frequency gives the representation.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -200,7 +200,7 @@ theorem featComp_eval (W : Fin (N + 1) → Matrix (Fin d) (Fin d) ℂ) (lam : Fi
 /-! ### Feature-component frequency invariant -/
 
 theorem tpVecConst_freqs (w : Fin d → ℂ) (m : Fin d) :
-    (tpVecConst w m).freqs = ({0} : Finset (Fin N → ℝ)) := rfl
+    (tpVecConst w m).freqs = ({0} : Finset (Fin N → ℝ)) := by rfl
 
 theorem tpVecConstMul_freqs (M : Matrix (Fin d) (Fin d) ℂ)
     (V : Fin d → TrigPolynomial N) (m : Fin d) :

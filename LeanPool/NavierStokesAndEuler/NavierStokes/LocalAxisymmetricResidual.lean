@@ -18,7 +18,7 @@ derivative formulas use equality of germs of first derivatives, so they do
 not impose any condition on an unrelated profile point such as the axis.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

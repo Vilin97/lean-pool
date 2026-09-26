@@ -28,7 +28,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # HighFreqBandEstimate -/
 
-@[expose] public section
+public section
 
 
 open MeasureTheory Complex Real Finset

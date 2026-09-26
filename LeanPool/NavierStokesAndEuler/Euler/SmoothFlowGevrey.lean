@@ -22,7 +22,7 @@ literal integral (or, in the final theorem, differential) equation for
 the actual spatial derivatives.  The nonlinear majorant is derived here
 from Faà di Bruno; no bound on the flow derivatives is assumed. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -221,7 +221,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

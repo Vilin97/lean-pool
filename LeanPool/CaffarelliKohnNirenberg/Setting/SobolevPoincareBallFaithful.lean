@@ -34,7 +34,7 @@ This file records the three clauses of the ball lemma together with one
 constant chosen independently of the ball and the functions.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Filter Topology
 open scoped ENNReal

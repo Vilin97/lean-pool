@@ -42,7 +42,7 @@ legitimately uses
 *construction* is choice-free
 (`[propext, Quot.sound]`). -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -57,6 +57,7 @@ uses chain
 totality: given `X ∈ x` and `Y ∈ y` with `x, y ∈ C`, one of `x ⊑ y`, `y ⊑ x`
 holds, and the larger
 filter contains both `X` and `Y`, hence `X ∩ Y`. -/
+@[expose]
 def chainUnion (C : Set V.Element) (hne : C.Nonempty) (hchain : IsChain (· ≤ ·) C) : V.Element where
   mem X := ∃ x ∈ C, x.mem X
   sub := by rintro X ⟨x, _, hxX⟩; exact x.sub hxX

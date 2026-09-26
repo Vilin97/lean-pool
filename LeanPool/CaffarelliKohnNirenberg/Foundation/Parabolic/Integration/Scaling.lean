@@ -18,7 +18,7 @@ change-of-variables statements needed for scale-invariant quantities.  In
 particular, no source-facing quantity is introduced in this module.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set
 open scoped ENNReal Pointwise
@@ -554,10 +554,12 @@ theorem volume_parabolicCylinder_translate (a x : Vec3) (τ t r : ℝ) :
   simp_rw [volume_vec3Ball]
 
 /-- The nonnegative energy of a spatial time slice. -/
+@[expose]
 def timeSliceBallEnergy (x : Vec3) (r s : ℝ) (g : ParabolicPoint → ℝ) : ℝ≥0∞ :=
   ∫⁻ y in vec3Ball x r, ‖g (y, s)‖ₑ ^ (2 : ℝ)
 
 /-- Essential supremum of a time-slice energy over the cylinder time interval. -/
+@[expose]
 def timeSliceEnergyEssSup (x : Vec3) (t r : ℝ) (g : ParabolicPoint → ℝ) : ℝ≥0∞ :=
   essSup (timeSliceBallEnergy x r · g) (volume.restrict (Ioc (t - r ^ 2) t))
 

@@ -18,7 +18,7 @@ import Mathlib.RingTheory.TwoSidedIdeal.BigOperators
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.TwoSidedIdeal`.
 -/
 
-@[expose] public section
+public section
 
 variable {M : Type*} [AddCommMonoid M] (r : AddCon M) {ι : Type*} (s : Finset ι)
 variable {R : Type*} [Ring R] (t : TwoSidedIdeal R)

@@ -29,7 +29,7 @@ instance. This file provides, once and for all:
 * `exists_smoothPartitionOfUnity` on a compact T2 surface.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology IsManifold

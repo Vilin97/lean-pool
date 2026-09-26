@@ -10,7 +10,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Formula
 
 /-! # IntProp -/
 
-@[expose] public section
+public section
 
 
 namespace LO

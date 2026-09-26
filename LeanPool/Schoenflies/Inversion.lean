@@ -95,7 +95,7 @@ abstract `IsSeparating` curve, do not need it.
   of `S` onto `T`" that `prop:exterior-extension` is phrased in.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Metric Set
 

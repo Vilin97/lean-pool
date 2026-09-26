@@ -26,7 +26,7 @@ coarea and thin-shell ingredients before `MainTheorem.lean` packages the final
 user-facing statement.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

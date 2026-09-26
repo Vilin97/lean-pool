@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
 /-! Explicit polynomial bounds for the actual mean Gram and time-form
 inverse constants, derived from a determinant-one parent deformation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -44,11 +44,11 @@ local instance instPacketParentMeanCoercivity4 : NormedSpace ℝ (solenoidalSpac
     inferInstance
 
 /-- Gram inverse envelope, given by `(3*C^2+1)^2`. -/
-def gramInverseEnvelope (C : ℝ) : ℝ := (3*C^2+1)^2
+@[expose] def gramInverseEnvelope (C : ℝ) : ℝ := (3*C^2+1)^2
 
 /-- Transport envelope, given by `1+(2*(gramInverseEnvelope C)^2*C^2*C₁+gramInverseEnvelope
 C*C₁)+gramInverseEnvelope C*C`. -/
-def transportEnvelope (C C₁ : ℝ) : ℝ :=
+@[expose] def transportEnvelope (C C₁ : ℝ) : ℝ :=
   1+(2*(gramInverseEnvelope C)^2*C^2*C₁+gramInverseEnvelope C*C₁)+gramInverseEnvelope C*C
 
 /-- Inverse envelope, given by `2*(transportEnvelope C C₁)^2`. -/

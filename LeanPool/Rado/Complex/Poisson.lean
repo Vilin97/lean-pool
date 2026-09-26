@@ -39,7 +39,7 @@ Mathlib anchors (pinned commit `905b9581`):
   `Mathlib/Analysis/Complex/Harmonic/`).
 -/
 
-@[expose] public section
+public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex Real
 

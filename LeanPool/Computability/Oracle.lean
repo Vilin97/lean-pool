@@ -38,7 +38,7 @@ the inductive structure of `Nat.Partrec`.
 Computability, Oracle, Recursion, Primitive Recursion
 -/
 
-@[expose] public section
+public section
 
 open Primrec Nat.Partrec Part Encodable
 

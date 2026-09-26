@@ -10,7 +10,7 @@ public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Calculus
 
 /-! # Soundness -/
 
-@[expose] public section
+public section
 
 
 namespace LO

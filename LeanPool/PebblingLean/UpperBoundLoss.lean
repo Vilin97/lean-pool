@@ -22,7 +22,7 @@ parameters yet; instead, it proves the deterministic theorem that a bounded
 finite loss sum gives a uniform normalized-cost bound.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 
@@ -376,7 +376,7 @@ theorem cost_uniform_bound_of_decreasing_lossBound
 end LossRecurrence
 
 /-- Normalized integer cost bound, divided by `(4/3)^n`. -/
-noncomputable def normalizedCost (costBound : ℕ → ℕ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def normalizedCost (costBound : ℕ → ℕ) (n : ℕ) : ℝ :=
   (costBound n : ℝ) / (((4 : ℝ) / 3) ^ n)
 
 theorem normalizedCost_nonneg (costBound : ℕ → ℕ) (n : ℕ) :
@@ -386,7 +386,7 @@ theorem normalizedCost_nonneg (costBound : ℕ → ℕ) (n : ℕ) :
 
 /-- A concrete finite bound for the normalized costs below a cutoff.  This is
 not optimized; it is just a convenient way to discharge finite base cases. -/
-noncomputable def finiteBaseNormalizedBound (costBound : ℕ → ℕ) (n0 : ℕ) : ℝ :=
+@[expose] noncomputable def finiteBaseNormalizedBound (costBound : ℕ → ℕ) (n0 : ℕ) : ℝ :=
   ∑ n ∈ Finset.range n0, normalizedCost costBound n
 
 theorem finiteBaseNormalizedBound_nonneg (costBound : ℕ → ℕ) (n0 : ℕ) :

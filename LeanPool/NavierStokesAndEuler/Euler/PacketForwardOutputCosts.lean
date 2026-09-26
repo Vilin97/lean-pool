@@ -29,7 +29,7 @@ section
 physical point. The slow primary derivative and finite tail contribute
 only a fixed source constant divided by the frequency. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -174,7 +174,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -19,4 +19,4 @@ Re-exports lemmas and instances about ω-complete partial orders that the
 quasi-Borel space formalization layers on top of `Mathlib.Order.OmegaCompletePartialOrder`.
 -/
 
-@[expose] public section
+public section

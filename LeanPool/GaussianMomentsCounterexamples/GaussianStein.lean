@@ -11,7 +11,7 @@ import Mathlib.Tactic.Ring
 
 /-! Polynomial Gaussian integration by parts on the canonical product space. -/
 
-@[expose] public section
+public section
 noncomputable section
 open MeasureTheory ProbabilityTheory MvPolynomial
 open scoped BigOperators

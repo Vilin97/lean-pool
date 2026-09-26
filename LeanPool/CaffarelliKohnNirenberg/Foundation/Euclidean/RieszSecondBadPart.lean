@@ -16,7 +16,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Harmonic.KernelAllOrde
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -29,9 +29,10 @@ namespace CKN.Foundation.Euclidean
 open CKN
 
 /-- Explicit coefficient controlling the second Riesz kernel's size estimates. -/
-def rieszSecondKernelC₂ : ℝ := 72 / (4 * Real.pi)
+@[expose] def rieszSecondKernelC₂ : ℝ := 72 / (4 * Real.pi)
 
 /-- Second spatial derivative of the Newtonian kernel in the chosen coordinates. -/
+@[expose]
 def rieszSecondKernel (i j : Fin 3) (z : Vec3) : ℝ :=
   CKN.spatialDeriv (CKN.spatialDeriv CKN.Foundation.Heat.newtonianKernel i) j z
 

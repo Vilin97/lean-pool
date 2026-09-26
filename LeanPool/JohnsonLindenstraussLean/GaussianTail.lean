@@ -32,7 +32,7 @@ The route is:
 * `foldedNormal_subgaussian`: assembling the above into `HasSubgaussianMGF (|·| − √(2/π)) 1`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Real Filter Set
 open scoped ENNReal NNReal Topology

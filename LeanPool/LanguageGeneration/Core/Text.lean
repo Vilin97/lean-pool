@@ -17,12 +17,12 @@ forgets order and repetitions; `textPrefix` retains both.  The bridge theorem
 values.
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit
 
 /-- The ordered observations strictly before time `t`. -/
-def textPrefix {α : Type*} (stream : ℕ → α) (t : ℕ) : List α :=
+@[expose] def textPrefix {α : Type*} (stream : ℕ → α) (t : ℕ) : List α :=
   (List.range t).map stream
 
 @[simp] theorem textPrefix_length {α : Type*} (stream : ℕ → α) (t : ℕ) :

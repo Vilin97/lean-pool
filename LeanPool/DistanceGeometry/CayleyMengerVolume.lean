@@ -53,7 +53,7 @@ identity is proved here.
 * K. Menger, *Untersuchungen über allgemeine Metrik*, 1928.
 -/
 
-@[expose] public section
+public section
 
 namespace DistanceGeometry
 
@@ -69,7 +69,7 @@ variable {n : ℕ}
 first row and column, and `D` in the lower-right `(n+1)×(n+1)` block.
 
 Built with `Fin.cons`: row `0` is `[0, 1, …, 1]`; row `i+1` is `[1, D i 0, …]`. -/
-def cayleyMenger (D : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ) :
+@[expose] def cayleyMenger (D : Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ) :
     Matrix (Fin (n + 2)) (Fin (n + 2)) ℝ :=
   Matrix.of (Fin.cons (Fin.cons 0 (fun _ => 1)) (fun i => Fin.cons 1 (D i)))
 

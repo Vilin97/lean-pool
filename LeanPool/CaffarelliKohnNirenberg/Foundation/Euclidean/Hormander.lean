@@ -45,7 +45,7 @@ shells are Euclidean (`vec3Ball`), and the volume normalization
 `volume_vec3Ball_eq` is the one of the paper.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 open Filter MeasureTheory MeasureTheory.Measure Set Metric

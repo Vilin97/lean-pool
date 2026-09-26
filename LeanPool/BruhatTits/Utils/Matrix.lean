@@ -14,7 +14,7 @@ import LeanPool.BruhatTits.Utils.Subring
 # LeanPool.BruhatTits.Utils.Matrix
 -/
 
-@[expose] public section
+public section
 
 open Module
 
@@ -318,6 +318,7 @@ section «GeneralLinearGroup»
 variable [DecidableEq n] [Fintype n]
 
 /-- `GL` version of `toMatrix`. -/
+@[expose]
 def _root_.Matrix.TransvectionStruct.toGL (t : TransvectionStruct n R) : GL n R where
   val := t.toMatrix
   inv := t.inv.toMatrix
@@ -325,7 +326,7 @@ def _root_.Matrix.TransvectionStruct.toGL (t : TransvectionStruct n R) : GL n R 
   inv_val := t.inv_mul
 
 /-- The transpose of an invertible matrix as an element of `GL`. -/
-@[simps val]
+@[expose, simps val]
 def _root_.Matrix.GL.transpose (g : GL n R) : GL n R where
   val := g.val.transpose
   inv := g.inv.transpose
@@ -341,7 +342,7 @@ lemma _root_.Matrix.GL.val_inv_transpose (g : GL n R) :
   rfl
 
 /-- A diagonal matrix with unit diagonal entries as an element of `GL`. -/
-@[simps val]
+@[expose, simps val]
 def _root_.Matrix.GL.diagonal (g : n → Rˣ) : GL n R where
   val := Matrix.diagonal (fun j ↦ g j)
   inv := Matrix.diagonal (fun j ↦ (g j).inv)
@@ -360,7 +361,7 @@ lemma _root_.Matrix.GL.diagonal_det (g : n → Rˣ) :
 variable [DecidableEq m] [Fintype m]
 
 /-- The block diagonal sum of two general linear matrices. -/
-@[simps val]
+@[expose, simps val]
 def _root_.Matrix.GL.diagonalBlocks (g : GL n R) (h : GL m R) : GL (n ⊕ m) R where
   val := Matrix.fromBlocks g 0 0 h
   inv := Matrix.fromBlocks g.inv 0 0 h.inv
@@ -376,7 +377,7 @@ lemma _root_.Matrix.GL.val_inv_diagonalBlocks (g : GL n R) (h : GL m R) :
   rfl
 
 /-- Reindex the rows and columns of an element of `GL` along an equivalence. -/
-@[simps val]
+@[expose, simps val]
 def _root_.Matrix.GL.reindex (e : n ≃ m) (g : GL n R) : GL m R where
   val := Matrix.reindex e e g
   inv := Matrix.reindex e e g.inv
@@ -453,6 +454,7 @@ lemma toBasis_coe_apply (g : GL ι K) (i : ι) : g.toBasis i = (fun j ↦ g j i)
 
 /-- From an invertible matrix over `K`, we obtain an `R` submodule by taking
 the span of the columns. -/
+@[expose]
 def toSubmodule (g : GL ι K) : Submodule R (ι → K) :=
   Submodule.span R (Set.range (fun col row ↦ g.val row col))
 
@@ -539,7 +541,7 @@ instance instMulActionSubmoduleSubtypeMemSubringForallLeanPool :
     simp
 
 /-- The canonical `R`-linear isomorphism from `M` to `g • M` induced by `g`. -/
-def equivSMulGL (g : GL ι K) (M : Submodule R (ι → K)) :
+@[expose] def equivSMulGL (g : GL ι K) (M : Submodule R (ι → K)) :
     M ≃ₗ[R] (g • M : Submodule R (ι → K)) :=
   ((toLin g).toLinearEquiv.restrictScalars R).submoduleMap M
 
@@ -549,12 +551,14 @@ lemma smul_toSubmodule (g h : GL ι K) :
   simp [mem_smul, mem_toSubmodule]
 
 /-- The linear equivalence induced by a matrix in the coordinates of a basis. -/
+@[expose]
 noncomputable def toLinearEquivOfBasis {R M : Type*} [CommRing R] [AddCommMonoid M] [Module R M]
     (b : Basis ι R M) (g : GL ι R) : M ≃ₗ[R] M :=
   let f : (ι → R) ≃ₗ[R] ι → R := (toLin g).toLinearEquiv
   b.equivFun ≪≫ₗ f ≪≫ₗ b.equivFun.symm
 
 /-- The basis obtained by acting on coordinates by a matrix in `GL`. -/
+@[expose]
 noncomputable def smulBasis {R M : Type*} [CommRing R] [AddCommMonoid M] [Module R M] (g : GL ι R)
     (b : Basis ι R M) : Basis ι R M :=
   b.map (toLinearEquivOfBasis b g)
@@ -590,7 +594,7 @@ instance (M : Submodule R (ι → K)) :
     simp
 
 /-- The diagonal embedding from the units of `R` to the general linear group. -/
-@[simps]
+@[expose, simps]
 def embDiagonal (R ι : Type*) [CommRing R] [Fintype ι] [DecidableEq ι] :
     Rˣ →* GL ι R where
   toFun x := Matrix.GL.diagonal (fun _ ↦ x)

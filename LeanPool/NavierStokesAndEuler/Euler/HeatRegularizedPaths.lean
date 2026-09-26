@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MildWordEquation
 
 /-! Genuine heat regularization of continuous Sobolev paths, uniformly in time. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

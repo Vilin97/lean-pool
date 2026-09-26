@@ -38,7 +38,7 @@ pointwise physical equation. No scalar potential or pressure time derivative
 is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -51,7 +51,7 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
 open scoped ContDiff
 
 /-- The canonical smooth spatial representative of an actual continuous L² path. -/
-def pathRepresentative (T : ℝ) (p : C(Icc (0 : ℝ) T, L2))
+@[expose] def pathRepresentative (T : ℝ) (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p))
     (t : Icc (0 : ℝ) T) : Space → Space :=
   representative (p t) (pathTranslation_evaluation_contDiff T p hp t)
@@ -188,7 +188,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -205,13 +205,13 @@ namespace Data
 
 /-- A continuous closed-interval retraction, used only to define the raw field outside its domain.
 -/
-def clamp (D : Data) (t : ℝ) : Icc (0 : ℝ) D.T := projIcc 0 D.T D.T_pos.le t
+@[expose] def clamp (D : Data) (t : ℝ) : Icc (0 : ℝ) D.T := projIcc 0 D.T D.T_pos.le t
 
 @[simp] theorem clamp_coe (D : Data) (t : Icc (0 : ℝ) D.T) : D.clamp t = t :=
   projIcc_of_mem D.T_pos.le t.property
 
 /-- Inverse Frame, given by `D.FInv (D.clamp z.1) z.2.1`. -/
-def inverseFrame (D : Data) (z : Domain) : Space →L[ℝ] Space :=
+@[expose] def inverseFrame (D : Data) (z : Domain) : Space →L[ℝ] Space :=
   D.FInv (D.clamp z.1) z.2.1
 
 /-- Strain, given by `D.M.field (D.clamp z.1) z.2.1`. -/
@@ -225,15 +225,15 @@ namespace Forcing
 variable {D : Data} {raw : VectorField} (G : Forcing D raw)
 
 /-- Literal velocity returned by the genuine mean inverse. -/
-def vector : VectorField := fun z =>
+@[expose] def vector : VectorField := fun z =>
   pathRepresentative D.T G.velocityPath G.velocityPath_orbit (D.clamp z.1) z.2.1
 
 /-- Literal continuous time derivative of the velocity on the source interval. -/
-def vectorDerivative : VectorField := fun z =>
+@[expose] def vectorDerivative : VectorField := fun z =>
   pathRepresentative D.T G.derivativePath G.derivativePath_orbit (D.clamp z.1) z.2.1
 
 /-- The normalized scalar pressure returned by the actual radial construction. -/
-def scalar : ScalarField := fun z =>
+@[expose] def scalar : ScalarField := fun z =>
   pressureScalar D.T D.T_pos.le D.F D.F₁ D.opInv G.solution
     D.frameLower D.frameLower_pos D.frame_lower G.path G.pressureForcePath_orbit
     (D.clamp z.1) z.2.1

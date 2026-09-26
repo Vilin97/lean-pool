@@ -5,7 +5,7 @@ Authors: Vasily Ilin, Justin Asher
 -/
 module
 
-@[expose] public section
+public section
 
 /-- Placeholder greeting string. -/
 def hello := "world"

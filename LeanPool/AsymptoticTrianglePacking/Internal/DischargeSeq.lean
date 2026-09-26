@@ -31,7 +31,7 @@ uncovered vertices, and the uncovered count after `T` rounds is controlled by th
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

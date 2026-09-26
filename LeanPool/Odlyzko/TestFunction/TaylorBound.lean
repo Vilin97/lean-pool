@@ -13,7 +13,7 @@ import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 namespace NumberField.Odlyzko
 
@@ -79,7 +79,7 @@ open MeasureTheory Set
 namespace NumberField.Odlyzko
 
 /-- A tartar amplitude lower six used in the Odlyzko-bound argument. -/
-noncomputable def tartarAmplitudeLowerSix (x : ℝ) : ℝ :=
+@[expose] noncomputable def tartarAmplitudeLowerSix (x : ℝ) : ℝ :=
   1 - x ^ 2 / 10 + x ^ 4 / 280 - x ^ 6 / 15120
 
 private theorem tartarWeight_mul_pow_integrable (n : ℕ) :

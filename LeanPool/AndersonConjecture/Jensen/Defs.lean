@@ -18,11 +18,12 @@ zero. This is the key condition in Jensen's construction of UFDs
 with prescribed completions.
 -/
 
-@[expose] public section
+public section
 
 /-- A local ring `R` has **trivial generic formal fiber** if every
 prime ideal of its `M`-adic completion that contracts to `0` in `R` is
 itself `0`. (This is the relevant condition for Noetherian local domains.) -/
+@[expose]
 def HasTrivialGenericFormalFiber
     (R : Type*) [CommRing R] [IsLocalRing R] : Prop :=
   ∀ (P : Ideal (AdicCompletion (IsLocalRing.maximalIdeal R) R)),

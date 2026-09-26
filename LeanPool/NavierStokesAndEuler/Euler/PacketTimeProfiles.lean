@@ -17,14 +17,14 @@ section
 
 /-! Exact time-profile bookkeeping for the high, mean, and previous-corrector terms. -/
 
-@[expose] public section
+public section
 
 namespace EulerPacketTimeProfile
 
 /-- Mean scale, given by `H^(2*p-2)`. -/
-def meanScale (H : ℝ) (p : ℕ) : ℝ := H^(2*p-2)
+@[expose] def meanScale (H : ℝ) (p : ℕ) : ℝ := H^(2*p-2)
 /-- High scale, given by `γ*meanScale H p`. -/
-def highScale (γ H : ℝ) (p : ℕ) : ℝ := γ*meanScale H p
+@[expose] def highScale (γ H : ℝ) (p : ℕ) : ℝ := γ*meanScale H p
 
 theorem meanScale_pos (H : ℝ) (hH : 0 < H) (p : ℕ) : 0 < meanScale H p := pow_pos hH _
 theorem highScale_pos (γ H : ℝ) (hγ : 0 < γ) (hH : 0 < H) (p : ℕ) :
@@ -140,7 +140,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -176,9 +176,9 @@ def ofGrowth [CompactSpace K] (g : C(K, ℝ)) (hg : ∀ t, 0 < g t) : Scales K w
 variable (S : Scales K)
 
 /-- Mean, given by `ContinuousMap.const K (meanScale S.H0 p)`. -/
-def mean (p : ℕ) : C(K,ℝ) := ContinuousMap.const K (meanScale S.H0 p)
+@[expose] def mean (p : ℕ) : C(K,ℝ) := ContinuousMap.const K (meanScale S.H0 p)
 /-- High, given by `S.growth*S.mean p`. -/
-def high (p : ℕ) : C(K,ℝ) := S.growth*S.mean p
+@[expose] def high (p : ℕ) : C(K,ℝ) := S.growth*S.mean p
 
 @[simp] theorem mean_apply (p : ℕ) (t : K) : S.mean p t = meanScale S.H0 p := rfl
 @[simp] theorem high_apply (p : ℕ) (t : K) : S.high p t = highScale (S.growth t) S.H0 p := rfl

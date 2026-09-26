@@ -13,12 +13,12 @@ import Mathlib.Analysis.LocallyConvex.Separation
 Polar duals and their compactness properties.
 -/
 
-@[expose] public section
+public section
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- The unit dual functional in the direction of a nonzero vector `p`. -/
-noncomputable def pointDualLin (p : {p : E // p ≠ 0}) :
+@[expose] noncomputable def pointDualLin (p : {p : E // p ≠ 0}) :
   {f : (StrongDual ℝ E) // norm f = 1} :=
   ⟨ (InnerProductSpace.toDual ℝ _ ((norm p.1)⁻¹ • p.1)), (by
   simp only [ne_eq, map_smulₛₗ, map_inv₀, RCLike.conj_to_real]
@@ -37,7 +37,9 @@ lemma pointDual.α (p : {p : E // p ≠ 0}) :
 
 lemma pointDual.h (p : {p : E // p ≠ 0}) :
   (pointDual p) =
-    (InnerProductSpace.toDual ℝ _ ((norm p.1)⁻¹ • p.1)) ⁻¹' {x | x ≤ (norm p.1)⁻¹} := by rfl
+    (InnerProductSpace.toDual ℝ _ ((norm p.1)⁻¹ • p.1)) ⁻¹' {x | x ≤ (norm p.1)⁻¹} := by
+  rw [Halfspace.h]
+  rfl
 
 lemma pointDual_origin (p : {p : E // p ≠ 0}) :
   (0 : E) ∈ (SetLike.coe <| pointDual p) := by
@@ -58,7 +60,7 @@ lemma pointDual_comm (p q : {p : E // p ≠ 0}) :
 
 
 /-- The polar dual of a set `X`: `{v | ∀ x ∈ X, inner x v ≤ 1}`. -/
-noncomputable def polarDual (X : Set E) : Set E :=
+@[expose] noncomputable def polarDual (X : Set E) : Set E :=
   ⋂₀ (SetLike.coe '' (pointDual '' (Subtype.val ⁻¹' X)))
 
 lemma polarDual_closed (X : Set E) : IsClosed (polarDual X) := by

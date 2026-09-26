@@ -30,7 +30,7 @@ The 65,536 Boolean matrices are checked in independent shards so Lake can
 compile the certificate in parallel. The public theorem is unchanged.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace Sp4

@@ -19,7 +19,7 @@ public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 
@@ -35,6 +35,7 @@ domain `L¹` size is controlled by the radius of `IsBoundedDomain`.
 -/
 
 /-- The order-`1` Riesz kernel in dimension `d`. -/
+@[expose]
 noncomputable def rieszKernel {d : ℕ} (x y : Vec d) : ℝ :=
   ‖x - y‖ ^ (1 - (d : ℝ))
 

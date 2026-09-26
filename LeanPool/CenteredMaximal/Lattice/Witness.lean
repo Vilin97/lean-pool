@@ -23,7 +23,7 @@ Six explicit witnesses cover the quarter cell `[0, hgap] × [0, vgap/2]` except 
 `(2 hgap, vgap)` preserve the atom masses, so they transport witnesses to the whole plane.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -32,23 +32,23 @@ open Finset
 namespace LeanPool.CenteredMaximal.Lattice
 
 /-- The mass of an atom in column `c`: `1` if `c` is even, `heavy` if `c` is odd. -/
-def colWeight (c : ℤ) : ℝ := if Even c then 1 else heavy
+@[expose] def colWeight (c : ℤ) : ℝ := if Even c then 1 else heavy
 
 /-- `(L, A)` witnesses level one at `(x, y)`: `L ≥ 1`, the atoms of `A` have total mass at least
 `L²`, and every atom of `A` lies in the closed square of side `L` centred at `(x, y)`. -/
-def IsWitness (x y L : ℝ) (A : Finset (ℤ × ℤ)) : Prop :=
+@[expose] def IsWitness (x y L : ℝ) (A : Finset (ℤ × ℤ)) : Prop :=
   1 ≤ L ∧ L ^ 2 ≤ ∑ p ∈ A, colWeight p.1 ∧
     ∀ p ∈ A, |p.1 * hgap - x| ≤ L / 2 ∧ |p.2 * vgap - y| ≤ L / 2
 
 /-- The atoms that a witness for a point of the period cell with index `(k, l)` may use. -/
-def nearBox (k l : ℤ) : Finset (ℤ × ℤ) :=
+@[expose] def nearBox (k l : ℤ) : Finset (ℤ × ℤ) :=
   Icc (2 * k - 2) (2 * k + 2) ×ˢ Icc (l - 1) (l + 1)
 
 /-- Reflection of atom indices in the vertical axis. -/
-def negFst : ℤ × ℤ ≃ ℤ × ℤ := (Equiv.neg ℤ).prodCongr (Equiv.refl ℤ)
+@[expose] def negFst : ℤ × ℤ ≃ ℤ × ℤ := (Equiv.neg ℤ).prodCongr (Equiv.refl ℤ)
 
 /-- Reflection of atom indices in the horizontal axis. -/
-def negSnd : ℤ × ℤ ≃ ℤ × ℤ := (Equiv.refl ℤ).prodCongr (Equiv.neg ℤ)
+@[expose] def negSnd : ℤ × ℤ ≃ ℤ × ℤ := (Equiv.refl ℤ).prodCongr (Equiv.neg ℤ)
 
 /-- `negFst` negates the first coordinate. -/
 @[simp] theorem coe_negFst : ⇑negFst = fun p ↦ (-p.1, p.2) := rfl

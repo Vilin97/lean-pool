@@ -28,7 +28,7 @@ and `hcard` is the union-bound counting condition implied by
 `k ≥ ⌈8 · log n / (ε² − ε³)⌉`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Real
 

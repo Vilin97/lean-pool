@@ -61,7 +61,7 @@ established
 `ofIso`/`fixMap` API.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -161,6 +161,7 @@ theorem constC_eq_constMap (k : V₁.Element) :
 *function-space
 domains*, obtained from Theorem 3.10 (`funSpaceEquiv`) and Theorem 3.12
 (`curryEquiv`). -/
+@[expose]
 def curryIso (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) (V₂ : NeighborhoodSystem γ) :
     (funSpace (prod V₀ V₁) V₂).Element ≃o (funSpace V₀ (funSpace V₁ V₂)).Element :=
   (funSpaceEquiv (prod V₀ V₁) V₂).trans

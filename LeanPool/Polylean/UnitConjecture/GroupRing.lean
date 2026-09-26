@@ -23,7 +23,7 @@ to show invariance under elementary moves and to prove that `R[G]` is a ring.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 
@@ -451,7 +451,7 @@ theorem groupRingMul_apply {R G : Type _} [Ring R] [DecidableEq G] [DecidableEq 
     (r : R) (g : G) : r * g = (⟦[(r, g)]⟧ : FreeModule R G) := rfl
 
 /-- Monoid homomorphism from `G` to `R[G]` given by `g ↦ 1 ⬝ g` -/
-def groupInclusionHom (G : Type) [Group G] [DecidableEq G] : G →* R[G] :=
+@[expose] def groupInclusionHom (G : Type) [Group G] [DecidableEq G] : G →* R[G] :=
   { toFun := baseInclusion 1,
     map_one' := rfl,
     map_mul' :=

@@ -27,7 +27,7 @@ products, so its smoothness and bounds follow without a new regularity
 assumption on the solution.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

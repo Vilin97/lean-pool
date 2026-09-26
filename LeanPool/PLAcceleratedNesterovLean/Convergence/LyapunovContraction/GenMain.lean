@@ -21,7 +21,7 @@ Generalization of `lyapunov_contraction` (Main.lean) to arbitrary `NesterovState
 supporting nonzero initial velocity. Used by `GenLocalArgument.lean`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -20,7 +20,7 @@ from `IntrinsicCloseGraphApproximation`.  The proofs parallel the first intrinsi
 construction, but the boundary map is now the second, metrically controlled graph replacement.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

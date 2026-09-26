@@ -12,7 +12,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Basic
 
 /-! Scalar normalization preserves the external word radius and fixed Sobolev order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

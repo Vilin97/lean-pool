@@ -21,7 +21,7 @@ Each induction step needs the lift's three conclusions at an even degree bound: 
 are both even, which is why the two families together cover every multiple of `4`.
 -/
 
-@[expose] public section
+public section
 
 namespace NaslundCounterexample
 

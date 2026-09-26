@@ -27,7 +27,7 @@ gives compact smooth divergence-free velocities that agree with `u` on any
 prescribed ball. This construction does not assume Sobolev regularity of `u`.
 -/
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 
@@ -41,7 +41,7 @@ open scoped ContDiff Topology
 namespace Euler.ComparatorBridge
 
 /-- The coordinate potential `-x × u(x)`. -/
-def negativeCrossPotential (u : Space → Space) (i : Fin 3) (x : Space) : ℝ :=
+@[expose] def negativeCrossPotential (u : Space → Space) (i : Fin 3) (x : Space) : ℝ :=
   x (i + 2) * u x (i + 1) - x (i + 1) * u x (i + 2)
 
 theorem negativeCrossPotential_smooth (u : Space → Space)
@@ -89,7 +89,7 @@ theorem curl_negativeCrossPotential
       PiLp.add_apply, PiLp.smul_apply, smul_eq_mul, hd] <;> ring
 
 /-- The radial average whose negative cross product is a vector potential. -/
-def radialAverage (u : Space → Space) (x : Space) : Space :=
+@[expose] def radialAverage (u : Space → Space) (x : Space) : Space :=
   ∫ t in (0 : ℝ)..1, t • u (t • x)
 
 /-- A smooth velocity gives a jointly smooth radial integrand. -/
@@ -195,7 +195,7 @@ theorem radialAverage_radial_identity
   simpa using ht
 
 /-- The concrete radial vector potential, in the development's curl convention. -/
-def radialPotential (u : Space → Space) : Fin 3 → Space → ℝ :=
+@[expose] def radialPotential (u : Space → Space) : Fin 3 → Space → ℝ :=
   negativeCrossPotential (radialAverage u)
 
 theorem radialPotential_smooth (u : Space → Space) (hu : ContDiff ℝ ∞ u)
@@ -212,7 +212,7 @@ theorem curl_radialPotential (u : Space → Space) (hu : ContDiff ℝ ∞ u)
   exact radialAverage_radial_identity u hu x
 
 /-- Cut off the constructed potential, then take its actual curl. -/
-def potentialTruncation (u : Space → Space) (χ : Space → ℝ) : Space → Space :=
+@[expose] def potentialTruncation (u : Space → Space) (χ : Space → ℝ) : Space → Space :=
   curl (fun i x => χ x * radialPotential u i x)
 
 theorem potentialTruncation_smooth (u : Space → Space) (hu : ContDiff ℝ ∞ u)

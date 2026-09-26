@@ -17,7 +17,7 @@ Kleinberg--Mullainathan algorithm depends on the enumeration order and permits
 repeated languages.
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit
 

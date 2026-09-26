@@ -22,7 +22,7 @@ The embedding ℕ∞ ↪ Ordinal sends n ↦ n and ⊤ ↦ ω, but ordinal VC di
 can take values beyond ω.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -60,6 +60,7 @@ structure VCLTree (X : Type u) where
   conceptClass : ConceptClass X Bool
 
 /-- Ordinal VC dimension: extends VCdim to ordinal values. -/
+@[expose]
 noncomputable def OrdinalVCDim (X : Type u) (C : ConceptClass X Bool) : Ordinal :=
   ⨆ (S : Finset X) (_ : Shatters X C S), ((S.card : ℕ) : Ordinal)
 

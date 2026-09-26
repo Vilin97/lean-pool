@@ -29,7 +29,7 @@ unit** — see the root file's LEDGER and this builder's final report for the pr
 (`Form1.trace`'s branch-point analyticity and the trace–path-integral relation).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

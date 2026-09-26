@@ -90,7 +90,7 @@ definitions below therefore declare `σ ≼ σ` for every new cell; that is the 
 this module adds a pair the blueprint's prose does not list.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies
 open scoped Graph
@@ -238,7 +238,7 @@ theorem faces_ne_edgeSet {z w : γ} (hz : z ∈ S.faces) (hw : w ∈ E(S.skel)) 
 
 /-- The cells of a walk: its edges, and the vertices it visits. This is what the blueprint
 calls "the cells of the boundary walk `Bᵢ`". -/
-def pathCells (u : γ) (W : List γ) : Set γ := {c | c ∈ W} ∪ S.skel.walkVertices u W
+@[expose] def pathCells (u : γ) (W : List γ) : Set γ := {c | c ∈ W} ∪ S.skel.walkVertices u W
 
 variable {S}
 

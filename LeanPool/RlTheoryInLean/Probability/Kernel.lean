@@ -15,4 +15,4 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 Import-only index for the `Kernel` directory of the RL-theory-in-Lean import.
 -/
 
-@[expose] public section
+public section

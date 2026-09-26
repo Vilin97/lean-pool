@@ -50,7 +50,7 @@ since `Bool` has a `UniformSpace` instance, the plain `PiNat.metricSpace` would 
 second, non-defeq uniform structure).
 -/
 
-@[expose] public section
+public section
 
 open Set PiNat Filter Topology
 

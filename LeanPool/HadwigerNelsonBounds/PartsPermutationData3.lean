@@ -15,12 +15,12 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Exact vertex permutation 3 for the Parts root stabilizer. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
 /-- Permutation 3, lookup chunk 0. -/
-def partsVertexPermutation3Chunk0 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation3Chunk0 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 0
   | 1 => 242
@@ -89,7 +89,7 @@ def partsVertexPermutation3Chunk0 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Permutation 3, lookup chunk 1. -/
-def partsVertexPermutation3Chunk1 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation3Chunk1 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 346
   | 1 => 338
@@ -158,7 +158,7 @@ def partsVertexPermutation3Chunk1 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Permutation 3, lookup chunk 2. -/
-def partsVertexPermutation3Chunk2 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation3Chunk2 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 368
   | 1 => 373
@@ -227,7 +227,7 @@ def partsVertexPermutation3Chunk2 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Permutation 3, lookup chunk 3. -/
-def partsVertexPermutation3Chunk3 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation3Chunk3 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 47
   | 1 => 213
@@ -296,7 +296,7 @@ def partsVertexPermutation3Chunk3 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Permutation 3, lookup chunk 4. -/
-def partsVertexPermutation3Chunk4 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation3Chunk4 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 247
   | 1 => 257
@@ -365,7 +365,7 @@ def partsVertexPermutation3Chunk4 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Permutation 3, lookup chunk 5. -/
-def partsVertexPermutation3Chunk5 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation3Chunk5 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 148
   | 1 => 149
@@ -434,7 +434,7 @@ def partsVertexPermutation3Chunk5 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Permutation 3, lookup chunk 6. -/
-def partsVertexPermutation3Chunk6 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation3Chunk6 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 89
   | 1 => 92
@@ -503,7 +503,7 @@ def partsVertexPermutation3Chunk6 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Permutation 3, lookup chunk 7. -/
-def partsVertexPermutation3Chunk7 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation3Chunk7 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 30
   | 1 => 35
@@ -541,7 +541,7 @@ def partsVertexPermutation3Chunk7 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Exact base-graph automorphism 3. -/
-def partsVertexPermutation3 (vertex : Fin 481) : Fin 481 :=
+@[expose] def partsVertexPermutation3 (vertex : Fin 481) : Fin 481 :=
   match vertex.val / 64 with
   | 0 => partsVertexPermutation3Chunk0 (vertex.val % 64)
   | 1 => partsVertexPermutation3Chunk1 (vertex.val % 64)

@@ -46,7 +46,7 @@ The downstream consumer is `hasArbLargeModels_of_tail_extraction` in
 `InfinitaryLogic/Conditional/MorleyHanfTransfer.lean`.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

@@ -16,7 +16,7 @@ locally integrable weak derivatives identifies it on the intersection of
 the consumer carrier and the local pressure ball, on one common time set.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators
@@ -105,6 +105,7 @@ theorem raw_divergence_source_memLp_ae_of_sws
 
 /-- The explicit complementary gradient after replacing the centred source
 by the raw source on the outer origin ball. -/
+@[expose]
 def rawCorrectedPressureRemainder
     (R₀ : ℝ) (z : ParabolicPoint) {ρ : ℝ} (hρ : 0 < ρ)
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3)

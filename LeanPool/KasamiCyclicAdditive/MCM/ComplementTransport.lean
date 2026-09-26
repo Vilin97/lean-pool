@@ -29,7 +29,7 @@ the derivative-image half-size equation at both `k` and the complementary
 parameter `n - k`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -43,7 +43,7 @@ variable {K : Type*} [Field K] [Fintype K] [DecidableEq K] [CharP K 2]
 
 The parameter `n` is not needed to define the equivalence; it enters only in
 the identity below relating the Kasami exponents at `k` and `n - k`. -/
-noncomputable def complementFrobeniusEquiv (k : ℕ) : K ≃+* K := by
+@[expose] noncomputable def complementFrobeniusEquiv (k : ℕ) : K ≃+* K := by
   have hinj : Function.Injective (iterateFrobenius K 2 (2 * k)) := RingHom.injective _
   have hbij : Function.Bijective (iterateFrobenius K 2 (2 * k)) :=
     ⟨hinj, Finite.injective_iff_surjective.mp hinj⟩

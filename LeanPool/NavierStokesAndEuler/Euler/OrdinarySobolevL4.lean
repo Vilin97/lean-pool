@@ -15,7 +15,7 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 L⁶ inequality is extended from compact fields by genuine cutoff limits;
 the L⁴ bound and product estimate therefore require no support hypothesis. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

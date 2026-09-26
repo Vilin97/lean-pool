@@ -27,7 +27,7 @@ not the plain functions with prescribed exact `support` needed here) was confirm
 call by an upstream investigation of the manifold `PartitionOfUnity` API.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

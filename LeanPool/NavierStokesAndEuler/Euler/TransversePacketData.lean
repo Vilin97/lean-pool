@@ -37,7 +37,7 @@ with their genuine jets and time derivative. A pointwise bound on F⁻¹ proves
 the uniform frame coercivity used by the constructed Gram inverse.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -123,7 +123,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -228,7 +228,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

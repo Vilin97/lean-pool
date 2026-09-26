@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Finite-family viscous metric energy for actual finite Sobolev solutions. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

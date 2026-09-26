@@ -28,7 +28,7 @@ The choices here are entirely set-theoretic.  No topology on the free group and 
 assumed.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 
@@ -53,11 +53,11 @@ theorem selector_strictMono (a : ContinuumIndex) : StrictMono (selector N hN M a
   (Classical.choose_spec (triangular_block_preprocess a N hN M)).1
 
 /-- The prepared subsequence coded by `a`. -/
-def prepared (a : ContinuumIndex) (n : ℕ) : ContinuumFreeGroup :=
+@[expose] def prepared (a : ContinuumIndex) (n : ℕ) : ContinuumFreeGroup :=
   codedSequence a (selector N hN M a n)
 
 /-- The shifted finite set in block `l`. -/
-def differenceBlock (a : ContinuumIndex) (l : ℕ) : Finset ContinuumFreeGroup :=
+@[expose] def differenceBlock (a : ContinuumIndex) (l : ℕ) : Finset ContinuumFreeGroup :=
   (blockPositions N hN l).image fun n ↦ prepared N hN M a n - codeBasisVector a
 
 theorem differenceBlock_boundedIndependent (a : ContinuumIndex) (l : ℕ) :
@@ -83,7 +83,7 @@ theorem preparedDifference_injective (a : ContinuumIndex) :
 /-! ## Packaging for the transfinite extension -/
 
 /-- The concrete triangular data used by the transfinite recursion. -/
-def transfiniteData : TransfiniteExtension.ContinuumData where
+@[expose] def transfiniteData : TransfiniteExtension.ContinuumData where
   Code := ContinuumIndex
   codeIndex := codeIndex
   prepared := prepared N hN M

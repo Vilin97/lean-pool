@@ -22,7 +22,7 @@ Tags: pde, kinetic-theory, mathematical-physics
 MSC: 35Q83, 82C40, 35Q61
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

@@ -58,7 +58,7 @@ proof is what makes that true, and it is not repeated.
 This file carries `hurwitz_classification`, the headline theorem of the development.
 -/
 
-@[expose] public section
+public section
 
 open scoped Quaternion
 
@@ -158,7 +158,7 @@ def congr (e : E ≃ₗ[ℝ] D) (he : IsCompIso e) (f : CompEmb D C) : CompEmb E
 
 omit [Nontrivial C] in
 @[simp] theorem congr_apply (e : E ≃ₗ[ℝ] D) (he : IsCompIso e) (f : CompEmb D C) (x : E) :
-    (f.congr e he).toLinearMap x = f.toLinearMap (e x) := rfl
+    (f.congr e he).toLinearMap x = f.toLinearMap (e x) := by rfl
 
 omit [Nontrivial C] in
 /-- Renaming the source does not move the range. -/
@@ -180,7 +180,7 @@ noncomputable def toEquiv (f : CompEmb D C) (h : LinearMap.range f.toLinearMap =
 
 omit [Nontrivial C] in
 @[simp] theorem toEquiv_apply (f : CompEmb D C) (h : LinearMap.range f.toLinearMap = ⊤) (x : D) :
-    f.toEquiv h x = f.toLinearMap x := rfl
+    f.toEquiv h x = f.toLinearMap x := by rfl
 
 omit [Nontrivial C] in
 theorem toEquiv_isCompIso (f : CompEmb D C) (h : LinearMap.range f.toLinearMap = ⊤) :
@@ -253,7 +253,7 @@ def doubleMap : CD D →ₗ[ℝ] C where
 
 omit [Nontrivial C] in
 @[simp] theorem doubleMap_apply (x : CD D) :
-    f.doubleMap (u := u) x = f.toLinearMap x.fst + (f.toLinearMap x.snd) * u := rfl
+    f.doubleMap (u := u) x = f.toLinearMap x.fst + (f.toLinearMap x.snd) * u := by rfl
 
 include hu hnu
 
@@ -281,7 +281,7 @@ def double : CompEmb (CD D) C where
     rw [hA.nf_add_mul_unit hu hnu ⟨x.fst, rfl⟩ ⟨x.snd, rfl⟩, f.map_nf, f.map_nf, CD.nf_eq]
 
 @[simp] theorem double_apply (x : CD D) :
-    (f.double hu hnu).toLinearMap x = f.toLinearMap x.fst + (f.toLinearMap x.snd) * u := rfl
+    (f.double hu hnu).toLinearMap x = f.toLinearMap x.fst + (f.toLinearMap x.snd) * u := by rfl
 
 /-- The transported embedding lands exactly on the internal double of the range. -/
 theorem range_double :
@@ -315,7 +315,7 @@ def realCompEmb : CompEmb ℝ C where
     ring
 
 @[simp] theorem realCompEmb_apply (x : ℝ) :
-    (realCompEmb (C := C)).toLinearMap x = x • (1 : C) := rfl
+    (realCompEmb (C := C)).toLinearMap x = x • (1 : C) := by rfl
 
 /-- The range of the base embedding is the line through the unit, the `A₀` of the dimension
 proof. -/

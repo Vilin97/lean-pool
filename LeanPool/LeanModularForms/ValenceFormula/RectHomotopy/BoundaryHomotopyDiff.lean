@@ -16,7 +16,7 @@ Proves that each segment of `fdBoundaryToPolygonHomotopy`
 is differentiable in t.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Metric Filter Topology
 

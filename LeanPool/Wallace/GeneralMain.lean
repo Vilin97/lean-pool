@@ -20,7 +20,7 @@ coordinatization embedding from Section 2.  Its prescribed basis limits lie in t
 group by construction, so no new fusion or set-theoretic hypothesis is needed.
 -/
 
-@[expose] public section
+public section
 
 open Cardinal
 

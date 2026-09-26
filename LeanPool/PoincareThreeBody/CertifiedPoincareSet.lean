@@ -18,7 +18,7 @@ finite data into membership in the exact Poincaré set.  Consequently, it is eno
 the set of actions carrying such certificates is dense.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
@@ -81,7 +81,7 @@ theorem ClassicalPoincareCertificate.mem_classicalPoincareSet
 
 /-- The subset of interior actions whose Poincaré-set membership has been reduced to finite
 validated numerical data. -/
-def certifiedClassicalPoincareSet : Set InteriorProgradeEllipticAction :=
+@[expose] def certifiedClassicalPoincareSet : Set InteriorProgradeEllipticAction :=
   {action | Nonempty (ClassicalPoincareCertificate action)}
 
 theorem certifiedClassicalPoincareSet_subset_classicalPoincareSet :

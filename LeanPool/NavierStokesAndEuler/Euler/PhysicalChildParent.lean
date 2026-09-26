@@ -33,7 +33,7 @@ section
 as smooth bounded coefficient paths. Every spatial jet is continuous in
 the sup norm; no third time derivative is used for the acceleration. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -179,7 +179,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -309,7 +309,7 @@ section
 /-! The literal child map X(t,Y(t,a)), its actual velocity, and its
 actual acceleration, as continuous smooth coefficient paths. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -426,7 +426,7 @@ section
 
 /-! Exact Jacobian composition for the child displacement. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -471,7 +471,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -545,7 +545,7 @@ section
 /-! The L² child fields used in the estimates are exactly the actual
 first and second time derivatives of the composed particle map. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -655,7 +655,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

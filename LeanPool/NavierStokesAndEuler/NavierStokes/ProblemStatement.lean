@@ -27,7 +27,7 @@ The `ContDiff` scope's `∞` means all finite differentiability orders. In this
 Mathlib version `⊤` would instead impose the stronger analytic order.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -49,62 +49,65 @@ abbrev VelocityField := SpaceTime → Space
 abbrev PressureField := SpaceTime → ℝ
 
 /-- The standard unit coordinate vectors, fixing both the metric and periods. -/
-def coordinateVector (i : Fin 3) : Space := EuclideanSpace.single i 1
+@[expose] def coordinateVector (i : Fin 3) : Space := EuclideanSpace.single i 1
 
 /-- Physical spacetime before the proposed singular time, including initial time. -/
+@[expose]
 def preSingularDomain : Set SpaceTime := Ico 0 1 ×ˢ univ
 
 /-- The physical domain on which the prescribed force must be smooth. -/
-def futureDomain : Set SpaceTime := Ici 0 ×ˢ univ
+@[expose] def futureDomain : Set SpaceTime := Ici 0 ×ˢ univ
 
 /-- Invariance under each of the three unit coordinate shifts. Quantifying over
 every spatial point also gives the corresponding negative shifts. -/
+@[expose]
 def UnitSpatialPeriodsOn {V : Type*} (times : Set ℝ) (g : SpaceTime → V) : Prop :=
   ∀ t ∈ times, ∀ x : Space, ∀ i : Fin 3,
     g (t, x + coordinateVector i) = g (t, x)
 
 /-- Ordinary time derivative, evaluated on the positive unit time direction.
 It is used in the PDE only for `0 < t < 1`. -/
-def temporalDerivative (u : VelocityField) (t : ℝ) (x : Space) : Space :=
+@[expose] def temporalDerivative (u : VelocityField) (t : ℝ) (x : Space) : Space :=
   fderiv ℝ (fun s : ℝ => u (s, x)) t 1
 
 /-- Spatial Frechet derivative with time held fixed. -/
-def spatialDerivative (u : VelocityField) (t : ℝ) (x : Space) : Space →L[ℝ] Space :=
+@[expose] def spatialDerivative (u : VelocityField) (t : ℝ) (x : Space) : Space →L[ℝ] Space :=
   fderiv ℝ (fun y : Space => u (t, y)) x
 
 /-- `(u · ∇)u`, the spatial derivative applied to the velocity vector. -/
-def advection (u : VelocityField) (t : ℝ) (x : Space) : Space :=
+@[expose] def advection (u : VelocityField) (t : ℝ) (x : Space) : Space :=
   spatialDerivative u t x (u (t, x))
 
 /-- Euclidean divergence `∑ᵢ ∂ᵢuᵢ`. -/
-def spatialDivergence (u : VelocityField) (t : ℝ) (x : Space) : ℝ :=
+@[expose] def spatialDivergence (u : VelocityField) (t : ℝ) (x : Space) : ℝ :=
   ∑ i : Fin 3, (spatialDerivative u t x (coordinateVector i)) i
 
 /-- Euclidean gradient `∑ᵢ (∂ᵢp)eᵢ`. -/
-def pressureGradient (p : PressureField) (t : ℝ) (x : Space) : Space :=
+@[expose] def pressureGradient (p : PressureField) (t : ℝ) (x : Space) : Space :=
   ∑ i : Fin 3,
     (fderiv ℝ (fun y : Space => p (t, y)) x (coordinateVector i)) • coordinateVector i
 
 /-- Componentwise Euclidean Laplacian `∑ᵢ ∂ᵢ∂ᵢu`. -/
-def spatialLaplacian (u : VelocityField) (t : ℝ) (x : Space) : Space :=
+@[expose] def spatialLaplacian (u : VelocityField) (t : ℝ) (x : Space) : Space :=
   ∑ i : Fin 3,
     fderiv ℝ (fun y : Space => spatialDerivative u t y (coordinateVector i))
       x (coordinateVector i)
 
 /-- The physical Navier--Stokes residual at viscosity exactly one. -/
-def navierStokesResidual (u : VelocityField) (p : PressureField)
+@[expose] def navierStokesResidual (u : VelocityField) (p : PressureField)
     (t : ℝ) (x : Space) : Space :=
   temporalDerivative u t x + advection u t x - spatialLaplacian u t x +
     pressureGradient p t x
 
 /-- A common finite upper endpoint for the force's future time support,
 uniformly over space. Spatial support is not required to be compact in the lift. -/
+@[expose]
 def CompactFutureTimeSupport (f : VelocityField) : Prop :=
   ∃ T : ℝ, 0 ≤ T ∧ ∀ t : ℝ, T ≤ t → ∀ x : Space, f (t, x) = 0
 
 /-- Pointwise expression of unbounded speed arbitrarily near time one from
 below. Both the threshold and the time-neighborhood radius are arbitrary. -/
-def SpeedUnboundedAtOne (u : VelocityField) : Prop :=
+@[expose] def SpeedUnboundedAtOne (u : VelocityField) : Prop :=
   ∀ M : ℝ, 0 < M → ∀ δ : ℝ, 0 < δ →
     ∃ t : ℝ, ∃ x : Space, t ∈ Ioo 0 1 ∧ 1 - δ < t ∧ M < ‖u (t, x)‖
 
@@ -129,7 +132,7 @@ structure CandidateProperties (u : VelocityField) (p : PressureField)
 /-- The primary existential content of Candidate Theorem 1.1.
 Maximal lifespan, Sobolev blow-up, and force derivative decay are derived
 from these candidate conditions in separate theorems. -/
-def candidateStatement : Prop :=
+@[expose] def candidateStatement : Prop :=
   ∃ u : VelocityField, ∃ p : PressureField, ∃ f : VelocityField,
     CandidateProperties u p f
 

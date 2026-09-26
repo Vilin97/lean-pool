@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CoefficientPathOrbit
 /-! Literal composition, scaling and spatial differentiation of the
 actual matrix-coefficient witnesses. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

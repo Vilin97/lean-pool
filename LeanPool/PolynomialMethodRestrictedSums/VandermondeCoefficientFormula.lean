@@ -22,7 +22,7 @@ Lemma 3.1 of Alon-Nathanson-Ruzsa: a closed form for the coefficient of
 culminating in `Vandermonde_coefficient_formula`.
 -/
 
-@[expose] public section
+public section
 
 open MvPolynomial
 open AddMonoidAlgebra (coeff)
@@ -46,13 +46,13 @@ def fallingFactorialMatrix (c : Fin (k + 1) → ℕ) : Matrix (Fin (k + 1)) (Fin
   Matrix.of (fun i j : Fin (k + 1) => (fallingFactorial (c i) j : ℚ))
 
 /-- Expected value: m! / (∏ c!) * ∏_{i>j} (c - c) -/
-def expectedValue (c : Fin (k + 1) → ℕ) (m : ℕ) : ℚ :=
+@[expose] def expectedValue (c : Fin (k + 1) → ℕ) (m : ℕ) : ℚ :=
   (m.factorial : ℚ) * (∏ i : Fin (k + 1), ∏ j : Fin (k + 1),
     if j.val < i.val then ((c i : ℚ) - (c j : ℚ)) else 1) /
     (∏ i : Fin (k + 1), ((c i).factorial : ℚ))
 
 /-- Convert a function c : Fin (k + 1) → ℕ to Finsupp -/
-def toFinsupp (c : Fin (k + 1) → ℕ) : (Fin (k + 1)) →₀ ℕ :=
+@[expose] def toFinsupp (c : Fin (k + 1) → ℕ) : (Fin (k + 1)) →₀ ℕ :=
   ⟨Finset.univ.filter (fun i => c i ≠ 0), c, fun i => by simp⟩
 
 /- Vandermonde Coefficient Formula (Lemma 3.1):

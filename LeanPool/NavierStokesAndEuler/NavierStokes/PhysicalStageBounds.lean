@@ -18,7 +18,7 @@ fields. Physical derivative estimates are consequences of their native
 classes, support and chart identities. No `RawStageBounds` is an input.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -327,12 +327,12 @@ section Assembly
 variable {h : ℝ} {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D] {I K : Type*}
 
 /-- Potential increment, defined pointwise by `W.vector w + M.family.angularField w`. -/
-noncomputable def potentialIncrement (W : WaveData h D I K (Fin 3))
+@[expose] noncomputable def potentialIncrement (W : WaveData h D I K (Fin 3))
     (M : MeanData h (CoordinateAlgebra.A h - 1 / 2)) : VelocityField :=
   fun w => W.vector w + M.family.angularField w
 
 /-- Pressure increment, defined pointwise by `W.pressure w + M.family.field w`. -/
-noncomputable def pressureIncrement (W : WaveData h D I K Unit)
+@[expose] noncomputable def pressureIncrement (W : WaveData h D I K Unit)
     (M : MeanData h (2 * CoordinateAlgebra.A h)) : PressureField :=
   fun w => W.pressure w + M.family.field w
 
@@ -343,7 +343,7 @@ noncomputable def potentialLoss (h waveOffset meanOffset : ℝ) (m : ℕ) : ℝ 
     (PhysicalMeanJetBounds.loss (CoordinateAlgebra.A h - 1 / 2) m + meanOffset)
 
 /-- Direct loss, given by `PhysicalMeanJetBounds.loss (CoordinateAlgebra.A h) m + meanOffset`. -/
-noncomputable def directLoss (h meanOffset : ℝ) (m : ℕ) : ℝ :=
+@[expose] noncomputable def directLoss (h meanOffset : ℝ) (m : ℕ) : ℝ :=
   PhysicalMeanJetBounds.loss (CoordinateAlgebra.A h) m + meanOffset
 
 /-- Pressure loss, given by `max (PhysicalGraphBounds.waveLoss h m + waveOffset)

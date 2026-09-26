@@ -63,7 +63,7 @@ Lie algebra, universal enveloping algebra
 
 -/
 
-@[expose] public section
+public section
 
 
 -- `LieRing.ofAssociativeRing` is only a local instance in Mathlib; it is needed to view the
@@ -86,11 +86,11 @@ lemma Algebra.smul_scalar_smul_eq_smul_algebraMap_mul (c : 𝕜) (a : A) :
 variable (V : Type*) [AddCommGroup V] [Module A V]
 
 /-- Any module over an algebra is a module over the scalars. -/
-@[reducible] def moduleScalarOfModule : Module 𝕜 V :=
+@[expose, reducible] def moduleScalarOfModule : Module 𝕜 V :=
   Module.compHom _ (algebraMap 𝕜 A)
 
 lemma moduleScalarOfModule.smul_def (r : 𝕜) (v : V) :
-    (moduleScalarOfModule 𝕜 A V).smul r v = algebraMap 𝕜 A r • v :=
+    (moduleScalarOfModule 𝕜 A V).smul r v = algebraMap 𝕜 A r • v := by
   rfl
 
 /-- When making any module over an algebra a module over the scalars, these form an
@@ -108,7 +108,7 @@ lemma isScalarTowerModuleScalarOfModule :
 
 /-- Type synonym of a module over an algebra, when it is to be viewed as a module over
 the scalars. -/
-def _root_.ModuleOfModuleAlgebra (𝕜 A V : Type*) [CommRing 𝕜]
+@[expose] def _root_.ModuleOfModuleAlgebra (𝕜 A V : Type*) [CommRing 𝕜]
     [Semiring A] [algebra : Algebra 𝕜 A] [AddCommGroup V] [module : Module A V] :=
   let _ : Algebra 𝕜 A := algebra
   let _ : Module A V := module
@@ -200,7 +200,7 @@ def centralSMulHom {z : R} (z_central : ∀ a, z * a = a * z)
 lemma centralSMulHom_apply {z : R} (z_central : ∀ a, Commute z a)
     (M : Type*) [AddCommMonoid M] [Module R M] (v : M) :
     centralSMulHom z_central M v = z • v :=
-  rfl
+  by rfl
 
 variable {𝕜 A : Type*} [CommRing 𝕜] [Semiring A] [Algebra 𝕜 A]
 variable (M : Type*) [AddCommGroup M] [Module 𝕜 M] [Module A M] [IsScalarTower 𝕜 A M]
@@ -388,7 +388,7 @@ structure on `V`. -/
     (a : 𝓤 𝕜 𝓰) (v : V) :
     (LieAlgebra.Representation.moduleUniversalEnvelopingAlgebra ρ).smul a v
       = UniversalEnvelopingAlgebra.lift 𝕜 ρ a v :=
-  rfl
+  by rfl
 
 /-- The defining property of the `𝓤 𝕜 𝓰`-module structure on a representation `V` of a
 `𝕜`-Lie algebra `𝓰`. -/

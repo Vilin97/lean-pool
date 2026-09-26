@@ -22,7 +22,7 @@ The lag variables in this file are the regular primitives constructed in
 derivative. The physical identities keep the axial-viscosity remainder.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,24 +37,24 @@ open scoped Topology ContDiff
 variable {Ω : RadialDomain} (P : Profiles Ω)
 
 /-- The angular source `S_q`; `Profiles.angularSource` is `H S_q`. -/
-noncomputable def sourceTheta (h : ℝ) (w : Point) : ℝ :=
+@[expose] noncomputable def sourceTheta (h : ℝ) (w : Point) : ℝ :=
   P.angularSource h w / P.H w
 
 /-- The axial source `S_n`. -/
-noncomputable def sourceAxial (h : ℝ) (w : Point) : ℝ := P.axialSource h w
+@[expose] noncomputable def sourceAxial (h : ℝ) (w : Point) : ℝ := P.axialSource h w
 
 /-- The coefficient of the angular radial stress in Proposition 3.2. -/
-noncomputable def theta (h : ℝ) (w : Point) : ℝ :=
+@[expose] noncomputable def theta (h : ℝ) (w : Point) : ℝ :=
   P.f w * w.1 * P.angularLag h w / L h w.2 + 2 * w.1 * partialX P.f w
 
 /-- The coefficient of the axial radial stress in Proposition 3.2. -/
-noncomputable def axial (h : ℝ) (w : Point) : ℝ :=
+@[expose] noncomputable def axial (h : ℝ) (w : Point) : ℝ :=
   Real.sqrt (2 * w.1) * (partialX P.U w + P.axialLag h w / (2 * L h w.2))
 
 /-- Slope A, given by `-2 * w.1 * partialX P.f w / P.f w`. -/
 noncomputable def slopeA (w : Point) : ℝ := -2 * w.1 * partialX P.f w / P.f w
 /-- Slope B, given by `2 * w.1 * partialX P.U w / P.E w`. -/
-noncomputable def slopeB (w : Point) : ℝ := 2 * w.1 * partialX P.U w / P.E w
+@[expose] noncomputable def slopeB (w : Point) : ℝ := 2 * w.1 * partialX P.U w / P.E w
 
 theorem theta_eq_lag_minus_slope (h : ℝ) {w : Point} (hf : P.f w ≠ 0) :
     theta P h w = P.f w * (w.1 * P.angularLag h w / L h w.2 - slopeA P w) := by
@@ -271,7 +271,7 @@ theorem transport_pullback_add_axialViscosity {h e : ℝ} (hh : 0 < h) (hh1 : h 
   ring
 
 /-- Cylindrical radial divergence `(∂r + k/r)S`, in the regular coordinate `s=r²/2`. -/
-noncomputable def radialDivergence (k : ℝ) (S : SimilarityProfile.PhysicalProfile)
+@[expose] noncomputable def radialDivergence (k : ℝ) (S : SimilarityProfile.PhysicalProfile)
     (p : SimilarityProfile.PhysicalPoint) : ℝ :=
   Real.sqrt (2 * p.2.1) * SimilarityProfile.partialS S p +
     k * S p / Real.sqrt (2 * p.2.1)

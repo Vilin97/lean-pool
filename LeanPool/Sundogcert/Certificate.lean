@@ -19,7 +19,7 @@ public import Mathlib.InformationTheory.Hamming  -- hammingNorm (the error weigh
   TRUST SURFACE = the `Scheme` fields (esp. `hHG`) + `Safe`; everything else is machine-checked.
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 
@@ -29,7 +29,7 @@ variable {F : Type*} [Field F] [Fintype F] [DecidableEq F]
 -- Deployed instance: `F := ZMod 2` (the [n=128, k=64] GF(2) certificate). Field-generic below.
 
 /-- Hamming weight = number of nonzero coordinates (the error weight). -/
-def wt {n : ℕ} (e : Fin n → F) : ℕ := hammingNorm e
+@[expose] def wt {n : ℕ} (e : Fin n → F) : ℕ := hammingNorm e
 
 /-! ### THE TRUST SURFACE — a reviewer audits these definitions; the rest is machine-checked. -/
 
@@ -58,7 +58,7 @@ def body (s : Fin S.k → F) (e : Fin S.n → F) : Fin S.n → F := s ᵥ* S.G +
 
 /-- **Safety predicate** (semantic): some same-syndrome witness has weight ≤ τ.
     The planted `e` is a *label*, never referenced here. -/
-def Safe (y : Fin S.n → F) : Prop :=
+@[expose] def Safe (y : Fin S.n → F) : Prop :=
   ∃ e' : Fin S.n → F, S.H *ᵥ e' = S.H *ᵥ y ∧ wt e' ≤ S.τ
 
 /-! ### The verifier (cheap, three-valued) -/
@@ -195,7 +195,7 @@ theorem hammingNorm_eq_card_vsupp {n : ℕ} (v : Fin n → F) :
   simp only [hammingNorm, vsupp]
 
 /-- Worst-case column weight of `M`: the most nonzero entries in any single column. -/
-def colBound (M : Matrix (Fin a) (Fin b) F) : ℕ :=
+@[expose] def colBound (M : Matrix (Fin a) (Fin b) F) : ℕ :=
   Finset.univ.sup (fun j => (Finset.univ.filter (fun i => M i j ≠ 0)).card)
 
 omit [Fintype F] in
@@ -236,7 +236,7 @@ theorem hammingNorm_mulVec_le (M : Matrix (Fin a) (Fin b) F) (e : Fin b → F) :
     `hammingNorm` zero-test + one division; `colBound S.H` amortized once per scheme).  Unlike
     `supportLb` it can exceed 1, so `reject` fires at `τ > 0`.  Floor division is the SOUND
     direction (it only under-estimates weight); `colBound = 0` ⟹ `H = 0` ⟹ syndrome `= 0`, sound. -/
-def colWeightLb (z : Fin S.m → F) : ℕ := hammingNorm z / colBound S.H
+@[expose] def colWeightLb (z : Fin S.m → F) : ℕ := hammingNorm z / colBound S.H
 
 /-- `colWeightLb` never exceeds any same-syndrome witness weight (soundness). -/
 theorem colWeightLb_sound (y e' : Fin S.n → F) (he : S.H *ᵥ e' = S.H *ᵥ y) :

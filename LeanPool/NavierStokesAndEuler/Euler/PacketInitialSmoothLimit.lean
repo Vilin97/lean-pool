@@ -20,7 +20,7 @@ section
 Only the source parameter cap and literal scale identities are supplied;
 all field estimates and the geometric amplitude decay are derived. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -90,7 +90,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -143,7 +143,7 @@ theorem actual_increment_summable (s : ℕ) :
 
 /-- Initial partial, defined pointwise by `∑ n ∈ range N, ((A n).high (frequency J X n) x+(A
 n).mean (frequency J X n) x)`. -/
-def initialPartial (N : ℕ) : Space → Space :=
+@[expose] def initialPartial (N : ℕ) : Space → Space :=
   fun x => ∑ n ∈ range N, ((A n).high (frequency J X n) x+(A n).mean (frequency J X n) x)
 
 theorem initialPartial_field (N : ℕ) :

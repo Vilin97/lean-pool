@@ -12,7 +12,7 @@ import Mathlib.Topology.NhdsWithin
 # LeanPool.SardMoreira.Topology
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology

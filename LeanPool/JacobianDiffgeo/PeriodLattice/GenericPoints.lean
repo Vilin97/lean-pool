@@ -24,7 +24,7 @@ Main declarations: `RS.isOpen_coeffAt_ne_zero`, `RS.exists_coeffAt_ne_zero_notMe
 `RS.exists_genericPoints`, `RS.det_genericMatrix_ne_zero`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology IsManifold
@@ -43,7 +43,7 @@ def evalAtₗ (x : X) : Form1 X →ₗ[ℂ] ℂ where
   map_smul' := coeffAt_smul x
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X] in
-@[simp] theorem evalAtₗ_apply (x : X) (η : Form1 X) : evalAtₗ x η = coeffAt x η := rfl
+@[simp] theorem evalAtₗ_apply (x : X) (η : Form1 X) : evalAtₗ x η = coeffAt x η := by rfl
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X] in
 /-- The nonvanishing locus of a form's coefficient is open. -/

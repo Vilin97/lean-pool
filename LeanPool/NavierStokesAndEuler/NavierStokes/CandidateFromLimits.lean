@@ -35,7 +35,7 @@ The actual residual is smooth and periodic on the whole open past and retains
 the original residual's terminal germ and all of its terminal derivative data.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -367,7 +367,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

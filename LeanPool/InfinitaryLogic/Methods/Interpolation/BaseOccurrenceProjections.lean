@@ -23,7 +23,7 @@ the boundary now matches the proof architecture.  Declaration names and namespac
 so no compatibility shims are needed.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

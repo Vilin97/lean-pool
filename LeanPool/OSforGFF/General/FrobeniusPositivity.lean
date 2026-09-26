@@ -17,7 +17,7 @@ inner product `⟪G, B⟫ = ∑ j l, G j l * B j l` is strictly positive. The pr
 nonzero), and reduces to `⟪G, B⟫ = tr(H D) = ∑ i, λᵢ Hᵢᵢ > 0`.
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 

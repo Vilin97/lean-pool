@@ -32,7 +32,7 @@ it is a two-sided
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -45,6 +45,7 @@ variable {V₀' : NeighborhoodSystem α'} {V₁' : NeighborhoodSystem β'}
 /-! ### Order-iso helpers for cartesian products. -/
 
 /-- The product of two order isomorphisms, as an order isomorphism. -/
+@[expose]
 def prodCongrOrderIso {A B C D : Type*} [Preorder A] [Preorder B] [Preorder C] [Preorder D]
     (e₀ : A ≃o B) (e₁ : C ≃o D) : A × C ≃o B × D where
   toFun p := (e₀ p.1, e₁ p.2)
@@ -111,6 +112,7 @@ single
 neighbourhood `Δ = univ`. Its domain `|𝟙|` has exactly one element (`⊥ = {Δ}`), so
 `𝟙` is the
 *product of no factors*. -/
+@[expose]
 def unitSys : NeighborhoodSystem Unit where
   mem X := X = Set.univ
   master := Set.univ

@@ -20,7 +20,7 @@ and that value of `h`.  The five-row correction is a fixed, constructed local
 inverse applied to the actual debt of the assembled prefix.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -208,7 +208,7 @@ noncomputable def idealAmplitude (F : Profile) (eta : ℝ) : ℝ :=
 /-- Ideal U, given by `4 * eta`. -/
 noncomputable def idealU (eta : ℝ) : ℝ := 4 * eta
 /-- Ideal E, given by `idealAmplitude F p.2 * p.1 ^ (1 / 10 : ℝ)`. -/
-noncomputable def idealE (F : Profile) (p : Point) : ℝ :=
+@[expose] noncomputable def idealE (F : Profile) (p : Point) : ℝ :=
   idealAmplitude F p.2 * p.1 ^ (1 / 10 : ℝ)
 
 theorem idealAmplitude_pos (F : Profile) (eta : ℝ) : 0 < idealAmplitude F eta :=
@@ -246,7 +246,7 @@ noncomputable def resetSolver : ResetSolver := Classical.choice resetSolver_exis
 
 /-- Normalized debt, given by `FiveProfileMoments.normalizedDebt (idealAmplitude F eta) (idealU
 eta) (debt eta)`. -/
-noncomputable def normalizedDebt (F : Profile) (debt : ℝ → Debt) (eta : ℝ) : Coeff :=
+@[expose] noncomputable def normalizedDebt (F : Profile) (debt : ℝ → Debt) (eta : ℝ) : Coeff :=
   FiveProfileMoments.normalizedDebt (idealAmplitude F eta) (idealU eta) (debt eta)
 
 /-- Reset coefficients, given by `resetSolver.solve (normalizedDebt F debt eta)`. -/
@@ -282,13 +282,13 @@ theorem resetCoefficients_smooth (F : Profile) {debt : ℝ → Debt} {V : Set �
 
 /-- Density, given by `![U x, Real.sqrt (2 * x) * E x, U x * Real.sqrt (2 * x) * E x, U x ^ 2 -
 E x ^ 2 / 2, E x ^ 2 / (2 * x)]`. -/
-noncomputable def density (U E : ℝ → ℝ) (x : ℝ) : Debt :=
+@[expose] noncomputable def density (U E : ℝ → ℝ) (x : ℝ) : Debt :=
   ![U x, Real.sqrt (2 * x) * E x, U x * Real.sqrt (2 * x) * E x,
     U x ^ 2 - E x ^ 2 / 2, E x ^ 2 / (2 * x)]
 
 /-- Moments, defined pointwise by `∫ x in Ioc 0 r, density (fun x => U (x, eta)) (fun x => E (x,
 eta)) x i`. -/
-noncomputable def moments (U E : Field) (r eta : ℝ) : Debt :=
+@[expose] noncomputable def moments (U E : Field) (r eta : ℝ) : Debt :=
   fun i => ∫ x in Ioc 0 r, density (fun x => U (x, eta)) (fun x => E (x, eta)) x i
 
 /-- Corrected U, given by `U p + idealAmplitude F p.2 * FiveProfileMoments.u resetPatch
@@ -729,7 +729,7 @@ theorem initialShape_value {eta : ℝ} (hη : eta ∈ ReferencePath.parameterInt
     c.finish c.radius_before_Xi A.normalization_pos hη
 
 /-- The nominal fields are functions of the actual stock-controlled seed. -/
-noncomputable def debt : ℝ → Debt :=
+@[expose] noncomputable def debt : ℝ → Debt :=
   actualDebt F A.normalization c.shapeTime c.initialShape c.seedF c.seedU
 /-- Normalized E, given by `joinedE F A.normalization c.shapeTime c.initialShape c.seedF
 c.seedU`. -/
@@ -943,7 +943,7 @@ namespace Controls
 variable {F : Profile} {A : AxisStage F} (c : Controls A)
 
 /-- Shaped F, given by `ShapeTransition.shapeField Xi c.shapeTime c.initialShape c.seedF`. -/
-noncomputable def shapedF : Field :=
+@[expose] noncomputable def shapedF : Field :=
   ShapeTransition.shapeField Xi c.shapeTime c.initialShape c.seedF
 
 theorem shapedF_smooth : ContDiffOn ℝ ∞ c.shapedF A.referenceInput.radialDomain.carrier := by
@@ -1544,12 +1544,12 @@ namespace Controls
 variable {F : Profile} {A : AxisStage F} (c : Controls A)
 
 /-- Separation, given by `ShapeTransition.separation c.shapeTime A.normalization F.data.core.P`. -/
-noncomputable def separation : ℝ := ShapeTransition.separation c.shapeTime A.normalization
+@[expose] noncomputable def separation : ℝ := ShapeTransition.separation c.shapeTime A.normalization
     F.data.core.P
 /-- Raw U, given by `ShapeTransition.scaledFamily c.radius c.seedU`. -/
-noncomputable def rawU : Field := ShapeTransition.scaledFamily c.radius c.seedU
+@[expose] noncomputable def rawU : Field := ShapeTransition.scaledFamily c.radius c.seedU
 /-- Raw F, given by `ShapeTransition.scaledFamily c.radius c.shapedF`. -/
-noncomputable def rawF : Field := ShapeTransition.scaledFamily c.radius c.shapedF
+@[expose] noncomputable def rawF : Field := ShapeTransition.scaledFamily c.radius c.shapedF
 /-- Raw rows as an element of `Debt`. -/
 noncomputable def rawRows (r eta : ℝ) : Debt :=
   ![ShapeTransition.rowM c.rawU r eta, ShapeTransition.rowI c.radius c.rawF r eta,
@@ -2460,7 +2460,7 @@ variable {F : Profile} {A : AxisStage F} (c : Controls A)
 noncomputable def extendedE (coef : ℝ → ExtendedHeatedOutgoing.Coeff) (p : Point) : ℝ :=
   c.E p + c.heatBlend p.1 * (ExtendedHeatedOutgoing.E F c.radius coef p - c.E p)
 /-- Extendedf, with branches according to `p.1 ≤ Xi`. -/
-noncomputable def extendedf (coef : ℝ → ExtendedHeatedOutgoing.Coeff) (p : Point) : ℝ :=
+@[expose] noncomputable def extendedf (coef : ℝ → ExtendedHeatedOutgoing.Coeff) (p : Point) : ℝ :=
   if p.1 ≤ Xi then c.f p else c.extendedE coef p / Real.sqrt (2 * p.1)
 /-- Extended pi, given by `F.axisDatum p.2 + ProfileHistories.primitive (fun q => c.extendedf
 coef q ^ 2) p`. -/

@@ -16,7 +16,7 @@ upper margins are an arbitrary positive `δ`.  The two halves of the outer kite 
 two-triangle mesh, so the transport is supplied by the canonical realization homeomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -24,7 +24,7 @@ namespace ClassificationOfSurfaces
 namespace Moise
 
 /-- Left, right, top, and bottom vertices of an axis-aligned kite. -/
-def axisKitePosition (lo hi : ℝ) : Fin 4 → Plane :=
+@[expose] def axisKitePosition (lo hi : ℝ) : Fin 4 → Plane :=
   ![planePoint (-1) 0, planePoint 1 0, planePoint 0 hi, planePoint 0 lo]
 
 @[simp] theorem axisKitePosition_zero (lo hi : ℝ) :
@@ -40,7 +40,7 @@ def axisKitePosition (lo hi : ℝ) : Fin 4 → Plane :=
     axisKitePosition lo hi 3 = planePoint 0 lo := rfl
 
 /-- The `axisKiteTriangles` declaration. -/
-def axisKiteTriangles : Finset (Finset (Fin 4)) :=
+@[expose] def axisKiteTriangles : Finset (Finset (Fin 4)) :=
   {{0, 2, 3}, {1, 2, 3}}
 
 /-- The `axisKitePatch` declaration. -/
@@ -150,11 +150,11 @@ theorem axisKitePatch_negTwo_two : axisKitePatch (-2) 2 = diamondPatch := by
     simp [axisKitePosition] <;> tauto
 
 /-- Vertical scale used to compress the fixed diamond to a kite with margins `δ`. -/
-noncomputable def thinKiteScale (δ : ℝ) : ℝ := (1 + 2 * δ) / 4
+@[expose] noncomputable def thinKiteScale (δ : ℝ) : ℝ := (1 + 2 * δ) / 4
 
 /-- The global piecewise-affine transport.  Writing the two affine pieces with `|x|` makes
 continuity across the vertical diagonal immediate. -/
-noncomputable def thinKiteMap (δ : ℝ) (p : Plane) : Plane :=
+@[expose] noncomputable def thinKiteMap (δ : ℝ) (p : Plane) : Plane :=
   planePoint (p 0) (thinKiteScale δ * p 1 + (1 - |p 0|) / 2)
 
 /-- The `thinKiteInv` declaration. -/
@@ -262,7 +262,7 @@ theorem thinKitePatch_subset_rightCone {δ : ℝ} (hδ : 0 ≤ δ) {p : Plane}
         nlinarith
 
 /-- The triangle onto which the thin kite collapses when `δ = 0`. -/
-def kiteTrianglePosition : Fin 3 → Plane :=
+@[expose] def kiteTrianglePosition : Fin 3 → Plane :=
   ![planePoint (-1) 0, planePoint 1 0, planePoint 0 1]
 
 theorem kiteTrianglePosition_affineIndependent :

@@ -13,7 +13,7 @@ by Alex Kontorovich and Terence Tao:
 `ResidueCalcOnRectangles.lean`, commit
 `be5e07e04cde20c5ceabf63759bd097a9c88173f` (Apache-2.0). -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -23,17 +23,18 @@ open scoped Interval
 namespace NumberField.Odlyzko
 
 /-- A horizontal integral used in the Odlyzko-bound argument. -/
-noncomputable def horizontalIntegral {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+@[expose] noncomputable def horizontalIntegral {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     (f : ℂ → E) (x₁ x₂ y : ℝ) : E :=
   ∫ x in x₁..x₂, f (x + y * I)
 
 /-- A vertical segment integral used in the Odlyzko-bound argument. -/
+@[expose]
 noncomputable def verticalSegmentIntegral {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     (f : ℂ → E) (x y₁ y₂ : ℝ) : E :=
   I • ∫ y in y₁..y₂, f (x + y * I)
 
 /-- A rectangle integral used in the Odlyzko-bound argument. -/
-noncomputable def rectangleIntegral {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+@[expose] noncomputable def rectangleIntegral {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     (f : ℂ → E) (z w : ℂ) : E :=
   horizontalIntegral f z.re w.re z.im -
     horizontalIntegral f z.re w.re w.im +
@@ -63,7 +64,7 @@ noncomputable def normalizedRectangleIntegral {E : Type*} [NormedAddCommGroup E]
   (1 / (2 * Real.pi * I)) • rectangleIntegral f z w
 
 /-- A rectangle border integrable used in the Odlyzko-bound argument. -/
-def RectangleBorderIntegrable {E : Type*} [NormedAddCommGroup E]
+@[expose] def RectangleBorderIntegrable {E : Type*} [NormedAddCommGroup E]
     (f : ℂ → E) (z w : ℂ) : Prop :=
   IntervalIntegrable (fun x ↦ f (x + z.im * I)) volume z.re w.re ∧
   IntervalIntegrable (fun x ↦ f (x + w.im * I)) volume z.re w.re ∧

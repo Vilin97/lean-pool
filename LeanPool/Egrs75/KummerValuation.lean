@@ -21,7 +21,7 @@ Erdos117 squarefree-central-binomial scaffold. Keeping them here makes the
 ConcreteMath module self-contained around its actual open target.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.ConcreteMath
 

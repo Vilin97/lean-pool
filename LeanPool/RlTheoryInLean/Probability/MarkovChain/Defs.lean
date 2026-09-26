@@ -12,7 +12,7 @@ public import Mathlib.Probability.Kernel.Composition.Comp
 # LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure ProbabilityTheory.Kernel ProbabilityTheory
 open Finset NNReal ENNReal Preorder Function
@@ -34,7 +34,7 @@ structure HomMarkovChainSpec (S : Type u) [MeasurableSpace S] where
   init : ProbabilityMeasure S
 
 /-- Iterates of the transition kernel of a Markov chain. -/
-noncomputable def Kernel.iter (κ : Kernel S S) : ℕ → Kernel S S
+@[expose] noncomputable def Kernel.iter (κ : Kernel S S) : ℕ → Kernel S S
 | 0       => Kernel.id
 | (n + 1) => ((iter κ) n).comp κ
 

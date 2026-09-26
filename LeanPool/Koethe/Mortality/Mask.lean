@@ -23,7 +23,7 @@ residue classes.  In particular a connector of length `m * period` has
 `m * holes` distinct projective blocks.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -111,7 +111,7 @@ def connectorLetter (M : PeriodicMask k) (L : ℕ) (i : Fin L) :
 
 /-- The formal word of length `L` reading the mask: its fixed letter at each assigned position
 and a distinct hole at each free position. -/
-def formalConnector (M : PeriodicMask k) (L : ℕ) :
+@[expose] def formalConnector (M : PeriodicMask k) (L : ℕ) :
     List (FormalLetter k (freeCount M L)) := List.ofFn (connectorLetter M L)
 
 @[simp] theorem formalConnector_length (M : PeriodicMask k) (L : ℕ) :

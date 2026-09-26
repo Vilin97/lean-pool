@@ -67,7 +67,7 @@ Bricks B7 and B8 of `lem:polygonal-redrawing` (H6), and the lemma itself.
   the core inside its tube, and the assembly of radial, replacement path and radial.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 open scoped Graph
@@ -172,7 +172,7 @@ polygon already built, truncates there and appends. -/
 /-- The last vertex of a nonempty vertex list, with the nonemptiness discharged by the
 `cons`. Carrying the list in the form `u :: t` removes every dependent proof argument from
 the statements below. -/
-def lastP (u : Plane) (t : List Plane) : Plane := (u :: t).getLast (List.cons_ne_nil u t)
+@[expose] def lastP (u : Plane) (t : List Plane) : Plane := (u :: t).getLast (List.cons_ne_nil u t)
 
 @[simp] theorem lastP_nil (u : Plane) : lastP u [] = u := rfl
 

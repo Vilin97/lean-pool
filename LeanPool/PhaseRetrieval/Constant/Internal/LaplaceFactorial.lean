@@ -27,7 +27,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # LaplaceFactorial -/
 
-@[expose] public section
+public section
 
 
 open Real MeasureTheory Set
@@ -39,11 +39,11 @@ namespace FockSPR
 /-! ## Definitions -/
 
 /-- `r_n = √(n + 1/2)`, the saddle point of `φ_n`. -/
-def rStar (n : ℕ) : ℝ := Real.sqrt (n + 1 / 2)
+@[expose] def rStar (n : ℕ) : ℝ := Real.sqrt (n + 1 / 2)
 
 /-- `φ_n(r) = (2n + 1) log(r) − r²` for `r > 0`.
 Note: `r^{2n+1} exp(−r²) = exp(φ_n(r))`. -/
-def phiFunc (n : ℕ) (r : ℝ) : ℝ := (2 * n + 1) * Real.log r - r ^ 2
+@[expose] def phiFunc (n : ℕ) (r : ℝ) : ℝ := (2 * n + 1) * Real.log r - r ^ 2
 
 /-! ## Private lemmas -/
 
@@ -250,7 +250,7 @@ Integrating over an interval of length 1 and applying Theorem 2.9.
 -/
 
 /-- Distance from a point to a closed interval `[j, j+1]`. -/
-def distToInterval (x : ℝ) (j : ℕ) : ℝ :=
+@[expose] def distToInterval (x : ℝ) (j : ℕ) : ℝ :=
   max (max ((j : ℝ) - x) (x - (j + 1 : ℝ))) 0
 
 private lemma distToInterval_nonneg (x : ℝ) (j : ℕ) : 0 ≤ distToInterval x j :=

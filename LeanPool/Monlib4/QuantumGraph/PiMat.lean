@@ -26,7 +26,7 @@ import LeanPool.Monlib4.RepTheory.AutMat
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.PiMat`.
 -/
 
-@[expose] public section
+public section
 
 variable {ι : Type*} {p : ι → Type*} [Fintype ι] [DecidableEq ι]
   [Π i, Fintype (p i)] [Π i, DecidableEq (p i)]

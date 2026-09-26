@@ -50,7 +50,7 @@ joined physical velocity and genuine time derivative. The input and output
 use the same fixed mixed-word Sobolev order and the same external radius.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -227,7 +227,7 @@ section
 
 /-! Same-radius estimates for the actual corrector, divided by the prescribed time profile. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -339,7 +339,7 @@ section
 
 /-! Restoring arbitrary forcing amplitudes by actual scalar homogeneity. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -440,7 +440,7 @@ The actual complete transverse inverse has one source-only radius budget.
 Its bounds are linear in the forcing amplitude and independent of grade.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -494,7 +494,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -516,15 +516,15 @@ variable {P : ℝ} [Fact (0 < P)]
   (L : Budget D τ hτ hτT B (Fin 4) q) (N : NormalBudget D q L.R)
 
 /-- Pressure amplitude, given by `P*pressureCost (Fin 4) q N.Ri N.C N.C 1 L.commonCost`. -/
-def pressureAmplitude : ℝ := P*pressureCost (Fin 4) q N.Ri N.C N.C 1 L.commonCost
+@[expose] def pressureAmplitude : ℝ := P*pressureCost (Fin 4) q N.Ri N.C N.C 1 L.commonCost
 /-- Potential amplitude, given by `3*N.blockAmplitude*(P*L.commonCost)`. -/
 def potentialAmplitude : ℝ := 3*N.blockAmplitude*(P*L.commonCost)
 /-- Potential time amplitude, given by `6*N.blockAmplitude*(P*L.commonCost)`. -/
 def potentialTimeAmplitude : ℝ := 6*N.blockAmplitude*(P*L.commonCost)
 /-- Corrector amplitude, given by `27*N.blockAmplitude^2*(P*L.commonCost)`. -/
-def correctorAmplitude : ℝ := 27*N.blockAmplitude^2*(P*L.commonCost)
+@[expose] def correctorAmplitude : ℝ := 27*N.blockAmplitude^2*(P*L.commonCost)
 /-- Corrector time amplitude, given by `108*N.blockAmplitude^2*(P*L.commonCost)`. -/
-def correctorTimeAmplitude : ℝ := 108*N.blockAmplitude^2*(P*L.commonCost)
+@[expose] def correctorTimeAmplitude : ℝ := 108*N.blockAmplitude^2*(P*L.commonCost)
 
 variable {raw : VectorField} (G : Forcing P D raw) (A : ℝ) (hA : 0 ≤ A) (d : ℕ)
   (hforce : ∀ n, block standardDirection q (fun a => pathTranslate P a
@@ -631,7 +631,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

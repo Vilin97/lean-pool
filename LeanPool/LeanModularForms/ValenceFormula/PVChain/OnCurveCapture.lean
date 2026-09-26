@@ -29,7 +29,7 @@ point is captured by one of the singular sets `sArcOfS S` or `sVertOfS S`.
 * `oncurve_full_capture` — full assembly for all t ∈ [0,5]
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

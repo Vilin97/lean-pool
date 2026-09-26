@@ -21,7 +21,7 @@ balanced, weighted and signed cuts, the induced-`2K₂` bound and the good-`C₄
 certificates all build an explicit `x ⊥ 𝟙` and discharge the Rayleigh inequality here.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

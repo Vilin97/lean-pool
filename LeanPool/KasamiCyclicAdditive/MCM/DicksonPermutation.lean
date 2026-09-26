@@ -32,7 +32,7 @@ consequence that `D_(3h)` and `D_3` have the same value distribution whenever
 `D_h` is a permutation.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 

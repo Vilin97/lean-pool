@@ -16,7 +16,7 @@ source (23).  Frame motion and primary shear motion are derived from the
 actual homogeneous ray and velocity equations.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

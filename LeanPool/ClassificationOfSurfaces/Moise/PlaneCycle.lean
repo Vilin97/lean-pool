@@ -15,7 +15,7 @@ polygonal circle.  The exact segment-intersection axioms follow from the complex
 law and the fact that a simple cycle has no repeated cyclic vertex.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

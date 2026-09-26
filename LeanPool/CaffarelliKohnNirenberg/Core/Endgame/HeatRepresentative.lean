@@ -15,7 +15,7 @@ bound and the global Hölder constant remain explicit functions of the source
 norms and the local averages of the potential.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 open MeasureTheory Set
@@ -26,6 +26,7 @@ noncomputable section
 namespace CKN.Core.Endgame
 
 /-- The explicit scalar Hölder coefficient in the heat-potential estimate. -/
+@[expose]
 def heatHolderCoefficient (F : ParabolicPoint → ℝ)
     (G : Fin 3 → ParabolicPoint → ℝ) (γ θ₀ θ₁ P : ℝ) : ℝ :=
   let V : ℝ := (volume (parabolicCylinder 0 0 1)).toReal
@@ -46,6 +47,7 @@ def heatHolderCoefficient (F : ParabolicPoint → ℝ)
     (Cnear + C * (1 - (2 : ℝ) ^ (γ - 1))⁻¹)
 
 /-- The sum of the absolute scalar Hölder coefficients. -/
+@[expose]
 def vectorHeatHolderCoefficient (F : ParabolicPoint → Vec3)
     (G : Fin 3 → ParabolicPoint → Vec3) (γ θ₀ θ₁ P : ℝ) : ℝ :=
   ∑ i, |heatHolderCoefficient (fun x => F x i) (fun j x => G j x i) γ θ₀ θ₁ P|

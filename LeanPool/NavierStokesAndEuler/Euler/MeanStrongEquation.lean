@@ -20,7 +20,7 @@ initial momentum trace then cancels the original M0 boundary term. The final
 fields contain the actual projected equation (9) and `z_t(0)=L A z(0)`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

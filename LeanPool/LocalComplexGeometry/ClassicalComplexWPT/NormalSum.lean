@@ -16,7 +16,7 @@ with one common positive-radius majorant lets us exchange the family sum and
 the homogeneous-degree sum and produces a `HasFPowerSeriesOnBall` witness.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped ENNReal NNReal Topology

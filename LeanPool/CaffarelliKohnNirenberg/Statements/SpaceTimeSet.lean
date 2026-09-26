@@ -13,13 +13,14 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Basic
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open CKN.Foundation.Parabolic
 
 namespace CKN
 
 /-- The open space-time carrier `Ω × I` from paper label `def:sws`. -/
+@[expose]
 def spaceTimeSet (Ω : Set Vec3) (I : Set ℝ) : Set ParabolicPoint := Ω ×ˢ I
 
 end CKN

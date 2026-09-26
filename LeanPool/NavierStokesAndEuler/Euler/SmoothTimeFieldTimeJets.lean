@@ -15,7 +15,7 @@ import Mathlib.Analysis.Calculus.Deriv.Comp
 /-! A literal time derivative of smooth bounded fields differentiates
 every actual spatial jet, both pointwise and in the uniform field norm. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

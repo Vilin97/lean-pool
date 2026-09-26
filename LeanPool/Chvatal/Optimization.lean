@@ -48,7 +48,7 @@ from Theorem 1.4 of Chang–Liu–Liu, arXiv:2609.19123v1. Real division in Lean
 `0 / 0 = 0`, agreeing with the convention in the footnote to Theorem 1.2.
 -/
 
-@[expose] public section
+public section
 
 namespace Chvatal
 

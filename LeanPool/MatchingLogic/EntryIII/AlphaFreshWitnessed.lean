@@ -22,7 +22,7 @@ import Mathlib.Tactic.FinCases
 # MatchingLogic.EntryIII.AlphaFreshWitnessed
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

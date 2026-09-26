@@ -23,7 +23,7 @@ The three private lemmas below are adapted, with thanks, from
 they support the same statement for that project's own order function.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

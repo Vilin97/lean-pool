@@ -20,7 +20,7 @@ section
 /-! The genuine short-time forward factory obeys the same source
 polynomial, using its proved constant profile and physical propagator cost 2. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -147,7 +147,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -158,7 +158,7 @@ open Set EulerSmoothLimit EulerPacketSupport EulerParentPacketFrames
   EulerParentInitializedRadius
 
 /-- First parameter size, given by `4+solutionLabelConstant+T⁻¹+δ⁻¹+hchild`. -/
-def firstParameterSize (T δ hchild : ℝ) : ℝ :=
+@[expose] def firstParameterSize (T δ hchild : ℝ) : ℝ :=
   4+solutionLabelConstant+T⁻¹+δ⁻¹+hchild
 
 theorem firstParameterSize_bounds (T δ hchild : ℝ) (hT : 0 < T) (hδ : 0 < δ)

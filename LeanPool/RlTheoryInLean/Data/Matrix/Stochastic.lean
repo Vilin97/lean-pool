@@ -16,7 +16,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 # LeanPool.RlTheoryInLean.Data.Matrix.Stochastic
 -/
 
-@[expose] public section
+public section
 
 open Finset NNReal WithLp Matrix PiLp Nat ContractingWith Metric Bornology Filter Function
 open scoped BigOperators

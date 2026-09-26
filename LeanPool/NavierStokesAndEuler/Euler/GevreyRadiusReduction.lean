@@ -11,7 +11,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Radius reduction for actual finite weighted Sobolev norms. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

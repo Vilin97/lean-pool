@@ -20,7 +20,7 @@ maps to compact time paths preserves their norm bounds. These are the
 coefficient maps used to construct the actual source forward generator.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -63,7 +63,7 @@ local instance instBoundedFieldCalculus9 : NormedAddCommGroup (α →ᵇ G) := i
 local instance instBoundedFieldCalculus10 : NormedSpace ℝ (α →ᵇ G) := inferInstance
 
 /-- The literal pointwise bounded bilinear field. -/
-def bilinearValue (B : E →L[ℝ] F →L[ℝ] G) (f : α →ᵇ E) (g : α →ᵇ F) : α →ᵇ G :=
+@[expose] def bilinearValue (B : E →L[ℝ] F →L[ℝ] G) (f : α →ᵇ E) (g : α →ᵇ F) : α →ᵇ G :=
   BoundedContinuousFunction.ofNormedAddCommGroup (fun x => B (f x) (g x))
     ((B.continuous.comp f.continuous).clm_apply g.continuous) (‖B‖*‖f‖*‖g‖)
     (fun x => (B.le_opNorm₂ (f x) (g x)).trans
@@ -78,7 +78,7 @@ theorem bilinearValue_norm (B : E →L[ℝ] F →L[ℝ] G) (f : α →ᵇ E) (g 
   BoundedContinuousFunction.norm_ofNormedAddCommGroup_le _ (by positivity) _
 
 /-- Bilinearity is proved on the actual coefficient functions. -/
-def bilinearLinear (B : E →L[ℝ] F →L[ℝ] G) : (α →ᵇ E) →ₗ[ℝ] (α →ᵇ F) →ₗ[ℝ] (α →ᵇ G) where
+@[expose] def bilinearLinear (B : E →L[ℝ] F →L[ℝ] G) : (α →ᵇ E) →ₗ[ℝ] (α →ᵇ F) →ₗ[ℝ] (α →ᵇ G) where
   toFun f :=
     { toFun := bilinearValue B f
       map_add' g h := by
@@ -103,7 +103,7 @@ def bilinearLinear (B : E →L[ℝ] F →L[ℝ] G) : (α →ᵇ E) →ₗ[ℝ] (
     exact congrArg (fun L : F →L[ℝ] G => L (h x)) (map_smul B r (f x))
 
 /-- The actual bilinear map on bounded continuous fields. -/
-def bilinearMap (B : E →L[ℝ] F →L[ℝ] G) : (α →ᵇ E) →L[ℝ] (α →ᵇ F) →L[ℝ] (α →ᵇ G) :=
+@[expose] def bilinearMap (B : E →L[ℝ] F →L[ℝ] G) : (α →ᵇ E) →L[ℝ] (α →ᵇ F) →L[ℝ] (α →ᵇ G) :=
   (bilinearLinear B).mkContinuous₂ ‖B‖ (bilinearValue_norm B)
 
 @[simp] theorem bilinearMap_apply (B : E →L[ℝ] F →L[ℝ] G) (f : α →ᵇ E) (g : α →ᵇ F) (x : α) :
@@ -167,7 +167,7 @@ local instance instBoundedFieldCalculus24 : NormedSpace ℝ ((α →ᵇ U →L[�
     := inferInstance
 
 /-- The literal composition of two bounded operator fields. -/
-def compositionMap : (α →ᵇ E →L[ℝ] F) →L[ℝ] (α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U →L[ℝ] F) :=
+@[expose] def compositionMap : (α →ᵇ E →L[ℝ] F) →L[ℝ] (α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ U →L[ℝ] F) :=
   bilinearMap (compL ℝ U E F)
 
 theorem compositionMap_norm : ‖compositionMap (α := α) (U := U) (E := E) (F := F)‖ ≤ 1 :=
@@ -221,7 +221,7 @@ local instance instBoundedFieldCalculus34 : NormedSpace ℝ (C(K,α →ᵇ U →
     inferInstance
 
 /-- Pointwise spatial composition, uniformly along a compact time path. -/
-def pathCompositionMap : C(K,α →ᵇ E →L[ℝ] F) →L[ℝ]
+@[expose] def pathCompositionMap : C(K,α →ᵇ E →L[ℝ] F) →L[ℝ]
     C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ U →L[ℝ] F) :=
   (EulerContinuousPathCalculus.coefficientMap (K := K)
     (E := α →ᵇ U →L[ℝ] E) (F := α →ᵇ U →L[ℝ] F)) ∘L
@@ -309,7 +309,7 @@ local instance instBoundedFieldCalculus44 : NormedSpace ℝ ((α →ᵇ U →L[�
     := inferInstance
 
 /-- The actual adjoint of every bounded coefficient operator. -/
-def adjointMap : (α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ E →L[ℝ] U) :=
+@[expose] def adjointMap : (α →ᵇ U →L[ℝ] E) →L[ℝ] (α →ᵇ E →L[ℝ] U) :=
   (realAdjoint (U := U) (E := E)).compLeftContinuousBounded α
 
 @[simp] theorem adjointMap_apply (A : α →ᵇ U →L[ℝ] E) (x : α) : adjointMap A x = (A x).adjoint :=
@@ -353,7 +353,7 @@ local instance instBoundedFieldCalculus50 : NormedSpace ℝ (C(K,α →ᵇ U →
     inferInstance
 
 /-- The bounded adjoint map on entire coefficient paths. -/
-def pathAdjointMap : C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ E →L[ℝ] U) :=
+@[expose] def pathAdjointMap : C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ E →L[ℝ] U) :=
   (adjointMap (α := α) (U := U) (E := E)).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in

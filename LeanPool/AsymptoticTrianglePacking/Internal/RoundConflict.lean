@@ -27,7 +27,7 @@ Definitions come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic`,
 axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

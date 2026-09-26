@@ -17,7 +17,7 @@ estimates. Real projection includes both conjugate harmonics. The constants are
 uniform over a fixed bound on the harmonic index.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

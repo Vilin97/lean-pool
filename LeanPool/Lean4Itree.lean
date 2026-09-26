@@ -19,4 +19,4 @@ Tags: coinduction, interaction-trees, monads, qpf, semantics
 MSC: 68Q55, 18C50, 68N18
 -/
 
-@[expose] public section
+public section

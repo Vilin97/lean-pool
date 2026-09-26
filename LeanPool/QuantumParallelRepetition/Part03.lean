@@ -9,7 +9,7 @@ public import LeanPool.QuantumParallelRepetition.Part02
 
 /-! # Quantum parallel repetition, part 03 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -686,7 +686,7 @@ theorem dSVDensityRationalGrid_density_defect_le
 The DSV density rational canonical accepted coefficient construction used in the quantum
 parallel-repetition argument.
 -/
-def dSVDensityRationalCanonicalAcceptedCoefficient
+@[expose] def dSVDensityRationalCanonicalAcceptedCoefficient
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) (i : Fin d) : ℝ :=
   Real.sqrt (w * dSVUniformDensityGridPrefix N
@@ -732,7 +732,7 @@ theorem dSVDensityRationalCanonicalAliceBasis_target
     (exists_proofDSVUniformDensityPolarLeftCanonicalSchmidt ξ)
 
 /-- The target object for DSV density rational canonical accepted. -/
-def dSVDensityRationalCanonicalAcceptedTarget
+@[expose] def dSVDensityRationalCanonicalAcceptedTarget
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) :
     EuclideanSpace ℂ (Fin d × Fin d) :=
@@ -1402,7 +1402,7 @@ attribute [local instance] Classical.propDecidable
 The DSV density rational complete physical stopping copy accepted construction used in the
 quantum parallel-repetition argument.
 -/
-def dSVDensityRationalCompletePhysicalStoppingCopyAccepted
+@[expose] def dSVDensityRationalCompletePhysicalStoppingCopyAccepted
     {N d : ℕ} (w : ℝ) (ξ : BipartiteUnitVector d)
     (q : DSVUniformDensityThresholdLocalIndex N d) : Prop :=
   dSVDensityRationalProjectiveThresholdBin w N q.1
@@ -1417,7 +1417,7 @@ open WithLp
 open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 
 /-- The finite outcome encoding for DSV density rational physical accepted. -/
-def dSVDensityRationalPhysicalAcceptedOutcome
+@[expose] def dSVDensityRationalPhysicalAcceptedOutcome
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ ζ : BipartiteUnitVector d) :
     EuclideanSpace ℂ
@@ -1565,7 +1565,7 @@ theorem
 The DSV density rational prefix rank mismatch construction used in the quantum parallel-
 repetition argument.
 -/
-def dSVDensityRationalPrefixRankMismatch
+@[expose] def dSVDensityRationalPrefixRankMismatch
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ ζ : BipartiteUnitVector d) : ℝ :=
   (∑ i : Fin d, ∑ j : Fin d,
@@ -2003,7 +2003,7 @@ theorem dSVDensityRationalMixedAcceptedPrefix_norm_sq
 The DSV density rational physical mixed accepted prefix work construction used in the quantum
 parallel-repetition argument.
 -/
-def dSVDensityRationalPhysicalMixedAcceptedPrefixWork
+@[expose] def dSVDensityRationalPhysicalMixedAcceptedPrefixWork
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ ζ : BipartiteUnitVector d) (i j : Fin d) :
     EuclideanSpace ℂ (Fin N × Fin N) :=
@@ -2030,7 +2030,7 @@ open WithLp
 open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 
 /-- The diagonal mask selecting accepted threshold and spectral coordinates. -/
-def dSVDensityRationalCanonicalPrefixMask
+@[expose] def dSVDensityRationalCanonicalPrefixMask
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) :
     Matrix (DSVUniformDensityThresholdLocalIndex N d)
@@ -2094,10 +2094,11 @@ private theorem dSVDensityRationalPhysicalAcceptedProjector_eq_spectralMask
     dSVDensityRationalLeftProjectiveThresholdPOVM
     dSVDensityRationalProjectiveThresholdPOVM
   rw [spectralPartitionPOVM_effect_eq_spectralDiagonal]
-  rfl
+  simp only [spectralConjugationCLM_apply, dSVUniformDensityThresholdLeftBobBasis,
+    Matrix.UnitaryGroup.inv_val]
 
 /-- The finite outcome encoding for DSV density rational canonical prefix spectral. -/
-def dSVDensityRationalCanonicalPrefixSpectralOutcome
+@[expose] def dSVDensityRationalCanonicalPrefixSpectralOutcome
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ ζ : BipartiteUnitVector d) :
     EuclideanSpace ℂ
@@ -2117,7 +2118,7 @@ def dSVDensityRationalCanonicalPrefixSpectralOutcome
         w N ξ ζ)))
 
 /-- The measurement effect for DSV density rational complete stopped optional local. -/
-def dSVDensityRationalCompleteStoppedOptionalLocalEffect
+@[expose] def dSVDensityRationalCompleteStoppedOptionalLocalEffect
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) :
     Option Bool → Matrix
@@ -2129,7 +2130,7 @@ def dSVDensityRationalCompleteStoppedOptionalLocalEffect
         w N ξ).effect outcome
 
 /-- The finite outcome encoding for DSV density rational complete stopped optional. -/
-def dSVDensityRationalCompleteStoppedOptionalOutcome
+@[expose] def dSVDensityRationalCompleteStoppedOptionalOutcome
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ ζ : BipartiteUnitVector d)
     (alice bob : Option Bool) :
@@ -2166,7 +2167,7 @@ theorem dSVDensityRationalCompleteStoppedOptionalOutcome_none_none
     mul_zero, mul_one, kroneckerMap_one_one, one_mulVec, toLp_ofLp]
 
 /-- The finite schedule for DSV density rational complete stopped optional local. -/
-def dSVDensityRationalCompleteStoppedOptionalLocalSchedule
+@[expose] def dSVDensityRationalCompleteStoppedOptionalLocalSchedule
     (L : ℕ) (hit copy : Fin (L + 1)) : Option Bool :=
   if copy.val < L then
     if hit = 0 then some false
@@ -2199,7 +2200,7 @@ open scoped Kronecker ComplexOrder MatrixOrder
 The DSV density rational first accept local spectral mask construction used in the quantum
 parallel-repetition argument.
 -/
-def dSVDensityRationalFirstAcceptLocalSpectralMask
+@[expose] def dSVDensityRationalFirstAcceptLocalSpectralMask
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) (outcome : Bool) :
     Matrix (DSVUniformDensityThresholdLocalIndex N d)
@@ -2257,7 +2258,8 @@ theorem dSVDensityRationalFirstAcceptPhysicalEffect_eq_spectralMask
   unfold dSVDensityRationalLeftProjectiveThresholdPOVM
     dSVDensityRationalProjectiveThresholdPOVM
   rw [spectralPartitionPOVM_effect_eq_spectralDiagonal]
-  rfl
+  simp only [spectralConjugationCLM_apply, dSVUniformDensityThresholdLeftBobBasis,
+    Matrix.UnitaryGroup.inv_val]
 
 theorem dSVDensityRationalFirstAcceptLocalSpectralMask_transpose
     {d : ℕ} (w : ℝ) (N : ℕ)
@@ -2740,7 +2742,7 @@ open WithLp
 open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 
 /-- The transcript representation for DSV density rational public bucket coherent phase. -/
-def dSVDensityRationalPublicBucketCoherentPhaseHistory
+@[expose] def dSVDensityRationalPublicBucketCoherentPhaseHistory
     {H : Type*} (B : ℕ)
     (history : EuclideanSpace ℂ (H × H)) :
     EuclideanSpace ℂ ((Fin B × H) × (Fin B × H)) :=
@@ -2778,7 +2780,7 @@ theorem dSVDensityRationalPublicBucketCoherentPhaseHistory_apply_norm_sq
       not_false_eq_true, zero_pow, zero_mul]
 
 /-- The quantum state representing DSV density rational public bucket coherent phase sigma. -/
-def dSVDensityRationalPublicBucketCoherentPhaseSigmaState
+@[expose] def dSVDensityRationalPublicBucketCoherentPhaseSigmaState
     {H : Type*} {m : ℕ} (B : ℕ)
     (history : EuclideanSpace ℂ (H × H))
     (work : Fin B → H → H →
@@ -2956,7 +2958,7 @@ def dSVDensityRationalPublicLogRankFineLabel
   Nat.floor ((Q : ℝ) * Real.log ((max 1 r.val : ℕ) : ℝ))
 
 /-- The probability weight for DSV density rational public log rank phase. -/
-def dSVDensityRationalPublicLogRankPhaseWeight
+@[expose] def dSVDensityRationalPublicLogRankPhaseWeight
     (B : ℕ) (_ : Fin B) : ℝ :=
   1 / (B : ℝ)
 
@@ -2973,7 +2975,7 @@ theorem dSVDensityRationalPublicLogRankPhaseWeight_sum
 The DSV density rational public log rank bucket construction used in the quantum parallel-
 repetition argument.
 -/
-def dSVDensityRationalPublicLogRankBucket
+@[expose] def dSVDensityRationalPublicLogRankBucket
     {N B : ℕ} (Q : ℕ) (phase : Fin B)
     (r : Fin (N + 1)) : Option ℕ :=
   if r.val = 0 then none
@@ -3246,7 +3248,7 @@ theorem dSVDensityRationalPublicMultiscalePhase_card_pos
   exact pow_pos positive S
 
 /-- The overlap quantity for DSV density rational prefix harmonic spectral. -/
-def dSVDensityRationalPrefixHarmonicSpectralOverlap
+@[expose] def dSVDensityRationalPrefixHarmonicSpectralOverlap
     {d : ℕ} (ξ ζ : BipartiteUnitVector d)
     (i j : Fin d) : ℝ :=
   spectralAtomOverlap
@@ -3288,7 +3290,7 @@ theorem dSVDensityRationalLocalSpectralPairBasisOverlap_norm_sq
     (dSVSoftBobLeftReducedDensity_posSemidef ζ) i j).symm
 
 /-- The transcript representation for DSV density rational local spectral pair. -/
-def dSVDensityRationalLocalSpectralPairHistory
+@[expose] def dSVDensityRationalLocalSpectralPairHistory
     {d : ℕ} (N : ℕ)
     (ξ ζ : BipartiteUnitVector d) :
     EuclideanSpace ℂ (Fin d × Fin d) :=
@@ -3946,7 +3948,7 @@ abbrev DSVDensityRationalPublicMultiscalePhaseHistoryLocalIndex
 The DSV density rational public multiscale phase residual construction used in the quantum
 parallel-repetition argument.
 -/
-def dSVDensityRationalPublicMultiscalePhaseResidual
+@[expose] def dSVDensityRationalPublicMultiscalePhaseResidual
     (S B N d L m : ℕ) : ℕ :=
   dSVDensityRationalPublicLogPhaseResidual
     (Fintype.card (DSVDensityRationalPublicMultiscalePhase S B))
@@ -3955,7 +3957,7 @@ def dSVDensityRationalPublicMultiscalePhaseResidual
 /--
 The finite equivalence encoding DSV density rational public multiscale phase target first index.
 -/
-def dSVDensityRationalPublicMultiscalePhaseTargetFirstIndexEquiv
+@[expose] def dSVDensityRationalPublicMultiscalePhaseTargetFirstIndexEquiv
     (S B N d L m : ℕ) :
     (DSVDensityRationalPublicMultiscalePhaseHistoryLocalIndex
       S B N d L × Fin m) ≃
@@ -3967,7 +3969,7 @@ def dSVDensityRationalPublicMultiscalePhaseTargetFirstIndexEquiv
     N d L m
 
 /-- The source object for DSV density rational public multiscale phase target first prepared. -/
-def dSVDensityRationalPublicMultiscalePhaseTargetFirstPreparedSource
+@[expose] def dSVDensityRationalPublicMultiscalePhaseTargetFirstPreparedSource
     (S B N d L m : ℕ) :
     EuclideanSpace ℂ
       (Fin (d *
@@ -4005,7 +4007,7 @@ open scoped BigOperators ComplexOrder Kronecker MatrixOrder
 The DSV density rational public log phase actual target first local lift construction used in
 the quantum parallel-repetition argument.
 -/
-def dSVDensityRationalPublicLogPhaseActualTargetFirstLocalLift
+@[expose] def dSVDensityRationalPublicLogPhaseActualTargetFirstLocalLift
     (B N d L m : ℕ)
     (U : Matrix.unitaryGroup
       (DSVDensityRationalPublicLogPhaseHistoryLocalIndex
@@ -4254,7 +4256,7 @@ theorem
 The DSV density rational heterogeneous actual copy accepted construction used in the quantum
 parallel-repetition argument.
 -/
-def dSVDensityRationalHeterogeneousActualCopyAccepted
+@[expose] def dSVDensityRationalHeterogeneousActualCopyAccepted
     {S N d L : ℕ}
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ : BipartiteUnitVector d)
@@ -4267,7 +4269,7 @@ def dSVDensityRationalHeterogeneousActualCopyAccepted
 The DSV density rational heterogeneous actual copy condition construction used in the quantum
 parallel-repetition argument.
 -/
-def dSVDensityRationalHeterogeneousActualCopyCondition
+@[expose] def dSVDensityRationalHeterogeneousActualCopyCondition
     {β : Type*} {L : ℕ}
     (accepted : Fin L → β → Prop)
     (flag : Fin (L + 1)) (i : Fin (L + 1)) (atom : β) : Prop :=
@@ -4415,7 +4417,7 @@ theorem
           then D i atom else 0)).symm
 
 /-- The unitary operator implementing DSV density rational heterogeneous actual physical local. -/
-def dSVDensityRationalHeterogeneousActualPhysicalLocalUnitary
+@[expose] def dSVDensityRationalHeterogeneousActualPhysicalLocalUnitary
     {β : Type*} [Fintype β] [DecidableEq β]
     {L : ℕ} (accepted : Fin L → β → Prop)
     (U : Matrix.unitaryGroup β ℂ) :
@@ -4454,7 +4456,7 @@ def dSVDensityRationalHeterogeneousActualBobUnitary
     ((dSVUniformDensityBobHistoryCopyBasis (N := N) ζ)⁻¹)
 
 /-- The quantum state representing DSV density rational heterogeneous actual physical. -/
-def dSVDensityRationalHeterogeneousActualPhysicalState
+@[expose] def dSVDensityRationalHeterogeneousActualPhysicalState
     (N : ℕ) {S d L : ℕ}
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d) :
@@ -4496,7 +4498,7 @@ section
 open scoped BigOperators ComplexOrder Kronecker MatrixOrder
 
 /-- The finite outcome encoding for DSV density rational heterogeneous physical stage. -/
-def dSVDensityRationalHeterogeneousPhysicalStageOutcome
+@[expose] def dSVDensityRationalHeterogeneousPhysicalStageOutcome
     {d S L : ℕ} (N : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d)
@@ -4510,7 +4512,7 @@ def dSVDensityRationalHeterogeneousPhysicalStageOutcome
 The DSV density rational heterogeneous physical stage continue construction used in the quantum
 parallel-repetition argument.
 -/
-def dSVDensityRationalHeterogeneousPhysicalStageContinue
+@[expose] def dSVDensityRationalHeterogeneousPhysicalStageContinue
     {d S L : ℕ} (N : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d) (k : ℕ) : ℝ :=
@@ -4521,7 +4523,7 @@ def dSVDensityRationalHeterogeneousPhysicalStageContinue
 The DSV density rational heterogeneous physical stage success construction used in the quantum
 parallel-repetition argument.
 -/
-def dSVDensityRationalHeterogeneousPhysicalStageSuccess
+@[expose] def dSVDensityRationalHeterogeneousPhysicalStageSuccess
     {d S L : ℕ} (N : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d) (k : ℕ) : ℝ :=
@@ -4594,7 +4596,7 @@ theorem
 The DSV density rational heterogeneous physical survival construction used in the quantum
 parallel-repetition argument.
 -/
-def dSVDensityRationalHeterogeneousPhysicalSurvival
+@[expose] def dSVDensityRationalHeterogeneousPhysicalSurvival
     {d S L : ℕ} (N : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d) (k : ℕ) : ℝ :=
@@ -4615,7 +4617,7 @@ theorem dSVDensityRationalHeterogeneousPhysicalSurvival_nonneg
     N width schedule ξ ζ j false false
 
 /-- The total probability mass of DSV density rational heterogeneous physical stopped success. -/
-def dSVDensityRationalHeterogeneousPhysicalStoppedSuccessMass
+@[expose] def dSVDensityRationalHeterogeneousPhysicalStoppedSuccessMass
     {d S L : ℕ} (N : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d) : ℝ :=
@@ -4639,7 +4641,7 @@ def dSVDensityRationalHeterogeneousPhysicalStoppedAsynchronousMass
         N width schedule ξ ζ k
 
 /-- The total probability mass of DSV density rational heterogeneous physical terminal. -/
-def dSVDensityRationalHeterogeneousPhysicalTerminalMass
+@[expose] def dSVDensityRationalHeterogeneousPhysicalTerminalMass
     {d S L : ℕ} (N : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d) : ℝ :=
@@ -5318,20 +5320,20 @@ open scoped BigOperators
 variable {α : Type*} [Fintype α] [DecidableEq α]
 
 /-- The probability weight for fair partition. -/
-def fairPartitionWeight (α : Type*) [Fintype α] : ℝ :=
+@[expose] def fairPartitionWeight (α : Type*) [Fintype α] : ℝ :=
   ((2 : ℝ) ^ Fintype.card α)⁻¹
 
 /-- The probability weight for reverse partition. -/
-def reversePartitionWeight (s : Finset α) : ℝ :=
+@[expose] def reversePartitionWeight (s : Finset α) : ℝ :=
   fairPartitionWeight α *
     (2 * (s.card : ℝ) / (Fintype.card α : ℝ))
 
 /-- The probability weight for forward marked partition. -/
-def forwardMarkedPartitionWeight (α : Type*) [Fintype α] : ℝ :=
+@[expose] def forwardMarkedPartitionWeight (α : Type*) [Fintype α] : ℝ :=
   2 * fairPartitionWeight α / (Fintype.card α : ℝ)
 
 /-- The probability weight for reverse marked partition. -/
-def reverseMarkedPartitionWeight (s : Finset α) (i : α) : ℝ :=
+@[expose] def reverseMarkedPartitionWeight (s : Finset α) (i : α) : ℝ :=
   if i ∈ s then reversePartitionWeight s / (s.card : ℝ) else 0
 
 omit [DecidableEq α] in
@@ -5771,7 +5773,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The full history answer count construction used in the quantum parallel-repetition argument. -/
-def fullHistoryAnswerCount
+@[expose] def fullHistoryAnswerCount
     {A B : Type*} [Fintype A] [Fintype B]
     {n : ℕ} (D : Finset (Fin n)) : ℝ :=
   (Fintype.card ({i : Fin n // i ∈ D} → A) : ℝ) *
@@ -5804,7 +5806,7 @@ def fullHistoryAtomCountingWeight
     fullHistoryWinIndicator G t.1 t.2.1 t.2.2
 
 /-- The total probability mass of full history atom born. -/
-def fullHistoryAtomBornMass
+@[expose] def fullHistoryAtomBornMass
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n))
     (D L : Finset (Fin n))
@@ -6049,7 +6051,7 @@ private def fullCoordinateBaseOfOldHistory
     ⟨j, fullHistoryRemaining_insert_subset D L i j.property⟩
 
 /-- The transcript representation for full coordinate old. -/
-def fullCoordinateOldHistory
+@[expose] def fullCoordinateOldHistory
     {X Y : Type*}
     {n : ℕ} (D L : Finset (Fin n)) (i : Fin n)
     (h : FullCoordinateRevealHistory X Y n D L i)
@@ -6078,7 +6080,7 @@ private def fullCoordinateBaseOfNewHistory
   bobRemaining := h.bobRemaining
 
 /-- The transcript representation for full coordinate new. -/
-def fullCoordinateNewHistory
+@[expose] def fullCoordinateNewHistory
     {X Y : Type*}
     {n : ℕ} (D L : Finset (Fin n)) (i : Fin n)
     (h : FullCoordinateRevealHistory X Y n D L i)
@@ -6303,7 +6305,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The probability weight for full coordinate base. -/
-def fullCoordinateBaseWeight
+@[expose] def fullCoordinateBaseWeight
     (G : Game X Y A B) {n : ℕ}
     (D L : Finset (Fin n)) (i : Fin n)
     (h : FullCoordinateRevealHistory X Y n D L i) : ℝ :=
@@ -6679,7 +6681,7 @@ def fullCoordinateAliceMeanFilter
     (fullCoordinateOldHistory D L i r y) α
 
 /-- Bob's history filter for the selected question and the previously revealed history. -/
-def fullCoordinateBobQuestionFilter
+@[expose] def fullCoordinateBobQuestionFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (r : FullCoordinateRevealHistory X Y n D L i)
@@ -7180,7 +7182,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The indicator function for full coordinate base win. -/
-def fullCoordinateBaseWinIndicator
+@[expose] def fullCoordinateBaseWinIndicator
     (G : Game X Y A B) {n : ℕ}
     (D L : Finset (Fin n)) (i : Fin n)
     (r : FullCoordinateRevealHistory X Y n D L i)

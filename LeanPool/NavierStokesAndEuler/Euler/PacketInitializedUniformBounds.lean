@@ -22,7 +22,7 @@ section
 guard. This constructor does not appeal to an eventual threshold depending
 on a chosen parent or on an arbitrary radius witness. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -99,7 +99,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -108,7 +108,7 @@ namespace EulerPacketInitializedCost
 open EulerPacketCorrectionOutput EulerPacketProfileRecursion EulerPacketTerminalDatum
 
 /-- Weight size, given by `outputEnvelope period (envelope W)`. -/
-def weightSize (W : ℝ) : ℝ := outputEnvelope period (envelope W)
+@[expose] def weightSize (W : ℝ) : ℝ := outputEnvelope period (envelope W)
 
 theorem weightSize_pos (W : ℝ) (hW : 0 ≤ W) : 0 < weightSize W :=
   zero_lt_one.trans_le (output_components period (envelope W)

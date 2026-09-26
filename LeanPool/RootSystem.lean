@@ -19,7 +19,7 @@ Tags: representation-theory, root-systems, lie-theory, combinatorics
 MSC: 17B22, 20F55
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

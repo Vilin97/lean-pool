@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Aggregated central-inversion facts for the finite gadget. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

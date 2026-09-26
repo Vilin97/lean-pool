@@ -19,7 +19,7 @@ entrywise positive part of a matrix, the rank-one Laplacian
 positive semidefinite matrices.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 
@@ -31,7 +31,7 @@ variable {m n : Type*}
 /-! ### N06 — Frobenius pairing -/
 
 /-- The real Frobenius pairing `⟨B, C⟩ = tr(Bᵀ C)`. -/
-def inner [Fintype n] (B C : Matrix n n ℝ) : ℝ :=
+@[expose] def inner [Fintype n] (B C : Matrix n n ℝ) : ℝ :=
   (Bᵀ * C).trace
 
 section Inner
@@ -86,7 +86,7 @@ def posPart (X : Matrix m n ℝ) : Matrix m n ℝ :=
 @[simp]
 lemma posPart_apply (X : Matrix m n ℝ) (i : m) (j : n) :
     posPart X i j = max (X i j) 0 :=
-  rfl
+  by rfl
 
 lemma posPart_nonneg (X : Matrix m n ℝ) (i : m) (j : n) :
     0 ≤ posPart X i j :=
@@ -99,7 +99,7 @@ lemma posPart_eq_of_nonneg (X : Matrix m n ℝ) {i : m} {j : n}
 /-! ### N09 — Rank-one Laplacian entries -/
 
 /-- The standard basis vector `e k` in `n → ℝ`. -/
-def e [DecidableEq n] (k : n) : n → ℝ :=
+@[expose] def e [DecidableEq n] (k : n) : n → ℝ :=
   Pi.single k 1
 
 /-- The vector `e i - e j` in coordinates. -/

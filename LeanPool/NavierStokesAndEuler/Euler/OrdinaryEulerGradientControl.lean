@@ -34,7 +34,7 @@ energy.  Everything is an actual smooth L² field.  Cubic testing and
 noncompact integration by parts prove the L⁴ inequality without a
 support or interpolation hypothesis. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -124,7 +124,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -272,7 +272,7 @@ section
 velocity gradient.  The pressure and undifferentiated transport cancel
 before the cubic-test interpolation estimate is used. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -392,7 +392,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -427,7 +427,7 @@ theorem pointwise_gradient_le (U : Evolution T hT) (t : Icc (0 : ℝ) T) (x : Sp
   (U.gradientNormPath_le_iff t _).mp le_rfl x
 
 /-- Gradient integral, given by `realIntegral T hT U.gradientNormPath t`. -/
-def gradientIntegral (U : Evolution T hT) (t : Icc (0 : ℝ) T) : ℝ :=
+@[expose] def gradientIntegral (U : Evolution T hT) (t : Icc (0 : ℝ) T) : ℝ :=
   realIntegral T hT U.gradientNormPath t
 
 theorem gradientIntegral_nonneg (U : Evolution T hT) (t : Icc (0 : ℝ) T) :

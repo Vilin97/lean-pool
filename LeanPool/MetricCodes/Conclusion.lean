@@ -13,7 +13,7 @@ public import LeanPool.MetricCodes.SpectralDecomposition
 The unconditional characteristic-minor argument and the final headline theorems.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 

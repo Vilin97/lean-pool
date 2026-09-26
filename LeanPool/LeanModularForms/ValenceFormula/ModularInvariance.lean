@@ -19,7 +19,7 @@ We also provide:
 * Cusp nonvanishing (`exists_height_cusp_nonvanishing`)
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular
@@ -254,7 +254,7 @@ lemma ord_S_eq (p : ℍ) :
     _ = meromorphicOrderAt G p_cplx := by simp [meromorphicOrderAt_zpow_eq_zero p_cplx hp_ne]
 
 /-- An open box containing the truncated fundamental domain. -/
-def fdBox (M : ℝ) : Set ℂ := {z : ℂ | -1 < z.re ∧ z.re < 1 ∧ (1 : ℝ)/2 < z.im ∧ z.im < M}
+@[expose] def fdBox (M : ℝ) : Set ℂ := {z : ℂ | -1 < z.re ∧ z.re < 1 ∧ (1 : ℝ)/2 < z.im ∧ z.im < M}
 
 lemma fdBox_im_pos {M : ℝ} {z : ℂ} (hz : z ∈ fdBox M) : 0 < z.im := by linarith [hz.2.2.1]
 

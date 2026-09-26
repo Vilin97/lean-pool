@@ -28,7 +28,7 @@ and `M_k(s) = T_k(s)^(2^k+1) / s^(2^k)` for the MCM map, the main identities are
 * consequently sums over `Δ` are half-space sums weighted by `1 + ψ(s)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -44,7 +44,7 @@ def asSet (K : Type*) [Field K] [Fintype K] [DecidableEq K] : Finset K :=
   Finset.image artinSchreier Finset.univ
 
 /-- MCM map, with Lean's field convention making `M_k(0)=0`. -/
-def mcmMap (k : ℕ) (s : K) : K :=
+@[expose] def mcmMap (k : ℕ) (s : K) : K :=
   frobSum k s ^ (2 ^ k + 1) / s ^ (2 ^ k)
 
 /-! ### Traces of finite fields are Frobenius invariant -/

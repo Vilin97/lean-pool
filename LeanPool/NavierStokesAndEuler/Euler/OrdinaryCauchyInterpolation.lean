@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevCauchyInterpolation
 /-! Actual ordinary L² convergence upgrades to convergence in every
 fixed Sobolev norm under uniform higher-order bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

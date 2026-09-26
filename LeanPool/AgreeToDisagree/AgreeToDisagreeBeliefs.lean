@@ -14,7 +14,7 @@ import Mathlib.Analysis.Normed.Group.InfiniteSum
 This file proves the `p`-belief version of Aumann's agreement theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace AgreeToDisagree
 

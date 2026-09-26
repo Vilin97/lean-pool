@@ -40,7 +40,7 @@ Unlike Examples 1.2–1.4 this construction needs no `fin_cases`/`decide`: it is
 bookkeeping, so it audits **constructive** (`[propext, Quot.sound]`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Example15
 

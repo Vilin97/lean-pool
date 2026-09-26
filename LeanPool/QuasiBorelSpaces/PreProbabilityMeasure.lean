@@ -22,7 +22,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.PreProbabilityMeasure`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped unitInterval
@@ -307,15 +307,15 @@ instance : CoeFun (Var A) (fun _ ↦ ℝ → PreProbabilityMeasure A) where
   coe := apply
 
 /-- The constant variable. -/
-def const (μ : PreProbabilityMeasure A) : Var A where
+@[expose] def const (μ : PreProbabilityMeasure A) : Var A where
   eval := μ.eval
   base _ := μ.base
 
 @[simp]
-lemma apply_const (μ : PreProbabilityMeasure A) (r : ℝ) : apply (const μ) r = μ := rfl
+lemma apply_const (μ : PreProbabilityMeasure A) (r : ℝ) : apply (const μ) r = μ := by rfl
 
 /-- Precomposition of variables by measurable functions. -/
-def comp {f : ℝ → ℝ} (hf : Measurable f) (φ : Var A) : Var A where
+@[expose] def comp {f : ℝ → ℝ} (hf : Measurable f) (φ : Var A) : Var A where
   eval := φ.eval
   base r := φ.base (f r)
 
@@ -323,7 +323,7 @@ def comp {f : ℝ → ℝ} (hf : Measurable f) (φ : Var A) : Var A where
 lemma apply_comp
     {f : ℝ → ℝ} (hf : Measurable f) (φ : Var A) (r : ℝ)
     : apply (comp hf φ) r = apply φ (f r) :=
-  rfl
+  by rfl
 
 /-- Gluing of a countable number of variables. -/
 noncomputable def cases

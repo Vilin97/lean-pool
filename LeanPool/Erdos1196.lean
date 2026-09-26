@@ -26,7 +26,7 @@ Tags: number-theory, combinatorics, analysis
 MSC: 11N25, 05D05
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

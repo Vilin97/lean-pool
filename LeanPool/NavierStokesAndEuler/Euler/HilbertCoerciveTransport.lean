@@ -15,7 +15,7 @@ This elementary operator lemma applies equally to mean and transverse
 displacement spaces, including forms with nonlocal initial-trace terms.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ variable {V W : Type*}
   [NormedAddCommGroup W] [InnerProductSpace ℝ W] [CompleteSpace W]
 
 /-- Pull a genuine bounded operator back along a bounded linear coordinate map. -/
-def transportedOperator (D : V →L[ℝ] W) (A : W →L[ℝ] W) : V →L[ℝ] V :=
+@[expose] def transportedOperator (D : V →L[ℝ] W) (A : W →L[ℝ] W) : V →L[ℝ] V :=
   D.adjoint.comp (A.comp D)
 
 /-- The transported bilinear form is exactly the original form on the image. -/

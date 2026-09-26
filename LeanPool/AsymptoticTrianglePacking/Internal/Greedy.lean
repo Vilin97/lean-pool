@@ -29,7 +29,7 @@ Definitions (`degree`, `IsUniform`, `IsMatching`) come from
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -38,6 +38,7 @@ namespace Hypergraph
 variable {V : Type*} [DecidableEq V]
 
 /-- The support (vertex set) of a family of edges. -/
+@[expose]
 def support (M : Finset (Finset V)) : Finset V := M.biUnion id
 
 /-- **A3a — support cardinality.** A matching of an `r`-uniform hypergraph covers exactly

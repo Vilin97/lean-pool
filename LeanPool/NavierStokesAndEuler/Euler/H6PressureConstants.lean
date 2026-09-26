@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Explicit polynomial dependence of the fixed-order inverse on coefficient bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

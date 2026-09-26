@@ -88,7 +88,7 @@ The script `scripts/c0_scan.py` evaluates `c₀` in floating point on a paramete
 witness points above.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -97,12 +97,14 @@ open Real
 /-- The constant `c₀` of `apd:thm:one_step_truncation_error`, as `apd:eq:c0` defines it:
 `c₀ = (r+1)/r · exp((9/4)(m*+1)/(rΓ)) · (1+B)^{1/(m*+1)}`, where `B` stands for the paper's `4eβ`.
 All four arguments are real, so the bounds below apply in particular to natural `r`, `m*`, `Γ`. -/
+@[expose]
 noncomputable def cZero (r m G B : ℝ) : ℝ :=
   (r + 1) / r * exp (9 / 4 * (m + 1) / (r * G)) * (1 + B) ^ ((1 : ℝ) / (m + 1))
 
 /-- The truncation threshold `t₀ = 1/(c₀ Γ (k_h − 1) α)` of `apd:eq:time_condition`, as a function
 of the constant `c`, the layer count `G`, the Hamiltonian locality `kh` and the coupling scale
 `a` (standing for `α`). -/
+@[expose]
 noncomputable def tZero (c G kh a : ℝ) : ℝ := 1 / (c * G * (kh - 1) * a)
 
 /-- The step-count conditions of `apd:thm:one_step_truncation_error` that constrain the triple
@@ -113,7 +115,7 @@ multiplicatively, `8(m*+1)² ≤ rΓ`, so that no division appears.
 The hypotheses `1 ≤ m*` and `5 ≤ r` of `cZero_le_two` are deliberately not part of this predicate:
 they are separate arguments there, and the necessity witnesses (`two_lt_cZero_of_m_zero`,
 `two_lt_cZero_of_admissible_four`, …) are stated against `Admissible` itself. -/
-def Admissible (r m G : ℝ) : Prop :=
+@[expose] def Admissible (r m G : ℝ) : Prop :=
   1 ≤ r ∧ 0 ≤ m ∧ 0 < G ∧ m ≤ r ∧ 8 * (m + 1) ^ 2 ≤ r * G
 
 /-- `exp y ≤ 1/(1-y)` for `y < 1`, the upper bound on `Real.exp` used below. It is the

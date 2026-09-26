@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialRegularity
 /-! Genuine ordinary vorticity fields, their continuous supremum norms,
 and actual time integrals. These are literal curls of the velocity. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,7 +40,7 @@ theorem vorticityField_continuous {K : Type*} [TopologicalSpace K]
     (continuous_jetLp_derivative A hA) n
 
 /-- Vorticity norm, given by `‖finiteField (vorticityField A)‖`. -/
-def vorticityNorm (A : SmoothL2Field Space) : ℝ := ‖finiteField (vorticityField A)‖
+@[expose] def vorticityNorm (A : SmoothL2Field Space) : ℝ := ‖finiteField (vorticityField A)‖
 
 theorem vorticityNorm_nonneg (A : SmoothL2Field Space) : 0 ≤ vorticityNorm A := norm_nonneg _
 

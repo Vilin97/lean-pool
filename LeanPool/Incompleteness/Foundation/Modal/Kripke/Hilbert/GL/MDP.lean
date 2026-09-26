@@ -15,7 +15,7 @@ import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Unnecessitatio
 
 /-! # MDP -/
 
-@[expose] public section
+public section
 
 
 namespace LO

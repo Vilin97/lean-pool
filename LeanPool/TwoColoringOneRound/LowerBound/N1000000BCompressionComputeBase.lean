@@ -17,7 +17,7 @@ we replace a term `(s : ℚ) / (D : ℚ)` by the reduced fraction obtained by ca
 `g = gcd(|s|, D)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -48,6 +48,7 @@ abbrev iOfNat (m : Nat) : Int := Int.ofNat m
 private theorem tTr_lt (d : DirIdx) : tTr[d.1]! < masks.size := by fin_cases d <;> decide
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def invDir (d : DirIdx) : DirIdx :=
   ⟨tTr[d.1]!, (by exact tTr_lt d)⟩
 
@@ -56,6 +57,7 @@ abbrev basisDen (r : Block) : Nat :=
   moduleBasisDen[r.1]!
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def bValNum (r : Block) (j : Fin 3) (k : DirIdx) : Int :=
   if j.1 < blockSizes[r.1]! then
     ((moduleBasisNum[r.1]!).getD j.1 #[]).getD (tTr[k.1]!) 0
@@ -67,7 +69,7 @@ def bVal (r : Block) (j : Fin 3) (k : DirIdx) : Q :=
   (bValNum r j k : Q) / (basisDen r : Q)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def compBasis (r : Block) (d : DirIdx) : Matrix (Fin 3) (Fin 3) Q :=
+@[expose] def compBasis (r : Block) (d : DirIdx) : Matrix (Fin 3) (Fin 3) Q :=
   fun p q =>
     (Finset.univ.sum fun k : DirIdx =>
       (Finset.univ.sum fun a : DirIdx =>
@@ -126,6 +128,7 @@ theorem div_by_D_eq_div_by_div_gcd (s : Int) :
       simp_all
 
 /-- Integer numerator of a compressed basis entry, skipping zero basis coordinates. -/
+@[expose]
 def compBasisIntEntry (r : Block) (d : DirIdx) (p q : Fin 3) : Int :=
   let rows := (Finset.univ : Finset DirIdx).filter fun k => bValNum r p k ≠ 0
   let columns := (Finset.univ : Finset DirIdx).filter fun a => bValNum r q a ≠ 0
@@ -234,13 +237,14 @@ theorem compBasis_entry_eq_div (r : Block) (d : DirIdx) (p q : Fin 3) :
   simpa [den, mul_assoc, mul_left_comm, mul_comm] using hmain
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def compBasisSymm (r : Block) (d : DirIdx) : Matrix (Fin 3) (Fin 3) Q :=
+@[expose] def compBasisSymm (r : Block) (d : DirIdx) : Matrix (Fin 3) (Fin 3) Q :=
   if tTr[d.1]! = d.1 then
     compBasis r d
   else
     compBasis r d + compBasis r (invDir d)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def idDirIdx : DirIdx :=
   ⟨idIndex, by decide⟩
 
@@ -248,6 +252,7 @@ private theorem varToOrbitRep_lt (i : Var) : varToOrbitRep[i.1]! < masks.size :=
   fin_cases i <;> decide
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def varOrbit (i : Var) : DirIdx :=
   ⟨varToOrbitRep[i.1]!, (by exact varToOrbitRep_lt i)⟩
 

@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPiolaCorrector
 
 /-! Every actual compact high/corrector pair is a member of the closed lifted solenoidal space. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketParentMeanBudget
 physical-label H⁶ word norms of the displacement, velocity and acceleration.
 No multiplier bound or inverse-solver estimate is an input. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

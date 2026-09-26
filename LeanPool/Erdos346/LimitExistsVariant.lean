@@ -45,7 +45,7 @@ from Codex and ChatGPT.  The final mathematical claims and public presentation
 remain the author's responsibility.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Topology goldenRatio
 open Filter Set

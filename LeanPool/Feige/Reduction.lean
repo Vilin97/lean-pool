@@ -21,7 +21,7 @@ hypotheses.  The result here is the shift, bad-event inclusion, and
 complement argument in the proof of Theorem 1.1.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open MeasureTheory ProbabilityTheory Set
@@ -31,7 +31,7 @@ namespace Feige
 /-- Abstract form of the `δ = 1` geometric estimate in §2.2: a nonnegative
 vector with ordinary sum at least `n + 1` has Dirichlet statistic at most
 `1 - bₙ,₁`. -/
-def LargeSumBridge {n : ℕ} (K : (Fin n → ℝ) → ℝ) : Prop :=
+@[expose] def LargeSumBridge {n : ℕ} (K : (Fin n → ℝ) → ℝ) : Prop :=
   ∀ y : Fin n → ℝ,
     (∀ i, 0 ≤ y i) →
     (n : ℝ) + 1 ≤ ∑ i, y i →
@@ -40,7 +40,7 @@ def LargeSumBridge {n : ℕ} (K : (Fin n → ℝ) → ℝ) : Prop :=
 /-- A candidate lower bound for the fixed-dimensional unit-slack Feige
 inequality, quantified over all admissible probability spaces and random
 variables. -/
-def FixedDimensionalFeigeLowerBound (n : ℕ) (c : ℝ) : Prop :=
+@[expose] def FixedDimensionalFeigeLowerBound (n : ℕ) (c : ℝ) : Prop :=
   ∀ (Ω : Type) (_ : MeasurableSpace Ω) (μ : Measure Ω)
       (_ : IsProbabilityMeasure μ) (X : Fin n → Ω → ℝ),
     (∀ i, Measurable (X i)) →

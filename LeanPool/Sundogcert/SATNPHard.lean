@@ -41,7 +41,7 @@ public import Mathlib.Data.Fin.VecNotation
   and its correctness, is the work to come — milestones 2+ of `3SAT ≤ 3DM ≤ X3C ≤ Decodes`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sundog.SATNPHard
 
@@ -52,7 +52,7 @@ abbrev Literal (n : ℕ) := Fin n × Bool
 abbrev Assignment (n : ℕ) := Fin n → Bool
 
 /-- Evaluate a literal under an assignment. -/
-def evalLiteral {n : ℕ} (a : Assignment n) (l : Literal n) : Bool :=
+@[expose] def evalLiteral {n : ℕ} (a : Assignment n) (l : Literal n) : Bool :=
   if l.2 then a l.1 else !(a l.1)
 
 /-- A 3-clause: an ORDERED triple of literals (`Fin 3 → Literal` — cleaner than a Finset
@@ -60,18 +60,18 @@ def evalLiteral {n : ℕ} (a : Assignment n) (l : Literal n) : Bool :=
 abbrev Clause (n : ℕ) := Fin 3 → Literal n
 
 /-- A clause is satisfied iff at least one of its 3 literals is true. -/
-def clauseSat {n : ℕ} (a : Assignment n) (c : Clause n) : Prop :=
+@[expose] def clauseSat {n : ℕ} (a : Assignment n) (c : Clause n) : Prop :=
   ∃ k : Fin 3, evalLiteral a (c k) = true
 
 /-- A 3-CNF formula: `m` clauses, indexed. -/
 abbrev Formula (n m : ℕ) := Fin m → Clause n
 
 /-- A formula is satisfied iff every clause is. -/
-def formulaSat {n m : ℕ} (a : Assignment n) (f : Formula n m) : Prop :=
+@[expose] def formulaSat {n m : ℕ} (a : Assignment n) (f : Formula n m) : Prop :=
   ∀ k : Fin m, clauseSat a (f k)
 
 /-- **3-SAT**: a formula is satisfiable iff some assignment satisfies it. -/
-def Satisfiable {n m : ℕ} (f : Formula n m) : Prop :=
+@[expose] def Satisfiable {n m : ℕ} (f : Formula n m) : Prop :=
   ∃ a : Assignment n, formulaSat a f
 
 /-! ### Decidability.
@@ -97,7 +97,7 @@ instance {n m : ℕ} (f : Formula n m) : Decidable (Satisfiable f) :=
     `a 0 = true`).  `∃` ranges over the 4 assignments of `Fin 2 → Bool` — decidable. -/
 
 /-- The single satisfiable clause `x₀ ∨ x₁ ∨ x₀`. -/
-def cSat : Clause 2 := ![(0, true), (1, true), (0, true)]
+@[expose] def cSat : Clause 2 := ![(0, true), (1, true), (0, true)]
 
 /-- The satisfiable formula with one clause. -/
 def fSat : Formula 2 1 := ![cSat]

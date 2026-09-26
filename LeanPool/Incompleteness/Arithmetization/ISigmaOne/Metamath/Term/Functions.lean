@@ -12,7 +12,7 @@ import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Functions -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»
@@ -677,16 +677,16 @@ end «lp_section_1»
 namespace Formalized
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected def zero : ℕ := ^func 0 zeroIndex 0
+@[expose] protected def zero : ℕ := ^func 0 zeroIndex 0
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected def one : ℕ := ^func 0 oneIndex 0
+@[expose] protected def one : ℕ := ^func 0 oneIndex 0
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qqAdd (x y : V) := ^func 2 (addIndex : V) ?[x, y]
+@[expose] def qqAdd (x y : V) := ^func 2 (addIndex : V) ?[x, y]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qqMul (x y : V) := ^func 2 (mulIndex : V) ?[x, y]
+@[expose] def qqMul (x y : V) := ^func 2 (mulIndex : V) ?[x, y]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 notation "qqZero" => Formalized.zero

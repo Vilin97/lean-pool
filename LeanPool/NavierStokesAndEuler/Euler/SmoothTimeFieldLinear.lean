@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.Deriv.Comp
 /-! Fixed bounded linear maps preserve the actual spatial and time jets of
 smooth bounded coefficient paths. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

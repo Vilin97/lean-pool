@@ -62,4 +62,4 @@ dimension counts, and the full six-term fragment, all previously deferred) is pr
 sorries.
 -/
 
-@[expose] public section
+public section

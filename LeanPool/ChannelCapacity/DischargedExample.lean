@@ -20,7 +20,7 @@ reference, instantiates `Kernel.ContinuousPositiveDensity`, and applies
 `exists_unique_capacity_achieving_prior_discharged`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory

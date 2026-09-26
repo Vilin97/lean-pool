@@ -19,7 +19,7 @@ equivalent to the corresponding indicator notation and makes global
 continuity transparent.
 -/
 
-@[expose] public section
+public section
 
 open Real Set Filter Topology MeasureTheory
 
@@ -191,10 +191,12 @@ theorem hasDerivAt_transferPsi_of_ne_zero
     exact hasDerivAt_transferPsi_of_pos hc hxpos
 
 /-- The a.e. derivative used when applying Stein's identity to `φ`. -/
+@[expose]
 noncomputable def transferPhiDeriv (d x : ℝ) : ℝ :=
   if 0 < x then exp (-x / d) / d else 0
 
 /-- The a.e. derivative used when applying Stein's identity to `ψ`. -/
+@[expose]
 noncomputable def transferPsiDeriv (c x : ℝ) : ℝ :=
   if x < 0 then exp (x / c) / c else 0
 

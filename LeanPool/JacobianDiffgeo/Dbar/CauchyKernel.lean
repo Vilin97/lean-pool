@@ -24,7 +24,7 @@ derivative package handles "differentiate under the integral", and the polar sub
 the kernel singularity cancel exactly.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric Set Complex
 open scoped Convolution ContDiff
@@ -36,7 +36,7 @@ namespace RS
 variable (g : ℂ → ℂ)
 
 /-- The Cauchy kernel `1/(π w)`. -/
-def cauchyKernel : ℂ → ℂ := fun w => (Real.pi * w)⁻¹
+@[expose] def cauchyKernel : ℂ → ℂ := fun w => (Real.pi * w)⁻¹
 
 theorem measurable_cauchyKernel : Measurable cauchyKernel :=
   (measurable_id.const_mul _).inv

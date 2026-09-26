@@ -36,7 +36,7 @@ distinct left cosets.
 * Shimura, Proposition 3.22
 -/
 
-@[expose] public section
+public section
 
 open Matrix Subgroup.Commensurable Pointwise HeckeRing Matrix.SpecialLinearGroup
 
@@ -81,7 +81,7 @@ abbrev UpperTriRep (a : Fin n → ℕ) (hdiv : DivChain n a) :=
   (p : { ij : Fin n × Fin n // ij.1 < ij.2 }) → Fin (a p.val.2 / a p.val.1)
 
 /-- Upper-triangular matrix with diagonal `a` and off-diagonal `M_{ij} = a_i * B_{ij}`. -/
-def upperTriMat (a : Fin n → ℕ) (hdiv : DivChain n a) (B : UpperTriRep n a hdiv) :
+@[expose] def upperTriMat (a : Fin n → ℕ) (hdiv : DivChain n a) (B : UpperTriRep n a hdiv) :
     Matrix (Fin n) (Fin n) ℤ :=
   fun i j =>
     if h : i < j then (a i : ℤ) * (B ⟨(i, j), h⟩ : ℕ)
@@ -153,7 +153,7 @@ lemma upperTriGL_mem_posDetInt (a : Fin n → ℕ) (hpos : ∀ i, 0 < a i)
     exact_mod_cast this⟩
 
 /-- The unipotent upper-triangular matrix with `1` on the diagonal and `B_{ij}` above. -/
-def unipMat (a : Fin n → ℕ) (hdiv : DivChain n a) (B : UpperTriRep n a hdiv) :
+@[expose] def unipMat (a : Fin n → ℕ) (hdiv : DivChain n a) (B : UpperTriRep n a hdiv) :
     Matrix (Fin n) (Fin n) ℤ :=
   fun i j =>
     if h : i < j then (B ⟨(i, j), h⟩ : ℕ)

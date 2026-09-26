@@ -9,12 +9,12 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageDataTypes
 
 /-! # Coverage certificate data, buckets 0–7 -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 
 /-- Generated monotone-obstruction entries for this hash-bucket group. -/
-def patternBuckets00 : Array (List PatternEntry) := #[
+@[expose] def patternBuckets00 : Array (List PatternEntry) := #[
   [
     ⟨0, 7196, .sharedThree 0 1 2 3 4⟩,
     ⟨1280, 11272194355625984, .k4 2 [2, 3, 5, 6] 2 3 5 6⟩,
@@ -88,7 +88,7 @@ def patternBuckets00 : Array (List PatternEntry) := #[
 ]
 
 /-- Generated exact-table entries for this hash-bucket group. -/
-def hardBuckets00 : Array (List HardEntry) := #[
+@[expose] def hardBuckets00 : Array (List HardEntry) := #[
   [
     ⟨0, 8697799730556775710, .cycleStrip 0 [0, 1, 2, 3, 4, 5, 6, 7] 0 1 3 5 7 6 4⟩,
     ⟨768, 6020701831342613790, .residual 104390639921009⟩,

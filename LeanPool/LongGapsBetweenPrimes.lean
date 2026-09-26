@@ -21,4 +21,4 @@ Tags: analytic-number-theory, prime-gaps, sieve-theory, erdos-rankin
 MSC: 11N05
 -/
 
-@[expose] public section
+public section

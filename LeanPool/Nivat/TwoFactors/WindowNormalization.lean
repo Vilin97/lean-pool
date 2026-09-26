@@ -47,13 +47,13 @@ The window and configuration are transported by the same affine bijection;
 the pattern inequality and row-block witnesses are preserved explicitly.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.TwoFactors
 
 /-- The additive lattice equivalence that preserves horizontal coordinates and either preserves
 or reverses the normal coordinate. Lemma 5.5 (`lem:boundary-window`). -/
-def normalSignEquiv (ε : ℤ) (hε : ε = 1 ∨ ε = -1) : Lattice ≃+ Lattice where
+@[expose] def normalSignEquiv (ε : ℤ) (hε : ε = 1 ∨ ε = -1) : Lattice ≃+ Lattice where
   toFun z := (z.1, ε * z.2)
   invFun z := (z.1, ε * z.2)
   left_inv z := by rcases hε with rfl | rfl <;> simp
@@ -62,7 +62,7 @@ def normalSignEquiv (ε : ℤ) (hε : ε = 1 ∨ ε = -1) : Lattice ≃+ Lattice
 
 /-- The affine lattice bijection sending the normalized edge origin to its selected site and
 choosing the normal orientation. Lemma 5.5 (`lem:boundary-window`). -/
-def normalAffineEquiv (ε : ℤ) (hε : ε = 1 ∨ ε = -1) (start edge : ℤ) :
+@[expose] def normalAffineEquiv (ε : ℤ) (hε : ε = 1 ∨ ε = -1) (start edge : ℤ) :
     Lattice ≃ Lattice :=
   (normalSignEquiv ε hε).toEquiv.trans (Equiv.addRight (start, edge))
 

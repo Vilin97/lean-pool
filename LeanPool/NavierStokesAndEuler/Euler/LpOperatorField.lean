@@ -20,7 +20,7 @@ to the closed supported spaces, where its norm needs a bound only on the
 support region. This supplies the physical frame and projected forcing maps.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -142,6 +142,10 @@ def fullMap : (α →ᵇ (E →L[ℝ] F)) →L[ℝ] (Lp E 2 μ →L[ℝ] Lp F 2 
     (fun A => by
       change ‖full μ A‖ ≤ (1 : ℝ)*‖A‖
       simpa only [one_mul] using full_norm μ A)
+
+@[simp] theorem fullMap_apply (A : α →ᵇ (E →L[ℝ] F)) :
+    fullMap μ A = full μ A := by
+  rfl
 
 theorem fullMap_norm : ‖fullMap (E := E) (F := F) μ‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one

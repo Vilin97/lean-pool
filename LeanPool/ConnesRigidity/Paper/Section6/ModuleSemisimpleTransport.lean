@@ -13,7 +13,7 @@ Transport the concrete first-module semisimplicity proof into the paper-facing
 predicate and expose the resulting Section 6 nonisomorphism theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperModuleSemisimpleTransport

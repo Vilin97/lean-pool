@@ -14,7 +14,7 @@ This file verifies that the pair `(X.IProd.sk 0, X.IProd)` is homeomorphic to
 and `I` is the unit interval.
 -/
 
-@[expose] public section
+public section
 
 
 open CategoryTheory unitInterval TopCat
@@ -123,7 +123,7 @@ lemma naturality : X.IProd.skInclSucc n ≫ incl X (n + 1) = incl X n :=
 /-- The cocone with `X.IProd.sk 0 ⟶ X.IProd.sk 1 ⟶ ⋯` as base
 and `TopCat.of (I × X.toTopCat)` as vertex.
 This is actually a colimit cocone (see `CWComplex.IProd.colimitCocone`). -/
-noncomputable def cocone : Limits.Cocone (Functor.ofSequence X.IProd.skInclSucc) :=
+@[expose] noncomputable def cocone : Limits.Cocone (Functor.ofSequence X.IProd.skInclSucc) :=
   { pt := TopCat.of (I × X.toTopCat)
     ι := NatTrans.ofSequence (incl X) <| by
       intro n

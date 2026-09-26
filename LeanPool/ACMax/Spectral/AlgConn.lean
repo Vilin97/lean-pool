@@ -21,14 +21,14 @@ Laplacian) sits at index `card V - 1`, and the second-smallest — the algebraic
 connectivity `λ₂` — at index `card V - 2`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 
 open Classical in
 /-- Algebraic connectivity of a finite simple graph: the second-smallest eigenvalue
 of the graph Laplacian `L(G) = D(G) - A(G)`. -/
-noncomputable def algConn {V : Type*} [Fintype V] [Nonempty V]
+@[expose] noncomputable def algConn {V : Type*} [Fintype V] [Nonempty V]
     (G : SimpleGraph V) : ℝ :=
   (SimpleGraph.posSemidef_lapMatrix ℝ G).isHermitian.eigenvalues₀
     ⟨Fintype.card V - 2, Nat.sub_lt Fintype.card_pos (by norm_num)⟩

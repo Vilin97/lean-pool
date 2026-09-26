@@ -17,7 +17,7 @@ time derivative follows by restriction or by the affine change t = τ+s;
 spatial derivatives are retained literally by continuous precomposition.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

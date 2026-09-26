@@ -21,7 +21,7 @@ Support comes from the canonical source carrier and the actual native
 mask/cutoff product.  Quantitative wave bounds are separate inputs.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

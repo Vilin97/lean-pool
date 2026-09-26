@@ -18,7 +18,7 @@ bounded inverse becomes a shift-zero coefficient estimate at a larger fixed
 radius. The enlargement is independent of the derivative order.
 -/
 
-@[expose] public section
+public section
 
 
 namespace EulerGevrey

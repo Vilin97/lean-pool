@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part03E
 
 /-! # GapCVP proof, part 03, continuation 06 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -182,7 +182,7 @@ def DelimitedCompareTrace.prefix
         EvalsToInTime.trans chosenStep _ _ _ _ _ hfirst hrest
 
 /-- GapCVP reduction support. -/
-def delimitedCompareRestoredWord
+@[expose] def delimitedCompareRestoredWord
     (outcome : EncodedWordOrdering)
     (input source sourcePrefix output : List Bool) : List Bool :=
   List.replicate (input.length + sourcePrefix.length) true ++

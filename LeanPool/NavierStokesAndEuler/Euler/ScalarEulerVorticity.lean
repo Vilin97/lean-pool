@@ -37,7 +37,7 @@ section
 
 /-! The ordinary curl identity for the Euler convection term on ℝ³. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -173,7 +173,7 @@ its derivatives. The transport theorem below uses an ordinary differential
 equation for vorticity, not a prescribed support condition.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -289,7 +289,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -459,7 +459,7 @@ section
 forms a smooth bounded coefficient family with uniformly bounded energy.
 No integrability of spatial derivatives of the original solution is needed. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

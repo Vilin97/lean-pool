@@ -19,7 +19,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Integration.
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology
@@ -28,6 +28,7 @@ open CKN.Foundation.Parabolic.Integration
 noncomputable section
 namespace CKN
 /-- Positive coefficient for the scale-normalized velocity interpolation estimate. -/
+@[expose]
 noncomputable def gagliardoConstant : ℝ := 1 + (81 * ENNReal.ofReal (Real.sqrt 3) *
   (Classical.choose interpolationBall_three_finite)).toReal
 private theorem gamma_le_of_same_ball_interpolation

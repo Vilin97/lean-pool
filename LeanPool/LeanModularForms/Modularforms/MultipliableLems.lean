@@ -16,7 +16,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Summable
 /-! # MultipliableLems -/
 
 
-@[expose] public section
+public section
 
 open EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
   Metric Filter Function Complex

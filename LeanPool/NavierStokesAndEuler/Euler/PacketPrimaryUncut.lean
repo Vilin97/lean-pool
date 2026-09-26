@@ -18,7 +18,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistory
 the actual stationary history's initial coordinate.  Its all-time relation
 to the compactly supported packet is proved by ODE uniqueness. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

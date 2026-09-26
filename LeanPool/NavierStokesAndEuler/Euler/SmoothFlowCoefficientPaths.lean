@@ -39,7 +39,7 @@ section
 /-! Joint time-space differentiability of a genuine smooth family of
 continuous paths, and the actual mixed derivative of its spatial Jacobian. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -167,7 +167,7 @@ section
 material derivative of its velocity, including the one-sided endpoint
 identities. All coefficient time derivatives are literal hypotheses. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -255,7 +255,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -424,7 +424,7 @@ section
 /-! Uniform bounds on a genuine time derivative turn a continuous family
 of paths into a continuous path of bounded fields. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -488,7 +488,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -586,7 +586,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

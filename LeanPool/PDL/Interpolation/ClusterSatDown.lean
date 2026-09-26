@@ -23,7 +23,7 @@ Q-formulas with an assignment, the witness distance `witDist`, and `BasicBetween
 `Pdl.EvalQ`.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 /-! ## Lemma 10.6

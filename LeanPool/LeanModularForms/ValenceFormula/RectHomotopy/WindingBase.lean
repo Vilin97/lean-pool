@@ -26,7 +26,7 @@ computation for the fundamental domain boundary.
 * `tendsto_arg_w_left`, `tendsto_arg_w_right` — limits of arg at tL from left/right
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Metric Filter Topology
 

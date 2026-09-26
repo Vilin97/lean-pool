@@ -11,7 +11,7 @@ import Mathlib.Algebra.BigOperators.Intervals
 
 /-! Degree bounds and the exact shift caused by a fast derivative. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -52,7 +52,7 @@ theorem evaluate_truncate_extend (M N : ℕ) (hMN : M ≤ N) (κ : ℝ) (u : ℕ
     (evaluate_truncate M κ u)
 
 /-- Shift down, given by `truncate M u (n+1)`. -/
-def shiftDown (M : ℕ) (u : ℕ → V) (n : ℕ) : V := truncate M u (n+1)
+@[expose] def shiftDown (M : ℕ) (u : ℕ → V) (n : ℕ) : V := truncate M u (n+1)
 
 omit [Module ℝ V] in
 theorem shiftDown_above (M n : ℕ) (u : ℕ → V) (hn : M ≤ n) : shiftDown M u n = 0 :=

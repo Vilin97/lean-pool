@@ -22,7 +22,7 @@ that their preferred Sobolev assumptions imply `WeakStationaryMapIn`, then call
 that theorem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

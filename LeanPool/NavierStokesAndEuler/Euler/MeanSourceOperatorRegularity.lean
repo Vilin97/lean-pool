@@ -24,7 +24,7 @@ fields and smooth compact cutoffs. Their operator regularity is proved by
 those constructions and then passed through the genuine fixed mean inverse.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -24,7 +24,7 @@ the abstract mortality assumption, and no assertion about the density of an
 infinite union of masks.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

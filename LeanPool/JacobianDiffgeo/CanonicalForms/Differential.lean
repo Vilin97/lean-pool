@@ -44,7 +44,7 @@ Quotient layer (`MForm`, the honest 1-form type):
   pointwise engine).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology
@@ -112,7 +112,7 @@ namespace MFormData
 open scoped Classical in
 /-- The holomorphic special case: a `Form1` gives an `MFormData` with the same chart coefficients
 (no poles). `compat` is exactly `coeffIn_trans` — no new work. -/
-noncomputable def ofForm1 (η : Form1 X) : MFormData X where
+@[expose] noncomputable def ofForm1 (η : Form1 X) : MFormData X where
   coeffAt x z := if z ∈ (chartAt ℂ x).target then coeffIn (chartAt ℂ x) η z else 0
   coeffAt_zero_off x z hz := ite_eq_right hz
   meromorphicOn_coeffAt x := by
@@ -196,10 +196,13 @@ noncomputable def smul (h : ℳ X) (θ : MFormData X) : MFormData X where
     rw [θ.compat x y (chartAt ℂ y p) ⟨p, hp, rfl⟩, hsy, (chartAt ℂ x).left_inv hp.1]
     ring
 
+theorem coeffAt_smul_meromorphic (h : ℳ X) (θ : MFormData X) (x : X) (z : ℂ) :
+    (smul h θ).coeffAt x z = h.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z := by rfl
+
 instance : SMul (ℳ X) (MFormData X) := ⟨smul⟩
 
 @[simp] theorem coeffAt_smul_mero (h : ℳ X) (θ : MFormData X) (x : X) (z : ℂ) :
-    (h • θ).coeffAt x z = h.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z := rfl
+    (h • θ).coeffAt x z = h.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z := by rfl
 
 /-! ### `MFormData.d`: the differential of a meromorphic function (D7, P1) -/
 
@@ -322,7 +325,7 @@ theorem Mero.ord_eq_meromorphicOrderAt_holoRepr (f : ℳ X) (x : X) :
 namespace MForm
 
 /-- D7: the holomorphic embedding, on classes. -/
-noncomputable def ofForm1 (η : Form1 X) : MForm X := mk (MFormData.ofForm1 η)
+@[expose] noncomputable def ofForm1 (η : Form1 X) : MForm X := mk (MFormData.ofForm1 η)
 
 theorem ofForm1_ord_nonneg (η : Form1 X) (x : X) : 0 ≤ (ofForm1 η).ord x :=
   MFormData.ofForm1_ord_nonneg η x

@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Poincare.Gradi
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped BigOperators ENNReal
@@ -33,6 +33,7 @@ private theorem vec3Ball_eq_euclideanBall {x₀ : Vec3} {r : ℝ} (hr : 0 < r) :
     using (mem_euclideanBall_iff_vecEuclideanNorm_lt (d := 3) hr).symm
 
 /-- Explicit constant for the vector-valued ball inequality. -/
+@[expose]
 noncomputable def poincareSobolevL1VectorConstant : ℝ :=
   2 * Real.sqrt 3 * poincareSobolevL1Constant.toReal
 

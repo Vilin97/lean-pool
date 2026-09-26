@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureJetIdentities
 
 /-! Sharp order-by-order Leibniz bounds for actual cylinder Sobolev jets. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -24,7 +24,7 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The sum of the L² norms of all actual derivative words of one order. -/
-def levelNorm {directions : Fin 4 → LiftTangent} {s : ℕ} {f : LiftL2 period}
+@[expose] def levelNorm {directions : Fin 4 → LiftTangent} {s : ℕ} {f : LiftL2 period}
     (J : SpatialJet period directions s f) (n : ℕ) : ℝ :=
   match n, J with
   | 0, _ => ‖f‖
@@ -33,7 +33,7 @@ def levelNorm {directions : Fin 4 → LiftTangent} {s : ℕ} {f : LiftL2 period}
 termination_by s
 
 /-- The sum of the uniform bounds of all coefficient derivatives of one order. -/
-def boundLevel {directions : Fin 4 → LiftTangent} {s : ℕ} {A : SmoothCoefficient period}
+@[expose] def boundLevel {directions : Fin 4 → LiftTangent} {s : ℕ} {A : SmoothCoefficient period}
     (K : CoefficientJet period directions s A) (n : ℕ) : ℝ :=
   match n, K with
   | 0, _ => A.bound
@@ -130,7 +130,7 @@ theorem levelNorm_add_le {s n : ℕ} {f g : LiftL2 period}
           exact Finset.sum_le_sum fun i _ => ih (lower i) (lowerG i)
 
 /-- Binomial convolution of nonnegative derivative-order bounds. -/
-def leibnizConvolution (A B : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] def leibnizConvolution (A B : ℕ → ℝ) (n : ℕ) : ℝ :=
   Finset.sum (Finset.range (n + 1)) (fun l => (n.choose l : ℝ) * A l * B (n - l))
 
 theorem leibnizConvolution_succ (A B : ℕ → ℝ) (n : ℕ) :
@@ -238,7 +238,7 @@ theorem word_add {s n : ℕ} {f g : LiftL2 period}
           exact ih (lower _) (lowerG _) _
 
 /-- Binomial derivative convolution with its undifferentiated-coefficient term removed. -/
-def commutatorConvolution (A B : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] def commutatorConvolution (A B : ℕ → ℝ) (n : ℕ) : ℝ :=
   leibnizConvolution A B n - A 0 * B n
 
 theorem commutatorConvolution_eq_sum (A B : ℕ → ℝ) (n : ℕ) :

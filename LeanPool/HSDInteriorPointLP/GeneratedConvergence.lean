@@ -21,7 +21,7 @@ Lean-reading hints for beginners:
 * `omega` solves arithmetic goals over natural numbers and integers.
 -/
 
-@[expose] public section
+public section
 noncomputable section
 
 open scoped BigOperators

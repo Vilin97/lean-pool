@@ -18,5 +18,5 @@ Tags: number-theory, quadratic-forms, local-global, p-adic
 MSC: 11E12, 11E08, 11E88
 -/
 
-@[expose] public section
+public section
 

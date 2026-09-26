@@ -29,7 +29,7 @@ Convexity, endpoint bounds, and interval-negativity proofs for the Phi
 functions used in the expander table.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 

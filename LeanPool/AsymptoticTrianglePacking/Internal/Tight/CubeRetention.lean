@@ -36,7 +36,7 @@ for which
   (`LeanPool.AsymptoticTrianglePacking.Internal.cube_centred_sq_le`).
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset
 
@@ -51,7 +51,7 @@ noncomputable def cubeMeasure (p : ℝ) : Measure (ι → Bool) :=
   ∑ ω : ι → Bool, ENNReal.ofReal (wt p ω) • Measure.dirac ω
 
 /-- The finite cube as a measure space. -/
-@[instance_reducible]
+@[instance_reducible, expose]
 noncomputable def cubeSpace (p : ℝ) : MeasureSpace (ι → Bool) := ⟨cubeMeasure p⟩
 
 theorem cubeMeasure_apply {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p ≤ 1) (A : Set (ι → Bool)) :

@@ -14,7 +14,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Kernel verification of the two normalized second-stage coloring trees. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

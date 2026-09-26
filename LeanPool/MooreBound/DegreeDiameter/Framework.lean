@@ -28,7 +28,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -42,13 +42,14 @@ universe u
 
 /-- Every vertex of `G` has degree at most `d`, expressed without choosing a decidable adjacency
 relation.  For a finite vertex type, `Set.ncard (G.neighborSet v)` is the ordinary vertex degree. -/
+@[expose]
 noncomputable def MaxDegreeLE {V : Type*} (G : SimpleGraph V) (d : ℕ) : Prop :=
   ∀ v, (G.neighborSet v).ncard ≤ d
 
 /-! ## A coarse breadth-first bound -/
 
 /-- One legal breadth-first move: stay at the current vertex, or cross one edge. -/
-def ClosedNeighbor {V : Type u} (G : SimpleGraph V) (x : V) :=
+@[expose] def ClosedNeighbor {V : Type u} (G : SimpleGraph V) (x : V) :=
   {y : V // x = y ∨ G.Adj x y}
 
 instance finite_closedNeighbor {V : Type u} [Finite V] (G : SimpleGraph V) (x : V) :
@@ -86,6 +87,7 @@ instance finite_bfsCode (d n : ℕ) : Finite (BFSCode d n) := by
   | succ n ih => simp [BFSCode, ih, pow_succ, mul_comm]
 
 /-- Exact-length breadth-first routes.  Unlike graph walks, these permit stationary moves. -/
+@[expose]
 def BFSRouteCode {V : Type u} (G : SimpleGraph V) : V → ℕ → Type u
   | _, 0 => PUnit
   | x, n + 1 => Σ y : ClosedNeighbor G x, BFSRouteCode G y.1 n
@@ -275,6 +277,7 @@ lemma maxDegreeLE_lineGraph {V : Type u} [Finite V] {G : SimpleGraph V} {d : ℕ
 
 The quantified vertex type is kept native instead of transporting every construction to `Fin n`.
 `Finite V` makes `Nat.card V` and the set cardinalities mathematically meaningful. -/
+@[expose]
 noncomputable def OrderAdmissible (k d n : ℕ) : Prop :=
   ∃ (V : Type) (G : SimpleGraph V),
     Finite V ∧ Nat.card V = n ∧ MaxDegreeLE G d ∧ G.ediam ≤ (k : ℕ∞)
@@ -298,6 +301,7 @@ noncomputable def nKD (k d : ℕ) : ℕ :=
 
 /-- A finite simple graph with `m` edges, maximum degree at most `d`, and line-graph diameter at
 most `ell`. -/
+@[expose]
 noncomputable def EdgeAdmissible (ell d m : ℕ) : Prop :=
   ∃ (V : Type) (G : SimpleGraph V),
     Finite V ∧ G.edgeSet.ncard = m ∧ MaxDegreeLE G d ∧
@@ -321,11 +325,11 @@ lemma edgeAdmissible_set_bddAbove (ell d : ℕ) :
 
 /-- The paper defines `h_ell(d) - 1` as the maximum admissible edge count, so we define `h` to be
 one plus that maximum. -/
-noncomputable def h (ell d : ℕ) : ℕ :=
+@[expose] noncomputable def h (ell d : ℕ) : ℕ :=
   1 + sSup {m : ℕ | EdgeAdmissible ell d m}
 
 /-- The exact Moore expression. -/
-def mooreBound (k d : ℕ) : ℕ :=
+@[expose] def mooreBound (k d : ℕ) : ℕ :=
   1 + d * ∑ j ∈ Finset.range k, (d - 1) ^ j
 
 lemma maxDegreeLE_mono {V : Type*} {G : SimpleGraph V} {d d' : ℕ}

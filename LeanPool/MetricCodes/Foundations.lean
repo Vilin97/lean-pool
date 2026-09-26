@@ -25,7 +25,7 @@ public import Mathlib.Analysis.SpecialFunctions.Log.Base
 Elementary coding-theory definitions, projection certificates, and the finite Johnson bound.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -86,7 +86,7 @@ theorem hammingCorrelation_le_of_dist_le
   linarith
 
 /-- The spherical entropy used in the metric-code argument. -/
-def sphericalEntropy (u : ℝ) : ℝ :=
+@[expose] def sphericalEntropy (u : ℝ) : ℝ :=
   (1 + u) * Real.logb 2 (1 + u) - u * Real.logb 2 u
 
 @[simp] theorem sphericalEntropy_zero : sphericalEntropy 0 = 0 := by
@@ -125,7 +125,7 @@ theorem binaryEntropy_nonneg {u : ℝ} (hu : 0 ≤ u) (hu' : u ≤ 1) :
   linarith
 
 /-- The gamma used in the metric-code argument. -/
-def Gamma (a b : ℝ) : ℝ :=
+@[expose] def Gamma (a b : ℝ) : ℝ :=
   ((a - b) * (1 + a + b)) /
     ((1 + 2 * a) * Real.sqrt (a * (1 + a)))
 
@@ -138,7 +138,7 @@ theorem Gamma_eq_sub (a b : ℝ) :
   ring
 
 /-- The classical threshold used in the metric-code argument. -/
-def classicalThreshold (s : ℝ) : ℝ :=
+@[expose] def classicalThreshold (s : ℝ) : ℝ :=
   (1 / Real.sqrt (1 - s ^ 2) - 1) / 2
 
 @[simp] theorem classicalThreshold_zero : classicalThreshold 0 = 0 := by
@@ -159,7 +159,7 @@ theorem classicalThreshold_pos {s : ℝ} (hs : 0 < s) (hs' : s < 1) :
   linarith
 
 /-- The boolean harmonic dimension used in the metric-code argument. -/
-def booleanHarmonicDimension (n : ℕ) : ℕ → ℕ
+@[expose] def booleanHarmonicDimension (n : ℕ) : ℕ → ℕ
   | 0 => 1
   | k + 1 => n.choose (k + 1) - n.choose k
 
@@ -189,7 +189,7 @@ abbrev hammingFibreDimension (n k : ℕ) : ℕ :=
   booleanHarmonicDimension n k
 
 /-- The johnson fibre dimension used in the metric-code argument. -/
-def johnsonFibreDimension (n w p q : ℕ) : ℕ :=
+@[expose] def johnsonFibreDimension (n w p q : ℕ) : ℕ :=
   booleanHarmonicDimension w p *
     booleanHarmonicDimension (n - w) q
 
@@ -242,42 +242,42 @@ def hammingGamma (a b : ℝ) : ℝ :=
     Real.sqrt (a * (1 - a))
 
 /-- The johnson j1 used in the metric-code argument. -/
-def johnsonJ1 (w p : ℕ) : ℝ :=
+@[expose] def johnsonJ1 (w p : ℕ) : ℝ :=
   (w : ℝ) / 2 - (p : ℝ)
 
 /-- The johnson j2 used in the metric-code argument. -/
-def johnsonJ2 (n w q : ℕ) : ℝ :=
+@[expose] def johnsonJ2 (n w q : ℕ) : ℝ :=
   ((n - w : ℕ) : ℝ) / 2 - (q : ℝ)
 
 /-- The johnson j used in the metric-code argument. -/
-def johnsonJ (n j : ℕ) : ℝ :=
+@[expose] def johnsonJ (n j : ℕ) : ℝ :=
   (n : ℝ) / 2 - (j : ℝ)
 
 /-- The johnson m used in the metric-code argument. -/
-def johnsonM (n w : ℕ) : ℝ :=
+@[expose] def johnsonM (n w : ℕ) : ℝ :=
   (n : ℝ) / 2 - (w : ℝ)
 
 /-- The johnson sigma used in the metric-code argument. -/
-def johnsonSigma (n w p q : ℕ) : ℝ :=
+@[expose] def johnsonSigma (n w p q : ℕ) : ℝ :=
   johnsonJ1 w p + johnsonJ2 n w q
 
 /-- The johnson delta used in the metric-code argument. -/
-def johnsonDelta (n w p q : ℕ) : ℝ :=
+@[expose] def johnsonDelta (n w p q : ℕ) : ℝ :=
   johnsonJ2 n w q - johnsonJ1 w p
 
 /-- The johnson last degree used in the metric-code argument. -/
-def johnsonLastDegree (n w p q : ℕ) : ℕ :=
+@[expose] def johnsonLastDegree (n w p q : ℕ) : ℕ :=
   min w (min (w - p + q) (n - w + p - q))
 
 /-- The johnson mu used in the metric-code argument. -/
-def johnsonMu (n w p q j : ℕ) : ℝ :=
+@[expose] def johnsonMu (n w p q j : ℕ) : ℝ :=
   (johnsonM n w / 2) *
     (johnsonJ2 n w q * (johnsonJ2 n w q + 1) -
       johnsonJ1 w p * (johnsonJ1 w p + 1)) /
     (johnsonJ n j * (johnsonJ n j + 1))
 
 /-- The johnson nu used in the metric-code argument. -/
-def johnsonNu (n w p q j : ℕ) : ℝ :=
+@[expose] def johnsonNu (n w p q j : ℕ) : ℝ :=
   Real.sqrt
       ((johnsonJ n j ^ 2 - johnsonM n w ^ 2) *
         (johnsonJ n j ^ 2 - johnsonDelta n w p q ^ 2) *
@@ -287,30 +287,30 @@ def johnsonNu (n w p q j : ℕ) : ℝ :=
         (2 * johnsonJ n j + 1)))
 
 /-- The johnson diagonal used in the metric-code argument. -/
-def johnsonDiagonal (n w p q j : ℕ) : ℝ :=
+@[expose] def johnsonDiagonal (n w p q j : ℕ) : ℝ :=
   ((n : ℝ) * johnsonMu n w p q j - johnsonM n w ^ 2) /
     ((w : ℝ) * ((n - w : ℕ) : ℝ))
 
 /-- The johnson edge used in the metric-code argument. -/
-def johnsonEdge (n w p q j : ℕ) : ℝ :=
+@[expose] def johnsonEdge (n w p q j : ℕ) : ℝ :=
   ((n : ℝ) * johnsonNu n w p q j) /
     ((w : ℝ) * ((n - w : ℕ) : ℝ))
 
 /-- The johnson zonal diagonal used in the metric-code argument. -/
-def johnsonZonalDiagonal (n w j : ℕ) : ℝ :=
+@[expose] def johnsonZonalDiagonal (n w j : ℕ) : ℝ :=
   johnsonDiagonal n w 0 0 j
 
 /-- The johnson zonal edge used in the metric-code argument. -/
-def johnsonZonalEdge (n w j : ℕ) : ℝ :=
+@[expose] def johnsonZonalEdge (n w j : ℕ) : ℝ :=
   johnsonEdge n w 0 0 j
 
 /-- The johnson hatted diagonal used in the metric-code argument. -/
-def johnsonHattedDiagonal (n w p q j : ℕ) : ℝ :=
+@[expose] def johnsonHattedDiagonal (n w p q j : ℕ) : ℝ :=
   if j = 0 then 0
   else johnsonDiagonal n w p q j ^ 2 / johnsonZonalDiagonal n w j
 
 /-- The johnson hatted edge used in the metric-code argument. -/
-def johnsonHattedEdge (n w p q j : ℕ) : ℝ :=
+@[expose] def johnsonHattedEdge (n w p q j : ℕ) : ℝ :=
   johnsonEdge n w p q j ^ 2 / johnsonZonalEdge n w j
 
 theorem johnsonHattedDiagonal_nonneg {n w p q j : ℕ}
@@ -320,7 +320,7 @@ theorem johnsonHattedDiagonal_nonneg {n w p q j : ℕ}
   split <;> positivity
 
 /-- The johnson jacobi matrix used in the metric-code argument. -/
-def johnsonJacobiMatrix (n w p q L : ℕ) :
+@[expose] def johnsonJacobiMatrix (n w p q L : ℕ) :
     Matrix (Fin (L - (p + q) + 1))
       (Fin (L - (p + q) + 1)) ℝ :=
   fun i j =>
@@ -374,27 +374,27 @@ theorem card_level (n k : ℕ) :
   simp only [Level, Fintype.card_finset_len, Fintype.card_fin]
 
 /-- The raise at used in the binary-code argument. -/
-def raiseAt {n : ℕ} (a : Fin n) (f : Function n) (S : Finset (Fin n)) : ℝ :=
+@[expose] def raiseAt {n : ℕ} (a : Fin n) (f : Function n) (S : Finset (Fin n)) : ℝ :=
   if a ∈ S then f (S.erase a) else 0
 
 /-- The lower at used in the binary-code argument. -/
-def lowerAt {n : ℕ} (a : Fin n) (f : Function n) (S : Finset (Fin n)) : ℝ :=
+@[expose] def lowerAt {n : ℕ} (a : Fin n) (f : Function n) (S : Finset (Fin n)) : ℝ :=
   if a ∈ S then 0 else f (insert a S)
 
 /-- The raise used in the binary-code argument. -/
-def raise {n : ℕ} (f : Function n) (S : Finset (Fin n)) : ℝ :=
+@[expose] def raise {n : ℕ} (f : Function n) (S : Finset (Fin n)) : ℝ :=
   ∑ a : Fin n, raiseAt a f S
 
 /-- The lower used in the binary-code argument. -/
-def lower {n : ℕ} (f : Function n) (S : Finset (Fin n)) : ℝ :=
+@[expose] def lower {n : ℕ} (f : Function n) (S : Finset (Fin n)) : ℝ :=
   ∑ a : Fin n, lowerAt a f S
 
 /-- The predicate asserting level. -/
-def IsLevel {n : ℕ} (k : ℕ) (f : Function n) : Prop :=
+@[expose] def IsLevel {n : ℕ} (k : ℕ) (f : Function n) : Prop :=
   ∀ S : Finset (Fin n), S.card ≠ k → f S = 0
 
 /-- The predicate asserting harmonic. -/
-def IsHarmonic {n : ℕ} (k : ℕ) (f : Function n) : Prop :=
+@[expose] def IsHarmonic {n : ℕ} (k : ℕ) (f : Function n) : Prop :=
   IsLevel k f ∧ ∀ S : Finset (Fin n), lower f S = 0
 
 variable {n : ℕ}
@@ -550,19 +550,19 @@ theorem lower_smul (c : ℝ) (f : Function n) :
   by_cases ha : a ∈ S <;> simp [ha]
 
 /-- The raise linear used in the binary-code argument. -/
-def raiseLinear (n : ℕ) : Function n →ₗ[ℝ] Function n where
+@[expose] def raiseLinear (n : ℕ) : Function n →ₗ[ℝ] Function n where
   toFun := raise
   map_add' := raise_add
   map_smul' := raise_smul
 
 /-- The lower linear used in the binary-code argument. -/
-def lowerLinear (n : ℕ) : Function n →ₗ[ℝ] Function n where
+@[expose] def lowerLinear (n : ℕ) : Function n →ₗ[ℝ] Function n where
   toFun := lower
   map_add' := lower_add
   map_smul' := lower_smul
 
 @[simp] theorem raiseLinear_apply (f : Function n) :
-    raiseLinear n f = raise f := rfl
+    raiseLinear n f = raise f := by rfl
 
 theorem IsLevel.raise {k : ℕ} {f : Function n} (hf : IsLevel k f) :
     IsLevel (k + 1) (raise f) := by
@@ -600,7 +600,7 @@ theorem IsLevel.lower {k : ℕ} {f : Function n}
     simp only [lowerAt, ha, ↓reduceIte, hf (insert a S) hinsert]
 
 /-- The raised used in the binary-code argument. -/
-def raised {n : ℕ} (f : Function n) : ℕ → Function n
+@[expose] def raised {n : ℕ} (f : Function n) : ℕ → Function n
   | 0 => f
   | r + 1 => raise (raised f r)
 
@@ -618,7 +618,7 @@ theorem IsLevel.raised {k : ℕ} {f : Function n}
       simpa only [raised_succ, Nat.add_assoc] using ih.raise
 
 /-- The harmonic coefficient used in the binary-code argument. -/
-def harmonicCoefficient (n k r : ℕ) : ℝ :=
+@[expose] def harmonicCoefficient (n k r : ℕ) : ℝ :=
   (r : ℝ) * ((n : ℝ) - 2 * (k : ℝ) - (r : ℝ) + 1)
 
 @[simp] theorem harmonicCoefficient_zero (n k : ℕ) :
@@ -683,7 +683,7 @@ private def toggleEquiv (a : Fin n) : Finset (Fin n) ≃ Finset (Fin n) where
   right_inv := toggle_toggle a
 
 /-- The dot used in the binary-code argument. -/
-def dot (f g : Function n) : ℝ :=
+@[expose] def dot (f g : Function n) : ℝ :=
   ∑ S : Finset (Fin n), f S * g S
 
 theorem dot_raiseAt_eq_lowerAt (a : Fin n) (f g : Function n) :
@@ -778,7 +778,7 @@ namespace ProjectionFamily
 variable {X : Type*} {D d : ℕ}
 
 /-- The overlap used in the metric-code argument. -/
-def overlap (P : ProjectionFamily X D d) (x y : X) : ℝ :=
+@[expose] def overlap (P : ProjectionFamily X D d) (x y : X) : ℝ :=
   Matrix.trace (P.projection x * P.projection y)
 
 @[simp] theorem overlap_self (P : ProjectionFamily X D d) (x : X) :
@@ -1148,11 +1148,11 @@ theorem IsLevel.twist {k : ℕ} {f : Function n}
 abbrev CoordinateFunction (n : ℕ) := Fin n → Function n
 
 /-- The coordinate dot used in the binary-code argument. -/
-def coordinateDot (f g : CoordinateFunction n) : ℝ :=
+@[expose] def coordinateDot (f g : CoordinateFunction n) : ℝ :=
   ∑ a : Fin n, dot (f a) (g a)
 
 /-- The delete channel used in the binary-code argument. -/
-def deleteChannel (i : ℕ) (f : Function n) : CoordinateFunction n :=
+@[expose] def deleteChannel (i : ℕ) (f : Function n) : CoordinateFunction n :=
   fun a => (Real.sqrt (i : ℝ))⁻¹ • lowerAt a f
 
 /-- The coordinate raising channels scaled by the inverse square root of `n - i`. -/
@@ -1335,7 +1335,7 @@ def layerExtend {n k : ℕ} (f : LayerFunction n k) : Function n :=
   fun S => if h : S.card = k then f ⟨S, h⟩ else 0
 
 /-- The layer restrict used in the binary-code argument. -/
-def layerRestrict (k : ℕ) (f : Function n) : LayerFunction n k :=
+@[expose] def layerRestrict (k : ℕ) (f : Function n) : LayerFunction n k :=
   fun S => f S.val
 
 theorem isLevel_layerExtend {k : ℕ} (f : LayerFunction n k) :
@@ -1402,11 +1402,11 @@ def layerDown (n k : ℕ) :
     ((lowerLinear n).comp (layerExtendLinear n (k + 1)))
 
 @[simp] theorem layerUp_apply {k : ℕ} (f : LayerFunction n k) :
-    layerUp n k f = layerRestrict (k + 1) (raise (layerExtend f)) := rfl
+    layerUp n k f = layerRestrict (k + 1) (raise (layerExtend f)) := by rfl
 
 @[simp] theorem layerDown_apply {k : ℕ}
     (f : LayerFunction n (k + 1)) :
-    layerDown n k f = layerRestrict k (lower (layerExtend f)) := rfl
+    layerDown n k f = layerRestrict k (lower (layerExtend f)) := by rfl
 
 theorem layerUp_injective {k : ℕ} (hk : 2 * k < n) :
     Function.Injective (layerUp n k) := by
@@ -1441,7 +1441,7 @@ theorem layerUp_injective {k : ℕ} (hk : 2 * k < n) :
   exact sub_eq_zero.mp hdiffzero
 
 /-- The layer dot used in the binary-code argument. -/
-def layerDot {n k : ℕ} (f g : LayerFunction n k) : ℝ :=
+@[expose] def layerDot {n k : ℕ} (f g : LayerFunction n k) : ℝ :=
   ∑ S : Level n k, f S * g S
 
 theorem dot_layerExtend {k : ℕ} (f g : LayerFunction n k) :
@@ -1734,7 +1734,7 @@ theorem dot_raised_of_harmonic {k : ℕ}
       ring
 
 /-- The harmonic embedding used in the binary-code argument. -/
-def harmonicEmbedding (k r : ℕ) (f : Function n) : Function n :=
+@[expose] def harmonicEmbedding (k r : ℕ) (f : Function n) : Function n :=
   (Real.sqrt (harmonicNormFactor n k r))⁻¹ • raised f r
 
 /-- The normalized harmonic embedding twisted by the Boolean character of `x`. -/
@@ -1862,7 +1862,7 @@ theorem mem_harmonicLayer_iff {k : ℕ} (f : LayerFunction n k) :
 abbrev EuclideanLayer (n k : ℕ) := EuclideanSpace ℝ (Level n k)
 
 /-- The harmonic euclidean layer used in the binary-code argument. -/
-def harmonicEuclideanLayer (n k : ℕ) :
+@[expose] def harmonicEuclideanLayer (n k : ℕ) :
     Submodule ℝ (EuclideanLayer n k) :=
   (harmonicLayer n k).map
     (WithLp.linearEquiv 2 ℝ (LayerFunction n k)).symm.toLinearMap
@@ -4350,7 +4350,7 @@ theorem choose_monotone_to_half (n : ℕ) {i j : ℕ}
   exact Finset.sum_le_sum_of_subset (Finset.range_mono (by omega))
 
 /-- The johnson ambient dimension used in the metric-code argument. -/
-def johnsonAmbientDimension (n a L : ℕ) : ℕ :=
+@[expose] def johnsonAmbientDimension (n a L : ℕ) : ℕ :=
   ∑ j ∈ Finset.Icc a L, booleanHarmonicDimension n j
 
 theorem johnsonAmbientDimension_eq (n a L : ℕ)
@@ -4715,7 +4715,7 @@ abbrev Index (k L : ℕ) := Fin (L - k + 1)
 abbrev Space (k L : ℕ) := EuclideanSpace ℝ (Index k L)
 
 /-- The matrix used in the binary-code argument. -/
-def matrix (n k L : ℕ) : Matrix (Index k L) (Index k L) ℝ :=
+@[expose] def matrix (n k L : ℕ) : Matrix (Index k L) (Index k L) ℝ :=
   MetricCodes.hammingJacobiMatrix n k L
 
 theorem matrix_hermitian (n k L : ℕ) : (matrix n k L).IsHermitian := by
@@ -4727,7 +4727,7 @@ theorem matrix_hermitian (n k L : ℕ) : (matrix n k L).IsHermitian := by
   simpa only [matrix, star_trivial, Matrix.transpose_apply] using h
 
 /-- The operator used in the binary-code argument. -/
-def operator (n k L : ℕ) : Space k L →ₗ[ℝ] Space k L :=
+@[expose] def operator (n k L : ℕ) : Space k L →ₗ[ℝ] Space k L :=
   Matrix.toEuclideanLin (matrix n k L)
 
 theorem operator_isSymmetric (n k L : ℕ) :
@@ -5472,11 +5472,11 @@ theorem variationalRate_lt_classicalRate {δ : ℝ}
   exact (variationalRate_le_of_feasible hfeasible).trans_lt himprove
 
 /-- The longitudinal degree used in the binary-code argument. -/
-def longitudinalDegree (a : ℝ) (n : ℕ) : ℕ :=
+@[expose] def longitudinalDegree (a : ℝ) (n : ℕ) : ℕ :=
   Nat.floor (a * (n : ℝ))
 
 /-- The transverse degree used in the binary-code argument. -/
-def transverseDegree (b : ℝ) (n : ℕ) : ℕ :=
+@[expose] def transverseDegree (b : ℝ) (n : ℕ) : ℕ :=
   Nat.floor (b * (n : ℝ))
 
 theorem tendsto_longitudinal_ratio {a : ℝ} (ha : 0 ≤ a) :
@@ -5651,7 +5651,7 @@ theorem tridiagonal_quadratic_sum
       ring
 
 /-- The terminal indicator used in the binary-code argument. -/
-def terminalIndicator (d m p : ℕ) : ℝ :=
+@[expose] def terminalIndicator (d m p : ℕ) : ℝ :=
   if d - m ≤ p then 1 else 0
 
 theorem terminal_indicator_sum (d m : ℕ) (hm : m ≤ d) :
@@ -6999,7 +6999,7 @@ def correlation {n w : ℕ} (x y : JohnsonSphere n w) : ℝ :=
     CharP.cast_eq_zero, mul_zero, zero_div, sub_zero]
 
 /-- The threshold used in the Johnson-code argument. -/
-def threshold (n w d : ℕ) : ℝ :=
+@[expose] def threshold (n w d : ℕ) : ℝ :=
   1 - (n : ℝ) * (d : ℝ) /
     (2 * (w : ℝ) * ((n - w : ℕ) : ℝ))
 
@@ -7066,7 +7066,7 @@ theorem correlation_le_threshold_of_code {n w d : ℕ}
   exact hxy (Subtype.ext hval)
 
 /-- The coordinate indicator used in the Johnson-code argument. -/
-def coordinateIndicator {n : ℕ} (x : BinaryWord n)
+@[expose] def coordinateIndicator {n : ℕ} (x : BinaryWord n)
     (i : Fin n) : ℝ :=
   if i ∈ MetricCodes.wordSupport x then 1 else 0
 
@@ -7142,7 +7142,7 @@ theorem centered_coordinate_inner_sum {n w : ℕ}
       field_simp [hn']; ring
 
 /-- The geometric axis used in the Johnson-code argument. -/
-def geometricAxis {n w : ℕ} (x : JohnsonSphere n w) : MetricCodes.Ambient n :=
+@[expose] def geometricAxis {n w : ℕ} (x : JohnsonSphere n w) : MetricCodes.Ambient n :=
   WithLp.toLp 2 (fun i : Fin n =>
     Real.sqrt ((n : ℝ) /
       ((w : ℝ) * ((n - w : ℕ) : ℝ))) *
@@ -7317,7 +7317,7 @@ abbrev Index (p q L : ℕ) := Fin (L - (p + q) + 1)
 abbrev Space (p q L : ℕ) := EuclideanSpace ℝ (Index p q L)
 
 /-- The matrix used in the Johnson-code argument. -/
-def matrix (n w p q L : ℕ) :
+@[expose] def matrix (n w p q L : ℕ) :
     Matrix (Index p q L) (Index p q L) ℝ :=
   MetricCodes.johnsonJacobiMatrix n w p q L
 
@@ -7331,7 +7331,7 @@ theorem matrix_hermitian (n w p q L : ℕ) :
   simpa only [matrix, star_trivial, Matrix.transpose_apply] using h
 
 /-- The operator used in the Johnson-code argument. -/
-def operator (n w p q L : ℕ) : Space p q L →ₗ[ℝ] Space p q L :=
+@[expose] def operator (n w p q L : ℕ) : Space p q L →ₗ[ℝ] Space p q L :=
   Matrix.toEuclideanLin (matrix n w p q L)
 
 theorem operator_isSymmetric (n w p q L : ℕ) :
@@ -7964,7 +7964,7 @@ def johnsonRecurrenceWeight
     v i
 
 /-- The johnson source channel coefficient used in the Johnson-code argument. -/
-def johnsonSourceChannelCoefficient
+@[expose] def johnsonSourceChannelCoefficient
     (n w p q L : ℕ) (m i : Index p q L) : ℝ :=
   matrix n w p q L m i *
     Real.sqrt (MetricCodes.booleanHarmonicDimension n (p + q + m.val) : ℝ) /
@@ -8069,7 +8069,7 @@ theorem johnsonRecurrenceWeight_eigenrecurrence
           ring
 
 /-- The johnson adjacent block coefficient used in the Johnson-code argument. -/
-def johnsonAdjacentBlockCoefficient
+@[expose] def johnsonAdjacentBlockCoefficient
     (n w p q L : ℕ) (v : Space p q L) (lam : ℝ)
     (target source : Index p q L) : ℝ :=
   Real.sqrt
@@ -8338,11 +8338,11 @@ theorem finite_binaryCodeNumber_bound_of_projection_gram
         hfactor
 
 /-- The centered eta used in the Johnson-code argument. -/
-def centeredEta (α β γ : ℝ) : ℝ :=
+@[expose] def centeredEta (α β γ : ℝ) : ℝ :=
   1 - 2 * α + 2 * β - 2 * γ
 
 /-- The spectral limit used in the Johnson-code argument. -/
-def spectralLimit (α β γ u : ℝ) : ℝ :=
+@[expose] def spectralLimit (α β γ u : ℝ) : ℝ :=
   let z := (1 - 2 * u)
   let m := (1 - 2 * α)
   let σ := (1 - 2 * β - 2 * γ)
@@ -8477,16 +8477,16 @@ theorem spectralLimit_zero_fibre_boundary {α u : ℝ}
       field_simp [hmraw, hA, hfourA, hplusraw]; ring
 
 /-- The asymptotic threshold used in the Johnson-code argument. -/
-def asymptoticThreshold (δ α : ℝ) : ℝ :=
+@[expose] def asymptoticThreshold (δ α : ℝ) : ℝ :=
   1 - δ / (2 * α * (1 - α))
 
 /-- The rank penalty used in the Johnson-code argument. -/
-def rankPenalty (α β γ : ℝ) : ℝ :=
+@[expose] def rankPenalty (α β γ : ℝ) : ℝ :=
   α * MetricCodes.binaryEntropy (β / α) +
     (1 - α) * MetricCodes.binaryEntropy (γ / (1 - α))
 
 /-- The shell rate used in the Johnson-code argument. -/
-def shellRate (α β γ u : ℝ) : ℝ :=
+@[expose] def shellRate (α β γ u : ℝ) : ℝ :=
   1 - MetricCodes.binaryEntropy α + MetricCodes.binaryEntropy u -
     rankPenalty α β γ
 
@@ -8634,7 +8634,7 @@ def IsSpectrallyFeasible (δ α β γ u : ℝ) : Prop :=
   asymptoticThreshold δ α < spectralLimit α β γ u
 
 /-- The feasible used in the Johnson-code argument. -/
-def Feasible (δ α β γ u : ℝ) : Prop :=
+@[expose] def Feasible (δ α β γ u : ℝ) : Prop :=
   AsymptoticParameters δ α β γ u ∧
     IsSpectrallyFeasible δ α β γ u
 
@@ -8659,7 +8659,7 @@ theorem variationalRate_le_of_feasible {δ α β γ u : ℝ}
   exact csInf_le (rateSet_bddBelow δ) ⟨α, β, γ, u, h, rfl⟩
 
 /-- The mrrw g used in the Johnson-code argument. -/
-def mrrwG (v : ℝ) : ℝ :=
+@[expose] def mrrwG (v : ℝ) : ℝ :=
   MetricCodes.binaryEntropy ((1 - Real.sqrt (1 - v)) / 2)
 
 @[simp] theorem mrrwG_one : mrrwG 1 = 1 := by
@@ -8687,7 +8687,7 @@ theorem mrrwG_nonneg {v : ℝ} (hv : 0 ≤ v) :
   · linarith
 
 /-- The mrrw objective used in the Johnson-code argument. -/
-def mrrwObjective (δ r : ℝ) : ℝ :=
+@[expose] def mrrwObjective (δ r : ℝ) : ℝ :=
   1 + mrrwG (r ^ 2) -
     mrrwG (r ^ 2 + 2 * δ * r + 2 * δ)
 
@@ -8873,7 +8873,7 @@ theorem mrrw_endpoint_dichotomy {δ : ℝ}
   exact lt_or_eq_of_le (mrrwRate_le_classicalRate hδ hhalf)
 
 /-- The combined variational rate used in the Johnson-code argument. -/
-def combinedVariationalRate (δ : ℝ) : ℝ :=
+@[expose] def combinedVariationalRate (δ : ℝ) : ℝ :=
   min (MetricCodes.Hamming.variationalRate δ) (variationalRate δ)
 
 theorem combinedVariationalRate_le_hamming (δ : ℝ) :

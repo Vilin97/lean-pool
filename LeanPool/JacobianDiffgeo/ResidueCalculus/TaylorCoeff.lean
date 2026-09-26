@@ -28,7 +28,7 @@ Main exports:
 * `RS.AnalyticAt.exists_taylor_remainder` — exact, pointwise Taylor remainder factorization.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Function
 
@@ -39,6 +39,7 @@ variable {f g F : ℂ → ℂ} {z₀ : ℂ}
 /-- The `j`-th Taylor coefficient of `g` at `z₀`, extracted by iterated difference quotients.
 For `g` analytic at `z₀` with power series `p` this equals `p.coeff j`. Junk for non-smooth
 `g` (whatever the iterated `dslope` evaluates to). -/
+@[expose]
 noncomputable def taylorCoeffAt (g : ℂ → ℂ) (z₀ : ℂ) (j : ℕ) : ℂ :=
   (Function.swap dslope z₀)^[j] g z₀
 

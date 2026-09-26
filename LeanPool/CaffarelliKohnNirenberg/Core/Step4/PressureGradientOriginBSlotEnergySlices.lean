@@ -21,7 +21,7 @@ or by the collar Dirichlet integral.
 No estimate here uses velocity or gradient Morrey data.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology BigOperators

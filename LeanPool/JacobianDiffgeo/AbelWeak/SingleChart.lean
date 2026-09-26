@@ -31,7 +31,7 @@ beyond `Set.EqOn`-rewriting** on the transition annulus (the same shape the desi
 describes).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set Filter Topology

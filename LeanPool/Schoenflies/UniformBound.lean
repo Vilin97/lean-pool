@@ -26,7 +26,7 @@ member at once.
   holding at some positive bound for each member holds at one common positive bound.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

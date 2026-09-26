@@ -16,7 +16,7 @@ at exponent `6/5`. Velocity cubes and gradient squares enter with powers
 `1/5` power of the time-window measure.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

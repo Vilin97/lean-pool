@@ -27,4 +27,4 @@ Tags: quantum-computing, quantum-algorithms, quantum-signal-processing, quantum-
 MSC: 81P68, 81P45, 68Q12
 -/
 
-@[expose] public section
+public section

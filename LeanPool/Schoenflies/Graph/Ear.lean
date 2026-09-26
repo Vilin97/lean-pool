@@ -90,7 +90,7 @@ consumer discharges it from its drawing.
   2-connected graph has no bridge", turned into one transfer lemma.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

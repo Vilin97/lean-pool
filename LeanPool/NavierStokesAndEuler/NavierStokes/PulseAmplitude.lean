@@ -32,7 +32,7 @@ All profiles and moments in this file are those of `OutgoingSchedule` and
 additional choice. Their log-coordinate translates are identified below.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -389,7 +389,7 @@ theorem prefixCoefficient_small (c : Parameters)
 parameter shape. These bounds therefore include the shape's first derivative. -/
 
 /-- Parameter polynomial, given by `eta * (1 + eta ^ 2)`. -/
-noncomputable def parameterPolynomial (eta : ℝ) : ℝ := eta * (1 + eta ^ 2)
+@[expose] noncomputable def parameterPolynomial (eta : ℝ) : ℝ := eta * (1 + eta ^ 2)
 
 theorem parameterPolynomial_bound {eta : ℝ} (heta : |eta| ≤ 1) :
     |parameterPolynomial eta| ≤ 2 := by
@@ -440,9 +440,9 @@ theorem normalized_mass_prefix_small (c : Parameters)
 /-! ## The actual bump is one fixed template in log coordinates -/
 
 /-- Template lower, given by `Real.exp (-(3 / 20 : ℝ))`. -/
-noncomputable def templateLower : ℝ := Real.exp (-(3 / 20 : ℝ))
+@[expose] noncomputable def templateLower : ℝ := Real.exp (-(3 / 20 : ℝ))
 /-- Template upper, given by `Real.exp (3 / 20 : ℝ)`. -/
-noncomputable def templateUpper : ℝ := Real.exp (3 / 20 : ℝ)
+@[expose] noncomputable def templateUpper : ℝ := Real.exp (3 / 20 : ℝ)
 /-- Radial template, given by `LocalizedMomentRepair.bump templateLower templateUpper`. -/
 noncomputable def radialTemplate : ℝ → ℝ :=
   LocalizedMomentRepair.bump templateLower templateUpper
@@ -1424,7 +1424,7 @@ These finite-dimensional calculations do not establish existence of the full
 smooth schedule, estimates on the correction bumps, or the stress-cone bounds.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1676,7 +1676,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1887,7 +1887,7 @@ theorem mainPulse_mul_prefixRepair (c : Parameters) (y : ℝ) :
   linarith
 
 /-- Pulse weight, given by `Real.exp (-2 * c.lam * y)`. -/
-def pulseWeight (c : Parameters) (y : ℝ) : ℝ := Real.exp (-2 * c.lam * y)
+@[expose] def pulseWeight (c : Parameters) (y : ℝ) : ℝ := Real.exp (-2 * c.lam * y)
 
 theorem pulseWeight_continuous (c : Parameters) : Continuous (pulseWeight c) :=
   Real.continuous_exp.comp (continuous_const.mul continuous_id)
@@ -2006,7 +2006,7 @@ def coreEnergyWeight (c : Parameters) (y : ℝ) : ℝ :=
   Real.exp y * radialAmplitude c.P c.dropLength c.lam y ^ 2
 
 /-- Normalization, given by `Real.exp c.pulseStart * pulseAmplitude c ^ 2`. -/
-def normalization (c : Parameters) : ℝ := Real.exp c.pulseStart * pulseAmplitude c ^ 2
+@[expose] def normalization (c : Parameters) : ℝ := Real.exp c.pulseStart * pulseAmplitude c ^ 2
 
 theorem normalization_pos (c : Parameters) : 0 < normalization c :=
   mul_pos (Real.exp_pos _) (sq_pos_of_pos (pulseAmplitude_pos c))
@@ -2125,7 +2125,7 @@ theorem prefixAxialEnergy_bound (c : Parameters) :
 
 /-- Energy integrand, given by `Real.exp y * (axial d.core (fun _ => A) (y, eta) ^ 2 -
 OutgoingTail.finalAngular d (y, eta) ^ 2 / 2)`. -/
-def energyIntegrand (d : OutgoingTail.TailData) (A eta y : ℝ) : ℝ :=
+@[expose] def energyIntegrand (d : OutgoingTail.TailData) (A eta y : ℝ) : ℝ :=
   Real.exp y * (axial d.core (fun _ => A) (y, eta) ^ 2 -
     OutgoingTail.finalAngular d (y, eta) ^ 2 / 2)
 
@@ -2313,7 +2313,7 @@ theorem totalEnergy_eq_of_integrable (d : OutgoingTail.TailData) (A eta : ℝ)
   linarith
 
 theorem tailEnergy_eq (d : OutgoingTail.TailData) (eta : ℝ) :
-    tailEnergy d eta = TailEnergyBounds.postPulseEnergy d eta := rfl
+    tailEnergy d eta = TailEnergyBounds.postPulseEnergy d eta := by rfl
 
 theorem tailEnergy_contDiff (d : OutgoingTail.TailData) : ContDiff ℝ ∞ (tailEnergy d) :=
   TailEnergyBounds.postPulseEnergy_contDiff d
@@ -2325,8 +2325,10 @@ theorem totalEnergy_eq (d : OutgoingTail.TailData) (A eta : ℝ) :
   totalEnergy_eq_of_integrable d A eta (TailEnergyBounds.energyDensity_integrable_postPulse d eta)
 
 /-- Normalized prefix axial, given by `c.lam * prefixAxialEnergy c / normalization c`. -/
+@[expose]
 def normalizedPrefixAxial (c : Parameters) : ℝ := c.lam * prefixAxialEnergy c / normalization c
 /-- Normalized prefix angular, given by `c.lam * prefixAngularEnergy c / normalization c`. -/
+@[expose]
 def normalizedPrefixAngular (c : Parameters) : ℝ := c.lam * prefixAngularEnergy c / normalization c
 /-- Normalized tail, given by `d.core.lam * tailEnergy d eta / (2 * normalization d.core * shape
 eta ^ 2)`. -/
@@ -2336,13 +2338,13 @@ def normalizedTail (d : OutgoingTail.TailData) (eta : ℝ) : ℝ :=
 /-- Linear term, given by `linearCoefficient c * etaPolynomial eta`. -/
 def linearTerm (c : Parameters) (eta : ℝ) : ℝ := linearCoefficient c * etaPolynomial eta
 /-- Constant term as an element of `ℝ`. -/
-def constantTerm (d : OutgoingTail.TailData) (eta : ℝ) : ℝ :=
+@[expose] def constantTerm (d : OutgoingTail.TailData) (eta : ℝ) : ℝ :=
   (constantCorrection d.core + normalizedPrefixAxial d.core) * etaPolynomial eta ^ 2 -
     RadialSchedule.pulseEnergyDebt - normalizedPrefixAngular d.core - normalizedTail d eta
 
 /-- Energy polynomial, given by `quadraticCoefficient d.core * A ^ 2 + linearTerm d.core eta * A
 + constantTerm d eta`. -/
-def energyPolynomial (d : OutgoingTail.TailData) (A eta : ℝ) : ℝ :=
+@[expose] def energyPolynomial (d : OutgoingTail.TailData) (A eta : ℝ) : ℝ :=
   quadraticCoefficient d.core * A ^ 2 + linearTerm d.core eta * A + constantTerm d eta
 
 theorem totalEnergy_normalized (d : OutgoingTail.TailData) (A eta : ℝ) :
@@ -2481,7 +2483,7 @@ theorem amplitude_totalEnergy_zero (d : OutgoingTail.TailData) (eta : ℝ)
 /-! ## Actual coefficient estimates for the paper's wait duration -/
 
 /-- Logarithmic rate, given by `lam * (1 + Real.log (1 / lam))`. -/
-def logarithmicRate (lam : ℝ) : ℝ := lam * (1 + Real.log (1 / lam))
+@[expose] def logarithmicRate (lam : ℝ) : ℝ := lam * (1 + Real.log (1 / lam))
 
 theorem log_inverse_nonneg (c : Parameters) : 0 ≤ Real.log (1 / c.lam) := by
   apply Real.log_nonneg
@@ -2837,7 +2839,7 @@ theorem errorConstant_ge {P : ℝ} (hP : 0 < P) (m : ℝ) :
   constructor <;> linarith
 
 /-- Error scale, given by `errorConstant c.P c.m * logarithmicRate c.lam`. -/
-def errorScale (c : Parameters) : ℝ := errorConstant c.P c.m * logarithmicRate c.lam
+@[expose] def errorScale (c : Parameters) : ℝ := errorConstant c.P c.m * logarithmicRate c.lam
 
 theorem errorScale_pos (c : Parameters) : 0 < errorScale c :=
   mul_pos (errorConstant_pos c.P_pos c.m) (logarithmicRate_pos c)

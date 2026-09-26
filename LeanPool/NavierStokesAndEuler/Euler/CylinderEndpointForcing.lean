@@ -27,7 +27,7 @@ potential term. Its variational correction is exactly the already
 constructed zero-endpoint inverse applied to `2 Q₁(t) (Y/T)`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -181,7 +181,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

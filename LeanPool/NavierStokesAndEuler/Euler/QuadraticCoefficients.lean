@@ -17,7 +17,7 @@ section
 /-! Quantitative bounds for the actual projected linear-plus-quadratic source of the correction
 equation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -30,7 +30,8 @@ variable {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
   [NormedAddCommGroup Y] [NormedSpace ℝ Y]
 
 /-- A pressure-projected source with actual forcing, linear terms, and quadratic terms. -/
-def source (P : Y →L[ℝ] Y) (r : Y) (A : X →L[ℝ] Y) (B : X →L[ℝ] X →L[ℝ] Y) (u : X) : Y :=
+@[expose] def source (P : Y →L[ℝ] Y) (r : Y) (A : X →L[ℝ] Y)
+    (B : X →L[ℝ] X →L[ℝ] Y) (u : X) : Y :=
   -(P (r + A u + B u u))
 
 /-- The actual quadratic source is jointly continuous in every coefficient and its unknown. -/
@@ -118,7 +119,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -143,7 +144,7 @@ structure Coefficients (T : Type*) [TopologicalSpace T] (X Y : Type*)
   quadratic : C(T, X →L[ℝ] X →L[ℝ] Y)
 
 /-- Evaluate the genuine projected source. -/
-def Coefficients.apply (C : Coefficients T X Y) (t : T) (u : X) : Y :=
+@[expose] def Coefficients.apply (C : Coefficients T X Y) (t : T) (u : X) : Y :=
   source (C.projection t) (C.forcing t) (C.linear t) (C.quadratic t) u
 
 /-- The source is jointly continuous in time and the Sobolev unknown. -/
@@ -153,6 +154,7 @@ theorem Coefficients.continuous (C : Coefficients T X Y) :
       C.quadratic.continuous
 
 /-- Restrict coefficient data along any continuous parameter map. -/
+@[expose]
 def Coefficients.comp {U : Type*} [TopologicalSpace U] (C : Coefficients T X Y) (f : C(U, T)) :
     Coefficients U X Y where
   projection := C.projection.comp f

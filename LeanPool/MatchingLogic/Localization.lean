@@ -27,14 +27,14 @@ import Mathlib.Data.Set.Basic
 # MatchingLogic.Localization
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
 variable {S : Signature} {Var : Type} [DecidableEq Var]
 
 /-- **Definition 6 (localization).**  `Δ_Γ := {[p]γ | γ ∈ Γ, p ∈ E*}`. -/
-def localize (Γ : Set (Pattern S Var)) : Set (Pattern S Var) :=
+@[expose] def localize (Γ : Set (Pattern S Var)) : Set (Pattern S Var) :=
   {ψ | ∃ γ ∈ Γ, ∃ p : List (Coord S), ψ = boxes p γ}
 
 omit [DecidableEq Var] in

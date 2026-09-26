@@ -26,7 +26,7 @@ slice mean.  The actual Riesz fields of the three sources then satisfy the
 clipped-cell estimate above an explicit threshold depending on nothing.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal BigOperators

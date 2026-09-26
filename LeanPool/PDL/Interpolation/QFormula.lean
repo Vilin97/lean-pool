@@ -27,7 +27,7 @@ the paper, but the extra generality is exactly what is needed later: in the corr
 proof the internal variables get replaced by other formulas.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -56,7 +56,7 @@ variable {Var : Type}
 /-- Replace the internal variables in a Q-formula according to `σ`, yielding a `Formula`.
 For `σ x = ·(n x)` with `n` injective into unused proposition letters this is the formula
 that the paper denotes by `ι` itself. -/
-def subst (σ : Var → Formula) : QFormula Var → Formula
+@[expose] def subst (σ : Var → Formula) : QFormula Var → Formula
   | .fma ψ => ψ
   | .var q => σ q
   | .and ι1 ι2 => ι1.subst σ ⋀ ι2.subst σ
@@ -70,7 +70,7 @@ def subst (σ : Var → Formula) : QFormula Var → Formula
     (ι.boxes as).subst σ = ⌈⌈as⌉⌉(ι.subst σ) := rfl
 
 /-- The internal variables occurring in a Q-formula. -/
-def vars : QFormula Var → List Var
+@[expose] def vars : QFormula Var → List Var
   | .fma _ => []
   | .var q => [q]
   | .and ι1 ι2 => ι1.vars ++ ι2.vars
@@ -86,7 +86,7 @@ def substVar [DecidableEq Var] (x : Var) (ρ : QFormula Var) (ι : QFormula Var)
 termination_by sizeOf ι
 
 /-- Big conjunction of a list of Q-formulas, mirroring `con` on formulas. -/
-def conj : List (QFormula Var) → QFormula Var
+@[expose] def conj : List (QFormula Var) → QFormula Var
   | [] => .fma ⊤
   | [ι] => ι
   | ι :: rest => .and ι (conj rest)
@@ -119,12 +119,12 @@ namespace QSimple
 variable {Var : Type}
 
 /-- A simple Q-formula is a Q-formula. -/
-def toQ : QSimple Var → QFormula Var
+@[expose] def toQ : QSimple Var → QFormula Var
   | .fma ψ => .fma ψ
   | .boxVar as q => .boxes as (.var q)
 
 /-- Prefix a simple Q-formula with a sequence of boxes; the result is again simple. -/
-def prefixBoxes (as : List Program) : QSimple Var → QSimple Var
+@[expose] def prefixBoxes (as : List Program) : QSimple Var → QSimple Var
   | .fma ψ => .fma (⌈⌈as⌉⌉ψ)
   | .boxVar bs q => .boxVar (as ++ bs) q
 
@@ -139,12 +139,12 @@ def prefixBoxes (as : List Program) : QSimple Var → QSimple Var
       | cons a as IH => simp only [List.cons_append, Formula.boxes_cons, IH]
 
 /-- Does the simple Q-formula mention the internal variable `x`? -/
-def mentions [DecidableEq Var] (x : Var) : QSimple Var → Bool
+@[expose] def mentions [DecidableEq Var] (x : Var) : QSimple Var → Bool
   | .fma _ => false
   | .boxVar _ q => q = x
 
 /-- If the simple Q-formula is `□(αs, q_x)` then return the program `αs` as one program. -/
-def progToOpt [DecidableEq Var] (x : Var) : QSimple Var → Option Program
+@[expose] def progToOpt [DecidableEq Var] (x : Var) : QSimple Var → Option Program
   | .fma _ => none
   | .boxVar as q => if q = x then some (Program.steps as) else none
 
@@ -156,7 +156,7 @@ variable {Var : Type}
 
 /-- Def 9.16: the finite set `Spl(ι)` of simple Q-formulas of a Q-formula `ι`.
 Note that `Spl(q_x) = { [⊤?]q_x }`, i.e. we make the variable into a box formula. -/
-def Spl : QFormula Var → List (QSimple Var)
+@[expose] def Spl : QFormula Var → List (QSimple Var)
   | .fma ψ => [.fma ψ]
   | .var q => [.boxVar [?'⊤] q]
   | .and ι1 ι2 => ι1.Spl ++ ι2.Spl
@@ -273,17 +273,17 @@ companion `x` is `[(⋃ᵢ αᵢ)*](⋀ⱼ [βⱼ]q_{zⱼ} ∧ ψ)`. We implemen
 `QFormula.gfp x ι`, using `Spl` to read off the `αᵢ` and the remaining conjuncts. -/
 
 /-- The programs `αᵢ` such that `[αᵢ]q_x` is a conjunct of the normal form of `ι`. -/
-def loopProgs [DecidableEq Var] (x : Var) (ι : QFormula Var) : List Program :=
+@[expose] def loopProgs [DecidableEq Var] (x : Var) (ι : QFormula Var) : List Program :=
   ι.Spl.filterMap (QSimple.progToOpt x)
 
 /-- The conjunction of those conjuncts of the normal form of `ι` that do not mention the
 internal variable `x`. -/
-def dropVar [DecidableEq Var] (x : Var) (ι : QFormula Var) : QFormula Var :=
+@[expose] def dropVar [DecidableEq Var] (x : Var) (ι : QFormula Var) : QFormula Var :=
   conj ((ι.Spl.filter (fun s => !s.mentions x)).map QSimple.toQ)
 
 /-- The greatest fixpoint of `ι` with respect to the internal variable `x`, i.e. the
 formula `[(⋃ᵢ αᵢ)*](⋀ⱼ [βⱼ]q_{zⱼ} ∧ ψ)` of the companion case of Definition 9.18. -/
-def gfp [DecidableEq Var] (x : Var) (ι : QFormula Var) : QFormula Var :=
+@[expose] def gfp [DecidableEq Var] (x : Var) (ι : QFormula Var) : QFormula Var :=
   .boxes [∗ (Program.unions (ι.loopProgs x))] (ι.dropVar x)
 
 /-- The internal variable `x` no longer occurs in `gfp x ι`. -/

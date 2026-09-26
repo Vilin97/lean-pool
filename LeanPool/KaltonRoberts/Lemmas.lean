@@ -27,7 +27,7 @@ import Mathlib.Tactic.Positivity.Finset
 Mathematical lemmas from Sections 1-4 of the companion paper.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 

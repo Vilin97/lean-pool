@@ -37,7 +37,7 @@ targeted expanded-language equivariance (`carrierEquiv_funMap` under the renamed
 infinitary formula is invariant under the induced automorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

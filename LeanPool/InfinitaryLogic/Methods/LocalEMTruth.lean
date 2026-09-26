@@ -47,7 +47,7 @@ This is the local analogue of `EMTermModel.lean:114–180`. It is a pure file (i
 stays off the EM stack.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

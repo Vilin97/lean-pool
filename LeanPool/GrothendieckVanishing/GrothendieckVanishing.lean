@@ -30,7 +30,7 @@ The dimension-zero base case is proved here; the positive-dimensional irreducibl
 lives in `IrreducibleStep.lean`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -78,12 +78,10 @@ theorem reducible_vanishing
         by_cases hxZ : x ∈ Z
         · -- closedIncl_unit_stalk_isIso: iso on stalks at z ∈ Z
           have : IsIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.g.hom) := by
-            change IsIso
-              ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u}
-                ((ConcreteCategory.hom (TopCat.closedIncl hZ_closed)) ⟨x, hxZ⟩)).map S.g.hom)
-            simpa [S, closedImmersionSES] using
-              (TopCat.closedIncl_unit_stalk_isIso (C := AddCommGrpCat.{u})
-                (hs := hZ_closed) Gsh ⟨x, hxZ⟩)
+            have hi := TopCat.closedIncl_unit_stalk_isIso (C := AddCommGrpCat.{u})
+              (hs := hZ_closed) Gsh ⟨x, hxZ⟩
+            erw [TopCat.closedIncl_apply hZ_closed ⟨x, hxZ⟩] at hi
+            simpa [S, closedImmersionSES] using hi
           exact stalk_zero_of_ses_g_iso S hSE x inferInstance a
         · exact stalk_zero_of_shortExact_kernel S hSE x (hG_stalks x (by
             simp_all)) a

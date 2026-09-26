@@ -18,7 +18,7 @@ coefficients uniformly in the band.  Radial graph differentiation, axial
 rescaling, and the fast direction are kept explicit.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -123,15 +123,16 @@ structure GraphDirections (D : Type*) [NormedAddCommGroup D] [NormedSpace ℝ D]
 namespace GraphDirections
 
 /-- Radial field, given by `d.radial + d.radialScale n • (d.radialProfile x • d.auxiliary)`. -/
-noncomputable def radialField (d : GraphDirections D) (n : ℕ) (x : D) : D :=
+@[expose] noncomputable def radialField (d : GraphDirections D) (n : ℕ) (x : D) : D :=
   d.radial + d.radialScale n • (d.radialProfile x • d.auxiliary)
 
 /-- Axial field, given by `s.epsilon n • d.axial`. -/
+@[expose]
 noncomputable def axialField (d : GraphDirections D) (s : StripData D) (n : ℕ) (_ : D) : D :=
   s.epsilon n • d.axial
 
 /-- Fast field, given by `d.fastScale n • d.fast`. -/
-noncomputable def fastField (d : GraphDirections D) (n : ℕ) (_ : D) : D :=
+@[expose] noncomputable def fastField (d : GraphDirections D) (n : ℕ) (_ : D) : D :=
   d.fastScale n • d.fast
 
 /-- Dr, defined pointwise by `along (d.radialField n) (f n)`. -/
@@ -147,7 +148,7 @@ noncomputable def Dt (d : GraphDirections D) (f : ℕ → D → E) : ℕ → D �
   fun n => along (fun _ => d.slow) (f n)
 
 /-- Dfast, defined pointwise by `along (d.fastField n) (f n)`. -/
-noncomputable def Dfast (d : GraphDirections D) (f : ℕ → D → E) : ℕ → D → E :=
+@[expose] noncomputable def Dfast (d : GraphDirections D) (f : ℕ → D → E) : ℕ → D → E :=
   fun n => along (d.fastField n) (f n)
 
 theorem Dr_eq (d : GraphDirections D) (f : ℕ → D → E) :
@@ -222,11 +223,13 @@ namespace WaveCoefficients
 
 /-- Normal, given by `phaseNormal (a.radius n) (d.radialField n) (fun _ => d.angular)
 (d.axialField s n) (a.phase n)`. -/
+@[expose]
 noncomputable def normal (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections D)
     (n : ℕ) : D → EuclideanSpace ℝ (Fin 3) :=
   phaseNormal (a.radius n) (d.radialField n) (fun _ => d.angular) (d.axialField s n) (a.phase n)
 
 /-- Defect, constructed using `LinearWaveResidual.materialPhaseDefect`. -/
+@[expose]
 noncomputable def defect (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections D)
     (n : ℕ) : D → ℝ :=
   LinearWaveResidual.materialPhaseDefect (a.radius n) (a.radialBase n) (a.frequencyBase n)
@@ -234,6 +237,7 @@ noncomputable def defect (a : WaveCoefficients D) (s : StripData D) (d : GraphDi
     (LinearWaveResidual.timeDirection (s.epsilon n) (d.fastField n) (fun _ => d.slow)) (a.phase n)
 
 /-- Remainder, constructed using `LinearWaveResidual.remainder`. -/
+@[expose]
 noncomputable def remainder (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections D)
     (n : ℕ) : D → ComplexVector :=
   LinearWaveResidual.remainder (s.epsilon n) (a.frequency n) (a.radius n) (a.radialBase n)
@@ -241,6 +245,7 @@ noncomputable def remainder (a : WaveCoefficients D) (s : StripData D) (d : Grap
     (d.axialField s n) (d.fastField n) (fun _ => d.slow) (a.phase n) (a.amplitude n) (a.pressure n)
 
 /-- Principal, constructed using `LinearWaveResidual.principal`. -/
+@[expose]
 noncomputable def principal (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections D)
     (n : ℕ) : D → ComplexVector :=
   LinearWaveResidual.principal (s.epsilon n) (a.frequency n) (a.radius n) (a.frequencyBase n)
@@ -248,6 +253,7 @@ noncomputable def principal (a : WaveCoefficients D) (s : StripData D) (d : Grap
     (a.phase n) (a.amplitude n) (a.pressure n)
 
 /-- Principal velocity, constructed using `LinearWaveResidual.principal`. -/
+@[expose]
 noncomputable def principalVelocity (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections
     D)
     (f : ℕ → D → ComplexVector) (n : ℕ) : D → ComplexVector :=
@@ -256,11 +262,12 @@ noncomputable def principalVelocity (a : WaveCoefficients D) (s : StripData D) (
     (a.phase n) (f n) (fun _ => 0)
 
 /-- Add amplitude, given by `{a with amplitude := fun n x => a.amplitude n x + f n x}`. -/
-noncomputable def addAmplitude (a : WaveCoefficients D) (f : ℕ → D → ComplexVector) :
+@[expose] noncomputable def addAmplitude (a : WaveCoefficients D) (f : ℕ → D → ComplexVector) :
     WaveCoefficients D := {a with amplitude := fun n x => a.amplitude n x + f n x}
 
 /-- With cutoff, given by `{ a with amplitude := fun n x => ψ n x • a.amplitude n x pressure :=
 fun n x => (ψ n x : ℂ) * a.pressure n x }`. -/
+@[expose]
 noncomputable def withCutoff (a : WaveCoefficients D) (ψ : ℕ → D → ℝ) : WaveCoefficients D :=
   { a with
     amplitude := fun n x => ψ n x • a.amplitude n x
@@ -268,12 +275,13 @@ noncomputable def withCutoff (a : WaveCoefficients D) (ψ : ℕ → D → ℝ) :
 
 /-- The retained coefficient after cutoff and exact-curl correction.
 The two slot tails are not included in this definition. -/
-noncomputable def goodCoefficient (a : WaveCoefficients D) (s : StripData D)
+@[expose] noncomputable def goodCoefficient (a : WaveCoefficients D) (s : StripData D)
     (d : GraphDirections D) (ψ : ℕ → D → ℝ) (f : ℕ → D → ComplexVector)
     (n : ℕ) (x : D) : ComplexVector :=
   a.principalVelocity s d f n x + ((a.withCutoff ψ).addAmplitude f).remainder s d n x
 
 /-- Harmonic residual, constructed using `LinearWaveResidual.linearResidual`. -/
+@[expose]
 noncomputable def harmonicResidual (a : WaveCoefficients D) (s : StripData D) (d : GraphDirections
     D)
     (n : ℕ) : D → ComplexVector :=
@@ -292,7 +300,7 @@ namespace WaveCoefficients
 
 /-- The actual coefficient error from taking the curl of the normalized
 harmonic vector potential. -/
-noncomputable def curlCorrection (a : WaveCoefficients D) (s : StripData D)
+@[expose] noncomputable def curlCorrection (a : WaveCoefficients D) (s : StripData D)
     (d : GraphDirections D) (n : ℕ) : D → ComplexVector :=
   CurlClassBounds.curlRemainder (a.frequency n) (a.radius n) (d.radialField n)
     (fun _ => d.angular) (d.axialField s n)
@@ -300,18 +308,18 @@ noncomputable def curlCorrection (a : WaveCoefficients D) (s : StripData D)
       (d.axialField s n) (a.phase n) (a.amplitude n))
 
 /-- Curl potential, constructed using `CurlClassBounds.vectorPotential`. -/
-noncomputable def curlPotential (a : WaveCoefficients D) (s : StripData D)
+@[expose] noncomputable def curlPotential (a : WaveCoefficients D) (s : StripData D)
     (d : GraphDirections D) (n : ℕ) : D → ComplexVector :=
   CurlClassBounds.vectorPotential (a.frequency n) (a.radius n) (d.radialField n)
     (fun _ => d.angular) (d.axialField s n) (a.phase n) (a.amplitude n)
 
 /-- Corrected, given by `(a.withCutoff ψ).addAmplitude ((a.withCutoff ψ).curlCorrection s d)`. -/
-noncomputable def corrected (a : WaveCoefficients D) (s : StripData D)
+@[expose] noncomputable def corrected (a : WaveCoefficients D) (s : StripData D)
     (d : GraphDirections D) (ψ : ℕ → D → ℝ) : WaveCoefficients D :=
   (a.withCutoff ψ).addAmplitude ((a.withCutoff ψ).curlCorrection s d)
 
 /-- Constructed good, given by `a.goodCoefficient s d ψ ((a.withCutoff ψ).curlCorrection s d)`. -/
-noncomputable def constructedGood (a : WaveCoefficients D) (s : StripData D)
+@[expose] noncomputable def constructedGood (a : WaveCoefficients D) (s : StripData D)
     (d : GraphDirections D) (ψ : ℕ → D → ℝ) : ℕ → D → ComplexVector :=
   a.goodCoefficient s d ψ ((a.withCutoff ψ).curlCorrection s d)
 
@@ -342,7 +350,7 @@ structure InputBounds (s : StripData D) (P : ℕ → D → ℝ) (α κ : ℝ)
 
 /-- Insert component, given by `ContinuousLinearMap.pi fun j => if j = i then
 ContinuousLinearMap.id ℝ ℂ else 0`. -/
-noncomputable def insertComponent (i : Fin 3) : ℂ →L[ℝ] ComplexVector :=
+@[expose] noncomputable def insertComponent (i : Fin 3) : ℂ →L[ℝ] ComplexVector :=
   ContinuousLinearMap.pi fun j => if j = i then ContinuousLinearMap.id ℝ ℂ else 0
 
 theorem component_classes {s : StripData D} {w : ℕ → D → ℝ} {α : ℝ}
@@ -809,7 +817,7 @@ theorem corrected_divergence {s : StripData D} {P : ℕ → D → ℝ} {α κ : 
 
 /-- The two excluded slot terms remain explicit fields. Their Gaussian
 flatness is a separate analytic theorem, never an instruction to set them to zero. -/
-noncomputable def excludedSlotError (d : GraphDirections D) (ψ : ℕ → D → ℝ)
+@[expose] noncomputable def excludedSlotError (d : GraphDirections D) (ψ : ℕ → D → ℝ)
     (a source : ℕ → D → ComplexVector) : ℕ → D → ComplexVector := fun n x =>
   d.Dfast ψ n x • a n x + (1 - ψ n x) • source n x
 

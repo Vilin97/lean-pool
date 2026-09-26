@@ -17,6 +17,6 @@ public import LeanPool.BruhatTits.Graph.Vertices
 # Bruhat-Tits graph
 -/
 
-@[expose] public section
+public section
 
 open Module

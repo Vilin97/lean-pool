@@ -18,19 +18,19 @@ enabling relation between a configuration and an event, and proves that enabling
 an event extends a configuration.
 -/
 
-@[expose] public section
+public section
 
 namespace EventStructures
 
 variable (es : EventStructure)
 
 /-- A set of events is a configuration if it is conflict-free and downward closed. -/
-@[simp] def isConf (X : Set es.Event) : Prop :=
+@[expose, simp] def isConf (X : Set es.Event) : Prop :=
   (∀ {e₁ e₂}, e₁ ∈ X → e₂ ∈ X → ¬ es.conflict e₁ e₂) ∧
   (∀ {e e'}, e ∈ X → e' ≤ e → e' ∈ X)
 
 /-- Type of all configurations of an event structure. -/
-def Conf : Type := {X : Set es.Event // isConf es X}
+@[expose] def Conf : Type := {X : Set es.Event // isConf es X}
 
 /-- Type of all finite configurations of an event structure. -/
 def FinConf : Type := {X : Finset es.Event // isConf es (X : Set es.Event)}
@@ -40,7 +40,7 @@ namespace Configuration
 /-- A configuration c enables an event e if e is fresh (not already in c),
     e is consistent with all events in c, and the past of e is contained in c.
     Freshness rules out self-loop edges in the configuration graph. -/
-def enables (c : Set es.Event) (e : es.Event) : Prop :=
+@[expose] def enables (c : Set es.Event) (e : es.Event) : Prop :=
   isConf es c ∧
   e ∉ c ∧
   (∀ e' ∈ c, es.consistent e e') ∧

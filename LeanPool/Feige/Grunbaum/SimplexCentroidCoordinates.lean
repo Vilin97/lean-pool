@@ -19,7 +19,7 @@ simplex.  Hence all centroid coordinates agree; their value follows from
 the already computed coordinate sum.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

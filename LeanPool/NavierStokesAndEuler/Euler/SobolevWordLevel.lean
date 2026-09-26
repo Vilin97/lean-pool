@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
 /-! Actual derivative words at any lower Sobolev level, with exact representative and norm
 identities. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

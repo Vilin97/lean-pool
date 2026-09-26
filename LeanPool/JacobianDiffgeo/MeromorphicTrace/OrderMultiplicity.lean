@@ -45,7 +45,7 @@ this lemma as a non-essential "cheap corollary... even though we do not need it 
 dropped rather than patched into a different (correct) statement under the same name.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 open Filter Set Function Topology

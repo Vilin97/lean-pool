@@ -32,7 +32,7 @@ mean residuals and excluded errors are combined before the physical graph
 restriction.  Phase regularity is needed only on coefficient support.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -914,7 +914,7 @@ theorem ResidualChartData.residual_jetRate {a b h gain β : ℝ} {N Δ : ℕ} {U
 
 /-- Band graph, given by `PhysicalResidualBridge.commonGraph (ChartScales.Q n) h
 (ChartScales.nativeIndex h n - d)`. -/
-noncomputable def bandGraph (h : ℝ) (n d : ℕ) : PhysicalResidualBridge.ScaledGraph :=
+@[expose] noncomputable def bandGraph (h : ℝ) (n d : ℕ) : PhysicalResidualBridge.ScaledGraph :=
   PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (ChartScales.nativeIndex h n - d)
 
 theorem polarGraph_eq_meanGraph {a : ℝ} (ha : 0 < a) (h : ℝ) (j : PolarCharts.Index)
@@ -1121,7 +1121,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1137,7 +1137,7 @@ abbrev Point := PhysicalMeanJetBounds.Point
 abbrev Cylinder := PhysicalResidualJetBounds.Cylinder
 
 /-- Active as an element of `Set SpaceTime`. -/
-noncomputable def active : Set SpaceTime :=
+@[expose] noncomputable def active : Set SpaceTime :=
   {w | (SlowBorelBase.cartesianChart ActualPrimary.h w).2.1 ∈
     Icc (NominalConeAssembly.activeLeft ActualPrimary.nominal)
       (NominalConeAssembly.activeRight ActualPrimary.nominal)}
@@ -1147,7 +1147,7 @@ noncomputable def inner : ℝ :=
   PrimaryTargetBounds.leftRadius ActualPrimary.nominal / 4
 
 /-- Outer, given by `2 * PrimaryTargetBounds.rightRadius ActualPrimary.nominal`. -/
-noncomputable def outer : ℝ :=
+@[expose] noncomputable def outer : ℝ :=
   2 * PrimaryTargetBounds.rightRadius ActualPrimary.nominal
 
 /-- Native domain, given by `HarmonicResidual.liftDomain (ActualInitialization.geometry.domain ∩

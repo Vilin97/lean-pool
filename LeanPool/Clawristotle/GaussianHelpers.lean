@@ -18,7 +18,7 @@ Gaussian normalization, gradient of exponential-quadratic functions,
 integrability, and related analysis lemmas used in Section 3.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 

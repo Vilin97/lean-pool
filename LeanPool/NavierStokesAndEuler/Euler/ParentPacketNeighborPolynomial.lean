@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHistoryPolynomial
 including the normal normalization and the selected terminal datum. The
 small label scale is kept outside this polynomial. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

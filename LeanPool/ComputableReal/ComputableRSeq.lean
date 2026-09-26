@@ -35,7 +35,7 @@ sense. Addition, negation, and multiplication are executable interval arithmetic
 classically and is `noncomputable`.
 -/
 
-@[expose] public section
+public section
 
 namespace QInterval
 
@@ -145,9 +145,9 @@ namespace ComputableℝSeq
 
 open scoped QInterval
 /-- The lower-bound Cauchy sequence of a `ComputableℝSeq`. -/
-def lb (x : ComputableℝSeq) : CauSeq ℚ abs := ⟨fun n ↦ (x.lub n).fst, x.hcl⟩
+@[expose] def lb (x : ComputableℝSeq) : CauSeq ℚ abs := ⟨fun n ↦ (x.lub n).fst, x.hcl⟩
 /-- The upper-bound Cauchy sequence of a `ComputableℝSeq`. -/
-def ub (x : ComputableℝSeq) : CauSeq ℚ abs := ⟨fun n ↦ (x.lub n).snd, x.hcu⟩
+@[expose] def ub (x : ComputableℝSeq) : CauSeq ℚ abs := ⟨fun n ↦ (x.lub n).snd, x.hcu⟩
 
 /-- Get the real value determined by the sequence. (Irreducibly) given here as the limit of
   the lower bound sequence. -/
@@ -195,7 +195,7 @@ theorem val_uniq {x : ℝ} {s : ComputableℝSeq} (hlb : ∀ n, s.lb n ≤ x) (h
   s.val_def ▸ val_uniq' hlb hub s.heq
 
 /-- Make a computable sequence for x from a separate lower and upper bound CauSeq. -/
-def mk (x : ℝ) (lub : ℕ → ℚInterval)
+@[expose] def mk (x : ℝ) (lub : ℕ → ℚInterval)
     (hcl : IsCauSeq abs (fun n ↦ (lub n).fst))
     (hcu : IsCauSeq abs (fun n ↦ (lub n).snd))
     (hlb : ∀ n, (lub n).fst ≤ x)
@@ -236,7 +236,7 @@ instance intCast : IntCast ComputableℝSeq where intCast z := ofRat z
 
 instance ratCast : RatCast ComputableℝSeq where ratCast q := ofRat q
 /-- Addition of computable real sequences. -/
-def add (x : ComputableℝSeq) (y : ComputableℝSeq) : ComputableℝSeq :=
+@[expose] def add (x : ComputableℝSeq) (y : ComputableℝSeq) : ComputableℝSeq :=
   mk (x.val + y.val)
   (fun n ↦ x.lub n + y.lub n)
   (IsCauSeq.add x.hcl y.hcl)
@@ -253,7 +253,7 @@ def add (x : ComputableℝSeq) (y : ComputableℝSeq) : ComputableℝSeq :=
     exact add_le_add (x.hub n) (y.hub n))
   (have := CauSeq.add_equiv_add x.heq y.heq; this) --TODO why does 'inlining' the have not work
 /-- Negation of a computable real sequence. -/
-def neg (x : ComputableℝSeq) : ComputableℝSeq :=
+@[expose] def neg (x : ComputableℝSeq) : ComputableℝSeq :=
   mk (-x.val)
   (fun n ↦ -x.lub n)
   (IsCauSeq.neg x.hcu)
@@ -262,7 +262,7 @@ def neg (x : ComputableℝSeq) : ComputableℝSeq :=
   (fun n ↦ by simpa [lb] using x.hlb n)
   (have := CauSeq.neg_equiv_neg (Setoid.symm x.heq); this)
 /-- Subtraction of computable real sequences. -/
-def sub (x : ComputableℝSeq) (y : ComputableℝSeq) : ComputableℝSeq :=
+@[expose] def sub (x : ComputableℝSeq) (y : ComputableℝSeq) : ComputableℝSeq :=
   add x (neg y)
 
 /-- "Bundled" multiplication to give lower and upper bounds. This bundling avoids the need to
@@ -493,7 +493,7 @@ private noncomputable instance sign_aux_sound (x : ℝ) :
   sign witness terminates exactly when `x ≠ 0` or some interval is the point `0`, so a fuel-free
   executable version cannot be total.) This ends up providing the `DecidableEq` and
   `DecidableLT` instances on `Computableℝ`, which are likewise classical. -/
-noncomputable def sign (x : ComputableℝSeq) : SignType :=
+@[expose] noncomputable def sign (x : ComputableℝSeq) : SignType :=
   SignType.sign x.val
 
 theorem sign_sound (x : ComputableℝSeq) : x.sign = SignType.sign x.val :=
@@ -534,26 +534,27 @@ theorem signWitnessTerm_prop (x : ComputableℝSeq) (n : ℕ) (hnz : x.val ≠ 0
   all_goals
     rify at *; linarith (config := {splitNe := true})
 
+/-- Find a sign witness by searching from index `k`. -/
+def signWitnessFrom (x : ComputableℝSeq) (hnz : x.val ≠ 0) (k : ℕ) :
+    { n // (0 < x.val ∧ 0 < x.lb n) ∨ (x.val < 0 ∧ x.ub n < 0)} :=
+  if hub : x.ub k < 0 then
+    ⟨k, Or.inr ⟨by rify at hub; linarith [x.hub k], hub⟩⟩
+  else if hlb : x.lb k > 0 then
+    ⟨k, Or.inl ⟨by rify at hlb; linarith [x.hlb k], hlb⟩⟩
+  else
+    signWitnessFrom x hnz (k + 1)
+termination_by (x.signWitnessTerm hnz).val.fst - k
+decreasing_by
+  decreasing_with
+  apply Nat.sub_add_lt_sub _ Nat.le.refl
+  exact x.signWitnessTerm_prop k hnz hub hlb
+
 /-- With the proof that x≠0, we can also eventually get a sign witness: a number n such that
     either 0 < x and 0 < lb n; or that x < 0 and ub n < 0. Marking it as irreducible because
     in theory all of the info needed is in the return Subtype. -/
 irreducible_def signWitness (x : ComputableℝSeq) (hnz : x.val ≠ 0) :
     { n // (0 < x.val ∧ 0 < x.lb n) ∨ (x.val < 0 ∧ x.ub n < 0)} :=
-  signWitness_aux 0 hnz where
-  signWitness_aux (k : ℕ) (hnz : x.val ≠ 0) : { n // (0 < x.val ∧ 0 < x.lb n) ∨ (x.val < 0 ∧ x.ub
-    n < 0)}:=
-    if hub : x.ub k < 0 then
-      ⟨k, Or.inr ⟨by rify at hub; linarith [x.hub k], hub⟩⟩
-    else if hlb : x.lb k > 0 then
-      ⟨k, Or.inl ⟨by rify at hlb; linarith [x.hlb k], hlb⟩⟩
-    else
-      signWitness_aux (k+1) hnz
-    termination_by
-      (x.signWitnessTerm hnz).val.fst - k
-    decreasing_by
-    · decreasing_with
-      apply Nat.sub_add_lt_sub _ Nat.le.refl
-      exact x.signWitnessTerm_prop k hnz hub hlb
+  signWitnessFrom x hnz 0
 
 /-- With the proof that x≠0, we get a total comparison function. -/
 def isPos {x : ComputableℝSeq} (hnz : x.val ≠ 0) : Bool :=
@@ -839,7 +840,7 @@ theorem val_safeInv_ne_zero {x : ComputableℝSeq} (hnz : x.val ≠ 0) : (x.safe
   rwa [val_safeInv, ne_eq, inv_eq_zero]
 
 /-- Subtype of sequences with nonzero values. These admit a (terminating) inverse function. -/
-def nzSeq := {x : ComputableℝSeq // x.val ≠ 0}
+@[expose] def nzSeq := {x : ComputableℝSeq // x.val ≠ 0}
 /-- The inverse on the subtype of sequences with nonzero value. -/
 noncomputable def invNz : nzSeq → nzSeq :=
   fun x ↦ ⟨x.val.safeInv x.prop, val_safeInv_ne_zero _⟩

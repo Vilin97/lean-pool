@@ -27,7 +27,7 @@ measure-preserving chart map and then extended by zero from the chart source.
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.h2ToL2`
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

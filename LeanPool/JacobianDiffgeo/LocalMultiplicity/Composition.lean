@@ -29,7 +29,7 @@ import Mathlib.RingTheory.RootsOfUnity.Complex
   `mult F y = 1` (mapping-degree's "critical values are discrete" seed).
 -/
 
-@[expose] public section
+public section
 
 open Filter Set OpenPartialHomeomorph Metric
 open scoped ContDiff Manifold Topology

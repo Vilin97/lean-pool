@@ -41,7 +41,7 @@ Write `relabel σ adj` for `adj` with its vertices renamed along `σ`.  Two stat
   `IsoGraph/Canon/Correct.lean` obtains from the soundness and optimality of the search.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph.Canon
 

@@ -22,7 +22,7 @@ their two endpoint terms and their strictly lower-order source. No matrix
 identity or existence of a transformed system is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -74,9 +74,9 @@ noncomputable def a (h : K) : K := 1 / 2 + h
 /-- D scale, given by `1 / 2 - h`. -/
 noncomputable def dScale (h : K) : K := 1 / 2 - h
 /-- Edge, given by `1 - eta ^ 2`. -/
-noncomputable def edge (eta : K) : K := 1 - eta ^ 2
+@[expose] noncomputable def edge (eta : K) : K := 1 - eta ^ 2
 /-- Ell, given by `1 - 2 * h * eta ^ 2`. -/
-noncomputable def ell (h eta : K) : K := 1 - 2 * h * eta ^ 2
+@[expose] noncomputable def ell (h eta : K) : K := 1 - 2 * h * eta ^ 2
 /-- Angular power, given by `-a h - 1 / 2`. -/
 noncomputable def angularPower (h : K) : K := -a h - 1 / 2
 /-- Axial power, given by `-a h`. -/
@@ -91,25 +91,26 @@ noncomputable def timeValue (h power eta X : K) (j : Jet K) : K :=
 
 /-- Axial value, given by `(2 * eta * power * j.value + edge eta * j.parameter - 2 * eta * X *
 j.radial) / ell h eta`. -/
-noncomputable def axialValue (h power eta X : K) (j : Jet K) : K :=
+@[expose] noncomputable def axialValue (h power eta X : K) (j : Jet K) : K :=
   (2 * eta * power * j.value + edge eta * j.parameter - 2 * eta * X * j.radial) / ell h eta
 
 /-- The quotient `V_n/X` obtained from (21) with `Ubar_n=U_n+K_n`. -/
-noncomputable def betaValue (h lam eta : K) (u k : Jet K) : K :=
+@[expose] noncomputable def betaValue (h lam eta : K) (u k : Jet K) : K :=
   (2 * eta * (a h - lam) * u.value - 2 * eta * (dScale h + lam) * k.value -
     edge eta * (u.parameter + k.parameter)) / ell h eta
 
 /-- Pressure source, given by `inverseSquare C * s.pressureProduct - s.omegaQuotient / 2`. -/
-noncomputable def pressureSource (C : K) (s : SourceJet K) : K :=
+@[expose] noncomputable def pressureSource (C : K) (s : SourceJet K) : K :=
   inverseSquare C * s.pressureProduct - s.omegaQuotient / 2
 
 /-- Pressure value, given by `2 * inverseSquare C * b.phi.value * phi.value + pressureSource C
 s`. -/
-noncomputable def pressureValue (C : K) (b : BaseJet K) (s : SourceJet K) (phi : Jet K) : K :=
+@[expose] noncomputable def pressureValue (C : K) (b : BaseJet K) (s : SourceJet K)
+    (phi : Jet K) : K :=
   2 * inverseSquare C * b.phi.value * phi.value + pressureSource C s
 
 /-- Angular RHS, constructed using `timeValue`. -/
-noncomputable def angularRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
+@[expose] noncomputable def angularRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
     (phi u k : Jet K) : K :=
   timeValue h (angularPower h + lam) eta X phi +
   b.beta * (X * phi.radial + phi.value) +
@@ -118,7 +119,7 @@ noncomputable def angularRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
   u.value * axialValue h (angularPower h) eta X b.phi + s.angular
 
 /-- Axial RHS, constructed using `timeValue`. -/
-noncomputable def axialRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
+@[expose] noncomputable def axialRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
     (_phi u k p : Jet K) : K :=
   timeValue h (axialPower h + lam) eta X u + b.beta * X * u.radial +
   betaValue h lam eta u k * X * b.axial.radial +
@@ -128,7 +129,7 @@ noncomputable def axialRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
 
 /-- The four equations remaining after the first two components of W have
 been defined as radial derivatives. These are the expanded (21)--(22). -/
-def ExpandedEquations (h lam C eta X : K) (b : BaseJet K) (s : SourceJet K)
+@[expose] def ExpandedEquations (h lam C eta X : K) (b : BaseJet K) (s : SourceJet K)
     (phi u k p : Jet K) : Prop :=
   X * (u.radial + k.radial) + k.value = 0 ∧
   p.radial = pressureValue C b s phi ∧
@@ -136,11 +137,11 @@ def ExpandedEquations (h lam C eta X : K) (b : BaseJet K) (s : SourceJet K)
   2 * (X * u.radial2 + u.radial) = axialRHS h lam eta X b s phi u k p
 
 /-- Diagonal, given by `![0, 0, 2, 0, 3, 1]`. -/
-noncomputable def diagonal : Fin 6 → K := ![0, 0, 2, 0, 3, 1]
+@[expose] noncomputable def diagonal : Fin 6 → K := ![0, 0, 2, 0, 3, 1]
 
 /-- Jet vector, given by `![phi.value, u.value, k.value, p.value, 2 * r * phi.radial, 2 * r *
 u.radial]`. -/
-noncomputable def jetVector (r : K) (phi u k p : Jet K) : Fin 6 → K :=
+@[expose] noncomputable def jetVector (r : K) (phi u k p : Jet K) : Fin 6 → K :=
   ![phi.value, u.value, k.value, p.value, 2 * r * phi.radial, 2 * r * u.radial]
 
 /-- Radial jet vector as an element of `Fin 6 → K`. -/
@@ -154,7 +155,7 @@ noncomputable def parameterJetVector (phi u k p : Jet K) (q₄ q₅ : K) : Fin 6
   ![phi.parameter, u.parameter, k.parameter, p.parameter, q₄, q₅]
 
 /-- A0 as an element of `Matrix (Fin 6) (Fin 6) K`. -/
-noncomputable def A0 (h lam C r eta : K) (b : BaseJet K) : Matrix (Fin 6) (Fin 6) K :=
+@[expose] noncomputable def A0 (h lam C r eta : K) (b : BaseJet K) : Matrix (Fin 6) (Fin 6) K :=
   let M := 1 - 2 * eta * b.axial.value
   let R := M / ell h eta + b.beta
   let Gphi := r ^ 2 * b.phi.radial + b.phi.value
@@ -175,7 +176,7 @@ noncomputable def A0 (h lam C r eta : K) (b : BaseJet K) : Matrix (Fin 6) (Fin 6
        4 * eta * (-2 * a h + lam) / ell h eta, 0, r * R]
 
 /-- A1 as an element of `Matrix (Fin 6) (Fin 6) K`. -/
-noncomputable def A1 (h r eta : K) (b : BaseJet K) : Matrix (Fin 6) (Fin 6) K :=
+@[expose] noncomputable def A1 (h r eta : K) (b : BaseJet K) : Matrix (Fin 6) (Fin 6) K :=
   let H := dScale h * eta + edge eta * b.axial.value
   let Gphi := r ^ 2 * b.phi.radial + b.phi.value
   let Gu := r ^ 2 * b.axial.radial
@@ -196,9 +197,23 @@ noncomputable def forcing (h C r eta : K) (s : SourceJet K) : Fin 6 → K :=
 
 /-- Matrix RHS, given by `(A0 h lam C r eta b).mulVec w + (A1 h r eta b).mulVec v + forcing h C
 r eta s`. -/
-noncomputable def matrixRHS (h lam C r eta : K) (b : BaseJet K) (s : SourceJet K)
+@[expose] noncomputable def matrixRHS (h lam C r eta : K) (b : BaseJet K) (s : SourceJet K)
     (w v : Fin 6 → K) : Fin 6 → K :=
   (A0 h lam C r eta b).mulVec w + (A1 h r eta b).mulVec v + forcing h C r eta s
+
+omit [CharZero K] in
+theorem matrixRHS_zero (h lam C r eta : K) (b : BaseJet K) (s : SourceJet K)
+    (w v : Fin 6 → K) : matrixRHS h lam C r eta b s w v 0 = w 4 := by
+  change dotProduct (![0, 0, 0, 0, 1, 0] : Fin 6 → K) w +
+    dotProduct (![0, 0, 0, 0, 0, 0] : Fin 6 → K) v + 0 = w 4
+  simp [dotProduct, Fin.sum_univ_succ]
+
+omit [CharZero K] in
+theorem matrixRHS_one (h lam C r eta : K) (b : BaseJet K) (s : SourceJet K)
+    (w v : Fin 6 → K) : matrixRHS h lam C r eta b s w v 1 = w 5 := by
+  change dotProduct (![0, 0, 0, 0, 0, 1] : Fin 6 → K) w +
+    dotProduct (![0, 0, 0, 0, 0, 0] : Fin 6 → K) v + 0 = w 5
+  simp [dotProduct, Fin.sum_univ_succ]
 
 /-- Jet system as an element of `Prop`. -/
 def JetSystem (h lam C r eta : K) (b : BaseJet K) (s : SourceJet K)
@@ -319,14 +334,14 @@ theorem jetSystem_iff_expanded {h lam C r eta : K} (hr : r ≠ 0)
 
 
 /-- Slow exponent at order `n`. -/
-noncomputable def slowPower (h : K) (n : ℕ) : K := 2 * (n : K) * h
+@[expose] noncomputable def slowPower (h : K) (n : ℕ) : K := 2 * (n : K) * h
 
 /-- The coefficient of a Cauchy product at the indicated order. -/
-noncomputable def convolution (n : ℕ) (F : ℕ → ℕ → K) : K :=
+@[expose] noncomputable def convolution (n : ℕ) (F : ℕ → ℕ → K) : K :=
   ∑ i ∈ Finset.range (n + 1), F i (n - i)
 
 /-- Both indices in this sum are strictly below a positive order `n`. -/
-noncomputable def lowerConvolution (n : ℕ) (F : ℕ → ℕ → K) : K :=
+@[expose] noncomputable def lowerConvolution (n : ℕ) (F : ℕ → ℕ → K) : K :=
   ∑ i ∈ Finset.range (n - 1), F (i + 1) (n - (i + 1))
 
 omit [CharZero K] in
@@ -356,14 +371,14 @@ theorem lowerConvolution_congr {n : ℕ} {F G : ℕ → ℕ → K}
 
 /-- Angular convection, given by `beta i * (X * (phi j).radial + (phi j).value) + (u i).value *
 axialValue h (angularPower h + slowPower h j) eta X (phi j)`. -/
-noncomputable def angularConvection (h eta X : K) (phi u : ℕ → Jet K)
+@[expose] noncomputable def angularConvection (h eta X : K) (phi u : ℕ → Jet K)
     (beta : ℕ → K) (i j : ℕ) : K :=
   beta i * (X * (phi j).radial + (phi j).value) +
     (u i).value * axialValue h (angularPower h + slowPower h j) eta X (phi j)
 
 /-- Axial convection, given by `beta i * X * (u j).radial + (u i).value * axialValue h
 (axialPower h + slowPower h j) eta X (u j)`. -/
-noncomputable def axialConvection (h eta X : K) (u : ℕ → Jet K)
+@[expose] noncomputable def axialConvection (h eta X : K) (u : ℕ → Jet K)
     (beta : ℕ → K) (i j : ℕ) : K :=
   beta i * X * (u j).radial +
     (u i).value * axialValue h (axialPower h + slowPower h j) eta X (u j)
@@ -371,7 +386,7 @@ noncomputable def axialConvection (h eta X : K) (u : ℕ → Jet K)
 /-- The known functions supplied here are exactly the previous-order axial
 viscosities and the smooth extension of the previous radial residual divided
 by `X`; no current-order unknown occurs in this source. -/
-noncomputable def lowerSource (h eta X : K) (n : ℕ) (phi u : ℕ → Jet K)
+@[expose] noncomputable def lowerSource (h eta X : K) (n : ℕ) (phi u : ℕ → Jet K)
     (beta : ℕ → K) (previousAngularDiffusion previousAxialDiffusion omegaQuotient : K) :
     SourceJet K where
   angular := lowerConvolution n (angularConvection h eta X phi u beta) - previousAngularDiffusion
@@ -380,7 +395,7 @@ noncomputable def lowerSource (h eta X : K) (n : ℕ) (phi u : ℕ → Jet K)
   omegaQuotient := omegaQuotient
 
 /-- Base at order zero, given by `⟨phi 0, u 0, beta 0⟩`. -/
-noncomputable def baseAtOrderZero (phi u : ℕ → Jet K) (beta : ℕ → K) : BaseJet K :=
+@[expose] noncomputable def baseAtOrderZero (phi u : ℕ → Jet K) (beta : ℕ → K) : BaseJet K :=
   ⟨phi 0, u 0, beta 0⟩
 
 /-- The beta formula is precisely (21), with `Ubar=U+K`. -/
@@ -449,7 +464,7 @@ theorem pressureValue_eq_convolution (h C eta X : K) {n : ℕ} (hn : 0 < n)
 /-- Positive-order equations (22) before extraction of the endpoint terms.
 The average relation is the derivative of `X Ubar = ∫₀ˣ U`, with `K=Ubar-U`.
 The beta hypothesis in the equivalence below is the second identity of (21). -/
-def PositiveOrderEquations (h C eta X : K) (n : ℕ) (phi u : ℕ → Jet K)
+@[expose] def PositiveOrderEquations (h C eta X : K) (n : ℕ) (phi u : ℕ → Jet K)
     (beta : ℕ → K) (k p : Jet K)
     (previousAngularDiffusion previousAxialDiffusion omegaQuotient : K) : Prop :=
   X * ((u n).radial + k.radial) + k.value = 0 ∧
@@ -499,14 +514,14 @@ section ActualProfiles
 open SimilarityProfile
 
 /-- Jets here are actual Fréchet partial derivatives of real profiles. -/
-noncomputable def actualJet (f : InnerProfile) (w : InnerPoint) : Jet ℝ :=
+@[expose] noncomputable def actualJet (f : InnerProfile) (w : InnerPoint) : Jet ℝ :=
   ⟨f w, partialX f w, partialX (partialX f) w, partialEta f w⟩
 
 theorem timeValue_actualJet (h b : ℝ) (f : InnerProfile) (w : InnerPoint) :
-    timeValue h b w.2 w.1 (actualJet f w) = T h b f w := rfl
+    timeValue h b w.2 w.1 (actualJet f w) = T h b f w := by rfl
 
 theorem axialValue_actualJet (h b : ℝ) (f : InnerProfile) (w : InnerPoint) :
-    axialValue h b w.2 w.1 (actualJet f w) = Z h b f w := rfl
+    axialValue h b w.2 w.1 (actualJet f w) = Z h b f w := by rfl
 
 theorem partialX_contDiffAt {f : InnerProfile} {w : InnerPoint}
     (hf : ContDiffAt ℝ 2 f w) : ContDiffAt ℝ 1 (partialX f) w := by
@@ -540,7 +555,7 @@ theorem hasDerivAt_squareProfile_radial {f : InnerProfile} {r eta : ℝ}
 
 /-- Profile vector, given by `jetVector r (actualJet phi (r ^ 2, eta)) (actualJet u (r ^ 2,
 eta)) (actualJet k (r ^ 2, eta)) (actualJet p (r ^ 2, eta))`. -/
-noncomputable def profileVector (phi u k p : InnerProfile) (r eta : ℝ) : Fin 6 → ℝ :=
+@[expose] noncomputable def profileVector (phi u k p : InnerProfile) (r eta : ℝ) : Fin 6 → ℝ :=
   jetVector r (actualJet phi (r ^ 2, eta)) (actualJet u (r ^ 2, eta))
     (actualJet k (r ^ 2, eta)) (actualJet p (r ^ 2, eta))
 
@@ -580,7 +595,7 @@ theorem profileVector_parameter {phi u k p : InnerProfile} {r eta : ℝ}
 
 /-- The displayed first-order system uses actual derivatives of the actual
 profiles, not independent formal jet variables. -/
-def ProfileSystem (h lam C r eta : ℝ) (b : BaseJet ℝ) (s : SourceJet ℝ)
+@[expose] def ProfileSystem (h lam C r eta : ℝ) (b : BaseJet ℝ) (s : SourceJet ℝ)
     (phi u k p : InnerProfile) : Prop :=
   (fun i => deriv (fun q => profileVector phi u k p q eta i) r +
     diagonal i / r * profileVector phi u k p r eta i) =
@@ -608,6 +623,7 @@ theorem profileSystem_iff_expanded {h lam C r eta : ℝ} (hr : r ≠ 0)
 
 /-- The preceding axial viscosity uses the actual similarity operator twice.
 The negative-order term at order zero is zero. -/
+@[expose]
 noncomputable def precedingDiffusion (h power : ℝ) (F : ℕ → InnerProfile) (n : ℕ) : InnerProfile :=
   if n = 0 then fun _ => 0 else
     Z h (power + slowPower h (n - 1) - dScale h)
@@ -622,7 +638,7 @@ theorem precedingDiffusion_congr (h power : ℝ) {F G : ℕ → InnerProfile} {n
 
 /-- Fully specified source from lower-order profile jets and a supplied
 regular representative of the preceding `Ω/X`. -/
-noncomputable def actualLowerSource (h : ℝ) (n : ℕ) (phi u beta : ℕ → InnerProfile)
+@[expose] noncomputable def actualLowerSource (h : ℝ) (n : ℕ) (phi u beta : ℕ → InnerProfile)
     (omegaQuotient : InnerProfile) (w : InnerPoint) : SourceJet ℝ :=
   lowerSource h w.2 w.1 n (fun j => actualJet (phi j) w) (fun j => actualJet (u j) w)
     (fun j => beta j w) (precedingDiffusion h (angularPower h) phi n w)
@@ -812,24 +828,24 @@ abbrev CoefficientData := Fin 11 → ℝ × ℂ → ℂ
 
 /-- Coefficient base, given by `⟨⟨F 0 (X, z), F 1 (X, z), 0, F 2 (X, z)⟩, ⟨F 3 (X, z), F 4 (X,
 z), 0, F 5 (X, z)⟩, F 6 (X, z)⟩`. -/
-noncomputable def coefficientBase (F : CoefficientData) (X : ℝ) (z : ℂ) : BaseJet ℂ :=
+@[expose] noncomputable def coefficientBase (F : CoefficientData) (X : ℝ) (z : ℂ) : BaseJet ℂ :=
   ⟨⟨F 0 (X, z), F 1 (X, z), 0, F 2 (X, z)⟩,
     ⟨F 3 (X, z), F 4 (X, z), 0, F 5 (X, z)⟩, F 6 (X, z)⟩
 
 /-- Coefficient source, given by `⟨F 7 (X, z), F 8 (X, z), F 9 (X, z), F 10 (X, z)⟩`. -/
-noncomputable def coefficientSource (F : CoefficientData) (X : ℝ) (z : ℂ) : SourceJet ℂ :=
+@[expose] noncomputable def coefficientSource (F : CoefficientData) (X : ℝ) (z : ℂ) : SourceJet ℂ :=
   ⟨F 7 (X, z), F 8 (X, z), F 9 (X, z), F 10 (X, z)⟩
 
 /-- Coefficient0, defined pointwise by `A0 h lam C (r : ℂ) z (coefficientBase F (r ^ 2) z)`. -/
-noncomputable def coefficient0 (h lam C : ℂ) (F : CoefficientData) : Coeff :=
+@[expose] noncomputable def coefficient0 (h lam C : ℂ) (F : CoefficientData) : Coeff :=
   fun r z => A0 h lam C (r : ℂ) z (coefficientBase F (r ^ 2) z)
 
 /-- Coefficient1, defined pointwise by `A1 h (r : ℂ) z (coefficientBase F (r ^ 2) z)`. -/
-noncomputable def coefficient1 (h : ℂ) (F : CoefficientData) : Coeff :=
+@[expose] noncomputable def coefficient1 (h : ℂ) (F : CoefficientData) : Coeff :=
   fun r z => A1 h (r : ℂ) z (coefficientBase F (r ^ 2) z)
 
 /-- Source field, defined pointwise by `forcing h C (r : ℂ) z (coefficientSource F (r ^ 2) z)`. -/
-noncomputable def sourceField (h C : ℂ) (F : CoefficientData) : Field :=
+@[expose] noncomputable def sourceField (h C : ℂ) (F : CoefficientData) : Field :=
   fun r z => forcing h C (r : ℂ) z (coefficientSource F (r ^ 2) z)
 
 theorem coefficient1_shape (h : ℂ) (F : CoefficientData) :
@@ -1120,15 +1136,15 @@ section RealOutput
 open VolterraAnalyticBounds
 
 /-- Complex jet, given by `⟨j.value, j.radial, j.radial2, j.parameter⟩`. -/
-noncomputable def complexJet (j : Jet ℝ) : Jet ℂ :=
+@[expose] noncomputable def complexJet (j : Jet ℝ) : Jet ℂ :=
   ⟨j.value, j.radial, j.radial2, j.parameter⟩
 
 /-- Complex base, given by `⟨complexJet b.phi, complexJet b.axial, b.beta⟩`. -/
-noncomputable def complexBase (b : BaseJet ℝ) : BaseJet ℂ :=
+@[expose] noncomputable def complexBase (b : BaseJet ℝ) : BaseJet ℂ :=
   ⟨complexJet b.phi, complexJet b.axial, b.beta⟩
 
 /-- Complex source, given by `⟨s.angular, s.axial, s.pressureProduct, s.omegaQuotient⟩`. -/
-noncomputable def complexSource (s : SourceJet ℝ) : SourceJet ℂ :=
+@[expose] noncomputable def complexSource (s : SourceJet ℝ) : SourceJet ℂ :=
   ⟨s.angular, s.axial, s.pressureProduct, s.omegaQuotient⟩
 
 theorem A0_ofReal (h lam C r eta : ℝ) (b : BaseJet ℝ) :
@@ -1177,7 +1193,7 @@ theorem matrixRHS_realPart (h lam C r eta : ℝ) (b : BaseJet ℝ) (s : SourceJe
   simp [Matrix.mulVec, dotProduct, Matrix.map, Complex.mul_re]
 
 /-- Real trace, given by `(W r (eta : ℂ) i).re`. -/
-noncomputable def realTrace (W : Field) (r eta : ℝ) (i : Fin 6) : ℝ :=
+@[expose] noncomputable def realTrace (W : Field) (r eta : ℝ) (i : Fin 6) : ℝ :=
   (W r (eta : ℂ) i).re
 
 /-- A complex solution with real coefficients yields a real solution by

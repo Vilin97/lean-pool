@@ -18,7 +18,7 @@ All jets below remain actual Fréchet derivatives. The operations preserve
 their genuine L² classes and continuity in an external parameter.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,12 +32,12 @@ variable {V W : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
   [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 /-- Jet postcompose, given by `compContinuousMultilinearMapL ℝ (fun _ : Fin n => Space) V W L`. -/
-def jetPostcompose (L : V →L[ℝ] W) (n : ℕ) :
+@[expose] def jetPostcompose (L : V →L[ℝ] W) (n : ℕ) :
     (Space [×n]→L[ℝ] V) →L[ℝ] (Space [×n]→L[ℝ] W) :=
   compContinuousMultilinearMapL ℝ (fun _ : Fin n => Space) V W L
 
 /-- Map field, bundling `field`, `smooth`, `integrable`. -/
-def mapField (L : V →L[ℝ] W) (A : SmoothL2Field V) : SmoothL2Field W where
+@[expose] def mapField (L : V →L[ℝ] W) (A : SmoothL2Field V) : SmoothL2Field W where
   field := L ∘ A.field
   smooth := L.contDiff.comp A.smooth
   integrable n := (jetPostcompose L n).comp_memLp' (A.integrable n) |>.ae_eq
@@ -45,7 +45,7 @@ def mapField (L : V →L[ℝ] W) (A : SmoothL2Field V) : SmoothL2Field W where
         simp)).symm))
 
 @[simp] theorem mapField_field (L : V →L[ℝ] W) (A : SmoothL2Field V) (x : Space) :
-    (mapField L A).field x = L (A.field x) := rfl
+    (mapField L A).field x = L (A.field x) := by rfl
 
 theorem toLp_mapField (L : V →L[ℝ] W) (A : SmoothL2Field V) :
     (mapField L A).toLp = L.compLpL 2 volume A.toLp := by
@@ -70,7 +70,7 @@ def addField (A B : SmoothL2Field V) : SmoothL2Field V where
       (A.smooth.contDiffAt.of_le (by simp)) (B.smooth.contDiffAt.of_le (by simp))).symm))
 
 @[simp] theorem addField_field (A B : SmoothL2Field V) (x : Space) :
-    (addField A B).field x = A.field x+B.field x := rfl
+    (addField A B).field x = A.field x+B.field x := by rfl
 
 theorem toLp_addField (A B : SmoothL2Field V) : (addField A B).toLp = A.toLp+B.toLp := by
   apply Lp.ext
@@ -114,11 +114,11 @@ theorem jetLp_derivative (A : SmoothL2Field V) (n : ℕ) :
   exact ((continuousMultilinearCurryRightEquiv' ℝ n Space V).apply_symm_apply _).symm
 
 /-- Directional field, given by `mapField (ContinuousLinearMap.apply ℝ V v) A.derivative`. -/
-def directionalField (A : SmoothL2Field V) (v : Space) : SmoothL2Field V :=
+@[expose] def directionalField (A : SmoothL2Field V) (v : Space) : SmoothL2Field V :=
   mapField (ContinuousLinearMap.apply ℝ V v) A.derivative
 
 @[simp] theorem directionalField_field (A : SmoothL2Field V) (v x : Space) :
-    (directionalField A v).field x = fderiv ℝ A.field x v := rfl
+    (directionalField A v).field x = fderiv ℝ A.field x v := by rfl
 
 theorem toLp_eq_jet_zero (A : SmoothL2Field V) :
     A.toLp = (continuousMultilinearCurryFin0 ℝ Space

@@ -79,7 +79,7 @@ existential.
   crosscut with no hypothesis left standing, and certifies that `HasArcCollars` is satisfiable.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 

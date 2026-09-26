@@ -45,7 +45,7 @@ import Mathlib.Data.Set.Lattice.Order
 # MatchingLogic.Sorted
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 namespace Sorted
@@ -110,21 +110,21 @@ abbrev MVal (M : MModel S) (Var : Type) : Type := (s : S.Srt) → Var → M.carr
 /-- Updating a sorted valuation at one variable of one sort.  This is the only
 place the sort indexing costs anything: the new value has sort `s'`, so it can
 only be installed at sort `s'`, and the equality has to be transported. -/
-noncomputable def mupdate (M : MModel S) (ρ : MVal M Var) (s' : S.Srt) (x : Var)
+@[expose] noncomputable def mupdate (M : MModel S) (ρ : MVal M Var) (s' : S.Srt) (x : Var)
     (a : M.carrier s') : MVal M Var :=
   letI := Classical.decEq S.Srt
   letI := Classical.decEq Var
   fun t y => if y = x then (if ht : t = s' then ht ▸ a else ρ t y) else ρ t y
 
 /-- The pointwise extension of a symbol, at its sorts. -/
-def MModel.app (M : MModel S) (σ : S.Sym)
+@[expose] def MModel.app (M : MModel S) (σ : S.Sym)
     (A : (i : Fin (S.arity σ)) → Set (M.carrier (S.argSort σ i))) :
     Set (M.carrier (S.resSort σ)) :=
   {u | ∃ a : (i : Fin (S.arity σ)) → M.carrier (S.argSort σ i),
         (∀ i, a i ∈ A i) ∧ u ∈ M.interp σ a}
 
 /-- The denotation, sort by sort. -/
-noncomputable def mdenote (M : MModel S) (ρ : MVal M Var) :
+@[expose] noncomputable def mdenote (M : MModel S) (ρ : MVal M Var) :
     {s : S.Srt} → MPattern S Var s → Set (M.carrier s)
   | _, .var x s => {ρ s x}
   | _, .bot => ∅
@@ -152,7 +152,7 @@ theorem MModel.app_eq_empty (M : MModel S) (σ : S.Sym)
   exact hi
 
 /-- `M ⊨ φ`: `φ` is total at its own sort under every valuation. -/
-def MModel.Sat (M : MModel S) {s : S.Srt} (φ : MPattern S Var s) : Prop :=
+@[expose] def MModel.Sat (M : MModel S) {s : S.Srt} (φ : MPattern S Var s) : Prop :=
   ∀ ρ : MVal M Var, mdenote M ρ φ = Set.univ
 
 /-- `M ⊨ Γ` for a HETEROGENEOUS theory: a set of sorted patterns, each total at
@@ -166,7 +166,7 @@ def MModel.SatSetHet (M : MModel S)
 what Proposition 30 needs, since its `Γ` is a singleton of sort `a`.  It is a
 special case of `SatSetHet`, not a different notion — `satSetHet_homogeneous`
 below records that. -/
-def MModel.SatSet (M : MModel S) {s : S.Srt} (Γ : Set (MPattern S Var s)) : Prop :=
+@[expose] def MModel.SatSet (M : MModel S) {s : S.Srt} (Γ : Set (MPattern S Var s)) : Prop :=
   ∀ γ ∈ Γ, M.Sat γ
 
 /-- The homogeneous notion is the heterogeneous one restricted to a single
@@ -184,7 +184,7 @@ theorem satSetHet_homogeneous (M : MModel S) {s : S.Srt}
 
 /-- `Γ ⊨ φ`, where `Γ` and `φ` may live at DIFFERENT sorts -- which is exactly
 the situation Proposition 30 exploits. -/
-def MGlobalCons {sΓ sφ : S.Srt} (Γ : Set (MPattern S Var sΓ))
+@[expose] def MGlobalCons {sΓ sφ : S.Srt} (Γ : Set (MPattern S Var sΓ))
     (φ : MPattern S Var sφ) : Prop :=
   ∀ M : MModel S, M.SatSet Γ → M.Sat φ
 

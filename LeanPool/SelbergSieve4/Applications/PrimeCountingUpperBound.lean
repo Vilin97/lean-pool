@@ -20,7 +20,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 # LeanPool.SelbergSieve4.Applications.PrimeCountingUpperBound
 -/
 
-@[expose] public section
+public section
 
 open scoped Nat Nat.Prime ArithmeticFunction.zeta ArithmeticFunction.Moebius
 open scoped ArithmeticFunction.omega BigOperators

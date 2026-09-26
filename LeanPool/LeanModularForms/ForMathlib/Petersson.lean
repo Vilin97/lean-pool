@@ -17,7 +17,7 @@ with `[Γ.HasDetOne]`, whereas the rest of this project still works with a
 `Γ : Subgroup SL(2, ℤ)`.  We provide thin wrappers that translate the SL version into the GL one.
 -/
 
-@[expose] public section
+public section
 
 open ModularForm Complex UpperHalfPlane MatrixGroups
 

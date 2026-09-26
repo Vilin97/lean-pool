@@ -36,7 +36,7 @@ polarity bounds `(Pos (r₂.not), Neg (r₂.not))`, so the engine maintains the 
 the endpoint's `(Pos r₁ ∩ Pos r₂, Neg r₁ ∩ Neg r₂)`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

@@ -20,7 +20,7 @@ section
 radius controlled by the same fixed parent polynomial. Its genuine geometric
 propagator constant is retained, without replacing the growth profile. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -156,7 +156,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

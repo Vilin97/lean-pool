@@ -64,7 +64,7 @@ for the two right germs, and there the missing second sign is exactly what "`s/t
 `Plane.exists_germ_threshold` supplies it, with an explicit threshold.
 -/
 
-@[expose] public section
+public section
 
 open Set
 
@@ -78,7 +78,7 @@ variable {u w d d₁ d₂ r₁ r₂ v : Plane} {r t s : ℝ}
 
 /-- A *direction* is a unit vector. Only the ray a direction spans ever matters below, but
 normalising to unit length gives a canonical representative of that ray. -/
-def IsDirection (u : Plane) : Prop := ‖u‖ = 1
+@[expose] def IsDirection (u : Plane) : Prop := ‖u‖ = 1
 
 theorem IsDirection.ne_zero (hu : IsDirection u) : u ≠ 0 := by
   intro h
@@ -88,7 +88,7 @@ theorem IsDirection.ne_zero (hu : IsDirection u) : u ≠ 0 := by
 theorem IsDirection.norm (hu : IsDirection u) : ‖u‖ = 1 := hu
 
 /-- The unit vector along a nonzero vector. -/
-noncomputable def dir (u : Plane) : Plane := ‖u‖⁻¹ • u
+@[expose] noncomputable def dir (u : Plane) : Plane := ‖u‖⁻¹ • u
 
 theorem isDirection_dir (hu : u ≠ 0) : IsDirection (dir u) := by
   have hpos : 0 < ‖u‖ := norm_pos_iff.2 hu
@@ -137,7 +137,7 @@ theorem det_ne_zero_iff (hu : IsDirection u) (hw : IsDirection w) :
 A nonzero `d` lies on it when at least two of the three consecutive orientation forms of the
 triple `(u, d, w)` are positive. The definition is a cyclic condition, so it is correct for the
 short arc and for the long arc alike, with no hypothesis on the sign of `det u w`. -/
-def arcCCW (u w : Plane) : Set Plane :=
+@[expose] def arcCCW (u w : Plane) : Set Plane :=
   {d | (0 < det u d ∧ 0 < det d w) ∨ (0 < det d w ∧ 0 < det w u) ∨ (0 < det w u ∧ 0 < det u d)}
 
 /-- Fix the orientation by `0 < det u w`, so that `w` is counterclockwise of `u` by less than a

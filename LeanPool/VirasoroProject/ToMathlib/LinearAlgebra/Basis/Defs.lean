@@ -11,8 +11,9 @@ public import Mathlib.LinearAlgebra.Basis.Defs
 # LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.Defs
 -/
 
-@[expose] public section
+public section
 
 /-- Standard basis of the space of finitely supported functions. -/
-noncomputable def Finsupp.basisFun (X R : Type*) [Semiring R] : Module.Basis X R (X →₀ R) where
+@[expose] noncomputable def Finsupp.basisFun (X R : Type*) [Semiring R] :
+    Module.Basis X R (X →₀ R) where
   repr := (LinearEquiv.refl _ _)

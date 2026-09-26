@@ -15,7 +15,7 @@ The finite-jet estimates are local in the slow variables. The radial
 frequency is finally specialized to the actual manuscript exponent.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

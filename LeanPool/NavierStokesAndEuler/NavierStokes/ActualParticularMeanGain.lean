@@ -16,7 +16,7 @@ common assembly below is independent of a signed family or any signed
 output estimate.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

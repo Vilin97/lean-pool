@@ -20,7 +20,7 @@ The actual scalar ODE gives the needed uniform logarithmic growth bound;
 there is no separate post-target growth hypothesis.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -50,7 +50,7 @@ Each piece of the search respects `≈`:
   the discreteness at the leaves.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon
@@ -2295,7 +2295,7 @@ theorem fragStart_eq {n : Nat} {p : Part} {c : Nat} {cnt ks sizes : Array Nat}
   rw [fragStart, hs, key]
 
 /-- The partition carried by the cell loop's state. -/
-def SplitState.part (st : SplitState) : Part :=
+@[expose] def SplitState.part (st : SplitState) : Part :=
   { lab := st.lab, pos := st.pos, cst := st.cst, cen := st.cen }
 
 /-- **What splitting one cell does.**  Outside the cell `[c, cen[c])` nothing moves; inside, each
@@ -2573,11 +2573,11 @@ kernel should never be asked to do. -/
 
 theorem part_mk (lab pos cst cen : Array Nat) (inW : Array Bool) (tr : UInt64) (bc : Array Nat) :
     (SplitState.mk lab pos cst cen inW tr bc).part
-      = { lab := lab, pos := pos, cst := cst, cen := cen } := rfl
+      = { lab := lab, pos := pos, cst := cst, cen := cen } := by rfl
 
 theorem part_update (st : SplitState) (inW : Array Bool) (tr : UInt64) (bc : Array Nat) :
     ({ lab := st.lab, pos := st.pos, cst := st.cst, cen := st.cen, inW, tr, bc } :
-      SplitState).part = st.part := rfl
+      SplitState).part = st.part := by rfl
 
 /-- A singleton cell: only the trace hash moves. -/
 theorem splitCell_eq_singleton {cnt : Array Nat} {c : Nat} {st : SplitState}
@@ -4468,6 +4468,7 @@ here, stated with the intermediates named by `orbRefresh` and `unwind`.  Proofs 
 ever use these, never the definitions. -/
 
 /-- The orbit cache of `dfsChildren`, refreshed if new generators have turned up. -/
+@[expose]
 def orbRefresh (G : Graph) (path : Array Nat) (processed : Array Nat) (orb : Orbits) (st : St) :
     Orbits :=
   if orb.nGens == st.autos.size then orb
@@ -4476,7 +4477,7 @@ def orbRefresh (G : Graph) (path : Array Nat) (processed : Array Nat) (orb : Orb
     { nGens := st.autos.size, gens, mark := orbitClosure G.n gens processed }
 
 /-- Absorb a backjump request aimed at this depth. -/
-def unwind (path : Array Nat) (st : St) : St :=
+@[expose] def unwind (path : Array Nat) (st : St) : St :=
   match st.abortTo with
   | some k => if k ≥ path.size then { st with abortTo := none } else st
   | none => st
@@ -4777,7 +4778,10 @@ theorem canonical_ok (n : Nat) (f : Nat → Nat → Bool) :
     | some b =>
       have hbo := hst.1 b hb
       exact ⟨hbo.size, hbo.lt, hbo.inj, hbo.cert⟩
-  exact key _ (dfsNode_ok n f _ _ _ _ _ (initialRefine_wf f) ⟨by simp, by simp⟩)
+  exact key _ (dfsNode_ok n f _ _ _ _
+    { best := none, first := none, autos := #[], nodes := 0, abortTo := none }
+    (initialRefine_wf f)
+    (by simp [StOk]))
 
 theorem canonical_cert (n : Nat) (f : Nat → Nat → Bool) :
     (canonical (Graph.ofOracle n f)).cert

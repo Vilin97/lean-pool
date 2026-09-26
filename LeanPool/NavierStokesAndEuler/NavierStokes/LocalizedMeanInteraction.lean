@@ -17,7 +17,7 @@ Outside that patch the wave coefficients have zero germs, which force
 the actual mean interaction to have a zero germ as well.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

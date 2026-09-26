@@ -20,7 +20,7 @@ section
 
 /-! Exact scalar homogeneity of the constructed history and forward paths. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -120,7 +120,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

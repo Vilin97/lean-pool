@@ -16,11 +16,12 @@ permission. This port retains the coordinate basis and reconstruction facts
 needed to state coordinate weak derivatives, under the `CKN` namespace.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 
 /-- The `i`th coordinate basis vector in the native ambient space. -/
+@[expose]
 def basisVec {d : ℕ} (i : Fin d) : Vec d :=
   Pi.single i (1 : ℝ)
 

@@ -20,7 +20,7 @@ This file contains some basic results on the inner product space on finite dimen
 
 -/
 
-@[expose] public section
+public section
 
 
 open scoped TensorProduct
@@ -100,7 +100,7 @@ A lemma that states the inner product of two direct sum matrices is the sum of t
   of their components. -/
 theorem inner_pi_eq_sum [∀ i, (ψ i).IsFaithfulPosMap] (x y : PiMat ℂ k s) :
     withPiInner[ψ] (⟪x, y⟫_ℂ = ∑ i, ⟪x i, y i⟫_ℂ) :=
-  rfl
+  by rfl
 
 theorem blockDiagonal'_includeBlock_trace' {R k : Type _} [CommSemiring R] [Fintype k]
     [DecidableEq k] {s : k → Type _} [∀ i, Fintype (s i)]
@@ -161,7 +161,7 @@ theorem Module.Dual.pi.apply_eq_of (ψ : ∀ i, Module.Dual ℂ (Matrix (s i) (s
   simp_rw [ha', ← Module.Dual.pi.apply_single_block, ← Pi.mul_apply, ←
     blockDiagonal'_includeBlock_trace, ← ha', Pi.mul_apply, ← ha']
   simp only [← blockDiagonal'AlgHom_apply, ← _root_.map_mul, a', hMul_includeBlock] at h
-  exact h
+  simpa only [blockDiagonal'AlgHom_apply] using h
 
 
 theorem unitary.inj_hMul {A : Type _} [Monoid A] [StarMul A] (U : unitary A) (x y : A) :
@@ -188,7 +188,7 @@ open scoped Classical in
 omit [DecidableEq n] in
 theorem inner_eq [φ.IsFaithfulPosMap] (x y : Matrix n n ℂ) :
   withMatrixInner[φ] (⟪x, y⟫_ℂ = φ (xᴴ * y)) :=
-rfl
+by rfl
 
 theorem inner_eq' (hφ : φ.IsFaithfulPosMap) (x y : Matrix n n ℂ) :
   withMatrixInner[φ] (⟪x, y⟫_ℂ = (φ.matrix * xᴴ * y).trace) := by
@@ -199,7 +199,6 @@ theorem matrixIsPosDef (hφ : φ.IsFaithfulPosMap) : PosDef φ.matrix :=
 φ.isFaithfulPosMap_iff_of_matrix.mp hφ
 
 /-- Modular automorphism associated to a faithful positive functional on matrices. -/
-@[simps]
 noncomputable def _root_.sig (hφ : φ.IsFaithfulPosMap) (z : ℝ) :
     Matrix n n ℂ ≃ₐ[ℂ] Matrix n n ℂ where
   toFun a := hφ.matrixIsPosDef.rpow (-z) * a * hφ.matrixIsPosDef.rpow z
@@ -217,6 +216,15 @@ noncomputable def _root_.sig (hφ : φ.IsFaithfulPosMap) (z : ℝ) :
   map_mul' x y := by
     simp_rw [Matrix.mul_assoc, ← Matrix.mul_assoc (hφ.matrixIsPosDef.rpow _),
       PosDef.rpow_mul_rpow, add_neg_cancel, PosDef.rpow_zero, Matrix.one_mul]
+
+@[simp] theorem _root_.sig_apply (hφ : φ.IsFaithfulPosMap) (z : ℝ) (a : Matrix n n ℂ) :
+    (_root_.sig hφ z) a = hφ.matrixIsPosDef.rpow (-z) * a * hφ.matrixIsPosDef.rpow z :=
+  by rfl
+
+@[simp] theorem _root_.sig_symm_apply (hφ : φ.IsFaithfulPosMap) (z : ℝ) (a : Matrix n n ℂ) :
+    (_root_.sig hφ z).symm a =
+      hφ.matrixIsPosDef.rpow z * a * hφ.matrixIsPosDef.rpow (-z) :=
+  by rfl
 
 /-- The modular automorphism associated to a faithful positive matrix functional. -/
 @[reducible]
@@ -477,7 +485,7 @@ protected noncomputable def toMatrixLinEquiv (hφ : φ.IsFaithfulPosMap) (hψ : 
 LinearMap.toMatrix hφ.basis hψ.basis
 
 /-- Matrix representation of endomorphisms for a faithful matrix inner product. -/
-protected noncomputable def toMatrix (hφ : φ.IsFaithfulPosMap) :
+@[expose] protected noncomputable def toMatrix (hφ : φ.IsFaithfulPosMap) :
     (Matrix n n ℂ →ₗ[ℂ] Matrix n n ℂ) ≃ₐ[ℂ] Matrix (n × n) (n × n) ℂ :=
   LinearMap.toMatrixAlgEquiv hφ.basis
 
@@ -903,7 +911,7 @@ theorem matrixBlock_self_hMul_inv (hψ : ∀ i, (ψ i).IsFaithfulPosMap) :
     mul_inv_of_invertible]
 
 /-- Matrix representation of maps between two faithful pi inner products. -/
-noncomputable def toMatrixLinEquiv (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
+@[expose] noncomputable def toMatrixLinEquiv (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
   (hφ : ∀ i, (φ i).IsFaithfulPosMap) :
     ((PiMat ℂ k s) →ₗ[ℂ] (PiMat ℂ k₂ s₂)) ≃ₗ[ℂ]
       Matrix (Σ i, s₂ i × s₂ i) (Σ i, s i × s i) ℂ :=

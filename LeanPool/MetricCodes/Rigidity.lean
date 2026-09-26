@@ -13,7 +13,7 @@ public import LeanPool.MetricCodes.Weyl
 Completion of the root complex and rigidity of harmonic highest-weight vectors.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 

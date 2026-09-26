@@ -17,7 +17,7 @@ Profiles use coordinates `(t,s,z)`, where `s=(x₀²+x₁²)/2`. The velocity is
 actual Euclidean curl. No division by the radius is used, including at the axis.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,23 +33,23 @@ abbrev ProfilePoint := ℝ × (ℝ × ℝ)
 abbrev Profile := ProfilePoint → ℝ
 
 /-- Projection, given by `EuclideanSpace.proj i`. -/
-def projection (i : Fin 3) : Space →L[ℝ] ℝ := EuclideanSpace.proj i
+@[expose] def projection (i : Fin 3) : Space →L[ℝ] ℝ := EuclideanSpace.proj i
 
 @[simp] theorem projection_apply (i : Fin 3) (x : Space) : projection i x = x i := rfl
 
 /-- Radial energy, given by `(x 0 ^ 2 + x 1 ^ 2) / 2`. -/
-def radialEnergy (x : Space) : ℝ := (x 0 ^ 2 + x 1 ^ 2) / 2
+@[expose] def radialEnergy (x : Space) : ℝ := (x 0 ^ 2 + x 1 ^ 2) / 2
 
 /-- Profile point, given by `(t, (radialEnergy x, x 2))`. -/
-def profilePoint (t : ℝ) (x : Space) : ProfilePoint := (t, (radialEnergy x, x 2))
+@[expose] def profilePoint (t : ℝ) (x : Space) : ProfilePoint := (t, (radialEnergy x, x 2))
 
 /-- Partial S, given by `fderiv ℝ F p (0, (1, 0))`. -/
-def partialS (F : Profile) (p : ProfilePoint) : ℝ := fderiv ℝ F p (0, (1, 0))
+@[expose] def partialS (F : Profile) (p : ProfilePoint) : ℝ := fderiv ℝ F p (0, (1, 0))
 /-- Partial Z, given by `fderiv ℝ F p (0, (0, 1))`. -/
-def partialZ (F : Profile) (p : ProfilePoint) : ℝ := fderiv ℝ F p (0, (0, 1))
+@[expose] def partialZ (F : Profile) (p : ProfilePoint) : ℝ := fderiv ℝ F p (0, (0, 1))
 
 /-- Potential as an element of `VelocityField`. -/
-def potential (H K : Profile) : VelocityField := fun w =>
+@[expose] def potential (H K : Profile) : VelocityField := fun w =>
   ((-(1 / 2) : ℝ) * (w.2 1 * H (profilePoint w.1 w.2))) • coordinateVector 0 +
   ((1 / 2 : ℝ) * (w.2 0 * H (profilePoint w.1 w.2))) • coordinateVector 1 +
   K (profilePoint w.1 w.2) • coordinateVector 2

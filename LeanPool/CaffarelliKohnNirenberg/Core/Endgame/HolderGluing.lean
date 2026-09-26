@@ -19,7 +19,7 @@ pointwise. A common local Hölder bound then gives a quantitative bound on
 a region whenever sufficiently close pairs lie in a common member of the cover.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

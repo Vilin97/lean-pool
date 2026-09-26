@@ -17,7 +17,7 @@ This module defines the uncentred maximal function on `Vec3` and proves its
 weak `(1,1)` estimate by the metric Vitali covering theorem.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 
@@ -34,6 +34,7 @@ open CKN.Foundation.Parabolic
 abbrev hardyLittlewoodMetricBall (c : Vec3) (r : ℝ) : Set Vec3 := Metric.ball c r
 
 /-- The uncentred Hardy--Littlewood maximal function on `Vec3`. -/
+@[expose]
 def maximalFunction (f : Vec3 → ℝ≥0∞) (z : Vec3) : ℝ≥0∞ :=
   ⨆ c : Vec3, ⨆ r : ℝ,
     (hardyLittlewoodMetricBall c r).indicator

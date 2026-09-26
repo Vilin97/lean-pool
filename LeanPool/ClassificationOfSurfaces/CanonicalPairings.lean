@@ -21,7 +21,7 @@ opposite-parameter boundary-seam pairings. The orientable generators are opposit
 orders. The free `h` dart in each boundary block occurs only once and contributes no gluing.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

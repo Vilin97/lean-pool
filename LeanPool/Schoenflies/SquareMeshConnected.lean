@@ -118,7 +118,7 @@ carried explicitly by every theorem below that needs it.
   unions are concatenations.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph
@@ -429,7 +429,7 @@ each cell a genuine quadrilateral. Sortedness enters only with the geometry of t
 cycle. -/
 
 /-- The grid point with coordinate indices `(i, j)`. -/
-def gridPt (xc yc : ℕ → ℝ) (i j : ℕ) : Plane := Plane.mk (xc i) (yc j)
+@[expose] def gridPt (xc yc : ℕ → ℝ) (i j : ℕ) : Plane := Plane.mk (xc i) (yc j)
 
 /-- The horizontal grid edge from `(i, j)` to `(i+1, j)`. -/
 def gridHEdge (xc yc : ℕ → ℝ) (i j : ℕ) : Piece := (gridPt xc yc i j, gridPt xc yc (i + 1) j)

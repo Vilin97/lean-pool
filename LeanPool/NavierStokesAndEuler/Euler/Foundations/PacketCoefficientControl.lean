@@ -14,7 +14,7 @@ import Mathlib.Analysis.Calculus.MeanValue
 # Packet Coefficient Control
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -11,7 +11,7 @@ public import Mathlib.Data.Finset.Sort
 
 /-! # Syntax (Section 2.1) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -42,17 +42,15 @@ namespace PDL
 /-! ## Abbreviations and Notation  -/
 
 /-- Disjunction encoded using conjunction and negation. -/
-@[simp]
-def Formula.or : Formula → Formula → Formula
+@[expose, simp] def Formula.or : Formula → Formula → Formula
   | f, g => Formula.neg (Formula.and (Formula.neg f) (Formula.neg g))
 
 /-- □(αs,φ) -/
-def Formula.boxes : List Program → Formula → Formula
+@[expose] def Formula.boxes : List Program → Formula → Formula
 | δ, χ => List.foldr (fun β φ => Formula.box β φ) χ δ
 
 /-- Sequential composition of a list of programs, with a true test as the empty sequence. -/
-@[simp]
-def Program.steps : List Program → Program
+@[expose, simp] def Program.steps : List Program → Program
   | [] => Program.test (Formula.neg Formula.bottom)
   | (p :: ps) => Program.sequence p (Program.steps ps)
 
@@ -92,7 +90,7 @@ scoped prefix:33 "?'" => Program.test -- avoiding plain "?" which has a meaning 
 
 /-- Union of a list of programs. The empty union is `?'⊥`, a program that cannot be
 executed, so that `[(⋃ ∅)*]φ` is equivalent to `φ`. -/
-def _root_.PDL.Program.unions : List Program → Program
+@[expose] def _root_.PDL.Program.unions : List Program → Program
   | [] => ?'⊥
   | [α] => α
   | α :: rest => α ⋓ Program.unions rest
@@ -100,8 +98,7 @@ def _root_.PDL.Program.unions : List Program → Program
 /-- A basic formula is of the form `¬⊥`, `p`, `¬p`, `[a]_` or `¬[a]_`.
 Note: in the article also `⊥` is basic, but not here because we want
 to apply `OneSidedLocalRule.bot` to it. -/
-@[simp]
-def Formula.basic : Formula → Bool
+@[expose, simp] def Formula.basic : Formula → Bool
   | ⊥ => False
   | ~⊥ => True
   | ·_ => True
@@ -111,7 +108,7 @@ def Formula.basic : Formula → Bool
   | _ => False
 
 /-- Whether a program is an atomic action. -/
-def Program.isAtomic : Program → Prop
+@[expose] def Program.isAtomic : Program → Prop
 | ·_ => true
 | _ => false
 
@@ -132,7 +129,7 @@ theorem Program.isAtomic_iff {α : Program} : α.isAtomic ↔ ∃ a, α = (·a :
   cases α <;> simp_all [isAtomic]
 
 /-- Whether a program has an outer Kleene-star constructor. -/
-def Program.isStar : Program → Prop
+@[expose] def Program.isStar : Program → Prop
 | ∗_ => true
 | _ => false
 
@@ -169,7 +166,7 @@ theorem boxes_append {as bs P} :
   induction as <;> simp [Formula.boxes]
 
 /-- Separate a formula's leading boxes from its remaining formula. -/
-def boxesOf : Formula → List Program × Formula
+@[expose] def boxesOf : Formula → List Program × Formula
 | (Formula.box prog nextf) => let (rest,endf) := boxesOf nextf; ⟨prog::rest, endf⟩
 | f => ([], f)
 
@@ -274,7 +271,7 @@ inductive AnyNegFormula
 | neg : AnyFormula → AnyNegFormula
 
 /-- Load a nonempty modal sequence given its prefix and final program. -/
-def loadMulti : List Program → Program → Formula → LoadFormula
+@[expose] def loadMulti : List Program → Program → Formula → LoadFormula
 | bs, α, φ => List.foldr (fun β lf => LoadFormula.box β lf) (LoadFormula.box α φ) bs
 
 @[simp]
@@ -285,7 +282,7 @@ theorem loadMulti_cons {β δ α φ} :
     loadMulti (β :: δ) α φ = LoadFormula.box β (loadMulti δ α φ) := by simp [loadMulti]
 
 /-- Prepend a list of loaded boxes to a loaded continuation. -/
-def LoadFormula.boxes : List Program → LoadFormula → LoadFormula
+@[expose] def LoadFormula.boxes : List Program → LoadFormula → LoadFormula
 | δ, χ => List.foldr (fun β lf => LoadFormula.box β lf) χ δ
 
 @[simp]
@@ -297,8 +294,7 @@ lemma LoadFormula.boxes_cons {b bs φ} :
   induction bs <;> simp [LoadFormula.boxes]
 
 /-- Erase loading annotations to obtain an ordinary formula. -/
-@[simp]
-def LoadFormula.unload : LoadFormula → Formula
+@[expose, simp] def LoadFormula.unload : LoadFormula → Formula
 | LoadFormula.box α (.normal φ) => ⌈α⌉φ
 | LoadFormula.box α (.loaded χ) => ⌈α⌉(unload χ)
 
@@ -323,8 +319,7 @@ scoped notation "~'" χ => NegLoadFormula.neg χ
 scoped notation "~''" φ:arg => AnyNegFormula.neg φ
 
 /-- Erase loading annotations from a negated loaded formula. -/
-@[simp]
-def negUnload : NegLoadFormula → Formula
+@[expose, simp] def negUnload : NegLoadFormula → Formula
 | NegLoadFormula.neg χ => ~ χ.unload
 
 example : NegLoadFormula := ~'(⌊((·1);' (·2))⌋(⊤ : Formula))
@@ -356,7 +351,7 @@ theorem unload_neg_normal {α φ} : (~'⌊α⌋(.normal φ)).1.unload = ⌈α⌉
 
 /-- Load a possibly already loaded formula χ with a sequence δ of boxes.
 The result is loaded iff δ≠[] or χ was loaded. -/
-def AnyFormula.loadBoxes : List Program → AnyFormula → AnyFormula
+@[expose] def AnyFormula.loadBoxes : List Program → AnyFormula → AnyFormula
 | δ, χ => List.foldr (fun β lf => LoadFormula.box β lf) χ δ
 
 @[simp]
@@ -383,7 +378,7 @@ lemma AnyFormula.loadBoxes_loaded_eq_loaded_boxes {δ χ} :
     rfl
 
 /-- Erase loading annotations, leaving ordinary formulas unchanged. -/
-def AnyFormula.unload : AnyFormula → Formula
+@[expose] def AnyFormula.unload : AnyFormula → Formula
   | .normal φ => φ
   | .loaded χ => χ.unload
 
@@ -437,14 +432,12 @@ lemma loaded_eq_to_unload_eq χ αs φ
 
 mutual
 /-- Split any formula into the list of loaded boxes and the free formula. -/
-@[simp]
-def AnyFormula.split : (af : AnyFormula) → List Program × Formula
+@[expose, simp] def AnyFormula.split : (af : AnyFormula) → List Program × Formula
 | .loaded lf => lf.split
 | .normal f => ([], f)
 
 /-- Split a loaded formula into the list of loaded boxes and the free formula. -/
-@[simp]
-def LoadFormula.split : (lf : LoadFormula) → List Program × Formula
+@[expose, simp] def LoadFormula.split : (lf : LoadFormula) → List Program × Formula
 | .box α af => (fun (δ,f) => (α :: δ, f)) af.split
 end
 
@@ -618,7 +611,7 @@ lemma loadMulti_eq_loadBoxes :
 /-! ## splitLast -/
 
 /-- Helper function for `YsetLoad'` to get last list element. -/
-def splitLast : List α → Option (List α × α)
+@[expose] def splitLast : List α → Option (List α × α)
 | [] => none
 | (x :: xs) => some <| match splitLast xs with
   | none => ([], x)
@@ -707,7 +700,7 @@ lemma loadMulti_of_splitLast_cons {α αs βs β φ} (h : splitLast (α :: αs) 
 
 mutual
   /-- The syntactic length of a program, mutually defined with formula length. -/
-  @[simp, implicit_reducible]
+  @[expose, simp, implicit_reducible]
   def lengthOfProgram : Program → Nat
     | ·_ => 1
     | α;'β => 1 + lengthOfProgram α + lengthOfProgram β
@@ -1178,7 +1171,7 @@ instance : Std.Antisymm (fun (a b : Formula) ↦ a ≤ b) := ⟨Formula.le_antis
 instance : Std.Total (fun (a b : Formula) ↦ a ≤ b) := ⟨Formula.le_total⟩
 
 /-- List the elements of a formula finset in the fixed formula order. -/
-def _root_.Finset.pdlSort : Finset Formula → List Formula | FS => FS.sort
+@[expose] def _root_.Finset.pdlSort : Finset Formula → List Formula | FS => FS.sort
 
 @[simp]
 lemma Formula.mem_pdlSort {X : Finset Formula} : φ ∈ X.pdlSort ↔ φ ∈ X := by simp [Finset.pdlSort]

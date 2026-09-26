@@ -16,7 +16,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Harmonic.Liouville
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -27,11 +27,11 @@ noncomputable section
 namespace CKN
 
 /-- The test functions used for a distributional spatial divergence. -/
-def SmoothCompactTest (ψ : Vec3 → ℝ) : Prop :=
+@[expose] def SmoothCompactTest (ψ : Vec3 → ℝ) : Prop :=
   (∀ n : ℕ, ContDiff ℝ (n : ℕ∞) ψ) ∧ HasCompactSupport ψ
 
 /-- Distributional divergence-free data, with the spatial test class explicit. -/
-def DistributionalDivergenceFree (F : Vec3 → Vec3) : Prop :=
+@[expose] def DistributionalDivergenceFree (F : Vec3 → Vec3) : Prop :=
   ∀ ψ : Vec3 → ℝ, SmoothCompactTest ψ →
     ∫ x, ∑ i : Fin 3, F x i * spatialDeriv ψ i x = 0
 

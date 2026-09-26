@@ -17,7 +17,7 @@ restriction supplies the physical-band witness; no comparison of unrelated
 existential choices is used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

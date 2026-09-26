@@ -57,7 +57,7 @@ increasing enumeration (a sorted `List ℕ`) and bridge to `Finset ℕ` only at 
 `Finset`-based (e.g. Ramsey) statements, via `Finset.sort` / `List.toFinset`.
 -/
 
-@[expose] public section
+public section
 
 open Set List
 
@@ -80,7 +80,7 @@ namespace Front
 /-- `IsInit s N` : the sorted list `s` is the initial segment of the increasing enumeration
 `N : ℕ → ℕ`, i.e. `s = [N 0, N 1, …, N (s.length - 1)]`. This is the prefix relation `⊑`
 between a finite set and an infinite set. -/
-def IsInit (s : List ℕ) (N : ℕ → ℕ) : Prop :=
+@[expose] def IsInit (s : List ℕ) (N : ℕ → ℕ) : Prop :=
   s = (List.range s.length).map N
 
 /-- `List.range` is monotone for the prefix order. -/
@@ -159,7 +159,7 @@ increasing lists of length `k` whose entries lie in `M`.
 -/
 
 /-- `[M]^k` : the strictly increasing lists of length `k` contained in `M`. -/
-def powK (M : ℕ → ℕ) (k : ℕ) : Set (List ℕ) :=
+@[expose] def powK (M : ℕ → ℕ) (k : ℕ) : Set (List ℕ) :=
   {s | s.length = k ∧ s.Pairwise (· < ·) ∧ ∀ x ∈ s, x ∈ Set.range M}
 
 /-- The first `k` values of `M ∘ e` forms a size-`k` subset of `M`, for `e` strictly
@@ -215,7 +215,7 @@ first genuinely non-uniform front — the lists' length varies with where the li
 
 /-- The Schreier front on `M`: increasing lists `s ⊆ M` whose length is one more than their first
 element. -/
-def schreier (M : ℕ → ℕ) : Set (List ℕ) :=
+@[expose] def schreier (M : ℕ → ℕ) : Set (List ℕ) :=
   {s | (∃ a, s.head? = some a ∧ s.length = a + 1) ∧
     s.Pairwise (· < ·) ∧ ∀ x ∈ s, x ∈ Set.range M}
 

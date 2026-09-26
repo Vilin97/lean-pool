@@ -16,7 +16,7 @@ terminal cylinder history. Pointwise tangency and the normal residual are
 deduced from the actual frame range; there is no single L² normal vector.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

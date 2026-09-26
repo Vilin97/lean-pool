@@ -11,7 +11,7 @@ import Mathlib.Tactic.Positivity.Finset
 Lemmas from https://github.com/leanprover-community/mathlib4/pull/32986
 -/
 
-@[expose] public section
+public section
 
 open scoped Topology Filter
 open MeasureTheory Measure Metric

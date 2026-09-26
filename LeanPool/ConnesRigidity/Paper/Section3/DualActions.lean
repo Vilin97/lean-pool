@@ -22,7 +22,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 The dual actions component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperDualActions
@@ -102,16 +102,16 @@ def dualPrecompHom (theta : H →* (D ≃ₗ[k] D)) :
     dualPrecompHom theta h ℓ d = ℓ ((theta h)⁻¹ d) := rfl
 
 /-- The first actual Zhou contragredient action on the full dual. Paper: §3. -/
-def paperDualActionOne : H →* (Dual ≃ₗ[k] Dual) :=
+@[expose] def paperDualActionOne : H →* (Dual ≃ₗ[k] Dual) :=
   dualPrecompHom PaperKernel.paperThetaOneLinearHom
 
 /-- The second actual Zhou contragredient action on the full dual. Paper: §3. -/
-def paperDualActionTwo : H →* (Dual ≃ₗ[k] Dual) :=
+@[expose] def paperDualActionTwo : H →* (Dual ≃ₗ[k] Dual) :=
   dualPrecompHom PaperKernel.paperThetaTwoLinearHom
 
 /-- Transport a full-dual additive equivalence to Zhou's raw coordinates.
 Paper: §3. -/
-def coordinateAction (dualAction : H →* (Dual ≃ₗ[k] Dual)) (h : H) :
+@[expose] def coordinateAction (dualAction : H →* (Dual ≃ₗ[k] Dual)) (h : H) :
     Coordinates ≃+ Coordinates :=
   PaperDualCoordinates.dualEquiv.toAddEquiv.symm.trans
     ((dualAction h).toAddEquiv.trans

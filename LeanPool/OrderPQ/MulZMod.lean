@@ -23,12 +23,12 @@ import Mathlib.Topology.MetricSpace.Bounded
 # LeanPool.OrderPQ.MulZMod
 -/
 
-@[expose] public section
+public section
 
 section MulZMod
 
 /-- `ZMod n` viewed as a multiplicative group. -/
-def MulZMod (n : ℕ) : Type := Multiplicative (ZMod n)
+@[expose] def MulZMod (n : ℕ) : Type := Multiplicative (ZMod n)
 
 attribute [local implicit_reducible] MulZMod
 
@@ -72,7 +72,7 @@ lemma unitOfNeZero_val (x : (ZMod p)ˣ) : unitOfNeZero x (Units.ne_zero _) = x :
   exact val_unitOfNeZero _ (Units.ne_zero _)
 
 /-- Multiplication by a unit in `ZMod p` as an additive automorphism. -/
-@[simps -isSimp]
+@[expose, simps -isSimp]
 def addAutOfUnit (x : (ZMod p)ˣ) : AddAut (ZMod p) where
   toFun a := x.val * a
   invFun a := x.inv * a

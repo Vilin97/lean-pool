@@ -14,7 +14,7 @@ import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
 # Graph Pullback
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -26,11 +26,11 @@ open scoped ContDiff
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- The linear graph carrying the oscillating phase. -/
-def graphMap (k : ℝ) (m : E) : E →L[ℝ] (E × ℝ) :=
+@[expose] def graphMap (k : ℝ) (m : E) : E →L[ℝ] (E × ℝ) :=
   (ContinuousLinearMap.id ℝ E).prod (k • toDual ℝ E m)
 
 /-- The constant lifted differential direction associated with a spatial vector. -/
-def liftedDirection (κ : ℝ) (m : E) : E →L[ℝ] (E × ℝ) :=
+@[expose] def liftedDirection (κ : ℝ) (m : E) : E →L[ℝ] (E × ℝ) :=
   (κ • ContinuousLinearMap.id ℝ E).prod (toDual ℝ E m)
 
 theorem graphMap_apply (k : ℝ) (m v : E) : graphMap k m v = (v, k * ⟪m, v⟫_ℝ) := rfl

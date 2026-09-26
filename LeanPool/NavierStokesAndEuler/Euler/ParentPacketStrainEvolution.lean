@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldChain
 inverse derivative is derived from the polynomial cofactor construction
 and the genuine frame identity, including the time-interval endpoints. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -117,11 +117,11 @@ theorem strainDerivative_norm_bound (CM CH : ℝ) (hCM : 0 ≤ CM)
   simpa only [pow_two] using add_le_add (mul_le_mul hM hM (norm_nonneg _) hCM) hH
 
 /-- Center strain, given by `extendPath G.T G.T_pos.le G.strain.field t 0`. -/
-def centerStrain (t : ℝ) : EndSpace :=
+@[expose] def centerStrain (t : ℝ) : EndSpace :=
   extendPath G.T G.T_pos.le G.strain.field t 0
 
 /-- Center curvature, given by `extendPath G.T G.T_pos.le G.curvature.field t 0`. -/
-def centerCurvature (t : ℝ) : EndSpace :=
+@[expose] def centerCurvature (t : ℝ) : EndSpace :=
   extendPath G.T G.T_pos.le G.curvature.field t 0
 
 /-- Center strain derivative, given by `extendPath G.T G.T_pos.le G.strainDerivative.field t 0`. -/

@@ -26,7 +26,7 @@ abstract in the finite blocks: the later scheduling module only has to provide n
 which eventually avoid every finite set and a deletion bound whose relative size tends to zero.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 open scoped Topology
@@ -48,7 +48,7 @@ namespace BlockSystem
 /-- The concrete block system supplied by the triangular preprocessing enumeration.  Its blocks
 have the prescribed cardinalities and partition `ℕ`; in particular, every finite set of positions
 meets only finitely many block labels. -/
-def ofBlockPositions (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) : BlockSystem where
+@[expose] def ofBlockPositions (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) : BlockSystem where
   block := TriangularPreprocess.blockPositions N hN
   block_nonempty := by
     intro l
@@ -254,7 +254,7 @@ variable (N : ℕ → ℕ) (hN : ∀ l, 0 < N l)
 abbrev blocks : BlockSystem := BlockSystem.ofBlockPositions N hN
 
 /-- A free ultrafilter refining the density filter of a code's label. -/
-def ultrafilter (a : ContinuumIndex) : Ultrafilter ℕ :=
+@[expose] def ultrafilter (a : ContinuumIndex) : Ultrafilter ℕ :=
   Classical.choose ((blocks N hN).exists_free_ultrafilter_le_densityFilter (label_infinite a))
 
 theorem ultrafilter_le_density (a : ContinuumIndex) :
@@ -323,7 +323,7 @@ namespace BlockSystem
 
 /-- The points retained after deleting `E l` from every block whose label belongs to `b`.
 This is exactly the set `U_α` in equation (retained) of the paper. -/
-def retainedBlocks (B : BlockSystem) (b : Set ℕ) (E : ℕ → Finset ℕ) : Set ℕ :=
+@[expose] def retainedBlocks (B : BlockSystem) (b : Set ℕ) (E : ℕ → Finset ℕ) : Set ℕ :=
   ⋃ l ∈ b, ↑(B.block l \ E l)
 
 /-- On a retained label, every point missing from the retained union lies in the

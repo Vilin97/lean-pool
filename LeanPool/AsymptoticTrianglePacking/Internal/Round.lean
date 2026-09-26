@@ -38,7 +38,7 @@ Definitions (`degree`, `IsUniform`, `IsMatching`, `support`) come from
 `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -48,13 +48,16 @@ variable {V : Type*} [DecidableEq V]
 
 /-- The matching induced by a retained set `R`: the retained edges that are disjoint from every
 other retained edge. -/
+@[expose]
 def roundMatching (R : Finset (Finset V)) : Finset (Finset V) :=
   R.filter (fun e => ∀ f ∈ R, f ≠ e → Disjoint e f)
 
 /-- The vertices covered by the round's matching. -/
+@[expose]
 def covered (R : Finset (Finset V)) : Finset V := support (roundMatching R)
 
 /-- The residual hypergraph: edges of `H` that avoid the covered vertices. -/
+@[expose]
 def residual (H R : Finset (Finset V)) : Finset (Finset V) :=
   H.filter (fun e => Disjoint e (covered R))
 

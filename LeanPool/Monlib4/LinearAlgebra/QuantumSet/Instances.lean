@@ -16,7 +16,7 @@ import LeanPool.Monlib4.RepTheory.AutMat
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances`.
 -/
 
-@[expose] public section
+public section
 -- import LeanPool.Monlib4.LinearAlgebra.Ips.Frob
 
 variable {n : Type*} [Fintype n] [DecidableEq n] {φ : Module.Dual ℂ (Matrix n n ℂ)}
