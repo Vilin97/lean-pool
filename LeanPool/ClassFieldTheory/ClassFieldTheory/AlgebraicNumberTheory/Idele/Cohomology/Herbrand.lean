@@ -602,7 +602,7 @@ theorem ideleClassHerbrandQuotientDefined_of_principal_relative
             (RelativeIdeleGroup.ClassGroup K L)
             inferInstance inferInstance inferInstance
             (ideleClassMulDistribMulAction K L)
-            σ hC.1 hC.2 := by
+            σ := by
   let q :
       RelativeIdeleGroup K L →*
         RelativeIdeleGroup.ClassGroup K L :=

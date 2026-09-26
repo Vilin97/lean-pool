@@ -37,6 +37,8 @@ open LocalFieldTheory.DiscreteValuationField
 
 variable {K : Type u} [Field K]
 
+attribute [local instance] equalCharacteristicCompletedLevelCharP
+
 /-- The coefficientwise Laurent-series algebra used by the completed
 unramified base.  It is kept local so importing this file does not change
 global type-class search. -/

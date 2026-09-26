@@ -39,7 +39,8 @@ private noncomputable local instance (priority := 50)
     UniformSpace (padicCompletedUnramifiedWittRing p) :=
   ⊥
 
-private noncomputable local instance
+/-- The maximal ideal defining the adic topology on the completed level valuation ring. -/
+noncomputable local instance
     padicCompletedFrobeniusEvaluationTargetWithIdeal
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     WithIdeal

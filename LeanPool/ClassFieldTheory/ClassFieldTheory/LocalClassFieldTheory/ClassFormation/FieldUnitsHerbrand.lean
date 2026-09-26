@@ -81,7 +81,7 @@ theorem fieldUnits_tate_card_of_integerUnits_herbrand_eq_one
       @herbrandQuotient (Gal(L/K))
           (ValuativeRel.valuation L).integerˣ _ _ _
           (galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L)
-          g hU.1 hU.2 = 1) :
+          g = 1) :
     letI := unitsTateH0FiniteOfIntegerUnitsHerbrand K L g hg hU
     Nat.card (tateCohomology (Rep.ofAlgebraAutOnUnits K L) 0) = Module.finrank K L ∧
       Nat.card (tateCohomology (Rep.ofAlgebraAutOnUnits K L) (-1)) = 1 := by
@@ -109,7 +109,7 @@ theorem fieldUnits_tate_card_of_integerUnits_herbrand_eq_one
     galoisGroupValueGroup_herbrandHMinusOne_card_eq_one K L g
   have hZ_one :
       @herbrandQuotient (Gal(L/K)) (Multiplicative Int) _ _ _
-          (galoisGroupValueGroupMulDistribMulAction K L) g hZ.1 hZ.2 =
+          (galoisGroupValueGroupMulDistribMulAction K L) g =
         (Module.finrank K L : ℚ) := by
     rw [herbrandQuotient_eq_card_ratio, hZ0, hZm1]
     simp
@@ -123,7 +123,7 @@ theorem fieldUnits_tate_card_of_integerUnits_herbrand_eq_one
   have hField_quotient :
       @herbrandQuotient (Gal(L/K)) Lˣ _ _ _
           (galoisGroupFieldUnitsMulDistribMulAction K L)
-          g hField.1 hField.2 = (Module.finrank K L : ℚ) := by
+          g = (Module.finrank K L : ℚ) := by
     rw [hmult, hU_one, hZ_one]
     simp
   have h0_field_rat :

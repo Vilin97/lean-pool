@@ -112,7 +112,7 @@ theorem ideleClass_herbrandQuotient_eq_card_of_relative_principal_values
       @herbrandQuotient
           (L ≃ₐ[K] L)
           (RelativeIdeleGroup.ClassGroup K L)
-          _ _ _ _ σ hC.1 hC.2 =
+          _ _ _ _ σ =
         (Fintype.card (L ≃ₐ[K] L) : ℚ) := by
   let := relativeIdeleMulDistribMulAction K L
   let := principalIdeleMulDistribMulAction K L
@@ -149,7 +149,7 @@ theorem ideleClass_herbrandQuotient_eq_card_of_relative_principal_values
           @herbrandQuotient
             (L ≃ₐ[K] L)
             (RelativeIdeleGroup.ClassGroup K L)
-            _ _ _ _ σ hC.1 hC.2 =
+            _ _ _ _ σ =
         q := by
       rw [← hPrincipal, ← hmul, hRelative]
     _ =

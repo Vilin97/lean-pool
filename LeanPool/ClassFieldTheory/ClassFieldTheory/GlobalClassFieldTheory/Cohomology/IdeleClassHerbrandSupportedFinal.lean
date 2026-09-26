@@ -197,7 +197,7 @@ theorem
           (L ≃ₐ[K] L)
           (RelativeOutsideSPlaceFactors
             (K := K) (L := L) S)
-          _ _ _ _ σ h.1 h.2 = 1 := by
+          _ _ _ _ σ = 1 := by
   let outsideAction :=
     relativeOutsideSPlaceFactorsAction
       (K := K) (L := L) S
@@ -266,7 +266,7 @@ theorem
           (L ≃ₐ[K] L)
           (relativeIdeleLocalTensorDecompositionSupportedSubgroup
             (K := K) (L := L) S)
-          _ _ _ _ σ h.1 h.2 =
+          _ _ _ _ σ =
         ∏ i,
           (relativeUnrestrictedSPlaceLocalDegree
             (K := K) (L := L) S i : ℚ) := by
@@ -348,7 +348,7 @@ theorem
           (L ≃ₐ[K] L)
           (relativeIdeleLocalTensorDecompositionSupportedSubgroup
             (K := K) (L := L) S)
-          _ _ _ _ σ hSupported.1 hSupported.2 =
+          _ _ _ _ σ =
         herbrandQuotient
           (G := L ≃ₐ[K] L)
           (A :=
@@ -1204,7 +1204,7 @@ theorem
       @herbrandQuotient
           (L ≃ₐ[K] L)
           (RelativeIdeleGroup.ClassGroup K L)
-          _ _ _ _ σ hC.1 hC.2 =
+          _ _ _ _ σ =
         (Fintype.card (L ≃ₐ[K] L) : ℚ) := by
   let sUnitAction :=
     sUnitMulDistribMulAction K L
@@ -1324,7 +1324,7 @@ theorem
           @herbrandQuotient
             (L ≃ₐ[K] L)
             (RelativeIdeleGroup.ClassGroup K L)
-            _ _ _ _ σ hC.1 hC.2 =
+            _ _ _ _ σ =
         q := by
       rw [← hUnit, ← hmul, hSupported]
     _ =
@@ -1438,7 +1438,7 @@ theorem
       @herbrandQuotient
           (L ≃ₐ[K] L)
           (RelativeIdeleGroup.ClassGroup K L)
-          _ _ _ _ σ hC.1 hC.2 =
+          _ _ _ _ σ =
         (Fintype.card (L ≃ₐ[K] L) : ℚ) := by
   let T :=
     finitePlacesAbove (K := K) (L := L) S
@@ -1506,7 +1506,7 @@ theorem
       @herbrandQuotient
           (L ≃ₐ[K] L)
           (SUnitGroup (K := L) T)
-          _ _ _ _ σ hUnit.1 hUnit.2 =
+          _ _ _ _ σ =
         q / (Fintype.card (L ≃ₐ[K] L) : ℚ) := by
     rw [hProducts]
     simpa only [indexAction, ρ, T, hT] using hUnitValue
@@ -1515,7 +1515,7 @@ theorem
           (L ≃ₐ[K] L)
           (relativeIdeleLocalTensorDecompositionSupportedSubgroup
             (K := K) (L := L) S)
-          _ _ _ _ σ hSupported.1 hSupported.2 =
+          _ _ _ _ σ =
         q := by
     exact hSupportedValue
   exact

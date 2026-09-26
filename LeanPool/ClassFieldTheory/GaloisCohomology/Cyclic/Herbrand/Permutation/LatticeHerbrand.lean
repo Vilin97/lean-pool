@@ -876,7 +876,7 @@ theorem
           G (Multiplicative L) σ,
       @herbrandQuotient
           G (Multiplicative L) _ _ _ _
-          σ h.1 h.2 =
+          σ =
         ∏ ω : MulAction.orbitRel.Quotient G ι,
           (Fintype.card
             (permutationOrbitStabilizer ω) : ℚ) := by
@@ -987,10 +987,10 @@ theorem
   calc
     @herbrandQuotient
           G (Multiplicative L) _ _ _ _
-          σ hA.1 hA.2 =
+          σ =
         @herbrandQuotient
           G B _ _ _ _
-          σ hB.1 hB.2 := by
+          σ := by
       simpa only [hA] using
         (herbrandQuotient_eq_of_finiteIndex_stableSubgroup
           B hstable σ hgen hB)

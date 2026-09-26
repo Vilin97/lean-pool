@@ -149,7 +149,7 @@ theorem equalCharacteristicLubinTateUnitQuotient_natCard
     letI : Finite
         (F.residueField⟦X⟧ˣ ⧸
           equalCharacteristicLubinTateHigherUnitSubgroup F n) :=
-      unitQuotientFinite F n
+      by exact unitQuotientFinite F n
     Nat.card
         (F.residueField⟦X⟧ˣ ⧸
           equalCharacteristicLubinTateHigherUnitSubgroup F n) =
@@ -259,7 +259,7 @@ theorem equalCharacteristicLubinTateUniformizerPrincipalQuotient_natCard
         (F.residueField⸨X⸩ˣ ⧸
           LocalFieldTheory.uniformizerPrincipalSubgroup F.residueField⸨X⸩
             (equalCharacteristicLaurentUniformizerUnit F)⁻¹ 1 (n + 1)) :=
-      uniformizerPrincipalQuotientFinite F n
+      by exact uniformizerPrincipalQuotientFinite F n
     Nat.card
         (F.residueField⸨X⸩ˣ ⧸
           LocalFieldTheory.uniformizerPrincipalSubgroup F.residueField⸨X⸩

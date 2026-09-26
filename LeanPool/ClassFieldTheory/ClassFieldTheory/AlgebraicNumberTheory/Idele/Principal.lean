@@ -190,13 +190,13 @@ theorem fieldUnits_herbrandQuotient_eq_principalIdeles
     @herbrandQuotient
         (L ≃ₐ[K] L) Lˣ _ _ _
         (galoisGroupFieldUnitsMulDistribMulAction K L)
-        σ h.1 h.2 =
+        σ =
       @herbrandQuotient
         (L ≃ₐ[K] L)
         (RelativeIdeleGroup.principalSubgroup K L)
         _ _ _
         (principalIdeleMulDistribMulAction K L)
-        σ hP.1 hP.2 := by
+        σ := by
   let _ :=
     galoisGroupFieldUnitsMulDistribMulAction K L
   let _ :=

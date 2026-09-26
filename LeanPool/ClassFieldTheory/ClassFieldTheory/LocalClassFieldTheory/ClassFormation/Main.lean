@@ -51,7 +51,7 @@ theorem exists_localIntegerUnitsHerbrandDefinedAndEqOne
     ∃ hU : HerbrandQuotientDefined (Gal(L/K)) 𝒪[L]ˣ g,
       @herbrandQuotient (Gal(L/K)) 𝒪[L]ˣ _ _ _
         (galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L)
-        g hU.1 hU.2 = 1 := by
+        g = 1 := by
   rcases exists_chosenNormalBasisPrincipalUnitSubgroup
       (K := K) (L := L) with ⟨cV, hcV⟩
   rcases exists_chosenNormalBasisPrincipalUnit_herbrand_subsingleton
@@ -86,9 +86,7 @@ private theorem localIntegerUnitsHerbrandQuotient_eq_one
     (hg : ∀ sigma : Gal(L/K), sigma ∈ Subgroup.zpowers g) :
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     @herbrandQuotient (Gal(L/K)) 𝒪[L]ˣ _ _ _
-      (galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L) g
-      (localIntegerUnitsHerbrandDefined K L g hg).1
-      (localIntegerUnitsHerbrandDefined K L g hg).2 = 1 :=
+      (galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L) g = 1 :=
   Classical.choose_spec (exists_localIntegerUnitsHerbrandDefinedAndEqOne K L g hg)
 
 /-- Finiteness of actual unit Tate `H⁰`, produced from the same local

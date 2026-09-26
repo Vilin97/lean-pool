@@ -1220,7 +1220,7 @@ theorem
           (L ≃ₐ[K] L)
           (Multiplicative
             (extendedFullLogLattice L S))
-          _ _ _ _ σ h.1 h.2 =
+          _ _ _ _ σ =
         ∏ ω :
             MulAction.orbitRel.Quotient
               (L ≃ₐ[K] L)

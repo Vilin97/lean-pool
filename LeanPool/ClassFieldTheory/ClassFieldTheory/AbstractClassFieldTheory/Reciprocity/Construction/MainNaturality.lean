@@ -1108,7 +1108,8 @@ theorem finiteReciprocityNaturalityFrobeniusConjugationLift_exponent
 
 section ConjugateFrobeniusQuotients
 
-private theorem finiteReciprocityNaturalityConjugateInertia_normal
+/-- Conjugation preserves normality of the inertia subgroup in the relative Galois group. -/
+theorem finiteReciprocityNaturalityConjugateInertia_normal
     (D : DegreeData G) [IsTopologicalGroup G]
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup) (s : G)
@@ -1348,8 +1349,9 @@ private theorem finiteReciprocityNaturality_relativeNorm_right_transport
 
 section ConjugateFiniteNormQuotient
 
+/-- The additive zero structure on the conjugate finite norm quotient. -/
 @[instance_reducible]
-private def finiteReciprocityNaturalityConjugateNormAddZero
+def finiteReciprocityNaturalityConjugateNormAddZero
     (A : Rep ℤ G) [IsTopologicalGroup G]
     (K : FiniteAbstractField G) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup) (s : G)

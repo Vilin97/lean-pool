@@ -203,7 +203,7 @@ private theorem integerUnits_herbrandQuotient_eq_one
     ∃ hU : HerbrandQuotientDefined Gal(L/K) 𝒪[L]ˣ g,
       @herbrandQuotient Gal(L/K) 𝒪[L]ˣ _ _ _
         (galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L)
-        g hU.1 hU.2 = 1 := by
+        g = 1 := by
   rcases exists_chosenNormalBasisPrincipalUnitSubgroup (K := K) (L := L) with
     ⟨cV, hcV⟩
   rcases exists_chosenNormalBasisPrincipalUnit_herbrand_subsingleton

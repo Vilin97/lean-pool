@@ -1160,7 +1160,7 @@ theorem fullLogLattice_herbrandQuotient_eq_stabilizerProduct_div_card
           (L ≃ₐ[K] L)
           (Multiplicative
             (SUnitGroup.fullLogLattice (K := L) S))
-          _ _ _ _ σ h.1 h.2 =
+          _ _ _ _ σ =
         (∏ ω :
             MulAction.orbitRel.Quotient
               (L ≃ₐ[K] L)
@@ -1288,13 +1288,13 @@ theorem fullLogLattice_herbrandQuotient_eq_stabilizerProduct_div_card
           (L ≃ₐ[K] L)
           (Multiplicative
             (SUnitGroup.fullLogLattice (K := L) S))
-          _ _ _ _ σ hLattice.1 hLattice.2 *
+          _ _ _ _ σ *
         (Fintype.card (L ≃ₐ[K] L) : ℚ) =
         @herbrandQuotient
           (L ≃ₐ[K] L)
           (Multiplicative
             (SUnitGroup.fullLogLattice (K := L) S × ℤ))
-          _ _ _ _ σ hProduct.1 hProduct.2 := by
+          _ _ _ _ σ := by
       rw [← hIntegerValue]
       exact hMultiplicative.symm
     _ =
@@ -1302,7 +1302,7 @@ theorem fullLogLattice_herbrandQuotient_eq_stabilizerProduct_div_card
           (L ≃ₐ[K] L)
           (Multiplicative
             (extendedFullLogLattice L S))
-          _ _ _ _ σ hExtended.1 hExtended.2 :=
+          _ _ _ _ σ :=
       hExtendedProduct.symm
     _ =
         ∏ ω :
@@ -1360,7 +1360,7 @@ theorem sUnit_herbrandQuotient_eq_stabilizerProduct_div_card
       @herbrandQuotient
           (L ≃ₐ[K] L)
           (SUnitGroup (K := L) S)
-          _ _ _ _ σ h.1 h.2 =
+          _ _ _ _ σ =
         (∏ ω :
             MulAction.orbitRel.Quotient
               (L ≃ₐ[K] L)
@@ -1482,24 +1482,24 @@ theorem sUnit_herbrandQuotient_eq_stabilizerProduct_div_card
     @herbrandQuotient
           (L ≃ₐ[K] L)
           (SUnitGroup (K := L) S)
-          _ _ _ _ σ hSUnit.1 hSUnit.2 =
+          _ _ _ _ σ =
         @herbrandQuotient
             (L ≃ₐ[K] L)
             (CommGroup.torsion
               (SUnitGroup (K := L) S))
-            _ _ _ _ σ hTorsion.1 hTorsion.2 *
+            _ _ _ _ σ *
           @herbrandQuotient
             (L ≃ₐ[K] L)
             (Multiplicative
               (SUnitGroup.fullLogLattice (K := L) S))
-            _ _ _ _ σ hLattice.1 hLattice.2 :=
+            _ _ _ _ σ :=
       hMultiplicative
     _ =
         @herbrandQuotient
           (L ≃ₐ[K] L)
           (Multiplicative
             (SUnitGroup.fullLogLattice (K := L) S))
-          _ _ _ _ σ hLattice.1 hLattice.2 := by
+          _ _ _ _ σ := by
       rw [hTorsionValue, one_mul]
     _ =
         (∏ ω :
@@ -1755,7 +1755,7 @@ theorem sUnit_herbrandQuotient_eq_localDegreeProduct_div_card
       @herbrandQuotient
           (L ≃ₐ[K] L)
           (SUnitGroup (K := L) S)
-          _ _ _ _ σ h.1 h.2 =
+          _ _ _ _ σ =
         (∏ ω :
             MulAction.orbitRel.Quotient
               (L ≃ₐ[K] L)
@@ -1794,7 +1794,7 @@ theorem sUnit_herbrandQuotient_eq_localDegreeProduct_div_card
     @herbrandQuotient
           (L ≃ₐ[K] L)
           (SUnitGroup (K := L) S)
-          _ _ _ _ σ hSUnit.1 hSUnit.2 =
+          _ _ _ _ σ =
         (∏ ω :
             MulAction.orbitRel.Quotient
               (L ≃ₐ[K] L)

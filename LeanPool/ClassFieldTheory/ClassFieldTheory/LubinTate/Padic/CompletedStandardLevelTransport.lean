@@ -35,13 +35,15 @@ open LocalFieldTheory.DiscreteValuationField.Examples.Qp
 open ValuationTheory.DiscreteValuationField
 open SameUniformizer
 
-private noncomputable local instance
+/-- The discrete uniform structure on the coefficient valuation ring used for evaluation. -/
+noncomputable local instance
     padicStandardLevelTransportCoefficientUniformSpace
     (p : ℕ) [Fact p.Prime] :
     UniformSpace (padicLocalField p).valuationSubring :=
   ⊥
 
-private noncomputable local instance
+/-- The discrete topology on the coefficient valuation ring used for evaluation. -/
+noncomputable local instance
     padicStandardLevelTransportCoefficientTopologicalSpace
     (p : ℕ) [Fact p.Prime] :
     TopologicalSpace (padicLocalField p).valuationSubring :=
@@ -53,7 +55,8 @@ private noncomputable local instance (priority := 50)
     UniformSpace (padicCompletedUnramifiedWittRing p) :=
   ⊥
 
-private noncomputable local instance
+/-- The maximal ideal defining the adic topology on the standard level valuation ring. -/
+noncomputable local instance
     padicStandardLevelTransportSourceWithIdeal
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     WithIdeal
@@ -64,7 +67,8 @@ private noncomputable local instance
       (padicMultiplicativeLubinTateSeries_isUniformizer p) n
     ).maximalIdeal
 
-private noncomputable local instance
+/-- The maximal ideal defining the adic topology on the completed level valuation ring. -/
+noncomputable local instance
     padicStandardLevelTransportTargetWithIdeal
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     WithIdeal

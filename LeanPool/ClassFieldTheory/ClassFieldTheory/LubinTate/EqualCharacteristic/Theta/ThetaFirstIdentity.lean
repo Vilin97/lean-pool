@@ -517,8 +517,8 @@ theorem equalCharacteristicThetaAfterBracketCoefficient_zero
   rw [equalCharacteristicThetaCoefficient_zero]
   simpa [equalCharacteristicThetaAfterBracketCoefficient,
     equalCharacteristicQAdditiveCompositionCoefficient,
-    equalCharacteristicCompletedSourceBracketCoefficient,
-    mul_comm] using hsemi.symm
+    equalCharacteristicCompletedSourceBracketCoefficient] using
+      (mul_comm _ _).trans hsemi.symm
 
 /-- The first-identity candidate `theta o [u]` satisfies the same
 Frobenius-intertwining equation as `theta^phi`.  This is the formal-series
