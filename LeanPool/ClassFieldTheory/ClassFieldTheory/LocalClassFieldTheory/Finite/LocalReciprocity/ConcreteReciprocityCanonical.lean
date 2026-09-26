@@ -174,7 +174,7 @@ theorem finiteGaloisBase_conjugator
   exact congrArg (fun H : Subgroup (G K) => H.carrier) hs
 
 /-- The finite quotient attached to an explicit finite Galois realization. -/
-private noncomputable instance
+noncomputable instance
     finiteGaloisAbstractExtensionOfEmbedding_bundle_finite
     (i : L →ₐ[K] SeparableClosure K) :
     Finite ((B K).toSubgroup ⧸
@@ -368,10 +368,20 @@ def finiteGaloisConjugationOfEmbeddings
   have hB := finiteGaloisBase_conjugator K
     (finiteGaloisEmbeddingConjugator K L i j)⁻¹
   have hH := finiteGaloisClosedFixingSubgroup_conjugator K L i j
+  letI : (extensionSubgroup (B K)
+      (finiteGaloisClosedFixingSubgroupOfEmbedding K L i) hLK).Normal :=
+    (finiteGaloisAbstractExtensionOfEmbedding K L i).normal
+  letI : (extensionSubgroup (B K)
+      (finiteGaloisClosedFixingSubgroupOfEmbedding K L j)
+      (fixingSubgroupLeBase K (SeparableClosure K)
+        (finiteGaloisFieldRangeOfEmbedding K L j))).Normal :=
+    (finiteGaloisAbstractExtensionOfEmbedding K L j).normal
   let e := finiteReciprocityNaturalityConjugation (B K)
       (finiteGaloisClosedFixingSubgroupOfEmbedding K L i)
-      hLK s
+      hLK s (hLnormal := (finiteGaloisAbstractExtensionOfEmbedding K L i).normal)
   let c := extensionQuotientCongr
+    (hN := by exact finiteGaloisEmbeddingConjugate_normal K L i s)
+    (hN' := (finiteGaloisAbstractExtensionOfEmbedding K L j).normal)
     (conjugateClosedSubgroup_mono hLK s)
     (fixingSubgroupLeBase K (SeparableClosure K)
       (finiteGaloisFieldRangeOfEmbedding K L j)) hB hH
@@ -526,6 +536,22 @@ def finiteGaloisNormConjugationOfEmbeddings
       hLK s
   letI := finite_conjugateExtension (B K)
     (finiteGaloisClosedFixingSubgroupOfEmbedding K L i) hLK s
+  letI : AddZeroClass (FiniteNormQuotient (AG K)
+      (conjugateClosedSubgroup (B K) s)
+      (conjugateClosedSubgroup (finiteGaloisClosedFixingSubgroupOfEmbedding K L i) s)
+      (conjugateClosedSubgroup_mono hLK s)) :=
+    (finiteNormQuotientAddCommGroup (AG K)
+      (conjugateClosedSubgroup (B K) s)
+      (conjugateClosedSubgroup (finiteGaloisClosedFixingSubgroupOfEmbedding K L i) s)
+      (conjugateClosedSubgroup_mono hLK s)).toAddZeroClass
+  letI : AddZeroClass (FiniteNormQuotient (AG K) (B K)
+      (finiteGaloisClosedFixingSubgroupOfEmbedding K L j)
+      (fixingSubgroupLeBase K (SeparableClosure K)
+        (finiteGaloisFieldRangeOfEmbedding K L j))) :=
+    (finiteNormQuotientAddCommGroup (AG K) (B K)
+      (finiteGaloisClosedFixingSubgroupOfEmbedding K L j)
+      (fixingSubgroupLeBase K (SeparableClosure K)
+        (finiteGaloisFieldRangeOfEmbedding K L j))).toAddZeroClass
   let c := finiteNormQuotientCongr (AG K)
     (K := conjugateClosedSubgroup (B K) s)
     (L := conjugateClosedSubgroup
@@ -674,7 +700,8 @@ theorem finiteNormQuotientEquivEmbeddedNormQuotient_finiteNormClass_baseUnit
           (localNormSubgroup_fieldRange_eq K (SeparableClosure K) L i)))
         ((MonoidHom.toAdditive (normClass K (AlgHom.fieldRange i)))
           (Additive.ofMul x)) := by
-      simp [AG, B, finiteGaloisClosedFixingSubgroupOfEmbedding,
+      simp [intrinsicAbsoluteUnits, intrinsicAbstractBase,
+        finiteGaloisClosedFixingSubgroupOfEmbedding,
         finiteGaloisFieldRangeOfEmbedding]
     _ = (MonoidHom.toAdditive (normClass K L)) (Additive.ofMul x) := by
       change Additive.ofMul
@@ -893,11 +920,11 @@ theorem finiteNormQuotientEquivEmbeddedNormQuotient_conjugation
 /-- The final pointwise diagram chase: the source, middle, and target squares
 determine the transported value without any further unfolding. -/
 private theorem reciprocityTransport_pointwise
-    {A B C D E F : Type}
-    (q : A → B) (b : C → D)
-    (ri : A ≃ C) (rj : B ≃ D)
+    {A B' C D E F : Type}
+    (q : A → B') (b : C → D)
+    (ri : A ≃ C) (rj : B' ≃ D)
     (ni : C → E) (nj : D → E)
-    (si : A ≃ F) (sj : B ≃ F)
+    (si : A ≃ F) (sj : B' ≃ F)
     (hsource : ∀ z, sj (q z) = si z)
     (hnorm : ∀ a, nj (b a) = ni a)
     (hforward : ∀ z, b (ri z) = rj (q z))
@@ -923,6 +950,7 @@ theorem concreteReciprocityAddEquivOfEmbedding_eq
     (hcf : SatisfiesClassFieldAxiom (AG K)) :
     concreteReciprocityAddEquivOfEmbedding K L i D v hcf =
       concreteReciprocityAddEquivOfEmbedding K L j D v hcf := by
+  let : T2Space (G K) := krullTopology_t2
   let Ei := finiteGaloisAbstractExtensionOfEmbedding K L i
   let Ej := finiteGaloisAbstractExtensionOfEmbedding K L j
   let hBAbsolute : Finite ((baseField (G K)).toSubgroup ⧸

@@ -51,12 +51,13 @@ private instance equalCharacteristicDirectThetaCompletedBaseCharP
       (equalCharacteristicCompletedUnramifiedField F.residueField)).injective
     F.residueCharacteristic
 
-private instance equalCharacteristicDirectThetaCompletedLevelCharP
+/-- The completed Lubin–Tate level field has the residue characteristic of the base field. -/
+instance equalCharacteristicDirectThetaCompletedLevelCharP
     (F : LocalField.{u, v} K)
     [CharP K F.residueCharacteristic] (n : ℕ) :
     CharP (equalCharacteristicCompletedLevelField F n)
-      F.residueCharacteristic :=
-  charP_of_injective_algebraMap
+      F.residueCharacteristic := by
+  exact charP_of_injective_algebraMap
     (algebraMap (equalCharacteristicCompletedUnramifiedField F.residueField)
       (equalCharacteristicCompletedLevelField F n)).injective
     F.residueCharacteristic
