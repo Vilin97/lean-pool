@@ -62,7 +62,11 @@ theorem postcomp_sobolevNorm_le (s : ℕ) (L : F →L[ℝ] G) (hL : ‖L‖ ≤ 
 end Postcomposition
 
 /-- A coordinate projection on a real Euclidean target, of operator norm at most one. -/
-noncomputable def coordinate (q : ℕ) (i : Fin q) : Domain q →L[ℝ] ℝ := EuclideanSpace.proj i
+@[expose] noncomputable def coordinate (q : ℕ) (i : Fin q) : Domain q →L[ℝ] ℝ :=
+  EuclideanSpace.proj i
+
+@[simp] theorem coordinate_apply (q : ℕ) (i : Fin q) (x : Domain q) :
+    coordinate q i x = x i := by rfl
 
 theorem coordinate_norm_le (q : ℕ) (i : Fin q) : ‖coordinate q i‖ ≤ 1 := by
   apply (coordinate q i).opNorm_le_bound (by norm_num)

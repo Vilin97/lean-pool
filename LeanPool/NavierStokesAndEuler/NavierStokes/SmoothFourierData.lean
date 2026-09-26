@@ -827,7 +827,7 @@ def coordinateCoeff (j : Bool) (a : Frequency → ℂ) : Frequency → ℂ :=
   if j then derivY a else derivX a
 
 /-- Coordinate partial, given by `fderiv ℝ f x (if j then (0, 1) else (1, 0))`. -/
-def coordinatePartial (j : Bool) (f : Plane → ℂ) (x : Plane) : ℂ :=
+@[expose] def coordinatePartial (j : Bool) (f : Plane → ℂ) (x : Plane) : ℂ :=
   fderiv ℝ f x (if j then (0, 1) else (1, 0))
 
 /-- Coefficient word as an element of `js, a => coordinateCoeff j (coefficientWord js a)`. -/

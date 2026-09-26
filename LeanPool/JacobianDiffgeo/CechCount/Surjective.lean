@@ -44,9 +44,11 @@ theorem mulH1_surjective {f : ℳ X} (hf0 : f ≠ 0) {D E : RS.Divisor X} (hf : 
   have hfinv0 : (f⁻¹ : ℳ X) ≠ 0 := inv_ne_zero hf0
   -- the coe bookkeeping: `((divisor f x : ℤ) : WithTop ℤ) = f.ord x` for `f ≠ 0`
   have hcoe : ∀ x : X, ((RS.divisor f x : ℤ) : WithTop ℤ) = f.ord x := fun x =>
-    WithTop.coe_untop₀_of_ne_top (RS.Mero.ord_ne_top hf0 x)
+    by simpa only [RS.divisor_apply] using
+      WithTop.coe_untop₀_of_ne_top (RS.Mero.ord_ne_top hf0 x)
   have hcoeinv : ∀ x : X, ((RS.divisor (f⁻¹) x : ℤ) : WithTop ℤ) = (f⁻¹ : ℳ X).ord x := fun x =>
-    WithTop.coe_untop₀_of_ne_top (RS.Mero.ord_ne_top hfinv0 x)
+    by simpa only [RS.divisor_apply] using
+      WithTop.coe_untop₀_of_ne_top (RS.Mero.ord_ne_top hfinv0 x)
   -- the intermediate divisor
   set D₁ : RS.Divisor X := E + RS.divisor f with hD₁def
   have hD₁x : ∀ x, D₁ x = E x + RS.divisor f x := fun x =>

@@ -32,7 +32,7 @@ noncomputable section
 
 /-- The prepared polynomial, written in the standard `Fin (n + 1) -> C`
 coordinate model used by `HolomorphicGerm`. -/
-def preparedPolynomialFunction {n d : ℕ}
+@[expose] def preparedPolynomialFunction {n d : ℕ}
     (a : Fin d → Base n → ℂ) : ComplexEuclidean (n + 1) → ℂ :=
   fun x ↦ preparedPolynomial d a (wptAmbientEquiv n x)
 
@@ -55,7 +55,7 @@ theorem analyticAt_preparedPolynomialFunction {n d : ℕ}
       ComplexEuclidean (n + 1) →L[ℂ] Ambient n)) (x := 0)
 
 /-- The germ of a fixed prepared polynomial. -/
-def preparedPolynomialGerm {n d : ℕ}
+@[expose] def preparedPolynomialGerm {n d : ℕ}
     (a : Fin d → Base n → ℂ) (ha : ∀ i, AnalyticAt ℂ (a i) 0) :
     HolomorphicGerm (n + 1) :=
   HolomorphicGerm.ofFunction (preparedPolynomialFunction a)
@@ -374,7 +374,7 @@ def preparedGermDivisionQuotient {n d : ℕ}
   Classical.choose (exists_preparedGermDivision a ha ha0 h)
 
 /-- The canonical coefficient vector of the degree-`< d` remainder. -/
-def preparedGermDivisionRemainder {n d : ℕ}
+@[expose] def preparedGermDivisionRemainder {n d : ℕ}
     (a : Fin d → Base n → ℂ) (ha : ∀ i, AnalyticAt ℂ (a i) 0)
     (ha0 : ∀ i, a i 0 = 0) (h : HolomorphicGerm (n + 1)) :
     Fin d → HolomorphicGerm n :=
@@ -469,7 +469,7 @@ theorem preparedGermDivisionRemainder_smul {n d : ℕ}
 
 /-- The base-linear coefficient-remainder map supplied by analytic
 Weierstrass division. -/
-def preparedGermDivisionRemainderLinearMap {n d : ℕ}
+@[expose] def preparedGermDivisionRemainderLinearMap {n d : ℕ}
     (a : Fin d → Base n → ℂ) (ha : ∀ i, AnalyticAt ℂ (a i) 0)
     (ha0 : ∀ i, a i 0 = 0) :
     HolomorphicGerm (n + 1) →ₗ[HolomorphicGerm n]

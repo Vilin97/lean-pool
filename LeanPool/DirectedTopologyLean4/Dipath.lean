@@ -153,8 +153,7 @@ lemma image_extend_eq_image (γ : Dipath x y) (a b : I) :
 /-! ### Reflexive dipaths -/
 
 /-- The constant dipath from a point to itself -/
-@[refl]
-def refl (x : X) : Dipath x x where
+@[expose, refl] def refl (x : X) : Dipath x x where
   toPath := Path.refl x
   dipath_toPath := isDipath_constant x
 
@@ -167,7 +166,7 @@ lemma refl_range {a : X} : range (Dipath.refl a) = {a} := Path.refl_range
 /-! ### Concatenation of dipaths -/
 
 /-- Directed paths can be concatenated -/
-@[trans] def trans (γ : Dipath x y) (γ' : Dipath y z) : Dipath x z :=
+@[expose, trans] def trans (γ : Dipath x y) (γ' : Dipath y z) : Dipath x z :=
 {
   γ.toPath.trans γ'.toPath with
   dipath_toPath := isDipath_concat γ.dipath_toPath γ'.dipath_toPath
@@ -275,7 +274,7 @@ lemma subparam_range (γ : Dipath x y) (f : D(I,I)) :
 /-- Given a dipath `γ` and a dimap `f : I → I` where `f 0 = 0` and `f 1 = 1`, `γ.reparam f` is the
 dipath defined by `γ ∘ f`.
 -/
-def reparam (γ : Dipath x y) (f : D(I,I)) (hf₀ : f 0 = 0) (hf₁ : f 1 = 1) :
+@[expose] def reparam (γ : Dipath x y) (f : D(I,I)) (hf₀ : f 0 = 0) (hf₁ : f 1 = 1) :
   Dipath x y :=
 (subparam γ f).cast (hf₀.symm ▸ γ.source.symm) (hf₁.symm ▸ γ.target.symm)
 

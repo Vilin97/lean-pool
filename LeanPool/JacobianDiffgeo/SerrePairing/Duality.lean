@@ -54,6 +54,7 @@ the residue-calculus atom the whole injectivity core rests on). -/
 theorem laurentCoeffAt_ord_ne_zero {Θ : MForm X} {x : X} (h : Θ.ord x ≠ ⊤) :
     Θ.laurentCoeffAt x (Θ.ord x).untop₀ ≠ 0 := by
   obtain ⟨θ, rfl⟩ := MForm.exists_rep Θ
+  rw [MForm.laurentCoeffAt_mk, MForm.ord_mk]
   exact RS.laurentCoeffAt_order_ne_zero (θ.meromorphicAt_coeffAt x) h
 
 end MForm
@@ -73,7 +74,7 @@ theorem exists_tail_pair_ne_zero {D : RS.Divisor X} {Θ : MForm X}
   have hp : Θ.ord p ≠ ⊤ := MForm.ord_ne_top hΘ0 p
   set k : ℤ := (Θ.ord p).untop₀ with hk_def
   have hk_eq : ((k : ℤ) : WithTop ℤ) = Θ.ord p := WithTop.coe_untop₀_of_ne_top hp
-  have h1 : ((-((-D) p) : ℤ) : WithTop ℤ) ≤ Θ.ord p := hΘ p
+  have h1 : ((-((-D) p) : ℤ) : WithTop ℤ) ≤ Θ.ord p := (MForm.mem_omegaSpace_iff.mp hΘ) p
   rw [Divisor.neg_apply, neg_neg, ← hk_eq] at h1
   have hDp : D p ≤ k := by exact_mod_cast h1
   refine ⟨Tail.single p (-1 - k) 1, Tail.single_boundedBy (fun _ => by omega), ?_⟩
@@ -128,7 +129,7 @@ theorem pair_congr_of_toH_eq (toH : ↥(TailSpace D) →ₗ[ℂ] H)
   have hz := hwd Θ hΘ δ hδker
   rw [hδcoe] at hz
   have hlin : pair Θ ((τ : Tail X) - (σ : Tail X)) = pair Θ (τ : Tail X) - pair Θ (σ : Tail X) :=
-    map_sub (pairL Θ) (τ : Tail X) (σ : Tail X)
+    by simpa only [pairL_apply] using map_sub (pairL Θ) (τ : Tail X) (σ : Tail X)
   rw [hlin] at hz
   exact sub_eq_zero.mp hz
 
@@ -194,15 +195,14 @@ theorem finrank_omegaSpace_le (toH : ↥(TailSpace D) →ₗ[ℂ] H) (hsurj : Fu
     have hsub0 : Θ1.1 - Θ2.1 ≠ 0 := sub_ne_zero.2 hne
     have hmem : Θ1.1 - Θ2.1 ∈ MForm.OmegaSpace (-D) := Submodule.sub_mem _ Θ1.2 Θ2.2
     obtain ⟨τ0, hτ0bd, hτ0ne⟩ := exists_tail_pair_ne_zero hmem hsub0
-    have hτ0mem : τ0 ∈ TailSpace D := hτ0bd
+    have hτ0mem : τ0 ∈ TailSpace D := mem_tailSpace_iff.mpr hτ0bd
     apply hτ0ne
     have hΦ : resDual toH hwd hsurj Θ1 (toH ⟨τ0, hτ0mem⟩)
         = resDual toH hwd hsurj Θ2 (toH ⟨τ0, hτ0mem⟩) :=
       LinearMap.ext_iff.1 heq (toH ⟨τ0, hτ0mem⟩)
     rw [resDual_apply_toH, resDual_apply_toH] at hΦ
     have hlin : pair (Θ1.1 - Θ2.1) τ0 = pair Θ1.1 τ0 - pair Θ2.1 τ0 := by
-      change pairL (Θ1.1 - Θ2.1) τ0 = pairL Θ1.1 τ0 - pairL Θ2.1 τ0
-      rw [map_sub, LinearMap.sub_apply]
+      simp only [← pairL_apply, map_sub, LinearMap.sub_apply]
     rw [hlin, hΦ, sub_self]
   rw [show Module.finrank ℂ (MForm.OmegaSpace (-D)) = Module.finrank ℂ ↥(MForm.OmegaSpace (-D))
     from rfl, ← Subspace.dual_finrank_eq (K := ℂ) (V := H)]

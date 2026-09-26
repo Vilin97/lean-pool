@@ -261,7 +261,7 @@ theorem analyticAt_delaunayActionSection
 /-- An action section through a prescribed eccentric anomaly and periapsis angle.  Fixing the
 eccentric anomaly, rather than the mean anomaly, makes the dependence on the two actions
 explicitly analytic. -/
-noncomputable def delaunayActionSectionAtAnomaly
+@[expose] noncomputable def delaunayActionSectionAtAnomaly
     (anomaly periapsisAngle : ℝ) (action : ActionSpace) : PhaseSpace :=
   let eccentricity := eccentricityFromActions action
   positionMomentumPhasePoint

@@ -493,7 +493,7 @@ inductive Side
 | RR : Side
 
 /-- The component indicated by a sum constructor. -/
-@[simp]
+@[expose, simp]
 def sideOf : Sum α α → Side
 | Sum.inl _ => .LL
 | Sum.inr _ => .RR

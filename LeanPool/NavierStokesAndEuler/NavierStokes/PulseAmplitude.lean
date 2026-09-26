@@ -440,9 +440,9 @@ theorem normalized_mass_prefix_small (c : Parameters)
 /-! ## The actual bump is one fixed template in log coordinates -/
 
 /-- Template lower, given by `Real.exp (-(3 / 20 : ℝ))`. -/
-noncomputable def templateLower : ℝ := Real.exp (-(3 / 20 : ℝ))
+@[expose] noncomputable def templateLower : ℝ := Real.exp (-(3 / 20 : ℝ))
 /-- Template upper, given by `Real.exp (3 / 20 : ℝ)`. -/
-noncomputable def templateUpper : ℝ := Real.exp (3 / 20 : ℝ)
+@[expose] noncomputable def templateUpper : ℝ := Real.exp (3 / 20 : ℝ)
 /-- Radial template, given by `LocalizedMomentRepair.bump templateLower templateUpper`. -/
 noncomputable def radialTemplate : ℝ → ℝ :=
   LocalizedMomentRepair.bump templateLower templateUpper
@@ -2313,7 +2313,7 @@ theorem totalEnergy_eq_of_integrable (d : OutgoingTail.TailData) (A eta : ℝ)
   linarith
 
 theorem tailEnergy_eq (d : OutgoingTail.TailData) (eta : ℝ) :
-    tailEnergy d eta = TailEnergyBounds.postPulseEnergy d eta := rfl
+    tailEnergy d eta = TailEnergyBounds.postPulseEnergy d eta := by rfl
 
 theorem tailEnergy_contDiff (d : OutgoingTail.TailData) : ContDiff ℝ ∞ (tailEnergy d) :=
   TailEnergyBounds.postPulseEnergy_contDiff d

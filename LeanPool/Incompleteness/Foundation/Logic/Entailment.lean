@@ -189,7 +189,7 @@ end «lp_section_2»
 @[simp] lemma provableSet_theory (𝓢 : S) : 𝓢 ⊢!* theory 𝓢 := fun hf ↦ hf
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Inconsistent (𝓢 : S) : Prop := ∀ f, 𝓢 ⊢! f
+@[expose] def Inconsistent (𝓢 : S) : Prop := ∀ f, 𝓢 ⊢! f
 
 /-- Imported declaration from the Incompleteness formalization. -/
 class Consistent (𝓢 : S) : Prop where

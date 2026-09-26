@@ -83,6 +83,11 @@ def pathDerivativeMap (DA : C(K, Space →ᵇ (Space →L[ℝ] V))) :
 @[simp] theorem pathDerivativeMap_apply (DA : C(K, Space →ᵇ (Space →L[ℝ] V)))
     (a : Space) (t : K) (x : Space) : pathDerivativeMap DA a t x = DA t x a := by rfl
 
+theorem pathDerivativeMap_apply_field (DA : C(K, Space →ᵇ (Space →L[ℝ] V)))
+    (a : Space) (t : K) : pathDerivativeMap DA a t = fieldDerivativeMap (DA t) a := by
+  ext x
+  simp only [pathDerivativeMap_apply, fieldDerivativeMap_apply]
+
 theorem pathDerivativeMap_norm_le (DA : C(K, Space →ᵇ (Space →L[ℝ] V))) :
     ‖pathDerivativeMap DA‖ ≤ ‖DA‖ :=
   (pathDerivativeMap DA).opNorm_le_bound (norm_nonneg DA) (pathDirection_norm_le DA)
@@ -114,7 +119,7 @@ theorem translateCoefficientPath_taylor (A : C(K, Space →ᵇ V))
   apply (ContinuousMap.norm_le _ (mul_nonneg hM (sq_nonneg _))).2
   intro t
   simpa only [ContinuousMap.sub_apply, translateCoefficientPath_apply,
-    pathDerivativeMap_apply] using
+    pathDerivativeMap_apply_field] using
     translated_taylor_bound (A t) (DA t) (hA t) (hDA t) M hM (h₂ t) a b
 
 /-- Actual spatial differentiation holds in the uniform time-path norm. -/

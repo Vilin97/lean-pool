@@ -96,7 +96,7 @@ theorem Qam.completeGraph_eq' :
   rw [Coalgebra.counit_eq_bra_one]
   ext
   simp [Algebra.algebraMap_eq_smul_one]
-  rfl
+  simp [Qam.completeGraph]
 
 open scoped schurMul
 theorem Qam.Nontracial.CompleteGraph.qam :
@@ -362,7 +362,7 @@ theorem Qam.complement'_eq {E₁ E₂ : Type _} [NormedAddCommGroupOfRing E₁]
     [NormedAddCommGroupOfRing E₂]
     [InnerProductSpace ℂ E₁] [InnerProductSpace ℂ E₂] (a : E₂ →ₗ[ℂ] E₁) :
     Qam.complement' a = Qam.completeGraph E₁ E₂ - a :=
-  rfl
+  by rfl
 
 theorem Qam.irreflexiveComplement_is_irreflexive_qam_iff_irreflexive_qam
   [hA2 : QuantumSetDeltaForm A] {x : l(A)} (hx : LinearMap.IsReal x) :

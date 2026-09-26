@@ -212,7 +212,7 @@ open GapCVP.CNFPolynomialRowMarkerTM GapCVP.SourceFormulaStructuralDecoder
 open GapCVP.CLStructuralCNFOutputMachinesUnconditional GapCVP.CNFDependentFiveFamilyRecordTM
 
 /-- GapCVP reduction support. -/
-def actualWindowIndexEquiv (T : ℕ) :
+@[expose] def actualWindowIndexEquiv (T : ℕ) :
     Window T ≃ (Fin T × Position T) where
   toFun window :=
     (⟨window.1.1.val, by have h := window.2; omega⟩,
@@ -231,7 +231,7 @@ def actualWindowIndexEquiv (T : ℕ) :
     · rfl
 
 /-- GapCVP reduction support. -/
-def totalAtMostOneFamilyClauses (T S : ℕ) : List (Clause T S) :=
+@[expose] def totalAtMostOneFamilyClauses (T S : ℕ) : List (Clause T S) :=
   (clauseLoopFiniteElements
     ((Time T × Position T) × (Symbol S × Symbol S))).map
     (fun candidate =>
@@ -242,7 +242,7 @@ def totalAtMostOneFamilyClauses (T S : ℕ) : List (Clause T S) :=
         atLeastOneClause candidate.1.1 candidate.1.2)
 
 /-- GapCVP reduction support. -/
-def totalForbiddenTransitionFamilyClauses {T S : ℕ}
+@[expose] def totalForbiddenTransitionFamilyClauses {T S : ℕ}
     (specification : Specification T S) : List (Clause T S) :=
   (clauseLoopFiniteElements (Window T × WindowSymbols S)).map
     (fun candidate =>

@@ -83,7 +83,6 @@ computable presentations
 `P` of `V` and `Q` of `W`, an approximable map `f : V → W` is *computable* iff its
 neighbourhood
 relation `Xₙ f Yₘ`, transported to the integer indices, is recursively enumerable. -/
-@[expose]
 @[expose] def IsComputableMap {V : NeighborhoodSystem α} {W : NeighborhoodSystem β}
     (P : ComputablePresentation V) (Q : ComputablePresentation W) (f : ApproximableMap V W) :
       Prop :=

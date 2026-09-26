@@ -276,6 +276,10 @@ noncomputable def reflection : Plane →L[ℝ] Plane :=
       ext i
       fin_cases i <;> simp }
 
+theorem reflection_zero (x : Plane) : reflection x 0 = x 0 := by rfl
+
+theorem reflection_one (x : Plane) : reflection x 1 = -x 1 := by rfl
+
 /-- `diag(lam,-lam)` as a genuine continuous linear operator. -/
 @[expose] noncomputable def diagonal (lam : ℝ) : Plane →L[ℝ] Plane := lam • reflection
 

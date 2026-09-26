@@ -20,7 +20,7 @@ public section
 namespace HadwigerNelsonBounds
 
 /-- Permutation 5, lookup chunk 0. -/
-def partsVertexPermutation5Chunk0 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation5Chunk0 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 0
   | 1 => 238
@@ -89,7 +89,7 @@ def partsVertexPermutation5Chunk0 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Permutation 5, lookup chunk 1. -/
-def partsVertexPermutation5Chunk1 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation5Chunk1 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 340
   | 1 => 350
@@ -158,7 +158,7 @@ def partsVertexPermutation5Chunk1 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Permutation 5, lookup chunk 2. -/
-def partsVertexPermutation5Chunk2 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation5Chunk2 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 360
   | 1 => 365
@@ -227,7 +227,7 @@ def partsVertexPermutation5Chunk2 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Permutation 5, lookup chunk 3. -/
-def partsVertexPermutation5Chunk3 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation5Chunk3 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 43
   | 1 => 203
@@ -296,7 +296,7 @@ def partsVertexPermutation5Chunk3 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Permutation 5, lookup chunk 4. -/
-def partsVertexPermutation5Chunk4 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation5Chunk4 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 259
   | 1 => 251
@@ -365,7 +365,7 @@ def partsVertexPermutation5Chunk4 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Permutation 5, lookup chunk 5. -/
-def partsVertexPermutation5Chunk5 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation5Chunk5 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 140
   | 1 => 141
@@ -434,7 +434,7 @@ def partsVertexPermutation5Chunk5 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Permutation 5, lookup chunk 6. -/
-def partsVertexPermutation5Chunk6 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation5Chunk6 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 85
   | 1 => 88
@@ -503,7 +503,7 @@ def partsVertexPermutation5Chunk6 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Permutation 5, lookup chunk 7. -/
-def partsVertexPermutation5Chunk7 (index : Nat) : Fin 481 :=
+@[expose] def partsVertexPermutation5Chunk7 (index : Nat) : Fin 481 :=
   match index with
   | 0 => 22
   | 1 => 27
@@ -541,7 +541,7 @@ def partsVertexPermutation5Chunk7 (index : Nat) : Fin 481 :=
   | _ => 0
 
 /-- Exact base-graph automorphism 5. -/
-def partsVertexPermutation5 (vertex : Fin 481) : Fin 481 :=
+@[expose] def partsVertexPermutation5 (vertex : Fin 481) : Fin 481 :=
   match vertex.val / 64 with
   | 0 => partsVertexPermutation5Chunk0 (vertex.val % 64)
   | 1 => partsVertexPermutation5Chunk1 (vertex.val % 64)

@@ -1046,7 +1046,7 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- A concrete `StripData`: the radial domain and both weights are explicit;
 the only inputs beyond the annulus are the positive band scales. -/
-noncomputable def logStripData (a b cL cR : ℝ) (ha : 0 < a)
+@[expose] noncomputable def logStripData (a b cL cR : ℝ) (ha : 0 < a)
     (hcL : 0 < cL) (hcR : 0 < cR) (ε S : ℕ → ℝ)
     (hε : ∀ n, 0 < ε n) (hεone : ∀ n, ε n ≤ 1) (hS : ∀ n, 1 ≤ S n) :
     WeightedClasses.StripData (ℝ × E) where

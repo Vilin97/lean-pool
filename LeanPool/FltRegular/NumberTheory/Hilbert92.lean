@@ -267,7 +267,7 @@ def relativeUnitsMapHom : (K →ₐ[k] K) →* (Monoid.End (RelativeUnits k K)) 
 
 @[simp]
 theorem relativeUnitsMapHom_apply (σ : K →ₐ[k] K) :
-    relativeUnitsMapHom σ = relativeUnitsMap σ := rfl
+    relativeUnitsMapHom σ = relativeUnitsMap σ := by rfl
 
 private lemma sum_ofMul_quotient_mk_eq_zero_iff
     {U ι : Type*} [CommGroup U] (N : Subgroup U)

@@ -2077,7 +2077,7 @@ theorem evaluated_mixed_error (I : AxisCoefficientSpace.Window)
 
 /-- Concrete instantiation by the genuine coefficient product, radial
 averages/inverses, and derivative composites constructed in AxisOperators. -/
-def coefficientOperators (I : AxisCoefficientSpace.Window) {ε : ℝ} (hε : 0 < ε) :
+@[expose] def coefficientOperators (I : AxisCoefficientSpace.Window) {ε : ℝ} (hε : 0 < ε) :
     NaturalOperators (AxisCoefficientSpace.AxisSpace I ε) where
   product := AxisOperators.product I hε
   average := AxisOperators.average I hε
@@ -3311,7 +3311,7 @@ theorem integrated_solution (I : Window) {ε : ℝ} (hε : 0 < ε)
       _ = _ := by rw [hst]
 
 /-- The leading pair defined using the proved angular resolvent. -/
-def referenceCoefficients (I : Window) {ε : ℝ} (hε : 0 < ε)
+@[expose] def referenceCoefficients (I : Window) {ε : ℝ} (hε : 0 < ε)
     (χ : AxisSpace I ε) (d : AxisContraction.AxisData (AxisSpace I ε)) :
     AxisSpace I ε × AxisSpace I ε :=
   AxisContraction.referencePair (AxisContraction.coefficientOperators I hε) d
@@ -3321,6 +3321,12 @@ def referenceCoefficients (I : Window) {ε : ℝ} (hε : 0 < ε)
     (χ : AxisSpace I ε) (d : AxisContraction.AxisData (AxisSpace I ε)) :
     (referenceCoefficients I hε χ d).1 = AxisResolvent.naturalResolvent I hε χ d.one := by
   rfl
+
+theorem referenceCoefficients_snd (I : Window) {ε : ℝ} (hε : 0 < ε)
+    (χ : AxisSpace I ε) (d : AxisContraction.AxisData (AxisSpace I ε)) :
+    (referenceCoefficients I hε χ d).2 =
+      -(1 / 2 : ℝ) • AxisOperators.regularInverse I hε 1 (by norm_num)
+        (AxisOperators.product I hε d.inverseL d.zStar) := by rfl
 
 /-- The limiting system is stated directly for actual functions. -/
 structure IsLeadingSolution (I : Window) (d : ParameterData)
@@ -3370,7 +3376,7 @@ theorem reference_isLeadingSolution (I : Window) {ε : ℝ} (hε : 0 < ε)
 
 /-- A fixed finite constant computed from the input norms and the genuine
 bounded operators. It is independent of `Λ` and of the amplitude in its norm ball. -/
-def errorConstant (I : Window) {ε : ℝ} (hε : 0 < ε)
+@[expose] def errorConstant (I : Window) {ε : ℝ} (hε : 0 < ε)
     (χ : AxisSpace I ε) (d : AxisContraction.AxisData (AxisSpace I ε))
     (M : ℝ) (hM : 0 ≤ M) : ℝ :=
   AxisContraction.remainderBound (AxisContraction.coefficientOperators I hε) d

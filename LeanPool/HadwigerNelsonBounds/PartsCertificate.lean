@@ -69,7 +69,7 @@ def PartsBlocks (path : List PartsAssignment) (vertex : Fin 481) (color : Fin 4)
     assignment.color = color ∧ partsAdjacent vertex assignment.vertex = true
 
 /-- A coloring agrees with every assignment on a certificate path. -/
-def PartsExtends (coloring : Fin 481 → Fin 4) (path : List PartsAssignment) : Prop :=
+@[expose] def PartsExtends (coloring : Fin 481 → Fin 4) (path : List PartsAssignment) : Prop :=
   ∀ assignment ∈ path, coloring assignment.vertex = assignment.color
 
 /-- Properness for the exact unit edges recognized by the certificate. -/
@@ -83,7 +83,8 @@ lemma mem_partsColors (color : Fin 4) : color ∈ partsColors := by
   fin_cases color <;> simp [partsColors]
 
 /-- Executable counterpart of `PartsBlocks`. -/
-def PartsBlocksB (path : List PartsAssignment) (vertex : Fin 481) (color : Fin 4) : Bool :=
+@[expose] def PartsBlocksB (path : List PartsAssignment) (vertex : Fin 481)
+    (color : Fin 4) : Bool :=
   path.any fun assignment =>
     assignment.color == color && partsAdjacent vertex assignment.vertex
 

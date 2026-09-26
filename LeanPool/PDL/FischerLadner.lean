@@ -63,7 +63,7 @@ namespace PDL
 /-! ## Lemmas  -/
 
 /-- Whether a formula has an outer negation constructor. -/
-def isNeg : Formula → Prop
+@[expose] def isNeg : Formula → Prop
 | ~_ => True
 | _ => False
 

@@ -48,7 +48,7 @@ theorem continuous_massScale : Continuous massScale := by
     ((continuous_id.smul continuous_const).prodMk continuous_const)
 
 /-- The distinguished unit direction in the mass coordinate. -/
-def massDirection : ParameterPhase := (1, 0)
+@[expose] def massDirection : ParameterPhase := (1, 0)
 
 @[simp] theorem massDirection_fst : massDirection.1 = 1 := rfl
 
@@ -76,7 +76,7 @@ theorem norm_massScale_le_one {t : ℝ} (ht : t ∈ Set.Icc (0 : ℝ) 1) :
 
 /-- The power series of the mass partial derivative after applying the mass-scaling homotopy to
 its input variables. -/
-noncomputable def massPartialSeries
+@[expose] noncomputable def massPartialSeries
     (p : FormalMultilinearSeries ℝ ParameterPhase ℝ) (t : ℝ) :
     FormalMultilinearSeries ℝ ParameterPhase ℝ :=
   (ContinuousLinearMap.apply ℝ ℝ massDirection).compFormalMultilinearSeries
@@ -114,7 +114,7 @@ theorem continuous_massPartialSeries_coeff
       (ContinuousLinearMap.apply ℝ ℝ massDirection)).continuous.comp hcomp
 
 /-- One evaluated coefficient, bundled as a continuous function of the homotopy parameter. -/
-noncomputable def massPartialTerm
+@[expose] noncomputable def massPartialTerm
     (p : FormalMultilinearSeries ℝ ParameterPhase ℝ)
     (x : ParameterPhase) (n : ℕ) : C(ℝ, ℝ) where
   toFun t := massPartialSeries p t n (fun _ ↦ x)

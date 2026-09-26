@@ -2295,7 +2295,7 @@ theorem fragStart_eq {n : Nat} {p : Part} {c : Nat} {cnt ks sizes : Array Nat}
   rw [fragStart, hs, key]
 
 /-- The partition carried by the cell loop's state. -/
-def SplitState.part (st : SplitState) : Part :=
+@[expose] def SplitState.part (st : SplitState) : Part :=
   { lab := st.lab, pos := st.pos, cst := st.cst, cen := st.cen }
 
 /-- **What splitting one cell does.**  Outside the cell `[c, cen[c])` nothing moves; inside, each

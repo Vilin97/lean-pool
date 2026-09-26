@@ -240,7 +240,7 @@ noncomputable def linearMatrix (P : Patch) (lam : ℝ) : Matrix (Fin 3) (Fin 3) 
   LocalizedMomentRepair.matrix (powers lam) (lower P) (upper P)
 
 theorem linearMatrix_entry (P : Patch) (lam : ℝ) (i j : Fin 3) :
-    linearMatrix P lam i j = bumpMoment P (powers lam i) j := rfl
+    linearMatrix P lam i j = bumpMoment P (powers lam i) j := by rfl
 
 /-- The three powers are those of pressure, energy, and angular momentum. -/
 theorem linearMatrix_det_ne_zero (P : Patch) (lam : ℝ) (hlam : 0 ≤ lam) :
@@ -265,7 +265,7 @@ noncomputable def linearEquiv (P : Patch) (lam : ℝ) (hlam : 0 ≤ lam) :
           (isUnit_iff_ne_zero.mpr (linearMatrix_det_ne_zero P lam hlam)), Matrix.one_mulVec] }
 
 theorem linearEquiv_apply (P : Patch) (lam : ℝ) (hlam : 0 ≤ lam) (c : Coeff) :
-    linearEquiv P lam hlam c = (linearMatrix P lam).mulVec c := rfl
+    linearEquiv P lam hlam c = (linearMatrix P lam).mulVec c := by rfl
 
 /-- Quadratic bilin, bundling `toFun`, `map_add`, `map_smul`, `map_add` and the required
 compatibility proofs. -/
@@ -296,7 +296,7 @@ noncomputable def quadraticCLM (P : Patch) : Coeff →L[ℝ] Coeff →L[ℝ] Coe
 theorem quadraticCLM_apply (P : Patch) (c d : Coeff) :
     quadraticCLM P c d =
       ![(1 / 2) * ∑ j, squareMoment P (-1) j * c j * d j,
-        (1 / 2) * ∑ j, squareMoment P 0 j * c j * d j, 0] := rfl
+        (1 / 2) * ∑ j, squareMoment P 0 j * c j * d j, 0] := by rfl
 
 /-- Base profile, given by `x ^ slope lam`. -/
 @[expose] noncomputable def baseProfile (lam x : ℝ) : ℝ := x ^ slope lam
@@ -492,7 +492,7 @@ noncomputable def correctionCLM (P : Patch) (x : ℝ) : Coeff →L[ℝ] ℝ :=
           RingHom.id_apply] }
 
 theorem correctionCLM_apply (P : Patch) (x : ℝ) (c : Coeff) :
-    correctionCLM P x c = correction P c x := rfl
+    correctionCLM P x c = correction P c x := by rfl
 
 theorem correction_parameter_deriv (P : Patch) {c : ℝ → Coeff} {η : ℝ}
     (hc : DifferentiableAt ℝ c η) (x : ℝ) :

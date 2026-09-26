@@ -29,6 +29,7 @@ variable
 @[irreducible, expose] def toSubtype (s : Finset A) :
     { xs : Multiset A // Multiset.Nodup xs } := ⟨s.val, s.nodup⟩
 
+omit [QuasiBorelSpace A] in
 theorem toSubtype_def (s : Finset A) :
     toSubtype s = ⟨s.val, s.nodup⟩ := by
   unfold toSubtype

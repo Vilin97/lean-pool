@@ -27,14 +27,14 @@ namespace LeanStationaryHarmonicMaps
 namespace StationaryHarmonicMap
 
 /-- The purely one-dimensional sharp-cutoff approximation step. -/
-def WeakOneDimensionalSharpCutoffStep {n m : ℕ}
+@[expose] def WeakOneDimensionalSharpCutoffStep {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   WeakRadialOneDimensionalIdentity Du R0 →
     WeakSharpCutoffLimitIdentity Du (0 : Domain n) R0
 
 /-- Intermediate distributional form of the one-dimensional sharp-cutoff
 argument. -/
-def WeakOneDimensionalToDistributionStep {n m : ℕ}
+@[expose] def WeakOneDimensionalToDistributionStep {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   WeakRadialOneDimensionalIdentity Du R0 →
     WeakSharpCutoffDistributionIdentity Du (0 : Domain n) R0
@@ -77,7 +77,7 @@ def WeakOneDimensionalPrimitiveTestFamily {n m : ℕ}
 test function in `(0, R0)` is the negative derivative, on `(0, R0)`, of a
 compactly supported radial cutoff.  This predicate contains only the
 one-dimensional construction, independent of the map `Du`. -/
-def WeakPrimitiveCutoffRealization (R0 : ℝ) : Prop :=
+@[expose] def WeakPrimitiveCutoffRealization (R0 : ℝ) : Prop :=
   ∀ g : ℝ → ℝ,
     ContDiff ℝ (⊤ : ℕ∞) g →
       HasCompactSupport g →

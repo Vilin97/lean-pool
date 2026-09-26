@@ -115,7 +115,7 @@ theorem germZeroLocus_eq_top_iff {n : ℕ} (f : HolomorphicGerm n) :
     exact germZeroLocus_zero n
 
 /-- Holomorphic germs vanishing on a fixed local set germ form an ideal. -/
-def vanishingIdeal {n : ℕ} (Z : LocalSetGerm n) : Ideal (HolomorphicGerm n) where
+@[expose] def vanishingIdeal {n : ℕ} (Z : LocalSetGerm n) : Ideal (HolomorphicGerm n) where
   carrier := {f | Z ≤ germZeroLocus f}
   zero_mem' := by simp
   add_mem' := by

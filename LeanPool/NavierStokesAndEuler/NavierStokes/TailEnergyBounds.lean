@@ -351,7 +351,7 @@ theorem energyDensity_integrable_postPulse (d : TailData) (eta : ℝ) :
     ⟨(energyDensity_continuous d eta).integrableOn_Ioc, energyDensity_integrable_release d eta⟩
 
 /-- Post pulse energy, given by `∫ y in Ioi d.core.endpoint, energyDensity d eta y`. -/
-noncomputable def postPulseEnergy (d : TailData) (eta : ℝ) : ℝ :=
+@[expose] noncomputable def postPulseEnergy (d : TailData) (eta : ℝ) : ℝ :=
   ∫ y in Ioi d.core.endpoint, energyDensity d eta y
 
 theorem postPulseEnergy_nonneg (d : TailData) (eta : ℝ) : 0 ≤ postPulseEnergy d eta :=

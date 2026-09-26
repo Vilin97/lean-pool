@@ -14,7 +14,7 @@ public section
 namespace HadwigerNelsonBounds
 
 /-- Normalized root orbit 2, checked by Parts tree `S`. -/
-def partsBaseCertificate2 : PartsCertificate := {
+@[expose] def partsBaseCertificate2 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 1⟩, ⟨72, 1⟩, ⟨78, 2⟩,
@@ -31,7 +31,7 @@ def partsBaseCertificate2 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 11, checked by Parts tree `L2`. -/
-def partsBaseCertificate11 : PartsCertificate := {
+@[expose] def partsBaseCertificate11 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 1⟩, ⟨78, 2⟩,
@@ -54,7 +54,7 @@ def partsBaseCertificate11 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 15, checked by Parts tree `S`. -/
-def partsBaseCertificate15 : PartsCertificate := {
+@[expose] def partsBaseCertificate15 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 1⟩, ⟨78, 2⟩,
@@ -71,7 +71,7 @@ def partsBaseCertificate15 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 24, checked by Parts tree `L8`. -/
-def partsBaseCertificate24 : PartsCertificate := {
+@[expose] def partsBaseCertificate24 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 1⟩, ⟨78, 3⟩,
@@ -190,7 +190,7 @@ def partsBaseCertificate24 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 30, checked by Parts tree `S`. -/
-def partsBaseCertificate30 : PartsCertificate := {
+@[expose] def partsBaseCertificate30 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 2⟩, ⟨78, 3⟩,

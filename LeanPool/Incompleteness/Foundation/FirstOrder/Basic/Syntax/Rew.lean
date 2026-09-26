@@ -53,7 +53,7 @@ namespace FirstOrder
 namespace Semiformula
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def rewAux ⦃n₁ n₂ : ℕ⦄ (ω : Rew L ξ₁ n₁ ξ₂ n₂) : Semiformula L ξ₁ n₁ → Semiformula L ξ₂ n₂
+@[expose] def rewAux ⦃n₁ n₂ : ℕ⦄ (ω : Rew L ξ₁ n₁ ξ₂ n₂) : Semiformula L ξ₁ n₁ → Semiformula L ξ₂ n₂
   | ⊤        => ⊤
   | ⊥        => ⊥
   | rel r v  => rel r (ω ∘ v)
@@ -70,7 +70,7 @@ lemma ext_rewAux' {ω₁ ω₂ : Rew L ξ₁ n₁ ξ₂ n₂} (h : ω₁ = ω₂
     rewAux ω₁ φ = rewAux ω₂ φ:= by simp [h]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def rew (ω : Rew L ξ₁ n₁ ξ₂ n₂) : Semiformula L ξ₁ n₁ →ˡᶜ Semiformula L ξ₂ n₂ where
+@[expose] def rew (ω : Rew L ξ₁ n₁ ξ₂ n₂) : Semiformula L ξ₁ n₁ →ˡᶜ Semiformula L ξ₂ n₂ where
   toTr := rewAux ω
   map_top'   := by rfl
   map_bot'   := by rfl

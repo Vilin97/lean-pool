@@ -179,7 +179,7 @@ The coefficient of `Q` in the `F` direction is required to be a nonnegative
 real number.  This is the global gauge needed for a no-`δ`, `lambda = 1`
 stability statement: the weaker local real gauge would still allow `Q = -F`.
 -/
-def positivePhaseGauge {d : Nat} {kappa : MultiIndex d}
+@[expose] def positivePhaseGauge {d : Nat} {kappa : MultiIndex d}
     (F Q : Pkappa d kappa) : Prop :=
   (pkappaInner Q F).im = 0 ∧ 0 ≤ (pkappaInner Q F).re
 

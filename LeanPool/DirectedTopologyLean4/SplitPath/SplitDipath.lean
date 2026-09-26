@@ -63,28 +63,28 @@ lemma second_part_is_dipath {γ : Path x₀ x₁} (γ_dipath : IsDipath γ) (T :
   exact isDipath_reparam φ_mono γ_dipath
 
 /-- The first half of a dipath split at parameter `T`, viewed as a dipath from `γ 0` to `γ T`. -/
-def FirstPart (γ : Dipath x₀ x₁) (T : I) : Dipath x₀ (γ T) := {
+@[expose] def FirstPart (γ : Dipath x₀ x₁) (T : I) : Dipath x₀ (γ T) := {
   SplitPath.FirstPart (γ : Path x₀ x₁) T with
   dipath_toPath := first_part_is_dipath γ.dipath_toPath T
 }
 
 /-- The second half of a dipath split at parameter `T`, viewed as a dipath from `γ T` to `γ 1`. -/
-def SecondPart (γ : Dipath x₀ x₁) (T : I) : Dipath (γ T) x₁ := {
+@[expose] def SecondPart (γ : Dipath x₀ x₁) (T : I) : Dipath (γ T) x₁ := {
   SplitPath.SecondPart (γ : Path x₀ x₁) T with
   dipath_toPath := second_part_is_dipath γ.dipath_toPath T
 }
 
 @[simp]
 lemma first_part_apply (γ : Dipath x₀ x₁) (T t : I) :
-  (FirstPart γ T) t = γ ⟨ T* t, unitInterval.mul_mem T.2 t.2⟩ := rfl
+  (FirstPart γ T) t = γ ⟨ T* t, unitInterval.mul_mem T.2 t.2⟩ := by rfl
 
 @[simp]
 lemma second_part_apply (γ : Dipath x₀ x₁) (T t : I) :
-  (SecondPart γ T) t = γ ⟨(σ T : ℝ) * (t : ℝ) + (T : ℝ), interp_left_mem_I T t⟩ := rfl
+  (SecondPart γ T) t = γ ⟨(σ T : ℝ) * (t : ℝ) + (T : ℝ), interp_left_mem_I T t⟩ := by rfl
 
 /-- The reparametrization of `I` used to glue the first and second part of a dipath split at
 `T` back into the original dipath, packaged as a directed self-map of `I`. -/
-def transReparamMap {T : I} (hT₀ : 0 < T) (hT₁ : T < 1) : D(I,I) where
+@[expose] def transReparamMap {T : I} (hT₀ : 0 < T) (hT₁ : T < 1) : D(I,I) where
   toFun := fun t => ⟨transReparam T t, trans_reparam_mem_I t hT₀ hT₁⟩
   continuous_toFun := Continuous.subtype_mk (continuous_trans_reparam hT₀ hT₁) _
   directed_toFun := DirectedUnitInterval.directed_of_monotone _ (monotone_trans_reparam hT₀ hT₁)

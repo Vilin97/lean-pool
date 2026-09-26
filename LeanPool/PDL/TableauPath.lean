@@ -48,7 +48,8 @@ lemma tabAt_cast_gen {Hist X} {tab : Tableau Hist X} (s : PathIn tab) (w : Σ H 
   cases h; rfl
 
 /-- Append a path in the reached tableau to an initial path. -/
-def PathIn.append {Hist X} {tab : Tableau Hist X} (p : PathIn tab) (q : PathIn (tabAt p).2.2) :
+@[expose] def PathIn.append {Hist X} {tab : Tableau Hist X} (p : PathIn tab)
+    (q : PathIn (tabAt p).2.2) :
   PathIn tab := match p with
   | .nil => q
   | .loc Y_in tail => .loc Y_in (PathIn.append tail q)

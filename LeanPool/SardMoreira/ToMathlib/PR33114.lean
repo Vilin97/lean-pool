@@ -66,11 +66,11 @@ def equiv (X : Type*) (α : ℝ) (hr₀ : 0 < α) (hr₁ : α ≤ 1) : WithRPowD
   left_inv _ := rfl
   right_inv _ := rfl
 
-@[simp] theorem equiv_apply (X : Type*) (α : ℝ) (hr₀ : 0 < α) (hr₁ : α ≤ 1)
-    (x : WithRPowDist X α hr₀ hr₁) : equiv X α hr₀ hr₁ x = x.val := by rfl
+@[simp] theorem equiv_apply (X : Type*) (α : ℝ) (hr₀ : 0 < α) (hr₁ : α ≤ 1) :
+    ⇑(equiv X α hr₀ hr₁) = val := by rfl
 
-@[simp] theorem equiv_symm_apply (X : Type*) (α : ℝ) (hr₀ : 0 < α) (hr₁ : α ≤ 1)
-    (x : X) : (equiv X α hr₀ hr₁).symm x = mk x := by rfl
+@[simp] theorem equiv_symm_apply (X : Type*) (α : ℝ) (hr₀ : 0 < α) (hr₁ : α ≤ 1) :
+    ⇑(equiv X α hr₀ hr₁).symm = mk := by rfl
 
 @[simp]
 theorem val_comp_mk : (val : WithRPowDist X α hα₀ hα₁ → X) ∘ mk = id := rfl
@@ -133,12 +133,11 @@ theorem toEquiv_homeomorph : homeomorph.toEquiv = equiv X α hα₀ hα₁ := by
 @[simp] theorem homeomorph_toEquiv : homeomorph.toEquiv = equiv X α hα₀ hα₁ :=
   toEquiv_homeomorph
 
-@[simp] theorem homeomorph_apply (x : WithRPowDist X α hα₀ hα₁) :
-    homeomorph x = x.val := by rfl
+@[simp] theorem homeomorph_apply :
+    ⇑(homeomorph : WithRPowDist X α hα₀ hα₁ ≃ₜ X) = val := by rfl
 
-@[simp] theorem homeomorph_symm_apply (x : X) :
-    (homeomorph : WithRPowDist X α hα₀ hα₁ ≃ₜ X).symm x =
-      (mk x : WithRPowDist X α hα₀ hα₁) := by rfl
+@[simp] theorem homeomorph_symm_apply :
+    ⇑(homeomorph : WithRPowDist X α hα₀ hα₁ ≃ₜ X).symm = mk := by rfl
 
 /-!
 We copy some instances from the underlying space `X` to `WithRPowDist X α hα₀ hα₁`.
@@ -219,7 +218,7 @@ def _root_.WithRPowDist.uniformEquiv : WithRPowDist X α hα₀ hα₁ ≃ᵤ X 
   uniformContinuous_toFun := uniformContinuous_val
   uniformContinuous_invFun := uniformContinuous_mk
 
-theorem uniformEquiv_toEquiv : uniformEquiv.toEquiv = equiv X α hα₀ hα₁ := by rfl
+@[simp] theorem uniformEquiv_toEquiv : uniformEquiv.toEquiv = equiv X α hα₀ hα₁ := by rfl
 
 @[simp] theorem uniformEquiv_apply (x : WithRPowDist X α hα₀ hα₁) :
     uniformEquiv x = x.val := by rfl

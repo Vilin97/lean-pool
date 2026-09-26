@@ -226,7 +226,7 @@ theorem inclC1_mem_Z1 {Ω : Opens X} {𝒰 : FinCover Ω} (h : D ≤ D') {f : C1
     ← map_sub, ← map_add, ← d1_apply, (mem_Z1_iff D 𝒰 f).1 hf (i, j, k), map_zero]
 
 /-- `D`-inclusion on cover-level `H¹`. -/
-noncomputable def h1CoverIncl {Ω : Opens X} (𝒰 : FinCover Ω) (h : D ≤ D') :
+@[expose] noncomputable def h1CoverIncl {Ω : Opens X} (𝒰 : FinCover Ω) (h : D ≤ D') :
     H1Cover D 𝒰 →ₗ[ℂ] H1Cover D' 𝒰 :=
   Submodule.mapQ _ _ (LinearMap.restrict (inclC1 D 𝒰 h) (fun _ hf => inclC1_mem_Z1 D h hf))
     (fun z hz => by
@@ -265,9 +265,6 @@ theorem h1CoverIncl_resH1 {Ω : Opens X} {𝒰 𝒱 : FinCover Ω} (h : D ≤ D'
   obtain ⟨f, rfl⟩ := H1Cover.mk_surjective D 𝒰 ξ
   rw [resH1_mk, h1CoverIncl_mk, h1CoverIncl_mk, resH1_mk]
   congr 1
-  apply Subtype.ext
-  simpa only [LinearMap.coe_restrict_apply, resZ1_apply_coe] using
-    inclC1_comp_resC1 D h τ hτ (f : C1 D 𝒰)
 
 /-- `D`-monotone functoriality of `H¹`: `H1Incl h : H1 D →ₗ H1 D'` for `D ≤ D'`. -/
 noncomputable def H1Incl (h : D ≤ D') : H1 D →ₗ[ℂ] H1 D' :=

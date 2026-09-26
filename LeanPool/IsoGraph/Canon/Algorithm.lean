@@ -451,7 +451,7 @@ def refineStep (G : Graph) (p : Part) (inW : Array Bool) (s : Nat) (tr : UInt64)
               bc := st.bc })
 
 /-- Index of the first `true` entry of `a`. -/
-def firstSet (a : Array Bool) : Option Nat := Id.run do
+@[expose] def firstSet (a : Array Bool) : Option Nat := Id.run do
   for j in [0:a.size] do
     if a[j]! then return some j
   return none
@@ -557,7 +557,7 @@ certificate exactly when they differ by an automorphism. -/
 /-- Lexicographic comparison of `a` and `b` from index `i` on, with `fuel` bounding the number of
 positions still to look at.  Written as a structural recursion rather than a `for` loop so that
 the order lemmas in `IsoGraph.Canon.Search` can be proved by induction on `fuel`. -/
-def lexCmpFrom (a b : Array UInt64) : Nat → Nat → Ordering
+@[expose] def lexCmpFrom (a b : Array UInt64) : Nat → Nat → Ordering
   | 0, _ => compare a.size b.size
   | fuel + 1, i =>
     if i < min a.size b.size then
@@ -567,7 +567,7 @@ def lexCmpFrom (a b : Array UInt64) : Nat → Nat → Ordering
     else compare a.size b.size
 
 /-- Lexicographic comparison of `UInt64` arrays (shorter is smaller on a common prefix). -/
-def lexCmpU64 (a b : Array UInt64) : Ordering := lexCmpFrom a b (min a.size b.size) 0
+@[expose] def lexCmpU64 (a b : Array UInt64) : Ordering := lexCmpFrom a b (min a.size b.size) 0
 
 /-! ## Automorphisms -/
 
@@ -576,7 +576,7 @@ def lexCmpU64 (a b : Array UInt64) : Ordering := lexCmpFrom a b (min a.size b.si
 
 Written as a `foldl` over `List.range n` rather than as a `for` loop so that
 `IsoGraph.Canon.Autos.autoOf_get` can read off each entry; the work is the same. -/
-def autoOf (n : Nat) (σ τ : Array Nat) : Array Nat :=
+@[expose] def autoOf (n : Nat) (σ τ : Array Nat) : Array Nat :=
   (List.range n).foldl (init := Array.replicate n 0) fun g i => g.set! σ[i]! τ[i]!
 
 /-- Whether a permutation moves some point. -/
@@ -613,7 +613,7 @@ pops, which is at most the number of marked points. -/
 /-- Scan for the first disagreement at or after `i`, stopping at `m`.  A structural recursion on
 fuel rather than a `for` loop with a `break`, for the same reason as the partition walks above:
 `IsoGraph.Canon.Jump` needs to induct on it. -/
-def commonPrefixFrom (a b : Array Nat) (m : Nat) : Nat → Nat → Nat
+@[expose] def commonPrefixFrom (a b : Array Nat) (m : Nat) : Nat → Nat → Nat
   | 0, i => i
   | fuel + 1, i =>
     if i ≥ m then m

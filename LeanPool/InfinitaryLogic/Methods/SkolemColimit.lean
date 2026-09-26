@@ -30,7 +30,7 @@ namespace FirstOrder.Language
   Quot (fun a b : Σ k, F k => b = ⟨a.1 + 1, φ a.1 a.2⟩)
 
 /-- The canonical inclusion of stage `k` into the colimit. -/
-def DirectedColim.incl {F : ℕ → Type} {φ : ∀ k, F k → F (k + 1)} (k : ℕ) (x : F k) :
+@[expose] def DirectedColim.incl {F : ℕ → Type} {φ : ∀ k, F k → F (k + 1)} (k : ℕ) (x : F k) :
     DirectedColim F φ :=
   Quot.mk _ ⟨k, x⟩
 

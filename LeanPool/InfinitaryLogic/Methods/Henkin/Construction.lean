@@ -303,7 +303,7 @@ private theorem termEquiv_equivalence (C : ConsistencyPropertyEq L) (S : Set L.S
 /-! ### Term Setoid and Quotient -/
 
 /-- The Setoid on closed terms induced by the equivalence relation from S*. -/
-def termSetoid (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
+@[expose] def termSetoid (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
     (hmax : C.toConsistencyProperty.MaximalConsistent S) : Setoid (L.Term Empty) where
   r := termEquiv C S hmax
   iseqv := by exact termEquiv_equivalence C S hmax
@@ -333,7 +333,7 @@ def TermModel.mk (t : L.Term Empty) : TermModel C S hmax :=
   Quotient.mk (termSetoid C S hmax) t
 
 /-- The constant family of setoids for the quotient lifting. -/
-def termSetoidFamily (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
+@[expose] def termSetoidFamily (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
     (hmax : C.toConsistencyProperty.MaximalConsistent S) (n : ℕ) :
     ∀ (_ : Fin n), Setoid (L.Term Empty) :=
   fun _ => termSetoid C S hmax

@@ -26,7 +26,7 @@ public section
 namespace HadwigerNelsonBounds
 
 /-- The 36 normalized coloring-tree representatives. -/
-def partsBaseCertificates : Array PartsCertificate := #[
+@[expose] def partsBaseCertificates : Array PartsCertificate := #[
   partsBaseCertificate0,
   partsBaseCertificate1,
   partsBaseCertificate2,

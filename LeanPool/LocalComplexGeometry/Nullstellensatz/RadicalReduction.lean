@@ -37,7 +37,7 @@ The prime-ideal zero-set statement in complex dimension `n`: every prime ideal
 is exactly the ideal of holomorphic germs vanishing on the local zero-set germ
 of any finite generating set selected for that prime.
 -/
-def PrimeZeroSetProperty (n : ℕ) : Prop :=
+@[expose] def PrimeZeroSetProperty (n : ℕ) : Prop :=
   ∀ P : Ideal (HolomorphicGerm n), P.IsPrime →
     vanishingIdeal (idealZeroSetGerm P) = P
 

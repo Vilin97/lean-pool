@@ -30,7 +30,7 @@ variable (period : ℝ) [Fact (0 < period)]
   (sobolevSubspace period q).toSubmodule.subtypeL
 
 /-- Continuous evaluation of the underlying L² field. -/
-def valueOperator (q : ℕ) : SobolevSpace period q →L[ℝ] LiftL2 period :=
+@[expose] def valueOperator (q : ℕ) : SobolevSpace period q →L[ℝ] LiftL2 period :=
   (ContinuousLinearMap.proj (emptyWord q)).comp (arrayOperator period q)
 
 /-- Continuous evaluation of one actual derivative coordinate. -/

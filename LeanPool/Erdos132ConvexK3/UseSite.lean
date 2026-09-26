@@ -48,7 +48,7 @@ structure ErLVAtVertexUseSite
     (firstCounterclockwiseNeighbor P d₁ d₂ d₃ (cyclicAdvance x 3))
 
 /-- Package an actual contradiction-branch use site. -/
-noncomputable def erlvAtVertexUseSiteOfHighDegree
+@[expose] noncomputable def erlvAtVertexUseSiteOfHighDegree
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (hConvex : CyclicStrictConvex P)
     (hClasses : HasTopThreeDistanceClasses P d₁ d₂ d₃)

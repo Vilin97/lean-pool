@@ -149,7 +149,7 @@ when `Γ` is, so the whole seed is. -/
 
 /-- The **lift** of `Γ` into the successor language `L.sum (localSkolem L Γ)` along the left
 injection `LHom.sumInl`. Arity is preserved. -/
-def liftGamma (Γ : Set (Σ n, L.BoundedFormulaω Empty n)) :
+@[expose] def liftGamma (Γ : Set (Σ n, L.BoundedFormulaω Empty n)) :
     Set (Σ n, (L.sum (localSkolem L Γ)).BoundedFormulaω Empty n) :=
   (fun p : Σ n, L.BoundedFormulaω Empty n =>
     (⟨p.1, p.2.mapLanguage (LHom.sumInl : L →ᴸ L.sum (localSkolem L Γ))⟩ :
@@ -241,7 +241,7 @@ symbol for `¬ψ` of each `∀ψ ∈ Gamma` exists) and replace the family by it
 Every countability certificate is carried forward: the family via `localGammaNext_countable`, the
 language via `sum_sigma_functions_countable` / `sum_sigma_relations_countable` together with
 `localSkolem`'s own countability (fed by `skolemNeed_countable`). -/
-def LocalStage.succ (s : LocalStage) : LocalStage where
+@[expose] def LocalStage.succ (s : LocalStage) : LocalStage where
   Lang := s.Lang.sum (localSkolem s.Lang (skolemNeed s.Gamma))
   Gamma := localGammaNext (skolemNeed s.Gamma)
   gamma_countable := by exact localGammaNext_countable (skolemNeed_countable s.gamma_countable)

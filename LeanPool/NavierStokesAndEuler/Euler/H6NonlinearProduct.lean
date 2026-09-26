@@ -60,10 +60,16 @@ theorem word_init_last {n : ℕ} (w : Fin (n + 1) → Fin 4) (f : LiftDomain per
     iteratedFieldDerivative period w f = iteratedFieldDerivative period (Fin.init w)
       (fieldDerivative period (standardDirection (w (Fin.last n))) f) := by
   induction n with
-  | zero => simp only [iteratedFieldDerivative_zero, iteratedFieldDerivative_succ]
+  | zero =>
+    simp only [iteratedFieldDerivative_zero, iteratedFieldDerivative_succ]
+    have hw : (0 : Fin 1) = Fin.last 0 := by decide
+    exact congrArg (fun k : Fin 1 => fieldDerivative period (standardDirection (w k)) f)
+      hw
   | succ n ih =>
-    simp only [iteratedFieldDerivative_succ]
+    conv_lhs => rw [iteratedFieldDerivative_succ]
     rw [ih (Fin.tail w)]
+    conv_rhs => rw [iteratedFieldDerivative_succ]
+    rw [Fin.tail_init_eq_init_tail]
     rfl
 
 theorem derivative_all_memLp (f : LiftDomain period → F)
@@ -191,7 +197,13 @@ theorem product_all_memLp (q : ℕ) (f : LiftDomain period → ℝ) (g : LiftDom
       hf (postcomp_smooth period _ g hg) (fun r _ v => hfL2 r v)
       (fun r _ v => postcomp_word_memLp period (show r ≤ r by
           omega) _ g hg (fun a _ z => hgL2 a z) v)
-    simpa only [iteratedFieldDerivative_zero, ← coordinate_smul] using h
+    rw [← coordinate_smul] at h
+    have heq : (coordinate q i ∘ fun x => f x • g x) =
+        (fun x => (f x • g x).ofLp i) := by
+      funext x
+      exact coordinate_apply q i (f x • g x)
+    rw [heq] at h
+    simpa only [iteratedFieldDerivative_zero] using h
   | succ j ih =>
     intro w
     rw [word_init_last period w, fieldDerivative_smul period _ f g hf hg]

@@ -541,7 +541,7 @@ open scoped ContDiff Topology
     d η * deriv P η + 4 * A h * η * P η
 
 /-- Chi, given by `(H h j η) ^ 2 / ((H h j η) ^ 2 + σ ^ 2)`. -/
-def chi (h j σ η : ℝ) : ℝ := (H h j η) ^ 2 / ((H h j η) ^ 2 + σ ^ 2)
+@[expose] def chi (h j σ η : ℝ) : ℝ := (H h j η) ^ 2 / ((H h j η) ^ 2 + σ ^ 2)
 
 /-- A concrete range of choices permitted by the manuscript's smallness order. -/
 structure SmallParameters (h j : ℝ) : Prop where
@@ -1670,6 +1670,15 @@ def realField (h j σ : ℝ) (P : ℝ → ℝ) : Field → ℝ → ℝ
   | .chi => NaturalAxisData.chi h j σ
   | .gradient => realGradient h j σ
 
+theorem realField_chi (h j σ : ℝ) (P : ℝ → ℝ) (η : ℝ) :
+    realField h j σ P .chi η = NaturalAxisData.chi h j σ η := by rfl
+
+theorem realField_inverseL (h j σ : ℝ) (P : ℝ → ℝ) (η : ℝ) :
+    realField h j σ P .inverseL η = (NaturalAxisData.L h η)⁻¹ := by rfl
+
+theorem realField_zStar (h j σ : ℝ) (P : ℝ → ℝ) (η : ℝ) :
+    realField h j σ P .zStar η = NaturalAxisData.Z h j P η := by rfl
+
 theorem deriv_complexPressure_ofReal {g a : ℝ → ℝ} {cap : ℝ}
     (hp : PressureDatum.Admissible g a cap) (x : ℝ) :
     deriv (PressureDatum.complexPressure g a) (x : ℂ) =
@@ -1909,6 +1918,12 @@ def CoefficientFamily.axisData {h j σ : ℝ} {P : ℝ → ℝ}
   normalizedGradient := v.elements .gradient
   zStar := v.elements .zStar
 
+theorem CoefficientFamily.axisData_inverseL {h j σ : ℝ} {P : ℝ → ℝ}
+    (v : CoefficientFamily h j σ P) : v.axisData.inverseL = v.elements .inverseL := by rfl
+
+theorem CoefficientFamily.axisData_zStar {h j σ : ℝ} {P : ℝ → ℝ}
+    (v : CoefficientFamily h j σ P) : v.axisData.zStar = v.elements .zStar := by rfl
+
 theorem CoefficientFamily.radiallyConstant {h j σ : ℝ} {P : ℝ → ℝ}
     (v : CoefficientFamily h j σ P) (k : Field) :
     NaturalAxisBridge.RadiallyConstant window v.epsilon (v.elements k) := by
@@ -2064,7 +2079,7 @@ theorem AnalyticInputs.realAmplitude_logDerivative {h j σ : ℝ} {P : ℝ → �
 
 /-- Normalization threshold, given by `Real.exp (Λ * realPartSup (axisPhase h j σ)
 d.compactSet)`. -/
-def AnalyticInputs.normalizationThreshold {h j σ : ℝ} {P : ℝ → ℝ}
+@[expose] def AnalyticInputs.normalizationThreshold {h j σ : ℝ} {P : ℝ → ℝ}
     (d : AnalyticInputs h j σ P) (Λ : ℝ) : ℝ :=
   Real.exp (Λ * realPartSup (axisPhase h j σ) d.compactSet)
 
@@ -2135,7 +2150,7 @@ open scoped Topology ContDiff
 @[expose] def rescalePoint (Λ : ℝ) (p : ℝ × ℝ) : ℝ × ℝ := (Λ * p.1, p.2)
 
 /-- Domain, given by `rescalePoint Λ ⁻¹' AxisEvaluation.strip window 20`. -/
-def domain (Λ : ℝ) : Set (ℝ × ℝ) :=
+@[expose] def domain (Λ : ℝ) : Set (ℝ × ℝ) :=
   rescalePoint Λ ⁻¹' AxisEvaluation.strip window 20
 
 /-- Pullback, given by `F (rescalePoint Λ p)`. -/
@@ -2671,7 +2686,7 @@ theorem angularProfile_log_slope_at_four {Λ : ℝ} (hΛ : 0 < Λ)
   field_simp; ring
 
 /-- Profile error constant, constructed using `errorConstant`. -/
-def profileErrorConstant {h j σ : ℝ} {P0 : ℝ → ℝ}
+@[expose] def profileErrorConstant {h j σ : ℝ} {P0 : ℝ → ℝ}
     (d : AnalyticInputs h j σ P0) : ℝ :=
   errorConstant window d.coefficients.epsilon_pos (d.coefficients.elements .chi)
     d.coefficients.axisData d.amplitudeBound d.amplitudeBound_nonneg
@@ -2724,7 +2739,7 @@ structure ProfileFamily {h j σ : ℝ} {P0 : ℝ → ℝ}
   affineProfile (NaturalAxisData.U j) (1 / Λ) Λ F.average
 
 /-- Pi, given by `affineProfile P0 (1 / Λ) Λ F.pressure`. -/
-def ProfileFamily.Pi {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
+@[expose] def ProfileFamily.Pi {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : AnalyticInputs h j σ P0}
     (F : ProfileFamily d Λ C) : ℝ × ℝ → ℝ :=
   affineProfile P0 (1 / Λ) Λ F.pressure
 

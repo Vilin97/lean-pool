@@ -604,7 +604,7 @@ variable [IsTotallyComplex K]
 
 open Classical in
 /-- A shape ideal theta used in the Odlyzko-bound argument. -/
-noncomputable def shapeIdealTheta
+@[expose] noncomputable def shapeIdealTheta
     (J : (Ideal (𝓞 K))⁰)
     (q : InfinitePlace K → ℝ) (hq : ∀ w, q w ≠ 0) : ℂ :=
   latticeTheta
@@ -925,7 +925,7 @@ variable [IsTotallyComplex K]
 
 open Classical in
 /-- A fractional shape ideal theta used in the Odlyzko-bound argument. -/
-noncomputable def fractionalShapeIdealTheta
+@[expose] noncomputable def fractionalShapeIdealTheta
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ)
     (q : InfinitePlace K → ℝ) (hq : ∀ w, q w ≠ 0) : ℂ :=
   latticeTheta (shapeIdealLattice K I q hq) Real.pi
@@ -966,7 +966,7 @@ theorem fractionalShapeIdealTheta_poissonSummation
 
 open Classical in
 /-- A fractional ideal numerator used in the Odlyzko-bound argument. -/
-noncomputable def fractionalIdealNumerator
+@[expose] noncomputable def fractionalIdealNumerator
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) : (Ideal (𝓞 K))⁰ :=
   ⟨(I : FractionalIdeal (𝓞 K)⁰ K).num,
     mem_nonZeroDivisors_iff_ne_zero.mpr fun hnum ↦

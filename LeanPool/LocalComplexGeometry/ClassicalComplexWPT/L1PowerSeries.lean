@@ -56,7 +56,7 @@ theorem one_le_radius_l1OperatorSeries : 1 ≤ l1OperatorSeries.radius := by
   simpa using norm_l1OperatorSeries_le k
 
 /-- The continuous-linear evaluation operator at `w`. -/
-noncomputable def l1EvalOperator (w : ℂ) : L1Sequence →L[ℂ] ℂ :=
+@[expose] noncomputable def l1EvalOperator (w : ℂ) : L1Sequence →L[ℂ] ℂ :=
   l1OperatorSeries.sum w
 
 theorem analyticAt_l1EvalOperator : AnalyticAt ℂ l1EvalOperator 0 := by

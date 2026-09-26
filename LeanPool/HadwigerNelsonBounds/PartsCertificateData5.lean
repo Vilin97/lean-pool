@@ -14,7 +14,7 @@ public section
 namespace HadwigerNelsonBounds
 
 /-- Normalized root orbit 6, checked by Parts tree `S`. -/
-def partsBaseCertificate6 : PartsCertificate := {
+@[expose] def partsBaseCertificate6 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 1⟩, ⟨78, 2⟩,
@@ -31,7 +31,7 @@ def partsBaseCertificate6 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 8, checked by Parts tree `L3`. -/
-def partsBaseCertificate8 : PartsCertificate := {
+@[expose] def partsBaseCertificate8 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 1⟩, ⟨78, 2⟩,
@@ -96,7 +96,7 @@ def partsBaseCertificate8 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 9, checked by Parts tree `L4`. -/
-def partsBaseCertificate9 : PartsCertificate := {
+@[expose] def partsBaseCertificate9 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 1⟩, ⟨78, 2⟩,
@@ -135,7 +135,7 @@ def partsBaseCertificate9 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 12, checked by Parts tree `L4`. -/
-def partsBaseCertificate12 : PartsCertificate := {
+@[expose] def partsBaseCertificate12 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 1⟩, ⟨78, 2⟩,
@@ -174,7 +174,7 @@ def partsBaseCertificate12 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 21, checked by Parts tree `S`. -/
-def partsBaseCertificate21 : PartsCertificate := {
+@[expose] def partsBaseCertificate21 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 1⟩, ⟨78, 3⟩,
@@ -191,7 +191,7 @@ def partsBaseCertificate21 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 32, checked by Parts tree `S`. -/
-def partsBaseCertificate32 : PartsCertificate := {
+@[expose] def partsBaseCertificate32 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 2⟩, ⟨78, 3⟩,

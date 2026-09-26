@@ -46,12 +46,12 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(
 variable {Ω : Opens X} {𝒰 : FinCover Ω} {D D' : RS.Divisor X}
 
 /-- A `C¹(D')`-cochain all of whose components satisfy the `D`-bound. -/
-def C1.MemLD (f : C1 D' 𝒰) (D : RS.Divisor X) : Prop :=
+@[expose] def C1.MemLD (f : C1 D' 𝒰) (D : RS.Divisor X) : Prop :=
   ∀ p : Fin 𝒰.n × Fin 𝒰.n, (f p : RS.MeroGermOn X ((𝒰.U p.1 ⊓ 𝒰.U p.2 : Opens X) : Set X)) ∈
     RS.LinSysOn D ((𝒰.U p.1 ⊓ 𝒰.U p.2 : Opens X) : Set X)
 
 /-- Re-tag a `D'`-cochain satisfying the `D`-bound as a `D`-cochain (same underlying germs). -/
-noncomputable def C1.retype (f : C1 D' 𝒰) (hf : f.MemLD D) : C1 D 𝒰 :=
+@[expose] noncomputable def C1.retype (f : C1 D' 𝒰) (hf : f.MemLD D) : C1 D 𝒰 :=
   fun p => ⟨(f p : RS.MeroGermOn X _), hf p⟩
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
@@ -73,7 +73,7 @@ variable {𝒰 : FinCover (⊤ : Opens X)}
 
 /-- The Mittag-Leffler atom (D7): a `D'`-`0`-cochain with `D`-bounded coboundary yields a class
 in `H¹(D)`. -/
-noncomputable def mlClass (𝒰 : FinCover (⊤ : Opens X)) (g : C0 D' 𝒰)
+@[expose] noncomputable def mlClass (𝒰 : FinCover (⊤ : Opens X)) (g : C0 D' 𝒰)
     (hg : (d0 D' 𝒰 g).MemLD D) : H1 D :=
   toH1 D 𝒰 (H1Cover.mk D 𝒰 ⟨C1.retype (d0 D' 𝒰 g) hg, C1.retype_mem_Z1 hg⟩)
 

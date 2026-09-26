@@ -267,7 +267,7 @@ theorem intervalMomentMatrix_det_ne_zero {n : ℕ} (a l u : Fin n → ℝ)
   exact sub_eq_zero.mp hcoeff
 
 /-- The manuscript's matrix of ordinary Lebesgue integrals against bump profiles. -/
-def bumpMomentMatrix {n : ℕ} (a : Fin n → ℝ) (β : Fin n → ℝ → ℝ) :
+@[expose] def bumpMomentMatrix {n : ℕ} (a : Fin n → ℝ) (β : Fin n → ℝ → ℝ) :
     Matrix (Fin n) (Fin n) ℝ := fun i j => ∫ t, t ^ a i * β j t
 
 /--
@@ -398,7 +398,7 @@ section Family
 variable {n : ℕ}
 
 /-- A fixed compact set, independent of the moment debt. -/
-def repairRegion (l u : Fin n → ℝ) : Set ℝ :=
+@[expose] def repairRegion (l u : Fin n → ℝ) : Set ℝ :=
   ⋃ j, Icc (innerLower (l j) (u j)) (innerUpper (l j) (u j))
 
 theorem repairRegion_isCompact (l u : Fin n → ℝ) : IsCompact (repairRegion l u) :=
@@ -411,7 +411,7 @@ theorem repairRegion_subset_open (l u : Fin n → ℝ) (hlu : ∀ j, l j < u j) 
   exact mem_iUnion.mpr ⟨j, innerInterval_subset_open _ _ (hlu j) hj⟩
 
 /-- The actual generalized-power moment matrix of the constructed profiles. -/
-def matrix (a l u : Fin n → ℝ) : Matrix (Fin n) (Fin n) ℝ :=
+@[expose] def matrix (a l u : Fin n → ℝ) : Matrix (Fin n) (Fin n) ℝ :=
   PowerMomentMatrix.bumpMomentMatrix a (fun j => bump (l j) (u j))
 
 theorem matrix_det_ne_zero (a l u : Fin n → ℝ) (ha : Injective a)

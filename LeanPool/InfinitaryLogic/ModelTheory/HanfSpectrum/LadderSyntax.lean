@@ -180,7 +180,7 @@ def constVal (n : ℕ) : M :=
   Structure.RelMap (L := ladderLang α) (show (ladderLang α).Relations 1 from i) (fun _ => x)
 
 /-- The edge relation `E`. -/
-def Edge (x y : M) : Prop :=
+@[expose] def Edge (x y : M) : Prop :=
   Structure.RelMap (L := ladderLang α) (show (ladderLang α).Relations 2 from ()) ![x, y]
 
 /-- **The six clauses of a ladder model** — the interface every semantic file works with. -/

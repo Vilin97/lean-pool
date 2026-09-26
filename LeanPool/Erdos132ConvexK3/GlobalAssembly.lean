@@ -155,35 +155,35 @@ noncomputable def setup
     (F.maximalGap (cyclicAdvance F.x 3)) F.M F.M_le_secondRight
 
 /-- First exceptional row of the five-row count table. -/
-def Row1
+@[expose] def Row1
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (F : ErLVGlobalFiveRowFrame P d₁ d₂ d₃) : Prop :=
   F.pair.first.rightMoves = 0 ∧ F.pair.first.leftMoves = 1 ∧
     F.setup.L = 3 ∧ F.M = 2
 
 /-- Second exceptional row of the five-row count table. -/
-def Row2
+@[expose] def Row2
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (F : ErLVGlobalFiveRowFrame P d₁ d₂ d₃) : Prop :=
   F.pair.first.rightMoves = 1 ∧ F.pair.first.leftMoves = 1 ∧
     F.setup.L = 3 ∧ F.M = 2
 
 /-- Third exceptional row of the five-row count table. -/
-def Row3
+@[expose] def Row3
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (F : ErLVGlobalFiveRowFrame P d₁ d₂ d₃) : Prop :=
   F.pair.first.rightMoves = 0 ∧ F.pair.first.leftMoves = 2 ∧
     F.setup.L = 2 ∧ F.M = 2
 
 /-- Fourth exceptional row of the five-row count table. -/
-def Row4
+@[expose] def Row4
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (F : ErLVGlobalFiveRowFrame P d₁ d₂ d₃) : Prop :=
   F.pair.first.rightMoves = 0 ∧ F.pair.first.leftMoves = 2 ∧
     F.setup.L = 3 ∧ F.M = 1
 
 /-- Fifth exceptional row of the five-row count table. -/
-def Row5
+@[expose] def Row5
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (F : ErLVGlobalFiveRowFrame P d₁ d₂ d₃) : Prop :=
   F.pair.first.rightMoves = 0 ∧ F.pair.first.leftMoves = 2 ∧
@@ -306,7 +306,7 @@ theorem second_rank_transition_of_positive
 maximal-gap frame.  The letters record the actual endpoint order (`A/B` for
 the first path and `C/D` for the second); the one-step words also retain the
 exact strict rank transition. -/
-def RealizesCoverWord
+@[expose] def RealizesCoverWord
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (F : ErLVGlobalFiveRowFrame P d₁ d₂ d₃) :
     ExceptionalCoverWord → Prop
@@ -674,7 +674,7 @@ theorem exists_erlv_global_exceptional_row_of_no_degree_six
 /-- Canonical raw geometric meaning of a cover word: it is realized by an
 actual localized maximal-gap frame with the row, endpoint order, and rank
 data recorded by `RealizesCoverWord`. -/
-def GeometricallyRealizesCoverWord
+@[expose] def GeometricallyRealizesCoverWord
     {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ)
     (w : ExceptionalCoverWord) : Prop :=
   ∃ F : ErLVGlobalFiveRowFrame P d₁ d₂ d₃, F.RealizesCoverWord w
@@ -699,7 +699,7 @@ theorem has_thirteen_word_reduction_of_convex_top_three
 /-- Exact remaining global component after the maximal-gap, five-row, and
 thirteen-word reductions: prove each canonical geometric word closes by its
 routed local kernel. -/
-def GlobalThirteenWordClosureComplete : Prop :=
+@[expose] def GlobalThirteenWordClosureComplete : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     Nonempty (DraftWordClosureInterface (vertexDegree P d₁ d₂ d₃)
       (GeometricallyRealizesCoverWord P d₁ d₂ d₃))

@@ -146,7 +146,7 @@ end «Section2»
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev mkPointed {T : Trees} (x : T) : PointedTrees := ⟨T, x⟩
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def mkPointedMor {S T : Trees} (f : S ⟶ T) (x : S) :
+@[expose] def mkPointedMor {S T : Trees} (f : S ⟶ T) (x : S) :
   mkPointed x ⟶ mkPointed (f x) := ⟨f, rfl⟩
 
 namespace ExtensionsAt

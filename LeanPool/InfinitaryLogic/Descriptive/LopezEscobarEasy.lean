@@ -40,7 +40,7 @@ variable {L : Language.{u, v}} [L.IsRelational]
 
 /-- **Isomorphism invariance** of a class of coded structures, in isomorphism-closed form: an
 `L`-isomorphism of the decoded structures transports membership. -/
-def IsomorphismInvariant (B : Set (StructureSpace L)) : Prop :=
+@[expose] def IsomorphismInvariant (B : Set (StructureSpace L)) : Prop :=
   ∀ c d : StructureSpace L,
     Nonempty (@Language.Equiv L ℕ ℕ c.toStructure d.toStructure) → (c ∈ B ↔ d ∈ B)
 

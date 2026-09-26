@@ -73,11 +73,11 @@ noncomputable def modalOperator (lam damping e11 e12 e21 e22 : ℝ) : State →L
 
 @[simp] theorem modalOperator_zero (lam damping e11 e12 e21 e22 : ℝ) (z : State) :
     modalOperator lam damping e11 e12 e21 e22 z 0 =
-      (lam - damping + e11) * z 0 + e12 * z 1 := rfl
+      (lam - damping + e11) * z 0 + e12 * z 1 := by rfl
 
 @[simp] theorem modalOperator_one (lam damping e11 e12 e21 e22 : ℝ) (z : State) :
     modalOperator lam damping e11 e12 e21 e22 z 1 =
-      e21 * z 0 + (-lam - damping + e22) * z 1 := rfl
+      e21 * z 0 + (-lam - damping + e22) * z 1 := by rfl
 
 /-- A nonzero solution of a continuous homogeneous linear equation cannot hit zero.
 This uses backwards uniqueness, not a positivity assumption on any coordinate. -/
@@ -1318,7 +1318,8 @@ theorem modalOperator_eq_coefficient (lam damping e11 e12 e21 e22 : ℝ) :
         (GrowingMode.modalOperator 0 0 e11 e12 e21 e22) := by
   ext z i
   fin_cases i <;> simp [GrowingMode.modalOperator, ViscousPropagator.coefficient,
-    ViscousPropagator.diagonal, ViscousPropagator.reflection] <;> ring
+    ViscousPropagator.diagonal, ViscousPropagator.reflection_zero,
+    ViscousPropagator.reflection_one] <;> ring
 
 theorem plane_norm_le_coordinate_sum (z : Plane) : ‖z‖ ≤ |z 0| + |z 1| := by
   have h := ViscousPropagator.plane_norm_sq z

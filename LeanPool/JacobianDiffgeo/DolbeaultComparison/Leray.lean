@@ -198,7 +198,7 @@ theorem patch_coe (gFam : ∀ i : Fin 𝒰.n, C0 D (𝒱.induced (𝒰.U i))) (i
         (RS.MeroGermOn.restrict
           (le_inf (inf_le_left.trans inf_le_left) inf_le_right :
             𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α ≤ (𝒱.induced (𝒰.U i)).U α)
-          (gFam i α : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α : Set X))) := rfl
+          (gFam i α : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α : Set X))) := by rfl
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] [T2Space X] [CompactSpace X] in
 /-- `patch`, restricted further down to an arbitrary open `W` (`LinSysOn`-level unfolding of

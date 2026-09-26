@@ -275,13 +275,15 @@ theorem exists_uniform_coefficient_bound {f : Source} (hf : ContDiff ℝ ∞ f)
     exact (h₂ (p, (x, y)) ⟨hparam, hx, hy⟩).trans hC₂
 
 /-- Polynomial growth, given by `∃ s : ℕ, ∃ C : ℝ, 0 ≤ C ∧ ∀ k, ‖m k‖ ≤ C * weight k ^ s`. -/
-def PolynomialGrowth (m : Frequency → ℂ) : Prop :=
+@[expose] def PolynomialGrowth (m : Frequency → ℂ) : Prop :=
   ∃ s : ℕ, ∃ C : ℝ, 0 ≤ C ∧ ∀ k, ‖m k‖ ≤ C * weight k ^ s
 
 /-- Multiplier X, given by `freqX k * m k`. -/
-noncomputable def multiplierX (m : Frequency → ℂ) (k : Frequency) : ℂ := freqX k * m k
+@[expose] noncomputable def multiplierX (m : Frequency → ℂ) (k : Frequency) : ℂ :=
+  freqX k * m k
 /-- Multiplier Y, given by `freqY k * m k`. -/
-noncomputable def multiplierY (m : Frequency → ℂ) (k : Frequency) : ℂ := freqY k * m k
+@[expose] noncomputable def multiplierY (m : Frequency → ℂ) (k : Frequency) : ℂ :=
+  freqY k * m k
 
 theorem PolynomialGrowth.mulX {m : Frequency → ℂ} (hm : PolynomialGrowth m) :
     PolynomialGrowth (multiplierX m) := by

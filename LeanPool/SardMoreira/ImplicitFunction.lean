@@ -65,6 +65,24 @@ def implicitFunctionDataOfComplementedKerRange (f : E → F) (f' : E →L[𝕜] 
   unfold implicitFunctionDataOfComplementedKerRange
   rfl
 
+@[simp] theorem implicitFunctionDataOfComplementedKerRange_leftFun_apply
+    (f : E → F) (f' : E →L[𝕜] F) {a : E} (hf : HasStrictFDerivAt f f' a)
+    (hker : f'.ker.ClosedComplemented) (hrange : f'.range.ClosedComplemented) (x : E) :
+    have := hrange.isClosed.completeSpace_coe
+    (hf.implicitFunctionDataOfComplementedKerRange f f' hker hrange).leftFun x =
+      hrange.choose (f x) := by
+  unfold implicitFunctionDataOfComplementedKerRange
+  rfl
+
+@[simp] theorem implicitFunctionDataOfComplementedKerRange_rightFun_apply
+    (f : E → F) (f' : E →L[𝕜] F) {a : E} (hf : HasStrictFDerivAt f f' a)
+    (hker : f'.ker.ClosedComplemented) (hrange : f'.range.ClosedComplemented) (x : E) :
+    have := hrange.isClosed.completeSpace_coe
+    (hf.implicitFunctionDataOfComplementedKerRange f f' hker hrange).rightFun x =
+      hker.choose x := by
+  unfold implicitFunctionDataOfComplementedKerRange
+  rfl
+
 /-- The `OpenPartialHomeomorph` associated to
 `implicitFunctionDataOfComplementedKerRange`. -/
 def implicitToOpenPartialHomeomorphOfComplementedKerRange (f : E → F) (f' : E →L[𝕜] F) {a : E}

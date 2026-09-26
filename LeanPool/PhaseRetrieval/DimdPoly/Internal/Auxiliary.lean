@@ -303,12 +303,12 @@ theorem stablePhaseRetrievalExplicitRange
 /-! ## Closure upgrade -/
 
 /-- `explicitGaussianL2DistanceSq`: explicit Gaussian L2 Distance Sq. -/
-def explicitGaussianL2DistanceSq
+@[expose] def explicitGaussianL2DistanceSq
     {d : ℕ} (P Q : (Fin d -> ℂ) -> ℂ) : ℝ :=
   ∫ z, ‖P z - Q z‖ ^ 2 ∂ explicitGamma d
 
 /-- `explicitModulusDistanceSq`: explicit Modulus Distance Sq. -/
-def explicitModulusDistanceSq
+@[expose] def explicitModulusDistanceSq
     {d : ℕ} (P Q : (Fin d -> ℂ) -> ℂ) : ℝ :=
   ∫ z, (‖P z‖ - ‖Q z‖) ^ 2 ∂ explicitGamma d
 
@@ -372,7 +372,7 @@ private theorem memLp_of_explicitHermitePoly
   exact memLp_two_evalPkappa hd κ F
 
 /-- `UnitPhase`: Unit Phase. -/
-def UnitPhase : Type :=
+@[expose] def UnitPhase : Type :=
   { θ : ℂ // ‖θ‖ = 1 }
 
 instance : TopologicalSpace UnitPhase :=

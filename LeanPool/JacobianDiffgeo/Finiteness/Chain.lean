@@ -222,7 +222,7 @@ abbrev NC1 : Type _ := ∀ p : Fin T.n × Fin T.n, BddHoloOn (P p.1 ⊓ P p.2)
 
 /-- `(δ⁰f)_{ij} = f_j − f_i` (after restriction to `P i ⊓ P j`); the Banach-layer analogue of
 `Cech.d0`. -/
-noncomputable def deltaCLM : NC0 T P →L[ℂ] NC1 T P :=
+@[expose] noncomputable def deltaCLM : NC0 T P →L[ℂ] NC1 T P :=
   ContinuousLinearMap.pi fun p : Fin T.n × Fin T.n =>
     (restrictCLM (inf_le_right : P p.1 ⊓ P p.2 ≤ P p.2)).comp (ContinuousLinearMap.proj p.2)
     - (restrictCLM (inf_le_left : P p.1 ⊓ P p.2 ≤ P p.1)).comp (ContinuousLinearMap.proj p.1)
@@ -254,7 +254,7 @@ closedness proof needed. -/
       + restrictCLM inf_le_left (f (t.1, t.2.1)) := by rfl
 
 /-- The norm-bounded cocycles at level `P`: the kernel of the bounded coboundary `d1NC`. -/
-noncomputable def NZ1 : Submodule ℂ (NC1 T P) := (d1NC T P).ker
+@[expose] noncomputable def NZ1 : Submodule ℂ (NC1 T P) := (d1NC T P).ker
 
 instance : CompleteSpace (NZ1 T P) := ContinuousLinearMap.completeSpace_ker (d1NC T P)
 
@@ -295,7 +295,7 @@ noncomputable def resNC0 (h : ∀ i, P' i ≤ P i) : NC0 T P →L[ℂ] NC0 T P' 
   ContinuousLinearMap.pi fun i => (restrictCLM (h i)).comp (ContinuousLinearMap.proj i)
 
 /-- Restriction of `1`-cochains along a same-index shrinking `P' ≤ P`. -/
-noncomputable def resNC1 (h : ∀ i, P' i ≤ P i) : NC1 T P →L[ℂ] NC1 T P' :=
+@[expose] noncomputable def resNC1 (h : ∀ i, P' i ≤ P i) : NC1 T P →L[ℂ] NC1 T P' :=
   ContinuousLinearMap.pi fun p : Fin T.n × Fin T.n =>
     (restrictCLM (inf_le_inf (h p.1) (h p.2))).comp (ContinuousLinearMap.proj p)
 
@@ -315,7 +315,7 @@ theorem resNC1_mapsTo_NZ1 (h : ∀ i, P' i ≤ P i) {f : NC1 T P} (hf : f ∈ NZ
     (le_inf (le_inf hkh hlh) hmh) (le_inf hlh hmh) (le_inf hkh hmh) (le_inf hkh hlh)
 
 /-- Restriction of bounded cocycles between same-index levels. -/
-noncomputable def resZ (h : ∀ i, P' i ≤ P i) : NZ1 T P →L[ℂ] NZ1 T P' :=
+@[expose] noncomputable def resZ (h : ∀ i, P' i ≤ P i) : NZ1 T P →L[ℂ] NZ1 T P' :=
   ((resNC1 T P P' h).comp (NZ1 T P).subtypeL).codRestrict (NZ1 T P')
     (fun f => resNC1_mapsTo_NZ1 T P P' h f.2)
 
@@ -381,14 +381,14 @@ noncomputable instance : NormedSpace ℂ (tradeSpace T) :=
 surjectivity = the qualitative trade, proved in `TradeBounded.lean` as `tradePi_surjective`;
 the norm constant of 14.6(b) is recovered inside `schwartz_finite_cospan` by
 `exists_preimage_norm_le` — design §5 step 7). -/
-noncomputable def tradePi : tradeSpace T →L[ℂ] NZ1 T T.V :=
+@[expose] noncomputable def tradePi : tradeSpace T →L[ℂ] NZ1 T T.V :=
   (ContinuousLinearMap.fst ℂ (NZ1 T T.V) (NC0 T T.W)).comp
     ((ContinuousLinearMap.snd ℂ (NZ1 T T.U) (NZ1 T T.V × NC0 T T.W)).comp
       (tradeSpace T).subtypeL)
 
 /-- **The compact leg** `v : L →L Z¹(𝔙)`, `(ζ, ξ, η) ↦ ζ|𝔙` (compactness = Montel, assembled
 from `isCompactOperator_restrictCLM` — deferred, see the end-of-file note). -/
-noncomputable def tradeCompact : tradeSpace T →L[ℂ] NZ1 T T.V :=
+@[expose] noncomputable def tradeCompact : tradeSpace T →L[ℂ] NZ1 T T.V :=
   (resZ T T.U T.V T.V_le_U).comp
     ((ContinuousLinearMap.fst ℂ (NZ1 T T.U) (NZ1 T T.V × NC0 T T.W)).comp
       (tradeSpace T).subtypeL)

@@ -262,7 +262,7 @@ theorem exists_radius_normalizedOrigin_close_half {n d : ℕ} {f : Ambient n →
   exact hclose
 
 /-- Normalize any analytic coefficient map by a fixed scalar. -/
-noncomputable def normalizedCoefficientMap {n : ℕ}
+@[expose] noncomputable def normalizedCoefficientMap {n : ℕ}
     (C : Base n → OriginSeq) (denom : ℂ) : Base n → OriginSeq :=
   fun z ↦ denom⁻¹ • C z
 

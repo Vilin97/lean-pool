@@ -43,7 +43,7 @@ theorem proj : g ∈ projection A X ↔ (⌈·A⌉g) ∈ X :=
     aesop
 
 /-- Collect the continuations of matching atomic boxes in a formula finset. -/
-def _root_.Finset.pdlProjection : Nat → Finset Formula → Finset Formula
+@[expose] def _root_.Finset.pdlProjection : Nat → Finset Formula → Finset Formula
   | A, X => (X.image fun x => (formProjection A x).toFinset).sup id
 
 /-- Membership in the projection of a `Finset` of formulas.
@@ -232,7 +232,7 @@ lemma FreeRepeat_iff_rep_and_isFree {H X} :
 Note that the negation of this is not the same as `¬ rep` because it will still allow
 loaded repeats that are not loaded-path repeats, at which `Tableau` may continue.
 See also `posOf` that is used to define `tableauGame` later. -/
-@[grind .]
+@[expose, grind .]
 def flprep (H : History) (X : Sequent) : Prop :=
   (rep H X ∧ X.isFree) ∨ Nonempty (LoadedPathRepeat H X)
 

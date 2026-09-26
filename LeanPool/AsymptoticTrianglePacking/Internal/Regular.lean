@@ -39,7 +39,7 @@ variable {V : Type*} [DecidableEq V]
   ∀ v : V, (1 - μ) * d ≤ (degree H v : ℝ) ∧ (degree H v : ℝ) ≤ (1 + μ) * d
 
 /-- `H` has codegree bounded by `C`: every distinct pair lies in at most `C` edges. -/
-def CodegreeBounded (H : Finset (Finset V)) (C : ℝ) : Prop :=
+@[expose] def CodegreeBounded (H : Finset (Finset V)) (C : ℝ) : Prop :=
   ∀ x y : V, x ≠ y → (codegree H x y : ℝ) ≤ C
 
 /-- **A4 — degree-sum squeeze.** If `H` is `(1±μ)`-nearly `d`-regular on a finite vertex type,

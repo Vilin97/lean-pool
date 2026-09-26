@@ -26,7 +26,7 @@ variable (K : Type*) [Field K] [NumberField K] [IsTotallyComplex K]
 
 open Classical in
 /-- A nonzero shape theta mellin kernel used in the Odlyzko-bound argument. -/
-noncomputable def nonzeroShapeThetaMellinKernel
+@[expose] noncomputable def nonzeroShapeThetaMellinKernel
     (J : (Ideal (𝓞 K))⁰) (s : ℂ)
     (y : mixedEmbedding.realSpace K) : ℂ :=
   logarithmicMellinWeight K s y * nonzeroIdealShapeTheta K J y

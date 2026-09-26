@@ -278,7 +278,7 @@ companion `x` is `[(⋃ᵢ αᵢ)*](⋀ⱼ [βⱼ]q_{zⱼ} ∧ ψ)`. We implemen
 
 /-- The conjunction of those conjuncts of the normal form of `ι` that do not mention the
 internal variable `x`. -/
-def dropVar [DecidableEq Var] (x : Var) (ι : QFormula Var) : QFormula Var :=
+@[expose] def dropVar [DecidableEq Var] (x : Var) (ι : QFormula Var) : QFormula Var :=
   conj ((ι.Spl.filter (fun s => !s.mentions x)).map QSimple.toQ)
 
 /-- The greatest fixpoint of `ι` with respect to the internal variable `x`, i.e. the

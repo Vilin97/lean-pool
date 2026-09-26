@@ -32,14 +32,14 @@ namespace StationaryHarmonicMap
 
 /-- The one-dimensional integration-by-parts step to be proved from
 `WeakRadialOneDimensionalIdentity`. -/
-def WeakOneDimensionalIBPStep {n m : ℕ}
+@[expose] def WeakOneDimensionalIBPStep {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   WeakRadialOneDimensionalIdentity Du R0 →
     WeakOneDimensionalDefectDerivativeIdentity Du R0
 
 /-- The concrete integration-by-parts identity needed to turn the
 one-dimensional radial identity into a defect-derivative identity. -/
-def WeakOneDimensionalIBPFormula {n m : ℕ}
+@[expose] def WeakOneDimensionalIBPFormula {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   ∀ phi : ℝ → ℝ,
     Differentiable ℝ phi →
@@ -58,7 +58,7 @@ def WeakOneDimensionalIBPFormula {n m : ℕ}
 /-- The genuine one-dimensional energy integration-by-parts input:
 `∫ -phi' ((n-2)E) = ∫ ((n-2)phi) E'`.  This is the part that ultimately comes
 from absolute continuity of the ball energy function. -/
-def WeakBallEnergyIntegrationByPartsFormula {n m : ℕ}
+@[expose] def WeakBallEnergyIntegrationByPartsFormula {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   ∀ phi : ℝ → ℝ,
     Differentiable ℝ phi →
@@ -75,7 +75,7 @@ def WeakBallEnergyIntegrationByPartsFormula {n m : ℕ}
 
 /-- Integrability side conditions needed only to justify splitting the Bochner
 integrals in the one-dimensional IBP algebra. -/
-def WeakOneDimensionalIBPIntegrability {n m : ℕ}
+@[expose] def WeakOneDimensionalIBPIntegrability {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   ∀ phi : ℝ → ℝ,
     Differentiable ℝ phi →
@@ -739,7 +739,7 @@ theorem weakEnergyAbsolutelyContinuousOnRadii_of_W12LocIn_ballIntegralAC
 radial stationarity has been reduced to scalar cutoffs.  The first field records
 the intended absolute-continuity theorem; the last two fields are the concrete
 IBP and integrability consequences consumed by the existing algebra. -/
-def WeakBallEnergyOneDimensionalCalculus {n m : ℕ}
+@[expose] def WeakBallEnergyOneDimensionalCalculus {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   WeakEnergyAbsolutelyContinuousOnRadii Du R0 ∧
   WeakBallEnergyIntegrationByPartsFormula Du R0 ∧

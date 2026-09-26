@@ -107,7 +107,7 @@ sentences for formulas whose `(arity, φ)`-pair lies in the family `Γ`. When
 `Γ` and `J` are both countable, the resulting theory is countable (see
 `templateTheoryOn_countable`), making it a candidate input to
 `model_existence` — which the full `templateTheory` can never be. -/
-def templateTheoryOn
+@[expose] def templateTheoryOn
     (T : Lomega1omegaTemplate L)
     (Γ : Set (Σ n, L.BoundedFormulaω Empty n))
     (J : Type u) [LinearOrder J] :

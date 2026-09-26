@@ -48,7 +48,7 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(
 /-- The pointwise order bound making multiplication by `f` carry `O_D`-cochains to
 `O_E`-cochains: `D x - E x ≤ ord_x f` for every `x` (in `WithTop ℤ`; for `f = 0` the order is
 `⊤` everywhere, so `MulBound 0 D E` always holds — multiplication by `0` is the zero map). -/
-def MulBound (f : ℳ X) (D E : RS.Divisor X) : Prop :=
+@[expose] def MulBound (f : ℳ X) (D E : RS.Divisor X) : Prop :=
   ∀ x : X, ((D x - E x : ℤ) : WithTop ℤ) ≤ f.ord x
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
@@ -350,12 +350,5 @@ theorem mulH1_H1Incl {f : ℳ X} {D D' E : RS.Divisor X} (h : D ≤ D') (hf' : M
   rw [H1Incl_toH1]
   simp only [mulH1_toH1]
   congr 1
-  rw [h1CoverIncl_mk, mulH1Cover_mk, mulH1Cover_mk]
-  congr 1
-  apply Subtype.ext
-  simp only [mulZ1_apply_coe, LinearMap.coe_restrict_apply]
-  funext p
-  apply Subtype.ext
-  simp only [mulC1_apply, inclC1_apply, mulOn_apply_coe, Submodule.coe_inclusion]
 
 end RS.Cech

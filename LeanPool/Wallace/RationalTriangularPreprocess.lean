@@ -105,7 +105,7 @@ def rationalSequenceCodeEquiv : ContinuumIndex ≃ RationalInjectiveSequences :=
     mk_continuumIndex.trans mk_rationalInjectiveSequences.symm
 
 /-- The injective rational sequence represented by the code `a`. -/
-def codedSequence (a : ContinuumIndex) : ℕ → ContinuumRationalGroup :=
+@[expose] def codedSequence (a : ContinuumIndex) : ℕ → ContinuumRationalGroup :=
   (rationalSequenceCodeEquiv a).1
 
 theorem codedSequence_injective (a : ContinuumIndex) :

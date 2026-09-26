@@ -374,7 +374,8 @@ theorem reference_phi_value {h j σ : ℝ} {P0 : ℝ → ℝ} (v : CoefficientFa
   rw [AxisReference.referenceCoefficients_profile_eq_series window v.epsilon_pos
     (v.elements .chi) v.axisData v.compatible hη]
   rw [v.value .chi hη]
-  rfl
+  exact congrArg (fun x => AxisSeries.profile x p.val.1)
+    (realField_chi h j σ P0 p.val.2)
 
 theorem reference_phi_lower {h j σ : ℝ} {P0 : ℝ → ℝ} (v : CoefficientFamily h j σ P0)
     (hσ : 0 < σ) (p : entranceSet) :
@@ -395,7 +396,7 @@ theorem reference_phiY_zero {h j σ : ℝ} {P0 : ℝ → ℝ} (v : CoefficientFa
   rw [AxisReference.referenceCoefficients_deriv_Y_eq window v.epsilon_pos
     (v.elements .chi) v.axisData v.compatible hη]
   rw [v.value .chi hη]
-  change deriv (AxisSeries.profile (NaturalAxisData.chi h j σ p.val.2)) p.val.1 = 0
+  rw [realField_chi]
   rw [hchi, AxisSeries.deriv_profile]
   simp
 
@@ -709,8 +710,10 @@ theorem reference_u_value {h j σ : ℝ} {P0 : ℝ → ℝ}
     rw [coefficient_product_constant window v.epsilon_pos _ _
       (v.radiallyConstant .inverseL) n ht, v.radiallyConstant .zStar n hn t ht, mul_zero]
   change AxisEvaluation.profile window v.epsilon
-    (-(1 / 2 : ℝ) • AxisOperators.regularInverse window v.epsilon_pos 1 (by norm_num) A)
+    (referenceCoefficients window v.epsilon_pos (v.elements .chi) v.axisData).2
       (Y, η) = _
+  rw [referenceCoefficients_snd]
+  rw [v.axisData_inverseL, v.axisData_zStar]
   rw [profile_smul, regularInverse_one_constant v.epsilon_pos A hA Y hη]
   have hvalue : inputValue window v.epsilon A η =
       (NaturalAxisData.L h η)⁻¹ * NaturalAxisData.Z h j P0 η := by
@@ -720,7 +723,7 @@ theorem reference_u_value {h j σ : ℝ} {P0 : ℝ → ℝ}
     change inputValue window v.epsilon (v.elements .inverseL) η *
       inputValue window v.epsilon (v.elements .zStar) η = _
     rw [v.value .inverseL hη, v.value .zStar hη]
-    rfl
+    simp only [realField_inverseL, realField_zStar]
   rw [hvalue]
   simp only [div_eq_mul_inv, mul_inv_rev]
   ring
@@ -752,8 +755,10 @@ theorem coefficient_phi_lower {h j σ Λ K : ℝ} {P0 : ℝ → ℝ}
   apply AxisReference.positive_of_uniformMixedError window v.epsilon_pos
     (v.elements .chi) v.axisData v.compatible hK hscale herr hY0 hY1 hη
   · rw [v.value .chi ⟨hη.1.le, hη.2.le⟩]
+    rw [realField_chi]
     exact (NaturalAxisData.chi_bounds h j hσ η).1
   · rw [v.value .chi ⟨hη.1.le, hη.2.le⟩]
+    rw [realField_chi]
     exact (NaturalAxisData.chi_bounds h j hσ η).2.le
 
 /-- The quantitative source inequality is proved for every actual
@@ -1074,8 +1079,10 @@ theorem exists_coefficientProfile {h j σ : ℝ} {P0 : ℝ → ℝ}
       apply AxisReference.log_slope_of_uniformMixedError window v.epsilon_pos
         (v.elements .chi) v.axisData v.compatible hK hscale he hη
       · rw [v.value .chi ⟨hη.1.le, hη.2.le⟩]
+        rw [realField_chi]
         exact hchi
       · rw [v.value .chi ⟨hη.1.le, hη.2.le⟩]
+        rw [realField_chi]
         exact (NaturalAxisData.chi_bounds h j hσ η).2.le }
   exact ⟨{
     family := F

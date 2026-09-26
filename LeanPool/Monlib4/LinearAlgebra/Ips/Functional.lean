@@ -89,7 +89,7 @@ theorem Module.Dual.apply (φ : Module.Dual R (Matrix n n R)) (a : Matrix n n R)
 /--
 we linear maps `φ_i : M_[n_i] →ₗ[R] R`, we define its direct sum as the linear map `(Π i, M_[n_i])
   →ₗ[R] R`. -/
-def Module.Dual.pi {k : Type _} [Fintype k] {s : k → Type _}
+@[expose] def Module.Dual.pi {k : Type _} [Fintype k] {s : k → Type _}
     (φ : ∀ i, Module.Dual R (Matrix (s i) (s i) R)) : Module.Dual R (PiMat R k s)
     where
   toFun a := ∑ i : k, φ i (a i)
@@ -633,7 +633,7 @@ theorem Module.Dual.pi.IsPosMap.isReal {k : Type _} [Fintype k] {s : k → Type 
     forall_true_iff]
 
 /-- A function $H \times H \to 𝕜$ defines an inner product if it satisfies the following. -/
-def IsInner {H : Type _} [AddCommMonoid H] [Module 𝕜 H] (φ : H × H → 𝕜) : Prop :=
+@[expose] def IsInner {H : Type _} [AddCommMonoid H] [Module 𝕜 H] (φ : H × H → 𝕜) : Prop :=
   (∀ x y : H, φ (x, y) = star (φ (y, x))) ∧
     (∀ x : H, 0 ≤ RCLike.re (φ (x, x))) ∧
       (∀ x : H, φ (x, x) = 0 ↔ x = 0) ∧
@@ -686,7 +686,7 @@ section
 variable {n : Type _} [Fintype n] [DecidableEq n] (φ : Module.Dual ℂ (Matrix n n ℂ))
 
 /-- The normed additive group structure induced by a faithful positive functional on matrices. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def Module.Dual.NormedAddCommGroup [hφ : φ.IsFaithfulPosMap] :
   _root_.NormedAddCommGroup (Matrix n n ℂ) :=
   @InnerProductSpace.Core.toNormedAddCommGroup ℂ (Matrix n n ℂ) _ _ _
@@ -703,7 +703,7 @@ variable [hφ : φ.IsFaithfulPosMap]
 
 
 /-- The inner product space structure induced by a faithful positive functional on matrices. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def Module.Dual.InnerProductSpace :
   @_root_.InnerProductSpace ℂ (Matrix n n ℂ) _
     ((Module.Dual.NormedAddCommGroup φ).toSeminormedAddCommGroup) := by
@@ -771,7 +771,7 @@ noncomputable def Module.Dual.PiNormedAddCommGroup
 (Module.Dual.PiInnerProductCore (φ := φ)).toNormedAddCommGroup
 
 /-- The inner product space on a finite product induced by faithful positive matrix functionals. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def Module.Dual.pi.InnerProductSpace
   {φ : Π i, Module.Dual ℂ (Matrix (s i) (s i) ℂ)}
   [hφ : Π i, (φ i).IsFaithfulPosMap] :
@@ -782,6 +782,7 @@ noncomputable def Module.Dual.pi.InnerProductSpace
     Module.Dual.PiNormedAddCommGroup (_hφ := hφ)
   letI : InnerProductSpace.Core ℂ (PiMat ℂ k s) :=
     Module.Dual.PiInnerProductCore (φ := φ)
-  exact InnerProductSpace.ofCore _
+  exact InnerProductSpace.ofCore
+    (inferInstance : PreInnerProductSpace.Core ℂ (PiMat ℂ k s))
 
 scoped[Functional] attribute [instance high] Module.Dual.pi.InnerProductSpace

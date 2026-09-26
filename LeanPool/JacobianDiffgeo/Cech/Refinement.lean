@@ -38,6 +38,7 @@ variable (D : RS.Divisor X) {Ω : Opens X} {𝒰 𝒱 : FinCover Ω}
 /-! ### Restriction along a refinement index -/
 
 /-- Restriction of `0`-cochains along a refinement index `τ`. -/
+@[expose]
 noncomputable def resC0 (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 𝒱 τ) : C0 D 𝒰 →ₗ[ℂ] C0 D 𝒱 :=
   LinearMap.pi fun k => (LinSysOn.restrictL D (hτ k)).comp (LinearMap.proj (τ k))
 
@@ -120,7 +121,7 @@ theorem resZ1_apply_coe (f : Z1 D 𝒰) :
     (resZ1 D τ hτ f : C1 D 𝒱) = resC1 D τ hτ (f : C1 D 𝒰) := by rfl
 
 /-- The induced map on cover-level `H¹`. -/
-noncomputable def resH1 : H1Cover D 𝒰 →ₗ[ℂ] H1Cover D 𝒱 :=
+@[expose] noncomputable def resH1 : H1Cover D 𝒰 →ₗ[ℂ] H1Cover D 𝒱 :=
   Submodule.mapQ _ _ (resZ1 D τ hτ) (fun z hz => by
     simp only [Submodule.mem_comap] at hz ⊢
     exact resC1_mem_B1 D τ hτ hz)

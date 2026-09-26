@@ -234,7 +234,7 @@ theorem exists_good_refinement_closure [CompactSpace X] [T2Space X]
 /-! ### Adapted covers (Miranda IX Ex. 3.6) -/
 
 /-- `𝒰` is adapted to the finite set `S`: each point of `S` lies in exactly one member. -/
-def FinCover.IsAdapted (𝒰 : FinCover Ω) (S : Finset X) : Prop := ∀ p ∈ S, ∃! i, p ∈ 𝒰.U i
+@[expose] def FinCover.IsAdapted (𝒰 : FinCover Ω) (S : Finset X) : Prop := ∀ p ∈ S, ∃! i, p ∈ 𝒰.U i
 
 /-- The open complement of a finite set (`[T1Space X]`). -/
 def compOpens [T1Space X] (T : Finset X) : Opens X := ⟨(T : Set X)ᶜ, T.isClosed.isOpen_compl⟩

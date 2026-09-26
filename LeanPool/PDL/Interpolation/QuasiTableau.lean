@@ -290,7 +290,7 @@ namespace QuasiTab
 def isNodeAt (q : QuasiTab) (x : List Nat) : Bool := (q.atOpt x).isSome
 
 /-- The set `Q` of all nodes, given by their addresses. -/
-def addresses : QuasiTab → List (List Nat)
+@[expose] def addresses : QuasiTab → List (List Nat)
   | .QNode _ _ next =>
       [] :: (next.map addresses).zipIdx.flatMap (fun p => p.1.map (fun a => p.2 :: a))
 
@@ -313,18 +313,18 @@ def addresses : QuasiTab → List (List Nat)
   | some n => n.children.isEmpty
 
 /-- `L_Q`, the set of leaves. -/
-def leaves (q : QuasiTab) : List (List Nat) := q.addresses.filter q.isLeafAt
+@[expose] def leaves (q : QuasiTab) : List (List Nat) := q.addresses.filter q.isLeafAt
 
 /-- `r_Q`, the root. -/
 def rootAddress : List Nat := []
 
 /-- `x ≤_Q y`, the reflexive-transitive closure of `⋖Q`, which on addresses is the prefix
 order. -/
-def qle (x y : List Nat) : Prop := x <+: y
+@[expose] def qle (x y : List Nat) : Prop := x <+: y
 
 /-- `x <_Q y`, the transitive closure of `⋖Q`, which on addresses is the *proper* prefix
 order. -/
-def qlt (x y : List Nat) : Prop := x <+: y ∧ x ≠ y
+@[expose] def qlt (x y : List Nat) : Prop := x <+: y ∧ x ≠ y
 
 /-- `x ⋖Q y`, i.e. `y` is a child of `x`. -/
 @[expose] def qedge (q : QuasiTab) (x y : List Nat) : Prop := y ∈ q.childrenAt x
@@ -333,7 +333,7 @@ def qlt (x y : List Nat) : Prop := x <+: y ∧ x ≠ y
 type 1 with the same label as `x`. Because repeats are identified at the first opportunity
 there is at most one such node in a quasi-tableau; here we simply take the one closest to
 the root. -/
-def companionOpt (q : QuasiTab) (x : List Nat) : Option (List Nat) :=
+@[expose] def companionOpt (q : QuasiTab) (x : List Nat) : Option (List Nat) :=
   x.inits.dropLast.find? (fun z => decide (q.labelAt z = q.labelAt x ∧ q.typAt z = some .one))
 
 /-- Def 9.8: `x` is a *repeat* leaf of `q`, i.e. a leaf of type 1 that has a companion. -/

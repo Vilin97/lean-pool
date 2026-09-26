@@ -818,7 +818,7 @@ noncomputable abbrev markerConditionalMachine
   }
 
 /-- GapCVP reduction support. -/
-noncomputable def validConfiguration
+@[expose] noncomputable def validConfiguration
     {valid : List Bool → List Bool}
     (computer : BitTM valid)
     (fallback : List Bool)

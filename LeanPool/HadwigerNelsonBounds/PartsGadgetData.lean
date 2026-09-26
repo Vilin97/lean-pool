@@ -29,7 +29,7 @@ structure PartsGadgetVertex where
 deriving DecidableEq
 
 /-- Exact descriptor of one of the 73 gadget vertices. -/
-def partsGadgetVertex (vertex : Fin 73) : PartsGadgetVertex :=
+@[expose] def partsGadgetVertex (vertex : Fin 73) : PartsGadgetVertex :=
   match vertex.val with
   | 0 => ⟨false, -3, 0⟩
   | 1 => ⟨false, -3, 1⟩

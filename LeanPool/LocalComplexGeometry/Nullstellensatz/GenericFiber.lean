@@ -50,7 +50,7 @@ abbrev AmbientGermQuotient {n : ℕ}
   HolomorphicGerm (n + 1) ⧸ P
 
 /-- The canonical quotient-base map induced by `lowerDimensionalInclusion`. -/
-def contractedQuotientMap {n : ℕ}
+@[expose] def contractedQuotientMap {n : ℕ}
     (P : Ideal (HolomorphicGerm (n + 1))) :
     ContractedGermQuotient P →+* AmbientGermQuotient P :=
   algebraMap _ _

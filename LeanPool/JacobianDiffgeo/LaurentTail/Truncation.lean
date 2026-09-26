@@ -119,7 +119,7 @@ theorem ker_alphaL_eq_linSys (D : RS.Divisor X) :
 
 /-- Miranda's `H¹(D) := T[D]/α_D(ℳ)` (PDF 192-193). The comparison to `Cech.H1 D`
 (`RS.Cech.H1`) is `Comparison.lean`'s job. -/
-noncomputable def H1Tail (D : RS.Divisor X) : Type _ := T D ⧸ LinearMap.range (alphaL D)
+@[expose] noncomputable def H1Tail (D : RS.Divisor X) : Type _ := T D ⧸ LinearMap.range (alphaL D)
 
 noncomputable instance instAddCommGroupH1Tail (D : RS.Divisor X) : AddCommGroup (H1Tail D) :=
   inferInstanceAs (AddCommGroup (T D ⧸ LinearMap.range (alphaL D)))
@@ -128,7 +128,7 @@ noncomputable instance instModuleH1Tail (D : RS.Divisor X) : Module ℂ (H1Tail 
   inferInstanceAs (Module ℂ (T D ⧸ LinearMap.range (alphaL D)))
 
 /-- The quotient map onto `H¹Tail(D)`. -/
-noncomputable def H1Tail.mk (D : RS.Divisor X) : T D →ₗ[ℂ] H1Tail D := Submodule.mkQ _
+@[expose] noncomputable def H1Tail.mk (D : RS.Divisor X) : T D →ₗ[ℂ] H1Tail D := Submodule.mkQ _
 
 theorem H1Tail.mk_surjective (D : RS.Divisor X) : Function.Surjective (H1Tail.mk D) :=
   Submodule.mkQ_surjective _

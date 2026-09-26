@@ -48,12 +48,12 @@ variable {α : Type u'} {n : ℕ}
 namespace BoundedFormulaω
 
 /-- Existentially quantify the last `k` bound variables of a formula, by iterating `ex`. -/
-def existsBlock : ∀ {k : ℕ}, L.BoundedFormulaω α (n + k) → L.BoundedFormulaω α n
+@[expose] def existsBlock : ∀ {k : ℕ}, L.BoundedFormulaω α (n + k) → L.BoundedFormulaω α n
   | 0, φ => φ
   | _ + 1, φ => existsBlock φ.ex
 
 /-- Universally quantify the last `k` bound variables of a formula, by iterating `all`. -/
-def forallBlock : ∀ {k : ℕ}, L.BoundedFormulaω α (n + k) → L.BoundedFormulaω α n
+@[expose] def forallBlock : ∀ {k : ℕ}, L.BoundedFormulaω α (n + k) → L.BoundedFormulaω α n
   | 0, φ => φ
   | _ + 1, φ => forallBlock φ.all
 

@@ -100,7 +100,7 @@ The honest tail-template residual quantifies over exactly this seed
 formula sequences: an arbitrary sequence can enumerate `{Pᵢ x}ᵢ ∪ {⋀ᵢ Pᵢ x}` against a "height"
 model, whose tail template is finitely satisfiable but unsatisfiable — a genuine `L_{ω₁ω}`
 compactness failure. -/
-def morleySeed (φ : L.Sentenceω) : ℕ → Σ n, L.BoundedFormulaω Empty n := fun i =>
+@[expose] def morleySeed (φ : L.Sentenceω) : ℕ → Σ n, L.BoundedFormulaω Empty n := fun i =>
   match i with
   | 0 => ⟨0, φ⟩
   | 1 => ⟨2, disEqFormula⟩

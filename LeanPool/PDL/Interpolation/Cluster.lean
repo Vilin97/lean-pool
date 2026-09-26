@@ -414,7 +414,7 @@ for the end nodes `Y` of the local tableau at `p`, and they are labelled with `Y
 
 /-- A fine node belongs to the cluster `C` iff its base node is in `C` and either it *is*
 that base node, or one of the children of the base node below it is in `C`. -/
-def memFine (C : LoadedCluster tab) (f : FinePathIn tab) : Prop :=
+@[expose] def memFine (C : LoadedCluster tab) (f : FinePathIn tab) : Prop :=
   f.base ∈ C.CL ∧ ( f.atBigRoot ∨ ∃ q ∈ f.coarseChildrenBelow, q ∈ C.CL )
 
 instance instDecidableMemFine (C : LoadedCluster tab) (f : FinePathIn tab) :
@@ -475,7 +475,7 @@ lemma exists_child_memFine_of_not_isLrep (C : LoadedCluster tab)
   (C.fineCL.toFinset.sup FinePathIn.children).filter (fun f => decide (¬ C.memFine f))
 
 /-- The fine version of `C⁺`. -/
-def fineCLplus (C : LoadedCluster tab) : Finset (FinePathIn tab) :=
+@[expose] def fineCLplus (C : LoadedCluster tab) : Finset (FinePathIn tab) :=
   C.fineCL.toFinset ∪ C.fineExits
 
 /-- `Λ₂[C]`, the right components of the fine nodes of the cluster. -/

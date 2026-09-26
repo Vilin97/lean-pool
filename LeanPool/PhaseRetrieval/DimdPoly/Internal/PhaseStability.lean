@@ -38,12 +38,12 @@ arrays.
 -/
 
 /-- The Gaussian `L²` modulus defect between two finite Hermite-Fock polynomials. -/
-def modulusDefect {d : Nat} (kappa : MultiIndex d)
+@[expose] def modulusDefect {d : Nat} (kappa : MultiIndex d)
     (F Q : Pkappa d kappa) : ℝ :=
   Real.sqrt <| ∫ z, (‖evalPkappa kappa Q z‖ - ‖evalPkappa kappa F z‖) ^ 2 ∂ gammaD d
 
 /-- The coefficient distance after applying a chosen global phase to `Q`. -/
-def phasedCoeffDistance {d : Nat} {kappa : MultiIndex d} (F Q : Pkappa d kappa)
+@[expose] def phasedCoeffDistance {d : Nat} {kappa : MultiIndex d} (F Q : Pkappa d kappa)
     (phase : ℂ) : ℝ :=
   ‖phase • Q - F‖
 

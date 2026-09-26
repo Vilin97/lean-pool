@@ -628,7 +628,8 @@ theorem hausdorffMeasure_image_nhdsWithin_null_of_finrank_eq
         rw [hdf.coe_implicitToOpenPartialHomeomorphOfComplementedKerRange hker hrange]
         funext x
         rw [ImplicitFunctionData.prodFun_apply]
-        simp only [φ]
+        simp only [φ, HasStrictFDerivAt.implicitFunctionDataOfComplementedKerRange_leftFun_apply,
+          HasStrictFDerivAt.implicitFunctionDataOfComplementedKerRange_rightFun_apply]
       rw [hprod]
       simpa [φ, HasStrictFDerivAt.implicitFunctionDataOfComplementedKerRange_pt] using
         φ.isInvertible_fderiv_prodFun

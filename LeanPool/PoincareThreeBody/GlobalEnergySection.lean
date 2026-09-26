@@ -376,7 +376,7 @@ theorem IsJointlyAnalytic.analyticOnNhd_globalEnergyDefect
   exact hcandidate.sub (hcoefficient.comp (f := hamiltonian 0) hhamiltonian)
 
 /-- Local version of the classical factorization obligation at the rational elliptic anchor. -/
-def LocalZerothCoefficientFactorizationAtAnchor : Prop :=
+@[expose] def LocalZerothCoefficientFactorizationAtAnchor : Prop :=
   ∀ {δ : ℝ} {F : ℝ → PhaseSpace → ℝ},
     0 < δ → IsJointlyAnalytic δ F → IsFirstIntegralFamily δ F →
       ∀ᶠ state in nhds (globalEnergySection (-2)),

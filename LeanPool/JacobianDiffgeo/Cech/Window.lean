@@ -84,7 +84,7 @@ theorem meromorphicOnX_tailGerm (p : X) (m : ℤ) :
   rw [(chartAt ℂ p).right_inv hz]
 
 /-- The local tail germ `(z − z_p)^m` (junk off the chart source). -/
-noncomputable def tailGerm (p : X) (m : ℤ) : RS.MeroGermOn X ((chartAt ℂ p).source) :=
+@[expose] noncomputable def tailGerm (p : X) (m : ℤ) : RS.MeroGermOn X ((chartAt ℂ p).source) :=
   RS.MeroGermOn.mk (fun y => (chartAt ℂ p y - chartAt ℂ p p) ^ m) (meromorphicOnX_tailGerm p m)
 
 theorem ord_tailGerm_self (p : X) (m : ℤ) : (tailGerm p m).ord p = (m : WithTop ℤ) := by

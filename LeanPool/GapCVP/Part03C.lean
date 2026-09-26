@@ -484,7 +484,7 @@ noncomputable def literalSuffixComputable :
       Function.comp_apply, firstFieldSuffix_valid, List.tail_cons]
 
 /-- GapCVP reduction support. -/
-def clauseSuffix : List Bool → List Bool :=
+@[expose] def clauseSuffix : List Bool → List Bool :=
   literalSuffix ∘ literalSuffix ∘ literalSuffix
 
 /-- GapCVP reduction support. -/

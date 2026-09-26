@@ -1037,7 +1037,7 @@ section SmoothUniformInverse
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Quadratic map, given by `B c + A c c`. -/
-def quadraticMap (B : E ≃L[ℝ] E) (A : E →L[ℝ] E →L[ℝ] E) (c : E) : E :=
+@[expose] def quadraticMap (B : E ≃L[ℝ] E) (A : E →L[ℝ] E →L[ℝ] E) (c : E) : E :=
   B c + A c c
 
 /-- Tangent, given by `B.toContinuousLinearMap + A c + A.flip c`. -/

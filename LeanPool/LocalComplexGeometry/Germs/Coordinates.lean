@@ -483,7 +483,7 @@ theorem lowerDimensionalInclusion_injective (n : ℕ) :
   rfl
 
 /-- The germ of the last coordinate `w` on `ℂⁿ⁺¹`. -/
-def lastCoordinateGerm (n : ℕ) : HolomorphicGerm (n + 1) :=
+@[expose] def lastCoordinateGerm (n : ℕ) : HolomorphicGerm (n + 1) :=
   HolomorphicGerm.ofFunction (lastCoordinateCLM n)
     ((lastCoordinateCLM n).analyticAt 0)
 

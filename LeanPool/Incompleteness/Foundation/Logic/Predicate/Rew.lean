@@ -133,7 +133,7 @@ def bind (b : Fin n₁ → Semiterm L ξ₂ n₂) (e : ξ₁ → Semiterm L ξ�
   bind (fun n => #(b n)) (fun m => &(e m))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def substs {n'} (v : Fin n → Semiterm L ξ n') : Rew L ξ n ξ n' := bind v fvar
+@[expose] def substs {n'} (v : Fin n → Semiterm L ξ n') : Rew L ξ n ξ n' := bind v fvar
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[expose] def emb {o : Type v₁} [h : IsEmpty o] {ξ : Type v₂} {n} : Rew L o n ξ n := map id h.elim

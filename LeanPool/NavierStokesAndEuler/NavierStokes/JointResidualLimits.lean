@@ -94,12 +94,12 @@ structure OneSidedExtension (f : SpaceTime → V) (x : Space) where
   agrees : EqOn value f (domain ∩ SpacetimeEndpoint.openPast 1)
 
 /-- Away extensions, given by `∀ x : Space, x ≠ 0 → Nonempty (OneSidedExtension f x)`. -/
-def AwayExtensions (f : SpaceTime → V) : Prop :=
+@[expose] def AwayExtensions (f : SpaceTime → V) : Prop :=
   ∀ x : Space, x ≠ 0 → Nonempty (OneSidedExtension f x)
 
 /-- Vanishing joint jets, given by `∀ n : ℕ, Tendsto (iteratedFDeriv ℝ n f)
 (𝓝[SpacetimeEndpoint.openPast 1] ((1 : ℝ), (0 : Space))) (𝓝 0)`. -/
-def VanishingJointJets (f : SpaceTime → V) : Prop :=
+@[expose] def VanishingJointJets (f : SpaceTime → V) : Prop :=
   ∀ n : ℕ, Tendsto (iteratedFDeriv ℝ n f)
     (𝓝[SpacetimeEndpoint.openPast 1] ((1 : ℝ), (0 : Space))) (𝓝 0)
 

@@ -42,7 +42,7 @@ abbrev pointedResObj (k : ℕ) (T : PointedTrees) : PointedTrees where
   snd := ⟨T.2.val.take k, Tree.take_mem T.2, List.length_take_le k T.2.val⟩
 /-- restriction of a pointed tree, obtained by replacing
   the base node by an ancestor if necessary -/
-def pointedRes (k : ℕ) : PointedTrees ⥤ PointedTrees where
+@[expose] def pointedRes (k : ℕ) : PointedTrees ⥤ PointedTrees where
   obj := pointedResObj k
   map {S T} f := ⟨(forgetPoint ⋙ res k).map f, by
     ext1; change (f.toHom (Tree.take k S.2)).val = _
@@ -55,7 +55,7 @@ lemma pointedRes_isIso_iff_fixing k {S T : PointedTrees} (f : S ⟶ T) :
   IsIso ((pointedRes k).map f) ↔ Fixing k f.toHom := by
     simp only [pointed_isIso_iff]; use Fixing.mk, fun h ↦ h.prop
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def extensionsRes T :
+@[expose] def extensionsRes T :
   extensions.obj T ≃ extensions.obj ((pointedRes (T.2.val.length + 1)).obj T) where
   toFun a := ⟨a.val, by
     constructor

@@ -56,7 +56,7 @@ lemma mem_S (x : A ⊗[F] B) :
 
 variable (α β) in
 /-- The balanced tensor-product module used in the multiplicativity proof. -/
-@[reducible] def M := (A ⊗[F] B) ⧸ Submodule.span F (S α β)
+@[expose, reducible] def M := (A ⊗[F] B) ⧸ Submodule.span F (S α β)
 
 /-- Right multiplication by fixed tensor factors descends to the balanced quotient. -/
 def AoxFBSmulMAux (a' : A) (b' : B) : M α β →ₗ[F] M α β :=
@@ -118,7 +118,7 @@ def AoxFBSmulM : A ⊗[F] B →ₗ[F] M α β →ₗ[F] M α β :=
 @[simp]
 lemma AoxFBSmulM_op_tmul_smul_mk_tmul (a' a : A) (b' b : B) :
     AoxFBSmulM (a' ⊗ₜ[F] b') (Submodule.Quotient.mk (a ⊗ₜ[F] b) : M α β) =
-    (Submodule.Quotient.mk ((a * a') ⊗ₜ[F] (b * b')) : M α β) := rfl
+    (Submodule.Quotient.mk ((a * a') ⊗ₜ[F] (b * b')) : M α β) := by rfl
 
 instance : SMul (A ⊗[F] B)ᵐᵒᵖ (M α β) where
   smul x y := AoxFBSmulM x.unop y
@@ -127,7 +127,7 @@ open MulOpposite in
 @[simp]
 lemma Aox_FB_op_tmul_smul_mk_tmul (a' a : A) (b' b : B) :
     op (a' ⊗ₜ[F] b') • (Submodule.Quotient.mk (a ⊗ₜ[F] b) : M α β) =
-    Submodule.Quotient.mk ((a * a') ⊗ₜ[F] (b * b')) := rfl
+    Submodule.Quotient.mk ((a * a') ⊗ₜ[F] (b * b')) := by rfl
 
 open MulOpposite in
 instance : MulAction (A ⊗[F] B)ᵐᵒᵖ (M α β) where
@@ -597,7 +597,7 @@ variable [IsGalois F K]
 
 variable (α β) in
 /-- A chosen simple module appearing in the Wedderburn decomposition of `C`. -/
-def SimpleMod : Type := exists_simple_module_directSum α β |>.choose
+@[expose] def SimpleMod : Type := exists_simple_module_directSum α β |>.choose
 
 local notation "SM" => SimpleMod α β
 
@@ -612,7 +612,7 @@ instance : IsSimpleModule C SM := exists_simple_module_directSum _ _
 
 variable (α β) in
 /-- The finite index set for the simple-module decomposition of `C`. -/
-def IndexingSet : Type := exists_simple_module_directSum α β
+@[expose] def IndexingSet : Type := exists_simple_module_directSum α β
   |>.choose_spec.choose_spec.choose_spec.choose_spec.choose
 
 local notation "ι" => IndexingSet α β
@@ -718,7 +718,7 @@ lemma M_directSum : ∃ (ιM : Type) (_ : Fintype ιM), Nonempty (M α β ≃ₗ
 
 variable (α β) in
 /-- The finite index set for the simple-module decomposition of `M`. -/
-def IndexingSetM : Type := (M_directSum α β).choose
+@[expose] def IndexingSetM : Type := (M_directSum α β).choose
 
 local notation "ιM" => IndexingSetM α β
 

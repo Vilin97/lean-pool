@@ -97,7 +97,7 @@ variable (γ)
 
 open LinearMapClass RingHom in
 /-- The Lie bracket in a central extension defined by a Lie algebra 2-cocycle. -/
-def bracket : γ.CentralExtension
+@[expose] def bracket : γ.CentralExtension
       →ₗ[𝕜] γ.CentralExtension →ₗ[𝕜] γ.CentralExtension where
   toFun := fun ⟨X,_⟩ ↦ {
     toFun := fun ⟨Y,_⟩ ↦ ⟨⁅X,Y⁆, γ X Y⟩
@@ -143,7 +143,7 @@ lemma bracket_leibniz (Z W₁ W₂ : γ.CentralExtension) :
 namespace CentralExtension
 
 /-- The central extension is a Lie ring. -/
-instance : LieRing γ.CentralExtension where
+@[expose] instance : LieRing γ.CentralExtension where
   bracket Z W := γ.bracket Z W
   add_lie Z₁ Z₂ W := by simp
   lie_add Z W₁ W₂ := by simp; rfl

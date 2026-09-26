@@ -27,20 +27,20 @@ public section
 namespace HadwigerNelsonBounds
 
 /-- Swap the two colors not fixed by the normalized root. -/
-def partsSwapMiddleColor (color : Fin 4) : Fin 4 := ![0, 2, 1, 3] color
+@[expose] def partsSwapMiddleColor (color : Fin 4) : Fin 4 := ![0, 2, 1, 3] color
 
 /-- The color renaming used by a certificate variant. -/
-def partsTransformColor (swap : Bool) (color : Fin 4) : Fin 4 :=
+@[expose] def partsTransformColor (swap : Bool) (color : Fin 4) : Fin 4 :=
   if swap then partsSwapMiddleColor color else color
 
 /-- Rename the vertices and optionally the two free colors of an assignment. -/
-def partsTransformAssignment (symmetry : Fin 6) (swap : Bool)
+@[expose] def partsTransformAssignment (symmetry : Fin 6) (swap : Bool)
     (assignment : PartsAssignment) : PartsAssignment :=
   { vertex := partsPermuteVertex symmetry assignment.vertex
     color := partsTransformColor swap assignment.color }
 
 /-- Transform a root path without materializing a second copy of its tree. -/
-def partsTransformPath (symmetry : Fin 6) (swap : Bool) :
+@[expose] def partsTransformPath (symmetry : Fin 6) (swap : Bool) :
     List PartsAssignment → List PartsAssignment
   | [] => []
   | assignment :: path =>
@@ -251,7 +251,7 @@ private lemma partsRunStemB_transform (symmetry : Fin 6) (swap : Bool) :
       · rfl
 
 /-- Select one of the 36 normalized root-orbit certificates. -/
-def partsBaseCertificate (base : Fin 36) : PartsCertificate :=
+@[expose] def partsBaseCertificate (base : Fin 36) : PartsCertificate :=
   match base.val with
   | 0 => partsBaseCertificate0
   | 1 => partsBaseCertificate1

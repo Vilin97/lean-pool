@@ -37,7 +37,7 @@ abbrev DelaunayAnchorParameters := ActionSpace × (ℝ × ℝ)
   ![1 / Real.sqrt 3, (1 / 2 : ℝ)]
 
 /-- Parameters corresponding to the rational phase point `(0, 1/6, -3, 0)`. -/
-noncomputable def delaunayAnchorParameters : DelaunayAnchorParameters :=
+@[expose] noncomputable def delaunayAnchorParameters : DelaunayAnchorParameters :=
   (delaunayAnchorAction, 0, Real.pi / 2)
 
 /-- Full local Delaunay chart using eccentric anomaly as its first angle. -/

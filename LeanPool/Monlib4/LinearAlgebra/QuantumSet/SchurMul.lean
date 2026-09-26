@@ -31,7 +31,7 @@ local notation x " ⊗ₘ " y => TensorProduct.map x y
 open Coalgebra
 
 /-- Schur product `x •ₛ y := m ∘ (x ⊗ y) ∘ comul`. -/
-noncomputable def schurMul {B C : Type*}
+@[expose] noncomputable def schurMul {B C : Type*}
     [AddCommMonoid B] [NonUnitalNonAssocSemiring C]
     [Module ℂ B] [Module ℂ C] [CoalgebraStruct ℂ B]
     [SMulCommClass ℂ C C] [IsScalarTower ℂ C C] :

@@ -46,7 +46,8 @@ variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
   ∫ y in (0 : ℝ)..1, ∫ x in (0 : ℝ)..1, f (x, y)
 
 /-- Slice mean, given by `torusMean (fun Y => f (U, Y))`. -/
-noncomputable def sliceMean (f : State → F) (U : ℝ) : F := torusMean (fun Y => f (U, Y))
+@[expose] noncomputable def sliceMean (f : State → F) (U : ℝ) : F :=
+  torusMean (fun Y => f (U, Y))
 
 /-- The exact defect in `D Ic = f - cutoffAlias`. -/
 noncomputable def cutoffAlias (χ : ℝ → ℝ) (M : ℝ) (v : Plane) (f : State → F) (z : State) : F :=

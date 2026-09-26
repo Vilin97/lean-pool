@@ -124,7 +124,7 @@ theorem mlClass_res {D D' : RS.Divisor X} {𝒰 𝒱 : RS.Cech.FinCover (⊤ : O
 /-! ### The per-point construction: realizing a clean representative -/
 
 /-- The 2-member cover `{V, X ∖ {p}}`, used to realize a single tail datum at `p`. -/
-@[reducible] noncomputable def pairCover (p : X) (V : Opens X) (hpV : p ∈ V) :
+@[expose, reducible] noncomputable def pairCover (p : X) (V : Opens X) (hpV : p ∈ V) :
     RS.Cech.FinCover (⊤ : Opens X) where
   n := 2
   U := ![V, ⟨{p}ᶜ, isOpen_compl_singleton⟩]
@@ -347,12 +347,12 @@ theorem restrict_ψ_mem_linSysOn (D : RS.Divisor X) (p : X)
 omit [T2Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] [CompactSpace X] [ConnectedSpace X] in
 theorem gOf_apply_zero (p : X) (V : Opens X) (hpV : p ∈ V) (D' : RS.Divisor X)
     (ψV : RS.LinSysOn D' (V : Set X)) :
-    gOf p V hpV D' ψV (0 : Fin 2) = ψV := rfl
+    gOf p V hpV D' ψV (0 : Fin 2) = ψV := by rfl
 
 omit [T2Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] [CompactSpace X] [ConnectedSpace X] in
 theorem gOf_apply_one (p : X) (V : Opens X) (hpV : p ∈ V) (D' : RS.Divisor X)
     (ψV : RS.LinSysOn D' (V : Set X)) :
-    gOf p V hpV D' ψV (1 : Fin 2) = 0 := rfl
+    gOf p V hpV D' ψV (1 : Fin 2) = 0 := by rfl
 
 /-- `ψ` restricted to its clean neighbourhood, as a section of the auxiliary linear system. -/
 noncomputable def ψVOf (D : RS.Divisor X) (p : X) (ψ : RS.MeroGermOn X (chartAt ℂ p).source) :
@@ -674,7 +674,7 @@ noncomputable def mlClassAtRaw (D : RS.Divisor X) (p : X) :
 
 omit [ConnectedSpace X] in
 theorem mlClassAtRaw_apply (D : RS.Divisor X) (p : X) (ψ : RS.MeroGermOn X (chartAt ℂ p).source) :
-    mlClassAtRaw D p ψ = mlClassAt D p ψ := rfl
+    mlClassAtRaw D p ψ = mlClassAt D p ψ := by rfl
 
 /-- The tail-to-cohomology map at a single point. -/
 noncomputable def tailAtToH1 (D : RS.Divisor X) (p : X) : TailAt p D →ₗ[ℂ] RS.Cech.H1 D :=

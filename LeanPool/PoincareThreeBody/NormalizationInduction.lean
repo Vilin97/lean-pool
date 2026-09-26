@@ -442,7 +442,7 @@ theorem not_isIndependentSomewhere_of_iterated_normalizations
 /-- The remaining classical input, isolated as an induction principle: every analytic first
 integral admits energy functions which cancel all successive Kepler-limit coefficients while the
 normalized remainders remain jointly analytic. -/
-def ClassicalNormalizationPrinciple : Prop :=
+@[expose] def ClassicalNormalizationPrinciple : Prop :=
   ∀ {δ : ℝ} {F : ℝ → PhaseSpace → ℝ},
     0 < δ → IsJointlyAnalytic δ F → IsFirstIntegralFamily δ F →
       ∃ energyFunction : ℕ → ℝ → ℝ,

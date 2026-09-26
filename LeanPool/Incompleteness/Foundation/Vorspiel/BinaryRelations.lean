@@ -55,7 +55,7 @@ def RightConvergent := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y ≺ z ∨ z �
 def Equality := ∀ ⦃x y⦄, x ≺ y ↔ x = y
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Isolated := ∀ ⦃x y⦄, ¬(x ≺ y)
+@[expose] def Isolated := ∀ ⦃x y⦄, ¬(x ≺ y)
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def Assymetric := ∀ ⦃x y⦄, (x ≺ y) → ¬(y ≺ x)
@@ -158,7 +158,7 @@ lemma WellFounded.trivial_wellfounded : WellFounded (α := α) (fun _ _ => False
   ⟨fun a => ⟨a, fun _ h => h.elim⟩⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Relation.IrreflGen (R : α → α → Prop) := fun x y => x ≠ y ∧ R x y
+@[expose] def Relation.IrreflGen (R : α → α → Prop) := fun x y => x ≠ y ∧ R x y
 
 
 /-- Imported declaration from the Incompleteness formalization. -/

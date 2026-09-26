@@ -40,7 +40,7 @@ variable {L : Language.{0, 0}} {α β : Type}
 /-- **The signed quantifier class.**  `universalSigned true φ` says `φ` is *universal* (`∀₁`) and
 `universalSigned false φ` says `φ` is *existential* (`∃₁`).  An antecedent flips the sign, the
 countable connectives preserve it, and `all` is admissible only at the universal sign. -/
-def universalSigned : ∀ {n : ℕ}, Bool → L.BoundedFormulaω α n → Prop
+@[expose] def universalSigned : ∀ {n : ℕ}, Bool → L.BoundedFormulaω α n → Prop
   | _, _, .falsum => True
   | _, _, .equal _ _ => True
   | _, _, .rel _ _ => True

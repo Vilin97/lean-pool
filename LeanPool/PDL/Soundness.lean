@@ -124,7 +124,7 @@ The `succ` is there because the lpr values are indices of the history starting w
 -- maybe use Fin.cast?
 
 /-- `s ♥ t` means `s` is a `LoadedPathRepeat` and the `companionOf s` is `t`. -/
-def companion {X} {tab : Tableau .nil X} (s t : PathIn tab) : Prop :=
+@[expose] def companion {X} {tab : Tableau .nil X} (s t : PathIn tab) : Prop :=
   ∃ (lpr : _) (h : (tabAt s).2.2 = .lrep lpr), t = companionOf s lpr h
 
 /-- The companion relation connecting a loaded repeat to its earlier node. -/
@@ -348,7 +348,7 @@ lemma not_edge_and_heart {X} {tab : Tableau .nil X} {a b : PathIn tab} : ¬ (a �
   exact node_ne node_eq
 
 /-- An ordinary tableau edge or an edge to a repeat's companion. -/
-def cEdge {X} {ctX : Tableau .nil X} (s t : PathIn ctX) : Prop :=
+@[expose] def cEdge {X} {ctX : Tableau .nil X} (s t : PathIn ctX) : Prop :=
   (s ⋖_ t) ∨ s ♥ t
 
 /-- One ordinary or companion edge. -/
@@ -400,7 +400,7 @@ def clusterOf {X} {tab : Tableau .nil X} (p : PathIn tab) :=
 /-- We have `before s t` iff there is a path from s to t but not from t to s.
 This means the cluster of `s` comes before the cluster of `t` in `tab`.
 NB: The notes use ◃* here but we use ◃⁺. The definitions are equivalent. -/
-def before {X} {tab : Tableau .nil X} (s t : PathIn tab) : Prop :=
+@[expose] def before {X} {tab : Tableau .nil X} (s t : PathIn tab) : Prop :=
   s ◃⁺ t  ∧  ¬ t ◃⁺ s
 
 /-- `s <ᶜ t` means there is a ◃-path from `s` to `t` but not from `t` to `s`.

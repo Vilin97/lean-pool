@@ -415,15 +415,15 @@ noncomputable def torusLiftY : ℂ →L[ℝ] (Point P →L[ℝ] ℂ) :=
     (dy.comp (ContinuousLinearMap.snd ℝ P Plane))
 
 @[simp] theorem parameterLift_apply (i : BasisIndex P) (c : ℂ) (v : Point P) :
-    parameterLift i c v = parameterCoord i v.1 • c := rfl
+    parameterLift i c v = parameterCoord i v.1 • c := by rfl
 
 omit [FiniteDimensional ℝ P] in
 @[simp] theorem torusLiftX_apply (c : ℂ) (v : Point P) :
-    torusLiftX c v = v.2.1 • c := rfl
+    torusLiftX c v = v.2.1 • c := by rfl
 
 omit [FiniteDimensional ℝ P] in
 @[simp] theorem torusLiftY_apply (c : ℂ) (v : Point P) :
-    torusLiftY c v = v.2.2 • c := rfl
+    torusLiftY c v = v.2.2 • c := by rfl
 
 theorem clm_parameter_expansion (L : P →L[ℝ] ℂ) (v : P) :
     L v = ∑ i : BasisIndex P, parameterCoord i v • L (parameterBasis i) := by
@@ -1548,11 +1548,11 @@ noncomputable def fromProduct (f : (ℝ × S) × Plane → F) (z : ℝ × (S × 
 
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] [NormedAddCommGroup F] [NormedSpace ℝ F] in
 @[simp] theorem fromProduct_toProduct (f : ℝ × (S × Plane) → F) :
-    fromProduct (toProduct f) = f := rfl
+    fromProduct (toProduct f) = f := by rfl
 
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] [NormedAddCommGroup F] [NormedSpace ℝ F] in
 @[simp] theorem toProduct_fromProduct (f : (ℝ × S) × Plane → F) :
-    toProduct (fromProduct f) = f := rfl
+    toProduct (fromProduct f) = f := by rfl
 
 theorem toProduct_smooth {f : ℝ × (S × Plane) → F} (hf : ContDiff ℝ ∞ f) :
     ContDiff ℝ ∞ (toProduct f) :=
@@ -1862,7 +1862,7 @@ noncomputable def realCenterSource (f : ℝ × (S × Plane) → ℝ) : ℝ × (S
 
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] [FiniteDimensional ℝ S] in
 theorem realCenterSource_apply (f : ℝ × (S × Plane) → ℝ) (z : ℝ × (S × Plane)) :
-    realCenterSource f z = f z - sourceMean f (z.1, z.2.1) := rfl
+    realCenterSource f z = f z - sourceMean f (z.1, z.2.1) := by rfl
 
 theorem realCenterSource_smooth {f : ℝ × (S × Plane) → ℝ}
     (hf : ContDiff ℝ ∞ f) (hp : SourcePeriodic f) : ContDiff ℝ ∞ (realCenterSource f) :=

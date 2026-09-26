@@ -273,7 +273,7 @@ end SeparationPackage
 /-- The exact topological conclusion shared by the free-Abelian and rational-vector-group
 results.  Total boundedness is stated for a compatible uniformity inducing the displayed
 topology. -/
-def HasMainGroupTopology (G : Type u) [AddCommGroup G] : Prop :=
+@[expose] def HasMainGroupTopology (G : Type u) [AddCommGroup G] : Prop :=
   ∃ (topology : TopologicalSpace G) (uniformity : UniformSpace G),
     uniformity.toTopologicalSpace = topology ∧
     @IsUniformAddGroup G uniformity _ ∧

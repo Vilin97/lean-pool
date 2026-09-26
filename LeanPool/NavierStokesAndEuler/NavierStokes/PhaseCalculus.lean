@@ -259,7 +259,7 @@ theorem contDiffAt_phaseNormal (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot
     exact contDiffAt_const.mul (hp eZ).contDiffAt
 
 /-- The exact fast-slot derivative of `nΦ` used by the tangent ODE. -/
-def normalSlotDerivative (ε p pz : ℝ) (F G : Slow → ℝ) (s : Slow) : Vec3 :=
+@[expose] def normalSlotDerivative (ε p pz : ℝ) (F G : Slow → ℝ) (s : Slow) : Vec3 :=
   !₂[-(p * slowR F s + pz * slowR G s), 0,
     -ε * (p * slowZ F s + pz * slowZ G s)]
 

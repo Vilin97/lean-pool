@@ -357,11 +357,11 @@ theorem pulseLength_pos (c : Parameters) : 0 < c.pulseLength :=
   if i = 0 then -(1 / 2 + c.lam) else -(1 / 2 + 2 * c.lam)
 
 /-- The log supports lie inside `(L-3.15,L-2.85)` and `(L-1.15,L-.85)`. -/
-def lower (c : Parameters) (i : Fin 2) : ℝ :=
+@[expose] def lower (c : Parameters) (i : Fin 2) : ℝ :=
   Real.exp (c.pulseLength - if i = 0 then 63 / 20 else 23 / 20)
 
 /-- Upper, given by `Real.exp (c.pulseLength - if i = 0 then 57 / 20 else 17 / 20)`. -/
-def upper (c : Parameters) (i : Fin 2) : ℝ :=
+@[expose] def upper (c : Parameters) (i : Fin 2) : ℝ :=
   Real.exp (c.pulseLength - if i = 0 then 57 / 20 else 17 / 20)
 
 theorem exponents_injective (c : Parameters) : Injective c.exponents := by
@@ -1022,7 +1022,7 @@ theorem angularMoment_after_pulse (c : Parameters) (amp : ℝ → ℝ) (eta : �
     _ = 0 := angularMoment_endpoint c amp eta
 
 /-- The manuscript's precise shaped-wait duration is a valid instance. -/
-def paperParameters (P m lam : ℝ) (hP : 0 < P) (hm : 0 < m)
+@[expose] def paperParameters (P m lam : ℝ) (hP : 0 < P) (hm : 0 < m)
     (hlam : 0 < lam) (hlam' : lam < 1 / 10) : Parameters where
   P := P
   m := m

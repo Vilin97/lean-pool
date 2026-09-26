@@ -111,6 +111,19 @@ theorem derivativeOperator_translation {q : ℕ} (i : Fin 4) (a : LiftDomain per
       sobolevTranslation period q a (derivativeOperator period q i u) := by
   apply Subtype.ext
   funext w
-  simp only [derivativeOperator_apply, sobolevTranslation, liftOperator_apply]
+  calc
+    (derivativeOperator period q i (sobolevTranslation period (q + 1) a u)).val w =
+        (sobolevTranslation period (q + 1) a u).val (derivativeIndex i w) :=
+      derivativeOperator_apply period i _ w
+    _ = (translation period a).toContinuousLinearMap (u.val (derivativeIndex i w)) := by
+      simpa only [sobolevTranslation] using
+        (liftOperator_apply period (translation period a).toContinuousLinearMap
+          (translations_commute period a) u (derivativeIndex i w))
+    _ = (translation period a).toContinuousLinearMap
+        ((derivativeOperator period q i u).val w) := by rw [derivativeOperator_apply]
+    _ = (sobolevTranslation period q a (derivativeOperator period q i u)).val w := by
+      simpa only [sobolevTranslation] using
+        (liftOperator_apply period (translation period a).toContinuousLinearMap
+          (translations_commute period a) (derivativeOperator period q i u) w).symm
 
 end EulerCylinderSobolevSpace

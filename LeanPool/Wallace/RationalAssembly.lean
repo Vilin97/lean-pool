@@ -82,7 +82,7 @@ theorem globalCharacter_admissible
     (localCharacter_admissible x) a
 
 /-- The complete character package for the rational direct sum of rank continuum. -/
-def fullCharacterPackage : FullCharacterPackage ContinuumRationalGroup where
+@[expose] def fullCharacterPackage : FullCharacterPackage ContinuumRationalGroup where
   Code := ContinuumIndex
   codeEquiv := rationalSequenceCodeEquiv
   subsequence := selector N hN M

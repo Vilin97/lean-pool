@@ -1990,7 +1990,7 @@ private noncomputable def satisfiesFormula {T S : ℕ}
   {negative (t, i, a), negative (t, i, b)}
 
 /-- GapCVP reduction support. -/
-def initialClause {T S : ℕ}
+@[expose] def initialClause {T S : ℕ}
     (input : Position T → Symbol S) (i : Position T) : Clause T S :=
   {positive ((0 : Time T), i, input i)}
 
@@ -2653,7 +2653,7 @@ private theorem paddedUnary_allDistinct (a : Literal)
     exact triple_distinct _ _ _ ha₀ ha₁ (by decide)
 
 /-- GapCVP reduction support. -/
-def negate (a : Literal) : Literal := (a.1, !a.2)
+@[expose] def negate (a : Literal) : Literal := (a.1, !a.2)
 
 @[simp] private theorem literalSatisfied_negate (assignment : ℕ → Bool)
     (a : Literal) :

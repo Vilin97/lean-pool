@@ -219,7 +219,7 @@ noncomputable def toGermSub (S : Opens X) :
 
 omit [T1Space X] in
 theorem toGermSub_apply_coe (S : Opens X) (f : BddHoloOn S) :
-    (toGermSub S f : RS.MeroGermOn X (S : Set X)) = toGerm S f := rfl
+    (toGermSub S f : RS.MeroGermOn X (S : Set X)) = toGerm S f := by rfl
 
 omit [T1Space X] in
 theorem toGermSub_restrictCLM_comm {S' S : Opens X} (h : S' ≤ S) (f : BddHoloOn S) :
@@ -235,7 +235,7 @@ lemmas typecheck for a bare `P : Fin T.n → Opens X` without needing `𝒰.n` t
 `T.n` — a genuine dependent-type obstruction for a free `𝒰 : FinCover (⊤ : Opens X)` variable).
 `T.coverU`/`T.coverV`/`T.coverW` are `rfl`-equal to `coverOfP T.U T.covers_U` etc. (same fields,
 `Prop`-irrelevant `covers` witness), so this is used transparently at call sites. -/
-@[reducible] noncomputable def coverOfP (P : Fin T.n → Opens X) (hcov : ∀ x, ∃ i, x ∈ P i) :
+@[expose, reducible] noncomputable def coverOfP (P : Fin T.n → Opens X) (hcov : ∀ x, ∃ i, x ∈ P i) :
     FinCover (⊤ : Opens X) where
   n := T.n
   U := P
@@ -250,7 +250,7 @@ noncomputable def toGermC1 (P : Fin T.n → Opens X) :
 
 omit [T1Space X] in
 theorem toGermC1_apply (P : Fin T.n → Opens X) (f : NC1 T P) (p : Fin T.n × Fin T.n) :
-    toGermC1 T P f p = toGermSub (P p.1 ⊓ P p.2) (f p) := rfl
+    toGermC1 T P f p = toGermSub (P p.1 ⊓ P p.2) (f p) := by rfl
 
 omit [T1Space X] in
 theorem toGermC1_mem_Z1 (P : Fin T.n → Opens X) (hcov : ∀ x, ∃ i, x ∈ P i)
@@ -278,8 +278,7 @@ noncomputable def toGermZ1 (P : Fin T.n → Opens X) (hcov : ∀ x, ∃ i, x ∈
 omit [T1Space X] in
 theorem toGermZ1_apply_coe (P : Fin T.n → Opens X) (hcov : ∀ x, ∃ i, x ∈ P i) (ξ : NZ1 T P) :
     (toGermZ1 T P hcov ξ : C1 (0 : RS.Divisor X) (coverOfP T P hcov)) = toGermC1 T P (ξ : NC1 T P)
-        :=
-  rfl
+        := by rfl
 
 variable [T2Space X] [CompactSpace X]
 
@@ -488,7 +487,7 @@ noncomputable def toGermC0 (P : Fin T.n → Opens X) :
 
 omit [T2Space X] [CompactSpace X] [T1Space X] in
 theorem toGermC0_apply (P : Fin T.n → Opens X) (h : NC0 T P) (i : Fin T.n) :
-    toGermC0 T P h i = toGermSub (P i) (h i) := rfl
+    toGermC0 T P h i = toGermSub (P i) (h i) := by rfl
 
 omit [T2Space X] [CompactSpace X] [T1Space X] in
 /-- Naturality: germifying a `0`-cochain then taking its cover-level coboundary agrees with
@@ -506,7 +505,7 @@ noncomputable def toGermZ1W (ψ : NZ1 T T.W) : Z1 (0 : RS.Divisor X) T.coverW :=
 
 omit [T2Space X] [CompactSpace X] [T1Space X] in
 theorem toGermZ1W_apply_coe (ψ : NZ1 T T.W) :
-    (toGermZ1W T ψ : C1 (0 : RS.Divisor X) T.coverW) = toGermC1 T T.W (ψ : NC1 T T.W) := rfl
+    (toGermZ1W T ψ : C1 (0 : RS.Divisor X) T.coverW) = toGermC1 T T.W (ψ : NC1 T T.W) := by rfl
 
 /-- **The Čech class map** (§5 step 8): bound `V`-level cocycles down to `W`, germify, take the
 Mittag-Leffler class. -/
@@ -528,8 +527,7 @@ noncomputable def classMap : NZ1 T T.V →ₗ[ℂ] H1Cover (0 : RS.Divisor X) T.
 omit [T2Space X] [CompactSpace X] [T1Space X] in
 theorem classMap_apply (ψ : NZ1 T T.V) :
     classMap T ψ = H1Cover.mk (0 : RS.Divisor X) T.coverW
-        (toGermZ1W T (resZ T T.V T.W T.W_le_V ψ)) :=
-  rfl
+        (toGermZ1W T (resZ T T.V T.W T.W_le_V ψ)) := by rfl
 
 omit [T2Space X] [CompactSpace X] [T1Space X] in
 /-- The trade defect, restricted to `W`, is minus the coboundary of `x`'s `W`-component. -/

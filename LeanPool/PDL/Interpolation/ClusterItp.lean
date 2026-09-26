@@ -60,7 +60,7 @@ variable {Var : Type}
 /-- The ordinary vocabulary of a Q-formula, i.e. the proposition letters and atomic
 programs occurring in it. The internal variables are *not* included; they are given by
 `QFormula.vars`. -/
-def voc : QFormula Var → Vocab
+@[expose] def voc : QFormula Var → Vocab
   | .fma ψ => ψ.voc
   | .var _ => ∅
   | .and ι1 ι2 => ι1.voc ∪ ι2.voc

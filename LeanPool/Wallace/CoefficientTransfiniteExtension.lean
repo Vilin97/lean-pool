@@ -113,7 +113,7 @@ def coordinateStep
       0
 
 /-- The coordinate characters constructed by well-founded recursion. -/
-def globalCoordinate {R : Type w} {I : Type u} [AddCommMonoid R] [One R]
+@[expose] def globalCoordinate {R : Type w} {I : Type u} [AddCommMonoid R] [One R]
     [LinearOrder I] [WellFoundedLT I] (extension : CoordinateExtension R)
     (E : Data R I) (D : Set I) (character : (D →₀ R) →+ UnitAddCircle) :
     I → (R →+ UnitAddCircle) :=

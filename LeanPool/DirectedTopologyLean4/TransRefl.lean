@@ -56,7 +56,7 @@ lemma directed_transReflReparamAux : DirectedMap.Directed
 
 /-- The auxiliary reparametrization map `I → I` used to show that `p.trans (refl _)` is
 dihomotopic to `p`, packaged as a directed map. -/
-def TransReflReparamAuxMap : D(I,I) where
+@[expose] def TransReflReparamAuxMap : D(I,I) where
   toFun := fun t => ⟨transReflReparamAux t, transReflReparamAux_mem_I t⟩
   continuous_toFun := Continuous.subtype_mk continuous_transReflReparamAux _
   directed_toFun := directed_transReflReparamAux
@@ -111,7 +111,7 @@ lemma directed_ReflTransReparamAux : DirectedMap.Directed
 
 /-- The auxiliary reparametrization map `I → I` used to show that `(refl _).trans p` is
 dihomotopic to `p`, packaged as a directed map. -/
-def ReflTransReparamAuxMap : D(I,I) where
+@[expose] def ReflTransReparamAuxMap : D(I,I) where
   toFun := fun t => ⟨ReflTransReparamAux t, reflTransReparamAux_mem_I t⟩
   continuous_toFun := Continuous.subtype_mk continuous_ReflTransReparamAux _
   directed_toFun := directed_ReflTransReparamAux

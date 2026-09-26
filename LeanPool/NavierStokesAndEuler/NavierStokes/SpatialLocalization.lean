@@ -233,7 +233,7 @@ theorem unitSpatialPeriodsOn_periodize (f : SpaceTime → V) (times : Set ℝ) :
   simpa only [lattice_single] using periodize_add_lattice f t x (Pi.single i 1)
 
 /-- The open spatial cube on which other copies are excluded. -/
-def innerCube (r : ℝ) : Set Space := {x | ∀ i : Fin 3, |x i| < 1 - r}
+@[expose] def innerCube (r : ℝ) : Set Space := {x | ∀ i : Fin 3, |x i| < 1 - r}
 
 /-- In this cube, a nonzero translate must be the zero lattice translate. -/
 theorem translate_eq_zero_on_innerCube {r : ℝ} {f : SpaceTime → V}
@@ -474,7 +474,7 @@ theorem plateau_subset_innerCube : plateau ⊆ PeriodicLocalization.innerCube (1
   fun z => spatialCutoff z.2 * p z
 
 /-- Cut velocity, given by `SpatialCurl.spatialCurl (cutPotential A)`. -/
-noncomputable def cutVelocity (A : VelocityField) : VelocityField :=
+@[expose] noncomputable def cutVelocity (A : VelocityField) : VelocityField :=
   SpatialCurl.spatialCurl (cutPotential A)
 
 theorem cutPotential_supported (A : VelocityField) :
@@ -688,11 +688,11 @@ theorem periodicVelocity_origin_blowup (A : VelocityField)
 
 /-- The previously constructed time switch is applied to the spatially
 localized fields.  It is independent of the spatial variables. -/
-noncomputable def localizedVelocity (A : VelocityField) : VelocityField :=
+@[expose] noncomputable def localizedVelocity (A : VelocityField) : VelocityField :=
   TimeLocalization.activatedVelocity (periodicVelocity A)
 
 /-- Localized pressure, given by `TimeLocalization.activatedPressure (periodicPressure p)`. -/
-noncomputable def localizedPressure (p : PressureField) : PressureField :=
+@[expose] noncomputable def localizedPressure (p : PressureField) : PressureField :=
   TimeLocalization.activatedPressure (periodicPressure p)
 
 /-- The same time activation can be performed on the actual potential. -/
