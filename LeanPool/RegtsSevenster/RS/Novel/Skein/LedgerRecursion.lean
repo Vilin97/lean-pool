@@ -510,14 +510,11 @@ theorem ledger_glueData : ∀ (n : ℕ)
     stageLedger 0 _ (glueData n V D) + glueCount n V D
       = stageLedger n V D
   | 0, V, D => by
-    have hzero : ∀ {W : Fragment (Fin (0 + 0) ⊕ Fin (0 + 0))}
-        (F : EdgeSubset W) (M N : DirMatching (UsedLab F)),
-        DirMatching.unionCount M N = 0 := by
-      intro W F M N
-      have : IsEmpty (UsedLab F) := ⟨fun x => isEmptyElim x.val⟩
-      exact DirMatching.unionCount_of_isEmpty M N
-    simp only [glueCount, stageLedger, ledgerOf, glueData, hzero,
-      Nat.add_zero]
+    let : IsEmpty (UsedLab D.sub) := ⟨fun x => isEmptyElim x.val⟩
+    let : IsEmpty (UsedLab (D.sub.relabelUp endEquiv)) :=
+      ⟨fun x => isEmptyElim x.val⟩
+    simp only [glueCount, stageLedger, ledgerOf, glueData,
+      DirMatching.unionCount_of_isEmpty, Nat.add_zero]
     exact relabel_openCircuitCount endEquiv D.sub D.rel
   | n + 1, V, D => by
     have ih := ledger_glueData n _ (stepData n V D)

@@ -108,9 +108,9 @@ private theorem std_coev_ev (k ℓ : ℕ) :
       id_eq, LinearMap.toSpanSingleton_apply, smul_add, one_smul, TensorProduct.tmul_add,
       TensorProduct.tmul_sum, LinearMap.zero_apply, mk_add_left, mk_sum_left, mk_smul_left,
       map_add, map_sum, SuperVect.assocAux_symm_ee, map_smul, SuperVect.assocAux_symm_eo,
-      Prod.fst_add, Prod.fst_sum, Prod.smul_fst, smul_zero, Finset.sum_const_zero, add_zero,
+      Prod.fst_sum, smul_zero, Finset.sum_const_zero, add_zero,
       LinearMap.coprod_apply, TensorProduct.lift.tmul, LinearMap.mk₂_apply, stdFormEven,
-      lmap_zero, TensorProduct.sum_tmul, Prod.snd_add, Prod.snd_sum, Prod.smul_snd, zero_add,
+      lmap_zero, TensorProduct.sum_tmul, Prod.snd_sum,
       LinearMap.coe_fst, TensorProduct.rid_tmul, TensorProduct.lid_symm_apply, LinearMap.coe_inr,
       SuperVect.prod_mk_zero, equiv_zero, Prod.fst_zero, Prod.snd_zero, TensorProduct.tmul_zero]
     simp only [← TensorProduct.sum_tmul]
@@ -151,10 +151,10 @@ private theorem std_coev_ev (k ℓ : ℕ) :
       TensorProduct.map_tmul, LinearMap.id_coe, id_eq, LinearMap.toSpanSingleton_apply, smul_add,
       one_smul, TensorProduct.tmul_add, TensorProduct.tmul_sum, mk_add_right, mk_sum_right,
       map_add, map_sum, SuperVect.assocAux_symm_oe, map_smul, SuperVect.assocAux_symm_oo,
-      Prod.fst_add, Prod.fst_sum, Finset.sum_const_zero, Prod.smul_fst, zero_add,
+      Prod.fst_sum, Finset.sum_const_zero, Prod.smul_fst, zero_add,
       LinearMap.coprod_apply, TensorProduct.lift.tmul, LinearMap.mk₂_apply, stdFormOdd, neg_mul,
-      Finset.sum_neg_distrib, Prod.snd_add, Prod.snd_sum, Prod.smul_snd, smul_zero, add_zero,
-      mk_sum_left, mk_smul_left, TensorProduct.rid_tmul]
+      Finset.sum_neg_distrib, Prod.snd_sum, Prod.smul_snd, smul_zero,
+      TensorProduct.rid_tmul]
     have hinner : ∀ m : Fin (2 * ℓ),
         (-∑ n, (oddPartnerSign ℓ n : ℂ) *
             (Pi.single x (1 : ℂ) : Fin (2 * ℓ) → ℂ) n *
@@ -220,10 +220,10 @@ private theorem std_ev_coev (k ℓ : ℕ) :
       LinearMap.toSpanSingleton_apply, smul_add, one_smul, LinearMap.id_coe, id_eq,
       TensorProduct.add_tmul, TensorProduct.sum_tmul, TensorProduct.smul_tmul,
       LinearMap.zero_apply, mk_add_left, mk_sum_left, mk_smul_left, map_add, map_sum,
-      SuperVect.assocAux_ee, map_smul, SuperVect.assocAux_oo, Prod.fst_add, Prod.fst_sum,
-      Prod.smul_fst, smul_zero, Finset.sum_const_zero, add_zero, LinearMap.coprod_apply,
+      SuperVect.assocAux_ee, map_smul, SuperVect.assocAux_oo, Prod.fst_sum,
+      smul_zero, Finset.sum_const_zero, add_zero, LinearMap.coprod_apply,
       TensorProduct.lift.tmul, LinearMap.mk₂_apply, stdFormEven, lmap_zero,
-      TensorProduct.tmul_sum, Prod.snd_add, Prod.snd_sum, Prod.smul_snd, zero_add,
+      TensorProduct.tmul_sum, Prod.snd_sum,
       LinearMap.coe_fst, TensorProduct.lid_tmul, TensorProduct.rid_symm_apply, LinearMap.coe_inr,
       SuperVect.prod_mk_zero, equiv_zero, Prod.fst_zero, Prod.snd_zero, TensorProduct.zero_tmul]
     simp only [← TensorProduct.tmul_sum]
@@ -262,10 +262,10 @@ private theorem std_ev_coev (k ℓ : ℕ) :
       LinearMap.toSpanSingleton_apply, smul_add, one_smul, LinearMap.id_coe, id_eq,
       TensorProduct.add_tmul, TensorProduct.sum_tmul, TensorProduct.smul_tmul,
       LinearMap.zero_apply, mk_add_left, mk_sum_left, mk_smul_left, map_add, map_sum,
-      SuperVect.assocAux_ee, map_smul, SuperVect.assocAux_oo, Prod.fst_add, Prod.fst_sum,
-      Prod.smul_fst, smul_zero, Finset.sum_const_zero, add_zero, Prod.snd_add, Prod.snd_sum,
+      SuperVect.assocAux_ee, map_smul, SuperVect.assocAux_oo, Prod.fst_sum,
+      Prod.smul_fst, smul_zero, Finset.sum_const_zero, Prod.snd_sum,
       Prod.smul_snd, zero_add, LinearMap.coprod_apply, lmap_zero, TensorProduct.lift.tmul,
-      LinearMap.mk₂_apply, stdFormOdd, neg_mul, Finset.sum_neg_distrib, mk_sum_right,
+      LinearMap.mk₂_apply, stdFormOdd, neg_mul, Finset.sum_neg_distrib,
       LinearMap.coe_inr, LinearMap.coe_fst, TensorProduct.lid_tmul, TensorProduct.rid_symm_apply,
       SuperVect.prod_mk_zero, equiv_zero, Prod.fst_zero, Prod.snd_zero, TensorProduct.zero_tmul]
     have hinner : ∀ m : Fin (2 * ℓ),
