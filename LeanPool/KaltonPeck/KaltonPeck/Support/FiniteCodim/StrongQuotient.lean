@@ -60,11 +60,6 @@ def fredholmQuotientStrong {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X
   have hProj (x : X) : (pF x : X) + (pY x : X) = x :=
     Submodule.projectionL_add_projectionL_eq_self hTop x
   have hRadical (f : eta.radical) : eta.toDual (f : X) = 0 := f.property
-  have hSkew (x y : X) : eta.toDual x y = -eta.toDual y x := by
-    have h := eta.alternating (x + y)
-    have hsum : eta.toDual x y + eta.toDual y x = 0 := by
-      simpa [eta.alternating, add_assoc, add_left_comm, add_comm] using h
-    exact eq_neg_of_add_eq_zero_left hsum
   let SY : Y →L[ℝ] StrongDual ℝ X := eta.toDual.comp Y.subtypeL
   have hSY_injective : Function.Injective SY := by
     intro y z hyz
