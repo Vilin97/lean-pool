@@ -109,15 +109,14 @@ theorem oneStep_originalPL_lowerFixed
     RelativeSubdivisionCylinderCombinatorics.vertex_eq_lowerBoundaryVertex_of_time_eq_zero m r i
       htime
   rw [CompatibleChartMapOneStep.vectorValue_assignment_sample]
-  simp [CompatibleChartMapOneStep.localVector,
-    CompatibleChartMapOneStep.localSpatialWeight,
-    baseOriginalPLMap,
-    RelativeSubdivisionOneStepCells.localPoint, RelativeSubdivisionOneStepCells.localWeight, hj,
-    RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex,
+  simp only [localVector, baseOriginalPLMap, Nat.add_one_sub_one, localSpatialWeight,
+    RelativeSubdivisionOneStepCells.localPoint, RelativeSubdivisionOneStepCells.localWeight,
+    eq_mpr_eq_cast, cast_eq, RelativeSubdivisionCylinderCombinatorics.chart_vertex, hj,
+    RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex, Set.Icc.mk_zero,
     RelativeAffineCellSystem.slotPoint, RelativeSubdivisionOneStepCells.cellSystem,
     RelativeSubdivisionOneStepCells.vertex, RelativeSubdivisionOneStepCells.chart,
     RelativeSubdivisionOneStepCells.liftPoint,
-      EquivariantPrismVertexParameters.CylinderPoint.ofProd]
+    EquivariantPrismVertexParameters.CylinderPoint.ofProd]
   funext c
   simp [RefinedAffineMap.value, RefinedAffineMap.vertexValue, RefinedAffineMap.vertex,
     StandardSimplex.ofDelta, SphereOddDegree.FiniteSimplex.vertex, Pi.single_apply, ite_mul,
@@ -143,6 +142,7 @@ structure Data
           (sampleVertex hp (positiveWitness hp A.level k).collar.cells s) =
         A.map ((positiveWitness hp A.level k).collar.cells.slotPoint s).spatial
 
+open ExplicitAffineRelativeCollarComposeDescribed in
 /-- Construct the full positive stack by induction on the number of additional layers. -/
 noncomputable def build
     (hp : Nat.Prime p)
@@ -199,11 +199,15 @@ noncomputable def build
         assignment := by
           simpa [positiveWitness, composeWitness, C, E,
             ExplicitAffineRelativeCollarCompose.endpointIdentifiedCollar,
-            ExplicitAffineRelativeCollarCompose.relativeCollar] using a
+            ExplicitAffineRelativeCollarComposeDescribed.endpointIdentifiedCollar,
+            ExplicitAffineRelativeCollarComposeDescribed.describedCollar,
+            EndpointDescribedRelativeAffineCollar.ofEndpointIdentified] using a
         represents := by
           simpa [positiveWitness, composeWitness, C, E, a, hseam,
             ExplicitAffineRelativeCollarCompose.endpointIdentifiedCollar,
-            ExplicitAffineRelativeCollarCompose.relativeCollar] using
+            ExplicitAffineRelativeCollarComposeDescribed.endpointIdentifiedCollar,
+            ExplicitAffineRelativeCollarComposeDescribed.describedCollar,
+            EndpointDescribedRelativeAffineCollar.ofEndpointIdentified] using
             combinedAssignment_represents C.cells E.cells K
               D.assignment b D.represents hbRep
         avoidsOrigin := by
@@ -219,7 +223,9 @@ noncomputable def build
                 ((baseOriginalPLMap_isAffine hp A).refine (k + 1)) r
           simpa [positiveWitness, composeWitness, C, E, a, hseam,
             ExplicitAffineRelativeCollarCompose.endpointIdentifiedCollar,
-            ExplicitAffineRelativeCollarCompose.relativeCollar] using
+            ExplicitAffineRelativeCollarComposeDescribed.endpointIdentifiedCollar,
+            ExplicitAffineRelativeCollarComposeDescribed.describedCollar,
+            EndpointDescribedRelativeAffineCollar.ofEndpointIdentified] using
             combinedAssignment_avoidsOrigin C.cells E.cells
               D.assignment b hseam D.avoidsOrigin hbAvoid q
         lowerFixed := by

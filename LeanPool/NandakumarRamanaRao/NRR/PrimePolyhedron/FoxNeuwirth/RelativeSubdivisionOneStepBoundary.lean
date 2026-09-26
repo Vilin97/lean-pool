@@ -108,7 +108,8 @@ theorem facetOrbitIndicator_smul
       simp [hh, mul_smul]
   exact if_congr hiff rfl rfl
 
-private def fullFacetIndexEquiv
+/-- Identify global facet indices with the dimension-normalized local cylinder indices. -/
+def fullFacetIndexEquiv
     (hp : Nat.Prime p) :
     Fin (p + 1) ≃ Fin (p - 1 + 2) :=
   finCongr (by
@@ -314,9 +315,8 @@ theorem localBase_eq_globalBase
     (liftTuple hp N q
       (RelativeSubdivisionCylinderCombinatorics.Oriented.baseFacetVertex (p - 1) r))) = _
   rw [htuple, facetOrbitIndicator_occurrence]
-  simp [ quotientIndicator, RelativeSubdivisionOneStepBoundaryBase.baseOccurrence,
-    RelativeSubdivisionOneStepCells.coefficient]
-  exact (mul_assoc _ _ _).symm
+  simp only [quotientIndicator, RelativeSubdivisionOneStepBoundaryBase.baseOccurrence,
+    RelativeSubdivisionOneStepCells.coefficient, mul_assoc]
 
 /-- Pointwise incidence is the global cone-base pairing. -/
 theorem facetIncidence_eq_basePairing
@@ -373,16 +373,19 @@ theorem sideMapWeight_smul
   rw [htuple, facetOrbitIndicator_smul hp N s g]
 
 
-private theorem sideDimension_eq (hp : Nat.Prime p) :
+/-- The recursive side simplex has the same dimension as the parent boundary. -/
+theorem sideDimension_eq (hp : Nat.Prime p) :
     p - 2 + 1 = p - 1 := by
   have h := hp.two_le
   omega
 
-private def sideDomainCast (hp : Nat.Prime p) :
+/-- Identify the side simplex dimension with the parent boundary dimension. -/
+def sideDomainCast (hp : Nat.Prime p) :
     Delta (p - 2 + 1) → Delta (p - 1) :=
   fun x => (sideDimension_eq hp) ▸ x
 
-private def sideRefinementCast (hp : Nat.Prime p)
+/-- Transport a parent refinement permutation to the side-cylinder index type. -/
+def sideRefinementCast (hp : Nat.Prime p)
     (rho : Equiv.Perm (Fin p)) :
     Equiv.Perm (Fin (p - 2 + 2)) :=
   let e : Fin (p - 2 + 2) ≃ Fin p :=
@@ -436,10 +439,7 @@ private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2))
     funext x
     apply Realization.ext
     intro c
-    simp [ EquivariantPrismNonhorizontalCancellation.iteratedBoundaryMap,
-      ReferenceAffineOrbitCount.topRepr,
-      Simplex.realizationContinuousMap, Simplex.realizationPoint,
-      Simplex.chartWeight, cofacePoint]
+    simp only [Nat.add_one_sub_one, Simplex.realizationPoint_apply]
     change (∑ i : Fin (d + 2),
       if (ReferenceAffineOrbitCount.topRepr hp orbit) i = c then
         (StandardSimplex.ofDelta
@@ -492,7 +492,6 @@ private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2))
       apply Finset.sum_congr rfl
       intro orbit horbit
       rw [Finset.mul_sum]
-
       have hreindex :
           (∑ j : Fin (d + 2),
             (PrimeOrbitCycle.orbitCycle hp).coefficient orbit *
@@ -523,7 +522,6 @@ private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2))
                     W
                       ((PrimeOrbitCycle.topRepresentative hp orbit).restrict
                         (FaceMap.delete j)))))).symm
-
       calc
         _ =
             ∑ j : Fin (d + 2),
@@ -537,9 +535,7 @@ private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2))
           apply Finset.sum_congr rfl
           intro j hj
           ring
-
         _ = _ := hreindex
-
         _ =
             (EquivariantPrismNonhorizontalCancellation.iteratedSign
                 (ZMod (d + 2)) N theta) *
@@ -555,13 +551,11 @@ private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2))
           apply Finset.sum_congr rfl
           intro k hk
           ring
-
         _ = _ := by
           congr 1
           rw [Finset.mul_sum]
-
     _ = 0 := by
-      simpa only [hz, mul_zero]
+      simp only [hz, mul_zero]
 
 /-- Dimension-normalized form of fixed-side cancellation. -/
 private theorem fixedSideCell_sum_eq_zero_dim
@@ -631,8 +625,8 @@ private theorem fixedSideCell_sum_eq_zero_dim
                     (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho
                     (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k))) = _ by
     apply Finset.sum_congr rfl
-    intro c hc
-    rw [hreindex c]]
+    · intro c hc
+      rw [hreindex c]]
   rw [show (∑ c : PrimeOrbitCycle.TopOrbit hp,
       (PrimeOrbitCycle.orbitCycle hp).coefficient c *
         ∑ rho : RefinementWord (d + 2) N,
@@ -729,7 +723,7 @@ private theorem sideMapWeight_baseOccurrence_sideCell
       RelativeSubdivisionCylinderCombinatorics.chart_vertex,
       RefinedAffineMap.chart, Simplex.refinedContinuousMap,
       Simplex.realizationContinuousMap]
-    congr 2 <;> simp [orbitFacetIndex, orbitFacetEquiv]
+    congr 2
   unfold sideMapWeight quotientIndicator
   rw [htuple, facetOrbitIndicator_occurrence]
 private theorem fixedSideCell_weighted_sum_eq_zero_dim
@@ -811,12 +805,15 @@ private theorem sideBasePairing_eq_zero_dim
   unfold RelativeSubdivisionOneStepBoundaryBase.sideBasePairing
     RelativeSubdivisionOneStepBoundaryBase.IsEndpointCell
   rw [Fintype.sum_prod_type]
-  simp [RelativeSubdivisionCylinderCombinatorics.Cell,
+  simp only [Nat.add_one_sub_one, RelativeSubdivisionCylinderCombinatorics.Cell,
     RelativeSubdivisionCylinderCombinatorics.lowerCell,
-    RelativeSubdivisionCylinderCombinatorics.upperCell,
-    RelativeSubdivisionOneStepCells.coefficient,
-    RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient,
-    RelativeSubdivisionOneStepBoundaryBase.baseOccurrence, quotientIndicator]
+    RelativeSubdivisionCylinderCombinatorics.upperCell, eq_mpr_eq_cast, cast_eq,
+    RelativeSubdivisionOneStepCells.coefficient, quotientIndicator,
+    RelativeSubdivisionOneStepBoundaryBase.baseOccurrence, Fintype.sum_sum_type,
+    Finset.univ_unique, PUnit.default_eq_unit, reduceCtorEq, exists_const, or_false,
+    ↓reduceIte, Finset.sum_const_zero, Sum.inr.injEq, false_or, Sum.inl.injEq, exists_eq',
+    RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient, neg_mul, mul_neg,
+    Finset.sum_neg_distrib, zero_add, neg_eq_zero]
   rw [Fintype.sum_prod_type]
   conv_lhs =>
     enter [2, orbit]

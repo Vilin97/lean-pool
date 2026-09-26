@@ -193,7 +193,8 @@ noncomputable def relativeCollar :
     FoxNeuwirthRelativeAffineCollar hp N₀ N₁ (max M₀ M₁) (L₀ + L₁ + 1) :=
   (ExplicitAffineRelativeCollarComposeDescribed.describedCollar
     (EndpointDescribedRelativeAffineCollar.ofEndpointIdentified C)
-    (EndpointDescribedRelativeAffineCollar.ofEndpointIdentified D)).toFoxNeuwirthRelativeAffineCollar
+    (EndpointDescribedRelativeAffineCollar.ofEndpointIdentified
+      D)).toFoxNeuwirthRelativeAffineCollar
 
 /-- Composition of endpoint-identified relative affine collars. -/
 noncomputable def endpointIdentifiedCollar :

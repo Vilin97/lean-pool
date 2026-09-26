@@ -149,9 +149,9 @@ theorem upperOccurrence_facetSignature
       exact hword
   rw [he]
   have hmR : (0 : Real) < (m : Real) := by exact_mod_cast hm
-  simp [slabPoint, slabTime, upperCylinderPoint, lastSlab]
+  apply congrArg (EquivariantPrismVertexParameters.CylinderPoint.mk _)
   apply Subtype.ext
-  norm_num
+  change (((m - 1 : Nat) : Real) + 1) / (m : Real) = 1
   have hcast : ((m - 1 : Nat) : Real) + 1 = (m : Real) := by
     exact_mod_cast (show (m - 1 : Nat) + 1 = m by omega)
   rw [hcast, div_self (ne_of_gt hmR)]

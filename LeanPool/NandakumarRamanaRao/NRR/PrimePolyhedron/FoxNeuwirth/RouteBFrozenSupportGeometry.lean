@@ -308,6 +308,7 @@ theorem frozenSafe_combined
           linarith
       · exact hzeros
 
+open ExplicitAffineRelativeCollarComposeDescribed in
 /-- Every iterated positive endpoint stack is lower-support safe. -/
 theorem build_lowerPositiveSupportRaySafe
     {F : ContinuousCoordinateMap p}
@@ -346,7 +347,9 @@ theorem build_lowerPositiveSupportRaySafe
         C0, E, b, hseam,
         RelativeSubdivisionEndpointCollar.composeWitness,
         ExplicitAffineRelativeCollarCompose.endpointIdentifiedCollar,
-        ExplicitAffineRelativeCollarCompose.relativeCollar] using
+        ExplicitAffineRelativeCollarComposeDescribed.endpointIdentifiedCollar,
+        ExplicitAffineRelativeCollarComposeDescribed.describedCollar,
+        EndpointDescribedRelativeAffineCollar.ofEndpointIdentified] using
         lowerSafe_combined_left hp C0.cells E.cells D0.assignment b hseam
           (build_lowerPositiveSupportRaySafe A k)
 

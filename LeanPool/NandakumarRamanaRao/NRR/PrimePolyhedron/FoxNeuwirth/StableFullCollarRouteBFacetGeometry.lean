@@ -52,6 +52,7 @@ open ExplicitAffineRelativeCollar.RouteB
 
 variable {p : Nat}
 
+open ExplicitAffineRelativeCollarComposeDescribed in
 /-- Every iterated lower endpoint stack admits boundary-respecting regular facet targets. -/
 theorem build_lowerFacetTargets
     (hp : Nat.Prime p)
@@ -90,7 +91,9 @@ theorem build_lowerFacetTargets
         C0, E, b, hseam,
         RelativeSubdivisionEndpointCollar.composeWitness,
         ExplicitAffineRelativeCollarCompose.endpointIdentifiedCollar,
-        ExplicitAffineRelativeCollarCompose.relativeCollar] using
+        ExplicitAffineRelativeCollarComposeDescribed.endpointIdentifiedCollar,
+        ExplicitAffineRelativeCollarComposeDescribed.describedCollar,
+        EndpointDescribedRelativeAffineCollar.ofEndpointIdentified] using
         lowerFacetTargets_combined_left hp C0.cells E.cells
           D0.assignment b hseam (build_lowerFacetTargets hp A k)
 

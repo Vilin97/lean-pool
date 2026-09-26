@@ -82,7 +82,7 @@ theorem cylinderVertex_point (hp : Nat.Prime p) {N : Nat}
 
 /-- A finite partial injection into a finite type extends to a permutation. -/
 theorem exists_perm_extending_finset
-    {α : Type*} [DecidableEq α]
+    {α : Type*}
     (s : Finset α) (f : α → α)
     (hinj : Set.InjOn f (s : Set α)) :
     ∃ e : Equiv.Perm α, ∀ x ∈ s, e x = f x := by
@@ -105,7 +105,8 @@ theorem exists_perm_extending_finset
           exact ha hx
         have hxb : x ≠ e.symm (f a) := by
           intro h
-          have hex : e x = f a := by simpa [h]
+          have hex : e x = f a :=
+            (congrArg e h).trans (e.apply_symm_apply (f a))
           have hfx : f x = f a := by rw [← he x hx, hex]
           exact hxa (hinj (Finset.mem_insert_of_mem hx)
             (Finset.mem_insert_self a s) hfx)
@@ -184,7 +185,7 @@ noncomputable def lowerFacetPermutation
     (by
       intro a ha b hb hab
       simp only [Finset.mem_coe] at ha hb
-      simp [ha, hb] at hab
+      simp only [dite_eq_left ha, dite_eq_left hb] at hab
       exact congrArg Subtype.val
         (lowerColumnIndex_injective hp q k hab)))
 
@@ -201,7 +202,7 @@ theorem lowerFacetPermutation_frozen
     (by
       intro a ha b hb hab
       simp only [Finset.mem_coe] at ha hb
-      simp [ha, hb] at hab
+      simp only [dite_eq_left ha, dite_eq_left hb] at hab
       exact congrArg Subtype.val
         (lowerColumnIndex_injective hp q k hab))) c hc
   simpa [lowerFacetPermutation, hc] using h

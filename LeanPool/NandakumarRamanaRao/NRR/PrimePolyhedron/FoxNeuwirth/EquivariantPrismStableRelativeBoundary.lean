@@ -319,11 +319,9 @@ theorem endpointInterpolant_equivariant
       ⟨g • v.1, by simpa [IsEndpointVertex] using v.2⟩
     have hpoint : endpointSpatialPoint hp N L s gv =
         g • endpointSpatialPoint hp N L s v := by
-      have hg := congrArg CylinderPoint.spatial
-        (globalPoint_smul hp N L g v.1)
-      simpa [endpointSpatialPoint, gv] using hg
+      simp [endpointSpatialPoint, gv]
     rw [← hpoint, rawEndpointInterpolant_sample]
-    simpa [gv, vectorValue_smul hp N L a g v.1]
+    simp [gv, vectorValue_smul hp N L a g v.1]
   calc
     _ = ((Fintype.card (PrimeSymmetry p) : Real)⁻¹) •
         ∑ _g : PrimeSymmetry p, vectorValue hp N L a v.1 := by
@@ -437,7 +435,7 @@ theorem endpointInterpolant_vertexValue
         RefinedAffineMap.vertex] using
         congrArg (fun z : CylinderPoint p => z.spatial) hsig
   rw [← hspatial]
-  simpa [v, o] using endpointInterpolant_sample hp N L s a v
+  simp [v, o]
 /-- Endpoint regularity inherited from the corresponding canonical horizontal facets of a generic
 prism assignment. -/
 theorem endpointInterpolant_regular

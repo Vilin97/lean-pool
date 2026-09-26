@@ -143,9 +143,8 @@ theorem positiveReferenceSkeletonFree
       value hp 0 (ofCoordinateAffineVertexMap F) q w
         (ReferenceAffineOrbitCount.lastLabel hp) at hr
     rw [value_zero_ofCoordinateAffineVertexMap hp F q w, chart_zero] at hr
-    simp [Simplex.realizationContinuousMap] at hr
-    rw [CoordinateAffineVertexMap.globalValue_realizationPoint] at hr
-    exact hr
+    simpa [Simplex.realizationContinuousMap,
+      CoordinateAffineVertexMap.globalValue_realizationPoint] using hr
   rw [AAK.positiveEquivariantReferenceCoordinateMap_deviation hp] at hzero
   exact ReferenceAffineOrbitCount.zero_isInterior hp
     (ReferenceAffineOrbitCount.topRepr hp q.1) w hzero

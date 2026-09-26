@@ -367,13 +367,6 @@ theorem lowerOccurrence_classification_zero
   rcases o with ⟨⟨⟨q, k⟩, rho⟩, j⟩
   have htime : ∀ i : Fin p, staircaseTime k (j.succAbove i) = 0 := by
     intro i
-    have hi := ho i
-    simp [
-      RelativeAffineCellSystem.facetSignature,
-      RelativeCollarMiddlePrism.vertex, SubdivisionPrismCharts.vertex,
-      SubdivisionPrismCharts.chart, staircasePoint, intervalPoint,
-      intervalWeight, CylinderPoint.ofProd, StandardSimplex.ofDelta,
-      SphereOddDegree.FiniteSimplex.vertex, Pi.single_apply, affineCompMap] at hi
     apply staircaseTime_lower
     by_contra h
     have hlt : k.val < (j.succAbove i).val := Nat.lt_of_not_ge h
@@ -392,7 +385,12 @@ theorem lowerOccurrence_classification_zero
           if k.val < x.val then
             if x = j.succAbove i then (1 : Real) else 0
           else 0) = 0 := by
-      simpa [staircaseTime] using hi
+      simpa [RelativeAffineCellSystem.facetSignature,
+        RelativeCollarMiddlePrism.vertex, SubdivisionPrismCharts.vertex,
+        SubdivisionPrismCharts.chart, staircasePoint, intervalPoint,
+        intervalWeight, CylinderPoint.ofProd, StandardSimplex.ofDelta,
+        SphereOddDegree.FiniteSimplex.vertex, Pi.single_apply, affineCompMap,
+        staircaseTime] using ho i
     linarith
   rcases lowerStaircaseFacet_indices hp k j htime with ⟨hk, hj⟩
   subst k
@@ -416,13 +414,6 @@ theorem upperOccurrence_classification_zero
   rcases o with ⟨⟨⟨q, k⟩, rho⟩, j⟩
   have htime : ∀ i : Fin p, staircaseTime k (j.succAbove i) = 1 := by
     intro i
-    have hi := ho i
-    simp [
-      RelativeAffineCellSystem.facetSignature,
-      RelativeCollarMiddlePrism.vertex, SubdivisionPrismCharts.vertex,
-      SubdivisionPrismCharts.chart, staircasePoint, intervalPoint,
-      intervalWeight, CylinderPoint.ofProd, StandardSimplex.ofDelta,
-      SphereOddDegree.FiniteSimplex.vertex, Pi.single_apply, affineCompMap] at hi
     apply staircaseTime_upper
     by_contra h
     have hle : (j.succAbove i).val ≤ k.val := Nat.le_of_not_gt h
@@ -442,7 +433,12 @@ theorem upperOccurrence_classification_zero
           if k.val < x.val then
             if x = j.succAbove i then (1 : Real) else 0
           else 0) = 1 := by
-      simpa [staircaseTime] using hi
+      simpa [RelativeAffineCellSystem.facetSignature,
+        RelativeCollarMiddlePrism.vertex, SubdivisionPrismCharts.vertex,
+        SubdivisionPrismCharts.chart, staircasePoint, intervalPoint,
+        intervalWeight, CylinderPoint.ofProd, StandardSimplex.ofDelta,
+        SphereOddDegree.FiniteSimplex.vertex, Pi.single_apply, affineCompMap,
+        staircaseTime] using ho i
     linarith
   rcases upperStaircaseFacet_indices hp k j htime with ⟨hk, hj⟩
   subst k

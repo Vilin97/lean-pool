@@ -290,10 +290,9 @@ theorem facetIncidence_eq_sum_slabOccurrencePairing
   apply Finset.sum_congr rfl
   intro k hk
   rw [slabFacetOrbitIndicator_occurrence]
-  simp [stackOccurrence,
-     occurrenceCoefficient,
-    RelativeAffineCellSystem.alternatingSign,
-    SimplicialChain.faceSign, RelativeCollarMiddlePrism.cellSystem]
+  simp only [Nat.add_zero, RelativeAffineCellSystem.alternatingSign, occurrenceCoefficient,
+    SimplicialChain.faceSign, facetFaceIndex_val, stackOccurrence,
+    RelativeCollarMiddlePrism.cellSystem]
   change
     (if (StackCells hp N m hm).facetClass ((r, q), k) = s then
         prismCoefficient hp N 0 q * (-1) ^ (k : Nat)

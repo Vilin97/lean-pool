@@ -42,11 +42,13 @@ open AffinePositiveRayBoundary.VertexMap
 
 variable {p : Nat}
 
-private abbrev parentIndex (p : Nat) :
+/-- Parent vertex index used by the local affine-pullback formulas. -/
+abbrev parentIndex (p : Nat) :
     Fin (p - 1 + 1) → Fin (p - 1 + 1) :=
   EndpointStackAffinePullbackCore.parentIndex p
 
-private abbrev cylinderIndex (hp : Nat.Prime p) : Fin (p + 1) → Fin (p - 1 + 2) :=
+/-- Identify global cylinder vertex indices with their local dimension-normalized indices. -/
+abbrev cylinderIndex (hp : Nat.Prime p) : Fin (p + 1) → Fin (p - 1 + 2) :=
   EndpointStackAffinePullbackCore.cylinderIndex hp
 
 /-- The one-step endpoint cylinder used throughout this module. -/
@@ -106,7 +108,8 @@ theorem pullbackVector_eq_value
     (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2)
   funext c
   have hc := congrFun h c
-  simp [RelativeSubdivisionOneStepCells.localWeight] at hc
+  simp only [RelativeSubdivisionOneStepCells.localWeight,
+    Nat.succ_eq_add_one, Nat.add_one_sub_one, eq_mpr_eq_cast, cast_eq] at hc
   rw [show RelativeSubdivisionCylinderCombinatorics.spatialPoint k s.1.2
       (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2) =
       (RelativeSubdivisionCylinderCombinatorics.vertex k s.1.2 s.2).1 by

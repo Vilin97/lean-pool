@@ -353,10 +353,7 @@ theorem occurrencePairing_lower
     simp only [iteratedSign,  permSignCoeff]
     have hlower (sigma : Delta p → Realization (p + 1)) :
         lowerEndpointMap sigma = fun x => (sigma x, 0) := rfl
-    simp [lowerEndpointPairing, endpointSpatialMap_succ,
-
-      subdivisionSign,  hlower]
-    rfl
+    simp [lowerEndpointPairing, endpointSpatialMap_succ, subdivisionSign, hlower]
 
 /-- Upper-horizontal part of the arbitrary weighted occurrence pairing. -/
 theorem occurrencePairing_upper
@@ -449,10 +446,7 @@ theorem occurrencePairing_upper
     simp only [iteratedSign,  permSignCoeff]
     have hupper (sigma : Delta p → Realization (p + 1)) :
         upperEndpointMap sigma = fun x => (sigma x, 1) := rfl
-    simp [upperEndpointPairing, endpointSpatialMap_succ,
-
-      subdivisionSign,  hupper]
-    rfl
+    simp [upperEndpointPairing, endpointSpatialMap_succ, subdivisionSign, hupper]
 
 /-- Prime invariance is inherited by the nonhorizontal restriction of a weight. -/
 theorem sideMapWeight_translate
@@ -525,7 +519,8 @@ theorem refined_side_eq_arbitrarySpatialSideWeight
   | succ n =>
       dsimp only
       rw [refined_chart_eq_affineCompMap]
-      simp [arbitrarySpatialSideWeight, sidePrismMap, deltaCast, Equiv.cast]
+      simp only [Nat.add_one_sub_one, Nat.succ_eq_add_one, Nat.reduceAdd, deltaCast_rfl,
+        Equiv.cast_refl, Equiv.refl_trans, Equiv.trans_refl, Fin.cast_eq_self]
       have hspatial :
           (fun k =>
             ((Equiv.cast (congrArg Fin (show n + 1 - 1 + 2 = n + 1 + 1 by omega))).trans
@@ -676,10 +671,7 @@ private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime
     funext x
     apply Realization.ext
     intro c
-    simp [  iteratedBoundaryMap,
-      ReferenceAffineOrbitCount.topRepr,
-      Simplex.realizationContinuousMap, Simplex.realizationPoint,
-      Simplex.chartWeight, cofacePoint]
+    simp only [Nat.add_one_sub_one, Simplex.realizationPoint_apply]
     change (∑ i : Fin (n + 1 + 1),
       if (ReferenceAffineOrbitCount.topRepr hp orbit) i = c then
         (StandardSimplex.ofDelta
@@ -771,7 +763,7 @@ private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime
               apply Finset.sum_congr rfl
               intro k hk
               ring
-    _ = 0 := by simpa only [hz, mul_zero]
+    _ = 0 := by simp only [hz, mul_zero]
 
 /-- The nonhorizontal part of every prime-invariant facet-map weight pairs trivially with the
 refined prism boundary. -/
@@ -901,8 +893,7 @@ theorem occurrencePairing_side_eq_zero
   cases n with
   | zero => simp
   | succ n =>
-    simp only [refined_side_eq_arbitrarySpatialSideWeight_succ
-      hp N L (sideMapWeight W)]
+    simp only
     simp_rw [Finset.mul_sum]
     conv_lhs =>
       enter [2, orbit]

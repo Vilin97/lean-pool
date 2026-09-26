@@ -122,26 +122,32 @@ noncomputable def build
     (ps : List PrimeFactor) →
     (A : ℝ) → (hA : 0 < A) → (hAK : A ≤ K.area) →
     (φ : NiceMV (BodySpace K (primeDescendArea A ps))) →
-    IteratedRefinement ps A hA φ
-  | [], A, hA, hAK, φ =>
-      { output := φ
-        decode := by
-          intro C y hy
-          exact
-            { partition := IndexedConvexPartition.singleton
-                (EMP.VariableBody.solidBody hA C)
-              leaf := fun _ => C
-              piece_eq_leaf := fun _ => rfl
-              piece_area_eq := fun _ => rfl
-              leaf_zero := fun _ => hy } }
-  | p :: ps, A, hA, hAK, φ => by
+    IteratedRefinement ps A hA φ := by
+  intro ps
+  induction ps with
+  | nil =>
+      intro A hA hAK φ
+      exact
+        { output := φ
+          decode := by
+            intro C y hy
+            exact
+              { partition := IndexedConvexPartition.singleton
+                  (EMP.VariableBody.solidBody hA C)
+                leaf := fun _ => C
+                piece_eq_leaf := fun _ => rfl
+                piece_area_eq := fun _ => rfl
+                leaf_zero := fun _ => hy } }
+  | cons p ps ih =>
+      intro A hA hAK φ
       have hpA : 0 < A / (p.1 : ℝ) :=
         div_pos hA (by exact_mod_cast p.2.pos)
       have hpOne : (1 : ℝ) ≤ (p.1 : ℝ) := by
         exact_mod_cast p.2.one_le
       have hpAK : A / (p.1 : ℝ) ≤ K.area :=
         (div_le_self (le_of_lt hA) hpOne).trans hAK
-      let inner := build H ps (A / (p.1 : ℝ)) hpA hpAK φ
+      let inner : IteratedRefinement (K := K) ps (A / (p.1 : ℝ)) hpA φ :=
+        ih (A / (p.1 : ℝ)) hpA hpAK φ
       letI : Nonempty (BodySpace K A) :=
         ⟨BodySpace.parentAt K hAK⟩
       let S := Classical.choice (H p.1 p.2 K A hA inner.output)

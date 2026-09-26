@@ -60,7 +60,7 @@ theorem facetMatrix_witnessTarget
   generalize hr : augmentedRowEquiv hp r = r'
   refine Fin.lastCases ?_ (fun s => ?_) r'
   · simp
-  · simp [deviation, facetValue, facetWitnessTarget_succAbove]
+  · simp only [deviation, facetValue, facetWitnessTarget_succAbove, Fin.lastCases_castSucc]
     generalize hc : augmentedRowEquiv hp c = c'
     refine Fin.lastCases ?_ (fun t => ?_) c'
     · simp

@@ -289,15 +289,17 @@ theorem upper_sample_refine
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))) := by
   obtain ⟨m, rfl⟩ : ∃ m, p = m + 1 := ⟨p - 1, (Nat.succ_pred_eq_of_pos hp.pos).symm⟩
   rw [vectorValue_assignment_sample]
-  simp [localVector, localSpatialWeight,
-    RelativeSubdivisionOneStepCells.localPoint,
-    RelativeSubdivisionOneStepCells.localWeight, ChartMap.refine,
-    ancestorTopCell, ancestorTail, ancestorWeight, splitRefinementWord,
+  simp only [localVector, localSpatialWeight, StandardSimplex.ofDelta, Nat.add_one_sub_one,
+    RelativeSubdivisionOneStepCells.localPoint, eq_mpr_eq_cast, cast_eq,
+    RelativeSubdivisionOneStepCells.localWeight,
     RelativeSubdivisionCylinderCombinatorics.chart_vertex,
     RelativeSubdivisionCylinderCombinatorics.vertex_succ_upper,
-    RelativeSubdivisionCylinderCombinatorics.upperBoundaryVertex,
-    StandardSimplex.ofDelta, Simplex.refinementIndexPerm,
-    affineCompMap_succ, affineSubdivContinuousMap]
+    RelativeSubdivisionCylinderCombinatorics.upperBoundaryVertex, Set.Icc.mk_one, ChartMap.refine,
+    ancestorTopCell, splitRefinementWord, ancestorWeight, Simplex.refinementIndexPerm,
+    lt_add_iff_pos_left, Order.lt_add_one_iff, zero_le, ↓reduceDIte, Equiv.cast_refl,
+    ancestorTail, Equiv.refl_trans, Equiv.trans_refl, affineCompMap_succ, affineCompMap_zero,
+    affineSubdivContinuousMap, Fin.last_zero, Fin.isValue, ContinuousMap.id_comp,
+    ContinuousMap.coe_mk, Fin.cast_eq_self]
   congr 1
   · have hword :
         (fun i : Fin N =>

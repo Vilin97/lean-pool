@@ -571,7 +571,7 @@ theorem bridgedMap_zeroFreeStraightLine
       ⟨t.1 * bridgeWeight hp F A x, by
         constructor
         · exact mul_nonneg t.2.1 (bridgeWeight_nonneg hp F A x)
-        · exact mul_le_one₀ t.2.2 (bridgeWeight_nonneg hp F A x)
+        · exact (mul_le_of_le_one_left (bridgeWeight_nonneg hp F A x) t.2.2).trans
             (bridgeWeight_le_one hp F A x)⟩
     have heq :
         (1 - t.1) • F.map x + t.1 • (bridgedMap hp F A).map x =
