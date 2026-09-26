@@ -364,9 +364,9 @@ private theorem mem_indexSet (ε : ℝ) (X : ℕ) (i j k n : ℕ) :
     ⟨i, j, k, n⟩ ∈ indexSet ε X ↔
       i ≤ Nat.log 2 X ∧ j ≤ Nat.log 2 X ∧ k ≤ Nat.log 2 X ∧
       1 ≤ n ∧ n ≤ Nat.log 2 X + 1 ∧ i + j + k ≤ (1 - ε) * n := by
-  simp [indexSet]
+  simp only [indexSet, mem_filter, mem_product, mem_Icc, zero_le, true_and]
   norm_cast
-  aesop
+  simp only [Nat.cast_add, and_assoc]
 
 theorem Nat.Coprime.isRelPrime (a b : ℕ) (h : a.Coprime b) : IsRelPrime a b := by
   rwa [← Nat.coprime_iff_isRelPrime]

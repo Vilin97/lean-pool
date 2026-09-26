@@ -139,7 +139,7 @@ lemma FourierBound.three (hd : 3 ≤ d) :
     ν < 1/2 * (1 + δ + ∑ i ≤ d, max (a i) (b i) - max (a 3) (b 3)) :=
   hfab.special _ (by simpa)
 
-lemma FourierBound.symm : FourierBound d δ ν b a := hfab.trans_eq (by simp [max_comm])
+lemma FourierBound.symm : FourierBound d δ ν b a := hfab.trans_eq (by simp only [max_comm])
 
 end
 
@@ -363,10 +363,12 @@ lemma GeometryBound.special_s
   simp [s_apply, mul_add, Finset.sum_add_distrib]
 
 lemma GeometryBound.left_comm : GeometryBound d ε ν b a c :=
-  fun Ia hIa Ib hIb Ic hIc ↦ (hg Ib hIb Ia hIa Ic hIc).trans_eq (by ring_nf)
+  fun Ia hIa Ib hIb Ic hIc ↦
+    (hg Ib hIb Ia hIa Ic hIc).trans_eq (by ac_rfl)
 
 lemma GeometryBound.right_comm : GeometryBound d ε ν a c b :=
-  fun Ia hIa Ib hIb Ic hIc ↦ (hg Ia hIa Ic hIc Ib hIb).trans_eq (by ring_nf)
+  fun Ia hIa Ib hIb Ic hIc ↦
+    (hg Ia hIa Ic hIc Ib hIb).trans_eq (by ac_rfl)
 
 lemma GeometryBound.rotate : GeometryBound d ε ν b c a := hg.left_comm.right_comm
 
@@ -553,49 +555,56 @@ lemma GeometryBound.subSums
       one_mul, Finset.sum_singleton, Finset.mem_insert, OfNat.one_ne_ofNat, or_self, hj₂,
       Nat.cast_ofNat] at h₁ h₂
     simp only [s_apply]
-    exact ⟨h₂.trans_eq (by congr 2 <;> ring_nf), h₁.trans_eq (by congr 2 <;> ring_nf)⟩
+    exact ⟨h₂.trans_eq (by simp only [mul_add]; ac_rfl),
+      h₁.trans_eq (by ac_rfl)⟩
   · have h₁ := hg.special h44 {1} {1, j} {1} ‹_› ‹_› ‹_›
     have h₂ := hg.special h44 {1, 2} {1, 2, j} {1, 2} ‹_› ‹_› ‹_›
     simp only [Finset.mem_singleton, hj₁, not_false_eq_true, Finset.sum_insert, Nat.cast_one,
       one_mul, Finset.sum_singleton, Finset.mem_insert, OfNat.one_ne_ofNat, or_self, hj₂,
       Nat.cast_ofNat] at h₁ h₂
     simp only [s_apply]
-    exact ⟨h₂.trans_eq (by congr 2 <;> ring_nf), h₁.trans_eq (by congr 2 <;> ring_nf)⟩
+    exact ⟨h₂.trans_eq (by simp only [mul_add]; ac_rfl),
+      h₁.trans_eq (by ac_rfl)⟩
   · have h₁ := hg.special h44 {1} {1} {1, j} ‹_› ‹_› ‹_›
     have h₂ := hg.special h44 {1, 2} {1, 2} {1, 2, j} ‹_› ‹_› ‹_›
     simp only [Finset.mem_singleton, hj₁, not_false_eq_true, Finset.sum_insert, Nat.cast_one,
       one_mul, Finset.sum_singleton, Finset.mem_insert, OfNat.one_ne_ofNat, or_self, hj₂,
       Nat.cast_ofNat] at h₁ h₂
     simp only [s_apply]
-    exact ⟨h₂.trans_eq (by congr 2 <;> ring_nf), h₁.trans_eq (by congr 2 <;> ring_nf)⟩
+    exact ⟨h₂.trans_eq (by simp only [mul_add]; ac_rfl),
+      h₁.trans_eq (by ac_rfl)⟩
   · have h₁ := hg.special h44 {1, j} {1, j} {1} ‹_› ‹_› ‹_›
     have h₂ := hg.special h44 {1, 2, j} {1, 2, j} {1, 2} ‹_› ‹_› ‹_›
     simp only [Finset.mem_singleton, hj₁, not_false_eq_true, Finset.sum_insert, Nat.cast_one,
       one_mul, Finset.sum_singleton, Finset.mem_insert, OfNat.one_ne_ofNat, or_self, hj₂,
       Nat.cast_ofNat] at h₁ h₂
     simp only [s_apply]
-    exact ⟨h₂.trans_eq (by congr 2 <;> ring_nf), h₁.trans_eq (by congr 2 <;> ring_nf)⟩
+    exact ⟨h₂.trans_eq (by simp only [mul_add]; ac_rfl),
+      h₁.trans_eq (by simp only [mul_add]; ac_rfl)⟩
   · have h₁ := hg.special h44 {1, j} {1} {1, j} ‹_› ‹_› ‹_›
     have h₂ := hg.special h44 {1, 2, j} {1, 2} {1, 2, j} ‹_› ‹_› ‹_›
     simp only [Finset.mem_singleton, hj₁, not_false_eq_true, Finset.sum_insert, Nat.cast_one,
       one_mul, Finset.sum_singleton, Finset.mem_insert, OfNat.one_ne_ofNat, or_self, hj₂,
       Nat.cast_ofNat] at h₁ h₂
     simp only [s_apply]
-    exact ⟨h₂.trans_eq (by congr 2 <;> ring_nf), h₁.trans_eq (by congr 2 <;> ring_nf)⟩
+    exact ⟨h₂.trans_eq (by simp only [mul_add]; ac_rfl),
+      h₁.trans_eq (by simp only [mul_add]; ac_rfl)⟩
   · have h₁ := hg.special h44 {1} {1, j} {1, j} ‹_› ‹_› ‹_›
     have h₂ := hg.special h44 {1, 2} {1, 2, j} {1, 2, j} ‹_› ‹_› ‹_›
     simp only [Finset.mem_singleton, hj₁, not_false_eq_true, Finset.sum_insert, Nat.cast_one,
       one_mul, Finset.sum_singleton, Finset.mem_insert, OfNat.one_ne_ofNat, or_self, hj₂,
       Nat.cast_ofNat] at h₁ h₂
     simp only [s_apply]
-    exact ⟨h₂.trans_eq (by congr 2 <;> ring_nf), h₁.trans_eq (by congr 2 <;> ring_nf)⟩
+    exact ⟨h₂.trans_eq (by simp only [mul_add]; ac_rfl),
+      h₁.trans_eq (by simp only [mul_add]; ac_rfl)⟩
   · have h₁ := hg.special_s h44 {1, j} ‹_›
     have h₂ := hg.special_s h44 {1, 2, j} ‹_›
     simp only [Finset.mem_singleton, hj₁, not_false_eq_true, Finset.sum_insert, Nat.cast_one,
       one_mul, Finset.sum_singleton, Finset.mem_insert, OfNat.one_ne_ofNat, or_self, hj₂,
       Nat.cast_ofNat, s_apply] at h₁ h₂
     simp only [s_apply]
-    exact ⟨h₂.trans_eq (by ring_nf), h₁.trans_eq (by ring_nf)⟩
+    exact ⟨h₂.trans_eq (by simp only [mul_add]; ac_rfl),
+      h₁.trans_eq (by simp only [mul_add])⟩
 
 include h44 hg in
 lemma bound_4_point_17 (τ : ℝ) {j : ℕ} (hτ : τ ∈ SubSums j a b c) (hν : 0.66 < ν)
@@ -1148,9 +1157,18 @@ lemma GeometryBound.s21_application_basic
        sum_sdiff_eq_sub (h₁₂.trans Icc_subset_Iic_self)] at h₁ h₂
     simp only [sum_Icc_eq_sum_range_add_sum_Icc (d := d) (t := 5) (by omega)] at h₁ h₂
     simp only [Finset.sum_add_distrib]
-    simp [sum_range, Fin.sum_univ_five, hb.zero, hc.zero] at h₁ h₂
-    ring_nf at h₁ h₂ ⊢
-    exact ⟨h₁, h₂⟩
+    simp only [sum_range, Fin.sum_univ_five, Fin.isValue, Fin.coe_ofNat_eq_mod, Nat.zero_mod,
+      hb.zero, Nat.one_mod, zero_add, Nat.reduceMod, Nat.mod_succ, mem_insert, OfNat.one_ne_ofNat,
+      mem_singleton, or_self, not_false_eq_true, sum_insert, Nat.reduceEqDiff, sum_singleton,
+      hc.zero, Nat.cast_ofNat, Nat.cast_one, one_mul] at h₁ h₂
+    rw [← add_assoc] at h₁ h₂
+    constructor
+    · refine h₁.trans_eq (congrArg₂ (· + ·) ?_ ?_)
+      · ring
+      · congr 1; ring
+    · refine h₂.trans_eq (congrArg₂ (· + ·) ?_ ?_)
+      · ring
+      · congr 1; ring
   obtain h4 | h4 := le_total (b 4) (c 4)
   · simpa only [min_eq_left h4, max_eq_right h4] using hbounds.2
   · simpa only [min_eq_right h4, max_eq_left h4] using hbounds.1
