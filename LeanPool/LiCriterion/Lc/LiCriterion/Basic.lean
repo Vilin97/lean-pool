@@ -2793,25 +2793,24 @@ lemma taylorCoeff_xiPairedFactor [Fact xiFactorizationShiftedProd] (ρ : Nontriv
             simpa [liSummand, add_comm] using hsum_pair
           simpa [liPairedSummand, add_comm] using hsum
 
-/-- Summability of the paired Li summand from a genus‑1 summability hypothesis
-`Summable (ρ ↦ 1/‖ρ‖²)`.
-
-The proof uses the algebraic reduction and the `O(‖w-1‖^2)` estimate in
-`Lc/LiCriterion/GenusOne.lean`. -/
-theorem summable_Li_paired_summand_of_genus_one
-    (hgenus : Summable (fun ρ : NontrivialZero => (1 : ℝ) / ‖ρ.val‖ ^ 2)) (n : ℕ) :
-    Summable (fun ρ : NontrivialZero => liPairedSummand n ρ) := by
+/-- The paired Li summand is summable along any indexed family of nontrivial zeros
+whose inverse squared norms are summable. -/
+theorem summable_Li_paired_summand_comp_of_genus_one
+    {ι : Type*} (zeros : ι → NontrivialZero)
+    (hgenus : Summable (fun i : ι => (1 : ℝ) / ‖(zeros i).val‖ ^ 2)) (n : ℕ) :
+    Summable (fun i : ι => liPairedSummand n (zeros i)) := by
   classical
   let m : ℕ := n + 1
   let K : ℝ := ∑ i ∈ Finset.range m, ((3 / 2 : ℝ) ^ i)
   let C : ℝ := ((2 : ℝ) ^ m) * K ^ 2
-  have hsum_dom : Summable (fun ρ : NontrivialZero => C * ((1 : ℝ) / ‖ρ.val‖ ^ 2)) :=
+  have hsum_dom : Summable (fun i : ι => C * ((1 : ℝ) / ‖(zeros i).val‖ ^ 2)) :=
     hgenus.const_smul C
   refine Summable.of_norm_bounded_eventually hsum_dom ?_
   have hsmall :
-      ∀ᶠ ρ : NontrivialZero in Filter.cofinite, (1 : ℝ) / ‖ρ.val‖ ^ 2 ≤ (1 / 4 : ℝ) :=
+      ∀ᶠ i : ι in Filter.cofinite, (1 : ℝ) / ‖(zeros i).val‖ ^ 2 ≤ (1 / 4 : ℝ) :=
     hgenus.tendsto_cofinite_zero.eventually_le_const (by norm_num : (0 : ℝ) < (1 / 4 : ℝ))
-  filter_upwards [hsmall] with ρ hρsmall
+  filter_upwards [hsmall] with i hρsmall
+  let ρ : NontrivialZero := zeros i
   let w : ℂ := (1 : ℂ) - (1 : ℂ) / ρ.val
   have hcore : liPairedSummand n ρ = core m w := by
     have h0 : (ρ.val : ℂ) ≠ 0 := NontrivialZero.ne_zero ρ
@@ -2860,6 +2859,16 @@ theorem summable_Li_paired_summand_of_genus_one
       _ = C * ((1 : ℝ) / ‖ρ.val‖ ^ 2) := by
           simp [C, hw2]
   exact this
+
+/-- Summability of the paired Li summand from a genus‑1 summability hypothesis
+`Summable (ρ ↦ 1/‖ρ‖²)`.
+
+The proof uses the algebraic reduction and the `O(‖w-1‖^2)` estimate in
+`Lc/LiCriterion/GenusOne.lean`. -/
+theorem summable_Li_paired_summand_of_genus_one
+    (hgenus : Summable (fun ρ : NontrivialZero => (1 : ℝ) / ‖ρ.val‖ ^ 2)) (n : ℕ) :
+    Summable (fun ρ : NontrivialZero => liPairedSummand n ρ) := by
+  exact summable_Li_paired_summand_comp_of_genus_one id hgenus n
 
 /-! ### Multiplicity-aware paired route via linear paired factors -/
 
@@ -3049,68 +3058,7 @@ lemma eventually_le_norm_of_summable_inv_norm_sq_withMultiplicity
 theorem summable_Li_paired_summand_withMultiplicity_of_genus_one
     (hgenus : Summable (fun i : XiZeroWithMultiplicity => (1 : ℝ) / ‖i.1.val‖ ^ 2)) (n : ℕ) :
     Summable (fun i : XiZeroWithMultiplicity => liPairedSummand n i.1) := by
-  classical
-  let m : ℕ := n + 1
-  let K : ℝ := ∑ i ∈ Finset.range m, ((3 / 2 : ℝ) ^ i)
-  let C : ℝ := ((2 : ℝ) ^ m) * K ^ 2
-  have hsum_dom :
-      Summable (fun i : XiZeroWithMultiplicity => C * ((1 : ℝ) / ‖i.1.val‖ ^ 2)) :=
-    hgenus.const_smul C
-  refine Summable.of_norm_bounded_eventually hsum_dom ?_
-  have hsmall :
-      ∀ᶠ i : XiZeroWithMultiplicity in Filter.cofinite,
-        (1 : ℝ) / ‖i.1.val‖ ^ 2 ≤ (1 / 4 : ℝ) :=
-    hgenus.tendsto_cofinite_zero.eventually_le_const (by norm_num : (0 : ℝ) < (1 / 4 : ℝ))
-  filter_upwards [hsmall] with i hi
-  let ρ : NontrivialZero := i.1
-  let w : ℂ := (1 : ℂ) - (1 : ℂ) / ρ.val
-  have hcore : liPairedSummand n ρ = core m w := by
-    have h0 : (ρ.val : ℂ) ≠ 0 := NontrivialZero.ne_zero ρ
-    have h1 : (ρ.val : ℂ) ≠ 1 := NontrivialZero.ne_one ρ
-    have hA : liSummand n ρ = liTerm m w := by
-      simp [liSummand, liTerm, w, m]
-    have hA' : liSummand n (pairedZero ρ) = liTerm m ((1 : ℂ) - (1 : ℂ) / (1 - ρ.val)) := by
-      simp [liSummand, liTerm, m, pairedZero_val]
-    have hcore' : liTerm m w + liTerm m ((1 : ℂ) - (1 : ℂ) / (1 - ρ.val)) = core m w := by
-      simpa [w] using (paired_liTerm_eq_core (m := m) (z := (ρ.val : ℂ)) h0 h1)
-    simpa [liPairedSummand, hA, hA'] using hcore'
-  have hw_sq : ‖w - 1‖ ^ 2 ≤ (1 / 2 : ℝ) ^ 2 := by
-    have hw2 : ‖w - 1‖ ^ 2 = (1 : ℝ) / ‖ρ.val‖ ^ 2 := by
-      have : w - 1 = -((1 : ℂ) / ρ.val) := by
-        dsimp [w]
-        ring
-      calc
-        ‖w - 1‖ ^ 2 = ‖-((1 : ℂ) / ρ.val)‖ ^ 2 := by simp [this]
-        _ = ‖(1 : ℂ) / ρ.val‖ ^ 2 := by simp
-        _ = ((1 : ℝ) / ‖ρ.val‖) ^ 2 := by simp
-        _ = (1 : ℝ) / ‖ρ.val‖ ^ 2 := by simp
-    have : ‖w - 1‖ ^ 2 ≤ (1 / 4 : ℝ) := by
-      simpa [hw2] using hi
-    have : ‖w - 1‖ ^ 2 ≤ (1 / 2 : ℝ) ^ 2 := by
-      simpa using (le_trans this (by norm_num : (1 / 4 : ℝ) ≤ (1 / 2 : ℝ) ^ 2))
-    exact this
-  have hw : ‖w - 1‖ ≤ (1 / 2 : ℝ) := by
-    have habs : |‖w - 1‖| ≤ |(1 / 2 : ℝ)| := (sq_le_sq).1 hw_sq
-    simpa [abs_of_nonneg (norm_nonneg _)] using habs
-  have hnorm_core : ‖core m w‖ ≤ ((2 : ℝ) ^ m) * K ^ 2 * ‖w - 1‖ ^ 2 := by
-    have h := norm_core_le_const_mul_norm_sub_one_sq (m := m) (w := w) hw
-    simpa [K, pow_two, mul_assoc, mul_left_comm, mul_comm] using h
-  have hw2 : ‖w - 1‖ ^ 2 = (1 : ℝ) / ‖ρ.val‖ ^ 2 := by
-    have : w - 1 = -((1 : ℂ) / ρ.val) := by
-      dsimp [w]
-      ring
-    calc
-      ‖w - 1‖ ^ 2 = ‖-((1 : ℂ) / ρ.val)‖ ^ 2 := by simp [this]
-      _ = ‖(1 : ℂ) / ρ.val‖ ^ 2 := by simp
-      _ = ((1 : ℝ) / ‖ρ.val‖) ^ 2 := by simp
-      _ = (1 : ℝ) / ‖ρ.val‖ ^ 2 := by simp
-  have : ‖liPairedSummand n i.1‖ ≤ C * ((1 : ℝ) / ‖i.1.val‖ ^ 2) := by
-    calc
-      ‖liPairedSummand n i.1‖ = ‖core m w‖ := by simp [ρ, hcore]
-      _ ≤ ((2 : ℝ) ^ m) * K ^ 2 * ‖w - 1‖ ^ 2 := hnorm_core
-      _ = C * ((1 : ℝ) / ‖i.1.val‖ ^ 2) := by
-            simp [C, ρ, hw2]
-  exact this
+  exact summable_Li_paired_summand_comp_of_genus_one (fun i => i.1) hgenus n
 
 theorem tsum_Li_paired_summand_withMultiplicity_eq_weighted_tsum
     (n : ℕ)
@@ -3824,11 +3772,11 @@ lemma xi_nonzero_away_from_nontrivial_zeros (w : ℂ)
 --
 -- This follows from iterating `TendstoLocallyUniformlyOn.deriv` (Mathlib) n times.
 -- See: Mathlib/Analysis/Complex/LocallyUniformLimit.lean, theorem at line 150
-lemma deriv_iterate_tendsto_of_uniform
+/-- Uniform limits of analytic partial functions have convergent Taylor coefficients. -/
+lemma deriv_iterate_tendsto_of_uniform_of_analytic_partials
     (f : ℕ → ℂ → ℂ) (g : ℂ → ℂ) (z₀ : ℂ) (r : ℝ) (n : ℕ)
     (hrpos : 0 < r)
     (han_partial : ∀ k, AnalyticOnNhd ℂ (f k) (Metric.ball z₀ r))
-    (_han_limit : AnalyticOnNhd ℂ g (Metric.ball z₀ r))
     (hunif_conv : TendstoUniformlyOn f g atTop (Metric.ball z₀ r)) :
     Filter.Tendsto (fun k => (deriv^[n] (f k)) z₀ / n.factorial)
       atTop (𝓝 ((deriv^[n] g) z₀ / n.factorial)) := by
@@ -3890,6 +3838,17 @@ lemma deriv_iterate_tendsto_of_uniform
       h_conv.tendsto_at hz₀
     -- Divide both sides by (n+1)! to get the desired form
     exact h_ptwise.div_const ((n + 1).factorial : ℂ)
+
+lemma deriv_iterate_tendsto_of_uniform
+    (f : ℕ → ℂ → ℂ) (g : ℂ → ℂ) (z₀ : ℂ) (r : ℝ) (n : ℕ)
+    (hrpos : 0 < r)
+    (han_partial : ∀ k, AnalyticOnNhd ℂ (f k) (Metric.ball z₀ r))
+    (_han_limit : AnalyticOnNhd ℂ g (Metric.ball z₀ r))
+    (hunif_conv : TendstoUniformlyOn f g atTop (Metric.ball z₀ r)) :
+    Filter.Tendsto (fun k => (deriv^[n] (f k)) z₀ / n.factorial)
+      atTop (𝓝 ((deriv^[n] g) z₀ / n.factorial)) := by
+  exact deriv_iterate_tendsto_of_uniform_of_analytic_partials
+    f g z₀ r n hrpos han_partial hunif_conv
 
 /-! ### Global Li sum formula via uniform-convergence reduction -/
 
@@ -4425,49 +4384,6 @@ lemma exists_increasing_finite_cover_zeros_with_multiplicity :
 lemma exists_increasing_finite_cover_zeros :
     ∃ (T : ℕ → Finset NontrivialZero),
       Monotone T ∧ (⋃ n, (T n : Set NontrivialZero)) = Set.univ := by
-  classical
-  -- NontrivialZero is countable, so we can enumerate it
-  have : Countable NontrivialZero := inferInstance
-  -- Use the fact that countable types can be put in bijection with a subset of ℕ
-  -- This gives us a way to build increasing finite approximations
-  by_cases h : Nonempty NontrivialZero
-  · -- If nonempty, enumerate the countable set and take finite prefixes
-    have := h
-    -- Get a default element
-    obtain ⟨default⟩ := h
-    -- The type NontrivialZero is countable
-    have : Countable NontrivialZero := inferInstance
-    -- The set of all NontrivialZero (Set.univ) is countable
-    let s_countable : (Set.univ : Set NontrivialZero).Countable := Set.to_countable _
-    -- Enumerate the set
-    let enum := Set.enumerateCountable s_countable default
-    -- Define T n as the image of the first n natural numbers under the enumeration
-    use fun n => Finset.image (fun k => enum k) (Finset.range n)
-    constructor
-    · -- Monotonicity: T n ⊆ T m when n ≤ m
-      intro n m hnm
-      apply Finset.image_subset_image
-      exact Finset.range_mono hnm
-    · -- Union equals univ
-      ext x
-      simp only [Set.mem_iUnion, Finset.coe_image, Finset.coe_range, Set.mem_univ, iff_true]
-      -- x is in the range of the enumeration since enum covers all of Set.univ
-      have : x ∈ Set.range enum := by
-        have subset := Set.subset_range_enumerate s_countable default
-        exact subset (Set.mem_univ x)
-      obtain ⟨k, hk⟩ := this
-      use k + 1
-      simp only [Set.mem_image]
-      exact ⟨k, Nat.lt_succ_self k, hk⟩
-  · -- If empty, use empty finsets
-    use fun _ => ∅
-    constructor
-    · intro n m _
-      exact Finset.empty_subset _
-    · -- Show that the union of empty sets equals Set.univ when NontrivialZero is empty
-      simp only [Finset.coe_empty, Set.iUnion_empty]
-      -- Set.univ is empty when the type is empty
-      rw [not_nonempty_iff] at h
-      simp [Set.eq_empty_of_isEmpty]
+  exact exists_increasing_finite_cover_of_countable NontrivialZero
 
 end LiCriterion

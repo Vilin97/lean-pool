@@ -212,25 +212,6 @@ lemma summable_logDeriv_weierstrass_E_one_div_of_summable_inv_norm_sq
       simpa [mul_assoc, mul_left_comm, mul_comm] using hmul
     simpa [g] using hnorm
 
-lemma tprod_weierstrass_E_one_div_ne_zero_of_summable_inv_norm_sq
-    {ι : Type} {z : ι → ℂ}
-    (hz0 : ∀ i, z i ≠ 0)
-    (h : Summable (fun i : ι => (1 : ℝ) / ‖z i‖ ^ 2))
-    (x : ℂ) (hx : ∀ i, x ≠ z i) :
-    (∏' i : ι, weierstrassE 1 (x / z i)) ≠ 0 := by
-  classical
-  let f : ι → ℂ := fun i => weierstrassE 1 (x / z i) - 1
-  have hf : ∀ i, 1 + f i ≠ 0 := by
-    intro i
-    have : weierstrassE 1 (x / z i) ≠ 0 :=
-      weierstrass_E_one_div_ne_zero (a := z i) (x := x) (hz0 i) (hx i)
-    simpa [f, add_assoc, sub_eq_add_neg] using this
-  have hsum : Summable fun i : ι => ‖f i‖ := by
-    simpa [f] using
-      summable_norm_weierstrass_E_one_sub_one_of_summable_inv_norm_sq (z := z) hz0 h x
-  have hnez := tprod_one_add_ne_zero_of_summable (f := f) hf hsum
-  simpa [f, sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using hnez
-
 /-- **Rank-`p` version**: `weierstrassE p (x / a) ≠ 0` whenever `a ≠ 0` and `x ≠ a`. -/
 lemma weierstrass_E_div_ne_zero (p : ℕ) {a x : ℂ} (ha : a ≠ 0) (hx : x ≠ a) :
     weierstrassE p (x / a) ≠ 0 := by
@@ -262,6 +243,14 @@ lemma tprod_weierstrass_E_div_ne_zero_of_summable_inv_norm_pow
   have hnez := tprod_one_add_ne_zero_of_summable (f := f) hf hsum
   simpa [f, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
     using hnez
+
+lemma tprod_weierstrass_E_one_div_ne_zero_of_summable_inv_norm_sq
+    {ι : Type} {z : ι → ℂ}
+    (hz0 : ∀ i, z i ≠ 0)
+    (h : Summable (fun i : ι => (1 : ℝ) / ‖z i‖ ^ 2))
+    (x : ℂ) (hx : ∀ i, x ≠ z i) :
+    (∏' i : ι, weierstrassE 1 (x / z i)) ≠ 0 := by
+  exact tprod_weierstrass_E_div_ne_zero_of_summable_inv_norm_pow (p := 1) hz0 h x hx
 
 theorem logDeriv_tprod_weierstrass_E_one_eq_tsum_of_summable_inv_norm_sq
     {ι : Type} {z : ι → ℂ}
