@@ -14,7 +14,6 @@ Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anth
 -/
 public import Mathlib.Data.Int.Star
 public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-public import Mathlib.RingTheory.SimpleRing.Principal
 public import Mathlib.Tactic
 public import Mathlib.Topology.Separation.CompletelyRegular
 public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Convolution

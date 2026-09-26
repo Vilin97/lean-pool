@@ -12,9 +12,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-public import Mathlib.RingTheory.Etale.Weakly
-public import Mathlib.RingTheory.Flat.TorsionFree
-public import Mathlib.RingTheory.TotallySplit
 public import Mathlib.Tactic
 public import LeanPool.NashEmbedding.NashEmbedding.Torus.Approximation.RealizeMetric
 public import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.Main

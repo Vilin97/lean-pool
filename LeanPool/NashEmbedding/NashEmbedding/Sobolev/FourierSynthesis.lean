@@ -219,6 +219,112 @@ theorem fourierSynthesis_smul
   unfold fourierSynthesis;
   simp +decide [ mul_assoc,  ← tsum_mul_left ]
 
+/-! ## Orthogonality of Fourier exponentials -/
+
+/-
+Orthogonality of Fourier exponentials on `[0, 2π]ⁿ`:
+`∫_{[0,2π]^n} eₘ(θ) · conj(e_{m₀}(θ)) dθ = (2π)^n δ_{m,m₀}`.
+-/
+lemma fourierExp_inner_eq (m m₀ : Fin n → ℤ) :
+    ∫ θ in Set.Icc (0 : Fin n → ℝ) (2 * π • (1 : Fin n → ℝ)),
+      fourierExp n m θ * starRingEnd ℂ (fourierExp n m₀ θ) =
+    if m = m₀ then ((2 * π) ^ n : ℝ) else 0 := by
+  split_ifs with h;
+  · simp +decide only [Algebra.mul_smul_comm, mul_one, fourierExp, ofReal_sum, ofReal_mul,
+    ofReal_intCast, ← h, ofReal_pow, ofReal_ofNat];
+    norm_num [ Complex.mul_conj, Complex.normSq_eq_norm_sq, Complex.norm_exp ];
+    erw [ MeasureTheory.measureReal_def ];
+    erw [ Real.volume_Icc_pi ]; norm_num [ mul_comm ];
+    rw [ ENNReal.toReal_ofReal ( by positivity ) ]; norm_num;
+  · -- Since $m \neq m_0$, there exists $j$ such that $m_j \neq m_{0,j}$.
+    obtain ⟨j, hj⟩ : ∃ j : Fin n, m j ≠ m₀ j := by
+      exact Function.ne_iff.mp h;
+    -- The integral over the product space can be factored into a product of integrals.
+    have h_prod : ∫ θ : Fin n → ℝ in Set.Icc (0 : Fin n → ℝ) (2 * Real.pi • 1), Complex.exp
+        (Complex.I * ∑ i : Fin n, ((m i - m₀ i) : ℂ) * θ i) = ∏ i : Fin n, ∫ θ : ℝ in Set.Icc 0
+        (2 * Real.pi), Complex.exp (Complex.I * ((m i - m₀ i) : ℂ) * θ) := by
+      have h_prod : ∫ θ : Fin n → ℝ in Set.Icc (0 : Fin n → ℝ) (2 * Real.pi • 1), Complex.exp
+          (Complex.I * ∑ i : Fin n, ((m i - m₀ i) : ℂ) * θ i) = ∫ θ : Fin n → ℝ, (∏ i : Fin n,
+          (if 0 ≤ θ i ∧ θ i ≤ 2 * Real.pi then Complex.exp (Complex.I * ((m i - m₀ i) : ℂ) * θ
+          i) else 0)) := by
+        rw [ ← MeasureTheory.integral_indicator ] <;> norm_num [ Set.indicator, Pi.le_def,
+            forall_and ];
+        congr with x; split_ifs <;> simp_all +decide only [ne_eq, mul_comm, and_self,
+          ↓reduceIte, mul_left_comm, not_and, not_forall, not_le, Finset.prod_ite,
+          Finset.prod_const, zero_eq_mul, pow_eq_zero_iff', Finset.card_eq_zero,
+          Finset.filter_eq_empty_iff, Finset.mem_univ,  not_lt, forall_const, true_and];
+        · rw [ ← Complex.exp_sum, Finset.mul_sum _ _ _ ];
+        · grind;
+      have h_prod : ∀ (f : Fin n → ℝ → ℂ), (∫ θ : Fin n → ℝ, ∏ i : Fin n, f i (θ i)) = ∏ i : Fin
+          n, ∫ θ : ℝ, f i θ := by
+        exact fun f => MeasureTheory.integral_fin_nat_prod_volume_eq_prod f;
+      convert h_prod ( fun i θ => if 0 ≤ θ ∧ θ ≤ 2 * Real.pi then Complex.exp ( Complex.I * ( m
+          i - m₀ i ) * θ ) else 0 ) using 1;
+      exact Finset.prod_congr rfl fun _ _ => by rw [ ← MeasureTheory.integral_indicator ] <;>
+          norm_num [ Set.indicator ];
+    -- For $m_j \neq m_{0,j}$, the integral $\int_0^{2\pi} e^{i(m_j - m_{0,j})\theta}
+    -- d\theta$ is zero.
+    have h_integral_zero : ∀ j : Fin n, m j ≠ m₀ j → ∫ θ : ℝ in Set.Icc 0 (2 * Real.pi),
+        Complex.exp (Complex.I * ((m j - m₀ j) : ℂ) * θ) = 0 := by
+      intro j hj; rw [ MeasureTheory.integral_Icc_eq_integral_Ioc, ←
+          intervalIntegral.integral_of_le Real.two_pi_pos.le ];
+      have := @integral_exp_mul_complex 0 ( 2 * Real.pi );
+      convert this ( show ( I * ( m j - m₀ j : ℂ ) ) ≠ 0 from mul_ne_zero Complex.I_ne_zero <|
+          sub_ne_zero_of_ne <| mod_cast hj ) using 1; norm_num;
+      exact Eq.symm ( div_eq_zero_iff.mpr <| Or.inl <| sub_eq_zero.mpr <|
+          Complex.exp_eq_one_iff.mpr ⟨ m j - m₀ j, by push_cast; ring ⟩ );
+    convert h_prod using 1;
+    · unfold fourierExp; norm_num [ Complex.exp_add, Complex.exp_neg, mul_sub, sub_mul,
+        Finset.sum_sub_distrib ];
+      norm_num [ Complex.exp_sub, Complex.exp_neg, Complex.exp_conj ];
+      norm_num [ div_eq_mul_inv, Complex.inv_def, Complex.normSq_eq_norm_sq, Complex.norm_exp ];
+    · rw [ Finset.prod_eq_zero ( Finset.mem_univ j ) ( h_integral_zero j hj ) ]; norm_num
+
+/-! ## Fourier inversion formula -/
+
+/-
+**Fourier inversion.** If `a ∈ ℓ¹(ℤⁿ)`, then the inner product of the
+Fourier synthesis `a_check(θ) = ∑ aₘ eₘ(θ)` with `conj(e_{m₀}(θ))` over
+`[0, 2π]ⁿ` recovers `(2π)ⁿ · a_{m₀}`.
+-/
+lemma fourierSynthesis_inner
+    {a : (Fin n → ℤ) → ℂ} (ha : Summable (fun m => ‖a m‖))
+    (m₀ : Fin n → ℤ) :
+    ∫ θ in Set.Icc (0 : Fin n → ℝ) (2 * π • (1 : Fin n → ℝ)),
+      fourierSynthesis n a θ * starRingEnd ℂ (fourierExp n m₀ θ) =
+    ((2 * π) ^ n : ℝ) * a m₀ := by
+  -- Expand the integral using the definition of `fourierSynthesis`.
+  have h_expand : ∫ θ in Set.Icc (0 : Fin n → ℝ) (2 * Real.pi • (1 : Fin n → ℝ)),
+      fourierSynthesis n a θ * (starRingEnd ℂ) (fourierExp n m₀ θ) = ∑' m : Fin n → ℤ, a m * ∫ θ
+      in Set.Icc (0 : Fin n → ℝ) (2 * Real.pi • (1 : Fin n → ℝ)), fourierExp n m θ *
+      (starRingEnd ℂ) (fourierExp n m₀ θ) := by
+    simp +decide only [fourierSynthesis, ← MeasureTheory.integral_const_mul];
+    rw [ ← MeasureTheory.integral_tsum ];
+    · simp +decide only [← tsum_mul_right, ← mul_assoc];
+    · intro m; apply_rules [ Continuous.aestronglyMeasurable, Continuous.mul, continuous_const ];
+      · exact Complex.continuous_exp.comp <| Continuous.mul continuous_const <| by continuity;
+      · exact Complex.continuous_conj.comp ( Complex.continuous_exp.comp <| by continuity );
+    · refine ne_of_lt (lt_of_le_of_lt (ENNReal.tsum_le_tsum
+          (g := fun m => ENNReal.ofReal (‖a m‖ * (2 * Real.pi) ^ n)) (fun m => ?_)) ?_)
+      · refine le_trans (MeasureTheory.lintegral_mono
+            (g := fun _ => ENNReal.ofReal ‖a m‖) (fun x => ?_)) ?_
+        · rw [ ENNReal.le_ofReal_iff_toReal_le ] <;> norm_num [ norm_fourierExp ];
+          finiteness;
+        · simp +decide only [Algebra.mul_smul_comm, mul_one, ofReal_norm,
+          MeasureTheory.lintegral_const, MeasurableSet.univ,
+          MeasureTheory.Measure.restrict_apply, Set.univ_inter, Real.volume_Icc_pi, Pi.smul_apply,
+          Pi.ofNat_apply, smul_eq_mul,  sub_zero, Finset.prod_const,
+          Finset.card_univ, Fintype.card_fin, mul_pow, norm_nonneg, ENNReal.ofReal_mul,
+          Nat.ofNat_nonneg, pow_nonneg, ENNReal.ofReal_pow, ENNReal.ofReal_ofNat];
+          rw [ ENNReal.ofReal_mul ( by positivity ), ENNReal.ofReal_pow ( by positivity ) ];
+              ring_nf; norm_num;
+      · rw [ ← ENNReal.ofReal_tsum_of_nonneg ] <;> norm_num;
+        · exact fun m => mul_nonneg ( norm_nonneg _ ) ( pow_nonneg ( by positivity ) _ );
+        · exact ha.mul_right _;
+  rw [ h_expand, tsum_eq_single m₀ ];
+  · rw [ mul_comm, fourierExp_inner_eq ]; norm_num;
+  · intro m hm; rw [ fourierExp_inner_eq m m₀ ] ; aesop;
+
 /-
 **Fourier synthesis: injectivity.** If `a_check = 0` then `a = 0`, provided
 `a ∈ ℓ¹`.
@@ -228,107 +334,11 @@ theorem fourierSynthesis_injective
     (ha : Summable (fun m => ‖a m‖))
     (h : ∀ θ : Fin n → ℝ, fourierSynthesis n a θ = 0) :
     a = 0 := by
-  apply funext;
-  have h_inner : ∀ m₀ : Fin n → ℤ, ∫ θ : Fin n → ℝ in Set.Icc (0 : Fin n → ℝ) (2 * Real.pi • 1),
-      fourierSynthesis n a θ * starRingEnd ℂ (fourierExp n m₀ θ) = (2 * Real.pi) ^ n * a m₀ := by
-    intro m₀
-    have h_fourier_coeff_inner : ∀ m : Fin n → ℤ, ∫ θ : Fin n → ℝ in Set.Icc (0 : Fin n → ℝ) (2
-        * Real.pi • 1), fourierExp n m θ * starRingEnd ℂ (fourierExp n m₀ θ) = if m = m₀ then (2
-        * Real.pi) ^ n else 0 := by
-      intro m
-      have h_fourier_coeff_inner : ∫ θ : Fin n → ℝ in Set.Icc (0 : Fin n → ℝ) (2 * Real.pi • 1),
-          Complex.exp (Complex.I * (∑ j, ((m j : ℝ) - (m₀ j : ℝ)) * θ j)) = if m = m₀ then (2 *
-          Real.pi) ^ n else 0 := by
-        split_ifs with h;
-        · simp +decide only [Algebra.mul_smul_comm, mul_one, h, sub_self, zero_mul,
-          Finset.sum_const_zero, ofReal_zero, mul_zero, exp_zero, MeasureTheory.integral_const,
-          MeasureTheory.measureReal_def, MeasurableSet.univ,
-          MeasureTheory.Measure.restrict_apply, Set.univ_inter, real_smul, ofReal_pow,
-          ofReal_mul, ofReal_ofNat];
-          erw [ Real.volume_Icc_pi ]; norm_num [ mul_comm ];
-          rw [ ENNReal.toReal_ofReal ( by positivity ) ]; norm_num;
-        · -- Since $m \neq m₀$, there exists some $j$ such that $m_j \neq m₀_j$.
-          obtain ⟨j, hj⟩ : ∃ j : Fin n, m j ≠ m₀ j := by
-            exact Function.ne_iff.mp h;
-          have h_integral_zero : ∫ θ : Fin n → ℝ in Set.Icc (0 : Fin n → ℝ) (2 * Real.pi • 1),
-              Complex.exp (Complex.I * (∑ j, ((m j : ℝ) - (m₀ j : ℝ)) * θ j)) = (∏ j, ∫ θ_j : ℝ
-              in Set.Icc 0 (2 * Real.pi), Complex.exp (Complex.I * ((m j : ℝ) - (m₀ j : ℝ)) *
-              θ_j)) := by
-            have h_integral_zero : ∫ θ : Fin n → ℝ in Set.Icc (0 : Fin n → ℝ) (2 * Real.pi • 1),
-                Complex.exp (Complex.I * (∑ j, ((m j : ℝ) - (m₀ j : ℝ)) * θ j)) = ∫ θ : Fin n →
-                ℝ, (∏ j, (if 0 ≤ θ j ∧ θ j ≤ 2 * Real.pi then Complex.exp (Complex.I * ((m j :
-                ℝ) - (m₀ j : ℝ)) * θ j) else 0)) := by
-              rw [ ← MeasureTheory.integral_indicator ] <;> norm_num [ Set.indicator ];
-              congr with θ; simp +decide only [Pi.le_def,  Pi.smul_apply,
-                Pi.ofNat_apply, smul_eq_mul];
-              split_ifs <;> simp_all +decide only [ne_eq, mul_comm, and_self, ↓reduceIte,
-                mul_left_comm, not_and, not_forall, not_le, Finset.prod_ite, Finset.prod_const,
-                zero_eq_mul, pow_eq_zero_iff', Finset.card_eq_zero, Finset.filter_eq_empty_iff,
-                Finset.mem_univ,  not_lt, forall_const, true_and];
-              · rw [ ← Complex.exp_sum, Finset.mul_sum _ _ _ ];
-              · grind;
-            have h_integral_zero : ∫ θ : Fin n → ℝ, (∏ j, (if 0 ≤ θ j ∧ θ j ≤ 2 * Real.pi then
-                Complex.exp (Complex.I * ((m j : ℝ) - (m₀ j : ℝ)) * θ j) else 0)) = ∏ j, ∫ θ_j :
-                ℝ, (if 0 ≤ θ_j ∧ θ_j ≤ 2 * Real.pi then Complex.exp (Complex.I * ((m j : ℝ) -
-                (m₀ j : ℝ)) * θ_j) else 0) := by
-              rw [ ← MeasureTheory.integral_fintype_prod_eq_prod ];
-              rfl;
-            simp_all +decide [ ← MeasureTheory.integral_indicator, Set.indicator_apply ];
-          have h_integral_zero : ∫ θ_j : ℝ in Set.Icc 0 (2 * Real.pi), Complex.exp (Complex.I *
-              ((m j : ℝ) - (m₀ j : ℝ)) * θ_j) = 0 := by
-            rw [ MeasureTheory.integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le
-                Real.two_pi_pos.le ];
-            have := @integral_exp_mul_complex 0 ( 2 * Real.pi );
-            have hz : I * ((m j : ℂ) - (m₀ j : ℂ)) * (2 * (π : ℂ))
-                    = ((m j - m₀ j : ℤ) : ℂ) * (2 * π * I) := by push_cast; ring
-            convert this ( show ( I * ( m j - m₀ j : ℂ ) ) ≠ 0 from mul_ne_zero
-                Complex.I_ne_zero <| sub_ne_zero_of_ne <| mod_cast hj ) using 1
-            all_goals (first
-              | rfl
-              | (norm_num; done)
-              | (push_cast; ring; done)
-              | (symm
-                 rw [div_eq_zero_iff]
-                 left
-                 simp only [Complex.ofReal_zero, mul_zero, Complex.exp_zero]
-                 push_cast
-                 exact sub_eq_zero.mpr (Complex.exp_eq_one_iff.mpr ⟨m j - m₀ j, hz⟩)));
-          simp_all +decide [ Finset.prod_eq_zero ( Finset.mem_univ j ) ];
-      convert h_fourier_coeff_inner using 3; norm_num [ fourierExp ]; ring;
-      norm_num [ Complex.ext_iff, Complex.exp_re, Complex.exp_im, Finset.sum_sub_distrib ];
-      exact ⟨ by rw [ Real.cos_sub ], by rw [ Real.sin_sub ]; ring ⟩;
-    have h_fourier_coeff_inner : ∫ θ : Fin n → ℝ in Set.Icc (0 : Fin n → ℝ) (2 * Real.pi • 1),
-        ∑' m : Fin n → ℤ, a m * fourierExp n m θ * starRingEnd ℂ (fourierExp n m₀ θ) = ∑' m :
-        Fin n → ℤ, a m * ∫ θ : Fin n → ℝ in Set.Icc (0 : Fin n → ℝ) (2 * Real.pi • 1),
-        fourierExp n m θ * starRingEnd ℂ (fourierExp n m₀ θ) := by
-      rw [ MeasureTheory.integral_tsum ];
-      · simp +decide only [mul_assoc, MeasureTheory.integral_const_mul];
-      · intro m; exact Continuous.aestronglyMeasurable ( by
-          refine Continuous.mul ?_ ?_;
-          · refine continuous_const.mul ?_;
-            exact Complex.continuous_exp.comp <| Continuous.mul continuous_const <|
-                Complex.continuous_ofReal.comp <| continuous_finsetSum _ fun _ _ =>
-                Continuous.mul ( continuous_const ) <| continuous_apply _;
-          · exact Complex.continuous_conj.comp ( Complex.continuous_exp.comp <| by continuity ) );
-      · refine ne_of_lt (lt_of_le_of_lt (ENNReal.tsum_le_tsum
-          (g := fun m => ENNReal.ofReal (‖a m‖ * (2 * Real.pi) ^ n)) (fun m => ?_)) ?_)
-        · refine le_trans (MeasureTheory.lintegral_mono
-            (g := fun _ => ENNReal.ofReal ‖a m‖) (fun x => ?_)) ?_
-          · rw [ ENNReal.le_ofReal_iff_toReal_le ] <;> norm_num [ norm_fourierExp ];
-            finiteness;
-          · simp +decide only [mul_comm, Algebra.smul_mul_assoc, one_mul, ofReal_norm,
-            MeasureTheory.lintegral_const, MeasurableSet.univ,
-            MeasureTheory.Measure.restrict_apply, Set.univ_inter, norm_nonneg,
-            ENNReal.ofReal_mul, Nat.ofNat_pos, mul_nonneg_iff_of_pos_right, Real.pi_pos.le,
-            ENNReal.ofReal_pow, ENNReal.ofReal_ofNat];
-            erw [ Real.volume_Icc_pi ]; norm_num [ mul_comm, Real.pi_pos.le ];
-        · rw [ ← ENNReal.ofReal_tsum_of_nonneg ] <;> norm_num;
-          · exact fun m => mul_nonneg ( norm_nonneg _ ) ( pow_nonneg ( by positivity ) _ );
-          · exact ha.mul_right _;
-    convert h_fourier_coeff_inner using 1;
-    · simp +decide only [fourierSynthesis, ← tsum_mul_right];
-    · rw [ tsum_eq_single m₀ ] <;> simp_all +decide [ mul_comm ];
-  simp_all +decide [ mul_eq_zero, Real.pi_ne_zero ]
+  funext m
+  have hm := fourierSynthesis_inner ha m
+  simp only [h, zero_mul, MeasureTheory.integral_zero] at hm
+  apply (mul_eq_zero.mp hm.symm).resolve_left
+  exact_mod_cast pow_ne_zero n (mul_ne_zero (by norm_num) Real.pi_ne_zero)
 
 end NashEmbedding.Sobolev
 
