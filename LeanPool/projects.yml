@@ -10563,3 +10563,32 @@ projects:
     - 20E05
     - 68Q45
     - 03B35
+  - slug: lean-superorthogonality
+    title: Square-function estimates from type IV superorthogonality
+    summary: Proves the type IV superorthogonality square-function estimate for finite and countable index
+      sets, including the pointwise combinatorial estimate and unconditional convergence in L^(2r).
+    branch: harmonic analysis
+    entry_module: LeanPool.Superorthogonality
+    authors:
+    - Joris Roos
+    source:
+      url: https://github.com/roos-j/lean-superorthogonality
+      github_repo: roos-j/lean-superorthogonality
+      commit: 6d3a3645c1e6f6a3c50bfdc12c4a51250e63bc31
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - Superorthogonal.sqfct_estimate_of_type_iv_superorthogonal
+    main_results:
+    - declaration: Superorthogonal.sqfct_estimate_of_type_iv_superorthogonal
+      informal: For an integer r >= 1, a countable type IV superorthogonal family in L^(2r), with
+        almost-everywhere summable squared norms and square function in L^(2r), converges unconditionally
+        in L^(2r) and satisfies the square-function bound with constant C(r).
+    tags:
+    - harmonic-analysis
+    - superorthogonality
+    - square-functions
+    msc:
+    - 42B25
+    - 46E30
