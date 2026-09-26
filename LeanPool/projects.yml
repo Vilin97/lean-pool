@@ -10308,39 +10308,41 @@ projects:
       - '12F05'
       - '13F25'
 
-  - slug: salem-theorem
-    title: Every Pisot number is a two-sided limit of Salem numbers
-    summary: Proves Salem’s two-sided approximation theorem for Pisot numbers, preserving both the polynomial
-      reciprocal-family construction and the exceptional quadratic-unit construction.
-    branch: algebraic number theory
-    entry_module: LeanPool.SalemTheorem
+  - slug: lean-spectral-theory
+    title: lean-spectral-theory
+    summary: The spectral theorem for possibly unbounded self-adjoint operators on complex Hilbert
+      spaces, formalized through the Cayley transform and real projection-valued measures. The
+      selected spectral theorem constructs a PVM whose scalar measures give the exact finite-second-moment
+      domain and first-moment quadratic form, with measurable-set uniqueness, and is proved
+      equivalent to equality with the unbounded coordinate spectral integral. The selected Stone
+      theorem proves both that strongly continuous one-parameter unitary groups have self-adjoint
+      generators and that every self-adjoint operator generates such a group.
+    branch: functional analysis
+    entry_module: LeanPool.SpectralTheory
     authors:
-    - Stephanie Alexander
+    - Ezzeri Esa
     source:
-      url: https://github.com/stalex444/salem-theorem
-      github_repo: stalex444/salem-theorem
-      commit: 887be765bf24c6a645600dfc7bd0a1055a1761dd
-    license: MIT
+      url: https://github.com/savarin/lean-spectral-theory
+      github_repo: savarin/lean-spectral-theory
+      commit: d19e279f0ab244657f02ce678e8d67fa69e2f407
+    license: Apache-2.0
     status: verified
-    provenance: AI
     main_declarations:
-    - SalemTheorem.salem_theorem
+    - PalomarSpectralStone.spectral_theorem_intrinsic
     main_results:
-    - declaration: SalemTheorem.salem_theorem
-      informal: Every Pisot number is approached by Salem numbers from both below and above.
-    - declaration: SalemTheorem.salem_construction_two_sided
-      informal: For the nondegenerate Pisot polynomial pattern, reciprocal-family polynomials have Salem
-        roots arbitrarily near the Pisot root from either side.
-    - declaration: SalemTheorem.salem_quadratic_unit
-      informal: The quadratic-unit family supplies Salem roots approaching each reciprocal quadratic Pisot
-        unit from either side.
+    - declaration: PalomarSpectralStone.spectral_theorem_intrinsic
+      informal: Every self-adjoint partial linear operator on a complex Hilbert space has a
+        real projection-valued measure representing its domain and scalar moments, unique on
+        Borel sets.
+    - declaration: PalomarSpectralStone.stone_theorem_intrinsic
+      informal: Every strongly continuous one-parameter unitary group has a self-adjoint
+        generator, and every self-adjoint operator generates such a group.
     tags:
-    - number-theory
-    - pisot-numbers
-    - salem-numbers
+    - functional-analysis
     msc:
-    - 11R06
-    - 11R09
+    - 47A10
+    - 47B15
+    provenance: AI
   - slug: nemytskii-lebesgue
     title: Nemytskii operators on Lebesgue spaces
     summary: >-
@@ -10438,3 +10440,37 @@ projects:
       - 47H30
       - 46E30
       - 47J05
+
+  - slug: salem-theorem
+    title: Every Pisot number is a two-sided limit of Salem numbers
+    summary: Proves Salem’s two-sided approximation theorem for Pisot numbers, preserving both the polynomial
+      reciprocal-family construction and the exceptional quadratic-unit construction.
+    branch: algebraic number theory
+    entry_module: LeanPool.SalemTheorem
+    authors:
+    - Stephanie Alexander
+    source:
+      url: https://github.com/stalex444/salem-theorem
+      github_repo: stalex444/salem-theorem
+      commit: 887be765bf24c6a645600dfc7bd0a1055a1761dd
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+    - SalemTheorem.salem_theorem
+    main_results:
+    - declaration: SalemTheorem.salem_theorem
+      informal: Every Pisot number is approached by Salem numbers from both below and above.
+    - declaration: SalemTheorem.salem_construction_two_sided
+      informal: For the nondegenerate Pisot polynomial pattern, reciprocal-family polynomials have Salem
+        roots arbitrarily near the Pisot root from either side.
+    - declaration: SalemTheorem.salem_quadratic_unit
+      informal: The quadratic-unit family supplies Salem roots approaching each reciprocal quadratic Pisot
+        unit from either side.
+    tags:
+    - number-theory
+    - pisot-numbers
+    - salem-numbers
+    msc:
+    - 11R06
+    - 11R09
