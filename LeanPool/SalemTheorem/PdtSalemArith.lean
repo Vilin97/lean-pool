@@ -131,25 +131,13 @@ lemma family_map_C (Pz : Polynomial ℤ) (alpha : ℝ) (inside : Multiset ℂ)
 
 /-! ### The main theorem: the arithmetic Salem-ness certificate -/
 
-/-- **The arithmetic Salem-ness certificate.**  A real root `tau > 1`
-of the integer family `X^m·Pz + Qz` — whose complex image is the `PdtSalemCircle`
-family — is a Salem number, provided `tau` avoids the two integer
-degeneracies `tau ∈ ℤ` and `tau + 1/tau ∈ ℤ`: it is an algebraic
-integer, its conjugates lie in the closed unit disk, at least one lies
-ON the circle, and `1/tau` is among them.  All degenerate exclusions run
-through the Gauss step (`minpoly ℚ tau` is the mapped `minpoly ℤ tau`,
-since ℤ is integrally closed). -/
-theorem salem_certificate
-    (Pz : Polynomial ℤ) (hmonic : Pz.Monic)
-    (alpha : ℝ) (halpha : 1 < alpha)
-    (inside : Multiset ℂ) (hin : ∀ r ∈ inside, ‖r‖ < 1)
-    (hconj : inside.map (starRingEnd ℂ) = inside)
-    (hfacC : Pz.map (Int.castRingHom ℂ) = SalemCircle.P alpha inside)
-    (Qz : Polynomial ℤ)
-    (hQmap : Qz.map (Int.castRingHom ℂ) = SalemCircle.Q alpha inside)
-    (m : ℕ) (hm : 1 ≤ m) (hmp : 3 ≤ m + (inside.card + 1))
-    (tau : ℝ) (htau : 1 < tau)
-    (hroot : ((X ^ m * Pz + Qz).map (Int.castRingHom ℝ)).eval tau = 0)
+/-- A monic integral polynomial whose roots lie on the unit circle or at `tau` and
+`tau⁻¹` certifies Salem-ness once the two integral degeneracies are excluded. -/
+theorem salem_certificate_of_root_trichotomy
+    (Rz : Polynomial ℤ) (hRzMonic : Rz.Monic) (tau : ℝ) (htau : 1 < tau)
+    (haevalR : Polynomial.aeval tau Rz = 0)
+    (htri : ∀ z : ℂ, (Rz.map (Int.castRingHom ℂ)).eval z = 0 →
+      ‖z‖ = 1 ∨ z = (tau : ℂ) ∨ z = (tau : ℂ)⁻¹)
     (hτZ : ∀ n : ℤ, tau ≠ (n : ℝ))
     (hτtr : ∀ n : ℤ, tau + tau⁻¹ ≠ (n : ℝ)) :
     IsIntegral ℤ tau ∧
@@ -157,42 +145,25 @@ theorem salem_certificate
     (∃ z : ℂ, (Polynomial.aeval z) (minpoly ℚ tau) = 0 ∧ ‖z‖ = 1) ∧
     (Polynomial.aeval ((tau : ℂ))⁻¹) (minpoly ℚ tau) = 0 := by
   classical
-  set Rz : Polynomial ℤ := X ^ m * Pz + Qz with hRzdef
-  -- bridge plumbing
-  have hRzMonic : Rz.Monic :=
-    family_monic Pz hmonic alpha inside hfacC Qz hQmap m hm
-  have hRmap : Rz.map (Int.castRingHom ℂ) = SalemCircle.R alpha inside m :=
-    family_map_C Pz alpha inside hfacC Qz hQmap m
-  have haevalR : Polynomial.aeval tau Rz = 0 := by
-    rw [aeval_eq_eval_map, algebraMap_int_eq]
-    exact hroot
   -- integrality
   have hint : IsIntegral ℤ tau := by
     refine ⟨Rz, hRzMonic, ?_⟩
     rw [← Polynomial.aeval_def]
     exact haevalR
   have hQint : IsIntegral ℚ tau := hint.tower_top
-  -- the family root over ℂ, and the trichotomy
-  have hRC : (SalemCircle.R alpha inside m).eval ((tau : ℂ)) = 0 := by
-    have h1 : Polynomial.aeval ((tau : ℂ)) Rz = 0 := by
-      rw [aeval_ofReal, haevalR, Complex.ofReal_zero]
-    rwa [aeval_eq_eval_map, algebraMap_int_eq, hRmap] at h1
-  have htri : ∀ z : ℂ, (SalemCircle.R alpha inside m).eval z = 0 →
-      ‖z‖ = 1 ∨ z = ((tau : ℂ)) ∨ z = ((tau : ℂ))⁻¹ :=
-    SalemCircle.salem_root_trichotomy alpha inside halpha hin hconj m hm hmp
-      tau htau hRC
-  -- the minimal polynomial divides, so conjugates are roots of `R`
+  -- the minimal polynomial divides, so conjugates are roots of the integral polynomial
   have hmpdvd : minpoly ℚ tau ∣ Rz.map (Int.castRingHom ℚ) := by
     apply minpoly.dvd ℚ tau
     rw [← algebraMap_int_eq, Polynomial.aeval_map_algebraMap]
     exact haevalR
-  have hdvdC : (minpoly ℚ tau).map (algebraMap ℚ ℂ) ∣ SalemCircle.R alpha inside m := by
+  have hdvdC : (minpoly ℚ tau).map (algebraMap ℚ ℂ)
+      ∣ Rz.map (Int.castRingHom ℂ) := by
     have h1 : (minpoly ℚ tau).map (algebraMap ℚ ℂ) ∣
         (Rz.map (Int.castRingHom ℚ)).map (algebraMap ℚ ℂ) :=
       Polynomial.map_dvd _ hmpdvd
-    rwa [Polynomial.map_map, castQC_triangle, hRmap] at h1
+    rwa [Polynomial.map_map, castQC_triangle] at h1
   have hcontain : ∀ z : ℂ, ((minpoly ℚ tau).map (algebraMap ℚ ℂ)).eval z = 0 →
-      (SalemCircle.R alpha inside m).eval z = 0 := by
+      (Rz.map (Int.castRingHom ℂ)).eval z = 0 := by
     intro z hz
     obtain ⟨c, hc⟩ := hdvdC
     rw [hc, Polynomial.eval_mul, hz, zero_mul]
@@ -254,7 +225,6 @@ theorem salem_certificate
   have hcircle : ∃ z : ℂ, Polynomial.aeval z (minpoly ℚ tau) = 0 ∧ ‖z‖ = 1 := by
     by_contra hno
     simp only [not_exists, not_and] at hno
-    -- containment of all roots in the pair {tau, 1/tau}
     have hpair : ∀ z ∈ ((minpoly ℚ tau).map (algebraMap ℚ ℂ)).roots,
         z = ((tau : ℂ)) ∨ z = ((tau : ℂ))⁻¹ := by
       intro z hz
@@ -265,7 +235,6 @@ theorem salem_certificate
       · exact absurd h (hno z hz1)
       · exact Or.inl h
       · exact Or.inr h
-    -- hence the degree is at most 2
     have hsub : ((minpoly ℚ tau).map (algebraMap ℚ ℂ)).roots.toFinset ⊆
         ({((tau : ℂ)), ((tau : ℂ))⁻¹} : Finset ℂ) := by
       intro z hz
@@ -321,7 +290,6 @@ theorem salem_certificate
   -- `1/tau` is a conjugate
   have hinvroot : Polynomial.aeval (((tau : ℂ))⁻¹) (minpoly ℚ tau) = 0 := by
     by_contra hne
-    -- every root other than `tau` is unimodular
     have hroots1 : ∀ z ∈ ((minpoly ℚ tau).map (algebraMap ℚ ℂ)).roots,
         z ≠ ((tau : ℂ)) → ‖z‖ = 1 := by
       intro z hz hzne
@@ -341,18 +309,67 @@ theorem salem_certificate
       apply hroots1 w (by rw [hrest]; exact Multiset.mem_cons_of_mem hw)
       intro hwz
       exact hnodup'.1 (hwz ▸ hw)
-    -- Vieta on the constant term, in absolute value
     have hc0 := hsplits.coeff_zero_eq_prod_roots_of_monic hmonicC
     rw [hrest, Multiset.prod_cons] at hc0
     have hnorm : ‖((minpoly ℚ tau).map (algebraMap ℚ ℂ)).coeff 0‖ = tau := by
       rw [hc0, norm_mul, norm_mul, norm_pow, norm_neg, norm_one, one_pow,
-        one_mul, htau_norm, norm_multiset_prod_eq_one rest hrest1, mul_one]
+        one_mul, htau_norm, norm_multiset_prod_eq_one rest hrest1,
+        mul_one]
     rw [Polynomial.coeff_map, hcoeff 0, map_intCast,
       show ((((minpoly ℤ tau).coeff 0 : ℤ)) : ℂ)
         = (((((minpoly ℤ tau).coeff 0 : ℤ) : ℝ)) : ℂ) by norm_cast,
       Complex.norm_real, Real.norm_eq_abs, ← Int.cast_abs] at hnorm
     exact hτZ |(minpoly ℤ tau).coeff 0| hnorm.symm
   exact ⟨hint, hdisk, hcircle, hinvroot⟩
+
+/-- **The arithmetic Salem-ness certificate.**  A real root `tau > 1`
+of the integer family `X^m·Pz + Qz` — whose complex image is the `PdtSalemCircle`
+family — is a Salem number, provided `tau` avoids the two integer
+degeneracies `tau ∈ ℤ` and `tau + 1/tau ∈ ℤ`: it is an algebraic
+integer, its conjugates lie in the closed unit disk, at least one lies
+ON the circle, and `1/tau` is among them.  All degenerate exclusions run
+through the Gauss step (`minpoly ℚ tau` is the mapped `minpoly ℤ tau`,
+since ℤ is integrally closed). -/
+theorem salem_certificate
+    (Pz : Polynomial ℤ) (hmonic : Pz.Monic)
+    (alpha : ℝ) (halpha : 1 < alpha)
+    (inside : Multiset ℂ) (hin : ∀ r ∈ inside, ‖r‖ < 1)
+    (hconj : inside.map (starRingEnd ℂ) = inside)
+    (hfacC : Pz.map (Int.castRingHom ℂ) = SalemCircle.P alpha inside)
+    (Qz : Polynomial ℤ)
+    (hQmap : Qz.map (Int.castRingHom ℂ) = SalemCircle.Q alpha inside)
+    (m : ℕ) (hm : 1 ≤ m) (hmp : 3 ≤ m + (inside.card + 1))
+    (tau : ℝ) (htau : 1 < tau)
+    (hroot : ((X ^ m * Pz + Qz).map (Int.castRingHom ℝ)).eval tau = 0)
+    (hτZ : ∀ n : ℤ, tau ≠ (n : ℝ))
+    (hτtr : ∀ n : ℤ, tau + tau⁻¹ ≠ (n : ℝ)) :
+    IsIntegral ℤ tau ∧
+    (∀ z : ℂ, (Polynomial.aeval z) (minpoly ℚ tau) = 0 → z ≠ (tau : ℂ) → ‖z‖ ≤ 1) ∧
+    (∃ z : ℂ, (Polynomial.aeval z) (minpoly ℚ tau) = 0 ∧ ‖z‖ = 1) ∧
+    (Polynomial.aeval ((tau : ℂ))⁻¹) (minpoly ℚ tau) = 0 := by
+  classical
+  set Rz : Polynomial ℤ := X ^ m * Pz + Qz with hRzdef
+  -- bridge plumbing
+  have hRzMonic : Rz.Monic :=
+    family_monic Pz hmonic alpha inside hfacC Qz hQmap m hm
+  have hRmap : Rz.map (Int.castRingHom ℂ) = SalemCircle.R alpha inside m :=
+    family_map_C Pz alpha inside hfacC Qz hQmap m
+  have haevalR : Polynomial.aeval tau Rz = 0 := by
+    rw [aeval_eq_eval_map, algebraMap_int_eq]
+    exact hroot
+  -- the family root over ℂ, and the trichotomy
+  have hRC : (SalemCircle.R alpha inside m).eval ((tau : ℂ)) = 0 := by
+    have h1 : Polynomial.aeval ((tau : ℂ)) Rz = 0 := by
+      rw [aeval_ofReal, haevalR, Complex.ofReal_zero]
+    rwa [aeval_eq_eval_map, algebraMap_int_eq, hRmap] at h1
+  have htri : ∀ z : ℂ, (SalemCircle.R alpha inside m).eval z = 0 →
+      ‖z‖ = 1 ∨ z = ((tau : ℂ)) ∨ z = ((tau : ℂ))⁻¹ :=
+    SalemCircle.salem_root_trichotomy alpha inside halpha hin hconj m hm hmp
+      tau htau hRC
+  apply salem_certificate_of_root_trichotomy Rz hRzMonic tau htau haevalR
+  · simpa only [hRmap] using htri
+  · exact hτZ
+  · exact hτtr
 
 /-! ### The reverse bridge — the companion IS the reverse -/
 
