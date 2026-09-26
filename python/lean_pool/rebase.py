@@ -79,7 +79,7 @@ def render_index(root: Path) -> str:
     )
 
 
-def _project_nodes(text: str) -> list[yaml.MappingNode]:
+def _project_nodes(text: str) -> yaml.SequenceNode:
     """Read card boundaries from YAML rather than assuming a first key."""
     root = yaml.compose(text, Loader=yaml.SafeLoader)
     if not isinstance(root, yaml.MappingNode) or len(root.value) != 1:
@@ -91,7 +91,7 @@ def _project_nodes(text: str) -> list[yaml.MappingNode]:
         raise ValueError("Project cards must use a block sequence")
     if any(not isinstance(card, yaml.MappingNode) for card in projects.value):
         raise ValueError("Each project card must be a mapping")
-    return projects.value
+    return projects
 
 
 def _card_slug(card: yaml.MappingNode) -> str:
@@ -113,15 +113,19 @@ def split_cards(text: str) -> tuple[str, list[tuple[str, str]]]:
     Returns ``(header, [(slug, block)])`` where concatenating the header and
     every block reproduces ``text`` exactly.
     """
-    nodes = _project_nodes(text)
-    starts = [text.rfind("\n", 0, card.start_mark.index) + 1 for card in nodes]
+    projects = _project_nodes(text)
+    nodes = projects.value
+    entries = [
+        token
+        for token in yaml.scan(text, Loader=yaml.SafeLoader)
+        if isinstance(token, yaml.tokens.BlockEntryToken)
+        and token.start_mark.column == projects.start_mark.column
+    ]
+    starts = [text.rfind("\n", 0, token.start_mark.index) + 1 for token in entries]
+    if len(starts) != len(nodes):
+        raise ValueError("Expected one sequence item per project card")
     if not starts:
         return text, []
-    if starts != sorted(set(starts)) or any(
-        not re.fullmatch(r"[ \t]*-[ \t]+", text[start : node.start_mark.index])
-        for start, node in zip(starts, nodes, strict=True)
-    ):
-        raise ValueError("Each project card must start on its own sequence-item line")
     header = text[: starts[0]]
     cards: list[tuple[str, str]] = []
     for index, (start, node) in enumerate(zip(starts, nodes, strict=True)):

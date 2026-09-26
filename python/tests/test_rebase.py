@@ -185,6 +185,14 @@ def test_merge_preserves_title_first_added_cards_verbatim() -> None:
     ]
 
 
+def test_merge_preserves_cards_with_keys_below_the_dash() -> None:
+    """A standalone YAML sequence marker is a valid card boundary too."""
+    added = "  - # project comment\n    title: Delta\n    slug: delta\n"
+    merged = merge_registry(BASE, OURS, BASE + added)
+    assert merged == OURS + added
+    assert yaml.safe_load(merged)["projects"][-1]["slug"] == "delta"
+
+
 def test_merge_recognizes_title_first_base_and_main_cards() -> None:
     """Reordered keys and quoted slugs must not duplicate existing cards."""
     base = "projects:\n  - title: Alpha\n    slug: 'alpha'\n"
