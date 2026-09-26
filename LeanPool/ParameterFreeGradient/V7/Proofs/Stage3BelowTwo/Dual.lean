@@ -269,16 +269,8 @@ private lemma pairing_smul_right (r : ℝ) (x y : Point d) :
 private lemma pairing_weightedSum_left (m : ℕ) (a : ScalarSeq)
     (X : VectorSeq d) (y : Point d) :
     O3.pairing (weightedSum m a X) y =
-      ∑ i ∈ Finset.range m, a i * O3.pairing (X i) y := by
-  induction m with
-  | zero => simp [weightedSum, O3.pairing]
-  | succ m ih =>
-    have hsum : weightedSum (m + 1) a X =
-        weightedSum m a X + a m • X m := by
-      ext j
-      simp [weightedSum, Finset.sum_range_succ]
-    rw [hsum, pairing_add_left, ih, pairing_smul_left,
-      Finset.sum_range_succ]
+      ∑ i ∈ Finset.range m, a i * O3.pairing (X i) y :=
+  V7.ResidualAlgebra.pairing_weightedSum_left m a X y
 
 private lemma sum_pairing_by_parts (n : ℕ) (u : ScalarSeq)
     (A X : VectorSeq d) :

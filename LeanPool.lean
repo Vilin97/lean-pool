@@ -6888,6 +6888,7 @@ public import LeanPool.ParameterFreeGradient.V7.AboveTwoStatements
 public import LeanPool.ParameterFreeGradient.V7.BelowTwoStatements
 public import LeanPool.ParameterFreeGradient.V7.ControllerStatements
 public import LeanPool.ParameterFreeGradient.V7.EuclideanStatements
+public import LeanPool.ParameterFreeGradient.V7.FiniteProgram
 public import LeanPool.ParameterFreeGradient.V7.Foundation
 public import LeanPool.ParameterFreeGradient.V7.Guards
 public import LeanPool.ParameterFreeGradient.V7.LowerBoundStatements
