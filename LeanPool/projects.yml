@@ -10308,43 +10308,41 @@ projects:
       - '12F05'
       - '13F25'
 
-  - slug: nikodym
-    title: The sharp finite-field Nikodym exponent
-    summary: Proves a lower bound for Nikodym sets over arbitrary finite fields and a matching exponent
-      upper construction over sufficiently large prime fields, using interpolation, algebraic degree bounds,
-      and multiquadratic constructions.
-    branch: additive combinatorics
-    entry_module: LeanPool.Nikodym
+  - slug: lean-spectral-theory
+    title: lean-spectral-theory
+    summary: The spectral theorem for possibly unbounded self-adjoint operators on complex Hilbert
+      spaces, formalized through the Cayley transform and real projection-valued measures. The
+      selected spectral theorem constructs a PVM whose scalar measures give the exact finite-second-moment
+      domain and first-moment quadratic form, with measurable-set uniqueness, and is proved
+      equivalent to equality with the unbounded coordinate spectral integral. The selected Stone
+      theorem proves both that strongly continuous one-parameter unitary groups have self-adjoint
+      generators and that every self-adjoint operator generates such a group.
+    branch: functional analysis
+    entry_module: LeanPool.SpectralTheory
     authors:
-    - Ting-Wei Chao
-    - Zach Hunter
-    - Cosmin Pohoata
-    - Hung-Hsun Hans Yu
-    - Shengtong Zhang
+    - Ezzeri Esa
     source:
-      url: https://github.com/shengtongzhang-alt/nikodym
-      github_repo: shengtongzhang-alt/nikodym
-      commit: 38d16dcdbaef04f6f85e5dee92905b7db2eba930
+      url: https://github.com/savarin/lean-spectral-theory
+      github_repo: savarin/lean-spectral-theory
+      commit: d19e279f0ab244657f02ce678e8d67fa69e2f407
     license: Apache-2.0
     status: verified
-    provenance: AI
     main_declarations:
-    - Nikodym.card_ge_pow_sub
-    - Nikodym.exists_isNikodym_card_le
+    - PalomarSpectralStone.spectral_theorem_intrinsic
     main_results:
-    - declaration: Nikodym.card_ge_pow_sub
-      informal: Every Nikodym set in dimension d ≥ 2 over a finite field of size q has size at least q^d
-        − (8d²+1)q^(d−2^(1−d)).
-    - declaration: Nikodym.exists_isNikodym_card_le
-      informal: For every positive ε and dimension d ≥ 2, sufficiently large prime fields admit a Nikodym
-        set of size at most q^d − q^(d−2^(1−d)−ε).
+    - declaration: PalomarSpectralStone.spectral_theorem_intrinsic
+      informal: Every self-adjoint partial linear operator on a complex Hilbert space has a
+        real projection-valued measure representing its domain and scalar moments, unique on
+        Borel sets.
+    - declaration: PalomarSpectralStone.stone_theorem_intrinsic
+      informal: Every strongly continuous one-parameter unitary group has a self-adjoint
+        generator, and every self-adjoint operator generates such a group.
     tags:
-    - combinatorics
-    - finite-fields
-    - nikodym-sets
+    - functional-analysis
     msc:
-    - 05B25
-    - 11T99
+    - 47A10
+    - 47B15
+    provenance: AI
   - slug: nemytskii-lebesgue
     title: Nemytskii operators on Lebesgue spaces
     summary: >-
@@ -10442,3 +10440,41 @@ projects:
       - 47H30
       - 46E30
       - 47J05
+
+  - slug: nikodym
+    title: The sharp finite-field Nikodym exponent
+    summary: Proves a lower bound for Nikodym sets over arbitrary finite fields and a matching exponent
+      upper construction over sufficiently large prime fields, using interpolation, algebraic degree bounds,
+      and multiquadratic constructions.
+    branch: additive combinatorics
+    entry_module: LeanPool.Nikodym
+    authors:
+    - Ting-Wei Chao
+    - Zach Hunter
+    - Cosmin Pohoata
+    - Hung-Hsun Hans Yu
+    - Shengtong Zhang
+    source:
+      url: https://github.com/shengtongzhang-alt/nikodym
+      github_repo: shengtongzhang-alt/nikodym
+      commit: 38d16dcdbaef04f6f85e5dee92905b7db2eba930
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - Nikodym.card_ge_pow_sub
+    - Nikodym.exists_isNikodym_card_le
+    main_results:
+    - declaration: Nikodym.card_ge_pow_sub
+      informal: Every Nikodym set in dimension d ≥ 2 over a finite field of size q has size at least q^d
+        − (8d²+1)q^(d−2^(1−d)).
+    - declaration: Nikodym.exists_isNikodym_card_le
+      informal: For every positive ε and dimension d ≥ 2, sufficiently large prime fields admit a Nikodym
+        set of size at most q^d − q^(d−2^(1−d)−ε).
+    tags:
+    - combinatorics
+    - finite-fields
+    - nikodym-sets
+    msc:
+    - 05B25
+    - 11T99
