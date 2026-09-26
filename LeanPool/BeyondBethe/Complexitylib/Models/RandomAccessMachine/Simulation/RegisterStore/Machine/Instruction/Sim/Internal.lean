@@ -375,13 +375,7 @@ private theorem bufferedCleanup_resetPhase
     (∀ (slot : Fin 7),
       resetWork (instructionCleanupResetTape tapes slot) =
         TM.resetBinaryBlank) := by
-  dsimp only
-  let targets := instructionCleanupResetTargets tapes
-  let resetBits := bufferedCleanupResetBitsAt tapes cleanupValues
-    remainingValue oldStore
-  let resetHeads :=
-    instructionCleanupResetHeadBoundAt tapes sourceHeadBound
-  let resetWork := TM.resetBinaryWorkManyResult initialWork targets
+  intro targets resetBits resetHeads resetWork
   have hresetContentIndexed : ∀ slot,
       (initialWork (instructionCleanupResetTape tapes slot)).HasBinaryContent
         (bufferedCleanupResetBits cleanupValues remainingValue oldStore
@@ -512,13 +506,7 @@ private theorem bufferedCleanup_rewindBufferPhase
       (nextBits.length + 1 + 2)) ∧
     (rewoundWork tapes.liftedSource = TM.resetBinaryBlank) ∧
     (∀ i, TM.Parked (rewoundWork i)) := by
-  dsimp only
-  intro hresetBuffer hresetParked hresetTarget
-  let nextBits := nextStore.flatMap Entry.encode
-  let targets := instructionCleanupResetTargets tapes
-  let resetWork := TM.resetBinaryWorkManyResult initialWork targets
-  let nextTape := (Tape.init (nextBits.map Γ.ofBool)).move Dir3.right
-  let rewoundWork := Function.update resetWork tapes.buffer nextTape
+  intro nextBits targets resetWork nextTape rewoundWork hresetBuffer hresetParked hresetTarget
   have hresetBufferContent :
       (resetWork tapes.buffer).HasBinaryContent nextBits := by
     rw [hresetBuffer]
@@ -593,17 +581,8 @@ private theorem bufferedCleanup_copyPhase
     (copiedWork tapes.buffer = prefixTape) ∧
     (copiedWork tapes.liftedSource = prefixTape) ∧
     (∀ i, TM.Parked (copiedWork i)) := by
-  dsimp only
-  intro hrewoundSource hrewoundParked
-  let nextBits := nextStore.flatMap Entry.encode
-  let targets := instructionCleanupResetTargets tapes
-  let resetWork := TM.resetBinaryWorkManyResult initialWork targets
-  let nextTape := (Tape.init (nextBits.map Γ.ofBool)).move Dir3.right
-  let rewoundWork := Function.update resetWork tapes.buffer nextTape
-  let prefixTape := instructionCleanupPrefixTape nextBits
-  let copiedWork := Function.update
-    (Function.update rewoundWork tapes.buffer prefixTape)
-    tapes.liftedSource prefixTape
+  intro nextBits targets resetWork nextTape rewoundWork prefixTape copiedWork hrewoundSource
+    hrewoundParked
   let copyFrame : TM.TapePred (n + 1) := fun inp work out =>
     inp = inp₀ ∧ out = out₀ ∧
       ∀ i, i ≠ tapes.buffer → i ≠ tapes.liftedSource →
@@ -732,21 +711,8 @@ private theorem bufferedCleanup_restoreSourcePhase
       sourceReadyWork i = resetWork i) ∧
     (∀ i, TM.Parked (sourceReadyWork i)) ∧
     (∀ i, TM.Parked (bufferResetWork i)) := by
-  dsimp only
-  intro hcopiedBuffer hcopiedSource hcopiedParked hresetParked
-  let nextBits := nextStore.flatMap Entry.encode
-  let targets := instructionCleanupResetTargets tapes
-  let resetWork := TM.resetBinaryWorkManyResult initialWork targets
-  let nextTape := (Tape.init (nextBits.map Γ.ofBool)).move Dir3.right
-  let rewoundWork := Function.update resetWork tapes.buffer nextTape
-  let prefixTape := instructionCleanupPrefixTape nextBits
-  let copiedWork := Function.update
-    (Function.update rewoundWork tapes.buffer prefixTape)
-    tapes.liftedSource prefixTape
-  let bufferResetWork := Function.update copiedWork tapes.buffer
-    ((Tape.init []).move Dir3.right)
-  let sourceReadyWork := Function.update bufferResetWork tapes.liftedSource
-    nextTape
+  intro nextBits targets resetWork nextTape rewoundWork prefixTape copiedWork bufferResetWork
+    sourceReadyWork hcopiedBuffer hcopiedSource hcopiedParked hresetParked
   have hresetBufferRaw := TM.resetBinaryWorkTM_hoareTime_frame tapes.buffer
     nextBits (nextBits.length + 1) inp₀ copiedWork out₀
     (by
@@ -879,25 +845,9 @@ private theorem bufferedCleanup_copyCountPhase
         inp = inp₀ ∧ work = sourceReadyWork ∧ out = out₀)
       (fun inp work out => inp = inp₀ ∧ work = finalWork ∧ out = out₀)
       (TM.binaryCopyTime nextStore.length 0)) := by
-  dsimp only
-  intro hsourceReadyOutside hresetDataOutside hresetTarget hsourceReadyParked
-  let nextBits := nextStore.flatMap Entry.encode
-  let targets := instructionCleanupResetTargets tapes
-  let resetWork := TM.resetBinaryWorkManyResult initialWork targets
-  let nextTape := (Tape.init (nextBits.map Γ.ofBool)).move Dir3.right
-  let rewoundWork := Function.update resetWork tapes.buffer nextTape
-  let prefixTape := instructionCleanupPrefixTape nextBits
-  let copiedWork := Function.update
-    (Function.update rewoundWork tapes.buffer prefixTape)
-    tapes.liftedSource prefixTape
-  let bufferResetWork := Function.update copiedWork tapes.buffer
-    ((Tape.init []).move Dir3.right)
-  let sourceReadyWork := Function.update bufferResetWork tapes.liftedSource
-    nextTape
-  let countTape :=
-    (Tape.init (nextStore.length.bits.map Γ.ofBool)).move Dir3.right
-  let finalWork := Function.update sourceReadyWork
-    tapes.lifted.data.update.remaining countTape
+  intro nextBits targets resetWork nextTape rewoundWork prefixTape copiedWork bufferResetWork
+    sourceReadyWork countTape finalWork hsourceReadyOutside hresetDataOutside hresetTarget
+    hsourceReadyParked
   have hresultCount :
       (sourceReadyWork tapes.lifted.data.update.resultCount).HasBinaryNat
         nextStore.length := by
@@ -995,25 +945,9 @@ private theorem bufferedCleanup_finalFrame
     (finalWork tapes.liftedSource = nextTape) ∧
     (finalWork tapes.buffer = (Tape.init []).move Dir3.right) ∧
     (∀ i, TM.Parked (finalWork i)) := by
-  dsimp only
-  intro hsourceReadyOutside hresetDataOutside hresetTarget hsourceReadyParked
-  let nextBits := nextStore.flatMap Entry.encode
-  let targets := instructionCleanupResetTargets tapes
-  let resetWork := TM.resetBinaryWorkManyResult initialWork targets
-  let nextTape := (Tape.init (nextBits.map Γ.ofBool)).move Dir3.right
-  let rewoundWork := Function.update resetWork tapes.buffer nextTape
-  let prefixTape := instructionCleanupPrefixTape nextBits
-  let copiedWork := Function.update
-    (Function.update rewoundWork tapes.buffer prefixTape)
-    tapes.liftedSource prefixTape
-  let bufferResetWork := Function.update copiedWork tapes.buffer
-    ((Tape.init []).move Dir3.right)
-  let sourceReadyWork := Function.update bufferResetWork tapes.liftedSource
-    nextTape
-  let countTape :=
-    (Tape.init (nextStore.length.bits.map Γ.ofBool)).move Dir3.right
-  let finalWork := Function.update sourceReadyWork
-    tapes.lifted.data.update.remaining countTape
+  intro nextBits targets resetWork nextTape rewoundWork prefixTape copiedWork bufferResetWork
+    sourceReadyWork countTape finalWork hsourceReadyOutside hresetDataOutside hresetTarget
+    hsourceReadyParked
   have hfinalDataOutside (role : Fin 18) (hremaining : role ≠ 9)
       (hsource : role ≠ 0) :
       finalWork (tapes.lifted.data.idx role) =
@@ -1130,25 +1064,9 @@ private theorem bufferedCleanup_finalScanner
     (∀ i, TM.Parked (finalWork i)) →
     (EntryScanReady tapes.lifted.data.update.entry
       nextBits [] finalWork finalWork) := by
-  dsimp only
-  intro hfinalSource hfinalPreservedData hfinalReset hblankNat hfinalParked
-  let nextBits := nextStore.flatMap Entry.encode
-  let targets := instructionCleanupResetTargets tapes
-  let resetWork := TM.resetBinaryWorkManyResult initialWork targets
-  let nextTape := (Tape.init (nextBits.map Γ.ofBool)).move Dir3.right
-  let rewoundWork := Function.update resetWork tapes.buffer nextTape
-  let prefixTape := instructionCleanupPrefixTape nextBits
-  let copiedWork := Function.update
-    (Function.update rewoundWork tapes.buffer prefixTape)
-    tapes.liftedSource prefixTape
-  let bufferResetWork := Function.update copiedWork tapes.buffer
-    ((Tape.init []).move Dir3.right)
-  let sourceReadyWork := Function.update bufferResetWork tapes.liftedSource
-    nextTape
-  let countTape :=
-    (Tape.init (nextStore.length.bits.map Γ.ofBool)).move Dir3.right
-  let finalWork := Function.update sourceReadyWork
-    tapes.lifted.data.update.remaining countTape
+  intro nextBits targets resetWork nextTape rewoundWork prefixTape copiedWork bufferResetWork
+    sourceReadyWork countTape finalWork hfinalSource hfinalPreservedData hfinalReset hblankNat
+    hfinalParked
   have hfinalScanner : EntryScanReady tapes.lifted.data.update.entry
       nextBits [] finalWork finalWork := by
     let entry := tapes.lifted.data.update.entry
@@ -1252,25 +1170,8 @@ private theorem bufferedCleanup_finalLookup
     (EntryScanReady
       tapes.lifted.data.lhsLookup.scan.entry nextBits [] finalWork
         finalWork) := by
-  dsimp only
-  intro hsourceReadyOutside hfinalScanner hfinalParked
-  let nextBits := nextStore.flatMap Entry.encode
-  let targets := instructionCleanupResetTargets tapes
-  let resetWork := TM.resetBinaryWorkManyResult initialWork targets
-  let nextTape := (Tape.init (nextBits.map Γ.ofBool)).move Dir3.right
-  let rewoundWork := Function.update resetWork tapes.buffer nextTape
-  let prefixTape := instructionCleanupPrefixTape nextBits
-  let copiedWork := Function.update
-    (Function.update rewoundWork tapes.buffer prefixTape)
-    tapes.liftedSource prefixTape
-  let bufferResetWork := Function.update copiedWork tapes.buffer
-    ((Tape.init []).move Dir3.right)
-  let sourceReadyWork := Function.update bufferResetWork tapes.liftedSource
-    nextTape
-  let countTape :=
-    (Tape.init (nextStore.length.bits.map Γ.ofBool)).move Dir3.right
-  let finalWork := Function.update sourceReadyWork
-    tapes.lifted.data.update.remaining countTape
+  intro nextBits targets resetWork nextTape rewoundWork prefixTape copiedWork bufferResetWork
+    sourceReadyWork countTape finalWork hsourceReadyOutside hfinalScanner hfinalParked
   have hfinalPC : finalWork tapes.liftedPC = initialWork tapes.liftedPC := by
     rw [show finalWork tapes.liftedPC = sourceReadyWork tapes.liftedPC by
       exact Function.update_of_ne (tapes.lifted.pc_ne 9) _ _]
@@ -1376,33 +1277,16 @@ private theorem bufferedCleanup_finalReady
     (finalWork tapes.buffer = (Tape.init []).move Dir3.right) →
     (InstructionExecutionReady tapes nextStore
       nextPC finalWork) := by
-  dsimp only
-  intro hfinalLookupScanner hfinalSource hfinalPreservedData hfinalReset
-    hblankNat hfinalPC hfinalBuffer
-  let nextBits := nextStore.flatMap Entry.encode
-  let targets := instructionCleanupResetTargets tapes
-  let resetWork := TM.resetBinaryWorkManyResult initialWork targets
-  let nextTape := (Tape.init (nextBits.map Γ.ofBool)).move Dir3.right
-  let rewoundWork := Function.update resetWork tapes.buffer nextTape
-  let prefixTape := instructionCleanupPrefixTape nextBits
-  let copiedWork := Function.update
-    (Function.update rewoundWork tapes.buffer prefixTape)
-    tapes.liftedSource prefixTape
-  let bufferResetWork := Function.update copiedWork tapes.buffer
-    ((Tape.init []).move Dir3.right)
-  let sourceReadyWork := Function.update bufferResetWork tapes.liftedSource
-    nextTape
-  let countTape :=
-    (Tape.init (nextStore.length.bits.map Γ.ofBool)).move Dir3.right
-  let finalWork := Function.update sourceReadyWork
-    tapes.lifted.data.update.remaining countTape
+  intro nextBits targets resetWork nextTape rewoundWork prefixTape copiedWork bufferResetWork
+    sourceReadyWork countTape finalWork hfinalLookupScanner hfinalSource hfinalPreservedData
+    hfinalReset hblankNat hfinalPC hfinalBuffer
   have hfinalReady : InstructionExecutionReady tapes nextStore
       nextPC finalWork := by
     refine
       { canonical := hready.nextCanonical
         control :=
           { lookup :=
-              { scanner := by simpa [nextBits] using hfinalLookupScanner
+              { scanner := hfinalLookupScanner
                 sourceStart := by
                   change (finalWork tapes.liftedSource).cells 0 = Γ.start
                   rw [hfinalSource]
