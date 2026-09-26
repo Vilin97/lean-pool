@@ -10563,3 +10563,44 @@ projects:
     - 20E05
     - 68Q45
     - 03B35
+  - slug: hs-virial-nbc-identity
+    title: Hard-sphere Mayer NBC identity and fork-packing volume bound
+    summary: A kernel-checked Lean formalization of the exact no-broken-circuit volume identity
+      for hard-sphere Mayer cluster integrals and the stronger dimension-three fork-packing
+      upper bound for each tree-owned NBC region. The development proves finite broken-circuit
+      cancellation, the measurable finite-region decomposition, the anchored Euclidean product-measure
+      theorem, and its explicit flat-coordinate transport.  Its geometric result is the attachment-aware
+      estimate Vol(NBC_T) <= (17/32)^hardSphereNu T * hardSphereKappa^(k-1), where hardSphereNu
+      T is the maximum cardinality of a packing of pairwise vertex-disjoint, order-compatible
+      forks in T.  A formal fork is an ordered triple (a,b,c) with a < b < c, center a, leaves
+      b,c, and tree edges {a,b} and {a,c}.  The central contribution is the complete pointwise-to-integral
+      bridge together with the orientation-aware measure-preserving factorization that realizes
+      the per-fork volume suppression.
+    branch: mathematical physics
+    entry_module: LeanPool.HardSphereNBC
+    authors:
+    - ukiyois
+    - OpenCode agent sessions
+    source:
+      url: https://github.com/ukiyois/hs-virial-nbc-identity
+      github_repo: ukiyois/hs-virial-nbc-identity
+      commit: fd0a1e73c336574fa9655f9ab3c0cd9ce5c4fcce
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+    - PalomarHS.main_result
+    - PalomarHS.nbc_region_real_volume_le_fork_factor
+    main_results:
+    - declaration: PalomarHS.main_result
+      informal: The absolute hard-sphere Mayer coefficient, multiplied by the factorial, equals
+        the sum of nonnegative no-broken-circuit region volumes over spanning trees.
+    - declaration: PalomarHS.nbc_region_real_volume_le_fork_factor
+      informal: For a spanning tree in three dimensions, its no-broken-circuit region has volume
+        at most (17/32) to the maximum disjoint compatible-fork packing size times the unit-ball
+        volume to the number of tree edges.
+    tags:
+    - mathematical-physics
+    msc:
+    - 05C15
+    - 82B05
+    provenance: AI
