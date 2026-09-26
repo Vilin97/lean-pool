@@ -119,7 +119,7 @@ private theorem controlCopy_entryScannerReady
   · intro i hi
     simp at hi
   · rw [hsourceFinalHead]
-    simpa only [List.length_nil, Nat.add_zero, Nat.add_comm] using hsourceFinalOutput.2
+    simpa only [List.length_nil, Nat.add_zero] using hsourceFinalOutput.2
   · intro j hj
     rw [hsourceCells]
     exact hsourceSuffix.2.2.2 j hj

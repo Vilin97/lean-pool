@@ -234,8 +234,10 @@ theorem directedNegativeObjectiveCoordinate_bounds
   · rw [directedNegativeObjectiveCoordinateUpper,
       directedNegativeObjectiveCoordinateLower]
     push_cast
-    norm_num only [Rat.cast_pow, Rat.cast_div, Rat.cast_one, Rat.cast_ofNat] at
-      hAweighted hXweighted hCweighted hAweightBound hXweightBound hCweightBound hdyadic ⊢
+    norm_num only [Rat.cast_pow, Rat.cast_div, Rat.cast_one,
+      Rat.cast_ofNat] at hAweighted hXweighted hCweighted
+    norm_num only [Rat.cast_pow, Rat.cast_div, Rat.cast_one,
+      Rat.cast_ofNat] at hAweightBound hXweightBound hCweightBound hdyadic ⊢
     nlinarith
 
 /-- Rational lower endpoint for the complete negative objective. -/
