@@ -42,14 +42,12 @@ public import LeanPool.ScottishBook155.BookkeepingSchedule
 public import LeanPool.ScottishBook155.CardinalControl
 public import LeanPool.ScottishBook155.Claim14
 public import LeanPool.ScottishBook155.CoherentBiSystem
-public import LeanPool.ScottishBook155.CoherentLimit
 public import LeanPool.ScottishBook155.CoherentRetractionLimit
 public import LeanPool.ScottishBook155.CollapsedQuotient
 public import LeanPool.ScottishBook155.CombinedEmbedding
 public import LeanPool.ScottishBook155.CompletedLimitMap
 public import LeanPool.ScottishBook155.DenseSequenceCardinal
 public import LeanPool.ScottishBook155.DirectedLimitStage
-public import LeanPool.ScottishBook155.EnumeratedStage
 public import LeanPool.ScottishBook155.FinalAssembly
 public import LeanPool.ScottishBook155.FinalChainAssembly
 public import LeanPool.ScottishBook155.InitialSegmentOrder

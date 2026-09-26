@@ -5,7 +5,7 @@ Authors: Yoshito Ishiki
 -/
 module
 
-public import LeanPool.ScottishBook155.EnumeratedStage
+public import LeanPool.ScottishBook155.ScheduledSuccessor
 public import LeanPool.ScottishBook155.ProtectedChainReindex
 public import LeanPool.ScottishBook155.ProtectedChainSingleton
 public import LeanPool.ScottishBook155.ProtectedChainSuccessor
