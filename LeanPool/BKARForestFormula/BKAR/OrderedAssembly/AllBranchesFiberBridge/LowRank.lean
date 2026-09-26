@@ -246,19 +246,9 @@ theorem sum_rootBoundarySupportOrderContribution_singleton
         (fun I => rootBoundarySupportOrderContribution choices ρ I [a]) =
       (choices (Forest.empty V) (emptyActiveEdge a)).forest.orderedContribution
         [a] ρ := by
-  classical
-  rw [Finset.sum_eq_single_of_mem (ForestIndex.singleton a)
-    (Finset.mem_univ (ForestIndex.singleton a))]
-  · exact rootBoundarySupportOrderContribution_singleton_eq_orderedContribution
-      choices a ρ
-  · intro I _ hne
-    exact
-      rootBoundarySupportOrderContribution_singleton_eq_zero_of_edges_ne_singleton
-        choices a ρ I (by
-          intro hIedges
-          apply hne
-          apply ForestIndex.ext
-          rw [hIedges, ForestIndex.singleton_edges])
+  exact sum_rootBoundarySupportOrderContribution_chosenGrowth choices
+    (ChosenGrowth.cons (emptyActiveEdge a).property (ChosenGrowth.nil _)) ρ
+
 
 /--
 The singleton support inner sum has already collapsed to the unique singleton
@@ -292,80 +282,10 @@ theorem rootBoundarySupportOrderContribution_pair_eq_orderedContribution
           ⟨b, hb⟩).forest.support) [a, b] =
       (choices (choices (Forest.empty V) (emptyActiveEdge a)).forest
         ⟨b, hb⟩).forest.orderedContribution [a, b] ρ := by
-  let F₁ : Forest V :=
-    (choices (Forest.empty V) (emptyActiveEdge a)).forest
-  let e₂ : {e // e ∈ F₁.activeEdges} := ⟨b, hb⟩
-  let F₂ : Forest V := (choices F₁ e₂).forest
-  change
-    rootBoundarySupportOrderContribution choices ρ F₂.support [a, b] =
-      F₂.orderedContribution [a, b] ρ
-  rw [rootBoundarySupportOrderContribution_eq_treeFiber_of_not_empty_marker
-    choices ρ F₂.support [a, b] (by
-      intro hmarker
-      cases hmarker.2)]
-  have heqEmpty :
-      (⟨a, (emptyActiveEdge a).property⟩ :
-        {e // e ∈ (Forest.empty V).activeEdges}) =
-        emptyActiveEdge a := by
-    apply Subtype.ext
-    rfl
-  rw [show
-      boundarySupportOrderTreeFiber choices (Forest.empty V) [] [] 1
-          F₂.support [a, b] ρ =
-        ∫ t in 0..(1 : ℝ),
-          boundarySupportOrderTreeFiber choices
-            (choices (Forest.empty V)
-              ⟨a, (emptyActiveEdge a).property⟩).forest
-            ([] ++ [a]) ([] ++ [t]) t F₂.support [a, b] ρ by
-    exact
-      boundarySupportOrderTreeFiber_eq_integral_child_of_tail_ne_nil
-        choices (Forest.empty V) [] [] 1 F₂.support a [b] ρ
-        (emptyActiveEdge a).property (by simp)]
-  rw [heqEmpty]
-  rw [orderedContribution, orderedSimplexIntegral]
-  apply intervalIntegral.integral_congr
-  intro t _ht
-  change
-    boundarySupportOrderTreeFiber choices
-        (choices (Forest.empty V) (emptyActiveEdge a)).forest
-        ([] ++ [a]) ([] ++ [t]) t F₂.support [a, b] ρ = _
-  rw [show
-      boundarySupportOrderTreeFiber choices
-          (choices (Forest.empty V) (emptyActiveEdge a)).forest
-          ([] ++ [a]) ([] ++ [t]) t F₂.support [a, b] ρ =
-        localBoundarySupportOrderContribution choices F₁ [a] [t] t
-          F₂.support [a, b] ρ by
-    change boundarySupportOrderTreeFiber choices F₁ [a] [t] t F₂.support
-        [a, b] ρ =
-      localBoundarySupportOrderContribution choices F₁ [a] [t] t
-        F₂.support [a, b] ρ
-    exact
-      boundarySupportOrderTreeFiber_eq_localBoundary_of_order_length_eq_succ
-        choices F₁ [a] [t] t F₂.support [a, b] ρ (by simp)]
-  rw [localBoundarySupportOrderContribution_def]
-  have hfilter :
-      F₁.activeEdges.attach.filter
-          (fun e =>
-            (choices F₁ e).forest.support = F₂.support ∧
-              [a] ++ [e.val] = [a, b]) =
-        {e₂} := by
-    ext e
-    rw [Finset.mem_filter, Finset.mem_singleton]
-    constructor
-    · intro h
-      exact Subtype.ext (by
-        have horder := h.2.2
-        have htail : [e.val] = [b] := (List.cons.inj horder).2
-        exact (List.cons.inj htail).1)
-    · intro h
-      rw [h]
-      constructor
-      · exact Finset.mem_attach _ _
-      · constructor
-        · rfl
-        · simp [e₂]
-  rw [hfilter, Finset.sum_singleton]
-  simp only [e₂, F₂, List.singleton_append]
+  exact rootBoundarySupportOrderContribution_chosenGrowth_eq_orderedContribution choices
+    (ChosenGrowth.cons (emptyActiveEdge a).property
+      (ChosenGrowth.cons hb (ChosenGrowth.nil _))) ρ (by simp)
+
 
 /--
 After summing over all support indices, a fixed active two-edge order leaves
@@ -380,41 +300,10 @@ theorem sum_rootBoundarySupportOrderContribution_pair
         (fun I => rootBoundarySupportOrderContribution choices ρ I [a, b]) =
       (choices (choices (Forest.empty V) (emptyActiveEdge a)).forest
         ⟨b, hb⟩).forest.orderedContribution [a, b] ρ := by
-  classical
-  let F₁ : Forest V :=
-    (choices (Forest.empty V) (emptyActiveEdge a)).forest
-  let e₂ : {e // e ∈ F₁.activeEdges} := ⟨b, hb⟩
-  let F₂ : Forest V := (choices F₁ e₂).forest
-  have hF₁edges : F₁.edges = ({a} : Finset (Edge V)) := by
-    change (choices (Forest.empty V) (emptyActiveEdge a)).forest.edges =
-      ({a} : Finset (Edge V))
-    rw [(choices (Forest.empty V) (emptyActiveEdge a)).extension.edges_eq,
-      Forest.empty_edges]
-    rfl
-  have hF₂edges : [a, b].toFinset = F₂.support.edges := by
-    change [a, b].toFinset = F₂.edges
-    rw [show F₂.edges = insert b F₁.edges by
-      exact (choices F₁ e₂).extension.edges_eq]
-    rw [hF₁edges]
-    ext x
-    simp [or_comm]
-  rw [Finset.sum_eq_single_of_mem F₂.support (Finset.mem_univ F₂.support)]
-  · change
-      rootBoundarySupportOrderContribution choices ρ
-          ((choices (choices (Forest.empty V) (emptyActiveEdge a)).forest
-            ⟨b, hb⟩).forest.support) [a, b] =
-        (choices (choices (Forest.empty V) (emptyActiveEdge a)).forest
-          ⟨b, hb⟩).forest.orderedContribution [a, b] ρ
-    exact rootBoundarySupportOrderContribution_pair_eq_orderedContribution
-      choices a b ρ hb
-  · intro I _ hne
-    exact
-      rootBoundarySupportOrderContribution_eq_zero_of_order_toFinset_ne_edges
-        choices ρ I [a, b] (by
-          intro hI
-          apply hne
-          apply ForestIndex.ext
-          rw [← hI, hF₂edges])
+  exact sum_rootBoundarySupportOrderContribution_chosenGrowth choices
+    (ChosenGrowth.cons (emptyActiveEdge a).property
+      (ChosenGrowth.cons hb (ChosenGrowth.nil _))) ρ
+
 
 
 end Forest

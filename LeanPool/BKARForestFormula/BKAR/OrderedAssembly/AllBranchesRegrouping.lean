@@ -400,25 +400,10 @@ theorem sum_firstBoundarySupportContribution
           (choices (Forest.empty V) e).forest.orderedContribution [e.val] ρ) =
       Finset.sum (Finset.univ : Finset (ForestIndex V))
         (fun I => firstBoundarySupportContribution choices I ρ) := by
-  classical
-  have hmap :
-      ∀ e ∈ (Forest.empty V).activeEdges.attach,
-        (choices (Forest.empty V) e).forest.support ∈
-          (Finset.univ : Finset (ForestIndex V)) := by
-    intro e _
-    exact Finset.mem_univ _
-  have hfiber :=
-    Finset.sum_fiberwise_of_maps_to
-      (s := (Forest.empty V).activeEdges.attach)
-      (t := (Finset.univ : Finset (ForestIndex V)))
-      (g := fun e => (choices (Forest.empty V) e).forest.support)
-      hmap
-      (fun e =>
-        (choices (Forest.empty V) e).forest.orderedContribution [e.val] ρ)
-  rw [← hfiber]
-  apply Finset.sum_congr rfl
-  intro I _
-  rw [firstBoundarySupportContribution_def choices I ρ]
+  simpa only [← firstBoundarySupportContribution_eq_localBoundarySupportContribution_empty,
+    orderedContribution, orderedSimplexIntegral, List.nil_append] using
+    sum_localBoundarySupportContribution choices (Forest.empty V) [] [] 1 ρ
+
 
 /-- A support fiber of exposed first sectors splits by canonical edge order. -/
 theorem firstBoundarySupportContribution_eq_sum_supportOrderContribution
@@ -428,48 +413,11 @@ theorem firstBoundarySupportContribution_eq_sum_supportOrderContribution
       Finset.sum (edgeSetOrders I.edges)
         (fun order =>
           firstBoundarySupportOrderContribution choices I order ρ) := by
-  classical
-  rw [firstBoundarySupportContribution_def choices I ρ]
-  have hmap :
-      ∀ e ∈ (Forest.empty V).activeEdges.attach.filter
-          (fun e => (choices (Forest.empty V) e).forest.support = I),
-        [e.val] ∈ edgeSetOrders I.edges := by
-    intro e he
-    exact
-      activeExtension_singleton_order_mem_edgeSetOrders_of_support_eq_empty
-        (choices (Forest.empty V) e) (Finset.mem_filter.mp he).2
-  have hfiber :=
-    Finset.sum_fiberwise_of_maps_to
-      (s := (Forest.empty V).activeEdges.attach.filter
-        (fun e => (choices (Forest.empty V) e).forest.support = I))
-      (t := edgeSetOrders I.edges)
-      (g := fun e => [e.val])
-      hmap
-      (fun e =>
-        (choices (Forest.empty V) e).forest.orderedContribution [e.val] ρ)
-  rw [← hfiber]
-  apply Finset.sum_congr rfl
-  intro order _
-  rw [firstBoundarySupportOrderContribution_def choices I order ρ]
-  have hfilter :
-      ((Forest.empty V).activeEdges.attach.filter
-          (fun e => (choices (Forest.empty V) e).forest.support = I)).filter
-          (fun e => [e.val] = order) =
-        (Forest.empty V).activeEdges.attach.filter
-          (fun e =>
-            (choices (Forest.empty V) e).forest.support = I ∧
-              [e.val] = order) := by
-    ext e
-    rw [Finset.mem_filter, Finset.mem_filter, Finset.mem_filter]
-    constructor
-    · intro h
-      exact ⟨h.1.1, h.1.2, h.2⟩
-    · intro h
-      exact ⟨⟨h.1, h.2.1⟩, h.2.2⟩
-  rw [hfilter]
-  apply Finset.sum_congr rfl
-  intro e he
-  rw [(Finset.mem_filter.mp he).2.2]
+  simpa only [← firstBoundarySupportContribution_eq_localBoundarySupportContribution_empty,
+    ← firstContribution_eq_boundaryContribution_empty] using
+    localBoundarySupportContribution_eq_sum_supportOrderContribution
+      choices (Forest.empty V) [] [] 1 rfl (by simp) I ρ
+
 
 /-- Exposed first boundary sectors regroup by support and canonical order. -/
 theorem sum_firstBoundarySupportOrderContribution
