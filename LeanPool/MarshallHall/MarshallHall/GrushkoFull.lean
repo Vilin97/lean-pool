@@ -130,34 +130,6 @@ theorem rerootMarkedGraph_weaklyConnected {n : ℕ}
 
 /-! ### The reduction package used by the global induction -/
 
-/-- Every generating connected marked graph with a reduced null run admits the required reducing
-fold. -/
-def HasReducedNullFold : Prop :=
-  ∀ (n : ℕ) (W : Type) [Fintype W] [qW : Quiver.{0, 0} W]
-    [_hW : HasInvolutiveReverse W]
-    [_hHomW : ∀ a b : W, Fintype (@Quiver.Hom W qW a b)]
-    (M : MarkedBinaryGraph (G := G) (H := H) (V := W) n),
-    ReverseFree (V := W) → M.IsGenerating → M.WeaklyConnected →
-      Fintype.card (AllArrow (V := W)) ≤
-        2 * (n + Fintype.card W - 1) →
-      1 < Fintype.card W →
-      ∃ U : Type,
-      ∃ hFU : Fintype U,
-      ∃ qU : Quiver.{0, 0} U,
-      ∃ hU : @HasInvolutiveReverse U qU,
-      ∃ hHomU : ∀ a b : U, Fintype (@Quiver.Hom U qU a b),
-        letI : Fintype U := hFU
-        letI : Quiver U := qU
-        letI : HasInvolutiveReverse U := hU
-        letI (a b : U) : Fintype (a ⟶ b) := hHomU a b
-        ∃ N : @MarkedBinaryGraph G H U _ _ qU hU n,
-          Fintype.card U < Fintype.card W ∧
-          @ReverseFree U qU hU ∧
-          @MarkedBinaryGraph.IsGenerating n G H U _ _ qU hU N ∧
-          @MarkedBinaryGraph.WeaklyConnected n G H U _ _ qU hU N ∧
-          Fintype.card (@AllArrow U qU) ≤
-            2 * (n + Fintype.card U - 1)
-
 private theorem null_path_tail_read
     {V : Type} [qV : Quiver.{0, 0} V] [HasInvolutiveReverse V]
     (L : BinaryLabelling (G := G) (H := H) (V := V))
@@ -376,77 +348,6 @@ theorem hasReducedNullFold :
       (M := M) hgen hconn hcard
   exact exists_reduced_graph_of_minimal_null_path
     (M := M) hfree hgen hconn hEuler hv p hp hminimal
-
-theorem separated_generators_of_hasReducedNullFold
-    (hred : HasReducedNullFold (G := G) (H := H)) :
-    HasSeparatedReduction (G := G) (H := H) := by
-  have hP : ∀ k : ℕ,
-      ∀ (V : Type) [Fintype V] [qV : Quiver.{0, 0} V]
-        [hV : HasInvolutiveReverse V]
-        [hHom : ∀ a b : V, Fintype (@Quiver.Hom V qV a b)]
-        (n : ℕ) (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n),
-        Fintype.card V = k →
-        ReverseFree (V := V) → M.IsGenerating → M.WeaklyConnected →
-        Fintype.card (AllArrow (V := V)) ≤
-          2 * (n + Fintype.card V - 1) →
-        ∃ s : Fin n → Sum G H,
-          Subgroup.closure (Set.range (separatedMap ∘ s)) = ⊤ := by
-    intro k
-    induction k using Nat.strong_induction_on with
-    | h k ih =>
-        intro V hFV qV hV hHom n M hcard hfree hgen hconn hEuler
-        by_cases hone : Fintype.card V = 1
-        · exact exists_separated_generators_of_euler_bound M hfree hgen
-            hone hEuler
-        · have hpos : 0 < Fintype.card V := by
-            exact Fintype.card_pos_iff.mpr ⟨M.base⟩
-          have htwo : 1 < Fintype.card V := by omega
-          obtain ⟨U, hFU, qU, hU, hHomU, hpack⟩ :=
-            hred n V M hfree hgen hconn hEuler htwo
-          obtain ⟨N, hcardN, hfreeN, hgenN, hconnN, hEulerN⟩ := hpack
-          let : Fintype U := hFU
-          let : Quiver.{0, 0} U := qU
-          let : HasInvolutiveReverse U := hU
-          let (a b : U) : Fintype (a ⟶ b) := hHomU a b
-          have hcard' : Fintype.card U < k := by
-            simpa [hcard] using hcardN
-          exact ih (V := U) (Fintype.card U) hcard' n N rfl
-            hfreeN hgenN hconnN hEulerN
-  intro n x hx
-  let V : Type := RoseVertex (fun i =>
-    binaryReducedLetters (G := G) (H := H) (x i))
-  let : Fintype V := by
-    dsimp [V]
-    infer_instance
-  let : Quiver V := by
-    dsimp [V]
-    exact roseQuiver (fun i =>
-      binaryReducedLetters (G := G) (H := H) (x i))
-  let : HasInvolutiveReverse V := by
-    dsimp [V]
-    exact roseHasReverse (fun i =>
-      binaryReducedLetters (G := G) (H := H) (x i))
-  let (a b : V) : Fintype (a ⟶ b) := by
-    dsimp [V]
-    exact roseHomFintype _ _ _
-  let M : MarkedBinaryGraph (G := G) (H := H) (V := V) n :=
-    reducedTupleRose x
-  have hMgen : M.IsGenerating := by
-    dsimp [M]
-    exact reducedTupleRose_isGenerating x hx
-  have hMconn : M.WeaklyConnected := by
-    dsimp [M]
-    exact reducedTupleRose_weaklyConnected x
-  have hMfree : ReverseFree (V := V) := by
-    intro e
-    dsimp [V] at e ⊢
-    exact rose_allArrow_reverse_ne _ e
-  have hMEuler : Fintype.card (AllArrow (V := V)) ≤
-      2 * (n + Fintype.card V - 1) := by
-    dsimp [V]
-    exact roseAllArrow_card_le_euler
-      (fun i => binaryReducedLetters (G := G) (H := H) (x i))
-  exact hP (Fintype.card V) V n M rfl hMfree hMgen hMconn hMEuler
 
 theorem rank_coprod_eq_add
     [Group.FG G] [Group.FG H] :

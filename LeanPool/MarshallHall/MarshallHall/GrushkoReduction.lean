@@ -712,13 +712,13 @@ theorem sumToSigma_fst (a : Sum G H) :
       binarySumIndex (G := G) (H := H) a := by
   cases a <;> rfl
 
-theorem reducedWord_of_sumList {u : List (Sum G H)}
+/-- Builds the indexed reduced word of a nontrivial alternating list of factor letters. -/
+def reducedWordOfSumList {u : List (Sum G H)}
     (hne : ∀ a ∈ u, a ≠ Sum.inl 1 ∧ a ≠ Sum.inr 1)
     (hchain : u.IsChain (fun a b =>
       binarySumIndex (G := G) (H := H) a ≠
         binarySumIndex (G := G) (H := H) b)) :
-    ∃ w : Monoid.CoprodI.Word (binaryFamily G H),
-      w.toList = u.map (sumToSigma (G := G) (H := H)) := by
+    Monoid.CoprodI.Word (binaryFamily G H) := by
   let v : List (Sigma (binaryFamily G H)) :=
     u.map (sumToSigma (G := G) (H := H))
   have hv_ne : ∀ z ∈ v, z.2 ≠ 1 := by
@@ -741,7 +741,16 @@ theorem reducedWord_of_sumList {u : List (Sum G H)}
     exact hchain.imp (by
       intro a b hab
       simpa only [sumToSigma_fst] using hab)
-  exact ⟨{ toList := v, ne_one := hv_ne, chain_ne := hv_chain }, rfl⟩
+  exact { toList := v, ne_one := hv_ne, chain_ne := hv_chain }
+
+theorem reducedWord_of_sumList {u : List (Sum G H)}
+    (hne : ∀ a ∈ u, a ≠ Sum.inl 1 ∧ a ≠ Sum.inr 1)
+    (hchain : u.IsChain (fun a b =>
+      binarySumIndex (G := G) (H := H) a ≠
+        binarySumIndex (G := G) (H := H) b)) :
+    ∃ w : Monoid.CoprodI.Word (binaryFamily G H),
+      w.toList = u.map (sumToSigma (G := G) (H := H)) := by
+  exact ⟨reducedWordOfSumList hne hchain, rfl⟩
 
 theorem binaryReducedWord_factorWordProd_of_reduced {u : List (Sum G H)}
     (hne : ∀ a ∈ u, a ≠ Sum.inl 1 ∧ a ≠ Sum.inr 1)
@@ -749,51 +758,12 @@ theorem binaryReducedWord_factorWordProd_of_reduced {u : List (Sum G H)}
       binarySumIndex (G := G) (H := H) a ≠
         binarySumIndex (G := G) (H := H) b)) :
     binaryReducedWord (G := G) (H := H) (factorWordProd u) =
-      { toList := u.map (sumToSigma (G := G) (H := H)),
-        ne_one := by
-          intro z hz
-          obtain ⟨a, ha, rfl⟩ := List.mem_map.mp hz
-          cases a with
-          | inl g =>
-              change g ≠ (1 : G)
-              intro hg
-              apply (hne (Sum.inl g) ha).1
-              exact congrArg (fun z : G => Sum.inl z) hg
-          | inr h =>
-              change h ≠ (1 : H)
-              intro hh
-              apply (hne (Sum.inr h) ha).2
-              exact congrArg (fun z : H => Sum.inr z) hh,
-        chain_ne := by
-          rw [List.isChain_map]
-          exact hchain.imp (by
-            intro a b hab
-            simpa only [sumToSigma_fst] using hab) } := by
-  let w : Monoid.CoprodI.Word (binaryFamily G H) :=
-    { toList := u.map (sumToSigma (G := G) (H := H)),
-      ne_one := by
-        intro z hz
-        obtain ⟨a, ha, rfl⟩ := List.mem_map.mp hz
-        cases a with
-        | inl g =>
-            change g ≠ (1 : G)
-            intro hg
-            apply (hne (Sum.inl g) ha).1
-            exact congrArg (fun z : G => Sum.inl z) hg
-        | inr h =>
-            change h ≠ (1 : H)
-            intro hh
-            apply (hne (Sum.inr h) ha).2
-            exact congrArg (fun z : H => Sum.inr z) hh,
-      chain_ne := by
-        rw [List.isChain_map]
-        exact hchain.imp (by
-          intro a b hab
-          simpa only [sumToSigma_fst] using hab) }
+      reducedWordOfSumList hne hchain := by
+  let w : Monoid.CoprodI.Word (binaryFamily G H) := reducedWordOfSumList hne hchain
   have hprod : Monoid.CoprodI.Word.prod w =
       binaryToIndexed (G := G) (H := H) (factorWordProd u) := by
     rw [binaryToIndexed_factorWordProd]
-    dsimp [w, Monoid.CoprodI.Word.prod]
+    dsimp [w, reducedWordOfSumList, Monoid.CoprodI.Word.prod]
     rw [List.map_map]
     apply congrArg List.prod
     apply List.map_congr_left
@@ -815,7 +785,7 @@ theorem factorWordLength_factorWordProd_eq_of_reduced {u : List (Sum G H)}
   rw [factorWordLength_eq_binaryReducedLength,
     binaryReducedLength,
     binaryReducedWord_factorWordProd_of_reduced (u := u) hne hchain]
-  simp
+  simp [reducedWordOfSumList]
 
 theorem factorWordProd_ne_one_of_reduced {u : List (Sum G H)}
     (hne : ∀ a ∈ u, a ≠ Sum.inl 1 ∧ a ≠ Sum.inr 1)

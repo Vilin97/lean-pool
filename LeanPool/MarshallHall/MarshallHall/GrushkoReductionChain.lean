@@ -168,13 +168,41 @@ theorem safe_null_fold_step {n : ℕ}
 
 /-! ### Strong induction on the number of vertices -/
 
-theorem separated_generators_of_hasSafeNullFold
-    (hsafe : HasSafeNullFold (G := G) (H := H)) :
+/-- Every generating connected marked graph with a reduced null run admits the required reducing
+fold. -/
+def HasReducedNullFold : Prop :=
+  ∀ (n : ℕ) (W : Type) [Fintype W] [qW : Quiver.{0, 0} W]
+    [_hW : HasInvolutiveReverse W]
+    [_hHomW : ∀ a b : W, Fintype (@Quiver.Hom W qW a b)]
+    (M : MarkedBinaryGraph (G := G) (H := H) (V := W) n),
+    ReverseFree (V := W) → M.IsGenerating → M.WeaklyConnected →
+      Fintype.card (AllArrow (V := W)) ≤
+        2 * (n + Fintype.card W - 1) →
+      1 < Fintype.card W →
+      ∃ U : Type,
+      ∃ hFU : Fintype U,
+      ∃ qU : Quiver.{0, 0} U,
+      ∃ hU : @HasInvolutiveReverse U qU,
+      ∃ hHomU : ∀ a b : U, Fintype (@Quiver.Hom U qU a b),
+        letI : Fintype U := hFU
+        letI : Quiver U := qU
+        letI : HasInvolutiveReverse U := hU
+        letI (a b : U) : Fintype (a ⟶ b) := hHomU a b
+        ∃ N : @MarkedBinaryGraph G H U _ _ qU hU n,
+          Fintype.card U < Fintype.card W ∧
+          @ReverseFree U qU hU ∧
+          @MarkedBinaryGraph.IsGenerating n G H U _ _ qU hU N ∧
+          @MarkedBinaryGraph.WeaklyConnected n G H U _ _ qU hU N ∧
+          Fintype.card (@AllArrow U qU) ≤
+            2 * (n + Fintype.card U - 1)
+
+theorem separated_generators_of_hasReducedNullFold
+    (hred : HasReducedNullFold (G := G) (H := H)) :
     HasSeparatedReduction (G := G) (H := H) := by
   have hP : ∀ k : ℕ,
       ∀ (V : Type) [Fintype V] [qV : Quiver.{0, 0} V]
         [hV : HasInvolutiveReverse V]
-        [hHom : ∀ a b : V, Fintype (a ⟶ b)]
+        [hHom : ∀ a b : V, Fintype (@Quiver.Hom V qV a b)]
         (n : ℕ) (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n),
         Fintype.card V = k →
         ReverseFree (V := V) → M.IsGenerating → M.WeaklyConnected →
@@ -192,36 +220,17 @@ theorem separated_generators_of_hasSafeNullFold
         · have hpos : 0 < Fintype.card V := by
             exact Fintype.card_pos_iff.mpr ⟨M.base⟩
           have htwo : 1 < Fintype.card V := by omega
-          obtain ⟨v, hv, p, hp, c, e, q, hpq, hq⟩ :=
-            hsafe n V M hfree hgen hconn hEuler htwo
-          have hdecomp : ∃ c : Symmetrify V,
-              ∃ e : @Quiver.Hom (Symmetrify V)
-                (@Quiver.symmetrifyQuiver V qV)
-                (show Symmetrify V from M.base) c,
-              ∃ q : @Quiver.Path (Symmetrify V)
-                (@Quiver.symmetrifyQuiver V qV) c
-                (show Symmetrify V from v),
-                p = e.toPath.comp q ∧
-                  foldSymmPathAvoid (symmOrientedArrow e) q :=
-            ⟨c, e, q, hpq, hq⟩
-          obtain ⟨e₀, ha, q', hq', hgen', hconn', hEuler', hcard',
-              hfree'⟩ := safe_null_fold_step
-            (G := G) (H := H) (V := V) (qV := qV) (v := v)
-            M hfree hgen hconn hEuler
-            hv p hp hdecomp
-          let : Fintype (foldVertex M.base v) := foldVertexFintype _ _
-          let : Quiver.{0, 0} (foldVertex M.base v) :=
-            foldQuiver (a := M.base) (b := v) e₀
-          let : HasInvolutiveReverse (foldVertex M.base v) :=
-            foldHasReverse (a := M.base) (b := v) e₀
-          let (x y : foldVertex M.base v) : Fintype (x ⟶ y) :=
-            foldQuiverHomFintype e₀ x y
-          have hcard'' : Fintype.card (foldVertex M.base v) < k := by
-            simpa [hcard] using hcard'
-          exact ih (V := foldVertex M.base v)
-            (Fintype.card (foldVertex M.base v)) hcard'' n
-            (foldedMarkedGraphSymm (a := M.base) (b := v)
-              M e₀ ha q' hq') rfl hfree' hgen' hconn' hEuler'
+          obtain ⟨U, hFU, qU, hU, hHomU, hpack⟩ :=
+            hred n V M hfree hgen hconn hEuler htwo
+          obtain ⟨N, hcardN, hfreeN, hgenN, hconnN, hEulerN⟩ := hpack
+          let : Fintype U := hFU
+          let : Quiver.{0, 0} U := qU
+          let : HasInvolutiveReverse U := hU
+          let (a b : U) : Fintype (a ⟶ b) := hHomU a b
+          have hcard' : Fintype.card U < k := by
+            simpa [hcard] using hcardN
+          exact ih (V := U) (Fintype.card U) hcard' n N rfl
+            hfreeN hgenN hconnN hEulerN
   intro n x hx
   let V : Type := RoseVertex (fun i =>
     binaryReducedLetters (G := G) (H := H) (x i))
@@ -257,6 +266,29 @@ theorem separated_generators_of_hasSafeNullFold
     exact roseAllArrow_card_le_euler
       (fun i => binaryReducedLetters (G := G) (H := H) (x i))
   exact hP (Fintype.card V) V n M rfl hMfree hMgen hMconn hMEuler
+
+/-- A safe null fold provides the smaller marked graph needed by vertex-count induction. -/
+theorem hasReducedNullFold_of_hasSafeNullFold
+    (hsafe : HasSafeNullFold (G := G) (H := H)) :
+    HasReducedNullFold (G := G) (H := H) := by
+  intro n V hFV qV hV hHom M hfree hgen hconn hEuler htwo
+  obtain ⟨v, hv, p, hp, c, e, q, hpq, hq⟩ :=
+    hsafe n V M hfree hgen hconn hEuler htwo
+  obtain ⟨e₀, ha, q', hq', hgen', hconn', hEuler', hcard', hfree'⟩ :=
+    safe_null_fold_step (G := G) (H := H) (V := V) (qV := qV) (v := v)
+      M hfree hgen hconn hEuler hv p hp ⟨c, e, q, hpq, hq⟩
+  refine ⟨foldVertex M.base v, foldVertexFintype _ _,
+    foldQuiver (a := M.base) (b := v) e₀,
+    foldHasReverse (a := M.base) (b := v) e₀,
+    (fun x y => foldQuiverHomFintype e₀ x y), ?_⟩
+  exact ⟨foldedMarkedGraphSymm (a := M.base) (b := v) M e₀ ha q' hq',
+    hcard', hfree', hgen', hconn', hEuler'⟩
+
+theorem separated_generators_of_hasSafeNullFold
+    (hsafe : HasSafeNullFold (G := G) (H := H)) :
+    HasSeparatedReduction (G := G) (H := H) := by
+  exact separated_generators_of_hasReducedNullFold
+    (hasReducedNullFold_of_hasSafeNullFold hsafe)
 
 end GeneralGrushko
 end MarshallHall

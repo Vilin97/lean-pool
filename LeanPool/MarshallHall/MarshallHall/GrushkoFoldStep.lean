@@ -313,8 +313,8 @@ theorem foldCodeQuotient_mk (a b v : V) :
     foldCodeQuotient a b (Quotient.mk (foldSetoid a b) v) = foldCode a b v :=
   rfl
 
-/-- Identifies the folded vertex set with the surviving vertices plus the identified vertex. -/
-noncomputable def foldQuotientCodeEquiv {a b : V} (hab : a ≠ b) :
+/-- Codes the quotient identifying two vertices, allowing the vertices to coincide. -/
+noncomputable def foldQuotientCodeEquivGeneral (a b : V) :
     foldVertex a b ≃ Option (deletedEdge V a b) := by
   classical
   apply Equiv.ofBijective (foldCodeQuotient a b)
@@ -357,6 +357,11 @@ noncomputable def foldQuotientCodeEquiv {a b : V} (hab : a ≠ b) :
         refine ⟨Quotient.mk (foldSetoid a b) e.1, ?_⟩
         rw [foldCodeQuotient_mk]
         exact (foldCode_eq_some_iff (a := a) (b := b) (v := e.1) e).mpr rfl
+
+/-- Identifies the folded vertex set with the surviving vertices plus the identified vertex. -/
+noncomputable def foldQuotientCodeEquiv {a b : V} (hab : a ≠ b) :
+    foldVertex a b ≃ Option (deletedEdge V a b) := by
+  exact foldQuotientCodeEquivGeneral a b
 
 omit [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
 omit [qV : Quiver V] in
@@ -1000,16 +1005,15 @@ def GeometricallySimple {a b : Symmetrify V}
   (symmPathEdges (qV := qV) p).Pairwise (fun e f =>
     e ≠ f ∧ e ≠ allArrowReverse f)
 
-omit [Fintype V] in
 omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
-theorem foldSymmPathAvoid_of_geometricallySimple [Finite V]
+/-- A geometrically simple path avoids its initial edge and reverse in the remaining tail. -/
+theorem foldSymmPathAvoid_of_geometricallySimple_general
     {a c b : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) a c)
     (q : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) c b)
     (hsimple : GeometricallySimple (qV := qV) (e.toPath.comp q)) :
     foldSymmPathAvoid (symmOrientedArrow e) q := by
   classical
-  let := Fintype.ofFinite V
   let e₀ := symmOrientedArrow e
   have hsimple' : List.Pairwise (fun x y : AllArrow (V := V) =>
       x ≠ y ∧ x ≠ allArrowReverse y)
@@ -1070,6 +1074,16 @@ theorem foldSymmPathAvoid_of_geometricallySimple [Finite V]
   apply havoid_aux q
   intro z hz
   exact hfirst' z hz
+
+omit [Fintype V] in
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
+theorem foldSymmPathAvoid_of_geometricallySimple [Finite V]
+    {a c b : Symmetrify V}
+    (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) a c)
+    (q : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) c b)
+    (hsimple : GeometricallySimple (qV := qV) (e.toPath.comp q)) :
+    foldSymmPathAvoid (symmOrientedArrow e) q := by
+  exact foldSymmPathAvoid_of_geometricallySimple_general e q hsimple
 
 omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldSymmPathAvoid_cast {e₀ : AllArrow (V := V)}

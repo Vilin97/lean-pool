@@ -113,164 +113,8 @@ theorem coreCondition_tail {H : Subgroup (FreeGroup α)}
   intro v hv y hy
   exact h v (by simp only [List.tails, List.mem_cons]; exact Or.inr hv) y hy
 
-omit [DecidableEq α] in
-theorem goodCore_rootedConnected
-    (H : Subgroup (FreeGroup α))
-    (A : Set (LeftCosetQuotient H)) (base : A)
-    [MulAction (FreeGroup α) A]
-    (word_action : ∀ (w : List (α × Bool)), coreCondition A w →
-      ((FreeGroup.mk w : FreeGroup α) • base : A).1 =
-        (Quotient.mk'' (wordValue w) : LeftCosetQuotient H))
-    (reach : ∀ z : MulAction.orbit (FreeGroup α) base, ∃ w,
-      coreCondition A w ∧
-        (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) =
-          (z.1 : A).1) :
-    let O : Set A := MulAction.orbit (FreeGroup α) base
-    let baseO : O := ⟨base, MulAction.mem_orbit_self base⟩
-    let V := ActionCategory (FreeGroup α) O
-    letI : IsFreeGroupoid V := freeActionGroupoidIsFree α O
-    let P := goodSymmetricSubquiver H (fun z : O => (z.1 : A).1)
-    let r : P := ActionCategory.objEquiv (FreeGroup α) O baseO
-    @RootedConnected
-      (WideSubquiver.toType
-        (Symmetrify (IsFreeGroupoid.Generators V)) P)
-      P.quiver r := by
-  let O : Set A := MulAction.orbit (FreeGroup α) base
-  let baseO : O := ⟨base, MulAction.mem_orbit_self base⟩
-  let V := ActionCategory (FreeGroup α) O
-  let : IsFreeGroupoid V := freeActionGroupoidIsFree α O
-  let P := goodSymmetricSubquiver H (fun z : O => (z.1 : A).1)
-  let r : P := ActionCategory.objEquiv (FreeGroup α) O baseO
-  have corePath : ∀ (w : List (α × Bool)), coreCondition A w →
-      @Path (WideSubquiver.toType
-        (Symmetrify (IsFreeGroupoid.Generators V)) P) P.quiver r
-        (ActionCategory.objEquiv (FreeGroup α) O
-          ((FreeGroup.mk w : FreeGroup α) • baseO)) := by
-    intro w
-    induction w with
-    | nil =>
-        intro hw
-        have hbase : (FreeGroup.mk [] : FreeGroup α) • baseO = baseO := by
-          rw [← FreeGroup.one_eq_mk, one_smul]
-        rw [hbase]
-        exact Path.nil
-    | cons x w ih =>
-        rcases x with ⟨a, b⟩
-        cases b with
-        | false =>
-            intro hw
-            have htail : coreCondition A w := coreCondition_tail hw
-            have hs := word_action w htail
-            have ht := word_action ((a, false) :: w) hw
-            let sourceO : O := (FreeGroup.mk w : FreeGroup α) • baseO
-            let targetO : O :=
-              (FreeGroup.mk ((a, false) :: w) : FreeGroup α) • baseO
-            let e : (ActionCategory.objEquiv (FreeGroup α) O targetO ⟶
-                ActionCategory.objEquiv (FreeGroup α) O sourceO) :=
-              ⟨a, by
-                change FreeGroup.of a • targetO = sourceO
-                dsimp [sourceO, targetO]
-                rw [show FreeGroup.mk ((a, false) :: w) =
-                    (FreeGroup.of a)⁻¹ * FreeGroup.mk w by
-                  calc
-                    FreeGroup.mk ((a, false) :: w) =
-                        wordValue ((a, false) :: w) :=
-                      (wordValue_eq_freeGroup_mk _).symm
-                    _ = signedLetter (a, false) * wordValue w := rfl
-                    _ = (FreeGroup.of a)⁻¹ * FreeGroup.mk w := by
-                      simp [signedLetter, wordValue_eq_freeGroup_mk]]
-                simp [smul_smul]⟩
-            have hsO : (sourceO.1 : A).1 =
-                (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) := by
-              change ((FreeGroup.mk w : FreeGroup α) • base : A).1 = _
-              exact hs
-            have htO : (targetO.1 : A).1 =
-                (Quotient.mk'' (wordValue ((a, false) :: w)) :
-                  LeftCosetQuotient H) := by
-              change ((FreeGroup.mk ((a, false) :: w) : FreeGroup α) • base : A).1 = _
-              exact ht
-            have heP :
-                (Sum.inr e :
-                  (ActionCategory.objEquiv (FreeGroup α) O sourceO ⟶
-                    ActionCategory.objEquiv (FreeGroup α) O targetO) ⊕
-                  (ActionCategory.objEquiv (FreeGroup α) O targetO ⟶
-                    ActionCategory.objEquiv (FreeGroup α) O sourceO)) ∈
-                P (ActionCategory.objEquiv (FreeGroup α) O sourceO)
-                  (ActionCategory.objEquiv (FreeGroup α) O targetO) := by
-              change goodGeneratorEdge H (fun z : O => (z.1 : A).1) e
-              change leftMulEquiv H (FreeGroup.of a) (targetO.1 : A).1 =
-                (sourceO.1 : A).1
-              rw [htO, hsO, leftMulEquiv_mk]
-              simp [wordValue, signedLetter]
-            have hp := ih htail
-            exact Path.cons hp ⟨Sum.inr e, heP⟩
-        | true =>
-            intro hw
-            have htail : coreCondition A w := coreCondition_tail hw
-            have hs := word_action w htail
-            have ht := word_action ((a, true) :: w) hw
-            let sourceO : O := (FreeGroup.mk w : FreeGroup α) • baseO
-            let targetO : O :=
-              (FreeGroup.mk ((a, true) :: w) : FreeGroup α) • baseO
-            let e : (ActionCategory.objEquiv (FreeGroup α) O sourceO ⟶
-                ActionCategory.objEquiv (FreeGroup α) O targetO) :=
-              ⟨a, by
-                change FreeGroup.of a • sourceO = targetO
-                dsimp [sourceO, targetO]
-                rw [show FreeGroup.mk ((a, true) :: w) =
-                    FreeGroup.of a * FreeGroup.mk w by
-                  calc
-                    FreeGroup.mk ((a, true) :: w) =
-                        wordValue ((a, true) :: w) :=
-                      (wordValue_eq_freeGroup_mk _).symm
-                    _ = signedLetter (a, true) * wordValue w := rfl
-                    _ = FreeGroup.of a * FreeGroup.mk w := by
-                      simp [signedLetter, wordValue_eq_freeGroup_mk]]
-                simp [smul_smul]⟩
-            have hsO : (sourceO.1 : A).1 =
-                (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) := by
-              change ((FreeGroup.mk w : FreeGroup α) • base : A).1 = _
-              exact hs
-            have htO : (targetO.1 : A).1 =
-                (Quotient.mk'' (wordValue ((a, true) :: w)) :
-                  LeftCosetQuotient H) := by
-              change ((FreeGroup.mk ((a, true) :: w) : FreeGroup α) • base : A).1 = _
-              exact ht
-            have heP :
-                (Sum.inl e :
-                  (ActionCategory.objEquiv (FreeGroup α) O sourceO ⟶
-                    ActionCategory.objEquiv (FreeGroup α) O targetO) ⊕
-                  (ActionCategory.objEquiv (FreeGroup α) O targetO ⟶
-                    ActionCategory.objEquiv (FreeGroup α) O sourceO)) ∈
-                P (ActionCategory.objEquiv (FreeGroup α) O sourceO)
-                  (ActionCategory.objEquiv (FreeGroup α) O targetO) := by
-              change goodGeneratorEdge H (fun z : O => (z.1 : A).1) e
-              change leftMulEquiv H (FreeGroup.of a) (sourceO.1 : A).1 =
-                (targetO.1 : A).1
-              rw [hsO, htO, leftMulEquiv_mk]
-              simp [wordValue, signedLetter]
-            have hp := ih htail
-            exact Path.cons hp ⟨Sum.inl e, heP⟩
-  constructor
-  intro b
-  obtain ⟨w, hw, hwz⟩ := reach b.back
-  have hp := corePath w hw
-  have hval : ((FreeGroup.mk w : FreeGroup α) • baseO : O).1.1 =
-      b.back.1.1 := by
-    change ((FreeGroup.mk w : FreeGroup α) • base : A).1 = _
-    exact (word_action w hw).trans hwz
-  have hO : ((FreeGroup.mk w : FreeGroup α) • baseO : O) = b.back := by
-    apply Subtype.ext
-    apply Subtype.ext
-    exact hval
-  have hV : ActionCategory.objEquiv (FreeGroup α) O
-      ((FreeGroup.mk w : FreeGroup α) • baseO) = b := by
-    exact (congrArg (ActionCategory.objEquiv (FreeGroup α) O) hO).trans
-      ((ActionCategory.objEquiv (FreeGroup α) O).apply_symm_apply b)
-  exact ⟨hV ▸ hp⟩
-
-/-! The same recursive construction also remembers the word labelling its
-path.  This is the bridge from a subgroup word to the corresponding loop in
+/-! The recursive construction remembers the word labelling its path.
+  This is the bridge from a subgroup word to the corresponding loop in
 the completed covering graph. -/
 
 omit [DecidableEq α] in
@@ -459,6 +303,52 @@ theorem goodCore_path
                 FreeGroup.mul_mk.symm
               _ = FreeGroup.mk ((a, true) :: w) := rfl
   exact corePath w hw
+
+omit [DecidableEq α] in
+theorem goodCore_rootedConnected
+    (H : Subgroup (FreeGroup α))
+    (A : Set (LeftCosetQuotient H)) (base : A)
+    [MulAction (FreeGroup α) A]
+    (word_action : ∀ (w : List (α × Bool)), coreCondition A w →
+      ((FreeGroup.mk w : FreeGroup α) • base : A).1 =
+        (Quotient.mk'' (wordValue w) : LeftCosetQuotient H))
+    (reach : ∀ z : MulAction.orbit (FreeGroup α) base, ∃ w,
+      coreCondition A w ∧
+        (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) =
+          (z.1 : A).1) :
+    let O : Set A := MulAction.orbit (FreeGroup α) base
+    let baseO : O := ⟨base, MulAction.mem_orbit_self base⟩
+    let V := ActionCategory (FreeGroup α) O
+    letI : IsFreeGroupoid V := freeActionGroupoidIsFree α O
+    let P := goodSymmetricSubquiver H (fun z : O => (z.1 : A).1)
+    let r : P := ActionCategory.objEquiv (FreeGroup α) O baseO
+    @RootedConnected
+      (WideSubquiver.toType
+        (Symmetrify (IsFreeGroupoid.Generators V)) P)
+      P.quiver r := by
+  let O : Set A := MulAction.orbit (FreeGroup α) base
+  let baseO : O := ⟨base, MulAction.mem_orbit_self base⟩
+  let V := ActionCategory (FreeGroup α) O
+  let : IsFreeGroupoid V := freeActionGroupoidIsFree α O
+  let P := goodSymmetricSubquiver H (fun z : O => (z.1 : A).1)
+  let r : P := ActionCategory.objEquiv (FreeGroup α) O baseO
+  constructor
+  intro b
+  obtain ⟨w, hw, hwz⟩ := reach b.back
+  obtain ⟨hp, _⟩ := goodCore_path H A base word_action w hw
+  have hval : ((FreeGroup.mk w : FreeGroup α) • baseO : O).1.1 =
+      b.back.1.1 := by
+    change ((FreeGroup.mk w : FreeGroup α) • base : A).1 = _
+    exact (word_action w hw).trans hwz
+  have hO : ((FreeGroup.mk w : FreeGroup α) • baseO : O) = b.back := by
+    apply Subtype.ext
+    apply Subtype.ext
+    exact hval
+  have hV : ActionCategory.objEquiv (FreeGroup α) O
+      ((FreeGroup.mk w : FreeGroup α) • baseO) = b := by
+    exact (congrArg (ActionCategory.objEquiv (FreeGroup α) O) hO).trans
+      ((ActionCategory.objEquiv (FreeGroup α) O).apply_symm_apply b)
+  exact ⟨hV ▸ hp⟩
 
 omit [DecidableEq α] in
 theorem good_tree_path

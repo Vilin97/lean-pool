@@ -96,15 +96,12 @@ theorem factorWordInv_factorMul (x y : Sum G H)
       | inl y => cases hxy
       | inr y => simp [factorMul, factorWordInv]
 
-theorem factorMul_assoc (x y z : Sum G H)
+/-- Multiplication of three letters in the same free-product factor is associative. -/
+theorem factorMul_assoc_of_sameFactor (x y z : Sum G H)
     (hxy : binarySumIndex (G := G) (H := H) x =
       binarySumIndex (G := G) (H := H) y)
     (hyz : binarySumIndex (G := G) (H := H) y =
-      binarySumIndex (G := G) (H := H) z)
-    (hleft : binarySumIndex (G := G) (H := H) (factorMul x y) =
-      binarySumIndex (G := G) (H := H) z)
-    (hright : binarySumIndex (G := G) (H := H) x =
-      binarySumIndex (G := G) (H := H) (factorMul y z)) :
+      binarySumIndex (G := G) (H := H) z) :
     factorMul (factorMul x y) z =
       factorMul x (factorMul y z) := by
   cases x with
@@ -122,6 +119,19 @@ theorem factorMul_assoc (x y z : Sum G H)
           cases z with
           | inl z => cases hyz
           | inr z => simp [factorMul, mul_assoc]
+
+theorem factorMul_assoc (x y z : Sum G H)
+    (hxy : binarySumIndex (G := G) (H := H) x =
+      binarySumIndex (G := G) (H := H) y)
+    (hyz : binarySumIndex (G := G) (H := H) y =
+      binarySumIndex (G := G) (H := H) z)
+    (hleft : binarySumIndex (G := G) (H := H) (factorMul x y) =
+      binarySumIndex (G := G) (H := H) z)
+    (hright : binarySumIndex (G := G) (H := H) x =
+      binarySumIndex (G := G) (H := H) (factorMul y z)) :
+    factorMul (factorMul x y) z =
+      factorMul x (factorMul y z) := by
+  exact factorMul_assoc_of_sameFactor x y z hxy hyz
 
 theorem factorMul_reverse_both (x y : Sum G H)
     (hxy : binarySumIndex (G := G) (H := H) x =
