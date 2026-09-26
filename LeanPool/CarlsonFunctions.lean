@@ -6,6 +6,11 @@ Authors: Bastiaan J Braams
 module
 
 
+public import LeanPool.CarlsonFunctions.Carlson.Associated
+public import LeanPool.CarlsonFunctions.Carlson.R.Associated
+public import LeanPool.CarlsonFunctions.Carlson.R.Recurrence
+public import LeanPool.CarlsonFunctions.Dirichlet.Beta
+public import LeanPool.CarlsonFunctions.Dirichlet.Integral
 public import LeanPool.CarlsonFunctions.Carlson
 public import LeanPool.CarlsonFunctions.Carlson.Aggregation
 public import LeanPool.CarlsonFunctions.Carlson.Associated.LinearDependence

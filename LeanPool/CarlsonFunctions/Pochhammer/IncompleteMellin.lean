@@ -42,7 +42,7 @@ def mellinSlope (a : ℝ) (K : ℝ → ℂ) (t : ℝ) : ℂ :=
   if t = 0 then derivWithin K (Icc (0 : ℝ) a) 0 else slope K 0 t
 
 /-- The first-order Taylor identity on `[0, a]`. -/
-theorem eq_add_mellinSlope {a : ℝ} {K : ℝ → ℂ} {t : ℝ} (_ht : t ∈ Icc (0 : ℝ) a) :
+theorem eq_add_mellinSlope {a : ℝ} {K : ℝ → ℂ} {t : ℝ} :
     K t = K 0 + t * mellinSlope a K t := by
   by_cases h : t = 0
   · subst t
@@ -350,7 +350,7 @@ theorem isBigO_nhdsGT_zero_indicator_Ioc {a : ℝ} {K : ℝ → ℂ}
 
 /-- The regularized incomplete Mellin transform of a continuous integrand is holomorphic
 on `{0 < re α}`. -/
-theorem analyticOn_regIncompleteMellin {a : ℝ} (_ha : 0 < a) {K : ℝ → ℂ}
+theorem analyticOn_regIncompleteMellin {a : ℝ} {K : ℝ → ℂ}
     (hK : ContinuousOn K (Icc 0 a)) :
     AnalyticOn ℂ (fun α => regIncompleteMellin α a K) {α : ℂ | 0 < α.re} := by
   have hopen : IsOpen {α : ℂ | 0 < α.re} := isOpen_lt continuous_const Complex.continuous_re
@@ -401,13 +401,9 @@ theorem regIncompleteMellin_const_mul {α : ℂ} {a : ℝ} {K : ℝ → ℂ} (c 
   rw [hfun, MeasureTheory.integral_const_mul, mul_left_comm]
 
 /-- Mellin of `t ↦ t^k K t` is the Pochhammer shift of the Mellin of `K`. -/
-theorem regIncompleteMellin_mul_pow {α : ℂ} {a : ℝ} (hα : 0 < α.re) (_ha : 0 < a)
-    {K : ℝ → ℂ} (_hK : ContinuousOn K (Icc 0 a)) (k : ℕ) :
+theorem regIncompleteMellin_mul_pow {α : ℂ} {a : ℝ} {K : ℝ → ℂ} (k : ℕ) :
     regIncompleteMellin α a (fun t => (t : ℂ) ^ k * K t) =
       (ascPochhammer ℂ k).eval α * regIncompleteMellin (α + k) a K := by
-  have hαk : 0 < (α + k).re := by
-    simp only [add_re, natCast_re]
-    exact add_pos_of_pos_of_nonneg hα (Nat.cast_nonneg k)
   have hfun :
       (fun t : ℝ => (t : ℂ) ^ (α - 1) * ((t : ℂ) ^ k * K t)) =ᵐ[volume.restrict (Icc 0 a)]
         fun t => (t : ℂ) ^ (α + k - 1) * K t := by
@@ -543,12 +539,12 @@ theorem regIncompleteMellin_eq_taylor_peano {N : ℕ} (hN : 0 < N) {a : ℝ} (ha
       regIncompleteMellin α a (fun t => (t : ℂ) ^ N * mellinPeanoRemainder N a K t) =
         (ascPochhammer ℂ N).eval α *
           regIncompleteMellin (α + N) a (mellinPeanoRemainder N a K) :=
-    regIncompleteMellin_mul_pow hα ha hψ N
+    regIncompleteMellin_mul_pow N
   rw [hrem]
 
 /-- Finite differentiability of the integrand yields an analytic continuation of the
 regularized incomplete Mellin transform from `{0 < re α}` to `{-(N : ℝ) < re α}`. -/
-theorem exists_regIncompleteMellin_continuation {N : ℕ} {a : ℝ} (ha : 0 < a) (_ha1 : a ≤ 1)
+theorem exists_regIncompleteMellin_continuation {N : ℕ} {a : ℝ} (ha : 0 < a)
     {K : ℝ → ℂ} (hK : ContDiffOn ℝ N K (Icc 0 a)) :
     ∃ Φ : ℂ → ℂ,
       AnalyticOn ℂ Φ {α : ℂ | -(N : ℝ) < α.re} ∧
@@ -556,7 +552,7 @@ theorem exists_regIncompleteMellin_continuation {N : ℕ} {a : ℝ} (ha : 0 < a)
   cases N with
   | zero =>
       refine ⟨fun α => regIncompleteMellin α a K, ?_, fun _ _ => rfl⟩
-      convert analyticOn_regIncompleteMellin ha hK.continuousOn
+      convert analyticOn_regIncompleteMellin hK.continuousOn
       simp
   | succ n =>
       have hN : 0 < n + 1 := Nat.succ_pos _
@@ -594,7 +590,7 @@ theorem exists_regIncompleteMellin_continuation {N : ℕ} {a : ℝ} (ha : 0 < a)
           (analyticOn_univ_iff_differentiable).mpr hTdiff
         have hP : AnalyticOn ℂ (fun α : ℂ => (ascPochhammer ℂ (n + 1)).eval α) Set.univ :=
           AnalyticOn.eval_polynomial (ascPochhammer ℂ (n + 1))
-        have hM := analyticOn_regIncompleteMellin ha hψ
+        have hM := analyticOn_regIncompleteMellin hψ
         have hshift : AnalyticOn ℂ (fun α : ℂ => α + (n + 1 : ℕ))
             {α | -((n + 1 : ℕ) : ℝ) < α.re} :=
           (analyticOn_id.add analyticOn_const).mono (subset_univ _)
