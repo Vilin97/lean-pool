@@ -10563,3 +10563,36 @@ projects:
     - 20E05
     - 68Q45
     - 03B35
+  - slug: stafford38-formal
+    title: Stafford 3.8
+    summary: Lean formalization of Stafford's Conjecture 3.8 for every characteristic-zero
+      field and every Weyl-algebra rank, proving that each nonzero d admits F, R, and
+      S with 1 = d*R + F*d*S. The development also proves an exact Bernstein-degree
+      fixed-source strengthening and derived localization, adjoint, and evolutionary
+      results.
+    branch: noncommutative algebra
+    entry_module: LeanPool.Stafford38
+    authors:
+    - Christopher Albert
+    source:
+      url: https://github.com/itpplasma/stafford38-formal
+      github_repo: itpplasma/stafford38-formal
+      commit: 1e234855eee36d2541dd69580501408288760e21
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - Stafford38.universalStatement
+    main_results:
+    - declaration: Stafford38.universalStatement
+      informal: For every characteristic-zero field, every Weyl algebra rank, and every
+        nonzero d, there are F, R, S with 1 = d*R + F*d*S.
+    - declaration: Stafford38.universalFixedSourceStatement
+      informal: The stated fixed-source strengthening holds with its exact Bernstein-degree
+        bound.
+    tags:
+    - weyl-algebras
+    - noncommutative-algebra
+    - bernstein-degree
+    msc:
+    - 16S32

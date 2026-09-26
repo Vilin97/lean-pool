@@ -1,0 +1,419 @@
+/-
+Copyright (c) 2026 Christopher Albert. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Christopher Albert
+-/
+
+module
+
+public import LeanPool.Stafford38.AlgebraicAnalysis
+public import LeanPool.Stafford38.AlgebraicAnalysis.Commutator
+public import LeanPool.Stafford38.AlgebraicAnalysis.CommutatorRiccati
+public import LeanPool.Stafford38.AlgebraicAnalysis.Derivation.Central
+public import LeanPool.Stafford38.AlgebraicAnalysis.Derivation.Escape
+public import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.Basic
+public import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.CoordinateGeneration
+public import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.LocalizedPolynomialCommutant
+public import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.LocalizedPolynomialDerivations
+public import LeanPool.Stafford38.AlgebraicAnalysis.FieldTheory.FunctionField
+public import LeanPool.Stafford38.AlgebraicAnalysis.LinearAlgebra.FiniteTaylorReconstruction
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.BaseLocalizationModuleComparison
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.BaseLocalizedKoszulPositivity
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.CommutingPolynomialAction
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.DenominatorTorsion
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.EndomorphismKernelSupport
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.EndomorphismKernelSupportOverBase
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.EscapeAssembly
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.EscapeSpan
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredSchreyer
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredStrictness
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermBoundaryExhaustion
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermBoundaryNaturality
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPageActions
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPageEquivalences
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPages
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermSuccessorNaturality
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermTotalActions
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermTotalPages
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.FreeSummandInduction
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.HyperplaneRestriction
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.LocalizedKernelCokernelEquivalences
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.LocalizedMinimalSupportAvoidance
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalPrimeFiniteLengthLocalization
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalSupportExistence
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalSupportKernelCokernelLengths
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.MonicAnnihilatorFinite
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulFiniteTorsion
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulMinimalSupportPositivity
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulPositivity
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulSupportOverBase
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.RankExact
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.RankTorsion
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.RightCoordinates
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.Splice
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.SplitLatticePresentation
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.StableTorsionResidualSupport
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.StablyFree
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.TorsionProjectiveImage
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.TriangularDenominator
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.TwoSimplicity
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.TwoTermPageLength
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.UniformBoundaryVanishing
+public import LeanPool.Stafford38.AlgebraicAnalysis.Module.Unimodular
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.ActiveCoordinate
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.IteratedPBW
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.IteratedTower
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.LeftPBW
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Localization
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.LocalizationExtension
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.PrincipalRightIdeal
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightDivision
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightHilbertBasis
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightIntersection
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightLocalization
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightPBW
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightQuotient
+public import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Tower
+public import LeanPool.Stafford38.AlgebraicAnalysis.Polynomial.DistinguishedVariable
+public import LeanPool.Stafford38.AlgebraicAnalysis.RingTheory.TwoGeneratorIdentity
+public import LeanPool.Stafford38.FixedSourceSolution
+public import LeanPool.Stafford38.Solution
+public import LeanPool.Stafford38.Stafford38
+public import LeanPool.Stafford38.Stafford38.CanonicalSupportVanishingReduction
+public import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianAdaptedBasisExistence
+public import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianAdaptedBasisTraceAdapter
+public import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianCoefficientField
+public import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianEquation33TraceProducer
+public import LeanPool.Stafford38.Stafford38.Characteristic.ArtinianTriangularTrace
+public import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedFinite
+public import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedModule
+public import LeanPool.Stafford38.Stafford38.Characteristic.BGab001CoefficientFieldTrace
+public import LeanPool.Stafford38.Stafford38.Characteristic.BaseLocalizationModuleComparison
+public import LeanPool.Stafford38.Stafford38.Characteristic.BaseLocalizedKoszulPositivity
+public import LeanPool.Stafford38.Stafford38.Characteristic.BaseRelativePoisson
+public import LeanPool.Stafford38.Stafford38.Characteristic.BaseZeroSection
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalAxisAvoidanceConsumer
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalAxisMonicInitialTop
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalBaseVariety
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalCertificate
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalFilteredGradedBridge
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalFilteredTwoTerm
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalGabberInvolutivityInterface
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalGradedTangentialEquivalences
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalKoszulContradiction
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalLaurentSymbolControl
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalMonicSaturation
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalNoncharacteristicCancellation
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalNormalAxisSupport
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalNormalSymbolFiniteness
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalOldTangentialFiniteness
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalPageEulerInequality
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalResidueExtensionSymbolControlAdapter
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalSupportAvoidanceFromCokernel
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialBoundaryMaps
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialPageOperators
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialRingEquivalence
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialSuccessors
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialSymbolFiniteness
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialTotalAction
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTotalGradedActionCompatibility
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTotalGradedBridge
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalUnitCoordinatePreimage
+public import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalUnitPreimageFromInitialTop
+public import LeanPool.Stafford38.Stafford38.Characteristic.CommutingPolynomialAction
+public import LeanPool.Stafford38.Stafford38.Characteristic.ConcreteEquation33SourceMatrices
+public import LeanPool.Stafford38.Stafford38.Characteristic.ConcreteInducedZAction
+public import LeanPool.Stafford38.Stafford38.Characteristic.ConcreteLocalizedTwoBlockSpecialFibre
+public import LeanPool.Stafford38.Stafford38.Characteristic.ConcreteSquareZeroTraceData
+public import LeanPool.Stafford38.Stafford38.Characteristic.EmptySupportVanishing
+public import LeanPool.Stafford38.Stafford38.Characteristic.EndomorphismKernelSupport
+public import LeanPool.Stafford38.Stafford38.Characteristic.EndomorphismKernelSupportOverBase
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotient
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientGraded
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientRees
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientReesAction
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientReesExact
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientSpecialFibre
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientSupport
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredQuotientTwoJet
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermBoundaryExhaustion
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermBoundaryNaturality
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermPageActions
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermPageEquivalences
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermPages
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermSuccessorNaturality
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermTotalActions
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermTotalPages
+public import LeanPool.Stafford38.Stafford38.Characteristic.FilteredVanishing
+public import LeanPool.Stafford38.Stafford38.Characteristic.GabberGlobalAssembly
+public import LeanPool.Stafford38.Stafford38.Characteristic.GeometricSupportDescent
+public import LeanPool.Stafford38.Stafford38.Characteristic.GeometricSupportScalarExtension
+public import LeanPool.Stafford38.Stafford38.Characteristic.HomogeneousChart
+public import LeanPool.Stafford38.Stafford38.Characteristic.HyperplaneRestriction
+public import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdeal
+public import LeanPool.Stafford38.Stafford38.Characteristic.InitialIdealHomogeneous
+public import LeanPool.Stafford38.Stafford38.Characteristic.LinearAction
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedHighPowerTwoBlockVanishing
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedKernelCokernelEquivalences
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedMinimalSupportAvoidance
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedOrderReesTwoJetSpecializationKernel
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedSpecializationActionCompatibility
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedTwoBlockModuleExactness
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedTwoBlockPrincipalKernelDescent
+public import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedTwoBlockQuotient
+public import LeanPool.Stafford38.Stafford38.Characteristic.MinimalPrimeFiniteLengthLocalization
+public import LeanPool.Stafford38.Stafford38.Characteristic.MinimalPrimePoisson
+public import LeanPool.Stafford38.Stafford38.Characteristic.MinimalSupportExistence
+public import LeanPool.Stafford38.Stafford38.Characteristic.MinimalSupportKernelCokernelLengths
+public import LeanPool.Stafford38.Stafford38.Characteristic.MonicAnnihilatorFinite
+public import LeanPool.Stafford38.Stafford38.Characteristic.NoncharacteristicMinimalPrime
+public import LeanPool.Stafford38.Stafford38.Characteristic.NormalSymbolPolynomial
+public import LeanPool.Stafford38.Stafford38.Characteristic.OrderReesTwoJet
+public import LeanPool.Stafford38.Stafford38.Characteristic.OrderReesTwoJetBracket
+public import LeanPool.Stafford38.Stafford38.Characteristic.OrderReesTwoJetSpecializationKernel
+public import LeanPool.Stafford38.Stafford38.Characteristic.Polynomial
+public import LeanPool.Stafford38.Stafford38.Characteristic.PostScalarExtensionPoisson
+public import LeanPool.Stafford38.Stafford38.Characteristic.PrincipalKoszulFiniteTorsion
+public import LeanPool.Stafford38.Stafford38.Characteristic.PrincipalKoszulMinimalSupportPositivity
+public import LeanPool.Stafford38.Stafford38.Characteristic.PrincipalKoszulPositivity
+public import LeanPool.Stafford38.Stafford38.Characteristic.PrincipalKoszulSupportOverBase
+public import LeanPool.Stafford38.Stafford38.Characteristic.RadicalMinimalPrimeInvolutivity
+public import LeanPool.Stafford38.Stafford38.Characteristic.ReducedSupportIdeal
+public import LeanPool.Stafford38.Stafford38.Characteristic.RightReesArtinianAdapter
+public import LeanPool.Stafford38.Stafford38.Characteristic.SourceActionCommutatorExpansion
+public import LeanPool.Stafford38.Stafford38.Characteristic.SpecializedNoncharacteristicEquality
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroAnnihilatorBracket
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroArtinianTruncation
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroHighPowerReduction
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroLinearTrace
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroLocalizedExactness
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroLocalizedRing
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroOreLocalization
+public import LeanPool.Stafford38.Stafford38.Characteristic.SquareZeroTraceData
+public import LeanPool.Stafford38.Stafford38.Characteristic.StableTorsionResidualSupport
+public import LeanPool.Stafford38.Stafford38.Characteristic.SymplecticCompletion
+public import LeanPool.Stafford38.Stafford38.Characteristic.TransposedFilteredModuleSupport
+public import LeanPool.Stafford38.Stafford38.Characteristic.TwoTermPageLength
+public import LeanPool.Stafford38.Stafford38.Characteristic.UniformBoundaryVanishing
+public import LeanPool.Stafford38.Stafford38.Characteristic.ZeroSectionContainment
+public import LeanPool.Stafford38.Stafford38.CoordinateDifferentialGeneration
+public import LeanPool.Stafford38.Stafford38.DifferentialOperators
+public import LeanPool.Stafford38.Stafford38.EulerRootSeparation
+public import LeanPool.Stafford38.Stafford38.EvolutionaryCertificate
+public import LeanPool.Stafford38.Stafford38.EvolutionaryCorollary
+public import LeanPool.Stafford38.Stafford38.FixedSourceAssembly
+public import LeanPool.Stafford38.Stafford38.FixedSourceChallengeTransport
+public import LeanPool.Stafford38.Stafford38.FixedSourceStatement
+public import LeanPool.Stafford38.Stafford38.FoundationClosure
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineComponentCoordinateSplit
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalClosure
+public import LeanPool.Stafford38.Stafford38.Geometry.AffineConormalSpan
+public import LeanPool.Stafford38.Stafford38.Geometry.ArcFrameConormal
+public import LeanPool.Stafford38.Stafford38.Geometry.AsymptoticChartArcAdapter
+public import LeanPool.Stafford38.Stafford38.Geometry.AsymptoticDivisorExistence
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalAsymptoticLaurentProducer
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalConstantCoordinateBranch
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalFiniteGradientProjectiveCoordinates
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalNonconstantFiniteGradientProduction
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalNonconstantFiniteGradientProductionProof
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalResidueExtensionAssembly
+public import LeanPool.Stafford38.Stafford38.Geometry.CanonicalVisibleDivisorFrameProduction
+public import LeanPool.Stafford38.Stafford38.Geometry.ChartArcAnnihilation
+public import LeanPool.Stafford38.Stafford38.Geometry.CoisotropicTranslation
+public import LeanPool.Stafford38.Stafford38.Geometry.CompletedDVRCoefficientSection
+public import LeanPool.Stafford38.Stafford38.Geometry.CompletedDVRPowerSeriesEquiv
+public import LeanPool.Stafford38.Stafford38.Geometry.ComponentFunctionFieldBoundary
+public import LeanPool.Stafford38.Stafford38.Geometry.ComponentProjectiveClosure
+public import LeanPool.Stafford38.Stafford38.Geometry.ComponentProjectiveClosureNormalization
+public import LeanPool.Stafford38.Stafford38.Geometry.ComponentProjectiveOrder
+public import LeanPool.Stafford38.Stafford38.Geometry.ConormalAxisContradiction
+public import LeanPool.Stafford38.Stafford38.Geometry.ConormalPrincipalOpenDensity
+public import LeanPool.Stafford38.Stafford38.Geometry.ConormalScalarExtensionVanishing
+public import LeanPool.Stafford38.Stafford38.Geometry.ConstantCoordinateConormal
+public import LeanPool.Stafford38.Stafford38.Geometry.ContinuousPowerSeriesTangentFrame
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorTangentLattice
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorialBoundaryExtension
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorialVisibleFrameCore
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorialVisibleFrameStage2
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorialVisibleFrameStage4
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorialVisibleFrameStage5
+public import LeanPool.Stafford38.Stafford38.Geometry.DivisorialVisibleFrameStageAssembly
+public import LeanPool.Stafford38.Stafford38.Geometry.ExactDivisorialVisibleFrameExistence
+public import LeanPool.Stafford38.Stafford38.Geometry.ExactVisibleDivisorFrameInterface
+public import LeanPool.Stafford38.Stafford38.Geometry.FibreConicalVanishingIdeal
+public import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientBoundaryProducer
+public import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientFromTangentInclusion
+public import LeanPool.Stafford38.Stafford38.Geometry.FiniteGradientResidueExtension
+public import LeanPool.Stafford38.Stafford38.Geometry.FiniteSeparableDVRChartFoundation
+public import LeanPool.Stafford38.Stafford38.Geometry.FixedWitnessTangentSqueeze
+public import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorAxisLift
+public import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorLaurentConormal
+public import LeanPool.Stafford38.Stafford38.Geometry.FormalDivisorTangent
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralAsymptoticConormal
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralAsymptoticLaurentAxis
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoisotropicCanonicalAdapter
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoisotropicExclusion
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoisotropicSets
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoisotropicSetsTest
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralComponentConormalContainment
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralConormalAxis
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralConormalContainment
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralConstantCoordinateAxis
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralCoordinateAvoidance
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralDivisorialVisibleFrame
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralTangentLatticePresentation
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralTangentLimitCriterion
+public import LeanPool.Stafford38.Stafford38.Geometry.GeneralTangentLimitCriterionTest
+public import LeanPool.Stafford38.Stafford38.Geometry.GenericPointKaehlerConormal
+public import LeanPool.Stafford38.Stafford38.Geometry.GenericSmoothOpen
+public import LeanPool.Stafford38.Stafford38.Geometry.JacobianConormalComparison
+public import LeanPool.Stafford38.Stafford38.Geometry.KaehlerDVRVisibility
+public import LeanPool.Stafford38.Stafford38.Geometry.KaehlerSpanSeparableAdjoin
+public import LeanPool.Stafford38.Stafford38.Geometry.KaehlerVisibleDerivationFrame
+public import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalDirection
+public import LeanPool.Stafford38.Stafford38.Geometry.LaurentConormalResidueExtension
+public import LeanPool.Stafford38.Stafford38.Geometry.LocalizedProjectiveChartTransition
+public import LeanPool.Stafford38.Stafford38.Geometry.NormalizationHeightOne
+public import LeanPool.Stafford38.Stafford38.Geometry.OneVariableAmbientConormal
+public import LeanPool.Stafford38.Stafford38.Geometry.OneVariablePrimeConormal
+public import LeanPool.Stafford38.Stafford38.Geometry.PointwiseConormalContainment
+public import LeanPool.Stafford38.Stafford38.Geometry.PowerSeriesArcTangency
+public import LeanPool.Stafford38.Stafford38.Geometry.PowerSeriesTangentLimit
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveBoundaryFrameRank
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveConormalDehomogenization
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveConormalDirections
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveDivisorOrderGap
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveEquationFormalChart
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveTangentInclusion
+public import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveValuationNormalization
+public import LeanPool.Stafford38.Stafford38.Geometry.RelativeCoefficientDVRPlace
+public import LeanPool.Stafford38.Stafford38.Geometry.RelativeDivisorialTower
+public import LeanPool.Stafford38.Stafford38.Geometry.RelativeFractionFieldTransport
+public import LeanPool.Stafford38.Stafford38.Geometry.RelativeRetainedBoundaryPlace
+public import LeanPool.Stafford38.Stafford38.Geometry.ResidueMinorSelection
+public import LeanPool.Stafford38.Stafford38.Geometry.RetainedComponentEquationPackage
+public import LeanPool.Stafford38.Stafford38.Geometry.RetainedDVRPlace
+public import LeanPool.Stafford38.Stafford38.Geometry.RetainedGroundMapIdentification
+public import LeanPool.Stafford38.Stafford38.Geometry.RetainedPlaceConormalTransport
+public import LeanPool.Stafford38.Stafford38.Geometry.RetainedProjectiveCompletion
+public import LeanPool.Stafford38.Stafford38.Geometry.RetractionSpecialization
+public import LeanPool.Stafford38.Stafford38.Geometry.ScalarExtensionPoints
+public import LeanPool.Stafford38.Stafford38.Geometry.SeparableResidueDerivationExtension
+public import LeanPool.Stafford38.Stafford38.Geometry.SmoothAffineConormal
+public import LeanPool.Stafford38.Stafford38.Geometry.SmoothConormalFibreVanishing
+public import LeanPool.Stafford38.Stafford38.Geometry.SplitTangentMatrix
+public import LeanPool.Stafford38.Stafford38.LeftDenominatorTransport
+public import LeanPool.Stafford38.Stafford38.LeftHandedCorollary
+public import LeanPool.Stafford38.Stafford38.LocalizationCorollaries
+public import LeanPool.Stafford38.Stafford38.LocalizedDifferentialClearing
+public import LeanPool.Stafford38.Stafford38.LocalizedDifferentialCorollaries
+public import LeanPool.Stafford38.Stafford38.LocalizedPolynomialCommutant
+public import LeanPool.Stafford38.Stafford38.LocalizedPolynomialDerivations
+public import LeanPool.Stafford38.Stafford38.LocalizedWeylAction
+public import LeanPool.Stafford38.Stafford38.Ore.CoordinateStage
+public import LeanPool.Stafford38.Stafford38.Ore.IteratedPairStage
+public import LeanPool.Stafford38.Stafford38.Ore.LinearNormalForm
+public import LeanPool.Stafford38.Stafford38.Ore.PairStage
+public import LeanPool.Stafford38.Stafford38.Ore.PairUniversal
+public import LeanPool.Stafford38.Stafford38.Ore.ScalarAlgebra
+public import LeanPool.Stafford38.Stafford38.PaperInputs
+public import LeanPool.Stafford38.Stafford38.PolynomialDifferentialOperators
+public import LeanPool.Stafford38.Stafford38.PolynomialOperatorCommutators
+public import LeanPool.Stafford38.Stafford38.PolynomialOperatorTaylorProjection
+public import LeanPool.Stafford38.Stafford38.Quotient.EulerSurjectivity
+public import LeanPool.Stafford38.Stafford38.Statement
+public import LeanPool.Stafford38.Stafford38.UniversalAssembly
+public import LeanPool.Stafford38.Stafford38.Weyl.AssociatedGraded
+public import LeanPool.Stafford38.Stafford38.Weyl.CommutatorSymbol
+public import LeanPool.Stafford38.Stafford38.Weyl.CoordinateCommutatorSymbol
+public import LeanPool.Stafford38.Stafford38.Weyl.EulerRemainder
+public import LeanPool.Stafford38.Stafford38.Weyl.EulerResidue
+public import LeanPool.Stafford38.Stafford38.Weyl.EulerSubring
+public import LeanPool.Stafford38.Stafford38.Weyl.FilteredCommutator
+public import LeanPool.Stafford38.Stafford38.Weyl.FilteredScalarLifting
+public import LeanPool.Stafford38.Stafford38.Weyl.Filtration
+public import LeanPool.Stafford38.Stafford38.Weyl.GradedAlgebra
+public import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence
+public import LeanPool.Stafford38.Stafford38.Weyl.LeadingSymbol
+public import LeanPool.Stafford38.Stafford38.Weyl.MonicNormalization
+public import LeanPool.Stafford38.Stafford38.Weyl.OrderRees
+public import LeanPool.Stafford38.Stafford38.Weyl.OuterOreMonic
+public import LeanPool.Stafford38.Stafford38.Weyl.PBW
+public import LeanPool.Stafford38.Stafford38.Weyl.PBWFirstContraction
+public import LeanPool.Stafford38.Stafford38.Weyl.PBWMonicBridge
+public import LeanPool.Stafford38.Stafford38.Weyl.PresentedScalarExtension
+public import LeanPool.Stafford38.Stafford38.Weyl.QuotientTransport
+public import LeanPool.Stafford38.Stafford38.Weyl.SymbolCompatibility
+public import LeanPool.Stafford38.Stafford38.Weyl.Symplectic
+public import LeanPool.Stafford38.Stafford38.Weyl.Transposition
+public import LeanPool.Stafford38.Stafford38.Weyl.TranspositionFiltration
+public import LeanPool.Stafford38.Stafford38.Weyl.Universal
+public import LeanPool.Stafford38.Proofs.Stafford38Reduction
+public import LeanPool.Stafford38.Proofs.WeylPurePower
+public import LeanPool.Stafford38.Proofs.WeylSymplectic
+
+
+/-!
+# Stafford 3.8
+
+Source: url:https://github.com/itpplasma/stafford38-formal
+Authors: Christopher Albert
+Status: verified
+Main declarations: `Stafford38.universalStatement`
+Tags: weyl-algebras, noncommutative-algebra, bernstein-degree
+MSC: 16S32
+-/
+
+
+/-
+Vendored dependency provenance:
+
+`LeanPool/Stafford38/AlgebraicAnalysis/` adapts the separately distributed
+AlgebraicAnalysis library from https://github.com/itpplasma/algebraic-analysis
+at commit 4aae47967f6ba02ffe2f639ab06564c9a9d1ecc8, the dependency pinned in
+https://github.com/itpplasma/stafford38-formal/blob/1e234855eee36d2541dd69580501408288760e21/lake-manifest.json.
+It is distributed under Apache-2.0:
+https://github.com/itpplasma/algebraic-analysis/blob/4aae47967f6ba02ffe2f639ab06564c9a9d1ecc8/LICENSE.
+
+Retained AlgebraicAnalysis NOTICE:
+
+AlgebraicAnalysis
+
+This project is distributed under the Apache License, Version 2.0. See
+LICENSE for the complete license text.
+
+The package depends on Lean and Mathlib. Exact toolchain and dependency
+revisions are recorded in lean-toolchain and lake-manifest.json.
+
+Some declarations were extracted from the historical Stafford38 development
+repository under the Apache-2.0 project license. The exact source revisions,
+paths, declaration mappings, and historical downstream compatibility
+relationships are recorded in docs/provenance.yaml.
+
+Pinned dependency notice and detailed source provenance:
+https://github.com/itpplasma/algebraic-analysis/blob/4aae47967f6ba02ffe2f639ab06564c9a9d1ecc8/NOTICE
+https://github.com/itpplasma/algebraic-analysis/blob/4aae47967f6ba02ffe2f639ab06564c9a9d1ecc8/docs/provenance.yaml.
+
+Retained upstream notice:
+
+Copyright 2026 Christopher Albert
+
+This project is distributed under the Apache License, Version 2.0. The full
+license text is provided in LICENSE.
+
+The project depends on Lean, Mathlib, and the separately distributed
+AlgebraicAnalysis library. Those projects retain their own copyright notices
+and licenses.
+
+scripts/landrun-wrapper.sh is adapted from PalomarRegistry/PalomarTemplate
+at commit 128a6c5ce5f48622e69927ccd639cbff401022e8, under Apache-2.0:
+https://github.com/PalomarRegistry/PalomarTemplate/blob/128a6c5ce5f48622e69927ccd639cbff401022e8/scripts/landrun-wrapper.sh
+The adaptation accepts an outer command delimiter already supplied by
+Comparator while preserving the rejection of unrestricted sandbox flags.
+
+The Stafford 3.8 manuscript, bibliography, figures, and supplements are
+separate works maintained under the private Overleaf authority and licensed
+CC BY 4.0. They are not included in this repository.
+
+-/
