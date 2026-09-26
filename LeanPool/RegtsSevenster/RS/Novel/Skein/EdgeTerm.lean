@@ -1231,6 +1231,7 @@ theorem relabel_edgeSum {α : Type} {β : Type} {W : Fragment α} (ee : α ≃ �
     {κ : F.RelTransitionSystem} (o : κ.Orientation) :
     (F.relabelUp ee).edgeSum h st hbnd (relabelOrientUp ee F o)
       = F.edgeSum h (fun a => st (ee a)) hbnd' o := by
+  classical
   unfold edgeSum
   refine Fintype.sum_equiv
     (Equiv.refl ((F.relabelUp ee).EvenColouring k) :
