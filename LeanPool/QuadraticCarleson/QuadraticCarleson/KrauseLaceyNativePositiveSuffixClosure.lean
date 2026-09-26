@@ -43,7 +43,7 @@ section
 construction. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
-/-- The nonnegative extended-real contribution of one interval to the sparse form. -/
+/-- The nonnegative sparse-form contribution of a single interval. -/
 def sparseAtom (p : ℝ) (f g : ℝ → ℂ) (I : RealInterval) : ℝ≥0∞ :=
   ENNReal.ofReal (I.length * localAverage 1 f I * localAverage p g I)
 
