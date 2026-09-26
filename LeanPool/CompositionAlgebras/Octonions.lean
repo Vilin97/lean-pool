@@ -64,7 +64,7 @@ dropped axiom. The other two remain unstated.
 * Hurwitz, "Uber die Composition der quadratischen Formen von beliebig vielen Variablen," 1898
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -94,10 +94,10 @@ theorem ext {a b : Octonion} (h : ∀ i, a.coords i = b.coords i) : a = b := by
 @[simp] lemma neg_coords (a : Octonion) (i : Fin 8) : (-a).coords i = -(a.coords i) := rfl
 
 /-- The real unit octonion e_0 = (1, 0, 0, 0, 0, 0, 0, 0). -/
-def one : Octonion := ⟨fun i => if i = 0 then 1 else 0⟩
+@[expose] def one : Octonion := ⟨fun i => if i = 0 then 1 else 0⟩
 
 /-- The i-th basis octonion e_i. -/
-def basisVec (i : Fin 8) : Octonion := ⟨fun j => if j = i then 1 else 0⟩
+@[expose] def basisVec (i : Fin 8) : Octonion := ⟨fun j => if j = i then 1 else 0⟩
 
 /-- Octonionic multiplication. Non-associative, non-commutative.
     Defined via the Fano plane multiplication table (Baez convention).
@@ -105,7 +105,7 @@ def basisVec (i : Fin 8) : Octonion := ⟨fun j => if j = i then 1 else 0⟩
     For each triple (i,j,k): e_i * e_j = e_k (cyclic positive), e_j * e_i = -e_k.
     e_0 is the two-sided identity; e_i^2 = -e_0 for i > 0.
     Extended bilinearly: (sum a_i e_i) * (sum b_j e_j) = sum a_i b_j (e_i * e_j). -/
-def mul (a b : Octonion) : Octonion where
+@[expose] def mul (a b : Octonion) : Octonion where
   coords k :=
     if k.val = 0 then
       a.coords 0 * b.coords 0 - a.coords 1 * b.coords 1 - a.coords 2 * b.coords 2 -
@@ -144,14 +144,14 @@ instance : Mul Octonion where mul := mul
 
 /-- Octonionic conjugation: a* = 2 Re(a) - a.
     Equivalently: conjugate flips the sign of all imaginary components. -/
-def conj (a : Octonion) : Octonion :=
+@[expose] def conj (a : Octonion) : Octonion :=
   ⟨fun i => if i = 0 then a.coords 0 else -(a.coords i)⟩
 
 /-- The real part of an octonion. -/
-def re (a : Octonion) : ℝ := a.coords 0
+@[expose] def re (a : Octonion) : ℝ := a.coords 0
 
 /-- The norm-squared: N(a) = a * a* = sum of squares of components. -/
-def normSq (a : Octonion) : ℝ := Finset.univ.sum fun i => (a.coords i) ^ 2
+@[expose] def normSq (a : Octonion) : ℝ := Finset.univ.sum fun i => (a.coords i) ^ 2
 
 /-- The 7 imaginary unit octonions e_1, ..., e_7. -/
 def imagUnit (i : Fin 7) : Octonion := basisVec ⟨i.val + 1, by omega⟩

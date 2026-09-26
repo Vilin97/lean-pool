@@ -17,7 +17,7 @@ import Mathlib.MeasureTheory.Covering.Besicovitch
 # LeanPool.RiemannMappingTheorem.Etape2
 -/
 
-@[expose] public section
+public section
 
 open Complex ComplexConjugate Set Metric Topology Filter
 

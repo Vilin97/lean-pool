@@ -13,7 +13,7 @@ import Mathlib.Analysis.Complex.LocallyUniformLimit
 # LeanPool.RiemannMappingTheorem.Hurwitz
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Set Metric Uniformity
 

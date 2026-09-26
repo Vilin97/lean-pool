@@ -14,7 +14,7 @@ import Mathlib.Analysis.Complex.CauchyIntegral
 # LeanPool.RiemannMappingTheorem.HasSqrt
 -/
 
-@[expose] public section
+public section
 
 open Set Complex Metric Topology
 
@@ -22,7 +22,7 @@ variable {z z₀ : ℂ} {U : Set ℂ}
 
 /-- `hasSqrt U` : every nowhere-zero holomorphic function on `U` has a
 holomorphic square root there. -/
-def hasSqrt (U : Set ℂ) : Prop :=
+@[expose] def hasSqrt (U : Set ℂ) : Prop :=
   ∀ (f : ℂ → ℂ), (∀ z ∈ U, f z ≠ 0) → DifferentiableOn ℂ f U →
   ∃ g, DifferentiableOn ℂ g U ∧ EqOn f (g ^ 2) U
 

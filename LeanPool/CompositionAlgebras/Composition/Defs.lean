@@ -64,7 +64,7 @@ Everything below is derived from the four class fields alone.
 Substrate for the two Hurwitz theorems. It states neither of them.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -88,12 +88,12 @@ variable {C : Type u} [NonAssocRing C] [Module ℝ C]
   [IsScalarTower ℝ C C] [SMulCommClass ℝ C C] [CompositionAlgebra C]
 
 /-- The inner product `⟪x, y⟫` of a composition algebra. -/
-def ip (x y : C) : ℝ := B x y
+@[expose] def ip (x y : C) : ℝ := B x y
 
 /-- The norm form `N x = ⟪x, x⟫`. Positive definite, and multiplicative by `comp`. -/
-def nf (x : C) : ℝ := B x x
+@[expose] def nf (x : C) : ℝ := B x x
 
-theorem nf_eq_ip (x : C) : nf x = ip x x := rfl
+theorem nf_eq_ip (x : C) : nf x = ip x x := by rfl
 
 theorem ip_symm (x y : C) : ip x y = ip y x := B_symm x y
 
@@ -182,7 +182,7 @@ theorem ip_exchange (x y w z : C) :
 /-- The conjugation `x* = 2⟪x, 1⟫ • 1 - x`, i.e. reflection in the line `ℝ ∙ 1`. -/
 def cstar (x : C) : C := (2 * ip x 1) • (1 : C) - x
 
-theorem cstar_apply (x : C) : cstar x = (2 * ip x 1) • (1 : C) - x := rfl
+theorem cstar_apply (x : C) : cstar x = (2 * ip x 1) • (1 : C) - x := by rfl
 
 theorem cstar_add (x y : C) : cstar (x + y) = cstar x + cstar y := by
   simp only [cstar_apply, ip_add_left]
@@ -337,7 +337,7 @@ theorem right_alternative (x y : C) : (y * x) * x = y * (x * x) := by
 /-! ### Imaginary elements -/
 
 /-- `x` is **imaginary** (pure) when it is orthogonal to the unit. -/
-def IsPure (x : C) : Prop := ip x 1 = 0
+@[expose] def IsPure (x : C) : Prop := ip x 1 = 0
 
 theorem cstar_of_pure {x : C} (hx : IsPure x) : cstar x = -x := by
   simp only [cstar_apply, IsPure] at *

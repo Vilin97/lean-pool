@@ -76,7 +76,7 @@ This file carries `finrank_eq_one_or_two_or_four_or_eight`, Hurwitz's theorem in
 dimension form.
 -/
 
-@[expose] public section
+public section
 
 namespace CompositionAlgebra
 
@@ -95,7 +95,7 @@ def mulRightL (u : C) : C →ₗ[ℝ] C where
   map_smul' r x := smul_mul_assoc r x u
 
 omit [SMulCommClass ℝ C C] [CompositionAlgebra C] [Nontrivial C] in
-@[simp] theorem mulRightL_apply (u x : C) : mulRightL u x = x * u := rfl
+@[simp] theorem mulRightL_apply (u x : C) : mulRightL u x = x * u := by rfl
 
 omit [Nontrivial C] in
 /-- Right multiplication by a unit vector is injective: it is a linear isometry of the norm
