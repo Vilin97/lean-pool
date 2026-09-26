@@ -10563,3 +10563,44 @@ projects:
     - 20E05
     - 68Q45
     - 03B35
+  - title: Riemannian curvature and geometric analysis toward Ricci flow
+    summary: 'Preserves the proof-bearing geometry packages: curvature and Levi–Civita connections,
+      Bianchi identities, Hamilton–Ivey reaction estimates, Bonnet–Myers, Schur rigidity, almost-Schur,
+      Lichnerowicz–Obata, scalar comparison, and symmetric tensor heat infrastructure. The upstream
+      Poincaré roadmap remains incomplete and this project does not claim the Poincaré conjecture.'
+    branch: differential geometry
+    main_declarations:
+    - HamiltonIveyReaction.hamiltonIvey_reaction_coercive
+    - HamiltonIveyReaction.hamiltonIvey_ode_pinching
+    main_results:
+    - declaration: HamiltonIveyReaction.hamiltonIvey_reaction_coercive
+      informal: For K > 0, t ≥ 0, and ordered curvature eigenvalues lambda ≥ mu ≥ nu with
+        nu < 0, assume the scalar lower barrier R ≥ -3K/(1+Kt). If the Hamilton–Ivey
+        defect is negative, then -nu > K/(1+Kt) and the reaction term is at least
+        (-nu)/9 and strictly positive.
+    - declaration: HamiltonIveyReaction.hamiltonIvey_ode_pinching
+      informal: For K > 0 and T ≥ 0, ordered differentiable eigenvalue curves solving
+        the curvature-reaction ODE on [0,T], with nu(t) < 0 throughout that interval
+        and nu(0) ≥ -K, have nonnegative Hamilton–Ivey defect throughout [0,T].
+        The scalar lower barrier is derived internally from the initial bound.
+    tags:
+    - riemannian-geometry
+    - curvature
+    - ricci-flow
+    - geometric-analysis
+    msc:
+    - 53C21
+    - 53E20
+    provenance: AI
+    slug: lean-poincare-formalization-plan
+    entry_module: LeanPool.PoincareGeometry
+    authors:
+    - Arthur Freitas Ramos
+    - David Barros Hulak
+    - Ruy J. G. B. de Queiroz
+    source:
+      url: https://github.com/arthur742ramos/lean-poincare-formalization-plan
+      github_repo: arthur742ramos/lean-poincare-formalization-plan
+      commit: 065c4335e2a23838cebed51417bb2fb0429007bc
+    license: Apache-2.0
+    status: verified
