@@ -1,4 +1,82 @@
 projects:
+  - slug: order-closures
+    title: Order closure, order adherence and Fatou norms
+    summary: >-
+      Formalizes order and unbounded-order adherence in vector lattices,
+      the Gao-Leung characterization of order-continuous norms on
+      sigma-order-complete Banach lattices, and the Solovay/Stone-space
+      construction of order-complete C(K) spaces with arbitrarily large
+      density and norm-closed separable sublattices whose only order-closed
+      vector-sublattice extension is the whole C(K) space. Constructs solid
+      sets with a prescribed infinite number kappa of solid generators whose
+      adherence towers are strict below any ordinal at most kappa's
+      successor cardinal. Constructs a complete weakly Fatou lattice norm
+      with constant 2 that is not equivalent to any Fatou lattice norm.
+      Includes reusable vector-lattice, net-convergence, sublattice,
+      seminorm, Boolean-algebra and transfinite-iteration infrastructure.
+    branch: functional analysis
+    entry_module: LeanPool.OrderClosures
+    authors:
+      - Antonio Avilés
+      - Mitchell A. Taylor
+      - Pedro Tradacete
+      - David Muñoz-Lahoz
+    source:
+      title: Order closure, order adherence and Fatou norms
+      arxiv: '2609.06689'
+      url: https://github.com/pedrotradacete/OrderClosures/tree/6189ba7134f6975e7d8e4c8c093a9869d03a769c
+      github_repo: pedrotradacete/OrderClosures
+      commit: 6189ba7134f6975e7d8e4c8c093a9869d03a769c
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - OrderClosures.exists_weaklyFatou_not_equivalent_fatou
+    main_results:
+      - declaration: OrderClosures.gaoLeung_orderContinuous_characterization
+        informal: >-
+          For a sigma-order-complete Banach lattice X, the following are
+          equivalent: every vector sublattice has order-closed order
+          adherence; every vector sublattice has equal order and
+          unbounded-order adherence; and the norm of X is order continuous.
+        source_ref: Paper Theorem 1.1, recalling Gao-Leung Theorem 2.7.
+      - declaration: OrderClosures.gao_counterexample
+        informal: >-
+          For every cardinal kappa there is a compact Hausdorff space K
+          such that C(K, R) is order complete and has density at least
+          kappa, with a norm-closed separable vector sublattice Y whose
+          only order-closed vector-sublattice extension is all of C(K, R).
+        source_ref: Paper Proposition 2.1, via the Solovay Boolean algebra.
+      - declaration: OrderClosures.solid_sets_require_arbitrarily_many_iterations
+        informal: >-
+          For every infinite cardinal kappa and ordinal xi at most the
+          initial ordinal of kappa's successor cardinal, there is a
+          vector lattice and a solid set with solid generator number
+          kappa whose order-adherence tower has a proper step at every
+          stage below xi. The witness and cardinal/ordinal parameters
+          are lifted one universe in Lean.
+        source_ref: Paper Theorem 2.6; explicit infinite-cardinal hypothesis.
+      - declaration: OrderClosures.exists_weaklyFatou_not_equivalent_fatou
+        informal: >-
+          There is a real vector lattice with a complete lattice norm p
+          satisfying the weak Fatou property with constant 2, such that
+          no lattice norm q with the Fatou property is equivalent to p.
+          Norms, completeness and equivalence are represented explicitly
+          by PaperLatticeNorm, IsCompleteFor and EquivalentNorms.
+        source_ref: >-
+          Paper Theorem 3.1; self-contained construction of the result
+          previously announced by Anthony Wickstead and credited to
+          Michael Elliott. The paper credits Jaume de Dios Pont for an
+          earlier Lean formalization of this result.
+    tags:
+      - banach-lattices
+      - order-convergence
+      - fatou-norms
+      - transfinite-constructions
+    msc:
+      - 46B42
+      - 46A40
+      - 46A19
   - slug: block-spectral-sensitivity
     title: Block sensitivity can exceed spectral sensitivity squared
     summary: >-
