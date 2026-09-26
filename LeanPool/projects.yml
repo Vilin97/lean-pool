@@ -10109,6 +10109,39 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - slug: bicausalot-palomar
+    title: "BicausalOT: measurable selection and coupling strategies"
+    summary: Develops Kuratowski–Ryll-Nardzewski selection, Jankov–von Neumann uniformization,
+      and finite-horizon Bellman identities for locally feasible coupling strategies. Exact Borel
+      measurable optimal strategies and initial couplings are obtained on Polish Borel spaces
+      for weakly continuous probability kernels and nonnegative extended-real lower semicontinuous
+      costs. Equivalence with optimization over bicausal path laws is not established.
+    branch: probability
+    entry_module: LeanPool.BicausalOT
+    authors:
+    - KT. Wu
+    source:
+      url: https://github.com/maxwellapexlab/bicausalot-palomar
+      github_repo: maxwellapexlab/bicausalot-palomar
+      commit: 3fe500ff64a75d7ab71b474d0c656d5471f62992
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+    - MeasurableSelection.exists_measurable_selection
+    main_results:
+    - declaration: MeasurableSelection.exists_measurable_selection
+      informal: A weakly measurable multifunction from an arbitrary measurable space to a Polish
+        space with nonempty closed values admits an everywhere-defined Borel-measurable selector.
+    tags:
+    - probability
+    msc:
+    - 28B20
+    - 54C65
+    - 54H05
+    - 03E15
+    - 28A20
+    - 68V20
+    provenance: AI
   - slug: asymptotic-triangle-packing
     title: Finite near-regular hypergraph rounding
     summary: >-

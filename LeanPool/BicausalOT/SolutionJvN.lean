@@ -1,0 +1,111 @@
+/-
+Copyright (c) 2026 KT. Wu. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: KT. Wu
+-/
+module
+
+public import Mathlib.Tactic
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.Tree
+
+
+/-!
+# Solution file: the Jankov–von Neumann uniformization theorem
+
+This module supplies a declaration whose type is exactly the type stated in
+`ChallengeJvN`, together with its proof.
+
+`import Mathlib` is present so that this module elaborates the statement in the same
+environment as `ChallengeJvN`, which imports Mathlib and nothing else;
+`BicausalOT.DescriptiveSetTheory.Tree` itself imports only three Mathlib files
+(`Mathlib.Topology.MetricSpace.Polish`, `Mathlib.Topology.MetricSpace.PiNat`,
+`Mathlib.MeasureTheory.Constructions.Polish.Basic`) and the repository's
+`BicausalOT.DescriptiveSetTheory.AnalyticSigmaAlgebra`.  Nothing in Mathlib at the pinned
+revision declares any of the names used below, so the extra import cannot change how the
+statement elaborates; it only guarantees that it cannot.
+
+## Relation to the library statement
+
+The library declaration is `jankov_von_neumann` in
+`BicausalOT/DescriptiveSetTheory/Tree.lean`, in the root namespace.  It states the same
+theorem using two abbreviations from
+`BicausalOT/DescriptiveSetTheory/AnalyticSigmaAlgebra.lean`:
+
+```
+@[reducible]
+def analyticMeasurableSpace (X : Type*) [TopologicalSpace X] : MeasurableSpace X :=
+  MeasurableSpace.generateFrom { s : Set X | AnalyticSet s }
+
+def AnalyticallyMeasurable {Y : Type*} [TopologicalSpace Y] (f : X → Y) : Prop :=
+  @Measurable X Y (analyticMeasurableSpace X) (borel Y) f
+```
+
+Both unfold in one step to Mathlib constants and to nothing else, so the type registered
+here — which writes them out — is definitionally equal to the library's, and the
+delegation below typechecks by that unfolding alone.  This is why the accompanying
+`comparator-jvn.json` lists no `definition_names`: the statement of record mentions only
+Mathlib notions, and no bespoke definition has to be replicated or trusted.
+
+## The proof being delegated to
+
+`Tree.lean` is a formalization of Kechris's own proof of 18.1:
+
+* the analytic `P` is `∅` or the range of a continuous `π : (ℕ → ℕ) → X × Y`; the empty
+  case is excluded by `hne`;
+* `F = {(x, z) | Prod.fst (π z) = x} ⊆ X × (ℕ → ℕ)` is closed, being an equalizer of two
+  continuous maps, and is nonempty;
+* `closedUniformizerG` uniformizes a closed `F ⊆ X × (ℕ → ℕ)` by the **leftmost branch**
+  of the section tree (`leftmostBranchG`, built from `leftmostAuxG`/`leftmostWitnessG`),
+  and `closedUniformizerG_selection` is the selection property;
+* `closedUniformizerG_cylinder_measurable` is the measurability core.  By
+  `closedUniformizerG_cylinder_eq`, the preimage of the basic cylinder over `f ↾ n` is the
+  union of two pieces: the set of `x` whose fiber meets that cylinder while meeting no
+  cylinder over an earlier extension `Function.update f m j` (`m < n`, `j < f m`) — this
+  is the leftmost-branch minimality condition — and an off-projection piece
+  `(Prod.fst '' F)ᶜ ∩ {x | ∀ i < n, hne.some.2 i = f i}` on which the uniformizer takes
+  its default value.  Every constituent is analytic or the complement of an analytic set
+  (`analyticSet_projFiberCylNG`; and `Prod.fst '' F` is analytic as a continuous image of
+  the closed `F`), and the intersections are countable, so the whole lies in `σ(Σ¹₁)`.
+  Induction over the cylinder basis (`PiNat.isTopologicalBasis_cylinders`) then gives
+  `closedUniformizerG_analyticallyMeasurable`, and `jvn_closedG` packages the closed case;
+* finally `φ x = Prod.snd (π (ψ x))`, which is `σ(Σ¹₁)`-measurable because `π` and
+  `Prod.snd` are continuous (`AnalyticallyMeasurable.comp_continuous`).
+
+Unlike Kechris, the Lean development never reduces the domain to `ℕ → ℕ`: the whole tree
+construction is generic in a Polish domain `X`, so the Borel-isomorphism invariance of
+`σ(Σ¹₁)` that Kechris invokes at the start of his proof is never needed.
+
+The declaration below restates the library theorem inside the `Uniformization` namespace
+so that its name matches the `ChallengeJvN` declaration named in `comparator-jvn.json`;
+the root `jankov_von_neumann` it delegates to is the audited declaration of the library.
+It is the first of the four headline declarations checked by `AxiomAudit.lean` at the
+repository root, and is checked again during the build by `BicausalOT/AxiomsAudit.lean`
+(line 35); both report only `[propext, Classical.choice, Quot.sound]`.
+-/
+
+@[expose] public section
+
+namespace Uniformization
+
+/-- **The Jankov–von Neumann uniformization theorem** (Kechris, *Classical Descriptive
+Set Theory*, Theorem 18.1; Bertsekas–Shreve, *Stochastic Optimal Control*, Definitions
+7.19–7.20 for the `σ(Σ¹₁)` notions).
+
+Let `X` and `Y` be Polish spaces and let `P ⊆ X × Y` be analytic and nonempty.  Then
+there is a `σ(Σ¹₁)`-measurable `φ : X → Y` uniformizing `P` on its projection: preimages
+under `φ` of Borel subsets of `Y` lie in the σ-algebra generated by the analytic subsets
+of `X`, and `(x, φ x) ∈ P` for every `x ∈ Prod.fst '' P`.
+
+Both σ-algebras in the measurability clause are written out explicitly, so the statement
+mentions only Mathlib notions: `MeasurableSpace.generateFrom {s | MeasureTheory.AnalyticSet s}`
+is the analytic σ-algebra `σ(Σ¹₁)` of `X`, and `borel Y` is the Borel σ-algebra of `Y`. -/
+theorem jankov_von_neumann {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
+    [PolishSpace X] (P : Set (X × Y))
+    (hP : MeasureTheory.AnalyticSet P) (hne : P.Nonempty) :
+    ∃ φ : X → Y,
+      @Measurable X Y
+        (MeasurableSpace.generateFrom {s : Set X | MeasureTheory.AnalyticSet s}) (borel Y) φ ∧
+      ∀ x ∈ Prod.fst '' P, (x, φ x) ∈ P :=
+  _root_.jankov_von_neumann P hP hne
+
+end Uniformization
