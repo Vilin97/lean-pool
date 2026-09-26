@@ -29,78 +29,19 @@ variable
 /-- Restrict a chart around the specified point to a bounded target. -/
 noncomputable def improvedChart (φ : OpenPartialHomeomorph M NNReal) (x : M) (h : x ∈ φ.source) :
   { ψ : OpenPartialHomeomorph M NNReal | (x ∈ ψ.source ∧ Bornology.IsBounded ψ.target) } := by
-  let y := φ.toFun x
-  by_cases h0 : y > 0
-  · let interval := Set.Ioo (y-1) (y+1)
-    let t := φ.target ∩ interval
-    let s := φ.symm '' t
-    let sOpen : IsOpen s := by
-      apply (OpenPartialHomeomorph.isOpen_symm_image_iff_of_subset_target φ (by exact
-        Set.inter_subset_left)).mpr
-      exact IsOpen.inter φ.open_target isOpen_Ioo
-    let φ' := φ.restrOpen s sOpen
-    use φ'
-    apply And.intro
-    · dsimp [φ']
-      simp only [Set.mem_inter_iff]
-      apply And.intro
-      · exact h
-      · dsimp [s]
-        simp only [Set.mem_image]
-        use y
-        apply And.intro
-        · apply Set.mem_inter
-          · exact PartialEquiv.map_source φ.toPartialEquiv h
-          · apply Set.mem_Ioo.mpr
-            apply And.intro
-            · refine NNReal.coe_lt_coe.mp ?_
-              simp only [NNReal.coe_lt_coe, tsub_lt_self_iff, zero_lt_one, and_true]
-              exact h0
-            · simp only [lt_add_iff_pos_right, zero_lt_one]
-        · exact OpenPartialHomeomorph.left_inv φ h
-    · have bi : Bornology.IsBounded interval := Metric.isBounded_Ioo (y - 1) (y + 1)
-      apply Bornology.IsBounded.subset bi
-      intro z hz
-      have hz' : z ∈ φ.target ∩ ↑φ.symm ⁻¹' (↑φ.symm '' t) := hz
-      rw [restrOpen_symm_image_target φ (t := t) Set.inter_subset_left] at hz'
-      exact Set.mem_of_mem_inter_right hz'
-  · simp only [gt_iff_lt, not_lt, nonpos_iff_eq_zero] at h0
-    let interval := Set.Iio (1 : NNReal)
-    let t := φ.target ∩ interval
-    let s := φ.symm '' t
-    let sOpen : IsOpen s := by
-      apply (OpenPartialHomeomorph.isOpen_symm_image_iff_of_subset_target φ (by exact
-        Set.inter_subset_left)).mpr
-      exact IsOpen.inter φ.open_target isOpen_Iio
-    let φ' := φ.restrOpen s sOpen
-    use φ'
-    apply And.intro
-    · dsimp [φ']
-      simp only [Set.mem_inter_iff]
-      apply And.intro
-      · exact h
-      · dsimp [s]
-        simp only [Set.mem_image]
-        use y
-        apply And.intro
-        · apply Set.mem_inter
-          · exact PartialEquiv.map_source φ.toPartialEquiv h
-          · exact Set.mem_Iio.mpr (by
-                                     rw [h0]
-                                     exact zero_lt_one' NNReal)
-        · exact OpenPartialHomeomorph.left_inv φ h
-    · have bi : Bornology.IsBounded interval := by
-        have : interval = Set.Ico 0 1 := by
-          dsimp [interval]
-          ext z
-          simp only [Set.mem_Iio, Set.mem_Ico, zero_le, true_and]
-        rw [this]
-        exact Metric.isBounded_Ico 0 1
-      apply Bornology.IsBounded.subset bi
-      intro z hz
-      have hz' : z ∈ φ.target ∩ ↑φ.symm ⁻¹' (↑φ.symm '' t) := hz
-      rw [restrOpen_symm_image_target φ (t := t) Set.inter_subset_left] at hz'
-      exact Set.mem_of_mem_inter_right hz'
+  let y := φ x
+  let t := φ.target ∩ Set.Iio (y + 1)
+  let s := φ.symm '' t
+  have sOpen : IsOpen s :=
+    (φ.isOpen_symm_image_iff_of_subset_target Set.inter_subset_left).mpr
+      (φ.open_target.inter isOpen_Iio)
+  refine ⟨φ.restrOpen s sOpen, ?_, ?_⟩
+  · exact ⟨h, ⟨y, ⟨φ.map_source h, lt_add_one y⟩, φ.left_inv h⟩⟩
+  · apply (Metric.isBounded_Ico (0 : NNReal) (y + 1)).subset
+    intro z hz
+    have hz' : z ∈ φ.target ∩ ↑φ.symm ⁻¹' (↑φ.symm '' t) := hz
+    rw [restrOpen_symm_image_target φ (t := t) Set.inter_subset_left] at hz'
+    exact ⟨zero_le, hz'.2⟩
 
 /-- Restrict a bounded chart to the connected component containing the specified point. -/
 noncomputable def improvedChart' (φ : OpenPartialHomeomorph M NNReal) (x : M) (h : x ∈ φ.source)
@@ -173,14 +114,6 @@ lemma nice_chart_connected {φ : OpenPartialHomeomorph M NNReal} {x : M} {h : x 
     have : c = niceChart φ x h := rfl
     rw [←this]
     exact c.2.2.2
-
-/-- A chart around a specified point with bounded connected target. -/
-structure NiceChartAt (x : M) where
-  /-- The local chart containing the specified point. -/
-  chart : OpenPartialHomeomorph M NNReal
-  mem_chart_source : x ∈ chart.source
-  bounded : Bornology.IsBounded chart.target
-  connected : ConnectedSpace chart.target
 
 /-- A charted space whose atlas has bounded connected targets. -/
 class NicelyChartedSpace (H : Type*) [TopologicalSpace H] [Bornology H] (M : Type*)
