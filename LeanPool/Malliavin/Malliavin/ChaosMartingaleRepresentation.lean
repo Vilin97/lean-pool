@@ -95,12 +95,6 @@ theorem naturalMartingaleRepresentation_of_positiveChaos_le_naturalItoRange
       (homogeneousChaos hB n : Submodule ℝ (RandomL2 P)) ≤
         naturalItoRange hB hsm hnat) :
     NaturalMartingaleRepresentation hB hsm hnat := by
-  let K : Submodule ℝ (RandomL2 P) :=
-    (naturalItoRange hB hsm hnat).comap
-      (centeredPartCLM (P := P)).toLinearMap
-  have hKclosed : IsClosed (K : Set (RandomL2 P)) := by
-    exact (isClosed_naturalItoRange hB hsm hnat).preimage
-      (centeredPartCLM (P := P)).continuous
   have hconstant : constantRandomVariables P ≤
       (centeredPartCLM (P := P)).ker := by
     unfold constantRandomVariables
@@ -114,54 +108,10 @@ theorem naturalMartingaleRepresentation_of_positiveChaos_le_naturalItoRange
         simp
       rw [Lp.constL_apply, hconst, sub_self]
     · exact (centeredPartCLM (P := P)).isClosed_ker
-  have hzero :
-      (homogeneousChaos hB 0 : Submodule ℝ (RandomL2 P)) ≤ K := by
-    intro F hF
-    change centeredPartCLM F ∈ naturalItoRange hB hsm hnat
-    have hFconst : F ∈ constantRandomVariables P := by
-      rw [← homogeneousChaos_zero_eq_constants hB]
-      exact hF
-    rw [show centeredPartCLM F = 0 by exact hconstant hFconst]
-    exact zero_mem _
-  have hpositiveCentered (n : ℕ) (hn : 0 < n) :
-      (homogeneousChaos hB n : Submodule ℝ (RandomL2 P)) ≤ K := by
-    intro F hF
-    change centeredPartCLM F ∈ naturalItoRange hB hsm hnat
-    have hcentered : CameronMartin.expectationMap P F = 0 := by
-      have hle : (homogeneousChaos hB n : Submodule ℝ (RandomL2 P)) ≤
-          (CameronMartin.expectationMap P).ker := by
-        unfold homogeneousChaos
-        apply Submodule.topologicalClosure_minimal
-        · rintro _ ⟨f, rfl⟩
-          rw [LinearMap.mem_ker]
-          change CameronMartin.expectationMap P (multipleIntegralCLM hB n f) = 0
-          rw [CameronMartin.expectationMap_apply]
-          exact integral_multipleIntegralCLM hB hn f
-        · exact (CameronMartin.expectationMap P).isClosed_ker
-      exact hle hF
-    have hexpect : expectationL2 F = 0 := by
-      rw [expectationL2, ← CameronMartin.expectationMap_apply, hcentered]
-      exact map_zero _
-    rw [centeredPartCLM_apply, hexpect, sub_zero]
-    exact hpositive n hn hF
-  have hchaos (n : ℕ) :
-      (homogeneousChaos hB n : Submodule ℝ (RandomL2 P)) ≤ K := by
-    cases n with
-    | zero => exact hzero
-    | succ n => exact hpositiveCentered (n + 1) (Nat.zero_lt_succ n)
-  have htop : (⊤ : Submodule ℝ (RandomL2 P)) ≤ K := by
-    rw [← homogeneousChaos_total hB generated]
-    exact Submodule.topologicalClosure_minimal _ (iSup_le hchaos) hKclosed
-  intro F
-  have hmem : centeredPartCLM F ∈ naturalItoRange hB hsm hnat := by
-    exact htop (Submodule.mem_top : F ∈ (⊤ : Submodule ℝ (RandomL2 P)))
-  obtain ⟨U, hU⟩ := hmem
-  refine ⟨U, ?_⟩
-  rw [centeredPartCLM_apply] at hU
-  change naturalItoIntegral hB hsm hnat U = F - expectationL2 F at hU
-  calc
-    F = expectationL2 F + (F - expectationL2 F) := by abel
-    _ = expectationL2 F + naturalItoIntegral hB hsm hnat U := by rw [← hU]
+  apply naturalMartingaleRepresentation_of_total_submodules hB hsm hnat
+    (fun n ↦ (homogeneousChaos hB n : Submodule ℝ (RandomL2 P)))
+    (homogeneousChaos_total hB generated) ?_ hpositive
+  simpa only [homogeneousChaos_zero_eq_constants] using hconstant
 
 /-- Construct the natural Brownian Clark--Ocone family from two inputs localized to the selected
 chaos tower and the smooth Malliavin core, respectively. -/

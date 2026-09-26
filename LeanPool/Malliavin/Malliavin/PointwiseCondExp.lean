@@ -170,6 +170,7 @@ theorem setIntegral_g_eq_zero (U : TimeProcessL2 P) {a : ℝ≥0} {A : Set W}
       simp only [hind, tsum_zero]
 
 omit [CompleteSpace W] [BorelSpace W] in
+omit [CompleteSpace W] [BorelSpace W] in
 /-- **Sections of the predictable projection carry the conditional moments of `U`**: for every
 `a` and every `A ∈ 𝓕 a`, for almost every time `t > a`,
 
@@ -575,6 +576,29 @@ omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
 theorem le_filtrationPred {s t : ℝ≥0} (hst : s < t) : 𝓕 s ≤ filtrationPred 𝓕 t :=
   le_iSup₂ (f := fun (s : ℝ≥0) (_ : s < t) ↦ 𝓕 s) s hst
 
+omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
+  [SecondCountableTopology W] [IsGaussian P] in
+private theorem iSup_exhaustion_eq_filtrationPred
+    (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) {t : ℝ≥0} (hat : 0 < t) :
+    (⨆ n : ℕ, 𝓕 (t - t / (n + 2))) = filtrationPred 𝓕 t := by
+  let u : ℕ → ℝ≥0 := fun n ↦ t - t / (n + 2)
+  have hu_lt : ∀ n, u n < t := fun n ↦ tsub_lt_self hat (by positivity)
+  refine le_antisymm (iSup_le fun n ↦ le_filtrationPred 𝓕 (hu_lt n)) (iSup₂_le fun s hst ↦ ?_)
+  have hts : t - s ≠ 0 := (tsub_pos_of_lt hst).ne'
+  obtain ⟨n, hn⟩ := exists_nat_ge (t / (t - s))
+  have hle : t / ((n : ℝ≥0) + 2) ≤ t - s := by
+    rw [div_le_iff₀ (by positivity)]
+    rw [div_le_iff₀ (pos_of_ne_zero hts)] at hn
+    calc t ≤ (n : ℝ≥0) * (t - s) := hn
+      _ ≤ ((n : ℝ≥0) + 2) * (t - s) := by gcongr; exact le_self_add
+      _ = (t - s) * ((n : ℝ≥0) + 2) := mul_comm _ _
+  have hsn : s ≤ u n := by
+    dsimp only [u]
+    have := tsub_le_tsub_left hle t
+    refine le_trans ?_ this
+    rw [tsub_tsub_cancel_of_le hst.le]
+  exact le_trans (𝓕.mono hsn) (le_iSup (fun n ↦ 𝓕 (u n)) n)
+
 omit [CompleteSpace W] [BorelSpace W] in
 /-- **Sections of the predictable projection are conditional expectations given the strict
 past**: for almost every `t > 0`, with a null set independent of everything else,
@@ -615,22 +639,8 @@ theorem condExp_timeSection_predictableProjection_pred_ae
     gcongr
   set ℱ : Filtration ℕ ‹MeasurableSpace W› :=
     ⟨fun n ↦ 𝓕 (u n), fun m n hmn ↦ 𝓕.mono (hu_mono hmn), fun n ↦ 𝓕.le _⟩ with hℱ
-  have hsup : (⨆ n, ℱ n) = filtrationPred 𝓕 t := by
-    refine le_antisymm (iSup_le fun n ↦ le_filtrationPred 𝓕 (hu_lt n)) (iSup₂_le fun s hst ↦ ?_)
-    have hts : t - s ≠ 0 := (tsub_pos_of_lt hst).ne'
-    obtain ⟨n, hn⟩ := exists_nat_ge (t / (t - s))
-    have hle : t / ((n : ℝ≥0) + 2) ≤ t - s := by
-      rw [div_le_iff₀ (by positivity)]
-      rw [div_le_iff₀ (pos_of_ne_zero hts)] at hn
-      calc t ≤ (n : ℝ≥0) * (t - s) := hn
-        _ ≤ ((n : ℝ≥0) + 2) * (t - s) := by gcongr; exact le_self_add
-        _ = (t - s) * ((n : ℝ≥0) + 2) := mul_comm _ _
-    have hsn : s ≤ u n := by
-      rw [hu]
-      have := tsub_le_tsub_left hle t
-      refine le_trans ?_ this
-      rw [tsub_tsub_cancel_of_le hst.le]
-    exact le_trans (𝓕.mono hsn) (le_iSup (fun n ↦ ℱ n) n)
+  have hsup : (⨆ n, ℱ n) = filtrationPred 𝓕 t :=
+    iSup_exhaustion_eq_filtrationPred 𝓕 hat
   -- Lévy's upward theorem for both conditional expectations
   have hXg : Integrable (P[X | filtrationPred 𝓕 t]) P := integrable_condExp
   have hYg : Integrable (P[Y | filtrationPred 𝓕 t]) P := integrable_condExp
@@ -996,22 +1006,8 @@ theorem _root_.Malliavin.ClarkOconeFamily.condExp_brownian_filtrationPred
     gcongr
   set ℱ : Filtration ℕ ‹MeasurableSpace W› :=
     ⟨fun n ↦ 𝓕 (u n), fun m n hmn ↦ 𝓕.mono (hu_mono hmn), fun n ↦ 𝓕.le _⟩ with hℱ
-  have hsup : (⨆ n, ℱ n) = filtrationPred 𝓕 t := by
-    refine le_antisymm (iSup_le fun n ↦ le_filtrationPred 𝓕 (hu_lt n)) (iSup₂_le fun s hst ↦ ?_)
-    have hts : t - s ≠ 0 := (tsub_pos_of_lt hst).ne'
-    obtain ⟨n, hn⟩ := exists_nat_ge (t / (t - s))
-    have hle : t / ((n : ℝ≥0) + 2) ≤ t - s := by
-      rw [div_le_iff₀ (by positivity)]
-      rw [div_le_iff₀ (pos_of_ne_zero hts)] at hn
-      calc t ≤ (n : ℝ≥0) * (t - s) := hn
-        _ ≤ ((n : ℝ≥0) + 2) * (t - s) := by gcongr; exact le_self_add
-        _ = (t - s) * ((n : ℝ≥0) + 2) := mul_comm _ _
-    have hsn : s ≤ u n := by
-      rw [hu]
-      have := tsub_le_tsub_left hle t
-      refine le_trans ?_ this
-      rw [tsub_tsub_cancel_of_le hst.le]
-    exact le_trans (𝓕.mono hsn) (le_iSup (fun n ↦ ℱ n) n)
+  have hsup : (⨆ n, ℱ n) = filtrationPred 𝓕 t :=
+    iSup_exhaustion_eq_filtrationPred 𝓕 hat
   -- Lévy's upward convergence of the conditional expectations
   have hgm : StronglyMeasurable[⨆ n, ℱ n] (P[B t | filtrationPred 𝓕 t]) := by
     rw [hsup]
