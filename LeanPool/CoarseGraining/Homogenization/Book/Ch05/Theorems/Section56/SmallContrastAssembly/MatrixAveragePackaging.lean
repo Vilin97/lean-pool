@@ -207,38 +207,8 @@ theorem descendantsAverageFluctuationOperatorNormSqWithNormalizer_integral_le_pr
               (fullBlockQuadratic (M a)
                 (Section54.VarianceBoundGoodScale.fullBlockMinusProbe α β)) ^ (2 : ℕ))) P := by
     intro α β
-    have hsum :
-        Integrable
-          (fun a : RegCoeffField d =>
-            (fullBlockQuadratic (M a)
-                (Section54.VarianceBoundGoodScale.fullBlockCoordinateProbe α)) ^ (2 : ℕ) +
-              (fullBlockQuadratic (M a)
-                (Section54.VarianceBoundGoodScale.fullBlockPlusProbe α β)) ^ (2 : ℕ) +
-              (fullBlockQuadratic (M a)
-                (Section54.VarianceBoundGoodScale.fullBlockMinusProbe α β)) ^ (2 : ℕ)) P := by
-      have hci :
-          Integrable
-            (fun a : RegCoeffField d =>
-              (fullBlockQuadratic (M a)
-                (Section54.VarianceBoundGoodScale.fullBlockCoordinateProbe α)) ^
-                  (2 : ℕ)) P := by
-        simpa [M, Q, j] using hcoord_int α
-      have hpi :
-          Integrable
-            (fun a : RegCoeffField d =>
-              (fullBlockQuadratic (M a)
-                (Section54.VarianceBoundGoodScale.fullBlockPlusProbe α β)) ^
-                  (2 : ℕ)) P := by
-        simpa [M, Q, j] using hplus_int α β
-      have hmi :
-          Integrable
-            (fun a : RegCoeffField d =>
-              (fullBlockQuadratic (M a)
-                (Section54.VarianceBoundGoodScale.fullBlockMinusProbe α β)) ^
-                  (2 : ℕ)) P := by
-        simpa [M, Q, j] using hminus_int α β
-      exact (hci.add hpi).add hmi
-    exact hsum.const_mul 3
+    simpa only [M, Q, j] using
+      (((hcoord_int α).add (hplus_int α β)).add (hminus_int α β)).const_mul 3
   have hbudget_int :
         Integrable
           (fun a : RegCoeffField d =>
