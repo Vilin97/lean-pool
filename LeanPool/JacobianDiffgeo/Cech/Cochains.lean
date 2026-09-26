@@ -44,7 +44,7 @@ omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 @[simp] theorem restrictL_apply_coe {V U : Opens X} (D : RS.Divisor X) (h : V ≤ U)
     (φ : RS.LinSysOn D (U : Set X)) :
     (LinSysOn.restrictL D h φ : RS.MeroGermOn X (V : Set X)) =
-      RS.MeroGermOn.restrict h (φ : RS.MeroGermOn X (U : Set X)) := rfl
+      RS.MeroGermOn.restrict h (φ : RS.MeroGermOn X (U : Set X)) := by rfl
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem restrictL_restrictL {W V U : Opens X} (D : RS.Divisor X) (h1 : V ≤ U) (h2 : W ≤ V)
@@ -116,7 +116,7 @@ noncomputable def d0 : C0 D 𝒰 →ₗ[ℂ] C1 D 𝒰 :=
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 @[simp] theorem d0_apply (f : C0 D 𝒰) (p : Fin 𝒰.n × Fin 𝒰.n) :
     d0 D 𝒰 f p = LinSysOn.restrictL D inf_le_right (f p.2) -
-      LinSysOn.restrictL D inf_le_left (f p.1) := rfl
+      LinSysOn.restrictL D inf_le_left (f p.1) := by rfl
 
 /-- `(δ¹f)_{ijk} = f_{jk} − f_{ik} + f_{ij}` (after restriction to `U i ⊓ U j ⊓ U k`). -/
 noncomputable def d1 : C1 D 𝒰 →ₗ[ℂ] C2 D 𝒰 :=
@@ -140,7 +140,7 @@ omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
           (f (t.2.1, t.2.2))
       - LinSysOn.restrictL D (le_inf (inf_le_left.trans inf_le_left) inf_le_right)
           (f (t.1, t.2.2))
-      + LinSysOn.restrictL D inf_le_left (f (t.1, t.2.1)) := rfl
+      + LinSysOn.restrictL D inf_le_left (f (t.1, t.2.1)) := by rfl
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem d1_comp_d0 : (d1 D 𝒰) ∘ₗ (d0 D 𝒰) = 0 := by

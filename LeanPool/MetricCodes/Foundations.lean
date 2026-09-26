@@ -8634,7 +8634,7 @@ def IsSpectrallyFeasible (δ α β γ u : ℝ) : Prop :=
   asymptoticThreshold δ α < spectralLimit α β γ u
 
 /-- The feasible used in the Johnson-code argument. -/
-def Feasible (δ α β γ u : ℝ) : Prop :=
+@[expose] def Feasible (δ α β γ u : ℝ) : Prop :=
   AsymptoticParameters δ α β γ u ∧
     IsSpectrallyFeasible δ α β γ u
 

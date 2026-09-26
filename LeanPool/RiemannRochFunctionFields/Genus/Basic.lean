@@ -255,7 +255,7 @@ theorem genus_le_of_family (B C : DivisorA k K) (c₀ : ℤ)
   simpa [hD] using hbound D
 
 /-- The index of specialty `i(D) = ℓ(D) − (deg D + 1 − g)`. -/
-noncomputable def indexOfSpecialty (D : DivisorA k K) : ℕ :=
+@[expose] noncomputable def indexOfSpecialty (D : DivisorA k K) : ℕ :=
   (ell k K D - (deg k K D + 1 - (genus k K : ℤ))).toNat
 
 theorem indexOfSpecialty_eq (D : DivisorA k K) :

@@ -50,7 +50,7 @@ instance instModuleMatrixForallLeanPool (M : Type*) [AddCommGroup M] [Module R M
   zero_smul v := funext fun i ↦ show ∑ _, _ = _ by simp
 
 /-- The functor sending an `R`-module to the coordinatewise module over `ι × ι` matrices. -/
-@[simps]
+@[expose, simps]
 def toModuleCatOverMatrix : ModuleCat R ⥤ ModuleCat M[ι, R] where
   obj M := ModuleCat.of M[ι, R] (ι → M)
   map f := ModuleCat.ofHom {
@@ -63,7 +63,7 @@ def toModuleCatOverMatrix : ModuleCat R ⥤ ModuleCat M[ι, R] where
   map_comp _ _ := rfl
 
 /-- The additive subgroup cut out by the default diagonal idempotent. -/
-@[simps]
+@[expose, simps]
 def fromModuleCatOverMatrix.α (M : Type*) [AddCommGroup M] [Module M[ι, R] M] :
     AddSubgroup M where
   carrier := Set.range ((single (default : ι) (default : ι) (1 : R) : M[ι, R]) • ·)
@@ -124,7 +124,7 @@ instance fromModuleCatOverMatrix.moduleΑ (M : Type*) [AddCommGroup M] [Module M
 open fromModuleCatOverMatrix
 
 /-- The functor sending a matrix-module to the default diagonal idempotent summand. -/
-@[simps]
+@[expose, simps]
 def fromModuleCatOverMatrix : ModuleCat M[ι, R] ⥤ ModuleCat R where
   obj M := .of _ <| α R ι M
   map f := ModuleCat.ofHom {
@@ -145,7 +145,7 @@ def fromModuleCatOverMatrix : ModuleCat M[ι, R] ⥤ ModuleCat R where
   map_comp _ _ := by ext; rfl
 
 /-- The counit of `toModuleCatOverMatrix ⋙ fromModuleCatOverMatrix`. -/
-@[simps]
+@[expose, simps]
 def matrix.unitIsoHom :
     toModuleCatOverMatrix R ι ⋙ fromModuleCatOverMatrix R ι ⟶ 𝟭 (ModuleCat R) where
   app X := ModuleCat.ofHom
@@ -193,7 +193,7 @@ def matrix.unitIsoHom :
     simp_all
 
 /-- The inverse unit map for `toModuleCatOverMatrix ⋙ fromModuleCatOverMatrix`. -/
-@[simps]
+@[expose, simps]
 def matrix.unitIsoInv :
     𝟭 (ModuleCat R) ⟶ toModuleCatOverMatrix R ι ⋙ fromModuleCatOverMatrix R ι where
   app X := ModuleCat.ofHom
@@ -242,7 +242,7 @@ def matrix.unitIsoInv :
 
 /-- The natural isomorphism from `toModuleCatOverMatrix ⋙ fromModuleCatOverMatrix`
 to the identity. -/
-@[simps]
+@[expose, simps]
 def matrix.unitIso :
     toModuleCatOverMatrix R ι ⋙ fromModuleCatOverMatrix R ι ≅
     𝟭 (ModuleCat R) where
@@ -359,7 +359,7 @@ noncomputable def matrix.counitIsoHomMap (M : ModuleCat M[ι, R]) :
         simp_all⟩
 
 /-- The counit map from the reconstructed matrix-module to the original matrix-module. -/
-@[simps]
+@[expose, simps]
 noncomputable def matrix.counitIsoHom :
     fromModuleCatOverMatrix R ι ⋙ toModuleCatOverMatrix R ι ⟶ 𝟭 (ModuleCat M[ι, R]) where
   app M := (matrix.counitIsoHomMap R ι M).inv
@@ -373,7 +373,7 @@ noncomputable def matrix.counitIsoHom :
     rw [map_smul]
 
 /-- The inverse of the matrix-module counit map. -/
-@[simps]
+@[expose, simps]
 noncomputable def matrix.counitIsoInv :
     𝟭 (ModuleCat M[ι, R]) ⟶
     fromModuleCatOverMatrix R ι ⋙ toModuleCatOverMatrix R ι where
@@ -388,7 +388,7 @@ noncomputable def matrix.counitIsoInv :
 
 /-- The natural isomorphism from `fromModuleCatOverMatrix ⋙ toModuleCatOverMatrix`
 to the identity. -/
-@[simps]
+@[expose, simps]
 noncomputable def matrix.counitIso :
     fromModuleCatOverMatrix R ι ⋙ toModuleCatOverMatrix R ι ≅ 𝟭 (ModuleCat M[ι, R]) where
   hom := matrix.counitIsoHom R ι
@@ -397,7 +397,7 @@ noncomputable def matrix.counitIso :
   inv_hom_id := by ext; simp
 
 /-- The Morita equivalence between modules over `R` and modules over `Matrix ι ι R`. -/
-@[simps]
+@[expose, simps]
 noncomputable def moritaEquivalentToMatrix : ModuleCat R ≌ ModuleCat M[ι, R] where
   functor := toModuleCatOverMatrix R ι
   inverse := fromModuleCatOverMatrix R ι

@@ -35,7 +35,7 @@ public section
 namespace NavierStokes.PulseGrowth
 
 /-- Scalar growth of the positive reference mode after the chosen viscous damping. -/
-noncomputable def netGrowth (lam u s : ℝ) : ℝ :=
+@[expose] noncomputable def netGrowth (lam u s : ℝ) : ℝ :=
   lam / Real.sqrt (1 + s ^ 2) -
     lam * (1 + s ^ 2) / ((1 + u ^ 2) * Real.sqrt (1 + u ^ 2))
 

@@ -33,7 +33,7 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit
 open scoped ContDiff Convolution
 
 /-- Scalar mollification, given by `φ.normed volume ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] f`. -/
-def scalarMollification (φ : ContDiffBump (0 : Space)) (f : Space → ℝ) : Space → ℝ :=
+@[expose] def scalarMollification (φ : ContDiffBump (0 : Space)) (f : Space → ℝ) : Space → ℝ :=
   φ.normed volume ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] f
 
 theorem scalarMollification_smooth (φ : ContDiffBump (0 : Space))

@@ -193,7 +193,7 @@ theorem add {k : Type _} [DecidableEq k] {s : k → Type _}
 end IsBlockDiagonal
 
 /-- The subtype of block-diagonal square matrices indexed by a sigma type. -/
-@[reducible]
+@[reducible, expose]
 def BlockDiagonals (R k : Type _) [Zero R] [DecidableEq k] (s : k → Type _) :=
 { x : Matrix (Σ i, s i) (Σ i, s i) R // IsBlockDiagonal x }
 

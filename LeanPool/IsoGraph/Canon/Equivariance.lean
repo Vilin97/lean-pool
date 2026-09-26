@@ -4779,7 +4779,7 @@ theorem canonical_ok (n : Nat) (f : Nat → Nat → Bool) :
       have hbo := hst.1 b hb
       exact ⟨hbo.size, hbo.lt, hbo.inj, hbo.cert⟩
   exact key _ (dfsNode_ok n f _ _ _ _ _ (initialRefine_wf f)
-    ⟨by intro l h; cases h, by intro l h; cases h⟩)
+    ⟨(by intro l h; cases h), (by intro l h; cases h)⟩)
 
 theorem canonical_cert (n : Nat) (f : Nat → Nat → Bool) :
     (canonical (Graph.ofOracle n f)).cert

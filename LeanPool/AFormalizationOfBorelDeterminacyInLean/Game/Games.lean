@@ -47,14 +47,16 @@ namespace Game
   · apply Set.hEq_of_image_eq _ hp
     rw [ht]
 /-- The residual game starting in position x -/
-@[simps tree] def residual (G : Game A) (x : List A) : Game A where
+@[expose] def residual (G : Game A) (x : List A) : Game A where
   tree := subAt G.tree x
   payoff := (body.append x)⁻¹' if x.length % 2 = 0 then G.payoff else G.payoffᶜ
+@[simp] theorem residual_tree (G : Game A) (x : List A) :
+    (G.residual x).tree = subAt G.tree x := rfl
 @[simp] lemma residual_payoff_even (G : Game A) (x : List A) (h : x.length % 2 = 0) :
   (G.residual x).payoff = (body.append x)⁻¹' G.payoff := by simp [residual, h]
 @[simp] lemma residual_payoff_odd (G : Game A) (x : List A) (h : x.length % 2 = 1) :
   (G.residual x).payoff = ((body.append x)⁻¹' G.payoff)ᶜ := by simp [residual, h]
-@[simp] lemma residual_nil (G : Game A) : G.residual [] = G := rfl
+@[simp] lemma residual_nil (G : Game A) : G.residual [] = G := by rfl
 @[simp] lemma residual_append (G : Game A) (x y : List A) :
   (G.residual x).residual y = G.residual (x ++ y) := by
   ext1

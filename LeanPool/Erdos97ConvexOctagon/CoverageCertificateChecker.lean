@@ -479,6 +479,7 @@ theorem rejectedRowValid_of_word
   (List.range count).all fun offset => nodeLocalValidB claims (start + offset)
 
 /-- Every node in a flat branch passes its local checker. -/
+@[expose]
 def BranchClaims.LocallyValid (claims : BranchClaims) : Prop :=
   ∀ identifier, identifier < claims.nodeCount →
     nodeLocalValidB claims identifier = true

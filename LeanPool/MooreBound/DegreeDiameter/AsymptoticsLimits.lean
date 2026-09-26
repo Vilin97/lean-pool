@@ -35,7 +35,7 @@ namespace DegreeDiameter
 noncomputable section
 
 /-- Abstract form of the sole PNT consequence used in the analytic reduction. -/
-def PrimeIntervalHypothesis : Prop :=
+@[expose] def PrimeIntervalHypothesis : Prop :=
   ∀ {η : ℝ}, 0 < η →
     ∀ᶠ x : ℝ in atTop, ∃ p : ℕ, Nat.Prime p ∧ x < p ∧ p < (1 + η) * x
 
@@ -114,7 +114,7 @@ lemma eventually_prime_near_nthRoot (hprime : PrimeIntervalHypothesis)
   omega
 
 /-- The real comparison used in both lower-bound arguments. -/
-def rootComparison (D : ℕ → ℕ) (m t : ℕ) (η : ℝ) (d : ℕ) : ℝ :=
+@[expose] def rootComparison (D : ℕ → ℕ) (m t : ℕ) (η : ℝ) (d : ℕ) : ℝ :=
   ((Nat.nthRoot m (D d) : ℝ) /
     ((Nat.nthRoot m (D d) : ℝ) + 1) / (1 + η)) ^ (m * t)
 

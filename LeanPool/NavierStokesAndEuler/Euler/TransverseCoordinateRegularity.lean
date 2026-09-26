@@ -45,7 +45,7 @@ def coordinatePrimitive (u : TimeLp T E) : ℝ → U :=
   productPrimitive T hT (frameLeftInversePath T Q c hc hQ) u
 
 /-- The actual L² derivative of the canonical coordinates. -/
-def coordinateDerivative (u : TimeLp T E) : TimeLp T U :=
+@[expose] def coordinateDerivative (u : TimeLp T E) : TimeLp T U :=
   productDerivative T hT (frameLeftInversePath T Q c hc hQ)
     (frameLeftInverseDerivativePath T Q Q₁ c hc hQ) u
 

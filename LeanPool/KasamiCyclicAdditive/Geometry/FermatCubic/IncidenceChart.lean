@@ -91,7 +91,7 @@ section Group
 variable [DecidableEq K]
 
 /-- The `3`-torsion point `t3 = (1,0)`. -/
-def t3 (K : Type*) [Field K] [CharP K 2] : (fer K).toAffine.Point :=
+@[expose] def t3 (K : Type*) [Field K] [CharP K 2] : (fer K).toAffine.Point :=
   pt 1 0 (by exact t3_fermat)
 
 /-- `t3 = (1,0)` is `3`-torsion. -/

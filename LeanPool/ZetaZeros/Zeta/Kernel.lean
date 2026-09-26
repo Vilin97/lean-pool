@@ -109,7 +109,7 @@ private lemma fourierC_deriv {f : ℝ → ℝ} (hf : ContDiff ℝ (⊤ : ℕ∞)
       ring
 
 /-- The unweighted second moment of the test kernel over ordered pairs of zeta zeros. -/
-noncomputable def unweightedKernelSum (eta : ℝ → ℝ) (T : ℝ) : ℂ :=
+@[expose] noncomputable def unweightedKernelSum (eta : ℝ → ℝ) (T : ℝ) : ℂ :=
   ∑ᶠ ρ ∈ nontrivialZeros T, ∑ᶠ ρ' ∈ nontrivialZeros T,
     ((zeroMultiplicity ρ * zeroMultiplicity ρ' : ℕ) : ℂ) *
       testKernel eta (rescaledDiff T ρ ρ') ^ 2

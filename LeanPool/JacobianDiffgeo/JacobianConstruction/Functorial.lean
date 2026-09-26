@@ -69,7 +69,7 @@ functoriality substrate `Jacobian X →ₜ+ Jacobian Y`. The *closure*-level hyp
 `Torus.inducedHom` needs is derived from this one via minimality of the topological closure
 (`AddSubgroup.topologicalClosure_minimal`), since `(periodSubgroup Y).topologicalClosure` is
 already closed and `T` is continuous (finite-dimensional). -/
-noncomputable def inducedHom {T : (Fin (genus X) → ℂ) →ₗ[ℂ] (Fin (genus Y) → ℂ)}
+@[expose] noncomputable def inducedHom {T : (Fin (genus X) → ℂ) →ₗ[ℂ] (Fin (genus Y) → ℂ)}
     (hT : RS.periodSubgroup X ≤ (RS.periodSubgroup Y).topologicalClosure.comap T.toAddMonoidHom) :
     Jacobian X →ₜ+ Jacobian Y :=
   RS.uliftUpHom.comp

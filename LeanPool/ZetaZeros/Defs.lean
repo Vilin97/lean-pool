@@ -97,7 +97,7 @@ structure IsConjInvariant (Z : Finset ℂ) (m : ℂ → ℕ) : Prop where
 
 /-- The weighted sum of `fourierC f` over ordered pairs of non-trivial zeros with imaginary part
 in `(0, T]`, each zero counted with multiplicity. -/
-@[zz_tag "def_B_T"]
+@[expose, zz_tag "def_B_T"]
 noncomputable def pairCorrelationSum (f : ℝ → ℝ) (T : ℝ) : ℂ :=
   ∑ᶠ ρ ∈ nontrivialZeros T, ∑ᶠ ρ' ∈ nontrivialZeros T,
     ((zeroMultiplicity ρ * zeroMultiplicity ρ' : ℕ) : ℂ) *
@@ -114,7 +114,7 @@ noncomputable def pairMainTerm (f : ℝ → ℝ) : ℝ :=
 The Lipschitz condition is imposed globally rather than only at `0`. That makes this predicate
 *stronger*, hence `PairCorrelation` weaker and safer to assume — and the cited lemma still supplies
 it. -/
-def IsPairTestFunction (f : ℝ → ℝ) : Prop :=
+@[expose] def IsPairTestFunction (f : ℝ → ℝ) : Prop :=
   (∀ x, f (-x) = f x) ∧ MeasureTheory.Integrable f ∧ (∀ x, 1 < |x| → f x = 0) ∧
     ∃ C : ℝ, ∀ x, |f x - f 0| ≤ C * |x|
 

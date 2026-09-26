@@ -121,7 +121,7 @@ lemma adj_smul_smul_iff_adj (g : GL (Fin 2) K) (x y : Vertices R) :
   simp
 
 /-- `GL₂(K)` acts by graph isomorphisms on the Bruhat-Tits tree. -/
-def _root_.Matrix.GeneralLinearGroup.toGraphIso (g : GL (Fin 2) K) :
+@[expose] def _root_.Matrix.GeneralLinearGroup.toGraphIso (g : GL (Fin 2) K) :
     BTgraph (R := R) ≃g BTgraph (R := R) where
   toEquiv := MulAction.toPerm g
   map_rel_iff' {x y} := adj_smul_smul_iff_adj g x y

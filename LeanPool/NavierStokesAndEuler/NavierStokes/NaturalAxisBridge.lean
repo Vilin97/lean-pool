@@ -2708,7 +2708,7 @@ open AxisCoefficientSpace AxisWeightEstimates
   deriv (fun Y => F (Y, p.2)) p.1
 
 /-- Ordinary parameter partial derivative of an actual function. -/
-def partialEta (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def partialEta (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   deriv (fun η => F (p.1, η)) p.2
 
 /-- Actual mixed derivative, with the order used by the manuscript's jet bounds. -/

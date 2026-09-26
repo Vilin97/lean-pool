@@ -51,7 +51,7 @@ variable {V : Type*} [DecidableEq V]
   ∑ u ∈ C.erase v, codegree H v u
 
 /-- The Bonferroni correction: `∑_{e ∋ v} C(|(e∖v) ∩ C|, 2)`. -/
-def pairWeight (H : Finset (Finset V)) (v : V) (C : Finset V) : ℕ :=
+@[expose] def pairWeight (H : Finset (Finset V)) (v : V) (C : Finset V) : ℕ :=
   ∑ e ∈ H.filter (fun e => v ∈ e), Nat.choose ((e.erase v ∩ C).card) 2
 
 /-- `coverWeight` counted edge-by-edge: `∑_{e ∋ v} |(e∖v) ∩ C|`. -/

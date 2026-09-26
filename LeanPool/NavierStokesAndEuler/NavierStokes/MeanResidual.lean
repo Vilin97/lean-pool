@@ -84,7 +84,7 @@ def AngularPeriodic (f : SpaceTime → E) : Prop :=
   ∀ q, f (angularShift q period) = f q
 
 /-- Angular invariant, given by `∀ q a, f (angularShift q a) = f q`. -/
-def AngularInvariant (f : SpaceTime → E) : Prop :=
+@[expose] def AngularInvariant (f : SpaceTime → E) : Prop :=
   ∀ q a, f (angularShift q a) = f q
 
 theorem contDiff_angularShift :

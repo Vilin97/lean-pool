@@ -64,7 +64,7 @@ namespace BooleanIsoperimetry
 (a full Hamming ball of radius `r-1` plus `t` vertices of layer `r`), this is the
 number of vertices the closed neighbourhood adds beyond the full ball of radius
 `r`, i.e. the size of the upper shadow of the first `t` vertices of layer `r`. -/
-noncomputable def upperShadow (N r t : ℕ) : ℕ :=
+@[expose] noncomputable def upperShadow (N r t : ℕ) : ℕ :=
   H N (binomPrefix N r + t) - binomPrefix N (r + 1)
 
 /-- **Macaulay closed form for `H` on a partial layer.**  For `1 ≤ r`, the

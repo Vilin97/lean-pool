@@ -287,7 +287,7 @@ abbrev delimitedPairComparisonMachine : Turing.FinTM2 where
       delimitedComparePrefixStatement
 
 /-- GapCVP reduction support. -/
-def delimitedCompareConfiguration (phase : Fin 12)
+@[expose] def delimitedCompareConfiguration (phase : Fin 12)
     (outcome : EncodedWordOrdering)
     (input firstCounter firstReversed secondCounter secondReversed
       firstForward secondForward source sourcePrefix output : List Bool) :

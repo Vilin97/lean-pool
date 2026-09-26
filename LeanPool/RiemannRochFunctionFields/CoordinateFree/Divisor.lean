@@ -177,7 +177,7 @@ abbrev Divisor := Place k K →₀ ℤ
   Finsupp.domCongr (chartToPlace k K)
 
 /-- The coordinate-free principal-divisor homomorphism. -/
-noncomputable def principalDivisor : Additive Kˣ →+ Divisor k K :=
+@[expose] noncomputable def principalDivisor : Additive Kˣ →+ Divisor k K :=
   (divisorEquivChart k K).toAddMonoidHom.comp (principalDivisorA k K)
 
 namespace Divisor

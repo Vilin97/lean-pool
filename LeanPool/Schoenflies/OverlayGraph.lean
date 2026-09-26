@@ -239,7 +239,7 @@ theorem overlayPieces_disjoint_interiors {pieces : List Piece} {points : List Pl
 
 An edge links `x` and `y` exactly when they are its two ends in one order or the other, which
 is what makes `eq_or_eq_of_isLink_of_isLink` a case split with no content. -/
-noncomputable def overlayGraph (pieces : List Piece) (points : List Plane) :
+@[expose] noncomputable def overlayGraph (pieces : List Piece) (points : List Plane) :
     Graph Plane Piece where
   vertexSet := endSet (overlayPieces pieces points)
   IsLink P x y := P ∈ overlayPieces pieces points ∧

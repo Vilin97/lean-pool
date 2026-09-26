@@ -48,7 +48,7 @@ namespace CyclotomicIntegers
 
 /-- The canonical equivalence between `CyclotomicIntegers p` and the ring of integers of the
 `p`-th cyclotomic field. -/
-@[expose] def equiv :
+@[expose, simps! -isSimp] def equiv :
     CyclotomicIntegers p ≃+* 𝓞 (CyclotomicField p ℚ) := by
   have H := IsCyclotomicExtension.zeta_spec p ℚ (CyclotomicField p ℚ)
   have hH : minpoly ℤ H.integralPowerBasis.gen = cyclotomic p ℤ :=

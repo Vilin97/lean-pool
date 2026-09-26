@@ -11,7 +11,9 @@ import LeanPool.MRiscX.Semantics.MsTheory
 import LeanPool.MRiscX.Semantics.Specification
 import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
 import LeanPool.MRiscX.Util.BasicTheorems
+import Std.Tactic.BVDecide
 import Std.Tactic.BVDecide.Normalize.Prop
+public meta import Std.Tactic.BVDecide.Reflect
 
 /-!
 # SingleProofsOTP
@@ -273,6 +275,8 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
       h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
     rw [show ({10} : Set UInt64) = {9 + 1} by simp]
+    have h_step : p + (l - x) + 1 = p + (l - (x - 1)) := by
+      bv_decide
     apply specification_Increment (dst := 0)
     · simp
     · simp
@@ -282,7 +286,9 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
     · repeat (constructor <;> try assumption)
       · simp at *
         bv_decide
-      · simp_all
+      · have h_index : p + (l - x) = p + (l - (x - 1)) - 1 := by
+          bv_decide
+        rw [h_index]
 
 
 

@@ -87,7 +87,7 @@ end UnitaryRepresentation
 
 /-- Relative property-(T), universe-polymorphic in the representation carrier so
 concrete `Type 0` groups are not restricted to `Type 0` Hilbert spaces. Paper: §4. -/
-def HasRelativePropertyT
+@[expose] def HasRelativePropertyT
     (G : CountableDiscreteGroup.{u}) (N : Subgroup G) : Prop :=
   ∀ (H : Type v)
     (_ : NormedAddCommGroup H)

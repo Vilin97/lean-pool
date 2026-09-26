@@ -47,7 +47,7 @@ instance : OrderHomClass (PointedLenHom S T) S.1 T.1 where
   f x = f.toHom x := rfl
 
 /-- The category of trees with a chosen base node -/
-@[expose] instance : Category PointedTrees where
+instance : Category PointedTrees where
   Hom S T := PointedLenHom S T
   id S := ⟨𝟙 S.1, rfl⟩
   comp f g := ⟨f.toHom ≫ g.toHom, by change g.toFun (f.toFun _) = _; rw [f.hp, g.hp]⟩
@@ -109,7 +109,7 @@ lemma concat_uniq b (hb : (f ⟨x, mem_of_append hx⟩).val ++ [b] = (f ⟨_, hx
 end «Section2»
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def extensions : PointedTrees ⥤ Type* where
+@[expose] def extensions : PointedTrees ⥤ Type* where
   obj T := { a : T.1.1 | T.2.val ++ [a] ∈ T.1.2 }
   map f := TypeCat.ofHom fun a ↦ ⟨concat (forgetPoint.map f) a.prop, by
     dsimp only [Set.mem_ofPred_eq]; erw [← f.hp, ← concat_spec]; apply SetLike.coe_mem⟩
@@ -129,8 +129,10 @@ def extensions : PointedTrees ⥤ Type* where
 def extensions.val' {T : PointedTrees} (a : extensions.obj T) : List T.1.1 :=
   T.2.val ++ [a.val]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def extensions.valT' {T : PointedTrees} (a : extensions.obj T) : T.1 :=
+@[expose] def extensions.valT' {T : PointedTrees} (a : extensions.obj T) : T.1 :=
   ⟨extensions.val' a, a.prop⟩
+@[simp] lemma extensions.valT'_coe {T : PointedTrees} (a : extensions.obj T) :
+    (extensions.valT' a).val = extensions.val' a := by rfl
 @[simp] lemma extensions_map_val' {S T : PointedTrees}
   (f : S ⟶ T) (a : extensions.obj S) :
   extensions.val' (extensions.map f a) = (f.toHom ⟨extensions.val' a, a.prop⟩).val := by

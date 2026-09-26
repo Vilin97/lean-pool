@@ -44,7 +44,8 @@ variable {P E F ι : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
   ∑ w : Fin n → ι, baseSize directions q (wordDerivative directions f w) x
 
 /-- The finite base-order Leibniz constant belongs only to the coefficient block. -/
-def coefficientBlock (directions : ι → P) (q : ℕ) (f : P → E) (n : ℕ) (x : P) : ℝ :=
+@[expose] def coefficientBlock (directions : ι → P) (q : ℕ) (f : P → E)
+    (n : ℕ) (x : P) : ℝ :=
   (2 : ℝ)^q*block directions q f n x
 
 theorem baseSize_nonneg (directions : ι → P) (q : ℕ) (f : P → E) (x : P) :

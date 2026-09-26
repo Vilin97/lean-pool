@@ -259,7 +259,7 @@ noncomputable def divisor [T1Space X] (θ : MFormData X) : Divisor X
       exact Set.Finite.subset (Set.finite_singleton z) hsub
 
 @[simp] theorem divisor_apply [T1Space X] (θ : MFormData X) (x : X) :
-    θ.divisor x = (θ.ord x).untop₀ := rfl
+    θ.divisor x = (θ.ord x).untop₀ := by rfl
 
 /-- D6: the degree of `θ`'s divisor. -/
 noncomputable def degree [T1Space X] [T2Space X] [CompactSpace X] (θ : MFormData X) : ℤ :=

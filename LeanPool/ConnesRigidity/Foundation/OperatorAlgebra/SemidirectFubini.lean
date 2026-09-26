@@ -123,11 +123,11 @@ def l2Curry (ι : Type u) (κ : Type v) :
 
 @[simp] theorem l2Curry_apply {ι : Type u} {κ : Type v}
     (ξ : GroupL2 (ι × κ)) (i : ι) (k : κ) :
-    l2Curry ι κ ξ i k = ξ (i, k) := rfl
+    l2Curry ι κ ξ i k = ξ (i, k) := by rfl
 
 @[simp] theorem l2Curry_symm_apply {ι : Type u} {κ : Type v}
     (ξ : lp (fun _ : ι => GroupL2 κ) 2) (i : ι) (k : κ) :
-    (l2Curry ι κ).symm ξ (i, k) = ξ i k := rfl
+    (l2Curry ι κ).symm ξ (i, k) = ξ i k := by rfl
 
 variable {A : Type u} {K : Type v} [Group A] [Group K]
 
@@ -140,7 +140,7 @@ def semidirectFubiniCoordinates (φ : K →* MulAut A) :
 
 @[simp] theorem semidirectFubiniCoordinates_apply
     (φ : K →* MulAut A) (g : SemidirectProduct A K φ) :
-    semidirectFubiniCoordinates φ g = (g.right, g.left) := rfl
+    semidirectFubiniCoordinates φ g = (g.right, g.left) := by rfl
 
 /-- The semidirect-product ℓ² carrier in fibre coordinates.  Ported from the
 public OpenAI construction, then kept local to Zhou's §3 model.
@@ -154,14 +154,14 @@ def semidirectFubini (φ : K →* MulAut A) :
     (φ : K →* MulAut A)
     (ξ : GroupL2 (SemidirectProduct A K φ)) (k : K) (a : A) :
     semidirectFubini φ ξ k a =
-      ξ (⟨a, k⟩ : SemidirectProduct A K φ) := rfl
+      ξ (⟨a, k⟩ : SemidirectProduct A K φ) := by rfl
 
 @[simp] theorem semidirectFubini_symm_apply
     (φ : K →* MulAut A)
     (ξ : lp (fun _ : K => GroupL2 A) 2)
     (a : A) (k : K) :
     (semidirectFubini φ).symm ξ (⟨a, k⟩ : SemidirectProduct A K φ) =
-      ξ k a := rfl
+      ξ k a := by rfl
 
 /- Regular translation in fibre coordinates.  This is the key carrier bridge
 for the inl and inr generator calculations.  Paper: §3. -/

@@ -421,7 +421,8 @@ private theorem quotientDifference_lintegral_tendsto_zero
           norm_num)
     (by
       rw [lintegral_const_mul 4 hcoordMeas]
-      exact ENNReal.mul_ne_top (by norm_num) x.property.ne)
+      exact ENNReal.mul_ne_top (by norm_num)
+        ((E_pvm.mem_domain_unboundedIntegral _ _ _).mp x.property).ne)
     (ae_of_all _ fun r => by
       have hconstR : Tendsto (fun _t : ℝ => (r : ℂ)) (nhdsWithin 0 {0}ᶜ)
           (nhds (r : ℂ)) := tendsto_const_nhds

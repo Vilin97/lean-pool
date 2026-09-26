@@ -36,7 +36,7 @@ open Filter Topology
   Real.pi * p / q
 
 /-- Orientation which places that apoapsis at the unit primary. -/
-noncomputable def resonantCollisionOrientation (p q : ℕ) : ℝ :=
+@[expose] noncomputable def resonantCollisionOrientation (p q : ℕ) : ℝ :=
   resonantApoapsisTime p q - Real.pi
 
 theorem resonantSemimajorAxis_pos {p q : ℕ} (hp : 0 < p) (hq : 0 < q) :

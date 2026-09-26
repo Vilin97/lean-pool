@@ -896,13 +896,14 @@ theorem sampleContributionSecondMomentProxy_le_two_width_mul_T
           ring
 
 /-- The event that a particular target receives less than demand `T`. -/
-def sampleTargetFails {n N : ℕ} (rIn rOut T : ℕ)
+@[expose] def sampleTargetFails {n N : ℕ} (rIn rOut T : ℕ)
     (target : HypercubeVertex n) (sample : CenterSample n N) : Prop :=
   sampleTotalContribution rIn rOut target sample < T
 
 instance instDecidableSampleTargetFails {n N rIn rOut T : ℕ}
     (target : HypercubeVertex n) (sample : CenterSample n N) :
     Decidable (sampleTargetFails rIn rOut T target sample) := by
+  change Decidable (sampleTotalContribution rIn rOut target sample < T)
   infer_instance
 
 instance instDecidablePredSampleTargetFails {n N rIn rOut T : ℕ}
@@ -911,14 +912,15 @@ instance instDecidablePredSampleTargetFails {n N rIn rOut T : ℕ}
   fun sample => instDecidableSampleTargetFails target sample
 
 /-- The event that some target receives less than demand `T`. -/
-def sampleFailsSomeTarget {n N : ℕ} (rIn rOut T : ℕ)
+@[expose] def sampleFailsSomeTarget {n N : ℕ} (rIn rOut T : ℕ)
     (sample : CenterSample n N) : Prop :=
   ∃ target : HypercubeVertex n, sampleTargetFails rIn rOut T target sample
 
 instance instDecidableSampleFailsSomeTarget {n N rIn rOut T : ℕ}
     (sample : CenterSample n N) :
     Decidable (sampleFailsSomeTarget rIn rOut T sample) := by
-  classical
+  change Decidable (∃ target : HypercubeVertex n,
+    sampleTargetFails rIn rOut T target sample)
   infer_instance
 
 instance instDecidablePredSampleFailsSomeTarget {n N rIn rOut T : ℕ} :
@@ -1558,7 +1560,7 @@ theorem targetFailureProbability_le_exp_optimized_chord
     target hlam_pos (hmoment'.trans hexp)
 
 /-- Probability that some target fails. -/
-noncomputable def globalFailureProbability {n N : ℕ} (rIn rOut T : ℕ) : ℚ :=
+@[expose] noncomputable def globalFailureProbability {n N : ℕ} (rIn rOut T : ℕ) : ℚ :=
   uniformProbability fun sample : CenterSample n N =>
     sampleFailsSomeTarget rIn rOut T sample
 
@@ -1568,19 +1570,11 @@ theorem globalFailureProbability_le_sum_targetFailureProbability {n N rIn rOut T
       ∑ target : HypercubeVertex n,
         targetFailureProbability (N := N) rIn rOut T target := by
   classical
-  change
-    uniformProbability
-        (fun sample : CenterSample n N =>
-          ∃ target : HypercubeVertex n,
-            sampleTotalContribution rIn rOut target sample < T) ≤
-      ∑ target : HypercubeVertex n,
-        uniformProbability
-          (fun sample : CenterSample n N =>
-            sampleTotalContribution rIn rOut target sample < T)
-  exact
-      (uniformProbability_exists_le_sum
-        (Ω := CenterSample n N) (ι := HypercubeVertex n)
-        (fun target sample => sampleTotalContribution rIn rOut target sample < T))
+  simpa only [globalFailureProbability, targetFailureProbability,
+    sampleFailsSomeTarget, sampleTargetFails] using
+    (uniformProbability_exists_le_sum
+      (Ω := CenterSample n N) (ι := HypercubeVertex n)
+      (fun target sample => sampleTotalContribution rIn rOut target sample < T))
 
 /-- Probabilistic-method extraction: if the probability that some target fails
 is less than one, then a good center sample exists. -/
@@ -1596,6 +1590,8 @@ theorem exists_goodCenterSample_of_globalFailureProbability_lt_one {n N rIn rOut
       (by simpa [globalFailureProbability] using hprob) with
     ⟨sample, hnot_fail⟩
   refine ⟨sample, ?_⟩
+  change ∀ target : HypercubeVertex n,
+    T ≤ annulusTotalContribution rIn rOut target sample.toList
   intro target
   have hnot_lt :
       ¬ sampleTotalContribution rIn rOut target sample < T := by

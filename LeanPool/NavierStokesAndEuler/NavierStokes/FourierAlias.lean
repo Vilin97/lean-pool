@@ -38,7 +38,7 @@ section Averages
 variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Integer translation invariance of an actual function on the universal cover. -/
-noncomputable def TorusPeriodic (f : Plane → F) : Prop :=
+@[expose] noncomputable def TorusPeriodic (f : Plane → F) : Prop :=
   ∀ Y : Plane, ∀ k : Frequency, f (Y + ((k.1 : ℝ), (k.2 : ℝ))) = f Y
 
 /-- The actual normalized unit-square average. -/
@@ -503,7 +503,7 @@ theorem cutoffAlias_eq_nonbarPart {a b M : ℝ} {v : Plane} {f : State → ℂ}
   rw [totalIntegral_nonbarPart hf hs hm]
 
 /-- The successive slow derivatives of actual directional Fourier inverses. -/
-noncomputable def fourierSourceJet (d : Direction) (f : State → ℂ) (p : ℕ) : State → ℂ :=
+@[expose] noncomputable def fourierSourceJet (d : Direction) (f : State → ℂ) (p : ℕ) : State → ℂ :=
   RadialAlias.sourceJet (inverse d) f p
 
 /-- The interleaved construction is exactly the manuscript's slow derivative

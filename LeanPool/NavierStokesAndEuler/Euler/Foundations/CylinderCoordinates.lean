@@ -85,7 +85,7 @@ theorem covering_fundamental_measurePreserving (a : ℝ) :
   coveringMap period ∘ coordinateEquiv
 
 /-- Euclidean measure restricted to one fundamental angular strip. -/
-noncomputable def stripMeasure (a : ℝ) : Measure (Domain 4) :=
+@[expose] noncomputable def stripMeasure (a : ℝ) : Measure (Domain 4) :=
   volume.restrict {z : Domain 4 | z 0 ∈ Set.Ioc a (a + period)}
 
 omit [Fact (0 < period)] in

@@ -226,7 +226,7 @@ high-rank induction be developed and checked independently of the rank-four proo
 rational weights that is isotropic over every `p`-adic completion and over `ℝ` is isotropic
 over `ℚ`.  This is the WP4.2 statement, recorded as a `Prop` so that the rank-`≥ 5`
 induction can be stated against it. -/
-def RankFourDiagonalHM : Prop :=
+@[expose] def RankFourDiagonalHM : Prop :=
   ∀ w : Fin 4 → ℚ, (∀ i, w i ≠ 0) →
     (∀ (p : ℕ) [Fact (Nat.Prime p)],
       (weightedSumSquares ℚ_[p] (fun i => (w i : ℚ_[p]))).Isotropic) →
@@ -763,7 +763,7 @@ end Assembly
 weights that is isotropic over every `p`-adic completion and over `ℝ` is isotropic over `ℚ`.
 This is the WP5.3 statement, recorded as a `Prop` so that the assembly of `hasseMinkowski`
 (WP6.2) can be developed against it while the induction is proved. -/
-def RankFiveLeDiagonalHM : Prop :=
+@[expose] def RankFiveLeDiagonalHM : Prop :=
   ∀ {n : ℕ}, 5 ≤ n → ∀ w : Fin n → ℚ, (∀ i, w i ≠ 0) →
     (∀ (p : ℕ) [Fact (Nat.Prime p)],
       (weightedSumSquares ℚ_[p] (fun i => (w i : ℚ_[p]))).Isotropic) →

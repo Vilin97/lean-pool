@@ -78,6 +78,7 @@ theorem iterFrom_mono (f : ApproximableMap V V) {a : V.Element} (ha : a ≤ f.to
 /-- The fixed point of `f` lying above a pre-fixed-point candidate `a` (with `a ⊑
 f(a)`),
 constructed as the directed union `⊔ₙ fⁿ(a)`. -/
+@[expose]
 def fixAbove (f : ApproximableMap V V) {a : V.Element} (ha : a ≤ f.toElementMap a) : V.Element :=
   NeighborhoodSystem.iSupDirected (f.iterFrom a)
     (fun i j => ⟨max i j, iterFrom_mono f ha (le_max_left i j),

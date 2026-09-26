@@ -90,7 +90,7 @@ lemma fₙ_sub_f {r : RuleApp} : fₙ r ⊆ f r := by
 @[expose] def p {X : Type} (α : X → T.obj X) (x : X) := (α x).2
 
 /-- Edge relation induced by `p`. -/
-def edge {X : Type} (α : X → T.obj X) (x y : X) : Prop := y ∈ p α x
+@[expose] def edge {X : Type} (α : X → T.obj X) (x y : X) : Prop := y ∈ p α x
 
 /-- Definition of GL-proof. -/
 structure Proof where
@@ -114,9 +114,9 @@ def Proof.toCoalgebra (𝕏 : Proof) : CategoryTheory.Endofunctor.Coalgebra T wh
   str := TypeCat.ofHom 𝕏.α
 
 /-- A proof `𝕏` proves sequent `Δ` if some node of `𝕏` has sequent `Δ` as its sequent. -/
-def proves (𝕏 : Proof) (Δ : Sequent) : Prop := ∃ x : 𝕏.X, f (r 𝕏.α x) = Δ
+@[expose] def proves (𝕏 : Proof) (Δ : Sequent) : Prop := ∃ x : 𝕏.X, f (r 𝕏.α x) = Δ
 /-- A sequent is provable if there exists a GL-proof of it. -/
-def Sequent.isTrue (Δ : Sequent) : Prop := ∃ 𝕏 : Proof, proves 𝕏 Δ
+@[expose] def Sequent.isTrue (Δ : Sequent) : Prop := ∃ 𝕏 : Proof, proves 𝕏 Δ
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
 infixr:6 "⊢" => proves

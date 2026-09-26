@@ -21,7 +21,7 @@ namespace NumberField.Odlyzko
 variable (K : Type*) [Field K] [NumberField K]
 
 /-- A discriminant factor used in the Odlyzko-bound argument. -/
-def CompletedZeta.discriminantFactor (s : ℂ) : ℂ :=
+@[expose] def CompletedZeta.discriminantFactor (s : ℂ) : ℂ :=
   ((|(discr K : ℝ)| : ℝ) : ℂ) ^ (s / 2)
 
 /-- An archimedean factor used in the Odlyzko-bound argument. -/

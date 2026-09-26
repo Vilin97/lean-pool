@@ -102,7 +102,7 @@ variable (𝕜 : Type*) (ι : Type*) [Semiring 𝕜] [PartialOrder 𝕜] [Fintyp
 
 /-- The standard simplex in the space of functions `ι → 𝕜` is the set of vectors with
 non-negative coordinates with total sum `1`. -/
-def stdSimplex : Set (ι → 𝕜) :=
+@[expose] def stdSimplex : Set (ι → 𝕜) :=
   {f | (∀ x, 0 ≤ f x) ∧ ∑ x, f x = 1}
 
 theorem stdSimplex_eq_inter :

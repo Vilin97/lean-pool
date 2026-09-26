@@ -107,19 +107,19 @@ lemma fₙ_alternate (r : RuleApp) : fₙ r = match r with
 lemma fₙ_sub_f {r : RuleApp} : fₙ r ⊆ f r := by simp [fₙ]
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def RuleApp.isBox : RuleApp → Prop
+@[expose] def RuleApp.isBox : RuleApp → Prop
   | RuleApp.boxₗ _ _ _ => true
   | RuleApp.boxᵣ _ _ _ => true
   | _ => false
 
 /-- Get RuleApp of a node (first projection). -/
-def r {X : Type} (α : X → T.obj X) (x : X) := (α x).1
+@[expose] def r {X : Type} (α : X → T.obj X) (x : X) := (α x).1
 
 /-- Get premises of a node (second projection). -/
-def p {X : Type} (α : X → T.obj X) (x : X) := (α x).2
+@[expose] def p {X : Type} (α : X → T.obj X) (x : X) := (α x).2
 
 /-- Edge relation induced by `p`. -/
-def edge {X : Type} (α : X → T.obj X) (x y : X) : Prop := y ∈ p α x
+@[expose] def edge {X : Type} (α : X → T.obj X) (x y : X) : Prop := y ∈ p α x
 
 /-- Definition of GL-split proof. -/
 structure Proof where
@@ -159,9 +159,9 @@ def Proof.toCoalgebra (𝕏 : Proof) : CategoryTheory.Endofunctor.Coalgebra T wh
   str := TypeCat.ofHom 𝕏.α
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def proves (𝕏 : Proof) (Δ : SplitSequent) : Prop := ∃ x : 𝕏.X, f (r 𝕏.α x) = Δ
+@[expose] def proves (𝕏 : Proof) (Δ : SplitSequent) : Prop := ∃ x : 𝕏.X, f (r 𝕏.α x) = Δ
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def SplitSequent.isTrue (Δ : SplitSequent) : Prop := ∃ (𝕏 : Proof), proves 𝕏 Δ
+@[expose] def SplitSequent.isTrue (Δ : SplitSequent) : Prop := ∃ (𝕏 : Proof), proves 𝕏 Δ
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
 infixr:6 "⊢" => proves

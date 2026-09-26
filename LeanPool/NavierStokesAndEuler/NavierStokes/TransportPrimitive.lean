@@ -66,7 +66,7 @@ def wholeAlias (M : ℝ) (v Y : E) (f : ℝ × E → F) : F :=
   fderiv ℝ f z (1, 0)
 
 /-- The actual auxiliary directional derivative. -/
-def directionalDeriv (v : E) (f : ℝ × E → F) (z : ℝ × E) : F :=
+@[expose] def directionalDeriv (v : E) (f : ℝ × E → F) (z : ℝ × E) : F :=
   fderiv ℝ f z (0, v)
 
 theorem shift_hasDerivAt (M : ℝ) (v Y : E) (u : ℝ) :

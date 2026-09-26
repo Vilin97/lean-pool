@@ -103,17 +103,17 @@ def _root_.LieAlgebra.Abelian.DerivationOfLinearMap (K L : Type*) [CommRing K] [
 @[simp]
 theorem _root_.LieAlgebra.Abelian.DerivationCoeLinearMap {K : Type*} [CommRing K] {L : Type*}
     [LieRing L] [LieAlgebra K L] [IsLieAbelian L] (f : L →ₗ[K] L) :
-    (Abelian.DerivationOfLinearMap K L f).toLinearMap = f := rfl
+    (Abelian.DerivationOfLinearMap K L f).toLinearMap = f := by rfl
 
 @[simp]
 theorem _root_.LieAlgebra.Abelian.DerivationCoeFun {K : Type*} [CommRing K] {L : Type*}
     [LieRing L] [LieAlgebra K L] [IsLieAbelian L] (f : L →ₗ[K] L) :
-    ⇑(Abelian.DerivationOfLinearMap K L f) = ⇑f := rfl
+    ⇑(Abelian.DerivationOfLinearMap K L f) = ⇑f := by rfl
 
 @[simp]
 theorem _root_.LieAlgebra.Abelian.DerivationCoeFun' {K : Type*} [CommRing K] {L : Type*}
     [LieRing L] [LieAlgebra K L] [IsLieAbelian L] (f : L →ₗ[K] L) :
-    ⇑((Abelian.DerivationOfLinearMap K L).toLieHom f) = ⇑f := rfl
+    ⇑((Abelian.DerivationOfLinearMap K L).toLieHom f) = ⇑f := by rfl
 
 end abelianDerivation
 

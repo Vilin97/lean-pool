@@ -43,6 +43,7 @@ instance instModuleQuotientOfIsScalarTowerLeanPool [Semiring α] [NonAssocSemiri
 
 variable (α) in
 /-- The quotient map as a linear map. -/
+@[expose]
 def mkL [Semiring α] [NonAssocSemiring R] [Module α R] [IsScalarTower α R R]
     (c : RingCon R) : R →ₗ[α] c.Quotient where
   __ := c.mk'

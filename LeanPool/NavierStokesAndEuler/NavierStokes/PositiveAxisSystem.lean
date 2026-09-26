@@ -503,10 +503,10 @@ open SimilarityProfile
   ⟨f w, partialX f w, partialX (partialX f) w, partialEta f w⟩
 
 theorem timeValue_actualJet (h b : ℝ) (f : InnerProfile) (w : InnerPoint) :
-    timeValue h b w.2 w.1 (actualJet f w) = T h b f w := rfl
+    timeValue h b w.2 w.1 (actualJet f w) = T h b f w := by rfl
 
 theorem axialValue_actualJet (h b : ℝ) (f : InnerProfile) (w : InnerPoint) :
-    axialValue h b w.2 w.1 (actualJet f w) = Z h b f w := rfl
+    axialValue h b w.2 w.1 (actualJet f w) = Z h b f w := by rfl
 
 theorem partialX_contDiffAt {f : InnerProfile} {w : InnerPoint}
     (hf : ContDiffAt ℝ 2 f w) : ContDiffAt ℝ 1 (partialX f) w := by

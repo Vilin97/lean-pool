@@ -136,8 +136,7 @@ lemma Olf.R_sdiff_subset {O Ocond : Olf} : (O \ Ocond).R ⊆ O.R := by
   by_cases h : χ = χ' <;> simp_all [SDiff.sdiff, Olf.R]
 
 /-- Use the new optional value when present, otherwise retain the old value. -/
-@[simp]
-def _root_.Option.pdlOverwrite : Option α → Option α → Option α
+@[expose, simp] def _root_.Option.pdlOverwrite : Option α → Option α → Option α
 | old, none   => old
 | _  , some x => some x
 
@@ -616,7 +615,7 @@ These could be moved to a separate file (or even might be in newer versions of M
 
 /-- Lexicographic extension of a relation `le` to lists: shorter lists come first,
 and lists of the same shape are compared element-wise from left to right. -/
-def listLex {α : Type} (le : α → α → Prop) : List α → List α → Prop
+@[expose] def listLex {α : Type} (le : α → α → Prop) : List α → List α → Prop
   | [], _ => True
   | _ :: _, [] => False
   | a :: as, b :: bs => le a b ∧ (a = b → listLex le as bs)
@@ -674,7 +673,7 @@ lemma listLex_total {α : Type} {le : α → α → Prop} (hrefl : ∀ a, le a a
         · exact Or.inr ⟨h, fun he => absurd he.symm hab⟩
 
 /-- Lexicographic combination of two relations on a product type. -/
-def prodLex {α β : Type} (le1 : α → α → Prop) (le2 : β → β → Prop) : α × β → α × β → Prop
+@[expose] def prodLex {α β : Type} (le1 : α → α → Prop) (le2 : β → β → Prop) : α × β → α × β → Prop
   | (a, b), (a', b') => le1 a a' ∧ (a = a' → le2 b b')
 
 instance prodLex.instDecidableRel {α β : Type} [DecidableEq α] (le1 : α → α → Prop)
@@ -788,7 +787,7 @@ lemma Sequent.key_injective {X Y : Sequent} (h : X.key = Y.key) : X = Y := by
     (Prod.ext (Finset.pdlSort_injective h.2.1) (Olf.key_injective h.2.2))
 
 /-- Order used to compare the keys of `Olf`s. -/
-def olfKeyLe : (ℕ × (List Program × Formula)) → (ℕ × (List Program × Formula)) → Prop :=
+@[expose] def olfKeyLe : (ℕ × (List Program × Formula)) → (ℕ × (List Program × Formula)) → Prop :=
   prodLex (fun (n m : ℕ) => n ≤ m) (prodLex (listLex Program.le) Formula.le)
 
 instance : DecidableRel olfKeyLe := by unfold olfKeyLe; infer_instance
@@ -812,14 +811,14 @@ lemma olfKeyLe_total (x y) : olfKeyLe x y ∨ olfKeyLe y x :=
       (listLex_total Program.le_rfl Program.le_total) Formula.le_total) x y
 
 /-- Order used to compare the keys of sequents. -/
-def seqKeyLe : (List Formula × (List Formula × (ℕ × (List Program × Formula)))) →
+@[expose] def seqKeyLe : (List Formula × (List Formula × (ℕ × (List Program × Formula)))) →
     (List Formula × (List Formula × (ℕ × (List Program × Formula)))) → Prop :=
   prodLex (listLex Formula.le) (prodLex (listLex Formula.le) olfKeyLe)
 
 instance : DecidableRel seqKeyLe := by unfold seqKeyLe; infer_instance
 
 /-- A linear order on sequents, used to define `Finset.pdlSeqSort`. -/
-def Sequent.le (X Y : Sequent) : Prop := seqKeyLe X.key Y.key
+@[expose] def Sequent.le (X Y : Sequent) : Prop := seqKeyLe X.key Y.key
 
 instance Sequent.instDecidableRelLe : DecidableRel Sequent.le :=
   fun X Y => by unfold Sequent.le; infer_instance

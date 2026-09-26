@@ -191,9 +191,10 @@ theorem Jacobian.pushforward_pullback (f : X → Y) (hf : ContMDiff 𝓘(ℂ) �
           (s := (RS.periodSubgroup Y).topologicalClosure) v := by
     exact map_nsmul (QuotientAddGroup.mk' _) (ContMDiff.degree f hf) v
   rw [h1]
-  exact map_nsmul (RS.uliftUpHom.toAddMonoidHom
-    (A := (Fin (genus Y) → ℂ) ⧸ (RS.periodSubgroup Y).topologicalClosure))
-    (ContMDiff.degree f hf) _
+  simpa only [ContinuousAddMonoidHom.coe_toAddMonoidHom, RS.uliftUpHom_apply] using
+    map_nsmul (RS.uliftUpHom.toAddMonoidHom
+      (A := (Fin (genus Y) → ℂ) ⧸ (RS.periodSubgroup Y).topologicalClosure))
+      (ContMDiff.degree f hf) (QuotientAddGroup.mk v)
 
 end RS
 

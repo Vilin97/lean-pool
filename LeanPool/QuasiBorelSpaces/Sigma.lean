@@ -57,7 +57,7 @@ attribute [fun_prop] measurable_index
 Since every `Var` represents a variable, each `Var` induces a function
 `ℝ → Σi, P i`.
 -/
-def apply (x : Var I P) (r : ℝ) : Sigma P where
+@[expose] def apply (x : Var I P) (r : ℝ) : Sigma P where
   fst := x.embed (x.index r)
   snd := x.var (x.index r) r
 

@@ -43,7 +43,7 @@ universe u
   IFN F {i} {j} - condIFN F {i} {j} {k} - condIFN F {i} {j} {l}
 
 /-- `Γ_n` (paper eq. 11) as a predicate on `Finset (Fin n) → ℝ`. -/
-def shannonConeN {n : ℕ} (F : Finset (Fin n) → ℝ) : Prop :=
+@[expose] def shannonConeN {n : ℕ} (F : Finset (Fin n) → ℝ) : Prop :=
   F ∅ = 0 ∧
   (∀ α β : Finset (Fin n), α ⊆ β → F α ≤ F β) ∧
   (∀ α β : Finset (Fin n), F (α ∪ β) + F (α ∩ β) ≤ F α + F β)
@@ -71,7 +71,7 @@ the test module); the quantifier shapes of `zhangYeungHoldsN` and `zhangYeungHol
 differ, so
 their equivalence at `n = 4` is extensional rather than definitional.
 -/
-def zhangYeungHoldsN {n : ℕ} (F : Finset (Fin n) → ℝ) : Prop :=
+@[expose] def zhangYeungHoldsN {n : ℕ} (F : Finset (Fin n) → ℝ) : Prop :=
   ∀ i j k l : Fin n, i ≠ j → i ≠ k → i ≠ l → j ≠ k → j ≠ l → k ≠ l →
     zhangYeungAtN F i j k l
 
@@ -103,7 +103,7 @@ noncomputable abbrev entropyFn
 The Shannon outer bound `Γ_n`, packaged as a set. Membership is definitionally
 `shannonConeN`.
 -/
-def shannonRegionN (n : ℕ) : Set (Finset (Fin n) → ℝ) :=
+@[expose] def shannonRegionN (n : ℕ) : Set (Finset (Fin n) → ℝ) :=
   {F | shannonConeN F}
 
 /--
@@ -113,7 +113,7 @@ variables. The quantified probability space and codomain family range over the a
 universe
 `u`, so a `Type u` realization is literally a member of the set.
 -/
-def entropyRegionN (n : ℕ) : Set (Finset (Fin n) → ℝ) :=
+@[expose] def entropyRegionN (n : ℕ) : Set (Finset (Fin n) → ℝ) :=
   {F | ∃ (Ω : Type u) (_ : MeasurableSpace Ω) (μ : Measure Ω) (_ : IsProbabilityMeasure μ)
       (S : Fin n → Type u) (_ : ∀ i, MeasurableSpace (S i)) (_ : ∀ i, Fintype (S i))
       (_ : ∀ i, MeasurableSingletonClass (S i))

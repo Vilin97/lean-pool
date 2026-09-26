@@ -114,7 +114,7 @@ variable {Y' : Type u} [TopologicalSpace Y'] [T2Space Y'] [CompactSpace Y'] [Con
 
 /-- **`Jacobian.pushforward` (§8.4)**: the pushforward map between Jacobians associated to a
 holomorphic map of the underlying curves. -/
-noncomputable def Jacobian.pushforward (f : X' → Y') (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
+@[expose] noncomputable def Jacobian.pushforward (f : X' → Y') (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
     Jacobian X' →ₜ+ Jacobian Y' :=
   Jacobian.inducedHom (periodSubgroup_le_comap_pushforwardT f hf)
 

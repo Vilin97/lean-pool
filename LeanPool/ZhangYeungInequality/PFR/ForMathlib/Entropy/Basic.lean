@@ -814,7 +814,7 @@ lemma _root_.ProbabilityTheory.mutualInfo_eq_zero
     congr
   rw [h_fst, h_snd]
   convert measureMutualInfo_eq_zero_iff (μ := μ.map (⟨X, Y⟩)) using 2
-  · exact measureMutualInfo_def (μ.map (⟨X, Y⟩))
+  · exact (measureMutualInfo_def (μ.map (⟨X, Y⟩))).symm
   rw [indepFun_iff_map_prod_eq_prod_map_map hX.aemeasurable hY.aemeasurable,
     Measure.ext_iff_measureReal_singleton_finiteSupport]
   congr! with p

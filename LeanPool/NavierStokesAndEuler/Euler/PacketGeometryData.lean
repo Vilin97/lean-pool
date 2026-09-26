@@ -223,7 +223,7 @@ variable {α : Type*}
 @[expose] def targetTime (D : PhysicalGeometryData α) : ℝ := D.time D.target
 
 /-- Ray, given by `scaledRay D.m D.v (D.r ξ) D.s₀ D.t₀ D.a D.ε τ`. -/
-def ray (D : PhysicalGeometryData α) (ξ : α) (τ : ℝ) : Fin 3 → ℝ :=
+@[expose] def ray (D : PhysicalGeometryData α) (ξ : α) (τ : ℝ) : Fin 3 → ℝ :=
   scaledRay D.m D.v (D.r ξ) D.s₀ D.t₀ D.a D.ε τ
 
 /-- Velocity, given by `scaledVelocity D.m D.v (D.w ξ) D.t₀ D.a D.ε τ`. -/

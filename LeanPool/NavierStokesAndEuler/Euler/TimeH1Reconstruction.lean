@@ -60,7 +60,7 @@ omit [CompleteSpace E] in
 theorem reconstruction_apply (T : ℝ) (hT : 0 ≤ T) (p q : TimeLp T E)
     (t : Icc (0 : ℝ) T) :
     reconstruction T hT (p,q) t =
-      mean T hT p + (terminalPrimitive T hT q t - mean T hT (primitiveTimeLp T hT q)) := rfl
+      mean T hT p + (terminalPrimitive T hT q t - mean T hT (primitiveTimeLp T hT q)) := by rfl
 
 /-- Constant fields have their actual value as time average. -/
 theorem mean_constantField (T : ℝ) (hT : 0 < T) (v : E) :

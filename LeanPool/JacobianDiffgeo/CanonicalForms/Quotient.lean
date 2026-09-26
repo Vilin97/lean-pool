@@ -68,7 +68,7 @@ end MFormData
 variable (X) in
 /-- D1 (revised): a meromorphic 1-form on `X` — the quotient of raw chart-coefficient families
 (`MFormData X`) by codiscrete/germ agreement, the same CC3 quotient pattern as `ℳ X`. -/
-def MForm : Type _ := Quotient (MFormData.instSetoid (X := X))
+@[expose] def MForm : Type _ := Quotient (MFormData.instSetoid (X := X))
 
 namespace MForm
 
@@ -116,13 +116,13 @@ instance : SMul ℂ (MForm X) :=
 
 @[simp] theorem mk_zero : (mk (0 : MFormData X)) = (0 : MForm X) := rfl
 
-@[simp] theorem mk_add (θ η : MFormData X) : mk θ + mk η = mk (θ + η) := rfl
+@[simp] theorem mk_add (θ η : MFormData X) : mk θ + mk η = mk (θ + η) := by rfl
 
-@[simp] theorem mk_neg (θ : MFormData X) : -mk θ = mk (-θ) := rfl
+@[simp] theorem mk_neg (θ : MFormData X) : -mk θ = mk (-θ) := by rfl
 
-@[simp] theorem mk_sub (θ η : MFormData X) : mk θ - mk η = mk (θ - η) := rfl
+@[simp] theorem mk_sub (θ η : MFormData X) : mk θ - mk η = mk (θ - η) := by rfl
 
-@[simp] theorem mk_smul (c : ℂ) (θ : MFormData X) : c • mk θ = mk (c • θ) := rfl
+@[simp] theorem mk_smul (c : ℂ) (θ : MFormData X) : c • mk θ = mk (c • θ) := by rfl
 
 instance : AddCommGroup (MForm X) where
   add_assoc a b c := Quotient.inductionOn₃ a b c fun θ η ζ => congrArg mk (add_assoc θ η ζ)
@@ -154,13 +154,13 @@ because `meromorphicOrderAt` is a germ functional). -/
 noncomputable def ord (Θ : MForm X) (x : X) : WithTop ℤ :=
   Quotient.liftOn Θ (fun θ => θ.ord x) fun _ _ h => meromorphicOrderAt_congr (h x)
 
-@[simp] theorem ord_mk (θ : MFormData X) (x : X) : (mk θ).ord x = θ.ord x := rfl
+@[simp] theorem ord_mk (θ : MFormData X) (x : X) : (mk θ).ord x = θ.ord x := by rfl
 
 /-- D4: the residue of a meromorphic 1-form at `x`. -/
 noncomputable def resAt (Θ : MForm X) (x : X) : ℂ :=
   Quotient.liftOn Θ (fun θ => θ.resAt x) fun _ _ h => resAt_congr (h x)
 
-@[simp] theorem resAt_mk (θ : MFormData X) (x : X) : (mk θ).resAt x = θ.resAt x := rfl
+@[simp] theorem resAt_mk (θ : MFormData X) (x : X) : (mk θ).resAt x = θ.resAt x := by rfl
 
 /-- The `k`-th Laurent coefficient of a meromorphic 1-form at `x`, read in the preferred chart
 (consumed by `MLFormData.Realizes`, D13). -/
@@ -169,7 +169,7 @@ noncomputable def laurentCoeffAt (Θ : MForm X) (x : X) (k : ℤ) : ℂ :=
     fun _ _ h => laurentCoeffAt_congr (h x) k
 
 @[simp] theorem laurentCoeffAt_mk (θ : MFormData X) (x : X) (k : ℤ) :
-    (mk θ).laurentCoeffAt x k = RS.laurentCoeffAt (θ.coeffAt x) (chartAt ℂ x x) k := rfl
+    (mk θ).laurentCoeffAt x k = RS.laurentCoeffAt (θ.coeffAt x) (chartAt ℂ x x) k := by rfl
 
 theorem resAt_eq_laurentCoeffAt (Θ : MForm X) (x : X) :
     Θ.resAt x = Θ.laurentCoeffAt x (-1) := by
@@ -202,7 +202,7 @@ noncomputable def divisor [T1Space X] (Θ : MForm X) : Divisor X :=
       rw [hord]
 
 @[simp] theorem divisor_mk [T1Space X] (θ : MFormData X) :
-    (mk θ).divisor = θ.divisor := rfl
+    (mk θ).divisor = θ.divisor := by rfl
 
 @[simp] theorem divisor_apply [T1Space X] (Θ : MForm X) (x : X) :
     Θ.divisor x = (Θ.ord x).untop₀ := by

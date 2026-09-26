@@ -373,7 +373,7 @@ theorem abs_coordAcross_sub_le (hu : IsDirection u) (a x y : Plane) :
 
 /-- The open block around the directed edge from `a` with unit tangent `u`: the points whose
 progress lies in `(t₁, t₂)` and whose signed distance lies in `(s₁, s₂)`. -/
-def strip (a u : Plane) (t₁ t₂ s₁ s₂ : ℝ) : Set Plane :=
+@[expose] def strip (a u : Plane) (t₁ t₂ s₁ s₂ : ℝ) : Set Plane :=
   {x | t₁ < coordAlong a u x ∧ coordAlong a u x < t₂ ∧
     s₁ < coordAcross a u x ∧ coordAcross a u x < s₂}
 
@@ -482,7 +482,7 @@ theorem vertex_ne : P.vertex i ≠ P.vertex (i + 1) := fun h =>
 /-! ### Edges, in their own frame -/
 
 /-- The length of the edge leaving vertex `i`. -/
-noncomputable def len : ℝ := ‖P.vertex (i + 1) - P.vertex i‖
+@[expose] noncomputable def len : ℝ := ‖P.vertex (i + 1) - P.vertex i‖
 
 /-- The unit tangent of the edge leaving vertex `i`, which is also the outgoing ray at `i`. -/
 noncomputable def tang : Plane := dir (P.vertex (i + 1) - P.vertex i)

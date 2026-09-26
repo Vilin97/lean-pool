@@ -37,7 +37,7 @@ open scoped TensorProduct
 lemma algebraMapCLM_eq_ket_one {R A : Type*} [RCLike R] [NormedAddCommGroupOfRing A]
   [InnerProductSpace R A] [SMulCommClass R A A] [IsScalarTower R A A] :
   algebraMapCLM R A = ket R 1 := by
-  ext r
+  ext
   simp only [algebraMapCLM_apply, ket_apply_apply, Algebra.smul_def, mul_one]
 
 lemma algebraMapCLM_adjoint_eq_bra_one {R A : Type*} [RCLike R] [NormedAddCommGroupOfRing A]
@@ -187,8 +187,7 @@ theorem Coalgebra.lTensor_mul_comp_rTensor_mul_adjoint_of
 Coalgebra.lTensor_mul_comp_rTensor_comul_of h
 
 /-- Construct the Frobenius algebra structure from finite-dimensional Hilbert-algebra data. -/
-@[reducible]
-@[expose] noncomputable def FiniteDimensionalCoAlgebraIsFrobeniusAlgebraOf
+@[reducible, expose] noncomputable def FiniteDimensionalCoAlgebraIsFrobeniusAlgebraOf
   [RCLike R] [NormedAddCommGroupOfRing A] [InnerProductSpace R A]
   [SMulCommClass R A A] [IsScalarTower R A A] [FiniteDimensional R A]
   (h : ∃ σ : A → A, ∀ x y z : A, ⟪x * y, z⟫_R = ⟪y, σ x * z⟫_R) :

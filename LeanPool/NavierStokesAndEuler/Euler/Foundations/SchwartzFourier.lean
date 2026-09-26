@@ -50,7 +50,7 @@ theorem schwartzFourier_apply (f : 𝓢(V, E)) (x : V) :
     schwartzFourier f x = 𝓕 (f : V → E) x := by rfl
 
 /-- The ordinary Fourier integral as a continuous linear map on Schwartz functions. -/
-def schwartzFourierCLM : 𝓢(V, E) →L[ℂ] 𝓢(V, E) where
+@[expose] def schwartzFourierCLM : 𝓢(V, E) →L[ℂ] 𝓢(V, E) where
   toFun := schwartzFourier
   map_add' := by
     intro f g

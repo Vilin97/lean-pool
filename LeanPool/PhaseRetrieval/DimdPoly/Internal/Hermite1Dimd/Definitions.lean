@@ -67,7 +67,7 @@ abbrev Circle := AddCircle T
   ∫ z, ‖F z‖ ^ 2 ∂ gaussianMeasure d
 
 /-- `gaussianL2Norm`: gaussian L2 Norm. -/
-def gaussianL2Norm {d : ℕ} {α : Type*} [Norm α] (F : CSpace d → α) : ℝ :=
+@[expose] def gaussianL2Norm {d : ℕ} {α : Type*} [Norm α] (F : CSpace d → α) : ℝ :=
   Real.sqrt (gaussianL2NormSq F)
 
 /-- `gaussianInner`: gaussian Inner. -/
@@ -136,7 +136,7 @@ def defectNorm {d : ℕ} (κ : MultiIndex d) (G : FiniteHermiteSum d) : ℝ :=
   fun q => HermiteLEAN.blockIndex (α q)
 
 /-- `totalDegreePiece`: total Degree Piece. -/
-def totalDegreePiece {d : ℕ} (n : ℕ) (G : FiniteHermiteSum d) : FiniteHermiteSum d := by
+@[expose] def totalDegreePiece {d : ℕ} (n : ℕ) (G : FiniteHermiteSum d) : FiniteHermiteSum d := by
   classical
   refine ⟨Finsupp.onFinset (G.support.filter fun α => totalDegree α = n)
     (fun α => if totalDegree α = n then G.coeff α else 0) ?_⟩
@@ -151,19 +151,19 @@ def totalDegreePiece {d : ℕ} (n : ℕ) (G : FiniteHermiteSum d) : FiniteHermit
   { z | ∀ q, (j q : ℝ) ≤ ‖z q‖ ∧ ‖z q‖ < (j q : ℝ) + 1 }
 
 /-- `indicatorMul`: the indicator of `s` times `f`, valued in `ℂ`. -/
-def indicatorMul {α : Type*} (s : Set α) (f : α → ℂ) : α → ℂ :=
+@[expose] def indicatorMul {α : Type*} (s : Set α) (f : α → ℂ) : α → ℂ :=
   by
     classical
     exact fun x => if x ∈ s then f x else 0
 
 /-- `annulusInner`: annulus Inner. -/
-def annulusInner {d : ℕ} (j : MultiIndex d) (F G : CSpace d → ℂ) : ℂ :=
+@[expose] def annulusInner {d : ℕ} (j : MultiIndex d) (F G : CSpace d → ℂ) : ℂ :=
   by
     classical
     exact ∫ z, if z ∈ productAnnulus j then F z * conj (G z) else 0 ∂ gaussianMeasure d
 
 /-- `annulusMass`: annulus Mass. -/
-def annulusMass {d : ℕ} (j : MultiIndex d) (F : CSpace d → ℂ) : ℝ :=
+@[expose] def annulusMass {d : ℕ} (j : MultiIndex d) (F : CSpace d → ℂ) : ℝ :=
   by
     classical
     exact ∫ z, if z ∈ productAnnulus j then ‖F z‖ ^ 2 else 0 ∂ gaussianMeasure d
@@ -178,7 +178,7 @@ def defectAnnulusMass {d : ℕ} (κ : MultiIndex d) (j : MultiIndex d)
         ∂ gaussianMeasure d
 
 /-- `squareBlock`: square Block. -/
-def squareBlock {d : ℕ} (ℓ : MultiIndex d) : Set (MultiIndex d) :=
+@[expose] def squareBlock {d : ℕ} (ℓ : MultiIndex d) : Set (MultiIndex d) :=
   { α | ∀ q, α q ∈ HermiteLEAN.squareBlock (ℓ q) }
 
 /-- `blockDistance`: block Distance. -/
@@ -186,6 +186,7 @@ def squareBlock {d : ℕ} (ℓ : MultiIndex d) : Set (MultiIndex d) :=
   (Finset.univ : Finset (Fin d)).sup fun q => Nat.dist (j q) (ℓ q)
 
 /-- `blockPart`: block Part. -/
+@[expose]
 def blockPart {d : ℕ} (ℓ : MultiIndex d) (G : FiniteHermiteSum d) : FiniteHermiteSum d := by
   classical
   refine ⟨Finsupp.onFinset (G.support.filter fun α => α ∈ squareBlock ℓ)
@@ -207,7 +208,7 @@ def blockPart {d : ℕ} (ℓ : MultiIndex d) (G : FiniteHermiteSum d) : FiniteHe
   G.support.filter fun α => M < blockDistance j (blockIndexMulti α)
 
 /-- `localPart`: local Part. -/
-def localPart {d : ℕ} (j : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d) :
+@[expose] def localPart {d : ℕ} (j : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d) :
     FiniteHermiteSum d := by
   classical
   refine ⟨Finsupp.onFinset (localCoeffSet j M G)
@@ -219,7 +220,7 @@ def localPart {d : ℕ} (j : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d) :
   exact Finset.mem_filter.mpr ⟨hsupp, hlocal⟩
 
 /-- `remainderPart`: remainder Part. -/
-def remainderPart {d : ℕ} (j : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d) :
+@[expose] def remainderPart {d : ℕ} (j : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d) :
     FiniteHermiteSum d := by
   classical
   refine ⟨Finsupp.onFinset (farCoeffSet j M G)
@@ -231,6 +232,7 @@ def remainderPart {d : ℕ} (j : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d
   exact Finset.mem_filter.mpr ⟨hsupp, hfar⟩
 
 /-- `localDegreeSet`: local Degree Set. -/
+@[expose]
 def localDegreeSet {d : ℕ} (j : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d) : Finset ℕ :=
   (localCoeffSet j M G).image totalDegree
 
@@ -252,7 +254,7 @@ def localDegreePiece {d : ℕ} (j : MultiIndex d) (M n : ℕ) (G : FiniteHermite
   degreeIntervalUpper j M - degreeIntervalLower j M + 1
 
 /-- `annulusRadius`: annulus Radius. -/
-def annulusRadius {d : ℕ} (j : MultiIndex d) : ℕ :=
+@[expose] def annulusRadius {d : ℕ} (j : MultiIndex d) : ℕ :=
   (Finset.univ : Finset (Fin d)).sup fun q => j q
 
 /-- `degreeThreshold`: degree Threshold. -/
@@ -340,11 +342,11 @@ def phaseAdjustedNorm {d : ℕ} (κ : MultiIndex d) (w : ℂ) (G : FiniteHermite
   fun t => ∑ m : Fin L, c m * fourier ((N + m.1 : ℕ) : ℤ) t
 
 /-- `HasPositiveFrequencySupport`: Has Positive Frequency Support. -/
-def HasPositiveFrequencySupport (P : Circle → ℂ) (E : Finset ℕ) : Prop :=
+@[expose] def HasPositiveFrequencySupport (P : Circle → ℂ) (E : Finset ℕ) : Prop :=
   ∃ b : ℕ → ℂ, P = positiveFrequencyPolynomial E b
 
 /-- `HasBandlimitedSupport`: Has Bandlimited Support. -/
-def HasBandlimitedSupport (P : Circle → ℂ) (N L : ℕ) : Prop :=
+@[expose] def HasBandlimitedSupport (P : Circle → ℂ) (N L : ℕ) : Prop :=
   ∃ c : Fin L → ℂ, P = bandLimitedPolynomial N L c
 
 end Hermite1DimdLEAN

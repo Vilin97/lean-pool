@@ -119,7 +119,7 @@ lemma fₙ_alternate {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSeq
 universe u
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-@[simp] def T {𝕏 : Split.Proof} (x : 𝕏.X) (τ : 𝕏.X → SplitSequent) :
+@[expose, simp] def T {𝕏 : Split.Proof} (x : 𝕏.X) (τ : 𝕏.X → SplitSequent) :
     CategoryTheory.Functor Type Type :=
   { obj := fun X ↦ ((RuleApp x τ × List X) : Type)
     map := fun {X Y} f ↦

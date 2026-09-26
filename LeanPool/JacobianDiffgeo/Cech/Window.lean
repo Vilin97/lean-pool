@@ -191,7 +191,7 @@ omit [IsManifold 𝓘(ℂ, ℂ) ω X] [T2Space X] [CompactSpace X] in
 theorem restrictToChart_apply_coe (D' : RS.Divisor X) (q : X) (φ : RS.LinSys D') :
     (restrictToChart D' q φ : RS.MeroGermOn X ((chartAt ℂ q).source)) =
       RS.MeroGermOn.restrict (Set.subset_univ (chartAt ℂ q).source)
-        (φ : RS.MeroGermOn X (Set.univ : Set X)) := rfl
+        (φ : RS.MeroGermOn X (Set.univ : Set X)) := by rfl
 
 /-- Truncation `β : L(D') → Window D D'` — purely structural (D7). -/
 noncomputable def windowMap {D D' : RS.Divisor X} (_h : D ≤ D') :
@@ -201,7 +201,7 @@ noncomputable def windowMap {D D' : RS.Divisor X} (_h : D ≤ D') :
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem windowMap_apply {D D' : RS.Divisor X} (h : D ≤ D') (φ : RS.LinSys D')
     (q : diffSupp D D') :
-    windowMap h φ q = WindowAt.mk (q : X) (D q) (D' q) (restrictToChart D' q φ) := rfl
+    windowMap h φ q = WindowAt.mk (q : X) (D q) (D' q) (restrictToChart D' q φ) := by rfl
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem windowMap_eq_zero_iff {D D' : RS.Divisor X} (h : D ≤ D') (φ : RS.LinSys D') :

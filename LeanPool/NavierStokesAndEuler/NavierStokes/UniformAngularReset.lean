@@ -230,11 +230,11 @@ def quadraticCLM (lam : ℝ) : Coeff →L[ℝ] Coeff →L[ℝ] Coeff :=
       (quadraticBilin lam))
 
 theorem linearEquiv_apply (lam : ℝ) (hlam : 0 < lam) (c : Coeff) :
-    linearEquiv lam hlam c = (linearMatrix lam).mulVec c := rfl
+    linearEquiv lam hlam c = (linearMatrix lam).mulVec c := by rfl
 
 theorem quadraticCLM_apply (lam : ℝ) (c d : Coeff) :
     quadraticCLM lam c d =
-      ![0, quadraticMoment lam 0 * c 0 * d 0 + quadraticMoment lam 1 * c 1 * d 1] := rfl
+      ![0, quadraticMoment lam 0 * c 0 * d 0 + quadraticMoment lam 1 * c 1 * d 1] := by rfl
 
 theorem weighted_relative_integrable (s : ℝ) (c : Coeff) :
     Integrable (fun y => Real.exp (s * y) * relative c y) :=
@@ -935,7 +935,7 @@ def linearEquivNonneg (lam : ℝ) (hlam : 0 ≤ lam) : Coeff ≃L[ℝ] Coeff :=
           (isUnit_iff_ne_zero.mpr (linearMatrix_det_ne_zero_nonneg lam hlam)), Matrix.one_mulVec] }
 
 theorem linearEquivNonneg_coe (lam : ℝ) (hlam : 0 ≤ lam) :
-    (linearEquivNonneg lam hlam).toContinuousLinearMap = linearCLM lam := rfl
+    (linearEquivNonneg lam hlam).toContinuousLinearMap = linearCLM lam := by rfl
 
 theorem continuous_linearCLM : Continuous linearCLM := by
   let L : (Matrix (Fin 2) (Fin 2) ℝ) →ₗ[ℝ] (Coeff →L[ℝ] Coeff) :=

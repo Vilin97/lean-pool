@@ -54,7 +54,7 @@ def lattice (n : Lattice) : Space :=
   (WithLp.equiv 2 (Fin 3 → ℝ)).symm (fun i => (n i : ℝ))
 
 @[simp] theorem lattice_apply (n : Lattice) (i : Fin 3) :
-    lattice n i = (n i : ℝ) := rfl
+    lattice n i = (n i : ℝ) := by rfl
 
 @[simp] theorem lattice_zero : lattice 0 = 0 := by
   ext i

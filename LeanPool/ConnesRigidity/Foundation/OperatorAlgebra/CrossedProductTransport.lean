@@ -51,7 +51,7 @@ def crossedHaarHilbertEquiv
     {Y : HaarProbabilityAction K Ξ}
     (e : EquivariantHaarEquiv X Y)
     (ξ : crossedHilbert X) (k : K) :
-    crossedHaarHilbertEquiv e ξ k = crossedBaseHaarEquiv e (ξ k) := rfl
+    crossedHaarHilbertEquiv e ξ k = crossedBaseHaarEquiv e (ξ k) := by rfl
 
 /- Constant one is preserved by measure-preserving base transport.
 Paper: §3. -/

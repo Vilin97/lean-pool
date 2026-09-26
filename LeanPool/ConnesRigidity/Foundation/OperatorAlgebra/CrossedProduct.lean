@@ -242,7 +242,7 @@ def crossedMultiplier
 /-- A fiberwise linear isometry is lifted to the crossed Hilbert space.
 Paper: §3.
 -/
-def crossedFiberwiseEquiv
+@[expose] def crossedFiberwiseEquiv
     {K : Type u} {H : Type v} {J : Type w}
     [NormedAddCommGroup H] [NormedSpace ℂ H]
     [NormedAddCommGroup J] [NormedSpace ℂ J]
@@ -339,7 +339,7 @@ def crossedIndexEquiv
 /-- The base Haar equivalence acts fiberwise on the crossed Hilbert space.
 Paper: §3.
 -/
-def crossedBaseHaarEquiv
+@[expose] def crossedBaseHaarEquiv
     {K : Type u} {Ω : Type v} {Ξ : Type w} [Group K]
     [AddCommGroup Ω] [TopologicalSpace Ω] [MeasurableSpace Ω]
     [AddCommGroup Ξ] [TopologicalSpace Ξ] [MeasurableSpace Ξ]
@@ -477,7 +477,7 @@ def crossedGeneratorSet
 /-- The crossed-product vacuum is the constant base vector at the identity.
 Paper: §3.
 -/
-def crossedVacuum
+@[expose] def crossedVacuum
     {K : Type u} {Ω : Type v} [Group K]
     [AddCommGroup Ω] [TopologicalSpace Ω] [MeasurableSpace Ω]
     (X : HaarProbabilityAction K Ω) : crossedHilbert X := by

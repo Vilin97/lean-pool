@@ -61,7 +61,8 @@ lemma _root_.SimpleGraph.Walk.exists_repr_isChain {x y : Vertices R} (p : BTgrap
       rw [← p.cons_tail_support] at hl
       exact (List.cons.inj hl).1
     subst hLv
-    obtain ⟨M, rfl, hstd⟩ := exists_repr_isStandardNeighbour_of_isNeighbour L u hadj.symm
+    obtain ⟨M, rfl, hstd⟩ := exists_repr_isStandardNeighbour_of_isNeighbour L u
+      (by simpa only [BTgraph_adj] using hadj.symm)
     refine ⟨M :: L :: l, ?_, ?_⟩
     · exact cons_isChain_of hchain hstd
     · rw [SimpleGraph.Walk.support_cons, ← hl]
@@ -73,6 +74,7 @@ noncomputable def chainToWalk (l : List (Lattice R)) (hl : l ≠ []) (hc : l.IsB
   | [L] => SimpleGraph.Walk.nil' ⟦L⟧
   | L₁ :: L₂ :: l =>
       have p : BTgraph.Adj ⟦L₁⟧ ⟦L₂⟧ := by
+        rw [BTgraph_adj]
         apply isNeighbour_of_isStandardNeighbour
         have := hc.isStandardNeighbour
         simp_all

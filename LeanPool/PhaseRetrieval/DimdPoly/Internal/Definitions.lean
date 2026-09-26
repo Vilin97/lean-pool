@@ -83,11 +83,11 @@ abbrev L2Tensor (d : Nat) := MeasureTheory.Lp ℂ 2 (gammaD d)
     complexHermite n k z
 
 /-- `Phi`: Phi. -/
-def Phi {d : Nat} (kappa : MultiIndex d) (alpha : Idx d) (z : Cd d) : ℂ :=
+@[expose] def Phi {d : Nat} (kappa : MultiIndex d) (alpha : Idx d) (z : Cd d) : ℂ :=
   Finset.prod Finset.univ fun q : Fin d => phi1D (kappa q) (alpha q) (z q)
 
 /-- `box`: box. -/
-def box {d : Nat} (J : MultiIndex d) : Finset (Idx d) :=
+@[expose] def box {d : Nat} (J : MultiIndex d) : Finset (Idx d) :=
   Fintype.piFinset fun q : Fin d => Finset.range (J q + 1)
 
 noncomputable instance instNormCircleTrigPoly : Norm CircleTrigPoly :=
@@ -130,6 +130,7 @@ def coeffSkappa {d : Nat} {kappa : MultiIndex d} (F : Skappa d kappa) (alpha : I
   fun z => ∑' alpha : Idx d, coeffSkappa F alpha * Phi kappa alpha z
 
 /-- `toL2`: to L2. -/
+@[expose]
 noncomputable def toL2 {d : Nat} (kappa : MultiIndex d) (F : Skappa d kappa) : L2Tensor d := by
   classical
   exact if h : MeasureTheory.MemLp (toFun kappa F) 2 (gammaD d) then h.toLp (toFun kappa F) else 0

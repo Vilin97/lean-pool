@@ -141,7 +141,7 @@ def restrictTerminalRule {N : Type*} (r : ContextFreeRule T N) : List (ContextFr
   ) :: newTerminalRules r
 
 /-- Compute all lifted rules -/
-noncomputable def restrictTerminalRules {N : Type*} [DecidableEq T] [DecidableEq N]
+@[expose] noncomputable def restrictTerminalRules {N : Type*} [DecidableEq T] [DecidableEq N]
     (l : List (ContextFreeRule T N)) : Finset (ContextFreeRule T (N ⊕ T)) :=
   (l.map restrictTerminalRule).flatten.toFinset
 

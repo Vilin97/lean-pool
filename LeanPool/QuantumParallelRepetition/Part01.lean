@@ -309,7 +309,7 @@ theorem entangledValue_nonneg [Fintype X] [Fintype Y]
   · rw [Set.not_nonempty_iff_eq_empty.mp h, Real.sSup_empty]
 
 /-- The entangled value of a coordinatewise repeated game. -/
-def repeatedEntangledValue [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
+@[expose] def repeatedEntangledValue [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) : ℝ :=
   entangledValue (G.repeat n)
 
@@ -852,7 +852,7 @@ theorem pureDensityMatrix_trace_mul
       rfl
 
 /-- The strategy implementing pure vector. -/
-def pureVectorStrategy
+@[expose] def pureVectorStrategy
     {X Y A B : Type*} {dA dB : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     [Fintype dA] [Fintype dB] [DecidableEq dA] [DecidableEq dB]
@@ -1114,7 +1114,7 @@ abbrev StrategyOutcome (X Y A B : Type*) :=
   X × Y × A × B
 
 /-- The finite probability law for strategy event. -/
-def strategyEventLaw (G : Game X Y A B) (S : Strategy G) :
+@[expose] def strategyEventLaw (G : Game X Y A B) (S : Strategy G) :
     FiniteEventLaw (StrategyOutcome X Y A B) where
   weight ω :=
     G.questionWeight ω.1 ω.2.1 *
@@ -2043,7 +2043,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The measurement effect for conditioned alice. -/
-def conditionedAliceEffect
+@[expose] def conditionedAliceEffect
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
@@ -2059,7 +2059,7 @@ def conditionedAliceEffect
       else 0
 
 /-- The measurement effect for conditioned bob. -/
-def conditionedBobEffect
+@[expose] def conditionedBobEffect
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n))
     (D : Finset (Fin n))

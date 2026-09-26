@@ -30,7 +30,7 @@ namespace LeanPool.PoincareThreeBody
   Real.sqrt (1 - (action 1 / action 0) ^ 2)
 
 /-- The open prograde elliptic action region. -/
-def ProgradeEllipticActions : Set ActionSpace :=
+@[expose] def ProgradeEllipticActions : Set ActionSpace :=
   {action | 0 < action 1 ∧ action 1 < action 0}
 
 lemma isOpen_progradeEllipticActions : IsOpen ProgradeEllipticActions := by

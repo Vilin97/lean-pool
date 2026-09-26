@@ -131,7 +131,7 @@ theorem complexPlaceRadialJacobian_expMapBasis_pos
 
 open Classical in
 /-- A radial mellin gaussian used in the Odlyzko-bound argument. -/
-noncomputable def radialMellinGaussian
+@[expose] noncomputable def radialMellinGaussian
     (x : K) (s : ℂ) (y : realSpace K) : ℂ :=
   complexPlaceRadialJacobian K (expMapBasis y) •
     complexPlaceMellinGaussian K x s (expMapBasis y)

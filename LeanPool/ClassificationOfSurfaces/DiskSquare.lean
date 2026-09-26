@@ -306,7 +306,7 @@ noncomputable def circleBoundaryHomeomorph : Circle ≃ₜ boundary where
 theorem circleBoundaryHomeomorph_val (z : Circle) :
     (circleBoundaryHomeomorph z).1 =
       radialToBoundary z z.coe_ne_zero :=
-  rfl
+  by rfl
 
 /-! ## Extending a chosen square-boundary parameterization -/
 
@@ -956,22 +956,22 @@ noncomputable def rightPlacement : C(square, square) where
 @[simp]
 theorem leftPlacement_re (z : square) :
     (leftPlacement z).1.re = (z.1.re - 1) / 2 :=
-  rfl
+  by rfl
 
 @[simp]
 theorem leftPlacement_im (z : square) :
     (leftPlacement z).1.im = z.1.im :=
-  rfl
+  by rfl
 
 @[simp]
 theorem rightPlacement_re (z : square) :
     (rightPlacement z).1.re = (1 - z.1.re) / 2 :=
-  rfl
+  by rfl
 
 @[simp]
 theorem rightPlacement_im (z : square) :
     (rightPlacement z).1.im = z.1.im :=
-  rfl
+  by rfl
 
 theorem leftPlacement_injective : Function.Injective leftPlacement := by
   intro z w h
@@ -1165,7 +1165,7 @@ noncomputable def squareGluingMap : C(SquareGluing, square) where
 theorem squareGluingMap_mk (x : SquarePair) :
     squareGluingMap (@Quotient.mk'' SquarePair seamSetoid x) =
       squarePairMerge x :=
-  rfl
+  by rfl
 
 theorem squareGluingMap_injective :
     Function.Injective squareGluingMap := by
@@ -1205,7 +1205,7 @@ noncomputable def squareGluingHomeomorph : SquareGluing ≃ₜ square := by
 @[simp]
 theorem squareGluingHomeomorph_apply (q : SquareGluing) :
     squareGluingHomeomorph q = squareGluingMap q :=
-  rfl
+  by rfl
 
 /-! ## Transporting the seam model to two nondegenerate polygon cells -/
 
@@ -1251,7 +1251,7 @@ theorem childPairSquarePairHomeomorph_inl
     (z : PolygonCell (l + 1)) :
     childPairSquarePairHomeomorph l r hl hr (.inl z) =
       .inl (finalSideCellHomeomorph l hl z) :=
-  rfl
+  by rfl
 
 @[simp]
 theorem childPairSquarePairHomeomorph_inr
@@ -1259,7 +1259,7 @@ theorem childPairSquarePairHomeomorph_inr
     (z : PolygonCell (r + 1)) :
     childPairSquarePairHomeomorph l r hl hr (.inr z) =
       .inr (firstSideCellHomeomorph r hr z) :=
-  rfl
+  by rfl
 
 theorem childSeamGenerator_map
     (l r : ℕ) (hl : 0 < l) (hr : 0 < r)
@@ -1542,7 +1542,7 @@ theorem finalOldArcLocal_apply
       finalSideCellHomeomorph l hl
         (PolygonCell.ofCircle (l + 1)
           (Circle.exp (2 * Real.pi * s.1 / (l + 1)))) :=
-  rfl
+  by rfl
 
 @[simp]
 theorem firstOldArcLocal_apply
@@ -1552,7 +1552,7 @@ theorem firstOldArcLocal_apply
         (PolygonCell.ofCircle (r + 1)
           (Circle.exp
             (2 * Real.pi * (1 + s.1) / (r + 1)))) :=
-  rfl
+  by rfl
 
 theorem finalOldArcLocal_re_eq_one_iff_endpoint
     (l : ℕ) (hl : 0 < l) (s : Set.Icc (0 : ℝ) l) :
@@ -2019,13 +2019,13 @@ theorem finalOldArc_val
     (l : ℕ) (hl : 0 < l) (s : Set.Icc (0 : ℝ) l) :
     (finalOldArc l hl s).1 =
       (leftPlacement (finalOldArcLocal l hl s)).1 :=
-  rfl
+  by rfl
 
 theorem firstOldArc_val
     (r : ℕ) (hr : 0 < r) (s : Set.Icc (0 : ℝ) r) :
     (firstOldArc r hr s).1 =
       (rightPlacement (firstOldArcLocal r hr s)).1 :=
-  rfl
+  by rfl
 
 theorem finalOldArc_zero_re (l : ℕ) (hl : 0 < l) :
     (finalOldArc l hl ⟨0, by constructor <;> positivity⟩).1.re = 0 := by
@@ -2801,7 +2801,7 @@ theorem outerEndpointArc_apply
     outerEndpointArc l r hl hr x =
       outerArc l r hl hr
         ⟨x.1, by simpa only [zero_add] using x.2⟩ :=
-  rfl
+  by rfl
 
 theorem outerArc_endpointIdent
     (x y : Set.Icc (0 : ℝ) (0 + (l + r)))
@@ -2825,7 +2825,7 @@ theorem outerBoundaryQuotMap_mk
     (x : Set.Icc (0 : ℝ) (0 + (l + r))) :
     outerBoundaryQuotMap l r hl hr (Quot.mk _ x) =
       outerEndpointArc l r hl hr x :=
-  rfl
+  by rfl
 
 theorem outerBoundaryQuotMap_surjective :
     Function.Surjective (outerBoundaryQuotMap l r hl hr) := by
@@ -2917,7 +2917,7 @@ theorem outerBoundaryQuotHomeomorph_mk
     (x : Set.Icc (0 : ℝ) (0 + (l + r))) :
     outerBoundaryQuotHomeomorph l r hl hr (Quot.mk _ x) =
       outerEndpointArc l r hl hr x :=
-  rfl
+  by rfl
 
 /-- The additive circle parameterized by the old sides is the outer square boundary. -/
 noncomputable def outerAddCircleHomeomorph :
@@ -3208,7 +3208,7 @@ theorem paramChildGluingHomeomorph_mk_inl
         (@Quotient.mk'' (ChildPair l r)
           (paramChildSeamSetoid l r) (.inl z)) =
       leftPlacement (finalSideCellHomeomorph l hl z) :=
-  rfl
+  by rfl
 
 @[simp]
 theorem paramChildGluingHomeomorph_mk_inr
@@ -3218,7 +3218,7 @@ theorem paramChildGluingHomeomorph_mk_inr
         (@Quotient.mk'' (ChildPair l r)
           (paramChildSeamSetoid l r) (.inr z)) =
       rightPlacement (firstSideCellHomeomorph r hr z) :=
-  rfl
+  by rfl
 
 /-- The complete local P2 equivalence: one unsplit polygon is homeomorphic to the quotient of
 the two child polygons by their reversed fresh-side identification. -/

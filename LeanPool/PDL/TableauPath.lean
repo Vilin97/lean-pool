@@ -35,8 +35,8 @@ inductive PathIn : ∀ {Hist X}, Tableau Hist X → Type
 deriving DecidableEq
 
 /-- The tableau reached by a path, together with its history and root sequent. -/
-@[implicit_reducible]
-@[expose] def tabAt {Hist X} {tab : Tableau Hist X} : PathIn tab → Σ H X, Tableau H X
+@[expose, implicit_reducible]
+def tabAt {Hist X} {tab : Tableau Hist X} : PathIn tab → Σ H X, Tableau H X
 | .nil => ⟨_,_,tab⟩
 | .loc _ tail => tabAt tail
 | .pdl tail => tabAt tail
@@ -155,8 +155,8 @@ def PathIn.head {Hist} {tab : Tableau Hist X} (_ : PathIn tab) : Sequent := X
 def PathIn.last {Hist X} {tab : Tableau Hist X} (t : PathIn tab) : Sequent := (tabAt t).2.1
 
 /-- The length of a path is the number of actual steps. -/
-@[simp, implicit_reducible]
-@[expose] def PathIn.length {Hist X} {tab : Tableau Hist X} : (t : PathIn tab) → ℕ
+@[expose, simp, implicit_reducible]
+def PathIn.length {Hist X} {tab : Tableau Hist X} : (t : PathIn tab) → ℕ
 | .nil => 0
 | .pdl tail => tail.length + 1
 | .loc _ tail => tail.length + 1
@@ -686,8 +686,8 @@ decreasing_by
 /-- Convert a path to a History.
 Does not include the last node.
 The history of `.nil` is `[]` because this will not go into `Hist`. -/
-@[implicit_reducible]
-@[expose] def PathIn.toHistory {Hist} {tab : Tableau Hist X} : (t : PathIn tab) → History
+@[expose, implicit_reducible]
+def PathIn.toHistory {Hist} {tab : Tableau Hist X} : (t : PathIn tab) → History
 | .nil => []
 | .pdl tail => tail.toHistory ++ [X]
 | .loc _ tail => tail.toHistory ++ [X]

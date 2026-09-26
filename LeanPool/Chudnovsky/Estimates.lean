@@ -89,7 +89,7 @@ lemma mul_Jtilde_eq (τ : ℍ) :
 
 /-- The approximation `stilde₂` of Ramanujan's `s₂` from Theorem `theonaehers2` of the paper:
 `stilde₂(τ) = (1 + 240(q + 9q²))/(1 - 504(q + 33q²)) · (1 - 24(q + 3q²) - 3/(π·Im τ))`. -/
-def s₂tilde (τ : ℍ) : ℂ :=
+@[expose] def s₂tilde (τ : ℍ) : ℂ :=
   (1 + 240 * (q τ + 9 * q τ ^ 2)) / (1 - 504 * (q τ + 33 * q τ ^ 2)) *
     (1 - 24 * (q τ + 3 * q τ ^ 2) - 3 / (π * τ.im))
 

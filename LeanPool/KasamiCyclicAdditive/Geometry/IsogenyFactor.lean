@@ -32,7 +32,7 @@ public section
 namespace KasamiCyclicAdditive.Isogeny
 
 /-- The `n`-fold iterate of `pi`. -/
-def piIter
+@[expose] def piIter
     {G : Type*} [AddCommGroup G]
     (pi : G →+ G) : ℕ → G → G
   | 0, x => x

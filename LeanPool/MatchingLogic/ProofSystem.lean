@@ -319,14 +319,14 @@ statement; strong local completeness is Theorem 3.7 (Theorem 83 of Chen and
 Rosu, *Matching μ-Logic*, 2019 technical report,
 https://hdl.handle.net/2142/102281).  See
 `FINDINGS.md`. -/
-def StrongLocalCompleteness (S : Signature) (Var : Type) [DecidableEq Var] : Prop :=
+@[expose] def StrongLocalCompleteness (S : Signature) (Var : Type) [DecidableEq Var] : Prop :=
   ∀ (Δ : Set (Pattern S Var)) (φ : Pattern S Var), LocalCons Δ φ →
     ∃ l : List (Pattern S Var), (∀ δ ∈ l, δ ∈ Δ) ∧
       Provable (∅ : Set (Pattern S Var)) (.imp (conj l) φ)
 
 /-- **(S) Soundness.**  `Γ ⊢ φ` implies `Γ ⊨ φ`.  The paper uses this as a
 black box too, but unlike (L) it is within reach here: see `soundness` below. -/
-def Soundness (S : Signature) (Var : Type) [DecidableEq Var] : Prop :=
+@[expose] def Soundness (S : Signature) (Var : Type) [DecidableEq Var] : Prop :=
   ∀ (Γ : Set (Pattern S Var)) (φ : Pattern S Var), Provable Γ φ → GlobalCons Γ φ
 
 end MatchingLogic

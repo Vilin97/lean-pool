@@ -118,7 +118,7 @@ theorem realize_castLE_self {n : ℕ} (φ : L.BoundedFormulaω α n) (h : n ≤ 
   realize_castLE_of_eq φ h rfl v xs
 
 /-- A function to help relabel the variables in bounded formulas. -/
-def relabelAux (g : α → β ⊕ Fin n) (k : ℕ) : α ⊕ Fin k → β ⊕ Fin (n + k) :=
+@[expose] def relabelAux (g : α → β ⊕ Fin n) (k : ℕ) : α ⊕ Fin k → β ⊕ Fin (n + k) :=
   Sum.map id finSumFinEquiv ∘ Equiv.sumAssoc _ _ _ ∘ Sum.map g id
 
 /-- Relabels a bounded formula's free variables. -/
@@ -406,7 +406,7 @@ theorem term_subst_empty_aux (t t' : L.Term Empty) :
 namespace BoundedFormula
 
 /-- Embeds a first-order bounded formula into Lω₁ω. -/
-def toLω : ∀ {n : ℕ}, L.BoundedFormula α n → L.BoundedFormulaω α n
+@[expose] def toLω : ∀ {n : ℕ}, L.BoundedFormula α n → L.BoundedFormulaω α n
   | _, falsum => BoundedFormulaω.falsum
   | _, equal t₁ t₂ => BoundedFormulaω.equal t₁ t₂
   | _, rel R ts => BoundedFormulaω.rel R ts

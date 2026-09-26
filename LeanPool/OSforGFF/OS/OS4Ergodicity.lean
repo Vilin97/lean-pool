@@ -257,6 +257,7 @@ lemma gff_exp_L2_norm_constant (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) (s
     f)‖^2 ∂μ =
       ∫ ω, ‖Complex.exp (distributionPairingℂReal ω (timeTranslationSchwartzℂ (-s) f))‖^2 ∂μ := by
     congr 1
+    funext ω
     rw [timeTranslationDistribution_pairingℂ]
   rw [h_lhs_eq]
   -- Convert: ∫ ‖exp(⟨ω, g⟩)‖² = (∫ exp * conj(exp)).re
@@ -497,7 +498,7 @@ lemma gff_covariance_timeTranslation_continuous (m : ℝ) [Fact (0 < m)]
   · intro s; exact Filter.Eventually.of_forall (h_bdd' s)
   · exact h_bound_int
   · filter_upwards with ⟨x, y⟩
-    simpa only [timeTranslationSchwartzℂ_apply] using
+    simpa only [timeTranslationSchwartzℂ_apply, Function.comp_def, Pi.mul_apply] using
       (((f.continuous.comp (TimeTranslation.continuous_timeShift_param x)).mul
         continuous_const).mul continuous_const)
 

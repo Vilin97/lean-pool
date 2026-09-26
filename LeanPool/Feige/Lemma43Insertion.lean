@@ -33,7 +33,7 @@ theorem theta_nonneg (ν : Measure ℝ) (c d : ℝ) :
 
 /-- The entries of the insertion sequences at one edge are represented by
 the two laws occurring in the local transfer step. -/
-def RealizesInsertionEdge
+@[expose] def RealizesInsertionEdge
     (upper old width interpolation : ℕ → ℝ) (j : ℕ)
     (νP νM : Measure ℝ) (c d : ℝ) : Prop :=
   upper j = A νP d ∧

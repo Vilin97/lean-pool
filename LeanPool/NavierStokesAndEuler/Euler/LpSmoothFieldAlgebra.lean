@@ -114,7 +114,7 @@ theorem jetLp_derivative (A : SmoothL2Field V) (n : ℕ) :
   exact ((continuousMultilinearCurryRightEquiv' ℝ n Space V).apply_symm_apply _).symm
 
 /-- Directional field, given by `mapField (ContinuousLinearMap.apply ℝ V v) A.derivative`. -/
-def directionalField (A : SmoothL2Field V) (v : Space) : SmoothL2Field V :=
+@[expose] def directionalField (A : SmoothL2Field V) (v : Space) : SmoothL2Field V :=
   mapField (ContinuousLinearMap.apply ℝ V v) A.derivative
 
 @[simp] theorem directionalField_field (A : SmoothL2Field V) (v x : Space) :

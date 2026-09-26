@@ -508,7 +508,7 @@ theorem erlv_exceptional_use_site_localization_avoids_five_rows
   omega
 
 /-- The two exact color subcases left at the shared tip in `(1,2)`. -/
-def ErLVAtVertexCase12OtherD1Impossible : Prop :=
+@[expose] def ErLVAtVertexCase12OtherD1Impossible : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     ∀ S : ErLVAtVertexUseSite P d₁ d₂ d₃, S.Case12 →
       sqDist
@@ -537,7 +537,7 @@ theorem erlv_at_vertex_case12_impossible_of_terminal_colors
   · exact hD2 P d₁ d₂ d₃ S h12 hOtherD2
 
 /-- The mirror terminal-color split left at the shared tip in `(2,1)`. -/
-def ErLVAtVertexCase21OtherD1Impossible : Prop :=
+@[expose] def ErLVAtVertexCase21OtherD1Impossible : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     ∀ S : ErLVAtVertexUseSite P d₁ d₂ d₃, S.Case21 →
       sqDist (P (cyclicAdvance S.x 2))
@@ -546,7 +546,7 @@ def ErLVAtVertexCase21OtherD1Impossible : Prop :=
           S.pair.second.rightMoves)) = d₁ → False
 
 /-- The remaining `d₂` terminal color is impossible in the `(2,1)` branch. -/
-def ErLVAtVertexCase21OtherD2Impossible : Prop :=
+@[expose] def ErLVAtVertexCase21OtherD2Impossible : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     ∀ S : ErLVAtVertexUseSite P d₁ d₂ d₃, S.Case21 →
       sqDist (P (cyclicAdvance S.x 2))

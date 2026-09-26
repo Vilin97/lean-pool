@@ -436,7 +436,7 @@ theorem homogeneous_viscous_propagator_estimate
 
 theorem reference_rate_split (lam u ell t : ℝ) :
     GaussianEnvelope.referenceRate lam u ell t =
-      referenceEigenvalue lam u ell t - referenceViscosity lam u ell t := rfl
+      referenceEigenvalue lam u ell t - referenceViscosity lam u ell t := by rfl
 
 theorem referenceEigenvalue_nonneg {lam : ℝ} (hlam : 0 ≤ lam) (u ell t : ℝ) :
     0 ≤ referenceEigenvalue lam u ell t :=

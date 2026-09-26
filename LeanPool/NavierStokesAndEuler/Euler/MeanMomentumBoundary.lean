@@ -57,7 +57,8 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (FInv F F' : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
 
 /-- The original initial boundary force, expressed in the actual solenoidal coordinate space. -/
-def meanBoundaryFlux (M0 A : L2 →L[ℝ] L2) (L : ℝ) (u : meanDerivatives T hT FInv) :
+@[expose] def meanBoundaryFlux (M0 A : L2 →L[ℝ] L2) (L : ℝ)
+    (u : meanDerivatives T hT FInv) :
     solenoidalSpace :=
   (solenoidalFrame T F ⟨0, le_rfl, hT⟩).adjoint
     ((M0+L • A) (meanTrace T hT FInv u))

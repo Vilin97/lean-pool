@@ -29,7 +29,7 @@ namespace Fraction
 
 /-- For any positive number `n : ℕ`, we have the fraction `1/n : ℝ` in the unit interval
 -/
-@[reducible]
+@[reducible, expose]
 def ofPos {n : ℕ} (hn : 0 < n) : I := Fraction hn (Nat.succ_le_iff.mpr hn)
 
 @[simp]

@@ -186,7 +186,7 @@ def IsCutVertex (G : Graph α β) (x : α) : Prop :=
 
 /-- The graph has three pairwise distinct vertices. Stated existentially rather than as
 `3 ≤ V(G).ncard` so that it is monotone with no finiteness hypothesis. -/
-def HasThreeVertices (G : Graph α β) : Prop :=
+@[expose] def HasThreeVertices (G : Graph α β) : Prop :=
   ∃ a ∈ V(G), ∃ b ∈ V(G), ∃ c ∈ V(G), a ≠ b ∧ a ≠ c ∧ b ≠ c
 
 /-- On a graph with finitely many vertices the clause is the count it is named for. Kept so

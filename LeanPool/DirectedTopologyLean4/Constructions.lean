@@ -66,7 +66,7 @@ topological space
   isDipath_reparam := fun {x y : α} γ t₀ t₁ φ hφ_mono hγ => by
     exact isDipath_reparam hφ_mono hγ
 
-@[expose] instance DirectedSubspace {α : Type u} {p : α → Prop} [DirectedSpace α] :
+instance DirectedSubspace {α : Type u} {p : α → Prop} [DirectedSpace α] :
   DirectedSpace (Subtype p) :=
   DirectedSpace.Induced continuous_induced_dom
 
@@ -102,7 +102,6 @@ def DirectedSubsetInclusion {α : Type u} [t : DirectedSpace α] {X Y : Set α} 
 
 end subtype
 
-@[expose]
 instance DirectedProduct {α : Type u} {β : Type v} [t₁ : DirectedSpace α] [t₂ : DirectedSpace β] :
   DirectedSpace (α × β) where
   IsDipath := fun {x y : α × β}
@@ -152,7 +151,7 @@ def DirectedMap.prodConstFst (F : D(α × β,γ)) (a : α) : D(β,γ) :=
   F.comp (DirectedMap.prodMapMk (DirectedMap.const β a) (DirectedMap.id β))
 
 @[simp] lemma DirectedMap.prod_const_fst_apply (F : D(α × β,γ)) (a : α) (b : β) :
-  DirectedMap.prodConstFst F a b = F (a, b) := rfl
+  DirectedMap.prodConstFst F a b = F (a, b) := by rfl
 
 /-- For every `t : β`, we can convert a directed map `F : α × β → γ` to a directed map `α → γ` by
   sending `a` to `F(a, t)`
@@ -161,6 +160,6 @@ def DirectedMap.prodConstSnd (F : D(α × β,γ)) (t : β) : D(α,γ) :=
   F.comp (DirectedMap.prodMapMk (DirectedMap.id α) (DirectedMap.const α t))
 
 @[simp] lemma DirectedMap.prod_const_snd_apply (F : D(α × β,γ)) (b : β) (a : α) :
-  DirectedMap.prodConstSnd F b a = F (a, b) := rfl
+  DirectedMap.prodConstSnd F b a = F (a, b) := by rfl
 
 end prod

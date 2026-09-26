@@ -60,7 +60,7 @@ abbrev Coeff := ℝ → ℂ → Matrix (Fin 6) (Fin 6) ℂ
 
 /-- The singular diagonal in the transformed axis equations is
 (0, 0, 2, 0, 3, 1), with zero-based component indices. -/
-noncomputable def exponent (i : Fin 6) : ℕ :=
+@[expose] noncomputable def exponent (i : Fin 6) : ℕ :=
   if i.val = 2 then 2 else if i.val = 4 then 3 else if i.val = 5 then 1 else 0
 
 /-- Parameter derivative, defined pointwise by `deriv (fun w : ℂ => F r w i) z`. -/
@@ -86,7 +86,7 @@ noncomputable def word (A₀ A₁ : Coeff) : List Bool → Field → Field
   | b :: w, F => letter A₀ A₁ b (word A₀ A₁ w F)
 
 /-- Only the last two rows and first four columns may be nonzero. -/
-def DerivativeShape (A : Coeff) : Prop :=
+@[expose] def DerivativeShape (A : Coeff) : Prop :=
   ∀ r z (i j : Fin 6), (i.val < 4 ∨ 4 ≤ j.val) → A r z i j = 0
 
 /-- Vanishing of the first four components as actual functions. -/
@@ -1763,11 +1763,11 @@ def ForcingParityOn (S : Set ℝ) (U : Set ℂ) (f : Field) : Prop :=
 
 /-- Coefficient parity, given by `∀ r z i j, A (-r) z i j = -(paritySign i * paritySign j) * A r
 z i j`. -/
-def CoefficientParity (A : Coeff) : Prop :=
+@[expose] def CoefficientParity (A : Coeff) : Prop :=
   ∀ r z i j, A (-r) z i j = -(paritySign i * paritySign j) * A r z i j
 
 /-- Forcing parity, given by `∀ r z i, f (-r) z i = -(paritySign i) * f r z i`. -/
-def ForcingParity (f : Field) : Prop :=
+@[expose] def ForcingParity (f : Field) : Prop :=
   ∀ r z i, f (-r) z i = -(paritySign i) * f r z i
 
 /-- Reflect field, defined pointwise by `W (-r) z`. -/

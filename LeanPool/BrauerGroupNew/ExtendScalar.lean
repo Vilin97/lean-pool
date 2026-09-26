@@ -141,6 +141,7 @@ def absorb : L ⊗[K] (K ⊗[k] A) →ₐ[L] L ⊗[k] A where
 
 /-- Algebra equivalence between direct scalar extension and extension through the intermediate
 field. -/
+@[expose]
 def absorbEqv : L ⊗[k] A ≃ₐ[L] L ⊗[K] (K ⊗[k] A) where
   toFun := release k K L A
   invFun := absorb k K L A

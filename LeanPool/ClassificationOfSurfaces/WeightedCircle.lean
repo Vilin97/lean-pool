@@ -35,7 +35,7 @@ noncomputable def unstretch : List ℕ → ℝ → ℝ
       if y ≤ w then y / w else 1 + unstretch weights (y - w)
 
 /-- Every weight is strictly positive. -/
-def Positive (weights : List ℕ) : Prop :=
+@[expose] def Positive (weights : List ℕ) : Prop :=
   ∀ w ∈ weights, 0 < w
 
 theorem Positive.head {w : ℕ} {weights : List ℕ}

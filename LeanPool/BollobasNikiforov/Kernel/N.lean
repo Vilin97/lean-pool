@@ -38,13 +38,13 @@ def fromThreeCols (c0 c1 c2 : Fin 3 → ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
   fun i j => if j = 0 then c0 i else if j = 1 then c1 i else c2 i
 
 lemma fromThreeCols_apply_zero (c0 c1 c2 : Fin 3 → ℝ) (i : Fin 3) :
-    fromThreeCols c0 c1 c2 i 0 = c0 i := rfl
+    fromThreeCols c0 c1 c2 i 0 = c0 i := by rfl
 
 lemma fromThreeCols_apply_one (c0 c1 c2 : Fin 3 → ℝ) (i : Fin 3) :
-    fromThreeCols c0 c1 c2 i 1 = c1 i := rfl
+    fromThreeCols c0 c1 c2 i 1 = c1 i := by rfl
 
 lemma fromThreeCols_apply_two (c0 c1 c2 : Fin 3 → ℝ) (i : Fin 3) :
-    fromThreeCols c0 c1 c2 i 2 = c2 i := rfl
+    fromThreeCols c0 c1 c2 i 2 = c2 i := by rfl
 
 lemma fromThreeCols_add (u0 u1 u2 v0 v1 v2 : Fin 3 → ℝ) :
     fromThreeCols (u0 + v0) (u1 + v1) (u2 + v2) =

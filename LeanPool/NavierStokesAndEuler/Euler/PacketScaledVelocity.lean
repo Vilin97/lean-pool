@@ -168,6 +168,7 @@ theorem scaledVelocity_restore (m v w : ℝ → Space) {t₀ a ε τ : ℝ}
   scaledVelocityEntry a ε (frameMatrix M (unit (m t)) (unit (v t)))
 
 /-- Scaled transport, constructed using `scaledVelocityEntry`. -/
+@[expose]
 def scaledTransport (B M : Space →L[ℝ] Space) (m v : ℝ → Space) (a ε t : ℝ) : Fin 3 → Fin 3 → ℝ :=
   scaledVelocityEntry a ε (fun i j => frameMatrix M (unit (m t)) (unit (v t)) i j +
     frameSkew (frameMatrix B (unit (m t)) (unit (v t))) i j)

@@ -86,7 +86,7 @@ theorem residual_degree_le_safeDegree {H R : Finset (Finset V)} (v : V) :
 /-! ## The safe-degree indicator and its expectation -/
 
 /-- The indicator that all vertices of `e` other than `v` survive the round. -/
-noncomputable def safeIndicator {H : Finset (Finset V)} {p : ℝ}
+@[expose] noncomputable def safeIndicator {H : Finset (Finset V)} {p : ℝ}
     (ρ : BernoulliRetention (Ω := Ω) H p) (v : V) (e : Finset V) (ω : Ω) : ℝ :=
   if Disjoint (e.erase v) (covered (retainedSet H ρ ω)) then 1 else 0
 

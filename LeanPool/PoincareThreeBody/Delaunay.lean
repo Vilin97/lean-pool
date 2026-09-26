@@ -200,7 +200,7 @@ theorem irrationalFrequencyPositiveActions_dense :
   exact ⟨positiveAction, hirrational, ha, hb⟩
 
 /-- The positive actions with a rational Kepler frequency ratio. -/
-def resonantPositiveActions : Set PositiveAction :=
+@[expose] def resonantPositiveActions : Set PositiveAction :=
   {x | ∃ p q : ℕ, 0 < p ∧ 0 < q ∧ x.1 = resonantFirstAction p q}
 
 theorem resonantPositiveActions_dense : Dense resonantPositiveActions := by

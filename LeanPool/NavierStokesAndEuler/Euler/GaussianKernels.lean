@@ -28,7 +28,7 @@ open scoped NNReal
   (Real.sqrt (2 * Real.pi * v))⁻¹ * Real.exp (-(x - μ) ^ 2 / (2 * v))
 
 /-- The Gaussian measure, with a point mass when its variance is zero. -/
-def gaussianMeasure (μ : ℝ) (v : ℝ≥0) : Measure ℝ :=
+@[expose] def gaussianMeasure (μ : ℝ) (v : ℝ≥0) : Measure ℝ :=
   if v = 0 then Measure.dirac μ else volume.withDensity
     (fun x => ENNReal.ofReal (gaussianDensity μ v x))
 

@@ -343,9 +343,9 @@ open Set Function MeasureTheory
 namespace NavierStokes.LocalizedMomentRepair
 
 /-- Inner lower, given by `(3 * l + u) / 4`. -/
-def innerLower (l u : ℝ) : ℝ := (3 * l + u) / 4
+@[expose] def innerLower (l u : ℝ) : ℝ := (3 * l + u) / 4
 /-- Inner upper, given by `(l + 3 * u) / 4`. -/
-def innerUpper (l u : ℝ) : ℝ := (l + 3 * u) / 4
+@[expose] def innerUpper (l u : ℝ) : ℝ := (l + 3 * u) / 4
 
 /-- A concrete smooth bump in the middle half of `(l,u)`. -/
 @[expose] def bump (l u : ℝ) (t : ℝ) : ℝ :=

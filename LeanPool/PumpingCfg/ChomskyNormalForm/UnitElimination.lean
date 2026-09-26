@@ -433,7 +433,7 @@ noncomputable def computeUnitPairRules (p : g.NT × g.NT) : List (ContextFreeRul
   g.rules.toList.filterMap f
 
 /-- Computes non-unit rules for all unit pairs -/
-noncomputable def removeUnitRules [DecidableEq T] (l : Finset (g.NT × g.NT)) :=
+@[expose] noncomputable def removeUnitRules [DecidableEq T] (l : Finset (g.NT × g.NT)) :=
   ((l.toList).map computeUnitPairRules).flatten.toFinset
 
 

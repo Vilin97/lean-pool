@@ -50,7 +50,7 @@ instance permModSMulCommClass : SMulCommClass H F2 (PermMod Ω) where
   smul_comm _ _ _ := by funext x; rfl
 
 /-- Sum all coordinates of a vector in the permutation module. -/
-def coordSum : PermMod Ω →ₗ[F2] F2 where
+@[expose] def coordSum : PermMod Ω →ₗ[F2] F2 where
   toFun f := ∑ x, f x
   map_add' f g := by simp only [Pi.add_apply, Finset.sum_add_distrib]
   map_smul' a f := by
@@ -265,7 +265,7 @@ theorem hq_faithful (d : Nat) (hd : Odd d) : FaithfulSMul (Hq d) (Vq d) := by
   exact pairVector_isRegular d hd g (hfix (pairVector d))
 
 /-- The complement-of-zero vector used in the displayed obstruction. -/
-noncomputable def hqBadSeedVector (d : Nat) (hd : Odd d) : Vq d :=
+@[expose] noncomputable def hqBadSeedVector (d : Nat) (hd : Odd d) : Vq d :=
   ⟨(1 : PermMod (Fq d)) + Pi.basisFun F2 (Fq d) 0, by
     change coordSum ((1 : PermMod (Fq d)) +
       Pi.basisFun F2 (Fq d) 0) = 0
@@ -327,7 +327,7 @@ theorem hqBadSeedVector_not_regular
     exact hzero
 
 /-- The coordinate map from the deleted module to binary-valued functions. -/
-def deletedCoord (d : Nat) : Vq d →+ (Fq d → F2) :=
+@[expose] def deletedCoord (d : Nat) : Vq d →+ (Fq d → F2) :=
   (Vq d).subtype.toAddHom
 
 end SaxlCounterexamples.EveryBase

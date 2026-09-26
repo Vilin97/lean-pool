@@ -60,7 +60,7 @@ abbrev φH :
     φK_maps_moduleCatToCycles_range R S₁ S₂ f
 
 /-- The explicit left homology map data for a morphism of short complexes of modules. -/
-@[simps]
+@[expose, simps]
 def LeftHomologyMapData.ofModuleCat :
     ShortComplex.LeftHomologyMapData f
     (ShortComplex.moduleCatLeftHomologyData S₁)

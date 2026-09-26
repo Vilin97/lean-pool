@@ -44,8 +44,7 @@ def proposition31PrimePowerIndexOfPrime (p : ℕ) (hp : p.Prime) :
 
 @[simp]
 theorem proposition31PrimePowerIndexOfPrime_val (p : ℕ) (hp : p.Prime) :
-    (proposition31PrimePowerIndexOfPrime p hp).1 = p :=
-  rfl
+    (proposition31PrimePowerIndexOfPrime p hp).1 = p := by rfl
 
 instance proposition31PrimePowerIndex_nonempty : Nonempty PrimePowerIndex :=
   ⟨proposition31PrimePowerIndexOfPrime 2 Nat.prime_two⟩

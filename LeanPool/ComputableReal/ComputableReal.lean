@@ -167,6 +167,14 @@ theorem neg_mk (x : ComputableℝSeq) : -mk x = mk (-x) :=
 instance instCommRing : CommRing Computableℝ := by
   refine { natCast := fun n => mk n
            intCast := fun z => mk z
+           intCast_negSucc := by
+             intro n
+             rw [← eq_iff_eq_val]
+             simp only [val_mk_eq_val, val_neg, ComputableℝSeq.val_intCast,
+               Int.cast_negSucc]
+             change -(↑(n + 1) : ℝ) =
+               -((mk ((n + 1 : ℕ) : ComputableℝSeq)).val)
+             simp only [val_mk_eq_val, ComputableℝSeq.val_natCast]
            zero := 0
            one := 1
            mul := (· * ·)

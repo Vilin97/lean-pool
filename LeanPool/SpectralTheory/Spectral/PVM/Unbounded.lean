@@ -35,7 +35,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
 
 /-- The nonnegative scalar set function induced by a PVM and a vector. -/
-def PVM.scalarContent (E_pvm : PVM E) (x : E) (S : Set ℝ) : ℝ :=
+@[expose] def PVM.scalarContent (E_pvm : PVM E) (x : E) (S : Set ℝ) : ℝ :=
   (@inner ℂ E _ (E_pvm.proj S x) x).re
 
 /-- Scalar PVM content is nonnegative for measurable sets. -/

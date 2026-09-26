@@ -296,7 +296,7 @@ variable {𝕜 𝓰 𝓪}
   map_smul' c X := by ext; simp
 
 /-- A Lie algebra 1-cochain linearly determines a bilinear map via the differential. -/
-def _root_.VirasoroProject.LieOneCochain.bdryHom'
+@[expose] def _root_.VirasoroProject.LieOneCochain.bdryHom'
     : LieOneCochain 𝕜 𝓰 𝓪 →ₗ[𝕜] 𝓰 →ₗ[𝕜] 𝓰 →ₗ[𝕜] 𝓪 where
   toFun := fun β ↦ LieOneCochain.bdry' β
   map_add' β₁ β₂ := by ext X Y; rfl

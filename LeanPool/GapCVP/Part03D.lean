@@ -2295,21 +2295,21 @@ noncomputable instance : Fintype EncodedWordOrdering where
   complete ordering := by cases ordering <;> simp
 
 /-- GapCVP reduction support. -/
-def encodedWordOrderingFirst : EncodedWordOrdering → Bool
+@[expose] def encodedWordOrderingFirst : EncodedWordOrdering → Bool
   | .invalid => false
   | .less => false
   | .equal => true
   | .greater => true
 
 /-- GapCVP reduction support. -/
-def encodedWordOrderingSecond : EncodedWordOrdering → Bool
+@[expose] def encodedWordOrderingSecond : EncodedWordOrdering → Bool
   | .invalid => false
   | .less => true
   | .equal => false
   | .greater => true
 
 /-- GapCVP reduction support. -/
-def encodedWordOrderingWord (outcome : EncodedWordOrdering) : List Bool :=
+@[expose] def encodedWordOrderingWord (outcome : EncodedWordOrdering) : List Bool :=
   [encodedWordOrderingFirst outcome, encodedWordOrderingSecond outcome]
 
 /-- GapCVP reduction support. -/

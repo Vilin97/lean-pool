@@ -50,7 +50,7 @@ variable {V : Type*} [DecidableEq V] [Fintype V] {Ω : Type*} [MeasureSpace Ω]
 /-! ## The covering indicator -/
 
 /-- The indicator that `u` is covered by the round matching. -/
-noncomputable def coverInd {H : Finset (Finset V)} {p : ℝ}
+@[expose] noncomputable def coverInd {H : Finset (Finset V)} {p : ℝ}
     (ρ : BernoulliRetention (Ω := Ω) H p) (u : V) (ω : Ω) : ℝ :=
   if u ∈ covered (retainedSet H ρ ω) then 1 else 0
 

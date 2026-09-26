@@ -198,7 +198,7 @@ theorem iteratedDeriv_radialDerivative_zero {f : ℝ → E} (hf : ContDiff ℝ �
   field_simp
 
 /-- Descent, given by `f (Real.sqrt X)`. -/
-noncomputable def descent (f : ℝ → E) (X : ℝ) : E := f (Real.sqrt X)
+@[expose] noncomputable def descent (f : ℝ → E) (X : ℝ) : E := f (Real.sqrt X)
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E] in
 theorem descent_square {f : ℝ → E} (he : Function.Even f) (x : ℝ) :

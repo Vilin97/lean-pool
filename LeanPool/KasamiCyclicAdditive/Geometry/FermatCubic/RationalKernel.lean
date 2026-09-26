@@ -79,7 +79,7 @@ variable {K : Type*} [Field K]
 
 /-- `IsPoint X Y Z` says that `[X : Y : Z]` is a point of the projective Fermat cubic
 `X³ + Y³ = Z³`: the coordinates are not all zero and they satisfy the equation. -/
-def IsPoint (X Y Z : K) : Prop :=
+@[expose] def IsPoint (X Y Z : K) : Prop :=
   ¬ (X = 0 ∧ Y = 0 ∧ Z = 0) ∧ X ^ 3 + Y ^ 3 = Z ^ 3
 
 /-- `IsKernelPoint k X Y Z` says that `(1 + π^k) [X : Y : Z] = O`, equivalently

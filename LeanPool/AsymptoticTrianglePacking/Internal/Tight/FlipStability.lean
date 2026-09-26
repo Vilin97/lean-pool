@@ -64,7 +64,7 @@ variable {V : Type*} [DecidableEq V]
 
 /-- The edges whose membership in the round matching can be affected by flipping the retention
 status of `e`: the edge `e` itself, and the retained edges meeting `e`. -/
-def flipInfluence (R : Finset (Finset V)) (e : Finset V) : Finset (Finset V) :=
+@[expose] def flipInfluence (R : Finset (Finset V)) (e : Finset V) : Finset (Finset V) :=
   insert e (R.filter (fun f => ¬ Disjoint f e))
 
 theorem notMem_flipInfluence_ne {R : Finset (Finset V)} {e f : Finset V}

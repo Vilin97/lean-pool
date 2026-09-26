@@ -76,7 +76,7 @@ noncomputable instance _root_.SubField.carrier.instSemifield [Nontrivial A] : Se
   nnqsmul := _
 
 /-- The directed supremum of a set of subfields. -/
-@[simps toSubalgebra]
+@[expose, simps toSubalgebra]
 def dSup (s : Set (SubField R A)) (hs : s.Nonempty) (hsdir : DirectedOn (· ≤ ·) s) :
     SubField R A where
   toSubalgebra := ⨆ L ∈ s, L.1

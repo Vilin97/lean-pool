@@ -123,7 +123,7 @@ variable {Y' : Type u} [TopologicalSpace Y'] [T2Space Y'] [CompactSpace Y'] [Con
 /-- **`Jacobian.pullback` (§8.4)**: the pullback map between Jacobians associated to a
 holomorphic map of the underlying curves. Equal to the zero map if the map on curves is
 constant (`Form1.trace`'s convention). -/
-noncomputable def Jacobian.pullback (f : X' → Y') (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
+@[expose] noncomputable def Jacobian.pullback (f : X' → Y') (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
     Jacobian Y' →ₜ+ Jacobian X' :=
   Jacobian.inducedHom (periodSubgroup_le_comap_pullbackT f hf)
 

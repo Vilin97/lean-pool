@@ -624,7 +624,7 @@ inductive GExpr where
   | otimes : GExpr → GExpr → GExpr
 
 /-- **The action of `T` on objects.** -/
-def GExpr.obj : GExpr → ScottSys → ScottSys
+@[expose] def GExpr.obj : GExpr → ScottSys → ScottSys
   | .const D, _ => D
   | .var, X => X
   | .sum a b, X => (a.obj X).sum (b.obj X)
@@ -633,7 +633,7 @@ def GExpr.obj : GExpr → ScottSys → ScottSys
   | .otimes a b, X => (a.obj X).otimes (b.obj X)
 
 /-- **The action of `T` on maps.** -/
-def GExpr.map : (T : GExpr) → {X Y : ScottSys} → ApproximableMap X.sys Y.sys →
+@[expose] def GExpr.map : (T : GExpr) → {X Y : ScottSys} → ApproximableMap X.sys Y.sys →
     ApproximableMap (T.obj X).sys (T.obj Y).sys
   | .const D, _, _, _ => idMap D.sys
   | .var, _, _, f => f
@@ -849,7 +849,7 @@ generic helpers
 /-- **The token-level master recursion for `GExpr`.** All four binary operations
 share the same body
 (`sumTokMaster = prodTokNbhd` on masters). -/
-def gFun : GExpr → Set Str → Set Str
+@[expose] def gFun : GExpr → Set Str → Set Str
   | .const C, _ => C.sys.master
   | .var, Γ => Γ
   | .sum a b, Γ => insert ([] : Str) (embBit false (gFun a Γ) ∪ embBit true (gFun b Γ))

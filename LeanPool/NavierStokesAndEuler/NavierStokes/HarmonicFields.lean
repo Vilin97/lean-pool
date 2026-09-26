@@ -95,7 +95,7 @@ noncomputable def evaluateHom {α : Type*} (x : α) (φ : ℝ) : Coefficients α
   c.sum (fun j a => a x * character j φ)
 
 theorem evaluate_eq_hom {α : Type*} (c : Coefficients α) (x : α) (φ : ℝ) :
-    evaluate c x φ = evaluateHom x φ c := rfl
+    evaluate c x φ = evaluateHom x φ c := by rfl
 
 @[simp] theorem evaluate_zero {α : Type*} (x : α) (φ : ℝ) :
     evaluate (0 : Coefficients α) x φ = 0 := (evaluateHom x φ).map_zero
@@ -275,7 +275,7 @@ noncomputable def conjugateReverse {α : Type*} (c : Coefficients α) : Coeffici
     (Finsupp.mapRange (fun a : α → ℂ => fun x => conj (a x)) (by ext x; simp) c.coeff)
 
 @[simp] theorem conjugateReverse_apply {α : Type*} (c : Coefficients α) (j : ℤ) (x : α) :
-    conjugateReverse c j x = conj (c (-j) x) := rfl
+    conjugateReverse c j x = conj (c (-j) x) := by rfl
 
 theorem evaluate_conjugateReverse {α : Type*} (c : Coefficients α) (x : α) (φ : ℝ) :
     evaluate (conjugateReverse c) x φ = conj (evaluate c x φ) := by
@@ -513,7 +513,7 @@ noncomputable def differentiate (V : E → E) (k : ℝ) (Φ : E → ℝ)
 
 @[simp] theorem differentiate_apply (V : E → E) (k : ℝ) (Φ : E → ℝ)
     (c : Coefficients E) (j : ℤ) :
-    differentiate V k Φ c j = derivativeCoefficient V k Φ j (c j) := rfl
+    differentiate V k Φ c j = derivativeCoefficient V k Φ j (c j) := by rfl
 
 theorem support_differentiate (V : E → E) (k : ℝ) (Φ : E → ℝ) (c : Coefficients E) :
     (differentiate V k Φ c).support ⊆ c.support := by
@@ -676,7 +676,7 @@ noncomputable def angularDifferentiate {α : Type*} (kp : ℤ) (c : Coefficients
 
 @[simp] theorem angularDifferentiate_apply {α : Type*} (kp : ℤ) (c : Coefficients α)
     (j : ℤ) (x : α) :
-    angularDifferentiate kp c j x = (((j * kp : ℤ) : ℂ) * Complex.I) * c j x := rfl
+    angularDifferentiate kp c j x = (((j * kp : ℤ) : ℂ) * Complex.I) * c j x := by rfl
 
 theorem support_angularDifferentiate {α : Type*} (kp : ℤ) (c : Coefficients α) :
     (angularDifferentiate kp c).support ⊆ c.support := by

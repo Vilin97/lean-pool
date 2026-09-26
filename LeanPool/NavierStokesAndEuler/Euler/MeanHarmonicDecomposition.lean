@@ -330,7 +330,7 @@ open MeasureTheory InnerProductSpace Laplacian EulerSmoothLimit EulerVectorCalcu
 open scoped ContDiff
 
 /-- Distributional harmonicity of an actual ordinary L² vector field on a set. -/
-def WeakHarmonicOn (U : Set Space) (u : EulerMeanSolenoidal.L2) : Prop :=
+@[expose] def WeakHarmonicOn (U : Set Space) (u : EulerMeanSolenoidal.L2) : Prop :=
   ∀ φ : Space → Space, HasCompactSupport φ → ContDiff ℝ ∞ φ →
     tsupport φ ⊆ U → (∫ x, ⟪u x, Δ φ x⟫_ℝ) = 0
 

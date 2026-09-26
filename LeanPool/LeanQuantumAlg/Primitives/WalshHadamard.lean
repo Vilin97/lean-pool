@@ -271,7 +271,7 @@ theorem norm_phaseSign (f : Oracle n) (x : Fin (2 ^ n)) :
   by_cases h : f x <;> simp [h]
 
 /-- Raw `n`-qubit Hadamard layer in Walsh-Hadamard closed form. -/
-def hadamardLayerOp (n : ℕ) : HilbertOperator n :=
+@[expose] def hadamardLayerOp (n : ℕ) : HilbertOperator n :=
   fun y x => invSqrtCard n * walshSign y x
 
 /-- The Walsh-Hadamard closed-form matrix is unitary. -/
@@ -350,7 +350,7 @@ def postOracleState (f : Oracle n) : PureState (n + 1) :=
 
 /-- The input-register state after rewriting the oracle query by phase
 kickback: `(√(2^n))⁻¹ ∑ x, (-1)^{f x}|x⟩`. -/
-def afterPhaseQueryVec (f : Oracle n) : StateVector n :=
+@[expose] def afterPhaseQueryVec (f : Oracle n) : StateVector n :=
   WithLp.toLp 2 fun x => invSqrtCard n * phaseSign f x
 
 /-- The phase-query vector has unit norm. -/

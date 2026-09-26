@@ -40,7 +40,7 @@ abbrev E (d : ℕ) := EuclideanSpace ℝ (Fin d)
 
 /-- A function f satisfies the μ-Polyak-Łojasiewicz (PL) condition on a set U if
     f is differentiable on U and ‖∇f(x)‖² ≥ 2μ(f(x) - f⋆) for all x ∈ U. -/
-def PolyakLojasiewicz (f : E d → ℝ) (μ : ℝ) (U : Set (E d)) : Prop :=
+@[expose] def PolyakLojasiewicz (f : E d → ℝ) (μ : ℝ) (U : Set (E d)) : Prop :=
   0 < μ ∧ DifferentiableOn ℝ f U ∧ ∀ x ∈ U, ‖gradient f x‖ ^ 2 ≥ 2 * μ * (f x - fStar f)
 
 /-- L-smoothness: the gradient of f is L-Lipschitz. -/

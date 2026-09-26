@@ -222,7 +222,7 @@ private theorem Provable.imp_imp_and {Gamma : Set (Pattern S Var)}
 /-- `Γ ⊢loc φ`: a finite list of premises from `Γ` has a theorem implication to
 `φ`.  Lists, rather than finite sets, are the pinned representation of the
 finite conjunction and make its bracketing explicit. -/
-def LocProvable (Gamma : Set (Pattern S Var)) (phi : Pattern S Var) : Prop :=
+@[expose] def LocProvable (Gamma : Set (Pattern S Var)) (phi : Pattern S Var) : Prop :=
   ∃ l : List (Pattern S Var), (∀ delta ∈ l, delta ∈ Gamma) ∧
     Provable (∅ : Set (Pattern S Var)) (.imp (conj l) phi)
 
@@ -232,7 +232,7 @@ def LocProvable (Gamma : Set (Pattern S Var)) (phi : Pattern S Var) : Prop :=
 
 /-- Definition 68: a locally consistent set with no locally consistent strict
 extension. -/
-def IsMCS (Gamma : Set (Pattern S Var)) : Prop :=
+@[expose] def IsMCS (Gamma : Set (Pattern S Var)) : Prop :=
   LocConsistent Gamma ∧ ∀ {Delta : Set (Pattern S Var)}, Gamma ⊂ Delta → ¬ LocConsistent Delta
 
 namespace LocProvable

@@ -2094,7 +2094,8 @@ private theorem dSVDensityRationalPhysicalAcceptedProjector_eq_spectralMask
     dSVDensityRationalLeftProjectiveThresholdPOVM
     dSVDensityRationalProjectiveThresholdPOVM
   rw [spectralPartitionPOVM_effect_eq_spectralDiagonal]
-  simp only [spectralConjugationCLM_apply, Matrix.UnitaryGroup.inv_val]
+  simp only [spectralConjugationCLM_apply, dSVUniformDensityThresholdLeftBobBasis,
+    Matrix.UnitaryGroup.inv_val]
 
 /-- The finite outcome encoding for DSV density rational canonical prefix spectral. -/
 @[expose] def dSVDensityRationalCanonicalPrefixSpectralOutcome
@@ -2257,7 +2258,8 @@ theorem dSVDensityRationalFirstAcceptPhysicalEffect_eq_spectralMask
   unfold dSVDensityRationalLeftProjectiveThresholdPOVM
     dSVDensityRationalProjectiveThresholdPOVM
   rw [spectralPartitionPOVM_effect_eq_spectralDiagonal]
-  simp only [spectralConjugationCLM_apply, Matrix.UnitaryGroup.inv_val]
+  simp only [spectralConjugationCLM_apply, dSVUniformDensityThresholdLeftBobBasis,
+    Matrix.UnitaryGroup.inv_val]
 
 theorem dSVDensityRationalFirstAcceptLocalSpectralMask_transpose
     {d : ℕ} (w : ℝ) (N : ℕ)
@@ -6049,7 +6051,7 @@ private def fullCoordinateBaseOfOldHistory
     ⟨j, fullHistoryRemaining_insert_subset D L i j.property⟩
 
 /-- The transcript representation for full coordinate old. -/
-def fullCoordinateOldHistory
+@[expose] def fullCoordinateOldHistory
     {X Y : Type*}
     {n : ℕ} (D L : Finset (Fin n)) (i : Fin n)
     (h : FullCoordinateRevealHistory X Y n D L i)
@@ -6078,7 +6080,7 @@ private def fullCoordinateBaseOfNewHistory
   bobRemaining := h.bobRemaining
 
 /-- The transcript representation for full coordinate new. -/
-def fullCoordinateNewHistory
+@[expose] def fullCoordinateNewHistory
     {X Y : Type*}
     {n : ℕ} (D L : Finset (Fin n)) (i : Fin n)
     (h : FullCoordinateRevealHistory X Y n D L i)
@@ -7180,7 +7182,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The indicator function for full coordinate base win. -/
-def fullCoordinateBaseWinIndicator
+@[expose] def fullCoordinateBaseWinIndicator
     (G : Game X Y A B) {n : ℕ}
     (D L : Finset (Fin n)) (i : Fin n)
     (r : FullCoordinateRevealHistory X Y n D L i)

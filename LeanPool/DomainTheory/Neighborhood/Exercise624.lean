@@ -102,12 +102,12 @@ namespace Exercise624
 ∪ 1q`. It is also
 the master of the product `{p} × {q}` (sum and product share the master shape over
 `{0,1}*`). -/
-def gTok (p q : Set Str) : Set Str := insert ([] : Str) (embBit false p ∪ embBit true q)
+@[expose] def gTok (p q : Set Str) : Set Str := insert ([] : Str) (embBit false p ∪ embBit true q)
 
 /-- `fTok p q = tok((D + (D×E)))` for `D = {p}`, `E = {q}`: `{Λ} ∪ 0p ∪ 1(gTok p
 q)`, equivalently
 `gTok p (gTok p q)`. -/
-def fTok (p q : Set Str) : Set Str := gTok p (gTok p q)
+@[expose] def fTok (p q : Set Str) : Set Str := gTok p (gTok p q)
 
 theorem nil_mem_gTok (p q : Set Str) : ([] : Str) ∈ gTok p q := Set.mem_insert _ _
 
@@ -232,16 +232,16 @@ theorem exists_double_fixedPoint :
 /-! ## The two solution systems and the simultaneous subsystem facts -/
 
 /-- The solution system `D = {Γ_D}`. -/
-def Dsol : ScottSys := singletonSys GammaD ⟨[], nil_mem_GammaD⟩
+@[expose] def Dsol : ScottSys := singletonSys GammaD ⟨[], nil_mem_GammaD⟩
 
 /-- The solution system `E = {Γ_E}`. -/
-def Esol : ScottSys := singletonSys GammaE ⟨[], nil_mem_GammaE⟩
+@[expose] def Esol : ScottSys := singletonSys GammaE ⟨[], nil_mem_GammaE⟩
 
 /-- The first right-hand side `D + (D × E)`. -/
-def Fsol (D E : ScottSys) : ScottSys := D.sum (D.prod E)
+@[expose] def Fsol (D E : ScottSys) : ScottSys := D.sum (D.prod E)
 
 /-- The second right-hand side `D + E`. -/
-def Gsol (D E : ScottSys) : ScottSys := D.sum E
+@[expose] def Gsol (D E : ScottSys) : ScottSys := D.sum E
 
 /-- The master (token set) of `D + (D×E)` is `fTok Γ_D Γ_E` — definitionally, the
 sum/product

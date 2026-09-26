@@ -104,7 +104,7 @@ instance addCommGroup : AddCommGroup (CrossProductAlgebra f) :=
   val_injective.addCommGroup val val_zero val_add val_neg val_sub (fun _ _ ↦ rfl) (fun _ _ ↦ rfl)
 
 /-- The additive equivalence with finitely supported functions on the Galois group. -/
-@[simps]
+@[expose, simps]
 def valAddEquiv : CrossProductAlgebra f ≃+ (Gal(K, F) →₀ K) where
   toFun := val
   invFun := mk
@@ -126,7 +126,7 @@ instance [Semiring R] [Semiring S] [Module R K] [Module S K] [Module R S] [IsSca
   smul_assoc r s x := by ext; simp [smul_assoc]
 
 /-- The linear equivalence with finitely supported functions on the Galois group. -/
-@[simps]
+@[expose, simps]
 def valLinearEquiv [Semiring R] [Module R K] :
     CrossProductAlgebra f ≃ₗ[R] (Gal(K, F) →₀ K) where
   __ := valAddEquiv
@@ -137,9 +137,9 @@ def valLinearEquiv [Semiring R] [Module R K] :
 def basis : Basis Gal(K, F) K (CrossProductAlgebra f) where
   repr := valLinearEquiv
 
-lemma basis_val (σ : Gal(K, F)) : (basis (f := f) σ).val = .single σ 1 := rfl
+lemma basis_val (σ : Gal(K, F)) : (basis (f := f) σ).val = .single σ 1 := by rfl
 
-lemma mk_single_one (σ : Gal(K, F)) : mk (.single σ 1) = basis (f := f) σ := rfl
+lemma mk_single_one (σ : Gal(K, F)) : mk (.single σ 1) = basis (f := f) σ := by rfl
 
 variable (f) in
 /-- The bilinear multiplication map on the underlying finitely supported functions. -/
@@ -263,7 +263,7 @@ variable (f) in
 
 Note that this does *not* make `CrossProductAlgebra f` into a `K`-algebra, because that would
 require `incl k * x = x * incl k`. -/
-@[simps -isSimp]
+@[expose, simps -isSimp]
 def incl : K →ₐ[F] CrossProductAlgebra f where
   toFun k := k • 1
   map_zero' := by ext; simp
@@ -287,7 +287,7 @@ instance [CommSemiring R] [Algebra R K] :
 
 variable (f) in
 /-- The canonical unit associated to an element of the Galois group. -/
-@[simps]
+@[expose, simps]
 def of (σ : Gal(K, F)) : (CrossProductAlgebra f)ˣ where
   val.val := .single σ 1
   inv.val := .single σ⁻¹ <| (f (σ⁻¹, σ))⁻¹ * (f (1, 1))⁻¹
@@ -307,7 +307,7 @@ def of (σ : Gal(K, F)) : (CrossProductAlgebra f)ˣ where
       map_one, mul_right_comm _ (f _ : K)⁻¹, mul_one, ne_eq, Units.ne_zero, not_false_eq_true,
       inv_mul_cancel₀, one_mul, val_one]
 
-lemma basis_eq_of (σ : Gal(K, F)) : basis σ = (of f σ).val := rfl
+lemma basis_eq_of (σ : Gal(K, F)) : basis σ = (of f σ).val := by rfl
 
 variable (f) in
 @[simp] lemma of_one : of f 1 = incl f (f (1, 1)) := by ext; simp [incl_apply]

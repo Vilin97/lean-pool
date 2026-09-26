@@ -85,7 +85,7 @@ lemma isCompact_rhoSupportClosure (i : d.ι) : IsCompact (rhoSupportClosure (d :
   (isClosed_closure.isCompact)
 
 /-- A compact subset of the chart model space containing the supports of all localizations. -/
-def rhoSupportImage (i : d.ι) : Set E :=
+@[expose] def rhoSupportImage (i : d.ι) : Set E :=
   (chart (d := d) i) '' rhoSupportClosure (d := d) i
 
 omit [CompleteSpace E] [FiniteDimensional ℝ E] [IsManifold I (1 : WithTop ℕ∞) M] [I.Boundaryless]

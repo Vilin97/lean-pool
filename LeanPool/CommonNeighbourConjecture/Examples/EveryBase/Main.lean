@@ -27,7 +27,7 @@ namespace SaxlCounterexamples.EveryBase
 open scoped Pointwise
 
 /-- The concrete binary seed attached to `GF(3^d)`. -/
-noncomputable def hqSeed (d : Nat) (hd : Odd d) (hd3 : 3 ≤ d) :
+@[expose] noncomputable def hqSeed (d : Nat) (hd : Odd d) (hd3 : 3 ≤ d) :
     EveryBaseSeed where
   Ω := Fq d
   H := Hq d
@@ -83,7 +83,7 @@ abbrev GBd
     (HqProductModule d hd hd3 tail)
 
 /-- The explicit vector outside the doubled generalized neighborhood. -/
-noncomputable def hqBadVector
+@[expose] noncomputable def hqBadVector
     (d : Nat) (hd : Odd d) (hd3 : 3 ≤ d) (tail : Nat) :
     HqProductModule d hd hd3 tail :=
   badVector (hqSeed d hd hd3) (hqColours d hd hd3 tail)

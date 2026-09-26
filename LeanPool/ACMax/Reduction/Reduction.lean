@@ -83,7 +83,7 @@ open Classical in
 /-- An **induced `2K₂` on degree-`3` vertices**: four distinct vertices of degree `3` spanning
 exactly the two edges `ab`, `cd`.  Its degree sum is `12`, so `algConn_le_two_of_ind_2K2`
 applies (for every `n`). -/
-def HasDeg3Ind2K2 (n : ℕ) (G : SimpleGraph (Fin n)) : Prop :=
+@[expose] def HasDeg3Ind2K2 (n : ℕ) (G : SimpleGraph (Fin n)) : Prop :=
   ∃ a b c d : Fin n, ({a, b, c, d} : Finset (Fin n)).card = 4 ∧
     G.degree a = 3 ∧ G.degree b = 3 ∧ G.degree c = 3 ∧ G.degree d = 3 ∧
     G.Adj a b ∧ G.Adj c d ∧ ¬G.Adj a c ∧ ¬G.Adj a d ∧ ¬G.Adj b c ∧ ¬G.Adj b d

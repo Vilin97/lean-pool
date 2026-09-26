@@ -165,7 +165,7 @@ noncomputable def extendByZeroₗ : Lp E p (μ.restrict s) →ₗ[ℝ] Lp E p μ
             simpa using hcx.symm
 
 /-- Extension-by-zero as a linear isometry. -/
-noncomputable def extendByZeroₗᵢ : Lp E p (μ.restrict s) →ₗᵢ[ℝ] Lp E p μ where
+@[expose] noncomputable def extendByZeroₗᵢ : Lp E p (μ.restrict s) →ₗᵢ[ℝ] Lp E p μ where
   toLinearMap := extendByZeroₗ (μ := μ) (p := p) (s := s) hs
   norm_map' f := by
     classical

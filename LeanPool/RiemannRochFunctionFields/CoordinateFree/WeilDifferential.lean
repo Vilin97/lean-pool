@@ -71,16 +71,14 @@ omit [IsFullConstantField k K] in
 theorem adeleDualEquivChart_apply (phi : AdeleSpace k K →ₗ[k] k)
     (a : Chart.AdeleSpace k K) :
     adeleDualEquivChart (k := k) (K := K) phi a =
-      phi ((adeleEquivChart k K).symm a) :=
-  rfl
+      phi ((adeleEquivChart k K).symm a) := by rfl
 
 omit [IsFullConstantField k K] in
 @[simp]
 theorem adeleDualEquivChart_symm_apply (phi : Chart.AdeleSpace k K →ₗ[k] k)
     (a : AdeleSpace k K) :
     (adeleDualEquivChart (k := k) (K := K)).symm phi a =
-      phi (adeleEquivChart k K a) :=
-  rfl
+      phi (adeleEquivChart k K a) := by rfl
 
 /-- Reindex an intrinsic Weil differential as a chart Weil differential. -/
 noncomputable def toChart (omega : WeilDifferential k K) :

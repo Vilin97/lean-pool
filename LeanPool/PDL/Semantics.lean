@@ -74,11 +74,11 @@ theorem evalDis {W M f g} {w : W} : evaluate M w (f⋁g) ↔ evaluate M w f ∨ 
   | (M, w), ϕ => evaluate M w ϕ
 
 /-- Validity of a formula at every world of every Kripke model. -/
-def tautology (φ : Formula) :=
+@[expose] def tautology (φ : Formula) :=
   ∀ (W : Type) (M : KripkeModel W) w, evaluate M w φ
 
 /-- Falsity of a formula at every world of every Kripke model. -/
-def contradiction (φ : Formula) :=
+@[expose] def contradiction (φ : Formula) :=
   ∀ (W : Type) (M : KripkeModel W) w, ¬evaluate M w φ
 
 /-! ## Satisfiability -/
@@ -121,7 +121,7 @@ def semImpliesSets (X : Finset Formula) (Y : Finset Formula) :=
   ∀ (W : Type) (M : KripkeModel W) w, evaluate M w φ ↔ evaluate M w ψ
 
 /-- Agreement of two program relations in every Kripke model. -/
-def relEquiv (α β : Program) :=
+@[expose] def relEquiv (α β : Program) :=
   ∀ (W : Type) (M : KripkeModel W) v w, relate M α v w ↔ relate M β v w
 
 theorem notsatisfnotThenTaut : ∀ φ, ¬ satisfiable (~φ) → tautology φ :=

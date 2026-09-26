@@ -38,10 +38,10 @@ abbrev Source := Point → ℂ
 noncomputable def slice (f : Source) (p : ℝ) : Plane → ℂ := fun Y => f (p, Y)
 
 /-- Periodic, given by `∀ p, SmoothFourierData.UnitPeriodic (slice f p)`. -/
-def Periodic (f : Source) : Prop := ∀ p, SmoothFourierData.UnitPeriodic (slice f p)
+@[expose] def Periodic (f : Source) : Prop := ∀ p, SmoothFourierData.UnitPeriodic (slice f p)
 
 /-- Parameter partial, given by `fderiv ℝ f z (1, 0)`. -/
-noncomputable def parameterPartial (f : Source) (z : Point) : ℂ :=
+@[expose] noncomputable def parameterPartial (f : Source) (z : Point) : ℂ :=
   fderiv ℝ f z (1, 0)
 
 /-- Torus X partial, given by `fderiv ℝ f z (0, (1, 0))`. -/
@@ -62,14 +62,14 @@ noncomputable def torusXJet : ℕ → Source → Source
   fun z => f (z.1, (z.2.2, z.2.1))
 
 /-- Coefficient, given by `SmoothFourierData.coefficient (slice f p) k`. -/
-noncomputable def coefficient (f : Source) (p : ℝ) (k : Frequency) : ℂ :=
+@[expose] noncomputable def coefficient (f : Source) (p : ℝ) (k : Frequency) : ℂ :=
   SmoothFourierData.coefficient (slice f p) k
 
 /-- Mean, given by `coefficient f p 0`. -/
-noncomputable def mean (f : Source) (p : ℝ) : ℂ := coefficient f p 0
+@[expose] noncomputable def mean (f : Source) (p : ℝ) : ℂ := coefficient f p 0
 
 /-- Zero mean, given by `∀ p, mean f p = 0`. -/
-def ZeroMean (f : Source) : Prop := ∀ p, mean f p = 0
+@[expose] def ZeroMean (f : Source) : Prop := ∀ p, mean f p = 0
 
 /-- Inverse, given by `directionalInverse d (coefficient f z.1) z.2`. -/
 @[expose] noncomputable def inverse (d : Direction) (f : Source) (z : Point) : ℂ :=
@@ -563,7 +563,7 @@ theorem inverse_zeroMean (d : Direction) {f : Source} (hf : ContDiff ℝ ∞ f)
   exact TorusInverse.inverse_zero_mean d ha
 
 /-- Directional partial, given by `fderiv ℝ f z (0, vector d)`. -/
-noncomputable def directionalPartial (d : Direction) (f : Source) (z : Point) : ℂ :=
+@[expose] noncomputable def directionalPartial (d : Direction) (f : Source) (z : Point) : ℂ :=
   fderiv ℝ f z (0, vector d)
 
 /-- Exact inversion for the given function, with the derivative taken in the

@@ -149,7 +149,7 @@ end RestrictLength
   ChomskyNormalFormGrammar.mk g.NT' (Sum.inl g.initial) (restrictLengthRules g.rules.toList)
 
 /-- A grammar is `Wellformed` if all rules are `ContextFreeRule.Wellformed` -/
-def Wellformed (g : ContextFreeGrammar T) : Prop := ∀ r ∈ g.rules, r.Wellformed
+@[expose] def Wellformed (g : ContextFreeGrammar T) : Prop := ∀ r ∈ g.rules, r.Wellformed
 
 /-! Definitions of embeding into and projecting to the type of symbols of the new grammar -/
 section EmbedProject

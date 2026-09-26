@@ -23,7 +23,7 @@ namespace LeanPool.PoincareThreeBody
 
 
 /-- Canonical symplectic pairing of two phase covectors. -/
-def phasePoissonPairing
+@[expose] def phasePoissonPairing
     (first second : PhaseSpace →L[ℝ] ℝ) : ℝ :=
   first (coordinateVector 0) * second (coordinateVector 2) -
       first (coordinateVector 2) * second (coordinateVector 0) +
@@ -111,7 +111,7 @@ lemma actionDerivativeCovector_apply
   rfl
 
 /-- The two Hamiltonian tangent vectors associated with the rows of an action derivative. -/
-def actionHamiltonianTangentMap
+@[expose] def actionHamiltonianTangentMap
     (actionDerivative : PhaseSpace →L[ℝ] ActionSpace) : ActionSpace →ₗ[ℝ] PhaseSpace where
   toFun vector :=
     vector 0 • phaseHamiltonianVector (actionDerivativeCovector actionDerivative 0) +

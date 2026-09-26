@@ -143,7 +143,7 @@ theorem polyConnIn_union_of_convex {C D : Set Plane} (hC : Convex ℝ C) (hD : C
 `U ∩ S` is the relative neighbourhood; stating it through an ambient open set avoids carrying a
 subtype topology. Note the paths are required to lie in `S`, not in the neighbourhood — that is
 the form brick B6's clopen argument consumes. -/
-def IsLocallyPolyConnAt (S : Set Plane) (p : Plane) : Prop :=
+@[expose] def IsLocallyPolyConnAt (S : Set Plane) (p : Plane) : Prop :=
   ∃ U : Set Plane, IsOpen U ∧ p ∈ U ∧ ∀ x ∈ U ∩ S, ∀ y ∈ U ∩ S, PolyConnIn S x y
 
 /-- `S` is locally polygonally connected: polygonally connected near each of its points. -/

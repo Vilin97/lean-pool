@@ -180,7 +180,7 @@ end IsComputable
 but that only uses neighborhoods within the rationals, which is a strictly
 weaker condition. This uses neighborhoods in the ambient space, the reals.
 -/
-def TendstoLocallyUniformlyWithout (F : ℕ → ℚ → ℚ) (f : ℝ → ℝ) : Prop :=
+@[expose] def TendstoLocallyUniformlyWithout (F : ℕ → ℚ → ℚ) (f : ℝ → ℝ) : Prop :=
   ∀ (ε : ℝ), 0 < ε →
     ∀ (x : ℝ), ∃ t ∈ nhds x, ∃ a, ∀ (b : ℕ), a ≤ b → ∀ (y : ℚ), ↑y ∈ t →
     |f y - ↑(F b y)| < ε

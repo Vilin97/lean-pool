@@ -43,7 +43,7 @@ def RadialStationarityIdentity {n m : ℕ} (u : Domain n → Target m) (R0 : ℝ
 
 /-- Weak radial identity obtained by testing stationarity with `X(x)=phi(|x|)x`,
 stated at center `0`. -/
-def WeakRadialStationarityIdentity {n m : ℕ}
+@[expose] def WeakRadialStationarityIdentity {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   ∀ phi : ℝ → ℝ,
     Differentiable ℝ phi →

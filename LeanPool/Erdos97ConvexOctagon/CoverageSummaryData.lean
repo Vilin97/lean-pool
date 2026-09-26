@@ -117,6 +117,7 @@ namespace Erdos97Octagon.RawIncidence
 ]
 
 /-- Check that a pattern summary occurs in the unique generated summary data. -/
+@[expose]
 def PatternSummary.memberB (summary : PatternSummary) : Bool :=
   let group := patternSummaryBucketGroups.getD (summary.origin % 256 / 8) #[]
   match (group.getD (summary.origin % 8) []).find?
@@ -125,6 +126,7 @@ def PatternSummary.memberB (summary : PatternSummary) : Bool :=
   | none => false
 
 /-- Check that a hard summary occurs in the unique generated summary data. -/
+@[expose]
 def HardSummary.memberB (summary : HardSummary) : Bool :=
   let group := hardSummaryBucketGroups.getD (summary.origin % 256 / 8) #[]
   match (group.getD (summary.origin % 8) []).find?

@@ -40,7 +40,7 @@ abbrev FlagSpace (K : Type u) : ℕ → Type u
 
 /-- The dimension of `FlagSpace`, kept recursive so adjoining its first two
 coordinates remains definitionally transparent. -/
-def flagDim : ℕ → ℕ
+@[expose] def flagDim : ℕ → ℕ
   | 0 => 1
   | k + 1 => flagDim k + 2
 

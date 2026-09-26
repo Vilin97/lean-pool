@@ -80,7 +80,7 @@ theorem contMDiffOn_const_smul {U : Set X} (hU : IsOpen U) (c : ℂ) {g : X → 
 
 /-- Bounded-holomorphic elements: BCF on the open subtype agreeing with a holomorphic function
 on `S`. -/
-noncomputable def BddHoloOn (S : Opens X) : Submodule ℂ (↥(S : Set X) →ᵇ ℂ) where
+@[expose] noncomputable def BddHoloOn (S : Opens X) : Submodule ℂ (↥(S : Set X) →ᵇ ℂ) where
   carrier :=
       {f | ∃ g : X → ℂ, ContMDiffOn 𝓘(ℂ) 𝓘(ℂ) ω g (S : Set X) ∧ ∀ z : ↥(S : Set X), f z = g z}
   zero_mem' := ⟨fun _ => 0, contMDiffOn_const, fun _ => rfl⟩
@@ -192,7 +192,7 @@ noncomputable def restrictCLM {S' S : Opens X} (h : S' ≤ S) : BddHoloOn S →L
 
 theorem restrictCLM_apply_coe {S' S : Opens X} (h : S' ≤ S) (f : BddHoloOn S)
     (z : ↥(S' : Set X)) :
-    (restrictCLM h f : ↥(S' : Set X) →ᵇ ℂ) z = (f : ↥(S : Set X) →ᵇ ℂ) (Set.inclusion h z) := rfl
+    (restrictCLM h f : ↥(S' : Set X) →ᵇ ℂ) z = (f : ↥(S : Set X) →ᵇ ℂ) (Set.inclusion h z) := by rfl
 
 /-- Presheaf law: restrictions compose (the analogue of `MeroGermOn.restrict_restrict` /
 `LinSysOn.restrictL_restrictL`, needed for the cochain-level naturality of `resNC1`). -/
@@ -333,7 +333,7 @@ omit [T1Space X] [T2Space X] in
 theorem restrictGerm_apply {S' S : Opens X} (hc : closure (S' : Set X) ⊆ (S : Set X))
     (φ : RS.LinSysOn (0 : RS.Divisor X) (S : Set X)) (z : ↥(S' : Set X)) :
     (restrictGerm hc φ : ↥(S' : Set X) →ᵇ ℂ) z
-      = RS.MeroGermOn.holoRepr (φ : RS.MeroGermOn X (S : Set X)) z := rfl
+      = RS.MeroGermOn.holoRepr (φ : RS.MeroGermOn X (S : Set X)) z := by rfl
 
 omit [T2Space X] [T1Space X] in
 theorem toGerm_restrictGerm {S' S : Opens X} (hc : closure (S' : Set X) ⊆ (S : Set X))

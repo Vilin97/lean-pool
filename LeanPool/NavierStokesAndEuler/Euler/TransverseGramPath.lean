@@ -110,7 +110,7 @@ variable (T : ℝ)
     exact hcont.comp (x := t) (gramPath T Q).continuous.continuousAt
 
 /-- Explicit continuous coefficient of the inverse derivative `-K⁻¹ K' K⁻¹`. -/
-def gramInverseDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
+@[expose] def gramInverseDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
   ⟨fun t => -(gramInversePath T Q c hc hQ t).comp
       ((gramDerivativePath T Q Q₁ t).comp (gramInversePath T Q c hc hQ t)),
     ((gramInversePath T Q c hc hQ).continuous.clm_comp
@@ -124,7 +124,7 @@ def gramInverseDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
       ((realAdjoint (U := U) (E := E)).continuous.comp Q.continuous)⟩
 
 /-- The continuous coefficient of the derivative of the frame left inverse. -/
-def frameLeftInverseDerivativePath : C(Icc (0 : ℝ) T, E →L[ℝ] U) :=
+@[expose] def frameLeftInverseDerivativePath : C(Icc (0 : ℝ) T, E →L[ℝ] U) :=
   ⟨fun t => (gramInverseDerivativePath T Q Q₁ c hc hQ t).comp (Q t).adjoint +
       (gramInversePath T Q c hc hQ t).comp (Q₁ t).adjoint,
     ((gramInverseDerivativePath T Q Q₁ c hc hQ).continuous.clm_comp

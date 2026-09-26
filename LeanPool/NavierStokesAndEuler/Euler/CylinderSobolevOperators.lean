@@ -26,7 +26,7 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The continuous inclusion of the Sobolev space into its finite derivative array. -/
-def arrayOperator (q : ℕ) : SobolevSpace period q →L[ℝ] (SobolevWord q → LiftL2 period) :=
+@[expose] def arrayOperator (q : ℕ) : SobolevSpace period q →L[ℝ] (SobolevWord q → LiftL2 period) :=
   (sobolevSubspace period q).toSubmodule.subtypeL
 
 /-- Continuous evaluation of the underlying L² field. -/
@@ -99,7 +99,7 @@ def liftOperator (q : ℕ) (A : LiftL2 period →L[ℝ] LiftL2 period)
 theorem liftOperator_apply {q : ℕ} (A : LiftL2 period →L[ℝ] LiftL2 period)
     (hA : ∀ a f, A (translation period a f) = translation period a (A f))
     (u : SobolevSpace period q) (w : SobolevWord q) :
-    (liftOperator period q A hA u).val w = A (u.val w) := rfl
+    (liftOperator period q A hA u).val w = A (u.val w) := by rfl
 
 /-- The lifted Sobolev operator has the same uniform bound as its L² action. -/
 theorem liftOperator_bound {q : ℕ} (A : LiftL2 period →L[ℝ] LiftL2 period)
@@ -121,7 +121,7 @@ theorem norm_liftOperator_le (q : ℕ) (A : LiftL2 period →L[ℝ] LiftL2 perio
 theorem value_liftOperator {q : ℕ} (A : LiftL2 period →L[ℝ] LiftL2 period)
     (hA : ∀ a f, A (translation period a f) = translation period a (A f))
     (u : SobolevSpace period q) : value period (liftOperator period q A hA u) = A (value period u)
-        := rfl
+        := by rfl
 
 /-- Translations commute in the cylinder's additive group. -/
 theorem translations_commute (a b : LiftDomain period) (f : LiftL2 period) :

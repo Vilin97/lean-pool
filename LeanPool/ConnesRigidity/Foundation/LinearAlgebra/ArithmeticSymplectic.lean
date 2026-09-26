@@ -68,7 +68,7 @@ instance : DistribMulAction IntegralSymplecticGroup IntegralLattice :=
 /--
 The `reducedMatrixHom` construction used in the Connes rigidity formalization.
 -/
-def reducedMatrixHom :
+@[expose] def reducedMatrixHom :
     IntegralSymplecticGroup →* Matrix SymplecticIndex SymplecticIndex (ZMod 2) where
   toFun g := (g.1 : Matrix SymplecticIndex SymplecticIndex ℤ).map
     (Int.castRingHom (ZMod 2))

@@ -204,7 +204,9 @@ theorem _root_.rankOne.EuclideanSpace.toEuclideanLin_symm {𝕜 : Type*} [RCLike
         (Matrix.replicateCol (Fin 1) (y : m → 𝕜))ᴴ := by
   have hrank : (rankOne 𝕜 x y).toLinearMap =
       (InnerProductSpace.rankOne 𝕜 x y).toLinearMap := by
-    ext z i
+    apply LinearMap.ext
+    intro z
+    change rankOne 𝕜 x y z = InnerProductSpace.rankOne 𝕜 x y z
     simp only [_root_.rankOne_apply, InnerProductSpace.rankOne_apply]
   rw [hrank, InnerProductSpace.symm_toEuclideanLin_rankOne, Matrix.vecMulVec_eq (Fin 1),
     Matrix.conjTranspose_replicateCol]

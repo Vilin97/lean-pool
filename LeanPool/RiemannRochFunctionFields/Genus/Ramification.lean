@@ -39,10 +39,10 @@ local instance instDecidableEqPlaceARam : DecidableEq (PlaceA k K) := Classical.
 local instance instDecidableEqRatFuncRam : DecidableEq k⟮X⟯ := Classical.decEq _
 
 /-- The uniformizer `t = X⁻¹` in `k(X)`. -/
-noncomputable def tRatFunc : k⟮X⟯ := 1 / RatFunc.X
+@[expose] noncomputable def tRatFunc : k⟮X⟯ := 1 / RatFunc.X
 
 /-- `t` as an element of the valuation subring at infinity. -/
-noncomputable def tA : inftyValuationSubring k :=
+@[expose] noncomputable def tA : inftyValuationSubring k :=
   ⟨tRatFunc k, by
     rw [Valuation.mem_valuationSubring_iff]
     dsimp [tRatFunc]
@@ -74,7 +74,7 @@ local notation "inftyInts" => infiniteIntegers k K
 local notation "maxIdealInfty" => IsLocalRing.maximalIdeal (inftyValuationSubring k)
 
 /-- Ramification index of the infinite place above `k(X)`. -/
-noncomputable def ramIdxInfty (P : Ideal (infiniteIntegers k K)) : ℕ :=
+@[expose] noncomputable def ramIdxInfty (P : Ideal (infiniteIntegers k K)) : ℕ :=
   (IsLocalRing.maximalIdeal (inftyValuationSubring k)).ramificationIdx' P
 
 /-- Its image `t_K` in the function field. -/

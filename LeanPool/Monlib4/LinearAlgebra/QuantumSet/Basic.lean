@@ -297,13 +297,7 @@ theorem lmul_adjoint [hB : QuantumSet B] (a : B) :
 
 lemma QuantumSet.inner_eq_counit' [QuantumSet B] :
     (⟪(1 : B), ·⟫_ℂ) = Coalgebra.counit := by
-  simp_rw [Coalgebra.counit]
-  ext
-  apply ext_inner_left ℂ
-  intro a
-  simp_rw [LinearMap.adjoint_inner_right, Algebra.linearMap_apply,
-    Algebra.algebraMap_eq_smul_one, inner_smul_left]
-  rw [RCLike.inner_apply']
+  exact Coalgebra.inner_eq_counit'
 
 lemma QuantumSet.inner_eq_counit [QuantumSet B] (x y : B) :
     ⟪x, y⟫_ℂ = Coalgebra.counit (star x * modAut (k B) y) := by
@@ -1016,4 +1010,4 @@ lemma rmulMapLmul_apply_Upsilon_eq [QuantumSet A] [QuantumSet B] (x : A →ₗ[�
   nth_rw 2 [QuantumSet.inner_conj_left]
   simp_rw [starAlgebra.modAut_star, modAut_apply_modAut, star_star,
     add_neg_cancel, starAlgebra.modAut_zero]
-  rfl
+  simp only [lmul_apply, one_mul]

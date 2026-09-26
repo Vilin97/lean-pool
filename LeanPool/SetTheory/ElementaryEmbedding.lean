@@ -109,7 +109,7 @@ lemma crit_exists : ∃ α, IsOrdinal α ∧ j α ≠ α := by
 
 variable (j) in
 /-- The `crit` declaration. -/
-def crit : M := sInf {α : M | j α ≠ α ∧ IsOrdinal α}
+@[expose] def crit : M := sInf {α : M | j α ≠ α ∧ IsOrdinal α}
 
 lemma crit_eq_ordinal_sInf : crit j = (sInf {α : Ordinals M | j α ≠ α}).1 := by
   rw [crit, show {α | j α ≠ α ∧ IsOrdinal α} = (·.1) '' {α : Ordinals M | j α ≠ α} by ext; simp,

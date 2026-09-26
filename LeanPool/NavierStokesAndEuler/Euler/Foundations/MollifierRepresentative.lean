@@ -127,6 +127,7 @@ theorem cylinderConvolution_smooth (φ : ContDiffBump (0 : Domain 4)) (f : LiftD
       fun v => coverConvolution period φ f (z + coordinateEquiv.symm v) := by
     funext v
     rw [← cylinderConvolution_cover, euclideanCover_add, hz]
+    simp [localFieldLift, euclideanCover, coveringMap]
     congr 1
   rw [he]
   exact (coverConvolution_smooth period φ f hf).comp (contDiff_const.add

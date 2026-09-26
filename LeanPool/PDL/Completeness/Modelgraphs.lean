@@ -44,7 +44,7 @@ open Modelgraphs
 the conditions (a) to (b). See also [MB1988] Def 19 on page 31 where (a)-(b) are named (i)-(iv).
 Note: In MB item (b) aka (ii) only has `→`. We use `↔` similar to [BRV2001] Def 4.18 and 4.84.
 Note: In item (c) `a` is atomic, but in item (d) `α` is any program. -/
-def ModelGraph (W : Finset (Finset Formula)) :=
+@[expose] def ModelGraph (W : Finset (Finset Formula)) :=
   let a := ∀ X : W, saturated X.val ∧ locallyConsistent X
   let b M := ∀ X p, (·p : Formula) ∈ X.val ↔ M.val X p
   let c M := ∀ X Y a P, M.Rel a X Y → (⌈·a⌉P) ∈ X.val → P ∈ Y.val

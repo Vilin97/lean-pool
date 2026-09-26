@@ -224,7 +224,7 @@ abbrev h1Target (μ : Measure M) : Type _ := ∀ i : d.ι, h1TargetE (d := d) (I
 
 /-- The per-chart graph map `C¹(M) →ₗ (L² × L²(E))` obtained by localization to chart `i` and the
 Euclidean `H¹` graph construction. -/
-noncomputable def h1GraphChart (i : d.ι) :
+@[expose] noncomputable def h1GraphChart (i : d.ι) :
     ↥(C1 (E := E) (H := H) (M := M) (I := I)) →ₗ[ℝ] h1TargetE (d := d) (I := I) μ i :=
   (RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.graph
       (μ := chartMeasure (d := d) (I := I) μ i) (E := E)).comp
@@ -273,7 +273,7 @@ lemma h1GraphChart_snd (i : d.ι) (f : ↥(C1 (E := E) (H := H) (M := M) (I := I
     RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.toL2GradLinear, localizeToC1c]
 
 /-- The product-of-charts graph map `C¹(M) →ₗ ∀ i, (L² × L²(E))` used to define manifold `H¹`. -/
-noncomputable def h1Graph :
+@[expose] noncomputable def h1Graph :
     ↥(C1 (E := E) (H := H) (M := M) (I := I)) →ₗ[ℝ] h1Target (d := d) (I := I) μ := by
   classical
   -- Assemble the per-chart graph maps into a product map.

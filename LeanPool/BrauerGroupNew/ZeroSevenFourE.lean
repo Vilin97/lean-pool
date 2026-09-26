@@ -560,6 +560,7 @@ lemma gen_spec (M : Type v) [AddCommGroup M]
 
 /-- The left action map into the double centralizer endomorphism algebra. -/
 @[simps]
+@[expose]
 def toEndEnd (M : Type v) [AddCommGroup M] [Module A M] :
     A →ₗ[A] Module.End (Module.End A M) M where
   toFun a :=
@@ -575,6 +576,7 @@ lemma toEndEnd_apply (M : Type v) [AddCommGroup M] [Module A M] (a : A) (m : M) 
     toEndEnd A M a m = a • m := rfl
 
 /-- The algebra homomorphism induced by the double centralizer action map. -/
+@[expose]
 def toEndEndAlgHom (M : Type v) [AddCommGroup M] [Module A M] [Module k M] [IsScalarTower k A M] :
     A →ₐ[k] Module.End (Module.End A M) M where
   __ := toEndEnd A M

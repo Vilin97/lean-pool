@@ -197,7 +197,7 @@ theorem j2_injective {Z Z' : Set γ}
 variable (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) (V₂ : NeighborhoodSystem γ)
 
 /-- The master neighbourhood of the three-way sum: `{Λ} ∪ 0Δ₀ ∪ 1Δ₁ ∪ 2Δ₂`. -/
-def master3 : Set (Option (α ⊕ β ⊕ γ)) :=
+@[expose] def master3 : Set (Option (α ⊕ β ⊕ γ)) :=
   insert none (j0 V₀.master ∪ j1 V₁.master ∪ j2 V₂.master)
 
 variable {V₀ V₁ V₂}
@@ -242,6 +242,7 @@ theorem eq_master3_of_subset {W : Set (Option (α ⊕ β ⊕ γ))}
 /-- **Example 6.2 — the three-way separated sum `D₀ + D₁ + D₂`** over `{Λ} ∪ 0Δ₀ ∪
 1Δ₁ ∪ 2Δ₂`,
 under the standing assumption that no neighbourhood of any factor is empty. -/
+@[expose]
 def sum3 (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) (V₂ : NeighborhoodSystem γ)
     (h₀ : ∀ X, V₀.mem X → X.Nonempty) (h₁ : ∀ Y, V₁.mem Y → Y.Nonempty)
     (h₂ : ∀ Z, V₂.mem Z → Z.Nonempty) : NeighborhoodSystem (Option (α ⊕ β ⊕ γ)) where

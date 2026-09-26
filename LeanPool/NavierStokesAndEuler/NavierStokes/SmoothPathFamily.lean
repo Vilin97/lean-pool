@@ -97,7 +97,7 @@ noncomputable def flipPath : C(Icc a b, P →L[ℝ] E) →L[ℝ] P →L[ℝ] C(I
       simpa only [one_mul] using norm_flipLinear_le g v)
 
 theorem flipPath_apply (g : C(Icc a b, P →L[ℝ] E)) (v : P) (t : Icc a b) :
-    flipPath (P := P) (E := E) g v t = g t v := rfl
+    flipPath (P := P) (E := E) g v t = g t v := by rfl
 
 /-- The key uniform differentiability theorem. Joint continuity of the actual
 slice derivative supplies a common remainder estimate for every time point. -/

@@ -28,7 +28,7 @@ open scoped ContDiff
   rfl
 
 /-- Add, given by `⟨χ.field + ψ.field, χ.smooth.add ψ.smooth, χ.compact.add ψ.compact⟩`. -/
-def Cutoff.add (χ ψ : Cutoff) : Cutoff :=
+@[expose] def Cutoff.add (χ ψ : Cutoff) : Cutoff :=
   ⟨χ.field + ψ.field, χ.smooth.add ψ.smooth, χ.compact.add ψ.compact⟩
 
 /-- Scale, given by `⟨c • χ.field, χ.smooth.const_smul c, χ.compact.comp_left (g := fun t : ℝ =>

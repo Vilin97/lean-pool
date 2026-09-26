@@ -123,7 +123,7 @@ noncomputable def delta
 lemma delta_def (Z : Ω → S₁) (U : Ω → S₂) (X : Ω → S₃) (Y : Ω
   → S₄) (μ : Measure Ω) :
     delta Z U X Y μ
-      = I[Z : U; μ] - I[Z : U | X; μ] - I[Z : U | Y; μ] := rfl
+      = I[Z : U; μ] - I[Z : U | X; μ] - I[Z : U | Y; μ] := by rfl
 
 /-- Swapping the two conditioning arguments leaves `delta` unchanged. -/
 lemma delta_comm_cond (Z : Ω → S₁) (U : Ω → S₂) (X : Ω → S₃) (Y : Ω

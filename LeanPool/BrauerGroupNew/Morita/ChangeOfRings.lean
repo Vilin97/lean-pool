@@ -75,6 +75,7 @@ instance instAlgebraEndOfLeanPool : Algebra R (End (ModuleCat.of A A)) := inferI
 /-- Right multiplication identifies the opposite division ring with endomorphisms of its regular
 module. -/
 @[simps]
+@[expose]
 def mopToEnd : Aᵐᵒᵖ →ₐ[R] End (ModuleCat.of A A) where
   toFun a := ModuleCat.ofHom <|
     { toFun := fun (x : A) ↦ x * a.unop

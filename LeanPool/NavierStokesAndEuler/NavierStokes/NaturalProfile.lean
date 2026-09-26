@@ -2204,7 +2204,7 @@ theorem pullback_partialY {F : ℝ × ℝ → ℝ}
   (pullback_hasDerivAt_Y hF Λ hp).deriv
 
 theorem pullback_partialEta (Λ : ℝ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) :
-    partialEta (pullback Λ F) p = partialEta F (rescalePoint Λ p) := rfl
+    partialEta (pullback Λ F) p = partialEta F (rescalePoint Λ p) := by rfl
 
 theorem pullback_second_Y {F : ℝ × ℝ → ℝ}
     (hF : ContDiffOn ℝ ∞ F (AxisEvaluation.strip window 20))

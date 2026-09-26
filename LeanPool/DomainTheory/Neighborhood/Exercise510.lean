@@ -370,7 +370,7 @@ abbrev StrictMap (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
     f ∈ sstep X Y ↔ f.1.rel X Y := Iff.rfl
 
 /-- A finite intersection of strict step sets. -/
-def sstepFun (L : List (Set α × Set β)) : Set (StrictMap V₀ V₁) :=
+@[expose] def sstepFun (L : List (Set α × Set β)) : Set (StrictMap V₀ V₁) :=
   {f | ∀ p ∈ L, f.1.rel p.1 p.2}
 
 @[simp] theorem mem_sstepFun {L : List (Set α × Set β)} {f : StrictMap V₀ V₁} :
@@ -421,7 +421,7 @@ theorem sstep_subset {X X' : Set α} {Y Y' : Set β} (hX' : V₀.mem X') (hY' : 
 /-- **Exercise 5.10 — the strict function space `(𝒟₀ →⊥ 𝒟₁)`.** Tokens are the
 strict approximable
 maps; neighbourhoods are non-empty finite intersections of step sets. -/
-def strictFun (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
+@[expose] def strictFun (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
     NeighborhoodSystem (StrictMap V₀ V₁) where
   mem W := (∃ L : List (Set α × Set β), (∀ p ∈ L, V₀.mem p.1 ∧ V₁.mem p.2) ∧ W = sstepFun L)
     ∧ W.Nonempty

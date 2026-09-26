@@ -49,7 +49,7 @@ instance : Fintype ModTwoSymplecticGroup :=
 /--
 The `reducedSymplecticHom` construction used in the Connes rigidity formalization.
 -/
-def reducedSymplecticHom :
+@[expose] def reducedSymplecticHom :
     IntegralSymplecticGroup →* ModTwoSymplecticGroup where
   toFun g :=
     ⟨(g.1 : Matrix SymplecticIndex SymplecticIndex ℤ).map

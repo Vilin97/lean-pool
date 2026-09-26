@@ -348,7 +348,7 @@ theorem initialCoordinates_continuous (u : TimeLp T E) :
     (initialRealPrimitive_continuous T u)
 
 /-- Coordinate velocity path, constructed using `extendPath`. -/
-def coordinateVelocityPath (u : TimeLp T E) (t : ℝ) : U :=
+@[expose] def coordinateVelocityPath (u : TimeLp T E) (t : ℝ) : U :=
   extendPath T hT (gramInversePath T Q c hc hQ) t
     (momentumPath T hT Q Q₁ H u t -
       extendPath T hT (mixedPath T Q Q₁) t (initialCoordinates T hT Q c hc hQ u t))

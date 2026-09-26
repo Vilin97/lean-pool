@@ -663,7 +663,7 @@ def ScottSys.tok (D : ScottSys) : Set Str := D.sys.master
 /-- **The one-neighbourhood system `{Γ}`** over `{0,1}*`: its only neighbourhood
 is `Γ` itself, and
 its master (token set) is `Γ`. It is `∅`-free precisely because `Γ` is non-empty. -/
-def singletonSys (Γ : Set Str) (h : Γ.Nonempty) : ScottSys where
+@[expose] def singletonSys (Γ : Set Str) (h : Γ.Nonempty) : ScottSys where
   sys :=
     { mem := fun X => X = Γ
       master := Γ

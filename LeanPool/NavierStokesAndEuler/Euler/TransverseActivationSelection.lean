@@ -247,7 +247,7 @@ def operatorEvaluation (A : C(Icc (0 : ℝ) T, U →L[ℝ] E)) :
 omit [CompleteSpace E] in
 @[simp] theorem operatorEvaluation_apply
     (A : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (Y : U) (t : Icc (0 : ℝ) T) :
-    operatorEvaluation T A Y t = A t Y := rfl
+    operatorEvaluation T A Y t = A t Y := by rfl
 
 /-- Trial frame, given by `⟨fun t => ramp T L t • P t, ((ramp_continuous T L).comp
 continuous_subtype_val).smul P.continuous⟩`. -/

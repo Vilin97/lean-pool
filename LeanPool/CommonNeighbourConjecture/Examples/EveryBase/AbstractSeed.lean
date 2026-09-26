@@ -563,7 +563,7 @@ noncomputable def regularTupleCode (S : EveryBaseSeed) (n : Nat) :
   hits := regularTupleColour_hits S n
 
 /-- The canonical, genuinely inhabited positive regular-colour tower. -/
-noncomputable def quotientRegularTupleColourTower (S : EveryBaseSeed) :
+@[expose] noncomputable def quotientRegularTupleColourTower (S : EveryBaseSeed) :
     RegularTupleColourTower S where
   C n := RegularTupleColour S n
   fintypeC n := regularTupleColourFintype S n
@@ -631,7 +631,7 @@ theorem firstVectorOrbitColour_regularTupleColour
   exact Quotient.lift_mk _ _ _
 
 /-- Canonical finite tuple/vector orbit colours used by the profile argument. -/
-noncomputable def quotientBaseArrayColours (S : EveryBaseSeed) (tail : Nat) :
+@[expose] noncomputable def quotientBaseArrayColours (S : EveryBaseSeed) (tail : Nat) :
     BaseArrayColours S tail where
   C := RegularTupleColour S tail
   D := VectorOrbitColour S

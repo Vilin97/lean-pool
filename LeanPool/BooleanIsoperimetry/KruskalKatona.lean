@@ -50,7 +50,7 @@ def layer (N r : ℕ) : Finset (Cube N) :=
 /-- Local numeric upper-shadow value (identical to `Shadow.upperShadow` but defined
 here so the Kruskal–Katona core is strictly upstream of `Shadow.lean`):
 `upperShadowVal N r t = H N (binomPrefix N r + t) - binomPrefix N (r+1)`. -/
-noncomputable def upperShadowVal (N r t : ℕ) : ℕ :=
+@[expose] noncomputable def upperShadowVal (N r t : ℕ) : ℕ :=
   H N (binomPrefix N r + t) - binomPrefix N (r + 1)
 
 /-- The layer-`r` part of the simplicial initial segment with local size `t`. -/

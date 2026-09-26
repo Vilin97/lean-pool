@@ -152,7 +152,7 @@ def skewEquiv (L : (Fin 2 → K) →ₗ[K] Y) :
 
 @[simp]
 theorem skewEquiv_apply (L : (Fin 2 → K) →ₗ[K] Y) (z : (Fin 2 → K) × Y) :
-    skewEquiv L z = (z.1, z.2 + L z.1) := rfl
+    skewEquiv L z = (z.1, z.2 + L z.1) := by rfl
 
 /-- The image of the horizontal two-space under the skew equivalence is the
 graph of `L`. -/

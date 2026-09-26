@@ -21,7 +21,7 @@ public section
 namespace LeanPool.PoincareThreeBody
 
 /-- Interior first actions carrying a positive rational Kepler resonance. -/
-def resonantInteriorPositiveActions (eccentricity : ℝ) :
+@[expose] def resonantInteriorPositiveActions (eccentricity : ℝ) :
     Set (InteriorPositiveAction eccentricity) :=
   {action | ∃ p q : ℕ, 0 < p ∧ 0 < q ∧
     action.1.1 = resonantFirstAction p q}

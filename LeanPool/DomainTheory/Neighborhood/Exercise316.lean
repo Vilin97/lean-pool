@@ -193,7 +193,7 @@ theorem reconstruct_subset {W : Set (ℕ × α)} (_hW : (iterSys V).mem W) {N : 
 
 /-- The `n`-th component `xₙ ∈ |𝒟|` of a `𝒟^∞`-element `z` (Scott's coordinate at
 copy `n`). -/
-def component (z : (iterSys V).Element) (n : ℕ) : V.Element where
+@[expose] def component (z : (iterSys V).Element) (n : ℕ) : V.Element where
   mem X := V.mem X ∧ z.mem (single V n X)
   sub h := h.1
   master_mem := ⟨V.master_mem, by rw [single_master]; exact z.master_mem⟩
@@ -296,7 +296,7 @@ def iterSeqEquiv (V : NeighborhoodSystem α) : (iterSys V).Element ≃o (∀ _ :
       exact ⟨hX.1, h (single V n X) hX.2⟩
 
 /-- The shift order-isomorphism `(ℕ → E) ≃o E × (ℕ → E)`, `f ↦ (f 0, f ∘ succ)`. -/
-def natShiftEquiv (E : Type*) [Preorder E] : (ℕ → E) ≃o E × (ℕ → E) where
+@[expose] def natShiftEquiv (E : Type*) [Preorder E] : (ℕ → E) ≃o E × (ℕ → E) where
   toFun f := (f 0, fun n => f (n + 1))
   invFun p := fun n => Nat.casesOn n p.1 (fun m => p.2 m)
   left_inv f := by funext n; cases n <;> rfl

@@ -90,7 +90,7 @@ noncomputable def supportVerticesOnBlock {t : ℕ}
 /-- The substitution hypergraph `F[G_1, ..., G_t]`, realized as the hypergraph whose
     vertices are tagged block vertices plus support vertices, and whose edges are the
     lifted edges of the blocks. -/
-noncomputable def substitutionHypergraph {t : ℕ}
+@[expose] noncomputable def substitutionHypergraph {t : ℕ}
     (F : Multiset (SupportPattern t))
     (blocks : BlockFamily t) : SubstitutedHypergraph F :=
   ((Finset.univ : Finset (Fin t)).biUnion fun i =>

@@ -276,7 +276,7 @@ lemma splitAtLast_inclToTop_eq {n : ℕ} {y : I^Fin n} :
     Homeomorph.apply_symm_apply, Homeomorph.symm_apply_apply]
 
 /-- `(y₀, y₁, …, yₙ₋₁, yₙ) ↦ (y₀, y₁, …, yₙ₋₁)` -/
-def discardLast {n : ℕ} : C(I^ Fin (n + 1), I^ Fin n) where
+@[expose] def discardLast {n : ℕ} : C(I^ Fin (n + 1), I^ Fin n) where
   toFun y := fun i ↦ y ⟨i.val, i.prop.trans (by omega : n < n + 1)⟩
   continuous_toFun := by fun_prop
 
@@ -313,7 +313,7 @@ end inclToBot
 /-- The inclusion `(y, t) ↦ (y₀, y₁, …, yₙ₋₁, t)` to
 the sides of `⊔I^(n+1)`, i.e.,
 the closure of the complement of the top and bottom faces of `∂I^(n+1)`. -/
-def inclToBoundaryJarSides {n : ℕ} : C((∂I^n) × I, ⊔I^(n+1)) where
+@[expose] def inclToBoundaryJarSides {n : ℕ} : C((∂I^n) × I, ⊔I^(n+1)) where
   toFun := fun yt ↦
     ⟨ (toContinuousMap splitAtLastComm.symm |>.comp <|
         ContinuousMap.prodMap (boundaryIncl n) (ContinuousMap.id _)) yt,
