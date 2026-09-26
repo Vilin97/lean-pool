@@ -10257,6 +10257,106 @@ projects:
       - '11E08'
       - '11E88'
 
+  - slug: puiseux
+    title: Puiseux's theorem
+    summary: >-
+      Constructs Puiseux series as the bounded-denominator subfield of rational-exponent
+      Hahn series. Proves that this field is algebraic over Laurent series over any
+      coefficient field, and is an algebraic closure when the coefficient field is
+      algebraically closed of characteristic zero. The Newton-Puiseux proof includes
+      reusable Hensel splitting and polynomial translation lemmas. Dean Cureton directed
+      the AI formalization and subsequently simplified its proofs.
+    branch: algebra
+    entry_module: LeanPool.Puiseux
+    authors:
+      - Dean Cureton
+    source:
+      title: Puiseux's theorem in Lean 4
+      url: https://github.com/deancureton/Puiseux/tree/73e78681d7bb78ddb202e29cb92ab3c16b723126
+      github_repo: deancureton/Puiseux
+      commit: 73e78681d7bb78ddb202e29cb92ab3c16b723126
+      announcement: https://x.com/deancureton/status/2082886228517564682
+      announced_at: '2026-07-30T17:49:09Z'
+      provenance_evidence: https://x.com/deancureton/status/2082886230266487252
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - PuiseuxSeries.isAlgClosure
+    main_results:
+      - declaration: PuiseuxSeries.isAlgClosure
+        informal: >-
+          For an algebraically closed field K of characteristic zero, the field of
+          Puiseux series over K is an algebraic closure of the Laurent series field K((t)).
+      - declaration: PuiseuxSeries.isAlgebraic
+        informal: >-
+          Over any field K, the Puiseux series field is algebraic over the Laurent series field.
+      - declaration: PuiseuxSeries.mem_subfield_iff_support
+        informal: >-
+          A rational-exponent Hahn series belongs to the Puiseux subfield if and only if
+          its support lies in (1/n) times the integers for some positive integer n.
+      - declaration: Polynomial.Monic.exists_factorization_rootMultiplicity
+        informal: >-
+          A monic degree-m polynomial over K[[t]] whose reduction has a root of multiplicity
+          k, with 0 < k < m, factors into monic polynomials of degrees k and m-k.
+    tags:
+      - field-theory
+      - puiseux-series
+      - algebraic-closure
+      - hensel-lemma
+    msc:
+      - '12F05'
+      - '13F25'
+
+  - slug: hasse-minkowski
+    title: The Hasse–Minkowski theorem over ℚ
+    summary: >-
+      Proves the local–global principle for quadratic forms over the rationals:
+      a form is isotropic over ℚ exactly when it is isotropic over ℝ and over
+      every p-adic completion, together with Meyer's theorem that an indefinite
+      rational form in at least five variables is isotropic. The development
+      builds the Hilbert symbol at every place of ℚ with Serre's explicit
+      formulas (including the 2-adic case), proves Hilbert reciprocity and the
+      existence theorem for prescribed local symbols, the Hasse invariant and
+      the rank-two and rank-three local representability criteria, Legendre's
+      ternary descent, and the rank-four and rank-≥5 inductions.
+    branch: number theory
+    entry_module: LeanPool.HasseMinkowski
+    authors:
+      - jayyswan
+      - Nirvana Coppola
+      - María Inés de Frutos-Fernández
+    source:
+      title: The Hasse–Minkowski theorem over ℚ
+      url: https://github.com/jayyswan/hasse-minkowski
+      github_repo: jayyswan/hasse-minkowski
+      commit: 47f0e9b5cba6e6354b882bc5856a11962ba61f4a
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - HasseMinkowski.hasseMinkowski
+      - HasseMinkowski.meyer
+    main_results:
+      - declaration: HasseMinkowski.hasseMinkowski
+        informal: >-
+          A quadratic form over ℚ is isotropic if and only if it is isotropic
+          over ℝ and over every p-adic completion ℚ_[p] (the Hasse–Minkowski
+          local–global principle, in isotropy form).
+      - declaration: HasseMinkowski.meyer
+        informal: >-
+          Every indefinite quadratic form over ℚ in at least five variables is
+          isotropic (Meyer's theorem).
+    tags:
+      - number-theory
+      - quadratic-forms
+      - local-global
+      - p-adic
+    msc:
+      - '11E12'
+      - '11E08'
+      - '11E88'
+
   - title: Local and global class field theory
     summary: Formalizes local and global reciprocity and existence theorems, Hasse–Arf, Hilbert pairings,
       the cyclic Hasse norm theorem, conductors, ray class fields, Hilbert class fields, and Kronecker–Weber,
