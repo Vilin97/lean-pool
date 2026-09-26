@@ -7,6 +7,7 @@ module
 
 
 public import LeanPool.InflationTermination.TriangleInflation.Defect
+public import LeanPool.InflationTermination.TriangleInflation.FiniteWeights
 
 /-!
 # The defect cube: laws of triangles, symmetry, and the diagonal
@@ -55,16 +56,7 @@ section
 private theorem pushforward_comp {α β γ : Type*} [Fintype α] [Fintype β] [DecidableEq β]
     [DecidableEq γ] (w : α → ℝ) (F : α → β) (G : β → γ) :
     pushforward (pushforward w F) G = pushforward w (fun a => G (F a)) := by
-  funext c
-  simp only [pushforward]
-  have key : ∀ b : β, (if G b = c then ∑ a, (if F a = b then w a else 0) else 0)
-      = ∑ a, (if F a = b then (if G b = c then w a else 0) else 0) := by
-    intro b
-    by_cases h : G b = c <;> simp [h]
-  rw [Finset.sum_congr rfl (fun b _ => key b), Finset.sum_comm]
-  refine Finset.sum_congr rfl (fun a _ => ?_)
-  rw [Finset.sum_ite_eq Finset.univ (F a) (fun b => if G b = c then w a else 0)]
-  simp
+  exact FiniteWeights.pushforward_comp w F G
 
 private theorem sum_prod_bool {ι : Type*} [Fintype ι] [DecidableEq ι] (f : ι → Bool → ℝ) :
     ∑ x : ι → Bool, ∏ i, f i (x i) = ∏ i, ∑ b, f i b := by

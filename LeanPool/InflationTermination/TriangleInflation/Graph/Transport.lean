@@ -8,6 +8,7 @@ module
 
 public import Mathlib.Analysis.SpecialFunctions.Sqrt
 public import LeanPool.InflationTermination.TriangleInflation.Graph.Linear
+public import LeanPool.InflationTermination.TriangleInflation.FiniteWeights
 
 /-!
 # Transport and exhaustion (A6)
@@ -604,15 +605,7 @@ namespace TransportFeasible
 theorem pushforward_comp {α β γ : Type*} [Fintype α] [Fintype β] [DecidableEq β] [DecidableEq γ]
     (w : α → ℝ) (F : α → β) (K : β → γ) :
     pushforward (pushforward w F) K = pushforward w (K ∘ F) := by
-  funext c
-  simp only [pushforward, Function.comp_apply]
-  have h : ∀ b : β, (if K b = c then ∑ a, if F a = b then w a else 0 else 0)
-      = ∑ a, (if K b = c then (if F a = b then w a else 0) else 0) := by
-    intro b; split <;> simp
-  rw [Finset.sum_congr rfl (fun b _ => h b), Finset.sum_comm]
-  refine Finset.sum_congr rfl fun a _ => ?_
-  rw [Finset.sum_eq_single (F a) (by intro b _ hb; simp [Ne.symm hb]) (by simp)]
-  simp
+  exact FiniteWeights.pushforward_comp w F K
 
 /-- A pushforward of a law is a law. -/
 theorem isLaw_pushforward {α β : Type*} [Fintype α] [Fintype β] [DecidableEq β]

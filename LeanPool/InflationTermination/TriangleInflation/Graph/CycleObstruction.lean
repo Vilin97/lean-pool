@@ -527,15 +527,11 @@ theorem cycleNext_val' (v : Fin m) :
   · rw [ite_eq_left h, h, Nat.mod_self]
   · rw [ite_eq_right h, Nat.mod_eq_of_lt (by omega : v.val + 1 < m)]
 
-theorem cycleNext_ne (hm : 2 ≤ m) (v : Fin m) : v ≠ cycleNext v := by
-  intro h
-  have hv := congrArg Fin.val h
-  rw [cycleNext_val'] at hv
-  have := v.isLt
-  split at hv <;> omega
+theorem cycleNext_ne (hm : 2 ≤ m) (v : Fin m) : v ≠ cycleNext v :=
+  (CycleWitnessAux.cycleNext_ne hm v).symm
 
 theorem cycle_adj_next (hm : 3 ≤ m) (i : Fin m) : (cycleAdj m).Adj i (cycleNext i) :=
-  ⟨cycleNext_ne (by omega) i, Or.inl rfl⟩
+  CycleWitnessAux.cycleAdj_next (le_trans (by decide : 2 ≤ 3) hm) i
 
 theorem mem_edgeFinset_cycle (hm : 3 ≤ m) {a b : Fin m} (h : (cycleAdj m).Adj a b) :
     s(a, b) ∈ (cycle m hm).G.edgeFinset := by
@@ -551,37 +547,23 @@ theorem adj_of_mem_edgeFinset (hm : 3 ≤ m) {a b : Fin m}
 
 /-- The edge of the cycle recorded by its lower endpoint. -/
 def cEdge (m : ℕ) (hm : 3 ≤ m) (i : Fin m) : (cycle m hm).Edge :=
-  ⟨s(i, cycleNext i), mem_edgeFinset_cycle hm (cycle_adj_next hm i)⟩
+  CycleWitnessAux.ce hm i
 
 theorem cEdge_val (hm : 3 ≤ m) (i : Fin m) :
     ((cEdge m hm i).1 : Sym2 (Fin m)) = s(i, cycleNext i) := rfl
 
 theorem mem_inc {hm : 3 ≤ m} (v : (cycle m hm).V) (e : (cycle m hm).Edge) :
-    e ∈ (cycle m hm).inc v ↔ v ∈ (e.1 : Sym2 (cycle m hm).V) := by
-  simp only [PairGraph.inc, Finset.mem_filter, Finset.mem_univ, true_and]
+    e ∈ (cycle m hm).inc v ↔ v ∈ (e.1 : Sym2 (cycle m hm).V) :=
+  CycleWitnessAux.mem_inc_iff v e
 
 /-- Every source incident to `v` is recorded either by `v` or by a predecessor of `v`. -/
 theorem inc_cases (hm : 3 ≤ m) (v : Fin m) (e : (cycle m hm).Edge)
     (h : e ∈ (cycle m hm).inc v) :
     e = cEdge m hm v ∨ ∃ p : Fin m, cycleNext p = v ∧ e = cEdge m hm p := by
-  have h1 : v ∈ (e.1 : Sym2 (cycle m hm).V) := (mem_inc (hm := hm) v e).1 h
-  obtain ⟨b, hb⟩ := Sym2.mem_iff_exists.1 h1
-  have hadj : (cycleAdj m).Adj v b := by
-    have h2 := e.2
-    rw [hb] at h2
-    exact adj_of_mem_edgeFinset hm h2
-  rcases hadj.2 with h1 | h1
-  · left
-    refine Subtype.ext ?_
-    rw [hb, cEdge_val]
-    congr 1
-    exact Fin.ext h1.symm
-  · right
-    refine ⟨b, Fin.ext h1, Subtype.ext ?_⟩
-    rw [hb, cEdge_val]
-    have : cycleNext b = v := Fin.ext h1
-    rw [this]
-    exact Sym2.eq_swap
+  rcases (CycleWitnessAux.mem_inc_cycle hm v e).mp h with hprev | hself
+  · exact Or.inr ⟨CycleWitnessAux.cyclePrev v,
+      CycleWitnessAux.cycleNext_cyclePrev v, hprev⟩
+  · exact Or.inl hself
 
 /-! ### The three arcs `{0}`, `{1}` and `{2,…,m-1}` -/
 
@@ -613,7 +595,7 @@ theorem cycleNext_cvl (hm : 3 ≤ m) : cycleNext (cvl m hm) = cv0 m hm := by
 /-- Membership in the incidence set of the source recorded by `i`. -/
 theorem mem_cEdge_iff (hm : 3 ≤ m) (v i : Fin m) :
     cEdge m hm i ∈ (cycle m hm).inc v ↔ (v = i ∨ v = cycleNext i) :=
-  Iff.trans (mem_inc (hm := hm) v (cEdge m hm i)) Sym2.mem_iff
+  CycleWitnessAux.mem_inc_ce hm v i
 
 /-- The sources incident to vertex `0` are those recorded by `m-1` and by `0`. -/
 theorem inc_cv0 (hm : 3 ≤ m) (e : (cycle m hm).Edge) (h : e ∈ (cycle m hm).inc (cv0 m hm)) :

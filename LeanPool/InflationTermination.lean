@@ -15,6 +15,7 @@ public import LeanPool.InflationTermination.TriangleInflation.DefectLaw
 public import LeanPool.InflationTermination.TriangleInflation.Defs
 public import LeanPool.InflationTermination.TriangleInflation.Exponent
 public import LeanPool.InflationTermination.TriangleInflation.Fan
+public import LeanPool.InflationTermination.TriangleInflation.FiniteWeights
 public import LeanPool.InflationTermination.TriangleInflation.Finner
 public import LeanPool.InflationTermination.TriangleInflation.FinnerMeasure
 public import LeanPool.InflationTermination.TriangleInflation.Graph

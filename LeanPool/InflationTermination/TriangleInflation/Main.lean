@@ -7,6 +7,7 @@ module
 
 
 public import LeanPool.InflationTermination.TriangleInflation.DefectLaw
+public import LeanPool.InflationTermination.TriangleInflation.FiniteWeights
 
 /-!
 # Nontermination
@@ -40,25 +41,7 @@ along `G ∘ F`. -/
 private theorem pushforward_comp {α β γ : Type*} [Fintype α] [Fintype β] [DecidableEq β]
     [DecidableEq γ] (w : α → ℝ) (F : α → β) (G : β → γ) :
     pushforward (pushforward w F) G = pushforward w (fun a => G (F a)) := by
-  funext c
-  simp only [pushforward]
-  have hsplit : ∀ b : β,
-      (if G b = c then (∑ a : α, if F a = b then w a else 0) else 0)
-        = ∑ a : α, (if G b = c then (if F a = b then w a else 0) else 0) := by
-    intro b
-    split
-    · rfl
-    · simp
-  simp_rw [hsplit]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun a _ => ?_
-  rw [Finset.sum_eq_single (F a)]
-  · simp
-  · intro b _ hb
-    have hFa : ¬ (F a = b) := fun h => hb h.symm
-    simp [hFa]
-  · intro ha
-    exact absurd (Finset.mem_univ (F a)) ha
+  exact FiniteWeights.pushforward_comp w F G
 
 /-- Membership of the three party-indexed families in a set forces it into a copied
 triangle. -/

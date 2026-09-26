@@ -8,6 +8,7 @@ module
 
 public import Mathlib.Analysis.SpecialFunctions.Sqrt
 public import LeanPool.InflationTermination.TriangleInflation.Graph.Soundness
+public import LeanPool.InflationTermination.TriangleInflation.FiniteWeights
 
 /-!
 # The root-sink expressibility lemma (A2)
@@ -417,16 +418,7 @@ theorem gInjectable_iff_raw_of_one_le (ht : 1 ≤ t) (S : Finset (GObs Γ t)) :
 private theorem pushforward_comp' {α β γ : Type*} [Fintype α] [Fintype β] [DecidableEq β]
     [DecidableEq γ] (w : α → ℝ) (F : α → β) (G : β → γ) :
     pushforward (pushforward w F) G = pushforward w (fun a => G (F a)) := by
-  funext c
-  simp only [pushforward]
-  have key : ∀ b : β, (if G b = c then ∑ a, (if F a = b then w a else 0) else 0)
-      = ∑ a, (if F a = b then (if G b = c then w a else 0) else 0) := by
-    intro b
-    by_cases h : G b = c <;> simp [h]
-  rw [Finset.sum_congr rfl (fun b _ => key b), Finset.sum_comm]
-  refine Finset.sum_congr rfl (fun a _ => ?_)
-  rw [Finset.sum_ite_eq Finset.univ (F a) (fun b => if G b = c then w a else 0)]
-  simp
+  exact FiniteWeights.pushforward_comp w F G
 
 private theorem pushforward_injective {α β : Type*} [Fintype α] [DecidableEq β]
     (w : α → ℝ) {F : α → β} (hF : Function.Injective F) (a : α) :
