@@ -7,6 +7,7 @@ module
 
 
 public import LeanPool.FullyDynamicMatching.FD1D.Dynamics
+public import LeanPool.FullyDynamicMatching.FD1D.Initialization
 
 /-! # Symmetry -/
 
@@ -176,27 +177,8 @@ instance inventoryStateNonempty
 
 /-- Push a fixed-total count vector forward along a permutation. -/
 def inventoryPerm {ι : Type*} [Fintype ι] {m : ℕ}
-    (e : Equiv.Perm ι) : Equiv.Perm (InventoryState ι m) where
-  toFun x :=
-    ⟨fun i => x.1 (e.symm i), by
-      calc
-        ∑ i, x.1 (e.symm i) = ∑ i, x.1 i :=
-          Equiv.sum_comp e.symm x.1
-        _ = m := x.2⟩
-  invFun x :=
-    ⟨fun i => x.1 (e i), by
-      calc
-        ∑ i, x.1 (e i) = ∑ i, x.1 i :=
-          Equiv.sum_comp e x.1
-        _ = m := x.2⟩
-  left_inv x := by
-    apply InventoryState.ext
-    intro i
-    simp
-  right_inv x := by
-    apply InventoryState.ext
-    intro i
-    simp
+    (e : Equiv.Perm ι) : Equiv.Perm (InventoryState ι m) :=
+  inventoryStatePerm e
 
 @[simp] theorem inventoryPerm_apply_count
     {ι : Type*} [Fintype ι] {m : ℕ}
@@ -268,21 +250,18 @@ theorem leafSwap_symm {d L : ℕ} (hdL : d < L) (v : DyadicNode d) :
 
 /-- Regard a fixed-total state as a leaf inventory. -/
 def stateLeafInventory {L m : ℕ}
-    (x : InventoryState (DyadicNode L) m) : LeafInventory L m where
-  count := x.1
-  total_count := x.2
+    (x : InventoryState (DyadicNode L) m) : LeafInventory L m :=
+  HierarchicalDynamics.leafInventory x
 
 /-- The canonical aggregate counts of a fixed-total state. -/
 def stateAggregate {L m : ℕ}
     (x : InventoryState (DyadicNode L) m) : AggregatedInventory L m :=
-  (stateLeafInventory x).aggregate
+  HierarchicalDynamics.aggregatedInventory x
 
 theorem stateAggregate_leaf_count {L m : ℕ}
     (x : InventoryState (DyadicNode L) m) (w : DyadicNode L) :
-    (stateAggregate x).count L w = x.1 w := by
-  change ((stateLeafInventory x).aggregate).count L w = x.1 w
-  rw [(stateLeafInventory x).aggregate.count_leaf]
-  rfl
+    (stateAggregate x).count L w = x.1 w :=
+  HierarchicalDynamics.aggregatedInventory_leaf_count x w
 
 /-- The inventory consisting of one item at `w`. -/
 def singletonInventoryState {L : ℕ} (w : DyadicNode L) :
@@ -296,14 +275,15 @@ def singletonInventoryState {L : ℕ} (w : DyadicNode L) :
       singletonInventoryState (e w) := by
   apply InventoryState.ext
   intro z
-  simp [singletonInventoryState, inventoryPerm, Equiv.symm_apply_eq]
+  simp [singletonInventoryState, inventoryPerm, inventoryStatePerm, Equiv.symm_apply_eq]
 
 theorem stateAggregate_singleton_count
     {L k : ℕ} (w : DyadicNode L) (hkL : k ≤ L)
     (u : DyadicNode k) :
     (stateAggregate (singletonInventoryState w)).count k u =
       if w ∈ leafBlock hkL u then 1 else 0 := by
-  simp [stateAggregate, stateLeafInventory, LeafInventory.aggregate,
+  simp [stateAggregate, HierarchicalDynamics.aggregatedInventory,
+    HierarchicalDynamics.leafInventory, LeafInventory.aggregate,
     LeafInventory.nodeCount, hkL, singletonInventoryState]
 
 /--

@@ -89,13 +89,10 @@ def bellmanY (I : AggregatedInventory L m) (a : ℝ) (d : ℕ)
   regularizedMass I a d v / hazard I a d v
 
 /-- The scalar weight in the Bellman function. -/
-def bellmanWeight (y : ℝ) : ℝ :=
-  (1 + 7 * y ^ 3) / 12
+def bellmanWeight (y : ℝ) : ℝ := FD1D.d y
 
 /-- The Bellman function from equation (6). -/
-def bellmanFunction (h t y : ℝ) : ℝ :=
-  bellmanWeight y * (t - y * h) *
-    (2 * h - t - (3 / 2 : ℝ) * y * h)
+def bellmanFunction (h t y : ℝ) : ℝ := FD1D.B h t y
 
 /-- The Bellman value attached to a policy node. -/
 def bellmanValue (I : AggregatedInventory L m) (a : ℝ) (d : ℕ)
@@ -730,52 +727,8 @@ theorem localBellmanHypothesis
     hs hrLower hrUpper hv0 hvUpper hwSq htNorm hy hhL hhR htL htR
     hyL hyR hZL hZR
   dsimp only [h, tt] at hlocal
-  simpa [childAverage, bellmanValue, bellmanFunction, bellmanWeight,
+  simpa [childAverage, bellmanValue, bellmanFunction,
     FD1D.B, FD1D.d, ge_iff_le, div_eq_mul_inv, mul_comm] using hlocal
-
-private theorem bellmanWeight_nonnegative {y : ℝ} (hy : 0 ≤ y) :
-    0 ≤ bellmanWeight y := by
-  unfold bellmanWeight
-  positivity
-
-private theorem bellmanFunction_nonpositive
-    {h r y : ℝ}
-    (hh : 0 ≤ h) (hr : r ≤ 1 / 2)
-    (hy0 : 0 ≤ y) (hy1 : y ≤ 1) (hry : r ≤ y) :
-    bellmanFunction h (h * r) y ≤ 0 := by
-  have hfirst : h * r - y * h ≤ 0 := by
-    rw [show h * r - y * h = h * (r - y) by ring]
-    exact mul_nonpos_of_nonneg_of_nonpos hh (sub_nonpos.mpr hry)
-  have hcoefficient : 0 ≤ 2 - r - (3 / 2 : ℝ) * y := by
-    linarith
-  have hsecond :
-      0 ≤ 2 * h - h * r - (3 / 2 : ℝ) * y * h := by
-    rw [show 2 * h - h * r - (3 / 2 : ℝ) * y * h =
-      h * (2 - r - (3 / 2 : ℝ) * y) by ring]
-    exact mul_nonneg hh hcoefficient
-  unfold bellmanFunction
-  exact mul_nonpos_of_nonpos_of_nonneg
-    (mul_nonpos_of_nonneg_of_nonpos (bellmanWeight_nonnegative hy0) hfirst)
-    hsecond
-
-private theorem bellmanFunction_root_identity (h y : ℝ) :
-    h ^ 2 / 3 + bellmanFunction h 0 y =
-      h ^ 2 * (1 - y) *
-        (5 + (1 - y) * (3 + 7 * y + 14 * y ^ 2 + 21 * y ^ 3)) / 24 := by
-  unfold bellmanFunction bellmanWeight
-  ring
-
-private theorem bellmanFunction_root_bound
-    {h y : ℝ} (hy0 : 0 ≤ y) (hy1 : y ≤ 1) :
-    -(h ^ 2) / 3 ≤ bellmanFunction h 0 y := by
-  have hpoly :
-      0 ≤ 5 + (1 - y) * (3 + 7 * y + 14 * y ^ 2 + 21 * y ^ 3) := by
-    positivity
-  have hrhs :
-      0 ≤ h ^ 2 * (1 - y) *
-        (5 + (1 - y) * (3 + 7 * y + 14 * y ^ 2 + 21 * y ^ 3)) / 24 := by
-    positivity
-  nlinarith [bellmanFunction_root_identity h y]
 
 theorem bellmanValue_leaf_nonpos
     (I : AggregatedInventory L m) {a : ℝ}
@@ -794,14 +747,14 @@ theorem bellmanValue_leaf_nonpos
     dsimp [r, h]
     field_simp [(hazard_pos I ha hm L le_rfl v).ne']
   rw [bellmanValue, ht]
-  exact bellmanFunction_nonpositive hh hr hy0 hy1 hry
+  exact FD1D.bellman_nonpositive hh hr hy0 hy1 hry
 
 theorem bellmanValue_root_lower
     (I : AggregatedInventory L m) {a : ℝ}
     (ha : 0 < a) (hm : 0 < m) :
     -(1 / (3 * (m : ℝ) ^ 2)) ≤ bellmanValue I a 0 dyadicRoot := by
   rw [bellmanValue, discrepancy_root I ha hm, hazard_root]
-  have h := bellmanFunction_root_bound
+  have h := FD1D.bellman_root_bound
     (h := 1 / (m : ℝ))
     (bellmanY_nonneg I ha hm (Nat.zero_le L) dyadicRoot)
     (bellmanY_le_one I ha hm (Nat.zero_le L) dyadicRoot)

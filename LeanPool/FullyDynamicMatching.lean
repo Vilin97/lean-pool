@@ -37,6 +37,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.TrajectoryBridge
 public import LeanPool.FullyDynamicMatching.FD1D.Transport
 public import LeanPool.FullyDynamicMatching.FD1D.Tree
 public import LeanPool.FullyDynamicMatching.FD1D.UniformArrival
+public import LeanPool.FullyDynamicMatching.FD1D.V5
 public import LeanPool.FullyDynamicMatching.FD1D.V5.Balanced
 public import LeanPool.FullyDynamicMatching.FD1D.V5.CompleteFormalizationAudit
 public import LeanPool.FullyDynamicMatching.FD1D.V5.Complexity
