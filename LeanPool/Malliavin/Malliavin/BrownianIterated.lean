@@ -617,25 +617,21 @@ omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [MeasurableSpa
     [BorelSpace W] [SecondCountableTopology W] [IsGaussian P] in
 theorem restrictedSimplexMeasure_le (n : ℕ) :
     (iteratedKernelMeasure n).restrict (simplex ℝ≥0 n) ≤
-      (1 : ℝ≥0∞) • iteratedKernelMeasure n := by
-  simpa only [one_smul] using
-    (Measure.restrict_le_self :
-      (iteratedKernelMeasure n).restrict (simplex ℝ≥0 n) ≤ iteratedKernelMeasure n)
+      (1 : ℝ≥0∞) • iteratedKernelMeasure n :=
+  IteratedIntegralConstruction.restrictedSimplexMeasure_le n
 
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [MeasurableSpace W]
     [BorelSpace W] [SecondCountableTopology W] [IsGaussian P] in
 /-- Restriction of a full product kernel to the strict simplex. -/
 noncomputable def restrictToSimplex (n : ℕ) :
     IteratedKernel n →L[ℝ] IteratedIntegralConstruction.SimplexKernel n :=
-  Lp.LpToLpOfMeasureLeSMul (p := (2 : ℝ≥0∞)) (c := 1)
-    (by norm_num) (restrictedSimplexMeasure_le n)
+  IteratedIntegralConstruction.restrictToSimplex n
 
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [MeasurableSpace W]
     [BorelSpace W] [SecondCountableTopology W] [IsGaussian P] in
 theorem restrictToSimplex_ae (n : ℕ) (f : IteratedKernel n) :
     restrictToSimplex n f =ᵐ[(iteratedKernelMeasure n).restrict (simplex ℝ≥0 n)] f :=
-  Lp.coeFn_LpToLpOfMeasureLeSMul (p := (2 : ℝ≥0∞)) (c := 1)
-    (by norm_num) (restrictedSimplexMeasure_le n) f
+  IteratedIntegralConstruction.restrictToSimplex_ae n f
 
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [MeasurableSpace W]
     [BorelSpace W] [SecondCountableTopology W] [IsGaussian P] in
@@ -658,27 +654,15 @@ omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [MeasurableSpa
 /-- Inner products after restriction are exactly the simplex integrals. -/
 theorem inner_restrictToSimplex (n : ℕ) (f g : IteratedKernel n) :
     inner ℝ (restrictToSimplex n f) (restrictToSimplex n g) =
-      ∫ t in simplex ℝ≥0 n, inner ℝ (f t) (g t) ∂iteratedKernelMeasure n := by
-  rw [L2.inner_def]
-  apply integral_congr_ae
-  filter_upwards [restrictToSimplex_ae n f, restrictToSimplex_ae n g] with t hft hgt
-  rw [hft, hgt]
+      ∫ t in simplex ℝ≥0 n, inner ℝ (f t) (g t) ∂iteratedKernelMeasure n :=
+  IteratedIntegralConstruction.inner_restrictToSimplex n f g
 
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [MeasurableSpace W]
     [BorelSpace W] [SecondCountableTopology W] [IsGaussian P] in
 /-- Restriction to the simplex is contractive. -/
 theorem norm_restrictToSimplex_le (n : ℕ) (f : IteratedKernel n) :
-    ‖restrictToSimplex n f‖ ≤ ‖f‖ := by
-  have hop : ‖restrictToSimplex n‖ ≤ 1 := by
-    simpa only [restrictToSimplex, ENNReal.toReal_one, Real.one_rpow] using
-      (Lp.norm_LpToLpOfMeasureLeSMul_le
-        (E := ℝ) (p := (2 : ℝ≥0∞)) (c := 1)
-        (by norm_num) (restrictedSimplexMeasure_le n))
-  calc
-    ‖restrictToSimplex n f‖ ≤ ‖restrictToSimplex n‖ * ‖f‖ :=
-      ContinuousLinearMap.le_opNorm (restrictToSimplex n) f
-    _ ≤ 1 * ‖f‖ := mul_le_mul_of_nonneg_right hop (norm_nonneg f)
-    _ = ‖f‖ := one_mul _
+    ‖restrictToSimplex n f‖ ≤ ‖f‖ :=
+  IteratedIntegralConstruction.norm_restrictToSimplex_le n f
 
 omit [CompleteSpace W] [BorelSpace W] in
 /-- The positive-order Brownian integral on full product kernels, obtained by restricting to the

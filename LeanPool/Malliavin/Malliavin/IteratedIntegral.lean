@@ -677,7 +677,7 @@ namespace IteratedIntegralConstruction
 noncomputable abbrev SimplexKernel (n : ℕ) :=
   Lp ℝ 2 ((iteratedKernelMeasure n).restrict (simplex ℝ≥0 n))
 
-private lemma restrictedSimplexMeasure_le (n : ℕ) :
+lemma restrictedSimplexMeasure_le (n : ℕ) :
     (iteratedKernelMeasure n).restrict (simplex ℝ≥0 n) ≤
       (1 : ℝ≥0∞) • iteratedKernelMeasure n := by
   simpa only [one_smul] using
@@ -690,12 +690,12 @@ noncomputable def restrictToSimplex (n : ℕ) :
   exact Lp.LpToLpOfMeasureLeSMul (p := (2 : ℝ≥0∞)) (c := 1)
     (by norm_num) (by exact restrictedSimplexMeasure_le n)
 
-private lemma restrictToSimplex_ae (n : ℕ) (f : IteratedKernel n) :
+lemma restrictToSimplex_ae (n : ℕ) (f : IteratedKernel n) :
     restrictToSimplex n f =ᵐ[(iteratedKernelMeasure n).restrict (simplex ℝ≥0 n)] f := by
   exact Lp.coeFn_LpToLpOfMeasureLeSMul (p := (2 : ℝ≥0∞)) (c := 1)
     (by norm_num) (restrictedSimplexMeasure_le n) f
 
-private lemma inner_restrictToSimplex (n : ℕ) (f g : IteratedKernel n) :
+lemma inner_restrictToSimplex (n : ℕ) (f g : IteratedKernel n) :
     inner ℝ (restrictToSimplex n f) (restrictToSimplex n g) =
       ∫ t in simplex ℝ≥0 n, inner ℝ (f t) (g t) ∂iteratedKernelMeasure n := by
   rw [L2.inner_def]
@@ -703,7 +703,7 @@ private lemma inner_restrictToSimplex (n : ℕ) (f g : IteratedKernel n) :
   filter_upwards [restrictToSimplex_ae n f, restrictToSimplex_ae n g] with t hft hgt
   rw [hft, hgt]
 
-private lemma norm_restrictToSimplex_le (n : ℕ) (f : IteratedKernel n) :
+lemma norm_restrictToSimplex_le (n : ℕ) (f : IteratedKernel n) :
     ‖restrictToSimplex n f‖ ≤ ‖f‖ := by
   have hop : ‖restrictToSimplex n‖ ≤ 1 := by
     simpa only [restrictToSimplex, ENNReal.toReal_one, Real.one_rpow] using
