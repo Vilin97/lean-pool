@@ -1483,7 +1483,7 @@ Recurrence relation: λ_n = n·a_n - ∑_{j=1}^{n-1} λ_j·a_{n-j}
 If Re(ρ) = 1/2, then |1 - 1/ρ| = 1
   - Implemented by `norm_sq_eq_to_re_half` and `modulus_criterion`
 Parametrize 1 - 1/ρ = e^(iθ_ρ)
-λ_n = ∑_ρ (1 - 1/ρ)^n = ∑_ρ (1 - e^{i(n)θ_ρ})
+λ_n = ∑_ρ [1 - (1 - 1/ρ)^n] = ∑_ρ (1 - e^{i(n)θ_ρ})
          = ∑_ρ (1 - cos(nθ_ρ) - i·sin(nθ_ρ))
          Taking real part: Re(λ_n) = ∑_ρ (1 - cos(nθ_ρ)) ≥ 0
 

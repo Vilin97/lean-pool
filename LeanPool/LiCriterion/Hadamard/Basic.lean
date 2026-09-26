@@ -1506,12 +1506,10 @@ lemma logTaylor_neg_eq_neg_sum (h : ℕ) (z : ℂ) :
       rw [Finset.sum_range_succ]
       ring
 
-lemma weierstrass_E_small_disk_lower_bound (h : ℕ) :
-  ∃ C : ℝ, ∀ z : ℂ, ‖z‖ ≤ (1 / 2 : ℝ) →
-    Real.log ‖weierstrassE h z‖ ≥ -C * ‖z‖^(h+1) := by
+private lemma weierstrassE_small_disk_exponential (h : ℕ) (z : ℂ)
+    (hz : ‖z‖ ≤ (1 / 2 : ℝ)) :
+    ∃ w : ℂ, weierstrassE h z = Complex.exp w ∧ ‖w‖ ≤ 2 * ‖z‖ ^ (h + 1) := by
   classical
-  refine ⟨2, ?_⟩
-  intro z hz
   have hz_lt : ‖z‖ < 1 := lt_of_le_of_lt hz (by norm_num)
   have hne : (1 - z) ≠ 0 := by
     intro h0
@@ -1541,13 +1539,6 @@ lemma weierstrass_E_small_disk_lower_bound (h : ℕ) :
       _ = Complex.exp S / Complex.exp (Complex.log ((1 - z)⁻¹)) := by
         simp [Complex.exp_log hinv_ne, div_eq_mul_inv]
       _ = Complex.exp w := this.symm
-  have hlogE : Real.log ‖weierstrassE h z‖ = w.re := by
-    simp [hE, Complex.norm_exp, Real.log_exp]
-  have hre_lower : w.re ≥ -‖w‖ := by
-    have h1 : -|w.re| ≤ w.re := neg_abs_le w.re
-    have h2 : |w.re| ≤ ‖w‖ := abs_re_le_norm w
-    have h3 : -‖w‖ ≤ -|w.re| := by linarith
-    exact le_trans h3 h1
   have hrem : ‖Complex.log ((1 - z)⁻¹) + logTaylor (h + 1) (-z)‖
       ≤ ‖z‖ ^ (h + 1) * (1 - ‖z‖)⁻¹ / (h + 1) :=
     norm_log_one_sub_inv_add_logTaylor_neg_le h hz_lt
@@ -1584,6 +1575,19 @@ lemma weierstrass_E_small_disk_lower_bound (h : ℕ) :
         le_trans hdiv hmul
       simpa [mul_assoc, mul_left_comm, mul_comm] using this
     exact le_trans hw_le this
+  exact ⟨w, hE, hw_le'⟩
+
+lemma weierstrass_E_small_disk_lower_bound (h : ℕ) :
+  ∃ C : ℝ, ∀ z : ℂ, ‖z‖ ≤ (1 / 2 : ℝ) →
+    Real.log ‖weierstrassE h z‖ ≥ -C * ‖z‖^(h+1) := by
+  classical
+  refine ⟨2, ?_⟩
+  intro z hz
+  obtain ⟨w, hE, hw_le'⟩ := weierstrassE_small_disk_exponential h z hz
+  have hlogE : Real.log ‖weierstrassE h z‖ = w.re := by
+    simp [hE, Complex.norm_exp, Real.log_exp]
+  have hre_lower : w.re ≥ -‖w‖ :=
+    (neg_le_neg (abs_re_le_norm w)).trans (neg_abs_le w.re)
   have hre_bound : w.re ≥ - (2 * ‖z‖ ^ (h + 1)) := by
     have : -(2 * ‖z‖ ^ (h + 1)) ≤ -‖w‖ := neg_le_neg hw_le'
     exact le_trans this hre_lower
@@ -1595,71 +1599,7 @@ lemma weierstrass_E_small_disk_norm_sub_one_le (h : ℕ) :
     ∀ z : ℂ, ‖z‖ ≤ (1 / 2 : ℝ) → ‖weierstrassE h z - 1‖ ≤ 4 * ‖z‖ ^ (h + 1) := by
   classical
   intro z hz
-  have hz_lt : ‖z‖ < 1 := lt_of_le_of_lt hz (by norm_num)
-  have hne : (1 - z) ≠ 0 := by
-    intro h0
-    have : z = (1 : ℂ) := by
-      have : (1 : ℂ) = z := sub_eq_zero.mp h0
-      simpa using this.symm
-    have : (1 : ℝ) ≤ (1 / 2 : ℝ) := by
-      simpa [this] using hz
-    linarith
-  set S : ℂ := ∑ k ∈ Finset.range h, z^(k+1) / (k+1) with hS
-  have hS' : logTaylor (h + 1) (-z) = -S := by
-    simpa [S] using (logTaylor_neg_eq_neg_sum h z)
-  set w : ℂ := S - Complex.log ((1 - z)⁻¹) with hw
-  have hw_eq : w = - (Complex.log ((1 - z)⁻¹) + logTaylor (h + 1) (-z)) := by
-    calc
-      w = S - Complex.log ((1 - z)⁻¹) := by rfl
-      _ = - (Complex.log ((1 - z)⁻¹) + (-S)) := by ring
-      _ = - (Complex.log ((1 - z)⁻¹) + logTaylor (h + 1) (-z)) := by simp [hS']
-  have hinv_ne : ((1 - z)⁻¹ : ℂ) ≠ 0 := inv_ne_zero hne
-  have hE : weierstrassE h z = Complex.exp w := by
-    have : Complex.exp w = Complex.exp S / Complex.exp (Complex.log ((1 - z)⁻¹)) := by
-      simpa [w, hw] using (Complex.exp_sub S (Complex.log ((1 - z)⁻¹)))
-    calc
-      weierstrassE h z = (1 - z) * Complex.exp S := by
-        simp [weierstrassE, S]
-      _ = Complex.exp S * (1 - z) := by ring
-      _ = Complex.exp S / Complex.exp (Complex.log ((1 - z)⁻¹)) := by
-        simp [Complex.exp_log hinv_ne, div_eq_mul_inv]
-      _ = Complex.exp w := this.symm
-  have hrem : ‖Complex.log ((1 - z)⁻¹) + logTaylor (h + 1) (-z)‖
-      ≤ ‖z‖ ^ (h + 1) * (1 - ‖z‖)⁻¹ / (h + 1) :=
-    norm_log_one_sub_inv_add_logTaylor_neg_le h hz_lt
-  have hw_norm : ‖w‖ = ‖Complex.log ((1 - z)⁻¹) + logTaylor (h + 1) (-z)‖ := by
-    have hnorm : ‖w‖ = ‖-(Complex.log ((1 - z)⁻¹) + logTaylor (h + 1) (-z))‖ :=
-      congrArg norm hw_eq
-    calc
-      ‖w‖ = ‖-(Complex.log ((1 - z)⁻¹) + logTaylor (h + 1) (-z))‖ := hnorm
-      _ = ‖Complex.log ((1 - z)⁻¹) + logTaylor (h + 1) (-z)‖ := by
-            simpa using
-              (norm_neg (Complex.log ((1 - z)⁻¹) + logTaylor (h + 1) (-z)))
-  have hw_le : ‖w‖ ≤ ‖z‖ ^ (h + 1) * (1 - ‖z‖)⁻¹ / (h + 1) := by
-    simpa [hw_norm] using hrem
-  have hhalf_pos : (0 : ℝ) < (1 / 2 : ℝ) := by norm_num
-  have hhalf_le : (1 / 2 : ℝ) ≤ 1 - ‖z‖ := by linarith
-  have hpos : 0 < 1 - ‖z‖ := lt_of_lt_of_le hhalf_pos hhalf_le
-  have hinv_le : (1 - ‖z‖)⁻¹ ≤ 2 := by
-    have : (1 - ‖z‖)⁻¹ ≤ ((1 / 2 : ℝ))⁻¹ := (inv_le_inv₀ hpos hhalf_pos).2 hhalf_le
-    simpa using this
-  have hden_ge : (1 : ℝ) ≤ (h + 1 : ℝ) := by
-    have : (1 : ℕ) ≤ h + 1 := Nat.succ_le_succ (Nat.zero_le h)
-    exact_mod_cast this
-  have hmul_nonneg : 0 ≤ ‖z‖ ^ (h + 1) * (1 - ‖z‖)⁻¹ := by
-    refine mul_nonneg (pow_nonneg (norm_nonneg z) _) ?_
-    exact inv_nonneg.2 (le_of_lt hpos)
-  have hw_le' : ‖w‖ ≤ 2 * ‖z‖ ^ (h + 1) := by
-    have hdiv : ‖z‖ ^ (h + 1) * (1 - ‖z‖)⁻¹ / (h + 1)
-        ≤ ‖z‖ ^ (h + 1) * (1 - ‖z‖)⁻¹ := by
-      exact div_le_self hmul_nonneg hden_ge
-    have hmul : ‖z‖ ^ (h + 1) * (1 - ‖z‖)⁻¹ ≤ ‖z‖ ^ (h + 1) * 2 := by
-      exact mul_le_mul_of_nonneg_left hinv_le (pow_nonneg (norm_nonneg z) _)
-    have : ‖z‖ ^ (h + 1) * (1 - ‖z‖)⁻¹ / (h + 1) ≤ 2 * ‖z‖ ^ (h + 1) := by
-      have : ‖z‖ ^ (h + 1) * (1 - ‖z‖)⁻¹ / (h + 1) ≤ ‖z‖ ^ (h + 1) * 2 :=
-        le_trans hdiv hmul
-      simpa [mul_assoc, mul_left_comm, mul_comm] using this
-    exact le_trans hw_le this
+  obtain ⟨w, hE, hw_le'⟩ := weierstrassE_small_disk_exponential h z hz
   have hw_le_one : ‖w‖ ≤ 1 := by
     have hz_le_one : ‖z‖ ≤ (1 : ℝ) := le_trans hz (by norm_num)
     have hzpow_le : ‖z‖ ^ (h + 1) ≤ ‖z‖ := by

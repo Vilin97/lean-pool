@@ -29,7 +29,7 @@ module
   **PART II: LI'S PROOF** (following the paper structure exactly)
  - Setup and statement of theorem
  - Product formula (ASSUMED, not proven in Li's paper)
- - Key identity λ_n = ∑_ρ (1 - 1 / ρ)^n
+ - Key identity λ_n = ∑_ρ [1 - (1 - 1 / ρ)^n] (symmetrically summed)
  - Coefficient positivity
  - Forward direction (RH ⟹ λ_n ≥ 0)
  - Reverse direction (λ_n ≥ 0 ⟹ RH)
@@ -1014,7 +1014,7 @@ lemma taylorCoeff_finite_Li (S : Finset ℂ) (hS : 0 ∉ S) (n : ℕ)
     (deriv^[n] (logDeriv φS)) 0 / n.factorial =
       ∑ ρ ∈ S, (1 - (1 - 1 / ρ)^(-(n+1 : ℤ))) := by
   intro fS φS
- -- Put φ(z) = ξ(1/(1-z)) = Σ_{n≥0} λ_n z^{n+1} for |z| < 1. (equation (1.4))
+ -- For φ(z) = ξ(1/(1-z)), the Taylor coefficients of φ′/φ at zero are λ_{n+1}.
  -- By (1.3), λ_n = Σ_ρ [1 - (1 - 1 / ρ)^{n+1}] expressed via zeros of ζ.
   -- This is Li's key formula (1.4) from the 1997 paper
   -- Following Li's proof from the 1997 paper:
@@ -1492,7 +1492,7 @@ See PART I (Prerequisites) for the ax_ioms encoding these external results.
 
 Define φ(z) = ξ(1/(1-z)), then RH ↔ φ'/φ analytic in unit disk
 Generating function: φ'/φ = ∑_{n=0}^∞ λ_{n+1} z^n
-Explicit formula: λ_n = ∑_ρ (1 - 1 / ρ)^n
+Explicit formula: λ_n = ∑_ρ [1 - (1 - 1 / ρ)^n] (symmetrically summed)
 
 This is the heart of Li's criterion.
 -/
