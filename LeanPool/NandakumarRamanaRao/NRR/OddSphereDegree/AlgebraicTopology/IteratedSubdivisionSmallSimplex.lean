@@ -89,7 +89,7 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
     ⟨i.val, Nat.lt_of_le_of_lt (Nat.le_of_lt_succ i.isLt) k.isLt⟩
   have hι : Function.Injective ι := by
     intro i l h
-    exact Fin.ext (congrArg Fin.val h)
+    exact Fin.ext (congrArg (fun a : Fin (n + 1) => a.val) h)
   have hI : Finset.image ι Finset.univ = Finset.Iic k := by
     ext y
     constructor
@@ -97,7 +97,7 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
       obtain ⟨i, _, rfl⟩ := Finset.mem_image.mp hy
       exact Finset.mem_Iic.mpr (Nat.le_of_lt_succ i.isLt)
     · intro hy
-      have hyk : y.val ≤ k.val := Finset.mem_Iic.mp hy
+      have hyk : y.val ≤ k.val := (show y ≤ k from Finset.mem_Iic.mp hy)
       exact Finset.mem_image.mpr
         ⟨⟨y.val, Nat.lt_succ_of_le hyk⟩, Finset.mem_univ _, Fin.ext rfl⟩
   ext j
@@ -109,8 +109,8 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
   apply Finset.sum_congr rfl
   intro i _
   by_cases hij : j = π (ι i)
-  · simp [prefixVertex, ι, Pi.single_apply, hij]
-  · simp [prefixVertex, ι, Pi.single_apply, hij, eq_comm]
+  · simp [prefixVertex, ι, hij]
+  · simp [prefixVertex, ι, hij, eq_comm]
 
 theorem affineSubdivLinear_stdVerts (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (k : Fin (n + 1)) :
