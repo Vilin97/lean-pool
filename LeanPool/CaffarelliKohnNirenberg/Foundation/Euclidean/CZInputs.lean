@@ -204,7 +204,7 @@ def l2ExtensionInput
     eLpNorm_congr_ae hf.coeFn_toLp, K, lpNorm] using hlp
 
 /-- Extension data for a second Riesz transform obtained by interpolation below exponent two. -/
-def rieszSecondExtensionInput
+@[expose] def rieszSecondExtensionInput
     {i j : Fin 3} {p A₁ : ℝ}
     (hL2 : RieszSecondL2Input i j)
     (hWeak11 : ∀ f, Measurable f → Integrable f volume → MemLp f 2 volume →
@@ -236,7 +236,7 @@ def rieszSecondExtensionInput
     hK
 
 /-- The extension input for the scalar pressure operator at exponent 3 / 2. -/
-def rieszSecondP1ExtensionInput {i j : Fin 3}
+@[expose] def rieszSecondP1ExtensionInput {i j : Fin 3}
     (hL2 : RieszSecondL2Input i j)
     (hWeak11 : ∀ f, Measurable f → Integrable f volume → MemLp f 2 volume →
       ∀ l : ℝ, 0 < l →
@@ -257,7 +257,7 @@ def rieszSecondP1ExtensionInput {i j : Fin 3}
       positivity) (by norm_num) (by norm_num) hK)
 
 /-- The extension input for one scalar gradient component at exponent 6 / 5. -/
-def rieszSecondGradientExtensionInput {i j : Fin 3}
+@[expose] def rieszSecondGradientExtensionInput {i j : Fin 3}
     (hL2 : RieszSecondL2Input i j)
     (hWeak11 : ∀ f, Measurable f → Integrable f volume → MemLp f 2 volume →
       ∀ l : ℝ, 0 < l →
@@ -279,7 +279,7 @@ def rieszSecondGradientExtensionInput {i j : Fin 3}
       positivity) (by norm_num) (by norm_num) hK)
 
 /-- The scalar pressure operator after completion from the L2 carrier. -/
-def rieszSecondP1ExtensionOperator {i j : Fin 3}
+@[expose] def rieszSecondP1ExtensionOperator {i j : Fin 3}
     (hL2 : RieszSecondL2Input i j)
     (hWeak11 : ∀ f, Measurable f → Integrable f volume → MemLp f 2 volume →
       ∀ l : ℝ, 0 < l →
@@ -325,7 +325,7 @@ theorem rieszSecondP1Extension_toLp_bound {i j : Fin 3}
     (rieszSecondP1ExtensionInput hL2 hWeak11) hf
 
 /-- The indexed completed operator at exponent 6 / 5. -/
-def rieszSecondGradientExtensionOperator {i j : Fin 3}
+@[expose] def rieszSecondGradientExtensionOperator {i j : Fin 3}
     (hL2 : RieszSecondL2Input i j)
     (hWeak11 : ∀ f, Measurable f → Integrable f volume → MemLp f 2 volume →
       ∀ l : ℝ, 0 < l →

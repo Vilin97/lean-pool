@@ -130,7 +130,8 @@ abbrev tangentCoord {Y : Type*} [TopologicalSpace Y] [ChartedSpace ℂ Y] {y : Y
 /-- Non-dependent evaluation of a raw covector section, through the definitional equality
 `TangentSpace 𝓘(ℂ) q ≡ ℂ ≡ Bundle.Trivial X ℂ q`. Point-congruences for the dependent
 evaluation are done through this function. -/
-@[expose] def evalC (σ : ∀ x : X, TangentSpace 𝓘(ℂ) x →L[ℂ] Bundle.Trivial X ℂ x) (q : X) (w : ℂ) : ℂ :=
+@[expose]
+def evalC (σ : ∀ x : X, TangentSpace 𝓘(ℂ) x →L[ℂ] Bundle.Trivial X ℂ x) (q : X) (w : ℂ) : ℂ :=
   σ q w
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in

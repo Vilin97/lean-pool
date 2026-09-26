@@ -75,6 +75,7 @@ noncomputable def meroGermSubalgebra (U : Set X) :
 
 variable (X) in
 /-- The space of meromorphic germ classes on `U` (CC3 relativized; junk-free). -/
+@[expose]
 def MeroGermOn (U : Set X) : Type _ := meroGermSubalgebra X U
 
 variable (X) in
@@ -174,7 +175,7 @@ noncomputable def restrictGerm (h : V ⊆ U) (γ : Filter.Germ (codiscreteWithin
 omit [ChartedSpace ℂ X] in
 @[simp] theorem restrictGerm_coe (h : V ⊆ U) (f : X → ℂ) :
     restrictGerm h (f : Filter.Germ (codiscreteWithin U) ℂ) =
-      (f : Filter.Germ (codiscreteWithin V) ℂ) := rfl
+      (f : Filter.Germ (codiscreteWithin V) ℂ) := by rfl
 
 omit [ChartedSpace ℂ X] in
 theorem restrictGerm_add (h : V ⊆ U) (γ₁ γ₂ : Filter.Germ (codiscreteWithin U) ℂ) :

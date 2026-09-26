@@ -32,7 +32,7 @@ noncomputable def adjacencyEigenvalues
 
 /-- The adjacency eigenvalues in nonincreasing order. The value at `i` is the
 paper's `λ_{i+1}(G)`. -/
-noncomputable def adjacencyEigenvalues₀
+@[expose] noncomputable def adjacencyEigenvalues₀
     (G : SimpleGraph V) [DecidableRel G.Adj] : Fin (Fintype.card V) → ℝ :=
   (G.isHermitian_adjMatrix ℝ).eigenvalues₀
 
@@ -47,7 +47,7 @@ lemma adjacencyEigenvalues₀_antitone
   adjacencyEigenvalues₀ G ⟨0, Fintype.card_pos⟩
 
 /-- The second-largest adjacency eigenvalue `λ₂(G)`. -/
-noncomputable def lambda2
+@[expose] noncomputable def lambda2
     (G : SimpleGraph V) [DecidableRel G.Adj] [Nontrivial V] : ℝ :=
   adjacencyEigenvalues₀ G ⟨1, Fintype.one_lt_card⟩
 

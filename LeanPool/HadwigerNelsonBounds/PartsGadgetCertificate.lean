@@ -205,7 +205,7 @@ def PartsGadgetVerifiesNodeB (nodes : Array (Array PartsGadgetTreeNode)) :
                         (⟨node.vertex, color⟩ :: extended) child
 
 /-- Check a certificate from node zero with enough acyclic-tree fuel. -/
-def PartsGadgetCertificate.Verifies
+@[expose] def PartsGadgetCertificate.Verifies
     (certificate : PartsGadgetCertificate) : Prop :=
   PartsGadgetVerifiesNodeB certificate.nodes (certificate.nodeCount + 1)
     certificate.roots 0 = true

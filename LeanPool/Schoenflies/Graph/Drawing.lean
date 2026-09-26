@@ -148,7 +148,7 @@ theorem IsDrawing.isClosed_pointSet [G.Finite] (h : IsDrawing G drawing) :
     IsClosed (pointSet G drawing) := h.isCompact_pointSet.isClosed
 
 /-- The exterior of a plane graph: everything the drawing does not occupy. -/
-def exterior (G : Graph Plane β) (drawing : β → ℝ → Plane) : Set Plane :=
+@[expose] def exterior (G : Graph Plane β) (drawing : β → ℝ → Plane) : Set Plane :=
   (pointSet G drawing)ᶜ
 
 theorem IsDrawing.isOpen_exterior [G.Finite] (h : IsDrawing G drawing) :
@@ -156,7 +156,7 @@ theorem IsDrawing.isOpen_exterior [G.Finite] (h : IsDrawing G drawing) :
 
 /-- A face of a plane graph, named by a point of the exterior rather than indexed: no face has
 to be produced before it can be spoken about. -/
-def face (G : Graph Plane β) (drawing : β → ℝ → Plane) (base : Plane) : Set Plane :=
+@[expose] def face (G : Graph Plane β) (drawing : β → ℝ → Plane) (base : Plane) : Set Plane :=
   connectedComponentIn (exterior G drawing) base
 
 theorem face_subset_exterior (G : Graph Plane β) (drawing : β → ℝ → Plane) (base : Plane) :

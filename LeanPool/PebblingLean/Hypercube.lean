@@ -141,7 +141,7 @@ theorem dist_triangle {n : ℕ} (x y z : HypercubeVertex n) :
   · simp_all
 
 /-- The `n`-dimensional hypercube graph. -/
-def graph (n : ℕ) : Graph (HypercubeVertex n) where
+@[expose] def graph (n : ℕ) : Graph (HypercubeVertex n) where
   Adj x y := dist x y = 1
   symm := by
     intro x y h

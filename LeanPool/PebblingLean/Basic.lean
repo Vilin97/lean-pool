@@ -55,7 +55,7 @@ variable {V : Type u}
   ∑ v, D v
 
 /-- Pointwise domination of pebbling distributions. -/
-def Dominates (D E : Pebbling V) : Prop :=
+@[expose] def Dominates (D E : Pebbling V) : Prop :=
   ∀ v : V, E v ≤ D v
 
 @[simp]
@@ -151,7 +151,7 @@ theorem solvableAtLeast_zero [DecidableEq V] (G : Graph V) (D : Pebbling V) :
   exact canReachAtLeast_zero G D target
 
 /-- There is a solvable distribution of total size `k`. -/
-def HasSolvableSize [Fintype V] [DecidableEq V] (G : Graph V) (k : ℕ) : Prop :=
+@[expose] def HasSolvableSize [Fintype V] [DecidableEq V] (G : Graph V) (k : ℕ) : Prop :=
   ∃ D : Pebbling V, size D = k ∧ Solvable G D
 
 /-- There is a `T`-solvable distribution of total size `k`. -/
@@ -175,7 +175,7 @@ def supportSize [Fintype V] (D : Pebbling V) : ℕ :=
 a solvable distribution with `k` pebbles, and none with fewer. This avoids
 choosing a numerical value before proving existence for the graph family under
 study. -/
-def IsOptimalNumber [Fintype V] [DecidableEq V] (G : Graph V) (k : ℕ) : Prop :=
+@[expose] def IsOptimalNumber [Fintype V] [DecidableEq V] (G : Graph V) (k : ℕ) : Prop :=
   HasSolvableSize G k ∧ ∀ l : ℕ, l < k → ¬ HasSolvableSize G l
 
 /-- A relational form of the optimal `T`-pebbling number. -/

@@ -29,7 +29,7 @@ open scoped Nat
 
 /-- The Montgomery–Taylor constant `1/2 + (1/√2) cot(1/√2) = 1.3274992963…`. -/
 @[zz_tag "def_C_MT"]
-noncomputable def montgomeryTaylorConst : ℝ :=
+@[expose] noncomputable def montgomeryTaylorConst : ℝ :=
   1 / 2 + (1 / Real.sqrt 2) * Real.cot (1 / Real.sqrt 2)
 
 /-- The proportion of zeros shown simple and on the critical line,

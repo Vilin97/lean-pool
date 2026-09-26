@@ -108,6 +108,7 @@ def hardEqualsAssignmentsB
         selectedByAssignmentsB assignments centre target
 
 /-- Add one row to a packed 64-bit incidence-table prefix. -/
+@[expose]
 def addRowCode (code row : UInt64) (centre : Vertex) : UInt64 :=
   code ||| ((row &&& 255) <<< UInt64.ofNat (8 * centre.val))
 

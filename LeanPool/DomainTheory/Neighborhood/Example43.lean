@@ -69,6 +69,7 @@ open Domain.Neighborhood NeighborhoodSystem ApproximableMap
 /-- Membership in Scott's natural-number system: a neighbourhood is the whole
 space `ℕ` or a
 singleton `{n}`. -/
+@[expose]
 def memN (X : Set ℕ) : Prop := X = Set.univ ∨ ∃ n, X = {n}
 
 theorem memN_univ : memN (Set.univ : Set ℕ) := Or.inl rfl
@@ -102,6 +103,7 @@ theorem nestedOrDisjoint : NestedOrDisjoint memN := by
 
 /-- **Example 4.3 (Scott 1981, PRG-19).** The natural-number neighbourhood system
 `N` on `Δ = ℕ`. -/
+@[expose]
 def N : NeighborhoodSystem ℕ :=
   NeighborhoodSystem.ofNestedOrDisjoint memN Set.univ memN_univ nestedOrDisjoint
     (fun _ => Set.subset_univ _)

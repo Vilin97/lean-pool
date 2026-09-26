@@ -43,7 +43,7 @@ theorem rieszTest_add (i j : Fin 3) (ψ φ : ComplexTest) :
         (EulerSobolev.schwartzFourier φ) ξ) := by
     have hadd : EulerSobolev.schwartzFourier (ψ + φ) =
         EulerSobolev.schwartzFourier ψ + EulerSobolev.schwartzFourier φ :=
-      (EulerSobolev.schwartzFourierCLM (V := Space) (E := ℂ)).map_add ψ φ
+      (FourierTransform.fourierCLM (F := ComplexTest) ℂ ComplexTest).map_add ψ φ
     funext ξ
     simp only [hadd, add_apply, Pi.add_apply, mul_add]
   have hcont : Continuous (fun p : Space × Space => (-innerₗ Space) p.1 p.2) := by
@@ -63,7 +63,7 @@ theorem rieszTest_smul (i j : Fin 3) (c : ℂ) (ψ : ComplexTest) :
         (EulerSobolev.schwartzFourier ψ) ξ) := by
     have hsmul : EulerSobolev.schwartzFourier (c • ψ) =
         c • EulerSobolev.schwartzFourier ψ :=
-      (EulerSobolev.schwartzFourierCLM (V := Space) (E := ℂ)).map_smul c ψ
+      (FourierTransform.fourierCLM (F := ComplexTest) ℂ ComplexTest).map_smul c ψ
     funext ξ
     simp only [hsmul, smul_apply, Pi.smul_apply, smul_eq_mul, mul_left_comm]
   unfold rieszTest
@@ -77,7 +77,7 @@ def rieszTestLinear (i j : Fin 3) : ComplexTest →ₗ[ℂ] (Space → ℂ) wher
   map_smul' := rieszTest_smul i j
 
 @[simp] theorem rieszTestLinear_apply (i j : Fin 3) (ψ : ComplexTest) :
-    rieszTestLinear i j ψ = rieszTest i j ψ := rfl
+    rieszTestLinear i j ψ = rieszTest i j ψ := by rfl
 
 @[simp] theorem rieszTest_zero (i j : Fin 3) : rieszTest i j 0 = 0 :=
   map_zero (rieszTestLinear i j)

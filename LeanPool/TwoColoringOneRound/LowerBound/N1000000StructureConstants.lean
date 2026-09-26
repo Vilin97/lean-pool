@@ -69,6 +69,7 @@ def rowMatch (m : Mask) (i : Fin 3) : Option (Fin 3) :=
   else none
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def freeCols (m : Mask) : Nat :=
   (Finset.univ.filter fun j : Fin 3 => colMatch m j = none).card
 

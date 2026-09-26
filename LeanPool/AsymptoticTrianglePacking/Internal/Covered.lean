@@ -40,6 +40,7 @@ namespace LeanPool.AsymptoticTrianglePacking.Internal
 variable {V : Type*} [DecidableEq V] {Ω : Type*} [MeasureSpace Ω]
 
 /-- The set of retained edges at outcome `ω` (classically decidable membership in the events). -/
+@[expose]
 noncomputable def retainedSet (H : Finset (Finset V)) {p : ℝ}
     (ρ : BernoulliRetention (Ω := Ω) H p) (ω : Ω) : Finset (Finset V) := by
   classical

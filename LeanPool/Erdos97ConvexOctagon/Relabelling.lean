@@ -27,12 +27,14 @@ def standardTargets : Finset Vertex := {1, 2, 3, 4}
 namespace OctagonIncidence
 
 /-- Simultaneously relabel the centres and every entry of their witness rows. -/
+@[expose]
 def relabel (Q : OctagonIncidence) (e : Vertex ≃ Vertex) : OctagonIncidence where
   targets v := (Q.targets (e.symm v)).map e.toEmbedding
   card_targets v := by simp [Q.card_targets]
   centre_not_mem v := by simpa using Q.centre_not_mem (e.symm v)
 
 /-- A system is normalized when row zero is the canonical four-set. -/
+@[expose]
 def Normalized (Q : OctagonIncidence) : Prop :=
   Q.targets 0 = standardTargets
 

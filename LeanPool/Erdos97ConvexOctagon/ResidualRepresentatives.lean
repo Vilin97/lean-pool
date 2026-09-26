@@ -24,6 +24,7 @@ public section
 namespace Erdos97Octagon
 
 /-- The exact residual incidence representative of class 0. -/
+@[expose]
 def residualRepresentative00 : OctagonIncidence where
   targets := ![
     {1, 2, 3, 4}, {0, 2, 3, 5}, {0, 4, 5, 6}, {2, 4, 5, 7},
@@ -33,6 +34,7 @@ def residualRepresentative00 : OctagonIncidence where
   centre_not_mem v := by fin_cases v <;> decide
 
 /-- The exact residual incidence representative of class 1. -/
+@[expose]
 def residualRepresentative01 : OctagonIncidence where
   targets := ![
     {1, 2, 3, 4}, {0, 2, 3, 5}, {0, 4, 5, 6}, {2, 4, 6, 7},
@@ -42,6 +44,7 @@ def residualRepresentative01 : OctagonIncidence where
   centre_not_mem v := by fin_cases v <;> decide
 
 /-- The exact residual incidence representative of class 2. -/
+@[expose]
 def residualRepresentative02 : OctagonIncidence where
   targets := ![
     {1, 2, 3, 4}, {0, 2, 3, 5}, {0, 5, 6, 7}, {2, 4, 6, 7},
@@ -51,6 +54,7 @@ def residualRepresentative02 : OctagonIncidence where
   centre_not_mem v := by fin_cases v <;> decide
 
 /-- The exact residual incidence representative of class 3. -/
+@[expose]
 def residualRepresentative03 : OctagonIncidence where
   targets := ![
     {1, 2, 3, 4}, {0, 2, 3, 5}, {0, 1, 4, 6}, {0, 4, 5, 7},
@@ -60,6 +64,7 @@ def residualRepresentative03 : OctagonIncidence where
   centre_not_mem v := by fin_cases v <;> decide
 
 /-- The exact residual incidence representative of class 4. -/
+@[expose]
 def residualRepresentative04 : OctagonIncidence where
   targets := ![
     {1, 2, 3, 4}, {0, 2, 3, 5}, {0, 1, 4, 6}, {2, 4, 6, 7},
@@ -69,6 +74,7 @@ def residualRepresentative04 : OctagonIncidence where
   centre_not_mem v := by fin_cases v <;> decide
 
 /-- The exact residual incidence representative of class 5. -/
+@[expose]
 def residualRepresentative05 : OctagonIncidence where
   targets := ![
     {1, 2, 3, 4}, {0, 2, 5, 6}, {3, 4, 5, 7}, {1, 2, 6, 7},
@@ -78,6 +84,7 @@ def residualRepresentative05 : OctagonIncidence where
   centre_not_mem v := by fin_cases v <;> decide
 
 /-- The exact residual incidence representative of class 6. -/
+@[expose]
 def residualRepresentative06 : OctagonIncidence where
   targets := ![
     {1, 2, 3, 4}, {0, 2, 3, 5}, {0, 1, 4, 6}, {0, 1, 5, 7},
@@ -87,6 +94,7 @@ def residualRepresentative06 : OctagonIncidence where
   centre_not_mem v := by fin_cases v <;> decide
 
 /-- The exact residual incidence representative of class 7. -/
+@[expose]
 def residualRepresentative07 : OctagonIncidence where
   targets := ![
     {1, 2, 3, 4}, {0, 2, 3, 5}, {3, 4, 6, 7}, {2, 5, 6, 7},
@@ -96,6 +104,7 @@ def residualRepresentative07 : OctagonIncidence where
   centre_not_mem v := by fin_cases v <;> decide
 
 /-- The exact residual incidence representative of class 8. -/
+@[expose]
 def residualRepresentative08 : OctagonIncidence where
   targets := ![
     {1, 2, 3, 4}, {0, 2, 3, 5}, {3, 4, 5, 6}, {2, 4, 5, 7},
@@ -105,6 +114,7 @@ def residualRepresentative08 : OctagonIncidence where
   centre_not_mem v := by fin_cases v <;> decide
 
 /-- The exact residual incidence representative of class 9. -/
+@[expose]
 def residualRepresentative09 : OctagonIncidence where
   targets := ![
     {1, 2, 3, 4}, {0, 2, 3, 5}, {3, 4, 5, 6}, {2, 4, 5, 7},
@@ -114,6 +124,7 @@ def residualRepresentative09 : OctagonIncidence where
   centre_not_mem v := by fin_cases v <;> decide
 
 /-- The exact residual incidence representative of class 10. -/
+@[expose]
 def residualRepresentative10 : OctagonIncidence where
   targets := ![
     {1, 2, 3, 4}, {0, 2, 3, 5}, {3, 4, 5, 6}, {2, 4, 5, 7},
@@ -123,6 +134,7 @@ def residualRepresentative10 : OctagonIncidence where
   centre_not_mem v := by fin_cases v <;> decide
 
 /-- The exact residual incidence representative of class 11. -/
+@[expose]
 def residualRepresentative11 : OctagonIncidence where
   targets := ![
     {1, 2, 3, 4}, {0, 2, 5, 6}, {3, 4, 5, 6}, {0, 4, 5, 7},
@@ -132,6 +144,7 @@ def residualRepresentative11 : OctagonIncidence where
   centre_not_mem v := by fin_cases v <;> decide
 
 /-- The exact residual incidence representative of class 12. -/
+@[expose]
 def residualRepresentative12 : OctagonIncidence where
   targets := ![
     {1, 2, 3, 4}, {0, 5, 6, 7}, {1, 3, 5, 6}, {1, 4, 5, 7},

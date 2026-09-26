@@ -200,6 +200,7 @@ lemma hasDerivAt (f : W1 (n + 1) E) (x : ℝ) : HasDerivAt f (f.deriv x) x :=
   f.differentiable.differentiableAt.hasDerivAt
 
 /-- Subtract two functions with integrable derivatives. -/
+@[expose]
 def sub (f g : W1 n E) : W1 n E where
   toFun := f - g
   smooth := f.smooth.sub g.smooth
@@ -216,6 +217,7 @@ lemma integrable_iteratedDeriv_Schwarz {f : 𝓢(ℝ, ℂ)} : Integrable (iterat
   | succ n ih => simpa [iteratedDeriv_succ'] using! ih (f := SchwartzMap.derivCLM ℝ ℂ f)
 
 /-- A Schwartz function has integrable derivatives of every finite order. -/
+@[expose]
 noncomputable def ofSchwartz (f : 𝓢(ℝ, ℂ)) : W1 n ℂ where
   toFun := f
   smooth := f.smooth n
@@ -240,6 +242,7 @@ noncomputable instance : Norm W21 where norm := norm ∘ W1.toFun
 noncomputable instance : Coe 𝓢(ℝ, ℂ) W21 where coe := W1.ofSchwartz
 
 /-- Regard a compactly supported C² function as an element of W21. -/
+@[expose]
 def ofCS2 (f : CS 2 ℂ) : W21 := by
   refine ⟨f, f.h1, fun k hk => ?_⟩; match k with
   | 0 => exact f.h1.continuous.integrable_of_hasCompactSupport f.h2

@@ -45,6 +45,7 @@ open scoped ComplexOrder
 
 /-- `T` is (semi-definite) **positive** if `T` is symmetric
 and `∀ x : V, 0 ≤ re ⟪x, T x⟫` -/
+@[expose]
 def IsPositive' (T : E →ₗ[𝕜] E) : Prop :=
   T.IsSymmetric ∧ ∀ x : E, 0 ≤ ⟪x, T x⟫
 
@@ -213,7 +214,7 @@ end
 theorem _root_.LinearMap.rePow_apply (hT : T.IsSymmetric)
     (r : ℝ) (v : E) :
     T.rePow hT r v = ∑ i, (((α hT rfl i : ℝ) ^ r : ℝ) : 𝕜) • ⟪e hT rfl i, v⟫ • e hT rfl i :=
-  rfl
+  by rfl
 
 /-- the square root of a symmetric linear map can then directly be defined with `re_pow` -/
 noncomputable def _root_.LinearMap.sqrt

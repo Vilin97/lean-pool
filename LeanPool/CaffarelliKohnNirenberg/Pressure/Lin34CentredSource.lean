@@ -30,7 +30,7 @@ mollified cut-off of `B_ρ` and `Û` the centred tensor `eq:Uhat`, at the time
 `s` and in the entries `i, j` it is the function
 
 `x ↦ η(x) · Û_{ij}(x, s)`. -/
-def lin34CentredSource (u : ParabolicPoint → Vec3) (x₀ : Vec3) {ρ : ℝ} (hρ : 0 < ρ)
+@[expose] def lin34CentredSource (u : ParabolicPoint → Vec3) (x₀ : Vec3) {ρ : ℝ} (hρ : 0 < ρ)
     (s : ℝ) (i j : Fin 3) : Vec3 → ℝ :=
   fun x => mollifiedBallCutoff x₀ hρ x *
     pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((x, s) : ParabolicPoint) i j

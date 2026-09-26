@@ -41,7 +41,8 @@ variable {V : Type u}
 
 /-- Weight of a pebbling distribution with respect to a target, using a supplied
 distance function. -/
-noncomputable def weight [Fintype V] (dist : V → V → ℕ) (D : Pebbling V) (target : V) : ℚ :=
+@[expose] noncomputable def weight [Fintype V] (dist : V → V → ℕ)
+    (D : Pebbling V) (target : V) : ℚ :=
   ∑ u, (D u : ℚ) * unitWeight dist target u
 
 @[simp]

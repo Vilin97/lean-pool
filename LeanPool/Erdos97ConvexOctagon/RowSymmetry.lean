@@ -58,6 +58,7 @@ structure RowSymmetryCertificate where
   inverseCode : UInt64
 
 /-- Mathematical validity of a row-symmetry certificate. -/
+@[expose]
 def RowSymmetryCertificate.Valid
     (certificate : RowSymmetryCertificate) (sourceMask : UInt64) : Prop :=
   let forward := decodeMap certificate.forwardCode

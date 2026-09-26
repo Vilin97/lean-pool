@@ -41,6 +41,7 @@ theorem TensorProduct.map_apply_map_apply {R : Type _} [CommSemiring R] {A B C D
   simp_all
 
 /-- Tensor two algebra equivalences. -/
+@[expose]
 noncomputable def AlgEquiv.TensorProduct.map {R : Type _} [CommSemiring R] {A B C D : Type _}
     [Semiring A] [Semiring B] [Semiring C] [Semiring D] [Algebra R A] [Algebra R B]
     [Algebra R C] [Algebra R D]

@@ -80,6 +80,7 @@ lemma labelGet_eq_symOfNat_labelGetNat (t : LabelTriple) (i : Fin 3) :
   fin_cases i <;> rfl
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def LabelsDistinct (t : LabelTriple) : Prop :=
   t.1 ≠ t.2.1 ∧ t.1 ≠ t.2.2 ∧ t.2.1 ≠ t.2.2
 
@@ -88,6 +89,7 @@ instance (t : LabelTriple) : Decidable (LabelsDistinct t) := by
   infer_instance
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def LabelsInRange (t : LabelTriple) : Prop :=
   t.1 < n ∧ t.2.1 < n ∧ t.2.2 < n
 

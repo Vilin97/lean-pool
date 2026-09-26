@@ -109,7 +109,7 @@ strictly TOO STRONG: it rejected genuinely capture-safe substitutions, which
 would have made rule (3) weaker than Figure 2 and could have left Corollary 15
 unprovable, with nothing failing to compile anywhere. See
 `captureFree_needs_notFree` below for a substitution the old version rejected. -/
-def CaptureFree (x y : Var) : Pattern S Var → Prop
+@[expose] def CaptureFree (x y : Var) : Pattern S Var → Prop
   | .var _ => True
   | .bot => True
   | .app _ f => ∀ i, CaptureFree x y (f i)

@@ -134,7 +134,7 @@ structure Part where
   deriving Inhabited
 
 /-- The one-cell (unit) partition of `{0, …, n-1}`. -/
-def Part.unit (n : Nat) : Part :=
+@[expose] def Part.unit (n : Nat) : Part :=
   { lab := Array.range n
     pos := Array.range n
     cst := Array.replicate n 0
@@ -374,7 +374,7 @@ structure SplitState where
 
 /-- Split the cell starting at position `c` by neighbour count, phases (3) to (5).  Written as a
 chain of `match`es rather than a `do` block for the same reason as the loops above. -/
-def splitCell (cnt : Array Nat) (c : Nat) (st : SplitState) : SplitState :=
+@[expose] def splitCell (cnt : Array Nat) (c : Nat) (st : SplitState) : SplitState :=
   -- Read the cell's extent *before* splitting it; splits stay inside `[c, ec)`, so the cells
   -- collected by phase (2) keep their starts.
   let ec := st.cen[c]!
@@ -408,7 +408,7 @@ def splitCell (cnt : Array Nat) (c : Nat) (st : SplitState) : SplitState :=
                 { lab, pos, cst, cen, inW, tr, bc := clearBcFrom ks ks.size 0 bc }
 
 /-- Split every cell in `cells[j:]`, left to right. -/
-def splitCellsFrom (cnt cells : Array Nat) : Nat → Nat → SplitState → SplitState
+@[expose] def splitCellsFrom (cnt cells : Array Nat) : Nat → Nat → SplitState → SplitState
   | 0, _, st => st
   | fuel + 1, j, st =>
     if j ≥ cells.size then st
@@ -489,7 +489,7 @@ def initialRefine (G : Graph) : Part × UInt64 :=
 /-- Write `c + 1` into `cst[j]` for every `j ∈ [j₀, ec)`, where `j₀` is the second argument.  A
 structural recursion rather than a `for` loop so that `Equivariance.setCstFrom_getElemD` can read
 off each entry; `fuel` is only ever `ec - j₀`, so the work is the same. -/
-def setCstFrom (c ec : Nat) : Nat → Nat → Array Nat → Array Nat
+@[expose] def setCstFrom (c ec : Nat) : Nat → Nat → Array Nat → Array Nat
   | 0, _, cst => cst
   | fuel + 1, j, cst =>
     if j ≥ ec then cst else setCstFrom c ec fuel (j + 1) (cst.set! j (c + 1))
@@ -497,7 +497,7 @@ def setCstFrom (c ec : Nat) : Nat → Nat → Array Nat → Array Nat
 /-- Split the vertex `v` off from its cell, placing it first.  Returns the new partition and the
 position of the new singleton cell `{v}` (which is the only splitter needed to re-refine, since
 the input partition is assumed equitable). -/
-def individualize (p : Part) (v : Nat) : Part × Nat :=
+@[expose] def individualize (p : Part) (v : Nat) : Part × Nat :=
   let i := p.pos[v]!
   let c := p.cst[i]!
   let ec := p.cen[i]!
@@ -540,8 +540,7 @@ the body — which is exactly what a proof about the loop needs and what a `for`
   | 0, _, out => out
   | fuel + 1, i, out => certRowsFrom n bit w fuel (i + 1) (certRow n (bit i) n 0 0 (i * w) out)
 
-@[inherit_doc certRow]
-@[expose] def certBits (n : Nat) (bit : Nat → Nat → Bool) : Array UInt64 :=
+@[expose, inherit_doc certRow] def certBits (n : Nat) (bit : Nat → Nat → Bool) : Array UInt64 :=
   certRowsFrom n bit (rowWords n) n 0 (Array.replicate (n * rowWords n) 0)
 
 /-- The adjacency matrix of `G` read off in the order `lab`, packed by `certBits`.
@@ -549,7 +548,7 @@ the body — which is exactly what a proof about the loop needs and what a `for`
 Packing bits most-significant-first means that comparing the word arrays lexicographically, as
 unsigned integers, compares the bit strings lexicographically.  Two labellings give the same
 certificate exactly when they differ by an automorphism. -/
-def certOf (G : Graph) (lab : Array Nat) : Array UInt64 :=
+@[expose] def certOf (G : Graph) (lab : Array Nat) : Array UInt64 :=
   certBits G.n fun i => let row := G.adj[lab[i]!]!; fun j => row[lab[j]!]!
 
 /-- Lexicographic comparison of `a` and `b` from index `i` on, with `fuel` bounding the number of

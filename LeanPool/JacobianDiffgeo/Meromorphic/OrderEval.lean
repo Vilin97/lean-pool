@@ -64,7 +64,7 @@ noncomputable def ord (φ : MeroGermOn X U) (x : X) : WithTop ℤ :=
 
 open scoped Classical in
 theorem ord_apply_mk (f : X → ℂ) (hf : MeromorphicOnX f U) (x : X) :
-    (mk f hf).ord x = if IsOpen U ∧ x ∈ U then ordAtX f x else 0 := rfl
+    (mk f hf).ord x = if IsOpen U ∧ x ∈ U then ordAtX f x else 0 := by rfl
 
 @[simp] theorem ord_mk (hU : IsOpen U) (hx : x ∈ U) {f : X → ℂ} {hf : MeromorphicOnX f U} :
     (mk f hf).ord x = ordAtX f x := by
@@ -155,7 +155,7 @@ noncomputable def evalAt (φ : MeroGermOn X U) (x : X) : ℂ :=
 open scoped Classical in
 theorem evalAt_apply_mk (f : X → ℂ) (hf : MeromorphicOnX f U) (x : X) :
     (mk f hf).evalAt x =
-      if (IsOpen U ∧ x ∈ U) ∧ 0 ≤ ordAtX f x then Filter.limUnder (𝓝[≠] x) f else 0 := rfl
+      if (IsOpen U ∧ x ∈ U) ∧ 0 ≤ ordAtX f x then Filter.limUnder (𝓝[≠] x) f else 0 := by rfl
 
 theorem tendsto_evalAt (hU : IsOpen U) (hx : x ∈ U) (φ : MeroGermOn X U) (h : 0 ≤ φ.ord x)
     {f : X → ℂ} {hf : MeromorphicOnX f U} (hrep : mk f hf = φ) :

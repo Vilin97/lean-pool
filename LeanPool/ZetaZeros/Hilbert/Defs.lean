@@ -43,7 +43,8 @@ namespace ZetaZeros
 /-- A function `ℝ → ℂ` is symmetric when conjugation acts as reflection: `conj (Φ u) = Φ (-u)`.
 The property is preserved by Gram–Schmidt and is what makes the Bessel coefficients real. -/
 @[zz_tag "def_symmetric"]
-def IsSymmetric (Φ : ℝ → ℂ) : Prop := ∀ u : ℝ, (starRingEnd ℂ) (Φ u) = Φ (-u)
+@[expose] def IsSymmetric (Φ : ℝ → ℂ) : Prop :=
+  ∀ u : ℝ, (starRingEnd ℂ) (Φ u) = Φ (-u)
 
 /-- The two-variable kernel `F (u, v) = ∑ z, m z * fz z u * fz z v`, the multiset sum written with
 explicit multiplicities. -/

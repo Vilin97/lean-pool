@@ -3651,7 +3651,7 @@ inductive GuessStep
         (.verifying certificate next)
 
 /-- GapCVP reduction support. -/
-def oneStepEvalsTo
+@[expose] def oneStepEvalsTo
     (tm : Turing.FinTM2)
     (configuration next : tm.Cfg)
     (hstep : tm.step configuration = some next) :
@@ -6221,7 +6221,7 @@ abbrev FiniteVerifierHeadQuery (tm : Turing.FinTM2) :=
     (Option tm.Λ × tm.σ)
 
 /-- GapCVP reduction support. -/
-def finiteHeadConfiguration
+@[expose] def finiteHeadConfiguration
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (control : Option machine.tm.Λ × machine.tm.σ)
@@ -6232,7 +6232,7 @@ def finiteHeadConfiguration
   stk stack := decodedAtomBlock machine stack (heads stack)
 
 /-- Turn a finite query into a head-position query. -/
-def finiteHeadQueryOf
+@[expose] def finiteHeadQueryOf
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (first next : machine.tm.Cfg)
@@ -6820,7 +6820,7 @@ private theorem finiteHeadScriptRun_eq_actual
   exact hscript.symm
 
 /-- GapCVP reduction support. -/
-def scriptVerifierQueryOf
+@[expose] def scriptVerifierQueryOf
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (first next : machine.tm.Cfg)

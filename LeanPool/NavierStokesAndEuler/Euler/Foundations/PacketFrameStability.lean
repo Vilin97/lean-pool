@@ -323,7 +323,7 @@ theorem third_ratio_error
   nlinarith only [hsum, hm]
 
 /-- A normalized parent-gradient row applied to the velocity ratios. -/
-def rowAction (A : Fin 3 → Fin 3 → ℝ) (i : Fin 3) (r w : ℝ) : ℝ :=
+@[expose] def rowAction (A : Fin 3 → Fin 3 → ℝ) (i : Fin 3) (r w : ℝ) : ℝ :=
   A i 0 * r + A i 1 + A i 2 * w
 
 /-- Rowwise control of the normalized parent action on the new velocity. -/
@@ -367,7 +367,7 @@ theorem normalized_action_error
 
 /-- The cross-product numerator for the next normalized coupling.
 The middle argument `Tq` denotes ε times the physical middle component. -/
-def frameCrossNumerator (ε P Q N r w Tp Tq Tn : ℝ) : ℝ :=
+@[expose] def frameCrossNumerator (ε P Q N r w Tp Tq Tn : ℝ) : ℝ :=
   (-N + ε ^ 2 * Q * w) * Tp + (N * r - P * w) * Tq + (P - ε ^ 2 * Q * r) * Tn
 
 /-- The ideal next-frame cross numerator in original scalar coordinates. -/

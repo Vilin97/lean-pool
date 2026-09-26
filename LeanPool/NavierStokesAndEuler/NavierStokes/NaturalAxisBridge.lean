@@ -117,7 +117,7 @@ theorem productFamily_eq (I : Window) (ε : ℝ) (A B : AxisSpace I ε)
     productFamily I ε A B n m x =
       ∑ ij ∈ antidiagonal n,
         leibnizSum (fun k => inputJet I ε A ij.1 k x)
-          (fun l => inputJet I ε B ij.2 l x) m := rfl
+          (fun l => inputJet I ε B ij.2 l x) m := by rfl
 
 theorem productFamily_continuous (I : Window) (ε : ℝ) (A B : AxisSpace I ε) (n m : ℕ) :
     ContinuousOn (productFamily I ε A B n m) I.interval := by
@@ -1973,12 +1973,12 @@ theorem uniform_natural_fixedPoint [CompleteSpace V]
 theorem naturalRemainder_fst_resolvent (O : NaturalOperators V) (d : AxisData V)
     (S : V →L[ℝ] V) (t : ℝ) (a : V) (x : V × V) :
     (naturalRemainder O d S t a x).1 =
-      S ((naturalRemainder O d (ContinuousLinearMap.id ℝ V) t a x).1) := rfl
+      S ((naturalRemainder O d (ContinuousLinearMap.id ℝ V) t a x).1) := by rfl
 
 theorem naturalRemainder_snd_resolvent (O : NaturalOperators V) (d : AxisData V)
     (S : V →L[ℝ] V) (t : ℝ) (a : V) (x : V × V) :
     (naturalRemainder O d S t a x).2 =
-      (naturalRemainder O d (ContinuousLinearMap.id ℝ V) t a x).2 := rfl
+      (naturalRemainder O d (ContinuousLinearMap.id ℝ V) t a x).2 := by rfl
 
 /-- Undoing the actual angular resolvent turns the fixed point into the
 two integrated natural equations. The only extra hypothesis is the

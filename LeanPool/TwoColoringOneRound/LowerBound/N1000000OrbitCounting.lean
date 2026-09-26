@@ -87,8 +87,8 @@ private lemma ge_three_of_ne_base (x : SymN)
                 simp_all
 
 /-- Free columns for a directed type `k`: coordinates not equal to any base symbol. -/
-@[implicit_reducible]
-@[expose] def FreeCol (k : DirIdx) : Type :=
+@[expose, implicit_reducible]
+def FreeCol (k : DirIdx) : Type :=
   { j : Fin 3 // colMatch (maskAt k) j = none }
 
 noncomputable instance (k : DirIdx) : Fintype (FreeCol k) := by

@@ -24,7 +24,7 @@ def Mirror2 {α : Type u} {β : Sort v} (f : α → α → β) : αᵒᵈ → α
   f (ofDual b) (ofDual a)
 
 /-- Mirror a ternary relation/function to the order dual, reversing argument order. -/
-def Mirror3 {α : Type u} {β : Sort v} (f : α → α → α → β) : αᵒᵈ → αᵒᵈ → αᵒᵈ → β :=
+@[expose] def Mirror3 {α : Type u} {β : Sort v} (f : α → α → α → β) : αᵒᵈ → αᵒᵈ → αᵒᵈ → β :=
   fun a b c => f (ofDual c) (ofDual b) (ofDual a)
 
 /-- Decidability of a ternary relation: each instance is decidable. -/

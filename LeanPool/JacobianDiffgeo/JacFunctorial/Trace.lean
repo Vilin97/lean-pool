@@ -141,10 +141,10 @@ restricted to the stack neighborhood `(stackAt hf hne y).V`. -/
 def traceChart (y : Y) : OpenPartialHomeomorph Y ℂ :=
   (chartAt ℂ y).restr (stackAt hf hne y).V
 
-@[simp] theorem traceChart_coe (y : Y) : ⇑(traceChart hf hne y) = ⇑(chartAt ℂ y) := rfl
+@[simp] theorem traceChart_coe (y : Y) : ⇑(traceChart hf hne y) = ⇑(chartAt ℂ y) := by rfl
 
 @[simp] theorem traceChart_symm_coe (y : Y) :
-    ⇑(traceChart hf hne y).symm = ⇑(chartAt ℂ y).symm := rfl
+    ⇑(traceChart hf hne y).symm = ⇑(chartAt ℂ y).symm := by rfl
 
 theorem traceChart_source (y : Y) :
     (traceChart hf hne y).source = (chartAt ℂ y).source ∩ (stackAt hf hne y).V := by

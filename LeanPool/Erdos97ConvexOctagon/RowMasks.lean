@@ -20,10 +20,12 @@ namespace Erdos97Octagon.RawIncidence
 
 /-- The seven canonical first-row masks, in certificate order. -/
 @[expose]
+@[expose]
 def canonicalRowMask : Fin 7 → UInt64 :=
   ![29, 45, 101, 225, 60, 108, 228]
 
 /-- All first-row masks in the lexicographic search order. -/
+@[expose]
 def rowOneMask : Fin 35 → UInt64 := ![
   29, 45, 77, 141, 53, 85, 149, 101, 165, 197, 57, 89, 153, 105, 169, 201,
   113, 177, 209, 225, 60, 92, 156, 108, 172, 204, 116, 180, 212, 228, 120,
@@ -31,6 +33,7 @@ def rowOneMask : Fin 35 → UInt64 := ![
 ]
 
 /-- All second-row masks in the lexicographic search order. -/
+@[expose]
 @[expose]
 def rowTwoMask : Fin 35 → UInt64 := ![
   27, 43, 75, 139, 51, 83, 147, 99, 163, 195, 57, 89, 153, 105, 169, 201,

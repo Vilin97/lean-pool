@@ -66,12 +66,12 @@ def thetaValue (κ α β δ : ℝ) : ℝ := α + β + κ ^ (-4 : ℝ) * δ ^ 2
 /-- The absolute constant `C₂₇` of `eq:theta-decay-1`, in terms of the input
 constants `C₉` (Gagliardo–Nirenberg), `C₁₄` (pressure) and `C₂₅`
 (Caccioppoli): the paper's `3C₁₄² + C₂₅(1 + 2C₉^{1/2}) + 2C₂₅C₉^{1/2}`. -/
-def thetaDecayC₂₇ (C₉ C₁₄ C₂₅ : ℝ) : ℝ :=
+@[expose] def thetaDecayC₂₇ (C₉ C₁₄ C₂₅ : ℝ) : ℝ :=
   3 * C₁₄ ^ 2 + C₂₅ * (1 + 2 * Real.sqrt C₉) + 2 * C₂₅ * Real.sqrt C₉
 
 /-- The constant `C₂₈ = C₂₈(q)` of `eq:theta-decay-1`, in terms of `C₉`,
 `C₁₅` (pressure) and `C₂₆` (Caccioppoli): the paper's `3C₁₅² + 2C₂₆C₉^{1/2}`. -/
-def thetaDecayC₂₈ (C₉ C₁₅ C₂₆ : ℝ) : ℝ :=
+@[expose] def thetaDecayC₂₈ (C₉ C₁₅ C₂₆ : ℝ) : ℝ :=
   3 * C₁₅ ^ 2 + 2 * C₂₆ * Real.sqrt C₉
 
 /-! ### Elementary real inequalities -/

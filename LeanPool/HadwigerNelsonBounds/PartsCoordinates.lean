@@ -540,7 +540,7 @@ def partsPointChunk7 (index : Nat) : PartsPoint :=
   | _ => ⟨0, 0, 0, 0⟩
 
 /-- The exact coordinate attached to a vertex number in the base graph. -/
-def partsPoint (v : Fin 481) : PartsPoint :=
+@[expose] def partsPoint (v : Fin 481) : PartsPoint :=
   match v.val / 64 with
   | 0 => partsPointChunk0 (v.val % 64)
   | 1 => partsPointChunk1 (v.val % 64)
@@ -553,7 +553,7 @@ def partsPoint (v : Fin 481) : PartsPoint :=
   | _ => ⟨0, 0, 0, 0⟩
 
 /-- Decidable unit adjacency used by the lower-bound certificate checker. -/
-def partsAdjacent (v w : Fin 481) : Bool :=
+@[expose] def partsAdjacent (v w : Fin 481) : Bool :=
   ((partsPoint v).sub (partsPoint w)).IsUnit
 
 lemma dist_partsPoint_eq_one {v w : Fin 481} (h : partsAdjacent v w) :

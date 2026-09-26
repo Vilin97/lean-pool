@@ -67,7 +67,7 @@ section extras_EF
 
 /-- Scalar action of a nonnegative scalar on `F∞`: `c • ⊥ = ⊥`, `c • ⊤ = ⊤` when `c > 0`
     (and `c • ⊤ = 0` when `c = 0`), and `c • (f : F) = c * f` on finite values. -/
-def EF.smulNN (c : F≥0) : F∞ → F∞
+@[expose] def EF.smulNN (c : F≥0) : F∞ → F∞
 | ⊥ => ⊥
 | ⊤ => if c = 0 then 0 else ⊤
 | (f : F) => toE (c.val * f)
@@ -95,7 +95,7 @@ lemma EF.smul_coe_neq_bot (c : F≥0) (f : F) : c • toE f ≠ (⊥ : F∞) :=
 
 omit [IsStrictOrderedRing F] in
 lemma EF.smul_bot (c : F≥0) : c • (⊥ : F∞) = ⊥ :=
-  rfl
+  by rfl
 
 lemma EF.smul_nonbot_neq_bot (c : F≥0) {r : F∞} (hr : r ≠ ⊥) : c • r ≠ ⊥ := by
   match r with
@@ -190,7 +190,7 @@ variable {α γ : Type*} [AddCommMonoid α] [SMul γ α]
     but heterogeneous (mnemonic: "vector times weights").
     Note that the order of arguments (also with the infix notation) is opposite than in the
     `SMul` it builds upon. -/
-def dotWeig (v : I → α) (w : I → γ) : α := ∑ i : I, w i • v i
+@[expose] def dotWeig (v : I → α) (w : I → γ) : α := ∑ i : I, w i • v i
 
 @[inherit_doc dotWeig]
 infixl:72 " ᵥ⬝ " => dotWeig

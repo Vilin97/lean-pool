@@ -80,13 +80,13 @@ theorem natAbs_le_intVectorHeight {m : ℕ} (a : Fin m → ℤ) (i : Fin m) :
   exact Finset.le_sup (f := fun j => (a j).natAbs) (Finset.mem_univ i)
 
 /-- A target tuple respects all relations of height at most `q`. -/
-def RespectsRelationsUpTo {G : Type u} [AddCommGroup G] {m : ℕ}
+@[expose] def RespectsRelationsUpTo {G : Type u} [AddCommGroup G] {m : ℕ}
     (q : ℕ) (z : Fin m → G) (t : Fin m → UnitAddCircle) : Prop :=
   ∀ a : Fin m → ℤ, intVectorHeight a ≤ q →
     relationMap z a = 0 → torusRelationMap t a = 0
 
 /-- `q` is a uniform Kronecker bound for tuples of length `m` and error `ε`. -/
-def IsUniformKroneckerBound (m : ℕ) (ε : ℝ) (q : ℕ) : Prop :=
+@[expose] def IsUniformKroneckerBound (m : ℕ) (ε : ℝ) (q : ℕ) : Prop :=
   ∀ {G : Type u} [AddCommGroup G] (z : Fin m → G) (t : Fin m → UnitAddCircle),
     RespectsRelationsUpTo q z t →
       ∃ χ : G →+ UnitAddCircle, ∀ i, ‖χ (z i) - t i‖ < ε

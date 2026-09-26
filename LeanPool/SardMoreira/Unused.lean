@@ -159,8 +159,7 @@ variable {𝕜 E F G : Type*}
 variable {n : ℕ} (c : OrderedFinpartition n)
 
 /-- Cover `[0, n)`, `n ≠ 0`, by a single subset. -/
-@[simps -fullyApplied]
-def single (n : ℕ) (hn : n ≠ 0) : OrderedFinpartition n where
+@[expose] def single (n : ℕ) (hn : n ≠ 0) : OrderedFinpartition n where
   length := 1
   partSize _ := n
   partSize_pos _ := hn.bot_lt
@@ -169,6 +168,14 @@ def single (n : ℕ) (hn : n ≠ 0) : OrderedFinpartition n where
   parts_strictMono := Subsingleton.strictMono _
   disjoint := subsingleton_univ.pairwise _
   cover x := ⟨0, x, rfl⟩
+
+@[simp] theorem single_length (n : ℕ) (hn : n ≠ 0) : (single n hn).length = 1 := by rfl
+
+@[simp] theorem single_partSize (n : ℕ) (hn : n ≠ 0) :
+    (single n hn).partSize = fun _ => n := by rfl
+
+@[simp] theorem single_emb (n : ℕ) (hn : n ≠ 0) :
+    (single n hn).emb = fun _ => id := by rfl
 
 @[simp]
 theorem applyOrderedFinpartition_single (hn : n ≠ 0)

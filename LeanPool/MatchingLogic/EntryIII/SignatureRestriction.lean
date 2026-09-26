@@ -182,7 +182,7 @@ theorem PForm.subst_liftSignature [DecidableEq S.Sym] (F : Finset S.Sym)
 namespace AppCtx
 
 /-- Regard an application context over a finite sub-signature as one over `S`. -/
-def liftSignature [DecidableEq S.Sym] (F : Finset S.Sym) :
+@[expose] def liftSignature [DecidableEq S.Sym] (F : Finset S.Sym) :
     AppCtx (S.restrict F) Var → AppCtx S Var
   | .hole => .hole
   | .node sigma i args C =>

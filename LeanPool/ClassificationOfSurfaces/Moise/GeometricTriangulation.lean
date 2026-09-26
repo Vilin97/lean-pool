@@ -206,7 +206,7 @@ noncomputable def map (f : X → Y) (s : stdSimplex S X) : stdSimplex S Y :=
   ⟨FunOnFinite.linearMap S S f s, image_linearMap f (by aesop)⟩
 
 @[simp] lemma map_coe (f : X → Y) (s : stdSimplex S X) :
-    ⇑(map f s) = FunOnFinite.linearMap S S f s := rfl
+    ⇑(map f s) = FunOnFinite.linearMap S S f s := by rfl
 
 @[simp] lemma map_id_apply (x : stdSimplex S X) : map id x = x := by
   aesop
@@ -592,7 +592,7 @@ omit [DecidableEq Vertex] in
 @[simp]
 theorem faceOfSubset_val {faces faces' : Finset (Finset Vertex)} (h : faces ⊆ faces')
     (f : Face faces) : (faceOfSubset h f).1 = f.1 :=
-  rfl
+  by rfl
 
 omit [DecidableEq Vertex] in
 theorem faceAdjacent_faceOfSubset {faces faces' : Finset (Finset Vertex)}

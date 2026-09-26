@@ -176,7 +176,7 @@ abbrev CompletePhaseWindow (tm : Turing.FinTM2) :=
   cell.script.2.2
 
 /-- GapCVP reduction support. -/
-def lastPhaseOffset (tm : Turing.FinTM2) : Fin (blockSize tm) :=
+@[expose] def lastPhaseOffset (tm : Turing.FinTM2) : Fin (blockSize tm) :=
   ⟨blockSize tm - 1, by
     have hpositive := blockSize_pos tm
     omega⟩

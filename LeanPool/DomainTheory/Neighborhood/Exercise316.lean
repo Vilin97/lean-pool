@@ -71,7 +71,7 @@ theorem fiber_mono {W W' : Set (ℕ × α)} (h : W ⊆ W') (i : ℕ) : fiber W i
   fun _ ha => h ha
 
 theorem fiber_inter (W W' : Set (ℕ × α)) (i : ℕ) :
-    fiber (W ∩ W') i = fiber W i ∩ fiber W' i := rfl
+    fiber (W ∩ W') i = fiber W i ∩ fiber W' i := by rfl
 
 theorem eq_of_fiber_eq {W W' : Set (ℕ × α)} (h : ∀ i, fiber W i = fiber W' i) : W = W' := by
   ext ⟨i, a⟩
@@ -134,9 +134,9 @@ def iterSys (V : NeighborhoodSystem α) : NeighborhoodSystem (ℕ × α) where
     rintro W ⟨hWf, _⟩ ⟨i, a⟩ ha
     exact V.sub_master (hWf i) ha
 
-@[simp] theorem iterSys_master : (iterSys V).master = {p : ℕ × α | p.2 ∈ V.master} := rfl
+@[simp] theorem iterSys_master : (iterSys V).master = {p : ℕ × α | p.2 ∈ V.master} := by rfl
 
-theorem fiber_iterSys_master (i : ℕ) : fiber ((iterSys V).master) i = V.master := rfl
+theorem fiber_iterSys_master (i : ℕ) : fiber ((iterSys V).master) i = V.master := by rfl
 
 @[simp] theorem mem_iterSys {W : Set (ℕ × α)} :
     (iterSys V).mem W ↔ (∀ i, V.mem (fiber W i)) ∧ ∃ N, ∀ i, N ≤ i → fiber W i = V.master := Iff.rfl

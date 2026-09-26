@@ -151,11 +151,16 @@ instance hasForgetToAddCommGrp : HasForget₂ FieldCat RingCat where
       map := fun f ↦ RingCat.ofHom f.hom }
 
 /-- Field equivalence are isomorphisms in category of semirings -/
-@[simps]
 def RingEquiv.toRingCatIso {R S : Type u} [Field R] [Field S] (e : R ≃+* S) :
     of R ≅ of S where
   hom := ⟨e⟩
   inv := ⟨e.symm⟩
+
+@[simp] lemma RingEquiv.toRingCatIso_hom_hom {R S : Type u} [Field R] [Field S]
+    (e : R ≃+* S) : (RingEquiv.toRingCatIso e).hom.hom = e.toRingHom := by rfl
+
+@[simp] lemma RingEquiv.toRingCatIso_inv_hom {R S : Type u} [Field R] [Field S]
+    (e : R ≃+* S) : (RingEquiv.toRingCatIso e).inv.hom = e.symm.toRingHom := by rfl
 
 instance forgetReflectIsos : (forget FieldCat).ReflectsIsomorphisms where
   reflects {X Y} f _ := by

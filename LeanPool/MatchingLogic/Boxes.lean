@@ -58,7 +58,7 @@ there is only one sort. -/
 namespace Model
 
 /-- One backward step along a single coordinate: `u ⇝_e v` (Definition 2). -/
-def stepAt (M : Model S) (e : Coord S) (u v : M.carrier) : Prop :=
+@[expose] def stepAt (M : Model S) (e : Coord S) (u v : M.carrier) : Prop :=
   ∃ a : Fin (S.arity e.1) → M.carrier, u ∈ M.interp e.1 a ∧ v = a e.2
 
 /-- `⇝_p` for a word `p`, the relational composite, with `⇝_ε = id`

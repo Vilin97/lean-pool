@@ -47,10 +47,10 @@ scoped[Bimodule] infixl:72 " •ᵣ " => Bimodule.rsmul
 open scoped Bimodule BigOperators
 
 theorem Bimodule.lsmul_apply (x a : H₁) (b : H₂) : x •ₗ a ⊗ₜ b = (x * a) ⊗ₜ[R] b :=
-  rfl
+  by rfl
 
 theorem Bimodule.rsmul_apply (a : H₁) (x b : H₂) : a ⊗ₜ b •ᵣ x = a ⊗ₜ[R] (b * x) :=
-  rfl
+  by rfl
 
 theorem Bimodule.lsmul_rsmul_assoc (x : H₁) (y : H₂) (a : H₁ ⊗[R] H₂) :
     x •ₗ a •ᵣ y = x •ₗ (a •ᵣ y) := by
@@ -58,14 +58,14 @@ theorem Bimodule.lsmul_rsmul_assoc (x : H₁) (y : H₂) (a : H₁ ⊗[R] H₂) 
     LinearMap.one_comp, LinearMap.comp_one]
 
 theorem Bimodule.lsmul_zero (x : H₁) : x •ₗ (0 : H₁ ⊗[R] H₂) = 0 :=
-  rfl
+  by rfl
 
 theorem Bimodule.zero_lsmul (x : H₁ ⊗[R] H₂) : 0 •ₗ x = 0 := by
   rw [Bimodule.lsmul, LinearMap.mulLeft_zero_eq_zero, TensorProduct.map_zero_left,
     LinearMap.zero_apply]
 
 theorem Bimodule.zero_rsmul (x : H₂) : (0 : H₁ ⊗[R] H₂) •ᵣ x = 0 :=
-  rfl
+  by rfl
 
 theorem Bimodule.rsmul_zero (x : H₁ ⊗[R] H₂) : x •ᵣ 0 = 0 := by
   rw [Bimodule.rsmul, LinearMap.mulRight_zero_eq_zero, TensorProduct.map_zero_right,
@@ -273,7 +273,6 @@ theorem rmulMapLmul_mem_isBimoduleMaps (x : H₁ ⊗[R] H₂) :
     rmulMapLmul_apply_one]
 
 /-- The tensor product is linearly equivalent to its bimodule endomorphism submodule. -/
-@[simps]
 noncomputable def TensorProduct.toIsBimoduleMap
   {R : Type*} {H₁ H₂ : Type*} [CommSemiring R] [Semiring H₁]
   [Semiring H₂] [Algebra R H₁] [Algebra R H₂] :
@@ -287,3 +286,15 @@ noncomputable def TensorProduct.toIsBimoduleMap
     simp only
     congr
     rw [LinearMap.isBimoduleMap_iff'.mp f.property]
+
+@[simp] theorem TensorProduct.toIsBimoduleMap_apply_coe
+    {R : Type*} {H₁ H₂ : Type*} [CommSemiring R] [Semiring H₁]
+    [Semiring H₂] [Algebra R H₁] [Algebra R H₂] (x : H₁ ⊗[R] H₂) :
+    ((TensorProduct.toIsBimoduleMap x : LinearMap.IsBimoduleMaps R H₁ H₂) :
+      l(R, H₁ ⊗[R] H₂)) = rmulMapLmul x := by rfl
+
+@[simp] theorem TensorProduct.toIsBimoduleMap_symm_apply
+    {R : Type*} {H₁ H₂ : Type*} [CommSemiring R] [Semiring H₁]
+    [Semiring H₂] [Algebra R H₁] [Algebra R H₂]
+    (f : LinearMap.IsBimoduleMaps R H₁ H₂) :
+    TensorProduct.toIsBimoduleMap.symm f = (f : l(R, H₁ ⊗[R] H₂)) 1 := by rfl

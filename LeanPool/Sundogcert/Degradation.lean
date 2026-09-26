@@ -257,7 +257,7 @@ theorem hHG_bandDense (m c : ℕ) :
 
 /-- The band-dense scheme at density `c`: same `n,k,m,G,τ` as `projScheme`, only `H` differs
     (`H := bandDenseH m c`, density `c`). -/
-def bandScheme (m c : ℕ) : Scheme (ZMod 2) where
+@[expose] def bandScheme (m c : ℕ) : Scheme (ZMod 2) where
   n := 2 * m
   k := m
   m := m

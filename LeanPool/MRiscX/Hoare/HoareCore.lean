@@ -38,9 +38,9 @@ public section
 abbrev Assertion : Type := MState → Prop
 
 /-- Conjunction of two assertions, holding when both hold. -/
-def Assertion.And (P Q : Assertion) : Assertion := fun st => (P st) ∧ (Q st)
+@[expose] def Assertion.And (P Q : Assertion) : Assertion := fun st => (P st) ∧ (Q st)
 /-- Negation of an assertion, holding when the assertion does not. -/
-def Assertion.Not (P : Assertion) : Assertion := fun st => ¬(P st)
+@[expose] def Assertion.Not (P : Assertion) : Assertion := fun st => ¬(P st)
 
 
 

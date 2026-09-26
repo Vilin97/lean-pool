@@ -407,10 +407,10 @@ lemma schwinger_eq_covarianceℂ_on_reals (f g : OSforGFF.TestFunction) :
       (gaussianFreeFieldFree m).toMeasure := by
     -- Use Hölder: L² × L² → L¹
     have hf : MemLp (fun ω => distributionPairing ω f) 2 (gaussianFreeFieldFree m).toMeasure :=
-      by simpa only [distributionPairingCLM_apply, distributionPairing] using
+      by simpa only [← distributionPairingCLM_apply] using
         gaussianFreeField_pairing_memLp m f 2 (by simp)
     have hg : MemLp (fun ω => distributionPairing ω g) 2 (gaussianFreeFieldFree m).toMeasure :=
-      by simpa only [distributionPairingCLM_apply, distributionPairing] using
+      by simpa only [← distributionPairingCLM_apply] using
         gaussianFreeField_pairing_memLp m g 2 (by simp)
     exact hf.integrable_mul hg
   -- Step 3: Pull cast outside integral: ∫ ↑(f ω) dμ = ↑(∫ f ω dμ)

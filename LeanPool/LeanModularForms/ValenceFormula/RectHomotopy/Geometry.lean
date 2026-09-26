@@ -181,7 +181,7 @@ lemma circleIntegral_winding (p : ℂ) (ε : ℝ) (hε : 0 < ε) :
 /-- Height parameter H = √3/2 + 1 for FD boundary. -/
 @[expose] noncomputable def HHeight : ℝ := Real.sqrt 3 / 2 + 1
 
-lemma H_height_eq_heightCutoff : HHeight = heightCutoff := rfl
+lemma H_height_eq_heightCutoff : HHeight = heightCutoff := by rfl
 
 /-- Polygon: FD boundary with arcs replaced by chords. -/
 @[expose] noncomputable def fdPolygon : ℝ → ℂ := fun t =>

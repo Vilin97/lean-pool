@@ -38,8 +38,7 @@ noncomputable
 def rotationAffine (rot : SO3) : ℝ³ →ᵃ[ℝ] ℝ³ := (Matrix.toEuclideanLin rot).toAffineMap
 
 /-- Translating is affine. -/
-noncomputable
-@[expose] def offsetAffine (off : E 2) : ℝ² →ᵃ[ℝ] ℝ² :=
+@[expose] noncomputable def offsetAffine (off : E 2) : ℝ² →ᵃ[ℝ] ℝ² :=
   {toFun v := off + v, linear := LinearMap.id, map_vadd' p v := add_vadd_comm v off p }
 
 /-- Projection of a rotated point onto the xy-plane, as an affine map. -/

@@ -206,6 +206,7 @@ theorem ell_add_principal (D : DivisorA k K) (x : Kˣ) :
   exact (RRspaceAddPrincipalEquiv k K D x).finrank_eq
 
 /-- The rank of the quotient `L(D') / L(D)` (with intersection semantics when unordered). -/
+@[expose]
 noncomputable def finrankRRspaceDiff (D D' : DivisorA k K) : ℕ := by
   letI : AddCommGroup (RRspace k K D') := Submodule.addCommGroup _
   letI : Module k (RRspace k K D') := Submodule.module _

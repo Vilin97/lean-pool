@@ -45,7 +45,7 @@ theorem weighted_derivative_bound (f : Space → ℂ) (hf : ContDiff ℝ ∞ f)
   exact ⟨C, fun x => (le_abs_self _).trans (hC x)⟩
 
 /-- A compactly supported smooth function defines a Schwartz function. -/
-def ofCompactSupport (f : Space → ℂ) (hf : ContDiff ℝ ∞ f)
+@[expose] def ofCompactSupport (f : Space → ℂ) (hf : ContDiff ℝ ∞ f)
     (hc : HasCompactSupport f) : SchwartzMap Space ℂ where
   toFun := f
   smooth' := hf

@@ -64,7 +64,7 @@ noncomputable def conjState (ψ : PureState n) : PureState n :=
 
 @[simp]
 theorem conjState_apply (ψ : PureState n) (i : Fin (2 ^ n)) :
-    conjState ψ i = starRingEnd ℂ (ψ i) := rfl
+    conjState ψ i = starRingEnd ℂ (ψ i) := by rfl
 
 /-- Conjugating both arguments conjugates the inner product. -/
 theorem inner_conjState (a b : PureState n) :

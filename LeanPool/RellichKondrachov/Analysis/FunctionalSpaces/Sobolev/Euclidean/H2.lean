@@ -51,7 +51,7 @@ abbrev L2EE : Type _ := ↥(E →₂[μ] (E →L[ℝ] E))
 abbrev H2Target : Type _ := L2ℝ (μ := μ) × (L2E (μ := μ) × L2EE (μ := μ))
 
 /-- `C²` real-valued functions on `E` with compact support, as a submodule of `E → ℝ`. -/
-def C2c : Submodule ℝ (E → ℝ) where
+@[expose] def C2c : Submodule ℝ (E → ℝ) where
   carrier := {f | ContDiff ℝ 2 f ∧ HasCompactSupport f}
   zero_mem' := by
     refine ⟨contDiff_const, ?_⟩

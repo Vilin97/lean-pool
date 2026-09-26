@@ -114,7 +114,7 @@ theorem fieldDerivatives_commute {W : Type*} [NormedAddCommGroup W] [NormedSpace
   exact h
 
 /-- A compact antisymmetric derivative test field for one lifted curl component. -/
-def curlTest (κ : ℝ) (m : Vector3) (i j : Fin 3) (ψ : LiftDomain period → ℝ)
+@[expose] def curlTest (κ : ℝ) (m : Vector3) (i j : Fin 3) (ψ : LiftDomain period → ℝ)
     (x : LiftDomain period) : Vector3 :=
   fieldDerivative period (coordinateDirection κ m j) ψ x • EuclideanSpace.single i 1 -
     fieldDerivative period (coordinateDirection κ m i) ψ x • EuclideanSpace.single j 1

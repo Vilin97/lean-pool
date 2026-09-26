@@ -88,7 +88,7 @@ def FrameSpec.countWitnesses (spec : FrameSpec)
 
 /-- A frame specification is valid when its support multiset satisfies the corresponding
     frame inequalities. -/
-def FrameSpec.IsValid (spec : FrameSpec) : Prop :=
+@[expose] def FrameSpec.IsValid (spec : FrameSpec) : Prop :=
   ∀ T I : Finset (Fin spec.t), I ⊆ T →
     spec.countWitnesses T I ≤ (T \ I).sum spec.cap
 

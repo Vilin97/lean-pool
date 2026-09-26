@@ -378,7 +378,7 @@ noncomputable def scalePlane (Q : ℝ) : Plane →L[ℝ] Plane :=
   Q ^ (-(1 / 2 : ℝ)) • ContinuousLinearMap.id ℝ Plane
 
 @[simp] theorem scalePlane_apply (Q : ℝ) (p : Plane) :
-    scalePlane Q p = Q ^ (-(1 / 2 : ℝ)) • p := rfl
+    scalePlane Q p = Q ^ (-(1 / 2 : ℝ)) • p := by rfl
 
 theorem norm_scalePlane_le {Q : ℝ} (hQ : 0 < Q) :
     ‖scalePlane Q‖ ≤ Q ^ (-(1 / 2 : ℝ)) := by
@@ -568,7 +568,7 @@ noncomputable def radialProjection : SpaceTime →L[ℝ] Plane :=
     ((AxisymmetricFields.projection 1).comp (ContinuousLinearMap.snd ℝ ℝ Space))
 
 @[simp] theorem radialProjection_apply (p : SpaceTime) :
-    radialProjection p = (p.2 0, p.2 1) := rfl
+    radialProjection p = (p.2 0, p.2 1) := by rfl
 
 theorem norm_radialProjection_le : ‖radialProjection‖ ≤ 1 := by
   refine ContinuousLinearMap.opNorm_le_bound _ zero_le_one ?_
@@ -788,7 +788,7 @@ theorem norm_positive_jet_linear_le {E F : Type*}
 noncomputable def timeProfile : SpaceTime →L[ℝ] Plane :=
   (ContinuousLinearMap.fst ℝ ℝ Space).smulRight timeDirection
 
-@[simp] theorem timeProfile_apply (p : SpaceTime) : timeProfile p = p.1 • timeDirection := rfl
+@[simp] theorem timeProfile_apply (p : SpaceTime) : timeProfile p = p.1 • timeDirection := by rfl
 
 theorem norm_timeProfile_le : ‖timeProfile‖ ≤ ‖timeDirection‖ := by
   refine ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _) ?_
@@ -905,7 +905,7 @@ noncomputable def coordinateProjection (j : Fin 3) : SpaceTime →L[ℝ] ℝ :=
   (AxisymmetricFields.projection j).comp (ContinuousLinearMap.snd ℝ ℝ Space)
 
 @[simp] theorem coordinateProjection_apply (j : Fin 3) (p : SpaceTime) :
-    coordinateProjection j p = p.2 j := rfl
+    coordinateProjection j p = p.2 j := by rfl
 
 /-- Cartesian form of the exact chart `(T, R cos θ, R sin θ, Z)`. -/
 noncomputable def chartLinear (h : ℝ) (n : ℕ) : SpaceTime →L[ℝ] ChartPoint :=
@@ -1562,7 +1562,7 @@ noncomputable def liftXY : LiftPoint →L[ℝ] Plane :=
     (ContinuousLinearMap.fst ℝ ℝ (ℝ × (ℝ × ℝ)))).comp
     (ContinuousLinearMap.fst ℝ ChartPoint Plane)
 
-@[simp] theorem liftXY_apply (y : LiftPoint) : liftXY y = (y.1.2.1, y.1.2.2.1) := rfl
+@[simp] theorem liftXY_apply (y : LiftPoint) : liftXY y = (y.1.2.1, y.1.2.2.1) := by rfl
 @[simp] theorem liftZT_apply (y : LiftPoint) : liftZT y = (y.1.2.2.2, y.1.1) := rfl
 
 theorem norm_liftXY_le : ‖liftXY‖ ≤ 1 := by

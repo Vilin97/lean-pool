@@ -54,7 +54,7 @@ noncomputable def _root_.ContMDiff.degree (f : X → Y) (_hf : ContMDiff 𝓘(�
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [T2Space Y]
     [CompactSpace Y] [IsManifold 𝓘(ℂ, ℂ) ω Y] in
 @[simp] theorem _root_.ContMDiff.degree_eq (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
-    hf.degree = RS.degree f := rfl
+    hf.degree = RS.degree f := by rfl
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [T2Space Y]
     [CompactSpace Y] [IsManifold 𝓘(ℂ, ℂ) ω Y] in

@@ -57,7 +57,7 @@ variable {I : Type*} [Fintype I] [DecidableEq I]
 /-- **Perfect 3-dimensional matching over an arbitrary `Fintype` index `I`** — a selection
     `T : Finset I` covering each W-element, each X-element, and each Y-element exactly once.
     Mirrors `MatchingNPHard.ThreeDM` exactly, but indexed by `I` rather than `Fin s`. -/
-def threeDMI (t : I → W × X × Y) : Prop := ∃ T : Finset I,
+@[expose] def threeDMI (t : I → W × X × Y) : Prop := ∃ T : Finset I,
     (∀ w : W, (T.filter (fun i => (t i).1   = w)).card = 1) ∧
     (∀ x : X, (T.filter (fun i => (t i).2.1 = x)).card = 1) ∧
     (∀ y : Y, (T.filter (fun i => (t i).2.2 = y)).card = 1)

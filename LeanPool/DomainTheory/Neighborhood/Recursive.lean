@@ -351,16 +351,19 @@ let us derive the
 inclusion- and equality-deciders. All choice-free. -/
 
 /-- A unary predicate `p : ℕ → Prop` is **recursively decidable**. -/
+@[expose]
 def RecDecidable (p : ℕ → Prop) : Prop :=
   ∃ f : ℕ → ℕ, Nat.Primrec f ∧ ∀ n, p n ↔ f n = 1
 
 /-- A binary relation is recursively decidable when its `Nat.pair`-coding is. -/
+@[expose]
 def RecDecidable₂ (r : ℕ → ℕ → Prop) : Prop :=
   RecDecidable fun t => r t.unpair.1 t.unpair.2
 
 /-- A ternary relation is recursively decidable when its `Nat.pair`-coding (`pair
 n (pair m k)`)
 is. -/
+@[expose]
 def RecDecidable₃ (r : ℕ → ℕ → ℕ → Prop) : Prop :=
   RecDecidable fun t => r t.unpair.1 t.unpair.2.unpair.1 t.unpair.2.unpair.2
 
@@ -472,10 +475,12 @@ equivalence (`REPred.of_iff`). All choice-free. -/
 /-- A unary predicate `p : ℕ → Prop` is **recursively enumerable**: it is the
 projection of a
 recursively decidable relation, `p n ↔ ∃ i, q (Nat.pair i n)`. -/
+@[expose]
 def REPred (p : ℕ → Prop) : Prop :=
   ∃ q : ℕ → Prop, RecDecidable q ∧ ∀ n, p n ↔ ∃ i, q (Nat.pair i n)
 
 /-- A binary relation is recursively enumerable when its `Nat.pair`-coding is. -/
+@[expose]
 def REPred₂ (r : ℕ → ℕ → Prop) : Prop :=
   REPred fun t => r t.unpair.1 t.unpair.2
 
@@ -635,6 +640,7 @@ theorem le_pair_right (a b : ℕ) : b ≤ Nat.pair a b := by
 /-- Encode a list of naturals as a single natural: `[] ↦ 0`, `a :: l ↦ pair a
 (encodeList l) + 1`.
 The `+1` keeps the empty list (code `0`) distinguishable from any nonempty list. -/
+@[expose]
 def encodeList : List ℕ → ℕ
   | [] => 0
   | a :: l => Nat.pair a (encodeList l) + 1

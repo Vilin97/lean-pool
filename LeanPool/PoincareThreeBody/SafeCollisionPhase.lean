@@ -22,7 +22,7 @@ public section
 namespace LeanPool.PoincareThreeBody
 
 /-- An orientation halfway between resonant collision phases. -/
-noncomputable def resonantSafeOrientation (p q : ℕ) : ℝ :=
+@[expose] noncomputable def resonantSafeOrientation (p q : ℕ) : ℝ :=
   resonantCollisionOrientation p q + Real.pi / q
 
 theorem resonantCollisionEccentricity_apoapsis_identity

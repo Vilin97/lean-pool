@@ -33,7 +33,7 @@ namespace TopCat
 
 
 /-- The mapping cylinder of a continuous map `f : X ⟶ Y`. -/
-noncomputable def MapCyl : TopCat.{u} := Limits.pushout f (Cyl.i₀ X)
+@[expose] noncomputable def MapCyl : TopCat.{u} := Limits.pushout f (Cyl.i₀ X)
 
 
 namespace MapCyl

@@ -74,7 +74,7 @@ the exact inner-ball interface consumed by `exists_spacetime_weak_gradient_of_sl
 This is the space-time form of the paper's display (3.5). -/
 
 /-- Existence interface for pressure-gradient slices on symmetric interior parabolic balls. -/
-def symmetricPressureGradientSliceProducer : Prop :=
+@[expose] def symmetricPressureGradientSliceProducer : Prop :=
   ∀ q : ℝ, 5 / 2 < q →
     ∀ {Ω : Set Vec3} {I : Set ℝ}
       {u : ParabolicPoint → Vec3}

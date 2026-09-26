@@ -50,6 +50,7 @@ def BCLearnable (X : Type u) (C : ConceptClass X Bool) : Prop :=
 
 /-- Finite learning: EX-learning where the learner makes at most finitely many
     mind changes and eventually outputs a CORRECT hypothesis. Stronger than EX. -/
+@[expose]
 def FiniteLearnable (X : Type u) (C : ConceptClass X Bool) : Prop :=
   ∃ (L : GoldLearner X Bool),
     ∀ (c : Concept X Bool), c ∈ C →

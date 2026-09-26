@@ -179,6 +179,7 @@ independent product space. -/
     (ν.prod (expMeasure 1) {p : ℝ × ℝ | 0 ≤ p.1 ∧ p.1 < d * p.2})
 
 /-- The probability `P(-cE' ≤ Z < 0)`. -/
+@[expose]
 noncomputable def vProbability (ν : Measure ℝ) (c : ℝ) : ℝ :=
   ENNReal.toReal
     (ν.prod (expMeasure 1) {p : ℝ × ℝ | p.1 < 0 ∧ -c * p.2 ≤ p.1})

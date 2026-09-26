@@ -209,10 +209,13 @@ theorem exists_spaceTimeSet_without_symmetric_ball {ρ : ℝ} (hρ : 0 < ρ) :
     ∃ (Ω : Set Vec3) (I : Set ℝ),
       closure (parabolicCylinder (0 : Vec3) 0 1) ⊆ spaceTimeSet Ω I ∧
       ¬ Metric.ball oneSidedPressureGradientOrigin ρ ⊆ spaceTimeSet Ω I := by
-  refine ⟨_, _,
-    (closure_parabolicCylinder_eq_spaceTimeSet (0 : Vec3) 0 (r := 1) one_pos).subset, ?_⟩
-  rw [← closure_parabolicCylinder_eq_spaceTimeSet (0 : Vec3) 0 (r := 1) one_pos]
+  let Ω : Set Vec3 := {y | vec3EuclideanNorm (y - 0) ≤ 1}
+  let I : Set ℝ := Icc (0 - (1 : ℝ) ^ 2) 0
+  have hEq : closure (parabolicCylinder (0 : Vec3) 0 1) = spaceTimeSet Ω I :=
+    closure_parabolicCylinder_eq_spaceTimeSet (0 : Vec3) 0 (r := 1) one_pos
+  refine ⟨Ω, I, hEq.subset, ?_⟩
+  intro hsub
   exact metricBall_not_subset_closure_parabolicCylinder
-    oneSidedPressureGradientOrigin hρ one_pos
+    oneSidedPressureGradientOrigin hρ one_pos (hEq.symm ▸ hsub)
 
 end CKN.Core.Endgame

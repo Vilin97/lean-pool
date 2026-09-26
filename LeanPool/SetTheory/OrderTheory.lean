@@ -23,7 +23,7 @@ variable {α β : Type*} [ConditionallyCompleteLattice α] [ConditionallyComplet
 /-- The `sInfClosed` declaration. -/
 @[expose] def sInfClosed (S : Set α) := ∀ s ⊆ S, s.Nonempty → BddBelow s → sInf s ∈ S
 /-- The `sSupClosed` declaration. -/
-def sSupClosed (S : Set α) := ∀ s ⊆ S, s.Nonempty → BddAbove s → sSup s ∈ S
+@[expose] def sSupClosed (S : Set α) := ∀ s ⊆ S, s.Nonempty → BddAbove s → sSup s ∈ S
 
 lemma sInfClosed_top : sInfClosed (⊤ : Set α) := by simp [sInfClosed]
 lemma sInfClosed_Ici (x : α) : sInfClosed (Ici x) := fun _ hsub hne _ => le_csInf hne hsub

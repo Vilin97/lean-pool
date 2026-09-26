@@ -380,7 +380,7 @@ theorem weight_pos (k : Frequency) : 0 < weight k := by
   positivity
 
 /-- Polynomially weighted absolute summability of every order. -/
-def Rapid (a : Frequency → ℂ) : Prop :=
+@[expose] def Rapid (a : Frequency → ℂ) : Prop :=
   ∀ p : ℕ, Summable (fun k => weight k ^ p * ‖a k‖)
 
 theorem Rapid.summable_norm {a : Frequency → ℂ} (ha : Rapid a) :
@@ -733,7 +733,8 @@ theorem norm_torusMode (k : Frequency) (z : Torus) : ‖torusMode k z‖ = 1 := 
   simp [torusMode, fourier_apply, Circle.norm_coe]
 
 /-- Torus series, given by `∑' k, a k * torusMode k z`. -/
-def torusSeries (a : Frequency → ℂ) (z : Torus) : ℂ := ∑' k, a k * torusMode k z
+@[expose] def torusSeries (a : Frequency → ℂ) (z : Torus) : ℂ :=
+  ∑' k, a k * torusMode k z
 
 theorem mode_eq_torusMode (k : Frequency) (x : Plane) :
     mode k x = torusMode k ((x.1 : UnitAddCircle), (x.2 : UnitAddCircle)) := by
@@ -1042,7 +1043,7 @@ theorem unitCoeff_of_hasDerivAt {f f' : ℝ → ℂ} {n : ℤ} (hn : n ≠ 0)
     Complex.ofReal_zero, one_mul, zero_sub, hden, one_div, inv_neg, neg_mul_neg] using h
 
 /-- Unit-periodicity in both coordinates, expressed on the universal cover. -/
-def UnitPeriodic (f : Plane → ℂ) : Prop :=
+@[expose] def UnitPeriodic (f : Plane → ℂ) : Prop :=
   ∀ z : Plane, ∀ k : Frequency, f (z + ((k.1 : ℝ), (k.2 : ℝ))) = f z
 
 /-- The genuine first coordinate derivative. -/
@@ -1131,7 +1132,7 @@ theorem coefficient_decay_first {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)
   exact mul_le_mul_of_nonneg_left (coefficient_norm_le k hb) (pow_nonneg (norm_nonneg _) p)
 
 /-- The negative Fourier character on the unit square. -/
-def kernel (k : Frequency) (z : Plane) : ℂ :=
+@[expose] def kernel (k : Frequency) (z : Plane) : ℂ :=
   fourier (-k.1) (z.1 : UnitAddCircle) * fourier (-k.2) (z.2 : UnitAddCircle)
 
 theorem kernel_continuous (k : Frequency) : Continuous (kernel k) :=
@@ -1164,7 +1165,8 @@ theorem integral_square_swap {f : Plane → ℂ} (hf : Continuous f) :
       (Set.prod_mono Ioc_subset_Icc_self Ioc_subset_Icc_self)
 
 /-- Swap function, defined pointwise by `f (z.2, z.1)`. -/
-noncomputable def swapFunction (f : Plane → ℂ) : Plane → ℂ := fun z => f (z.2, z.1)
+@[expose] noncomputable def swapFunction (f : Plane → ℂ) : Plane → ℂ :=
+  fun z => f (z.2, z.1)
 
 theorem swapFunction_smooth {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f) :
     ContDiff ℝ ∞ (swapFunction f) := hf.comp (contDiff_snd.prodMk contDiff_fst)
@@ -1374,7 +1376,7 @@ theorem coefficient_seminorm_bound {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)
 /-! ## Identification with the actual torus Fourier coefficients -/
 
 /-- Torus lift, given by `f ((x.1 : UnitAddCircle), (x.2 : UnitAddCircle))`. -/
-noncomputable def torusLift (f : Torus → ℂ) (x : Plane) : ℂ :=
+@[expose] noncomputable def torusLift (f : Torus → ℂ) (x : Plane) : ℂ :=
   f ((x.1 : UnitAddCircle), (x.2 : UnitAddCircle))
 
 theorem torusLift_periodic (f : Torus → ℂ) : UnitPeriodic (torusLift f) := by

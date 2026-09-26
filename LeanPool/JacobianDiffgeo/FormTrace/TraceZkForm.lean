@@ -50,6 +50,7 @@ variable {h g : ℂ → ℂ} {k : ℕ}
 
 /-- The Jacobian-weighted planar trace atom: divides the `k·v^{k-1}` Jacobian factor of
 `F^*(dz)` back out before applying `RS.MTrace.traceZk`. -/
+@[expose]
 noncomputable def traceZkForm (h : ℂ → ℂ) (k : ℕ) (w : ℂ) : ℂ :=
   RS.MTrace.traceZk (fun v => h v * ((k : ℂ) * v ^ ((k : ℤ) - 1))⁻¹) k w
 

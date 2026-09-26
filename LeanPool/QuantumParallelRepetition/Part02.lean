@@ -194,7 +194,7 @@ def permutationUnitary
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (σ : Equiv.Perm ι) :
     (permutationUnitary σ : Matrix ι ι ℂ) =
-      σ.permMatrix ℂ := rfl
+      σ.permMatrix ℂ := by rfl
 
 theorem localPermutationUnitaryAction_apply
     {n : ℕ} (σ : Equiv.Perm (Fin n))
@@ -6251,7 +6251,7 @@ theorem reindexedMatrixQuadratic
   rw [dotProduct_comm]
 
 /-- The positive operator-valued measurement implementing purification alice. -/
-def purificationAlicePOVM
+@[expose] def purificationAlicePOVM
     {ι d k : Type*} [Fintype ι]
     [Fintype d] [Fintype k] [DecidableEq d] [DecidableEq k]
     (P : POVM ι d) : POVM ι (d × k) where

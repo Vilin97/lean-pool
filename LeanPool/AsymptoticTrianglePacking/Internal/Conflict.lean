@@ -39,6 +39,7 @@ namespace Hypergraph
 variable {V : Type*} [DecidableEq V]
 
 /-- The conflict set of an edge `e`: the other edges of `H` that meet `e`. -/
+@[expose]
 def conflicts (H : Finset (Finset V)) (e : Finset V) : Finset (Finset V) :=
   H.filter (fun f => f ≠ e ∧ (e ∩ f).Nonempty)
 

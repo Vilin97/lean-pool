@@ -99,6 +99,7 @@ variable {V : Type*} [AddCommGroup V] [Module ℚ V]
 
 /-- A quadratic form over `ℚ` is *everywhere locally isotropic* if it is isotropic over every
 completion of `ℚ`: over `ℝ` and over every `p`-adic field `ℚ_[p]`. -/
+@[expose]
 def EverywhereLocallyIsotropic (Q : QuadraticForm ℚ V) : Prop :=
   (∀ (p : ℕ) [Fact (Nat.Prime p)], Isotropic (QuadraticForm.baseChange ℚ_[p] Q)) ∧
     Isotropic (QuadraticForm.baseChange ℝ Q)

@@ -31,7 +31,7 @@ noncomputable def liftedDelaunayMeanAnomalyAlongFlow
   meanAnomaly + time / firstAction ^ 3
 
 /-- Eccentric anomaly along a general lifted Delaunay flow line. -/
-noncomputable def liftedDelaunayEccentricAnomalyAlongFlow
+@[expose] noncomputable def liftedDelaunayEccentricAnomalyAlongFlow
     (firstAction eccentricity meanAnomaly time : ℝ) : ℝ :=
   eccentricAnomaly eccentricity
     (liftedDelaunayMeanAnomalyAlongFlow firstAction meanAnomaly time)
@@ -498,7 +498,7 @@ abbrev InteriorPositiveAction (eccentricity : ℝ) :=
   {action : PositiveAction // action.1 ^ 2 * (1 + eccentricity) < 1}
 
 /-- The interior actions with irrational Kepler frequency. -/
-def irrationalFrequencyInteriorPositiveActions (eccentricity : ℝ) :
+@[expose] def irrationalFrequencyInteriorPositiveActions (eccentricity : ℝ) :
     Set (InteriorPositiveAction eccentricity) :=
   {action | Irrational (1 / action.1.1 ^ 3)}
 

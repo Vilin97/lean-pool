@@ -205,6 +205,7 @@ theorem latentParamsMeasure_apply (μ : Measure ℝ) (M : ℝ)
 
 /-- The resulting genuine kernel mixture of the nondegenerate latent
 component. -/
+@[expose]
 noncomputable def nondegenerateKernelMixture (μ : Measure ℝ) (M : ℝ) :
     Measure ℝ :=
   kernelTwoPointMixture (latentParamsMeasure μ M)
@@ -385,6 +386,7 @@ theorem latentPairMeasure_univ_meanOne
 
 /-- The full kernel mixture: the atom at one plus the nondegenerate latent
 two-point component. -/
+@[expose]
 noncomputable def fullKernelMixture (μ : Measure ℝ) (M : ℝ) : Measure ℝ :=
   μ {1} • Measure.dirac 1 + nondegenerateKernelMixture μ M
 

@@ -77,7 +77,7 @@ structure HeckePair (G : Type*) [Group G] where
   h₁ : Δ ≤ (commensurator H).toSubmonoid
 
 /-- Two elements of `Δ` define the same double coset `HgH = HhH`. -/
-def dcRel (P : HeckePair G) (g h : P.Δ) : Prop :=
+@[expose] def dcRel (P : HeckePair G) (g h : P.Δ) : Prop :=
   DoubleCoset.doubleCoset (g : G) P.H P.H = DoubleCoset.doubleCoset (h : G) P.H P.H
 
 /-- The setoid on `Δ` identifying elements with the same double coset. -/
@@ -101,7 +101,7 @@ instance lcSetoid (P : HeckePair G) : Setoid P.Δ where
   iseqv := ⟨fun _ => rfl, Eq.symm, Eq.trans⟩
 
 /-- A Hecke left coset: an equivalence class of `Δ`-elements under `gH = hH`. -/
-def HeckeLeftCoset (P : HeckePair G) := Quotient (lcSetoid P)
+@[expose] def HeckeLeftCoset (P : HeckePair G) := Quotient (lcSetoid P)
 
 noncomputable instance (P : HeckePair G) : DecidableEq (HeckeLeftCoset P) := Classical.decEq _
 
@@ -124,7 +124,7 @@ lemma eq_iff (g h : P.Δ) : (⟦g⟧ : HeckeCoset P) = ⟦h⟧ ↔
 
 /-- The carrier set of `⟦g⟧` is definitionally `HgH`. -/
 @[simp] lemma toSet_mk (g : P.Δ) :
-    HeckeCoset.toSet (⟦g⟧ : HeckeCoset P) = DoubleCoset.doubleCoset (g : G) P.H P.H := rfl
+    HeckeCoset.toSet (⟦g⟧ : HeckeCoset P) = DoubleCoset.doubleCoset (g : G) P.H P.H := by rfl
 
 /-- Membership in `toSet ⟦g⟧` is membership in the double coset `HgH`. -/
 lemma mem_toSet_mk (g : P.Δ) (x : G) :

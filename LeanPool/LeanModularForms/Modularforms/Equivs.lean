@@ -50,10 +50,10 @@ def succEquiv : ℤ ≃ ℤ where
 
 
 /-- Swaps the two entries of a length-2 vector. -/
-def swap {α : Type*} : (Fin 2 → α) → (Fin 2 → α) := fun x => ![x 1, x 0]
+@[expose] def swap {α : Type*} : (Fin 2 → α) → (Fin 2 → α) := fun x => ![x 1, x 0]
 
 @[simp]
-lemma swap_apply {α : Type*} (b : Fin 2 → α) : swap b = ![b 1, b 0] := rfl
+lemma swap_apply {α : Type*} (b : Fin 2 → α) : swap b = ![b 1, b 0] := by rfl
 
 lemma swap_involutive {α : Type*} (b : Fin 2 → α) : swap (swap b) = b := by
   ext i

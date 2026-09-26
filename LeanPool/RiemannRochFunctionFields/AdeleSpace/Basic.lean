@@ -37,6 +37,7 @@ local instance instDecidableEqPlaceAAdele : DecidableEq (PlaceA k K) := Classica
 
 /-- The `k`-submodule of the full product consisting of tuples integral at all but finitely many
 places. -/
+@[expose]
 def adeleSubmodule : Submodule k (PlaceA k K → K) where
   carrier := {α | ∀ᶠ v in cofinite, α v ∈ placeValuationSubring k K v}
   zero_mem' := by simp
@@ -110,6 +111,7 @@ valuation at most `WithZero.exp (D v)`. -/
   ∀ v, placeValuation k K v (α.val v) ≤ WithZero.exp (D v)
 
 /-- The filtration piece `A(D)` of the adele space. -/
+@[expose]
 def adeleFilt (D : DivisorA k K) : Submodule k (AdeleSpace k K) where
   carrier := {a | memAdeleFilt k K D a}
   zero_mem' := fun v => by simp
@@ -136,6 +138,7 @@ def adeleFilt (D : DivisorA k K) : Submodule k (AdeleSpace k K) where
   map_smul' _ _ := rfl
 
 /-- The image `diag(K)` of the diagonal embedding. -/
+@[expose]
 def diagonalSubmodule : Submodule k (AdeleSpace k K) := LinearMap.range (diagonal k K)
 
 theorem adeleFilt_inf_diagonal (D : DivisorA k K) :
@@ -160,6 +163,7 @@ def adeleFiltWithin (D D' : DivisorA k K) :
   Submodule.comap (adeleFilt k K D').subtype (adeleFilt k K D)
 
 /-- Finite-rank increment `finrank k (A(D') ⧸ A(D))`. -/
+@[expose]
 noncomputable def finrankAdeleFiltDiff (D D' : DivisorA k K) : ℕ := by
   letI : AddCommGroup (adeleFilt k K D') := Submodule.addCommGroup _
   letI : Module k (adeleFilt k K D') := Submodule.module _
@@ -168,6 +172,7 @@ noncomputable def finrankAdeleFiltDiff (D D' : DivisorA k K) : ℕ := by
       Submodule.comap (adeleFilt k K D').subtype (adeleFilt k K D)
 
 /-- Rank of `(A(D') + diag(K)) ⧸ (A(D) + diag(K))` from the sandwich bookkeeping. -/
+@[expose]
 noncomputable def sandwichRank (D D' : DivisorA k K) : ℤ :=
   by
   letI : AddCommGroup (adeleFilt k K D' + diagonalSubmodule k K) :=

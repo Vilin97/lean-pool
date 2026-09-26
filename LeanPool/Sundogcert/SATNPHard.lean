@@ -67,7 +67,7 @@ abbrev Clause (n : ℕ) := Fin 3 → Literal n
 abbrev Formula (n m : ℕ) := Fin m → Clause n
 
 /-- A formula is satisfied iff every clause is. -/
-def formulaSat {n m : ℕ} (a : Assignment n) (f : Formula n m) : Prop :=
+@[expose] def formulaSat {n m : ℕ} (a : Assignment n) (f : Formula n m) : Prop :=
   ∀ k : Fin m, clauseSat a (f k)
 
 /-- **3-SAT**: a formula is satisfiable iff some assignment satisfies it. -/
@@ -97,7 +97,7 @@ instance {n m : ℕ} (f : Formula n m) : Decidable (Satisfiable f) :=
     `a 0 = true`).  `∃` ranges over the 4 assignments of `Fin 2 → Bool` — decidable. -/
 
 /-- The single satisfiable clause `x₀ ∨ x₁ ∨ x₀`. -/
-def cSat : Clause 2 := ![(0, true), (1, true), (0, true)]
+@[expose] def cSat : Clause 2 := ![(0, true), (1, true), (0, true)]
 
 /-- The satisfiable formula with one clause. -/
 def fSat : Formula 2 1 := ![cSat]

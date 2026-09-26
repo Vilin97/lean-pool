@@ -95,14 +95,15 @@ noncomputable def adeleEquivChart : AdeleSpace k K ≃ₗ[k] Chart.AdeleSpace k 
 @[simp]
 theorem adeleEquivChart_apply (a : AdeleSpace k K) (w : PlaceA k K) :
     (adeleEquivChart k K a).1 w = a.1 (chartToPlace k K w) :=
-  rfl
+  by rfl
 
 @[simp]
 theorem adeleEquivChart_symm_apply (a : Chart.AdeleSpace k K) (v : Place k K) :
     ((adeleEquivChart k K).symm a).1 v = a.1 ((chartToPlace k K).symm v) :=
-  rfl
+  by rfl
 
 /-- Pointwise multiplication of an intrinsic adele by an element of `K`. -/
+@[expose]
 def smulAdele (x : K) (a : AdeleSpace k K) : AdeleSpace k K :=
   ⟨fun v => x * a.1 v, (eventually_mem_place k K x).and a.property |>.mono
     fun _ h => mul_mem h.1 h.2⟩

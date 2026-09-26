@@ -34,13 +34,15 @@ namespace NavierStokesR3.SchwartzCompactApproximation
 open ProblemStatement ComparisonCutoffs
 
 /-- Multiplication by a compactly supported smooth cutoff. -/
-def truncate (ψ : SchwartzMap Space ℂ) (R : ℝ) (hR : 0 < R) : SchwartzMap Space ℂ :=
+@[expose] def truncate (ψ : SchwartzMap Space ℂ) (R : ℝ) (hR : 0 < R) :
+    SchwartzMap Space ℂ :=
   CompactSchwartz.ofCompactSupport (fun x => cutoff R x • ψ x)
     ((cutoff_smooth R).smul (ψ.smooth ⊤))
     (cutoff_hasCompactSupport hR).smul_right
 
 @[simp] theorem truncate_apply (ψ : SchwartzMap Space ℂ) (R : ℝ) (hR : 0 < R)
-    (x : Space) : truncate ψ R hR x = cutoff R x • ψ x := rfl
+    (x : Space) : truncate ψ R hR x = cutoff R x • ψ x := by
+  exact CompactSchwartz.ofCompactSupport_apply _ _ _ x
 
 theorem truncate_hasCompactSupport (ψ : SchwartzMap Space ℂ) (R : ℝ) (hR : 0 < R) :
     HasCompactSupport (truncate ψ R hR : Space → ℂ) := by
@@ -189,11 +191,12 @@ theorem seminorm_truncate_sub_le (ψ : SchwartzMap Space ℂ) {R : ℝ}
   exact truncate_error_weighted_le ψ hR hRone k m
 
 /-- A sequence of compactly supported smooth approximations. -/
-def approximate (ψ : SchwartzMap Space ℂ) (n : ℕ) : SchwartzMap Space ℂ :=
+@[expose] def approximate (ψ : SchwartzMap Space ℂ) (n : ℕ) : SchwartzMap Space ℂ :=
   truncate ψ ((n : ℝ) + 1) (by positivity)
 
 @[simp] theorem approximate_apply (ψ : SchwartzMap Space ℂ) (n : ℕ) (x : Space) :
-    approximate ψ n x = cutoff ((n : ℝ) + 1) x • ψ x := rfl
+    approximate ψ n x = cutoff ((n : ℝ) + 1) x • ψ x := by
+  exact truncate_apply ψ _ _ x
 
 theorem approximate_hasCompactSupport (ψ : SchwartzMap Space ℂ) (n : ℕ) :
     HasCompactSupport (approximate ψ n : Space → ℂ) :=

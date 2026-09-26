@@ -111,6 +111,7 @@ single
 neighbourhood `Δ = univ`. Its domain `|𝟙|` has exactly one element (`⊥ = {Δ}`), so
 `𝟙` is the
 *product of no factors*. -/
+@[expose]
 def unitSys : NeighborhoodSystem Unit where
   mem X := X = Set.univ
   master := Set.univ

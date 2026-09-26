@@ -374,7 +374,7 @@ private lemma partsVerifiesVariantNodeB_transform (symmetry : Fin 6) (swap : Boo
                   partsTransformColor_involutive]
 
 /-- One of the 432 symmetry-expanded certificates passes the checker. -/
-def PartsCertificateVariantVerifies (base : Fin 36) (symmetry : Fin 6)
+@[expose] def PartsCertificateVariantVerifies (base : Fin 36) (symmetry : Fin 6)
     (swap : Bool) : Prop :=
   let certificate := partsBaseCertificate base
   PartsVerifiesVariantNodeB symmetry swap certificate.nodes

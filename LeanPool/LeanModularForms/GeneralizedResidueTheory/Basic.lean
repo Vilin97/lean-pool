@@ -49,7 +49,7 @@ instance : CoeFun PiecewiseC1Curve fun _ => ℝ → ℂ where
   coe := PiecewiseC1Curve.toFun
 
 /-- A closed curve has γ(a) = γ(b). -/
-def PiecewiseC1Curve.IsClosed (γ : PiecewiseC1Curve) : Prop :=
+@[expose] def PiecewiseC1Curve.IsClosed (γ : PiecewiseC1Curve) : Prop :=
   γ.toFun γ.a = γ.toFun γ.b
 
 /-- A piecewise C¹ immersion: a piecewise C¹ curve with nonzero derivative. -/
@@ -83,7 +83,7 @@ theorem cauchyPrincipalValueIntegrand'_of_le {f : ℂ → ℂ} {γ : ℝ → ℂ
     ∫ t in a..b, if ‖γ t - z₀‖ > ε then f (γ t) * deriv γ t else 0
 
 /-- The Cauchy principal value exists if the limit exists. -/
-def CauchyPrincipalValueExists' (f : ℂ → ℂ) (γ : ℝ → ℂ)
+@[expose] def CauchyPrincipalValueExists' (f : ℂ → ℂ) (γ : ℝ → ℂ)
     (a b : ℝ) (z₀ : ℂ) : Prop :=
   ∃ L : ℂ, Tendsto (fun ε =>
     ∫ t in a..b, if ‖γ t - z₀‖ > ε then f (γ t) * deriv γ t else 0)
@@ -103,7 +103,7 @@ def CurvesHomotopic (Γ γ : ℝ → ℂ) (a b : ℝ) : Prop :=
     (∀ s ∈ Icc (0 : ℝ) 1, H (a, s) = H (a, 0) ∧ H (b, s) = H (b, 0))
 
 /-- Homotopy avoiding a point z₀. -/
-def CurvesHomotopicAvoiding (Γ γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) : Prop :=
+@[expose] def CurvesHomotopicAvoiding (Γ γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) : Prop :=
   ∃ H : ℝ × ℝ → ℂ,
     Continuous H ∧
     (∀ t ∈ Icc a b, H (t, 0) = Γ t) ∧

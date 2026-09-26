@@ -29,7 +29,7 @@ noncomputable section
 def G₂ : ℍ → ℂ := EisensteinSeries.G2
 
 /-- Compatibility alias for Mathlib's `EisensteinSeries.E2`. -/
-def E₂ : ℍ → ℂ := EisensteinSeries.E2
+@[expose] def E₂ : ℍ → ℂ := EisensteinSeries.E2
 
 /-- Compatibility alias for Mathlib's `EisensteinSeries.D2`. -/
 def D₂ (γ : SL(2, ℤ)) : ℍ → ℂ := EisensteinSeries.D2 γ

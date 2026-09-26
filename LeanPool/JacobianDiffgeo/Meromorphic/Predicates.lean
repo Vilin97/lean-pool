@@ -47,6 +47,7 @@ theorem meromorphicOnX_univ : MeromorphicOnX f univ ↔ ∀ x, MeromorphicAtX f 
   simp [MeromorphicOnX]
 
 /-- CC3 (frozen): the order at `x`, `WithTop ℤ`-valued, junk `0` off meromorphy. -/
+@[expose]
 noncomputable def ordAtX (f : X → ℂ) (x : X) : WithTop ℤ :=
   meromorphicOrderAt (f ∘ (chartAt ℂ x).symm) (chartAt ℂ x x)
 

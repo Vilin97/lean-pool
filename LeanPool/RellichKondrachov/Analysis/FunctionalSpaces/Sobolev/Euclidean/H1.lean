@@ -170,7 +170,7 @@ private lemma toL2_smul (c : ℝ) (f : ↥(C1c (E := E))) :
   simp [Pi.smul_apply, hxsmul, hxf]
 
 /-- Linear map sending `C¹_c` functions to their `L²` classes. -/
-noncomputable def toL2Linear : ↥(C1c (E := E)) →ₗ[ℝ] L2ℝ (μ := μ) where
+@[expose] noncomputable def toL2Linear : ↥(C1c (E := E)) →ₗ[ℝ] L2ℝ (μ := μ) where
   toFun := toL2 (μ := μ) (E := E)
   map_add' := by exact toL2_add (μ := μ) (E := E)
   map_smul' := by exact toL2_smul (μ := μ) (E := E)
@@ -231,7 +231,7 @@ private lemma toL2Grad_smul (c : ℝ) (f : ↥(C1c (E := E))) :
       simpa [Pi.smul_apply] using hxsmul.symm
 
 /-- Linear map sending `C¹_c` functions to the `L²` class of their gradient. -/
-noncomputable def toL2GradLinear : ↥(C1c (E := E)) →ₗ[ℝ] L2E (μ := μ) where
+@[expose] noncomputable def toL2GradLinear : ↥(C1c (E := E)) →ₗ[ℝ] L2E (μ := μ) where
   toFun := toL2Grad (μ := μ) (E := E)
   map_add' := by exact toL2Grad_add (μ := μ) (E := E)
   map_smul' := by exact toL2Grad_smul (μ := μ) (E := E)

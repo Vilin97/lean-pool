@@ -85,7 +85,7 @@ theorem bestDenom_pos (hr : RecordsContinue r) (n : ℕ) : 1 ≤ bestDenom r hr 
 
 /-- The defining unfolding of `bestDenom` at a successor (with the positivity proof discharged). -/
 theorem bestDenom_succ (hr : RecordsContinue r) (n : ℕ) :
-    bestDenom r hr (n + 1) = Nat.find (hr (bestDenom r hr n) (bestDenom_pos r hr n)) := rfl
+    bestDenom r hr (n + 1) = Nat.find (hr (bestDenom r hr n) (bestDenom_pos r hr n)) := by rfl
 
 /-- Each best-approximation denominator is strictly larger than the previous. -/
 theorem bestDenom_lt (hr : RecordsContinue r) (n : ℕ) :

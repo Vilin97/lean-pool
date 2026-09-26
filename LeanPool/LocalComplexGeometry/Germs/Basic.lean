@@ -40,7 +40,7 @@ abbrev FunctionGerm (n : ℕ) :=
   Filter.Germ (𝓝 (0 : ComplexEuclidean n)) ℂ
 
 /-- Function germs which have a representative analytic at the origin. -/
-def holomorphicGermSubring (n : ℕ) : Subring (FunctionGerm n) where
+@[expose] def holomorphicGermSubring (n : ℕ) : Subring (FunctionGerm n) where
   carrier := {φ | ∃ f : ComplexEuclidean n → ℂ,
     AnalyticAt ℂ f 0 ∧ (f : FunctionGerm n) = φ}
   zero_mem' := ⟨0, analyticAt_const, rfl⟩

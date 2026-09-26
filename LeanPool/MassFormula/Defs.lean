@@ -100,7 +100,7 @@ for `L` infinite over `K`. -/
 
 /-- `L` / `K` is *totally ramified* when its ramification index equals its degree
 `Module.finrank K ↥L` ([Serre 1978, p.1031][Serre1978]). -/
-def IsTotallyRamified (L : IntermediateField K (SeparableClosure K)) : Prop :=
+@[expose] def IsTotallyRamified (L : IntermediateField K (SeparableClosure K)) : Prop :=
   ramificationIdx L = Module.finrank K ↥L
 
 variable (K)
@@ -108,7 +108,7 @@ variable (K)
 /-- The set of subextensions `L` of `SeparableClosure K` that are totally ramified over `K` and
 satisfy `Module.finrank K ↥L = n` ([Serre 1978, p.1031][Serre1978]). For `n = 0` the set is junk
 (the paper takes `1 ≤ n`), which is why every main theorem assumes `0 < n`. -/
-def sigma (n : ℕ) : Set (IntermediateField K (SeparableClosure K)) :=
+@[expose] def sigma (n : ℕ) : Set (IntermediateField K (SeparableClosure K)) :=
   {L | Module.finrank K ↥L = n ∧ IsTotallyRamified L}
 
 variable {K}
@@ -132,7 +132,7 @@ noncomputable def discIdeal (L : IntermediateField K (SeparableClosure K)) : Ide
 
 /-- The valuation of the discriminant of `L` over `K`: the multiplicity of the maximal ideal `𝓂[K]`
 in `discIdeal L`, in the monoid of ideals of `𝒪[K]` ([Serre 1978, p.1031][Serre1978]). -/
-noncomputable def d (L : IntermediateField K (SeparableClosure K)) : ℕ :=
+@[expose] noncomputable def d (L : IntermediateField K (SeparableClosure K)) : ℕ :=
   multiplicity 𝓂[K] (discIdeal L)
 
 /-- `c L` is `d L - n + 1`, where `n` is the degree `Module.finrank K ↥L`, written in the

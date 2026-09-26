@@ -172,7 +172,7 @@ theorem graphRealization_image_isOpen_of_saturated
   exact hopen
 
 /-- The characteristic path of the interval cell associated to an edge. -/
-def graphEdgePath {V : Type u} [Quiver.{u} V] (e : Quiver.Total V) :
+@[expose] def graphEdgePath {V : Type u} [Quiver.{u} V] (e : Quiver.Total V) :
     C(I, graphRealization V) where
   toFun t := graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge e, t⟩)
   continuous_toFun :=
@@ -207,7 +207,7 @@ theorem continuous_graphEdgePath {V : Type u} [Quiver.{u} V] (e : Quiver.Total V
   (graphEdgePath e).continuous
 
 /-- The interval cell, regarded as a path from the source to the target. -/
-def graphRealizationForwardPath {V : Type u} [Quiver.{u} V]
+@[expose] def graphRealizationForwardPath {V : Type u} [Quiver.{u} V]
     {a b : V} (e : a ⟶ b) :
     Path (graphVertex a) (graphVertex b) where
   toContinuousMap := graphEdgePath ⟨a, b, e⟩
@@ -364,7 +364,7 @@ theorem graphRealizationPreMap_eqvGen {V W : Type u} [Quiver.{u} V]
   | trans x y z hxy hyz ihxy ihyz => exact Relation.EqvGen.trans _ _ _ ihxy ihyz
 
 /-- The continuous map of graph realizations induced by a quiver prefunctor. -/
-def graphRealizationMap {V W : Type u} [Quiver.{u} V] [Quiver.{u} W]
+@[expose] def graphRealizationMap {V W : Type u} [Quiver.{u} V] [Quiver.{u} W]
     (F : V ⥤q W) : graphRealization V → graphRealization W := by
   let f : graphRealizationPre V → graphRealization W :=
     fun x => graphRealizationQuotient (graphRealizationPreMap F x)

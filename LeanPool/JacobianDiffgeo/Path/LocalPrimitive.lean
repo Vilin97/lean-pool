@@ -51,6 +51,7 @@ variable {α : Type*} [TopologicalSpace α]
 /-- `F` is a primitive of the 1-form `η` along the map `K` on `s`: near every `a ∈ s`
 (within `s`), `F` factors as `g ∘ e ∘ K` for a chart `e` at `K a` and a planar local
 primitive `g` of the chart coefficient of `η`. -/
+@[expose]
 def IsPrimitiveAlongMap (K : α → X) (η : Form1 X) (F : α → ℂ) (s : Set α) : Prop :=
   ∀ a ∈ s, ∃ e : OpenPartialHomeomorph X ℂ, e ∈ maximalAtlas 𝓘(ℂ) ω X ∧ K a ∈ e.source ∧
     ∃ g : ℂ → ℂ, (∀ᶠ z in 𝓝 (e (K a)), HasDerivAt g (coeffIn e η z) z) ∧

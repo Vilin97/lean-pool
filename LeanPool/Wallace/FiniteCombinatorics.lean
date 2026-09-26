@@ -284,7 +284,7 @@ def HasMixedRelation (Q : ℕ) (A Y : Finset G) : Prop :=
       (∑ a ∈ A, b a • a) + ∑ y ∈ Y, c y • y = 0
 
 /-- No nontrivial relation of coefficient height at most `Q` uses both `A` and `Y`. -/
-def MixedRelationFree (Q : ℕ) (A Y : Finset G) : Prop :=
+@[expose] def MixedRelationFree (Q : ℕ) (A Y : Finset G) : Prop :=
   ¬ HasMixedRelation Q A Y
 
 theorem mixedRelationFree_empty (Q : ℕ) (A : Finset G) :

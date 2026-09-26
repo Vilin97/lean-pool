@@ -67,23 +67,28 @@ variable {α : Type*}
 /-- `0X = {([], a) ∣ a ∈ X}`: the `0`-tagged copy of a `D`-neighbourhood `X`
 (empty
 `{1,2}`-path). -/
+@[expose]
 def embZero (X : Set α) : Set (List Bool × α) := {t | t.1 = [] ∧ t.2 ∈ X}
 
 /-- `1P = {(1::p, a) ∣ (p, a) ∈ P}`: the `1`-prefixed copy of a
 `D^§`-neighbourhood `P`. -/
+@[expose]
 def embL (P : Set (List Bool × α)) : Set (List Bool × α) :=
   {t | ∃ p', t.1 = true :: p' ∧ (p', t.2) ∈ P}
 
 /-- `2Q = {(2::q, a) ∣ (q, a) ∈ Q}`: the `2`-prefixed copy of a
 `D^§`-neighbourhood `Q`. -/
+@[expose]
 def embR (Q : Set (List Bool × α)) : Set (List Bool × α) :=
   {t | ∃ q', t.1 = false :: q' ∧ (q', t.2) ∈ Q}
 
 /-- `1P ∪ 2Q`: the product-style neighbourhood of `D^§`. -/
+@[expose]
 def embPair (P Q : Set (List Bool × α)) : Set (List Bool × α) := embL P ∪ embR Q
 
 /-- The master neighbourhood `Γ = {1,2}* 0 Δ` of `D^§`: any path, `D`-token in
 `Δ`. -/
+@[expose]
 def Gamma (D : NeighborhoodSystem α) : Set (List Bool × α) := {t | t.2 ∈ D.master}
 
 @[simp] theorem mem_embZero {X : Set α} {p : List Bool} {a : α} :
@@ -283,6 +288,7 @@ theorem memS_inter {D : NeighborhoodSystem α} (hD : ∀ X, D.mem X → X.Nonemp
 /-- **Example 6.1 (Scott 1981, PRG-19).** The *tree algebra* `D^§`: a
 neighbourhood system over
 `Γ = {1,2}* 0 Δ`, under the standing assumption `∅ ∉ 𝒟` (`hD`). -/
+@[expose]
 def Dsharp (D : NeighborhoodSystem α) (hD : ∀ X, D.mem X → X.Nonempty) :
     NeighborhoodSystem (List Bool × α) where
   mem := MemS D
@@ -295,7 +301,7 @@ def Dsharp (D : NeighborhoodSystem α) (hD : ∀ X, D.mem X → X.Nonempty) :
     {W : Set (List Bool × α)} : (Dsharp D hD).mem W ↔ MemS D W := Iff.rfl
 
 @[simp] theorem Dsharp_master {D : NeighborhoodSystem α} {hD : ∀ X, D.mem X → X.Nonempty} :
-    (Dsharp D hD).master = Gamma D := rfl
+    (Dsharp D hD).master = Gamma D := by rfl
 
 /-! ### Inversion lemmas for `D^§`-neighbourhoods.
 

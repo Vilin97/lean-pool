@@ -72,7 +72,7 @@ def toSection (x : X) : TangentSpace 𝓘(ℂ) x →L[ℂ] Bundle.Trivial X ℂ 
 theorem evalC_toSection (x : X) (w : ℂ) :
     evalC D.toSection x w =
       D.coeff (D.idx x) (D.chart (D.idx x) x) *
-        tangentCoord (mfderiv 𝓘(ℂ) 𝓘(ℂ) (D.chart (D.idx x)) x w) := rfl
+        tangentCoord (mfderiv 𝓘(ℂ) 𝓘(ℂ) (D.chart (D.idx x)) x w) := by rfl
 
 /-- **Master computation**: in any maximal-atlas chart `e'`, at a target point `z` whose base
 point lies in the `i`-th chart, the raw coefficient of `D.toSection` is the `i`-th coefficient

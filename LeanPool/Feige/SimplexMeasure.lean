@@ -76,6 +76,7 @@ theorem simplexK_le_one (y : ι → ℝ) : simplexK y ≤ 1 := by
 
 /-- The precise `α = 0` simplex centroid-halfspace conclusion used by the
 `δ = 1` geometric estimate in §2.2. -/
+@[expose]
 def SimplexCentroidHalfspaceProperty : Prop :=
   ∀ y : ι → ℝ,
     (∀ i, 0 ≤ y i) →

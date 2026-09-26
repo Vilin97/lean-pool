@@ -227,6 +227,7 @@ theorem coe_mul (G K : Gate n) :
       = (G : HilbertOperator n) * (K : HilbertOperator n) := by rfl
 
 /-- Conjugate transpose of a unitary gate, again as a gate. -/
+@[expose]
 def conjTranspose (G : Gate n) : Gate n :=
   ofUnitary ((G : HilbertOperator n).conjTranspose) (by
     rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose,
@@ -245,6 +246,7 @@ theorem coe_conjTranspose (G : Gate n) :
   HilbertOperator.applyVec (G : HilbertOperator n) ψ
 
 /-- A gate evolves a pure state to a pure state. -/
+@[expose]
 def apply (G : Gate n) (ψ : PureState n) : PureState n :=
   PureState.ofVec (G.applyVec (ψ : StateVector n)) (by
     change ‖HilbertOperator.applyVec (G : HilbertOperator n) (ψ : StateVector n)‖ = 1

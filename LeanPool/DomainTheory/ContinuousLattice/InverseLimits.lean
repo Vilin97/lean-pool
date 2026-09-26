@@ -387,7 +387,7 @@ theorem iComp_monotone (n m : ℕ) : Monotone (fun x : D n => iComp D P n x m) :
 /-- The embedding `i_{n∞} : Dₙ → D_∞` as a bare function into the inverse limit. -/
 def embInfFun (n : ℕ) (x : D n) : InverseLimit D P := ⟨iComp D P n x, iComp_compatible D P n x⟩
 
-@[simp] theorem embInfFun_coe (n : ℕ) (x : D n) : (embInfFun D P n x).1 = iComp D P n x := rfl
+@[simp] theorem embInfFun_coe (n : ℕ) (x : D n) : (embInfFun D P n x).1 = iComp D P n x := by rfl
 
 theorem embInf_monotone (n : ℕ) : Monotone (embInfFun D P n) := by
   intro x x' hxx
@@ -557,7 +557,7 @@ def coconeInf (f : ∀ n, ScottMap (D n) D') (x : InverseLimit D P) : D' :=
   ⨆ n, f n (x.1 n)
 
 theorem coconeInf_apply (f : ∀ n, ScottMap (D n) D') (x : InverseLimit D P) :
-    coconeInf D P f x = ⨆ n, f n (x.1 n) := rfl
+    coconeInf D P f x = ⨆ n, f n (x.1 n) := by rfl
 
 /-- Climbing then applying `f` is constant: `f_m(i_{m-1}…iₙ x) = fₙ(x)`. -/
 theorem coconeInf_climb (f : ∀ n, ScottMap (D n) D')

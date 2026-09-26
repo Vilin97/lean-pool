@@ -29,8 +29,7 @@ structure Rose (A : Type u) : Type u where
 namespace Rose
 
 /-- The fold operation over trees. -/
-@[simp]
-@[expose] def fold (f : A → List B → B) : Rose A → B
+@[simp, expose] def fold (f : A → List B → B) : Rose A → B
   | ⟨x, xs⟩ => f x (xs.map (fold f))
 
 /-- Grafts a tree to every sub-node in a `Rose` tree. -/

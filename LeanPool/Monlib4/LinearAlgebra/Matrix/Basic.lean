@@ -380,7 +380,7 @@ lemma _root_.Matrix.smul_one_eq_one_iff {𝕜 n : Type*} [DecidableEq n] [Field 
     · simp_all
 
 /-- A linear equivalence of `R^n` gives an invertible matrix. -/
-@[reducible]
+@[expose, reducible]
 def LinearEquiv.toInvertibleMatrix {n R : Type _} [CommSemiring R]
     [Fintype n] [DecidableEq n] (x : (n → R) ≃ₗ[R] n → R) :
     Invertible (LinearMap.toMatrix' (x : (n → R) →ₗ[R] n → R)) := by

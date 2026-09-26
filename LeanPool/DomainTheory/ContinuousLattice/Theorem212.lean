@@ -97,7 +97,7 @@ supremum corrected by `e`; the rest follows from `completeLatticeOfSup`. -/
 /-- The ambient supremum corrected by `e` is the supremum in `IdemFix e`. -/
 theorem coe_sSup (hidem : ∀ x, e (e x) = e x) (hmono : Monotone e) (S : Set (IdemFix e)) :
     letI := completeLattice hidem hmono
-    ((sSup S : IdemFix e) : L) = e (sSup (Subtype.val '' S)) := rfl
+    ((sSup S : IdemFix e) : L) = e (sSup (Subtype.val '' S)) := by rfl
 
 end IdemFix
 

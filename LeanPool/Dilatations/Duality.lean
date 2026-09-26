@@ -212,7 +212,7 @@ theorem Cocenter.Upsilon_isSigmaRegular (co : Cocenter C) :
 `Θ` post-composed with `G.rightOp`. This is the key bridge letting factorizations through
 `Codila co` be transported to (and from) factorizations through `Dila (co.toCenterOp)`. -/
 lemma Cocenter.comp_Upsilon_op (co : Cocenter C) (G : Codila co ⥤ D) :
-    (co.Upsilon ⋙ G).op = CatToDila (co.toCenterOp) ⋙ G.rightOp := rfl
+    (co.Upsilon ⋙ G).op = CatToDila (co.toCenterOp) ⋙ G.rightOp := by rfl
 
 /-- `ImageCenterMorphismProperty` for `(co.toCenterOp, F.op)` is exactly the `.op` of
 `ImageCenterMorphismProperty` for `(co.toCenter, F)`. -/

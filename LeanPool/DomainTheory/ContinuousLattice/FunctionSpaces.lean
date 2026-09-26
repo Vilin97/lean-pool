@@ -159,6 +159,7 @@ theorem preservesDirectedSup_comp {f : D' → D''} {g : D → D'} (hf : Preserve
   exact (Set.image_comp f g S).symm
 
 /-- Composition of Scott-continuous maps. -/
+@[expose]
 def comp (f : ScottMap D' D'') (g : ScottMap D D') : ScottMap D D'' :=
   ⟨f ∘ g, continuous_of_preservesDirectedSup (preservesDirectedSup_comp
     ((proposition_2_5 (Subtype.val f)).mp f.property)

@@ -27,7 +27,7 @@ variable {α : Type _}
   Finset.image OrderDual.toDual S
 
 /-- The image of a finset of order-dual elements back under `ofDual`. -/
-protected def Finset.ofMirror [LinearOrder α] (S : Finset αᵒᵈ) : Finset α :=
+@[expose] protected def Finset.ofMirror [LinearOrder α] (S : Finset αᵒᵈ) : Finset α :=
   Finset.image OrderDual.ofDual S
 
 namespace List
@@ -37,7 +37,7 @@ namespace List
   (List.map OrderDual.toDual l).reverse
 
 /-- Recover a list from its mirror in the order dual. -/
-protected def ofMirror (l : List αᵒᵈ) : List α :=
+@[expose] protected def ofMirror (l : List αᵒᵈ) : List α :=
   (List.map OrderDual.ofDual l).reverse
 
 variable (R : α → α → α → Prop)

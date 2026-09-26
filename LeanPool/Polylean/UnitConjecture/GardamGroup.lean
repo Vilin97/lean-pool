@@ -83,17 +83,13 @@ namespace Q
 /-! The elements of the Klein Four group `Q`. -/
 
 /-- The identity element of `Q`. -/
-@[match_pattern]
-@[expose] def e : Q := (⟨0, by decide⟩, ⟨0, by decide⟩)
+@[expose, match_pattern] def e : Q := (⟨0, by decide⟩, ⟨0, by decide⟩)
 /-- The first generator of `Q`. -/
-@[match_pattern]
-@[expose] def a : Q := (⟨1, by decide⟩, ⟨0, by decide⟩)
+@[expose, match_pattern] def a : Q := (⟨1, by decide⟩, ⟨0, by decide⟩)
 /-- The second generator of `Q`. -/
-@[match_pattern]
-@[expose] def b : Q := (⟨0, by decide⟩, ⟨1, by decide⟩)
+@[expose, match_pattern] def b : Q := (⟨0, by decide⟩, ⟨1, by decide⟩)
 /-- The product of the first two generators of `Q`. -/
-@[match_pattern]
-@[expose] def c : Q := (⟨1, by decide⟩, ⟨1, by decide⟩)
+@[expose, match_pattern] def c : Q := (⟨1, by decide⟩, ⟨1, by decide⟩)
 
 end Q
 

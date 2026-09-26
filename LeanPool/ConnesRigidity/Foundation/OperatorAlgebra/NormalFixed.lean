@@ -170,7 +170,7 @@ def normalFixedRepresentation :
     (g : G) (x : normalFixedSubmodule N π) :
     ((normalFixedRepresentation N π g :
       normalFixedSubmodule N π →L[ℂ] normalFixedSubmodule N π) x : K) =
-      (π g : K →L[ℂ] K) (x : K) := rfl
+      (π g : K →L[ℂ] K) (x : K) := by rfl
 
 theorem normalFixedRepresentation_apply_eq_one
     (n : G) (hn : n ∈ N) : normalFixedRepresentation N π n = 1 := by
@@ -191,7 +191,7 @@ theorem normalFixedQuotientRepresentation_apply_mk
     (g : G) (x : normalFixedSubmodule N π) :
     ((normalFixedQuotientRepresentation N π (QuotientGroup.mk' N g) :
       normalFixedSubmodule N π →L[ℂ] normalFixedSubmodule N π) x : K) =
-      (π g : K →L[ℂ] K) (x : K) := rfl
+      (π g : K →L[ℂ] K) (x : K) := by rfl
 
 /--
 The `normalFixedOrthogonalLinearIsometryEquiv` construction used in the
@@ -249,7 +249,7 @@ def normalFixedOrthogonalRepresentation :
     ((normalFixedOrthogonalRepresentation N π g :
       (normalFixedSubmodule N π)ᗮ →L[ℂ]
         (normalFixedSubmodule N π)ᗮ) x : K) =
-      (π g : K →L[ℂ] K) (x : K) := rfl
+      (π g : K →L[ℂ] K) (x : K) := by rfl
 
 theorem normalFixedOrthogonalRepresentation_no_fixed
     (x : (normalFixedSubmodule N π)ᗮ)

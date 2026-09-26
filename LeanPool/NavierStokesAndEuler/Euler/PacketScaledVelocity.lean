@@ -163,7 +163,8 @@ theorem scaledVelocity_restore (m v w : ℝ → Space) {t₀ a ε τ : ℝ}
   field_simp [velocityScale_ne_zero hε i]
 
 /-- Scaled action, given by `scaledVelocityEntry a ε (frameMatrix M (unit (m t)) (unit (v t)))`. -/
-def scaledAction (M : Space →L[ℝ] Space) (m v : ℝ → Space) (a ε t : ℝ) : Fin 3 → Fin 3 → ℝ :=
+@[expose] def scaledAction (M : Space →L[ℝ] Space) (m v : ℝ → Space)
+    (a ε t : ℝ) : Fin 3 → Fin 3 → ℝ :=
   scaledVelocityEntry a ε (frameMatrix M (unit (m t)) (unit (v t)))
 
 /-- Scaled transport, constructed using `scaledVelocityEntry`. -/

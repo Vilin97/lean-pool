@@ -64,6 +64,7 @@ abbrev Str := List Bool
 
 /-- The neighbourhood `σΣ*`: all *extensions* of `σ` (sequences with `σ` as an
 initial segment). -/
+@[expose]
 def cone (σ : Str) : Set Str := {w | σ <+: w}
 
 @[simp] theorem mem_cone {σ w : Str} : w ∈ cone σ ↔ σ <+: w := Iff.rfl

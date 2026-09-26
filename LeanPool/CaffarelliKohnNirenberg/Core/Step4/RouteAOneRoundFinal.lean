@@ -85,7 +85,7 @@ namespace CKN.Core.Step4
    boundary until its general construction lands.  Its two support fields are
    deliberately symmetric-ball fields, matching BallBootstrap. -/
 /-- Final localized-source integrability and Morrey estimates required by the bootstrap route. -/
-def routeAFinalSourcePackage : Prop :=
+@[expose] def routeAFinalSourcePackage : Prop :=
   ∀ {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
     {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3},

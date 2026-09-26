@@ -230,7 +230,7 @@ theorem lpExtensionCore_norm_le {p : ℝ≥0∞} [Fact (1 ≤ p)]
     C (lpInterL2Map_bound_subtype h) u)
 
 /-- Measurable representative of the extended operator, defined as zero outside its Lᵖ domain. -/
-def lpExtensionRepresentative {p : ℝ≥0∞} [Fact (1 ≤ p)] {C : ℝ}
+@[expose] def lpExtensionRepresentative {p : ℝ≥0∞} [Fact (1 ≤ p)] {C : ℝ}
     (hp : p ≠ ∞) (h : LpExtensionInput p C) (f : Vec3 → ℝ) : Vec3 → ℝ := by
   classical
   exact if hf : MemLp f p volume then

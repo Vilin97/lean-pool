@@ -165,7 +165,7 @@ instance (witness : PartsGadgetTriangleWitnessData) (root : Fin 73) :
   infer_instance
 
 /-- Geometric witnesses for every listed sqrt-three triple. -/
-def partsGadgetTriangleWitnesses (vertex : Fin 73) :
+@[expose] def partsGadgetTriangleWitnesses (vertex : Fin 73) :
     List PartsGadgetTriangleWitnessData :=
   match vertex.val with
   | 0 => [
@@ -545,7 +545,7 @@ def partsGadgetTriangleWitnesses (vertex : Fin 73) :
   | _ => []
 
 /-- Unit-edge neighbors used by the executable certificate checker. -/
-def partsGadgetNeighbors (vertex : Fin 73) : List (Fin 73) :=
+@[expose] def partsGadgetNeighbors (vertex : Fin 73) : List (Fin 73) :=
   match vertex.val with
   | 0 => [1, 4, 5]
   | 1 => [0, 2, 5, 6]
@@ -623,7 +623,7 @@ def partsGadgetNeighbors (vertex : Fin 73) : List (Fin 73) :=
   | _ => []
 
 /-- Opposite pairs completing sqrt-three triples at a vertex. -/
-def partsGadgetTriplePairs (vertex : Fin 73) : List (Fin 73 × Fin 73) :=
+@[expose] def partsGadgetTriplePairs (vertex : Fin 73) : List (Fin 73 × Fin 73) :=
   (partsGadgetTriangleWitnesses vertex).map fun witness =>
     (witness.left, witness.right)
 

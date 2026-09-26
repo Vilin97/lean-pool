@@ -49,7 +49,7 @@ noncomputable section
 namespace CKN.Foundation.Heat
 
 /-- The potential of a kernel `K` against a density `g`. -/
-def kernelPotential {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
+@[expose] def kernelPotential {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
     (K : Vec3 → F) (g : Vec3 → ℝ) (x : Vec3) : F :=
   ∫ y : Vec3, g y • K (x - y)
 

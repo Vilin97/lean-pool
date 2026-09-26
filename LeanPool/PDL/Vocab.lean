@@ -127,8 +127,7 @@ theorem Formula.voc_boxes : (⌈⌈δ⌉⌉φ).voc = δ.pdlPvoc ∪ φ.voc := by
 /-! ## Tests in a program -/
 
 /-- Test(α) -/
-@[implicit_reducible]
-@[expose] def testsOfProgram : Program → List Formula
+@[expose, implicit_reducible] def testsOfProgram : Program → List Formula
 | ·_ => []
 | ?' τ => [τ] -- no sub-tests etc. needed?
 | α;'β => testsOfProgram α ++ testsOfProgram β

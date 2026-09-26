@@ -48,7 +48,7 @@ namespace BlockSystem
 /-- The concrete block system supplied by the triangular preprocessing enumeration.  Its blocks
 have the prescribed cardinalities and partition `ℕ`; in particular, every finite set of positions
 meets only finitely many block labels. -/
-def ofBlockPositions (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) : BlockSystem where
+@[expose] def ofBlockPositions (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) : BlockSystem where
   block := TriangularPreprocess.blockPositions N hN
   block_nonempty := by
     intro l

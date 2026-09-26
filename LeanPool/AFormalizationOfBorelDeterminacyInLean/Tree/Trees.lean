@@ -53,6 +53,9 @@ def drop {T : tree A} {n : ℕ} {x : T} :
   right_inv _ := rfl
 @[simp] lemma drop_apply_coe {T : tree A} {n : ℕ} {x : T} (a : ExtensionsAt x) :
     (drop (n := n) a).val = a.val := by rfl
+@[simp] lemma drop_symm_apply_coe {T : tree A} {n : ℕ}
+    {x : T} (a : ExtensionsAt (Tree.drop T n x)) :
+    ((drop (n := n) (x := x)).symm a).val = a.val := by rfl
 @[simp] lemma val'_length :
   a.val' (A := no_index _).length (α := no_index _) = x.val.length (α := no_index _) + 1 := by
   simp [ExtensionsAt.val']
@@ -75,7 +78,7 @@ lemma valT'_take_of_eq (a : ExtensionsAt x) (h : n = x.val.length) :
 end ExtensionsAt
 
 /-- A tree is pruned if it has no leaves -/
-def IsPruned : Prop := ∀ x : T, Nonempty (ExtensionsAt x)
+@[expose] def IsPruned : Prop := ∀ x : T, Nonempty (ExtensionsAt x)
 lemma IsPruned.sub {T : tree A} (h : IsPruned T) (x : List A) : IsPruned (subAt T x) := by
   intro ⟨y, h'⟩
   simpa only [ExtensionsAt, nonempty_subtype, List.append_assoc, mem_subAt] using h ⟨_, h'⟩

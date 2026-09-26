@@ -47,7 +47,7 @@ def continuousOperator (A : Matrix I I ℝ) : Space I →L[ℝ] Space I :=
   LinearMap.toContinuousLinearMap (operator A)
 
 /-- The Rayleigh quotient of the matrix operator. -/
-def rayleigh (A : Matrix I I ℝ) (x : Space I) : ℝ :=
+@[expose] def rayleigh (A : Matrix I I ℝ) (x : Space I) : ℝ :=
   (continuousOperator A).rayleighQuotient x
 
 omit [Nonempty I] in
@@ -60,7 +60,7 @@ theorem rayleigh_bddAbove (A : Matrix I I ℝ) :
     ((continuousOperator A).rayleighQuotient_le_norm x)
 
 /-- The supremum of the Rayleigh quotient over nonzero vectors. -/
-def topEigenvalue (A : Matrix I I ℝ) : ℝ :=
+@[expose] def topEigenvalue (A : Matrix I I ℝ) : ℝ :=
   ⨆ x : {x : Space I // x ≠ 0}, rayleigh A x
 
 omit [Nonempty I] in

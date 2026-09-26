@@ -65,8 +65,7 @@ def meanFreeComponent (u : ParabolicPoint → Vec3) (x₀ : Vec3) (ρ : ℝ) (t 
 
 /-- The mean-free velocity `v = u(·,t) - ⨍_{B_ρ} u(·,t)` of equation
 `eq:Uij` in `paper/ckn.tex`. -/
-@[expose]
-def meanFreeVec (u : ParabolicPoint → Vec3) (x₀ : Vec3) (ρ : ℝ) (t : ℝ)
+@[expose] def meanFreeVec (u : ParabolicPoint → Vec3) (x₀ : Vec3) (ρ : ℝ) (t : ℝ)
     (y : Vec3) : Vec3 :=
   fun j => meanFreeComponent u x₀ ρ t j y
 

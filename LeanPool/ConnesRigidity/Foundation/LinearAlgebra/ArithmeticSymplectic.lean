@@ -94,7 +94,7 @@ def reduceVector : IntegralLattice →+ ModTwoSpace where
 
 /-- Evaluation of coordinatewise reduction. Paper: §2. -/
 @[simp] theorem reduceVector_apply (v : IntegralLattice) (i : SymplecticIndex) :
-    reduceVector v i = (v i : ZMod 2) := rfl
+    reduceVector v i = (v i : ZMod 2) := by rfl
 
 /- A canonical integral lift. Paper: §2.
 -/

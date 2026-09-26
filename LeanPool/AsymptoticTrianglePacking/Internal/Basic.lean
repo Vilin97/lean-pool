@@ -34,6 +34,7 @@ variable {V : Type*} [DecidableEq V] [Fintype V]
 @[expose] def degree (H : Finset (Finset V)) (v : V) : ℕ := (H.filter (fun e => v ∈ e)).card
 
 /-- The codegree of a pair `x y`: the number of edges containing both. -/
+@[expose]
 def codegree (H : Finset (Finset V)) (x y : V) : ℕ :=
   (H.filter (fun e => x ∈ e ∧ y ∈ e)).card
 

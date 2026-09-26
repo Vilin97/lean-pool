@@ -37,7 +37,7 @@ theorem norm_parameterInclusion : ‖parameterInclusion‖ = 1 := by
   exact ContinuousLinearMap.norm_inl ℝ ℝ ℝ
 
 /-- Restrict a changed-origin joint series to displacement in the first coordinate. -/
-noncomputable def jointBallFiberSeries
+@[expose] noncomputable def jointBallFiberSeries
     (jointSeries : FormalMultilinearSeries ℝ (ℝ × ℝ) ℝ)
     (centerTime time : ℝ) : FormalMultilinearSeries ℝ ℝ ℝ :=
   (jointSeries.changeOrigin (0, time - centerTime)).compContinuousLinearMap

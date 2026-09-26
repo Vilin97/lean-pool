@@ -44,6 +44,7 @@ variable {X Y : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
   [TopologicalSpace Y] [ChartedSpace ℂ Y]
 
 /-- Points where `F` is ramified (local multiplicity `≥ 2`, CC4's `IsRamifiedAt`). -/
+@[expose]
 def ramificationLocus (F : X → Y) : Set X := {x | IsRamifiedAt F x}
 
 /-- Branch values (critical values): images of ramification points. -/
@@ -53,6 +54,7 @@ def ramificationLocus (F : X → Y) : Set X := {x | IsRamifiedAt F x}
 nonconstant `F` this is equivalent to `y ∉ branchLocus F`, and then every fiber point has
 multiplicity exactly `1`.) Values NOT attained are regular (empty fiber) — harmless, since for
 nonconstant `F` every value is attained. -/
+@[expose]
 def IsRegularValue (F : X → Y) (y : Y) : Prop := ∀ x ∈ F ⁻¹' {y}, ¬ IsRamifiedAt F x
 
 theorem mem_ramificationLocus_iff {F : X → Y} {x : X} :

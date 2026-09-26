@@ -193,7 +193,7 @@ theorem hasTopThreeDistanceClasses_of_check
     exact hall e he
 
 /-- Adjacency in the union of the three named largest distance classes. -/
-def TopThreeAdjacent
+@[expose] def TopThreeAdjacent
     {K : Type*} [Ring K] {n : ℕ}
     (P : Fin n → Point K) (d₁ d₂ d₃ : K) (i j : Fin n) : Prop :=
   i ≠ j ∧
@@ -201,7 +201,7 @@ def TopThreeAdjacent
       sqDist (P i) (P j) = d₃)
 
 /-- The graph `G(S,3)` for three explicitly identified distance classes. -/
-def topThreeGraph
+@[expose] def topThreeGraph
     {K : Type*} [CommRing K] {n : ℕ}
     (P : Fin n → Point K) (d₁ d₂ d₃ : K) : SimpleGraph (Fin n) where
   Adj i j := TopThreeAdjacent P d₁ d₂ d₃ i j

@@ -276,7 +276,6 @@ variable {ι₁ ι₂ : Type*} [DecidableEq ι₁] [DecidableEq ι₂] [Fintype 
     [(i₁ : ι₁) → InnerProductSpace 𝕜 (M₁ i₁)] [(i₂ : ι₂) → InnerProductSpace 𝕜 (M₂ i₂)]
 
 /-- Tensor products commute with finite `PiLp 2` products as a linear equivalence. -/
-@[simps!]
 noncomputable def PiLpTensorEquiv :
   (PiLp 2 M₁ ⊗[𝕜] PiLp 2 M₂) ≃ₗ[𝕜]
     PiLp 2 (fun (i : ι₁ × ι₂) => (M₁ i.1) ⊗[𝕜] (M₂ i.2)) :=
@@ -284,6 +283,24 @@ noncomputable def PiLpTensorEquiv :
     (WithLp.linearEquiv 2 𝕜 (∀ i, M₁ i))
     (WithLp.linearEquiv 2 𝕜 (∀ i, M₂ i))).trans directSumTensor).trans
   (WithLp.linearEquiv 2 𝕜 (∀ i : ι₁ × ι₂, M₁ i.1 ⊗[𝕜] M₂ i.2)).symm
+
+@[simp] theorem PiLpTensorEquiv_apply
+    (x : PiLp 2 M₁ ⊗[𝕜] PiLp 2 M₂) :
+    PiLpTensorEquiv x =
+      (((TensorProduct.congr
+        (WithLp.linearEquiv 2 𝕜 (∀ i, M₁ i))
+        (WithLp.linearEquiv 2 𝕜 (∀ i, M₂ i))).trans directSumTensor).trans
+        (WithLp.linearEquiv 2 𝕜
+          (∀ i : ι₁ × ι₂, M₁ i.1 ⊗[𝕜] M₂ i.2)).symm) x := by rfl
+
+theorem PiLpTensorEquiv_symm_apply
+    (x : PiLp 2 (fun (i : ι₁ × ι₂) => M₁ i.1 ⊗[𝕜] M₂ i.2)) :
+    PiLpTensorEquiv.symm x =
+      (((TensorProduct.congr
+        (WithLp.linearEquiv 2 𝕜 (∀ i, M₁ i))
+        (WithLp.linearEquiv 2 𝕜 (∀ i, M₂ i))).trans directSumTensor).trans
+        (WithLp.linearEquiv 2 𝕜
+          (∀ i : ι₁ × ι₂, M₁ i.1 ⊗[𝕜] M₂ i.2)).symm).symm x := by rfl
 
 theorem PiLpTensorEquiv_tmul (x : PiLp 2 M₁) (y : PiLp 2 M₂) (i : ι₁ × ι₂) :
   PiLpTensorEquiv (x ⊗ₜ y) i = x i.1 ⊗ₜ[𝕜] y i.2 := by
@@ -307,12 +324,19 @@ theorem PiLpTensorEquiv_norm_map
   simp only [TensorProduct.inner_tmul]
 
 /-- `PiLpTensorEquiv` as a linear isometry equivalence. -/
-@[simps! -isSimp]
 noncomputable abbrev PiLpTensorLinearIsometryEquiv :
     (PiLp 2 M₁ ⊗[𝕜] PiLp 2 M₂) ≃ₗᵢ[𝕜]
       PiLp 2 (fun (i : ι₁ × ι₂) => (M₁ i.1) ⊗[𝕜] (M₂ i.2)) where
   toLinearEquiv := PiLpTensorEquiv
   norm_map' := PiLpTensorEquiv_norm_map
+
+theorem PiLpTensorLinearIsometryEquiv_apply
+    (x : PiLp 2 M₁ ⊗[𝕜] PiLp 2 M₂) :
+    PiLpTensorLinearIsometryEquiv x = PiLpTensorEquiv x := by rfl
+
+theorem PiLpTensorLinearIsometryEquiv_symm_apply
+    (x : PiLp 2 (fun (i : ι₁ × ι₂) => M₁ i.1 ⊗[𝕜] M₂ i.2)) :
+    PiLpTensorLinearIsometryEquiv.symm x = PiLpTensorEquiv.symm x := by rfl
 
 omit [(i : ι₁) → FiniteDimensional 𝕜 (M₁ i)]
   [(i : ι₂) → FiniteDimensional 𝕜 (M₂ i)] in
@@ -339,7 +363,6 @@ lemma euclideanSpaceTensor_apply {R : Type*} [RCLike R] {ι₁ ι₂ : Type*}
 PiLpTensorLinearIsometryEquiv_tmul x y i
 
 /-- The left unit tensor equivalence as a linear isometry equivalence. -/
-@[simps!]
 noncomputable def TensorProduct.lidLinearIsometryEquiv
   (𝕜 E : Type*) [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
   [FiniteDimensional 𝕜 E] :
@@ -350,6 +373,17 @@ noncomputable def TensorProduct.lidLinearIsometryEquiv
     simp only [← LinearEquiv.coe_toLinearMap, ← LinearMap.adjoint_inner_left,
       TensorProduct.lid_adjoint]
     simp only [LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply, ← norm_eq_sqrt_re_inner]
+
+@[simp] theorem TensorProduct.lidLinearIsometryEquiv_apply
+    (𝕜 E : Type*) [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [FiniteDimensional 𝕜 E] (x : 𝕜 ⊗[𝕜] E) :
+    TensorProduct.lidLinearIsometryEquiv 𝕜 E x = TensorProduct.lid 𝕜 E x := by rfl
+
+theorem TensorProduct.lidLinearIsometryEquiv_symm_apply
+    (𝕜 E : Type*) [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [FiniteDimensional 𝕜 E] (x : E) :
+    (TensorProduct.lidLinearIsometryEquiv 𝕜 E).symm x =
+      (TensorProduct.lid 𝕜 E).symm x := by rfl
 
 /-- Tensor product equivalence for finite Euclidean spaces, using `R ⊗[R] R ≃ R`. -/
 noncomputable abbrev euclideanSpaceTensor' {R : Type*} [RCLike R] {ι₁ ι₂ : Type*}

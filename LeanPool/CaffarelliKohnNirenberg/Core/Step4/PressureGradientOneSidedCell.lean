@@ -26,7 +26,7 @@ noncomputable section
 namespace CKN.Core.Step4
 
 /-- Origin used for the normalized pressure-gradient estimate. -/
-def oneSidedPressureGradientOrigin : ParabolicPoint := ((0 : Vec3), 0)
+@[expose] def oneSidedPressureGradientOrigin : ParabolicPoint := ((0 : Vec3), 0)
 
 /-! The cell is carried by the inner half of a symmetric parabolic ball. -/
 

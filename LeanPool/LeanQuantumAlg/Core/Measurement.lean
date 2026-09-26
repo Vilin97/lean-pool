@@ -60,6 +60,7 @@ theorem probOutcome_ket (x y : Fin (2 ^ n)) :
 
 /-- Probability that measuring qubit 0 of a `1 + n`-qubit raw state vector
 yields `b`, leaving the other qubits unobserved. -/
+@[expose]
 noncomputable def probQubit0 (psi : StateVector (1 + n)) (b : Fin (2 ^ 1)) : ℝ :=
   ∑ y : Fin (2 ^ n), ‖psi (prodEquiv (b, y))‖ ^ 2
 

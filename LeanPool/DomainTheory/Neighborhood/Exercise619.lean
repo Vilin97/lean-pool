@@ -450,7 +450,7 @@ def prodTokNbhd (X Y : Set Str) : Set Str := insert [] (embBit false X ∪ embBi
   simp_all
 
 /-- `prodTokNbhd D₀.master D₁.master` is exactly the sum master `{Λ} ∪ 0Δ₀ ∪ 1Δ₁`. -/
-theorem prodTokNbhd_master_eq : prodTokNbhd D₀.master D₁.master = sumTokMaster D₀ D₁ := rfl
+theorem prodTokNbhd_master_eq : prodTokNbhd D₀.master D₁.master = sumTokMaster D₀ D₁ := by rfl
 
 /-- Scott's (2) for the product: product neighbourhoods intersect componentwise. -/
 theorem prodTokNbhd_inter (X X' Y Y' : Set Str) :
@@ -508,7 +508,7 @@ def prodTok (D₀ D₁ : NeighborhoodSystem Str) : NeighborhoodSystem Str where
 theorem prodTok_mem_prodTokNbhd {X Y : Set Str} (hX : D₀.mem X) (hY : D₁.mem Y) :
     (prodTok D₀ D₁).mem (prodTokNbhd X Y) := ⟨X, Y, hX, hY, rfl⟩
 
-@[simp] theorem prodTok_master : (prodTok D₀ D₁).master = prodTokNbhd D₀.master D₁.master := rfl
+@[simp] theorem prodTok_master : (prodTok D₀ D₁).master = prodTokNbhd D₀.master D₁.master := by rfl
 
 /-- The concrete product is again `∅`-free (every neighbourhood contains `Λ`). -/
 theorem prodTok_nonempty : ∀ W, (prodTok D₀ D₁).mem W → W.Nonempty := by

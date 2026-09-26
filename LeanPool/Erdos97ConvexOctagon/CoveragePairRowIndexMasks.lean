@@ -18,6 +18,7 @@ namespace Erdos97Octagon.RawIncidence
 
 /-- For each centre and packed pair bit, legal-row indices containing that pair. -/
 @[expose]
+@[expose]
 def pairRowIndexMasks : Array (Array UInt64) := #[
   #[
     0, 0, 0, 0,
@@ -166,6 +167,7 @@ def pairRowIndexMasks : Array (Array UInt64) := #[
 ]
 
 /-- Set-bit positions for each five-bit word. -/
+@[expose]
 def fiveBitIndices : Array (List Nat) := #[
   [],
   [0],

@@ -411,7 +411,7 @@ namespace cubeBoundary
 /-- The inclusion from the n-dimensional cube to the top or bottom face
 of the boundary of the (n+1)-dimensional cube,
 mapping (y₀, y₁, …, yₙ₋₁) to (y₀, y₁, …, yₙ₋₁, t). -/
-def cubeInclToBotOrTop {n : ℕ} (t : unitInterval.zeroOne) : 𝕀 n ⟶ ∂𝕀 (n + 1) :=
+@[expose] def cubeInclToBotOrTop {n : ℕ} (t : unitInterval.zeroOne) : 𝕀 n ⟶ ∂𝕀 (n + 1) :=
   ofHom
     { toFun := fun ⟨y⟩ ↦ ⟨Cube.splitAtLast.symm ⟨unitInterval.zeroOneIncl t, y⟩, by
         use Fin.last _

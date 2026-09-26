@@ -39,6 +39,7 @@ variable {K V : Type*} [DivisionRing K] [AddCommGroup V] [Module K V]
   fun i ↦ if i.val % 2 = parity % 2 then F i else ⊥
 
 /-- Partial complete flags supported on one parity of ranks. -/
+@[expose]
 def PartialFlag (parity : ℕ) :=
   {P : Fin (n + 1) → Submodule K V //
     ∃ F : CompleteFlag K V n, flagPart parity F = P}

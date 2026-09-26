@@ -64,7 +64,8 @@ theorem meanPrimitive_in_frame_range
     (u : meanDerivatives T hT FInv) (t : Icc (0 : ℝ) T) :
     ∃ z : solenoidalSpace, solenoidalFrame T F t z = realPrimitive T (u : TimeLp T L2) t := by
   have hz : FInv t (realPrimitive T (u : TimeLp T L2) t) ∈ solenoidalSpace := by
-    simpa only [terminalPrimitive_apply] using u.property t
+    simpa only [terminalPrimitive_apply] using
+      ((mem_meanDerivatives T hT FInv (u : TimeLp T L2)).mp u.property t)
   refine ⟨⟨FInv t (realPrimitive T (u : TimeLp T L2) t), hz⟩, ?_⟩
   exact hRight t _
 

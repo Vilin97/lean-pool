@@ -52,10 +52,11 @@ noncomputable def iteratedPoly {R : Type*} [CommSemiring R] (a : R) : ℕ → R[
   | 0 => X
   | n + 1 => (iteratedPoly a n) ^ 2 + C a
 
-@[simp] lemma iteratedPoly_zero {R : Type*} [CommSemiring R] (a : R) : iteratedPoly a 0 = X := rfl
+@[simp] lemma iteratedPoly_zero {R : Type*} [CommSemiring R] (a : R) :
+    iteratedPoly a 0 = X := by rfl
 
 lemma iteratedPoly_succ {R : Type*} [CommSemiring R] (a : R) (n : ℕ) :
-    iteratedPoly a (n + 1) = iteratedPoly a n ^ 2 + C a := rfl
+    iteratedPoly a (n + 1) = iteratedPoly a n ^ 2 + C a := by rfl
 
 /-- Iterating commutes with any ring homomorphism: the image of `f_n` under `φ` is the `n`-th
 iterate over the codomain with parameter `φ a`. -/
@@ -127,9 +128,9 @@ index `0` is `0`. It is the `γ`-sequence of `X² + a` with `ε = -1`. -/
 noncomputable def cSeq (a : ℤ) : ℕ → ℤ := gammaSeq (X ^ 2 + C a) (-1)
 
 /-- `c_n = γ_n(X² + a, ε = -1)` (definitional). -/
-lemma cSeq_eq_gammaSeq (a : ℤ) (n : ℕ) : cSeq a n = gammaSeq (X ^ 2 + C a) (-1) n := rfl
+lemma cSeq_eq_gammaSeq (a : ℤ) (n : ℕ) : cSeq a n = gammaSeq (X ^ 2 + C a) (-1) n := by rfl
 
-@[simp] lemma cSeq_zero (a : ℤ) : cSeq a 0 = 0 := rfl
+@[simp] lemma cSeq_zero (a : ℤ) : cSeq a 0 = 0 := by rfl
 
 @[simp] lemma cSeq_one (a : ℤ) : cSeq a 1 = -a := by simp [cSeq_eq_gammaSeq]
 
@@ -166,7 +167,8 @@ of the general `β`-sequence to `X² + a`, `ε = -1` (an integer by strong divis
 `intCast_bSeq`). -/
 noncomputable def bSeq (a : ℤ) (n : ℕ) : ℤ := betaSeq (X ^ 2 + C a) (-1) n
 
-lemma bSeq_eq_moebiusFactorR (a : ℤ) (n : ℕ) : bSeq a n = moebiusFactorR (cSeq a) n := rfl
+lemma bSeq_eq_moebiusFactorR (a : ℤ) (n : ℕ) :
+    bSeq a n = moebiusFactorR (cSeq a) n := by rfl
 
 @[simp] lemma bSeq_one (a : ℤ) : bSeq a 1 = -a := by
   rw [bSeq_eq_moebiusFactorR, moebiusFactorR_one, cSeq_one]

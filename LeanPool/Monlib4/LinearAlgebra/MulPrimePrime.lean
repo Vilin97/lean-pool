@@ -156,6 +156,6 @@ def mulToClm (𝕜 X : Type _) [RCLike 𝕜] [NormedAddCommGroupOfRing X] [Norme
 theorem mulToClm_apply {𝕜 X : Type _} [RCLike 𝕜] [NormedAddCommGroupOfRing X]
     [NormedSpace 𝕜 X] [SMulCommClass 𝕜 X X] [IsScalarTower 𝕜 X X] [FiniteDimensional 𝕜 X]
     (x y : X) : mulToClm 𝕜 X x y = x * y :=
-  rfl
+  by rfl
 
 end LinearMap

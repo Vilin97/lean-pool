@@ -99,7 +99,7 @@ lemma posPart_eq_of_nonneg (X : Matrix m n ℝ) {i : m} {j : n}
 /-! ### N09 — Rank-one Laplacian entries -/
 
 /-- The standard basis vector `e k` in `n → ℝ`. -/
-def e [DecidableEq n] (k : n) : n → ℝ :=
+@[expose] def e [DecidableEq n] (k : n) : n → ℝ :=
   Pi.single k 1
 
 /-- The vector `e i - e j` in coordinates. -/

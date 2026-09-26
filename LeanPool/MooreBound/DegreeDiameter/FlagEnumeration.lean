@@ -110,6 +110,7 @@ variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
 
 /-- A vector which advances the complete flag `F` from rank `i` to rank
 `i+1`. -/
+@[expose]
 def FlagStepVector (F : CompleteFlag K V n) (i : Fin n) :=
   {x : F i.succ // (x : V) ∉ F i.castSucc}
 

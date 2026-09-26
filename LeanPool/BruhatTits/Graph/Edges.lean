@@ -153,7 +153,8 @@ lemma isNeighbour_of_isStandardNeighbour {M L : Lattice R} (h : IsStandardNeighb
   have : f 1 = 0 ∧ f 0 = 1 := by omega
   rw [this.left, this.right] at hdiff
   simp at hdiff
-  rw [isNeighbour_def, inv_mk, dist_symm]
+  apply (isNeighbour_def (Vertices.mk _) (Vertices.mk _)).mpr
+  rw [inv_mk, dist_symm]
   omega
 
 lemma exists_basis_eq_ntwist_of_isNeighbour (M : Lattice R) (L : Vertices R)

@@ -77,6 +77,7 @@ theorem extend_clampI (γ : Path x y) (u : ℝ) : γ.extend (clampI u) = γ.exte
 /-! ### `IsPrimitiveAlong`, existence, `pathIntegral` -/
 
 /-- `F` is a primitive of `η` along the path `γ`. -/
+@[expose]
 def IsPrimitiveAlong (γ : Path x y) (η : Form1 X) (F : ℝ → ℂ) : Prop :=
   IsPrimitiveAlongMap γ.extend η F Set.univ
 

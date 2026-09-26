@@ -183,7 +183,7 @@ variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 variable {G : Game X Y A B}
 
 /-- The tensor product of Alice's and Bob's effects for a joint outcome. -/
-def jointEffect (S : Strategy G) (x : X) (y : Y) (a : A) (b : B) :
+@[expose] def jointEffect (S : Strategy G) (x : X) (y : Y) (a : A) (b : B) :
     Matrix (S.Alice × S.Bob) (S.Alice × S.Bob) ℂ :=
   (S.aliceMeasurement x).effect a ⊗ₖ (S.bobMeasurement y).effect b
 
@@ -193,7 +193,7 @@ private theorem jointEffect_positive (S : Strategy G) (x : X) (y : Y) (a : A) (b
     ((S.bobMeasurement y).positive b)
 
 /-- The Born probability of a question-and-answer outcome. -/
-def outcomeProbability (S : Strategy G) (x : X) (y : Y) (a : A) (b : B) : ℝ :=
+@[expose] def outcomeProbability (S : Strategy G) (x : X) (y : Y) (a : A) (b : B) : ℝ :=
   (Matrix.trace (S.state.matrix * S.jointEffect x y a b)).re
 
 theorem outcomeProbability_nonneg (S : Strategy G)
@@ -1748,7 +1748,7 @@ open scoped BigOperators Topology ComplexOrder MatrixOrder Kronecker Matrix.Norm
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 /-- The spectral filter for spectral purification. -/
-def spectralPurificationFilter
+@[expose] def spectralPurificationFilter
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) (s : ℝ) : Matrix d d ℂ :=
   spectralConjugationCLM hF.isHermitian.eigenvectorUnitary
@@ -2176,7 +2176,7 @@ open scoped BigOperators ComplexOrder MatrixOrder
 /--
 The spectral support functional construction used in the quantum parallel-repetition argument.
 -/
-def spectralSupportFunctional
+@[expose] def spectralSupportFunctional
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef)
     (f : ℝ → ℝ) : Matrix d d ℂ :=
@@ -2256,7 +2256,7 @@ private def spectralSupportProjection
   spectralSupportFunctional F hF (fun x => if x = 0 then 0 else 1)
 
 /-- The positive square-root construction for spectral support. -/
-def spectralSupportSqrt
+@[expose] def spectralSupportSqrt
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) : Matrix d d ℂ :=
   spectralSupportFunctional F hF Real.sqrt
@@ -7060,7 +7060,7 @@ open Complex Matrix Finset
 section
 
 /-- The unitary operator implementing orthonormal basis. -/
-def orthonormalBasisUnitary
+@[expose] def orthonormalBasisUnitary
     {d : ℕ}
     (b : OrthonormalBasis (Fin d) ℂ
       (EuclideanSpace ℂ (Fin d))) :
@@ -7077,7 +7077,7 @@ def orthonormalBasisUnitary
   rfl
 
 /-- The unitary operator implementing conjugate. -/
-def conjugateUnitary
+@[expose] def conjugateUnitary
     {d : ℕ}
     (U : Matrix.unitaryGroup (Fin d) ℂ) :
     Matrix.unitaryGroup (Fin d) ℂ := by

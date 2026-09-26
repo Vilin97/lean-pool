@@ -91,7 +91,7 @@ This abstract Boolean-algebra formulation captures the paper's statement for
 arbitrary set algebras: a set algebra is a Boolean subalgebra of `Set Ω`.
 **Reference**: paragraph after Equation (1) in Section 1 of
 the companion paper. -/
-noncomputable def krConstant : ℝ :=
+@[expose] noncomputable def krConstant : ℝ :=
   sInf { C : ℝ | 0 ≤ C ∧
     ∀ (α : Type) [BooleanAlgebra α] (f : α → ℝ),
       IsApproxAdditiveBA f 1 →

@@ -392,6 +392,7 @@ variable [T2Space X] [CompactSpace X]
 
 /-- The `i`-th planar integrand of the Serre pairing: `ψ_i · σ_i · ω_i` read in the `i`-th
 chart, extended by `0` off the chart target. -/
+@[expose]
 def pairingTerm (PU : SurfPoU X) (σ : RS.Form01 X) (θ : RS.Form1 X) (i : Fin PU.n) : ℂ → ℂ :=
   ((PU.chart i).target).indicator
     (fun z => PU.ψ i ((PU.chart i).symm z) •
@@ -439,6 +440,7 @@ theorem integrable_pairingTerm (PU : SurfPoU X) (σ : RS.Form01 X) (θ : RS.Form
 
 /-- **The Serre area pairing** over the fixed partition datum `PU`:
 `∑ i, ∫ z, ψ_i(z) σ_i(z) ω_i(z) dA(z)`. -/
+@[expose]
 def pairing (PU : SurfPoU X) (σ : RS.Form01 X) (θ : RS.Form1 X) : ℂ :=
   ∑ i, ∫ z : ℂ, pairingTerm PU σ θ i z
 

@@ -32,7 +32,7 @@ variable {A : Type*} (T : tree A) (p : Player)
 /-- a `PreStrategy` is a weak form of a strategy given by specifying not a single move,
   but a possibly empty set of valid moves in all positions. This can be defined for
   arbitrary trees and not just games as the payoff set is irrelevant -/
-def PreStrategy := ∀ x : T, IsPosition x.val p → Set (ExtensionsAt x) --TODO synth arg?
+@[expose] def PreStrategy := ∀ x : T, IsPosition x.val p → Set (ExtensionsAt x) --TODO synth arg?
 variable {T p}
 namespace PreStrategy
 @[ext] lemma ext {f g : PreStrategy T p} (h : ∀ x hp, f x hp = g x hp) : f = g :=
@@ -54,7 +54,8 @@ def subtree : tree A where
 @[simp] lemma subtree_ne : [] ∈ S.subtree ↔ [] ∈ T := by simp [subtree]
 @[simp] lemma subtree_sub : S.subtree ≤ T := fun _ ⟨h, _⟩ ↦ h
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def subtreeIncl (x : S.subtree) : T := ⟨x.val, S.subtree_sub x.prop⟩
+def subtreeIncl (x : S.subtree) : T := ⟨x.val, S.subtree_sub x.prop⟩
+@[simp] lemma subtreeIncl_coe (x : S.subtree) : (S.subtreeIncl x : List A) = x.val := by rfl
 attribute [simp_lengths] subtreeIncl_coe
 
 @[gcongr] lemma subtree_mono {f g : PreStrategy T p} (h : f ≤ g) : f.subtree ≤ g.subtree :=

@@ -30,7 +30,7 @@ namespace CKN
 
 /-- Squared common coefficient collecting the velocity and pressure terms in the Caccioppoli
 estimate. -/
-def caccioppoliC₂₅BaseSquared : ℝ :=
+@[expose] def caccioppoliC₂₅BaseSquared : ℝ :=
   max ((32 + 3 * cutoffSecondDerivativeConstant) * 8000000 +
     6 * cutoffGradientConstant * 5000000)
     (max (poincareSobolevL1VectorConstant *

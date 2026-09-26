@@ -236,7 +236,7 @@ instance intCast : IntCast ComputableℝSeq where intCast z := ofRat z
 
 instance ratCast : RatCast ComputableℝSeq where ratCast q := ofRat q
 /-- Addition of computable real sequences. -/
-def add (x : ComputableℝSeq) (y : ComputableℝSeq) : ComputableℝSeq :=
+@[expose] def add (x : ComputableℝSeq) (y : ComputableℝSeq) : ComputableℝSeq :=
   mk (x.val + y.val)
   (fun n ↦ x.lub n + y.lub n)
   (IsCauSeq.add x.hcl y.hcl)
@@ -253,7 +253,7 @@ def add (x : ComputableℝSeq) (y : ComputableℝSeq) : ComputableℝSeq :=
     exact add_le_add (x.hub n) (y.hub n))
   (have := CauSeq.add_equiv_add x.heq y.heq; this) --TODO why does 'inlining' the have not work
 /-- Negation of a computable real sequence. -/
-def neg (x : ComputableℝSeq) : ComputableℝSeq :=
+@[expose] def neg (x : ComputableℝSeq) : ComputableℝSeq :=
   mk (-x.val)
   (fun n ↦ -x.lub n)
   (IsCauSeq.neg x.hcu)
@@ -346,10 +346,10 @@ instance instComputableZero : Zero ComputableℝSeq :=
 instance instComputableOne : One ComputableℝSeq :=
   ⟨(1 : ℕ)⟩
 
-instance instAdd : Add ComputableℝSeq :=
+@[expose] instance instAdd : Add ComputableℝSeq :=
   ⟨add⟩
 
-instance instNeg : Neg ComputableℝSeq :=
+@[expose] instance instNeg : Neg ComputableℝSeq :=
   ⟨neg⟩
 
 instance instSub : Sub ComputableℝSeq :=
@@ -493,7 +493,7 @@ private noncomputable instance sign_aux_sound (x : ℝ) :
   sign witness terminates exactly when `x ≠ 0` or some interval is the point `0`, so a fuel-free
   executable version cannot be total.) This ends up providing the `DecidableEq` and
   `DecidableLT` instances on `Computableℝ`, which are likewise classical. -/
-noncomputable def sign (x : ComputableℝSeq) : SignType :=
+@[expose] noncomputable def sign (x : ComputableℝSeq) : SignType :=
   SignType.sign x.val
 
 theorem sign_sound (x : ComputableℝSeq) : x.sign = SignType.sign x.val :=
@@ -534,26 +534,27 @@ theorem signWitnessTerm_prop (x : ComputableℝSeq) (n : ℕ) (hnz : x.val ≠ 0
   all_goals
     rify at *; linarith (config := {splitNe := true})
 
+/-- Find a sign witness by searching from index `k`. -/
+def signWitnessFrom (x : ComputableℝSeq) (hnz : x.val ≠ 0) (k : ℕ) :
+    { n // (0 < x.val ∧ 0 < x.lb n) ∨ (x.val < 0 ∧ x.ub n < 0)} :=
+  if hub : x.ub k < 0 then
+    ⟨k, Or.inr ⟨by rify at hub; linarith [x.hub k], hub⟩⟩
+  else if hlb : x.lb k > 0 then
+    ⟨k, Or.inl ⟨by rify at hlb; linarith [x.hlb k], hlb⟩⟩
+  else
+    signWitnessFrom x hnz (k + 1)
+termination_by (x.signWitnessTerm hnz).val.fst - k
+decreasing_by
+  decreasing_with
+  apply Nat.sub_add_lt_sub _ Nat.le.refl
+  exact x.signWitnessTerm_prop k hnz hub hlb
+
 /-- With the proof that x≠0, we can also eventually get a sign witness: a number n such that
     either 0 < x and 0 < lb n; or that x < 0 and ub n < 0. Marking it as irreducible because
     in theory all of the info needed is in the return Subtype. -/
 irreducible_def signWitness (x : ComputableℝSeq) (hnz : x.val ≠ 0) :
     { n // (0 < x.val ∧ 0 < x.lb n) ∨ (x.val < 0 ∧ x.ub n < 0)} :=
-  signWitness_aux 0 hnz where
-  signWitness_aux (k : ℕ) (hnz : x.val ≠ 0) : { n // (0 < x.val ∧ 0 < x.lb n) ∨ (x.val < 0 ∧ x.ub
-    n < 0)}:=
-    if hub : x.ub k < 0 then
-      ⟨k, Or.inr ⟨by rify at hub; linarith [x.hub k], hub⟩⟩
-    else if hlb : x.lb k > 0 then
-      ⟨k, Or.inl ⟨by rify at hlb; linarith [x.hlb k], hlb⟩⟩
-    else
-      signWitness_aux (k+1) hnz
-    termination_by
-      (x.signWitnessTerm hnz).val.fst - k
-    decreasing_by
-    · decreasing_with
-      apply Nat.sub_add_lt_sub _ Nat.le.refl
-      exact x.signWitnessTerm_prop k hnz hub hlb
+  signWitnessFrom x hnz 0
 
 /-- With the proof that x≠0, we get a total comparison function. -/
 def isPos {x : ComputableℝSeq} (hnz : x.val ≠ 0) : Bool :=

@@ -64,11 +64,11 @@ variable {G : Type u} {H : Type v} [Group G]
   [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
 
 /-- Invariant-vector predicate. Paper: §4. -/
-def IsInvariant (π : UnitaryRepresentation G H) (ξ : H) : Prop :=
+@[expose] def IsInvariant (π : UnitaryRepresentation G H) (ξ : H) : Prop :=
   ∀ g : G, (π g : H →L[ℂ] H) ξ = ξ
 
 /-- Almost-invariant-vector predicate. Paper: §4. -/
-def HasAlmostInvariantUnitVectors (π : UnitaryRepresentation G H) : Prop :=
+@[expose] def HasAlmostInvariantUnitVectors (π : UnitaryRepresentation G H) : Prop :=
   ∀ (K : Finset G) (ε : ℝ), 0 < ε →
     ∃ ξ : H, ‖ξ‖ = 1 ∧ ∀ g ∈ K, ‖(π g : H →L[ℂ] H) ξ - ξ‖ < ε
 
@@ -76,7 +76,7 @@ end UnitaryRepresentation
 
 /-- Property-(T), universe-polymorphic in the representation carrier so concrete
 `Type 0` groups are not restricted to `Type 0` Hilbert spaces. Paper: §4. -/
-def HasKazhdanPropertyT (G : CountableDiscreteGroup.{u}) : Prop :=
+@[expose] def HasKazhdanPropertyT (G : CountableDiscreteGroup.{u}) : Prop :=
   ∀ (H : Type v)
     (_ : NormedAddCommGroup H)
     (_ : InnerProductSpace ℂ H)

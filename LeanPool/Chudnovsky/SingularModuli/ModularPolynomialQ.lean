@@ -199,6 +199,7 @@ The generating polynomial of the orbit; its coefficients are (up to sign) the el
 symmetric functions of `{f_i τ}`, which are `SL(2,ℤ)`-invariant and holomorphic. -/
 
 /-- The orbit polynomial `∏_i (X − f_i τ) ∈ ℂ[X]`. -/
+@[expose]
 def orbitPoly (m : ℕ) [NeZero m] (τ : ℍ) : Polynomial ℂ :=
   ∏ i : Option (ZMod m), (X - C (f m i τ))
 
@@ -841,6 +842,7 @@ series. -/
 variable {m : ℕ}
 
 /-- The subring `ℚ ⊆ ℂ` (image of the rational cast). -/
+@[expose]
 def RQ : Subring ℂ := (Rat.castHom ℂ).range
 
 lemma intCast_mem_RQ (n : ℤ) : (n : ℂ) ∈ RQ := intCast_mem RQ n

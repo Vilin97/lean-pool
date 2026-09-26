@@ -59,14 +59,16 @@ sequence). -/
 /-- The Möbius factors `β_n = ∏_{d ∣ n} γ_d^{μ(n/d)}` of the `γ`-sequence, as elements of the
 coefficient ring: the unique preimage of the fraction-field Möbius product under
 `R → FractionRing R` (junk when that product is not integral). -/
-@[expose] noncomputable def betaSeq {R : Type*} [CommRing R] [IsDomain R] (g : R[X]) (ε : R) (n : ℕ) : R :=
+@[expose]
+noncomputable def betaSeq {R : Type*} [CommRing R] [IsDomain R] (g : R[X]) (ε : R) (n : ℕ) : R :=
   moebiusFactorR (gammaSeq g ε) n
 
 lemma betaSeq_eq_moebiusFactorR {R : Type*} [CommRing R] [IsDomain R] (g : R[X]) (ε : R) (n : ℕ) :
     betaSeq g ε n = moebiusFactorR (gammaSeq g ε) n := rfl
 
 /-- `g` is an even polynomial (`g ∈ R[X²]`): `g = Polynomial.expand R 2 h` for some `h`. -/
-def EvenPoly {R : Type*} [CommSemiring R] (g : R[X]) : Prop := ∃ h : R[X], g = expand R 2 h
+@[expose] def EvenPoly {R : Type*} [CommSemiring R] (g : R[X]) : Prop :=
+  ∃ h : R[X], g = expand R 2 h
 
 /-- An even polynomial takes equal values at points with equal squares. -/
 theorem EvenPoly.eval_congr {R : Type*} [CommSemiring R] {g : R[X]} (hg : EvenPoly g)

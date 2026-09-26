@@ -73,7 +73,7 @@ lemma graphCoverCostar_ext {V : Type u} [Quiver.{u} V] {root : V}
   exact heq_of_eq (Subtype.ext (eq_of_heq h))
 
 /-- Explicit lifting of a star at a cover vertex. -/
-def graphCoverStarEquiv {V : Type u} [Quiver.{u} V] (root : V)
+@[expose] def graphCoverStarEquiv {V : Type u} [Quiver.{u} V] (root : V)
     (x : graphCoverVertex root) :
     Quiver.Star x ≃ Quiver.Star x.1 where
   toFun := (graphCoverProjection root).star x
@@ -98,7 +98,7 @@ def graphCoverStarEquiv {V : Type u} [Quiver.{u} V] (root : V)
     rfl
 
 /-- Explicit lifting of a costar at a cover vertex. -/
-def graphCoverCostarEquiv {V : Type u} [Quiver.{u} V] (root : V)
+@[expose] def graphCoverCostarEquiv {V : Type u} [Quiver.{u} V] (root : V)
     (x : graphCoverVertex root) :
     Quiver.Costar x ≃ Quiver.Costar x.1 where
   toFun := (graphCoverProjection root).costar x

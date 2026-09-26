@@ -56,6 +56,7 @@ def exponentialSimplexSource : Set (ℝ × (Fin n → ℝ)) :=
   {z | 0 < z.1 ∧ z.2 ∈ fullSimplex (Fin n)}
 
 /-- Nonnegative exponential vectors with nonzero total mass. -/
+@[expose]
 def positiveExponentialOrthant : Set (ℝ × (Fin n → ℝ)) :=
   {e | 0 ≤ e.1 ∧ (∀ i, 0 ≤ e.2 i) ∧ 0 < exponentialTotal e}
 

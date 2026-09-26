@@ -149,7 +149,7 @@ theorem exists_resonantFirstAction_between {a b : ℝ} (ha : 0 < a) (hab : a < b
 abbrev PositiveAction := Set.Ioi (0 : ℝ)
 
 /-- The positive actions whose Kepler frequency is irrational. -/
-def irrationalFrequencyPositiveActions : Set PositiveAction :=
+@[expose] def irrationalFrequencyPositiveActions : Set PositiveAction :=
   {action | Irrational (1 / action.1 ^ 3)}
 
 /-- Actions with irrational Kepler frequency occur in every positive open interval. -/

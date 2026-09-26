@@ -118,6 +118,7 @@ in the sense
 `X' ⊆ X → m X hX ≤ m X' hX'` (i.e. `↑X ⊑ ↑X' ⟹ m(↑X) ⊑ m(↑X')`). The induced
 relation is
 `X f Y ↔ Y ∈ m(↑X)`. -/
+@[expose]
 def ofMono (m : (X : Set α) → V₀.mem X → V₁.Element)
     (hmono : ∀ (X X' : Set α) (hX : V₀.mem X) (hX' : V₀.mem X'), X' ⊆ X → m X hX ≤ m X' hX') :
     ApproximableMap V₀ V₁ where

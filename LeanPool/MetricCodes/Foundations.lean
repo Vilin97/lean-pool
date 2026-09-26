@@ -4780,7 +4780,7 @@ theorem rayleigh_eq_inner (n k L : ℕ) (x : Space k L) :
   rfl
 
 /-- The coordinate abs used in the binary-code argument. -/
-@[expose] abbrev coordinateAbs (k L : ℕ) (x : Space k L) : Space k L :=
+abbrev coordinateAbs (k L : ℕ) (x : Space k L) : Space k L :=
   MetricCodes.Spherical.HigherHierarchyFinitePerron.coordinateAbs x
 
 theorem coordinateAbs_nonneg (k L : ℕ)

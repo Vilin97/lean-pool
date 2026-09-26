@@ -127,8 +127,7 @@ inductive Rel : ℕ → Type
 end ORing
 
 /-- Imported declaration from the Incompleteness formalization. -/
-@[reducible]
-@[expose] def oRing : Language where
+@[expose, reducible] def oRing : Language where
   Func := ORing.Func
   Rel := ORing.Rel
 
@@ -289,7 +288,8 @@ def ofFunc (F : ℕ → Type v) : Language := ⟨F, fun _ => PEmpty⟩
 instance : _root_.Add Language := ⟨add⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def sigma (L : ι → Language) : Language := ⟨fun k => Σ i, (L i).Func k, fun k => Σ i, (L i).Rel k⟩
+@[expose] def sigma (L : ι → Language) : Language :=
+  ⟨fun k => Σ i, (L i).Func k, fun k => Σ i, (L i).Rel k⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 protected class Eq (L : Language) where
@@ -407,10 +407,10 @@ def comp (Ψ : L₂ →ᵥ L₃) (Φ : L₁ →ᵥ L₂) : L₁ →ᵥ L₃ wher
   rel  := Ψ.rel ∘ Φ.rel
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def add₁ (L₁ : Language) (L₂ : Language) : L₁ →ᵥ L₁.add L₂ := ⟨Sum.inl, Sum.inl⟩
+@[expose] def add₁ (L₁ : Language) (L₂ : Language) : L₁ →ᵥ L₁.add L₂ := ⟨Sum.inl, Sum.inl⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def add₂ (L₁ : Language) (L₂ : Language) : L₂ →ᵥ L₁.add L₂ := ⟨Sum.inr, Sum.inr⟩
+@[expose] def add₂ (L₁ : Language) (L₂ : Language) : L₂ →ᵥ L₁.add L₂ := ⟨Sum.inr, Sum.inr⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 lemma func_add₁ (L₁ : Language) (L₂ : Language) (f : L₁.Func k) :
@@ -447,7 +447,8 @@ lemma rel_add₂ (L₁ : Language) (L₂ : Language) (r : L₂.Rel k) :
     (add₁ L₁ L₂).rel LT.lt = LT.lt := rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def sigma (L : ι → Language) (i : ι) : L i →ᵥ Language.sigma L := ⟨fun f => ⟨i, f⟩, fun r => ⟨i, r⟩⟩
+@[expose] def sigma (L : ι → Language) (i : ι) : L i →ᵥ Language.sigma L :=
+  ⟨fun f => ⟨i, f⟩, fun r => ⟨i, r⟩⟩
 
 lemma func_sigma (L : ι → Language) (i : ι) (f : (L i).Func k) : (sigma L i).func f = ⟨i, f⟩ := rfl
 

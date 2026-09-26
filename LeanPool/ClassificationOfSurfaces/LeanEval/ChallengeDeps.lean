@@ -42,7 +42,7 @@ namespace Complex
 abbrev ClosedUnitDisc : Type := Metric.closedBall (0 : ℂ) 1
 
 /-- The boundary point exp(2πir) on the boundary of the closed unit disc in the complex plane. -/
-noncomputable def ClosedUnitDisc.bdyPtOfReal (r : ℝ) : ClosedUnitDisc :=
+@[expose] noncomputable def ClosedUnitDisc.bdyPtOfReal (r : ℝ) : ClosedUnitDisc :=
   ⟨r.fourierChar, r.fourierChar.2.le⟩
 
 end Complex

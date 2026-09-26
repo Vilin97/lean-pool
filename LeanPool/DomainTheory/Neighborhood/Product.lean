@@ -66,6 +66,7 @@ variable {α β γ δ : Type*}
 /-- The product neighbourhood `X ∪ Y` over the disjoint union `Δ₀ ∪ Δ₁`, modelled
 on `α ⊕ β` as
 `Sum.inl '' X ∪ Sum.inr '' Y`. -/
+@[expose]
 def prodNbhd (X : Set α) (Y : Set β) : Set (α ⊕ β) := Sum.inl '' X ∪ Sum.inr '' Y
 
 @[simp] theorem mem_prodNbhd_inl {X : Set α} {Y : Set β} {a : α} :
@@ -117,6 +118,7 @@ neighbourhoods are
 (`prodNbhd_inter`) together with the factors' closure; the consistency witness `Z
 ⊆ (X∪Y) ∩ (X'∪Y')`
 splits into witnesses `Z₀ ⊆ X ∩ X'`, `Z₁ ⊆ Y ∩ Y'` by `prodNbhd_subset_iff`. -/
+@[expose]
 def prod (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) : NeighborhoodSystem (α ⊕ β) where
   mem W := ∃ X Y, V₀.mem X ∧ V₁.mem Y ∧ W = prodNbhd X Y
   master := prodNbhd V₀.master V₁.master
@@ -144,6 +146,7 @@ theorem prod_mem_prodNbhd {X : Set α} {Y : Set β} (hX : V₀.mem X) (hY : V₁
 
 /-- Scott's `z₀ = {X ∈ 𝒟₀ ∣ X ∪ Δ₁ ∈ z}`: the first component of a product
 element. -/
+@[expose]
 def NeighborhoodSystem.Element.fst (z : (prod V₀ V₁).Element) : V₀.Element where
   mem X := V₀.mem X ∧ z.mem (prodNbhd X V₁.master)
   sub h := h.1
@@ -162,6 +165,7 @@ def NeighborhoodSystem.Element.fst (z : (prod V₀ V₁).Element) : V₀.Element
 
 /-- Scott's `z₁ = {Y ∈ 𝒟₁ ∣ Δ₀ ∪ Y ∈ z}`: the second component of a product
 element. -/
+@[expose]
 def NeighborhoodSystem.Element.snd (z : (prod V₀ V₁).Element) : V₁.Element where
   mem Y := V₁.mem Y ∧ z.mem (prodNbhd V₀.master Y)
   sub h := h.1
@@ -207,6 +211,7 @@ theorem prod_mem_split {z : (prod V₀ V₁).Element} {X : Set α} {Y : Set β}
 /-- **Definition 3.1 (Scott 1981, PRG-19).** The element pairing `⟨x, y⟩ = {X ∪ Y
 ∣ X ∈ x, Y ∈
 y}`. -/
+@[expose]
 def pair (x : V₀.Element) (y : V₁.Element) : (prod V₀ V₁).Element where
   mem W := ∃ X Y, x.mem X ∧ y.mem Y ∧ W = prodNbhd X Y
   sub := by rintro W ⟨X, Y, hX, hY, rfl⟩; exact prod_mem_prodNbhd (x.sub hX) (y.sub hY)
@@ -360,6 +365,7 @@ def proj₁ (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
 /-- **Definition 3.3 (Scott 1981, PRG-19).** The paired mapping `⟨f, g⟩ : 𝒟₂ → 𝒟₀
 × 𝒟₁`,
 `Z ⟨f, g⟩ (X ∪ Y) ↔ Z f X ∧ Z g Y`. -/
+@[expose]
 def paired (f : ApproximableMap V₂ V₀) (g : ApproximableMap V₂ V₁) :
     ApproximableMap V₂ (prod V₀ V₁) where
   rel Z P := (prod V₀ V₁).mem P ∧ f.rel Z (Sum.inl ⁻¹' P) ∧ g.rel Z (Sum.inr ⁻¹' P)

@@ -143,7 +143,7 @@ theorem integral_inv_real_axis (r ε : ℝ) (hr : 0 < r)
     Complex.ofReal_log hr.le, Complex.ofReal_log hε.le]
 
 /-- Translate a piecewise C¹ immersion by a constant. -/
-def PiecewiseC1Immersion.translate
+@[expose] def PiecewiseC1Immersion.translate
     (γ : PiecewiseC1Immersion) (c : ℂ) :
     PiecewiseC1Immersion where
   toFun := fun t => γ.toFun t + c

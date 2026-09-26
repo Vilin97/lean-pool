@@ -69,7 +69,7 @@ theorem cyclicRetreat_add {n : ℕ} [NeZero n] (i : Fin n) (a b : ℕ) :
 /-- Nonzero counterclockwise offsets from `v` that lead to a neighbor in
 `G(S,3)`.  The order on `Fin n` is the order of representatives
 `0,1,...,n-1`, so its minimum is the first counterclockwise neighbor. -/
-noncomputable def ccwNeighborOffsets
+@[expose] noncomputable def ccwNeighborOffsets
     {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) (v : Fin n) :
     Finset (Fin n) := by
   classical
@@ -77,7 +77,7 @@ noncomputable def ccwNeighborOffsets
     k ≠ 0 ∧ TopThreeAdjacent P d₁ d₂ d₃ v (cyclicAdvance v k.val)
 
 /-- Nonzero clockwise offsets from `v` that lead to a graph neighbor. -/
-noncomputable def cwNeighborOffsets
+@[expose] noncomputable def cwNeighborOffsets
     {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) (v : Fin n) :
     Finset (Fin n) := by
   classical
@@ -86,14 +86,14 @@ noncomputable def cwNeighborOffsets
 
 /-- First counterclockwise neighbor offset; zero is the explicit sentinel
 when the vertex is isolated. -/
-noncomputable def firstNeighborOffset
+@[expose] noncomputable def firstNeighborOffset
     {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) (v : Fin n) : Fin n := by
   classical
   let S := ccwNeighborOffsets P d₁ d₂ d₃ v
   exact if h : S.Nonempty then S.min' h else 0
 
 /-- First clockwise neighbor offset, with zero as the isolated sentinel. -/
-noncomputable def firstClockwiseNeighborOffset
+@[expose] noncomputable def firstClockwiseNeighborOffset
     {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) (v : Fin n) : Fin n := by
   classical
   let S := cwNeighborOffsets P d₁ d₂ d₃ v
@@ -283,7 +283,7 @@ right endpoint by one side strictly increases the squared distance. -/
 
 /-- An oriented edge is a majorant when neither legal endpoint cover raises
 its distance. -/
-def IsMajorant
+@[expose] def IsMajorant
     {K : Type*} [Ring K] [LT K] {n : ℕ} [NeZero n]
     (P : Fin n → Point K) (i j : Fin n) : Prop :=
   ¬IsLeftCover P i j ∧ ¬IsRightCover P i j
@@ -626,7 +626,7 @@ theorem exists_maximal_gap_coordinated_majorants
 namespace K3MajorantWitness
 
 /-- Convert a witness without changing endpoint orientation. -/
-def toK3Majorant
+@[expose] def toK3Majorant
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ} {i j : Fin n}
     (W : K3MajorantWitness P d₁ d₂ d₃ i j) : K3Majorant where
   leftMoves := W.leftMoves
@@ -673,7 +673,7 @@ The acute-angle/nonavoiding-majorants implication is proved in
 `MajorantArcNesting.lean`.  What remains is ErLV's undisplayed strict order of
 the two inner majorant endpoints: under the draft's side-count convention it
 is `first.rightMoves + second.leftMoves < 3`. -/
-def ErLVMajorantArcNestingComplete : Prop :=
+@[expose] def ErLVMajorantArcNestingComplete : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     CyclicStrictConvex P → HasTopThreeDistanceClasses P d₁ d₂ d₃ →
     (∀ v, 7 ≤ vertexDegree P d₁ d₂ d₃ v) →

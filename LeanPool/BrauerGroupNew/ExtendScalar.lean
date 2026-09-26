@@ -169,4 +169,4 @@ def absorbEqv : L ⊗[k] A ≃ₐ[L] L ⊗[K] (K ⊗[k] A) where
   commutes' := release k K L A|>.commutes
 
 theorem absorbEqv_apply (l : L) (a : A) : absorbEqv k K L A (l ⊗ₜ a) = l ⊗ₜ[K] (1 ⊗ₜ a) :=
-  rfl
+  by rfl

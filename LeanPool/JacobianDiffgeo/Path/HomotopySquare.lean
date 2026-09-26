@@ -410,7 +410,7 @@ noncomputable def pathIntegralQ (η : Form1 X) (q : Path.Homotopic.Quotient x y)
   Quotient.liftOn q (pathIntegral · η) fun _ _ h => pathIntegral_congr_homotopic h η
 
 @[simp] theorem pathIntegralQ_mk (γ : Path x y) (η : Form1 X) :
-    pathIntegralQ η (Path.Homotopic.Quotient.mk γ) = pathIntegral γ η := rfl
+    pathIntegralQ η (Path.Homotopic.Quotient.mk γ) = pathIntegral γ η := by rfl
 
 theorem pathIntegralQ_trans (p : Path.Homotopic.Quotient x y) (q : Path.Homotopic.Quotient y z)
     (η : Form1 X) : pathIntegralQ η (p.trans q) = pathIntegralQ η p + pathIntegralQ η q := by

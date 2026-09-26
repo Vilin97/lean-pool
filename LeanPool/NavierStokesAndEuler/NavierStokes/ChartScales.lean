@@ -753,7 +753,8 @@ theorem slotLength_bounds (r0 h : ℝ) (hr : 0 ≤ r0) (hh : 0 ≤ h) {n : ℕ} 
     by simpa only [slotLength, div_eq_mul_inv, mul_assoc] using hu⟩
 
 /-- The carrier is the genuine rounded integer frequency used in the manuscript. -/
-def carrier (h : ℝ) (n : ℕ) : ℕ := Scaling.carrierFrequency (epsilon h n)
+@[expose] def carrier (h : ℝ) (n : ℕ) : ℕ :=
+  Scaling.carrierFrequency (epsilon h n)
 
 theorem carrier_viscosity_bounds (h : ℝ) (hh : 0 ≤ h) (n : ℕ) :
     1 ≤ epsilon h n * (carrier h n : ℝ) ^ 2 ∧

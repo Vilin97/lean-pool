@@ -34,7 +34,7 @@ there is no symmetric time window in this interface. -/
 
 /-- Existence interface for a measurable weak pressure gradient with normalized-cylinder cell
 bounds. -/
-def oneSidedPressureGradientOriginCellProducer : Prop :=
+@[expose] def oneSidedPressureGradientOriginCellProducer : Prop :=
   ∀ q τ C_CZ R₀ R₁ ε : ℝ, ∀ KU KD : ℝ≥0∞,
     5 / 2 < q → 25 / 3 ≤ τ → τ ≤ 25 →
     0 ≤ C_CZ →

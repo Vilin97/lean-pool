@@ -59,6 +59,7 @@ variable {A' : Type u} [CommRing A']
 /-- An ideal of `A'`, regarded as a sieve over the unique object of `SingleObj A'`: ideals absorb
 multiplication by arbitrary ring elements, which is exactly a sieve's stability under
 precomposition, since composition in `SingleObj A'` *is* ring multiplication. -/
+@[expose]
 def Sieve.ofIdeal (I : Ideal A') : Sieve (CategoryTheory.SingleObj.star A') where
   arrows {_} f := (f : A') ∈ I
   downward_closed {_ _ f} hf g := by

@@ -830,7 +830,7 @@ The full bijection NoncrossingPairing(n+1) ≃ Σ k, NCP(k) × NCP(n-k)
 that yields the Catalan recurrence when we take cardinalities. -/
 
 /-- Noncrossing pairings: the subtype of pairings that are noncrossing. -/
-def NoncrossingPairing (n : ℕ) :=
+@[expose] def NoncrossingPairing (n : ℕ) :=
   { p : Pairing n // p.IsNoncrossing }
 
 /-! ### Helper: extracting k from p(0) = 2k+1 -/

@@ -79,7 +79,7 @@ def bipartiteEdge (H : SimpleGraph V) (x y : V) (hxy : Linked H x y) :
 
 @[simp] lemma bipartiteEdge_val (H : SimpleGraph V) (x y : V) (hxy : Linked H x y) :
     (bipartiteEdge H x y hxy : Sym2 (V ⊕ V)) = s(.inl x, .inr y) :=
-  rfl
+  by rfl
 
 lemma setOf_linked_eq_insert_neighborSet (H : SimpleGraph V) (x : V) :
     {y : V | Linked H x y} = insert x (H.neighborSet x) := by

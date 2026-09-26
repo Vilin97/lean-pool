@@ -42,6 +42,7 @@ universe u
 
 /-- Every vertex of `G` has degree at most `d`, expressed without choosing a decidable adjacency
 relation.  For a finite vertex type, `Set.ncard (G.neighborSet v)` is the ordinary vertex degree. -/
+@[expose]
 noncomputable def MaxDegreeLE {V : Type*} (G : SimpleGraph V) (d : ℕ) : Prop :=
   ∀ v, (G.neighborSet v).ncard ≤ d
 
@@ -276,6 +277,7 @@ lemma maxDegreeLE_lineGraph {V : Type u} [Finite V] {G : SimpleGraph V} {d : ℕ
 
 The quantified vertex type is kept native instead of transporting every construction to `Fin n`.
 `Finite V` makes `Nat.card V` and the set cardinalities mathematically meaningful. -/
+@[expose]
 noncomputable def OrderAdmissible (k d n : ℕ) : Prop :=
   ∃ (V : Type) (G : SimpleGraph V),
     Finite V ∧ Nat.card V = n ∧ MaxDegreeLE G d ∧ G.ediam ≤ (k : ℕ∞)

@@ -207,7 +207,7 @@ private theorem inducedMap'_respects (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ 
 
 /-- The map between homotopy groups (as sets)
 induced by a morphism `f : X ⟶ Y` of pointed topological spaces -/
-def inducedMap' (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
+@[expose] def inducedMap' (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
     π_ n X.as X.point → π_ n Y.as Y.point :=
   Quotient.map (GenLoop.inducedMap' n f) fun {α β} hαβ ↦ by
     exact inducedMap'_respects n f (α := α) (β := β) hαβ

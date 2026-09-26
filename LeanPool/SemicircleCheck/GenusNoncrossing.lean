@@ -573,7 +573,7 @@ formulation because:
 -/
 
 /-- An adjacent pair in a pairing: a point i such that π(i) = i + 1 mod 2n. -/
-def Pairing.hasAdjacentAt {n : ℕ} (p : Pairing n) (i : Fin (2 * n)) : Prop :=
+@[expose] def Pairing.hasAdjacentAt {n : ℕ} (p : Pairing n) (i : Fin (2 * n)) : Prop :=
   p.val i = finRotate (2 * n) i
 
 /-- Deletion of an adjacent pair: given a pairing with π(i) = i+1,
@@ -589,7 +589,7 @@ def Pairing.hasAdjacentAt {n : ℕ} (p : Pairing n) (i : Fin (2 * n)) : Prop :=
     It requires building the injection Fin(2n-2) ↪ Fin(2n) that
     skips i and j, and proving the conjugated permutation is
     a fixed-point-free involution. -/
-noncomputable def Pairing.deleteAdjacent {n : ℕ} (p : Pairing (n + 1))
+@[expose] noncomputable def Pairing.deleteAdjacent {n : ℕ} (p : Pairing (n + 1))
     (i : Fin (2 * (n + 1))) (h : p.hasAdjacentAt i) :
     Pairing n :=
   -- Rotate so the adjacent pair sits at coordinates (0, 1)
@@ -636,7 +636,7 @@ noncomputable def Pairing.deleteAdjacent {n : ℕ} (p : Pairing (n + 1))
       exact SemicircleCore.contractZeroOne_isPairing h₀' h₁' hinv hfpf⟩
 
 /-- Recursive noncrossing predicate. -/
-def Pairing.IsNoncrossing : {n : ℕ} → Pairing n → Prop
+@[expose] def Pairing.IsNoncrossing : {n : ℕ} → Pairing n → Prop
   | 0, _ => True
   | n + 1, p => ∃ i : Fin (2 * (n + 1)),
       ∃ h : p.hasAdjacentAt i, (p.deleteAdjacent i h).IsNoncrossing

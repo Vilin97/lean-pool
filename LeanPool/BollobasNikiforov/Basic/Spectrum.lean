@@ -30,7 +30,7 @@ variable {A : Matrix n n ℝ}
 
 /-- The eigenvalues of a Hermitian matrix in nonincreasing order. The value at
 `i` is the paper's `λ_{i+1}`. -/
-noncomputable def eigs₀ (hA : A.IsHermitian) : Fin (Fintype.card n) → ℝ :=
+@[expose] noncomputable def eigs₀ (hA : A.IsHermitian) : Fin (Fintype.card n) → ℝ :=
   hA.eigenvalues₀
 
 lemma eigs₀_antitone (hA : A.IsHermitian) : Antitone (eigs₀ hA) :=

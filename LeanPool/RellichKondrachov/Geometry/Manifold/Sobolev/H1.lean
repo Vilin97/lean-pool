@@ -64,7 +64,7 @@ local instance instBorelSpaceMH1 : BorelSpace M := ⟨rfl⟩
 namespace FiniteChartData
 
 /-- `C¹` scalar functions `M → ℝ` (in the manifold sense), as a submodule of `M → ℝ`. -/
-def C1 : Submodule ℝ (M → ℝ) where
+@[expose] def C1 : Submodule ℝ (M → ℝ) where
   carrier := {f | ContMDiff I (𝓘(ℝ, ℝ)) 1 f}
   zero_mem' := by
     -- `0` is (locally) constant, hence `C¹`.

@@ -69,7 +69,7 @@ abbrev Length := Word → Nat
 @[expose] def triangIneq (l : Length) : Prop := (g h : Word) → l (g ++ h) ≤ l g + l h
 
 /-- A length function normalized on single letters. -/
-def normalized (l : Length) : Prop := (x : Letter) → l [x] = 1
+@[expose] def normalized (l : Length) : Prop := (x : Letter) → l [x] = 1
 
 /-- A length function that sends the empty word to zero. -/
 def emptyWord (l : Length) : Prop := l [] = 0

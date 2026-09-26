@@ -90,7 +90,7 @@ scoped prefix:33 "?'" => Program.test -- avoiding plain "?" which has a meaning 
 
 /-- Union of a list of programs. The empty union is `?'⊥`, a program that cannot be
 executed, so that `[(⋃ ∅)*]φ` is equivalent to `φ`. -/
-def _root_.PDL.Program.unions : List Program → Program
+@[expose] def _root_.PDL.Program.unions : List Program → Program
   | [] => ?'⊥
   | [α] => α
   | α :: rest => α ⋓ Program.unions rest

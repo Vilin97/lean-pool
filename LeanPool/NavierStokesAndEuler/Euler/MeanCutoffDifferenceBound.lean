@@ -46,18 +46,18 @@ theorem cutoffBound_translate (χ : Cutoff) (a : Space) :
     lpNorm_translated (gradient χ.field) (contDiff_gradient χ.smooth).continuous]
 
 /-- The genuine directional spatial difference quotient, defined also at h = 0. -/
-def spatialDifference (a : Space) (h : ℝ) : L2 →L[ℝ] L2 :=
+@[expose] def spatialDifference (a : Space) (h : ℝ) : L2 →L[ℝ] L2 :=
   h⁻¹ • ((translation (h • a)).toContinuousLinearMap - ContinuousLinearMap.id ℝ L2)
 
 theorem spatialDifference_apply (a : Space) (h : ℝ) (z : L2) :
-    spatialDifference a h z = h⁻¹ • (translation (h • a) z - z) := rfl
+    spatialDifference a h z = h⁻¹ • (translation (h • a) z - z) := by rfl
 
 /-- Difference quotient, given by `((χ.translate (h • a)).sub χ).scale h⁻¹`. -/
-def Cutoff.differenceQuotient (χ : Cutoff) (a : Space) (h : ℝ) : Cutoff :=
+@[expose] def Cutoff.differenceQuotient (χ : Cutoff) (a : Space) (h : ℝ) : Cutoff :=
   ((χ.translate (h • a)).sub χ).scale h⁻¹
 
 theorem Cutoff.differenceQuotient_field (χ : Cutoff) (a : Space) (h : ℝ) (x : Space) :
-    (χ.differenceQuotient a h).field x = h⁻¹ * (χ.field (x + h • a) - χ.field x) := rfl
+    (χ.differenceQuotient a h).field x = h⁻¹ * (χ.field (x + h • a) - χ.field x) := by rfl
 
 theorem spatialDifference_commutator (a : Space) (h : ℝ) (A : L2 →L[ℝ] L2) :
     (spatialDifference a h).comp A - A.comp (spatialDifference a h) =

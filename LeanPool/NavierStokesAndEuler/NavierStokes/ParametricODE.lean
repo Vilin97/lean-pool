@@ -93,7 +93,7 @@ def integrator : Curve a b E →L[ℝ] Curve a b E :=
   } (b - a) (norm_integralPath_le hab)
 
 theorem integrator_apply (f : Curve a b E) (t : Icc a b) :
-    integrator hab f t = ∫ s in a..(t : ℝ), extend hab f s := rfl
+    integrator hab f t = ∫ s in a..(t : ℝ), extend hab f s := by rfl
 
 /-- Apply coefficient, given by `⟨fun t => A t (u t), A.continuous.clm_apply u.continuous⟩`. -/
 @[expose]
@@ -130,7 +130,7 @@ def coefficientAction : Coefficient a b E →L[ℝ] Curve a b E →L[ℝ] Curve 
 
 omit [CompleteSpace E] in
 theorem coefficientAction_apply (A : Coefficient a b E) (u : Curve a b E) (t : Icc a b) :
-    coefficientAction (E := E) A u t = A t (u t) := rfl
+    coefficientAction (E := E) A u t = A t (u t) := by rfl
 
 /-- Volterra, given by `((ContinuousLinearMap.compL ℝ (Curve a b E) (Curve a b E) (Curve a b E))
 (integrator hab)).comp (coefficientAction (E := E))`. -/
@@ -140,7 +140,7 @@ def volterra : Coefficient a b E →L[ℝ] Curve a b E →L[ℝ] Curve a b E :=
 
 theorem volterra_apply (A : Coefficient a b E) (u : Curve a b E) (t : Icc a b) :
     volterra (E := E) hab A u t =
-      ∫ s in a..(t : ℝ), extend hab A s (extend hab u s) := rfl
+      ∫ s in a..(t : ℝ), extend hab A s (extend hab u s) := by rfl
 
 theorem norm_volterra_apply_le (A : Coefficient a b E) (u : Curve a b E) :
     ‖volterra (E := E) hab A u‖ ≤ (b - a) * ‖A‖ * ‖u‖ := by
@@ -150,7 +150,7 @@ theorem norm_volterra_apply_le (A : Coefficient a b E) (u : Curve a b E) :
       (sub_nonneg.mpr hab)).trans_eq (mul_assoc _ _ _).symm)
 
 /-- Homogeneous system as an element of `TangentODE.IntervalSystem E`. -/
-def homogeneousSystem (A : Coefficient a b E) : TangentODE.IntervalSystem E := {
+@[expose] def homogeneousSystem (A : Coefficient a b E) : TangentODE.IntervalSystem E := {
   left := a
   right := b
   ordered := hab

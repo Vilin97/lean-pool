@@ -159,7 +159,7 @@ def funSpace (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
     · exact hL' p h
   sub_master := fun _ => Set.subset_univ _
 
-@[simp] theorem funSpace_master : (funSpace V₀ V₁).master = Set.univ := rfl
+@[simp] theorem funSpace_master : (funSpace V₀ V₁).master = Set.univ := by rfl
 
 theorem funSpace_mem_iff {W : Set (ApproximableMap V₀ V₁)} :
     (funSpace V₀ V₁).mem W ↔
@@ -289,10 +289,10 @@ def funSpaceEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) 
       exact h _ hrel
 
 @[simp] theorem funSpaceEquiv_apply (φ : (funSpace V₀ V₁).Element) :
-    funSpaceEquiv V₀ V₁ φ = toApproxMap φ := rfl
+    funSpaceEquiv V₀ V₁ φ = toApproxMap φ := by rfl
 
 @[simp] theorem funSpaceEquiv_symm_apply (f : ApproximableMap V₀ V₁) :
-    (funSpaceEquiv V₀ V₁).symm f = toFilter f := rfl
+    (funSpaceEquiv V₀ V₁).symm f = toFilter f := by rfl
 
 /-- Intersection of two function-space neighbourhoods, when non-empty, is again
 one. -/
@@ -332,10 +332,10 @@ def interYs (m : Set β) : List (Set α × Set β) → Set α → Set β
   | [], _ => m
   | p :: L, X => {z | X ⊆ p.1 → z ∈ p.2} ∩ interYs m L X
 
-@[simp] theorem interYs_nil (m : Set β) (X : Set α) : interYs m [] X = m := rfl
+@[simp] theorem interYs_nil (m : Set β) (X : Set α) : interYs m [] X = m := by rfl
 
 theorem interYs_cons (m : Set β) (p : Set α × Set β) (L : List (Set α × Set β)) (X : Set α) :
-    interYs m (p :: L) X = {z | X ⊆ p.1 → z ∈ p.2} ∩ interYs m L X := rfl
+    interYs m (p :: L) X = {z | X ⊆ p.1 → z ∈ p.2} ∩ interYs m L X := by rfl
 
 /-- Membership in `interYs`: `z ∈ ⋂{Yᵢ ∣ X ⊆ Xᵢ}` iff `z ∈ Δ₁` and `z ∈ Yᵢ` for
 every `i` with
@@ -478,6 +478,7 @@ def MapsBounded (F : Set (ApproximableMap V₀ V₁)) : Prop := ∃ h, ∀ f ∈
 
 /-- `F` is *pointwise bounded* when `{f(x) ∣ f ∈ F}` is bounded in `|𝒟₁|` for
 every `x`. -/
+@[expose]
 def PointwiseBounded (F : Set (ApproximableMap V₀ V₁)) : Prop :=
   ∀ x : V₀.Element, V₁.Bounded (Set.image (fun f => f.toElementMap x) F)
 

@@ -45,10 +45,10 @@ def isDvdNat (n m : ℕ) : ℕ := if n ∣ m then 1 else 0
     0 < isDvdNat n m ↔ n ∣ m := by simp[isDvdNat]; by_cases n ∣ m <;> simp[*]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def inv (n : ℕ) : ℕ := isEqNat n 0
+@[expose] def inv (n : ℕ) : ℕ := isEqNat n 0
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def pos (n : ℕ) : ℕ := isLtNat 0 n
+@[expose] def pos (n : ℕ) : ℕ := isLtNat 0 n
 
 @[simp] lemma inv_zero : inv 0 = 1 := rfl
 

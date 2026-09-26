@@ -41,7 +41,7 @@ as the base point of that family.
 /-- The slicewise `L^{6/5}` pressure-gradient production on the symmetric
 ball, with the incoming velocity Morrey exponent `τ` free.  The conclusion
 does not mention `τ`: only the hypothesis on `u` does. -/
-def symmetricPressureGradientSliceProducerUniform : Prop :=
+@[expose] def symmetricPressureGradientSliceProducerUniform : Prop :=
   ∀ q τ : ℝ, 5 / 2 < q → 25 / 3 ≤ τ → τ ≤ 25 →
     ∀ {Ω : Set Vec3} {I : Set ℝ}
       {u : ParabolicPoint → Vec3}
@@ -65,7 +65,7 @@ def symmetricPressureGradientSliceProducerUniform : Prop :=
 /-- The Route A pressure-gradient producer at a free velocity exponent.  This
 is the statement consumed by the regularity provider for every `τ` that the
 bootstrap of `prop:bootstrap` visits. -/
-def routeAGradientProducerUniform : Prop :=
+@[expose] def routeAGradientProducerUniform : Prop :=
   ∀ q τ : ℝ, 5 / 2 < q → 25 / 3 ≤ τ → τ ≤ 25 →
     ∀ {Ω : Set Vec3} {I : Set ℝ}
       {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}

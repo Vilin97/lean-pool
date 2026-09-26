@@ -109,7 +109,7 @@ theorem denote_closed (M : Model S) {φ : Pattern S Var} (hφ : Closed φ)
   M.denote ρ φ = Set.univ
 
 /-- `M ⊨ φ`: `φ` is total in `M` under every valuation. -/
-def Model.Sat (M : Model S) (φ : Pattern S Var) : Prop := ∀ ρ, M.Total ρ φ
+@[expose] def Model.Sat (M : Model S) (φ : Pattern S Var) : Prop := ∀ ρ, M.Total ρ φ
 
 /-- `M ⊨ Γ`. -/
 @[expose] def Model.SatSet (M : Model S) (Γ : Set (Pattern S Var)) : Prop := ∀ γ ∈ Γ, M.Sat γ

@@ -36,7 +36,7 @@ open CKN
 abbrev rieszSecondL2 := Lp ℝ 2 (volume : Measure Vec3)
 
 /-- Continuous inclusion of Schwartz functions into the L² source space. -/
-def rieszSecondSchwartzEmbedding :
+@[expose] def rieszSecondSchwartzEmbedding :
     SchwartzMap Vec3 ℝ →L[ℝ] rieszSecondL2 :=
   SchwartzMap.toLpCLM ℝ ℝ 2 volume
 
@@ -389,7 +389,7 @@ theorem rieszSecondKernelC_H :
   ring
 
 /-- Measurable second-Riesz operator on L² inputs, extended by zero outside L². -/
-def rieszSecondL2RawOperator {i j : Fin 3}
+@[expose] def rieszSecondL2RawOperator {i j : Fin 3}
     (hL2 : RieszSecondL2Input i j) (f : Vec3 → ℝ) : Vec3 → ℝ := by
   classical
   exact if hf : MemLp f (2 : ℝ≥0∞) volume then

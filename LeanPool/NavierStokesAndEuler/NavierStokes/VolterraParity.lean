@@ -653,7 +653,7 @@ section RadialInverse
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The normalized integral in the regular inverse of `d/dξ+c/ξ`. -/
-def weightedMean (c : ℕ) (f : ℝ → E) (ξ : ℝ) : E :=
+@[expose] def weightedMean (c : ℕ) (f : ℝ → E) (ξ : ℝ) : E :=
   ∫ t in (0 : ℝ)..1, (t ^ c) • f (t * ξ)
 
 /-- The genuine zero-axis Volterra inverse. -/
@@ -1818,7 +1818,8 @@ theorem radialInverse_equationRHS_reflect (A₀ A₁ : Coeff) (f W : Field) :
   rw [equationRHS_reflect, radialInverse_reflect]
 
 /-- The actual regular integral equation on a specified radial set. -/
-def IntegralEquationOn (S : Set ℝ) (U : Set ℂ) (A₀ A₁ : Coeff) (f W : Field) : Prop :=
+@[expose] def IntegralEquationOn (S : Set ℝ) (U : Set ℂ) (A₀ A₁ : Coeff)
+    (f W : Field) : Prop :=
   ∀ r ∈ S, ∀ z ∈ U, W r z = radialInverse (equationRHS A₀ A₁ f W) r z
 
 theorem IntegralEquationOn.reflect {S : Set ℝ} {U : Set ℂ}

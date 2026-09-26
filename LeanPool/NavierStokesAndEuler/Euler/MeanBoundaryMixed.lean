@@ -33,12 +33,12 @@ def Cutoff.add (χ ψ : Cutoff) : Cutoff :=
 
 /-- Scale, given by `⟨c • χ.field, χ.smooth.const_smul c, χ.compact.comp_left (g := fun t : ℝ =>
 c • t) (smul_zero c)⟩`. -/
-def Cutoff.scale (χ : Cutoff) (c : ℝ) : Cutoff :=
+@[expose] def Cutoff.scale (χ : Cutoff) (c : ℝ) : Cutoff :=
   ⟨c • χ.field, χ.smooth.const_smul c,
     χ.compact.comp_left (g := fun t : ℝ => c • t) (smul_zero c)⟩
 
 /-- Sub, given by `⟨χ.field - ψ.field, χ.smooth.sub ψ.smooth, χ.compact.sub ψ.compact⟩`. -/
-def Cutoff.sub (χ ψ : Cutoff) : Cutoff :=
+@[expose] def Cutoff.sub (χ ψ : Cutoff) : Cutoff :=
   ⟨χ.field - ψ.field, χ.smooth.sub ψ.smooth, χ.compact.sub ψ.compact⟩
 
 /-- Translate, given by `⟨fun x => χ.field (x+a), χ.smooth.comp (contDiff_id.add

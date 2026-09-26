@@ -396,6 +396,7 @@ the quantification to measurable targets. -/
     This is the correct target for the Borel-analytic positive bridge:
     Borel parameterization ⇒ analytic bad event ⇒ NullMeasurableSet,
     but only when c is measurable (so the ghost-gap map is measurable). -/
+@[expose]
 def WellBehavedVCMeasTarget
     (X : Type u) [MeasurableSpace X]
     (C : ConceptClass X Bool) : Prop :=

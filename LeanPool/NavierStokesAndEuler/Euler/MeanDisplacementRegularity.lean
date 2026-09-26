@@ -110,7 +110,7 @@ theorem labelDerivative_norm_sq_le (u : meanDerivatives T hT FInv) :
 variable (F F' : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
 
 /-- Restrict the physical deformation to actual solenoidal label fields. -/
-def solenoidalFrame : C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2) :=
+@[expose] def solenoidalFrame : C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2) :=
   ⟨fun t => (F t).comp solenoidalSpace.subtypeL,
     F.continuous.clm_comp continuous_const⟩
 

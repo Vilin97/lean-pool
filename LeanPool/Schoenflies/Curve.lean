@@ -58,7 +58,7 @@ structure IsLoop (f : ℝ → Plane) : Prop where
   injOn : InjOn f (Ico 0 1)
 
 /-- A Jordan curve: the image of a loop. -/
-def IsJordanCurve (C : Set Plane) : Prop :=
+@[expose] def IsJordanCurve (C : Set Plane) : Prop :=
   ∃ f : ℝ → Plane, IsLoop f ∧ f '' I = C
 
 /-! ### The unit interval, as a subset of `ℝ` -/

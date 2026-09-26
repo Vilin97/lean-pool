@@ -152,7 +152,7 @@ theorem full_two_rung_shared_tip_degree_le_six
   · exact (hLow hLow').trans (by omega)
 
 /-- The four shared geometric realization predicates, indexed by closure route. -/
-def WordClosureRealization
+@[expose] def WordClosureRealization
     {n : ℕ} (route : WordClosureRoute)
     (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) : Prop := match route with
   | .terminalCage => Nonempty (Row1B32WordRealization P d₁ d₂ d₃)
@@ -161,7 +161,7 @@ def WordClosureRealization
   | .fourEdgeCage => Nonempty (Row4DDWordRealization P d₁ d₂ d₃)
 
 /-- A word is realized when the geometric predicate selected by its route is inhabited. -/
-def WordRealization
+@[expose] def WordRealization
     {n : ℕ} (word : ExceptionalCoverWord)
     (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) : Prop :=
   WordClosureRealization word.route P d₁ d₂ d₃

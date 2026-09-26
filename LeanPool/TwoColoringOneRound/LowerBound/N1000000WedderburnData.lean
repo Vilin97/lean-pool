@@ -47,6 +47,7 @@ def blockScales : Array Q :=
 -- stored as integer numerators with a single common denominator per block:
 -- `moduleBasisQ r p k = moduleBasisNum[r][p][k] / moduleBasisDen[r]`.
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def moduleBasisDen : Array Nat := #[6000000,
   2999973000077999928,
   999997000002000000,

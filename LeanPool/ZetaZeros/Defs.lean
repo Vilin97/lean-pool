@@ -33,7 +33,8 @@ def nontrivialZeros (T : ℝ) : Set ℂ :=
 
 /-- The multiplicity of `ρ` as a zero of the Riemann zeta function, i.e. its order of
 vanishing there. -/
-@[expose, zz_tag "def_multiplicity"] noncomputable def zeroMultiplicity (ρ : ℂ) : ℕ := analyticOrderNatAt riemannZeta ρ
+@[expose, zz_tag "def_multiplicity"]
+noncomputable def zeroMultiplicity (ρ : ℂ) : ℕ := analyticOrderNatAt riemannZeta ρ
 
 /-- The number of non-trivial zeros with imaginary part in `(0, T]`, counted with multiplicity.
 This is `N T` in the source. -/
@@ -69,7 +70,8 @@ structure IsAdmissible (lam : ℝ) (eta : ℝ → ℝ) : Prop where
   fourier_sq_zero : fourierC (eta ^ 2) 0 = 1
 
 /-- The kernel of a test function, `K_eta = fourier transform of eta squared`. -/
-@[expose, zz_tag "def_kernel"] noncomputable def testKernel (eta : ℝ → ℝ) : ℂ → ℂ := fourierC (eta ^ 2)
+@[expose, zz_tag "def_kernel"]
+noncomputable def testKernel (eta : ℝ → ℝ) : ℂ → ℂ := fourierC (eta ^ 2)
 
 /-- The support `Z` with multiplicities `m` is conjugation-invariant: every multiplicity is at
 least one, and conjugation permutes `Z` preserving multiplicity. -/
@@ -102,7 +104,9 @@ noncomputable def pairCorrelationSum (f : ℝ → ℝ) (T : ℝ) : ℂ :=
       fourierC f (rescaledDiff T ρ ρ') * pairWeight (ρ - ρ')
 
 /-- The main term `f 0 + 2 ∫₀¹ α f α` of the pair-correlation formula. -/
-@[expose, zz_tag "def_A_functional"] noncomputable def pairMainTerm (f : ℝ → ℝ) : ℝ := f 0 + 2 * ∫ α in (0:ℝ)..1, α * f α
+@[expose, zz_tag "def_A_functional"]
+noncomputable def pairMainTerm (f : ℝ → ℝ) : ℝ :=
+  f 0 + 2 * ∫ α in (0:ℝ)..1, α * f α
 
 /-- A test function admissible in the pair-correlation formula: even, integrable, supported in
 `[-1, 1]`, and Lipschitz at the origin.
@@ -122,8 +126,8 @@ every result depending on it names it in its own statement.
 -/
 
 /-- **Riemann--von Mangoldt** (`lem_rvm`, external input). `N T ∼ (T / 2π) log T`. -/
-@[zz_tag "lem_rvm"]
-def RiemannVonMangoldt : Prop :=
+@[expose, zz_tag "lem_rvm"]
+@[expose] def RiemannVonMangoldt : Prop :=
   ∀ ε > 0, ∃ T₀ : ℝ, ∀ T ≥ T₀,
     |(zeroCount T : ℝ) / (T / (2 * Real.pi) * Real.log T) - 1| < ε
 
@@ -132,7 +136,7 @@ function the weighted pair-correlation sum is `(T / 2π) log T` times its main t
 `O(1 / √log T)`. Lemma 5 of Baluyot--Goldston--Suriajaya--Turnage-Butterbaugh, *An unconditional
 Montgomery theorem for pair correlation of zeros of the Riemann zeta-function*, Acta Arith. 214
 (2024), 357--376. -/
-@[zz_tag "lem_bgst"]
+@[expose, zz_tag "lem_bgst"]
 def PairCorrelation : Prop :=
   ∀ f : ℝ → ℝ, IsPairTestFunction f →
     ∃ C : ℝ, 0 < C ∧ ∃ T₀ : ℝ, ∀ T ≥ T₀,

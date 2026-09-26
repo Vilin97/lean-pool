@@ -24,14 +24,14 @@ variable {α : Type u} (rel : α → α → Prop)
 local infix:50 " ≺ " => rel
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def IsSymmetric := ∀ ⦃x y⦄, x ≺ y → y ≺ x
+@[expose] def IsSymmetric := ∀ ⦃x y⦄, x ≺ y → y ≺ x
 
 -- NOTE: Another convention uses `x ≺ y → x ≺ z → y ≺ z`.
 /-- Imported declaration from the Incompleteness formalization. -/
 def Euclidean := ∀ ⦃x y z⦄, x ≺ y → x ≺ z → z ≺ y
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Serial := ∀ x, ∃ y, x ≺ y
+@[expose] def Serial := ∀ x, ∃ y, x ≺ y
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def Confluent := ∀ ⦃x y z⦄, ((x ≺ y ∧ x ≺ z) → ∃ w, (y ≺ w ∧ z ≺ w))

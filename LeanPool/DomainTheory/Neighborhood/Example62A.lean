@@ -319,7 +319,7 @@ def Asys (n : ℕ) (hn : 0 < n) : NeighborhoodSystem Str where
 
 @[simp] theorem Asys_mem {hn : 0 < n} {W : Set Str} : (Asys n hn).mem W ↔ MemA n W := Iff.rfl
 
-@[simp] theorem Asys_master {hn : 0 < n} : (Asys n hn).master = Set.univ := rfl
+@[simp] theorem Asys_master {hn : 0 < n} : (Asys n hn).master = Set.univ := by rfl
 
 /-! ### The domain equation `A ≅ Aⁿ + Aⁿ`. -/
 

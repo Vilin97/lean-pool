@@ -163,7 +163,7 @@ theorem mixedSeries_uniform (I : Window) {ε R : ℝ} (hε : 0 < ε) (hR20 : R <
       (hp.trans (le_max_right 1 R)))
 
 /-- Strip, given by `Ioo (-R) R ×ˢ Ioo I.left I.right`. -/
-def strip (I : Window) (R : ℝ) : Set (ℝ × ℝ) :=
+@[expose] def strip (I : Window) (R : ℝ) : Set (ℝ × ℝ) :=
   Ioo (-R) R ×ˢ Ioo I.left I.right
 
 theorem strip_isOpen (I : Window) (R : ℝ) : IsOpen (strip I R) :=

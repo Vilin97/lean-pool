@@ -180,6 +180,7 @@ theorem contMDiffAt_section_iff_analyticAt_coeffInFun
 
 /-- Build a holomorphic 1-form from a raw covector section whose preferred-chart coefficient
 functions are analytic. -/
+@[expose]
 def Form1.ofSectionAnalytic (σ : ∀ x : X, TangentSpace 𝓘(ℂ) x →L[ℂ] Bundle.Trivial X ℂ x)
     (h : ∀ x, AnalyticAt ℂ (coeffInFun (chartAt ℂ x) σ) (chartAt ℂ x x)) : Form1 X :=
   ⟨σ, fun x => (contMDiffAt_section_iff_analyticAt_coeffInFun σ x).mpr (h x)⟩

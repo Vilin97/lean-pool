@@ -49,7 +49,10 @@ theorem joinDerivative_apply (v : E) (D : SpatialDomain →L[ℝ] E) (h : Domain
 
 theorem slicedJet_time (s : Set ℝ) (f : Domain → E) (z : Domain) :
     (slicedJet s f z).2 timeDirection=derivWithin (fun t => f (t,z.2)) s z.1 := by
-  simp [slicedJet, joinDerivative_apply, timeDirection]
+  have hzero : (fderiv ℝ (fun y => f (z.1, y)) z.2) (0, 0) = 0 := by
+    change (fderiv ℝ (fun y => f (z.1, y)) z.2) 0 = 0
+    exact map_zero _
+  simpa [slicedJet, joinDerivative_apply, timeDirection] using hzero
 
 theorem slicedJet_space (s : Set ℝ) (f : Domain → E) (z : Domain) (v : Space) :
     (slicedJet s f z).2 (spatialInjection v)=fderiv ℝ (fun y => f (z.1,y)) z.2 (v,0) := by

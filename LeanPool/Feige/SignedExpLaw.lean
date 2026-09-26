@@ -136,6 +136,7 @@ theorem SignedExpFactor.map_expMeasure_one (F : SignedExpFactor) :
       map_neg_mul_expMeasure_one F.scale_pos
 
 /-- The pushforward law of one signed factor. -/
+@[expose]
 def SignedExpFactor.sourceLaw (F : SignedExpFactor) : Measure ℝ :=
   Measure.map
     (fun x : ℝ ↦

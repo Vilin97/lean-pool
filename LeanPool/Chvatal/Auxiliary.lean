@@ -251,7 +251,7 @@ theorem fourier_smul_function (c : ℝ) (f : Finset ι → ℝ) (S : Finset ι) 
 
 /-- The functions satisfying both support restrictions of Corollary 3.2 form a
 linear subspace: physical support lies in `F`, and Fourier support lies in `K`. -/
-def supportSubspace (F K : Family ι) : Submodule ℝ (Finset ι → ℝ) where
+@[expose] def supportSubspace (F K : Family ι) : Submodule ℝ (Finset ι → ℝ) where
   carrier := {f | (∀ x, x ∉ F → f x = 0) ∧ (∀ S, S ∉ K → fourier f S = 0)}
   zero_mem' := by
     constructor

@@ -49,23 +49,23 @@ noncomputable def hzL2 (h : IsAdmissible lam eta) (z : ℂ) : L2Interval lam :=
 
 /-- The first subspace, spanned by the twisted functions at the multiple real points together with
 the even parts at the non-real points. -/
-@[zz_tag "def_U"]
-@[expose] noncomputable def subspaceU (h : IsAdmissible lam eta) (Z : Finset ℂ) (m : ℂ → ℕ) :
+@[expose, zz_tag "def_U"] noncomputable def subspaceU
+    (h : IsAdmissible lam eta) (Z : Finset ℂ) (m : ℂ → ℕ) :
     Submodule ℂ (L2Interval lam) :=
   Submodule.span ℂ
     ((fzL2 h '' (multipleRealPart Z m : Set ℂ)) ∪ (gzL2 h '' (nonRealPart Z : Set ℂ)))
 
 /-- The second subspace, adding the twisted functions at the simple real points. -/
-@[zz_tag "def_V"]
-@[expose] noncomputable def subspaceV (h : IsAdmissible lam eta) (Z : Finset ℂ) (m : ℂ → ℕ) :
+@[expose, zz_tag "def_V"] noncomputable def subspaceV
+    (h : IsAdmissible lam eta) (Z : Finset ℂ) (m : ℂ → ℕ) :
     Submodule ℂ (L2Interval lam) :=
   Submodule.span ℂ
     ((fzL2 h '' ((simpleRealPart Z m ∪ multipleRealPart Z m : Finset ℂ) : Set ℂ))
       ∪ (gzL2 h '' (nonRealPart Z : Set ℂ)))
 
 /-- The third subspace, adding the odd parts at the non-real points. -/
-@[zz_tag "def_W"]
-@[expose] noncomputable def subspaceW (h : IsAdmissible lam eta) (Z : Finset ℂ) (m : ℂ → ℕ) :
+@[expose, zz_tag "def_W"] noncomputable def subspaceW
+    (h : IsAdmissible lam eta) (Z : Finset ℂ) (m : ℂ → ℕ) :
     Submodule ℂ (L2Interval lam) :=
   Submodule.span ℂ
     ((fzL2 h '' ((simpleRealPart Z m ∪ multipleRealPart Z m : Finset ℂ) : Set ℂ))

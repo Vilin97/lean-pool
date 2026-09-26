@@ -44,7 +44,7 @@ functions.
 namespace MState
 
   /-- The instruction at the current program counter. -/
-  def currInstruction (ms:MState) : Instr :=
+  @[expose] def currInstruction (ms:MState) : Instr :=
     ms.code.instructionMap.get (ms.pc)
 
   /-- Increment the program counter by one. -/

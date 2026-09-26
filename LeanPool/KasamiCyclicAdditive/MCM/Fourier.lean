@@ -41,7 +41,8 @@ variable {K : Type*} [Field K] [Fintype K] [DecidableEq K] [CharP K 2]
   ∑ s : K, χ (mcmMap k s)
 
 /-- Additively twisted MCM character sum. -/
-noncomputable def mcmTwistedCharSum (k : ℕ) (ψ : AddChar K ℂ) (χ : MulChar K ℂ) : ℂ :=
+@[expose] noncomputable def mcmTwistedCharSum (k : ℕ) (ψ : AddChar K ℂ)
+    (χ : MulChar K ℂ) : ℂ :=
   ∑ s : K, ψ s * χ (mcmMap k s)
 
 /-! ### Characteristic-two preliminaries -/

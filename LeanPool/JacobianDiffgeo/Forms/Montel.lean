@@ -45,6 +45,7 @@ theorem norm_deriv_le_of_bounded {Ω : Set ℂ} {g : ℂ → ℂ} {C : ℝ} (hΩ
 
 /-- The set of restrictions to a compact `K` of functions holomorphic on an open `Ω ⊇ K` and
 bounded by `C` there. -/
+@[expose]
 def montelFamily (Ω K : Set ℂ) (C : ℝ) : Set C(K, ℂ) :=
   {f | ∃ g : ℂ → ℂ, DifferentiableOn ℂ g Ω ∧ (∀ z ∈ Ω, ‖g z‖ ≤ C) ∧ ∀ z : K, f z = g z}
 

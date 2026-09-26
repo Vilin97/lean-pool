@@ -99,7 +99,7 @@ noncomputable def reversedSide {n : ℕ} (i : Fin n) : C(unitInterval, PolygonCe
 
 theorem reversedSide_apply {n : ℕ} (i : Fin n) (t : unitInterval) :
     reversedSide i t = side i (unitInterval.symm t) :=
-  rfl
+  by rfl
 
 theorem castHomeomorph_side {m n : ℕ} (h : m = n) (i : Fin m)
     (t : unitInterval) :
@@ -240,18 +240,18 @@ def homeomorph : ParameterDirection → (unitInterval ≃ₜ unitInterval)
   | opposite => unitInterval.symmHomeomorph
 
 theorem homeomorph_same : homeomorph same = Homeomorph.refl unitInterval :=
-  rfl
+  by rfl
 
 theorem homeomorph_opposite : homeomorph opposite = unitInterval.symmHomeomorph :=
-  rfl
+  by rfl
 
 @[simp]
 theorem homeomorph_same_apply (t : unitInterval) : homeomorph same t = t :=
-  rfl
+  by rfl
 
 theorem homeomorph_opposite_apply (t : unitInterval) :
     homeomorph opposite t = unitInterval.symm t :=
-  rfl
+  by rfl
 
 end ParameterDirection
 
@@ -289,13 +289,13 @@ namespace Identification
 theorem parameter_sameDirection {Face : Type u} {sideCount : Face → ℕ}
     (source target : Side Face sideCount) :
     (sameDirection source target).parameter = Homeomorph.refl unitInterval :=
-  rfl
+  by rfl
 
 @[simp]
 theorem parameter_oppositeDirection {Face : Type u} {sideCount : Face → ℕ}
     (source target : Side Face sideCount) :
     (oppositeDirection source target).parameter = unitInterval.symmHomeomorph :=
-  rfl
+  by rfl
 
 end Identification
 

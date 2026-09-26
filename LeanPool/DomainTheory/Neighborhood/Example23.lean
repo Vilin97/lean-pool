@@ -61,12 +61,15 @@ open Domain.Neighborhood NeighborhoodSystem ExampleB
 abbrev T : NeighborhoodSystem Example12.Token := Example12.neighborhoodSystem
 
 /-- Scott's `true`: the total element `{Δ, {0}}` of `T`. -/
+@[expose]
 def trueElt : T.Element := Example12.neighborhoodSystem.elemZero
 
 /-- Scott's `false`: the total element `{Δ, {1}}` of `T`. -/
+@[expose]
 def falseElt : T.Element := Example12.neighborhoodSystem.elemOne
 
 /-- Scott's `⊥`: the unique partial element `{Δ}` of `T`. -/
+@[expose]
 def botElt : T.Element := Example12.neighborhoodSystem.bot
 
 /-- The codomain element selected by a parity reading: `none ↦ ⊥`, `some true ↦

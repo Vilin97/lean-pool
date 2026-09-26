@@ -30,12 +30,12 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerTimeH1OperatorProduct
 
 /-- Literal spatial conjugation of a bounded operator on ordinary L². -/
-def translateOperator (a : Space) (A : L2 →L[ℝ] L2) : L2 →L[ℝ] L2 :=
+@[expose] def translateOperator (a : Space) (A : L2 →L[ℝ] L2) : L2 →L[ℝ] L2 :=
   (translation a).toContinuousLinearMap.comp
     (A.comp (translation (-a)).toContinuousLinearMap)
 
 @[simp] theorem translateOperator_apply (a : Space) (A : L2 →L[ℝ] L2) (u : L2) :
-    translateOperator a A u = translation a (A (translation (-a) u)) := rfl
+    translateOperator a A u = translation a (A (translation (-a) u)) := by rfl
 
 /-- Applying the translated coefficient to the translated field is exact covariance. -/
 theorem translateOperator_translation (a : Space) (A : L2 →L[ℝ] L2) (u : L2) :
@@ -81,14 +81,14 @@ theorem translateOperator_norm (a : Space) (A : L2 →L[ℝ] L2) :
   simpa only [translateOperator_neg_cancel] using h
 
 /-- Translate the spatial operator at every time in the coefficient path. -/
-def translatePath (T : ℝ) (a : Space) (F : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) :
+@[expose] def translatePath (T : ℝ) (a : Space) (F : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) :
     C(Icc (0 : ℝ) T, L2 →L[ℝ] L2) :=
   ⟨fun t => translateOperator a (F t),
     continuous_const.clm_comp (F.continuous.clm_comp continuous_const)⟩
 
 @[simp] theorem translatePath_apply (T : ℝ) (a : Space)
     (F : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (t : Icc (0 : ℝ) T) :
-    translatePath T a F t = translateOperator a (F t) := rfl
+    translatePath T a F t = translateOperator a (F t) := by rfl
 
 theorem translatePath_norm_le (T : ℝ) (a : Space)
     (F : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) : ‖translatePath T a F‖ ≤ ‖F‖ := by

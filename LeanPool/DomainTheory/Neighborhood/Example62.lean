@@ -62,6 +62,7 @@ namespace Example62
 /-- `bX = {b :: w' ∣ w' ∈ X}`: the `b`-prefixed copy of a neighbourhood `X`
 (Scott's `0X` for
 `b = false` and `1X` for `b = true`). -/
+@[expose]
 def embBit (b : Bool) (X : Set Str) : Set Str := {w | ∃ w', w = b :: w' ∧ w' ∈ X}
 
 @[simp] theorem mem_embBit {b : Bool} {X : Set Str} {w : Str} :

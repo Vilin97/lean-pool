@@ -70,7 +70,8 @@ abbrev PhaseSpace := Fin 4 → ℝ
   AnalyticOnNhd ℝ (Function.uncurry F) (parameterDomain δ)
 
 /-- A first-integral family Poisson-commutes with the Hamiltonian throughout the domain. -/
-noncomputable def IsFirstIntegralFamily (δ : ℝ) (F : ℝ → PhaseSpace → ℝ) : Prop :=
+@[expose] noncomputable def IsFirstIntegralFamily (δ : ℝ)
+    (F : ℝ → PhaseSpace → ℝ) : Prop :=
   ∀ z ∈ parameterDomain δ, poissonBracket (F z.1) (hamiltonian z.1) z.2 = 0
 
 /-- Functional independence of the phase differentials at some point. -/

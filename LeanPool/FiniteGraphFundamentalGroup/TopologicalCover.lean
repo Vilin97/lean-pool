@@ -39,11 +39,12 @@ the endpoint quotient is handled by a small saturation lemma.
 -/
 
 /-- The midpoint of the unit interval used to separate the two incident-edge stars. -/
-def graphHalf : I :=
+@[expose] def graphHalf : I :=
   ⟨(1 : ℝ) / 2, by constructor <;> norm_num⟩
 
 @[simp]
 theorem graphHalf_coe : (graphHalf : ℝ) = (1 : ℝ) / 2 := rfl
+
 
 @[simp]
 theorem graphHalf_pos : (0 : I) < graphHalf := by
@@ -298,7 +299,7 @@ theorem graphRealizationMap_quotient {V W : Type u} [Quiver.{u} V]
       graphRealizationQuotient (graphRealizationPreMap F x) := rfl
 
 /-- The cover vertex represented by the identity path at the root. -/
-def graphCoverRootVertex {V : Type u} [Quiver.{u} V] (root : V) :
+@[expose] def graphCoverRootVertex {V : Type u} [Quiver.{u} V] (root : V) :
     graphCoverVertex root :=
   ⟨root, 𝟙 _⟩
 
@@ -307,7 +308,7 @@ theorem graphCoverRootVertex_projection {V : Type u} [Quiver.{u} V]
     (root : V) : (graphCoverRootVertex root).1 = root := rfl
 
 /-- The discrete fiber of cover vertices over a base vertex. -/
-def graphCoverVertexOver {V : Type u} [Quiver.{u} V] (root v : V) :=
+@[expose] def graphCoverVertexOver {V : Type u} [Quiver.{u} V] (root v : V) :=
   {x : graphCoverVertex root // x.1 = v}
 
 instance graphCoverVertexOverTopology {V : Type u} [Quiver.{u} V]
@@ -1095,7 +1096,7 @@ def graphCoverEdgeProjection {V : Type u} [Quiver.{u} V] (root : V)
   ⟨d.left.1, d.right.1, d.hom.1⟩
 
 /-- The discrete fiber of cover edges over a base edge. -/
-def graphCoverEdgeOver {V : Type u} [Quiver.{u} V] (root : V)
+@[expose] def graphCoverEdgeOver {V : Type u} [Quiver.{u} V] (root : V)
     (e : Quiver.Total V) :=
   {d : Quiver.Total (graphCoverVertex root) //
     graphCoverEdgeProjection root d = e}

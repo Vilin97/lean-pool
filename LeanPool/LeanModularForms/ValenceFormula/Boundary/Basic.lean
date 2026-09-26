@@ -33,7 +33,7 @@ open scoped Real Interval
 noncomputable section
 
 /-- Height cutoff for the finite-height fundamental domain boundary. -/
-def heightCutoff : ℝ := Real.sqrt 3 / 2 + 1
+@[expose] def heightCutoff : ℝ := Real.sqrt 3 / 2 + 1
 
 lemma one_lt_heightCutoff : 1 < heightCutoff := by
   unfold heightCutoff; linarith [Real.sqrt_pos_of_pos (show (3 : ℝ) > 0 by norm_num)]
