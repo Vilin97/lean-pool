@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+import yaml
 
 from lean_pool.rebase import (
     main,
@@ -153,6 +154,75 @@ def test_split_cards_round_trips() -> None:
     header, cards = split_cards(OURS)
     assert [slug for slug, _ in cards] == ["alpha", "beta", "gamma"]
     assert header + "".join(block for _, block in cards) == OURS
+
+
+@pytest.mark.parametrize("indent", ["", "  ", "    "])
+def test_split_cards_uses_yaml_boundaries_and_decoded_slugs(indent: str) -> None:
+    """Key order, quoting, comments and nested lists do not change card identity."""
+    text = (
+        "# Keep this header\nprojects:\n"
+        f'{indent}- title: "First: project"\n'
+        f"{indent}  summary: |\n{indent}    - slug: not-a-card\n"
+        f"{indent}  tags:\n{indent}    - slug: nested\n"
+        f"{indent}  slug: 'alpha' # Keep this comment\n"
+        f'{indent}- slug: "beta"\n{indent}  title: Beta\n'
+    )
+    header, cards = split_cards(text)
+    assert [slug for slug, _ in cards] == ["alpha", "beta"]
+    assert header + "".join(block for _, block in cards) == text
+
+
+def test_merge_preserves_title_first_added_cards_verbatim() -> None:
+    """Regression: the automatic updater must not silently drop a title-first card."""
+    added = "  - title: Delta\n    slug: 'delta' # quoted identity\n"
+    merged = merge_registry(BASE, OURS, BASE + added)
+    assert merged == OURS + added
+    assert [card["slug"] for card in yaml.safe_load(merged)["projects"]] == [
+        "alpha",
+        "beta",
+        "gamma",
+        "delta",
+    ]
+
+
+def test_merge_recognizes_title_first_base_and_main_cards() -> None:
+    """Reordered keys and quoted slugs must not duplicate existing cards."""
+    base = "projects:\n  - title: Alpha\n    slug: 'alpha'\n"
+    ours = base + '  - title: Delta\n    slug: "delta"\n'
+    theirs = "projects:\n  - slug: alpha\n    title: Alpha\n"
+    theirs += "  - slug: delta\n    title: Delta\n"
+    assert merge_registry(base, ours, theirs) == ours
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "projects:\n  - title: Missing slug\n",
+        "projects:\n  - slug: alpha\n    slug: beta\n",
+        "projects:\n  - slug: alpha\n  - slug: 'alpha'\n",
+        "projects:\n  - slug: 123\n",
+        "projects:\n  - slug: ''\n",
+        "projects: [{slug: alpha}, {slug: beta}]\n",
+        "projects:\n  - &card {slug: alpha}\n  - *card\n",
+        "projects:\n  - not-a-mapping\n",
+        "projects: {}\n",
+    ],
+)
+def test_split_cards_rejects_ambiguous_registries(text: str) -> None:
+    """Malformed identities and unsupported layouts fail before anything is pushed."""
+    with pytest.raises(ValueError):
+        split_cards(text)
+
+
+def test_split_cards_covers_every_real_project() -> None:
+    """Every YAML project, including title-first entries, gets a verbatim block."""
+    root = Path(__file__).resolve().parents[2]
+    text = (root / "LeanPool/projects.yml").read_text(encoding="utf-8")
+    header, cards = split_cards(text)
+    assert [slug for slug, _ in cards] == [
+        card["slug"] for card in yaml.safe_load(text)["projects"]
+    ]
+    assert header + "".join(block for _, block in cards) == text
 
 
 def test_merge_keeps_both_additions() -> None:
