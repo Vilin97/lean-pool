@@ -10109,6 +10109,42 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - slug: euclidean-jordan
+    title: Euclidean Jordan algebras and the frame Peirce decomposition
+    summary: 'The frame Peirce decomposition: relative to a Jordan frame, a Euclidean Jordan
+      algebra is the internal direct sum of the blocks V_ij over unordered pairs of frame indices,
+      and in finite dimension the diagonal blocks are lines, dim V_ii = 1 - the Faraut-Koranyi
+      table entry. The frame is carried as data, so frame conjugacy is sidestepped and nothing
+      here claims anything about the rank of J. Machine checked, not peer reviewed, no priority
+      claim.'
+    branch: nonassociative algebra
+    entry_module: LeanPool.EuclideanJordan
+    authors:
+    - Bryan Ehrlich
+    source:
+      url: https://github.com/ehrlich-b/euclidean-jordan
+      github_repo: ehrlich-b/euclidean-jordan
+      commit: a83407e4dbf73c77c31a2291c02f20b37a5ebbaf
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+    - EuclideanJordan.frameBlock_isInternal
+    main_results:
+    - declaration: EuclideanJordan.frameBlock_isInternal
+      informal: A Euclidean Jordan algebra is the internal direct sum of the Peirce blocks associated
+        with a Jordan frame.
+    - declaration: EuclideanJordan.finrank_frameBlock_diag
+      informal: In finite dimension, every diagonal block of a Jordan frame has dimension one.
+    tags:
+    - nonassociative-algebra
+    msc:
+    - 17C20
+    - 17C27
+    - 17C37
+    - 17C65
+    - 17A15
+    - 46L70
+    provenance: AI
   - slug: asymptotic-triangle-packing
     title: Finite near-regular hypergraph rounding
     summary: >-
