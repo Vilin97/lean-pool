@@ -114,13 +114,9 @@ theorem abs_cubeAverage_vecDot_centered_scalar_cutoff_le_scaledWeakNormProduct
           (fun x => u.grad x i)) ≤
         (Fintype.card (Fin d) : ℝ) * scaledGrad := by
     calc
-      (∑ i : Fin d,
-        Ch01.Legacy.circNegativeBesovNorm Q s (2 : ℝ≥0∞) (1 : ℝ≥0∞)
-          (fun x => u.grad x i))
-          ≤ ∑ _i : Fin d, scaledGrad := by
-            refine Finset.sum_le_sum ?_
-            intro i _hi
-            simpa [Ch01.Legacy.circNegativeBesovNorm] using hgradComp i
+      _ ≤ ∑ _i : Fin d, scaledGrad :=
+        Finset.sum_le_sum fun i _ => by
+          simpa only [Ch01.Legacy.circNegativeBesovNorm] using hgradComp i
       _ = (Fintype.card (Fin d) : ℝ) * scaledGrad := by
             simp [Finset.sum_const, nsmul_eq_mul]
   have hproductDual :
@@ -156,30 +152,8 @@ theorem abs_cubeAverage_vecDot_centered_scalar_cutoff_le_scaledWeakNormProduct
             (fun x => u.grad x i)) ≤
           (Fintype.card (Fin d) : ℝ) * scaledGrad := by
       simpa [r] using hgradCircSum
-    have hmain :
-        (2 * cubeScaleFactor Q * B + 3 * cubeLpNorm Q ∞ ξ) *
-            ((Ch01.Legacy.fullVectorPoincareConstant Q * (3 : ℝ) ^ ((d : ℝ) + 1)) *
-              ∑ i : Fin d,
-                Ch01.Legacy.circNegativeBesovNorm Q (1 - r) (2 : ℝ≥0∞)
-                  (1 : ℝ≥0∞)
-                  (fun x => u.grad x i)) ≤
-          productBound := by
-      calc
-        (2 * cubeScaleFactor Q * B + 3 * cubeLpNorm Q ∞ ξ) *
-            ((Ch01.Legacy.fullVectorPoincareConstant Q * (3 : ℝ) ^ ((d : ℝ) + 1)) *
-              ∑ i : Fin d,
-                Ch01.Legacy.circNegativeBesovNorm Q (1 - r) (2 : ℝ≥0∞)
-                  (1 : ℝ≥0∞)
-                  (fun x => u.grad x i))
-            ≤
-          (2 * cubeScaleFactor Q * B + 3 * cubeLpNorm Q ∞ ξ) *
-            ((Ch01.Legacy.fullVectorPoincareConstant Q * (3 : ℝ) ^ ((d : ℝ) + 1)) *
-              ((Fintype.card (Fin d) : ℝ) * scaledGrad)) := by
-            exact mul_le_mul_of_nonneg_left
-              (mul_le_mul_of_nonneg_left hsum hpoincare_nonneg) hfront_nonneg
-        _ = productBound := by
-            simp [productBound, gradCoeff]
-            ring
+    have hmain := mul_le_mul_of_nonneg_left
+      (mul_le_mul_of_nonneg_left hsum hpoincare_nonneg) hfront_nonneg
     have hdual :
         cubeBesovDualTestNorm Q r (2 : ℝ≥0∞) (1 : ℝ≥0∞) N
             (fun x => productField x i) =
@@ -188,7 +162,10 @@ theorem abs_cubeAverage_vecDot_centered_scalar_cutoff_le_scaledWeakNormProduct
         Q r (2 : ℝ≥0∞) (1 : ℝ≥0∞) N (fun x => productField x i) hqConj]
       rw [hpConj]
     rw [hdual]
-    exact hch01.trans hmain
+    refine hch01.trans (hmain.trans ?_)
+    apply le_of_eq
+    dsimp [productBound, gradCoeff]
+    ring
   have hu : MemLp (fun x => u x) (2 : ℝ≥0∞) (normalizedCubeMeasure Q) :=
     u.memL2_normalizedCubeMeasure
   have hfluct :
