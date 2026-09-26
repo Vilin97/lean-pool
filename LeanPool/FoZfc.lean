@@ -23,7 +23,7 @@ Tags: model-theory, set-theory, zf
 MSC: 03B10, 03E30
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

@@ -28,7 +28,7 @@ public import LeanPool.FoZfc.Axioms
 
 -/
 
-@[expose] public section
+public section
 
 open FirstOrder
 open FirstOrder.Language

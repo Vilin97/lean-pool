@@ -27,7 +27,7 @@ import Mathlib.Tactic.Attr.Core
 
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -36,7 +36,7 @@ namespace FirstOrder.ZFC.FixedSnoc
 variable {V : Type u}
 
 /-- Fin.snoc for the type V. -/
-def fixedSnoc {n : ℕ} (xs : Fin n → V) (b : V) :=
+@[expose] def fixedSnoc {n : ℕ} (xs : Fin n → V) (b : V) :=
     (fun (k : Fin (n + 1)) => if h : k.val < n then xs (Fin.castLT k h) else b)
 
 /-- Fin.snoc = fixedSnoc when applied to V. -/
