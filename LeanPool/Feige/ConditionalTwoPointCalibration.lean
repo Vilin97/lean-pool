@@ -18,7 +18,7 @@ conditional product law selected by any admissible augmented latent vector
 inherits the same rejection bound.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

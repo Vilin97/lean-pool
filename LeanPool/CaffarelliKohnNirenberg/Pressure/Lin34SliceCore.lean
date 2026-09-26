@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Harmonic.InteriorEstim
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -516,6 +516,7 @@ theorem lin34_centred_remainder_integral_bound
 /-- The Calderón--Zygmund part `p₁` of `prop:pressure-decomposition`, run with
 the centred tensor `eq:Uhat`.  This is the object the external input
 `ext:CZ` bounds in the proof of `prop:lin34`. -/
+@[expose]
 def lin34CentredP1 (u : ParabolicPoint → Vec3) (p : ParabolicPoint → ℝ)
     (f : ParabolicPoint → Vec3) (x₀ : Vec3) (ρ : ℝ) (hρ : 0 < ρ) (s : ℝ) :
     Vec3 → ℝ :=

@@ -30,7 +30,7 @@ step 5). This is the first of the three files that were blocked on the cech `Col
   Schwartz-consumer properties.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold BoundedContinuousFunction
 open Set Filter Topology TopologicalSpace Metric RS.Cech

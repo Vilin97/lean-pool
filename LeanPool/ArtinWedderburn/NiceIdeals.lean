@@ -20,7 +20,7 @@ A *nice ideal* is an idempotent ideal whose corner ring is `OrtIdemDiv`. We
 prove that in a prime artinian ring, every ideal is nice.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 

@@ -18,7 +18,7 @@ factorization of the squared radial momentum. These identities underlie the squa
 in the Delaunay generating function.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
@@ -31,7 +31,7 @@ noncomputable def apoapsisRadius (firstAction secondAction : ℝ) : ℝ :=
   firstAction * (firstAction + Real.sqrt (firstAction ^ 2 - secondAction ^ 2))
 
 /-- Angular action of an elliptic Kepler orbit with first action `I₁` and eccentricity `e`. -/
-noncomputable def angularActionFromEccentricity (firstAction eccentricity : ℝ) : ℝ :=
+@[expose] noncomputable def angularActionFromEccentricity (firstAction eccentricity : ℝ) : ℝ :=
   firstAction * Real.sqrt (1 - eccentricity ^ 2)
 
 lemma periapsis_add_apoapsis (firstAction secondAction : ℝ) :

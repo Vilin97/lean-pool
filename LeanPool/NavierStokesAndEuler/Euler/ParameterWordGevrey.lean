@@ -18,7 +18,7 @@ word derivative. Summing all words changes the radius by one fixed alphabet
 factor, independent of the derivative order and factorial shift.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,11 +31,11 @@ variable {P E ι : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup E] [NormedSpace ℝ E] [Fintype ι]
 
 /-- The actual mixed differential evaluated on an ordered word of directions. -/
-def wordDerivative (directions : ι → P) (f : P → E) {n : ℕ} (w : Fin n → ι) (x : P) : E :=
+@[expose] def wordDerivative (directions : ι → P) (f : P → E) {n : ℕ} (w : Fin n → ι) (x : P) : E :=
   iteratedFDeriv ℝ n f x (fun j => directions (w j))
 
 /-- The sum of the actual norms over all ordered words. -/
-def wordSum (directions : ι → P) (f : P → E) (n : ℕ) (x : P) : ℝ :=
+@[expose] def wordSum (directions : ι → P) (f : P → E) (n : ℕ) (x : P) : ℝ :=
   ∑ w : Fin n → ι, ‖wordDerivative directions f w x‖
 
 omit [Fintype ι] in

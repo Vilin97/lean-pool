@@ -34,7 +34,7 @@ Main declarations:
   instance, and the headline `RS.SphereTopology.genus_eq_zero_of_simplyConnectedSpace`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology IsManifold RS Metric

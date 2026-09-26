@@ -38,7 +38,7 @@ Main declarations:
 * `RS.SphereTopology.simplyConnectedSpace_sphere` (the challenge sphere model).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Topology OnePoint RS RS.P1

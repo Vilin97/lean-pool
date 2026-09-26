@@ -62,7 +62,7 @@ The whole file is **sorry-free**. The gated pieces, with routes, are documented 
    documented at `PhiQ`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

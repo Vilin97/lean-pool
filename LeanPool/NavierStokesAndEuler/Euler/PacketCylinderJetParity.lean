@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderSpatialJet
 
 /-! The actual spatial derivatives and nonlinear jet terms preserve joint odd velocity parity. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

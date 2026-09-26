@@ -23,7 +23,7 @@ Unit: serre-duality-tails (`docs/design/serre-duality-tails.md` §3 D1/D3, §5.1
   plus the `μ_{1/f}` inversion identity `nuL_mulInto_inv` the surjectivity endgame needs.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace

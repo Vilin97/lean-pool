@@ -16,7 +16,7 @@ the weak radial integral identity, with integrability side conditions supplied
 by `RadialIntegrability`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.Pow
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Etv.Defs`.
 -/
 
-@[expose] public section
+public section
 
 variable {α : Type _} [LinearOrder α] (C : Config α)
 
@@ -41,7 +41,7 @@ theorem mem_ends {C : Config α} {n : ℕ} {S : Finset α} {p q : α} (h : C.Has
 end HasLaced
 
 /-- Two interweaving laced pairs `(p, r)` and `(q, s)` with `p < q ≤ r < s`. -/
-def HasInterweavedLaced (n : ℕ) (S : Finset α) (p q r s : α) : Prop :=
+@[expose] def HasInterweavedLaced (n : ℕ) (S : Finset α) (p q r s : α) : Prop :=
   (p < q ∧ q ≤ r ∧ r < s) ∧ C.HasLaced n S p r ∧ C.HasLaced n S q s
 
 /-- A join of an `a`-cup and a `b`-cup in `S` meeting at a common point `p`. -/

@@ -24,7 +24,7 @@ arbitrary order-connected time interval; so the cover is indexed by one finite
 family and a finite union of integrability statements closes it.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology

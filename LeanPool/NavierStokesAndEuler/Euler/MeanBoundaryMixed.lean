@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryOperator
 
 /-! Genuine mixed cutoff Newtonian operators and their quantitative dependence on both cutoffs. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -43,7 +43,7 @@ def Cutoff.sub (χ ψ : Cutoff) : Cutoff :=
 
 /-- Translate, given by `⟨fun x => χ.field (x+a), χ.smooth.comp (contDiff_id.add
 contDiff_const), χ.compact.comp_homeomorph (Homeomorph.addRight a)⟩`. -/
-def Cutoff.translate (χ : Cutoff) (a : Space) : Cutoff :=
+@[expose] def Cutoff.translate (χ : Cutoff) (a : Space) : Cutoff :=
   ⟨fun x => χ.field (x+a), χ.smooth.comp (contDiff_id.add contDiff_const),
     χ.compact.comp_homeomorph (Homeomorph.addRight a)⟩
 
@@ -147,7 +147,7 @@ theorem weakPotential_sub (χ ψ : Cutoff) :
   rw [neg_one_smul ℝ, sub_eq_add_neg]
 
 /-- The literal weak `curl χ (-Δ)⁻¹ ψ curl` operator. -/
-def mixedBoundaryOperator (χ ψ : Cutoff) : L2 →L[ℝ] L2 :=
+@[expose] def mixedBoundaryOperator (χ ψ : Cutoff) : L2 →L[ℝ] L2 :=
   (cutoffCurl χ).comp (weakPotential ψ)
 
 theorem mixedBoundaryOperator_diagonal (χ : Cutoff) :

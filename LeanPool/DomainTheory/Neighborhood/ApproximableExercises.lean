@@ -44,7 +44,7 @@ the two
 classical, exactly like
 `ext_of_toElementMap`. -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -67,6 +67,7 @@ def iSupDirected {α : Type*} {V : NeighborhoodSystem α} {I : Type*} [Nonempty 
 theorem mem_iSupDirected {α : Type*} {V : NeighborhoodSystem α} {I : Type*} [Nonempty I]
     (a : I → V.Element) (hdir : ∀ i j, ∃ k, a i ≤ a k ∧ a j ≤ a k) {Z : Set α} :
     (iSupDirected a hdir).mem Z ↔ ∃ i, (a i).mem Z := by
+  rw [iSupDirected, mem_sSupDirected]
   constructor
   · rintro ⟨s, ⟨i, rfl⟩, hsZ⟩; exact ⟨i, hsZ⟩
   · rintro ⟨i, hi⟩; exact ⟨a i, ⟨i, rfl⟩, hi⟩
@@ -142,6 +143,7 @@ theorem toElementMap_ofMono_principal
     (ofMono m hmono).toElementMap (V₀.principal hX) = m X hX := by
   apply Element.ext
   intro Y
+  simp only [mem_toElementMap]
   constructor
   · rintro ⟨Z, ⟨hZmem, hXZ⟩, hZ', hmY⟩
     have hle : m Z hZ' ≤ m X hX := hmono Z X hZ' hX hXZ
@@ -188,6 +190,7 @@ witnesses `X ∈ x` (for `f`) and `X' ∈ x` (for `g`) through `X ∩ X' ∈ x` 
 theorem mem_toElementMap_interMap (f g : ApproximableMap V₀ V₁) (x : V₀.Element) {Z : Set β} :
     ((interMap f g).toElementMap x).mem Z ↔
       (f.toElementMap x).mem Z ∧ (g.toElementMap x).mem Z := by
+  simp only [mem_toElementMap]
   constructor
   · rintro ⟨X, hxX, hf, hg⟩
     exact ⟨⟨X, hxX, hf⟩, ⟨X, hxX, hg⟩⟩
@@ -213,6 +216,7 @@ theorem toElementMap_iSupDirected (f : ApproximableMap V₀ V₁) {I : Type*} [N
   apply Element.ext
   intro Y
   rw [mem_toElementMap, NeighborhoodSystem.mem_iSupDirected]
+  simp only [mem_toElementMap]
   constructor
   · rintro ⟨X, hX, hrel⟩
     obtain ⟨i, hi⟩ := (NeighborhoodSystem.mem_iSupDirected a hdir).mp hX
@@ -249,6 +253,7 @@ theorem mem_toElementMap_iSupMap {I : Type*} [Nonempty I] (f : I → Approximabl
     (hdir : ∀ i j, ∃ k, (∀ X Y, (f i).rel X Y → (f k).rel X Y) ∧
       (∀ X Y, (f j).rel X Y → (f k).rel X Y)) (x : V₀.Element) {Y : Set β} :
     ((iSupMap f hdir).toElementMap x).mem Y ↔ ∃ i, ((f i).toElementMap x).mem Y := by
+  simp only [mem_toElementMap]
   constructor
   · rintro ⟨X, hxX, i, hrel⟩
     exact ⟨i, X, hxX, hrel⟩

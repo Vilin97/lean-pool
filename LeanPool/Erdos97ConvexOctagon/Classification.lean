@@ -17,7 +17,7 @@ finite search excludes every completion of those canonical rows using checked
 geometric obstruction witnesses.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 

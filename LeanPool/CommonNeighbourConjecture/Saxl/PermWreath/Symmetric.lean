@@ -16,7 +16,7 @@ Only the distinguishing-word facts used by the every-base construction are
 included here.
 -/
 
-@[expose] public section
+public section
 
 namespace Saxl
 

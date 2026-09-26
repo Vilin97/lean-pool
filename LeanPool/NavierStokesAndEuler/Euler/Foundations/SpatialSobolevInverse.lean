@@ -18,7 +18,7 @@ The pressure jet is constructed, rather than assumed, from coercivity and
 pointwise smooth coefficient data.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -76,7 +76,7 @@ theorem measurable (A : SmoothCoefficient period) :
   (smoothField_continuous period A.coefficient A.smooth).aestronglyMeasurable
 
 /-- Actual multiplication by the coefficient field in L². -/
-def operator (A : SmoothCoefficient period) : LiftL2 period →L[ℝ] LiftL2 period :=
+@[expose] def operator (A : SmoothCoefficient period) : LiftL2 period →L[ℝ] LiftL2 period :=
   coefficientOperator A.coefficient A.measurable A.bound A.norm_bound
 
 theorem operator_ae (A : SmoothCoefficient period) (f : LiftL2 period) :
@@ -88,7 +88,7 @@ theorem operator_norm (A : SmoothCoefficient period) (f : LiftL2 period) :
   coefficientApply_norm_le A.coefficient A.measurable A.bound A.norm_bound f
 
 /-- The Lax–Milgram pressure associated with this actual coefficient. -/
-def pressure (A : SmoothCoefficient period) (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
+@[expose] def pressure (A : SmoothCoefficient period) (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
     (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ)
     (f : LiftL2 period) : LiftL2 period :=
   liftedPressure period κ m A.coefficient A.measurable A.bound A.norm_bound c hc hpos f
@@ -215,14 +215,14 @@ namespace SpatialJet
 variable {period} {directions : Fin 4 → LiftTangent}
 
 /-- Forget the highest derivative order of a genuine spatial jet. -/
-def truncate {n : ℕ} {f : LiftL2 period} (J : SpatialJet period directions (n + 1) f) :
+@[expose] def truncate {n : ℕ} {f : LiftL2 period} (J : SpatialJet period directions (n + 1) f) :
     SpatialJet period directions n f :=
   match n, J with
   | 0, _ => .zero f
   | _n + 1, .succ df lower hd => .succ df (fun i => (lower i).truncate) hd
 
 /-- The sum of all derivative-word L² norms represented by the jet. -/
-def sobolevNorm {n : ℕ} {f : LiftL2 period} (J : SpatialJet period directions n f) : ℝ :=
+@[expose] def sobolevNorm {n : ℕ} {f : LiftL2 period} (J : SpatialJet period directions n f) : ℝ :=
   match J with
   | .zero f => ‖f‖
   | .succ _ lower _ => ‖f‖ + ∑ i, (lower i).sobolevNorm
@@ -260,7 +260,7 @@ theorem lower_norm_le {n : ℕ} {f : LiftL2 period} (df : Fin 4 → LiftL2 perio
     (le_add_of_nonneg_left (norm_nonneg f))
 
 /-- Addition preserves the actual strong derivatives recorded in a spatial jet. -/
-def add {n : ℕ} {f g : LiftL2 period}
+@[expose] def add {n : ℕ} {f g : LiftL2 period}
     (J : SpatialJet period directions n f) (K : SpatialJet period directions n g) :
     SpatialJet period directions n (f + g) :=
   match J, K with
@@ -271,7 +271,7 @@ def add {n : ℕ} {f g : LiftL2 period}
       first | rfl | (funext t; simp))
 
 /-- Subtraction preserves the actual strong derivatives recorded in a spatial jet. -/
-def sub {n : ℕ} {f g : LiftL2 period}
+@[expose] def sub {n : ℕ} {f g : LiftL2 period}
     (J : SpatialJet period directions n f) (K : SpatialJet period directions n g) :
     SpatialJet period directions n (f - g) :=
   match J, K with
@@ -320,14 +320,14 @@ namespace CoefficientJet
 variable {period} {directions : Fin 4 → LiftTangent}
 
 /-- Forget the highest derivative level while retaining the original coefficient. -/
-def truncate {n : ℕ} {A : SmoothCoefficient period}
+@[expose] def truncate {n : ℕ} {A : SmoothCoefficient period}
     (J : CoefficientJet period directions (n + 1) A) : CoefficientJet period directions n A :=
   match n, J with
   | 0, _ => .zero A
   | _n + 1, .succ dA lower hd => .succ dA (fun i => (lower i).truncate) hd
 
 /-- A finite polynomial bound for multiplication in the jet Sobolev norm. -/
-def productConstant {n : ℕ} {A : SmoothCoefficient period}
+@[expose] def productConstant {n : ℕ} {A : SmoothCoefficient period}
     (J : CoefficientJet period directions n A) : ℝ :=
   match J with
   | .zero A => A.bound
@@ -415,7 +415,7 @@ namespace CoefficientJet
 variable {period} {directions : Fin 4 → LiftTangent}
 
 /-- The explicit finite-order inverse constant obtained from coercivity and coefficient products. -/
-def pressureConstant {n : ℕ} {A : SmoothCoefficient period}
+@[expose] def pressureConstant {n : ℕ} {A : SmoothCoefficient period}
     (J : CoefficientJet period directions n A) (c : ℝ) : ℝ :=
   match J with
   | .zero _ => c⁻¹
@@ -528,7 +528,7 @@ namespace SpatialJet
 variable {period} {directions : Fin 4 → LiftTangent}
 
 /-- A derivative word, ordered with its head differentiated last; invalid orders return zero. -/
-def word {s : ℕ} {f : LiftL2 period} (J : SpatialJet period directions s f)
+@[expose] def word {s : ℕ} {f : LiftL2 period} (J : SpatialJet period directions s f)
     {n : ℕ} (w : Fin n → Fin 4) : LiftL2 period :=
   match n, J with
   | 0, _ => f

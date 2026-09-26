@@ -23,7 +23,7 @@ global viscosity-one solution, contradicting the existing maximal-lifespan theor
 No result here uses any of the comparator's unproved statements.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

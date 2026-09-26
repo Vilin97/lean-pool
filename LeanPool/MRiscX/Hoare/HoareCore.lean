@@ -33,7 +33,7 @@ state before and after the execution of a command.
 This can be used to perform a structured proof later.
 -/
 
-@[expose] public section
+public section
 /-- An assertion is a predicate on machine states. -/
 abbrev Assertion : Type := MState → Prop
 
@@ -70,7 +70,7 @@ intermediate state between `s` and `s'` has a program counter in `L_w`.
 
 With the help of this relation, unambiguous statements can be made about the flow of the program.
 -/
-def weak (s s' : MState) (L_w L_b : Set UInt64) (c : Code) : Prop :=
+@[expose] def weak (s s' : MState) (L_w L_b : Set UInt64) (c : Code) : Prop :=
   s.code = c →
   ∃ (n:Nat), n > 0 ∧ s.runNSteps n = s' ∧ (s'.pc) ∈ L_w ∧
   ∀ (n':Nat), 0 < n' ∧ n' < n →
@@ -88,7 +88,7 @@ there exists a successor state `s'` for which both the relation
 `weak(s, L_w ∪ L_b, s')` and `Q(s')`, `I(s')` and `s'.pc ∉ L_w`
 are satisfied.
 -/
-def hoareTripleUp (P Q : Assertion) (l : UInt64) (L_w L_b : Set UInt64)
+@[expose] def hoareTripleUp (P Q : Assertion) (l : UInt64) (L_w L_b : Set UInt64)
   (c : Code)
 :=
   L_w ∩ L_b = ∅ →
@@ -104,7 +104,7 @@ Essentially the same as the `hoareTripleUp`, but instead of inspecting a whole c
 this relation only focusses on the instruction which is executed next. This can be used to
 reason about single instructions in order to define their specification.
 -/
-def hoare_triple_up_1 (P Q : Assertion) (l : UInt64) (L_w L_b : Set UInt64) (i : Instr)
+@[expose] def hoare_triple_up_1 (P Q : Assertion) (l : UInt64) (L_w L_b : Set UInt64) (i : Instr)
 :=
   L_w ∩ L_b = ∅ →
   L_w ≠ ∅ →

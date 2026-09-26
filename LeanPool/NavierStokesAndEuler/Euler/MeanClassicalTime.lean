@@ -21,7 +21,7 @@ time derivative. The original AC paths have these derivatives at every
 interior time, and within the interval at both endpoints.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -98,7 +98,7 @@ variable (c : ℝ) (hc : 0 < c)
   (fC : C(Icc (0 : ℝ) T, L2))
 
 /-- Continuous coordinate acceleration constructed by the actual Gram inverse. -/
-def classicalAcceleration : C(Icc (0 : ℝ) T, solenoidalSpace) :=
+@[expose] def classicalAcceleration : C(Icc (0 : ℝ) T, solenoidalSpace) :=
   accelerationPath T (solenoidalFrame T F) (solenoidalFrame T F₁) c hc hLower
     s.coordinateVelocityPath fC
 

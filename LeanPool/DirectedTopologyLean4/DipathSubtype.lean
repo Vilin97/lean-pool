@@ -11,7 +11,7 @@ public import LeanPool.DirectedTopologyLean4.FundamentalCategory
 # LeanPool.DirectedTopologyLean4.DipathSubtype
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains properties of dipaths contained in directed subspaces of a directed space.

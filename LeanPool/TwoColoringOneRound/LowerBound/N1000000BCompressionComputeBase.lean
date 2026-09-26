@@ -17,7 +17,7 @@ we replace a term `(s : ℚ) / (D : ℚ)` by the reduced fraction obtained by ca
 `g = gcd(|s|, D)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -67,7 +67,7 @@ def bVal (r : Block) (j : Fin 3) (k : DirIdx) : Q :=
   (bValNum r j k : Q) / (basisDen r : Q)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def compBasis (r : Block) (d : DirIdx) : Matrix (Fin 3) (Fin 3) Q :=
+@[expose] def compBasis (r : Block) (d : DirIdx) : Matrix (Fin 3) (Fin 3) Q :=
   fun p q =>
     (Finset.univ.sum fun k : DirIdx =>
       (Finset.univ.sum fun a : DirIdx =>
@@ -234,7 +234,7 @@ theorem compBasis_entry_eq_div (r : Block) (d : DirIdx) (p q : Fin 3) :
   simpa [den, mul_assoc, mul_left_comm, mul_comm] using hmain
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def compBasisSymm (r : Block) (d : DirIdx) : Matrix (Fin 3) (Fin 3) Q :=
+@[expose] def compBasisSymm (r : Block) (d : DirIdx) : Matrix (Fin 3) (Fin 3) Q :=
   if tTr[d.1]! = d.1 then
     compBasis r d
   else

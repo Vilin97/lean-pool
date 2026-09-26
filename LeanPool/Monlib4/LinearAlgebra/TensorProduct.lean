@@ -18,4 +18,4 @@ import Mathlib.Analysis.SpecialFunctions.Bernstein
 Import-only index for the `TensorProduct` directory of the monlib4 import.
 -/
 
-@[expose] public section
+public section

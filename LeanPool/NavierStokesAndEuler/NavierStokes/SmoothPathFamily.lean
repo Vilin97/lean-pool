@@ -18,7 +18,7 @@ Continuity into the supremum-norm path space follows from compact-open currying.
 All path derivatives are constructed from genuine parameter derivatives.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.SmoothPathFamily

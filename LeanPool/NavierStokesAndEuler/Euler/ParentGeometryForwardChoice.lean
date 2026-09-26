@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParentUniformForwardChild
 /-! The actual zero-history geometry constructs the forward packet and
 its new smooth Euler state at the uniformly chosen frequency. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

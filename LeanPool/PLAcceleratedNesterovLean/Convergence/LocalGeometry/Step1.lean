@@ -24,7 +24,7 @@ Both arguments use: continuous function ≥ threshold on compact set ⟹
                      ≥ (threshold - δ) on a neighborhood.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

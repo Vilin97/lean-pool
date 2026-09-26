@@ -70,7 +70,7 @@ part of the pure local stack guarded by `check_local_boundary.sh`'s EM-free root
 downstream Conditional-touching file.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

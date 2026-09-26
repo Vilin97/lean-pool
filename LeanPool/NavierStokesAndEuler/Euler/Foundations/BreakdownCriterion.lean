@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Ring.Star
 # Breakdown Criterion
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

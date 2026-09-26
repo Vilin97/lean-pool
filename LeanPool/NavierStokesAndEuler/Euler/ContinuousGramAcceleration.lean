@@ -17,7 +17,7 @@ Its norm and its identification with the strong L² acceleration are proved
 directly, for arbitrary complete real Hilbert coefficient spaces.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,7 +35,7 @@ variable (T : ℝ) (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
   (c : ℝ) (hc : 0 < c) (hQ : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖Q t v‖ ^ 2)
 
 /-- The actual continuous acceleration recovered from velocity and forcing. -/
-def accelerationPath (v : C(Icc (0 : ℝ) T, U)) (f : C(Icc (0 : ℝ) T, E)) :
+@[expose] def accelerationPath (v : C(Icc (0 : ℝ) T, U)) (f : C(Icc (0 : ℝ) T, E)) :
     C(Icc (0 : ℝ) T, U) :=
   ⟨fun t => gramInverse (Q t) c hc (hQ t)
       ((Q t).adjoint (f t-(2 : ℝ) • Q₁ t (v t))),

@@ -18,10 +18,10 @@ This file defines `LinearMap.real`, the star-conjugate of a linear map,
 when `φ = φ.real`.
 -/
 
-@[expose] public section
+public section
 
 /-- A function-like map is real if it commutes with star. -/
-def LinearMap.IsReal {M₁ M₂ : Type*} {F : Type*} [FunLike F M₁ M₂]
+@[expose] def LinearMap.IsReal {M₁ M₂ : Type*} {F : Type*} [FunLike F M₁ M₂]
     [Star M₁] [Star M₂] (φ : F) : Prop :=
   ∀ x, φ (star x) = star (φ x)
 
@@ -36,7 +36,7 @@ variable {E F K : Type _} [AddCommMonoid E] [StarAddMonoid E] [AddCommMonoid F]
   [StarAddMonoid F]
 
 /-- The star-conjugate of a linear map. -/
-@[simps!]
+@[expose, simps!]
 def LinearMap.real
     [Semiring K] [Module K E] [Module K F]
     [InvolutiveStar K] [StarModule K E] [StarModule K F] (φ : E →ₗ[K] F) :

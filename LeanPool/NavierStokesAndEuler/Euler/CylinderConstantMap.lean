@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTranslation
 
 /-! Fixed bounded maps on actual cylinder L² classes and continuous paths. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

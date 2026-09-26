@@ -33,7 +33,7 @@ universe containment (the kernel's `GenU`, whose seed already holds every consta
 atom — in particular all of `Bφ`'s diagram), and (*) at every countable ordinal.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

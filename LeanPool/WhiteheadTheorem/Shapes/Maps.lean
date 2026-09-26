@@ -15,7 +15,7 @@ public import Mathlib.Topology.Category.TopCat.Basic
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Maps`.
 -/
 
-@[expose] public section
+public section
 -- import Mathlib.Topology.Category.TopCat.Limits.Basic
 
 open scoped Topology unitInterval CategoryTheory

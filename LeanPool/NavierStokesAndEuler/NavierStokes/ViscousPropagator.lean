@@ -21,7 +21,7 @@ The auxiliary Hilbert-space lemmas derive an estimate from a differential
 equation and an energy inequality; no propagator bound is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.ViscousPropagator
@@ -277,10 +277,10 @@ noncomputable def reflection : Plane →L[ℝ] Plane :=
       fin_cases i <;> simp }
 
 /-- `diag(lam,-lam)` as a genuine continuous linear operator. -/
-noncomputable def diagonal (lam : ℝ) : Plane →L[ℝ] Plane := lam • reflection
+@[expose] noncomputable def diagonal (lam : ℝ) : Plane →L[ℝ] Plane := lam • reflection
 
 /-- The actual diagonalized coefficient, including scalar damping and error. -/
-noncomputable def coefficient (lam damping : ℝ) (E : Plane →L[ℝ] Plane) :
+@[expose] noncomputable def coefficient (lam damping : ℝ) (E : Plane →L[ℝ] Plane) :
     Plane →L[ℝ] Plane :=
   diagonal lam - damping • ContinuousLinearMap.id ℝ Plane + E
 
@@ -426,11 +426,11 @@ theorem homogeneous_viscous_propagator_estimate
   ring
 
 /-- The positive reference eigenvalue appearing in the Gaussian construction. -/
-noncomputable def referenceEigenvalue (lam u ell t : ℝ) : ℝ :=
+@[expose] noncomputable def referenceEigenvalue (lam u ell t : ℝ) : ℝ :=
   lam / Real.sqrt (1 + (PulseGrowth.slotMagnitude u ell t) ^ 2)
 
 /-- The fundamental damping fixed by the manuscript's choice of `B_s`. -/
-noncomputable def referenceViscosity (lam u ell t : ℝ) : ℝ :=
+@[expose] noncomputable def referenceViscosity (lam u ell t : ℝ) : ℝ :=
   lam * (1 + (PulseGrowth.slotMagnitude u ell t) ^ 2) /
     ((1 + u ^ 2) * Real.sqrt (1 + u ^ 2))
 

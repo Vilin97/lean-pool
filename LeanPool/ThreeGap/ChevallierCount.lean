@@ -38,7 +38,7 @@ This file isolates the count as a pure statement about a cost function `r : ℕ 
 Axiom-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.Chevallier
 

@@ -12,7 +12,7 @@ import Mathlib.MeasureTheory.Integral.Prod
 
 /-! The genuine constant-angle embedding of ordinary spatial L² into cylinder L². -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

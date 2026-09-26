@@ -37,7 +37,7 @@ anti-involution preserving `Γ` and fixing every double coset (`GL_pair_onHeckeC
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, §3.4, Prop 3.30
 -/
 
-@[expose] public section
+public section
 
 open Matrix Matrix.SpecialLinearGroup Subgroup.Commensurable Pointwise
 open HeckeRing DoubleCoset HeckeRing.GLn
@@ -117,7 +117,7 @@ noncomputable abbrev tRep (D : HeckeCoset (GLPair 2))
     where `ΓδΓ = ⊔ᵢ (σᵢδ)Γ` is the right coset decomposition.
     Each `(σᵢδ)ᵀ = δᵀσᵢᵀ` is a left coset representative, giving
     genuinely distinct terms `f ∣[k] (δᵀσᵢᵀ)`. -/
-noncomputable def heckeSlash (k : ℤ) (D : HeckeCoset (GLPair 2)) (f : ℍ → ℂ) : ℍ → ℂ :=
+@[expose] noncomputable def heckeSlash (k : ℤ) (D : HeckeCoset (GLPair 2)) (f : ℍ → ℂ) : ℍ → ℂ :=
   ∑ i : decompQuot (GLPair 2) (HeckeCoset.rep D), f ∣[k] tRep D i
 
 /-- The Hecke slash action distributes over addition of functions. -/

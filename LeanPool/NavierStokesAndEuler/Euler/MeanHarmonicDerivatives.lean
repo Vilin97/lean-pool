@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Harmonicity of actual coordinate derivatives on an open subset of R³. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

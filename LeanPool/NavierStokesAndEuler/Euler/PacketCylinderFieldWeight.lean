@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
 
 /-! Actual time-profile multiplication of raw cylinder witnesses and their same-radius bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

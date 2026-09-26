@@ -23,7 +23,7 @@ leanprover/lean-eval/generated/topological_classification_of_surfaces
 
 -/
 
-@[expose] public section
+public section
 
 /-!
 Benchmark statements for topological classification of compact connected surfaces with boundary.

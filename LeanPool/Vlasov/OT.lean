@@ -15,4 +15,4 @@ import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-! # Optimal transport, characteristic flow, and the well-posedness ladder. -/
 
-@[expose] public section
+public section

@@ -17,7 +17,7 @@ cells use one pressure normalization in the clipped carrier integral.
 The argument is slicewise and requires no temporal integrability of the gauge.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped BigOperators ENNReal Topology

@@ -20,7 +20,7 @@ normalization.  The homotopy `(mass, phase) ↦ (t * mass, phase)` reduces divis
 coordinate to integration of the mass partial derivative along `0 ≤ t ≤ 1`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

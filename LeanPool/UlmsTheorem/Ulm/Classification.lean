@@ -18,7 +18,7 @@ the back-and-forth construction on finite partial isomorphisms and the final
 isomorphism-from-invariants statement.
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 

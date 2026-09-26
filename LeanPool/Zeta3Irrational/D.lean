@@ -14,7 +14,7 @@ import Mathlib.Data.Nat.Choose.Factorization
 # LeanPool.Zeta3Irrational.D
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Zeta3Irrational
 

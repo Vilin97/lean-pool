@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketParentCoefficientBounds
 radius.  Cofactor bounds discharge the Gram inverse cost.  The sole growth
 estimate supplied here is the genuine weighted homogeneous propagator H3. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficients EulerTransve
 open scoped ContDiff BoundedContinuousFunction
 
 /-- Radius as an element of `ℝ`. -/
-def radius (q : ℕ) (T R C C₁ Cp : ℝ) : ℝ :=
+@[expose] def radius (q : ℕ) (T R C C₁ Cp : ℝ) : ℝ :=
   1+sobolevCoefficientRadius (Fin 4) R +
     sobolevCoefficientRadius (Fin 4) (4*inverseRadius R C) +
     2*forwardCost q T 0 R C C₁ Cp*(sobolevCoefficientRadius (Fin 4) (4*inverseRadius R C)+1)

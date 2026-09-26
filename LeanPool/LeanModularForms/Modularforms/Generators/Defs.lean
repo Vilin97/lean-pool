@@ -19,7 +19,7 @@ along with basic API lemmas (evaluation on generators, odd-weight vanishing,
 monomial weight existence, and `Δ ∈ range evalE₄E₆`).
 -/
 
-@[expose] public section
+public section
 
 open ModularForm hiding E₄ E₆
 open LevelOneEisenstein
@@ -45,7 +45,7 @@ noncomputable def evalE₄E₆ :
 
 /-- The polynomial `Δ_poly = (1/1728)(X₀³ - X₁²)` in `ℂ[X₀, X₁]`,
 mapping to `Δ` under `evalE₄E₆`. -/
-noncomputable def DeltaPoly : MvPolynomial (Fin 2) ℂ :=
+@[expose] noncomputable def DeltaPoly : MvPolynomial (Fin 2) ℂ :=
   (1 / 1728 : ℂ) • (MvPolynomial.X 0 ^ 3 - MvPolynomial.X 1 ^ 2)
 
 /-! ## Odd-weight vanishing -/

@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Partial
 /-! Actual time derivatives and the genuine spatial jets give joint C¹
 regularity on the interior of the time interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ variable {E V : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   (T : ℝ) (hT : 0 ≤ T) (A A₁ : SmoothTimeField (Icc (0 : ℝ) T) E V)
 
 /-- Real field, given by `extendPath T hT A.field t x`. -/
-def realField (t : ℝ) (x : E) : V := extendPath T hT A.field t x
+@[expose] def realField (t : ℝ) (x : E) : V := extendPath T hT A.field t x
 
 @[simp] theorem realField_apply (t : Icc (0 : ℝ) T) (x : E) :
     A.realField T hT t x = A.field t x := by
@@ -48,7 +48,7 @@ def TimeDerivative : Prop := ∀ t : Icc (0 : ℝ) T, ∀ x : E,
 
 /-- Joint derivative, given by `(ContinuousLinearMap.toSpanSingleton ℝ (A₁.realField T hT t
 x)).coprod (A.derivative.realField T hT t x)`. -/
-def jointDerivative (t : ℝ) (x : E) : (ℝ × E) →L[ℝ] V :=
+@[expose] def jointDerivative (t : ℝ) (x : E) : (ℝ × E) →L[ℝ] V :=
   (ContinuousLinearMap.toSpanSingleton ℝ (A₁.realField T hT t x)).coprod
     (A.derivative.realField T hT t x)
 

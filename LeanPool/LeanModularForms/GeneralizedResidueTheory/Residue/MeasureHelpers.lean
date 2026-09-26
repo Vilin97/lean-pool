@@ -21,7 +21,7 @@ Countability of isolated point sets and measure-zero results for
 preimages of singletons under piecewise C¹ immersions.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval

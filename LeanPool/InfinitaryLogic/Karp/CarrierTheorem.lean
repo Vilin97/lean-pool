@@ -52,7 +52,7 @@ The common-carrier formulation with `IndexCoding` is this formalization's presen
 a statement made in those sources; the mathematics is Karp's.
 -/
 
-@[expose] public section
+public section
 
 universe u v w w' uι uκ
 

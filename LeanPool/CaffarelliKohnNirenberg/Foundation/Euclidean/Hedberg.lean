@@ -15,7 +15,7 @@ three-dimensional model `Vec3`.  The maximal majorant is the uncentred
 maximal function from `Maximal.HardyLittlewood`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 open MeasureTheory MeasureTheory.Measure Set Metric Filter
@@ -23,12 +23,14 @@ noncomputable section
 namespace CKN.Foundation.Euclidean
 open CKN.Foundation.Parabolic
 /-- A maximal majorant for the absolute value of a real function. -/
+@[expose]
 def IsMaximalMajorant (f : Vec3 → ℝ) (M : Vec3 → ℝ≥0∞) : Prop :=
   ∀ z : Vec3, ∀ R : ℝ, 0 < R →
     (∫⁻ w in Metric.ball z R, ENNReal.ofReal |f w|) ≤
       M z * volume (Metric.ball z R)
 
 /-- The maximal majorant associated with the Euclidean maximal function. -/
+@[expose]
 def maximalMajorant (f : Vec3 → ℝ) : Vec3 → ℝ≥0∞ :=
   maximalFunction (fun z ↦ ENNReal.ofReal |f z|)
 theorem isMaximalMajorant_maximalMajorant (f : Vec3 → ℝ) :
@@ -47,9 +49,10 @@ theorem isMaximalMajorant_maximalMajorant (f : Vec3 → ℝ) :
   exact (ENNReal.div_le_iff hvol0
     hvoltop).mp haverage
 /-- The order-one Riesz kernel and its nonnegative potential. -/
-def rieszKernelOne (z w : Vec3) : ℝ≥0∞ :=
+@[expose] def rieszKernelOne (z w : Vec3) : ℝ≥0∞ :=
   (ENNReal.ofReal (dist z w)) ^ (-2 : ℝ)
 /-- Order-one Riesz potential of the absolute value of a scalar source. -/
+@[expose]
 def rieszPotentialOne (f : Vec3 → ℝ) (z : Vec3) : ℝ≥0∞ :=
   ∫⁻ w, rieszKernelOne z w * ENNReal.ofReal |f w|
 /-- Dyadic shell inside the reference radius for the near-field potential estimate. -/
@@ -264,6 +267,7 @@ def nearTerm (n : ℕ) : ℝ≥0∞ :=
   (ENNReal.ofReal ((2 : ℝ) ^ (Int.negSucc n : ℝ))) ^ (-2 : ℝ) *
     ENNReal.ofReal ((4 * ((2 : ℝ) ^ (Int.negSucc n : ℝ))) ^ 3)
 /-- The geometric constant in the near-field estimate. -/
+@[expose]
 def hedbergNearConstant : ℝ≥0∞ := ∑' n : ℕ, nearTerm n
 
 private lemma near_shell_integral_le
@@ -599,6 +603,7 @@ private lemma far_shell_scale_identity {R : ℝ} (hR : 0 < R) (n : ℕ) :
   ring_nf
 
 /-- Summed coefficient in the far-field Hedberg estimate. -/
+@[expose]
 def hedbergFarConstant : ℝ≥0∞ := ∑' n : ℕ, farTerm n
 
 private lemma far_integral_le_shell_sum {R : ℝ} (hR : 0 < R)

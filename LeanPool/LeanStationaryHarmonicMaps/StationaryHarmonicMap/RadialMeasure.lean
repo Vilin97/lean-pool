@@ -14,7 +14,7 @@ import Mathlib.MeasureTheory.VectorMeasure.Decomposition.RadonNikodym
 # Radial Measure
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -25,7 +25,7 @@ namespace LeanStationaryHarmonicMaps
 namespace StationaryHarmonicMap
 
 /-- The one-dimensional measure on the radius interval `(0, R0)`. -/
-def radiusIntervalMeasure (R0 : ℝ) : Measure ℝ :=
+@[expose] def radiusIntervalMeasure (R0 : ℝ) : Measure ℝ :=
   volume.restrict (Ioo (0 : ℝ) R0)
 
 instance sigmaFinite_radiusIntervalMeasure (R0 : ℝ) :

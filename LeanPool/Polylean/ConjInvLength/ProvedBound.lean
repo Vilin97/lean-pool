@@ -12,7 +12,7 @@ import Batteries.Logic
 # LeanPool.Polylean.ConjInvLength.ProvedBound
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 open Letter

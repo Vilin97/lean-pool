@@ -17,7 +17,7 @@ The requested moving stress preserves the residual class.  Their difference
 is retained on every band; only the supplied tail identity makes it vanish.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -15,7 +15,7 @@ import Mathlib.MeasureTheory.Covering.Besicovitch
 # Radius Weights
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

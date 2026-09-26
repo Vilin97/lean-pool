@@ -14,7 +14,7 @@ import Mathlib.Data.Int.Star
 /-! # RamanujanIdentities -/
 
 
-@[expose] public section
+public section
 
 /-!
 # Ramanujan Identities for Eisenstein Series

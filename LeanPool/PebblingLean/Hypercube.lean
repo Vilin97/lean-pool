@@ -20,7 +20,7 @@ The `n`-dimensional hypercube is represented as Boolean coordinate functions
 coordinate.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 
@@ -33,11 +33,11 @@ theorem card_vertex (n : ℕ) : Fintype.card (HypercubeVertex n) = 2 ^ n := by
   simp [HypercubeVertex]
 
 /-- Hamming distance on Boolean coordinate functions. -/
-def dist {n : ℕ} (x y : HypercubeVertex n) : ℕ :=
+@[expose] def dist {n : ℕ} (x y : HypercubeVertex n) : ℕ :=
   (Finset.univ.filter (fun i : Fin n => x i ≠ y i)).card
 
 /-- Coordinates on which two hypercube vertices differ. -/
-def diffSet {n : ℕ} (x y : HypercubeVertex n) : Finset (Fin n) :=
+@[expose] def diffSet {n : ℕ} (x y : HypercubeVertex n) : Finset (Fin n) :=
   Finset.univ.filter (fun i : Fin n => x i ≠ y i)
 
 theorem dist_eq_card_diffSet {n : ℕ} (x y : HypercubeVertex n) :
@@ -56,7 +56,7 @@ theorem dist_le {n : ℕ} (x y : HypercubeVertex n) : dist x y ≤ n := by
 
 /-- The vertex obtained from `base` by flipping exactly the coordinates in
 `s`. -/
-def fromDiffSet {n : ℕ} (base : HypercubeVertex n) (s : Finset (Fin n)) :
+@[expose] def fromDiffSet {n : ℕ} (base : HypercubeVertex n) (s : Finset (Fin n)) :
     HypercubeVertex n :=
   fun i => if i ∈ s then Bool.not (base i) else base i
 
@@ -82,7 +82,7 @@ theorem fromDiffSet_diffSet {n : ℕ} (base v : HypercubeVertex n) :
 
 /-- Vertices of `Q_n` are equivalent to subsets of coordinates, by recording
 where they differ from a fixed base vertex. -/
-def diffSetEquiv {n : ℕ} (base : HypercubeVertex n) :
+@[expose] def diffSetEquiv {n : ℕ} (base : HypercubeVertex n) :
     HypercubeVertex n ≃ Finset (Fin n) where
   toFun := diffSet base
   invFun := fromDiffSet base

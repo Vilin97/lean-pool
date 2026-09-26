@@ -15,7 +15,7 @@ public import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -28,11 +28,13 @@ noncomputable section
 namespace CKN
 
 /-- The velocity oscillation in `eq:Chat`, with the spatial mean taken at each time. -/
+@[expose]
 def pressureChat (u : ParabolicPoint → Vec3) (z : ParabolicPoint) (r : ℝ) : ℝ :=
   r⁻¹ ^ 2 * ∫ w in parabolicCylinder z.1 z.2 r,
     vec3EuclideanNorm (meanFreeVec u z.1 r w.2 w.1) ^ (3 : ℕ)
 
 /-- The unrooted pressure quantity `D` used in the integrated Lin estimate. -/
+@[expose]
 def pressureD (p : ParabolicPoint → ℝ) (z : ParabolicPoint) (r : ℝ) : ℝ :=
   r⁻¹ ^ 2 * ∫ w in parabolicCylinder z.1 z.2 r, |p w| ^ (3 / 2 : ℝ)
 
@@ -198,6 +200,7 @@ theorem pressureD_integrated_from_slices
       rw [hChat, hDρ]
 
 /-- Coefficient for the forcing term in the localized pressure estimate. -/
+@[expose]
 noncomputable def lin34ForceConstant (C₁₃ : ℝ) : ℝ :=
   Real.sqrt 2 * (1 + C₁₃ ^ (3 / 2 : ℝ))
 

@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
 /-! The exact corrected packet has the same primary shear, with the
 literal finite-tail and correction derivatives as its only errors. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

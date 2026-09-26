@@ -25,7 +25,7 @@ via Hilbert-Schmidt embeddings. Adapted from OSforGFF/IsHilbertNuclear.lean.
 - Reed-Simon, "Methods of Modern Mathematical Physics" Vol. 1, §V.3
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -50,17 +50,17 @@ def IsNuclearMap {E F : Type*}
 /-- A seminorm is **Hilbertian** (comes from an inner product) iff it satisfies
     the parallelogram law.
 -/
-def Seminorm.IsHilbertian {E : Type*} [AddCommGroup E] [Module ℝ E]
+@[expose] def Seminorm.IsHilbertian {E : Type*} [AddCommGroup E] [Module ℝ E]
     (p : Seminorm ℝ E) : Prop :=
   ∀ x y : E, p (x + y) ^ 2 + p (x - y) ^ 2 = 2 * (p x ^ 2 + p y ^ 2)
 
 /-- The inner product induced by a Hilbertian seminorm via polarization. -/
-noncomputable def Seminorm.innerProd {E : Type*} [AddCommGroup E] [Module ℝ E]
+@[expose] noncomputable def Seminorm.innerProd {E : Type*} [AddCommGroup E] [Module ℝ E]
     (p : Seminorm ℝ E) (x y : E) : ℝ :=
   (p (x + y) ^ 2 - p (x - y) ^ 2) / 4
 
 /-- A finite sequence is **p-orthonormal**: ⟨eᵢ, eⱼ⟩_p = δᵢⱼ. -/
-def Seminorm.IsOrthonormalSeq {E : Type*} [AddCommGroup E] [Module ℝ E]
+@[expose] def Seminorm.IsOrthonormalSeq {E : Type*} [AddCommGroup E] [Module ℝ E]
     (p : Seminorm ℝ E) {n : ℕ} (e : Fin n → E) : Prop :=
   ∀ i j, p.innerProd (e i) (e j) = if i = j then 1 else 0
 
@@ -69,7 +69,7 @@ def Seminorm.IsOrthonormalSeq {E : Type*} [AddCommGroup E] [Module ℝ E]
 /-- The canonical inclusion Ê_p → Ê_q is **Hilbert-Schmidt**: the sum ∑ q(eₖ)²
     is uniformly bounded over all finite p-orthonormal sequences.
 -/
-def Seminorm.IsHilbertSchmidtEmbedding {E : Type*} [AddCommGroup E] [Module ℝ E]
+@[expose] def Seminorm.IsHilbertSchmidtEmbedding {E : Type*} [AddCommGroup E] [Module ℝ E]
     (p q : Seminorm ℝ E) : Prop :=
   q ≤ p ∧
   ∃ (C : ℝ), ∀ (n : ℕ) (e : Fin n → E),

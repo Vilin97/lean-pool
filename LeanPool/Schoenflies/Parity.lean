@@ -68,7 +68,7 @@ zero over the list". `edgesOf` builds a closed chain from a cyclic vertex list, 
   supply from a cyclic vertex list, and its survival of subdivision.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -248,7 +248,7 @@ noncomputable def mark (u : Plane) (P : Piece) (q : Plane) : ZMod 2 :=
   if Crosses u P q then 1 else 0
 
 /-- The crossing parity `π_C(q)`. -/
-noncomputable def parity (u : Plane) (L : List Piece) (q : Plane) : ZMod 2 :=
+@[expose] noncomputable def parity (u : Plane) (L : List Piece) (q : Plane) : ZMod 2 :=
   (L.map (fun P => mark u P q)).sum
 
 @[simp] theorem crossings_nil (u q : Plane) : crossings u [] q = 0 := rfl

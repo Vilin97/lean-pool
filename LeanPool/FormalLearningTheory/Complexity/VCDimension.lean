@@ -20,24 +20,24 @@ The foundational complexity measure for PAC learning.
 Bridges to Mathlib's `Finset.vcDim` via `Bridge.lean`.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
 /-- A set S ⊆ X is shattered by concept class C if every labeling of S
     is realized by some concept in C. -/
-def Shatters (X : Type u) (C : ConceptClass X Bool) (S : Finset X) : Prop :=
+@[expose] def Shatters (X : Type u) (C : ConceptClass X Bool) (S : Finset X) : Prop :=
   ∀ f : S → Bool, ∃ c ∈ C, ∀ x : S, c (x : X) = f x
 
 /-- VC dimension of a concept class: the size of the largest shattered set.
     Returns ℕ∞ = WithTop ℕ. -/
-noncomputable def VCDim (X : Type u) (C : ConceptClass X Bool) : WithTop ℕ :=
+@[expose] noncomputable def VCDim (X : Type u) (C : ConceptClass X Bool) : WithTop ℕ :=
   ⨆ (S : Finset X) (_ : Shatters X C S), (S.card : WithTop ℕ)
 
 /-- Growth function (shattering coefficient): π_C(m) = max_{|S|=m} |{c|_S : c ∈ C}|.
     For each m-element set S, counts the number of distinct restrictions of C to S,
     then takes the supremum over all such S. -/
-noncomputable def GrowthFunction (X : Type u)
+@[expose] noncomputable def GrowthFunction (X : Type u)
     (C : ConceptClass X Bool) : ℕ → ℕ :=
   fun m => sSup (Set.range fun (S : { S : Finset X // S.card = m }) =>
     ({ f : ↥S.val → Bool | ∃ c ∈ C, ∀ x : ↥S.val, c ↑x = f x } : Set (↥S.val → Bool)).ncard)

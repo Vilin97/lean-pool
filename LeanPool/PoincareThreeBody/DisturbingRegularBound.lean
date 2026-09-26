@@ -17,7 +17,7 @@ The two nonsingular terms in the first mass perturbation stay uniformly bounded 
 resonant ellipse approaches its apoapsis collision boundary.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

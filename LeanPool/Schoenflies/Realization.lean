@@ -80,7 +80,7 @@ needs to cut at a straight point has to change the curve — bend it there — w
 theorem, and is exactly the freedom `Graph.IsK33Config.not_isDrawing` reserves for itself.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 

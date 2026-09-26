@@ -27,7 +27,7 @@ The public statements use the primed uniform-convergence route from
 - `rademacher_vanishing_imp_pac` : uniform Rademacher vanishing → PAC
 -/
 
-@[expose] public section
+public section
 
 universe u
 

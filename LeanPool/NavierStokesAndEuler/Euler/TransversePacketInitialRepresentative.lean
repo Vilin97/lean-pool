@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketInitial
 /-! The raw forward field attains the actual continuous representative of
 its prescribed supported initial coordinates. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -25,7 +25,7 @@ import Mathlib.Analysis.SpecialFunctions.Bernstein
     such as the complete graph and the trivial graph.
 -/
 
-@[expose] public section
+public section
 
 
 -- import quantum_graph.basic
@@ -76,6 +76,7 @@ local notation "τ⁻¹" =>
 local notation "id" => (1 : ℍ →ₗ[ℂ] ℍ)
 
 /-- The complete quantum adjacency map between two Hilbert spaces with chosen units. -/
+@[expose]
 noncomputable def Qam.completeGraph (E₁ E₂ : Type _) [One E₁] [One E₂] [NormedAddCommGroup E₁]
     [NormedAddCommGroup E₂] [InnerProductSpace ℂ E₁] [InnerProductSpace ℂ E₂] :
     E₂ →ₗ[ℂ] E₁ :=

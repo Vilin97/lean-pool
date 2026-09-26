@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Harmonic.InteriorEstim
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology
@@ -42,10 +42,10 @@ def caccioppoliC₂₅BaseSquared : ℝ :=
 def caccioppoliC₂₅Base : ℝ := Real.sqrt caccioppoliC₂₅BaseSquared
 
 /-- Velocity and pressure coefficient after normalizing the Caccioppoli energy bound. -/
-def caccioppoliC₂₅ : ℝ := Real.sqrt (6000 * caccioppoliC₂₅BaseSquared)
+@[expose] def caccioppoliC₂₅ : ℝ := Real.sqrt (6000 * caccioppoliC₂₅BaseSquared)
 
 /-- Force coefficient in the Caccioppoli estimate for local integrability exponent `q`. -/
-def caccioppoliC₂₆ (q : ℝ) : ℝ :=
+@[expose] def caccioppoliC₂₆ (q : ℝ) : ℝ :=
   Real.sqrt (6000 * (2000 * (4 * Real.pi / 3) ^
     (1 / (q / (q - 1)) - 1 / 3 : ℝ)))
 

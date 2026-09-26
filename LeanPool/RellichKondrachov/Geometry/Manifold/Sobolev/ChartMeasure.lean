@@ -17,7 +17,7 @@ on `M` to a measure on the model space `E` using `extChartAt`. This file defines
 measures and records basic finiteness instances needed by the Euclidean Sobolev baseline.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

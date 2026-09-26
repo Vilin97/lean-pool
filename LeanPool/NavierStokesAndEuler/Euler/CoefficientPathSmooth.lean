@@ -15,7 +15,7 @@ import Mathlib.Analysis.Normed.Operator.Prod
 /-! Genuine bounded smooth cylinder coefficients and all their derivative
 jets are constructed from the actual coefficient translation orbit. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -126,7 +126,7 @@ end Basic
 
 /-- Coefficient jet as an element of `CoefficientJet P standardDirection q (smoothCoefficient P
 A hA t)`. -/
-def coefficientJet (P : ℝ) [Fact (0 < P)]
+@[expose] def coefficientJet (P : ℝ) [Fact (0 < P)]
     (A : C(K, Space →ᵇ Space →L[ℝ] Space))
     (hA : ContDiff ℝ ∞ (translateCoefficientPath A)) (q : ℕ) (t : K) :
     CoefficientJet P standardDirection q (smoothCoefficient P A hA t) :=

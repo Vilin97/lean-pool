@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.Deriv.Inv
 
 /-! Smoothness and actual time differentiation of the normalized cross multiplier. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -43,7 +43,7 @@ local instance instPacketPotentialMultiplier5 : TopologicalSpace (Space →L[ℝ
   (inferInstance : PseudoMetricSpace (Space →L[ℝ] Space)).toUniformSpace.toTopologicalSpace
 
 /-- Cross operator linear, bundling `toFun`, `map_add`, `map_smul`. -/
-def crossOperatorLinear : Space →ₗ[ℝ] (Space →L[ℝ] Space) where
+@[expose] def crossOperatorLinear : Space →ₗ[ℝ] (Space →L[ℝ] Space) where
   toFun := crossLeft
   map_add' a b := by
     apply ContinuousLinearMap.ext
@@ -56,7 +56,7 @@ def crossOperatorLinear : Space →ₗ[ℝ] (Space →L[ℝ] Space) where
 
 /-- Cross operator, given by `crossOperatorLinear.mkContinuous 1 (fun a => by change ‖crossLeft
 a‖ ≤ 1*‖a‖ simpa only [one_mul] using crossLeft_norm_le a)`. -/
-def crossOperator : Space →L[ℝ] (Space →L[ℝ] Space) :=
+@[expose] def crossOperator : Space →L[ℝ] (Space →L[ℝ] Space) :=
   crossOperatorLinear.mkContinuous 1 (fun a => by
     change ‖crossLeft a‖ ≤ 1*‖a‖
     simpa only [one_mul] using crossLeft_norm_le a)

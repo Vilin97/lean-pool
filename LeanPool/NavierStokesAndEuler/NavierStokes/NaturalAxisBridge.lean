@@ -30,7 +30,7 @@ proves compatibility of the output jets, so its operators act on actual smooth
 coefficient functions in the complete space, not just unrelated arrays.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -850,7 +850,7 @@ small-operator-norm hypothesis is used. The generic Banach-ring lemmas isolate
 the analytic implication of the factorial estimate from its radial proof.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1239,7 +1239,7 @@ theorem axisLinearOperator_resolvent_equation (I : Window) {ε : ℝ} (hε : 0 <
     (axisLinearOperator_pow_bound I hε χ Q hQ) A
 
 /-- The exact bounded operator in the natural angular equation. -/
-def naturalOperator (I : Window) {ε : ℝ} (hε : 0 < ε) (χ : AxisSpace I ε) :
+@[expose] def naturalOperator (I : Window) {ε : ℝ} (hε : 0 < ε) (χ : AxisSpace I ε) :
     AxisSpace I ε →L[ℝ] AxisSpace I ε :=
   (1 / 2 : ℝ) • ((AxisOperators.regularInverse I hε 2 (by norm_num)).comp
     (AxisOperators.product I hε χ))
@@ -1330,7 +1330,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2166,7 +2166,7 @@ The identities here combine the convergent, smooth evaluation of `AxisSpace`
 with the exact compatible coefficient operators of `AxisOperators`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2684,7 +2684,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2704,7 +2704,7 @@ open scoped Topology ContDiff
 open AxisCoefficientSpace AxisWeightEstimates
 
 /-- Ordinary radial partial derivative of an actual function. -/
-def partialY (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def partialY (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   deriv (fun Y => F (Y, p.2)) p.1
 
 /-- Ordinary parameter partial derivative of an actual function. -/
@@ -2712,11 +2712,11 @@ def partialEta (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   deriv (fun η => F (p.1, η)) p.2
 
 /-- Actual mixed derivative, with the order used by the manuscript's jet bounds. -/
-def mixedDerivative (k m : ℕ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def mixedDerivative (k m : ℕ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   iteratedDeriv m (fun η => iteratedDeriv k (fun Y => F (Y, η)) p.1) p.2
 
 /-- The singular radial differential expression, evaluated without division by `Y`. -/
-def radialDifferential (r : ℕ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def radialDifferential (r : ℕ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   p.1 * iteratedDeriv 2 (fun Y => F (Y, p.2)) p.1 + (r : ℝ) * partialY F p
 
 /-- The same expression in terms of the rigorously differentiated sums. -/
@@ -2924,11 +2924,11 @@ structure ParameterData where
   zStar : ℝ → ℝ
 
 /-- The actual parameter function represented by the zeroth radial coefficient. -/
-def inputValue (I : Window) (ε : ℝ) (A : AxisSpace I ε) : ℝ → ℝ :=
+@[expose] def inputValue (I : Window) (ε : ℝ) (A : AxisSpace I ε) : ℝ → ℝ :=
   coefficient I (weight ε) A 0
 
 /-- The fixed fields of the integrated system, interpreted as actual functions. -/
-def parameters (I : Window) (ε : ℝ) (χ : AxisSpace I ε)
+@[expose] def parameters (I : Window) (ε : ℝ) (χ : AxisSpace I ε)
     (d : AxisContraction.AxisData (AxisSpace I ε)) : ParameterData where
   A := d.A
   D := d.D
@@ -2975,20 +2975,20 @@ def pressureCoefficient (I : Window) {ε : ℝ} (hε : 0 < ε)
   AxisOperators.primitive I hε (pressureSource I hε a Φ)
 
 /-- The reconstructed axial profile `U=U*+Λ⁻¹u`. -/
-def reconstructedU (d : ParameterData) (t : ℝ) (u : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def reconstructedU (d : ParameterData) (t : ℝ) (u : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   d.uStar p.2 + t * u p
 
 /-- The actual transport coefficient using the regular radial average. -/
-def reconstructedW (d : ParameterData) (t : ℝ) (B : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def reconstructedW (d : ParameterData) (t : ℝ) (B : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   d.wStar p.2 - t * ((2 * d.D * p.2) * B p + d.d p.2 * partialEta B p)
 
 /-- Reconstructed H, given by `d.hStar p.2 + t * d.d p.2 * u p`. -/
-def reconstructedH (d : ParameterData) (t : ℝ) (u : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def reconstructedH (d : ParameterData) (t : ℝ) (u : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   d.hStar p.2 + t * d.d p.2 * u p
 
 /-- The first remainder in equation (17), using ordinary derivatives of
 actual functions and `κ=ξ₀/Λ`. -/
-def angularRemainder (d : ParameterData) (t : ℝ)
+@[expose] def angularRemainder (d : ParameterData) (t : ℝ)
     (Φ u B : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   d.inverseL p.2 *
     ((reconstructedW d t B p + d.h * (1 - 2 * p.2 * reconstructedU d t u p) +
@@ -2998,7 +2998,7 @@ def angularRemainder (d : ParameterData) (t : ℝ)
 
 /-- The expanded second remainder in equation (17), including all pressure
 terms and the actual parameter derivative of the pressure correction. -/
-def axialRemainder (d : ParameterData) (t : ℝ)
+@[expose] def axialRemainder (d : ParameterData) (t : ℝ)
     (u B P : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   d.inverseL p.2 *
     (d.A * (1 - 4 * p.2 * d.uStar p.2) * u p -

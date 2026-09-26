@@ -62,14 +62,14 @@ frobSum_one --------------+
 ```
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive
 
 variable {K : Type*} [Field K] [Fintype K] [DecidableEq K] [CharP K 2]
 
 /-- `T_k(s)=s+s^2+...+s^(2^(k-1))`. -/
-def frobSum (k : ℕ) (s : K) : K :=
+@[expose] def frobSum (k : ℕ) (s : K) : K :=
   ∑ i ∈ Finset.range k, s ^ (2 ^ i)
 
 omit [Fintype K] [DecidableEq K] [CharP K 2] in

@@ -18,7 +18,7 @@ relative Radó weld uses this formula after composing with the inverse-affine pi
 polygonal filling certificates.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

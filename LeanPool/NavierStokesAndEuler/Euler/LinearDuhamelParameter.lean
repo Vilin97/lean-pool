@@ -20,7 +20,7 @@ fixed continuous-path Banach space. Operator inversion therefore proves its
 parameter smoothness from coefficient and data smoothness alone.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

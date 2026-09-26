@@ -13,7 +13,7 @@ with deck translations induces a measure-preserving cylinder map. The
 proof compares genuine fundamental domains; it does not integrate a
 nonzero periodic function over the whole real cover. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

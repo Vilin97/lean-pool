@@ -42,7 +42,7 @@ is bounded by (1-a) times the corresponding component of L_n.
   L_{n+1} ≤ (1-a) L_n + perturbation ≤ (1-a/2) L_n.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

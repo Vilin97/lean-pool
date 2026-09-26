@@ -79,7 +79,7 @@ cone, and the induction is what will discharge it.
   domain-restricted absorption interface.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

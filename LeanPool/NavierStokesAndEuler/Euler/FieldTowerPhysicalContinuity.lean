@@ -20,7 +20,7 @@ section
 /-! The physical tensor estimate controls differences of actual L²
 representatives, which supplies time continuity without a domination premise. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -79,7 +79,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

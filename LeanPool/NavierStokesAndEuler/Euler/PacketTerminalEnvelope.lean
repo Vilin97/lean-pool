@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
 
 /-! A common-radius envelope for the literal compact terminal wave. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

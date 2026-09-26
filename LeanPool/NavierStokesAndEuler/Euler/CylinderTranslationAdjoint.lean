@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TimeLpBoundedMap
 
 /-! The adjoint of the genuine mixed cylinder translation is its inverse. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -16,7 +16,7 @@ public import Mathlib.MeasureTheory.Integral.MeanInequalities
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Metric
 open scoped ENNReal NNReal Topology
@@ -27,12 +27,14 @@ noncomputable section
 namespace CKN.Foundation.Parabolic.Morrey
 
 /-- The Morrey cell for an extended nonnegative-valued function. -/
+@[expose]
 def morreyENormCell (p q : ℝ) (f : ParabolicPoint → ℝ≥0∞)
     (z : ParabolicPoint) (r : ℝ) : ℝ≥0∞ :=
   (ENNReal.ofReal r) ^ (-(5 * (1 - p / q) / p)) *
     (∫⁻ w in parabolicCylinder z.1 z.2 r, f w ^ p) ^ (1 / p)
 
 /-- The extended nonnegative-valued Morrey seminorm. -/
+@[expose]
 def morreyENorm (p q : ℝ) (f : ParabolicPoint → ℝ≥0∞) : ℝ≥0∞ :=
   ⨆ z : ParabolicPoint, ⨆ r : {r : ℝ // 0 < r}, morreyENormCell p q f z r.1
 

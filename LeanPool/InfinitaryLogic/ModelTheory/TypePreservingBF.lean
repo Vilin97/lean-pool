@@ -26,7 +26,7 @@ two extensions is `BFEquiv` at EVERY ordinal — one `limitRecOn` induction whos
 the substructure inclusion reflects them).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

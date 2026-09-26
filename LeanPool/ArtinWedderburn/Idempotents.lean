@@ -22,7 +22,7 @@ orthogonal idempotents whose corner rings are division rings, and packages the
 data as `OrtIdem` / `OrtIdemDiv` structures.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 

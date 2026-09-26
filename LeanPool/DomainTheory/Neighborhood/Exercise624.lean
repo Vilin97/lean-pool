@@ -87,7 +87,7 @@ of the simultaneous Theorem 6.14, which then yields the required isomorphisms
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

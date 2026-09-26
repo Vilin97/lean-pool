@@ -14,7 +14,7 @@ import LeanPool.Feige.Lemma43Relations
 # Local transfer identity for an arbitrary base law
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real Set
 open scoped ENNReal

@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParameterWordHigher
 
 /-! Fixed bounded maps preserve the actual fixed-Sobolev external word sums. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

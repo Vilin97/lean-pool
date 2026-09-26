@@ -23,7 +23,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame.BorelDet.One
@@ -37,7 +37,7 @@ noncomputable section «Section1»
 namespace Lift'
 variable (H : Lift' hyp)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def extension (hp : IsPosition H.x.val Player.one)
+@[expose] def extension (hp : IsPosition H.x.val Player.one)
     (R : ResStrategy (gameAsTrees hyp) Player.one H.x.val.length) :=
   R H.lift (by
     change H.liftVal.length % 2 = Player.one.toNat
@@ -46,7 +46,7 @@ def extension (hp : IsPosition H.x.val Player.one)
     change H.liftVal.length ≤ H.x.val.length
     rw [H.liftVal_length])
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def extensionMap (hp : IsPosition H.x.val Player.one)
+@[expose] def extensionMap (hp : IsPosition H.x.val Player.one)
     (R : ResStrategy (gameAsTrees hyp) Player.one H.x.val.length) :=
   ExtensionsAt.map (treeHom hyp) H.lift_lift (H.extension hp R)
 variable (hp : IsPosition H.x.val Player.one)
@@ -193,7 +193,7 @@ structure LLift extends PreLift hyp where
 namespace LLift
 variable (H : LLift hyp)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def S := defensiveQuasi H.game Player.one (hyp.pruned.sub _)
+@[expose] def S := defensiveQuasi H.game Player.one (hyp.pruned.sub _)
 lemma S_winning : H.S.1.IsWinning :=
   H.game.gale_stewart_precise' H.game_open (hyp.pruned.sub _) (by
     intro h; apply H.los; use 0; simpa)
@@ -489,7 +489,7 @@ lemma takeMin_winnable : h.takeMin.Winnable := by
 attribute [simp_lengths] x'_coe
 variable (hp : IsPosition H.x.val Player.one)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def a : ExtensionsAt h.x' := h.strat h.x' (by have := H.hlvl; synthIsPosition)
+@[expose] def a : ExtensionsAt h.x' := h.strat h.x' (by have := H.hlvl; synthIsPosition)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def extension : ExtensionsAt H.x where
   val := (h.a hp).val

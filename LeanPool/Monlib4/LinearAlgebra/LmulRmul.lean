@@ -18,7 +18,7 @@ The left and right multiplication maps, copied from `LinearMap.mulLeft` and
 
 -/
 
-@[expose] public section
+public section
 
 
 section

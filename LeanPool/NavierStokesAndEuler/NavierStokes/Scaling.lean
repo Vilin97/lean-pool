@@ -17,7 +17,7 @@ scaling facts; they do not supply a Navier--Stokes solution or analytic estimate
 for its profiles. The arbitrary envelope is kept in the carrier Reynolds product.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ namespace NavierStokes.Scaling
 def coreVelocity (q h : ℝ) : ℝ := q ^ (-(1 / 2 + h))
 
 /-- The radial length scale. -/
-def radialLength (q : ℝ) : ℝ := q ^ (1 / 2 : ℝ)
+@[expose] def radialLength (q : ℝ) : ℝ := q ^ (1 / 2 : ℝ)
 
 /-- The axial length scale. -/
 def axialLength (q h : ℝ) : ℝ := q ^ (1 / 2 - h)

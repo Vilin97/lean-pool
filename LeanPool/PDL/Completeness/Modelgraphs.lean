@@ -13,7 +13,7 @@ public import LeanPool.PDL.Local.Rules
 
 /-! # Model Graphs (Section 7.1) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -447,6 +447,7 @@ def Qtests {W : Finset (Finset Formula)} (R : Nat → W → W → Prop) (F : Lis
 | v, w => v == w ∧ ∀ τ ∈ F, Q R (?' τ) v w
 
 /-- Q_δ for a list `δ` of programs. -/
+@[expose]
 def Qsteps {W : Finset (Finset Formula)} (R : Nat → W → W → Prop) : List Program → W → W → Prop
 | [], v, w => v == w
 | (α :: δ), v, w => Relation.Comp (Q R α) (Qsteps R δ) v w

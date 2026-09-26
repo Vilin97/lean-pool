@@ -37,7 +37,7 @@ is now instance-free and `Module.finrank` needs no topology, so both theorems he
 `CONVENTIONS.md`'s "drop hypotheses lemmas don't need, when free to do so".
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

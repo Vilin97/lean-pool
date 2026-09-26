@@ -20,7 +20,7 @@ The concrete formula `stepOne` (subformulas / components / Skolem witnesses / re
 to the lifted EM starting family.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

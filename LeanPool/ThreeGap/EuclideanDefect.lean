@@ -23,7 +23,7 @@ over that finite set realises the infimum.
 `deltaN_euclNorm_attained`: `∃ p, euclNorm n (rem α q p) = δ_q`. Axiom-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.SimApprox
 

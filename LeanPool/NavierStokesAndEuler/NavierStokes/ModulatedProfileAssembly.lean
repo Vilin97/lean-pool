@@ -32,7 +32,7 @@ supported edit differences, including their nonlinear density integrals, are
 unchanged when transplanted back to the original field.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -155,7 +155,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

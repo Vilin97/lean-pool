@@ -63,7 +63,7 @@ continuous maps.
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise514
 
@@ -84,6 +84,7 @@ theorem num_succ_left_gt (n b : ℕ) : b < num (n + 1) b := by
 
 /-- `tag [n₀, …, n_{k-1}] m = [n₀+1, …, n_{k-1}+1, 0, m]`, built from the pairing
 function `num`. -/
+@[expose]
 def tag : List ℕ → ℕ → ℕ
   | [], m => num 0 m
   | (n :: ns), m => num (n + 1) (tag ns m)

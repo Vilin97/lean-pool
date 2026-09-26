@@ -24,7 +24,7 @@ section
 
 /-! Full Fréchet tensor convergence from the genuine cylinder derivative words. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -105,7 +105,7 @@ section
 # Smooth Uniform Limit
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -179,7 +179,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -255,7 +255,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -28,7 +28,7 @@ Signed integers are used for arc differences.  Thus the case `L < 0`, where
 `u` precedes `y` in unwrapped order, is represented rather than discarded.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -128,7 +128,7 @@ theorem maximal_gap_signed_yz
 
 /-- The five and only five integer rows for which the short-arc inequality
 `L + M + b ≤ 5` fails under the `k = 3` majorant budgets. -/
-def IsExceptionalMajorantRow (a b L M : ℤ) : Prop :=
+@[expose] def IsExceptionalMajorantRow (a b L M : ℤ) : Prop :=
   (a = 0 ∧ b = 1 ∧ L = 3 ∧ M = 2) ∨
   (a = 1 ∧ b = 1 ∧ L = 3 ∧ M = 2) ∨
   (a = 0 ∧ b = 2 ∧ L = 2 ∧ M = 2) ∨

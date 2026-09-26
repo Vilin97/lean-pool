@@ -17,7 +17,7 @@ import Mathlib.CategoryTheory.LiftingProperties.Limits
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.HEP.Cofibration`.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory TopCat
 open scoped Topology unitInterval

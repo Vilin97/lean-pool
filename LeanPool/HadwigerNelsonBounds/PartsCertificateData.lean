@@ -21,7 +21,7 @@ Together with swapping the two unused color names, they expand 36 orbit
 representatives to all 432 proper normalized root colorings.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

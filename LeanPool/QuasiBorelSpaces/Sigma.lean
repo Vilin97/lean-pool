@@ -22,7 +22,7 @@ This file defines small coproducts of quasi-borel spaces by giving a
 See [HeunenKSY17], Proposition 17.
 -/
 
-@[expose] public section
+public section
 
 open scoped MeasureTheory
 

@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
 /-! The genuine commuting coordinate derivatives and bounded Laplacian on the complete Sobolev
 scale. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

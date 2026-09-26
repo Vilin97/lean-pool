@@ -27,7 +27,7 @@ This file contains results for linear functionals on the set of $n \times n$ mat
 
 -/
 
-@[expose] public section
+public section
 
 
 open scoped Matrix BigOperators

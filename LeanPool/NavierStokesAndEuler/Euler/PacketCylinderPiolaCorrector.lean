@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
 
 /-! The literal raw curl-corrector equals the genuine periodic Piola corrector. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

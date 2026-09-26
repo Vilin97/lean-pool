@@ -59,7 +59,7 @@ after `x` is known to
 have terminated.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise221
 

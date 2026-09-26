@@ -19,7 +19,7 @@ Core definitions for piecewise C¹ curves, Cauchy principal value integrals,
 and generalized winding numbers following Hungerbühler–Wasem.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval
@@ -61,7 +61,7 @@ structure PiecewiseC1Immersion extends PiecewiseC1Curve where
     ∃ L : ℂ, L ≠ 0 ∧ Tendsto (deriv toFun) (𝓝[>] p) (𝓝 L)
 
 /-- The Cauchy principal value integrand at cutoff ε. -/
-def cauchyPrincipalValueIntegrand' (f : ℂ → ℂ) (γ : ℝ → ℂ)
+@[expose] def cauchyPrincipalValueIntegrand' (f : ℂ → ℂ) (γ : ℝ → ℂ)
     (z₀ : ℂ) (ε : ℝ) (t : ℝ) : ℂ :=
   if ‖γ t - z₀‖ > ε then f (γ t) * deriv γ t else 0
 
@@ -78,7 +78,7 @@ theorem cauchyPrincipalValueIntegrand'_of_le {f : ℂ → ℂ} {γ : ℝ → ℂ
   simp only [cauchyPrincipalValueIntegrand', show ¬(‖γ t - z₀‖ > ε) from not_lt.mpr h, ite_false]
 
 /-- The Cauchy principal value of ∮_γ f(z) dz, excluding ε-neighborhoods of z₀. -/
-def cauchyPrincipalValue' (f : ℂ → ℂ) (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) : ℂ :=
+@[expose] def cauchyPrincipalValue' (f : ℂ → ℂ) (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) : ℂ :=
   limUnder (𝓝[>] (0 : ℝ)) fun ε =>
     ∫ t in a..b, if ‖γ t - z₀‖ > ε then f (γ t) * deriv γ t else 0
 
@@ -91,7 +91,7 @@ def CauchyPrincipalValueExists' (f : ℂ → ℂ) (γ : ℝ → ℂ)
 
 /-- The generalized winding number of γ around z₀, defined via principal value.
 `n_{z₀}(γ) = (1/2πi) · PV ∮_γ dz/(z - z₀)`. -/
-def generalizedWindingNumber' (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) : ℂ :=
+@[expose] def generalizedWindingNumber' (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) : ℂ :=
   (2 * Real.pi * I)⁻¹ * cauchyPrincipalValue' (·⁻¹) (fun t => γ t - z₀) a b 0
 
 /-- Two curves are homotopic relative to endpoints. -/

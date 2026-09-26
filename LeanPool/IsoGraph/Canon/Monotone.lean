@@ -31,7 +31,7 @@ The comparison used throughout is `compare k k' ≠ .gt` on `leafKey`s, the same
 is stated with.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon

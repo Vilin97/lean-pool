@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
 
 /-! Cutoff-independent bounds for the actual order-zero Euler correction source. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,13 +33,13 @@ synthesis. -/
 local instance orderZeroSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
 /-- The actual derivative-free algebraic nonlinearity at one complete Sobolev level. -/
-def algebraicAt {s : ℕ} (hs : 6 ≤ s)
+@[expose] def algebraicAt {s : ℕ} (hs : 6 ≤ s)
     (C : Fin 3 → SobolevSpace period s →L[ℝ] SobolevSpace period s)
     (u v : SobolevSpace period s) : SobolevSpace period s :=
   ∑ i : Fin 3, C i (productHq period hs (coordinate 3 i) (coordinate_norm_le 3 i) u v)
 
 /-- The part e·D z_a transports the prescribed background and has no derivative on the error. -/
-def backgroundDrift {s : ℕ} (hs : 6 ≤ s)
+@[expose] def backgroundDrift {s : ℕ} (hs : 6 ≤ s)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (background : SobolevSpace period (s + 1)) (e : SobolevSpace period s) : SobolevSpace period s
         :=
@@ -81,7 +81,7 @@ theorem backgroundDrift_bound {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : N + 6 ≤
     _ = _ := (Finset.mul_sum ..).symm
 
 /-- The actual order-zero source Z(e)+r_a in the transformed Euler correction equation. -/
-def orderZeroSource {s : ℕ} (hs : 6 ≤ s)
+@[expose] def orderZeroSource {s : ℕ} (hs : 6 ≤ s)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (C0 : SobolevSpace period s →L[ℝ] SobolevSpace period s)
     (C : Fin 3 → SobolevSpace period s →L[ℝ] SobolevSpace period s)

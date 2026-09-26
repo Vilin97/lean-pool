@@ -16,7 +16,7 @@ section
 
 /-! Exact almost-everywhere restriction of the actual nonlinear source and pressure time fields. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -138,7 +138,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -159,7 +159,7 @@ local instance lowerDataGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace perio
 local instance lowerDataSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
 /-- The same genuine correction coefficients and background restricted by one Sobolev order. -/
-def lowerData {q : ℕ} {T : ℝ} (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
+@[expose] def lowerData {q : ℕ} {T : ℝ} (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
     (KG : ∀ t, CoefficientJet period standardDirection q (D.metric.coefficient t))
     (KL : ∀ t, CoefficientJet period standardDirection q (D.linear.coefficient t))
     (KQ : ∀ i t, CoefficientJet period standardDirection q ((D.quadratic i).coefficient t))

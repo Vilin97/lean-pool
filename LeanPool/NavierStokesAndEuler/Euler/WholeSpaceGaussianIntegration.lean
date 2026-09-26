@@ -11,7 +11,7 @@ import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
 
 /-! Integration by parts for the literal whole-space Gaussian average. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

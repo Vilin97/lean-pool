@@ -17,7 +17,7 @@ import Mathlib.Analysis.Calculus.Deriv.Add
 /-! Strong time differentiation of every actual ordinary L² word,
 derived from the pointwise evolution and continuous L² spatial jets. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

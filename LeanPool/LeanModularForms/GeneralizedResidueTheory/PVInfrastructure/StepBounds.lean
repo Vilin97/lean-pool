@@ -31,7 +31,7 @@ cutoff integrals converge along dyadic subsequences.
     integral
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

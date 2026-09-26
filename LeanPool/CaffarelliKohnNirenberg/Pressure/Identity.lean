@@ -19,7 +19,7 @@ public import Mathlib.MeasureTheory.Function.LocallyIntegrable
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped ENNReal NNReal Topology
@@ -31,6 +31,7 @@ noncomputable section
 namespace CKN
 
 /-- The spatial pressure residual at a fixed time for a compactly supported test. -/
+@[expose]
 def pressureSliceResidual {Ω : Set Vec3} {u : ParabolicPoint → Vec3}
     {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}
     (ψ : Vec3 → ℝ) (s : ℝ) : ℝ :=

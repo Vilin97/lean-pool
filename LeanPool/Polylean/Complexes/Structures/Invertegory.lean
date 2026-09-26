@@ -7,7 +7,7 @@ module
 
 public import LeanPool.Polylean.Complexes.Structures.Category
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 

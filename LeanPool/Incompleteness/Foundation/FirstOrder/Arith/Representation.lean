@@ -12,7 +12,7 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.CobhamR0
 
 /-! # Representation -/
 
-@[expose] public section
+public section
 
 namespace Part
 

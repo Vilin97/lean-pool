@@ -21,7 +21,7 @@ import Mathlib.Algebra.Module.StablyFree.Basic
 The binary pontryagin dual component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace BinaryPontryaginDual

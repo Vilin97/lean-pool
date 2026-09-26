@@ -32,7 +32,7 @@ two equal-certificate leaves visibly map one branch onto the other.
 Along the way `nodePath` makes a node an honest function of its path (`Node.det`).
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon

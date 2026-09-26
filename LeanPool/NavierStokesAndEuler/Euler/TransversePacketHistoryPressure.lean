@@ -23,7 +23,7 @@ residual of the constructed history. Its L² realization, zero mean, spatial
 smoothness, support, and pointwise equation (11) are proved here.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

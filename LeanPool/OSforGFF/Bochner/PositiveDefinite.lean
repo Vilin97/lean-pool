@@ -38,7 +38,7 @@ but that weaker condition does not imply Hermitian symmetry.
 - `isPositiveDefinite_precomp_linear`: composition with linear maps preserves PD
 -/
 
-@[expose] public section
+public section
 
 open Complex BigOperators
 open scoped Kronecker

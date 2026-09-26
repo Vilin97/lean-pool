@@ -21,7 +21,7 @@ Mertens estimate used later in the normalization and tail-sum arguments.
 * `mertensEstimate`
 -/
 
-@[expose] public section
+public section
 
 open scoped ArithmeticFunction BigOperators
 

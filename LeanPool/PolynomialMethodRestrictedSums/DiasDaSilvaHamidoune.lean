@@ -22,7 +22,7 @@ The main theorem of this file was originally proved by Aristotle
 (Lean v4.24.0, project request uuid 7257b62c-6371-4fa8-a5b5-ea19029f0f1f).
 -/
 
-@[expose] public section
+public section
 
 open MvPolynomial
 

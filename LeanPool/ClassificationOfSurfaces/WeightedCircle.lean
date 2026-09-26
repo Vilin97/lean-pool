@@ -16,7 +16,7 @@ packages that map as a homeomorphism of intervals and, after identifying endpoin
 homeomorphism of circles.  It is the geometric core of Gallier--Xu P1 edge subdivision.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

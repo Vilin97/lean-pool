@@ -19,7 +19,7 @@ places parameter-dependent transverse variational problems on one fixed Hilbert
 space before coefficient differentiation or all-order estimates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -61,7 +61,7 @@ theorem coordinateDerivative_productDerivative (v : TimeLp T U) :
   exact frameLeftInverse_apply (Q t) c hc (hQ t) _
 
 /-- A strictly positive polynomial transport cost from the inverse-frame bounds. -/
-def transportCost : ℝ :=
+@[expose] def transportCost : ℝ :=
   1 + ((2 * (c⁻¹)^2 * ‖Q‖^2 * ‖Q₁‖ + c⁻¹ * ‖Q₁‖) * T + c⁻¹ * ‖Q‖)
 
 omit [CompleteSpace U] [CompleteSpace E] in

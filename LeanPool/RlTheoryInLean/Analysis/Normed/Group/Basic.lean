@@ -12,7 +12,7 @@ import Mathlib.Analysis.Normed.Group.Basic
 # LeanPool.RlTheoryInLean.Analysis.Normed.Group.Basic
 -/
 
-@[expose] public section
+public section
 
 variable {E : Type*} [SeminormedAddGroup E]
 

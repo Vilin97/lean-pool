@@ -23,7 +23,7 @@ the full language.
 Pure syntax + set-countability; no EM, no local stack, no `Conditional/`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -76,7 +76,7 @@ a formula mentions: `relationsIn` + countability, the two-sorted `symbSublang`, 
 restriction `restrictSymbols`, and the left-inverse law. -/
 
 /-- The relation symbols occurring in a formula (through all countable connectives). -/
-def BoundedFormulaω.relationsIn {α : Type} :
+@[expose] def BoundedFormulaω.relationsIn {α : Type} :
     ∀ {n : ℕ}, L.BoundedFormulaω α n → Set (Σ n, L.Relations n)
   | _, .falsum => ∅
   | _, .equal _ _ => ∅

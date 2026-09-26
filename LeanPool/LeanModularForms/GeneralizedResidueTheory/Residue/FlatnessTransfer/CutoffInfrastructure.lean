@@ -27,7 +27,7 @@ vanishing foundations to provide the `cutoff_zpow_infrastructure` lemma.
 * `cutoff_zpow_infrastructure` — combined FTC + direction infrastructure
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

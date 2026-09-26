@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
 
 /-! Actual nonlinear and coefficient operations on raw cylinder-path witnesses. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

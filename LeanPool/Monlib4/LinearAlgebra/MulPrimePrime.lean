@@ -19,7 +19,7 @@ this defines the multiplication map $M_{n\times n} \to M_n$
 
 -/
 
-@[expose] public section
+public section
 
 
 open Matrix

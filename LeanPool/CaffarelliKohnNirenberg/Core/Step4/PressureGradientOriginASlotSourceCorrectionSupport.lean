@@ -30,7 +30,7 @@ centring term explicit, so they can be consumed by the source estimates.
   derivative of that cutoff vanishes there under the same condition.
 -/
 
-@[expose] public section
+public section
 
 section
 

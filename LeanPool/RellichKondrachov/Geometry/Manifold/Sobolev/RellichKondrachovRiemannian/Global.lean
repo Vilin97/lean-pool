@@ -20,7 +20,7 @@ Finite-atlas assembly: turn the per-chart compactness result into compactness of
 `H¹ → L²` map for the Riemannian volume measure.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

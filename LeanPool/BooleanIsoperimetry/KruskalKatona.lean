@@ -23,7 +23,7 @@ This file proves the set-family upper-shadow minimization theorem used by the
 Boolean-isoperimetry argument.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open scoped FinsetFamily
@@ -58,7 +58,7 @@ noncomputable def layerInitSeg (N r t : ℕ) : Finset (Cube N) :=
   (simplicialInitSeg N (binomPrefix N r + t)).filter (fun x => x.card = r)
 
 /-- The layer-`r + 1` upper shadow of a uniform family in layer `r`. -/
-noncomputable def upperLayerShadow (N r : ℕ) (A : Finset (Cube N)) : Finset (Cube N) :=
+@[expose] noncomputable def upperLayerShadow (N r : ℕ) (A : Finset (Cube N)) : Finset (Cube N) :=
   (Finset.upShadow A).filter (fun x => x.card = r + 1)
 
 lemma binomPrefix_eq_card_lt (N r : ℕ) :

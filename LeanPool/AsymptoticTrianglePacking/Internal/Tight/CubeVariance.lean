@@ -38,7 +38,7 @@ Averaging over a duplicate-free list exhausting `ι` turns `f` into the constant
 telescoping sum of the second bullet is exactly the statement.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

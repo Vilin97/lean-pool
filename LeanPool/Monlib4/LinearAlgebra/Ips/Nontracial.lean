@@ -26,7 +26,7 @@ This file contains some results on the Hilbert space on finite-dimensional C*-al
 
 -/
 
-@[expose] public section
+public section
 
 
 variable {n : Type _} [Fintype n]

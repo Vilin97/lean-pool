@@ -18,7 +18,7 @@ contravariant pullback homomorphisms on holomorphic germs, the inclusion of
 lower-dimensional base germs, and the resulting algebra structure.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology
@@ -49,7 +49,7 @@ def wptAmbientLinearEquiv (n : ℕ) :
 
 The codomain is definitionally WPT's `(Fin n → ℂ) × ℂ` ambient space.
 -/
-def wptAmbientEquiv (n : ℕ) :
+@[expose] def wptAmbientEquiv (n : ℕ) :
     ComplexEuclidean (n + 1) ≃L[ℂ] ClassicalComplexWPT.Ambient n :=
   (wptAmbientLinearEquiv n).toContinuousLinearEquiv
 
@@ -370,7 +370,7 @@ theorem coordinatePullback_symm {n m : ℕ}
 /-! ## Base inclusion and the last coordinate -/
 
 /-- Projection from `ℂⁿ⁺¹` to its first `n` coordinates. -/
-def baseProjectionCLM (n : ℕ) :
+@[expose] def baseProjectionCLM (n : ℕ) :
     ComplexEuclidean (n + 1) →L[ℂ] ComplexEuclidean n :=
   (ContinuousLinearMap.fst ℂ (ComplexEuclidean n) ℂ).comp
     (wptAmbientEquiv n : ComplexEuclidean (n + 1) →L[ℂ]
@@ -398,7 +398,7 @@ theorem baseSectionCLM_last (n : ℕ) (z : ComplexEuclidean n) :
   simp [baseSectionCLM]
 
 /-- Extraction of the last coordinate of `ℂⁿ⁺¹`. -/
-def lastCoordinateCLM (n : ℕ) : ComplexEuclidean (n + 1) →L[ℂ] ℂ :=
+@[expose] def lastCoordinateCLM (n : ℕ) : ComplexEuclidean (n + 1) →L[ℂ] ℂ :=
   (ContinuousLinearMap.snd ℂ (ComplexEuclidean n) ℂ).comp
     (wptAmbientEquiv n : ComplexEuclidean (n + 1) →L[ℂ]
       ClassicalComplexWPT.Ambient n)
@@ -418,7 +418,7 @@ theorem baseProjectionCLM_comp_baseSectionCLM (n : ℕ) :
   simp
 
 /-- Include a base germ as a germ independent of the last coordinate. -/
-def lowerDimensionalInclusion (n : ℕ) :
+@[expose] def lowerDimensionalInclusion (n : ℕ) :
     HolomorphicGerm n →+* HolomorphicGerm (n + 1) :=
   holomorphicGermPullbackHom (baseProjectionCLM n)
 

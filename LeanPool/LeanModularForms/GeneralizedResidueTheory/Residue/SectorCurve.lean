@@ -46,7 +46,7 @@ The PV of `dz/z` along this curve decomposes as:
 Reference: Hungerbuhler-Wasem, arXiv:1808.00997v2, Lemma 3.1.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval
@@ -61,7 +61,7 @@ noncomputable section
 - [0,1]: radial ray from 0 to r along the positive real axis
 - [1,2]: circular arc of radius r from angle 0 to angle alpha
 - [2,3]: radial ray from r*exp(i*alpha) back to 0 -/
-def sectorCurve (r : ℝ) (α : ℝ) (t : ℝ) : ℂ :=
+@[expose] def sectorCurve (r : ℝ) (α : ℝ) (t : ℝ) : ℂ :=
   if t ≤ 1 then
     ↑(t * r)
   else if t ≤ 2 then

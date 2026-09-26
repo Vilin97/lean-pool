@@ -14,7 +14,7 @@ section
 
 /-! Exact spatial difference-quotient commutators with the actual mixed boundary operator. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -128,7 +128,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -223,7 +223,7 @@ theorem differenceQuotient_support (χ : Cutoff) (R : ℝ)
 
 /-- Cutoff difference constant, given by `3 * cutoffCurlConstant * (M₁ + M₂ * (volume
 (Metric.closedBall (0 : Space) (R+1))).toReal ^ (1/3 : ℝ))`. -/
-def cutoffDifferenceConstant (R M₁ M₂ : ℝ) : ℝ :=
+@[expose] def cutoffDifferenceConstant (R M₁ M₂ : ℝ) : ℝ :=
   3 * cutoffCurlConstant *
     (M₁ + M₂ * (volume (Metric.closedBall (0 : Space) (R+1))).toReal ^ (1/3 : ℝ))
 

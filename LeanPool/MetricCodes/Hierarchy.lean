@@ -13,7 +13,7 @@ public import LeanPool.MetricCodes.HarmonicAnalysis
 General spectral bounds, localization, compactification, and strict hierarchy estimates.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 

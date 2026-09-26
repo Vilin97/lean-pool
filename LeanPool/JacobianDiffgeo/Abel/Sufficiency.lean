@@ -69,7 +69,7 @@ The **easy/necessity direction** (§2.2, "`∃F` with one simple pole `⟹` `gen
 built, no admitted steps: `genus_eq_zero_of_exists_simple_pole` (`WeakToMero.lean`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

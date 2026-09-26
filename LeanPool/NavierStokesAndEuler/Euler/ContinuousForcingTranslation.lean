@@ -34,7 +34,7 @@ The proof uses a quadratic Taylor remainder and loses no derivative-bound
 constant. No uniform-path differentiability is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -313,7 +313,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

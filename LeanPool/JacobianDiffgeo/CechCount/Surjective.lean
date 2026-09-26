@@ -25,7 +25,7 @@ primal form). Proof: factor through the intermediate divisor `D₁ := E + diviso
 * `mulH1 f hf` agrees with the composite (`mulH1_H1Incl`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech Module

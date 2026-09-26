@@ -23,7 +23,7 @@ The stress operator is the two tangential radial operators in (24). It is
 not identified with the divergence of an unspecified symmetric tensor.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -39,7 +39,7 @@ open SlowExpansionResidual
 open AxisymmetricFields (radialEnergy profilePoint)
 
 /-- Convert a regular radial quotient to the actual radial flux. -/
-noncomputable def ofBeta (phi axial beta pressure : ℕ → InnerProfile) : SlowProfiles where
+@[expose] noncomputable def ofBeta (phi axial beta pressure : ℕ → InnerProfile) : SlowProfiles where
   phi := phi
   axial := axial
   flux := fun n => AxisSourceRegularity.axisFactor (beta n)
@@ -299,7 +299,7 @@ theorem pairTail_bound {q h : ℝ} (hq : 0 < q) (hq1 : q ≤ 1) (hh : 0 ≤ h)
     _ = _ := (Finset.sum_mul _ _ _).symm
 
 /-- Transport kernel, constructed using `transportPair`. -/
-noncomputable def transportKernel (h e α : ℝ) (v u f : ℕ → InnerProfile)
+@[expose] noncomputable def transportKernel (h e α : ℝ) (v u f : ℕ → InnerProfile)
     (w : InnerPoint) : ℕ → ℕ → ℝ :=
   transportPair w.1 α (fun j => v j w) (fun j => u j w) (fun j => f j w)
     (fun j => partialX (f j) w) (fun j => Z h (e + slowOrder h j) (f j) w)
@@ -368,14 +368,14 @@ theorem pressureTail_bound {q h : ℝ} (hq : 0 < q) (hq1 : q ≤ 1) (hh : 0 ≤ 
   nlinarith
 
 /-- The change from cylindrical radius R to the regular variable X. -/
-noncomputable def radiusPoint (w : InnerPoint) : InnerPoint := (w.1 ^ 2 / 2, w.2)
+@[expose] noncomputable def radiusPoint (w : InnerPoint) : InnerPoint := (w.1 ^ 2 / 2, w.2)
 
 /-- From radius, given by `F (Real.sqrt (2 * w.1), w.2)`. -/
-noncomputable def fromRadius (F : InnerProfile) (w : InnerPoint) : ℝ :=
+@[expose] noncomputable def fromRadius (F : InnerProfile) (w : InnerPoint) : ℝ :=
   F (Real.sqrt (2 * w.1), w.2)
 
 /-- To radius, given by `f (radiusPoint w)`. -/
-noncomputable def toRadius (f : InnerProfile) (w : InnerPoint) : ℝ := f (radiusPoint w)
+@[expose] noncomputable def toRadius (f : InnerProfile) (w : InnerPoint) : ℝ := f (radiusPoint w)
 
 /-- Swirl radius, given by `w.1 / C * toRadius f w`. -/
 noncomputable def swirlRadius (C : ℝ) (f : InnerProfile) (w : InnerPoint) : ℝ :=
@@ -433,19 +433,20 @@ theorem primitive_stress_radial_identity {S : Set ℝ} (hS : IsOpen S)
   simpa only [id_eq, mul_one, Prod.eta] using he
 
 /-- Literal R²-weighted angular residual. -/
+@[expose]
 noncomputable def thetaDensity (h C : ℝ) (f : SlowProfiles) (n : ℕ) (w : InnerPoint) : ℝ :=
   w.1 ^ 3 / C * angularCoefficient h f n (radiusPoint w)
 
 /-- Literal R-weighted axial residual. -/
-noncomputable def zDensity (h : ℝ) (f : SlowProfiles) (n : ℕ) (w : InnerPoint) : ℝ :=
+@[expose] noncomputable def zDensity (h : ℝ) (f : SlowProfiles) (n : ℕ) (w : InnerPoint) : ℝ :=
   w.1 * axialCoefficient h f n (radiusPoint w)
 
 /-- Theta stress, given by `fromRadius (SlowStressSupport.stress 2 (thetaDensity h C f n))`. -/
-noncomputable def thetaStress (h C : ℝ) (f : SlowProfiles) (n : ℕ) : InnerProfile :=
+@[expose] noncomputable def thetaStress (h C : ℝ) (f : SlowProfiles) (n : ℕ) : InnerProfile :=
   fromRadius (SlowStressSupport.stress 2 (thetaDensity h C f n))
 
 /-- Z stress, given by `fromRadius (SlowStressSupport.stress 1 (zDensity h f n))`. -/
-noncomputable def zStress (h : ℝ) (f : SlowProfiles) (n : ℕ) : InnerProfile :=
+@[expose] noncomputable def zStress (h : ℝ) (f : SlowProfiles) (n : ℕ) : InnerProfile :=
   fromRadius (SlowStressSupport.stress 1 (zDensity h f n))
 
 theorem thetaStress_smoothAt {S : Set ℝ} (hS : IsOpen S) (h C : ℝ)
@@ -588,7 +589,7 @@ theorem physicalZStress_divergence {S : Set ℝ} (hS : IsOpen S)
 
 /-- The two radial tangential operators appearing in the manuscript.
 They are written as an actual Cartesian vector; no unspecified tensor is used. -/
-noncomputable def tangentialStressForce (theta axial : PhysicalProfile)
+@[expose] noncomputable def tangentialStressForce (theta axial : PhysicalProfile)
     (t : ℝ) (x : ProblemStatement.Space) : ProblemStatement.Space :=
   let r := Real.sqrt (2 * radialEnergy x)
   let a := LeadingStress.radialDivergence 2 theta (profilePoint t x)
@@ -979,7 +980,7 @@ abbrev PressureIndex := Sum TailIndex TailIndex
 
 /-- Pressure indices, given by `((transportIndices N).image Sum.inl) ∪ ((transportIndices
 N).image Sum.inr)`. -/
-noncomputable def pressureIndices (N : ℕ) : Finset PressureIndex :=
+@[expose] noncomputable def pressureIndices (N : ℕ) : Finset PressureIndex :=
   ((transportIndices N).image Sum.inl) ∪ ((transportIndices N).image Sum.inr)
 
 /-- Pressure power used in slow residual matching. -/
@@ -989,6 +990,7 @@ noncomputable def pressurePower (N : ℕ) (h : ℝ) : PressureIndex → ℝ
   | Sum.inr (some ij) => pressureExponent h + slowOrder h (ij.1 + ij.2)
 
 /-- Pressure term used in slow residual matching. -/
+@[expose]
 noncomputable def pressureTerm (N : ℕ) (h C : ℝ) (f : SlowProfiles) : PressureIndex → InnerProfile
   | Sum.inl i => transportTerm N h 0 (-(1 / 2)) f.flux f.axial f.flux i
   | Sum.inr none => omegaCoefficient h f N

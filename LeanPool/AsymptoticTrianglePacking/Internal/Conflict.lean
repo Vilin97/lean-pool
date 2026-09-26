@@ -30,7 +30,7 @@ Definitions (`degree`, `IsUniform`) come from `LeanPool.AsymptoticTrianglePackin
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

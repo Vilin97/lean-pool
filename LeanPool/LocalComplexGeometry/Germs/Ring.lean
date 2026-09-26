@@ -20,7 +20,7 @@ This file packages the constant inclusion, identifies the residue field with
 `ℂ`, and supplies the zero-dimensional base case used by Rückert induction.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology

@@ -17,7 +17,7 @@ The joint analyticity of the disturbing function and compact parameter-integral 
 that averaging over one resonant period preserves real analyticity in eccentricity.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

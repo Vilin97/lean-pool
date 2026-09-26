@@ -19,7 +19,7 @@ translation orbit, literal raw representative and true time derivative are
 preserved by the same bounded linear embedding.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

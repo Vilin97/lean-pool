@@ -23,7 +23,7 @@ Faithfulness and irreducibility are intentionally absent from
 needed for the obstruction.
 -/
 
-@[expose] public section
+public section
 
 namespace SaxlCounterexamples.EveryBase
 

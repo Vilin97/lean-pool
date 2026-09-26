@@ -48,7 +48,7 @@ transported radial and axial directions. No new divergence premise is
 needed for the associated particular-solver coordinates.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -147,7 +147,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1894,7 +1894,7 @@ is applied at that original band.  The square-root moving-edge weight is kept
 through the entire estimate, including the uncovered source term.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2161,7 +2161,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

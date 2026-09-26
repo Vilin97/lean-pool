@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHessianSymmetry
 History norms and symmetry are derived from the parent fields, and the
 neighbor error is the computed, ell-scaled coefficient expression. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -16,4 +16,4 @@ import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 Import aggregator for the `GaussianField/Nuclear` directory.
 -/
 
-@[expose] public section
+public section

@@ -16,7 +16,7 @@ the same certificate as the source coloring diagram, but avoids artificial
 recursion depth from long chains of forced assignments.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
@@ -40,7 +40,7 @@ structure PartsTreeNode where
 namespace PartsTreeNode
 
 /-- Decode zero as no child and `n + 1` as child index `n`. -/
-def child (node : PartsTreeNode) (color : Fin 4) : Option Nat :=
+@[expose] def child (node : PartsTreeNode) (color : Fin 4) : Option Nat :=
   match node.children color with
   | 0 => none
   | n + 1 => some n
@@ -77,7 +77,7 @@ def PartsProper (coloring : Fin 481 → Fin 4) : Prop :=
   ∀ ⦃v w : Fin 481⦄, partsAdjacent v w = true → coloring v ≠ coloring w
 
 /-- The four colors, as data for the executable checker. -/
-def partsColors : List (Fin 4) := [0, 1, 2, 3]
+@[expose] def partsColors : List (Fin 4) := [0, 1, 2, 3]
 
 lemma mem_partsColors (color : Fin 4) : color ∈ partsColors := by
   fin_cases color <;> simp [partsColors]
@@ -99,12 +99,12 @@ lemma partsBlocksB_eq_true {path : List PartsAssignment} {vertex : Fin 481}
     exact ⟨assignment, hin, by simp [hcolor, hadj]⟩
 
 /-- A forced assignment is the only color not blocked by the current path. -/
-def PartsForcedB (path : List PartsAssignment) (assignment : PartsAssignment) : Bool :=
+@[expose] def PartsForcedB (path : List PartsAssignment) (assignment : PartsAssignment) : Bool :=
   partsColors.all fun color =>
     color == assignment.color || PartsBlocksB path assignment.vertex color
 
 /-- Execute a sequence of forced assignments, returning the extended path. -/
-def PartsRunStemB : List PartsAssignment → List PartsAssignment →
+@[expose] def PartsRunStemB : List PartsAssignment → List PartsAssignment →
     Option (List PartsAssignment)
   | [], path => some path
   | assignment :: stem, path =>
@@ -114,7 +114,7 @@ def PartsRunStemB : List PartsAssignment → List PartsAssignment →
         none
 
 /-- Executable checker for a compressed coloring tree. -/
-def PartsVerifiesNodeB (nodes : Array (Array PartsTreeNode)) :
+@[expose] def PartsVerifiesNodeB (nodes : Array (Array PartsTreeNode)) :
     Nat → List PartsAssignment → Nat → Bool
   | 0, _, _ => false
   | fuel + 1, path, index =>
@@ -133,7 +133,7 @@ def PartsVerifiesNodeB (nodes : Array (Array PartsTreeNode)) :
                         (⟨node.vertex, color⟩ :: extended) child
 
 /-- Check a certificate from node zero with enough fuel for an acyclic tree. -/
-def PartsCertificate.Verifies (certificate : PartsCertificate) : Prop :=
+@[expose] def PartsCertificate.Verifies (certificate : PartsCertificate) : Prop :=
   PartsVerifiesNodeB certificate.nodes (certificate.nodeCount + 1)
     certificate.roots 0 = true
 

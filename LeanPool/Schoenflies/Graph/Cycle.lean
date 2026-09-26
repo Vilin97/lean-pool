@@ -76,7 +76,7 @@ subgraph can answer differently. `Graph.IsWalk.anti` from `Walk.lean` is the eng
   a cycle"; the form the tree module's longest-path argument consumes.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

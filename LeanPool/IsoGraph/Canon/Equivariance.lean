@@ -50,7 +50,7 @@ Each piece of the search respects `≈`:
   the discreteness at the leaves.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon
@@ -4468,6 +4468,7 @@ here, stated with the intermediates named by `orbRefresh` and `unwind`.  Proofs 
 ever use these, never the definitions. -/
 
 /-- The orbit cache of `dfsChildren`, refreshed if new generators have turned up. -/
+@[expose]
 def orbRefresh (G : Graph) (path : Array Nat) (processed : Array Nat) (orb : Orbits) (st : St) :
     Orbits :=
   if orb.nGens == st.autos.size then orb
@@ -4476,7 +4477,7 @@ def orbRefresh (G : Graph) (path : Array Nat) (processed : Array Nat) (orb : Orb
     { nGens := st.autos.size, gens, mark := orbitClosure G.n gens processed }
 
 /-- Absorb a backjump request aimed at this depth. -/
-def unwind (path : Array Nat) (st : St) : St :=
+@[expose] def unwind (path : Array Nat) (st : St) : St :=
   match st.abortTo with
   | some k => if k ≥ path.size then { st with abortTo := none } else st
   | none => st

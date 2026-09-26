@@ -18,7 +18,7 @@ The coefficients are the integrals of the given function. Local uniform
 decay is obtained from genuine derivatives on compact parameter intervals.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -683,7 +683,7 @@ noncomputable def mixedJet (q : ℕ) (w : List Bool) (f : Source) (z : Point) : 
 
 /-- Mixed loss constant, given by `((6 * ‖omega⁻¹‖) * ‖omega‖ ^ r) * 3 ^ (r + 5) * ∑' k :
 Frequency, (weight k ^ 4)⁻¹`. -/
-noncomputable def mixedLossConstant (r : ℕ) : ℝ :=
+@[expose] noncomputable def mixedLossConstant (r : ℕ) : ℝ :=
   ((6 * ‖omega⁻¹‖) * ‖omega‖ ^ r) * 3 ^ (r + 5) *
     ∑' k : Frequency, (weight k ^ 4)⁻¹
 

@@ -23,7 +23,7 @@ by `Finset E`), enabling application of the Kolmogorov extension theorem.
 - `marginalFamily_isProjective` — the family is projective (consistent under restriction)
 -/
 
-@[expose] public section
+public section
 
 open BigOperators MeasureTheory Complex
 
@@ -35,7 +35,7 @@ variable {E : Type*} [AddCommGroup E] [Module ℝ E]
 /-! ## Transport equivalence -/
 
 /-- Measurable equivalence between `∀ j : J, ℝ` and `Fin |J| → ℝ` via `J.equivFin`. -/
-def finsetReindexEquiv (J : Finset E) :
+@[expose] def finsetReindexEquiv (J : Finset E) :
     (↥J → ℝ) ≃ᵐ (Fin J.card → ℝ) where
   toEquiv :=
     { toFun := fun x i => x (J.equivFin.symm i)
@@ -48,14 +48,14 @@ def finsetReindexEquiv (J : Finset E) :
 /-- Measurable equivalence between `∀ j : J, ℝ` and `EuclideanSpace ℝ (Fin |J|)`.
     Composition of reindexing by `J.equivFin` and `MeasurableEquiv.toLp`.
 -/
-def finsetPiMeasEquiv (J : Finset E) :
+@[expose] def finsetPiMeasEquiv (J : Finset E) :
     (↥J → ℝ) ≃ᵐ EuclideanSpace ℝ (Fin J.card) :=
   (finsetReindexEquiv J).trans (MeasurableEquiv.toLp 2 (Fin J.card → ℝ))
 
 /-! ## Marginal family -/
 
 /-- The test vectors for a finset `J`, as a function `Fin |J| → E`. -/
-def finsetTestVectors (J : Finset E) : Fin J.card → E :=
+@[expose] def finsetTestVectors (J : Finset E) : Fin J.card → E :=
   fun i => (J.equivFin.symm i : E)
 
 /-- Choose the unique Bochner marginal measure for test vectors from a finset. -/
@@ -74,7 +74,7 @@ theorem marginalMeasure_charFun (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
     Bochner marginal on `EuclideanSpace ℝ (Fin |J|)` and transport it to `∀ j : J, ℝ`
     via the `finsetPiMeasEquiv`.
 -/
-def marginalFamily (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
+@[expose] def marginalFamily (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
     (hΦ_pd : IsPositiveDefinite Φ) (hΦ_norm : Φ 0 = 1) :
     ∀ J : Finset E, Measure (∀ j : ↥J, (fun (_ : E) => ℝ) ↑j) :=
   fun J => (marginalMeasure Φ hΦ_cont hΦ_pd hΦ_norm J).toMeasure.map

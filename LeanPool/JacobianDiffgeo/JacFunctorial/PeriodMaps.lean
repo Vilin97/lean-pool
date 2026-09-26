@@ -27,7 +27,7 @@ trace–path-integral relation are not completed, so `pullbackT`/`Jacobian.pullb
 `pushforward_pullback` cannot be assembled here).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Module
@@ -59,7 +59,7 @@ variable {Y : Type*} [TopologicalSpace Y] [T2Space Y] [CompactSpace Y] [Connecte
 /-- The induced `ℂ`-linear map on period spaces, from `Form1.pullback f hf`'s `dualMap`
 (contravariant: `Form1 Y →ₗ Form1 X` transposes to `Dual(Form1 X) →ₗ Dual(Form1 Y)`, exactly the
 pushforward direction). -/
-noncomputable def pushforwardT (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
+@[expose] noncomputable def pushforwardT (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
     (Fin (genus X) → ℂ) →ₗ[ℂ] (Fin (genus Y) → ℂ) :=
   (periodCoordEquiv Y).toLinearMap ∘ₗ
     ((Form1.pullback f hf).dualMap ∘ₗ (periodCoordEquiv X).symm.toLinearMap)

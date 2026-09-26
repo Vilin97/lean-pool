@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
 
 /-! The literal transport and order-zero quadratic operators in the Euler correction equation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -96,7 +96,7 @@ theorem algebraicBilinear_apply {q : ℕ} (hq : 6 ≤ q)
   simp only [algebraicBilinear, sum_apply, postcompose_apply]
 
 /-- The full bilinear nonlinearity of the transformed Euler equation. -/
-def eulerBilinear {q : ℕ} (hq : 6 ≤ q)
+@[expose] def eulerBilinear {q : ℕ} (hq : 6 ≤ q)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (C : Fin 3 → SobolevSpace period q →L[ℝ] SobolevSpace period q) :
     SobolevSpace period (q+1) →L[ℝ] SobolevSpace period (q+1) →L[ℝ] SobolevSpace period q :=

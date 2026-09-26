@@ -19,7 +19,7 @@ density and derives its four-point log-concavity from translation TP2
 closure under convolution.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal
 open MeasureTheory ProbabilityTheory
@@ -101,7 +101,7 @@ structure SignedExpFactor where
 namespace SignedExpFactor
 
 /-- The one-sided exponential density associated with a signed factor. -/
-def density (F : SignedExpFactor) : ℝ → ℝ≥0∞ :=
+@[expose] def density (F : SignedExpFactor) : ℝ → ℝ≥0∞ :=
   match F.direction with
   | .positive => rightExponentialDensity F.scale
   | .negative => leftExponentialDensity F.scale

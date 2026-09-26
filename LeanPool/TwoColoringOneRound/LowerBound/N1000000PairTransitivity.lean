@@ -23,7 +23,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -55,10 +55,10 @@ abbrev i1 : Fin 3 := 1
 abbrev i2 : Fin 3 := 2
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def bit (k : Nat) : Nat := (1 : Nat) <<< k
+@[expose] def bit (k : Nat) : Nat := (1 : Nat) <<< k
 
 /-- The directed overlap mask between two vertices, as a `3×3` partial permutation bitmask. -/
-def dirMask (u v : V) : Mask :=
+@[expose] def dirMask (u v : V) : Mask :=
   -- We build a `9`-bit number by appending three `3`-bit rows.
   let row0 : Nat :=
     ((if u.1 i0 = v.1 i0 then bit 0 else 0) ||| (if u.1 i0 = v.1 i1 then bit 1 else 0)) |||

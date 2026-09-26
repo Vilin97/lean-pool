@@ -31,7 +31,7 @@ count to that unit slice. Among unit words of length `n + 3`, exactly
 `(n + 9) * 2 ^ n` create fewer than two doubling carries.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 

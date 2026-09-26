@@ -20,7 +20,7 @@ facewise affine formulas and subordination to old faces.  Thus an arbitrary home
 be installed as a subdivision by bookkeeping alone.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -207,7 +207,7 @@ noncomputable def faceVertexEquiv (t : K.Face) : Fin 3 ≃ t.1 :=
     rw [Fintype.card_fin, Fintype.card_coe, K.faces_card t.1 t.2])
 
 /-- Cyclically indexed vertices of a maximal face. -/
-noncomputable def faceVertex (t : K.Face) (i : ZMod 3) : K.Vertex :=
+@[expose] noncomputable def faceVertex (t : K.Face) (i : ZMod 3) : K.Vertex :=
   (K.faceVertexEquiv t ((ZMod.finEquiv 3).symm i)).1
 
 theorem faceVertex_mem (t : K.Face) (i : ZMod 3) : K.faceVertex t i ∈ t.1 :=
@@ -296,7 +296,7 @@ theorem faceEdge_ne_next (t : K.Face) (i : ZMod 3) :
 abbrev UsedVertex : Type := {v : K.Vertex // ∃ t ∈ K.faces, v ∈ t}
 
 /-- A cyclic face vertex with explicit evidence that it occurs in the complex. -/
-noncomputable def faceUsedVertex (t : K.Face) (i : ZMod 3) : K.UsedVertex :=
+@[expose] noncomputable def faceUsedVertex (t : K.Face) (i : ZMod 3) : K.UsedVertex :=
   ⟨K.faceVertex t i, t.1, t.2, K.faceVertex_mem t i⟩
 
 /-- A chosen maximal face containing a used vertex. -/
@@ -392,11 +392,11 @@ theorem edgeVertexPoint_eq_vertexPoint (e : K.Edge) (v : K.Vertex) (hv : v ∈ e
   rfl
 
 /-- Canonical first endpoint in the barycentric realization. -/
-noncomputable def edgeFirstPoint (e : K.Edge) : K.realization :=
+@[expose] noncomputable def edgeFirstPoint (e : K.Edge) : K.realization :=
   K.edgeVertexPoint e (K.edgeFirst e) (K.edgeFirst_mem e)
 
 /-- Canonical second endpoint in the barycentric realization. -/
-noncomputable def edgeSecondPoint (e : K.Edge) : K.realization :=
+@[expose] noncomputable def edgeSecondPoint (e : K.Edge) : K.realization :=
   K.edgeVertexPoint e (K.edgeSecond e) (K.edgeSecond_mem e)
 
 /-- The first endpoint as a used vertex. -/

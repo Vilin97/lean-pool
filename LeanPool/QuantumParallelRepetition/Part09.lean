@@ -9,7 +9,7 @@ public import LeanPool.QuantumParallelRepetition.Part08
 
 /-! # Quantum parallel repetition, part 09 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4453,7 +4453,7 @@ def directDSVActualBilateralRetainedIndexEquiv
     (Equiv.prodProdProdComm s t u v)
 
 /-- The measurement effect for direct DSV actual local POVM winning. -/
-def directDSVActualLocalPOVMWinningEffect
+@[expose] def directDSVActualLocalPOVMWinningEffect
     {X Y A B s t : Type*}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     [Fintype s] [Fintype t] [DecidableEq s] [DecidableEq t]
@@ -4975,7 +4975,7 @@ def physical8SelectedGlobalTargetWorkEquiv
     rfl
 
 /-- The finite equivalence encoding physical 8 one scale actual global fiber. -/
-def physical8OneScaleActualGlobalFiberEquiv
+@[expose] def physical8OneScaleActualGlobalFiberEquiv
     {P N d L m : ℕ} {R : Type}
     (phaseSplit :
       DSVDensityRationalPublicMultiscalePhaseIndex 1 P ≃
@@ -5980,7 +5980,7 @@ def integratorActualC485NormalizedDiagonalWork
 
 open Classical in
 /-- The state vector representing integrator actual c 485 cleaned. -/
-def integratorActualC485CleanedVector
+@[expose] def integratorActualC485CleanedVector
     {S B N d L m : ℕ}
     (Q : ℕ) (width : Fin S → ℝ)
     (schedule : Fin L → Fin S)
@@ -6005,7 +6005,7 @@ def integratorActualC485CleanedVector
         (S := S) (B := B) (N := N) (d := d) (L := L) j))
 
 /-- The state vector representing integrator actual c 485 canonical. -/
-def integratorActualC485CanonicalVector
+@[expose] def integratorActualC485CanonicalVector
     {S B N d L m : ℕ}
     {width : Fin S → ℝ}
     (schedule : Fin L → Fin S)
@@ -6024,7 +6024,7 @@ def integratorActualC485CanonicalVector
       (B := B) width schedule ξ ζ j)
 
 /-- The state vector representing integrator actual c 485 source. -/
-def integratorActualC485SourceVector
+@[expose] def integratorActualC485SourceVector
     {S B N d L m : ℕ}
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d)

@@ -21,7 +21,7 @@ public import Mathlib.Data.Set.BooleanAlgebra
 # MatchingLogic.EntryIII.LocalTheory
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -227,7 +227,7 @@ def LocProvable (Gamma : Set (Pattern S Var)) (phi : Pattern S Var) : Prop :=
     Provable (∅ : Set (Pattern S Var)) (.imp (conj l) phi)
 
 /-- Definition 68: local consistency. -/
-def LocConsistent (Gamma : Set (Pattern S Var)) : Prop :=
+@[expose] def LocConsistent (Gamma : Set (Pattern S Var)) : Prop :=
   ¬ LocProvable Gamma (.bot : Pattern S Var)
 
 /-- Definition 68: a locally consistent set with no locally consistent strict

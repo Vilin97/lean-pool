@@ -19,7 +19,7 @@ derivative estimates are derived from the actual physical graph and radius map.
 The final restriction is a single coherent physical field, not a sum over bands.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,13 +33,13 @@ open scoped Topology ContDiff BigOperators
 abbrev Point := PressureStream.Lift PhysicalGraphBounds.Plane
 
 /-- The unscaled physical cylindrical point with the actual auxiliary graph. -/
-noncomputable def physicalPoint (h : ℝ) (w : SpaceTime) : Point :=
+@[expose] noncomputable def physicalPoint (h : ℝ) (w : SpaceTime) : Point :=
   (PhysicalClassBounds.cartesianRadius (PhysicalGraphBounds.radialProjection w),
     ((1 - w.1, w.2 2), PhysicalGraphBounds.radialProfile (ChartScales.radialExponent h)
       (PhysicalGraphBounds.radialProjection w) + w.1 • PhysicalGraphBounds.timeDirection))
 
 /-- A bounded-gap common-cover graph, in the mean-field coordinate order. -/
-noncomputable def graph (h : ℝ) (n d : ℕ) : SpaceTime → Point :=
+@[expose] noncomputable def graph (h : ℝ) (n d : ℕ) : SpaceTime → Point :=
   PhysicalClassBounds.cylindricalMap ∘ commonLift h n d
 
 theorem cartesianRadius_smul {c : ℝ} (hc : 0 ≤ c) (y : PhysicalGraphBounds.Plane) :
@@ -145,7 +145,7 @@ noncomputable def bandField (h : ℝ) (n d : ℕ) (degree : ℝ) (f : Point → 
   fun w => (ChartScales.Q n ^ (-degree)) • f (graph h n d w)
 
 /-- Loss, given by `PhysicalGraphBounds.graphLoss m + 1 + degree`. -/
-noncomputable def loss (degree : ℝ) (m : ℕ) : ℝ :=
+@[expose] noncomputable def loss (degree : ℝ) (m : ℕ) : ℝ :=
   PhysicalGraphBounds.graphLoss m + 1 + degree
 
 /-- Actual cylindrical mean-field restriction.  Both graph stages are
@@ -540,7 +540,7 @@ theorem loss_stream (h : ℝ) (m : ℕ) :
 
 /-- The Cartesian unit angular direction, with the usual totalized value
 at the axis.  Axis regularity below comes from the supported coefficient. -/
-noncomputable def angularVector (y : PhysicalGraphBounds.Plane) : Space :=
+@[expose] noncomputable def angularVector (y : PhysicalGraphBounds.Plane) : Space :=
   (-y.2 / PhysicalClassBounds.cartesianRadius y) • coordinateVector 0 +
     (y.1 / PhysicalClassBounds.cartesianRadius y) • coordinateVector 1
 
@@ -717,6 +717,7 @@ theorem bandAngularField_jet_bound {h a b : ℝ}
 
 /-- The actual Cartesian vector associated with the coherent scalar
 field.  The formula applies both to angular velocity and stream potential. -/
+@[expose]
 noncomputable def CoherentFamily.angularField (D : CoherentFamily h degree N Δ U ℝ) : VelocityField
     :=
   fun w => D.field w • angularVector (PhysicalGraphBounds.radialProjection w)

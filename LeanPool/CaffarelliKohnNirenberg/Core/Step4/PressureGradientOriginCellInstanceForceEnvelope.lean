@@ -17,7 +17,7 @@ Fixed-radius Young and far-field bounds control the force contribution
 of `eq:pressure-gradient-morrey` by spatial source norms on its cutoff ball.
 -/
 
-@[expose] public section
+public section
 
 section
 

@@ -24,7 +24,7 @@ proof is the same contrapositive Hilbert-choice argument — `localSkolem_funMap
 tuple-shape hypothesis, so nothing about `σ` is used beyond interpreting the argument terms.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

@@ -19,7 +19,7 @@ quadratic form is written as a finite sum so that it is independent of the
 ambient sup norm on the function space.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 
@@ -35,6 +35,7 @@ open CKN.Foundation.Parabolic
 /-! ### Definitions and elementary identities -/
 
 /-- Three-dimensional Gaussian heat kernel, extended by zero to nonpositive time. -/
+@[expose]
 def heatKernel (x : Vec3) (t : ℝ) : ℝ :=
   if 0 < t then
     (4 * Real.pi * t) ^ (-(3 : ℝ) / 2) *
@@ -42,10 +43,12 @@ def heatKernel (x : Vec3) (t : ℝ) : ℝ :=
   else 0
 
 /-- Causal heat kernel on parabolic points. -/
+@[expose]
 def heatKernelPlus (p : ParabolicPoint) : ℝ :=
   if 0 < p.2 then heatKernel p.1 p.2 else 0
 
 /-- Sum of spatial Euclidean length and the square root of time used in kernel estimates. -/
+@[expose]
 def rhoTwo (x : Vec3) (t : ℝ) : ℝ :=
   vec3EuclideanNorm x + Real.sqrt t
 

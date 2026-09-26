@@ -22,7 +22,7 @@ Finiteness properties of `riemannianVolumeMeasure`.
   on a compact manifold, the total volume is finite.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

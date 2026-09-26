@@ -16,4 +16,4 @@ public import LeanPool.FormalLearningTheory.Learner.Bayesian
 Imported Lean Pool material for `LeanPool.FormalLearningTheory.Learner`.
 -/
 
-@[expose] public section
+public section

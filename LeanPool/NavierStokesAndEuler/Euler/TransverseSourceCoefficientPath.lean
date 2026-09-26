@@ -35,7 +35,7 @@ hypotheses using the prescribed invertible deformation and orthonormal reference
 plane. No inverse solution or acceleration is supplied as input.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -201,7 +201,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

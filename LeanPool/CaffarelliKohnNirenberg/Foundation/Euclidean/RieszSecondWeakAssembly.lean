@@ -16,7 +16,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Euclidean.Interpolatio
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -365,6 +365,7 @@ theorem rieszSecond_good_output_l2
   simpa only [g, u] using And.intro hmem_op hreal
 
 /-- Second-Riesz kernel with the sign convention for pressure reconstruction. -/
+@[expose]
 def rieszSecondPressureKernel (i j : Fin 3) : Vec3 → ℝ :=
   fun z => -rieszSecondKernel i j z
 

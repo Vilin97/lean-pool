@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Formula
 
 /-! # Substitution -/
 
-@[expose] public section
+public section
 
 
 namespace LO

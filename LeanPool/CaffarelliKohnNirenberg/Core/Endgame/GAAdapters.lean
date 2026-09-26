@@ -36,7 +36,7 @@ against origin carrier, and the two orders in which the solution hypotheses
 are presented. No estimate is strengthened or weakened here.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal

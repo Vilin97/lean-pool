@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part03B
 
 /-! # GapCVP proof, part 03, continuation 03 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -342,7 +342,7 @@ def suffixTruncatedTrace
   }
 
 /-- GapCVP reduction support. -/
-def firstFieldSuffix (input : List Bool) : List Bool :=
+@[expose] def firstFieldSuffix (input : List Bool) : List Bool :=
   match BinaryEncoding.readLengthPrefixedWord input with
   | some (_, suffix) => suffix
   | none => []
@@ -463,7 +463,7 @@ noncomputable def firstFieldSuffixComputable :
   }
 
 /-- GapCVP reduction support. -/
-def literalSuffix : List Bool → List Bool :=
+@[expose] def literalSuffix : List Bool → List Bool :=
   List.tail ∘ firstFieldSuffix
 
 /-- GapCVP reduction support. -/
@@ -527,7 +527,7 @@ def variablePayloadLabel (position : Fin 3) : Fin 7 :=
   ⟨position.val + 3, by omega⟩
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def nextLiteralPosition (position : Fin 3) : Fin 3 :=
+@[expose] def nextLiteralPosition (position : Fin 3) : Fin 3 :=
   if position = 0 then 1 else if position = 1 then 2 else 0
 
 /-- Parse a literal's unary prefix or enter its payload or failure phase. -/
@@ -1031,7 +1031,7 @@ namespace FormulaTuringTM
 open Turing GapCVP.SourceVariableFormulaDecoder
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def binaryStackValue : List Bool → ℕ
+@[expose] def binaryStackValue : List Bool → ℕ
   | [] => 0
   | bit :: rest => (if bit then 1 else 0) + 2 * binaryStackValue rest
 
@@ -1284,7 +1284,7 @@ abbrev canonicalFormulaMachine : Turing.FinTM2 where
             (.push 5 (fun _ => true) .halt)))
 
 /-- GapCVP reduction support. -/
-def canonicalConfiguration
+@[expose] def canonicalConfiguration
     (phase : Fin 17)
     (input counter field binary borrow output : List Bool) :
     canonicalFormulaMachine.Cfg where
@@ -1860,7 +1860,7 @@ namespace FormulaCert
 open Turing GapCVP.SourceVariableFormulaDecoder GapCVP.FormulaTuringTM
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def isCanonicalBinaryWord (word : List Bool) : Bool :=
+@[expose] def isCanonicalBinaryWord (word : List Bool) : Bool :=
   match word.reverse with
   | [] => true
   | true :: _ => true
@@ -2129,7 +2129,7 @@ open Turing GapCVP.SourceTotalStructuralDecoder GapCVP.SourceVariableFormulaDeco
 open GapCVP.FormulaTuringTM GapCVP.FormulaCert
 
 /-- GapCVP reduction support. -/
-def canonicalFormulaExpected (input : List Bool) : List Bool :=
+@[expose] def canonicalFormulaExpected (input : List Bool) : List Bool :=
   match BinaryEncoding.decodeThreeCNF input with
   | none => [false]
   | some formula =>

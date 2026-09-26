@@ -40,7 +40,7 @@ public import LeanPool.Sundogcert.MatchingNPHard
   Axiom-clean (`decide`/`native_decide` never used).  Expect the standard classical trio.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open Sundog.MatchingNPHard

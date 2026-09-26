@@ -55,7 +55,7 @@ public import LeanPool.Sundogcert.VarWheel
   AXIOM-CLEAN (no `Lean.ofReduceBool`; we use `decide`, never `native_decide`).
 -/
 
-@[expose] public section
+public section
 
 open Sundog.SATNPHard Sundog.VarWheel
 

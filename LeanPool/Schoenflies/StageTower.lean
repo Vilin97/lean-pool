@@ -62,7 +62,7 @@ facts about the square.
   `Schoenflies.HasLimitHomeomorphism`.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Filter Metric Set Topology
 open scoped Graph

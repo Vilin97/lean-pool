@@ -12,7 +12,7 @@ public import Mathlib.CategoryTheory.ConcreteCategory.Basic
 # LeanPool.DirectedTopologyLean4.DTop
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the definition of `dTopCat`, the category of directed spaces.

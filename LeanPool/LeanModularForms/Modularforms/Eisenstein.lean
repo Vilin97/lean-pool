@@ -21,7 +21,7 @@ import Mathlib.Data.Int.Star
 /-! # Eisenstein -/
 
 
-@[expose] public section
+public section
 
 open ModularForm hiding E₄ E₆
 open LevelOneEisenstein

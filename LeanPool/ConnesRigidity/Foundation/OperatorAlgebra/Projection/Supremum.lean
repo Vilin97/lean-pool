@@ -27,7 +27,7 @@ star-algebra equivalences. It supplies the normality witness consumed by the
 spatial factor equivalence in Zhou §3.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 

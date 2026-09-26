@@ -34,7 +34,7 @@ form most of the development speaks, since gluing and cutting are stated about e
 * `IsLoop` — the parametrisation underlying a Jordan curve.
 -/
 
-@[expose] public section
+public section
 
 open Set unitInterval
 

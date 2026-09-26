@@ -30,7 +30,7 @@ already-formalized explicit construction to
 conclude `p ≤ 0.24118` for some `ClassicalAlgorithm`.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring
 

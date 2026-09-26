@@ -18,7 +18,7 @@ This defines the rank one operator $| x \rangle\langle y |$ for continuous linea
 
 -/
 
-@[expose] public section
+public section
 
 
 section rankOne

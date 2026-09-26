@@ -28,7 +28,7 @@ This is the deterministic convergence mechanism into which the per-round coverin
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 

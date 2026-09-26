@@ -24,7 +24,7 @@ plus the `dij` relations imply that (at the uniform point) the metric is determi
 scalar.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

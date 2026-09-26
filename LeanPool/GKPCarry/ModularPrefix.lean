@@ -18,7 +18,7 @@ binary-digit modular exponentiation function below lets the finite certificate
 evaluate those residues without first constructing the enormous value `4 ^ m`.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 
@@ -83,14 +83,14 @@ theorem hasTwoTernaryTwosBelow_iff_mod (depth n : ℕ) :
   rw [count_two_take_eq_count_two_mod_pow depth n]
 
 /-- Modular exponentiation over a little-endian list of binary digits. -/
-def powModDigits (base modulus : ℕ) : List ℕ → ℕ
+@[expose] def powModDigits (base modulus : ℕ) : List ℕ → ℕ
   | [] => 1 % modulus
   | digit :: digits =>
       let rest := powModDigits (base * base % modulus) modulus digits
       if digit = 0 then rest else base * rest % modulus
 
 /-- Modular exponentiation by repeated squaring over binary exponent digits. -/
-def powMod (base exponent modulus : ℕ) : ℕ :=
+@[expose] def powMod (base exponent modulus : ℕ) : ℕ :=
   powModDigits base modulus (Nat.digits 2 exponent)
 
 theorem powModDigits_eq_pow_mod

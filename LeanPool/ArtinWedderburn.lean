@@ -34,7 +34,7 @@ Tags: ring-theory, noncommutative-algebra, artinian-rings
 MSC: 16K20, 16P20
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

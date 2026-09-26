@@ -72,7 +72,7 @@ picks witnesses of non-emptiness and uses finite-set induction), exactly as
 Exercise 3.27 does.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Proposition611
 

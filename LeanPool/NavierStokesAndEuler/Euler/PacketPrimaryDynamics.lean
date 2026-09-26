@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketTimeData
 canonical primary. Nonvanishing follows from the prescribed nonzero
 terminal displacement, rather than from an assumption on the solved velocity. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

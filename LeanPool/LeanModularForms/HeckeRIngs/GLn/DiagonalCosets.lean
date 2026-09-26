@@ -36,7 +36,7 @@ representative (elementary divisor theorem / Smith normal form).
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, §3.2
 -/
 
-@[expose] public section
+public section
 
 open Matrix Subgroup.Commensurable Pointwise HeckeRing Matrix.SpecialLinearGroup
 
@@ -95,7 +95,7 @@ section HeckeDiagonal
 variable [NeZero n]
 
 /-- The diagonal matrix `diag(a₁,...,aₙ)` as an element of Shimura's `Δ`. -/
-noncomputable def diagMatDelta (a : Fin n → ℕ) : (GLPair n).Δ :=
+@[expose] noncomputable def diagMatDelta (a : Fin n → ℕ) : (GLPair n).Δ :=
   if h : ∀ i, 0 < a i then
     ⟨diagMat n a, diagMat_mem_posDetInt n a h⟩
   else ⟨1, (GLPair n).Δ.one_mem⟩
@@ -135,11 +135,11 @@ variable {n} [NeZero n]
 /-- `T(a₁,...,aₙ) = Γ · diag[a₁,...,aₙ] · Γ` as a double coset.
 Hypotheses `ha` (positivity) and `hdiv` (divisibility chain) belong in lemmas,
 not the definition; the result is junk when they fail. -/
-noncomputable def TDiag (a : Fin n → ℕ) : HeckeCoset (GLPair n) :=
+@[expose] noncomputable def TDiag (a : Fin n → ℕ) : HeckeCoset (GLPair n) :=
   ⟦diagMatDelta n a⟧
 
 /-- `T(a₁,...,aₙ)` as a Hecke ring element with coefficient `1`. -/
-noncomputable def TElem (a : Fin n → ℕ) : HeckeAlgebra n :=
+@[expose] noncomputable def TElem (a : Fin n → ℕ) : HeckeAlgebra n :=
   Finsupp.single (TDiag a) 1
 
 /-- The representative of TDiag lies in the double coset of diagMat. -/

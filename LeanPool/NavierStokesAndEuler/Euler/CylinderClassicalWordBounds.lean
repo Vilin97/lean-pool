@@ -20,7 +20,7 @@ translation words. Consequently the fixed-Hq external-word sum equals the
 block used by the inverse estimate, with no alphabet factor or radius loss.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

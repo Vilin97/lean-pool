@@ -26,7 +26,7 @@ This is done via the cocycle construction, using the explicit action and cocycle
 Section 3.1 of Giles Gardam's paper (https: //arxiv.org/abs/2102.11818).
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 
@@ -84,16 +84,16 @@ namespace Q
 
 /-- The identity element of `Q`. -/
 @[match_pattern]
-def e : Q := (⟨0, by decide⟩, ⟨0, by decide⟩)
+@[expose] def e : Q := (⟨0, by decide⟩, ⟨0, by decide⟩)
 /-- The first generator of `Q`. -/
 @[match_pattern]
-def a : Q := (⟨1, by decide⟩, ⟨0, by decide⟩)
+@[expose] def a : Q := (⟨1, by decide⟩, ⟨0, by decide⟩)
 /-- The second generator of `Q`. -/
 @[match_pattern]
-def b : Q := (⟨0, by decide⟩, ⟨1, by decide⟩)
+@[expose] def b : Q := (⟨0, by decide⟩, ⟨1, by decide⟩)
 /-- The product of the first two generators of `Q`. -/
 @[match_pattern]
-def c : Q := (⟨1, by decide⟩, ⟨1, by decide⟩)
+@[expose] def c : Q := (⟨1, by decide⟩, ⟨1, by decide⟩)
 
 end Q
 
@@ -116,7 +116,7 @@ local infixr: 100 " × " => AddMonoidHom.prodMap
 The action can be given a component-wise description in terms of `id` and `neg`, the
 identity and negation homomorphisms. -/
 @[aesop norm unfold (rule_sets := [P]), reducible]
-def action : Q → (K →+ K)
+@[expose] def action : Q → (K →+ K)
   | .e => .id ℤ × .id ℤ × .id ℤ
   | .a => .id ℤ × neg ℤ × neg ℤ
   | .b => neg ℤ × .id ℤ × neg ℤ
@@ -134,7 +134,7 @@ instance : AutAction action :=
 open K Q in
 /-- The cocycle in the construction of `P`. -/
 @[aesop norm unfold (rule_sets := [P]), reducible]
-def cocycle : Q → Q → K
+@[expose] def cocycle : Q → Q → K
   | a , a => x
   | a , c => x
   | b , b => y

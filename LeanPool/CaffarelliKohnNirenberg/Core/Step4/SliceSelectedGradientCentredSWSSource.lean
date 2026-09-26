@@ -14,7 +14,7 @@ The local norm data of `def:sws` give compactly supported `L^{6/5}` sources
 and the explicit centred majorant used in `eq:pressure-gradient-decomposition`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

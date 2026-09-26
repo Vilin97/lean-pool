@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketContinuousInverse
 /-! Literal agreement between the exact physical Euler fields and their
 constructed smooth L² representatives, including the scalar pressure. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

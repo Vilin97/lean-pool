@@ -29,7 +29,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
   existence `RS.exists_isRegularValue`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Function
 open scoped ContDiff Manifold Topology

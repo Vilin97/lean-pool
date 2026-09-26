@@ -17,7 +17,7 @@ This file defines the exponential object in the category of quasi-borel spaces.
 See [HeunenKSY17], Proposition 18.
 -/
 
-@[expose] public section
+public section
 
 open QuasiBorelSpace
 

@@ -33,7 +33,7 @@ API for topological Krull dimension on irreducible spaces.
   strictly smaller dimension
 -/
 
-@[expose] public section
+public section
 
 universe u
 

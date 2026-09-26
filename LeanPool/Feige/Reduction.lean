@@ -21,7 +21,7 @@ hypotheses.  The result here is the shift, bad-event inclusion, and
 complement argument in the proof of Theorem 1.1.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open MeasureTheory ProbabilityTheory Set

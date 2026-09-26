@@ -18,7 +18,7 @@ import Mathlib.RingTheory.SimpleModule.Rank
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Morita.ChangeOfRings`.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory Limits
 

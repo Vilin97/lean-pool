@@ -20,7 +20,7 @@ a genuinely adjacent pair, and either occurrence of their common edge can be pla
 of a suitably oriented cyclic boundary.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

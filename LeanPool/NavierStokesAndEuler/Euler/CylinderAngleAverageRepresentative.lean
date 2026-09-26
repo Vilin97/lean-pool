@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleRepresentative
 
 /-! The actual L² angular average equals the literal mean of every continuous H³ representative. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

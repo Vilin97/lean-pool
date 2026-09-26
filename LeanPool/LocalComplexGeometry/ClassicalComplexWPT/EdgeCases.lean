@@ -15,7 +15,7 @@ The degree-zero case is independent of analytic division: the distinguished
 polynomial is `1`, so the original analytic germ is the unit.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology

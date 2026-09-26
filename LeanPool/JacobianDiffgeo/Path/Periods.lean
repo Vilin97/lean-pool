@@ -26,7 +26,7 @@ Main declarations:
   `periodVector_trans/symm/refl`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Module
@@ -60,7 +60,7 @@ theorem period_conj (σ : Path x' x) (γ : Path x x) (η : Form1 X) :
   ring
 
 /-- Period vector w.r.t. a basis of `Form1 X` (CC9 feed). -/
-noncomputable def periodVector {n : ℕ} (b : Basis (Fin n) ℂ (Form1 X)) (γ : Path x x) :
+@[expose] noncomputable def periodVector {n : ℕ} (b : Basis (Fin n) ℂ (Form1 X)) (γ : Path x x) :
     Fin n → ℂ := fun i => period γ (b i)
 
 theorem periodVector_trans {n : ℕ} (b : Basis (Fin n) ℂ (Form1 X)) (γ γ' : Path x x) :

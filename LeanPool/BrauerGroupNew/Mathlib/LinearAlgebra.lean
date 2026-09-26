@@ -16,4 +16,4 @@ import Mathlib.Data.Nat.Totient
 Import index for the Brauer group formalization.
 -/
 
-@[expose] public section
+public section

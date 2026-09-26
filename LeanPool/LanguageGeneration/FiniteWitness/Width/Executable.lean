@@ -12,13 +12,14 @@ public import Mathlib.Data.Finset.Max
 # Finite-search implementation of the bounded normalization
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 
 variable {α : Type*} [DecidableEq α] [Encodable α]
 
 /-- The decidable candidate test with bounded history length and observed checkpoints. -/
+@[expose]
 def finiteCandidate (F : List α → α) (S : Finset α) (n : ℕ)
     (p : List α) (k : ℕ) (q : List α) : Prop :=
   p <+: q ∧ p.length < q.length ∧ q.toFinset ⊆ S ∧ q.length ≤ 2 * n ∧

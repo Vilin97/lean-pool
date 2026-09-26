@@ -26,7 +26,7 @@ kept as an explicit a.e. input until the distributional identification and
 the endpoint estimates are available together.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 
@@ -41,11 +41,13 @@ open CKN
 open CKN.Foundation.Parabolic
 
 /-- The real-valued operator constant at exponent `3 / 2`. -/
+@[expose]
 def czP1Constant (A₁ A₂ : ℝ) : ℝ :=
   (ENNReal.ofReal (rieszSecondInterpolationConstant A₁ A₂ ((3 : ℝ) / 2))) ^
       (2 / 3 : ℝ) |>.toReal
 
 /-- The real-valued component constant at exponent `6 / 5`. -/
+@[expose]
 def czGradientComponentConstant (A₁ A₂ : ℝ) : ℝ :=
   (ENNReal.ofReal (rieszSecondInterpolationConstant A₁ A₂ ((6 : ℝ) / 5))) ^
       (5 / 6 : ℝ) |>.toReal

@@ -83,7 +83,7 @@ holding the anchored form.
   (`rem:intermediate-disconnection` waives it only at intermediate stages).
 -/
 
-@[expose] public section
+public section
 
 open Metric Set Topology unitInterval
 open scoped Graph

@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevFiniteSum
 
 /-! The actual scalar pressure gradient uses one external word and keeps the same radius. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,7 +34,7 @@ variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- Scalar gradient path, given by `∑ i : Fin 3, pathMap P (gradientComponent i) (derivativePath
 P (pathMap P scalarEmbed p) i.succ)`. -/
-def scalarGradientPath : C(K,LiftL2 P) := ∑ i : Fin 3,
+@[expose] def scalarGradientPath : C(K,LiftL2 P) := ∑ i : Fin 3,
   pathMap P (gradientComponent i) (derivativePath P (pathMap P scalarEmbed p) i.succ)
 
 include hp in

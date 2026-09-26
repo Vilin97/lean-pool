@@ -13,7 +13,7 @@ public import Mathlib.MeasureTheory.Constructions.Polish.Basic
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.Sum`.
 -/
 
-@[expose] public section
+public section
 
 open scoped MeasureTheory
 

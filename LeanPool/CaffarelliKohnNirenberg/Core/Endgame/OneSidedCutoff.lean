@@ -20,7 +20,7 @@ zero, the resulting function agrees locally with the fixed cutoff. Thus its
 negative-time derivatives do not acquire domain-dependent constants.
 -/
 
-@[expose] public section
+public section
 
 open Set Metric Filter
 open scoped Topology

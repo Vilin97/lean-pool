@@ -33,7 +33,7 @@ The environment in the realization lemmas is the plain `Fin.append xs ys` (well-
 syntax infrastructure independent of any particular application.
 -/
 
-@[expose] public section
+public section
 
 universe u v w u'
 

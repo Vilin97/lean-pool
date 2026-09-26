@@ -36,7 +36,7 @@ constant-specialized equality and congruence laws.
 congruence, and `C0` alone. There is no `M ⊨ φ ↔ φ ∈ S` for arbitrary `φ`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

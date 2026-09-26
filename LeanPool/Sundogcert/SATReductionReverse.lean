@@ -52,7 +52,7 @@ import LeanPool.Sundogcert.VarWheel
   Expect `[propext, Classical.choice, Quot.sound]` on both `reverse` and the helper.
 -/
 
-@[expose] public section
+public section
 
 open Sundog.SATReduction Sundog.SATNPHard Sundog.VarWheel
 open Sundog.SATReductionIncidence Sundog.ThreeDMReindex

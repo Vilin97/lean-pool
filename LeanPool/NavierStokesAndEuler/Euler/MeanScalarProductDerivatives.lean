@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Scalar coordinate product rules for the localized harmonic estimates. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

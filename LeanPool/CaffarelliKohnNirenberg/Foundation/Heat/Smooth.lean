@@ -19,7 +19,7 @@ The coordinate formulas below use the standard coordinate directions of
 quadratic expressions are finite sums.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal Topology
 
@@ -33,6 +33,7 @@ namespace CKN.Foundation.Heat
 open CKN.Foundation.Parabolic
 
 /-- Time derivative formula for the causal heat kernel. -/
+@[expose]
 def heatKernelTimeDerivative (x : Vec3) (t : ℝ) : ℝ :=
   if 0 < t then
     heatKernel x t *
@@ -40,17 +41,19 @@ def heatKernelTimeDerivative (x : Vec3) (t : ℝ) : ℝ :=
   else 0
 
 /-- First spatial derivative formula for the causal heat kernel. -/
+@[expose]
 def heatKernelSpaceDerivative (x : Vec3) (t : ℝ) (i : Fin 3) : ℝ :=
   if 0 < t then -(x i) / (2 * t) * heatKernel x t else 0
 
 /-- Pure second spatial derivative formula for the causal heat kernel. -/
+@[expose]
 def heatKernelSpaceSecondDerivative (x : Vec3) (t : ℝ) (i : Fin 3) : ℝ :=
   if 0 < t then
     ((x i) ^ 2 / (4 * t ^ 2) - 1 / (2 * t)) * heatKernel x t
   else 0
 
 /-- Mixed second spatial derivative formula for the causal heat kernel. -/
-def heatKernelSpaceMixedSecondDerivative (x : Vec3) (t : ℝ)
+@[expose] def heatKernelSpaceMixedSecondDerivative (x : Vec3) (t : ℝ)
     (i j : Fin 3) : ℝ :=
   if 0 < t then
     ((x i) * (x j) / (4 * t ^ 2) -
@@ -58,6 +61,7 @@ def heatKernelSpaceMixedSecondDerivative (x : Vec3) (t : ℝ)
   else 0
 
 /-- Third spatial derivative formula for the causal heat kernel. -/
+@[expose]
 def heatKernelSpaceThirdDerivative (x : Vec3) (t : ℝ)
     (i j k : Fin 3) : ℝ :=
   if 0 < t then
@@ -68,6 +72,7 @@ def heatKernelSpaceThirdDerivative (x : Vec3) (t : ℝ)
   else 0
 
 /-- Fourth spatial derivative formula for the causal heat kernel. -/
+@[expose]
 def heatKernelSpaceFourthDerivative (x : Vec3) (t : ℝ)
     (i j k l : Fin 3) : ℝ :=
   if 0 < t then
@@ -85,6 +90,7 @@ def heatKernelSpaceFourthDerivative (x : Vec3) (t : ℝ)
   else 0
 
 /-- Spatial Laplacian of the heat kernel, summed over coordinate directions. -/
+@[expose]
 def heatKernelLaplacian (x : Vec3) (t : ℝ) : ℝ :=
   ∑ i, heatKernelSpaceSecondDerivative x t i
 

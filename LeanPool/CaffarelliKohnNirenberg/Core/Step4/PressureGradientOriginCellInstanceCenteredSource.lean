@@ -17,7 +17,7 @@ cost needed for the time estimate of `eq:pressure-gradient-morrey`.
 The scalar Hölder proofs follow `PressureGradientSourceBounds`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators

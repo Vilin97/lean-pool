@@ -35,7 +35,7 @@ explicit positive-order system, and to smooth profiles in the squared radius.
 All existence assertions are obtained from the actual convergent series.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -745,7 +745,7 @@ noncomputable def lowerHistoryData (h : ℝ) (n : ℕ) (phi u beta : ℕ → Inn
 
 /-- New beta, defined pointwise by `betaValue h (slowPower h n) w.2 (actualJet u w) (actualJet k
 w)`. -/
-noncomputable def newBeta (h : ℝ) (n : ℕ) (u k : InnerProfile) : InnerProfile :=
+@[expose] noncomputable def newBeta (h : ℝ) (n : ℕ) (u k : InnerProfile) : InnerProfile :=
   fun w => betaValue h (slowPower h n) w.2 (actualJet u w) (actualJet k w)
 
 /-- The original positive-order convolution equations evaluated on the
@@ -976,7 +976,7 @@ This module removes the apparent `1/X` singularities in the radial source
 of equation (22), using the actual differential operators from SimilarityProfile.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -986,7 +986,7 @@ open SimilarityProfile Set Filter
 open scoped BigOperators Topology ContDiff
 
 /-- Axis factor, given by `w.1 * v w`. -/
-noncomputable def axisFactor (v : InnerProfile) (w : InnerPoint) : ℝ := w.1 * v w
+@[expose] noncomputable def axisFactor (v : InnerProfile) (w : InnerPoint) : ℝ := w.1 * v w
 
 theorem partialX_axisFactor {v : InnerProfile} {w : InnerPoint}
     (hv : DifferentiableAt ℝ v w) :
@@ -1067,7 +1067,7 @@ theorem radial_advection_axisFactor {vi vj : InnerProfile} {w : InnerPoint}
     ring
 
 /-- Slow order, given by `2 * (k : ℝ) * h`. -/
-noncomputable def slowOrder (h : ℝ) (k : ℕ) : ℝ := 2 * (k : ℝ) * h
+@[expose] noncomputable def slowOrder (h : ℝ) (k : ℕ) : ℝ := 2 * (k : ℝ) * h
 
 /-- Shifted axial as an element of `ℕ → InnerProfile | 0 => fun _ => 0 | k + 1 => Z2 h
 (slowOrder h k) (V k)`. -/
@@ -1090,6 +1090,7 @@ noncomputable def omega (h : ℝ) (U V : ℕ → InnerProfile) (k : ℕ) (w : In
     2 * w.1 * partialX (partialX (V k)) w - shiftedAxial h V k w
 
 /-- An explicit expression for Ω_k/X with no division by X. -/
+@[expose]
 noncomputable def omegaDivX (h : ℝ) (U v : ℕ → InnerProfile) (k : ℕ) (w : InnerPoint) : ℝ :=
   T h (slowOrder h k - 1) (v k) w +
     (∑ ij ∈ Finset.antidiagonal k,
@@ -1541,7 +1542,7 @@ noncomputable def lowerConvolution (a b : ℕ → InnerProfile) (n : ℕ) (w : I
 
 /-- Previous omega div X as an element of `ℕ → InnerProfile | 0 => fun _ => 0 | k + 1 =>
 omegaDivX h U v k`. -/
-noncomputable def previousOmegaDivX (h : ℝ) (U v : ℕ → InnerProfile) : ℕ → InnerProfile
+@[expose] noncomputable def previousOmegaDivX (h : ℝ) (U v : ℕ → InnerProfile) : ℕ → InnerProfile
   | 0 => fun _ => 0
   | k + 1 => omegaDivX h U v k
 
@@ -1831,7 +1832,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2115,7 +2116,7 @@ noncomputable def symmetrize {R : ℝ} {U : Set ℂ} (hU : IsOpen U)
       rfl }⟩
 
 /-- Profile, given by `(F (Real.sqrt p.1, (p.2 : ℂ))).re`. -/
-noncomputable def profile {R : ℝ} {U : Set ℂ} (F : AxisFunction R U)
+@[expose] noncomputable def profile {R : ℝ} {U : Set ℂ} (F : AxisFunction R U)
     (p : ℝ × ℝ) : ℝ := (F (Real.sqrt p.1, (p.2 : ℂ))).re
 
 /-- Complex profile, given by `F (Real.sqrt p.1, p.2)`. -/

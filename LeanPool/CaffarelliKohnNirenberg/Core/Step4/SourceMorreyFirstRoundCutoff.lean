@@ -22,7 +22,7 @@ admits a smooth cutoff equal to one on the inner quarter-ball, supported inside
 the three-eighths-ball, and contained in the product box of half radius.
 -/
 
-@[expose] public section
+public section
 
 open Set Metric
 open scoped Topology

@@ -81,7 +81,7 @@ operations replace a single cell `c` by a set `N` of fresh cells and send `N` to
 lemma serves both.
 -/
 
-@[expose] public section
+public section
 
 open Set Metric Bornology
 open scoped Graph

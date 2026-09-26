@@ -30,7 +30,7 @@ perfect square ∫ (1/ω)|F_ω(kbar)|² dkbar with F_ω(kbar) = ∫ ftilde(t,kba
 - `freeCovariance_reflection_positive_real`: real-valued version
 -/
 
-@[expose] public section
+public section
 
 namespace QFT
 
@@ -71,14 +71,14 @@ open scoped ComplexConjugate
 /-! ## Part 1: Core Definitions -/
 
 /-- The `timeReflection` declaration. -/
-noncomputable def timeReflection (x : SpaceTime) : SpaceTime :=
+@[expose] noncomputable def timeReflection (x : SpaceTime) : SpaceTime :=
   (WithLp.equiv 2 _).symm (Function.update x.ofLp 0 (-x.ofLp 0))
 
 lemma timeReflection_involutive : Function.Involutive timeReflection :=
   _root_.timeReflection_involutive
 
 /-- The `spatialDot` declaration. -/
-noncomputable def spatialDot (k_spatial x_spatial : SpatialCoords) : ℝ :=
+@[expose] noncomputable def spatialDot (k_spatial x_spatial : SpatialCoords) : ℝ :=
   ∑ i, k_spatial i * x_spatial i
 
 /-- The `freeCovarianceℂBilinear` declaration. -/
@@ -100,7 +100,11 @@ noncomputable def rpInnerProduct (m : ℝ) (f : TestFunctionℂ) : ℂ :=
 variable (m : ℝ) [Fact (0 < m)]
 
 lemma star_apply (f : TestFunctionℂ) (x : SpaceTime) :
-    (star f) x = starRingEnd ℂ (f (timeReflection x)) := rfl
+    (star f) x = starRingEnd ℂ (f (timeReflection x)) := by
+  change (starTestFunction f) x = _
+  rw [starTestFunction_apply]
+  simp only [QFT.compTimeReflection, SchwartzMap.compCLM_apply, Function.comp_apply]
+  rfl
 
 omit [Fact (0 < m)] in
 theorem rpInnerProduct_eq_bessel_reflected (f : TestFunctionℂ) :
@@ -425,7 +429,7 @@ lemma star_toComplex_eq_compTimeReflection (f : OSforGFF.TestFunction) :
   ext x
   -- star f is defined as starTestFunction f
   -- starTestFunction f x = starRingEnd ℂ ((compTimeReflection f) x)
-  simp only [star, starTestFunction]
+  simp only [star, starTestFunction_apply]
   -- Now goal: starRingEnd ℂ ((compTimeReflection (toComplex f)) x) = (compTimeReflection (toComplex
   -- f)) x
   exact compTimeReflection_toComplex_star_eq f x

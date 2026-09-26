@@ -17,7 +17,7 @@ import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Config.Mirror`.
 -/
 
-@[expose] public section
+public section
 
 variable {α : Type _} [LinearOrder α] (C : Config α)
 

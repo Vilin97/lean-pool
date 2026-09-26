@@ -30,7 +30,7 @@ at the bottom proves that these hypotheses imply the real asymptotic upper
 bound.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 
@@ -54,7 +54,7 @@ def minPile (n : ℕ) : ℕ :=
 /-- The recursive loss used in the paper, `n^{-2}`.  At `n = 0` this is `0`
 under Lean's totalized inverse convention, but all recurrence uses are above a
 positive base cutoff. -/
-noncomputable def loss (n : ℕ) : ℝ :=
+@[expose] noncomputable def loss (n : ℕ) : ℝ :=
   ((n : ℝ) ^ 2)⁻¹
 
 /-- Integer multiplier for the fiber cost.  This is the ceiling of the

@@ -20,7 +20,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! The literal packet differs from its primary wave by a quadratic-frequency remainder. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

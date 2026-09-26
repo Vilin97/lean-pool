@@ -24,7 +24,7 @@ families in the Boolean cube, connecting compressed families to canonical
 simplicial initial segments.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open scoped FinsetFamily

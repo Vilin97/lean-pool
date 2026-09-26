@@ -13,7 +13,7 @@ import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 # Concavity of truncated-volume roots
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped Pointwise
@@ -21,7 +21,7 @@ open scoped Pointwise
 namespace Grunbaum
 
 /-- The part of `C` cut out by the sublevel halfspace of `ℓ` at `t`. -/
-def trunc {d : ℕ} (C : Set (Euc d)) (ℓ : Euc d →L[ℝ] ℝ) (t : ℝ) : Set (Euc d) :=
+@[expose] def trunc {d : ℕ} (C : Set (Euc d)) (ℓ : Euc d →L[ℝ] ℝ) (t : ℝ) : Set (Euc d) :=
   C ∩ ℓ ⁻¹' Set.Iic t
 
 /-- The dimension-normalized root of a truncation's volume. -/
@@ -30,11 +30,12 @@ noncomputable def truncRoot {d : ℕ} (C : Set (Euc d))
   (volume (trunc C ℓ t) ^ ((d : ℝ) + 1)⁻¹).toReal
 
 /-- The dimension-normalized root of the truncation's volume ratio. -/
-noncomputable def cdfRoot {d : ℕ} (C : Set (Euc d))
+@[expose] noncomputable def cdfRoot {d : ℕ} (C : Set (Euc d))
     (ℓ : Euc d →L[ℝ] ℝ) (t : ℝ) : ℝ :=
   ((volume (trunc C ℓ t) / volume C) ^ ((d : ℝ) + 1)⁻¹).toReal
 
 /-- Thresholds for which the corresponding truncation is nonempty. -/
+@[expose]
 def truncDomain {d : ℕ} (C : Set (Euc d)) (ℓ : Euc d →L[ℝ] ℝ) : Set ℝ :=
   {t | (trunc C ℓ t).Nonempty}
 

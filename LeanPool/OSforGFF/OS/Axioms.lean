@@ -35,7 +35,7 @@ Following Glimm-Jaffe formulation using probability measures on field configurat
 Glimm and Jaffe, Quantum Physics, pp. 89-90
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory NNReal ENNReal
 open TopologicalSpace Measure QFT
@@ -45,7 +45,7 @@ noncomputable section
 open scoped MeasureTheory Complex BigOperators SchwartzMap
 
 /-- OS0 (Analyticity): The generating functional is analytic in the test functions. -/
-def os0Analyticity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+@[expose] def os0Analyticity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (n : ℕ) (J : Fin n → TestFunctionℂ),
     AnalyticOn ℂ (fun z : Fin n → ℂ =>
       GJGeneratingFunctionalℂ dμ_config (∑ i, z i • J i)) Set.univ
@@ -63,7 +63,7 @@ def os1Regularity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
     (p = 2 → TwoPointIntegrable dμ_config)
 
 /-- OS2 (Euclidean Invariance): The measure is invariant under Euclidean transformations. -/
-def os2EuclideanInvariance (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+@[expose] def os2EuclideanInvariance (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (g : QFT.E) (f : TestFunctionℂ),
     GJGeneratingFunctionalℂ dμ_config f =
     GJGeneratingFunctionalℂ dμ_config (QFT.euclideanAction g f)

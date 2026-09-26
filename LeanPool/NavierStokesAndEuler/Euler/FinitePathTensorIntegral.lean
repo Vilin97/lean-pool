@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
 Bochner time integral. These identities permit differentiation of a
 path-space integral equation at every spatial order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -47,6 +47,8 @@ theorem tensorPath_integral (T : ℝ) (hT : 0 ≤ T) (n : ℕ)
   apply ContinuousMultilinearMap.ext
   intro v
   rw [tensorPathMap_apply]
+  simp only [ContinuousLinearMap.compContinuousMultilinearMap_coe,
+    Function.comp_apply, integral_apply, realIntegral]
   let ev : (E [×n]→L[ℝ] V) →L[ℝ] V :=
     (ContinuousLinearMap.id ℝ (E [×n]→L[ℝ] V)).flipMultilinear v
   change (∫ s in (0 : ℝ)..(t : ℝ), extendPath T hT (A v) s) =

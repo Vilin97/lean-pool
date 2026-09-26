@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.Pow
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.PiDirectSum`.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 
@@ -81,7 +81,7 @@ theorem directSumTensorToFun_apply {R : Type _} [CommSemiring R] {ι₁ : Type _
     [∀ i₂ : ι₂, AddCommGroup (M₂ i₂)] [∀ i₁ : ι₁, Module R (M₁ i₁)] [∀ i₂ : ι₂, Module R (M₂ i₂)]
     (x : ∀ i, M₁ i) (y : ∀ i, M₂ i) (i : ι₁ × ι₂) :
     directSumTensorToFun (x ⊗ₜ[R] y) i = x i.1 ⊗ₜ[R] y i.2 :=
-  rfl
+  by rfl
 
 open scoped BigOperators
 
@@ -171,7 +171,7 @@ theorem directSumTensorToFun_apply_inv_fun {R : Type _} [CommRing R] {ι₁ : Ty
 
 /-- Linear equivalence between tensor products of finite dependent products and products of tensor
 factors. -/
-@[simps]
+@[expose, simps]
 noncomputable def directSumTensor {R : Type _} [CommRing R] {ι₁ : Type _} {ι₂ : Type _}
     [DecidableEq ι₁] [DecidableEq ι₂] [Fintype ι₁] [Fintype ι₂]
     {M₁ : ι₁ → Type _} {M₂ : ι₂ → Type _}
@@ -210,10 +210,10 @@ theorem directSumTensorToFun.map_one {R : Type _} [CommRing R] {ι₁ : Type _} 
     [∀ i₂ : ι₂, Ring (M₂ i₂)]
     [∀ i₁ : ι₁, Algebra R (M₁ i₁)] [∀ i₂ : ι₂, Algebra R (M₂ i₂)] :
     directSumTensorToFun (1 : (∀ i, M₁ i) ⊗[R] ∀ i, M₂ i) = 1 :=
-  rfl
+  by rfl
 
 /-- Algebra equivalence induced by `directSumTensor` for finite dependent products. -/
-@[simps]
+@[expose, simps]
 noncomputable def directSumTensorAlgEquiv (R : Type _) {ι₁ ι₂ : Type _} [CommRing R]
     [Fintype ι₁] [Fintype ι₂] [DecidableEq ι₁] [DecidableEq ι₂]
     (M₁ : ι₁ → Type _) (M₂ : ι₂ → Type _) [∀ i₁ : ι₁, Ring (M₁ i₁)]
@@ -260,7 +260,7 @@ theorem Pi.tensor_ext {R : Type _} [CommRing R] {ι₁ : Type _} {ι₂ : Type _
   simp only [imp_self]
 
 /-- Reindex linear maps out of a product-shaped dependent family. -/
-@[simps!]
+@[expose, simps!]
 def LinearMap.piPiProd (R : Type _) {ι₁ ι₂ : Type _} [Semiring R] (φ : ι₁ → Type _)
     (ψ : ι₂ → Type _) [∀ i, AddCommMonoid (φ i)] [∀ i, Module R (φ i)]
     [∀ i, AddCommMonoid (ψ i)] [∀ i, Module R (ψ i)] (S : Type _) [Semiring S]
@@ -275,7 +275,7 @@ def LinearMap.piPiProd (R : Type _) {ι₁ ι₂ : Type _} [Semiring R] (φ : ι
   right_inv _ := rfl
 
 /-- Swap the two function arguments in a doubly-indexed family of linear maps. -/
-@[simps!]
+@[expose, simps!]
 def LinearMap.piProdSwap (R : Type _) {ι₁ ι₂ : Type _} [Semiring R] (φ : ι₁ → Type _)
     (ψ : ι₂ → Type _) [∀ i, AddCommMonoid (φ i)] [∀ i, Module R (φ i)]
     [∀ i, AddCommMonoid (ψ i)] [∀ i, Module R (ψ i)] (S : Type _) [Semiring S]
@@ -290,7 +290,7 @@ def LinearMap.piProdSwap (R : Type _) {ι₁ ι₂ : Type _} [Semiring R] (φ : 
   right_inv _ := rfl
 
 /-- Linear equivalence between maps into a dependent product and dependent products of maps. -/
-@[simps!]
+@[expose, simps!]
 def LinearMap.rsum (R : Type _) {M : Type _} {ι : Type _} [Semiring R] (φ : ι → Type _)
     [∀ i : ι, AddCommMonoid (φ i)] [∀ i : ι, Module R (φ i)] (S : Type _) [AddCommMonoid M]
     [Module R M] [Semiring S] [∀ i, Module S (φ i)] [∀ i, SMulCommClass R S (φ i)] :
@@ -307,7 +307,7 @@ def LinearMap.rsum (R : Type _) {M : Type _} {ι : Type _} [Semiring R] (φ : ι
     simp_all
 
 /-- Combine `piPiProd`, `piProdSwap`, `lsum`, and `rsum` into a two-sided reindexing equivalence. -/
-@[simps!]
+@[expose, simps!]
 def LinearMap.lrsum (R : Type _) {ι₁ ι₂ : Type _} [Semiring R] (φ : ι₁ → Type _) (ψ : ι₂ → Type _)
     [∀ i, AddCommMonoid (φ i)] [∀ i, Module R (φ i)] [∀ i, AddCommMonoid (ψ i)]
     [∀ i, Module R (ψ i)] (S : Type _) [Fintype ι₁] [DecidableEq ι₁] [Semiring S]

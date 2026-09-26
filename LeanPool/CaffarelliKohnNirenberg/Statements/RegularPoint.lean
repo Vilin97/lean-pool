@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Basic
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open CKN.Foundation.Parabolic
@@ -27,6 +27,7 @@ namespace CKN
 
 /-- The regular-point predicate from paper label `def:regular`, with the Hölder representative
   convention of docs/DESIGN_NOTES.md. -/
+@[expose]
 def IsRegularPoint (Ω : Set Vec3) (I : Set ℝ)
     (u : ParabolicPoint → Vec3) (z₀ : ParabolicPoint) : Prop :=
   z₀ ∈ spaceTimeSet Ω I ∧

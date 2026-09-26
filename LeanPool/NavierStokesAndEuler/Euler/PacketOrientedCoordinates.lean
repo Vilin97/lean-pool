@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketMovingFrame
 
 /-! Oriented cross products in the actual normalized primary frame. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -21,7 +21,7 @@ namespace EulerPacketMovingFrame
 open EulerSmoothLimit EulerPacketCrossProduct InnerProductSpace ContinuousLinearMap WithLp
 
 /-- Frame coordinates, given by `⟪frame p q i,x⟫_ℝ`. -/
-def frameCoordinates (p q x : Space) (i : Fin 3) : ℝ := ⟪frame p q i,x⟫_ℝ
+@[expose] def frameCoordinates (p q x : Space) (i : Fin 3) : ℝ := ⟪frame p q i,x⟫_ℝ
 
 /-- Frame vector, given by `X 0 • p+X 1 • q+X 2 • cross p q`. -/
 def frameVector (p q : Space) (X : Fin 3 → ℝ) : Space :=

@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TimeLpPairing
 
 /-! Strong Bochner energy passage on every genuine subinterval of the original time interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

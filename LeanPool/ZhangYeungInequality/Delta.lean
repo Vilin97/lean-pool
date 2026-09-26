@@ -93,7 +93,7 @@ for this module.
 Shannon entropy, mutual information, non-Shannon information inequality, Zhang-Yeung
 -/
 
-@[expose] public section
+public section
 
 namespace ZhangYeung
 

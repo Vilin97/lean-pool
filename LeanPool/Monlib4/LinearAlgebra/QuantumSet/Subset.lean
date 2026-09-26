@@ -17,7 +17,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.QuantumSet.Subset`.
 -/
 
-@[expose] public section
+public section
 
 /-- Type synonym for a quantum set with its modular exponent shifted to `k`. -/
 def QuantumSet.toSubset (k : ℝ) (A : Type*) : Type _ :=

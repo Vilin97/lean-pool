@@ -13,7 +13,7 @@ public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal
 

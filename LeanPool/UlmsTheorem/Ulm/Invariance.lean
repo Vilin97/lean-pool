@@ -15,7 +15,7 @@ both the Ulm filtration and the classical `P_α / P_{α+1}` quotients, hence the
 Ulm invariants.
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 

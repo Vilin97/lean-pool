@@ -17,7 +17,7 @@ import Mathlib.Tactic.Linarith.Frontend
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame.BorelDet.One
@@ -29,7 +29,7 @@ variable {A : Type*} {G : Game A} {k m n : ℕ} {hyp : Hyp G k}
 noncomputable section «Section1»
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def stratMap (lvl : ℕ) (R : ResStrategy (gameAsTrees hyp) Player.one lvl) :
+@[expose] def stratMap (lvl : ℕ) (R : ResStrategy (gameAsTrees hyp) Player.one lvl) :
   ResStrategy (oldAsTrees hyp) Player.one lvl := fun x hp hlen ↦
   if hxlen : x.val.length ≤ 2 * k then (ResStrategy.fromMap (treeHom hyp)) (R.res hlen) x hp le_rfl
   else

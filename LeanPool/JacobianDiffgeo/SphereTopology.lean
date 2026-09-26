@@ -53,4 +53,4 @@ re-derive the same conclusion from its own chain-continuation `IsPrimitiveAlongM
 fact — both routes agree, no dependency is required either way).
 -/
 
-@[expose] public section
+public section

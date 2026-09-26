@@ -31,7 +31,7 @@ Main exports:
   (Miranda VI.3 `Res_ω` shape `Σ c_n a_{−1−n}`).
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Function
 
@@ -41,6 +41,7 @@ variable {f g h : ℂ → ℂ} {z₀ : ℂ} {k n : ℤ}
 
 /-- The residue of `f` at `z₀`: the `(-1)`-st Laurent coefficient. Purely algebraic; the
 circle-integral characterization is `RS.circleIntegral_eq_two_pi_I_mul_resAt`. -/
+@[expose]
 noncomputable def resAt (f : ℂ → ℂ) (z₀ : ℂ) : ℂ := laurentCoeffAt f z₀ (-1)
 
 theorem resAt_congr (hfg : f =ᶠ[𝓝[≠] z₀] g) : resAt f z₀ = resAt g z₀ :=

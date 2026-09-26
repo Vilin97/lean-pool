@@ -103,7 +103,7 @@ general and belong in `Schoenflies/Graph/Walk.lean` and `Schoenflies/Graph/Cycle
 * `Graph.face_cycles` — `lem:face-cycles`, modulo `Schoenflies.CrosscutSplitsRegion`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 open scoped Graph

@@ -16,7 +16,7 @@ tight-band nibble proof.  It deliberately contains no historical majority-only
 or round-oracle development: the global degree ceiling is part of every input.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 

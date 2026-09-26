@@ -33,7 +33,7 @@ identities. Their propagator norm uses only the pointwise bound on that set,
 so the source's `C g(t)/g(s)` estimate is preserved exactly.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -211,7 +211,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

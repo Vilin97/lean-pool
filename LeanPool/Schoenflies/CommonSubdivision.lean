@@ -30,7 +30,7 @@ the ear construction.
   arbitrary plane drawings, used when assembling target/mesh overlays.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

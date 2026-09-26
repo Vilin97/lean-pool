@@ -20,7 +20,7 @@ below concern the literal Bochner integral, including its L²-to-uniform bound.
 The parameterization exp(-|x|²/t) has heat generator one quarter of the Laplacian.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,10 +31,10 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit EulerLpTranslation Filter
 open scoped ContDiff ENNReal RealInnerProductSpace
 
 /-- Normalization, given by `(Real.pi*t)^(-(3:ℝ)/2)`. -/
-def normalization (t : ℝ) : ℝ := (Real.pi*t)^(-(3:ℝ)/2)
+@[expose] def normalization (t : ℝ) : ℝ := (Real.pi*t)^(-(3:ℝ)/2)
 
 /-- Kernel, given by `normalization t * Real.exp (-t⁻¹*‖x‖^2)`. -/
-def kernel (t : ℝ) (x : Space) : ℝ :=
+@[expose] def kernel (t : ℝ) (x : Space) : ℝ :=
   normalization t * Real.exp (-t⁻¹*‖x‖^2)
 
 theorem normalization_pos {t : ℝ} (ht : 0 < t) : 0 < normalization t :=
@@ -122,7 +122,7 @@ section Averaging
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- The actual whole-space Gaussian average, with no periodic identification. -/
-def average (t : ℝ) (f : Space → V) (x : Space) : V :=
+@[expose] def average (t : ℝ) (f : Space → V) (x : Space) : V :=
   ∫ y : Space, kernel t y • f (x+y)
 
 theorem average_integrable_of_bound {t : ℝ} (ht : 0 < t)

@@ -36,7 +36,7 @@ Main declarations:
   (`Continuation.lean`) and the 2D grid (`HomotopySquare.lean`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology
 open IsManifold Metric Set Filter

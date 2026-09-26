@@ -37,7 +37,7 @@ Constructive (`[propext, Quot.sound]`) except the counterexample's finite
 case-analysis.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -184,7 +184,7 @@ def triSys : NeighborhoodSystem (Fin 3) :=
   NeighborhoodSystem.ofPositive (fun X => X.Nonempty) Set.univ
     (⟨0, Set.mem_univ 0⟩) (fun {_} _ => Set.subset_univ _) (fun _ _ _ _ => Iff.rfl)
 
-theorem triSys_master : triSys.master = (Set.univ : Set (Fin 3)) := rfl
+theorem triSys_master : triSys.master = (Set.univ : Set (Fin 3)) := by rfl
 
 namespace triSys
 

@@ -30,7 +30,7 @@ freshness arguments must CARRY a finite support rather than compute one). Craig 
   transport (the `A = ∅` root gate of the interpolation argument).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

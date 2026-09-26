@@ -18,7 +18,7 @@ This file contains the definition of a quantum graph as a projection, and the pr
 
 -/
 
-@[expose] public section
+public section
 
 
 variable {p : Type _} [Fintype p] [DecidableEq p] {n : p → Type _} [∀ i, Fintype (n i)]

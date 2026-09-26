@@ -29,7 +29,7 @@ The rank-three criterion of `RankCriteria.lean` together with `hilbertSym_padicI
 turns the local isotropy into the vanishing of a Hilbert symbol of two `p`-adic units.
 -/
 
-@[expose] public section
+public section
 
 open Module QuadraticMap
 

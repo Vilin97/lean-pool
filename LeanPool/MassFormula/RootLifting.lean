@@ -67,7 +67,7 @@ No topology on `L` enters anywhere: the completeness of `integers L` is the alge
   degré donné d'un corps local*, C. R. Acad. Sci. Paris **286** (1978), Série A, 1031–1036.
 -/
 
-@[expose] public section
+public section
 
 open ValuativeRel IntermediateField IsDiscreteValuationRing
 

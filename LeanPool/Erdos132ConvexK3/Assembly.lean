@@ -23,7 +23,7 @@ final section separately records the stronger global reduction still needed
 to obtain the source-facing convex theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -91,7 +91,7 @@ def ExceptionalCoverWord.row : ExceptionalCoverWord → ExceptionalRow
   | .row5_BB_DD => .row5
 
 /-- Exact destination column of the draft Section 7 table. -/
-def ExceptionalCoverWord.route : ExceptionalCoverWord → WordClosureRoute
+@[expose] def ExceptionalCoverWord.route : ExceptionalCoverWord → WordClosureRoute
   | .row1_B32 | .row4_D32 => .terminalCage
   | .row1_B31 | .row2_BA | .row4_D31 | .row4_DC => .antiSaturation
   | .row4_DD => .fourEdgeCage
@@ -99,7 +99,7 @@ def ExceptionalCoverWord.route : ExceptionalCoverWord → WordClosureRoute
       .row5_BB_DD => .fullTwoRung
 
 /-- Degree bound supplied by each of the four local closure routes. -/
-def WordClosureRoute.degreeBound : WordClosureRoute → ℕ
+@[expose] def WordClosureRoute.degreeBound : WordClosureRoute → ℕ
   | .antiSaturation => 5
   | .fullTwoRung | .terminalCage | .fourEdgeCage => 6
 

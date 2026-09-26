@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketGeometrySourceGrowth
 profile on the forward part of the source interval.  The same scalar
 solution also retains the amplification and amplitude conclusions. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

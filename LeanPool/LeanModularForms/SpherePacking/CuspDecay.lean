@@ -40,7 +40,7 @@ The proof chain is:
 7. Combined with `Delta = Theta(exp(-2*pi*Im))`, `phi0` is bounded
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Filter Topology MeasureTheory ModularFormClass
 

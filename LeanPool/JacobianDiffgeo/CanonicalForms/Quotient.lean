@@ -34,7 +34,7 @@ meromorphic functions by codiscrete agreement (`Jacobian/Meromorphic/GermSpace.l
   `MForm.ord_ne_top`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology

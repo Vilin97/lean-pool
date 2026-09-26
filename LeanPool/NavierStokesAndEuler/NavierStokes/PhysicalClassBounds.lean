@@ -20,7 +20,7 @@ The final passage uses genuine common-coordinate compositions and the
 physical carrier estimates of `PhysicalWaveSum`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -469,7 +469,7 @@ theorem strippedClass {s : StripData D} {h α σ a b r0 P : ℝ}
 
 /-- The derivative loss includes the displayed physical field rescaling.
 It depends on the derivative order and fixed scaling parameters only. -/
-noncomputable def physicalLoss (h σ : ℝ) (m : ℕ) : ℝ :=
+@[expose] noncomputable def physicalLoss (h σ : ℝ) (m : ℕ) : ℝ :=
   PhysicalGraphBounds.waveLoss h m - σ
 
 /-- Full physical jets of the actual locally finite wave sum.  The
@@ -631,7 +631,7 @@ theorem physical_vector_curl_jet_bound {s : StripData D} {h α σ a b r0 Z P : �
 abbrev CylindricalPoint := ℝ × ((ℝ × ℝ) × PhysicalGraphBounds.Plane)
 
 /-- Cartesian radius, given by `Real.sqrt (y.1 ^ 2 + y.2 ^ 2)`. -/
-noncomputable def cartesianRadius (y : PhysicalGraphBounds.Plane) : ℝ :=
+@[expose] noncomputable def cartesianRadius (y : PhysicalGraphBounds.Plane) : ℝ :=
   Real.sqrt (y.1 ^ 2 + y.2 ^ 2)
 
 theorem cartesianRadius_smooth :
@@ -663,7 +663,7 @@ theorem norm_slowFast_le : ‖slowFast‖ ≤ 1 := by
     (le_max_right _ _)
 
 /-- Cylindrical map, given by `(cartesianRadius (PhysicalGraphBounds.liftXY x), slowFast x)`. -/
-noncomputable def cylindricalMap (x : PhysicalWaveSum.LiftPoint) : CylindricalPoint :=
+@[expose] noncomputable def cylindricalMap (x : PhysicalWaveSum.LiftPoint) : CylindricalPoint :=
   (cartesianRadius (PhysicalGraphBounds.liftXY x), slowFast x)
 
 /-- Cylindrical domain, given by `(fun x => ‖PhysicalGraphBounds.liftXY x‖) ⁻¹' Ioo (a / 2) (b +

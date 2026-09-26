@@ -59,7 +59,7 @@ The data (`C‚ÇÅ`, `consMap`, `relateNToC1`) is **choice-free** (`#print axioms ‚
 Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise425
 

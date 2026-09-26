@@ -33,7 +33,7 @@ Unit: finiteness-and-chi (`docs/design/finiteness-and-chi.md` §8).
 * `l_mono`/`l_le_l_add_degree`/`h1_le_of_le`/`h1_le_h1_add_degree`: monotonicity corollaries.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology TopologicalSpace RS.Cech
@@ -74,7 +74,7 @@ instance finiteDimensional_linSys [ConnectedSpace X] (D : RS.Divisor X) :
 noncomputable def h1 (D : RS.Divisor X) : ℕ := Module.finrank ℂ (H1 D)
 
 /-- The Euler characteristic `χ(D) = l(D) - h¹(D)`. -/
-noncomputable def chi (D : RS.Divisor X) : ℤ := (RS.l D : ℤ) - (h1 D : ℤ)
+@[expose] noncomputable def chi (D : RS.Divisor X) : ℤ := (RS.l D : ℤ) - (h1 D : ℤ)
 
 /-! ### The shared six-term rank bookkeeping -/
 

@@ -27,7 +27,7 @@ and `μ_x`, and the abstract Markov-layer interface used for the visit-probabili
 * `MarkovLayer`
 -/
 
-@[expose] public section
+public section
 
 open scoped ArithmeticFunction BigOperators
 
@@ -38,41 +38,41 @@ def PrimitiveSet (A : Set ℕ) : Prop :=
   ∀ ⦃m n : ℕ⦄, m ∈ A → n ∈ A → m ∣ n → m = n
 
 /-- Partial sums of `Λ(q) / q`. -/
-noncomputable def mertensPartialSum (t : ℕ) : ℝ :=
+@[expose] noncomputable def mertensPartialSum (t : ℕ) : ℝ :=
   (Finset.Icc 1 t).sum fun q => Λ q / (q : ℝ)
 
 /-- The logarithmic tail sum `T(m, y)` used in the normalization estimates. -/
-noncomputable def tailSum (m y : ℕ) : ℝ :=
+@[expose] noncomputable def tailSum (m y : ℕ) : ℝ :=
   ∑' q : ℕ,
     if y ≤ q then
       Λ q / ((q : ℝ) * (Real.log ((m * q : ℕ) : ℝ)) ^ 2)
     else 0
 
 /-- The quantity `R_Y(m)` introduced in the proof of the main theorem. -/
-noncomputable def ry (Y m : ℕ) : ℝ :=
+@[expose] noncomputable def ry (Y m : ℕ) : ℝ :=
   ∑' q : ℕ,
     if Y ≤ q then
       (Real.log (m : ℝ) / (Real.log ((m * q : ℕ) : ℝ)) ^ 2) * (Λ q / (q : ℝ))
     else 0
 
 /-- The transition weight `p(m, mq)` of the sub-Markov chain. -/
-noncomputable def transitionWeight (Y m q : ℕ) : ℝ :=
+@[expose] noncomputable def transitionWeight (Y m q : ℕ) : ℝ :=
   if Y ≤ q then
     (Real.log (m : ℝ) / (Real.log ((m * q : ℕ) : ℝ)) ^ 2) * (Λ q / (q : ℝ))
   else 0
 
 /-- The entry weight `b_x(n)` used to define the initial distribution of the chain. -/
-noncomputable def entryWeight (x Y n : ℕ) : ℝ :=
+@[expose] noncomputable def entryWeight (x Y n : ℕ) : ℝ :=
   1 / ((n : ℝ) * (Real.log (n : ℝ)) ^ 2) *
     (((n.divisors.filter (fun q => q < Y)).sum fun q => Λ q) +
       ((n.divisors.filter (fun q => Y ≤ q ∧ n / q < x)).sum fun q => Λ q))
 
 /-- The normalizing constant `B_x`. -/
-noncomputable def normalizationConstant (x Y : ℕ) : ℝ :=
+@[expose] noncomputable def normalizationConstant (x Y : ℕ) : ℝ :=
   ∑' n : ℕ, if x ≤ n then entryWeight x Y n else 0
 
 /-- The normalized initial distribution `μ_x(n) = b_x(n) / B_x`. -/
-noncomputable def initialDistribution (x Y n : ℕ) : ℝ :=
+@[expose] noncomputable def initialDistribution (x Y n : ℕ) : ℝ :=
   entryWeight x Y n / normalizationConstant x Y
 
 /--

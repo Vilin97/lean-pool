@@ -18,7 +18,7 @@ heat exterior the resulting potential is a finite, anchored heat primitive,
 which has a smooth extension through the terminal central plane.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

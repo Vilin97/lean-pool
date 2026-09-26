@@ -10,7 +10,7 @@ import LeanPool.Incompleteness.Foundation.Modal.Entailment.Grz
 
 /-! # WellKnown -/
 
-@[expose] public section
+public section
 
 
 namespace LO

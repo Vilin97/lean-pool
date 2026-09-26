@@ -57,7 +57,7 @@ section
 continuity of the coefficients, with a uniform bound, gives strong
 continuity even when uniform convergence of coefficients is unavailable. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -188,7 +188,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -355,7 +355,7 @@ section
 /-! Actual Sobolev integrability under a smooth volume-preserving change
 of variables, with an explicit finite-order composition constant. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -460,7 +460,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -564,7 +564,7 @@ section
 /-! A finite-order Sobolev composition constant obtained from the actual
 parent deformation. No inverse-flow derivative budget is assumed. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -629,7 +629,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -714,7 +714,7 @@ section
 restriction and its actual inverse-flow pullback are continuous spatial L²
 paths, with no independent integrability assumption on the perturbation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -805,7 +805,7 @@ section
 every time. Its tensor paths also give a bounded smooth coefficient
 path, with continuity in the uniform norm at every spatial order. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -870,7 +870,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -988,7 +988,7 @@ section
 correction data have the checked parity. Passing from L² symmetry to
 the canonical point field supplies symmetry of the real flow coefficient. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1040,7 +1040,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1106,7 +1106,7 @@ section
 inverse and the proved parent label bound supply all reconstruction
 regularity, and the physical spatial scale is retained exactly. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1201,7 +1201,7 @@ section
 all-order spatial Sobolev class. Its fields are the parent fields plus
 the very same exact packet used in the particle-map construction. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1261,7 +1261,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1309,7 +1309,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (nextEll : ℝ) (hnext : 0 < nextEll) (hnext1 : nextEll ≤ 1)
 
 /-- Packet child, bundling `evolution`, `regularity`, `labels`, `odd`. -/
-def packetChild (labels : LabelData (A.child G k m hgraph nextEll hnext hnext1)) :
+@[expose] def packetChild (labels : LabelData (A.child G k m hgraph nextEll hnext hnext1)) :
     SmoothState (A.child G k m hgraph nextEll hnext hnext1) where
   evolution := S.evolution.child m hm J support hSupport B residual V hV G hG k hk hgraph
     nextEll hnext hnext1

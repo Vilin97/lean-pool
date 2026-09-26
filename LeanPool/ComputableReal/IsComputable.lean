@@ -29,7 +29,7 @@ rather than recursive data, this is not computability in the computable-analysis
 comparison instances below are classical (`noncomputable`, via sign information on the limit).
 -/
 
-@[expose] public section
+public section
 
 /-- Type class stating that `x : ℝ` carries a `ComputableℝSeq`: an explicit sequence of rational
 interval approximations converging to `x`. Like `Decidable`, it carries data with it, and

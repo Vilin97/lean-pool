@@ -25,7 +25,7 @@ segment itself, and the distinctness of its ends is already part of well-formedn
 * `isArcBetween_segment` — a nondegenerate segment is an arc between its endpoints.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

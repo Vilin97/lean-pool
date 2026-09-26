@@ -14,7 +14,7 @@ public import Mathlib.CategoryTheory.Limits.Shapes.FiniteLimits
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Pushout`.
 -/
 
-@[expose] public section
+public section
 
 /-!
 TODO:

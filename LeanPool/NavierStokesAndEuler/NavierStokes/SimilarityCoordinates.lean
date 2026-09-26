@@ -18,7 +18,7 @@ Here `a = 2h`. We construct the unique positive solution of
 `τ = q - z² q^a` for `0 < a < 1` and `τ > 0`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ open scoped Topology ContDiff
 namespace NavierStokes.SimilarityCoordinates
 
 /-- Forward scalar, given by `q - z ^ 2 * q ^ a`. -/
-def forwardScalar (a z q : ℝ) : ℝ := q - z ^ 2 * q ^ a
+@[expose] def forwardScalar (a z q : ℝ) : ℝ := q - z ^ 2 * q ^ a
 
 theorem forwardScalar_factor {q : ℝ} (hq : 0 < q) (a z : ℝ) :
     forwardScalar a z q = q ^ a * (q ^ (1 - a) - z ^ 2) := by
@@ -131,6 +131,7 @@ theorem existsUnique_positive_solution {a τ : ℝ} (ha : 0 < a) (ha1 : a < 1)
 
 /-- The unique positive coordinate, with value `1` outside the intended
 parameter domain. Only its restriction to that open domain is used. -/
+@[expose]
 def coordinateQ (a : ℝ) (p : ℝ × ℝ) : ℝ :=
   if hp : 0 < a ∧ a < 1 ∧ 0 < p.1 then
     Classical.choose (exists_positive_solution hp.1 hp.2.1 hp.2.2 p.2)
@@ -149,7 +150,7 @@ theorem eq_coordinateQ {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
   exact positive_solution_unique ha ha1 hp hq hs.1 he hs.2
 
 /-- Scalar slope, given by `1 - z ^ 2 * a * q ^ (a - 1)`. -/
-def scalarSlope (a z q : ℝ) : ℝ := 1 - z ^ 2 * a * q ^ (a - 1)
+@[expose] def scalarSlope (a z q : ℝ) : ℝ := 1 - z ^ 2 * a * q ^ (a - 1)
 
 theorem scalarSlope_pos {a z q : ℝ} (ha : 0 < a) (ha1 : a < 1)
     (hq : 0 < q) (hf : 0 < forwardScalar a z q) : 0 < scalarSlope a z q := by
@@ -165,7 +166,7 @@ theorem scalarSlope_pos {a z q : ℝ} (ha : 0 < a) (ha1 : a < 1)
   ring
 
 /-- The forward map whose inverse supplies smooth dependence on `(τ,z)`. -/
-def forwardMap (a : ℝ) (p : ℝ × ℝ) : ℝ × ℝ :=
+@[expose] def forwardMap (a : ℝ) (p : ℝ × ℝ) : ℝ × ℝ :=
   (forwardScalar a p.2 p.1, p.2)
 
 /-- Explicit invertible triangular linear map used by the inverse theorem. -/
@@ -241,7 +242,7 @@ theorem forwardMap_hasFDerivAt {a : ℝ} {p : ℝ × ℝ} (hp : p.1 ≠ 0)
   simpa only [Pi.mul_apply, Pi.sub_apply, pow_two] using hder
 
 /-- Inverse map, given by `(coordinateQ a p, p.2)`. -/
-def inverseMap (a : ℝ) (p : ℝ × ℝ) : ℝ × ℝ := (coordinateQ a p, p.2)
+@[expose] def inverseMap (a : ℝ) (p : ℝ × ℝ) : ℝ × ℝ := (coordinateQ a p, p.2)
 
 theorem inverseMap_forwardMap {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
     {p : ℝ × ℝ} (hq : 0 < p.1) (hF : 0 < forwardScalar a p.2 p.1) :
@@ -350,7 +351,7 @@ theorem coordinateQ_hasDerivAt_time {a t z : ℝ}
   ring
 
 /-- Coordinate eta, given by `p.2 / coordinateQ a p ^ ((1 - a) / 2)`. -/
-def coordinateEta (a : ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def coordinateEta (a : ℝ) (p : ℝ × ℝ) : ℝ :=
   p.2 / coordinateQ a p ^ ((1 - a) / 2)
 
 theorem coordinateEta_smooth {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
@@ -511,7 +512,7 @@ theorem coordinateQ_hasDerivAt_z_L {a τ z : ℝ}
   exact hc
 
 /-- Coordinate X, given by `s / coordinateQ a p`. -/
-def coordinateX (a s : ℝ) (p : ℝ × ℝ) : ℝ := s / coordinateQ a p
+@[expose] def coordinateX (a s : ℝ) (p : ℝ × ℝ) : ℝ := s / coordinateQ a p
 
 theorem coordinateX_smooth {a s : ℝ} (ha : 0 < a) (ha1 : a < 1)
     {p : ℝ × ℝ} (hp : 0 < p.1) : ContDiffAt ℝ ∞ (coordinateX a s) p := by

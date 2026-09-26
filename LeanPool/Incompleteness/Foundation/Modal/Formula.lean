@@ -10,7 +10,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.LogicSymbol
 
 /-! # Formula -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -138,7 +138,7 @@ def complexity : Formula α → ℕ
 | □φ   => φ.complexity + 1
 
 /-- Max numbers of `□` -/
-def degree : Formula α → Nat
+@[expose] def degree : Formula α → Nat
   | atom _ => 0
   | ⊥ => 0
   | φ ==> ψ => max φ.degree ψ.degree

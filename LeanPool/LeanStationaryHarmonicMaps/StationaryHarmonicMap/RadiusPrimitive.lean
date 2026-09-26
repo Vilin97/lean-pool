@@ -17,7 +17,7 @@ This module contains primitive, increment, annulus, and interval-indicator
 forms of the radius derivative calculus.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

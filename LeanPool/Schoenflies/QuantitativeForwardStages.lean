@@ -19,7 +19,7 @@ This module turns that containment into the pointwise source-star estimate used 
 survives the forward refinement.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

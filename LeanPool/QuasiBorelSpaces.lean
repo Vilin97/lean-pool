@@ -50,7 +50,7 @@ Tags: probability, category-theory, measure-theory, denotational-semantics
 MSC: 60A05, 18C50, 68Q55
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

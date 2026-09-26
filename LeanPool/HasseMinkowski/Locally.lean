@@ -29,7 +29,7 @@ The tensor-product object `Q.baseChange A` is Mathlib's `QuadraticForm.baseChang
 on `A ⊗[ℚ] V`.
 -/
 
-@[expose] public section
+public section
 
 open Module QuadraticMap TensorProduct
 

@@ -13,7 +13,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.SardMoreira.ImplicitFunction
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

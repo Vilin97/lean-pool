@@ -21,7 +21,7 @@ tie every statement to one `Semiring` derivation path and break instance unifica
 (`OreLocalization.instSemiring` vs `FractionRing.field`).
 -/
 
-@[expose] public section
+public section
 
 open FunctionField
 open FunctionField.Chart

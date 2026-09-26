@@ -15,7 +15,7 @@ public import LeanPool.PDL.Syntax
 
 /-! # Vocabulary and other Syntax functions (part of Section 2.1) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -34,16 +34,14 @@ def Vocab.atomProgs : Vocab → Finset Nat :=
 
 mutual
   /-- The proposition and program vocabulary occurring in a program. -/
-  @[simp]
-  def Program.voc : Program → Vocab
+  @[expose, simp] def Program.voc : Program → Vocab
     | ·n => {.inr n}
     | α;'β => α.voc ∪ β.voc
     | α ⋓ β => α.voc ∪ β.voc
     | ∗α => α.voc
     | ?' φ => φ.voc
   /-- The proposition and program vocabulary occurring in a formula. -/
-  @[simp]
-  def Formula.voc : Formula → Vocab
+  @[expose, simp] def Formula.voc : Formula → Vocab
     | ⊥ => ∅
     | ·n => {.inl n}
     | ~φ => φ.voc
@@ -57,12 +55,10 @@ end PDL
 namespace PDL
 
 /-- The union of the vocabularies in a list. -/
-@[simp]
-def Vocab.fromList (L : List Vocab) : Vocab := L.toFinset.sup id
+@[expose, simp] def Vocab.fromList (L : List Vocab) : Vocab := L.toFinset.sup id
 
 /-- The union of the vocabularies in a finset. -/
-@[simp]
-def Vocab.fromFinset (L : Finset Vocab) : Vocab := L.sup id
+@[expose, simp] def Vocab.fromFinset (L : Finset Vocab) : Vocab := L.sup id
 
 /-- The combined vocabulary of a list of formulas. -/
 @[simp]
@@ -123,18 +119,16 @@ theorem Formula.voc_boxes : (⌈⌈δ⌉⌉φ).voc = δ.pdlPvoc ∪ φ.voc := by
   induction δ <;> simp_all
 
 /-- The vocabulary of a loaded formula after erasing its loading annotations. -/
-@[simp]
-def LoadFormula.voc (lf : LoadFormula) : Vocab := (unload lf).voc
+@[expose, simp] def LoadFormula.voc (lf : LoadFormula) : Vocab := (unload lf).voc
 
 /-- The vocabulary of a negated loaded formula after erasing its loading annotations. -/
-@[simp]
-def NegLoadFormula.voc (nlf : NegLoadFormula) : Vocab := (negUnload nlf).voc
+@[expose, simp] def NegLoadFormula.voc (nlf : NegLoadFormula) : Vocab := (negUnload nlf).voc
 
 /-! ## Tests in a program -/
 
 /-- Test(α) -/
 @[implicit_reducible]
-def testsOfProgram : Program → List Formula
+@[expose] def testsOfProgram : Program → List Formula
 | ·_ => []
 | ?' τ => [τ] -- no sub-tests etc. needed?
 | α;'β => testsOfProgram α ++ testsOfProgram β
@@ -168,7 +162,7 @@ theorem testsOfProgram.voc α {τ} (τ_in : τ ∈ testsOfProgram α) : τ.voc �
 /-! ## Subprograms -/
 
 /-- Prog(α) -/
-def subprograms : Program → List Program
+@[expose] def subprograms : Program → List Program
 | ·a => [(·a : Program)]
 | ?' φ => [?' φ]
 | α;'β => [α;'β ] ++ subprograms α ++ subprograms β

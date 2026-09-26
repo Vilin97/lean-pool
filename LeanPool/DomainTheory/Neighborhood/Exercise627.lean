@@ -56,7 +56,7 @@ genuinely-undecidable test
 `X = Δ₀` over an arbitrary system and so depends on `Classical.choice`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

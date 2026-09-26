@@ -14,7 +14,7 @@ import LeanPool.Erdos97ConvexOctagon.RowSymmetry
 
 /-! # Soundness of the exhaustive coverage-certificate manifest -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

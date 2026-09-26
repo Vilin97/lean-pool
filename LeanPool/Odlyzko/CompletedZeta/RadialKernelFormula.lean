@@ -12,7 +12,7 @@ import Mathlib.MeasureTheory.Function.LpSpace.InfiniteSum
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -55,7 +55,7 @@ variable (K : Type*) [Field K] [NumberField K]
 
 open Classical in
 /-- A complex place gaussian used in the Odlyzko-bound argument. -/
-noncomputable def complexPlaceGaussian
+@[expose] noncomputable def complexPlaceGaussian
     (x : K) (q : InfinitePlace K → ℝ) : ℂ :=
   Complex.exp
     (-((2 * Real.pi *

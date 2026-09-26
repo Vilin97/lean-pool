@@ -37,7 +37,7 @@ initial velocity.  The loss `ε⁻¹` comes from the specified coordinate
 rescaling and is independent of the oscillation frequency.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -175,7 +175,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -258,7 +258,7 @@ section
 The physical interval ends at the chosen scaled horizon; no extension
 beyond the source time interval is required. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -322,7 +322,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -337,9 +337,10 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 /-- Source matrix, given by `D.M.field (D.clamp t) x`. -/
+@[expose]
 def sourceMatrix (D : Data U) (x : Space) (t : ℝ) : Space →L[ℝ] Space := D.M.field (D.clamp t) x
 /-- Source ray, given by `D.normal.field (D.clamp t) x`. -/
-def sourceRay (D : Data U) (x : Space) (t : ℝ) : Space := D.normal.field (D.clamp t) x
+@[expose] def sourceRay (D : Data U) (x : Space) (t : ℝ) : Space := D.normal.field (D.clamp t) x
 
 theorem sourceMatrix_continuous (D : Data U) (x : Space) : Continuous (sourceMatrix D x) :=
   extendPath_continuous D.T D.T_pos.le (pathEvaluation x D.M.field)
@@ -350,7 +351,7 @@ variable [CompleteSpace U] {D : Data U} {τ : ℝ}
 
 /-- Source error, given by `sourceMatrix D x t-P.B t-primaryShear P.c P.m P.v t • rankOne ℝ
 (unit (P.v t)) (unit (P.m t))`. -/
-def ParentFrame.sourceError (x : Space) (t : ℝ) : Space →L[ℝ] Space :=
+@[expose] def ParentFrame.sourceError (x : Space) (t : ℝ) : Space →L[ℝ] Space :=
   sourceMatrix D x t-P.B t-primaryShear P.c P.m P.v t • rankOne ℝ (unit (P.v t)) (unit (P.m t))
 
 namespace Guards

@@ -49,7 +49,7 @@ only that are unaffected.
   rather than indexed, so no face has to be produced before it is spoken about.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set Schoenflies unitInterval
 open scoped Graph
@@ -59,7 +59,7 @@ namespace Graph
 variable {β : Type*} {G : Graph Plane β} {drawing : β → ℝ → Plane} {base : Plane}
 
 /-- The point set of a single edge: the image of its parametrization on `[0, 1]`. -/
-def edgeArc (drawing : β → ℝ → Plane) (e : β) : Set Plane := drawing e '' I
+@[expose] def edgeArc (drawing : β → ℝ → Plane) (e : β) : Set Plane := drawing e '' I
 
 /-- A drawing of an abstract graph in the plane.
 
@@ -128,7 +128,7 @@ end IsDrawing
 /-! ### What a plane graph occupies -/
 
 /-- The point set of a plane graph: its vertices together with all of its edge arcs. -/
-def pointSet (G : Graph Plane β) (drawing : β → ℝ → Plane) : Set Plane :=
+@[expose] def pointSet (G : Graph Plane β) (drawing : β → ℝ → Plane) : Set Plane :=
   V(G) ∪ ⋃ e ∈ E(G), edgeArc drawing e
 
 theorem vertexSet_subset_pointSet : V(G) ⊆ pointSet G drawing := subset_union_left

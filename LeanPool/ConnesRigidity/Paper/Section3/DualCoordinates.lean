@@ -16,7 +16,7 @@ import Mathlib.Algebra.Algebra.ZMod
 The dual coordinates component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperDualCoordinates
@@ -228,7 +228,7 @@ noncomputable def avDualEquiv : Module.Dual k AVStar ≃ₗ[k] A →ₗ[k] V :=
 /--
 The `dualEquiv` construction used in the Connes rigidity formalization.
 -/
-noncomputable def dualEquiv : Module.Dual k D ≃ₗ[k] DualCoordinates :=
+@[expose] noncomputable def dualEquiv : Module.Dual k D ≃ₗ[k] DualCoordinates :=
   (Module.dualProdDualEquivDual k AVStar C).symm.trans
     (avDualEquiv.prodCongr (LinearEquiv.refl k (C →ₗ[k] k)))
 

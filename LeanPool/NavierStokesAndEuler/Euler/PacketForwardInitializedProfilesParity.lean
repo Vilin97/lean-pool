@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParity
 /-! Reflection parity of every zero-history profile, derived from the
 literal terminal wave and the prescribed coefficient symmetries. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

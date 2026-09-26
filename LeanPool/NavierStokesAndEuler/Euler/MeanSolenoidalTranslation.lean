@@ -17,7 +17,7 @@ actual R³ L² space, preserve its weak divergence constraint, and commute with
 the orthogonal solenoidal projection.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ open scoped ContDiff
 
 /-- Translation, given by `Lp.compMeasurePreservingₗᵢ ℝ (fun x : Space => x + a)
 (measurePreserving_add_right (volume : Measure Space) a)`. -/
-def translation (a : Space) : L2 →ₗᵢ[ℝ] L2 :=
+@[expose] def translation (a : Space) : L2 →ₗᵢ[ℝ] L2 :=
   Lp.compMeasurePreservingₗᵢ ℝ (fun x : Space => x + a)
     (measurePreserving_add_right (volume : Measure Space) a)
 

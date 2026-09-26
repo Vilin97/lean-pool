@@ -21,7 +21,7 @@ Defines muGFF m as a ProbabilityMeasure and proves two OS axioms for general Gau
 - OS2 (Euclidean invariance): Z[gf] = Z[f] when covariance is E(4)-invariant
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex
 open TopologicalSpace SchwartzMap

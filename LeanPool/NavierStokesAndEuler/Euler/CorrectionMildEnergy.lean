@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevMaximalRegularity
 /-! Actual nonlinear correction mild solutions obey the full-order continuous scalar integral energy
 estimate. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

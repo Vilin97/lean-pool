@@ -16,7 +16,7 @@ normal component. Applying this elementary Hilbert-space fact to the proved
 projected coordinate equation gives the pressure coefficient in equation (11).
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

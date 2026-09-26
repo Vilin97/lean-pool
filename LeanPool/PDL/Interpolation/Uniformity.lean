@@ -53,7 +53,7 @@ proved there. The section `Uniformity` below therefore repeats those that are ne
 under different names.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -1561,7 +1561,7 @@ lemma lra_or_basic_of_usesRightRule : ∀ {H : History} {Z : Sequent}
 /-- The right component of the child obtained by applying the modal rule `(M)` to a sequent
 whose loaded formula `~⌊·A⌋ξ` is on the right.
 Same as `modRChildRightOnly` in `Pdl.ClusterInterpolation`. -/
-def modRChildRight (A : Nat) (ξ : AnyFormula) (R : Finset Formula) : Sequent :=
+@[expose] def modRChildRight (A : Nat) (ξ : AnyFormula) (R : Finset Formula) : Sequent :=
   match ξ with
   | .normal φ => ⟨∅, {~φ} ∪ R.pdlProjection A, none⟩
   | .loaded χ => ⟨∅, R.pdlProjection A, some (Sum.inr (~'χ))⟩

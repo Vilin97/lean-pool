@@ -24,7 +24,7 @@ primitive.
   to a *simple* arc, which needs the finite-graph machinery and is proved with Lemma 1.2.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

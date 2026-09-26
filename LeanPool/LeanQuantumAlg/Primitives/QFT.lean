@@ -53,7 +53,7 @@ Pinned Mathlib API: `Complex.exp`, `Complex.exp_nat_mul`, `Complex.exp_eq_one_if
 `Int.abs_sub_lt_of_lt_lt`, `Matrix.mem_unitaryGroup_iff'`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

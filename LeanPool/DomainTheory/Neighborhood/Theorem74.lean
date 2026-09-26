@@ -53,7 +53,7 @@ development.
 Everything here is `⊆ {propext, Quot.sound}` (choice-free).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

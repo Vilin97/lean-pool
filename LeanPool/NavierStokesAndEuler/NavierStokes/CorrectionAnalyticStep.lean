@@ -31,7 +31,7 @@ its literal difference and its radial divergence.  The composition below
 has no `SignedMeanGain.NativeData` input.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -795,7 +795,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

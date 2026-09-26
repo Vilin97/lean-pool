@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevTransport
 
 /-! The genuine external transport commutator as a bounded bilinear Sobolev operator. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -16,4 +16,4 @@ public import LeanPool.Polylean.UnitConjecture.Tactics.ReduceGoal
 Import-only index for the local Aesop rule sets used by the Unit Conjecture formalization.
 -/
 
-@[expose] public section
+public section

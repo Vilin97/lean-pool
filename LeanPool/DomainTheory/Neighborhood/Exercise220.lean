@@ -53,7 +53,7 @@ Choice-free (`#print axioms ⊆ {propext, Quot.sound}`); the
 `mem_compl_of_finite` is structural recursion on a finiteness proof, not
 `Classical.choice`. -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise220
 

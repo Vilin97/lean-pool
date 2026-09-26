@@ -27,7 +27,7 @@ vertex has the same finite number of neighbours. Furthermore we show that this n
   cardinality of `R ⧸ 𝓂 R`.
 -/
 
-@[expose] public section
+public section
 
 open Module
 

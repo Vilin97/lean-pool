@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardUniformCosts
 /-! The actual zero-history correction from the same fixed polynomial
 frequency comparison, together with its uniform weighted output bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

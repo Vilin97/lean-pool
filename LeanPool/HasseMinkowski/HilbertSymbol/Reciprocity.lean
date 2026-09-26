@@ -31,7 +31,7 @@ This file records the two global properties:
   square (`prod_eq_one_of_isSquare`, where every local symbol is `1`) as a step.
 -/
 
-@[expose] public section
+public section
 
 namespace HasseMinkowski
 

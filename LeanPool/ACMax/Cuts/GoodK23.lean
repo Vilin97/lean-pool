@@ -22,7 +22,7 @@ with two degree-4 vertices on the small side has `C₄`s of degree-sum `14 > 13`
 yet the denser 5-vertex set still yields `cut = 5`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

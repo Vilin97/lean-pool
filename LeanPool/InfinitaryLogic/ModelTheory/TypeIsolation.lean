@@ -27,7 +27,7 @@ relation symbols, no relationality assumption. The characterization:
   `realize_isolatingFormula_iff : χ_p.Realize Empty.elim a ↔ infinitaryType M a = p`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

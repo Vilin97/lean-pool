@@ -24,7 +24,7 @@ Source: Rudolph, Jones, Teng, Angrisani, Holmes (2025), *Pauli Propagation*
 (arXiv:2505.21606), Theory Box 3.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

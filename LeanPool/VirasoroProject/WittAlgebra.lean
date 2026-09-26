@@ -53,7 +53,7 @@ Witt algebra
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 

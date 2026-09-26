@@ -52,7 +52,7 @@ gives exactly `O_r(γΔ(1 + κ))`, the sharp bound — the arithmetic is recorde
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 

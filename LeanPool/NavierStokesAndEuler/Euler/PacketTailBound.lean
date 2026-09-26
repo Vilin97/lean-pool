@@ -10,7 +10,7 @@ public import Mathlib.Analysis.Normed.Operator.Basic
 
 /-! Bounds for the surviving grades of the actual finite packet residual. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

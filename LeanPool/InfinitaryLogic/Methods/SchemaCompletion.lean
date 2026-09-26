@@ -40,7 +40,7 @@ No completion, Zorn, term model, or `realizeWith` bridge appears here — this c
 pins the countable substrate.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

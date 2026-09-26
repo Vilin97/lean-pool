@@ -32,7 +32,7 @@ the hard core of Silver is exactly the non-smooth relations — the `G₀`-dicho
 the category route.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

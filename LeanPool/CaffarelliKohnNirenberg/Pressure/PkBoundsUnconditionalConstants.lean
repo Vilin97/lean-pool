@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Pressure.PkBoundsUnconditionalSca
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -28,6 +28,7 @@ namespace CKN
 /-! Explicit constants used by the three unconditional pressure estimates. -/
 
 /-- Combined coefficient for the three velocity-tensor pressure corrections. -/
+@[expose]
 noncomputable def pressureP234Constant : ℝ :=
   3 *
     (9 * sobolevPoincareL6Constant.toReal *
@@ -36,6 +37,7 @@ noncomputable def pressureP234Constant : ℝ :=
     (4 * Real.pi / 3) ^ (2 / 3 : ℝ)
 
 /-- Combined coefficient for the two pressure-cutoff corrections. -/
+@[expose]
 noncomputable def pressureP56Constant : ℝ :=
   2 *
     ((Real.pi * 4 / 3) ^ (1 / 3 : ℝ) *
@@ -47,6 +49,7 @@ noncomputable def pressureP12Constant : ℝ :=
   max pressureP234Constant pressureP56Constant
 
 /-- Exponent-dependent coefficient for the force-cutoff contribution. -/
+@[expose]
 noncomputable def pressureP13Constant (q : ℝ) : ℝ :=
   6 * cutoffGradientConstant *
     (4 * Real.pi / 3) ^ (1 - 1 / q) *

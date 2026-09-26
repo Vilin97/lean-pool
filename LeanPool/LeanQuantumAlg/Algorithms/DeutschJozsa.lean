@@ -41,7 +41,7 @@ nonzero decides the promise problem exactly.
   constant.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

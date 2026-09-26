@@ -26,12 +26,12 @@ Upper bounded by VC dimension. Bridges to lean-rademacher library (K₂).
 - `vcdim_finite_imp_rademacher_vanishing` : VCDim < ⊤ → Rad → 0
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
 /-- Convert Bool labels to ±1 reals. true ↦ 1, false ↦ -1. -/
-noncomputable def boolToSign (b : Bool) : ℝ := if b then 1 else -1
+@[expose] noncomputable def boolToSign (b : Bool) : ℝ := if b then 1 else -1
 
 theorem boolToSign_abs_eq_one (b : Bool) : |boolToSign b| = 1 := by
   unfold boolToSign; cases b <;> simp

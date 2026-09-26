@@ -17,7 +17,7 @@ actual nonlinear fluxes and differential residuals are consequences.
 Base coefficients need smoothness and periodicity only at positive radii.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.MeanStateRegularity

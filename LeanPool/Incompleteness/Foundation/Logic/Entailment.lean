@@ -34,7 +34,7 @@ Also defines soundness and completeness.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 

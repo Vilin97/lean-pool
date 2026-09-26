@@ -29,7 +29,7 @@ The strategy for proving acyclicity is as follows:
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 

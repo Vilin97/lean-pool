@@ -19,7 +19,7 @@ since both sites need exactly the same construction (design §6.5's `segmentPath
 Main declarations: `RS.segmentPath`, `RS.pathIntegral_segmentPath`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Metric unitInterval

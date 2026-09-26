@@ -27,7 +27,7 @@ have a unique child. For nodes without children where the paper assumes one we r
 placeholder `⊤`; by Remark 9.9 (`QuasiTab.build_leaf_typ`) this does not happen in `C.Q`.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

@@ -14,7 +14,7 @@ In this file, the homotopy extension property (HEP) of the pair $(I^n, ∂I^n)$
 is derived from the HEP of $(D^n, ∂D^n)$.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory TopCat
 open scoped Topology unitInterval

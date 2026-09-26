@@ -33,7 +33,7 @@ Only the **generic** `relationsInSigned` equations are `@[simp]`; the `positiveR
 installed alongside them and nothing can loop through `not`, `and`, `or`, or `ex`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

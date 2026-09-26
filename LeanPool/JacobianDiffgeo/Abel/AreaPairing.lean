@@ -48,7 +48,7 @@ single-chart-supported `(0,1)`-data. No independence-of-`PU` statement is ever n
 downstream conclusion is a `Prop` quantified over a single fixed `PU`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set MeasureTheory
@@ -312,7 +312,7 @@ theorem psi_symm_eventually_zero (i : Fin PU.n) {z : ℂ} (hzK : z ∉ PU.K i) :
   · exact Set.indicator_of_notMem hwT _
 
 /-- The complexified partition function read through an arbitrary chart. -/
-def psiC (i : Fin PU.n) (e : OpenPartialHomeomorph X ℂ) : ℂ → ℂ :=
+@[expose] def psiC (i : Fin PU.n) (e : OpenPartialHomeomorph X ℂ) : ℂ → ℂ :=
   fun w => ((PU.ψ i (e.symm w) : ℝ) : ℂ)
 
 omit [T2Space X] [CompactSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] in

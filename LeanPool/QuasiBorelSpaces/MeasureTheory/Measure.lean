@@ -15,7 +15,7 @@ import Mathlib.Probability.Kernel.MeasurableLIntegral
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.Measure`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace MeasureTheory.Measure

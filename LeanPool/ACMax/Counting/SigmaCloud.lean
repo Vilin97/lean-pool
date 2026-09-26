@@ -39,7 +39,7 @@ on the one cloud class (`W₅ᵇ`) that obstructs it. All certificates use the �
   `n ≥ 512`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

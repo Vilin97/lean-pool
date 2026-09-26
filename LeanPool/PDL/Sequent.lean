@@ -14,7 +14,7 @@ public import LeanPool.PDL.Discon
 
 /-! # Sequents -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -86,7 +86,7 @@ lemma Option.insHasSdiff_remove_sem_eq_none [DecidableEq α] :
   grind
 
 /-- The unloaded left formula contributed by an optional loading. -/
-def Olf.L : Olf → Finset Formula
+@[expose] def Olf.L : Olf → Finset Formula
 | none => {}
 | some (Sum.inl ⟨lf⟩) => {~ lf.unload}
 | some (Sum.inr _) =>{}
@@ -111,7 +111,7 @@ lemma Olf.L_sdiff_subset {O Ocond : Olf} : (O \ Ocond).L ⊆ O.L := by
   by_cases h : χ = χ' <;> simp_all [SDiff.sdiff, Olf.L]
 
 /-- The unloaded right formula contributed by an optional loading. -/
-def Olf.R : Olf → Finset Formula
+@[expose] def Olf.R : Olf → Finset Formula
 | none => {}
 | some (Sum.inl _) => {}
 | some (Sum.inr ⟨lf⟩) => {~ lf.unload}
@@ -142,6 +142,7 @@ def _root_.Option.pdlOverwrite : Option α → Option α → Option α
 | _  , some x => some x
 
 /-- Remove the rule's required loading and install its new loading when present. -/
+@[expose]
 def Olf.change (oldO : Olf) (Ocond : Olf) (newO : Olf) : Olf := (oldO \ Ocond).pdlOverwrite newO
 
 @[simp]
@@ -169,15 +170,13 @@ def Olf.isNone : Olf → Prop
  | .some (Sum.inr _) => False
 
 /-- Whether the optional loading belongs to the left component. -/
-@[simp]
-def Olf.isLeft : Olf → Prop
+@[expose, simp] def Olf.isLeft : Olf → Prop
  | .none => False
  | .some (Sum.inl _) => True
  | .some (Sum.inr _) => False
 
 /-- Whether the optional loading belongs to the right component. -/
-@[simp]
-def Olf.isRight : Olf → Prop
+@[expose, simp] def Olf.isRight : Olf → Prop
  | .none => False
  | .some (Sum.inl _) => False
  | .some (Sum.inr _) => True
@@ -209,20 +208,20 @@ def Sequent := Finset Formula × Finset Formula × Olf -- ⟨L, R, o⟩
   deriving DecidableEq, Repr
 
 /-- All ordinary formulas of a sequent, including its loading after unloading. -/
-def Sequent.toFinset : Sequent → Finset Formula
+@[expose] def Sequent.toFinset : Sequent → Finset Formula
 | (L,R,O) => (L ∪ R) ∪ (O.map (Sum.elim negUnload negUnload)).toFinset
 
 /-! ## Components and sides of sequents -/
 
 /-- The ordinary formulas in the left component. -/
 @[grind .]
-def Sequent.L : Sequent → Finset Formula | ⟨L,_,_⟩ => L
+@[expose] def Sequent.L : Sequent → Finset Formula | ⟨L,_,_⟩ => L
 /-- The ordinary formulas in the right component. -/
 @[grind .]
-def Sequent.R : Sequent → Finset Formula | ⟨_,R,_⟩ => R
+@[expose] def Sequent.R : Sequent → Finset Formula | ⟨_,R,_⟩ => R
 /-- The optional loaded formula and its side. -/
 @[grind .]
-def Sequent.O : Sequent → Olf | ⟨_,_,O⟩ => O
+@[expose] def Sequent.O : Sequent → Olf | ⟨_,_,O⟩ => O
 
 @[simp]
 lemma Sequent.L_eq {L R O} : Sequent.L ⟨L,R,O⟩ = L := by simp [Sequent.L]
@@ -232,9 +231,9 @@ lemma Sequent.R_eq {L R O} : Sequent.R ⟨L,R,O⟩ = R := by simp [Sequent.R]
 lemma Sequent.O_eq {L R O} : Sequent.O ⟨L,R,O⟩ = O := by simp [Sequent.O]
 
 /-- The left component including any left loading after unloading. -/
-def Sequent.left (X : Sequent) : Finset Formula := X.L ∪ X.O.L
+@[expose] def Sequent.left (X : Sequent) : Finset Formula := X.L ∪ X.O.L
 /-- The right component including any right loading after unloading. -/
-def Sequent.right (X : Sequent) : Finset Formula := X.R ∪ X.O.R
+@[expose] def Sequent.right (X : Sequent) : Finset Formula := X.R ∪ X.O.R
 
 @[simp]
 lemma Sequent.left_eq {L R O} : Sequent.left ⟨L,R,O⟩ = L ∪ O.L := by simp [Sequent.left]
@@ -245,7 +244,7 @@ lemma Sequent.right_eq {L R O} : Sequent.right ⟨L,R,O⟩ = R ∪ O.R := by sim
 /-! ## (Joint) vocabulary of sequents -/
 
 /-- Like `Olf.voc` but without the ⊕ inside. -/
-def onlfvoc : Option NegLoadFormula → Vocab
+@[expose] def onlfvoc : Option NegLoadFormula → Vocab
 | none => ∅
 | some nlf => nlf.voc
 
@@ -254,12 +253,11 @@ def lfovoc (L : List (List Formula × Option NegLoadFormula)) : Vocab :=
   L.toFinset.sup (fun ⟨fs,o⟩ => fs.pdlFvoc ∪ (onlfvoc o))
 
 /-- `Finset` version of `lfovoc`. -/
-def lfovocFin (L : Finset (Finset Formula × Option NegLoadFormula)) : Vocab :=
+@[expose] def lfovocFin (L : Finset (Finset Formula × Option NegLoadFormula)) : Vocab :=
   L.sup (fun ⟨fs,o⟩ => fs.pdlFvoc ∪ (onlfvoc o))
 
 /-- The joint vocabulary occurring on both the left and the right side. -/
-@[simp]
-def jvoc (X : Sequent) : Vocab := (X.left).pdlFvoc ∩ (X.right).pdlFvoc
+@[expose, simp] def jvoc (X : Sequent) : Vocab := (X.left).pdlFvoc ∩ (X.right).pdlFvoc
 
 lemma jvoc_sub_of_voc_sub {Y X : Sequent}
     (hl : Y.left.pdlFvoc ⊆ X.left.pdlFvoc)
@@ -294,8 +292,7 @@ instance instFintypeSubtypeMemSequent {X : Sequent} : Fintype (Subtype (fun x =>
   aesop
 
 /-- Whether the specified loaded formula is the loading on either side of a sequent. -/
-@[simp]
-def NegLoadFormula.memSequent (X : Sequent) (nlf : NegLoadFormula) : Prop :=
+@[expose, simp] def NegLoadFormula.memSequent (X : Sequent) (nlf : NegLoadFormula) : Prop :=
   X.O = some (Sum.inl nlf) ∨ X.O = some (Sum.inr nlf)
 
 instance {nlf} : Decidable (NegLoadFormula.memSequent ⟨L,R,O⟩ nlf) := by
@@ -309,7 +306,7 @@ instance instMembershipNegLoadFormulaSequent :
     Membership NegLoadFormula Sequent := ⟨NegLoadFormula.memSequent⟩
 
 /-- Membership of a negated ordinary or loaded formula in a sequent. -/
-def AnyNegFormula.memSequent : (X : Sequent) → (anf : AnyNegFormula) → Prop
+@[expose] def AnyNegFormula.memSequent : (X : Sequent) → (anf : AnyNegFormula) → Prop
 | X, ⟨.normal φ⟩ => (~φ) ∈ X
 | X, ⟨.loaded χ⟩ => instMembershipNegLoadFormulaSequent.mem X (~'χ)
   -- Note: writing `∈` does not work because the first argument of `Membership` is `outParam`.
@@ -320,11 +317,11 @@ instance : Membership AnyNegFormula Sequent := ⟨AnyNegFormula.memSequent⟩
 /-! ## Closed, basic, loaded and free sequents -/
 
 /-- A sequent is *closed* iff it contains `⊥` or contains a formula and its negation. -/
-def Sequent.closed (X : Sequent) : Prop :=
+@[expose] def Sequent.closed (X : Sequent) : Prop :=
   ⊥ ∈ X ∨ ∃ f ∈ X, (~f) ∈ X
 
 /-- A sequent is *basic* iff it only contains basic formulas and is not closed. -/
-def Sequent.basic : Sequent → Prop
+@[expose] def Sequent.basic : Sequent → Prop
   | X => (∀ f ∈ X.toFinset, f.basic) ∧ ¬ X.closed
 
 /-- A variant of `Fintype.decidableExistsFintype`, used by `instDecidableClosed`. -/
@@ -361,7 +358,7 @@ instance instDecidableBasic {X : Sequent} : Decidable (X.basic) := by
       assumption
 
 /-- Whether a sequent carries a loaded formula. -/
-def Sequent.isLoaded : Sequent → Prop
+@[expose] def Sequent.isLoaded : Sequent → Prop
 | ⟨_, _, none  ⟩ => False
 | ⟨_, _, some _⟩ => True
 
@@ -376,7 +373,7 @@ instance instDecidableSequentisLoaded (X : Sequent) : Decidable (X.isLoaded) := 
   · apply isTrue; simp_all [Sequent.isLoaded]
 
 /-- Whether a sequent has no loaded formula. -/
-def Sequent.isFree (Γ : Sequent) : Prop := ¬ Γ.isLoaded
+@[expose] def Sequent.isFree (Γ : Sequent) : Prop := ¬ Γ.isLoaded
 
 instance instDecidableSequentisFree (X : Sequent) : Decidable (X.isFree) := by
   rcases X with ⟨_, _, _|_⟩
@@ -506,7 +503,7 @@ def sideOf : Sum α α → Side
 | Sum.inr _ => .RR
 
 /-- Membership of a negated formula in the specified sequent component. -/
-def AnyNegFormula.inSide : (anf : AnyNegFormula) → Side → (X : Sequent) → Prop
+@[expose] def AnyNegFormula.inSide : (anf : AnyNegFormula) → Side → (X : Sequent) → Prop
 | ⟨.normal φ⟩, .LL, ⟨L, _, _⟩ => (~φ) ∈ L
 | ⟨.normal φ⟩, .RR, ⟨_, R, _⟩ => (~φ) ∈ R
 | ⟨.loaded χ⟩, .LL, ⟨_, _, O⟩ => O = some (Sum.inl (~'χ))

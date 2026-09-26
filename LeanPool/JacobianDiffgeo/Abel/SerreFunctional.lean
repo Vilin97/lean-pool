@@ -54,7 +54,7 @@ concrete planar Stokes/residue computations — the shape `DolbeaultBridge.lean`
 residue-pairing hypothesis does not directly offer.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set MeasureTheory

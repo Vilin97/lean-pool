@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Step3.LocalizedEquationDuham
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 open MeasureTheory MeasureTheory.Measure Set Metric Filter

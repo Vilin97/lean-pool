@@ -17,7 +17,7 @@ spatial directional derivatives. Every witness consists of literal smooth
 fields and their continuous L² jets; no inverse or equation is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

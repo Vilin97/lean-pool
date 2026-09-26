@@ -21,7 +21,7 @@ section
 
 /-! Genuine one-derivative L² smoothing lifts to the complete cylinder Sobolev scale. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -190,7 +190,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

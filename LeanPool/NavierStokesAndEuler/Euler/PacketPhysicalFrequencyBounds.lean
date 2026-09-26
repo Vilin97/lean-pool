@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! A fixed polynomial frequency loss for every actual physical spatial
 derivative of a reconstructed lifted field. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 /-- Physical radius cost, given by `sourceInverseRadius C R*(9*C^2*(R +
 (‖coordinateEquiv.symm.toContinuousLinearMap‖*(1+‖D.m₀‖))*S)+2)`. -/
-def physicalRadiusCost (R C S : ℝ) : ℝ :=
+@[expose] def physicalRadiusCost (R C S : ℝ) : ℝ :=
   sourceInverseRadius C R*(9*C^2*(R +
     (‖coordinateEquiv.symm.toContinuousLinearMap‖*(1+‖D.m₀‖))*S)+2)
 
@@ -61,7 +61,7 @@ theorem physicalRadius_le_linear (k R C S : ℝ) (hk : 1 ≤ k) (hR : 0 ≤ R) (
     ring)
 
 /-- Physical fixed cost, given by `3*C*(physicalRadiusCost D R C S)^n*(n.factorial : ℝ)^2`. -/
-def physicalFixedCost (R C S : ℝ) (n : ℕ) : ℝ :=
+@[expose] def physicalFixedCost (R C S : ℝ) (n : ℕ) : ℝ :=
   3*C*(physicalRadiusCost D R C S)^n*(n.factorial : ℝ)^2
 
 theorem physicalFixedCost_nonneg (R C S : ℝ) (n : ℕ)

@@ -16,7 +16,7 @@ public import Mathlib.Analysis.InnerProductSpace.TensorProduct
 Associated Gegenbauer systems, harmonic Young spaces, and higher projection graphs.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -409,7 +409,7 @@ abbrev PolynomialSpace (r n : ℕ) :=
   MvPolynomial (Fin ((r + 1) * n)) ℝ
 
 /-- The variable index used in the spherical-code argument. -/
-def variableIndex {r n : ℕ} (i : Fin (r + 1)) (j : Fin n) :
+@[expose] def variableIndex {r n : ℕ} (i : Fin (r + 1)) (j : Fin n) :
     Fin ((r + 1) * n) :=
   finProdFinEquiv (i, j)
 
@@ -1219,7 +1219,7 @@ def rowAxisHomogeneous {r n : ℕ}
         v)).mul p.property.1)
 
 /-- The projected coordinate raise used in the spherical-code argument. -/
-def projectedCoordinateRaise {r n : ℕ}
+@[expose] def projectedCoordinateRaise {r n : ℕ}
     (mu lam : Fin (r + 1) → ℕ)
     (hdeg : (∑ i, mu i) = (∑ i, lam i) + 1)
     (i : Fin (r + 1)) (v : SpherePacking.Euclidean n) :
@@ -1520,11 +1520,11 @@ open scoped BigOperators Nat Topology
 namespace HigherHierarchy.Weyl
 
 /-- The tail length used in the spherical-code argument. -/
-def tailLength (n r : ℕ) (i : Fin (r + 1)) : ℕ :=
+@[expose] def tailLength (n r : ℕ) (i : Fin (r + 1)) : ℕ :=
   n - i.val - r - 3
 
 /-- The row tail used in the spherical-code argument. -/
-def rowTail {r : ℕ} (i : Fin (r + 1)) : ℕ :=
+@[expose] def rowTail {r : ℕ} (i : Fin (r + 1)) : ℕ :=
   r - i.val
 
 /-- The row factor used in the spherical-code argument. -/
@@ -1538,7 +1538,7 @@ def rowFactor {r : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
       ((lam i + rowTail i).factorial : ℝ))
 
 /-- The pair factor used in the spherical-code argument. -/
-def pairFactor {r : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
+@[expose] def pairFactor {r : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (i j : Fin (r + 1)) : ℝ :=
   (((lam i : ℝ) - (lam j : ℝ) + (j.val : ℝ) - (i.val : ℝ)) /
       ((j.val : ℝ) - (i.val : ℝ))) *
@@ -1547,7 +1547,7 @@ def pairFactor {r : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
       ((n : ℝ) - (i.val : ℝ) - (j.val : ℝ) - 2))
 
 /-- The dimension used in the spherical-code argument. -/
-def dimension {r : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ) : ℝ :=
+@[expose] def dimension {r : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ) : ℝ :=
   (∏ i, rowFactor n lam i) *
     ∏ i, ∏ j, if i < j then pairFactor n lam i j else 1
 
@@ -2133,7 +2133,7 @@ theorem tendsto_log_dimension_div_log_two
   exact h
 
 /-- The floored weight used in the spherical-code argument. -/
-def flooredWeight {r : ℕ} (a : Fin (r + 1) → ℝ) (n : ℕ)
+@[expose] def flooredWeight {r : ℕ} (a : Fin (r + 1) → ℝ) (n : ℕ)
     (i : Fin (r + 1)) : ℕ :=
   ⌊a i * (n : ℝ)⌋₊
 
@@ -2417,7 +2417,7 @@ theorem card_rowDegreeFamilies {r n : ℕ}
   simp only [Finset.card_finsuppAntidiag_nat_eq_choose, Finset.card_univ, Fintype.card_fin]
 
 /-- The young multihomogeneous exponents used in the spherical-code argument. -/
-def youngMultihomogeneousExponents {r : ℕ} (n : ℕ)
+@[expose] def youngMultihomogeneousExponents {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) :
     Finset (Fin ((r + 1) * n) →₀ ℕ) :=
   (rowDegreeFamilies (n := n) lam).image flattenRowExponents
@@ -3775,7 +3775,7 @@ section
 open scoped BigOperators
 
 /-- The row pairing polynomial used in the spherical-code argument. -/
-def rowPairingPolynomial {r n : ℕ} (i j : Fin (r + 1)) :
+@[expose] def rowPairingPolynomial {r n : ℕ} (i j : Fin (r + 1)) :
     PolynomialSpace r n :=
   ∑ k : Fin n,
     MvPolynomial.X (variableIndex i k) *
@@ -4871,7 +4871,7 @@ theorem fullBranchOfInterlaces_signature {r : ℕ}
   · simp only [fullBranchOfInterlaces_castSucc, Fin.snoc_castSucc]
 
 /-- The weyl branching recurrence used in the spherical-code argument. -/
-def WeylBranchingRecurrence {r : ℕ} (n : ℕ)
+@[expose] def WeylBranchingRecurrence {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) : Prop :=
   Weyl.dimension n lam =
     ∑ mu : FullBranchWeight lam,
@@ -4993,7 +4993,7 @@ def complexRowEuler {r n : ℕ} (i : Fin (r + 1))
       MvPolynomial.pderiv (variableIndex i j) p
 
 /-- The complex trace operator used in the spherical-code argument. -/
-def complexTraceOperator {r n : ℕ} (i j : Fin (r + 1))
+@[expose] def complexTraceOperator {r n : ℕ} (i j : Fin (r + 1))
     (p : MvPolynomial (Fin ((r + 1) * n)) ℂ) :
     MvPolynomial (Fin ((r + 1) * n)) ℂ :=
   ∑ k : Fin n,
@@ -5248,7 +5248,7 @@ theorem pderiv_nullRowLinearForm {r m n : ℕ}
   · simp only [Ne.symm hi, false_and, ↓reduceIte, mul_zero, Finset.sum_const_zero, hi]
 
 /-- The null substitution used in the spherical-code argument. -/
-def nullSubstitution {r m n : ℕ} (hn : 2 * m ≤ n) :
+@[expose] def nullSubstitution {r m n : ℕ} (hn : 2 * m ≤ n) :
     MvPolynomial (Fin (r + 1) × Fin m) ℂ →ₐ[ℂ]
       MvPolynomial (Fin ((r + 1) * n)) ℂ :=
   MvPolynomial.aeval fun z => nullRowLinearForm hn z.1 z.2
@@ -5454,12 +5454,12 @@ theorem nullSubstitution_injective {r m n : ℕ}
 namespace DeterminantVectors
 
 /-- The even coordinate used in the spherical-code argument. -/
-def evenCoordinate {r n : ℕ} (h : 2 * (r + 1) ≤ n)
+@[expose] def evenCoordinate {r n : ℕ} (h : 2 * (r + 1) ≤ n)
     (j : Fin (r + 1)) : Fin n :=
   ⟨2 * j.val, by have := j.isLt; omega⟩
 
 /-- The odd coordinate used in the spherical-code argument. -/
-def oddCoordinate {r n : ℕ} (h : 2 * (r + 1) ≤ n)
+@[expose] def oddCoordinate {r n : ℕ} (h : 2 * (r + 1) ≤ n)
     (j : Fin (r + 1)) : Fin n :=
   ⟨2 * j.val + 1, by have := j.isLt; omega⟩
 
@@ -5514,7 +5514,7 @@ theorem evenCoordinate_ne_oddCoordinate {r n : ℕ}
     rfl
 
 /-- The isotropic variable used in the spherical-code argument. -/
-def isotropicVariable {r n : ℕ} (h : 2 * (r + 1) ≤ n)
+@[expose] def isotropicVariable {r n : ℕ} (h : 2 * (r + 1) ≤ n)
     (i j : Fin (r + 1)) : MvPolynomial (Fin ((r + 1) * n)) ℂ :=
   MvPolynomial.X (variableIndex i (evenCoordinate h j)) +
     MvPolynomial.C Complex.I *
@@ -5662,7 +5662,7 @@ theorem derivation_det_eq_zero {σ ι : Type*}
   simp only [smul_eq_mul, mul_zero, add_zero]
 
 /-- The minor index used in the spherical-code argument. -/
-def minorIndex {r : ℕ} (k : Fin (r + 1))
+@[expose] def minorIndex {r : ℕ} (k : Fin (r + 1))
     (i : Fin (k.val + 1)) : Fin (r + 1) :=
   ⟨i.val, by have := i.isLt; have := k.isLt; omega⟩
 
@@ -5835,7 +5835,7 @@ theorem isotropicVariable_eq_nullRowLinearForm {r n : ℕ}
   rfl
 
 /-- The source leading minor used in the spherical-code argument. -/
-def sourceLeadingMinor {r : ℕ} (k : Fin (r + 1)) :
+@[expose] def sourceLeadingMinor {r : ℕ} (k : Fin (r + 1)) :
     MvPolynomial (Fin (r + 1) × Fin (r + 1)) ℂ :=
   Matrix.det (Matrix.of fun i j : Fin (k.val + 1) =>
     MvPolynomial.X (minorIndex k i, minorIndex k j))
@@ -5906,7 +5906,7 @@ def highestWeightPolynomial {r n : ℕ} (h : 2 * (r + 1) ≤ n)
   ∏ k : Fin (r + 1), leadingMinor h k ^ e k
 
 /-- The source highest weight polynomial used in the spherical-code argument. -/
-def sourceHighestWeightPolynomial {r : ℕ}
+@[expose] def sourceHighestWeightPolynomial {r : ℕ}
     (e : Fin (r + 1) → ℕ) :
     MvPolynomial (Fin (r + 1) × Fin (r + 1)) ℂ :=
   ∏ k : Fin (r + 1), sourceLeadingMinor k ^ e k
@@ -5978,7 +5978,7 @@ theorem highestWeightPolynomial_ne_zero {r n : ℕ}
   simp only [hz, map_zero, zero_ne_one] at this
 
 /-- The determinant weight used in the spherical-code argument. -/
-def determinantWeight {r : ℕ} (e : Fin (r + 1) → ℕ)
+@[expose] def determinantWeight {r : ℕ} (e : Fin (r + 1) → ℕ)
     (i : Fin (r + 1)) : ℕ :=
   ∑ k : Fin (r + 1), if i ≤ k then e k else 0
 
@@ -6150,7 +6150,7 @@ theorem finrank_harmonicYoung_pos_of_antitone {r n : ℕ}
     (dominantHighestWeightWitness h lam hdom)
 
 /-- The conjugate isotropic variable used in the spherical-code argument. -/
-def conjugateIsotropicVariable {r n : ℕ}
+@[expose] def conjugateIsotropicVariable {r n : ℕ}
     (h : 2 * (r + 1) ≤ n) (i j : Fin (r + 1)) :
     MvPolynomial (Fin ((r + 1) * n)) ℂ :=
   MvPolynomial.X (variableIndex i (evenCoordinate h j)) -
@@ -6388,7 +6388,7 @@ theorem ambientPositiveRoot_dominantHighestWeightWitness {r n : ℕ}
     (signatureExponent lam) p q hpq
 
 /-- The antiholomorphic derivative used in the spherical-code argument. -/
-def antiholomorphicDerivative {r n : ℕ}
+@[expose] def antiholomorphicDerivative {r n : ℕ}
     (h : 2 * (r + 1) ≤ n) (a p : Fin (r + 1)) :
     Derivation ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ)
       (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
@@ -6416,7 +6416,7 @@ theorem antiholomorphicDerivative_isotropicVariable {r n : ℕ}
   · simp only [hij, ↓reduceIte, mul_zero, add_zero]
 
 /-- The ambient sum positive root used in the spherical-code argument. -/
-def ambientSumPositiveRoot {r n : ℕ}
+@[expose] def ambientSumPositiveRoot {r n : ℕ}
     (h : 2 * (r + 1) ≤ n) (p q : Fin (r + 1)) :
     Derivation ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ)
       (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
@@ -6578,7 +6578,7 @@ theorem ambientShortPositiveRoot_dominantHighestWeightWitness {r n : ℕ}
     (signatureExponent lam) p t ht
 
 /-- The ambient cartan used in the spherical-code argument. -/
-def ambientCartan {r n : ℕ}
+@[expose] def ambientCartan {r n : ℕ}
     (h : 2 * (r + 1) ≤ n) (p : Fin (r + 1)) :
     Derivation ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ)
       (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
@@ -6721,17 +6721,17 @@ def FiniteInterlacing {r : ℕ} (n : ℕ)
     ∀ m : Fin r, mu m ≤ lam m.castSucc ∧ lam m.succ ≤ mu m
 
 /-- The ambient shift used in the spherical-code argument. -/
-def ambientShift {r : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
+@[expose] def ambientShift {r : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (ℓ : Fin (r + 1)) : ℝ :=
   (lam ℓ : ℝ) + (n : ℝ) / 2 - ((ℓ.val : ℝ) + 1)
 
 /-- The stabilizer shift used in the spherical-code argument. -/
-def stabilizerShift {r : ℕ} (n : ℕ) (mu : Fin r → ℕ)
+@[expose] def stabilizerShift {r : ℕ} (n : ℕ) (mu : Fin r → ℕ)
     (m : Fin r) : ℝ :=
   (mu m : ℝ) + ((n : ℝ) - 1) / 2 - ((m.val : ℝ) + 1)
 
 /-- The wall shift used in the spherical-code argument. -/
-def wallShift (n r : ℕ) : ℝ :=
+@[expose] def wallShift (n r : ℕ) : ℝ :=
   (n : ℝ) / 2 - (r : ℝ) - 1
 
 theorem FiniteInterlacing.wallShift_pos {r n : ℕ}
@@ -6818,13 +6818,13 @@ theorem FiniteInterlacing.stabilizerShift_pos {r n : ℕ}
   linarith [h.stabilizerShift_ge_succ m]
 
 /-- The active denominator used in the spherical-code argument. -/
-def activeDenominator {r : ℕ}
+@[expose] def activeDenominator {r : ℕ}
     (L : Fin (r + 1) → ℝ) (ℓ : Fin (r + 1)) : ℝ :=
   2 * L ℓ * ∏ q : Fin r,
     (L ℓ ^ 2 - L (ℓ.succAbove q) ^ 2)
 
 /-- The plus probability used in the spherical-code argument. -/
-def plusProbability {r : ℕ} (n : ℕ)
+@[expose] def plusProbability {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) (mu : Fin r → ℕ)
     (ℓ : Fin (r + 1)) : ℝ :=
   ((ambientShift n lam ℓ + wallShift n r) *
@@ -6834,7 +6834,7 @@ def plusProbability {r : ℕ} (n : ℕ)
       activeDenominator (ambientShift n lam) ℓ
 
 /-- The minus probability used in the spherical-code argument. -/
-def minusProbability {r : ℕ} (n : ℕ)
+@[expose] def minusProbability {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) (mu : Fin r → ℕ)
     (ℓ : Fin (r + 1)) : ℝ :=
   ((ambientShift n lam ℓ - wallShift n r) *
@@ -6974,7 +6974,7 @@ theorem FiniteInterlacing.minusProbability_nonneg {r n : ℕ}
     (Finset.prod_nonneg fun m _ => h.minusFactor_nonneg ℓ m)
 
 /-- The signed node used in the spherical-code argument. -/
-def signedNode {r : ℕ} (L : Fin (r + 1) → ℝ)
+@[expose] def signedNode {r : ℕ} (L : Fin (r + 1) → ℝ)
     (z : Fin (r + 1) × Bool) : ℝ :=
   if z.2 then L z.1 else -L z.1
 
@@ -6993,7 +6993,7 @@ theorem signedNode_injective {r : ℕ}
   · exact Prod.ext (hinj heq) rfl
 
 /-- The channel numerator polynomial used in the spherical-code argument. -/
-def channelNumeratorPolynomial {r : ℕ}
+@[expose] def channelNumeratorPolynomial {r : ℕ}
     (rho : ℝ) (M : Fin r → ℝ) : Polynomial ℝ :=
   (Polynomial.X + Polynomial.C rho) *
     ∏ m : Fin r,
@@ -8479,7 +8479,7 @@ theorem polynomialInner_youngGramRadialIdeal_eq_zero_of_traceFree
   simpa only [one_mul] using hstrong 1
 
 /-- The young gram radial weight submodule used in the spherical-code argument. -/
-def youngGramRadialWeightSubmodule {r : ℕ}
+@[expose] def youngGramRadialWeightSubmodule {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) :
     Submodule ℝ (youngMultihomogeneousSubmodule n lam) :=
   ((youngGramRadialIdeal r n).restrictScalars ℝ).comap

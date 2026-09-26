@@ -14,7 +14,7 @@ This file contains the `NormedAddCommGroupOfRing` class, which bundles the
 ring structure together with the normed additive commutative group structure.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

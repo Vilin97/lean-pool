@@ -20,7 +20,7 @@ sum estimates use the actual closed label windows and the existing finite
 coloring, rather than the total number of labels in an active finite set.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -515,6 +515,7 @@ theorem uniform_blockCovariance {s : StripData D} {P : ι → ℕ → D → ℝ}
 /-! ## Actual finite sums and support-induced covariance diagonality -/
 
 /-- Field sum, defined pointwise by `∑ l ∈ labels n, u l n p i`. -/
+@[expose]
 noncomputable def fieldSum (labels : ℕ → Finset ι) (u : ι → Oscillation D) : Oscillation D :=
   fun n p i => ∑ l ∈ labels n, u l n p i
 
@@ -769,7 +770,7 @@ noncomputable def symmetricCovariance (u v : Oscillation D) : Tensor D :=
   bilinearCovariance u v + bilinearCovariance v u
 
 /-- Definitionally the same five terms used by CorrectionStep. -/
-noncomputable def signedRemainder (primary old tangent curl : Oscillation D) : Tensor D :=
+@[expose] noncomputable def signedRemainder (primary old tangent curl : Oscillation D) : Tensor D :=
   (bilinearCovariance old (tangent + curl) + bilinearCovariance (tangent + curl) old +
     bilinearCovariance (tangent + curl) (tangent + curl)) - symmetricCovariance primary tangent
 

@@ -14,7 +14,7 @@ public import Mathlib.Order.Lattice.Nat
 The complete non-Mathlib vocabulary used in the public statement.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

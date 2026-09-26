@@ -19,7 +19,7 @@ analyticity and the first-integral equation—classical choice and primitive rec
 orders automatically.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

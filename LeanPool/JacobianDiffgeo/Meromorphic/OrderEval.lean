@@ -29,7 +29,7 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.4,
   it recovers `φ` as a class. This is the rigidified normal form the blueprint needs for Čech.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

@@ -16,4 +16,4 @@ import Mathlib.Tactic.Positivity.Finset
 This module re-exports the vendored formalization imported from `2-coloring-1-round`.
 -/
 
-@[expose] public section
+public section

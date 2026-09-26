@@ -27,7 +27,7 @@ difference set as the complement of this same `Δ`; the sign convention here is
 therefore opposite to theirs.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

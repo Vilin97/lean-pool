@@ -18,7 +18,7 @@ coercive inverse is constructed and identified with the original mean solve,
 so coefficient comparisons can use a common domain without assuming an inverse.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

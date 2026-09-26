@@ -17,7 +17,7 @@ latent law is simply the atom branch.  This removes the artificial
 coordinatewise strict-moment assumption from the finite product mixture.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 

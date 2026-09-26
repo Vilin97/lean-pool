@@ -12,7 +12,7 @@ public import LeanPool.DirectedTopologyLean4.Dipath
 # LeanPool.DirectedTopologyLean4.TransRefl
 -/
 
-@[expose] public section
+public section
 
 /-
   Auxiliary lemmas for the reflTrans and transRefl definitions in directed_path_homotopy.lean.
@@ -70,7 +70,7 @@ lemma trans_refl_reparam_dipath (p : Dipath x₀ x₁) : p.trans (Dipath.refl x�
   rfl
 
 /-- Auxilliary function for `ReflTransReparam` -/
-def ReflTransReparamAux (t : I) : ℝ :=
+@[expose] def ReflTransReparamAux (t : I) : ℝ :=
 if (t : ℝ) ≤ 1/2 then
   0
 else

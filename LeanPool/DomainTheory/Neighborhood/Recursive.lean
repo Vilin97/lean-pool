@@ -47,7 +47,7 @@ pairing round-trips (`unpair_pair'`, `pair_unpair'`) choice-free here.
 Everything in this file is `⊆ {propext, Quot.sound}`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Recursive
 
@@ -317,7 +317,7 @@ theorem primrec_sub₂ {f g : ℕ → ℕ} (hf : Nat.Primrec f) (hg : Nat.Primre
 /-- Choice-free primitive-recursive **selection**: `selectFn c a b = a` if `c =
 1`, `= b` if `c = 0`
 (for a `{0,1}`-valued `c`), via `c * a + (1 - c) * b`. -/
-def selectFn (c a b : ℕ) : ℕ := c * a + (1 - c) * b
+@[expose] def selectFn (c a b : ℕ) : ℕ := c * a + (1 - c) * b
 
 @[simp] theorem selectFn_one (a b : ℕ) : selectFn 1 a b = a := by simp [selectFn]
 
@@ -910,7 +910,7 @@ recursively decidable —
 choice-free, via an explicit `Nat.rec` fold of the `{0,1}` indicator. -/
 
 /-- Indicator of `v = 1`, as a `{0,1}`-valued primitive-recursive function. -/
-def isOne (v : ℕ) : ℕ := 1 - ((v - 1) + (1 - v))
+@[expose] def isOne (v : ℕ) : ℕ := 1 - ((v - 1) + (1 - v))
 
 theorem isOne_le_one (v : ℕ) : isOne v ≤ 1 := by unfold isOne; omega
 
@@ -925,7 +925,7 @@ theorem primrec_isOne : Nat.Primrec isOne :=
 /-- The `{0,1}`-valued bounded-`∀` indicator: `1` iff `g (pair i n) = 1` for all
 `i < N`. Folded
 right-to-left with `selectFn` so the result stays in `{0,1}`. -/
-def bForallFn (g : ℕ → ℕ) (n N : ℕ) : ℕ :=
+@[expose] def bForallFn (g : ℕ → ℕ) (n N : ℕ) : ℕ :=
   Nat.rec (motive := fun _ => ℕ) 1 (fun i ih => selectFn ih (isOne (g (Nat.pair i n))) 0) N
 
 theorem bForallFn_le_one (g : ℕ → ℕ) (n N : ℕ) : bForallFn g n N ≤ 1 := by

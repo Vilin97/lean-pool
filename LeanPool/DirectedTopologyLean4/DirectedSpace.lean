@@ -11,7 +11,7 @@ public import Mathlib.Topology.Path
 # LeanPool.DirectedTopologyLean4.DirectedSpace
 -/
 
-@[expose] public section
+public section
 
 /-
   # Definition of directed spaces

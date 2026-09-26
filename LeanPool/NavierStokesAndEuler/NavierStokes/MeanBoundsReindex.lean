@@ -19,7 +19,7 @@ unchanged.  In particular, uniform constants are chosen before the label
 both before and after reassociation.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

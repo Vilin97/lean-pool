@@ -92,7 +92,7 @@ representing `Φ` is the identity on the function space. Everything here is
 (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

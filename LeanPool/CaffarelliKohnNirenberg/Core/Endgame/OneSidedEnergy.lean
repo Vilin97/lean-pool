@@ -16,7 +16,7 @@ top time. Their constants depend only on the given decay constant. They are
 the scalar integral inputs for extension by zero across the top time face.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology

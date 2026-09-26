@@ -34,7 +34,7 @@ In both of the following results, `b` is a natural number greater than `1`.
 
 -/
 
-@[expose] public section
+public section
 
 
 open scoped BigOperators

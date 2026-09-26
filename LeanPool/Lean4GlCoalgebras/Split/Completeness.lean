@@ -22,7 +22,7 @@ If Prover has a winning strategy in the game starting from `Γ`, then there is a
 of `Γ`, proven in `prover_win_builds_proof`; all other definitions and proofs in this
 file are helpers. -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 

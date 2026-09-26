@@ -28,7 +28,7 @@ arbitrary measure `μ`. Compactness results are proven elsewhere.
 - `RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.h1OnToL2Measure`
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis
@@ -110,7 +110,7 @@ lemma mem_range_extendByZeroₗᵢ_toLp_of_tsupport_subset {F : Type*} [NormedAd
 
 We model “supported in `K`” as belonging to the closed range of the extension-by-zero map
 `Lp(μ.restrict K) →ₗᵢ Lp(μ)`. -/
-noncomputable def h1OnMeasure :
+@[expose] noncomputable def h1OnMeasure :
     Submodule ℝ (↥(h1 (μ := μ) (E := E))) :=
   Submodule.comap
     (h1ToL2 (μ := μ) (E := E)).toLinearMap

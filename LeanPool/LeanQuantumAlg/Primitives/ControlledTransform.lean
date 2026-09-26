@@ -63,7 +63,7 @@ leaves only the parity phase `(e^{-iθ/2})^{L mod 2}`.
   the eigenphase by some QPP word.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

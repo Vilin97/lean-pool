@@ -16,7 +16,7 @@ This file provides utilities for working with chains in sum types,
 which are used to construct the ωCPO instance for coproducts.
 -/
 
-@[expose] public section
+public section
 
 namespace OmegaCompletePartialOrder.Chain.Sum
 

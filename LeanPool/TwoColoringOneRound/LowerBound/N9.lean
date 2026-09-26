@@ -33,7 +33,7 @@ This file proves a small “warm-up” theorem matching the report:
 All proofs are kernel-checked (no `native_decide`).
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 

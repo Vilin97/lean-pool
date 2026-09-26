@@ -17,7 +17,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Generated exact combinatorics for the finite second-stage Parts gadget. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
@@ -121,7 +121,7 @@ deriving DecidableEq
 
 /-- A vertex has the requested axial coordinates in the requested patch.
 The common origin belongs to both patches. -/
-def partsGadgetAxialAt (rotated : Bool) (q r : Int)
+@[expose] def partsGadgetAxialAt (rotated : Bool) (q r : Int)
     (vertex : Fin 73) : Prop :=
   let descriptor := partsGadgetVertex vertex
   descriptor.q = q ∧ descriptor.r = r ∧
@@ -133,7 +133,7 @@ instance (rotated : Bool) (q r : Int) (vertex : Fin 73) :
   infer_instance
 
 /-- Decidable equality-up-to-permutation for three named vertices. -/
-def partsGadgetSameTriple (a b c x y z : Fin 73) : Prop :=
+@[expose] def partsGadgetSameTriple (a b c x y z : Fin 73) : Prop :=
   (a = x ∧ b = y ∧ c = z) ∨ (a = x ∧ b = z ∧ c = y) ∨
     (a = y ∧ b = x ∧ c = z) ∨ (a = y ∧ b = z ∧ c = x) ∨
     (a = z ∧ b = x ∧ c = y) ∨ (a = z ∧ b = y ∧ c = x)

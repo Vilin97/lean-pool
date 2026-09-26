@@ -28,7 +28,7 @@ import Mathlib.Tactic.ContinuousFunctionalCalculus
   family demonstrates SOUNDNESS and linear-in-n τ reach, NOT general tightness.
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 
@@ -37,7 +37,7 @@ namespace Sundog.Certificate.Scaling
 /-! ### The parametric family (the [2m, m] projection code). -/
 
 /-- Parity-check `[Iₘ | 0]` : row `i`, col `j` is `1` iff `j = i` (so `j < m`). -/
-def projH (m : ℕ) : Matrix (Fin m) (Fin (2 * m)) (ZMod 2) :=
+@[expose] def projH (m : ℕ) : Matrix (Fin m) (Fin (2 * m)) (ZMod 2) :=
   Matrix.of fun i j => if (j : ℕ) = (i : ℕ) then 1 else 0
 
 /-- Generator `[0 | Iₘ]` : row `i`, col `j` is `1` iff `j = i + m` (so `j ≥ m`).
@@ -47,7 +47,7 @@ def projG (m : ℕ) : Matrix (Fin m) (Fin (2 * m)) (ZMod 2) :=
 
 /-- The all-ones-syndrome body: the first `m` coordinates are `1`, the rest `0`.
     `projH m *ᵥ (allOnesSynBody m)` is the all-ones vector in `Fin m`. -/
-def allOnesSynBody (m : ℕ) : Fin (2 * m) → ZMod 2 :=
+@[expose] def allOnesSynBody (m : ℕ) : Fin (2 * m) → ZMod 2 :=
   fun j => if (j : ℕ) < m then 1 else 0
 
 /-! ### TIER 3 — pure computation. The empirical scaling law (NO Scheme / hHG needed).

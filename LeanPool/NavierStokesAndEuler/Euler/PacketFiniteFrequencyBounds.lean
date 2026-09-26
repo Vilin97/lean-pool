@@ -11,7 +11,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Frequency guards turn the finite geometric remainder into fixed polynomial bounds. -/
 
-@[expose] public section
+public section
 
 
 namespace EulerPacketFiniteFrequency

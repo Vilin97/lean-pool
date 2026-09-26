@@ -18,7 +18,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Harmonic.NewtonianKern
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 open MeasureTheory MeasureTheory.Measure Set Filter
@@ -35,6 +35,7 @@ noncomputable section
 namespace CKN.Foundation.Heat
 
 /-- Squared Euclidean radius in native three-dimensional coordinates. -/
+@[expose]
 def q (z : Vec3) : ℝ := ∑ i : Fin 3, z i ^ 2
 
 lemma q_pos {z : Vec3} (hz : z ≠ 0) : 0 < q z := by
@@ -297,10 +298,12 @@ private lemma spatialDeriv_kernel_eq_kernelDerivative {x y : Vec3} (hxy : x - y 
   exact spatialDeriv_newtonianKernel_shift hxy i
 
 /-- The smooth cutoff used in the annular harmonic representation. -/
+@[expose]
 def eta (x₀ : Vec3) {ρ : ℝ} (hρ : 0 < ρ) : Vec3 → ℝ :=
   mollifiedBallCutoff x₀ hρ
 
 /-- The Newtonian kernel times one cutoff derivative. -/
+@[expose]
 def kernelCutoffDerivative (x x₀ : Vec3) {ρ : ℝ} (hρ : 0 < ρ)
     (i : Fin 3) (y : Vec3) : ℝ :=
   newtonianKernel (x - y) * spatialDeriv (eta x₀ hρ) i y

@@ -15,7 +15,7 @@ root. Its leaves point to the appropriate one of the 432 checked symmetry and
 color variants from `PartsFirstStage`.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
@@ -115,7 +115,7 @@ lemma partsRootVerifiesNodeB_unsat {nodes : Array (Array PartsRootNode)}
             · exact hextends assignment hin
 
 /-- The four fixed assignments after color normalization. -/
-def partsNormalizedRootPath : List PartsAssignment :=
+@[expose] def partsNormalizedRootPath : List PartsAssignment :=
   [⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩]
 
 /-- A checked root trie eliminates every proper coloring extending the fixed root. -/

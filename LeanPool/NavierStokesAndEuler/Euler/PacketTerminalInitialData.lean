@@ -21,7 +21,7 @@ section
 
 /-! The literal terminal datum belongs to the actual supported, mean-zero cylinder space. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -96,7 +96,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

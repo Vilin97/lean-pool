@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketShiftArithmetic
 
 /-! Uniform estimates for finite coefficient assembly, including zero and terminal grades. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

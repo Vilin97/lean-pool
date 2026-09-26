@@ -14,7 +14,7 @@ If a non-unital ring `R` has an element `e` that is both a left and a right
 identity, then `R` admits a (unital) ring structure with `1 = e`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 

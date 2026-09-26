@@ -21,7 +21,7 @@ Laplacian) sits at index `card V - 1`, and the second-smallest — the algebraic
 connectivity `λ₂` — at index `card V - 2`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

@@ -19,12 +19,12 @@ proved for the smooth pullback; a density theorem for the full representative
 level is still a separate input.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 
 /-- Pull back a scalar function by the affine map from the unit ball. -/
-def ballPullback {d : ℕ} (x₀ : Vec d) (r : ℝ) (u : Vec d → ℝ) : Vec d → ℝ :=
+@[expose] def ballPullback {d : ℕ} (x₀ : Vec d) (r : ℝ) (u : Vec d → ℝ) : Vec d → ℝ :=
   fun x => u (ballAffineMap x₀ r x)
 
 theorem ballPullback_contDiff {d : ℕ} (x₀ : Vec d) (r : ℝ)

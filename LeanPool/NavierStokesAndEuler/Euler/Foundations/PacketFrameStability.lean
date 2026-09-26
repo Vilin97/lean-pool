@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Star.Real
 # Packet Frame Stability
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -371,7 +371,7 @@ def frameCrossNumerator (ε P Q N r w Tp Tq Tn : ℝ) : ℝ :=
   (-N + ε ^ 2 * Q * w) * Tp + (N * r - P * w) * Tq + (P - ε ^ 2 * Q * r) * Tn
 
 /-- The ideal next-frame cross numerator in original scalar coordinates. -/
-def idealCrossNumerator (β P Q r : ℝ) : ℝ :=
+@[expose] def idealCrossNumerator (β P Q r : ℝ) : ℝ :=
   -1 + β * P + (1 + P ^ 2) * r ^ 2 + P * Q * r
 
 /-- Quantitative stability of the exact cross-product numerator. -/
@@ -507,7 +507,7 @@ theorem frame_cross_error_from_matrix
   nlinarith only [hh]
 
 /-- Squared norm of the normalized velocity direction. -/
-def velocityDirectionNormSq (ε r w : ℝ) : ℝ := 1 + ε ^ 2 * (r ^ 2 + w ^ 2)
+@[expose] def velocityDirectionNormSq (ε r w : ℝ) : ℝ := 1 + ε ^ 2 * (r ^ 2 + w ^ 2)
 
 theorem velocity_direction_norm_bound
     {Θ ε r w : ℝ} (hΘ : 1 ≤ Θ) (hr : |r| ≤ 9) (hw : |w| ≤ 60 * Θ ^ 2) :

@@ -22,7 +22,7 @@ the spatial curl, and requires neither a lower support radius nor estimates
 on the individual summands.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,7 +38,7 @@ abbrev Space := ProblemStatement.Space
 abbrev SpaceTime := ProblemStatement.SpaceTime
 
 /-- The actual Cartesian distance to the symmetry axis. -/
-noncomputable def radius (w : SpaceTime) : ℝ :=
+@[expose] noncomputable def radius (w : SpaceTime) : ℝ :=
   PolarCharts.radius (PhysicalGraphBounds.radialProjection w)
 
 theorem radius_continuous : Continuous radius :=

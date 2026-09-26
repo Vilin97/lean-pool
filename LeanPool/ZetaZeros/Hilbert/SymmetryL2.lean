@@ -24,7 +24,7 @@ the structure the Gram–Schmidt argument needs, since its coefficients are real
 `inner_symmetric_im_eq_zero` and so it never leaves the subspace.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

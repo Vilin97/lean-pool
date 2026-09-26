@@ -33,7 +33,7 @@ rational is an integer, and an integer within distance `< 1/2` of a certified nu
 approximation is determined exactly.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

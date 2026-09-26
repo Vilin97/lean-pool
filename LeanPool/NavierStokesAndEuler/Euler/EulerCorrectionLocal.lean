@@ -29,7 +29,7 @@ section
 /-! Local boundedness, continuity, and differentiation derived from an exact operator resolvent
 identity. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -126,7 +126,7 @@ section
 
 /-! Time regularity of the actual Sobolev pressure inverse, derived from its genuine resolvent. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -216,7 +216,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -356,7 +356,7 @@ section
 
 /-! The local quadratic heat construction preserves the actual lifted divergence constraint. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -405,7 +405,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -437,7 +437,7 @@ structure CoefficientPath (q : ℕ) (T : Type*) [TopologicalSpace T] where
   continuous : Continuous (fun t => coefficientSobolevOperator period (jet t))
 
 /-- The path acts by actual pointwise multiplication at each time. -/
-def CoefficientPath.operatorPath {q : ℕ} {T : Type*} [TopologicalSpace T]
+@[expose] def CoefficientPath.operatorPath {q : ℕ} {T : Type*} [TopologicalSpace T]
     (A : CoefficientPath period q T) : C(T, SobolevSpace period q →L[ℝ] SobolevSpace period q) :=
   ⟨fun t => coefficientSobolevOperator period (A.jet t), A.continuous⟩
 

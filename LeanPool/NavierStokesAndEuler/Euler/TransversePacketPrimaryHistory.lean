@@ -25,7 +25,7 @@ The actual compact-terminal source history is the manuscript's pointwise
 stationary history multiplied by the literal cutoff and periodic wave.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -99,7 +99,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -24,7 +24,7 @@ section
 
 /-! Exact angular mean and raw corrector identities for the constructed source profiles. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -80,7 +80,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -162,7 +162,7 @@ section
 
 /-! The literal packet sums and their genuine first derivatives match the graded assembly. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

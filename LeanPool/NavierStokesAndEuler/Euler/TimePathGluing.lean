@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
 
 /-! Exact pasting of actual continuous solution paths on adjacent compact time intervals. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

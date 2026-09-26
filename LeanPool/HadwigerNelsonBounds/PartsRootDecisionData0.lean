@@ -9,7 +9,7 @@ public import LeanPool.HadwigerNelsonBounds.PartsRootDecisionCore
 
 /-! Generated root-decision chunks 0 through 3. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

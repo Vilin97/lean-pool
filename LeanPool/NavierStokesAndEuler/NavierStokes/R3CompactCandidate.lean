@@ -35,7 +35,7 @@ Euclidean space. They bound the full one-sided space-time derivative tensors,
 including time zero, and allow every real decay exponent.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -130,7 +130,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

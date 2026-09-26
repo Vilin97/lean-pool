@@ -41,7 +41,7 @@ orthogonality and string recovery for Bernstein-Vazirani).
   with `finalJointState_eq_finalState_tensor` factoring off the `|−⟩` target.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -61,7 +61,7 @@ abbrev Oracle (n : ℕ) : Type := Fin (2 ^ n) → Bool
 abbrev oracleGate (f : Oracle n) : Gate (n + 1) := Gate.xorOracle f
 
 /-- The phase `(-1)^{f x}`, written as a complex scalar. -/
-def phaseSign (f : Oracle n) (x : Fin (2 ^ n)) : ℂ :=
+@[expose] def phaseSign (f : Oracle n) (x : Fin (2 ^ n)) : ℂ :=
   if f x then -1 else 1
 
 /-! ### The Walsh-Hadamard transform -/
@@ -72,11 +72,11 @@ independent of it. -/
 def bit (x : Fin (2 ^ n)) (k : Fin n) : Bool := x.val.testBit k.val
 
 /-- Parity of the bitwise inner product of two basis labels. -/
-def dotParity (x y : Fin (2 ^ n)) : Bool :=
+@[expose] def dotParity (x y : Fin (2 ^ n)) : Bool :=
   Odd ((Finset.univ.filter fun k : Fin n => bit x k && bit y k).card)
 
 /-- The Walsh-Hadamard sign `(-1)^{x · y}`. -/
-def walshSign (x y : Fin (2 ^ n)) : ℂ := if dotParity x y then -1 else 1
+@[expose] def walshSign (x y : Fin (2 ^ n)) : ℂ := if dotParity x y then -1 else 1
 
 /-- `(√(2^n))⁻¹`, the normalization scalar of the `n`-qubit Hadamard layer. -/
 def invSqrtCard (n : ℕ) : ℂ := (Real.sqrt ((2 ^ n : ℕ) : ℝ) : ℂ)⁻¹

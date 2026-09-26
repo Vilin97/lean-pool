@@ -29,7 +29,7 @@ Unit: jacobian-functoriality. The remaining challenge exports
 Same-universe convention throughout (see `PeriodMaps.lean`'s universe warning).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Module

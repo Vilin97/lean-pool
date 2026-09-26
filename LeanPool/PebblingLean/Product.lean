@@ -18,7 +18,7 @@ result here is the slice simulation lemma: a pebbling sequence in one factor of
 a Cartesian product can be executed inside a fixed slice of the product.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 
@@ -52,7 +52,7 @@ variable {V : Type u} {W : Type v}
 
 /-- A product distribution assembled from first-factor fibers indexed by the
 second factor.  The value at `(x, z)` is the value of the `z`-fiber at `x`. -/
-def fibersDistribution (F : W → Pebbling V) : Pebbling (V × W) :=
+@[expose] def fibersDistribution (F : W → Pebbling V) : Pebbling (V × W) :=
   fun p => F p.2 p.1
 
 @[simp]

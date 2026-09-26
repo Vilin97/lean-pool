@@ -17,7 +17,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
 /-! The literal forward finite packet is its actual primary plus a
 remainder with a proved physical C1 bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -53,7 +53,7 @@ theorem forwardInitializedProfiles_one_mean :
 
 /-- Forward initialized primary remainder, given by `forwardInitializedVelocity M D δ hδ ξ hs α
 N κ - κ • vector D (initialData D δ hδ (α • ξ) hs)`. -/
-def forwardInitializedPrimaryRemainder (N : ℕ) (κ : ℝ) : VectorField :=
+@[expose] def forwardInitializedPrimaryRemainder (N : ℕ) (κ : ℝ) : VectorField :=
   forwardInitializedVelocity M D δ hδ ξ hs α N κ -
     κ • vector D (initialData D δ hδ (α • ξ) hs)
 

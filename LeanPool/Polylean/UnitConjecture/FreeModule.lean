@@ -29,7 +29,7 @@ We also give an alternative description via moves, which is more convenient for 
 properties.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 
@@ -70,7 +70,7 @@ The definition of coordinate functions is in two steps. We first define the coor
 -/
 
 /-- Coordinates for a formal sum with one term. -/
-def monomCoeff (R X : Type _) [Ring R] [DecidableEq X] (x₀ : X) (nx : R × X) : R :=
+@[expose] def monomCoeff (R X : Type _) [Ring R] [DecidableEq X] (x₀ : X) (nx : R × X) : R :=
   match (nx.2 == x₀) with
   | true => nx.1
   | false => 0
@@ -98,7 +98,7 @@ theorem monom_coords_at_zero (x₀ x : X) : monomCoeff R X x₀ (0, x) = 0 := by
   cases x == x₀ <;> rfl
 
 /-- The coordinates for a formal sum. -/
-def _root_.LeanPool.Polylean.FormalSum.coords : FormalSum R X → X → R
+@[expose] def _root_.LeanPool.Polylean.FormalSum.coords : FormalSum R X → X → R
   | [], _ => 0
   | h :: t, x₀ => monomCoeff R X x₀ h + coords t x₀
 

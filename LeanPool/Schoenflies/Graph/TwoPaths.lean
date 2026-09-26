@@ -32,7 +32,7 @@ one cycle at a time, and any later argument that has to see a subdivided closed 
 * `Graph.isTwoConnected_of_two_paths` — the cycle base case of `lem:union-two-connected`.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

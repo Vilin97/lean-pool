@@ -80,7 +80,7 @@ lemmas of this module, and all three are statements about `Γ`, never about the 
 Neither is a restatement of a goal of this module, and both are true.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph

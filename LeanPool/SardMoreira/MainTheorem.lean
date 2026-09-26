@@ -21,7 +21,7 @@ import Mathlib.Topology.Separation.CompletelyRegular
 # LeanPool.SardMoreira.MainTheorem
 -/
 
-@[expose] public section
+public section
 
 open scoped unitInterval NNReal Topology ENNReal Pointwise
 open MeasureTheory Measure Metric

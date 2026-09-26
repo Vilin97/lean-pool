@@ -19,7 +19,7 @@ public import Mathlib.Algebra.Field.Defs
 # Category instances for `Field`.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

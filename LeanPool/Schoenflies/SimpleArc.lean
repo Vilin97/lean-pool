@@ -71,7 +71,7 @@ is a general fact about preconnected sets. Both are here only because their home
 `main`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph

@@ -18,7 +18,7 @@ public import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 open MeasureTheory MeasureTheory.Measure Set Filter
@@ -121,7 +121,7 @@ lemma eta_spatialSecond_bound_global (x₀ : Vec3) {ρ : ℝ} (hρ : 0 < ρ)
   eta_second_derivative_bound x₀ hρ y i j
 
 /-- Annulus containing the derivatives of the interior harmonic cutoff. -/
-def cutoffAnnulus (x₀ : Vec3) (ρ : ℝ) : Set Vec3 :=
+@[expose] def cutoffAnnulus (x₀ : Vec3) (ρ : ℝ) : Set Vec3 :=
   euclideanBall x₀ (3 * ρ / 4) \ euclideanClosedBall x₀ (13 * ρ / 20)
 
 private lemma cutoff_annulus_distance_for_inner_half

@@ -22,7 +22,7 @@ finite samples.
 - `boolFamilyToFinsetFamily` / `Finset.boolVCDim` : VC dimension for Boolean function families
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -33,7 +33,7 @@ noncomputable section
 /-- Expected value `∑ h, μ.prob h * f h` of a real-valued test under a finitely supported
 distribution. The base expectation primitive of the approximation layer; specialised to
 indicator tests in `boolTestExpectation`. -/
-def trueExpectation {H : Type*} [Fintype H]
+@[expose] def trueExpectation {H : Type*} [Fintype H]
     (μ : FinitePMF H) (f : H → ℝ) : ℝ :=
   ∑ h : H, μ.prob h * f h
 
@@ -41,7 +41,7 @@ def trueExpectation {H : Type*} [Fintype H]
 indicator embedding `if f h then 1 else 0`. The central quantity of the finite-VC
 approximation layer: a TV bound on distributions translates to a uniform bound on test
 expectations via `expectation_approx_of_tv`. -/
-def boolTestExpectation {H : Type*} [Fintype H]
+@[expose] def boolTestExpectation {H : Type*} [Fintype H]
     (μ : FinitePMF H) (f : H → Bool) : ℝ :=
   trueExpectation μ (fun h => if f h then (1 : ℝ) else 0)
 
@@ -143,7 +143,7 @@ lemma boolTestExpectation_empirical_eq_avg
     {T : ℕ} (hT : 0 < T) (hs : Fin T → H) (f : H → Bool) :
     boolTestExpectation (empiricalPMF hT hs) f =
     (∑ t : Fin T, if f (hs t) then (1 : ℝ) else 0) / T := by
-  simp only [boolTestExpectation, trueExpectation, empiricalPMF]
+  simp only [boolTestExpectation, trueExpectation, empiricalPMF_prob]
   conv_lhs => arg 2; ext h; rw [div_mul_eq_mul_div]
   rw [← Finset.sum_div]
   congr 1
@@ -182,14 +182,14 @@ lemma boolGamePayoff_eq_boolTestExpectation
 accepting sets. The set-system view is what Mathlib's `Finset.Shatters` and
 `Finset.vcDim` consume, so this is the entry point from the function-class view to the
 combinatorial VC machinery. -/
-def boolFamilyToFinsetFamily {H : Type*} [Fintype H] [DecidableEq H]
+@[expose] def boolFamilyToFinsetFamily {H : Type*} [Fintype H] [DecidableEq H]
     (A : Finset (H → Bool)) : Finset (Finset H) :=
   A.image (fun f => Finset.univ.filter (fun h => f h = true))
 
 /-- VC dimension of a finite `Bool`-valued family, computed via the set-system image
 `boolFamilyToFinsetFamily` and Mathlib's `Finset.vcDim`. Declared `noncomputable`
 because the underlying `vcDim` is. -/
-noncomputable def Finset.boolVCDim {H : Type*} [Fintype H] [DecidableEq H]
+@[expose] noncomputable def Finset.boolVCDim {H : Type*} [Fintype H] [DecidableEq H]
     (A : Finset (H → Bool)) : ℕ :=
   (boolFamilyToFinsetFamily A).vcDim
 

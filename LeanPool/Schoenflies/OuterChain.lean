@@ -101,7 +101,7 @@ assumed.
   statement with nothing assumed.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies
 open scoped Graph

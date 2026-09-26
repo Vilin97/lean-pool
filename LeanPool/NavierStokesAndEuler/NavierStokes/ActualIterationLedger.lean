@@ -19,7 +19,7 @@ This module does not assert the existence of correction cycles or their
 native class estimates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -143,14 +143,14 @@ theorem all_cycle_margins (n : ℕ) {κ : ℝ} (hκ : κ ≤ 1 / 100000) :
 
 /-- Conservative class for the actual wave potential.  The local inverse
 frequency can give an additional half power, which is not needed here. -/
-noncomputable def waveNative (κ : ℝ) (j : ℕ) : ℝ :=
+@[expose] noncomputable def waveNative (κ : ℝ) (j : ℕ) : ℝ :=
   ExponentLedger.waveExponent (inputSigma j) - κ
 
 /-- Wave pressure native, given by `waveNative κ j + 1 / 2`. -/
-noncomputable def wavePressureNative (κ : ℝ) (j : ℕ) : ℝ := waveNative κ j + 1 / 2
+@[expose] noncomputable def wavePressureNative (κ : ℝ) (j : ℕ) : ℝ := waveNative κ j + 1 / 2
 
 /-- Mean native, given by `ExponentLedger.meanUpdateExponent (inputSigma j) κ`. -/
-noncomputable def meanNative (κ : ℝ) (j : ℕ) : ℝ :=
+@[expose] noncomputable def meanNative (κ : ℝ) (j : ℕ) : ℝ :=
   ExponentLedger.meanUpdateExponent (inputSigma j) κ
 
 /-- Radial native, given by `meanNative κ j + 1`. -/

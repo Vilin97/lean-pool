@@ -11,7 +11,7 @@ public import Mathlib.Order.Hom.Basic
 # LeanPool.BruhatTits.Utils.Order
 -/
 
-@[expose] public section
+public section
 
 variable {α β : Type*} [PartialOrder α] [PartialOrder β] (f : α ≃o β)
 

@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryParentCost
 polynomial dependence on the parent label constant and reciprocal
 history length. The small physical scale remains a multiplicative factor. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

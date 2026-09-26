@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedAssembly
 
 /-! Joint parity carried by the actual profile fields and their true time derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

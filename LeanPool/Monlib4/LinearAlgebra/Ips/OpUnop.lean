@@ -19,7 +19,7 @@ swaps the tensor factors while keeping the `ᵒᵖ` in place.
 
 -/
 
-@[expose] public section
+public section
 
 
 variable {R A : Type _} [CommSemiring R] [AddCommMonoid A] [Module R A]

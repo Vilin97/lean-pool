@@ -30,7 +30,7 @@ Main declarations: `RS.span_real_periodSubgroup`, `RS.isZLattice_periodSubgroup_
 `RS.finrank_int_periodSubgroup`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

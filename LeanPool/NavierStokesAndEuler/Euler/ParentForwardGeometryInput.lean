@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketParentPhysicalBudgets
 actual amplification geometry. The large parent shear needs no short-time
 assumption of the form CM*T≤1/2. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

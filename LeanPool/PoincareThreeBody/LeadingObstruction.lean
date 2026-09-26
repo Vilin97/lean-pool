@@ -18,7 +18,7 @@ is isolated as `ClassicalDisturbingNondegeneracy`: the resonant disturbing avera
 nonconstant at every rational resonance under consideration.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

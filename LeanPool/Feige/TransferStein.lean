@@ -16,7 +16,7 @@ The outer integrability assumptions are stated explicitly, making the
 result usable independently of how the law of `Y` is presented.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real Set
 
@@ -27,11 +27,11 @@ namespace TransferStein
 open TransferTestFunctions
 
 /-- Real-valued conditional lower-tail transfer integrand `u`. -/
-noncomputable def uTailIntegrand (d z : ℝ) : ℝ :=
+@[expose] noncomputable def uTailIntegrand (d z : ℝ) : ℝ :=
   if 0 ≤ z then exp (-z / d) else 0
 
 /-- Real-valued conditional upper-tail transfer integrand `v`. -/
-noncomputable def vTailIntegrand (c z : ℝ) : ℝ :=
+@[expose] noncomputable def vTailIntegrand (c z : ℝ) : ℝ :=
   if z < 0 then exp (z / c) else 0
 
 /-- The formal derivative of `φ`, multiplied by `d`, is the conditional
@@ -84,20 +84,20 @@ theorem c_mul_integral_transferPsiDeriv
   exact Filter.Eventually.of_forall fun z => c_mul_transferPsiDeriv hc
 
 /-- The positive `φ` expectation conditional on `Y = y`. -/
-noncomputable def phiPlus (d a y : ℝ) : ℝ :=
+@[expose] noncomputable def phiPlus (d a y : ℝ) : ℝ :=
   ∫ e : ℝ in Ioi 0, transferPhi d (y + a * e) * exp (-e)
 
 /-- The negative `φ` expectation conditional on `Y = y`. -/
-noncomputable def phiMinus (d b y : ℝ) : ℝ :=
+@[expose] noncomputable def phiMinus (d b y : ℝ) : ℝ :=
   ∫ e : ℝ in Ioi 0, transferPhi d (y - b * e) * exp (-e)
 
 /-- The positive derivative expectation conditional on `Y = y`. -/
-noncomputable def phiDerivPlus (d a y : ℝ) : ℝ :=
+@[expose] noncomputable def phiDerivPlus (d a y : ℝ) : ℝ :=
   ∫ e : ℝ in Ioi 0,
     a * transferPhiDeriv d (y + a * e) * exp (-e)
 
 /-- The negative derivative expectation conditional on `Y = y`. -/
-noncomputable def phiDerivMinus (d b y : ℝ) : ℝ :=
+@[expose] noncomputable def phiDerivMinus (d b y : ℝ) : ℝ :=
   ∫ e : ℝ in Ioi 0,
     b * transferPhiDeriv d (y - b * e) * exp (-e)
 
@@ -177,20 +177,20 @@ theorem integral_phi_two_sided_prod
   simpa [phiPlus, phiMinus, phiDerivPlus, phiDerivMinus] using hiter
 
 /-- The positive `ψ` expectation conditional on `Y = y`. -/
-noncomputable def psiPlus (c a y : ℝ) : ℝ :=
+@[expose] noncomputable def psiPlus (c a y : ℝ) : ℝ :=
   ∫ e : ℝ in Ioi 0, transferPsi c (y + a * e) * exp (-e)
 
 /-- The negative `ψ` expectation conditional on `Y = y`. -/
-noncomputable def psiMinus (c b y : ℝ) : ℝ :=
+@[expose] noncomputable def psiMinus (c b y : ℝ) : ℝ :=
   ∫ e : ℝ in Ioi 0, transferPsi c (y - b * e) * exp (-e)
 
 /-- The positive derivative expectation conditional on `Y = y`. -/
-noncomputable def psiDerivPlus (c a y : ℝ) : ℝ :=
+@[expose] noncomputable def psiDerivPlus (c a y : ℝ) : ℝ :=
   ∫ e : ℝ in Ioi 0,
     a * transferPsiDeriv c (y + a * e) * exp (-e)
 
 /-- The negative derivative expectation conditional on `Y = y`. -/
-noncomputable def psiDerivMinus (c b y : ℝ) : ℝ :=
+@[expose] noncomputable def psiDerivMinus (c b y : ℝ) : ℝ :=
   ∫ e : ℝ in Ioi 0,
     b * transferPsiDeriv c (y - b * e) * exp (-e)
 
@@ -286,19 +286,19 @@ noncomputable def BMinus (μ : Measure ℝ) (c b : ℝ) : ℝ :=
 /-- `u₊`, normalized as `d` times the `φ'` expectation.  Since
 `phiDerivPlus` includes the affine chain-rule factor `a`, it is divided
 out here. -/
-noncomputable def uPlus (μ : Measure ℝ) (d a : ℝ) : ℝ :=
+@[expose] noncomputable def uPlus (μ : Measure ℝ) (d a : ℝ) : ℝ :=
   (d / a) * ∫ y, phiDerivPlus d a y ∂μ
 
 /-- Analytic `u₋`. -/
-noncomputable def uMinus (μ : Measure ℝ) (d b : ℝ) : ℝ :=
+@[expose] noncomputable def uMinus (μ : Measure ℝ) (d b : ℝ) : ℝ :=
   (d / b) * ∫ y, phiDerivMinus d b y ∂μ
 
 /-- `v₊`, normalized as `c` times the `ψ'` expectation. -/
-noncomputable def vPlus (μ : Measure ℝ) (c a : ℝ) : ℝ :=
+@[expose] noncomputable def vPlus (μ : Measure ℝ) (c a : ℝ) : ℝ :=
   (c / a) * ∫ y, psiDerivPlus c a y ∂μ
 
 /-- Analytic `v₋`. -/
-noncomputable def vMinus (μ : Measure ℝ) (c b : ℝ) : ℝ :=
+@[expose] noncomputable def vMinus (μ : Measure ℝ) (c b : ℝ) : ℝ :=
   (c / b) * ∫ y, psiDerivMinus c b y ∂μ
 
 /-- The lower-test Stein identity for the analytic quantities above. -/

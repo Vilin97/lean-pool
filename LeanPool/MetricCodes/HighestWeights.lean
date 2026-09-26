@@ -13,7 +13,7 @@ public import LeanPool.MetricCodes.Interlacing
 Diamond relations, Lie irreducibility, and isotropic highest-weight constructions.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -3472,7 +3472,7 @@ structure CanonicalBoxForwardPolynomialData {r m n : ℕ}
         (Weyl.flooredWeight b (n + 1)) row
 
 /-- The canonical box adjacent fischer recurrence used in the spherical-code argument. -/
-def CanonicalBoxAdjacentFischerRecurrence {r m n : ℕ}
+@[expose] def CanonicalBoxAdjacentFischerRecurrence {r m n : ℕ}
     (a : Fin (r + 2) → ℝ) (b : Fin (r + 1) → ℝ)
     (hstable : ∀ v : RectangularVertices.Vertex (r + 1) m,
       FiniteInterlacing (n + 1)
@@ -3706,12 +3706,12 @@ def sourceColumnRoot {m : ℕ} (i j : Fin m) :
   rfl
 
 /-- The source row degree used in the spherical-code argument. -/
-def sourceRowDegree {m : ℕ}
+@[expose] def sourceRowDegree {m : ℕ}
     (d : Fin m × Fin m →₀ ℕ) (i : Fin m) : ℕ :=
   ∑ j : Fin m, d (i, j)
 
 /-- The source column degree used in the spherical-code argument. -/
-def sourceColumnDegree {m : ℕ}
+@[expose] def sourceColumnDegree {m : ℕ}
     (d : Fin m × Fin m →₀ ℕ) (j : Fin m) : ℕ :=
   ∑ i : Fin m, d (i, j)
 
@@ -4146,7 +4146,7 @@ theorem polynomialImaginaryPart_complex_smul {r n : ℕ} (c : ℂ)
     AddMonoidAlgebra.coeff_add, Finsupp.add_apply, coeff_polynomialRealPart]
 
 /-- The polynomial complex span used in the spherical-code argument. -/
-def polynomialComplexSpan {r n : ℕ}
+@[expose] def polynomialComplexSpan {r n : ℕ}
     (W : Submodule ℝ (PolynomialSpace r n)) :
     Submodule ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
   Submodule.span ℂ (polynomialComplexification '' (W : Set (PolynomialSpace r n)))
@@ -4308,7 +4308,7 @@ theorem complexAmbientCoordinateDerivation_complexification
   rw [map_mul, MvPolynomial.map_X, MvPolynomial.pderiv_map]
 
 /-- The complex ambient rotation used in the spherical-code argument. -/
-def complexAmbientRotation {r n : ℕ} (a b : Fin n) :
+@[expose] def complexAmbientRotation {r n : ℕ} (a b : Fin n) :
     Derivation ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ)
       (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
   complexAmbientCoordinateDerivation (r := r) a b -
@@ -4331,7 +4331,7 @@ theorem complexAmbientRotation_complexification
     complexAmbientCoordinateDerivation_complexification, map_sub]
 
 /-- The young real polynomial image used in the spherical-code argument. -/
-def youngRealPolynomialImage {r n : ℕ}
+@[expose] def youngRealPolynomialImage {r n : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (W : Submodule ℝ (HarmonicYoungSpace (n := n) lam)) :
     Submodule ℝ (PolynomialSpace r n) :=
@@ -4382,14 +4382,14 @@ theorem youngRealPolynomialImage_inf_orthogonal_eq_bot {r n : ℕ}
   simp only [hzzero, zero_mem]
 
 /-- The young complex polynomial span used in the spherical-code argument. -/
-def youngComplexPolynomialSpan {r n : ℕ}
+@[expose] def youngComplexPolynomialSpan {r n : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (W : Submodule ℝ (HarmonicYoungSpace (n := n) lam)) :
     Submodule ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
   polynomialComplexSpan (youngRealPolynomialImage lam W)
 
 /-- The full young complex polynomial span used in the spherical-code argument. -/
-def fullYoungComplexPolynomialSpan {r n : ℕ}
+@[expose] def fullYoungComplexPolynomialSpan {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     Submodule ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
   polynomialComplexSpan (harmonicYoungSubmodule lam)
@@ -5944,7 +5944,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung.DeterminantVectors
 open MetricCodes.Spherical.HigherYoungPenultimateRowProjectedLower
 
 /-- The arbitrary row raise tensor gram scalar used in the spherical-code argument. -/
-def arbitraryRowRaiseTensorGramScalar
+@[expose] def arbitraryRowRaiseTensorGramScalar
     {r n : ℕ} (high : Fin (r + 1) → ℕ)
     (row : Fin (r + 1)) : ℝ :=
   internalRowLowerGramScalar high row *
@@ -6658,7 +6658,7 @@ def ambientPairIndex {r n : ℕ}
   omega
 
 /-- The isotropic coordinate generator used in the spherical-code argument. -/
-def isotropicCoordinateGenerator {r n : ℕ} (h : 2 * (r + 1) ≤ n)
+@[expose] def isotropicCoordinateGenerator {r n : ℕ} (h : 2 * (r + 1) ≤ n)
     (v : Fin ((r + 1) * n)) :
     MvPolynomial (Fin ((r + 1) * n)) ℂ :=
   let a := ((finProdFinEquiv (m := r + 1) (n := n)).symm v).1

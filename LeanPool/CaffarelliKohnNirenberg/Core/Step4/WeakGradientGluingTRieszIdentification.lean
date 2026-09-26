@@ -16,7 +16,7 @@ force has the opposite sign. Uniqueness identifies these terms with an
 already chosen weak pressure derivative.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal BigOperators Topology

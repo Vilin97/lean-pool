@@ -23,7 +23,7 @@ endpoints on the frontier.  It is the face-to-face lemma behind the cone extensi
 on a triangle boundary.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -1085,7 +1085,7 @@ theorem sum_coneWeights (z : K.Vertex → ℝ) :
   simp
 
 /-- Lift a base face to the non-cone vertices. -/
-def liftFace (s : Finset K.Vertex) : Finset (Option K.Vertex) :=
+@[expose] def liftFace (s : Finset K.Vertex) : Finset (Option K.Vertex) :=
   s.map Function.Embedding.some
 
 /-- Remove the cone vertex from a cone face. -/

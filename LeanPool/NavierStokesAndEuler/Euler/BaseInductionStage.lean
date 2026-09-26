@@ -48,7 +48,7 @@ section
 /-! Exact low-order propagation for the first homogeneous packet, whose
 amplitude is delta times the desired initial shear. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -174,7 +174,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -287,7 +287,7 @@ section
 /-! The first packet's size and sign hypotheses are proved for the
 concrete base solution on its actual restricted horizon. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -362,7 +362,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -468,7 +468,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -604,7 +604,7 @@ section
 the normalized packet's gradient. At the fixed center this is the same
 quantity used by the source error bound and geometric renewal. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -675,7 +675,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -820,7 +820,7 @@ section
 /-! Exact initial frame parameters for the first normal stage: its
 coupling is one, tilt is beta, and shear is the prescribed first shear. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -918,7 +918,7 @@ section
 /-! The literal base scale constructs the first actual smooth Euler
 packet state and its localized source bounds. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1015,7 +1015,7 @@ section
 /-! The first actual packet has the precise initial frame parameters
 a=1, sigma=sqrt(beta), and the prescribed polynomial shear. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1076,7 +1076,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

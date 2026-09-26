@@ -16,7 +16,7 @@ This module binds the generic profile and physical-shear identities to the
 same finite modulation, aligned coefficient family, and covariance target.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

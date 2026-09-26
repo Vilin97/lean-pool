@@ -20,7 +20,7 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.3).
 * `h0Equiv`: the global form `H⁰(𝒰,D) ≃ L(D)` for covers of `X`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

@@ -25,7 +25,7 @@ The P5-1 correction is explicit in the theorem statement: the lower point
 does not by itself supply `0 < X < 2c`; the diameter bound does.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 

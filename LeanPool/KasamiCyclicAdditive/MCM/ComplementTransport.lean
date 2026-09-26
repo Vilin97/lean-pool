@@ -29,7 +29,7 @@ the derivative-image half-size equation at both `k` and the complementary
 parameter `n - k`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

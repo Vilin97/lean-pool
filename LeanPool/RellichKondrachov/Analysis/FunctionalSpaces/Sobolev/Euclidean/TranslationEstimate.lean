@@ -23,7 +23,7 @@ At this stage we only prove *pointwise* inequalities along the segment `t ↦ x 
 The measure-theoretic lifting to `L²` is tracked separately under `lean-103.5.2.26.5.3.2.3`.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis

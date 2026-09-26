@@ -36,7 +36,7 @@ equivalent to the six named clause predicates bundled in `IsLadderModel` — dow
 never unfold binders, `ciInf`/`ciSup`, or valuation bookkeeping again.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

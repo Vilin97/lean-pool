@@ -26,7 +26,7 @@ import Mathlib.Tactic.NormNum.OfScientific
 Here we show that given a finite GL-split proof, we can always find suitable interpolants.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 
@@ -100,7 +100,7 @@ lemma encodeVar_eq {𝕏 : Proof} {Fin_X : Fintype 𝕏.X} {x : 𝕏.X} {n : ℕ
     exact h2
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-noncomputable def equation {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x : 𝕏.X) :
+@[expose] noncomputable def equation {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x : 𝕏.X) :
     Formula := match r : r 𝕏.α x with
   | RuleApp.topₗ _ _ => ⊥
   | RuleApp.topᵣ _ _ => ⊤
@@ -1138,7 +1138,7 @@ decreasing_by
     simp [←Finset.card_sdiff_add_card_inter Y {leaf_in_Y.choose}, leaf_in]
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-noncomputable def interpolant (𝕏 : Proof) [fin_X : Fintype 𝕏.X] : Formula → Formula
+@[expose] noncomputable def interpolant (𝕏 : Proof) [fin_X : Fintype 𝕏.X] : Formula → Formula
   := partial_ <| @interpolantStrong 𝕏 _ fin_X.elems (by aesop)
 
 theorem interpolant_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x : 𝕏.X) :

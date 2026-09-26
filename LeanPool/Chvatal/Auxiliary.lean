@@ -50,7 +50,7 @@ Corollary 3.2. The independence proof uses subset induction and needs no
 arbitrary ordering of the monomials.
 -/
 
-@[expose] public section
+public section
 
 namespace Chvatal
 

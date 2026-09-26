@@ -21,7 +21,7 @@ public import LeanPool.ConnesRigidity.Core
 The crossed product component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace CrossedProduct

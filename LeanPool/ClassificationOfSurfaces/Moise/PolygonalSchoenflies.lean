@@ -28,7 +28,7 @@ Only the polygonal case is stated.  The full Schoenflies theorem (Moise Ch. 9) c
 triangulation theorem in Moise and is not on this route's critical path.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

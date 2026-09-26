@@ -19,7 +19,7 @@ section
 geometry. The source normal, primary and all ODEs are the actual forward
 fields, including exact initial data at time zero. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -166,7 +166,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -18,7 +18,7 @@ when `tau` and `z` tend to zero together. The value assigned outside the
 positive-time domain is never used in this assertion.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

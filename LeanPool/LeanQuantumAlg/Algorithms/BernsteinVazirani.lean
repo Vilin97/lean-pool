@@ -50,7 +50,7 @@ disagree).
   circuit is exactly `|s⟩ ⊗ |−⟩`: one query recovers the hidden string.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

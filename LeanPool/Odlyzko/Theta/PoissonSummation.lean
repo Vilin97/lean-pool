@@ -13,7 +13,7 @@ import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

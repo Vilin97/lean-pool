@@ -36,4 +36,4 @@ Umbrella module for the quantum-kernel development; re-exports the genuine resul
   (`eqk_realizes`, Gil-Fuster 2023).
 -/
 
-@[expose] public section
+public section

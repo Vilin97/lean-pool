@@ -20,7 +20,7 @@ bounded velocity and Grönwall estimate will give joint continuity in both
 times and the initial point.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

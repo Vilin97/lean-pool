@@ -14,7 +14,7 @@ constant is the same explicit q-dependent constant as in Caccioppoli.
 Neither constant depends on the domain or the solution.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open CKN.Foundation.Parabolic

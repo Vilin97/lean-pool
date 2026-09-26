@@ -41,7 +41,7 @@ Jacobi identity, Lie algebra 2-cocycle condition
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 

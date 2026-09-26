@@ -21,7 +21,7 @@ linear programs. The only exception is the weak duality theorem, which is proved
 to allow weaker assumptions.
 -/
 
-@[expose] public section
+public section
 
 
 /-- Linear program in the standard form. Variables are of type `J`. Conditions are indexed by

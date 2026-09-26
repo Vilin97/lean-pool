@@ -56,7 +56,7 @@ orthogonal to the
 neighbourhood-system machinery.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -83,6 +83,7 @@ def pos (a : Tree n) : Bool := a []
 `σ`. Defined so
 that `(aσ)τ = a(στ)`; the `pos`-label at node `τ` of `aσ` is the label at node
 `στ` of `a`. -/
+@[expose]
 def select (a : Tree n) (σ : List (Fin n)) : Tree n := fun τ => a (σ ++ τ)
 
 @[simp] theorem select_apply (a : Tree n) (σ τ : List (Fin n)) : select a σ τ = a (σ ++ τ) := rfl

@@ -34,7 +34,7 @@ allows any seed cutoff with the same order-zero profile and outer radius,
 including the entrance-aligned scheme.
 -/
 
-@[expose] public section
+public section
 
 namespace NavierStokes.ModulatedExterior
 
@@ -570,7 +570,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -591,10 +591,10 @@ noncomputable def edgeExponent : ℝ := W.controls.activationTime ^ 2
 theorem edgeExponent_pos : 0 < edgeExponent W := sq_pos_of_pos W.controls.activationTime_pos
 
 /-- Log left, given by `Real.log (NominalConeAssembly.activeLeft W)`. -/
-noncomputable def logLeft : ℝ := Real.log (NominalConeAssembly.activeLeft W)
+@[expose] noncomputable def logLeft : ℝ := Real.log (NominalConeAssembly.activeLeft W)
 
 /-- Log right, given by `Real.log (NominalConeAssembly.activeRight W)`. -/
-noncomputable def logRight : ℝ := Real.log (NominalConeAssembly.activeRight W)
+@[expose] noncomputable def logRight : ℝ := Real.log (NominalConeAssembly.activeRight W)
 
 /-- Annulus, given by `Ioo (NominalConeAssembly.activeLeft W) (NominalConeAssembly.activeRight
 W) ×ˢ Icc (-1 : ℝ) 1`. -/
@@ -602,10 +602,11 @@ noncomputable def annulus : Set Inner :=
   Ioo (NominalConeAssembly.activeLeft W) (NominalConeAssembly.activeRight W) ×ˢ Icc (-1 : ℝ) 1
 
 /-- Weight, given by `BaseResidual.activeZeta (edgeExponent W) (logLeft W) (logRight W)`. -/
-noncomputable def weight : Inner → ℝ :=
+@[expose] noncomputable def weight : Inner → ℝ :=
   BaseResidual.activeZeta (edgeExponent W) (logLeft W) (logRight W)
 
 /-- Edge distance, given by `BaseResidual.activeDelta (logLeft W) (logRight W)`. -/
+@[expose]
 noncomputable def edgeDistance : Inner → ℝ := BaseResidual.activeDelta (logLeft W) (logRight W)
 
 /-- Box radius, given by `max upper (NominalConeAssembly.activeRight W)`. -/
@@ -667,6 +668,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
   (v : ModulatedProfileAssembly.Witness ld)
 
 /-- Coefficients, given by `EntranceAlignedBase.modulatedCoefficients H v`. -/
+@[expose]
 noncomputable def coefficients : Coefficients := EntranceAlignedBase.modulatedCoefficients H v
 
 /-- Profile sequence, given by `asSlowProfiles (EntranceAlignedBase.modulatedScheme H v)`. -/
@@ -686,6 +688,7 @@ theorem stressZeroCore : BaseResidual.StressZeroCore (coefficients H v)
   EntranceAlignedBase.modulated_stressZeroCore H v
 
 /-- The literal stress of the same finite modulated profile. -/
+@[expose]
 noncomputable def leadingStress : Inner → Inner := LeadingStressWeights.stress v.profiles F.data.h
 
 theorem leadingStress_smoothAt {p : Inner} (hX : 0 < p.1) (heta : p.2 ∈ Icc (-1 : ℝ) 1) :
@@ -798,6 +801,7 @@ theorem spectral_cones (hcone : LeadingStressWeights.FullTrueCone v)
   AlignedProfileSpectralCone.modulated_spectral_cones H v hcone hT hR hw.1.1 hw.1.2
 
 /-- The actual covariance target, including its positive chart factor. -/
+@[expose]
 noncomputable def covarianceTarget (q : ℝ) (N : ℕ) (U : PartitionedCovariance.UnsignedLabel)
     (p : PhaseCalculus.Slow) : MovingFrameODE.Plane :=
   let w := (BaseChartJets.normalizedCoordinates F.data.h p).2
@@ -851,12 +855,12 @@ theorem weighted_bound (upper : ℝ) (B : ℕ) :
 
 /-- Velocity, given by `baseVelocity (scales H v upper B) F.data.h W.axis.normalization
 (coefficients H v)`. -/
-noncomputable def velocity (upper : ℝ) (B : ℕ) : ProblemStatement.VelocityField :=
+@[expose] noncomputable def velocity (upper : ℝ) (B : ℕ) : ProblemStatement.VelocityField :=
   baseVelocity (scales H v upper B) F.data.h W.axis.normalization (coefficients H v)
 
 /-- Pressure, given by `basePressure (scales H v upper B) F.data.h W.axis.normalization
 (coefficients H v)`. -/
-noncomputable def pressure (upper : ℝ) (B : ℕ) : ProblemStatement.PressureField :=
+@[expose] noncomputable def pressure (upper : ℝ) (B : ℕ) : ProblemStatement.PressureField :=
   basePressure (scales H v upper B) F.data.h W.axis.normalization (coefficients H v)
 
 /-- Vector potential, given by `ConstructedSlowBase.potential (scales H v upper B) F.data.h

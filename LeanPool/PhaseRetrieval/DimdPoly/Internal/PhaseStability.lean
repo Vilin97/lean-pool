@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # PhaseStability -/
 
-@[expose] public section
+public section
 
 
 open MeasureTheory

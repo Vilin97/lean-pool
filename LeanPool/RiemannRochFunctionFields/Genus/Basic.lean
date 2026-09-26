@@ -30,7 +30,7 @@ This file defines the genus of a function field and the specialty index `i(D)`.
 * `FunctionField.deg_polarX_eq_finrank`
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 
@@ -50,7 +50,7 @@ variable [IsFullConstantField k K]
 local instance instDecidableEqRatFuncGenus : DecidableEq k⟮X⟯ := Classical.decEq _
 
 /-- The defect `deg D + 1 − ℓ(D)`. -/
-noncomputable def defect (D : DivisorA k K) : ℤ :=
+@[expose] noncomputable def defect (D : DivisorA k K) : ℤ :=
   deg k K D + 1 - ell k K D
 
 /-- Stichtenoth 1.4.11 for the chart variable `X_K` (equality; ≤ half proved in `Polar.lean`). -/
@@ -265,7 +265,7 @@ theorem indexOfSpecialty_eq (D : DivisorA k K) :
   omega
 
 /-- `finrank k (A_K ⧸ (A(D) + diag(K)))`. -/
-noncomputable def finrankAdeleQuotient (D : DivisorA k K) : ℕ :=
+@[expose] noncomputable def finrankAdeleQuotient (D : DivisorA k K) : ℕ :=
   Module.finrank k <|
     (AdeleSpace k K) ⧸ (adeleFilt k K D + diagonalSubmodule k K)
 

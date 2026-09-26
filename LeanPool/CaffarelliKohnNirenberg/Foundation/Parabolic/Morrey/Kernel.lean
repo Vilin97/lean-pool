@@ -16,7 +16,7 @@ potential estimates and expose the dyadic shell geometry used by later
 integral estimates.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Metric
 open scoped ENNReal NNReal Topology
@@ -27,20 +27,22 @@ noncomputable section
 namespace CKN.Foundation.Parabolic.Morrey
 
 /-- The parabolic gauge used by the order-`β` Riesz kernel. -/
-def parabolicRho₂ (z w : ParabolicPoint) : ℝ :=
+@[expose] def parabolicRho₂ (z w : ParabolicPoint) : ℝ :=
   Real.sqrt |z.2 - w.2| + vec3EuclideanNorm (z.1 - w.1)
 
 /-- The order-`β` parabolic Riesz kernel as an extended nonnegative function. -/
+@[expose]
 def parabolicRieszKernel (β : ℝ) (z w : ParabolicPoint) : ℝ≥0∞ :=
   (ENNReal.ofReal (parabolicRho₂ z w)) ^ (-(5 - β))
 
 /-- The nonnegative parabolic Riesz potential. -/
+@[expose]
 def parabolicRieszPotential (β : ℝ) (f : ParabolicPoint → ℝ)
     (z : ParabolicPoint) : ℝ≥0∞ :=
   ∫⁻ w, parabolicRieszKernel β z w * ENNReal.ofReal |f w|
 
 /-- The shell with inner radius `2^k R` and outer radius `2^(k+1) R`. -/
-def parabolicRieszShell (R : ℝ) (k : ℤ) (z : ParabolicPoint) : Set ParabolicPoint :=
+@[expose] def parabolicRieszShell (R : ℝ) (k : ℤ) (z : ParabolicPoint) : Set ParabolicPoint :=
   {w | (2 : ℝ) ^ (k : ℝ) * R ≤ parabolicRho₂ z w ∧
     parabolicRho₂ z w < (2 : ℝ) ^ ((k : ℝ) + 1) * R}
 

@@ -32,7 +32,7 @@ It lives in its own file so that `Geometry/EvenCase.lean`, which proves
 `Assembly/GeometricChain.lean` without an import cycle.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive
 

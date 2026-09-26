@@ -25,7 +25,7 @@ import Mathlib.Combinatorics.Matroid.Init
 
 /-! # Definitions -/
 
-@[expose] public section
+public section
 
 
 open Complex MeasureTheory Real Finset
@@ -51,7 +51,7 @@ abbrev Circle := AddCircle T
 def posPart (x : ℝ) : ℝ := max x 0
 
 /-- The signed modulus defect imported from the Fock-space argument. -/
-def rho (w : ℂ) : ℝ := |‖(1 : ℂ) + w‖ - 1|
+@[expose] def rho (w : ℂ) : ℝ := |‖(1 : ℂ) + w‖ - 1|
 
 /-- The distinguished basis vector `Φ₀(z) = \bar z`. -/
 def phi0 (z : ℂ) : ℂ := conj z
@@ -71,16 +71,16 @@ def phi : ℕ → ℂ → ℂ
               Real.sqrt ((Nat.factorial (Nat.succ n) : ℕ) : ℝ)) : ℂ)
 
 /-- The weighted inner product on `L²_γ(ℂ)`. -/
-def weightedInner (F G : ℂ → ℂ) : ℂ :=
+@[expose] def weightedInner (F G : ℂ → ℂ) : ℂ :=
   (1 / Real.pi : ℂ) *
     ∫ z, F z * conj (G z) * (Real.exp (-‖z‖ ^ 2) : ℂ) ∂(volume : Measure ℂ)
 
 /-- The weighted squared norm on `L²_γ(ℂ)`. -/
-def weightedNormSq (F : ℂ → ℂ) : ℝ :=
+@[expose] def weightedNormSq (F : ℂ → ℂ) : ℝ :=
   (1 / Real.pi) * ∫ z, ‖F z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) ∂(volume : Measure ℂ)
 
 /-- The weighted norm on `L²_γ(ℂ)`. -/
-def weightedNorm (F : ℂ → ℂ) : ℝ := Real.sqrt (weightedNormSq F)
+@[expose] def weightedNorm (F : ℂ → ℂ) : ℝ := Real.sqrt (weightedNormSq F)
 
 /-- The pointwise modulus defect relative to a background function `F₀`. -/
 def modulusDefect (F0 G : ℂ → ℂ) (z : ℂ) : ℝ := |‖F0 z + G z‖ - ‖F0 z‖|
@@ -145,10 +145,10 @@ def circleDefectNormSq (F0 G : Circle → ℂ) : ℝ :=
   ∫ t, (circleModulusDefect F0 G t) ^ 2 ∂AddCircle.haarAddCircle
 
 /-- The annulus `A_j = { z : j ≤ |z| < j + 1 }`. -/
-def annulus (j : ℕ) : Set ℂ := {z | (j : ℝ) ≤ ‖z‖ ∧ ‖z‖ < ((j + 1 : ℕ) : ℝ)}
+@[expose] def annulus (j : ℕ) : Set ℂ := {z | (j : ℝ) ≤ ‖z‖ ∧ ‖z‖ < ((j + 1 : ℕ) : ℝ)}
 
 /-- The weighted squared mass of a function on annulus `A_j`. -/
-def annulusIntegralSq (F : ℂ → ℂ) (j : ℕ) : ℝ :=
+@[expose] def annulusIntegralSq (F : ℂ → ℂ) (j : ℕ) : ℝ :=
   (1 / Real.pi) *
     ∫ z in annulus j, ‖F z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) ∂(volume : Measure ℂ)
 
@@ -156,7 +156,7 @@ def annulusIntegralSq (F : ℂ → ℂ) (j : ℕ) : ℝ :=
 def squareBlock (ℓ : ℕ) : Finset ℕ := Finset.Ico (ℓ ^ 2) ((ℓ + 1) ^ 2)
 
 /-- The block index of a positive Hermite mode. -/
-def blockIndex (n : ℕ) : ℕ := Nat.sqrt n
+@[expose] def blockIndex (n : ℕ) : ℕ := Nat.sqrt n
 
 /-- The `ℓ`-th block of a finite Hermite perturbation. -/
 def blockPiece {D : ℕ} (a : Fin D → ℂ) (ℓ : ℕ) : ℂ → ℂ :=

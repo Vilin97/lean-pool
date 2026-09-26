@@ -41,7 +41,7 @@ surface hypotheses throughout (`CONVENTIONS.md`).
   nonconstant `toP1 f`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 open Filter Set Function Topology

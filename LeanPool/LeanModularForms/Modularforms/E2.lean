@@ -14,7 +14,7 @@ import Mathlib.NumberTheory.ModularForms.EisensteinSeries.E2.Transform
 /-! # E2 -/
 
 
-@[expose] public section
+public section
 
 open ModularForm UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
   Metric Filter Function Complex MatrixGroups

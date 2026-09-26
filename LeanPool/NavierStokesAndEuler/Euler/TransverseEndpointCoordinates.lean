@@ -21,7 +21,7 @@ Equation (10), already proved for that solution, provides its genuine time
 derivative; the bounded H¹ reconstruction recovers the actual history path.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

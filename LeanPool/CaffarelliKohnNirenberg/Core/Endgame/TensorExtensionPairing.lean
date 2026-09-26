@@ -14,7 +14,7 @@ integrability justifies the finite-sum interchanges without compact support
 of the tensor inputs or any condition on chosen Lp representatives.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal Topology BigOperators

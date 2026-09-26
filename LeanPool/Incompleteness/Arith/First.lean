@@ -12,7 +12,7 @@ import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # First -/
 
-@[expose] public section
+public section
 
 
 

@@ -98,7 +98,7 @@ There is no blueprint label for this statement: like the closed-curve realizatio
   same at the call site of `thm:general-crosscut`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 

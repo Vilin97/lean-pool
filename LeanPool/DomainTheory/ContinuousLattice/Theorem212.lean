@@ -39,7 +39,7 @@ idempotent on a complete lattice form a complete lattice
 (`IdemFix.completeLattice`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.ContinuousLattice
 

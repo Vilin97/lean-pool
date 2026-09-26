@@ -19,7 +19,7 @@ physical estimate is then the center-independent single-carrier estimate,
 followed by the existing bounded overlap estimate for the outer labels.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -88,21 +88,21 @@ structure CopyFamily (H : ℕ) (K : Type*) where
   amplitude : K → WaveIndex H → LiftPoint → ℂ
 
 /-- Copy, given by `⟨f.gap, f.carrier k, f.amplitude k⟩`. -/
-noncomputable def CopyFamily.copy {H : ℕ} {K : Type*} (f : CopyFamily H K) (k : K) :
+@[expose] noncomputable def CopyFamily.copy {H : ℕ} {K : Type*} (f : CopyFamily H K) (k : K) :
     WaveFamily H := ⟨f.gap, f.carrier k, f.amplitude k⟩
 
 /-- Term, given by `(f.copy k).term a h r0 I`. -/
-noncomputable def CopyFamily.term {H : ℕ} {K : Type*} (f : CopyFamily H K)
+@[expose] noncomputable def CopyFamily.term {H : ℕ} {K : Type*} (f : CopyFamily H K)
     (a h r0 : ℝ) (I : WaveIndex H) (k : K) : SpaceTime → ℂ :=
   (f.copy k).term a h r0 I
 
 /-- Sum full local carriers, including their individual phases. -/
-noncomputable def CopyFamily.periodized {H : ℕ} {K : Type*} (f : CopyFamily H K)
+@[expose] noncomputable def CopyFamily.periodized {H : ℕ} {K : Type*} (f : CopyFamily H K)
     (a h r0 : ℝ) (I : WaveIndex H) (w : SpaceTime) : ℂ :=
   ∑' k, f.term a h r0 I k w
 
 /-- Sum, given by `∑ᶠ I, f.periodized a h r0 I w`. -/
-noncomputable def CopyFamily.sum {H : ℕ} {K : Type*} (f : CopyFamily H K)
+@[expose] noncomputable def CopyFamily.sum {H : ℕ} {K : Type*} (f : CopyFamily H K)
     (a h r0 : ℝ) (w : SpaceTime) : ℂ :=
   ∑ᶠ I, f.periodized a h r0 I w
 
@@ -417,7 +417,7 @@ theorem CommonChart.amplitude_bound {s : StripData D} {α σ : ℝ}
     _ = _ := by rw [Real.rpow_add hQ, pow_add, mul_pow, ← pow_mul]; ring
 
 /-- Copy band domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
-noncomputable def copyBandDomain {V : Type*} [NormedAddCommGroup V]
+@[expose] noncomputable def copyBandDomain {V : Type*} [NormedAddCommGroup V]
     (U : K → BandLabel → Set V) (hU : ∀ k L, IsOpen (U k L)) :
     PhaseJetBounds.Domain (K × BandLabel) V where
   scale i := ChartScales.S i.2.val.1
@@ -648,7 +648,7 @@ theorem RegularFamily.sum_support (hr : RegularFamily f a b h r0 Z Δ)
     (hr.copy k).term_support I w hw hk⟩
 
 /-- Vector sum, given by `∑ i : Fin 3, realCoordinate i ((f i).sum a h r0 w)`. -/
-noncomputable def vectorSum (f : Fin 3 → CopyFamily H K) (a h r0 : ℝ)
+@[expose] noncomputable def vectorSum (f : Fin 3 → CopyFamily H K) (a h r0 : ℝ)
     (w : SpaceTime) : Space := ∑ i : Fin 3, realCoordinate i ((f i).sum a h r0 w)
 
 theorem vectorSum_smooth {f : Fin 3 → CopyFamily H K}

@@ -20,7 +20,7 @@ The target-manifold constraint is intentionally absent.  The monotonicity proof
 uses only this stationary package.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

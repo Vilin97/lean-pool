@@ -24,7 +24,7 @@ compact Riemann surface has genus `0`) into the exact backward-headline signatur
 Main declaration: `RS.SphereTopology.genus_eq_zero_of_homeo_sphere`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

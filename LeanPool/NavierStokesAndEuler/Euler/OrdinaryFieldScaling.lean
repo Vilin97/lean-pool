@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 /-! Literal scalar multiplication of smooth ordinary L² fields and all
 of their genuine spatial derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -14,21 +14,22 @@ Paper-independent quantifier patterns for generation from positive data over
 an arbitrary example type.
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.Generic
 
 /-- Every language in the class is infinite. -/
+@[expose]
 def UUS (H : LanguageClass α) : Prop :=
   ∀ L, L ∈ H → L.Infinite
 
 /-- `gen` eventually generates fresh elements of every presented target. -/
-def IsLimitGenerator (gen : Generator α) (H : LanguageClass α) : Prop :=
+@[expose] def IsLimitGenerator (gen : Generator α) (H : LanguageClass α) : Prop :=
   ∀ L, L ∈ H → ∀ stream : Stream α, Presents stream L →
     ∃ T, ∀ s, T ≤ s → CorrectAt gen L stream s
 
 /-- Generation in the limit from positive presentations. -/
-def GeneratableInLimit (H : LanguageClass α) : Prop :=
+@[expose] def GeneratableInLimit (H : LanguageClass α) : Prop :=
   ∃ gen : Generator α, IsLimitGenerator gen H
 
 /-- `d` is a uniform distinct-sample threshold for `gen` on `H`. -/

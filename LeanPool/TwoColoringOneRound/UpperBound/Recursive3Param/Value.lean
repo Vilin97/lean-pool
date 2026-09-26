@@ -14,7 +14,7 @@ The final result is the dyadic rational value
 `94835 / 393216 ≈ 0.24117787679 < 24118/100000`.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring
 

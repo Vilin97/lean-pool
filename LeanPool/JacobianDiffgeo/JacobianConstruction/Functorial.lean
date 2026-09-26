@@ -23,7 +23,7 @@ blueprint unit currently owns "pullback of holomorphic `1`-forms along a holomor
 this unit's final report for the flag to the orchestrator.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

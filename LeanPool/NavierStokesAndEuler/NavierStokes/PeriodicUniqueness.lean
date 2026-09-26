@@ -19,7 +19,7 @@ The differential operators are those of `ProblemStatement`. The energy
 estimate is derived from the equations and periodic integration by parts.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

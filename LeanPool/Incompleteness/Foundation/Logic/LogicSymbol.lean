@@ -23,7 +23,7 @@ a function that preserves logical connectives.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 
@@ -341,7 +341,7 @@ variable {α : Type*}
 variable [LogicalConnective α] [LogicalConnective β]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def conjVec : {n : ℕ} → (Fin n → α) → α
+@[expose] def conjVec : {n : ℕ} → (Fin n → α) → α
   | 0,     _ => ⊤
   | _ + 1, v => v 0 ⋏ conjVec (vecTail v)
 
@@ -509,7 +509,7 @@ section «lp_section_8»
 variable [LogicalConnective α]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-noncomputable def conj (s : Finset α) : α := s.toList.conj
+@[expose] noncomputable def conj (s : Finset α) : α := s.toList.conj
 
 lemma map_conj [FunLike F α Prop] [LogicalConnective.HomClass F α Prop] (f : F) (s : Finset α) :
     f s.conj ↔ ∀ a ∈ s, f a := by
@@ -522,7 +522,7 @@ lemma map_conj_union [DecidableEq α] [FunLike F α Prop] [LogicalConnective.Hom
   aesop
 
 /-- Imported declaration from the Incompleteness formalization. -/
-noncomputable def disj (s : Finset α) : α := s.toList.disj
+@[expose] noncomputable def disj (s : Finset α) : α := s.toList.disj
 
 lemma map_disj [FunLike F α Prop] [LogicalConnective.HomClass F α Prop] (f : F) (s : Finset α) :
     f s.disj ↔ ∃ a ∈ s, f a := by

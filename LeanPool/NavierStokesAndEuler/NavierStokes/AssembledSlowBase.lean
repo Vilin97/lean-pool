@@ -22,7 +22,7 @@ All coefficient extensions in this module are constructed from the coherent
 coefficient or derivative order is selected.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -35,7 +35,7 @@ facts proved elementarily (no Čech `H1`/cochain machinery: `H1Tail D` being a l
 own docstring for the full account. riemann-roch (#28) now consumes `chiT`'s own ledger directly.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace
@@ -292,6 +292,6 @@ theorem h1T_canonical {ω₀ : MForm X} (h₀ : ω₀ ≠ 0) :
 
 /-- The tail-level `χ`. Additivity (`chiT D = chiT 0 + deg D`) is NOT delivered — see the file
 docstring. -/
-noncomputable def chiT (D : RS.Divisor X) : ℤ := (RS.l D : ℤ) - (h1T D : ℤ)
+@[expose] noncomputable def chiT (D : RS.Divisor X) : ℤ := (RS.l D : ℤ) - (h1T D : ℤ)
 
 end RS.TailDuality

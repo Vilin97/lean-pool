@@ -27,7 +27,7 @@ Induced actions on test functions: (Θf)(x) = f(Θx) = f(−t, xbar).
 Foundation for the OS3 reflection positivity axiom.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 
@@ -54,7 +54,7 @@ def timeReflectionIsometry : Matrix.orthogonalGroup (Fin STDimension) ℝ :=
   ⟨timeReflectionMatrix, timeReflectionMatrix_is_orthogonal⟩
 
 /-- The `timeReflectionLinear` declaration. -/
-def timeReflectionLinear : SpaceTime →ₗ[ℝ] SpaceTime :=
+@[expose] def timeReflectionLinear : SpaceTime →ₗ[ℝ] SpaceTime :=
 { toFun := timeReflection
   map_add' x y := by
     refine PiLp.ext fun i => ?_
@@ -70,7 +70,7 @@ def timeReflectionLinear : SpaceTime →ₗ[ℝ] SpaceTime :=
     · simp [Function.update_of_ne h] }
 
 /-- The `timeReflectionCLM` declaration. -/
-noncomputable def timeReflectionCLM : SpaceTime →L[ℝ] SpaceTime :=
+@[expose] noncomputable def timeReflectionCLM : SpaceTime →L[ℝ] SpaceTime :=
 timeReflectionLinear.toContinuousLinearMap (E := SpaceTime) (F' := SpaceTime)
 
 open InnerProductSpace
@@ -92,7 +92,7 @@ lemma timeReflection_inner_map (x y : SpaceTime) :
   simp_all
 
 /-- The `timeReflectionLE` declaration. -/
-def timeReflectionLE : SpaceTime ≃ₗᵢ[ℝ] SpaceTime :=
+@[expose] def timeReflectionLE : SpaceTime ≃ₗᵢ[ℝ] SpaceTime :=
 { toFun := timeReflection
   invFun := timeReflection  -- Time reflection is self-inverse
   left_inv := timeReflection_involutive
@@ -129,7 +129,7 @@ private lemma timeReflection_hg_upper :
   simp_all
 
 /-- The `compTimeReflection` declaration. -/
-noncomputable def compTimeReflection : TestFunctionℂ →L[ℝ] TestFunctionℂ :=
+@[expose] noncomputable def compTimeReflection : TestFunctionℂ →L[ℝ] TestFunctionℂ :=
   SchwartzMap.compCLM (𝕜 := ℝ)
     (hg := timeReflectionCLM.hasTemperateGrowth)
     (hg_upper := by exact timeReflection_hg_upper)
@@ -139,7 +139,8 @@ noncomputable def compTimeReflection : TestFunctionℂ →L[ℝ] TestFunctionℂ
     subspaces defined over ℝ, so that reflection positivity can be formulated
     without passing through complex scalars.
 -/
-noncomputable def compTimeReflectionReal : OSforGFF.TestFunction →L[ℝ] OSforGFF.TestFunction :=
+@[expose] noncomputable def compTimeReflectionReal :
+    OSforGFF.TestFunction →L[ℝ] OSforGFF.TestFunction :=
   SchwartzMap.compCLM (𝕜 := ℝ)
     (hg := timeReflectionCLM.hasTemperateGrowth)
     (hg_upper := by exact timeReflection_hg_upper)

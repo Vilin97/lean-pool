@@ -37,7 +37,7 @@ via representatives + residue-calculus's `laurentCoeffAt_fun_add`/`_const_mul`/`
 (coordination note filed to `docs/requests/canonical-forms.md`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

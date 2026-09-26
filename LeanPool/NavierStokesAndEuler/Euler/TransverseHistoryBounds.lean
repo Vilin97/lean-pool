@@ -32,7 +32,7 @@ The input called `R` below is an inverse operator; the transverse specialization
 constructs it by coercivity and discharges all of its norm bounds.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -192,7 +192,7 @@ constants below bound coefficients or their explicit frame-transport cost;
 no bound on an unknown inverse or on a supplied solution is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -292,7 +292,7 @@ theorem fixedInverse_sub_norm_le (d a r : ℝ)
   ring
 
 /-- The polynomial sensitivity of an affine terminal-coordinate solve. -/
-def endpointDifferenceCost (d i a δd δa : ℝ) : ℝ :=
+@[expose] def endpointDifferenceCost (d i a δd δa : ℝ) : ℝ :=
   (1 + 3 * d ^ 2 * i * a + 2 * d ^ 4 * i ^ 2 * a ^ 2) * δd +
     (d ^ 3 * i + d ^ 5 * i ^ 2 * a) * δa
 
@@ -378,7 +378,7 @@ section
 
 /-! Polynomial size and coefficient sensitivity of the actual source (10) generator. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -438,7 +438,7 @@ theorem generator_norm_le (q r : ℝ) (hQn : ‖Q‖ ≤ q) (hQ₁n : ‖Q₁‖
   ring
 
 /-- Only frame differences occur in the genuine generator difference. -/
-def generatorDifferenceCost (c q r δq δr : ℝ) : ℝ :=
+@[expose] def generatorDifferenceCost (c q r δq δr : ℝ) : ℝ :=
   (4*(c⁻¹)^2*q^2*r + 2*c⁻¹*r)*δq + 2*c⁻¹*q*δr
 
 theorem generator_sub_norm_le (q r : ℝ)
@@ -496,7 +496,7 @@ section
 
 /-! Uniform-time polynomial bounds from an actual L² value and generator derivative. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -519,7 +519,7 @@ def generatorTrace (B : C(Icc (0 : ℝ) T, U →L[ℝ] U)) :
   valuePart T hT + (derivativePart T hT).comp (timeMultiplier T hT B)
 
 /-- Trace cost, given by `(1+T) * (T⁻¹ + 2*b)`. -/
-def traceCost (T b : ℝ) : ℝ := (1+T) * (T⁻¹ + 2*b)
+@[expose] def traceCost (T b : ℝ) : ℝ := (1+T) * (T⁻¹ + 2*b)
 
 theorem sqrt_le_one_add (hT : 0 ≤ T) : Real.sqrt T ≤ 1+T := by
   nlinarith only [Real.sq_sqrt hT, Real.sqrt_nonneg T, sq_nonneg (Real.sqrt T-1)]
@@ -611,7 +611,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -639,11 +639,11 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
 
 /-- Slope cost, given by `r * (1+d^2*(2*r^2)*a) * (affineCost T*d)`. -/
-def slopeCost (T d a r : ℝ) : ℝ := r * (1+d^2*(2*r^2)*a) * (affineCost T*d)
+@[expose] def slopeCost (T d a r : ℝ) : ℝ := r * (1+d^2*(2*r^2)*a) * (affineCost T*d)
 
 /-- Slope difference cost, given by `r * (affineCost T * endpointDifferenceCost d (2*r^2) a δd
 δa + δd * slopeCost T d a r)`. -/
-def slopeDifferenceCost (T d a r δd δa : ℝ) : ℝ :=
+@[expose] def slopeDifferenceCost (T d a r δd δa : ℝ) : ℝ :=
   r * (affineCost T * endpointDifferenceCost d (2*r^2) a δd δa + δd * slopeCost T d a r)
 
 theorem coordinateSlope_norm_le (d a r : ℝ)
@@ -711,7 +711,7 @@ def historyCost (T c q q₁ d a r : ℝ) : ℝ :=
   q * traceCost T (2*c⁻¹*q*q₁) * slopeCost T d a r
 
 /-- History difference cost, constructed using `δq`. -/
-def historyDifferenceCost (T c q q₁ d a r δq δq₁ δH : ℝ) : ℝ :=
+@[expose] def historyDifferenceCost (T c q q₁ d a r δq δq₁ δH : ℝ) : ℝ :=
   δq * traceCost T (2*c⁻¹*q*q₁) * slopeCost T d a r +
     q * (2*(1+T)*generatorDifferenceCost c q q₁ δq δq₁*slopeCost T d a r +
       traceCost T (2*c⁻¹*q*q₁)*slopeDifferenceCost T d a r (T*δq₁+δq) (T^2*δH))

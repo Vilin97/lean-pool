@@ -14,7 +14,7 @@ This file develops the pole divisor `(x)_∞` and the key degree identity:
 `deg (polarDivisor x) = finrank k(X) K` for transcendental `x`.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 
@@ -229,7 +229,7 @@ theorem nsmul_le_nsmul_polar {D : DivisorA k K} (hD : 0 ≤ D) {j r : ℕ} (hjr 
   exact mul_le_mul_of_nonneg_right (Nat.cast_le.mpr hjr) (hD v)
 
 /-- A uniform pole bound for a finite family of functions. -/
-noncomputable def basisPoleBound {ι : Type*} [Fintype ι] (f : ι → K) : DivisorA k K :=
+@[expose] noncomputable def basisPoleBound {ι : Type*} [Fintype ι] (f : ι → K) : DivisorA k K :=
   (Finset.univ : Finset ι).sum fun i => polarDivisor k K (f i)
 
 omit [Algebra k K] [IsScalarTower k k[X] K] [IsFullConstantField k K] in
@@ -281,7 +281,7 @@ local instance instIsScalarTowerChart : IsScalarTower k k⟮X⟯ K :=
       ← IsScalarTower.algebraMap_apply k k[X] k⟮X⟯]
 
 /-- The chart variable `X_K` in `K`. -/
-noncomputable def XK : K := algebraMap k⟮X⟯ K (RatFunc.X : k⟮X⟯)
+@[expose] noncomputable def XK : K := algebraMap k⟮X⟯ K (RatFunc.X : k⟮X⟯)
 
 omit [_root_.FunctionField k K] [Algebra.IsSeparable k⟮X⟯ K] [IsFullConstantField k K] in
 theorem transcendental_XK : Transcendental k (XK k K) :=

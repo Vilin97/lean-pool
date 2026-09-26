@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientSource
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology

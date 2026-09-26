@@ -10,7 +10,7 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateLookup
 
 /-! # Canonical validity of dense certificate summary identifiers -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

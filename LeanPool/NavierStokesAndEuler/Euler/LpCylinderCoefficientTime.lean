@@ -20,7 +20,7 @@ constructed Duhamel evolution. Literal within-time derivatives of the
 coefficient fields induce true operator-path derivatives and product rules.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

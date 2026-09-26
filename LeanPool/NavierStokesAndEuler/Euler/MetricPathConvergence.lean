@@ -12,7 +12,7 @@ import Mathlib.Analysis.InnerProductSpace.Continuous
 
 /-! Uniform convergence of actual finite metric energies along continuous Hilbert-space paths. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -24,7 +24,7 @@ and
 `EuclideanAngle.angle_ge_pi_div_three_of_norm_sub_gt` (the record-angle bound).
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.FiveDistance
 

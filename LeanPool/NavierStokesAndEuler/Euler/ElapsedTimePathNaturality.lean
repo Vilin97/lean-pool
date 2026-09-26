@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTranslation
 
 /-! Bounded spatial maps and mixed derivative words commute with the actual elapsed-time join. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

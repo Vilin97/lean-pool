@@ -19,7 +19,7 @@ cut value is `∑ deg − 8`, and the weighted-cut inequality `n · (∑deg − 
 applies in the no-`2K₂` regime where the induced-`2K₂` method fails.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

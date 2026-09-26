@@ -23,16 +23,16 @@ At zero mass the planar rotating Kepler Hamiltonian in Delaunay actions is
 explicit family of resonant actions.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 /-- The rotating Kepler Hamiltonian in planar Delaunay actions. -/
-noncomputable def delaunayHamiltonian (action : ActionSpace) : ℝ :=
+@[expose] noncomputable def delaunayHamiltonian (action : ActionSpace) : ℝ :=
   -1 / (2 * (action 0) ^ 2) - action 1
 
 /-- The frequency of the rotating Kepler Hamiltonian. -/
-noncomputable def delaunayFrequency (firstAction : ℝ) : ActionSpace :=
+@[expose] noncomputable def delaunayFrequency (firstAction : ℝ) : ActionSpace :=
   ![1 / firstAction ^ 3, -1]
 
 /-- A positive Delaunay action whose Kepler frequency ratio is the positive rational `q / p`. -/
@@ -40,7 +40,7 @@ noncomputable def resonantFirstAction (p q : ℕ) : ℝ :=
   ((p : ℝ) / (q : ℝ)) ^ ((3 : ℝ)⁻¹)
 
 /-- The integer resonance vector, regarded as a real vector. -/
-def resonanceVector (p q : ℕ) : ActionSpace :=
+@[expose] def resonanceVector (p q : ℕ) : ActionSpace :=
   ![(p : ℝ), (q : ℝ)]
 
 theorem hasDerivAt_delaunayHamiltonian_firstAction {firstAction : ℝ}

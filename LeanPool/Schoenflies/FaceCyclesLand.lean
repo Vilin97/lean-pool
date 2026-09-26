@@ -78,7 +78,7 @@ Once this module is moved above `Schoenflies/FaceCyclesProof.lean`, the hypothes
 * `Graph.IsFaceCycle.eq_inside_of_isBounded'` — "in particular, every bounded face is the
   interior of its boundary cycle".
 -/
-@[expose] public section
+public section
 
 open Bornology Metric Set
 

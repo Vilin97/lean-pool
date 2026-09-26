@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureJetIdentities
 
 /-! A complete cylinder Sobolev space constructed from closed graphs of actual L² derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,14 +31,14 @@ abbrev SobolevWord (q : ℕ) := Σ n : Fin (q + 1), Fin n.val → Fin 4
 abbrev SobolevEdge (q : ℕ) := Σ n : Fin q, (Fin n.val → Fin 4) × Fin 4
 
 /-- The empty derivative word. -/
-def emptyWord (q : ℕ) : SobolevWord q := ⟨⟨0, Nat.zero_lt_succ q⟩, Fin.elim0⟩
+@[expose] def emptyWord (q : ℕ) : SobolevWord q := ⟨⟨0, Nat.zero_lt_succ q⟩, Fin.elim0⟩
 
 /-- The lower endpoint of a derivative edge. -/
-def edgeParent {q : ℕ} (e : SobolevEdge q) : SobolevWord q :=
+@[expose] def edgeParent {q : ℕ} (e : SobolevEdge q) : SobolevWord q :=
   ⟨⟨e.1.val, Nat.lt_succ_of_lt e.1.isLt⟩, e.2.1⟩
 
 /-- The upper endpoint obtained by prepending one derivative direction. -/
-def edgeChild {q : ℕ} (e : SobolevEdge q) : SobolevWord q :=
+@[expose] def edgeChild {q : ℕ} (e : SobolevEdge q) : SobolevWord q :=
   ⟨⟨e.1.val + 1, Nat.succ_lt_succ e.1.isLt⟩, Fin.cons e.2.2 e.2.1⟩
 
 variable (period : ℝ) [Fact (0 < period)]

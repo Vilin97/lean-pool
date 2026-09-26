@@ -33,7 +33,7 @@ order,
   `MeroGermOn.divisorOn`'s proof exactly.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology

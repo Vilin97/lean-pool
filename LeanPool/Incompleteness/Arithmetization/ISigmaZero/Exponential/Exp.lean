@@ -11,7 +11,7 @@ import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Exp -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»

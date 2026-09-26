@@ -22,7 +22,7 @@ Closedness of the CP cone upgrades SC18 on the enlargements to CP of the
 original `M`, including the case `p = 0` (SC21).
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 

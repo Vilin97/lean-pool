@@ -23,7 +23,7 @@ velocity therefore preserve zero mean. No pointwise mean condition is assumed
 on the solution.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

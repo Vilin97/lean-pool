@@ -12,7 +12,7 @@ import LeanPool.LowDimSolvClassification.Tactics
 # LeanPool.LowDimSolvClassification.Semidirect
 -/
 
-@[expose] public section
+public section
 
 section lie_semidirect
 

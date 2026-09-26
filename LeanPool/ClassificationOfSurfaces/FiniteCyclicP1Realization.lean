@@ -22,7 +22,7 @@ and weight one everywhere else.  `WeightedCircle` turns those weights into the e
 homeomorphism required by P1, and radial extension gives the corresponding disk homeomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

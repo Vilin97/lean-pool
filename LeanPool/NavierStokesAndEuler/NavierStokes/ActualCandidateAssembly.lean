@@ -39,7 +39,7 @@ fixed actual cycle parameters. The finite labels, phase carriers, base error,
 and current pressure alias are retained through the literal recurrence.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1104,7 +1104,7 @@ the actual initial mean families and the existing extensions of the same
 base potential and pressure.  No output extension is an input below.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1396,7 +1396,7 @@ argument; a representation by a fixed-reference copy family is unnecessary.
 The zeroth potential and pressure retain the separately extended slow base.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1877,7 +1877,7 @@ the curl is therefore the actual particular velocity increment, with its physica
 scale and moving frame.  No output representation is an input to these identities.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2172,7 +2172,7 @@ nominal active annulus, without enlarging either edge.  This applies to the
 literal initialized fields and to every mean stage of the same coherent cycle.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2381,7 +2381,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

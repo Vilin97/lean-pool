@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Paper.Section3.DualCoordinates
 The dual haar component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperDualHaar
@@ -59,7 +59,7 @@ noncomputable instance paperCharacterMeasurableSpace :
 instance paperCharacterBorelSpace : BorelSpace PaperCharacterSpace := ⟨rfl⟩
 
 /-- The normalized Haar probability on the actual character space. Paper: §3. -/
-noncomputable def paperCharacterHaar : Measure PaperCharacterSpace :=
+@[expose] noncomputable def paperCharacterHaar : Measure PaperCharacterSpace :=
   NormalizedHaar.normalizedAddHaar PaperCharacterSpace
 
 /-- The normalized dual Haar measure is a probability measure. Paper: §3. -/
@@ -196,7 +196,7 @@ def characterLinearEquiv :
       exact congrArg (fun f => f x) (characterLinear_linearCharacter ℓ)⟩
 
 /-- The actual Zhou dual coordinates. Paper: §3. -/
-def characterCoordinatesEquiv :
+@[expose] def characterCoordinatesEquiv :
     PaperCharacterSpace ≃+ PaperFactorIsomorphism.DualCoordinates :=
   characterLinearEquiv.trans PaperDualCoordinates.dualEquiv.toAddEquiv
 

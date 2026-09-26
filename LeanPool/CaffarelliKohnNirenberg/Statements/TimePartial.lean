@@ -14,7 +14,7 @@ public import Mathlib.Analysis.Calculus.FDeriv.Add
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open CKN.Foundation.Parabolic
 
@@ -24,6 +24,7 @@ noncomputable section
 namespace CKN
 
 /-- Factor-wise time derivative on the ordinary product space described in docs/DESIGN_NOTES.md. -/
+@[expose]
 def timePartial (g : ParabolicPoint → ℝ) (z : ParabolicPoint) : ℝ :=
   (fderiv ℝ (fun s : ℝ => g (z.1, s)) z.2) 1
 

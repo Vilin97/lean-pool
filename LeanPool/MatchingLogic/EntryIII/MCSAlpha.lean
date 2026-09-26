@@ -21,7 +21,7 @@ public import LeanPool.MatchingLogic.EntryIII.LocalTheory
 # MatchingLogic.EntryIII.MCSAlpha
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

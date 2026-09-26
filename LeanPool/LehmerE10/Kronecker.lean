@@ -27,7 +27,7 @@ Contents:
 Axiom footprint: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
 
-@[expose] public section
+public section
 
 namespace LehmerE10
 

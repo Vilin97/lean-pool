@@ -9,7 +9,7 @@ public import LeanPool.HadwigerNelsonBounds.PartsCertificate
 
 /-! Generated chunk 1 of the Parts coloring-tree certificate. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

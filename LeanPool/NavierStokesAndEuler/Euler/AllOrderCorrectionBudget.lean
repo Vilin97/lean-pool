@@ -19,7 +19,7 @@ section
 /-! Whole-interval inviscid correction retaining quantitative Gevrey bounds and its actual
 finite-Sobolev pressure equation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -94,7 +94,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

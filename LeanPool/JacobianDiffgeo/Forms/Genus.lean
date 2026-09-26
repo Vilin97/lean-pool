@@ -25,7 +25,7 @@ Main declarations:
 * `genus_eq_zero_iff_subsingleton` — `genus X = 0 ↔ Subsingleton (RS.Form1 X)`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

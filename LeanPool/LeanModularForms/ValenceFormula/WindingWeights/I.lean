@@ -28,7 +28,7 @@ around the point i.
 * `gWN_fdBoundary_H_at_i` — gWN = -1/2 at i
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

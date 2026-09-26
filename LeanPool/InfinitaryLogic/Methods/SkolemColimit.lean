@@ -18,7 +18,7 @@ import Mathlib.Tactic.SetLike
 tower uses this generic construction for its function and relation symbols.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

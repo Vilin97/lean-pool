@@ -24,7 +24,7 @@ does not differentiate a polar chart at the axis or use an excluded dyadic
 face of a fixed reference formula.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

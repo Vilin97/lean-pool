@@ -15,7 +15,7 @@ In this file we define the Bruhat-Tits graph as a simple graph and show it is co
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 

@@ -16,7 +16,7 @@ section
 
 /-! Jointly odd transverse profiles give the actual jointly even vector potential. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -53,7 +53,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

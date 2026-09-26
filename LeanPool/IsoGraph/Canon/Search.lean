@@ -32,7 +32,7 @@ largest key, i.e. that none of the three pruning rules ever discards it — is `
 `IsoGraph/Canon/Optimal.lean`; the two are joined in `IsoGraph/Canon/Correct.lean`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace IsoGraph

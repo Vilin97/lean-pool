@@ -21,7 +21,7 @@ section
 /-! Jacobi's formula in every finite dimension, and determinant preservation
 for the actual linear evolution with trace-free coefficient. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -147,7 +147,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

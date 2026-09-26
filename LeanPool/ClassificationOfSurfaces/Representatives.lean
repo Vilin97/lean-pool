@@ -16,7 +16,7 @@ The Lean-Eval challenge owns `Complex.ClosedUnitDisc`, `OrientableRel`, and
 only the project-owned sphere abbreviation and the index type used by the normal-form reduction.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

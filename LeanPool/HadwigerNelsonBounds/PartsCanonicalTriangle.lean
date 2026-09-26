@@ -16,7 +16,7 @@ The checked Parts certificate rules out a monochromatic copy of its canonical
 equilateral triangle in every proper four-coloring of the plane.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
@@ -31,10 +31,10 @@ lemma partsColorEquiv_spec {triple center : Fin 4} (hne : triple ≠ center) :
   fin_cases triple <;> fin_cases center <;> revert hne <;> decide
 
 /-- First vertex of the canonical equilateral triangle in the Parts graph. -/
-noncomputable def partsTriangleA : R2 := (partsPoint 195).toR2
+@[expose] noncomputable def partsTriangleA : R2 := (partsPoint 195).toR2
 
 /-- Second vertex of the canonical equilateral triangle in the Parts graph. -/
-noncomputable def partsTriangleB : R2 := (partsPoint 205).toR2
+@[expose] noncomputable def partsTriangleB : R2 := (partsPoint 205).toR2
 
 /-- Third vertex of the canonical equilateral triangle in the Parts graph. -/
 noncomputable def partsTriangleC : R2 := (partsPoint 215).toR2

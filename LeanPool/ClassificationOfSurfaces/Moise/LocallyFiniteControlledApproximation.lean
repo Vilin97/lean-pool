@@ -21,7 +21,7 @@ construction supplies quantitative face control and separation.  Polygonal Schoe
 fills every face, and local finiteness glues the fillings into a homeomorphism of supports.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

@@ -45,7 +45,7 @@ distance), handled separately.
 Axiom-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.DeltaCost
 

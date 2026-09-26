@@ -17,7 +17,7 @@ section
 
 /-! A literal product with one mixed cylinder derivative consumes exactly one shift. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -79,7 +79,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

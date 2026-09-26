@@ -21,7 +21,7 @@ lifts to `ℝ`, whereas its restriction to the boundary cannot be the identity b
 standard boundary loop has lifts whose endpoints differ by `2π`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

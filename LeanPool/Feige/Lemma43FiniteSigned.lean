@@ -18,7 +18,7 @@ likelihood-ratio results to the exact common laws appearing on genuine
 Boolean-lattice insertion edges.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

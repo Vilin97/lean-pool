@@ -31,7 +31,7 @@ no dependency on the quantum framework:
 These are upstream candidates for Mathlib; nothing here mentions `Gate`/`PureState`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

@@ -19,7 +19,7 @@ smoothness is proved with the inverse function theorem applied to the triangular
 map `(p, θ) ↦ (p, Φ(p, θ))`; no smooth inverse is postulated.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

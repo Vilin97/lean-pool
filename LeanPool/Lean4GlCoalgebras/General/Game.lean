@@ -22,7 +22,7 @@ plays an applicable sequent `Γ` in order to construct a counter-model. Prover g
 plays rule applications `R` in order to construct a proof.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 
@@ -32,7 +32,7 @@ abbrev Builder := Player.A
 abbrev Prover := Player.B
 
 /-- The available rule applications for a sequent `Γ`. -/
-def Sequent.ruleApps (Γ : Sequent) : Finset RuleApp :=
+@[expose] def Sequent.ruleApps (Γ : Sequent) : Finset RuleApp :=
   let f : Formula → Option RuleApp := fun φ ↦
     if φ_in : φ ∈ Γ then match φ with
     | ⊤ => RuleApp.top Γ φ_in
@@ -47,7 +47,7 @@ def Sequent.ruleApps (Γ : Sequent) : Finset RuleApp :=
   cases φ <;> cases ψ <;> grind [f])
 
 /-- The sequents possible after a rule application `R`. -/
-def RuleApp.sequents (R : RuleApp) : Finset Sequent := match R with
+@[expose] def RuleApp.sequents (R : RuleApp) : Finset Sequent := match R with
   | RuleApp.top _ _ => ∅
   | RuleApp.ax _ _ _ => ∅
   | RuleApp.and Δ φ ψ _ => {(Δ \ {φ & ψ}) ∪ {φ}, (Δ \ {φ & ψ}) ∪ {ψ}}

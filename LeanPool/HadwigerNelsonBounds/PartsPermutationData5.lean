@@ -15,7 +15,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Exact vertex permutation 5 for the Parts root stabilizer. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

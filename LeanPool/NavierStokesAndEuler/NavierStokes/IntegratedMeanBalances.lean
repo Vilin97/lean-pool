@@ -17,7 +17,7 @@ the boundary cancellations, and parameter derivatives pass under integrals by
 the dominated differentiation theorem in `TransportPrimitive`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ open Set Function MeasureTheory Filter
 open scoped ContDiff Topology Interval
 
 /-- Moment, given by `∫ r, r ^ n * f r`. -/
-noncomputable def moment (n : ℕ) (f : ℝ → ℝ) : ℝ := ∫ r, r ^ n * f r
+@[expose] noncomputable def moment (n : ℕ) (f : ℝ → ℝ) : ℝ := ∫ r, r ^ n * f r
 
 theorem weighted_integrable {f : ℝ → ℝ} (hf : Continuous f)
     (hs : HasCompactSupport f) (n : ℕ) : Integrable (fun r => r ^ n * f r) :=
@@ -90,15 +90,15 @@ theorem moment_deriv_succ {f : ℝ → ℝ} (hf : ContDiff ℝ ∞ f)
   simpa only [moment, Pi.mul_apply, mul_assoc, integral_const_mul, neg_mul] using hi
 
 /-- Radial divergence, given by `deriv f r + c / r * f r`. -/
-noncomputable def radialDivergence (c : ℝ) (f : ℝ → ℝ) (r : ℝ) : ℝ :=
+@[expose] noncomputable def radialDivergence (c : ℝ) (f : ℝ → ℝ) (r : ℝ) : ℝ :=
   deriv f r + c / r * f r
 
 /-- Angular radial viscosity, given by `deriv (deriv f) r + deriv f r / r - f r / r ^ 2`. -/
-noncomputable def angularRadialViscosity (f : ℝ → ℝ) (r : ℝ) : ℝ :=
+@[expose] noncomputable def angularRadialViscosity (f : ℝ → ℝ) (r : ℝ) : ℝ :=
   deriv (deriv f) r + deriv f r / r - f r / r ^ 2
 
 /-- Axial radial viscosity, given by `deriv (deriv f) r + deriv f r / r`. -/
-noncomputable def axialRadialViscosity (f : ℝ → ℝ) (r : ℝ) : ℝ :=
+@[expose] noncomputable def axialRadialViscosity (f : ℝ → ℝ) (r : ℝ) : ℝ :=
   deriv (deriv f) r + deriv f r / r
 
 theorem weighted_angular_divergence_ae (f : ℝ → ℝ) :
@@ -247,11 +247,11 @@ section Families
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Radial moment, given by `moment n (fun r => F (r, p))`. -/
-noncomputable def radialMoment (n : ℕ) (F : ℝ × P → ℝ) (p : P) : ℝ :=
+@[expose] noncomputable def radialMoment (n : ℕ) (F : ℝ × P → ℝ) (p : P) : ℝ :=
   moment n (fun r => F (r, p))
 
 /-- Parameter partial, given by `fderiv ℝ F x (0, v)`. -/
-noncomputable def parameterPartial (v : P) (F : ℝ × P → ℝ) (x : ℝ × P) : ℝ :=
+@[expose] noncomputable def parameterPartial (v : P) (F : ℝ × P → ℝ) (x : ℝ × P) : ℝ :=
   fderiv ℝ F x (0, v)
 
 theorem parameterPartial_smooth (v : P) {F : ℝ × P → ℝ}

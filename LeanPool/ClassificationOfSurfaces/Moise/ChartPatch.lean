@@ -20,7 +20,7 @@ corresponding half-disk patch.  These strict margins are the concrete base geome
 Rado induction.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

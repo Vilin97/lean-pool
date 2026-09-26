@@ -25,7 +25,7 @@ import Mathlib.Tactic.SetLike
 # MatchingLogic.EntryIII.Countertheory
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

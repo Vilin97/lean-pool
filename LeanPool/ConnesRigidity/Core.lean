@@ -23,7 +23,7 @@ public import Mathlib.Analysis.VonNeumannAlgebra.Basic
 The core component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 
@@ -182,7 +182,7 @@ theorem mem_vonNeumannClosure
   rfl
 
 /-- Group von Neumann algebra boundary. Paper: §3. -/
-def groupVonNeumannAlgebra (G : CountableDiscreteGroup.{u}) :
+@[expose] def groupVonNeumannAlgebra (G : CountableDiscreteGroup.{u}) :
     VonNeumannAlgebra (GroupL2 G) :=
   vonNeumannClosure (Set.range fun g : G ↦
     (leftRegularRepresentation G g : GroupL2 G →L[ℂ] GroupL2 G))

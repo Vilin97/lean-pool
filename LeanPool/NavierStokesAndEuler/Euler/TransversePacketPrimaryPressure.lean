@@ -19,7 +19,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryEquation
 /-! The primary pressure is the actual mean-zero angular primitive of the
 normal residual.  Its field satisfies the homogeneous packet equation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

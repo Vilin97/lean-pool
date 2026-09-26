@@ -19,7 +19,7 @@ the L² norm of `(1 + |ξ|²)^(s/2) 𝓕f(ξ)`, so its relation to the represent
 function is explicit. All estimates are proved from inversion and Hölder.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -41,7 +41,7 @@ theorem weightedFourier_apply (d : ℕ) (s : ℝ) (f : 𝓢(Domain d, F)) (ξ : 
   simp [weightedFourier, SchwartzMap.smulLeftCLM_apply_apply (besselWeight_temperate d s)]
 
 /-- The inhomogeneous Fourier `Hˢ` norm of a Schwartz function. -/
-noncomputable def sobolevNorm (d : ℕ) (s : ℝ) (f : 𝓢(Domain d, F)) : ℝ :=
+@[expose] noncomputable def sobolevNorm (d : ℕ) (s : ℝ) (f : 𝓢(Domain d, F)) : ℝ :=
   ‖(weightedFourier d s f).toLp 2‖
 
 /-- Fourier inversion bounds a Schwartz function pointwise by the L¹ norm of its transform. -/

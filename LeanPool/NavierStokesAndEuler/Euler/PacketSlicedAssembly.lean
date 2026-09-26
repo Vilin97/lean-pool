@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.Deriv.Add
 
 /-! Finite packet assembly commutes with the genuine time-within/spatial jets. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

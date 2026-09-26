@@ -19,7 +19,7 @@ interval, while space and angle derivatives are ordinary Fréchet derivatives.
 No smooth extension across a time endpoint is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -34,7 +34,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Join derivative, given by `(ContinuousLinearMap.fst ℝ ℝ SpatialDomain).smulRight v + D.comp
 (ContinuousLinearMap.snd ℝ ℝ SpatialDomain)`. -/
-def joinDerivative (v : E) (D : SpatialDomain →L[ℝ] E) : Domain →L[ℝ] E :=
+@[expose] def joinDerivative (v : E) (D : SpatialDomain →L[ℝ] E) : Domain →L[ℝ] E :=
   (ContinuousLinearMap.fst ℝ ℝ SpatialDomain).smulRight v +
     D.comp (ContinuousLinearMap.snd ℝ ℝ SpatialDomain)
 
@@ -43,15 +43,13 @@ theorem joinDerivative_apply (v : E) (D : SpatialDomain →L[ℝ] E) (h : Domain
 
 /-- Sliced jet, given by `(f z, joinDerivative (derivWithin (fun t => f (t,z.2)) s z.1) (fderiv
 ℝ (fun y => f (z.1,y)) z.2))`. -/
-def slicedJet (s : Set ℝ) (f : Domain → E) (z : Domain) : Jet E :=
+@[expose] def slicedJet (s : Set ℝ) (f : Domain → E) (z : Domain) : Jet E :=
   (f z, joinDerivative (derivWithin (fun t => f (t,z.2)) s z.1)
     (fderiv ℝ (fun y => f (z.1,y)) z.2))
 
 theorem slicedJet_time (s : Set ℝ) (f : Domain → E) (z : Domain) :
     (slicedJet s f z).2 timeDirection=derivWithin (fun t => f (t,z.2)) s z.1 := by
-  change (1 : ℝ) • derivWithin (fun t => f (t,z.2)) s z.1 +
-    (fderiv ℝ (fun y => f (z.1,y)) z.2) (0 : SpatialDomain)=_
-  simp
+  simp [slicedJet, joinDerivative_apply, timeDirection]
 
 theorem slicedJet_space (s : Set ℝ) (f : Domain → E) (z : Domain) (v : Space) :
     (slicedJet s f z).2 (spatialInjection v)=fderiv ℝ (fun y => f (z.1,y)) z.2 (v,0) := by
@@ -109,7 +107,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -118,7 +116,7 @@ namespace EulerPacketPointJets
 open EulerFiniteGrades Finset
 
 /-- The unused time slot is zero: no time derivative of the scalar potential is required. -/
-def pressureJet (p : Domain → ℝ) (z : Domain) : ScalarJet :=
+@[expose] def pressureJet (p : Domain → ℝ) (z : Domain) : ScalarJet :=
   (p z, joinDerivative 0 (fderiv ℝ (fun y => p (z.1,y)) z.2))
 
 theorem pressureJet_space (p : Domain → ℝ) (z : Domain) (v : EulerSmoothLimit.Space) :

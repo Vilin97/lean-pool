@@ -15,7 +15,7 @@ import Mathlib.Tactic.SetLike
 
 /-! # NotationClass -/
 
-@[expose] public section
+public section
 
 
 namespace LO

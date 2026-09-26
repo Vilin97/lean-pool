@@ -23,4 +23,4 @@ Tags: finite-fields, coding-theory, APN-functions, difference-sets, character-su
 MSC: 11T06, 11T71, 94A60
 -/
 
-@[expose] public section
+public section

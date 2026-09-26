@@ -17,7 +17,7 @@ it equal to the same zero-axis primitive in every containing gauge.  All
 moment estimates below use the local physical domain, not global slow data.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

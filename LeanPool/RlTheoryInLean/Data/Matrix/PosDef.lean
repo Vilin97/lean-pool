@@ -15,7 +15,7 @@ import Mathlib.Analysis.Matrix.PosDef
 # LeanPool.RlTheoryInLean.Data.Matrix.PosDef
 -/
 
-@[expose] public section
+public section
 
 open Real Finset Filter TopologicalSpace Preorder Matrix EuclideanSpace
 open scoped InnerProductSpace RealInnerProductSpace

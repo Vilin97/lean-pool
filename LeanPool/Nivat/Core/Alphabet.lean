@@ -45,7 +45,7 @@ The reduction in Section 1.1, used in Section 6 to prove Theorem 1.1 (`thm:main`
 `exists_rational_model` preserves all pattern counts and all individual periods.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat
 

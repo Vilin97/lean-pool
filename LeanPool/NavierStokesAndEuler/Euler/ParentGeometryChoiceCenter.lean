@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.ParentStateGeometry
 /-! The center error in a geometric packet choice is the gradient of
 the actual increment between its two Euler states. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

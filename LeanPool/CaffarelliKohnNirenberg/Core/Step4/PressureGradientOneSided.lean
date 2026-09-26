@@ -20,7 +20,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.BallBasics
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology
@@ -173,6 +173,7 @@ representations on arbitrary sub-boxes. -/
 
 /-- Quantitative Morrey bound assembled from velocity, gradient, forcing and harmonic remainders.
 -/
+@[expose]
 def oneSidedPressureGradientKP
     (q τ C_CZ R₀ R₁ ε : ℝ) (KU KD : ℝ≥0∞) : ℝ≥0∞ :=
   let κ := min ((1 / τ + 8 / 25)⁻¹) q

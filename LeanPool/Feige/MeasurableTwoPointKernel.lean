@@ -17,7 +17,7 @@ This file supplies the measurable-kernel interface needed to condition on
 the latent two-point parameters in the proof of Theorem 2.1.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Set
 
@@ -35,6 +35,7 @@ theorem measurable_twoPointMeasure_apply {B : Set ℝ} (hB : MeasurableSet B) :
   fun_prop
 
 /-- Admissible parameters `x ≤ 1 ≤ y`, with distinct support points. -/
+@[expose]
 def TwoPointParams :=
   {p : ℝ × ℝ // p.1 ≤ 1 ∧ 1 ≤ p.2 ∧ p.1 < p.2}
 
@@ -122,7 +123,7 @@ local instance : DecidablePred (· ∈ strictPairSet) :=
 /-- A total measurable map into `TwoPointParams`; outside the strict region
 we use the harmless default pair `(0,2)`.  The weighted latent measure below
 is supported on the strict region. -/
-noncomputable def pairToParams (p : ℝ × ℝ) : TwoPointParams :=
+@[expose] noncomputable def pairToParams (p : ℝ × ℝ) : TwoPointParams :=
   if hp : p ∈ strictPairSet then ⟨p, strictPairSet_admissible hp⟩
   else ⟨(0, 2), by norm_num⟩
 
@@ -147,7 +148,7 @@ theorem measurable_pairToParams : Measurable pairToParams := by
 
 /-- The unnormalized product law on a strict below point and a strict above
 point. -/
-noncomputable def belowAboveProduct (μ : Measure ℝ) : Measure (ℝ × ℝ) :=
+@[expose] noncomputable def belowAboveProduct (μ : Measure ℝ) : Measure (ℝ × ℝ) :=
   (μ.restrict (Iio 1)).prod (μ.restrict (Ioi 1))
 
 /-- The density `(y-x)/M` of the latent below/above pair, written in
@@ -192,7 +193,7 @@ instance (μ : Measure ℝ) [SFinite μ] (M : ℝ) :
 
 /-- The weighted pair measure, transported to the admissible parameter
 subtype on which `twoPointKernel` is Markov. -/
-noncomputable def latentParamsMeasure (μ : Measure ℝ) (M : ℝ) :
+@[expose] noncomputable def latentParamsMeasure (μ : Measure ℝ) (M : ℝ) :
     Measure TwoPointParams :=
   (latentPairMeasure μ M).map pairToParams
 

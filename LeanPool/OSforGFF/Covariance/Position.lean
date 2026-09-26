@@ -30,7 +30,7 @@ C(x,y) = ∫₀^∞ e^{−sm²} H(s,|x−y|) ds via the heat kernel.
 - `covariance_timeReflection_invariant`: Time reflection invariance
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex Real Filter
 open TopologicalSpace
@@ -496,7 +496,7 @@ theorem freeCovarianceℂ_regulated_positive (α : ℝ) (hα : 0 < α) (m : ℝ)
     (freePropagatorMomentum_mathlib_nonneg m (Fact.out) k)
 
 /-- Complex extension of the covariance for complex test functions (limit form via Bessel). -/
-def freeCovarianceℂ (m : ℝ) (f g : TestFunctionℂ) : ℂ :=
+@[expose] def freeCovarianceℂ (m : ℝ) (f g : TestFunctionℂ) : ℂ :=
   ∫ x, ∫ y, (f x) * (freeCovariance m x y) * (starRingEnd ℂ (g y)) ∂volume ∂volume
 
 /-- The complex covariance (Bessel form) is positive definite. -/

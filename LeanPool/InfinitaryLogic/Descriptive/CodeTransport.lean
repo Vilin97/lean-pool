@@ -21,7 +21,7 @@ finite-specific and are the transport layer the López–Escobar converse (issue
 so they live here at the `StructureSpaceOn` level.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

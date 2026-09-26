@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLocalExistence
 /-! Genuine continuation of every closed smooth Euler evolution, and
 the resulting gradient blowup criterion at a finite maximal horizon. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

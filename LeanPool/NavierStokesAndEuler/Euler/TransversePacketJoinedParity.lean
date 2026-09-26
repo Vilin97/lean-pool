@@ -23,7 +23,7 @@ section
 
 /-! Joint parity of the actual source history inverse and its normalized pressure. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -96,7 +96,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

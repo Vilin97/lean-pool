@@ -18,7 +18,7 @@ section
 
 /-! Exact identification of the source's base-Sobolev word sum and root metric energy. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -51,7 +51,7 @@ theorem card_baseWord (s : ℕ) : Fintype.card (BaseWord s) = ∑ n ∈ Finset.r
   exact Fin.sum_univ_eq_sum_range (fun n => 4 ^ n) (s + 1)
 
 /-- The source's root-of-sum metric energy for all base Sobolev words. -/
-def baseWordMetricNorm {s : ℕ} {f : LiftL2 period} (K : LiftL2 period →L[ℝ] LiftL2 period)
+@[expose] def baseWordMetricNorm {s : ℕ} {f : LiftL2 period} (K : LiftL2 period →L[ℝ] LiftL2 period)
     (J : SpatialJet period standardDirection s f) : ℝ := familyMetricNorm K (baseWordValues period
         J)
 
@@ -87,7 +87,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -106,7 +106,7 @@ variable (period : ℝ) [Fact (0 < period)]
 abbrev ExternalWord (N : ℕ) := Σ n : Fin (N+1), Fin n.val → Fin 4
 
 /-- Literal base derivatives of each external word of an actual Sobolev field. -/
-def energyValues {s : ℕ} (q N : ℕ) (hN : N + q ≤ s) (u : SobolevSpace period s) :
+@[expose] def energyValues {s : ℕ} (q N : ℕ) (hN : N + q ≤ s) (u : SobolevSpace period s) :
     ExternalWord N → BaseWord q → LiftL2 period := fun I =>
   baseWordValues period (EulerH6Pressure.SpatialJet.derivativeJet (q := q) (toJet period u) I.2 (by
       have := I.1.isLt; omega))

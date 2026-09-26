@@ -20,7 +20,7 @@ convexity propagates those local inequalities to all four angles of their
 quadrilateral, contradicting `strict_convex_quad_not_all_acute`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 

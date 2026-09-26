@@ -23,7 +23,7 @@ its own function
 space* `[D_∞ → D_∞]`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.ContinuousLattice
 

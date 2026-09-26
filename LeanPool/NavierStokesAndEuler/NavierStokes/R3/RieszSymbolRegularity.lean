@@ -18,7 +18,7 @@ Its bound by one gives integrability of every polynomial moment of a multiplied
 Schwartz transform, hence smoothness and boundedness of its inverse Fourier integral.
 -/
 
-@[expose] public section
+public section
 
 
 

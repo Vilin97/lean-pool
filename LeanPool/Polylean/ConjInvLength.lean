@@ -18,4 +18,4 @@ public import LeanPool.Polylean.ConjInvLength.WordTree
 Import index for the Polylean conjugacy-invariant length computations.
 -/
 
-@[expose] public section
+public section

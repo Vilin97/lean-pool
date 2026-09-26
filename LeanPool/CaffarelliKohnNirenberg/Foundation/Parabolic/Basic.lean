@@ -20,7 +20,7 @@ finite sum of squares.  This is deliberate: the ambient function space's
 default norm can be the sup norm, whereas the cylinders here are Euclidean.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 
@@ -38,6 +38,7 @@ abbrev Vec3 := Fin 3 → ℝ
 abbrev L2Vec3 := PiLp 2 (fun _ : Fin 3 => ℝ)
 
 /-- Space-time points, given the parabolic metric below rather than the product metric. -/
+@[expose]
 def ParabolicPoint := Vec3 × ℝ
 
 theorem half_pos : 0 < (1 / 2 : ℝ) := by norm_num
@@ -48,6 +49,7 @@ theorem half_le_one : (1 / 2 : ℝ) ≤ 1 := by norm_num
 abbrev SnowTime := Metric.Snowflaking ℝ (1 / 2 : ℝ) half_pos half_le_one
 
 /-- Euclidean length of a native three-dimensional coordinate vector. -/
+@[expose]
 def vec3EuclideanNorm (v : Vec3) : ℝ := Real.sqrt (∑ i, v i ^ 2)
 
 instance : MeasurableSpace ParabolicPoint := inferInstanceAs (MeasurableSpace (Vec3 × ℝ))
@@ -57,6 +59,7 @@ instance : MeasurableSpace SnowTime := borel SnowTime
 instance : BorelSpace SnowTime := ⟨rfl⟩
 
 /-- Measurable equivalence to Euclidean space times snowflaked time. -/
+@[expose]
 def parabolicMeasurableEquiv : ParabolicPoint ≃ᵐ L2Vec3 × SnowTime :=
   MeasurableEquiv.prodCongr (MeasurableEquiv.toLp 2 Vec3) {
     toEquiv := Metric.Snowflaking.toSnowflaking
@@ -64,6 +67,7 @@ def parabolicMeasurableEquiv : ParabolicPoint ≃ᵐ L2Vec3 × SnowTime :=
     measurable_invFun := Metric.Snowflaking.homeomorph.continuous.measurable }
 
 /-- Coordinate map into the product carrying the parabolic metric. -/
+@[expose]
 def parabolicMap (p : ParabolicPoint) :
     L2Vec3 × SnowTime := parabolicMeasurableEquiv p
 
@@ -106,6 +110,7 @@ lemma vec3EuclideanNorm_smul (a : ℝ) (v : Vec3) :
     ← vec3EuclideanNorm_eq_l2]
 
 /-- Maximum of spatial Euclidean distance and square-root time separation. -/
+@[expose]
 def parabolicDist (p q : ParabolicPoint) : ℝ :=
   max (vec3EuclideanNorm (p.1 - q.1)) (Real.sqrt |p.2 - q.2|)
 
@@ -115,10 +120,12 @@ lemma dist_eq_parabolicDist (p q : ParabolicPoint) :
   rfl
 
 /-- Open Euclidean ball in native spatial coordinates. -/
+@[expose]
 def vec3Ball (x : Vec3) (r : ℝ) : Set Vec3 :=
   {y | vec3EuclideanNorm (y - x) < r}
 
 /-- Backward parabolic cylinder with spatial radius `r` and time depth `r ^ 2`. -/
+@[expose]
 def parabolicCylinder (x : Vec3) (t r : ℝ) : Set ParabolicPoint :=
   vec3Ball x r ×ˢ Ioc (t - r ^ 2) t
 
@@ -145,10 +152,12 @@ lemma parabolicCylinder_mono {x : Vec3} {t r₁ r₂ : ℝ} (hr₁ : 0 ≤ r₁)
   exact (sub_le_sub_left hrsq t).trans_lt hp₂
 
 /-- Space-time translation by a spatial vector and time offset. -/
+@[expose]
 def parabolicTranslate (a : Vec3) (τ : ℝ) (p : ParabolicPoint) : ParabolicPoint :=
   (a + p.1, τ + p.2)
 
 /-- Parabolic scaling, linear in space and quadratic in time. -/
+@[expose]
 def parabolicScale (a : ℝ) (p : ParabolicPoint) : ParabolicPoint :=
   (a • p.1, a ^ 2 * p.2)
 
@@ -265,6 +274,7 @@ lemma volume_parabolicCylinder_zero (x : Vec3) (t r : ℝ) :
   rw [volume_parabolicCylinder, volume_vec3Ball]
 
 /-- Hausdorff measure computed using the parabolic metric and the real value of the exponent. -/
+@[expose]
 def parabolicHausdorffMeasure (d : ℝ≥0∞) : Measure ParabolicPoint :=
   MeasureTheory.Measure.hausdorffMeasure d.toReal
 

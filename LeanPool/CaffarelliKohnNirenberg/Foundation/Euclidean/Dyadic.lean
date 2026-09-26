@@ -17,7 +17,7 @@ The cubes use the half-open product grid on `Vec3 = Fin 3 → ℝ`.  The scale
 index is integral so that parent and child cubes are represented uniformly.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology
@@ -39,14 +39,17 @@ structure DyadicIndex where
   corner : DyadicCorner
 
 /-- Side length of the dyadic grid at integer scale `k`. -/
+@[expose]
 def dyadicScale (k : ℤ) : ℝ := (2 : ℝ) ^ (-k : ℤ)
 
 /-- Half-open dyadic cube with scale index `k` and lattice corner `a`. -/
+@[expose]
 def dyadicCube (k : ℤ) (a : DyadicCorner) : Set Vec3 :=
   Set.univ.pi (fun i => Ico ((a i : ℝ) * dyadicScale k)
     (((a i : ℝ) + 1) * dyadicScale k))
 
 /-- Center of a dyadic cube in native Euclidean coordinates. -/
+@[expose]
 def dyadicCubeCenter (k : ℤ) (a : DyadicCorner) : Vec3 :=
   fun i => ((a i : ℝ) + 1 / 2) * dyadicScale k
 
@@ -55,6 +58,7 @@ def dyadicCorner (k : ℤ) (x : Vec3) : DyadicCorner :=
   fun i => ⌊x i / dyadicScale k⌋
 
 /-- Immediate containing dyadic cube at the next coarser scale. -/
+@[expose]
 def dyadicParent (Q : DyadicIndex) : DyadicIndex :=
   { scale := Q.scale - 1
     corner := fun i => Q.corner i / 2 }

@@ -17,7 +17,7 @@ import Mathlib.Analysis.Calculus.Deriv.Add
 equation at every spatial order. This is proved by the bounded Bochner
 integral identity, rather than assumed commutation of derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -23,7 +23,7 @@ Tags: graph-theory, graph-isomorphism, canonical-labelling, verified-algorithms
 MSC: 05C60, 68R10
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Imported scope

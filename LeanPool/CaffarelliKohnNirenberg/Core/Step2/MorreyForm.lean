@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Step2.MorreyBalls
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology

@@ -23,7 +23,7 @@ public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SplitAbelianExtensi
 The spectral criterion component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 
@@ -103,7 +103,7 @@ def IsInvariantSpectralMeasure
       (dualCharacterAction action h) = μ
 
 /-- Mass of the trivial character. Paper: §4. -/
-def spectralTrivialAtom
+@[expose] def spectralTrivialAtom
     (μ : ProbabilityMeasure (DiscreteCharacterSpace A)) : ℝ :=
   (μ : Measure (DiscreteCharacterSpace A)).real {1}
 
@@ -157,7 +157,7 @@ theorem integrable_spectralEnergyTest
 
 /-- Spectral displacement energy of a kernel element. Its integrand is
 integrable by `integrable_spectralEnergyTest`. Paper: §4. -/
-def spectralDetectionEnergy
+@[expose] def spectralDetectionEnergy
     (μ : ProbabilityMeasure (DiscreteCharacterSpace A)) (a : A) : ℝ :=
   ∫ χ : DiscreteCharacterSpace A,
     ‖((χ (Multiplicative.ofAdd a) : Circle) : ℂ) - 1‖ ^ 2

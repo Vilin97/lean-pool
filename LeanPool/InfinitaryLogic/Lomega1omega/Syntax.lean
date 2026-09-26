@@ -40,7 +40,7 @@ to it
 (`not falsum` reduces to `imp falsum falsum`).
 -/
 
-@[expose] public section
+public section
 
 universe u v u'
 
@@ -128,7 +128,7 @@ protected def iff (φ ψ : L.BoundedFormulaω α n) : L.BoundedFormulaω α n :=
 
 /-- Indexed conjunction over any `Encodable` type. This extends `iInf` from ℕ-indexed
 to general countable indices by encoding. -/
-def einf {ι : Type*} [Encodable ι] (φs : ι → L.BoundedFormulaω α n) :
+@[expose] def einf {ι : Type*} [Encodable ι] (φs : ι → L.BoundedFormulaω α n) :
     L.BoundedFormulaω α n :=
   iInf fun k => match Encodable.decode (α := ι) k with
     | some i => φs i
@@ -136,7 +136,7 @@ def einf {ι : Type*} [Encodable ι] (φs : ι → L.BoundedFormulaω α n) :
 
 /-- Indexed disjunction over any `Encodable` type. This extends `iSup` from ℕ-indexed
 to general countable indices by encoding. -/
-def esup {ι : Type*} [Encodable ι] (φs : ι → L.BoundedFormulaω α n) :
+@[expose] def esup {ι : Type*} [Encodable ι] (φs : ι → L.BoundedFormulaω α n) :
     L.BoundedFormulaω α n :=
   iSup fun k => match Encodable.decode (α := ι) k with
     | some i => φs i

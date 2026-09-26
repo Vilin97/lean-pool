@@ -33,7 +33,7 @@ pointwise scalar multiple with a scalar depending on the point.
 - `CencovPetz.MonotoneMetricFamily.uniformScalar_eq_uniformScalar_two`
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

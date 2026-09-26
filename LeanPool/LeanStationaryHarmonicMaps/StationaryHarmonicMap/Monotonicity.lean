@@ -22,7 +22,7 @@ modules should discharge its `WeakStationaryMapIn` hypothesis and then call this
 theorem, rather than reopening the radial monotonicity proof chain.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

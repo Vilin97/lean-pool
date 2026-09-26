@@ -29,7 +29,7 @@ the ordinary Gamma integral. These estimates are uniform in the spatial
 indices and give the inverse-cube kernel bound in three dimensions.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -240,7 +240,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -32,7 +32,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame
@@ -79,7 +79,7 @@ end «Section1»
 variable {A : Type*} (x : List A) (p q : Player)
 namespace Player
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def toNat : Player → ℕ
+@[expose] def toNat : Player → ℕ
   | zero => 0
   | one => 1
 /-- Auxiliary declaration for the Borel determinacy formalization. -/

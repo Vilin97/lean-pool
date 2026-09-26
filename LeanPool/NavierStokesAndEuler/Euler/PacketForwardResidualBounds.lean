@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketProfileTailEstimates
 
 /-! Exponentially small literal residual for the actual zero-history packet. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

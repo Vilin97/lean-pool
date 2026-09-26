@@ -37,7 +37,7 @@ Bridge from arbitrary real-weighted collections to finite-uniform
 recombination, with an epsilon loss in the recombination inequality.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 

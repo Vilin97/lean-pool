@@ -27,7 +27,7 @@ Probabilistic counting argument proving existence of expanders for the rows
 needed by the Kalton-Roberts bound.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 

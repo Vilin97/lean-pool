@@ -17,7 +17,7 @@ The azimuthal potential carries the scale velocity/radialScale. Its genuine
 Cartesian curl is the meridional stream pair in the same physical graph.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,7 +38,7 @@ abbrev ScaledGraph := PhysicalResidualBridge.ScaledGraph
 noncomputable def axial : (ℝ × ℝ) × (ℝ × ℝ) := ((0, 1), 0)
 
 /-- Chart point, given by `(PhysicalResidualTZ.graphMapTZ G z).1`. -/
-noncomputable def chartPoint (G : ScaledGraph) (z : SpaceTime) : Point :=
+@[expose] noncomputable def chartPoint (G : ScaledGraph) (z : SpaceTime) : Point :=
   (PhysicalResidualTZ.graphMapTZ G z).1
 
 /-- Meridional as an element of `Fin 3 → ℝ`. -/
@@ -220,7 +220,7 @@ theorem cartesianPotential_curl_forward {a : ℝ} (ha : 0 < a) (j : PolarCharts.
 
 /-- Cartesian domain, given by `PhysicalGraphBounds.radialProjection ⁻¹' PolarCharts.chartDomain
 a j`. -/
-noncomputable def cartesianDomain (a : ℝ) (j : PolarCharts.Index) : Set SpaceTime :=
+@[expose] noncomputable def cartesianDomain (a : ℝ) (j : PolarCharts.Index) : Set SpaceTime :=
   PhysicalGraphBounds.radialProjection ⁻¹' PolarCharts.chartDomain a j
 
 theorem cartesianDomain_open (a : ℝ) (j : PolarCharts.Index) : IsOpen (cartesianDomain a j) :=

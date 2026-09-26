@@ -14,7 +14,7 @@ import Mathlib.FieldTheory.Finite.Basic
 Algebraic finite-chart detector spine for Zhou's §4. Paper: §4.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperChartDetector
@@ -49,7 +49,7 @@ noncomputable instance coeffIndexLinearOrder (N : ℕ) :
     (finSumFinEquiv : PaperFiniteCharts.CoeffIndex N ≃ Fin (N + N)).injective
 
 /-- The symmetric cross term of two vectors. Paper: §4. -/
-def cross (a b : A) : C :=
+@[expose] def cross (a b : A) : C :=
   ⟨a ⊗ₜ[k] b + b ⊗ₜ[k] a, by
     change TensorProduct.comm k A A
         (a ⊗ₜ[k] b + b ⊗ₜ[k] a) = a ⊗ₜ[k] b + b ⊗ₜ[k] a
@@ -221,7 +221,7 @@ theorem chartPoint_ofCoefficients_eq_sum (N : ℕ) (s : Fin 3)
 /--
 The `chartEvaluation` construction used in the Connes rigidity formalization.
 -/
-def chartEvaluation (χ : C →ₗ[k] k) (N : ℕ) (s : Fin 3)
+@[expose] def chartEvaluation (χ : C →ₗ[k] k) (N : ℕ) (s : Fin 3)
     (x : PaperFiniteCharts.CoeffIndex N → F) : F :=
   χ (PaperKernel.diagonal
     (PaperFiniteCharts.chartPoint N (chartIndexOfCoefficients N s x)))
@@ -372,7 +372,7 @@ abbrev ChartEvalIndex (N : ℕ) :=
 /--
 The `chartEvalValue` construction used in the Connes rigidity formalization.
 -/
-def chartEvalValue (χ : C →ₗ[k] k) (N : ℕ) (i : ChartEvalIndex N) : F :=
+@[expose] def chartEvalValue (χ : C →ₗ[k] k) (N : ℕ) (i : ChartEvalIndex N) : F :=
   chartEvaluation χ N i.1 i.2
 
 /--

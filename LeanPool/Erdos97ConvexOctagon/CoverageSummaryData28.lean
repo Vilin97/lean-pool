@@ -10,7 +10,7 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryDataTypes
 
 /-! # Lightweight coverage summaries, buckets 224–231 -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 

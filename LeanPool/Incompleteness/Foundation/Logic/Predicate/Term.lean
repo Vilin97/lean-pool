@@ -22,7 +22,7 @@ variables of `ξ`.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 
@@ -140,7 +140,7 @@ lemma bv_func {k} (f : L.Func k) (v : Fin k → Semiterm L ξ n) :
 @[simp] lemma bv_constant (f : L.Func 0) (v : Fin 0 → Semiterm L ξ n) : (func f v).bv = ∅ := rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Positive (t : Semiterm L ξ (n + 1)) : Prop := ∀ x ∈ t.bv, 0 < x
+@[expose] def Positive (t : Semiterm L ξ (n + 1)) : Prop := ∀ x ∈ t.bv, 0 < x
 
 namespace Positive
 

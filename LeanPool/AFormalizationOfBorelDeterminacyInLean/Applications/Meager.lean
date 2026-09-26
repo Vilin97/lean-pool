@@ -17,7 +17,7 @@ import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.RegularOpen
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 variable {X Y : Type*} [tX : TopologicalSpace X] [tY : TopologicalSpace Y]

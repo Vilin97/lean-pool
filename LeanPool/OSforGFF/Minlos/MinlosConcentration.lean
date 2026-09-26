@@ -47,7 +47,7 @@ nuclear cylindrical measures. `minlos_concentration` is a convenience wrapper.
 - Trèves, "Topological Vector Spaces", Ch. 50-51
 -/
 
-@[expose] public section
+public section
 
 open BigOperators MeasureTheory Complex TopologicalSpace Finsupp
 

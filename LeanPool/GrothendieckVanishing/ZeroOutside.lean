@@ -41,7 +41,7 @@ finitely-generated subsheaf reduction in the Grothendieck vanishing proof.
   canonical germ.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -327,6 +327,7 @@ namespace Sheaf
 open Presheaf
 
 /-- Sheafification of the integer-valued zero-outside presheaf. -/
+@[expose]
 def zeroOutsideInt {X : TopCat.{u}} (U : Opens X) : Sheaf AddCommGrpCat.{u} X :=
   (presheafToSheaf _ _).obj (Presheaf.constZ.zeroOutside U)
 
@@ -343,7 +344,7 @@ def generator : (zeroOutsideInt U).presheaf.obj (op U) :=
 variable {U}
 
 /-- The canonical morphism `zeroOutsideInt V ⟶ zeroOutsideInt U` for `V ≤ U`. -/
-@[simps]
+@[expose, simps]
 def openHom {X : TopCat.{u}} {V U : Opens X} (h : V ≤ U) :
     zeroOutsideInt V ⟶ zeroOutsideInt U where
   hom := sheafifyMap _ (Presheaf.zeroOutsideOpenHom (F := Presheaf.constZ) h)

@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevPathLimits
 
 /-! Strong convergence of the actual nonlinear and viscous right-hand sides. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

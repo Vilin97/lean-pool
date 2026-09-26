@@ -28,7 +28,7 @@ retraction. We use the equivalent Hilbert product norm only to construct the
 retraction; all stated spaces retain their original sup norms.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -101,7 +101,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -15,7 +15,7 @@ strict below/above pair.  Thus a single latent parameter always determines a
 mean-one law supported on at most two points.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Set
 

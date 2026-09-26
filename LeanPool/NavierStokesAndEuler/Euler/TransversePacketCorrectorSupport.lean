@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderLocalSupport
 
 /-! Compact support of the actual transverse potential, corrector, and their time derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

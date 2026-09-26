@@ -28,7 +28,7 @@ nor the slice bounds.  The output also records the identification of the field
 with every slice weak gradient, which is what pins it almost everywhere.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology

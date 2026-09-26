@@ -17,7 +17,7 @@ independent of the solution. Both estimates concern extension by zero from
 the intermediate backward cylinder of radius `5/8`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology
@@ -59,12 +59,12 @@ theorem closure_small_cylinder_subset_unit
     linarith only [ht, hzlow]
 
 /-- The explicit uniform velocity Morrey constant. -/
-def oneSidedVelocityMorreyBound (M r₀ ε₀ : ℝ) : ℝ≥0∞ :=
+@[expose] def oneSidedVelocityMorreyBound (M r₀ ε₀ : ℝ) : ℝ≥0∞ :=
   oneSidedMorreyBound 3 (25 / 3) r₀
     (ENNReal.ofReal ((2 * gagliardoConstant * M) ^ 3)) (ENNReal.ofReal ε₀)
 
 /-- The explicit uniform pressure Morrey constant. -/
-def oneSidedPressureMorreyBound (M r₀ ε₀ : ℝ) : ℝ≥0∞ :=
+@[expose] def oneSidedPressureMorreyBound (M r₀ ε₀ : ℝ) : ℝ≥0∞ :=
   oneSidedMorreyBound (3 / 2) (25 / 8) r₀
     (ENNReal.ofReal (M ^ (3 / 2 : ℝ))) (ENNReal.ofReal ε₀)
 

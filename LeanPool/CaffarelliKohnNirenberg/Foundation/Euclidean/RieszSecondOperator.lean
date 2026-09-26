@@ -20,7 +20,7 @@ public import Mathlib.MeasureTheory.Function.LpSpace.Complete
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -375,6 +375,7 @@ structure RieszSecondL2CZCertificate {i j : Fin 3}
               ENNReal.ofReal |dyadicBadPart F Q.1 x|)
 
 /-- Explicit weak-(1,1) coefficient assembled from the decomposition and kernel bounds. -/
+@[expose]
 def rieszSecondWeakTypeConstant : ℝ :=
   32 + 32 * Real.pi * Real.sqrt 3 +
     256 * Real.pi * rieszSecondKernelC₂

@@ -19,7 +19,7 @@ Imported Lean Pool material for
 `LeanPool.ZhangYeungInequality.PFR.ForMathlib.ConditionalIndependence`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Measure Set
 open scoped ENNReal ZhangYeungPFR

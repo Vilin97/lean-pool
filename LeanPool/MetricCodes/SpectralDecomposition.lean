@@ -13,7 +13,7 @@ public import LeanPool.MetricCodes.Rigidity
 Gelfand--Tsetlin completeness, Pieri channels, and projected-axis sufficiency.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -2926,7 +2926,7 @@ namespace HigherYoungAllRankGTCharacteristicResidue
 open MetricCodes.Spherical.HigherChannel
 
 /-- The signed ambient characteristic used in the spherical-code argument. -/
-def signedAmbientCharacteristic {r : ℕ}
+@[expose] def signedAmbientCharacteristic {r : ℕ}
     (L : Fin (r + 1) → ℝ) : Polynomial ℝ :=
   Lagrange.nodal
     (Finset.univ : Finset (Fin (r + 1) × Bool))
@@ -3515,7 +3515,7 @@ theorem gtTensorCasimir_tmul {r n : ℕ}
   congr 1
 
 /-- The gt mixed rotation operator used in the spherical-code argument. -/
-def gtMixedRotationOperator {r n : ℕ}
+@[expose] def gtMixedRotationOperator {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     Module.End ℝ (SpherePacking.Euclidean n ⊗[ℝ]
       HarmonicYoungSpace (n := n) lam) :=
@@ -3726,7 +3726,7 @@ open MetricCodes.Spherical.HigherRepresentationGraph (Interlaces)
 open MetricCodes.Spherical.HigherYoungAllRankGTCharacteristicResidue
 
 /-- The gt axis compressed signed projector coefficient used in the spherical-code argument. -/
-def gtAxisCompressedSignedProjectorCoefficient
+@[expose] def gtAxisCompressedSignedProjectorCoefficient
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu)
     (hgram : PositiveGelfandTsetlinFischerGram (n := n) lam mu h)
@@ -6625,7 +6625,7 @@ theorem loweredInternalYoungWeight_appendZeroWeight_castSucc
         not_false_eq_true, Function.update_of_ne, h]
 
 /-- The retained padded pieri signed node used in the spherical-code argument. -/
-def retainedPaddedPieriSignedNode {r : ℕ}
+@[expose] def retainedPaddedPieriSignedNode {r : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     {i : PaddedPieriChannel (appendZeroWeight lam) //
       retainedPaddedPieriChannel lam i} → Fin (r + 1) × Bool
@@ -6845,7 +6845,7 @@ namespace HigherYoungAllRankGTArrowheadSchurComplement
 open MetricCodes.Spherical.HigherChannel
 
 /-- The gt stabilizer arrowhead node used in the spherical-code argument. -/
-def gtStabilizerArrowheadNode {r : ℕ} (rho : ℝ) (M : Fin r → ℝ) :
+@[expose] def gtStabilizerArrowheadNode {r : ℕ} (rho : ℝ) (M : Fin r → ℝ) :
     Unit ⊕ (Fin r × Bool) → ℝ
   | .inl _ => -rho
   | .inr (m, true) => M m - 1 / 2
@@ -6862,7 +6862,7 @@ def gtStabilizerArrowheadNode {r : ℕ} (rho : ℝ) (M : Fin r → ℝ) :
       -M m - 1 / 2 := rfl
 
 /-- The gt stabilizer arrowhead minor used in the spherical-code argument. -/
-def gtStabilizerArrowheadMinor {r : ℕ}
+@[expose] def gtStabilizerArrowheadMinor {r : ℕ}
     (rho : ℝ) (M : Fin r → ℝ) : Polynomial ℝ :=
   Lagrange.nodal
     (Finset.univ : Finset (Unit ⊕ (Fin r × Bool)))

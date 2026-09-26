@@ -17,7 +17,7 @@ Basic matrix lemmas used by the monlib4 automorphism-of-matrix-algebras
 formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Matrix
 

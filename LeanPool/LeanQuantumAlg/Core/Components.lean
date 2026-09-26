@@ -19,4 +19,4 @@ public import LeanPool.LeanQuantumAlg.Core.Components.Control
 This module re-exports named kets, gates, oracle blocks, and control blocks.
 -/
 
-@[expose] public section
+public section

@@ -21,7 +21,7 @@ section
 /-! Concatenation of two paths on closed time intervals. Matching
 endpoint values and derivatives give a genuine derivative at the seam. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -144,7 +144,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

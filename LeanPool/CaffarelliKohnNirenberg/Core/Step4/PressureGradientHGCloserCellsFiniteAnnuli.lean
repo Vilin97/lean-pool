@@ -16,7 +16,7 @@ many dyadic annuli. The near part uses the global Calderón–Zygmund bound;
 each annulus uses the exterior inverse-cube estimate.
 -/
 
-@[expose] public section
+public section
 
 section
 

@@ -18,7 +18,7 @@ frozen-coefficient identity is exact and will be differentiated for quantitative
 parameter estimates; no norm of the weighted primitive is used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -72,7 +72,7 @@ theorem weightedForcing_norm (hg₀ : g ⟨0, le_rfl, hT⟩ = 1) (C : ℝ) (hC :
   nlinarith
 
 /-- The normalized constructed path, with normalized forcing as input. -/
-def weightedSolution (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) : C(Icc (0 : ℝ) T,E) :=
+@[expose] def weightedSolution (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) : C(Icc (0 : ℝ) T,E) :=
   normalize g hg (U.solution (weight g f) a₀)
 
 /-- The normalized solution is still exactly the two actual data maps. -/

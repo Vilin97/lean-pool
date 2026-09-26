@@ -17,7 +17,7 @@ Transporting the standard function-space basis gives the classes of
 `1, w, ..., w^(d-1)`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

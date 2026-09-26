@@ -21,7 +21,7 @@ bounds place its finite cost on coefficient blocks, preserving the input
 and output external radius and factorial shift.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,11 +36,11 @@ variable {P E F ι : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup F] [NormedSpace ℝ F] [Fintype ι]
 
 /-- The fixed-order sum of the actual spatial derivative norms. -/
-def baseSize (directions : ι → P) (q : ℕ) (f : P → E) (x : P) : ℝ :=
+@[expose] def baseSize (directions : ι → P) (q : ℕ) (f : P → E) (x : P) : ℝ :=
   ∑ k ∈ range (q+1), wordSum directions f k x
 
 /-- A fixed Sobolev base norm inside the sum of actual external words. -/
-def block (directions : ι → P) (q : ℕ) (f : P → E) (n : ℕ) (x : P) : ℝ :=
+@[expose] def block (directions : ι → P) (q : ℕ) (f : P → E) (n : ℕ) (x : P) : ℝ :=
   ∑ w : Fin n → ι, baseSize directions q (wordDerivative directions f w) x
 
 /-- The finite base-order Leibniz constant belongs only to the coefficient block. -/

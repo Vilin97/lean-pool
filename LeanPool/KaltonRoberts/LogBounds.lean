@@ -27,7 +27,7 @@ Numerical logarithm bounds proved via the atanh series and exact rational
 estimates.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 

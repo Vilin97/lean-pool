@@ -19,7 +19,7 @@ differentiation and the currying identity for `iteratedFDeriv`; it is not an
 assumption on a separately supplied family of jets.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -274,7 +274,7 @@ variable {F : ℝ → α → E}
 
 /-- One-dimensional form of the same local domination condition, using actual
 scalar iterated derivatives rather than multilinear maps. -/
-def LocallyDominatedDeriv (F : ℝ → α → E) (μ : Measure α) : Prop :=
+@[expose] def LocallyDominatedDeriv (F : ℝ → α → E) (μ : Measure α) : Prop :=
   ∀ (k : ℕ) (x : ℝ), ∃ ε : ℝ, 0 < ε ∧ ∃ bound : α → ℝ,
     Integrable bound μ ∧ ∀ᵐ t ∂μ, ∀ y ∈ ball x ε,
       ‖iteratedDeriv k (fun z => F z t) y‖ ≤ bound t

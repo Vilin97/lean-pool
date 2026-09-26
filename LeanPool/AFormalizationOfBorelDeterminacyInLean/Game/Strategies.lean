@@ -23,7 +23,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame
@@ -113,7 +113,7 @@ lemma restrict_valid (rto : tree A) (hr : rto ≤ T) :
     (fun _ h ↦ ⟨h.2, h.1.2⟩)
 
 /-- the residual strategy for the game starting in position x -/
-def residual (x : List A) : PreStrategy (subAt T x) (p.residual x) :=
+@[expose] def residual (x : List A) : PreStrategy (subAt T x) (p.residual x) :=
   fun y hy ↦ {a | ⟨a.val, by simpa [List.append_assoc] using a.prop⟩ ∈
       S ⟨x ++ y.val, y.prop⟩ (by synthIsPosition)}
 lemma sub_residual_subtree (x : List A) :
@@ -138,7 +138,7 @@ lemma sub_residual_subtree (x : List A) :
   · apply sub_residual_subtree
 
 /-- A quasistrategy is a `PreStrategy` that allows at least one move in every position -/
-def IsQuasi (S : PreStrategy T p) := ∀ x hx, (S x hx).Nonempty
+@[expose] def IsQuasi (S : PreStrategy T p) := ∀ x hx, (S x hx).Nonempty
 end PreStrategy
 variable (T p) in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/

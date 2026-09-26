@@ -38,7 +38,7 @@ isomorphism class and `IsGallierValid` adds it as an explicit disjunct. The pres
 `twoMonogonSphere` is the nonexceptional two-face model obtained by the book's P2 refinement.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -70,11 +70,11 @@ abbrev Face (P : FiniteCyclicPresentation) :=
   Fin P.faces.length
 
 /-- The stored cyclic boundary word of a face. -/
-def boundary (P : FiniteCyclicPresentation) (f : P.Face) : List P.Dart :=
+@[expose] def boundary (P : FiniteCyclicPresentation) (f : P.Face) : List P.Dart :=
   P.faces.get f
 
 /-- Forget the orientation of a signed edge occurrence. -/
-def edgeOfDart {α : Type*} : SignedDart α → α
+@[expose] def edgeOfDart {α : Type*} : SignedDart α → α
   | .pos e => e
   | .neg e => e
 
@@ -84,7 +84,7 @@ theorem edgeOfDart_flip {α : Type*} (d : SignedDart α) :
   cases d <;> rfl
 
 /-- Reverse the traversal direction of a signed boundary word. -/
-def inverseWord {α : Type*} (word : List (SignedDart α)) :
+@[expose] def inverseWord {α : Type*} (word : List (SignedDart α)) :
     List (SignedDart α) :=
   word.reverse.map SignedDart.flip
 
@@ -146,7 +146,7 @@ structure EdgeRelabeling (α β : Type*) where
 namespace EdgeRelabeling
 
 /-- Apply an edge relabeling to a signed dart. -/
-def mapDart {α β : Type*} (e : EdgeRelabeling α β) : SignedDart α → SignedDart β
+@[expose] def mapDart {α β : Type*} (e : EdgeRelabeling α β) : SignedDart α → SignedDart β
   | .pos a =>
       if e.reverse a then
         .neg (e.edgeEquiv a)
@@ -380,7 +380,7 @@ deriving DecidableEq, Fintype
 namespace OrientedFace
 
 /-- A face with its stored traversal orientation. -/
-def pos {P : FiniteCyclicPresentation} (f : P.Face) : P.OrientedFace :=
+@[expose] def pos {P : FiniteCyclicPresentation} (f : P.Face) : P.OrientedFace :=
   ⟨f, false⟩
 
 /-- A face with the traversal orientation opposite to the stored one. -/
@@ -388,7 +388,7 @@ def neg {P : FiniteCyclicPresentation} (f : P.Face) : P.OrientedFace :=
   ⟨f, true⟩
 
 /-- Reverse the traversal orientation of a face. -/
-def flip {P : FiniteCyclicPresentation} (f : P.OrientedFace) :
+@[expose] def flip {P : FiniteCyclicPresentation} (f : P.OrientedFace) :
     P.OrientedFace :=
   ⟨f.face, !f.orientation⟩
 
@@ -458,7 +458,7 @@ theorem orientedBoundary_length (P : FiniteCyclicPresentation)
       cases orientation <;> simp [orientedBoundary]
 
 /-- Multiplicity of an edge in one face boundary. -/
-def faceEdgeMultiplicity (P : FiniteCyclicPresentation) (f : P.Face) (e : P.Edge) : ℕ :=
+@[expose] def faceEdgeMultiplicity (P : FiniteCyclicPresentation) (f : P.Face) (e : P.Edge) : ℕ :=
   ((P.boundary f).map edgeOfDart).count e
 
 /-- Reading a face boundary in the opposite direction does not change edge multiplicities. -/
@@ -475,7 +475,7 @@ theorem orientedBoundary_edgeMultiplicity (P : FiniteCyclicPresentation)
         exact (List.reverse_perm _).count_eq e
 
 /-- Total number of boundary occurrences of an unoriented edge. -/
-def edgeMultiplicity (P : FiniteCyclicPresentation) (e : P.Edge) : ℕ :=
+@[expose] def edgeMultiplicity (P : FiniteCyclicPresentation) (e : P.Edge) : ℕ :=
   ∑ f : P.Face, P.faceEdgeMultiplicity f e
 
 /-- An edge is a boundary edge when it occurs in exactly one face boundary position. -/
@@ -514,7 +514,7 @@ def emptyWordSphere : FiniteCyclicPresentation where
 
 Gallier--Xu page 86 obtains this presentation from `emptyWordSphere` by the P2 face split. Unlike
 the exceptional presentation, it satisfies the ordinary nonempty-boundary validity predicate. -/
-@[reducible]
+@[expose, reducible]
 def twoMonogonSphere : FiniteCyclicPresentation where
   edgeCount := 1
   faces := [[.pos 0], [.neg 0]]

@@ -16,7 +16,7 @@ mean-component bounds, and the localized force estimate used in
 All coefficients are explicit and independent of the solution.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

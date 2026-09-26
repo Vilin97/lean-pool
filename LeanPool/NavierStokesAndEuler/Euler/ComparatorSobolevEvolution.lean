@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
 /-! Repackaging the reference's ordinary functions as the development's smooth
 L² fields. The scalar Euler equations and time-regularity hypotheses coincide. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -20,7 +20,7 @@ All functions below are actual formulas.  Stage inequalities are hypotheses on
 real parameters, not assumptions that suitable profiles or corrections exist.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,7 @@ namespace NavierStokes.OutgoingSchedule
 /-! ## The manuscript's smooth step -/
 
 /-- Sigma, given by `FlatCutoff.edge 1 x / (FlatCutoff.edge 1 x + FlatCutoff.edge 1 (1 - x))`. -/
-def sigma (x : ℝ) : ℝ :=
+@[expose] def sigma (x : ℝ) : ℝ :=
   FlatCutoff.edge 1 x / (FlatCutoff.edge 1 x + FlatCutoff.edge 1 (1 - x))
 
 theorem sigma_denom_pos (x : ℝ) :
@@ -88,7 +88,7 @@ theorem sigma_monotone : Monotone sigma := by
 /-! ## Smooth primitives and the single global slope -/
 
 /-- Primitive, given by `∫ t in (0 : ℝ)..y, g t`. -/
-def primitive (g : ℝ → ℝ) (y : ℝ) : ℝ := ∫ t in (0 : ℝ)..y, g t
+@[expose] def primitive (g : ℝ → ℝ) (y : ℝ) : ℝ := ∫ t in (0 : ℝ)..y, g t
 
 theorem primitive_hasDerivAt {g : ℝ → ℝ} (hg : Continuous g) (y : ℝ) :
     HasDerivAt (primitive g) (g y) y :=
@@ -117,7 +117,7 @@ theorem primitive_increment {g : ℝ → ℝ} (hg : Continuous g) (a b c : ℝ)
   simpa only [primitive, hi] using h.symm
 
 /-- Slope, given by `(3 / 5) * (1 - sigma y) - lam * sigma (y - (dropLength + 1))`. -/
-def slope (dropLength lam y : ℝ) : ℝ :=
+@[expose] def slope (dropLength lam y : ℝ) : ℝ :=
   (3 / 5) * (1 - sigma y) - lam * sigma (y - (dropLength + 1))
 
 theorem slope_contDiff (dropLength lam : ℝ) : ContDiff ℝ ∞ (slope dropLength lam) :=
@@ -138,18 +138,18 @@ theorem slope_hold {dropLength lam y : ℝ} (hd : 0 ≤ dropLength)
     sigma_one (by linarith : 1 ≤ y - (dropLength + 1))]
 
 /-- Log amplitude, given by `primitive (fun y => slope dropLength lam y - 1 / 2)`. -/
-def logAmplitude (dropLength lam : ℝ) : ℝ → ℝ :=
+@[expose] def logAmplitude (dropLength lam : ℝ) : ℝ → ℝ :=
   primitive (fun y => slope dropLength lam y - 1 / 2)
 
 /-- Radial amplitude, given by `P * Real.exp (logAmplitude dropLength lam y)`. -/
-def radialAmplitude (P dropLength lam y : ℝ) : ℝ :=
+@[expose] def radialAmplitude (P dropLength lam y : ℝ) : ℝ :=
   P * Real.exp (logAmplitude dropLength lam y)
 
 /-- Shape, given by `(1 + eta ^ 2)⁻¹`. -/
-def shape (eta : ℝ) : ℝ := (1 + eta ^ 2)⁻¹
+@[expose] def shape (eta : ℝ) : ℝ := (1 + eta ^ 2)⁻¹
 
 /-- Angular, given by `radialAmplitude P dropLength lam p.1 * shape p.2`. -/
-def angular (P dropLength lam : ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def angular (P dropLength lam : ℝ) (p : ℝ × ℝ) : ℝ :=
   radialAmplitude P dropLength lam p.1 * shape p.2
 
 theorem logAmplitude_contDiff (dropLength lam : ℝ) :
@@ -276,10 +276,10 @@ theorem initialAxial_contDiff {m : ℝ} (hm : 0 < m) :
 /-! ## The main pulse and fixed, separated repair intervals -/
 
 /-- Pulse ramp, given by `primitive (fun z => sigma (50 * z))`. -/
-def pulseRamp : ℝ → ℝ := primitive (fun z => sigma (50 * z))
+@[expose] def pulseRamp : ℝ → ℝ := primitive (fun z => sigma (50 * z))
 
 /-- Main pulse, given by `pulseRamp z * (1 - sigma (z - 10))`. -/
-def mainPulse (z : ℝ) : ℝ := pulseRamp z * (1 - sigma (z - 10))
+@[expose] def mainPulse (z : ℝ) : ℝ := pulseRamp z * (1 - sigma (z - 10))
 
 theorem pulseRamp_contDiff : ContDiff ℝ ∞ pulseRamp :=
   primitive_contDiff (sigma_contDiff.comp (contDiff_const.mul contDiff_id))
@@ -324,15 +324,15 @@ structure Parameters where
 namespace Parameters
 
 /-- Drop length, given by `Real.exp c.m + 10`. -/
-def dropLength (c : Parameters) : ℝ := Real.exp c.m + 10
+@[expose] def dropLength (c : Parameters) : ℝ := Real.exp c.m + 10
 /-- Hold start, given by `c.dropLength + 2`. -/
-def holdStart (c : Parameters) : ℝ := c.dropLength + 2
+@[expose] def holdStart (c : Parameters) : ℝ := c.dropLength + 2
 /-- Pulse start, given by `c.holdStart + c.wait`. -/
-def pulseStart (c : Parameters) : ℝ := c.holdStart + c.wait
+@[expose] def pulseStart (c : Parameters) : ℝ := c.holdStart + c.wait
 /-- Pulse length, given by `13 / c.lam`. -/
-def pulseLength (c : Parameters) : ℝ := 13 / c.lam
+@[expose] def pulseLength (c : Parameters) : ℝ := 13 / c.lam
 /-- Endpoint, given by `c.pulseStart + c.pulseLength`. -/
-def endpoint (c : Parameters) : ℝ := c.pulseStart + c.pulseLength
+@[expose] def endpoint (c : Parameters) : ℝ := c.pulseStart + c.pulseLength
 
 theorem dropLength_pos (c : Parameters) : 0 < c.dropLength := by
   dsimp [dropLength]
@@ -353,7 +353,7 @@ theorem pulseLength_pos (c : Parameters) : 0 < c.pulseLength :=
   div_pos (by norm_num) c.lam_pos
 
 /-- Exponents, with branches according to `i = 0`. -/
-def exponents (c : Parameters) (i : Fin 2) : ℝ :=
+@[expose] def exponents (c : Parameters) (i : Fin 2) : ℝ :=
   if i = 0 then -(1 / 2 + c.lam) else -(1 / 2 + 2 * c.lam)
 
 /-- The log supports lie inside `(L-3.15,L-2.85)` and `(L-1.15,L-.85)`. -/
@@ -410,22 +410,22 @@ end Parameters
 /-! ## Explicit smooth debts and constructed corrections -/
 
 /-- Prefix M, given by `4 + ∫ y in (0 : ℝ)..c.pulseStart, Real.exp y * dropCoefficient c.m y`. -/
-def prefixM (c : Parameters) : ℝ :=
+@[expose] def prefixM (c : Parameters) : ℝ :=
   4 + ∫ y in (0 : ℝ)..c.pulseStart, Real.exp y * dropCoefficient c.m y
 
 /-- Prefix J as an element of `ℝ`. -/
-def prefixJ (c : Parameters) : ℝ :=
+@[expose] def prefixJ (c : Parameters) : ℝ :=
   (5 / 2) * Real.sqrt 2 * c.P +
     ∫ y in (0 : ℝ)..c.pulseStart,
       Real.sqrt 2 * Real.exp (3 * y / 2) *
         radialAmplitude c.P c.dropLength c.lam y * dropCoefficient c.m y
 
 /-- Pulse amplitude, given by `radialAmplitude c.P c.dropLength c.lam c.pulseStart`. -/
-def pulseAmplitude (c : Parameters) : ℝ :=
+@[expose] def pulseAmplitude (c : Parameters) : ℝ :=
   radialAmplitude c.P c.dropLength c.lam c.pulseStart
 
 /-- Moment scale, with branches according to `i = 0`. -/
-def momentScale (c : Parameters) (i : Fin 2) : ℝ :=
+@[expose] def momentScale (c : Parameters) (i : Fin 2) : ℝ :=
   if i = 0 then Real.exp c.pulseStart * pulseAmplitude c
   else Real.sqrt 2 * Real.exp (3 * c.pulseStart / 2) * pulseAmplitude c ^ 2
 
@@ -440,17 +440,17 @@ theorem momentScale_pos (c : Parameters) (i : Fin 2) : 0 < momentScale c i := by
       (sq_pos_of_pos (pulseAmplitude_pos c))
 
 /-- Prefix coefficient, given by `(if i = 0 then prefixM c else prefixJ c) / momentScale c i`. -/
-def prefixCoefficient (c : Parameters) (i : Fin 2) : ℝ :=
+@[expose] def prefixCoefficient (c : Parameters) (i : Fin 2) : ℝ :=
   (if i = 0 then prefixM c else prefixJ c) / momentScale c i
 
 /-- Main moment, given by `∫ x in (1 : ℝ)..Real.exp c.pulseLength, x ^ c.exponents i * mainPulse
 (c.lam * Real.log x)`. -/
-def mainMoment (c : Parameters) (i : Fin 2) : ℝ :=
+@[expose] def mainMoment (c : Parameters) (i : Fin 2) : ℝ :=
   ∫ x in (1 : ℝ)..Real.exp c.pulseLength,
     x ^ c.exponents i * mainPulse (c.lam * Real.log x)
 
 /-- Debt, given by `-(prefixCoefficient c i * eta * (1 + eta ^ 2) + amp eta * mainMoment c i)`. -/
-def debt (c : Parameters) (amp : ℝ → ℝ) (eta : ℝ) (i : Fin 2) : ℝ :=
+@[expose] def debt (c : Parameters) (amp : ℝ → ℝ) (eta : ℝ) (i : Fin 2) : ℝ :=
   -(prefixCoefficient c i * eta * (1 + eta ^ 2) + amp eta * mainMoment c i)
 
 theorem debt_contDiff (c : Parameters) {amp : ℝ → ℝ} (ha : ContDiff ℝ ∞ amp)
@@ -460,7 +460,7 @@ theorem debt_contDiff (c : Parameters) {amp : ℝ → ℝ} (ha : ContDiff ℝ �
 
 /-- Correction, given by `LocalizedMomentRepair.repair c.exponents c.lower c.upper (debt c amp
 eta) x`. -/
-def correction (c : Parameters) (amp : ℝ → ℝ) (eta x : ℝ) : ℝ :=
+@[expose] def correction (c : Parameters) (amp : ℝ → ℝ) (eta x : ℝ) : ℝ :=
   LocalizedMomentRepair.repair c.exponents c.lower c.upper (debt c amp eta) x
 
 theorem correction_exact (c : Parameters) (amp : ℝ → ℝ) (eta : ℝ) (i : Fin 2) :
@@ -511,7 +511,7 @@ theorem correction_zero_late (c : Parameters) (amp : ℝ → ℝ) (eta : ℝ) {y
 
 /-- Pulse ratio, given by `amp p.2 * mainPulse (c.lam * p.1) + correction c amp p.2 (Real.exp
 p.1)`. -/
-def pulseRatio (c : Parameters) (amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def pulseRatio (c : Parameters) (amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   amp p.2 * mainPulse (c.lam * p.1) + correction c amp p.2 (Real.exp p.1)
 
 theorem pulseRatio_contDiff (c : Parameters) {amp : ℝ → ℝ}
@@ -539,7 +539,7 @@ theorem pulseRatio_zero_late (c : Parameters) (amp : ℝ → ℝ) (eta : ℝ) {y
 
 /-- Axial, given by `initialAxial c.m p + angular c.P c.dropLength c.lam p * pulseRatio c amp
 (p.1 - c.pulseStart, p.2)`. -/
-def axial (c : Parameters) (amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def axial (c : Parameters) (amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   initialAxial c.m p + angular c.P c.dropLength c.lam p *
     pulseRatio c amp (p.1 - c.pulseStart, p.2)
 
@@ -783,11 +783,11 @@ theorem angular_integrand_pulse (c : Parameters) (amp : ℝ → ℝ) (eta : ℝ)
     _ = _ := by rw [he]; ring
 
 /-- `X=e^y`; the first term is the exact mass of the ideal prefix `0<X≤1`. -/
-def massMoment (c : Parameters) (amp : ℝ → ℝ) (eta y : ℝ) : ℝ :=
+@[expose] def massMoment (c : Parameters) (amp : ℝ → ℝ) (eta y : ℝ) : ℝ :=
   4 * eta + ∫ t in (0 : ℝ)..y, Real.exp t * axial c amp (t, eta)
 
 /-- The first term integrates `U H` over the ideal prefix `0<X≤1`. -/
-def angularMoment (c : Parameters) (amp : ℝ → ℝ) (eta y : ℝ) : ℝ :=
+@[expose] def angularMoment (c : Parameters) (amp : ℝ → ℝ) (eta y : ℝ) : ℝ :=
   (5 / 2) * Real.sqrt 2 * c.P * eta * shape eta +
     ∫ t in (0 : ℝ)..y,
       Real.sqrt 2 * Real.exp (3 * t / 2) * angular c.P c.dropLength c.lam (t, eta) *

@@ -51,7 +51,7 @@ line ideal gives the smaller low-complexity rectangle of Corollary 2.3, and
 Theorem 5.1. `nivat` then transfers periods through a rational alphabet labeling.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat
 

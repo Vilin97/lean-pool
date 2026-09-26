@@ -17,7 +17,7 @@ polynomially weighted derivative norm is continuous with compact support and
 is bounded, giving a Schwartz map with the original function as its coercion.
 -/
 
-@[expose] public section
+public section
 
 
 

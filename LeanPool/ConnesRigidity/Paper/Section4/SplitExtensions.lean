@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SplitAbelianExtensi
 The split extensions component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperSplitExtensions

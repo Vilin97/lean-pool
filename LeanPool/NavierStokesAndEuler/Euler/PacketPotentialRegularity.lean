@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialMultiplier
 
 /-! Spatial smoothness of the source vector potential, derived from its literal integral. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

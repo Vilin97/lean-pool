@@ -81,7 +81,7 @@ Everything is **data**; the combinators are built from `idMap`, `curry`, `proj`,
 choice-free.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise508
 

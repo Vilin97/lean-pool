@@ -20,7 +20,7 @@ away from one analytic exceptional factor, its complex specializations keep
 their generic degree and have only simple roots.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology

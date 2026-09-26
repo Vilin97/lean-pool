@@ -25,7 +25,7 @@ section
 
 /-! The source localization estimate for the constructed nonlocal boundary operator. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -126,7 +126,7 @@ section
 
 /-! Integrating the source's different lower bounds inside and outside the core. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -171,7 +171,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -233,7 +233,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

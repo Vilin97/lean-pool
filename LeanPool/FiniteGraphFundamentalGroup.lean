@@ -22,4 +22,4 @@ Tags: algebraic-topology, graph-theory, fundamental-groups, free-groups, coverin
 MSC: 05C25, 55Q05, 20F65
 -/
 
-@[expose] public section
+public section

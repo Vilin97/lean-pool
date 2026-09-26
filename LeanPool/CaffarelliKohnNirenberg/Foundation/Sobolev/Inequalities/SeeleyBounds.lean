@@ -18,7 +18,7 @@ The constants are deliberately coarse absolute constants; their role is to
 make the change-of-variables estimates explicit.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped BigOperators ENNReal

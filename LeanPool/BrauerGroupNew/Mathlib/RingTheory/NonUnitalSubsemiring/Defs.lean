@@ -14,7 +14,7 @@ Imported Lean Pool material for
 `LeanPool.BrauerGroupNew.Mathlib.RingTheory.NonUnitalSubsemiring.Defs`.
 -/
 
-@[expose] public section
+public section
 
 variable {R : Type*} [NonUnitalSemiring R]
 

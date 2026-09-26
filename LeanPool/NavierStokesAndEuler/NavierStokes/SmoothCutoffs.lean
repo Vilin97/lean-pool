@@ -19,7 +19,7 @@ no analyticity assertion is made. The scaled cutoff and time switch are explicit
 functions obtained from that bump. No convergence or PDE claim is encoded here.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -141,7 +141,7 @@ theorem cutoff_iteratedDeriv_bounded (n : ℕ) :
   exact hx.trans (le_max_left _ _)
 
 /-- Scaled cutoff, defined pointwise by `cutoff (a * q)`. -/
-def scaledCutoff (a : ℝ) : ℝ → ℝ := fun q => cutoff (a * q)
+@[expose] def scaledCutoff (a : ℝ) : ℝ → ℝ := fun q => cutoff (a * q)
 
 theorem scaledCutoff_contDiff (a : ℝ) : ContDiff ℝ ∞ (scaledCutoff a) :=
   cutoff_contDiff.comp (contDiff_const.mul contDiff_id)

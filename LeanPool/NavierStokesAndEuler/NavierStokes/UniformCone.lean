@@ -17,7 +17,7 @@ set. Uniform margins, a single amplitude threshold, and a common perturbation
 radius are conclusions of the theorems, not assumptions.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

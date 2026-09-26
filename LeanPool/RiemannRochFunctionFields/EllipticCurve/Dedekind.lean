@@ -23,7 +23,7 @@ localization of a polynomial PID, so its maximal ideal is principal and the loca
 The main result is the `IsDedekindDomain W.CoordinateRing` instance.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped Polynomial.Bivariate

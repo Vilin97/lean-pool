@@ -37,7 +37,7 @@ lifted variable embedding `ctxLiftEmb` (no term relabeling of built formulas).
 * The nested-formula pilot `R(f(g(x), h(c)))`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

@@ -16,7 +16,7 @@ Kernel-reduced checks for the three configurations used during the convex
 regressions use them without importing the closure stack.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3.Witnesses
 

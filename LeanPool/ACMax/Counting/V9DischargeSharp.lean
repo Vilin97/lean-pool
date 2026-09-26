@@ -35,7 +35,7 @@ so its minimum sits at `17H = 4N − 200`; there `4913·gap − cubic` splits *e
 three manifestly non-negative products, and `strip_cubic_sharp` closes.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

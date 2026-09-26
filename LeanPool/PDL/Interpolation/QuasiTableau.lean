@@ -11,7 +11,7 @@ public import LeanPool.PDL.Interpolation.Cluster
 
 /-! ## Quasi-Tableaux (Def 9.8) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -29,13 +29,13 @@ inductive QuasiTab : Type | QNode : (k : Typ) → (Δ : Sequent) → (next : Lis
 open QuasiTab
 
 /-- The type `k(x)` of the root of a quasi-tableau. -/
-def QuasiTab.typ : QuasiTab → Typ | .QNode k _ _ => k
+@[expose] def QuasiTab.typ : QuasiTab → Typ | .QNode k _ _ => k
 
 /-- The label `Δₓ` of the root of a quasi-tableau. -/
-def QuasiTab.label : QuasiTab → Sequent | .QNode _ Δ _ => Δ
+@[expose] def QuasiTab.label : QuasiTab → Sequent | .QNode _ Δ _ => Δ
 
 /-- The children `⋖Q` of the root of a quasi-tableau. -/
-def QuasiTab.children : QuasiTab → List QuasiTab | .QNode _ _ next => next
+@[expose] def QuasiTab.children : QuasiTab → List QuasiTab | .QNode _ _ next => next
 
 /-- All nodes of a quasi-tableau, each given by the subtree rooted at it. -/
 def QuasiTab.subtrees : QuasiTab → List QuasiTab
@@ -279,7 +279,7 @@ and `x <_Q y` becomes "`x` is a proper prefix of `y`". -/
 namespace QuasiTab
 
 /-- The subtree of `q` rooted at the node with address `x`, if there is such a node. -/
-def atOpt : QuasiTab → List Nat → Option QuasiTab
+@[expose] def atOpt : QuasiTab → List Nat → Option QuasiTab
   | q, [] => some q
   | q, (i :: rest) =>
     match q.children[i]? with
@@ -295,19 +295,19 @@ def addresses : QuasiTab → List (List Nat)
       [] :: (next.map addresses).zipIdx.flatMap (fun p => p.1.map (fun a => p.2 :: a))
 
 /-- The label `Δₓ` of the node at address `x`. -/
-def labelAt (q : QuasiTab) (x : List Nat) : Option Sequent := (q.atOpt x).map label
+@[expose] def labelAt (q : QuasiTab) (x : List Nat) : Option Sequent := (q.atOpt x).map label
 
 /-- The type `k(x)` of the node at address `x`. -/
-def typAt (q : QuasiTab) (x : List Nat) : Option Typ := (q.atOpt x).map typ
+@[expose] def typAt (q : QuasiTab) (x : List Nat) : Option Typ := (q.atOpt x).map typ
 
 /-- The addresses of the children of the node at address `x`. -/
-def childrenAt (q : QuasiTab) (x : List Nat) : List (List Nat) :=
+@[expose] def childrenAt (q : QuasiTab) (x : List Nat) : List (List Nat) :=
   match q.atOpt x with
   | none => []
   | some n => (List.range n.children.length).map (fun i => x ++ [i])
 
 /-- Is the node at address `x` a leaf? (Also `false` when there is no node at `x`.) -/
-def isLeafAt (q : QuasiTab) (x : List Nat) : Bool :=
+@[expose] def isLeafAt (q : QuasiTab) (x : List Nat) : Bool :=
   match q.atOpt x with
   | none => false
   | some n => n.children.isEmpty
@@ -327,7 +327,7 @@ order. -/
 def qlt (x y : List Nat) : Prop := x <+: y ∧ x ≠ y
 
 /-- `x ⋖Q y`, i.e. `y` is a child of `x`. -/
-def qedge (q : QuasiTab) (x y : List Nat) : Prop := y ∈ q.childrenAt x
+@[expose] def qedge (q : QuasiTab) (x y : List Nat) : Prop := y ∈ q.childrenAt x
 
 /-- Def 9.11: the companion `c(x)` of a repeat leaf `x`, that is, the node `z <_Q x` of
 type 1 with the same label as `x`. Because repeats are identified at the first opportunity
@@ -337,11 +337,11 @@ def companionOpt (q : QuasiTab) (x : List Nat) : Option (List Nat) :=
   x.inits.dropLast.find? (fun z => decide (q.labelAt z = q.labelAt x ∧ q.typAt z = some .one))
 
 /-- Def 9.8: `x` is a *repeat* leaf of `q`, i.e. a leaf of type 1 that has a companion. -/
-def isRepeatLeaf (q : QuasiTab) (x : List Nat) : Bool :=
+@[expose] def isRepeatLeaf (q : QuasiTab) (x : List Nat) : Bool :=
   q.isLeafAt x && decide (q.typAt x = some .one) && (q.companionOpt x).isSome
 
 /-- All repeat leaves of `q`. -/
-def repeatLeaves (q : QuasiTab) : List (List Nat) := q.leaves.filter q.isRepeatLeaf
+@[expose] def repeatLeaves (q : QuasiTab) : List (List Nat) := q.leaves.filter q.isRepeatLeaf
 
 /-- Def 9.11: `K_Q`, the set of companions. -/
 def companions (q : QuasiTab) : List (List Nat) :=

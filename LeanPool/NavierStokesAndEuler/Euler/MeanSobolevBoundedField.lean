@@ -21,7 +21,7 @@ any finite-dimensional real target. It is used only for qualitative closure;
 the sharp word estimates use their previously proved direct bounds.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

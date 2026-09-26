@@ -21,7 +21,7 @@ Tags: polynomials, analysis, combinatorics, linear-algebra, graph-theory
 MSC: 26D15, 05C50, 15A42
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

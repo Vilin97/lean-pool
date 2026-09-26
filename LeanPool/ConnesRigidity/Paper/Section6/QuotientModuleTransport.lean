@@ -14,7 +14,7 @@ This file proves the concrete quotient and module transport in Zhou's
 Section 6 argument. It uses public project statements only.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperCharacteristicTransport

@@ -20,7 +20,7 @@ Volterra operator. Smooth inversion then gives parameter dependence without
 assuming smoothness of a pre-existing family of solutions.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.ParametricODE
@@ -42,7 +42,7 @@ abbrev Coefficient (a b : ℝ) (E : Type*) [NormedAddCommGroup E] [NormedSpace �
 variable {a b : ℝ} (hab : a ≤ b)
 
 /-- Extend, given by `f (projIcc a b hab t)`. -/
-def extend (f : Curve a b E) (t : ℝ) : E := f (projIcc a b hab t)
+@[expose] def extend (f : Curve a b E) (t : ℝ) : E := f (projIcc a b hab t)
 
 omit [NormedSpace ℝ E] [CompleteSpace E] in
 theorem continuous_extend (f : Curve a b E) : Continuous (extend hab f) :=
@@ -96,6 +96,7 @@ theorem integrator_apply (f : Curve a b E) (t : Icc a b) :
     integrator hab f t = ∫ s in a..(t : ℝ), extend hab f s := rfl
 
 /-- Apply coefficient, given by `⟨fun t => A t (u t), A.continuous.clm_apply u.continuous⟩`. -/
+@[expose]
 noncomputable def applyCoefficient (A : Coefficient a b E) (u : Curve a b E) : Curve a b E :=
   ⟨fun t => A t (u t), A.continuous.clm_apply u.continuous⟩
 
@@ -264,11 +265,11 @@ def constantCurve : E →L[ℝ] Curve a b E :=
         (fun _ => le_rfl))
 
 /-- Source, given by `constantCurve x₀ + integrator hab f`. -/
-def source (x₀ : E) (f : Curve a b E) : Curve a b E :=
+@[expose] def source (x₀ : E) (f : Curve a b E) : Curve a b E :=
   constantCurve x₀ + integrator hab f
 
 /-- The constructed solution as a continuous path, not an assumed solution family. -/
-def solution (A : Coefficient a b E) (x₀ : E) (f : Curve a b E) : Curve a b E :=
+@[expose] def solution (A : Coefficient a b E) (x₀ : E) (f : Curve a b E) : Curve a b E :=
   resolvent hab A (source hab x₀ f)
 
 theorem resolvent_equation (A : Coefficient a b E) (g : Curve a b E) :
@@ -299,7 +300,7 @@ theorem solution_initial (A : Coefficient a b E) (x₀ : E) (f : Curve a b E) :
 
 /-- Solution extension, given by `x₀ + ∫ s in a..t, extend hab (applyCoefficient A (solution hab
 A x₀ f) + f) s`. -/
-def solutionExtension (A : Coefficient a b E) (x₀ : E) (f : Curve a b E) (t : ℝ) : E :=
+@[expose] def solutionExtension (A : Coefficient a b E) (x₀ : E) (f : Curve a b E) (t : ℝ) : E :=
   x₀ + ∫ s in a..t, extend hab (applyCoefficient A (solution hab A x₀ f) + f) s
 
 theorem solutionExtension_coe (A : Coefficient a b E) (x₀ : E)

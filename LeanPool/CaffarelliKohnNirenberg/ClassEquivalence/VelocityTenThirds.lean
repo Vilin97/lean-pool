@@ -49,7 +49,7 @@ norms: a component is bounded by the sup norm on the way into the interpolation,
 and the Euclidean norm is bounded by `√3` times the sup norm on the way out.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology

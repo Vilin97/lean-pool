@@ -30,7 +30,7 @@ each splitting's PDE data as a `DbarGlueData` (via `GlueForm01.lean`), whose glu
   `dolbForm_mem_range_of_mem_B1`, `dolbForm_res_sub_mem`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

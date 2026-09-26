@@ -35,7 +35,7 @@ All powers here have natural exponents. Constants and neighborhoods may depend
 on the requested power, as they do in a flatness statement.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 
@@ -158,7 +158,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -520,7 +520,7 @@ theorem residual_add_sub_on {u w : VelocityField} {p r : PressureField}
   abel
 
 /-- The difference of the two actual viscosity-one Navier--Stokes residuals. -/
-def residualDifference (u w : VelocityField) (p r : PressureField) : VelocityField :=
+@[expose] def residualDifference (u w : VelocityField) (p r : PressureField) : VelocityField :=
   fun z => navierStokesResidual (fun y => u y + w y) (fun y => p y + r y) z.1 z.2 -
     navierStokesResidual u p z.1 z.2
 

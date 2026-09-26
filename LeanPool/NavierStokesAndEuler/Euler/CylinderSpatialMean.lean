@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverage
 
 /-! A genuine bounded cylinder-to-spatial mean, defined by the adjoint of constant extension. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorOpera
 
 /-! Literal packet operators and coefficient witnesses from the given analytic source data. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

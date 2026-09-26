@@ -22,7 +22,7 @@ definition for arbitrary `n`, `m`, and `r`; its rank is exactly `r` when
 `r ≤ n` and `r ≤ m`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace LocalComplexGeometry
@@ -30,7 +30,7 @@ namespace LocalComplexGeometry
 noncomputable section
 
 /-- The complex dimension of the range of a continuous complex-linear map. -/
-def complexRank {n m : ℕ}
+@[expose] def complexRank {n m : ℕ}
     (A : ComplexEuclidean n →L[ℂ] ComplexEuclidean m) : ℕ :=
   Module.finrank ℂ (LinearMap.range A.toLinearMap)
 

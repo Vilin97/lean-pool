@@ -35,7 +35,7 @@ existing zero-endpoint Hilbert space; the proved energy coercivity then
 identifies all constructions of the same weak solution.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -153,7 +153,7 @@ section
 /-! The stationary path selected by the actual activation argument is the
 same history used by the packet, after matching its physical terminal trace. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -256,7 +256,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -376,7 +376,7 @@ section
 strain error and compression bounds imply the compressed terminal-matrix
 hypotheses, so no abstract endpoint matrix or plane isometry is supplied. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -469,7 +469,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

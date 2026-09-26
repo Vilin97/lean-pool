@@ -19,7 +19,7 @@ Shared definitions for the proof of local accelerated convergence:
 - Tangent/normal space of an embedded manifold
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -33,7 +33,7 @@ variable {d : ℕ}
 /-! ## Hessian quadratic form -/
 
 /-- The Hessian quadratic form: ξᵀ D²f(x) ξ = ⟨(D(∇f)(x)) ξ, ξ⟩. -/
-def hessianQuadForm (f : E d → ℝ) (x ξ : E d) : ℝ :=
+@[expose] def hessianQuadForm (f : E d → ℝ) (x ξ : E d) : ℝ :=
   @inner ℝ _ _ (fderiv ℝ (gradient f) x ξ) ξ
 
 /-! ## Modified Nesterov scheme -/
@@ -46,7 +46,7 @@ structure NesterovState (d : ℕ) where
   v : E d
 
 /-- The look-ahead point x' = x + √η · v. -/
-def NesterovState.lookahead (s : NesterovState d) (η : ℝ) : E d :=
+@[expose] def NesterovState.lookahead (s : NesterovState d) (η : ℝ) : E d :=
   s.x + Real.sqrt η • s.v
 
 /-- One step of the modified Nesterov scheme:
@@ -55,7 +55,7 @@ def NesterovState.lookahead (s : NesterovState d) (η : ℝ) : E d :=
     x₊ = x' - η · g       (gradient step)
     v₊ = ρ(v - √η · g)    (momentum update)
 -/
-def nesterovStep (f : E d → ℝ) (η ρ : ℝ) (s : NesterovState d) : NesterovState d :=
+@[expose] def nesterovStep (f : E d → ℝ) (η ρ : ℝ) (s : NesterovState d) : NesterovState d :=
   let x' := s.lookahead η
   let g := gradient f x'
   { x := x' - η • g
@@ -63,7 +63,7 @@ def nesterovStep (f : E d → ℝ) (η ρ : ℝ) (s : NesterovState d) : Nestero
 
 /-- The Nesterov sequence starting from x₁ with v₁ = 0.
     Index 0 corresponds to iteration 1 in the paper. -/
-def nesterovSeq (f : E d → ℝ) (η ρ : ℝ) (x₁ : E d) : ℕ → NesterovState d
+@[expose] def nesterovSeq (f : E d → ℝ) (η ρ : ℝ) (x₁ : E d) : ℕ → NesterovState d
   | 0     => { x := x₁, v := 0 }
   | n + 1 => nesterovStep f η ρ (nesterovSeq f η ρ x₁ n)
 
@@ -79,13 +79,13 @@ def nesterovH (f : E d → ℝ) (η ρ : ℝ) (x₁ : E d) (n : ℕ) : E d :=
 
 /-- Normal displacement: e_n = x'_n - π(x'_n), the error from the manifold.
     Here π is the nearest-point projection. -/
-def normalDisp (π : E d → E d) (f : E d → ℝ) (η ρ : ℝ) (x₁ : E d) (n : ℕ) : E d :=
+@[expose] def normalDisp (π : E d → E d) (f : E d → ℝ) (η ρ : ℝ) (x₁ : E d) (n : ℕ) : E d :=
   let x' := (nesterovSeq f η ρ x₁ n).lookahead η
   x' - π x'
 
 /-- Auxiliary variable: u_n = P⊥ v_n + √μ' · e_n,
     where P⊥ = Id - P is the normal projector (P projects onto tangent space). -/
-def auxVar (P : E d →L[ℝ] E d) (μ' : ℝ) (π : E d → E d)
+@[expose] def auxVar (P : E d →L[ℝ] E d) (μ' : ℝ) (π : E d → E d)
     (f : E d → ℝ) (η ρ : ℝ) (x₁ : E d) (n : ℕ) : E d :=
   let s := nesterovSeq f η ρ x₁ n
   let perpV := s.v - P s.v
@@ -104,13 +104,13 @@ def curvatureError (P π : E d → E d) (f : E d → ℝ) (η ρ : ℝ) (x₁ : 
 
 /-- The potential Ψ(x) = f(x) - f⋆ + (μ'/2) · dist(x, S)².
     Combines the optimality gap with a quadratic distance penalty. -/
-def psi (f : E d → ℝ) (μ' : ℝ) (S : Set (E d)) (x : E d) : ℝ :=
+@[expose] def psi (f : E d → ℝ) (μ' : ℝ) (S : Set (E d)) (x : E d) : ℝ :=
   (f x - fStar f) + μ' / 2 * (Metric.infDist x S) ^ 2
 
 /-- The Lyapunov function:
     L_n = (f(x_n) - f⋆) + ½‖u_n‖² + lam‖P v_n‖²
     where lam = (1+a)²/(2(1-a)) and a = √(μ'·η). -/
-def lyapunov (P : E d →L[ℝ] E d) (μ' : ℝ) (π : E d → E d)
+@[expose] def lyapunov (P : E d →L[ℝ] E d) (μ' : ℝ) (π : E d → E d)
     (f : E d → ℝ) (η ρ : ℝ) (x₁ : E d) (n : ℕ) : ℝ :=
   let s := nesterovSeq f η ρ x₁ n
   let u := auxVar P μ' π f η ρ x₁ n

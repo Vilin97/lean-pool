@@ -18,7 +18,7 @@ This file restores the upstream tensor-product quantum-set instance and the
 fourfold tensor-shuffle lemmas used by later quantum-graph files.
 -/
 
-@[expose] public section
+public section
 
 variable {A : Type*} [ha : starAlgebra A]
   {B : Type*} [hb : starAlgebra B]

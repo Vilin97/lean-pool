@@ -26,7 +26,7 @@ Frobenius transport of `MCM/ComplementTransport.lean` preserves the cardinality 
 derivative image.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

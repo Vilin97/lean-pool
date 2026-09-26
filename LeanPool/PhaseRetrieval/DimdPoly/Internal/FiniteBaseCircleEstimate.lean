@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # FiniteBaseCircleEstimate -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,12 +36,12 @@ explicit support and gap parameters.
 -/
 
 /-- `lowPoly`: low Poly. -/
-noncomputable def lowPoly {D : Nat} (q : Fin (D + 1) -> ℂ) :
+@[expose] noncomputable def lowPoly {D : Nat} (q : Fin (D + 1) -> ℂ) :
     AddCircle (2 * Real.pi) -> ℂ :=
   fun t => ∑ n : Fin (D + 1), q n * circleChar n.1 t
 
 /-- `bandPoly`: band Poly. -/
-noncomputable def bandPoly (N : Nat) {L : Nat} (p : Fin L -> ℂ) :
+@[expose] noncomputable def bandPoly (N : Nat) {L : Nat} (p : Fin L -> ℂ) :
     AddCircle (2 * Real.pi) -> ℂ :=
   fun t => ∑ m : Fin L, p m * circleChar (N + m.1) t
 
@@ -249,7 +249,7 @@ noncomputable def circleL2Sq (f : AddCircle (2 * Real.pi) -> ℂ) : ℝ :=
   ∫ t, ‖f t‖ ^ 2 ∂ AddCircle.haarAddCircle
 
 /-- `defectSq`: defect Sq. -/
-noncomputable def defectSq
+@[expose] noncomputable def defectSq
     (Q P : AddCircle (2 * Real.pi) -> ℂ) : ℝ :=
   ∫ t, (‖Q t + P t‖ - ‖Q t‖) ^ 2 ∂ AddCircle.haarAddCircle
 

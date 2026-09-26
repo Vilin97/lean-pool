@@ -24,7 +24,7 @@ velocity alone. Pressure regularity follows from the projected equation.
 Every solution has one continuous strong time derivative in every
 spatial Sobolev order. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -101,7 +101,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

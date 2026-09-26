@@ -12,7 +12,7 @@ public import Mathlib.Tactic.Push
 # An explicit family with finite witnesses of unbounded size
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness.TwoCore
 

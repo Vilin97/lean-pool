@@ -27,7 +27,7 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.6,
   `finite_setOf_ord_neg/pos`, `eventually_ord_eq_zero`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

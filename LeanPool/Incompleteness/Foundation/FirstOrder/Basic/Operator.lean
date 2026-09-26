@@ -12,7 +12,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # Operator -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -199,6 +199,7 @@ lemma _root_.LO.FirstOrder.Semiterm.Operator.Star.term_eq [L.Star] :
 open Language Semiterm
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def numeral (L : Language) [Operator.Zero L] [Operator.One L] [Operator.Add L] : ℕ → Const L
   | 0     => Zero.zero
   | n + 1 => Add.add.foldr One.one (List.replicate n One.one)
@@ -383,7 +384,7 @@ abbrev Const (L : Language.{u}) := Operator L 0
 namespace Operator
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def operator {arity : ℕ} (o : Operator L arity) (v : Fin arity → Semiterm L ξ n) :
+@[expose] def operator {arity : ℕ} (o : Operator L arity) (v : Fin arity → Semiterm L ξ n) :
     Semiformula L ξ n := Rewriting.embedding o.sentence <~ v
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -409,7 +410,7 @@ lemma operator_comp (o : Operator L k) (w : Fin k → Semiterm.Operator L l) (v 
 def and {k} (o₁ o₂ : Operator L k) : Operator L k := ⟨o₁.sentence ⋏ o₂.sentence⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def or {k} (o₁ o₂ : Operator L k) : Operator L k := ⟨o₁.sentence ⋎ o₂.sentence⟩
+@[expose] def or {k} (o₁ o₂ : Operator L k) : Operator L k := ⟨o₁.sentence ⋎ o₂.sentence⟩
 
 @[simp] lemma operator_and (o₁ o₂ : Operator L k) (v : Fin k → Semiterm L ξ n) :
   (o₁.and o₂).operator v = o₁.operator v ⋏ o₂.operator v := by simp [operator, and]
@@ -554,11 +555,11 @@ lemma eval_operator {k} {o : Operator L k} {v : Fin k → Semiterm L ξ n} :
 end «lp_section_5»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ballLT [Operator.LT L] (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
+@[expose] def ballLT [Operator.LT L] (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
     Semiformula L ξ n := ∀[Operator.LT.lt.operator ![#0, Rew.bShift t]] φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def bexLT [Operator.LT L] (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
+@[expose] def bexLT [Operator.LT L] (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
     Semiformula L ξ n := ∃[Operator.LT.lt.operator ![#0, Rew.bShift t]] φ
 
 /-- Imported declaration from the Incompleteness formalization. -/

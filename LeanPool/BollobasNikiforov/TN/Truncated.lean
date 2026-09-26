@@ -20,7 +20,7 @@ This file records the elementary algebraic facts about the kernels
 part is `max · 0`.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 
@@ -33,7 +33,7 @@ def unrestrictedSquare (a : ι → ℝ) (t : κ → ℝ) : Matrix ι κ ℝ :=
   fun i j => (t j - a i) ^ 2
 
 /-- The truncated square kernel `(i, j) ↦ (t j - a i)₊²`. -/
-def truncatedSquare (a : ι → ℝ) (t : κ → ℝ) : Matrix ι κ ℝ :=
+@[expose] def truncatedSquare (a : ι → ℝ) (t : κ → ℝ) : Matrix ι κ ℝ :=
   fun i j => (max (t j - a i) 0) ^ 2
 
 @[simp] lemma unrestrictedSquare_apply (a : ι → ℝ) (t : κ → ℝ) (i : ι) (j : κ) :

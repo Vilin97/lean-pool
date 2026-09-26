@@ -20,7 +20,7 @@ BayesianLearner extends BatchLearner with Bayesian inference machinery.
 GibbsPosterior adds temperature for PAC-Bayes optimization.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

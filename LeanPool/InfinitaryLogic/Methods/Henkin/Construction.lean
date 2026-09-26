@@ -37,7 +37,7 @@ existence theorem for Lω₁ω. The construction proceeds in several stages:
 - [Kei71]
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

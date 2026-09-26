@@ -14,4 +14,4 @@ public import LeanPool.FormalLearningTheory.Complexity.Generalization.Tail
 Import-only index for the generalization infrastructure.
 -/
 
-@[expose] public section
+public section

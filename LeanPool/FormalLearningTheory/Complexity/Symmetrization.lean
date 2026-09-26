@@ -38,7 +38,7 @@ NOT the relaxed iid Rademacher approach. This is the structurally correct argume
 that avoids introducing unnecessary independence assumptions.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

@@ -11,7 +11,7 @@ public import LeanPool.Feige.ProductTwoPointKernel
 # Probability instance for the recursive latent product
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

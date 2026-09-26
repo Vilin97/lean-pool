@@ -33,7 +33,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
   `[CompactSpace Y]`, the only statement in the unit that does).
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Function
 open scoped ContDiff Manifold Topology

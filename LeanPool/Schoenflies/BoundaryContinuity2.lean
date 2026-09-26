@@ -88,7 +88,7 @@ corresponding target side, whose trace on `S` is `u(A₁)` — and `r ∉ A₁`.
   **`thm:square-extension`**.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Filter Metric Schoenflies Set Topology
 open scoped Graph

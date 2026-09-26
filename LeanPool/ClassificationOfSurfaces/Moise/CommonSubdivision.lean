@@ -16,7 +16,7 @@ subordinate to a target mesh with the same support, cut it by every barycentric-
 hyperplane of every target triangle.  The resulting chambers lie in target triangles.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

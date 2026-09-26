@@ -30,7 +30,7 @@ move chain, which may pass through the exceptional empty-word sphere where
 subdivision implies move equivalence, but no converse or confluence theorem is asserted here.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

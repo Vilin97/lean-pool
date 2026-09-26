@@ -14,7 +14,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 This file proves the exact rank formula for the adele filtration and the sandwich identity.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 open IsDedekindDomain Cardinal

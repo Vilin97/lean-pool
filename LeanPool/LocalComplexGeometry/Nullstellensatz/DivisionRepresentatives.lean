@@ -21,7 +21,7 @@ prepared-root locality then specializes it simultaneously at every root of a
 nearby prepared fiber.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators Topology

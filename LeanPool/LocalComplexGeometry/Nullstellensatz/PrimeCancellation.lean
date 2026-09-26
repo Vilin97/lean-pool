@@ -20,7 +20,7 @@ the lower-dimensional prime theorem puts the product in the prime, and
 primality cancels `D`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace LocalComplexGeometry

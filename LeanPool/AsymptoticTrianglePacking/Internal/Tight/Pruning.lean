@@ -27,7 +27,7 @@ Pure `Finset` combinatorics, no probability.  placeholder-free and axiom-clean
 `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 

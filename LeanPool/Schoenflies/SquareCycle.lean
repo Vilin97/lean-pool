@@ -67,7 +67,7 @@ boundary, a number in `[0, 8r)`.  It is affine on each side, and it is the order
   `lem:polygonal-overlay`'s cut points into an ordered cycle.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph

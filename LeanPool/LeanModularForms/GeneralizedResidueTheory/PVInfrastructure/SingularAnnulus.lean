@@ -27,7 +27,7 @@ bound used in the dyadic PV convergence proof.
 * `singular_annulus_bound_explicit` — epsilon-independent bound on singular integral
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

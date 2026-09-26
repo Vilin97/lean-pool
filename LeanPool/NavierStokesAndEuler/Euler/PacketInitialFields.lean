@@ -21,7 +21,7 @@ section
 word bound. Restoring a time weight uses its value at that time, retaining
 the source's initial alpha factor. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -147,7 +147,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -157,7 +157,7 @@ open Set Finset EulerSmoothLimit EulerPacketProfileRecursion EulerPacketPointJet
   EulerPacketCylinderField EulerFiniteGrades
 
 /-- Time slice, defined pointwise by `f (t,z.2)`. -/
-def timeSlice (t : ℝ) (f : VectorField) : VectorField := fun z => f (t,z.2)
+@[expose] def timeSlice (t : ℝ) (f : VectorField) : VectorField := fun z => f (t,z.2)
 
 /-- High grade, given by `assemble N (fun i => timeSlice t (a i).high) (fun i => timeSlice t (a
 i).corrector)`. -/
@@ -165,7 +165,7 @@ def highGrade (N : ℕ) (t : ℝ) (a : ℕ → Profile) : ℕ → VectorField :=
   assemble N (fun i => timeSlice t (a i).high) (fun i => timeSlice t (a i).corrector)
 
 /-- Mean grade, given by `truncate N (fun i => timeSlice t (a i).mean)`. -/
-def meanGrade (N : ℕ) (t : ℝ) (a : ℕ → Profile) : ℕ → VectorField :=
+@[expose] def meanGrade (N : ℕ) (t : ℝ) (a : ℕ → Profile) : ℕ → VectorField :=
   truncate N (fun i => timeSlice t (a i).mean)
 
 /-- High, given by `fieldSum (N+1) κ (highGrade N t a)`. -/

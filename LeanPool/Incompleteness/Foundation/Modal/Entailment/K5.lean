@@ -14,7 +14,7 @@ import Mathlib.Tactic.SetLike
 
 /-! # K5 -/
 
-@[expose] public section
+public section
 
 
 namespace LO

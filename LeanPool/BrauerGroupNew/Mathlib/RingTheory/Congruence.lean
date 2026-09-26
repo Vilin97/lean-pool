@@ -16,4 +16,4 @@ import Mathlib.Tactic.NormNum.Pow
 Import index for the Brauer group formalization.
 -/
 
-@[expose] public section
+public section

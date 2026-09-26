@@ -21,7 +21,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Morita.TensorProduct`.
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 

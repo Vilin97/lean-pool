@@ -29,7 +29,7 @@ that identifies `L(W − D)` with `Ω(D)`.
 * `FunctionField.duality`
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 

@@ -51,7 +51,7 @@ This module collects the five closure facts as concrete lemmas; everything is
 **choice-free**.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

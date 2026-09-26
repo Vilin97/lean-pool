@@ -22,7 +22,7 @@ Hessian, and define `H²` as the topological closure of the range inside an ambi
 No Rellich/elliptic regularity theorems are proved here; this file is purely definitional/API.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis

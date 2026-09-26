@@ -29,7 +29,7 @@ Semantic anchors (see `Moise/Countermodels.lean` and the Definition Faithfulness
 * non-example: `ℝ` and `ℚ` admit no geometric triangulation (they are not compact).
 -/
 
-@[expose] public section
+public section
 
 /-- A finite closed cover of a preconnected set has a connected intersection graph.
 
@@ -265,7 +265,7 @@ end stdSimplex
 points of the standard simplex on `V` whose support lies inside some face of `F`.  For a face `t`
 this carves out the geometric simplex spanned by `t`, so the realization is the finite union of
 the geometric simplexes of `F`, glued along shared barycentric-coordinate faces. -/
-def GeometricRealization (V : Type*) [Fintype V] (F : Finset (Finset V)) : Set (V → ℝ) :=
+@[expose] def GeometricRealization (V : Type*) [Fintype V] (F : Finset (Finset V)) : Set (V → ℝ) :=
   {x | x ∈ stdSimplex ℝ V ∧ ∃ t ∈ F, ∀ v ∉ t, x v = 0}
 
 /-- The geometric simplex carried by one finite set of vertices. -/
@@ -497,7 +497,7 @@ theorem mem_of_reflTransGen_faceAdjacentAtVertex
   | tail _h hstep _ih => exact mem_right_of_faceAdjacentAtVertex hstep
 
 /-- Every two listed triangles are connected by a finite chain of shared edges. -/
-def IsDualConnected (faces : Finset (Finset Vertex)) : Prop :=
+@[expose] def IsDualConnected (faces : Finset (Finset Vertex)) : Prop :=
   ∀ f g : Face faces, Relation.ReflTransGen (FaceAdjacent faces) f g
 
 /-- Every pair of triangles incident to one vertex can be joined through shared edges.

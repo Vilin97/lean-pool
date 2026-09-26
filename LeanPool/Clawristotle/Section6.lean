@@ -16,7 +16,7 @@ Proves that the drift velocity u_inf = 0 using Ampere's law, Stokes' theorem
 on the torus, and positivity of the charge density.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

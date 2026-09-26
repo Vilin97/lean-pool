@@ -14,7 +14,7 @@ public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology Interval
 open MeasureTheory MeasureTheory.Measure Set Filter
@@ -29,6 +29,7 @@ open CKN.Foundation.Parabolic
 /-! The Newtonian kernel representation obtained from the heat semigroup. -/
 
 /-- The positive three-dimensional Newtonian kernel. -/
+@[expose]
 def newtonianKernel (z : Vec3) : ℝ :=
   1 / (4 * Real.pi * vec3EuclideanNorm z)
 

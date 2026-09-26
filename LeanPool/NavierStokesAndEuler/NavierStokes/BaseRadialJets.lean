@@ -18,7 +18,7 @@ factor is `Q^h`.  The exact stream formula includes the factor `1/2` in
 `AxisymmetricFields.velocity_zero`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

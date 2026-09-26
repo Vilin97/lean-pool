@@ -20,7 +20,7 @@ coefficient values on the support set. Thus the localized (H3) propagator
 bound is retained without any estimate outside its stated region.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -59,7 +59,7 @@ theorem full_mem (A : Field (α := α) (V := V)) (u : supportedSpace (V := V) μ
   rw [ha, hu hs, map_zero]
 
 /-- The genuine coefficient operator on the supported Hilbert space. -/
-def operator (A : Field (α := α) (V := V)) :
+@[expose] def operator (A : Field (α := α) (V := V)) :
     supportedSpace (V := V) μ S hS →L[ℝ] supportedSpace (V := V) μ S hS :=
   ((full μ A).comp (supportedSpace μ S hS).subtypeL).codRestrict
     (supportedSpace μ S hS) (full_mem μ S hS A)
@@ -156,7 +156,7 @@ theorem operator_one : operator μ S hS (1 : Field (α := α) (V := V)) =
   exact hx
 
 /-- Coefficient-to-operator lifting is a genuine bounded linear map. -/
-def operatorMap : Field (α := α) (V := V) →L[ℝ]
+@[expose] def operatorMap : Field (α := α) (V := V) →L[ℝ]
     (supportedSpace (V := V) μ S hS →L[ℝ] supportedSpace (V := V) μ S hS) where
   toLinearMap :=
     { toFun := operator μ S hS

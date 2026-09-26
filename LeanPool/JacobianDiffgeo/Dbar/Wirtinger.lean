@@ -28,7 +28,7 @@ project imports, no manifold variables, so downstream planar consumers (`planar-
   `hasCompactSupport_wirtingerDbar`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff
 
@@ -45,7 +45,7 @@ def wirtingerD (f : ℂ → ℂ) (z : ℂ) : ℂ :=
 
 /-- The Wirtinger `dbar` (anti-holomorphic) derivative, `(∂f/∂x + i ∂f/∂y)/2` in real coordinates.
 Junk `0` if `f` is not `ℝ`-differentiable at `z`. -/
-def wirtingerDbar (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+@[expose] def wirtingerDbar (f : ℂ → ℂ) (z : ℂ) : ℂ :=
   (fderiv ℝ f z 1 + Complex.I * fderiv ℝ f z Complex.I) / 2
 
 /-! ### The Wirtinger decomposition of an `ℝ`-linear map -/

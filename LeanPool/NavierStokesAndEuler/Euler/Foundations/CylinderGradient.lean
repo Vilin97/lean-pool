@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
 
 /-! Actual full cylinder gradients from the coordinate derivative Sobolev norms. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

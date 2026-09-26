@@ -12,7 +12,7 @@ public import LeanPool.DirectedTopologyLean4.DirectedPathHomotopy
 # LeanPool.DirectedTopologyLean4.DihomotopyToPathDihomotopy
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the construction of the following statement:

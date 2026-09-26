@@ -17,7 +17,7 @@ import LeanPool.WhiteheadTheorem.Auxiliary
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.DiskHomeoCube`.
 -/
 
-@[expose] public section
+public section
 
 
 open scoped Topology TopCat ENNReal unitInterval

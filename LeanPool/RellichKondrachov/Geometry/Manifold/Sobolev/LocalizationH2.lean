@@ -23,7 +23,7 @@ This extends `RellichKondrachov.Geometry.Manifold.Sobolev.Localization` by showi
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.localize_mem_C2c`
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

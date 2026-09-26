@@ -25,7 +25,7 @@ import Mathlib.Data.Set.Lattice.Order
 # MatchingLogic.Boxes
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -37,11 +37,11 @@ coordinate has a constant as its first component. -/
 abbrev Coord (S : Signature) : Type := (σ : S.Sym) × Fin (S.arity σ)
 
 /-- `⟨e⟩ψ := σ(⊤, …, ψ, …, ⊤)` with `ψ` in position `i` (Definition 3). -/
-def dia (e : Coord S) (ψ : Pattern S Var) : Pattern S Var :=
+@[expose] def dia (e : Coord S) (ψ : Pattern S Var) : Pattern S Var :=
   .app e.1 (fun j => if j = e.2 then ψ else Pattern.tp)
 
 /-- `[e]ψ := ⟨e⟩(ψ → ⊥) → ⊥` (Definition 3). -/
-def box (e : Coord S) (ψ : Pattern S Var) : Pattern S Var :=
+@[expose] def box (e : Coord S) (ψ : Pattern S Var) : Pattern S Var :=
   .imp (dia e (.imp ψ .bot)) .bot
 
 /-- `[p]ψ := [e₁]⋯[eₘ]ψ` for a word `p = e₁⋯eₘ`, with `[ε]ψ := ψ`

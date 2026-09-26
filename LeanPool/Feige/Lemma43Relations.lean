@@ -16,7 +16,7 @@ tails.  Consequently the `ProbabilityRelations` input of `Lemma43.complete`
 holds for every finite law and need not remain an external hypothesis.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real Set
 

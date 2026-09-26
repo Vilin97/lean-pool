@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyPressureParity
 /-! Actual common pressure and a canonically normalized scalar graph pressure
 constructed from all-order drift-aware input budgets. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

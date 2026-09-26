@@ -16,7 +16,7 @@ two-point decomposition: an almost-everywhere event bound for the
 conditional Markov kernel survives averaging over a probability law.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 

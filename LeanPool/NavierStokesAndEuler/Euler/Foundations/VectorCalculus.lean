@@ -16,7 +16,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 # Vector Calculus
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -26,11 +26,11 @@ open EulerSmoothLimit
 open scoped ContDiff
 
 /-- The ordinary coordinate derivative, evaluated using the Fréchet derivative. -/
-def partialDerivative (f : Space → ℝ) (i : Fin 3) (x : Space) : ℝ :=
+@[expose] def partialDerivative (f : Space → ℝ) (i : Fin 3) (x : Space) : ℝ :=
   fderiv ℝ f x (EuclideanSpace.single i 1)
 
 /-- The three-dimensional curl of a vector potential in standard coordinates. -/
-def curl (ψ : Fin 3 → Space → ℝ) (x : Space) : Space :=
+@[expose] def curl (ψ : Fin 3 → Space → ℝ) (x : Space) : Space :=
   (EuclideanSpace.equiv (𝕜 := ℝ) (ι := Fin 3)).symm
     (fun i => partialDerivative (ψ (i + 2)) (i + 1) x -
       partialDerivative (ψ (i + 1)) (i + 2) x)

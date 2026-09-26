@@ -17,7 +17,7 @@ This file is the new entry point for shared p-group infrastructure.
 At the moment it re-exports the project-wide basic setup from `Lib.Basic`.
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 

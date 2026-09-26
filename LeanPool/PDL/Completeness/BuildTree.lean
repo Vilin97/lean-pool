@@ -12,7 +12,7 @@ public import LeanPool.PDL.PdlSteps
 
 /-! # From winning strategies to model graphs, part 1: BuildTree and PreState (Section 6.3) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -147,7 +147,7 @@ lemma BuildChoice.frth_mem {H X YS} {bc : BuildChoice H X YS} : bc.4 ∈ YS := b
   cases bc; assumption
 
 /-- Whether this strategy tree is a leaf justified by a free repeat. -/
-def BuildTree.isFreeRepeat {H X} : BuildTree H X → Prop
+@[expose] def BuildTree.isFreeRepeat {H X} : BuildTree H X → Prop
   | BuildTree.freeRepeat _ => True
   | _ => False
 
@@ -660,7 +660,7 @@ We collect the sequents along such paths directly by induction on the `BuildTree
 /-- Collect pre-states in the whole BuildTree.
 The local pre-states come from paths in a local tableau,
 and PDL pre-states each consist of just a single node. -/
-def BuildTree.collect {H X} : (bt : BuildTree H X) → Finset (List Sequent)
+@[expose] def BuildTree.collect {H X} : (bt : BuildTree H X) → Finset (List Sequent)
   | .loc _ _ next => (UniOpenLT.all X).toFinset.sup
                       fun lt => lt.1.pathsTo (next lt).4 ∪ (next lt).6.collect
   | .pdl _ _ next => { [X] } ∪ (PdlRule.all X).toFinset.sup fun ⟨Y,r⟩ => (next Y r).collect
@@ -773,11 +773,12 @@ decreasing_by -- almost same termination proof as for Match.all etc above :-)
 
 /-- Λ(π) gets all formulas for a pre-state but keep the information what is loaded.
 Returns the `WhateverFormula` type so that lemmas like 6.15 and 6.18 are sayable. -/
+@[expose]
 def PreState.wForms {H X} {bt : BuildTree H X} (π : PreState bt) : Finset WhateverFormula :=
   pathWForms π.val
 
 /-- Λ⁻(π) gets all formulas from a pre-state π, via unloading if needed. -/
-def PreState.forms {H X} {bt : BuildTree H X} (π : PreState bt) : Finset Formula :=
+@[expose] def PreState.forms {H X} {bt : BuildTree H X} (π : PreState bt) : Finset Formula :=
   pathForms π.val
 
 @[simp]

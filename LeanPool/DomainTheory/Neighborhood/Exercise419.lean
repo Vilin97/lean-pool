@@ -64,7 +64,7 @@ structurally from `T` (Example 1.2), exactly as `Example23.parityMap` and
 `Example43.zeroMap` do.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise419
 

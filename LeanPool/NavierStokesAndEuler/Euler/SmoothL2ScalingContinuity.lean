@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 /-! Physical spatial dilation preserves continuity of every actual L²
 jet. The proof uses its explicit bounded action on differences. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

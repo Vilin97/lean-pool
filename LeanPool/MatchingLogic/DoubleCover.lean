@@ -32,7 +32,7 @@ import Mathlib.Data.Set.Insert
 # MatchingLogic.DoubleCover
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -63,7 +63,7 @@ def cover (hne : C.Nonempty) : Model S where
 
 /-- The projections `π_i : N → M` of Definition 10: keep copy `i`, and send the
 other copy to a fixed `star ∈ M \ C`. -/
-def proj (star : M.carrier) (i : Bool) (p : C × Bool) : M.carrier :=
+@[expose] def proj (star : M.carrier) (i : Bool) (p : C × Bool) : M.carrier :=
   if p.2 = i then (p.1 : M.carrier) else star
 
 private theorem proj_update (star : M.carrier) (i : Bool)

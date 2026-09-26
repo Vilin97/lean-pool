@@ -61,7 +61,7 @@ Everything, unconditionally:
 The top-level deliverable is `masser_s₂_rational : ∃ r : ℚ, s₂ τ₁₆₃ = r`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

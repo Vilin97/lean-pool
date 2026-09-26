@@ -14,7 +14,7 @@ public import Mathlib.Topology.Homotopy.HomotopyGroup
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Cube`.
 -/
 
-@[expose] public section
+public section
 
 
 open scoped unitInterval Topology Topology.Homotopy
@@ -30,7 +30,7 @@ def boundaryJar (n : ℕ) : Set (I^ Fin n) :=
       (y (Fin.last _) = 1 → ∃ i < Fin.last _, y i = 0 ∨ y i = 1) }
 
 /-- `Cube.boundaryLid (n + 1) = Iⁿ × {1} ⊆ Iⁿ⁺¹` -/
-def boundaryLid (n : ℕ) : Set (I^ Fin n) :=
+@[expose] def boundaryLid (n : ℕ) : Set (I^ Fin n) :=
   match n with
   | 0 => ∅
   | _ + 1 => {y | y (Fin.last _) = 1}
@@ -41,9 +41,9 @@ scoped[Topology.Homotopy] notation "∂I^" n => Cube.boundary (Fin n)
 scoped[Topology.Homotopy] notation "⊔I^" n => Cube.boundaryJar n
 
 /-- `boundaryIncl` -/
-def boundaryIncl (n : ℕ) : C(∂I^n, I^ (Fin n)) := ⟨Subtype.val, continuous_subtype_val⟩
+@[expose] def boundaryIncl (n : ℕ) : C(∂I^n, I^ (Fin n)) := ⟨Subtype.val, continuous_subtype_val⟩
 /-- `boundaryJarIncl` -/
-def boundaryJarIncl (n : ℕ) : C(⊔I^n, I^ (Fin n)) := ⟨Subtype.val, continuous_subtype_val⟩
+@[expose] def boundaryJarIncl (n : ℕ) : C(⊔I^n, I^ (Fin n)) := ⟨Subtype.val, continuous_subtype_val⟩
 
 instance isEmpty_boundary_zero : IsEmpty (∂I^0) :=
   Set.isEmpty_coe_sort.mpr <| Set.subset_empty_iff.mp fun _ ⟨i, _⟩ ↦ isEmptyElim i
@@ -122,12 +122,12 @@ def homeoNeqLast {n : ℕ} : (I^ Fin n) ≃ₜ I^{ j : Fin (n + 1) // j ≠ Fin.
     fun _ ↦ Homeomorph.refl _
 
 /-- A homeomorphism that sends `(y₀, y₁, …, yₙ₋₁, yₙ)` to `(yₙ, (y₀, y₁, …, yₙ₋₁))` -/
-def splitAtLast {n : ℕ} : (I^ Fin (n + 1)) ≃ₜ I × (I^ Fin n) :=
+@[expose] def splitAtLast {n : ℕ} : (I^ Fin (n + 1)) ≃ₜ I × (I^ Fin n) :=
   splitAt (Fin.last _) |>.trans <|
     Homeomorph.prodCongr (Homeomorph.refl _) homeoNeqLast.symm
 
 /-- A homeomorphism that sends `(y₀, y₁, …, yₙ₋₁, yₙ)` to `((y₀, y₁, …, yₙ₋₁), yₙ)` -/
-def splitAtLastComm {n : ℕ} : (I^ Fin (n + 1)) ≃ₜ (I^ Fin n) × I :=
+@[expose] def splitAtLastComm {n : ℕ} : (I^ Fin (n + 1)) ≃ₜ (I^ Fin n) × I :=
   splitAtLast.trans <| Homeomorph.prodComm I (I^ Fin n)
 
 lemma splitAtLast_fst_eq {n : ℕ} (y : I^Fin (n + 1)) :
@@ -229,7 +229,7 @@ lemma splitAtLast_symm_mem_boundary_of_mem_boundary
 mapping (y₀, y₁, …, yₙ₋₁) to (y₀, y₁, …, yₙ₋₁, 1).
 (Although `1` appears first in this definition, it is actually the last coordinate
 in `(I^ Fin (n + 1))`, due to `Cube.insertAt`). -/
-def inclToTop {n : ℕ} : C(I^ Fin n, I^ Fin (n + 1)) where
+@[expose] def inclToTop {n : ℕ} : C(I^ Fin n, I^ Fin (n + 1)) where
   toFun y := splitAtLast.symm ⟨1, y⟩
   continuous_toFun := splitAtLast.symm.continuous.comp <|
     Continuous.prodMk continuous_const continuous_id
@@ -281,7 +281,7 @@ def discardLast {n : ℕ} : C(I^ Fin (n + 1), I^ Fin n) where
   continuous_toFun := by fun_prop
 
 /-- (y₀, y₁, …, yₙ₋₁) ↦ (y₀, y₁, …, yₙ₋₁, 0) -/
-def inclToBot {n : ℕ} : C(I^ Fin n, I^ Fin (n + 1)) where
+@[expose] def inclToBot {n : ℕ} : C(I^ Fin n, I^ Fin (n + 1)) where
   toFun y := Cube.insertAt (Fin.last _) ⟨0, Cube.homeoNeqLast y⟩
   continuous_toFun := (Cube.insertAt _).continuous.comp <|
     Continuous.prodMk continuous_const Cube.homeoNeqLast.continuous
@@ -306,7 +306,7 @@ lemma mem_boundaryJar {n : ℕ} (y : I^Fin n) : inclToBot y ∈ ⊔I^(n + 1) := 
 end inclToBot
 
 /-- The inclusion (y₀, y₁, …, yₙ₋₁) ↦ (y₀, y₁, …, yₙ₋₁, 0) to the bottom face of `⊔I^(n+1)` -/
-def inclToBoundaryJarBot {n : ℕ} : C(I^ Fin n, ⊔I^(n+1)) where
+@[expose] def inclToBoundaryJarBot {n : ℕ} : C(I^ Fin n, ⊔I^(n+1)) where
   toFun y := ⟨ inclToBot y, inclToBot.mem_boundaryJar y ⟩
   continuous_toFun := Continuous.subtype_mk inclToBot.continuous _
 
@@ -333,7 +333,7 @@ def inclToBoundaryJarSides {n : ℕ} : C((∂I^n) × I, ⊔I^(n+1)) where
 
 /-- The inclusion `(y, t) ↦ (y₀, y₁, …, yₙ₋₁, t)` to the sides of
 the $(n+1)$-dimensional cube. -/
-def inclToSides {n : ℕ} : C((∂I^n) × I, I^ Fin (n + 1)) where
+@[expose] def inclToSides {n : ℕ} : C((∂I^n) × I, I^ Fin (n + 1)) where
   toFun := Subtype.val ∘ inclToBoundaryJarSides
   continuous_toFun := Continuous.subtype_val inclToBoundaryJarSides.continuous
 
@@ -343,13 +343,13 @@ end Cube
 namespace TopCat
 
 /-- `cube` -/
-def cube (n : ℕ) : TopCat.{u} := TopCat.of <| ULift <| I^ Fin n
+@[expose] def cube (n : ℕ) : TopCat.{u} := TopCat.of <| ULift <| I^ Fin n
 
 /-- `cubeBoundary` -/
-def cubeBoundary (n : ℕ) : TopCat.{u} := TopCat.of <| ULift <| Cube.boundary (Fin n)
+@[expose] def cubeBoundary (n : ℕ) : TopCat.{u} := TopCat.of <| ULift <| Cube.boundary (Fin n)
 
 /-- `cubeBoundaryJar` -/
-def cubeBoundaryJar (n : ℕ) : TopCat.{u} := TopCat.of <| ULift <| Cube.boundaryJar n
+@[expose] def cubeBoundaryJar (n : ℕ) : TopCat.{u} := TopCat.of <| ULift <| Cube.boundaryJar n
 
 /-- `𝕀 n` denotes the `n`-cube (as an object in `TopCat`). -/
 scoped prefix:arg "𝕀 " => cube
@@ -362,7 +362,7 @@ of the `n`-cube (as an object in `TopCat`). -/
 scoped prefix:arg "⊔𝕀 " => cubeBoundaryJar
 
 /-- The inclusion `∂𝕀 n ⟶ 𝕀 n` of the boundary of the `n`-cube. -/
-def cubeBoundaryIncl (n : ℕ) : cubeBoundary.{u} n ⟶ cube.{u} n :=
+@[expose] def cubeBoundaryIncl (n : ℕ) : cubeBoundary.{u} n ⟶ cube.{u} n :=
   ofHom
     { toFun := fun ⟨⟨p, _⟩⟩ ↦ ⟨p⟩
       continuous_toFun :=

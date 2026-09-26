@@ -48,7 +48,7 @@ The scalar pressure needs only ordinary smoothness. In particular, neither
 the pressure nor its gradient is assumed to be globally square integrable.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -121,7 +121,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -283,7 +283,7 @@ The curl-curl identity reduces the orthogonal complement of compact smooth
 curls inside the solenoidal space to globally weakly harmonic L² fields.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -485,7 +485,7 @@ the ordinary spatial integral against advection. Compactly supported smooth
 tests automatically satisfy the required `L²` assumption.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -549,7 +549,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -55,7 +55,7 @@ The geometry of supported multiples is in `Nivat.Algebra.RectangleSupport`;
 the finite fiber-counting argument is in `Nivat.Descent.FiberBudget`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.Descent
 
@@ -114,7 +114,7 @@ def coefficientRestriction (R : Finset Lattice) : Laurent →ₗ[ℚ] (R → ℚ
 
 /-- Multiplication by `Φ` on polynomials supported in `S`, with coefficients read on `R`.
 This is the map `Φ : ℚ^S → ℚ^R` in Lemma 2.1 (`lem:supported`). -/
-noncomputable def multiplierMap (Φ : Laurent) (R S : Finset Lattice) :
+@[expose] noncomputable def multiplierMap (Φ : Laurent) (R S : Finset Lattice) :
     (S → ℚ) →ₗ[ℚ] (R → ℚ) :=
   (coefficientRestriction R).comp ((LinearMap.mulLeft ℚ Φ).comp (windowPolynomialLinear S))
 

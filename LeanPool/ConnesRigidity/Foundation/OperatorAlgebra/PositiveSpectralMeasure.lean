@@ -36,7 +36,7 @@ import Mathlib.Topology.Order.Hom.Esakia
 The positive spectral measure component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 

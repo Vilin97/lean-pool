@@ -26,7 +26,7 @@ index, so the chosen points converge to `(queryCode c, g)`, continuity gives
 analytic set is served by the branchless tree.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

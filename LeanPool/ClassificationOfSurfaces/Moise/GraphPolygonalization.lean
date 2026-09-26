@@ -18,7 +18,7 @@ constructions trim each embedded edge at the last exits from those regions and p
 remaining pairwise-disjoint compact arcs.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

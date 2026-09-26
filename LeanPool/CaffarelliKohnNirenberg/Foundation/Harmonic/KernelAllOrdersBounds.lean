@@ -16,7 +16,7 @@ public import Mathlib.Analysis.Calculus.ContDiff.Bounds
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Topology
 open CKN.Foundation.Parabolic

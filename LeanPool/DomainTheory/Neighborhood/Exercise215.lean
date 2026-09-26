@@ -61,7 +61,7 @@ Choice-free (`#print axioms ⊆ {propext, Quot.sound}`) apart from the
 `eq_of_toElementMap_principal`
 uniqueness step inherited from Exercise 2.8. -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise215
 

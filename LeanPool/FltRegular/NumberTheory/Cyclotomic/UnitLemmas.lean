@@ -18,7 +18,7 @@ This file records how complex conjugation acts on cyclotomic units and proves th
 of a unit by its conjugate is a square of a root of unity.
 -/
 
-@[expose] public section
+public section
 
 variable {p : ℕ} [NeZero p] {K : Type*} [Field K]
 

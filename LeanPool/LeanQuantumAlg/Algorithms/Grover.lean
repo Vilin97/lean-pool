@@ -33,7 +33,7 @@ closed-form rotation core used by those refinements.
   measurement probability.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

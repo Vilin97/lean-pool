@@ -13,7 +13,7 @@ public import Mathlib.RingTheory.TensorProduct.Basic
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.ExtendScalar`.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 

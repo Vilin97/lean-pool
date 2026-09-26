@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 # Packet Frame Renewal
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -364,12 +364,12 @@ theorem parent_ray_compression
   exact (div_le_iff₀ hD).mpr hquad
 
 /-- The ideal pressure-to-velocity ratio at the inverse target scale. -/
-noncomputable def idealTargetPressure (ε y : ℝ) (V V₁ : ℝ → ℝ) : ℝ :=
+@[expose] noncomputable def idealTargetPressure (ε y : ℝ) (V V₁ : ℝ → ℝ) : ℝ :=
   let t := y⁻¹ / ε
   ε ^ 2 * t ^ 2 + ε ^ 2 + (-2 * ε ^ 2 * t) * (-V₁ t / V t)
 
 /-- The ideal cross numerator at the inverse target scale. -/
-noncomputable def idealTargetCross (ε y : ℝ) (V V₁ : ℝ → ℝ) : ℝ :=
+@[expose] noncomputable def idealTargetCross (ε y : ℝ) (V V₁ : ℝ → ℝ) : ℝ :=
   let t := y⁻¹ / ε
   idealCrossNumerator (ε ^ 2) (ε ^ 2 * t ^ 2) (-2 * ε ^ 2 * t) (-V₁ t / V t)
 

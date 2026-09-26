@@ -14,7 +14,7 @@ Spatial boundedness on the half-collar and Holder's inequality in space
 and time retain the force data power without an additive constant.
 -/
 
-@[expose] public section
+public section
 
 section
 
@@ -66,6 +66,7 @@ theorem four_term_slice_mass_le {μ : Measure Vec3} {D A B C E : Vec3 → ℝ}
   exact (ENNReal.rpow_le_rpow hh (by norm_num)).trans (four_term_six_fifths _ _ _ _)
 
 /-- The absolute enlargement pays the triangle cost and all four component budgets. -/
+@[expose]
 def fourTermAffineThreshold (Cbase : ℝ) : ℝ := 64*(|Cbase|+1)
 
 /-- Four component bounds at the base constant fit the enlarged affine slot. -/

@@ -17,7 +17,7 @@ They identify the continuous acceleration family with translation of the
 original acceleration, including endpoint time values.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

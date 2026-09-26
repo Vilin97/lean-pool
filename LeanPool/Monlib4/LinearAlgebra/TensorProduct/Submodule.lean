@@ -21,7 +21,7 @@ import Mathlib.FieldTheory.Finiteness
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule`.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 

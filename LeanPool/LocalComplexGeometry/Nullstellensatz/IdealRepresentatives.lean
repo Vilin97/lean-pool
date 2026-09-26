@@ -18,7 +18,7 @@ file chooses analytic representatives of those generators and records the
 exact pointwise predicate representing the ideal's local zero-set germ.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology
@@ -34,7 +34,7 @@ abbrev IdealGeneratorIndex {n : ℕ}
     (I : Ideal (HolomorphicGerm n)) := idealGeneratorFinset I
 
 /-- Chosen analytic representatives of the chosen generators of an ideal. -/
-def idealGeneratorRepresentatives {n : ℕ}
+@[expose] def idealGeneratorRepresentatives {n : ℕ}
     [IsNoetherianRing (HolomorphicGerm n)]
     (I : Ideal (HolomorphicGerm n)) :
     IdealGeneratorIndex I → ComplexEuclidean n → ℂ :=
@@ -68,7 +68,7 @@ theorem idealGenerator_mem {n : ℕ}
 
 /-- Pointwise representative of the ideal zero-set germ furnished by the
 chosen finite generating family. -/
-def idealGeneratorZeroPredicate {n : ℕ}
+@[expose] def idealGeneratorZeroPredicate {n : ℕ}
     [IsNoetherianRing (HolomorphicGerm n)]
     (I : Ideal (HolomorphicGerm n)) (z : ComplexEuclidean n) : Prop :=
   ∀ f : IdealGeneratorIndex I, idealGeneratorRepresentatives I f z = 0

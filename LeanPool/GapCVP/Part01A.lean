@@ -15,7 +15,7 @@ public import Mathlib.Computability.TuringMachine.Computable
 
 /-! # GapCVP proof, part 01 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -144,7 +144,7 @@ noncomputable def latticeDistance (I : GapCVPInstance) : ℝ :=
   Metric.infDist I.targetPoint (Set.range I.latticePoint)
 
 /-- GapCVP reduction support. -/
-noncomputable def IsYes (I : GapCVPInstance) : Bool :=
+@[expose] noncomputable def IsYes (I : GapCVPInstance) : Bool :=
   @decide (
   I.latticeDistance ≤ (I.radius : ℝ)
   ) (Classical.propDecidable _)
@@ -162,7 +162,7 @@ section
 open scoped BigOperators
 
 /-- GapCVP reduction support. -/
-def squaredDistance (I : GapCVPInstance)
+@[expose] def squaredDistance (I : GapCVPInstance)
     (z : Fin I.dimension → ℤ) : ℝ :=
   ∑ i : Fin I.dimension,
     (((I.target i : ℚ) : ℝ) -
@@ -170,13 +170,13 @@ def squaredDistance (I : GapCVPInstance)
         (I.basis i j : ℝ) * (z j : ℝ)) ^ 2
 
 /-- GapCVP reduction support. -/
-noncomputable def SquaredYes (I : GapCVPInstance) : Bool :=
+@[expose] noncomputable def SquaredYes (I : GapCVPInstance) : Bool :=
   @decide (
   ∃ z : Fin I.dimension → ℤ,
     squaredDistance I z ≤ (I.radius : ℝ) ^ 2
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def SquaredNoAt (c : ℝ) (I : GapCVPInstance) : Bool :=
+@[expose] noncomputable def SquaredNoAt (c : ℝ) (I : GapCVPInstance) : Bool :=
   @decide (
   ∀ z : Fin I.dimension → ℤ,
     (((I.dimension : ℝ) ^ c) * (I.radius : ℝ)) ^ 2 <
@@ -343,17 +343,17 @@ noncomputable def clauseHasDistinctVariables (c : ThreeClause) : Bool :=
   Function.Injective (fun i : Fin 3 => (c i).1)
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def literalSatisfied (assignment : ℕ → Bool) (l : Literal) : Bool :=
+@[expose] noncomputable def literalSatisfied (assignment : ℕ → Bool) (l : Literal) : Bool :=
   @decide (
   assignment l.1 = l.2
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def clauseSatisfied (assignment : ℕ → Bool) (c : ThreeClause) : Bool :=
+@[expose] noncomputable def clauseSatisfied (assignment : ℕ → Bool) (c : ThreeClause) : Bool :=
   @decide (
   ∃ i : Fin 3, literalSatisfied assignment (c i)
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def threeCNFSatisfiable (φ : ThreeCNF) : Bool :=
+@[expose] noncomputable def threeCNFSatisfiable (φ : ThreeCNF) : Bool :=
   @decide (
   (∀ c ∈ φ, clauseHasDistinctVariables c) ∧
     ∃ assignment : ℕ → Bool, ∀ c ∈ φ, clauseSatisfied assignment c
@@ -370,12 +370,12 @@ structure GapCVPInstance where
   radius : ℚ
 
 /-- GapCVP reduction support. -/
-noncomputable def gapCVPWellFormed (I : GapCVPInstance) : Bool :=
+@[expose] noncomputable def gapCVPWellFormed (I : GapCVPInstance) : Bool :=
   @decide (
   0 < I.dimension ∧ I.basis.det ≠ 0 ∧ 0 < I.radius
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def distanceSquared (I : GapCVPInstance)
+@[expose] noncomputable def distanceSquared (I : GapCVPInstance)
     (z : Fin I.dimension → ℤ) : ℝ :=
   ∑ i : Fin I.dimension,
     (((∑ j : Fin I.dimension,
@@ -392,7 +392,7 @@ class BinaryBitCodec (α : Type*) where
 namespace BinaryEncoding
 
 /-- GapCVP reduction support. -/
-def lengthPrefixedWord (word : List Bool) : List Bool :=
+@[expose] def lengthPrefixedWord (word : List Bool) : List Bool :=
   List.replicate word.length true ++ false :: word
 
 @[simp] theorem lengthPrefixedWord_length (word : List Bool) :
@@ -401,7 +401,7 @@ def lengthPrefixedWord (word : List Bool) : List Bool :=
   omega
 
 /-- GapCVP reduction support. -/
-def readUnaryPrefix : List Bool → Option (ℕ × List Bool)
+@[expose] def readUnaryPrefix : List Bool → Option (ℕ × List Bool)
   | [] => none
   | false :: rest => some (0, rest)
   | true :: rest =>
@@ -419,7 +419,7 @@ def readUnaryPrefix : List Bool → Option (ℕ × List Bool)
       simp only [List.replicate_succ, List.cons_append, readUnaryPrefix, ih]
 
 /-- GapCVP reduction support. -/
-def readLengthPrefixedWord (bits : List Bool) :
+@[expose] def readLengthPrefixedWord (bits : List Bool) :
     Option (List Bool × List Bool) :=
   match readUnaryPrefix bits with
   | none => none
@@ -439,7 +439,7 @@ def readLengthPrefixedWord (bits : List Bool) :
       List.drop_left']
 
 /-- GapCVP reduction support. -/
-def encodeLiteral (literal : Literal) : List Bool :=
+@[expose] def encodeLiteral (literal : Literal) : List Bool :=
   lengthPrefixedWord (Computability.encodeNat literal.1) ++ [literal.2]
 
 /-- GapCVP reduction support. -/
@@ -458,7 +458,7 @@ def readLiteral (bits : List Bool) : Option (Literal × List Bool) :=
       readLengthPrefixedWord_append, Computability.decode_encodeNat]
 
 /-- GapCVP reduction support. -/
-def encodeThreeClause (clause : ThreeClause) : List Bool :=
+@[expose] def encodeThreeClause (clause : ThreeClause) : List Bool :=
   encodeLiteral (clause 0) ++
     encodeLiteral (clause 1) ++ encodeLiteral (clause 2)
 
@@ -509,7 +509,7 @@ def readThreeClauses : ℕ → List Bool → Option (ThreeCNF × List Bool)
           ih]
 
 /-- GapCVP reduction support. -/
-def encodeThreeCNF (clauses : ThreeCNF) : List Bool :=
+@[expose] def encodeThreeCNF (clauses : ThreeCNF) : List Bool :=
   lengthPrefixedWord (Computability.encodeNat clauses.length) ++
     clauses.flatMap encodeThreeClause
 
@@ -545,7 +545,7 @@ end
 namespace BinaryEncoding
 
 /-- GapCVP reduction support. -/
-def encodeAtomic {α : Type*} [Encodable α] (a : α) : List Bool :=
+@[expose] def encodeAtomic {α : Type*} [Encodable α] (a : α) : List Bool :=
   lengthPrefixedWord (Computability.encodeNat (Encodable.encode a))
 
 /-- GapCVP reduction support. -/
@@ -566,7 +566,7 @@ def readAtomic {α : Type*} [Encodable α] (bits : List Bool) :
       Encodable.encodek]
 
 /-- GapCVP reduction support. -/
-def encodeFinValues {α : Type*} [Encodable α] :
+@[expose] def encodeFinValues {α : Type*} [Encodable α] :
     (n : ℕ) → (Fin n → α) → List Bool
   | 0, _ => []
   | n + 1, values =>
@@ -607,7 +607,7 @@ def readFinValues {α : Type*} [Encodable α] :
       simp only [readFinValues, encodeFinValues, List.append_assoc, readAtomic_append, ih, hvalues]
 
 /-- GapCVP reduction support. -/
-def encodeMatrixRows :
+@[expose] def encodeMatrixRows :
     (m n : ℕ) → (Fin m → Fin n → ℤ) → List Bool
   | 0, _, _ => []
   | m + 1, n, matrix =>
@@ -651,7 +651,7 @@ def readMatrixRows :
           hmatrix]
 
 /-- GapCVP reduction support. -/
-def encodeGapCVPInstance (I : GapCVPInstance) : List Bool :=
+@[expose] def encodeGapCVPInstance (I : GapCVPInstance) : List Bool :=
   encodeAtomic I.dimension ++
     encodeAtomic I.radius ++
     encodeFinValues I.dimension I.target ++
@@ -708,7 +708,7 @@ noncomputable instance (priority := 2000) instBinaryBitCodecGapCVPInstance :
 open Computability
 
 /-- GapCVP reduction support. -/
-noncomputable def binaryFinEncoding (α : Type*)
+@[expose] noncomputable def binaryFinEncoding (α : Type*)
     [BinaryBitCodec α] : Encoding α Bool where
   encode := BinaryBitCodec.encode
   decode := BinaryBitCodec.decode
@@ -737,7 +737,7 @@ abbrev VerifierTM (verifier : List Bool × List Bool → Bool) :=
     pairBitEncoding Computability.encodeBool verifier
 
 /-- GapCVP reduction support. -/
-noncomputable def IsNP (L : BitLanguage) : Bool :=
+@[expose] noncomputable def IsNP (L : BitLanguage) : Bool :=
   @decide (
   ∃ (bound : Polynomial ℕ) (verifier : List Bool × List Bool → Bool),
     Nonempty (VerifierTM verifier) ∧
@@ -763,7 +763,7 @@ noncomputable def PolynomialTimeClosedUnderComposition : Bool :=
     Nonempty (BitTM (g ∘ f))
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def NPHard (L : BitLanguage) : Bool :=
+@[expose] noncomputable def NPHard (L : BitLanguage) : Bool :=
   @decide (
   ∀ A : BitLanguage, IsNP A → Nonempty (PolynomialReduction A L)
   ) (Classical.propDecidable _)
@@ -801,7 +801,7 @@ end
 section
 
 /-- GapCVP reduction support. -/
-noncomputable def gapYES (I : GapCVPInstance) : Bool :=
+@[expose] noncomputable def gapYES (I : GapCVPInstance) : Bool :=
   @decide (
   gapCVPWellFormed I ∧
     ∃ z : Fin I.dimension → ℤ,
@@ -1197,6 +1197,7 @@ noncomputable def liftSecondStmt
   | .halt => .halt
 
 /-- GapCVP reduction support. -/
+@[expose]
 noncomputable def machine
     {f g : List Bool → List Bool}
     (first : BitTM f)
@@ -1228,6 +1229,7 @@ noncomputable def machine
   }
 
 /-- GapCVP reduction support. -/
+@[expose]
 noncomputable def auxiliary
     {f g : List Bool → List Bool}
     (first : BitTM f)
@@ -1960,11 +1962,11 @@ abbrev Clause (T S : ℕ) := Finset (SignedLiteral T S)
 abbrev Formula (T S : ℕ) := Finset (Clause T S)
 
 /-- GapCVP reduction support. -/
-def positive {T S : ℕ} (v : Variable T S) : SignedLiteral T S :=
+@[expose] def positive {T S : ℕ} (v : Variable T S) : SignedLiteral T S :=
   (v, true)
 
 /-- GapCVP reduction support. -/
-def negative {T S : ℕ} (v : Variable T S) : SignedLiteral T S :=
+@[expose] def negative {T S : ℕ} (v : Variable T S) : SignedLiteral T S :=
   (v, false)
 
 private noncomputable def satisfiesClause {T S : ℕ}
@@ -1978,12 +1980,12 @@ private noncomputable def satisfiesFormula {T S : ℕ}
   ∀ clause ∈ formula, satisfiesClause assignment clause
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-def atLeastOneClause {T S : ℕ}
+@[expose] def atLeastOneClause {T S : ℕ}
     (t : Time T) (i : Position T) : Clause T S :=
   Finset.univ.image (fun s : Symbol S => positive (t, i, s))
 
 /-- GapCVP reduction support. -/
-def atMostOneClause {T S : ℕ}
+@[expose] def atMostOneClause {T S : ℕ}
     (t : Time T) (i : Position T) (a b : Symbol S) : Clause T S :=
   {negative (t, i, a), negative (t, i, b)}
 
@@ -1993,7 +1995,7 @@ def initialClause {T S : ℕ}
   {positive ((0 : Time T), i, input i)}
 
 /-- GapCVP reduction support. -/
-def acceptanceClause {T S : ℕ} (accept : Symbol S) : Clause T S :=
+@[expose] def acceptanceClause {T S : ℕ} (accept : Symbol S) : Clause T S :=
   Finset.univ.image
     (fun i : Position T => positive ((Fin.last T), i, accept))
 
@@ -2002,7 +2004,7 @@ abbrev Window (T : ℕ) :=
   { ti : Time T × Position T // ti.1.val + 1 < T + 1 }
 
 /-- GapCVP reduction support. -/
-def nextTime {T : ℕ} (w : Window T) : Time T :=
+@[expose] def nextTime {T : ℕ} (w : Window T) : Time T :=
   ⟨w.1.1.val + 1, w.2⟩
 
 /-- GapCVP reduction support. -/
@@ -2024,7 +2026,7 @@ abbrev WindowSymbols (S : ℕ) :=
   Symbol S × Symbol S × Symbol S × Symbol S
 
 /-- GapCVP reduction support. -/
-def transitionClause {T S : ℕ}
+@[expose] def transitionClause {T S : ℕ}
     (w : Window T) (symbols : WindowSymbols S) : Clause T S :=
   { negative (w.1.1, leftPosition w, symbols.1),
     negative (w.1.1, w.1.2, symbols.2.1),
@@ -2041,7 +2043,7 @@ structure Specification (T S : ℕ) where
   allowed : WindowSymbols S → Bool
 
 /-- GapCVP reduction support. -/
-def structuralClauses (T S : ℕ) : Formula T S :=
+@[expose] def structuralClauses (T S : ℕ) : Formula T S :=
   (Finset.univ.image fun p : Time T × Position T =>
       atLeastOneClause p.1 p.2) ∪
     ((Finset.univ.filter fun p :
@@ -2050,22 +2052,22 @@ def structuralClauses (T S : ℕ) : Formula T S :=
           atMostOneClause p.1.1 p.1.2 p.2.1 p.2.2)
 
 /-- GapCVP reduction support. -/
-def initialClauses {T S : ℕ} (spec : Specification T S) : Formula T S :=
+@[expose] def initialClauses {T S : ℕ} (spec : Specification T S) : Formula T S :=
   Finset.univ.image fun i : Position T => initialClause spec.input i
 
 /-- GapCVP reduction support. -/
-def transitionClauses {T S : ℕ}
+@[expose] def transitionClauses {T S : ℕ}
     (spec : Specification T S) : Formula T S :=
   ((Finset.univ.filter fun p : Window T × WindowSymbols S =>
       spec.allowed p.2 = false).image fun p => transitionClause p.1 p.2)
 
 /-- GapCVP reduction support. -/
-def tableauFormula {T S : ℕ} (spec : Specification T S) : Formula T S :=
+@[expose] def tableauFormula {T S : ℕ} (spec : Specification T S) : Formula T S :=
   structuralClauses T S ∪ initialClauses spec ∪
     {acceptanceClause spec.accept} ∪ transitionClauses spec
 
 /-- GapCVP reduction support. -/
-noncomputable def ValidTrace {T S : ℕ} (spec : Specification T S)
+@[expose] noncomputable def ValidTrace {T S : ℕ} (spec : Specification T S)
     (trace : Time T → Position T → Symbol S) : Bool :=
   @decide (
   (∀ i, trace 0 i = spec.input i) ∧
@@ -2494,7 +2496,7 @@ private noncomputable def satisfies (assignment : ℕ → Bool) (formula : Three
   simp only [satisfies, List.mem_cons, List.not_mem_nil, or_false, forall_eq, Bool.decide_eq_true]
 
 /-- GapCVP reduction support. -/
-noncomputable def allDistinct (formula : ThreeCNF) : Bool :=
+@[expose] noncomputable def allDistinct (formula : ThreeCNF) : Bool :=
   @decide (
   ∀ clause ∈ formula, clauseHasDistinctVariables clause
   ) (Classical.propDecidable _)
@@ -2520,11 +2522,11 @@ private theorem threeCNFSatisfiable_iff (formula : ThreeCNF) :
       GapCVP.ThreeCNFReduction.satisfies, decide_eq_true_eq]
 
 /-- GapCVP reduction support. -/
-def sourceVariable {T S : ℕ} (v : Variable T S) : ℕ :=
+@[expose] def sourceVariable {T S : ℕ} (v : Variable T S) : ℕ :=
   4 * Encodable.encode v
 
 /-- GapCVP reduction support. -/
-def accumulatorVariable (clauseIndex prefixIndex : ℕ) : ℕ :=
+@[expose] def accumulatorVariable (clauseIndex prefixIndex : ℕ) : ℕ :=
   4 * Encodable.encode (clauseIndex, prefixIndex) + 1
 
 private theorem accumulatorVariable_injective :
@@ -2575,7 +2577,7 @@ private theorem consecutive_accumulatorVariables_ne
   omega
 
 /-- GapCVP reduction support. -/
-def triple (a b c : Literal) : ThreeClause := ![a, b, c]
+@[expose] def triple (a b c : Literal) : ThreeClause := ![a, b, c]
 
 @[simp] private theorem clauseSatisfied_triple (assignment : ℕ → Bool)
     (a b c : Literal) :
@@ -2596,7 +2598,7 @@ private theorem triple_distinct (a b c : Literal)
     simp_all [triple]
 
 /-- GapCVP reduction support. -/
-def paddedBinary (a b : Literal) : ThreeCNF :=
+@[expose] def paddedBinary (a b : Literal) : ThreeCNF :=
   [triple a b (2, true),
    triple a b (2, false)]
 
@@ -2622,7 +2624,7 @@ private theorem paddedBinary_allDistinct (a b : Literal)
     exact triple_distinct _ _ _ hab ha hb
 
 /-- GapCVP reduction support. -/
-def paddedUnary (a : Literal) : ThreeCNF :=
+@[expose] def paddedUnary (a : Literal) : ThreeCNF :=
   [triple a (2, false) (3, false),
    triple a (2, false) (3, true),
    triple a (2, true) (3, false),
@@ -2660,7 +2662,7 @@ def negate (a : Literal) : Literal := (a.1, !a.2)
     simp [negate, literalSatisfied]
 
 /-- GapCVP reduction support. -/
-def orGate (a b output : Literal) : ThreeCNF :=
+@[expose] def orGate (a b output : Literal) : ThreeCNF :=
   paddedBinary (negate a) output ++
     paddedBinary (negate b) output ++
     [triple a b (negate output)]
@@ -2708,17 +2710,17 @@ private theorem orGate_allDistinct (a b output : Literal)
       List.length_nil, zero_add, Nat.reduceAdd]
 
 /-- GapCVP reduction support. -/
-def sourceLiteral {T S : ℕ}
+@[expose] def sourceLiteral {T S : ℕ}
     (literal : SignedLiteral T S) : Literal :=
   (sourceVariable literal.1, literal.2)
 
 /-- GapCVP reduction support. -/
-def accumulatorLiteral
+@[expose] def accumulatorLiteral
     (clauseIndex prefixIndex : ℕ) (value : Bool) : Literal :=
   (accumulatorVariable clauseIndex prefixIndex, value)
 
 /-- GapCVP reduction support. -/
-def gateList {T S : ℕ} (clauseIndex : ℕ) :
+@[expose] def gateList {T S : ℕ} (clauseIndex : ℕ) :
     ℕ → List (SignedLiteral T S) → ThreeCNF
   | _, [] => []
   | prefixIndex, literal :: remaining =>
@@ -2750,7 +2752,7 @@ private theorem gateList_allDistinct {T S : ℕ}
         clauseIndex prefixIndex
 
 /-- GapCVP reduction support. -/
-def encodeClause {T S : ℕ}
+@[expose] def encodeClause {T S : ℕ}
     (clauseIndex : ℕ) (clause : Clause T S) : ThreeCNF :=
   paddedUnary (accumulatorLiteral clauseIndex 0 true) ++
     gateList clauseIndex 0 (sortedElements clause) ++
@@ -2772,7 +2774,7 @@ private theorem encodeClause_allDistinct {T S : ℕ}
         clauseIndex (sortedElements clause).length)⟩
 
 /-- GapCVP reduction support. -/
-def encodeFormulaFrom {T S : ℕ} :
+@[expose] def encodeFormulaFrom {T S : ℕ} :
     ℕ → List (Clause T S) → ThreeCNF
   | _, [] => []
   | clauseIndex, clause :: remaining =>
@@ -3145,7 +3147,7 @@ theorem encodeNat_length_eq_size (n : ℕ) :
   simp only [Num.of_natCast, Nat.cast_id]
 
 /-- GapCVP reduction support. -/
-def verifierInput
+@[expose] def verifierInput
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (x certificate : List Bool) : List (machine.tm.Γ machine.tm.k₀) :=
@@ -3879,14 +3881,14 @@ private noncomputable def configurationTraceRun
   exact hprefix steps (le_refl steps)
 
 /-- GapCVP reduction support. -/
-noncomputable def guessTimePolynomial
+@[expose] noncomputable def guessTimePolynomial
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier) : Polynomial ℕ :=
   bound + 1 + witnessTimePolynomial bound machine
 
 /-- GapCVP reduction support. -/
-noncomputable def nondeterministicTableauDimensionPolynomial
+@[expose] noncomputable def nondeterministicTableauDimensionPolynomial
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier) : Polynomial ℕ :=
@@ -4228,6 +4230,7 @@ def pushSourceOfSlot (tm : Turing.FinTM2)
       exact slot.2.isLt⟩
 
 /-- GapCVP reduction support. -/
+@[expose]
 def cellAtomValue
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -4506,7 +4509,7 @@ namespace CLCellRows
 open Computability GapCVP.CLBoundedStates GapCVP.CLPushAlphabet
 
 /-- GapCVP reduction support. -/
-def paddedAtom {tm : Turing.FinTM2}
+@[expose] def paddedAtom {tm : Turing.FinTM2}
     (atoms : List (CellAtom tm)) (index : ℕ) : CellAtom tm :=
   (atoms[index]?).getD none
 
@@ -4535,7 +4538,7 @@ theorem paddedAtom_decode
       | succ index => simpa only [paddedAtom, List.getElem?_cons_succ] using ih index
 
 /-- GapCVP reduction support. -/
-def certificatePhase (certificate : List Bool) (index : ℕ) : PhaseTag :=
+@[expose] def certificatePhase (certificate : List Bool) (index : ℕ) : PhaseTag :=
   if h : index < certificate.length then
     if certificate.get ⟨index, h⟩ then
       .verifying
@@ -4576,7 +4579,7 @@ abbrev CellRow (tm : Turing.FinTM2) (width : ℕ) :=
   Fin (width + 1) → LocalCellSymbol tm
 
 /-- GapCVP reduction support. -/
-def guessingRow (tm : Turing.FinTM2) (width : ℕ)
+@[expose] def guessingRow (tm : Turing.FinTM2) (width : ℕ)
     (certificate : List Bool) : CellRow tm width :=
   fun index =>
     (certificatePhase certificate index.val,
@@ -4585,7 +4588,7 @@ def guessingRow (tm : Turing.FinTM2) (width : ℕ)
       false)
 
 /-- GapCVP reduction support. -/
-def configurationControl (tm : Turing.FinTM2)
+@[expose] def configurationControl (tm : Turing.FinTM2)
     (configuration : tm.Cfg) : tm.Λ × tm.σ :=
   (configuration.l.getD tm.main, configuration.var)
 
@@ -4676,7 +4679,7 @@ instance instFintypeBlockCell (tm : Turing.FinTM2) :
   infer_instance
 
 /-- GapCVP reduction support. -/
-def blankCell (tm : Turing.FinTM2) : LocalCellSymbol tm :=
+@[expose] def blankCell (tm : Turing.FinTM2) : LocalCellSymbol tm :=
   (.guessing, none, fun _ => none, false)
 
 /-- A row of blocks covering the encoded machine configuration. -/
@@ -4684,7 +4687,7 @@ abbrev BlockRow (tm : Turing.FinTM2) (width : ℕ) :=
   Fin (width + 1) → BlockCell tm
 
 /-- GapCVP reduction support. -/
-def packRow (tm : Turing.FinTM2) (width : ℕ)
+@[expose] def packRow (tm : Turing.FinTM2) (width : ℕ)
     (row : CellRow tm width) : BlockRow tm width :=
   fun block offset =>
     if h : block.val * blockSize tm + offset.val < width + 1 then
@@ -4693,14 +4696,14 @@ def packRow (tm : Turing.FinTM2) (width : ℕ)
       blankCell tm
 
 /-- GapCVP reduction support. -/
-def coordinateBlock (tm : Turing.FinTM2) (width : ℕ)
+@[expose] def coordinateBlock (tm : Turing.FinTM2) (width : ℕ)
     (index : Fin (width + 1)) : Fin (width + 1) :=
   ⟨index.val / blockSize tm,
     Nat.lt_of_le_of_lt
       (Nat.div_le_self index.val (blockSize tm)) index.isLt⟩
 
 /-- GapCVP reduction support. -/
-def coordinateOffset (tm : Turing.FinTM2) (width : ℕ)
+@[expose] def coordinateOffset (tm : Turing.FinTM2) (width : ℕ)
     (index : Fin (width + 1)) : Fin (blockSize tm) :=
   ⟨index.val % blockSize tm,
     Nat.mod_lt index.val (blockSize_pos tm)⟩
@@ -4730,7 +4733,7 @@ theorem packRow_cell
   simpa only [coordinateBlock, coordinateOffset] using hcoordinate
 
 /-- GapCVP reduction support. -/
-def leftBlock (width : ℕ)
+@[expose] def leftBlock (width : ℕ)
     (index : Fin (width + 1)) : Fin (width + 1) :=
   ⟨index.val - 1,
     Nat.lt_of_le_of_lt (Nat.sub_le _ _) index.isLt⟩
@@ -4781,7 +4784,7 @@ open Computability GapCVP.CLBoundedStates GapCVP.CLCellRows GapCVP.CLLocalWindow
 abbrev GuessPhaseWindow := PhaseTag × PhaseTag × PhaseTag × PhaseTag
 
 /-- GapCVP reduction support. -/
-noncomputable def GuessPhaseAllowed (window : GuessPhaseWindow) : Bool :=
+@[expose] noncomputable def GuessPhaseAllowed (window : GuessPhaseWindow) : Bool :=
   @decide (
   (window.2.1 = .accepting ∧
     window.2.2.1 = .guessing ∧
@@ -4938,7 +4941,7 @@ namespace CLExactStackRules
 open Computability GapCVP.CLBoundedStates GapCVP.CLPushAlphabet
 
 /-- GapCVP reduction support. -/
-noncomputable def SupportedStackValue
+@[expose] noncomputable def SupportedStackValue
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (stack : machine.tm.K)
@@ -4989,7 +4992,7 @@ theorem canonicalCellAtom_decode
     (by simpa only [SupportedStackValue, decide_eq_true_eq] using hsupported)
 
 /-- GapCVP reduction support. -/
-def canonicalStackAtoms
+@[expose] def canonicalStackAtoms
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (stack : machine.tm.K)
@@ -5125,7 +5128,7 @@ namespace CLExactVerifierRules
 open Computability GapCVP.CLLocalWindows
 
 /-- GapCVP reduction support. -/
-noncomputable def StackPrefixAgreement
+@[expose] noncomputable def StackPrefixAgreement
     {K : Type} {Γ : K → Type}
     (radius : ℕ)
     (first next : ∀ stack : K, List (Γ stack)) : Bool :=
@@ -5261,7 +5264,7 @@ instance instFintypeSingleStackHint (tm : Turing.FinTM2) :
   infer_instance
 
 /-- GapCVP reduction support. -/
-def atomBlockAt (tm : Turing.FinTM2)
+@[expose] def atomBlockAt (tm : Turing.FinTM2)
     (atoms : List (CellAtom tm)) (index : ℕ) : AtomBlock tm :=
   fun offset =>
     paddedAtom atoms (index * blockSize tm + offset.val)
@@ -5271,7 +5274,7 @@ abbrev StackShiftWindow (tm : Turing.FinTM2) :=
   AtomBlock tm × AtomBlock tm × AtomBlock tm × AtomBlock tm × Bool
 
 /-- GapCVP reduction support. -/
-def stackShiftWindowAt (tm : Turing.FinTM2) (width : ℕ)
+@[expose] def stackShiftWindowAt (tm : Turing.FinTM2) (width : ℕ)
     (first next : List (CellAtom tm))
     (index : Fin (width + 1)) : StackShiftWindow tm :=
   (atomBlockAt tm first (leftBlock width index).val,
@@ -5281,7 +5284,7 @@ def stackShiftWindowAt (tm : Turing.FinTM2) (width : ℕ)
     decide (index.val = 0))
 
 /-- GapCVP reduction support. -/
-def shiftedWindowAtom (tm : Turing.FinTM2)
+@[expose] def shiftedWindowAtom (tm : Turing.FinTM2)
     (hint : SingleStackHint tm)
     (window : StackShiftWindow tm)
     (offset : Fin (blockSize tm)) : CellAtom tm :=
@@ -5305,7 +5308,7 @@ def shiftedWindowAtom (tm : Turing.FinTM2)
           omega⟩
 
 /-- GapCVP reduction support. -/
-noncomputable def StackShiftAllowed (tm : Turing.FinTM2)
+@[expose] noncomputable def StackShiftAllowed (tm : Turing.FinTM2)
     (hint : SingleStackHint tm)
     (window : StackShiftWindow tm) : Bool :=
   @decide (
@@ -5335,7 +5338,7 @@ open Computability GapCVP.CLBoundedStates GapCVP.CLPushAlphabet GapCVP.CLCellRow
 open GapCVP.CLExactStackRules GapCVP.CLCompleteLocalCompiler
 
 /-- GapCVP reduction support. -/
-noncomputable def NoBlankAtoms (tm : Turing.FinTM2)
+@[expose] noncomputable def NoBlankAtoms (tm : Turing.FinTM2)
     (atoms : List (CellAtom tm)) : Bool :=
   @decide (
   ∀ atom ∈ atoms, atom ≠ none
@@ -5464,7 +5467,7 @@ noncomputable def AllStackShiftWindows (tm : Turing.FinTM2) (width : ℕ)
       (stackShiftWindowAt tm width first next index) = true
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def PrefixHintCorrect (tm : Turing.FinTM2)
+@[expose] noncomputable def PrefixHintCorrect (tm : Turing.FinTM2)
     (hint : SingleStackHint tm)
     (next : List (CellAtom tm)) : Bool :=
   @decide (
@@ -5787,7 +5790,7 @@ instance instFintypeFiniteVerifierHint (tm : Turing.FinTM2) :
   infer_instance
 
 /-- GapCVP reduction support. -/
-noncomputable def AllVerifierStackWindows
+@[expose] noncomputable def AllVerifierStackWindows
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (width : ℕ)
@@ -6175,7 +6178,7 @@ theorem filterMap_ofFn_getElem
                   true_and] using ih rest
 
 /-- GapCVP reduction support. -/
-def decodedAtomBlock
+@[expose] def decodedAtomBlock
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (stack : machine.tm.K)
@@ -7217,7 +7220,7 @@ def stackAtomsOfBlock (tm : Turing.FinTM2)
   fun offset => (block offset).2.2.1 stack
 
 /-- GapCVP reduction support. -/
-def machineControlOfBlock (tm : Turing.FinTM2)
+@[expose] def machineControlOfBlock (tm : Turing.FinTM2)
     (block : BlockCell tm) : Option (Option tm.Λ × tm.σ) :=
   match (block ⟨0, blockSize_pos tm⟩).2.1 with
   | none => none
@@ -7256,7 +7259,7 @@ def scriptBlockWindowAt (tm : Turing.FinTM2)
     next index)
 
 /-- GapCVP reduction support. -/
-def canonicalVerifyingRow
+@[expose] def canonicalVerifyingRow
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (width : ℕ)
@@ -7312,7 +7315,7 @@ theorem stackAtomsOfBlock_pack_canonical
             (index.val * blockSize machine.tm + offset.val) hbound]
 
 /-- GapCVP reduction support. -/
-def canonicalScriptBlockRow
+@[expose] def canonicalScriptBlockRow
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (width : ℕ)
@@ -7357,7 +7360,7 @@ theorem machineControlOfBlock_pack_canonical
           Option.isSome_some, ↓reduceIte]
 
 /-- GapCVP reduction support. -/
-def scriptQueryOfBlockWindow
+@[expose] def scriptQueryOfBlockWindow
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (window : ScriptBlockWindow machine.tm) :
@@ -7377,7 +7380,7 @@ def scriptQueryOfBlockWindow
   | _, _ => none
 
 /-- GapCVP reduction support. -/
-def stackWindowOfScriptBlock
+@[expose] def stackWindowOfScriptBlock
     (tm : Turing.FinTM2)
     (window : ScriptBlockWindow tm)
     (stack : tm.K) : StackShiftWindow tm :=
@@ -7388,7 +7391,7 @@ def stackWindowOfScriptBlock
     window.2.1.2.2)
 
 /-- GapCVP reduction support. -/
-noncomputable def ScriptBlockCoherent (tm : Turing.FinTM2)
+@[expose] noncomputable def ScriptBlockCoherent (tm : Turing.FinTM2)
     (window : ScriptBlockWindow tm) : Bool :=
   @decide (
   window.1.1.2 = window.2.1.1.2 ∧
@@ -7799,7 +7802,7 @@ inductive PairedInputTag where
   deriving DecidableEq, Fintype
 
 /-- GapCVP reduction support. -/
-def pairedInputTagAt (x certificate : List Bool)
+@[expose] def pairedInputTagAt (x certificate : List Bool)
     (index : ℕ) : PairedInputTag :=
   match (pairBitEncoding (x, certificate))[index]? with
   | some value => .bit value

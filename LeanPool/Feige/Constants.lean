@@ -19,14 +19,14 @@ which is the `δ = 1` value of the second branch in (1.1).  The
 probability-theoretic proof is kept in later modules.
 -/
 
-@[expose] public section
+public section
 
 namespace Feige
 
 open Filter Topology
 
 /-- The unit-slack sharp constant `bₙ,₁` in dimension `n`. -/
-noncomputable def sharpConstant (n : ℕ) : ℝ :=
+@[expose] noncomputable def sharpConstant (n : ℕ) : ℝ :=
   ((n : ℝ) / (n + 1)) ^ n
 
 @[simp] theorem sharpConstant_zero : sharpConstant 0 = 1 := by

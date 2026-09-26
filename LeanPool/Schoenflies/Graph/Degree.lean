@@ -73,7 +73,7 @@ notation `G.degree`, `G.IsLeaf`, `G.vertexFinset` works on a `G : Graph α β`. 
 modules should do the same.
 -/
 
-@[expose] public section
+public section
 
 open scoped Graph
 

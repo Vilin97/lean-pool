@@ -34,7 +34,7 @@ over `fun v => Finset (G.Walk x v)` is not type-correct — the fibers must be t
 endpoint first, which is exactly what `nbWalksFrom` does).
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

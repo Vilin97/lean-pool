@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParameterWordCalculus
 /-! Every genuine derivative word preserves the ordinary Helmholtz
 constraint, and consequently the pressure pairing vanishes at every order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

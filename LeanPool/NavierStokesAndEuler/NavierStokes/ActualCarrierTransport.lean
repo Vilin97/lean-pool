@@ -16,7 +16,7 @@ The geometry and support proofs live below the stage controls in
 canonical parameter record without adding a solved-field assumption.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

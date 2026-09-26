@@ -49,7 +49,7 @@ filter maps `toBB` (forward) / `fromBB` (inverse), mirroring
 All *data* is choice-free (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

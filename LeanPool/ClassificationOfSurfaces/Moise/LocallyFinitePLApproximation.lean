@@ -17,7 +17,7 @@ deliberately pointwise: on a noncompact open complex no uniform positive toleran
 strongly positive tolerance has a positive lower bound on every compact face.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

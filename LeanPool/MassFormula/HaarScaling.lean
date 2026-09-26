@@ -62,7 +62,7 @@ Modeling decisions, local to this file:
   degré donné d'un corps local*, C. R. Acad. Sci. Paris **286** (1978), Série A, 1031–1036.
 -/
 
-@[expose] public section
+public section
 
 open ValuativeRel MeasureTheory Module
 open scoped ENNReal Pointwise

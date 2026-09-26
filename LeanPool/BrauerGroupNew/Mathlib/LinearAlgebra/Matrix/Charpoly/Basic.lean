@@ -13,7 +13,7 @@ public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 This file restores upstream helper lemmas for block diagonal characteristic polynomials.
 -/
 
-@[expose] public section
+public section
 
 variable {F : Type*} [Field F]
 

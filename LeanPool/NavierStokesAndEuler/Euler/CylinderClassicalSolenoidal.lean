@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-! Classical lifted divergence zero implies membership in the actual closed L² constraint space. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

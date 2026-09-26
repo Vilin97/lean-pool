@@ -17,7 +17,7 @@ actual time derivative, and the residual f-B_t-MB. Its F-adjoint transform is
 in the ordinary L² gradient space by the proved strong projected equation.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,7 +38,7 @@ def velocityField : TimeLp T L2 :=
   timeMultiplier T hT (solenoidalFrame T F) s.velocityLp
 
 /-- The actual continuous physical-velocity representative. -/
-def physicalPath : ℝ → L2 := fun t => extendPath T hT F t (s.velocity t : L2)
+@[expose] def physicalPath : ℝ → L2 := fun t => extendPath T hT F t (s.velocity t : L2)
 
 /-- The product-rule candidate for B_t, constructed in actual Bochner L². -/
 def velocityDerivative : TimeLp T L2 :=

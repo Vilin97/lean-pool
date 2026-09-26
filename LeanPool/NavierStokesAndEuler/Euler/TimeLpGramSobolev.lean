@@ -17,7 +17,7 @@ The coefficient family alone pays a fixed Sobolev cost. The actual right
 side and solution are measured in the identical ordered-word blocks.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

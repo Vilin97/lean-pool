@@ -15,7 +15,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # DegreeBookkeeping -/
 
-@[expose] public section
+public section
 
 
 open Complex MeasureTheory Real Finset

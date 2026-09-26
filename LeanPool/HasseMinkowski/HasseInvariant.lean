@@ -54,7 +54,7 @@ with any concrete list of weights.  The diagonal-level statements (`hasseMinkows
 proved here are exactly the part of the development that does not need that machinery.
 -/
 
-@[expose] public section
+public section
 
 namespace HasseMinkowski
 

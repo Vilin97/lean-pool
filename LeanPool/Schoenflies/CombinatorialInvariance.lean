@@ -85,7 +85,7 @@ from one combinatorial hypothesis.
   of a realization needs.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies
 open scoped Graph
@@ -238,7 +238,7 @@ namespace CellStructure
 variable (S : CellStructure γ)
 
 /-- All cells of the structure. -/
-def cells : Set γ := V(S.skel) ∪ E(S.skel) ∪ S.faces
+@[expose] def cells : Set γ := V(S.skel) ∪ E(S.skel) ∪ S.faces
 
 /-- The cells of the distinguished outer cycle: its vertices and its edges. -/
 def outerCells : Set γ := V(S.outerGraph) ∪ E(S.outerGraph)
@@ -312,7 +312,7 @@ def nonboundary : Set Plane := R.skeletonSet \ R.outerSet
 
 /-- The closed star of a cell: the union of the closures of its supercells. The index set is
 abstract; only the summands are geometric. -/
-def star (σ : γ) : Set Plane := ⋃ τ ∈ S.supercells σ, closure (R.cell τ)
+@[expose] def star (σ : γ) : Set Plane := ⋃ τ ∈ S.supercells σ, closure (R.cell τ)
 
 theorem outerSet_subset_skeletonSet : R.outerSet ⊆ R.skeletonSet :=
   pointSet_mono (S.outerGraph_le.map R.pos)

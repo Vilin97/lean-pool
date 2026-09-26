@@ -20,7 +20,7 @@ This module sets up the `L²`-range codomain restrictions and applies Euclidean 
 `RellichKondrachovRiemannian.Transport`.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

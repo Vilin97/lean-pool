@@ -17,7 +17,7 @@ import Mathlib.Tactic.ArithMult.Init
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

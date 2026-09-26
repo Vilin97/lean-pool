@@ -15,7 +15,7 @@ when its cutoff is supported in the smaller cylinder. No global weak-gradient
 characterization is asserted for the extended field.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal

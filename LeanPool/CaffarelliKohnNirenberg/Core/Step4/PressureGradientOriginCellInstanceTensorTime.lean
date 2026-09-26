@@ -16,7 +16,7 @@ in `eq:pressure-gradient-morrey` by the velocity cube. The mean oscillation
 argument follows the local estimate in `CKN.Pressure.Lin34SliceMeanFree`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

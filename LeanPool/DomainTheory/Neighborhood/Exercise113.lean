@@ -41,7 +41,7 @@ Constructive except `branch_isTotal`'s use of `B`'s structure (still `[propext,
 Quot.sound]`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise113
 

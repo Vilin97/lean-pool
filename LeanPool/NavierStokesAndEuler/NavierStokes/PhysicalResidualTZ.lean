@@ -16,7 +16,7 @@ pipeline uses `(T,Z)`.  The map below swaps those two input coordinates and
 leaves radius, fast variables, angle, and vector components unchanged.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -407,7 +407,7 @@ theorem matchesAtTZ_graphOperators (r : CorrectionState.ReconstructionData)
   · rfl
 
 /-- The actual scaled physical graph, with the slow coordinates in `(T,Z)` order. -/
-noncomputable def graphMapTZ (G : PhysicalResidualBridge.ScaledGraph)
+@[expose] noncomputable def graphMapTZ (G : PhysicalResidualBridge.ScaledGraph)
     (p : ProblemStatement.SpaceTime) : Cylinder := swapCylinder (G.map p)
 
 /-- Graph source TZ, given by `{p | 0 < p.2 0 ∧ graphMapTZ G p ∈ U}`. -/
@@ -443,12 +443,12 @@ theorem graphRadialTZ_eq (G : PhysicalResidualBridge.ScaledGraph) : graphRadialT
 theorem graphAngularTZ_eq : graphAngularTZ = PhysicalResidualBridge.ScaledGraph.angular := rfl
 
 /-- Velocity TZ, given by `G.velocity (fun x => a (swapCylinder x))`. -/
-noncomputable def velocityTZ (G : PhysicalResidualBridge.ScaledGraph)
+@[expose] noncomputable def velocityTZ (G : PhysicalResidualBridge.ScaledGraph)
     (a : Cylinder → Fin 3 → ℝ) : ProblemStatement.VelocityField :=
   G.velocity (fun x => a (swapCylinder x))
 
 /-- Pressure TZ, given by `G.pressure (fun x => p (swapCylinder x))`. -/
-noncomputable def pressureTZ (G : PhysicalResidualBridge.ScaledGraph)
+@[expose] noncomputable def pressureTZ (G : PhysicalResidualBridge.ScaledGraph)
     (p : Cylinder → ℝ) : ProblemStatement.PressureField :=
   G.pressure (fun x => p (swapCylinder x))
 
@@ -484,7 +484,7 @@ theorem physicalToChartTZ_eq_formula (h : ℝ) (n k : ℕ) :
             (TemporalMeanUpdate.coverMap k)) := rfl
 
 /-- Absolute lift TZ, given by `swapSlow (PhysicalResidualBridge.absoluteLift h p)`. -/
-noncomputable def absoluteLiftTZ (h : ℝ) (p : ProblemStatement.SpaceTime) : Lift :=
+@[expose] noncomputable def absoluteLiftTZ (h : ℝ) (p : ProblemStatement.SpaceTime) : Lift :=
   swapSlow (PhysicalResidualBridge.absoluteLift h p)
 
 theorem commonGraph_eq_physicalToChartTZ (h : ℝ) (n k : ℕ) {p : ProblemStatement.SpaceTime}

@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldRestriction
 /-! Restricting the actual parent to a nested horizon preserves its
 flow identities, physical-label budget and the source low-order guards. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

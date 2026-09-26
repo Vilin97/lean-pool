@@ -15,7 +15,7 @@ Core definitions: ambient space, optimization concepts (argmin, PL condition, L-
 tubular neighborhoods, first-order algorithm model, convergence rate, and manifold setup.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -36,7 +36,7 @@ def argminSet (f : E d → ℝ) : Set (E d) :=
   {x | ∀ y, f x ≤ f y}
 
 /-- The infimal value f⋆ = inf_x f(x). -/
-def fStar (f : E d → ℝ) : ℝ := iInf f
+@[expose] def fStar (f : E d → ℝ) : ℝ := iInf f
 
 /-- A function f satisfies the μ-Polyak-Łojasiewicz (PL) condition on a set U if
     f is differentiable on U and ‖∇f(x)‖² ≥ 2μ(f(x) - f⋆) for all x ∈ U. -/
@@ -115,7 +115,7 @@ def HasAcceleratedRateWithPrefactorTwo (f : E d → ℝ) (iterates : ℕ → E d
 abbrev ManifoldModel (n : ℕ) := EuclideanSpace ℝ (Fin n)
 
 /-- Model with corners for the n-dimensional Euclidean model (no boundary). -/
-def modelI (n : ℕ) : ModelWithCorners ℝ (ManifoldModel n) (ManifoldModel n) :=
+@[expose] def modelI (n : ℕ) : ModelWithCorners ℝ (ManifoldModel n) (ManifoldModel n) :=
   modelWithCornersSelf ℝ (ManifoldModel n)
 
 end PLAcceleratedNesterovLean

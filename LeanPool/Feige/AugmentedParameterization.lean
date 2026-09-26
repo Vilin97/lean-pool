@@ -16,7 +16,7 @@ parametrization `γ = 0`, `β = 1`.  A genuine support pair `(x,y)` is
 represented by `γ = 1-x`, `β = y-1`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 
@@ -37,7 +37,7 @@ def augmentedBeta (p : AugmentedTwoPointParams) : ℝ :=
   | Sum.inr q => q.1.2 - 1
 
 /-- The nonnegativity condition on an augmented two-point parameter. -/
-def AugmentedParamNonnegative (p : AugmentedTwoPointParams) : Prop :=
+@[expose] def AugmentedParamNonnegative (p : AugmentedTwoPointParams) : Prop :=
   match p with
   | Sum.inl _ => True
   | Sum.inr q => 0 ≤ q.1.1 ∧ 1 < q.1.2
@@ -45,7 +45,7 @@ def AugmentedParamNonnegative (p : AugmentedTwoPointParams) : Prop :=
 /-- The condition enjoyed by latent parameters sampled from a
 nonnegative mean-one law: genuine lower support points are nonnegative and
 genuine upper support points are strictly above one. -/
-def AugmentedParamsNonnegative {n : ℕ}
+@[expose] def AugmentedParamsNonnegative {n : ℕ}
     (p : Fin n → AugmentedTwoPointParams) : Prop :=
   ∀ i, AugmentedParamNonnegative (p i)
 

@@ -13,7 +13,7 @@ public import Mathlib.Order.OrderDual
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Lib.Core.Rel3`.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -28,7 +28,7 @@ def Mirror3 {α : Type u} {β : Sort v} (f : α → α → α → β) : αᵒᵈ
   fun a b c => f (ofDual c) (ofDual b) (ofDual a)
 
 /-- Decidability of a ternary relation: each instance is decidable. -/
-@[reducible]
+@[expose, reducible]
 def DecidableRel3 {α : Sort u} (r : α → α → α → Prop) :=
   ∀ a b c : α, Decidable (r a b c)
 

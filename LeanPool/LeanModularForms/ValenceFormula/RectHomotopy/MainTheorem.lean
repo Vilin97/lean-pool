@@ -23,7 +23,7 @@ The generalized winding number of `fdBoundary` around
 interior points equals -1 (clockwise).
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Metric Filter Topology
 

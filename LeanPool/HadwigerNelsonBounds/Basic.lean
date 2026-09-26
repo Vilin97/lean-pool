@@ -15,7 +15,7 @@ This module defines the Euclidean plane graph and the lattice geometry used by
 the seven-color construction.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
@@ -42,7 +42,7 @@ def unitDistanceGraph : SimpleGraph R2 :=
 /-- Lattice basis spacing. Any value in the interval
     `(1/(√7 − 2/√3), √3/2) ≈ (0.671, 0.866)` is geometrically valid;
     we pick the clean rational `3/4`. -/
-noncomputable def isbellLatticeStep : ℝ := 3 / 4
+@[expose] noncomputable def isbellLatticeStep : ℝ := 3 / 4
 
 /-- The triangular-lattice point at integer coords `(i, j)`:
     `i · (a, 0) + j · (a/2, a·√3/2)`. -/

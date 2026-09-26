@@ -17,11 +17,12 @@ import Mathlib.Tactic.NormNum.Basic
 
 -/
 
-@[expose] public section
+public section
 
 
 /-- Composition of the `i`-th injection and the `j`-th projection of a dependent
 direct sum, giving a linear map `M₁ i →ₗ[R] M₁ j`. -/
+@[expose]
 def directSumFromTo {R : Type*} [Semiring R] {ι₁ : Type*} [DecidableEq ι₁] {M₁ : ι₁ → Type*}
     [∀ i₁ : ι₁, AddCommGroup (M₁ i₁)] [∀ i₁ : ι₁, Module R (M₁ i₁)] (i j : ι₁) : M₁ i →ₗ[R] M₁ j :=
   LinearMap.proj j ∘ₗ LinearMap.single _ _ i

@@ -19,7 +19,7 @@ Deliberately language-generic and free of any nonemptiness assumption; the Lópe
 specialization (`baseGraphEmb`, code compatibility) lives in `Methods/LopezEscobar/PCMem.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

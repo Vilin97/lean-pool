@@ -38,7 +38,7 @@ The maps are clamped outside the chosen interval, preserving volume at every
 real parameter. Reversing from the other endpoint recovers the original
 coefficient and supplies the forward paths used in local trapping arguments. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -258,7 +258,7 @@ endpoint maps in one common ball. These hypotheses exclude all nonzero
 vorticity outside that ball; no global pointwise velocity bound is needed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -408,7 +408,7 @@ section
 
 /-! Short-time confinement uses a velocity bound only inside the trapping ball. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -521,7 +521,7 @@ section
 /-! Nonzero vorticity cannot disappear on an existing reverse-time particle
 trajectory of a Comparator solution. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -579,7 +579,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

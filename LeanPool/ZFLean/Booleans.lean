@@ -25,7 +25,7 @@ It defines the following operations:
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

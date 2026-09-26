@@ -30,7 +30,7 @@ The constants are fixed polynomials in the coefficient amplitudes and the
 proved inverse bound; none depends on the derivative order.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -180,7 +180,7 @@ with those spatial derivatives, giving genuine jointly continuous spatial
 representatives and their pointwise classical time derivative.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

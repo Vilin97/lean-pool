@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderMollifier
 /-! Continuous operators and exact norm comparisons on the actual complete cylinder Sobolev spaces.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -46,7 +46,7 @@ theorem value_norm_le {q : ℕ} (u : SobolevSpace period q) : ‖value period u�
   word_norm_le period u (emptyWord q)
 
 /-- The sum of actual derivative norms, in the source's Sobolev convention. -/
-def sumNorm {q : ℕ} (u : SobolevSpace period q) : ℝ := ∑ w : SobolevWord q, ‖u.val w‖
+@[expose] def sumNorm {q : ℕ} (u : SobolevSpace period q) : ℝ := ∑ w : SobolevWord q, ‖u.val w‖
 
 /-- The complete-array norm is bounded by the source's derivative sum. -/
 theorem norm_le_sumNorm {q : ℕ} (u : SobolevSpace period q) : ‖u‖ ≤ sumNorm period u := by

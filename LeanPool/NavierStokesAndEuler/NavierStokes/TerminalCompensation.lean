@@ -18,7 +18,7 @@ amplitude leaves one fixed quadratic map, so its smooth inverse and estimates
 are uniform in the transverse parameter.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -104,7 +104,7 @@ theorem bumps_disjoint (P : Patch) (i j : Fin 3) (hij : i ≠ j) (x : ℝ) :
     linarith [hjx.2, hix.1]
 
 /-- Correction, given by `∑ j, c j * bump P j x`. -/
-noncomputable def correction (P : Patch) (c : Coeff) (x : ℝ) : ℝ :=
+@[expose] noncomputable def correction (P : Patch) (c : Coeff) (x : ℝ) : ℝ :=
   ∑ j, c j * bump P j x
 
 theorem correction_contDiff (P : Patch) (c : Coeff) :
@@ -226,7 +226,7 @@ theorem correction_square_moment (P : Patch) (s : ℝ) (c : Coeff) :
     exact (weighted_bump_sq_integrable P s j).const_mul _
 
 /-- Slope, given by `-1 / 2 - lam`. -/
-noncomputable def slope (lam : ℝ) : ℝ := -1 / 2 - lam
+@[expose] noncomputable def slope (lam : ℝ) : ℝ := -1 / 2 - lam
 
 /-- Powers, given by `![-1 + slope lam, slope lam, 1 / 2]`. -/
 noncomputable def powers (lam : ℝ) : Coeff := ![-1 + slope lam, slope lam, 1 / 2]
@@ -299,7 +299,7 @@ theorem quadraticCLM_apply (P : Patch) (c d : Coeff) :
         (1 / 2) * ∑ j, squareMoment P 0 j * c j * d j, 0] := rfl
 
 /-- Base profile, given by `x ^ slope lam`. -/
-noncomputable def baseProfile (lam x : ℝ) : ℝ := x ^ slope lam
+@[expose] noncomputable def baseProfile (lam x : ℝ) : ℝ := x ^ slope lam
 
 /-- One half of a squared-profile change, against a power weight. -/
 noncomputable def weightedChange (P : Patch) (lam : ℝ) (c : Coeff) (w x : ℝ) : ℝ :=
@@ -522,11 +522,11 @@ theorem composed_solver_deriv_bound {g : Coeff → Coeff} {ε C : ℝ}
     (mul_le_mul_of_nonneg_right (hbound (d η) hmem) (norm_nonneg _))
 
 /-- The physical profile uses the actual additive bumps at scale `R`. -/
-noncomputable def physicalProfile (P : Patch) (lam R a : ℝ) (c : Coeff) (X : ℝ) : ℝ :=
+@[expose] noncomputable def physicalProfile (P : Patch) (lam R a : ℝ) (c : Coeff) (X : ℝ) : ℝ :=
   a * (baseProfile lam (X / R) + correction P c (X / R))
 
 /-- Clean profile, given by `a * baseProfile lam (X / R)`. -/
-noncomputable def cleanProfile (lam R a X : ℝ) : ℝ := a * baseProfile lam (X / R)
+@[expose] noncomputable def cleanProfile (lam R a X : ℝ) : ℝ := a * baseProfile lam (X / R)
 
 /-- Physical moments as an element of `Coeff`. -/
 noncomputable def physicalMoments (P : Patch) (lam R a : ℝ) (c : Coeff) : Coeff :=
@@ -621,7 +621,7 @@ noncomputable def amplitudeFactors (a : ℝ) : Coeff :=
   ![(2 * a ^ 2)⁻¹, (2 * a ^ 2)⁻¹, a⁻¹]
 
 /-- Amplitude debt, given by `-(amplitudeFactors a * v)`. -/
-noncomputable def amplitudeDebt (a : ℝ) (v : Coeff) : Coeff := -(amplitudeFactors a * v)
+@[expose] noncomputable def amplitudeDebt (a : ℝ) (v : Coeff) : Coeff := -(amplitudeFactors a * v)
 
 theorem normalizedDebt_eq (R a : ℝ) (d : Coeff) :
     normalizedDebt R a d = amplitudeDebt a (scaledDebt R d) := by

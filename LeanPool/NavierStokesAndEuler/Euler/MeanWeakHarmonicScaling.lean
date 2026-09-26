@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Scale-independent local L² control of weak harmonic fields on ordinary R³. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

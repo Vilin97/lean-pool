@@ -17,7 +17,7 @@ import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
 Imported Lean Pool material for `LeanPool.ZhangYeungInequality.Test.Delta`.
 -/
 
-@[expose] public section
+public section
 
 namespace ZhangYeungTest
 

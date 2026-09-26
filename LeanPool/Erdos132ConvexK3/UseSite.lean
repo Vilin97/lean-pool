@@ -24,7 +24,7 @@ impossible.
 The use-site package keeps only the data consumed by the branch proofs.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -72,19 +72,19 @@ noncomputable def erlvAtVertexUseSiteOfHighDegree
 namespace ErLVAtVertexUseSite
 
 /-- The exceptional branch with inner endpoint move counts `(1,2)`. -/
-def Case12
+@[expose] def Case12
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (S : ErLVAtVertexUseSite P d₁ d₂ d₃) : Prop :=
   S.pair.first.rightMoves = 1 ∧ S.pair.second.leftMoves = 2
 
 /-- The exceptional branch with inner endpoint move counts `(2,1)`. -/
-def Case21
+@[expose] def Case21
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (S : ErLVAtVertexUseSite P d₁ d₂ d₃) : Prop :=
   S.pair.first.rightMoves = 2 ∧ S.pair.second.leftMoves = 1
 
 /-- The exceptional branch with inner endpoint move counts `(2,2)`. -/
-def Case22
+@[expose] def Case22
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (S : ErLVAtVertexUseSite P d₁ d₂ d₃) : Prop :=
   S.pair.first.rightMoves = 2 ∧ S.pair.second.leftMoves = 2

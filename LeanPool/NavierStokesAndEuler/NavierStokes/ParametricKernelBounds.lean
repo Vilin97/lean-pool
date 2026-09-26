@@ -18,7 +18,7 @@ The estimates use actual total Fréchet derivatives and finite profile-jet
 bounds. The parameter space need not be finite-dimensional for these bounds.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

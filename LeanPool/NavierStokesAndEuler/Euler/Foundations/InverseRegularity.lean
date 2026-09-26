@@ -15,7 +15,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 # Inverse Regularity
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

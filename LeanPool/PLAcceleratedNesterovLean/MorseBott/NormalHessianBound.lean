@@ -41,7 +41,7 @@ These are equal for C² functions because:
 - PLMB/HessianPL.lean: `hessian_coercive_on_orthogonal_of_MuPL_impl`
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Submodule InnerProductSpace
 
@@ -76,7 +76,7 @@ def ExternalThm3.gradient (f : E → ℝ) (x : E) : E :=
 
 /-- PLAcceleratedNesterovLean's Hessian quadratic form: `⟨D(∇f)(x)·ξ, ξ⟩`.
     Here `gradient f` is the Riesz representative of `fderiv ℝ f`. -/
-def ExternalThm3.hessianQuadForm (f : E → ℝ) (x ξ : E) : ℝ :=
+@[expose] def ExternalThm3.hessianQuadForm (f : E → ℝ) (x ξ : E) : ℝ :=
   @inner ℝ E _ (fderiv ℝ (ExternalThm3.gradient f) x ξ) ξ
 
 -- ════════════════════════════════════════════════════════════════════════════

@@ -24,7 +24,7 @@ names for the matrix-algebra specialization and its trace, spectrum, and
 Hermitian-preservation lemmas.
 -/
 
-@[expose] public section
+public section
 
 open scoped ComplexOrder
 

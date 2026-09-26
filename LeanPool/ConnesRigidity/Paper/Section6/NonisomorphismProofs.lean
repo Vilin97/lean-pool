@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
 The nonisomorphism proofs component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperNonisomorphism
@@ -98,7 +98,7 @@ def paperEllVStarRepresentation : Representation k PaperKernel.Q PaperKernel.VSt
 /--
 The `paperEllScalarRepresentation` construction used in the Connes rigidity formalization.
 -/
-def paperEllScalarRepresentation : Representation k PaperKernel.Q k :=
+@[expose] def paperEllScalarRepresentation : Representation k PaperKernel.Q k :=
   Representation.trivial k PaperKernel.Q k
 
 /--

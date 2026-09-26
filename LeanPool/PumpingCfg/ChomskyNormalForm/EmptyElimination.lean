@@ -29,7 +29,7 @@ original up to omission of the empty word.
    [Hopcroft et al. 2006]
 -/
 
-@[expose] public section
+public section
 
 namespace ContextFreeRule
 universe uT uN
@@ -402,6 +402,7 @@ lemma subset_addIfNullable (r : ContextFreeRule T N) (p : Finset N) :
 variable {g : ContextFreeGrammar T} [DecidableEq g.NT]
 
 /-- `generators g` is the set of nonterminals that appear in the left hand side of rules of `g` -/
+@[expose]
 noncomputable def generators (g : ContextFreeGrammar T) [DecidableEq g.NT] : Finset g.NT :=
   (g.rules.toList.map ContextFreeRule.input).toFinset
 
@@ -670,7 +671,7 @@ noncomputable def removeNullables [DecidableEq T] [DecidableEq g.NT] (p : Finset
 in `g` have a set of corresponding rules in g' in which some nullable symbols do not appear in
 the output. For example if `r: V -> ABC` is in `g` and `A` and `B` are nullable, the rules
 `r₁ : V -> ABC`, `r₂ : V -> BC`, `r₃ : V -> AC`, `r₄ : V -> C` will be in `g.eliminate_empty` -/
-noncomputable def eliminateEmpty [DecidableEq T] (g : ContextFreeGrammar T)
+@[expose] noncomputable def eliminateEmpty [DecidableEq T] (g : ContextFreeGrammar T)
     [DecidableEq g.NT] : ContextFreeGrammar T :=
   ⟨g.NT, g.initial, removeNullables g.computeNullables⟩
 

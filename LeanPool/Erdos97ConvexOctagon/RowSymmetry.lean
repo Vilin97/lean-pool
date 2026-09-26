@@ -18,7 +18,7 @@ to seven canonical orbits.  The small table below records an explicit forward
 and inverse permutation for every row.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 

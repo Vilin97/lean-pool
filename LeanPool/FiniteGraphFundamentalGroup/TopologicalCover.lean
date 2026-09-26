@@ -16,7 +16,7 @@ import Mathlib.Topology.WithTopology
 This module verifies the local topology needed to realize the combinatorial path-lifting cover.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory CategoryTheory.SingleObj Quiver
@@ -282,7 +282,7 @@ abbrev graphCoverRealization {V : Type u} [Quiver.{u} V] (root : V) :=
   graphRealization (graphCoverVertex root)
 
 /-- The realization map induced by the canonical graph-cover projection. -/
-def graphCoverRealizationProjection {V : Type u} [Quiver.{u} V] (root : V) :
+@[expose] def graphCoverRealizationProjection {V : Type u} [Quiver.{u} V] (root : V) :
     graphCoverRealization root → graphRealization V :=
   graphRealizationMap (graphCoverProjection root)
 

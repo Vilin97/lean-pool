@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Euclidean.NewtonianDer
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology
@@ -27,6 +27,7 @@ namespace CKN.Foundation.Euclidean
 open CKN
 
 /-- The Newtonian kernel truncated to the ball of radius `R` about the origin. -/
+@[expose]
 def truncatedNewtonianPotentialKernel (R : ℝ) : Vec3 → ℝ := fun z =>
   if ‖z‖ < R then newtonianKernel z else 0
 

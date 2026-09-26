@@ -58,7 +58,7 @@ import Mathlib.Data.Set.Lattice.Order
 # MatchingLogic.SortedProof
 -/
 
-@[expose] public section
+public section
 
 -- `PForm` lives in ProofSystem.lean. Without this import, `autoImplicit` turns
 -- every mention of it into a fresh type VARIABLE and the file still elaborates

@@ -16,4 +16,4 @@ public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operation
 Import index for the Brauer group formalization.
 -/
 
-@[expose] public section
+public section

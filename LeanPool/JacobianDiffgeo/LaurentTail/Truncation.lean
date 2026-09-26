@@ -24,7 +24,7 @@ Unit: laurent-tails (`docs/design/laurent-tails.md`).
   `Cech.H1 D` is `Comparison.lean`'s job).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace

@@ -41,7 +41,7 @@ Marker's Corollary 4.27 then bounds the order types of all models of `φ ⊓ inf
 single countable ordinal, which `exists_code_type_eq` contradicts.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

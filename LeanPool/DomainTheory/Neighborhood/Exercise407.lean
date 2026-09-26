@@ -36,7 +36,7 @@ filters, Exercise 2.11 /
 All constructions are **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

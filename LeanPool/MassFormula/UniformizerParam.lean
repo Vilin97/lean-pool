@@ -71,7 +71,7 @@ Eisenstein polynomials enters it.
   degré donné d'un corps local*, C. R. Acad. Sci. Paris **286** (1978), Série A, 1031–1036.
 -/
 
-@[expose] public section
+public section
 
 open ValuativeRel IsDiscreteValuationRing MeasureTheory
 open scoped ENNReal
@@ -419,7 +419,7 @@ variable {R A : Type*} [CommRing R] [IsDomain R] [IsDiscreteValuationRing R]
   {π : R} {ξ : A} {n : ℕ}
 
 /-- The polynomial expanding `y` in a power basis. -/
-noncomputable def expand (b : Module.Basis (Fin n) R A) (y : A) : Polynomial R :=
+@[expose] noncomputable def expand (b : Module.Basis (Fin n) R A) (y : A) : Polynomial R :=
   ∑ i : Fin n, Polynomial.C (b.repr y i) * Polynomial.X ^ (i : ℕ)
 
 omit [IsDomain R] [IsDiscreteValuationRing R] [IsDomain A] [IsDiscreteValuationRing A] in
@@ -443,7 +443,7 @@ private lemma degree_expand_lt (b : Module.Basis (Fin n) R A) (y : A) :
 
 /-- The monic degree-`n` annihilator of `y` read off a power basis at `y`: `y ^ n` minus its
 expansion in the lower powers. -/
-noncomputable def annih (b : Module.Basis (Fin n) R A) (y : A) : Polynomial R :=
+@[expose] noncomputable def annih (b : Module.Basis (Fin n) R A) (y : A) : Polynomial R :=
   Polynomial.X ^ n - expand b (y ^ n)
 
 omit [IsDomain A] [IsDiscreteValuationRing A] in
@@ -1016,7 +1016,7 @@ theorem toCoeff_equivFun_mem_imageLattice_iff (hπ : Irreducible π) (hint : IsI
 /-- The coordinate embedding of `integers L` into the coefficient space, in the monogenic basis
 (`basisOfEisenstein`): the chart in which the balls of `integers L` become the lattices of
 `HaarScaling.lean`. -/
-noncomputable def coord (hπ : Irreducible π) (hint : IsIntegral 𝒪[K] x)
+@[expose] noncomputable def coord (hπ : Irreducible π) (hint : IsIntegral 𝒪[K] x)
     (hei : (minpoly 𝒪[K] x).IsEisensteinAt (Submodule.span 𝒪[K] {π}))
     (y : ↥(integers (IntermediateField.adjoin K {x}))) :
     Fin (minpoly 𝒪[K] x).natDegree → K :=

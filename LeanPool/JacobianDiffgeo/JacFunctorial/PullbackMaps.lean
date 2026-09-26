@@ -25,7 +25,7 @@ via `RS.periodVector_traceForm_mem`, after conjugating the loop to a regular bas
 `PeriodMaps.lean`'s universe warning).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Module
@@ -44,7 +44,7 @@ variable {Y : Type*} [TopologicalSpace Y] [T2Space Y] [CompactSpace Y] [Connecte
 /-- The induced `ℂ`-linear map on period spaces for the pullback direction, from
 `Form1.trace f hf`'s `dualMap` (covariant trace transposes to the contravariant direction:
 `Dual (Form1 Y) →ₗ Dual (Form1 X)`, i.e. period space of `Y` to period space of `X`). -/
-noncomputable def pullbackT (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
+@[expose] noncomputable def pullbackT (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
     (Fin (genus Y) → ℂ) →ₗ[ℂ] (Fin (genus X) → ℂ) :=
   (periodCoordEquiv X).toLinearMap ∘ₗ
     ((Form1.trace f hf).dualMap ∘ₗ (periodCoordEquiv Y).symm.toLinearMap)

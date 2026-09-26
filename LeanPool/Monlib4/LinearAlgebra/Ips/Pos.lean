@@ -28,7 +28,7 @@ for linear maps:
 
 -/
 
-@[expose] public section
+public section
 
 open InnerProductSpace RCLike
 

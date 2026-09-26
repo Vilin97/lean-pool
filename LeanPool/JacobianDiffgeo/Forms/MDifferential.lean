@@ -25,7 +25,7 @@ Holomorphic 1-forms only — no meromorphic machinery here (meromorphic 1-forms 
 `f • η` pairs in canonical-forms/meromorphic-trace).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Bundle
 open Set IsManifold

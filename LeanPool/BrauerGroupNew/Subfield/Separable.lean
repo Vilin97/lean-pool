@@ -23,7 +23,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Subfield.Separable`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

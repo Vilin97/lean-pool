@@ -32,7 +32,7 @@ the Bessel K₁ asymptotics: (m/4π²|x|)K₁(m|x|) is locally integrable in 4D.
 - `gaussianFreeField_satisfies_OS1_revised`
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex BigOperators SchwartzMap Real QFT
 open scoped MeasureTheory ENNReal

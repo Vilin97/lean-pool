@@ -15,7 +15,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.HomotopyGroup.ChangeBasePt`.
 -/
 
-@[expose] public section
+public section
 -- import Mathlib.CategoryTheory.Category.Pointed
 -- import WhiteheadTheorem.HEP.Retract
 -- import Mathlib.CategoryTheory.LiftingProperties.Adjunction

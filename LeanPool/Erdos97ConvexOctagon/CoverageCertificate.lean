@@ -14,4 +14,4 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Audited flat coverage certificates -/
 
-@[expose] public section
+public section

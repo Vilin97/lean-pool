@@ -9,7 +9,7 @@ public import LeanPool.QuantumParallelRepetition.Part06
 
 /-! # Quantum parallel repetition, part 07 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -907,7 +907,7 @@ private def dSVDensityRationalPublicBucketPhysicalPhaseWeightedMixedError
               embezzlementState (N * n)‖ ^ 2
 
 /-- The quantum state representing DSV density rational public bucket physical coherent mixed. -/
-def dSVDensityRationalPublicBucketPhysicalCoherentMixedState
+@[expose] def dSVDensityRationalPublicBucketPhysicalCoherentMixedState
     {d N B : ℕ} (w : ℝ) (n : ℕ)
     (ξ ζ : BipartiteUnitVector d) :
     EuclideanSpace ℂ
@@ -939,7 +939,7 @@ def dSVDensityRationalPublicBucketPhysicalCoherentTargetState
 The DSV density rational public bucket physical coherent local reset construction used in the
 quantum parallel-repetition argument.
 -/
-def dSVDensityRationalPublicBucketPhysicalCoherentLocalReset
+@[expose] def dSVDensityRationalPublicBucketPhysicalCoherentLocalReset
     {d N B n : ℕ} (Q : ℕ) (w : ℝ)
     (ξ ζ : BipartiteUnitVector d)
     (A C : Fin B → Option ℕ →
@@ -2048,7 +2048,7 @@ open scoped BigOperators ComplexOrder Kronecker MatrixOrder
 The DSV density rational heterogeneous common stop gauge stage error construction used in the
 quantum parallel-repetition argument.
 -/
-def dSVDensityRationalHeterogeneousCommonStopGaugeStageError
+@[expose] def dSVDensityRationalHeterogeneousCommonStopGaugeStageError
     {d N B : ℕ} (Q : ℕ) (w : ℝ) (n : ℕ)
     (ξ ζ : BipartiteUnitVector d)
     (A C : Fin B → Option ℕ →
@@ -2332,7 +2332,7 @@ theorem
 The DSV density rational heterogeneous stopped common prefix hazard construction used in the
 quantum parallel-repetition argument.
 -/
-def dSVDensityRationalHeterogeneousStoppedCommonPrefixHazard
+@[expose] def dSVDensityRationalHeterogeneousStoppedCommonPrefixHazard
     {d N B S L : ℕ} (Q n : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d)
@@ -2564,7 +2564,7 @@ theorem exists_proofUnconditionalStoppedCommonPrefixBalancedHazard
 The unconditional prefactor bucket coefficient construction used in the quantum parallel-
 repetition argument.
 -/
-def unconditionalPrefactorBucketCoefficient : ℝ :=
+@[expose] def unconditionalPrefactorBucketCoefficient : ℝ :=
   16 * (Real.exp 1 - 1) + 4
 
 theorem unconditionalPrefactorBucketCoefficient_nonneg :
@@ -2872,7 +2872,7 @@ private def exactLocalQuestionHistoryEquiv
 The exact locally sampleable ja rounded construction used in the quantum parallel-repetition
 argument.
 -/
-def exactLocallySampleableJARounded
+@[expose] def exactLocallySampleableJARounded
     (G : Game X Y A B) (n : ℕ) (D : Finset (Fin n))
     (denominator : ℕ)
     (numerator : ExactLocalSamplerIndex X Y D →
@@ -3270,7 +3270,7 @@ abbrev ExactSourceSharedFlag
       (ExactHistoryFlag X Y A B D × Fin denominator)
 
 /-- The probability weight for exact source shared flag. -/
-def exactSourceSharedFlagWeight
+@[expose] def exactSourceSharedFlagWeight
     {n : ℕ} (D : Finset (Fin n)) (denominator : ℕ)
     (_ : ExactSourceSharedFlag X Y A B D denominator) : ℝ :=
   (1 / (Fintype.card (SourceRemainingCoordinate D) : ℝ)) *
@@ -3312,7 +3312,7 @@ theorem exactSourceSharedFlagWeight_sum
   field_simp
 
 /-- The transcript representation for exact source alice permutation. -/
-def exactSourceAlicePermutationHistory
+@[expose] def exactSourceAlicePermutationHistory
     {n : ℕ} (D : Finset (Fin n)) (denominator : ℕ)
     (numerator : ExactLocalSamplerIndex X Y D →
       ExactHistoryFlag X Y A B D → ℕ)
@@ -4970,7 +4970,7 @@ def exactConditionedReverseBobPrefixEntropyIncrement
 The exact conditioned reverse alice prefix information construction used in the quantum
 parallel-repetition argument.
 -/
-def exactConditionedReverseAlicePrefixInformation
+@[expose] def exactConditionedReverseAlicePrefixInformation
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (remaining : 0 < (Finset.univ \ D).card)
@@ -4986,7 +4986,7 @@ def exactConditionedReverseAlicePrefixInformation
 The exact conditioned reverse bob prefix information construction used in the quantum parallel-
 repetition argument.
 -/
-def exactConditionedReverseBobPrefixInformation
+@[expose] def exactConditionedReverseBobPrefixInformation
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (remaining : 0 < (Finset.univ \ D).card)
@@ -5002,7 +5002,7 @@ def exactConditionedReverseBobPrefixInformation
 The exact reverse alice conditional history identification construction used in the quantum
 parallel-repetition argument.
 -/
-def ExactReverseAliceConditionalHistoryIdentification
+@[expose] def ExactReverseAliceConditionalHistoryIdentification
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (remaining : 0 < (Finset.univ \ D).card)
@@ -5016,7 +5016,7 @@ def ExactReverseAliceConditionalHistoryIdentification
 The exact reverse bob conditional history identification construction used in the quantum
 parallel-repetition argument.
 -/
-def ExactReverseBobConditionalHistoryIdentification
+@[expose] def ExactReverseBobConditionalHistoryIdentification
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (remaining : 0 < (Finset.univ \ D).card)
@@ -5697,7 +5697,7 @@ def exactConditionedReverseAliceNextJoint
 The exact conditioned reverse alice next prior construction used in the quantum parallel-
 repetition argument.
 -/
-def exactConditionedReverseAliceNextPrior
+@[expose] def exactConditionedReverseAliceNextPrior
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (remaining : 0 < (Finset.univ \ D).card)
@@ -6182,7 +6182,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The data context recording exact reverse alice marked history. -/
-def exactReverseAliceMarkedHistoryContext
+@[expose] def exactReverseAliceMarkedHistoryContext
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (default : Y)
     (seed : ExactRemainingSeed D)
@@ -6204,7 +6204,7 @@ def exactReverseAliceMarkedHistoryContext
       projection.2)
 
 /-- The data context recording exact reverse bob marked history. -/
-def exactReverseBobMarkedHistoryContext
+@[expose] def exactReverseBobMarkedHistoryContext
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (default : X)
     (seed : ExactRemainingSeed D)

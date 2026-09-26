@@ -24,7 +24,7 @@ import Mathlib.RingTheory.SimpleRing.Principal
 # LeanPool.SardMoreira.Chart
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

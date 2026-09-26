@@ -20,7 +20,7 @@ of the smaller disk. It is defined on all continuous outer-disk functions;
 on holomorphic inputs it agrees with the actual complex derivative.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

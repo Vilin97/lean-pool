@@ -13,7 +13,7 @@ import Mathlib.Algebra.EuclideanDomain.Field
 /-! Finite-prefix control of the actual coupling recurrence. Each step
 may use only the bounds already proved on its preceding prefix. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

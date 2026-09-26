@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Pressure.Lin34SliceQuantities
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -273,6 +273,7 @@ theorem pressure_lin34_force_of_sws
 
 /-- The constant `C₃₂(q)` of `eq:lin35-force` in `paper/ckn.tex`, expressed
 through the exponent that `lin34ForceConstant` consumes. -/
+@[expose]
 def lin34SolutionForceExponent (C₁₁ q : ℝ) : ℝ :=
   (lin34ForceConstant (lin34ForceExponent C₁₁) *
     (1 + lin34ForceCylinderConstant q ^ (3 / 2 : ℝ))) ^ (2 / 3 : ℝ)

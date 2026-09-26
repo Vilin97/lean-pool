@@ -52,7 +52,7 @@ needed on `Y` itself).
   stability, though `trace_eq_finsum'` proves the identity at every point.)
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Filter Set Function Topology

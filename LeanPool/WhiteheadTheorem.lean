@@ -48,4 +48,4 @@ Tags: algebraic-topology, cw-complex, homotopy-groups, weak-homotopy-equivalence
 MSC: 55P10, 55Q05, 55U10
 -/
 
-@[expose] public section
+public section

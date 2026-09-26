@@ -45,7 +45,7 @@ used to compare the
 two directed unions.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

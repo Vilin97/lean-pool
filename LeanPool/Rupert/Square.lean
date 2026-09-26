@@ -15,7 +15,7 @@ import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
 Imported Lean Pool material for `LeanPool.Rupert.Square`.
 -/
 
-@[expose] public section
+public section
 
 namespace Square
 

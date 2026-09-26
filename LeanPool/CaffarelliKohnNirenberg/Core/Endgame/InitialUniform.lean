@@ -14,7 +14,7 @@ domain and the solution. The proof consumes the actual start and iteration
 route on the wider cylinder needed for the first localization.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal

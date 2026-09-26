@@ -27,7 +27,7 @@ section
 # Gevrey Inverse
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -132,7 +132,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -143,7 +143,7 @@ open Real
 open EulerGevrey EulerGevreyInverse EulerGevreyFunctions
 
 /-- Explicit smooth periodic profile with a narrow positive derivative peak. -/
-def profile (δ t : ℝ) : ℝ := arctan (sin t / (1 + δ - cos t))
+@[expose] def profile (δ t : ℝ) : ℝ := arctan (sin t / (1 + δ - cos t))
 
 /-- Denominator of the derivative of the periodic profile. -/
 def denominator (δ t : ℝ) : ℝ := (1 + δ) ^ 2 - 2 * (1 + δ) * cos t + 1

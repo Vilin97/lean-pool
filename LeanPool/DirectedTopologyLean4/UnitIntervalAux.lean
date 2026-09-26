@@ -11,7 +11,7 @@ public import Mathlib.Topology.Path
 # LeanPool.DirectedTopologyLean4.UnitIntervalAux
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains lemmas about

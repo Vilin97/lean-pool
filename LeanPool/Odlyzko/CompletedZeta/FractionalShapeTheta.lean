@@ -10,7 +10,7 @@ public import LeanPool.Odlyzko.Theta.TraceDualLattice
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

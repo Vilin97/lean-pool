@@ -18,7 +18,7 @@ and the actual repair coefficients are the only perturbation parameters.
 All histories are recovered from the exact five-row match at the right end.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

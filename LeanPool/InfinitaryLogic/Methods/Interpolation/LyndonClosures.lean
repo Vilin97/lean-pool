@@ -46,7 +46,7 @@ projections this file consumes now live in the neutral
 universe.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

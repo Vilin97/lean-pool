@@ -16,11 +16,11 @@ This entire file is inspired by:
 https://github.com/leanprover-community/mathlib4/blob/333e2d79fdaee86489af73dee919bc4b66957a52/Mathlib/Data/Real/EReal.lean
 -/
 
-@[expose] public section
+public section
 
 /-- `Extend F` is the type of values in `F ∪ {⊥, ⊤}` where, informally speaking,
     `⊥` (negative infinity) is stronger than `⊤` (positive infinity). -/
-def Extend (F : Type*) := WithBot (WithTop F)
+@[expose] def Extend (F : Type*) := WithBot (WithTop F)
 
 
 variable {F : Type*} [Field F] [LinearOrder F] [IsStrictOrderedRing F]

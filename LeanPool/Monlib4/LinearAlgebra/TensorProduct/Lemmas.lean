@@ -15,7 +15,7 @@ This file contains compatibility lemmas and equivalences for tensor-product
 maps used by the Monlib4 port.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 
@@ -63,10 +63,10 @@ lemma AlgEquiv.TensorProduct.map_tmul {R : Type _} [CommSemiring R] {A B C D : T
     [Semiring B] [Semiring C] [Semiring D] [Algebra R A] [Algebra R B] [Algebra R C] [Algebra R D]
     (f : A ≃ₐ[R] B) (g : C ≃ₐ[R] D) (x : A) (y : C) :
   AlgEquiv.TensorProduct.map f g (x ⊗ₜ[R] y) = f x ⊗ₜ[R] g y :=
-rfl
+by rfl
 
 /-- Tensor two linear equivalences. -/
-@[simps!]
+@[expose, simps!]
 noncomputable def LinearEquiv.TensorProduct.map {R : Type _} [CommSemiring R] {A B C D : Type _}
     [AddCommMonoid A] [AddCommMonoid B] [AddCommMonoid C] [AddCommMonoid D] [Module R A]
     [Module R B] [Module R C] [Module R D] (f : A ≃ₗ[R] B) (g : C ≃ₗ[R] D) :
@@ -95,7 +95,7 @@ lemma AlgEquiv.TensorProduct.map_toLinearMap
     [Semiring B] [Semiring C] [Semiring D] [Algebra R A] [Algebra R B] [Algebra R C] [Algebra R D]
     (f : A ≃ₐ[R] B) (g : C ≃ₐ[R] D) :
   (AlgEquiv.TensorProduct.map f g).toLinearMap = f.toLinearMap ⊗ₘ g.toLinearMap :=
-rfl
+by rfl
 lemma AlgEquiv.TensorProduct.map_map_toLinearMap
   {R : Type _} [CommSemiring R] {A B C D E F : Type _} [Semiring A]
     [Semiring B] [Semiring C] [Semiring D] [Semiring E] [Semiring F]
@@ -114,7 +114,7 @@ lemma AlgEquiv.TensorProduct.map_symm
     (h : B ≃ₐ[R] E) (i : D ≃ₐ[R] F) :
   (AlgEquiv.TensorProduct.map h i).symm
     = (AlgEquiv.TensorProduct.map h.symm i.symm) :=
-rfl
+by rfl
 
 lemma AlgEquiv.op_trans {R A B C : Type*} [CommSemiring R] [Semiring A]
   [Semiring B] [Semiring C] [Algebra R A] [Algebra R B] [Algebra R C]
@@ -158,9 +158,9 @@ lemma AlgEquiv.lTensor_tmul {R A B C : Type*} [CommSemiring R] [Semiring A]
   [Semiring B] [Semiring C] [Algebra R A] [Algebra R B] [Algebra R C]
   (f : A ≃ₐ[R] B) (x : C) (y : A) :
   (AlgEquiv.lTensor C f) (x ⊗ₜ[R] y) = x ⊗ₜ f (y) :=
-rfl
+by rfl
 lemma AlgEquiv.lTensor_symm_tmul {R A B C : Type*} [CommSemiring R] [Semiring A]
   [Semiring B] [Semiring C] [Algebra R A] [Algebra R B] [Algebra R C]
   (f : A ≃ₐ[R] B) (x : C) (y : B) :
   (AlgEquiv.lTensor C f).symm (x ⊗ₜ[R] y) = x ⊗ₜ f.symm (y) :=
-rfl
+by rfl

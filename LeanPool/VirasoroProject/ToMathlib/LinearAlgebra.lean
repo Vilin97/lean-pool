@@ -14,4 +14,4 @@ public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Finsupp
 Import-only index for linear algebra support modules used by the Virasoro Project.
 -/
 
-@[expose] public section
+public section

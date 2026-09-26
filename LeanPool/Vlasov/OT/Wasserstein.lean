@@ -18,7 +18,7 @@ truncated-metric variant `wassersteinBar` (Wbar), and their property lemmas
 (symmetry, triangle, non-expansion under 1-Lipschitz pushforward, KR-dual lower
 bound, finiteness under finite first moments). -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 
@@ -44,7 +44,7 @@ bound `|f x − f y| ≤ c x y` (rather than `LipschitzWith 1 f` w.r.t. an ambie
 metric) decouples the definition from the `PseudoMetricSpace` instance, so a
 cost like `min (dist x y) 1` (the truncated-metric "Wbar" cost) instantiates with
 no new instance.  `wasserstein1` is the `c = dist` case. -/
-noncomputable def wassersteinCost {α : Type*} [MeasurableSpace α]
+@[expose] noncomputable def wassersteinCost {α : Type*} [MeasurableSpace α]
     (c : α → α → ℝ) (μ ν : Measure α) : ENNReal :=
   ⨆ (f : α → ℝ) (_ : ∀ x y, |f x - f y| ≤ c x y),
     ENNReal.ofReal (∫ x, f x ∂μ - ∫ x, f x ∂ν)
@@ -66,7 +66,7 @@ lemma lipschitzWith_one_iff_oscillation {α : Type*} [PseudoMetricSpace α]
 
 /-- The Kantorovich–Rubinstein dual Wasserstein-1 distance: the `c = dist` case
 of `wassersteinCost`. -/
-noncomputable def wasserstein1 {α : Type*} [MeasurableSpace α] [PseudoMetricSpace α]
+@[expose] noncomputable def wasserstein1 {α : Type*} [MeasurableSpace α] [PseudoMetricSpace α]
     (μ ν : Measure α) : ENNReal :=
   wassersteinCost (fun x y => dist x y) μ ν
 

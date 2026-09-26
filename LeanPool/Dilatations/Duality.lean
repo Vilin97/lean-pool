@@ -15,7 +15,7 @@ https://arxiv.org/abs/2608.09305, and `rndmx/DilCat` at commit
 `604559654c948566675da3f7709b8ad3126bd487` (Apache-2.0).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -25,4 +25,4 @@ public import LeanPool.Monlib4.QuantumGraph.ToProjections
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph`.
 -/
 
-@[expose] public section
+public section

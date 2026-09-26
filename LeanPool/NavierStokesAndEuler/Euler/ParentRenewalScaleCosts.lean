@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleGuards
 envelope uses the constant sequence a=2, so its summability does not assume
 bounds for the future, not-yet-constructed geometric couplings. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

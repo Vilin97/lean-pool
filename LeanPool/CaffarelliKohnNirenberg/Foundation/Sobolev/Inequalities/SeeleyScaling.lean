@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Inequalities.S
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal Pointwise
@@ -23,7 +23,7 @@ namespace CKN
 noncomputable section
 
 /-- Affine map transporting the unit ball to a ball centered at `x₀` with scale `r`. -/
-def seeleyAffineMap (x₀ : Vec 3) (r : ℝ) (x : Vec 3) : Vec 3 :=
+@[expose] def seeleyAffineMap (x₀ : Vec 3) (r : ℝ) (x : Vec 3) : Vec 3 :=
   x₀ + r • x
 
 private theorem seeleyAffineMap_preimage (x₀ : Vec 3) {r : ℝ} (hr : 0 < r) :

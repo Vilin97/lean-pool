@@ -26,7 +26,7 @@ reverses the former. The side words `U`, `V`, and `X` must not use `a`; this is 
 side-condition available when the displayed two darts are the two occurrences of an inner edge.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -37,7 +37,7 @@ open SurfaceCellComplex
 namespace Dyck
 
 /-- A finite-cyclic presentation with one explicitly indexed face. -/
-@[reducible]
+@[expose, reducible]
 def oneFace {n : ℕ} (word : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation where
   edgeCount := n
@@ -48,7 +48,7 @@ theorem oneFace_boundary_zero {n : ℕ} (word : List (SignedDart (Fin n))) :
   rfl
 
 /-- The source spelling of the Dyck rewrite. -/
-@[reducible]
+@[expose, reducible]
 def source {n : ℕ} (a : Fin n)
     (U V X : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=
@@ -56,7 +56,7 @@ def source {n : ℕ} (a : Fin n)
 
 /-- A cyclic spelling of the target word `a V U a⁻¹ X`, chosen so its common P2 subdivision is
 definitionally transparent. -/
-@[reducible]
+@[expose, reducible]
 def target {n : ℕ} (a : Fin n)
     (U V X : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=

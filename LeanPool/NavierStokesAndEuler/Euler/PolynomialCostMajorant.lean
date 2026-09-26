@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.NatFactorial
 /-! A fixed polynomial has one uniform power bound on the whole range
 x ≥ 1. This extracts an actual degree and constant for scalar cost formulas. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

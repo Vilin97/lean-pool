@@ -38,7 +38,7 @@ After cancellations the remaining coefficients are all ≤ 0:
   • PperpVsq:  (1-a)·(εη − a)/2 ≤ 0          (since εη ≤ a)
 -/
 
-@[expose] public section
+public section
 
 
 namespace PLAcceleratedNesterovLean

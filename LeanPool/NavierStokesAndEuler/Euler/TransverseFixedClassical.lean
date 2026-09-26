@@ -19,7 +19,7 @@ velocity therefore has its actual derivative throughout the closed interval.
 The displacement keeps both zero endpoint conditions.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

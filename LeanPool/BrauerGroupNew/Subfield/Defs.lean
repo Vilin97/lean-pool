@@ -14,7 +14,7 @@ import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Directed
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Subfield.Defs`.
 -/
 
-@[expose] public section
+public section
 
 open Function TensorProduct MulOpposite
 

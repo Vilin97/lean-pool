@@ -27,7 +27,7 @@ Main declarations:
 * `RS.Form1.ofCoeffs`, `RS.Form1.coeffIn_ofCoeffs`, `RS.Form1.coeffAt_ofCoeffs`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Bundle
 open Set IsManifold

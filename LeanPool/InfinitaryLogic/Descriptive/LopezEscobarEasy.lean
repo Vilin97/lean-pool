@@ -30,7 +30,7 @@ route through Craig interpolation and PC-separation — is **proved**: `lopez_es
 in `Descriptive/LopezEscobar.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

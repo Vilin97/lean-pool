@@ -24,7 +24,7 @@ an every-time derivative; the actual Gram inverse then differentiates the
 coordinate velocity.  These are properties of the constructed weak solution.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -187,7 +187,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

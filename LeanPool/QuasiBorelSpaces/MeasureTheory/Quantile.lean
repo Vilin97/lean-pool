@@ -15,7 +15,7 @@ import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.Quantile`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace MeasureTheory

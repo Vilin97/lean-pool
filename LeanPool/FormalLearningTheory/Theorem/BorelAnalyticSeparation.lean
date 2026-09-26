@@ -27,7 +27,7 @@ KrappWirthWellBehaved (MeasurableSet/Borel).
 - `singleton_badEvent_not_measurable`: the sample-space bad event is NOT Borel
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

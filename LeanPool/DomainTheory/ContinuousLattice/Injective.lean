@@ -25,7 +25,7 @@ theorem) that every `T₀`-space embeds in a power of the Sierpiński space.
 * `corollary_1_6`, `corollary_1_7` — Scott's Corollaries 1.6 and 1.7.
 -/
 
-@[expose] public section
+public section
 
 /-- Scott's two-point Sierpiński space 𝕆: `Prop` with the Sierpiński topology. -/
 abbrev Sierpinski := Prop

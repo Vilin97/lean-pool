@@ -20,7 +20,7 @@ the `δ = 1` specialization of §2.2.  Everything after that geometric input,
 including the strict-boundary/complement step, is proved here.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal
 open MeasureTheory ProbabilityTheory Set
@@ -30,12 +30,12 @@ namespace Feige
 variable {ι : Type*} [Fintype ι]
 
 /-- Lebesgue measure restricted to the full-dimensional simplex. -/
-noncomputable def simplexRestrictedVolume (ι : Type*) [Fintype ι] :
+@[expose] noncomputable def simplexRestrictedVolume (ι : Type*) [Fintype ι] :
     Measure (ι → ℝ) :=
   volume.restrict (fullSimplex ι)
 
 /-- Uniform probability measure on the full-dimensional standard simplex. -/
-noncomputable def simplexUniformMeasure (ι : Type*) [Fintype ι] :
+@[expose] noncomputable def simplexUniformMeasure (ι : Type*) [Fintype ι] :
     Measure (ι → ℝ) :=
   (volume (fullSimplex ι))⁻¹ • simplexRestrictedVolume ι
 
@@ -55,7 +55,7 @@ theorem simplexUniformMeasure_apply {s : Set (ι → ℝ)} (hs : MeasurableSet s
     smul_eq_mul, simplexRestrictedVolume, Measure.restrict_apply hs]
 
 /-- The simplex form of the Dirichlet statistic `Kₙ` in (2.1). -/
-noncomputable def simplexK (y : ι → ℝ) : ℝ :=
+@[expose] noncomputable def simplexK (y : ι → ℝ) : ℝ :=
   (simplexUniformMeasure ι).real {x | simplexLinearForm y x ≤ 1}
 
 theorem measurableSet_simplexK_event (y : ι → ℝ) :

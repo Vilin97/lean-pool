@@ -16,7 +16,7 @@ section
 
 /-! The literal pressure integral is the genuine jointly continuous scalar path representative. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -63,7 +63,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -14,7 +14,7 @@ import Mathlib.CategoryTheory.Category.Init
 # LeanPool.DirectedTopologyLean4.DirectedHomotopy
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the definitions of three type of directed homotopies:

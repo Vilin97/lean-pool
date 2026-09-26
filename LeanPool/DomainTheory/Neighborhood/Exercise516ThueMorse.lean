@@ -64,7 +64,7 @@ word-combinatorics theorem and
 lives in its own module.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise516
 

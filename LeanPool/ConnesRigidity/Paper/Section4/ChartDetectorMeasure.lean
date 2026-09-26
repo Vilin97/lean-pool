@@ -17,7 +17,7 @@ Concrete §4 chart detector transport and the invariant-measure bound for
 Zhou's dual kernel. Paper: §4.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperChartDetectorMeasure
@@ -131,7 +131,7 @@ def chartLinear (χ : CharacterSpace) : C →ₗ[k] k :=
 
 /-- The detector set associated with one C-coordinate. Paper: §4.
 -/
-def chartDetector (c : C) : Set CharacterSpace :=
+@[expose] def chartDetector (c : C) : Set CharacterSpace :=
   linearDetector (0, c)
 
 /-- The C-coordinate agrees with direct character evaluation. Paper: §4. -/

@@ -44,7 +44,7 @@ result is `coeffSum(f • m) = deg(f) * coeffSum(m)`, which follows from the orb
 lemma `smulOrbit_card`.
 -/
 
-@[expose] public section
+public section
 
 open MulOpposite Set DoubleCoset Subgroup Subgroup.Commensurable
 
@@ -59,7 +59,7 @@ open Finsupp
 
 /-- The degree of a double coset: `deg(HgH) = [H : H ∩ gHg⁻¹]`, the number of left cosets
 in the decomposition of `HgH`. -/
-noncomputable def HeckeCosetDeg (D : HeckeCoset P) : ℤ :=
+@[expose] noncomputable def HeckeCosetDeg (D : HeckeCoset P) : ℤ :=
   Fintype.card (decompQuot P (HeckeCoset.rep D))
 
 /-- The degree of the identity double coset is 1. -/
@@ -148,7 +148,7 @@ end CoeffSum
 section DegreeMap
 
 /-- The underlying function of the degree map: `Σ_D a_D * deg(D)`. -/
-noncomputable def degFun (f : 𝕋 P ℤ) : ℤ := f.sum fun D a => a * HeckeCosetDeg P D
+@[expose] noncomputable def degFun (f : 𝕋 P ℤ) : ℤ := f.sum fun D a => a * HeckeCosetDeg P D
 
 /-- The degree function of zero is zero. -/
 @[simp] lemma deg_fun_zero : degFun P (0 : 𝕋 P ℤ) = 0 := Finsupp.sum_zero_index
@@ -202,7 +202,7 @@ lemma deg_fun_mul (f g : 𝕋 P ℤ) :
 
 /-- The degree ring homomorphism `deg : 𝕋 P ℤ →+* ℤ`, sending each double coset to the
 number of left cosets it contains (Shimura Proposition 3.3). -/
-noncomputable def deg : 𝕋 P ℤ →+* ℤ where
+@[expose] noncomputable def deg : 𝕋 P ℤ →+* ℤ where
   toFun := degFun P
   map_zero' := deg_fun_zero P
   map_one' := deg_fun_one P

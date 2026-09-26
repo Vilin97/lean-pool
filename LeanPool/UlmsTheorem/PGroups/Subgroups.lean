@@ -17,7 +17,7 @@ development: the natural-number powers `pPow` and the image-of-multiplication
 construction `pImage`.
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 
@@ -69,6 +69,7 @@ end PowLemmas
 /-! ### `p`-image of a subgroup -/
 
 /-- `{ p • y | y ∈ H }` as a subgroup of `G`. -/
+@[expose]
 def pImage {G : Type*} [AddCommGroup G] (H : AddSubgroup G) : AddSubgroup G where
   carrier   := {x | ∃ y ∈ H, p • y = x}
   zero_mem' := ⟨0, H.zero_mem, by simp⟩

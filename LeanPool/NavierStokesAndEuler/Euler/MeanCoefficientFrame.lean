@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientTime
 
 /-! Genuine matrix-frame identities induce the operator identities used by the mean inverse. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,7 +27,7 @@ local instance instMeanCoefficientFrame1 : NormedAddCommGroup Field := inferInst
 local instance instMeanCoefficientFrame2 : NormedSpace ℝ Field := inferInstance
 
 /-- Adjoint field as an element of `Field`. -/
-def adjointField (A : Field) : Field :=
+@[expose] def adjointField (A : Field) : Field :=
   (ContinuousLinearMap.adjoint.toContinuousLinearEquiv.toContinuousLinearMap
     : (Space →L[ℝ] Space) →L[ℝ] (Space →L[ℝ] Space)).compLeftContinuousBounded Space A
 

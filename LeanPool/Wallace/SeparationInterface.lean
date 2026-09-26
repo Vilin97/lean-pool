@@ -21,7 +21,7 @@ No topology on the free Abelian group and no compactness conclusion is stored in
 `SeparationPackage`; both are derived below from its algebraic and filter-theoretic fields.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

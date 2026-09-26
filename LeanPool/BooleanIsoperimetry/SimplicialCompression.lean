@@ -20,7 +20,7 @@ This file defines coordinate up/down compression operations on Boolean-cube
 families and proves basic neighborhood monotonicity and slice-pair facts.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Finset
@@ -391,7 +391,7 @@ lemma neighborhood_coordinateDown_subset {N : ℕ} {i : Fin N} {A : Finset (Cube
 the sum of simplicial ranks of all vertices in the family.  Coordinate and
 within-layer shifts are expected to strictly reduce this potential unless they
 are already fixed points. -/
-noncomputable def compressionPotential {N : ℕ} (A : Finset (Cube N)) : ℕ :=
+@[expose] noncomputable def compressionPotential {N : ℕ} (A : Finset (Cube N)) : ℕ :=
   ∑ x ∈ A, rank x
 
 /-- The paired version of `compressionPotential`, matching the two-slice
@@ -407,7 +407,7 @@ def IsCoordinateUpFixed {N : ℕ} (A : Finset (Cube N)) : Prop :=
   ∀ i : Fin N, IsCoordinateUp i A A
 
 /-- A family is fixed by all currently formalized Down-compressions. -/
-def IsCoordinateDownFixed {N : ℕ} (A : Finset (Cube N)) : Prop :=
+@[expose] def IsCoordinateDownFixed {N : ℕ} (A : Finset (Cube N)) : Prop :=
   ∀ i : Fin N, IsCoordinateDown i A A
 
 lemma coordinateUp_card_eq {N : ℕ} {i : Fin N} {A A' : Finset (Cube N)}
@@ -580,7 +580,7 @@ the compression process keeps a vertex of a given Hamming level, every lower
 Hamming level is already completely filled.  Coordinate Down-compressions alone
 only fill coordinate subfaces of a present vertex; they do not imply this global
 saturation across a whole level. -/
-def IsLowerLevelSaturated {N : ℕ} (A : Finset (Cube N)) : Prop :=
+@[expose] def IsLowerLevelSaturated {N : ℕ} (A : Finset (Cube N)) : Prop :=
   ∀ ⦃x y : Cube N⦄, x.card < y.card → y ∈ A → x ∈ A
 
 lemma lowerLevelSaturated_colexFixed_is_downClosed {N : ℕ} (A : Finset (Cube N))

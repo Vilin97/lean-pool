@@ -17,7 +17,7 @@ indexed by the old edge itself, the construction is automatically coherent acros
 faces.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -53,7 +53,7 @@ variable (K : IntrinsicTwoComplex)
 abbrev MidpointVertex := K.Vertex ⊕ K.Edge
 
 /-- The corner triangle at the `i`-th vertex of an old face. -/
-noncomputable def midpointCornerFace (t : K.Face) (i : ZMod 3) :
+@[expose] noncomputable def midpointCornerFace (t : K.Face) (i : ZMod 3) :
     Finset K.MidpointVertex :=
   {Sum.inl (K.faceVertex t i), Sum.inr (K.faceEdge t i),
     Sum.inr (K.faceEdge t (i + 2))}
@@ -141,7 +141,7 @@ theorem midpointFace_mem_parent (s : K.midpointComplex.Face) :
   Classical.choose_spec (K.exists_parentFace_of_mem_midpointFaces s.2)
 
 /-- Canonical old barycentric position of a midpoint-subdivision vertex. -/
-noncomputable def midpointPosition : K.MidpointVertex → (K.Vertex → ℝ)
+@[expose] noncomputable def midpointPosition : K.MidpointVertex → (K.Vertex → ℝ)
   | Sum.inl v => Pi.single v 1
   | Sum.inr e => fun v => if v ∈ e.1 then (2 : ℝ)⁻¹ else 0
 

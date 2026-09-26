@@ -14,7 +14,7 @@ This module proves the modular quadratic-form estimate that separates distinct
 lattice points carrying the same residue color.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

@@ -24,7 +24,7 @@ the resulting tail sum, and the pairwise weights used later in the fiberwise rei
 * `firstEntryPairWeight`
 -/
 
-@[expose] public section
+public section
 
 open scoped ArithmeticFunction BigOperators
 
@@ -35,7 +35,7 @@ def entryThreshold (x Y m : ℕ) : ℕ :=
   max Y (x ⌈/⌉ m)
 
 /-- The first-entry tail sum starting from a parent state `m`. -/
-noncomputable def firstEntryTail (x Y m : ℕ) : ℝ :=
+@[expose] noncomputable def firstEntryTail (x Y m : ℕ) : ℝ :=
   ∑' q : ℕ,
     if entryThreshold x Y m ≤ q then
       Λ q / ((q : ℝ) * (Real.log ((m * q : ℕ) : ℝ)) ^ 2)
@@ -43,7 +43,7 @@ noncomputable def firstEntryTail (x Y m : ℕ) : ℝ :=
 
 /-- The pairwise weight indexed by a parent state `m` and jump factor `q`
 for the first-entry contribution to `B_x`. -/
-noncomputable def firstEntryPairWeight (x Y : ℕ) (mq : ℕ × ℕ) : ℝ :=
+@[expose] noncomputable def firstEntryPairWeight (x Y : ℕ) (mq : ℕ × ℕ) : ℝ :=
   if 1 ≤ mq.1 ∧ mq.1 < x ∧ entryThreshold x Y mq.1 ≤ mq.2 then
     Λ mq.2 / (((mq.1 * mq.2 : ℕ) : ℝ) * (Real.log ((mq.1 * mq.2 : ℕ) : ℝ)) ^ 2)
   else 0

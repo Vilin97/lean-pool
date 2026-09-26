@@ -63,7 +63,7 @@ argument depends on, would invert the layering. They are `private` so that the d
 cannot collide when the integrator hoists the originals.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Metric Set
 

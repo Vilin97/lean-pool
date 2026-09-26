@@ -48,7 +48,7 @@ EXPLICIT hypothesis `hcal` (satisfied by any stack built via `exists_fiberStack`
   (task item 5, §4.6), NOT gated on the calibration issue at all (pure value/finsum identities).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Filter Topology Metric Function Set

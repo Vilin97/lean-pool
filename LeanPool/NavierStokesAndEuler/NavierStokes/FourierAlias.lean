@@ -18,7 +18,7 @@ The compactification defect is retained as an actual function. Its averaging
 and integration-by-parts identities concern genuine Bochner integrals.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -42,7 +42,7 @@ noncomputable def TorusPeriodic (f : Plane → F) : Prop :=
   ∀ Y : Plane, ∀ k : Frequency, f (Y + ((k.1 : ℝ), (k.2 : ℝ))) = f Y
 
 /-- The actual normalized unit-square average. -/
-noncomputable def torusMean (f : Plane → F) : F :=
+@[expose] noncomputable def torusMean (f : Plane → F) : F :=
   ∫ y in (0 : ℝ)..1, ∫ x in (0 : ℝ)..1, f (x, y)
 
 /-- Slice mean, given by `torusMean (fun Y => f (U, Y))`. -/

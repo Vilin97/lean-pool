@@ -12,7 +12,7 @@ public import Mathlib.Probability.Kernel.Composition.Comp
 # LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure ProbabilityTheory.Kernel ProbabilityTheory
 open Finset NNReal ENNReal Preorder Function

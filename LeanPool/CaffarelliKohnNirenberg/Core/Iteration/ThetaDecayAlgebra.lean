@@ -47,7 +47,7 @@ square-root bounds for `√γ`, and the power comparisons `κ ≤ κ^{2/3}` and
 `κ⁻¹ ≤ κ^{-5}` valid for `0 < κ ≤ 1/2`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -60,6 +60,7 @@ namespace CKN
 The fourth power of the scale ratio enters as `κ ^ (-4 : ℝ)` so that the
 statement is uniform with the remaining real powers of `κ` in the decay
 estimates; for `κ > 0` this is the paper's `κ⁻⁴`. -/
+@[expose]
 def thetaValue (κ α β δ : ℝ) : ℝ := α + β + κ ^ (-4 : ℝ) * δ ^ 2
 
 /-- The absolute constant `C₂₇` of `eq:theta-decay-1`, in terms of the input

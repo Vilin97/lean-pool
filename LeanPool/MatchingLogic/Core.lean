@@ -45,7 +45,7 @@ import Mathlib.Data.Set.Lattice.Order
 # MatchingLogic.Core
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -122,12 +122,12 @@ variable {S : Signature}
 /-- The pointwise extension of a symbol to sets:
 `σ_M(A₁,…,Aₙ) = ⋃ {σ_M(a₁,…,aₙ) | aᵢ ∈ Aᵢ}`.
 It is `∅` as soon as some `Aᵢ` is (paper, Section 2). -/
-def app (M : Model S) (σ : S.Sym) (A : Fin (S.arity σ) → Set M.carrier) :
+@[expose] def app (M : Model S) (σ : S.Sym) (A : Fin (S.arity σ) → Set M.carrier) :
     Set M.carrier :=
   {u | ∃ a : Fin (S.arity σ) → M.carrier, (∀ i, a i ∈ A i) ∧ u ∈ M.interp σ a}
 
 /-- The denotation `ρ(φ) ⊆ M` (paper, Section 2). -/
-def denote {Var : Type} [DecidableEq Var] (M : Model S) :
+@[expose] def denote {Var : Type} [DecidableEq Var] (M : Model S) :
     (Var → M.carrier) → Pattern S Var → Set M.carrier
   | ρ, .var x => {ρ x}
   | _, .bot => ∅

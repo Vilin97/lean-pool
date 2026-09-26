@@ -55,7 +55,7 @@ continuous on maps, monotone and continuous on domains) is **Part B**, deferred.
 Everything here is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -72,7 +72,7 @@ variable {D₀ D₁ : NeighborhoodSystem Str}
 `1Y = embBit true Y`. -/
 
 /-- The master neighbourhood `{Λ} ∪ 0Δ₀ ∪ 1Δ₁` of the concrete sum. -/
-def sumTokMaster (D₀ D₁ : NeighborhoodSystem Str) : Set Str :=
+@[expose] def sumTokMaster (D₀ D₁ : NeighborhoodSystem Str) : Set Str :=
   insert [] (embBit false D₀.master ∪ embBit true D₁.master)
 
 theorem nil_mem_sumTokMaster : ([] : Str) ∈ sumTokMaster D₀ D₁ := Set.mem_insert _ _

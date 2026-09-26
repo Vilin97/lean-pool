@@ -11,7 +11,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Actual Bochner L² time spaces and continuous-path embeddings used by maximal regularity. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -22,7 +22,7 @@ open MeasureTheory Set EulerVolterraConvolution
 open scoped Topology ENNReal
 
 /-- Lebesgue time measure restricted to the prescribed compact evolution interval. -/
-def timeMeasure (T : ℝ) : Measure ℝ := volume.restrict (Icc 0 T)
+@[expose] def timeMeasure (T : ℝ) : Measure ℝ := volume.restrict (Icc 0 T)
 
 /-- The actual compact time measure is finite. -/
 instance timeMeasureFinite (T : ℝ) : IsFiniteMeasure (timeMeasure T) := by

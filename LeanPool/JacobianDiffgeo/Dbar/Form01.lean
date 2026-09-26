@@ -30,7 +30,7 @@ reserved token in the ambient `ContDiff` scope's regularity level and cannot be 
 ordinary identifier.)
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold

@@ -22,7 +22,7 @@ section
 /-! Pullback of a bounded field by identity plus a bounded displacement.
 Uniform spatial Lipschitz control proves continuity in the genuine sup norm. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -138,7 +138,7 @@ section
 /-! A continuous multilinear operation acts on genuine bounded fields in
 the uniform norm. This includes the finite Faà di Bruno operations. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -234,7 +234,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

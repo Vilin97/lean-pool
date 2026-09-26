@@ -35,7 +35,7 @@ on.
 - `CodedFamily`, `codedIInf`, `codedISup`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

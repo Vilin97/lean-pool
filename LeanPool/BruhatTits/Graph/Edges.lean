@@ -43,7 +43,7 @@ sense of `inv`, is one.
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 
@@ -153,7 +153,7 @@ lemma isNeighbour_of_isStandardNeighbour {M L : Lattice R} (h : IsStandardNeighb
   have : f 1 = 0 ∧ f 0 = 1 := by omega
   rw [this.left, this.right] at hdiff
   simp at hdiff
-  change dist _ _ = 1
+  change dist (R := R) _ _ = 1
   rw [dist_symm]
   omega
 

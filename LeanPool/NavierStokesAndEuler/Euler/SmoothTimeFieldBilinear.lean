@@ -14,7 +14,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Operations
 /-! Constants and bounded bilinear operations on actual smooth bounded
 coefficient paths, with the spatial product rule at every order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -15,7 +15,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 Definitions and basic structure for Stichtenoth's adele space.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 open Filter
@@ -106,7 +106,7 @@ def mulAdeleLinear (x : K) : AdeleSpace k K →ₗ[k] AdeleSpace k K where
 
 /-- An adele lies in the filtration piece `A(D)` when its component at every place `v` has
 valuation at most `WithZero.exp (D v)`. -/
-def memAdeleFilt (D : DivisorA k K) (α : AdeleSpace k K) : Prop :=
+@[expose] def memAdeleFilt (D : DivisorA k K) (α : AdeleSpace k K) : Prop :=
   ∀ v, placeValuation k K v (α.val v) ≤ WithZero.exp (D v)
 
 /-- The filtration piece `A(D)` of the adele space. -/
@@ -128,7 +128,7 @@ def adeleFilt (D : DivisorA k K) : Submodule k (AdeleSpace k K) where
       (one_mul _)
 
 /-- The diagonal embedding `K → A_K` of principal adeles. -/
-def diagonal : K →ₗ[k] AdeleSpace k K where
+@[expose] def diagonal : K →ₗ[k] AdeleSpace k K where
   toFun f := ⟨fun _ => f, by
     simpa [adeleSubmodule] using
       eventually_mem_placeValuationSubring k K f⟩
@@ -179,7 +179,7 @@ noncomputable def sandwichRank (D D' : DivisorA k K) : ℤ :=
         (adeleFilt k K D + diagonalSubmodule k K))
 
 /-- Component update for adele surgery (`A(D₁ ⊔ D₂) = A(D₁) + A(D₂)`). -/
-def adeleUpdate (α : AdeleSpace k K) (v : PlaceA k K) (a : K) : AdeleSpace k K :=
+@[expose] def adeleUpdate (α : AdeleSpace k K) (v : PlaceA k K) (a : K) : AdeleSpace k K :=
   ⟨Function.update α.val v a, by
     change ∀ᶠ w : PlaceA k K in cofinite,
       Function.update α.val v a w ∈ placeValuationSubring k K w

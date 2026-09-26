@@ -26,7 +26,7 @@ Computability-theoretic substrate for Gold-style learning theory. Contains:
 - Execution traces for program synthesis
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

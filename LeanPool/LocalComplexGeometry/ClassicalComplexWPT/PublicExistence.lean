@@ -18,7 +18,7 @@ from the normalized `ℓ¹(ℕ)` quotient/remainder supplied by
 `PreparationSequences`.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology

@@ -30,7 +30,7 @@ Formalization of definitions from:
 - `IsMuMB`              : μ-Morse–Bott property
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Submodule
 

@@ -21,7 +21,7 @@ derivatives are actual Fréchet derivatives, proved square integrable by the
 Leibniz estimate. The derivative identity remains a literal function equality.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

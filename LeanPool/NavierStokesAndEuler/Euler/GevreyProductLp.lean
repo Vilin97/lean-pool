@@ -19,7 +19,7 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
 bounded uniformly and the field tensors measured in L². It applies on
 any base, including cylinder tensors evaluated through a cover section. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

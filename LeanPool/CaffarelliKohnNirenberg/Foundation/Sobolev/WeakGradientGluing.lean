@@ -15,7 +15,7 @@ Locally integrable weak partial derivatives of the same function on an open
 set agree almost everywhere.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped Topology BigOperators

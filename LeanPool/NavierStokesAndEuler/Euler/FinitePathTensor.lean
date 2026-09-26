@@ -17,7 +17,7 @@ genuine continuous path of tensors. Finite spatial coordinates establish
 continuity; the actual operator norm is preserved without a coordinate
 count in the bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

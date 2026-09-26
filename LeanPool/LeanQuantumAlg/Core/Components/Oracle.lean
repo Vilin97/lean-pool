@@ -44,7 +44,7 @@ Pinned Mathlib API: `Equiv.permCongr` (`permCongr_apply`), `Fin.rev`
 `Equiv.symm_apply_eq`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

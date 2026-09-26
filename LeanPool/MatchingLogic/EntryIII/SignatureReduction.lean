@@ -22,7 +22,7 @@ import Mathlib.Tactic.Bound.Init
 # MatchingLogic.EntryIII.SignatureReduction
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

@@ -30,7 +30,7 @@ which the translated data lie in one fixed larger supported space. This
 margin is qualitative and does not occur in any operator-norm constant.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -118,7 +118,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -244,7 +244,7 @@ theorem fieldPathLift_norm : ‖fieldPathLift (K := K) (W := W) period‖ ≤ 1 
 end Fields
 
 /-- Support in a set of spatial labels, with arbitrary angular coordinate. -/
-def spatialSet (S : Set Space) : Set (LiftDomain period) := Prod.fst ⁻¹' S
+@[expose] def spatialSet (S : Set Space) : Set (LiftDomain period) := Prod.fst ⁻¹' S
 
 omit [Fact (0 < period)] in
 theorem spatialSet_measurable (S : Set Space) (hS : MeasurableSet S) :

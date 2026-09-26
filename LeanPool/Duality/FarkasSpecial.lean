@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.Pow
 # LeanPool.Duality.FarkasSpecial
 -/
 
-@[expose] public section
+public section
 
 section notation_EF
 
@@ -199,7 +199,7 @@ infixl:72 " ᵥ⬝ " => dotWeig
     `Matrix.mulVec M w` (mnemonic: "matrix times weights").
     Note that the order of arguments (also with the infix notation) is opposite than in the
     `SMul` it builds upon. -/
-def Matrix.mulWeig (M : Matrix I J α) (w : J → γ) (i : I) : α :=
+@[expose] def Matrix.mulWeig (M : Matrix I J α) (w : J → γ) (i : I) : α :=
   M i ᵥ⬝ w
 
 @[inherit_doc Matrix.mulWeig]

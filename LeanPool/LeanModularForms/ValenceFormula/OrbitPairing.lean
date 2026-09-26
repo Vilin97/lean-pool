@@ -21,7 +21,7 @@ pairing left/right vertical and arc contributions.
 * `sum_ord_rightArc_eq_sum_ord_leftArc`: Orders on right arc equal orders on left arc.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular
@@ -168,11 +168,11 @@ theorem S_smul_mem_fd_of_unit (p : ℍ) (hp_fd : p ∈ 𝒟) (hp_norm : ‖(p : 
     exact habs_re
 
 /-- The left-vertical filter of S: points with `re = -1/2` and `‖p‖ > 1`. -/
-def sLeftVert (S : Finset ℍ) : Finset ℍ :=
+@[expose] def sLeftVert (S : Finset ℍ) : Finset ℍ :=
   S.filter (fun p => (p : ℂ).re = -1/2 ∧ ‖(p : ℂ)‖ > 1)
 
 /-- The right-vertical filter of S: points with `re = 1/2` and `‖p‖ > 1`. -/
-def sRightVert (S : Finset ℍ) : Finset ℍ :=
+@[expose] def sRightVert (S : Finset ℍ) : Finset ℍ :=
   S.filter (fun p => (p : ℂ).re = 1/2 ∧ ‖(p : ℂ)‖ > 1)
 
 /-- T-translation maps `sLeftVert S` into `sRightVert S`. -/
@@ -209,11 +209,11 @@ lemma ord_vAdd_neg_one_eq (p : ℍ) :
   simp_all
 
 /-- The left-arc filter: points on the unit circle with negative real part. -/
-def sLeftArc (S : Finset ℍ) : Finset ℍ :=
+@[expose] def sLeftArc (S : Finset ℍ) : Finset ℍ :=
   S.filter (fun p => ‖(p : ℂ)‖ = 1 ∧ (p : ℂ).re < 0)
 
 /-- The right-arc filter: points on the unit circle with positive real part. -/
-def sRightArc (S : Finset ℍ) : Finset ℍ :=
+@[expose] def sRightArc (S : Finset ℍ) : Finset ℍ :=
   S.filter (fun p => ‖(p : ℂ)‖ = 1 ∧ (p : ℂ).re > 0)
 
 private lemma S_mul_S : ModularGroup.S * ModularGroup.S = -1 := by

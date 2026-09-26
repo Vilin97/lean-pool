@@ -27,7 +27,7 @@ changes nothing); the genuine extensions go through `WOMem.extend`, whose three 
 `StarWitness` operations of the previous commits.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

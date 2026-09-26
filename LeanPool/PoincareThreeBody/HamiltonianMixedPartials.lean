@@ -20,7 +20,7 @@ Combining this fact with the explicit mass derivative identifies the Hamiltonian
 Poincaré's first homological equation.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

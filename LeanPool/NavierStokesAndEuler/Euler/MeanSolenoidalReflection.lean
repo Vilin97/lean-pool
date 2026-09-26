@@ -17,7 +17,7 @@ projection.  The scalar test is reflected with a minus sign so its gradient
 has the same pullback as an ordinary vector field.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

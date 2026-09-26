@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Basic
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open CKN.Foundation.Parabolic
 
@@ -21,6 +21,7 @@ open CKN.Foundation.Parabolic
 namespace CKN
 
 /-- A bounded vector-valued parabolic Hölder norm built from paper label `def:holder`. -/
+@[expose]
 def ParabolicHolderVecNormLE (U : Set ParabolicPoint) (g : ParabolicPoint → Vec3)
     (γ C : ℝ) : Prop :=
   ∃ B K : ℝ, 0 ≤ B ∧ 0 ≤ K ∧ B + K ≤ C ∧

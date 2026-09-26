@@ -17,7 +17,7 @@ Their alphabet count and fixed base derivative order enlarge only the
 coefficient radius, once. No forcing or solution radius is changed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -46,12 +46,12 @@ theorem block_eq_sum_levels (directions : ι → P) (q : ℕ) (f : P → E)
       (wordSum_succ directions f hf (n+k) x).symm
 
 /-- The enlarged radius is a property only of the coefficient alphabet. -/
-def sobolevCoefficientRadius (ι : Type*) [Fintype ι] (Rc : ℝ) : ℝ :=
+@[expose] def sobolevCoefficientRadius (ι : Type*) [Fintype ι] (Rc : ℝ) : ℝ :=
   4*(max 1 (Fintype.card ι : ℝ)*Rc)
 
 /-- For fixed q this is a literal polynomial in the original coefficient
 radius and amplitude, with numerical factorial coefficients. -/
-def sobolevCoefficientAmplitude (ι : Type*) [Fintype ι] (q : ℕ) (Rc C : ℝ) : ℝ :=
+@[expose] def sobolevCoefficientAmplitude (ι : Type*) [Fintype ι] (q : ℕ) (Rc C : ℝ) : ℝ :=
   (2 : ℝ)^q*C*∑ k ∈ range (q+1), sobolevCoefficientRadius ι Rc^k*(k.factorial : ℝ)^2
 
 theorem sobolevCoefficientRadius_nonneg (Rc : ℝ) (hRc : 0 ≤ Rc) :

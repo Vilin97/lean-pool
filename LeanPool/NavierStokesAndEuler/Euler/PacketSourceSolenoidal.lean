@@ -16,7 +16,7 @@ The terminal corrector is retained in the finite assembly. Each genuine Piola
 pair and every inverse-frame mean belongs to the same closed constraint space.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

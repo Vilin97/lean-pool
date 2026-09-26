@@ -21,7 +21,7 @@ the mass of `X ⊙ X` off those edges equals `1`. The feasible set is nonempty
 and compact, so the supremum is attained.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 

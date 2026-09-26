@@ -17,7 +17,7 @@ spatial or cylinder L² spaces, where a pointwise transverse constraint must
 not be replaced by orthogonality to a single Hilbert-space vector.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

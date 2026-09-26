@@ -53,7 +53,7 @@ list-prefix is decidable,
 so the trichotomy is choice-free.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.ExampleB
 
@@ -113,6 +113,7 @@ theorem cone_trichotomy (σ τ : Str) :
 
 /-- Membership in Scott's binary neighbourhood system `B`: `X ∈ B` iff `X = σΣ*`
 for some `σ`. -/
+@[expose]
 def memB (X : Set Str) : Prop := ∃ σ, X = cone σ
 
 /-- **Exercise ("`B` is a neighbourhood system").** The family `B = {σΣ* ∣ σ ∈
@@ -124,13 +125,14 @@ theorem nestedOrDisjoint : NestedOrDisjoint memB := by
 
 /-- **Example 1.B (Scott 1981, PRG-19).** The binary neighbourhood system `B` on
 `Δ = Σ*`. -/
+@[expose]
 def B : NeighborhoodSystem Str :=
   NeighborhoodSystem.ofNestedOrDisjoint memB Set.univ ⟨[], cone_nil.symm⟩ nestedOrDisjoint
     (fun _ => Set.subset_univ _)
 
 @[simp] theorem B_mem {X : Set Str} : B.mem X ↔ memB X := Iff.rfl
 
-@[simp] theorem B_master : B.master = Set.univ := rfl
+@[simp] theorem B_master : B.master = Set.univ := by rfl
 
 /-- Every cone is a neighbourhood of `B`. -/
 theorem memB_cone (σ : Str) : B.mem (cone σ) := ⟨σ, rfl⟩
@@ -138,6 +140,7 @@ theorem memB_cone (σ : Str) : B.mem (cone σ) := ⟨σ, rfl⟩
 /-! ### Prepending a prefix: `σX = {στ ∣ τ ∈ X}`. -/
 
 /-- Scott's `σX = {στ ∣ τ ∈ X}` (prepend the prefix `σ` to every member of `X`). -/
+@[expose]
 def prepend (σ : Str) (X : Set Str) : Set Str := {w | ∃ τ, τ ∈ X ∧ w = σ ++ τ}
 
 @[simp] theorem mem_prepend {σ : Str} {X : Set Str} {w : Str} :
@@ -174,6 +177,7 @@ theorem memB_prepend (σ : Str) {X : Set Str} (hX : B.mem X) : B.mem (prepend σ
 of `σ`; its
 minimal neighbourhood is `σΔ = σΣ*` (Scott). These are exactly the finite elements
 of `|B|`. -/
+@[expose]
 def sigmaBot (σ : Str) : B.Element := B.principal (memB_cone σ)
 
 /-- **Factoid (Scott 1981, PRG-19).** "`σ₀⊥ ⊆ σ₁⊥` if and only if `σ₀` is an

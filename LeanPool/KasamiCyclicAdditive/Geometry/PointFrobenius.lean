@@ -39,7 +39,7 @@ at infinity `ptInf a`, or an affine Fermat point `pt w t`.  This is what lets
 the two charts of `FermatCubic` be used exhaustively.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive.PointFrobenius
 

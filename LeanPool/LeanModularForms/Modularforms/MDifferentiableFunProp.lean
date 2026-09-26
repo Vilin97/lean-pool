@@ -12,7 +12,7 @@ public import LeanPool.LeanModularForms.Modularforms.Eisenstein
 /-! # MDifferentiableFunProp -/
 
 
-@[expose] public section
+public section
 
 open scoped Manifold UpperHalfPlane EisensteinSeries
 

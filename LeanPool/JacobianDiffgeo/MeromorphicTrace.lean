@@ -83,4 +83,4 @@ API summary (see `docs/design/meromorphic-trace.md`). Standing surface hypothese
   beyond what `residue-calculus`/`form-trace-tower` already mediate).
 -/
 
-@[expose] public section
+public section

@@ -16,7 +16,7 @@ The Lyapunov function L_n controls the physical quantities ‖v_n‖² + μ'‖e
 and the potential Ψ(x_n). The constants depend only on a = √(μ'·η).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

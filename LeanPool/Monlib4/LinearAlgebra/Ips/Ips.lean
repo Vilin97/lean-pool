@@ -23,7 +23,7 @@ and `↥P _` for the extended orthogonal projection `orthogonal_projection' _`.
 We let $V$ be an inner product space over $\mathbb{k}$.
 -/
 
-@[expose] public section
+public section
 
 
 variable {V 𝕜 : Type _} [RCLike 𝕜] [NormedAddCommGroup V] [InnerProductSpace 𝕜 V]

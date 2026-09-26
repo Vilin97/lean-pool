@@ -11,7 +11,7 @@ public import LeanPool.GapCVP.StatementLifting
 
 /-! # GapCVP proof, part 04, continuation 03 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -633,7 +633,7 @@ def executableAtLeastOneFamilyClauses (T S : ℕ) :
       position.1 position.2)
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def executableAtMostOneFamilyClauses (T S : ℕ) :
+@[expose] def executableAtMostOneFamilyClauses (T S : ℕ) :
     List (Clause T S) :=
   (clauseLoopFiniteElements
     ((Time T × Position T) × (Symbol S × Symbol S))).filterMap
@@ -651,12 +651,12 @@ def executableInitialFamilyClauses {T S : ℕ}
     (initialClause specification.input)
 
 /-- GapCVP reduction support. -/
-def executableAcceptanceFamilyClauses {T S : ℕ}
+@[expose] def executableAcceptanceFamilyClauses {T S : ℕ}
     (specification : Specification T S) : List (Clause T S) :=
   [acceptanceClause specification.accept]
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def executableForbiddenTransitionFamilyClauses {T S : ℕ}
+@[expose] def executableForbiddenTransitionFamilyClauses {T S : ℕ}
     (specification : Specification T S) : List (Clause T S) :=
   (clauseLoopFiniteElements (Window T × WindowSymbols S)).filterMap
     (fun window =>
@@ -666,7 +666,7 @@ def executableForbiddenTransitionFamilyClauses {T S : ℕ}
         none)
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def executableFiveFamilySourceClauseCandidates {T S : ℕ}
+@[expose] def executableFiveFamilySourceClauseCandidates {T S : ℕ}
     (specification : Specification T S) : List (Clause T S) :=
   executableAtLeastOneFamilyClauses T S ++
     executableAtMostOneFamilyClauses T S ++
@@ -743,7 +743,7 @@ namespace OutputPolynomialCompositionClosure
 open Turing
 
 /-- GapCVP reduction support. -/
-def markerConditionalOutput
+@[expose] def markerConditionalOutput
     (valid : List Bool → List Bool) (fallback : List Bool) :
     List Bool → List Bool
   | true :: input => valid input

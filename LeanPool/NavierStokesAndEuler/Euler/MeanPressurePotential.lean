@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanWeakCurl
 
 /-! A canonically normalized actual scalar potential for ordinary mean pressure gradients. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

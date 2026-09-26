@@ -44,7 +44,7 @@ via injectivity,
 obtained here as the adjoint of the inclusion.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.ContinuousLattice
 

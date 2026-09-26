@@ -80,7 +80,7 @@ lists it holds are closed walks of `initSkel` whose cells are exactly `faceCells
   anchor clause and the matched labelling in the statement.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set Topology unitInterval
 open scoped Graph

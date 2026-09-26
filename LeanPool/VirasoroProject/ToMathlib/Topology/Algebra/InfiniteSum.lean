@@ -13,4 +13,4 @@ public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.InfiniteSum.Ba
 Import-only index for infinite-sum support modules used by the Virasoro Project.
 -/
 
-@[expose] public section
+public section

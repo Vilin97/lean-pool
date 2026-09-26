@@ -16,7 +16,7 @@ estimated separately.  All parameter derivatives below are actual derivatives
 of the constructed fields and their moment integrals.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

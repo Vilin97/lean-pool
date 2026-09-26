@@ -30,7 +30,7 @@ Note that the "two units have symbol `1`" statement that holds for odd `p` is **
 at `p = 2`: `(3,3)_2 = -1`.
 -/
 
-@[expose] public section
+public section
 
 namespace HasseMinkowski
 

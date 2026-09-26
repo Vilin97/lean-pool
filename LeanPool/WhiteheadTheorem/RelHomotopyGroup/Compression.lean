@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.GCD
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.RelHomotopyGroup.Compression`.
 -/
 
-@[expose] public section
+public section
 
 open scoped unitInterval Topology Topology.Homotopy
 open ContinuousMap

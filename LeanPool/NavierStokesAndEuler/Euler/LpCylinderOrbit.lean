@@ -11,7 +11,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-! Actual mixed translation orbits are smooth everywhere as soon as they are smooth at zero. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

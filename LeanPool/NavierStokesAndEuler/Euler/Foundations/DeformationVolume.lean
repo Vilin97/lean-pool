@@ -17,7 +17,7 @@ public import Mathlib.Topology.Algebra.Module.ModuleTopology
 # Deformation Volume
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

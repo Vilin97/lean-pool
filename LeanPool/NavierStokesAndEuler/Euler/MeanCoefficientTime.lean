@@ -18,7 +18,7 @@ of their L² multiplication operators. The bridge is proved by evaluating the
 Bochner fundamental theorem of calculus, not by assuming operator derivatives.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,7 +41,7 @@ local instance instMeanCoefficientTime4 : NormedSpace ℝ (L2 →L[ℝ] L2) := i
 
 /-- Operator path, given by `⟨fun t => multiplierMap (A t), multiplierMap.continuous.comp
 A.continuous⟩`. -/
-def operatorPath (T : ℝ) (A : C(Icc (0 : ℝ) T, Field)) :
+@[expose] def operatorPath (T : ℝ) (A : C(Icc (0 : ℝ) T, Field)) :
     C(Icc (0 : ℝ) T, L2 →L[ℝ] L2) :=
   ⟨fun t => multiplierMap (A t), multiplierMap.continuous.comp A.continuous⟩
 
@@ -118,12 +118,14 @@ theorem operatorPath_inverse (T : ℝ) (A B : C(Icc (0 : ℝ) T, Field))
     (hAB : ∀ t x v, A t x (B t x v) = v) :
     ∀ t (u : L2), operatorPath T A t (operatorPath T B t u) = u := by
   intro t u
-  exact multiplier_inverse (A t) (B t) (hAB t) u
+  simpa only [operatorPath, ContinuousMap.coe_mk, multiplierMap_apply] using
+    multiplier_inverse (A t) (B t) (hAB t) u
 
 theorem operatorPath_quadratic_upper (T : ℝ) (A : C(Icc (0 : ℝ) T, Field)) (K : ℝ)
     (hA : ∀ t x v, ⟪A t x v, v⟫_ℝ ≤ K * ‖v‖ ^ 2) :
     ∀ t (u : L2), ⟪operatorPath T A t u, u⟫_ℝ ≤ K * ‖u‖^2 := by
   intro t u
-  exact multiplier_quadratic_upper (A t) K (hA t) u
+  simpa only [operatorPath, ContinuousMap.coe_mk, multiplierMap_apply] using
+    multiplier_quadratic_upper (A t) K (hA t) u
 
 end EulerMeanCoefficients

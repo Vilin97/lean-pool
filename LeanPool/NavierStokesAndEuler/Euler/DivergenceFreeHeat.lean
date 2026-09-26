@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.VolterraFixedPoint
 
 /-! The actual Gaussian heat and Volterra integrals preserve the lifted divergence constraint. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

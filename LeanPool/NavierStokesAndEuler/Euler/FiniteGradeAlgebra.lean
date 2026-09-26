@@ -17,7 +17,7 @@ import Mathlib.Tactic.FieldSimp
 
 /-! Exact finite graded identities for the literal packet residual. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,15 +30,16 @@ variable {V W Q : Type*} [AddCommGroup V] [Module ℝ V]
   [AddCommGroup W] [Module ℝ W] [AddCommGroup Q] [Module ℝ Q]
 
 /-- Evaluate, given by `∑ n ∈ range (M+1), κ^n • u n`. -/
-def evaluate (M : ℕ) (κ : ℝ) (u : ℕ → V) : V :=
+@[expose] def evaluate (M : ℕ) (κ : ℝ) (u : ℕ → V) : V :=
   ∑ n ∈ range (M+1), κ^n • u n
 
 /-- Truncate, with branches according to `n ≤ M`. -/
+@[expose]
 def truncate (M : ℕ) (u : ℕ → V) (n : ℕ) : V := if n ≤ M then u n else 0
 
 /-- Convolution, given by `∑ i ∈ range (M+1), ∑ j ∈ range (M+1), if i+j=n then B (u i) (v j)
 else 0`. -/
-def convolution (M : ℕ) (B : V →ₗ[ℝ] W →ₗ[ℝ] Q) (u : ℕ → V) (v : ℕ → W) (n : ℕ) : Q :=
+@[expose] def convolution (M : ℕ) (B : V →ₗ[ℝ] W →ₗ[ℝ] Q) (u : ℕ → V) (v : ℕ → W) (n : ℕ) : Q :=
   ∑ i ∈ range (M+1), ∑ j ∈ range (M+1), if i+j=n then B (u i) (v j) else 0
 
 theorem evaluate_add (M : ℕ) (κ : ℝ) (u v : ℕ → V) :

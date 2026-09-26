@@ -17,7 +17,7 @@ identity minus measurable-set projection. This gives a complete Hilbert space
 for localized propagators and keeps the support restriction explicit.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -79,6 +79,10 @@ def cutoffOperator : Lp V 2 μ →L[ℝ] Lp V 2 μ :=
   (cutoffLinear μ S hS).mkContinuous 1 (fun u => by
     change ‖cutoff μ S hS u‖ ≤ (1 : ℝ)*‖u‖
     simpa only [one_mul] using cutoff_norm μ S hS u)
+
+@[simp] theorem cutoffOperator_apply (u : Lp V 2 μ) :
+    cutoffOperator μ S hS u = cutoff μ S hS u := by
+  rfl
 
 /-- The localized Hilbert subspace is a closed kernel. -/
 def supportedSpace : Submodule ℝ (Lp V 2 μ) :=

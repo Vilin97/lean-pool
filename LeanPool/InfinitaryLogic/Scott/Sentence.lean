@@ -33,7 +33,7 @@ The proof proceeds by showing:
 3. The Scott formula at the stabilization ordinal captures exactly this.
 -/
 
-@[expose] public section
+public section
 
 universe u v w u'
 

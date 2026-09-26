@@ -14,4 +14,4 @@ public import LeanPool.VirasoroProject.ToMathlib.Topology.Order
 Import-only index for topology support modules used by the Virasoro Project.
 -/
 
-@[expose] public section
+public section

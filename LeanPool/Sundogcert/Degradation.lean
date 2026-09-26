@@ -33,7 +33,7 @@ public import LeanPool.Sundogcert.Scaling
                     Safe-equivalence for all c), reusing the Looseness invertibility approach.
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 

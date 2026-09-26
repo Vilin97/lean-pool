@@ -17,7 +17,7 @@ The 1,023-node trie has 432 leaves, one for each proper normalized coloring of
 the 13-vertex 2-Golomb root. Every leaf names a separately checked Parts tree.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

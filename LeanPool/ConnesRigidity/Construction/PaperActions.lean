@@ -17,7 +17,7 @@ public import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.QuadraticCocycle
 The paper actions component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace Construction
@@ -45,7 +45,7 @@ def sl3AAction : SpecialLinear.SL3 →* (A ≃ₗ[k] A) where
     simp
 
 /-- The diagonal SL₃ action on the tensor square. Paper: §2. -/
-def sl3TensorAction (l : SpecialLinear.SL3) :
+@[expose] def sl3TensorAction (l : SpecialLinear.SL3) :
     TensorAA →ₗ[k] TensorAA :=
   TensorProduct.map (sl3AAction l).toLinearMap (sl3AAction l).toLinearMap
 

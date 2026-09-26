@@ -38,7 +38,7 @@ identity constructs an AC representative of `Pσ F* η_t`. This is a regularity
 conclusion, not an assumed momentum equation or an assumed second derivative.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -157,7 +157,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

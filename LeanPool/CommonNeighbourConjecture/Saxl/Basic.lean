@@ -18,14 +18,14 @@ Foundational definitions for ordered tuple bases, ordinary and generalized
 Saxl adjacency, exact base size, and common neighbours.
 -/
 
-@[expose] public section
+public section
 
 namespace Saxl
 
 variable (G Ω : Type*) [Group G] [MulAction G Ω]
 
 /-- An ordered tuple whose pointwise stabilizer in `G` is trivial. -/
-def IsBaseTuple {n : Nat} (x : Fin n → Ω) : Prop :=
+@[expose] def IsBaseTuple {n : Nat} (x : Fin n → Ω) : Prop :=
   ∀ g : G, (∀ i, g • x i = x i) → g = 1
 
 /-- An injective ordered tuple corresponding literally to a base as a set. -/

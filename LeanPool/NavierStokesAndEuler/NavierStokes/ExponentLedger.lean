@@ -26,7 +26,7 @@ hold uniformly for `0 ≤ κ ≤ 10⁻⁵` and `σ ≥ 1/5`. Fractions are exact
 in the real numbers; no floating-point calculation is used.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.ExponentLedger
@@ -34,13 +34,13 @@ namespace NavierStokes.ExponentLedger
 noncomputable section
 
 /-- The good-wave residual exponent `B = 1/2 + σ`. -/
-def waveExponent (σ : ℝ) : ℝ := 1 / 2 + σ
+@[expose] def waveExponent (σ : ℝ) : ℝ := 1 / 2 + σ
 
 /-- The mean and defect target exponent `C = 1 + σ`. -/
-def meanExponent (σ : ℝ) : ℝ := 1 + σ
+@[expose] def meanExponent (σ : ℝ) : ℝ := 1 + σ
 
 /-- The intermediate exponent `H₁ = C - 2κ`. -/
-def meanUpdateExponent (σ κ : ℝ) : ℝ := meanExponent σ - 2 * κ
+@[expose] def meanUpdateExponent (σ κ : ℝ) : ℝ := meanExponent σ - 2 * κ
 
 /-- Minimum of the four listed gains for the particular wave correction. -/
 def particularGain (σ κ : ℝ) : ℝ :=

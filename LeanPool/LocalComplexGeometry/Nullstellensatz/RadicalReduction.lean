@@ -22,7 +22,7 @@ for the radical theorem, the finite-family representative-level theorem, and
 the arbitrary-ideal zero-set equality.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators Topology

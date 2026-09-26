@@ -26,7 +26,7 @@ its stored realization. The classification proof therefore starts from `Geometri
 and uses the incidence certificate constructed by its bridge.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -41,7 +41,7 @@ deriving DecidableEq, Repr, Fintype
 namespace OrientedEdge
 
 /-- The underlying unoriented edge. -/
-def edge {α : Type*} : OrientedEdge α → α
+@[expose] def edge {α : Type*} : OrientedEdge α → α
   | pos e => e
   | neg e => e
 
@@ -159,7 +159,7 @@ def orientedEdge {S : Type*} [TopologicalSpace S] {T : FiniteSurfaceTriangulatio
   (T.triangleBoundary o.1).get o.2
 
 /-- The unoriented edge stored at a triangle-boundary position. -/
-def edge {S : Type*} [TopologicalSpace S] {T : FiniteSurfaceTriangulation S}
+@[expose] def edge {S : Type*} [TopologicalSpace S] {T : FiniteSurfaceTriangulation S}
     (o : T.BoundaryPosition) : T.Edge :=
   o.orientedEdge.edge
 
@@ -361,7 +361,7 @@ theorem triangleBoundary_nodup (t : T.Triangle) : (T.triangleBoundary t).Nodup :
 This is the compatibility bridge: downstream consumers (the cell-complex conversion and the
 Gallier--Xu route) keep their interface, while the triangulation content now lives in the
 faithful geometric object. -/
-noncomputable def toFiniteSurfaceTriangulation : FiniteSurfaceTriangulation S where
+@[expose] noncomputable def toFiniteSurfaceTriangulation : FiniteSurfaceTriangulation S where
   Vertex := T.Vertex
   Edge := T.Edge
   Triangle := T.Triangle

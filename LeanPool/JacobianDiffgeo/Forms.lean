@@ -57,4 +57,4 @@ Downstream units use `coeffIn`/`coeffAt` and the lemmas above — never raw bund
 (`Form1` is `abbrev`-only plumbing).
 -/
 
-@[expose] public section
+public section

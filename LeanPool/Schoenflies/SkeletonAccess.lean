@@ -127,7 +127,7 @@ nothing beyond the shared hypothesis.
   point of a target face" of the same lemma.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph

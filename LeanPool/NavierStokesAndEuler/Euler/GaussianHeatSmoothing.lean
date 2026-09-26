@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ClosedTranslationGraph
 
 /-! Gaussian averaging genuinely gains one strong derivative for every cylinder L² datum. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

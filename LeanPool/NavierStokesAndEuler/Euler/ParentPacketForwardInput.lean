@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCommonRadius
 label fields and its short-time low strain bound. The growth profile is
 the constant one, proved by the actual tangent equation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

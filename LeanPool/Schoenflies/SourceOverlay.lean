@@ -33,7 +33,7 @@ geometric core of the forward half of the quantitative-refinement recursion.
   carried source-connectedness invariant and two distinct common source/grid vertices.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

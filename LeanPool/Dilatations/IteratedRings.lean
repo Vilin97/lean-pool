@@ -18,7 +18,7 @@ The ring construction includes work by Arnaud Mayeux and Jujian Zhang from
 `ProjConstruction/Proj` (Apache-2.0).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -44,6 +44,7 @@ variable {A' : Type*} [CommRing A'] (M : Multicenter A') (K : Set M.index)
 
 /-- **Restriction of a multicenter to a subset `K ⊆ I` of the index set**, matching the notation
 `{[Mᵢ,aᵢ]}_{i∈K}` of §2.2 of the printed paper. -/
+@[expose]
 def restrict : Multicenter A' where
   index := K
   ideal := fun i => M.ideal i.1
@@ -57,6 +58,7 @@ def restrict : Multicenter A' where
 /-- **The second-stage multicenter of Proposition 2.24.** Over `B := A'[M.restrict K]`, the
 complementary indices `j ∈ I ∖ K` carry the ideal `B·(Mⱼ)` (the image of `M.ideal j`) and the
 element `aⱼ/1` (the image of `M.elem j`). -/
+@[expose]
 def complement : Multicenter (A'[M.restrict K]) where
   index := (Kᶜ : Set M.index)
   ideal := fun j => Ideal.map (algebraMap A' A'[M.restrict K]) (M.ideal j.1)

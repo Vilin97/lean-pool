@@ -47,7 +47,7 @@ for Craig's graph antecedent `(graphAxioms F).and (relationalizeFormula r)` and 
 `(graphAxioms F).imp (relationalizeFormula r)`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

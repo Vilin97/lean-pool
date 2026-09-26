@@ -15,7 +15,7 @@ import Mathlib.Tactic.NormNum.Pow
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence.Basic`.
 -/
 
-@[expose] public section
+public section
 
 open Function
 

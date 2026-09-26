@@ -19,4 +19,4 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 Import index for the Brauer group formalization.
 -/
 
-@[expose] public section
+public section

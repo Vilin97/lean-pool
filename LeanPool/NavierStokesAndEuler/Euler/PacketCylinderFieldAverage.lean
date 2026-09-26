@@ -32,7 +32,7 @@ section
 
 /-! The bounded cylinder-to-space operator is the literal angular integral on smooth fields. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -121,7 +121,7 @@ section
 
 /-! The literal angular mean of a solved cylinder path is an actual smooth spatial L² path. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -173,7 +173,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -225,7 +225,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -264,6 +264,7 @@ def angleMean (G : Field P T raw) : Field P T (EulerPacketProfileRecursion.angle
       exact G.raw_eq t x s)
 
 /-- Subtracting the literal mean is an operation on the actual cylinder L² path. -/
+@[expose]
 def highPart (G : Field P T raw) : Field P T (raw-EulerPacketProfileRecursion.angleMean P raw) :=
   G.sub G.angleMean
 

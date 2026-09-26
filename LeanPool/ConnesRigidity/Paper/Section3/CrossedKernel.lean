@@ -17,7 +17,7 @@ public import LeanPool.ConnesRigidity.Paper.Section3.CrossedHaar
 The crossed kernel component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperCrossedKernel
@@ -83,7 +83,7 @@ local instance paperMultiplicativeDDecidableEq :
 /--
 The `coordinateComplexCharacter` construction used in the Connes rigidity formalization.
 -/
-def coordinateComplexCharacter (d : D) : C(Coordinates, ℂ) where
+@[expose] def coordinateComplexCharacter (d : D) : C(Coordinates, ℂ) where
   toFun p := complexCharacter d (characterCoordinatesHomeomorph.symm p)
   continuous_toFun := (complexCharacter d).continuous.comp
     characterCoordinatesHomeomorph.symm.continuous

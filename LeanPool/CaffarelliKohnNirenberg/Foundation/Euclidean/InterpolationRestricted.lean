@@ -41,7 +41,7 @@ of `InterpolationTruncBounds.lean`, are what lets the restricted hypotheses be
 applied.  Everything else is the argument of `Interpolation.lean`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 

@@ -23,7 +23,7 @@ to show invariance under elementary moves and to prove that `R[G]` is a ring.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 

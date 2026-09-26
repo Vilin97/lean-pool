@@ -25,7 +25,7 @@ This module gives its genuine parameter regularity and factorial estimate,
 with the explicit amplitude needed by the actual Gram inverse.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

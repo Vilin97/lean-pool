@@ -23,7 +23,7 @@ exact pressure binder consumed by the gradient criterion of `thm:B`.  The
 constant relation is the one exposed by the transfer: the cylinder constant
 `C₁₂_p1` dominates `C_CZ * (9 * sobolevPoincareL6Constant)`. -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

@@ -9,7 +9,7 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageDataTypes
 
 /-! # Coverage certificate data, buckets 168–175 -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 

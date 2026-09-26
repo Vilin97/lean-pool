@@ -28,7 +28,7 @@ to the structure of the isomorphism relation.
 - [KK04]
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 

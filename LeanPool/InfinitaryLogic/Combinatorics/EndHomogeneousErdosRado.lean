@@ -58,7 +58,7 @@ feeding `c'` to the arity-`(n+1)` inductive hypothesis homogenizes `G` outright.
   (abstract well-ordered source); **regression**: `pairER_from_endHomogeneous`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

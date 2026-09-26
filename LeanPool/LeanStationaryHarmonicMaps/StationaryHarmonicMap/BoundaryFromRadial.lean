@@ -20,7 +20,7 @@ stationarity to the boundary identity.  The recommended public entry point is
 the final theorem in `MainTheorem.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

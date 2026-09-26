@@ -31,7 +31,7 @@ Rewritings `LO.FirstOrder.Rew` is naturally converted to formula Rewritings by
 
 -/
 
-@[expose] public section
+public section
 
 namespace Finset
 
@@ -496,6 +496,7 @@ private lemma «not_fvar?_fixitr_fvSup» (φ : SyntacticFormula L) :
   simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def close (φ : SyntacticFormula L) : SyntacticFormula L := ∀* (@Rew.fixitr L 0 φ.fvSup ▹ φ)
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -517,7 +518,7 @@ lemma close_eq_self_of (φ : SyntacticFormula L) (h : φ.freeVariables = ∅) : 
   close_eq_self_of (∀∀φ) (by simp)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def toEmpty [DecidableEq ξ] {n : ℕ} : (φ :
+@[expose] def toEmpty [DecidableEq ξ] {n : ℕ} : (φ :
     Semiformula L ξ n) → φ.freeVariables = ∅ → Semisentence L n
   | rel R v,  h =>
     rel R fun i ↦ (v i).toEmpty (by

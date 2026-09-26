@@ -19,7 +19,7 @@ section
 /-! Fixed continuous majorants for metric growth; no time continuity of arbitrary bound witnesses is
 required. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -29,10 +29,10 @@ open EulerLiftedGradientSpace EulerSpatialSobolevInverse EulerCylinderSobolevSpa
   EulerCylinderViscousEnergy EulerWeightedCylinderEnergy EulerGevreyMetricEstimate
 
 /-- A fixed bound for the metric derivative and viscosity contribution. -/
-def growthBudgetBase (c D L : ℝ) : ℝ := (D+4*L^2/c^2)/(2*c^2)
+@[expose] def growthBudgetBase (c D L : ℝ) : ℝ := (D+4*L^2/c^2)/(2*c^2)
 
 /-- A fixed bound for the velocity-dependent metric transport slope. -/
-def growthBudgetSlope (c L : ℝ) : ℝ := 2*L/(2*c^2)
+@[expose] def growthBudgetSlope (c L : ℝ) : ℝ := 2*L/(2*c^2)
 
 variable (period : ℝ) [Fact (0 < period)]
 
@@ -92,7 +92,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

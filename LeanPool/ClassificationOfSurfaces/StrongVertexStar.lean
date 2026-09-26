@@ -23,7 +23,7 @@ had two adjacency components, their finite closed face unions would separate tha
 chart.
 -/
 
-@[expose] public section
+public section
 
 open Set Topology
 open scoped Manifold

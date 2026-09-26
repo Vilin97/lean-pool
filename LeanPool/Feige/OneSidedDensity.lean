@@ -16,7 +16,7 @@ negative scaled exponentials.  This file verifies the four-point
 log-concavity condition for each individual one-sided exponential factor.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal
 
@@ -24,7 +24,7 @@ namespace Feige
 namespace LikelihoodRatio
 
 /-- Density of `aE`, up to the canonical Lebesgue interpretation. -/
-noncomputable def rightExponentialDensity (a x : ℝ) : ℝ≥0∞ :=
+@[expose] noncomputable def rightExponentialDensity (a x : ℝ) : ℝ≥0∞ :=
   if 0 ≤ x then ENNReal.ofReal (Real.exp (-x / a) / a) else 0
 
 theorem measurable_rightExponentialDensity (a : ℝ) :
@@ -71,7 +71,7 @@ theorem FourPointLogConcave.reflect {f : ℝ → ℝ≥0∞}
   simpa [mul_comm] using h
 
 /-- Density of `-bE`. -/
-noncomputable def leftExponentialDensity (b x : ℝ) : ℝ≥0∞ :=
+@[expose] noncomputable def leftExponentialDensity (b x : ℝ) : ℝ≥0∞ :=
   rightExponentialDensity b (-x)
 
 theorem measurable_leftExponentialDensity (b : ℝ) :

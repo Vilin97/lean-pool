@@ -48,7 +48,7 @@ to `⊥` (the first
 Choice-free (`#print axioms ⊆ {propext, Quot.sound}`): everything is decidable
 list surgery. -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise218
 
@@ -62,8 +62,8 @@ def hOut : Str → Str
   | [] => []
   | b :: t => b :: false :: hOut t
 
-@[simp] theorem hOut_nil : hOut [] = [] := rfl
-@[simp] theorem hOut_cons (b : Bool) (t : Str) : hOut (b :: t) = b :: false :: hOut t := rfl
+@[simp] theorem hOut_nil : hOut [] = [] := by rfl
+@[simp] theorem hOut_cons (b : Bool) (t : Str) : hOut (b :: t) = b :: false :: hOut t := by rfl
 
 /-- `hOut` grows under extension: `hOut σ <+: hOut (σ ++ t)`. -/
 theorem hOut_append (σ t : Str) : hOut σ <+: hOut (σ ++ t) := by
@@ -87,9 +87,9 @@ def kOut : Str → Str
   | [_] => []
   | b :: _ :: t => b :: kOut t
 
-@[simp] theorem kOut_nil : kOut [] = [] := rfl
-@[simp] theorem kOut_single (b : Bool) : kOut [b] = [] := rfl
-@[simp] theorem kOut_cons (b c : Bool) (t : Str) : kOut (b :: c :: t) = b :: kOut t := rfl
+@[simp] theorem kOut_nil : kOut [] = [] := by rfl
+@[simp] theorem kOut_single (b : Bool) : kOut [b] = [] := by rfl
+@[simp] theorem kOut_cons (b c : Bool) (t : Str) : kOut (b :: c :: t) = b :: kOut t := by rfl
 
 /-- **`k` inverts `h` on prefixes.** `kOut (hOut σ) = σ`. -/
 theorem kOut_hOut (σ : Str) : kOut (hOut σ) = σ := by

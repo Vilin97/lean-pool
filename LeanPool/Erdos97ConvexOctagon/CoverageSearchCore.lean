@@ -13,7 +13,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Lightweight state for finite coverage search -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
@@ -28,14 +28,14 @@ structure PairState where
   seenTwice : UInt64
 
 /-- The empty pair-occurrence state. -/
-def PairState.empty : PairState := ⟨0, 0⟩
+@[expose] def PairState.empty : PairState := ⟨0, 0⟩
 
 /-- Whether adding a row preserves pair sparsity. -/
-def PairState.compatible (state : PairState) (pairMask : UInt64) : Bool :=
+@[expose] def PairState.compatible (state : PairState) (pairMask : UInt64) : Bool :=
   (state.seenTwice &&& pairMask) == 0
 
 /-- Update pair occurrences after accepting one row. -/
-def PairState.add (state : PairState) (pairMask : UInt64) : PairState :=
+@[expose] def PairState.add (state : PairState) (pairMask : UInt64) : PairState :=
   ⟨state.seenOnce ||| pairMask,
     state.seenTwice ||| (state.seenOnce &&& pairMask)⟩
 
@@ -63,7 +63,7 @@ def ColumnState.count (state : ColumnState) (target : Vertex) : Nat :=
   ((state.counts >>> UInt64.ofNat (8 * target.val)) &&& 255).toNat
 
 /-- Number of remaining rows that can still select a target. -/
-def remainingColumnCapacity (remaining : List Vertex) (target : Vertex) : Nat :=
+@[expose] def remainingColumnCapacity (remaining : List Vertex) (target : Vertex) : Nat :=
   (remaining.filter (· ≠ target)).length
 
 /-- Fast packed check that every column can still finish with exactly four entries. -/
@@ -73,13 +73,13 @@ def ColumnState.feasible (state : ColumnState) (remaining : List Vertex) : Bool 
       decide (4 ≤ state.count target + remainingColumnCapacity remaining target)
 
 /-- Whether a target is selected by an assigned row. -/
-def selectedByAssignmentsB
+@[expose] def selectedByAssignmentsB
     (assignments : List RowAssignment) (centre target : Vertex) : Bool :=
   assignments.any fun assignment =>
     (assignment.1 == centre) && bitSetB assignment.2 target.val
 
 /-- Number of assigned rows selecting one target, computed from the semantic prefix. -/
-def assignmentColumnCount
+@[expose] def assignmentColumnCount
     (assignments : List RowAssignment) (target : Vertex) : Nat :=
   (assignments.filter fun assignment => bitSetB assignment.2 target.val).length
 

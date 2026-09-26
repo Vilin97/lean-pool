@@ -16,7 +16,7 @@ This module contains the primitive cutoff realization and the abstract
 one-dimensional sharp-cutoff inputs.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

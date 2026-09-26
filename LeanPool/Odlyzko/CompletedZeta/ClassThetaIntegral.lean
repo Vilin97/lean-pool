@@ -13,7 +13,7 @@ import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -28,7 +28,7 @@ variable (K : Type*) [Field K] [NumberField K] [IsTotallyComplex K]
 
 open Classical in
 /-- A shape theta integral constant used in the Odlyzko-bound argument. -/
-noncomputable def shapeThetaIntegralConstant : ℝ :=
+@[expose] noncomputable def shapeThetaIntegralConstant : ℝ :=
   2⁻¹ ^ nrComplexPlaces K * Module.finrank ℚ K *
     NumberField.Units.regulator K
 

@@ -18,7 +18,7 @@ Jacobian. Their normalized values extend smoothly to the compact set
 one power of `q` per physical derivative.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,16 +40,16 @@ private theorem infty_add_one_le : (∞ : WithTop ℕ∞) + 1 ≤ ∞ := by
   simpa only [ENat.coe_top_add_one] using (le_rfl : (∞ : WithTop ℕ∞) ≤ ∞)
 
 /-- D, given by `(1 - a) / 2`. -/
-noncomputable def D (a : ℝ) : ℝ := (1 - a) / 2
+@[expose] noncomputable def D (a : ℝ) : ℝ := (1 - a) / 2
 
 /-- Positive time, given by `{p | 0 < p.1}`. -/
-noncomputable def positiveTime : Set Point := {p | 0 < p.1}
+@[expose] noncomputable def positiveTime : Set Point := {p | 0 < p.1}
 
 /-- Q coord, given by `coordinateQ a (p.1, p.2.2)`. -/
-noncomputable def qCoord (a : ℝ) (p : Point) : ℝ := coordinateQ a (p.1, p.2.2)
+@[expose] noncomputable def qCoord (a : ℝ) (p : Point) : ℝ := coordinateQ a (p.1, p.2.2)
 
 /-- Inverse coordinates, given by `(qCoord a p, p.2)`. -/
-noncomputable def inverseCoordinates (a : ℝ) (p : Point) : Point := (qCoord a p, p.2)
+@[expose] noncomputable def inverseCoordinates (a : ℝ) (p : Point) : Point := (qCoord a p, p.2)
 
 /-- Inverse differential as an element of `Point →L[ℝ] Point`. -/
 noncomputable def inverseDifferential (a : ℝ) (y : Point) : Point →L[ℝ] Point :=
@@ -205,7 +205,7 @@ theorem exists_normalized_jet_bound {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
 
 /-- The physical dilation: time and squared radius have weight one, while
 the axial variable has weight `D = (1-a)/2`. -/
-noncomputable def dilation (a r : ℝ) : Point →L[ℝ] Point :=
+@[expose] noncomputable def dilation (a r : ℝ) : Point →L[ℝ] Point :=
   (r • ContinuousLinearMap.fst ℝ ℝ (ℝ × ℝ)).prod
     (((r • ContinuousLinearMap.fst ℝ ℝ ℝ).comp (ContinuousLinearMap.snd ℝ ℝ (ℝ × ℝ))).prod
       (((r ^ D a) • ContinuousLinearMap.snd ℝ ℝ ℝ).comp
@@ -247,10 +247,10 @@ theorem inverseCoordinates_dilation {a r : ℝ} (ha : 0 < a) (ha1 : a < 1) (hr :
   · rfl
 
 /-- Eta coord, given by `p.2.2 / qCoord a p ^ D a`. -/
-noncomputable def etaCoord (a : ℝ) (p : Point) : ℝ := p.2.2 / qCoord a p ^ D a
+@[expose] noncomputable def etaCoord (a : ℝ) (p : Point) : ℝ := p.2.2 / qCoord a p ^ D a
 
 /-- X coord, given by `p.2.1 / qCoord a p`. -/
-noncomputable def xCoord (a : ℝ) (p : Point) : ℝ := p.2.1 / qCoord a p
+@[expose] noncomputable def xCoord (a : ℝ) (p : Point) : ℝ := p.2.1 / qCoord a p
 
 theorem normalized_inverseCoordinates {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
     {p : Point} (hp : p ∈ positiveTime) :
@@ -465,7 +465,7 @@ noncomputable def timeReflection : Point ≃ₗᵢ[ℝ] Point where
     rw [norm_neg]
 
 /-- Time shift, given by `(1 - p.1, p.2)`. -/
-noncomputable def timeShift (p : Point) : Point := (1 - p.1, p.2)
+@[expose] noncomputable def timeShift (p : Point) : Point := (1 - p.1, p.2)
 
 theorem timeShift_eq (p : Point) :
     timeShift p = ((1 : ℝ), ((0 : ℝ), (0 : ℝ))) + timeReflection p := by
@@ -486,13 +486,13 @@ theorem norm_iteratedFDeriv_timeShift (F : Point → ℝ) (n : ℕ) (p : Point) 
 
 /-- Physical coordinates use `(t,s,z)`. The exponent parameter here is
 `a = 2h`, so these definitions agree with the coordinates used by NaturalCore. -/
-noncomputable def physicalQ (a : ℝ) : Point → ℝ := qCoord a ∘ timeShift
+@[expose] noncomputable def physicalQ (a : ℝ) : Point → ℝ := qCoord a ∘ timeShift
 
 /-- Physical eta, given by `etaCoord a ∘ timeShift`. -/
-noncomputable def physicalEta (a : ℝ) : Point → ℝ := etaCoord a ∘ timeShift
+@[expose] noncomputable def physicalEta (a : ℝ) : Point → ℝ := etaCoord a ∘ timeShift
 
 /-- Physical X, given by `xCoord a ∘ timeShift`. -/
-noncomputable def physicalX (a : ℝ) : Point → ℝ := xCoord a ∘ timeShift
+@[expose] noncomputable def physicalX (a : ℝ) : Point → ℝ := xCoord a ∘ timeShift
 
 theorem physicalQ_pos {a : ℝ} (ha : 0 < a) (ha1 : a < 1) {p : Point} (hp : p.1 < 1) :
     0 < physicalQ a p := qCoord_pos ha ha1 (sub_pos.mpr hp)

@@ -14,7 +14,7 @@ import Mathlib.MeasureTheory.Constructions.Polish.EmbeddingReal
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.StandardBorelSpace`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace MeasureTheory

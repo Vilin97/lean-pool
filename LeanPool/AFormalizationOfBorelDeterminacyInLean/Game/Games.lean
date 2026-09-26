@@ -22,7 +22,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame
@@ -95,7 +95,7 @@ abbrev PreStrategy.subgame (S : PreStrategy G.tree p) : Game A where
 
 namespace Player
 /-- player p wins if and only if the resulting play lies in `p.payoff G` -/
-def payoff (p : Player) (G : Game A) : Set (body G.tree) := match p with
+@[expose] def payoff (p : Player) (G : Game A) : Set (body G.tree) := match p with
   | zero => G.payoff
   | one => G.payoffᶜ
 @[simp] lemma payoff_zero : zero.payoff G = G.payoff := rfl
@@ -127,7 +127,7 @@ end Player
 
 /-- A pre-strategy is winning if all compatible plays are won. Keeping this as a definition
 lets API-level simp lemmas remain stated in terms of winning strategies. -/
-def PreStrategy.IsWinning (s : PreStrategy G.tree p) := body s.subtree ⊆ p.payoff G
+@[expose] def PreStrategy.IsWinning (s : PreStrategy G.tree p) := body s.subtree ⊆ p.payoff G
 lemma PreStrategy.sub_winning {s t : PreStrategy G.tree p} (h : s ≤ t) (h' : t.IsWinning) :
   s.IsWinning := subset_trans (by gcongr) h'
 lemma PreStrategy.IsWinning.residual {s : PreStrategy G.tree p} (h : s.IsWinning)
@@ -148,7 +148,7 @@ namespace Game
   (∃ s : Strategy S.tree p, s.pre.IsWinning) ↔ ∃ s : Strategy T.tree q, s.pre.IsWinning := by
   subst hS hp; rfl
 /-- whether a winning strategy exists for player p -/
-def ExistsWinning (G : Game A) p := ∃ S : Strategy G.tree p, S.pre.IsWinning
+@[expose] def ExistsWinning (G : Game A) p := ∃ S : Strategy G.tree p, S.pre.IsWinning
 lemma existsWinning_iff_quasi :
   G.ExistsWinning p ↔ ∃ S : QuasiStrategy G.tree p, S.1.IsWinning :=
   ⟨fun ⟨S, h'⟩ ↦ ⟨S.quasi, h'⟩, fun ⟨_, h'⟩ ↦ ⟨_, h'.choose⟩⟩
@@ -168,7 +168,7 @@ include hW in lemma not_both_winning (hNe : [] ∈ G.tree) : ¬ G.ExistsWinning 
   exact h.subset (by simpa using ha)
 end ExistsWinning
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def AllWinning (G : Game A) (p : Player) := p.payoff G = Set.univ
+@[expose] def AllWinning (G : Game A) (p : Player) := p.payoff G = Set.univ
 lemma AllWinning.residual (hW : G.AllWinning p) x :
   (G.residual x).AllWinning (p.residual x) := by
   cases p

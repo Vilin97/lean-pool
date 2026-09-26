@@ -40,7 +40,7 @@ Source: Larocca, Ju, García-Martín, Coles, Cerezo (2021), arXiv:2109.11676.
   overparametrized, adding parameters keeps the QNN overparametrized.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

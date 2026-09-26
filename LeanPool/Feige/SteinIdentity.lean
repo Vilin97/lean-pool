@@ -20,7 +20,7 @@ conditions and the boundary condition at infinity needed for improper
 integration by parts.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real Set Filter Topology
 

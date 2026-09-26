@@ -31,7 +31,7 @@ continuous maps, so every chart composite involving them cancels by `rfl`. Conse
   analyticity computation.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Pointwise
 open Set Filter Topology Metric

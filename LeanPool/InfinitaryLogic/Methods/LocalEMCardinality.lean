@@ -29,7 +29,7 @@ embedding travels WITH the code, expansion is a total function (`LocatedTermCode
   countable base language, injective deep sequence.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

@@ -43,7 +43,7 @@ This file builds the construction in milestones:
   `surj` (every `𝒟^§`-neighbourhood is some `V k`), nonemptiness. All choice-free.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

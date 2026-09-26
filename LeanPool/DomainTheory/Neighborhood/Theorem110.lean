@@ -42,7 +42,7 @@ Everything is constructive (`[propext, Quot.sound]`): `[X]`-membership is just
 filter laws mirror the constructive proofs for `principal`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

@@ -26,7 +26,7 @@ Auxiliary torus averaging, radial integration, and the pressure constructor
 connect the literal state residual to its actual slow debt derivatives.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -38,7 +38,7 @@ open scoped BigOperators ContDiff Topology
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
 /-- Mean bar, defined pointwise by `MeanMomentBounds.liftedTorusAverage (f n)`. -/
-noncomputable def meanBar (f : ScalarField (Lift S)) : ScalarField (Lift S) :=
+@[expose] noncomputable def meanBar (f : ScalarField (Lift S)) : ScalarField (Lift S) :=
   fun n => MeanMomentBounds.liftedTorusAverage (f n)
 
 namespace AuxiliaryAverage
@@ -376,11 +376,11 @@ noncomputable def averaged (f : ScalarField (Lift S)) : ℕ → ℝ × S → ℝ
   fun n => PressureStream.torusAverage (f n)
 
 /-- Lift slow, defined pointwise by `f n (x.1, x.2.1)`. -/
-noncomputable def liftSlow (f : ℕ → ℝ × S → ℝ) : ScalarField (Lift S) :=
+@[expose] noncomputable def liftSlow (f : ℕ → ℝ × S → ℝ) : ScalarField (Lift S) :=
   fun n x => f n (x.1, x.2.1)
 
 /-- Native operators, given by `graphOperators r ε fast (z, 0) (t, 0) v`. -/
-noncomputable def nativeOperators (r : ReconstructionData) (ε fast : ℕ → ℝ)
+@[expose] noncomputable def nativeOperators (r : ReconstructionData) (ε fast : ℕ → ℝ)
     (z t : S) (v : PressureStream.Plane) : MeanIncrementBounds.Operators (Lift S) :=
   graphOperators r ε fast (z, 0) (t, 0) v
 
@@ -1211,7 +1211,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1412,7 +1412,7 @@ theorem LocalField.add {a b : ℝ} {U : Set S} {f g : ScalarField (PressureStrea
     exact congrArg₂ (· + ·) (hf.periodic n R s hs Y k) (hg.periodic n R s hs Y k)
 
 /-- Localize family, defined pointwise by `PhysicalMeanDomain.localize χ (f n)`. -/
-noncomputable def localizeFamily (χ : S → ℝ) (f : ScalarField (PressureStream.Lift S)) :
+@[expose] noncomputable def localizeFamily (χ : S → ℝ) (f : ScalarField (PressureStream.Lift S)) :
     ScalarField (PressureStream.Lift S) := fun n => PhysicalMeanDomain.localize χ (f n)
 
 theorem LocalField.localize {a b : ℝ} {U : Set S} (hU : IsOpen U)
@@ -1717,7 +1717,7 @@ abbrev MovingAxialInputs {coord : ℝ} (U : SlowRegion coord) (a b : ℝ)
   MovingFluxInputs U a b u.mean.axial (axialRadialFlux c u) (axialAxialFlux c u) c.virtualAxial
 
 /-- Pressure recipe, given by `(VariableGaugeMean.reconstructState g c u).pressure`. -/
-noncomputable def pressureRecipe (g : VariableGaugeMean.GaugeData Plane)
+@[expose] noncomputable def pressureRecipe (g : VariableGaugeMean.GaugeData Plane)
     (c : Context Point) (u : State Point) : ScalarField Point :=
   (VariableGaugeMean.reconstructState g c u).pressure
 

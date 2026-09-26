@@ -17,7 +17,7 @@ This file isolates the exact (non-quantitative) character-extension argument use
 The remaining quantitative statement is developed on top of these declarations.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

@@ -56,7 +56,7 @@ it needs
 with the decider.)
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

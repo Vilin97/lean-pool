@@ -34,7 +34,7 @@ This is the foundation for the Hecke ring of GL_n following Shimura §3.2.
 * `posDetInt_le_commensurator` — `Δ ⊆ commensurator(SL_n(ℤ))`
 -/
 
-@[expose] public section
+public section
 
 open Matrix Subgroup.Commensurable Pointwise Matrix.SpecialLinearGroup
 

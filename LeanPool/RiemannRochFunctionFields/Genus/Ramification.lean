@@ -15,7 +15,7 @@ This file proves `deg (X_K)_∞ ≤ [K : k(X)]` via the fundamental identity of 
 index and inertia degree.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero Additive
 

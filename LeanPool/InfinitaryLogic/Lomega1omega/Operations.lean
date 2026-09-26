@@ -27,7 +27,7 @@ sense at an arbitrary branching carrier belongs upstream on `BoundedFormulaInf`;
 handles transport between carriers.
 -/
 
-@[expose] public section
+public section
 
 universe u v u'
 
@@ -45,14 +45,13 @@ keeping the first `n` as free variables. Used for quantifying over the last posi
 
 This function is used by `openBounds` (for the `all` case) and by `existsLastVar`/`forallLastVar`
 in `Scott/Formula.lean`. -/
-def insertLastBound {n : ℕ} : Fin (n + 1) → Fin n ⊕ Fin 1 :=
+@[expose] def insertLastBound {n : ℕ} : Fin (n + 1) → Fin n ⊕ Fin 1 :=
   fun i => if h : i.val < n then Sum.inl ⟨i.val, h⟩ else Sum.inr 0
 
 namespace BoundedFormulaω
 
 /-- Casts a bounded formula to one with more bound variables. -/
-@[simp]
-def castLE : ∀ {m n : ℕ} (_h : m ≤ n), L.BoundedFormulaω α m → L.BoundedFormulaω α n
+@[expose, simp] def castLE : ∀ {m n : ℕ} (_h : m ≤ n), L.BoundedFormulaω α m → L.BoundedFormulaω α n
   | _, _, _, falsum => falsum
   | _, _, h, equal t₁ t₂ =>
     equal (t₁.relabel (Sum.map id (Fin.castLE h))) (t₂.relabel (Sum.map id (Fin.castLE h)))
@@ -123,6 +122,7 @@ def relabelAux (g : α → β ⊕ Fin n) (k : ℕ) : α ⊕ Fin k → β ⊕ Fin
   Sum.map id finSumFinEquiv ∘ Equiv.sumAssoc _ _ _ ∘ Sum.map g id
 
 /-- Relabels a bounded formula's free variables. -/
+@[expose]
 def relabel (g : α → β ⊕ Fin n) : ∀ {k}, L.BoundedFormulaω α k → L.BoundedFormulaω β (n + k)
   | _, falsum => falsum
   | _, equal t₁ t₂ => equal (t₁.relabel (relabelAux g _)) (t₂.relabel (relabelAux g _))
@@ -254,7 +254,7 @@ theorem realize_relabel_sumInr_zero {n : ℕ} (φ : L.Formulaω (Fin n)) (xs : F
   exact h
 
 /-- Substitutes the free variables in a bounded formula with terms. -/
-def subst : ∀ {n : ℕ}, L.BoundedFormulaω α n → (α → L.Term β) → L.BoundedFormulaω β n
+@[expose] def subst : ∀ {n : ℕ}, L.BoundedFormulaω α n → (α → L.Term β) → L.BoundedFormulaω β n
   | _, falsum, _ => falsum
   | _, equal t₁ t₂, tf =>
     equal (t₁.subst (Sum.elim (Term.relabel Sum.inl ∘ tf) (Term.var ∘ Sum.inr)))
@@ -310,7 +310,7 @@ the bound variables `Fin n` become the only variables, now treated as free.
 
 For the `all` case, the last free variable is re-bound using `relabel` with
 `insertLastBound`. -/
-def openBounds : ∀ {n : ℕ}, L.BoundedFormulaω Empty n → L.Formulaω (Fin n)
+@[expose] def openBounds : ∀ {n : ℕ}, L.BoundedFormulaω Empty n → L.Formulaω (Fin n)
   | _, .falsum => .falsum
   | _, .equal t₁ t₂ =>
     .equal (t₁.relabel (Sum.elim Empty.elim Sum.inl))
@@ -335,7 +335,7 @@ def openBounds : ∀ {n : ℕ}, L.BoundedFormulaω Empty n → L.Formulaω (Fin 
 This maps function and relation symbols in the formula using the language homomorphism,
 while preserving the variable structure. It is the Lω₁ω analogue of Mathlib's
 `LHom.onBoundedFormula`. -/
-def mapLanguage {L' : Language.{u, v}} (g : L →ᴸ L') :
+@[expose] def mapLanguage {L' : Language.{u, v}} (g : L →ᴸ L') :
     ∀ {n}, L.BoundedFormulaω α n → L'.BoundedFormulaω α n
   | _, falsum => falsum
   | _, equal t₁ t₂ => equal (g.onTerm t₁) (g.onTerm t₂)

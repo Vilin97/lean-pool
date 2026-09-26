@@ -18,7 +18,7 @@ The activation integrates damped genuine reference derivatives. Error factors
 are constructed from the flat primitive integral, never supplied as input.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,11 +36,11 @@ noncomputable def logDomain (J : Set ℝ) (hJ : IsOpen J) : RadialDomain where
   scale_mem := fun _ hp _ _ => ⟨mem_univ _, hp.2⟩
 
 /-- Activation, given by `(1 - κ) * OutgoingSchedule.sigma (y / T)`. -/
-noncomputable def activation (T κ y : ℝ) : ℝ :=
+@[expose] noncomputable def activation (T κ y : ℝ) : ℝ :=
   (1 - κ) * OutgoingSchedule.sigma (y / T)
 
 /-- Damping, given by `1 - activation T κ y`. -/
-noncomputable def damping (T κ y : ℝ) : ℝ := 1 - activation T κ y
+@[expose] noncomputable def damping (T κ y : ℝ) : ℝ := 1 - activation T κ y
 
 theorem activation_smooth (T κ : ℝ) : ContDiff ℝ ∞ (activation T κ) :=
   contDiff_const.mul (OutgoingSchedule.sigma_contDiff.comp (contDiff_id.div_const T))
@@ -71,11 +71,11 @@ theorem activation_zero {T : ℝ} (hT : 0 < T) (κ : ℝ) {y : ℝ} (hy : y ≤ 
     (div_nonpos_of_nonpos_of_nonneg hy hT.le)]
 
 /-- Weighted field, defined pointwise by `activation T κ p.1 * B p`. -/
-noncomputable def weightedField (T κ : ℝ) (B : Field) : Field :=
+@[expose] noncomputable def weightedField (T κ : ℝ) (B : Field) : Field :=
   fun p => activation T κ p.1 * B p
 
 /-- Weighted primitive, given by `primitive (weightedField T κ B)`. -/
-noncomputable def weightedPrimitive (T κ : ℝ) (B : Field) : Field :=
+@[expose] noncomputable def weightedPrimitive (T κ : ℝ) (B : Field) : Field :=
   primitive (weightedField T κ B)
 
 theorem weightedField_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {B : Field}
@@ -107,7 +107,7 @@ theorem weightedPrimitive_zero {T : ℝ} (hT : 0 < T) (κ : ℝ) (B : Field)
     _ = 0 := by simp
 
 /-- Direct integration of the reference derivative times the prescribed damping. -/
-noncomputable def controlled (T κ : ℝ) (F : Field) : Field := fun p =>
+@[expose] noncomputable def controlled (T κ : ℝ) (F : Field) : Field := fun p =>
   F (0, p.2) + primitive (fun q => damping T κ q.1 * radialPartial F q) p
 
 theorem controlled_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {F : Field}
@@ -234,7 +234,7 @@ noncomputable def flatCoefficient (T : ℝ) (B : Field) (q : ℝ × ℝ) : ℝ :
   B (q.2, q.1) / stepDenominator T q.2
 
 /-- Division by `y e_a` is implemented by a smooth transformed integral. -/
-noncomputable def primitiveFactor (T : ℝ) (B : Field) (p : Point) : ℝ :=
+@[expose] noncomputable def primitiveFactor (T : ℝ) (B : Field) (p : Point) : ℝ :=
   p.1 ^ 2 * stepDenominator T p.1 *
     ParametricFlatFactor.factor (T ^ 2) 0 (flatCoefficient T B) (p.2, p.1)
 
@@ -331,14 +331,14 @@ theorem exp_sub_one (x : ℝ) : Real.exp x - 1 = x * meanExp x := by
     _ = _ := primitive_eq_mul_average _ _
 
 /-- Reference angular, defined pointwise by `Real.exp (L p)`. -/
-noncomputable def referenceAngular (L : Field) : Field := fun p => Real.exp (L p)
+@[expose] noncomputable def referenceAngular (L : Field) : Field := fun p => Real.exp (L p)
 /-- Activated angular, defined pointwise by `Real.exp (controlled T κ L p)`. -/
-noncomputable def activatedAngular (T κ : ℝ) (L : Field) : Field :=
+@[expose] noncomputable def activatedAngular (T κ : ℝ) (L : Field) : Field :=
   fun p => Real.exp (controlled T κ L p)
 /-- Reference P1, defined pointwise by `-2 * radialPartial L p`. -/
-noncomputable def referenceP1 (L : Field) : Field := fun p => -2 * radialPartial L p
+@[expose] noncomputable def referenceP1 (L : Field) : Field := fun p => -2 * radialPartial L p
 /-- Radius, given by `X0 * Real.exp y`. -/
-noncomputable def radius (X0 y : ℝ) : ℝ := X0 * Real.exp y
+@[expose] noncomputable def radius (X0 y : ℝ) : ℝ := X0 * Real.exp y
 /-- Reference ns, defined pointwise by `-2 * radialPartial U p / radius X0 p.1`. -/
 noncomputable def referenceNs (X0 : ℝ) (U : Field) : Field :=
   fun p => -2 * radialPartial U p / radius X0 p.1
@@ -571,7 +571,7 @@ inductive HistoryRow
   | mass | angular | transport | energy | pressure
 
 /-- These are the integrands used by `ProfileHistories.Profiles`. -/
-noncomputable def radialDensity : HistoryRow → ℝ → ℝ → ℝ → ℝ
+@[expose] noncomputable def radialDensity : HistoryRow → ℝ → ℝ → ℝ → ℝ
   | .mass, _, _, u => u
   | .angular, x, f, _ => 2 * x * f
   | .transport, x, f, u => u * (2 * x * f)
@@ -583,7 +583,7 @@ noncomputable def logDensity (X0 : ℝ) (f U : Field) (r : HistoryRow) : Field :
   fun p => radius X0 p.1 * radialDensity r (radius X0 p.1) (f p) (U p)
 
 /-- The initial row values are shared; every subsequent value is recomputed. -/
-noncomputable def logHistory (X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
+@[expose] noncomputable def logHistory (X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
     (f U : Field) (r : HistoryRow) : Field :=
   fun p => initial r p.2 + primitive (logDensity X0 f U r) p
 
@@ -836,12 +836,12 @@ theorem history_parameter_jet_bounds {T : ℝ} (hT : 0 < T) (X0 : ℝ)
 /-! ## Identification with the physical `ProfileHistories` integrals -/
 
 /-- Profile density, defined pointwise by `radialDensity r p.1 (P.f p) (P.U p)`. -/
-noncomputable def profileDensity {D : RadialDomain} (P : Profiles D)
+@[expose] noncomputable def profileDensity {D : RadialDomain} (P : Profiles D)
     (r : HistoryRow) : Field := fun p => radialDensity r p.1 (P.f p) (P.U p)
 
 /-- Profile history as an element of `HistoryRow → Field | .mass => P.M | .angular => P.I |
 .transport => P.J | .energy => P.S | .pressure => P.pressure`. -/
-noncomputable def profileHistory {D : RadialDomain} (P : Profiles D) : HistoryRow → Field
+@[expose] noncomputable def profileHistory {D : RadialDomain} (P : Profiles D) : HistoryRow → Field
   | .mass => P.M
   | .angular => P.I
   | .transport => P.J
@@ -850,7 +850,7 @@ noncomputable def profileHistory {D : RadialDomain} (P : Profiles D) : HistoryRo
 
 /-- Profile initial as an element of `HistoryRow → ℝ → ℝ | .pressure => P.pressure0 | _ => fun _
 => 0`. -/
-noncomputable def profileInitial {D : RadialDomain} (P : Profiles D) : HistoryRow → ℝ → ℝ
+@[expose] noncomputable def profileInitial {D : RadialDomain} (P : Profiles D) : HistoryRow → ℝ → ℝ
   | .pressure => P.pressure0
   | _ => fun _ => 0
 
@@ -962,9 +962,9 @@ open ReferencePath
 variable (N : ReferencePath.Input)
 
 /-- Ref log, given by `ReferencePath.continuation δ N.logF`. -/
-noncomputable def refLog (δ : ℝ) : Field := ReferencePath.continuation δ N.logF
+@[expose] noncomputable def refLog (δ : ℝ) : Field := ReferencePath.continuation δ N.logF
 /-- Ref axial, given by `ReferencePath.continuation δ N.logU`. -/
-noncomputable def refAxial (δ : ℝ) : Field := ReferencePath.continuation δ N.logU
+@[expose] noncomputable def refAxial (δ : ℝ) : Field := ReferencePath.continuation δ N.logU
 
 theorem refLog_smooth {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit) :
     ContDiffOn ℝ ∞ (refLog N δ) (logDomain parameterInterval parameterInterval_open).carrier :=
@@ -976,13 +976,13 @@ theorem refAxial_smooth {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit) :
 
 /-- F, defined pointwise by `if p.1 ≤ N.endpoint then N.refF δ p else activatedAngular T κ
 (refLog N δ) (N.logTime p.1, p.2)`. -/
-noncomputable def f (T κ δ : ℝ) : Field := fun p =>
+@[expose] noncomputable def f (T κ δ : ℝ) : Field := fun p =>
   if p.1 ≤ N.endpoint then N.refF δ p else
     activatedAngular T κ (refLog N δ) (N.logTime p.1, p.2)
 
 /-- U, defined pointwise by `if p.1 ≤ N.endpoint then N.refU δ p else controlled T κ (refAxial N
 δ) (N.logTime p.1, p.2)`. -/
-noncomputable def U (T κ δ : ℝ) : Field := fun p =>
+@[expose] noncomputable def U (T κ δ : ℝ) : Field := fun p =>
   if p.1 ≤ N.endpoint then N.refU δ p else
     controlled T κ (refAxial N δ) (N.logTime p.1, p.2)
 
@@ -1216,11 +1216,11 @@ end FromReference
 /-! ## Exact shear identities and cancellation of the common damping -/
 
 /-- Actual P1, given by `-2 * deriv (fun y => Real.log (activatedAngular T κ L (y, p.2))) p.1`. -/
-noncomputable def actualP1 (T κ : ℝ) (L : Field) (p : Point) : ℝ :=
+@[expose] noncomputable def actualP1 (T κ : ℝ) (L : Field) (p : Point) : ℝ :=
   -2 * deriv (fun y => Real.log (activatedAngular T κ L (y, p.2))) p.1
 
 /-- Velocity, given by `Real.sqrt (2 * radius X0 p.1) * f p`. -/
-noncomputable def velocity (X0 : ℝ) (f : Field) (p : Point) : ℝ :=
+@[expose] noncomputable def velocity (X0 : ℝ) (f : Field) (p : Point) : ℝ :=
   Real.sqrt (2 * radius X0 p.1) * f p
 
 /-- Reference P2, given by `-2 * radialPartial U p / velocity X0 (referenceAngular L) p`. -/
@@ -1229,7 +1229,7 @@ noncomputable def referenceP2 (X0 : ℝ) (L U : Field) (p : Point) : ℝ :=
 
 /-- Actual P2, given by `-2 * deriv (fun y => controlled T κ U (y, p.2)) p.1 / velocity X0
 (activatedAngular T κ L) p`. -/
-noncomputable def actualP2 (T κ X0 : ℝ) (L U : Field) (p : Point) : ℝ :=
+@[expose] noncomputable def actualP2 (T κ X0 : ℝ) (L U : Field) (p : Point) : ℝ :=
   -2 * deriv (fun y => controlled T κ U (y, p.2)) p.1 /
     velocity X0 (activatedAngular T κ L) p
 
@@ -1238,11 +1238,11 @@ noncomputable def shearSlope (T κ X0 : ℝ) (L U : Field) (p : Point) : ℝ :=
   actualP2 T κ X0 L U p / actualP1 T κ L p
 
 /-- Shear size, given by `actualP1 T κ L p + actualP2 T κ X0 L U p ^ 2 / actualP1 T κ L p`. -/
-noncomputable def shearSize (T κ X0 : ℝ) (L U : Field) (p : Point) : ℝ :=
+@[expose] noncomputable def shearSize (T κ X0 : ℝ) (L U : Field) (p : Point) : ℝ :=
   actualP1 T κ L p + actualP2 T κ X0 L U p ^ 2 / actualP1 T κ L p
 
 /-- Reference size, given by `referenceP1 L p + referenceP2 X0 L U p ^ 2 / referenceP1 L p`. -/
-noncomputable def referenceSize (X0 : ℝ) (L U : Field) (p : Point) : ℝ :=
+@[expose] noncomputable def referenceSize (X0 : ℝ) (L U : Field) (p : Point) : ℝ :=
   referenceP1 L p + referenceP2 X0 L U p ^ 2 / referenceP1 L p
 
 theorem damping_ge (T κ y : ℝ) (hκ : κ ≤ 1) : κ ≤ damping T κ y := by

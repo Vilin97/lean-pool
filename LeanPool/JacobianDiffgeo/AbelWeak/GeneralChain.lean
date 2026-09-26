@@ -38,7 +38,7 @@ THREE points (`M 0`, `M m`, `M (m+1)`, with the possible coincidences `M 0 = M m
 off-`U` value if `P ∉ U`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set Filter Topology

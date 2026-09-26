@@ -22,7 +22,7 @@ duplicated subsegment is named once (`lem:polygonal-overlay`).
 * `polygonal_overlay` — Lemma 3.7 (polygonal overlay).
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -130,7 +130,7 @@ segment's ends are determined by its point set is a theorem this development doe
 does not need. -/
 
 /-- Where two pieces meet. -/
-def meetOf (P Q : Piece) : Set Plane := P.seg ∩ Q.seg
+@[expose] def meetOf (P Q : Piece) : Set Plane := P.seg ∩ Q.seg
 
 theorem meetOf_comm (P Q : Piece) : meetOf P Q = meetOf Q P := inter_comm _ _
 

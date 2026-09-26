@@ -13,7 +13,7 @@ public import Mathlib.RingTheory.TensorProduct.Basic
 This file restores an upstream tensor-product associator over mixed scalar towers.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 

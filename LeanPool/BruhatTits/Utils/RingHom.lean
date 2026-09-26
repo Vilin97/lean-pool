@@ -11,7 +11,7 @@ public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 # LeanPool.BruhatTits.Utils.RingHom
 -/
 
-@[expose] public section
+public section
 
 open Module
 
@@ -21,7 +21,7 @@ variable {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S)
 -- all in Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs.lean
 -- for some reason `Units.map f.mapMatrix` does not work.
 /-- Map an element of `GL` along a ring homomorphism. -/
-def GL.map {α : Type*} [DecidableEq α] [Fintype α] (g : GL α R) : GL α S where
+@[expose] def GL.map {α : Type*} [DecidableEq α] [Fintype α] (g : GL α R) : GL α S where
   val := f.mapMatrix g
   inv := f.mapMatrix g.inv
   val_inv := by rw [← map_mul]; simp

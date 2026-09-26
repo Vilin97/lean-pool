@@ -24,7 +24,7 @@ Both were previously proved inside `Scott/Formula.lean` and `Methods/Henkin/Cons
 respectively; the statements and names are unchanged.
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 

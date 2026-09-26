@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
 /-! Canonical smooth pointwise representatives of any genuine all-order
 field tower. All spatial regularity follows from its actual Sobolev jets. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

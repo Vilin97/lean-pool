@@ -23,7 +23,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.ToSecond`.
 -/
 
-@[expose] public section
+public section
 
 suppress_compilation
 
@@ -1048,7 +1048,7 @@ lemma fromSnd_toSnd : (fromSnd F K ∘ (H2Iso (galAct F K)).hom) ∘ toSnd = id 
         simp [-GoodRep.conjFactor_prop]
 
 /-- The equivalence between the relative Brauer group and second Galois cohomology. -/
-@[simp]
+@[expose, simp]
 def equivSnd : RelativeBrGroup K F ≃ H2 (galAct F K) where
   toFun := toSnd
   invFun := (fromSnd F K ∘ (H2Iso (galAct F K)).hom)

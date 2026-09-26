@@ -37,7 +37,7 @@ average-degree walk-count lower bound.
   i.e. `Λ ≥ (D − n)/n = d_avg − 1`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

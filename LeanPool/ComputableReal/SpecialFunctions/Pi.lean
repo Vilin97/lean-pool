@@ -21,7 +21,7 @@ go through the `noncomputable` square-root sequences, so `Pi` and the derived
 bounds `piLb`/`piUb` are `noncomputable` Lean terms.
 -/
 
-@[expose] public section
+public section
 
 open scoped QInterval
 

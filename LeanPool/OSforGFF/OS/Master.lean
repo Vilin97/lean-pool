@@ -33,7 +33,7 @@ Assembles OS0–OS4 into `gaussianFreeField_satisfies_all_OS_axioms`:
 Unconditional theorem: only requires m > 0.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

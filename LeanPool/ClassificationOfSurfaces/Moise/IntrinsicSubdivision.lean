@@ -18,7 +18,7 @@ subdivision induces a faithful intrinsic subdivision through the barycentric rea
 homeomorphisms.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

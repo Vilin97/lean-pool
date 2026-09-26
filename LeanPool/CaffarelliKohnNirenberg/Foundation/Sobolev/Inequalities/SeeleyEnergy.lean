@@ -17,7 +17,7 @@ nonnegative extended-valued integrands, so no auxiliary measurability
 assumptions are needed at this stage.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal
@@ -29,7 +29,7 @@ noncomputable section
 attribute [local instance] Classical.propDecidable
 
 /-- The part of the closed annulus lying in the outer unit-ball shell. -/
-def seeleyOuterAnnulus : Set (Vec 3) :=
+@[expose] def seeleyOuterAnnulus : Set (Vec 3) :=
   {x | 1 < vecEuclideanNorm x ∧ vecEuclideanNorm x < 2}
 
 theorem seeleyOuterAnnulus_subset_closedAnnulus :

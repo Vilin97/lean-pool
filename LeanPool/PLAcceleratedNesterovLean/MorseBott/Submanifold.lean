@@ -66,7 +66,7 @@ where ∇f(x) ∈ E is the Riesz representative of Df(x) ∈ E*.
   `ImplicitFunctionData`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Submodule Asymptotics
 

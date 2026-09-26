@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePrimitiveBounds
 /-! Reusable bounds for the actual parameters entering the canonical
 correction. They all use the same fixed polynomial envelope. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

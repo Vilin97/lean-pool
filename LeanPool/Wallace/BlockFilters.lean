@@ -26,7 +26,7 @@ abstract in the finite blocks: the later scheduling module only has to provide n
 which eventually avoid every finite set and a deletion bound whose relative size tends to zero.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 open scoped Topology
@@ -323,7 +323,7 @@ namespace BlockSystem
 
 /-- The points retained after deleting `E l` from every block whose label belongs to `b`.
 This is exactly the set `U_α` in equation (retained) of the paper. -/
-def retainedBlocks (B : BlockSystem) (b : Set ℕ) (E : ℕ → Finset ℕ) : Set ℕ :=
+@[expose] def retainedBlocks (B : BlockSystem) (b : Set ℕ) (E : ℕ → Finset ℕ) : Set ℕ :=
   ⋃ l ∈ b, ↑(B.block l \ E l)
 
 /-- On a retained label, every point missing from the retained union lies in the

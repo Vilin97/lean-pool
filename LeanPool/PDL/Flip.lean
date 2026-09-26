@@ -18,7 +18,7 @@ For the case where the loaded formula is on the left, we flip the tableau left-t
 The lemmas here then allow us to prove `clusterInterpolation` from `clusterInterpolationRight`.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -37,7 +37,7 @@ lemma Olf.flip_flip {O : Olf} : O.flip.flip = O := by
 lemma Olf.flip_none : Olf.flip none = none := by simp [Olf.flip]
 
 /-- Exchange both sequent components and the side of its loaded formula. -/
-def Sequent.flip : Sequent → Sequent := fun ⟨L, R, O⟩ => ⟨R, L, O.flip⟩
+@[expose] def Sequent.flip : Sequent → Sequent := fun ⟨L, R, O⟩ => ⟨R, L, O.flip⟩
 
 @[simp]
 lemma Sequent.flip_right {X : Sequent} : X.flip.right = X.left := by

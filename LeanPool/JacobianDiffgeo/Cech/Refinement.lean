@@ -25,7 +25,7 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.4, proof plans §6.4
 (sheaf-axiom gluing argument via `injPatch`/`exists_injGlue`, no analysis).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

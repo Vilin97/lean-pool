@@ -25,7 +25,7 @@ form of the weak partial derivative, so that a smooth `ψ` may be differentiated
 inside the pairing.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric
 open scoped Convolution Topology

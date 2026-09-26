@@ -22,7 +22,7 @@ These prove that the paradigms are genuinely different —
 the criteria do NOT imply each other.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

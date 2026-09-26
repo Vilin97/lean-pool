@@ -32,7 +32,7 @@ own `mulInto` (built directly on `T D`/`TailAt p D` from this file) supersedes `
 is a genuine scope relief, not a shortfall.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace

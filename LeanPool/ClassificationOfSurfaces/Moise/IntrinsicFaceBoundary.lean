@@ -18,7 +18,7 @@ actually carry those three edges, resolves all their segments simultaneously, an
 resulting simple polygonal cycle.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

@@ -18,7 +18,7 @@ all iterates remain in the controlled region Ω and the Lyapunov function
 decays geometrically.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -19,7 +19,7 @@ import Mathlib.Topology.Separation.CompletelyRegular
 # LeanPool.SardMoreira.LebesgueDensity
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Set.Notation Pointwise
 open MeasureTheory Filter Set Function Metric Topology

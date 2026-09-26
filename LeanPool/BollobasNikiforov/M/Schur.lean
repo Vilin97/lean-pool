@@ -25,7 +25,7 @@ rows by `(F_E, 𝒰)`, the Schur complement of the first block is
 (paper (eq:Schur)).
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 open scoped Matrix

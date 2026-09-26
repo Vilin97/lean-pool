@@ -18,7 +18,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -27,7 +27,7 @@ open Complex MeasureTheory Set
 namespace NumberField.Odlyzko
 
 /-- A scaled tartar test function used in the Odlyzko-bound argument. -/
-noncomputable def scaledTartarTestFunction (y : ℝ) (x : ℝ) : ℝ :=
+@[expose] noncomputable def scaledTartarTestFunction (y : ℝ) (x : ℝ) : ℝ :=
   Tartar.testFunction (y * x)
 
 theorem scaledTartarTestFunction_nonneg (y x : ℝ) :
@@ -136,7 +136,7 @@ theorem poitouTransform_scaledTartar_one
     integral_scaledTartarTestFunction hy]
 
 /-- A poitou transform derivative integrand used in the Odlyzko-bound argument. -/
-noncomputable def poitouTransformDerivativeIntegrand
+@[expose] noncomputable def poitouTransformDerivativeIntegrand
     (f : ℝ → ℝ) (s : ℂ) (x : ℝ) : ℂ :=
   x * poitouTransformIntegrand f s x
 

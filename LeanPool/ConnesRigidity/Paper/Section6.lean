@@ -16,4 +16,4 @@ The section endpoint combines characteristic-kernel transport with the
 concrete nonsplit module obstruction.
 -/
 
-@[expose] public section
+public section

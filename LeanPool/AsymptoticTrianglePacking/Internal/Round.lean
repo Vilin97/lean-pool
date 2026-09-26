@@ -38,7 +38,7 @@ Definitions (`degree`, `IsUniform`, `IsMatching`, `support`) come from
 `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

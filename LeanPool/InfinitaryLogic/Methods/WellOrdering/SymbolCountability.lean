@@ -26,7 +26,7 @@ relation survives the restriction):
 the separate arbitrary-function-language graph translation, not this wrapper.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

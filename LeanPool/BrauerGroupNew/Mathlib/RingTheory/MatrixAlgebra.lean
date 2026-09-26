@@ -13,7 +13,7 @@ public import Mathlib.RingTheory.MatrixAlgebra
 This file restores an upstream matrix/tensor equivalence in the opposite direction.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 

@@ -16,7 +16,7 @@ import Mathlib.NumberTheory.ModularForms.QExpansion
 /-! # ResToImagAxis -/
 
 
-@[expose] public section
+public section
 
 open UpperHalfPlane hiding I
 
@@ -28,13 +28,13 @@ open scoped Interval Real Topology Manifold ModularForm MatrixGroups
 Restrict a function `F : ℍ → ℂ` to the positive imaginary axis, i.e. `t ↦ F (I * t)`.
 If $t \le 0$, then `F (I * t)` is not defined, and we return `0` in that case.
 -/
-noncomputable def ResToImagAxis (F : ℍ → ℂ) : ℝ → ℂ :=
+@[expose] noncomputable def ResToImagAxis (F : ℍ → ℂ) : ℝ → ℂ :=
   fun t => if ht : 0 < t then F ⟨(I * t), by simp [ht]⟩ else 0
 
 namespace Function
 
 /-- Dot notation alias for `ResToImagAxis`. -/
-noncomputable def resToImagAxis (F : ℍ → ℂ) : ℝ → ℂ := ResToImagAxis F
+@[expose] noncomputable def resToImagAxis (F : ℍ → ℂ) : ℝ → ℂ := ResToImagAxis F
 
 @[simp] lemma resToImagAxis_eq_resToImagAxis (F : ℍ → ℂ) :
     F.resToImagAxis = ResToImagAxis F := rfl

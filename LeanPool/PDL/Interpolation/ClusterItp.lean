@@ -18,7 +18,7 @@ This file continues the development of `Pdl.PreInterpolant` with
 Definition 10.2 and Lemma 10.3 are in `Pdl.ClusterRho`.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

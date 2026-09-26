@@ -18,7 +18,7 @@ They use Fourier inversion on Schwartz functions, without introducing an
 extension of the Fourier transform to all of `L²`.
 -/
 
-@[expose] public section
+public section
 
 
 

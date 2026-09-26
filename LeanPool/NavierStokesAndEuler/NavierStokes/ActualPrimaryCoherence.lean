@@ -18,7 +18,7 @@ The phase, coefficient, cutoff, and chart in this file are the actual
 curl correction and Gaussian term are transported on the whole free lift.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -145,9 +145,9 @@ noncomputable def absoluteRadial (x : Absolute) : Absolute :=
       radialVector), 0)
 
 /-- Absolute axial, given by `(((0,(1,0)),0),0)`. -/
-noncomputable def absoluteAxial (_ : Absolute) : Absolute := (((0,(1,0)),0),0)
+@[expose] noncomputable def absoluteAxial (_ : Absolute) : Absolute := (((0,(1,0)),0),0)
 /-- Absolute angular, given by `(0,1)`. -/
-noncomputable def absoluteAngular (_ : Absolute) : Absolute := (0,1)
+@[expose] noncomputable def absoluteAngular (_ : Absolute) : Absolute := (0,1)
 /-- Absolute fast, given by `(((0,(0,0)),temporalVector),0)`. -/
 noncomputable def absoluteFast (_ : Absolute) : Absolute := (((0,(0,0)),temporalVector),0)
 
@@ -256,11 +256,13 @@ theorem absoluteChart_fast (B n : ℕ) (x : ChartPoint) :
 variable {B N0 : ℕ}
 
 /-- Absolute cut amplitude, given by `periodicGaussian j L x.1.2 • absoluteAmplitude j L x.1`. -/
+@[expose]
 noncomputable def absoluteCutAmplitude (j : Fin 2) (L : Label B N0) (x : Absolute) : ComplexVector
     :=
   periodicGaussian j L x.1.2 • absoluteAmplitude j L x.1
 
 /-- Absolute exact amplitude, constructed using `CurlClassBounds.realizedCoefficient`. -/
+@[expose]
 noncomputable def absoluteExactAmplitude (j : Fin 2) (L : Label B N0) : Absolute → ComplexVector :=
   CurlClassBounds.realizedCoefficient 1 absoluteRadius absoluteRadial absoluteAngular absoluteAxial
     (absolutePhase j L) (absoluteCutAmplitude j L)
@@ -951,7 +953,7 @@ theorem realizedCoefficient_translate (w : E) (K : ℝ) {R Φ : E → ℝ}
 end PeriodicCalculus
 
 /-- Chart deck, given by `((0, ((0,0), TorusAverages.latticePoint k)),0)`. -/
-noncomputable def chartDeck (k : TorusInverse.Frequency) : ChartPoint :=
+@[expose] noncomputable def chartDeck (k : TorusInverse.Frequency) : ChartPoint :=
   ((0, ((0,0), TorusAverages.latticePoint k)),0)
 
 theorem native_copy_sum_periodic {E : Type} [NormedAddCommGroup E]
@@ -1733,7 +1735,7 @@ theorem physicalAmplitude_eq (j : Fin 2) (L : Label B N0) (n : ℕ)
   rfl
 
 /-- Physical angular, given by `(0,ProblemStatement.coordinateVector 1)`. -/
-noncomputable def physicalAngular : ProblemStatement.SpaceTime :=
+@[expose] noncomputable def physicalAngular : ProblemStatement.SpaceTime :=
   (0,ProblemStatement.coordinateVector 1)
 
 theorem physicalLift_angular (z : ProblemStatement.SpaceTime) (s : ℝ) :

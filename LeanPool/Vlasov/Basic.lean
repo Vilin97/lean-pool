@@ -38,7 +38,7 @@ mean-field theory of the Vlasov equation:
 `(tex: …)` labels cross-reference the companion LaTeX paper.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 
@@ -251,7 +251,7 @@ lemma empiricalMeasure_isProbabilityMeasure (N : ℕ) [NeZero N]
 
 /-- (tex: def:empirical)
 The time-dependent empirical measure μ_t^N along a solution of eq:newton. -/
-noncomputable def empiricalMeasureCurve (N : ℕ) (X V : ℝ → Fin N → PhysSpace d) :
+@[expose] noncomputable def empiricalMeasureCurve (N : ℕ) (X V : ℝ → Fin N → PhysSpace d) :
     ℝ → Measure (PhaseSpace d) :=
   fun t => empiricalMeasure N (X t) (V t)
 
@@ -264,12 +264,12 @@ noncomputable def empiricalMeasureCurve (N : ℕ) (X V : ℝ → Fin N → PhysS
 /-- Convolution of a function k : ℝ^d → ℝ^d with a (finite) measure ρ on ℝ^d:
   (k * ρ)(x) := ∫ k(x − y) dρ(y).
 -/
-noncomputable def convolveFunctionMeasure (k : PhysSpace d → PhysSpace d)
+@[expose] noncomputable def convolveFunctionMeasure (k : PhysSpace d → PhysSpace d)
     (ρ : Measure (PhysSpace d)) (x : PhysSpace d) : PhysSpace d :=
   ∫ y, k (x - y) ∂ρ
 
 /-- Spatial marginal of a measure on phase space. -/
-noncomputable def spatialMarginal (μ : Measure (PhaseSpace d)) :
+@[expose] noncomputable def spatialMarginal (μ : Measure (PhaseSpace d)) :
     Measure (PhysSpace d) :=
   Measure.map Prod.fst μ
 
@@ -757,7 +757,7 @@ for every φ ∈ C_c^∞(ℝ^d × ℝ^d), with |R_N(t)| ≤ (1/N) ‖∇W‖_∞
 
 This is a `Prop`-valued definition packaging the statement of eq:weak-eq.
 -/
-def WeakEvolutionEq (gradW : PhysSpace d → PhysSpace d)
+@[expose] def WeakEvolutionEq (gradW : PhysSpace d → PhysSpace d)
     (μ : ℝ → Measure (PhaseSpace d))
     (φ : PhaseSpace d → ℝ)
     (gradXφ gradVφ : PhaseSpace d → PhysSpace d)
@@ -834,7 +834,7 @@ the map t ↦ ∫ φ df_t satisfies
 
   d/dt ∫ φ df_t = ∫ [v · ∇_x φ − (∇W * ρ_t)(x) · ∇_v φ] df_t.
 -/
-def IsVlasovSolution (gradW : PhysSpace d → PhysSpace d)
+@[expose] def IsVlasovSolution (gradW : PhysSpace d → PhysSpace d)
     (f : ℝ → Measure (PhaseSpace d)) : Prop :=
   ∀ (φ : PhaseSpace d → ℝ),
     ContDiff ℝ (⊤ : ℕ∞) φ → HasCompactSupport φ →
@@ -873,7 +873,7 @@ theorem empiricalMeasure_isVlasovSolution
 -- condition on the norm.
 
 /-- Predicate: μ is a probability measure on PhaseSpace d with finite first moment. -/
-def HasFiniteFirstMoment (μ : Measure (PhaseSpace d)) : Prop :=
+@[expose] def HasFiniteFirstMoment (μ : Measure (PhaseSpace d)) : Prop :=
   IsProbabilityMeasure μ ∧ Integrable (fun z : PhaseSpace d => ‖z‖) μ
 
 omit [NeZero d] in
@@ -924,7 +924,7 @@ is the characteristic flow associated to a given curve of spatial marginal measu
 The self-consistent condition (ρ_t is the pushforward of f_0 under X(t, ·)) is
 captured by `IsCharacteristicFlowSelfConsistent`.
 -/
-def IsCharacteristicFlow
+@[expose] def IsCharacteristicFlow
     (gradW : PhysSpace d → PhysSpace d)
     (ρ : ℝ → Measure (PhysSpace d))
     (charX charV : ℝ → PhaseSpace d → PhysSpace d) : Prop :=
@@ -939,7 +939,7 @@ def IsCharacteristicFlow
 /-- (tex: eq:char)
 The self-consistency condition: the spatial marginal ρ_t equals the pushforward
 of the initial spatial marginal f₀_x under the position map X(t, ·). -/
-def IsCharacteristicFlowSelfConsistent
+@[expose] def IsCharacteristicFlowSelfConsistent
     (charX : ℝ → PhaseSpace d → PhysSpace d)
     (f₀ : Measure (PhaseSpace d))
     (ρ : ℝ → Measure (PhysSpace d)) : Prop :=
@@ -948,7 +948,7 @@ def IsCharacteristicFlowSelfConsistent
 /-- (tex: eq:char)
 The Vlasov solution f_t is the pushforward of f_0 under the characteristic map
 (X(t,·), V(t,·)). -/
-noncomputable def vlasovSolutionViaPushforward
+@[expose] noncomputable def vlasovSolutionViaPushforward
     (charX charV : ℝ → PhaseSpace d → PhysSpace d)
     (f₀ : Measure (PhaseSpace d)) (t : ℝ) : Measure (PhaseSpace d) :=
   Measure.map (fun z => (charX t z, charV t z)) f₀
@@ -978,7 +978,7 @@ Producers:
     conclusion costs no extra infrastructure.
 
 `IsLagrangianVlasovSolution gradW f → IsVlasovSolution gradW f` by `.1`. -/
-def IsLagrangianVlasovSolution (gradW : PhysSpace d → PhysSpace d)
+@[expose] def IsLagrangianVlasovSolution (gradW : PhysSpace d → PhysSpace d)
     (f : ℝ → Measure (PhaseSpace d)) : Prop :=
   IsVlasovSolution gradW f ∧
   ∃ charX charV : ℝ → PhaseSpace d → PhysSpace d,

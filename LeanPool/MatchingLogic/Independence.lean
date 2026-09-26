@@ -41,7 +41,7 @@ import Mathlib.Data.Set.Lattice.Order
 # MatchingLogic.Independence
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

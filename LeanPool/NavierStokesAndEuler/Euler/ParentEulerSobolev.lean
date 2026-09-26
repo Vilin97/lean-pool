@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothEulerEvolution
 order. Strong time evolution follows from their classical Euler equation
 and continuous L² jets, including both endpoint derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

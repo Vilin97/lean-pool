@@ -32,7 +32,7 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.7).
 is proved in `SixTerm.lean`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

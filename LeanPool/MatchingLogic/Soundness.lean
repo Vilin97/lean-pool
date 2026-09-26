@@ -25,7 +25,7 @@ import Mathlib.Data.Set.BooleanAlgebra
 # MatchingLogic.Soundness
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

@@ -13,7 +13,7 @@ import Mathlib.Tactic.SetLike
 
 /-! # Graph -/
 
-@[expose] public section
+public section
 
 
 namespace Function

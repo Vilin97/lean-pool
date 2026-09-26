@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-! Norm-one coefficient constructions used by the actual slow and fast packet terms. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

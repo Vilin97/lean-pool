@@ -16,7 +16,7 @@ import LeanPool.Monlib4.Preq.RCLikeLe
 Compatibility wrappers for the part of Monlib's matrix-positive API now covered by Mathlib.
 -/
 
-@[expose] public section
+public section
 
 namespace Matrix
 

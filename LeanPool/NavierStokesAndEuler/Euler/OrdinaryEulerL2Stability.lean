@@ -17,7 +17,7 @@ and the entire transport term cancel before estimating the remaining
 reference-gradient term.  All time derivatives are genuine one-sided
 derivatives at the endpoints. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -82,7 +82,7 @@ def velocityPath (U : Evolution T hT) : C(Icc (0 : ℝ) T,L2) :=
   simp only [velocityPath,ordinaryWordPath_apply,wordField_zero]
 
 /-- L2 energy path as an element of `C(Icc (0 : ℝ) T,ℝ)`. -/
-def l2EnergyPath (U V : Evolution T hT) : C(Icc (0 : ℝ) T,ℝ) :=
+@[expose] def l2EnergyPath (U V : Evolution T hT) : C(Icc (0 : ℝ) T,ℝ) :=
   ⟨fun t => ‖(U.difference V t).toLp‖^2,by
     have h := (ordinaryWordPath (U.difference V) (U.difference_continuous V)
       (Fin.elim0 : Fin 0 → Fin 3)).continuous

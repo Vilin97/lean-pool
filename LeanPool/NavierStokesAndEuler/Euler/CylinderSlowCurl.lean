@@ -25,7 +25,7 @@ section
 
 /-! Coordinate realization of the actual slow curl and its bounded coefficients. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -165,7 +165,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -223,7 +223,7 @@ variable
   (p : C(K, LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
 /-- Term, given by `fullMultiplierMap P (curlCoefficientPath i G) (derivativePath P p i.succ)`. -/
-def term (i : Fin 3) : C(K,LiftL2 P) :=
+@[expose] def term (i : Fin 3) : C(K,LiftL2 P) :=
   fullMultiplierMap P (curlCoefficientPath i G) (derivativePath P p i.succ)
 
 include hG hp in
@@ -233,7 +233,7 @@ theorem term_orbit (i : Fin 3) :
     (derivativePath P p i.succ) (derivativePath_orbit P p hp i.succ)
 
 /-- Path, given by `∑ i : Fin 3, term P G p i`. -/
-def path : C(K,LiftL2 P) := ∑ i : Fin 3, term P G p i
+@[expose] def path : C(K,LiftL2 P) := ∑ i : Fin 3, term P G p i
 
 include hG hp in
 theorem path_orbit :

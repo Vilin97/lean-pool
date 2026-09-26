@@ -20,7 +20,7 @@ dimension.  This module exposes its unconditional ideal-theoretic and
 representative-level consequences.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators Topology

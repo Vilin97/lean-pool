@@ -24,7 +24,7 @@ import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
 /-! # Vorspiel -/
 
-@[expose] public section
+public section
 
 
 namespace Nat
@@ -266,7 +266,7 @@ lemma getM_pure [LawfulMonad m] {n} {β : Fin n → Type u} (v : (i : Fin n) →
     getM (fun i => (some (v i) : Option (β i))) = some v := getM_pure v
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def appendr {n m} (v : Fin n → α) (w : Fin m → α) : Fin (m + n) → α :=
+@[expose] def appendr {n m} (v : Fin n → α) (w : Fin m → α) : Fin (m + n) → α :=
   Matrix.vecAppend (add_comm m n) v w
 
 @[simp] lemma appendr_nil {m} (w : Fin m → α) : appendr ![] w = w := by funext i; simp [appendr]
@@ -278,7 +278,7 @@ def appendr {n m} (v : Fin n → α) (w : Fin m → α) : Fin (m + n) → α :=
 section «lp_section_3»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def vecToNat : {n : ℕ} → (Fin n → ℕ) → ℕ
+@[expose] def vecToNat : {n : ℕ} → (Fin n → ℕ) → ℕ
   | 0,     _ => 0
   | _ + 1, v => Nat.pair (v 0) (vecToNat <| v ∘ Fin.succ) + 1
 

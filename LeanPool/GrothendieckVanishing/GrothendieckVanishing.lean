@@ -30,7 +30,7 @@ The dimension-zero base case is proved here; the positive-dimensional irreducibl
 lives in `IrreducibleStep.lean`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

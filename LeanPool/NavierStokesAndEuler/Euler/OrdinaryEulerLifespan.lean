@@ -22,7 +22,7 @@ Euler solutions are rescaled to a common interval; the already proved
 smooth limit supplies the endpoint, and uniqueness identifies it with
 every original partial solution. No analytic radius is assumed. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -124,7 +124,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

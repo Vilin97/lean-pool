@@ -102,7 +102,7 @@ have to add the field.
   combinatorial half `Graph.CrosscutExists`.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Set
 

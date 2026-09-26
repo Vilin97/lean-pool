@@ -101,4 +101,4 @@ a finite-dimensional space).
   conditional equivalence as a hypothesis.
 -/
 
-@[expose] public section
+public section

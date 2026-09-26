@@ -15,7 +15,7 @@ public import Mathlib.Topology.Homotopy.Basic
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Compressible.Defs`.
 -/
 
-@[expose] public section
+public section
 
 
 open CategoryTheory unitInterval

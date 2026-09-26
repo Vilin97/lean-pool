@@ -22,7 +22,7 @@ regularity is inferred. Separate smoothness is not used as a substitute for
 joint smoothness.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

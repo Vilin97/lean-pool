@@ -31,7 +31,7 @@ The statement decomposes into the equality clause (`algConn_completeBipartite_tw
 and the universal upper-bound clause (`algConn_le_two_of_card`).
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

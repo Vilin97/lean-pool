@@ -17,7 +17,7 @@ support, and support-in-domain data, so future mathlib distribution/test-functio
 work has a single interface to refine.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

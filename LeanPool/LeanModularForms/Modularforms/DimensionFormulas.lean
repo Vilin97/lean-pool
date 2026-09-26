@@ -14,7 +14,7 @@ import Mathlib.Data.Rat.Star
 /-! # DimensionFormulas -/
 
 
-@[expose] public section
+public section
 
 open ModularForm hiding E₄ E₆
 open LevelOneEisenstein

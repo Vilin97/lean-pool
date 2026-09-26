@@ -22,7 +22,7 @@ section
 polynomial in the parent labels and reciprocal history length. The good
 interval keeps its absolute size constant. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -271,7 +271,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

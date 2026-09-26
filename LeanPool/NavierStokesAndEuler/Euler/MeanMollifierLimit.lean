@@ -23,7 +23,7 @@ section
 
 /-! Actual compact mollification on R³ is smooth and contractive on scalar L². -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -121,7 +121,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -24,7 +24,7 @@ Riemannian isometries and suitable for building `L²(M)` once finiteness propert
   Hausdorff measure `μH[dim]` on `M`, using the emetric structure induced by the Riemannian metric.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

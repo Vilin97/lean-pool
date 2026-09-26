@@ -24,7 +24,7 @@ search is split into kernel-checked chunks and decoded back to Mathlib's
 symplectic-matrix carrier for the public theorem used in Zhou §6.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace Sp4

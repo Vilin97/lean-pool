@@ -17,7 +17,7 @@ This file reconstructs function-level analytic quotients and polynomial
 remainders from the sequence-level division operators.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology

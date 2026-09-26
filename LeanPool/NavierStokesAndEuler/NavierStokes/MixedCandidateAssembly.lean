@@ -21,7 +21,7 @@ This is a conditional consumer. It does not construct the complete
 correction iteration or supply the finite-stage estimates it requires.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -121,7 +121,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
     (v : ModulatedProfileAssembly.Witness ld)
 
 /-- The actual anchored base and finite initialization share stage zero. -/
-noncomputable def potentialStages (upper : ℝ) (bandFloor : ℕ) {qbig : ℝ}
+@[expose] noncomputable def potentialStages (upper : ℝ) (bandFloor : ℕ) {qbig : ℝ}
     (initial : MixedAxisPreservation.PotentialStage.{u} F.data.h
       (MixedAxisPreservation.localDomain F.data.h qbig))
     (stages : ℕ → MixedAxisPreservation.PotentialStage.{u} F.data.h

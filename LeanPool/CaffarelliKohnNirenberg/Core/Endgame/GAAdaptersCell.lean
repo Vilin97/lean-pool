@@ -33,7 +33,7 @@ is itself a space-time product set, the domain hypothesis of `thm:A` does not
 imply the corresponding inclusion for any symmetric ball about the origin.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Metric
 open scoped ENNReal Topology

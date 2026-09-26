@@ -12,7 +12,7 @@ import LeanPool.DirectedTopologyLean4.MonotonePath
 # LeanPool.DirectedTopologyLean4.Constructions
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains constructions of directed spaces such as:

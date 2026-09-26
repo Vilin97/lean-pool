@@ -24,7 +24,7 @@ Main declarations: `RS.isOpen_coeffAt_ne_zero`, `RS.exists_coeffAt_ne_zero_notMe
 `RS.exists_genericPoints`, `RS.det_genericMatrix_ne_zero`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology IsManifold

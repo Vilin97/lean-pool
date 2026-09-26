@@ -14,7 +14,7 @@ This file verifies that the pair `(X.IProd.sk 0, X.IProd)` is homeomorphic to
 and `I` is the unit interval.
 -/
 
-@[expose] public section
+public section
 
 
 open CategoryTheory unitInterval TopCat

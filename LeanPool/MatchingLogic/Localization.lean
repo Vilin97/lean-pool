@@ -27,7 +27,7 @@ import Mathlib.Data.Set.Basic
 # MatchingLogic.Localization
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

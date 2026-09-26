@@ -45,4 +45,4 @@ dependency surface explicit so that the entry point does not pull in the whole
 Mathlib umbrella.
 -/
 
-@[expose] public section
+public section

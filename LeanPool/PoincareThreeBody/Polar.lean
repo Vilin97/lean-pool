@@ -18,7 +18,7 @@ the zero-mass Cartesian Hamiltonian to the rotating Kepler Hamiltonian. This is 
 change on the route to Delaunay action-angle variables.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
@@ -43,7 +43,7 @@ noncomputable def polarKeplerEnergy (state : PolarState) : ℝ :=
 
 /-- The squared radial momentum prescribed by a Kepler energy
 `-1 / (2 * firstAction²)` and angular momentum `secondAction`. -/
-noncomputable def delaunayRadialMomentumSq
+@[expose] noncomputable def delaunayRadialMomentumSq
     (radius firstAction secondAction : ℝ) : ℝ :=
   2 / radius - 1 / firstAction ^ 2 - secondAction ^ 2 / radius ^ 2
 

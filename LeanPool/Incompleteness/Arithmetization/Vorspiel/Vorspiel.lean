@@ -13,7 +13,7 @@ import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
 /-! # Vorspiel -/
 
-@[expose] public section
+public section
 
 
 instance [Zero α] : Nonempty α := ⟨0⟩

@@ -14,7 +14,7 @@ import LeanPool.MatchingLogic.EntryIII.Compactness
 # MatchingLogic.EntryIII.FiniteReduction
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

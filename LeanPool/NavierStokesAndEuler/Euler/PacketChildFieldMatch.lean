@@ -18,7 +18,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketExactEulerianField
 physical velocity gradient and scalar-pressure Hessian retain the
 normalized packet's size: neither receives a negative power of ell. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerLagrangian
 
 
 /-- Add velocity, given by `u x+ell • w (ell⁻¹ • x)`. -/
-def addVelocity (ell : ℝ) (u w : Space → Space) (x : Space) : Space :=
+@[expose] def addVelocity (ell : ℝ) (u w : Space → Space) (x : Space) : Space :=
   u x+ell • w (ell⁻¹ • x)
 
 /-- Add pressure, given by `p x+ell^2*q (ell⁻¹ • x)`. -/

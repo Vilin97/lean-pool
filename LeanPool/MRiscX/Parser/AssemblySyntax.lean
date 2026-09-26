@@ -13,7 +13,7 @@ public meta import Lean.Parser.Term
 This module provides the parser/grammar for MRiscX assembly syntax.
 -/
 
-@[expose] public section
+public section
 open Lean Parser
 /-
 In this file, we extend Lean by introducing a new term. This term allows

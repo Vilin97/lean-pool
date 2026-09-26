@@ -27,7 +27,7 @@ chart-subordinate cover determine a UNIQUE global `Form01` solving `dbaru_i = ω
 * `DbarGlueData.isDbarOn_form`, `DbarGlueData.form_unique`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold TopologicalSpace

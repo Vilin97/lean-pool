@@ -22,7 +22,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # LocalCircleEstimate -/
 
-@[expose] public section
+public section
 
 
 open MeasureTheory Complex Real Finset

@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketParity
 
 /-! Even parity of the actual normalized transverse pressure from the odd solved velocity. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

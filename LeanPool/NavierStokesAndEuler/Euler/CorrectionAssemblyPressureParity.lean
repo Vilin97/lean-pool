@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyReconstructi
 
 /-! Pointwise parity and canonical normalization of the assembled actual pressure. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

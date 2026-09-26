@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryBounds
 The time reciprocal and inverse Gram bound are independent scalar inputs;
 no operator or solution norm occurs in the resulting envelope. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -25,20 +25,20 @@ open EulerTimeH1GeneratorBounds EulerTransverseEndpointBounds
   EulerPacketParentMeanCoercivity
 
 /-- Slope envelope, given by `r*(1+d^2*(2*r^2)*a)*(2*Ti*d)`. -/
-def slopeEnvelope (Ti d a r : ℝ) : ℝ :=
+@[expose] def slopeEnvelope (Ti d a r : ℝ) : ℝ :=
   r*(1+d^2*(2*r^2)*a)*(2*Ti*d)
 
 /-- Slope difference envelope, given by `r*(2*Ti*endpointDifferenceCost d (2*r^2) a x
 y+x*slopeEnvelope Ti d a r)`. -/
-def slopeDifferenceEnvelope (Ti d a r x y : ℝ) : ℝ :=
+@[expose] def slopeDifferenceEnvelope (Ti d a r x y : ℝ) : ℝ :=
   r*(2*Ti*endpointDifferenceCost d (2*r^2) a x y+x*slopeEnvelope Ti d a r)
 
 /-- Generator difference envelope, given by `(4*ci^2*q^2*q1+2*ci*q1)*x+2*ci*q*y`. -/
-def generatorDifferenceEnvelope (ci q q1 x y : ℝ) : ℝ :=
+@[expose] def generatorDifferenceEnvelope (ci q q1 x y : ℝ) : ℝ :=
   (4*ci^2*q^2*q1+2*ci*q1)*x+2*ci*q*y
 
 /-- Difference envelope as an element of `ℝ`. -/
-def differenceEnvelope (Ti ci q q1 d a r x y z : ℝ) : ℝ :=
+@[expose] def differenceEnvelope (Ti ci q q1 d a r x y z : ℝ) : ℝ :=
   x*(2*(Ti+4*ci*q*q1))*slopeEnvelope Ti d a r +
     q*(4*generatorDifferenceEnvelope ci q q1 x y*slopeEnvelope Ti d a r +
       (2*(Ti+4*ci*q*q1))*slopeDifferenceEnvelope Ti d a r (y+x) z)
@@ -133,7 +133,7 @@ theorem differenceEnvelope_mono
 
 /-- Parent difference envelope, given by `differenceEnvelope Ti (gramInverseEnvelope C) C C1
 (C1+C) (1+CH) (transportEnvelope C C1) (C*R) (C1*R) (CH*R)`. -/
-def parentDifferenceEnvelope (Ti C C1 CH R : ℝ) : ℝ :=
+@[expose] def parentDifferenceEnvelope (Ti C C1 CH R : ℝ) : ℝ :=
   differenceEnvelope Ti (gramInverseEnvelope C) C C1 (C1+C) (1+CH)
     (transportEnvelope C C1) (C*R) (C1*R) (CH*R)
 

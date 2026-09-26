@@ -26,7 +26,7 @@ import Mathlib.Data.Set.Insert
 # MatchingLogic.Locality
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

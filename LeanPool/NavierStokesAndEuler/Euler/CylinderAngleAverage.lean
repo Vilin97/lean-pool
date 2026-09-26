@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangular
 
 /-! Actual angular averaging on the cylinder, including its supported spaces. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

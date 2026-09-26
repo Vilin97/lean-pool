@@ -53,7 +53,7 @@ Main declarations:
   existence/uniqueness API).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology
 open Set Filter TopologicalSpace

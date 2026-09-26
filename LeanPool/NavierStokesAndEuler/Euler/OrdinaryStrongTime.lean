@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.InjectivePathDerivativeWithin
 the proposed derivative has continuous actual spatial jets. Bounded
 Sobolev evaluation then supplies the classical pointwise time law. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

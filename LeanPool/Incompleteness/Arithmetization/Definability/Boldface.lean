@@ -11,7 +11,7 @@ import Mathlib.Algebra.Order.Sub.Basic
 
 /-! # Boldface -/
 
-@[expose] public section
+public section
 
 
 namespace LO

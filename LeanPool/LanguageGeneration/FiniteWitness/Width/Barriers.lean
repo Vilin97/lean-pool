@@ -12,7 +12,7 @@ public import Mathlib.Tactic.Tauto
 # Obstructions to countable tests and finite observation profiles
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 

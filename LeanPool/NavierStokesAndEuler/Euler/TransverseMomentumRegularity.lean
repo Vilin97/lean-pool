@@ -20,7 +20,7 @@ absolutely continuous representative. No momentum equation or second derivative
 of the solved displacement is included in the assumptions.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,10 +40,10 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
 
 /-- The literal transverse momentum as an actual L² field. -/
-def momentum (u : TimeLp T E) : TimeLp T U := (timeMultiplier T hT Q).adjoint u
+@[expose] def momentum (u : TimeLp T E) : TimeLp T U := (timeMultiplier T hT Q).adjoint u
 
 /-- The forcing for the momentum derivative, before using the frame ODE. -/
-def momentumForcing (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
+@[expose] def momentumForcing (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
     (u f : TimeLp T E) : TimeLp T U :=
   (timeMultiplier T hT Q₁).adjoint u -
     (timeMultiplier T hT Q).adjoint
@@ -91,6 +91,7 @@ theorem productDerivative_mem_transverse
     (hm : ∀ t x, ⟪m t, Q t x⟫_ℝ = 0)
     (v : TimeLp T U) (hv : initialTrace T hT v = 0) :
     productDerivative T hT Q Q₁ v ∈ transverseDerivatives T hT m := by
+  rw [mem_transverseDerivatives]
   constructor
   · rw [initialTrace_productDerivative T hT Q Q₁ hQ, hv, map_zero]
   · intro t
@@ -135,10 +136,7 @@ theorem momentum_weak
         primitiveTimeLp T hT v⟫_ℝ := by
   have htest := hu ⟨productDerivative T hT Q Q₁ v,
     productDerivative_mem_transverse T hT Q Q₁ hQ m hm v hv⟩
-  change ⟪(u : TimeLp T E), productDerivative T hT Q Q₁ v⟫_ℝ -
-    ⟪timeMultiplier T hT H (primitiveTimeLp T hT (u : TimeLp T E)),
-      primitiveTimeLp T hT (productDerivative T hT Q Q₁ v)⟫_ℝ =
-    -⟪f, primitiveTimeLp T hT (productDerivative T hT Q Q₁ v)⟫_ℝ at htest
+  simp only [transversePrimitive_apply] at htest
   exact momentum_weak_of_product_tests T hT Q Q₁ hQ H
     (u : TimeLp T E) f v htest
 

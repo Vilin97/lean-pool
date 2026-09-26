@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Basic
 
 /-! Differentiating an actual L²-valued family by dominated ordinary derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

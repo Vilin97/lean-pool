@@ -16,7 +16,7 @@ both an absolutely continuous representative and its initial trace.  The
 boundary value is a conclusion of testing against all terminal-zero H¹ paths.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

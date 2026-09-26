@@ -16,7 +16,7 @@ primitive additive character of `K` with values in `ℂ` (in the application
 `ψ x = (-1)^(Tr x)`), and `D` is an exponent inverse to `m` modulo `N = #Kˣ`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -27,30 +27,32 @@ section Defs
 variable (K : Type*) [Field K] [Fintype K] [DecidableEq K]
 
 /-- `U = μ₃(K)`, the group of cube roots of unity of `K`, as a finset. -/
-def cubeRootsOne : Finset K := {u : K | u ^ 3 = 1}
+@[expose] def cubeRootsOne : Finset K := {u : K | u ^ 3 = 1}
 
 /-- `c = |μ₃(K)|`. -/
-def mu3Card : ℕ := (cubeRootsOne K).card
+@[expose] def mu3Card : ℕ := (cubeRootsOne K).card
 
 end Defs
 
 variable {K : Type*} [Field K] [Fintype K] [DecidableEq K]
 
 /-- `Φ(x) = ∑_{u ∈ U} ψ(u x^D)`. -/
+@[expose]
 noncomputable def phi (ψ : AddChar K ℂ) (D : ℕ) (x : K) : ℂ := ∑ u ∈ cubeRootsOne K, ψ (u * x ^ D)
 
 /-- The additive Fourier transform `Φ̂(z) = ∑_{t ∈ K} Φ(t) ψ(z t)`. -/
+@[expose]
 noncomputable def phiHat (ψ : AddChar K ℂ) (D : ℕ) (z : K) : ℂ := ∑ t : K, phi ψ D t * ψ (z * t)
 
 /-- `W_{u,v} = ∑_{x,y ∈ K} ψ(u x^D + v (A x + B y)^D + y^D)`. -/
-noncomputable def weilSum (ψ : AddChar K ℂ) (D : ℕ) (A B u v : K) : ℂ :=
+@[expose] noncomputable def weilSum (ψ : AddChar K ℂ) (D : ℕ) (A B u v : K) : ℂ :=
   ∑ x : K, ∑ y : K, ψ (u * x ^ D + v * (A * x + B * y) ^ D + y ^ D)
 
 /-- `R_{u,v}(A,B) = #{t ∈ K : u t^D + v (A t + B)^D = 1}`. -/
-def rootCount (D : ℕ) (A B u v : K) : ℕ := #{t : K | u * t ^ D + v * (A * t + B) ^ D = 1}
+@[expose] def rootCount (D : ℕ) (A B u v : K) : ℕ := #{t : K | u * t ^ D + v * (A * t + B) ^ D = 1}
 
 /-- `Z(ρ) = ∑_{λ ∈ G} S(λ) S(ρ λ) S(σ λ)`. -/
-noncomputable def phaseTripleSum (S : K → ℂ) (rho sigma : K) : ℂ :=
+@[expose] noncomputable def phaseTripleSum (S : K → ℂ) (rho sigma : K) : ℂ :=
   ∑ lam : Kˣ, S (lam : K) * S (rho * (lam : K)) * S (sigma * (lam : K))
 
 /-- The all-character Walsh formula

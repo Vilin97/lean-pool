@@ -14,7 +14,7 @@ changed on a null set to obey that bound at every spatial point on almost
 every time slice. This preserves its value on the prescribed carrier.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal Topology

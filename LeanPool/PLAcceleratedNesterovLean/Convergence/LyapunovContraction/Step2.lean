@@ -24,7 +24,7 @@ Since u_{n+1} = w_n + √μ' ξ_n:
   ½‖u_{n+1}‖² = ½‖w_n‖² + √μ'⟨w_n, ξ_n⟩ + (μ'/2)‖ξ_n‖²
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -35,7 +35,7 @@ These results are essential for proving bilinearity of Schwinger functions
 and other quantum field theory constructions.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory
 
@@ -81,13 +81,9 @@ lemma ω_re_decompose_linear
           - s.im • (complexTestFunctionDecompose g).2 := by
     ext x
     -- Rewrite to Complex.re/Complex.im and use algebra on ℂ
-    change Complex.reCLM ((t • f + s • g) x)
-        = t.re * Complex.reCLM (f x) - t.im * Complex.imCLM (f x)
-          + s.re * Complex.reCLM (g x) - s.im * Complex.imCLM (g x)
-    -- Evaluate pointwise scalar multiplication and addition
-    simp only [add_apply, smul_apply, smul_eq_mul, reCLM_apply,
-      add_re, mul_re, imCLM_apply]
-    ring
+    simp only [complexTestFunctionDecompose, add_apply, sub_apply, smul_apply,
+      smul_eq_mul, schwartz_comp_clm_apply, reCLM_apply, imCLM_apply,
+      add_re, mul_re]; ring
   -- Apply ω (a real-linear functional) to both sides
   simp_all
 
@@ -110,13 +106,9 @@ lemma ω_im_decompose_linear
           + s.im • (complexTestFunctionDecompose g).1 := by
     ext x
     -- Rewrite to Complex.im/Complex.re and use algebra on ℂ
-    change Complex.imCLM ((t • f + s • g) x)
-        = t.re * Complex.imCLM (f x) + t.im * Complex.reCLM (f x)
-          + s.re * Complex.imCLM (g x) + s.im * Complex.reCLM (g x)
-    -- Evaluate pointwise scalar multiplication and addition
-    simp only [add_apply, smul_apply, smul_eq_mul, imCLM_apply,
-      add_im, mul_im, reCLM_apply]
-    ring
+    simp only [complexTestFunctionDecompose, add_apply, smul_apply,
+      smul_eq_mul, schwartz_comp_clm_apply, reCLM_apply, imCLM_apply,
+      add_im, mul_im]; ring
   -- Apply ω (a real-linear functional) to both sides
   simp_all
 
@@ -335,7 +327,7 @@ noncomputable def conjSchwartz {E : Type*} [NormedAddCommGroup E] [NormedSpace �
 
 @[simp] lemma conjSchwartz_apply {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (f : SchwartzMap E ℂ) (x : E) :
-    conjSchwartz f x = starRingEnd ℂ (f x) := rfl
+    conjSchwartz f x = starRingEnd ℂ (f x) := by rfl
 
 /-- Conjugation is involutive: conj(conj(f)) = f -/
 @[simp] lemma conjSchwartz_conjSchwartz {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]

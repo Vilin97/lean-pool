@@ -25,7 +25,7 @@ Also provides 𝓜 characterization of compactness.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 
@@ -127,7 +127,7 @@ def Valid (f : F) : Prop := ∀ 𝓜 : M, 𝓜 ⊧ f
 def Satisfiable (T : Set F) : Prop := ∃ 𝓜 : M, 𝓜 ⊧* T
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def models (T : Set F) : Set M := {𝓜 | 𝓜 ⊧* T}
+@[expose] def models (T : Set F) : Set M := {𝓜 | 𝓜 ⊧* T}
 
 variable {M}
 

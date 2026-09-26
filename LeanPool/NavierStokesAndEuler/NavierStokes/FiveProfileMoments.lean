@@ -20,7 +20,7 @@ the patch. Positive amplitude factoring removes the background parameters
 from the normalized quadratic system.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -103,6 +103,7 @@ theorem bumps_disjoint (P : Patch) (i j : Fin n) (hij : i ≠ j) (x : ℝ) :
   · linarith [intervals_separated P j i h, hjx.2, hix.1]
 
 /-- Correction, given by `∑ j, c j * bump P j x`. -/
+@[expose]
 noncomputable def correction (P : Patch) (c : Fin n → ℝ) (x : ℝ) : ℝ := ∑ j, c j * bump P j x
 
 theorem correction_contDiff (P : Patch) (c : Fin n → ℝ) : ContDiff ℝ ∞ (correction P c) :=
@@ -325,9 +326,9 @@ theorem angularPowers_injective (b : ℝ) (hb : GoodExponent b) : Injective (ang
   all_goals first | exact hb.2.1 (by linarith) | exact hb.2.2 (by linarith)
 
 /-- U, given by `correction P.leftHalf c.1`. -/
-noncomputable def u (P : Patch) (c : Coeff) : ℝ → ℝ := correction P.leftHalf c.1
+@[expose] noncomputable def u (P : Patch) (c : Coeff) : ℝ → ℝ := correction P.leftHalf c.1
 /-- E, given by `correction P.rightHalf c.2`. -/
-noncomputable def e (P : Patch) (c : Coeff) : ℝ → ℝ := correction P.rightHalf c.2
+@[expose] noncomputable def e (P : Patch) (c : Coeff) : ℝ → ℝ := correction P.rightHalf c.2
 
 theorem u_mul_e (P : Patch) (c d : Coeff) (x : ℝ) : u P c x * e P d x = 0 := by
   by_cases hu : u P c x = 0
@@ -1191,7 +1192,7 @@ theorem physical_edits_tsupport (P : Patch) (A : ℝ) (c : Coeff) :
     exact hx (by simp [he])
 
 /-- Profile change density as an element of `Debt`. -/
-noncomputable def profileChangeDensity (U E dU dE : ℝ → ℝ) (x : ℝ) : Debt :=
+@[expose] noncomputable def profileChangeDensity (U E dU dE : ℝ → ℝ) (x : ℝ) : Debt :=
   ![(U x + dU x) - U x,
     Real.sqrt (2 * x) * ((E x + dE x) - E x),
     (U x + dU x) * Real.sqrt (2 * x) * (E x + dE x) - U x * Real.sqrt (2 * x) * E x,

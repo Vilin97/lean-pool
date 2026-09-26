@@ -14,7 +14,7 @@ This module collects order-theoretic lemmas about infima and suprema in conditio
 complete lattices, in particular closure under bounded infima and suprema.
 -/
 
-@[expose] public section
+public section
 
 open Function OrderDual Set
 

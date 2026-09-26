@@ -30,7 +30,7 @@ sibling unit laurent-tails independently discovered that a plain `def` wrapping 
 every `Finsupp` instance transport for free), so no manual instances are needed at all.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

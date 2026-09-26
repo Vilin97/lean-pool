@@ -40,7 +40,7 @@ vanishes.  Compact smooth potentials also produce members of the existing
 closed divergence-free Bochner L² space.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -248,7 +248,7 @@ The derivative of the Jacobian cancels by symmetry of the genuine second
 Fréchet derivative.  No curl identity or commutation relation is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -342,7 +342,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -543,7 +543,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -588,7 +588,7 @@ def coveringSlowCurl (G : Space →L[ℝ] Space) (q : LiftTangent → Space)
   curlMatrix ((fderiv ℝ q z).comp ((ContinuousLinearMap.inl ℝ Space ℝ).comp G))
 
 /-- The same angular primitive as in the source, at each ordinary label. -/
-def coveringPotential (P : ℝ) (m : Space → Space) (A : LiftTangent → Space)
+@[expose] def coveringPotential (P : ℝ) (m : Space → Space) (A : LiftTangent → Space)
     (z : LiftTangent) : Space :=
   potential P (m z.1) (fun θ => A (z.1, θ)) z.2
 

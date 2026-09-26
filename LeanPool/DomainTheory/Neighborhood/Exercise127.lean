@@ -48,7 +48,7 @@ this is a
 *proof*, so the construction stays choice-free.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

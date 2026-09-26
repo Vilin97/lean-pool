@@ -15,7 +15,7 @@ replacing it by its essential supremum in time. The calculus and integral
 estimates are adapted from `CKN.Pressure.HarmonicPartBoundsAE`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -463,6 +463,7 @@ def fixedRemainderSliceMajorant (C ρ : ℝ) (x : Vec3)
       (∫⁻ y in vec3Ball x ρ, ENNReal.ofReal (vec3EuclideanNorm (f (y,s))))
 
 /-- An explicit coefficient for the `3/2` time moment on a fixed collar. -/
+@[expose]
 def fixedRemainderMomentConstant (C ρ : ℝ) (x : Vec3) : ℝ≥0∞ :=
   16 * volume (vec3Ball x ρ) ^ (1/2 : ℝ) *
     (fixedRemainderCoefficients C ρ 0 ^ (3/2 : ℝ) +

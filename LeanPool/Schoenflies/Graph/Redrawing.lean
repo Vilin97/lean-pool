@@ -67,7 +67,7 @@ Bricks B7 and B8 of `lem:polygonal-redrawing` (H6), and the lemma itself.
   the core inside its tube, and the assembly of radial, replacement path and radial.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 open scoped Graph

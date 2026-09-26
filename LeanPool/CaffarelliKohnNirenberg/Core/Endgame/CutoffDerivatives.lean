@@ -20,7 +20,7 @@ support assumptions on the second function. In particular the negative-time
 bounds of a domain-adapted cutoff retain the fixed function's constants.
 -/
 
-@[expose] public section
+public section
 
 open Set Filter
 open scoped Topology BigOperators

@@ -30,7 +30,7 @@ public import Mathlib.Geometry.Manifold.ContMDiff.Defs
 * `RS.map_nhdsNE` — an `OpenPartialHomeomorph` maps `𝓝[≠] x` to `𝓝[≠] (e x)` on its source.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set OpenPartialHomeomorph
 open scoped ContDiff Manifold Topology
@@ -43,7 +43,7 @@ variable {X Y : Type*}
 
 /-- `F` read in the standard charts at `x` and `F x`, recentered to vanish at `chartAt ℂ x x`.
 Junk (from the charts' junk values) away from the chart sources; only its germ matters. -/
-noncomputable def inChartAt (F : X → Y) (x : X) : ℂ → ℂ :=
+@[expose] noncomputable def inChartAt (F : X → Y) (x : X) : ℂ → ℂ :=
   fun z ↦ chartAt ℂ (F x) (F ((chartAt ℂ x).symm z)) - chartAt ℂ (F x) (F x)
 
 @[simp] theorem inChartAt_apply_chart (F : X → Y) (x : X) :

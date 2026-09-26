@@ -14,7 +14,7 @@ import Mathlib.Analysis.SpecialFunctions.Bernstein
 Spectral helpers for Hermitian and almost-Hermitian matrices.
 -/
 
-@[expose] public section
+public section
 
 instance multisetCoe {α β : Type _} [Coe α β] : Coe (Multiset α) (Multiset β)
     where coe s := s.map (Coe.coe : α → β)

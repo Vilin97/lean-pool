@@ -16,7 +16,7 @@ A finite, ceiling-carrying nibble theorem for near-regular uniform hypergraphs.
 The module deliberately stops before application-specific graph-transfer assemblies.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 

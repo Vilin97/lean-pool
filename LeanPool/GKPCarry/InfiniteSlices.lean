@@ -26,7 +26,7 @@ This is an infinite scoped result. The other nine residue classes are not
 settled here, and the universal GKP conjecture remains open.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 

@@ -20,7 +20,7 @@ enumerating the `C(3, r)` strictly increasing maps `Fin r → Fin 3`
 (`r = 0,1,2,3`) and using rank for `r > 3`.
 -/
 
-@[expose] public section
+public section
 
 open Function Matrix
 

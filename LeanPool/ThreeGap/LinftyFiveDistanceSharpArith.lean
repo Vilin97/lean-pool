@@ -46,7 +46,7 @@ comparison is between *integers*, and the rational→irrational transport gap is
 are reused verbatim from the Euclidean development.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.LinftyRecords
 

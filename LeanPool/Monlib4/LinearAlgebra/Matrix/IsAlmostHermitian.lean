@@ -20,7 +20,7 @@ import Mathlib.Tactic.Positivity.Finset
  We say a matrix `x` is `is_almost_hermitian` if there exists some scalar `α ∈ ℂ`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace Matrix

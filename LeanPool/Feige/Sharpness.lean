@@ -21,7 +21,7 @@ sample space is `(Fin n → Fin (n + 1))`, with its uniform law.  Coordinate
 every coordinate has the two-point law used in the proof outline.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal
 open MeasureTheory Set

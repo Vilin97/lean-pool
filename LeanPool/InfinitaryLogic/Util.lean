@@ -14,7 +14,7 @@ Small lemmas about `Empty.elim`, `Fin.elim0`, `Fin.snoc`, and `Fin.append` that 
 across the infinitary logic library but not (yet) in Mathlib.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

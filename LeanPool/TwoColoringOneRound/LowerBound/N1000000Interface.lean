@@ -38,7 +38,7 @@ It states that for `n = 1_000_000`, every coloring has monochromatic-edge fracti
 `23879/100000 = 0.23879`.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 

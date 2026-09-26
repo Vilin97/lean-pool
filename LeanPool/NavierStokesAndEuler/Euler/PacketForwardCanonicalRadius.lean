@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalEnvelope
 
 /-! Named direct-forward budgets at the literal canonical source radius. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

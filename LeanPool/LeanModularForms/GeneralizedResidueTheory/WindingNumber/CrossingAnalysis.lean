@@ -32,7 +32,7 @@ Contains the core monotonicity, cutoff boundary, and direction convergence lemma
 * `tendsto_exp_cutoff_integral_crossing` — exp(R(ε)) → exp(-iα)
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

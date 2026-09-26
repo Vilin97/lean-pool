@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
 
 /-! The actual continuous-path embedding as a bounded linear time-space map. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -53,6 +53,6 @@ def pathLpOperator (T : ℝ) (hT : 0 ≤ T) : C(Icc (0 : ℝ) T, E) →L[ℝ] Ti
 
 /-- The bounded embedding is exactly the actual L² equivalence class of the path. -/
 theorem pathLpOperator_apply (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, E)) :
-    pathLpOperator T hT f = pathLp T hT f := rfl
+    pathLpOperator T hT f = pathLp T hT f := by rfl
 
 end EulerTimeLp

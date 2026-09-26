@@ -23,7 +23,7 @@ existing Sobolev arrays and a smooth representative; no spatial regularity of
 the solution is assumed separately.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

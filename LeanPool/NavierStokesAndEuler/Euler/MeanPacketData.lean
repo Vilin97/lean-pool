@@ -36,7 +36,7 @@ operator and harmonic localization. No solution, momentum equation, acceleration
 or initial velocity condition is included in the hypotheses.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -78,7 +78,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -146,7 +146,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

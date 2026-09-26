@@ -21,7 +21,7 @@ This file defines the language of first-order logic.
 - `LO.FirstOrder.Language.oRing`, `ℒₒᵣ` is the language of ordered ring.
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 

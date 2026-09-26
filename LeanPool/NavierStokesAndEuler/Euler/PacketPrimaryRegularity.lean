@@ -15,7 +15,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureGradie
 
 /-! The genuine homogeneous high-mode solution supplies the primary profile's regularity. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -72,7 +72,7 @@ def homogeneousForcing (D : EulerTransversePacketProvider.Data U) :
 
 /-- Homogeneous primary, given by `primaryProfile O ((homogeneousForcing (P := P) D).vector I)
 ((homogeneousForcing (P := P) D).scalar I)`. -/
-def homogeneousPrimary (D : EulerTransversePacketProvider.Data U)
+@[expose] def homogeneousPrimary (D : EulerTransversePacketProvider.Data U)
     (I : EulerTransversePacketProvider.InitialData P D) (O : Operators) : Profile :=
   primaryProfile O ((homogeneousForcing (P := P) D).vector I) ((homogeneousForcing (P := P)
       D).scalar I)

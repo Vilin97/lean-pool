@@ -30,7 +30,7 @@ is later used to define the edge relations on the Bruhat-Tits graph (see `Bruhat
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 
@@ -41,7 +41,7 @@ variable {K : Type*} [Field K] (R : Subring K) [IsDiscreteValuationRing R]
 
 /-- The vertices of the Bruhat-Tits tree are `R`-lattices modulo the equivalence relation
 `IsSimilar`. -/
-def Vertices : Type _ :=
+@[expose] def Vertices : Type _ :=
   Quotient (Lattice.IsSimilar.setoid R)
 
 variable {R}
@@ -57,7 +57,7 @@ noncomputable def inv (L M : Vertices R) : ℕ :=
 
 @[simp]
 lemma inv_mk (L M : BruhatTits.Lattice R) :
-    inv (Quotient.mk'' L) (Quotient.mk'' M) = dist L M :=
+    inv (Quotient.mk'' L) (Quotient.mk'' M) = dist L M := by
   rfl
 
 lemma inv_symm (L M : Vertices R) : inv L M = inv M L := by
@@ -195,7 +195,8 @@ lemma dist_twist₂ (b : Basis (Fin 2) K (Fin 2 → K)) {ϖ : R} (hϖ : Irreduci
 
 lemma dist_ntwist₂ (b : Basis (Fin 2) K (Fin 2 → K)) {ϖ : R} (hϖ : Irreducible ϖ) (n : ℕ) :
     dist (b.toLattice (R := R)) (b.ntwist₂ hϖ n 0).toLattice = n := by
-  simp [Basis.ntwist₂, ← Nat.cast_inj (R := ℤ), dist_twist₂]
+  rw [← Nat.cast_inj (R := ℤ)]
+  simp [Basis.ntwist₂, dist_twist₂]
 
 /-- If vertices `x` and `y` have distance `n + 1`, there exists a vertex `o`
 with `inv o x = 1` and `inv y o = n`.

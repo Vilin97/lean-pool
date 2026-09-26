@@ -18,7 +18,7 @@ It also contains basic results about congruence subgroups.
 
 -/
 
-@[expose] public section
+public section
 
 open Matrix.SpecialLinearGroup Matrix ModularGroup CongruenceSubgroup
 

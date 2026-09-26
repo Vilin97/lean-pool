@@ -13,7 +13,7 @@ import Mathlib.Geometry.Euclidean.PerpBisector
 
 /-! # Erdős 97 convex-octagon formalization: Geometry Reduction -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 

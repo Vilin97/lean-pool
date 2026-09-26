@@ -21,7 +21,7 @@ import Mathlib.Analysis.Normed.Group.Tannery
 /-! # Delta -/
 
 
-@[expose] public section
+public section
 
 open ModularForm EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
   Metric Filter Function Complex MatrixGroups

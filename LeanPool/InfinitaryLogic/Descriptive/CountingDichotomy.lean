@@ -31,7 +31,7 @@ The isomorphism relation `isoSetoid` this file counts is defined in
   among coded ℕ-models is either ≤ ℵ₀ or exactly 2^ℵ₀.
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 

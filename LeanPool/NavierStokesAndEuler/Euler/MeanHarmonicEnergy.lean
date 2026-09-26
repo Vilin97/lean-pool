@@ -22,7 +22,7 @@ identity, proved by ordinary-space integration by parts. No interior estimate
 or mean-value formula is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

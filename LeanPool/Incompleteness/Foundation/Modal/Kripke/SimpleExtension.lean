@@ -10,7 +10,7 @@ public import Mathlib.Basic.Finite.Sum
 
 /-! # SimpleExtension -/
 
-@[expose] public section
+public section
 
 
 namespace LO

@@ -42,7 +42,7 @@ note). Assembles the two already-built halves:
   standing variables — a direct alias target for final assembly).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

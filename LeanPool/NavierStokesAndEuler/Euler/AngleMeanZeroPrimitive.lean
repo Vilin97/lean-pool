@@ -20,7 +20,7 @@ curve such as a time-L² pressure coefficient. Periodicity is proved from the
 zero integral of the forcing; subtracting the actual mean fixes the constant.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,10 +32,10 @@ open MeasureTheory Set
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
 /-- The raw angular primitive, anchored at angle zero. -/
-def rawPrimitive (f : ℝ → E) (θ : ℝ) : E := ∫ s in 0..θ, f s
+@[expose] def rawPrimitive (f : ℝ → E) (θ : ℝ) : E := ∫ s in 0..θ, f s
 
 /-- The actual angular primitive with its mean over one period removed. -/
-def primitive (P : ℝ) (f : ℝ → E) (θ : ℝ) : E :=
+@[expose] def primitive (P : ℝ) (f : ℝ → E) (θ : ℝ) : E :=
   rawPrimitive f θ - P⁻¹ • (∫ s in 0..P, rawPrimitive f s)
 
 /-- The explicit integral has the actual derivative prescribed by the forcing. -/

@@ -50,7 +50,7 @@ order-isomorphism
 All *data* is choice-free (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

@@ -25,7 +25,7 @@ The analytic heart of Rellich (compactness on Euclidean chart domains) is tracke
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.isCompactOperator_h2ToL2_of_summands`
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

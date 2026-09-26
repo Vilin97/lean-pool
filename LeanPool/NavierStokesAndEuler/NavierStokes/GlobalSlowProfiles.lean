@@ -22,7 +22,7 @@ All integrals and differential operators below are the actual ones.  In
 particular the preceding radial source is retained when pressure is recomputed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -1880,7 +1880,7 @@ theorem betaFromU_x_divergence {S : Set ℝ} {h : ℝ} (d : Domain S h) (lam : �
   linear_combination he
 
 /-- As slow profiles, constructed using `SlowResidualMatching.ofBeta`. -/
-noncomputable def asSlowProfiles {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) :
+@[expose] noncomputable def asSlowProfiles {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) :
     SlowExpansionResidual.SlowProfiles :=
   SlowResidualMatching.ofBeta (fun j => xProfile (profiles s j).phi)
     (fun j => xProfile (profiles s j).axial) (fun j => xProfile (profiles s j).beta)

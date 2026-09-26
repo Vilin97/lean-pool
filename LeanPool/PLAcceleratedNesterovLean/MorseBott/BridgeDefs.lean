@@ -16,7 +16,7 @@ These mirror definitions from the source project so external theorems can be
 stated and proved using the same types.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric InnerProductSpace
 

@@ -16,7 +16,7 @@ import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
 This file defines the concept of a quasi-borel space, as given by [HeunenKSY17].
 -/
 
-@[expose] public section
+public section
 
 open scoped MeasureTheory
 

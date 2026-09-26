@@ -20,7 +20,7 @@ Let 𝑋 be a closed convex subset of ℝ^𝑑. Then:
 Theorem : Every 𝑉-polytope is an 𝐻-polytope, and every compact 𝐻-polytope is a 𝑉-polytope.
 -/
 
-@[expose] public section
+public section
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 open Pointwise
@@ -421,7 +421,7 @@ def translationHomeo (x : E) : E ≃ₜ E where
 
 omit [InnerProductSpace ℝ E] [CompleteSpace E] in
 lemma translationHomeo.toFun.def (x : E) :
-  ↑(translationHomeo x) = (· + x) := rfl
+  ↑(translationHomeo x) = (· + x) := by rfl
 
 lemma Hpolytope_of_Vpolytope_interior [FiniteDimensional ℝ E] {S : Set E} (hS : S.Finite)
   (hVinteriorNonempty : (interior (Vpolytope hS)).Nonempty) :

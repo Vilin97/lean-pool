@@ -15,12 +15,12 @@ Defines `nTimes` (notation `l ^+^ n`), the `n`-fold repetition of a list,
 together with basic rewriting lemmas about it.
 -/
 
-@[expose] public section
+public section
 
 variable {α : Type _}
 
 /-- `nTimes l n` (notation `l ^+^ n`) is the concatenation of `n` copies of the list `l`. -/
-def nTimes (l : List α) (n : ℕ) : List α :=
+@[expose] def nTimes (l : List α) (n : ℕ) : List α :=
   (List.replicate n l).flatten
 
 @[inherit_doc]

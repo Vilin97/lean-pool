@@ -12,7 +12,7 @@ import Mathlib.Analysis.Calculus.Deriv.Add
 
 /-! Adding the actual correction removes a genuine approximate-solution residual. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

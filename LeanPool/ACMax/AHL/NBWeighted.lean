@@ -18,7 +18,7 @@ Alon–Hoory–Linial irregular Moore bound chain; the walk-count and average-de
 it live downstream (`AHL.AHLAmGm`, `Band.Sum`).
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

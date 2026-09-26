@@ -19,7 +19,7 @@ predicate.  Compact support keeps every test-function product inside the open se
 the resulting derivative is a global weak derivative of the zero extension.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal

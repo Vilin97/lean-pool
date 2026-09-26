@@ -14,7 +14,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.SardMoreira.LinearAlgebra
 -/
 
-@[expose] public section
+public section
 
 open Function
 open Module (finrank)

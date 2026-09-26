@@ -20,7 +20,7 @@ Definitions come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic` (`IsUn
 (`NearlyRegular`, `CodegreeBounded`).
 -/
 
-@[expose] public section
+public section
 
 open Hypergraph
 

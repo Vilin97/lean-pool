@@ -16,7 +16,7 @@ a prescribed circle element. The integer specialization uses scalar multiplicati
 specialization obtains the character from Baer's extension theorem.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

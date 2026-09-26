@@ -16,7 +16,7 @@ import LeanPool.ConnesRigidity.Porting.CoreTransfer
 Property-(T) transfer for Zhou §4 on the concrete tensor-kernel groups.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperPropertyT

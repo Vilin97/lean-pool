@@ -33,7 +33,7 @@ All declarations live in the `RiemannRochTest.EllipticCurve` namespace so that t
 `k`, `curve`, … do not leak into the root environment.
 -/
 
-@[expose] public section
+public section
 
 open FunctionField
 

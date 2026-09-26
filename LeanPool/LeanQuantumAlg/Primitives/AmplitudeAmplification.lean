@@ -30,7 +30,7 @@ with `amplitudeAmplificationStep θ` on this plane.
   good-state measurement probability.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -39,7 +39,7 @@ open PureState Gate
 noncomputable section
 
 /-- The angle after `k` amplitude-amplification iterates: `(2k+1)θ`. -/
-def amplitudeAmplificationAngle (θ : ℝ) (k : ℕ) : ℝ := ((2 : ℝ) * k + 1) * θ
+@[expose] def amplitudeAmplificationAngle (θ : ℝ) (k : ℕ) : ℝ := ((2 : ℝ) * k + 1) * θ
 
 /-- The good/bad-plane state with bad amplitude `cos((2k+1)θ)` and good
 amplitude `sin((2k+1)θ)`. In this two-dimensional model, `|0⟩` is the bad axis

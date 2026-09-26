@@ -50,7 +50,7 @@ section
 into every complete Sobolev space are bounded by the closed graph
 theorem, rather than by an assumed derivative estimate. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -202,7 +202,7 @@ a genuine global flow on a real Hilbert space. Radial normalization
 first gives a globally Lipschitz equation; its conserved norm then
 removes the normalization by a constant rescaling of time. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -339,7 +339,7 @@ section
 equation. The vector field is a bounded bilinear map and its actual
 L² energy vanishes by noncompact transport cancellation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -449,7 +449,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -588,7 +588,7 @@ section
 
 /-! A true orbit derivative gives a global increment bound for a linear isometric action. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -620,7 +620,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -796,7 +796,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -916,7 +916,7 @@ section
 /-! The actual regularized Euler right-hand side converges to the
 projected Euler right-hand side, uniformly on bounded H⁴ sets. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1013,7 +1013,7 @@ section
 /-! Actual L² stability of projected Euler with a small additive
 defect. The reference gradient is the only solution coefficient. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1098,7 +1098,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1207,7 +1207,7 @@ section
 /-! A uniform short-time bound for a nonnegative genuine energy with
 a quadratic differential upper bound. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1262,7 +1262,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1439,7 +1439,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -14,7 +14,7 @@ This module iterates the two-sided quantitative successor. Window centres are
 read from a recurrent sequence and all three quantitative parameters use a dyadic scale.
 -/
 
-@[expose] public section
+public section
 
 open Filter Metric Set
 

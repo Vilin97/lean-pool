@@ -9,7 +9,7 @@ public import LeanPool.QuantumParallelRepetition.Part07
 
 /-! # Quantum parallel repetition, part 08 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -107,7 +107,7 @@ theorem exactPermutationOutputUniformExpectation
           denominator numerator normalized nonempty]
 
 /-- The product encoding of exact source alice sample. -/
-def exactSourceAliceSampleTuple
+@[expose] def exactSourceAliceSampleTuple
     {n : ℕ} (D : Finset (Fin n)) (denominator : ℕ)
     (numerator : ExactLocalSamplerIndex X Y D →
       ExactHistoryFlag X Y A B D → ℕ)
@@ -2585,7 +2585,7 @@ variable {X Y A B : Type}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The measurement effect for exact source global winning. -/
-def exactSourceGlobalWinningEffect
+@[expose] def exactSourceGlobalWinningEffect
     [DecidableEq A] [DecidableEq B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (a₀ : A) (b₀ : B) (x : X) (y : Y) :

@@ -30,7 +30,7 @@ and establishing slitPlane membership for shifted curves.
 * `curve_sub_in_slitPlane` - shifted curve lands in slitPlane
 -/
 
-@[expose] public section
+public section
 
 open Set Complex Metric
 

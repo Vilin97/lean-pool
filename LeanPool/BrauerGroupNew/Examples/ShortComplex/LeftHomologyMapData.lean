@@ -13,7 +13,7 @@ public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Examples.ShortComplex.LeftHomologyMapData`.
 -/
 
-@[expose] public section
+public section
 
 universe v u
 

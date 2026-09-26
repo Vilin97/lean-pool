@@ -37,7 +37,7 @@ Lie algebra, central extension, 2-cocycle
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 

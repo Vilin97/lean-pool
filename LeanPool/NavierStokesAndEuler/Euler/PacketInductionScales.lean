@@ -24,7 +24,7 @@ section
 /-! Reconstruct the numerical source guards from a supplied common
 finite cost budget, without making a second choice of the starting stage. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -138,7 +138,7 @@ section
 geometric guards, pressure series, and any finite list of further packet
 frequency comparisons. No independently chosen index is substituted. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -216,7 +216,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -240,7 +240,7 @@ theorem geometryConstant_one : 1 ≤ geometryConstant := by
 
 /-- Activation margin, given by `1/(32*(activationConstant gradientConstant
 hessianConstant+1))`. -/
-def activationMargin : ℝ :=
+@[expose] def activationMargin : ℝ :=
   1/(32*(activationConstant gradientConstant hessianConstant+1))
 
 theorem activationMargin_pos : 0 < activationMargin := by
@@ -290,14 +290,14 @@ def extraCost : Sum Unit Bool → CostSpec
 
 /-- Initial increment, given by `badCost J 4 gradientConstant gradientConstant hessianConstant
 80 (scaleSequence J X) n + (frequency J X n)^(-(1/4 : ℝ))`. -/
-def initialIncrement (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
+@[expose] def initialIncrement (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
   badCost J 4 gradientConstant gradientConstant hessianConstant 80 (scaleSequence J X) n +
     (frequency J X n)^(-(1/4 : ℝ))
 
 /-- Pressure increment, given by
 `2*gradientConstant*EulerPacketGeometryLowBounds.goodRatio*goodCost J (scaleSequence J X) n
 + initialIncrement J X n`. -/
-def pressureIncrement (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
+@[expose] def pressureIncrement (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
   2*gradientConstant*EulerPacketGeometryLowBounds.goodRatio*goodCost J (scaleSequence J X) n +
     initialIncrement J X n
 

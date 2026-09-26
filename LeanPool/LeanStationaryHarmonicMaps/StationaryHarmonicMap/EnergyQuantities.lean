@@ -13,7 +13,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 # Energy Quantities
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -32,7 +32,7 @@ def ballRadialEnergy {n m : ℕ} (u : Domain n → Target m) (a : Domain n) (r :
   ∫ x in Metric.ball a r, radialEnergyDensity u a x
 
 /-- Weak energy on a ball, written in terms of the chosen weak gradient. -/
-def weakBallEnergy {n m : ℕ}
+@[expose] def weakBallEnergy {n m : ℕ}
     (Du : Domain n → Gradient n m) (a : Domain n) (r : ℝ) : ℝ :=
   ∫ x in Metric.ball a r, weakEnergyDensity Du x
 
@@ -54,7 +54,7 @@ theorem weakBallRadialEnergy_zero_radius {n m : ℕ}
   simp [weakBallRadialEnergy, Metric.ball_eq_empty.mpr le_rfl]
 
 /-- The factor `r^(2-n)` as an integer power. -/
-def thetaFactor (n : ℕ) (r : ℝ) : ℝ :=
+@[expose] def thetaFactor (n : ℕ) (r : ℝ) : ℝ :=
   r ^ (2 - (n : ℤ))
 
 /-- The monotonicity factor is continuous on any closed interval bounded away
@@ -73,7 +73,7 @@ def theta {n m : ℕ} (u : Domain n → Target m) (a : Domain n) (r : ℝ) : ℝ
   thetaFactor n r * ballEnergy u a r
 
 /-- Weak monotonicity quantity, using the weak gradient energy. -/
-def weakTheta {n m : ℕ}
+@[expose] def weakTheta {n m : ℕ}
     (Du : Domain n → Gradient n m) (a : Domain n) (r : ℝ) : ℝ :=
   thetaFactor n r * weakBallEnergy Du a r
 
@@ -145,7 +145,7 @@ def monotonicityRhs {n m : ℕ} (u : Domain n → Target m) (a : Domain n) (s r 
     annulusWeight n a x * radialEnergyDensity u a x
 
 /-- Right-hand side of the weak monotonicity formula on `B_r(a) \ B_s(a)`. -/
-def weakMonotonicityRhs {n m : ℕ}
+@[expose] def weakMonotonicityRhs {n m : ℕ}
     (Du : Domain n → Gradient n m) (a : Domain n) (s r : ℝ) : ℝ :=
   2 * ∫ x in Metric.ball a r \ Metric.ball a s,
     ‖x - a‖ ^ (2 - (n : ℤ)) * weakRadialEnergyDensity Du a x
@@ -164,11 +164,11 @@ theorem weakMonotonicityRhs_nonneg {n m : ℕ}
           (sq_nonneg ‖weakRadialDerivative Du a x‖)))
 
 /-- Coefficient multiplying the weak energy density in the radial identity. -/
-def weakRadialMainCoeff (n : ℕ) (phi : ℝ → ℝ) (x : Domain n) : ℝ :=
+@[expose] def weakRadialMainCoeff (n : ℕ) (phi : ℝ → ℝ) (x : Domain n) : ℝ :=
   ((n : ℝ) - 2) * phi ‖x‖ + ‖x‖ * deriv phi ‖x‖
 
 /-- Coefficient multiplying the weak radial-energy density in the radial identity. -/
-def weakRadialRhsCoeff {n : ℕ} (phi : ℝ → ℝ) (x : Domain n) : ℝ :=
+@[expose] def weakRadialRhsCoeff {n : ℕ} (phi : ℝ → ℝ) (x : Domain n) : ℝ :=
   ‖x‖ * deriv phi ‖x‖
 
 /-- Continuity of the main radial cutoff coefficient, assuming `phi` and `phi'`

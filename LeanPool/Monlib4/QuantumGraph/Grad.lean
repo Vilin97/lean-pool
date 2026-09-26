@@ -15,7 +15,7 @@ import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.Grad`.
 -/
 
-@[expose] public section
+public section
 
 variable {B : Type*} [starAlgebra B] [QuantumSet B]
 

@@ -15,7 +15,7 @@ unrestricted clipped-cell bound. The explicit cover count is absorbed once
 into the affine pressure coefficient.
 -/
 
-@[expose] public section
+public section
 
 section
 

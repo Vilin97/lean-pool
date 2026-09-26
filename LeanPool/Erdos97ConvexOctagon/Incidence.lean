@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.Pow
 
 /-! # Erdős 97 convex-octagon formalization: Incidence -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 
@@ -46,14 +46,15 @@ theorem OctagonIncidence.ext {Q R : OctagonIncidence} (h : Q.targets = R.targets
 namespace OctagonIncidence
 
 /-- The number of witness rows containing `a`. -/
-def indegree (Q : OctagonIncidence) (a : Vertex) : ℕ :=
+@[expose] def indegree (Q : OctagonIncidence) (a : Vertex) : ℕ :=
   ∑ v, if a ∈ Q.targets v then 1 else 0
 
 /-- The number of witness rows containing both `a` and `b`. -/
-def pairMultiplicity (Q : OctagonIncidence) (a b : Vertex) : ℕ :=
+@[expose] def pairMultiplicity (Q : OctagonIncidence) (a b : Vertex) : ℕ :=
   ∑ v, if a ∈ Q.targets v ∧ b ∈ Q.targets v then 1 else 0
 
 /-- No distinct pair occurs together in more than two witness rows. -/
+@[expose]
 def PairSparse (Q : OctagonIncidence) : Prop :=
   ∀ ⦃a b⦄, a ≠ b → Q.pairMultiplicity a b ≤ 2
 

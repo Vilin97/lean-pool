@@ -41,7 +41,7 @@ Unit: canonical-forms (`docs/design/canonical-forms.md` §2 D11–D13, §4.5, pr
   `Realizes.resAt_eq`: a thin `X`-level wrapper around residue-calculus's `PrincipalPartData`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology

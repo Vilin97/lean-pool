@@ -16,7 +16,7 @@ This module packages the scalar radial cutoffs used to test weak stationarity.
 It is deliberately independent of the later radial integral identities.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

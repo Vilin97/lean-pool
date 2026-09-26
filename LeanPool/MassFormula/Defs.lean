@@ -57,7 +57,7 @@ short well-formedness facts are proved here.
 * [Serre1979] J-P. Serre, *Local fields*, Graduate Texts in Mathematics **67**, Springer, 1979.
 -/
 
-@[expose] public section
+public section
 
 open ValuativeRel
 
@@ -89,13 +89,13 @@ noncomputable def integers (L : IntermediateField K (SeparableClosure K)) :
 extended along `algebraMap 𝒪[K] (integers L)`. For `L` / `K` finite this is the unique maximal ideal
 of the local ring `integers L`, but the definition itself carries no such obligations, and is junk
 for `L` infinite over `K`. -/
-noncomputable def maximalIdealAbove (L : IntermediateField K (SeparableClosure K)) :
+@[expose] noncomputable def maximalIdealAbove (L : IntermediateField K (SeparableClosure K)) :
     Ideal (integers L) :=
   (Ideal.map (algebraMap 𝒪[K] (integers L)) 𝓂[K]).radical
 
 /-- The ramification index of `L` / `K`: the exponent of `maximalIdealAbove L` in the extension of
 `𝓂[K]` to `integers L`, via Mathlib's junk-tolerant `Ideal.ramificationIdx'`. -/
-noncomputable def ramificationIdx (L : IntermediateField K (SeparableClosure K)) : ℕ :=
+@[expose] noncomputable def ramificationIdx (L : IntermediateField K (SeparableClosure K)) : ℕ :=
   Ideal.ramificationIdx' 𝓂[K] (maximalIdealAbove L)
 
 /-- `L` / `K` is *totally ramified* when its ramification index equals its degree
@@ -139,7 +139,7 @@ noncomputable def d (L : IntermediateField K (SeparableClosure K)) : ℕ :=
 truncation-safe form `d L + 1 - n` ([Serre 1978, p.1031][Serre1978]). The bound `n - 1 ≤ d L` making
 the truncated subtraction faithful is the paper's own claim that `c L` is a nonnegative integer, the
 theorem `sub_one_le_d`. -/
-noncomputable def c (L : IntermediateField K (SeparableClosure K)) : ℕ :=
+@[expose] noncomputable def c (L : IntermediateField K (SeparableClosure K)) : ℕ :=
   d L + 1 - Module.finrank K ↥L
 
 /-- The number of `K`-automorphisms of `L` ([Serre 1978, Remark 3°, p.1031][Serre1978]). -/

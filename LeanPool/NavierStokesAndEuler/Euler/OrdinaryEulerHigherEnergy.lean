@@ -17,7 +17,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
 the actual H³ norm is bounded. There is no order-dependent shortening
 of time and no postulated energy differential inequality. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -51,7 +51,7 @@ variable {T : ℝ} {hT : 0 ≤ T}
 
 /-- Integer energy path, given by `⟨fun t => wordEnergy m (U.velocity t),wordEnergy_continuous
 U.velocity U.velocity_continuous m⟩`. -/
-def integerEnergyPath (U : Evolution T hT) (m : ℕ) : C(Icc (0 : ℝ) T,ℝ) :=
+@[expose] def integerEnergyPath (U : Evolution T hT) (m : ℕ) : C(Icc (0 : ℝ) T,ℝ) :=
   ⟨fun t => wordEnergy m (U.velocity t),wordEnergy_continuous U.velocity U.velocity_continuous m⟩
 
 /-- Integer energy derivative, given by `integerEnergyProduction m (U.velocity t) (U.derivative

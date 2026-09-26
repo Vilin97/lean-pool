@@ -19,7 +19,7 @@ finite-dimensional complements, and the mean-value theorem on the kernel
 factor.
 -/
 
-@[expose] public section
+public section
 
 
 open Filter Metric

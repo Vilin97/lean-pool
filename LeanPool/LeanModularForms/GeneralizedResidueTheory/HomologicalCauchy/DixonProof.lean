@@ -44,7 +44,7 @@ is exactly mathlib's `dslope f z w`. We use this identification throughout.
 * `contourIntegral_eq_zero_of_nullHomologous` -- vanishing for holomorphic functions
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Filter Topology MeasureTheory intervalIntegral
 

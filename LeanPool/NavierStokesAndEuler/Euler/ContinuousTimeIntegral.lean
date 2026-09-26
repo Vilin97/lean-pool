@@ -20,7 +20,7 @@ primitive has the prescribed derivative, including the one-sided endpoint
 statements, and the uniform bound is exactly the interval length.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,7 +36,7 @@ variable {K E F : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Pointwise multiplication by an operator-valued continuous path. -/
-def multiplierLinear (A : C(K, E →L[ℝ] F)) : C(K,E) →ₗ[ℝ] C(K,F) where
+@[expose] def multiplierLinear (A : C(K, E →L[ℝ] F)) : C(K,E) →ₗ[ℝ] C(K,F) where
   toFun f := ⟨fun t => A t (f t), A.continuous.clm_apply f.continuous⟩
   map_add' f g := by ext t; exact map_add (A t) (f t) (g t)
   map_smul' r f := by ext t; exact map_smul (A t) r (f t)
@@ -50,11 +50,11 @@ theorem multiplierLinear_bound (A : C(K, E →L[ℝ] F)) (f : C(K, E)) :
     (mul_le_mul (A.norm_coe_le_norm t) (f.norm_coe_le_norm t) (norm_nonneg _) (norm_nonneg A))
 
 /-- The genuine bounded multiplier on continuous time paths. -/
-def multiplier (A : C(K, E →L[ℝ] F)) : C(K,E) →L[ℝ] C(K,F) :=
+@[expose] def multiplier (A : C(K, E →L[ℝ] F)) : C(K,E) →L[ℝ] C(K,F) :=
   (multiplierLinear A).mkContinuous ‖A‖ (multiplierLinear_bound A)
 
 @[simp] theorem multiplier_apply (A : C(K, E →L[ℝ] F)) (f : C(K, E)) (t : K) :
-    multiplier A f t = A t (f t) := rfl
+    multiplier A f t = A t (f t) := by rfl
 
 /-- No derivative-dependent loss enters continuous path multiplication. -/
 theorem multiplier_norm (A : C(K, E →L[ℝ] F)) : ‖multiplier A‖ ≤ ‖A‖ :=
@@ -65,7 +65,7 @@ section Primitive
 variable [CompleteSpace E] (T : ℝ) (hT : 0 ≤ T)
 
 /-- The literal zero-initial-time integral. -/
-def realIntegral (f : C(Icc (0 : ℝ) T, E)) : ℝ → E :=
+@[expose] def realIntegral (f : C(Icc (0 : ℝ) T, E)) : ℝ → E :=
   fun t => ∫ s in (0 : ℝ)..t, extendPath T hT f s
 
 /-- The integral has the actual classical derivative. -/
@@ -104,7 +104,7 @@ def integral : C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E) :=
   (integralLinear T hT).mkContinuous T (integralLinear_bound T hT)
 
 @[simp] theorem integral_apply (f : C(Icc (0 : ℝ) T, E)) (t : Icc (0 : ℝ) T) :
-    integral T hT f t = realIntegral T hT f t := rfl
+    integral T hT f t = realIntegral T hT f t := by rfl
 
 /-- The exact operator bound for the initial primitive. -/
 theorem integral_norm : ‖integral (E := E) T hT‖ ≤ T := by

@@ -32,7 +32,7 @@ bookkeeping for the two-sided bound is more delicate than the time budget allowe
 final report for the precise missing step. Everything else in §4.7 is proved.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology
@@ -109,7 +109,7 @@ theorem mem_linSys_iff_eq_zero_or_le_divisor [ConnectedSpace X] {φ : ℳ X} :
 /-- CC3: `l D`. Finiteness is NOT this unit's business (Čech/finiteness proves
 `FiniteDimensional`); until then `finrank` junk-returns `0` on infinite-dimensional spaces — no
 lemma here depends on finiteness. -/
-noncomputable def l (D : Divisor X) : ℕ := Module.finrank ℂ (LinSys D)
+@[expose] noncomputable def l (D : Divisor X) : ℕ := Module.finrank ℂ (LinSys D)
 
 omit [T1Space X] [IsManifold 𝓘(ℂ) ω X] in
 theorem linSys_mono (h : D ≤ E) : LinSys D ≤ LinSys E := by

@@ -19,14 +19,14 @@ a little-endian ternary word.  This file proves that, on the canonical ternary
 digits of `n`, twice that count is exactly Kummer's ternary digit excess.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 
 open Nat
 
 /-- Kummer's ternary digit excess for a central binomial coefficient. -/
-def ternaryDigitExcess (n : ℕ) : ℕ :=
+@[expose] def ternaryDigitExcess (n : ℕ) : ℕ :=
   2 * (Nat.digits 3 n).sum - (Nat.digits 3 (2 * n)).sum
 
 /-- Fixed-length output digits emitted while doubling a ternary word.  The

@@ -21,7 +21,7 @@ the consequence that `aRb = 0` collapses these auxiliary sets to zero. Used by t
 characterisation.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 

@@ -25,7 +25,7 @@ They neither construct the approximate packet nor identify arbitrary coefficient
 with the physical Euler equation in parent-flow coordinates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

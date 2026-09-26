@@ -11,7 +11,7 @@ public import Mathlib.Topology.Order
 # LeanPool.VirasoroProject.ToMathlib.Topology.Order
 -/
 
-@[expose] public section
+public section
 
 section
 

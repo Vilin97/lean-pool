@@ -13,12 +13,12 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Pair-sparsity guard for direct incidence-table search -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 
 /-- Number of processed row masks containing both vertices. -/
-def pairCount
+@[expose] def pairCount
     (assignments : List (Vertex × UInt64)) (a b : Vertex) : ℕ :=
   (assignments.filter fun previous =>
     bitSetB previous.2 a.val && bitSetB previous.2 b.val).length

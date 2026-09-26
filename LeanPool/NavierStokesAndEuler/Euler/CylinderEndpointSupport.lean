@@ -17,7 +17,7 @@ cylinder inverse. Both properties are inherited from its genuine L²
 terminal datum through the explicit forced reduction.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

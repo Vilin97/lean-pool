@@ -11,7 +11,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Spatial translation calculus for coefficients uniformly on a compact time interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

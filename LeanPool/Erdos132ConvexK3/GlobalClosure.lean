@@ -23,7 +23,7 @@ reflected row-4 routes use the orientation-reversing isometry
 the original labelling.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 

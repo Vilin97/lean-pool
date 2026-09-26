@@ -44,7 +44,7 @@ The other pieces:
   it returned normally, only the part above the backjump target if it asked to jump.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon

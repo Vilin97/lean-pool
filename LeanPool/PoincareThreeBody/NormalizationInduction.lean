@@ -21,7 +21,7 @@ expansions then express the original candidate as a function of the Hamiltonian 
 arbitrarily high power of the mass parameter.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

@@ -17,7 +17,7 @@ import Mathlib.Analysis.Complex.Liouville
 /-! # Derivative -/
 
 
-@[expose] public section
+public section
 
 open UpperHalfPlane hiding I
 open Real Complex CongruenceSubgroup SlashAction SlashInvariantForm ContinuousMap
@@ -47,7 +47,7 @@ Definition of (Serre) derivative of modular forms.
 Prove Ramanujan's formulas on derivatives of Eisenstein series.
 -/
 /-- The Serre/Ramanujan derivative `D = (2πi)⁻¹ d/dz` of a function on the upper half-plane. -/
-noncomputable def D (F : ℍ → ℂ) : ℍ → ℂ :=
+@[expose] noncomputable def D (F : ℍ → ℂ) : ℍ → ℂ :=
   fun (z : ℍ) => (2 * π * I)⁻¹ * ((deriv (F ∘ ofComplex)) z)
 
 /--
@@ -344,7 +344,7 @@ theorem D_qexp_tsum_pnat (a : ℕ+ → ℂ) (z : ℍ)
 Serre derivative of weight $k$.
 Note that the definition makes sense for any analytic function $F : \mathbb{H} \to \mathbb{C}$.
 -/
-noncomputable def serreD (k : ℂ) : (ℍ → ℂ) → (ℍ → ℂ) :=
+@[expose] noncomputable def serreD (k : ℂ) : (ℍ → ℂ) → (ℍ → ℂ) :=
   fun (F : ℍ → ℂ) => (fun z => D F z - k * 12⁻¹ * E₂ z * F z)
 
 @[simp]

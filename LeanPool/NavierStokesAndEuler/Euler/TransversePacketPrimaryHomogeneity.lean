@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHomogeneity
 
 /-! Exact scalar homogeneity of the actual compact terminal-data primary. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

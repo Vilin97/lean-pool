@@ -20,4 +20,4 @@ public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection
 # Morse-Bott infrastructure for PL-accelerated Nesterov convergence
 -/
 
-@[expose] public section
+public section

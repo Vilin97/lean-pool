@@ -29,7 +29,7 @@ section
 /-! Cutoff-independent background, derivative, drift and residual budgets
 for the actual zero-history correction data. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -126,7 +126,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -266,7 +266,7 @@ section
 /-! The zero-history initialized approximation satisfies the lifted divergence
 constraint for an actual volume-preserving source deformation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -319,7 +319,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

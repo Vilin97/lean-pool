@@ -16,7 +16,7 @@ energy bounds.  They are used to control the value and derivative terms after
 the compactly supported cutoff is applied to a mean-subtracted function.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal

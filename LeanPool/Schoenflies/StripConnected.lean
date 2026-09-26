@@ -50,7 +50,7 @@ Producing the constants is `exists_stripData`, which lives elsewhere; every stat
 for a given `D : StripData P`, exactly as in `Schoenflies/Strip.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

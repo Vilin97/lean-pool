@@ -12,7 +12,7 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
 
 /-! # Eq -/
 
-@[expose] public section
+public section
 
 namespace Matrix
 

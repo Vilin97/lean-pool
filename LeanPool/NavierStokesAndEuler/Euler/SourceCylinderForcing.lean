@@ -21,7 +21,7 @@ velocity uses the actual frame. Both preserve the closed spatial support,
 actual mixed-orbit smoothness, and the external-word radius at fixed Hq.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -43,7 +43,7 @@ variable (period : ℝ) [Fact (0 < period)]
   (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q.field t x v‖ ^ 2)
 
 /-- The actual projected forcing on the supported cylinder. -/
-def projectedForcing (f : C(K, Supported period E S hS)) : C(K,Supported period U S hS) :=
+@[expose] def projectedForcing (f : C(K, Supported period E S hS)) : C(K,Supported period U S hS) :=
   supportedMultiplierMap period S hS (sourceForcing Q c hc hQ) f
 
 /-- The actual physical velocity associated with the coordinate field. -/

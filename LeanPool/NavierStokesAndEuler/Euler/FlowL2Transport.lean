@@ -13,7 +13,7 @@ public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreser
 /-! A genuine determinant-one flow transports continuous spatial L² paths
 through its actual inverse, preserving the norm exactly. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

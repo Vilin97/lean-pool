@@ -26,7 +26,7 @@ based at the origin of the unit parabolic cylinder, and a parabolic metric ball
 about an arbitrary centre.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open CKN.Foundation.Parabolic

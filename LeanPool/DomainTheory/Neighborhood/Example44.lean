@@ -58,7 +58,7 @@ The data constructions (`C`, `consMap`) are **choice-free** (`#print axioms ⊆
 Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Example44
 

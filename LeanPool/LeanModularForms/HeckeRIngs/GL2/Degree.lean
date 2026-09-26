@@ -33,7 +33,7 @@ Shimura Theorem 3.24, identities 6 and 7: degree formulas for the GL₂ Hecke al
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, Theorem 3.24
 -/
 
-@[expose] public section
+public section
 
 open HeckeRing HeckeRing.GLn HeckeRing.GL2
 open scoped ArithmeticFunction.sigma

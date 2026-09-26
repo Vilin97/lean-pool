@@ -20,7 +20,7 @@ local Boolean-polynomial namespace. The remaining finite-coordinate support
 and weight development is local. See the upstream PORT_MAP.md.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace BooleanPolynomial
@@ -64,7 +64,7 @@ structure QuadraticData (ι : Type*) [Fintype ι] where
   quadratic : ι → ι → F
 
 /-- Evaluation of degree-two coefficient data. Paper: §4. -/
-def QuadraticData.eval {ι : Type*} [Fintype ι]
+@[expose] def QuadraticData.eval {ι : Type*} [Fintype ι]
     (q : QuadraticData ι) (x : ι → F) : F :=
   q.constantTerm +
     ∑ i, q.linear i * x i +

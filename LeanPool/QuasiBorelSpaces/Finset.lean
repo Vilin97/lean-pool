@@ -16,7 +16,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Finset`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuasiBorelSpace.Finset
 

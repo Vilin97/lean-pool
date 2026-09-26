@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryData
 normal.  The new reference plane is the literal orthogonal complement,
 and the history hypotheses are inherited without any new analytic input. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

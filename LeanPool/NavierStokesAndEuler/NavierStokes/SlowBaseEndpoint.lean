@@ -23,7 +23,7 @@ is only extended at nonzero axial coordinate here; a central-plane gauge
 correction is a separate construction.
 -/
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 

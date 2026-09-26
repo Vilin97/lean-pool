@@ -25,7 +25,7 @@ upper bound `Lomega1omegaHanfNumber_le_beth_omega1`:
 Reference: Marker, *Lectures on Infinitary Model Theory*, Exercise 5.3 and Theorem 5.4.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

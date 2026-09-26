@@ -22,7 +22,7 @@ The identity `N = det(I + Q W)` of `docs/sol.tex` §3, the factorization of
 for `x ≥ 0`.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 

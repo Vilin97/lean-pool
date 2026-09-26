@@ -13,7 +13,7 @@ import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 # LeanPool.LowDimSolvClassification.LemmasDim3
 -/
 
-@[expose] public section
+public section
 
 open Module
 open Submodule

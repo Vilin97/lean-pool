@@ -15,7 +15,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Generated `Middle` certificate chunks 0 through 0. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

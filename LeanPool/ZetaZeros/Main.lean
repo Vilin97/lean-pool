@@ -20,7 +20,7 @@ This combines the kernel construction, the finite-set bounds transferred to zeta
 Riemann--von Mangoldt asymptotic to obtain the two asymptotic proportion bounds.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

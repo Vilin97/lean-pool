@@ -22,7 +22,7 @@ faithful polygonal quotient. Consequently, clients of directed chains and common
 certificates do not need to pass the primitive invariance proofs explicitly.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

@@ -11,7 +11,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! A genuine singular-kernel Volterra convolution on continuous Banach-valued paths. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,7 +26,7 @@ variable {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 variable (T : ℝ) (hT : 0 ≤ T)
 
 /-- Continuous extension of a compact-interval path by clamping its time argument. -/
-def extendPath (f : C(Icc (0 : ℝ) T, Y)) (t : ℝ) : Y := f (projIcc 0 T hT t)
+@[expose] def extendPath (f : C(Icc (0 : ℝ) T, Y)) (t : ℝ) : Y := f (projIcc 0 T hT t)
 
 omit [NormedSpace ℝ Y] in
 /-- The clamped extension of a continuous path is continuous. -/
@@ -39,7 +39,7 @@ theorem extendPath_norm_le (f : C(Icc (0 : ℝ) T, Y)) (t : ℝ) : ‖extendPath
   f.norm_coe_le_norm _
 
 /-- The fixed-domain integrand for a causal, possibly singular, time convolution. -/
-def causalIntegrand (K : ℝ → Y →L[ℝ] X) (f : C(Icc (0 : ℝ) T, Y))
+@[expose] def causalIntegrand (K : ℝ → Y →L[ℝ] X) (f : C(Icc (0 : ℝ) T, Y))
     (t : Icc (0 : ℝ) T) (r : ℝ) : X :=
   (Iic t.val).indicator (fun r => K r (extendPath T hT f (t.val - r))) r
 
@@ -117,6 +117,13 @@ theorem causalIntegral_continuous (f : C(Icc (0 : ℝ) T, Y)) :
 def convolution (f : C(Icc (0 : ℝ) T, Y)) : C(Icc (0 : ℝ) T, X) where
   toFun t := ∫ r in Ioc 0 T, causalIntegrand T hT K f t r
   continuous_toFun := causalIntegral_continuous T hT K k hK hk hk0 hbound f
+
+/-- Evaluating the continuous convolution path gives its causal integral. -/
+@[simp] theorem convolution_apply (f : C(Icc (0 : ℝ) T, Y))
+    (t : Icc (0 : ℝ) T) :
+    convolution T hT K k hK hk hk0 hbound f t =
+      ∫ r in Ioc 0 T, causalIntegrand T hT K f t r := by
+  rfl
 
 /-- The scalar mass of an integrable time-kernel bound on the chosen time interval. -/
 def kernelMass : ℝ := ∫ r in Ioc 0 T, k r

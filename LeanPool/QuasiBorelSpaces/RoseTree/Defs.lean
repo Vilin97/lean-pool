@@ -13,7 +13,7 @@ public import Mathlib.Logic.Equiv.List
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.RoseTree.Defs`.
 -/
 
-@[expose] public section
+public section
 
 
 universe u
@@ -34,12 +34,12 @@ def fold (f : A → List B → B) : Rose A → B
   | ⟨x, xs⟩ => f x (xs.map (fold f))
 
 /-- Grafts a tree to every sub-node in a `Rose` tree. -/
-@[simp]
+@[expose, simp]
 def bind (f : A → Rose B) : Rose A → Rose B := fun
   | ⟨x, xs⟩ => ⟨(f x).label, (f x).children ++ List.map (bind f) xs⟩
 
 /-- Applies a function to every label in a `Rose` tree. -/
-def map (f : A → B) : Rose A → Rose B :=
+@[expose] def map (f : A → B) : Rose A → Rose B :=
   bind (fun x ↦ ⟨f x, []⟩)
 
 instance : Monad Rose where
@@ -47,7 +47,7 @@ instance : Monad Rose where
   bind := flip bind
 
 /-- An injection into the natural numbers. -/
-def encode [Encodable A] : Rose A → ℕ
+@[expose] def encode [Encodable A] : Rose A → ℕ
   | ⟨x, xs⟩ => Nat.pair (Encodable.encode x) (Encodable.encode (List.map encode xs))
 
 /-- The inverse of `encode`. -/

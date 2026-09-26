@@ -16,7 +16,7 @@ slice `L³` norm, and splits the centred source majorant of
 velocity term, and a localized force term, with explicit numerical constants.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal BigOperators

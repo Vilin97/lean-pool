@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerL2Stability
 /-! A variable-coefficient Gronwall estimate from a genuine one-sided
 time derivative.  The integrating factor uses the actual time integral. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

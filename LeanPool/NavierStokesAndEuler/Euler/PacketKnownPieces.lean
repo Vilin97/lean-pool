@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedAssembly
 
 /-! The three actual, strictly known pieces of a recursive velocity jet. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,7 +35,7 @@ instance : Fintype KnownPiece where
 namespace KnownPiece
 
 /-- Active as an element of `Prop`. -/
-def active (k : KnownPiece) (p i : ℕ) : Prop :=
+@[expose] def active (k : KnownPiece) (p i : ℕ) : Prop :=
   match k with
   | .high => 1 ≤ i ∧ i < p
   | .mean => 2 ≤ i ∧ i < p
@@ -51,7 +51,7 @@ def profileIndex (k : KnownPiece) (i : ℕ) : ℕ :=
   | .corrector => i-1
 
 /-- Raw, with branches according to `k.active p i`. -/
-def raw (k : KnownPiece) (p : ℕ) (a : ℕ → Profile) (i : ℕ) : VectorField :=
+@[expose] def raw (k : KnownPiece) (p : ℕ) (a : ℕ → Profile) (i : ℕ) : VectorField :=
   if k.active p i then
     match k with
     | .high => (a i).high
@@ -60,7 +60,7 @@ def raw (k : KnownPiece) (p : ℕ) (a : ℕ → Profile) (i : ℕ) : VectorField
   else 0
 
 /-- Jet, given by `slicedJet O.interval (k.raw p a i) z`. -/
-def jet (k : KnownPiece) (O : Operators) (p : ℕ) (a : ℕ → Profile)
+@[expose] def jet (k : KnownPiece) (O : Operators) (p : ℕ) (a : ℕ → Profile)
     (z : Domain) (i : ℕ) : VectorJet :=
   slicedJet O.interval (k.raw p a i) z
 

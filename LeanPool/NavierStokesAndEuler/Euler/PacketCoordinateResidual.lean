@@ -22,7 +22,7 @@ section
 derivative is derived from the prescribed deformation, including at the
 endpoints of the actual time interval. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -165,7 +165,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -190,12 +190,12 @@ def transport (κ : ℝ) (Z : VectorField) (z : Domain) : Space :=
   fderiv ℝ (fun y => Z (z.1,y)) z.2 (κ • Z z,⟪D.m₀,Z z⟫_ℝ)
 
 /-- Algebraic, given by `∑ i : Fin 3, (Z z) i • rawQuadratic D κ i z (Z z)`. -/
-def algebraic (κ : ℝ) (Z : VectorField) (z : Domain) : Space :=
+@[expose] def algebraic (κ : ℝ) (Z : VectorField) (z : Domain) : Space :=
   ∑ i : Fin 3, (Z z) i • rawQuadratic D κ i z (Z z)
 
 /-- Coordinate pressure, given by `k • pressureGradient p z + k^2 • ((pressureJet p z).2
 angleDirection • D.m₀)`. -/
-def coordinatePressure (k : ℝ) (p : ScalarField) (z : Domain) : Space :=
+@[expose] def coordinatePressure (k : ℝ) (p : ScalarField) (z : Domain) : Space :=
   k • pressureGradient p z + k^2 • ((pressureJet p z).2 angleDirection • D.m₀)
 
 /-- Lifted pressure, given by `κ • pressureGradient p z + (pressureJet p z).2 angleDirection •

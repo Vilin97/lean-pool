@@ -14,7 +14,7 @@ Consequently a real norm estimate between the representatives gives the
 same numerical estimate on the original functions, for any exponent.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal

@@ -19,7 +19,7 @@ public import Mathlib.LinearAlgebra.SymplecticGroup
 The arithmetic symplectic component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace OpenAIPort
@@ -155,13 +155,13 @@ theorem two_nsmul_integralLattice_injective :
 /--
 The `modTwoSymplecticForm` construction used in the Connes rigidity formalization.
 -/
-def modTwoSymplecticForm (x y : ModTwoSpace) : ZMod 2 :=
+@[expose] def modTwoSymplecticForm (x y : ModTwoSpace) : ZMod 2 :=
   ∑ i : Fin 2, (x (Sum.inl i) * y (Sum.inr i) +
     x (Sum.inr i) * y (Sum.inl i))
 
 /-- The standard quadratic refinement. Paper: §2.
 -/
-def standardQuadraticForm (x : ModTwoSpace) : ZMod 2 :=
+@[expose] def standardQuadraticForm (x : ModTwoSpace) : ZMod 2 :=
   ∑ i : Fin 2, x (Sum.inl i) * x (Sum.inr i)
 
 /- Polarization of the standard quadratic refinement. Paper: §2. -/

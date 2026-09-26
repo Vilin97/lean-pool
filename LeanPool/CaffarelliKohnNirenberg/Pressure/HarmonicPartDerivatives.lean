@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Pressure.OscillationHarmonic
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -25,6 +25,7 @@ noncomputable section
 namespace CKN
 
 /-- The harmonic pressure part appearing in the local decomposition. -/
+@[expose]
 def harmonicPressurePart (η : Vec3 → ℝ) (u : ParabolicPoint → Vec3)
     (c : ℝ → Vec3) (p : ParabolicPoint → ℝ) (s : ℝ) : Vec3 → ℝ :=
   pressureP2 η u c s + pressureP3 η u c s + pressureP4 η u c s +

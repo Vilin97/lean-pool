@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PressureCommutatorWeights
 /-! Explicit cutoff-independent coefficient and inverse constants in the nonlinear correction
 estimate. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

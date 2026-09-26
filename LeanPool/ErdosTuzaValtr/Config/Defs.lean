@@ -13,7 +13,7 @@ public import LeanPool.ErdosTuzaValtr.Lib.List.Defs
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Config.Defs`.
 -/
 
-@[expose] public section
+public section
 
 
 /-- A configuration: a decidable ternary "cup" relation on a linearly ordered type. -/
@@ -39,11 +39,11 @@ def DecidableCap3 : DecidableRel3 C.Cap3 := fun a b c => @instDecidableNot _ (C.
 attribute [instance] DecidableCap3
 
 /-- A cap is a strictly increasing list whose consecutive triples are 3-caps. -/
-def Cap (l : List α) : Prop :=
+@[expose] def Cap (l : List α) : Prop :=
   l.IsChain (· < ·) ∧ l.Chain3' C.Cap3
 
 /-- A cup is a strictly increasing list whose consecutive triples are 3-cups. -/
-def Cup (l : List α) : Prop :=
+@[expose] def Cup (l : List α) : Prop :=
   l.IsChain (· < ·) ∧ l.Chain3' C.Cup3
 
 /-- A gon is a cap and a cup of length at least 2 sharing their first and last endpoints. -/
@@ -55,11 +55,11 @@ def Gon (l1 l2 : List α) : Prop :=
 instance DecidableCup {l : List α} : Decidable (C.Cup l) := by rw [Cup]; infer_instance
 
 /-- An `n`-cap is a cap of length `n`. -/
-def NCap (n : ℕ) (l : List α) : Prop :=
+@[expose] def NCap (n : ℕ) (l : List α) : Prop :=
   C.Cap l ∧ l.length = n
 
 /-- An `n`-cup is a cup of length `n`. -/
-def NCup (n : ℕ) (l : List α) : Prop :=
+@[expose] def NCup (n : ℕ) (l : List α) : Prop :=
   C.Cup l ∧ l.length = n
 
 /-- An `n`-gon is a gon whose cap and cup lengths sum to `n + 2`. -/

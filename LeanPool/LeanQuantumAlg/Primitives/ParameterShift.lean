@@ -37,7 +37,7 @@ Farhi, Goldstone, Gutmann (2014), *A Quantum Approximate Optimization Algorithm*
 - `LeanPool.LeanQuantumAlg.varCost_ket0_Z_parameter_shift` — the parameter-shift rule for it.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

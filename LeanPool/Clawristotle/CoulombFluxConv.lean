@@ -23,7 +23,7 @@ Coulomb kernel entry convolutions are differentiable with uniform derivative bou
 and the full Coulomb flux component is differentiable with a decomposition formula.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

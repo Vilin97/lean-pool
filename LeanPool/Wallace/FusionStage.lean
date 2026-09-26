@@ -17,7 +17,7 @@ This module turns the bounded-deletion conclusion into the exact short-relation 
 required by the uniform Kronecker lemma.  It is the finite algebraic heart of one fusion stage.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

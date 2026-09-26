@@ -23,7 +23,7 @@ This is the final step shared by all winding number computations.
 * `gWN_eq_neg_sixth_of_pv_tendsto` — specialized: L = -πi/3 implies gWN = -1/6
 -/
 
-@[expose] public section
+public section
 
 open Complex
 

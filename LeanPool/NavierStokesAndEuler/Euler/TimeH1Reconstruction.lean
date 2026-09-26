@@ -22,7 +22,7 @@ of `p` with derivative `q`, this is that representative. Thus parameter
 derivatives and all-order bounds pass through one fixed bounded linear map.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

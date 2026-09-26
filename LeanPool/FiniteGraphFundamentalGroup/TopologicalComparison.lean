@@ -19,7 +19,7 @@ import Mathlib.Topology.WithTopology
 This module identifies the free-groupoid computation with the fundamental group of the realization.
 -/
 
-@[expose] public section
+public section
 
 attribute [local implicit_reducible]
   Quiver.Symmetrify Quiver.FreeGroupoid Quiver.FreeGroupoid.of IsFreeGroupoid.Generators

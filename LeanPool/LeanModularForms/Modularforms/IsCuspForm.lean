@@ -15,7 +15,7 @@ import Mathlib.Analysis.SpecialFunctions.Bernstein
 /-! # IsCuspForm -/
 
 
-@[expose] public section
+public section
 
 open ModularForm UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
   Metric Filter Function Complex MatrixGroups

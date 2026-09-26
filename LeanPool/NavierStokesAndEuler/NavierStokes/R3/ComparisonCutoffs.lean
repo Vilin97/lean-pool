@@ -18,7 +18,7 @@ All scaled cutoffs are obtained from this same bump by dilation.  In particular,
 the constants in their derivative estimates do not depend on the radius.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -41,14 +41,15 @@ def baseCutoff (x : Space) : ℝ :=
   NavierStokesAndEuler.SmoothCutoff.baseCutoff Space x
 
 /-- The cutoff at spatial radius `R`; its estimates are stated for `0 < R`. -/
+@[expose]
 def cutoff (R : ℝ) (x : Space) : ℝ :=
   NavierStokesAndEuler.SmoothCutoff.cutoff Space R x
 
 /-- The weight in the localized energy. -/
-def weight (R : ℝ) (x : Space) : ℝ := cutoff R x ^ 8
+@[expose] def weight (R : ℝ) (x : Space) : ℝ := cutoff R x ^ 8
 
 /-- The multiplier used to commute the pressure operator. -/
-def multiplier (R : ℝ) (x : Space) : ℝ := cutoff R x ^ 2
+@[expose] def multiplier (R : ℝ) (x : Space) : ℝ := cutoff R x ^ 2
 
 theorem baseCutoff_smooth : ContDiff ℝ ∞ baseCutoff :=
   NavierStokesAndEuler.SmoothCutoff.baseCutoff_smooth
@@ -153,7 +154,7 @@ theorem exists_derivative_bound (n : ℕ) :
     NavierStokesAndEuler.SmoothCutoff.baseCutoff_iteratedFDeriv_le n⟩
 
 /-- A fixed positive bound for the `n`th derivative of the unscaled bump. -/
-def derivativeConstant (n : ℕ) : ℝ :=
+@[expose] def derivativeConstant (n : ℕ) : ℝ :=
   NavierStokesAndEuler.SmoothCutoff.derivativeConstant Space n
 
 theorem derivativeConstant_pos (n : ℕ) : 0 < derivativeConstant n :=
@@ -177,7 +178,7 @@ theorem cutoff_second_fderiv_le {R : ℝ} (hR : 0 < R) (x : Space) :
   NavierStokesAndEuler.SmoothCutoff.cutoff_second_fderiv_le hR x
 
 /-- The scalar spatial Laplacian, using the fixed standard coordinate vectors. -/
-def laplacian (f : Space → ℝ) (x : Space) : ℝ :=
+@[expose] def laplacian (f : Space → ℝ) (x : Space) : ℝ :=
   ∑ i : Fin 3, NavierStokes.SolutionDifference.spatialPartial i
     (NavierStokes.SolutionDifference.spatialPartial i f) x
 

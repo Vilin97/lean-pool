@@ -16,7 +16,7 @@ and shows some obvious properties of this identification.
 
 -/
 
-@[expose] public section
+public section
 
 
 namespace Matrix

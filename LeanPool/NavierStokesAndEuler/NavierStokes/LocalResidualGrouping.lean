@@ -29,7 +29,7 @@ is derived from the represented finite harmonic fields, with no regularity
 or support assumption on the independent alias.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -307,7 +307,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

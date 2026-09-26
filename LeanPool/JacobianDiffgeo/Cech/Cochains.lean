@@ -23,7 +23,7 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.2).
 * `Z1`/`B1`/`H1Cover` — the cover-level Čech `H¹(𝒰,D)`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

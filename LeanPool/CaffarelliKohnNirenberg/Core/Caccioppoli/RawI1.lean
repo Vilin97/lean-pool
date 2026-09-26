@@ -16,7 +16,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Setting.SliceNormBounds
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter Metric
 open scoped ENNReal NNReal Topology
@@ -46,6 +46,7 @@ theorem caccioppoli_timePartial_contDiff
   simpa only [F, timePartial, Function.uncurry] using hderiv
 
 /-- Raw energy contribution from the time derivative and Laplacian of the heat cutoff. -/
+@[expose]
 def caccioppoliI1HeatCutoffRaw
     {u : ParabolicPoint → Vec3} {x₀ : Vec3} {t₀ ρ ε r : ℝ}
     (hρ : 0 < ρ) (hε : 0 < ε) :

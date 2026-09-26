@@ -33,7 +33,7 @@ inverse on neighborhoods of four compact sectors. Their global extensions
 are not asserted to be a global choice of angle.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -87,7 +87,7 @@ theorem rotate_sum_sq (j : Index) (p : Plane) :
   fin_cases j <;> simp [rotate] <;> ring
 
 /-- Radius, given by `Real.sqrt (p.1 ^ 2 + p.2 ^ 2)`. -/
-noncomputable def radius (p : Plane) : ℝ := Real.sqrt (p.1 ^ 2 + p.2 ^ 2)
+@[expose] noncomputable def radius (p : Plane) : ℝ := Real.sqrt (p.1 ^ 2 + p.2 ^ 2)
 
 theorem radius_nonneg (p : Plane) : 0 ≤ radius p := Real.sqrt_nonneg _
 
@@ -130,7 +130,7 @@ theorem radius_rotate (j : Index) (p : Plane) : radius (rotate j p) = radius p :
   simp only [radius, rotate_sum_sq]
 
 /-- The genuine Cartesian map, with radius in the first coordinate. -/
-noncomputable def polar (q : Plane) : Plane :=
+@[expose] noncomputable def polar (q : Plane) : Plane :=
   (q.1 * Real.cos q.2, q.1 * Real.sin q.2)
 
 theorem polar_contDiff : ContDiff ℝ ∞ polar :=
@@ -514,7 +514,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -531,9 +531,9 @@ private theorem nat_le_infty (k : ℕ) : (k : WithTop ℕ∞) ≤ ∞ :=
 abbrev Plane := ℝ × ℝ
 
 /-- Radial direction, given by `(1, 1 - Real.sqrt 2)`. -/
-noncomputable def radialDirection : Plane := (1, 1 - Real.sqrt 2)
+@[expose] noncomputable def radialDirection : Plane := (1, 1 - Real.sqrt 2)
 /-- Time direction, given by `(Real.sqrt 2 - 1, 1)`. -/
-noncomputable def timeDirection : Plane := (Real.sqrt 2 - 1, 1)
+@[expose] noncomputable def timeDirection : Plane := (Real.sqrt 2 - 1, 1)
 
 theorem cover_radialDirection :
     SlotGeometry.cover radialDirection = ChartScales.Lambda • radialDirection := by
@@ -579,11 +579,11 @@ theorem norm_radialProjection_le : ‖radialProjection‖ ≤ 1 := by
     ((PiLp.norm_apply_le p.2 1).trans (le_max_right _ _))
 
 /-- Radius power, given by `(y.1 ^ 2 + y.2 ^ 2) ^ (d / 2)`. -/
-noncomputable def radiusPower (d : ℝ) (y : Plane) : ℝ :=
+@[expose] noncomputable def radiusPower (d : ℝ) (y : Plane) : ℝ :=
   (y.1 ^ 2 + y.2 ^ 2) ^ (d / 2)
 
 /-- Radial profile, given by `radiusPower d y • radialDirection`. -/
-noncomputable def radialProfile (d : ℝ) (y : Plane) : Plane :=
+@[expose] noncomputable def radialProfile (d : ℝ) (y : Plane) : Plane :=
   radiusPower d y • radialDirection
 
 theorem radiusPower_eq (d : ℝ) (y : Plane) :
@@ -630,7 +630,7 @@ theorem nativeGraph_eq (h : ℝ) (n : ℕ) (p : SpaceTime) :
   congr 1 <;> congr 1 <;> ring
 
 /-- Scaled radial, given by `ChartScales.Q n ^ (-(1 / 2 : ℝ)) • radialProjection`. -/
-noncomputable def scaledRadial (n : ℕ) : SpaceTime →L[ℝ] Plane :=
+@[expose] noncomputable def scaledRadial (n : ℕ) : SpaceTime →L[ℝ] Plane :=
   ChartScales.Q n ^ (-(1 / 2 : ℝ)) • radialProjection
 
 theorem norm_scaledRadial_le (n : ℕ) :
@@ -922,7 +922,7 @@ noncomputable def chartLinear (h : ℝ) (n : ℕ) : SpaceTime →L[ℝ] ChartPoi
   simp [chartLinear, smul_eq_mul]
 
 /-- Physical chart, given by `chartLinear h n p + (ChartScales.Q n ^ (-1 : ℝ), 0)`. -/
-noncomputable def physicalChart (h : ℝ) (n : ℕ) (p : SpaceTime) : ChartPoint :=
+@[expose] noncomputable def physicalChart (h : ℝ) (n : ℕ) (p : SpaceTime) : ChartPoint :=
   chartLinear h n p + (ChartScales.Q n ^ (-1 : ℝ), 0)
 
 theorem physicalChart_time (h : ℝ) (n : ℕ) (p : SpaceTime) :
@@ -988,7 +988,7 @@ theorem iteratedFDeriv_pair {E F G : Type*} [NormedAddCommGroup E] [NormedSpace 
   · exact (congrArg (fun M => M v) h2).symm
 
 /-- Actual graph restriction together with the exact physical chart scaling. -/
-noncomputable def physicalLift (h : ℝ) (n : ℕ) (p : SpaceTime) : LiftPoint :=
+@[expose] noncomputable def physicalLift (h : ℝ) (n : ℕ) (p : SpaceTime) : LiftPoint :=
   (physicalChart h n p, nativeGraph h n p)
 
 theorem physicalLift_smooth (h : ℝ) (n : ℕ) :
@@ -1147,10 +1147,10 @@ theorem carrier_upper {h : ℝ} (hh : 0 ≤ h) (n : ℕ) :
       ring
 
 /-- Phase factor, given by `(c : ℂ) * Complex.I`. -/
-noncomputable def phaseFactor (c : ℝ) : ℂ := (c : ℂ) * Complex.I
+@[expose] noncomputable def phaseFactor (c : ℝ) : ℂ := (c : ℂ) * Complex.I
 
 /-- Character, given by `Complex.exp (phaseFactor c * (t : ℂ))`. -/
-noncomputable def character (c : ℝ) (t : ℝ) : ℂ :=
+@[expose] noncomputable def character (c : ℝ) (t : ℝ) : ℂ :=
   Complex.exp (phaseFactor c * (t : ℂ))
 
 @[simp] theorem norm_character (c t : ℝ) : ‖character c t‖ = 1 := by
@@ -1555,7 +1555,7 @@ noncomputable def liftXY : LiftPoint →L[ℝ] Plane :=
     (ContinuousLinearMap.fst ℝ ChartPoint Plane)
 
 /-- Lift ZT as an element of `LiftPoint →L[ℝ] Plane`. -/
-noncomputable def liftZT : LiftPoint →L[ℝ] Plane :=
+@[expose] noncomputable def liftZT : LiftPoint →L[ℝ] Plane :=
   (((ContinuousLinearMap.snd ℝ ℝ ℝ).comp
       ((ContinuousLinearMap.snd ℝ ℝ (ℝ × ℝ)).comp
         (ContinuousLinearMap.snd ℝ ℝ (ℝ × (ℝ × ℝ))))).prod
@@ -1698,7 +1698,7 @@ theorem slotMap_physical (κ : Plane → Plane) (h : ℝ) (n : ℕ)
 
 /-- Composition of (26) with the actual native slot map. This is the phase
 whose exponential is used in the physical carrier estimate. -/
-noncomputable def liftedPhase (κ : Plane → Plane) (h : ℝ) (n : ℕ)
+@[expose] noncomputable def liftedPhase (κ : Plane → Plane) (h : ℝ) (n : ℕ)
     (center : Plane) (r0 p pz x0 : ℝ) (F G : Slow → ℝ) : LiftPoint → ℝ :=
   PhaseCalculus.phase (ChartScales.epsilon h n) p pz x0 F G ∘
     slotMap κ (ChartScales.timeCoefficient h n) center r0
@@ -1872,7 +1872,7 @@ theorem liftedPhase_power_bound {h K Z r0 P B d : ℝ}
     _ ≤ _ := by gcongr; exact le_max_right 1 C0
 
 /-- Wave loss, given by `graphLoss m + (m : ℝ) + h * (m : ℝ) / 2 + 1`. -/
-noncomputable def waveLoss (h : ℝ) (m : ℕ) : ℝ :=
+@[expose] noncomputable def waveLoss (h : ℝ) (m : ℕ) : ℝ :=
   graphLoss m + (m : ℝ) + h * (m : ℝ) / 2 + 1
 
 theorem carrier_weight_identity {q S : ℝ} (hq : 0 < q) (hS : 0 < S)

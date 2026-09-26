@@ -12,7 +12,7 @@ public import LeanPool.LanguageGeneration.FiniteWitness.Characterization
 # Locking and characterization through fixed-size checkpoints
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness.Simplified
 variable {α : Type*} [Encodable α] [DecidableEq α]

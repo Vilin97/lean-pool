@@ -35,7 +35,7 @@ satisfy the domain equation `D ≅ T(D)`".
 Choice-free (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

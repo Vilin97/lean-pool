@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeat
 
 /-! Bounded actual derivative-word blocks on the complete Sobolev scale. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

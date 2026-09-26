@@ -25,7 +25,7 @@ The cutoff construction packages the unweighted pair sum, proves that the normal
 admissible, and develops the analytic identities needed to apply pair correlation.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

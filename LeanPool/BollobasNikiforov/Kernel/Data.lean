@@ -18,7 +18,7 @@ functions of `docs/sol.tex` §3 (`sec:kernel`, `eq:functions`). Coordinates of
 `ℝ³` are numbered `0,1,2`.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 
@@ -28,7 +28,7 @@ open scoped Matrix
 noncomputable section
 
 /-- Feature vector `v(t) = (1, -√2 t, t²)ᵀ`. -/
-def v (t : ℝ) : Fin 3 → ℝ :=
+@[expose] def v (t : ℝ) : Fin 3 → ℝ :=
   ![1, -Real.sqrt 2 * t, t ^ 2]
 
 /-- Feature vector `b(x) = (x², √2 x, 1)ᵀ`. -/
@@ -36,7 +36,7 @@ def b (x : ℝ) : Fin 3 → ℝ :=
   ![x ^ 2, Real.sqrt 2 * x, 1]
 
 /-- Truncated square `aᵢ(x) = (x - tᵢ)₊²`. -/
-def truncSq (ti x : ℝ) : ℝ :=
+@[expose] def truncSq (ti x : ℝ) : ℝ :=
   (max (x - ti) 0) ^ 2
 
 /-- The outer product `v vᵀ` is Hermitian. -/
@@ -84,18 +84,18 @@ lemma 𝒜_isUnit (hq : ∀ i, 0 < q i) : IsUnit (𝒜 t q) :=
   (𝒜_posDef t q hq).isUnit
 
 /-- Moments `mⱼ = ∑ᵢ qᵢ tᵢʲ`. -/
-def m (j : ℕ) : ℝ :=
+@[expose] def m (j : ℕ) : ℝ :=
   ∑ i, q i * t i ^ j
 
 lemma m_zero : m t q 0 = ∑ i, q i := by
   simp [m]
 
 /-- Scalar `a₀ = 1 + m₀`. -/
-def a0 : ℝ :=
+@[expose] def a0 : ℝ :=
   1 + m t q 0
 
 /-- Scalar `D₂ = a₀(1 + 2 m₂) - 2 m₁²`. -/
-def D2 : ℝ :=
+@[expose] def D2 : ℝ :=
   a0 t q * (1 + 2 * m t q 2) - 2 * m t q 1 ^ 2
 
 /-- Scalar `Δ = det 𝒜`. -/
@@ -103,7 +103,7 @@ def Δ : ℝ :=
   (𝒜 t q).det
 
 /-- Vector `V = 𝒜 e₀`. -/
-def Vvec : Fin 3 → ℝ :=
+@[expose] def Vvec : Fin 3 → ℝ :=
   𝒜 t q *ᵥ Pi.single 0 1
 
 /-! ### KR04: principal minors of `𝒜` -/
@@ -186,11 +186,11 @@ def h (x : ℝ) : ℝ :=
   ∑ i, q i * truncSq (t i) x
 
 /-- `h₁(x) = ∑ᵢ qᵢ tᵢ aᵢ(x)`. -/
-def h1 (x : ℝ) : ℝ :=
+@[expose] def h1 (x : ℝ) : ℝ :=
   ∑ i, q i * t i * truncSq (t i) x
 
 /-- `b̂(x) = b(x) + ∑ᵢ qᵢ aᵢ(x) v(tᵢ)`. -/
-def bhat (x : ℝ) : Fin 3 → ℝ :=
+@[expose] def bhat (x : ℝ) : Fin 3 → ℝ :=
   b x + ∑ i, (q i * truncSq (t i) x) • v (t i)
 
 /-- `U(x) = b̂(x) + (h(x)/γ) V`. -/
@@ -216,11 +216,11 @@ def 𝒦 (γ : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
   (𝒦Mat t q γ)⁻¹
 
 /-- `N(x) = Δ e₂ᵀ 𝒜⁻¹ b̂(x)`. -/
-def N (x : ℝ) : ℝ :=
+@[expose] def N (x : ℝ) : ℝ :=
   Δ t q * ((𝒜 t q)⁻¹ *ᵥ bhat t q x) 2
 
 /-- `P(x) = a₀ x + m₁ x² + m₁ h(x) − a₀ h₁(x)`. -/
-def P (x : ℝ) : ℝ :=
+@[expose] def P (x : ℝ) : ℝ :=
   a0 t q * x + m t q 1 * x ^ 2 + m t q 1 * h t q x - a0 t q * h1 t q x
 
 /-- `Z(x) = γ x² + (γ + a₀) h(x)`. -/

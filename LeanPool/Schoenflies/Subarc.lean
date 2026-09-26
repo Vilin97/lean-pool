@@ -47,7 +47,7 @@ the density arguments of `lem:accessible-dense`, which need `basic_piece_inside_
 * `basic_piece_inside_ball` — the subarc basis.
 -/
 
-@[expose] public section
+public section
 
 open Set unitInterval
 
@@ -57,7 +57,7 @@ namespace Schoenflies
 
 /-- The affine map carrying `[0, 1]` onto the parameter interval between `a` and `b`,
 running from `a` to `b`. -/
-def reparam (a b : ℝ) : ℝ → ℝ := fun t => a + t * (b - a)
+@[expose] def reparam (a b : ℝ) : ℝ → ℝ := fun t => a + t * (b - a)
 
 variable {a b : ℝ}
 
@@ -97,7 +97,7 @@ theorem uIcc_subset_I (ha : a ∈ I) (hb : b ∈ I) : uIcc a b ⊆ I :=
 
 /-- The subarc of `f` between the parameters `a` and `b`: the arc traversed from `f a` to
 `f b`, reparametrised so that it is again a map on `[0, 1]`. -/
-def subarc (f : ℝ → Plane) (a b : ℝ) : ℝ → Plane := fun t => f (reparam a b t)
+@[expose] def subarc (f : ℝ → Plane) (a b : ℝ) : ℝ → Plane := fun t => f (reparam a b t)
 
 variable {f : ℝ → Plane}
 

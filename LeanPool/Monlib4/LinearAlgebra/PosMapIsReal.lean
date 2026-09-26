@@ -24,7 +24,7 @@ import Mathlib.Analysis.InnerProductSpace.StarOrder
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.PosMapIsReal`.
 -/
 
-@[expose] public section
+public section
 
 variable {A : Type _} [Ring A] [StarRing A] [Algebra ℂ A] [StarModule ℂ A] [PartialOrder A]
   [_root_.StarOrderedRing A]

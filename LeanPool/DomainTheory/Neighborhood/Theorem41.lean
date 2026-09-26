@@ -60,7 +60,7 @@ pulls
 `Classical.choice` only through the project's `ext_of_toElementMap`, as permitted.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

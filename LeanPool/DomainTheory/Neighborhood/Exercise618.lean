@@ -71,7 +71,7 @@ T(ρₙ) ∘ j`,
 Everything is choice-free where it is data.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

@@ -14,7 +14,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.SardMoreira.UnifDoublingCover
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Measure Metric Set
 

@@ -11,7 +11,7 @@ public import LeanPool.LeanModularForms.Modularforms.Eisenstein
 /-! # PhiTransform -/
 
 
-@[expose] public section
+public section
 
 /-!
 # Transformation Rules for φ₀

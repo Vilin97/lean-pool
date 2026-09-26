@@ -17,7 +17,7 @@ Combining the logarithmic singular estimate with the uniform regular bound gives
 upper bound on the aligned disturbing average.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

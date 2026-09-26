@@ -16,7 +16,7 @@ public import LeanPool.QuasiBorelSpaces.Basic
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Functor`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuasiBorelSpace
 

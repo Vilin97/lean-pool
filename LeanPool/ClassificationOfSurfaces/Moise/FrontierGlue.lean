@@ -16,7 +16,7 @@ continuously with the unchanged map outside the open set.  This file isolates th
 argument from the later complex bookkeeping.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

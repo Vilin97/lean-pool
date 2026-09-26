@@ -38,7 +38,7 @@ Degree formulas (identities 6--7) are in `GL2.Degree`.
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, Theorem 3.24
 -/
 
-@[expose] public section
+public section
 
 open HeckeRing HeckeRing.GLn HeckeRing.GL2
 open scoped ArithmeticFunction.sigma

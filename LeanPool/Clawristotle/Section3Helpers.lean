@@ -20,7 +20,7 @@ characterization, and derivative bounds used in the nullspace analysis of the
 Landau operator.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 

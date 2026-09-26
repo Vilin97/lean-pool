@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketResidualGrades
 
 /-! Exact residual expansion with genuine derivatives within the prescribed time interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -21,7 +21,7 @@ namespace EulerPacketPointJets
 open EulerSmoothLimit EulerFiniteGrades EulerPacketResidual Finset Set
 
 /-- Sliced momentum residual, constructed using `linearPart`. -/
-def slicedMomentumResidual (s : Set ℝ) (κ : ℝ) (FInv M : Space →L[ℝ] Space) (m : Space)
+@[expose] def slicedMomentumResidual (s : Set ℝ) (κ : ℝ) (FInv M : Space →L[ℝ] Space) (m : Space)
     (u : Domain → Space) (p : Domain → ℝ) (z : Domain) : Space :=
   linearPart M (slicedJet s u z)+slowPressure FInv (pressureJet p z) +
     κ⁻¹ • fastPressure m (pressureJet p z) +
@@ -29,7 +29,7 @@ def slicedMomentumResidual (s : Set ℝ) (κ : ℝ) (FInv M : Space →L[ℝ] Sp
     κ⁻¹ • fastAdvection m (slicedJet s u z) (slicedJet s u z)
 
 /-- Sliced momentum grade, constructed using `coefficient`. -/
-def slicedMomentumGrade (s : Set ℝ) (N : ℕ) (FInv M : Space →L[ℝ] Space) (m : Space)
+@[expose] def slicedMomentumGrade (s : Set ℝ) (N : ℕ) (FInv M : Space →L[ℝ] Space) (m : Space)
     (u : ℕ → Domain → Space) (p : ℕ → Domain → ℝ) (z : Domain) (n : ℕ) : Space :=
   coefficient N (linearPart M) (slowPressure FInv) (fastPressure m)
     (slowAdvection FInv) (fastAdvection m) (fun i => slicedJet s (u i) z)

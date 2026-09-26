@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedAdvection
 
 /-! The old-corrector time term and old pressure term use the same fixed coefficient budget. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

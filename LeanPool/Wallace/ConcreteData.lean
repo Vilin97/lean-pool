@@ -28,7 +28,7 @@ The choices here are entirely set-theoretic.  No topology on the free group and 
 assumed.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

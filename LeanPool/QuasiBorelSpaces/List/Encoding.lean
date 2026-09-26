@@ -16,7 +16,7 @@ import Mathlib.Tactic.Push
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.List.Encoding`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace List
@@ -33,14 +33,14 @@ abbrev Encoding (A : Type*) :=
 namespace Encoding
 
 /-- The encoded version of `[]`. -/
-def nil : Encoding A := ⟨0, Fin.elim0⟩
+@[expose] def nil : Encoding A := ⟨0, Fin.elim0⟩
 
 /-- The encoded version of `· ∷ ·`. -/
-def cons (x : A) (xs : Encoding A) : Encoding A :=
+@[expose] def cons (x : A) (xs : Encoding A) : Encoding A :=
   ⟨xs.1 + 1, Fin.cases x xs.2⟩
 
 /-- The encoded version of `List.foldr`. -/
-def foldr (cons : A → B → B) (nil : B) : Encoding A → B
+@[expose] def foldr (cons : A → B → B) (nil : B) : Encoding A → B
   | ⟨0, _⟩ => nil
   | ⟨n + 1, k⟩ => cons (k 0) (foldr cons nil ⟨n, fun i ↦ k i.succ⟩)
 

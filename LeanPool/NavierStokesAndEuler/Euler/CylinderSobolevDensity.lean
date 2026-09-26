@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.MollifierRepresent
 
 /-! Smooth mollifications are dense in every actual complete cylinder Sobolev space. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

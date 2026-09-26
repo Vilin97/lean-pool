@@ -30,7 +30,7 @@ The Frobenius-twist hypothesis is stated as `pi^n Q = Q + C` with `C = ptInf c` 
 the three points at infinity are the three points of `K0 = ker (1+pi)`, cf. `neg_ptInf`.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 

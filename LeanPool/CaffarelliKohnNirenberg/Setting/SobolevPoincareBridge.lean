@@ -18,7 +18,7 @@ public import Mathlib.MeasureTheory.SpecificCodomains.Pi
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology
@@ -30,6 +30,7 @@ noncomputable section
 namespace CKN
 
 /-- Volume-normalization coefficient for the full ball Sobolev estimate. -/
+@[expose]
 noncomputable def sobolevPoincareBallFullConstant : ℝ≥0∞ :=
   ENNReal.ofReal (Real.pi * 4 / 3) ^ (-(1 / 3 : ℝ))
 

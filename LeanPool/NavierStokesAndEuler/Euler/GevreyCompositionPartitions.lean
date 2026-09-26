@@ -17,7 +17,7 @@ at most `(n + 1)^2 * (x + 2)`.  This avoids replacing every derivative in the
 composition formula by the largest derivative bound.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -52,15 +52,15 @@ lemma sum_partSize_succ_sq_le (c : OrderedFinpartition n) :
     _ ≤ _ := by nlinarith
 
 /-- Factorial product, given by `∏ i, ((c.partSize i).factorial : ℝ)`. -/
-def factorialProduct (c : OrderedFinpartition n) : ℝ :=
+@[expose] def factorialProduct (c : OrderedFinpartition n) : ℝ :=
   ∏ i, ((c.partSize i).factorial : ℝ)
 
 /-- Partition weight, given by `x^c.length * ((c.length.factorial : ℝ) * factorialProduct c)^2`. -/
-def partitionWeight (x : ℝ) (c : OrderedFinpartition n) : ℝ :=
+@[expose] def partitionWeight (x : ℝ) (c : OrderedFinpartition n) : ℝ :=
   x^c.length * ((c.length.factorial : ℝ) * factorialProduct c)^2
 
 /-- Partition sum, given by `∑ c : OrderedFinpartition n, partitionWeight x c`. -/
-def partitionSum (n : ℕ) (x : ℝ) : ℝ :=
+@[expose] def partitionSum (n : ℕ) (x : ℝ) : ℝ :=
   ∑ c : OrderedFinpartition n, partitionWeight x c
 
 lemma partitionWeight_nonneg (x : ℝ) (hx : 0 ≤ x) (c : OrderedFinpartition n) :

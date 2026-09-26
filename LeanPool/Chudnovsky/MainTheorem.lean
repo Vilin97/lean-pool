@@ -35,7 +35,7 @@ estimates), and the principal square root of `w²` is `w` on the right half-plan
 originally planned for this step (PLAN A8) is kept for reference/reuse.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -51,7 +51,7 @@ def Gsq (z : ℂ) : ℂ := (₂F₁ (1 / 12 : ℂ) (5 / 12) 1 z) ^ 2
 
 /-- The summand of the Main Theorem's series:
 `((1−s₂(τ))/6 + n) · (6n)!/((3n)!(n!)³) · (1728·J(τ))⁻ⁿ`. -/
-def mainSummand (τ : ℍ) (n : ℕ) : ℂ :=
+@[expose] def mainSummand (τ : ℍ) (n : ℕ) : ℂ :=
   ((1 - s₂ τ) / 6 + n) * (((6 * n)! : ℂ) / (((3 * n)! : ℂ) * ((n ! : ℕ) : ℂ) ^ 3)) /
     (1728 * J τ) ^ n
 

@@ -19,7 +19,7 @@ It closes the three terminal-color obligations left after `TailClosure.lean`:
 `(1,2)-d₁`, `(2,1)-d₁`, and `(2,1)-d₂`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 

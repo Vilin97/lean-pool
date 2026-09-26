@@ -11,4 +11,4 @@ public import LeanPool.PLAcceleratedNesterovLean.Convergence.MotionError.Main
 # Motion error estimates
 -/
 
-@[expose] public section
+public section

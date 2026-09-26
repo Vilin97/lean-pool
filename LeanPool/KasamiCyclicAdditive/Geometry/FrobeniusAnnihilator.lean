@@ -31,7 +31,7 @@ it makes `G` bijective on `E(K)` — no algebraic closure and no kernel
 decomposition.
 -/
 
-@[expose] public section
+public section
 
 open KasamiCyclicAdditive.FermatCubic
 

@@ -27,7 +27,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 # MatchingLogic.EntryIII.CaptureAvoiding
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -145,7 +145,7 @@ namespace Pattern
 open scoped BigOperators
 
 /-- Name-insensitive structural complexity for strong induction in the Truth Lemma. -/
-def complexity : Pattern S Nat → Nat
+@[expose] def complexity : Pattern S Nat → Nat
   | .var _ => 1
   | .bot => 1
   | .app _ args => 1 + ∑ i, (args i).complexity
@@ -247,7 +247,7 @@ def AvoidsBinder (y : Nat) : Pattern S Nat → Prop
   | .ex z p => z ≠ y ∧ AvoidsBinder y p
 
 /-- Alpha-normalize all binders named `y`. -/
-def avoidBinder (y : Nat) : Pattern S Nat → Pattern S Nat
+@[expose] def avoidBinder (y : Nat) : Pattern S Nat → Pattern S Nat
   | .var x => .var x
   | .bot => .bot
   | .app sigma args => .app sigma (fun i => avoidBinder y (args i))
@@ -351,7 +351,7 @@ theorem avoidBinder_eq_self_of_not_mem_allVars {y : Nat} {p : Pattern S Nat}
       simp [avoidBinder, Ne.symm hy.1, ih hy.2]
 
 /-- Total source-style capture-avoiding substitution on raw `Nat` names. -/
-def captureAvoidingSubst (x y : Nat) (p : Pattern S Nat) : Pattern S Nat :=
+@[expose] def captureAvoidingSubst (x y : Nat) (p : Pattern S Nat) : Pattern S Nat :=
   substVar x y (avoidBinder y p)
 
 /-- Relational specification exposing the alpha-equivalent, capture-free body

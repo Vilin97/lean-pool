@@ -23,7 +23,7 @@ it is compressible with respect to `TopCat.diskBoundaryIncl n : ∂𝔻 n ⟶ �
 for each `n`.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory TopCat
 open scoped unitInterval ContinuousMap Topology Topology.Homotopy

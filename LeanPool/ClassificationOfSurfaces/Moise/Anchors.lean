@@ -28,7 +28,7 @@ affine independence of the three vertices, proved from non-collinearity by coord
 computation.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -36,7 +36,7 @@ namespace ClassificationOfSurfaces
 namespace Moise
 
 /-- The vertices of the standard triangle: `(0,0)`, `(1,0)`, `(0,1)`. -/
-def standardTriangleVertex : Fin 3 → Plane :=
+@[expose] def standardTriangleVertex : Fin 3 → Plane :=
   ![!₂[(0 : ℝ), 0], !₂[(1 : ℝ), 0], !₂[(0 : ℝ), 1]]
 
 /-- The vertices of the standard triangle are not collinear. -/

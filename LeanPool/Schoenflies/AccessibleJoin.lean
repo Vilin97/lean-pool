@@ -88,7 +88,7 @@ skeleton homeomorphism. Both need the stage/anchor machinery of §"Continuity at
 curve"; the extraction between them is what this module supplies.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

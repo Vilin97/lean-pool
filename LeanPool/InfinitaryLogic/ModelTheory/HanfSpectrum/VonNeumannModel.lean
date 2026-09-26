@@ -25,7 +25,7 @@ The upper-bound half (every ladder model has size `≤ ℶ_{α+1}`) is `LadderBo
 per-stage endpoint and the supremum assembly are `BethLadder.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

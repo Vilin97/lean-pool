@@ -40,7 +40,7 @@ engine is a BFS ball-excess count in a graph with no cycle of length `≤ 2r + 1
   `two_core_of_excess` (`degWithin`, `edgeSumWithin`).
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

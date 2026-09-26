@@ -20,7 +20,7 @@ a comparable native band; no physical support property is an input.
 The zeroth support assertion concerns the finite initialization increment.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

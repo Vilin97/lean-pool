@@ -21,7 +21,7 @@ the monoid structure on `TwoSidedIdeal R` used throughout the
 Artin–Wedderburn development.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 
@@ -240,7 +240,7 @@ def twoSidedIdealToSubgroup (I : TwoSidedIdeal R) : AddSubgroup R :=
     neg_mem' := I.neg_mem }
 
 theorem subgroup_of_ideal_carrier_eq_carrier (I : TwoSidedIdeal R) :
-    ((twoSidedIdealToSubgroup I) : Set R) = I := rfl
+    ((twoSidedIdealToSubgroup I) : Set R) = I := by rfl
 
 -- cl(cl(A*B)*C) = cl(A*B*C)
 theorem ideal_product_subgroup_eq (A B C : TwoSidedIdeal R) :

@@ -20,7 +20,7 @@ is used to initialize an explicitly solved scalar ODE, but is not asserted
 to be the unedited angular history.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -93,7 +93,7 @@ theorem sigma_derivative_le (x : ℝ) : deriv sigma x ≤ stepBound :=
   (Classical.choose_spec exists_sigma_derivative_bound).2 x
 
 /-- Flatten length, given by `10 * (stepBound + 1) * Real.log 2 + 1`. -/
-def flattenLength : ℝ := 10 * (stepBound + 1) * Real.log 2 + 1
+@[expose] def flattenLength : ℝ := 10 * (stepBound + 1) * Real.log 2 + 1
 
 theorem flattenLength_pos : 0 < flattenLength := by
   have hlog : 0 < Real.log 2 := Real.log_pos (by norm_num)
@@ -137,11 +137,11 @@ theorem one_sub_h_pos (d : TailData) : 0 < 1 - d.h := by
   linarith [d.h_lt_half]
 
 /-- Flatten end, given by `d.core.endpoint + flattenLength`. -/
-def flattenEnd (d : TailData) : ℝ := d.core.endpoint + flattenLength
+@[expose] def flattenEnd (d : TailData) : ℝ := d.core.endpoint + flattenLength
 /-- Uniform wait, given by `30 * Real.log (1 / d.core.lam)`. -/
-def uniformWait (d : TailData) : ℝ := 30 * Real.log (1 / d.core.lam)
+@[expose] def uniformWait (d : TailData) : ℝ := 30 * Real.log (1 / d.core.lam)
 /-- Release start, given by `d.flattenEnd + d.uniformWait`. -/
-def releaseStart (d : TailData) : ℝ := d.flattenEnd + d.uniformWait
+@[expose] def releaseStart (d : TailData) : ℝ := d.flattenEnd + d.uniformWait
 
 theorem uniformWait_pos (d : TailData) : 0 < d.uniformWait := by
   unfold uniformWait
@@ -151,11 +151,11 @@ theorem uniformWait_pos (d : TailData) : 0 < d.uniformWait := by
   linarith [d.core.lam_lt]
 
 /-- Long hold, given by `4 * Real.log (1 / d.h)`. -/
-def longHold (d : TailData) : ℝ := 4 * Real.log (1 / d.h)
+@[expose] def longHold (d : TailData) : ℝ := 4 * Real.log (1 / d.h)
 /-- Second ramp start, given by `1 + d.longHold`. -/
-def secondRampStart (d : TailData) : ℝ := 1 + d.longHold
+@[expose] def secondRampStart (d : TailData) : ℝ := 1 + d.longHold
 /-- Ramp end, given by `d.secondRampStart + 1`. -/
-def rampEnd (d : TailData) : ℝ := d.secondRampStart + 1
+@[expose] def rampEnd (d : TailData) : ℝ := d.secondRampStart + 1
 
 theorem longHold_pos (d : TailData) : 0 < d.longHold := by
   unfold longHold
@@ -184,11 +184,11 @@ end TailData
 /-! ## The fixed terminal taper and its positive weighted debt -/
 
 /-- Tail shape, given by `1 - d.rho + d.rho * sigma ((t - 1) / 2)`. -/
-def tailShape (d : TailData) (t : ℝ) : ℝ :=
+@[expose] def tailShape (d : TailData) (t : ℝ) : ℝ :=
   1 - d.rho + d.rho * sigma ((t - 1) / 2)
 
 /-- Tail shape derivative, given by `(d.rho / 2) * deriv sigma ((t - 1) / 2)`. -/
-def tailShapeDeriv (d : TailData) (t : ℝ) : ℝ :=
+@[expose] def tailShapeDeriv (d : TailData) (t : ℝ) : ℝ :=
   (d.rho / 2) * deriv sigma ((t - 1) / 2)
 
 theorem tailShape_contDiff (d : TailData) : ContDiff ℝ ∞ (tailShape d) :=
@@ -235,11 +235,11 @@ theorem tailShapeDeriv_integral (d : TailData) :
   linarith
 
 /-- Tail log slope, given by `-d.h + tailShapeDeriv d t / tailShape d t`. -/
-def tailLogSlope (d : TailData) (t : ℝ) : ℝ := -d.h + tailShapeDeriv d t / tailShape d t
+@[expose] def tailLogSlope (d : TailData) (t : ℝ) : ℝ := -d.h + tailShapeDeriv d t / tailShape d t
 
 /-- Tail debt, given by `(∫ t in (0 : ℝ)..3, Real.exp ((1 - d.h) * t) * tailShapeDeriv d t) / (1
 - d.rho)`. -/
-def tailDebt (d : TailData) : ℝ :=
+@[expose] def tailDebt (d : TailData) : ℝ :=
   (∫ t in (0 : ℝ)..3, Real.exp ((1 - d.h) * t) * tailShapeDeriv d t) / (1 - d.rho)
 
 theorem tailDebt_bounds (d : TailData) :
@@ -371,7 +371,7 @@ def releaseRate (d : TailData) (t : ℝ) : ℝ := 1 + releaseSlope d t
 /-- Release source, given by `-releaseSlope d t - d.h`. -/
 def releaseSource (d : TailData) (t : ℝ) : ℝ := -releaseSlope d t - d.h
 /-- Initial lag, given by `(d.core.lam - d.h) / (1 - d.core.lam)`. -/
-def initialLag (d : TailData) : ℝ := (d.core.lam - d.h) / (1 - d.core.lam)
+@[expose] def initialLag (d : TailData) : ℝ := (d.core.lam - d.h) / (1 - d.core.lam)
 
 theorem initialLag_gt_h (d : TailData) : d.h < initialLag d := by
   apply (lt_div_iff₀ (show 0 < 1 - d.core.lam by linarith [d.core.lam_lt])).mpr
@@ -385,7 +385,7 @@ theorem releaseSource_contDiff (d : TailData) : ContDiff ℝ ∞ (releaseSource 
 
 /-- Linear lag, given by `Real.exp (-primitive a t) * (q + primitive (fun v => Real.exp
 (primitive a v) * b v) t)`. -/
-def linearLag (a b : ℝ → ℝ) (q : ℝ) (t : ℝ) : ℝ :=
+@[expose] def linearLag (a b : ℝ → ℝ) (q : ℝ) (t : ℝ) : ℝ :=
   Real.exp (-primitive a t) *
     (q + primitive (fun v => Real.exp (primitive a v) * b v) t)
 
@@ -412,7 +412,7 @@ theorem linearLag_hasDerivAt {a b : ℝ → ℝ} (ha : Continuous a) (hb : Conti
   linarith [congrArg (fun v : ℝ => v * b t) he]
 
 /-- Release lag, given by `linearLag (releaseRate d) (releaseSource d) (initialLag d)`. -/
-def releaseLag (d : TailData) : ℝ → ℝ :=
+@[expose] def releaseLag (d : TailData) : ℝ → ℝ :=
   linearLag (releaseRate d) (releaseSource d) (initialLag d)
 
 theorem releaseLag_contDiff (d : TailData) : ContDiff ℝ ∞ (releaseLag d) :=
@@ -510,18 +510,18 @@ theorem decayHold_hits_target (d : TailData) :
 /-! ## One globally smooth positive angular profile -/
 
 /-- Log shape, given by `Real.log (1 + eta ^ 2)`. -/
-def logShape (eta : ℝ) : ℝ := Real.log (1 + eta ^ 2)
+@[expose] def logShape (eta : ℝ) : ℝ := Real.log (1 + eta ^ 2)
 
 theorem logShape_contDiff : ContDiff ℝ ∞ logShape :=
   (contDiff_const.add (contDiff_id.pow 2)).log (fun eta => by positivity)
 
 /-- Flatten factor, given by `Real.exp (sigma ((p.1 - d.core.endpoint) / flattenLength) *
 (logShape p.2 - Real.log 2))`. -/
-def flattenFactor (d : TailData) (p : ℝ × ℝ) : ℝ :=
+@[expose] def flattenFactor (d : TailData) (p : ℝ × ℝ) : ℝ :=
   Real.exp (sigma ((p.1 - d.core.endpoint) / flattenLength) * (logShape p.2 - Real.log 2))
 
 /-- Flattened, given by `angular d.core.P d.core.dropLength d.core.lam p * flattenFactor d p`. -/
-def flattened (d : TailData) (p : ℝ × ℝ) : ℝ :=
+@[expose] def flattened (d : TailData) (p : ℝ × ℝ) : ℝ :=
   angular d.core.P d.core.dropLength d.core.lam p * flattenFactor d p
 
 theorem flattenFactor_contDiff (d : TailData) : ContDiff ℝ ∞ (flattenFactor d) :=
@@ -558,7 +558,7 @@ theorem flattened_uniform (d : TailData) (eta : ℝ) {y : ℝ}
   field_simp
 
 /-- Release adjustment, given by `primitive (fun t => releaseSlope d t + d.core.lam)`. -/
-def releaseAdjustment (d : TailData) : ℝ → ℝ :=
+@[expose] def releaseAdjustment (d : TailData) : ℝ → ℝ :=
   primitive (fun t => releaseSlope d t + d.core.lam)
 
 theorem releaseAdjustment_contDiff (d : TailData) : ContDiff ℝ ∞ (releaseAdjustment d) :=
@@ -587,9 +587,9 @@ theorem releaseAdjustment_late (d : TailData) {a t : ℝ}
     ring
 
 /-- Tail start, given by `d.releaseStart + d.rampEnd + decayHold d`. -/
-def tailStart (d : TailData) : ℝ := d.releaseStart + d.rampEnd + decayHold d
+@[expose] def tailStart (d : TailData) : ℝ := d.releaseStart + d.rampEnd + decayHold d
 /-- Tail end, given by `tailStart d + 3`. -/
-def tailEnd (d : TailData) : ℝ := tailStart d + 3
+@[expose] def tailEnd (d : TailData) : ℝ := tailStart d + 3
 
 theorem releaseStart_gt_flattenEnd (d : TailData) : d.flattenEnd < d.releaseStart := by
   dsimp [TailData.releaseStart]
@@ -605,7 +605,7 @@ theorem tailStart_gt_release (d : TailData) : d.releaseStart < tailStart d := by
 
 /-- Final angular, given by `flattened d p * Real.exp (releaseAdjustment d (p.1 -
 d.releaseStart)) * (tailShape d (p.1 - tailStart d) / (1 - d.rho))`. -/
-def finalAngular (d : TailData) (p : ℝ × ℝ) : ℝ :=
+@[expose] def finalAngular (d : TailData) (p : ℝ × ℝ) : ℝ :=
   flattened d p * Real.exp (releaseAdjustment d (p.1 - d.releaseStart)) *
     (tailShape d (p.1 - tailStart d) / (1 - d.rho))
 
@@ -739,14 +739,14 @@ theorem axial_product_unchanged (d : TailData) (amp : ℝ → ℝ) (eta y : ℝ)
 /-! ## The prescribed taper is an actual backward lag solution -/
 
 /-- Tail rate, given by `1 + tailLogSlope d t`. -/
-def tailRate (d : TailData) (t : ℝ) : ℝ := 1 + tailLogSlope d t
+@[expose] def tailRate (d : TailData) (t : ℝ) : ℝ := 1 + tailLogSlope d t
 
 theorem tailRate_contDiff (d : TailData) : ContDiff ℝ ∞ (tailRate d) :=
   contDiff_const.add (contDiff_const.add
     ((tailShapeDeriv_contDiff d).div (tailShape_contDiff d) (fun t => (tailShape_pos d t).ne')))
 
 /-- Weighted tail derivative, given by `Real.exp ((1 - d.h) * t) * tailShapeDeriv d t`. -/
-def weightedTailDerivative (d : TailData) (t : ℝ) : ℝ :=
+@[expose] def weightedTailDerivative (d : TailData) (t : ℝ) : ℝ :=
   Real.exp ((1 - d.h) * t) * tailShapeDeriv d t
 
 theorem weightedTailDerivative_contDiff (d : TailData) :
@@ -790,12 +790,12 @@ theorem tailDebt_source_formula (d : TailData) :
 
 /-- Tail numerator, given by `Real.exp (-(1 - d.h) * t) * (primitive (weightedTailDerivative d)
 3 - primitive (weightedTailDerivative d) t)`. -/
-def tailNumerator (d : TailData) (t : ℝ) : ℝ :=
+@[expose] def tailNumerator (d : TailData) (t : ℝ) : ℝ :=
   Real.exp (-(1 - d.h) * t) *
     (primitive (weightedTailDerivative d) 3 - primitive (weightedTailDerivative d) t)
 
 /-- Tail lag, given by `tailNumerator d t / tailShape d t`. -/
-def tailLag (d : TailData) (t : ℝ) : ℝ := tailNumerator d t / tailShape d t
+@[expose] def tailLag (d : TailData) (t : ℝ) : ℝ := tailNumerator d t / tailShape d t
 
 theorem tailNumerator_contDiff (d : TailData) : ContDiff ℝ ∞ (tailNumerator d) :=
   (contDiff_const.mul contDiff_id).exp.mul
@@ -1008,7 +1008,7 @@ theorem carrier_hasDerivAt (d : TailData) {y : ℝ} (hy : d.releaseStart ≤ y) 
 
 /-- Profile slope, given by `releaseSlope d (y - d.releaseStart) + tailShapeDeriv d (y -
 tailStart d) / tailShape d (y - tailStart d)`. -/
-def profileSlope (d : TailData) (y : ℝ) : ℝ :=
+@[expose] def profileSlope (d : TailData) (y : ℝ) : ℝ :=
   releaseSlope d (y - d.releaseStart) + tailShapeDeriv d (y - tailStart d) / tailShape d (y -
       tailStart d)
 

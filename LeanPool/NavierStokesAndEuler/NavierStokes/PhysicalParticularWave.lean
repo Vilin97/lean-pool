@@ -19,7 +19,7 @@ The input is the constructed reference Volterra solve.  Curl identities
 are conclusions, not compatibility assumptions on solved velocities.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.PhysicalParticularWave
@@ -193,11 +193,11 @@ noncomputable def waveEquiv : Cylinder ≃ₗᵢ[ℝ] WaveSpace :=
     waveEquiv x = (((x.1.1, (x.1.2.1.2, x.1.2.1.1)), x.2), x.1.2.2) := rfl
 
 /-- Native map, given by `waveEquiv ((PhysicalResidualBridge.commonGraph Q h i).map z)`. -/
-noncomputable def nativeMap (h Q : ℝ) (i : ℕ) (z : SpaceTime) : WaveSpace :=
+@[expose] noncomputable def nativeMap (h Q : ℝ) (i : ℕ) (z : SpaceTime) : WaveSpace :=
   waveEquiv ((PhysicalResidualBridge.commonGraph Q h i).map z)
 
 /-- Ratio power, given by `Q ^ a / Qr ^ a`. -/
-noncomputable def ratioPower (Q Qr a : ℝ) : ℝ := Q ^ a / Qr ^ a
+@[expose] noncomputable def ratioPower (Q Qr a : ℝ) : ℝ := Q ^ a / Qr ^ a
 
 theorem ratioPower_pos {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr) (a : ℝ) :
     0 < ratioPower Q Qr a := div_pos (Real.rpow_pos_of_pos hQ _) (Real.rpow_pos_of_pos hQr _)
@@ -243,7 +243,7 @@ noncomputable def chartChange (h Q Qr : ℝ) (gap : ℕ) : Lift →L[ℝ] Lift :
 
 /-- Cylinder change, given by `((chartChange h Q Qr gap).comp (ContinuousLinearMap.fst ℝ Lift
 ℝ)).prod (ContinuousLinearMap.snd ℝ Lift ℝ)`. -/
-noncomputable def cylinderChange (h Q Qr : ℝ) (gap : ℕ) : Cylinder →L[ℝ] Cylinder :=
+@[expose] noncomputable def cylinderChange (h Q Qr : ℝ) (gap : ℕ) : Cylinder →L[ℝ] Cylinder :=
   ((chartChange h Q Qr gap).comp (ContinuousLinearMap.fst ℝ Lift ℝ)).prod
     (ContinuousLinearMap.snd ℝ Lift ℝ)
 
@@ -270,16 +270,20 @@ theorem cylinderChange_graph {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
   · rfl
 
 /-- Velocity weight, given by `ratioPower Q Qr (CoordinateAlgebra.A h)`. -/
+@[expose]
 noncomputable def velocityWeight (h Q Qr : ℝ) : ℝ := ratioPower Q Qr (CoordinateAlgebra.A h)
 /-- Clock weight, given by `ratioPower Q Qr (CoordinateAlgebra.A h + 1 / 2)`. -/
+@[expose]
 noncomputable def clockWeight (h Q Qr : ℝ) : ℝ := ratioPower Q Qr (CoordinateAlgebra.A h + 1 / 2)
 /-- Source weight, given by `ratioPower Q Qr (2 * CoordinateAlgebra.A h + 1 / 2)`. -/
+@[expose]
 noncomputable def sourceWeight (h Q Qr : ℝ) : ℝ := ratioPower Q Qr (2 * CoordinateAlgebra.A h + 1 /
     2)
 /-- Pressure weight, given by `ratioPower Q Qr (2 * CoordinateAlgebra.A h)`. -/
+@[expose]
 noncomputable def pressureWeight (h Q Qr : ℝ) : ℝ := ratioPower Q Qr (2 * CoordinateAlgebra.A h)
 /-- Normal weight, given by `(Kr / K) * ratioPower Q Qr (1 / 2)`. -/
-noncomputable def normalWeight (Q Qr K Kr : ℝ) : ℝ := (Kr / K) * ratioPower Q Qr (1 / 2)
+@[expose] noncomputable def normalWeight (Q Qr K Kr : ℝ) : ℝ := (Kr / K) * ratioPower Q Qr (1 / 2)
 
 theorem clock_mul_velocity {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr) (h : ℝ) :
     clockWeight h Q Qr * velocityWeight h Q Qr = sourceWeight h Q Qr := by
@@ -518,7 +522,7 @@ noncomputable def referenceRawPressure (D : AssemblyData Parameter) (j : ℤ) : 
     D.gaussianInput D.aliasInput j)
 
 /-- Reference frequency, given by `(j : ℝ) * D.carrierBlock.frequency D.reference.band`. -/
-noncomputable def referenceFrequency (D : AssemblyData Parameter) (j : ℤ) : ℝ :=
+@[expose] noncomputable def referenceFrequency (D : AssemblyData Parameter) (j : ℤ) : ℝ :=
   (j : ℝ) * D.carrierBlock.frequency D.reference.band
 
 /-- Reference phase, given by `(actualCarrier D.background D.carrierBlock j).phase
@@ -556,12 +560,12 @@ noncomputable def physicalVelocity (D : AssemblyData Parameter) (h Qr : ℝ) (I 
 
 /-- The finite harmonic sum for a single original spatial label is one
 actual Cartesian potential, rather than a collection of bandwise fields. -/
-noncomputable def labelPotential (D : AssemblyData Parameter) (h Qr : ℝ) (I : ℕ)
+@[expose] noncomputable def labelPotential (D : AssemblyData Parameter) (h Qr : ℝ) (I : ℕ)
     (delta : ℝ) (N : ℕ) : VelocityField :=
   fun z => ∑ j ∈ modes N, physicalPotential D h Qr I delta j z
 
 /-- Label velocity, given by `SpatialCurl.spatialCurl (labelPotential D h Qr I delta N)`. -/
-noncomputable def labelVelocity (D : AssemblyData Parameter) (h Qr : ℝ) (I : ℕ)
+@[expose] noncomputable def labelVelocity (D : AssemblyData Parameter) (h Qr : ℝ) (I : ℕ)
     (delta : ℝ) (N : ℕ) : VelocityField :=
   SpatialCurl.spatialCurl (labelPotential D h Qr I delta N)
 
@@ -674,6 +678,7 @@ noncomputable def liftPhase (D : AssemblyData Parameter) (j : ℤ) : Cylinder �
   fun x => referencePhase D j (waveEquiv x)
 
 /-- Lift raw, defined pointwise by `referenceRaw D j (waveEquiv x)`. -/
+@[expose]
 noncomputable def liftRaw (D : AssemblyData Parameter) (j : ℤ) : Cylinder → ComplexVector :=
   fun x => referenceRaw D j (waveEquiv x)
 
@@ -837,7 +842,7 @@ end ReferenceRealization
 
 /-- Parameter change, given by `(ratioPower Q Qr (1 / 2) * p.1, (ratioPower Q Qr 1 * p.2.1,
 ratioPower Q Qr (CoordinateAlgebra.D h) * p.2.2))`. -/
-noncomputable def parameterChange (h Q Qr : ℝ) (p : Parameter) : Parameter :=
+@[expose] noncomputable def parameterChange (h Q Qr : ℝ) (p : Parameter) : Parameter :=
   (ratioPower Q Qr (1 / 2) * p.1,
     (ratioPower Q Qr 1 * p.2.1, ratioPower Q Qr (CoordinateAlgebra.D h) * p.2.2))
 
@@ -857,7 +862,7 @@ noncomputable def referenceSource (D : AssemblyData Parameter) (j : ℤ) : Param
   residualSource D.context D.state D.carrierBlock D.gaussianInput D.aliasInput j D.reference.band
 
 /-- Band amplitude, constructed using `ParticularWaveBounds.commonVelocity`. -/
-noncomputable def bandAmplitude (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
+@[expose] noncomputable def bandAmplitude (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (K : ℝ) (j : ℤ) : Parameter × Plane → ComplexVector :=
   ParticularWaveBounds.commonVelocity
     (ScaledTangentTransport.transportTangent (D.reference.tangent j) (parameterChange h Q Qr) gap 0
@@ -870,7 +875,7 @@ noncomputable def bandAmplitude (D : AssemblyData Parameter) (h : ℝ) {Q Qr : �
     (D.reference.cutoff ∘ CopySolveCompatibility.nativeTimeMap 0 (clockWeight h Q Qr))
 
 /-- Band pressure, constructed using `ParticularWaveBounds.commonPressure`. -/
-noncomputable def bandPressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
+@[expose] noncomputable def bandPressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (K : ℝ) (j : ℤ) : Parameter × Plane → ℂ :=
   ParticularWaveBounds.commonPressure
     (ScaledTangentTransport.transportTangent (D.reference.tangent j) (parameterChange h Q Qr) gap 0
@@ -940,6 +945,7 @@ noncomputable def bandRawPressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr :
 
 /-- Band phase, defined pointwise by `(referenceFrequency D j / K) * liftPhase D j
 (cylinderChange h Q Qr gap x)`. -/
+@[expose]
 noncomputable def bandPhase (D : AssemblyData Parameter) (h Q Qr : ℝ) (gap : ℕ) (K : ℝ) (j : ℤ) :
     Cylinder → ℝ := fun x => (referenceFrequency D j / K) * liftPhase D j (cylinderChange h Q Qr
         gap x)
@@ -1095,6 +1101,7 @@ noncomputable def complexPhysicalPressure (D : AssemblyData Parameter) (h Qr : �
   mode (referenceFrequency D j) (physicalPhase D h Qr I j) (physicalPressureCoefficient D h Qr I j)
 
 /-- Pressure vector, given by `![0, 0, p z]`. -/
+@[expose]
 noncomputable def pressureVector (p : SpaceTime → ℂ) (z : SpaceTime) : ComplexVector := ![0, 0, p z]
 
 /-- A scalar is the axial component of its Cartesian coordinate lift;
@@ -1106,7 +1113,7 @@ noncomputable def physicalPressure (D : AssemblyData Parameter) (h Qr : ℝ) (I 
 
 /-- Band pressure mode, given by `mode K (bandPhase D h Q Qr gap K j) (bandRawPressure D h hQ
 hQr gap K j)`. -/
-noncomputable def bandPressureMode (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
+@[expose] noncomputable def bandPressureMode (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (K : ℝ) (j : ℤ) : Cylinder → ℂ :=
   mode K (bandPhase D h Q Qr gap K j) (bandRawPressure D h hQ hQr gap K j)
 
@@ -1226,19 +1233,19 @@ theorem band_physical_pressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : �
 
 /-- Label band velocity, given by `∑ j ∈ modes N, (bandVelocity D h hQ hQr i gap (frequency j) j
 x component).re`. -/
-noncomputable def labelBandVelocity (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
+@[expose] noncomputable def labelBandVelocity (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (i gap : ℕ) (frequency : ℤ → ℝ) (N : ℕ)
     (x : Cylinder) (component : Fin 3) : ℝ :=
   ∑ j ∈ modes N, (bandVelocity D h hQ hQr i gap (frequency j) j x component).re
 
 /-- Label band pressure, given by `∑ j ∈ modes N, (bandPressureMode D h hQ hQr gap (frequency j)
 j x).re`. -/
-noncomputable def labelBandPressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
+@[expose] noncomputable def labelBandPressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (frequency : ℤ → ℝ) (N : ℕ)
     (x : Cylinder) : ℝ := ∑ j ∈ modes N, (bandPressureMode D h hQ hQr gap (frequency j) j x).re
 
 /-- Label pressure, defined pointwise by `∑ j ∈ modes N, physicalPressure D h Qr I delta j z`. -/
-noncomputable def labelPressure (D : AssemblyData Parameter) (h Qr : ℝ) (I : ℕ)
+@[expose] noncomputable def labelPressure (D : AssemblyData Parameter) (h Qr : ℝ) (I : ℕ)
     (delta : ℝ) (N : ℕ) : PressureField :=
   fun z => ∑ j ∈ modes N, physicalPressure D h Qr I delta j z
 
@@ -1527,7 +1534,7 @@ noncomputable def transportedResidualSource (D : AssemblyData Parameter) (h Q Qr
     (clockWeight h Q Qr) (velocityWeight h Q Qr)
 
 /-- Residual band amplitude, constructed using `ParticularWaveBounds.commonVelocity`. -/
-noncomputable def residualBandAmplitude (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
+@[expose] noncomputable def residualBandAmplitude (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (K : ℝ) (j : ℤ) (n : ℕ) :
     Parameter × Plane → ComplexVector :=
   ParticularWaveBounds.commonVelocity
@@ -1540,7 +1547,7 @@ noncomputable def residualBandAmplitude (D : AssemblyData Parameter) (h : ℝ) {
     (D.reference.cutoff ∘ CopySolveCompatibility.nativeTimeMap 0 (clockWeight h Q Qr))
 
 /-- Residual band pressure, constructed using `ParticularWaveBounds.commonPressure`. -/
-noncomputable def residualBandPressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
+@[expose] noncomputable def residualBandPressure (D : AssemblyData Parameter) (h : ℝ) {Q Qr : ℝ}
     (hQ : 0 < Q) (hQr : 0 < Qr) (gap : ℕ) (K : ℝ) (j : ℤ) (n : ℕ) :
     Parameter × Plane → ℂ :=
   ParticularWaveBounds.commonPressure

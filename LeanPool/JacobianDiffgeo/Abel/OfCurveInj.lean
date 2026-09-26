@@ -31,7 +31,7 @@ moment `period-lattice-rank` registers `instance : DiscreteTopology (RS.periodSu
 `WeakSolutionUpgrade X` is proved (see `Sufficiency.lean` for the precise remaining roadmap).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

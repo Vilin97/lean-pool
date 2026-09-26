@@ -17,7 +17,7 @@ Shifting the aligned orientation by `π/q` puts it halfway between the possible 
 The exclusion is ultimately the parity contradiction `1 + 2ql = 2pk`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

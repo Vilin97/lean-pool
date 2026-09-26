@@ -35,7 +35,7 @@ chosen representative agrees with every valid chart on an ambient
 neighborhood.  No regularity at the boundary of the union is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -214,7 +214,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

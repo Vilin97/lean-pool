@@ -21,7 +21,7 @@ boundary and radius statements so the proof can be checked modularly, but they
 are not intended as the public API of the project.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -42,7 +42,7 @@ def BoundaryIdentity {n m : ℕ} (u : Domain n → Target m) (a : Domain n) (R0 
 
 /-- Weak a.e. boundary identity, stated directly in terms of the weak gradient
 energy and weak radial energy. -/
-def WeakBoundaryIdentity {n m : ℕ}
+@[expose] def WeakBoundaryIdentity {n m : ℕ}
     (Du : Domain n → Gradient n m) (a : Domain n) (R0 : ℝ) : Prop :=
   ∀ᵐ rho ∂(volume.restrict (Ioo (0 : ℝ) R0)),
     rho * deriv (weakBallEnergy Du a) rho - ((n : ℝ) - 2) * weakBallEnergy Du a rho
@@ -66,7 +66,7 @@ def WeakSharpCutoffRadiusIdentityAt {n m : ℕ}
   -(2 * rho * deriv (weakBallRadialEnergy Du a) rho)
 
 /-- The scalar defect whose vanishing is the sharp-cutoff radius identity. -/
-def weakSharpCutoffDefect {n m : ℕ}
+@[expose] def weakSharpCutoffDefect {n m : ℕ}
     (Du : Domain n → Gradient n m) (a : Domain n) (rho : ℝ) : ℝ :=
   ((n : ℝ) - 2) * weakBallEnergy Du a rho
       - rho * deriv (weakBallEnergy Du a) rho
@@ -183,7 +183,7 @@ def WeakRadialCutoffLimitStep {n m : ℕ}
     WeakSharpCutoffLimitIdentity Du (0 : Domain n) R0
 
 /-- Main one-dimensional radial integrand after applying coarea. -/
-def weakRadialOneDimensionalMainIntegrand {n m : ℕ}
+@[expose] def weakRadialOneDimensionalMainIntegrand {n m : ℕ}
     (Du : Domain n → Gradient n m) (phi : ℝ → ℝ) (rho : ℝ) : ℝ :=
   (((n : ℝ) - 2) * phi rho + rho * deriv phi rho) *
     deriv (weakBallEnergy Du (0 : Domain n)) rho

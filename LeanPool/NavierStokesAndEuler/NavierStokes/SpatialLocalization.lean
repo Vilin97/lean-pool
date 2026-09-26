@@ -37,7 +37,7 @@ Consequently every smoothness order is preserved. The construction agrees with
 the original field on an explicit cube whenever the other translates vanish.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -319,7 +319,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 namespace NavierStokes.SpatialLocalization
 
@@ -333,7 +333,7 @@ private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   (ENat.natCast_lt_of_coe_top_le_withTop le_rfl n).le
 
 /-- Squared distance to the symmetry axis, with no square-root singularity. -/
-noncomputable def radialSquare (x : Space) : ℝ := (x 0) ^ 2 + (x 1) ^ 2
+@[expose] noncomputable def radialSquare (x : Space) : ℝ := (x 0) ^ 2 + (x 1) ^ 2
 
 theorem radialSquare_nonneg (x : Space) : 0 ≤ radialSquare x :=
   add_nonneg (sq_nonneg _) (sq_nonneg _)
@@ -350,7 +350,7 @@ theorem cutoffProfile_contDiff : ContDiff ℝ ∞ cutoffProfile :=
     (SmoothCutoffs.cutoff_contDiff.comp (contDiff_const.mul contDiff_snd))
 
 /-- The explicit spatial cutoff used in both the potential and the pressure. -/
-noncomputable def spatialCutoff (x : Space) : ℝ :=
+@[expose] noncomputable def spatialCutoff (x : Space) : ℝ :=
   cutoffProfile (radialSquare x, x 2)
 
 theorem spatialCutoff_contDiff : ContDiff ℝ ∞ spatialCutoff :=
@@ -466,11 +466,11 @@ theorem plateau_subset_innerCube : plateau ⊆ PeriodicLocalization.innerCube (1
   linarith
 
 /-- Multiplication of the actual Cartesian potential, before any curl. -/
-noncomputable def cutPotential (A : VelocityField) : VelocityField :=
+@[expose] noncomputable def cutPotential (A : VelocityField) : VelocityField :=
   fun z => spatialCutoff z.2 • A z
 
 /-- Cut pressure, defined pointwise by `spatialCutoff z.2 * p z`. -/
-noncomputable def cutPressure (p : PressureField) : PressureField :=
+@[expose] noncomputable def cutPressure (p : PressureField) : PressureField :=
   fun z => spatialCutoff z.2 * p z
 
 /-- Cut velocity, given by `SpatialCurl.spatialCurl (cutPotential A)`. -/

@@ -17,7 +17,7 @@ high shifts and low cuts have operator norm at most one, and evaluation on the
 unit polydisc is bounded by the `ℓ¹` norm.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open scoped ENNReal NNReal Topology

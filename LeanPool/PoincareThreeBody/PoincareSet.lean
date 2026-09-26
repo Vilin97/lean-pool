@@ -20,7 +20,7 @@ defines that set intrinsically in the full two-dimensional action region and pro
 leading-coefficient obstruction.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

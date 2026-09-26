@@ -32,7 +32,7 @@ Implementation note: `Mathlib.RingTheory.HahnSeries.Summable` must be imported e
 the lexicographic Hahn import alone does not load the field instance.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

@@ -16,7 +16,7 @@ import Mathlib.Tactic.SetLike
 
 /-! # Order -/
 
-@[expose] public section
+public section
 
 
 section «lp_section_1»

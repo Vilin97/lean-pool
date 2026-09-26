@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPath
 spatial jets continuous in the uniform time-path norm. This extends the
 ordinary-space coefficient interface to the lifted four-dimensional flow. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

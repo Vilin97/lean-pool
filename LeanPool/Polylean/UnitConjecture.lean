@@ -72,4 +72,4 @@ checking equality on a basis for finitely generated abelian groups.
   homomorphisms on finitely generated free abelian groups.
 -/
 
-@[expose] public section
+public section

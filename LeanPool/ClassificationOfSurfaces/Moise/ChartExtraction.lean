@@ -31,7 +31,7 @@ boundary-faithfulness: manifold-boundary points in the chart land on the frontie
 target, hence on the model edge line.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold
 open Topology
@@ -44,7 +44,7 @@ namespace Moise
 open InvarianceOfDomain
 
 /-- The closed right half-plane, the ambient model for `EuclideanHalfSpace 2`. -/
-def HalfPlaneSet : Set Plane :=
+@[expose] def HalfPlaneSet : Set Plane :=
   {v : Plane | 0 ≤ v 0}
 
 theorem continuous_coordZero : Continuous fun v : Plane => v 0 :=
@@ -136,7 +136,7 @@ inductive ChartKind where
 deriving DecidableEq, Repr
 
 /-- The model region of a chart kind: the open unit disk, or its closed-right half. -/
-def ChartKind.modelRegion : ChartKind → Set Plane
+@[expose] def ChartKind.modelRegion : ChartKind → Set Plane
   | .disk => Metric.ball 0 1
   | .halfDisk => {x ∈ Metric.ball 0 1 | 0 ≤ x 0}
 

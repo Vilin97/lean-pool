@@ -33,7 +33,7 @@ graph axioms, choice, or reconstruction enters.
   relationalization is semantically the original formula (no syntactic identity claimed).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

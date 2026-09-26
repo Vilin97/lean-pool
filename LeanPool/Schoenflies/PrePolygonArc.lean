@@ -71,7 +71,7 @@ of the split edge lies on neither half.
   `Schoenflies.exists_closedPolygon_split`, which requires them to be corners.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Metric Set
 

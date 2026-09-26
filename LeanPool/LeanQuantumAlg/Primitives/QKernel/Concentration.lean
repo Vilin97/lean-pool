@@ -20,7 +20,7 @@ invariance each coordinate reduces to a uniform variable on `[-π,π]`, so we st
 `Var[κ]=(3/8)ⁿ-(1/4)ⁿ`), giving genuine exponential concentration with NO Haar assumption.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

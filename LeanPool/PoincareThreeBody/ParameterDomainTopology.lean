@@ -19,7 +19,7 @@ twice-punctured plane, and the unrestricted momentum plane.  This proves that th
 path-connected whenever the mass interval is nonempty.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

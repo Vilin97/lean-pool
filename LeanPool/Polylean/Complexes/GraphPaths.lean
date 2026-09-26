@@ -12,7 +12,7 @@ public import Aesop.BuiltinRules
 # LeanPool.Polylean.Complexes.GraphPaths
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 
@@ -31,7 +31,7 @@ variable {V : Type} {E : Type} {x₁ x₂ : V}
 
 
 /-- The terminal vertex of an edge, defined as the initial vertex of its reverse. -/
-@[inline] def term (graph : Graph V E) : E → V :=
+@[expose, inline] def term (graph : Graph V E) : E → V :=
   fun e => graph.init (graph.bar e)
 
 /-- Edge paths in a graph, indexed by their initial and terminal vertices. -/

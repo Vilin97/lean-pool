@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParentPacketStrainEvolution
 normal and the actual homogeneous transverse velocity. Initial plateau
 data are the only geometric inputs; all time equations are constructed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

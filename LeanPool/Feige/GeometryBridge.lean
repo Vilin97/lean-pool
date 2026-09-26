@@ -19,7 +19,7 @@ the `α = 0` centroid-halfspace theorem supplies the `δ = 1`
 `LargeSumBridge` consumed by the final reduction.
 -/
 
-@[expose] public section
+public section
 
 namespace Feige
 

@@ -13,7 +13,7 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 and the initial point. Reversing its two time arguments gives its genuine
 continuous inverse, so each fixed-time map is a homeomorphism. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

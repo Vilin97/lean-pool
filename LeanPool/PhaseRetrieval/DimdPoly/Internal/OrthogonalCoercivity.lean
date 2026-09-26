@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # OrthogonalCoercivity -/
 
-@[expose] public section
+public section
 
 
 open MeasureTheory Complex

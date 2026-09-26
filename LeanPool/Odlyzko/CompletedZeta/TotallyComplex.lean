@@ -11,7 +11,7 @@ import LeanPool.Odlyzko.CompletedZeta.GammaFactor
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

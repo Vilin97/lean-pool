@@ -19,7 +19,7 @@ point of that same neighbourhood; the singular set is then the trace on `𝒪`
 of the complement, a closed set.
 -/
 
-@[expose] public section
+public section
 
 open Set Filter
 

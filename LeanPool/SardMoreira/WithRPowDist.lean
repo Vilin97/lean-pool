@@ -13,7 +13,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.SardMoreira.WithRPowDist
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Filter Uniformity Topology
 open Function

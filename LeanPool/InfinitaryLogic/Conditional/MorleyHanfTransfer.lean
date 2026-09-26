@@ -29,7 +29,7 @@ Both are placed in `Conditional/` to make the external dependency visible.
 - [KK04], §1.6
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

@@ -175,4 +175,4 @@ every breakpoint, including the case where the path revisits its own basepoint).
    ```
 -/
 
-@[expose] public section
+public section

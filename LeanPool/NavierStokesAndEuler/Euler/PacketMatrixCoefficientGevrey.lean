@@ -16,7 +16,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Bounds
 of packet matrix-coefficient witnesses.  The derivative radius enlargement
 occurs only in this fixed coefficient budget. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

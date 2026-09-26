@@ -18,4 +18,4 @@ public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction
 # Lyapunov contraction estimates
 -/
 
-@[expose] public section
+public section

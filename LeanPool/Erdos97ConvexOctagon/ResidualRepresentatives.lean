@@ -19,7 +19,7 @@ module defines the systems exactly but makes no claim that they exhaust all
 normalized, balanced, pair-sparse incidence systems.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 

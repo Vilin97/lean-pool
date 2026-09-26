@@ -20,7 +20,7 @@ ordinary three-dimensional smooth L² slices and bounded coefficient paths.
 The zero-angle restriction costs one fixed radius enlargement, independent
 of the derivative order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

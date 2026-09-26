@@ -42,7 +42,7 @@ The degree-weighted lower bound on the *number* of non-backtracking walks and th
 assembly into the Moore bound are the follow-up counting node; this file lands the foundation only.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

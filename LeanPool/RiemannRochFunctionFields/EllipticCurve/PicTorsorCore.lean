@@ -21,7 +21,7 @@ This file constructs the divisor-class map, proves its bijectivity by Riemann–
 identifies it with the ideal-class map on rational Weierstrass points.
 -/
 
-@[expose] public section
+public section
 
 open FunctionField
 open FunctionField.Chart

@@ -38,7 +38,7 @@ to the weighted conjugate of an `L²` function, this removes the Fourier
 Laplacian multiplier away from its single zero at the origin.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -144,7 +144,7 @@ injective linear map into a Hilbert space is represented by an inner product in
 that Hilbert space. No topology on the source vector space is needed.
 -/
 
-@[expose] public section
+public section
 
 namespace NavierStokesR3.HilbertFunctionalExtension
 
@@ -186,7 +186,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

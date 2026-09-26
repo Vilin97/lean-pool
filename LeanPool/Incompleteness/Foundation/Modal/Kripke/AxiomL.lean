@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
 
 /-! # AxiomL -/
 
-@[expose] public section
+public section
 
 
 namespace LO

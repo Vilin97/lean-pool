@@ -9,7 +9,7 @@ public import LeanPool.Odlyzko.CompletedZeta.UnitSlabTranslation
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

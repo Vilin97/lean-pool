@@ -23,7 +23,7 @@ back along the standard continuous linear equivalence to Euclidean space.
 Integration by parts is derived from Mathlib's proved box divergence theorem.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -39,7 +39,7 @@ open ProblemStatement
 abbrev Coords := Fin 3 → ℝ
 
 /-- To space, given by `(EuclideanSpace.equiv (Fin 3) ℝ).symm`. -/
-def toSpace : Coords ≃L[ℝ] Space := (EuclideanSpace.equiv (Fin 3) ℝ).symm
+@[expose] def toSpace : Coords ≃L[ℝ] Space := (EuclideanSpace.equiv (Fin 3) ℝ).symm
 
 /-- Cube, given by `Icc 0 1`. -/
 def cube : Set Coords := Icc 0 1

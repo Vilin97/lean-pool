@@ -18,7 +18,7 @@ is therefore periodic on the full auxiliary lift and retains the original
 clock, with every derivative, on each padded wave core.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -76,7 +76,7 @@ namespace ClockWindow
 variable (w : ClockWindow)
 
 /-- Core, given by `Icc w.lower.1 w.upper.1 ×ˢ Icc w.lower.2 w.upper.2`. -/
-noncomputable def core : Set Plane :=
+@[expose] noncomputable def core : Set Plane :=
   Icc w.lower.1 w.upper.1 ×ˢ Icc w.lower.2 w.upper.2
 
 /-- Plateau, given by `Ioo (w.lower.1 - w.padding) (w.upper.1 + w.padding) ×ˢ Ioo (w.lower.2 -
@@ -331,7 +331,7 @@ theorem phase_path (g : Geometry) (w : ClockWindow)
   simp only [phase, periodicClock_path g w hinj k Y t htransverse ht]
 
 /-- The angular coordinate is distinct from the auxiliary torus. -/
-noncomputable def angularLift (Φ : P × Plane → ℝ) (angular : ℝ)
+@[expose] noncomputable def angularLift (Φ : P × Plane → ℝ) (angular : ℝ)
     (x : (P × ℝ) × Plane) : ℝ := Φ (x.1.1, x.2) + angular * x.1.2
 
 theorem angularLift_contDiff {Φ : P × Plane → ℝ} (hΦ : ContDiff ℝ ∞ Φ) (angular : ℝ) :

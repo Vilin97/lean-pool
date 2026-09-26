@@ -74,4 +74,4 @@ over `ℤ`), `Iterates` (the polynomials `f_n`, the fields `K_n`, the groups `Ω
 `c` and `b`), `Irreducibility`, `DegreeCriterion` and `Main`.
 -/
 
-@[expose] public section
+public section

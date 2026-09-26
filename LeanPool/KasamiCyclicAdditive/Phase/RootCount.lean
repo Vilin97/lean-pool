@@ -20,7 +20,7 @@ Assuming the all-character Walsh formula `WalshCharacterFormula`, we prove
 for `A, B ∈ K^*` with `A³ + B³ = 1` and `A³ ≠ 1`, where `ρ = A³`, `σ = B³`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

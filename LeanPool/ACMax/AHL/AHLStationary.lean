@@ -51,7 +51,7 @@ finsets with **no** `Dart`-to-walk bridge.  (`Walk.penultimate_concat` is alread
 "penultimate of an extension" fiber fact needs no fresh lemma.)
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

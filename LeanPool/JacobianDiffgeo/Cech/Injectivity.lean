@@ -22,7 +22,7 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.4, §6.7).
 * `subsingleton_H1_iff`: the colimit vanishes iff every cover-level `H¹` vanishes.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

@@ -21,7 +21,7 @@ result is the contraction estimate needed in the density argument for
 mollification.
 -/
 
-@[expose] public section
+public section
 
 open Function Set Filter MeasureTheory Topology
 open scoped ENNReal Convolution

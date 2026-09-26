@@ -29,7 +29,7 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.5, §5).
 cofinality) does not need 12.4 and is proved here.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech Module

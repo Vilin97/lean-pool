@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketPotentialRegularity
 
 /-! The literal angular vector potential on the periodic cylinder. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

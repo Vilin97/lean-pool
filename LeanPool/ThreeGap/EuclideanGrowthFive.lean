@@ -38,7 +38,7 @@ sequence
 remaining instantiation step. Axiom-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.SimApprox
 

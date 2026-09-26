@@ -17,7 +17,7 @@ profiles. Uniform estimates and the regular radial integral are used to check
 the entrance test before any outgoing controlled continuation.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,27 +38,27 @@ local instance instNaturalEntrance2 (I : AxisCoefficientSpace.Window) (ε : ℝ)
 
 /-- Sq, given by `-transportW h V p * (1 + p.1 * partialY f p / f p) - h * (1 - 2 * p.2 * U p) -
 transportH h U p * (partialEta f p / f p)`. -/
-def Sq (h : ℝ) (f U V : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def Sq (h : ℝ) (f U V : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   -transportW h V p * (1 + p.1 * partialY f p / f p) -
     h * (1 - 2 * p.2 * U p) - transportH h U p * (partialEta f p / f p)
 
 /-- P1, given by `-2 * p.1 * partialY f p / f p`. -/
-def p1 (f : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def p1 (f : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   -2 * p.1 * partialY f p / f p
 
 /-- Ns, given by `-2 * partialY U p`. -/
-def ns (U : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ := -2 * partialY U p
+@[expose] def ns (U : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ := -2 * partialY U p
 
 /-- Angular velocity, given by `Real.sqrt (2 * p.1) * f p`. -/
-def angularVelocity (f : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def angularVelocity (f : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   Real.sqrt (2 * p.1) * f p
 
 /-- P2, given by `p.1 * ns U p / angularVelocity f p`. -/
-def p2 (f U : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def p2 (f U : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   p.1 * ns U p / angularVelocity f p
 
 /-- Cone size, given by `p1 f p + (p2 f U p) ^ 2 / p1 f p`. -/
-def coneSize (f U : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def coneSize (f U : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   p1 f p + (p2 f U p) ^ 2 / p1 f p
 
 theorem Sq_eq_radial {h j Λ : ℝ} {P0 a₀ : ℝ → ℝ} {f U V Pr : ℝ × ℝ → ℝ}
@@ -606,7 +606,7 @@ noncomputable def angularField (h j σ Λ C : ℝ) {ε : ℝ} (x : CoefficientPa
 
 /-- Axial field, given by `affineProfile (NaturalAxisData.U j) (1 / Λ) Λ (AxisEvaluation.profile
 window ε x.2)`. -/
-noncomputable def axialField (j Λ : ℝ) {ε : ℝ} (x : CoefficientPair ε) :
+@[expose] noncomputable def axialField (j Λ : ℝ) {ε : ℝ} (x : CoefficientPair ε) :
     ℝ × ℝ → ℝ := affineProfile (NaturalAxisData.U j) (1 / Λ) Λ
       (AxisEvaluation.profile window ε x.2)
 
@@ -1340,14 +1340,14 @@ theorem p1_eq_scaled_regularAngularLag {h j Λ : ℝ} {P0 a : ℝ → ℝ}
   ring
 
 /-- Sn as an element of `ℝ`. -/
-noncomputable def Sn (h : ℝ) (U V Pr : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def Sn (h : ℝ) (U V Pr : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   -transportW h V p * (p.1 * partialY U p) -
     NaturalAxisData.A h * (1 - 2 * p.2 * U p) * U p -
     transportH h U p * partialEta U p - NaturalAxisData.d p.2 * partialEta Pr p +
     4 * NaturalAxisData.A h * p.2 * Pr p + 2 * p.2 * p.1 * partialY Pr p
 
 /-- Regular axial lag, given by `(∫ x in (0 : ℝ)..p.1, Sn h U V Pr (x, p.2)) / p.1`. -/
-noncomputable def regularAxialLag (h : ℝ) (U V Pr : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def regularAxialLag (h : ℝ) (U V Pr : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   (∫ x in (0 : ℝ)..p.1, Sn h U V Pr (x, p.2)) / p.1
 
 theorem Sn_eq_radial {h j Λ : ℝ} {P0 a : ℝ → ℝ} {f U V Pr : ℝ × ℝ → ℝ}

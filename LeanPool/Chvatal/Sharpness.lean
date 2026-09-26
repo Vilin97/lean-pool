@@ -47,7 +47,7 @@ This file formalizes Proposition 5.1 and Remark 5.2 of arXiv:2609.19123.
 The AND function is the indicator of the top cube point; OR is its dual.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators symmDiff
 

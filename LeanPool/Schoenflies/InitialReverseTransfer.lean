@@ -28,7 +28,7 @@ cell name.  Edge relabelling preserves the ambient boundary geometry used by rev
   subdivision hypotheses, and run reverse transfer.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

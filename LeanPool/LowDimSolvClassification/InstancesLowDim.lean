@@ -13,7 +13,7 @@ public import LeanPool.LowDimSolvClassification.InstancesConstructions
 # LeanPool.LowDimSolvClassification.InstancesLowDim
 -/
 
-@[expose] public section
+public section
 
 open Module
 open Submodule
@@ -34,7 +34,7 @@ variable (K : Type*) [CommRing K]
 abbrev Abelian := mkAbelian K (Fin 2 → K)
 
 /-- TODO. -/
-def Affine := Fin 2 → K
+@[expose] def Affine := Fin 2 → K
 attribute [local implicit_reducible] Affine
 
 instance : LieRing (Affine K) := {

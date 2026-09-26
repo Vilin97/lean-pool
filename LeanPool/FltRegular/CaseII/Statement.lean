@@ -17,7 +17,7 @@ import Mathlib.NumberTheory.NumberField.Cyclotomic.Ideal
 This file states the second-case contradiction in the cyclotomic-number-field setting.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors NumberField
 open Polynomial

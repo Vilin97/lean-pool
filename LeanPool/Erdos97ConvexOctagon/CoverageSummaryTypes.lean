@@ -13,7 +13,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Lightweight coverage-summary types -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 
@@ -54,17 +54,18 @@ def vertexPairTuples : List (Vertex × Vertex) :=
     | _ => none
 
 /-- Whether one row selects both endpoints of a vertex pair. -/
-def pairSelectedB (rowMask : UInt64) (pair : Vertex × Vertex) : Bool :=
+@[expose] def pairSelectedB (rowMask : UInt64) (pair : Vertex × Vertex) : Bool :=
   bitSetB rowMask pair.1.val && bitSetB rowMask pair.2.val
 
 /-- Add one selected pair to a packed pair mask. -/
-def addPairBit
+@[expose] def addPairBit
     (rowMask : UInt64) (result : UInt64) (pair : Vertex × Vertex) : UInt64 :=
   if pairSelectedB rowMask pair then
     result ||| (1 <<< UInt64.ofNat (varIndex pair.1 pair.2))
   else result
 
 /-- Compute the unordered vertex-pair bits selected together by a row mask. -/
+@[expose]
 def rowPairMask (rowMask : UInt64) : UInt64 :=
   vertexPairTuples.foldl (addPairBit rowMask) 0
 

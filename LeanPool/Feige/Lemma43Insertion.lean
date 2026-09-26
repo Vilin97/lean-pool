@@ -18,7 +18,7 @@ an old Boolean chain.  This file records the exact, purely algebraic
 interface between those two presentations.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

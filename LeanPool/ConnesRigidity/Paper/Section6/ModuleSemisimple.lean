@@ -20,7 +20,7 @@ import Mathlib.RingTheory.PicardGroup
 The module semisimple component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperModuleSemisimple

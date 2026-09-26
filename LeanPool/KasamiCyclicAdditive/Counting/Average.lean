@@ -23,7 +23,7 @@ the average.  Both are proved for an arbitrary `Δ : Finset K` and then
 specialized to `derivativeImage k K`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

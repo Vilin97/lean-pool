@@ -23,7 +23,7 @@ This module chooses, uniformly for every coded injective rational sequence, its 
 subsequence and its free block-density ultrafilter.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

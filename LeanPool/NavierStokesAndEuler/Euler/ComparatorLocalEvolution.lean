@@ -51,7 +51,7 @@ therefore gives a finite constant converting the sum of the scalar coordinate
 energies into a bound for the literal tensor norm.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -108,7 +108,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -263,7 +263,7 @@ section
 /-! Joint spatial coordinate derivatives and uniform energy bounds for
 families supported in a fixed compact set. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -385,7 +385,7 @@ vorticity stays in one compact set on a finite time interval. Ordinary joint
 smoothness supplies the compact source bounds, and elliptic recovery supplies
 the velocity derivative bounds. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -480,7 +480,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

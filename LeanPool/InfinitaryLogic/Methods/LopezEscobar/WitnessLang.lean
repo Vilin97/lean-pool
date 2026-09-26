@@ -24,7 +24,7 @@ witness, and right witness symbols; the tagged symbol-image sets; and their pair
 disjointness (the combinatorial half of the Unit-1 occurrence gate).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

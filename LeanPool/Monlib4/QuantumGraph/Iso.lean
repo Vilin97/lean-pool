@@ -20,7 +20,7 @@ import LeanPool.Monlib4.LinearAlgebra.MySpec
  This file defines isomorphisms between quantum graphs.
 -/
 
-@[expose] public section
+public section
 
 
 open TensorProduct Matrix

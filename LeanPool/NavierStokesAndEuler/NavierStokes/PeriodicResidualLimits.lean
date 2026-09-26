@@ -24,7 +24,7 @@ lattice copy of the origin. No residual identity or residual limit after
 periodization is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

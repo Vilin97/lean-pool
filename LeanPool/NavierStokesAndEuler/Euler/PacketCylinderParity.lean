@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderFieldReflection
 
 /-! Literal joint parity is equivalent to parity of an actual cylinder-path witness. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -20,7 +20,7 @@ positive base case has an empty left cut word and a nonempty right cut word.  Re
 swap transport that case to every ordinary-valid one-sided-degenerate cut.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

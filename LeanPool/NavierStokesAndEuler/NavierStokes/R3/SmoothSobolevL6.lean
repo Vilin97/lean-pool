@@ -18,7 +18,7 @@ function whose value and derivative belong to `L²`. The derivative of the
 cutoff contributes an error tending to zero; Fatou's lemma passes to the limit.
 -/
 
-@[expose] public section
+public section
 
 
 

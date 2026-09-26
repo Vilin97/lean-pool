@@ -26,7 +26,7 @@ Given `d : FiniteChartData` and a finite measure `μ` on `M`, we:
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.h1`
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry
@@ -280,7 +280,7 @@ noncomputable def h1Graph :
   refine LinearMap.pi fun i => h1GraphChart (d := d) (I := I) (μ := μ) i
 
 /-- The `H¹` submodule defined by chart localizations and the Euclidean `H¹` graph construction. -/
-noncomputable def h1 : Submodule ℝ (h1Target (d := d) (I := I) μ) :=
+@[expose] noncomputable def h1 : Submodule ℝ (h1Target (d := d) (I := I) μ) :=
   (LinearMap.range (h1Graph (d := d) (I := I) (μ := μ))).topologicalClosure
 
 omit [T2Space M] in
@@ -294,17 +294,17 @@ instance instCompleteSpaceh1 : CompleteSpace (↥(h1 (d := d) (I := I) (μ := μ
   exact (isClosed_h1 (d := d) (I := I) (μ := μ)).isComplete.completeSpace_coe
 
 /-- The continuous projection `H¹ →` chartwise `L² × L²(E)` for a fixed chart index. -/
-noncomputable def h1ToChart (i : d.ι) :
+@[expose] noncomputable def h1ToChart (i : d.ι) :
     (↥(h1 (d := d) (I := I) (μ := μ))) →L[ℝ] h1TargetE (d := d) (I := I) μ i :=
   (ContinuousLinearMap.proj (R := ℝ) i).comp (Submodule.subtypeL (h1 (d := d) (I := I) (μ := μ)))
 
 /-- The continuous chartwise `L²` map extracted from `H¹`. -/
-noncomputable def h1ToChartL2 (i : d.ι) :
+@[expose] noncomputable def h1ToChartL2 (i : d.ι) :
     (↥(h1 (d := d) (I := I) (μ := μ))) →L[ℝ] ↥(E →₂[chartMeasure (d := d) (I := I) μ i] ℝ) :=
   (ContinuousLinearMap.fst ℝ _ _).comp (h1ToChart (d := d) (I := I) (μ := μ) i)
 
 /-- The continuous chartwise gradient map `H¹ → L²(E)` extracted from `H¹`. -/
-noncomputable def h1ToChartL2Grad (i : d.ι) :
+@[expose] noncomputable def h1ToChartL2Grad (i : d.ι) :
     (↥(h1 (d := d) (I := I) (μ := μ))) →L[ℝ] ↥(E →₂[chartMeasure (d := d) (I := I) μ i] E) :=
   (ContinuousLinearMap.snd ℝ _ _).comp (h1ToChart (d := d) (I := I) (μ := μ) i)
 

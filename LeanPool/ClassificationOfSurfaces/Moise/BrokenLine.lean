@@ -26,7 +26,7 @@ points extends or truncates a broken line by one segment.  Preconnectedness of `
 the complement to be empty.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

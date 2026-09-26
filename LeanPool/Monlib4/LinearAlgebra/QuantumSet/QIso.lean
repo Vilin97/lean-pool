@@ -17,7 +17,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.QuantumSet.QIso`.
 -/
 
-@[expose] public section
+public section
 
 local notation "lT" => LinearMap.lTensor
 local notation "rT" => LinearMap.rTensor

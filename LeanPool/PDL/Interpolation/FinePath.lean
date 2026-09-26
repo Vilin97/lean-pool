@@ -19,7 +19,7 @@ of a `LocalTableau`, and `FinePathIn`, for the nodes of a whole `Tableau` in the
 i.e. including those nodes inside a local tableau that a `loc` step jumps over.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -45,7 +45,7 @@ inductive LocalPathIn : {X : Sequent} → LocalTableau X → Type
 deriving DecidableEq
 
 /-- The sequent at the node a local path is pointing at. -/
-def LocalPathIn.last {X} {lt : LocalTableau X} : LocalPathIn lt → Sequent
+@[expose] def LocalPathIn.last {X} {lt : LocalTableau X} : LocalPathIn lt → Sequent
   | .nil => X
   | .cons _ tail => tail.last
 
@@ -60,7 +60,7 @@ def LocalPathIn.isNilB {X} {lt : LocalTableau X} : LocalPathIn lt → Bool
   | .cons _ _ => false
 
 /-- Is a local rule applied at the root of this local tableau? -/
-def LocalTableau.hasRule {X} : LocalTableau X → Prop
+@[expose] def LocalTableau.hasRule {X} : LocalTableau X → Prop
   | .byLocalRule .. => True
   | .sim _ => False
 
@@ -69,7 +69,7 @@ instance LocalTableau.instDecidableHasRule {X} (lt : LocalTableau X) : Decidable
 
 /-- A local path is *internal* iff a local rule is applied at the node it points at,
 i.e. iff that node is not a leaf of the local tableau. -/
-def LocalPathIn.isInternal {X} {lt : LocalTableau X} (lp : LocalPathIn lt) : Prop :=
+@[expose] def LocalPathIn.isInternal {X} {lt : LocalTableau X} (lp : LocalPathIn lt) : Prop :=
   lp.ltAt.hasRule
 
 instance LocalPathIn.instDecidableIsInternal {X} {lt : LocalTableau X} (lp : LocalPathIn lt) :
@@ -118,7 +118,7 @@ def LocalPathIn.children {X} {lt : LocalTableau X} :
   | .cons Y_in tail => tail.children.image (.cons Y_in)
 
 /-- The sequents labelling the children of the root of a local tableau. -/
-def LocalTableau.childLabels {X} : LocalTableau X → Finset Sequent
+@[expose] def LocalTableau.childLabels {X} : LocalTableau X → Finset Sequent
   | .byLocalRule lra _ _ => lra.C
   | .sim _ => {}
 
@@ -137,7 +137,7 @@ lemma LocalPathIn.map_last_children {X} {lt : LocalTableau X} (lp : LocalPathIn 
     exact IH
 
 /-- The end nodes of the whole local tableau that are below a given local path. -/
-def LocalPathIn.endNodesBelow {X} {lt : LocalTableau X} :
+@[expose] def LocalPathIn.endNodesBelow {X} {lt : LocalTableau X} :
     (lp : LocalPathIn lt) → List {Y : Sequent // Y ∈ endNodesOf lt}
   | .nil => (endNodesOf lt).pdlSeqSort.attach.map
       (fun ⟨Z, hZ⟩ => ⟨Z, (Finset.mem_seqSort _).mp hZ⟩)
@@ -264,7 +264,7 @@ def rootFine : {H : History} → {X : Sequent} → (tab : Tableau H X) → FineP
   | _, _, .lrep _ => .lrepHere
 
 /-- The sequent at the node a fine path points at, i.e. `Λ(t)` for fine nodes `t`. -/
-def FinePathIn.label : ∀ {Hist X} {tab : Tableau Hist X}, FinePathIn tab → Sequent
+@[expose] def FinePathIn.label : ∀ {Hist X} {tab : Tableau Hist X}, FinePathIn tab → Sequent
   | _, _, _, .inLoc lp _ => lp.last
   | _, X, _, .pdlHere => X
   | _, X, _, .lrepHere => X
@@ -272,7 +272,7 @@ def FinePathIn.label : ∀ {Hist X} {tab : Tableau Hist X}, FinePathIn tab → S
   | _, _, _, .pdl tail => tail.label
 
 /-- The `PathIn` node in whose local tableau the given fine node lies. -/
-def FinePathIn.base : ∀ {Hist X} {tab : Tableau Hist X}, FinePathIn tab → PathIn tab
+@[expose] def FinePathIn.base : ∀ {Hist X} {tab : Tableau Hist X}, FinePathIn tab → PathIn tab
   | _, _, _, .inLoc _ _ => .nil
   | _, _, _, .pdlHere => .nil
   | _, _, _, .lrepHere => .nil
@@ -282,7 +282,7 @@ def FinePathIn.base : ∀ {Hist X} {tab : Tableau Hist X}, FinePathIn tab → Pa
 /-- The children of a fine node. Note that a child of an internal node of a local tableau
 may be a node of the tableau in the coarse `PathIn` sense, namely when it is an end node
 of that local tableau. -/
-def FinePathIn.children : ∀ {Hist X} {tab : Tableau Hist X},
+@[expose] def FinePathIn.children : ∀ {Hist X} {tab : Tableau Hist X},
     FinePathIn tab → Finset (FinePathIn tab)
   | _, _, _, .inLoc lp _ => lp.children.image (fun lp' =>
       match h : lp'.endNodeAtOpt with
@@ -406,7 +406,7 @@ lemma FinePathIn.map_label_children_inLoc {Hist X nrep nbas} {lt : LocalTableau 
   · simp [FinePathIn.label]
 
 /-- The local rule applied at a fine node, if any. -/
-def FinePathIn.lraOpt : ∀ {H X} {tab : Tableau H X}, FinePathIn tab → Option LocalRuleApp
+@[expose] def FinePathIn.lraOpt : ∀ {H X} {tab : Tableau H X}, FinePathIn tab → Option LocalRuleApp
   | _, _, _, .inLoc lp _ => match lp.ltAt with
       | .byLocalRule lra _ _ => some lra
       | .sim _ => none
@@ -473,22 +473,22 @@ This is what Lemma 9.7 (a) is about, and it is the reason why we needed the fine
 on the `Tableau` level a `loc` step is in general a mix of left and right rules. -/
 
 /-- Is this a local rule applied to the right component? -/
-def LocalRule.isRightRule {X YS} : LocalRule X YS → Bool
+@[expose] def LocalRule.isRightRule {X YS} : LocalRule X YS → Bool
   | .oneSidedR _ _ => true
   | .loadedR _ _ _ => true
   | _ => false
 
 /-- Is this a local rule applied to the left component? -/
-def LocalRule.isLeftRule {X YS} : LocalRule X YS → Bool
+@[expose] def LocalRule.isLeftRule {X YS} : LocalRule X YS → Bool
   | .oneSidedL _ _ => true
   | .loadedL _ _ _ => true
   | _ => false
 
 /-- Whether this local rule application acts on the right component. -/
-def LocalRuleApp.isRightRule (lra : LocalRuleApp) : Bool := lra.lr.isRightRule
+@[expose] def LocalRuleApp.isRightRule (lra : LocalRuleApp) : Bool := lra.lr.isRightRule
 
 /-- Whether this local rule application acts on the left component. -/
-def LocalRuleApp.isLeftRule (lra : LocalRuleApp) : Bool := lra.lr.isLeftRule
+@[expose] def LocalRuleApp.isLeftRule (lra : LocalRuleApp) : Bool := lra.lr.isLeftRule
 
 lemma LocalRuleApp.not_left_and_right (lra : LocalRuleApp) :
     ¬ (lra.isLeftRule ∧ lra.isRightRule) := by
@@ -498,21 +498,21 @@ lemma LocalRuleApp.not_left_and_right (lra : LocalRuleApp) :
       LocalRule.isRightRule]
 
 /-- The `(M)`, `(L+)` and `(L-)` rules acting on the right component. -/
-def PdlRule.isRightRule {X Y} : PdlRule X Y → Bool
+@[expose] def PdlRule.isRightRule {X Y} : PdlRule X Y → Bool
   | .loadR _ _ _ => true
   | .freeR _ _ => true
   | .modR _ _ => true
   | _ => false
 
 /-- The `(M)`, `(L+)` and `(L-)` rules acting on the left component. -/
-def PdlRule.isLeftRule {X Y} : PdlRule X Y → Bool
+@[expose] def PdlRule.isLeftRule {X Y} : PdlRule X Y → Bool
   | .loadL _ _ _ => true
   | .freeL _ _ => true
   | .modL _ _ => true
   | _ => false
 
 /-- Is a right rule applied at this fine node? -/
-def FinePathIn.usesRightRule : ∀ {H X} {tab : Tableau H X}, FinePathIn tab → Bool
+@[expose] def FinePathIn.usesRightRule : ∀ {H X} {tab : Tableau H X}, FinePathIn tab → Bool
   | _, _, _, .inLoc lp _ => match lp.ltAt with
       | .byLocalRule lra _ _ => lra.isRightRule
       | .sim _ => false
@@ -522,7 +522,7 @@ def FinePathIn.usesRightRule : ∀ {H X} {tab : Tableau H X}, FinePathIn tab →
   | _, _, _, .pdl tail => tail.usesRightRule
 
 /-- Is a left rule applied at this fine node? -/
-def FinePathIn.usesLeftRule : ∀ {H X} {tab : Tableau H X}, FinePathIn tab → Bool
+@[expose] def FinePathIn.usesLeftRule : ∀ {H X} {tab : Tableau H X}, FinePathIn tab → Bool
   | _, _, _, .inLoc lp _ => match lp.ltAt with
       | .byLocalRule lra _ _ => lra.isLeftRule
       | .sim _ => false
@@ -569,7 +569,7 @@ lemma FinePathIn.not_isLrep_base_of_usesRightRule {H X} {tab : Tableau H X} (f :
 
 /-- Is this fine node also a node in the coarse sense, i.e. the root of the local tableau
 at its base? -/
-def FinePathIn.atBigRoot : ∀ {H X} {tab : Tableau H X}, FinePathIn tab → Bool
+@[expose] def FinePathIn.atBigRoot : ∀ {H X} {tab : Tableau H X}, FinePathIn tab → Bool
   | _, _, _, .inLoc lp _ => lp.isNilB
   | _, _, _, .pdlHere => true
   | _, _, _, .lrepHere => true
@@ -603,7 +603,7 @@ def FinePathIn.endLabelsBelow : ∀ {H X} {tab : Tableau H X}, FinePathIn tab �
 Note that when `f` is a coarse node itself, i.e. `f.atBigRoot`, then these are *all*
 children of `f.base`, and that they get further restricted the deeper `f` sits inside the
 local tableau at `f.base`. -/
-def FinePathIn.coarseChildrenBelow : ∀ {H X} {tab : Tableau H X},
+@[expose] def FinePathIn.coarseChildrenBelow : ∀ {H X} {tab : Tableau H X},
     FinePathIn tab → List (PathIn tab)
   | _, _, _, .inLoc lp _ => lp.endNodesBelow.map (fun ⟨_, Y_in⟩ => PathIn.loc Y_in .nil)
   | _, _, _, .pdlHere => [PathIn.pdl .nil]
@@ -742,7 +742,7 @@ lemma PathIn.mem_coarseChildrenBelow_toFine {H X} {tab : Tableau H X} :
 
 /-- The right component of a sequent, again as a sequent but with empty left component.
 This is `Λ₂` from the paper; we use it to label the nodes of the quasi-tableau. -/
-def Sequent.rightOnly (X : Sequent) : Sequent := ⟨{}, X.2.1, X.2.2⟩
+@[expose] def Sequent.rightOnly (X : Sequent) : Sequent := ⟨{}, X.2.1, X.2.2⟩
 
 /-! ## Well-founded descent for fine paths
 

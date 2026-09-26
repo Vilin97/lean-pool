@@ -34,7 +34,7 @@ Instantiated with `P w := "the subtree below the child w is dominated"` and comb
 `Autos.reach_child_auto`, this says that skipping a marked child loses no leaf key.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon

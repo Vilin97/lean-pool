@@ -16,7 +16,7 @@ import Mathlib.Tactic.NormNum.Pow
 
 /-! ## Soundness of GL-split proof system. -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 

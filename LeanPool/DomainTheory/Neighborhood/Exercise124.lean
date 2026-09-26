@@ -42,7 +42,7 @@ legitimately uses
 *construction* is choice-free
 (`[propext, Quot.sound]`). -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

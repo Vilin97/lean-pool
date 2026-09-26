@@ -26,7 +26,7 @@ but unfinished is in `Unused/FischerLadnerViaPreForms.lean`.
 
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -47,7 +47,7 @@ def FL : Formula → List Formula
 
 /-- The Fischer-Ladner closure of a box formula,
 not recursing into the formula after the box. -/
-def FLb : Program → Formula → List Formula
+@[expose] def FLb : Program → Formula → List Formula
 | ·a, φ => [ ⌈·a⌉φ, ~⌈·a⌉φ ]
 | α⋓β, φ => [ ⌈α⋓β⌉φ, ~⌈α⋓β⌉φ ] ++ FLb α φ ++ FLb β φ
 | α;'β, φ => [ ⌈α;'β⌉φ, ~⌈α;'β⌉φ ] ++ FLb α (⌈β⌉φ) ++ FLb β φ
@@ -232,7 +232,7 @@ lemma FL_box_star {φ α ψ} :
 /-! ## Closure of a list -/
 
 /-- Concatenate the Fischer-Ladner closures of every formula in a list. -/
-def FLL (L : List Formula) : List Formula := L.flatMap FL
+@[expose] def FLL (L : List Formula) : List Formula := L.flatMap FL
 
 @[simp]
 lemma FLL_refl_sub {L} : L ⊆ FLL L := by induction L <;> simp_all [FLL]
@@ -291,7 +291,7 @@ namespace Finset
 open PDL
 
 /-- The union of the Fischer-Ladner closures of every formula in a finset. -/
-def FL (X : Finset Formula) : Finset Formula :=
+@[expose] def FL (X : Finset Formula) : Finset Formula :=
   X.sup (fun φ => (_root_.PDL.FL φ).toFinset)
 
 @[simp]

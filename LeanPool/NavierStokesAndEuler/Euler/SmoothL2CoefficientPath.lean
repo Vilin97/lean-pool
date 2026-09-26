@@ -23,7 +23,7 @@ section
 
 /-! Every actual spatial derivative tensor remains a smooth L² field. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -145,7 +145,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

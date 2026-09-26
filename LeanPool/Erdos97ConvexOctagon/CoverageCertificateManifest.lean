@@ -28,7 +28,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Exhaustive fixed-branch coverage-certificate manifest -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

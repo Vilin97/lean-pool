@@ -22,7 +22,7 @@ Noetherian spaces:
   degree-`n+1` colimit comparison.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -123,6 +123,7 @@ variable (Y' : J' ⥤ TopCat.Sheaf AddCommGrpCat.{u} X)
 variable [Zero (TopCat.Sheaf AddCommGrpCat.{u} X)]
 
 /-- The arrow diagram used in the successor-step dimension-shift construction. -/
+@[expose]
 noncomputable def sheafHFilteredColimitSuccToArrow :
     J' ⥤ Arrow (TopCat.Sheaf AddCommGrpCat.{u} X) :=
   { obj := fun j ↦ Arrow.mk (0 : Y'.obj j ⟶ 0)
@@ -133,6 +134,7 @@ noncomputable def sheafHFilteredColimitSuccToArrow :
     map_comp := fun f g ↦ by ext <;> aesop_cat }
 
 /-- Objectwise injective envelopes coming from functorial factorization of `0 : Y_j ⟶ 0`. -/
+@[expose]
 noncomputable def sheafHFilteredColimitSuccInj :
     J' ⥤ TopCat.Sheaf AddCommGrpCat.{u} X :=
   sheafHFilteredColimitSuccToArrow Y' ⋙
@@ -159,6 +161,7 @@ theorem sheafH_filtered_colimit_succ_eta_mono (j : J') :
   exact ffData.hi ((sheafHFilteredColimitSuccToArrow Y').obj j)
 
 /-- The colimit cocone of the injective replacement diagram. -/
+@[expose]
 noncomputable def sheafHFilteredColimitSuccInjCocone :
     Cocone (sheafHFilteredColimitSuccInj Y') :=
   colimit.cocone (sheafHFilteredColimitSuccInj Y')
@@ -201,6 +204,7 @@ noncomputable instance sheafH_filtered_colimit_succ_iota_mono
     (sheafH_filtered_colimit_succ_iota_fac Y' c' hc')
 
 /-- The short exact sequence on colimit objects obtained from the injective replacement. -/
+@[expose]
 noncomputable def sheafHFilteredColimitSuccShortComplex
     (c' : Cocone Y') (hc' : IsColimit c') :
     ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
@@ -218,7 +222,7 @@ theorem sheafH_filtered_colimit_succ_shortExact
     (ShortComplex.exact_of_g_is_cokernel _ (cokernelIsCokernel ι')) inferInstance inferInstance
 
 /-- The quotient diagram obtained by objectwise cokernels of the injective replacement maps. -/
-noncomputable def sheafHFilteredColimitSuccQuotient :
+@[expose] noncomputable def sheafHFilteredColimitSuccQuotient :
     J' ⥤ TopCat.Sheaf AddCommGrpCat.{u} X :=
   { obj := fun j ↦ cokernel ((sheafHFilteredColimitSuccEta Y').app j)
     map := fun {j j'} f ↦
@@ -231,6 +235,7 @@ noncomputable def sheafHFilteredColimitSuccQuotient :
 attribute [local implicit_reducible] sheafHFilteredColimitSuccQuotient
 
 /-- The quotient cocone on the cokernel diagram induced by the colimit short exact sequence. -/
+@[expose]
 noncomputable def sheafHFilteredColimitSuccQuotientCocone
     (c' : Cocone Y') (hc' : IsColimit c') :
     Cocone (sheafHFilteredColimitSuccQuotient Y') :=
@@ -399,6 +404,7 @@ theorem sheafH_filtered_colimit_succ_stage_shortExact (j : J') :
 
 /-- The morphism between stagewise short exact sequences induced by a transition map in the
     filtered diagram. -/
+@[expose]
 noncomputable def sheafHFilteredColimitSuccStageMapHom
     {j j' : J'} (f : j ⟶ j') :
     ShortComplex.mk ((sheafHFilteredColimitSuccEta Y').app j)
@@ -415,6 +421,7 @@ noncomputable def sheafHFilteredColimitSuccStageMapHom
     (cokernel.π_desc _ _ _).symm
 
 /-- The morphism from the stagewise short exact sequence to the colimit short exact sequence. -/
+@[expose]
 noncomputable def sheafHFilteredColimitSuccStageHom
     (c' : Cocone Y') (hc' : IsColimit c') (j : J') :
     ShortComplex.mk ((sheafHFilteredColimitSuccEta Y').app j)
@@ -473,6 +480,7 @@ noncomputable def sheafHFilteredColimitSuccShiftDomainIso
 
 /-- The colimit-level dimension-shift isomorphism for the short exact sequence obtained from
     the injective replacement of the filtered colimit cocone. -/
+@[expose]
 noncomputable def sheafHFilteredColimitSuccShiftCodomainIso
     (c' : Cocone Y') (hc' : IsColimit c') (n : ℕ)
     (h_colim_n :
@@ -510,6 +518,7 @@ theorem sheafH_filtered_colimit_succ_inj_subsingleton
 end SheafHFilteredColimitSucc
 
 /-- The canonical comparison morphism `colim H^n(F_j) ⟶ H^n(colim F_j)` induced by a cocone. -/
+@[expose]
 noncomputable def sheafHFilteredColimitComparison
     {X : TopCat.{u}}
     {J' : Type u} [SmallCategory J']

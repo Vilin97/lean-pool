@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.H6TransportSource
 
 /-! Actual four-dimensional velocity fields assembled from bounded vector functionals. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

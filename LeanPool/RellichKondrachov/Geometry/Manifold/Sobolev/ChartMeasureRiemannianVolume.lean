@@ -31,7 +31,7 @@ resulting domination by `volume` on chart balls.
    `volume_restrict_le_chartMeasure`
  -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

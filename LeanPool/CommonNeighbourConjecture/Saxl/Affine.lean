@@ -20,7 +20,7 @@ semidirect product of the additive translation group by a distributive action.
 It proves the part of paper Lemma 3.1 used by every affine construction.
 -/
 
-@[expose] public section
+public section
 
 namespace Saxl
 

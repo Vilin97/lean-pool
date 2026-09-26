@@ -32,7 +32,7 @@ section
 
 /-! Genuine first-order evolution paths glue through a matching interior trace. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -147,7 +147,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -248,7 +248,7 @@ section
 
 /-! Matching time paths glue without any external-word or fixed-Sobolev loss. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -325,7 +325,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -440,7 +440,7 @@ section
 
 /-! The actual affine time shift used by the forward transverse solve. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -494,7 +494,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

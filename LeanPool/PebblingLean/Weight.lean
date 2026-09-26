@@ -25,7 +25,7 @@ The lower-bound argument is organized around the standard pebbling weight
 function: a pebble at distance `d` from a target contributes `2^{-d}`.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 
@@ -36,7 +36,7 @@ namespace Pebbling
 variable {V : Type u}
 
 /-- Contribution of a single pebble at `u` to the weight with target `target`. -/
-noncomputable def unitWeight (dist : V → V → ℕ) (target u : V) : ℚ :=
+@[expose] noncomputable def unitWeight (dist : V → V → ℕ) (target u : V) : ℚ :=
   (1 : ℚ) / (2 : ℚ) ^ dist u target
 
 /-- Weight of a pebbling distribution with respect to a target, using a supplied

@@ -20,7 +20,7 @@ coarea and one-dimensional calculus steps can be audited independently, while
 public users should rely on `MainTheorem.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -391,7 +391,7 @@ def RadialOpenShell {n : ℕ} (r s : ℝ) : Set (Domain n) :=
 
 /-- The union of the radial open shells associated to a finite interval family
 from the absolute-continuity filter. -/
-def RadialOpenShells {n : ℕ} (E : ℕ × (ℕ → ℝ × ℝ)) : Set (Domain n) :=
+@[expose] def RadialOpenShells {n : ℕ} (E : ℕ × (ℕ → ℝ × ℝ)) : Set (Domain n) :=
   ⋃ i ∈ Finset.range E.1, RadialOpenShell (n := n) (E.2 i).1 (E.2 i).2
 
 /-- The geometric thin-annulus estimate needed for the `L¹` radius theorem:

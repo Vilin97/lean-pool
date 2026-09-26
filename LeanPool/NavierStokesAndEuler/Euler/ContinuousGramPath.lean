@@ -21,7 +21,7 @@ smoothness follows from inversion at units of that algebra. No smoothness
 of a pre-existing inverse is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

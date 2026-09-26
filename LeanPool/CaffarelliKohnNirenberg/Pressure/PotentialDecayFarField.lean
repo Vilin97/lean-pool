@@ -22,7 +22,7 @@ Newtonian representation `ext:newtonian` of the paper, where the difference of t
 representations is harmonic on all of space and tends to zero in the `L^{3/2}` average sense.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology

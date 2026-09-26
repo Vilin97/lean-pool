@@ -18,7 +18,7 @@ As the library grows, compatibility helpers specific to this project can
 be added here.
 -/
 
-@[expose] public section
+public section
 
 namespace OmegaCompletePartialOrder
 

@@ -80,7 +80,7 @@ the rings are disjoint frames.
   belong in `Schoenflies/Subdivide.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph
@@ -96,7 +96,7 @@ def ringSet (r : ℝ) : Set Plane := {x : Plane | Plane.supNorm x = r}
 theorem ringSet_one : ringSet 1 = modelCurve := rfl
 
 /-- The four sides of the square of radius `r`, as a list of pieces. -/
-def ringPieces (r : ℝ) : List Piece :=
+@[expose] def ringPieces (r : ℝ) : List Piece :=
   [(Plane.mk r r, Plane.mk (-r) r),
    (Plane.mk (-r) r, Plane.mk (-r) (-r)),
    (Plane.mk (-r) (-r), Plane.mk r (-r)),

@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketTimeProfiles
 /-! Time-endpoint equality transports the actual path norm and its profile without changing any
 bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

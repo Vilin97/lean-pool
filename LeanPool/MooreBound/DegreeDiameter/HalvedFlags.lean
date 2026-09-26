@@ -22,7 +22,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -34,7 +34,7 @@ variable {K V : Type*} [DivisionRing K] [AddCommGroup V] [Module K V]
   {n : ℕ}
 
 /-- Keep the ranks congruent to `parity` modulo two and erase the others. -/
-def flagPart (parity : ℕ) (F : CompleteFlag K V n) :
+@[expose] def flagPart (parity : ℕ) (F : CompleteFlag K V n) :
     Fin (n + 1) → Submodule K V :=
   fun i ↦ if i.val % 2 = parity % 2 then F i else ⊥
 
@@ -66,7 +66,7 @@ theorem ext {parity : ℕ}
   exact funext h
 
 /-- The partial flag of a complete flag at the selected parity. -/
-def ofComplete (parity : ℕ) (F : CompleteFlag K V n) :
+@[expose] def ofComplete (parity : ℕ) (F : CompleteFlag K V n) :
     PartialFlag (K := K) (V := V) (n := n) parity :=
   ⟨flagPart parity F, F, rfl⟩
 

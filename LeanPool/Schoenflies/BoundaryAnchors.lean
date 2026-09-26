@@ -21,7 +21,7 @@ This discharges `lem:anchor-density` and constructs the `HasAnchorCrosscuts` and
 inputs used in `prop:boundary-continuity`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Metric Set
 open scoped Graph

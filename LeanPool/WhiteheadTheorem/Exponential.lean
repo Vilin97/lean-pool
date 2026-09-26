@@ -17,7 +17,7 @@ import Mathlib.Topology.UnitInterval
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Exponential`.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory
 open scoped Topology
@@ -137,7 +137,7 @@ def argSwap : C(C(A × B, Y), C(B × A, Y)) where
   continuous_toFun := by fun_prop
 
 /-- `curriedArgSwap` -/
-def curriedArgSwap [LocallyCompactSpace A] [LocallyCompactSpace B] :
+@[expose] def curriedArgSwap [LocallyCompactSpace A] [LocallyCompactSpace B] :
     C(C(A, C(B, Y)), C(B, C(A, Y))) where
   toFun f := ContinuousMap.curry <| argSwap <| ContinuousMap.uncurry f
   continuous_toFun := by

@@ -15,7 +15,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 Symmetry of the source history Hessian is consequently a theorem about
 the constructed parent data, rather than an independent hypothesis. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

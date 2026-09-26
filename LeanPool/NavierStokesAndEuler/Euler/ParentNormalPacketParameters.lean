@@ -26,7 +26,7 @@ section
 one explicit polynomial-exponential envelope, including the base-sized
 boundary coefficient and both reciprocal time intervals. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -37,7 +37,7 @@ open Real EulerPacketSourceParameterScales EulerPacketUniformFrequencyScales
   EulerPacketSourceScales
 
 /-- Bound constant, given by `8+1120*(2*Cθ)^10+CB+Cξ`. -/
-def boundConstant (Cθ CB Cξ : ℝ) : ℝ := 8+1120*(2*Cθ)^10+CB+Cξ
+@[expose] def boundConstant (Cθ CB Cξ : ℝ) : ℝ := 8+1120*(2*Cθ)^10+CB+Cξ
 
 theorem constant_pos (Cθ CB Cξ : ℝ) (hB : 0 ≤ CB) (hξ : 0 ≤ Cξ) :
     0 < boundConstant Cθ CB Cξ := by
@@ -137,7 +137,7 @@ section
 parameter have fixed polynomial caps. They are inputs to the uniform
 normal-stage source envelope. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -228,7 +228,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

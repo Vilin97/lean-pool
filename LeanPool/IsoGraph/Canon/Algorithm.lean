@@ -54,7 +54,7 @@ Two prunings make this fast:
 
 Note that hash collisions can only *weaken* pruning: an invariant path is used solely as the first
 component of a total order on leaves, and any isomorphism-invariant function works there.
--/@[expose] public section
+-/public section
 
 namespace IsoGraph
 namespace Canon
@@ -82,7 +82,7 @@ Written with `Array.ofFn`/`Array.filter` rather than as an imperative fill: the 
 same, but every entry is then definitionally the oracle, which is what makes the lemmas in
 `IsoGraph/Canon/Equivariance.lean` about this function short.  `vs` is shared across the rows so the
 `nbr` pass allocates only the neighbour lists themselves. -/
-def Graph.ofOracle (n : Nat) (f : Nat → Nat → Bool) : Graph :=
+@[expose] def Graph.ofOracle (n : Nat) (f : Nat → Nat → Bool) : Graph :=
   let vs := Array.range n
   { n := n
     adj := Array.ofFn (n := n) fun v => Array.ofFn (n := n) fun w => f v.1 w.1
@@ -153,7 +153,7 @@ def cenHashFrom (cen : Array Nat) (n : Nat) : Nat → Nat → UInt64 → UInt64
     if i ≥ n then h else cenHashFrom cen n fuel cen[i]! (mixN h (cen[i]! - i))
 
 /-- Start of the first non-singleton cell at or after cell start `i`, if any. -/
-def cenTargetFrom (cen : Array Nat) (n : Nat) : Nat → Nat → Option Nat
+@[expose] def cenTargetFrom (cen : Array Nat) (n : Nat) : Nat → Nat → Option Nat
   | 0, _ => none
   | fuel + 1, i =>
     if i ≥ n then none
@@ -191,7 +191,7 @@ structure Scratch where
 
 /-- Cleared scratch space for a graph on `n` vertices.  Counts never exceed `n`, so `bc` needs
 `n + 1` entries. -/
-def Scratch.empty (n : Nat) : Scratch :=
+@[expose] def Scratch.empty (n : Nat) : Scratch :=
   { cnt := Array.replicate n 0, hit := Array.replicate n false, bc := Array.replicate (n + 1) 0 }
 
 /-- Bump `cnt[v]` for every `v` in `nbrs[j:]`, pushing each newly-touched vertex onto `touched`.
@@ -229,6 +229,7 @@ the sorted order of the cells and of the counts *is* part of what makes the trac
 this goes through `List.mergeSort`, which does.  The round trip through `List` costs nothing
 measurable on the benchmarks: both call sites sort at most one entry per cell of the partition,
 against a refinement step that already costs the splitter's degree sum. -/
+@[expose]
 def sortNats (a : Array Nat) : Array Nat := (a.toList.mergeSort (fun x y => x ≤ y)).toArray
 
 /-- Collect the distinct cell starts of the vertices in `touched[j:]`, using `hit` to deduplicate.
@@ -524,7 +525,7 @@ Like the partition walks above, the two loops are structural recursions on fuel 
 `for` loops, so that induction applies to them: `fuel` counts the entries still to do and `j`
 (resp. `i`) the position reached, and `j + fuel = n` is the invariant that gives `j < n` inside
 the body — which is exactly what a proof about the loop needs and what a `for` loop hides. -/
-def certRow (n : Nat) (b : Nat → Bool) :
+@[expose] def certRow (n : Nat) (b : Nat → Bool) :
     Nat → Nat → UInt64 → Nat → Array UInt64 → Array UInt64
   | 0, _, acc, k, out =>
     if n % 64 != 0 then out.set! k (acc <<< UInt64.ofNat (64 - n % 64)) else out
@@ -618,7 +619,7 @@ def commonPrefixFrom (a b : Array Nat) (m : Nat) : Nat → Nat → Nat
     else i
 
 /-- Length of the longest common prefix of two paths. -/
-def commonPrefix (a b : Array Nat) : Nat :=
+@[expose] def commonPrefix (a b : Array Nat) : Nat :=
   let m := min a.size b.size
   commonPrefixFrom a b m m 0
 
@@ -833,7 +834,7 @@ def invLab (n : Nat) (a : Array Nat) : Array Nat :=
 /-- Is `a` a permutation of `{0, …, n-1}`?  `O(n)`: build the positional inverse and check that
 it really inverts, which gives injectivity for free (if `a[v]! = a[w]!` then
 `v = b[a[v]!]! = b[a[w]!]! = w`). -/
-def isPermArray (n : Nat) (a : Array Nat) : Bool :=
+@[expose] def isPermArray (n : Nat) (a : Array Nat) : Bool :=
   a.size == n &&
     (let b := invLab n a
      (List.range n).all fun i => a[i]! < n && b[a[i]!]! == i)

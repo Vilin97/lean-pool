@@ -16,7 +16,7 @@ the explicit coordinate reindexing homeomorphism to the standard plane triangle.
 source-side bridge used to apply the already proved polygonal Schoenflies extension cellwise.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -92,7 +92,7 @@ noncomputable def faceVertexEmbedding (t : K.Face) : Fin 3 ↪ K.Vertex where
   inj' := fun _ _ hij => (K.faceVertexEquiv t).injective (Subtype.ext hij)
 
 /-- The two standard indices belonging to cyclic side `i`. -/
-noncomputable def faceStandardEdge (i : ZMod 3) : Finset (Fin 3) :=
+@[expose] noncomputable def faceStandardEdge (i : ZMod 3) : Finset (Fin 3) :=
   {(ZMod.finEquiv 3).symm i, (ZMod.finEquiv 3).symm (i + 1)}
 
 theorem faceVertexEmbedding_cyclic (t : K.Face) (i : ZMod 3) :
@@ -376,7 +376,7 @@ noncomputable def faceCoordExtensionAffine (t : K.Face) :
 
 /-- The barycentric-coordinate formula for the inverse standard plane chart of one intrinsic
 face. -/
-noncomputable def facePlaneInverseAffine (t : K.Face) :
+@[expose] noncomputable def facePlaneInverseAffine (t : K.Face) :
     Plane →ᵃ[ℝ] (K.Vertex → ℝ) :=
   (K.faceCoordExtensionAffine t).comp
     (standardTrianglePlaneComplex.faceCoords standardTriangleMeshFace)

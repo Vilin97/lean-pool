@@ -85,7 +85,7 @@ Three hypotheses, all named in the statements that carry them.
   simple polygonal arc.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 open scoped Graph

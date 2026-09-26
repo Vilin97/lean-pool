@@ -142,7 +142,7 @@ there as `Schoenflies.finite_transfer_toward_square`.
   finite-transfer induction parametrized by its two construction interfaces.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph

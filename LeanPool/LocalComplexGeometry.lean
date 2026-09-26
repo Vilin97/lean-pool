@@ -29,7 +29,7 @@ Tags: complex-analysis, analytic-geometry, nullstellensatz, weierstrass-preparat
 MSC: 32A05, 32A10, 32B05, 32C25, 13E05
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Local complex-analytic geometry

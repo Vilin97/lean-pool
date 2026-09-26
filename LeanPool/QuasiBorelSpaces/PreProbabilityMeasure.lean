@@ -22,7 +22,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.PreProbabilityMeasure`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped unitInterval

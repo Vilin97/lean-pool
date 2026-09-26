@@ -22,7 +22,7 @@ Kepler limit. The resulting disturbing function is the explicit input to Poincar
 homological equation.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
@@ -50,7 +50,7 @@ lemma hasDerivAt_inverseSqrt_comp {f : ℝ → ℝ} {f' x : ℝ}
   simp [one_div]
 
 /-- The coefficient of `μ` in the planar Hamiltonian at the Kepler limit. -/
-noncomputable def firstMassPerturbation (s : PhaseSpace) : ℝ :=
+@[expose] noncomputable def firstMassPerturbation (s : PhaseSpace) : ℝ :=
   1 / Real.sqrt ((s 0) ^ 2 + (s 1) ^ 2) +
     s 0 / (Real.sqrt ((s 0) ^ 2 + (s 1) ^ 2)) ^ 3 -
       1 / Real.sqrt ((s 0 - 1) ^ 2 + (s 1) ^ 2)

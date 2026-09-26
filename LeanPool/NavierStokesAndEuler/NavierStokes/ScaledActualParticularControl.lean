@@ -30,7 +30,7 @@ geometric separation identifies its grouped Gaussian at every integration
 time.  All finite-jet constants precede the external label and lattice copy.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1160,7 +1160,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1197,6 +1197,7 @@ theorem interval_open (F : PhaseConstruction D) (clock : ActualSignedControl.Pos
   (F.openV i).preimage (continuous_const.mul continuous_id)
 
 /-- Length, given by `F.L (l,n)/clock.value l n`. -/
+@[expose]
 noncomputable def length (F : PhaseConstruction D) (clock : ActualSignedControl.PositiveScale Label)
     (l : Label) (n : ℕ) : ℝ := F.L (l,n)/clock.value l n
 

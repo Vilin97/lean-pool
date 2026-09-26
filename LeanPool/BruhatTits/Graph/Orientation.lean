@@ -31,7 +31,7 @@ evenness of vertices (see `BruhatTits.isEven_specialLinearGroup_smul_iff`).
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 

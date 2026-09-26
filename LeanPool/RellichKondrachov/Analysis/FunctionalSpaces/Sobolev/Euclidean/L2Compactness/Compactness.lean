@@ -25,7 +25,7 @@ The Arzelà–Ascoli compactness statement for `smoothBCF` lives in
 This is tracked under Beads `lean-103.5.2.26.5.3.2.2.1`.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis

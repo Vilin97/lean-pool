@@ -35,7 +35,7 @@ section
 /-! Translation is strongly differentiable in the actual Sobolev topology with one more derivative.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -87,7 +87,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -196,7 +196,7 @@ section
 
 /-! Actual real and scalar-vector cylinder multiplication at every fixed Sobolev order q≥6. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -321,7 +321,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -471,7 +471,7 @@ section
 
 /-! Cauchy convergence of actual smooth cylinder products in the complete Sobolev space. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -614,7 +614,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

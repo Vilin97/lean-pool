@@ -15,7 +15,7 @@ import LeanPool.QuasiBorelSpaces.Prop
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Nat`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuasiBorelSpace.Nat
 

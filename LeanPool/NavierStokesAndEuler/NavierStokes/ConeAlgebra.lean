@@ -16,13 +16,13 @@ of the candidate manuscript, together with the normalized
 factorization used in equation (11). It does not construct any stress profile.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.ConeAlgebra
 
 /-- The lower root appearing in equation (10). -/
-noncomputable def coneBound (P J : ℝ) : ℝ :=
+@[expose] noncomputable def coneBound (P J : ℝ) : ℝ :=
   P + J ^ 2 / 4 - |J| * Real.sqrt ((P - 2) / 2 + J ^ 2 / 16)
 
 /-- The discriminant term in the displayed root formula. -/

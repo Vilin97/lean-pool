@@ -36,7 +36,7 @@ The smooth-refined master inequality `master_ineq` is the `g = 3` instance of th
 (via `blockRadLB_iff`).
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos137
 

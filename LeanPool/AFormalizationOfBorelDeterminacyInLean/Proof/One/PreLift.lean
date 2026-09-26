@@ -24,7 +24,7 @@ import Mathlib.Tactic.NormNum.OfScientific
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame.BorelDet.One
@@ -164,7 +164,7 @@ attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
     _ = H.x.val.take (2 * k + 1) := by
       simp_all
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def liftShort : gameTree hyp := (H.R H.liftVeryShort
+@[expose] def liftShort : gameTree hyp := (H.R H.liftVeryShort
   (by
     change H.liftVeryShort.val.length % 2 = Player.one.toNat
     simp_all)
@@ -192,7 +192,7 @@ def liftShort : gameTree hyp := (H.R H.liftVeryShort
   H.liftShort.val.take (α := no_index _) (2 * k + 1) = H.liftVeryShort :=
   ExtensionsAt.val'_take_of_eq _ H.liftVeryShort_length.symm
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def liftVal := if H.x.val.length = 2 * k + 1 then H.liftVeryShort.val
+@[expose] def liftVal := if H.x.val.length = 2 * k + 1 then H.liftVeryShort.val
   else H.liftShort.val ++
   (H.x.val.drop (2 * k + 2)).zipInitsMap
     (fun a y ↦ ⟨a, subAt (getTree' hyp H.liftShort.val) y⟩)
@@ -241,7 +241,7 @@ attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
   · simp
 -- for u drop (2 * k + 1)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def PreWonPos (u : List A) := LosingCondition H.liftShort.val (by simp) ∧
+@[expose] def PreWonPos (u : List A) := LosingCondition H.liftShort.val (by simp) ∧
   (∃ (h : u ≠ []), u[0]'(by simpa [List.length_pos_iff]) = H.liftShort.val[2 * k + 1].1) ∧
   getTree' hyp H.liftShort.val =
     pullSub (subAt G.tree (H.x.val.take (2 * k + 1) ++ u)) u.tail
@@ -305,7 +305,7 @@ lemma liftVal_mono {H H' : Lift hyp} (h : H ≤ H') (ht : H.liftTree = H'.liftTr
   H.liftVal <+: H'.liftVal := by rw [eq_take h ht]; simpa using List.take_prefix _ _
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def Con := H.x.val.drop (2 * k + 1) ∈
+@[expose] def Con := H.x.val.drop (2 * k + 1) ∈
   pullSub (getTree' hyp H.liftShort.val) [H.liftShort.val[2 * k + 1].1]
 lemma Con.take h (h' : H.Con) : (H.take n h).Con := by
   simpa [Lift.Con, List.drop_take] using take_mem ⟨_, h'⟩
@@ -458,7 +458,7 @@ variable (H : PreLift hyp)
   htree := ⟨S, rfl⟩
 attribute [simp_lengths] extend_toPreLift
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def WonPos := {u | ∃ S, (H.extend S).PreWonPos u}
+@[expose] def WonPos := {u | ∃ S, (H.extend S).PreWonPos u}
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps -isSimp] def game : Game A where
   tree := subAt G.tree (H.x.val.take (2 * k + 1))
@@ -478,9 +478,9 @@ lemma extend_take h S : (H.take n h).extend S =
 @[simp] lemma game_take h : (H.take n h).game = H.game := by
   ext1 <;> simp [game, List.take_take, h]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def Won := ∃ u ∈ H.WonPos, u <+: H.x.val.drop (2 * k + 1)
+@[expose] def Won := ∃ u ∈ H.WonPos, u <+: H.x.val.drop (2 * k + 1)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def Winnable := WinningPrefix H.game Player.zero (H.x.val.drop (2 * k + 1))
+@[expose] def Winnable := WinningPrefix H.game Player.zero (H.x.val.drop (2 * k + 1))
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def Losable' := ¬ WinningPrefix H.game Player.zero (H.x.val.drop (2 * k + 1))
 end PreLift

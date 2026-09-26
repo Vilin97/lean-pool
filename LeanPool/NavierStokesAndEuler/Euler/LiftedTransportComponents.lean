@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
 
 /-! Exact coefficient functionals for the lifted Euler transport vector (κz,m·z). -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -22,7 +22,7 @@ open InnerProductSpace EulerLiftedGradientSpace EulerMetricTransport EulerVector
 
 /-- Coordinate functionals of the actual lifted transport vector, with the angle coordinate first.
 -/
-def velocityComponents (κ : ℝ) (m : Vector3) : Fin 4 → Vector3 →L[ℝ] ℝ :=
+@[expose] def velocityComponents (κ : ℝ) (m : Vector3) : Fin 4 → Vector3 →L[ℝ] ℝ :=
   Fin.cons (innerSL ℝ m) (fun i : Fin 3 => κ • coordinate 3 i)
 
 /-- The scale-normalized lifted velocity coefficients have norm at most one. -/

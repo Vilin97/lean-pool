@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part02
 
 /-! # GapCVP proof, part 03 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -93,7 +93,7 @@ def paddedAcceptancePhaseSymbolAllowed
       (completePhaseSymbolEquiv machine.tm).symm window.2.2.2)
 
 /-- GapCVP reduction support. -/
-def paddedAcceptancePhaseSpecification
+@[expose] def paddedAcceptancePhaseSpecification
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -1130,7 +1130,7 @@ namespace CLStructuralCNFVariableBounds
 open GapCVP.CL GapCVP.ThreeCNFReduction
 
 /-- GapCVP reduction support. -/
-def tableauFiniteVariableCodeBound (T S : ℕ) : ℕ :=
+@[expose] def tableauFiniteVariableCodeBound (T S : ℕ) : ℕ :=
   ((T + S + 2) ^ 2 + 1) ^ 2
 
 theorem tableauVariable_encode_lt
@@ -1504,7 +1504,7 @@ noncomputable def prependWordComputable (word : List Bool) :
         (prependBitComputable bit)
 
 /-- GapCVP reduction support. -/
-def formulaVariables (formula : ThreeCNF) : List ℕ :=
+@[expose] def formulaVariables (formula : ThreeCNF) : List ℕ :=
   formula.flatMap fun clause =>
     [(clause 0).1, (clause 1).1, (clause 2).1]
 
@@ -1530,7 +1530,7 @@ theorem mem_formulaVariables
   fin_cases i <;> simp
 
 /-- GapCVP reduction support. -/
-def variableRank (formula : ThreeCNF) (index : ℕ) : ℕ :=
+@[expose] def variableRank (formula : ThreeCNF) (index : ℕ) : ℕ :=
   (formulaVariables formula).idxOf index
 
 end SourceMachineCert
@@ -1540,7 +1540,7 @@ namespace SourceMachineRouting
 open SourceMachineCert
 
 /-- GapCVP reduction support. -/
-def canonicalYesInstance : GapCVPInstance where
+@[expose] def canonicalYesInstance : GapCVPInstance where
   dimension := 1
   basis := Matrix.of fun _ _ => 1
   target _ := 0
@@ -1772,7 +1772,7 @@ private theorem unaryPrefixMachine_finish_drain (count : ℕ) :
   cases stack <;> simp [Function.update]
 
 /-- GapCVP reduction support. -/
-def unaryPrefixLength : List Bool → ℕ
+@[expose] def unaryPrefixLength : List Bool → ℕ
   | [] => 0
   | false :: _ => 0
   | true :: rest => unaryPrefixLength rest + 1
@@ -1784,7 +1784,7 @@ def unaryPrefixHasDelimiter : List Bool → Bool
   | true :: rest => unaryPrefixHasDelimiter rest
 
 /-- GapCVP reduction support. -/
-def unaryPrefixOutput (input : List Bool) : List Bool :=
+@[expose] def unaryPrefixOutput (input : List Bool) : List Bool :=
   unaryPrefixHasDelimiter input ::
     List.replicate (unaryPrefixLength input) true
 

@@ -25,7 +25,7 @@ for points `s` on the unit circle arc of the fundamental domain
 Contains parameterization, separation, slitPlane conditions, and the FTC value computation.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm

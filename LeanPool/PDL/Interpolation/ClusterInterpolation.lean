@@ -34,7 +34,7 @@ interpolants of the coarse exits upwards through the local tableaux with
 `LocalTableau.interpolant`.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

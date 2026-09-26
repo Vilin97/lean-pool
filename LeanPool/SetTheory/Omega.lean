@@ -16,7 +16,7 @@ This module develops the theory of `ω` and the natural numbers inside a von Neu
 of ZF, providing the infinitary tools needed for the Kunen inconsistency argument.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

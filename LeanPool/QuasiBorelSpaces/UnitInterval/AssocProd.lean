@@ -13,7 +13,7 @@ public import Mathlib.Topology.UnitInterval
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.UnitInterval.AssocProd`.
 -/
 
-@[expose] public section
+public section
 
 
 open scoped unitInterval

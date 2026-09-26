@@ -27,7 +27,7 @@ makes it admissible at every code.  The resulting characters form a separating f
 minimal construction interface yields the Wallace semigroup.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

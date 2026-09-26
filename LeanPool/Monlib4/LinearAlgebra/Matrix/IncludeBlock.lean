@@ -21,7 +21,7 @@ import Mathlib.Analysis.SpecialFunctions.Bernstein
 
 -/
 
-@[expose] public section
+public section
 
 
 open scoped BigOperators

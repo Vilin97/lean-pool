@@ -18,7 +18,7 @@ the normalized-exponential calculation with the project's existing uniform
 simplex probability measure.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal
 open MeasureTheory Set
@@ -42,7 +42,7 @@ noncomputable def normalizedExponentialCoordinates
 
 /-- Independent unit exponentials on the positive real orthant, written as
 an absolutely continuous measure in real product coordinates. -/
-noncomputable def realExponentialProductMeasure :
+@[expose] noncomputable def realExponentialProductMeasure :
     Measure (ℝ × (Fin n → ℝ)) :=
   (volume.restrict (positiveExponentialOrthant (n := n))).withDensity
     (fun e ↦ ENNReal.ofReal (Real.exp (-exponentialTotal e)))

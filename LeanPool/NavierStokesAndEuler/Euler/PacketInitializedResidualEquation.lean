@@ -24,7 +24,7 @@ section
 Field in the closed lifted gradient space.  Both the mean and oscillatory
 pieces come from the actual source inverses. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -210,7 +210,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -244,7 +244,7 @@ variable (M : EulerMeanPacketProvider.Data)
 
 /-- Initialized velocity, given by `fieldSum (N+1) κ (assembledVelocity N (initializedProfiles M
 D τ hτ hτT B δ hδ ξ hs α))`. -/
-def initializedVelocity (N : ℕ) (κ : ℝ) : VectorField :=
+@[expose] def initializedVelocity (N : ℕ) (κ : ℝ) : VectorField :=
   fieldSum (N+1) κ (assembledVelocity N (initializedProfiles M D τ hτ hτT B δ hδ ξ hs α))
 
 /-- Initialized velocity field as an element of `Field period D.T (initializedVelocity M D τ hτ

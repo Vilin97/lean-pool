@@ -23,7 +23,7 @@ mass zero.  This file establishes the analytic one-variable division theorem and
 each phase-space slice of the normalized residual.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
@@ -44,7 +44,7 @@ theorem sub_mul_dslope_eq_of_eq_zero
   simpa only [smul_eq_mul] using sub_smul_dslope_of_zero hzero argument
 
 /-- The residual obtained after subtracting a one-variable function of the Hamiltonian. -/
-noncomputable def normalizationResidual
+@[expose] noncomputable def normalizationResidual
     (F : ℝ → PhaseSpace → ℝ) (energyFunction : ℝ → ℝ)
     (mass : ℝ) (state : PhaseSpace) : ℝ :=
   F mass state - energyFunction (hamiltonian mass state)

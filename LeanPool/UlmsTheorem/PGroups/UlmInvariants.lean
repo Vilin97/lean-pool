@@ -36,7 +36,7 @@ not the classical Ulm invariant used in Ulm's theorem.
 - Kaplansky, "Infinite Abelian Groups", Theorem 14
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 
@@ -55,6 +55,7 @@ noncomputable def layerSuccIncl {G : Type*} [AddCommGroup G] (α : Ordinal) :
 
 /-- The quotient `G_α / G_{α+1}`. This is useful auxiliary filtration data, but
 it is not the classical Ulm invariant. -/
+@[expose]
 noncomputable def layerQuotient {G : Type*} [AddCommGroup G] (α : Ordinal) :
     Type _ :=
   (ulmSubgroup p α (G := G)) ⧸
@@ -79,7 +80,7 @@ lemma layerQuotient_orderOf_dvd_p {G : Type*} [AddCommGroup G] (α : Ordinal)
       ((ulmSubgroup p (Order.succ α) (G := G)).comap (ulmSubgroup p α (G := G)).subtype)
       0
   have hmem : (p • (a : G)) ∈ ulmSubgroup p (Order.succ α) (G := G) := by
-    rw [ulmSubgroup_succ]
+    rw [ulmSubgroup_succ, mem_pImage]
     exact ⟨a, a.property, rfl⟩
   apply (QuotientAddGroup.mk'_eq_mk' _).2
   refine ⟨-(p • a), ?_, by simp⟩
@@ -100,6 +101,7 @@ noncomputable def layerInvariant {G : Type*} [AddCommGroup G]
 /-! ### The classical Ulm quotient `P_α / P_{α+1}` -/
 
 /-- `P_(α+1)` as a `ZMod p`-submodule of `P_α`. -/
+@[expose]
 noncomputable def ulmDenSubmodule {G : Type*} [AddCommGroup G] (α : Ordinal) :
     Submodule (ZMod p) (pSocleAt p α (G := G)) :=
   AddSubgroup.toZModSubmodule p (pSocleAtSuccSubgroupOf p α)
@@ -122,6 +124,7 @@ lemma ulmQuotient_orderOf_dvd_p {G : Type*} [AddCommGroup G] (α : Ordinal)
   rfl
 
 /-- The classical Ulm invariant `f_G(α) = dim_{ℤ/pℤ}(P_α / P_{α+1})`. -/
+@[expose]
 noncomputable def ulmInvariant {G : Type*} [AddCommGroup G]
     (α : Ordinal) : Cardinal :=
   Module.rank (ZMod p) (ulmQuotient p α (G := G))
@@ -171,12 +174,14 @@ theorem markedGradedInvariant_bot (α : Ordinal) :
 
 /-- The Fuchs/Walker Hill denominator
 `P_α ∩ (S + G_(α+1))`, viewed inside `P_α`. -/
+@[expose]
 noncomputable def hillDen (S : AddSubgroup G) (α : Ordinal) :
     AddSubgroup (pSocleAt p α (G := G)) :=
   (pSocleAt p α ⊓ (S ⊔ ulmSubgroup p (Order.succ α))).comap
     (pSocleAt p α).subtype
 
 /-- The Hill denominator as a `ZMod p`-submodule of `P_α`. -/
+@[expose]
 noncomputable def hillSubmodule (S : AddSubgroup G) (α : Ordinal) :
     Submodule (ZMod p) (pSocleAt p α (G := G)) :=
   AddSubgroup.toZModSubmodule p (hillDen p S α)
@@ -259,6 +264,7 @@ lemma ulmDenSubmodule_le_hillSubmodule (S : AddSubgroup G) (α : Ordinal) :
   exact ⟨x.property, AddSubgroup.mem_sup_right hx.2⟩
 
 /-- The subspace of the ordinary Ulm layer occupied by the marked subgroup `S`. -/
+@[expose]
 noncomputable def relativeOccupiedSubmodule (S : AddSubgroup G) (α : Ordinal) :
     Submodule (ZMod p) (ulmQuotient p α (G := G)) :=
   (hillSubmodule p S α).map (ulmDenSubmodule p α).mkQ

@@ -28,7 +28,7 @@ import Mathlib.GroupTheory.Perm.Fin
   - Three-stage proof decomposition via cycle count bound
 -/
 
-@[expose] public section
+public section
 
 open Equiv Equiv.Perm Fintype
 
@@ -83,7 +83,7 @@ def IsPairing {n : ℕ} (π : Perm (Fin (2 * n))) : Prop :=
   π ^ 2 = 1 ∧ ∀ x, π x ≠ x
 
 /-- The type of pairings of Fin (2n). -/
-def Pairing (n : ℕ) :=
+@[expose] def Pairing (n : ℕ) :=
   { π : Perm (Fin (2 * n)) // IsPairing π }
 
 instance (n : ℕ) : CoeOut (Pairing n) (Perm (Fin (2 * n))) :=

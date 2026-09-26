@@ -20,7 +20,7 @@ import Mathlib.NumberTheory.NumberField.Cyclotomic.PID
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -31,11 +31,11 @@ open scoped NumberField
 variable (n p : ℕ)
 
 /-- A natural number `n` is regular if `n` is coprime with the cardinal of the class group. -/
-def IsRegularNumber : Prop :=
+@[expose] def IsRegularNumber : Prop :=
   n.Coprime <| Fintype.card <| ClassGroup (𝓞 <| CyclotomicField n ℚ)
 
 /-- The definition of regular primes. -/
-def IsRegularPrime : Prop :=
+@[expose] def IsRegularPrime : Prop :=
   IsRegularNumber p
 
 section TwoRegular

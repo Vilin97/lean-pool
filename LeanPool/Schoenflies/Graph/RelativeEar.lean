@@ -93,7 +93,7 @@ current graph and add the next geometric ear") and of the finite transfer of Par
 Root `Graph`, as fixed by `Schoenflies/Graph/Walk.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

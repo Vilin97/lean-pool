@@ -21,7 +21,7 @@ The quantification is represented by de Bruijn index.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 
@@ -526,7 +526,7 @@ abbrev «FVar?» (φ : Semiformula L ξ n) (x : ξ) : Prop := x ∈ φ.freeVaria
     (∀* φ).FVar? x ↔ φ.FVar? x := by simp [FVar?]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def fvSup (φ : SyntacticSemiformula L n) : ℕ := (φ.freeVariables.max).recBotCoe 0 .succ
+@[expose] def fvSup (φ : SyntacticSemiformula L n) : ℕ := (φ.freeVariables.max).recBotCoe 0 .succ
 
 lemma «lt_fvSup_of_fvar?» {φ : SyntacticSemiformula L n} : φ.FVar? m → m < φ.fvSup := by
   unfold fvSup FVar?

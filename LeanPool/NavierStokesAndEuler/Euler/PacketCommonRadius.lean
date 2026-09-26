@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
 /-! Monotone enlargement of the actual source budgets and a common external
 radius for the mean, forced transverse and nonlinear packet estimates. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -147,7 +147,7 @@ variable {P Tc : ℝ} [Fact (0 < P)] {O : Operators} {C : CoefficientData P Tc O
 
 /-- Every summand is a fixed source quantity.  There is no occurrence of the
 new target radius, the forcing amplitude, or the recursive grade on the right. -/
-def commonRadius : ℝ :=
+@[expose] def commonRadius : ℝ :=
   Rm + L.R + CB.termCost + sobolevCoefficientRadius (Fin 4) CB.Rc +
     M.velocityCost + M.derivativeCost + M.pressureGradientCost +
       L.commonCost + L.correctorAmplitude (P := P) N +

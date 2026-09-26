@@ -51,7 +51,7 @@ arguments below allow any fixed selector belonging to that set, a slightly
 stronger formulation which includes the paper's choice.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

@@ -23,7 +23,7 @@ half the level and Tonelli's theorem, so it does not depend on an abstract
 interpolation package.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 
@@ -35,6 +35,7 @@ noncomputable section
 namespace CKN.Foundation.Parabolic
 
 /-- Explicit strong-type coefficient for the parabolic maximal operator. -/
+@[expose]
 def parabolicMaximalStrongConstant (p : ℝ) : ℝ≥0∞ :=
   (2 : ℝ≥0∞) ^ p * ENNReal.ofReal (10 ^ 5) * ENNReal.ofReal p /
     ENNReal.ofReal (p - 1)

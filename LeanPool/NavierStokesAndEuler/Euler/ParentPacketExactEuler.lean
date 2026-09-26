@@ -22,7 +22,7 @@ section
 /-! Euler's spatial/amplitude rescaling, proved for the actual first
 derivatives and scalar pressure. Time is unchanged. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -119,7 +119,7 @@ section
 /-! Normalizing the actual parent Euler velocity and pressure preserves
 Euler and supplies the true time law of the normalized particle map. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -208,7 +208,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

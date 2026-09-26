@@ -12,7 +12,7 @@ public import Mathlib.Algebra.Group.Defs
 # Demonstration executable for Polylean length computations
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 

@@ -18,7 +18,7 @@ import Mathlib.Tactic.Positivity.Finset
 # Passing from closed to strict halfspaces
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 

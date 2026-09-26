@@ -30,7 +30,7 @@ section
 
 /-! The fixed-base transport commutator estimate with only H⁶ velocity norms. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -134,7 +134,7 @@ section
 /-! Genuine transport as a bounded bilinear map from Sobolev velocity and an H¹ transported field
 into L². -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -213,7 +213,7 @@ section
 /-! Transfer of continuous real inequalities from actual smooth H∞ representatives to finite Sobolev
 fields. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -265,7 +265,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -399,7 +399,7 @@ section
 
 /-! Summation of the actual base transport commutators with no external-cutoff constant. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -520,7 +520,7 @@ section
 
 /-! Literal differentiated forcing arrays and their actual finite Gevrey norms. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -668,7 +668,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -690,7 +690,7 @@ variable (period : ℝ) [Fact (0 < period)]
 (17).
 The two pressure arguments are the positive projected inverses; the PDE pressure has the opposite
 sign. -/
-def correctionForcing {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient period}
+@[expose] def correctionForcing {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (K0 : EulerSpatialSobolevInverse.CoefficientJet period standardDirection 6 A)
     (N : ℕ) (hN : N + 6 ≤ s) (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)

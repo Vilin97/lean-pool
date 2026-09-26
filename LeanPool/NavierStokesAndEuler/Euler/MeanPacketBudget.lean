@@ -87,7 +87,7 @@ section
 
 /-! Factorial bounds for actual spatial derivatives of the localized Newtonian operator family. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -249,7 +249,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -404,7 +404,7 @@ iterated Fréchet derivatives are estimated. Coefficient and forcing amplitudes
 enter through explicit polynomials, independently of derivative order.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -441,7 +441,7 @@ local instance instMeanTranslatedGevrey6 (T : ℝ) : InnerProductSpace ℝ (Time
     := inferInstance
 
 /-- The proved polynomial amplitude for the actual fixed mean operator. -/
-def operatorAmplitude (T CF CF₁ CH CM CA L : ℝ) : ℝ :=
+@[expose] def operatorAmplitude (T CF CF₁ CH CM CA L : ℝ) : ℝ :=
   9*(T*CF₁+CF)^2*(1+(T^2/2)*CH+T*(CM+|L| * CA))
 
 /-- The proved polynomial amplitude of the actual forcing pullback. -/
@@ -560,7 +560,7 @@ converted from tensor bounds. Their finite Sobolev cost is paid once, before
 applying the actual inverse recurrence.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -599,12 +599,12 @@ local instance instMeanFixedSobolevGevrey6 (T : ℝ) : InnerProductSpace ℝ (Ti
     := inferInstance
 
 /-- Coefficient-only amplitude of the full mean form in a fixed base order. -/
-def operatorBlockAmplitude (ι : Type*) [Fintype ι] (q : ℕ)
+@[expose] def operatorBlockAmplitude (ι : Type*) [Fintype ι] (q : ℕ)
     (T Rc CF CF₁ CH CM CA L : ℝ) : ℝ :=
   sobolevCoefficientAmplitude ι q Rc (operatorAmplitude T CF CF₁ CH CM CA L)
 
 /-- Pulling back the right side is a multiplication in the same Sobolev block. -/
-def forcingBlockAmplitude (ι : Type*) [Fintype ι] (q : ℕ)
+@[expose] def forcingBlockAmplitude (ι : Type*) [Fintype ι] (q : ℕ)
     (T Rc CF CF₁ Cf : ℝ) : ℝ :=
   3*sobolevCoefficientAmplitude ι q Rc (T*(T*CF₁+CF))*Cf
 
@@ -762,7 +762,7 @@ The remaining quantitative inputs are literal spatial derivatives of the given
 matrix coefficients and the actual translation derivatives of the forcing.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -905,7 +905,7 @@ L² translation orbits. Taking q=6 gives the fixed-H6 endpoint without spending
 six additional factorial shifts. All constants are independent of the grade.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1008,7 +1008,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1108,7 +1108,7 @@ The actual continuous Gram inverse then controls acceleration and the
 physical time derivative. All bounds concern genuine spatial derivatives.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1117,7 +1117,7 @@ namespace EulerMeanStrongContinuousGevrey
 open EulerGevrey
 
 /-- The fixed H¹ trace cost for unit velocity and acceleration jet amplitudes. -/
-def coordinateTraceCost (T : ℝ) : ℝ := T⁻¹*Real.sqrt T+2*Real.sqrt T
+@[expose] def coordinateTraceCost (T : ℝ) : ℝ := T⁻¹*Real.sqrt T+2*Real.sqrt T
 
 theorem coordinateTraceCost_nonneg (T : ℝ) (hT : 0 ≤ T) : 0 ≤ coordinateTraceCost T := by
   unfold coordinateTraceCost
@@ -1226,7 +1226,7 @@ section
 
 /-! The genuine mean acceleration estimate in fixed-Hq external word blocks. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1340,7 +1340,7 @@ of its data. This identifies the parameterized continuous solve with the
 genuine spatial orbit of the acceleration, including endpoint times.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1463,7 +1463,7 @@ result gives the actual continuous physical field at shift d+2 and its true
 within-time derivative at shift d+3. All use the identical external radius.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1593,7 +1593,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1726,7 +1726,7 @@ result gives the actual continuous physical field at shift d+2 and its true
 within-time derivative at shift d+3. All use the identical external radius.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1859,7 +1859,7 @@ boundary cutoff calculus, Gram inversion, and time reconstruction are all
 proved constructions used by this theorem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1977,7 +1977,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2123,7 +2123,7 @@ coercive inverse. Consequently scalar forcing envelopes remain outside the
 velocity, time-derivative, and physical-pressure estimates.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2245,7 +2245,7 @@ section
 
 /-! Zero forcing produces the actual zero velocity, derivative, and pressure force. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2288,7 +2288,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2397,7 +2397,7 @@ section
 
 /-! Exact parameter restriction and injective subalphabet bounds for genuine derivative words. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2461,7 +2461,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2608,7 +2608,7 @@ section
 
 /-! A single uniform-time forcing bound suffices for the normalized mean estimates. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2659,7 +2659,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

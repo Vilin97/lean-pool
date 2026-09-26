@@ -26,7 +26,7 @@ Bridge lemmas, elliptic point CPV, segment geometry helpers, arc injectivity,
 and CPV helper lemmas (avoidance, concatenation, sub-interval extension, integrability).
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

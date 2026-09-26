@@ -26,7 +26,7 @@ Main declarations:
   `C(K, ℂ)` (Cauchy estimate ⇒ equicontinuity ⇒ Arzelà–Ascoli).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -16,7 +16,7 @@ physical vectors.  The third ratio is eliminated using actual tangency,
 and the scalar estimate is transported through the checked exact formulas.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

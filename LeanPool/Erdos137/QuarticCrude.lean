@@ -43,7 +43,7 @@ The ONLY hypothesis is `BlockRadLB4` (the `g = 4` instance of `BlockRadLBg`); it
 an `axiom`, so it does not appear in any axiom footprint.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos137
 

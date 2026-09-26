@@ -86,7 +86,7 @@ restatement of anything proved here.
   `prop:initial-pair`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set Topology unitInterval
 open scoped Graph
@@ -229,7 +229,7 @@ namespace InitialCell
 
 /-- The two ends of a cell, when it is an edge. Junk elsewhere; the graph below only ever
 consults it on an edge name. -/
-def ends : InitialCell → InitialCell × InitialCell
+@[expose] def ends : InitialCell → InitialCell × InitialCell
   | .edge i => (.vert i, .vert (i + 1))
   | .chord => (.vert 1, .vert 4)
   | c => (c, c)
@@ -238,10 +238,10 @@ def ends : InitialCell → InitialCell × InitialCell
 def vertices : Set InitialCell := Set.range InitialCell.vert
 
 /-- The seven 1-cells: six outer edges and the crosscut. -/
-def edges : Set InitialCell := Set.range InitialCell.edge ∪ {InitialCell.chord}
+@[expose] def edges : Set InitialCell := Set.range InitialCell.edge ∪ {InitialCell.chord}
 
 /-- The six outer 1-cells. -/
-def outerEdges : Set InitialCell := Set.range InitialCell.edge
+@[expose] def outerEdges : Set InitialCell := Set.range InitialCell.edge
 
 /-- The two 2-cells. -/
 def faces : Set InitialCell := Set.range InitialCell.face
@@ -331,12 +331,12 @@ theorem initOuter_le_initSkel : initOuter ≤ initSkel :=
 /-- The cells lying on the closed boundary of a 2-cell: the vertices and edges of `Bᵢ`
 together with the crosscut. `face false = R₁` is bounded by `B₁ ∪ P`, `face true = R₂` by
 `B₂ ∪ P`. -/
-def faceCells : Bool → Set InitialCell
+@[expose] def faceCells : Bool → Set InitialCell
   | false => {.vert 1, .vert 2, .vert 3, .vert 4, .edge 1, .edge 2, .edge 3, .chord}
   | true => {.vert 4, .vert 5, .vert 0, .vert 1, .edge 4, .edge 5, .edge 0, .chord}
 
 /-- The cyclic boundary walk of each 2-cell, as a list of edge names. -/
-def initBoundary : InitialCell → List InitialCell
+@[expose] def initBoundary : InitialCell → List InitialCell
   | .face false => [.edge 1, .edge 2, .edge 3, .chord]
   | .face true => [.edge 4, .edge 5, .edge 0, .chord]
   | _ => []

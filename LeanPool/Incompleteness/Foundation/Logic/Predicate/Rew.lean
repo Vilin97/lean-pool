@@ -29,7 +29,7 @@ Rewritings `LO.FirstOrder.Rew` is naturally converted to formula Rewritings by
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 
@@ -121,10 +121,10 @@ def bind (b : Fin n₁ → Semiterm L ξ₂ n₂) (e : ξ₁ → Semiterm L ξ�
   func' := fun _ _ => rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def rewrite (f : ξ₁ → Semiterm L ξ₂ n) : Rew L ξ₁ n ξ₂ n := bind Semiterm.bvar f
+@[expose] def rewrite (f : ξ₁ → Semiterm L ξ₂ n) : Rew L ξ₁ n ξ₂ n := bind Semiterm.bvar f
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def rewriteMap (e : ξ₁ → ξ₂) : Rew L ξ₁ n ξ₂ n := rewrite (fun m => &(e m))
+@[expose] def rewriteMap (e : ξ₁ → ξ₂) : Rew L ξ₁ n ξ₂ n := rewrite (fun m => &(e m))
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def map (b : Fin n₁ → Fin n₂) (e : ξ₁ → ξ₂) : Rew L ξ₁ n₁ ξ₂ n₂ :=
@@ -155,7 +155,7 @@ def cast {n n' : ℕ} (h : n = n') : Rew L ξ n ξ n' := map (Fin.cast h) id
 def castLE {n n' : ℕ} (h : n ≤ n') : Rew L ξ n ξ n' := map (Fin.castLE h) id
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def toS : Rew L (Fin n) 0 Empty n := Rew.bind ![] (#·)
+@[expose] def toS : Rew L (Fin n) 0 Empty n := Rew.bind ![] (#·)
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def toF : Rew L Empty n (Fin n) 0 := Rew.bind (&·) Empty.elim
@@ -530,9 +530,10 @@ def shift : SyntacticRew L n n := map id Nat.succ
  -/
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def free : SyntacticRew L (n + 1) n := bind (bvar <: &0) (fun m => &(Nat.succ m))
+@[expose] def free : SyntacticRew L (n + 1) n := bind (bvar <: &0) (fun m => &(Nat.succ m))
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def fix : SyntacticRew L n (n + 1) := bind (fun x => #(Fin.castSucc x)) (#(Fin.last n) :>ₙ fvar)
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -963,7 +964,7 @@ abbrev free [Rewriting L ℕ F ℕ F] (φ : F (n + 1)) : F n := @Rew.free L n �
 abbrev fix [Rewriting L ℕ F ℕ F] (φ : F n) : F (n + 1) := @Rew.fix L n ▹ φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def shifts [Rewriting L ℕ F ℕ F] (Γ : List (F n)) : List (F n) := Γ.map Rewriting.shift
+@[expose] def shifts [Rewriting L ℕ F ℕ F] (Γ : List (F n)) : List (F n) := Γ.map Rewriting.shift
 
 /-- Imported declaration from the Incompleteness formalization. -/
 scoped[LO.FirstOrder] postfix:max "⁺" => FirstOrder.Rewriting.shifts

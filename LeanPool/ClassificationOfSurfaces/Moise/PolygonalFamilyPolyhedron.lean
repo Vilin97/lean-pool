@@ -19,7 +19,7 @@ the family and retains precisely the chambers lying inside at least one polygon.
 single triangle mesh has support equal to the union.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -90,7 +90,7 @@ namespace PolygonalFamily
 variable {ι : Type*} [Fintype ι] (J : ι → PolygonalCircle)
 
 /-- The union of the finitely many closed polygonal disks. -/
-def closedRegion : Set Plane :=
+@[expose] def closedRegion : Set Plane :=
   ⋃ i, (J i).closedRegion
 
 omit [Fintype ι] in
@@ -331,7 +331,7 @@ theorem closedRegionMesh_support :
 /-! ## Synchronized submeshes of one family arrangement -/
 
 /-- The union of a selected subfamily of polygonal closed disks. -/
-def selectedClosedRegion (p : ι → Prop) : Set Plane :=
+@[expose] def selectedClosedRegion (p : ι → Prop) : Set Plane :=
   ⋃ i, ⋃ (_ : p i), (J i).closedRegion
 
 /-- An arrangement chamber belongs to the selected submesh when its interior lies on the

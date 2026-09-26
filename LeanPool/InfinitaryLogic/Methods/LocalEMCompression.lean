@@ -29,7 +29,7 @@ for a countable base language (`countable_localEMTupleCode`) — the quotient-tu
 the orbit theorem are unit 3b (`LocalEMTupleOrbit.lean`).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

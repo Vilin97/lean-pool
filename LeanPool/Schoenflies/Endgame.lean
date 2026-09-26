@@ -92,7 +92,7 @@ into the module that owns `Schoenflies.IsHomeoOn`:
 `Schoenflies.paste` and `Schoenflies.Plane.IsSquareMover.isHomeoOn`.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Metric Set
 

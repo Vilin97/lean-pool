@@ -55,7 +55,7 @@ project's permitted
 `Element.ext`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

@@ -14,7 +14,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 open Ideal IsDedekindDomain
 
@@ -34,7 +34,7 @@ lemma one_lt_primeIdealNorm (P : HeightOneSpectrum (𝓞 K)) :
   · simpa [primeIdealNorm, Ideal.absNorm_eq_one_iff] using P.isPrime.ne_top
 
 /-- A prime ideal factor used in the Odlyzko-bound argument. -/
-noncomputable def primeIdealFactor (P : HeightOneSpectrum (𝓞 K)) (s : ℂ) : ℂ :=
+@[expose] noncomputable def primeIdealFactor (P : HeightOneSpectrum (𝓞 K)) (s : ℂ) : ℂ :=
   localFactor (primeIdealNorm K P) s
 
 lemma primeIdealFactor_ne_zero (P : HeightOneSpectrum (𝓞 K)) {s : ℂ} (hs : 0 < s.re) :

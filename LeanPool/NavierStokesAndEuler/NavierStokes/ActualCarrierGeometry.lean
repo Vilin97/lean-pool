@@ -16,7 +16,7 @@ but does not keep a separate dyadic mask.  A single geometric threshold,
 chosen before the actual primary family, controls this larger carrier.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

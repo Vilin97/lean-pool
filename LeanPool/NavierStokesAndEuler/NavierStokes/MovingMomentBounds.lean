@@ -16,7 +16,7 @@ exponent using the same moving edge weight. The containing annulus is used
 only to justify the actual integrals and local smoothness.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

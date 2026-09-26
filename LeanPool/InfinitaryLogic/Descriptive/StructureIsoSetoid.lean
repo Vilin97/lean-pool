@@ -25,7 +25,7 @@ theorem about it.  The sentence-level predicates below then quantify over perfec
 statements.
 -/
 
-@[expose] public section
+public section
 
 open Cardinal Set
 

@@ -18,7 +18,7 @@ vanish on `A(D)` plus the diagonal for some intrinsic divisor. The equivalence
 carriers in the public statements.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 

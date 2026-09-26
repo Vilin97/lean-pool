@@ -17,7 +17,7 @@ public import Mathlib.RingTheory.Regular.RegularSequence
 Trace ideals, Clebsch decompositions, and arbitrary-rank branching constructions.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -607,7 +607,7 @@ section
 open scoped BigOperators
 
 /-- The raise weight used in the spherical-code argument. -/
-def raiseWeight {r : ℕ} (lam : Fin (r + 1) → ℕ)
+@[expose] def raiseWeight {r : ℕ} (lam : Fin (r + 1) → ℕ)
     (ℓ : Fin (r + 1)) : Fin (r + 1) → ℕ :=
   Function.update lam ℓ (lam ℓ + 1)
 
@@ -1011,7 +1011,7 @@ open scoped BigOperators Topology
 open MetricCodes.Spherical.HigherHierarchy
 
 /-- The floored coordinates used in the spherical-code argument. -/
-def flooredCoordinates {I : Type*} (a : I → ℝ) (n : ℕ) : I → ℕ :=
+@[expose] def flooredCoordinates {I : Type*} (a : I → ℝ) (n : ℕ) : I → ℕ :=
   fun i => ⌊a i * (n : ℝ)⌋₊
 
 theorem tendsto_flooredCoordinates_ratio {I : Type*}
@@ -1278,7 +1278,7 @@ open MetricCodes.Spherical.HigherChannel
 abbrev Vertex (r m : ℕ) := Fin (r + 1) → Fin (m + 1)
 
 /-- The signature used in the spherical-code argument. -/
-def signature {r : ℕ} (a : Fin (r + 1) → ℝ)
+@[expose] def signature {r : ℕ} (a : Fin (r + 1) → ℝ)
     (n : ℕ) {m : ℕ} (v : Vertex r m) : Fin (r + 1) → ℕ :=
   fun i => flooredCoordinates a n i + (v i).val
 
@@ -1620,7 +1620,7 @@ theorem tendsto_log_dimensionSum_div_log_two {r m : ℕ}
   exact tendsto_log_vertexDimension_div_log_two a ha hanti (fun _ => v)
 
 /-- The next vertex used in the spherical-code argument. -/
-def nextVertex {r m : ℕ} (v : Vertex r m)
+@[expose] def nextVertex {r m : ℕ} (v : Vertex r m)
     (i : Fin (r + 1)) (h : (v i).val < m) : Vertex r m :=
   Function.update v i ⟨(v i).val + 1, by omega⟩
 
@@ -3523,7 +3523,7 @@ abbrev BoxIndex (r m : ℕ) :=
     (MetricCodes.Spherical.HigherHierarchy.RectangularVertices.Vertex r m))
 
 /-- The box signature used in the spherical-code argument. -/
-def boxSignature {r m : ℕ} (a : Fin (r + 1) → ℝ) (n : ℕ)
+@[expose] def boxSignature {r m : ℕ} (a : Fin (r + 1) → ℝ) (n : ℕ)
     (i : BoxIndex r m) : Fin (r + 1) → ℕ :=
   MetricCodes.Spherical.HigherHierarchy.RectangularVertices.signature a n
     ((Fintype.equivFin
@@ -3941,18 +3941,18 @@ def precedingRows {r : ℕ} (row : Fin (r + 1)) : Finset (Fin (r + 1)) :=
   simp only [precedingRows, Finset.mem_filter, Finset.mem_univ, true_and]
 
 /-- The shifted row gap used in the spherical-code argument. -/
-def shiftedRowGap {r : ℕ}
+@[expose] def shiftedRowGap {r : ℕ}
     (lam : Fin (r + 1) → ℕ) (row i : Fin (r + 1)) : ℝ :=
   ((lam i - lam row : ℕ) : ℝ) +
     ((row.val - i.val - 1 : ℕ) : ℝ)
 
 /-- The arbitrary row leading scalar used in the spherical-code argument. -/
-def arbitraryRowLeadingScalar {r : ℕ}
+@[expose] def arbitraryRowLeadingScalar {r : ℕ}
     (lam : Fin (r + 1) → ℕ) (row : Fin (r + 1)) : ℝ :=
   ∏ i ∈ precedingRows row, shiftedRowGap lam row i
 
 /-- The lower polarization path used in the spherical-code argument. -/
-def lowerPolarizationPath {r n : ℕ} :
+@[expose] def lowerPolarizationPath {r n : ℕ} :
     List (Fin (r + 1)) →
       (PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n)
   | [] => LinearMap.id
@@ -3962,19 +3962,19 @@ def lowerPolarizationPath {r n : ℕ} :
         (lowerPolarizationPath (j :: rest))
 
 /-- The polarization path start used in the spherical-code argument. -/
-def polarizationPathStart {r : ℕ}
+@[expose] def polarizationPathStart {r : ℕ}
     (row : Fin (r + 1)) (S : Finset (Fin (r + 1))) : Fin (r + 1) :=
   if h : S.Nonempty then S.min' h else row
 
 /-- The polarization path coefficient used in the spherical-code argument. -/
-def polarizationPathCoefficient {r : ℕ}
+@[expose] def polarizationPathCoefficient {r : ℕ}
     (lam : Fin (r + 1) → ℕ) (row : Fin (r + 1))
     (S : Finset (Fin (r + 1))) : ℝ :=
   (-1 : ℝ) ^ S.card *
     ∏ i ∈ precedingRows row \ S, shiftedRowGap lam row i
 
 /-- The arbitrary row axial raise used in the spherical-code argument. -/
-def arbitraryRowAxialRaise {r n : ℕ}
+@[expose] def arbitraryRowAxialRaise {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) (row : Fin (r + 1)) (k : Fin n) :
     PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n :=
   ∑ S ∈ (precedingRows row).powerset,
@@ -4061,7 +4061,7 @@ open MetricCodes.Spherical.ThreeRowYoungBranching
 open MetricCodes.Spherical.HigherHarmonicYoung.AllRankArbitraryRowBranchingOperator
 
 /-- The interlacing gap used in the spherical-code argument. -/
-def interlacingGap {r : ℕ}
+@[expose] def interlacingGap {r : ℕ}
     (lam : Fin (r + 2) → ℕ) (mu : Fin (r + 1) → ℕ)
     (row : Fin (r + 2)) : ℕ :=
   lam row - appendZeroWeight mu row
@@ -4093,7 +4093,7 @@ theorem interlaces_of_between_appendZero_and_target {r : ℕ}
   · exact (hupper i.succ).trans (h i).2
 
 /-- The interlacing row schedule used in the spherical-code argument. -/
-def interlacingRowSchedule {r : ℕ}
+@[expose] def interlacingRowSchedule {r : ℕ}
     (lam : Fin (r + 2) → ℕ) (mu : Fin (r + 1) → ℕ) :
     List (Fin (r + 2)) :=
   (List.finRange (r + 2)).flatMap fun row =>
@@ -4219,7 +4219,7 @@ theorem foldl_arbitraryRowLeadingScalar_pos_of_count_lt_gap {r : ℕ}
     row j hrow hj
 
 /-- The reverse interlacing row schedule used in the spherical-code argument. -/
-def reverseInterlacingRowSchedule {r : ℕ}
+@[expose] def reverseInterlacingRowSchedule {r : ℕ}
     (lam : Fin (r + 2) → ℕ) (mu : Fin (r + 1) → ℕ) :
     List (Fin (r + 2)) :=
   (interlacingRowSchedule lam mu).reverse
@@ -4291,12 +4291,12 @@ abbrev UpperGramPair (r : ℕ) :=
   {z : Fin (r + 1) × Fin (r + 1) // z.1 ≤ z.2}
 
 /-- The gram pair polynomial used in the spherical-code argument. -/
-def gramPairPolynomial {r : ℕ} (n : ℕ)
+@[expose] def gramPairPolynomial {r : ℕ} (n : ℕ)
     (z : UpperGramPair r) : PolynomialSpace r n :=
   rowPairingPolynomial (n := n) z.val.1 z.val.2
 
 /-- The gram quadratic list used in the spherical-code argument. -/
-def gramQuadraticList (r n : ℕ) : List (PolynomialSpace r n) :=
+@[expose] def gramQuadraticList (r n : ℕ) : List (PolynomialSpace r n) :=
   (Finset.univ : Finset (UpperGramPair r)).toList.map
     (gramPairPolynomial n)
 
@@ -4349,7 +4349,7 @@ def gramPivot {r n : ℕ} (hn : 2 * r < n)
     (gramPivot hn z).val = z.val.1.val + z.val.2.val := rfl
 
 /-- The gram pivot variables used in the spherical-code argument. -/
-def gramPivotVariables {r n : ℕ} (hn : 2 * r < n)
+@[expose] def gramPivotVariables {r n : ℕ} (hn : 2 * r < n)
     (z : UpperGramPair r) : Finset (Fin ((r + 1) * n)) :=
   {variableIndex z.val.1 (gramPivot hn z),
     variableIndex z.val.2 (gramPivot hn z)}
@@ -6139,14 +6139,14 @@ theorem arbitraryRowAxialRaise_sub_mem_youngGramRadialIdeal
   exact arbitraryRowAxialRaise_mem_youngGramRadialIdeal lam row k h
 
 /-- The arbitrary row path weight used in the spherical-code argument. -/
-def arbitraryRowPathWeight {r : ℕ}
+@[expose] def arbitraryRowPathWeight {r : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     List (Fin (r + 1)) → (Fin (r + 1) → ℕ)
   | [] => lam
   | row :: rows => arbitraryRowPathWeight (raiseWeight lam row) rows
 
 /-- The iterated arbitrary row axial raise used in the spherical-code argument. -/
-def iteratedArbitraryRowAxialRaise {r n : ℕ}
+@[expose] def iteratedArbitraryRowAxialRaise {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) (k : Fin n) :
     List (Fin (r + 1)) →
       (PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n)

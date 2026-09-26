@@ -63,7 +63,7 @@ Lie algebra, universal enveloping algebra
 
 -/
 
-@[expose] public section
+public section
 
 
 -- `LieRing.ofAssociativeRing` is only a local instance in Mathlib; it is needed to view the

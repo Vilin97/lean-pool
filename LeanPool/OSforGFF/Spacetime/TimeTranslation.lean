@@ -43,7 +43,7 @@ that time translation acts continuously on Schwartz space (a standard textbook f
 from Reed-Simon V.3 and Hörmander Ch. 7).
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real
 open TopologicalSpace
@@ -807,14 +807,14 @@ for all f ∈ S(ℝ × ℝ³).
 
     Continuity is automatic since composition of continuous linear maps is continuous.
 -/
-def timeTranslationDistribution (s : ℝ) (ω : FieldConfiguration) : FieldConfiguration :=
+@[expose] def timeTranslationDistribution (s : ℝ) (ω : FieldConfiguration) : FieldConfiguration :=
   ω.comp (timeTranslationSchwartzCLM (-s))
 
 /-- The defining property of time translation on distributions. -/
 @[simp]
 lemma timeTranslationDistribution_apply (s : ℝ) (ω : FieldConfiguration)
     (f : OSforGFF.TestFunction) :
-    (timeTranslationDistribution s ω) f = ω (timeTranslationSchwartz (-s) f) := rfl
+    (timeTranslationDistribution s ω) f = ω (timeTranslationSchwartz (-s) f) := by rfl
 
 /-- Time translation on distributions is a group homomorphism: T_{s+t} = T_s ∘ T_t -/
 lemma timeTranslationDistribution_add (s t : ℝ) (ω : FieldConfiguration) :

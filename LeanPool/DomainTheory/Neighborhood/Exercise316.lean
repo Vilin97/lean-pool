@@ -52,7 +52,7 @@ inherited from the
 project's `Element.ext`/`prodEquiv` machinery, as elsewhere in §3.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

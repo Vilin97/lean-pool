@@ -18,7 +18,7 @@ All jets below remain actual Fréchet derivatives. The operations preserve
 their genuine L² classes and continuity in an external parameter.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

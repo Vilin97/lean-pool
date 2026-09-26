@@ -21,7 +21,7 @@ construction of matrix units from `OrtIdemDiv`, and the explicit ring
 isomorphism `R ≃+* Matrix (Fin n) (Fin n) (e₀₀ R e₀₀)`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 

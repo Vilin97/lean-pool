@@ -31,7 +31,7 @@ the original.
    [Hopcroft et al. 2006]
 -/
 
-@[expose] public section
+public section
 
 universe uN uT
 namespace ContextFreeGrammar
@@ -422,6 +422,7 @@ variable {g : ContextFreeGrammar T} [DecidableEq g.NT]
 
 /-- For a given unit pair `(n₁, n₂)`, computes rules `r : n₁ → o`, s.t. there is a rule
 `r' : n₂ → o` in `g` (and `o` is non-unit) -/
+@[expose]
 noncomputable def computeUnitPairRules (p : g.NT × g.NT) : List (ContextFreeRule T g.NT) :=
   let f (r : ContextFreeRule T g.NT) : Option (ContextFreeRule T g.NT) :=
     if r.input = p.2 then
@@ -439,7 +440,7 @@ noncomputable def removeUnitRules [DecidableEq T] (l : Finset (g.NT × g.NT)) :=
 /-- Given `g`, computes a new grammar `g'` in which all unit rules are removed and, for each
 unit pair `(n₁, n₂)`, we add rules `r : n₁ → o` if the rule `r' : n₂ → o` is in the grammar
 (and non-unit) -/
-noncomputable def eliminateUnitRules [DecidableEq T] (g : ContextFreeGrammar T)
+@[expose] noncomputable def eliminateUnitRules [DecidableEq T] (g : ContextFreeGrammar T)
     [DecidableEq g.NT] :=
   ContextFreeGrammar.mk g.NT g.initial (removeUnitRules computeUnitPairs)
 

@@ -17,7 +17,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Comp
 One extra angular derivative suffices, and its norm is controlled by
 the next actual cover tensor. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

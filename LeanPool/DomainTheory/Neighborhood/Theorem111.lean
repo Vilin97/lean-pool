@@ -34,7 +34,7 @@ filter law (ii)
 Everything is constructive (`[propext, Quot.sound]`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

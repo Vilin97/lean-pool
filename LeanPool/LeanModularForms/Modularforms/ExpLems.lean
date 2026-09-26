@@ -12,7 +12,7 @@ public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 /-! # ExpLems -/
 
 
-@[expose] public section
+public section
 
 
 open UpperHalfPlane TopologicalSpace Set

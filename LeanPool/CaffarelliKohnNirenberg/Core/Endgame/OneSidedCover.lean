@@ -16,7 +16,7 @@ finite backward-cylinder cover after truncating the forward time shifts.
 All centers and the number of cylinders are chosen before the integrand.
 -/
 
-@[expose] public section
+public section
 
 open Set Metric MeasureTheory
 open scoped ENNReal BigOperators

@@ -13,4 +13,4 @@ public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.BigOperators.F
 Import-only index for big-operator support modules used by the Virasoro Project.
 -/
 
-@[expose] public section
+public section

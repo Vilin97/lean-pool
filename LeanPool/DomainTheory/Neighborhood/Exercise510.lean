@@ -76,7 +76,7 @@ enters only the `smashCurryEquiv` *proof*, through the genuinely-classical `X =
 boundary case analysis.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise510
 

@@ -16,7 +16,7 @@ import Mathlib.Algebra.Order.Star.Real
 # Packet Uniform Scale Sums
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

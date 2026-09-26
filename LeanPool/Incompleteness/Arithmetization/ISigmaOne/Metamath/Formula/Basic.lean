@@ -10,7 +10,7 @@ import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # Basic -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»

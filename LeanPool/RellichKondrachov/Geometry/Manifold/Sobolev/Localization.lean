@@ -26,7 +26,7 @@ For compact manifolds, the resulting function has compact support and is `C^1` (
 the Euclidean `C1c` submodule used in the Euclidean Sobolev baseline).
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry
@@ -65,7 +65,7 @@ abbrev chart (i : d.ι) : PartialEquiv M E :=
   extChartAt I (d.center i)
 
 /-- The localization of a scalar function `f : M → ℝ` to a chart `i`, as a function on `E`. -/
-noncomputable def localize (f : M → ℝ) (i : d.ι) : E → ℝ :=
+@[expose] noncomputable def localize (f : M → ℝ) (i : d.ι) : E → ℝ :=
   Set.indicator (chart (d := d) i).target fun y =>
     d.ρ i ((chart (d := d) i).symm y) * f ((chart (d := d) i).symm y)
 

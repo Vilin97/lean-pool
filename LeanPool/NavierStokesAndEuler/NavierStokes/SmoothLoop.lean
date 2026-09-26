@@ -41,7 +41,7 @@ The final lemmas give explicit two-point distributions with prescribed variance.
 They establish finite moment feasibility, including a one-sided support bound.
 -/
 
-@[expose] public section
+public section
 
 namespace NavierStokes.LoopMoments
 
@@ -126,10 +126,10 @@ theorem required_variance_nonneg (s : Finset ι) (w t : ι → ℝ) (a m ρ : �
 def phaseDensity (a v t : ℝ) : ℝ := a * (1 + t ^ 2) / v
 
 /-- The positive first component of the loop shear. -/
-def loopA (v t : ℝ) : ℝ := v / (1 + t ^ 2)
+@[expose] def loopA (v t : ℝ) : ℝ := v / (1 + t ^ 2)
 
 /-- The signed second component; this corresponds to `-b_L`. -/
-def loopC (v t : ℝ) : ℝ := v * t / (1 + t ^ 2)
+@[expose] def loopC (v t : ℝ) : ℝ := v * t / (1 + t ^ 2)
 
 theorem one_add_sq_pos (t : ℝ) : 0 < 1 + t ^ 2 := by
   nlinarith [sq_nonneg t]
@@ -353,7 +353,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 namespace NavierStokes.SmoothLoop
 
@@ -363,7 +363,7 @@ open MeasureTheory
 open scoped Interval ContDiff
 
 /-- Angular average over one full turn. -/
-def angularMean (f : ℝ → ℝ) : ℝ := (∫ θ in (0 : ℝ)..(2 * Real.pi), f θ) / (2 * Real.pi)
+@[expose] def angularMean (f : ℝ → ℝ) : ℝ := (∫ θ in (0 : ℝ)..(2 * Real.pi), f θ) / (2 * Real.pi)
 
 theorem period_pos : (0 : ℝ) < 2 * Real.pi := mul_pos (by norm_num) Real.pi_pos
 
@@ -415,7 +415,7 @@ theorem angularMean_cos_sq : angularMean (fun θ => Real.cos θ ^ 2) = 1 / 2 := 
   field_simp [Real.pi_ne_zero]
 
 /-- A smooth tilt parametrized by its mean and its (signed) amplitude. -/
-def cosineTilt (m amplitude θ : ℝ) : ℝ := m + amplitude * Real.cos θ
+@[expose] def cosineTilt (m amplitude θ : ℝ) : ℝ := m + amplitude * Real.cos θ
 
 theorem cosineTilt_periodic (m amplitude : ℝ) :
     Function.Periodic (cosineTilt m amplitude) (2 * Real.pi) := by
@@ -563,7 +563,7 @@ theorem periodic_loop_shears (t : ℝ → ℝ) (v : ℝ)
 
 /-- The normalizing angular mean in the manuscript's exponential family,
 using cosine instead of sine (a translation of the angular origin). -/
-def expNormalizer (s : ℝ) : ℝ := angularMean (fun θ => Real.exp (s * Real.cos θ))
+@[expose] def expNormalizer (s : ℝ) : ℝ := angularMean (fun θ => Real.exp (s * Real.cos θ))
 
 theorem expNormalizer_pos (s : ℝ) : 0 < expNormalizer s := by
   apply angularMean_pos
@@ -575,7 +575,7 @@ theorem expNormalizer_zero : expNormalizer 0 = 1 := by
   simp only [expNormalizer, zero_mul, Real.exp_zero, angularMean_const]
 
 /-- Normalized exp, given by `Real.exp (s * Real.cos θ) / expNormalizer s`. -/
-def normalizedExp (s θ : ℝ) : ℝ := Real.exp (s * Real.cos θ) / expNormalizer s
+@[expose] def normalizedExp (s θ : ℝ) : ℝ := Real.exp (s * Real.cos θ) / expNormalizer s
 
 theorem normalizedExp_pos (s θ : ℝ) : 0 < normalizedExp s θ :=
   div_pos (Real.exp_pos _) (expNormalizer_pos s)
@@ -615,7 +615,7 @@ theorem normalizedExp_variance (s : ℝ) :
 
 /-- The divided exponential tilt. Its smooth extension at `p=0` is handled
 separately below; this expression by itself is not that extension. -/
-def expTilt (m d μ p θ : ℝ) : ℝ := m + (d / p) * (normalizedExp (μ * p) θ - 1)
+@[expose] def expTilt (m d μ p θ : ℝ) : ℝ := m + (d / p) * (normalizedExp (μ * p) θ - 1)
 
 theorem expTilt_contDiff (m d μ p : ℝ) :
     ContDiff ℝ (∞ : WithTop ℕ∞) (expTilt m d μ p) := by
@@ -659,7 +659,7 @@ theorem expTilt_projection_lower (p₁ p₂ m d μ : ℝ) (hp : p₂ ≠ 0) (hd 
 
 /-- Correct value at vanishing transverse stress. Smooth dependence across
 `p=0` is a separate analytic obligation; only angular smoothness is proved. -/
-def extendedExpTilt (m d μ p : ℝ) : ℝ → ℝ :=
+@[expose] def extendedExpTilt (m d μ p : ℝ) : ℝ → ℝ :=
   if p = 0 then cosineTilt m (d * μ) else expTilt m d μ p
 
 theorem extendedExpTilt_contDiff (m d μ p : ℝ) :
@@ -707,7 +707,7 @@ structure CircleDensity where
   integral_one : (∫ θ in (0 : ℝ)..(2 * Real.pi), rate θ) = 1
 
 /-- Phase map, given by `∫ x in (0 : ℝ)..θ, d.rate x`. -/
-def phaseMap (d : CircleDensity) (θ : ℝ) : ℝ := ∫ x in (0 : ℝ)..θ, d.rate x
+@[expose] def phaseMap (d : CircleDensity) (θ : ℝ) : ℝ := ∫ x in (0 : ℝ)..θ, d.rate x
 
 theorem phaseMap_hasDerivAt (d : CircleDensity) (θ : ℝ) :
     HasDerivAt (phaseMap d) (d.rate θ) θ := by
@@ -786,7 +786,7 @@ theorem phaseInverse_add_one (d : CircleDensity) (φ : ℝ) :
   rw [(phaseHomeomorph d).apply_symm_apply]
 
 /-- Rephase, given by `f ((phaseHomeomorph d).symm φ)`. -/
-def rephase (d : CircleDensity) (f : ℝ → ℝ) (φ : ℝ) : ℝ :=
+@[expose] def rephase (d : CircleDensity) (f : ℝ → ℝ) (φ : ℝ) : ℝ :=
   f ((phaseHomeomorph d).symm φ)
 
 theorem rephase_contDiff (d : CircleDensity) (f : ℝ → ℝ)

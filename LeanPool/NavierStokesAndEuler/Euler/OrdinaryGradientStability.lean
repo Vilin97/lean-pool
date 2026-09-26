@@ -16,7 +16,7 @@ import Mathlib.Algebra.Order.Star.Real
 gradient.  The spatial cancellation is exact; no energy differential
 inequality is assumed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

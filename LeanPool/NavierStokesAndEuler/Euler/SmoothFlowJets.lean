@@ -21,7 +21,7 @@ the tensor paths therefore gives genuine within-time derivatives of all
 jets, without assuming differentiability of an ODE solution family.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -101,7 +101,7 @@ theorem displacementJetPath_hasDerivWithinAt (n : ℕ) (x : E) (t : Icc (0 : ℝ
 
 /-- The clamped extension is used only to state derivatives on the closed
 time interval; there it is exactly the constructed flow minus its label. -/
-def displacement (t : ℝ) (x : E) : E :=
+@[expose] def displacement (t : ℝ) (x : E) : E :=
   extendPath T hT (displacementFamily T hT A x) t
 
 theorem displacement_eq (t : Icc (0 : ℝ) T) (x : E) :

@@ -26,7 +26,7 @@ Planned approach (to be implemented):
 * translate the resulting edge-correlation bound into a monochromatic-edge bound.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -57,16 +57,16 @@ def psdNumD2 (i : Nat) : Int :=
     innerD2 (SiBlocks.getD r #[] |>.getD i #[]) (ZBlocks.getD r #[])
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def c (i : Nat) : Int :=
+@[expose] def c (i : Nat) : Int :=
   if i = edgeVar then 1 else 0
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def stationarityLHSD2 (i : Nat) : Int :=
+@[expose] def stationarityLHSD2 (i : Nat) : Int :=
   -- `linNumD i` represents the numerator over `D`; multiply by `D` to put it over `D^2`.
   (linNumD i) * (D : Int) - psdNumD2 i
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def dualObjectiveComputedD2 : Int :=
+@[expose] def dualObjectiveComputedD2 : Int :=
   let muSumD : Int := muSupport.foldl (fun acc t => acc + t.2.2) 0
   let psdSumD2 : Int :=
     (Finset.range S0Blocks.size).sum fun r =>

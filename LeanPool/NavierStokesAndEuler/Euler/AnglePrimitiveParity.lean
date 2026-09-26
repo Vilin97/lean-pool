@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.Deriv.Comp
 
 /-! The normalized angular primitive reverses joint reflection parity. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

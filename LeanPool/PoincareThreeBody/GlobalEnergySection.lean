@@ -20,7 +20,7 @@ real energy.  This supplies a canonical globally analytic one-variable represent
 mass-zero coefficient of any jointly analytic family.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
@@ -252,7 +252,7 @@ theorem analyticAt_globalEnergySection (energy : ℝ) :
   · exact analyticAt_const
 
 /-- Evaluate the mass-zero coefficient along the global energy section. -/
-noncomputable def globalEnergyCoefficient
+@[expose] noncomputable def globalEnergyCoefficient
     (F : ℝ → PhaseSpace → ℝ) (energy : ℝ) : ℝ :=
   F 0 (globalEnergySection energy)
 

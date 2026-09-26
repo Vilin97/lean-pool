@@ -42,7 +42,7 @@ key honesty input making the `∞`-chart congruences legitimate for a RAW repres
 forces `R` to be honestly analytic near `∞`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter Topology OnePoint Real Complex MeasureTheory

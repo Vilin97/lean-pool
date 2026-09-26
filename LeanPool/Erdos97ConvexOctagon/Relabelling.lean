@@ -9,7 +9,7 @@ public import LeanPool.Erdos97ConvexOctagon.GeometryReduction
 
 /-! # Erdős 97 convex-octagon formalization: Relabelling -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 

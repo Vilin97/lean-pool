@@ -38,7 +38,7 @@ reduction below is independent of the descent proof.  Every declaration below is
 * `isotropic_of_rank_three`: the rank-three case, conditional on `HilbertSymLocalGlobal`.
 -/
 
-@[expose] public section
+public section
 
 open Module QuadraticMap TensorProduct
 

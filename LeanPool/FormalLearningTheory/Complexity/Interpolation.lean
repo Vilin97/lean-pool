@@ -36,7 +36,7 @@ not stay at the Borel level.
 - BorelAnalyticBridge.lean (this kernel)
 -/
 
-@[expose] public section
+public section
 
 universe u
 

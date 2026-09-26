@@ -22,7 +22,7 @@ existential pair at support `A`. The full inseparability consistency-property in
 Henkin model existence belong to tranche 2.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -32,7 +32,7 @@ variable {L : Language.{0, 0}}
 
 /-- **Support-parameterized inseparability**: no separator with base symbols in `(F, R)`,
 constant support in `A`, entailed by `Γ` and refuted on `Δ`. -/
-def InsepAt (F : Set (Σ n, L.Functions n)) (R : Set (Σ n, L.Relations n))
+@[expose] def InsepAt (F : Set (Σ n, L.Functions n)) (R : Set (Σ n, L.Relations n))
     (A : Finset ℕ) (Γ Δ : Set L[[ℕ]].Sentenceω) : Prop :=
   ¬ ∃ σ : L[[ℕ]].Sentenceω,
     σ.baseFunctionsIn ⊆ F ∧ σ.baseRelationsIn ⊆ R ∧

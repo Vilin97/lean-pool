@@ -18,7 +18,7 @@ section
 
 /-! A translation-kernel formula for the literal normalized periodic primitive. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -64,7 +64,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

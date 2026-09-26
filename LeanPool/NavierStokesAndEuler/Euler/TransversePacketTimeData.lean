@@ -30,7 +30,7 @@ section
 
 /-! The vector-potential multiplier is a fixed linear contraction of the normal functional. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -88,7 +88,7 @@ section
 
 /-! The literal vector-potential multiplier inherits the source normal coefficient bounds. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -208,7 +208,7 @@ section
 
 /-! An inverse-free polynomial formula for the actual normal multiplier's time derivative. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -263,7 +263,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -523,7 +523,7 @@ section
 /-! The potential time coefficient from an actual continuous, translation-smooth normal derivative
 path. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -662,7 +662,7 @@ section
 
 /-! Genuine time derivatives of the inverse deformation and its transported normal. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -735,7 +735,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

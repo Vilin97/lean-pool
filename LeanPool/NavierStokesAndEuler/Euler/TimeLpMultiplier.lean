@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
 
 /-! Actual bounded time-dependent linear operators on Bochner L² time fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -76,6 +76,17 @@ theorem timeApply_bound (T : ℝ) (hT : 0 ≤ T) (A : C(Icc (0 : ℝ) T, E →L[
 def timeMultiplier (T : ℝ) (hT : 0 ≤ T) (A : C(Icc (0 : ℝ) T, E →L[ℝ] F)) :
     TimeLp T E →L[ℝ] TimeLp T F :=
   (timeApplyLinear T hT A).mkContinuous ‖A‖ (timeApply_bound T hT A)
+
+/-- The operator norm of time multiplication is bounded by the coefficient path. -/
+theorem timeMultiplier_norm_le (T : ℝ) (hT : 0 ≤ T)
+    (A : C(Icc (0 : ℝ) T, E →L[ℝ] F)) : ‖timeMultiplier T hT A‖ ≤ ‖A‖ :=
+  (timeApplyLinear T hT A).mkContinuous_norm_le (norm_nonneg A) (timeApply_bound T hT A)
+
+theorem timeMultiplier_bound (T : ℝ) (hT : 0 ≤ T)
+    (A : C(Icc (0 : ℝ) T, E →L[ℝ] F)) (u : TimeLp T E) :
+    ‖timeMultiplier T hT A u‖ ≤ ‖A‖ * ‖u‖ :=
+  ((timeMultiplier T hT A).le_opNorm u).trans
+    (mul_le_mul_of_nonneg_right (timeMultiplier_norm_le T hT A) (norm_nonneg u))
 
 /-- The continuous linear time multiplier agrees with literal pointwise application. -/
 theorem timeMultiplier_ae (T : ℝ) (hT : 0 ≤ T) (A : C(Icc (0 : ℝ) T, E →L[ℝ] F))

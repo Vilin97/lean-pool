@@ -12,7 +12,7 @@ public import LeanPool.DirectedTopologyLean4.Fraction
 # LeanPool.DirectedTopologyLean4.Dipath
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the definition of a dipath in a directed space:
@@ -75,7 +75,7 @@ def ofIsDipath {γ : Path x y} (hγ : IsDipath γ) : Dipath x y := {
 }
 
 /-- An directed map from I to a directed space can be turned into a dipath -/
-def ofDirectedMap (f : D(I,X)) : Dipath (f 0) (f 1) where
+@[expose] def ofDirectedMap (f : D(I,X)) : Dipath (f 0) (f 1) where
   toFun := f
   continuous_toFun := f.continuous_toFun
   source' := rfl

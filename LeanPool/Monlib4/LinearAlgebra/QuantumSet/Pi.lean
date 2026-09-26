@@ -17,7 +17,7 @@ This file restores the finite-product quantum set instance from upstream
 `Monlib.LinearAlgebra.QuantumSet.Pi`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators InnerProductSpace
 

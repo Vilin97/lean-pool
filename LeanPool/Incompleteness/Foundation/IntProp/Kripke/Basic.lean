@@ -13,7 +13,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # Basic -/
 
-@[expose] public section
+public section
 
 
 namespace LO

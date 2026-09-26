@@ -12,7 +12,7 @@ import Mathlib.Analysis.Calculus.Deriv.Add
 
 /-! The literal difference equation of two actual inviscid corrections. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

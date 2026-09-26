@@ -18,7 +18,7 @@ bounds. These extra guards use only the unit terminal-data cost, never the
 terminal amplitude or a recursive derivative shift.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

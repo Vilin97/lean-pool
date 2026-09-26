@@ -19,7 +19,7 @@ These are needed for the Nesterov algorithm with arbitrary initial state
 (nonzero velocity).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -34,7 +34,7 @@ variable {d : ℕ}
 
 /-- Generalized Nesterov sequence starting from an arbitrary initial state s₀.
     Generalization of `nesterovSeq` supporting nonzero initial velocity. -/
-def nesterovSeqGen (f : E d → ℝ) (η ρ : ℝ) (s₀ : NesterovState d) :
+@[expose] def nesterovSeqGen (f : E d → ℝ) (η ρ : ℝ) (s₀ : NesterovState d) :
     ℕ → NesterovState d
   | 0     => s₀
   | n + 1 => nesterovStep f η ρ (nesterovSeqGen f η ρ s₀ n)
@@ -53,18 +53,18 @@ theorem nesterovSeqGen_succ (f : E d → ℝ) (η ρ : ℝ) (s₀ : NesterovStat
 /-! ## State-based auxiliary definitions -/
 
 /-- Normal displacement for a given state: e = x' − π(x'). -/
-def normalDispOfState (π : E d → E d) (η : ℝ) (s : NesterovState d) : E d :=
+@[expose] def normalDispOfState (π : E d → E d) (η : ℝ) (s : NesterovState d) : E d :=
   let x' := s.lookahead η
   x' - π x'
 
 /-- Auxiliary variable for a given state: u = P⊥v + √μ'·e. -/
-def auxVarOfState (P : E d →L[ℝ] E d) (μ' : ℝ) (π : E d → E d) (η : ℝ)
+@[expose] def auxVarOfState (P : E d →L[ℝ] E d) (μ' : ℝ) (π : E d → E d) (η : ℝ)
     (s : NesterovState d) : E d :=
   let e := normalDispOfState π η s
   (s.v - P s.v) + Real.sqrt μ' • e
 
 /-- Curvature error for a step: ξ = e' − e − P⊥h. -/
-def curvatureErrorOfState (P : E d → E d) (π : E d → E d) (f : E d → ℝ)
+@[expose] def curvatureErrorOfState (P : E d → E d) (π : E d → E d) (f : E d → ℝ)
     (η ρ : ℝ) (s : NesterovState d) : E d :=
   let s' := nesterovStep f η ρ s
   let e  := normalDispOfState π η s
@@ -73,7 +73,7 @@ def curvatureErrorOfState (P : E d → E d) (π : E d → E d) (f : E d → ℝ)
   e' - e - (h - P h)
 
 /-- Step displacement h = x'_{n+1} − x'_n for a given state. -/
-def stepDispOfState (f : E d → ℝ) (η ρ : ℝ) (s : NesterovState d) : E d :=
+@[expose] def stepDispOfState (f : E d → ℝ) (η ρ : ℝ) (s : NesterovState d) : E d :=
   let s' := nesterovStep f η ρ s
   s'.lookahead η - s.lookahead η
 
@@ -84,7 +84,7 @@ def gradOfState (f : E d → ℝ) (η : ℝ) (s : NesterovState d) : E d :=
 /-- State-based Lyapunov function:
     L(s) = (f(x) − f⋆) + ½‖u‖² + λ‖Pv‖²
     where u = P⊥v + √μ'·e, λ = (1+a)²/(2(1−a)), a = √(μ'·η). -/
-def lyapunovOfState (P : E d →L[ℝ] E d) (μ' : ℝ) (π : E d → E d)
+@[expose] def lyapunovOfState (P : E d →L[ℝ] E d) (μ' : ℝ) (π : E d → E d)
     (f : E d → ℝ) (η : ℝ) (s : NesterovState d) : ℝ :=
   let u := auxVarOfState P μ' π η s
   let a := Real.sqrt (μ' * η)

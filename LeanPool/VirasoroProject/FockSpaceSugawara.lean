@@ -52,7 +52,7 @@ Heisenberg algebra, Fock space, Virasoro algebra, Sugawara construction
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 

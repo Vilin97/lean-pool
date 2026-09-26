@@ -15,7 +15,7 @@ Both primitives, the actual affine trial, and the fixed-coordinate form are
 estimated in their genuine Bochner and operator norms.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -157,7 +157,7 @@ theorem energyOperator_sub_norm_le (H H' : C(Icc (0 : ℝ) T, E →L[ℝ] E)) :
   dirichlet_sub_norm_le T hT _ (initialPrimitive_norm_le_time T hT) H H'
 
 /-- The affine coordinate trial costs a fixed polynomial in time and its reciprocal. -/
-def affineCost (T : ℝ) : ℝ := (1+T) * |T⁻¹|
+@[expose] def affineCost (T : ℝ) : ℝ := (1+T) * |T⁻¹|
 
 omit [CompleteSpace U] [CompleteSpace E] in
 theorem affineTrial_norm_le (A A₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E)) :

@@ -27,7 +27,7 @@ Main declarations:
   `RS.pathIntegral_eq_of_simplyConnected`, `RS.period_eq_zero_of_homotopic_refl`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology unitInterval
 open IsManifold Metric Set Filter

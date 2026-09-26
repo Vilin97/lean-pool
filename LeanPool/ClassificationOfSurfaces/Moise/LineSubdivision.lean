@@ -18,7 +18,7 @@ file develops that construction from its local primitive: when an affine functio
 signs at the endpoints of an edge, its zero gives the new subdivision vertex on that edge.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -312,7 +312,7 @@ theorem convexHull_image_inter_of_affine_separation {V : Type*} [DecidableEq V]
 /-! ## The reference split of a triangle -/
 
 /-- A point of the Euclidean plane with the displayed Cartesian coordinates. -/
-def planePoint (x y : ℝ) : Plane :=
+@[expose] def planePoint (x y : ℝ) : Plane :=
   WithLp.toLp 2 ![x, y]
 
 @[simp] theorem planePoint_apply_zero (x y : ℝ) : planePoint x y 0 = x := rfl
@@ -793,11 +793,11 @@ theorem referenceSplitMesh_support (a b : ℝ) (ha0 : 0 < a) (ha1 : a < 1)
 /-! ## The reference split through one vertex -/
 
 /-- The `referenceEdgeSplitPosition` declaration. -/
-def referenceEdgeSplitPosition (c : ℝ) : Fin 4 → Plane :=
+@[expose] def referenceEdgeSplitPosition (c : ℝ) : Fin 4 → Plane :=
   ![planePoint 0 0, planePoint 1 0, planePoint 0 1, planePoint c 0]
 
 /-- The `referenceEdgeSplitTriangles` declaration. -/
-def referenceEdgeSplitTriangles : Finset (Finset (Fin 4)) :=
+@[expose] def referenceEdgeSplitTriangles : Finset (Finset (Fin 4)) :=
   {{0, 2, 3}, {1, 2, 3}}
 
 theorem referenceEdgeSplitPosition_injective {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) :
@@ -1084,7 +1084,7 @@ end affineCutPoint
 /-! ## The transported split of an arbitrary triangle -/
 
 /-- The ordered vertices of the standard triangle. -/
-def standardTrianglePosition : Fin 3 → Plane :=
+@[expose] def standardTrianglePosition : Fin 3 → Plane :=
   ![planePoint 0 0, planePoint 1 0, planePoint 0 1]
 
 theorem standardTrianglePosition_affineIndependent :
@@ -1147,7 +1147,7 @@ noncomputable def triangleEquiv (t : M.Triangle) : t.1 ≃ Fin 3 :=
     rw [Fintype.card_coe, M.card_triangle t.1 t.2])
 
 /-- A proof-independent ordering of the three vertices of a maximal triangle. -/
-noncomputable def orderedVertex (t : M.Triangle) : Fin 3 → M.Vertex :=
+@[expose] noncomputable def orderedVertex (t : M.Triangle) : Fin 3 → M.Vertex :=
   fun i => ((M.triangleEquiv t).symm i).1
 
 theorem orderedVertex_injective (t : M.Triangle) :
@@ -2838,7 +2838,7 @@ theorem child_vertex_mem_parent (t : M.Triangle)
 /-! ## Barycentric traces on old parent edges -/
 
 /-- The barycentric coordinate opposite the `k`-th edge of an old triangle. -/
-noncomputable def oppositeCoord (t : M.Triangle) (k : Fin 3) : Plane →ᵃ[ℝ] ℝ :=
+@[expose] noncomputable def oppositeCoord (t : M.Triangle) (k : Fin 3) : Plane →ᵃ[ℝ] ℝ :=
   (affineBasisOfTriangle (M.position ∘ M.orderedVertex t)
     (M.orderedVertex_affineIndependent t)).coord k
 
@@ -2847,7 +2847,7 @@ noncomputable def oppositeCoord (t : M.Triangle) (k : Fin 3) : Plane →ᵃ[ℝ]
   exact AffineBasis.coord_apply _ _ _
 
 /-- The two old geometric vertices of the edge opposite `k`. -/
-noncomputable def oppositeEdgePoints (t : M.Triangle) (k : Fin 3) : Finset Plane :=
+@[expose] noncomputable def oppositeEdgePoints (t : M.Triangle) (k : Fin 3) : Finset Plane :=
   (Finset.univ.erase k).image (M.position ∘ M.orderedVertex t)
 
 theorem oppositeEdgePoints_subset_parentPoints (t : M.Triangle) (k : Fin 3) :

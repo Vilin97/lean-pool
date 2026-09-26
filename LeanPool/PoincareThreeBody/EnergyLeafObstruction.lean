@@ -22,7 +22,7 @@ makes that coefficient constant on every connected energy-leaf segment contained
 interior elliptic region.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

@@ -25,7 +25,7 @@ theorem to a harmonic function that tends to zero in the `L^{3/2}` average
 sense at infinity.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped ENNReal NNReal Topology
@@ -199,6 +199,7 @@ theorem eLpNorm_euclideanBall_le_of_inv_norm_decay
 /-- The explicit growth constant attached to an inverse-distance decay
 estimate: the local norm near the origin plus the decay constant times the
 universal ball constant. -/
+@[expose]
 def invNormGrowthConstant (h : Vec3 → ℝ) (M R : ℝ) : ℝ :=
   lpNorm h (ENNReal.ofReal (3 / 2 : ℝ))
       (volume.restrict (Metric.ball (0 : Vec3) (2 * R))) +

@@ -12,7 +12,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-! Finite sums preserve genuine fixed-Sobolev external-word estimates. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

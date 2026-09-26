@@ -18,7 +18,7 @@ Most internal development lives under `Distributed2Coloring.LowerBound` and
 they want to follow the detailed proofs.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring
 
@@ -63,11 +63,11 @@ The event that a fixed oriented edge is monochromatic.
 We represent an oriented edge by four consecutive i.i.d. labels `x 0, x 1, x 2, x 3`; the two
 endpoints apply the same local rule to the overlapping triples `(x0,x1,x2)` and `(x1,x2,x3)`.
 -/
-def pEvent (alg : ClassicalAlgorithm) : Set (Samples 4) :=
+@[expose] def pEvent (alg : ClassicalAlgorithm) : Set (Samples 4) :=
   {x | alg.f (x 0, x 1, x 2) = alg.f (x 1, x 2, x 3)}
 
 /-- The monochromatic-edge probability of a one-round algorithm on the directed cycle. -/
-noncomputable def p (alg : ClassicalAlgorithm) : ENNReal :=
+@[expose] noncomputable def p (alg : ClassicalAlgorithm) : ENNReal :=
   (volume : Measure (Samples 4)) (pEvent alg)
 
 lemma measurable_fstTriple :

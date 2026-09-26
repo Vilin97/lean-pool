@@ -30,7 +30,7 @@ comultiplication on `ℂ`, and the `Psi`/`Upsilon` equivalences used by
 downstream quantum-graph files.
 -/
 
-@[expose] public section
+public section
 
 /-- A star algebra over `ℂ` equipped with a real-parameter modular automorphism group. -/
 class starAlgebra (A : Type _) extends

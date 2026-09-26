@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCorrectionParity
 /-! Source budgets and the actual initialized residual construct exact
 corrected lifted packets at every sufficiently large frequency. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

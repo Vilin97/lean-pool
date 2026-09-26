@@ -15,7 +15,7 @@ the parameter property used by the pointwise potential argument and records
 the exponent identities needed by its eventual proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Metric
 open scoped ENNReal NNReal Topology
@@ -26,7 +26,7 @@ noncomputable section
 namespace CKN.Foundation.Parabolic.Morrey
 
 /-- A function is a parabolic uncentred maximal majorant for `f`. -/
-def IsParabolicMaximalMajorant (f : ParabolicPoint → ℝ)
+@[expose] def IsParabolicMaximalMajorant (f : ParabolicPoint → ℝ)
     (M : ParabolicPoint → ℝ≥0∞) : Prop :=
   ∀ z : ParabolicPoint, ∀ R : ℝ, 0 < R →
     (∫⁻ w in Metric.ball z R, ENNReal.ofReal |f w|) ≤

@@ -22,7 +22,7 @@ jointly selected majorants and their outer-endpoint localization.  The first
 stage below packages that data and instantiates the five-row enumeration.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -139,7 +139,7 @@ namespace ErLVGlobalFiveRowFrame
 
 /-- The global frame contains exactly the data required by the established
 degree-seven use-site lemmas. -/
-noncomputable def toUseSite
+@[expose] noncomputable def toUseSite
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (F : ErLVGlobalFiveRowFrame P d₁ d₂ d₃) :
     ErLVAtVertexUseSite P d₁ d₂ d₃ :=
@@ -200,13 +200,13 @@ theorem exceptional_row_iff_rows
   norm_cast
 
 /-- Squared distance of the first majorant's starting edge. -/
-noncomputable def firstStartSqDist
+@[expose] noncomputable def firstStartSqDist
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (F : ErLVGlobalFiveRowFrame P d₁ d₂ d₃) : ℝ :=
   sqDist (P (firstClockwiseNeighbor P d₁ d₂ d₃ F.x)) (P F.x)
 
 /-- Squared distance of the first majorant's terminal edge. -/
-noncomputable def firstTerminalSqDist
+@[expose] noncomputable def firstTerminalSqDist
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (F : ErLVGlobalFiveRowFrame P d₁ d₂ d₃) : ℝ :=
   sqDist
@@ -215,14 +215,14 @@ noncomputable def firstTerminalSqDist
     (P (cyclicAdvance F.x F.pair.first.rightMoves))
 
 /-- Squared distance of the second majorant's starting edge. -/
-noncomputable def secondStartSqDist
+@[expose] noncomputable def secondStartSqDist
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (F : ErLVGlobalFiveRowFrame P d₁ d₂ d₃) : ℝ :=
   sqDist (P (cyclicAdvance F.x 3))
     (P (firstCounterclockwiseNeighbor P d₁ d₂ d₃ (cyclicAdvance F.x 3)))
 
 /-- Squared distance of the second majorant's terminal edge. -/
-noncomputable def secondTerminalSqDist
+@[expose] noncomputable def secondTerminalSqDist
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (F : ErLVGlobalFiveRowFrame P d₁ d₂ d₃) : ℝ :=
   sqDist

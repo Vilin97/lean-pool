@@ -23,7 +23,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # LocalHelpers -/
 
-@[expose] public section
+public section
 
 
 open FockSPR MeasureTheory Complex Real Polynomial Finset

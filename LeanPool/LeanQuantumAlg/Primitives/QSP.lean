@@ -41,4 +41,4 @@ The two families are genuinely different transforms with different inputs
 - `LeanPool.LeanQuantumAlg.qsp_yzy_iff`, `LeanPool.LeanQuantumAlg.qsp_yzzyz_iff` — Fourier basis.
 -/
 
-@[expose] public section
+public section

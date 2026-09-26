@@ -17,7 +17,7 @@ multiplication by `φ` is a `ℂ`-linear equivalence `L(D) ≃ₗ L(D - divisor 
 vocabulary; riemann-roch's lattice tool).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

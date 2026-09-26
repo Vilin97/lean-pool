@@ -56,7 +56,7 @@ import Mathlib.Tactic.SetLike
   by kernel `decide` — AXIOM-CLEAN (no `Lean.ofReduceBool`; we use `decide`, never `native_decide`).
 -/
 
-@[expose] public section
+public section
 
 namespace Sundog.VarWheel
 
@@ -141,10 +141,10 @@ theorem validCover_iff_const (_hm : 0 < m) (σ : Selection m) :
     family of tips is left uncovered ("free") and thus available to the clause gadgets. -/
 
 /-- The positive tip `posTip j` is free in state `σ` iff its triple `t_j` was NOT selected. -/
-def posTipFree (σ : Selection m) (j : Fin m) : Prop := σ j = false
+@[expose] def posTipFree (σ : Selection m) (j : Fin m) : Prop := σ j = false
 
 /-- The negative tip `negTip j` is free in state `σ` iff its triple `t⁻_j` was NOT selected. -/
-def negTipFree (σ : Selection m) (j : Fin m) : Prop := σ j = true
+@[expose] def negTipFree (σ : Selection m) (j : Fin m) : Prop := σ j = true
 
 omit [NeZero m] in
 /-- The all-true (one truth value) state frees every negative tip and no positive tip. -/

@@ -44,7 +44,7 @@ import Mathlib.Data.Set.Insert
 # MatchingLogic.Definedness
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

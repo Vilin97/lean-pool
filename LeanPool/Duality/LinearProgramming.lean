@@ -20,7 +20,7 @@ import Mathlib.Tactic.NormNum.OfScientific
 # LeanPool.Duality.LinearProgramming
 -/
 
-@[expose] public section
+public section
 
 /-- Linear program over `F∞` in the standard form (i.e.,
     a system of linear inequalities with nonnegative variables).
@@ -75,7 +75,7 @@ def ExtendedLP.IsFeasible [Fintype J] (P : ExtendedLP I J F) : Prop :=
 
 /-- Linear program `P` is bounded by `r` iff every value reached by `P` is
     greater or equal to `r` (i.e., `P` is bounded by `r` from below). -/
-def ExtendedLP.IsBoundedBy [Fintype J] (P : ExtendedLP I J F) (r : F) : Prop :=
+@[expose] def ExtendedLP.IsBoundedBy [Fintype J] (P : ExtendedLP I J F) (r : F) : Prop :=
   ∀ p : F∞, P.Reaches p → r ≤ p
 
 /-- Linear program `P` is unbounded iff values reached by `P` have no finite lower bound. -/
@@ -84,7 +84,7 @@ def ExtendedLP.IsUnbounded [Fintype J] (P : ExtendedLP I J F) : Prop :=
 
 open scoped Classical in
 /-- Extended notion of "optimum" of "minimization LP" (the less the better). -/
-noncomputable def ExtendedLP.optimum [Fintype J] (P : ExtendedLP I J F) : Option F∞ :=
+@[expose] noncomputable def ExtendedLP.optimum [Fintype J] (P : ExtendedLP I J F) : Option F∞ :=
   if ¬P.IsFeasible then
     some ⊤ -- infeasible means that the minimum is `⊤`
   else

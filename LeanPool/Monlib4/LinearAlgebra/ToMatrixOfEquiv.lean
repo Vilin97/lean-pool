@@ -17,7 +17,7 @@ Mathlib's `LinearEquiv.conjAlgEquiv` is the current version of the upstream
 `LinearEquiv.innerConj` construction used by the Monlib4 `IncludeBlock` slice.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Matrix Module.End InnerProductSpace

@@ -37,7 +37,7 @@ then using Mathlib's `memLp_id_gaussianReal`.
 - `constructGaussianMeasureMinlosFree`: the GFF measure for mass m > 0
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex QFT ProbabilityTheory
 open TopologicalSpace SchwartzMap
@@ -51,8 +51,9 @@ No axioms declared here. Transitively uses `schwartzIsHilbertNuclear, schwartzSe
 noncomputable section
 
 private lemma distributionPairingCLM_measurable (φ : OSforGFF.TestFunction) :
-    Measurable (distributionPairingCLM φ) :=
-  WeakDual.eval_measurable φ
+    Measurable (distributionPairingCLM φ) := by
+  rw [distributionPairingCLM_eq_fun]
+  simpa only [distributionPairing] using (WeakDual.eval_measurable φ)
 
 private lemma freeCovarianceFormR_neg_neg (m : ℝ) [Fact (0 < m)] (f : OSforGFF.TestFunction) :
     freeCovarianceFormR m (-f) (-f) = freeCovarianceFormR m f f := by
@@ -83,7 +84,7 @@ def isCenteredGJ (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
 /-- A measure is Gaussian if its generating functional has the Gaussian form.
     For a centered Gaussian measure, Z[J] = exp(-½⟨J, CJ⟩) where C is the covariance.
 -/
-def isGaussianGJ (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+@[expose] def isGaussianGJ (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   isCenteredGJ dμ_config ∧
   ∀ (J : TestFunctionℂ),
     GJGeneratingFunctionalℂ dμ_config J =
@@ -211,8 +212,7 @@ private lemma charFun_eq_GJGeneratingFunctional
   rw [GJGeneratingFunctional]
   congr 1
   ext ω
-  simp only [distributionPairingCLM, ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk,
-    distributionPairing, map_smul, smul_eq_mul]
+  simp only [distributionPairingCLM_apply, distributionPairing, map_smul, smul_eq_mul]
   rw [show (inner ℝ (ω φ) t : ℝ) = ω φ * t by
     rw [real_inner_comm]
     exact Real.ext_cauchy rfl]
@@ -390,7 +390,9 @@ theorem gaussianFreeField_free_centered (m : ℝ) [Fact (0 < m)] :
     have h_int_real : Integrable (distributionPairingCLM φ) (gaussianFreeFieldFree m).toMeasure :=
       h_memLp.integrable (by norm_num : (1 : ENNReal) ≤ 1)
     -- The complex version follows since ofReal is continuous
-    exact h_int_real.ofReal
+    have h_int_complex : Integrable (fun ω => ((distributionPairingCLM φ) ω : ℂ))
+        (gaussianFreeFieldFree m).toMeasure := h_int_real.ofReal
+    simpa only [distributionPairingCLM_apply, distributionPairing] using h_int_complex
   -- Step 3: Apply moment_zero_from_realCF to get ∫ (ω φ : ℂ) = 0
   have h_complex_zero : ∫ ω, (ω φ : ℂ) ∂(gaussianFreeFieldFree m).toMeasure = 0 :=
     MinlosAnalytic.moment_zero_from_realCF
@@ -447,6 +449,6 @@ lemma gaussian_pairing_square_integrable_real
   -- L² membership directly implies integrability of the square
   have h_integrable_CLM := h_memLp.integrable_sq
   -- Translate the statement from the continuous linear map to the scalar pairing
-  exact h_integrable_CLM
+  simpa only [distributionPairingCLM_apply, distributionPairing] using h_integrable_CLM
 
 end

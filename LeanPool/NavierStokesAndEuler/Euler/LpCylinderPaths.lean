@@ -21,7 +21,7 @@ translated compact support lies in the target region, the projection is the
 identity, so these families are the true mixed translations there.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -16,13 +16,13 @@ field with `rotatingKeplerVectorField`.  Consequently, a Poisson bracket with th
 Hamiltonian is exactly differentiation along a Kepler flow line.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 
 /-- Explicit differential of the rotating Kepler Hamiltonian. -/
-noncomputable def rotatingKeplerDifferential (s : PhaseSpace) : PhaseSpace →L[ℝ] ℝ :=
+@[expose] noncomputable def rotatingKeplerDifferential (s : PhaseSpace) : PhaseSpace →L[ℝ] ℝ :=
   let radius := Real.sqrt (s 0 ^ 2 + s 1 ^ 2)
   let projection : Fin 4 → PhaseSpace →L[ℝ] ℝ := fun i ↦ ContinuousLinearMap.proj i
   (s 0 / radius ^ 3 - s 3) • projection 0 +

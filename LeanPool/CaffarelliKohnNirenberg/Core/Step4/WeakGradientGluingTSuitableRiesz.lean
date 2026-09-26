@@ -15,7 +15,7 @@ window. The selected operator fields satisfy the completed-operator identity
 on the full spatial space at almost every time, including the zero extension.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology

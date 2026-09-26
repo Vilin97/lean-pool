@@ -12,7 +12,7 @@ import Mathlib.NumberTheory.NumberField.Discriminant.Basic
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -210,7 +210,7 @@ variable (K : Type*) [Field K] [NumberField K]
 
 open Classical in
 /-- A divide by sqrt two used in the Odlyzko-bound argument. -/
-noncomputable def divideBySqrtTwo : ℂ ≃L[ℝ] ℂ :=
+@[expose] noncomputable def divideBySqrtTwo : ℂ ≃L[ℝ] ℂ :=
     ContinuousLinearEquiv.smulLeft (R₁ := ℝ) (M₁ := ℂ)
       (Units.mk0 (Real.sqrt 2)⁻¹
         (inv_ne_zero (ne_of_gt (Real.sqrt_pos.2 (by norm_num)))))
@@ -226,14 +226,14 @@ theorem divideBySqrtTwo_symm_apply (z : ℂ) :
 
 open Classical in
 /-- An unscale complex coordinates used in the Odlyzko-bound argument. -/
-noncomputable def unscaleComplexCoordinates :
+@[expose] noncomputable def unscaleComplexCoordinates :
     ({w : InfinitePlace K // IsComplex w} → ℂ) ≃L[ℝ]
       ({w : InfinitePlace K // IsComplex w} → ℂ) :=
   ContinuousLinearEquiv.piCongrRight fun _ ↦ divideBySqrtTwo
 
 open Classical in
 /-- A trace to mixed used in the Odlyzko-bound argument. -/
-noncomputable def traceToMixed :
+@[expose] noncomputable def traceToMixed :
     mixedEmbedding.euclidean.mixedSpace K ≃L[ℝ]
       mixedEmbedding.mixedSpace K :=
   (mixedEmbedding.euclidean.toMixed K).trans
@@ -243,7 +243,7 @@ noncomputable def traceToMixed :
 
 open Classical in
 /-- A trace embedding used in the Odlyzko-bound argument. -/
-noncomputable def traceEmbedding (x : K) :
+@[expose] noncomputable def traceEmbedding (x : K) :
     mixedEmbedding.euclidean.mixedSpace K :=
   (traceToMixed K).symm (mixedEmbedding K x)
 
@@ -300,7 +300,7 @@ theorem exists_traceEmbedding_eq_of_mem_traceIdealLattice
 
 open Classical in
 /-- A trace conjugation used in the Odlyzko-bound argument. -/
-noncomputable def traceConjugation :
+@[expose] noncomputable def traceConjugation :
     mixedEmbedding.euclidean.mixedSpace K ≃ₗᵢ[ℝ]
       mixedEmbedding.euclidean.mixedSpace K :=
   LinearIsometryEquiv.withLpProdCongr 2

@@ -14,7 +14,7 @@ import Mathlib.LinearAlgebra.Matrix.FixedDetMatrices
 /-! # SlashActionAuxil -/
 
 
-@[expose] public section
+public section
 
 /-!
 # Auxiliary theorems for the slash actions groups SL(2, ℤ) and Γ(2)

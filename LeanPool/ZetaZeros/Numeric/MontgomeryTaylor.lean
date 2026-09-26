@@ -18,7 +18,7 @@ no estimate at an irrational argument: five terms bound the first from above, fo
 from below, and the gap to `1.3275` is about `7 · 10⁻⁷`.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

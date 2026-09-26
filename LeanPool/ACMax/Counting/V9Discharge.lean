@@ -45,7 +45,7 @@ twins turns the honest excess into `t₉ = n − 4 − X − 3h = Θ(n)` (`X = e
   `GirthExcessBound`) and a `119`-fold giant credit in `heavy_full_budget`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

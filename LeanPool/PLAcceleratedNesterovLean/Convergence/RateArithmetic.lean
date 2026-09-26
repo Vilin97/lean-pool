@@ -20,7 +20,7 @@ These establish that:
 All lemmas are independent of the Lean formalization of the algorithm.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

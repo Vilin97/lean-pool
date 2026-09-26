@@ -23,7 +23,7 @@ This file ports the upstream BrauerGroup development proving the Morita
 equivalence between modules over a ring and over a matrix ring.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory Matrix Module
 

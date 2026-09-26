@@ -29,7 +29,7 @@ null set requires a countable `C¹`-dense family of test functions and is not fo
 here.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped ENNReal NNReal Topology

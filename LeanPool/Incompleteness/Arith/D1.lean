@@ -14,7 +14,7 @@ import Mathlib.Data.Nat.SuccPred
 
 /-! # D1 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»

@@ -14,7 +14,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-! # Definitions -/
 
-@[expose] public section
+public section
 
 
 open scoped BigOperators
@@ -60,25 +60,25 @@ structure Skappa (d : Nat) (kappa : MultiIndex d) where
 instance : Fact (0 < (2 * Real.pi : ℝ)) := ⟨by positivity⟩
 
 /-- `gaussianDensity`: gaussian Density. -/
-def gaussianDensity (d : Nat) (z : Cd d) : ℝ :=
+@[expose] def gaussianDensity (d : Nat) (z : Cd d) : ℝ :=
   (1 / Real.pi ^ d) * Real.exp (-Finset.sum Finset.univ (fun q : Fin d => ‖z q‖ ^ 2))
 
 /-- `gammaD`: gamma d. -/
-def gammaD (d : Nat) : MeasureTheory.Measure (Cd d) :=
+@[expose] def gammaD (d : Nat) : MeasureTheory.Measure (Cd d) :=
   MeasureTheory.volume.withDensity fun z => ENNReal.ofReal (gaussianDensity d z)
 
 /-- `L2Tensor`: L2 Tensor. -/
 abbrev L2Tensor (d : Nat) := MeasureTheory.Lp ℂ 2 (gammaD d)
 
 /-- `complexHermite`: complex Hermite. -/
-def complexHermite (m n : Nat) (z : ℂ) : ℂ :=
+@[expose] def complexHermite (m n : Nat) (z : ℂ) : ℂ :=
   Finset.sum (Finset.range (min m n + 1)) fun j =>
     ((-1 : ℂ) ^ j) * (Nat.factorial j : ℂ) *
       (Nat.choose m j : ℂ) * (Nat.choose n j : ℂ) *
       z ^ (m - j) * (star z) ^ (n - j)
 
 /-- `phi1D`: phi1 D. -/
-def phi1D (k n : Nat) (z : ℂ) : ℂ :=
+@[expose] def phi1D (k n : Nat) (z : ℂ) : ℂ :=
   (((Real.sqrt ((Nat.factorial n : ℝ) * (Nat.factorial k : ℝ))) : ℂ)⁻¹) *
     complexHermite n k z
 
@@ -113,18 +113,20 @@ instance {d : Nat} {kappa : MultiIndex d} : SMul ℂ (Skappa d kappa) where
         exact u.summable_norm_sq.mul_left (‖c‖ ^ 2) }
 
 /-- `coeffPkappa`: coeff Pkappa. -/
+@[expose]
 def coeffPkappa {d : Nat} {kappa : MultiIndex d} (F : Pkappa d kappa) (alpha : Idx d) : ℂ := F alpha
 
 /-- `coeffSkappa`: coeff Skappa. -/
+@[expose]
 def coeffSkappa {d : Nat} {kappa : MultiIndex d} (F : Skappa d kappa) (alpha : Idx d) : ℂ :=
   F.coeff alpha
 
 /-- `evalPkappa`: eval Pkappa. -/
-def evalPkappa {d : Nat} (kappa : MultiIndex d) (F : Pkappa d kappa) : Cd d -> ℂ :=
+@[expose] def evalPkappa {d : Nat} (kappa : MultiIndex d) (F : Pkappa d kappa) : Cd d -> ℂ :=
   fun z => F.sum fun alpha c => c * Phi kappa alpha z
 
 /-- `toFun`: to Fun. -/
-def toFun {d : Nat} (kappa : MultiIndex d) (F : Skappa d kappa) : Cd d -> ℂ :=
+@[expose] def toFun {d : Nat} (kappa : MultiIndex d) (F : Skappa d kappa) : Cd d -> ℂ :=
   fun z => ∑' alpha : Idx d, coeffSkappa F alpha * Phi kappa alpha z
 
 /-- `toL2`: to L2. -/
@@ -142,11 +144,13 @@ def ofPkappa {d : Nat} (kappa : MultiIndex d) (F : Pkappa d kappa) : Skappa d ka
       simp_all }
 
 /-- `projFinset`: proj Finset. -/
+@[expose]
 def projFinset {d : Nat} {kappa : MultiIndex d} (E : Finset (Idx d)) (F : Pkappa d kappa) :
     Pkappa d kappa :=
   F.filter fun alpha => alpha ∈ E
 
 /-- `truncateFinset`: truncate Finset. -/
+@[expose]
 def truncateFinset {d : Nat} {kappa : MultiIndex d} (E : Finset (Idx d)) (F : Skappa d kappa) :
     Pkappa d kappa :=
   Finset.sum E fun alpha => Finsupp.single alpha (coeffSkappa F alpha)
@@ -156,7 +160,7 @@ def rotateCoord {d : Nat} (q : Fin d) (t : ℝ) (z : Cd d) : Cd d :=
   Function.update z q (Complex.exp (t * Complex.I) * z q)
 
 /-- `pkappaInner`: pkappa Inner. -/
-def pkappaInner {d : Nat} {kappa : MultiIndex d} (F G : Pkappa d kappa) : ℂ :=
+@[expose] def pkappaInner {d : Nat} {kappa : MultiIndex d} (F G : Pkappa d kappa) : ℂ :=
   F.sum fun alpha c => c * star (G alpha)
 
 /-- `basePointNormalized`: base Point Normalized. -/
@@ -164,7 +168,7 @@ def basePointNormalized {d : Nat} {kappa : MultiIndex d} (F : Pkappa d kappa) : 
   F ≠ 0 ∧ ‖F‖ = 1
 
 /-- `orthogonalToPk`: orthogonal To Pk. -/
-def orthogonalToPk {d : Nat} {kappa : MultiIndex d} (F G : Pkappa d kappa) : Prop :=
+@[expose] def orthogonalToPk {d : Nat} {kappa : MultiIndex d} (F G : Pkappa d kappa) : Prop :=
   pkappaInner G F = 0
 
 /--
@@ -179,7 +183,7 @@ def positivePhaseGauge {d : Nat} {kappa : MultiIndex d}
   (pkappaInner Q F).im = 0 ∧ 0 ≤ (pkappaInner Q F).re
 
 /-- `defect`: defect. -/
-def defect {d : Nat} {kappa : MultiIndex d} (F G : Pkappa d kappa) : ℝ :=
+@[expose] def defect {d : Nat} {kappa : MultiIndex d} (F G : Pkappa d kappa) : ℝ :=
   Real.sqrt <| ∫ z, (‖evalPkappa kappa (F + G) z‖ - ‖evalPkappa kappa F z‖) ^ 2 ∂ gammaD d
 
 /-- `productAnnulus`: product Annulus. -/
@@ -191,15 +195,15 @@ def annulusMass {d : Nat} {kappa : MultiIndex d} (j : Idx d) (F : Skappa d kappa
   ∫ z, Set.indicator (productAnnulus j) (fun w => ‖toFun kappa F w‖ ^ 2) z ∂ gammaD d
 
 /-- `lowAnnuli`: low Annuli. -/
-def lowAnnuli (d J : Nat) : Finset (Idx d) :=
+@[expose] def lowAnnuli (d J : Nat) : Finset (Idx d) :=
   Fintype.piFinset fun _ : Fin d => Finset.range J
 
 /-- `lowAnnulusMass`: low Annulus Mass. -/
-def lowAnnulusMass {d : Nat} {kappa : MultiIndex d} (J : Nat) (F : Skappa d kappa) : ℝ :=
+@[expose] def lowAnnulusMass {d : Nat} {kappa : MultiIndex d} (J : Nat) (F : Skappa d kappa) : ℝ :=
   Finset.sum (lowAnnuli d J) fun j => annulusMass j F
 
 /-- `highAnnulusMass`: high Annulus Mass. -/
-def highAnnulusMass {d : Nat} {kappa : MultiIndex d} (J : Nat) (F : Skappa d kappa) : ℝ :=
+@[expose] def highAnnulusMass {d : Nat} {kappa : MultiIndex d} (J : Nat) (F : Skappa d kappa) : ℝ :=
   (∫ z, ‖toFun kappa F z‖ ^ 2 ∂ gammaD d) - lowAnnulusMass J F
 
 /-- `coefficientRadius`: coefficient Radius. -/

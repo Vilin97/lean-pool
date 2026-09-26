@@ -15,7 +15,7 @@ The nonlinear terms use the value and spatial/angular part of each jet.
 These are reconstructed from actual raw-path witnesses and finite sums.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

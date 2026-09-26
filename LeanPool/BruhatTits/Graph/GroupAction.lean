@@ -28,7 +28,7 @@ In this file we equip the Bruhat-Tits graph with group actions of `GL₂(K)` and
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 

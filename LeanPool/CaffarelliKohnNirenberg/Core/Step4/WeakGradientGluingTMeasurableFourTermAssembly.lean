@@ -21,7 +21,7 @@ Only the final centred-source correction needs a mass bound without any
 joint measurability assumption.
 -/
 
-@[expose] public section
+public section
 
 section
 

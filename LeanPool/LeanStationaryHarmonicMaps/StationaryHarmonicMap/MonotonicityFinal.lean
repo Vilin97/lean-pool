@@ -17,7 +17,7 @@ This module contains the final radius integration step and converts the
 boundary identity into monotonicity of the weak theta quantity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

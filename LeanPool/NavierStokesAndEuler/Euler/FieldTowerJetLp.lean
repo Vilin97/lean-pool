@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
 their actual cylinder L² bounds. The estimate selects a summand of the
 weighted H6 norm and has no loss depending on the derivative order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

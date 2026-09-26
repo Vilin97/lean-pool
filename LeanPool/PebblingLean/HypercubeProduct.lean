@@ -20,7 +20,7 @@ to hypercubes.  The first ingredient is the coordinate split
 `Q_{a+m} ≃ Q_a × Q_m`.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 

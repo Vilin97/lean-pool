@@ -17,7 +17,7 @@ extended source, because the cutoff vanishes outside that cylinder in the
 past. Its numerical Morrey bound follows from the original small-data sum.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology
@@ -29,6 +29,7 @@ noncomputable section
 namespace CKN.Core.Endgame
 
 /-- A scalar component of the cutoff force, extended by zero to future times. -/
+@[expose]
 def causalForceComponent (φ : ParabolicPoint → ℝ) (f : ParabolicPoint → Vec3)
     (i : Fin 3) : ParabolicPoint → ℝ :=
   {z : ParabolicPoint | z.2 ≤ 0}.indicator (fun z => φ z * f z i)

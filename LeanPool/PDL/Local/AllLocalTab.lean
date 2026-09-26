@@ -17,7 +17,7 @@ We show that for any `X` the type `LocalTableau` is finite.
 This is needed to define `BuildTree` as a finite tree.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

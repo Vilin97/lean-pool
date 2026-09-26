@@ -33,7 +33,7 @@ Since both remainders are supported in degrees below `d`, uniqueness of
 division identifies both the quotient and the remainder.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped ENNReal NNReal Topology
@@ -75,7 +75,7 @@ convolution. -/
 /-- The normalized weighted low-degree tail of a prepared polynomial.  Its
 `i`-th coordinate is `r^i / r^d * a_i(z)`; adding the shifted constant
 sequence gives the coefficients of `r^{-d} P(z,rw)`. -/
-noncomputable def preparedTailSeq {n : ℕ} (r : ℝ≥0) (d : ℕ)
+@[expose] noncomputable def preparedTailSeq {n : ℕ} (r : ℝ≥0) (d : ℕ)
     (a : Fin d → Base n → ℂ) (z : Base n) : L1Sequence :=
   ∑ i : Fin d, (((r : ℂ) ^ d)⁻¹ * (r : ℂ) ^ (i : ℕ)) •
     lp.single 1 (i : ℕ) (a i z)

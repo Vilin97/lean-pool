@@ -42,7 +42,7 @@ The functions and radial integrals here are genuine functions and Bochner
 integrals. The parameter derivative is the actual complex derivative.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -64,7 +64,7 @@ noncomputable def exponent (i : Fin 6) : ℕ :=
   if i.val = 2 then 2 else if i.val = 4 then 3 else if i.val = 5 then 1 else 0
 
 /-- Parameter derivative, defined pointwise by `deriv (fun w : ℂ => F r w i) z`. -/
-noncomputable def parameterDeriv (F : Field) : Field :=
+@[expose] noncomputable def parameterDeriv (F : Field) : Field :=
   fun r z i => deriv (fun w : ℂ => F r w i) z
 
 /-- Normalized form of the regular inverse. It includes r = 0 without
@@ -73,7 +73,7 @@ noncomputable def radialInverse (F : Field) : Field :=
   fun r z i => r • ∫ t : ℝ in (0)..(1), (t ^ exponent i) • F (t * r) z i
 
 /-- Matrix action, defined pointwise by `(A r z).mulVec (F r z)`. -/
-noncomputable def matrixAction (A : Coeff) (F : Field) : Field :=
+@[expose] noncomputable def matrixAction (A : Coeff) (F : Field) : Field :=
   fun r z => (A r z).mulVec (F r z)
 
 /-- False is the multiplication letter; true is the parameter-derivative letter. -/
@@ -639,7 +639,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -657,7 +657,7 @@ def weightedMean (c : ℕ) (f : ℝ → E) (ξ : ℝ) : E :=
   ∫ t in (0 : ℝ)..1, (t ^ c) • f (t * ξ)
 
 /-- The genuine zero-axis Volterra inverse. -/
-def regularPrimitive (c : ℕ) (f : ℝ → E) (ξ : ℝ) : E :=
+@[expose] def regularPrimitive (c : ℕ) (f : ℝ → E) (ξ : ℝ) : E :=
   ξ • weightedMean c f ξ
 
 theorem weightedMean_continuous (c : ℕ) {f : ℝ → E} (hf : Continuous f) :
@@ -1427,7 +1427,7 @@ theorem liftedField_eq_trace {R : ℝ} (hR : 0 ≤ R)
   rfl
 
 /-- Equation RHS as an element of `VolterraAnalyticBounds.Field`. -/
-def equationRHS (A₀ A₁ : VolterraAnalyticBounds.Coeff)
+@[expose] def equationRHS (A₀ A₁ : VolterraAnalyticBounds.Coeff)
     (f W : VolterraAnalyticBounds.Field) : VolterraAnalyticBounds.Field :=
   fun r z => f r z + (VolterraAnalyticBounds.matrixAction A₀ W r z +
     VolterraAnalyticBounds.matrixAction A₁ (VolterraAnalyticBounds.parameterDeriv W) r z)
@@ -1722,7 +1722,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1734,7 +1734,7 @@ open VolterraAnalyticBounds
 open NilpotentVolterra (equationRHS)
 
 /-- Parity sign, with branches according to `i.val < 4`. -/
-noncomputable def paritySign (i : Fin 6) : ℂ := if i.val < 4 then 1 else -1
+@[expose] noncomputable def paritySign (i : Fin 6) : ℂ := if i.val < 4 then 1 else -1
 
 /-- Parity vector, given by `ContinuousLinearMap.pi (fun i => paritySign i •
 ContinuousLinearMap.proj i)`. -/
@@ -2009,13 +2009,13 @@ theorem sideData_holomorphic {R : ℝ} {E : Type*}
   exact (signedRestriction (E := E) hR b).differentiable.comp_differentiableOn hF
 
 /-- Symmetric raw field, defined pointwise by `F z (projIcc (-R) R (by linarith) r)`. -/
-noncomputable def symmetricRawField {R : ℝ} (hR : 0 ≤ R)
+@[expose] noncomputable def symmetricRawField {R : ℝ} (hR : 0 ≤ R)
     (F : ℂ → SymmetricPath R Vec) : Field :=
   fun r z => F z (projIcc (-R) R (by linarith) r)
 
 /-- Symmetric raw coefficient, defined pointwise by `LinearMap.toMatrix' (A z (projIcc (-R) R
 (by linarith) r)).toLinearMap`. -/
-noncomputable def symmetricRawCoefficient {R : ℝ} (hR : 0 ≤ R)
+@[expose] noncomputable def symmetricRawCoefficient {R : ℝ} (hR : 0 ≤ R)
     (A : ℂ → SymmetricCoefficientPath R) : Coeff :=
   fun r z => LinearMap.toMatrix' (A z (projIcc (-R) R (by linarith) r)).toLinearMap
 

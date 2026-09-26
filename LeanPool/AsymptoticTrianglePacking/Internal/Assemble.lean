@@ -28,7 +28,7 @@ Definitions from `LeanPool.AsymptoticTrianglePacking.Internal.Basic` /
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

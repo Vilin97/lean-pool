@@ -18,7 +18,7 @@ estimation returns the basis index `j = s * (2^t / r)` exactly, and a classical
 gcd recovers the order.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

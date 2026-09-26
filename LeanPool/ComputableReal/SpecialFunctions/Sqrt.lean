@@ -22,7 +22,7 @@ functions are executable; the packaged sequence mentions `Real.sqrt` itself as i
 value, so `sqrt` and the instances are `noncomputable` Lean terms.
 -/
 
-@[expose] public section
+public section
 
 namespace ComputableℝSeq
 

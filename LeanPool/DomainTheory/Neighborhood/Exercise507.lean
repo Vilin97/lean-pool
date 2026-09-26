@@ -57,7 +57,7 @@ No new axioms are introduced beyond the project's `Element.ext` /
 already used by `curry`/`uncurry`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise507
 

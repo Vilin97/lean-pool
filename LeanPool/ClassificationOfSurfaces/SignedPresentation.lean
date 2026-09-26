@@ -24,7 +24,7 @@ does not trust the stored vertex endpoints. This is the combinatorial input need
 boundary-word moves can be stated independently of a presentation's original edge names.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

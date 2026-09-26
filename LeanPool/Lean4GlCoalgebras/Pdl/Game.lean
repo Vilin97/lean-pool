@@ -16,7 +16,7 @@ must have a winning strategy: `gamedet` at the end.
 
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 
@@ -104,7 +104,7 @@ instance {g : Game} : LT g.Pos := ⟨fun p q => g.wf.rel q p⟩
 /-! ## Strategies -/
 
 /-- A strategy in `g` for `i`, whenever it is `i`'s turn, chooses a move, if there are any. -/
-def Strategy (g : Game) (i : Player) : Type :=
+@[expose] def Strategy (g : Game) (i : Player) : Type :=
   ∀ p : g.Pos, g.turn p = i → p.moves.Nonempty → p.moves
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/

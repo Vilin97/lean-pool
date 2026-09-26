@@ -16,7 +16,7 @@ import Mathlib.Analysis.Normed.Affine.AddTorsor
 # LeanPool.SardMoreira.LocalEstimates
 -/
 
-@[expose] public section
+public section
 
 open scoped Topology NNReal ENNReal unitInterval
 open Asymptotics Filter MeasureTheory AffineMap Set Metric

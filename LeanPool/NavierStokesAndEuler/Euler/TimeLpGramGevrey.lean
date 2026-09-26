@@ -19,7 +19,7 @@ for the inverse appearing in the strong acceleration equation. No derivative
 bounds on a pre-existing inverse are assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerTimeLp EulerVolterraConvolut
   EulerTransverseGramPath EulerGevrey
 
 /-- A polynomial top constant for coefficient amplitude `3 C²` and forcing amplitude `D`. -/
-def gramCost (c C D : ℝ) : ℝ := 1 + c⁻¹ * (3*C^2+D+1)
+@[expose] def gramCost (c C D : ℝ) : ℝ := 1 + c⁻¹ * (3*C^2+D+1)
 
 variable {P U E : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]

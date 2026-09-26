@@ -50,7 +50,7 @@ unit cube. All derivatives below are the ordinary Frechet coordinate
 derivatives on `ProblemStatement.Space`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -419,7 +419,7 @@ for a continuous periodic field across time one. It assumes no general
 Navier--Stokes existence theorem and never identifies pressure gauges.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -726,7 +726,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -946,7 +946,7 @@ schedule supplies the actual velocity and pressure sums, their endpoint
 extensions, and the force with all proved consequences.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1100,7 +1100,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

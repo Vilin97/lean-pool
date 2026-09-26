@@ -24,7 +24,7 @@ section
 
 /-! Exact signed Gevrey integral energy for actual finite-Sobolev viscous solutions. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -148,7 +148,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

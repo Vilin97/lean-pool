@@ -15,7 +15,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-! Genuine smooth L² sums, scalar products, and ordinary advection. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -71,7 +71,7 @@ def fieldNeg (A : SmoothL2Field V) : SmoothL2Field V := mapField (-(ContinuousLi
     (fieldNeg A).field x = -A.field x := rfl
 
 /-- Field sub, given by `addField A (fieldNeg B)`. -/
-def fieldSub (A B : SmoothL2Field V) : SmoothL2Field V := addField A (fieldNeg B)
+@[expose] def fieldSub (A B : SmoothL2Field V) : SmoothL2Field V := addField A (fieldNeg B)
 
 @[simp] theorem fieldSub_field (A B : SmoothL2Field V) (x : Space) :
     (fieldSub A B).field x = A.field x-B.field x := by
@@ -129,6 +129,7 @@ theorem scalarProduct_norm_right (A : SmoothL2Field ℝ) (B : SmoothL2Field V)
   exact mul_le_mul_of_nonneg_right (hM x) (norm_nonneg _)
 
 /-- Coordinate product, given by `scalarProduct (mapField (EuclideanSpace.proj i) A) B`. -/
+@[expose]
 def coordinateProduct (i : Fin 3) (A : SmoothL2Field Space) (B : SmoothL2Field V) : SmoothL2Field V
     :=
   scalarProduct (mapField (EuclideanSpace.proj i) A) B

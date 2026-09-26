@@ -19,7 +19,7 @@ the loss of powers in the background estimates must not. All jet estimates
 refer to actual iterated Fréchet derivatives of the displayed fields.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownJets
 /-! Compact high profiles and angle-independent means make the exterior nonlinear forcing constant
 in angle. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

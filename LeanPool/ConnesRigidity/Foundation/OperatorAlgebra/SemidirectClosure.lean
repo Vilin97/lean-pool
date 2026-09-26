@@ -19,7 +19,7 @@ public import LeanPool.ConnesRigidity.Core
 The semidirect closure component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 

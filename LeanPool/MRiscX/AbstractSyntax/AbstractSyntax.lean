@@ -14,7 +14,7 @@ public import LeanPool.MRiscX.AbstractSyntax.Instr
 This module provides core abstract-syntax types of the MRiscX assembly language.
 -/
 
-@[expose] public section
+public section
 open Nat
 open Lean Lean.Elab
 /--

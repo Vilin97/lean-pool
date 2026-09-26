@@ -17,7 +17,7 @@ layers. `PureState.tensor` and `Gate.tensor` wrap these raw tensors with the
 normalization/unitarity proofs needed to stay in their semantic types.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

@@ -5,7 +5,7 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 module
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 

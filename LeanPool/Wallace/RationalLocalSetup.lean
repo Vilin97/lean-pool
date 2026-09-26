@@ -21,7 +21,7 @@ has at most one active code, and its shifted prepared terms form the finite inde
 used by the fusion.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

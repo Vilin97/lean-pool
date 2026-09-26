@@ -22,7 +22,7 @@ The key identity `pv_chain_identity` follows by uniqueness of limits:
 both sides are limits of the same ε-truncated integral, so they are equal.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

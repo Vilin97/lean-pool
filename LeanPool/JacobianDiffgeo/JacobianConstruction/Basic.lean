@@ -48,7 +48,7 @@ subgroup of a given `X`, Lean's instance search discharges all four automaticall
 needs to change here.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

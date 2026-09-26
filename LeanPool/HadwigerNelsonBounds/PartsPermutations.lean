@@ -19,7 +19,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! The six exact automorphisms of the normalized Parts root. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

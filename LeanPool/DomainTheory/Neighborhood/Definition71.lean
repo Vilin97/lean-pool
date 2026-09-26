@@ -75,7 +75,7 @@ inhabitant
 (`unitSys_isEffectivelyGiven`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

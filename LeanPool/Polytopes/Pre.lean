@@ -15,7 +15,7 @@ import Mathlib.Tactic.NormNum.GCD
 Preliminary lemmas and definitions used by the Polytopes formalization.
 -/
 
-@[expose] public section
+public section
 
 open Pointwise Module
 
@@ -103,7 +103,7 @@ def Equiv.VSubconst {E P : Type} [AddCommGroup E] [AddTorsor E P] (x : P) : P �
   right_inv := fun y => by simp
 
 lemma Equiv.coe_VSubconst {E P : Type} [AddCommGroup E] [AddTorsor E P]
-    (x : P) : ↑(Equiv.VSubconst x) = (· -ᵥ x) := rfl
+    (x : P) : ↑(Equiv.VSubconst x) = (· -ᵥ x) := by rfl
 
 /-- The affine equivalence `P ≃ᵃ[𝕜] E` sending a point `p` to the vector `p -ᵥ x`. -/
 def AffineEquiv.VSubconst (𝕜 : Type) {E P : Type} [Field 𝕜] [AddCommGroup E] [Module 𝕜 E]
@@ -114,13 +114,14 @@ def AffineEquiv.VSubconst (𝕜 : Type) {E P : Type} [Field 𝕜] [AddCommGroup 
 
 lemma AffineEquiv.Vsubconst_toEquiv (𝕜 : Type) {E P : Type} [Field 𝕜] [AddCommGroup E]
     [Module 𝕜 E] [AddTorsor E P] (x : P) :
-    (AffineEquiv.VSubconst 𝕜 x).toEquiv = Equiv.VSubconst x := rfl
+    (AffineEquiv.VSubconst 𝕜 x).toEquiv = Equiv.VSubconst x := by rfl
 
 lemma AffineEquiv.Vsubconst_linear_apply (𝕜 : Type) {E P : Type} [Field 𝕜] [AddCommGroup E]
-    [Module 𝕜 E] [AddTorsor E P] (x : P) (v : E) : (AffineEquiv.VSubconst 𝕜 x).linear v = v := rfl
+    [Module 𝕜 E] [AddTorsor E P] (x : P) (v : E) :
+    (AffineEquiv.VSubconst 𝕜 x).linear v = v := by rfl
 
 lemma AffineEquiv.coe_VSubconst (𝕜 : Type) {E P : Type} [Field 𝕜] [AddCommGroup E] [Module 𝕜 E]
-    [AddTorsor E P] (x : P) : ↑(AffineEquiv.VSubconst 𝕜 x) = (· -ᵥ x) := rfl
+    [AddTorsor E P] (x : P) : ↑(AffineEquiv.VSubconst 𝕜 x) = (· -ᵥ x) := by rfl
 
 /-- The affine isometry equivalence `P ≃ᵃⁱ[𝕜] E` sending a point `p` to the vector `p -ᵥ x`. -/
 def AffineIsometryEquiv.VSubconst (𝕜 : Type) {E P : Type} [NormedField 𝕜] [NormedAddCommGroup E]
@@ -131,7 +132,7 @@ def AffineIsometryEquiv.VSubconst (𝕜 : Type) {E P : Type} [NormedField 𝕜] 
 @[simp]
 lemma AffineIsometryEquiv.coe_VSubconst (𝕜 : Type) {E P : Type} [NormedField 𝕜]
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] [PseudoMetricSpace P] [NormedAddTorsor E P] (x : P) :
-    ↑(AffineIsometryEquiv.VSubconst 𝕜 x) = (· -ᵥ x) := rfl
+    ↑(AffineIsometryEquiv.VSubconst 𝕜 x) = (· -ᵥ x) := by rfl
 
 
 lemma Submodule.mem_orthogonal_Basis {𝕜 : Type u_1} {E : Type u_2} {ι : Type u_3} [RCLike 𝕜]

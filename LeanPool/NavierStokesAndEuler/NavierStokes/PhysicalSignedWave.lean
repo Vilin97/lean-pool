@@ -19,7 +19,7 @@ band views use the same absolute-lift primary pulse and covariance
 matrix.  Compatibility is proved before restriction to a physical graph.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -78,7 +78,7 @@ theorem increment_square_scale (H : Mat2) (T R : Vec2) {a : ℝ} (ha : 0 < a) (j
 
 /-- Coefficient scale, given by `velocityScale * Real.sqrt referenceEpsilon / Real.sqrt
 epsilon`. -/
-noncomputable def coefficientScale (epsilon referenceEpsilon velocityScale : ℝ) : ℝ :=
+@[expose] noncomputable def coefficientScale (epsilon referenceEpsilon velocityScale : ℝ) : ℝ :=
   velocityScale * Real.sqrt referenceEpsilon / Real.sqrt epsilon
 
 theorem coefficientScale_pos {epsilon referenceEpsilon velocityScale : ℝ}
@@ -309,6 +309,7 @@ end ActualRequest
 /-! ## The actual current-state request on the full free lift -/
 
 /-- Slow change as an element of `LocalSignedRequest.Plane →L[ℝ] LocalSignedRequest.Plane`. -/
+@[expose]
 noncomputable def slowChange (h Q Qr : ℝ) : LocalSignedRequest.Plane →L[ℝ] LocalSignedRequest.Plane
     :=
   ((PhysicalParticularWave.ratioPower Q Qr 1) • ContinuousLinearMap.id ℝ ℝ).prodMap
@@ -515,7 +516,7 @@ noncomputable def withReferencePhase (C : ReferencePhase) : PrimaryData U :=
   { B with base := C.base B.base }
 
 /-- Matrix, given by `SignedWaveUpdate.phaseMatrix B.pulse B.prefactor B.coordinate`. -/
-noncomputable def matrix : ℕ → Cylinder → Mat2 :=
+@[expose] noncomputable def matrix : ℕ → Cylinder → Mat2 :=
   SignedWaveUpdate.phaseMatrix B.pulse B.prefactor B.coordinate
 
 /-- Fundamental, given by `SignedWaveUpdate.phaseFundamental B.pulse B.coordinate j`. -/
@@ -584,7 +585,7 @@ noncomputable def viewBase (background : LinearWaveBounds.WaveCoefficients Cylin
 
 /-- View target, defined pointwise by `coefficientScale (s.epsilon n) (B.strip.epsilon
 reference) (velocity n) ^ 2 • B.target reference (view n x)`. -/
-noncomputable def viewTarget (s : StripData Cylinder) (velocity : ℕ → ℝ)
+@[expose] noncomputable def viewTarget (s : StripData Cylinder) (velocity : ℕ → ℝ)
     (view : ℕ → Cylinder → Cylinder) (reference : ℕ) : ℕ → Cylinder → Vec2 :=
   fun n x => coefficientScale (s.epsilon n) (B.strip.epsilon reference) (velocity n) ^ 2 •
     B.target reference (view n x)
@@ -1027,7 +1028,7 @@ variable {B reference} (V : B.Views reference)
 
 /-- Map, given by `PhysicalParticularWave.cylinderChange V.exponent (V.scale n) V.referenceScale
 (V.referenceCover - V.cover n)`. -/
-noncomputable def map (n : ℕ) : Cylinder →L[ℝ] Cylinder :=
+@[expose] noncomputable def map (n : ℕ) : Cylinder →L[ℝ] Cylinder :=
   PhysicalParticularWave.cylinderChange V.exponent (V.scale n) V.referenceScale
     (V.referenceCover - V.cover n)
 
@@ -1401,7 +1402,7 @@ theorem physicalVelocity_divergence (referenceRequest : ℕ → Cylinder → Vec
 /-! ## Pressure is transported from the same reference coefficient -/
 
 /-- Physical pressure coefficient as an element of `SpaceTime → ℂ`. -/
-noncomputable def physicalPressureCoefficient (referenceRequest : ℕ → Cylinder → Vec2)
+@[expose] noncomputable def physicalPressureCoefficient (referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) : SpaceTime → ℂ :=
   fun z => V.referenceScale ^ (-(2 * CoordinateAlgebra.A V.exponent)) •
     B.rawPressure referenceRequest j reference
@@ -1409,7 +1410,7 @@ noncomputable def physicalPressureCoefficient (referenceRequest : ℕ → Cylind
 
 /-- Complex physical pressure, given by `mode (B.base.frequency reference) V.physicalPhase
 (V.physicalPressureCoefficient referenceRequest j)`. -/
-noncomputable def complexPhysicalPressure (referenceRequest : ℕ → Cylinder → Vec2)
+@[expose] noncomputable def complexPhysicalPressure (referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) : SpaceTime → ℂ :=
   mode (B.base.frequency reference) V.physicalPhase (V.physicalPressureCoefficient referenceRequest
       j)

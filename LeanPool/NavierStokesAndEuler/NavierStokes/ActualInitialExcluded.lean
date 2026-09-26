@@ -36,7 +36,7 @@ stored base error is the actual base residual, whose angular continuity is
 used only on the positive-time domain.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -754,7 +754,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

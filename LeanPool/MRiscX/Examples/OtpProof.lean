@@ -22,7 +22,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 This module provides the end-to-end One-Time-Pad correctness proof.
 -/
 
-@[expose] public section
+public section
 
 
 

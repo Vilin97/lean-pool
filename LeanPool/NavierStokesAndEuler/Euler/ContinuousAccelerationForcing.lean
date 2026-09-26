@@ -20,7 +20,7 @@ factorial bound are proved in the uniform time norm and are shared by the
 mean and transverse strong equations.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

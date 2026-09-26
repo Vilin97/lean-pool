@@ -15,7 +15,7 @@ This file proves Stichtenoth 1.5.4: the rank of `𝒜_K/(A(D)+diag(K))` equals t
 index `i(D)`.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 open Filter

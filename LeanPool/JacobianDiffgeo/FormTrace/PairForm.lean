@@ -48,7 +48,7 @@ than assumed away (see `ResidueTraceCompat.lean`).
 * Basic algebra: `resAtX_congr`, `resAtX_add`, `resAtX_const_mul`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Filter Topology Metric Function Set

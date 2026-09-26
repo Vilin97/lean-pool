@@ -24,7 +24,7 @@ states. The `PureState` wrappers automatically form probability distributions,
 because normalization is part of `PureState`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -36,7 +36,7 @@ variable {n : ℕ}
 
 /-- Born rule [dW19, qcnotes.tex:406]: the probability of observing outcome `x`
 when measuring `psi` in the computational basis. -/
-noncomputable def probOutcome (psi : StateVector n) (x : Fin (2 ^ n)) : ℝ :=
+@[expose] noncomputable def probOutcome (psi : StateVector n) (x : Fin (2 ^ n)) : ℝ :=
   ‖psi x‖ ^ 2
 
 theorem probOutcome_nonneg (psi : StateVector n) (x : Fin (2 ^ n)) :

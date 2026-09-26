@@ -26,7 +26,7 @@ homogeneity come for free from that being a (continuous) linear equivalence.
 Axiom-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.SimApprox
 
@@ -34,7 +34,7 @@ variable {d : ℕ}
 
 /-- The **Euclidean (L²) norm** on `Fin d → ℝ`, transported from `EuclideanSpace ℝ (Fin d)` along
 `EuclideanSpace.equiv`. Concretely `euclNorm x = √(∑ i, (x i)²)`. -/
-noncomputable def euclNorm (d : ℕ) (x : Fin d → ℝ) : ℝ :=
+@[expose] noncomputable def euclNorm (d : ℕ) (x : Fin d → ℝ) : ℝ :=
   ‖(EuclideanSpace.equiv (Fin d) ℝ).symm x‖
 
 theorem euclNorm_nonneg (x : Fin d → ℝ) : 0 ≤ euclNorm d x := norm_nonneg _

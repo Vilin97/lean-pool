@@ -23,4 +23,4 @@ re-exports them via the relevant Mathlib imports so existing import sites
 continue to resolve.
 -/
 
-@[expose] public section
+public section

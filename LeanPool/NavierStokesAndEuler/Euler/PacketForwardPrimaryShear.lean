@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTensorBounds
 zero.  The leading tensors are derivatives of the actual constructed
 velocity and scalar pressure, with the slow terms retained exactly. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -107,7 +107,7 @@ theorem global_gradient_bound (a k : ℝ) (hk : 0 < k)
 
 /-- Pressure coefficient, given by `-(2*a*⟪D.normal.field t x,D.M.field t x (canonicalVelocity D
 ξ t x)⟫_ℝ)/ ‖D.normal.field t x‖^2`. -/
-def pressureCoefficient (a : ℝ) (t : Icc (0 : ℝ) D.T) (x : Space) : ℝ :=
+@[expose] def pressureCoefficient (a : ℝ) (t : Icc (0 : ℝ) D.T) (x : Space) : ℝ :=
   -(2*a*⟪D.normal.field t x,D.M.field t x (canonicalVelocity D ξ t x)⟫_ℝ)/
     ‖D.normal.field t x‖^2
 

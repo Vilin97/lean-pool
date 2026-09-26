@@ -43,7 +43,7 @@ and the data
 (`Cn`, `consMapN`) stays choice-free.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise617Gen
 

@@ -11,7 +11,7 @@ import Mathlib.Analysis.Calculus.UniformLimitsDeriv
 
 /-! Closed graphs of the genuine strong cylinder translation derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

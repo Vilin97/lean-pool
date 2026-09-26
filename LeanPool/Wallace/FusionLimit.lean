@@ -18,7 +18,7 @@ complete metric argument: the pointwise limit is again a homomorphism, and a geo
 a tail gives an explicit bound from the first point of that tail to the limit.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 open scoped ENNReal

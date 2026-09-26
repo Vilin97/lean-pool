@@ -38,7 +38,7 @@ what makes the SAFE degree concentrate where the residual degree cannot.
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 

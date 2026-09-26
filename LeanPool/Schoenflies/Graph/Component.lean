@@ -79,7 +79,7 @@ must aim at a vertex of `S` other than `c`. In the application `S` is the vertex
 Root `Graph`, as fixed by `Schoenflies/Graph/Walk.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

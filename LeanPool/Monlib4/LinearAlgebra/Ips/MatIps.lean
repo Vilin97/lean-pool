@@ -20,7 +20,7 @@ This file contains some basic results on the inner product space on finite dimen
 
 -/
 
-@[expose] public section
+public section
 
 
 open scoped TensorProduct
@@ -477,7 +477,7 @@ protected noncomputable def toMatrixLinEquiv (hφ : φ.IsFaithfulPosMap) (hψ : 
 LinearMap.toMatrix hφ.basis hψ.basis
 
 /-- Matrix representation of endomorphisms for a faithful matrix inner product. -/
-protected noncomputable def toMatrix (hφ : φ.IsFaithfulPosMap) :
+@[expose] protected noncomputable def toMatrix (hφ : φ.IsFaithfulPosMap) :
     (Matrix n n ℂ →ₗ[ℂ] Matrix n n ℂ) ≃ₐ[ℂ] Matrix (n × n) (n × n) ℂ :=
   LinearMap.toMatrixAlgEquiv hφ.basis
 
@@ -903,7 +903,7 @@ theorem matrixBlock_self_hMul_inv (hψ : ∀ i, (ψ i).IsFaithfulPosMap) :
     mul_inv_of_invertible]
 
 /-- Matrix representation of maps between two faithful pi inner products. -/
-noncomputable def toMatrixLinEquiv (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
+@[expose] noncomputable def toMatrixLinEquiv (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
   (hφ : ∀ i, (φ i).IsFaithfulPosMap) :
     ((PiMat ℂ k s) →ₗ[ℂ] (PiMat ℂ k₂ s₂)) ≃ₗ[ℂ]
       Matrix (Σ i, s₂ i × s₂ i) (Σ i, s i × s i) ℂ :=

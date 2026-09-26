@@ -35,7 +35,7 @@ in Lω₁ω (countable infinitary logic with countable conjunctions/disjunctions
 - [KK04]
 -/
 
-@[expose] public section
+public section
 
 universe u v w w'
 

@@ -30,7 +30,7 @@ pointwise identities into the germs needed by the spatial curl. No global
 support condition or final velocity identity is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -195,7 +195,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

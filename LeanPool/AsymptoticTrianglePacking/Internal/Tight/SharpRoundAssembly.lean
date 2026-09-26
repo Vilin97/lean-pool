@@ -47,7 +47,7 @@ the sharp upper bound `(1−p)^{rΔ} ≤ 1 − γ + γ²/2`
 the `(1−γ)` factor carried by the ceiling drop that `SharpRoundFor` requests.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable

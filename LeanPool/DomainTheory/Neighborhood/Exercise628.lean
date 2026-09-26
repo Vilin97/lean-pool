@@ -75,7 +75,7 @@ genuinely
 unavoidable, as it extracts a `Fintype` from `Finite` and a surjection's section.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

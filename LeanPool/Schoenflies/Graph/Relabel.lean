@@ -20,7 +20,7 @@ The relabelling map only has to be injective on the graph's edge set.  Walks, pa
 graphs then push forward by mapping their edge lists.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open Schoenflies

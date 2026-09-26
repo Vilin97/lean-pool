@@ -19,7 +19,7 @@ This file establishes the complex-conjugation congruence used in the first case 
 Theorem for regular primes.
 -/
 
-@[expose] public section
+public section
 
 open scoped NumberField nonZeroDivisors
 

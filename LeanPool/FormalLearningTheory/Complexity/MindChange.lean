@@ -15,11 +15,12 @@ public import Mathlib.SetTheory.Ordinal.Basic
 Counts how often a Gold learner changes its conjecture before converging.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
 /-- The data prefix: the first t examples from a data stream, as a list. -/
+@[expose]
 def DataStream.prefix {X : Type u} {Y : Type v} (T : DataStream X Y) (t : ℕ) : List (X × Y) :=
   (List.range t).map T.observe
 
@@ -43,7 +44,7 @@ open Classical in
     Design rationale: encoding correctness at the definition level makes the backward
     direction of mind_change_characterization provable  -  `MindChangeOrdinal < ω` directly
     entails both convergence and correctness without needing to extract them separately. -/
-noncomputable def MindChangeOrdinal (X : Type u) (L : GoldLearner X Bool)
+@[expose] noncomputable def MindChangeOrdinal (X : Type u) (L : GoldLearner X Bool)
     (c : Concept X Bool) (T : DataStream X Bool) : Ordinal :=
   let changes := { t : ℕ | L.conjecture (T.prefix t) ≠ L.conjecture (T.prefix (t + 1)) }
   if h : changes.Finite then

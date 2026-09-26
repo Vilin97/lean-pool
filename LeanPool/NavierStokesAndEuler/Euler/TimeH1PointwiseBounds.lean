@@ -16,7 +16,7 @@ Absolute continuity and the actual Bochner L² derivative give exact integral
 increments, square-root continuity, and initial/terminal trace bounds.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

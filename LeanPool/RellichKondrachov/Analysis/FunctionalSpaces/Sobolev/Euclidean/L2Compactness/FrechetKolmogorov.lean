@@ -36,7 +36,7 @@ compact support (modeled as `Lp ‚Ñù 2 (volume.restrict K)` and embedded into `L¬
 Tracking: Beads `lean-103.5.2.26.5.3.2.2.3`.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis

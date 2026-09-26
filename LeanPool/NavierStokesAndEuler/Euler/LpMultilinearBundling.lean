@@ -12,7 +12,7 @@ public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 
 /-! Pointwise multilinear L² fields define genuine bounded multilinear maps into L². -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

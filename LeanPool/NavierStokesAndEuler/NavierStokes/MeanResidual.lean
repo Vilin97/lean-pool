@@ -19,7 +19,7 @@ are Fréchet derivatives on spacetime, and the Reynolds products include the
 entire oscillatory velocity.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.MeanResidual
@@ -37,7 +37,7 @@ abbrev Scalar := SpaceTime → ℝ
 abbrev Components := Fin 3 → Scalar
 
 /-- Period, given by `2 * Real.pi`. -/
-noncomputable def period : ℝ := 2 * Real.pi
+@[expose] noncomputable def period : ℝ := 2 * Real.pi
 /-- Angular vector, given by `(0, coordinateVector 1)`. -/
 noncomputable def angularVector : SpaceTime := (0, coordinateVector 1)
 /-- Angular shift, given by `q + a • angularVector`. -/
@@ -59,20 +59,20 @@ variable {E F : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Direction, given by `fderiv ℝ f q v`. -/
-noncomputable def direction (v : SpaceTime) (f : SpaceTime → E) (q : SpaceTime) : E :=
+@[expose] noncomputable def direction (v : SpaceTime) (f : SpaceTime → E) (q : SpaceTime) : E :=
   fderiv ℝ f q v
 
 /-- Dt, given by `direction (1, 0) f`. -/
-noncomputable def dt (f : SpaceTime → E) := direction (1, 0) f
+@[expose] noncomputable def dt (f : SpaceTime → E) := direction (1, 0) f
 /-- Dr, given by `direction (0, coordinateVector 0) f`. -/
-noncomputable def dr (f : SpaceTime → E) := direction (0, coordinateVector 0) f
+@[expose] noncomputable def dr (f : SpaceTime → E) := direction (0, coordinateVector 0) f
 /-- Dtheta, given by `direction angularVector f`. -/
 noncomputable def dtheta (f : SpaceTime → E) := direction angularVector f
 /-- Dz, given by `direction (0, coordinateVector 2) f`. -/
-noncomputable def dz (f : SpaceTime → E) := direction (0, coordinateVector 2) f
+@[expose] noncomputable def dz (f : SpaceTime → E) := direction (0, coordinateVector 2) f
 
 /-- Average, given by `period⁻¹ • ∫ a in (0 : ℝ)..period, f (angularShift q a)`. -/
-noncomputable def average (f : SpaceTime → E) (q : SpaceTime) : E :=
+@[expose] noncomputable def average (f : SpaceTime → E) (q : SpaceTime) : E :=
   period⁻¹ • ∫ a in (0 : ℝ)..period, f (angularShift q a)
 
 /-- Angular continuous, given by `∀ q, Continuous (fun a => f (angularShift q a))`. -/
@@ -351,11 +351,11 @@ noncomputable def laplacian (f : Scalar) (q : SpaceTime) : ℝ :=
   dr (dr f) q + dr f q / radius q + dtheta (dtheta f) q / radius q ^ 2 + dz (dz f) q
 
 /-- Mean laplacian, given by `dr (dr f) q + dr f q / radius q + dz (dz f) q`. -/
-noncomputable def meanLaplacian (f : Scalar) (q : SpaceTime) : ℝ :=
+@[expose] noncomputable def meanLaplacian (f : Scalar) (q : SpaceTime) : ℝ :=
   dr (dr f) q + dr f q / radius q + dz (dz f) q
 
 /-- Radial divergence, given by `dr f q + c / radius q * f q`. -/
-noncomputable def radialDivergence (c : ℝ) (f : Scalar) (q : SpaceTime) : ℝ :=
+@[expose] noncomputable def radialDivergence (c : ℝ) (f : Scalar) (q : SpaceTime) : ℝ :=
   dr f q + c / radius q * f q
 
 /-- Divergence, given by `dr (w 0) q + w 0 q / radius q + dtheta (w 1) q / radius q + dz (w 2)
@@ -736,7 +736,7 @@ noncomputable def covariance (osc : Components) (i j : Fin 3) : Scalar :=
 
 /-- Flux difference, defined pointwise by `base i q * mean j q + mean i q * base j q + mean i q
 * mean j q + covariance osc i j q`. -/
-noncomputable def fluxDifference (base mean osc : Components) (i j : Fin 3) : Scalar :=
+@[expose] noncomputable def fluxDifference (base mean osc : Components) (i j : Fin 3) : Scalar :=
   fun q => base i q * mean j q + mean i q * base j q +
     mean i q * mean j q + covariance osc i j q
 
@@ -854,19 +854,19 @@ noncomputable def baseAxial (b : Components) (p : Scalar) (q : SpaceTime) : ℝ 
     dz (fun y => b 2 y * b 2 y) q - meanLaplacian (b 2) q + dz p q
 
 /-- Physical version of `E_theta` in (32), with viscosity one. -/
-noncomputable def Etheta (b m o : Components) (Ttheta : Scalar) (q : SpaceTime) : ℝ :=
+@[expose] noncomputable def Etheta (b m o : Components) (Ttheta : Scalar) (q : SpaceTime) : ℝ :=
   dt (m 1) q + radialDivergence 2 (fluxDifference b m o 0 1) q +
     dz (fluxDifference b m o 2 1) q - meanLaplacian (m 1) q + m 1 q / radius q ^ 2 -
     radialDivergence 2 Ttheta q
 
 /-- Physical version of `E_z` in (32), with viscosity one. -/
-noncomputable def Ez (b m o : Components) (pm Tz : Scalar) (q : SpaceTime) : ℝ :=
+@[expose] noncomputable def Ez (b m o : Components) (pm Tz : Scalar) (q : SpaceTime) : ℝ :=
   dt (m 2) q + radialDivergence 1 (fluxDifference b m o 0 2) q +
     dz (fun y => fluxDifference b m o 2 2 y + pm y) q - meanLaplacian (m 2) q -
     radialDivergence 1 Tz q
 
 /-- Required physical radial pressure derivative in (32). -/
-noncomputable def gr (b m o : Components) (q : SpaceTime) : ℝ :=
+@[expose] noncomputable def gr (b m o : Components) (q : SpaceTime) : ℝ :=
   -(dt (m 0) q + radialDivergence 1 (fluxDifference b m o 0 0) q +
     dz (fluxDifference b m o 2 0) q - fluxDifference b m o 1 1 q / radius q -
     meanLaplacian (m 0) q + m 0 q / radius q ^ 2)

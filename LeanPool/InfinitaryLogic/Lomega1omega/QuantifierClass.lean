@@ -29,7 +29,7 @@ reused by any preservation theorem (issue #15's interpolation and relative prese
 #16's end extensions), not to live inside the interpolation development.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

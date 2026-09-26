@@ -32,7 +32,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -42,7 +42,7 @@ open scoped BigOperators
 namespace DegreeDiameter
 
 /-- The `q`-integer `[n]_q = 1 + q + ... + q^(n-1)`. -/
-def qInteger (q n : ℕ) : ℕ :=
+@[expose] def qInteger (q n : ℕ) : ℕ :=
   ∑ i ∈ Finset.range n, q ^ i
 
 /-- The `q`-factorial `[n]_q! = [n]_q [n-1]_q ... [1]_q`.
@@ -129,6 +129,7 @@ noncomputable instance flagStepChoicesFinite [Finite V]
 
 /-- A complete flag together with a choice of one advancing vector at every
 rank. -/
+@[expose]
 def AdaptedFlagBasis (K V : Type*) [Field K] [AddCommGroup V] [Module K V]
     (n : ℕ) :=
   Σ F : CompleteFlag K V n, FlagStepChoices F
@@ -273,9 +274,13 @@ noncomputable def adaptedFlagBasisEquivLinearIndependent
         simp [hV])
     let F : CompleteFlag K V n := CompleteFlag.ofBasis b
     let a : FlagStepChoices F := fun i ↦
-      ⟨⟨b i, b.self_mem_flag (by simp)⟩, by
+      ⟨⟨b i, by
+        simpa only [F, CompleteFlag.ofBasis_space] using
+          b.self_mem_flag (i := i) (k := i.succ) (by simp)⟩, by
         intro hmem
-        exact (lt_irrefl i.castSucc) ((b.self_mem_flag_iff).mp hmem)⟩
+        have hmem' : b i ∈ b.flag i.castSucc := by
+          simpa only [F, CompleteFlag.ofBasis_space] using hmem
+        exact (lt_irrefl i.castSucc) ((b.self_mem_flag_iff).mp hmem')⟩
     refine ⟨⟨F, a⟩, ?_⟩
     apply Subtype.ext
     funext i

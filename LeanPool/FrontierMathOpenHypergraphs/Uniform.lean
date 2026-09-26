@@ -18,7 +18,7 @@ import Mathlib.Tactic.Ring.RingNF
 # The uniform 26/25 factor and the finite bootstrap
 -/
 
-@[expose] public section
+public section
 
 namespace HypergraphLowerBound
 

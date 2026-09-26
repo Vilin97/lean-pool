@@ -18,7 +18,7 @@ genuine linear endpoint map gives the identical coefficient/radius guard
 for every nonnegative amplitude, including zero.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

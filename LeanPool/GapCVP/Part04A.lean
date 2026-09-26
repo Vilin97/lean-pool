@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part03
 
 /-! # GapCVP proof, part 04 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -26,7 +26,7 @@ namespace CNFFiniteRecordSort
 open Computability Turing GapCVP.ThreeCNFReduction
 
 /-- GapCVP reduction support. -/
-def sourceOrderedDistinctRecords
+@[expose] def sourceOrderedDistinctRecords
     {α : Type} [Encodable α] [DecidableEq α]
     (records : List α) : List α :=
   sortedElements records.toFinset
@@ -196,7 +196,7 @@ def delimitedNaturalPairOrdering (input : List Bool) :
       | some (second, _) => littleEndianNaturalOrdering first second
 
 /-- GapCVP reduction support. -/
-def sourcePreservingDelimitedNaturalComparisonWord
+@[expose] def sourcePreservingDelimitedNaturalComparisonWord
     (input : List Bool) : List Bool :=
   lengthPrefixedWord input ++
     encodedWordOrderingWord (delimitedNaturalPairOrdering input)

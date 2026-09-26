@@ -14,7 +14,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # BinaryRelations -/
 
-@[expose] public section
+public section
 
 
 

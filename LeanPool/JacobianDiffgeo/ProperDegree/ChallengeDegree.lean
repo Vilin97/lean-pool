@@ -31,7 +31,7 @@ match "the exact challenge signature" this file declares `f` explicit throughout
 (dot notation) still works since `f` is fully determined by unification against `hf`'s type.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

@@ -20,7 +20,7 @@ constant.  The conclusion is stated on the cylinder's time interval, which is
 the form the slice pressure estimates consume.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

@@ -18,7 +18,7 @@ physical derivative and upper pressure bounds. The early interval keeps
 its exponential gain, and the good interval retains the extra delta in
 the upper pressure estimate. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

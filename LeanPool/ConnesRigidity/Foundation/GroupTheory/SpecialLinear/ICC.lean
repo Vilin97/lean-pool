@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.Basic
 # Special-linear conjugacy and ICC for Zhou §5
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace SpecialLinear

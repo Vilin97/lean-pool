@@ -32,7 +32,7 @@ The comparison structures are the arbitrary-language ones already built for
 generic code-transport API.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

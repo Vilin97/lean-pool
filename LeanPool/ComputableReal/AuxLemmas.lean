@@ -15,7 +15,7 @@ Small helper lemmas about `CauSeq` suprema/infima and about Cauchy sequences
 converging to a real number, used in the construction of computable reals.
 -/
 
-@[expose] public section
+public section
 
 theorem abs_ite_le [AddCommGroup α] [LinearOrder α] [IsOrderedAddMonoid α] (x : α) :
     abs x = if 0 ≤ x then x else -x := by

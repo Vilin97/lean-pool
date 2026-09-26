@@ -21,7 +21,7 @@ polynomial in `ℤ[X]`. We prove some basic properties of the shiftedLegendre po
 
 -/
 
-@[expose] public section
+public section
 
 open scoped Nat
 open BigOperators Finset

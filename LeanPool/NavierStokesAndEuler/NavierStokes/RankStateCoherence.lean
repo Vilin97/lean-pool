@@ -18,7 +18,7 @@ data and the shared normalized inverse are transported before applying the
 actual variable-gauge stream and pressure constructors.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

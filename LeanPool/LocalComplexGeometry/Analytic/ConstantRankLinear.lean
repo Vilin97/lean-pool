@@ -23,7 +23,7 @@ composition, a vertical-kernel criterion, and canonical product coordinates on
 `Fin (r + k) → ℂ`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace LocalComplexGeometry

@@ -18,7 +18,7 @@ the coefficients of the prepared divisor; its coefficients are analytic and
 vanish at the origin.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators Topology
@@ -62,14 +62,14 @@ def preparedPolynomialGerm {n d : ℕ}
     (analyticAt_preparedPolynomialFunction a ha)
 
 /-- The degree-`< d` polynomial germ with a prescribed coefficient vector. -/
-def remainderPolynomialGerm {n d : ℕ}
+@[expose] def remainderPolynomialGerm {n d : ℕ}
     (r : Fin d → HolomorphicGerm n) : HolomorphicGerm (n + 1) :=
   ∑ i : Fin d,
     lowerDimensionalInclusion n (r i) * lastCoordinateGerm n ^ (i : ℕ)
 
 /-- A quotient and coefficient vector satisfy Weierstrass division at the
 level of germs. -/
-def IsPreparedGermDivision {n d : ℕ}
+@[expose] def IsPreparedGermDivision {n d : ℕ}
     (a : Fin d → Base n → ℂ) (ha : ∀ i, AnalyticAt ℂ (a i) 0)
     (h q : HolomorphicGerm (n + 1)) (r : Fin d → HolomorphicGerm n) : Prop :=
   h = q * preparedPolynomialGerm a ha + remainderPolynomialGerm r

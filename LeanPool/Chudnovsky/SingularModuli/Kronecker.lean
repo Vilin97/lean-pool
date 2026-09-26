@@ -43,7 +43,7 @@ Everything downstream of `±1` is `isIntegral_of_kronecker`; `isIntegral_j_of_cm
 so that only the CM relation `j τ = f m i τ` and the defining identity `hPhi` are needed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

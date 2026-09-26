@@ -32,7 +32,7 @@ Realization of the coded connectives and of carrier transport is in
 `Infinitary/Reindex.lean`.
 -/
 
-@[expose] public section
+public section
 
 universe u v u' uι w
 
@@ -46,7 +46,7 @@ namespace BoundedFormulaInf
 
 /-- Realization of an infinitary bounded formula in a structure, given valuations of the free
 and bound variables. One recursion serves every carrier. -/
-def Realize {M : Type w} [L.Structure M] :
+@[expose] def Realize {M : Type w} [L.Structure M] :
     ∀ {n}, L.BoundedFormulaInf ι α n → (α → M) → (Fin n → M) → Prop
   | _, .falsum, _, _ => False
   | _, .equal t₁ t₂, v, xs => t₁.realize (Sum.elim v xs) = t₂.realize (Sum.elim v xs)

@@ -22,7 +22,7 @@ new high-side scale.  This identifies every nonterminal edge with the
 finite signed-exponential instance of the local transfer step.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

@@ -18,7 +18,7 @@ import LeanPool.FltRegular.NumberTheory.Unramified
 This file proves the class-number divisibility result used in the regular-prime argument.
 -/
 
-@[expose] public section
+public section
 
 open scoped NumberField
 

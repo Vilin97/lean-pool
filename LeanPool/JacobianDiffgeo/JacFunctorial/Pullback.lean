@@ -34,7 +34,7 @@ Main declarations:
   `RS.tangentCoord_mfderiv_comp`, reading the target through its own preferred chart.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Bundle
 open Set IsManifold

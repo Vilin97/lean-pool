@@ -12,21 +12,23 @@ public import Mathlib.Tactic.Push
 
 /-! Fixed-assignment interfaces and arbitrary positive separating sets. -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 
 variable {α : Type*}
 
 /-- Every assigned witness consists of positive examples from its target language. -/
-def Positive (H : Set (Set α)) (T : Set α → Finset α) : Prop :=
+@[expose] def Positive (H : Set (Set α)) (T : Set α → Finset α) : Prop :=
   ∀ L ∈ H, (↑(T L) : Set α) ⊆ L
 
 /-- A positive witness assignment whose nonempty active subfamilies have infinite common cores. -/
+@[expose]
 def Valid (H : Set (Set α)) (T : Set α → Finset α) : Prop :=
   Positive H T ∧ ∀ S, (active H T S).Nonempty → (activeCore H T S).Infinite
 
 /-- Existence of a valid witness assignment with a uniform finite cardinality bound. -/
+@[expose]
 def HasBoundedWitnesses (H : Set (Set α)) (d : ℕ) : Prop :=
   ∃ T, Valid H T ∧ ∀ L ∈ H, (T L).card ≤ d
 

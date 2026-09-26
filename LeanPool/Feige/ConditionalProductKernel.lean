@@ -15,7 +15,7 @@ has, at every fixed latent parameter vector, exactly the ordinary finite
 product of the selected one-coordinate laws.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 

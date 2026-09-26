@@ -34,7 +34,7 @@ both subdivided edges, and preserves ordinary validity, face-incidence connectiv
 isomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -46,7 +46,7 @@ open SurfaceCellComplex
 namespace P1
 
 /-- Retain an old signed edge in the enlarged edge type. -/
-def castSuccDart {n : ℕ} : SignedDart (Fin n) → SignedDart (Fin (n + 1))
+@[expose] def castSuccDart {n : ℕ} : SignedDart (Fin n) → SignedDart (Fin (n + 1))
   | .pos e => .pos e.castSucc
   | .neg e => .neg e.castSucc
 
@@ -66,11 +66,11 @@ theorem edgeOfDart_castSuccDart {n : ℕ} (d : SignedDart (Fin n)) :
   cases d <;> rfl
 
 /-- The fresh second subedge in the canonical P1 expansion. -/
-def freshEdge (n : ℕ) : Fin (n + 1) :=
+@[expose] def freshEdge (n : ℕ) : Fin (n + 1) :=
   Fin.last n
 
 /-- The retained first subedge in the canonical P1 expansion. -/
-def firstSubedge {n : ℕ} (a : Fin n) : Fin (n + 1) :=
+@[expose] def firstSubedge {n : ℕ} (a : Fin n) : Fin (n + 1) :=
   a.castSucc
 
 theorem firstSubedge_ne_freshEdge {n : ℕ} (a : Fin n) :
@@ -78,7 +78,7 @@ theorem firstSubedge_ne_freshEdge {n : ℕ} (a : Fin n) :
   Fin.castSucc_ne_last a
 
 /-- Substitute one signed occurrence according to Gallier--Xu P1. -/
-def expandDart {n : ℕ} (a : Fin n) :
+@[expose] def expandDart {n : ℕ} (a : Fin n) :
     SignedDart (Fin n) → List (SignedDart (Fin (n + 1)))
   | .pos e =>
       if e = a then
@@ -141,7 +141,7 @@ theorem castSuccDart_mem_expandDart {n : ℕ} (a : Fin n)
       · simp [expandDart, h]
 
 /-- Contract one target dart: discard the fresh edge and retain every old edge. -/
-def contractDart {n : ℕ} :
+@[expose] def contractDart {n : ℕ} :
     SignedDart (Fin (n + 1)) → Option (SignedDart (Fin n))
   | .pos e => Fin.lastCases none (fun b ↦ some (.pos b)) e
   | .neg e => Fin.lastCases none (fun b ↦ some (.neg b)) e
@@ -167,12 +167,12 @@ theorem contractDart_neg_freshEdge (n : ℕ) :
   simp [contractDart, freshEdge]
 
 /-- Apply P1 simultaneously to every occurrence in a linear representative of a cyclic word. -/
-def expandWord {n : ℕ} (a : Fin n) (word : List (SignedDart (Fin n))) :
+@[expose] def expandWord {n : ℕ} (a : Fin n) (word : List (SignedDart (Fin n))) :
     List (SignedDart (Fin (n + 1))) :=
   word.flatMap (expandDart a)
 
 /-- Contract a P1 word by deleting the fresh subedge. -/
-def contractWord {n : ℕ} (word : List (SignedDart (Fin (n + 1)))) :
+@[expose] def contractWord {n : ℕ} (word : List (SignedDart (Fin (n + 1)))) :
     List (SignedDart (Fin n)) :=
   word.filterMap contractDart
 
@@ -392,7 +392,7 @@ theorem expand_faces_length (P : FiniteCyclicPresentation) (a : P.Edge) :
   simp [expand]
 
 /-- P1 preserves face positions. -/
-def faceEquiv (P : FiniteCyclicPresentation) (a : P.Edge) :
+@[expose] def faceEquiv (P : FiniteCyclicPresentation) (a : P.Edge) :
     P.Face ≃ (expand P a).Face :=
   finCongr (expand_faces_length P a).symm
 

@@ -14,7 +14,7 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 /-! Construction of the actual mean boundary operator by homogeneous-gradient
 completion and the Hilbert adjoint. No bounded inverse Laplacian on L² is assumed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,7 @@ structure Cutoff where
   compact : HasCompactSupport field
 
 /-- Coordinate antisymmetrization of a genuine derivative. -/
-def curlMatrix (A : Space →L[ℝ] Space) : Space :=
+@[expose] def curlMatrix (A : Space →L[ℝ] Space) : Space :=
   WithLp.toLp 2 (fun i : Fin 3 =>
     (A (EuclideanSpace.single (i+1) 1)) (i+2) -
       (A (EuclideanSpace.single (i+2) 1)) (i+1))
@@ -123,7 +123,7 @@ def testCurlLinear (χ : Cutoff) : Test →ₗ[ℝ] L2 where
   map_smul' := testCurl_smul χ
 
 /-- The proved cutoff-dependent bound on the homogeneous space. -/
-def cutoffBound (χ : Cutoff) : ℝ :=
+@[expose] def cutoffBound (χ : Cutoff) : ℝ :=
   3 * cutoffCurlConstant *
     (lpNorm χ.field ∞ volume + lpNorm (gradient χ.field) 3 volume)
 
@@ -152,7 +152,7 @@ theorem testCurl_bound (χ : Cutoff) (f : Test) :
       ring
 
 /-- The bounded extension of actual cutoff-curl to the homogeneous Hilbert space. -/
-def cutoffCurl (χ : Cutoff) : homogeneousSpace →L[ℝ] L2 :=
+@[expose] def cutoffCurl (χ : Cutoff) : homogeneousSpace →L[ℝ] L2 :=
   (testCurlLinear χ).extendOfNorm homogeneousGradient
 
 theorem cutoffCurl_on_test (χ : Cutoff) (f : Test) :
@@ -164,7 +164,7 @@ theorem cutoffCurl_norm_le (χ : Cutoff) : ‖cutoffCurl χ‖ ≤ cutoffBound �
       χ)
 
 /-- The Riesz/weak-Newtonian representation of the cutoff curl functional. -/
-def weakPotential (χ : Cutoff) : L2 →L[ℝ] homogeneousSpace := (cutoffCurl χ).adjoint
+@[expose] def weakPotential (χ : Cutoff) : L2 →L[ℝ] homogeneousSpace := (cutoffCurl χ).adjoint
 
 /-- The represented functional agrees exactly with the source's distributional pairing. -/
 theorem weakPotential_pairing (χ : Cutoff) (z : L2) (f : Test) :
@@ -203,7 +203,8 @@ theorem existsUnique_weakPotential (χ : Cutoff) (z : L2) :
   ⟨weakPotential χ z, weakPotential_pairing χ z, fun u hu => weakPotential_unique χ z u hu⟩
 
 /-- The actual bounded positive mean boundary operator `Tχ Tχ*`. -/
-def boundaryOperator (χ : Cutoff) : L2 →L[ℝ] L2 := (cutoffCurl χ).comp (weakPotential χ)
+@[expose] def boundaryOperator (χ : Cutoff) : L2 →L[ℝ] L2 :=
+  (cutoffCurl χ).comp (weakPotential χ)
 
 theorem boundaryOperator_pairing (χ : Cutoff) (z w : L2) :
     ⟪boundaryOperator χ z, w⟫_ℝ = ⟪weakPotential χ z, weakPotential χ w⟫_ℝ := by

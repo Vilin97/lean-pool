@@ -20,4 +20,4 @@ This module re-exports the current project skeleton for the Lean Eval challenge
 `topological_classification_of_surfaces`.
 -/
 
-@[expose] public section
+public section

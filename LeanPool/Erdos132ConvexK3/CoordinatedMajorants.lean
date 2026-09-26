@@ -19,7 +19,7 @@ jointly to minimize the moves made by their facing endpoints.  The finite
 minimum exists.  The remaining exchange statement is isolated exactly.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 

@@ -25,7 +25,7 @@ import Mathlib.RingTheory.SimpleRing.Matrix
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.BrauerOverR`.
 -/
 
-@[expose] public section
+public section
 
 suppress_compilation
 

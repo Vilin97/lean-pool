@@ -29,7 +29,7 @@ used for the local base estimates.  Compact constants use the genuine
 stable inverse branch, including its regular zero-time boundary.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -107,7 +107,7 @@ theorem openCell_representative_distance (K : Set Slow) (L : PositiveRepresentat
   PositiveRepresentatives.representative_enlarged_distance K L (openCell_subset_box _ _ hp)
 
 /-- Cell domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
-noncomputable def cellDomain (h lo hi : ℝ) (N : ℕ) :
+@[expose] noncomputable def cellDomain (h lo hi : ℝ) (N : ℕ) :
     PhaseJetBounds.Domain (BaseChartJets.CellIndex h lo hi N) Slow where
   scale L := ChartScales.S (BaseChartJets.cellBand L)
   carrier L := openCell L.val.val.1 L.val.val.2
@@ -176,6 +176,7 @@ instance indexCountable (N : ℕ) : Countable (Index W N) := by
   infer_instance
 
 /-- Label, given by `L.val.val`. -/
+@[expose]
 noncomputable def label {N : ℕ} (L : Index W N) : PartitionedCovariance.UnsignedLabel := L.val.val
 
 theorem label_injective {N : ℕ} : Injective (label W (N := N)) :=
@@ -183,7 +184,7 @@ theorem label_injective {N : ℕ} : Injective (label W (N := N)) :=
 
 /-- Domain, given by `cellDomain F.data.h (NominalConeAssembly.activeLeft W)
 (NominalConeAssembly.activeRight W) N`. -/
-noncomputable def domain (N : ℕ) : PhaseJetBounds.Domain (Index W N) Slow :=
+@[expose] noncomputable def domain (N : ℕ) : PhaseJetBounds.Domain (Index W N) Slow :=
   cellDomain F.data.h (NominalConeAssembly.activeLeft W) (NominalConeAssembly.activeRight W) N
 
 /-- Representative, given by `PositiveRepresentatives.representative (referenceSet W) L.val`. -/
@@ -730,7 +731,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1411,9 +1412,9 @@ section MovingWeight
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
 /-- Left radius, given by `Real.sqrt (2 * NominalConeAssembly.activeLeft W)`. -/
-noncomputable def leftRadius : ℝ := Real.sqrt (2 * NominalConeAssembly.activeLeft W)
+@[expose] noncomputable def leftRadius : ℝ := Real.sqrt (2 * NominalConeAssembly.activeLeft W)
 /-- Right radius, given by `Real.sqrt (2 * NominalConeAssembly.activeRight W)`. -/
-noncomputable def rightRadius : ℝ := Real.sqrt (2 * NominalConeAssembly.activeRight W)
+@[expose] noncomputable def rightRadius : ℝ := Real.sqrt (2 * NominalConeAssembly.activeRight W)
 
 theorem leftRadius_pos : 0 < leftRadius W :=
   Real.sqrt_pos.mpr (mul_pos (by norm_num) (NominalConeAssembly.activeLeft_pos W))
@@ -1482,11 +1483,11 @@ theorem stripWeight_eq (r eta : ℝ) (hr : 0 < r) :
   norm_num [stripWeight, WeightedRadialPrimitive.zeta]
 
 /-- Profile radius, given by `p.1 / Real.sqrt (BaseChartJets.normalizedCoordinates h p).1`. -/
-noncomputable def profileRadius (h : ℝ) (p : Slow) : ℝ :=
+@[expose] noncomputable def profileRadius (h : ℝ) (p : Slow) : ℝ :=
   p.1 / Real.sqrt (BaseChartJets.normalizedCoordinates h p).1
 
 /-- Moving weight, given by `stripWeight W (profileRadius F.data.h p)`. -/
-noncomputable def movingWeight (p : Slow) : ℝ := stripWeight W (profileRadius F.data.h p)
+@[expose] noncomputable def movingWeight (p : Slow) : ℝ := stripWeight W (profileRadius F.data.h p)
 
 theorem movingWeight_nonneg (p : Slow) : 0 ≤ movingWeight W p := stripWeight_nonneg W _
 
@@ -1557,7 +1558,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
     (v : ModulatedProfileAssembly.Witness ld)
 
 /-- The literal leading covariance target in its own normalized band. -/
-noncomputable def actualTarget (p : Slow) : Plane :=
+@[expose] noncomputable def actualTarget (p : Slow) : Plane :=
   (BaseChartJets.normalizedCoordinates F.data.h p).1 ^ (-CoordinateAlgebra.A F.data.h - 1/2) •
     ProfileSpectralCone.stressVector v.profiles F.data.h
       (BaseChartJets.normalizedCoordinates F.data.h p).2

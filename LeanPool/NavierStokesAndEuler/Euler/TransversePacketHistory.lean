@@ -35,7 +35,7 @@ The adjoint multiplier identity turns it into the pointwise matrix equation
 almost everywhere. Its normal residual is exactly the scalar source in (11).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -131,7 +131,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

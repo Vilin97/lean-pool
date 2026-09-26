@@ -19,7 +19,7 @@ The logarithmic edge distances carry their actual exponential coefficients.
 The global estimates are obtained from smooth edge factors and compactness.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,12 +30,14 @@ open Set Filter Metric
 open scoped Topology ContDiff
 
 /-- Weight, given by `FlatCutoff.edge c (y-a) * FlatCutoff.edge 4 (b-y)`. -/
+@[expose]
 noncomputable def weight (c a b y : ℝ) : ℝ := FlatCutoff.edge c (y-a) * FlatCutoff.edge 4 (b-y)
 
 /-- Edge distance, given by `min 1 (min (y-a) (b-y))`. -/
-noncomputable def edgeDistance (a b y : ℝ) : ℝ := min 1 (min (y-a) (b-y))
+@[expose] noncomputable def edgeDistance (a b y : ℝ) : ℝ := min 1 (min (y-a) (b-y))
 
 /-- Radial weight, with branches according to `0 < X`. -/
+@[expose]
 noncomputable def radialWeight (c a b X : ℝ) : ℝ := if 0 < X then weight c a b (Real.log X) else 0
 
 theorem edge_le_one {c : ℝ} (hc : 0 ≤ c) (x : ℝ) : FlatCutoff.edge c x ≤ 1 := by
@@ -358,9 +360,9 @@ theorem EdgeFactor.collar {K : Set E} (hK : IsCompact K) {c : ℝ} {T : E × ℝ
       _ = _ := mul_comm _ _
 
 /-- Left chart, given by `T (q.1,a+q.2)`. -/
-noncomputable def leftChart (a : ℝ) (T : E × ℝ → V) (q : E × ℝ) : V := T (q.1,a+q.2)
+@[expose] noncomputable def leftChart (a : ℝ) (T : E × ℝ → V) (q : E × ℝ) : V := T (q.1,a+q.2)
 /-- Right chart, given by `T (q.1,b-q.2)`. -/
-noncomputable def rightChart (b : ℝ) (T : E × ℝ → V) (q : E × ℝ) : V := T (q.1,b-q.2)
+@[expose] noncomputable def rightChart (b : ℝ) (T : E × ℝ → V) (q : E × ℝ) : V := T (q.1,b-q.2)
 
 /-- Radial reflection, given by `{ (LinearEquiv.refl ℝ E).prodCongr (LinearEquiv.neg ℝ) with
 norm_map' := by intro q; simp [Prod.norm_def] }`. -/
@@ -584,9 +586,9 @@ variable {E V : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Log chart, given by `(q.1,Real.log q.2)`. -/
-noncomputable def logChart (q : E × ℝ) : E × ℝ := (q.1,Real.log q.2)
+@[expose] noncomputable def logChart (q : E × ℝ) : E × ℝ := (q.1,Real.log q.2)
 /-- Radial pullback, given by `T (logChart q)`. -/
-noncomputable def radialPullback (T : E × ℝ → V) (q : E × ℝ) : V := T (logChart q)
+@[expose] noncomputable def radialPullback (T : E × ℝ → V) (q : E × ℝ) : V := T (logChart q)
 
 theorem logChart_smooth : ContDiffOn ℝ ∞ (logChart (E := E))
     ((univ : Set E) ×ˢ Ioi (0 : ℝ)) := by
@@ -695,7 +697,7 @@ section Directions
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Tilt, given by `v.2 / v.1`. -/
-noncomputable def tilt (v : ℝ × ℝ) : ℝ := v.2 / v.1
+@[expose] noncomputable def tilt (v : ℝ × ℝ) : ℝ := v.2 / v.1
 
 /-- Unit of tilt, given by `((Real.sqrt (1+t^2))⁻¹,t / Real.sqrt (1+t^2))`. -/
 noncomputable def unitOfTilt (t : ℝ) : ℝ × ℝ :=
@@ -790,8 +792,9 @@ theorem EdgeFactor.direction_collar {K : Set E} (hK : IsCompact K) {c : ℝ}
     exact mul_pos (div_pos (FlatCutoff.edge_pos _ hx) (pow_pos hx _)) (hpos p hp x ⟨hx.le,hxd⟩)
 
 /-- Direction projection, given by `1+s*t`. -/
-noncomputable def directionProjection (s t : ℝ) : ℝ := 1+s*t
+@[expose] noncomputable def directionProjection (s t : ℝ) : ℝ := 1+s*t
 /-- Direction gap, given by `2*(directionProjection s t)^2 - (v-2)*(t-s)^2`. -/
+@[expose]
 noncomputable def directionGap (v s t : ℝ) : ℝ := 2*(directionProjection s t)^2 - (v-2)*(t-s)^2
 
 theorem aligned_direction_margin (v s : ℝ) :

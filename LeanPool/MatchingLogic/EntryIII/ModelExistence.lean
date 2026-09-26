@@ -23,7 +23,7 @@ import Mathlib.Tactic.Bound.Init
 # MatchingLogic.EntryIII.ModelExistence
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

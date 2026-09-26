@@ -18,7 +18,7 @@ The physical domain, embedding constant, and Schwartz derivatives used by the
 cylinder estimates are independent of Fourier inversion.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -31,7 +31,7 @@ open scoped SchwartzMap ENNReal ContDiff LineDeriv
 abbrev Domain (d : ℕ) := EuclideanSpace ℝ (Fin d)
 
 /-- The Fourier weight defining the inhomogeneous Sobolev order `s`. -/
-noncomputable def besselWeight (d : ℕ) (s : ℝ) (ξ : Domain d) : ℝ :=
+@[expose] noncomputable def besselWeight (d : ℕ) (s : ℝ) (ξ : Domain d) : ℝ :=
   (1 + ‖ξ‖ ^ 2) ^ (s / 2)
 
 theorem besselWeight_temperate (d : ℕ) (s : ℝ) :
@@ -85,12 +85,12 @@ theorem reciprocal_weight_memLp (d : ℕ) (s : ℝ) (hs : (d : ℝ) < 2 * s) :
   ring
 
 /-- The reciprocal Fourier weight represented as a genuine `L²` element. -/
-noncomputable def reciprocalWeightLp (d : ℕ) (s : ℝ) (hs : (d : ℝ) < 2 * s) :
+@[expose] noncomputable def reciprocalWeightLp (d : ℕ) (s : ℝ) (hs : (d : ℝ) < 2 * s) :
     Lp ℝ 2 (volume : Measure (Domain d)) :=
   (reciprocal_weight_memLp d s hs).toLp (besselWeight d (-s))
 
 /-- A finite Sobolev embedding constant: the `L²` norm of the reciprocal weight. -/
-noncomputable def embeddingConstant (d : ℕ) (s : ℝ) (hs : (d : ℝ) < 2 * s) : ℝ :=
+@[expose] noncomputable def embeddingConstant (d : ℕ) (s : ℝ) (hs : (d : ℝ) < 2 * s) : ℝ :=
   ‖reciprocalWeightLp d s hs‖
 
 end EulerSobolev
@@ -101,7 +101,7 @@ open EulerSobolev
 open scoped SchwartzMap LineDeriv
 
 /-- Repeated differentiation in one fixed direction, as a Schwartz function. -/
-noncomputable def directional (d n : ℕ) (v : Domain d) (f : 𝓢(Domain d, ℂ)) :
+@[expose] noncomputable def directional (d n : ℕ) (v : Domain d) (f : 𝓢(Domain d, ℂ)) :
     𝓢(Domain d, ℂ) := schwartzIteratedDerivative (fun _ : Fin n => v) f
 
 end EulerSobolevProducts

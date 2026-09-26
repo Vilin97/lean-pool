@@ -18,7 +18,7 @@ that value-level statement to a differential identity: at every noncircular elli
 phase differential is the pullback of the differential of the action-space representative.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

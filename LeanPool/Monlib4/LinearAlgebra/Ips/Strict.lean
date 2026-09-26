@@ -11,7 +11,7 @@ public import Mathlib.LinearAlgebra.TensorProduct.Associator
 # Strict tensor product (wip)
 -/
 
-@[expose] public section
+public section
 
 
 variable {R E F G : Type _} [CommSemiring R] [AddCommGroup E] [AddCommGroup F] [AddCommGroup G]
@@ -19,12 +19,12 @@ variable {R E F G : Type _} [CommSemiring R] [AddCommGroup E] [AddCommGroup F] [
 
 open scoped TensorProduct
 
-@[reducible, instance]
+@[expose, reducible, instance]
 noncomputable def TensorProduct.assocHasCoe :
   CoeFun ((E ⊗[R] F) ⊗[R] G) (fun _ ↦ E ⊗[R] (F ⊗[R] G))
     where coe x := TensorProduct.assoc R E F G x
 
-@[reducible, instance]
+@[expose, reducible, instance]
 noncomputable def TensorProduct.assocSymmHasCoe :
   CoeFun (E ⊗[R] (F ⊗[R] G)) (fun _ ↦ (E ⊗[R] F) ⊗[R] G)
     where coe x := (TensorProduct.assoc R E F G).symm x
@@ -43,22 +43,22 @@ theorem TensorProduct.tmul_assoc_coe (a : E) (b : F) (c : G) :
 theorem TensorProduct.coe_coe_assoc (a : E ⊗[R] (F ⊗[R] G)) :
     a = ↑(a : (E ⊗[R] F) ⊗[R] G) := by simp only [LinearEquiv.apply_symm_apply]
 
-@[reducible, instance]
+@[expose, reducible, instance]
 noncomputable def TensorProduct.lidHasCoe :
     CoeFun (R ⊗[R] E) (fun _ => E) where
   coe x := TensorProduct.lid R E x
 
-@[reducible, instance]
+@[expose, reducible, instance]
 noncomputable def TensorProduct.ridHasCoe :
     CoeFun (E ⊗[R] R) (fun _ => E) where
   coe x := TensorProduct.rid R E x
 
-@[reducible, instance]
+@[expose, reducible, instance]
 noncomputable def TensorProduct.lidSymmHasCoe :
     Coe E (R ⊗[R] E) where
   coe x := (TensorProduct.lid R E).symm x
 
-@[reducible, instance]
+@[expose, reducible, instance]
 noncomputable def TensorProduct.ridSymmHasCoe :
     Coe E (E ⊗[R] R) where
   coe x := (TensorProduct.rid R E).symm x

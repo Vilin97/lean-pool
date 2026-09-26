@@ -34,7 +34,7 @@ torus. A separately constructed directional primitive supplies the inverse
 identity; no decay estimate for the integral is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -62,7 +62,7 @@ def RadiallySupported (a b : ℝ) (f : ℝ × E → F) : Prop :=
   support f ⊆ Prod.fst ⁻¹' Icc a b
 
 /-- The derivative in the slow radial coordinate, holding the auxiliary variable fixed. -/
-def slowDeriv (f : ℝ × E → F) (z : ℝ × E) : F :=
+@[expose] def slowDeriv (f : ℝ × E → F) (z : ℝ × E) : F :=
   fderiv ℝ f z (1, 0)
 
 /-- The actual auxiliary directional derivative. -/
@@ -191,7 +191,7 @@ theorem wholeAlias_directionalDeriv [CompleteSpace F]
   exact aliasIntegral_directionalDeriv hM hg hs
 
 /-- Successive actual slow derivatives of directional primitives. -/
-def sourceJet (J : (ℝ × E → F) → (ℝ × E → F)) (f : ℝ × E → F) (p : ℕ) :
+@[expose] def sourceJet (J : (ℝ × E → F) → (ℝ × E → F)) (f : ℝ × E → F) (p : ℕ) :
     ℝ × E → F := (slowDeriv ∘ J)^[p] f
 
 @[simp] theorem sourceJet_zero (J : (ℝ × E → F) → (ℝ × E → F)) (f : ℝ × E → F) :
@@ -301,7 +301,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -400,19 +400,19 @@ variable {E F : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- A fixed translation along the transport direction. -/
-noncomputable def shift (M : ℝ) (v : E) (z : ℝ × E) (u : ℝ) : ℝ × E :=
+@[expose] noncomputable def shift (M : ℝ) (v : E) (z : ℝ × E) (u : ℝ) : ℝ × E :=
   z + (u, (M * u) • v)
 
 /-- The past half-line primitive, in fixed integration coordinates. -/
-noncomputable def pastIntegral (M : ℝ) (v : E) (f : ℝ × E → F) (z : ℝ × E) : F :=
+@[expose] noncomputable def pastIntegral (M : ℝ) (v : E) (f : ℝ × E → F) (z : ℝ × E) : F :=
   ∫ u in Iic (0 : ℝ), f (shift M v z u)
 
 /-- The complete translated radial integral. -/
-noncomputable def totalIntegral (M : ℝ) (v : E) (f : ℝ × E → F) (z : ℝ × E) : F :=
+@[expose] noncomputable def totalIntegral (M : ℝ) (v : E) (f : ℝ × E → F) (z : ℝ × E) : F :=
   ∫ u : ℝ, f (shift M v z u)
 
 /-- Compactification with a fixed radial cutoff. -/
-noncomputable def compactIntegral (χ : ℝ → ℝ) (M : ℝ) (v : E)
+@[expose] noncomputable def compactIntegral (χ : ℝ → ℝ) (M : ℝ) (v : E)
     (f : ℝ × E → F) (z : ℝ × E) : F :=
   pastIntegral M v f z - χ z.1 • totalIntegral M v f z
 
@@ -577,7 +577,7 @@ theorem totalIntegral_hasFDerivAt {a b M : ℝ} {v : E}
   exact h.congr_of_eventuallyEq (totalIntegral_eventually_eq_interval hs z)
 
 /-- An ordinary derivative in any fixed direction, including a slow parameter. -/
-noncomputable def fixedDeriv (w : ℝ × E) (f : ℝ × E → F) (z : ℝ × E) : F :=
+@[expose] noncomputable def fixedDeriv (w : ℝ × E) (f : ℝ × E → F) (z : ℝ × E) : F :=
   fderiv ℝ f z w
 
 theorem fixedDeriv_contDiff {f : ℝ × E → F} (hf : ContDiff ℝ ∞ f) (w : ℝ × E) :
@@ -743,7 +743,7 @@ theorem compactIntegral_supported {a b M : ℝ} {v : E} {f : ℝ × E → F} {χ
     exact hz (by simp [compactIntegral, pastIntegral_eq_total_of_ge hs z hzb, hright _ hzb])
 
 /-- An explicit smooth transition with specified plateau thresholds. -/
-noncomputable def cutoff (c d : ℝ) (u : ℝ) : ℝ :=
+@[expose] noncomputable def cutoff (c d : ℝ) (u : ℝ) : ℝ :=
   Real.smoothTransition ((u - c) / (d - c))
 
 theorem cutoff_contDiff (c d : ℝ) : ContDiff ℝ ∞ (cutoff c d) :=
@@ -760,7 +760,7 @@ theorem cutoff_mem_Icc (c d u : ℝ) : cutoff c d u ∈ Icc (0 : ℝ) 1 :=
   ⟨Real.smoothTransition.nonneg _, Real.smoothTransition.le_one _⟩
 
 /-- The canonical cutoff has both plateaus strictly inside the support interval. -/
-noncomputable def interiorCutoff (a b : ℝ) : ℝ → ℝ :=
+@[expose] noncomputable def interiorCutoff (a b : ℝ) : ℝ → ℝ :=
   cutoff ((2 * a + b) / 3) ((a + 2 * b) / 3)
 
 theorem interiorCutoff_contDiff (a b : ℝ) : ContDiff ℝ ∞ (interiorCutoff a b) :=
@@ -780,7 +780,7 @@ theorem canonicalCompact_supported {a b M : ℝ} {v : E} {f : ℝ × E → F}
     (fun u hu => interiorCutoff_one hab (by linarith))
 
 /-- The complementary future integral used at the right support edge. -/
-noncomputable def futureIntegral (M : ℝ) (v : E) (f : ℝ × E → F) (z : ℝ × E) : F :=
+@[expose] noncomputable def futureIntegral (M : ℝ) (v : E) (f : ℝ × E → F) (z : ℝ × E) : F :=
   ∫ u in Ioi (0 : ℝ), f (shift M v z u)
 
 theorem past_add_future {a b M : ℝ} {v : E} {f : ℝ × E → F}

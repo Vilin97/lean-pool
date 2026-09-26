@@ -30,16 +30,16 @@ The number of such moves is therefore exactly the side-count convention used
 by `K3Majorant.leftMoves/rightMoves`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 
 /-- Advance by `k` polygon sides in the fixed cyclic labelling. -/
-def cyclicAdvance {n : ℕ} [NeZero n] (i : Fin n) (k : ℕ) : Fin n :=
+@[expose] def cyclicAdvance {n : ℕ} [NeZero n] (i : Fin n) (k : ℕ) : Fin n :=
   i + Fin.ofNat n k
 
 /-- Retreat by `k` polygon sides in the fixed cyclic labelling. -/
-def cyclicRetreat {n : ℕ} [NeZero n] (i : Fin n) (k : ℕ) : Fin n :=
+@[expose] def cyclicRetreat {n : ℕ} [NeZero n] (i : Fin n) (k : ℕ) : Fin n :=
   i - Fin.ofNat n k
 
 @[simp] theorem cyclicAdvance_zero {n : ℕ} [NeZero n] (i : Fin n) :
@@ -100,13 +100,13 @@ noncomputable def firstClockwiseNeighborOffset
   exact if h : S.Nonempty then S.min' h else 0
 
 /-- The first-neighbor gap `g(v)`, measured in polygon sides. -/
-noncomputable def firstNeighborGap
+@[expose] noncomputable def firstNeighborGap
     {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) (v : Fin n) : ℕ :=
   (firstNeighborOffset P d₁ d₂ d₃ v).val
 
 /-- First counterclockwise graph neighbor, with the vertex itself as the
 isolated-vertex sentinel. -/
-noncomputable def firstCounterclockwiseNeighbor
+@[expose] noncomputable def firstCounterclockwiseNeighbor
     {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) (v : Fin n) : Fin n :=
   cyclicAdvance v (firstNeighborGap P d₁ d₂ d₃ v)
 
@@ -269,14 +269,14 @@ theorem exists_maximal_firstNeighborGap
 
 /-- A primary-source left cover of the oriented edge `ij`: retreating the
 left endpoint by one side strictly increases the squared distance. -/
-def IsLeftCover
+@[expose] def IsLeftCover
     {K : Type*} [Ring K] [LT K] {n : ℕ} [NeZero n]
     (P : Fin n → Point K) (i j : Fin n) : Prop :=
   sqDist (P i) (P j) < sqDist (P (cyclicRetreat i 1)) (P j)
 
 /-- A primary-source right cover of the oriented edge `ij`: advancing the
 right endpoint by one side strictly increases the squared distance. -/
-def IsRightCover
+@[expose] def IsRightCover
     {K : Type*} [Ring K] [LT K] {n : ℕ} [NeZero n]
     (P : Fin n → Point K) (i j : Fin n) : Prop :=
   sqDist (P i) (P j) < sqDist (P i) (P (cyclicAdvance j 1))
@@ -646,7 +646,7 @@ end K3MajorantWitness
 
 /-- Build the arithmetic record once the source's arc-nesting conclusion
 `s = u+M`, `M≤β` has been supplied. -/
-noncomputable def erlvK3MaximalGapSetupOfMajorants
+@[expose] noncomputable def erlvK3MaximalGapSetupOfMajorants
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     {x z t u : Fin n}
     (first : K3MajorantWitness P d₁ d₂ d₃ z x)

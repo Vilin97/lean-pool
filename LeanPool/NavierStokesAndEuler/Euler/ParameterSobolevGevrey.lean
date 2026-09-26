@@ -30,7 +30,7 @@ undifferentiated coefficient action. Its direct word recurrence places at
 least one external derivative on the coefficient in every term.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -160,7 +160,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

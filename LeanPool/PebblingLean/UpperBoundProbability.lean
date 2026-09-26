@@ -21,7 +21,7 @@ Bernstein inputs.  These are propositions, not axioms: later work must prove
 them or replace them with imported theorems.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 

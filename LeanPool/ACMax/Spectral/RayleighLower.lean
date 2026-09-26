@@ -18,7 +18,7 @@ every `x` orthogonal to the all-ones vector (`∑ i, x i = 0`), then `c ≤ algC
 This is the reverse direction used to certify the *lower* bound `algConn ≥ 2`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

@@ -18,7 +18,7 @@ time zero.  The same fixed radius controls unit forcing and unit initial
 coordinates; there is no history interval or terminal variational problem.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -95,11 +95,11 @@ namespace Budget
 variable {D : Data U} {ι : Type*} [Fintype ι] {q : ℕ} (L : Budget D ι q)
 
 /-- Velocity cost, given by `3*sobolevCoefficientAmplitude ι q L.Rc L.C₀`. -/
-def velocityCost : ℝ := 3*sobolevCoefficientAmplitude ι q L.Rc L.C₀
+@[expose] def velocityCost : ℝ := 3*sobolevCoefficientAmplitude ι q L.Rc L.C₀
 /-- Derivative cost, given by `physicalCost ι q L.Ri L.C₀ L.C₁ 1 1`. -/
-def derivativeCost : ℝ := physicalCost ι q L.Ri L.C₀ L.C₁ 1 1
+@[expose] def derivativeCost : ℝ := physicalCost ι q L.Ri L.C₀ L.C₁ 1 1
 /-- Common cost, given by `L.velocityCost+L.derivativeCost`. -/
-def commonCost : ℝ := L.velocityCost+L.derivativeCost
+@[expose] def commonCost : ℝ := L.velocityCost+L.derivativeCost
 
 /-- Enlarge radius as an element of `Budget D ι q`. -/
 def enlargeRadius (R' : ℝ) (hR : L.R ≤ R') : Budget D ι q :=

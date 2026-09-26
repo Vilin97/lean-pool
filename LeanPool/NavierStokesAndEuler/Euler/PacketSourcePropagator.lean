@@ -19,7 +19,7 @@ tangent solution after multiplication by F R.  Consequently a physical
 propagator estimate supplies H3 with only the explicit F and F⁻¹ factors,
 preserving exactly the time-profile ratio. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -79,7 +79,7 @@ def physical (s : Icc (0 : ℝ) D.T) (x : Space) (v : U) (t : ℝ) : Space :=
 
 /-- Physical rhs, given by `-(D.M.field t x) w + (2*⟪D.normal.field t x,(D.M.field t x)
 w⟫_ℝ/‖D.normal.field t x‖^2) • D.normal.field t x`. -/
-def physicalRhs (t : Icc (0 : ℝ) D.T) (x w : Space) : Space :=
+@[expose] def physicalRhs (t : Icc (0 : ℝ) D.T) (x w : Space) : Space :=
   -(D.M.field t x) w +
     (2*⟪D.normal.field t x,(D.M.field t x) w⟫_ℝ/‖D.normal.field t x‖^2) • D.normal.field t x
 

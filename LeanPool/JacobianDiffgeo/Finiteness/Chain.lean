@@ -50,7 +50,7 @@ not built here): the two `IsCompactOperator` assembly lemmas of design §4.4
 Nothing here uses the forbidden tactic.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold BoundedContinuousFunction
 open Set Filter Topology TopologicalSpace Metric RS.Cech

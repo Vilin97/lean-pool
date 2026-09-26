@@ -25,7 +25,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # LeakageEstimate -/
 
-@[expose] public section
+public section
 
 
 open MeasureTheory Real Finset Complex
@@ -400,7 +400,7 @@ where `η_M := 2 exp(1/4) ∑_{m ≥ M} exp(−m²)`.
 -/
 
 /-- The leakage coefficient `η_M = 2 exp(1/4) ∑_{m ≥ M}^∞ exp(−m²)`. -/
-def etaCoeff (M : ℕ) (bound : ℕ) : ℝ :=
+@[expose] def etaCoeff (M : ℕ) (bound : ℕ) : ℝ :=
   2 * Real.exp (1 / 4) * ∑ m ∈ Finset.Icc M bound, Real.exp (-(m : ℝ) ^ 2)
 
 /-! ### Helper: symmetric block_annulus_leakage -/

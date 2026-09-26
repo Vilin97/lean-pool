@@ -17,7 +17,7 @@ Relative perturbation estimates for the finite-dimensional scalar ODE in the
 Euler packet proposal.  These results do not assert the PDE packet lemma.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -13,7 +13,7 @@ import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # IOpen -/
 
-@[expose] public section
+public section
 
 
 namespace LO

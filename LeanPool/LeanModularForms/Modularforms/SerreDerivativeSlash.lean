@@ -11,7 +11,7 @@ public import LeanPool.LeanModularForms.Modularforms.Derivative
 /-! # SerreDerivativeSlash -/
 
 
-@[expose] public section
+public section
 
 /-!
 # Slash Invariance of Serre Derivative of E₂

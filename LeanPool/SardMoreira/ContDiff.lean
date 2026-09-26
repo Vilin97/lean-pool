@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.GCD
 # LeanPool.SardMoreira.ContDiff
 -/
 
-@[expose] public section
+public section
 
 open scoped unitInterval Topology NNReal
 open Function Asymptotics Filter Set

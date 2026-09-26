@@ -19,7 +19,7 @@ Sobolev evolution when all spatial L² jets of the field and its prescribed
 time derivative are continuous. The ordinary field is represented by its
 isometric, angle-independent lift to the unit cylinder. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

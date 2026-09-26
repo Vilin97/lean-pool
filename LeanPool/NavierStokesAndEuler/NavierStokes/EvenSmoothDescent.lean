@@ -18,7 +18,7 @@ formula, not from a convergent power series. Its iterates are the genuine
 one-sided derivatives of `X ↦ f (sqrt X)`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -47,7 +47,7 @@ theorem iteratedDeriv_iteratedDeriv (f : ℝ → E) (m n : ℕ) :
   simp only [iteratedDeriv_eq_iterate, Function.iterate_add_apply]
 
 /-- Average, given by `∫ t in (0 : ℝ)..1, f (t * x)`. -/
-noncomputable def average (f : ℝ → E) (x : ℝ) : E :=
+@[expose] noncomputable def average (f : ℝ → E) (x : ℝ) : E :=
   ∫ t in (0 : ℝ)..1, f (t * x)
 
 omit [CompleteSpace E] in
@@ -124,7 +124,7 @@ theorem average_deriv_identity {f : ℝ → E} (hf : ContDiff ℝ ∞ f) (x : �
     ((contDiff_infty_iff_deriv.mp hf).2.continuous.intervalIntegrable 0 x)
 
 /-- Radial derivative, given by `(1 / 2 : ℝ) • average (iteratedDeriv 2 f) x`. -/
-noncomputable def radialDerivative (f : ℝ → E) (x : ℝ) : E :=
+@[expose] noncomputable def radialDerivative (f : ℝ → E) (x : ℝ) : E :=
   (1 / 2 : ℝ) • average (iteratedDeriv 2 f) x
 
 omit [CompleteSpace E] in
@@ -248,7 +248,7 @@ theorem hasDerivWithinAt_descent {f : ℝ → E} (hf : ContDiff ℝ ∞ f)
   · exact (hasDerivAt_descent_pos hf he h).hasDerivWithinAt
 
 /-- Radial iterate, given by `(radialDerivative^[n]) f`. -/
-noncomputable def radialIterate (f : ℝ → E) (n : ℕ) : ℝ → E :=
+@[expose] noncomputable def radialIterate (f : ℝ → E) (n : ℕ) : ℝ → E :=
   (radialDerivative^[n]) f
 
 omit [CompleteSpace E] in
@@ -328,11 +328,11 @@ constructed here; the input is not assumed to have a global even extension. -/
 
 /-- Even cutoff, given by `SmoothCutoffs.scaledCutoff (2 / r) x * SmoothCutoffs.scaledCutoff (2
 / r) (-x)`. -/
-noncomputable def evenCutoff (r x : ℝ) : ℝ :=
+@[expose] noncomputable def evenCutoff (r x : ℝ) : ℝ :=
   SmoothCutoffs.scaledCutoff (2 / r) x * SmoothCutoffs.scaledCutoff (2 / r) (-x)
 
 /-- Localized, given by `evenCutoff r x • f x`. -/
-noncomputable def localized (r : ℝ) (f : ℝ → E) (x : ℝ) : E :=
+@[expose] noncomputable def localized (r : ℝ) (f : ℝ → E) (x : ℝ) : E :=
   evenCutoff r x • f x
 
 theorem contDiff_evenCutoff (r : ℝ) : ContDiff ℝ ∞ (evenCutoff r) :=

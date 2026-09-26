@@ -14,7 +14,7 @@ The order and coordinates are transcribed from `JP/Pink/g481.vtx` in the
 Polymath 16 data archive accompanying Jaan Parts, arXiv:2010.12661.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

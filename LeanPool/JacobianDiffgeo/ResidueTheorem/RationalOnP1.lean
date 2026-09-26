@@ -82,7 +82,7 @@ now-known-insufficient `Differentiable ℂ R_mid` hypothesis and would need re-t
 whichever fix is chosen.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter Topology OnePoint Real Complex MeasureTheory

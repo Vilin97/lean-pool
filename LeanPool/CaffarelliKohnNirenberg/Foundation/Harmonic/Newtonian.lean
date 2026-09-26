@@ -21,7 +21,7 @@ kernel away from its singularity.  This identity is the scalar analytic
 input for the heat-kernel route to the pressure decomposition.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 

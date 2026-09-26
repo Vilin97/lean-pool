@@ -30,7 +30,7 @@ map is obtained from the weak equation and the true time primitive.  Its
 continuous representative and derivative are conclusions, not extra data.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -51,7 +51,7 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
 
 /-- The literal derivative of Q*η_t for the homogeneous stationary equation. -/
-def initialMomentumForcing : TimeLp T E →L[ℝ] TimeLp T U :=
+@[expose] def initialMomentumForcing : TimeLp T E →L[ℝ] TimeLp T U :=
   (timeMultiplier T hT Q₁).adjoint -
     (timeMultiplier T hT Q).adjoint.comp
       ((timeMultiplier T hT H).comp (initialPrimitiveTimeLp T hT))
@@ -103,7 +103,7 @@ def terminalMomentum : TimeLp T E →L[ℝ] U :=
       (primitiveTimeLp T hT).comp (initialMomentumForcing T hT Q Q₁ H))
 
 /-- The canonical momentum representative, including both time endpoints. -/
-def momentumPath (u : TimeLp T E) (t : ℝ) : U :=
+@[expose] def momentumPath (u : TimeLp T E) (t : ℝ) : U :=
   realPrimitive T (initialMomentumForcing T hT Q Q₁ H u) t +
     terminalMomentum T hT Q Q₁ H u
 
@@ -192,7 +192,7 @@ All time boundary terms are obtained from absolute continuity and the genuine
 H¹ coordinate reconstruction.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -322,7 +322,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -356,7 +356,7 @@ def coordinateVelocityPath (u : TimeLp T E) (t : ℝ) : U :=
       extendPath T hT (mixedPath T Q Q₁) t (initialCoordinates T hT Q c hc hQ u t))
 
 /-- Physical velocity path, constructed using `extendPath`. -/
-def physicalVelocityPath (u : TimeLp T E) (t : ℝ) : E :=
+@[expose] def physicalVelocityPath (u : TimeLp T E) (t : ℝ) : E :=
   extendPath T hT Q₁ t (initialCoordinates T hT Q c hc hQ u t) +
     extendPath T hT Q t (coordinateVelocityPath T hT Q Q₁ c hc hQ H u t)
 

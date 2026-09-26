@@ -51,7 +51,7 @@ The main results are `finite_pattern_occurs`,
 pattern-language inclusion needed for Laurent annihilator inheritance.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.Dynamics
 

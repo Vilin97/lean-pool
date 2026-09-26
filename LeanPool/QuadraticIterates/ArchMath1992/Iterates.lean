@@ -40,7 +40,7 @@ Arch. Math. **59** (1992), 239-244; see `QuadraticIterates.ArchMath1992`.
 `fℚ[a, n]` is scoped notation for the iterate `f_n` viewed in `ℚ[X]`.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 

@@ -23,7 +23,7 @@ minimal polynomial.  The last section clears all coefficients of that
 minimal polynomial back to the contracted quotient.
 -/
 
-@[expose] public section
+public section
 
 
 namespace LocalComplexGeometry
@@ -207,20 +207,20 @@ def lastCoordinateQuotientClass {n : ℕ}
 /-! The explicit polynomials represented by prepared and remainder germs. -/
 
 /-- The analytic coefficient `a i`, regarded as a lower-dimensional germ. -/
-def preparedCoefficientGerm {n d : ℕ}
+@[expose] def preparedCoefficientGerm {n d : ℕ}
     (a : Fin d → ClassicalComplexWPT.Base n → ℂ)
     (ha : ∀ i, AnalyticAt ℂ (a i) 0) (i : Fin d) : HolomorphicGerm n :=
   HolomorphicGerm.ofFunction (a i) (ha i)
 
 /-- The prepared monic polynomial with coefficients in the base germ ring. -/
-def preparedGermPolynomial {n d : ℕ}
+@[expose] def preparedGermPolynomial {n d : ℕ}
     (a : Fin d → ClassicalComplexWPT.Base n → ℂ)
     (ha : ∀ i, AnalyticAt ℂ (a i) 0) : Polynomial (HolomorphicGerm n) :=
   Polynomial.X ^ d + ∑ i : Fin d,
     Polynomial.C (preparedCoefficientGerm a ha i) * Polynomial.X ^ (i : ℕ)
 
 /-- A WPT coefficient vector, assembled as a polynomial over the base germ ring. -/
-def remainderGermPolynomial {n d : ℕ}
+@[expose] def remainderGermPolynomial {n d : ℕ}
     (r : Fin d → HolomorphicGerm n) : Polynomial (HolomorphicGerm n) :=
   ∑ i : Fin d, Polynomial.C (r i) * Polynomial.X ^ (i : ℕ)
 
@@ -1210,7 +1210,7 @@ theorem ambientGermRemainderModMinpolyLiftCertificate_mem_of_coeff_mem
 
 /-- The product of the leading coefficient and the fixed-size derivative
 resultant is one common specialization bad factor outside the contraction. -/
-def genericMinpolyLiftSpecializationBadFactor {d : ℕ}
+@[expose] def genericMinpolyLiftSpecializationBadFactor {d : ℕ}
     (a : Fin d → ClassicalComplexWPT.Base n → ℂ)
     (ha : ∀ i, AnalyticAt ℂ (a i) 0)
     (ha0 : ∀ i, a i 0 = 0)

@@ -14,7 +14,7 @@ public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Option
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Option`.
 -/
 
-@[expose] public section
+public section
 
 
 /-

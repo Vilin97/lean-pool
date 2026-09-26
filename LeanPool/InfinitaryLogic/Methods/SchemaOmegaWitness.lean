@@ -29,7 +29,7 @@ No enumeration, Zorn, or term model appears here — this is the interface miles
 the shape the ω-stage completion (Layer 7b) must produce.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

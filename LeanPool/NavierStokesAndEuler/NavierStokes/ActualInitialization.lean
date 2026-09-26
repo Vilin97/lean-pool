@@ -20,7 +20,7 @@ This consumer uses the single primary family selected by
 Gaussian errors and common-cover chart representations.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,11 +38,11 @@ abbrev Index (B N0 : ℕ) := ActualPrimary.Label B N0 × Fin 2
 variable {B N0 : ℕ}
 
 /-- Primary piece, given by `ActualPrimary.piece ActualPrimary.standardRegion l.2 l.1`. -/
-noncomputable def primaryPiece (l : Index B N0) : PrimaryPiece (Point × ℝ) :=
+@[expose] noncomputable def primaryPiece (l : Index B N0) : PrimaryPiece (Point × ℝ) :=
   ActualPrimary.piece ActualPrimary.standardRegion l.2 l.1
 
 /-- Phase, given by `(primaryPiece l).coefficients.phase n (x, 0)`. -/
-noncomputable def phase (l : Index B N0) (n : ℕ) (x : Point) : ℝ :=
+@[expose] noncomputable def phase (l : Index B N0) (n : ℕ) (x : Point) : ℝ :=
   (primaryPiece l).coefficients.phase n (x, 0)
 
 /-- Angular mode, constructed using `PrimaryGeometryAssembly.angularMode`. -/
@@ -184,12 +184,12 @@ noncomputable def baseError (B : ℕ) : Oscillation Point :=
       ActualPrimary.upper B
 
 /-- Source state, given by `bandSeed (coefficients B N0).labels primaryPiece (baseError B)`. -/
-noncomputable def sourceState (B N0 : ℕ) : State Point :=
+@[expose] noncomputable def sourceState (B N0 : ℕ) : State Point :=
   bandSeed (coefficients B N0).labels primaryPiece (baseError B)
 
 /-- Primary state, given by `VariableGaugeMean.reconstructState ActualPrimary.commonGauge
 (ActualPrimary.commonContext B) (sourceState B N0)`. -/
-noncomputable def primaryState (B N0 : ℕ) : State Point :=
+@[expose] noncomputable def primaryState (B N0 : ℕ) : State Point :=
   VariableGaugeMean.reconstructState ActualPrimary.commonGauge (ActualPrimary.commonContext B)
       (sourceState B N0)
 
@@ -197,18 +197,18 @@ noncomputable def primaryState (B N0 : ℕ) : State Point :=
 noncomputable def axial : TorusInverse.Plane × TorusInverse.Plane := ((0, 1), 0)
 
 /-- Temporal state, constructed using `VariableGaugeMean.temporalStageState`. -/
-noncomputable def temporalState (B N0 : ℕ) : State Point :=
+@[expose] noncomputable def temporalState (B N0 : ℕ) : State Point :=
   VariableGaugeMean.temporalStageState ActualPrimary.commonGauge ActualPrimary.h
     (CommonWindow.index ActualPrimary.h) axial (ActualPrimary.commonContext B) (primaryState B N0)
 
 /-- Rank state, constructed using `VariableGaugeMean.rankStageState`. -/
-noncomputable def rankState (B N0 : ℕ) : State Point :=
+@[expose] noncomputable def rankState (B N0 : ℕ) : State Point :=
   VariableGaugeMean.rankStageState ActualPrimary.commonGauge ActualPrimary.rankData axial
     (ActualPrimary.commonContext B) (temporalState B N0)
 
 /-- Initial state, given by `GaugeInitialization.retainPressureAlias ActualPrimary.commonGauge
 (ActualPrimary.commonContext B) (rankState B N0)`. -/
-noncomputable def initialState (B N0 : ℕ) : State Point :=
+@[expose] noncomputable def initialState (B N0 : ℕ) : State Point :=
   GaugeInitialization.retainPressureAlias ActualPrimary.commonGauge (ActualPrimary.commonContext B)
     (rankState B N0)
 

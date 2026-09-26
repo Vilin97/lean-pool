@@ -53,7 +53,7 @@ central charge, Sugawara construction
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 

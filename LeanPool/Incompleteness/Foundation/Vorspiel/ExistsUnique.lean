@@ -14,7 +14,7 @@ import Mathlib.Tactic.SetLike
 
 /-! # ExistsUnique -/
 
-@[expose] public section
+public section
 
 
 namespace Classical

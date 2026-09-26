@@ -10,7 +10,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # BinderNotation -/
 
-@[expose] public section
+public section
 
 
 open Lean PrettyPrinter Delaborator SubExpr

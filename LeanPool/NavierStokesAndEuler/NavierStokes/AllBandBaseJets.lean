@@ -17,7 +17,7 @@ extends the normalized bounds to every positive physical scale and removes
 the auxiliary restriction `Q * qhi ≤ 1` from the chart estimates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

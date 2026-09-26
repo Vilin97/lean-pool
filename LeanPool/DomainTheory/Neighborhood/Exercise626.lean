@@ -59,7 +59,7 @@ to decide whether an element lies above the fresh bottom — unavoidable and cal
 out there.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

@@ -21,7 +21,7 @@ This file supplies the consumer-shaped definition. Existence results via ordered
 `HighlyTransitiveField.lean` and `HighlyTransitiveExistence.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

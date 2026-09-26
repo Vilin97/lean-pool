@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.GevreyRestriction
 /-! Continuous scalar majorants derived from actual coefficient budgets and actual nonlinear time
 fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

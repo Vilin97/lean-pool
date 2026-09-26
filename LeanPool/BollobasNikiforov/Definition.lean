@@ -18,7 +18,7 @@ counted automatically. The ordered family is Mathlib's antitone
 `eigenvalues₀`, which is the paper's `λ₁ ≥ ⋯ ≥ λₙ` with `λ₁` at index `0`.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 
@@ -42,7 +42,7 @@ lemma adjacencyEigenvalues₀_antitone
   (G.isHermitian_adjMatrix ℝ).eigenvalues₀_antitone
 
 /-- The largest adjacency eigenvalue `λ₁(G)`. -/
-noncomputable def lambda1
+@[expose] noncomputable def lambda1
     (G : SimpleGraph V) [DecidableRel G.Adj] [Nonempty V] : ℝ :=
   adjacencyEigenvalues₀ G ⟨0, Fintype.card_pos⟩
 

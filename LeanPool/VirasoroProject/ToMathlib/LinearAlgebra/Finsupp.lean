@@ -14,4 +14,4 @@ Import-only index for finitely supported function support modules used by the
 Virasoro Project.
 -/
 
-@[expose] public section
+public section

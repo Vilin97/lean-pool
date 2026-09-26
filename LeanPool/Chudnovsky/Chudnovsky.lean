@@ -26,7 +26,7 @@ the Phase C inputs (`SingularModuli.lean`) as explicit hypotheses: the paper's p
 minus the literature citations (Silverman II.6.1, II.4.3(b), Buell, Masser Thm. A1).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

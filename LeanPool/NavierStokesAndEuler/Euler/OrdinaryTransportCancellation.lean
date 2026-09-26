@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OrdinaryL2Integration
 /-! The exact ordinary transport energy cancellation on noncompact
 smooth L² fields. Products and all required pairings are actual L²/L¹ objects. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

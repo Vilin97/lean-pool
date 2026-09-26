@@ -28,7 +28,7 @@ tight (`degsum = 12`), which is exactly what certifies the `n = 9` Fiedler-eigen
 graphs that no `±1` cut can.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

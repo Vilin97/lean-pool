@@ -40,7 +40,7 @@ rectangle) — a shorter route to the same identity, using the same mathlib mach
 the design's own R2 fallback.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Metric
 open scoped Real

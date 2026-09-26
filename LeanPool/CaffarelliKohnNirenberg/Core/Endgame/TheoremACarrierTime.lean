@@ -16,7 +16,7 @@ obligations on compactly interior source balls. A finite spatial estimate
 then transfers them to the entire carrier in `prop:bootstrap`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators

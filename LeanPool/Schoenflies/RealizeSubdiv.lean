@@ -99,7 +99,7 @@ Declarations:
   realized 1-skeleton.
 -/
 
-@[expose] public section
+public section
 
 open Set unitInterval
 open scoped Graph

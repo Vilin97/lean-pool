@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
 
 /-! A genuine smooth ordinary solenoidal L² field remains solenoidal on the periodic cylinder. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

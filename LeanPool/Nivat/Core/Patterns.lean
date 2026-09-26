@@ -50,7 +50,7 @@ invariance under translations and injective relabeling. Unique extension is
 the counting step used in Lemma 5.5 (`lem:boundary-window`).
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat
 
@@ -68,17 +68,17 @@ def rectangle (m n : ℕ) : Finset Lattice :=
   simp [rectangle, Int.card_Ico]
 
 /-- The restriction of `Tᵘc` to `D`, indexed by the sites of `D` (Section 1). -/
-def patternAt {A : Type*} (c : Configuration A) (D : Finset Lattice) (u : Lattice) :
+@[expose] def patternAt {A : Type*} (c : Configuration A) (D : Finset Lattice) (u : Lattice) :
     D → A := fun z => c (z.1 + u)
 
 /-- The set `Pat_c(D)` of distinct restrictions over all lattice translations (Section 1). -/
-def patterns {A : Type*} (c : Configuration A) (D : Finset Lattice) : Set (D → A) :=
+@[expose] def patterns {A : Type*} (c : Configuration A) (D : Finset Lattice) : Set (D → A) :=
   Set.range (patternAt c D)
 
 /-- The pattern count `P_c(D)` from Section 1.
 For finite-range configurations, `patterns_finite` ensures that natural set cardinality
 counts this finite set; repeated occurrences contribute only one pattern. -/
-noncomputable def complexity {A : Type*} (c : Configuration A) (D : Finset Lattice) : ℕ :=
+@[expose] noncomputable def complexity {A : Type*} (c : Configuration A) (D : Finset Lattice) : ℕ :=
   (patterns c D).ncard
 
 /-- The signed discrepancy `δ_c(D) = P_c(D) - |D|` from Section 1.1. -/
@@ -129,7 +129,7 @@ theorem patterns_shift {A : Type*} (c : Configuration A) (D : Finset Lattice)
   simp only [complexity, patterns_shift]
 
 /-- Restriction of a pattern to a smaller window (Section 1.1). -/
-def restrictPattern {A : Type*} {C D : Finset Lattice} (hCD : C ⊆ D)
+@[expose] def restrictPattern {A : Type*} {C D : Finset Lattice} (hCD : C ⊆ D)
     (p : D → A) : C → A := fun z => p ⟨z.1, hCD z.2⟩
 
 /-- Restriction maps onto all occurring patterns on the smaller window (Section 1.1). -/

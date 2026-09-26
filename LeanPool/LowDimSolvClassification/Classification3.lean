@@ -12,7 +12,7 @@ import LeanPool.LowDimSolvClassification.LemmasDim3
 # LeanPool.LowDimSolvClassification.Classification3
 -/
 
-@[expose] public section
+public section
 
 open Module
 open Submodule

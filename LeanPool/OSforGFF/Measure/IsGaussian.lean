@@ -30,7 +30,7 @@ interchange, not because of OS0-specific infrastructure.
 - `isGaussianGJ_gaussianFreeField_free`: the free GFF is Gaussian
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex QFT
 

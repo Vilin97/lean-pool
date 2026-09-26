@@ -79,7 +79,7 @@ see the note there about the `corner` field. Nothing in this file inspects `corn
 * `polygonal_crosscut` — Theorem 2.8, bundled.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Set
 

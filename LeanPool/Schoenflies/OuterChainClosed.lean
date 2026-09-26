@@ -31,7 +31,7 @@ fill it in, and every consumer written in the meantime would have been built on 
   statement as `Graph.IsPlaneChain.outer_chain`, with its hypothesis discharged.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies
 open scoped Graph

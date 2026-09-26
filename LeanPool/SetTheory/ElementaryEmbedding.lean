@@ -15,7 +15,7 @@ This module defines nontrivial elementary embeddings of a model of ZF into itsel
 critical points, and the basic properties of the iterates of the critical point.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -29,4 +29,4 @@ Tags: number-theory, finite-automata, asymptotic-density
 MSC: 11A63, 11B65, 68Q45
 -/
 
-@[expose] public section
+public section

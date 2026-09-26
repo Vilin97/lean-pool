@@ -13,7 +13,7 @@ import LeanPool.PLAcceleratedNesterovLean.Convergence.MainTheoremInternal
 # Public main theorem wrappers
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

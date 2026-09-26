@@ -14,7 +14,7 @@ This file packages the analytic quotient and remainder sequence operators for
 prepared divisors so the local complex-geometry development can reuse them.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped ENNReal NNReal Topology
@@ -26,19 +26,19 @@ open ClassicalComplexWPT
 noncomputable section
 
 /-- Analytic divisor-tail/dividend input for WPT's total sequence division maps. -/
-def divisionInput {n d : ℕ}
+@[expose] def divisionInput {n d : ℕ}
     (p : FormalMultilinearSeries ℂ (Ambient n) ℂ) (r : ℝ≥0)
     (a : Fin d → Base n → ℂ) (z : Base n) : L1Sequence × L1Sequence :=
   (preparedTailSeq r d a z, (weightedCoefficientSeries p r).sum z)
 
 /-- Sequence quotient supplied by the pinned WPT division operator. -/
-def quotientSeq {n d : ℕ}
+@[expose] def quotientSeq {n d : ℕ}
     (p : FormalMultilinearSeries ℂ (Ambient n) ℂ) (r : ℝ≥0)
     (a : Fin d → Base n → ℂ) (z : Base n) : L1Sequence :=
   seqDivisionQuotientGlobal d (divisionInput p r a z)
 
 /-- Sequence remainder supplied by the pinned WPT division operator. -/
-def remainderSeq {n d : ℕ}
+@[expose] def remainderSeq {n d : ℕ}
     (p : FormalMultilinearSeries ℂ (Ambient n) ℂ) (r : ℝ≥0)
     (a : Fin d → Base n → ℂ) (z : Base n) : L1Sequence :=
   seqDivisionRemainderGlobal d (divisionInput p r a z)

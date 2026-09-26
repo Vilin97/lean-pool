@@ -37,7 +37,7 @@ Lie algebra, central extension, short exact sequence
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 

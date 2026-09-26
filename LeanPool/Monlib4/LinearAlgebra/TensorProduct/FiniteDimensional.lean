@@ -18,7 +18,7 @@ star modules and proves compatibility lemmas for tensor-product maps.
 
 -/
 
-@[expose] public section
+public section
 
 
 open scoped TensorProduct BigOperators

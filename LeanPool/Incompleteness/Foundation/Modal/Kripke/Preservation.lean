@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Closure
 
 /-! # Preservation -/
 
-@[expose] public section
+public section
 
 
 namespace LO

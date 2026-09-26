@@ -34,7 +34,7 @@ by discharging `hex` with `RS.exists_nonconstant_mero` — each a one-line corol
   the `Finset`-flexible unconditional corollary.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

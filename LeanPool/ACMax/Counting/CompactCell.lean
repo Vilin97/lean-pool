@@ -37,7 +37,7 @@ degree excess.
   the large-order reduction. The full theorem is assembled in `Band.Final`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 
@@ -60,7 +60,7 @@ noncomputable def cW (G : SimpleGraph V) (u : V) : ℝ :=
 
 open Classical in
 /-- The **`σ`-sum** `Σσ_u = Σ_{w∈N(u)} σ(deg w)`. -/
-noncomputable def sigS (G : SimpleGraph V) (u : V) : ℝ :=
+@[expose] noncomputable def sigS (G : SimpleGraph V) (u : V) : ℝ :=
   ∑ w ∈ G.neighborFinset u, sigma (G.degree w)
 
 /-! ### `σ` arithmetic (`L-FB-2` real-valued facts) -/
@@ -542,13 +542,13 @@ variable {n : ℕ}
 open Classical in
 /-- The **total degree excess** `X = ∑_{deg v ≥ 5} (deg v − 4)` (ℕ-valued;
 the truncated subtraction is exact since every summand has degree ≥ 5). -/
-noncomputable def excessX (n : ℕ) (G : SimpleGraph (Fin n)) : ℕ :=
+@[expose] noncomputable def excessX (n : ℕ) (G : SimpleGraph (Fin n)) : ℕ :=
   ∑ v ∈ Finset.univ.filter (fun v => 5 ≤ G.degree v), (G.degree v - 4)
 
 open Classical in
 /-- The **radius-3 combinatorial ball** around `u₀`: `u₀` together with its
 neighbours, second neighbours, and third neighbours. -/
-noncomputable def closeSet (G : SimpleGraph (Fin n)) (u₀ : Fin n) : Finset (Fin n) :=
+@[expose] noncomputable def closeSet (G : SimpleGraph (Fin n)) (u₀ : Fin n) : Finset (Fin n) :=
   insert u₀ (G.neighborFinset u₀
     ∪ (G.neighborFinset u₀).biUnion (fun w => G.neighborFinset w)
     ∪ ((G.neighborFinset u₀).biUnion (fun w => G.neighborFinset w)).biUnion
@@ -875,6 +875,6 @@ cover `53 + 6·C₀` (the disjoint-slot 6X covering: heavy counts are dominated
 by their own excess pools) when a light usable vertex exists; the second arm
 `199990` dominates both the all-usable-heavy case (`n + 8 ≤ 5·29877`) and the
 hoarding wall (`199985 = 6·33322 + 53`). -/
-def boundLin (C₀ : ℕ) : ℕ := max ((151 + 11 * C₀) / 2) 520
+@[expose] def boundLin (C₀ : ℕ) : ℕ := max ((151 + 11 * C₀) / 2) 520
 
 end ACMax

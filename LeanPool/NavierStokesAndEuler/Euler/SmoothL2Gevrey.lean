@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Star.Real
 Sobolev word bounds. The finite Sobolev order contributes only a fixed
 polynomial amplitude and one fixed enlargement of the radius. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

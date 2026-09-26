@@ -18,7 +18,7 @@ import LeanPool.DirectedTopologyLean4.SplitPath.SplitProperties
 # LeanPool.DirectedTopologyLean4.DirectedVanKampen
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the directed version of the Van Kampen Theorem.

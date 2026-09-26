@@ -20,7 +20,7 @@ This file proves the first case of Fermat's Last Theorem for regular primes, red
 statement to a normalized version and establishing the required cyclotomic ideal factorization.
 -/
 
-@[expose] public section
+public section
 
 open Finset Nat IsCyclotomicExtension Ideal Polynomial Int Basis FltRegular.CaseI
 

@@ -17,7 +17,7 @@ the native coefficient can be nonzero.  No extension of these controls to
 the whole fast lift is required.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -503,7 +503,7 @@ namespace WaveFamily
 
 /-- Coefficients, bundling `radius`, `radialBase`, `frequencyBase`, `axialBase` and the required
 compatibility proofs. -/
-noncomputable def coefficients (a : WaveFamily D I) (i : I) : WaveCoefficients D where
+@[expose] noncomputable def coefficients (a : WaveFamily D I) (i : I) : WaveCoefficients D where
   radius n := a.radius n i
   radialBase n := a.radialBase n i
   frequencyBase n := a.frequencyBase n i
@@ -515,7 +515,7 @@ noncomputable def coefficients (a : WaveFamily D I) (i : I) : WaveCoefficients D
 
 /-- Of coefficients, bundling `radius`, `radialBase`, `frequencyBase`, `axialBase` and the
 required compatibility proofs. -/
-noncomputable def ofCoefficients (a : I → WaveCoefficients D) : WaveFamily D I where
+@[expose] noncomputable def ofCoefficients (a : I → WaveCoefficients D) : WaveFamily D I where
   radius n i := (a i).radius n
   radialBase n i := (a i).radialBase n
   frequencyBase n i := (a i).frequencyBase n
@@ -526,28 +526,32 @@ noncomputable def ofCoefficients (a : I → WaveCoefficients D) : WaveFamily D I
   frequency n i := (a i).frequency n
 
 /-- Normal, defined pointwise by `(a.coefficients i).normal s d n`. -/
-noncomputable def normal (a : WaveFamily D I) (s : StripData D) (d : GraphDirections D) :
+@[expose] noncomputable def normal (a : WaveFamily D I) (s : StripData D) (d : GraphDirections D) :
     ℕ → I → D → ProblemStatement.Space := fun n i => (a.coefficients i).normal s d n
 
 /-- Defect, defined pointwise by `(a.coefficients i).defect s d n`. -/
-noncomputable def defect (a : WaveFamily D I) (s : StripData D) (d : GraphDirections D) :
+@[expose] noncomputable def defect (a : WaveFamily D I) (s : StripData D) (d : GraphDirections D) :
     ℕ → I → D → ℝ := fun n i => (a.coefficients i).defect s d n
 
 /-- Remainder, defined pointwise by `(a.coefficients i).remainder s d n`. -/
+@[expose]
 noncomputable def remainder (a : WaveFamily D I) (s : StripData D) (d : GraphDirections D) :
     ℕ → I → D → ComplexVector := fun n i => (a.coefficients i).remainder s d n
 
 /-- Principal velocity, defined pointwise by `(a.coefficients i).principalVelocity s d (fun n =>
 f n i) n`. -/
+@[expose]
 noncomputable def principalVelocity (a : WaveFamily D I) (s : StripData D) (d : GraphDirections D)
     (f : ℕ → I → D → ComplexVector) : ℕ → I → D → ComplexVector :=
   fun n i => (a.coefficients i).principalVelocity s d (fun n => f n i) n
 
 /-- Curl correction, defined pointwise by `(a.coefficients i).curlCorrection s d n`. -/
+@[expose]
 noncomputable def curlCorrection (a : WaveFamily D I) (s : StripData D) (d : GraphDirections D) :
     ℕ → I → D → ComplexVector := fun n i => (a.coefficients i).curlCorrection s d n
 
 /-- Add amplitude, given by `{ a with amplitude := fun n i x => a.amplitude n i x + f n i x }`. -/
+@[expose]
 noncomputable def addAmplitude (a : WaveFamily D I) (f : ℕ → I → D → ComplexVector) : WaveFamily D
     I :=
   { a with amplitude := fun n i x => a.amplitude n i x + f n i x }
@@ -561,6 +565,7 @@ noncomputable def withCutoff (a : WaveFamily D I) (ψ : ℕ → I → D → ℝ)
 
 /-- Retained good, defined pointwise by `a.principalVelocity s d (a.curlCorrection s d) n i x +
 (a.addAmplitude (a.curlCorrection s d)).remainder s d n i x`. -/
+@[expose]
 noncomputable def retainedGood (a : WaveFamily D I) (s : StripData D) (d : GraphDirections D) :
     ℕ → I → D → ComplexVector := fun n i x =>
   a.principalVelocity s d (a.curlCorrection s d) n i x +

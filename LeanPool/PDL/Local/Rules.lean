@@ -14,7 +14,7 @@ public import Mathlib.Data.Finset.Sort
 
 /-! ## Local rules and local rule applications  -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -322,8 +322,7 @@ instance localRuleSubsingleton (X YS) : Subsingleton (LocalRule X YS) :=
 instance {YS} : DecidableEq (LocalRule X YS) := fun a b => isTrue (Subsingleton.elim a b)
 
 /-- Replace a rule's preconditions by each of its possible result sequents. -/
-@[simp]
-def applyLocalRule {Lcond Rcond Ocond ress} :
+@[expose, simp] def applyLocalRule {Lcond Rcond Ocond ress} :
   LocalRule (Lcond, Rcond, Ocond) ress → Sequent → Finset Sequent
   | _, ⟨L, R, O⟩ => ress.image <|
       fun (Lnew, Rnew, Onew) => ( L \ Lcond ∪ Lnew
@@ -1613,7 +1612,7 @@ lemma LocalRuleApp.formula_preserved_or_expanded (lra : LocalRuleApp) {Y : Seque
 removing double negations, splitting (negated) conjunctions,
 unfolding boxes using any test profile, and unfolding diamonds using `H`.
 Part of Def 6.2 -/
-def saturated : Finset Formula → Prop
+@[expose] def saturated : Finset Formula → Prop
   | X => ∀ (φ ψ : Formula) (α : Program),
     -- propositional closure:
       ((~~φ) ∈ X → φ ∈ X)
@@ -1671,7 +1670,7 @@ lemma Sequent.basic_then_saturated {X : Sequent} : X.basic → saturated X.toFin
 
 /-- A set of formulas is *lcoally consistent* iff it does not contain `⊥`
 and for all atoms `p ∈ X` we do not have `~p ∈ X`. Part of Def 6.2 -/
-def locallyConsistent (X : Finset Formula) : Prop :=
+@[expose] def locallyConsistent (X : Finset Formula) : Prop :=
   ⊥ ∉ X.val ∧ ∀ pp, (·pp : Formula) ∈ X.val → (~(·pp)) ∉ X.val
 
 lemma Sequent.basic_to_locallyConsistent {X : Sequent} (bas : X.basic) :

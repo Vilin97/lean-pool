@@ -51,7 +51,7 @@ out of scope, per `Comparison.lean`/the root docstring) — it is not used here 
 * **`chiT_eq_chiT_zero_add_degree (D) : chiT D = chiT 0 + D.degree`** — the primary deliverable.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace

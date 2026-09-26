@@ -15,7 +15,7 @@ Morrey exponent and radii. The actual-integral slots are required only at
 those triples, above one absolute Calderón–Zygmund threshold.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators

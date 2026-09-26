@@ -17,7 +17,7 @@ This file packages their simultaneous neighborhood shrinking into the germ
 identity needed by preparation and uniqueness.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped ENNReal NNReal Topology

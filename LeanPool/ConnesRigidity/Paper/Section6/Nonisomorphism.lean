@@ -15,7 +15,7 @@ semisimplicity predicates are the concrete `k[Sp₄(F₂)]` modules attached to
 the two actions from §2.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperNonisomorphism

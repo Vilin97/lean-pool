@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Pressure.SliceIntegrability
 
 /-! Componentwise norm estimates used by Caccioppoli finiteness arguments. -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter CKN.Foundation.Parabolic CKN.Foundation.Parabolic.Integration
 open scoped ENNReal NNReal Topology

@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.LpOperatorFieldAlgebra
 
 /-! Spatial support is preserved by the actual zero-endpoint history inverse. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

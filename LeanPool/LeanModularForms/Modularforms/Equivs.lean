@@ -21,7 +21,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 /-! # Equivs -/
 
 
-@[expose] public section
+public section
 
 
 
@@ -60,5 +60,5 @@ lemma swap_involutive {α : Type*} (b : Fin 2 → α) : swap (swap b) = b := by
   fin_cases i <;> rfl
 
 /-- Swapping the two entries of a length-2 vector as an equivalence. -/
-def swapEquiv {α : Type*} : Equiv (Fin 2 → α) (Fin 2 → α) := Equiv.mk swap swap
+@[expose] def swapEquiv {α : Type*} : Equiv (Fin 2 → α) (Fin 2 → α) := Equiv.mk swap swap
   swap_involutive swap_involutive

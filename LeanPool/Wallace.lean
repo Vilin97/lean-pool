@@ -22,7 +22,7 @@ Tags: wallace-problem, topological-groups, set-theoretic-topology
 MSC: 22A05, 54D30, 20K20
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Countably compact groups and the Wallace counterexample

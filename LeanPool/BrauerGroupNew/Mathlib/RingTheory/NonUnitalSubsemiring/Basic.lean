@@ -14,6 +14,6 @@ Imported Lean Pool material for
 `LeanPool.BrauerGroupNew.Mathlib.RingTheory.NonUnitalSubsemiring.Basic`.
 -/
 
-@[expose] public section
+public section
 
 attribute [simp, norm_cast] NonUnitalSubsemiring.coe_center

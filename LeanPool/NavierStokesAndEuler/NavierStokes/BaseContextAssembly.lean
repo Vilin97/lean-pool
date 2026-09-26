@@ -34,7 +34,7 @@ construction. The improved nonlinear bound uses the exact divergence of that
 curl, before projecting the literal residual into its finite harmonics.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,7 +47,7 @@ open scoped Topology ContDiff BigOperators ComplexConjugate
 variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- The context's literal graph directions lifted to the explicit angle. -/
-noncomputable def directions (c : CorrectionState.Context D) :
+@[expose] noncomputable def directions (c : CorrectionState.Context D) :
     LinearWaveBounds.GraphDirections (D × ℝ) where
   radial := (c.operators.eR, 0)
   auxiliary := (c.operators.vR, 0)
@@ -804,7 +804,7 @@ slot coordinate require polynomial bounds; the angular coordinate and
 the unstripped phase itself need no such bound.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -931,7 +931,7 @@ theorem differentiableAt_phase (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot
       (hi.snd.snd.mul ((hFl.const_mul p).add (hGl.const_mul pz)))
 
 /-- The algebraic expression after exact material cancellation. -/
-noncomputable def expression (ε p pz x0 v b G FR GR FT GT FZ GZ : ℝ) : ℝ :=
+@[expose] noncomputable def expression (ε p pz x0 v b G FR GR FT GT FZ GZ : ℝ) : ℝ :=
   b * x0 - v * (b * (p * FR + pz * GR) - ε * (p * FT + pz * GT) +
     ε * G * (p * FZ + pz * GZ))
 
@@ -1109,7 +1109,7 @@ variable {U : PhaseJetBounds.Domain ℕ Slow}
 
 /-- Pulled phase, given by `PhaseCalculus.phase (P.phase.epsilon n) (P.phase.p n) (P.phase.pz n)
 (P.phase.x0 n) (P.phase.F n) (P.phase.G n) (χ n x)`. -/
-noncomputable def pulledPhase (P : PrimaryPulseBounds.PhaseConstruction U)
+@[expose] noncomputable def pulledPhase (P : PrimaryPulseBounds.PhaseConstruction U)
     (χ : ℕ → E → Slot) (n : ℕ) (x : E) : ℝ :=
   PhaseCalculus.phase (P.phase.epsilon n) (P.phase.p n) (P.phase.pz n) (P.phase.x0 n)
     (P.phase.F n) (P.phase.G n) (χ n x)
@@ -1117,7 +1117,7 @@ noncomputable def pulledPhase (P : PrimaryPulseBounds.PhaseConstruction U)
 /-- Canonical raw geometry with arbitrary amplitude/pressure.  Those two
 fields do not enter the material defect.  The angular base field here is
 the frequency `F`, as required by `LinearWaveResidual`, not `R*F`. -/
-noncomputable def coefficients (P : PrimaryPulseBounds.PhaseConstruction U)
+@[expose] noncomputable def coefficients (P : PrimaryPulseBounds.PhaseConstruction U)
     (b : ℕ → Slow → ℝ) (χ : ℕ → E → Slot)
     (amplitude : ℕ → E → HarmonicCalculus.ComplexVector)
     (pressure : ℕ → E → ℂ) (frequency : ℕ → ℝ) : WaveCoefficients E where
@@ -1271,7 +1271,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1291,7 +1291,7 @@ abbrev Slow := PhaseCalculus.Slow
 noncomputable def commonIndex (h : ℝ) (n : ℕ) : ℕ := ChartScales.nativeIndex h n
 
 /-- Slow scale, given by `max 1 (ChartScales.S n)`. -/
-noncomputable def slowScale (n : ℕ) : ℝ := max 1 (ChartScales.S n)
+@[expose] noncomputable def slowScale (n : ℕ) : ℝ := max 1 (ChartScales.S n)
 
 theorem one_le_slowScale (n : ℕ) : 1 ≤ slowScale n := le_max_left _ _
 
@@ -1326,7 +1326,7 @@ noncomputable def operators (h a b : ℝ) (hab : a < b) : MeanIncrementBounds.Op
     (operators h a b hab).radius = Prod.fst := rfl
 
 /-- The actual fixed `TZ -> ZT` permutation, discarding auxiliary variables. -/
-noncomputable def slowCoordinates : Point →L[ℝ] Slow where
+@[expose] noncomputable def slowCoordinates : Point →L[ℝ] Slow where
   toFun x := (x.1, (x.2.1.2, x.2.1.1))
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
@@ -1342,6 +1342,7 @@ theorem slowCoordinates_norm_le : ‖slowCoordinates‖ ≤ 1 := by
   exact max_le_max le_rfl ((max_comm _ _).le.trans (le_max_left _ _))
 
 /-- Physical point, given by `BaseChartJets.bandPoint h (ChartScales.Q n) (slowCoordinates x)`. -/
+@[expose]
 noncomputable def physicalPoint (h : ℝ) (n : ℕ) (x : Point) : ProblemStatement.SpaceTime :=
   BaseChartJets.bandPoint h (ChartScales.Q n) (slowCoordinates x)
 
@@ -1715,28 +1716,28 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
 
 /-- Radial base, given by `ChartScales.Q n ^ CoordinateAlgebra.A F.data.h *
 FinalSlowBase.velocity H v upper B (physicalPoint F.data.h n x) 0`. -/
-noncomputable def radialBase (n : ℕ) (x : Point) : ℝ :=
+@[expose] noncomputable def radialBase (n : ℕ) (x : Point) : ℝ :=
   ChartScales.Q n ^ CoordinateAlgebra.A F.data.h *
     FinalSlowBase.velocity H v upper B (physicalPoint F.data.h n x) 0
 
 /-- Frequency base, constructed using `BaseChartJets.frequency`. -/
-noncomputable def frequencyBase (n : ℕ) (x : Point) : ℝ :=
+@[expose] noncomputable def frequencyBase (n : ℕ) (x : Point) : ℝ :=
   BaseChartJets.frequency (FinalSlowBase.scales H v upper B) F.data.h W.axis.normalization
     (FinalSlowBase.coefficients H v) (ChartScales.Q n) (slowCoordinates x)
 
 /-- Axial base, constructed using `BaseChartJets.axial`. -/
-noncomputable def axialBase (n : ℕ) (x : Point) : ℝ :=
+@[expose] noncomputable def axialBase (n : ℕ) (x : Point) : ℝ :=
   BaseChartJets.axial (FinalSlowBase.scales H v upper B) F.data.h
     (FinalSlowBase.coefficients H v) (ChartScales.Q n) (slowCoordinates x)
 
 /-- Base, bundling `radial`, `angular`, `axial`. -/
-noncomputable def base : MeanIncrementBounds.Triple Point where
+@[expose] noncomputable def base : MeanIncrementBounds.Triple Point where
   radial := radialBase H v upper B
   angular n x := x.1 * frequencyBase H v upper B n x
   axial := axialBase H v upper B
 
 /-- Raw stress as an element of `ℝ × ℝ`. -/
-noncomputable def rawStress (n : ℕ) (x : Point) : ℝ × ℝ :=
+@[expose] noncomputable def rawStress (n : ℕ) (x : Point) : ℝ × ℝ :=
   let p := AxisymmetricFields.profilePoint (physicalPoint F.data.h n x).1
     (physicalPoint F.data.h n x).2
   ChartScales.Q n ^ (2 * CoordinateAlgebra.A F.data.h) •
@@ -1759,7 +1760,7 @@ noncomputable def virtualStress (n : ℕ) (x : Point) : ℝ × ℝ :=
   simp only [virtualStress, ite_eq_right (not_lt.mpr hR)]
 
 /-- Context, bundling `operators`, `base`, `virtualTheta`, `virtualAxial`. -/
-noncomputable def context (a b : ℝ) (hab : a < b) : CorrectionState.Context Point where
+@[expose] noncomputable def context (a b : ℝ) (hab : a < b) : CorrectionState.Context Point where
   operators := operators F.data.h a b hab
   base := base H v upper B
   virtualTheta n x := (virtualStress H v upper B n x).1
@@ -2059,18 +2060,18 @@ theorem waveCoefficients_match (U : LocalSignedRequest.SlowRegion (2 * F.data.h)
   fin_cases i <;> rfl
 
 /-- Radial slow, constructed using `BaseRadialJets.radial`. -/
-noncomputable def radialSlow (n : ℕ) (p : Slow) : ℝ :=
+@[expose] noncomputable def radialSlow (n : ℕ) (p : Slow) : ℝ :=
   BaseRadialJets.radial (FinalSlowBase.scales H v upper B) F.data.h W.axis.normalization
     (FinalSlowBase.coefficients H v) (ChartScales.Q n) p
 
 /-- Frequency slow, constructed using `BaseChartJets.frequency`. -/
-noncomputable def frequencySlow (n : ℕ) : Slow → ℝ :=
+@[expose] noncomputable def frequencySlow (n : ℕ) : Slow → ℝ :=
   BaseChartJets.frequency (FinalSlowBase.scales H v upper B) F.data.h W.axis.normalization
     (FinalSlowBase.coefficients H v) (ChartScales.Q n)
 
 /-- Axial slow, given by `BaseChartJets.axial (FinalSlowBase.scales H v upper B) F.data.h
 (FinalSlowBase.coefficients H v) (ChartScales.Q n)`. -/
-noncomputable def axialSlow (n : ℕ) : Slow → ℝ :=
+@[expose] noncomputable def axialSlow (n : ℕ) : Slow → ℝ :=
   BaseChartJets.axial (FinalSlowBase.scales H v upper B) F.data.h
     (FinalSlowBase.coefficients H v) (ChartScales.Q n)
 
@@ -2150,7 +2151,7 @@ theorem radialSlow_productClass (U : LocalSignedRequest.SlowRegion (2 * F.data.h
 
 /-- Native context, given by `context H v upper B (PrimaryTargetBounds.leftRadius W)
 (PrimaryTargetBounds.rightRadius W) (PrimaryTargetBounds.radii_ordered W)`. -/
-noncomputable def nativeContext : CorrectionState.Context Point :=
+@[expose] noncomputable def nativeContext : CorrectionState.Context Point :=
   context H v upper B (PrimaryTargetBounds.leftRadius W) (PrimaryTargetBounds.rightRadius W)
     (PrimaryTargetBounds.radii_ordered W)
 

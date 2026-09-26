@@ -30,7 +30,7 @@ This file constructs the cross product algebra associated to a 2-cocycle of a fi
 * [*Advanced Algebra*]
 -/
 
-@[expose] public section
+public section
 
 open groupCohomology Function Module
 
@@ -133,7 +133,7 @@ def valLinearEquiv [Semiring R] [Module R K] :
   map_smul' := val_smul
 
 /-- The standard basis of the cross product algebra over `K`. -/
-@[simps]
+@[expose, simps]
 def basis : Basis Gal(K, F) K (CrossProductAlgebra f) where
   repr := valLinearEquiv
 

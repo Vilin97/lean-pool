@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevGevreyProduct
 /-! The actual finite-Sobolev external transport commutator satisfies the Gevrey radius-loss bound.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,7 +40,7 @@ synthesis. -/
 local instance weightedCommSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
 /-- The actual finite weighted derivative-loss norm. -/
-def weightedLoss {s : ℕ} (q N : ℕ) (ρ : ℝ) (u : SobolevSpace period s) : ℝ :=
+@[expose] def weightedLoss {s : ℕ} (q N : ℕ) (ρ : ℝ) (u : SobolevSpace period s) : ℝ :=
   ∑ n ∈ Finset.range (N+1), (n : ℝ)*weight ρ n*blockNorm period (toJet period u) q n
 
 theorem weightedLoss_nonneg {s : ℕ} (q N : ℕ) (ρ : ℝ) (hρ : 0 < ρ) (u : SobolevSpace period s) :
@@ -81,7 +81,7 @@ theorem weightedLoss_eq_classical {s : ℕ} (q N : ℕ) (hN : N + q ≤ s) (ρ :
       have := Finset.mem_range.mp hn; omega) f hu hf]
 
 /-- Weighted sum of the genuine H⁶ external transport commutators. -/
-def weightedCommutatorNorm {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : N + 6 ≤ s) (ρ : ℝ)
+@[expose] def weightedCommutatorNorm {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : N + 6 ≤ s) (ρ : ℝ)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (u v : SobolevSpace period (s + 1)) : ℝ :=
   ∑ n : Fin (N+1), weight ρ n.val * ∑ w : Fin n.val → Fin 4,

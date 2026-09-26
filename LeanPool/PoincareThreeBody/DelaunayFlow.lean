@@ -20,7 +20,7 @@ rotating periapsis angle at unit speed.  Here we verify directly that this curve
 Hamilton equations for the mass-zero rotating Kepler Hamiltonian.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

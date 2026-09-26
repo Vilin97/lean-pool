@@ -15,7 +15,7 @@ section
 
 /-! Exact triangle inequalities for the actual finite Hilbert forcing families. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -86,7 +86,7 @@ section
 
 /-! Complete finite-cutoff pressure commutator bounds for both actual source components. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

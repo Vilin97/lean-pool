@@ -17,7 +17,7 @@ Proves that the derivative norm of each segment of
 `fdBoundaryToPolygonHomotopy` is bounded by 5.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Metric Filter Topology
 

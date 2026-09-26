@@ -13,7 +13,7 @@ public import Mathlib.Tactic.Choose
 # Padding witnesses collapses the bad-sample dimension
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 

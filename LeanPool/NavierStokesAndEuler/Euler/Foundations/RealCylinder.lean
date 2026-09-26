@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderAlgebra
 
 /-! Real-valued forms of the cylinder Sobolev and multiplication estimates. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

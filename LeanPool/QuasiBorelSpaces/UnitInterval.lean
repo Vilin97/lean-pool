@@ -14,4 +14,4 @@ Re-exports the `UnitInterval` sub-modules used by the quasi-Borel space
 formalization.
 -/
 
-@[expose] public section
+public section

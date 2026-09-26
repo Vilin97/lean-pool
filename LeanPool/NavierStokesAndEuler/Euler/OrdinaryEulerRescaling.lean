@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerDifference
 /-! The genuine time/amplitude symmetry of ordinary Euler, including
 restriction to a shorter closed time interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

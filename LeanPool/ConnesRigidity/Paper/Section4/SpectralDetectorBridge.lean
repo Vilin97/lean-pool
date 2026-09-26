@@ -13,7 +13,7 @@ Transport of Zhou's compact-dual detector estimate to the raw Pontryagin-dual
 carrier used by the generic split-extension criterion. Paper: §4.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperSpectralDetectorBridge

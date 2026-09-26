@@ -20,7 +20,7 @@ is multiplied by the physical frame. All three operations use the same
 external radius R. Only the solve spends one shift.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -59,7 +59,7 @@ def normalizedVelocity : C(Icc (0 : ℝ) T,Supported period E S hS) :=
   physicalVelocity period S hS Q (normalizedCoordinates period T hT S hS Q Q₁ c hc hQ g hg f a₀)
 
 /-- Explicit coefficient cost of projecting a physical forcing at the fixed base order. -/
-def forcingCost (ι : Type*) [Fintype ι] (q : ℕ) (Ri C₀ : ℝ) : ℝ :=
+@[expose] def forcingCost (ι : Type*) [Fintype ι] (q : ℕ) (Ri C₀ : ℝ) : ℝ :=
   3*sobolevCoefficientAmplitude ι q (4*Ri) (3*Ri*C₀)
 
 /-- The physical solution has the source's genuine fixed-Hq mixed-word bound,

@@ -29,7 +29,7 @@ stated that way can be used while the identity clauses of the class are still
 being established, which a lemma stated with the full class cannot.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology
@@ -42,7 +42,7 @@ namespace CKN
 
 /-- The measurability and local-integrability clauses of `def:sws`: the first
 six conjuncts of `CKN.IsSuitableWeakSolutionIntegrable`, copied verbatim. -/
-def IsSuitableWeakSolutionData (Ω : Set Vec3) (I : Set ℝ) (q : ℝ)
+@[expose] def IsSuitableWeakSolutionData (Ω : Set Vec3) (I : Set ℝ) (q : ℝ)
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3)
     (p : ParabolicPoint → ℝ) (f : ParabolicPoint → Vec3) : Prop :=
   IsOpen Ω ∧ IsOpen I ∧ OrdConnected I ∧ 5 / 2 < q ∧

@@ -27,7 +27,7 @@ direction of Ulm's theorem, formulated against the classical invariants
 `dim_{ℤ/pℤ}(P_α / P_{α+1})`.
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 
@@ -84,6 +84,7 @@ noncomputable def stageAtSuccInStar (S : AddSubgroup G) (α : Ordinal) :
   (stageAt p S (Order.succ α)).comap (kaplanskyStar p S α).subtype
 
 /-- The source quotient in Kaplansky's relative-Ulm map. -/
+@[expose]
 noncomputable def kaplanskyDomainQuotient (S : AddSubgroup G) (α : Ordinal) : Type u :=
   kaplanskyStar p S α ⧸ stageAtSuccInStar p S α
 
@@ -508,6 +509,7 @@ def UlmStage.at (s : UlmStage p (G := G) (H := H)) (α : Ordinal.{0}) :
   hφ_succSucc := fun x ↦ s.hφ x (Order.succ (Order.succ α))
 
 /-- Reverse a finite partial isomorphism. -/
+@[expose]
 noncomputable def UlmStage.symm (s : UlmStage p (G := G) (H := H)) :
     UlmStage p (G := H) (H := G) where
   A := s.B

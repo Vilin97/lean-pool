@@ -18,7 +18,7 @@ import Mathlib.Tactic.Positivity.Finset
 # The Grünbaum property for the standard simplex
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal
 open Set MeasureTheory

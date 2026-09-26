@@ -35,7 +35,7 @@ and on the moving plane its reconstruction is the identity.  These are
 coefficient identities, not assumptions about a differential inverse.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -162,7 +162,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -197,6 +197,13 @@ def transverseDerivatives (T : ℝ) (hT : 0 ≤ T) (m : Icc (0 : ℝ) T → E) :
     · intro t
       simp only [map_smul, ContinuousMap.smul_apply, inner_smul_right, hu.2 t,
         mul_zero]
+
+@[simp] theorem mem_transverseDerivatives (T : ℝ) (hT : 0 ≤ T)
+    (m : Icc (0 : ℝ) T → E) (u : TimeLp T E) :
+    u ∈ transverseDerivatives T hT m ↔
+      initialTrace T hT u = 0 ∧
+        ∀ t, ⟪m t, terminalPrimitive T hT u t⟫_ℝ = 0 := by
+  rfl
 
 /-- The two endpoint and moving tangency conditions are closed constraints. -/
 theorem transverseDerivatives_closed (T : ℝ) (hT : 0 ≤ T) (m : Icc (0 : ℝ) T → E) :
@@ -247,6 +254,11 @@ theorem derivative_mem_of_ac [CompleteSpace E] (T : ℝ) (hT : 0 ≤ T)
 def transversePrimitive (T : ℝ) (hT : 0 ≤ T) (m : Icc (0 : ℝ) T → E) :
     transverseDerivatives T hT m →L[ℝ] TimeLp T E :=
   (primitiveTimeLp T hT).comp (transverseDerivatives T hT m).subtypeL
+
+@[simp] theorem transversePrimitive_apply (T : ℝ) (hT : 0 ≤ T)
+    (m : Icc (0 : ℝ) T → E) (u : transverseDerivatives T hT m) :
+    transversePrimitive T hT m u = primitiveTimeLp T hT (u : TimeLp T E) := by
+  rfl
 
 /-- The sharp time Poincaré bound holds on the actual transverse space. -/
 theorem transversePrimitive_norm_sq (T : ℝ) (hT : 0 ≤ T)

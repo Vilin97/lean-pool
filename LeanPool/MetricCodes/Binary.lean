@@ -14,7 +14,7 @@ import all Mathlib.Analysis.SpecialFunctions.BinaryEntropy
 Asymptotic Johnson-scheme estimates and the binary-code variational bound.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -31,19 +31,19 @@ open scoped Topology
 namespace Asymptotics
 
 /-- The shell weight used in the Johnson-code argument. -/
-def shellWeight (a : ℝ) (n : ℕ) : ℕ :=
+@[expose] def shellWeight (a : ℝ) (n : ℕ) : ℕ :=
   MetricCodes.Hamming.longitudinalDegree a n
 
 /-- The support degree used in the Johnson-code argument. -/
-def supportDegree (b : ℝ) (n : ℕ) : ℕ :=
+@[expose] def supportDegree (b : ℝ) (n : ℕ) : ℕ :=
   MetricCodes.Hamming.longitudinalDegree b n
 
 /-- The complement degree used in the Johnson-code argument. -/
-def complementDegree (g : ℝ) (n : ℕ) : ℕ :=
+@[expose] def complementDegree (g : ℝ) (n : ℕ) : ℕ :=
   MetricCodes.Hamming.longitudinalDegree g n
 
 /-- The terminal degree used in the Johnson-code argument. -/
-def terminalDegree (u : ℝ) (n : ℕ) : ℕ :=
+@[expose] def terminalDegree (u : ℝ) (n : ℕ) : ℕ :=
   MetricCodes.Hamming.longitudinalDegree u n
 
 theorem tendsto_shellWeight_ratio {a : ℝ} (ha : 0 ≤ a) :
@@ -699,7 +699,7 @@ theorem tendsto_logb_windowFibreQuotient
   ring
 
 /-- The bassalygo factor used in the Johnson-code argument. -/
-def bassalygoFactor (a : ℝ) (n : ℕ) : ℝ :=
+@[expose] def bassalygoFactor (a : ℝ) (n : ℕ) : ℝ :=
   (2 : ℝ) ^ n / (n.choose (shellWeight a n) : ℝ)
 
 theorem tendsto_logb_shellChoose
@@ -751,7 +751,7 @@ theorem tendsto_logb_bassalygoFactor
   ring
 
 /-- The bassalygo window fibre quotient used in the Johnson-code argument. -/
-def bassalygoWindowFibreQuotient
+@[expose] def bassalygoWindowFibreQuotient
     (a b g u : ℝ) (n : ℕ) : ℝ :=
   bassalygoFactor a n * windowFibreQuotient a b g u n
 
@@ -2055,7 +2055,7 @@ theorem AdmissibleDegrees.window_degree_half
   omega
 
 /-- The coupled degree vector used in the Johnson-code argument. -/
-def coupledDegreeVector {n w p q L : ℕ}
+@[expose] def coupledDegreeVector {n w p q L : ℕ}
     (h : AdmissibleDegrees n w p q L)
     (x : JohnsonSphere n w) (i : Index p q L)
     (a : HarmonicFibreIndex n w p q) :
@@ -2067,7 +2067,7 @@ def coupledDegreeVector {n w p q L : ℕ}
       (h.complementResidual_bound i) a)
 
 /-- The coupled degree coordinates used in the Johnson-code argument. -/
-def coupledDegreeCoordinates {n w p q L : ℕ}
+@[expose] def coupledDegreeCoordinates {n w p q L : ℕ}
     (h : AdmissibleDegrees n w p q L)
     (x : JohnsonSphere n w) (i : Index p q L)
     (a : HarmonicFibreIndex n w p q)
@@ -4278,7 +4278,7 @@ theorem johnsonAdjacentChannel_orthogonal
       omega
 
 /-- The johnson axis tensor used in the Johnson-code argument. -/
-def johnsonAxisTensor {n w : ℕ}
+@[expose] def johnsonAxisTensor {n w : ℕ}
     (x : JohnsonSphere n w) (f : MetricCodes.Boolean.Function n) :
     MetricCodes.Boolean.CoordinateFunction n :=
   fun a => (geometricAxis x a) • f

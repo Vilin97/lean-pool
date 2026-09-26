@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Paper.Section3.DualHaar
 The dual topology component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperDualTopology
@@ -406,7 +406,7 @@ theorem measurable_fiberShear :
   continuous_fiberShear.measurable
 
 /-- The normalized Haar probability in raw Zhou coordinates. Paper: §3. -/
-noncomputable def coordinatesHaar : Measure Coordinates :=
+@[expose] noncomputable def coordinatesHaar : Measure Coordinates :=
   NormalizedHaar.normalizedAddHaar Coordinates
 
 instance coordinatesHaar_isProbability : IsProbabilityMeasure coordinatesHaar := by

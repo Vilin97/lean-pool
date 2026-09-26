@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketProfileEnvelope
 /-! The chosen geometric growth profile carries a polynomial amplitude
 bound. This controls the actual grade scale, including its history part. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

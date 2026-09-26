@@ -17,7 +17,7 @@ and the specialized one-variable quotient and remainder operators used in
 complex-analytic Weierstrass preparation.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open scoped ENNReal NNReal Topology

@@ -30,7 +30,7 @@ the unit-square integrals of that source. No output regularity or decay
 assumptions are part of the construction.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -54,7 +54,7 @@ def Periodic (f : Source P) : Prop :=
   ∀ p, SmoothFourierData.UnitPeriodic (slice f p)
 
 /-- Coefficient, given by `SmoothFourierData.coefficient (slice f p) k`. -/
-noncomputable def coefficient (f : Source P) (p : P) (k : Frequency) : ℂ :=
+@[expose] noncomputable def coefficient (f : Source P) (p : P) (k : Frequency) : ℂ :=
   SmoothFourierData.coefficient (slice f p) k
 
 /-- Mean, given by `coefficient f p 0`. -/
@@ -63,7 +63,7 @@ noncomputable def mean (f : Source P) (p : P) : ℂ := coefficient f p 0
 def ZeroMean (f : Source P) : Prop := ∀ p, mean f p = 0
 
 /-- Inverse, given by `directionalInverse d (coefficient f z.1) z.2`. -/
-noncomputable def inverse (d : Direction) (f : Source P) (z : Point P) : ℂ :=
+@[expose] noncomputable def inverse (d : Direction) (f : Source P) (z : Point P) : ℂ :=
   directionalInverse d (coefficient f z.1) z.2
 
 /-- Fixed partial, given by `fderiv ℝ f z v`. -/
@@ -1200,7 +1200,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1307,7 +1307,7 @@ variable {E F : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The exact defect in the compact transport primitive, with all auxiliary
 slow variables retained in `E`. -/
-noncomputable def exactAlias (χ : ℝ → ℝ) (M : ℝ) (v : E)
+@[expose] noncomputable def exactAlias (χ : ℝ → ℝ) (M : ℝ) (v : E)
     (f : ℝ × E → F) (z : ℝ × E) : F :=
   deriv χ z.1 • TransportPrimitive.totalIntegral M v f z
 

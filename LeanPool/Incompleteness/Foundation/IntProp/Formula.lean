@@ -10,7 +10,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # Formula -/
 
-@[expose] public section
+public section
 
 
 namespace LO

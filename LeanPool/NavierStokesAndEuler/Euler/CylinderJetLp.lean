@@ -19,7 +19,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 lie in cylinder L² whenever its actual coordinate words do. The bound
 keeps the ordered-word sum; there is no extra alphabet factor. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

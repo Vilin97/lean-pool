@@ -49,7 +49,7 @@ inheriting
 `lfpSet` from Exercise 4.14.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise417
 

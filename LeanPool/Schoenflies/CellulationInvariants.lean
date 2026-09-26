@@ -95,7 +95,7 @@ closed walk.
   out, and this is what it has to be.
 -/
 
-@[expose] public section
+public section
 
 open Set Bornology
 open scoped Graph

@@ -19,7 +19,7 @@ entrywise positive part of a matrix, the rank-one Laplacian
 positive semidefinite matrices.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 
@@ -31,7 +31,7 @@ variable {m n : Type*}
 /-! ### N06 — Frobenius pairing -/
 
 /-- The real Frobenius pairing `⟨B, C⟩ = tr(Bᵀ C)`. -/
-def inner [Fintype n] (B C : Matrix n n ℝ) : ℝ :=
+@[expose] def inner [Fintype n] (B C : Matrix n n ℝ) : ℝ :=
   (Bᵀ * C).trace
 
 section Inner

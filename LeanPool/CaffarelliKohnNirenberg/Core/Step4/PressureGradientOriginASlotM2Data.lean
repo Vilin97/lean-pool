@@ -22,7 +22,7 @@ slice mean; the divergence source's Morrey budget on any carrier inside the
 outer cylinder; and the gradient-shaped budget for the mean-free velocity.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal BigOperators

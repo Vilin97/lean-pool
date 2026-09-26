@@ -19,7 +19,7 @@ These establish the key perturbation bounds:
 3. Kills-normal bound: ‖P en‖ ≤ ε₁·‖en‖
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

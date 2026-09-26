@@ -18,7 +18,7 @@ Only the given operator coefficients use tensor bounds. Forcing and solved
 fields retain their literal fixed-base ordered-word blocks at the same radius.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ open scoped ContDiff
 
 /-- For fixed q this is an explicit polynomial in the original inverse,
 coefficient, and forcing constants. It has no grade dependence. -/
-def inverseBlockCost (ι : Type*) [Fintype ι] (q : ℕ) (I Rc C D : ℝ) : ℝ :=
+@[expose] def inverseBlockCost (ι : Type*) [Fintype ι] (q : ℕ) (I Rc C D : ℝ) : ℝ :=
   1+sobolevInverseCost I (sobolevCoefficientAmplitude ι q Rc C) q *
     (sobolevCoefficientAmplitude ι q Rc C+D)
 

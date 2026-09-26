@@ -27,7 +27,7 @@ measure on the chart target, restricted to suitable neighborhoods.
   with an explicit constant.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

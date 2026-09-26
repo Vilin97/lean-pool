@@ -20,7 +20,7 @@ initial-energy neighborhood and converts the generalized state sequence back
 to `nesterovSeq`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

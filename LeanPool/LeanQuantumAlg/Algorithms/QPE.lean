@@ -35,7 +35,7 @@ maps that raw phase vector to the computational-basis vector `|j>`.
   outcome `j` has probability one after the exact readout.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

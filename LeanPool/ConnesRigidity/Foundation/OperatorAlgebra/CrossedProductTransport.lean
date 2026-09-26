@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProduct
 The crossed product transport component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace CrossedProduct

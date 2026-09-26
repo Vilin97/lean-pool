@@ -11,7 +11,7 @@ public import Mathlib.Algebra.Lie.Basic
 # LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Basic
 -/
 
-@[expose] public section
+public section
 
 universe u
 variable (𝕜 : Type*) [CommRing 𝕜]

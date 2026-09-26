@@ -17,7 +17,7 @@ basic vanishing, symmetry and value-set properties, and the class `HasBilinHilbe
 recording multiplicativity in the first argument.
 -/
 
-@[expose] public section
+public section
 
 namespace HasseMinkowski
 

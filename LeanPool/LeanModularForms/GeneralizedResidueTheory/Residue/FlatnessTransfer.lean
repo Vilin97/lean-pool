@@ -29,7 +29,7 @@ built from `conditionsAB_imply_higherOrderCancel_nh` and
   conditions (A')+(B), convex domain.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology Finset Real
 open scoped Interval

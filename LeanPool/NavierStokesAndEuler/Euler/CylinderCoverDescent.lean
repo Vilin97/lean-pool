@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderMeasureDescent
 /-! Canonical descent of periodic cover fields and deck-equivariant maps
 to the cylinder, with genuine continuity, inverse and volume properties. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -24,6 +24,7 @@ open Set Function MeasureTheory EulerLiftedGradientSpace
 variable (P : ℝ) [Fact (0 < P)]
 
 /-- Section point, given by `(q.1,(AddCircle.equivIoc P 0 q.2 : ℝ))`. -/
+@[expose]
 def sectionPoint (q : LiftDomain P) : LiftTangent :=
   (q.1,(AddCircle.equivIoc P 0 q.2 : ℝ))
 
@@ -35,6 +36,7 @@ theorem sectionPoint_measurable : Measurable (sectionPoint P) :=
     (AddCircle.measurableEquivIoc P 0).measurable).comp measurable_snd)
 
 /-- Descend, given by `f (sectionPoint P q)`. -/
+@[expose]
 def descend {V : Type*} (f : LiftTangent → V) (q : LiftDomain P) : V := f (sectionPoint P q)
 
 theorem descend_cover {V : Type*} (f : LiftTangent → V)
@@ -83,6 +85,7 @@ theorem fiber_constant_of_deck {V : Type*} (f : LiftTangent → V)
   exact hf c b
 
 /-- Descend map, given by `descend P (coveringMap P ∘ f)`. -/
+@[expose]
 def descendMap (f : LiftTangent → LiftTangent) : LiftDomain P → LiftDomain P :=
   descend P (coveringMap P ∘ f)
 

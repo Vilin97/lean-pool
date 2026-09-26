@@ -20,7 +20,7 @@ when a crosscap is present, and the resulting ordered word is signed-relabelled 
 project-owned `NormalForm.canonicalPresentation`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

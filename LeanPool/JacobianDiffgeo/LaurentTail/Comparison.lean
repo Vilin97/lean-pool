@@ -60,7 +60,7 @@ accumulating ~25 `have`/`set` steps hits a severe elaboration performance wall r
 helpers (`alphaPatch`/`mlSumCochain`/…) were already structured — restores normal compile times.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

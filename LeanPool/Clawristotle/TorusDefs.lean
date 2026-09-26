@@ -20,7 +20,7 @@ and differential operators (`torusGradX`, `torusDivX`, `torusCurlX`) via the
 periodic lift. The `FlatTorus3` instance is assembled in `TorusInstance.lean`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real Filter
 
@@ -61,7 +61,7 @@ lemma torusMk_surjective : Function.Surjective torusMk := by
 -- ============================================================================
 
 /-- The periodic lift of a function on the torus to ℝ³. -/
-def periodicLift (f : Torus3 → ℝ) : (Fin 3 → ℝ) → ℝ := f ∘ torusMk
+@[expose] def periodicLift (f : Torus3 → ℝ) : (Fin 3 → ℝ) → ℝ := f ∘ torusMk
 
 -- The lift IS periodic (by construction):
 lemma periodicLift_periodic (f : Torus3 → ℝ) (x : Fin 3 → ℝ) (i : Fin 3) :
@@ -115,18 +115,18 @@ lemma periodicLift_fderiv_eq (f : Torus3 → ℝ) (x y : Fin 3 → ℝ)
 /-- Spatial gradient on T³.
     For f : T³ → ℝ, we lift to ℝ³, compute fderiv, and read off components.
     This is well-defined by periodicLift_fderiv_eq. -/
-def torusGradX (f : Torus3 → ℝ) (x : Torus3) : Fin 3 → ℝ :=
+@[expose] def torusGradX (f : Torus3 → ℝ) (x : Torus3) : Fin 3 → ℝ :=
   -- Choose any preimage of x
   let x₀ := (torusMk_surjective x).choose
   fun i => fderiv ℝ (periodicLift f) x₀ (Pi.single i 1)
 
 /-- Spatial divergence on T³. -/
-def torusDivX (F : Torus3 → (Fin 3 → ℝ)) (x : Torus3) : ℝ :=
+@[expose] def torusDivX (F : Torus3 → (Fin 3 → ℝ)) (x : Torus3) : ℝ :=
   let x₀ := (torusMk_surjective x).choose
   ∑ i : Fin 3, fderiv ℝ (fun y => periodicLift (fun z => F z i) y) x₀ (Pi.single i 1)
 
 /-- Spatial curl on T³. -/
-def torusCurlX (F : Torus3 → (Fin 3 → ℝ)) (x : Torus3) : Fin 3 → ℝ :=
+@[expose] def torusCurlX (F : Torus3 → (Fin 3 → ℝ)) (x : Torus3) : Fin 3 → ℝ :=
   let x₀ := (torusMk_surjective x).choose
   let d := fun i j => fderiv ℝ (fun y => periodicLift (fun z => F z j) y) x₀ (Pi.single i 1)
   ![d 1 2 - d 2 1, d 2 0 - d 0 2, d 0 1 - d 1 0]

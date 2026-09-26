@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Statements.RegularPoint
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Set
 
@@ -23,6 +23,7 @@ open CKN.Foundation.Parabolic
 namespace CKN
 
 /-- The singular set from paper label `def:regular`. -/
+@[expose]
 def SingularSet (Ω : Set Vec3) (I : Set ℝ) (u : ParabolicPoint → Vec3) :
     Set ParabolicPoint :=
   {z | z ∈ spaceTimeSet Ω I ∧ ¬ IsRegularPoint Ω I u z}

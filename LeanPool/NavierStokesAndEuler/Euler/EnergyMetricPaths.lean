@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevEnergyPaths
 /-! Actual metric Gevrey energy and radius loss as continuous paths, with exact
 higher-representative compatibility. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

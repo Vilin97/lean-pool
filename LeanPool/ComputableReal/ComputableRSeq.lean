@@ -35,7 +35,7 @@ sense. Addition, negation, and multiplication are executable interval arithmetic
 classically and is `noncomputable`.
 -/
 
-@[expose] public section
+public section
 
 namespace QInterval
 
@@ -145,9 +145,9 @@ namespace ComputableℝSeq
 
 open scoped QInterval
 /-- The lower-bound Cauchy sequence of a `ComputableℝSeq`. -/
-def lb (x : ComputableℝSeq) : CauSeq ℚ abs := ⟨fun n ↦ (x.lub n).fst, x.hcl⟩
+@[expose] def lb (x : ComputableℝSeq) : CauSeq ℚ abs := ⟨fun n ↦ (x.lub n).fst, x.hcl⟩
 /-- The upper-bound Cauchy sequence of a `ComputableℝSeq`. -/
-def ub (x : ComputableℝSeq) : CauSeq ℚ abs := ⟨fun n ↦ (x.lub n).snd, x.hcu⟩
+@[expose] def ub (x : ComputableℝSeq) : CauSeq ℚ abs := ⟨fun n ↦ (x.lub n).snd, x.hcu⟩
 
 /-- Get the real value determined by the sequence. (Irreducibly) given here as the limit of
   the lower bound sequence. -/

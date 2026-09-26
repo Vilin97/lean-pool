@@ -23,7 +23,7 @@ terms of the existing `P2Cut` data, so the presentation-level quotient compariso
 same side indices and no second formulation of P2 is introduced.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -597,7 +597,7 @@ def positiveSelectedChildSideIndex
     exact i.isLt⟩
 
 /-- The target right-child index corresponding to a local child side. -/
-def positiveRightChildSideIndex
+@[expose] def positiveRightChildSideIndex
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false)
     (i : Fin (cut.right.length + 1)) :
@@ -712,7 +712,7 @@ theorem positiveChildPairPreMap_inr
   rfl
 
 /-- Send a local child point to its class in the complete split realization. -/
-noncomputable def positiveChildPairMap
+@[expose] noncomputable def positiveChildPairMap
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false)
     (validP : P.IsSurfaceValid) :
@@ -950,7 +950,7 @@ noncomputable def retainedCellHomeomorph
     (split_boundary_old_length_of_ne P cut hface).symm 0
 
 /-- Target index corresponding to a side of a retained source face. -/
-def retainedSideIndex
+@[expose] def retainedSideIndex
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     {f : P.Face} (hface : f ≠ cut.face.face)
     (i : Fin (P.boundary f).length) :

@@ -28,7 +28,7 @@ this is the `ℕ`-tier that issue #27 packages (and that #28 will build its σ-a
 topology, Polish-group structure, and `ContinuousSMul` are the *next* milestones of #27, not here.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

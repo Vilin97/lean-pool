@@ -22,7 +22,7 @@ pair of nonterminals.
 * `Language.toCFG_correct`: `g.toCFG` generates the same language a a context-free grammar `g`.
 -/
 
-@[expose] public section
+public section
 
 universe uT uN
 
@@ -49,15 +49,13 @@ namespace ChomskyNormalFormRule
 variable {N : Type uN} {r : ChomskyNormalFormRule T N} {u v : List (Symbol T N)}
 
 /-- The input of a CNF rule, similar to `ContextFreeRule.input` -/
-@[simp]
-def input (r : ChomskyNormalFormRule T N) :=
+@[expose, simp] def input (r : ChomskyNormalFormRule T N) :=
   match r with
   | leaf n _ => n
   | node n _ _ => n
 
 /-- The output of a CNF rule, similar to `ContextFreeRule.output` -/
-@[simp]
-def output (r : ChomskyNormalFormRule T N) :=
+@[expose, simp] def output (r : ChomskyNormalFormRule T N) :=
   match r with
   | leaf _ t => [Symbol.terminal t]
   | node _ n₁ n₂ => [Symbol.nonterminal n₁, Symbol.nonterminal n₂]
@@ -146,7 +144,7 @@ namespace ChomskyNormalFormGrammar
 /-- Given a cnf grammar `g` and strings `u` and `v`
 `g.Produces u v` means that one step of a cnf transformation by a rule from `g` sends
 `u` to `v`. -/
-def Produces (g : ChomskyNormalFormGrammar T) (u v : List (Symbol T g.NT)) : Prop :=
+@[expose] def Produces (g : ChomskyNormalFormGrammar T) (u v : List (Symbol T g.NT)) : Prop :=
   ∃ r ∈ g.rules, r.Rewrites u v
 
 /-- Given a cnf grammar `g` and strings `u` and `v`
@@ -242,7 +240,7 @@ section toCFG
 variable [DecidableEq T]
 
 /-- Translation of `ChomskyNormalFormGrammar` to `ContextFreeGrammar` -/
-noncomputable def toCFG (g : ChomskyNormalFormGrammar T) [DecidableEq g.NT] :
+@[expose] noncomputable def toCFG (g : ChomskyNormalFormGrammar T) [DecidableEq g.NT] :
     ContextFreeGrammar T where
   NT := g.NT
   initial := g.initial

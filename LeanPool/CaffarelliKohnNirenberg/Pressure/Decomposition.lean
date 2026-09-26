@@ -17,7 +17,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Harmonic.NewtonianRepr
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped ENNReal NNReal Topology
@@ -25,6 +25,7 @@ open CKN.Foundation.Parabolic
 noncomputable section
 namespace CKN
 /-- Partially centered velocity tensor with the sign convention for the pressure decomposition. -/
+@[expose]
 def pressureUTensor (u : ParabolicPoint → Vec3) (c : ℝ → Vec3)
     (z : ParabolicPoint) (i j : Fin 3) : ℝ :=
   -u z i * (u z j - c z.2 j)

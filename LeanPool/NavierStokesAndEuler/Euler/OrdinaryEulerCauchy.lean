@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerLimit
 H³ bound, uniform initial Sobolev bounds, and initial L² Cauchy data
 produce an actual smooth Euler limit on the same positive interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

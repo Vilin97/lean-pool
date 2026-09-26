@@ -27,7 +27,7 @@ Uses the helper lemmas from `UnitArcHelpers` together with log ratio/diff tendst
 and strict norm monotonicity on the arc.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm

@@ -18,7 +18,7 @@ section
 
 /-! The actual viscous derivative expressed using the identical lower-order nonlinear source. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -80,7 +80,7 @@ section
 
 /-! A pointwise viscous derivative expressed as a continuous path. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -113,7 +113,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

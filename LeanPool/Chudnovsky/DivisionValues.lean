@@ -31,7 +31,7 @@ recursion, Baker's factorization `thmbaker`
 structure lemmas `propindu`, from which the two theorems below follow.
 -/
 
-@[expose] public section
+public section
 
 open scoped Topology
 
@@ -43,7 +43,7 @@ variable (L : PeriodPair)
 
 /-- The `m`-division point `(k/m)·ω₁ + (l/m)·ω₂` indexed by `v = (k, l) : Fin m × Fin m`.
 For `v ≠ 0` these are exactly the points of the paper's `DIV(m)` (Def. `defidivi`). -/
-def divPt (m : ℕ) (v : Fin m × Fin m) : ℂ :=
+@[expose] def divPt (m : ℕ) (v : Fin m × Fin m) : ℂ :=
   ((v.1 : ℕ) : ℂ) / m * L.ω₁ + ((v.2 : ℕ) : ℂ) / m * L.ω₂
 
 /-- A nonnegative rational `k/m` with `k < m` and integral denominator must be `0`. -/

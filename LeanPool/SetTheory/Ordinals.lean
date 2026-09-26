@@ -17,7 +17,7 @@ This module develops the theory of ordinals inside a von Neumann model of ZF, in
 their order structure and the correspondence with Mathlib's `Ordinal` type.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

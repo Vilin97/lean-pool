@@ -13,7 +13,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Dense identifiers for audited coverage summaries -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
@@ -929,7 +929,7 @@ def denseHardSummaries16 : Array HardSummary :=
   ⟨5855, 3858256025070658590⟩]
 
 /-- Pattern summaries indexed by compact certificate identifier. -/
-def densePatternSummaryGroups : Array (Array PatternSummary) :=
+@[expose] def densePatternSummaryGroups : Array (Array PatternSummary) :=
   #[densePatternSummaries00, densePatternSummaries01, densePatternSummaries02,
   densePatternSummaries03, densePatternSummaries04, densePatternSummaries05,
   densePatternSummaries06, densePatternSummaries07, densePatternSummaries08,
@@ -940,7 +940,7 @@ def densePatternSummaryGroups : Array (Array PatternSummary) :=
   densePatternSummaries21]
 
 /-- Exact summaries indexed by compact certificate identifier. -/
-def denseHardSummaryGroups : Array (Array HardSummary) :=
+@[expose] def denseHardSummaryGroups : Array (Array HardSummary) :=
   #[denseHardSummaries00, denseHardSummaries01, denseHardSummaries02, denseHardSummaries03,
   denseHardSummaries04, denseHardSummaries05, denseHardSummaries06, denseHardSummaries07,
   denseHardSummaries08, denseHardSummaries09, denseHardSummaries10, denseHardSummaries11,

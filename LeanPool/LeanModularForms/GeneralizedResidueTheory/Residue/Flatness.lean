@@ -38,7 +38,7 @@ the generalized residue theorem with higher-order poles.
 Reference: Hungerbuhler-Wasem, arXiv:1808.00997v2, Definition 3.2.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Filter Topology Asymptotics
 open scoped Real Interval
@@ -51,11 +51,11 @@ noncomputable section
 
 /-- The orthogonal projection of `w` onto the real line spanned by `L` in C,
 where C is viewed as R^2. This computes `(Re(w * conj L) / ||L||^2) * L`. -/
-def orthogonalProjectionComplex (w L : ℂ) : ℂ :=
+@[expose] def orthogonalProjectionComplex (w L : ℂ) : ℂ :=
   ((w * starRingEnd ℂ L).re / Complex.normSq L) • L
 
 /-- The tangent deviation: the component of `w` orthogonal to `L`. -/
-def tangentDeviation (w L : ℂ) : ℂ :=
+@[expose] def tangentDeviation (w L : ℂ) : ℂ :=
   w - orthogonalProjectionComplex w L
 
 theorem orthogonalProjectionComplex_zero_left (L : ℂ) :
@@ -280,7 +280,7 @@ theorem isFlatOfOrder_one (γ : PiecewiseC1Immersion) (t₀ : ℝ)
 /-- The pole order of a meromorphic function at a point, as a natural number.
 Returns 0 if `f` is analytic at `x` (including the case where `f` is identically zero
 near `x`). Returns `n` if `f` has a pole of order `n` (i.e., `meromorphicOrderAt f x = -n`). -/
-noncomputable def poleOrderAt (f : ℂ → ℂ) (x : ℂ) : ℕ :=
+@[expose] noncomputable def poleOrderAt (f : ℂ → ℂ) (x : ℂ) : ℕ :=
   (-(meromorphicOrderAt f x).untop₀).toNat
 
 /-! ### Condition (A): Flatness condition for higher-order poles -/

@@ -20,7 +20,7 @@ directly from the coordinatewise antitonicity of the exponential Dirichlet
 statistic.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Set
 
@@ -29,14 +29,14 @@ namespace Feige
 section Parameters
 
 /-- Probability of the high value in a mean-one two-point law. -/
-noncomputable def highProbability (γ β : ℝ) : ℝ :=
+@[expose] noncomputable def highProbability (γ β : ℝ) : ℝ :=
   γ / (γ + β)
 
 /-- The low value in the mean-one two-point parametrization. -/
-def lowValue (γ : ℝ) : ℝ := 1 - γ
+@[expose] def lowValue (γ : ℝ) : ℝ := 1 - γ
 
 /-- The high value in the mean-one two-point parametrization. -/
-def highValue (β : ℝ) : ℝ := 1 + β
+@[expose] def highValue (β : ℝ) : ℝ := 1 + β
 
 theorem highProbability_nonneg {γ β : ℝ} (hγ : 0 ≤ γ) (hβ : 0 < β) :
     0 ≤ highProbability γ β := by
@@ -77,7 +77,7 @@ noncomputable def twoPointVector (γ β : ι → ℝ) (S : Set ι) (i : ι) : �
     exact if i ∈ S then highValue (β i) else lowValue (γ i)
 
 /-- The Dirichlet statistic at the two-point vector encoded by `S`. -/
-noncomputable def twoPointK (γ β : ι → ℝ) (S : Set ι) : ℝ :=
+@[expose] noncomputable def twoPointK (γ β : ι → ℝ) (S : Set ι) : ℝ :=
   dirichletK (twoPointVector γ β S)
 
 /-- At the bottom of the Boolean lattice every coefficient in the internal
@@ -126,7 +126,7 @@ section ProductHighSet
 variable [DecidableEq ι]
 
 /-- Product-law mass of a high set. -/
-def highSetMass (p : ι → ℝ) (S : Finset ι) : ℝ :=
+@[expose] def highSetMass (p : ι → ℝ) (S : Finset ι) : ℝ :=
   (∏ i ∈ S, p i) * ∏ i ∈ Finset.univ \ S, (1 - p i)
 
 theorem highSetMass_nonneg {p : ι → ℝ}
@@ -145,7 +145,7 @@ theorem sum_highSetMass (p : ι → ℝ) :
 
 /-- Finset-indexed version of `Kₘ(S)`, convenient for finite products and
 maximal-chain constructions. -/
-noncomputable def twoPointKFinset (γ β : ι → ℝ) (S : Finset ι) : ℝ :=
+@[expose] noncomputable def twoPointKFinset (γ β : ι → ℝ) (S : Finset ι) : ℝ :=
   twoPointK γ β (S : Set ι)
 
 omit [DecidableEq ι] in
@@ -156,11 +156,12 @@ theorem twoPointKFinset_antitone {γ β : ι → ℝ}
   exact twoPointK_antitone hγ hβ (by simpa using hAB)
 
 /-- Coordinatewise high probabilities in the two-point parametrization. -/
-noncomputable def twoPointHighProbability (γ β : ι → ℝ) (i : ι) : ℝ :=
+@[expose] noncomputable def twoPointHighProbability (γ β : ι → ℝ) (i : ι) : ℝ :=
   highProbability (γ i) (β i)
 
 /-- Rejection probability under the independent two-point product law,
 written as a finite sum over high sets. -/
+@[expose]
 noncomputable def twoPointRejectionMass
     (γ β : ι → ℝ) (α : ℝ) : ℝ := by
   classical

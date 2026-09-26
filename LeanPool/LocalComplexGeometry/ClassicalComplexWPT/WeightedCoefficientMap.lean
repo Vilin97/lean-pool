@@ -23,7 +23,7 @@ ultrametric multiplication estimates for restricted or Gauss-norm power
 series.
 -/
 
-@[expose] public section
+public section
 
 
 open scoped NNReal ENNReal Topology

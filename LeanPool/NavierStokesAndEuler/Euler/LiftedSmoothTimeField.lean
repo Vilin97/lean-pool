@@ -22,7 +22,7 @@ section
 /-! The four-dimensional transport velocity associated with a lifted
 solenoidal field has zero ordinary trace on the real covering space. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -98,7 +98,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

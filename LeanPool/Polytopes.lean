@@ -18,7 +18,7 @@ Tags: convex-geometry, discrete-geometry, polytopes
 MSC: 52B11, 52A20
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

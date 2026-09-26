@@ -18,7 +18,7 @@ arithmetic; inversion and the comparison `Decidable` instances go through the
 classical `ComputableℝSeq.sign` and are `noncomputable`.
 -/
 
-@[expose] public section
+public section
 
 /-- Computable reals, defined as the quotient of ComputableℝSeq sequences -- sequences with
   Cauchy sequences of lower and upper bounds that converge to the same value -- by the equivalence

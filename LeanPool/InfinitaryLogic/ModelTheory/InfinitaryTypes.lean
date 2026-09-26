@@ -22,7 +22,7 @@ image); it does NOT ascend through arbitrary expansions, which is why the arbitr
 endpoint of issue #11 must go through a canonical uniform expansion rather than this lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

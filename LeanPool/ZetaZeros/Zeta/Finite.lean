@@ -20,7 +20,7 @@ It is discharged from Mathlib's `IsCompact.inter_riemannZetaZeros_finite`, since
 bounded.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

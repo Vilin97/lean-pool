@@ -26,7 +26,7 @@ model `fer`.  The main results are
   vanishes.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 

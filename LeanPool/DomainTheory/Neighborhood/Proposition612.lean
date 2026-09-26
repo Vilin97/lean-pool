@@ -60,7 +60,7 @@ The element-wise descriptions Scott records are `Subsystem.toElementMap_inj` and
 Everything here is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

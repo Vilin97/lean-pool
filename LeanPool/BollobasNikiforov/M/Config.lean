@@ -19,7 +19,7 @@ Indices are identified with `Option (Fin k) ⊕ Fin p` via `configIdxEquiv`:
 `Fin (k + 1 + p)`, which supplies `LinearOrder` for `M`.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 
@@ -40,13 +40,13 @@ def configIdxEquiv (k p : ℕ) : ConfigIdx k p ≃ Option (Fin k) ⊕ Fin p :=
     (Equiv.sumCongr (finSuccEquiv k) (Equiv.refl _))
 
 /-- The `z₀` index (`none`). -/
-def idxZ0 : ConfigIdx k p := (configIdxEquiv k p).symm (Sum.inl none)
+@[expose] def idxZ0 : ConfigIdx k p := (configIdxEquiv k p).symm (Sum.inl none)
 
 /-- The `zᵢ` index (`some i`). -/
-def idxZ (i : Fin k) : ConfigIdx k p := (configIdxEquiv k p).symm (Sum.inl (some i))
+@[expose] def idxZ (i : Fin k) : ConfigIdx k p := (configIdxEquiv k p).symm (Sum.inl (some i))
 
 /-- The `yⱼ` index. -/
-def idxY (j : Fin p) : ConfigIdx k p := (configIdxEquiv k p).symm (Sum.inr j)
+@[expose] def idxY (j : Fin p) : ConfigIdx k p := (configIdxEquiv k p).symm (Sum.inr j)
 
 lemma idxZ0_eq : (idxZ0 : ConfigIdx k p) = 0 := by
   simp only [idxZ0, configIdxEquiv, Equiv.symm_trans, Equiv.sumCongr_symm, Equiv.refl_symm,
@@ -104,14 +104,14 @@ lemma sum_configIdx (f : ConfigIdx k p → ℝ) :
 /-! ### MX06 — configuration vectors and Gram matrix -/
 
 /-- Feature vector `z₀ = (1, 0)`. -/
-def z0 : Fin 2 → ℝ := ![1, 0]
+@[expose] def z0 : Fin 2 → ℝ := ![1, 0]
 
 /-- Feature vector `zᵢ = √sᵢ (-1, tᵢ)`. -/
-def zVec (s t : Fin k → ℝ) (i : Fin k) : Fin 2 → ℝ :=
+@[expose] def zVec (s t : Fin k → ℝ) (i : Fin k) : Fin 2 → ℝ :=
   ![ -Real.sqrt (s i), Real.sqrt (s i) * t i ]
 
 /-- Feature vector `yⱼ = √ρⱼ (xⱼ, 1)`. -/
-def yVec (ρ x : Fin p → ℝ) (j : Fin p) : Fin 2 → ℝ :=
+@[expose] def yVec (ρ x : Fin p → ℝ) (j : Fin p) : Fin 2 → ℝ :=
   ![ Real.sqrt (ρ j) * x j, Real.sqrt (ρ j) ]
 
 @[simp] lemma z0_zero : z0 0 = 1 := rfl
@@ -126,7 +126,7 @@ def yVec (ρ x : Fin p → ℝ) (j : Fin p) : Fin 2 → ℝ :=
     yVec ρ x j 1 = Real.sqrt (ρ j) := by simp [yVec]
 
 /-- The assembled configuration on `ConfigIdx`. -/
-def configVec (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
+@[expose] def configVec (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
     ConfigIdx k p → Fin 2 → ℝ :=
   fun α =>
     match configIdxEquiv k p α with
@@ -152,7 +152,7 @@ def configMat (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
   fun α c => configVec s t ρ x α c
 
 /-- Gram matrix of the configuration. -/
-def Xconfig (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
+@[expose] def Xconfig (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
     Matrix (ConfigIdx k p) (ConfigIdx k p) ℝ :=
   fun a b => configVec s t ρ x a ⬝ᵥ configVec s t ρ x b
 
@@ -229,11 +229,11 @@ lemma Xconfig_z_y (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) (i : Fin k) (j : 
 /-! ### MX07 — auxiliary scalars -/
 
 /-- `Hᵢ = ∑ⱼ ρⱼ (xⱼ - tᵢ)₊²`. -/
-def configH (t : Fin k → ℝ) (ρ x : Fin p → ℝ) (i : Fin k) : ℝ :=
+@[expose] def configH (t : Fin k → ℝ) (ρ x : Fin p → ℝ) (i : Fin k) : ℝ :=
   ∑ j, ρ j * (max (x j - t i) 0) ^ 2
 
 /-- `dᵢ = 1 + Hᵢ`. -/
-def configD (t : Fin k → ℝ) (ρ x : Fin p → ℝ) (i : Fin k) : ℝ :=
+@[expose] def configD (t : Fin k → ℝ) (ρ x : Fin p → ℝ) (i : Fin k) : ℝ :=
   1 + configH t ρ x i
 
 /-- `σ = ∑ᵢ sᵢ`. -/

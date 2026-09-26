@@ -22,7 +22,7 @@ and has no non-eventually-constant convergent sequences.  Its canonical induced 
 totally bounded, which is the uniform formulation of precompactness used here.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

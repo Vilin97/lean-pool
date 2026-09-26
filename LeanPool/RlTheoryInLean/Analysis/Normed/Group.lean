@@ -14,4 +14,4 @@ import Mathlib.Analysis.Normed.Group.Basic
 Import-only index for the `Group` directory of the RL-theory-in-Lean import.
 -/
 
-@[expose] public section
+public section

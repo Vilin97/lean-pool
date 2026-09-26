@@ -21,7 +21,7 @@ named after whichever definition in the *module* first needed it, so splitting t
 modules gives them names a single self-contained file cannot reproduce.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 
@@ -33,8 +33,7 @@ def nontrivialZeros (T : ℝ) : Set ℂ :=
 
 /-- The multiplicity of `ρ` as a zero of the Riemann zeta function, i.e. its order of
 vanishing there. -/
-@[zz_tag "def_multiplicity"]
-noncomputable def zeroMultiplicity (ρ : ℂ) : ℕ := analyticOrderNatAt riemannZeta ρ
+@[expose, zz_tag "def_multiplicity"] noncomputable def zeroMultiplicity (ρ : ℂ) : ℕ := analyticOrderNatAt riemannZeta ρ
 
 /-- The number of non-trivial zeros with imaginary part in `(0, T]`, counted with multiplicity.
 This is `N T` in the source. -/
@@ -53,8 +52,7 @@ in the source. -/
 noncomputable def distinctZeroCount (T : ℝ) : ℕ := (nontrivialZeros T).ncard
 
 /-- The Fourier transform of a compactly supported real function, at a complex argument. -/
-@[zz_tag "def_fourier"]
-noncomputable def fourierC (f : ℝ → ℝ) (ξ : ℂ) : ℂ :=
+@[expose, zz_tag "def_fourier"] noncomputable def fourierC (f : ℝ → ℝ) (ξ : ℂ) : ℂ :=
   ∫ u : ℝ, (f u : ℂ) * Complex.exp (-(2 * (Real.pi : ℂ)) * Complex.I * ξ * (u : ℂ))
 
 /-- `eta` is `lam`-admissible: square-integrable, real-valued, even, supported in
@@ -71,8 +69,7 @@ structure IsAdmissible (lam : ℝ) (eta : ℝ → ℝ) : Prop where
   fourier_sq_zero : fourierC (eta ^ 2) 0 = 1
 
 /-- The kernel of a test function, `K_eta = fourier transform of eta squared`. -/
-@[zz_tag "def_kernel"]
-noncomputable def testKernel (eta : ℝ → ℝ) : ℂ → ℂ := fourierC (eta ^ 2)
+@[expose, zz_tag "def_kernel"] noncomputable def testKernel (eta : ℝ → ℝ) : ℂ → ℂ := fourierC (eta ^ 2)
 
 /-- The support `Z` with multiplicities `m` is conjugation-invariant: every multiplicity is at
 least one, and conjugation permutes `Z` preserving multiplicity. -/
@@ -86,17 +83,14 @@ structure IsConjInvariant (Z : Finset ℂ) (m : ℂ → ℕ) : Prop where
   mult_conj : ∀ z ∈ Z, m ((starRingEnd ℂ) z) = m z
 
 /-- The simple real part of the support: real points of multiplicity one. -/
-@[zz_tag "def_R1"]
-noncomputable def simpleRealPart (Z : Finset ℂ) (m : ℂ → ℕ) : Finset ℂ :=
+@[expose, zz_tag "def_R1"] noncomputable def simpleRealPart (Z : Finset ℂ) (m : ℂ → ℕ) : Finset ℂ :=
   Z.filter fun x => x.im = 0 ∧ m x = 1
 
 /-- The weight `4 / (4 - z²)` carried by the unconditional pair-correlation formula. -/
-@[zz_tag "def_w"]
-noncomputable def pairWeight (z : ℂ) : ℂ := 4 / (4 - z ^ 2)
+@[expose, zz_tag "def_w"] noncomputable def pairWeight (z : ℂ) : ℂ := 4 / (4 - z ^ 2)
 
 /-- The rescaled difference `i(ρ - ρ') log T / (2π)` of two zeros. -/
-@[zz_tag "def_z_rho"]
-noncomputable def rescaledDiff (T : ℝ) (ρ ρ' : ℂ) : ℂ :=
+@[expose, zz_tag "def_z_rho"] noncomputable def rescaledDiff (T : ℝ) (ρ ρ' : ℂ) : ℂ :=
   Complex.I * (ρ - ρ') * ((Real.log T / (2 * Real.pi) : ℝ) : ℂ)
 
 /-- The weighted sum of `fourierC f` over ordered pairs of non-trivial zeros with imaginary part
@@ -108,8 +102,7 @@ noncomputable def pairCorrelationSum (f : ℝ → ℝ) (T : ℝ) : ℂ :=
       fourierC f (rescaledDiff T ρ ρ') * pairWeight (ρ - ρ')
 
 /-- The main term `f 0 + 2 ∫₀¹ α f α` of the pair-correlation formula. -/
-@[zz_tag "def_A_functional"]
-noncomputable def pairMainTerm (f : ℝ → ℝ) : ℝ := f 0 + 2 * ∫ α in (0:ℝ)..1, α * f α
+@[expose, zz_tag "def_A_functional"] noncomputable def pairMainTerm (f : ℝ → ℝ) : ℝ := f 0 + 2 * ∫ α in (0:ℝ)..1, α * f α
 
 /-- A test function admissible in the pair-correlation formula: even, integrable, supported in
 `[-1, 1]`, and Lipschitz at the origin.

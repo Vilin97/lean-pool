@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftGraph
 The identities concern the constructed exact packet, not an arbitrary
 pair satisfying an energy bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

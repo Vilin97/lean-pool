@@ -42,4 +42,4 @@ Tags: representation-theory, lie-algebras, mathematical-physics, virasoro-algebr
 MSC: 17B68, 17B56, 81R10
 -/
 
-@[expose] public section
+public section

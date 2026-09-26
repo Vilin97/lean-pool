@@ -30,7 +30,7 @@ another. The registered `bell-state-prep` target is `bell_state_prep` here.
 - `LeanPool.LeanQuantumAlg.norm_bell` — the Bell state is normalized.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

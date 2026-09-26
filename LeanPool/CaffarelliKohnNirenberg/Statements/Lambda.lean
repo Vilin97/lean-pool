@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Basic
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal NNReal Topology
@@ -25,6 +25,7 @@ noncomputable section
 namespace CKN
 
 /-- The force quantity λ from the manuscript, `eq:lambda`. -/
+@[expose]
 noncomputable def lambda (q : ℝ) (f : ParabolicPoint → Vec3)
     (z : ParabolicPoint) (r : ℝ) : ℝ :=
   r ^ (3 - 5 / q) *

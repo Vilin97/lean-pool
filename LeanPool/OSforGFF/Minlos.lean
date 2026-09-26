@@ -23,4 +23,4 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 Import aggregator for the `Minlos` directory.
 -/
 
-@[expose] public section
+public section

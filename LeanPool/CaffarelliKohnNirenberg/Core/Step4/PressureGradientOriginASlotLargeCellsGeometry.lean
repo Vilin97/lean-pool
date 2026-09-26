@@ -31,7 +31,7 @@ Together they reduce every clipped cell to margin cells centred in the carrier,
 at the cost of one absolute multiplicative constant.
 -/
 
-@[expose] public section
+public section
 
 section
 

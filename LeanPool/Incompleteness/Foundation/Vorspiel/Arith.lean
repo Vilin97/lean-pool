@@ -11,7 +11,7 @@ import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
 
 /-! # Arith -/
 
-@[expose] public section
+public section
 
 
 open Mathlib List.Vector Part
@@ -21,10 +21,10 @@ namespace Nat
 lemma pos_of_eq_one (h : n = 1) : 0 < n := by simp[h]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def isEqNat (n m : ℕ) : ℕ := if n = m then 1 else 0
+@[expose] def isEqNat (n m : ℕ) : ℕ := if n = m then 1 else 0
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def isLtNat (n m : ℕ) : ℕ := if n < m then 1 else 0
+@[expose] def isLtNat (n m : ℕ) : ℕ := if n < m then 1 else 0
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def isLeNat (n m : ℕ) : ℕ := if n ≤ m then 1 else 0

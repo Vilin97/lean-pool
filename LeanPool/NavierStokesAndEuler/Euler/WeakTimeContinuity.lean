@@ -21,7 +21,7 @@ to all `L²` test fields. No spatial derivative integrability or energy
 conservation assumption is used here.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

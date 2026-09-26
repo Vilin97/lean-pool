@@ -53,7 +53,7 @@ Source: Ragone, Bakalov, Sauvage, Kemper, Ortiz Marrero, Larocca, Cerezo (2023),
 *A Lie algebraic theory of barren plateaus* (arXiv:2309.09342).
 -/
 
-@[expose] public section
+public section
 
 attribute [local instance 100] LieRing.ofAssociativeRing
 

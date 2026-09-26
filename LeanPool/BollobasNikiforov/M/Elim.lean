@@ -29,7 +29,7 @@ products of those columns yield a completely positive `C₀` (EL12). The
 remainder is the `T`-Schur complement of `E` and is PSD (EL13–EL14).
 -/
 
-@[expose] public section
+public section
 
 open Matrix Function
 
@@ -1222,12 +1222,12 @@ lemma MX_isSymm (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
   isHermitian_iff_isSymm.mp (MX_isHermitian s t ρ x)
 
 /-- `E`-embedding: `none` is `z₀`, `some i` is `zᵢ`. -/
-def elimEEmbed : Option (Fin k) → ConfigIdx k p
+@[expose] def elimEEmbed : Option (Fin k) → ConfigIdx k p
   | none => idxZ0
   | some i => idxZ i
 
 /-- `T`-embedding: the `y`-indices. -/
-def elimT : Fin p → ConfigIdx k p := idxY
+@[expose] def elimT : Fin p → ConfigIdx k p := idxY
 
 lemma elimEEmbed_none : elimEEmbed (p := p) (none : Option (Fin k)) = idxZ0 := rfl
 lemma elimEEmbed_some (i : Fin k) : elimEEmbed (p := p) (some i) = idxZ i := rfl
@@ -1363,7 +1363,7 @@ lemma M_submatrix_sumElim (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
   cases i <;> cases j <;> rfl
 
 /-- Schur complement of the `E`-block in the `T`-block. -/
-def elimSchurR (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
+@[expose] def elimSchurR (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
     Matrix (Fin p) (Fin p) ℝ :=
   elimTT s t ρ x - elimTE s t ρ x * (elimEE s t ρ x)⁻¹ * elimET s t ρ x
 

@@ -17,7 +17,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Flat local checker for coverage certificates -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
@@ -103,15 +103,15 @@ def BranchClaims.nodeAt (claims : BranchClaims) (identifier : Nat) : NodeClaim :
     defaultNodeClaim
 
 /-- Read one row byte from a packed incidence-table code. -/
-def rowFromCode (code : UInt64) (centre : Vertex) : UInt64 :=
+@[expose] def rowFromCode (code : UInt64) (centre : Vertex) : UInt64 :=
   (code >>> UInt64.ofNat (8 * centre.val)) &&& 255
 
 /-- Assigned centres at one search depth. -/
-def assignedCentres (depth : Nat) : List Vertex :=
+@[expose] def assignedCentres (depth : Nat) : List Vertex :=
   [0, 1, 2] ++ searchCentres.take depth
 
 /-- Reconstruct the semantic assignment prefix from a code and search depth. -/
-def assignmentsFromCode (code : UInt64) (depth : Nat) : List RowAssignment :=
+@[expose] def assignmentsFromCode (code : UInt64) (depth : Nat) : List RowAssignment :=
   (assignedCentres depth).map fun centre => (centre, rowFromCode code centre)
 
 /-- Reconstruct the packed pair state from the semantic assignment prefix. -/
@@ -177,37 +177,37 @@ private theorem foldl_good_of_final
       · exact induction hfinal htail
 
 /-- Constant-depth lookup of one compact pattern-summary identifier. -/
-def densePatternSummaryLookup (identifier : Nat) : Option PatternSummary :=
+@[expose] def densePatternSummaryLookup (identifier : Nat) : Option PatternSummary :=
   match densePatternSummaryGroups[identifier / 64]? with
   | none => none
   | some group => group[identifier % 64]?
 
 /-- Constant-depth lookup of one compact exact-summary identifier. -/
-def denseHardSummaryLookup (identifier : Nat) : Option HardSummary :=
+@[expose] def denseHardSummaryLookup (identifier : Nat) : Option HardSummary :=
   match denseHardSummaryGroups[identifier / 64]? with
   | none => none
   | some group => group[identifier % 64]?
 
 /-- Packed-only pattern-summary validation for the first computation gate. -/
-def patternIdentifierPackedMatchesB
+@[expose] def patternIdentifierPackedMatchesB
     (identifier : Nat) (code : UInt64) : Bool :=
   match densePatternSummaryLookup identifier with
   | none => false
   | some summary => (summary.mask &&& code) == summary.mask
 
 /-- Packed-only exact-summary validation for the first computation gate. -/
-def hardIdentifierPackedMatchesB (identifier : Nat) (code : UInt64) : Bool :=
+@[expose] def hardIdentifierPackedMatchesB (identifier : Nat) (code : UInt64) : Bool :=
   match denseHardSummaryLookup identifier with
   | none => false
   | some summary => summary.code == code
 
 /-- Selected row indices in one fixed five-index word. -/
-def rowIndexWord (rows : UInt64) (offset : Nat) : List Nat :=
+@[expose] def rowIndexWord (rows : UInt64) (offset : Nat) : List Nat :=
   let word := ((rows >>> UInt64.ofNat offset) &&& 31).toNat
   (fiveBitIndices.getD word []).map fun index => offset + index
 
 /-- Retrieve one conflict cover without unfolding the full generated table. -/
-def conflictCoverLookup (identifier : Nat) : Option ConflictCover :=
+@[expose] def conflictCoverLookup (identifier : Nat) : Option ConflictCover :=
   match conflictCoverGroups[identifier / 64]? with
   | none => none
   | some group => group[identifier % 64]?
@@ -350,7 +350,7 @@ theorem nodeRowValid_of_word
   · exact hindex
 
 /-- Validate one semantically rejected row of a node claim. -/
-def rejectedRowValidB
+@[expose] def rejectedRowValidB
     (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
     (index target : Nat) : Bool :=
   if htarget : target < 8 then
@@ -419,7 +419,7 @@ theorem rejectedRowValid_of_word
   · exact hindex
 
 /-- Validate the conservative pair/column row partition of one node. -/
-def nodePruningValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
+@[expose] def nodePruningValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
   if identifier < claims.nodeCount then
     let claim := claims.nodeAt identifier
     if claim.depth < searchCentres.length then
@@ -447,7 +447,7 @@ def nodePruningValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
   else false
 
 /-- Validate the active row outcomes and child-state transitions of one node. -/
-def nodeTransitionsValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
+@[expose] def nodeTransitionsValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
   if identifier < claims.nodeCount then
     let claim := claims.nodeAt identifier
     if claim.depth < searchCentres.length then
@@ -460,7 +460,7 @@ def nodeTransitionsValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
   else false
 
 /-- Fail-closed local validation of one postorder node. -/
-def nodeLocalValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
+@[expose] def nodeLocalValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
   nodePruningValidB claims identifier && nodeTransitionsValidB claims identifier
 
 /-- Validate a bounded consecutive chunk of postorder node identifiers. -/
@@ -503,7 +503,7 @@ def allNodeClaimsValidB (claims : BranchClaims) : Bool :=
     nodeClaimChunkValidB claims start (min 64 (claims.nodeCount - start))
 
 /-- Validate the exact fixed-row root carried by one search claim array. -/
-def searchBranchRootValidB
+@[expose] def searchBranchRootValidB
     (orbit : Fin 7) (rowTwo : Fin 35) (claims : BranchClaims) : Bool :=
   if claims.rootId < claims.nodeCount then
     let root := claims.nodeAt claims.rootId

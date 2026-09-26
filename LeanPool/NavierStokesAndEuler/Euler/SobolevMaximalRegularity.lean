@@ -40,7 +40,7 @@ section
 
 /-! Genuine gradient energy and maximal-regularity estimates for smooth Sobolev heat solutions. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -173,7 +173,7 @@ section
 
 /-! Exact L² Hessian coercivity from actual commuting strong derivatives. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -243,7 +243,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -312,7 +312,7 @@ section
 
 /-! Integrated genuine heat gradient energy, with the source measured only in L². -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -373,7 +373,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -496,7 +496,7 @@ section
 
 /-! Strong Cauchy convergence from a quadratic norm estimate in complete-space arguments. -/
 
-@[expose] public section
+public section
 
 namespace EulerQuadraticCauchy
 
@@ -550,7 +550,7 @@ section
 
 /-! Strong L²-time H² Cauchy convergence from genuine heat energy, avoiding weak compactness. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -718,7 +718,7 @@ section
 /-! Actual higher Sobolev norms controlled by lower norms and finitely many top derivative blocks.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -780,7 +780,7 @@ section
 
 /-! Strong time-space completion controlled by genuine finite spatial derivative blocks. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -844,7 +844,7 @@ section
 
 /-! Strong Cauchy convergence controlled by finitely many genuine norm observations. -/
 
-@[expose] public section
+public section
 
 namespace EulerQuadraticCauchy
 
@@ -878,7 +878,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -938,7 +938,7 @@ section
 /-! Genuine maximal spatial regularity of the actual viscous mild solution, proved by strong Cauchy
 limits. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1074,7 +1074,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1138,7 +1138,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

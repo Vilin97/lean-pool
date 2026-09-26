@@ -19,7 +19,7 @@ Tags: additive-combinatorics, number-theory, distinct-subset-sums, erdos-problem
 MSC: 11B13, 11B75
 -/
 
-@[expose] public section
+public section
 
 /-!
 Guy's 1982 account states the exact finite sum-of-squares inequality as

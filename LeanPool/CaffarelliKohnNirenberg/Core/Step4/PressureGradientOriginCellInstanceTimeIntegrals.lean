@@ -19,7 +19,7 @@ windows. Tonelli identifies these integrals with the carrier-restricted
 space-time mass without extending any data outside the carrier.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology BigOperators

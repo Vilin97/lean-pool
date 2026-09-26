@@ -13,7 +13,7 @@ import Mathlib.MeasureTheory.Measure.Haar.Unique
 
 /-! The actual joint spatial and angular reflection on cylinder L² fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

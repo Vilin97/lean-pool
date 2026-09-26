@@ -30,7 +30,7 @@ therefore vanish past the same outer radius, uniformly over positive orders
 moment; no renormalized order-zero moment is used in this module.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -533,7 +533,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

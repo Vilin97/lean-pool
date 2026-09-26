@@ -11,7 +11,7 @@ public import LeanPool.DirectedTopologyLean4.DirectedSpace
 # LeanPool.DirectedTopologyLean4.DirectedMap
 -/
 
-@[expose] public section
+public section
 
 /-
   # Definition of directed maps

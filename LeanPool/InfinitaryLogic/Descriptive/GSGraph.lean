@@ -47,7 +47,7 @@ applied to the part of the symmetric difference inside each child cylinder). A c
 `(prependWord (s ++ [false]) x, prependWord (s ++ [true]) x)` inside `B`.
 -/
 
-@[expose] public section
+public section
 
 open Set Filter Topology
 

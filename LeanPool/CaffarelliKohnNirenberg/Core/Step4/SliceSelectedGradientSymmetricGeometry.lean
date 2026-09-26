@@ -25,7 +25,7 @@ The module contains no analytic content: it is pure parabolic geometry, and its
 statements are used only to rewrite membership between the one-sided and
 symmetric carriers. -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology

@@ -23,7 +23,7 @@ velocity itself, so its integrability exponent stays at `3`: it is estimated
 in `M^{3,25/6}` directly, by lowering only the Morrey exponent from `25/3`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 open MeasureTheory MeasureTheory.Measure Set Metric Filter

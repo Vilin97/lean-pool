@@ -16,7 +16,7 @@ import Mathlib.MeasureTheory.Covering.Besicovitch
 # LeanPool.SardMoreira.ChartEstimates
 -/
 
-@[expose] public section
+public section
 
 open scoped unitInterval Topology NNReal
 open Asymptotics Filter Set Metric Function MeasureTheory Measure

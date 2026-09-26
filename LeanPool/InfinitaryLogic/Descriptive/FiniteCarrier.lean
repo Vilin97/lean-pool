@@ -31,7 +31,7 @@ gives a counting dichotomy for all countable models.
 - `allCodedIsoClasses_dichotomy`: Combined counting dichotomy for all countable models.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

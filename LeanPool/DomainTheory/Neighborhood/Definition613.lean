@@ -85,7 +85,7 @@ The identity functor is monotone and continuous on domains
 (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -145,7 +145,7 @@ theorem monotoneOnDomains_id : MonotoneOnDomains (idEndofunctor DomainObj.{w}) :
 over `T(E)`'s carrier (using `MonotoneAt.carrier_eq` to transport neighbourhoods
 of `T(D)` to that
 carrier). This is the data on which "`λD. T(D)` is approximable" is expressed. -/
-def targetFam (T : Endofunctor DomainObj.{w}) (hmono : MonotoneOnDomains T)
+@[expose] def targetFam (T : Endofunctor DomainObj.{w}) (hmono : MonotoneOnDomains T)
     {α : Type w} {D E : NeighborhoodSystem α} (h : D ◁ E) :
     Set (Set (T.obj ⟨α, E⟩).carrier) :=
   {Y | (T.obj ⟨α, D⟩).sys.mem ((hmono h).carrier_eq ▸ Y)}

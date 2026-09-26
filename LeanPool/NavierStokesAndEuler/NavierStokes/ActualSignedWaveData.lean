@@ -33,7 +33,7 @@ family. Bounds are uniform before selecting an outer label, a harmonic,
 a band, or a lattice copy. No physical derivative estimate is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -810,7 +810,7 @@ common lift has positive time exactly before terminal time, so all physical
 copy fields and their ambient jets agree there with the original fields.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1038,7 +1038,7 @@ native time is an explicit premise; no support assertion is made for the
 totalized formulas outside that domain.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1144,7 +1144,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1742,7 +1742,7 @@ positive time.  This proves the physical closure-coverage condition without
 extending the profile functions across a native domain boundary.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2030,7 +2030,7 @@ assembly.  The source-domain statements concern the original, ungated
 amplitudes on positive lift time.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2236,7 +2236,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

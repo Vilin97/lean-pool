@@ -20,7 +20,7 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -20,7 +20,7 @@ flow is therefore differentiable and smooth; its derivative is the actual
 inverse fundamental operator, without an independent inverse assumption.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

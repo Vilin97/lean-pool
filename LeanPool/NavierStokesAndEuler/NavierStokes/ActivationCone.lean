@@ -20,7 +20,7 @@ In particular, none of their constants involves the inverse of the retained
 damping parameter. The later results use the constructed activation fields.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -485,7 +485,7 @@ noncomputable def activatedCross (h X0 : ℝ) (initial : HistoryRow → ℝ → 
     (activatedStockTwo h X0 initial L U T κ p) (shearSlope T κ X0 L U p)
 
 /-- Activated stress as an element of `ℝ × ℝ`. -/
-noncomputable def activatedStress (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
+@[expose] noncomputable def activatedStress (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
     (L U : Field) (T κ : ℝ) (p : Point) : ℝ × ℝ :=
   (activatedAngular T κ L p * (activatedStockOne h X0 initial L U T κ p - actualP1 T κ L p),
     activatedAngular T κ L p * (activatedStockTwo h X0 initial L U T κ p - actualP2 T κ X0 L U p))

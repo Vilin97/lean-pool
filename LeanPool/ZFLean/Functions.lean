@@ -19,7 +19,7 @@ import Mathlib.Tactic.NormNum.Pow
 Imported Lean Pool material for `LeanPool.ZFLean.Functions`.
 -/
 
-@[expose] public section
+public section
 
 namespace ZFSet
 
@@ -99,7 +99,7 @@ theorem _root_.ZFSet.funs.nonempty {A B : ZFSet} (hB : B ≠ ∅) : ZFSet.funs A
 `IsPFunc f A B` is the assertion that `f` is a partial function from `A` to `B`,
 i.e. that if `pair x y ∈ f` and `pair x z ∈ f` then `y = z`.
 -/
-def IsPFunc (f A B : ZFSet) := f ⊆ prod A B ∧ ∀ x y :
+@[expose] def IsPFunc (f A B : ZFSet) := f ⊆ prod A B ∧ ∀ x y :
   ZFSet, pair x y ∈ f → ∀ z, pair x z ∈ f → y = z
 
 @[zrel]
@@ -213,16 +213,16 @@ theorem is_func_of_pfunc (f : ZFSet) {A B} (hf : f.IsPFunc A B) : IsFunc f.Dom B
   rw [pair_mem_prod]
   exact ⟨u_dom, yB⟩
 /-- Imported ZFLean declaration. -/
-def IsInjective (f : ZFSet) {A B : ZFSet} (_hf : IsFunc A B f := by zfun) :=
+@[expose] def IsInjective (f : ZFSet) {A B : ZFSet} (_hf : IsFunc A B f := by zfun) :=
   let _ := _hf
   ∀ x y z, x ∈ A → y ∈ A → z ∈ B → x.pair z ∈ f → y.pair z ∈ f → x = y
 /-- Imported ZFLean declaration. -/
-def IsSurjective (f : ZFSet) {A B : ZFSet} (_hf : IsFunc A B f := by zfun) :=
+@[expose] def IsSurjective (f : ZFSet) {A B : ZFSet} (_hf : IsFunc A B f := by zfun) :=
   let _ := _hf
   ∀ y ∈ B, ∃ x ∈ A, x.pair y ∈ f
 
 /-- A function is bijective when it is injective and surjective. -/
-def IsBijective (f : ZFSet) {A B : ZFSet} (hf : IsFunc A B f := by zfun) :=
+@[expose] def IsBijective (f : ZFSet) {A B : ZFSet} (hf : IsFunc A B f := by zfun) :=
   f.IsInjective ∧ f.IsSurjective
 
 theorem _root_.ZFSet.IsInjective.ofBijective {f A B C : ZFSet} {hf : IsFunc A B f}
@@ -357,7 +357,7 @@ If `f : A → B` and `g : B → C` are functions, then `composition g f` is the 
 from `A` to `C` defined by `composition g f (x, z) = (x, y)` where `y` is such that
 `(x, y) ∈ f` and `(y, z) ∈ g`.
 -/
-def composition (g f : ZFSet) (A B C : ZFSet) : ZFSet :=
+@[expose] def composition (g f : ZFSet) (A B C : ZFSet) : ZFSet :=
   (A.prod C).sep fun xz =>
     ∃ (x z : ZFSet), xz = x.pair z ∧ ∃ y ∈ B, x.pair y ∈ f ∧ y.pair z ∈ g
 

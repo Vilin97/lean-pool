@@ -30,7 +30,7 @@ Main declarations:
   `periodVector (basis X)` over based loops at a fixed basepoint.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Module

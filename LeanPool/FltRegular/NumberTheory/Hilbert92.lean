@@ -18,7 +18,7 @@ This file studies systems of relative units in cyclic extensions for the proof o
 Hilbert's theorem 92.
 -/
 
-@[expose] public section
+public section
 
 open scoped NumberField nonZeroDivisors
 open FiniteDimensional NumberField

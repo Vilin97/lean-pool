@@ -104,7 +104,7 @@ genuine cycle rather than a point set — `Schoenflies.squareMesh_isLongCycle_ou
   clause 5.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph

@@ -17,7 +17,7 @@ lemmas here supply the product integrability on `(0, ∞) × ℝ³` that license
 Fubini exchange, for data that is smooth with compact support.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology

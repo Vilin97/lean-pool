@@ -23,7 +23,7 @@ import Mathlib.Tactic.NormNum.OfScientific
 # The uniform 26/25 factor and the finite bootstrap
 -/
 
-@[expose] public section
+public section
 
 namespace HypergraphLowerBound
 
@@ -1195,7 +1195,7 @@ private def under60Choices : List ChoiceSpec :=
   ]
 
 /-- The bonus terms e_r(m) for the balanced four-way construction. -/
-def eBonus (r : ℕ) (m : ℕ) : ℕ :=
+@[expose] def eBonus (r : ℕ) (m : ℕ) : ℕ :=
   match r % 4 with
   | 0 => (13 * m) / 3
   | 1 => (13 * m + 1) / 3

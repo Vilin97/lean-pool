@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJets
 
 /-! Actual defining equations of the generated mean and high profiles. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

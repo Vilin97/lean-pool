@@ -29,7 +29,7 @@ least ordinal α such that any tuple extending with a is determined by its α-ty
 This is equivalent to the stabilization ordinal approach but more compositional.
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 

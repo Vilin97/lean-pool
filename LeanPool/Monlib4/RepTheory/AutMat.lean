@@ -19,7 +19,7 @@ corollaries package the implementing matrix as a linear equivalence or as an
 element of the general linear group.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Matrix
 

@@ -29,7 +29,7 @@ For holomorphic maps between Riemann surfaces:
   (Forster 2.7; consumed by mapping-degree and the headline).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology IsManifold

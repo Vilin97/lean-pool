@@ -26,7 +26,7 @@ The forward map is
 and its inverse divides all nonzero-total vectors by their total mass.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal
 open Set
@@ -37,7 +37,7 @@ namespace Feige
 variable {n : ℕ}
 
 /-- Total mass of an `E₀,E₁,...,Eₙ` vector in product coordinates. -/
-def exponentialTotal (e : ℝ × (Fin n → ℝ)) : ℝ :=
+@[expose] def exponentialTotal (e : ℝ × (Fin n → ℝ)) : ℝ :=
   e.1 + ∑ i, e.2 i
 
 /-- Polar/simplex coordinate map used for normalized exponentials. -/
@@ -577,7 +577,7 @@ theorem lintegral_exponentialRadial_mul_test
 /-- The measure on simplex coordinates obtained from independent unit-rate
 exponentials: factorial times Lebesgue measure restricted to the full
 simplex. -/
-noncomputable def normalizedExponentialSimplexMeasure :
+@[expose] noncomputable def normalizedExponentialSimplexMeasure :
     Measure (Fin n → ℝ) :=
   (n.factorial : ℝ≥0∞) •
     (volume.restrict (fullSimplex (Fin n)))
@@ -611,7 +611,7 @@ theorem lintegral_normalizedExponential_eq_simplex
 
 /-- The unit-rate exponential density, extended by zero to the negative
 half-line. -/
-noncomputable def unitExponentialDensity (t : ℝ) : ℝ :=
+@[expose] noncomputable def unitExponentialDensity (t : ℝ) : ℝ :=
   (Ici (0 : ℝ)).indicator (fun t ↦ Real.exp (-t)) t
 
 theorem integral_unitExponentialDensity :

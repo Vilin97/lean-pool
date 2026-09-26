@@ -17,7 +17,7 @@ In this file we provide some elementary results for summations
 
 -/
 
-@[expose] public section
+public section
 
 
 namespace Finset

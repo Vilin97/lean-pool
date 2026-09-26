@@ -11,7 +11,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.IntProp
 
 /-! # Basic -/
 
-@[expose] public section
+public section
 
 
 namespace LO

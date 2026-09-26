@@ -21,7 +21,7 @@ core, crosscut, and grid together with the joining segments, retaining every old
 `OverlayExtension` then supplies the plane-subdivision certificate automatically.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

@@ -16,7 +16,7 @@ These permit nonzero terminal values and hence explicit affine coordinate
 lifts in the fixed-space endpoint problem.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

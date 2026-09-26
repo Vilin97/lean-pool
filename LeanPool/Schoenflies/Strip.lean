@@ -78,7 +78,7 @@ sufficiently small disk about a point of the curve meets the complement in exact
 components, one in each side), and part **(b)**, the arc case.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -297,7 +297,7 @@ progress along the edge and `coordAcross` the signed distance to its line. Both 
 the block is an intersection of four open half-planes — open and convex at a glance. -/
 
 /-- Progress along the directed edge that starts at `a` with unit tangent `u`. -/
-noncomputable def coordAlong (a u x : Plane) : ℝ := inner ℝ u (x - a)
+@[expose] noncomputable def coordAlong (a u x : Plane) : ℝ := inner ℝ u (x - a)
 
 /-- Signed distance from `x` to the line of the directed edge that starts at `a` with unit
 tangent `u`; positive on the left. -/
@@ -500,7 +500,7 @@ noncomputable def pt : Plane := P.off i c 0
 def edge : Set Plane := segment ℝ (P.vertex i) (P.vertex (i + 1))
 
 /-- The carrier of the polygon: the union of its edges. -/
-def carrier : Set Plane := ⋃ i, P.edge i
+@[expose] def carrier : Set Plane := ⋃ i, P.edge i
 
 variable {P i j c t s}
 

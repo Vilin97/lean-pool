@@ -172,7 +172,7 @@ Shannon entropy, conditional mutual information, conditional information inequal
 Kullback-Leibler divergence, Zhang-Yeung, essentially conditional inequality
 -/
 
-@[expose] public section
+public section
 
 namespace ZhangYeung
 

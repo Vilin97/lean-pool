@@ -12,7 +12,7 @@ public import Mathlib.Order.Lattice.Nat
 # Set-valued separators and their cardinality cost
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 

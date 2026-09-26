@@ -22,7 +22,7 @@ section
 /-! The actual correction energy right-hand side has the scalar shrinking-radius form, including its
 exact zero initial trace. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -117,7 +117,7 @@ section
 /-! Shrinking-radius Gevrey bootstrap from actual integral energy inequalities, including zero
 norms. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

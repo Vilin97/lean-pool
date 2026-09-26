@@ -21,7 +21,7 @@ mixed translation orbit is smooth because each input has a smooth H6 orbit.
 The output representative is the literal pointwise product at every point.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -17,7 +17,7 @@ exponential transfer step used in the proof of Theorem 2.1.  We use an
 auxiliary integrability assumptions.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real Set
 open scoped ENNReal
@@ -32,6 +32,7 @@ For nonnegative functions on the line this is the exact multiplicative
 inequality needed below.  Ordinary log-concave densities with convex
 support satisfy this property by concavity of `log f`.
 -/
+@[expose]
 def FourPointLogConcave (f : ℝ → ℝ≥0∞) : Prop :=
   ∀ ⦃r p q s : ℝ⦄,
     r ≤ p → p ≤ q → r ≤ s → s ≤ q → p + s = r + q →
@@ -56,7 +57,7 @@ theorem four_point_exponential_shifts
   simpa [mul_comm] using h
 
 /-- The exponential convolution weight. -/
-noncomputable def expWeight (s : ℝ) : ℝ≥0∞ :=
+@[expose] noncomputable def expWeight (s : ℝ) : ℝ≥0∞ :=
   ENNReal.ofReal (exp (-s))
 
 theorem measurable_expWeight : Measurable expWeight := by
@@ -129,11 +130,11 @@ theorem measurable_fMinus {f : ℝ → ℝ≥0∞} (hf : Measurable f) (b : ℝ)
     (measurable_expWeight.comp measurable_snd)
 
 /-- The lower-tail transfer functional `u` for a nonnegative density `g`. -/
-noncomputable def uIntegral (g : ℝ → ℝ≥0∞) (d : ℝ) : ℝ≥0∞ :=
+@[expose] noncomputable def uIntegral (g : ℝ → ℝ≥0∞) (d : ℝ) : ℝ≥0∞ :=
   ∫⁻ x in Ici 0, g x * ENNReal.ofReal (exp (-x / d))
 
 /-- The upper-tail transfer functional `v` for a nonnegative density `g`. -/
-noncomputable def vIntegral (g : ℝ → ℝ≥0∞) (c : ℝ) : ℝ≥0∞ :=
+@[expose] noncomputable def vIntegral (g : ℝ → ℝ≥0∞) (c : ℝ) : ℝ≥0∞ :=
   ∫⁻ y in Iio 0, g y * ENNReal.ofReal (exp (y / c))
 
 /-- Integrating the likelihood-ratio comparison against the two exponential

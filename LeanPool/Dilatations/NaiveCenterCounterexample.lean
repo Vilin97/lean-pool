@@ -19,7 +19,7 @@ The ring construction includes work by Arnaud Mayeux and Jujian Zhang from
 `ProjConstruction/Proj` (Apache-2.0).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

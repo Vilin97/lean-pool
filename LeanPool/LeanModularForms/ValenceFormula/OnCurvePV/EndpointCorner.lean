@@ -24,7 +24,7 @@ Cauchy principal value existence at the endpoint `1/2 + H*I` and corner `-1/2 + 
 of the fundamental domain boundary `fdBoundaryH H`.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

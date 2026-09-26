@@ -22,7 +22,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Aggregated kernel and routing checks for the hard normalized cases. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

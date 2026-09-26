@@ -16,7 +16,7 @@ This file contains the reducedness predicate used in the project and the
 basic finite `p`-height calculus.
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 
@@ -29,6 +29,7 @@ variable (p : ℕ)
 This hypothesis is logically independent from reducedness.  In particular, torsion-free
 groups such as `ℤ` must not enter Ulm's classification theorem merely because their
 `p`-socle is trivial. -/
+@[expose]
 def IsPrimaryPGroup (G : Type*) [AddCommGroup G] : Prop :=
   ∀ x : G, ∃ n : ℕ, p ^ n • x = 0
 
@@ -38,6 +39,7 @@ For the countable `p`-primary groups classified below, this is equivalent to say
 `G` has no nontrivial divisible subgroup: the eventual stable Ulm subgroup is the maximal
 divisible subgroup.  Crucially, this does *not* require `G_ω = 0`; reduced groups may
 contain elements of infinite height and have arbitrary countable Ulm length. -/
+@[expose]
 def IsPReduced (G : Type*) [AddCommGroup G] : Prop :=
   ∃ α : Ordinal.{0}, ulmSubgroup p α (G := G) = ⊥
 

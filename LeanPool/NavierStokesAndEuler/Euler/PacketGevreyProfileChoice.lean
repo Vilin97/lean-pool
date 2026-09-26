@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketBudgetTimeChange
 
 /-! One positive growth profile and one scalar amplitude determine all grade profiles. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

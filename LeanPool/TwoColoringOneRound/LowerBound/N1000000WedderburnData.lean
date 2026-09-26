@@ -18,7 +18,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 namespace N1000000WedderburnData

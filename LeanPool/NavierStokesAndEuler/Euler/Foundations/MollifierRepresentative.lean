@@ -26,7 +26,7 @@ section
 
 /-! Classical smooth cylinder representatives obtained by Euclidean mollification. -/
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 
@@ -168,7 +168,7 @@ section
 
 /-! The finite-set Fubini bridge identifying classical and L² cylinder mollification. -/
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 
@@ -299,7 +299,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 

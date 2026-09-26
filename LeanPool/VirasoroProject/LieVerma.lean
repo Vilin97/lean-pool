@@ -59,7 +59,7 @@ Verma module, Lie algebra, representation
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 

@@ -44,7 +44,7 @@ section
 /-! Initial high and mean estimates retain their distinct small factors.
 The only truncation-dependent quantity is the already controlled tail base. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -217,7 +217,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -326,7 +326,7 @@ section
 /-! Source (22) for the literal initialized packet. The constants at
 each fixed Sobolev order are independent of its truncation and frequency. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -482,7 +482,7 @@ section
 /-! The actual chosen primary amplitude has exponential initial decay.
 Its prefactor is a fixed polynomial in the same source parameters. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -614,7 +614,7 @@ section
 are fixed polynomials in the source primitives. Frequency and amplitude
 are kept outside these polynomials. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -750,7 +750,7 @@ section
 compactly supported initial increments are precisely the finite-packet
 high and mean fields whose physical Sobolev bounds were proved above. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -845,7 +845,7 @@ section
 /-! The actual initial increments for the canonical uniformly selected
 packet satisfy source (22), with fixed-order polynomial costs. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -958,7 +958,7 @@ section
 /-! Fixed-order source polynomial bounds for the literal initial increments.
 These use the same finite frequency guard as the constructed exact packet. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1020,7 +1020,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1141,7 +1141,7 @@ section
 /-! Ordinary smooth square-integrable fields realizing both actual
 initial increments, with the same concrete high and mean functions. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1191,7 +1191,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

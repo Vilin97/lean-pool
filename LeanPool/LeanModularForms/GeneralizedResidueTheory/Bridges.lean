@@ -17,7 +17,7 @@ We provide `PiecewiseC1Curve.toPath` and `PiecewiseC1Curve.toContinuousMap` that
 rescale the domain `[a,b]` to the unit interval `[0,1]` via `iccHomeoI`.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Topology unitInterval
 

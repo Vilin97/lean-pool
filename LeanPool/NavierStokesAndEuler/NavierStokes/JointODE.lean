@@ -24,7 +24,7 @@ solution on the prescribed closed interval. We do not assert smoothness of
 the original clamped extension outside that interval.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.JointODE
@@ -41,13 +41,13 @@ variable {P E : Type u} [NormedAddCommGroup P] [NormedSpace ℝ P]
 variable {a b : ℝ}
 
 /-- The actual extension constructed by the Volterra inverse, jointly indexed. -/
-noncomputable def actualSolution (hab : a ≤ b) (A : P × ℝ → E →L[ℝ] E)
+@[expose] noncomputable def actualSolution (hab : a ≤ b) (A : P × ℝ → E →L[ℝ] E)
     (x₀ : P → E) (f : P × ℝ → E) (z : P × ℝ) : E :=
   ParametricODE.solutionExtension hab (SmoothPathFamily.pathFamily A z.1) (x₀ z.1)
     (SmoothPathFamily.pathFamily f z.1) z.2
 
 /-- The affine time change from the unit interval to `[a,t]`. -/
-noncomputable def affineTime (a t s : ℝ) : ℝ := a + s * (t - a)
+@[expose] noncomputable def affineTime (a t s : ℝ) : ℝ := a + s * (t - a)
 
 @[simp] theorem affineTime_zero (a t : ℝ) : affineTime a t 0 = a := by
   simp [affineTime]
@@ -69,7 +69,7 @@ theorem hasDerivAt_affineTime (a t s : ℝ) :
   simpa using ((hasDerivAt_id s).mul_const (t - a)).const_add a
 
 /-- `(p,t,s)` is sent to the original coefficient argument `(p,a+s(t-a))`. -/
-noncomputable def timeMap (a : ℝ) (w : (P × ℝ) × ℝ) : P × ℝ :=
+@[expose] noncomputable def timeMap (a : ℝ) (w : (P × ℝ) × ℝ) : P × ℝ :=
   (w.1.1, affineTime a w.1.2 w.2)
 
 theorem contDiff_timeMap (a : ℝ) : ContDiff ℝ ∞ (timeMap (P := P) a) :=
@@ -79,7 +79,7 @@ theorem contDiff_timeMap (a : ℝ) : ContDiff ℝ ∞ (timeMap (P := P) a) :=
 variable {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 /-- Both the linear coefficient and the source acquire the time-change factor. -/
-noncomputable def rescale (a : ℝ) (F : P × ℝ → W) (w : (P × ℝ) × ℝ) : W :=
+@[expose] noncomputable def rescale (a : ℝ) (F : P × ℝ → W) (w : (P × ℝ) × ℝ) : W :=
   (w.1.2 - a) • F (timeMap a w)
 
 theorem rescale_contDiffOn {U : Set P} {V : Set ℝ}
@@ -102,7 +102,7 @@ theorem rescale_slice_continuousOn {U : Set P} (F : P × ℝ → W)
   exact (continuousOn_const (c := z.2 - a)).smul hc
 
 /-- A new solution on the fixed unit interval, evaluated at its fixed right endpoint. -/
-noncomputable def reparamSolution (a : ℝ) (A : P × ℝ → E →L[ℝ] E)
+@[expose] noncomputable def reparamSolution (a : ℝ) (A : P × ℝ → E →L[ℝ] E)
     (x₀ : P → E) (f : P × ℝ → E) (z : P × ℝ) : E :=
   SmoothPathFamily.odeFamily (a := 0) (b := 1) zero_le_one
     (rescale a A) (fun q => x₀ q.1) (rescale a f) z ⟨1, zero_le_one, le_rfl⟩

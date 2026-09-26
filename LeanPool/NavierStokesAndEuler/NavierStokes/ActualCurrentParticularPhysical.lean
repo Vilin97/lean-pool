@@ -20,7 +20,7 @@ of a polar angle depends only on the Cartesian point and is independent
 of the band.  No regularity of a fixed-reference continuation is used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -56,7 +56,7 @@ theorem copyData_eq_actual (x : CycleState (Label B N0)) (l : Label B N0) (j : �
   rw [ActualParticularStageControls.parameters_eq_canonical x l hf]
 
 /-- The current common coefficient includes every localized copy cutoff. -/
-noncomputable def nativePotential (x : CycleState (Label B N0)) (l : Label B N0)
+@[expose] noncomputable def nativePotential (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) : Native → ComplexVector :=
   (copyData x l j).common.curlPotential
     (ParticularParameters.nativeStrip ActualParticularStageControls.associatedStrip)
@@ -64,7 +64,7 @@ noncomputable def nativePotential (x : CycleState (Label B N0)) (l : Label B N0)
 
 /-- Native pressure, given by `mode ((copyData x l j).background.frequency n) ((copyData x l
 j).background.phase n) ((copyData x l j).common.pressure n)`. -/
-noncomputable def nativePressure (x : CycleState (Label B N0)) (l : Label B N0)
+@[expose] noncomputable def nativePressure (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) : Native → ℂ :=
   mode ((copyData x l j).background.frequency n)
     ((copyData x l j).background.phase n) ((copyData x l j).common.pressure n)
@@ -79,18 +79,18 @@ noncomputable def angle (w : SpaceTime) : ℝ :=
 
 /-- Cylinder point, given by `(w.1, AxisymmetricResidual.pack (PolarCharts.radius
 (PhysicalGraphBounds.radialProjection w)) (angle w) (w.2 2))`. -/
-noncomputable def cylinderPoint (w : SpaceTime) : SpaceTime :=
+@[expose] noncomputable def cylinderPoint (w : SpaceTime) : SpaceTime :=
   (w.1, AxisymmetricResidual.pack
     (PolarCharts.radius (PhysicalGraphBounds.radialProjection w)) (angle w) (w.2 2))
 
 /-- This is a current-band map; it does not use the reference band of a label. -/
-noncomputable def nativePoint (n : ℕ) (w : SpaceTime) : Native :=
+@[expose] noncomputable def nativePoint (n : ℕ) (w : SpaceTime) : Native :=
   PhysicalParticularWave.nativeMap CorrectionInitialization.ActualPrimary.h
     (ChartScales.Q n) (CommonWindow.index CorrectionInitialization.ActualPrimary.h n)
     (cylinderPoint w)
 
 /-- Cylindrical potential as an element of `ComplexVector`. -/
-noncomputable def cylindricalPotential (x : CycleState (Label B N0)) (l : Label B N0)
+@[expose] noncomputable def cylindricalPotential (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) (z : SpaceTime) : ComplexVector :=
   (ChartScales.Q n) ^ (-CorrectionInitialization.ActualPrimary.h) •
     nativePotential x l j n
@@ -98,7 +98,7 @@ noncomputable def cylindricalPotential (x : CycleState (Label B N0)) (l : Label 
         (ChartScales.Q n) (CommonWindow.index CorrectionInitialization.ActualPrimary.h n) z)
 
 /-- Cylindrical pressure as an element of `ℝ`. -/
-noncomputable def cylindricalPressure (x : CycleState (Label B N0)) (l : Label B N0)
+@[expose] noncomputable def cylindricalPressure (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) (z : SpaceTime) : ℝ :=
   (ChartScales.Q n) ^ (-2 * CoordinateAlgebra.A CorrectionInitialization.ActualPrimary.h) *
     (nativePressure x l j n
@@ -106,7 +106,7 @@ noncomputable def cylindricalPressure (x : CycleState (Label B N0)) (l : Label B
         (ChartScales.Q n) (CommonWindow.index CorrectionInitialization.ActualPrimary.h n) z)).re
 
 /-- A single actual harmonic, in Cartesian coordinates. -/
-noncomputable def localPotentialMode (x : CycleState (Label B N0)) (l : Label B N0)
+@[expose] noncomputable def localPotentialMode (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) (w : SpaceTime) : Space :=
   PhysicalCurlCovariance.realVector
     (CartesianCopySource.rotationMap (PhysicalGraphBounds.radialProjection w)

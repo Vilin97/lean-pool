@@ -29,7 +29,7 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.3,
   maps), with `restrict_mk`, `restrict_restrict`, `restrict_id`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

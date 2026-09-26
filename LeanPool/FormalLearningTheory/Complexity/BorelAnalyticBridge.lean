@@ -39,7 +39,7 @@ but KrappWirthWellBehaved fails. See Theorem/BorelAnalyticSeparation.lean.
 - This kernel: NullMeasurableSet weakening discovered during Lean4 formalization
 -/
 
-@[expose] public section
+public section
 
 universe u
 

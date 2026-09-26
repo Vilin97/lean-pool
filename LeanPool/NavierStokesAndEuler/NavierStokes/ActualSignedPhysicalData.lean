@@ -20,7 +20,7 @@ is repartitioned exactly, and the physical carrier uses the midpoint of
 each actual lattice-translated slot.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -269,7 +269,7 @@ noncomputable def layout (hh : 0 ≤ h) (label : SlotColoring.Label) (hl : 4 ≤
       hl gap
 
 /-- The actual native carrier, retaining the individual lattice midpoint. -/
-noncomputable def carrier (label : SlotColoring.Label) (k : Frequency)
+@[expose] noncomputable def carrier (label : SlotColoring.Label) (k : Frequency)
     (p pz x0 : ℝ) (F G : PhysicalGraphBounds.Slow → ℝ) : PhysicalWaveSum.CarrierData where
   chart := 0
   center := center (h := h) label k
@@ -281,6 +281,7 @@ noncomputable def carrier (label : SlotColoring.Label) (k : Frequency)
 
 /-- Polar coordinates are used only as a chart for the actual Cartesian
 lift; the free torus coordinate remains unchanged. -/
+@[expose]
 noncomputable def cylinderAt (a : ℝ) (chart : PolarCharts.Index) (x : LiftPoint) : Cylinder :=
   (((PolarCharts.chart a chart (PhysicalGraphBounds.liftXY x)).1,
     (PhysicalGraphBounds.liftZT x, x.2)),
@@ -337,7 +338,7 @@ noncomputable def dynamicCoefficients (request : ℕ → Cylinder → Vec2) (j :
 
 /-- The raw mask carries only the slow cutoff.  The transverse mask and
 Gaussian together form the final compact native cutoff. -/
-noncomputable def dynamicCopyData (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
+@[expose] noncomputable def dynamicCopyData (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
     PeriodizedWaveBounds.CopyData Cylinder Frequency where
   background := (ActualPeriodizedSignedRealization.periodizedPrimary B (layout sys hh label hl
       gap)).viewBase
@@ -425,6 +426,7 @@ structure SignedFamily (U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow) where
   column : NativeLabel active → Fin 2
 
 /-- Positive index, given by `(L, ⟨1, by decide⟩)`. -/
+@[expose]
 noncomputable def positiveIndex (L : PhysicalWaveSum.BandLabel) : PhysicalWaveSum.WaveIndex 1 :=
   (L, ⟨1, by decide⟩)
 
@@ -628,7 +630,7 @@ noncomputable def selectedCarrier (L : NativeLabel f.active) (k : Frequency) :
     (((f.primary L).pulse (f.column L)).phase.G L.val.1)
 
 /-- Extended carrier, with branches according to `hL : L ∈ f.active`. -/
-noncomputable def extendedCarrier (L : PhysicalWaveSum.BandLabel) (k : Frequency) :
+@[expose] noncomputable def extendedCarrier (L : PhysicalWaveSum.BandLabel) (k : Frequency) :
     PhysicalWaveSum.CarrierData :=
   if hL : L ∈ f.active then
     selectedCarrier (h := h) f ⟨L.val, L.property, hL⟩ k
@@ -644,6 +646,7 @@ theorem extendedCarrier_center (L : PhysicalWaveSum.BandLabel) (k : Frequency) :
   split_ifs <;> rfl
 
 /-- Raw signed amplitude, constructed using `ActualPeriodizedSignedRealization.referenceScalar`. -/
+@[expose]
 noncomputable def rawSignedAmplitude (L : NativeLabel f.active) (k : Frequency) (x : Cylinder) :
     ComplexVector :=
   ActualPeriodizedSignedRealization.referenceScalar (f.primary L) (f.state L).referenceRequest
@@ -652,7 +655,7 @@ noncomputable def rawSignedAmplitude (L : NativeLabel f.active) (k : Frequency) 
         (layout sys hh L.val L.property 0) (f.column L) L.val.1 k x)
 
 /-- Raw potential, constructed using `CurlClassBounds.inverseCarrier`. -/
-noncomputable def rawPotential (L : NativeLabel f.active) (k : Frequency) (x : Cylinder) :
+@[expose] noncomputable def rawPotential (L : NativeLabel f.active) (k : Frequency) (x : Cylinder) :
     ComplexVector :=
   CurlClassBounds.inverseCarrier ((f.primary L).base.frequency L.val.1) •
     CurlClassBounds.normalCoefficient
@@ -660,6 +663,7 @@ noncomputable def rawPotential (L : NativeLabel f.active) (k : Frequency) (x : C
       (rawSignedAmplitude sys hh f L k x)
 
 /-- Raw pressure, constructed using `ActualPeriodizedSignedRealization.referenceScalar`. -/
+@[expose]
 noncomputable def rawPressure (L : NativeLabel f.active) (k : Frequency) (x : Cylinder) : ℂ :=
   ActualPeriodizedSignedRealization.referenceScalar (f.primary L) (f.state L).referenceRequest
     (f.column L) L.val.1 x •
@@ -671,6 +675,7 @@ noncomputable def rawPressure (L : NativeLabel f.active) (k : Frequency) (x : Cy
 
 /-- One positive harmonic suffices because the physical field takes the
 real part.  Its native copies retain their individual centers and phases. -/
+@[expose]
 noncomputable def potentialFamily (i : Fin 3) : PhysicalCopyBounds.CopyFamily 1 Frequency where
   gap _ := 0
   carrier k L := extendedCarrier (h := h) f L k
@@ -684,7 +689,7 @@ noncomputable def potentialFamily (i : Fin 3) : PhysicalCopyBounds.CopyFamily 1 
   else 0
 
 /-- Pressure family, bundling `gap`, `carrier`, `amplitude`. -/
-noncomputable def pressureFamily : PhysicalCopyBounds.CopyFamily 1 Frequency where
+@[expose] noncomputable def pressureFamily : PhysicalCopyBounds.CopyFamily 1 Frequency where
   gap _ := 0
   carrier k L := extendedCarrier (h := h) f L k
   amplitude k I x := if hL : I.1 ∈ f.active then
@@ -1044,6 +1049,7 @@ theorem potential_commonWave (L : NativeLabel f.active) (k : Frequency) (i : Fin
 
 omit G in
 /-- Reference potential coefficient, constructed using `CurlClassBounds.inverseCarrier`. -/
+@[expose]
 noncomputable def referencePotentialCoefficient (L : NativeLabel f.active) (x : Cylinder) :
     ComplexVector :=
   CurlClassBounds.inverseCarrier ((f.primary L).base.frequency L.val.1) •
@@ -1332,6 +1338,7 @@ variable {D h : ℝ}
   (hh : 0 ≤ h) {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow} (f : SignedFamily U)
 
 /-- Native potential source, with branches according to `hL : I.1.1 ∈ f.active`. -/
+@[expose]
 noncomputable def nativePotentialSource (I : SourceIndex) (n : ℕ) (y : Native) : ComplexVector :=
   if hL : I.1.1 ∈ f.active then
     if I.1.2.val = 1 ∧ n = I.1.1.val.1 then
@@ -1341,7 +1348,7 @@ noncomputable def nativePotentialSource (I : SourceIndex) (n : ℕ) (y : Native)
   else 0
 
 /-- Native pressure source, with branches according to `hL : I.1.1 ∈ f.active`. -/
-noncomputable def nativePressureSource (I : SourceIndex) (n : ℕ) (y : Native) : ℂ :=
+@[expose] noncomputable def nativePressureSource (I : SourceIndex) (n : ℕ) (y : Native) : ℂ :=
   if hL : I.1.1 ∈ f.active then
     if I.1.2.val = 1 ∧ n = I.1.1.val.1 then
       waveMask sys I.1.1.val ((geometry sys I.1.1.val 0).coordinates I.2 y.2.2) •
@@ -1701,6 +1708,7 @@ theorem term_tsupport_labelRegion {H : ℕ} {K : Type*}
 
 
 /-- Native slow, given by `(y.1, (y.2.1.2, y.2.1.1))`. -/
+@[expose]
 noncomputable def nativeSlow (y : Native) : PhysicalGraphBounds.Slow := (y.1, (y.2.1.2, y.2.1.1))
 
 theorem slotSlow_eq_nativeSlow {a : ℝ} (ha : 0 < a) (c : PhysicalWaveSum.CarrierData)

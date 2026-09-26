@@ -25,7 +25,7 @@ on `Gate`/`PureState`.
 Pinned Mathlib API: `finProdFinEquiv` (`(x, y) ↦ y + n * x`), `finCongr`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

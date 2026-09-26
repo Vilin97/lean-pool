@@ -37,7 +37,7 @@ import LeanPool.MatchingLogic.Composite
 # MatchingLogic.Applicative
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 namespace Applicative

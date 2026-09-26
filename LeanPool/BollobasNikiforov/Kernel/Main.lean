@@ -22,7 +22,7 @@ factorization of `docs/sol.tex` §3 (`lem:kernel`, `eq:factor`), and the
 resulting three-column completely positive Gram of `U`.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 

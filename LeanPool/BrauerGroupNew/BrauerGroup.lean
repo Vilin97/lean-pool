@@ -28,7 +28,7 @@ public import Mathlib.RingTheory.SimpleRing.Matrix
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.BrauerGroup`.
 -/
 
-@[expose] public section
+public section
 
 suppress_compilation
 universe u v v₁ v₂ w
@@ -118,7 +118,7 @@ lemma dim_eq :
   simp only [Module.finrank_self, mul_one]
 
 /-- The central simple algebra isomorphism `A ⊗ Aᵐᵒᵖ ≃ End_K(A)`. -/
-def equivEnd : A ⊗[K] Aᵐᵒᵖ ≃ₐ[K] Module.End K A :=
+@[expose] def equivEnd : A ⊗[K] Aᵐᵒᵖ ≃ₐ[K] Module.End K A :=
   AlgEquiv.ofBijective (toEnd K A) <| bijective_of_dim_eq_of_isCentralSimple _ _ _ _ <|
     dim_eq K A
 
@@ -181,7 +181,7 @@ def CSASetoid : Setoid (CSA K) where
   iseqv := IsBrauerEquivalent.Braur_is_eqv
 
 /-- Tensor-product multiplication on representatives of the Brauer group. -/
-def mul (A B : CSA K) : CSA K where
+@[expose] def mul (A B : CSA K) : CSA K where
   toAlgCat := .of K (A ⊗[K] B)
   fin_dim := Module.Finite.tensorProduct K A B
 
@@ -200,7 +200,7 @@ def inv (A : CSA K) : CSA K := {
 def oneIn (n : ℕ) [hn : NeZero n] : CSA K := ⟨.of K (Matrix (Fin n) (Fin n) K)⟩
 
 /-- The base field representative of the identity Brauer class. -/
-def oneIn' : CSA K := ⟨.of K K⟩
+@[expose] def oneIn' : CSA K := ⟨.of K K⟩
 
 /-- Right tensoring by an identity matrix algebra representative. -/
 def oneMulIn (n : ℕ) [hn : NeZero n] (A : CSA K) : CSA K :=

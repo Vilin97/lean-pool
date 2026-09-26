@@ -70,7 +70,7 @@ the choice-free
 deciders of Definition 7.1 and the choice-free r.e. layer of `Recursive.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

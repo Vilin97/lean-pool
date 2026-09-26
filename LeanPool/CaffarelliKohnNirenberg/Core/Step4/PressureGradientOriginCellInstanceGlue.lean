@@ -24,7 +24,7 @@ This module records the gluing construction and the geometric facts about the
 unit domain hypothesis of the one-sided pressure estimate.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology

@@ -19,7 +19,7 @@ section
 /-! Genuine finite-interval Lipschitz comparison of actual correction solutions at different
 viscosities. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -131,7 +131,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -165,7 +165,7 @@ theorem cauchySeq_of_norm_le {X : Type*} [NormedAddCommGroup X]
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The genuine continuous L² path underlying a finite-Sobolev correction path. -/
-def valuePath {q : ℕ} (T : ℝ) (u : C(Icc (0 : ℝ) T, SobolevSpace period q)) :
+@[expose] def valuePath {q : ℕ} (T : ℝ) (u : C(Icc (0 : ℝ) T, SobolevSpace period q)) :
     C(Icc (0 : ℝ) T,LiftL2 period) :=
   (valueOperator period q).compLeftContinuous ℝ (Icc (0 : ℝ) T) u
 

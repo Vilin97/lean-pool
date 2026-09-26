@@ -19,7 +19,7 @@ through every interval. The true additional inequality starts at the shaped
 hold; the early outgoing region only requires the relaxed cone.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

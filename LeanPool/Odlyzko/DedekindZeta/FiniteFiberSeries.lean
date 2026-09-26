@@ -9,7 +9,7 @@ public import Mathlib.NumberTheory.LSeries.Basic
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 namespace NumberField.Odlyzko
 

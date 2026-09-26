@@ -20,7 +20,7 @@ This file combines the four `b`-regions computed in
 `ClassicalAlgorithm.p recursive3ParamAlg < 24118/100000`.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring
 

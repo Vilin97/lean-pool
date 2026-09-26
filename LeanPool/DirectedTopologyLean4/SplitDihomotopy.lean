@@ -12,7 +12,7 @@ public import LeanPool.DirectedTopologyLean4.DTop
 # LeanPool.DirectedTopologyLean4.SplitDihomotopy
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the definitions of splitting a (dipath)

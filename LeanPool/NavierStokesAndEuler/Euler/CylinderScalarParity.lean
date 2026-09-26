@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.AnglePrimitiveParity
 
 /-! The normalized scalar angular primitive converts joint odd parity to even parity. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -18,7 +18,7 @@ includes all joint derivatives and all spatial localizations up to that degree.
 This gives joint smoothness without imposing global bounds on the input jets.
 -/
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 
@@ -495,7 +495,7 @@ theorem extension_zero_of_coefficients_zero {x : X} (hx : ∀ j, a j x = 0) (t :
     smul_zero, tsum_zero]
 
 /-- Right extension, given by `extension a ha (z.1 - T, z.2)`. -/
-def rightExtension (T : ℝ) (z : ℝ × X) : V := extension a ha (z.1 - T, z.2)
+@[expose] def rightExtension (T : ℝ) (z : ℝ × X) : V := extension a ha (z.1 - T, z.2)
 
 theorem rightExtension_contDiff (T : ℝ) : ContDiff ℝ ∞ (rightExtension a ha T) :=
   (extension_contDiff a ha).comp ((contDiff_fst.sub contDiff_const).prodMk contDiff_snd)

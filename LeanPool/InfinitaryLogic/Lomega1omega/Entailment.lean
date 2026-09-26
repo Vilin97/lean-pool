@@ -17,7 +17,7 @@ base structure by constant interpretations, which no empty carrier admits).
 `Language.{0,0}` throughout, per the arc's D2 freeze.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

@@ -29,7 +29,7 @@ All the estimates are stated for exponents `q ≥ 6/5`, which covers the exponen
 pressure and the exponents `q > 5/2` of the force datum of `def:sws`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology
@@ -46,22 +46,26 @@ open CKN
 
 /-- The far-field decay constant of the Newtonian potential of `G`: the potential is bounded by
 this constant times `‖x‖⁻¹` outside the support ball. -/
+@[expose]
 def newtonianPotentialDecayConstant (G : Vec3 → ℝ) : ℝ :=
   2 * (4 * Real.pi)⁻¹ * ∫ y, |G y|
 
 /-- The far-field decay constant of the first-derivative Newtonian potential of `G` on the
 region `2 * R ≤ ‖x‖`, measured against `‖x‖⁻¹`. -/
+@[expose]
 def newtonianDerivativePotentialDecayConstant (G : Vec3 → ℝ) (R : ℝ) : ℝ :=
   4 * (4 * Real.pi)⁻¹ * (∫ y, |G y|) / (2 * R)
 
 /-- The linear-growth constant of the Newtonian potential of data supported in the closed ball
 of radius `R`: the local `L^{3/2}` norm near the origin plus the far-field decay constant times
 the universal ball constant. -/
+@[expose]
 def newtonianPotentialGrowthConstant (G : Vec3 → ℝ) (R : ℝ) : ℝ :=
   invNormGrowthConstant (pressureNewtonianPotential G) (newtonianPotentialDecayConstant G) R
 
 /-- The linear-growth constant of the first-derivative Newtonian potential of data supported in
 the closed ball of radius `R`. -/
+@[expose]
 def newtonianDerivativePotentialGrowthConstant (i : Fin 3) (G : Vec3 → ℝ) (R : ℝ) : ℝ :=
   invNormGrowthConstant (pressureNewtonianDerivativePotential i G)
     (newtonianDerivativePotentialDecayConstant G R) R

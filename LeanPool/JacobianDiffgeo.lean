@@ -53,4 +53,4 @@ Tags: riemann-surfaces, complex-geometry, abel-jacobi, riemann-roch, serre-duali
 MSC: 14H40, 30F30, 32G20
 -/
 
-@[expose] public section
+public section

@@ -15,7 +15,7 @@ These compatibility theorems keep the width API without maintaining a second
 finite-state construction and a separate induction on the cardinality bound.
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 

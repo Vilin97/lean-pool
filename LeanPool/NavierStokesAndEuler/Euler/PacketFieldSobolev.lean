@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldProducts
 /-! Exact identification of the packet's ordered-word blocks with the
 genuine Sobolev blocks used in the correction energy. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

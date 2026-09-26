@@ -20,7 +20,7 @@ uniform in the spatial variable in the tensor norm. Closed-side smoothness is
 proved from these data, rather than included as a hypothesis.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,9 +36,9 @@ abbrev Space := ProblemStatement.Space
 abbrev SpaceTime := ProblemStatement.SpaceTime
 
 /-- Open past, given by `Iio T ×ˢ univ`. -/
-def openPast (T : ℝ) : Set SpaceTime := Iio T ×ˢ univ
+@[expose] def openPast (T : ℝ) : Set SpaceTime := Iio T ×ˢ univ
 /-- Closed past, given by `Iic T ×ˢ univ`. -/
-def closedPast (T : ℝ) : Set SpaceTime := Iic T ×ˢ univ
+@[expose] def closedPast (T : ℝ) : Set SpaceTime := Iic T ×ˢ univ
 
 theorem openPast_isOpen (T : ℝ) : IsOpen (openPast T) :=
   isOpen_Iio.prod isOpen_univ
@@ -187,7 +187,7 @@ theorem hasFDerivWithinAt_extendTrace {T : ℝ}
         (openPast_isOpen T) hc hdf
 
 /-- Extend every actual mixed derivative tensor by its spatial boundary trace. -/
-def extendJets (T : ℝ) (J : SpaceTime → FormalMultilinearSeries ℝ SpaceTime V)
+@[expose] def extendJets (T : ℝ) (J : SpaceTime → FormalMultilinearSeries ℝ SpaceTime V)
     (L : Space → FormalMultilinearSeries ℝ SpaceTime V)
     (z : SpaceTime) : FormalMultilinearSeries ℝ SpaceTime V :=
   fun n => extendTrace T (fun y => J y n) (fun x => L x n) z

@@ -11,7 +11,7 @@ import LeanPool.Incompleteness.Foundation.Vorspiel.Chain
 
 /-! # Tree -/
 
-@[expose] public section
+public section
 
 namespace LO
 namespace Modal

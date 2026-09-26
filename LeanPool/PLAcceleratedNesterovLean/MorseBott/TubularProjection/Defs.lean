@@ -18,7 +18,7 @@ Core definitions (`optimalityEqn`, `IsTubularNeighborhoodOfSubmanifold`,
 `tubularProj`) and basic helper lemmas for the nearest-point projection.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric NNReal
 
@@ -42,7 +42,7 @@ on `S` to a query point `y = m + r` is `p = m + v + φ(v)` where
 
   `F(r, v) = V.orthogonalProjectionOnto(r − v − φ(v))
             + (fderiv ℝ φ v).adjoint (V⊥.orthogonalProjectionOnto(r − v − φ(v)))` -/
-noncomputable def optimalityEqn
+@[expose] noncomputable def optimalityEqn
     {V : Submodule ℝ E} (φ : V → V.orthogonal) (_m : E)
     : E × V → V :=
   let _anchor := _m
@@ -90,7 +90,7 @@ structure IsTubularNeighborhoodOfSubmanifold (S U : Set E) : Prop where
 
 /-- The nearest-point projection: for `x ∈ U` pick the unique closest point
     in `S`; for `x ∉ U` pick an arbitrary element of `S`. -/
-def tubularProj {S U : Set E} (hTN : IsTubularNeighborhoodOfSubmanifold S U)
+@[expose] def tubularProj {S U : Set E} (hTN : IsTubularNeighborhoodOfSubmanifold S U)
     (hne : S.Nonempty) (x : E) : E :=
   if hx : x ∈ U then
     (hTN.uniqueProj x hx).choose

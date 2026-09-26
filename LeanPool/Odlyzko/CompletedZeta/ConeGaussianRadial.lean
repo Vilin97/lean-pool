@@ -11,7 +11,7 @@ import Mathlib.RingTheory.Flat.TorsionFree
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

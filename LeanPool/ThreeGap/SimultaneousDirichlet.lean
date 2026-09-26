@@ -33,7 +33,7 @@ coordinate, **with no remaining hypothesis** (`nnDist_count_unconditional`,
 `nnDist_count_plane_unconditional`). Axiom-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.SimDirichlet
 

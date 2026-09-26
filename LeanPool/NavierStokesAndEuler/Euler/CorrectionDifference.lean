@@ -15,7 +15,7 @@ section
 
 /-! Actual L² bounds for the lower-order difference terms in nonlinear transport. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -133,7 +133,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

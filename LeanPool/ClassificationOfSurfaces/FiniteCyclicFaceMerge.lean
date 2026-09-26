@@ -20,7 +20,7 @@ local merge used to reduce a connected presentation to one face.  It covers both
 nondegenerate cuts and the one-sided monogon case.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -264,7 +264,7 @@ theorem polygonallyEquivalentOfSignedIso
 namespace ContextMerge
 
 /-- Merge `U` and `V` into the first face while retaining the remaining face words `W`. -/
-@[reducible]
+@[expose, reducible]
 def target {n : ℕ}
     (U V : List (SignedDart (Fin n)))
     (W : List (List (SignedDart (Fin n)))) :
@@ -283,7 +283,7 @@ has finished.
 
 /-- Merge the first and last displayed children while retaining their separator as an adjacent
 inverse pair in the merged face. -/
-@[reducible]
+@[expose, reducible]
 def markedTarget {n : ℕ}
     (U V : List (SignedDart (Fin n)))
     (W : List (List (SignedDart (Fin n)))) :
@@ -412,7 +412,7 @@ theorem markedMiddleFaceEquiv_rightFace {n : ℕ}
   simp [target, markedTarget]
 
 /-- The child occupying the selected old-face position. -/
-def selectedFace {n : ℕ}
+@[expose] def selectedFace {n : ℕ}
     (U V : List (SignedDart (Fin n)))
     (W : List (List (SignedDart (Fin n)))) :
     (source U V W).Face :=
@@ -427,7 +427,7 @@ def rightFace {n : ℕ}
   P2.rightFace (target U V W) (targetCut U V W)
 
 /-- The target face occupied by the `i`th untouched word. -/
-def untouchedTargetFace {n : ℕ}
+@[expose] def untouchedTargetFace {n : ℕ}
     (U V : List (SignedDart (Fin n)))
     (W : List (List (SignedDart (Fin n))))
     (i : Fin W.length) :
@@ -438,7 +438,7 @@ def untouchedTargetFace {n : ℕ}
     omega⟩
 
 /-- The source face occupied by the `i`th untouched word. -/
-def untouchedSourceFace {n : ℕ}
+@[expose] def untouchedSourceFace {n : ℕ}
     (U V : List (SignedDart (Fin n)))
     (W : List (List (SignedDart (Fin n))))
     (i : Fin W.length) :

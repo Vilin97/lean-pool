@@ -17,7 +17,7 @@ ordinary L². Its Bochner multiplier and H¹ frame derivative obey exact
 covariance, including the terminal primitive and initial trace.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

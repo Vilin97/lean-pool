@@ -21,7 +21,7 @@ sqrt-three triples.  Unary stretches of its coloring trees are stored as
 forced stems, exactly as in the first-stage Parts certificate.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

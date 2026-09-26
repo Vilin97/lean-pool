@@ -14,7 +14,7 @@ public import Mathlib.LinearAlgebra.TensorProduct.Map
  Some lemmas about `ite` and `coe` for `star` and `tensor_product`.
 -/
 
-@[expose] public section
+public section
 
 
 @[simp]

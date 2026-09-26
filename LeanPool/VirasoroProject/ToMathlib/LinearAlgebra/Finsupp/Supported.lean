@@ -13,7 +13,7 @@ import Mathlib.Algebra.Module.Submodule.Basic
 # LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Finsupp.Supported
 -/
 
-@[expose] public section
+public section
 
 --import Mathlib
 

@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ViscosityCauchy
 
 /-! Strong lower-Sobolev compactness of an actual uniformly bounded correction family. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

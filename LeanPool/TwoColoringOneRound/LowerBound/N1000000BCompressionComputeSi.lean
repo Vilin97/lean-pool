@@ -13,7 +13,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSi
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 

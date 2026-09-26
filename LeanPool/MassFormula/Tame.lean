@@ -44,7 +44,7 @@ Classically this is the characterization of tame ramification by `d = e - 1`
 * [Serre1979] J-P. Serre, *Local fields*, Graduate Texts in Mathematics **67**, Springer, 1979.
 -/
 
-@[expose] public section
+public section
 
 open ValuativeRel IsDiscreteValuationRing
 

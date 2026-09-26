@@ -18,7 +18,7 @@ import Mathlib.Combinatorics.Matroid.Init
 
 /-! # MissingMathlib -/
 
-@[expose] public section
+public section
 
 
 open Complex MeasureTheory Real Finset Filter

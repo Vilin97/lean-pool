@@ -22,7 +22,7 @@ import Mathlib.MeasureTheory.Measure.RegularityCompacts
 
 /-! # ImportedAnalyticInputs -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -55,21 +55,21 @@ def Cavg : ℝ := 1
 theorem Cavg_pos : 0 < Cavg := by norm_num [Cavg]
 
 /-- `Crot`: Crot. -/
-def Crot : ℝ := 64 * Real.pi
+@[expose] def Crot : ℝ := 64 * Real.pi
 
 theorem Crot_pos : 0 < Crot := by
   unfold Crot
   nlinarith [Real.pi_pos]
 
 /-- `zeta`: zeta. -/
-noncomputable def zeta (x : Circle) : ℂ :=
+@[expose] noncomputable def zeta (x : Circle) : ℂ :=
   AddCircle.toCircle x
 
 theorem norm_zeta (x : Circle) : ‖zeta x‖ = 1 := by
   simp [zeta, Circle.norm_coe]
 
 /-- `circleChar`: circle Char. -/
-noncomputable def circleChar (n : Nat) : Circle -> ℂ :=
+@[expose] noncomputable def circleChar (n : Nat) : Circle -> ℂ :=
   fun x => zeta x ^ n
 
 theorem circleChar_eq_zeta_pow (n : Nat) (x : Circle) :
@@ -85,10 +85,10 @@ structure CircleArc where
   width_le_period : right - left ≤ 2 * Real.pi
 
 /-- `arcLength`: arc Length. -/
-def arcLength (I : CircleArc) : ℝ := I.right - I.left
+@[expose] def arcLength (I : CircleArc) : ℝ := I.right - I.left
 
 /-- `arcParam`: arc Param. -/
-def arcParam (I : CircleArc) (t : ℝ) : Circle :=
+@[expose] def arcParam (I : CircleArc) (t : ℝ) : Circle :=
   QuotientAddGroup.mk (I.left + t * arcLength I)
 
 /-- `arcSet`: arc Set. -/
@@ -305,7 +305,7 @@ theorem carrierArc_arcSet_ae_eq_mk_image_Ioc_volume {N : Nat} (k : Fin N) :
   carrierArc_arcSet_ae_eq_mk_image_Ioc_of_singleton_null k _ volume_singleton_circle
 
 /-- `carrierAverage`: carrier Average. -/
-noncomputable def carrierAverage {N : Nat} (k : Fin N)
+@[expose] noncomputable def carrierAverage {N : Nat} (k : Fin N)
     (f : Circle -> ℂ) : ℂ :=
   (N : ℂ) * ∫ x in arcSet (carrierArc N k), f x ∂ μCircle
 
@@ -382,7 +382,7 @@ theorem period_smul_μCircle_carrierArc {N : Nat} (k : Fin N) :
   exact period_smul_μCircle_mk_image_carrierArc_Ioc k
 
 /-- `arcIntegral`: arc Integral. -/
-noncomputable def arcIntegral (I : CircleArc) (f : Circle -> ℝ) : ℝ :=
+@[expose] noncomputable def arcIntegral (I : CircleArc) (f : Circle -> ℝ) : ℝ :=
   ∫ x in arcSet I, f x ∂ μCircle
 
 theorem carrierArc_arcIntegral_eq_mk_image_Ioc
@@ -885,7 +885,7 @@ abbrev L2Real (d : Nat) :=
   MeasureTheory.Lp ℂ 2 (MeasureTheory.volume : MeasureTheory.Measure (RealVec d))
 
 /-- `stftRep`: stft Rep. -/
-noncomputable def stftRep {d : Nat} :
+@[expose] noncomputable def stftRep {d : Nat} :
     L2Real d -> L2Real d -> PhaseSpace d -> ℂ :=
   fun h f ξ =>
     ∫ t : RealVec d,
@@ -894,7 +894,7 @@ noncomputable def stftRep {d : Nat} :
         Complex.exp (-(2 * Real.pi : ℂ) * Complex.I * ((inner ℝ ξ.2 t : ℝ) : ℂ))
 
 /-- `ambiguityRep`: ambiguity Rep. -/
-noncomputable def ambiguityRep {d : Nat} :
+@[expose] noncomputable def ambiguityRep {d : Nat} :
     L2Real d -> L2Real d -> PhaseSpace d -> ℂ :=
   fun f g ξ =>
     ∫ t : RealVec d,

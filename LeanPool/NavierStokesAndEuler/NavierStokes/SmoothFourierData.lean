@@ -42,7 +42,7 @@ integer by its conjugate, proves that the resulting integer is nonzero using
 irrationality of `sqrt 2`, and bounds the conjugate explicitly.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -315,7 +315,7 @@ theorem graph_directions_diophantine (k : ℤ × ℤ) (hk : k ≠ 0) :
   · simpa only [timeSymbol_formula] using time_diophantine k.1 k.2 hmn
 
 /-- The integer matrix `[[3,1],[1,5]]` acting on a frequency. -/
-def coveringFrequency (k : ℤ × ℤ) : ℤ × ℤ :=
+@[expose] def coveringFrequency (k : ℤ × ℤ) : ℤ × ℤ :=
   (3 * k.1 + k.2, k.1 + 5 * k.2)
 
 theorem coveringFrequency_injective : Function.Injective coveringFrequency := by
@@ -359,7 +359,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -405,9 +405,9 @@ theorem Rapid.mul_linear {a b : Frequency → ℂ} (ha : Rapid a) (C : ℝ)
 def omega : ℂ := 2 * Real.pi * Complex.I
 
 /-- Freq X, given by `omega * (k.1 : ℂ)`. -/
-def freqX (k : Frequency) : ℂ := omega * (k.1 : ℂ)
+@[expose] def freqX (k : Frequency) : ℂ := omega * (k.1 : ℂ)
 /-- Freq Y, given by `omega * (k.2 : ℂ)`. -/
-def freqY (k : Frequency) : ℂ := omega * (k.2 : ℂ)
+@[expose] def freqY (k : Frequency) : ℂ := omega * (k.2 : ℂ)
 
 /-- Dx, given by `ContinuousLinearMap.fst ℝ ℝ ℝ`. -/
 def dx : Plane →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ ℝ
@@ -415,18 +415,18 @@ def dx : Plane →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ ℝ
 def dy : Plane →L[ℝ] ℝ := ContinuousLinearMap.snd ℝ ℝ ℝ
 
 /-- Lift X, given by `ContinuousLinearMap.smulRightL ℝ Plane ℂ dx`. -/
-def liftX : ℂ →L[ℝ] (Plane →L[ℝ] ℂ) := ContinuousLinearMap.smulRightL ℝ Plane ℂ dx
+@[expose] def liftX : ℂ →L[ℝ] (Plane →L[ℝ] ℂ) := ContinuousLinearMap.smulRightL ℝ Plane ℂ dx
 /-- Lift Y, given by `ContinuousLinearMap.smulRightL ℝ Plane ℂ dy`. -/
-def liftY : ℂ →L[ℝ] (Plane →L[ℝ] ℂ) := ContinuousLinearMap.smulRightL ℝ Plane ℂ dy
+@[expose] def liftY : ℂ →L[ℝ] (Plane →L[ℝ] ℂ) := ContinuousLinearMap.smulRightL ℝ Plane ℂ dy
 
 @[simp] theorem liftX_apply (c : ℂ) (x : Plane) : liftX c x = x.1 • c := rfl
 @[simp] theorem liftY_apply (c : ℂ) (x : Plane) : liftY c x = x.2 • c := rfl
 
 /-- Phase, given by `liftX (freqX k) + liftY (freqY k)`. -/
-def phase (k : Frequency) : Plane →L[ℝ] ℂ := liftX (freqX k) + liftY (freqY k)
+@[expose] def phase (k : Frequency) : Plane →L[ℝ] ℂ := liftX (freqX k) + liftY (freqY k)
 
 /-- Mode, given by `Complex.exp (phase k x)`. -/
-def mode (k : Frequency) (x : Plane) : ℂ := Complex.exp (phase k x)
+@[expose] def mode (k : Frequency) (x : Plane) : ℂ := Complex.exp (phase k x)
 
 theorem phase_formula (k : Frequency) (x : Plane) :
     phase k x = omega * ((k.1 : ℂ) * (x.1 : ℂ) + (k.2 : ℂ) * (x.2 : ℂ)) := by
@@ -467,7 +467,7 @@ theorem Rapid.derivY {a : Frequency → ℂ} (ha : Rapid a) : Rapid (derivY a) :
   ha.mul_linear ‖omega‖ norm_freqY_le
 
 /-- Series, given by `∑' k, a k * mode k x`. -/
-def series (a : Frequency → ℂ) (x : Plane) : ℂ := ∑' k, a k * mode k x
+@[expose] def series (a : Frequency → ℂ) (x : Plane) : ℂ := ∑' k, a k * mode k x
 
 theorem summable_terms {a : Frequency → ℂ} (ha : Rapid a) (x : Plane) :
     Summable (fun k => a k * mode k x) := by
@@ -561,7 +561,7 @@ inductive Direction
 
 /-- Vector as an element of `Direction → Plane | .radial => (1, 1 - Real.sqrt 2) | .temporal =>
 (Real.sqrt 2 - 1, 1)`. -/
-def vector : Direction → Plane
+@[expose] def vector : Direction → Plane
   | .radial => (1, 1 - Real.sqrt 2)
   | .temporal => (Real.sqrt 2 - 1, 1)
 
@@ -618,9 +618,9 @@ theorem omega_ne_zero : omega ≠ 0 := by
     (Complex.ofReal_ne_zero.mpr Real.pi_ne_zero)) Complex.I_ne_zero
 
 /-- Multiplier, given by `(omega * (symbol d k : ℂ))⁻¹`. -/
-def multiplier (d : Direction) (k : Frequency) : ℂ := (omega * (symbol d k : ℂ))⁻¹
+@[expose] def multiplier (d : Direction) (k : Frequency) : ℂ := (omega * (symbol d k : ℂ))⁻¹
 /-- Inverse coefficient, given by `multiplier d k * a k`. -/
-def inverseCoeff (d : Direction) (a : Frequency → ℂ) (k : Frequency) : ℂ :=
+@[expose] def inverseCoeff (d : Direction) (a : Frequency → ℂ) (k : Frequency) : ℂ :=
   multiplier d k * a k
 
 @[simp] theorem symbol_zero (d : Direction) : symbol d 0 = 0 := by
@@ -673,7 +673,7 @@ theorem coefficient_cancel (d : Direction) {a : Frequency → ℂ} (hzero : a 0 
     rw [← mul_assoc, mul_inv_cancel₀ hd, one_mul]
 
 /-- Directional inverse, given by `series (inverseCoeff d a)`. -/
-def directionalInverse (d : Direction) (a : Frequency → ℂ) : Plane → ℂ :=
+@[expose] def directionalInverse (d : Direction) (a : Frequency → ℂ) : Plane → ℂ :=
   series (inverseCoeff d a)
 
 theorem contDiff_directionalInverse (d : Direction) {a : Frequency → ℂ} (ha : Rapid a) :
@@ -716,7 +716,7 @@ local instance instTorusInverse1 : Fact ((0 : ℝ) < 1) := ⟨by norm_num⟩
 abbrev Torus := UnitAddCircle × UnitAddCircle
 
 /-- Torus measure as an element of `Measure Torus`. -/
-def torusMeasure : Measure Torus :=
+@[expose] def torusMeasure : Measure Torus :=
   (AddCircle.haarAddCircle : Measure UnitAddCircle).prod AddCircle.haarAddCircle
 
 instance : IsProbabilityMeasure torusMeasure := by
@@ -801,7 +801,7 @@ theorem integral_torusSeries {a : Frequency → ℂ} (ha : Rapid a) :
   simp
 
 /-- Weighted absolute Fourier coefficient seminorm. -/
-def coeffSeminorm (p : ℕ) (a : Frequency → ℂ) : ℝ :=
+@[expose] def coeffSeminorm (p : ℕ) (a : Frequency → ℂ) : ℝ :=
   ∑' k, weight k ^ p * ‖a k‖
 
 theorem inverseCoeff_seminorm_le (d : Direction) {a : Frequency → ℂ}
@@ -835,7 +835,7 @@ def coefficientWord : List Bool → (Frequency → ℂ) → Frequency → ℂ
   | j :: js, a => coordinateCoeff j (coefficientWord js a)
 
 /-- Derivative word as an element of `js, f => coordinatePartial j (derivativeWord js f)`. -/
-def derivativeWord : List Bool → (Plane → ℂ) → Plane → ℂ
+@[expose] def derivativeWord : List Bool → (Plane → ℂ) → Plane → ℂ
   | [], f => f
   | j :: js, f => coordinatePartial j (derivativeWord js f)
 
@@ -994,7 +994,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1046,10 +1046,10 @@ def UnitPeriodic (f : Plane → ℂ) : Prop :=
   ∀ z : Plane, ∀ k : Frequency, f (z + ((k.1 : ℝ), (k.2 : ℝ))) = f z
 
 /-- The genuine first coordinate derivative. -/
-noncomputable def partialX (f : Plane → ℂ) (z : Plane) : ℂ := fderiv ℝ f z (1, 0)
+@[expose] noncomputable def partialX (f : Plane → ℂ) (z : Plane) : ℂ := fderiv ℝ f z (1, 0)
 
 /-- X jet, given by `partialX^[p] f`. -/
-noncomputable def xJet (p : ℕ) (f : Plane → ℂ) : Plane → ℂ := partialX^[p] f
+@[expose] noncomputable def xJet (p : ℕ) (f : Plane → ℂ) : Plane → ℂ := partialX^[p] f
 
 @[simp] theorem xJet_zero (f : Plane → ℂ) : xJet 0 f = f := rfl
 
@@ -1088,7 +1088,7 @@ theorem hasDerivAt_slice {f : Plane → ℂ} {x y : ℝ}
     ((hasDerivAt_id x).prodMk (hasDerivAt_const x y))
 
 /-- The actual two-dimensional Fourier coefficient, with the first coordinate integrated first. -/
-def coefficient (f : Plane → ℂ) (k : Frequency) : ℂ :=
+@[expose] def coefficient (f : Plane → ℂ) (k : Frequency) : ℂ :=
   unitCoeff (fun y => unitCoeff (fun x => f (x, y)) k.1) k.2
 
 theorem coefficient_norm_le {f : Plane → ℂ} {C : ℝ} (k : Frequency)

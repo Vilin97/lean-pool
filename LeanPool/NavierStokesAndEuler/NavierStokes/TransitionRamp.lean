@@ -19,7 +19,7 @@ control is turned off first; the angular control is then interpolated to
 joins.  No cone inequality is assumed here.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -85,17 +85,17 @@ theorem integrate_congr (initial : ℝ → ℝ) (slope₁ slope₂ : Field) (p :
 
 /-- The ordinary ACT control continues to multiply the REF lag stock,
 even when the REF derivative has already become zero. -/
-noncomputable def baseSlope (T κ : ℝ) (stock : Field) : Field :=
+@[expose] noncomputable def baseSlope (T κ : ℝ) (stock : Field) : Field :=
   fun p => -(damping T κ p.1 * stock p) / 2
 
 /-- Angular slope, defined pointwise by `(1 - step (b + w₁) w₂ p.1) * baseSlope T κ stock p - (2
 / 5 : ℝ) * step (b + w₁) w₂ p.1`. -/
-noncomputable def angularSlope (T κ b w₁ w₂ : ℝ) (stock : Field) : Field :=
+@[expose] noncomputable def angularSlope (T κ b w₁ w₂ : ℝ) (stock : Field) : Field :=
   fun p => (1 - step (b + w₁) w₂ p.1) * baseSlope T κ stock p -
     (2 / 5 : ℝ) * step (b + w₁) w₂ p.1
 
 /-- Axial slope, defined pointwise by `(1 - step b w₁ p.1) * baseSlope T κ stock p`. -/
-noncomputable def axialSlope (T κ b w₁ : ℝ) (stock : Field) : Field :=
+@[expose] noncomputable def axialSlope (T κ b w₁ : ℝ) (stock : Field) : Field :=
   fun p => (1 - step b w₁ p.1) * baseSlope T κ stock p
 
 theorem baseSlope_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
@@ -715,7 +715,7 @@ variable {J : Set ℝ} (R : StockReference J)
 /-- Log time, given by `Real.log (X / R.radius0)`. -/
 noncomputable def logTime (X : ℝ) : ℝ := Real.log (X / R.radius0)
 /-- Log point, given by `(R.logTime p.1, p.2)`. -/
-noncomputable def logPoint (p : Point) : Point := (R.logTime p.1, p.2)
+@[expose] noncomputable def logPoint (p : Point) : Point := (R.logTime p.1, p.2)
 
 theorem logPoint_smoothAt {p : Point} (hX : 0 < p.1) : ContDiffAt ℝ ∞ R.logPoint p :=
   ((contDiffAt_fst.div_const R.radius0).log (div_ne_zero hX.ne' R.radius0_pos.ne')).prodMk
@@ -788,7 +788,7 @@ theorem L_pos_parameterInterval {h j η : ℝ} (hs : NaturalAxisData.SmallParame
 
 /-- No stock or differential equation is postulated in this constructor:
 the underlying profiles and all five histories are the completed REF path. -/
-noncomputable def ofNatural : StockReference parameterInterval where
+@[expose] noncomputable def ofNatural : StockReference parameterInterval where
   exponent := h
   radius0 := (Input.ofNatural hΛ F).endpoint
   radius0_pos := (Input.ofNatural hΛ F).endpoint_pos

@@ -17,7 +17,7 @@ import Mathlib.RingTheory.Coalgebra.CoassocSimps
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.Coalgebra.MulOpposite`.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 

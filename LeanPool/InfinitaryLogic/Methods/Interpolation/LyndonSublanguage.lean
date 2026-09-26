@@ -38,7 +38,7 @@ clause (.4) in full, with clause (.3)'s equality-occurrence condition deliberate
 recoverable without duplicating the existing `craig_interpolation_relational`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

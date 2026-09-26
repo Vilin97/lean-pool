@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part01A
 
 /-! # GapCVP proof, part 01, continuation 02 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -39,7 +39,7 @@ abbrev PhaseMaskBlock (tm : Turing.FinTM2) :=
   Fin (blockSize tm) → Bool
 
 /-- GapCVP reduction support. -/
-def pairedInputBlockAt (tm : Turing.FinTM2)
+@[expose] def pairedInputBlockAt (tm : Turing.FinTM2)
     (width : ℕ) (x certificate : List Bool)
     (position : Fin (width + 1)) : PairedInputBlock tm :=
   fun offset =>
@@ -50,14 +50,14 @@ def pairedInputBlockAt (tm : Turing.FinTM2)
       .blank
 
 /-- GapCVP reduction support. -/
-def phaseRangeBlockAt (tm : Turing.FinTM2)
+@[expose] def phaseRangeBlockAt (tm : Turing.FinTM2)
     (width : ℕ)
     (position : Fin (width + 1)) : PhaseMaskBlock tm :=
   fun offset =>
     decide (position.val * blockSize tm + offset.val < width + 1)
 
 /-- GapCVP reduction support. -/
-def phaseBudgetBlockAt
+@[expose] def phaseBudgetBlockAt
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -91,7 +91,7 @@ def initialPairedAtom
     | .blank => none
 
 /-- GapCVP reduction support. -/
-def initializedPhaseBlock
+@[expose] def initializedPhaseBlock
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (old : BlockCell machine.tm)
@@ -161,17 +161,17 @@ abbrev CompletePhaseWindow (tm : Turing.FinTM2) :=
     CompletePhaseCell tm × CompletePhaseCell tm
 
 /-- GapCVP reduction support. -/
-def completeMachineBlock (tm : Turing.FinTM2)
+@[expose] def completeMachineBlock (tm : Turing.FinTM2)
     (cell : CompletePhaseCell tm) : BlockCell tm :=
   cell.script.1.1
 
 /-- GapCVP reduction support. -/
-def completeMachineHead (tm : Turing.FinTM2)
+@[expose] def completeMachineHead (tm : Turing.FinTM2)
     (cell : CompletePhaseCell tm) : BlockCell tm :=
   cell.script.1.2
 
 /-- GapCVP reduction support. -/
-def completeIsFirstBlock (tm : Turing.FinTM2)
+@[expose] def completeIsFirstBlock (tm : Turing.FinTM2)
     (cell : CompletePhaseCell tm) : Bool :=
   cell.script.2.2
 
@@ -182,7 +182,7 @@ def lastPhaseOffset (tm : Turing.FinTM2) : Fin (blockSize tm) :=
     omega⟩
 
 /-- GapCVP reduction support. -/
-def phaseLeftOffset {α : Type}
+@[expose] def phaseLeftOffset {α : Type}
     (tm : Turing.FinTM2)
     (first : Bool)
     (left center : Fin (blockSize tm) → α)
@@ -195,7 +195,7 @@ def phaseLeftOffset {α : Type}
       omega⟩
 
 /-- GapCVP reduction support. -/
-def phaseRightOffset {α : Type}
+@[expose] def phaseRightOffset {α : Type}
     (tm : Turing.FinTM2)
     (center right : Fin (blockSize tm) → α)
     (offset : Fin (blockSize tm)) : α :=
@@ -205,7 +205,7 @@ def phaseRightOffset {α : Type}
     right ⟨0, blockSize_pos tm⟩
 
 /-- GapCVP reduction support. -/
-def completeWitnessWindow
+@[expose] def completeWitnessWindow
     (tm : Turing.FinTM2)
     (window : CompletePhaseWindow tm)
     (offset : Fin (blockSize tm)) : GuessPhaseWindow :=
@@ -226,7 +226,7 @@ def completeWitnessWindow
     (completeMachineBlock tm window.2.2.2 offset).1)
 
 /-- GapCVP reduction support. -/
-def completePayloadWindow
+@[expose] def completePayloadWindow
     (tm : Turing.FinTM2)
     (window : CompletePhaseWindow tm)
     (offset : Fin (blockSize tm)) :
@@ -240,7 +240,7 @@ def completePayloadWindow
     window.2.2.2.payload offset)
 
 /-- GapCVP reduction support. -/
-noncomputable def PairedInputGuessAllowed
+@[expose] noncomputable def PairedInputGuessAllowed
     (bit : Bool)
     (window :
       PairedInputTag × PairedInputTag ×
@@ -257,7 +257,7 @@ noncomputable def PairedInputGuessAllowed
       window.2.2.2 = window.2.1)
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def BroadcastWitnessGuessAllowed
+@[expose] noncomputable def BroadcastWitnessGuessAllowed
     (bit : Bool)
     (window : GuessPhaseWindow) : Bool :=
   @decide (
@@ -267,7 +267,7 @@ noncomputable def BroadcastWitnessGuessAllowed
         if bit then PhaseTag.verifying else PhaseTag.guessing)
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def CompletePhaseCoherent
+@[expose] noncomputable def CompletePhaseCoherent
     (tm : Turing.FinTM2)
     (window : CompletePhaseWindow tm) : Bool :=
   @decide (
@@ -281,14 +281,14 @@ noncomputable def CompletePhaseCoherent
     window.2.2.1.rangeHead = window.2.1.rangeHead
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-def completeScriptWindow
+@[expose] def completeScriptWindow
     (tm : Turing.FinTM2)
     (window : CompletePhaseWindow tm) : ScriptBlockWindow tm :=
   (window.1.script, window.2.1.script,
     window.2.2.1.script, window.2.2.2.script)
 
 /-- GapCVP reduction support. -/
-noncomputable def CompleteStaticTracksPreserved
+@[expose] noncomputable def CompleteStaticTracksPreserved
     (tm : Turing.FinTM2)
     (window : CompletePhaseWindow tm) : Bool :=
   @decide (
@@ -301,7 +301,7 @@ noncomputable def CompleteStaticTracksPreserved
       completeIsFirstBlock tm window.2.1
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-def canonicalGuessingScriptRow
+@[expose] def canonicalGuessingScriptRow
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (width : ℕ)
@@ -316,7 +316,7 @@ def canonicalGuessingScriptRow
       hint, decide (position.val = 0))
 
 /-- GapCVP reduction support. -/
-def initialPhaseCell
+@[expose] def initialPhaseCell
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -339,7 +339,7 @@ def initialPhaseCell
   guessBit := false
 
 /-- GapCVP reduction support. -/
-def acceptingPhaseCell
+@[expose] def acceptingPhaseCell
     (tm : Turing.FinTM2) : CompletePhaseCell tm where
   mode := .accepting
   script := defaultScriptBlockCell tm
@@ -351,7 +351,7 @@ def acceptingPhaseCell
   guessBit := false
 
 /-- GapCVP reduction support. -/
-noncomputable def AcceptingPhaseBlock
+@[expose] noncomputable def AcceptingPhaseBlock
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (cell : CompletePhaseCell machine.tm) : Bool :=
@@ -374,7 +374,7 @@ noncomputable def AcceptingPhaseBlock
           none
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def CompleteInitializationAllowed
+@[expose] noncomputable def CompleteInitializationAllowed
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (window : CompletePhaseWindow machine.tm) : Bool :=
@@ -391,7 +391,7 @@ noncomputable def CompleteInitializationAllowed
         window.2.1.payloadHead window.2.1.rangeHead
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def CompleteVerificationAllowed
+@[expose] noncomputable def CompleteVerificationAllowed
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (window : CompletePhaseWindow machine.tm) : Bool :=
@@ -402,7 +402,7 @@ noncomputable def CompleteVerificationAllowed
       (completeScriptWindow machine.tm window) = true
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def CompleteAcceptanceAllowed
+@[expose] noncomputable def CompleteAcceptanceAllowed
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (window : CompletePhaseWindow machine.tm) : Bool :=

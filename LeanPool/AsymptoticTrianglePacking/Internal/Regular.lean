@@ -26,7 +26,7 @@ Definitions (`degree`, `codegree`) come from `LeanPool.AsymptoticTrianglePacking
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

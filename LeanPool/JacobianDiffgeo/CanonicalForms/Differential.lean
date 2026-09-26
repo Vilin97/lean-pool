@@ -44,7 +44,7 @@ Quotient layer (`MForm`, the honest 1-form type):
   pointwise engine).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology

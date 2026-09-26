@@ -17,7 +17,7 @@ public import LeanPool.PDL.StayingInFL
 
 /-! # The Tableau Game (Section 6.2) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -114,8 +114,7 @@ lemma move_then_no_frep {H X next} {p : (ProverPos H X ⊕ BuilderPos H X)} :
 
 /-- The finite set of moves, given as a function instead of a relation.
 With `move_of_mem_theMoves` and `mem_theMoves_of_move` this agrees with `move`. -/
-@[simp]
-def theMoves : GamePos → Finset GamePos
+@[expose, simp] def theMoves : GamePos → Finset GamePos
   -- ProverPos:
   | ⟨H, X, .inl (.frep _)⟩ => ∅ -- no moves ⇒ Builder wins
   | ⟨H, X, .inl (.bas _ Xbasic)⟩ =>
@@ -1435,7 +1434,7 @@ decreasing_by
 
 /-- The starting position for the given sequent.
 With an empty history and using `posOf` to determine the first `GamePos`. -/
-def startPos (X : Sequent) : GamePos := ⟨[], X, posOf [] X⟩
+@[expose] def startPos (X : Sequent) : GamePos := ⟨[], X, posOf [] X⟩
 
 /-- We start with a prover position, because when the history is empty we can't have any repeat. -/
 lemma posOf_for_startPos (X : Sequent) : ∃ proPos, posOf [] X = Sum.inl proPos := by

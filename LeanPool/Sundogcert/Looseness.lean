@@ -33,7 +33,7 @@ public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
                     weight `m` YET `colWeightLb (denseScheme m) = 0`.  Anti-scaling-law: gap = m.
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 

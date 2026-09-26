@@ -83,7 +83,7 @@ concrete `DomainObj`s
   g.hom` — the `have` unifies by defeq), then `rw [← e]`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

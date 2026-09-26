@@ -17,7 +17,7 @@ This neutral module defines the two closing operations by the auxiliary constant
   constants `c_{τ i}`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

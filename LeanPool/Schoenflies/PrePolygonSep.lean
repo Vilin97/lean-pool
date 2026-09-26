@@ -90,7 +90,7 @@ under `List.Perm` (immediate, `parity` is a sum over the list), and a strengthen
 shorter than either.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Metric Set
 

@@ -19,7 +19,7 @@ Wiener and Consequences retain the PNT and prime-interval dependency closure;
 unrelated later developments and LeanArchitect annotations are omitted.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -78,6 +78,7 @@ instance : Coe (CS n ℝ) (CS n ℂ) where coe f := ⟨fun x => f x,
   contDiff_ofReal.of_le (mod_cast le_top) |>.comp f.h1, f.h2.comp_left (g := ofReal) rfl⟩
 
 /-- Pointwise negation preserves smoothness and compact support. -/
+@[expose]
 def neg (f : CS n E) : CS n E where
   toFun := -f
   h1 := f.h1.neg
@@ -88,6 +89,7 @@ instance : Neg (CS n E) where neg := neg
 @[simp] lemma neg_apply {x : ℝ} : (-f) x = - (f x) := rfl
 
 /-- Multiply a compactly supported smooth function by a real scalar. -/
+@[expose]
 def smul (R : ℝ) (f : CS n E) : CS n E := ⟨R • f, f.h1.const_smul R, f.h2.smul_left⟩
 
 instance : HSMul ℝ (CS n E) (CS n E) where hSMul := smul
@@ -97,6 +99,7 @@ instance : HSMul ℝ (CS n E) (CS n E) where hSMul := smul
 lemma continuous (f : CS n E) : Continuous f := f.h1.continuous
 
 /-- Differentiate a compactly supported function, lowering its smoothness index. -/
+@[expose]
 noncomputable def deriv (f : CS (n + 1) E) : CS n E where
   toFun := _root_.deriv f
   h1 := (contDiff_succ_iff_deriv.mp f.h1).2.2
@@ -225,7 +228,7 @@ namespace W21
 variable {f : W21}
 
 /-- The L¹ size of a function plus the scaled L¹ size of its second derivative. -/
-noncomputable def norm (f : ℝ → ℂ) : ℝ :=
+@[expose] noncomputable def norm (f : ℝ → ℂ) : ℝ :=
     (∫ v, ‖f v‖) + (4 * π ^ 2)⁻¹ * (∫ v, ‖deriv (deriv f) v‖)
 
 lemma norm_nonneg {f : ℝ → ℂ} : 0 ≤ norm f :=

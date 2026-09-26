@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedAssembly
 
 /-! Genuine regularity and locality data carried by each recursively constructed profile. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

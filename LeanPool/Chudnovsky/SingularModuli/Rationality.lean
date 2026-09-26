@@ -51,7 +51,7 @@ Let `j₀ := j τ₁₆₃` and `x` an arbitrary complex root of `minpoly ℚ j�
   Vieta relation on the subleading coefficient (a rational) forces `j₀ ∈ ℚ`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

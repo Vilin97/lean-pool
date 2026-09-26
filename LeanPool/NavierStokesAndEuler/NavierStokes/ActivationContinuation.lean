@@ -30,7 +30,7 @@ The history estimates below use the primitive-defined lags and pressure of
 choices are derived from the constructed natural and reference profiles.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -46,7 +46,7 @@ section Histories
 variable {D : RadialDomain} (P : Profiles D)
 
 /-- Log slope, given by `1 + p.1 * radialPartial P.f p / P.f p`. -/
-noncomputable def logSlope (p : Point) : ℝ :=
+@[expose] noncomputable def logSlope (p : Point) : ℝ :=
   1 + p.1 * radialPartial P.f p / P.f p
 
 /-- Source Q as an element of `ℝ`. -/
@@ -56,15 +56,15 @@ noncomputable def sourceQ (h : ℝ) (p : Point) : ℝ :=
       (parameterPartial P.f p / P.f p)
 
 /-- P1, given by `p.1 * P.angularLag h p / NaturalAxisData.L h p.2`. -/
-noncomputable def p1 (h : ℝ) (p : Point) : ℝ :=
+@[expose] noncomputable def p1 (h : ℝ) (p : Point) : ℝ :=
   p.1 * P.angularLag h p / NaturalAxisData.L h p.2
 
 /-- Ns, given by `P.axialLag h p / NaturalAxisData.L h p.2`. -/
-noncomputable def ns (h : ℝ) (p : Point) : ℝ :=
+@[expose] noncomputable def ns (h : ℝ) (p : Point) : ℝ :=
   P.axialLag h p / NaturalAxisData.L h p.2
 
 /-- P2, given by `p.1 * ns P h p / P.E p`. -/
-noncomputable def p2 (h : ℝ) (p : Point) : ℝ := p.1 * ns P h p / P.E p
+@[expose] noncomputable def p2 (h : ℝ) (p : Point) : ℝ := p.1 * ns P h p / P.E p
 
 /-- Cone size, given by `p1 P h p + p2 P h p ^ 2 / p1 P h p`. -/
 noncomputable def coneSize (h : ℝ) (p : Point) : ℝ :=
@@ -1334,7 +1334,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1346,11 +1346,11 @@ namespace NavierStokes.ActivationContinuation
 open ProfileHistories
 
 /-- Shear size, given by `a * (1 + (b / a) ^ 2)`. -/
-noncomputable def shearSize (a b : ℝ) : ℝ := a * (1 + (b / a) ^ 2)
+@[expose] noncomputable def shearSize (a b : ℝ) : ℝ := a * (1 + (b / a) ^ 2)
 /-- Projection, given by `p + q * (b / a)`. -/
-noncomputable def projection (p q a b : ℝ) : ℝ := p + q * (b / a)
+@[expose] noncomputable def projection (p q a b : ℝ) : ℝ := p + q * (b / a)
 /-- Transverse, given by `q - p * (b / a)`. -/
-noncomputable def transverse (p q a b : ℝ) : ℝ := q - p * (b / a)
+@[expose] noncomputable def transverse (p q a b : ℝ) : ℝ := q - p * (b / a)
 
 /-- Relaxed data, collecting `first_positive`, `projection_positive`, `cone`. -/
 structure Relaxed (a b p q : ℝ) : Prop where
@@ -1474,13 +1474,13 @@ section Physical
 variable {D : RadialDomain} (P : Profiles D)
 
 /-- Shear A, given by `-2 * p.1 * radialPartial P.f p / P.f p`. -/
-noncomputable def shearA (p : Point) : ℝ := -2 * p.1 * radialPartial P.f p / P.f p
+@[expose] noncomputable def shearA (p : Point) : ℝ := -2 * p.1 * radialPartial P.f p / P.f p
 /-- Shear B, given by `-2 * p.1 * radialPartial P.U p / P.E p`. -/
-noncomputable def shearB (p : Point) : ℝ := -2 * p.1 * radialPartial P.U p / P.E p
+@[expose] noncomputable def shearB (p : Point) : ℝ := -2 * p.1 * radialPartial P.U p / P.E p
 
 /-- Is relaxed, given by `Relaxed (shearA P p) (shearB P p) (ReferenceBounds.p1 P h p)
 (ReferenceBounds.p2 P h p)`. -/
-noncomputable def IsRelaxed (h : ℝ) (p : Point) : Prop :=
+@[expose] noncomputable def IsRelaxed (h : ℝ) (p : Point) : Prop :=
   Relaxed (shearA P p) (shearB P p) (ReferenceBounds.p1 P h p) (ReferenceBounds.p2 P h p)
 
 theorem logSlope_eq_shear (p : Point) :

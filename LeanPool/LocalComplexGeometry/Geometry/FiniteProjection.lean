@@ -18,7 +18,7 @@ preparation.  The source is the actual zero locus in an open vertical tube,
 and properness is asserted over the open base neighborhood itself.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators Topology
@@ -31,12 +31,12 @@ noncomputable section
 /-! ## Coordinate and zero-locus definitions -/
 
 /-- Projection to the first `n` standard complex coordinates. -/
-def dropLastCLM (n : ℕ) :
+@[expose] def dropLastCLM (n : ℕ) :
     ComplexEuclidean (n + 1) →L[ℂ] ComplexEuclidean n :=
   baseProjectionCLM n
 
 /-- Append a distinguished last coordinate. -/
-def appendLastCLE (n : ℕ) :
+@[expose] def appendLastCLE (n : ℕ) :
     (ComplexEuclidean n × ℂ) ≃L[ℂ] ComplexEuclidean (n + 1) :=
   (wptAmbientEquiv n).symm
 
@@ -63,7 +63,7 @@ theorem wptAmbientEquiv_eq_dropLast_lastCoordinate (n : ℕ)
   rfl
 
 /-- Evaluation of a monic prepared polynomial in its base and last variables. -/
-def preparedValue {n d : ℕ}
+@[expose] def preparedValue {n d : ℕ}
     (a : Fin d → ComplexEuclidean n → ℂ)
     (z : ComplexEuclidean n) (w : ℂ) : ℂ :=
   w ^ d + ∑ i, a i z * w ^ (i : ℕ)
@@ -105,7 +105,7 @@ An explicit local finite projection, including analytic preparation on a tube,
 vertical boundary control, finite fibers, surjectivity, and genuine properness
 over the open base `U`.
 -/
-def HasGeometricFiniteProjection {n : ℕ}
+@[expose] def HasGeometricFiniteProjection {n : ℕ}
     (F : ComplexEuclidean (n + 1) → ℂ) (d : ℕ) : Prop :=
   ∃ (a : Fin d → ComplexEuclidean n → ℂ)
       (u : ComplexEuclidean (n + 1) → ℂ)
@@ -135,7 +135,7 @@ def HasGeometricFiniteProjection {n : ℕ}
 /-! ## The polynomial associated to one vertical fiber -/
 
 /-- The prepared value at `z`, regarded as a polynomial in the last variable. -/
-def preparedPolynomialAt {n d : ℕ}
+@[expose] def preparedPolynomialAt {n d : ℕ}
     (a : Fin d → ComplexEuclidean n → ℂ) (z : ComplexEuclidean n) :
     Polynomial ℂ :=
   Polynomial.X ^ d +

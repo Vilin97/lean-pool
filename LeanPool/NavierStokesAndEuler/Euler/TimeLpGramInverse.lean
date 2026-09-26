@@ -23,7 +23,7 @@ matrix/Hilbert Gram inverse. This identifies the strong-equation inverse
 with the same operator to which the genuine parameter estimates apply.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

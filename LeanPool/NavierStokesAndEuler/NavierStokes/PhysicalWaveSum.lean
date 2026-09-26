@@ -18,7 +18,7 @@ Cover changes are the actual powers of `J_g`. Bounds use actual Fréchet
 derivatives and the constructed dyadic and spatial masks.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -100,7 +100,7 @@ theorem norm_upLift_le {d Δ : ℕ} (hd : d ≤ Δ) : ‖upLift d‖ ≤ coverBo
       _ ≤ _ := by unfold coverBound; nlinarith [norm_nonneg y]
 
 /-- Common lift, given by `downLift d ∘ PhysicalGraphBounds.physicalLift h n`. -/
-noncomputable def commonLift (h : ℝ) (n d : ℕ) : SpaceTime → LiftPoint :=
+@[expose] noncomputable def commonLift (h : ℝ) (n d : ℕ) : SpaceTime → LiftPoint :=
   downLift d ∘ PhysicalGraphBounds.physicalLift h n
 
 /-- The changed coordinate is exactly `J_g^(i(n)-d) Y`, when the gap does
@@ -189,13 +189,13 @@ structure CarrierData where
 
 /-- Phase, given by `PhysicalGraphBounds.liftedPhase (PolarCharts.chart a c.chart) h n c.center
 r0 c.angular c.axial c.radial c.F c.G`. -/
-noncomputable def CarrierData.phase (c : CarrierData) (a h : ℝ) (n : ℕ) (r0 : ℝ) :
+@[expose] noncomputable def CarrierData.phase (c : CarrierData) (a h : ℝ) (n : ℕ) (r0 : ℝ) :
     LiftPoint → ℝ :=
   PhysicalGraphBounds.liftedPhase (PolarCharts.chart a c.chart) h n c.center r0
     c.angular c.axial c.radial c.F c.G
 
 /-- Common wave, constructed using `amp`. -/
-noncomputable def commonWave (a h : ℝ) (n d : ℕ) (r0 : ℝ) (c : CarrierData)
+@[expose] noncomputable def commonWave (a h : ℝ) (n d : ℕ) (r0 : ℝ) (c : CarrierData)
     (amp : LiftPoint → ℂ) (j : ℤ) (w : SpaceTime) : ℂ :=
   amp (commonLift h n d w) *
     PhysicalGraphBounds.character ((ChartScales.carrier h n : ℝ) * (j : ℝ))
@@ -675,7 +675,7 @@ theorem commonWave_charts_agree {a : ℝ} (ha : 0 < a) (h : ℝ) (n d : ℕ) (r0
 
 /-- A genuine angular carrier: valid polar charts are selected pointwise;
 the integer angular mode will prove that the selection is smooth. -/
-noncomputable def globalWave (a h : ℝ) (n d : ℕ) (r0 : ℝ) (c : CarrierData)
+@[expose] noncomputable def globalWave (a h : ℝ) (n d : ℕ) (r0 : ℝ) (c : CarrierData)
     (amp : LiftPoint → ℂ) (j : ℤ) (w : SpaceTime) : ℂ :=
   commonWave a h n d r0 (c.withChart (chooseChart a (PhysicalGraphBounds.scaledRadial n w))) amp j w
 
@@ -799,7 +799,7 @@ structure WaveFamily (H : ℕ) where
 
 /-- Term, given by `globalWave a h I.1.val.1 (f.gap I.1) r0 (f.carrier I.1) (f.amplitude I)
 I.2.val`. -/
-noncomputable def WaveFamily.term {H : ℕ} (f : WaveFamily H) (a h r0 : ℝ)
+@[expose] noncomputable def WaveFamily.term {H : ℕ} (f : WaveFamily H) (a h r0 : ℝ)
     (I : WaveIndex H) : SpaceTime → ℂ :=
   globalWave a h I.1.val.1 (f.gap I.1) r0 (f.carrier I.1) (f.amplitude I) I.2.val
 
@@ -1001,7 +1001,7 @@ theorem norm_realCoordinate_le (i : Fin 3) : ‖realCoordinate i‖ ≤ 1 := by
   exact Complex.abs_re_le_norm z
 
 /-- Real Euclidean vector assembled from the three scalar carrier sums. -/
-noncomputable def vectorSum {H : ℕ} (f : Fin 3 → WaveFamily H) (a h r0 : ℝ)
+@[expose] noncomputable def vectorSum {H : ℕ} (f : Fin 3 → WaveFamily H) (a h r0 : ℝ)
     (w : SpaceTime) : Space := ∑ i : Fin 3, realCoordinate i ((f i).sum a h r0 w)
 
 theorem vectorSum_smooth {H : ℕ} {f : Fin 3 → WaveFamily H} {a b h r0 Z : ℝ} {Δ : ℕ}

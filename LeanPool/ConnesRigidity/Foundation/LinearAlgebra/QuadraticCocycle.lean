@@ -20,7 +20,7 @@ public import Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
 The quadratic cocycle component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace OpenAIPort
@@ -77,7 +77,7 @@ instance : DistribMulAction ModTwoSymplecticGroup ModTwoSpace :=
 /--
 The `modTwoBasis` construction used in the Connes rigidity formalization.
 -/
-def modTwoBasis (i : SymplecticIndex) : ModTwoSpace :=
+@[expose] def modTwoBasis (i : SymplecticIndex) : ModTwoSpace :=
   Pi.single i 1
 
 /-- The source-shaped quadratic cocycle. Paper: §2.

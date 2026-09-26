@@ -28,7 +28,7 @@ section
 
 /-! # Fourier bounds for pressure test functionals -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -311,7 +311,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -420,7 +420,7 @@ def l1PairLinear (g : Space → ℝ) (hg : Integrable g) : ComplexTest →ₗ[�
 
 /-- The coefficients are the two time averages of velocity and the time average
 of the quadratic tensor in the conservative pressure equation. -/
-def averagedPressureDifferenceValue (W0 W1 : Space → ℝ)
+@[expose] def averagedPressureDifferenceValue (W0 W1 : Space → ℝ)
     (G : Fin 3 → Fin 3 → Space → ℝ) (k : Fin 3) (ψ : ComplexTest) : ℂ :=
   (∫ x : Space, (W0 x : ℂ) * laplacianCLM ψ x) +
     (∫ x : Space, (W1 x : ℂ) * ψ x) +

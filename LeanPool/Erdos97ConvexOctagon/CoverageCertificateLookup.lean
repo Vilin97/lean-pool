@@ -9,7 +9,7 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryValidity
 
 /-! # Canonical lookup and validity of coverage summaries -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

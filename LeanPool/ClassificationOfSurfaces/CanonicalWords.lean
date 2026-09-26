@@ -26,7 +26,7 @@ certificates. Their faithful polygonal realizations are compared with the closed
 defined in `LeanEval/ChallengeDeps.lean` by the canonical realization layer.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

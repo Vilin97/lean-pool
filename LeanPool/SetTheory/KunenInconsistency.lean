@@ -16,7 +16,7 @@ This module proves the Kunen inconsistency theorem: there is no nontrivial eleme
 embedding of the universe of sets into itself.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

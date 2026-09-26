@@ -35,7 +35,7 @@ below is a complete, self-contained, fully admitted-free proof of disk acyclicit
 structure sheaf, which is the piece the design flags as needed with "no compactness".
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology TopologicalSpace

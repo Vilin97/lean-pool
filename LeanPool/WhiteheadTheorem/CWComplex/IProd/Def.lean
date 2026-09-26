@@ -20,7 +20,7 @@ homeomorphic to `I × X`, where `I` is the unit interval.
 The $(-1)$-skeleton of `X.IProd` is homeomorphic to `{0, 1} × X`.
 -/
 
-@[expose] public section
+public section
 
 
 open CategoryTheory unitInterval TopCat

@@ -14,7 +14,7 @@ section
 
 /-! Exact restart identities for the genuine cylinder heat and Bochner Duhamel integrals. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -98,7 +98,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

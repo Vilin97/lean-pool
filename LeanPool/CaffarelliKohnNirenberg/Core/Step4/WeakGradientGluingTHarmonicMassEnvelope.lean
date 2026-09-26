@@ -14,7 +14,7 @@ The collar floor is `1/128`. The larger absolute moment coefficient is
 chosen before the numerical data and the suitable solution.
 -/
 
-@[expose] public section
+public section
 
 section
 

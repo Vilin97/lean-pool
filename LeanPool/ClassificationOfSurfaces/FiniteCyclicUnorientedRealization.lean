@@ -26,7 +26,7 @@ does preserve their faithful polygonal realizations. This is the exact extra com
 the cross-cap pseudo-rewrite, whose common P2 refinement reads one of its two faces backwards.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

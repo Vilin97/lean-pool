@@ -15,7 +15,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # DimdPoly -/
 
-@[expose] public section
+public section
 
 
 open scoped BigOperators

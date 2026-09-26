@@ -13,7 +13,7 @@ public import LeanPool.Polylean.Complexes.Structures.Quiver
 Imported Lean Pool material for `LeanPool.Polylean.Complexes.Structures.Category`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 

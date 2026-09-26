@@ -21,7 +21,7 @@ analytic maps in both directions, carrying `a` to `b`, whose two composites agre
 with the identity on neighborhoods of the relevant base points.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology
@@ -221,7 +221,7 @@ def ofContinuousLinearEquiv (e : E ≃L[ℂ] F) (a : E) :
 
 /-- A continuous complex-linear equivalence regarded as a biholomorphic germ
 at the origin in both spaces. -/
-def ofContinuousLinearEquivAtZero (e : E ≃L[ℂ] F) :
+@[expose] def ofContinuousLinearEquivAtZero (e : E ≃L[ℂ] F) :
     LocalBiholomorphAt E F 0 0 where
   toFun := e
   invFun := e.symm

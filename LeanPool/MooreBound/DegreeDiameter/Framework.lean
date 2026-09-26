@@ -28,7 +28,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -86,6 +86,7 @@ instance finite_bfsCode (d n : ℕ) : Finite (BFSCode d n) := by
   | succ n ih => simp [BFSCode, ih, pow_succ, mul_comm]
 
 /-- Exact-length breadth-first routes.  Unlike graph walks, these permit stationary moves. -/
+@[expose]
 def BFSRouteCode {V : Type u} (G : SimpleGraph V) : V → ℕ → Type u
   | _, 0 => PUnit
   | x, n + 1 => Σ y : ClosedNeighbor G x, BFSRouteCode G y.1 n
@@ -325,7 +326,7 @@ noncomputable def h (ell d : ℕ) : ℕ :=
   1 + sSup {m : ℕ | EdgeAdmissible ell d m}
 
 /-- The exact Moore expression. -/
-def mooreBound (k d : ℕ) : ℕ :=
+@[expose] def mooreBound (k d : ℕ) : ℕ :=
   1 + d * ∑ j ∈ Finset.range k, (d - 1) ^ j
 
 lemma maxDegreeLE_mono {V : Type*} {G : SimpleGraph V} {d d' : ℕ}

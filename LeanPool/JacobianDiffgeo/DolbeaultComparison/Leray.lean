@@ -30,7 +30,7 @@ under this unit's authorization) as black boxes — no `Form01`, no PoU, no dbar
   injectivity is cech's `toH1_injective`, ALREADY on disk) / `h1CoverEquiv`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

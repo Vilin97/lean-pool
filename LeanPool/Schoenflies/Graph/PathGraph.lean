@@ -72,7 +72,7 @@ Root `Graph`, as fixed by `Schoenflies/Graph/Walk.lean`, so that `h.reaches_an_e
 `G.pathGraphOf u W` resolve by dot notation.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

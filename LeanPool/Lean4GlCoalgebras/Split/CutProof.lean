@@ -19,7 +19,7 @@ Here we define the GL-ext proof system along with finitization and basic propert
 namespace ExtSkip to distinguish from our general GL-proofs.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 
@@ -78,7 +78,7 @@ def fₚ : RuleApp → SplitSequent
   | RuleApp.boxᵣ _ A _ => {Sum.inr (□ A)}
 
 /-- Given a RuleApp, obtain the split sequent. -/
-def f : RuleApp → SplitSequent
+@[expose] def f : RuleApp → SplitSequent
   | RuleApp.skp Δ => Δ
   | RuleApp.cutₗ Δ _ => Δ
   | RuleApp.cutᵣ Δ _ => Δ
@@ -127,13 +127,13 @@ def RuleApp.isBox : RuleApp → Prop
   | _ => false
 
 /-- Get RuleApp of a node (first projection). -/
-def r {X : Type} (α : X → T.obj X) (x : X) := (α x).1
+@[expose] def r {X : Type} (α : X → T.obj X) (x : X) := (α x).1
 
 /-- Get premises of a node (second projection). -/
-def p {X : Type} (α : X → T.obj X) (x : X) := (α x).2
+@[expose] def p {X : Type} (α : X → T.obj X) (x : X) := (α x).2
 
 /-- Edge relation induced by `p`. -/
-def edge {X : Type} (α : X → T.obj X) (x y : X) : Prop := y ∈ p α x
+@[expose] def edge {X : Type} (α : X → T.obj X) (x y : X) : Prop := y ∈ p α x
 
 /-- Definition of GL-ext+skip proof. -/
 structure Proof where

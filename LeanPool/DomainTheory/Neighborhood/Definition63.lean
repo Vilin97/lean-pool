@@ -101,7 +101,7 @@ counterproductive* for
 this development, and is deliberately not used.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -215,10 +215,10 @@ def comp {A B C : TAlgebra T} (β : AlgHom B C) (α : AlgHom A B) : AlgHom A C w
   comm := by
     rw [Category.assoc, α.comm, ← Category.assoc, β.comm, Category.assoc, ← T.map_comp]
 
-@[simp] theorem id_hom (A : TAlgebra T) : (AlgHom.id A).hom = Category.id A.carrier := rfl
+@[simp] theorem id_hom (A : TAlgebra T) : (AlgHom.id A).hom = Category.id A.carrier := by rfl
 
 @[simp] theorem comp_hom {A B C : TAlgebra T} (β : AlgHom B C) (α : AlgHom A B) :
-    (β.comp α).hom = β.hom ⊚ α.hom := rfl
+    (β.comp α).hom = β.hom ⊚ α.hom := by rfl
 
 end AlgHom
 

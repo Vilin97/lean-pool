@@ -28,7 +28,7 @@ This file provides:
   manifold, there exists such data subordinate to `chartAt` sources.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

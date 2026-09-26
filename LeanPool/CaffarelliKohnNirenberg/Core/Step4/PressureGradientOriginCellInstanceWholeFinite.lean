@@ -16,7 +16,7 @@ any local box from the spatial Sobolev data of `def:sws`, at almost every
 time of that box.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators

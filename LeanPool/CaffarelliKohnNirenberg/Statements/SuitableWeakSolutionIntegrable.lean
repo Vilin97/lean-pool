@@ -24,7 +24,7 @@ public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology
@@ -37,6 +37,7 @@ namespace CKN
 finite energies, support integrability, and interval time domains. The a.e.
 uniqueness of the weak gradient is `CKN.HasWeakPartialDerivOn.ae_eq` from
 `CKN/Foundation/Sobolev/WeakDerivative.lean`. -/
+@[expose]
 def IsSuitableWeakSolutionIntegrable (Ω : Set Vec3) (I : Set ℝ) (q : ℝ)
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3)
     (p : ParabolicPoint → ℝ) (f : ParabolicPoint → Vec3) : Prop :=

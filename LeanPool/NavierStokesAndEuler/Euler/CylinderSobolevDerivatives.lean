@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOperators
 
 /-! Actual coordinate derivatives and truncations between the complete cylinder Sobolev spaces. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -25,7 +25,7 @@ def truncateIndex {q : ℕ} (w : SobolevWord q) : SobolevWord (q + 1) :=
   ⟨⟨w.1.val, Nat.lt_succ_of_lt w.1.isLt⟩, w.2⟩
 
 /-- Appending a direction indexes a derivative of the corresponding underlying derivative field. -/
-def derivativeIndex {q : ℕ} (i : Fin 4) (w : SobolevWord q) : SobolevWord (q + 1) :=
+@[expose] def derivativeIndex {q : ℕ} (i : Fin 4) (w : SobolevWord q) : SobolevWord (q + 1) :=
   ⟨⟨w.1.val + 1, Nat.succ_lt_succ w.1.isLt⟩, Fin.snoc w.2 i⟩
 
 variable (period : ℝ) [Fact (0 < period)]

@@ -23,7 +23,7 @@ Still language-general (countable function symbols only — relationality first 
 BF/Scott packaging boundary, per the frozen audit).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

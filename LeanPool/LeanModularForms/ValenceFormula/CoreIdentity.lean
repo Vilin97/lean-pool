@@ -29,7 +29,7 @@ The orbit-sum valence formula applied to the canonical zero set `s₀`.
 * `valence_formula_orbit_sum` — orbit-sum with boundary weight hypothesis
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

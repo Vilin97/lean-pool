@@ -17,7 +17,7 @@ For a real matrix `X`,
 When `X` is positive semidefinite this is PSD and entrywise nonnegative.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 
@@ -32,11 +32,11 @@ noncomputable section
 
 /-- The correction weight on the pair `{i,j}`: `(X i j)²` when `i < j` and the
 entry is negative, and `0` otherwise. -/
-def laplacianCoeff (X : Matrix n n ℝ) (i j : n) : ℝ :=
+@[expose] def laplacianCoeff (X : Matrix n n ℝ) (i j : n) : ℝ :=
   if i < j ∧ X i j < 0 then (X i j) ^ 2 else 0
 
 /-- The map of `docs/sol.tex` (eq:matrix). -/
-def M (X : Matrix n n ℝ) : Matrix n n ℝ :=
+@[expose] def M (X : Matrix n n ℝ) : Matrix n n ℝ :=
   X ⊙ X + ∑ i, ∑ j, laplacianCoeff X i j • vecMulVec (e i - e j) (e i - e j)
 
 /-- The all-ones matrix, used as the Frobenius partner of `M`. -/

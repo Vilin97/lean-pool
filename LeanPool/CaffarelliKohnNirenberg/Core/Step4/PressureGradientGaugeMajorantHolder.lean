@@ -15,7 +15,7 @@ the backward window of a parabolic cell: a power-mean bound that trades a
 sub-unit power for the total mass.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

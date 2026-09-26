@@ -16,7 +16,7 @@ monicity, genuine parameter dependence, nonconstant units, and the `n = 0`
 and `d = 0` semantics of the public interface.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Topology
 

@@ -18,7 +18,7 @@ edge.  The construction below is topological; the finite conforming subdivision 
 that it is PL is kept as a separate obligation.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

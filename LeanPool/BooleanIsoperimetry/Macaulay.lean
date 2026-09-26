@@ -23,7 +23,7 @@ This file develops the increment profile of the Harper boundary function and
 the nested-cascade inequalities used by the final minimization argument.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

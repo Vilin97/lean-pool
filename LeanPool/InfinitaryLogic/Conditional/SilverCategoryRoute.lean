@@ -62,7 +62,7 @@ for this route; it remains the assembly point for the closed case (`silver_core_
   whole chain through `gandy_harrington_of_gSGraphHom` is unconditional.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

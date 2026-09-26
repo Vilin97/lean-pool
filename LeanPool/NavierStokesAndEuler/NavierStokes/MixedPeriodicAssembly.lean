@@ -26,7 +26,7 @@ the periodic fields and their residual limits.  They do not establish the
 correction iteration or the existence of singular incoming fields.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

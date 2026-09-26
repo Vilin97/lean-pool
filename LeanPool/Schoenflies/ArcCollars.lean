@@ -88,7 +88,7 @@ arc, and `Schoenflies.isPolyArcCarrier_segment` exhibits one.
   a `PolyArc`, which recovers `Schoenflies.hasArcCollars_segment` as a special case.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

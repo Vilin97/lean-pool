@@ -23,7 +23,7 @@ Two elementary tools used to extract a single good outcome of a nibble round.
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Finset
 open scoped ProbabilityTheory

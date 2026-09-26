@@ -25,7 +25,7 @@ Key lemmas:
 - `isPositiveDefinite_precomp_linear`: Composition with linear map preserves PD
 -/
 
-@[expose] public section
+public section
 
 open Complex
 open BigOperators
@@ -44,7 +44,7 @@ namespace GFF4D
 
     This is the standard definition in harmonic analysis and probability theory.
 -/
-def IsPositiveDefinite {α : Type*} [AddGroup α] (φ : α → ℂ) : Prop :=
+@[expose] def IsPositiveDefinite {α : Type*} [AddGroup α] (φ : α → ℂ) : Prop :=
   ∀ (m : ℕ) (x : Fin m → α) (c : Fin m → ℂ),
     0 ≤ (∑ i, ∑ j, (starRingEnd ℂ) (c i) * c j * φ (x i - x j)).re
 

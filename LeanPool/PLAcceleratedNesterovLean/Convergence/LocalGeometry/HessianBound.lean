@@ -23,7 +23,7 @@ bounds proved in `MorseBott.HessianPL`. The unique content here:
   4. `PL_gradient_hessian_bound`: gradient-form export
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

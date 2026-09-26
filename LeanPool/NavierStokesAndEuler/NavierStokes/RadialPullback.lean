@@ -35,7 +35,7 @@ interval `(0,L)`. The constants in the estimates are independent of the point
 approaching either endpoint and of any auxiliary shifts in the source.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -49,11 +49,11 @@ private theorem nat_le_smooth (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   le_of_lt (WithTop.coe_lt_coe.mpr (ENat.natCast_lt_top n))
 
 /-- Delta, given by `min 1 (min x (L - x))`. -/
-def delta (L x : ℝ) : ℝ := min 1 (min x (L - x))
+@[expose] def delta (L x : ℝ) : ℝ := min 1 (min x (L - x))
 /-- Zeta, given by `edge cL x * edge cR (L - x)`. -/
-def zeta (cL cR L x : ℝ) : ℝ := edge cL x * edge cR (L - x)
+@[expose] def zeta (cL cR L x : ℝ) : ℝ := edge cL x * edge cR (L - x)
 /-- Weight, given by `zeta cL cR L x / delta L x ^ m`. -/
-def weight (cL cR L : ℝ) (m : ℕ) (x : ℝ) : ℝ := zeta cL cR L x / delta L x ^ m
+@[expose] def weight (cL cR L : ℝ) (m : ℕ) (x : ℝ) : ℝ := zeta cL cR L x / delta L x ^ m
 /-- Single weight, given by `edge c x / x ^ m`. -/
 def singleWeight (c : ℝ) (m : ℕ) (x : ℝ) : ℝ := edge c x / x ^ m
 
@@ -407,11 +407,11 @@ end Integrals
 /-! ### Pullback to logarithmic edge distances on a fixed positive annulus -/
 
 /-- Log length, given by `Real.log (b / a)`. -/
-def logLength (a b : ℝ) : ℝ := Real.log (b / a)
+@[expose] def logLength (a b : ℝ) : ℝ := Real.log (b / a)
 /-- Log position, given by `Real.log (X / a)`. -/
-def logPosition (a X : ℝ) : ℝ := Real.log (X / a)
+@[expose] def logPosition (a X : ℝ) : ℝ := Real.log (X / a)
 /-- Log weight, given by `weight cL cR (logLength a b) m (logPosition a X)`. -/
-def logWeight (cL cR a b : ℝ) (m : ℕ) (X : ℝ) : ℝ :=
+@[expose] def logWeight (cL cR a b : ℝ) (m : ℕ) (X : ℝ) : ℝ :=
   weight cL cR (logLength a b) m (logPosition a X)
 
 theorem logLength_pos {a b : ℝ} (ha : 0 < a) (hab : a < b) : 0 < logLength a b :=
@@ -1153,7 +1153,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1167,7 +1167,7 @@ private theorem nat_le_smooth (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   le_of_lt (WithTop.coe_lt_coe.mpr (ENat.natCast_lt_top n))
 
 /-- A globally smooth positive radius, identical to the radius above `2ℓ`. -/
-noncomputable def positiveRadius (ℓ x : ℝ) : ℝ :=
+@[expose] noncomputable def positiveRadius (ℓ x : ℝ) : ℝ :=
   ℓ + (x - ℓ) * Real.smoothTransition ((x - ℓ) / ℓ)
 
 theorem positiveRadius_contDiff (ℓ : ℝ) : ContDiff ℝ ∞ (positiveRadius ℓ) := by
@@ -1211,11 +1211,11 @@ theorem positiveRadius_lt {ℓ x t : ℝ} (hℓ : 0 < ℓ) (hℓt : ℓ < t) (hx
   (positiveRadius_le_max hℓ x).trans_lt (max_lt hℓt hxt)
 
 /-- Power chart, given by `(positiveRadius (a / 4) R) ^ d`. -/
-noncomputable def powerChart (d a R : ℝ) : ℝ := (positiveRadius (a / 4) R) ^ d
+@[expose] noncomputable def powerChart (d a R : ℝ) : ℝ := (positiveRadius (a / 4) R) ^ d
 /-- Inverse chart, given by `(positiveRadius (a ^ d / 4) U) ^ d⁻¹`. -/
 noncomputable def inverseChart (d a U : ℝ) : ℝ := (positiveRadius (a ^ d / 4) U) ^ d⁻¹
 /-- Radial jacobian, given by `d * R ^ (d - 1)`. -/
-noncomputable def radialJacobian (d R : ℝ) : ℝ := d * R ^ (d - 1)
+@[expose] noncomputable def radialJacobian (d R : ℝ) : ℝ := d * R ^ (d - 1)
 
 theorem powerChart_contDiff {a : ℝ} (ha : 0 < a) (d : ℝ) :
     ContDiff ℝ ∞ (powerChart d a) :=
@@ -1321,7 +1321,7 @@ variable {E V : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Lift chart, given by `(φ z.1, z.2)`. -/
-noncomputable def liftChart (φ : ℝ → ℝ) (z : ℝ × E) : ℝ × E := (φ z.1, z.2)
+@[expose] noncomputable def liftChart (φ : ℝ → ℝ) (z : ℝ × E) : ℝ × E := (φ z.1, z.2)
 
 theorem liftChart_contDiff {φ : ℝ → ℝ} (hφ : ContDiff ℝ ∞ φ) :
     ContDiff ℝ ∞ (liftChart (E := E) φ) := (hφ.comp contDiff_fst).prodMk contDiff_snd
@@ -1335,7 +1335,7 @@ theorem liftChart_hasFDerivAt {φ : ℝ → ℝ} {c : ℝ} (z : ℝ × E) (hφ :
 /-- Source multiplier, given by `(radialJacobian d (inverseChart d a U))⁻¹`. -/
 noncomputable def sourceMultiplier (d a U : ℝ) : ℝ := (radialJacobian d (inverseChart d a U))⁻¹
 /-- Normalize source, given by `sourceMultiplier d a z.1 • g (liftChart (inverseChart d a) z)`. -/
-noncomputable def normalizeSource (d a : ℝ) (g : ℝ × E → V) (z : ℝ × E) : V :=
+@[expose] noncomputable def normalizeSource (d a : ℝ) (g : ℝ × E → V) (z : ℝ × E) : V :=
   sourceMultiplier d a z.1 • g (liftChart (inverseChart d a) z)
 
 theorem sourceMultiplier_contDiff {a d : ℝ} (ha : 0 < a) (hd : 0 < d) :
@@ -1388,7 +1388,7 @@ theorem normalizeSource_eq_formula {a b d U : ℝ} (ha : 0 < a) (hab : a < b)
       TransportPrimitive.radial_zero_of_lt hs hR, smul_zero]
 
 /-- Pullback, given by `F ∘ liftChart (powerChart d a)`. -/
-noncomputable def pullback (d a : ℝ) (F : ℝ × E → V) : ℝ × E → V :=
+@[expose] noncomputable def pullback (d a : ℝ) (F : ℝ × E → V) : ℝ × E → V :=
   F ∘ liftChart (powerChart d a)
 
 theorem pullback_contDiff {a : ℝ} (ha : 0 < a) (d : ℝ)
@@ -1489,7 +1489,7 @@ theorem total_normalized_eq_radialIntegral {a b d : ℝ}
 
 /-- Physical compact, given by `pullback d a (TransportPrimitive.compactIntegral
 (TransportPrimitive.interiorCutoff (a ^ d) (b ^ d)) M v (normalizeSource d a g))`. -/
-noncomputable def physicalCompact (d a b M : ℝ) (v : E) (g : ℝ × E → V) : ℝ × E → V :=
+@[expose] noncomputable def physicalCompact (d a b M : ℝ) (v : E) (g : ℝ × E → V) : ℝ × E → V :=
   pullback d a (TransportPrimitive.compactIntegral
     (TransportPrimitive.interiorCutoff (a ^ d) (b ^ d)) M v (normalizeSource d a g))
 
@@ -1528,14 +1528,14 @@ theorem physicalCompact_eq_radialIntegral {a b d : ℝ}
   simp only [normalized_radial_integral ha hd hz hg, normalized_radial_integral ha hd hab.le hg]
 
 /-- Physical alias as an element of `V`. -/
-noncomputable def physicalAlias (d a b M : ℝ) (v : E) (g : ℝ × E → V) (z : ℝ × E) : V :=
+@[expose] noncomputable def physicalAlias (d a b M : ℝ) (v : E) (g : ℝ × E → V) (z : ℝ × E) : V :=
   (radialJacobian d z.1 * deriv (TransportPrimitive.interiorCutoff (a ^ d) (b ^ d))
       (powerChart d a z.1)) •
     TransportPrimitive.totalIntegral M v (normalizeSource d a g) (liftChart (powerChart d a) z)
 
 /-- Physical cutoff, given by `TransportPrimitive.interiorCutoff (a ^ d) (b ^ d) (powerChart d a
 R)`. -/
-noncomputable def physicalCutoff (d a b R : ℝ) : ℝ :=
+@[expose] noncomputable def physicalCutoff (d a b R : ℝ) : ℝ :=
   TransportPrimitive.interiorCutoff (a ^ d) (b ^ d) (powerChart d a R)
 
 theorem physicalCutoff_contDiff {a : ℝ} (ha : 0 < a) (d b : ℝ) :

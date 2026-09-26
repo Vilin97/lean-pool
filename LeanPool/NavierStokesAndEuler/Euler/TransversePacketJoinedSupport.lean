@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SourceCylinderMeanZero
 
 /-! Actual support and angular normalization of the joined transverse provider. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

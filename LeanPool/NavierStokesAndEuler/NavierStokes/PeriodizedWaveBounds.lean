@@ -22,7 +22,7 @@ one uncovered-source term.  In particular, the source is never summed once
 for every inactive copy.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -312,6 +312,7 @@ variable {P E : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Native cell, given by `{z | g.coordinates k z.2 ∈ K}`. -/
+@[expose]
 noncomputable def nativeCell (g : Geometry) (K : Set Plane) (k : Frequency) : Set (P × Plane) :=
   {z | g.coordinates k z.2 ∈ K}
 
@@ -342,7 +343,7 @@ theorem nativeCell_locallyFinite (g : Geometry) {K : Set Plane} (hK : IsCompact 
   simp [κ, hy] at hh
 
 /-- Native cells, bundling `carrier`, `closed`, `locallyFinite`, `unique`. -/
-noncomputable def nativeCells (g : ℕ → Geometry) (K : ℕ → Set Plane)
+@[expose] noncomputable def nativeCells (g : ℕ → Geometry) (K : ℕ → Set Plane)
     (hK : ∀ n, IsCompact (K n))
     (hinj : ∀ n, InjOn quotientPoint ((fun z => (g n).center + (g n).basis z) '' K n)) :
     Cells (P × Plane) Frequency where
@@ -808,6 +809,7 @@ noncomputable def localGood (s : StripData D) (d : GraphDirections D) (n : ℕ) 
     D → ComplexVector := (a.raw i).constructedGood s d (fun n => a.cutoff n i) n
 
 /-- Local tail, given by `d.Dfast (fun n => a.cutoff n i) n x • a.amplitude n i x`. -/
+@[expose]
 noncomputable def localTail (d : GraphDirections D) (n : ℕ) (i : I) (x : D) : ComplexVector :=
   d.Dfast (fun n => a.cutoff n i) n x • a.amplitude n i x
 
@@ -817,13 +819,13 @@ noncomputable def localGaussian (d : GraphDirections D) (n : ℕ) (i : I) : D �
   excludedSlotError d (fun n => a.cutoff n i) (fun n => a.amplitude n i) a.source n
 
 /-- The single native cutoff is applied before periodization and curl. -/
-noncomputable def common : WaveCoefficients D :=
+@[expose] noncomputable def common : WaveCoefficients D :=
   { a.background with
     amplitude := fun n => copySum (fun i => (a.localized i).amplitude n)
     pressure := fun n => copySum (fun i => (a.localized i).pressure n) }
 
 /-- Common corrected, given by `a.common.addAmplitude (a.common.curlCorrection s d)`. -/
-noncomputable def commonCorrected (s : StripData D) (d : GraphDirections D) :
+@[expose] noncomputable def commonCorrected (s : StripData D) (d : GraphDirections D) :
     WaveCoefficients D := a.common.addAmplitude (a.common.curlCorrection s d)
 
 /-- An actual global good coefficient, assembled from the cutoff-and-curl
@@ -835,11 +837,12 @@ noncomputable def globalGood (s : StripData D) (d : GraphDirections D) (n : ℕ)
 noncomputable def cutoffSum (n : ℕ) : D → ℝ := copySum (a.cutoff n)
 
 /-- Global tail, given by `copySum (a.localTail d n)`. -/
-noncomputable def globalTail (d : GraphDirections D) (n : ℕ) : D → ComplexVector :=
+@[expose] noncomputable def globalTail (d : GraphDirections D) (n : ℕ) : D → ComplexVector :=
   copySum (a.localTail d n)
 
 /-- The shared source occurs once.  This definition also makes sense off
 every native patch and preserves the uncovered-source term there. -/
+@[expose]
 noncomputable def globalGaussian (d : GraphDirections D) (n : ℕ) (x : D) : ComplexVector :=
   a.globalTail d n x + (1 - a.cutoffSum n x) • a.source n x
 
@@ -1583,7 +1586,7 @@ variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 times.  In particular, a transported clock may use `exit = length / clock`.
 The tangent coefficients, source, geometry, and frequency are the actual
 inputs of `complexCopyVelocity` and its projected pressure. -/
-noncomputable def complexCopyData (base : WaveCoefficients (P × Plane))
+@[expose] noncomputable def complexCopyData (base : WaveCoefficients (P × Plane))
     (t : ℕ → TangentData P ProblemStatement.Space) (source : ℕ → P × Plane → ComplexVector)
     (g : ℕ → Geometry) (entry exit : ℕ → ℝ) (hab : ∀ n, entry n ≤ exit n)
     (κ : ℕ → Plane → ℝ) : CopyData (P × Plane) Frequency where

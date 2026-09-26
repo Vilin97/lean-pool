@@ -28,7 +28,7 @@ inputs) are exported from `WindowRank.lean` instead, via a one-step splitting
 needed); the *structural* exactness in this file does not depend on them.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology
 open Set TopologicalSpace Filter

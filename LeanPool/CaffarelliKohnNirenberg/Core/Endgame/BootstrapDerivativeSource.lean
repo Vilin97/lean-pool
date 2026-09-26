@@ -15,7 +15,7 @@ without lowering integrability. Unit-cylinder support then lowers only the
 outer Morrey exponent, with numerical factor one.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal

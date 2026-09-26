@@ -19,7 +19,7 @@ proves integrability on the product space, so Fubini is applicable.
 These results do not assume or construct a singular integral operator.
 -/
 
-@[expose] public section
+public section
 
 
 

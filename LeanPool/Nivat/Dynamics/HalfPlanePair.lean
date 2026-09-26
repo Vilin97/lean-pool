@@ -53,7 +53,7 @@ and `exists_halfPlane_pair_coordinates` with the normal written as a coordinate
 pair.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.Dynamics
 

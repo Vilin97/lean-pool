@@ -14,7 +14,7 @@ import LeanPool.Erdos97ConvexOctagon.ResidualObstructions
 
 /-! # Erdős 97 convex-octagon formalization: Certificates -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 
@@ -41,7 +41,7 @@ def PrefixCertificate.toCertificate : PrefixCertificate → Certificate
   | .sharedThree a b q1 q2 q3 => .sharedThree a b q1 q2 q3
 
 /-- Validate the tail of an ordered mutual-edge spanning tree. -/
-def extendsTreeB
+@[expose] def extendsTreeB
     (R : RawIncidence) (reached : Finset Vertex) : List Vertex → Bool
   | [] => true
   | v :: todo =>
@@ -50,12 +50,12 @@ def extendsTreeB
         extendsTreeB R (insert v reached) todo
 
 /-- Check that the listed vertices form an ordered mutual-edge spanning tree. -/
-def componentTreeB (R : RawIncidence) (root : Vertex) : List Vertex → Bool
+@[expose] def componentTreeB (R : RawIncidence) (root : Vertex) : List Vertex → Bool
   | [] => false
   | first :: rest => decide (first = root) && extendsTreeB R {root} rest
 
 /-- A selected edge whose selecting endpoint occurs in a validated tree. -/
-def TreeLabelledEdge (R : RawIncidence) (component : List Vertex) (a b : Vertex) : Prop :=
+@[expose] def TreeLabelledEdge (R : RawIncidence) (component : List Vertex) (a b : Vertex) : Prop :=
   (a ∈ component ∧ b ∈ R a) ∨ (b ∈ component ∧ a ∈ R b)
 
 /-- Boolean test for a selected edge incident to the validated tree. -/
@@ -77,7 +77,7 @@ def payloadInverseCode (payload : UInt64) : UInt64 :=
   (payload >>> 28) &&& 0xffffff
 
 /-- The mathematical proposition checked for each emitted finite witness. -/
-def Certificate.Valid (R : RawIncidence) : Certificate → Prop
+@[expose] def Certificate.Valid (R : RawIncidence) : Certificate → Prop
   | .k4 root component a b c d =>
       componentTreeB R root component = true ∧ [a, b, c, d].Nodup ∧
         TreeLabelledEdge R component a b ∧ TreeLabelledEdge R component a c ∧

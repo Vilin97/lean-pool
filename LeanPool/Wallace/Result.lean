@@ -28,7 +28,7 @@ compact, cancellative on both sides, a topological semigroup, and not a group.
 Every declaration in this file is proved from its explicitly stated hypotheses.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketInitialSupport
 initial increment is supported in the small physical packet ball. The
 exact correction starts from zero, so it adds no initial tail. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

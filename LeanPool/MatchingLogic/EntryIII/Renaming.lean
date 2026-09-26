@@ -22,7 +22,7 @@ public import Mathlib.Basic.Denumerable
 # MatchingLogic.EntryIII.Renaming
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

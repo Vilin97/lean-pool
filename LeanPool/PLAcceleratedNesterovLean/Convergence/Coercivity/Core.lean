@@ -20,7 +20,7 @@ Proves that `(1 - a)² * (V² + μ' * E²) ≤ 60 * Ln` by resolving coupled
 norm inequalities from the Nesterov accelerated gradient descent analysis.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -27,7 +27,7 @@ Hoare-style semantics for quantum while programs, are future extensions rather
 than prerequisites for this TimeM layer.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -43,6 +43,7 @@ structure Timed (α : Type u) where
 namespace Timed
 
 /-- Attach a trusted cost to a return value. -/
+@[expose]
 def trusted {α : Type u} (cost : ℕ) (ret : α) : Timed α := ⟨ret, cost⟩
 
 @[simp]
@@ -81,6 +82,7 @@ def zero : ResourceProfile where
   classicalOps := 0
 
 /-- Sequential composition adds every resource counter. -/
+@[expose]
 def sequential (left right : ResourceProfile) : ResourceProfile where
   oracleQueries := left.oracleQueries + right.oracleQueries
   hadamardGates := left.hadamardGates + right.hadamardGates
@@ -88,11 +90,12 @@ def sequential (left right : ResourceProfile) : ResourceProfile where
   classicalOps := left.classicalOps + right.classicalOps
 
 /-- Tensor/parallel circuit composition uses the same additive counters. -/
+@[expose]
 def tensor (left right : ResourceProfile) : ResourceProfile :=
   sequential left right
 
 /-- Exact counter claim used by supporting public theorem statements. -/
-def HasExactCounts (profile : ResourceProfile)
+@[expose] def HasExactCounts (profile : ResourceProfile)
     (oracleQueries hadamardGates elementaryGates classicalOps : ℕ) : Prop :=
   profile.oracleQueries = oracleQueries ∧
     profile.hadamardGates = hadamardGates ∧
@@ -154,7 +157,7 @@ deriving DecidableEq
 namespace CircuitGateProfile
 
 /-- Exact fixed-circuit gate-count claim. -/
-def HasExactCounts (profile : CircuitGateProfile)
+@[expose] def HasExactCounts (profile : CircuitGateProfile)
     (hadamardGates controlledPhaseGates swapGates : ℕ) : Prop :=
   profile.hadamardGates = hadamardGates ∧
     profile.controlledPhaseGates = controlledPhaseGates ∧
@@ -172,6 +175,7 @@ structure Profiled (α : Type u) where
 namespace Profiled
 
 /-- Attach a trusted resource profile to a return value. -/
+@[expose]
 def trusted {α : Type u} (resources : ResourceProfile) (ret : α) : Profiled α :=
   ⟨ret, resources⟩
 
@@ -198,7 +202,7 @@ deriving DecidableEq
 namespace CommunicationProfile
 
 /-- Exact communication-resource claim for protocol supporting theorems. -/
-def HasExactCounts (profile : CommunicationProfile)
+@[expose] def HasExactCounts (profile : CommunicationProfile)
     (classicalBits transmittedQubits bellPairs : ℕ) : Prop :=
   profile.classicalBits = classicalBits ∧
     profile.transmittedQubits = transmittedQubits ∧

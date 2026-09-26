@@ -26,7 +26,7 @@ Tags: combinatorics, discrete-geometry, convex-geometry, ramsey-theory
 MSC: 52C10, 05D10
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

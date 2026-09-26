@@ -12,7 +12,7 @@ import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
 
 /-! Full spatial-parameter smoothness of the actual localized Newtonian operators. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

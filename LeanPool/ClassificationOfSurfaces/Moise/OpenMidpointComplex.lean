@@ -16,7 +16,7 @@ triangle whose whole carrier is contained in `U`.  These finite stages are neste
 subdivisions are reconciled by coning.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

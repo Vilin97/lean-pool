@@ -34,7 +34,7 @@ current leaf and the deepest node the two leaves share.  This file justifies tha
   therefore already recorded under the second — the branch depth-first search has *finished*.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon

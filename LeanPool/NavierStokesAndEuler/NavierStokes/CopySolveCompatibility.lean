@@ -17,7 +17,7 @@ actual coefficient/forcing paths and then for the constructed Volterra
 inverse; no native periodicity of an inhomogeneous solution is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,7 @@ theorem coverPower_add (d k : ℕ) (Y : Plane) :
   simp only [coverPower_apply, pow_add, _root_.mul_apply_eq_comp]
 
 /-- Refine geometry, given by `{ g with gap := g.gap + k }`. -/
-noncomputable def refineGeometry (g : Geometry) (k : ℕ) : Geometry :=
+@[expose] noncomputable def refineGeometry (g : Geometry) (k : ℕ) : Geometry :=
   { g with gap := g.gap + k }
 
 theorem coordinates_refine (g : Geometry) (k : ℕ) (j : Frequency) (Y : Plane) :
@@ -346,13 +346,14 @@ end SourceScale
 /-! ## Transporting the native clock, its anchor, and its cutoff together -/
 
 /-- Native time map, given by `(z.1, τ + rate * z.2)`. -/
-noncomputable def nativeTimeMap (τ rate : ℝ) (z : Plane) : Plane :=
+@[expose] noncomputable def nativeTimeMap (τ rate : ℝ) (z : Plane) : Plane :=
   (z.1, τ + rate * z.2)
 
 theorem nativeTimeMap_continuous (τ rate : ℝ) : Continuous (nativeTimeMap τ rate) :=
   continuous_fst.prodMk (continuous_const.add (continuous_const.mul continuous_snd))
 
 /-- Time geometry, bundling `gap`, `basis`, `center`. -/
+@[expose]
 noncomputable def timeGeometry (g : Geometry) (τ rate : ℝ) (hrate : rate ≠ 0) : Geometry where
   gap := g.gap
   basis := CommonCoverClass.scaledBasis g.basis rate hrate
@@ -523,11 +524,12 @@ variable {P Q V E X I : Type}
   [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
 /-- Transport data, given by `scaleSource (transformData (timeData d τ rate) φ k) amplitude`. -/
-noncomputable def transportData (d : LinearData P V E) (φ : Q → P) (k : ℕ)
+@[expose] noncomputable def transportData (d : LinearData P V E) (φ : Q → P) (k : ℕ)
     (τ rate amplitude : ℝ) : LinearData Q V E :=
   scaleSource (transformData (timeData d τ rate) φ k) amplitude
 
 /-- Transport geometry, given by `refineGeometry (timeGeometry g τ rate hrate) k`. -/
+@[expose]
 noncomputable def transportGeometry (g : Geometry) (k : ℕ) (τ rate : ℝ) (hrate : rate ≠ 0) :
     Geometry := refineGeometry (timeGeometry g τ rate hrate) k
 

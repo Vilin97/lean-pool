@@ -23,7 +23,7 @@ same subsequence would converge to zero along the free ultrafilter.
 This observation avoids any separate oscillating-marker construction.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

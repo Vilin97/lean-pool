@@ -102,7 +102,7 @@ subgraphs of the union.
   have at least two vertices in common, their union is 2-connected".
 -/
 
-@[expose] public section
+public section
 
 open Set
 

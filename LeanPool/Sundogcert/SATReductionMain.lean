@@ -52,7 +52,7 @@ import LeanPool.Sundogcert.SATReductionReverse
   `[propext, Classical.choice, Quot.sound]` on each audited result.
 -/
 
-@[expose] public section
+public section
 
 open Sundog.SATReduction Sundog.SATNPHard Sundog.SATReductionForward
 open Sundog.SATReductionReverse Sundog.ThreeDMReindex Sundog.MatchingNPHard

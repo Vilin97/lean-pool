@@ -17,7 +17,7 @@ The time derivatives of the Gram and mixed coefficients are genuine derivatives
 of the prescribed coefficient paths.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,7 +34,7 @@ variable {U E : Type*}
 variable (T : ℝ) (Q Q₁ Q₂ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
 
 /-- The mixed coefficient `Q* Q_t` in the transverse momentum. -/
-def mixedPath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
+@[expose] def mixedPath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
   ⟨fun t => (Q t).adjoint.comp (Q₁ t),
     ((realAdjoint (U := U) (E := E)).continuous.comp Q.continuous).clm_comp Q₁.continuous⟩
 

@@ -96,7 +96,7 @@ With this module in place `Graph.IsHexRealization`, `Graph.IsHexCrosscut`, `Grap
 and `Graph.Bendable` have no consumers left.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Metric Set unitInterval
 open scoped Graph

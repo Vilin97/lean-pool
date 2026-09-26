@@ -30,7 +30,7 @@ These results do not assert bounds on the actual variable-coefficient ODE or
 on its parameter derivatives.
 -/
 
-@[expose] public section
+public section
 
 namespace NavierStokes.PulseGrowth
 
@@ -160,7 +160,7 @@ theorem netGrowth_strictAntiOn_nonneg {lam u : ℝ} (hlam : 0 < lam) :
   simpa only [abs_of_nonneg hs0, abs_of_nonneg ht0] using hst
 
 /-- Magnitude of either signed schedule, in the slot-time variable. -/
-noncomputable def slotMagnitude (u ell v : ℝ) : ℝ := u / 2 + u * v / ell
+@[expose] noncomputable def slotMagnitude (u ell v : ℝ) : ℝ := u / 2 + u * v / ell
 
 theorem slotMagnitude_midpoint (u ell : ℝ) (hell : ell ≠ 0) :
     slotMagnitude u ell (ell / 2) = u := by
@@ -212,14 +212,14 @@ end
 
 end
 
-@[expose] public section
+public section
 
 namespace NavierStokes.GaussianEnvelope
 
 open Set MeasureTheory
 
 /-- Envelope normalized to one at the midpoint. -/
-noncomputable def envelope (rate : ℝ → ℝ) (midpoint time : ℝ) : ℝ :=
+@[expose] noncomputable def envelope (rate : ℝ → ℝ) (midpoint time : ℝ) : ℝ :=
   Real.exp (∫ x in midpoint..time, rate x)
 
 /-- Exact integral of a centered affine rate, for either order of the endpoints. -/
@@ -359,7 +359,7 @@ theorem hasDerivAt_netGrowth (lam u s : ℝ) :
   ring
 
 /-- A positive lower bound on the magnitude of the rate derivative in the slot. -/
-noncomputable def referenceMinSlope (lam u : ℝ) : ℝ :=
+@[expose] noncomputable def referenceMinSlope (lam u : ℝ) : ℝ :=
   lam * u / ((1 + u ^ 2) * Real.sqrt (1 + u ^ 2))
 
 /-- An upper bound on the magnitude of the rate derivative in the slot. -/

@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketNormalBudget
 and its first time derivative. Its radius is an explicit polynomial in their
 Gevrey radius and amplitudes; no inverse or strain jet bound is an input. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -24,14 +24,14 @@ open Set EulerSmoothLimit EulerMeanCoefficients EulerPacketCofactor EulerPacketP
   EulerGevrey EulerTimeLpGramGevrey EulerParameterWordGevrey EulerSourceCylinderTimeBounds
 
 /-- Amplitude, given by `9*C^2+27*C^2*C₁`. -/
-def amplitude (C C₁ : ℝ) : ℝ := 9*C^2+27*C^2*C₁
+@[expose] def amplitude (C C₁ : ℝ) : ℝ := 9*C^2+27*C^2*C₁
 
 /-- Inverse radius, given by `2*(1+(1+C)^2*(3*(amplitude C C₁)^2+2))*(R+1)`. -/
-def inverseRadius (R C C₁ : ℝ) : ℝ :=
+@[expose] def inverseRadius (R C C₁ : ℝ) : ℝ :=
   2*(1+(1+C)^2*(3*(amplitude C C₁)^2+2))*(R+1)
 
 /-- Radius, given by `16*(R+4*inverseRadius R C C₁+1)`. -/
-def radius (R C C₁ : ℝ) : ℝ := 16*(R+4*inverseRadius R C C₁+1)
+@[expose] def radius (R C C₁ : ℝ) : ℝ := 16*(R+4*inverseRadius R C C₁+1)
 
 theorem amplitude_nonneg (C C₁ : ℝ) (hC₁ : 0 ≤ C₁) : 0 ≤ amplitude C C₁ := by
   unfold amplitude

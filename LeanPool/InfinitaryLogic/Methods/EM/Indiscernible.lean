@@ -16,7 +16,7 @@ formula holds on one iff it holds on the other.
 Standalone API — does not advance the Hanf boundary.
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 

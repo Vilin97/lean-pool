@@ -17,7 +17,7 @@ This file defines the function space `OmegaQuasiBorelHom X Y` (written
 itself an ωQBS.
 -/
 
-@[expose] public section
+public section
 
 open QuasiBorelSpace
 open OmegaQuasiBorelSpace

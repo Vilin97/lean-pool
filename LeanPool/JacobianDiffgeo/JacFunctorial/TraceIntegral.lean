@@ -34,7 +34,7 @@ Route (cheaper than the design's full `FiberChain`/monodromy construction, same 
   loop. No cycle decomposition, no lifted-path concatenation.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology unitInterval
 open Set Filter Metric IsManifold

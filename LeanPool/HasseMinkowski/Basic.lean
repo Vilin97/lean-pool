@@ -41,7 +41,7 @@ nondegeneracy with orthogonal sums and base change.  This file supplies them.
 * `Indefinite.isotropic`: an indefinite real form is isotropic (intermediate value theorem).
 -/
 
-@[expose] public section
+public section
 
 open Module QuadraticMap
 

@@ -39,4 +39,4 @@ Tags: mathematical-logic, infinitary-logic, model-theory, descriptive-set-theory
 MSC: 03C75, 03E15, 03C30
 -/
 
-@[expose] public section
+public section

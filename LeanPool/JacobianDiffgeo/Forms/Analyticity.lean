@@ -30,7 +30,7 @@ Main declarations:
   targets (any maximal-atlas chart).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Bundle
 open Set IsManifold

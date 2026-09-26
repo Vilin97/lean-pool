@@ -19,7 +19,7 @@ by a fixed constant divided by R. Consequently compactly supported Schwartz
 functions are dense, and continuous identities extend from compact tests.
 -/
 
-@[expose] public section
+public section
 
 
 

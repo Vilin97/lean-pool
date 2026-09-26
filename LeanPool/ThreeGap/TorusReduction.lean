@@ -34,7 +34,7 @@ distinct **actual** nearest-neighbour distances: `g_∞ ≤ 2^d + 1`.
 Axiom-clean; elementary.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.DeltaCost
 

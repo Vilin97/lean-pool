@@ -18,7 +18,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 # LeanPool.SardMoreira.UpperLowerSemicontinuous
 -/
 
-@[expose] public section
+public section
 
 open Set Filter Function TopologicalSpace
 

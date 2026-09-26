@@ -61,7 +61,7 @@ Sugawara construction, Virasoro algebra, Heisenberg algebra, bosonic Fock space
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 

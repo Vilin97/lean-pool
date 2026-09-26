@@ -31,7 +31,7 @@ independence selector from `Wallace.TriangularPreprocess`.
 No topology or character is assumed.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Cardinal
@@ -146,7 +146,7 @@ theorem codedSequence_supportedBelow (a : ContinuumIndex) :
     (TriangularPreprocess.freshIndex_spec supportBound a).1
 
 /-- The rational basis point assigned to a code. -/
-def codeBasisVector (a : ContinuumIndex) : ContinuumRationalGroup :=
+@[expose] def codeBasisVector (a : ContinuumIndex) : ContinuumRationalGroup :=
   Finsupp.single (codeIndex a) 1
 
 /-- The translated sequence used for bounded-independence preprocessing. -/

@@ -14,7 +14,7 @@ public import Mathlib.RingTheory.TensorProduct.Basic
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.MatrixEquivTensor`.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 

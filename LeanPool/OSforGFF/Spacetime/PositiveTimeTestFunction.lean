@@ -31,7 +31,7 @@ the star operation (complex conjugation composed with time reflection) for test 
 * `Star TestFunctionℂ`: Star instance for complex test functions
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -131,6 +131,9 @@ noncomputable def starTestFunction (f : TestFunctionℂ) : TestFunctionℂ :=
      refine ⟨C, fun x => ?_⟩
      rw [starRingEnd_iteratedFDeriv_norm_eq f_reflected n x]
      exact hC x⟩
+
+lemma starTestFunction_apply (f : TestFunctionℂ) (x : SpaceTime) :
+    (starTestFunction f) x = starRingEnd ℂ ((compTimeReflection f) x) := by rfl
 
 /-- Star instance for complex test functions -/
 noncomputable instance : Star TestFunctionℂ where

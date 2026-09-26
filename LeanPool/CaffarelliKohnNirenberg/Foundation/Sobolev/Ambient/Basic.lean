@@ -15,7 +15,7 @@ permission. This port keeps only the coordinate carrier needed by the
 weak-derivative API and uses the `CKN` namespace.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 

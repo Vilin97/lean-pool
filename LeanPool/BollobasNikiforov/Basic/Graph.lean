@@ -19,14 +19,14 @@ This module is copied, up to the namespace, from `SqOmega/Graph.lean` in
 <https://github.com/ShengtongZhang-alt/SqOmega> (Liu, Tang, Zhang).
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 
 variable {V : Type*}
 
 /-- The coefficient `1 - 1 / ω(G)` appearing in Turán-type bounds. -/
-noncomputable def turanFactor (G : SimpleGraph V) : ℝ :=
+@[expose] noncomputable def turanFactor (G : SimpleGraph V) : ℝ :=
   1 - 1 / (G.cliqueNum : ℝ)
 
 namespace SimpleGraph

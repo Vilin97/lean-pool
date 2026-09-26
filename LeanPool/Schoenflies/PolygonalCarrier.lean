@@ -35,7 +35,7 @@ Brick B6 of `lem:polygonal-redrawing` (H6): polygonal connectivity one level up.
   it, verbatim; the `example` below it is a machine check that the statements agree.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

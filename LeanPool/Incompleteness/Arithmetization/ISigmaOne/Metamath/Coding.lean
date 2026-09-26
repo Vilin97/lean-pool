@@ -14,7 +14,7 @@ import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Coding -/
 
-@[expose] public section
+public section
 
 namespace LO
 namespace FirstOrder

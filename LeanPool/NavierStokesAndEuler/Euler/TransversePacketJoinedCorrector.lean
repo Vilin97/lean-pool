@@ -19,7 +19,7 @@ C and C_t. The returned Field is for the literal raw curlCorrector used by
 the recursion, including at the history/forward junction.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

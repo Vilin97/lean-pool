@@ -18,7 +18,7 @@ the Dedekind eta function. Since η is holomorphic and nonvanishing on ℍ,
 `logDeriv(η)` is holomorphic, hence E₂ is holomorphic.
 -/
 
-@[expose] public section
+public section
 
 open UpperHalfPlane Set Filter Topology Function
 open scoped Real

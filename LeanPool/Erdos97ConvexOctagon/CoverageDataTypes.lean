@@ -9,7 +9,7 @@ public import LeanPool.Erdos97ConvexOctagon.PackedCertificates
 
 /-! # Erdős 97 convex-octagon formalization: Coverage Data Types -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 

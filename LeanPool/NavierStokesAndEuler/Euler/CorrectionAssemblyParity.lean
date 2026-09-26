@@ -25,7 +25,7 @@ section
 
 /-! Reflection invariance of the concrete lifted-gradient space and pressure solve. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -153,7 +153,7 @@ section
 
 /-! Joint reflection on the actual complete cylinder Sobolev spaces. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -296,7 +296,7 @@ section
 
 /-! Reflection covariance of the literal Sobolev product, transport and pressure operators. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -512,7 +512,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -685,7 +685,7 @@ section
 
 /-! Odd parity of actual inviscid correction solutions, proved by genuine PDE uniqueness. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -780,7 +780,7 @@ section
 /-! Genuine continuous Sobolev realizations of the assembled correction and its actual pressure at
 every order. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -838,7 +838,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

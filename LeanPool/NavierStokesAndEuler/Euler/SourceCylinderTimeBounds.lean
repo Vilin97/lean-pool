@@ -24,7 +24,7 @@ external radius and shift. Scalar time weights commute with these expressions;
 in particular no derivative of the positive profile is used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -81,13 +81,13 @@ theorem physicalRhs_contDiff
 
 /-- Coordinate cost, given by `3*sobolevCoefficientAmplitude ι q (4*Ri) (18*Ri*C₀*C₁)*Da +
 3*sobolevCoefficientAmplitude ι q (4*Ri) (3*Ri*C₀)*Df`. -/
-def coordinateCost (ι : Type*) [Fintype ι] (q : ℕ) (Ri C₀ C₁ Df Da : ℝ) : ℝ :=
+@[expose] def coordinateCost (ι : Type*) [Fintype ι] (q : ℕ) (Ri C₀ C₁ Df Da : ℝ) : ℝ :=
   3*sobolevCoefficientAmplitude ι q (4*Ri) (18*Ri*C₀*C₁)*Da +
     3*sobolevCoefficientAmplitude ι q (4*Ri) (3*Ri*C₀)*Df
 
 /-- Physical cost, given by `3*sobolevCoefficientAmplitude ι q (4*Ri) C₁*Da +
 3*sobolevCoefficientAmplitude ι q (4*Ri) C₀*coordinateCost ι q Ri C₀ C₁ Df Da`. -/
-def physicalCost (ι : Type*) [Fintype ι] (q : ℕ) (Ri C₀ C₁ Df Da : ℝ) : ℝ :=
+@[expose] def physicalCost (ι : Type*) [Fintype ι] (q : ℕ) (Ri C₀ C₁ Df Da : ℝ) : ℝ :=
   3*sobolevCoefficientAmplitude ι q (4*Ri) C₁*Da +
     3*sobolevCoefficientAmplitude ι q (4*Ri) C₀*coordinateCost ι q Ri C₀ C₁ Df Da
 

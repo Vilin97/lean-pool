@@ -18,7 +18,7 @@ each other point of the terminal slice. The boundary tensor family and its
 local uniform convergence are constructed below.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -9,14 +9,14 @@ public import LeanPool.Erdos97ConvexOctagon.GeometryReduction
 
 /-! # Erdős 97 convex-octagon formalization: Radius -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 
 namespace OctagonIncidence
 
 /-- Two centres are mutually selected. -/
-def Mutual (Q : OctagonIncidence) (a b : Vertex) : Prop :=
+@[expose] def Mutual (Q : OctagonIncidence) (a b : Vertex) : Prop :=
   b ∈ Q.targets a ∧ a ∈ Q.targets b
 
 /-- Two centres lie in the same connected component of mutual selections. -/

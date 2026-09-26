@@ -19,7 +19,7 @@ section
 
 /-! Exact repeated restriction of coherent prescribed coefficient and field data. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -56,7 +56,7 @@ section
 /-! The literal inviscid correction equation follows from the actual strongly convergent viscous
 family. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -17,7 +17,7 @@ version allows the base to be a periodic cylinder while the derivatives
 are tensors on its Euclidean cover.  The output is the literal finite
 Taylor composition of the given jets. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

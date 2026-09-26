@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.Pow
 # Support gadgets and the substitution theorem
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -36,20 +36,20 @@ abbrev BlockFamily (t : ℕ) := HypergraphFamily (Fin t) ℕ
 abbrev SupportOcc {t : ℕ} (F : Multiset (SupportPattern t)) := Fin F.card
 
 /-- The support pattern attached to a given support-vertex occurrence. -/
-noncomputable def supportPatternAt {t : ℕ}
+@[expose] noncomputable def supportPatternAt {t : ℕ}
     (F : Multiset (SupportPattern t)) (s : SupportOcc F) : SupportPattern t :=
   F.toList.get ⟨s.1, by
     simp_all
   ⟩
 
 /-- The underlying subset of `[t]` attached to a support occurrence. -/
-noncomputable def supportSetAt {t : ℕ}
+@[expose] noncomputable def supportSetAt {t : ℕ}
     (F : Multiset (SupportPattern t)) (s : SupportOcc F) : Finset (Fin t) :=
   (supportPatternAt F s).1
 
 /-- `omegaCount F T I` counts the occurrences of support patterns `S` in `F`
     with `S ⊆ T` and `|S ∩ I| = 1`, counting multiplicity. -/
-noncomputable def omegaCount {t : ℕ}
+@[expose] noncomputable def omegaCount {t : ℕ}
     (F : Multiset (SupportPattern t))
     (T I : Finset (Fin t)) : ℕ :=
   ((Finset.univ : Finset (Fin F.card)).filter fun s =>
@@ -82,7 +82,7 @@ noncomputable def supportVerticesOnBlock {t : ℕ}
     SubstVertex.new
 
 /-- Lift one edge from block `i` into the substituted hypergraph. -/
-noncomputable def liftBlockEdge {t : ℕ}
+@[expose] noncomputable def liftBlockEdge {t : ℕ}
     (F : Multiset (SupportPattern t)) (i : Fin t) (e : Finset ℕ) :
     Finset (SubstVertex t F) :=
   (e.image fun v => SubstVertex.old i v) ∪ supportVerticesOnBlock F i

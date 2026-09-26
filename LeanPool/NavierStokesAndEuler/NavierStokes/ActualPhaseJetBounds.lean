@@ -19,7 +19,7 @@ bound.  The remaining expression has polynomial slow jets on the same
 native phase cells used to construct the primary waves.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

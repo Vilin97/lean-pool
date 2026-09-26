@@ -46,7 +46,7 @@ are ever needed.
 - The nested-term pilot `f(g(x), h(c))` (genuinely nested, includes a `0`-ary application).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

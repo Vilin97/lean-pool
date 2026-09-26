@@ -20,7 +20,7 @@ The ring construction includes work by Arnaud Mayeux and Jujian Zhang from
 `ProjConstruction/Proj` (Apache-2.0).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -83,7 +83,7 @@ variable (M : Multicenter A')
 /-- The functor `SingleObj A' ⥤ SingleObj A'[M]` induced by the canonical ring map `A' → A'[M]`
 (`CategoryTheory.SingleObj.mapHom` turns any monoid hom into a functor between the attached
 one-object categories). This plays the role of `Θ` on the "attached-to-a-ring" side. -/
-def toDilatationFunctor : CategoryTheory.SingleObj A' ⥤ CategoryTheory.SingleObj A'[M] :=
+@[expose] def toDilatationFunctor : CategoryTheory.SingleObj A' ⥤ CategoryTheory.SingleObj A'[M] :=
   CategoryTheory.SingleObj.mapHom A' A'[M] (algebraMap A' A'[M]).toMonoidHom
 
 /-- **General fact**: in the one-object category `SingleObj R` attached to a monoid `R`, a

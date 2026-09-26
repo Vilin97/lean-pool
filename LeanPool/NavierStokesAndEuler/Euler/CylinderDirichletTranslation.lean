@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderTranslationAdjoint
 
 /-! The actual history solve commutes with all mixed spatial/angular translations. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

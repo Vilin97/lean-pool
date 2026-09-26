@@ -18,7 +18,7 @@ The source and its tested pairing in `eq:pressure-gradient-morrey` follow
 from the velocity's spatial weak gradient and divergence constraint.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

@@ -60,7 +60,7 @@ realisation is a single arc and not a Jordan curve.
   inclusion of it, but the equality is what the blueprint asserts.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies unitInterval
 open scoped Graph

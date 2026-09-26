@@ -21,7 +21,7 @@ section
 /-! The manuscript's literal first-packet scales have a fixed monomial
 frequency cost. The exponent and coefficient do not depend on J or X. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -115,7 +115,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -127,11 +127,11 @@ open Real Filter EulerPacketBaseScales EulerPacketBaseGuardScales EulerPacketSou
 open scoped Topology
 
 /-- Literal initial error, given by `(X^D)^(-(1/4 : ℝ))`. -/
-def literalInitialError (D : ℕ) (X : ℝ) : ℝ := (X^D)^(-(1/4 : ℝ))
+@[expose] def literalInitialError (D : ℕ) (X : ℝ) : ℝ := (X^D)^(-(1/4 : ℝ))
 
 /-- Literal initial pressure cost, given by `2*initialCoefficientCost*X^(-1010 :
 ℝ)*(X^1000*firstRatio)+literalInitialError D X`. -/
-def literalInitialPressureCost (D : ℕ) (X : ℝ) : ℝ :=
+@[expose] def literalInitialPressureCost (D : ℕ) (X : ℝ) : ℝ :=
   2*initialCoefficientCost*X^(-1010 : ℝ)*(X^1000*firstRatio)+literalInitialError D X
 
 theorem literalInitialError_nonneg (D : ℕ) (X : ℝ) (hX : 0 ≤ X) :

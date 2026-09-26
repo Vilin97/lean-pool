@@ -19,7 +19,7 @@ import Mathlib.Topology.Separation.CompletelyRegular
 /-! # Eisensteinqexpansions -/
 
 
-@[expose] public section
+public section
 
 open ModularForm EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
   Metric Filter Function Complex

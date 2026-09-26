@@ -32,7 +32,7 @@ import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.UniformOn
 
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real Set
 open scoped ENNReal NNReal Topology

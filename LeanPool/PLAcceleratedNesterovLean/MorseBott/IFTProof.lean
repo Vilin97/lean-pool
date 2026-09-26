@@ -16,7 +16,7 @@ Proves `ift_gives_graph`: under Hessian coercivity on the normal space,
 the critical set near x₀ is locally a C¹ graph over ker(Hess f(x₀)).
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Submodule Asymptotics
 

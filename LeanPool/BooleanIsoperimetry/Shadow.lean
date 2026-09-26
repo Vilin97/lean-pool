@@ -21,7 +21,7 @@ This file connects Kruskal-Katona upper-shadow estimates to the Macaulay
 exchange inequalities used in Harper's theorem.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

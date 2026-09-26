@@ -37,7 +37,7 @@ on the basepoint `Λ` (i.e. `(f + g)(⊥)`) is unconstrained; our choice sends `
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

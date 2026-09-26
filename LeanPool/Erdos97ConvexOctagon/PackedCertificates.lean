@@ -9,7 +9,7 @@ public import LeanPool.Erdos97ConvexOctagon.Certificates
 
 /-! # Fast validation of certificates against packed incidence tables -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 

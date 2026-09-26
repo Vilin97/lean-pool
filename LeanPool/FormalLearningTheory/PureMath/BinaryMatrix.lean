@@ -16,7 +16,7 @@ Pure combinatorics: VC dimension on binary matrices, bridged to Mathlib's
 `Finset.Shatters` infrastructure. No learning theory types.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

@@ -18,7 +18,7 @@ unweighted inverse is used only for qualitative parameter regularity; source
 quantitative estimates use the original relative propagator bound directly.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,11 +37,11 @@ namespace Evolution
 variable (U : Evolution T hT B)
 
 /-- The actual zero-initial-data forcing operator. -/
-def forcingOperator : C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E) :=
+@[expose] def forcingOperator : C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E) :=
   (multiplier U.forward).comp ((integral T hT).comp (multiplier U.backward))
 
 /-- The actual homogeneous initial-data operator. -/
-def initialOperator : E →L[ℝ] C(Icc (0 : ℝ) T,E) :=
+@[expose] def initialOperator : E →L[ℝ] C(Icc (0 : ℝ) T,E) :=
   (multiplier U.forward).comp ((ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)).comp
     (U.backward ⟨0,le_rfl,hT⟩))
 
@@ -62,6 +62,9 @@ theorem solution_eq_operators (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) :
     (U.backward ⟨0,le_rfl,hT⟩ a₀ + ∫ s in (0 : ℝ)..(t : ℝ), U.transformedForcing f s) = _
   rw [show extendPath T hT U.forward t = U.forward t by
     simp only [extendPath, projIcc_of_mem hT t.property], map_add]
+  simp only [ContinuousMap.add_apply, initialOperator, forcingOperator, comp_apply,
+    multiplier_apply, EulerContinuousTimeIntegral.integral_apply, realIntegral,
+    transformedForcing, extendPath]
   rfl
 
 /-- The original relative propagator bound controls the actual forcing map. -/
@@ -103,7 +106,7 @@ theorem solution_integral (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) :
 end Evolution
 
 /-- The ordinary continuous-path Volterra operator. -/
-def volterraOperator (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T, E →L[ℝ] E)) :
+@[expose] def volterraOperator (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T, E →L[ℝ] E)) :
     C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E) :=
   ContinuousLinearMap.id ℝ _ - (integral T hT).comp (multiplier B)
 
@@ -112,7 +115,7 @@ namespace Evolution
 variable (U : Evolution T hT B)
 
 /-- Duhamel's formula gives an actual inverse on every continuous input. -/
-def volterraInverse : C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E) :=
+@[expose] def volterraInverse : C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E) :=
   ContinuousLinearMap.id ℝ _ + U.forcingOperator.comp (multiplier B)
 
 /-- The Volterra operator followed by the constructed inverse is the identity. -/
@@ -162,7 +165,7 @@ theorem volterra_inverse_operator (h : C(Icc (0 : ℝ) T, E)) :
   exact U.volterra_operator_inverse _
 
 /-- The actual two-sided Volterra equivalence. -/
-def volterraEquiv : C(Icc (0 : ℝ) T,E) ≃L[ℝ] C(Icc (0 : ℝ) T,E) :=
+@[expose] def volterraEquiv : C(Icc (0 : ℝ) T,E) ≃L[ℝ] C(Icc (0 : ℝ) T,E) :=
   ContinuousLinearEquiv.equivOfInverse (volterraOperator T hT B) U.volterraInverse
     U.volterra_inverse_operator U.volterra_operator_inverse
 

@@ -21,7 +21,7 @@ This file restores the upstream symmetry map on linear maps between quantum
 sets, together with its interaction with modular automorphisms and `Psi`.
 -/
 
-@[expose] public section
+public section
 
 /-- The symmetry map sends a linear map to the adjoint of its real conjugate. -/
 @[simps]

@@ -30,7 +30,7 @@ where `μᵢ` is the pushforward chart measure (`chartMeasure`) and the graph ma
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.h2`
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry
@@ -281,12 +281,12 @@ instance instCompleteSpaceh2 : CompleteSpace (↥(h2 (d := d) (I := I) (μ := μ
 
 /-- The continuous projection `H² →` chartwise
 `L² × (L²(E) × L²(E →L E))` for a fixed chart index. -/
-noncomputable def h2ToChart (i : d.ι) :
+@[expose] noncomputable def h2ToChart (i : d.ι) :
     (↥(h2 (d := d) (I := I) (μ := μ))) →L[ℝ] h2TargetE (d := d) (I := I) μ i :=
   (ContinuousLinearMap.proj (R := ℝ) i).comp (Submodule.subtypeL (h2 (d := d) (I := I) (μ := μ)))
 
 /-- The continuous chartwise `L²` map extracted from `H²`. -/
-noncomputable def h2ToChartL2 (i : d.ι) :
+@[expose] noncomputable def h2ToChartL2 (i : d.ι) :
     (↥(h2 (d := d) (I := I) (μ := μ))) →L[ℝ] ↥(E →₂[chartMeasure (d := d) (I := I) μ i] ℝ) :=
   (ContinuousLinearMap.fst ℝ _ _).comp (h2ToChart (d := d) (I := I) (μ := μ) i)
 

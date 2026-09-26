@@ -17,7 +17,7 @@ import Mathlib.Tactic.NormNum.Pow
 # Exact small-frame validations
 -/
 
-@[expose] public section
+public section
 
 namespace HypergraphLowerBound
 

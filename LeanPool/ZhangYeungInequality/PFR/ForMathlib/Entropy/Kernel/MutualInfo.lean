@@ -32,7 +32,7 @@ public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Kernel.Basic
 
 -/
 
-@[expose] public section
+public section
 
 open Function MeasureTheory Real
 open scoped ENNReal NNReal Topology ProbabilityTheory
@@ -44,8 +44,7 @@ variable {Ω S T U V : Type*} [mΩ : MeasurableSpace Ω]
   {κ : Kernel T S} {μ : Measure T} {X : Ω → S} {Y : Ω → U}
 
 /-- Mutual information of a kernel into a product space with respect to a measure. -/
-noncomputable
-def mutualInfo (κ : Kernel T (S × U)) (μ : Measure T) : ℝ :=
+@[expose] noncomputable def mutualInfo (κ : Kernel T (S × U)) (μ : Measure T) : ℝ :=
   Hk[fst κ, μ] + Hk[snd κ, μ] - Hk[κ, μ]
 
 /-- Mutual information of a kernel into a product space with respect to a measure. -/

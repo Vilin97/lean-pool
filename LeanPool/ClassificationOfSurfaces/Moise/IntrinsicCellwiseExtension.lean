@@ -20,7 +20,7 @@ glues the finite family.  Coherence is proved from the common global one-skeleto
 it is not stored as an extra compatibility assumption.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

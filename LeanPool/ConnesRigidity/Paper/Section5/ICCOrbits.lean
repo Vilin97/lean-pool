@@ -15,7 +15,7 @@ finite quotient detector is checked by kernel computation over the public
 finite carrier. Paper: §5.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperICC

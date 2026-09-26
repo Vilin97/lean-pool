@@ -22,7 +22,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.IsoSecond`.
 -/
 
-@[expose] public section
+public section
 
 suppress_compilation
 

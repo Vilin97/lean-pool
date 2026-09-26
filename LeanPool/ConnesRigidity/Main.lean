@@ -17,7 +17,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 Completion boundary for Zhou's Theorem A.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 

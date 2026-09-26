@@ -26,7 +26,7 @@ import Mathlib.MeasureTheory.Integral.Gamma
 
 /-! # Definitions -/
 
-@[expose] public section
+public section
 
 
 open MeasureTheory Complex Real Finset
@@ -45,7 +45,7 @@ We adopt Mathlib's conventions throughout:
 - **Complex plane**: `ℂ ≃ ℝ²`. Lebesgue measure on `ℂ` is `volume`. -/
 
 /-- The two-pi period, as a convenient abbreviation. -/
-def T : ℝ := 2 * Real.pi
+@[expose] def T : ℝ := 2 * Real.pi
 
 lemma T_pos : 0 < T := mul_pos two_pos Real.pi_pos
 
@@ -54,39 +54,39 @@ instance : Fact (0 < T) := ⟨T_pos⟩
 /-! ## Def 1.1: The function `rho` -/
 
 /-- `rho(w) = | ‖1 + w‖ - 1 |` where `‖·‖` is the complex modulus. -/
-def rho (w : ℂ) : ℝ := |‖(1 : ℂ) + w‖ - 1|
+@[expose] def rho (w : ℂ) : ℝ := |‖(1 : ℂ) + w‖ - 1|
 
 /-! ## Def 1.2: Polynomial evaluation -/
 
 /-- For `a : Fin D → ℂ` representing coefficients `a₁, …, a_D`, the polynomial
 `U(z) = ∑_{n=1}^D aₙ zⁿ` with `U(0) = 0`. -/
-def polyEval {D : ℕ} (a : Fin D → ℂ) (z : ℂ) : ℂ :=
+@[expose] def polyEval {D : ℕ} (a : Fin D → ℂ) (z : ℂ) : ℂ :=
   ∑ k : Fin D, a k * z ^ (k.val + 1)
 
 /-! ## Def 1.3: Polynomial evaluation on a circle (via AddCircle) -/
 
 /-- Restriction of the polynomial to `|z| = r`, viewed as a function on `AddCircle T`.
 `polyEvalCircle a r t = ∑_k a(k) * r^{k+1} * fourier(k+1)(t)`. -/
-def polyEvalCircle {D : ℕ} (a : Fin D → ℂ) (r : ℝ) : AddCircle T → ℂ :=
+@[expose] def polyEvalCircle {D : ℕ} (a : Fin D → ℂ) (r : ℝ) : AddCircle T → ℂ :=
   fun t => ∑ k : Fin D, a k * (r : ℂ) ^ (k.val + 1) * fourier ((k.val + 1 : ℕ) : ℤ) t
 
 /-! ## Def 1.4: Fock norm squared (finite) -/
 
 /-- `‖U‖_F² = ∑_{n=1}^D |aₙ|² n!` — the Fock-space norm squared as a finite sum. -/
-def fockNormSq {D : ℕ} (a : Fin D → ℂ) : ℝ :=
+@[expose] def fockNormSq {D : ℕ} (a : Fin D → ℂ) : ℝ :=
   ∑ k : Fin D, ‖a k‖ ^ 2 * (Nat.factorial (k.val + 1) : ℝ)
 
 /-! ## Def 1.5: Rho-Fock norm squared (finite) -/
 
 /-- The RHS of the main inequality:
 `(1/π) ∫_ℂ ρ(U(z))² exp(−|z|²) dm(z)`. -/
-def rhoFockNormSq {D : ℕ} (a : Fin D → ℂ) : ℝ :=
+@[expose] def rhoFockNormSq {D : ℕ} (a : Fin D → ℂ) : ℝ :=
   (1 / Real.pi) * ∫ z : ℂ, (rho (polyEval a z)) ^ 2 * Real.exp (-‖z‖ ^ 2)
 
 /-! ## Def 1.6: Circle L² norm squared -/
 
 /-- `‖f‖²_{L²(S¹)} = ∫ |f(t)|² d(haar)` w.r.t. normalized Haar measure on `AddCircle T`. -/
-def circleNormSq (f : AddCircle T → ℂ) : ℝ :=
+@[expose] def circleNormSq (f : AddCircle T → ℂ) : ℝ :=
   ∫ t, ‖f t‖ ^ 2 ∂AddCircle.haarAddCircle
 
 /-! ## Helper lemmas -/

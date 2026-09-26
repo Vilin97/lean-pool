@@ -20,7 +20,7 @@ import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacy
 The crossed haar component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperCrossedHaar
@@ -161,7 +161,7 @@ def paperHaarHomeomorph :
 /-- Zhou's fiber shear is an equivariant Haar equivalence between the two
 crossed-product bases. Paper: §3.
 -/
-def paperHaarEquiv :
+@[expose] def paperHaarEquiv :
     EquivariantHaarEquiv paperHaarActionOne paperHaarActionTwo :=
   paperHaarHomeomorph.toEquivariantHaarEquiv
 

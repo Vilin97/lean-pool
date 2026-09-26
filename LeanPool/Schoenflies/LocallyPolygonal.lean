@@ -53,7 +53,7 @@ point misses all the others outright, so `M` looks locally exactly like the one-
   pairwise disjoint closures is locally polygonally connected.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

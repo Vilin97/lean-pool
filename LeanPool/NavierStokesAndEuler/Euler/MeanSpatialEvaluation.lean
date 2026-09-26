@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
 
 /-! Bounded point evaluation and joint continuity of reconstructed ordinary-space fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

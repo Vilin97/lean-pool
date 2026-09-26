@@ -21,7 +21,7 @@ the descended map is bijective and hence, by compactness of the source and the H
 of the target, a homeomorphism with `SphereRepresentative`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

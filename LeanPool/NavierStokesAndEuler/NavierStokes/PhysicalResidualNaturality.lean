@@ -18,7 +18,7 @@ is always the literal `HarmonicResidual.residualBlock`, including its real
 projection and its Gaussian and alias subtractions.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -582,7 +582,7 @@ noncomputable def chartEquiv (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
     (gap : ℕ) (x : Lift) : chartEquiv h hQ hQr gap x = chartChange h Q Qr gap x := rfl
 
 /-- Actual graph directions on the free lift, before adjoining the angle. -/
-noncomputable def commonFrame (h Q : ℝ) (i : ℕ) : HarmonicResidual.Frame Lift where
+@[expose] noncomputable def commonFrame (h Q : ℝ) (i : ℕ) : HarmonicResidual.Frame Lift where
   radius := Prod.fst
   radial x := ((PhysicalResidualBridge.commonGraph Q h i).radial (x,0)).1
   axial x := ((PhysicalResidualBridge.commonGraph Q h i).axial (x,0)).1
@@ -656,7 +656,7 @@ noncomputable def associatedChart (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 <
     associatedChart h hQ hQr gap x = (parameterChange h Q Qr x.1, coverPower gap x.2) := rfl
 
 /-- Associated frame, given by `StateReindex.frame associatedToLift (commonFrame h Q i)`. -/
-noncomputable def associatedFrame (h Q : ℝ) (i : ℕ) : HarmonicResidual.Frame Associated :=
+@[expose] noncomputable def associatedFrame (h Q : ℝ) (i : ℕ) : HarmonicResidual.Frame Associated :=
   StateReindex.frame associatedToLift (commonFrame h Q i)
 
 theorem associatedFrame_chart (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
@@ -802,7 +802,7 @@ theorem BandCoherence.residualBandPressure_eq
 /-! ## A lift-coherence invariant preserved by actual state addition -/
 
 /-- Scalar on, given by `∀ x ∈ U, f x = a * g (e x)`. -/
-def ScalarOn (U : Set D) (e : D ≃L[ℝ] E) (a : ℝ) (f : D → ℝ) (g : E → ℝ) : Prop :=
+@[expose] def ScalarOn (U : Set D) (e : D ≃L[ℝ] E) (a : ℝ) (f : D → ℝ) (g : E → ℝ) : Prop :=
   ∀ x ∈ U, f x = a * g (e x)
 
 namespace ScalarOn

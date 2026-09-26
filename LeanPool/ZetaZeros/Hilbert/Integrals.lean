@@ -20,7 +20,7 @@ literally the inner product of the ambient Hilbert space; `fourierC` integrates 
 the two agree because an admissible test function vanishes off the interval.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

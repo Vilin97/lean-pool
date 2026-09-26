@@ -19,7 +19,7 @@ No nonsingularity or preimage is assumed: the profiles use the constructed
 localized moment inverse.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -92,9 +92,9 @@ theorem cell_union_subset {n : ℕ} (a b : ℝ) (hab : a < b) :
   exact ⟨(cellLower_gt a b hab j).trans hj.1, hj.2.trans (cellUpper_lt a b hab j)⟩
 
 /-- Angular powers, given by `![2, -2 - 2 * lam, -2 * lam]`. -/
-def angularPowers (lam : ℝ) : Fin 3 → ℝ := ![2, -2 - 2 * lam, -2 * lam]
+@[expose] def angularPowers (lam : ℝ) : Fin 3 → ℝ := ![2, -2 - 2 * lam, -2 * lam]
 /-- Axial powers, given by `![1, 1 - 2 * lam]`. -/
-def axialPowers (lam : ℝ) : Fin 2 → ℝ := ![1, 1 - 2 * lam]
+@[expose] def axialPowers (lam : ℝ) : Fin 2 → ℝ := ![1, 1 - 2 * lam]
 
 theorem angularPowers_injective (lam : ℝ) (hlam : 0 < lam) : Injective (angularPowers lam) := by
   intro i j hij
@@ -122,7 +122,7 @@ def gamma (lam C a b : ℝ) (d : Debt) : ℝ → ℝ :=
     (axialDebt C d)
 
 /-- The unaltered power-law angular mean on the repair patch. -/
-def background (lam C R : ℝ) : ℝ := C * R ^ (-1 - 2 * lam)
+@[expose] def background (lam C R : ℝ) : ℝ := C * R ^ (-1 - 2 * lam)
 
 theorem deltaV_contDiff (lam C a b : ℝ) (d : Debt) : ContDiff ℝ ∞ (deltaV lam C a b d) :=
   LocalizedMomentRepair.repair_contDiff _ _ _ _

@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
 
 /-! Actual one-derivative-losing nonlinear transport on the complete cylinder Sobolev spaces. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -41,7 +41,7 @@ and the growth inequality) are the substantial geometric pieces still to formali
 Axiom-clean; elementary.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.Chevallier
 

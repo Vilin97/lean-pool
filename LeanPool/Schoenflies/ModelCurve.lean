@@ -58,7 +58,7 @@ subsequence chase establishes, and it is one line here.
   `IsJordanCurve.modelCurve_homeomorph` — Lemma 3.1, first clause.
 -/
 
-@[expose] public section
+public section
 
 open Set Topology unitInterval
 

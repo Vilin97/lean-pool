@@ -22,7 +22,7 @@ almost-disjoint labels, selects the unique active code at each block label, and 
 finite independent set presented to bounded deletion at that stage.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

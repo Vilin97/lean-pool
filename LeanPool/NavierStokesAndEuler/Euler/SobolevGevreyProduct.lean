@@ -18,7 +18,7 @@ import LeanPool.NavierStokesAndEuler.Euler.UnshiftedProducts
 /-! The actual complete Sobolev product obeys the finite Gevrey H⁶ algebra bound, including
 nonsmooth inputs. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

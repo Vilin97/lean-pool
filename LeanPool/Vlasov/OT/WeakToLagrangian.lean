@@ -83,7 +83,7 @@ Assembly (C4):
 Universal (non-`_On`) form via window-gluing is a deferred follow-on (C5).
 -/
 
-@[expose] public section
+public section
 
 namespace Vlasov
 
@@ -614,7 +614,7 @@ theorem convolveFunctionMeasure_fderiv_continuous
 
 /-- Picard iterates for the linear IVP `x' = 𝒜(t)x`, `x(0)=x₀` (the V1c engine):
 `I₀ ≡ x₀`, `I_{n+1}(t) = ∫₀ᵗ 𝒜(s)(Iₙ(s)) ds`. -/
-noncomputable def picardIter {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+@[expose] noncomputable def picardIter {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (𝒜 : ℝ → (E →L[ℝ] E)) (x₀ : E) : ℕ → ℝ → E
   | 0, _ => x₀
   | (n + 1), t => ∫ s in (0 : ℝ)..t, 𝒜 s (picardIter 𝒜 x₀ n s)

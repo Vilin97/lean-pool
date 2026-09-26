@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientSpatial
 
 /-! All-order parameter regularity of actual bounded smooth coefficient translations. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

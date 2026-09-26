@@ -19,7 +19,7 @@ compact subset of a real normed space. The Fréchet derivative in the
 supremum norm is proved by a uniform mean-value remainder estimate.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.CompactSmoothFamily

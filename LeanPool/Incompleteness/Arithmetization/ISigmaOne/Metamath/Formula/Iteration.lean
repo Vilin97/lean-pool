@@ -10,7 +10,7 @@ import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # Iteration -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -30,7 +30,7 @@ lemma replicate_succ (p : Semiformula L ξ n) (k : ℕ) :
     p.replicate (k + 1) = p ⋏ p.replicate k := by simp [replicate]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def weight (k : ℕ) : Semiformula L ξ n := (List.replicate k ⊤).conj
+@[expose] def weight (k : ℕ) : Semiformula L ξ n := (List.replicate k ⊤).conj
 
 end Semiformula
 end FirstOrder

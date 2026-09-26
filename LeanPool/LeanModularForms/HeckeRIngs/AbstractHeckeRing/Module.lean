@@ -20,7 +20,7 @@ The module action of `𝕋 P ℤ` on `HeckeModule P ℤ` (formal sums of left co
 theorem `eq_of_smul_eq_smul_𝕋`.
 -/
 
-@[expose] public section
+public section
 
 open MulOpposite Set DoubleCoset Subgroup Subgroup.Commensurable
 
@@ -47,7 +47,7 @@ noncomputable def smulOrbitElement (g β : P.Δ) (i : decompQuot P g) :
 
 /-- The orbit of a left coset representative `β` under double coset representative `g`:
 the set of left cosets `{β · σ_i · g | σ_i ∈ H/(H ∩ gHg⁻¹)}`. -/
-noncomputable def smulOrbit (g : P.Δ) (β : P.Δ) :
+@[expose] noncomputable def smulOrbit (g : P.Δ) (β : P.Δ) :
     Finset (HeckeLeftCoset P) :=
   Finset.image (smulOrbitElement P g β) ⊤
 

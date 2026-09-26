@@ -9,20 +9,20 @@ public import LeanPool.LanguageGeneration.FiniteWitness.Normalization
 
 /-! # Target-free bounded search on the observed finite set -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 
 variable {α : Type*} [Encodable α] [DecidableEq α]
 
 /-- A tentative bad extension: its output is unconfirmed by the entire sample. -/
-def Candidate (F : List α → α) (S : Finset α) (n : ℕ)
+@[expose] def Candidate (F : List α → α) (S : Finset α) (n : ℕ)
     (p : List α) (k : ℕ) (q : List α) : Prop :=
   p <+: q ∧ p.length < q.length ∧ q.toFinset ⊆ S ∧ q.length ≤ 2 * n ∧
     checkpoint (↑S : Set α) (k + 1) ⊆ q.toFinset ∧ F q ∉ S
 
 /-- Bounded iteration; an empty candidate set leaves the current word fixed. -/
-noncomputable def sampleRun (F : List α → α) (S : Finset α) (n : ℕ) : ℕ → List α
+@[expose] noncomputable def sampleRun (F : List α → α) (S : Finset α) (n : ℕ) : ℕ → List α
   | 0 => []
   | k + 1 => by
       classical
@@ -76,7 +76,7 @@ theorem sampleRun_preserves_fresh {F : List α → α} {S : Finset α} {n k j : 
       · simpa only [sampleRun, dite_eq_right h] using ih
 
 /-- The normalized output function is fixed before a target is selected. -/
-noncomputable def normalized (F : List α → α) (S : Finset α) : α :=
+@[expose] noncomputable def normalized (F : List α → α) (S : Finset α) : α :=
   F (sampleRun F S S.card S.card)
 
 end GenLimit.FiniteWitness

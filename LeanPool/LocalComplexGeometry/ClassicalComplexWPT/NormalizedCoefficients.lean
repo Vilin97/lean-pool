@@ -17,7 +17,7 @@ degree-`d` monomial in the ordinary complex `ℓ¹` norm.  This is the
 Archimedean tail-scaling estimate needed by the Banach-algebra proof.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology

@@ -22,7 +22,7 @@ public import Mathlib.Logic.Equiv.List
 # MatchingLogic.EntryIII.SignatureRestriction
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -40,7 +40,7 @@ end Signature
 namespace Pattern
 
 /-- Regard a pattern over a finite sub-signature as a pattern over `S`. -/
-def liftSignature [DecidableEq S.Sym] (F : Finset S.Sym) :
+@[expose] def liftSignature [DecidableEq S.Sym] (F : Finset S.Sym) :
     Pattern (S.restrict F) Var → Pattern S Var
   | .var x => .var x
   | .app sigma args => .app sigma.1 (fun i => (args i).liftSignature F)

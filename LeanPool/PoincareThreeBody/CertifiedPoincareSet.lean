@@ -18,7 +18,7 @@ finite data into membership in the exact Poincaré set.  Consequently, it is eno
 the set of actions carrying such certificates is dense.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

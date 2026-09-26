@@ -13,7 +13,7 @@ import Mathlib.Tactic.TautoSet
 
 /-! # AxiomGrz -/
 
-@[expose] public section
+public section
 
 
 namespace LO

@@ -15,7 +15,7 @@ import Mathlib.Analysis.Normed.Module.HahnBanach
 Halfspaces in inner product spaces and their basic geometric operations.
 -/
 
-@[expose] public section
+public section
 
 open Pointwise
 
@@ -139,7 +139,7 @@ instance Halfspace.SetLike : SetLike (Halfspace E) E where
       exact ⟨ le_refl _, not_le_of_gt <| lt_of_le_of_ne hmax2 h ⟩
 
 /-- The coercion of a halfspace to a set equals the sublevel preimage of its functional. -/
-lemma Halfspace.h (H_ : Halfspace E) : ↑H_ = H_.f.1 ⁻¹' {x | x ≤ H_.α} := rfl
+lemma Halfspace.h (H_ : Halfspace E) : ↑H_ = H_.f.1 ⁻¹' {x | x ≤ H_.α} := by rfl
 
 lemma Halfspace_mem (H_ : Halfspace E) : ∀ x, x ∈ (SetLike.coe H_) ↔ H_.f.1 x ≤ H_.α := by
   intro x

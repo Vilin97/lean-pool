@@ -19,7 +19,7 @@ directions. The differentiated Volterra equation gives a triangular system;
 the energy estimate, rather than an uncontrolled inverse norm, estimates it.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.WeightedODEJets

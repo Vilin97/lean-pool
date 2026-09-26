@@ -40,4 +40,4 @@ API summary (see `docs/design/local-multiplicity.md`):
   `LMCompat` copy of the CC7 holomorphy bridge (canonical version: `Jacobian.Surface`).
 -/
 
-@[expose] public section
+public section

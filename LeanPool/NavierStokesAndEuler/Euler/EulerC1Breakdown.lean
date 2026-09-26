@@ -22,7 +22,7 @@ section
 /-! The full smooth initial datum retains the common support of its
 finite initial base and its actual summable packet increments. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -80,7 +80,7 @@ section
 whose ordinary smooth Euler solutions have a finite maximal horizon.
 The separate continuation and vorticity criteria are not asserted here. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -134,7 +134,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

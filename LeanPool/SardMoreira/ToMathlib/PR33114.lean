@@ -38,7 +38,7 @@ then these sets become balls, and we can apply Vitali theorem.
   [Moreira2001]
 -/
 
-@[expose] public section
+public section
 
 
 open scoped ENNReal NNReal Filter Uniformity Topology

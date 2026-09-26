@@ -16,7 +16,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Pressure.LeibnizLaplacian
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 
@@ -40,17 +40,20 @@ the pointwise estimate is proved directly from the explicit heat kernels.
 -/
 
 /-- Velocity multiplied by the localization cutoff. -/
+@[expose]
 def localizedVelocity (φ : ParabolicPoint → ℝ)
     (u : ParabolicPoint → Vec3) : ParabolicPoint → Vec3 :=
   fun z => φ z • u z
 
 /-- Convective derivative of velocity, expressed through its selected weak gradient. -/
+@[expose]
 def localizedConvection (u : ParabolicPoint → Vec3)
     (Du : ParabolicPoint → Fin 3 → Vec3) : ParabolicPoint → Vec3 :=
   fun z i => ∑ j, u z j * Du z i j
 
 /-- Scalar-source part of the localized heat equation before putting convection in divergence
 form. -/
+@[expose]
 def localizedEquationG (φ : ParabolicPoint → ℝ)
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3)
     (f : ParabolicPoint → Vec3) : ParabolicPoint → Vec3 :=
@@ -60,6 +63,7 @@ def localizedEquationG (φ : ParabolicPoint → ℝ)
       φ z * localizedConvection u Du z i + φ z * f z i
 
 /-- Divergence-source contribution from differentiating the localization cutoff. -/
+@[expose]
 def localizedEquationH (φ : ParabolicPoint → ℝ)
     (u : ParabolicPoint → Vec3) : Fin 3 → ParabolicPoint → Vec3 :=
   fun i z => (-2 * spatialPartial φ i z) • u z

@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Endgame.PotentialFiniteness
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open CKN.Foundation.Parabolic CKN.Foundation.Parabolic.Morrey

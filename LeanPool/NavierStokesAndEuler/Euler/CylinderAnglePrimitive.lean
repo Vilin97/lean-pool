@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderMollifier
 
 /-! A genuine bounded angular primitive on the full cylinder L² space. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -24,7 +24,7 @@ open Set MeasureTheory EulerLiftedGradientSpace EulerCylinderSobolevSpace
 variable (P : ℝ) [Fact (0 < P)]
 
 /-- Angle shift, given by `(0,(s : AddCircle P))`. -/
-def angleShift (s : ℝ) : LiftDomain P := (0,(s : AddCircle P))
+@[expose] def angleShift (s : ℝ) : LiftDomain P := (0,(s : AddCircle P))
 
 omit [Fact (0 < P)] in
 theorem angleShift_continuous : Continuous (angleShift P) :=

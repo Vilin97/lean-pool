@@ -51,7 +51,7 @@ The principal identities are `act_apply`, `act_mul`, `act_difference`, and
 class of finite-range rational configurations is closed under every operator.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat
 
@@ -61,7 +61,7 @@ abbrev Laurent := AddMonoidAlgebra ℚ Lattice
 namespace Algebra
 
 /-- Section 1.1 (Notation): a forward lattice translation as a rational linear endomorphism. -/
-def shiftLinear (h : Lattice) : Module.End ℚ (Configuration ℚ) where
+@[expose] def shiftLinear (h : Lattice) : Module.End ℚ (Configuration ℚ) where
   toFun := shift h
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
@@ -72,7 +72,7 @@ def shiftLinear (h : Lattice) : Module.End ℚ (Configuration ℚ) where
 
 /-- Section 1.1 (Notation): the additive lattice acts on configurations by commuting forward
 shifts. -/
-def shiftRepresentation : Multiplicative Lattice →* Module.End ℚ (Configuration ℚ) where
+@[expose] def shiftRepresentation : Multiplicative Lattice →* Module.End ℚ (Configuration ℚ) where
   toFun h := shiftLinear h.toAdd
   map_one' := by ext c z; simp [shiftLinear, shift]
   map_mul' h t := by
@@ -82,12 +82,12 @@ def shiftRepresentation : Multiplicative Lattice →* Module.End ℚ (Configurat
 
 /-- Section 1.1 (Notation): the algebra homomorphism extending lattice translations to Laurent
 filters. -/
-noncomputable def actionHom : Laurent →ₐ[ℚ] Module.End ℚ (Configuration ℚ) :=
+@[expose] noncomputable def actionHom : Laurent →ₐ[ℚ] Module.End ℚ (Configuration ℚ) :=
   AddMonoidAlgebra.lift ℚ (Module.End ℚ (Configuration ℚ)) Lattice shiftRepresentation
 
 /-- Section 1.1 (Notation): the finite Laurent polynomial operator applied to a rational
 configuration. -/
-noncomputable def act (f : Laurent) (c : Configuration ℚ) : Configuration ℚ :=
+@[expose] noncomputable def act (f : Laurent) (c : Configuration ℚ) : Configuration ℚ :=
   actionHom f c
 
 /-- Section 1.1 (Notation): the operator is the finite sum of coefficients times forward-shifted
@@ -156,7 +156,7 @@ theorem act_smul (a : ℚ) (f : Laurent) (c : Configuration ℚ) :
   simp [act, actionHom, shiftRepresentation, shiftLinear]
 
 /-- Section 1.1 (Notation): the lattice monomial with exponent `h` and coefficient one. -/
-noncomputable def monomial (h : Lattice) : Laurent := AddMonoidAlgebra.single h 1
+@[expose] noncomputable def monomial (h : Lattice) : Laurent := AddMonoidAlgebra.single h 1
 
 /-- Section 1.1 (Notation): the zero-exponent monomial is the multiplicative identity. -/
 @[simp] theorem monomial_zero : monomial 0 = 1 := rfl

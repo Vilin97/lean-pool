@@ -21,7 +21,7 @@ order and `StarOrderedRing` instance, so this file restores the Monlib-facing
 negative definiteness definitions, spectral criteria, and compatibility names.
 -/
 
-@[expose] public section
+public section
 
 namespace Matrix
 

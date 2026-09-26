@@ -34,7 +34,7 @@ to the face machinery at all, even though both halves compiled. The overlay now 
 * `polygonal_collar` — Lemma 1.8 (a), the three strip modules composed.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

@@ -23,7 +23,7 @@ function `FractionalIdeal.count K v`.
 * `FractionalIdeal.principalDivisor`: the divisor of a nonzero element of the fraction field.
 -/
 
-@[expose] public section
+public section
 
 open IsDedekindDomain
 open scoped nonZeroDivisors
@@ -105,7 +105,7 @@ noncomputable def principalFractionalIdeal : Kˣ →* (FractionalIdeal R⁰ K)ˣ
 @[simp]
 theorem principalFractionalIdeal_apply_coe (x : Kˣ) :
     (principalFractionalIdeal (R := R) (K := K) x : FractionalIdeal R⁰ K) =
-      spanSingleton R⁰ (x : K) := rfl
+      spanSingleton R⁰ (x : K) := by rfl
 
 /-- The principal divisor of a nonzero element of the fraction field. -/
 noncomputable def principalDivisor : Additive Kˣ →+ Divisor R :=
@@ -130,7 +130,7 @@ omit [IsDedekindDomain R] in
 @[simp]
 theorem weightedDegree_apply (w : Ideal R → ℕ) (D : Divisor R) :
     weightedDegree (R := R) w D =
-      D.sum fun v n => n * (w v.asIdeal : ℤ) := rfl
+      D.sum fun v n => n * (w v.asIdeal : ℤ) := by rfl
 
 /-- The weighted degree of the divisor of a nonzero integral ideal is the weighted sum of its
 normalized prime factors.  The weight is stated on ideals, so that it can later be chosen as a

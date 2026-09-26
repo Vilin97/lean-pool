@@ -13,7 +13,7 @@ import LeanPool.ConnesRigidity.Paper.Section4.SpectralDetectorBridge
 Finite detector sets for the raw Zhou split extensions. Paper: §4.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperSpectralFiniteDetection

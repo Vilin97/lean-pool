@@ -32,7 +32,7 @@ Tags: set-theory, zfc, foundations
 MSC: 03E30, 03B35
 -/
 
-@[expose] public section
+public section
 
 /-!
 # ZFLean

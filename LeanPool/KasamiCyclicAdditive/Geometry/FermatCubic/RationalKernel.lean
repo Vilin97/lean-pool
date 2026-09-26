@@ -64,7 +64,7 @@ in `rational_kernel_odd`, combined with the standard fact that a group homomorph
 kernel is injective; the group law on `E` itself is not developed here.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open scoped Real

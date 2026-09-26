@@ -26,7 +26,7 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.1)
   (and back); every other transport lemma in this file is a one-line specialization of it.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology
@@ -51,7 +51,7 @@ noncomputable def ordAtX (f : X → ℂ) (x : X) : WithTop ℤ :=
   meromorphicOrderAt (f ∘ (chartAt ℂ x).symm) (chartAt ℂ x x)
 
 theorem ordAtX_def (f : X → ℂ) (x : X) :
-    ordAtX f x = meromorphicOrderAt (f ∘ (chartAt ℂ x).symm) (chartAt ℂ x x) := rfl
+    ordAtX f x = meromorphicOrderAt (f ∘ (chartAt ℂ x).symm) (chartAt ℂ x x) := by rfl
 
 /-! ### The chart-transport workhorse -/
 

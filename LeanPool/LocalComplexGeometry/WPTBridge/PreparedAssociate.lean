@@ -12,7 +12,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 # The prepared divisor is associate to the regularized germ
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology

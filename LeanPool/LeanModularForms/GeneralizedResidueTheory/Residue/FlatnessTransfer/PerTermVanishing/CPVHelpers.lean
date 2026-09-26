@@ -33,7 +33,7 @@ per-term vanishing into the complete higher-order cancellation.
 * `cpv_tendsto_zero_of_add_decomposition` — final assembly
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

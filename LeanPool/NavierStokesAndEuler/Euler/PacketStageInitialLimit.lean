@@ -27,7 +27,7 @@ section
 excludes an ordinary Euler evolution on the base horizon. Each stage is
 compared only on its own genuine horizon. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -104,7 +104,7 @@ section
 /-! Exact reindexing of the prescribed scale sequence after finitely many
 exceptional initial stages. No new choice of asymptotic scales is made. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -145,7 +145,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

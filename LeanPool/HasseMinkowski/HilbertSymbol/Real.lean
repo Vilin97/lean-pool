@@ -20,7 +20,7 @@ are negative, and `1` otherwise (for nonzero arguments). Geometrically, the coni
 `(√b, 0, 1)`, while two negative coefficients force `z² ≤ 0`, hence `z = x = y = 0`.
 -/
 
-@[expose] public section
+public section
 
 namespace HasseMinkowski
 

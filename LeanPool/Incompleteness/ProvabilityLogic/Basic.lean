@@ -11,7 +11,7 @@ import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # Basic -/
 
-@[expose] public section
+public section
 
 
 namespace LO

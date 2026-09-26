@@ -40,7 +40,7 @@ fit) is Ermakov's Lemmas 1–2, the cited geometric completion. Norm-agnostic: h
 Axiom-clean; elementary.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.SimApprox
 
@@ -48,11 +48,11 @@ variable {n : ℕ}
 
 /-- The integer-vector translate of `q • α` by `p`, as an element of `Fin n → ℝ`. Its norm over all
 `p ∈ ℤⁿ` is minimised at the best approximation; here we only need the value and its lower bound. -/
-noncomputable def rem (α : Fin n → ℝ) (q : ℤ) (p : Fin n → ℤ) : Fin n → ℝ :=
+@[expose] noncomputable def rem (α : Fin n → ℝ) (q : ℤ) (p : Fin n → ℤ) : Fin n → ℝ :=
   (q : ℝ) • α - (fun k => (p k : ℝ))
 
 /-- The **approximation defect** `δ_q = inf_{p ∈ ℤⁿ} ‖q • α − p‖`. -/
-noncomputable def delta (α : Fin n → ℝ) (q : ℤ) : ℝ :=
+@[expose] noncomputable def delta (α : Fin n → ℝ) (q : ℤ) : ℝ :=
   ⨅ p : Fin n → ℤ, ‖rem α q p‖
 
 /-- The **approximation defect for an arbitrary norm `N`**: `δ^N_q = inf_{p ∈ ℤⁿ} N (q • α − p)`.

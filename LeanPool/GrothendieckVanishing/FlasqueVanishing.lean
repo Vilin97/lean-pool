@@ -33,7 +33,7 @@ adapted from Brian Nugent's Mathlib PR #35790.
 Generic `Sheaf.H` and `Ext` API lives in `CohomologyAPI.lean`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

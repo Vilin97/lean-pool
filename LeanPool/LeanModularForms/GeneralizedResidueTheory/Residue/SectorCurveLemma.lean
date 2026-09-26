@@ -33,7 +33,7 @@ model sector-curve defined in `SectorCurve.lean`.
 * `generalizedWindingNumber_sectorCurve` -- winding number equals `alpha / (2 * pi)`
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

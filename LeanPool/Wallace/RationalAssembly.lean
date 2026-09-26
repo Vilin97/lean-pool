@@ -18,7 +18,7 @@ The resulting compatible characters separate points and realize the nonzero ultr
 attached to every injective rational sequence.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

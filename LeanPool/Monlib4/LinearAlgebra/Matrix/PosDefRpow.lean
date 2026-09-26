@@ -19,7 +19,7 @@ semidefinite and positive definite matrices.  The definitions are stated in
 terms of the current Mathlib Hermitian spectral theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace Matrix
 

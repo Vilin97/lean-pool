@@ -50,4 +50,4 @@ Tags: algebra, ring-theory, central-simple-algebras, brauer-groups
 MSC: 16K20, 16K50, 16S35
 -/
 
-@[expose] public section
+public section

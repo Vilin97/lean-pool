@@ -27,7 +27,7 @@ import Mathlib.Data.Fin.Basic
     rotate to (0,1) → contractZeroOne → rotate back (if needed)
 -/
 
-@[expose] public section
+public section
 
 namespace SemicircleCore
 
@@ -35,7 +35,7 @@ variable {n : ℕ}
 
 /-- The uniform, piecewise-free embedding of the reduced universe
     into the expanded universe, bypassing coordinates 0 and 1. -/
-def shiftTwoEquiv (n : ℕ) :
+@[expose] def shiftTwoEquiv (n : ℕ) :
     Fin (2 * n) ≃ { x : Fin (2 * n + 2) // 2 ≤ x.val } where
   toFun x := ⟨⟨x.val + 2, by omega⟩, by simp⟩
   invFun y := ⟨y.val.val - 2, by omega⟩
@@ -43,7 +43,7 @@ def shiftTwoEquiv (n : ℕ) :
   right_inv y := Subtype.ext (Fin.ext (by simp; omega))
 
 /-- The invariant subspace after 0 and 1 are claimed by adjacency. -/
-def RemainingDomain (n : ℕ) : Set (Fin (2 * n + 2)) :=
+@[expose] def RemainingDomain (n : ℕ) : Set (Fin (2 * n + 2)) :=
   { x | 2 ≤ x.val }
 
 /-- If π(0) = 1 and π(1) = 0, then π maps {x | x ≥ 2} into itself.

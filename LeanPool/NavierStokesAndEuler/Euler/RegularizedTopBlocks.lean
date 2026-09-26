@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.RegularizedMildEquation
 
 /-! Exact compatibility of the actual heat regularizations with highest derivative blocks. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

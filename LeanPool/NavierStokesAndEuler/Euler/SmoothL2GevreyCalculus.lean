@@ -19,7 +19,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! Quantitative calculus for concrete smooth L² fields, with the outer
 factor in L² and the inner coordinate change preserving volume. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -12,7 +12,7 @@ import Mathlib.NumberTheory.LSeries.Linearity
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

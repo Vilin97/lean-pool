@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Spatial translations and their genuine uniform-norm derivatives for matrix coefficients. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

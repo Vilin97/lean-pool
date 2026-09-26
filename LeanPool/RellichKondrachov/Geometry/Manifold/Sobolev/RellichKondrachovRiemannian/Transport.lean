@@ -25,7 +25,7 @@ compactness proof.
 - `rhoSupportImage_measurable`: measurability of the fixed support set.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

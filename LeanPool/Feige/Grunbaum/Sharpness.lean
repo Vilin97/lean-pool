@@ -19,7 +19,7 @@ layer-cake formula and proves that every universal project-level lower bound
 is at most `grunbaumConstant`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -250,7 +250,7 @@ theorem integral_coordinateSum (n : ℕ) :
       (fun _ hx ↦ ht1.trans hx) obs
 
 /-- The volume centroid of the standard simplex. -/
-def simplexCentroid (n : ℕ) : SimplexE n :=
+@[expose] def simplexCentroid (n : ℕ) : SimplexE n :=
   ⨍ x in simplexSet n, x ∂volume
 
 /-- The scalar coordinate needed to locate the sharp supporting hyperplane. -/
@@ -306,7 +306,7 @@ def simplexFullBody (d : ℕ) : FullDimensionalConvexBody d where
 
 theorem simplexFullBody_centroid (d : ℕ) :
     (simplexFullBody d).centroid = simplexCentroid (d + 1) :=
-  rfl
+  by rfl
 
 /-- The sharp halfspace for the standard simplex. -/
 def sharpClosedHalfspace (d : ℕ) : ClosedHalfspace d where

@@ -12,7 +12,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Integration.
 
 /-! Product rules for the spatial part of the first Caccioppoli term. -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

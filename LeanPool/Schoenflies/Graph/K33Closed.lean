@@ -63,7 +63,7 @@ genuinely about changing the drawing, not about presentations. `Graph.Bendable` 
 statement in the shape the theorems below consume; nothing here proves it.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 open scoped Graph

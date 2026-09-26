@@ -52,13 +52,13 @@ and reconstruction lemmas also supply the finite-dimensional pairing used in
 Theorem 2.2 (`thm:descent`).
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.Algebra
 
 /-- Auxiliary construction for Lemma 3.2 (`lem:ann-exists`): identify a coefficient vector on a
 finite window with its supported Laurent polynomial. -/
-noncomputable def windowPolynomial (D : Finset Lattice) (a : D → ℚ) : Laurent :=
+@[expose] noncomputable def windowPolynomial (D : Finset Lattice) (a : D → ℚ) : Laurent :=
   ∑ z : D, AddMonoidAlgebra.single z.1 (a z)
 
 /-- Auxiliary construction for Lemma 3.2 (`lem:ann-exists`): the supported polynomial recovers each
@@ -109,7 +109,7 @@ theorem windowPolynomial_reconstruct (D : Finset Lattice) (f : Laurent)
 
 /-- Auxiliary construction for Lemma 3.2 (`lem:ann-exists`): the supported-polynomial identification
 as a rational linear map. -/
-noncomputable def windowPolynomialLinear (D : Finset Lattice) : (D → ℚ) →ₗ[ℚ] Laurent where
+@[expose] noncomputable def windowPolynomialLinear (D : Finset Lattice) : (D → ℚ) →ₗ[ℚ] Laurent where
   toFun := windowPolynomial D
   map_add' a b := by
     classical

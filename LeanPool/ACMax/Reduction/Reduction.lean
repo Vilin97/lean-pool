@@ -60,7 +60,7 @@ residual case as an explicit hypothesis. `residual_algConn_le_two` in
 conjecture. The numeric examples below check the cut thresholds at order 19.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

@@ -28,7 +28,7 @@ it is affine on every face of some subdivision.  A generic continuous map is *no
 complex with a 2-face, in contrast to the vacuous `IsPLOnSimplexes` this replaces.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -527,7 +527,7 @@ theorem mapAffineEquiv_triangles (e : Plane ≃ᵃ[ℝ] Plane) :
     (M.mapAffineEquiv e).triangles = M.triangles := rfl
 
 /-- The nonempty subfaces of all maximal triangles in a triangle mesh. -/
-def faces : Finset (Finset M.Vertex) :=
+@[expose] def faces : Finset (Finset M.Vertex) :=
   M.triangles.biUnion fun t => t.powerset.filter (·.Nonempty)
 
 theorem mem_faces_iff {s : Finset M.Vertex} :
@@ -623,7 +623,7 @@ namespace PlaneComplex
 variable (K : PlaneComplex)
 
 /-- The carrier of a face: the convex hull of its vertex positions. -/
-def cellCarrier (s : Finset K.Vertex) : Set Plane :=
+@[expose] def cellCarrier (s : Finset K.Vertex) : Set Plane :=
   convexHull ℝ (K.position '' s)
 
 /-- The support of the complex: the union of its face carriers. -/
@@ -705,7 +705,7 @@ theorem mapAffineEquiv_support (e : Plane ≃ᵃ[ℝ] Plane) :
     exact ⟨_, hy, rfl⟩
 
 /-- The two-dimensional faces. -/
-def cells : Finset (Finset K.Vertex) :=
+@[expose] def cells : Finset (Finset K.Vertex) :=
   K.simplexes.filter fun s => s.card = 3
 
 /-- The edges (one-dimensional faces). -/
@@ -1200,7 +1200,7 @@ theorem card_of_mem_cells {t : Finset K.Vertex} (ht : t ∈ K.cells) : t.card = 
   (Finset.mem_filter.mp ht).2
 
 /-- Barycentric evaluation: the point of the plane with the given barycentric weights. -/
-noncomputable def baryEval (x : K.Vertex → ℝ) : Plane :=
+@[expose] noncomputable def baryEval (x : K.Vertex → ℝ) : Plane :=
   ∑ v, x v • K.position v
 
 theorem continuous_baryEval :

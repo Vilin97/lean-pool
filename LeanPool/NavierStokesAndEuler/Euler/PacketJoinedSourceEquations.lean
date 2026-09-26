@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketJoinedEquation
 
 /-! Actual equations, tangency and pressure regularity at every solved joined grade. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

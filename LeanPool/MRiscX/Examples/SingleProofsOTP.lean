@@ -19,7 +19,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 This module provides the per-instruction lemmas of the One-Time-Pad proof.
 -/
 
-@[expose] public section
+public section
 
 attribute [local implicit_reducible] Registers Memory
 

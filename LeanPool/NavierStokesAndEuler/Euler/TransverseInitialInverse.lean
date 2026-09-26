@@ -18,7 +18,7 @@ gives polynomial coordinate estimates for nonzero-terminal paths, including
 differences between frames, without estimating a forward evolution.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

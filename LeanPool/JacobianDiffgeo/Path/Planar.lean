@@ -33,7 +33,7 @@ Main declarations:
   convex planar set are homotopic rel endpoints through the set (affine homotopy).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

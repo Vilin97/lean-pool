@@ -35,7 +35,7 @@ realization with the same fixed-coordinate derivative field. Spatial estimates
 for the fixed inverse consequently apply to the constructed physical velocity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -103,7 +103,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

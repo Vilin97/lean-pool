@@ -30,7 +30,7 @@ bounded continuous velocity on the prescribed finite time interval.
 Endpoint extension only defines the auxiliary velocity outside that
 interval; all stated ODE identities use the original velocity. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -92,7 +92,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

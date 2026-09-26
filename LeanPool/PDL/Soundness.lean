@@ -12,7 +12,7 @@ public import LeanPool.PDL.TableauPath
 
 /-! # Soundness (Section 6) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -117,7 +117,7 @@ theorem pdlRuleSat (r : PdlRule X Y) (satX : satisfiable X) : satisfiable Y := b
 /-- To get the companion of a `LoadedPathRepeat` we rewind the path with the lpr value.
 The `succ` is there because the lpr values are indices of the history starting with 0, but
 `PathIn.rewind 0` would do nothing. -/
-def companionOf {X} {tab : Tableau .nil X} (s : PathIn tab) lpr
+@[expose] def companionOf {X} {tab : Tableau .nil X} (s : PathIn tab) lpr
   (_ : (tabAt s).2.2 = .lrep lpr) : PathIn tab :=
     s.rewind ((Fin.cast (tabAt_fst_length_eq_toHistory_length s) lpr.val).succ)
 
@@ -381,7 +381,7 @@ instance instDecidablecEdgeTransGen {X} {tab : Tableau .nil X} (p q : PathIn tab
 
 /-- Nodes are c-equivalent iff there are `◃` paths both ways.
 Note that this is not a closure, so we do not want `Relation.EqvGen` here. -/
-def cEquiv {X} {tab : Tableau .nil X} (s t : PathIn tab) : Prop :=
+@[expose] def cEquiv {X} {tab : Tableau .nil X} (s t : PathIn tab) : Prop :=
   s ◃* t  ∧  t ◃* s
 
 /-- Membership in the same cluster. -/

@@ -10,7 +10,7 @@ import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 
 /-! # Quantum parallel repetition, part 10 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1279,7 +1279,7 @@ def unconditionalActualC485FairSourceDiagonalWork
     (exactGlobalHistoryFinPhi G n S D u.2.2.2 u.2.2.1) j
 
 /-- The energy quantity for unconditional actual c 485 fair source clip. -/
-def unconditionalActualC485FairSourceClipEnergy
+@[expose] def unconditionalActualC485FairSourceClipEnergy
     {X Y A B : Type*}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))

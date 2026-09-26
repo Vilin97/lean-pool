@@ -16,7 +16,7 @@ import Mathlib.Topology.WithTopology
 This module realizes vertices discretely and every directed edge as a separate interval cell.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory CategoryTheory.SingleObj Quiver
@@ -86,7 +86,7 @@ instance graphRealizationSetoid {V : Type u} [Quiver.{u} V] :
     to a vertex away from its two prescribed endpoints. -/
 
 /-- Labels the two endpoints of an edge interval and leaves interior points unlabeled. -/
-def graphRealizationEndpointLabel {V : Type u} [Quiver.{u} V]
+@[expose] def graphRealizationEndpointLabel {V : Type u} [Quiver.{u} V]
     : graphRealizationPre V → Option V
   | Sum.inl v => some (graphVertexUnderlying v)
   | Sum.inr ⟨e, t⟩ =>
@@ -317,7 +317,7 @@ def graphRealizationQuiverMap {V : Type u} [Quiver.{u} V] :
     fundamental groupoid of the realization. -/
 
 /-- The functor from the free graph groupoid to the realization's fundamental groupoid. -/
-def graphFreeGroupoidToTopological {V : Type u} [Quiver.{u} V] :
+@[expose] def graphFreeGroupoidToTopological {V : Type u} [Quiver.{u} V] :
     Quiver.FreeGroupoid V ⥤ FundamentalGroupoid (graphRealization V) :=
   Quiver.FreeGroupoid.lift (graphRealizationQuiverMap (V := V))
 
@@ -331,7 +331,7 @@ theorem graphFreeGroupoidToTopological_restrict {V : Type u} [Quiver.{u} V] :
     below for the realization of the path-lifting cover. -/
 
 /-- The map on vertex and edge-interval representatives induced by a quiver prefunctor. -/
-def graphRealizationPreMap {V W : Type u} [Quiver.{u} V] [Quiver.{u} W]
+@[expose] def graphRealizationPreMap {V W : Type u} [Quiver.{u} V] [Quiver.{u} W]
     (F : V ⥤q W) : graphRealizationPre V → graphRealizationPre W :=
   Sum.elim
     (fun v => Sum.inl (graphDiscreteVertex (F.obj (graphVertexUnderlying v))))
@@ -424,7 +424,7 @@ theorem graphRealizationMap_forwardPath {V W : Type u} [Quiver.{u} V]
     in a finite one-dimensional cell complex. -/
 
 /-- The homomorphism from combinatorial loops to loops in the topological realization. -/
-def graphCombinatorialToTopological {V : Type u} [Quiver.{u} V]
+@[expose] def graphCombinatorialToTopological {V : Type u} [Quiver.{u} V]
     (root : V) :
     graphFundamentalGroup root →*
       FundamentalGroup (graphRealization V) (graphVertex root) :=

@@ -16,7 +16,7 @@ forces the leading integral differential to be dependent on the Kepler frequency
 the corresponding fixed-eccentricity action interval.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

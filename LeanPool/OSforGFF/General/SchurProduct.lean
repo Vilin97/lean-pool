@@ -19,7 +19,7 @@ the diagonal embedding of `x` into `ι × ι`. Used in the OS3 reflection positi
 to transfer PSD properties through the matrix exponential via `HadamardExp.lean`.
 -/
 
-@[expose] public section
+public section
 
 
 open scoped BigOperators

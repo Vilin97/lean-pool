@@ -16,7 +16,7 @@ the terminal-zero primitive, this applies to the nonzero-terminal paths used
 in the activation argument.  The factor `T²/2` is proved from integration.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ open MeasureTheory Set EulerTimeLp EulerTerminalTimePrimitive
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The actual real-time primitive, normalized at the initial endpoint. -/
-def initialRealPrimitive (T : ℝ) (u : TimeLp T E) (t : ℝ) : E :=
+@[expose] def initialRealPrimitive (T : ℝ) (u : TimeLp T E) (t : ℝ) : E :=
   realPrimitive T u t - realPrimitive T u 0
 
 theorem initialRealPrimitive_eq_integral (T : ℝ) (u : TimeLp T E) (t : ℝ) :
@@ -79,7 +79,7 @@ theorem initialRealPrimitive_norm_le (T : ℝ) (u : TimeLp T E) (t : ℝ)
 
 /-- Initial path, given by `⟨fun t => initialRealPrimitive T u t,
 (initialRealPrimitive_continuous T u).comp continuous_subtype_val⟩`. -/
-def initialPath (T : ℝ) (u : TimeLp T E) : C(Icc (0 : ℝ) T, E) :=
+@[expose] def initialPath (T : ℝ) (u : TimeLp T E) : C(Icc (0 : ℝ) T, E) :=
   ⟨fun t => initialRealPrimitive T u t,
     (initialRealPrimitive_continuous T u).comp continuous_subtype_val⟩
 
@@ -110,7 +110,7 @@ theorem initialPath_norm_le (T : ℝ) (_hT : 0 ≤ T) (u : TimeLp T E) :
     (mul_le_mul_of_nonneg_right (Real.sqrt_le_sqrt t.property.2) (norm_nonneg _))
 
 /-- Bounded initial integration of genuine L² data. -/
-def initialPrimitive (T : ℝ) (hT : 0 ≤ T) :
+@[expose] def initialPrimitive (T : ℝ) (hT : 0 ≤ T) :
     TimeLp T E →L[ℝ] C(Icc (0 : ℝ) T, E) :=
   ({ toFun := initialPath T
      map_add' := initialPath_add T hT
@@ -132,13 +132,13 @@ theorem initialPrimitive_eq_terminal_sub (T : ℝ) (hT : 0 ≤ T) (u : TimeLp T 
     initialPrimitive T hT u t = terminalPrimitive T hT u t - initialTrace T hT u := rfl
 
 /-- Initial primitive time Lᵖ, given by `(pathLpOperator T hT).comp (initialPrimitive T hT)`. -/
-def initialPrimitiveTimeLp (T : ℝ) (hT : 0 ≤ T) : TimeLp T E →L[ℝ] TimeLp T E :=
+@[expose] def initialPrimitiveTimeLp (T : ℝ) (hT : 0 ≤ T) : TimeLp T E →L[ℝ] TimeLp T E :=
   (pathLpOperator T hT).comp (initialPrimitive T hT)
 
 theorem initialPrimitiveTimeLp_ae (T : ℝ) (hT : 0 ≤ T) (u : TimeLp T E) :
     (initialPrimitiveTimeLp T hT u : ℝ → E) =ᵐ[timeMeasure T]
       initialRealPrimitive T u := by
-  change (pathLp T hT (initialPrimitive T hT u) : ℝ → E) =ᵐ[timeMeasure T] _
+  simp only [initialPrimitiveTimeLp, ContinuousLinearMap.comp_apply, pathLpOperator_apply]
   filter_upwards [pathLp_ae T hT (initialPrimitive T hT u),
     ae_restrict_mem measurableSet_Icc] with t ht hmem
   rw [ht]

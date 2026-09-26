@@ -40,7 +40,7 @@ DM structure directly from the Hermite basis.
 - Gel'fand-Vilenkin, "Generalized Functions" Vol. 4
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

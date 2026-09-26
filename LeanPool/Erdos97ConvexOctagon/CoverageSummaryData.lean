@@ -40,7 +40,7 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData31
 
 /-! # Aggregated lightweight coverage summaries -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 

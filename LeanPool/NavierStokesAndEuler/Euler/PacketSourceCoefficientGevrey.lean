@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketMatrixCoefficientGevrey
 three quadratic coefficients.  Their common coefficient radius and amplitudes
 are independent of the correction order, cutoff and frequency. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

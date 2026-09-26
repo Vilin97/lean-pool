@@ -26,7 +26,7 @@ spatial translation of the original solution. Thus regularity of known
 coefficient families yields genuine spatial regularity of the solved field.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -151,7 +151,7 @@ section
 
 /-! Actual derivatives and factorial bounds for the translated multiplication operators. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

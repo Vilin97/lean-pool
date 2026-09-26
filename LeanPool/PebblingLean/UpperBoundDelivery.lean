@@ -23,7 +23,7 @@ annulus center.  This file proves that the counted quantity is not just
 bookkeeping: it is actually deliverable by pebbling moves.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 

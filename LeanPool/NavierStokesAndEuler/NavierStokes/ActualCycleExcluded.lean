@@ -18,7 +18,7 @@ covering index, and fast operator. Their bounds are derived from primitive
 state regularity and ordinary cumulative/covariance estimates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -18,7 +18,7 @@ satisfies `1-t = q - z^2*q^(2*h)`.  The quadratic-coordinate helper with
 edit to the terminal angular velocity, including its normalization.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -63,7 +63,7 @@ noncomputable def editedAngular (d : OutgoingTail.TailData) (K : ℝ)
     ParametricHeatTail.physicalEdit d K (eta d.h p) (X d.h p)
 
 /-- Shape, given by `OutgoingTail.tailShape d (y - Real.log K + 1 / 5)`. -/
-noncomputable def shape (d : OutgoingTail.TailData) (K y : ℝ) : ℝ :=
+@[expose] noncomputable def shape (d : OutgoingTail.TailData) (K y : ℝ) : ℝ :=
   OutgoingTail.tailShape d (y - Real.log K + 1 / 5)
 
 theorem editedAngular_eq_heat (d : OutgoingTail.TailData) {K : ℝ}

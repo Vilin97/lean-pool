@@ -25,7 +25,7 @@ bundle are all found by typeclass inference (checked by the `example`s below). E
 `η x v : ℂ` works through the reducible `Bundle.Trivial X ℂ x ≡ ℂ`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Bundle
 

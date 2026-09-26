@@ -13,7 +13,7 @@ public import Mathlib.Data.Finset.Preimage
 # Anchored families and their positive witness geometry
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness.Anchored
 

@@ -16,7 +16,7 @@ submeshes of one ambient triangle mesh.  This file records that harmless extra-l
 generalization of `PolygonalFamily.synchronizedArrangement`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

@@ -43,7 +43,7 @@ public import LeanPool.Sundogcert.DecodingNPHard
   `3SAT ≤ 3DM` that would discharge 3DM's hardness internally.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -58,7 +58,7 @@ variable {s : ℕ} (t : Fin s → W × X × Y) (q : ℕ)
 
 /-- **Perfect 3-dimensional matching** among the `s` triples: a selection `T` of triple-indices
     covering each W-element, each X-element, and each Y-element exactly once. -/
-def ThreeDM : Prop := ∃ T : Finset (Fin s),
+@[expose] def ThreeDM : Prop := ∃ T : Finset (Fin s),
     (∀ w : W, (T.filter (fun i => (t i).1   = w)).card = 1) ∧
     (∀ x : X, (T.filter (fun i => (t i).2.1 = x)).card = 1) ∧
     (∀ y : Y, (T.filter (fun i => (t i).2.2 = y)).card = 1)

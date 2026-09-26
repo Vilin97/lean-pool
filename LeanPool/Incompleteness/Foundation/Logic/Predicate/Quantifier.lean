@@ -10,7 +10,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # Quantifier -/
 
-@[expose] public section
+public section
 
 
 
@@ -156,7 +156,7 @@ section «lp_section_2»
 variable {α : ℕ → Type*} [UnivQuantifier α]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def univClosure : {n : ℕ} → α n → α 0
+@[expose] def univClosure : {n : ℕ} → α n → α 0
   | 0,     a => a
   | _ + 1, a => univClosure (∀' a)
 
@@ -188,7 +188,7 @@ section «lp_section_3»
 variable {α : ℕ → Type*} [ExQuantifier α]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def exClosure : {n : ℕ} → α n → α 0
+@[expose] def exClosure : {n : ℕ} → α n → α 0
   | 0,     a => a
   | _ + 1, a => exClosure (∃' a)
 
@@ -220,10 +220,11 @@ section «lp_section_4»
 variable {α : ℕ → Type*}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ball [UnivQuantifier α] [Arrow (α (n + 1))] (φ : α (n + 1)) (ψ : α (n + 1)) : α n :=
+@[expose] def ball [UnivQuantifier α] [Arrow (α (n + 1))] (φ : α (n + 1)) (ψ : α (n + 1)) : α n :=
   ∀' (φ ==> ψ)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def bex [ExQuantifier α] [Wedge (α (n + 1))] (φ : α (n + 1)) (ψ : α (n + 1)) : α n := ∃' (φ ⋏ ψ)
 
 /-- Imported declaration from the Incompleteness formalization. -/

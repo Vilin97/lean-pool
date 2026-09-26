@@ -16,7 +16,7 @@ used in downstream modules (`degA`, `placeDegA`), and hosts the standing
 `IsFullConstantField` hypothesis.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc
 

@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Genuine Sobolev arrays and bounded spatial evaluation for ordinary L² translation orbits. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ open scoped ContDiff
 local instance instMeanOrbitSobolev1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
 /-- Coordinate tuple, defined pointwise by `(standardDirection (w i)).1`. -/
-def coordinateTuple {n : ℕ} (w : Fin n → Fin 4) : Fin n → Space :=
+@[expose] def coordinateTuple {n : ℕ} (w : Fin n → Fin 4) : Fin n → Space :=
   fun i => (standardDirection (w i)).1
 
 theorem coordinateTuple_norm_le {n : ℕ} (w : Fin n → Fin 4) : ‖coordinateTuple w‖ ≤ 1 := by

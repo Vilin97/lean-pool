@@ -37,7 +37,7 @@ The proof follows Steps 1–6 of §4.4.5:
 - `gaussianFreeField_satisfies_OS4`
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex
 open scoped Real BigOperators SchwartzMap

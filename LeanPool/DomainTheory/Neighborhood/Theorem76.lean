@@ -71,7 +71,7 @@ the flag together with the final inclusion `X_{last} ⊆ X_ℓ`. Everything audi
 `⊆ {propext, Quot.sound}`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

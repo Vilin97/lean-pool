@@ -42,7 +42,7 @@ Everything is arranged for a realization with shrunken approximation controls
 radii; the resulting entry point is `exists_controlled_polygonalReplacement_of_comparison`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

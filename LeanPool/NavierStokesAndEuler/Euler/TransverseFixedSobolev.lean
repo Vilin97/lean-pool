@@ -48,7 +48,7 @@ interval length. They control genuine Fréchet derivatives of the concrete
 fixed-space operator and forcing, without a packaged jet or recurrence input.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -68,10 +68,10 @@ variable {P U E : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- The polynomial coefficient cost of taking a physical derivative. -/
-def derivativeCost (T C₀ C₁ : ℝ) : ℝ := T*C₁+C₀
+@[expose] def derivativeCost (T C₀ C₁ : ℝ) : ℝ := T*C₁+C₀
 
 /-- The polynomial coefficient cost of the transported variational form. -/
-def formCost (T C₀ C₁ CH : ℝ) : ℝ :=
+@[expose] def formCost (T C₀ C₁ CH : ℝ) : ℝ :=
   9 * (derivativeCost T C₀ C₁)^2 * (1 + T^2*CH)
 
 /-- The polynomial cost of the actual weak forcing term. -/
@@ -222,7 +222,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -239,11 +239,11 @@ open Set InnerProductSpace ContinuousLinearMap EulerTimeLp EulerTerminalTimePrim
   EulerTimeLpCoefficientGevrey
 
 /-- Uniform polynomial bound for the inverse frame transport. -/
-def transportCeiling (T C₀ C₁ c : ℝ) : ℝ :=
+@[expose] def transportCeiling (T C₀ C₁ c : ℝ) : ℝ :=
   1 + ((2*(c⁻¹)^2*C₀^2*C₁ + c⁻¹*C₁)*T + c⁻¹*C₀)
 
 /-- Uniform polynomial bound for the inverse of the transported form. -/
-def inverseCost (T C₀ C₁ c : ℝ) : ℝ := 2 * (transportCeiling T C₀ C₁ c)^2
+@[expose] def inverseCost (T C₀ C₁ c : ℝ) : ℝ := 2 * (transportCeiling T C₀ C₁ c)^2
 
 /-- One polynomial top constant handles both coefficient and forcing amplitudes. -/
 def solveCost (T C₀ C₁ CH c : ℝ) : ℝ :=
@@ -428,7 +428,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -447,7 +447,7 @@ def forcingBlockAmplitude (ι : Type*) [Fintype ι] (q : ℕ) (T Rc C₀ C₁ Cf
 
 /-- Block cost, given by `inverseBlockCost ι q (inverseCost T C₀ C₁ c) Rc (formCost T C₀ C₁ CH)
 (forcingBlockAmplitude ι q T Rc C₀ C₁ Cf)`. -/
-def blockCost (ι : Type*) [Fintype ι] (q : ℕ) (T Rc C₀ C₁ CH c Cf : ℝ) : ℝ :=
+@[expose] def blockCost (ι : Type*) [Fintype ι] (q : ℕ) (T Rc C₀ C₁ CH c Cf : ℝ) : ℝ :=
   inverseBlockCost ι q (inverseCost T C₀ C₁ c) Rc (formCost T C₀ C₁ CH)
     (forcingBlockAmplitude ι q T Rc C₀ C₁ Cf)
 

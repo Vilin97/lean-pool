@@ -16,7 +16,7 @@ of parametrized triangles in the open subpolyhedron.  This file constructs those
 proving the global face-to-face intersection theorem.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

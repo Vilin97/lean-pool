@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 
 /-! Uniform Taylor remainders for the actual smooth compact cutoffs. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -78,7 +78,7 @@ theorem norm_differenceQuotient_remainder_le {E : Type*} [NormedAddCommGroup E] 
 
 /-- Directional, given by `⟨fun x => fderiv ℝ χ.field x a, (χ.smooth.fderiv_right (m := ∞) (by
 simp)).clm_apply contDiff_const, χ.compact.fderiv_apply ℝ a⟩`. -/
-def Cutoff.directional (χ : Cutoff) (a : Space) : Cutoff :=
+@[expose] def Cutoff.directional (χ : Cutoff) (a : Space) : Cutoff :=
   ⟨fun x => fderiv ℝ χ.field x a,
     (χ.smooth.fderiv_right (m := ∞) (by simp)).clm_apply contDiff_const,
     χ.compact.fderiv_apply ℝ a⟩

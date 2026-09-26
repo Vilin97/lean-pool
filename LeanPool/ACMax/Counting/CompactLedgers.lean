@@ -51,7 +51,7 @@ same-count hubs with zero internal degree, zero `mCross` and no adjacency shares
 shared twins would assemble a good `K_{2,3}` (`Σ₅deg = 21`), contradicting
 `no_good_K23` (`no_two_saturated_deg6`). -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

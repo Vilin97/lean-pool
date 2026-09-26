@@ -40,7 +40,7 @@ the Jacobian factor" atom on top.
   identities, now UNCONDITIONALLY PROVABLE (mtrace's P6 landed, see `docs/build-log.md`).
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 

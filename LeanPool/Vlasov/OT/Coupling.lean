@@ -31,7 +31,7 @@ characteristic flows.
 See `formalize/DESIGN.md` (in the source repository) for the overall design choices.
 -/
 
-@[expose] public section
+public section
 
 /-
 The contents of this file — `IsCoupling`, `wasserstein1Coupling`, both

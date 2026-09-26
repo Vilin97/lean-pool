@@ -21,7 +21,7 @@ family at that constant and the resulting slice bound, so the pressure
 gradient on a slice is controlled with no Calderón--Zygmund premise.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal

@@ -36,7 +36,7 @@ for which
   (`LeanPool.AsymptoticTrianglePacking.Internal.cube_centred_sq_le`).
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset
 

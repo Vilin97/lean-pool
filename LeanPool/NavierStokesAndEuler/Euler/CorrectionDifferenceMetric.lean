@@ -15,7 +15,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! The actual nonlinear viscosity-difference PDE implies a fixed squared metric energy inequality.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

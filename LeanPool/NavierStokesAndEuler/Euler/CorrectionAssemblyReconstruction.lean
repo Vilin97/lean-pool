@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
 
 /-! Canonical smooth pressure reconstruction for the generic finite-solution assembly. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -67,7 +67,7 @@ theorem FiniteFamily.pointPressure_smooth (F : FiniteFamily period hT A) (C : Co
   exact hg x
 
 /-- The genuine signed pressure-gradient vector field on the oscillatory physical graph. -/
-def FiniteFamily.graphPressure (F : FiniteFamily period hT A) (k : ℝ)
+@[expose] def FiniteFamily.graphPressure (F : FiniteFamily period hT A) (k : ℝ)
     (t : Icc (0 : ℝ) T) (x : Vector3) : Vector3 :=
   A.κ • F.pointPressure period t (cylinderGraph period k A.direction x)
 

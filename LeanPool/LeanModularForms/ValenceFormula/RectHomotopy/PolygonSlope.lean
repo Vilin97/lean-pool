@@ -21,7 +21,7 @@ non-differentiability at partition points `{1,2,3,4}`, and global derivative bou
 * `fdPolygon_deriv_bounded` — `∃ M, ∀ t ∈ Icc 0 5, ‖deriv fdPolygon t‖ ≤ M`
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Metric Filter Topology
 

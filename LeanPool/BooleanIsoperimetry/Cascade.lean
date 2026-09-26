@@ -17,7 +17,7 @@ simplicial initial segments in the Boolean cube, including the slice recurrence
 for the Harper boundary function `H`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -38,11 +38,11 @@ def IsBinomialCascade (n k r t : ℕ) : Prop :=
   (t < Nat.choose n r ∨ r = n + 1)
 
 /-- The lower-slice size determined by cascade parameters `n`, `r`, and `t`. -/
-def cascadeSlice0Value (n r t : ℕ) : ℕ :=
+@[expose] def cascadeSlice0Value (n r t : ℕ) : ℕ :=
   binomPrefix n r + (t - choosePred n r)
 
 /-- The upper-slice size determined by cascade parameters `n`, `r`, and `t`. -/
-def cascadeSlice1Value (n r t : ℕ) : ℕ :=
+@[expose] def cascadeSlice1Value (n r t : ℕ) : ℕ :=
   binomPrefix n (r - 1) + min t (choosePred n r)
 
 /--

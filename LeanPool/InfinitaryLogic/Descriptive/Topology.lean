@@ -26,7 +26,7 @@ with `Bool` discrete) and proves that cylinder sets are clopen.
 - `isOpen_relHolds`, `isClosed_relHolds`: Components of the clopen result.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

@@ -20,7 +20,7 @@ quotient-based `Ideal.ramificationIdx'` over the finite set
 records the resulting bound `e ≤ [L : K]` for a single prime.
 -/
 
-@[expose] public section
+public section
 
 open Module
 

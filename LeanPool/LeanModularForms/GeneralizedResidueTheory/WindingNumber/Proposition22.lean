@@ -37,7 +37,7 @@ also gives isolation on each side via strict monotonicity of a real projection.
 The crossing set is closed and has no accumulation points, hence finite by compactness.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

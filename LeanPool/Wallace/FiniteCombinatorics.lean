@@ -32,7 +32,7 @@ The paper writes integer bounds as `|c| ≤ M`.  We use `Int.natAbs c ≤ M`, wh
 definitionally the corresponding natural-number inequality.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Set
@@ -61,7 +61,7 @@ variable {G : Type u} [AddCommGroup G]
 
 /-- A finite set is `M`-independent if every integer relation whose coefficients have absolute
 value at most `M` is trivial.  This is the paper's definition, specialized to a finite set. -/
-def BoundedIndependent (M : ℕ) (X : Finset G) : Prop :=
+@[expose] def BoundedIndependent (M : ℕ) (X : Finset G) : Prop :=
   ∀ c : G → ℤ, (∀ x ∈ X, Int.natAbs (c x) ≤ M) →
     (∑ x ∈ X, c x • x) = 0 → ∀ x ∈ X, c x = 0
 

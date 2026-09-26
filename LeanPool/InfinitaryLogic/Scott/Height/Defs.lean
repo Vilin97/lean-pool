@@ -24,7 +24,7 @@ formula analysis stabilizes for all tuples simultaneously.
 - `scottHeight_eq_of_equiv`: Scott height is invariant under L-isomorphism.
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 

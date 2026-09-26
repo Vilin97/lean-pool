@@ -39,7 +39,7 @@ while `⊔S` is the supremum in the subspace `D`; the retraction identity is `j(
 = ⊔S`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.ContinuousLattice
 
@@ -117,6 +117,7 @@ abbrev ScottC (D D' : Type*) [CompleteLattice D] [CompleteLattice D'] :=
   @ContinuousMap D D' scottTopologicalSpace scottTopologicalSpace
 
 /-- Continuous maps between complete lattices with Scott's induced topologies. -/
+@[expose]
 def ScottMap (D D' : Type*) [CompleteLattice D] [CompleteLattice D'] : Type _ :=
   { f : D → D' // @Continuous D D' scottTopologicalSpace scottTopologicalSpace f }
 
@@ -194,6 +195,7 @@ noncomputable def bot : ScottMap D D' :=
   const ⊥
 
 /-- The pointwise order on Scott maps. -/
+@[expose]
 def le (f g : ScottMap D D') : Prop :=
   ∀ x, f x ≤ g x
 

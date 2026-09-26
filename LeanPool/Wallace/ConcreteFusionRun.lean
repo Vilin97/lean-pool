@@ -18,7 +18,7 @@ prepared local blocks.  It then converts the bounded deletion at every stage int
 block-density certificate for every relevant code.  No marker sequence is used.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

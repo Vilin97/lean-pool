@@ -20,7 +20,7 @@ surface (imported by `TailAdapter.lean` → `Admissible.lean`); being neutral an
 harmless, unlike routing the def through the WIP-excluded `LocalEMSupport.lean`.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

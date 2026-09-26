@@ -48,7 +48,7 @@ and the cube's uniform probability measure. They are the elementary counting
 steps in Section 4 of arXiv:2609.19123.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -60,7 +60,7 @@ namespace Family
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- The real-valued indicator `𝟙_B` of a family, used in Section 4. -/
-def indicator (B : Family ι) (x : Finset ι) : ℝ := if x ∈ B then 1 else 0
+@[expose] def indicator (B : Family ι) (x : Finset ι) : ℝ := if x ∈ B then 1 else 0
 
 omit [Fintype ι] in
 /-- Evaluating the Section 4 indicator at a member of its family. -/

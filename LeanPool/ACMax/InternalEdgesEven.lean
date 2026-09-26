@@ -15,7 +15,7 @@ For any finite simple graph `G` and vertex set `s`, the sum over `v ∈ s` of th
 neighbours of `v` lying in `s` equals twice the number of edges internal to `s`, hence is even.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

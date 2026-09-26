@@ -33,7 +33,7 @@ used throughout.  The final field is the actual conjugate-pair Gaussian
 block, with its full angular variable.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -299,7 +299,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

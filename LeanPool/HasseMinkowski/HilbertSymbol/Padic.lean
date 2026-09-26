@@ -30,7 +30,7 @@ are recorded in `HANDOFF-hilbertpadic.md` as the outstanding work; only `p = 2` 
 scope entirely.
 -/
 
-@[expose] public section
+public section
 
 namespace HasseMinkowski
 

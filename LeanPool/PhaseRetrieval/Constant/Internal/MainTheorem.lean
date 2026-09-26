@@ -25,7 +25,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # MainTheorem -/
 
-@[expose] public section
+public section
 
 
 open MeasureTheory Complex Real Finset Polynomial

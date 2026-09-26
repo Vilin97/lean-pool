@@ -35,7 +35,7 @@ Main declarations:
 * `instance : FiniteDimensional ℂ (Form1 X)` (compact T2 `X`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Bundle Topology
 open Set Filter IsManifold

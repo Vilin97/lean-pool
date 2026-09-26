@@ -18,7 +18,7 @@ regularity needed in these equations is obtained on the selected native
 cell. No global covariance-control or solved-output class is required.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

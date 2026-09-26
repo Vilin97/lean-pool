@@ -12,7 +12,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # LogicSymbol -/
 
-@[expose] public section
+public section
 
 
 open Function

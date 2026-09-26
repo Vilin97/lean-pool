@@ -24,7 +24,7 @@ Main exports: `RS.MeromorphicGerm`, `RS.meromorphicGermsAt`, `RS.laurentCoeffL`,
 `RS.laurentCoeffL_mk`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Function
 
@@ -40,6 +40,7 @@ def MeromorphicGerm (z₀ : ℂ) (γ : Filter.Germ (𝓝[≠] z₀) ℂ) : Prop 
     MeromorphicGerm z₀ (f : Filter.Germ (𝓝[≠] z₀) ℂ) ↔ MeromorphicAt f z₀ := Iff.rfl
 
 /-- The ℂ-space of meromorphic germs at `z₀` (a submodule of the full germ module). -/
+@[expose]
 def meromorphicGermsAt (z₀ : ℂ) : Submodule ℂ (Filter.Germ (𝓝[≠] z₀) ℂ) where
   carrier := {γ | MeromorphicGerm z₀ γ}
   zero_mem' := analyticAt_const.meromorphicAt

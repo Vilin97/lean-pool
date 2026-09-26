@@ -31,7 +31,7 @@ Definitions come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic` /
 `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

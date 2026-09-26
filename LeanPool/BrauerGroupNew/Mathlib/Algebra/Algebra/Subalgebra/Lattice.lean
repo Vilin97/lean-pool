@@ -15,7 +15,7 @@ Imported Lean Pool material for
 `LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Lattice`.
 -/
 
-@[expose] public section
+public section
 
 variable {R A B : Type*} [CommSemiring R] [Semiring A] [Semiring B] [Algebra R A] [Algebra R B]
 

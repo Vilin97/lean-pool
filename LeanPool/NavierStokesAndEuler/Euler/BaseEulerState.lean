@@ -80,7 +80,7 @@ section
 equation: identity pressure metric, zero lower-order coefficients, spatial
 scale one and angular direction zero. No solution is included in the data. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -286,7 +286,7 @@ section
 a quadratic residual envelope at every Sobolev order. No residual estimate
 or differential equation is postulated. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -379,7 +379,7 @@ quadratic residual envelope in the all-order correction regime. The
 growth constant belongs to the identity-metric equation, not to an
 assumed solution. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -490,7 +490,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -631,7 +631,7 @@ section
 angle-independent cylinder field. Tensor bounds give a fixed mixed Sobolev
 word bound, and classical divergence zero gives the actual lifted constraint. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -749,7 +749,7 @@ section
 spatial convection, at every finite Sobolev order. This verifies the
 equation input to the correction theorem rather than assuming it. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -833,7 +833,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -913,7 +913,7 @@ section
 slice of the actual exact lifted solution solves ordinary three-dimensional
 Euler. The scalar pressure is the canonical normalized graph potential. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1062,7 +1062,7 @@ section
 /-! The genuine Euler time/amplitude scaling. A solution starting from
 ε u₀ on [0,1] gives a solution starting from u₀ on [0,ε]. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1165,7 +1165,7 @@ solenoidal Gevrey datum. The initial velocity is the original datum, not
 its small multiple. All spatial derivative tensors remain continuous L²
 paths after the actual Euler time/amplitude rescaling. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1354,7 +1354,7 @@ section
 the Euler amplitude/time scaling. The time interval is shortened by the
 same positive amplitude used to normalize the initial velocity. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1418,7 +1418,7 @@ section
 have smooth bounded spatial jets continuous in time. This includes the
 one-sided derivatives at both endpoints. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1521,7 +1521,7 @@ section
 are functions of the datum's supplied Gevrey bounds and the fixed period;
 none depends on which datum realizes those bounds. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1652,7 +1652,7 @@ section
 /-! Quantitative spatial jet bounds under actual Euler time/amplitude
 rescaling. The constants are explicit and the spatial radius is unchanged. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1716,7 +1716,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1996,7 +1996,7 @@ section
 the first parent particle data. Its horizon can be shortened by an explicit
 positive amount before applying the uniform flow-jet estimate. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2216,7 +2216,7 @@ section
 for the base flow. The displacement estimate integrates the real spatial
 jets of the flow, and the other two estimates use volume preservation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2477,7 +2477,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2576,7 +2576,7 @@ section
 correction. In particular the actual convection residual is odd; this is
 proved from its derivative formula. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2623,7 +2623,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2732,7 +2732,7 @@ section
 constructed smooth coefficient paths. In particular the local velocity
 has a true one-sided time derivative at the initial and terminal times. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2794,7 +2794,7 @@ section
 /-! Oddness of the genuine base velocity propagates through its actual
 flow to the base parent, using ODE uniqueness. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2819,7 +2819,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2999,7 +2999,7 @@ section
 /-! The compact initial velocity in the manuscript is constructed using
 the fixed factorial-bounded outer cutoff and the actual curl potential. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3118,7 +3118,7 @@ section
 /-! Pointwise factorial estimates suffice when one factor has compact
 support. In particular polynomial factors need not be globally bounded. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3194,7 +3194,7 @@ section
 /-! Compact support turns actual uniform tensor bounds into the ordinary
 L² tensor bounds used in the label Sobolev estimates. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3228,7 +3228,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3419,7 +3419,7 @@ section
 In particular this covers β=x₀⁻² with x₀≥1, independently of the
 eventual frequency and iteration scales. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3513,7 +3513,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3618,7 +3618,7 @@ section
 /-! The actual normalized Euler pressure force has smooth ordinary L²
 slices, with all derivative tensors continuous in time. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3674,7 +3674,7 @@ section
 both velocity and pressure force. Consequently its Euler equation holds
 strongly in every finite Sobolev order, including endpoint derivatives. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3722,7 +3722,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

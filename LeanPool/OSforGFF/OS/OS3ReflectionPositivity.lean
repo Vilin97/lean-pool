@@ -43,7 +43,7 @@ exponential PSD theorem.
 - `gaussianFreeField_OS3`: `os3ReflectionPositivity (muGFF m)`  (complex)
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex Matrix
 open scoped Real InnerProductSpace BigOperators

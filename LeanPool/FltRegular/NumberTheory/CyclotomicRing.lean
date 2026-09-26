@@ -16,7 +16,7 @@ This file defines cyclotomic integers using `AdjoinRoot` and relates them to the
 integers of the corresponding rational cyclotomic field.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -28,7 +28,7 @@ local instance : IsCyclotomicExtension {p} ℚ (CyclotomicField p ℚ) :=
   CyclotomicField.isCyclotomicExtension p ℚ
 
 /-- The cyclotomic integers of conductor `p`, defined as an `AdjoinRoot`. -/
-def CyclotomicIntegers : Type := AdjoinRoot (cyclotomic p ℤ)
+@[expose] def CyclotomicIntegers : Type := AdjoinRoot (cyclotomic p ℤ)
 
 instance : CommRing (CyclotomicIntegers p) := by
   delta CyclotomicIntegers

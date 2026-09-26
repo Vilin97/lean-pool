@@ -28,7 +28,7 @@ there is its weak gradient.  Adding the two produces one slice field, in
 `L^{6/5}` of the inner ball with the `ρ^{-1/2}` weight of display (3.5).
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

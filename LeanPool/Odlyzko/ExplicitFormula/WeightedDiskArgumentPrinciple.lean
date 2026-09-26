@@ -16,7 +16,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -26,7 +26,7 @@ with `BollobasNikiforov.MS.Basic` (pulled in by `Weighted`), and also overlaps W
 `GramAux`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

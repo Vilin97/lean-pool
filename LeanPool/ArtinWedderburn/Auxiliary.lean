@@ -25,7 +25,7 @@ Mathlib's `DivisionRing`, and shows that an isomorphism of rings transports the
 division-ring property.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 

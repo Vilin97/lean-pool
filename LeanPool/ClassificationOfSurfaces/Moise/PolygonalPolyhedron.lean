@@ -17,7 +17,7 @@ edges of a polygon cut an enclosing triangle into a finite triangle mesh.  The t
 bounded side of polygonal Jordan form the required finite complex.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

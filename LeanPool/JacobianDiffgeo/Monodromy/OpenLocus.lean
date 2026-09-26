@@ -31,7 +31,7 @@ Main declarations:
   in the open locus; `RS.Monodromy.Path.liftOpenLocus_extend` recovers `γ.extend` pointwise.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open TopologicalSpace Set
@@ -43,6 +43,7 @@ namespace RS.Monodromy
 variable {X : Type*} [TopologicalSpace X] [T2Space X] [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ) ω X]
 
 /-- The open locus determined by a closed "bad set" (in practice a divisor support). -/
+@[expose]
 def openLocus {S : Set X} (hS : IsClosed S) : Opens X := ⟨Sᶜ, hS.isOpen_compl⟩
 
 /-- Finite bad sets are closed in a `T2Space` (`Set.Finite.isClosed`), hence give an open locus.

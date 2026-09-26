@@ -22,7 +22,7 @@ root symmetries and the remaining color swap. The resulting 432 certificates
 cover every proper normalized coloring of the 13-vertex 2-Golomb root.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

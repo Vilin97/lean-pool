@@ -11,7 +11,7 @@ import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -84,7 +84,7 @@ theorem fractionalShapeCovolumeCenter_traceDual
 
 open Classical in
 /-- A centered fractional shape coordinates used in the Odlyzko-bound argument. -/
-noncomputable def centeredFractionalShapeCoordinates
+@[expose] noncomputable def centeredFractionalShapeCoordinates
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ)
     (y : mixedEmbedding.realSpace K) :
     mixedEmbedding.realSpace K :=

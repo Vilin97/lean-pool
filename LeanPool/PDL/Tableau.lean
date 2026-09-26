@@ -12,7 +12,7 @@ public import LeanPool.PDL.Local.Tableau
 
 /-! # PDL-Tableaux (Section 4) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -306,7 +306,7 @@ inductive Tableau : History → Sequent → Type
   | lrep {Hist X} (lpr : LoadedPathRepeat Hist X) : Tableau Hist X
 
 /-- The number of nodes in a tableau, including every local-rule continuation. -/
-def Tableau.size {Hist X} : Tableau Hist X → Nat
+@[expose] def Tableau.size {Hist X} : Tableau Hist X → Nat
   | .loc _ _ lt next => 1 + ((endNodesOf lt).attach.sum (fun ⟨Y, Y_in⟩ => (next Y Y_in).size))
   | .pdl _ _ _ next => 1 + next.size
   | .lrep _ => 1
@@ -384,7 +384,7 @@ decreasing_by
   · exact Tableau.size_next_lt_of_pdl tab1_def
 
 /-- Whether a tableau is a loaded-path-repeat leaf. -/
-def Tableau.isLrep {Hist X} : (Tableau Hist X) → Prop
+@[expose] def Tableau.isLrep {Hist X} : (Tableau Hist X) → Prop
   | .loc .. => False
   | .pdl .. => False
   | .lrep .. => True
@@ -395,11 +395,11 @@ inductive provable : Formula → Prop
   | byTableauR {φ : Formula} : Tableau .nil ⟨{}, {~φ}, none⟩ → provable φ
 
 /-- A Sequent is inconsistent if there exists a closed tableau for it. -/
-def inconsistent : Sequent → Prop
+@[expose] def inconsistent : Sequent → Prop
   | LR => Nonempty (Tableau .nil LR)
 
 /-- A `Sequent` is consistent iff it is not inconsistent. -/
-def consistent : Sequent → Prop
+@[expose] def consistent : Sequent → Prop
   | LR => ¬inconsistent LR
 
 end PDL

@@ -17,7 +17,7 @@ Schoenflies induction.  A finite planar triangle mesh with infinite frontier has
 to exactly one triangle, hence a free triangle that can be removed by a supported ambient move.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -29,7 +29,7 @@ namespace TriangleMesh
 variable (M : TriangleMesh)
 
 /-- The geometric carrier of a maximal triangle. -/
-def triangleCarrier (t : Finset M.Vertex) : Set Plane :=
+@[expose] def triangleCarrier (t : Finset M.Vertex) : Set Plane :=
   convexHull ℝ (M.position '' (t : Set M.Vertex))
 
 /-- The two-element faces occurring in maximal triangles. -/
@@ -71,7 +71,7 @@ theorem mem_allBoundaryEdges_iff {e : Finset M.Vertex} :
   simp [allBoundaryEdges, IsBoundaryEdge]
 
 /-- The finite union of the geometric carriers of all incidence-one mesh edges. -/
-noncomputable def boundaryCarrier : Set Plane :=
+@[expose] noncomputable def boundaryCarrier : Set Plane :=
   ⋃ e ∈ M.allBoundaryEdges, convexHull ℝ (M.position '' (e : Set M.Vertex))
 
 theorem isCompact_boundaryCarrier : IsCompact M.boundaryCarrier := by

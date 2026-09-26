@@ -13,7 +13,7 @@ import Mathlib.CategoryTheory.Category.Init
 # LeanPool.DirectedTopologyLean4.SplitPath.SplitPath
 -/
 
-@[expose] public section
+public section
 
 /- This file contains definitions for splitting a path `γ : Path x y` at some point `T : I`
   yielding two different paths:

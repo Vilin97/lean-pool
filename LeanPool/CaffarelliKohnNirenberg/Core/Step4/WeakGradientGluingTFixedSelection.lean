@@ -16,7 +16,7 @@ chosen from suitability. Their measurable remainder represents the classical
 harmonic and far-force gradient on almost every slice of the target carrier.
 -/
 
-@[expose] public section
+public section
 
 section
 

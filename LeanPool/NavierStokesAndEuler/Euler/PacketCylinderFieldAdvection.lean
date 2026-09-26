@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPath
 
 /-! Actual raw slow and normal-weighted angular advection on cylinder-path witnesses. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

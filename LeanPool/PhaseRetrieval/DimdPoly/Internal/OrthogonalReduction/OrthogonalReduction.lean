@@ -17,7 +17,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # OrthogonalReduction -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

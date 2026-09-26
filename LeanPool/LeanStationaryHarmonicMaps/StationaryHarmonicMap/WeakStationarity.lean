@@ -12,7 +12,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 # Weak Stationarity
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -44,7 +44,7 @@ def SmoothStationaryIn {n m : ℕ} (u : Domain n → Target m) (Ω : Set (Domain
 
 /-- Stationarity integrand written directly in terms of an arbitrary gradient
 field `Du`.  This is the expression used for `W^{1,2}_{loc}` maps. -/
-def weakStationarityIntegrand {n m : ℕ}
+@[expose] def weakStationarityIntegrand {n m : ℕ}
     (Du : Domain n → Gradient n m) (X : Domain n → Domain n) (x : Domain n) : ℝ :=
   weakEnergyDensity Du x * divergence X x -
     2 * ∑ i : Fin n, ∑ j : Fin n,
@@ -105,7 +105,7 @@ def LocallyIntegrableScalarIn {n : ℕ}
 
 /-- The `L²_loc` requirement for the map itself, stated as local integrability
 of `|u|²`. -/
-def MapLocallyL2In {n m : ℕ}
+@[expose] def MapLocallyL2In {n m : ℕ}
     (u : Domain n → Target m) (Ω : Set (Domain n)) : Prop :=
   LocallyIntegrableScalarIn (fun x => ‖u x‖ ^ 2) Ω
 

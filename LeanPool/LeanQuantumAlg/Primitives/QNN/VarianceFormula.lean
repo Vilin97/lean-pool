@@ -40,7 +40,7 @@ form — is machine-checked.
   `⟪C, H⊗H⟫ = P_g(H)`).
 -/
 
-@[expose] public section
+public section
 
 attribute [local instance 100] LieRing.ofAssociativeRing
 

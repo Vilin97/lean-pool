@@ -39,7 +39,7 @@ predicates (D7); `exists_dbar_solution_chart_ball` transports Forster 13.2 (`Sol
 through a chart.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold

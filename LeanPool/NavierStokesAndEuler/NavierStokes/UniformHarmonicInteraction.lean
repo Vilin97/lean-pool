@@ -19,7 +19,7 @@ The nonlinear estimate uses exact mode solenoidality to remove the phase
 normal. Only the fixed signed harmonic ratio remains in that cancellation.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

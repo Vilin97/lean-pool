@@ -21,7 +21,7 @@ function of `R` alone. Profile weights are transported exactly by a change
 of band scale.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -157,15 +157,15 @@ theorem pullback_physicalScale {h Q b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 abbrev ChartPoint := ℝ × (ℝ × ℝ)
 
 /-- A band chart is ordered `(R,(Z,T))`. -/
-noncomputable def chartQ (h : ℝ) (p : ChartPoint) : ℝ :=
+@[expose] noncomputable def chartQ (h : ℝ) (p : ChartPoint) : ℝ :=
   coordinateQ (2 * h) (p.2.2, p.2.1)
 
 /-- Chart eta, given by `coordinateEta (2 * h) (p.2.2, p.2.1)`. -/
-noncomputable def chartEta (h : ℝ) (p : ChartPoint) : ℝ :=
+@[expose] noncomputable def chartEta (h : ℝ) (p : ChartPoint) : ℝ :=
   coordinateEta (2 * h) (p.2.2, p.2.1)
 
 /-- Chart X, given by `coordinateX (2 * h) (p.1 ^ 2 / 2) (p.2.2, p.2.1)`. -/
-noncomputable def chartX (h : ℝ) (p : ChartPoint) : ℝ :=
+@[expose] noncomputable def chartX (h : ℝ) (p : ChartPoint) : ℝ :=
   coordinateX (2 * h) (p.1 ^ 2 / 2) (p.2.2, p.2.1)
 
 /-- Chart inner, given by `(chartX h p, chartEta h p)`. -/
@@ -173,7 +173,7 @@ noncomputable def chartInner (h : ℝ) (p : ChartPoint) : ℝ × ℝ :=
   (chartX h p, chartEta h p)
 
 /-- Transition from the band of scale `Q` to the band of scale `Q'`. -/
-noncomputable def chartTransition (h Q Q' : ℝ) (p : ChartPoint) : ChartPoint :=
+@[expose] noncomputable def chartTransition (h Q Q' : ℝ) (p : ChartPoint) : ChartPoint :=
   ((Q / Q') ^ (1 / 2 : ℝ) * p.1,
     ((Q / Q') ^ D h * p.2.1, (Q / Q') * p.2.2))
 

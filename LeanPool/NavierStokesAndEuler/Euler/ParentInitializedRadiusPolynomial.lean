@@ -25,7 +25,7 @@ section
 /-! A fixed polynomial in the genuine parent label bound controls the
 coefficient leaves of the normal, joined and mean packet budgets. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -167,7 +167,7 @@ section
 /-! Composing the actual coefficient envelope with the parent label
 polynomial gives a single fixed polynomial in the parent size K. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -232,7 +232,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -314,7 +314,7 @@ theorem sourceEnvelope_power (X : ℝ) (hX : 1 ≤ X) :
   exact (le_abs_self _).trans (eval_bound sourcePolynomial X hX)
 
 /-- Parameter size, given by `1+K+Ti+TiTotal+Cp+B+δ⁻¹+N`. -/
-def parameterSize (K Ti TiTotal Cp B δ N : ℝ) : ℝ := 1+K+Ti+TiTotal+Cp+B+δ⁻¹+N
+@[expose] def parameterSize (K Ti TiTotal Cp B δ N : ℝ) : ℝ := 1+K+Ti+TiTotal+Cp+B+δ⁻¹+N
 
 theorem parameterSize_bounds (K Ti TiTotal Cp B δ N : ℝ)
     (hK : 0 ≤ K) (hTi : 0 ≤ Ti) (hTiTotal : 0 ≤ TiTotal) (hCp : 0 ≤ Cp)

@@ -82,7 +82,7 @@ is done by `Exists.elim` while proving a `Prop`, so it stays **choice-free**
 (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

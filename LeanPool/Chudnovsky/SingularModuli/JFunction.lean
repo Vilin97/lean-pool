@@ -49,7 +49,7 @@ harmlessly, in the *boundedness* of `j·q` at the cusp, via
 `tendsto_atImInfty_tprod_one_sub_eta_q_pow`.)
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -65,7 +65,7 @@ Kept definitionally equal to the `1728 * J τ` appearing in `SingularModuli.lean
 statements. -/
 def j (τ : ℍ) : ℂ := 1728 * J τ
 
-@[simp] lemma j_def (τ : ℍ) : j τ = 1728 * J τ := rfl
+@[simp] lemma j_def (τ : ℍ) : j τ = 1728 * J τ := by rfl
 
 /-- `j = E₄³/Δ`. -/
 lemma j_eq (τ : ℍ) : j τ = E₄ τ ^ 3 / discriminant τ := by

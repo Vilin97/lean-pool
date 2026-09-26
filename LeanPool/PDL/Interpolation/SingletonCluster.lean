@@ -11,7 +11,7 @@ public import LeanPool.PDL.Interpolation.Local
 
 /-! ## Helper lemmas about vocabularies and interpolants -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

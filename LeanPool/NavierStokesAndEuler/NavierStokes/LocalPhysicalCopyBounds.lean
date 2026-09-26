@@ -20,7 +20,7 @@ germ at one evaluation point.  The physical carrier bound measures only jets at
 that point, so no bound on the extension away from it is needed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -113,7 +113,7 @@ noncomputable def replaceProfiles (c : CarrierData)
     (F G : PhysicalGraphBounds.Slow → ℝ) : CarrierData := { c with F := F, G := G }
 
 /-- Slot slow as an element of `PhysicalGraphBounds.Slow`. -/
-noncomputable def slotSlow (c : CarrierData) (a h : ℝ) (n : ℕ) (r0 : ℝ)
+@[expose] noncomputable def slotSlow (c : CarrierData) (a h : ℝ) (n : ℕ) (r0 : ℝ)
     (w : SpaceTime) : PhysicalGraphBounds.Slow :=
   (PhysicalGraphBounds.slotMap (PolarCharts.chart a c.chart)
     (ChartScales.timeCoefficient h n) c.center r0 (PhysicalGraphBounds.physicalLift h n w)).1

@@ -12,7 +12,7 @@ import LeanPool.DirectedTopologyLean4.MonotonePath
 # LeanPool.DirectedTopologyLean4.DirectedUnitInterval
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the definition of the directed unit interval.

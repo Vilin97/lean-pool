@@ -30,7 +30,7 @@ anywhere) this file converts holomorphy of maps `Z → OnePoint ℂ` into planar
 * `contMDiff_inversion`/`inversionDiffeomorph`: inversion is a biholomorphic involution.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter Topology OnePoint

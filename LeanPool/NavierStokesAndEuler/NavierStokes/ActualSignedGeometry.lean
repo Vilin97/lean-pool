@@ -29,7 +29,7 @@ are computed from the same prepared primary family. Their native-copy
 estimates have constants before all labels, bands and copies.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -848,7 +848,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -929,7 +929,7 @@ noncomputable def nativeDomain : PrimaryCopyBounds.JetDomain (Label H v a) Nativ
 
 /-- Pulse coordinates, given by `(x.1, x.2.2 / ChartScales.slotLength r0 F.data.h
 (BaseChartJets.cellBand L))`. -/
-noncomputable def pulseCoordinates (L : Label H v a) (x : Native) : Slow × ℝ :=
+@[expose] noncomputable def pulseCoordinates (L : Label H v a) (x : Native) : Slow × ℝ :=
   (x.1, x.2.2 / ChartScales.slotLength r0 F.data.h (BaseChartJets.cellBand L))
 
 theorem nativeSlow_positive (L : Label H v a) {p : Slow}
@@ -1231,6 +1231,7 @@ variable {D h : ℝ} {vr vt : Plane}
   (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
 
 /-- Slot geometry, constructed using `CommonCoverClass.bandGeometry`. -/
+@[expose]
 noncomputable def slotGeometry (l : SlotColoring.Label) (gap : ℕ) : CommonCoverSolve.Geometry :=
   CommonCoverClass.bandGeometry (TorusAverages.slotChart vr vt hdet) h l.1 gap
     (PartitionedCovariance.slotCenter h l - sys.radius • vt)
@@ -1467,7 +1468,7 @@ variable {D h : ℝ} {vr vt : Plane}
   (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
 
 /-- Copy point as an element of `Native`. -/
-noncomputable def copyPoint (l : SlotColoring.Label) (chart common : ℕ)
+@[expose] noncomputable def copyPoint (l : SlotColoring.Label) (chart common : ℕ)
     (k : TorusInverse.Frequency) (x : Native) : Native :=
   (slowChange h (ChartScales.Q chart) (ChartScales.Q l.1) x.1,
     (slotGeometry sys hdet l (ChartScales.nativeIndex h l.1 - common)).coordinates k x.2)
@@ -1857,7 +1858,7 @@ theorem slot_coordinates_axial (g : CommonCoverSolve.Geometry) (Q h : ℝ) (i : 
   simp [PhaseCalculus.eZ]
 
 /-- Periodic phase, constructed using `PhaseCalculus.phase`. -/
-noncomputable def periodicPhase (l : SlotColoring.Label) (gap : ℕ)
+@[expose] noncomputable def periodicPhase (l : SlotColoring.Label) (gap : ℕ)
     (epsilon p pz x0 : ℝ) (F G : Slow → ℝ) (x : Cylinder) : ℝ :=
   PhaseCalculus.phase epsilon p pz x0 F G
     ((x.1.1, x.1.2.1), (x.2,
@@ -2065,13 +2066,14 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
   (a : PrimaryGeometryAssembly.Prepared H v upper B sys.radius N0)
 
 /-- Prepared phase as an element of `Cylinder → ℝ`. -/
-noncomputable def preparedPhase (j : Fin 2) (L : Label H v a) : Cylinder → ℝ :=
+@[expose] noncomputable def preparedPhase (j : Fin 2) (L : Label H v a) : Cylinder → ℝ :=
   let P := PrimaryGeometryAssembly.construction H v a sys.radius_pos j
   periodicPhase sys (PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label W L) j) 0
     (ChartScales.epsilon F.data.h (BaseChartJets.cellBand L))
     (P.phase.p L) (P.phase.pz L) (P.phase.x0 L) (P.phase.F L) (P.phase.G L)
 
 /-- Prepared view phase as an element of `Cylinder → ℝ`. -/
+@[expose]
 noncomputable def preparedViewPhase (j : Fin 2) (L : Label H v a) (n common : ℕ) : Cylinder → ℝ :=
   fun x => ((ChartScales.carrier F.data.h (BaseChartJets.cellBand L) : ℝ) /
     (ChartScales.carrier F.data.h n : ℝ)) * preparedPhase H v sys a j L
@@ -2325,7 +2327,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
   (a : PrimaryGeometryAssembly.Prepared H v upper B r0 N0)
 
 /-- Native cutoff, constructed using `SquaredPartition.dyadicProfile`. -/
-noncomputable def nativeCutoff (L : Label H v a) (x : Native) : ℝ :=
+@[expose] noncomputable def nativeCutoff (L : Label H v a) (x : Native) : ℝ :=
   SquaredPartition.dyadicProfile (SimilarityHomogeneity.chartQ F.data.h x.1) *
     PrimaryRepresentatives.nativeMask (BaseChartJets.cellBand L) (PrimaryGeometryAssembly.label W
         L).2 x.1 *

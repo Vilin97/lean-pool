@@ -41,7 +41,7 @@ The kernel → 1 pointwise and is bounded by 1, so DCT gives J_R → ∫ ψ.
 - Folland, *A Course in Abstract Harmonic Analysis*, §4.2, Lemma 4.8
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex Filter Topology BigOperators
 open scoped Real FourierTransform InnerProductSpace

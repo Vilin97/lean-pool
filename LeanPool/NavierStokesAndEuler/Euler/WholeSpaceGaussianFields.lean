@@ -23,7 +23,7 @@ section
 
 /-! The same Gaussian average as a continuous dilation of a fixed kernel. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -119,7 +119,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

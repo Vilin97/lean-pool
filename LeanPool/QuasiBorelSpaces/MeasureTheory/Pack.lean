@@ -13,7 +13,7 @@ public import Mathlib.MeasureTheory.Constructions.Polish.EmbeddingReal
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.Pack`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace MeasureTheory

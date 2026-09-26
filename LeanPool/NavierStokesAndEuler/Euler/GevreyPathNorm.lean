@@ -34,7 +34,7 @@ section
 /-! Actual complete-Sobolev control from a positive-radius finite Gevrey bound, for parabolic
 continuation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -126,7 +126,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -172,7 +172,7 @@ section
 
 /-! The actual finite Gevrey metric energy passes to strong Sobolev limits. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -240,7 +240,7 @@ section
 
 /-! Monotonicity of the actual finite Gevrey metric energy in the external cutoff. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -300,7 +300,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -348,7 +348,7 @@ section
 /-! Genuine finite-time continuation of actual viscous mild solutions from an a priori Sobolev
 bound. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -438,7 +438,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -493,7 +493,7 @@ section
 
 /-! Applying the concrete Gevrey budgets to a genuinely bounded viscous correction family. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

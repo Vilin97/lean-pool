@@ -87,7 +87,7 @@ union, not an
 existential witness).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

@@ -16,7 +16,7 @@ has period 2π.  The constant vector is multiplied by the spatial cutoff
 before it is placed in the genuine cylinder L² space.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

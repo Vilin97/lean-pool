@@ -20,7 +20,7 @@ Using uniqueness of Haar measures, we record the resulting proportionality
 compactness statements across equivalent measures.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 

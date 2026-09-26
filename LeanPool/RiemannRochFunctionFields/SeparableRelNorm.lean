@@ -16,7 +16,7 @@ available in its sharp form: the particular fraction-field extension is separabl
 records that variant, using the same normal-closure argument as the Mathlib theorem.
 -/
 
-@[expose] public section
+public section
 
 open Module
 open UniqueFactorizationMonoid

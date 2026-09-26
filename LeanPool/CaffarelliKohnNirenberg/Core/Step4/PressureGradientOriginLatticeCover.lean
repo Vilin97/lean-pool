@@ -17,7 +17,7 @@ Spatial mesh `r/2` and temporal mesh `r²/2` give a countable family of
 backward parabolic cells of radius `r` that covers the whole space-time.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal BigOperators
@@ -27,6 +27,7 @@ namespace CKN.Core.Step4
 attribute [local instance] Classical.propDecidable
 
 /-- The lattice with spatial mesh `r/2` and temporal mesh `r²/2`. -/
+@[expose]
 def originLatticeCentre (r : ℝ) (k : (Fin 3 → ℤ) × ℤ) : ParabolicPoint :=
   (fun i => (r / 2) * (k.1 i : ℝ), (r ^ 2 / 2) * (k.2 : ℝ))
 

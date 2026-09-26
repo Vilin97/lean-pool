@@ -16,7 +16,7 @@ public import Mathlib.Analysis.Calculus.ParametricIntegral
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology Convolution
 open MeasureTheory MeasureTheory.Measure Set Filter
@@ -30,7 +30,7 @@ namespace CKN.Foundation.Heat
 
 /-- A locally integrable function is weakly harmonic when its Laplacian pairing
 with every compactly supported smooth test function vanishes. -/
-def WeaklyHarmonicOn (U : Set Vec3) (h : Vec3 → ℝ) : Prop :=
+@[expose] def WeaklyHarmonicOn (U : Set Vec3) (h : Vec3 → ℝ) : Prop :=
   ∀ ψ : Vec3 → ℝ,
     ContDiff ℝ (⊤ : ℕ∞) ψ →
     HasCompactSupport ψ →

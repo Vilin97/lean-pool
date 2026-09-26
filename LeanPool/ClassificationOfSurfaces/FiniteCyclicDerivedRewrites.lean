@@ -24,7 +24,7 @@ normalization proof.  It starts with proof-producing infrastructure for one-face
 These lemmas keep intermediate validity witnesses out of the public derived-chain APIs.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -128,7 +128,7 @@ theorem target_isSurfaceValid {n : ℕ} (a : Fin n)
   omega
 
 /-- Reverse exactly one named edge orientation. -/
-def reverseEdgeRelabeling {n : ℕ} (a : Fin n) :
+@[expose] def reverseEdgeRelabeling {n : ℕ} (a : Fin n) :
     EdgeRelabeling (Fin n) (Fin n) where
   edgeEquiv := Equiv.refl _
   reverse := fun e ↦ decide (e = a)
@@ -175,14 +175,14 @@ theorem reverseEdgeRelabeling_word {n : ℕ} (a : Fin n)
           exact reverseEdgeRelabeling_of_ne a e hda true
 
 /-- The negatively oriented spelling of the Dyck source. -/
-@[reducible]
+@[expose, reducible]
 def negativeSource {n : ℕ} (a : Fin n)
     (U V X : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=
   oneFace (([.neg a] ++ U) ++ (V ++ [.pos a] ++ X))
 
 /-- The corresponding negatively oriented target spelling. -/
-@[reducible]
+@[expose, reducible]
 def negativeTarget {n : ℕ} (a : Fin n)
     (U V X : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=
@@ -279,14 +279,14 @@ theorem target_isSurfaceValid {n : ℕ} (a : Fin n)
   omega
 
 /-- The cross-cap source with the distinguished edge displayed negative. -/
-@[reducible]
+@[expose, reducible]
 def negativeSource {n : ℕ} (a : Fin n)
     (X Y : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=
   Dyck.oneFace (([.neg a] ++ X) ++ ([.neg a] ++ Y))
 
 /-- The corresponding negatively oriented target. -/
-@[reducible]
+@[expose, reducible]
 def negativeTarget {n : ℕ} (a : Fin n)
     (X Y : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=
@@ -363,14 +363,14 @@ theorem negativeNormalizationEquivalent {n : ℕ} (a : Fin n)
         (NormalizationEquivalent.ofSignedIso targetIso).symm)
 
 /-- The adjacent-crosscap source `a a X Y`. -/
-@[reducible]
+@[expose, reducible]
 def adjacentSource {n : ℕ} (a : Fin n)
     (X Y : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=
   Dyck.oneFace ([.pos a, .pos a] ++ X ++ Y)
 
 /-- The alternate cross-cap target `a Y a X⁻¹`. -/
-@[reducible]
+@[expose, reducible]
 def adjacentTarget {n : ℕ} (a : Fin n)
     (X Y : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=
@@ -440,7 +440,7 @@ end Crosscap
 namespace Handle
 
 /-- The source spelling for Gallier--Xu handle extraction. -/
-@[reducible]
+@[expose, reducible]
 def source {n : ℕ} (a b : Fin n)
     (U V X Y : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=
@@ -668,7 +668,7 @@ private theorem crosscap_rewriteCertificate {n : ℕ} (a : Fin n)
   · exact Crosscap.normalizationEquivalent a X Y haX haY
 
 /-- A crosscap followed by a handle, with arbitrary intervening words `X` and `Y`. -/
-@[reducible]
+@[expose, reducible]
 def source {n : ℕ} (a b c : Fin n)
     (X Y : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=
@@ -903,7 +903,7 @@ namespace LoopGrouping
 
 /-- A cyclic word with the loop block `a H a⁻¹`, a separating word `X`, and a block `V` to
 move next to the loop. -/
-@[reducible]
+@[expose, reducible]
 def source {n : ℕ} (a : Fin n)
     (H X V : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=

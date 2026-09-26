@@ -22,7 +22,7 @@ translated test function and proves the statements of `eq:psi-backward`,
 canonical-center statements exactly.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 
@@ -38,6 +38,7 @@ open CKN.Foundation.Parabolic
 /-- The backward Gaussian test function `ψ_r` of `eq:psi-r` based at
 `z₀ = (x₀, t₀)`, namely `x ↦ r² G(x - x₀, r² - (t - t₀))` on a parabolic
 point `z = (x, t)`. -/
+@[expose]
 def centeredBackwardHeatTest (x₀ : Vec3) (t₀ r : ℝ) (z : ParabolicPoint) : ℝ :=
   backwardHeatTestFunction r (z.1 - x₀) (z.2 - t₀)
 

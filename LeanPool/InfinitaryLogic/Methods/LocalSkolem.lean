@@ -25,7 +25,7 @@ This file builds the language, its Hilbert-choice structure, and its countabilit
 recursive language/closure tower is a later chunk.
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 

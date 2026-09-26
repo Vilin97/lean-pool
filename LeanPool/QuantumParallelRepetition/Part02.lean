@@ -13,7 +13,7 @@ public import Mathlib.NumberTheory.Harmonic.Bounds
 
 /-! # Quantum parallel repetition, part 02 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -137,7 +137,7 @@ open WithLp
 open scoped BigOperators Kronecker
 
 /-- The quantum state representing e pr. -/
-def ePRState (m : ℕ) :
+@[expose] def ePRState (m : ℕ) :
     EuclideanSpace ℂ (Fin m × Fin m) :=
   toLp 2 fun q : Fin m × Fin m =>
     if q.1 = q.2 then
@@ -1951,7 +1951,7 @@ theorem dSVCanonicalFailurePrefix_card
 /--
 The DSV canonical failure prefix construction used in the quantum parallel-repetition argument.
 -/
-def dSVCanonicalFailurePrefix
+@[expose] def dSVCanonicalFailurePrefix
     {d : ℕ} (r : Fin (d + 1)) :
     EuclideanSpace ℂ (Fin d × Fin d) :=
   toLp 2 fun q : Fin d × Fin d =>
@@ -2265,7 +2265,7 @@ section
 open scoped BigOperators
 
 /-- The DSV rational soft pass construction used in the quantum parallel-repetition argument. -/
-def dSVRationalSoftPass (t x : ℝ) : ℝ :=
+@[expose] def dSVRationalSoftPass (t x : ℝ) : ℝ :=
   x / (x + t)
 
 theorem dSVRationalSoftPass_mem_unit
@@ -2398,7 +2398,7 @@ open scoped BigOperators ComplexOrder
 /--
 The DSV heterogeneous real prefix construction used in the quantum parallel-repetition argument.
 -/
-def dSVHeterogeneousRealPrefix
+@[expose] def dSVHeterogeneousRealPrefix
     (continuation : ℕ → ℝ) (k : ℕ) : ℝ :=
   ∏ i ∈ Finset.range k, continuation i
 
@@ -2523,7 +2523,7 @@ theorem dSVUniformDensityThresholdSharedState_mismatchedWork
 The DSV uniform density threshold shared density construction used in the quantum parallel-
 repetition argument.
 -/
-def dSVUniformDensityThresholdSharedDensity
+@[expose] def dSVUniformDensityThresholdSharedDensity
     {N d : ℕ} (grid : 0 < N) (dimension : 0 < d) :
     DensityMatrix
       (DSVUniformDensityThresholdLocalIndex N d ×
@@ -3543,12 +3543,12 @@ theorem quadratic_le_klFun {x : ℝ} (hx : 0 ≤ x) :
   linarith
 
 /-- The entropy quantity for finite relative. -/
-def finiteRelativeEntropy {ι : Type*} [Fintype ι]
+@[expose] def finiteRelativeEntropy {ι : Type*} [Fintype ι]
     (p q : ι → ℝ) : ℝ :=
   ∑ i, q i * InformationTheory.klFun (p i / q i)
 
 /-- The finite total variation construction used in the quantum parallel-repetition argument. -/
-def finiteTotalVariation {ι : Type*} [Fintype ι]
+@[expose] def finiteTotalVariation {ι : Type*} [Fintype ι]
     (p q : ι → ℝ) : ℝ :=
   (∑ i, |p i - q i|) / 2
 
@@ -3771,7 +3771,7 @@ variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 /--
 The distribution floor numerator construction used in the quantum parallel-repetition argument.
 -/
-def distributionFloorNumerator (denominator : ℕ) (p : ι → ℝ) : ι → ℕ :=
+@[expose] def distributionFloorNumerator (denominator : ℕ) (p : ι → ℝ) : ι → ℕ :=
   fun i => Nat.floor (p i * (denominator : ℝ))
 
 /--
@@ -4039,7 +4039,7 @@ section CoarseGraining
 variable {κ : Type*} [Fintype κ] [DecidableEq κ]
 
 /-- The total probability mass of grouped. -/
-def groupedMass (map : ι → κ) (p : ι → ℝ) (j : κ) : ℝ :=
+@[expose] def groupedMass (map : ι → κ) (p : ι → ℝ) (j : κ) : ℝ :=
   ∑ i ∈ (Finset.univ.filter fun i => map i = j), p i
 
 omit [DecidableEq ι] [Fintype κ] in
@@ -4103,11 +4103,11 @@ section JointChainRule
 variable {κ : Type*} [Fintype κ]
 
 /-- The marginal distribution of joint first. -/
-def jointFirstMarginal (joint : ι × κ → ℝ) : ι → ℝ :=
+@[expose] def jointFirstMarginal (joint : ι × κ → ℝ) : ι → ℝ :=
   fun i => ∑ j : κ, joint (i, j)
 
 /-- The joint conditional construction used in the quantum parallel-repetition argument. -/
-def jointConditional (joint : ι × κ → ℝ) (i : ι) : κ → ℝ :=
+@[expose] def jointConditional (joint : ι × κ → ℝ) (i : ι) : κ → ℝ :=
   fun j => joint (i, j) / jointFirstMarginal joint i
 
 omit [Fintype ι] [DecidableEq ι] in
@@ -4651,7 +4651,7 @@ def dSVUniformLeftDensitySchmidtCoefficient
 The DSV uniform left density spectral atom discrepancy construction used in the quantum
 parallel-repetition argument.
 -/
-def dSVUniformLeftDensitySpectralAtomDiscrepancy
+@[expose] def dSVUniformLeftDensitySpectralAtomDiscrepancy
     {d : ℕ} (ξ ζ : BipartiteUnitVector d) : ℝ :=
   ∑ i : Fin d, ∑ j : Fin d,
     |dSVUniformLeftDensitySchmidtCoefficient ξ i ^ 2 -
@@ -4714,7 +4714,7 @@ theorem dSVUniformDensityThresholdGrid_apply
   ring
 
 /-- The probability weight for DSV uniform density threshold. -/
-def dSVUniformDensityThresholdWeight
+@[expose] def dSVUniformDensityThresholdWeight
     (N : ℕ) (_k : Fin N) : ℝ :=
   1 / (N : ℝ)
 
@@ -4728,7 +4728,7 @@ theorem dSVUniformDensityThresholdWeight_nonneg
 The DSV uniform density grid prefix construction used in the quantum parallel-repetition
 argument.
 -/
-def dSVUniformDensityGridPrefix
+@[expose] def dSVUniformDensityGridPrefix
     (N : ℕ) (density : ℝ) : ℝ :=
   ∑ k : Fin N,
     dSVUniformDensityThresholdWeight N k *
@@ -4752,7 +4752,7 @@ theorem dSVUniformDensityGridPrefix_eq_count
 The DSV uniform density threshold mismatch construction used in the quantum parallel-repetition
 argument.
 -/
-def dSVUniformDensityThresholdMismatch
+@[expose] def dSVUniformDensityThresholdMismatch
     (N : ℕ) (alice bob : ℝ) : ℝ :=
   ∑ k : Fin N,
     dSVUniformDensityThresholdWeight N k *
@@ -4944,7 +4944,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 attribute [local instance] Classical.propDecidable
 
 /-- The normalize or default construction used in the quantum parallel-repetition argument. -/
-def normalizeOrDefault (fallback z : E) : E :=
+@[expose] def normalizeOrDefault (fallback z : E) : E :=
   if z = 0 then fallback else NormedSpace.normalize z
 
 theorem normalizeOrDefault_norm
@@ -5732,7 +5732,7 @@ noncomputable def commonPurificationOrthonormalBasis
     (commonPurificationSubspace F M positive hM)
 
 /-- The matrix representation of finite purification. -/
-noncomputable def finitePurificationMatrix
+@[expose] noncomputable def finitePurificationMatrix
     {ι d : Type*} [Fintype ι] [Fintype d] [DecidableEq d]
     (F : ι → Matrix d d ℂ) (M : Matrix d d ℂ)
     (positive : ∀ i, (F i).PosSemidef)
@@ -6368,7 +6368,7 @@ theorem purifiedStrategy_winProbability
   simp_rw [purifiedStrategy_outcomeProbability]
 
 /-- The matrix representation of finite local purification joint. -/
-def finiteLocalPurificationJointMatrix
+@[expose] def finiteLocalPurificationJointMatrix
     {X Y A B eA eB : Type*}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     {G : Game X Y A B} (S : Strategy G)
@@ -6379,7 +6379,7 @@ def finiteLocalPurificationJointMatrix
     (1 : Matrix (S.Alice × S.Bob) (S.Alice × S.Bob) ℂ)) ⊗ₖ KB
 
 /-- The state vector representing finite local purification. -/
-def finiteLocalPurificationVector
+@[expose] def finiteLocalPurificationVector
     {X Y A B eA eB : Type*}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     {G : Game X Y A B} (S : Strategy G)
@@ -6775,7 +6775,7 @@ open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 The DSV uniform density corrected matched sigma weighted residual construction used in the
 quantum parallel-repetition argument.
 -/
-def dSVUniformDensityCorrectedMatchedSigmaWeightedResidual
+@[expose] def dSVUniformDensityCorrectedMatchedSigmaWeightedResidual
     {H : Type*} {n : ℕ}
     (history : EuclideanSpace ℂ (H × H))
     (work : H → H → EuclideanSpace ℂ (Fin n × Fin n)) :
@@ -6874,7 +6874,7 @@ attribute [local instance] Classical.propDecidable
 The DSV density rational projective threshold bin construction used in the quantum parallel-
 repetition argument.
 -/
-def dSVDensityRationalProjectiveThresholdBin
+@[expose] def dSVDensityRationalProjectiveThresholdBin
     (w : ℝ) (N : ℕ) (k : Fin N) (a : ℝ) : Bool :=
   decide (dSVUniformDensityThresholdGrid N k ≤
     dSVRationalSoftPass w a)
@@ -6882,7 +6882,7 @@ def dSVDensityRationalProjectiveThresholdBin
 /--
 The positive operator-valued measurement implementing DSV density rational projective threshold.
 -/
-def dSVDensityRationalProjectiveThresholdPOVM
+@[expose] def dSVDensityRationalProjectiveThresholdPOVM
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (w : ℝ) (N : ℕ) (k : Fin N)
     (F : Matrix ι ι ℂ) (positive : F.PosSemidef) : POVM Bool ι :=
@@ -6908,7 +6908,7 @@ theorem dSVDensityRationalProjectiveThresholdPOVM_projective
 The positive operator-valued measurement implementing DSV density rational left projective
 threshold.
 -/
-def dSVDensityRationalLeftProjectiveThresholdPOVM
+@[expose] def dSVDensityRationalLeftProjectiveThresholdPOVM
     {d : ℕ} (w : ℝ) (N : ℕ) (k : Fin N)
     (ξ : BipartiteUnitVector d) : POVM Bool (Fin d) :=
   dSVDensityRationalProjectiveThresholdPOVM w N k
@@ -6919,7 +6919,7 @@ def dSVDensityRationalLeftProjectiveThresholdPOVM
 The DSV density rational left projective threshold atom mismatch construction used in the
 quantum parallel-repetition argument.
 -/
-def dSVDensityRationalLeftProjectiveThresholdAtomMismatch
+@[expose] def dSVDensityRationalLeftProjectiveThresholdAtomMismatch
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ ζ : BipartiteUnitVector d) : ℝ :=
   let F := dSVSoftBobLeftReducedDensity ξ
@@ -7062,7 +7062,7 @@ theorem dSVUniformDensityGridPrefix_density_sub_le
     positive nonnegative bounded]
 
 /-- The total probability mass of DSV density rational left projective diagonal. -/
-def dSVDensityRationalLeftProjectiveDiagonalMass
+@[expose] def dSVDensityRationalLeftProjectiveDiagonalMass
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) : ℝ :=
   let hF := dSVSoftBobLeftReducedDensity_posSemidef ξ

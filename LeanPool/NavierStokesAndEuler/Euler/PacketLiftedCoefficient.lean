@@ -37,7 +37,7 @@ actual continuous path of bounded tensor fields. Finite coordinates prove
 continuity; the norm estimate uses the original multilinear map directly
 and therefore has constant one. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -242,7 +242,7 @@ mixed translation orbit in cylinder L². Every spatial tensor jet is a
 continuous path in the uniform norm. No integrability on the real cover is
 asserted or used. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -323,7 +323,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -399,7 +399,7 @@ section
 are actual smooth bounded cover coefficients. Their quantitative bounds
 come from the checked weighted Sobolev estimates. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -472,7 +472,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

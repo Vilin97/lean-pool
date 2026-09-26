@@ -24,7 +24,7 @@ degree with the residue-field weighted sum.
 * `FunctionField.principalDivisor`: coordinate-free principal divisors.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 
@@ -172,7 +172,7 @@ theorem placeDegree_eq (w : PlaceA k K) :
 abbrev Divisor := Place k K →₀ ℤ
 
 /-- Reindex a chart divisor by the chart/intrinsic place equivalence. -/
-noncomputable def divisorEquivChart : DivisorA k K ≃+ Divisor k K :=
+@[expose] noncomputable def divisorEquivChart : DivisorA k K ≃+ Divisor k K :=
   Finsupp.domCongr (chartToPlace k K)
 
 /-- The coordinate-free principal-divisor homomorphism. -/

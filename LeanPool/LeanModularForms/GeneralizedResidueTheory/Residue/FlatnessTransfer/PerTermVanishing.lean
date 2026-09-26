@@ -32,7 +32,7 @@ integrals, multi-point CPV, holomorphic CPV vanishing, and assembly helpers.
 * `tendsto_cpv_of_continuousOn_zero_integral`: CPV → 0 for continuous functions with zero integral
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology Finset Real
 open scoped Interval

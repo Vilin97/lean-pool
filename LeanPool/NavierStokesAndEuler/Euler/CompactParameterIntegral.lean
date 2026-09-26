@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.ParametricIntegral
 
 /-! Smooth parameter dependence of an actual integral over a compact interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,6 +29,7 @@ variable {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X] [ProperSpace X]
   {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
 /-- Parameter derivative, given by `(fderiv ℝ F p).comp (ContinuousLinearMap.inl ℝ X ℝ)`. -/
+@[expose]
 def parameterDerivative (F : X × ℝ → E) (p : X × ℝ) : X →L[ℝ] E :=
   (fderiv ℝ F p).comp (ContinuousLinearMap.inl ℝ X ℝ)
 

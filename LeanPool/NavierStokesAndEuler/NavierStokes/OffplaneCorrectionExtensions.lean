@@ -19,7 +19,7 @@ mean operations.  Agreement of primitive data is on whole slow fibers,
 because radial and torus integrals are nonlocal on each such fiber.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -792,7 +792,7 @@ abbrev Space := ProblemStatement.Space
 abbrev SpaceTime := ProblemStatement.SpaceTime
 
 /-- Physical slow, given by `(1 - w.1, w.2 2)`. -/
-noncomputable def physicalSlow (w : SpaceTime) : Slow := (1 - w.1, w.2 2)
+@[expose] noncomputable def physicalSlow (w : SpaceTime) : Slow := (1 - w.1, w.2 2)
 
 theorem physicalSlow_contDiff : ContDiff ℝ ∞ physicalSlow :=
   (contDiff_const.sub contDiff_fst).prodMk
@@ -800,11 +800,11 @@ theorem physicalSlow_contDiff : ContDiff ℝ ∞ physicalSlow :=
 
 /-- The actual radial/slow/native-graph restriction of a full-fiber mean
 field.  The common covering level remains the supplied `n`. -/
-noncomputable def physicalLift (h : ℝ) (n : ℕ) (w : SpaceTime) : Lift :=
+@[expose] noncomputable def physicalLift (h : ℝ) (n : ℕ) (w : SpaceTime) : Lift :=
   (AnnularEndpoint.radius w, (physicalSlow w, PhysicalGraphBounds.nativeGraph h n w))
 
 /-- Physical domain, given by `physicalSlow ⁻¹' U`. -/
-noncomputable def physicalDomain (U : Set Slow) : Set SpaceTime := physicalSlow ⁻¹' U
+@[expose] noncomputable def physicalDomain (U : Set Slow) : Set SpaceTime := physicalSlow ⁻¹' U
 
 theorem physicalDomain_open {U : Set Slow} (hU : IsOpen U) : IsOpen (physicalDomain U) :=
   hU.preimage physicalSlow_contDiff.continuous
@@ -833,7 +833,7 @@ theorem physicalLift_contDiffAt (h : ℝ) (n : ℕ) {w : SpaceTime}
     (PhysicalGraphBounds.contDiffAt_nativeGraph h n hw))
 
 /-- Physical scalar, given by `f ∘ physicalLift h n`. -/
-noncomputable def physicalScalar (h : ℝ) (n : ℕ) (f : Lift → ℝ) : SpaceTime → ℝ :=
+@[expose] noncomputable def physicalScalar (h : ℝ) (n : ℕ) (f : Lift → ℝ) : SpaceTime → ℝ :=
   f ∘ physicalLift h n
 
 theorem physicalScalar_zero_germ (h : ℝ) (n : ℕ) {U : Set Slow} (hU : IsOpen U)
@@ -864,6 +864,7 @@ theorem physicalScalar_smooth (h : ℝ) (n : ℕ) {U : Set Slow} (hU : IsOpen U)
 
 /-- `streamPotential` is already the azimuthal component of the vector
 potential, including its division by the radial variable. -/
+@[expose]
 noncomputable def azimuthalPotential (h : ℝ) (n : ℕ) (f : Lift → ℝ) (w : SpaceTime) : Space :=
   (-w.2 1 / AnnularEndpoint.radius w * physicalScalar h n f w) • ProblemStatement.coordinateVector
       0 +
@@ -872,7 +873,7 @@ noncomputable def azimuthalPotential (h : ℝ) (n : ℕ) (f : Lift → ℝ) (w :
 
 /-- A direct angular velocity uses the same Cartesian multiplication by
 `e_theta`.  This definition does not apply a curl or a radial primitive. -/
-noncomputable def angularField (h : ℝ) (n : ℕ) (f : Lift → ℝ) : SpaceTime → Space :=
+@[expose] noncomputable def angularField (h : ℝ) (n : ℕ) (f : Lift → ℝ) : SpaceTime → Space :=
   azimuthalPotential h n f
 
 theorem azimuthalPotential_smooth (h : ℝ) (n : ℕ) {U : Set Slow} (hU : IsOpen U)

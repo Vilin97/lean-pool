@@ -27,7 +27,7 @@ artinianness, primality, lifts and pushes of ideals, and isomorphisms between
 corner subrings of equal idempotents.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 
@@ -84,7 +84,7 @@ theorem eq_carrier_eq_corner (x y : R) (h : bothMul x x = bothMul y y) :
 /-- The corner subring `eRe` packaged as a `NonUnitalSubring`, tagged with the
 proof that `e` is idempotent. The proof argument lets later constructions
 attach the unital ring structure on `eRe`. -/
-@[reducible]
+@[expose, reducible]
 def CornerSubring (idem_e : IsIdempotentElem e) : NonUnitalSubring R :=
   have : IsIdempotentElem e := idem_e
   CornerSubringNonUnital e

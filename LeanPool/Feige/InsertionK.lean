@@ -16,13 +16,13 @@ This file connects the concrete inserted Boolean chain to the abstract
 `A`/`B` statistic sequences used in the mass-transport proof of Theorem 2.1.
 -/
 
-@[expose] public section
+public section
 
 namespace Feige
 
 /-- The `Bᵣ` value at the lifted lower state `Cᵣ`, extended by zero after
 the old chain's sentinel. -/
-noncomputable def insertionLowerK {n : ℕ}
+@[expose] noncomputable def insertionLowerK {n : ℕ}
     (γ β : Fin (n + 1) → ℝ) (σ : Equiv.Perm (Fin n)) (r : ℕ) : ℝ :=
   if hr : r < n + 1 then
     twoPointKFinset γ β
@@ -31,7 +31,7 @@ noncomputable def insertionLowerK {n : ℕ}
 
 /-- The `Aᵣ` value at the lifted upper state `Hᵣ`, extended by zero after
 the old chain's sentinel. -/
-noncomputable def insertionUpperK {n : ℕ}
+@[expose] noncomputable def insertionUpperK {n : ℕ}
     (γ β : Fin (n + 1) → ℝ) (σ : Equiv.Perm (Fin n)) (r : ℕ) : ℝ :=
   if hr : r < n + 1 then
     twoPointKFinset γ β
@@ -40,18 +40,18 @@ noncomputable def insertionUpperK {n : ℕ}
 
 /-- The old `n`-coordinate statistic sequence `Fᵣ`, including its zero
 sentinel. -/
-noncomputable def insertionOldK {n : ℕ}
+@[expose] noncomputable def insertionOldK {n : ℕ}
     (γ β : Fin (n + 1) → ℝ) (σ : Equiv.Perm (Fin n)) (r : ℕ) : ℝ :=
   booleanChainK (fun i ↦ γ i.castSucc) (fun i ↦ β i.castSucc) σ r
 
 /-- Band width `wᵣ = Bᵣ - Aᵣ`. -/
-noncomputable def insertionWidth {n : ℕ}
+@[expose] noncomputable def insertionWidth {n : ℕ}
     (γ β : Fin (n + 1) → ℝ) (σ : Equiv.Perm (Fin n)) (r : ℕ) : ℝ :=
   insertionLowerK γ β σ r - insertionUpperK γ β σ r
 
 /-- Conditional interpolation parameter
 `θᵣ = (Fᵣ - Aᵣ) / (Bᵣ - Aᵣ)`. -/
-noncomputable def insertionTheta {n : ℕ}
+@[expose] noncomputable def insertionTheta {n : ℕ}
     (γ β : Fin (n + 1) → ℝ) (σ : Equiv.Perm (Fin n)) (r : ℕ) : ℝ :=
   (insertionOldK γ β σ r - insertionUpperK γ β σ r) /
     insertionWidth γ β σ r

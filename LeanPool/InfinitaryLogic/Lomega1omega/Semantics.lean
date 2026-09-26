@@ -40,7 +40,7 @@ Mathlib semantics, and that the historical `Fin.elim0` spellings of the arity-0 
 agree with Mathlib's `default`.
 -/
 
-@[expose] public section
+public section
 
 universe u v w u'
 

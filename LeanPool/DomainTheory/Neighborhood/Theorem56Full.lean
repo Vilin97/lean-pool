@@ -43,7 +43,7 @@ minimisation compose. The capstone is `partrec_lamDef` and the 1-ary corollary
 `partrec_one`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Theorem56Full
 

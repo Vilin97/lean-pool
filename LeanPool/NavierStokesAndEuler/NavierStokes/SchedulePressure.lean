@@ -18,7 +18,7 @@ This module instantiates the abstract pressure integral with `finalAngular`.
 The pressure-neutral angular-moment correction remains a separate operation.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,7 +37,7 @@ noncomputable def shapeExponent (d : TailData) (y : ℝ) : ℝ :=
   1 - sigma ((y - d.core.endpoint) / flattenLength)
 
 /-- The datum computed directly from the complete constructed angular field. -/
-noncomputable def axisPressure (d : TailData) (η : ℝ) : ℝ :=
+@[expose] noncomputable def axisPressure (d : TailData) (η : ℝ) : ℝ :=
   -(1 / 2 : ℝ) * ∫ y, finalAngular d (y, η) ^ 2
 
 theorem endpoint_pos (d : TailData) : 0 < d.core.endpoint := by

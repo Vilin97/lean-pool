@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 /-! Genuine linear restriction of smooth coefficient fields, including
 the exact spatial tensors and preservation of actual time derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

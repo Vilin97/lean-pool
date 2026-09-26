@@ -10,7 +10,7 @@ import LeanPool.Erdos97ConvexOctagon.Gram
 
 /-! # Erdős 97 convex-octagon formalization: Pentagon -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 

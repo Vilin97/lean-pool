@@ -19,7 +19,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 lemma choose_eq {α : Type*} {p q : α → Prop} (hpq : ∀ a, p a ↔ q a) (h : ∃ a, p a) :

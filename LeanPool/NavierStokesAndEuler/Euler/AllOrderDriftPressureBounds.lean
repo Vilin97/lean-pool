@@ -16,7 +16,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! Smaller-radius quantitative bounds for the constructed common pressure
 and the actual first time derivative of the correction. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

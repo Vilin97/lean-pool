@@ -11,7 +11,7 @@ public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 # Passing nonnegative integral bounds to an almost-everywhere limit
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Filter
 open scoped ENNReal Topology

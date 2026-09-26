@@ -42,7 +42,7 @@ methods*.
 - `LeanPool.LeanQuantumAlg.quantumKernel_self` — the diagonal value on a pure state.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

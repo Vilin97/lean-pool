@@ -15,7 +15,7 @@ public import Mathlib.Tactic.SplitIfs
 # Sorting histories can destroy eventual generation
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness.Sorting
 

@@ -18,7 +18,7 @@ Local Lipschitz control for the (forward) extended chart on a Riemannian manifol
 - `RellichKondrachov.Geometry.Manifold.Riemannian.lipschitzOnWith_extChartAt_ofRiemannianMetric`
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

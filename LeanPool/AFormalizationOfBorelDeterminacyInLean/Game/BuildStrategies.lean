@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame
@@ -98,7 +98,7 @@ lemma _root_.GaleStewartGame.Game.AllWinning.existsWinning
   subset_trans (by simp) (Set.image_mono h.superset)⟩
 /-- Extend a pre-strategy to a quasi-strategy. The definition boundary keeps API-level simp
 lemmas stated through `extQuasi` instead of exposing the `tryAndElse` implementation. -/
-def extQuasi (S : PreStrategy T p) (h : IsPruned T) : QuasiStrategy T p :=
+@[expose] def extQuasi (S : PreStrategy T p) (h : IsPruned T) : QuasiStrategy T p :=
   ⟨tryAndElse S ⊤, quasi_of_planB <| top_isQuasi h⟩
 lemma eq_extQuasi (S : PreStrategy T p) (hT : IsPruned T)
   (h : ∀ (x : S.subtree) (hp : IsPosition x.val p), ∃ a, a ∈ S (S.subtreeIncl x) hp) :
@@ -241,7 +241,7 @@ section «PreserveProp»
 variable {p : Player}
 variable (P : ∀ x : T, IsPosition x.val p.swap → Prop)
 /-- play such that the proposition `P x` holds in every position `x` resulting from your move -/
-def preserveProp : PreStrategy T p := fun x hp ↦ {a | P a.valT' (by synthIsPosition)}
+@[expose] def preserveProp : PreStrategy T p := fun x hp ↦ {a | P a.valT' (by synthIsPosition)}
 lemma preserveProp_eq_extQuasi (h : ∀ x hp, P x hp → ∀ a : ExtensionsAt x,
   (preserveProp P a.valT' (by as_aux_lemma => synthIsPosition)).Nonempty) (hT : IsPruned T)
   (hst0 : (hp : p = Player.zero) → ∃ a ha, P ⟨[a], ha⟩ (by as_aux_lemma => synthIsPosition))
@@ -262,13 +262,13 @@ end PreStrategy
 variable {G G' : Game A} {p p' : Player}
 namespace Game
 /-- a position is winning if there is a winning strategy in the residual game -/
-def WinningPosition (G : Game A) (x : List A) (p : Player := Player.zero) :=
+@[expose] def WinningPosition (G : Game A) (x : List A) (p : Player := Player.zero) :=
   (G.residual x).ExistsWinning p
 @[simp] lemma winningPosition_residual x y :
   (G.residual x).WinningPosition y p ↔ G.WinningPosition (x ++ y) p := by
   simp [WinningPosition]
 /-- a position is won if it cannot be lost by playing however -/
-def WonPosition (G : Game A) (x : List A) (p : Player := Player.zero) :=
+@[expose] def WonPosition (G : Game A) (x : List A) (p : Player := Player.zero) :=
   (G.residual x).AllWinning p
 @[simp] lemma wonPosition_residual x y :
  (G.residual x).WonPosition y p ↔ G.WonPosition (x ++ y) p := by
@@ -302,7 +302,7 @@ lemma wonPosition_iff_disjoint {x} :
     wonPosition_iff_disjoint'
 
 /-- the defensive PreStrategy never moves into a winning position of the opponent -/
-def defensivePre (G : Game A) (p : Player) : PreStrategy G.tree p :=
+@[expose] def defensivePre (G : Game A) (p : Player) : PreStrategy G.tree p :=
   preserveProp (fun x _ ↦ ¬ WinningPosition G x.val)
 @[simp] lemma defensivePre_residual {x} :
   (defensivePre G p).residual x = defensivePre (G.residual x) (p.residual x) := by
@@ -313,7 +313,7 @@ def defensivePre (G : Game A) (p : Player) : PreStrategy G.tree p :=
 @[congr] lemma defensivePre_subtree {hG : G = G'} {hp : p = p'} :
   (defensivePre G p).subtree = (defensivePre G' p').subtree := by congr!
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def defensiveQuasi (G : Game A) (p : Player) := (defensivePre G p).extQuasi
+@[expose] def defensiveQuasi (G : Game A) (p : Player) := (defensivePre G p).extQuasi
 @[congr] lemma defensiveQuasi_subtree {hG : G = G'} {hp : p = p'} h :
   (defensiveQuasi G p h).1.subtree = (defensiveQuasi G' p' (hG ▸ h)).1.subtree := by
   subst hG hp; rfl

@@ -82,7 +82,7 @@ One general lemma is stated here that does not belong here: `Schoenflies.exists_
 the destructor matching `Schoenflies.mem_cover`, whose home is `Schoenflies/Parity.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

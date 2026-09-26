@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketExponentialTail
 
 /-! Actual inverse-frame normalization preserves the exponentially small residual estimate. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

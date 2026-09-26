@@ -15,7 +15,7 @@ the move fixes the patch frontier, it extends to an ambient homeomorphism by the
 file proves that pasting step independently of the particular triangulated patch.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -218,7 +218,7 @@ variable (M : TriangleMesh)
 
 /-- A repositioning with unchanged support and fixed support frontier extends to an ambient plane
 homeomorphism. -/
-noncomputable def ambientRepositionHomeomorph (position' : M.Vertex → Plane)
+@[expose] noncomputable def ambientRepositionHomeomorph (position' : M.Vertex → Plane)
     (hposition_injective : Function.Injective position')
     (haffineIndependent : ∀ t ∈ M.triangles,
       AffineIndependent ℝ fun v : t => position' v)

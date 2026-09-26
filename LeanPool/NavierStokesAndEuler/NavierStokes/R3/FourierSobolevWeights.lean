@@ -17,7 +17,7 @@ The weight is constructed by coordinate multiplication on Schwartz space.
 Consequently the resulting Fourier expressions belong to ordinary `L²`.
 -/
 
-@[expose] public section
+public section
 
 
 

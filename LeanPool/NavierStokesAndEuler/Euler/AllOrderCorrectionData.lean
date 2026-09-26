@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CorrectionLowerData
 
 /-! Coherent prescribed cylinder data at every finite Sobolev order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -86,6 +86,7 @@ structure Data (T : ℝ) where
   residual : FieldTower period T
 
 /-- The literal finite-order correction data extracted from a coherent prescribed tower. -/
+@[expose]
 def Data.atOrder {T : ℝ} (A : Data period T) (q : ℕ) : CorrectionData period q (Icc (0 : ℝ) T) where
   κ := A.κ
   direction := A.direction

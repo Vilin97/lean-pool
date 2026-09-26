@@ -11,7 +11,7 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 namespace NumberField.Odlyzko
 

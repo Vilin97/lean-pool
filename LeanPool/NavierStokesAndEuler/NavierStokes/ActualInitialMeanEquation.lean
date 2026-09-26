@@ -18,7 +18,7 @@ initialization consumer. No `MeanHypotheses` or divergence statement is
 an input.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

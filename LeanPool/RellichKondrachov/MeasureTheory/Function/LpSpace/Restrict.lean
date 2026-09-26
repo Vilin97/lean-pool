@@ -29,7 +29,7 @@ given by extension-by-zero (via `Set.indicator`).
 - `MeasureTheory.Lp.extendByZeroₗᵢ`
 -/
 
-@[expose] public section
+public section
 
 namespace MeasureTheory
 

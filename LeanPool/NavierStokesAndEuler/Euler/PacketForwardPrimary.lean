@@ -19,7 +19,7 @@ homogeneous forward evolution, has the prescribed initial field, and supplies
 the literal homogeneous equation and all primary regularity/parity inputs.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

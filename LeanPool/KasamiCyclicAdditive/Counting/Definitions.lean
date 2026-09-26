@@ -27,7 +27,7 @@ form used throughout the proof, indexed by `ρ = v₂/v₁`;
 relates the two.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -39,7 +39,7 @@ variable {K : Type*} [Field K] [Fintype K] [DecidableEq K]
 normalised form of the triple count of the conjecture, obtained from the
 original `v₁ x + v₂ y + v₃ z = 0` by dividing through by `v₁` and setting
 `ρ = v₂/v₁`. -/
-def slopeTripleCount (k : ℕ) (ρ : K) : ℕ :=
+@[expose] def slopeTripleCount (k : ℕ) (ρ : K) : ℕ :=
   (((derivativeImage k K) ×ˢ (derivativeImage k K) ×ˢ (derivativeImage k K)).filter
     (fun p => p.1 + ρ * p.2.1 + (1 + ρ) * p.2.2 = 0)).card
 
@@ -51,7 +51,7 @@ noncomputable def walshCoefficient (k : ℕ) (ψ : AddChar K ℂ) (a : K) : ℂ 
 def AdmissibleSlope (ρ : K) : Prop := ρ ≠ 0 ∧ ρ ≠ 1
 
 /-- The finset of admissible slopes. -/
-def slopes (K : Type*) [Field K] [Fintype K] [DecidableEq K] : Finset K :=
+@[expose] def slopes (K : Type*) [Field K] [Fintype K] [DecidableEq K] : Finset K :=
   Finset.univ.filter (fun r : K => r ≠ 0 ∧ r ≠ 1)
 
 end KasamiCyclicAdditive

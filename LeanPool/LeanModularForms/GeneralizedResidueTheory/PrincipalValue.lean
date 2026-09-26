@@ -18,7 +18,7 @@ Theory of Cauchy principal value integrals for piecewise C¹ contour integration
 The principal value approach allows contours to pass through singularities.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

@@ -22,7 +22,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace Descriptive.Tree
@@ -30,12 +30,12 @@ namespace Descriptive.Tree
 variable {A A' : Type*} (S T : tree A) (x y : List A)
 
 /-- Set of children of node x as elements of T -/
-def ExtensionsAt {T : tree A} (x : T) := { a : A // x.val ++ [a] ∈ T }
+@[expose] def ExtensionsAt {T : tree A} (x : T) := { a : A // x.val ++ [a] ∈ T }
 namespace ExtensionsAt
 variable {S T}
 variable {n : ℕ} {x : T} (a : ExtensionsAt x)
 /-- The underlying list of a child -/
-def val' := x.val ++ [a.val]
+@[expose] def val' := x.val ++ [a.val]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps coe] def valT' : T := ⟨a.val', a.prop⟩
 @[ext] lemma ext {a b : ExtensionsAt x} (h : a.val = b.val) : a = b := Subtype.ext h

@@ -27,7 +27,7 @@ Main declarations:
 * `RS.pathIntegral_add/smul/zero_form`, `RS.pathIntegralₗ`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology unitInterval
 open IsManifold Metric Set Filter
@@ -43,7 +43,7 @@ variable {x y z : X}
 /-! ### The real-line clamp to `[0,1]` -/
 
 /-- Clamp a real number into `[0,1]`. -/
-def clampI (u : ℝ) : ℝ := max 0 (min u 1)
+@[expose] def clampI (u : ℝ) : ℝ := max 0 (min u 1)
 
 theorem clampI_mem (u : ℝ) : clampI u ∈ Icc (0 : ℝ) 1 :=
   ⟨le_max_left _ _, max_le zero_le_one (min_le_right _ _)⟩

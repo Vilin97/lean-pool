@@ -58,7 +58,7 @@ structurally from the truth domain `T` of Example 1.2 exactly as
 `Example23.parityMap` does.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Example43
 

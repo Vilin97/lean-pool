@@ -23,7 +23,7 @@ section
 /-! The actual direct-forward source packet has a lifted pressure gradient.
 Every component is constructed from its mean or oscillatory inverse. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -133,7 +133,7 @@ section
 
 /-! The finite zero-history pressure and its actual lifted gradient. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -181,7 +181,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -214,7 +214,7 @@ variable (M : EulerMeanPacketProvider.Data)
 
 /-- Forward initialized velocity, given by `fieldSum (N+1) κ (assembledVelocity N
 (forwardInitializedProfiles M D δ hδ ξ hs α))`. -/
-def forwardInitializedVelocity (N : ℕ) (κ : ℝ) : VectorField :=
+@[expose] def forwardInitializedVelocity (N : ℕ) (κ : ℝ) : VectorField :=
   fieldSum (N+1) κ (assembledVelocity N (forwardInitializedProfiles M D δ hδ ξ hs α))
 
 /-- Forward initialized velocity field as an element of `Field period D.T

@@ -19,7 +19,7 @@ Input field bounds are pointwise bounds, not assumptions on the five row debts.
 All constants in the estimates may be chosen before the final large `C`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ open scoped Topology ContDiff BigOperators
 namespace NavierStokes.ShapeTransition
 
 /-- Log shape, given by `Real.log (OutgoingSchedule.shape eta)`. -/
-noncomputable def logShape (eta : ℝ) : ℝ := Real.log (OutgoingSchedule.shape eta)
+@[expose] noncomputable def logShape (eta : ℝ) : ℝ := Real.log (OutgoingSchedule.shape eta)
 
 theorem logShape_contDiff : ContDiff ℝ ∞ logShape :=
   OutgoingSchedule.shape_contDiff.log (fun eta => (OutgoingSchedule.shape_pos eta).ne')
@@ -40,12 +40,12 @@ theorem exp_logShape (eta : ℝ) : Real.exp (logShape eta) = OutgoingSchedule.sh
 
 /-- Blend, given by `(1 - OutgoingSchedule.sigma (p.1 / T)) * li p.2 + OutgoingSchedule.sigma
 (p.1 / T) * logShape p.2`. -/
-noncomputable def blend (T : ℝ) (li : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def blend (T : ℝ) (li : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   (1 - OutgoingSchedule.sigma (p.1 / T)) * li p.2 +
     OutgoingSchedule.sigma (p.1 / T) * logShape p.2
 
 /-- Log profile, given by `-Real.log C + p.1 / 10 + blend T li p`. -/
-noncomputable def logProfile (C T : ℝ) (li : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def logProfile (C T : ℝ) (li : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   -Real.log C + p.1 / 10 + blend T li p
 
 /-- Amplitude, given by `Real.exp (p.1 / 10 + blend T li p)`. -/
@@ -53,7 +53,7 @@ noncomputable def amplitude (T : ℝ) (li : ℝ → ℝ) (p : ℝ × ℝ) : ℝ 
   Real.exp (p.1 / 10 + blend T li p)
 
 /-- Angular, given by `Real.exp (logProfile C T li p)`. -/
-noncomputable def angular (C T : ℝ) (li : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def angular (C T : ℝ) (li : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   Real.exp (logProfile C T li p)
 
 /-- Axial, given by `Gi p.2`. -/
@@ -342,16 +342,16 @@ theorem angular_jet_bound {C T y B : ℝ} (hC : 0 < C)
 /-! ## The reset clock and exact ideal matching -/
 
 /-- Reset radius, given by `Xi * (C * P) ^ 10`. -/
-noncomputable def resetRadius (Xi C P : ℝ) : ℝ := Xi * (C * P) ^ 10
+@[expose] noncomputable def resetRadius (Xi C P : ℝ) : ℝ := Xi * (C * P) ^ 10
 
 /-- Separation, given by `Real.exp T / (C * P) ^ 10`. -/
 noncomputable def separation (T C P : ℝ) : ℝ := Real.exp T / (C * P) ^ 10
 
 /-- Reset clock, given by `y - 10 * Real.log (C * P)`. -/
-noncomputable def resetClock (C P y : ℝ) : ℝ := y - 10 * Real.log (C * P)
+@[expose] noncomputable def resetClock (C P y : ℝ) : ℝ := y - 10 * Real.log (C * P)
 
 /-- Ideal angular, given by `P * OutgoingSchedule.shape p.2 * Real.exp (p.1 / 10)`. -/
-noncomputable def idealAngular (P : ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def idealAngular (P : ℝ) (p : ℝ × ℝ) : ℝ :=
   P * OutgoingSchedule.shape p.2 * Real.exp (p.1 / 10)
 
 theorem idealAngular_contDiff (P : ℝ) : ContDiff ℝ ∞ (idealAngular P) :=
@@ -392,7 +392,7 @@ theorem separation_eventually_before (T : ℝ) {P : ℝ} (hP : 0 < P) (clock : �
 
 /-- Restore, given by `(1 - OutgoingSchedule.sigma (p.1 + 8)) * Gi p.2 + OutgoingSchedule.sigma
 (p.1 + 8) * (4 * p.2)`. -/
-noncomputable def restore (Gi : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def restore (Gi : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   (1 - OutgoingSchedule.sigma (p.1 + 8)) * Gi p.2 +
     OutgoingSchedule.sigma (p.1 + 8) * (4 * p.2)
 
@@ -488,7 +488,7 @@ theorem radialSwitch_contDiff {Xi T : ℝ} (hXi : 0 < Xi) (hT : 0 < T) :
 
 /-- The supplied old normalized field is continued by its held power law past
 `Xi`. Multiplication by this explicit smooth factor performs the transition. -/
-noncomputable def shapeField (Xi T : ℝ) (li : ℝ → ℝ) (old : ℝ × ℝ → ℝ)
+@[expose] noncomputable def shapeField (Xi T : ℝ) (li : ℝ → ℝ) (old : ℝ × ℝ → ℝ)
     (p : ℝ × ℝ) : ℝ :=
   old p * Real.exp (radialSwitch Xi T p.1 * (logShape p.2 - li p.2))
 
@@ -639,27 +639,27 @@ theorem product_jet_bound {f g : ℝ → ℝ} (hf : ContDiff ℝ ∞ f) (hg : Co
 /-! ## The five actual scaled history rows -/
 
 /-- Scaled E, given by `Real.sqrt (2 * R * p.1) * f p`. -/
-noncomputable def scaledE (R : ℝ) (f : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def scaledE (R : ℝ) (f : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   Real.sqrt (2 * R * p.1) * f p
 
 /-- Row M, given by `∫ x in (0 : ℝ)..r, u (x, eta)`. -/
-noncomputable def rowM (u : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
+@[expose] noncomputable def rowM (u : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..r, u (x, eta)
 
 /-- Row I, given by `∫ x in (0 : ℝ)..r, Real.sqrt (2 * x) * scaledE R f (x, eta)`. -/
-noncomputable def rowI (R : ℝ) (f : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
+@[expose] noncomputable def rowI (R : ℝ) (f : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..r, Real.sqrt (2 * x) * scaledE R f (x, eta)
 
 /-- Row J, given by `∫ x in (0 : ℝ)..r, u (x, eta) * Real.sqrt (2 * x) * scaledE R f (x, eta)`. -/
-noncomputable def rowJ (R : ℝ) (u f : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
+@[expose] noncomputable def rowJ (R : ℝ) (u f : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..r, u (x, eta) * Real.sqrt (2 * x) * scaledE R f (x, eta)
 
 /-- Row S, given by `∫ x in (0 : ℝ)..r, u (x, eta) ^ 2 - scaledE R f (x, eta) ^ 2 / 2`. -/
-noncomputable def rowS (R : ℝ) (u f : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
+@[expose] noncomputable def rowS (R : ℝ) (u f : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..r, u (x, eta) ^ 2 - scaledE R f (x, eta) ^ 2 / 2
 
 /-- Row P, given by `∫ x in (0 : ℝ)..r, scaledE R f (x, eta) ^ 2 / (2 * x)`. -/
-noncomputable def rowP (R : ℝ) (f : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
+@[expose] noncomputable def rowP (R : ℝ) (f : ℝ × ℝ → ℝ) (r eta : ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..r, scaledE R f (x, eta) ^ 2 / (2 * x)
 
 theorem sqrt_scaled_product {R x : ℝ} (hR : 0 ≤ R) (hx : 0 ≤ x) :
@@ -1135,17 +1135,17 @@ theorem integral_jet_bound_on {a b B : ℝ} (hab : a ≤ b) {F : ℝ × ℝ → 
       (fun x hx => hB x ((uIoc_of_le hab) ▸ hx))
 
 /-- Restore defect, given by `restore Gi (Real.log p.1, p.2) - 4 * p.2`. -/
-noncomputable def restoreDefect (Gi : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def restoreDefect (Gi : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   restore Gi (Real.log p.1, p.2) - 4 * p.2
 
 /-- Restore density J, given by `(Real.sqrt (2 * p.1) * p.1 ^ (1 / 10 : ℝ)) * (restoreDefect Gi
 p * A p.2)`. -/
-noncomputable def restoreDensityJ (Gi A : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def restoreDensityJ (Gi A : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   (Real.sqrt (2 * p.1) * p.1 ^ (1 / 10 : ℝ)) * (restoreDefect Gi p * A p.2)
 
 /-- Restore density S, given by `restoreDefect Gi p * (restore Gi (Real.log p.1, p.2) + 4 *
 p.2)`. -/
-noncomputable def restoreDensityS (Gi : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def restoreDensityS (Gi : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   restoreDefect Gi p * (restore Gi (Real.log p.1, p.2) + 4 * p.2)
 
 theorem restoreDensityJ_eq (Gi A : ℝ → ℝ) (p : ℝ × ℝ) :
@@ -1177,15 +1177,15 @@ theorem restore_local_smooth {Gi A : ℝ → ℝ} (hGi : ContDiff ℝ ∞ Gi) (h
         contDiffAt_snd))
 
 /-- Restore debt M, given by `∫ x in a..b, restoreDefect Gi (x, eta)`. -/
-noncomputable def restoreDebtM (Gi : ℝ → ℝ) (a b eta : ℝ) : ℝ :=
+@[expose] noncomputable def restoreDebtM (Gi : ℝ → ℝ) (a b eta : ℝ) : ℝ :=
   ∫ x in a..b, restoreDefect Gi (x, eta)
 
 /-- Restore debt J, given by `∫ x in a..b, restoreDensityJ Gi A (x, eta)`. -/
-noncomputable def restoreDebtJ (Gi A : ℝ → ℝ) (a b eta : ℝ) : ℝ :=
+@[expose] noncomputable def restoreDebtJ (Gi A : ℝ → ℝ) (a b eta : ℝ) : ℝ :=
   ∫ x in a..b, restoreDensityJ Gi A (x, eta)
 
 /-- Restore debt S, given by `∫ x in a..b, restoreDensityS Gi (x, eta)`. -/
-noncomputable def restoreDebtS (Gi : ℝ → ℝ) (a b eta : ℝ) : ℝ :=
+@[expose] noncomputable def restoreDebtS (Gi : ℝ → ℝ) (a b eta : ℝ) : ℝ :=
   ∫ x in a..b, restoreDensityS Gi (x, eta)
 
 /-- Restore jet size as an element of `ℝ`. -/
@@ -1322,29 +1322,29 @@ theorem abs_jet_sub_le {F G : ℝ → ℝ} (hF : ContDiff ℝ ∞ F) (hG : ContD
 
 /-- Reset debt M, given by `rowM u r eta - idealM (fun e => 4 * e) r eta + restoreDebtM Gi r b
 eta`. -/
-noncomputable def resetDebtM (u : ℝ × ℝ → ℝ) (Gi : ℝ → ℝ) (r b eta : ℝ) : ℝ :=
+@[expose] noncomputable def resetDebtM (u : ℝ × ℝ → ℝ) (Gi : ℝ → ℝ) (r b eta : ℝ) : ℝ :=
   rowM u r eta - idealM (fun e => 4 * e) r eta + restoreDebtM Gi r b eta
 
 /-- Reset debt I, given by `rowI R f r eta - idealI A r eta`. -/
-noncomputable def resetDebtI (R : ℝ) (f : ℝ × ℝ → ℝ) (A : ℝ → ℝ) (r eta : ℝ) : ℝ :=
+@[expose] noncomputable def resetDebtI (R : ℝ) (f : ℝ × ℝ → ℝ) (A : ℝ → ℝ) (r eta : ℝ) : ℝ :=
   rowI R f r eta - idealI A r eta
 
 /-- Reset debt J, given by `rowJ R u f r eta - idealJ (fun e => 4 * e) A r eta + restoreDebtJ Gi
 A r b eta`. -/
-noncomputable def resetDebtJ (R : ℝ) (u f : ℝ × ℝ → ℝ) (Gi A : ℝ → ℝ) (r b eta : ℝ) : ℝ :=
+@[expose] noncomputable def resetDebtJ (R : ℝ) (u f : ℝ × ℝ → ℝ) (Gi A : ℝ → ℝ) (r b eta : ℝ) : ℝ :=
   rowJ R u f r eta - idealJ (fun e => 4 * e) A r eta + restoreDebtJ Gi A r b eta
 
 /-- Reset debt S, given by `rowS R u f r eta - idealS (fun e => 4 * e) A r eta + restoreDebtS Gi
 r b eta`. -/
-noncomputable def resetDebtS (R : ℝ) (u f : ℝ × ℝ → ℝ) (Gi A : ℝ → ℝ) (r b eta : ℝ) : ℝ :=
+@[expose] noncomputable def resetDebtS (R : ℝ) (u f : ℝ × ℝ → ℝ) (Gi A : ℝ → ℝ) (r b eta : ℝ) : ℝ :=
   rowS R u f r eta - idealS (fun e => 4 * e) A r eta + restoreDebtS Gi r b eta
 
 /-- Reset debt P, given by `rowP R f r eta - idealP A r eta`. -/
-noncomputable def resetDebtP (R : ℝ) (f : ℝ × ℝ → ℝ) (A : ℝ → ℝ) (r eta : ℝ) : ℝ :=
+@[expose] noncomputable def resetDebtP (R : ℝ) (f : ℝ × ℝ → ℝ) (A : ℝ → ℝ) (r eta : ℝ) : ℝ :=
   rowP R f r eta - idealP A r eta
 
 /-- Reset debt jet size as an element of `ℝ`. -/
-noncomputable def resetDebtJetSize (n : ℕ) (R r b : ℝ) (u f : ℝ × ℝ → ℝ)
+@[expose] noncomputable def resetDebtJetSize (n : ℕ) (R r b : ℝ) (u f : ℝ × ℝ → ℝ)
     (Gi A : ℝ → ℝ) (eta : ℝ) : ℝ :=
   |iteratedDeriv n (resetDebtM u Gi r b) eta| +
     |iteratedDeriv n (resetDebtI R f A r) eta| +
@@ -1388,7 +1388,7 @@ noncomputable def vanishingDebtBound (n : ℕ) (B K L BG KA r C : ℝ) : ℝ :=
     (2 ^ n * L * K ^ 2) / C ^ 2 + (5 / 2) * (2 ^ n * KA ^ 2) * r ^ (1 / 5 : ℝ)
 
 /-- Restoration bound, given by `delta * (1 + 2 * (2 ^ n * KA) + 2 ^ n * (delta + 2 * BG))`. -/
-noncomputable def restorationBound (n : ℕ) (BG KA delta : ℝ) : ℝ :=
+@[expose] noncomputable def restorationBound (n : ℕ) (BG KA delta : ℝ) : ℝ :=
   delta * (1 + 2 * (2 ^ n * KA) + 2 ^ n * (delta + 2 * BG))
 
 theorem resetDebtJetSize_bound {R r b L B K C BG KA delta : ℝ}
@@ -1470,7 +1470,7 @@ theorem shapeField_jets_uniform {Xi C T X B K : ℝ} (hXi : 0 < Xi) (hC : 0 < C)
     (mul_nonneg (Nat.cast_nonneg _) (Real.exp_pos _).le)
 
 /-- Scaled family, given by `F (R * p.1, p.2)`. -/
-noncomputable def scaledFamily (R : ℝ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ := F (R * p.1, p.2)
+@[expose] noncomputable def scaledFamily (R : ℝ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ := F (R * p.1, p.2)
 
 theorem scaledFamily_contDiff (R : ℝ) {F : ℝ × ℝ → ℝ} (hF : ContDiff ℝ ∞ F) :
     ContDiff ℝ ∞ (scaledFamily R F) :=

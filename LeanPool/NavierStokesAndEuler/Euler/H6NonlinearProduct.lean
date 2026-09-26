@@ -15,7 +15,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Mul
 
 /-! Fixed H⁶ algebra estimates at every external derivative order, for actual nonlinear fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -114,7 +114,7 @@ theorem sobolev_add_le (q : ℕ) (f g : LiftDomain period → F)
   simpa only [ENNReal.toReal_add hfj.eLpNorm_ne_top hgj.eLpNorm_ne_top] using he
 
 /-- Sum of actual Hq norms of all external derivative words of exactly order n. -/
-def wordSobolevNorm (q n : ℕ) (f : LiftDomain period → F) : ℝ :=
+@[expose] def wordSobolevNorm (q n : ℕ) (f : LiftDomain period → F) : ℝ :=
   ∑ w : Fin n → Fin 4, liftSobolevNorm period q (iteratedFieldDerivative period w f)
 
 theorem wordSobolevNorm_nonneg (q n : ℕ) (f : LiftDomain period → F) :

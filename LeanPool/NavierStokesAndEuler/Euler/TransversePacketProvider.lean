@@ -20,7 +20,7 @@ prescribed initial coordinates; the zero initial datum gives the forced
 operator used when t₀ = 0.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,7 +41,7 @@ namespace Forcing
 variable {D : Data U} {raw : VectorField} (G : Forcing P D raw) (I : InitialData P D)
 
 /-- Vector as an element of `VectorField`. -/
-def vector : VectorField := fun z =>
+@[expose] def vector : VectorField := fun z =>
   field P D.support D.support_measurable D.support_compact D.T D.T_pos.le
     D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower G.path I.value
     G.path_orbit I.orbit (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
@@ -53,7 +53,7 @@ def vectorDerivative : VectorField := fun z =>
     G.path_orbit I.orbit (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
 
 /-- Scalar as an element of `ScalarField`. -/
-def scalar : ScalarField := fun z =>
+@[expose] def scalar : ScalarField := fun z =>
   pressureField P D.support D.support_measurable D.support_compact D.T D.T_pos.le
     D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower G.path I.value
     G.path_orbit I.orbit D.M D.normal D.normalLower D.normalLower_pos D.normal_lower

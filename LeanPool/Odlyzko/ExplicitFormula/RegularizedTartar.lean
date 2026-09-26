@@ -17,7 +17,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -27,7 +27,7 @@ open scoped Topology
 namespace NumberField.Odlyzko
 
 /-- A regularized scaled tartar used in the Odlyzko-bound argument. -/
-noncomputable def regularizedScaledTartar
+@[expose] noncomputable def regularizedScaledTartar
     (y δ x : ℝ) : ℝ :=
   scaledTartarTestFunction y x * Real.exp (-δ * x ^ 2)
 

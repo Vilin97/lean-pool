@@ -22,7 +22,7 @@ This forces all differences to be zero (since S_k → 1/(q;q)_∞),
 so all S_k are equal to 1/(q;q)_∞.
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 open scoped Topology
@@ -32,11 +32,11 @@ namespace QSeries
 noncomputable section
 
 /-- The key sum S_k(q) = Σ_{m≥0} q^{m(m+k)} / ((q;q)_m (q;q)_{m+k}). -/
-def keySum (q : ℂ) (k : ℕ) : ℂ :=
+@[expose] def keySum (q : ℂ) (k : ℕ) : ℂ :=
   ∑' m : ℕ, q ^ (m * (m + k)) / (qPochhammer q q m * qPochhammer q q (m + k))
 
 /-- The summand of S_k. -/
-def keySummand (q : ℂ) (k : ℕ) (m : ℕ) : ℂ :=
+@[expose] def keySummand (q : ℂ) (k : ℕ) (m : ℕ) : ℂ :=
   q ^ (m * (m + k)) / (qPochhammer q q m * qPochhammer q q (m + k))
 
 /-- Unfolds `keySum` as the tsum of `keySummand`. -/

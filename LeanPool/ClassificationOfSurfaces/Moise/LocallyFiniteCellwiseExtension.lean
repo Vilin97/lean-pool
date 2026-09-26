@@ -18,7 +18,7 @@ the family of filled closed regions is locally finite.  Under these conditions t
 maps form a genuine locally finite triangle complex in the plane.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

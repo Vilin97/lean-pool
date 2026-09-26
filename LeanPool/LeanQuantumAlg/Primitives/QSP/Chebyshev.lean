@@ -64,7 +64,7 @@ Pinned Mathlib API: `Polynomial.coeff_X_mul`, `Polynomial.coeff_mul`,
 `Set.Icc.infinite`, `List.reverseRecOn`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

@@ -14,7 +14,7 @@ import LeanPool.QuasiBorelSpaces.Basic
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Cont`.
 -/
 
-@[expose] public section
+public section
 
 open QuasiBorelSpace
 open OmegaCompletePartialOrder

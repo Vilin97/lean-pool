@@ -21,7 +21,7 @@ map from `Fin n` down to the first four coordinates. Witness-specific `Fin n` le
 witness and its cone membership / violation) live in `ZhangYeung.Theorem4`.
 -/
 
-@[expose] public section
+public section
 
 namespace ZhangYeung
 
@@ -31,15 +31,15 @@ open scoped Topology
 universe u
 
 /-- `IF` generalized to `Finset (Fin n)`. -/
-def IFN {n : ℕ} (F : Finset (Fin n) → ℝ) (α β : Finset (Fin n)) : ℝ :=
+@[expose] def IFN {n : ℕ} (F : Finset (Fin n) → ℝ) (α β : Finset (Fin n)) : ℝ :=
   F α + F β - F (α ∪ β)
 
 /-- `condIF` generalized to `Finset (Fin n)`. -/
-def condIFN {n : ℕ} (F : Finset (Fin n) → ℝ) (α β γ : Finset (Fin n)) : ℝ :=
+@[expose] def condIFN {n : ℕ} (F : Finset (Fin n) → ℝ) (α β γ : Finset (Fin n)) : ℝ :=
   F (α ∪ γ) + F (β ∪ γ) - F (α ∪ β ∪ γ) - F γ
 
 /-- `deltaF` generalized to `Finset (Fin n)`. -/
-def deltaFN {n : ℕ} (F : Finset (Fin n) → ℝ) (i j k l : Fin n) : ℝ :=
+@[expose] def deltaFN {n : ℕ} (F : Finset (Fin n) → ℝ) (i j k l : Fin n) : ℝ :=
   IFN F {i} {j} - condIFN F {i} {j} {k} - condIFN F {i} {j} {l}
 
 /-- `Γ_n` (paper eq. 11) as a predicate on `Finset (Fin n) → ℝ`. -/
@@ -49,7 +49,7 @@ def shannonConeN {n : ℕ} (F : Finset (Fin n) → ℝ) : Prop :=
   (∀ α β : Finset (Fin n), F (α ∪ β) + F (α ∩ β) ≤ F α + F β)
 
 /-- The Zhang-Yeung inequality at a 4-tuple labeling over `Fin n`. -/
-def zhangYeungAtN {n : ℕ} (F : Finset (Fin n) → ℝ) (i j k l : Fin n) : Prop :=
+@[expose] def zhangYeungAtN {n : ℕ} (F : Finset (Fin n) → ℝ) (i j k l : Fin n) : Prop :=
   deltaFN F i j k l ≤ (1 / 2) * (IFN F {k} {l} + IFN F {k} ({i} ∪ {j})
     + condIFN F {i} {j} {k} - condIFN F {i} {j} {l})
 
@@ -80,7 +80,7 @@ The entropy function of an `n`-variable random-variable family `X : ∀ i : Fin 
 i`,
 expressed as a set function on `Finset (Fin n)`.
 -/
-noncomputable def entropyFnN
+@[expose] noncomputable def entropyFnN
     {Ω : Type*} [MeasurableSpace Ω]
     {n : ℕ} {S : Fin n → Type u}
     [∀ i, MeasurableSpace (S i)]
@@ -126,11 +126,11 @@ The almost-entropic region `closure (Γ_n^*)`. Inherits the universe parameter f
 witnessed by a
 `Type u` entropy function (or a limit of such) is literally a member of the set.
 -/
-def almostEntropicRegionN (n : ℕ) : Set (Finset (Fin n) → ℝ) :=
+@[expose] def almostEntropicRegionN (n : ℕ) : Set (Finset (Fin n) → ℝ) :=
   closure (entropyRegionN.{u} n)
 
 /-- Restrict a set function on `Fin n` to its first four coordinates. -/
-def restrictFirstFour {n : ℕ} (hn : 4 ≤ n) :
+@[expose] def restrictFirstFour {n : ℕ} (hn : 4 ≤ n) :
     (Finset (Fin n) → ℝ) → (Finset (Fin 4) → ℝ) :=
   fun F α => F (α.map (Fin.castLEEmb hn))
 

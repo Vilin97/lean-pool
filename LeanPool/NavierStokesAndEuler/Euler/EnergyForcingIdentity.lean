@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.GevreyDifferentiatedEquation
 /-! Exact identification of the limiting actual metric forcing with the seven spatial correction
 terms. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

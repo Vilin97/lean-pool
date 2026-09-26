@@ -82,7 +82,7 @@ reuses the project's
 established machinery.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

@@ -29,7 +29,7 @@ Sources: McClean, Boixo, Smelyanskiy, Babbush, Neven (2018); Cerezo, Sone, Volko
 Cincio, Coles (2021); Ragone et al. (2023); Thanasilp, Wang, Cerezo, Holmes (2022).
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -37,6 +37,7 @@ open Filter Topology
 
 /-- **Exponential concentration.** `X n` deviates from `μ` by at most `C / b ^ n`
 for some base `b > 1` (McClean 2018; Thanasilp 2022, Def. 1). -/
+@[expose]
 def ExpConcentrated (X : ℕ → ℝ) (μ : ℝ) : Prop :=
   ∃ b : ℝ, 1 < b ∧ ∃ C : ℝ, 0 ≤ C ∧ ∀ n, |X n - μ| ≤ C / b ^ n
 
@@ -59,6 +60,7 @@ theorem ExpConcentrated.tendsto {X : ℕ → ℝ} {μ : ℝ} (h : ExpConcentrate
 /-- A model has a **barren plateau** when its loss/gradient variance is
 exponentially concentrated to `0` (so the trainable signal vanishes with system
 size). -/
+@[expose]
 def HasBarrenPlateau (variance : ℕ → ℝ) : Prop := ExpConcentrated variance 0
 
 /-- Under a barren plateau the variance vanishes in the large-system limit. -/

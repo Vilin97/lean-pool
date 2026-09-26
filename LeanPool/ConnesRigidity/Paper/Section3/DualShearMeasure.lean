@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Paper.Section3.DualTopology
 The dual shear measure component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperDualShearMeasure

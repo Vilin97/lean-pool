@@ -22,7 +22,7 @@ Riemannian `edist` on `M`).
   `lipschitzOnWith_symm_extChartAt_ofRiemannianMetric`
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry

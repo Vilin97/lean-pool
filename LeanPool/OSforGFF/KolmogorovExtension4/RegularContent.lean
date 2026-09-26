@@ -14,7 +14,7 @@ public import Mathlib.MeasureTheory.Measure.AddContent
 Regularity lemmas for additive contents used in the Kolmogorov extension construction.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal
 

@@ -16,7 +16,7 @@ estimate and unit-support exponent reduction preserve a fully numerical
 bound, with no conversion of infinite integrals to real numbers.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology
@@ -28,6 +28,7 @@ noncomputable section
 namespace CKN.Core.Endgame
 
 /-- The force-source bound determined by the unit-cylinder data size. -/
+@[expose]
 def forceSourceMorreyBound (q ε₀ : ℝ) : ℝ≥0∞ :=
   volume (parabolicCylinder (0 : Vec3) 0 1) ^ (5 / 6 - 1 / q : ℝ) *
     ENNReal.ofReal ε₀ ^ (1 / q : ℝ)

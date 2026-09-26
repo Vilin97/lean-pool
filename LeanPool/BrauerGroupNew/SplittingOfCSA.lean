@@ -32,7 +32,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 This file ports the upstream splitting-field infrastructure for central simple algebras.
 -/
 
-@[expose] public section
+public section
 
 suppress_compilation
 

@@ -30,7 +30,7 @@ manifold smoothness/holomorphy into planar statements about the chart composites
   `contMDiffOn_iff_analyticOnNhd_of_subset_source`: holomorphy may be read in ANY atlas chart.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology IsManifold

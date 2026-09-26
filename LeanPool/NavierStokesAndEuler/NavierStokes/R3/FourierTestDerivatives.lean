@@ -21,7 +21,7 @@ as the equation.  Their Fourier identities include the `2π` normalization of
 Mathlib's Fourier transform.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -35,11 +35,11 @@ namespace NavierStokesR3.HarmonicTestFunctionals
 open ProblemStatement Comparison
 
 /-- Coordinate differentiation on Schwartz tests. -/
-def partialCLM (i : Fin 3) : ComplexTest →L[ℂ] ComplexTest :=
+@[expose] def partialCLM (i : Fin 3) : ComplexTest →L[ℂ] ComplexTest :=
   LineDeriv.lineDerivOpCLM ℂ ComplexTest (NavierStokes.ProblemStatement.coordinateVector i)
 
 /-- The ordinary spatial Laplacian acting on Schwartz tests. -/
-def laplacianCLM : ComplexTest →L[ℂ] ComplexTest :=
+@[expose] def laplacianCLM : ComplexTest →L[ℂ] ComplexTest :=
   ∑ i : Fin 3, (partialCLM i).comp (partialCLM i)
 
 @[simp] theorem partialCLM_apply (i : Fin 3) (ψ : ComplexTest) (x : Space) :

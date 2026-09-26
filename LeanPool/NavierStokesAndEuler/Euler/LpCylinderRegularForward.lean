@@ -37,7 +37,7 @@ section
 
 /-! Genuine scalar-profile normalization commutes with bounded linear intertwiners. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -82,7 +82,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -210,7 +210,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

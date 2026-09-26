@@ -25,7 +25,7 @@ for a smooth cutoff. Interpolation yields the `L³` and `L^(10/3)` estimates;
 for `Q_r = (t-r²,t) × B_r`, the `L³` cylinder factor is `r^(1/2)`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal
@@ -35,10 +35,12 @@ namespace CKN
 noncomputable section
 
 /-- The extended `Lᵖ` seminorm of a function on a measurable set. -/
+@[expose]
 def lpNormOn (p : ℝ≥0∞) (s : Set (Vec 3)) (u : Vec 3 → ℝ) : ℝ≥0∞ :=
   eLpNorm u p (volume.restrict s)
 
 /-- The extended `Lᵖ` seminorm of the native classical gradient. -/
+@[expose]
 def gradientLpNormOn (p : ℝ≥0∞) (s : Set (Vec 3)) (u : Vec 3 → ℝ) : ℝ≥0∞ :=
   eLpNorm (classicalGradient u) p (volume.restrict s)
 
@@ -108,6 +110,7 @@ private theorem canonicalBallCutoff_gradient_norm_bound
 
 /- The fixed factor is absolute because the ambient dimension is three. -/
 /-- Euclidean Sobolev coefficient inherited from Mathlib's compact-support inequality. -/
+@[expose]
 noncomputable def localSobolevConstant : ℝ≥0∞ :=
   ((3 : NNReal) : ℝ≥0∞) *
     (SNormLESNormFDerivOfEqConst (E := Vec 3) ℝ (volume : Measure (Vec 3))

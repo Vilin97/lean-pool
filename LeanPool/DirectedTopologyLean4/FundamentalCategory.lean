@@ -12,7 +12,7 @@ public import LeanPool.DirectedTopologyLean4.DTop
 # LeanPool.DirectedTopologyLean4.FundamentalCategory
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the definition of the fundamental category of a directed space.

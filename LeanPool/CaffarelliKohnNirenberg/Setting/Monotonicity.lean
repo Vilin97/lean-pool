@@ -38,7 +38,7 @@ require the relevant quantity at the larger radius to be finite: this is the
 in `paper/ckn.tex`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set
 open scoped ENNReal

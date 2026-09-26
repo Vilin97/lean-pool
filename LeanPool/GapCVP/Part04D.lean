@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part04C
 
 /-! # GapCVP proof, part 04, continuation 04 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -252,7 +252,7 @@ def totalForbiddenTransitionFamilyClauses {T S : ℕ}
         atLeastOneClause candidate.1.1.1 candidate.1.1.2)
 
 /-- GapCVP reduction support. -/
-def totalFiveFamilySourceClauseCandidates {T S : ℕ}
+@[expose] def totalFiveFamilySourceClauseCandidates {T S : ℕ}
     (specification : Specification T S) : List (Clause T S) :=
   executableAtLeastOneFamilyClauses T S ++
     totalAtMostOneFamilyClauses T S ++
@@ -471,7 +471,7 @@ open Turing
   rfl
 
 /-- GapCVP reduction support. -/
-def parseUnaryBoundedFold : List Bool → Option (ℕ × List Bool)
+@[expose] def parseUnaryBoundedFold : List Bool → Option (ℕ × List Bool)
   | [] => none
   | false :: remaining => some (0, remaining)
   | true :: remaining =>
@@ -479,7 +479,7 @@ def parseUnaryBoundedFold : List Bool → Option (ℕ × List Bool)
         (fun parsed => (parsed.1 + 1, parsed.2))
 
 /-- GapCVP reduction support. -/
-def unaryBoundedFoldWord (count : ℕ) (seed : List Bool) : List Bool :=
+@[expose] def unaryBoundedFoldWord (count : ℕ) (seed : List Bool) : List Bool :=
   List.replicate count true ++ false :: seed
 
 @[simp] theorem parseUnaryBoundedFold_word
@@ -497,7 +497,7 @@ def unaryBoundedFoldWord (count : ℕ) (seed : List Bool) : List Bool :=
           congrArg (Option.map (fun parsed : ℕ × List Bool => (parsed.1 + 1, parsed.2))) ih
 
 /-- GapCVP reduction support. -/
-def boundedRecordFoldOutput
+@[expose] def boundedRecordFoldOutput
     (worker : List Bool → List Bool) (input : List Bool) : List Bool :=
   match parseUnaryBoundedFold input with
   | none => []
@@ -529,7 +529,7 @@ theorem parsedUnaryFold_count_le_length
               omega
 
 /-- GapCVP reduction support. -/
-noncomputable def PolynomiallyBoundedFoldStates
+@[expose] noncomputable def PolynomiallyBoundedFoldStates
     (worker : List Bool → List Bool)
     (bound : Polynomial ℕ) : Bool :=
   @decide (

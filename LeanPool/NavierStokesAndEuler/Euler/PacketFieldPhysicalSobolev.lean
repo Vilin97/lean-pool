@@ -18,7 +18,7 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 word bounds. The constants are finite polynomials at each fixed order;
 the oscillating phase costs only the indicated power of its frequency. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,7 +31,7 @@ namespace EulerPhysicalL2Scaling
 open Finset MeasureTheory EulerSmoothLimit
 
 /-- Derivative sum, given by `∑ n ∈ range (m+1), lpNorm (iteratedFDeriv ℝ n f) 2 volume`. -/
-def derivativeSum {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+@[expose] def derivativeSum {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (m : ℕ) (f : Space → V) : ℝ :=
   ∑ n ∈ range (m+1), lpNorm (iteratedFDeriv ℝ n f) 2 volume
 
@@ -46,7 +46,7 @@ theorem jetPolynomial_nonneg (R : ℝ) (hR : 0 ≤ R) (m : ℕ) :
 
 /-- Physical derivative cost, given by `∑ n ∈ range (m+1), (4*C)^n*Real.sqrt
 (2/P+2*P)*jetPolynomial R (n+1)`. -/
-def physicalDerivativeCost (P R C : ℝ) (m : ℕ) : ℝ :=
+@[expose] def physicalDerivativeCost (P R C : ℝ) (m : ℕ) : ℝ :=
   ∑ n ∈ range (m+1), (4*C)^n*Real.sqrt (2/P+2*P)*jetPolynomial R (n+1)
 
 theorem physicalDerivativeCost_nonneg (P R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (m : ℕ) :

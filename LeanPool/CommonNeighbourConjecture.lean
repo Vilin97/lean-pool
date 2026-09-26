@@ -24,4 +24,4 @@ Tags: permutation-groups, group-actions, algebraic-graph-theory, saxl-graphs, co
 MSC: 20B15, 05C25
 -/
 
-@[expose] public section
+public section

@@ -28,7 +28,7 @@ Main declarations:
 * `RS.pathIntegral_mdifferential` — FTC along a continuous path for `d f`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology
 open IsManifold Metric Set Filter MeasureTheory

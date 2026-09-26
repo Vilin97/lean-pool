@@ -20,7 +20,7 @@ neighborhood.  This is the finite-uniformity step needed when cleared generic
 fiber identities are specialized over the analytic base.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology
@@ -31,7 +31,7 @@ namespace LocalComplexGeometry
 noncomputable section
 
 /-- The ring homomorphism sending a function to its germ at the origin. -/
-def functionToGermRingHom (n : ℕ) :
+@[expose] def functionToGermRingHom (n : ℕ) :
     (ComplexEuclidean n → ℂ) →+* FunctionGerm n :=
   Filter.Germ.coeRingHom (𝓝 (0 : ComplexEuclidean n))
 

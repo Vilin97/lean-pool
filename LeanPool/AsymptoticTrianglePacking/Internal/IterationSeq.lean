@@ -38,7 +38,7 @@ The fixed-strategy iteration is recovered by specializing this sequence in
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

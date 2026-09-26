@@ -31,7 +31,7 @@ places are the height-one primes of the integral closure of the valuation subrin
 * `FunctionField.principalDivisorA`: the principal divisor on both coordinate charts.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 
@@ -243,6 +243,7 @@ noncomputable def normalization (v : Place k K) :
   Classical.choice v.isDiscrete
 
 /-- The normalized `ℤᵐ⁰`-valued valuation associated to a coordinate-free place. -/
+@[expose]
 noncomputable def valuation (v : Place k K) : Valuation K ℤᵐ⁰ :=
   v.toValuationSubring.valuation.restrict.map
     v.normalization.toMonoidWithZeroHom v.normalization.toOrderIso.monotone
@@ -450,7 +451,7 @@ abbrev PlaceA :=
     IsDedekindDomain.HeightOneSpectrum (infiniteIntegers k K)
 
 /-- The discrete valuation associated to a coordinate place. -/
-def placeValuation : PlaceA k K → Valuation K ℤᵐ⁰
+@[expose] def placeValuation : PlaceA k K → Valuation K ℤᵐ⁰
   | Sum.inl v => v.valuation K
   | Sum.inr v => v.valuation K
 
@@ -507,6 +508,14 @@ noncomputable def principalDivisorA : Additive Kˣ →+ DivisorA k K :=
       (FractionalIdeal.principalDivisor (R := ringOfIntegers k K) (K := K)) +
     (Finsupp.mapDomain.addMonoidHom Sum.inr).comp
       (FractionalIdeal.principalDivisor (R := infiniteIntegers k K) (K := K))
+
+/-- A principal divisor combines the finite and infinite coordinate divisors. -/
+theorem principalDivisorA_apply (x : Additive Kˣ) :
+    principalDivisorA k K x =
+      Finsupp.mapDomain Sum.inl
+        (FractionalIdeal.principalDivisor (R := ringOfIntegers k K) (K := K) x) +
+      Finsupp.mapDomain Sum.inr
+        (FractionalIdeal.principalDivisor (R := infiniteIntegers k K) (K := K) x) := by rfl
 
 @[simp]
 theorem principalDivisorA_apply_finite (x : Additive Kˣ)

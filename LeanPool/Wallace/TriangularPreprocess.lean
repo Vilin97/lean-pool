@@ -32,7 +32,7 @@ assigned distinct indices strictly above every coordinate in the sequence.  The 
 the file constructs a genuine subsequence whose prescribed finite blocks are bounded-independent.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Cardinal
@@ -554,7 +554,7 @@ theorem exists_boundedIndependent_subsequence_for_sizes
 /-! ## The paper's shifted coded sequences -/
 
 /-- The basis vector attached to a code's fresh index. -/
-def codeBasisVector (a : ContinuumIndex) : ContinuumFreeGroup :=
+@[expose] def codeBasisVector (a : ContinuumIndex) : ContinuumFreeGroup :=
   Finsupp.single (codeIndex a) 1
 
 /-- The sequence to which finite bounded-independence extraction is applied. -/

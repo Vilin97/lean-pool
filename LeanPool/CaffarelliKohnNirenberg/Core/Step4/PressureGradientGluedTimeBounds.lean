@@ -18,7 +18,7 @@ and under extending the time window by zero. The coefficients below are fixed
 before the time integral; no shrinking-cell growth is asserted.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology

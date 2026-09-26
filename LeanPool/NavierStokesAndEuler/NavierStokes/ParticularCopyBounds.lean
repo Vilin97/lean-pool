@@ -20,7 +20,7 @@ assumed, and no assertion that separate copy classes have uniform constants
 is used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -17,7 +17,7 @@ Nothing in this file is about PDL. These are helper definitions and lemmas that 
 used in several places and might also be in (newer versions of) Mathlib.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

@@ -21,7 +21,7 @@ import Mathlib.Order.Zorn
 # MatchingLogic.EntryIII.Lindenbaum
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

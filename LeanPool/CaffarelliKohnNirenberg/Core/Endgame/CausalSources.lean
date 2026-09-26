@@ -16,7 +16,7 @@ the pressure gradient in the order-two slot. This is an identity of formulas;
 it does not assert the still-needed localized representation theorem.
 -/
 
-@[expose] public section
+public section
 
 open Set Filter
 open scoped Topology
@@ -27,6 +27,7 @@ noncomputable section
 namespace CKN.Core.Endgame
 
 /-- The actual past-time order-two source with the pressure gradient. -/
+@[expose]
 def causalGradientSourceComponent (φ : ParabolicPoint → ℝ)
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3)
     (f Dp : ParabolicPoint → Vec3) (i : Fin 3) : ParabolicPoint → ℝ :=

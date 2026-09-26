@@ -10,7 +10,7 @@ public import Mathlib.Order.WithBot
 
 /-! The ordered range 0,1,2,...,omega,omega+1, and its exact threshold. -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 
@@ -20,7 +20,7 @@ abbrev SeparationValue := WithTop (WithTop ℕ)
 /-- Embed a finite witness bound into the separation-width range. -/
 def finiteValue (n : ℕ) : SeparationValue := ((n : WithTop ℕ) : SeparationValue)
 /-- The width value for finite witnesses with no uniform finite bound. -/
-def omegaValue : SeparationValue := ((⊤ : WithTop ℕ) : SeparationValue)
+@[expose] def omegaValue : SeparationValue := ((⊤ : WithTop ℕ) : SeparationValue)
 
 @[simp] theorem finiteValue_le_iff (m n : ℕ) : finiteValue m ≤ finiteValue n ↔ m ≤ n := by
   simp [finiteValue]

@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevDerivativeNorm
 
 /-! Real Euclidean vector wrappers for the actual cylinder Sobolev estimates. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -16,7 +16,7 @@ explicit lets Sobolev norms expose their formula without exposing the analytic p
 of Fourier inversion and rapid decay.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -29,7 +29,7 @@ variable {V E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [MeasurableSpace V] [BorelSpace V]
 
 /-- The ordinary Fourier integral with its Schwartz smoothness and decay proofs. -/
-def schwartzFourier (f : 𝓢(V, E)) : 𝓢(V, E) where
+@[expose] def schwartzFourier (f : 𝓢(V, E)) : 𝓢(V, E) where
   toFun := 𝓕 (f : V → E)
   smooth' := by
     have h : ContDiff ℝ ∞ ((𝓕 f : 𝓢(V, E)) : V → E) := (𝓕 f : 𝓢(V, E)).smooth'
@@ -47,7 +47,7 @@ private theorem schwartzFourier_eq (f : 𝓢(V, E)) :
 
 /-- The bundled Schwartz transform has exactly the ordinary Fourier integral as its values. -/
 theorem schwartzFourier_apply (f : 𝓢(V, E)) (x : V) :
-    schwartzFourier f x = 𝓕 (f : V → E) x := rfl
+    schwartzFourier f x = 𝓕 (f : V → E) x := by rfl
 
 /-- The ordinary Fourier integral as a continuous linear map on Schwartz functions. -/
 def schwartzFourierCLM : 𝓢(V, E) →L[ℂ] 𝓢(V, E) where

@@ -12,7 +12,7 @@ import Mathlib.NumberTheory.NumberField.Discriminant.Different
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

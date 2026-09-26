@@ -17,7 +17,7 @@ irreducibility proof: every endomorphism of the deleted module extends to the
 full permutation module, while the all-ones operator restricts to zero.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

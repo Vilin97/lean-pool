@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderKnownForce
 
 /-! The literal recursively constructed high forcing has zero angular mean. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

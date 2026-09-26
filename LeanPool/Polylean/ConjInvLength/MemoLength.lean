@@ -11,7 +11,7 @@ public import LeanPool.Polylean.ConjInvLength.LengthBound
 # LeanPool.Polylean.ConjInvLength.MemoLength
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 

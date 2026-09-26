@@ -19,7 +19,7 @@ Kummer carry theorem: divisibility by nine for a finite family of central
 binomial coefficients indexed by powers of four.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 

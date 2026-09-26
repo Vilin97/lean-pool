@@ -14,7 +14,7 @@ import Mathlib.Tactic.SetLike
 
 /-! # RelItr -/
 
-@[expose] public section
+public section
 
 
 /-- Imported declaration from the Incompleteness formalization. -/

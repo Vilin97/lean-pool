@@ -52,7 +52,7 @@ the project's permitted `Element.ext`; the inclusion data `inclMap` is
 **choice-free**.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

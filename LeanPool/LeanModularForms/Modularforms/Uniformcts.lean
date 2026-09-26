@@ -13,7 +13,7 @@ import Mathlib.Tactic.Positivity.Finset
 /-! # Uniformcts -/
 
 
-@[expose] public section
+public section
 
 
 /-!

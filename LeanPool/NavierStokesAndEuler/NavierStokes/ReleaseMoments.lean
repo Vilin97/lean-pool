@@ -18,7 +18,7 @@ actual integral with each constructed lag solution. The terminal identity
 then gives the vanishing renormalized angular moment.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -39,7 +39,7 @@ noncomputable def history (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) : ℝ
   (5 / 8) * d.core.P * shape eta + primitive (correctedWeight d c eta) y
 
 /-- Release weight, given by `Real.exp (3 * y / 2) * finalAngular d (y, 0)`. -/
-noncomputable def releaseWeight (d : TailData) (y : ℝ) : ℝ :=
+@[expose] noncomputable def releaseWeight (d : TailData) (y : ℝ) : ℝ :=
   Real.exp (3 * y / 2) * finalAngular d (y, 0)
 
 theorem releaseWeight_contDiff (d : TailData) : ContDiff ℝ ∞ (releaseWeight d) :=
@@ -304,7 +304,7 @@ theorem history_eventual_power (eta : ℝ) {y : ℝ} (hy : tailEnd d ≤ y) :
 end ResetWitness
 
 /-- Normalized lag, given by `(1 - d.h) * history d c eta y / releaseWeight d y - 1`. -/
-noncomputable def normalizedLag (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) : ℝ :=
+@[expose] noncomputable def normalizedLag (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) : ℝ :=
   (1 - d.h) * history d c eta y / releaseWeight d y - 1
 
 namespace ResetWitness

@@ -20,17 +20,18 @@ All share the quantifier pattern:
 The variation is in what "..." requires.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
 /-- Helper: the data seen up to time t from a data stream. -/
-def dataUpTo {X : Type u} {Y : Type v} (T : DataStream X Y) (t : ℕ) : List (X × Y) :=
+@[expose] def dataUpTo {X : Type u} {Y : Type v} (T : DataStream X Y) (t : ℕ) : List (X × Y) :=
   (List.range (t + 1)).map T.observe
 
 /-- EX-learning (explanatory learning, identification in the limit):
     The learner eventually converges to a hypothesis extensionally equal to c.
     Gold's original definition (1967). -/
+@[expose]
 def EXLearnable (X : Type u) (C : ConceptClass X Bool) : Prop :=
   ∃ (L : GoldLearner X Bool),
     ∀ (c : Concept X Bool), c ∈ C →

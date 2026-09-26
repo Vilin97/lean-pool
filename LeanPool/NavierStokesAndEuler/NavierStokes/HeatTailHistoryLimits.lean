@@ -17,7 +17,7 @@ kernels have explicit integrable power majorants. The physical histories use
 the same outgoing profile and the same compensation witness throughout.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

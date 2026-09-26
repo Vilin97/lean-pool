@@ -20,7 +20,7 @@ universals to full A-elementarity — witnesses are ELEMENTS (semantic parameter
 syntactic substitution enters the induction.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

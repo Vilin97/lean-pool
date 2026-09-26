@@ -26,7 +26,7 @@ proof fields of `Simplex` are propositions, this agrees with the usual subspace 
 - `CencovPetz.Simplex.continuous_eval`
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

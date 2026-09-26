@@ -20,7 +20,7 @@ We define (A-A)-bimodules, where A is a commutative semiring, and show basic
 properties of them.
 -/
 
-@[expose] public section
+public section
 
 
 variable {R H₁ H₂ : Type _} [CommSemiring R] [Semiring H₁] [Semiring H₂] [Algebra R H₁]

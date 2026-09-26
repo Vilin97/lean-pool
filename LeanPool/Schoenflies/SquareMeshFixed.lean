@@ -114,7 +114,7 @@ hypothesis giving two distinct fresh points.
   open.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph
@@ -779,13 +779,13 @@ sides are disjoint; two adjacent ones meet in their common corner. Everything is
 `mem_segment_horiz` / `mem_segment_vert` and `plane_eq_of_coords`. -/
 
 /-- The top side of `S`, from the north-east corner to the north-west one. -/
-def sideT : Piece := (Plane.mk 1 1, Plane.mk (-1) 1)
+@[expose] def sideT : Piece := (Plane.mk 1 1, Plane.mk (-1) 1)
 
 /-- The left side of `S`. -/
 def sideL : Piece := (Plane.mk (-1) 1, Plane.mk (-1) (-1))
 
 /-- The bottom side of `S`. -/
-def sideB : Piece := (Plane.mk (-1) (-1), Plane.mk 1 (-1))
+@[expose] def sideB : Piece := (Plane.mk (-1) (-1), Plane.mk 1 (-1))
 
 /-- The right side of `S`, from the south-east corner back to the north-east one. -/
 def sideR : Piece := (Plane.mk 1 (-1), Plane.mk 1 1)

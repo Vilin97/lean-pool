@@ -33,7 +33,7 @@ and ODE uniqueness. This result is qualitative. No exponential estimate from
 this construction is used in the later profile estimates.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -121,7 +121,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

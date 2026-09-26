@@ -35,7 +35,7 @@ three named maps; the Banach files (`Chain.lean`, `CompactRestrict.lean`) never 
 `MeroGermOn` internals directly, and the germ files never touch `→ᵇ` internals.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold BoundedContinuousFunction
 open Set Filter Topology TopologicalSpace Metric

@@ -38,7 +38,7 @@ Hypothesis note: D8 needs only `[T1Space X] [ConnectedSpace X]` (the design list
 `[T2Space X]`, which is not required — the dichotomy and `Mero.ord_ne_top` are `T1`-level).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology

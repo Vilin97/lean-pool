@@ -20,7 +20,7 @@ profile. All differentiated kernels and their integrable majorants are
 derived from that extension.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -95,20 +95,20 @@ end IntegralChain
 /-! ## The actual extended edit and all its diffusion derivatives -/
 
 /-- Correction, given by `switch K X * (HeatProfileExtension.scaledProfile (1 + h) X ν - 1)`. -/
-noncomputable def correction (h K ν X : ℝ) : ℝ :=
+@[expose] noncomputable def correction (h K ν X : ℝ) : ℝ :=
   switch K X * (HeatProfileExtension.scaledProfile (1 + h) X ν - 1)
 
 /-- Multiplier, given by `1 + correction h K ν X`. -/
-noncomputable def multiplier (h ν K X : ℝ) : ℝ := 1 + correction h K ν X
+@[expose] noncomputable def multiplier (h ν K X : ℝ) : ℝ := 1 + correction h K ν X
 
 /-- Edit, given by `E X * multiplier h ν K X`. -/
-noncomputable def edit (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ := E X * multiplier h ν K X
+@[expose] noncomputable def edit (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ := E X * multiplier h ν K X
 
 /-- Change, given by `edit E h ν K X - E X`. -/
-noncomputable def change (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ := edit E h ν K X - E X
+@[expose] noncomputable def change (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ := edit E h ν K X - E X
 
 /-- Square change, given by `edit E h ν K X ^ 2 - E X ^ 2`. -/
-noncomputable def squareChange (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ :=
+@[expose] noncomputable def squareChange (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ :=
   edit E h ν K X ^ 2 - E X ^ 2
 
 /-- Correction jet, given by `iteratedDeriv n (fun u => correction h K u X) ν`. -/
@@ -274,7 +274,7 @@ theorem squareCorrectionJet_bound {h K L ν X : ℝ} (hh : 0 < h) (hX : 1 ≤ X)
     _ = _ := by unfold squareCorrectionBound; ring
 
 /-- Edit jet, with branches according to `square`. -/
-noncomputable def editJet (square : Bool) (h K : ℝ) (n : ℕ) (ν X : ℝ) : ℝ :=
+@[expose] noncomputable def editJet (square : Bool) (h K : ℝ) (n : ℕ) (ν X : ℝ) : ℝ :=
   if square then squareCorrectionJet h K n ν X else correctionJet h K n ν X
 
 /-- Edit bound, with branches according to `square`. -/
@@ -463,7 +463,7 @@ theorem nuDebtJet_bound (d : TailData) {K : ℝ} (hK : 1 ≤ K) (square : Bool)
   ring
 
 /-- The literal extended outgoing edit. -/
-noncomputable def physicalEdit (d : TailData) (K η X : ℝ) : ℝ :=
+@[expose] noncomputable def physicalEdit (d : TailData) (K η X : ℝ) : ℝ :=
   edit (outgoingProfile d K η) d.h (diffusion η) K X
 
 /-- Physical pressure, given by `∫ X in Ioi K, squareChange (outgoingProfile d K η) d.h

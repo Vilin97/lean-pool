@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
 
 /-! Finite algebra on actual cylinder-path witnesses of raw packet fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

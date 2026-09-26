@@ -39,7 +39,7 @@ i.e. deviations of relative size `γ²`, whose accumulation over `γ^{-1}log(1/�
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable

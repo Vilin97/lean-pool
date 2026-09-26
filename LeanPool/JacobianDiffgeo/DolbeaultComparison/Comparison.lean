@@ -26,7 +26,7 @@ the time of this build `Jacobian/Finiteness/H1Finite.lean` (the file that would 
 hypothesis unconditionally) has not landed; see the unit's build-log entry.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

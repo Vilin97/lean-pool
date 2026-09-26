@@ -16,7 +16,7 @@ import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
 
 /-! Genuine approximate identities for the lifted L² translation representation. -/
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 
@@ -58,7 +58,7 @@ theorem euclideanCover_zero : euclideanCover period 0 = 0 := by
   ext i <;> simp [euclideanCover, coveringMap]
 
 /-- The actual L² translation orbit in Euclidean covering coordinates. -/
-def orbit (f : LiftL2 period) (x : Domain 4) : LiftL2 period :=
+@[expose] def orbit (f : LiftL2 period) (x : Domain 4) : LiftL2 period :=
   translation period (euclideanCover period x) f
 
 theorem orbit_continuous (f : LiftL2 period) : Continuous (orbit period f) :=
@@ -79,7 +79,7 @@ def mollifierBump (n : ℕ) : ContDiffBump (0 : Domain 4) where
   rIn_lt_rOut := by have h := cutoffScale_pos n; linarith
 
 /-- The real smooth compact approximate-identity kernel. -/
-def mollifierKernel (n : ℕ) : Domain 4 → ℝ := (mollifierBump n).normed volume
+@[expose] def mollifierKernel (n : ℕ) : Domain 4 → ℝ := (mollifierBump n).normed volume
 
 theorem mollifierKernel_smooth (n : ℕ) : ContDiff ℝ ∞ (mollifierKernel n) :=
   (mollifierBump n).contDiff_normed

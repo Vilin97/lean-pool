@@ -23,7 +23,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -79,10 +79,12 @@ noncomputable def ofBasis (b : Basis (Fin n) K V) : CompleteFlag K V n where
   space_zero := b.flag_zero
   space_last := b.flag_last
 
+theorem ofBasis_space (b : Basis (Fin n) K V) : (ofBasis b).space = b.flag := by rfl
+
 end CompleteFlag
 
 /-- The set of entries appearing before rank `i` in an ordering `σ`. -/
-def PrefixSet {n : ℕ} (σ : Equiv.Perm (Fin n)) (i : Fin (n + 1)) : Set (Fin n) :=
+@[expose] def PrefixSet {n : ℕ} (σ : Equiv.Perm (Fin n)) (i : Fin (n + 1)) : Set (Fin n) :=
   σ '' {j | j.castSucc < i}
 
 theorem ofBasis_reindex_apply {n : ℕ} (b : Basis (Fin n) K V)

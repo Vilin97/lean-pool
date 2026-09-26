@@ -49,7 +49,7 @@ extracting the continuous homomorphism build on these in
 completed proof map.
 -/
 
-@[expose] public section
+public section
 
 open Set Function MeasureTheory
 

@@ -49,7 +49,7 @@ Supporting material, of independent use: `Plane.tent` and `Plane.bend` with thei
 and `Plane.interior_closedSquare`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

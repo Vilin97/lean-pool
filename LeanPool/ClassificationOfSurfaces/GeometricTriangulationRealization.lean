@@ -23,7 +23,7 @@ barycentric face.  Its side formula uses the cyclic face order exactly, so adjac
 agree under the signed occurrence pairing.
 -/
 
-@[expose] public section
+public section
 
 open Set Topology
 

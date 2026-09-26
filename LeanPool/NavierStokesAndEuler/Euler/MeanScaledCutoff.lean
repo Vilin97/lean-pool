@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! The actual source outer cutoff in rescaled particle labels. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

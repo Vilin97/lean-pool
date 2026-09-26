@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientTimeRestricti
 closed interval. The reference size of the original solution still
 bounds every restricted velocity. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

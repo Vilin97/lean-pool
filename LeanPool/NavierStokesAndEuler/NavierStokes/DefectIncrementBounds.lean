@@ -17,7 +17,7 @@ moments.  Their linear changes are precisely the last three rows of (35).
 The remaining terms include the complete radial-source remainder of (32).
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.DefectIncrementBounds
@@ -225,7 +225,7 @@ end FluxSupport
 /-! ## The actual three moments and their linearity -/
 
 /-- Bar moment, given by `CorrectionState.radialMoment k f`. -/
-noncomputable def barMoment (k : ℕ) (f : ScalarField (Point P)) : ScalarField P :=
+@[expose] noncomputable def barMoment (k : ℕ) (f : ScalarField (Point P)) : ScalarField P :=
   CorrectionState.radialMoment k f
 
 omit [NormedAddCommGroup P] [NormedSpace ℝ P] in
@@ -318,7 +318,7 @@ noncomputable def thetaLeading (base h : Triple (Point P)) : ScalarField (Point 
   base.axial * h.angular + base.angular * h.axial
 
 /-- Axial leading, given by `(2 : ℝ) • (base.axial * h.axial)`. -/
-noncomputable def axialLeading (base h : Triple (Point P)) : ScalarField (Point P) :=
+@[expose] noncomputable def axialLeading (base h : Triple (Point P)) : ScalarField (Point P) :=
   (2 : ℝ) • (base.axial * h.axial)
 
 /-- Theta quadratic, given by `m.axial * h.angular + h.axial * m.angular + h.axial * h.angular`. -/
@@ -352,20 +352,20 @@ noncomputable def axialDefect (o : Operators (Point P)) (base m : Triple (Point 
 
 /-- Defects, defined pointwise by `![pressureDefect o base m W n p, thetaDefect base m W n p,
 axialDefect o base m W n p]`. -/
-noncomputable def defects (o : Operators (Point P)) (base m : Triple (Point P))
+@[expose] noncomputable def defects (o : Operators (Point P)) (base m : Triple (Point P))
     (W : Fin 3 → Fin 3 → ScalarField (Point P)) : ℕ → P → Fin 3 → ℝ :=
   fun n p => ![pressureDefect o base m W n p, thetaDefect base m W n p,
     axialDefect o base m W n p]
 
 /-- Linear rows as an element of `ℕ → P → Fin 3 → ℝ`. -/
-noncomputable def linearRows (o : Operators (Point P)) (base h : Triple (Point P)) :
+@[expose] noncomputable def linearRows (o : Operators (Point P)) (base h : Triple (Point P)) :
     ℕ → P → Fin 3 → ℝ := fun n p =>
   ![barMoment 0 (leadingRadial o base h) n p,
     barMoment 2 (thetaLeading base h) n p,
     barMoment 1 (axialLeading base h) n p - (1 / 2) * barMoment 2 (leadingRadial o base h) n p]
 
 /-- Remainders as an element of `ℕ → P → Fin 3 → ℝ`. -/
-noncomputable def remainders (o : Operators (Point P)) (base m h : Triple (Point P))
+@[expose] noncomputable def remainders (o : Operators (Point P)) (base m h : Triple (Point P))
     (W : Fin 3 → Fin 3 → ScalarField (Point P)) : ℕ → P → Fin 3 → ℝ := fun n p =>
   ![barMoment 0 (actualRadialError o base m h W) n p,
     barMoment 2 (thetaQuadratic m h) n p,
@@ -603,7 +603,7 @@ end IntegratedBounds
 /-! ## Identification with the five solved rows and both exact masses -/
 
 /-- Slow slice, given by `f n (r, (p, 0))`. -/
-noncomputable def slowSlice (f : ScalarField (Point P)) (n : ℕ) (p : P) (r : ℝ) : ℝ :=
+@[expose] noncomputable def slowSlice (f : ScalarField (Point P)) (n : ℕ) (p : P) (r : ℝ) : ℝ :=
   f n (r, (p, 0))
 
 /-- Is slow, given by `∀ n r p Y, f n (r, (p, Y)) = slowSlice f n p r`. -/

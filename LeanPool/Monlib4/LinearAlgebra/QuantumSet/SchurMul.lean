@@ -21,7 +21,7 @@ Hilbert-algebra coalgebra instance and tensor-product infrastructure that are no
 in the current monlib4 slice.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct BigOperators
 

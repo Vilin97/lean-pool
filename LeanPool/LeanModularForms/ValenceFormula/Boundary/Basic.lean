@@ -25,7 +25,7 @@ for SL₂(ℤ), both at fixed height `heightCutoff` and at variable height `H`.
 * `seg5QRadiusH` — q-expansion radius e^(-2πH)
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval
@@ -42,28 +42,28 @@ lemma sqrt3_div2_lt_heightCutoff :
     Real.sqrt 3 / 2 < heightCutoff := by unfold heightCutoff; linarith
 
 /-- Segment 1: right vertical from (1/2 + H·i) down to ρ+1. -/
-def fdBoundarySeg1 : ℝ → ℂ := fun t =>
+@[expose] def fdBoundarySeg1 : ℝ → ℂ := fun t =>
   1 / 2 + (heightCutoff - t * (heightCutoff - Real.sqrt 3 / 2)) * I
 
 /-- Segment 2: arc from ρ+1 to i (angle π/3 → π/2). -/
-def fdBoundarySeg2 : ℝ → ℂ := fun t =>
+@[expose] def fdBoundarySeg2 : ℝ → ℂ := fun t =>
   Complex.exp ((Real.pi / 3 + (t - 1) * (Real.pi / 2 - Real.pi / 3)) * I)
 
 /-- Segment 3: arc from i to ρ (angle π/2 → 2π/3). -/
-def fdBoundarySeg3 : ℝ → ℂ := fun t =>
+@[expose] def fdBoundarySeg3 : ℝ → ℂ := fun t =>
   Complex.exp ((Real.pi / 2 + (t - 2) * (2 * Real.pi / 3 - Real.pi / 2)) * I)
 
 /-- Segment 4: left vertical from ρ up to (-1/2 + H·i). -/
-def fdBoundarySeg4 : ℝ → ℂ := fun t =>
+@[expose] def fdBoundarySeg4 : ℝ → ℂ := fun t =>
   -1 / 2 + (Real.sqrt 3 / 2 + (t - 3) * (heightCutoff - Real.sqrt 3 / 2)) * I
 
 /-- Segment 5: horizontal from (-1/2 + H·i) to (1/2 + H·i). -/
-def fdBoundarySeg5 : ℝ → ℂ := fun t =>
+@[expose] def fdBoundarySeg5 : ℝ → ℂ := fun t =>
   (t - 9 / 2) + heightCutoff * I
 
 /-- Boundary of the standard fundamental domain at fixed
 height `heightCutoff`, parameterized over [0, 5]. -/
-def fdBoundary : ℝ → ℂ := fun t =>
+@[expose] def fdBoundary : ℝ → ℂ := fun t =>
   if t ≤ 1 then
     1 / 2 +
       (heightCutoff - t * (heightCutoff - Real.sqrt 3 / 2)) * I
@@ -83,10 +83,10 @@ def fdBoundary : ℝ → ℂ := fun t =>
     (t - 9 / 2) + heightCutoff * I
 
 /-- Interior partition points of fdBoundary. -/
-def fdPartition : Finset ℝ := {1, 2, 3, 4}
+@[expose] def fdPartition : Finset ℝ := {1, 2, 3, 4}
 
 /-- Full partition including endpoints. -/
-def fdBoundaryFullPartition : Finset ℝ := {0, 1, 2, 3, 4, 5}
+@[expose] def fdBoundaryFullPartition : Finset ℝ := {0, 1, 2, 3, 4, 5}
 
 lemma fdBoundary_at_zero :
     fdBoundary 0 = 1 / 2 + heightCutoff * I := by
@@ -142,25 +142,25 @@ lemma fdBoundary_closed : fdBoundary 0 = fdBoundary 5 := by
 
 /-- Segment 1 at height H: right vertical from (1/2 + H·i) down
 to ρ+1. -/
-def fdBoundarySeg1H (H : ℝ) : ℝ → ℂ := fun t =>
+@[expose] def fdBoundarySeg1H (H : ℝ) : ℝ → ℂ := fun t =>
   1 / 2 + (H - t * (H - Real.sqrt 3 / 2)) * I
 
 /-- Segment 2 at height H (H-independent): arc from ρ+1 to i. -/
-def fdBoundarySeg2H : ℝ → ℂ := fdBoundarySeg2
+@[expose] def fdBoundarySeg2H : ℝ → ℂ := fdBoundarySeg2
 
 /-- Segment 3 at height H (H-independent): arc from i to ρ. -/
-def fdBoundarySeg3H : ℝ → ℂ := fdBoundarySeg3
+@[expose] def fdBoundarySeg3H : ℝ → ℂ := fdBoundarySeg3
 
 /-- Segment 4 at height H: left vertical from ρ up to (-1/2 + H·i). -/
-def fdBoundarySeg4H (H : ℝ) : ℝ → ℂ := fun t =>
+@[expose] def fdBoundarySeg4H (H : ℝ) : ℝ → ℂ := fun t =>
   -1 / 2 + (Real.sqrt 3 / 2 + (t - 3) * (H - Real.sqrt 3 / 2)) * I
 
 /-- Segment 5 at height H: horizontal from (-1/2 + H·i) to (1/2 + H·i). -/
-def fdBoundarySeg5H (H : ℝ) : ℝ → ℂ := fun t => (t - 9 / 2) + H * I
+@[expose] def fdBoundarySeg5H (H : ℝ) : ℝ → ℂ := fun t => (t - 9 / 2) + H * I
 
 /-- Boundary of the standard fundamental domain at variable height H,
 parameterized over [0, 5]. -/
-def fdBoundaryH (H : ℝ) : ℝ → ℂ := fun t =>
+@[expose] def fdBoundaryH (H : ℝ) : ℝ → ℂ := fun t =>
   if t ≤ 1 then
     1 / 2 + (H - t * (H - Real.sqrt 3 / 2)) * I
   else if t ≤ 2 then
@@ -180,10 +180,10 @@ def fdBoundaryH (H : ℝ) : ℝ → ℂ := fun t =>
 
 /-- Non-differentiable corner points of fdBoundaryH (excluding smooth
 transitions at t = 2). -/
-def fdBoundaryHPartition : Finset ℝ := {1, 3, 4}
+@[expose] def fdBoundaryHPartition : Finset ℝ := {1, 3, 4}
 
 /-- The q-expansion radius at height H: e^(-2πH). -/
-def seg5QRadiusH (H : ℝ) : ℝ := Real.exp (-2 * Real.pi * H)
+@[expose] def seg5QRadiusH (H : ℝ) : ℝ := Real.exp (-2 * Real.pi * H)
 
 theorem fdBoundary_eq_fdBoundary_H :
     fdBoundary = fdBoundaryH heightCutoff := by

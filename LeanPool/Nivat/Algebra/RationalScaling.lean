@@ -48,7 +48,7 @@ two nonzero multipliers. The map `intLaurentCast` changes only the coefficient
 ring, so the resulting equations still concern the full integer lattice.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.Algebra
 
@@ -58,7 +58,7 @@ abbrev IntegerLaurent := AddMonoidAlgebra ℤ Lattice
 
 /-- The coefficient embedding from integer to rational Laurent polynomials in Appendix A
 (`app:product`), preserving every lattice exponent. -/
-noncomputable def intLaurentCast : IntegerLaurent →+* Laurent :=
+@[expose] noncomputable def intLaurentCast : IntegerLaurent →+* Laurent :=
   AddMonoidAlgebra.mapRingHom Lattice (Int.castRingHom ℚ)
 
 /-- Auxiliary to the scaling step of Appendix A (`app:product`): coefficient embedding acts

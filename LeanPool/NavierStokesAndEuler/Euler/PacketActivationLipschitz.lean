@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryLipschitz
 constants below are computed from the supplied smooth coefficient paths;
 no continuity or estimate for the solved history is assumed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -22,7 +22,7 @@ All three are proved from theorems in `HermiteFunctions.lean` and
 `SchwartzHermiteExpansion.lean`. No axioms.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real SchwartzMap
 
@@ -64,7 +64,7 @@ def hermiteCoeff1DCLM (n : ℕ) : SchwartzMap ℝ ℝ →L[ℝ] ℝ where
     exact fun f => key f
 
 @[simp] theorem hermiteCoeff1DCLM_apply (n : ℕ) (f : SchwartzMap ℝ ℝ) :
-    hermiteCoeff1DCLM n f = hermiteCoeff1D n f := rfl
+    hermiteCoeff1DCLM n f = hermiteCoeff1D n f := by rfl
 
 /-! ## Expansion Identity for Scalar CLFs
 
@@ -126,7 +126,10 @@ theorem schwartzHermiteBasis1D_growth (k l : ℕ) :
   refine ⟨C, hC, ⌈max s 0⌉₊, fun m => ?_⟩
   calc SchwartzMap.seminorm ℝ k l (schwartzHermiteBasis1D m)
       = SchwartzMap.seminorm ℝ k l (Classical.choose (hermiteFunction_schwartz m)) := by
-        congr 1 -- schwartzHermiteBasis1D m = Classical.choose ...
+        congr 1
+        ext x
+        exact (schwartzHermiteBasis1D_apply m x).trans
+          (Classical.choose_spec (hermiteFunction_schwartz m) x).symm
     _ ≤ C * (1 + ↑m) ^ s := hbound m
     _ ≤ C * (1 + ↑m) ^ (↑⌈max s 0⌉₊ : ℝ) := by
         gcongr

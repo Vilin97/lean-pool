@@ -18,7 +18,7 @@ This file is the local boundary between the project and mathlib's concrete
 calls to `EuclideanSpace.*`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -29,7 +29,7 @@ namespace LeanStationaryHarmonicMaps
 namespace StationaryHarmonicMap
 
 /-- The `i`-th coordinate vector in the project domain `ℝⁿ`. -/
-def domainCoordUnit {n : ℕ} (i : Fin n) : Domain n :=
+@[expose] def domainCoordUnit {n : ℕ} (i : Fin n) : Domain n :=
   EuclideanSpace.single i (1 : ℝ)
 
 /-- Coordinate extraction via the Euclidean inner product. -/

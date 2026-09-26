@@ -33,7 +33,7 @@ This file proves that satisfaction of Lω₁ω formulas is measurable on
 - `modelsOfOn_measurableSet`: Satisfaction of any Lω₁ω sentence is measurable.
 -/
 
-@[expose] public section
+public section
 
 universe u v u'
 

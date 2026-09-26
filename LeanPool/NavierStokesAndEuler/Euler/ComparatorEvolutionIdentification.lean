@@ -25,7 +25,7 @@ section
 
 /-! Restriction of an ordinary Euler evolution to a translated closed interval. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -104,7 +104,7 @@ section
 /-! Time translation preserves the independent whole-space Euler class,
 including its one-sided initial-time equation and uniform energy bound. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -160,7 +160,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

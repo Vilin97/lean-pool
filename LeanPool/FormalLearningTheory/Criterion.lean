@@ -16,4 +16,4 @@ public import LeanPool.FormalLearningTheory.Criterion.Extended
 Imported Lean Pool material for `LeanPool.FormalLearningTheory.Criterion`.
 -/
 
-@[expose] public section
+public section

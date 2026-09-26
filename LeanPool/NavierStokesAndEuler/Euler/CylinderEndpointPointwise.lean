@@ -31,7 +31,7 @@ evaluation. This will apply to the two-dimensional reference plane, without
 identifying an L² normal with a pointwise normal vector.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -121,7 +121,7 @@ section
 
 /-! Initial time integration commutes with the genuine mixed cylinder action. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -172,7 +172,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

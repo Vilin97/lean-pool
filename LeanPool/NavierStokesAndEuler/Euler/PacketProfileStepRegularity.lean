@@ -15,7 +15,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureGradie
 /-! One literal profile-recursion step carries genuine path, time-derivative and locality witnesses.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

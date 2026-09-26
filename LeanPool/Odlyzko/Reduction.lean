@@ -9,7 +9,7 @@ public import Mathlib.NumberTheory.NumberField.Discriminant.Basic
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 open NumberField Module
 

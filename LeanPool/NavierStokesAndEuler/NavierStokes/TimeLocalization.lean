@@ -23,7 +23,7 @@ This transformation does not construct the incoming singular fields or a smooth
 global force extension. It supplies the time-switch portion of Proposition 11.4.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,11 +36,11 @@ namespace NavierStokes.TimeLocalization
 open ProblemStatement SmoothCutoffs ResidualCalculus
 
 /-- Activated velocity, defined pointwise by `timeSwitch z.1 • u z`. -/
-def activatedVelocity (u : VelocityField) : VelocityField :=
+@[expose] def activatedVelocity (u : VelocityField) : VelocityField :=
   fun z => timeSwitch z.1 • u z
 
 /-- Activated pressure, defined pointwise by `timeSwitch z.1 * p z`. -/
-def activatedPressure (p : PressureField) : PressureField :=
+@[expose] def activatedPressure (p : PressureField) : PressureField :=
   fun z => timeSwitch z.1 * p z
 
 theorem activatedVelocity_smooth (u : VelocityField)

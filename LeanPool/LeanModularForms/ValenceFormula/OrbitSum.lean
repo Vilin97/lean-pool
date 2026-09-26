@@ -23,7 +23,7 @@ on orbits and establish finite support for the orbit sum.
 * `finite_support_ordOrbit` — finitely many orbits have nonzero `ordOrbit`
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups
@@ -58,7 +58,7 @@ theorem ord_smul_eq (g : SL(2, ℤ)) (p : ℍ) :
 abbrev Orbit := MulAction.orbitRel.Quotient SL(2, ℤ) ℍ
 
 /-- The canonical map from `ℍ` to its orbit. -/
-def orb (p : ℍ) : Orbit := Quotient.mk'' p
+@[expose] def orb (p : ℍ) : Orbit := Quotient.mk'' p
 
 /-- The order of vanishing lifted to orbits. Well-defined by `ord_smul_eq`. -/
 def ordOrbit (q : Orbit) : ℤ :=

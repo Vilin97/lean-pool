@@ -21,7 +21,7 @@ space) and `ι := Fin 3` gives exactly the sphere model used by the challenge's
 `ContinuousLinearEquiv` via `Nonempty.some`); no consumer needs one (see design §3.4).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 

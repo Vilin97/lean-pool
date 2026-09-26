@@ -23,7 +23,7 @@ import Mathlib.Tactic.NormNum.GCD
 # LeanPool.SardMoreira.Unused
 -/
 
-@[expose] public section
+public section
 
 open scoped Topology
 open Filter Set

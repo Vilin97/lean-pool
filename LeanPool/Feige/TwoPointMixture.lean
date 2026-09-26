@@ -15,7 +15,7 @@ Theorem 2.1.  It isolates the equality of the lower and upper first moments
 and constructs the mean-one two-point law `Q_{x,y}`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 
@@ -24,11 +24,11 @@ namespace Feige
 noncomputable section
 
 /-- The lower absolute first moment around one. -/
-def belowMoment (μ : Measure ℝ) : ℝ :=
+@[expose] def belowMoment (μ : Measure ℝ) : ℝ :=
   ∫ x, (|x - 1| - (x - 1)) / 2 ∂μ
 
 /-- The upper absolute first moment around one. -/
-def aboveMoment (μ : Measure ℝ) : ℝ :=
+@[expose] def aboveMoment (μ : Measure ℝ) : ℝ :=
   ∫ x, (|x - 1| + (x - 1)) / 2 ∂μ
 
 theorem integrable_sub_one {μ : Measure ℝ}
@@ -60,11 +60,11 @@ theorem belowMoment_eq_aboveMoment {μ : Measure ℝ}
   ring
 
 /-- Lower weight in the mean-one law supported on `x < 1 < y`. -/
-def twoPointLowerWeight (x y : ℝ) : ℝ :=
+@[expose] def twoPointLowerWeight (x y : ℝ) : ℝ :=
   (y - 1) / (y - x)
 
 /-- Upper weight in the mean-one law supported on `x < 1 < y`. -/
-def twoPointUpperWeight (x y : ℝ) : ℝ :=
+@[expose] def twoPointUpperWeight (x y : ℝ) : ℝ :=
   (1 - x) / (y - x)
 
 theorem twoPointWeights_nonneg {x y : ℝ} (hxy : x < y)
@@ -83,7 +83,7 @@ theorem twoPointWeights_add {x y : ℝ} (hxy : x ≠ y) :
   ring
 
 /-- The mean-one two-point law, expressed as a genuine nonnegative measure. -/
-def twoPointMeasure (x y : ℝ) : Measure ℝ :=
+@[expose] def twoPointMeasure (x y : ℝ) : Measure ℝ :=
   ENNReal.ofReal (twoPointLowerWeight x y) • Measure.dirac x +
     ENNReal.ofReal (twoPointUpperWeight x y) • Measure.dirac y
 
@@ -152,6 +152,7 @@ two-point mixture formula.
 
 The first restricted measure is multiplied by the upper moment (integration
 in `y`), and the second by the lower moment (integration in `x`). -/
+@[expose]
 def expandedTwoPointMixture (μ : Measure ℝ) (M : ℝ) : Measure ℝ :=
   μ {1} • Measure.dirac 1 +
     (ENNReal.ofReal M)⁻¹ •

@@ -30,7 +30,7 @@ Metabelian construction.
   argument and the action as a field of the structure.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 

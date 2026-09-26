@@ -28,7 +28,7 @@ Karp's theorem is the motivating consumer: its `M`-indexed and `N`-indexed separ
 conjunctions are `iInfAlong` at the two sum codings into the single carrier `M ⊕ N`.
 -/
 
-@[expose] public section
+public section
 
 universe u v u' uι uκ uμ w
 

@@ -55,7 +55,7 @@ merely in `closure U`.
 subset of `ℝ` is an open interval whose endpoints are outside the set.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Metric Set
 

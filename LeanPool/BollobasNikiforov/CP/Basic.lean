@@ -15,7 +15,7 @@ A real matrix is completely positive if it is a finite sum of rank-one
 matrices `vecMulVec p p` with entrywise nonnegative `p`.
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 

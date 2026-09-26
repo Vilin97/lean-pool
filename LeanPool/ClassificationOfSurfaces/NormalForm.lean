@@ -24,7 +24,7 @@ with the exact realization homeomorphisms for the three canonical endpoints.  Ev
 chain is a faithful polygonal quotient.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

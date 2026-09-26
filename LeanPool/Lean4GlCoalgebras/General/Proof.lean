@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.Pow
 Here we define the GL-proof system along with finitization and basic properties.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 
@@ -54,7 +54,7 @@ def fₚ : RuleApp → Sequent
   | RuleApp.box _ A _ => {□ A}
 
 /-- Given a RuleApp, obtain the sequent. -/
-def f : RuleApp → Sequent
+@[expose] def f : RuleApp → Sequent
   | RuleApp.top Δ _ => Δ
   | RuleApp.ax Δ _ _ => Δ
   | RuleApp.and Δ _ _ _ => Δ
@@ -79,15 +79,15 @@ lemma fₙ_sub_f {r : RuleApp} : fₙ r ⊆ f r := by
   cases r <;> simp_all [fₙ, f]
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def RuleApp.isBox : RuleApp → Bool
+@[expose] def RuleApp.isBox : RuleApp → Bool
   | RuleApp.box _ _ _ => true
   | _ => false
 
 /-- Get RuleApp of a node (first projection). -/
-def r {X : Type} (α : X → T.obj X) (x : X) := (α x).1
+@[expose] def r {X : Type} (α : X → T.obj X) (x : X) := (α x).1
 
 /-- Get premises of a node (second projection). -/
-def p {X : Type} (α : X → T.obj X) (x : X) := (α x).2
+@[expose] def p {X : Type} (α : X → T.obj X) (x : X) := (α x).2
 
 /-- Edge relation induced by `p`. -/
 def edge {X : Type} (α : X → T.obj X) (x y : X) : Prop := y ∈ p α x

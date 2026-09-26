@@ -27,7 +27,7 @@ import Mathlib.Data.Set.Insert
 # MatchingLogic.Necessity
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 namespace Necessity

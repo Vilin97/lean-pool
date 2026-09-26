@@ -21,7 +21,7 @@ All raw fields are canonical continuous representatives of the constructed
 L² paths. Restriction recovers the actual history and forward solutions.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

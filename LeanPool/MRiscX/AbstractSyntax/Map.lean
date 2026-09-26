@@ -14,7 +14,7 @@ These maps are converted from
 -/
 module
 
-@[expose] public section
+public section
 
 /--
 Total map as recursive type with a key type α and value of type β.

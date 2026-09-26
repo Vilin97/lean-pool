@@ -17,7 +17,7 @@ coordinate-free places. The equivalence `adeleEquivChart` identifies it with the
 construction and transports the filtration and diagonal embedding.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 open Filter

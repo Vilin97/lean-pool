@@ -35,7 +35,7 @@ binomial coefficient $\binom{n}{k}_q$, together with their basic properties.
   $\binom{n}{k}_q (q;q)_k (q;q)_{n-k} = (q;q)_n$.
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 open scoped Topology
@@ -81,7 +81,7 @@ variable {R : Type*}
 
 /-- **Finite q-Pochhammer symbol.**
 $(a;q)_n = \prod_{k=0}^{n-1} (1 - a q^k)$. -/
-def qPochhammer [CommRing R] (a q : R) (n : ℕ) : R :=
+@[expose] def qPochhammer [CommRing R] (a q : R) (n : ℕ) : R :=
   ∏ k ∈ range n, (1 - a * q ^ k)
 
 /-- The empty q-Pochhammer product $(a;q)_0 = 1$. -/
@@ -99,7 +99,7 @@ theorem qPochhammer_succ [CommRing R] (a q : R) (n : ℕ) :
 Defined by the q-Pascal recurrence so that the result is always a polynomial
 in $q$ (no division). The boundary cases are
 $\binom{0}{0}_q = 1$, $\binom{0}{k+1}_q = 0$, $\binom{n+1}{0}_q = 1$. -/
-def qBinom [CommRing R] : ℕ → ℕ → R → R
+@[expose] def qBinom [CommRing R] : ℕ → ℕ → R → R
   | 0,     0,     _ => 1
   | 0,     _ + 1, _ => 0
   | _ + 1, 0,     _ => 1

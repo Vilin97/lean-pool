@@ -33,7 +33,7 @@ action level by level, mirroring `Colimit.lean`'s `H1Incl` construction verbatim
 epimorphism statement `mulH1_surjective`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech Module

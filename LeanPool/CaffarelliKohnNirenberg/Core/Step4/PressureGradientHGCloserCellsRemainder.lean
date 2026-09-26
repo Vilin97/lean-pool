@@ -16,7 +16,7 @@ power needed for the harmonic part of the pressure gradient. The temporal
 Hölder factor is retained explicitly before the Morrey normalization.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

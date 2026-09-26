@@ -18,7 +18,7 @@ EX under drift, universal learning, Bayesian criteria (posterior consistency,
 PAC-Bayes, information-theoretic bounds).
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

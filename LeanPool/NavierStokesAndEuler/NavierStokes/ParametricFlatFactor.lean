@@ -17,7 +17,7 @@ The coefficient depends on a finite-dimensional auxiliary parameter and the
 edge coordinate. The factor is the actual transformed improper integral.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -62,18 +62,18 @@ end PartialJets
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Kernel as an element of `ℝ`. -/
-def kernel (c : ℝ) (j : ℕ) (b : E × ℝ → ℝ) (y : E × ℝ) (t : ℝ) : ℝ :=
+@[expose] def kernel (c : ℝ) (j : ℕ) (b : E × ℝ → ℝ) (y : E × ℝ) (t : ℝ) : ℝ :=
   (1 / 2 : ℝ) * Real.exp (-c * t) *
     (FlatPrimitiveFactor.denominator y.2 t ^ j /
       FlatPrimitiveFactor.denominator y.2 t ^ 3) *
     b (y.1, FlatPrimitiveFactor.coordinate y.2 t)
 
 /-- Factor, given by `∫ t in Ioi (0 : ℝ), kernel c j b y t`. -/
-def factor (c : ℝ) (j : ℕ) (b : E × ℝ → ℝ) (y : E × ℝ) : ℝ :=
+@[expose] def factor (c : ℝ) (j : ℕ) (b : E × ℝ → ℝ) (y : E × ℝ) : ℝ :=
   ∫ t in Ioi (0 : ℝ), kernel c j b y t
 
 /-- Primitive, given by `FlatPrimitive.primitive c j (fun u => b (y.1, u)) y.2`. -/
-def primitive (c : ℝ) (j : ℕ) (b : E × ℝ → ℝ) (y : E × ℝ) : ℝ :=
+@[expose] def primitive (c : ℝ) (j : ℕ) (b : E × ℝ → ℝ) (y : E × ℝ) : ℝ :=
   FlatPrimitive.primitive c j (fun u => b (y.1, u)) y.2
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] in

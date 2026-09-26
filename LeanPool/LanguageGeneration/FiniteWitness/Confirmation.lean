@@ -9,7 +9,7 @@ public import LeanPool.LanguageGeneration.FiniteWitness.SampleSearch
 
 /-! # Finite positive confirmation of the canonical error priorities -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 
@@ -85,7 +85,7 @@ theorem sampleRun_matches_true {F : List α → α} {L : Set α}
   classical
   intro k
   induction k with
-  | zero => intro _; rfl
+  | zero => intro _; simp only [sampleRun, trueRun_zero]
   | succ k ih =>
       intro hkm
       have hk : k < m := by omega
@@ -122,8 +122,7 @@ theorem sampleRun_matches_true {F : List α → α} {L : Set α}
             exact hselected.2.2.2.2.1
         have hminimal : Encodable.encode (trueRun F L (k + 1)) ≤
             Encodable.encode (sampleRun F S n (k + 1)) := by
-          rw [trueRun, dite_eq_left (hbefore k hk)]
-          exact leastCode_le _ (hbefore k hk) htrue
+          exact trueRun_code_le htrue
         omega
       exact Encodable.encode_injective (Nat.le_antisymm hupper (Nat.le_of_not_lt hnotlower))
 

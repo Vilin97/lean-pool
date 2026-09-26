@@ -17,7 +17,7 @@ records the elementary fact that any primitive complex additive character is
 nonprincipal.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive
 
@@ -25,7 +25,7 @@ variable {K : Type*} [Field K] [Fintype K] [DecidableEq K]
 
 /-- Mathlib's canonical primitive complex additive character on a finite
 field. -/
-noncomputable def primitiveAddChar (K : Type*) [Field K] [Fintype K] : AddChar K ℂ :=
+@[expose] noncomputable def primitiveAddChar (K : Type*) [Field K] [Fintype K] : AddChar K ℂ :=
   AddChar.FiniteField.primitiveChar_to_Complex K
 
 omit [DecidableEq K] in

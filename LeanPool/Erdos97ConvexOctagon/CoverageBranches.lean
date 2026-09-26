@@ -17,7 +17,7 @@ The compact kernel-checked coverage certificate excludes all seven canonical
 first rows.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 

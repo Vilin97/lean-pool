@@ -31,7 +31,7 @@ character and derive:
 The second half of the file carries out the scheduling induction for the concrete Wallace data.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

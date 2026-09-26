@@ -20,7 +20,7 @@ Natural powers of the square root encode the real power `(j - 3) / 2`
 without truncating subtraction in the natural numbers.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

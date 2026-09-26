@@ -12,7 +12,7 @@ public import Mathlib.Algebra.Lie.Nilpotent
 # LeanPool.LowDimSolvClassification.GeneralResults
 -/
 
-@[expose] public section
+public section
 
 ---possible generalizations to commutative rings instead of fields
 

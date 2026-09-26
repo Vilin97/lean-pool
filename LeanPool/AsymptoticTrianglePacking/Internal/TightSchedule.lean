@@ -39,7 +39,7 @@ The two per-round band inequalities reduce to the polynomial cores
 Must be sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

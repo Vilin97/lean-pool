@@ -44,7 +44,7 @@ and
 
 -/
 
-@[expose] public section
+public section
 
 open Function MeasureTheory Measure Real
 open scoped ENNReal NNReal Topology ProbabilityTheory ZhangYeungPFR

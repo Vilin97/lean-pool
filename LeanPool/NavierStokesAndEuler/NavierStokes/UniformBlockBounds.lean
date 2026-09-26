@@ -18,7 +18,7 @@ and finite signed harmonic sums preserve constants chosen before labels.
 The endpoints use the actual signed and particular block constructors.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

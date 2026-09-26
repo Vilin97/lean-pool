@@ -19,7 +19,7 @@ reindexing, so that
 Unlike `RegularWreathProduct`, the action of `Q` on `ι` need not be regular.
 -/
 
-@[expose] public section
+public section
 
 namespace Saxl
 

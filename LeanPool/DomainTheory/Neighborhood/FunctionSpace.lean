@@ -60,7 +60,7 @@ neighbourhood, condition
   `sSupMaps` with `toElementMap_sSupMaps` (iii).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

@@ -20,7 +20,7 @@ all generators are zero germs, the common-zero hypothesis forces the target
 to be the zero germ.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators Topology

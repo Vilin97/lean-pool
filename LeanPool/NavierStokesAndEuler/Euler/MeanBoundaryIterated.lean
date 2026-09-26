@@ -14,7 +14,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-! Genuine all-order derivatives of the cutoff operators, with a fixed support-volume factor. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

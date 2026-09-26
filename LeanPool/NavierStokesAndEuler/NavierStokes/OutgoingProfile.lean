@@ -20,7 +20,7 @@ amplitude is the corrected energy root associated with that same witness.
 All histories and pressures below are integrals of these fields.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -44,31 +44,31 @@ structure Profile where
 namespace Profile
 
 /-- Amp, given by `CorrectedPulseAmplitude.amplitude F.data F.reset.coefficients`. -/
-def amp (F : Profile) : ℝ → ℝ :=
+@[expose] def amp (F : Profile) : ℝ → ℝ :=
   CorrectedPulseAmplitude.amplitude F.data F.reset.coefficients
 
 /-- Log E, given by `correctedAngular F.data F.reset.coefficients`. -/
-def logE (F : Profile) : ℝ × ℝ → ℝ :=
+@[expose] def logE (F : Profile) : ℝ × ℝ → ℝ :=
   correctedAngular F.data F.reset.coefficients
 
 /-- Log U, given by `axial F.data.core F.amp`. -/
-def logU (F : Profile) : ℝ × ℝ → ℝ := axial F.data.core F.amp
+@[expose] def logU (F : Profile) : ℝ × ℝ → ℝ := axial F.data.core F.amp
 
 /-- E, given by `F.logE (Real.log p.1, p.2)`. -/
-def E (F : Profile) (p : ℝ × ℝ) : ℝ := F.logE (Real.log p.1, p.2)
+@[expose] def E (F : Profile) (p : ℝ × ℝ) : ℝ := F.logE (Real.log p.1, p.2)
 
 /-- U, given by `F.logU (Real.log p.1, p.2)`. -/
-def U (F : Profile) (p : ℝ × ℝ) : ℝ := F.logU (Real.log p.1, p.2)
+@[expose] def U (F : Profile) (p : ℝ × ℝ) : ℝ := F.logU (Real.log p.1, p.2)
 
 /-- H, given by `Real.sqrt (2 * p.1) * F.E p`. -/
-def H (F : Profile) (p : ℝ × ℝ) : ℝ := Real.sqrt (2 * p.1) * F.E p
+@[expose] def H (F : Profile) (p : ℝ × ℝ) : ℝ := Real.sqrt (2 * p.1) * F.E p
 
 /-- Power E, given by `powerConstant F.data * X ^ (-(1 / 2 + F.data.h))`. -/
 def powerE (F : Profile) (X : ℝ) : ℝ :=
   powerConstant F.data * X ^ (-(1 / 2 + F.data.h))
 
 /-- Power H, given by `Real.sqrt (2 * X) * F.powerE X`. -/
-def powerH (F : Profile) (X : ℝ) : ℝ := Real.sqrt (2 * X) * F.powerE X
+@[expose] def powerH (F : Profile) (X : ℝ) : ℝ := Real.sqrt (2 * X) * F.powerE X
 
 /-- Mass weight, given by `Real.exp y * F.logU (y, eta)`. -/
 def massWeight (F : Profile) (eta y : ℝ) : ℝ := Real.exp y * F.logU (y, eta)
@@ -82,14 +82,14 @@ def angularWeight (F : Profile) (eta y : ℝ) : ℝ :=
 def M (F : Profile) (eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, F.U (u, eta)
 
 /-- J, given by `∫ u in Ioc 0 X, F.H (u, eta) * F.U (u, eta)`. -/
-def J (F : Profile) (eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, F.H (u, eta) * F.U (u, eta)
+@[expose] def J (F : Profile) (eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, F.H (u, eta) * F.U (u, eta)
 
 /-- Energy density, given by `F.U (X, eta) ^ 2 - F.E (X, eta) ^ 2 / 2`. -/
 def energyDensity (F : Profile) (eta X : ℝ) : ℝ :=
   F.U (X, eta) ^ 2 - F.E (X, eta) ^ 2 / 2
 
 /-- Total S, given by `∫ X in Ioi 0, F.energyDensity eta X`. -/
-def totalS (F : Profile) (eta : ℝ) : ℝ := ∫ X in Ioi 0, F.energyDensity eta X
+@[expose] def totalS (F : Profile) (eta : ℝ) : ℝ := ∫ X in Ioi 0, F.energyDensity eta X
 
 /-- Pressure weight, given by `F.logE (y, eta) ^ 2`. -/
 def pressureWeight (F : Profile) (eta y : ℝ) : ℝ := F.logE (y, eta) ^ 2
@@ -99,7 +99,7 @@ def logPi (F : Profile) (p : ℝ × ℝ) : ℝ :=
   -(1 / 2 : ℝ) * ∫ y in Ioi p.1, F.pressureWeight p.2 y
 
 /-- Pi, given by `F.logPi (Real.log p.1, p.2)`. -/
-def Pi (F : Profile) (p : ℝ × ℝ) : ℝ := F.logPi (Real.log p.1, p.2)
+@[expose] def Pi (F : Profile) (p : ℝ × ℝ) : ℝ := F.logPi (Real.log p.1, p.2)
 
 /-- Axis datum, given by `-(1 / 2 : ℝ) * ∫ y, F.pressureWeight eta y`. -/
 def axisDatum (F : Profile) (eta : ℝ) : ℝ :=
@@ -567,7 +567,7 @@ theorem image_exp_Ioi (y : ℝ) : Real.exp '' Ioi y = Ioi (Real.exp y) := by
 namespace Profile
 
 /-- Canonical kernel, given by `F.E (X, eta) ^ 2 / X`. -/
-def canonicalKernel (F : Profile) (eta X : ℝ) : ℝ := F.E (X, eta) ^ 2 / X
+@[expose] def canonicalKernel (F : Profile) (eta X : ℝ) : ℝ := F.E (X, eta) ^ 2 / X
 
 theorem canonicalKernel_comp_exp (F : Profile) (eta y : ℝ) :
     |Real.exp y| • F.canonicalKernel eta (Real.exp y) = F.pressureWeight eta y := by

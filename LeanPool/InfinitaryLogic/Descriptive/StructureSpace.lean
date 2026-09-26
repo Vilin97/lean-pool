@@ -32,7 +32,7 @@ while `RelQuery L` and `StructureSpace L` specialize to carrier ℕ.
   preserves relation satisfaction.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -68,7 +68,7 @@ abbrev StructureSpaceOn (L : Language.{u, v}) (α : Type*) := RelQueryOn L α �
 
 /-- The coding space for countable L-structures on ℕ: for each relation query,
 does the relation hold on that tuple? -/
-def StructureSpace (L : Language.{u, v}) := StructureSpaceOn L ℕ
+@[expose] def StructureSpace (L : Language.{u, v}) := StructureSpaceOn L ℕ
 
 namespace StructureSpaceOn
 

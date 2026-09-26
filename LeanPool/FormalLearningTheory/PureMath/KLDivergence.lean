@@ -26,7 +26,7 @@ KL divergence, cross-entropy, and expected values. No learning-theory types.
 - Cover & Thomas, "Elements of Information Theory", Chapter 2
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -48,13 +48,13 @@ noncomputable def klDivFinitePMF {H : Type*} [Fintype H]
 
 /-- Cross-entropy: ∑_h Q(h) · log(1/P(h)).
     Equals KL(Q‖P) + H(Q) where H(Q) is Shannon entropy. -/
-noncomputable def crossEntropyFinitePMF {H : Type*} [Fintype H]
+@[expose] noncomputable def crossEntropyFinitePMF {H : Type*} [Fintype H]
     (Q P : FinitePMF H) : ℝ :=
   ∑ h : H, if Q.prob h = 0 then 0
     else Q.prob h * Real.log (1 / P.prob h)
 
 /-- Expected value of a real-valued function under a FinitePMF. -/
-noncomputable def expectFinitePMF {H : Type*} [Fintype H]
+@[expose] noncomputable def expectFinitePMF {H : Type*} [Fintype H]
     (Q : FinitePMF H) (f : H → ℝ) : ℝ :=
   ∑ h : H, Q.prob h * f h
 

@@ -23,4 +23,4 @@ Tags: combinatorics, frieze-patterns, fibonacci, coxeter
 MSC: 05E15, 11B39, 13F60
 -/
 
-@[expose] public section
+public section

@@ -25,4 +25,4 @@ Tags: algebraic-geometry, sheaf-theory, topology
 MSC: 14F06, 18F20
 -/
 
-@[expose] public section
+public section

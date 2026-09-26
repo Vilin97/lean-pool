@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TimeLpPairing
 
 /-! Genuine continuous energy paths and their weighted strong limits. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

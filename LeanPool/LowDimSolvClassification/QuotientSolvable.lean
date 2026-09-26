@@ -13,7 +13,7 @@ import Mathlib.Data.Rat.Floor
 # LeanPool.LowDimSolvClassification.QuotientSolvable
 -/
 
-@[expose] public section
+public section
 
 namespace LieIdeal
 

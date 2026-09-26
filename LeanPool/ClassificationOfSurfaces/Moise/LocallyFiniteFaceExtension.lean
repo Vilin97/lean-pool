@@ -19,7 +19,7 @@ resulting boundary maps agree literally on overlaps.  This is the compatibility 
 applying polygonal Schoenflies face by face.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

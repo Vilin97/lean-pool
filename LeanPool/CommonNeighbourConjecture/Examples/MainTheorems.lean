@@ -18,7 +18,7 @@ The complete reader-facing interface: the four non-Mathlib definitions needed
 to read the result, followed by one theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace SaxlCounterexamples.MainTheorems
 

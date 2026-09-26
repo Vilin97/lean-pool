@@ -53,7 +53,7 @@ the boundary cost inequality. This finite minimization implements the
 lemma's discrepancy-crossing selection.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.TwoFactors
 

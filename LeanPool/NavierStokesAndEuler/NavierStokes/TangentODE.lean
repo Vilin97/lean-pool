@@ -20,7 +20,7 @@ has a solution on the whole prescribed interval, without a small-time
 assumption. Continuous linear coefficients provide the required bound.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.TangentODE

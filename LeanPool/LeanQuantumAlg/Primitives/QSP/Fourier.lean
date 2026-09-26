@@ -60,7 +60,7 @@ Pinned Mathlib API: `Polynomial.reflect`, `Polynomial.divX`,
 `Set.Ioo.infinite`, `List.reverseRecOn`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

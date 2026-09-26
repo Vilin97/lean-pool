@@ -20,7 +20,7 @@ the P1 expansion of the one-sided split of the word with the pair removed.  Thus
 one P1 contraction, and one one-sided P2 merge cancel the pair.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -97,18 +97,18 @@ theorem retainWord_contractWord_of_fresh_not_mem {n : ℕ}
                 P1.castSuccDart_neg, ih']
 
 /-- Move a chosen edge name to the fresh-last position. -/
-def moveToLast {n : ℕ} (a : Fin (n + 1)) :
+@[expose] def moveToLast {n : ℕ} (a : Fin (n + 1)) :
     Fin (n + 1) ≃ Fin (n + 1) :=
   Equiv.swap a (Fin.last n)
 
 /-- Rename a tail so that the displayed cancellable edge becomes last. -/
-def renamedTail {n : ℕ} (a : Fin (n + 1))
+@[expose] def renamedTail {n : ℕ} (a : Fin (n + 1))
     (X : List (SignedDart (Fin (n + 1)))) :
     List (SignedDart (Fin (n + 1))) :=
   X.map (SignedDart.mapEquiv (moveToLast a))
 
 /-- Delete the now-unused last edge name from a renamed tail. -/
-def lowerTail {n : ℕ} (a : Fin (n + 1))
+@[expose] def lowerTail {n : ℕ} (a : Fin (n + 1))
     (X : List (SignedDart (Fin (n + 1)))) :
     List (SignedDart (Fin n)) :=
   P1.contractWord (renamedTail a X)

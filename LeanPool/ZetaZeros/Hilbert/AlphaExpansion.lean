@@ -32,7 +32,7 @@ Bochner integral is unconditional, so a separable integrand factors by two such 
 by Fubini.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

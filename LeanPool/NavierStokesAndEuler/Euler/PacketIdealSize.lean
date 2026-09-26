@@ -16,7 +16,7 @@ Uniform comparison of ideal primary sizes before target.  This follows
 from the actual scalar equation's prefix and weighted monotonicity.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,7 +27,7 @@ namespace EulerPacketMovingFrame
 open Set EulerPacketGrowth
 
 /-- Ideal primary size, given by `Real.sqrt (1+(σ^2*t^2)^2)*Z t`. -/
-def idealPrimarySize (σ : ℝ) (Z : ℝ → ℝ) (t : ℝ) : ℝ :=
+@[expose] def idealPrimarySize (σ : ℝ) (Z : ℝ → ℝ) (t : ℝ) : ℝ :=
   Real.sqrt (1+(σ^2*t^2)^2)*Z t
 
 theorem quadratic_weight_sqrt {p : ℝ} (hp : 0 ≤ p) :

@@ -22,7 +22,7 @@ the same `Filter.Germ` model and `AnalyticAt` predicate as the pinned WPT
 project.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology

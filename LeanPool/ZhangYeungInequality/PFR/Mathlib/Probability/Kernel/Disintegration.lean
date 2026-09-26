@@ -20,7 +20,7 @@ where
 
 -/
 
-@[expose] public section
+public section
 
 open Real MeasureTheory Measure ProbabilityTheory
 open scoped ENNReal NNReal Topology ProbabilityTheory

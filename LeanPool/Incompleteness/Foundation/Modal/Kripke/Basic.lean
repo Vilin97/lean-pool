@@ -10,7 +10,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Substitution
 
 /-! # Basic -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -69,7 +69,7 @@ namespace Formula
 namespace Kripke
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Satisfies (M : Kripke.Model) (x : M.World) : Formula ℕ → Prop
+@[expose] def Satisfies (M : Kripke.Model) (x : M.World) : Formula ℕ → Prop
   | atom a  => M x a
   | ⊥  => False
   | φ ==> ψ => (Satisfies M x φ) ==> (Satisfies M x ψ)
@@ -183,7 +183,7 @@ end Satisfies
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ValidOnModel (M : Kripke.Model) (φ : Formula ℕ) := ∀ x : M.World, x ⊧ φ
+@[expose] def ValidOnModel (M : Kripke.Model) (φ : Formula ℕ) := ∀ x : M.World, x ⊧ φ
 
 namespace ValidOnModel
 
@@ -248,7 +248,7 @@ end ValidOnModel
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ValidOnFrame (F : Kripke.Frame) (φ : Formula ℕ) := ∀ V, (⟨F, V⟩ : Kripke.Model) ⊧ φ
+@[expose] def ValidOnFrame (F : Kripke.Frame) (φ : Formula ℕ) := ∀ V, (⟨F, V⟩ : Kripke.Model) ⊧ φ
 
 namespace ValidOnFrame
 

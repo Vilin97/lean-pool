@@ -60,7 +60,7 @@ aside (eventually-periodic trees ↔ regular events) are formalised in
 All *data* is choice-free (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

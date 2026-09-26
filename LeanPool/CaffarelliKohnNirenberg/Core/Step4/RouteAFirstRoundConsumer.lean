@@ -19,7 +19,7 @@ first-round exponents `(6/5, 25/11)` and `(3, 25/6)`.  The last of these is
 remaining inputs.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Metric
 open scoped ENNReal

@@ -20,7 +20,7 @@ This file contains no declaration block recorded as a code transfer; its
 public code dependencies are attributed in their defining modules.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace Construction
@@ -76,7 +76,7 @@ def C : Submodule k TensorAA where
     rw [map_smul, hx]
 
 /-- Diagonal element of the paper's symmetric tensor module. Paper: §2. -/
-def diagonal (a : A) : C :=
+@[expose] def diagonal (a : A) : C :=
   ⟨a ⊗ₜ[k] a, by simp [flip, C]⟩
 
 /-- Matrix-indexed finite symplectic module. Paper: §2. -/

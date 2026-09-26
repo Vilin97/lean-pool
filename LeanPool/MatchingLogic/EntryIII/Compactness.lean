@@ -12,7 +12,7 @@ public import Mathlib.ModelTheory.Satisfiability
 # MatchingLogic.EntryIII.Compactness
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic.EntryIII
 

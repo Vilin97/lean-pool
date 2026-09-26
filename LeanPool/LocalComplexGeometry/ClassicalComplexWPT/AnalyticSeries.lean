@@ -17,7 +17,7 @@ series at the ambient origin to Taylor coefficients at the moving centers
 an analytic function of `z`, with all radii controlled by the original series.
 -/
 
-@[expose] public section
+public section
 
 
 namespace ClassicalComplexWPT
@@ -30,10 +30,10 @@ noncomputable def lastAxis (n : ℕ) : ℂ →L[ℂ] Ambient n :=
 theorem lastAxis_apply (n : ℕ) (w : ℂ) : lastAxis n w = (0, w) := rfl
 
 /-- The unit vector in the distinguished complex direction. -/
-def lastDirection (n : ℕ) : Ambient n := (0, 1)
+@[expose] def lastDirection (n : ℕ) : Ambient n := (0, 1)
 
 /-- The `k`-th (factorial-normalized) distinguished-variable Taylor coefficient at `(z, 0)`. -/
-noncomputable def lastTaylorCoefficient {n : ℕ}
+@[expose] noncomputable def lastTaylorCoefficient {n : ℕ}
     (p : FormalMultilinearSeries ℂ (Ambient n) ℂ) (k : ℕ) (z : Base n) : ℂ :=
   p.changeOrigin (z, 0) k (fun _ ↦ lastDirection n)
 

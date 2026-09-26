@@ -26,7 +26,7 @@ the actual differential residual in `HarmonicResidual`; excluded errors are
 kept as separate additive differences.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -139,6 +139,7 @@ theorem transport_constant_right (g : HarmonicResidual.Frame D) (k : ℝ) (Φ : 
     angularDifferentiate_constant, zero_add, rotate_constant, div_eq_mul_inv]
 
 /-- The two actual cross-advections at coefficient level, before any zero-mode deletion. -/
+@[expose]
 noncomputable def crossCoefficients (g : HarmonicResidual.Frame D) (k : ℝ) (Φ : D → ℝ) (kp : ℤ)
     (m : D → ComplexVector) (a : HarmonicResidual.VectorCoefficients D) :
         HarmonicResidual.VectorCoefficients D := fun i =>
@@ -194,7 +195,7 @@ theorem stateMean_updated (s₀ s₁ : CorrectionState.State D) (h : MeanIncreme
   fin_cases i <;> simp [HarmonicResidual.stateMean, tripleField, he, MeanIncrementBounds.updated]
 
 /-- Block amplitude, defined pointwise by `HarmonicResidual.realCoefficients (b.velocity n i)`. -/
-noncomputable def blockAmplitude (b : CorrectionState.HarmonicBlock D) (n : ℕ) :
+@[expose] noncomputable def blockAmplitude (b : CorrectionState.HarmonicBlock D) (n : ℕ) :
     HarmonicResidual.VectorCoefficients D :=
   fun i => HarmonicResidual.realCoefficients (b.velocity n i)
 
@@ -276,7 +277,7 @@ noncomputable def slowGeometry {s : StripData D} {κ : ℝ} (c : CorrectionState
   inverse_radius_class := ho.invRadius
 
 /-- Slow normal, constructed using `phaseNormal`. -/
-noncomputable def slowNormal {s : StripData D} {κ : ℝ} (c : CorrectionState.Context D)
+@[expose] noncomputable def slowNormal {s : StripData D} {κ : ℝ} (c : CorrectionState.Context D)
     (ho : MeanIncrementBounds.OperatorBounds s c.operators κ)
     (hR : ∀ x ∈ s.domain, 0 < c.operators.radius x) (Φ : ℕ → D → ℝ) (n : ℕ) (x : D) :
     EuclideanSpace ℝ (Fin 3) :=
@@ -702,7 +703,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -718,7 +719,7 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Pullback strip, bundling `domain`, `isOpen_domain`, `epsilon`, `epsilon_pos` and the
 required compatibility proofs. -/
-noncomputable def pullbackStrip (s : StripData D) (L : E →L[ℝ] D) : StripData E where
+@[expose] noncomputable def pullbackStrip (s : StripData D) (L : E →L[ℝ] D) : StripData E where
   domain := L ⁻¹' s.domain
   isOpen_domain := s.isOpen_domain.preimage L.continuous
   epsilon := s.epsilon
@@ -756,7 +757,7 @@ theorem class_pullback {s : StripData D} {w : ℕ → D → ℝ} {α : ℝ} {f :
   exact (hc.trans (mul_le_of_le_one_right (norm_nonneg _) hpow)).trans (hb n (L x) hx j hj)
 
 /-- Projection, given by `ContinuousLinearMap.fst ℝ D ℝ`. -/
-noncomputable def projection : D × ℝ →L[ℝ] D := ContinuousLinearMap.fst ℝ D ℝ
+@[expose] noncomputable def projection : D × ℝ →L[ℝ] D := ContinuousLinearMap.fst ℝ D ℝ
 /-- Inclusion, given by `(ContinuousLinearMap.id ℝ D).prod (0 : D →L[ℝ] ℝ)`. -/
 noncomputable def inclusion : D →L[ℝ] D × ℝ :=
   (ContinuousLinearMap.id ℝ D).prod (0 : D →L[ℝ] ℝ)
@@ -773,6 +774,7 @@ theorem inclusion_norm : ‖inclusion (D := D)‖ ≤ 1 := by
   simp [inclusion, Prod.norm_def]
 
 /-- Product strip, given by `pullbackStrip s projection`. -/
+@[expose]
 noncomputable def productStrip (s : StripData D) : StripData (D × ℝ) := pullbackStrip s projection
 
 theorem class_lift {s : StripData D} {w : ℕ → D → ℝ} {α : ℝ} {f : ℕ → D → F}
@@ -813,11 +815,11 @@ theorem fullPhase_smooth {s : StripData D} (b : CorrectionState.HarmonicBlock D)
   ((hΦ n).comp contDiffOn_fst (fun _ hx => hx)).add (contDiffOn_const.mul contDiffOn_snd)
 
 /-- Amplitude, defined pointwise by `blockAmplitude b n i j x`. -/
-noncomputable def amplitude (b : CorrectionState.HarmonicBlock D) (j : ℤ)
+@[expose] noncomputable def amplitude (b : CorrectionState.HarmonicBlock D) (j : ℤ)
     (n : ℕ) (x : D) : ComplexVector := fun i => blockAmplitude b n i j x
 
 /-- Single mode, constructed using `HarmonicResidual.vectorField`. -/
-noncomputable def singleMode (b : CorrectionState.HarmonicBlock D) (j : ℤ)
+@[expose] noncomputable def singleMode (b : CorrectionState.HarmonicBlock D) (j : ℤ)
     (n : ℕ) (p : D × ℝ) : ComplexVector :=
   HarmonicResidual.vectorField (fun i => AddMonoidAlgebra.single j (fun x => amplitude b j n x i))
     (b.frequency n) (b.phase n) (b.angularFrequency n) p
@@ -1128,7 +1130,7 @@ theorem transport_mean_class {s : StripData D} {κ α β : ℝ} {P : ℕ → D �
     (transport_raw_class c ho hR ha hb ha0 hb0 hN hΦ hk hdiv m i) hP0 hP1
 
 /-- Coefficients evaluated using the original label's carrier. -/
-noncomputable def withCarrier (carrierData b : CorrectionState.HarmonicBlock D) :
+@[expose] noncomputable def withCarrier (carrierData b : CorrectionState.HarmonicBlock D) :
     CorrectionState.HarmonicBlock D where
   velocity := b.velocity
   pressure := b.pressure
@@ -1137,7 +1139,7 @@ noncomputable def withCarrier (carrierData b : CorrectionState.HarmonicBlock D) 
   angularFrequency := carrierData.angularFrequency
 
 /-- The updated label retains its carrier, including its angular frequency. -/
-noncomputable def addBlock (a b : CorrectionState.HarmonicBlock D) :
+@[expose] noncomputable def addBlock (a b : CorrectionState.HarmonicBlock D) :
     CorrectionState.HarmonicBlock D where
   velocity := fun n i => a.velocity n i + b.velocity n i
   pressure := fun n => a.pressure n + b.pressure n
@@ -1167,7 +1169,7 @@ theorem blockAmplitude_addBlock (a b : CorrectionState.HarmonicBlock D) (n : ℕ
   exact realCoefficients_add _ _
 
 /-- Block transport as an element of `HarmonicResidual.BlockCoefficients D`. -/
-noncomputable def blockTransport (c : CorrectionState.Context D)
+@[expose] noncomputable def blockTransport (c : CorrectionState.Context D)
     (carrierData a b : CorrectionState.HarmonicBlock D) : HarmonicResidual.BlockCoefficients D :=
   fun n => HarmonicResidual.transport (HarmonicResidual.contextFrame c n)
     (carrierData.frequency n) (carrierData.phase n) (carrierData.angularFrequency n)
@@ -1531,7 +1533,7 @@ noncomputable def interactionBlock (c : CorrectionState.Context D) (u : Correcti
 
 /-- Linear good block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required
 compatibility proofs. -/
-noncomputable def linearGoodBlock (c : CorrectionState.Context D)
+@[expose] noncomputable def linearGoodBlock (c : CorrectionState.Context D)
     (a b : CorrectionState.HarmonicBlock D) (g : HarmonicResidual.BlockCoefficients D) :
     CorrectionState.HarmonicBlock D where
   velocity := fun n i => HarmonicResidual.nonconstant

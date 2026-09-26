@@ -19,7 +19,7 @@ The proof uses interior mollification on compactly contained balls and then
 exhausts the original ball.
 -/
 
-@[expose] public section
+public section
 
 open Function Set Filter MeasureTheory Topology
 open scoped ENNReal Convolution Pointwise
@@ -110,6 +110,7 @@ lemma opNorm_eq_sum_abs_basis (L : Vec 3 →L[ℝ] ℝ) :
   exact le_antisymm hupper hlower
 
 /-- The native coordinate-gradient norm used by the scalar `W^{1,p}` result. -/
+@[expose]
 def w1pGradientNorm {U : Set (Vec 3)} {p : ℝ≥0∞}
     (u : W1pFunction U p) : Vec 3 → ℝ :=
   fun x => ∑ i : Fin 3, |u.grad x i|

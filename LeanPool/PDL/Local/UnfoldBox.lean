@@ -15,7 +15,7 @@ public import LeanPool.PDL.Star
 
 /-! # Local Box Unfolding (Section 3.1) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -137,7 +137,7 @@ Note: In `F`, `P` and `Bset` we use lists not sets, to eventually make formulas.
 -/
 
 /-- The test constraints produced by box unfolding under a test profile. -/
-def F : (α : Program) → (ℓ : TP α) → List Formula
+@[expose] def F : (α : Program) → (ℓ : TP α) → List Formula
 | ·_ , _ => ∅
 | ?'τ, ℓ => if ℓ ⟨τ, by simp [testsOfProgram]⟩ then ∅ else [~ τ]
 | α⋓β, ℓ => F α ℓ ∪ F β ℓ
@@ -163,7 +163,7 @@ lemma F_sub_testsOfProgram_map_neg (α : Program) (ℓ : TP α) :
     split <;> grind
 
 /-- The residual program sequences produced by box unfolding under a test profile. -/
-def P : (α : Program) →  (ℓ : TP α) → List (List Program)
+@[expose] def P : (α : Program) →  (ℓ : TP α) → List (List Program)
 | ·a, _ => [ [(·a : Program)] ]
 | ?' τ, ℓ => if ℓ ⟨τ, by simp [testsOfProgram]⟩ then [ [] ] else ∅
 | α ⋓ β, ℓ => P α ℓ ∪ P β ℓ
@@ -172,11 +172,11 @@ def P : (α : Program) →  (ℓ : TP α) → List (List Program)
 | ∗α, ℓ => [ [] ] ∪ ((P α ℓ).filter (· != [])).map (fun as => as ++ [∗α])
 
 /-- The test constraints and residual boxes in one branch of box unfolding. -/
-def Bset (α : Program) (ℓ : TP α) (ψ : Formula) : List Formula :=
+@[expose] def Bset (α : Program) (ℓ : TP α) (ψ : Formula) : List Formula :=
   F α ℓ ++ (P α ℓ).map (fun as => Formula.boxes as ψ)
 
 /-- unfold_□(α,ψ) -/
-def unfoldBox (α : Program) (φ : Formula) : List (List Formula) :=
+@[expose] def unfoldBox (α : Program) (φ : Formula) : List (List Formula) :=
   (allTP α).map (fun ℓ => Bset α ℓ φ)
 
 theorem F_mem_iff_neg α (ℓ : TP α) φ :

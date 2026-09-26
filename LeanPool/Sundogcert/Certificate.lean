@@ -19,7 +19,7 @@ public import Mathlib.InformationTheory.Hamming  -- hammingNorm (the error weigh
   TRUST SURFACE = the `Scheme` fields (esp. `hHG`) + `Safe`; everything else is machine-checked.
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 
@@ -58,7 +58,7 @@ def body (s : Fin S.k → F) (e : Fin S.n → F) : Fin S.n → F := s ᵥ* S.G +
 
 /-- **Safety predicate** (semantic): some same-syndrome witness has weight ≤ τ.
     The planted `e` is a *label*, never referenced here. -/
-def Safe (y : Fin S.n → F) : Prop :=
+@[expose] def Safe (y : Fin S.n → F) : Prop :=
   ∃ e' : Fin S.n → F, S.H *ᵥ e' = S.H *ᵥ y ∧ wt e' ≤ S.τ
 
 /-! ### The verifier (cheap, three-valued) -/
@@ -236,7 +236,7 @@ theorem hammingNorm_mulVec_le (M : Matrix (Fin a) (Fin b) F) (e : Fin b → F) :
     `hammingNorm` zero-test + one division; `colBound S.H` amortized once per scheme).  Unlike
     `supportLb` it can exceed 1, so `reject` fires at `τ > 0`.  Floor division is the SOUND
     direction (it only under-estimates weight); `colBound = 0` ⟹ `H = 0` ⟹ syndrome `= 0`, sound. -/
-def colWeightLb (z : Fin S.m → F) : ℕ := hammingNorm z / colBound S.H
+@[expose] def colWeightLb (z : Fin S.m → F) : ℕ := hammingNorm z / colBound S.H
 
 /-- `colWeightLb` never exceeds any same-syndrome witness weight (soundness). -/
 theorem colWeightLb_sound (y e' : Fin S.n → F) (he : S.H *ᵥ e' = S.H *ᵥ y) :

@@ -31,14 +31,14 @@ Used for computing winding numbers, distances, and derivatives along circular ar
 * `sin_pos_of_mem_Ioo_zero_pi` - sin is positive on (0, π)
 -/
 
-@[expose] public section
+public section
 
 open Complex Real Set
 
 namespace ArcCalculus
 
 /-- Unit circle arc from angle θ₁ to θ₂, linearly parameterized on [a,b]. -/
-noncomputable def unitArc (θ₁ θ₂ a b : ℝ) (t : ℝ) : ℂ :=
+@[expose] noncomputable def unitArc (θ₁ θ₂ a b : ℝ) (t : ℝ) : ℂ :=
   exp (↑(θ₁ + (t - a) / (b - a) * (θ₂ - θ₁)) * I)
 
 /-- Points on the unit arc have norm 1. -/

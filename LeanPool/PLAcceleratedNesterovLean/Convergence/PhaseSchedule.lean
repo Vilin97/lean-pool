@@ -21,7 +21,7 @@ Key arithmetic facts:
 - θₖ ↓ 0 as k → ∞
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

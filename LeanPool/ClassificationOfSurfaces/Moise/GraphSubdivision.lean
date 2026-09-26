@@ -18,7 +18,7 @@ source edge.  Keeping only arrangement faces subordinate to an original face pro
 subdivision of the graph.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -160,7 +160,7 @@ theorem edgeAt_mem_simplexes (i : Fin (Fintype.card K.EdgeFace)) :
   (Finset.mem_filter.mp (K.edgeAt i).2).1
 
 /-- Affine coordinate from `0` to `1` on an enumerated source edge. -/
-noncomputable def edgeParameter (i : Fin (Fintype.card K.EdgeFace)) :
+@[expose] noncomputable def edgeParameter (i : Fin (Fintype.card K.EdgeFace)) :
     Plane →ᵃ[ℝ] ℝ :=
   if _ : K.position (K.edgeFirst i) 0 ≠ K.position (K.edgeSecond i) 0 then
     (K.position (K.edgeSecond i) 0 - K.position (K.edgeFirst i) 0)⁻¹ •

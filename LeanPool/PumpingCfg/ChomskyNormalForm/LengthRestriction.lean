@@ -30,7 +30,7 @@ the original
    [Hopcroft et al. 2006]
 -/
 
-@[expose] public section
+public section
 
 universe uN uT
 variable {T : Type uT}
@@ -144,7 +144,7 @@ def restrictLengthRules [DecidableEq T] [DecidableEq g.NT] (l : List (ContextFre
 end RestrictLength
 
 /-- Construct a `ChomskyNormalGrammar` corresponding to the original `ContextFreeGrammar` -/
-noncomputable def restrictLength [DecidableEq T] (g : ContextFreeGrammar T)
+@[expose] noncomputable def restrictLength [DecidableEq T] (g : ContextFreeGrammar T)
     [e : DecidableEq g.NT] :=
   ChomskyNormalFormGrammar.mk g.NT' (Sum.inl g.initial) (restrictLengthRules g.rules.toList)
 
@@ -438,7 +438,7 @@ lemma computeRulesRec_derives [DecidableEq T] [DecidableEq g.NT] {r : ContextFre
             · simp only [List.mem_toFinset]
               exact hx₁
             · exact ChomskyNormalFormRule.Rewrites.input_output
-        · simp only [ChomskyNormalFormRule.output, List.map_cons, List.map_drop]
+        · simp only [List.map_cons, List.map_drop]
           rw [← List.singleton_append, ← List.singleton_append, embedSymbol_nonterminal,
             ← List.map_drop]
           apply ChomskyNormalFormGrammar.Derives.append_left

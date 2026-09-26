@@ -23,4 +23,4 @@ Barrel file re-exporting the three submodules:
 * `Decomposition` — H-W Prop 2.2, main decomposition theorems
 -/
 
-@[expose] public section
+public section

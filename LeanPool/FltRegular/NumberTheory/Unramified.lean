@@ -22,7 +22,7 @@ public import Mathlib.RingTheory.Unramified.Locus
   `f'(α) mod p` is separable for the prime below `P`, then `S/R` is unramified at `P`.
 -/
 
-@[expose] public section
+public section
 open UniqueFactorizationMonoid Ideal
 
 attribute [local instance] FractionRing.liftAlgebra

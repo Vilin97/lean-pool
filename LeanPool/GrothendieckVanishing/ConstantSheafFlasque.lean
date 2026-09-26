@@ -25,7 +25,7 @@ relies crucially on `nonempty_preirreducible_inter` for irreducible spaces.
 * `isFlasqueSheaf_zeroOutsideInt_top`
 -/
 
-@[expose] public section
+public section
 
 universe u
 

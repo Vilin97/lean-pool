@@ -40,7 +40,7 @@ establish convergence of a formal power series, the nonlinear remainder
 estimates, the contraction argument, or the full profile's cone margin.
 -/
 
-@[expose] public section
+public section
 
 namespace NavierStokes.AxisProfile
 
@@ -206,7 +206,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -597,7 +597,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

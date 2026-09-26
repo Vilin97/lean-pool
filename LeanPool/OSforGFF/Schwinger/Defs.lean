@@ -20,7 +20,7 @@ For centered Gaussian measures: Z[J] = exp(−½⟨J,CJ⟩) and all Sₙ are
 determined by Wick's theorem from the two-point function S₂ = C.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex
 open TopologicalSpace
@@ -89,21 +89,21 @@ lemma schwinger_vanishes_centered (dμ_config : ProbabilityMeasure FieldConfigur
   exact h_centered f
 
 /-- Complex version of Schwinger functions for complex test functions -/
-def SchwingerFunctionℂ (dμ_config : ProbabilityMeasure FieldConfiguration) (n : ℕ)
+@[expose] def SchwingerFunctionℂ (dμ_config : ProbabilityMeasure FieldConfiguration) (n : ℕ)
   (f : Fin n → TestFunctionℂ) : ℂ :=
   ∫ ω, (∏ i, distributionPairingℂReal ω (f i)) ∂dμ_config.toMeasure
 
 /-- The complex 2-point Schwinger function for complex test functions.
     This is the natural extension of SchwingerFunction₂ to complex test functions.
 -/
-def SchwingerFunctionℂ₂ (dμ_config : ProbabilityMeasure FieldConfiguration)
+@[expose] def SchwingerFunctionℂ₂ (dμ_config : ProbabilityMeasure FieldConfiguration)
   (φ ψ : TestFunctionℂ) : ℂ :=
   SchwingerFunctionℂ dμ_config 2 ![φ, ψ]
 
 /-- Property that SchwingerFunctionℂ₂ is ℂ-bilinear in both arguments.
     This is a key property for Gaussian measures and essential for OS0 analyticity.
 -/
-def CovarianceBilinear (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+@[expose] def CovarianceBilinear (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (c : ℂ) (φ₁ φ₂ ψ : TestFunctionℂ),
     SchwingerFunctionℂ₂ dμ_config (c • φ₁) ψ = c * SchwingerFunctionℂ₂ dμ_config φ₁ ψ ∧
     SchwingerFunctionℂ₂ dμ_config (φ₁ + φ₂) ψ = SchwingerFunctionℂ₂ dμ_config φ₁ ψ +

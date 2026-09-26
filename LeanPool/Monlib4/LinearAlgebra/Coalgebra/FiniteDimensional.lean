@@ -21,7 +21,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.Coalgebra.FiniteDimensional`.
 -/
 
-@[expose] public section
+public section
 
 variable {R A : Type*}
 local notation "lT" => LinearMap.lTensor

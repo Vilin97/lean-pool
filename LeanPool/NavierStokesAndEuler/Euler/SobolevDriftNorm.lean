@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
 
 /-! Genuine finite-Sobolev norms of the small four-component transport drift. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,12 +41,12 @@ def driftLevelNorm {s : ℕ} (n : ℕ) (L : Vector3 →L[ℝ] Domain 4)
 
 /-- The drift norm at one external order, including all derivatives in the fixed base Sobolev block.
 -/
-def driftBlockNorm {s : ℕ} (q n : ℕ) (L : Vector3 →L[ℝ] Domain 4)
+@[expose] def driftBlockNorm {s : ℕ} (q n : ℕ) (L : Vector3 →L[ℝ] Domain 4)
     (u : SobolevSpace period s) : ℝ :=
   ∑ r ∈ Finset.range (q+1), driftLevelNorm period (n+r) L u
 
 /-- The weighted genuine drift norm, retaining cancellations in the fixed velocity map. -/
-def weightedDriftNorm {s : ℕ} (q N : ℕ) (ρ : ℝ) (L : Vector3 →L[ℝ] Domain 4)
+@[expose] def weightedDriftNorm {s : ℕ} (q N : ℕ) (ρ : ℝ) (L : Vector3 →L[ℝ] Domain 4)
     (u : SobolevSpace period s) : ℝ :=
   ∑ n ∈ Finset.range (N+1), EulerPacketWeights.weight ρ n * driftBlockNorm period q n L u
 

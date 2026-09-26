@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerMaximal
 /-! Local recovery and ordinary uniqueness identify the canonical maximal
 velocity with every global Comparator solution. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -94,7 +94,7 @@ One lemma here strengthens one on `main`: `mark_swap'` drops the non-levelness h
 under either name. Its home is `Schoenflies/Parity.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

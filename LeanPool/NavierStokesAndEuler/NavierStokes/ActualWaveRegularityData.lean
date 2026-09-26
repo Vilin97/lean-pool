@@ -31,7 +31,7 @@ Native smoothness and genuine zero germs, rather than estimates on a
 smaller strip, supply the continuation away from the active phase patches.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -947,7 +947,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

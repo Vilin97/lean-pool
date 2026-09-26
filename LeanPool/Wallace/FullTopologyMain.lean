@@ -16,7 +16,7 @@ This module applies the unconditional fusion construction to the generic topolog
 `Wallace.FullTopology`.  The resulting theorem has no hypotheses.
 -/
 
-@[expose] public section
+public section
 
 namespace Wallace
 

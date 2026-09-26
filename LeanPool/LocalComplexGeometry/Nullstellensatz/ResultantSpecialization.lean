@@ -20,7 +20,7 @@ are part of every definition, so specialization remains valid even when a
 fiber drops degree.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators Topology
@@ -34,12 +34,12 @@ noncomputable section
 
 /-- Assemble coefficients indexed by `Fin (d + 1)` into a polynomial of
 degree at most `d`. -/
-def fixedDegreePolynomial {R : Type*} [Semiring R] {d : ℕ}
+@[expose] def fixedDegreePolynomial {R : Type*} [Semiring R] {d : ℕ}
     (c : Fin (d + 1) → R) : Polynomial R :=
   ∑ i : Fin (d + 1), Polynomial.C (c i) * Polynomial.X ^ (i : ℕ)
 
 /-- Specialize a fixed-degree polynomial family at a parameter. -/
-def fixedDegreePolynomialAt {R X : Type*} [Semiring R] {d : ℕ}
+@[expose] def fixedDegreePolynomialAt {R X : Type*} [Semiring R] {d : ℕ}
     (c : Fin (d + 1) → X → R) (x : X) : Polynomial R :=
   fixedDegreePolynomial (fun i ↦ c i x)
 

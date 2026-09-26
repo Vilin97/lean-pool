@@ -19,7 +19,7 @@ supremum-norm kernel paired with the supplied Banach-valued curve. This proves
 joint smoothness, rather than inferring it from separate smoothness.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.HolomorphicFamily

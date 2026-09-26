@@ -31,7 +31,7 @@ This file records the three polynomial identities behind the formula; they are a
 consequences of the two Fermat equations and of `2 = 0`.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 

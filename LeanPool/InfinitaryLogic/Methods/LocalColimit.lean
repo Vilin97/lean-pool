@@ -39,7 +39,7 @@ Next chunks (not here): the local atom/deForm seed and its countability, then th
 re-base over `localColim`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

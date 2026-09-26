@@ -19,7 +19,7 @@ The integrable Fourier multipliers defining the test operators respect complex
 linear combinations. Their inverse Fourier integrals vanish at spatial infinity.
 -/
 
-@[expose] public section
+public section
 
 
 

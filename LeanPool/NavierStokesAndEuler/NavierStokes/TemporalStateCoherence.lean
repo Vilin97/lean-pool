@@ -17,7 +17,7 @@ stream construction, retained alias and recomputed pressure are the literal
 operators used by `VariableGaugeMean.temporalStageState`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.TemporalStateCoherence

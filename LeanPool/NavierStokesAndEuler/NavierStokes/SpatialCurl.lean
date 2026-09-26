@@ -17,7 +17,7 @@ space used in `ProblemStatement`. In particular, mixed-partial symmetry is
 proved from C² regularity, rather than assumed for formal derivative symbols.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -53,10 +53,10 @@ def curlLinear : (Space →L[ℝ] Space) →L[ℝ] Space :=
   simp [curlLinear, coordinateVector]
 
 /-- Curl of a potential on physical Euclidean three-space. -/
-def curl (A : Space → Space) (x : Space) : Space := curlLinear (fderiv ℝ A x)
+@[expose] def curl (A : Space → Space) (x : Space) : Space := curlLinear (fderiv ℝ A x)
 
 /-- Curl taken only in space, with the physical time held fixed. -/
-def spatialCurl (A : VelocityField) : VelocityField :=
+@[expose] def spatialCurl (A : VelocityField) : VelocityField :=
   fun z => curl (fun y => A (z.1, y)) z.2
 
 /-- Actual mixed-partial symmetry, obtained from Schwarz's theorem. -/

@@ -14,7 +14,7 @@ that derivative is continuous and is verified through a separating family
 of bounded linear observations. The proof reconstructs the actual Bochner
 primitive and does not infer strong convergence from pointwise convergence. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -27,7 +27,7 @@ only creates more codes, and countability plus "same code ⇒ same orbit" is all
 countably-many-types argument consumes.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

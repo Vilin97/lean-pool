@@ -36,7 +36,7 @@ For higher-order poles, the project's `residueAt_eq_laurent_head_coeff` (in
 Laurent coefficient.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval

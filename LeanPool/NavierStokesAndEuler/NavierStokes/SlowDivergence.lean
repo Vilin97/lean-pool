@@ -21,7 +21,7 @@ axial profile. Its radial derivative is the actual similarity axial operator,
 and its physical reconstruction satisfies the flux form of incompressibility.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,7 @@ open scoped Topology ContDiff
 open ProfileHistories
 
 /-- The positive-order radial flux, with an arbitrary exponent increment lam. -/
-def radialFlux (h lam : ℝ) (U : Field) (p : Point) : ℝ :=
+@[expose] def radialFlux (h lam : ℝ) (U : Field) (p : Point) : ℝ :=
   p.1 / CoordinateAlgebra.L h p.2 *
     (2 * p.2 * U p - 2 * p.2 * (CoordinateAlgebra.D h + lam) * average U p -
       CoordinateAlgebra.d p.2 * SimilarityProfile.partialEta (average U) p)

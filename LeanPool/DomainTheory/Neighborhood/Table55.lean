@@ -61,7 +61,7 @@ established
 `ofIso`/`fixMap` API.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

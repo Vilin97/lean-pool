@@ -20,7 +20,7 @@ and its coordinate derivative is the translate of the coordinate derivative of
 the kernel.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric
 

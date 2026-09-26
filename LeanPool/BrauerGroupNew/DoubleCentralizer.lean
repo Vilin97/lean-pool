@@ -32,7 +32,7 @@ import Mathlib.RingTheory.SimpleRing.Matrix
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.DoubleCentralizer`.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

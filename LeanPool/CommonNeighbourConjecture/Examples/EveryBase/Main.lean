@@ -18,7 +18,7 @@ This module instantiates the abstract obstruction construction with the affine
 Frobenius groups and their deleted binary permutation modules.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

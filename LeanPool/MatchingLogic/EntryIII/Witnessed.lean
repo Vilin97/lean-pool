@@ -24,7 +24,7 @@ import LeanPool.MatchingLogic.EntryIII.Lindenbaum
 # MatchingLogic.EntryIII.Witnessed
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -163,7 +163,7 @@ theorem locConsistent_insert_captureAvoidingWitness
 /-! ### Shared Henkin-stage infrastructure -/
 
 /-- Iterate a witness-adjunction operation along an enumeration. -/
-def henkinStages {α : Type} (step : List α → α → List α)
+@[expose] def henkinStages {α : Type} (step : List α → α → List α)
     (enum : Nat → α) (base : List α) : Nat → List α
   | 0 => base
   | n + 1 => step (henkinStages step enum base n) (enum n)

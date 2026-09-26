@@ -22,7 +22,7 @@ section
 budgets that retain it. Quantitative bounds must concern this radius,
 rather than an arbitrary witness of a radius-existence theorem. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -131,7 +131,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

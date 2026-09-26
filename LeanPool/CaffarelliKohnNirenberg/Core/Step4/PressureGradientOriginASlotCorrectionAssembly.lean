@@ -16,7 +16,7 @@ transfer are supplied internally. Only the displayed correction estimate
 remains as the analytic input of this reduction.
 -/
 
-@[expose] public section
+public section
 
 section
 

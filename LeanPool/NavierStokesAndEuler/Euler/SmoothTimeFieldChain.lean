@@ -19,7 +19,7 @@ import Mathlib.Analysis.Calculus.Deriv.Prod
 bounded coefficient paths. The closed-interval statements include both
 one-sided endpoints, obtained from the actual Bochner integral identity. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

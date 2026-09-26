@@ -31,7 +31,7 @@ This union-bound estimate deliberately sidesteps the delicate correlation struct
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 

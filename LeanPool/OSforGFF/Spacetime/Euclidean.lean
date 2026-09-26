@@ -20,7 +20,7 @@ pullbacks (needed for Schwartz space), and continuity of all actions.
 Foundation for the OS2 axiom.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory NNReal ENNReal
 open TopologicalSpace Measure
@@ -51,7 +51,7 @@ structure E where
 /-- Action of g : E on a spacetime point x.
 Impliments the pullback map x to Rx+ t
 -/
-def act (g : E) (x : SpaceTime) : SpaceTime := g.R x + g.t
+@[expose] def act (g : E) (x : SpaceTime) : SpaceTime := g.R x + g.t
 
 /-act_one, act_mul and act_inv lemmas prove
 identity, composition and inverse. They are needed to say Euclidean sym

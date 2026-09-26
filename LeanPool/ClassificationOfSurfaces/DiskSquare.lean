@@ -23,7 +23,7 @@ projection of the Euclidean circle, and an arbitrary homeomorphism from the circ
 frontier of a bounded convex disk is extended across `PolygonCell`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

@@ -65,7 +65,7 @@ overlap-freeness) are real combinatorics-on-words and are left as a separate
 follow-up.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise516
 

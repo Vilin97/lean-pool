@@ -14,7 +14,7 @@ public import LeanPool.PDL.Interpolation.SingletonCluster
 Here we put together the interpolants for singleton clusters and for proper clusters.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

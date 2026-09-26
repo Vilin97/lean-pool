@@ -82,7 +82,7 @@ by shortening an arbitrary walk at repeated vertices"). This file supplies that 
   vertex it visits; what `lem:subdivision-ear-preserve` and `lem:relative-ear` run on.
 -/
 
-@[expose] public section
+public section
 
 open Set
 
@@ -93,11 +93,12 @@ namespace Graph
 /-! ### The vertices an edge list touches -/
 
 /-- The vertices lying on at least one edge of `W`. -/
-def coveredVertices (G : Graph α β) (W : List β) : Set α := {x | ∃ e ∈ W, G.Inc e x}
+@[expose] def coveredVertices (G : Graph α β) (W : List β) : Set α := {x | ∃ e ∈ W, G.Inc e x}
 
 /-- The vertices a walk from `u` along `W` visits: its source, plus the ends of every edge it
 takes. Defined for any edge list, not just for one that walks — the freshness clause of a
 path reads it about the *rest* of the path before that rest is known to be a walk at all. -/
+@[expose]
 def walkVertices (G : Graph α β) (u : α) (W : List β) : Set α := insert u (G.coveredVertices W)
 
 theorem mem_coveredVertices_iff : x ∈ G.coveredVertices W ↔ ∃ e ∈ W, G.Inc e x := Iff.rfl

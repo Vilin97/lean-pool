@@ -14,7 +14,7 @@ section
 
 /-! Uniform bounds for the actual mean-zero angular primitive. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -60,7 +60,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

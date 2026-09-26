@@ -22,7 +22,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace Descriptive.Tree
@@ -32,7 +32,7 @@ variable {A : Type*} (S T : tree A)
 
 /-- The body of a tree T, also written [T] in the literature, is the set of infinite branches,
   implemented as `Stream` -/
-def body : Set (Stream' A) := { y | ∀ x, y ∈ principalOpen x → x ∈ T }
+@[expose] def body : Set (Stream' A) := { y | ∀ x, y ∈ principalOpen x → x ∈ T }
 @[gcongr] lemma body_mono {S T : tree A} (h : S ≤ T) : body S ⊆ body T :=
   fun _ h' x y ↦ h (h' x y)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
@@ -78,7 +78,7 @@ def bodyInfHom : sInfHom (tree A) (Set (Stream' A)) where
   · intro h _ _; apply h; simpa
 
 /-- Appending lists to the front of a branch lifts as an operation on bodies -/
-@[simps -fullyApplied coe]
+@[expose, simps -fullyApplied coe]
 def body.append {T : tree A} (x : List A) (y : body (subAt T x)) : body T :=
   ⟨x ++ₛ y.val, by simpa using y.prop⟩
 @[simp] lemma body_append_nil (y : body T) : body.append (T := no_index _) [] y = y := rfl

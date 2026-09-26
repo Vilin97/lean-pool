@@ -28,7 +28,7 @@ positive sign only.  Nothing here mentions interpolation; the set-level versions
 the separator budgets are stated against.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

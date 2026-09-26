@@ -13,7 +13,7 @@ public import LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
 # LeanPool.RlTheoryInLean.Probability.MarkovChain.Trajectory
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Filtration
 open ProbabilityTheory.Kernel

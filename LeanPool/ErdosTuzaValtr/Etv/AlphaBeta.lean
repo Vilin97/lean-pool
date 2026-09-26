@@ -22,7 +22,7 @@ import Mathlib.Tactic.NormNum.Pow
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Etv.AlphaBeta`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

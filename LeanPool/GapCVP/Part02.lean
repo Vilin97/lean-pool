@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part01
 
 /-! # GapCVP proof, part 02 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -124,7 +124,7 @@ noncomputable def AnchoredInitializationAllowed
     FirstBlockAnchored machine.tm window.2.2.2
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def AnchoredVerificationAllowed
+@[expose] noncomputable def AnchoredVerificationAllowed
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (window : CompletePhaseWindow machine.tm) : Bool :=
@@ -134,7 +134,7 @@ noncomputable def AnchoredVerificationAllowed
     FirstBlockAnchored machine.tm window.2.2.2
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def AnchoredAcceptanceAllowed
+@[expose] noncomputable def AnchoredAcceptanceAllowed
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (window : CompletePhaseWindow machine.tm) : Bool :=
@@ -352,7 +352,7 @@ open GapCVP.CLTableauSimulationCert GapCVP.CLCompleteVerifierSimulation
 open GapCVP.CLPhaseTableauSimulation GapCVP.CLPhaseTraceInduction
 
 /-- GapCVP reduction support. -/
-def anchoredVerifierWindowAt
+@[expose] def anchoredVerifierWindowAt
     (tm : Turing.FinTM2) (width : ℕ)
     (first next : Position width → CompletePhaseCell tm)
     (position : Position width) : CompletePhaseWindow tm :=
@@ -859,7 +859,7 @@ abbrev AnchoredPhaseTrace
       Symbol (completePhaseSymbolCount machine.tm)
 
 /-- GapCVP reduction support. -/
-noncomputable def AnchoredPhaseMasks
+@[expose] noncomputable def AnchoredPhaseMasks
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -1529,7 +1529,7 @@ private theorem canonicalVerifierScriptHints_occupied
   simp only [hvalueBound, getElem?_pos, Option.isSome_some]
 
 /-- GapCVP reduction support. -/
-noncomputable def StackSoundAnchoredVerificationAllowed
+@[expose] noncomputable def StackSoundAnchoredVerificationAllowed
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (window : CompletePhaseWindow machine.tm) : Bool :=
@@ -1538,7 +1538,7 @@ noncomputable def StackSoundAnchoredVerificationAllowed
     OccupiedVerifierPrefix machine window.2.1.script.2.1
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def StackSoundAnchoredPhaseAllowed
+@[expose] noncomputable def StackSoundAnchoredPhaseAllowed
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (window : CompletePhaseWindow machine.tm) : Bool :=
@@ -6595,7 +6595,7 @@ open GapCVP.CLCompactWindowSoundness GapCVP.CLBoundedRowInduction
 open GapCVP.CLFullStackStepSoundness GapCVP.CLFullTraceReachability GapCVP.CLNaturalTimeCompiler
 
 /-- GapCVP reduction support. -/
-noncomputable def ReplicatedMachineHeadCoherent
+@[expose] noncomputable def ReplicatedMachineHeadCoherent
     (tm : Turing.FinTM2)
     (window : CompletePhaseWindow tm) : Bool :=
   @decide (
@@ -6605,7 +6605,7 @@ noncomputable def ReplicatedMachineHeadCoherent
       completeMachineHead tm window.2.1
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def TrueOutputMachineHead
+@[expose] noncomputable def TrueOutputMachineHead
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (cell : CompletePhaseCell machine.tm) : Bool :=
@@ -6621,7 +6621,7 @@ noncomputable def TrueOutputMachineHead
         none
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-noncomputable def AcceptanceAnchoredPhaseAllowed
+@[expose] noncomputable def AcceptanceAnchoredPhaseAllowed
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (window : CompletePhaseWindow machine.tm) : Bool :=
@@ -7276,7 +7276,7 @@ private theorem actualStep_iff_acceptanceAnchoredCanonicalVerifierWindows
     exact hwindow.1
 
 /-- GapCVP reduction support. -/
-noncomputable def AllCanonicalAcceptanceAnchoredVerifierTraceWindows
+@[expose] noncomputable def AllCanonicalAcceptanceAnchoredVerifierTraceWindows
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)

@@ -19,7 +19,7 @@ Gallier-Xu normal-form route. The definitions are still intentionally light, but
 and theorem boundaries match the Moise/PL blueprint.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -82,15 +82,16 @@ instance boundaryOccurrenceFintype (K : SurfaceCellComplex) : Fintype K.Boundary
   inferInstance
 
 /-- The dart stored at a boundary occurrence. -/
+@[expose]
 def BoundaryOccurrence.dart {K : SurfaceCellComplex} (o : K.BoundaryOccurrence) : K.Dart :=
   (K.boundary o.1).get o.2
 
 /-- Two darts name the same unoriented edge. -/
-def SameEdge (K : SurfaceCellComplex) (d e : K.Dart) : Prop :=
+@[expose] def SameEdge (K : SurfaceCellComplex) (d e : K.Dart) : Prop :=
   e = d ∨ e = K.inv d
 
 /-- A boundary position belongs to the unoriented edge named by `d`. -/
-def Occurs (K : SurfaceCellComplex) (d : K.Dart) (o : K.BoundaryOccurrence) : Prop :=
+@[expose] def Occurs (K : SurfaceCellComplex) (d : K.Dart) (o : K.BoundaryOccurrence) : Prop :=
   K.SameEdge d o.dart
 
 /-- The unoriented edge named by `d` occurs at exactly one boundary position. -/
@@ -174,7 +175,7 @@ def edge {α : Type*} : SignedDart α → α
   | neg a => a
 
 /-- Reverse the orientation of a signed dart. -/
-def flip {α : Type*} : SignedDart α → SignedDart α
+@[expose] def flip {α : Type*} : SignedDart α → SignedDart α
   | pos a => neg a
   | neg a => pos a
 

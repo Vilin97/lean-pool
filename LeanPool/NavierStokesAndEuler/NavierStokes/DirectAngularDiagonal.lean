@@ -19,7 +19,7 @@ an axial primitive. Axisymmetry proves its divergence equation, and an
 annular zero germ removes the coordinate singularity on the axis.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,17 +37,17 @@ abbrev CylPoint := ℝ × (ℝ × ℝ)
 abbrev Coefficient := CylPoint → ℝ
 
 /-- Radius, given by `PolarCharts.radius (PhysicalGraphBounds.radialProjection w)`. -/
-noncomputable def radius (w : SpaceTime) : ℝ :=
+@[expose] noncomputable def radius (w : SpaceTime) : ℝ :=
   PolarCharts.radius (PhysicalGraphBounds.radialProjection w)
 
 /-- Slow point, given by `(w.1, w.2 2)`. -/
-noncomputable def slowPoint (w : SpaceTime) : Slow := (w.1, w.2 2)
+@[expose] noncomputable def slowPoint (w : SpaceTime) : Slow := (w.1, w.2 2)
 
 /-- Cyl point, given by `(w.1, (radius w, w.2 2))`. -/
-noncomputable def cylPoint (w : SpaceTime) : CylPoint := (w.1, (radius w, w.2 2))
+@[expose] noncomputable def cylPoint (w : SpaceTime) : CylPoint := (w.1, (radius w, w.2 2))
 
 /-- Slow of cyl, given by `(p.1, p.2.2)`. -/
-noncomputable def slowOfCyl (p : CylPoint) : Slow := (p.1, p.2.2)
+@[expose] noncomputable def slowOfCyl (p : CylPoint) : Slow := (p.1, p.2.2)
 
 /-- Physical domain, given by `slowPoint ⁻¹' U`. -/
 noncomputable def physicalDomain (U : Set Slow) : Set SpaceTime := slowPoint ⁻¹' U
@@ -80,7 +80,7 @@ noncomputable def rate (b : Coefficient) (p : AxisymmetricFields.ProfilePoint) :
   b (profileToCyl p) / Real.sqrt (2 * p.2.1)
 
 /-- Literal angular velocity with physical tangential magnitude `b`. -/
-noncomputable def angularField (b : Coefficient) (w : SpaceTime) : Space :=
+@[expose] noncomputable def angularField (b : Coefficient) (w : SpaceTime) : Space :=
   (-w.2 1 / radius w * b (cylPoint w)) • coordinateVector 0 +
     (w.2 0 / radius w * b (cylPoint w)) • coordinateVector 1
 

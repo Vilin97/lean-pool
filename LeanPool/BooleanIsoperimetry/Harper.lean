@@ -22,7 +22,7 @@ This file assembles the compression, Macaulay, Kruskal-Katona, and scalar
 recurrence layers into the final sorry-free proof of Harper's theorem.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

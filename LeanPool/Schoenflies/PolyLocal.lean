@@ -59,7 +59,7 @@ Brick B5 ↔ brick B6 of `lem:polygonal-redrawing` (H6), and the interface B7 us
   payoff: two points of a connected relatively open piece are joined *inside that piece*.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

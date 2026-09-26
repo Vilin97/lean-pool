@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CorrectionDifference
 
 /-! Fixed, actual coefficient budgets for L² viscosity stability. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,11 +26,11 @@ def lowerConstant (period : ℝ) [Fact (0 < period)] (q : ℕ) (A0 A2 Z R : ℝ)
   A0+(4+2*A2)*sobolevEmbeddingConstant period q*(Z+R)
 
 /-- A fixed pointwise bound for the actual background-plus-error advecting velocity. -/
-def velocityBound (period : ℝ) [Fact (0 < period)] (q : ℕ) (Z R : ℝ) : ℝ :=
+@[expose] def velocityBound (period : ℝ) [Fact (0 < period)] (q : ℕ) (Z R : ℝ) : ℝ :=
   sobolevEmbeddingConstant period q*(Z+R)
 
 /-- The squared-metric growth coefficient after the genuine transport and heat cancellations. -/
-def growthConstant (c Kb Kx Kt V L : ℝ) : ℝ :=
+@[expose] def growthConstant (c Kb Kx Kt V L : ℝ) : ℝ :=
   (Kt+2*Kx*V+4*Kx^2/c^2+2*Kb*L+1)/c^2
 
 /-- The fixed coefficient of the squared viscosity difference. -/

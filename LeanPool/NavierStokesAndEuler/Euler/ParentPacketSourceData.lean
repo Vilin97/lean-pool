@@ -19,7 +19,7 @@ section
 /-! The ordinary three-dimensional coefficient interface is a literal
 restriction of the generic smooth time-field interface. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,7 +47,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

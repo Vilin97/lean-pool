@@ -22,7 +22,7 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.1, D2–D4, proof pl
 * `FinCover.IsAdapted`: adapted covers (Miranda IX Ex. 3.6), `exists_adapted_refinement`.
 -/
 
-@[expose] public section
+public section
 
 open Set Filter Topology TopologicalSpace
 
@@ -54,6 +54,7 @@ instance : Nonempty (FinCover Ω) := ⟨FinCover.single Ω⟩
 
 /-- `τ` is a valid refinement index from `𝒰` to `𝒱`: each member of `𝒱` sits inside the
 `τ`-indexed member of `𝒰` (D3). -/
+@[expose]
 def IsRefIdx (𝒰 𝒱 : FinCover Ω) (τ : Fin 𝒱.n → Fin 𝒰.n) : Prop := ∀ k, 𝒱.U k ≤ 𝒰.U (τ k)
 
 instance : Preorder (FinCover Ω) where

@@ -10,7 +10,7 @@ public import LeanPool.Odlyzko.CompletedZeta.UnitAveragedGaussian
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

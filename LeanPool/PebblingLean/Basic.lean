@@ -17,7 +17,7 @@ formalization: simple undirected graphs, pebbling distributions, legal pebbling
 moves, reachability, solvability, and optimality.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 
@@ -51,7 +51,7 @@ namespace Pebbling
 variable {V : Type u}
 
 /-- The total number of pebbles in a finite distribution. -/
-def size [Fintype V] (D : Pebbling V) : ℕ :=
+@[expose] def size [Fintype V] (D : Pebbling V) : ℕ :=
   ∑ v, D v
 
 /-- Pointwise domination of pebbling distributions. -/
@@ -72,7 +72,7 @@ theorem le_size [Fintype V] (D : Pebbling V) (v : V) :
 
 /-- The distribution obtained by moving two pebbles from `u` to one pebble at
 `v`. Legality of this operation is recorded separately in `Move`. -/
-def moveDistribution [DecidableEq V] (D : Pebbling V) (u v : V) : Pebbling V :=
+@[expose] def moveDistribution [DecidableEq V] (D : Pebbling V) (u v : V) : Pebbling V :=
   fun x =>
     if x = u then D x - 2
     else if x = v then D x + 1
@@ -117,7 +117,7 @@ def Move [DecidableEq V] (G : Graph V) (D E : Pebbling V) : Prop :=
         E = moveDistribution D u v
 
 /-- `E` is reachable from `D` by zero or more pebbling moves. -/
-def Reaches [DecidableEq V] (G : Graph V) (D E : Pebbling V) : Prop :=
+@[expose] def Reaches [DecidableEq V] (G : Graph V) (D E : Pebbling V) : Prop :=
   Relation.ReflTransGen (Move G) D E
 
 /-- Reach a target with at least `T` pebbles. -/
@@ -136,7 +136,7 @@ def SolvableAtLeast [DecidableEq V] (G : Graph V) (D : Pebbling V) (T : ℕ) : P
   ∀ target : V, CanReachAtLeast G D target T
 
 /-- A distribution is solvable if it can reach every target vertex. -/
-def Solvable [DecidableEq V] (G : Graph V) (D : Pebbling V) : Prop :=
+@[expose] def Solvable [DecidableEq V] (G : Graph V) (D : Pebbling V) : Prop :=
   SolvableAtLeast G D 1
 
 /-- Reaching demand zero is automatic. -/

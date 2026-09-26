@@ -14,16 +14,16 @@ public import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Lib.List.Defs`.
 -/
 
-@[expose] public section
+public section
 
 variable {α : Type _}
 
 /-- Local notion for a list whose elements all lie in a finset. -/
-protected def List.In (l : List α) (S : Finset α) : Prop :=
+@[expose] protected def List.In (l : List α) (S : Finset α) : Prop :=
   ∀ a : α, a ∈ l → a ∈ S
 
 /-- The image of a finset under the order-dual embedding. -/
-protected def Finset.Mirror [LinearOrder α] (S : Finset α) : Finset αᵒᵈ :=
+@[expose] protected def Finset.Mirror [LinearOrder α] (S : Finset α) : Finset αᵒᵈ :=
   Finset.image OrderDual.toDual S
 
 /-- The image of a finset of order-dual elements back under `ofDual`. -/
@@ -33,7 +33,7 @@ protected def Finset.ofMirror [LinearOrder α] (S : Finset αᵒᵈ) : Finset α
 namespace List
 
 /-- Flip a list of elements together with its order, landing in the order dual. -/
-protected def Mirror (l : List α) : List αᵒᵈ :=
+@[expose] protected def Mirror (l : List α) : List αᵒᵈ :=
   (List.map OrderDual.toDual l).reverse
 
 /-- Recover a list from its mirror in the order dual. -/

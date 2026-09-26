@@ -19,7 +19,7 @@ construction.  The weighted amplitude bound supplies its smooth extension
 across the radial edges.  All physical statements use the current band.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -132,6 +132,7 @@ theorem native_curl (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (fun _ hy => common_tangent l u n hy) hx
 
 /-- The actual current potential expressed in the selected Cartesian polar chart. -/
+@[expose]
 noncomputable def currentPotential (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (n : ℕ) (a : ℝ) (i : PolarCharts.Index) : VelocityField :=
   PhysicalCurlCovariance.cartesianPotential a i (cylindricalPotential l u n)
@@ -412,7 +413,7 @@ theorem pressureMode_eq_exact (l : SignedLabel B N0) (u : CorrectionState.State 
 
 /-- Current pressure, defined pointwise by `(cylindricalPressureMode l u n
 (PhysicalCurlCovariance.polarCoordinates a i z)).re`. -/
-noncomputable def currentPressure (l : SignedLabel B N0) (u : CorrectionState.State Point)
+@[expose] noncomputable def currentPressure (l : SignedLabel B N0) (u : CorrectionState.State Point)
     (n : ℕ) (a : ℝ) (i : PolarCharts.Index) : PressureField :=
   fun z => (cylindricalPressureMode l u n (PhysicalCurlCovariance.polarCoordinates a i z)).re
 

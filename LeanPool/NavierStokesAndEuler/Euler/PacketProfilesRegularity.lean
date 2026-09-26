@@ -18,7 +18,7 @@ Strong induction applies the constructed mean and high solvers at each grade.
 Only the primary profile is supplied; later forcing admissibility is proved.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -18,7 +18,7 @@ an explicit AC momentum representative. Its initial value is the adjoint
 frame applied to the original `M0 + L A` boundary force.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

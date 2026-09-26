@@ -47,7 +47,7 @@ any root set `T`; combined with `total_excess_eq` and a multiplicity cap
 multiplicity is unbounded); the clean instances are `thin_twin_exists_deg5`
 (`K = 5` when `Δ ≤ 5`) and `thin_twin_exists_iso_of_multcap` (on `isoTwins G`). -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

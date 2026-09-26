@@ -31,7 +31,7 @@ puiseux series, laurent series, algebraic
 
 /- Ported to Lean Pool and its pinned Mathlib toolchain in September 2026. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

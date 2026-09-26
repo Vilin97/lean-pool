@@ -13,7 +13,7 @@ import LeanPool.Feige.TransferProbability
 # Probability-law formulation of the transfer Stein identities
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real Set
 open scoped ENNReal
@@ -27,11 +27,11 @@ local instance : IsProbabilityMeasure (expMeasure 1) :=
   isProbabilityMeasure_expMeasure one_pos
 
 /-- Law of `Z₊ = Y + aE`, where `E` is an independent rate-one exponential. -/
-noncomputable def zPlusLaw (μ : Measure ℝ) (a : ℝ) : Measure ℝ :=
+@[expose] noncomputable def zPlusLaw (μ : Measure ℝ) (a : ℝ) : Measure ℝ :=
   Measure.map (fun p : ℝ × ℝ => p.1 + a * p.2) (μ.prod (expMeasure 1))
 
 /-- Law of `Z₋ = Y - bE`, where `E` is an independent rate-one exponential. -/
-noncomputable def zMinusLaw (μ : Measure ℝ) (b : ℝ) : Measure ℝ :=
+@[expose] noncomputable def zMinusLaw (μ : Measure ℝ) (b : ℝ) : Measure ℝ :=
   Measure.map (fun p : ℝ × ℝ => p.1 - b * p.2) (μ.prod (expMeasure 1))
 
 theorem measurable_zPlusMap (a : ℝ) :
@@ -174,7 +174,7 @@ theorem integrable_vTailIntegrand
 
 /-- The probability `P(0 ≤ Z < dE')`, represented on the canonical
 independent product space. -/
-noncomputable def uProbability (ν : Measure ℝ) (d : ℝ) : ℝ :=
+@[expose] noncomputable def uProbability (ν : Measure ℝ) (d : ℝ) : ℝ :=
   ENNReal.toReal
     (ν.prod (expMeasure 1) {p : ℝ × ℝ | 0 ≤ p.1 ∧ p.1 < d * p.2})
 

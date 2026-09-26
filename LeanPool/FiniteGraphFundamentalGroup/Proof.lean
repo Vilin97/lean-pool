@@ -16,7 +16,7 @@ Mathlib's free groupoid and identifies a basis indexed by the edges outside a ge
 tree.
 -/
 
-@[expose] public section
+public section
 
 attribute [local implicit_reducible]
   Quiver.Symmetrify IsFreeGroupoid.Generators
@@ -496,7 +496,7 @@ def generatorTotalEquiv {V : Type u} [Quiver.{u} V] :
   right_inv e := by cases e; rfl
 
 /-- The complement of the geodesic tree, indexed by the actual non-tree generator arrows. -/
-noncomputable def graphGeneratorSet {V : Type u} [Quiver.{u} V]
+@[expose] noncomputable def graphGeneratorSet {V : Type u} [Quiver.{u} V]
     [WeaklyConnected V] (root : V) :
     Set (Quiver.Total (IsFreeGroupoid.Generators (Quiver.FreeGroupoid V))) :=
   (wideSubquiverEquivSetTotal

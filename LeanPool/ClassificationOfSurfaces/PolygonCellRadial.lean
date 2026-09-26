@@ -23,7 +23,7 @@ later boundary reparameterization only needs to construct a circle homeomorphism
 action on marked arcs; `PolygonCell.radialHomeomorph` then supplies the disk homeomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

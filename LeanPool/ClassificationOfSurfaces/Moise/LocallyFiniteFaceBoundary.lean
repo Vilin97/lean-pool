@@ -17,7 +17,7 @@ line arrangement and extracts the resulting simple polygonal cycle. Shared abstr
 literally the same replacement arc, so adjacent face fillings will have identical boundaries.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

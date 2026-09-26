@@ -32,7 +32,7 @@ section
 
 /-! Genuine pointwise time differentiation of the generically assembled correction. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -111,7 +111,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

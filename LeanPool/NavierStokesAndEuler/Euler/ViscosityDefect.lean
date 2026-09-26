@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatGenerator
 /-! The actual viscous term vanishes uniformly for a uniformly Sobolev-bounded approximation family.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

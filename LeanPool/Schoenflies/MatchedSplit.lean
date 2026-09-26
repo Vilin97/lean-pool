@@ -101,7 +101,7 @@ arcs of the graph's own edges. It is stated in the root `Graph` namespace next t
 appears it belongs there or in `Schoenflies/Graph/Drawing.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies
 open scoped Graph

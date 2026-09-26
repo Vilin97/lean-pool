@@ -64,7 +64,7 @@ for the two right germs, and there the missing second sign is exactly what "`s/t
 `Plane.exists_germ_threshold` supplies it, with an explicit threshold.
 -/
 
-@[expose] public section
+public section
 
 open Set
 
@@ -137,7 +137,7 @@ theorem det_ne_zero_iff (hu : IsDirection u) (hw : IsDirection w) :
 A nonzero `d` lies on it when at least two of the three consecutive orientation forms of the
 triple `(u, d, w)` are positive. The definition is a cyclic condition, so it is correct for the
 short arc and for the long arc alike, with no hypothesis on the sign of `det u w`. -/
-def arcCCW (u w : Plane) : Set Plane :=
+@[expose] def arcCCW (u w : Plane) : Set Plane :=
   {d | (0 < det u d ∧ 0 < det d w) ∨ (0 < det d w ∧ 0 < det w u) ∨ (0 < det w u ∧ 0 < det u d)}
 
 /-- Fix the orientation by `0 < det u w`, so that `w` is counterclockwise of `u` by less than a

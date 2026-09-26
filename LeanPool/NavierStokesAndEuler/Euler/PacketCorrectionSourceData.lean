@@ -16,7 +16,7 @@ section
 /-! Positivity and the literal inverse identity for the pressure metric.
 Both follow from the prescribed deformation and its two-sided inverse. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -133,7 +133,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -164,7 +164,7 @@ def correctionData (κ : ℝ) (hκ : |κ| ≤ 1)
   residual := residual
 
 /-- Correction data of fields, given by `correctionData D P κ hκ Z.toFieldTower G.toFieldTower`. -/
-def correctionDataOfFields (κ : ℝ) (hκ : |κ| ≤ 1)
+@[expose] def correctionDataOfFields (κ : ℝ) (hκ : |κ| ≤ 1)
     {z r : VectorField} (Z : Field P D.T z) (G : Field P D.T r) : Data P D.T :=
   correctionData D P κ hκ Z.toFieldTower G.toFieldTower
 

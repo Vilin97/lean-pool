@@ -22,13 +22,13 @@ Their soundness is transported through proved modular exponentiation and ternary
 prefix lemmas, yielding the headline carry theorem at the end of this file.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 
 /-- Test whether the ternary expansion contains at least `required` twos,
 stopping as soon as enough have been found. -/
-def hasAtLeastTernaryTwos : (required n : ℕ) → Bool
+@[expose] def hasAtLeastTernaryTwos : (required n : ℕ) → Bool
   | 0, _ => true
   | required + 1, n =>
       if hzero : n = 0 then false

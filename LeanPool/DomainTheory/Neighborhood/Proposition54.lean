@@ -51,7 +51,7 @@ permitted
 `ext_of_toElementMap`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

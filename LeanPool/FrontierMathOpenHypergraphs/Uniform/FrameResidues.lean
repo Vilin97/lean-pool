@@ -17,7 +17,7 @@ import Mathlib.Tactic.NormNum.Pow
 # Residue-gadget validations
 -/
 
-@[expose] public section
+public section
 
 namespace HypergraphLowerBound
 

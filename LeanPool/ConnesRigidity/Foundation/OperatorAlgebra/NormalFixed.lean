@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Core
 The normal fixed component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 

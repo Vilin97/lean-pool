@@ -18,7 +18,7 @@ radius on any smaller time slab.  These are the local pieces used in the compact
 parameter-integral theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

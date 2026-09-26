@@ -14,7 +14,7 @@ import LeanPool.QuasiBorelSpaces.Basic
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Lift`.
 -/
 
-@[expose] public section
+public section
 
 variable {A B : Type*} [QuasiBorelSpace A] [QuasiBorelSpace B]
 

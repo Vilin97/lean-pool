@@ -22,7 +22,7 @@ import Mathlib.RingTheory.TwoSidedIdeal.BigOperators
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Wedderburn`.
 -/
 
-@[expose] public section
+public section
 
 variable (A : Type*) [Ring A]
 
@@ -173,7 +173,7 @@ def toEndMop : A →+* (Module.End A A)ᵐᵒᵖ where
 /--
 the map `Aᵒᵖ → Hom(A, A)` is bijective
 -/
-noncomputable def mopEquivEnd : Aᵐᵒᵖ ≃+* Module.End A A :=
+@[expose] noncomputable def mopEquivEnd : Aᵐᵒᵖ ≃+* Module.End A A :=
   .ofBijective (mopToEnd A) ⟨RingHom.injective_iff_ker_eq_bot _ |>.mpr <|
     SetLike.ext fun α => ⟨by rintro (ha : mopToEnd A α = 0); simpa using (DFunLike.ext_iff.mp ha) 1,
       by rintro rfl; ext; simp⟩, fun φ => ⟨op (φ 1), by ext; simp⟩⟩

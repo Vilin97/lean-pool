@@ -16,7 +16,7 @@ This file defines the Riemann–Roch space of a divisor on a function field and 
 `ℓ(D)`.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 
@@ -61,7 +61,7 @@ theorem nonempty_placeA : Nonempty (PlaceA k K) := by
 /-- A function belongs to the Riemann–Roch space of `D` when its valuation at every place `v`
 is at most `WithZero.exp (D v)`, i.e. `ord_v f ≥ -D v` in additive notation. The zero function
 belongs trivially since its valuation is `0`. -/
-def memRRspace (D : DivisorA k K) (f : K) : Prop :=
+@[expose] def memRRspace (D : DivisorA k K) (f : K) : Prop :=
   ∀ v, placeValuation k K v f ≤ WithZero.exp (D v)
 
 namespace memRRspace
@@ -127,7 +127,7 @@ def RRspace (D : DivisorA k K) : Submodule k K where
   smul_mem' c _ hf := memRRspace.smul_mem (k := k) (K := K) c hf
 
 /-- The dimension `ℓ(D)`. -/
-noncomputable def ell (D : DivisorA k K) : ℕ :=
+@[expose] noncomputable def ell (D : DivisorA k K) : ℕ :=
   Module.finrank k (RRspace k K D)
 
 @[simp]

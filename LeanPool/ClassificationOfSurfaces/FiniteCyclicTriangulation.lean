@@ -20,7 +20,7 @@ Incidence validity and dual connectivity then pass to the resulting
 `FiniteCyclicPresentation`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -167,7 +167,7 @@ theorem toFiniteCyclicPresentation_boundary_faceEquiv_get
 
 /-- Original triangle-boundary positions are canonically the boundary occurrences of the
 enumerated cyclic presentation. -/
-noncomputable def finiteCyclicOccurrenceEquiv (T : FiniteSurfaceTriangulation S) :
+@[expose] noncomputable def finiteCyclicOccurrenceEquiv (T : FiniteSurfaceTriangulation S) :
     T.BoundaryPosition ≃
       (Σ f : T.toFiniteCyclicPresentation.Face,
         Fin (T.toFiniteCyclicPresentation.boundary f).length) :=

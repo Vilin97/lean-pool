@@ -19,7 +19,7 @@ The common variable on the terminal edge is the sum of the negative old
 coordinates, with the distinguished positive exponential removed.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 

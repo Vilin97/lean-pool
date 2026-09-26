@@ -58,7 +58,7 @@ program identified by the investigation of the per-`n` architecture (`n = 12..19
 Everything here is sorry-free and axiom-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

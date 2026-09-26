@@ -19,7 +19,7 @@ have a zero germ there.  Local smoothness of the actual raw primary is
 proved from the fixed prepared family before using that flatness.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

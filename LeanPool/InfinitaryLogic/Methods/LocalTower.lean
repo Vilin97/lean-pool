@@ -36,7 +36,7 @@ this chunk** is that every stage is countable — both the language's symbol typ
 countability live in `LocalColimit.lean`; here we stop at the tower and its stagewise countability.
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 

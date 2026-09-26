@@ -19,7 +19,7 @@ slopes, including the first unit ramp.  Angular derivatives are derivatives of
 the actual improper integral.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

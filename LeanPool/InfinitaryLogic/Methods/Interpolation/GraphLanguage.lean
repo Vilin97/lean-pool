@@ -33,7 +33,7 @@ computation.
 * `relSym` and the intersection identity `relSym_inter`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

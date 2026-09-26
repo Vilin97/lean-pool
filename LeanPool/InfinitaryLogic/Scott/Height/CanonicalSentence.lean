@@ -26,7 +26,7 @@ Scott sentence.
 - `canonicalScottSentence_qrank`: Quantifier rank bounded by scottHeight + ω.
 -/
 
-@[expose] public section
+public section
 
 universe u v w w'
 

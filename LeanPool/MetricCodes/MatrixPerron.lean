@@ -18,7 +18,7 @@ bounds. It requires no coding-theory definitions. Positivity is propagated along
 positive matrix entries, allowing arbitrary finite index sets rather than just tridiagonal grids.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

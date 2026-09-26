@@ -41,7 +41,7 @@ Main declarations:
   formula / functoriality laws / the trace–period relation).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology
 open Set Filter Metric IsManifold
@@ -186,7 +186,7 @@ theorem branchTrans_mem_ball (y : Y) {w : ℂ} (hw : w ∈ (traceChart hf hne y)
 
 /-- The coefficient of the trace in the chart at index `y`: the branch-transported sum of the
 repaired planar trace coefficients of `η`'s stack-chart coefficients. -/
-def traceCoeffFun (η : Form1 X) (y : Y) : ℂ → ℂ := fun w =>
+@[expose] def traceCoeffFun (η : Form1 X) (y : Y) : ℂ → ℂ := fun w =>
   ∑ i, deriv (branchTrans hf hne y i) w
     * traceCoeff (coeffIn ((stackAt hf hne y).A i).e η)
         (multiplicity f ((stackAt hf hne y).pt i)) (branchTrans hf hne y i w)

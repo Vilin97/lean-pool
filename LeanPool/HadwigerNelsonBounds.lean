@@ -18,7 +18,7 @@ Tags: graph-theory, geometric-graph-theory, graph-coloring, hadwiger-nelson
 MSC: 05C15, 52C10
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Kernel-checked Hadwiger--Nelson bounds

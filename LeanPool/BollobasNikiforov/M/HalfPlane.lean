@@ -25,7 +25,7 @@ MX06 configuration (`k ≥ 1`). Unique and tied open-half-plane configurations
 are completely positive (HP04–HP05), as is the closed half-plane (HP06).
 -/
 
-@[expose] public section
+public section
 
 open Matrix Filter
 open scoped Matrix Topology

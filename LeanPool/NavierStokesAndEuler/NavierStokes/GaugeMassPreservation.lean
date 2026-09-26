@@ -16,7 +16,7 @@ All conclusions are restricted to the valid open slow region. The common
 torus index and the moving radial support are retained throughout.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

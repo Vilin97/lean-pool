@@ -21,7 +21,7 @@ import Mathlib.Topology.Separation.CompletelyRegular
 The semidirect fubini component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace SemidirectFubini

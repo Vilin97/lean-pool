@@ -36,7 +36,7 @@ Uses α = 6 from the spatial dimension d = 3 (mass gap).
 - `OS4_PolynomialClustering_implies_OS4_Ergodicity`
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real
 open TopologicalSpace

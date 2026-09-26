@@ -19,7 +19,7 @@ only place where a classical representative of the completed operator is
 identified, and it is used exactly on the dense class of test data.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

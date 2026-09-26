@@ -14,7 +14,7 @@ public import Mathlib.Probability.Independence.Basic
 This is the final mean-normalization reduction in the proof of Theorem 2.1.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Set Filter
 

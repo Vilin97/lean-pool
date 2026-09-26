@@ -21,7 +21,7 @@ This file is independent of learning theory and is a candidate for contribution 
 - `analyticSet_nullMeasurableSet`: analytic sets are null-measurable for finite Borel measures
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 

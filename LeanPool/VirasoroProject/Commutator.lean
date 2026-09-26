@@ -22,7 +22,7 @@ This file defines commutators of linear operators, and proves a few useful prope
 
 -/
 
-@[expose] public section
+public section
 
 namespace LinearMap
 

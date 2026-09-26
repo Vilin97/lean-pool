@@ -10,7 +10,7 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageSearchCore
 
 /-! # Exactness of packed incidence-table prefixes -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

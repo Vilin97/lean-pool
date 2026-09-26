@@ -52,7 +52,7 @@ import Mathlib.Data.Set.Insert
 # MatchingLogic.ProofSystem
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -68,7 +68,7 @@ inductive PForm where
   deriving DecidableEq
 
 /-- Boolean evaluation under an assignment to the atoms. -/
-def PForm.eval (v : Nat → Bool) : PForm → Bool
+@[expose] def PForm.eval (v : Nat → Bool) : PForm → Bool
   | .atom n => v n
   | .bot => false
   | .imp a b => !(a.eval v) || b.eval v
@@ -77,7 +77,7 @@ def PForm.eval (v : Nat → Bool) : PForm → Bool
 def PForm.Taut (p : PForm) : Prop := ∀ v, p.eval v = true
 
 /-- Substituting patterns for the propositional atoms. -/
-def PForm.subst (θ : Nat → Pattern S Var) : PForm → Pattern S Var
+@[expose] def PForm.subst (θ : Nat → Pattern S Var) : PForm → Pattern S Var
   | .atom n => θ n
   | .bot => .bot
   | .imp a b => .imp (PForm.subst θ a) (PForm.subst θ b)
@@ -86,7 +86,7 @@ def PForm.subst (θ : Nat → Pattern S Var) : PForm → Pattern S Var
 
 /-- `φ[y/x]`, replacing the element variable `x` by `y`. Naive: it stops at a
 binder for `x`, but does not itself avoid capture of `y`. -/
-def substVar (x y : Var) : Pattern S Var → Pattern S Var
+@[expose] def substVar (x y : Var) : Pattern S Var → Pattern S Var
   | .var z => if z = x then .var y else .var z
   | .bot => .bot
   | .app σ f => .app σ (fun i => substVar x y (f i))
@@ -135,7 +135,7 @@ inductive AppCtx (S : Signature) (Var : Type) where
       (Fin (S.arity σ) → Pattern S Var) → AppCtx S Var → AppCtx S Var
 
 /-- `C[φ]`. -/
-def AppCtx.plug : AppCtx S Var → Pattern S Var → Pattern S Var
+@[expose] def AppCtx.plug : AppCtx S Var → Pattern S Var → Pattern S Var
   | .hole, φ => φ
   | .node σ i args c, φ => .app σ (Function.update args i (c.plug φ))
 
@@ -299,7 +299,7 @@ theorem necessitation {Γ : Set (Pattern S Var)} {ψ : Pattern S Var}
 /-! ### The two black boxes -/
 
 /-- Finite conjunction, `⋀ l`. -/
-def conj : List (Pattern S Var) → Pattern S Var
+@[expose] def conj : List (Pattern S Var) → Pattern S Var
   | [] => Pattern.tp
   | φ :: l => Pattern.and φ (conj l)
 

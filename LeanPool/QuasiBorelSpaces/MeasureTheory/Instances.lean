@@ -13,7 +13,7 @@ public import Mathlib.MeasureTheory.MeasurableSpace.Defs
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.Instances`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace MeasureTheory

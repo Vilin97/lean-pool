@@ -33,7 +33,7 @@ structural lemmas for Shimura's Theorem 3.24.
 * Shimura, Theorem 3.24
 -/
 
-@[expose] public section
+public section
 
 open Matrix Subgroup.Commensurable Pointwise HeckeRing DoubleCoset HeckeRing.GLn
 
@@ -43,7 +43,7 @@ namespace HeckeRing.GL2
 
 /-- `T(a,d)` for n=2: the Hecke basis element for diagonal `(a,d)` with `a | d`.
     Returns 0 when `a = 0` or `d = 0` or `a ∤ d`. -/
-noncomputable def TAd (a d : ℕ) : HeckeAlgebra 2 :=
+@[expose] noncomputable def TAd (a d : ℕ) : HeckeAlgebra 2 :=
   if _ : 0 < a ∧ 0 < d ∧ a ∣ d then TElem ![a, d] else 0
 
 /-- Unfold `TAd` to `TElem` when all positivity and divisibility conditions hold. -/

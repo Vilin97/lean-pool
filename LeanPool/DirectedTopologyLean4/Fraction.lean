@@ -11,7 +11,7 @@ public import Mathlib.Topology.UnitInterval
 # LeanPool.DirectedTopologyLean4.Fraction
 -/
 
-@[expose] public section
+public section
 
 open scoped unitInterval
 noncomputable section

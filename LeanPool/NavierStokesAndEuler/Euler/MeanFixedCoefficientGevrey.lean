@@ -36,7 +36,7 @@ primitive does. The estimates keep the coefficient amplitudes outside the
 factorial radius.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -173,7 +173,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

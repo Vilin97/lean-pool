@@ -40,7 +40,7 @@ This file provides the honest objects for that induction:
 * `moise_triangulation_of_boundaries` — the finite induction and final geometric realization.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold
 

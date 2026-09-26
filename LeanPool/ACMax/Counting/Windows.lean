@@ -39,7 +39,7 @@ present ⟹ the sparse-core moat fires; absent ⟹ the shared-hub stars are forc
 hypothesis (negating `Z1` starves the degree-4 hubs and the incidence total forces
 `n ≥ 32`). The same star moat fires throughout this range by `z1_fires_sharp`. -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

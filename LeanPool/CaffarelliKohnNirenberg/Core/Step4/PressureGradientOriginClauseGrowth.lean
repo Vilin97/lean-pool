@@ -21,7 +21,7 @@ The separate large-radius estimate is supplied by
 No estimate for the complete slice majorant is asserted here.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped BigOperators ENNReal NNReal Topology

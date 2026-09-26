@@ -17,7 +17,7 @@ Only coefficient blocks are compared with the coefficient radius. The input
 field's ordered word sum passes directly through the Leibniz estimate.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -23,7 +23,7 @@ shape `c₁ * (a * d) + c₂ * a ^ 2 + c₃ * F`.
 Every constant here is explicit, and no estimate below depends on the solution.
 -/
 
-@[expose] public section
+public section
 
 section
 

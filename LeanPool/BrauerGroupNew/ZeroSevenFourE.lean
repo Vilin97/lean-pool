@@ -20,7 +20,7 @@ This file ports the upstream Wedderburn-Artin uniqueness arguments used by the B
 development.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory DirectSum
 
@@ -700,7 +700,7 @@ lemma isBalanced_of_simpleMod (k : Type u) (A : Type v) [Field k] [Ring A] [Alge
   exact this
 
 /-- The double centralizer algebra equivalence for a simple module. -/
-noncomputable def endEndIso
+@[expose] noncomputable def endEndIso
     (M : Type v) [AddCommGroup M]
     [Module A M] [IsSimpleModule A M] [Module k M] [IsScalarTower k A M] :
     A ≃ₐ[k] Module.End (Module.End A M) M :=

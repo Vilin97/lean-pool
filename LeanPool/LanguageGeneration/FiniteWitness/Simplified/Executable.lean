@@ -12,7 +12,7 @@ public import LeanPool.LanguageGeneration.FiniteWitness.Width.Executable
 # Finite-search implementation of the revised normalization
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness.Simplified
 
@@ -43,13 +43,15 @@ theorem mem_codeWords {q : List ℕ} {b : ℕ} (h : Encodable.encode q ≤ b) :
 
 /-- Test a strict history extension that covers the next checkpoint and outputs outside the
 sample. -/
+@[expose]
 def testCandidate (F : List ℕ → ℕ) (S : Finset ℕ) (p : List ℕ) (k : ℕ)
     (q : List ℕ) : Prop :=
   p <+: q ∧ p.length < q.length ∧ q.toFinset ⊆ S ∧
     samplePoints S (k + 1) ⊆ q.toFinset ∧ F q ∉ S
 
 instance (F : List ℕ → ℕ) (S : Finset ℕ) (p : List ℕ) (k : ℕ) (q : List ℕ) :
-    Decidable (testCandidate F S p k q) := inferInstanceAs (Decidable (_ ∧ _ ∧ _ ∧ _ ∧ _))
+    Decidable (testCandidate F S p k q) :=
+  inferInstanceAs (Decidable (_ ∧ _ ∧ _ ∧ _ ∧ _))
 
 theorem testCandidate_iff (F : List ℕ → ℕ) (S : Finset ℕ) (p : List ℕ) (k : ℕ)
     (q : List ℕ) :

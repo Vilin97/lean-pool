@@ -19,7 +19,7 @@ public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
 Imported Lean Pool material for `LeanPool.ZhangYeungInequality.Prelude`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ZhangYeungPFR

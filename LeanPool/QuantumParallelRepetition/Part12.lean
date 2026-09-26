@@ -9,7 +9,7 @@ public import LeanPool.QuantumParallelRepetition.Part11
 
 /-! # Quantum parallel repetition, part 12 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

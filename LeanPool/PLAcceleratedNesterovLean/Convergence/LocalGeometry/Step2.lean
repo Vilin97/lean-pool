@@ -25,7 +25,7 @@ Since U₊ is fiber-saturated, m + te ∈ U₊ for t ∈ [0,1].
   So ⟨∇f(x), e⟩ ≥ f(x) - f⋆ + (μ'/2)‖e‖²
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

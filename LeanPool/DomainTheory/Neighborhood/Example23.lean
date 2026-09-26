@@ -51,7 +51,7 @@ codomain `T` of Example 1.2, whose `simp`/`fin_cases` proofs already do —
 pre-existing and harmless.)
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Example23
 
@@ -95,9 +95,9 @@ def scan : Str → Option Bool
   | true :: _ => some true
   | false :: t => (scan t).map (!·)
 
-@[simp] theorem scan_nil : scan [] = none := rfl
-@[simp] theorem scan_true (t : Str) : scan (true :: t) = some true := rfl
-@[simp] theorem scan_false (t : Str) : scan (false :: t) = (scan t).map (!·) := rfl
+@[simp] theorem scan_nil : scan [] = none := by rfl
+@[simp] theorem scan_true (t : Str) : scan (true :: t) = some true := by rfl
+@[simp] theorem scan_false (t : Str) : scan (false :: t) = (scan t).map (!·) := by rfl
 
 /-- **Stability of the scan under extension.** Once `scan σ` has committed to a
 parity `some b`,

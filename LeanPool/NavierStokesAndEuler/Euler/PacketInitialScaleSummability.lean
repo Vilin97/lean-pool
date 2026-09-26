@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Ring.Star
 /-! The two literal initial-increment majorants are summable on the
 source scale sequence. The mean retains its full inverse-frequency square. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,13 +26,13 @@ open Real EulerPacketSourceScales EulerPacketSourceScaleChoice
 
 /-- High majorant, given by `(supportScale J X n)⁻¹^m*(frequency J X n)^m *
 (K*(parameterEnvelope J C c p q X n)^N)*exp (-scaleSequence J X n/8)`. -/
-def highMajorant (J : ℕ) (C c K : ℝ) (p q N m : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
+@[expose] def highMajorant (J : ℕ) (C c K : ℝ) (p q N m : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
   (supportScale J X n)⁻¹^m*(frequency J X n)^m *
     (K*(parameterEnvelope J C c p q X n)^N)*exp (-scaleSequence J X n/8)
 
 /-- Mean majorant, given by `(supportScale J X n)⁻¹^m/(frequency J X n)^2 *
 (K*(parameterEnvelope J C c p q X n)^N)`. -/
-def meanMajorant (J : ℕ) (C c K : ℝ) (p q N m : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
+@[expose] def meanMajorant (J : ℕ) (C c K : ℝ) (p q N m : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
   (supportScale J X n)⁻¹^m/(frequency J X n)^2 *
     (K*(parameterEnvelope J C c p q X n)^N)
 

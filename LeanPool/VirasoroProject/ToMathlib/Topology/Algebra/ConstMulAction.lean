@@ -11,7 +11,7 @@ public import Mathlib.Topology.Algebra.ConstMulAction
 # LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.ConstMulAction
 -/
 
-@[expose] public section
+public section
 
 lemma continuousConstSMul_of_discreteTopology (𝕜 X : Type*) [TopologicalSpace X]
     [DiscreteTopology X] [SMul 𝕜 X] :

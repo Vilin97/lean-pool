@@ -18,7 +18,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.MappingCylinder`.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory
 open scoped unitInterval ContinuousMap
@@ -80,7 +80,7 @@ the mapping cylinder of `f`. -/
 noncomputable def domHomeoTop : X ≃ₜ top f := (isEmbedding_domIncl f).toHomeomorph
 
 /-- `domInclToTop` -/
-noncomputable def domInclToTop : C(X, top f) := toContinuousMap (domHomeoTop f)
+@[expose] noncomputable def domInclToTop : C(X, top f) := toContinuousMap (domHomeoTop f)
 /-- `domInclFromTop` -/
 def domInclFromTop : C(top f, MapCyl f) := ⟨Subtype.val, continuous_subtype_val⟩
 

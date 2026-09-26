@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.SourceMorreySlice
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology
@@ -39,6 +39,7 @@ uncentred source is zero while the centred tensor has a nonzero `(0,0)` entry.
 -/
 
 /-- The centred divergence-form source paired with `pressureUTensor u c`. -/
+@[expose]
 def pressureDivergenceCutoffSourceCentred
     (η : Vec3 → ℝ) (dη : Fin 3 → Vec3 → ℝ)
     (u : Vec3 → Vec3) (Du : Vec3 → Fin 3 → Vec3) (f : Vec3 → Vec3)
@@ -47,6 +48,7 @@ def pressureDivergenceCutoffSourceCentred
       dη j x * u x i * (u x j - c j)) - η x * f x i
 
 /-- Alias used by the source-Morrey and slice-selection interfaces. -/
+@[expose]
 def sourceMorreyCutoffVCentred
     (η : Vec3 → ℝ) (dη : Fin 3 → Vec3 → ℝ)
     (u : Vec3 → Vec3) (Du : Vec3 → Fin 3 → Vec3) (f : Vec3 → Vec3)

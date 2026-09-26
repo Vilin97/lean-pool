@@ -22,7 +22,7 @@ section
 
 /-! The additional H⁵ cylinder algebra estimate needed for the base transport commutator. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -197,7 +197,7 @@ section
 
 /-! Actual real and scalar-vector cylinder multiplication at every fixed Sobolev order q≥5. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -322,7 +322,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

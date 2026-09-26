@@ -23,7 +23,7 @@ already-certified canonical polygonal quotients; in particular, it does not rest
 Lean-Eval relation.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

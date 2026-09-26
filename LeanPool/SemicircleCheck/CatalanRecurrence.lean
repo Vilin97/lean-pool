@@ -30,7 +30,7 @@ import LeanPool.SemicircleCheck.RotationArithmetic
   4. catalanEquiv: NoncrossingPairing(n+1) ≃ Σ k, NCP(k) × NCP(n-k)
 -/
 
-@[expose] public section
+public section
 
 open Equiv Equiv.Perm Fintype
 

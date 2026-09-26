@@ -19,7 +19,7 @@ from Section 8.2.  No error field is set to zero: local vanishing on the plateau
 the Gaussian bound off that plateau, and higher Leibniz estimates are used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -97,7 +97,7 @@ theorem profile_jet_bounded (m : ℕ) :
   exact (hC v).trans (le_max_left _ _)
 
 /-- Slot cutoff, given by `profile (v / L)`. -/
-noncomputable def slotCutoff (L : ℝ) (v : ℝ) : ℝ := profile (v / L)
+@[expose] noncomputable def slotCutoff (L : ℝ) (v : ℝ) : ℝ := profile (v / L)
 
 theorem slotCutoff_contDiff (L : ℝ) : ContDiff ℝ ∞ (slotCutoff L) :=
   profile_contDiff.comp (contDiff_id.div_const L)
@@ -515,11 +515,11 @@ structure SlotFamily (s : StripData D) where
 namespace SlotFamily
 
 /-- Coordinate, given by `g.offset n + g.linear n x`. -/
-noncomputable def coordinate {s : StripData D} (g : SlotFamily s) (n : ℕ) (x : D) : ℝ :=
+@[expose] noncomputable def coordinate {s : StripData D} (g : SlotFamily s) (n : ℕ) (x : D) : ℝ :=
   g.offset n + g.linear n x
 
 /-- Cutoff, given by `profile (g.coordinate n x)`. -/
-noncomputable def cutoff {s : StripData D} (g : SlotFamily s) (n : ℕ) (x : D) : ℝ :=
+@[expose] noncomputable def cutoff {s : StripData D} (g : SlotFamily s) (n : ℕ) (x : D) : ℝ :=
   profile (g.coordinate n x)
 
 /-- Error, given by `cutoffError (g.length n) (g.coordinate n) (u n) (f n)`. -/
@@ -762,7 +762,7 @@ theorem actualSlotFamily_cutoff (s : StripData D) (r0 h : ℝ)
 
 /-- The reference Gaussian envelope, extended by zero away from its slot.
 This is a weight, not a redefinition of either retained error. -/
-noncomputable def referenceSlotEnvelope (lam u L θ : ℝ) : ℝ :=
+@[expose] noncomputable def referenceSlotEnvelope (lam u L θ : ℝ) : ℝ :=
   if θ ∈ Icc (0 : ℝ) 1 then
     GaussianEnvelope.envelope (GaussianEnvelope.referenceRate lam u L) (L / 2) (L * θ)
   else 0

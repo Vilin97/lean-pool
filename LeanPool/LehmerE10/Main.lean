@@ -44,7 +44,7 @@ is NOT claimed anywhere in this repository.
 Axiom footprint: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
 
-@[expose] public section
+public section
 
 namespace LehmerE10
 
@@ -197,7 +197,7 @@ lemma dtrace_y5_ne_zero : dtraceQC (y5 : ℂ) ≠ 0 := by
 /-! ### Lehmer over ℂ: evaluation bridge, derivative, and the derivative–trace identity. -/
 
 /-- Lehmer's polynomial over ℂ. -/
-noncomputable def LC : Polynomial ℂ := lehmerPolynomial.map (Int.castRingHom ℂ)
+@[expose] noncomputable def LC : Polynomial ℂ := lehmerPolynomial.map (Int.castRingHom ℂ)
 
 lemma LC_poly : LC = X ^ 10 + X ^ 9 - X ^ 7 - X ^ 6 - X ^ 5 - X ^ 4 - X ^ 3 + X + 1 := by
   unfold LC lehmerPolynomial
@@ -247,7 +247,7 @@ lemma deriv_trace_identity {z : ℂ} (hz : z ≠ 0) :
 into the reciprocal pair. -/
 noncomputable def s5 : ℝ := Real.sqrt (y5 ^ 2 - 4)
 /-- Lehmer's number `μ ≈ 1.17628`: the larger root of `x² − y₅·x + 1`. -/
-noncomputable def mu : ℝ := (y5 + s5) / 2
+@[expose] noncomputable def mu : ℝ := (y5 + s5) / 2
 /-- The reciprocal root `1/μ`: the smaller root of `x² − y₅·x + 1`. -/
 noncomputable def nu : ℝ := (y5 - s5) / 2
 

@@ -50,7 +50,7 @@ The `SingleCrossingData` structure bundles the 8 obligations of
 making it easy to instantiate for each geometric case.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 

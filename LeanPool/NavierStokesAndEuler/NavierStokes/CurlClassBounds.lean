@@ -54,7 +54,7 @@ symbol and the algebraic divergence cancellation. They do not establish
 regularity, bounds for the differentiated amplitude, or descent from the lift.
 -/
 
-@[expose] public section
+public section
 
 namespace NavierStokes.CurlGeometry
 
@@ -218,7 +218,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -538,7 +538,7 @@ It is not a differentiation variable.  All derivatives are actual Fréchet
 derivatives in the slow variables (and, when present, the slot variable).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1019,6 +1019,7 @@ theorem polynomialJets_of_uniform {E F : Type*}
   exact ⟨C, hC, 0, by simpa only [pow_zero, mul_one] using hc⟩
 
 /-- Slot, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
+@[expose]
 noncomputable def Domain.slot (D : Domain ι Slow) (V : ι → Set ℝ) (hV : ∀ i, IsOpen (V i)) :
     Domain ι (Slow × ℝ) where
   scale := D.scale
@@ -1091,7 +1092,7 @@ structure PhaseFamily (ι : Type*) where
 
 /-- Normal, given by `PhaseCalculus.phaseNormal (a.epsilon i) (a.p i) (a.pz i) (a.x0 i) (a.F i)
 (a.G i) (z.1, (a.theta i, z.2))`. -/
-noncomputable def PhaseFamily.normal (a : PhaseFamily ι) (i : ι) (z : Slow × ℝ) : Space :=
+@[expose] noncomputable def PhaseFamily.normal (a : PhaseFamily ι) (i : ι) (z : Slow × ℝ) : Space :=
   PhaseCalculus.phaseNormal (a.epsilon i) (a.p i) (a.pz i) (a.x0 i) (a.F i) (a.G i)
     (z.1, (a.theta i, z.2))
 
@@ -1101,7 +1102,7 @@ noncomputable def PhaseFamily.velocity (a : PhaseFamily ι) (i : ι) (z : Slow �
   PhaseCalculus.normalSlotDerivative (a.epsilon i) (a.p i) (a.pz i) (a.F i) (a.G i) z.1
 
 /-- Shear, given by `PhaseEstimates.shearVector (a.F i) (a.G i) z.1`. -/
-noncomputable def PhaseFamily.shear (a : PhaseFamily ι) (i : ι) (z : Slow × ℝ) : Plane :=
+@[expose] noncomputable def PhaseFamily.shear (a : PhaseFamily ι) (i : ι) (z : Slow × ℝ) : Plane :=
   PhaseEstimates.shearVector (a.F i) (a.G i) z.1
 
 /-- Actual phase-normal and shear jets derived from the base fields.  The
@@ -1468,7 +1469,7 @@ variable {ι : Type*}
 
 /-- The actual phase-derived frame with the explicit reference eigenbasis.
 Only the band/representative labels enter the frozen scalar choices. -/
-noncomputable def PhaseFamily.frameData (a : PhaseFamily ι)
+@[expose] noncomputable def PhaseFamily.frameData (a : PhaseFamily ι)
     (lam c0 u ell ν : ι → ℝ) (i : ι) : PrimaryODE.FrameData Slow :=
   PrimaryODE.FrameData.ofNormalLocal (a.normal i) (a.velocity i)
     (fun z => a.F i z.1) (a.shear i)
@@ -1606,7 +1607,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1704,7 +1705,7 @@ theorem polynomialJets_unweighted {f : ℕ → D → E}
 end Classes
 
 /-- Real vectors embedded coordinatewise in the complex coefficient space. -/
-noncomputable def complexify : RealVector →L[ℝ] ComplexVector :=
+@[expose] noncomputable def complexify : RealVector →L[ℝ] ComplexVector :=
   ContinuousLinearMap.pi (fun i => Complex.ofRealCLM.comp (EuclideanSpace.proj i))
 
 @[simp] theorem complexify_apply (a : RealVector) (i : Fin 3) : complexify a i = (a i : ℂ) := rfl
@@ -1726,7 +1727,7 @@ noncomputable def complexCrossLinear : ComplexVector →L[ℝ] ComplexVector →
       ((ContinuousLinearMap.proj 0).smulRight (Pi.single 2 (1 : ℂ)))
 
 /-- Normal cross, given by `complexCrossLinear (complexify n) a`. -/
-noncomputable def normalCross (n : RealVector) (a : ComplexVector) : ComplexVector :=
+@[expose] noncomputable def normalCross (n : RealVector) (a : ComplexVector) : ComplexVector :=
   complexCrossLinear (complexify n) a
 
 theorem normalCross_apply (n : RealVector) (a : ComplexVector) :
@@ -1773,6 +1774,7 @@ theorem normalCross_triple (n : RealVector) (a : ComplexVector) :
       Complex.ofReal_mul] <;> ring
 
 /-- The actual coefficient in the vector potential (30). -/
+@[expose]
 noncomputable def normalCoefficient (n : RealVector) (a : ComplexVector) : ComplexVector :=
   (‖n‖ ^ 2)⁻¹ • normalCross n a
 
@@ -1820,7 +1822,7 @@ theorem normalCoefficient_class {N : ℕ → D → RealVector} {a : ℕ → D �
 end Coefficients
 
 /-- Actual cylindrical curl, including the frame connection in its axial component. -/
-noncomputable def cylindricalCurl {D : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
+@[expose] noncomputable def cylindricalCurl {D : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
     (R : D → ℝ) (Vr Vθ Vz : D → D) (a : D → ComplexVector) (x : D) : ComplexVector :=
   ![(R x)⁻¹ • HarmonicCalculus.along Vθ (fun y => a y 2) x -
       HarmonicCalculus.along Vz (fun y => a y 1) x,
@@ -1876,7 +1878,7 @@ theorem strippedDivergence_class (ha : MemClass s w α a) (hκ : 0 ≤ κ)
 end CurlClass
 
 /-- The inverse frequency is the only band factor in the stripped curl error. -/
-noncomputable def curlRemainder {D : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
+@[expose] noncomputable def curlRemainder {D : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
     (K : ℝ) (R : D → ℝ) (Vr Vθ Vz : D → D) (B : D → ComplexVector) (x : D) : ComplexVector :=
   (1 / K) • (Complex.I • cylindricalCurl R Vr Vθ Vz B x)
 
@@ -2190,12 +2192,12 @@ theorem normalCoefficient_contDiffOn {U : Set D} {N : D → RealVector} {a : D �
 
 /-- Coefficient, given by `normalCoefficient (HarmonicCalculus.phaseNormal R Vr Vθ Vz Φ x) (a
 x)`. -/
-noncomputable def coefficient (R : D → ℝ) (Vr Vθ Vz : D → D)
+@[expose] noncomputable def coefficient (R : D → ℝ) (Vr Vθ Vz : D → D)
     (Φ : D → ℝ) (a : D → ComplexVector) (x : D) : ComplexVector :=
   normalCoefficient (HarmonicCalculus.phaseNormal R Vr Vθ Vz Φ x) (a x)
 
 /-- Inverse carrier, given by `Complex.I / (K : ℂ)`. -/
-noncomputable def inverseCarrier (K : ℝ) : ℂ := Complex.I / (K : ℂ)
+@[expose] noncomputable def inverseCarrier (K : ℝ) : ℂ := Complex.I / (K : ℂ)
 
 theorem inverseCarrier_phaseFactor {K : ℝ} (hK : K ≠ 0) :
     inverseCarrier K * HarmonicCalculus.phaseFactor K = -1 := by
@@ -2215,13 +2217,13 @@ theorem curlRemainder_eq (K : ℝ) (R : D → ℝ) (Vr Vθ Vz : D → D)
 
 /-- Vector potential, given by `HarmonicCalculus.vectorMode K Φ (fun x => inverseCarrier K •
 coefficient R Vr Vθ Vz Φ a x)`. -/
-noncomputable def vectorPotential (K : ℝ) (R : D → ℝ) (Vr Vθ Vz : D → D)
+@[expose] noncomputable def vectorPotential (K : ℝ) (R : D → ℝ) (Vr Vθ Vz : D → D)
     (Φ : D → ℝ) (a : D → ComplexVector) : D → ComplexVector :=
   HarmonicCalculus.vectorMode K Φ (fun x => inverseCarrier K • coefficient R Vr Vθ Vz Φ a x)
 
 /-- Realized coefficient, given by `a x + curlRemainder K R Vr Vθ Vz (coefficient R Vr Vθ Vz Φ
 a) x`. -/
-noncomputable def realizedCoefficient (K : ℝ) (R : D → ℝ) (Vr Vθ Vz : D → D)
+@[expose] noncomputable def realizedCoefficient (K : ℝ) (R : D → ℝ) (Vr Vθ Vz : D → D)
     (Φ : D → ℝ) (a : D → ComplexVector) (x : D) : ComplexVector :=
   a x + curlRemainder K R Vr Vθ Vz (coefficient R Vr Vθ Vz Φ a) x
 

@@ -17,7 +17,7 @@ The full development remains internal so that the public API is limited to stabl
 statements.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.AsymptoticTrianglePacking
 

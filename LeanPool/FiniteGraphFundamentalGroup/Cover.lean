@@ -19,7 +19,7 @@ import Mathlib.Tactic.SetLike
 This module constructs the standard combinatorial unfolding of a rooted quiver.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory Quiver
 
@@ -51,7 +51,7 @@ instance graphCoverQuiver {V : Type u} [Quiver.{u} V] (root : V) :
     x.2 ≫ (Quiver.FreeGroupoid.of V).map e = y.2}
 
 /-- The projection from the path-lifting cover to the original quiver. -/
-def graphCoverProjection {V : Type u} [Quiver.{u} V] (root : V) :
+@[expose] def graphCoverProjection {V : Type u} [Quiver.{u} V] (root : V) :
     graphCoverVertex root ⥤q V where
   obj x := x.1
   map e := e.1

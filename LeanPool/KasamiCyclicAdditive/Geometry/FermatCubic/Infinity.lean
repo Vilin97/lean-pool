@@ -27,7 +27,7 @@ The main result is the diagonal translation formula:
 ```
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 
@@ -56,7 +56,7 @@ variable [DecidableEq K]
 
 /-- The point at infinity `P_a = [1:a:0]` of the Fermat cubic, `a^3 = 1`, in the Weierstrass
 model.  For `a = 1` this is the origin `O = [1:1:0]`. -/
-def ptInf (a : K) (ha : a ^ 3 = 1) : (fer K).toAffine.Point :=
+@[expose] def ptInf (a : K) (ha : a ^ 3 = 1) : (fer K).toAffine.Point :=
   if ha1 : a = 1 then 0 else Affine.Point.some _ _ (inf_nonsingular (cube_root_rel ha ha1))
 
 /-- `P_1` is the origin. -/

@@ -22,7 +22,7 @@ import Mathlib.Tactic.ArithMult.Init
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1607,11 +1607,11 @@ namespace NumberField.Odlyzko
 variable (K : Type*) [Field K] [NumberField K] [IsTotallyComplex K]
 
 /-- A completed zeta radius six vertical coefficient used in the Odlyzko-bound argument. -/
-noncomputable def completedZetaRadiusSixVerticalCoefficient : ℝ :=
+@[expose] noncomputable def completedZetaRadiusSixVerticalCoefficient : ℝ :=
   max 1 (poleClearedCompletedDedekindZetaVerticalBound K (-4) 8)
 
 /-- A completed zeta center log linear expression used in the Odlyzko-bound argument. -/
-noncomputable def completedZetaCenterLogLinearExpression (t : ℝ) : ℝ :=
+@[expose] noncomputable def completedZetaCenterLogLinearExpression (t : ℝ) : ℝ :=
   completedZetaRadiusSixVerticalCoefficient K + 2 * (7 + |t|) +
     Real.log (dedekindZetaInverseVerticalMajorant K) -
     (nrComplexPlaces K : ℝ) / 2 *
@@ -1619,7 +1619,7 @@ noncomputable def completedZetaCenterLogLinearExpression (t : ℝ) : ℝ :=
     (nrComplexPlaces K : ℝ) / 2 * Real.pi * |t|
 
 /-- A completed zeta center log linear bound used in the Odlyzko-bound argument. -/
-noncomputable def completedZetaCenterLogLinearBound (t : ℝ) : ℝ :=
+@[expose] noncomputable def completedZetaCenterLogLinearBound (t : ℝ) : ℝ :=
   max 1 (completedZetaCenterLogLinearExpression K t)
 
 omit [IsTotallyComplex K] in

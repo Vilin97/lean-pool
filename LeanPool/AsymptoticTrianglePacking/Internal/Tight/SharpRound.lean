@@ -17,7 +17,7 @@ It packages retention, concentration, degree-band, codegree, and cover-rate boun
 can be iterated by the schedule.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 

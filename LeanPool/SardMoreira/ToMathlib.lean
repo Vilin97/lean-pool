@@ -23,4 +23,4 @@ This module gathers auxiliary lemmas from the SardMoreira project that are
 candidates for upstreaming to Mathlib.
 -/
 
-@[expose] public section
+public section

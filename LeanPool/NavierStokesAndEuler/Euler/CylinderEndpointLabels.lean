@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointCoordinates
 
 /-! Evaluation of the actual cylinder coefficients at a spatial label. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
