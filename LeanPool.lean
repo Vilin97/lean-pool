@@ -1368,6 +1368,17 @@ public import LeanPool.ChannelCapacity.Finite
 public import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
 public import LeanPool.ChannelCapacity.NonDegeneracy
 public import LeanPool.ChannelCapacity.StrictConcavity
+public import LeanPool.ChipFiring
+public import LeanPool.ChipFiring.ChipFiringWithLean
+public import LeanPool.ChipFiring.ChipFiringWithLean.Algorithms
+public import LeanPool.ChipFiring.ChipFiringWithLean.Basic
+public import LeanPool.ChipFiring.ChipFiringWithLean.CFGraphExample
+public import LeanPool.ChipFiring.ChipFiringWithLean.Config
+public import LeanPool.ChipFiring.ChipFiringWithLean.Orientation
+public import LeanPool.ChipFiring.ChipFiringWithLean.PalomarSolution
+public import LeanPool.ChipFiring.ChipFiringWithLean.RRGHelpers
+public import LeanPool.ChipFiring.ChipFiringWithLean.Rank
+public import LeanPool.ChipFiring.ChipFiringWithLean.RiemannRoch
 public import LeanPool.Chudnovsky
 public import LeanPool.Chudnovsky.Basic
 public import LeanPool.Chudnovsky.Chudnovsky
