@@ -738,6 +738,8 @@ theorem lowerEndpointRefinedCount_eq_upperEndpointRefinedCount
     upperHorizontalContribution_eq_upperEndpointRefinedCount] at hbalance
   exact neg_injective hbalance
 
+open EquivariantPrismHorizontalEndpointIdentification renaming
+  lowerEndpointRefinedCount_eq_upperEndpointRefinedCount → endpointCountsEqual in
 /-- Endpoint-count equality specialized to the compatible generic perturbation. -/
 theorem Result.lowerEndpointRefinedCount_eq_upperEndpointRefinedCount
     (hp : Nat.Prime p) (N L : Nat)
@@ -746,8 +748,7 @@ theorem Result.lowerEndpointRefinedCount_eq_upperEndpointRefinedCount
     (m : Real) (R : Result hp N L H m) :
     lowerEndpointRefinedCount hp N L R.assignment =
       upperEndpointRefinedCount hp N L R.assignment :=
-  lowerEndpointRefinedCount_eq_upperEndpointRefinedCount
-    hp N L R.assignment R.generalPosition
+  endpointCountsEqual hp N L R.assignment R.generalPosition
 
 end EquivariantPrismHorizontalEndpointIdentification
 end FoxNeuwirthOrderComplex
