@@ -71,3 +71,45 @@ for both output files on cold extraction, cache reuse, and forced refresh.
 Cache reuse took under a millisecond, versus 5–13 seconds for extraction on that
 machine. This is a small-project correctness check, not a whole-pool timing claim.
 Measure full-run savings after the main-branch extraction cache has been seeded.
+
+## Pull-request scheduling and project validation
+
+Pull requests retain the required `Documentation preflight` check, including
+workspace compatibility and generated-root checks. Full exposition/doc-gen
+jobs run on main; use the Documentation workflow's `preview` input to generate
+branch artifacts on demand. Branch previews never deploy production Pages.
+Ordinary PR builds no longer package the large documentation build artifact.
+
+After compilation, Lean CI partitions every pool source into project units,
+including Basic, the root, nested files and unregistered modules. Declaration
+lint, axiom audits and option-backdoor audits import all owned modules; each
+compiled declaration is checked in its owning unit. Registry declarations use
+separate per-entry receipts. Static checks (registry/card consistency,
+reachability, forbidden constructs, size limits and Lake options), text style
+lint, and Challenge/Solution validation still run every time.
+
+`.lake/validation-cache/v1/passes.json` contains successful receipts keyed by
+source contents, each module's transitive compiler import inventory, toolchain,
+dependency pins, build options and checker code. Missing import inventories
+conservatively hash all local Lean sources. Changes to a project's registry
+entry invalidate its declaration check without invalidating sibling projects.
+Adding, deleting or editing modules changes the validation coverage. Failed
+checks never publish receipts. A registry-only rebase can therefore reuse
+proof validation while still checking the registry and generated cards.
+
+Actions saves the small receipt cache after all gates pass. PR cache scope is
+`refs/pull/<n>/merge`, so a PR can reuse its previous validation across rebases,
+but main and other PRs cannot consume its receipts. Main receipts are available
+to all branches. The first run after shipping, a toolchain bump or a checker
+change remains cold; subsequent runs should avoid validating unchanged projects.
+
+To bypass receipts for comparison, from `python/`:
+
+```sh
+uv run python -m lean_pool.validation_cache lint --repo .. --refresh
+uv run python -m lean_pool.validation_cache quality --repo .. --refresh
+```
+
+This does not eliminate GitHub's strict up-to-date check requirement or registry
+merge conflicts. CI still runs for a new merge result, with compilation handled
+by Lake's existing incremental build cache and validation reused by content.
