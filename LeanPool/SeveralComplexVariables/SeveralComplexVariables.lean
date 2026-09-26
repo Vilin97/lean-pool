@@ -1,0 +1,217 @@
+/-
+Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bastiaan J Braams
+-/
+module
+
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Analysis.Connected
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Analysis.LinearFunctional
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Analysis.OpenMapping
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Analysis.TaylorBounds
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticGerm
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticGerm.CoefficientPolynomial
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticGerm.CoordinateChange
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticGerm.Elimination
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticGerm.Factorization
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticGerm.Fiber
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticGerm.IntrinsicOrder
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticGerm.Noetherian
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticGerm.Order
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticGerm.Polynomial
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticGerm.RelativePrimality
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticGerm.Units
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticGerm.Weierstrass
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticSet.Basic
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticSet.Codimension
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticSet.CoordinatePlane
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticSet.FunctionSpace
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticSet.Hartogs
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticSet.Holomorphic
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticSet.Regular
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.AnalyticSet.Removable
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Analyticity
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.BallAutomorphisms
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Biholomorphic
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.BiholomorphicRigidity
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.CartanThullen
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.CartanUniqueness
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.CauchyCoefficients
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.CauchyDerivatives
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.CauchyEstimates
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.CauchyIntegral
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.CauchyPompeiu
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.CauchyRiemann
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.CauchySeries
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.CauchyTransform
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Circular
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.CircularContinuation
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.CommonExtension
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.CompactHole
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.ContourIntegral
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Derivatives
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.DomainOfHolomorphy
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.DominatedIntegral
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.FunctionSpace
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.FunctionSpace.Extension
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.HartogsContinuation
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.HartogsDomain
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.HartogsExtension
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.HartogsLaurent
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.HartogsSeries
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.HolomorphicConvexity.BoundaryDistance
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.HolomorphicConvexity.Exhaustion
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.HolomorphicConvexity.Hull
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.HolomorphicConvexity.Thullen
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.HolomorphicConvexity.Transport
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.HolomorphicLp
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.IdentityPrinciple
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.ImplicitGraph
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.ImplicitMapping
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.InjectiveMapping
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.InjectiveMapping.CorankOne
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.InjectiveMapping.CriticalSet
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.InjectiveMapping.Immersion
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.InjectiveMapping.OneVariable
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Integral.Circle
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.IsolatedSingularity
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LaurentApproximation
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LaurentSeries
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LaurentSeries.Annulus
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LaurentSeries.Basic
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LaurentSeries.Coefficients
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LaurentSeries.Convergence
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LaurentSeries.Iterated
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LaurentSeries.Neighborhoods
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LaurentSeries.OneVariable
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LaurentSeries.ProductCoefficients
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LaurentSeries.ProductExpansion
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LaurentSeries.Uniqueness
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LeviConvexity
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LeviConvexity.Independence
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LeviConvexity.Invariance
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LeviConvexity.Necessity
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LeviConvexity.Peak
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LeviForm
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LeviForm.Holomorphic
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LocallyBounded
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.LocallyUniform
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.MaximumModulus
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Montel
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Osgood
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.ParametricIntegral
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Plurisubharmonic
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Polydisc
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.PolydiscMeanValue
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.PolydiscTaylor
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Polynomial.OfFn
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.PolynomialDerivatives
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.PowerSeriesConvergence
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.PowerSeriesConvergence.Analytic
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.PowerSeriesConvergence.Basic
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Pseudoconvexity
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.RealUniqueness
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Reindex
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Reinhardt
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Reinhardt.Extension
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Reinhardt.GeometricConvexity
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Reinhardt.HolomorphicConvexity
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Reinhardt.Hull
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Reinhardt.MonomialSeparation
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Reinhardt.PartialHull
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.RemovableSingularity
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.RemovableSingularity.Cauchy
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.RemovableSingularity.ExceptionalSet
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.RemovableSingularity.Geometry
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.RemovableSingularity.Gluing
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.RemovableSingularity.Local
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.RemovableSingularity.OneVariable
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Runge
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Runge.Examples
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.SeparateAnalytic
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.SeparateAnalytic.Baire
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.SeparateAnalytic.FiberExtension
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.SeparateAnalytic.HartogsLemma
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.SeparateAnalytic.MeanValue
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.SeparateAnalytic.Submean
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.SphericalShell
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Subharmonic
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Subharmonic.Majorant
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Subharmonic.SmoothCriterion
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Topology.CompactExhaustion
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Topology.Frontier
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Topology.Graph
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Topology.Path
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.Topology.UpperSemicontinuous
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.TubeDomain
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.TubeDomain.Basic
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.TubeDomain.Bochner
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.TubeDomain.Disc
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.TubeDomain.Gluing
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.TubeDomain.StarConvex
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.WeierstrassDivision
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.WeierstrassDivision.Basic
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.WeierstrassDivision.CoordinatePower
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.WeierstrassDivision.Picard
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.WeierstrassPreparation
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.ZeroSets
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.ZeroSets.Basic
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.ZeroSets.Connected
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.ZeroSets.Local
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables.ZeroSets.Persistence
+
+/-!
+# Several complex variables
+
+This umbrella imports the classical function theory of open subsets of finite-dimensional
+complex normed spaces. Analytic maps use Mathlib's `AnalyticOnNhd ℂ`; holomorphic maps on open
+sets use `DifferentiableOn ℂ`. Banach-valued targets are retained where appropriate. Finite
+coordinate spaces carry the supremum norm, so their balls are polydiscs; Euclidean ball geometry
+uses the inner-product norm explicitly.
+
+## Local analysis and function spaces
+
+The library provides polydisc Cauchy and Taylor formulas with separate radii, mixed derivative
+estimates, the Cauchy–Riemann equations, the identity and maximum principles, analytic parameter
+integrals, and the Cauchy–Pompeiu identity. Locally uniform convergence preserves analyticity
+and derivatives. Holomorphic maps form compact-open function spaces, with continuous evaluation,
+restriction, and coordinate differentiation. Montel and Vitali theorems use finite-dimensional
+targets for compactness. Holomorphic `Lp` spaces are complete, including exponent infinity.
+
+## Mapping theory and continuation
+
+Inverse and implicit mapping theorems, regular zero-set graphs, injective holomorphic maps,
+Cartan uniqueness, circular rigidity, and explicit ball automorphisms are included. Reinhardt,
+circular, and Hartogs geometry support Taylor and Laurent continuation, unrestricted separate
+holomorphy, and removable singularities. Hartogs' compact-hole theorem follows from Ehrenpreis'
+argument with real derivatives and the Cauchy transform, without differential forms.
+
+## Germs and analytic sets
+
+Analytic germs form local integral domains with residue field `ℂ`. Weierstrass division and
+preparation, Taylor uniqueness, coordinate-independent total order, Noetherianity, and unique
+factorization support zero-set and relative-primality results. Analytic subsets have local
+finite equations, interior rigidity, dense connected complements, and regular and singular loci.
+The Riemann extension theorems include Banach-valued removal and the holomorphic restriction
+algebra equivalence across sets of slice codimension at least two.
+
+## Convexity, boundary geometry, and approximation
+
+Holomorphic hulls, compact exhaustions, and escaping sequences lead to the Cartan–Thullen
+equivalences on finite-dimensional complex normed spaces. Thullen's Banach-valued Taylor
+continuation lemma gives the coordinate hull-radius statements and Bochner's tube theorem.
+Subharmonicity and plurisubharmonicity use the local submean property; the Laplacian and Levi
+form give their `C²` criteria. Domains of holomorphy are pseudoconvex and satisfy continuity
+principles. Levi's necessary condition, independence of the defining function, holomorphic
+supporting polynomials, normalized local peak functions, and local holomorphic blow-up are
+proved. Runge pairs and domains use approximation on compact sets; polynomial hulls and
+Reinhardt and circular examples are included.
+
+The Oka–Weil theorem, the Levi sufficiency problem, and abstract envelopes of holomorphy remain
+outside this library's scope. The [upstream theorem catalogue][scvCatalogue] records the precise
+mathematical statements at the imported revision.
+
+[scvCatalogue]: https://github.com/bjbraams/lean-scv/blob/caef1ae776ff79933718312357980d46628d3702/SCVMainTheorems.md
+-/
+
+/- Adapted for Lean Pool: module imports and compatibility with its pinned toolchain. -/

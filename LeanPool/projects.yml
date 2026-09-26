@@ -10563,3 +10563,41 @@ projects:
     - 20E05
     - 68Q45
     - 03B35
+  - slug: lean-scv
+    title: Classical several complex variables
+    summary: Formalizes Cauchy and Taylor theory, Hartogs phenomena, removable singularities, analytic
+      sets and germs, Weierstrass theory, holomorphic convexity, Cartan–Thullen and Bochner tube theorems,
+      plurisubharmonic functions, Levi convexity, and elementary Runge-domain theory. Weierstrass preparation
+      and coordinate-origin germ Noetherianity overlap LocalComplexGeometry; this development also supplies
+      germ unique factorization and global extension and convexity results.
+    branch: complex analysis
+    entry_module: LeanPool.SeveralComplexVariables
+    authors:
+    - Bastiaan J Braams
+    source:
+      url: https://github.com/bjbraams/lean-scv
+      github_repo: bjbraams/lean-scv
+      commit: caef1ae776ff79933718312357980d46628d3702
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded
+    main_results:
+    - declaration: SCV.cauchy_formula_polydisc
+      informal: Holomorphic functions on a polydisc satisfy the iterated Cauchy integral formula.
+    - declaration: SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded
+      informal: On an open subset of a finite complex coordinate space, a Banach-valued separately analytic
+        map that is locally bounded is jointly analytic.
+      source_ref: Boas (2013), Section 2.7, Theorem 7 (the classical two-variable scalar case).
+    - declaration: SCV.identity_theorem
+      informal: Holomorphic functions on a connected domain that agree on a nonempty open subset agree
+        throughout the domain.
+    tags:
+    - complex-analysis
+    - several-complex-variables
+    - holomorphic-functions
+    msc:
+    - 32A10
+    - 32D05
+    - 32E10
