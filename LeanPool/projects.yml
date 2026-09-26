@@ -10563,3 +10563,38 @@ projects:
     - 20E05
     - 68Q45
     - 03B35
+  - title: Beyond the Bethe approximation of the permanent
+    summary: Constructs a deterministic polynomial-time approximation algorithm for the permanent of
+      every nonnegative rational matrix, with exponential base strictly smaller than the square root
+      of two. The development includes stable-polynomial inequalities, rational convex optimization,
+      finite-precision arithmetic, and a Turing-machine complexity proof.
+    branch: theoretical computer science
+    provenance: AI
+    main_declarations:
+    - BeyondBethe.theoremOne
+    main_results:
+    - declaration: BeyondBethe.theoremOne
+      informal: There is a fixed rational algorithm approximating the permanent of every nonnegative
+        rational n-by-n matrix within c^n for an absolute c below sqrt(2), with a deterministic polynomial-time
+        Turing-machine implementation.
+    tags:
+    - permanent
+    - approximation-algorithms
+    - computational-complexity
+    - stable-polynomials
+    msc:
+    - 68W25
+    - 15A15
+    slug: formalization-beyond-bethe
+    entry_module: LeanPool.BeyondBethe
+    authors:
+    - Nima Anari
+    - Samuel Schlesinger
+    - Bolton Bailey
+    - Christian Reitwiessner
+    source:
+      url: https://github.com/nimaanari/formalization-beyond-bethe
+      github_repo: nimaanari/formalization-beyond-bethe
+      commit: 325cda6d2118870f7f121a9a986b7ea9ffdd7a26
+    license: Apache-2.0
+    status: verified
