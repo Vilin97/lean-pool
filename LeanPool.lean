@@ -7390,6 +7390,15 @@ public import LeanPool.Sabidussi.OddBalance
 public import LeanPool.Sabidussi.OrdinaryCircuit
 public import LeanPool.Sabidussi.Parity
 public import LeanPool.Sabidussi.Statement
+public import LeanPool.SalemTheorem
+public import LeanPool.SalemTheorem.PdtPisotLadder
+public import LeanPool.SalemTheorem.PdtSalemArith
+public import LeanPool.SalemTheorem.PdtSalemCircle
+public import LeanPool.SalemTheorem.PdtSalemEndgame
+public import LeanPool.SalemTheorem.PdtSalemMinus
+public import LeanPool.SalemTheorem.PdtSalemQuadUnit
+public import LeanPool.SalemTheorem.SalemPisot
+public import LeanPool.SalemTheorem.Solution
 public import LeanPool.SardMoreira
 public import LeanPool.SardMoreira.Chart
 public import LeanPool.SardMoreira.ChartEstimates
