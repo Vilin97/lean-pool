@@ -69,7 +69,8 @@ private theorem norm_tendsto_has_order_convergent_subsequence
     apply squeeze_zero_norm
     · intro k
       change ‖∑' j, v (j + k)‖ ≤ ∑' j, ‖v (j + k)‖
-      exact norm_tsum_le_tsum_norm ((summable_nat_add_iff k).2 hv_norm_sum)
+      exact norm_tsum_le_tsum_norm
+        ((summable_nat_add_iff (f := fun n ↦ ‖v n‖) k).2 hv_norm_sum)
     · exact tendsto_sum_nat_add (fun n ↦ ‖v n‖)
   refine ⟨φ, hφ, ?_⟩
   let K := ULift.{u} ℕ
