@@ -1,0 +1,103 @@
+/-
+Copyright (c) 2026 Nathan Pflueger. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nathan Pflueger
+-/
+module
+
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffineCover
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffineCoverData
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffineDecisionCoverData
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffinePosition
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffinePositionMultiBreak
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CanonicalDivisor
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedContraction
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedCoreSymmetry
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedFaceCensus
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedFaceDispatch
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ConnectedCheckFast
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreBridgeCut
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreBridgeRankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreExpansion
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreExpansionClosed
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CorePairMultiplicity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreRelabeling
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreSymmetry
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCut
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutGenus
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutGenusFour
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutRankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutTwoRegular
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexReachability
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CubicCore
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateAffinePosition
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateAffinePositionMultiBreak
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateCoreVertexCut
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateInterpolation
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateMultiBreakScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegeneratePiecewiseInterpolation
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateRamp
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateRankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateRepRigidity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSlopeScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpec
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpecCensus
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSubdivisionIso
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DiscreteSpecialization
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DoubledAnchorChecks
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotential
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotentialRankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.GraphIsoLaplacianEquiv
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.IteratedSplitRefinement
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquivSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LeafExtension
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LeafPruning
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LeafReduction
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LegSplit
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MovingPosition
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MultiBreakScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.NestedOneVertexCut
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.OddSubdivisionDescent
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.OneEdgeSplitRefinement
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.OneVertexCutCheck
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.PathSplitRefinement
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.PiecewiseBlockDecoder
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.PointedGenusOneRigidTransport
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.RampScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.RankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ReorientContraction
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SlopeScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SpanningTreeConnectivity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SpecBurning
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SplitRampArithmetic
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SplitRampScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SquareRootDescent
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionArithmetic
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionChipDescent
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionChipDescentMain
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionChipDescentStep
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionCoreSupport
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionTwoEdgeCut
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TrivalentExpansion
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoEdgeConnectedCheckFast
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoPoleSubdivision
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoPoleSubdivisionGluing
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoVertexPencilCore
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.UnitSubdivisionPresentation
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ValidClosed
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.WindowProfile
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.WindowProfileReachability
+
+/-! Supporting modules for Brill–Noether theory and gonality of finite graphs. -/
+
+@[expose] public section
