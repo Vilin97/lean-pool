@@ -26,35 +26,6 @@ open Filter
 namespace Hadamard
 namespace OrderOne
 
-lemma finite_norm_le_of_summable_inv_norm_sq {ι : Type} {z : ι → ℂ}
-    (hz0 : ∀ i, z i ≠ 0)
-    (h : Summable (fun i => (1 : ℝ) / ‖z i‖ ^ 2))
-    {R : ℝ} (hR : 0 < R) :
-    ({i : ι | ‖z i‖ ≤ R} : Set ι).Finite := by
-  have ht : Tendsto (fun i : ι => (1 : ℝ) / ‖z i‖ ^ 2) cofinite (nhds 0) :=
-    h.tendsto_cofinite_zero
-  have hpos : (0 : ℝ) < (1 / R ^ 2 : ℝ) := by positivity
-  have hsmall : ∀ᶠ i in cofinite, (1 : ℝ) / ‖z i‖ ^ 2 < 1 / R ^ 2 :=
-    ht.eventually (Iio_mem_nhds hpos)
-  have hfinite_compl : ({i : ι | ¬((1 : ℝ) / ‖z i‖ ^ 2 < 1 / R ^ 2)} : Set ι).Finite := by
-    have : ({i : ι | (1 : ℝ) / ‖z i‖ ^ 2 < 1 / R ^ 2} : Set ι) ∈ (cofinite : Filter ι) := hsmall
-    have : ({i : ι | (1 : ℝ) / ‖z i‖ ^ 2 < 1 / R ^ 2} : Set ι)ᶜ.Finite :=
-      (Filter.mem_cofinite.1 this)
-    simpa [Set.compl_ofPred] using this
-  refine hfinite_compl.subset ?_
-  intro i hi
-  have hzpos : 0 < (‖z i‖ : ℝ) := norm_pos_iff.2 (hz0 i)
-  have hzpos_sq : 0 < (‖z i‖ : ℝ) ^ 2 := by positivity
-  have hsq_le : (‖z i‖ : ℝ) ^ 2 ≤ R ^ 2 := by
-    have : (‖z i‖ : ℝ) ≤ R := hi
-    have habs : |(‖z i‖ : ℝ)| ≤ |R| := by
-      simpa [abs_of_nonneg (norm_nonneg _), abs_of_pos hR] using this
-    simpa using (sq_le_sq.2 habs)
-  have hcontra : (1 : ℝ) / R ^ 2 ≤ (1 : ℝ) / ‖z i‖ ^ 2 :=
-    one_div_le_one_div_of_le hzpos_sq hsq_le
-  intro hlt
-  exact (lt_irrefl (1 / R ^ 2)) (lt_of_le_of_lt hcontra hlt)
-
 /-- **General-exponent finiteness.**
 
 The `exponent ≥ 1` analogue of `finite_norm_le_of_summable_inv_norm_sq`:
@@ -87,6 +58,13 @@ lemma finite_norm_le_of_summable_inv_norm_pow {ι : Type*} {z : ι → ℂ} {p :
     one_div_le_one_div_of_le hzpos_pow hpow_le
   intro hlt
   exact (lt_irrefl (1 / R ^ (p + 1))) (lt_of_le_of_lt hcontra hlt)
+
+lemma finite_norm_le_of_summable_inv_norm_sq {ι : Type} {z : ι → ℂ}
+    (hz0 : ∀ i, z i ≠ 0)
+    (h : Summable (fun i => (1 : ℝ) / ‖z i‖ ^ 2))
+    {R : ℝ} (hR : 0 < R) :
+    ({i : ι | ‖z i‖ ≤ R} : Set ι).Finite := by
+  exact finite_norm_le_of_summable_inv_norm_pow (p := 1) hz0 h hR
 
 lemma tendsto_norm_atTop_of_summable_inv_norm_sq {ι : Type} {z : ι → ℂ}
     (hz0 : ∀ i, z i ≠ 0)
