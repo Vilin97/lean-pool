@@ -10308,35 +10308,41 @@ projects:
       - '12F05'
       - '13F25'
 
-  - slug: lean-superorthogonality
-    title: Square-function estimates from type IV superorthogonality
-    summary: Proves the type IV superorthogonality square-function estimate for finite and countable index
-      sets, including the pointwise combinatorial estimate and unconditional convergence in L^(2r).
-    branch: harmonic analysis
-    entry_module: LeanPool.Superorthogonality
+  - slug: lean-spectral-theory
+    title: lean-spectral-theory
+    summary: The spectral theorem for possibly unbounded self-adjoint operators on complex Hilbert
+      spaces, formalized through the Cayley transform and real projection-valued measures. The
+      selected spectral theorem constructs a PVM whose scalar measures give the exact finite-second-moment
+      domain and first-moment quadratic form, with measurable-set uniqueness, and is proved
+      equivalent to equality with the unbounded coordinate spectral integral. The selected Stone
+      theorem proves both that strongly continuous one-parameter unitary groups have self-adjoint
+      generators and that every self-adjoint operator generates such a group.
+    branch: functional analysis
+    entry_module: LeanPool.SpectralTheory
     authors:
-    - Joris Roos
+    - Ezzeri Esa
     source:
-      url: https://github.com/roos-j/lean-superorthogonality
-      github_repo: roos-j/lean-superorthogonality
-      commit: 6d3a3645c1e6f6a3c50bfdc12c4a51250e63bc31
+      url: https://github.com/savarin/lean-spectral-theory
+      github_repo: savarin/lean-spectral-theory
+      commit: d19e279f0ab244657f02ce678e8d67fa69e2f407
     license: Apache-2.0
     status: verified
-    provenance: AI
     main_declarations:
-    - Superorthogonal.sqfct_estimate_of_type_iv_superorthogonal
+    - PalomarSpectralStone.spectral_theorem_intrinsic
     main_results:
-    - declaration: Superorthogonal.sqfct_estimate_of_type_iv_superorthogonal
-      informal: For an integer r >= 1, a countable type IV superorthogonal family in L^(2r), with
-        almost-everywhere summable squared norms and square function in L^(2r), converges unconditionally
-        in L^(2r) and satisfies the square-function bound with constant C(r).
+    - declaration: PalomarSpectralStone.spectral_theorem_intrinsic
+      informal: Every self-adjoint partial linear operator on a complex Hilbert space has a
+        real projection-valued measure representing its domain and scalar moments, unique on
+        Borel sets.
+    - declaration: PalomarSpectralStone.stone_theorem_intrinsic
+      informal: Every strongly continuous one-parameter unitary group has a self-adjoint
+        generator, and every self-adjoint operator generates such a group.
     tags:
-    - harmonic-analysis
-    - superorthogonality
-    - square-functions
+    - functional-analysis
     msc:
-    - 42B25
-    - 46E30
+    - 47A10
+    - 47B15
+    provenance: AI
   - slug: nemytskii-lebesgue
     title: Nemytskii operators on Lebesgue spaces
     summary: >-
@@ -10434,3 +10440,33 @@ projects:
       - 47H30
       - 46E30
       - 47J05
+
+  - slug: lean-superorthogonality
+    title: Square-function estimates from type IV superorthogonality
+    summary: Proves the type IV superorthogonality square-function estimate for finite and countable index
+      sets, including the pointwise combinatorial estimate and unconditional convergence in L^(2r).
+    branch: harmonic analysis
+    entry_module: LeanPool.Superorthogonality
+    authors:
+    - Joris Roos
+    source:
+      url: https://github.com/roos-j/lean-superorthogonality
+      github_repo: roos-j/lean-superorthogonality
+      commit: 6d3a3645c1e6f6a3c50bfdc12c4a51250e63bc31
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - Superorthogonal.sqfct_estimate_of_type_iv_superorthogonal
+    main_results:
+    - declaration: Superorthogonal.sqfct_estimate_of_type_iv_superorthogonal
+      informal: For an integer r >= 1, a countable type IV superorthogonal family in L^(2r), with
+        almost-everywhere summable squared norms and square function in L^(2r), converges unconditionally
+        in L^(2r) and satisfies the square-function bound with constant C(r).
+    tags:
+    - harmonic-analysis
+    - superorthogonality
+    - square-functions
+    msc:
+    - 42B25
+    - 46E30
