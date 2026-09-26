@@ -10109,42 +10109,6 @@ projects:
     msc:
       - '90C35'
       - '05C21'
-  - slug: chip-firing-with-lean
-    title: Chip-Firing with Lean 4
-    summary: A Lean 4 / Mathlib formalization of Baker and Norine's Riemann-Roch theorem for
-      finite graphs. Chip configurations on a finite graph, modulo chip-firing moves, form an
-      abelian group analogous to the group of line bundles on a compact Riemann surface. Each
-      class can be assigned a rank, analogous to the dimension of a linear series. These ranks
-      then satisfy a formula of the form r(D) - r(K-D) = deg D + 1 - g, in exact analogy to
-      Riemann surfaces. This formula is formalized, along with the analog of Clifford's theorem
-      for finite graphs.
-    branch: combinatorics
-    entry_module: LeanPool.ChipFiring
-    authors:
-    - Dhyey Dharmendrakumar Mavani
-    - Nathan Pflueger
-    source:
-      url: https://github.com/dhyeymavani2003/chip-firing-with-lean
-      github_repo: dhyeymavani2003/chip-firing-with-lean
-      commit: 5b422d855c02af60591121ba7c11b5e8242542b8
-    license: Apache-2.0
-    status: verified
-    main_declarations:
-    - ChipFiring.Propositions.riemann_roch
-    - ChipFiring.Propositions.clifford
-    main_results:
-    - declaration: ChipFiring.Propositions.riemann_roch
-      informal: For a finite connected graph, the ranks of a divisor and its canonical complement
-        satisfy the graph Riemann–Roch formula.
-    - declaration: ChipFiring.Propositions.clifford
-      informal: For a special divisor on a finite connected graph, its rank is at most half
-        its degree.
-    tags:
-    - combinatorics
-    msc:
-    - 05C57
-    - 14T20
-    provenance: mix
   - slug: asymptotic-triangle-packing
     title: Finite near-regular hypergraph rounding
     summary: >-
@@ -10292,3 +10256,91 @@ projects:
       - '11E12'
       - '11E08'
       - '11E88'
+
+  - slug: puiseux
+    title: Puiseux's theorem
+    summary: >-
+      Constructs Puiseux series as the bounded-denominator subfield of rational-exponent
+      Hahn series. Proves that this field is algebraic over Laurent series over any
+      coefficient field, and is an algebraic closure when the coefficient field is
+      algebraically closed of characteristic zero. The Newton-Puiseux proof includes
+      reusable Hensel splitting and polynomial translation lemmas. Dean Cureton directed
+      the AI formalization and subsequently simplified its proofs.
+    branch: algebra
+    entry_module: LeanPool.Puiseux
+    authors:
+      - Dean Cureton
+    source:
+      title: Puiseux's theorem in Lean 4
+      url: https://github.com/deancureton/Puiseux/tree/73e78681d7bb78ddb202e29cb92ab3c16b723126
+      github_repo: deancureton/Puiseux
+      commit: 73e78681d7bb78ddb202e29cb92ab3c16b723126
+      announcement: https://x.com/deancureton/status/2082886228517564682
+      announced_at: '2026-07-30T17:49:09Z'
+      provenance_evidence: https://x.com/deancureton/status/2082886230266487252
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - PuiseuxSeries.isAlgClosure
+    main_results:
+      - declaration: PuiseuxSeries.isAlgClosure
+        informal: >-
+          For an algebraically closed field K of characteristic zero, the field of
+          Puiseux series over K is an algebraic closure of the Laurent series field K((t)).
+      - declaration: PuiseuxSeries.isAlgebraic
+        informal: >-
+          Over any field K, the Puiseux series field is algebraic over the Laurent series field.
+      - declaration: PuiseuxSeries.mem_subfield_iff_support
+        informal: >-
+          A rational-exponent Hahn series belongs to the Puiseux subfield if and only if
+          its support lies in (1/n) times the integers for some positive integer n.
+      - declaration: Polynomial.Monic.exists_factorization_rootMultiplicity
+        informal: >-
+          A monic degree-m polynomial over K[[t]] whose reduction has a root of multiplicity
+          k, with 0 < k < m, factors into monic polynomials of degrees k and m-k.
+    tags:
+      - field-theory
+      - puiseux-series
+      - algebraic-closure
+      - hensel-lemma
+    msc:
+      - '12F05'
+      - '13F25'
+
+  - slug: chip-firing-with-lean
+    title: Chip-Firing with Lean 4
+    summary: A Lean 4 / Mathlib formalization of Baker and Norine's Riemann-Roch theorem for
+      finite graphs. Chip configurations on a finite graph, modulo chip-firing moves, form an
+      abelian group analogous to the group of line bundles on a compact Riemann surface. Each
+      class can be assigned a rank, analogous to the dimension of a linear series. These ranks
+      then satisfy a formula of the form r(D) - r(K-D) = deg D + 1 - g, in exact analogy to
+      Riemann surfaces. This formula is formalized, along with the analog of Clifford's theorem
+      for finite graphs.
+    branch: combinatorics
+    entry_module: LeanPool.ChipFiring
+    authors:
+    - Dhyey Dharmendrakumar Mavani
+    - Nathan Pflueger
+    source:
+      url: https://github.com/dhyeymavani2003/chip-firing-with-lean
+      github_repo: dhyeymavani2003/chip-firing-with-lean
+      commit: 5b422d855c02af60591121ba7c11b5e8242542b8
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+    - ChipFiring.Propositions.riemann_roch
+    - ChipFiring.Propositions.clifford
+    main_results:
+    - declaration: ChipFiring.Propositions.riemann_roch
+      informal: For a finite connected graph, the ranks of a divisor and its canonical complement
+        satisfy the graph Riemann–Roch formula.
+    - declaration: ChipFiring.Propositions.clifford
+      informal: For a special divisor on a finite connected graph, its rank is at most half
+        its degree.
+    tags:
+    - combinatorics
+    msc:
+    - 05C57
+    - 14T20
+    provenance: mix

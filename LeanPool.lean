@@ -6963,6 +6963,11 @@ public import LeanPool.Polytopes.MainTheorem
 public import LeanPool.Polytopes.Polar
 public import LeanPool.Polytopes.Polytope
 public import LeanPool.Polytopes.Pre
+public import LeanPool.Puiseux
+public import LeanPool.Puiseux.AlgClosed
+public import LeanPool.Puiseux.Algebraic
+public import LeanPool.Puiseux.Basic
+public import LeanPool.Puiseux.HenselSplitting
 public import LeanPool.PumpingCfg
 public import LeanPool.PumpingCfg.ChomskyNormalForm.Basic
 public import LeanPool.PumpingCfg.ChomskyNormalForm.ContextFreeGrammarExtras
