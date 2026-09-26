@@ -10563,3 +10563,62 @@ projects:
     - 20E05
     - 68Q45
     - 03B35
+  - slug: uniform-sheafy-tate-domains-lean
+    title: Uniform sheafy Tate rings that are not stably uniform
+    summary: 'A Lean 4 formalisation of *Uniform sheafy Tate rings that are not stably
+      uniform* (Birkbeck–Torzewski), answering Question 7 of Kedlaya''s *Nonarchimedean
+      Scottish Book* in the negative: a sheafy uniform Huber pair need not be stably
+      uniform. Buzzard–Verberkmoes and Mihara proved that stably uniform Tate Huber
+      rings are sheafy; whether the converse holds was open.
+  
+      The paper gives two complete Tate algebras over a complete discretely valued field
+      `k` that are uniform, nonnoetherian integral domains with `A° = A₀`, strongly
+      sheafy (every Tate algebra `A⟨X₁, …, Xₙ⟩` is sheafy), and yet not stably uniform,
+      because an explicit rational localisation is not uniform. The first (Theorem 1.1)
+      is the finite-jet pinching algebra `𝓐 = B ×_D C`, the pullback of a Milnor square
+      with `B = k⟨W, Q⟩/(Q²)`, `C = k⟨W, W⁻¹⟩⟨Q⟩`, `D = C/(Q²)` — concretely, the series
+      in `k⟨W, W⁻¹⟩⟨Q⟩` whose `Q⁰`- and `Q¹`-coefficients have nonnegative `W`-support;
+      its bad chart `𝓐⟨W/ϖ⟩ ≅ k⟨X, Q⟩/(Q²)` is non-reduced. The second (Theorem 8.1)
+      is the weighted-parity algebra `𝒜_w`, whose bad chart is an integral domain; the
+      paper proves it for every unbounded weight `w ≥ 1`, the formalisation for `w(n)
+      = n`.
+  
+      This submission certifies the seven conclusions of Theorem 1.1 together with two
+      statements ruling out a vacuous reading of its sheafiness claims, stated self-containedly
+      on Mathlib in `Challenge.lean` over an arbitrary complete ultrametric field with
+      DVR valuation ring; Theorem 8.1 is certified by the repository''s in-library configuration.
+      The repository also develops the surrounding theory after Wedhorn''s *Adic Spaces*:
+      Huber and Tate rings, the adic spectrum, rational localisations, the structure
+      presheaf, and sheafiness (Definition 8.26), including the strongly noetherian
+      theorem (8.28(b)).'
+    branch: nonarchimedean geometry
+    entry_module: LeanPool.UniformSheafyTateDomains
+    authors:
+    - Christopher Birkbeck
+    - Alex Torzewski
+    source:
+      url: https://github.com/cbirkbeck/uniform-sheafy-tate-domains-lean
+      github_repo: cbirkbeck/uniform-sheafy-tate-domains-lean
+      commit: 2f45865e87d20dd460cc5a14d04850bf03be4570
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - FiniteJetOver.finiteJet_not_stablyUniform_of_dvr
+    main_results:
+    - declaration: FiniteJetOver.finiteJet_isSheafyComplete_of_dvr
+      informal: The finite-jet pinching algebra is sheafy over the stated complete discretely
+        valued field.
+    - declaration: FiniteJetOver.finiteJet_not_stablyUniform_of_dvr
+      informal: The finite-jet pinching algebra is not stably uniform.
+    - declaration: WeightedParity.weightedParity_isSheafyComplete_of_dvr
+      informal: The weighted-parity algebra is sheafy over the stated complete discretely
+        valued field.
+    - declaration: WeightedParity.weightedParity_not_stablyUniform_of_dvr
+      informal: The weighted-parity algebra is not stably uniform.
+    tags:
+    - adic-spaces
+    - tate-algebras
+    - sheaf-theory
+    msc:
+    - 14G22
