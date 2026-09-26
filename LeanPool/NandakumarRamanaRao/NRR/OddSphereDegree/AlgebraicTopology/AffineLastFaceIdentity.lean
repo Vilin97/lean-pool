@@ -98,7 +98,7 @@ theorem affineSubdiv_face_last_eq_boundary_subdiv_of_faceData {n : ℕ}
   simp? +decide [ Finset.sum_filter, Finset.mul_sum _ _ _, mul_comm,
     FunOnFinite.linearMap_apply_apply ];
   rw [ Finset.sum_comm ];
-  simp +decide [ Finset.sum_ite ];
+  simp +decide only [sum_ite_irrel, sum_const_zero, add_eq_left, mul_eq_zero];
   exact Or.inl hxlast
 
 /-- A slightly shorter alias for the last-face affine identity. -/

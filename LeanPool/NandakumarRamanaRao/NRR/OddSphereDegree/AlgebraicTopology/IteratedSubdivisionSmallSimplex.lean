@@ -84,24 +84,33 @@ theorem affineSubdivLinear_coe (n : ℕ) (π : Equiv.Perm (Fin (n + 1))) (x : De
 theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (k : Fin (n + 1)) :
     (prefixBarycenter n π k).val = stepVertices n (stdVerts n) π k := by
-  unfold prefixBarycenter stepVertices;
-  ext j; simp +decide only [FiniteSimplex.map, FiniteSimplex.barycenter, Fintype.card_fin,
-    Nat.cast_add, Nat.cast_one, stdVerts, Pi.smul_apply, Finset.sum_apply, smul_eq_mul];
-  unfold FunOnFinite.linearMap; simp +decide only
-    [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
-      Finsupp.lmapDomain_apply, Finsupp.linearEquivFunOnFinite_apply];
-  simp +decide [ Finsupp.mapDomain, Finsupp.linearEquivFunOnFinite, Pi.single_apply ];
-  simp +decide [ Finsupp.sum_fintype, prefixVertex ];
-  rw [ ← Finset.sum_subset ( show Finset.image ( fun x : Fin ( k.val + 1 ) => ⟨ x, by
-    linarith [ Fin.is_lt x, Fin.is_lt k ] ⟩ ) Finset.univ ⊆ Finset.Iic k from ?_ ) ];
-  · rw [ Finset.sum_image ] <;> norm_num;
-    · exact Finset.sum_congr rfl fun _ _ => by rw [ Finsupp.single_apply ]; aesop;
-    · exact fun x y h => by simpa [ Fin.ext_iff ] using h;
-  · simp +decide [ Fin.ext_iff ];
-    exact fun x hx₁ hx₂ hx₃ => False.elim <| hx₂ ⟨ x, by
-      linarith [ Fin.is_lt x, Fin.is_lt k, show ( x : ℕ ) ≤ k from hx₁ ] ⟩ rfl;
-  · exact Finset.image_subset_iff.mpr fun x _ => Finset.mem_Iic.mpr ( Nat.le_trans (
-      Nat.le_of_lt_succ ( Fin.is_lt x ) ) ( Nat.le_refl _ ) )
+  classical
+  let ι : Fin (k.val + 1) → Fin (n + 1) := fun i =>
+    ⟨i.val, Nat.lt_of_le_of_lt (Nat.le_of_lt_succ i.isLt) k.isLt⟩
+  have hι : Function.Injective ι := by
+    intro i l h
+    exact Fin.ext (congrArg Fin.val h)
+  have hI : Finset.image ι Finset.univ = Finset.Iic k := by
+    ext y
+    constructor
+    · intro hy
+      obtain ⟨i, _, rfl⟩ := Finset.mem_image.mp hy
+      exact Finset.mem_Iic.mpr (Nat.le_of_lt_succ i.isLt)
+    · intro hy
+      have hyk : y.val ≤ k.val := Finset.mem_Iic.mp hy
+      exact Finset.mem_image.mpr
+        ⟨⟨y.val, Nat.lt_succ_of_le hyk⟩, Finset.mem_univ _, Fin.ext rfl⟩
+  ext j
+  simp only [prefixBarycenter, FiniteSimplex.map, FiniteSimplex.barycenter,
+    FunOnFinite.linearMap_apply_apply, Fintype.card_fin, Nat.cast_add, Nat.cast_one,
+    stepVertices, stdVerts, Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
+  rw [← hI, Finset.sum_image (fun a _ b _ hab => hι hab)]
+  simp only [Finset.sum_filter, Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro i _
+  by_cases hij : j = π (ι i)
+  · simp [prefixVertex, ι, Pi.single_apply, hij]
+  · simp [prefixVertex, ι, Pi.single_apply, hij, eq_comm]
 
 theorem affineSubdivLinear_stdVerts (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (k : Fin (n + 1)) :
