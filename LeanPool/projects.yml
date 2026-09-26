@@ -10563,3 +10563,32 @@ projects:
     - 20E05
     - 68Q45
     - 03B35
+  - title: Equal-area and equal-perimeter convex partitions
+    summary: Formalizes the Akopyan–Avvakumov–Karasev theorem that every planar convex body can be partitioned
+      into any prescribed positive number of convex pieces with equal area and equal perimeter. Area
+      is Lebesgue measure and perimeter is Hausdorff measure of the boundary.
+    branch: convex geometry
+    main_declarations:
+    - HumanVerification.equalAreaEqualPerimeterPartition
+    main_results:
+    - declaration: HumanVerification.equalAreaEqualPerimeterPartition
+      informal: Every compact convex planar set with nonempty interior admits a convex partition into
+        any positive number of pieces whose areas and perimeters are all equal.
+    tags:
+    - convex-geometry
+    - equivariant-topology
+    - partitions
+    msc:
+    - 52A10
+    - 55M20
+    provenance: mix
+    slug: nrr-aak
+    entry_module: LeanPool.NandakumarRamanaRao
+    authors:
+    - Arseniy Akopyan
+    source:
+      url: https://github.com/akopjan/nrr-aak
+      github_repo: akopjan/nrr-aak
+      commit: 9e57be63320f29cbb8d2da7c4a8ad6afdef681eb
+    license: Apache-2.0
+    status: verified
