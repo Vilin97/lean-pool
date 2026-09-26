@@ -227,17 +227,17 @@ noncomputable def dhar (G : CFGraph) (D : CFDiv G) (v : G.V) : Option (CFDiv G) 
   findQReducedDivisor G v D
 
 /--
-The efficient winnability determination algorithm.
+Attempts to determine winnability with a fuel-bounded reduction.
 
-This checks whether $D$ is winnable by finding the $q$-reduced representative $D_q$
-and checking whether $D_q(q) \ge 0$ (see Corry-Perkinson, Corollary 3.7). It requires
-a chosen source vertex $q$ and returns `false` if the reduction process fails.
+An already effective divisor returns `some true`, including on disconnected graphs.
+Otherwise this seeks the $q$-reduced representative $D_q$ and returns
+`some (D_q(q) ≥ 0)` (see Corry-Perkinson, Corollary 3.7).
+If reduction exhausts its fuel, `none` records an inconclusive search, not unwinnability.
 -/
 @[simp]
-noncomputable def isWinnable (G : CFGraph) (q : G.V) (D : CFDiv G) : Bool :=
-  match findQReducedDivisor G q D with
-  | none => false -- Reduction process failed (preprocessing or main loop fuel)
-  | some D_q => D_q q >= 0
+noncomputable def isWinnable (G : CFGraph) (q : G.V) (D : CFDiv G) : Option Bool :=
+  if isEffective D then some true
+  else (findQReducedDivisor G q D).map (fun D_q => decide (D_q q ≥ 0))
 
 /--
 Calculates the incoming burning degree of a vertex $v$ from a set $B$.
