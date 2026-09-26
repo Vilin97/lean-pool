@@ -10563,3 +10563,60 @@ projects:
     - 20E05
     - 68Q45
     - 03B35
+  - slug: champernowne-normality
+    title: Champernowne normality in every base
+    summary: >-
+      Proves that concatenating the base-b digits of the positive integers
+      gives a normal digit sequence for every integer base b at least 2:
+      every nonempty length-k word of digits below b has limiting frequency
+      b^(-k). This is a discrete, all-base generalization of D. G.
+      Champernowne's 1933 base-ten result, without a real-number expansion
+      bridge. Includes reusable substring-counting inequalities, a
+      digit-string equivalence, exact cohort counts, and quantitative prefix
+      bounds used to establish the frequency limit.
+    branch: number theory and asymptotic analysis
+    entry_module: LeanPool.Champernowne
+    authors:
+      - Arthur Champernowne
+    source:
+      title: Champernowne Sequence Normality Proof
+      authors:
+        - Arthur Champernowne
+      url: https://github.com/OldMathematician/ChampernowneNormality
+      github_repo: OldMathematician/ChampernowneNormality
+      commit: 31a76dbde2727745beb6fb81af4cab1ce6a15fda
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Champernowne.champernowne_normal
+    main_results:
+      - declaration: Champernowne.champernowne_normal
+        informal: >-
+          For every integer base b at least 2, the sequence formed by
+          concatenating the base-b digits of 1, 2, 3, and so on is normal:
+          each nonempty word w of digits below b has limiting occurrence
+          frequency 1 / b^(length w), counting overlapping occurrences.
+      - declaration: Champernowne.champernowne_normal_ten
+        informal: >-
+          The decimal digit sequence 123456789101112... is normal in base ten.
+      - declaration: Champernowne.sum_countOccurrences_cohort
+        informal: >-
+          For a nonempty length-k word of base-b digits with nonzero first
+          digit and k at most m, its total occurrences inside all m-digit
+          positive integers equal b^(m-k) + (m-k)(b-1)b^(m-k-1), with natural
+          subtraction in the exponents.
+      - declaration: Champernowne.sum_countOccurrences_cohort_zero
+        informal: >-
+          For a nonempty length-k word of base-b digits starting with zero
+          and k at most m, its total occurrences inside all m-digit positive
+          integers equal (m-k)(b-1)b^(m-k-1), with natural subtraction in the
+          exponent.
+    tags:
+      - normal-numbers
+      - digit-expansions
+      - combinatorics-on-words
+      - asymptotic-frequency
+    msc:
+      - 11K16
+      - 68R15

@@ -1357,6 +1357,15 @@ public import LeanPool.CenteredMaximal.Lattice.Witness
 public import LeanPool.CenteredMaximal.Numerics
 public import LeanPool.CenteredMaximal.Statement
 public import LeanPool.CenteredMaximal.UpperBound
+public import LeanPool.Champernowne
+public import LeanPool.Champernowne.Asymptotics
+public import LeanPool.Champernowne.Count
+public import LeanPool.Champernowne.CountExtras
+public import LeanPool.Champernowne.Defs
+public import LeanPool.Champernowne.DigitCount
+public import LeanPool.Champernowne.Main
+public import LeanPool.Champernowne.Positions
+public import LeanPool.Champernowne.Prefix
 public import LeanPool.ChannelCapacity
 public import LeanPool.ChannelCapacity.Basic
 public import LeanPool.ChannelCapacity.Capacity
