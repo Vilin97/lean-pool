@@ -141,6 +141,31 @@ lemma conv_abs_summable
   exact mul_le_mul_of_nonneg_left ( Real.le_sqrt_of_sq_le ( Summable.le_tsum ( hg_sq ) ( m - i )
       ( fun _ _ => sq_nonneg _ ) ) ) ( hf_nn i )
 
+private lemma young_joint_summable (f g : (Fin n → ℤ) → ℝ)
+    (hf : Summable f) (hg_sq : Summable (fun m => g m ^ 2)) :
+    Summable (fun p : (Fin n → ℤ) × (Fin n → ℤ) => f p.2 * g (p.1 - p.2) ^ 2) := by
+  have hprod : Summable (fun p : (Fin n → ℤ) × (Fin n → ℤ) =>
+      f p.1 * g p.2 ^ 2) := by
+    exact .of_norm <| by simpa using Summable.mul_norm hf.norm hg_sq.norm
+  exact hprod.comp_injective
+    (show Function.Injective (fun p : (Fin n → ℤ) × (Fin n → ℤ) =>
+      (p.2, p.1 - p.2)) from fun p q h => by
+      rcases p with ⟨a, b⟩
+      rcases q with ⟨c, d⟩
+      have hb : b = d := congrArg Prod.fst h
+      have ha : a - b = c - d := congrArg Prod.snd h
+      simp only [hb, sub_left_inj] at ha
+      exact Prod.ext ha hb)
+
+private lemma young_fubini (f g : (Fin n → ℤ) → ℝ)
+    (hf : Summable f) (hg_sq : Summable (fun m => g m ^ 2)) :
+    ∑' m, ∑' i, f i * g (m - i) ^ 2 = ∑' i, f i * ∑' m, g (m - i) ^ 2 := by
+  calc
+    _ = ∑' i, ∑' m, f i * g (m - i) ^ 2 :=
+      (Summable.tsum_comm (f := fun m i => f i * g (m - i) ^ 2)
+        (young_joint_summable f g hf hg_sq)).symm
+    _ = _ := tsum_congr fun i => tsum_mul_left
+
 /-
 **Young's convolution inequality** for ℓ¹ ⊛ ℓ² on `ℤⁿ`.
 If `f ∈ ℓ¹` and `g ∈ ℓ²` are non-negative, then `f ⊛ g ∈ ℓ²` with
@@ -201,66 +226,18 @@ theorem young_conv_sq_bound
         mul_le_mul_of_nonneg_left ( show g ( m - i ) ^ 2 ≤ ∑' j, g j ^ 2 from ?_ ) ( hf_nn i ) )
         ( hf.mul_right _ );
     exact Summable.le_tsum ( hg_sq ) ( m - i ) ( fun _ _ => sq_nonneg _ );
-  have h_fubini : ∑' m, ∑' i, f i * g (m - i) ^ 2 = ∑' i, f i * ∑' m, g (m - i) ^ 2 := by
-    rw [ Summable.tsum_comm ];
-    · simp +decide only [← tsum_mul_left];
-    · have h_fubini : Summable (fun p : (Fin n → ℤ) × (Fin n → ℤ) => f p.1 * g p.2 ^ 2) := by
-        exact .of_norm <| by simpa using Summable.mul_norm ( hf.norm ) ( hg_sq.norm );
-      convert h_fubini.comp_injective ( show Function.Injective ( fun p : ( Fin n → ℤ ) × ( Fin
-          n → ℤ ) => ( p.1, p.2 - p.1 ) ) from fun p q h => by aesop ) using 1
-      funext p; simp [Function.uncurry, Function.comp]
+  have hjoint := young_joint_summable f g hf hg_sq
+  have h_fubini := young_fubini f g hf hg_sq
+  have hmajor : Summable (fun m => (∑' i, f i) * ∑' i, f i * g (m - i) ^ 2) :=
+    hjoint.prod.mul_left _
+  have hconv : Summable (fun m => (∑' i, f i * g (m - i)) ^ 2) :=
+    Summable.of_nonneg_of_le (fun m => sq_nonneg _) h_cauchy_schwarz hmajor
   have h_translation_invariance : ∀ i, ∑' m, g (m - i) ^ 2 = ∑' m, g m ^ 2 := by
     exact fun i => Equiv.tsum_eq ( Equiv.subRight i ) fun m => g m ^ 2;
-  simp_all +decide only [tsum_mul_right];
-  refine ⟨ ?_, ?_ ⟩;
-  · refine Summable.of_nonneg_of_le ( fun m => sq_nonneg _ ) ( fun m => h_cauchy_schwarz m ) ?_;
-    refine Summable.mul_left _ ?_;
-    contrapose! h_fubini;
-    rw [ tsum_eq_zero_of_not_summable h_fubini ]; norm_num;
-    constructor;
-    · intro H;
-      have h_zero : ∀ m, f m = 0 := by
-        exact fun m => le_antisymm ( le_trans ( Summable.le_tsum ( hf ) m ( fun _ _ => hf_nn _ )
-            ) H.le ) ( hf_nn m );
-      exact h_fubini <| by simp [ h_zero ];
-    · intro H; simp_all +decide only ;
-      -- Since $\sum' m, g m ^ 2 = 0$, we have $g m = 0$ for all $m$.
-      have h_g_zero : ∀ m, g m = 0 := by
-        exact fun m => sq_eq_zero_iff.mp ( le_antisymm ( le_trans ( Summable.le_tsum ( hg_sq ) m
-            ( fun _ _ => sq_nonneg _ ) ) H.le ) ( sq_nonneg _ ) );
-      exact h_fubini <| by simp [ h_g_zero ];
-  · refine le_trans ( Summable.tsum_le_tsum h_cauchy_schwarz ?_ ?_ ) ?_;
-    · refine Summable.of_nonneg_of_le ( fun m => sq_nonneg _ ) ( fun m => h_cauchy_schwarz m ) ?_;
-      refine Summable.mul_left _ ?_;
-      contrapose! h_fubini;
-      rw [ tsum_eq_zero_of_not_summable h_fubini ]; norm_num;
-      constructor;
-      · intro H;
-        have h_zero : ∀ m, f m = 0 := by
-          exact fun m => le_antisymm ( le_trans ( Summable.le_tsum ( hf ) m ( fun _ _ => hf_nn _
-              ) ) H.le ) ( hf_nn m );
-        exact h_fubini <| by simp [ h_zero ];
-      · intro H; simp_all +decide only ;
-        -- Since $\sum' m, g m ^ 2 = 0$, we have $g m = 0$ for all $m$.
-        have h_g_zero : ∀ m, g m = 0 := by
-          exact fun m => sq_eq_zero_iff.mp ( le_antisymm ( le_trans ( Summable.le_tsum ( hg_sq )
-              m ( fun _ _ => sq_nonneg _ ) ) H.le ) ( sq_nonneg _ ) );
-        exact h_fubini <| by simp [ h_g_zero ];
-    · refine Summable.mul_left _ ?_;
-      contrapose! h_fubini;
-      rw [ tsum_eq_zero_of_not_summable h_fubini ]; norm_num;
-      constructor <;> intro h <;> simp_all +decide only [zero_mul, _root_.sq_nonpos_iff];
-      · -- Since $f$ is non-negative and its sum is zero, $f$ must be zero everywhere.
-        have h_f_zero : ∀ m, f m = 0 := by
-          exact fun m => le_antisymm ( le_trans ( Summable.le_tsum ( hf ) m ( fun _ _ => hf_nn _
-              ) ) h.le ) ( hf_nn m );
-        exact h_fubini <| by simp [ h_f_zero ];
-      · -- Since $\sum' m, g m ^ 2 = 0$, we have $g m = 0$ for all $m$.
-        have h_g_zero : ∀ m, g m = 0 := by
-          exact fun m => sq_eq_zero_iff.mp ( le_antisymm ( le_trans ( Summable.le_tsum ( hg_sq )
-              m ( fun _ _ => sq_nonneg _ ) ) h.le ) ( sq_nonneg _ ) );
-        exact h_fubini <| by simp [ h_g_zero ];
-    · rw [ tsum_mul_left, h_fubini, sq, mul_assoc ]
+  refine ⟨hconv, (hconv.tsum_le_tsum h_cauchy_schwarz hmajor).trans_eq ?_⟩
+  rw [tsum_mul_left, h_fubini]
+  simp only [h_translation_invariance, tsum_mul_right]
+  ring
 
 /-! ## First Sobolev multiplication theorem (sequence side) -/
 
