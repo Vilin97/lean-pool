@@ -24,21 +24,6 @@ construction is finite and the input words remain visible in the definition.
 
 namespace Stallings
 
-/-- The maximum length of a word in a finite input list. -/
-def maxWordLength : List Word → Nat
-  | [] => 0
-  | w :: ws => max w.length (maxWordLength ws)
-
-theorem length_le_maxWordLength_of_mem {S : List Word} {w : Word} (h : w ∈ S) :
-    w.length ≤ maxWordLength S := by
-  induction S with
-  | nil => simp at h
-  | cons u S ih =>
-      simp only [List.mem_cons] at h
-      rcases h with rfl | h
-      · exact Nat.le_max_left _ _
-      · exact (ih h).trans (Nat.le_max_right _ _)
-
 /-- A finite vertex type for the flower of `S`. `none` is the common basepoint;
 `some ⟨i,k⟩` is the vertex after `k + 1` letters of the `i`th generator.
 Only internal positions are retained; empty and singleton words add no vertices. -/
