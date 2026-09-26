@@ -9,6 +9,8 @@ on:
       - 'NOTICE'
       - 'NOTICE.extra.yml'
       - '.github/workflows/python_ci.yml'
+      - '.github/workflows/lean_action_ci.yml'
+      - '.github/workflows/docs.yml'
   pull_request:
     branches:
       - main
@@ -23,6 +25,8 @@ on:
       - 'NOTICE'
       - 'NOTICE.extra.yml'
       - '.github/workflows/python_ci.yml'
+      - '.github/workflows/lean_action_ci.yml'
+      - '.github/workflows/docs.yml'
   workflow_dispatch:
 
 concurrency:
