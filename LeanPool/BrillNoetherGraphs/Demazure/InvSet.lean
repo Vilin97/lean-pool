@@ -729,7 +729,8 @@ noncomputable def AspPermEquivAspSet :
 /-!
 A set $I \subseteq \mathbb{Z} \times \mathbb{Z}$ is the inversion set of an ASP permutation
 with shift parameter $\chi$ if and only if it satisfies the ASP set properties.
-*Theorem 2.13* (`thm:aspSetReconstruction`) from [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
+*Theorem 2.13* (`thm:aspSetReconstruction`) from [An extended Demazure
+product](https://arxiv.org/abs/2206.14227). -/
 theorem invSets_of_AspPerms (I : Set (ℤ × ℤ)) (χ : ℤ) :
   (∃ τ : AspPerm, invSet τ = I ∧ τ.χ = χ) ↔  (AspSet_prop I) := by
   constructor

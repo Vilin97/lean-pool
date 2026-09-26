@@ -1716,7 +1716,8 @@ def Δ (a b : ℤ) : ℤ :=
   sf (a+1) b - sf a b - sf (a+1) (b+1) + sf a (b+1)
 
 /-- Duality preserves the mixed difference `Δ` after swapping the coordinates.
-*Equation (20) (`eq:DeltasDual`) of [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
+*Equation (20) (`eq:DeltasDual`) of [An extended Demazure
+product](https://arxiv.org/abs/2206.14227).* -/
 lemma Δ_dual (a b : ℤ) : sf.dual.Δ b a = sf.Δ a b := by
   dsimp [SlipFace.dual, Δ]
   omega
@@ -1848,7 +1849,8 @@ s(a-1,b) < s(a,b) = s(a+1,b) \mbox{ and } s(a,b+1) < s(a,b) = s(a,b-1) \}.$
 def ess : Set (ℤ × ℤ) := {(a, b) | sf (a-1) b < sf a b ∧ sf a b = sf (a+1) b
   ∧ sf a (b+1) < sf a b ∧ sf a b = sf a (b-1)}
 
-/-- Lemma 7.2 (`lem:essSetMoves`) of [An extended Demazure product](https://arxiv.org/abs/2206.14227).
+/-- Lemma 7.2 (`lem:essSetMoves`) of [An extended Demazure
+product](https://arxiv.org/abs/2206.14227).
 -/
 lemma ess_step (s t : SlipFace) (a b : ℤ) (wit : s a b > t a b) :
   ¬ (a, b) ∈ s.ess →

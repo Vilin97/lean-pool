@@ -151,7 +151,8 @@ uniqueness of the chain.
 **The route actually taken is the paper's level-set decomposition, not the
 "maximal legal set" route this docstring used to recommend.**  That route is a
 dead end: a set `U` legal for `D` is *not* in general legal for
-`setFiring G D U` (that would need `D u ≥ 2 · outdegreeSet G U u`), so maximality at consecutive steps
+`setFiring G D U` (that would need `D u ≥ 2 · outdegreeSet G U u`), so maximality at consecutive
+steps
 does not force nestedness.  What works instead:
 
 * take `D'`, the `q`-reduced representative of `D` (`exists_q_reduced_representative`),

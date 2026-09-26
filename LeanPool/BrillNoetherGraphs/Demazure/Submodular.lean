@@ -190,7 +190,8 @@ private lemma asp_bijective {s : SlipFace} (hsub : s.submodular) :
     exact (unique_a hsub b).choose_spec.2 a mem
 
 /-- The ASP permutation associated to a submodular slipface. It can be reconstructed from the set
-$\Gamma$ in the manner described in Section 4 of [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
+$\Gamma$ in the manner described in Section 4 of [An extended Demazure
+product](https://arxiv.org/abs/2206.14227). -/
 noncomputable def asp {s : SlipFace} (hsub : s.submodular) : AspPerm where
   func := aspFunc hsub
   bijective := by exact asp_bijective hsub
@@ -1160,14 +1161,16 @@ lemma chi_rres (α β : AspPerm) : (α ▹ β).χ = α.χ + β.χ := by
   simp only [rres_spec, SlipFace.chi_rres]
 
 /-- The min-plus characterization of the Demazure product on \mathrm{ASP}.
-This is part of *Theorem A* (`thm:starExists`) in [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
+This is part of *Theorem A* (`thm:starExists`) in [An extended Demazure
+product](https://arxiv.org/abs/2206.14227). -/
 theorem star_sf_isleast (α β : AspPerm) (a b : ℤ) :
     IsLeast {α.s a l + β.s l b | l : ℤ} ((α ⋆ β).s a b) := by
   have h := SlipFace.star_eq_min α.s β.s a b
   rwa [← star_spec α β] at h
 
 /-- The max-minus characteriztion of the $\triangleleft$ operator on \mathrm{ASP}.
-This is part of *Theorem 1.1* (`thm:resL`) in [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
+This is part of *Theorem 1.1* (`thm:resL`) in [An extended Demazure
+product](https://arxiv.org/abs/2206.14227). -/
 theorem lres_sf_isgreatest (α β : AspPerm) (a b : ℤ) :
     IsGreatest {α.s a l - β⁻¹.s b l | l : ℤ} ((α ◃ β).s a b) := by
   constructor
@@ -1375,7 +1378,8 @@ lemma ge_star_iff_ge_rres (α β τ : AspPerm) :
 
 /-- The left residual $\alpha \triangleleft \beta^{-1}$ is the minimum permutation $\gamma$
   such that $\gamma \star \beta \ge \alpha$.
-  This is the first sentence of *Theorem 1.1* (`thm:resL`) in [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
+  This is the first sentence of *Theorem 1.1* (`thm:resL`) in [An extended Demazure
+  product](https://arxiv.org/abs/2206.14227). -/
 theorem lres_eq_min (α β : AspPerm) :
   IsLeast {γ : AspPerm | γ ⋆ β ≥ α } (α ◃ β⁻¹) := by
   constructor
@@ -1385,7 +1389,8 @@ theorem lres_eq_min (α β : AspPerm) :
 
 /- The right residual $\alpha^{-1} \triangleright \beta$ is the minimum permutation $\gamma$
   such that $\alpha \star \gamma \ge \beta$.
-  This is Equation (11) (`eq:resRMin`) in [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
+  This is Equation (11) (`eq:resRMin`) in [An extended Demazure
+  product](https://arxiv.org/abs/2206.14227). -/
 theorem rres_eq_min (α β : AspPerm) :
   IsLeast {γ : AspPerm | α ⋆ γ ≥ β } (α⁻¹ ▹ β) := by
   constructor
@@ -1437,7 +1442,8 @@ lemma eq_star_iff {τ α β : AspPerm} : τ = α ⋆ β ↔ τ.eqDprod α β := 
     apply le_antisymm le ge
 
 /-- Comparison of ASP permutations in the Bruhat order using essential set.
-  This is Corollary 7.9 (`cor:essBD`) in [An extended Demazure product](https://arxiv.org/abs/2206.14227).
+  This is Corollary 7.9 (`cor:essBD`) in [An extended Demazure
+  product](https://arxiv.org/abs/2206.14227).
   This theorem is delayed until this file since the definition of `≤` on ASP is needed for the
   statement. -/
 theorem ess_bdiff (α β : AspPerm) (bdiff : α.isBdiff) :
