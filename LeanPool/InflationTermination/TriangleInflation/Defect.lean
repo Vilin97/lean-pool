@@ -7,6 +7,7 @@ module
 
 
 public import LeanPool.InflationTermination.TriangleInflation.Finner
+public import LeanPool.InflationTermination.TriangleInflation.FiniteWeights
 
 /-!
 # The defect cube
@@ -76,56 +77,7 @@ theorem sum_prodLaw_mul_mul {w : ι → Bool → ℝ} (hw : ∀ i, IsLaw (w i))
     (hψ : ∀ x y, (∀ i ∈ J, x i = y i) → ψ x = ψ y) :
     ∑ x, prodLaw w x * (φ x * ψ x)
       = (∑ x, prodLaw w x * φ x) * (∑ x, prodLaw w x * ψ x) := by
-  classical
-  set T : (ι → Bool) × (ι → Bool) → (ι → Bool) × (ι → Bool) :=
-    fun q => (mixOn I q.1 q.2, mixOn I q.2 q.1) with hTdef
-  have hTT : Function.LeftInverse T T := by
-    intro q
-    have h1 : mixOn I (mixOn I q.1 q.2) (mixOn I q.2 q.1) = q.1 := by
-      funext i
-      by_cases hi : i ∈ I
-      · rw [mixOn_mem hi, mixOn_mem hi]
-      · rw [mixOn_not_mem hi, mixOn_not_mem hi]
-    have h2 : mixOn I (mixOn I q.2 q.1) (mixOn I q.1 q.2) = q.2 := by
-      funext i
-      by_cases hi : i ∈ I
-      · rw [mixOn_mem hi, mixOn_mem hi]
-      · rw [mixOn_not_mem hi, mixOn_not_mem hi]
-    simp only [hTdef]
-    exact Prod.ext h1 h2
-  let e : (ι → Bool) × (ι → Bool) ≃ (ι → Bool) × (ι → Bool) := ⟨T, T, hTT, hTT⟩
-  have hstep : ∀ q : (ι → Bool) × (ι → Bool),
-      (prodLaw w q.1 * φ q.1) * (prodLaw w q.2 * ψ q.2)
-        = (prodLaw w (e q).1 * (φ (e q).1 * ψ (e q).1)) * prodLaw w (e q).2 := by
-    intro q
-    have hφm : φ (mixOn I q.1 q.2) = φ q.1 :=
-      hφ _ _ fun i hi => mixOn_mem hi
-    have hψm : ψ (mixOn I q.1 q.2) = ψ q.2 :=
-      hψ _ _ fun i hi => mixOn_not_mem (Finset.disjoint_right.mp hIJ hi)
-    have hp := prodLaw_mixOn_mul (w := w) I q.1 q.2
-    change (prodLaw w q.1 * φ q.1) * (prodLaw w q.2 * ψ q.2)
-      = (prodLaw w (mixOn I q.1 q.2) * (φ (mixOn I q.1 q.2) * ψ (mixOn I q.1 q.2)))
-          * prodLaw w (mixOn I q.2 q.1)
-    rw [hφm, hψm]
-    calc (prodLaw w q.1 * φ q.1) * (prodLaw w q.2 * ψ q.2)
-        = (prodLaw w q.1 * prodLaw w q.2) * (φ q.1 * ψ q.2) := by ring
-      _ = (prodLaw w (mixOn I q.1 q.2) * prodLaw w (mixOn I q.2 q.1)) * (φ q.1 * ψ q.2) := by
-            rw [hp]
-      _ = (prodLaw w (mixOn I q.1 q.2) * (φ q.1 * ψ q.2)) * prodLaw w (mixOn I q.2 q.1) := by
-            ring
-  have hsum := Fintype.sum_equiv e
-    (fun q : (ι → Bool) × (ι → Bool) => (prodLaw w q.1 * φ q.1) * (prodLaw w q.2 * ψ q.2))
-    (fun q : (ι → Bool) × (ι → Bool) =>
-      (prodLaw w q.1 * (φ q.1 * ψ q.1)) * prodLaw w q.2) hstep
-  have e1 : (∑ x, prodLaw w x * φ x) * (∑ x, prodLaw w x * ψ x)
-      = ∑ q : (ι → Bool) × (ι → Bool), (prodLaw w q.1 * φ q.1) * (prodLaw w q.2 * ψ q.2) := by
-    simp only [Fintype.sum_prod_type]
-    exact Finset.sum_mul_sum _ _ _ _
-  have e2 : (∑ x, prodLaw w x * (φ x * ψ x)) * (∑ x, prodLaw w x)
-      = ∑ q : (ι → Bool) × (ι → Bool), (prodLaw w q.1 * (φ q.1 * ψ q.1)) * prodLaw w q.2 := by
-    simp only [Fintype.sum_prod_type]
-    exact Finset.sum_mul_sum _ _ _ _
-  rw [e1, hsum, ← e2, sum_prodLaw hw, mul_one]
+  exact FiniteWeights.sum_dprod_mul_mul (fun i => (hw i).2) hIJ hφ hψ
 
 /-- The finite-family expectation form: real-valued functions of pairwise disjoint
 coordinate sets have a product expectation under a product weight. -/
@@ -134,39 +86,7 @@ theorem sum_prodLaw_prod {w : ι → Bool → ℝ} (hw : ∀ i, IsLaw (w i)) :
       (∀ m m', m ≠ m' → Disjoint (I m) (I m')) →
       (∀ m x y, (∀ i ∈ I m, x i = y i) → χ m x = χ m y) →
       ∑ x, prodLaw w x * ∏ m, χ m x = ∏ m, ∑ x, prodLaw w x * χ m x := by
-  intro n
-  induction n with
-  | zero => intro I χ _ _; simp [sum_prodLaw hw]
-  | succ n ih =>
-      intro I χ hI hχ
-      have hsplit : ∀ x : ι → Bool,
-          (∏ m : Fin (n + 1), χ m x) = χ 0 x * ∏ m : Fin n, χ m.succ x := by
-        intro x
-        exact Fin.prod_univ_succ (fun m => χ m x)
-      have hdisj : Disjoint (I 0) (univ.biUnion fun m : Fin n => I m.succ) := by
-        rw [Finset.disjoint_biUnion_right]
-        intro m _
-        exact hI 0 m.succ (Ne.symm (Fin.succ_ne_zero m))
-      have hdep : ∀ x y : ι → Bool,
-          (∀ i ∈ univ.biUnion fun m : Fin n => I m.succ, x i = y i) →
-            (∏ m : Fin n, χ m.succ x) = ∏ m : Fin n, χ m.succ y := by
-        intro x y hxy
-        refine Finset.prod_congr rfl fun m _ => ?_
-        exact hχ m.succ x y fun i hi => hxy i (mem_biUnion.mpr ⟨m, mem_univ m, hi⟩)
-      have key := sum_prodLaw_mul_mul hw hdisj (φ := χ 0)
-        (ψ := fun x => ∏ m : Fin n, χ m.succ x) (hχ 0) hdep
-      have hrest := ih (fun m : Fin n => I m.succ) (fun m : Fin n => χ m.succ)
-        (fun m m' hm => hI m.succ m'.succ fun hc => hm (Fin.succ_injective n hc))
-        (fun m => hχ m.succ)
-      calc ∑ x, prodLaw w x * ∏ m : Fin (n + 1), χ m x
-          = ∑ x, prodLaw w x * (χ 0 x * ∏ m : Fin n, χ m.succ x) := by
-            refine Finset.sum_congr rfl fun x _ => ?_
-            rw [hsplit x]
-        _ = (∑ x, prodLaw w x * χ 0 x) * ∑ x, prodLaw w x * ∏ m : Fin n, χ m.succ x := key
-        _ = (∑ x, prodLaw w x * χ 0 x) * ∏ m : Fin n, ∑ x, prodLaw w x * χ m.succ x := by
-            rw [hrest]
-        _ = ∏ m : Fin (n + 1), ∑ x, prodLaw w x * χ m x :=
-            (Fin.prod_univ_succ (fun m => ∑ x, prodLaw w x * χ m x)).symm
+  exact FiniteWeights.sum_dprod_prod (fun i => (hw i).2)
 
 end ProductWeight
 
