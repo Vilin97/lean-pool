@@ -103,7 +103,8 @@ theorem continuous_coeff_divByMonic_X_sub_C (p : Polynomial ℂ) (n : ℕ) :
   rw [hfun]
   fun_prop
 
-private theorem contourIntegral_pow_eq_zero
+/-- Monomials have zero integral around a smooth closed boundary. -/
+theorem contourIntegral_pow_eq_zero
     (Omega : SmoothJordanDomain) (n : ℕ) :
     contourIntegral (fun z : ℂ => z ^ n) Omega.boundaryParam = 0 := by
   apply contourIntegral_eq_zero_of_hasDerivAt_of_closed
@@ -121,7 +122,8 @@ private theorem contourIntegral_pow_eq_zero
     · exact (continuous_pow n).continuousOn
   · simpa only [zero_add] using Omega.boundaryParam_periodic 0
 
-private theorem contourIntegral_finset_sum_pow_mul_eq_zero
+/-- Finite linear combinations of monomials have zero closed-boundary integral. -/
+theorem contourIntegral_finset_sum_pow_mul_eq_zero
     (Omega : SmoothJordanDomain) (s : Finset ℕ) (k : ℕ → ℕ) (c : ℕ → ℂ) :
     contourIntegral (fun z : ℂ => ∑ j ∈ s, z ^ k j * c j)
       Omega.boundaryParam = 0 := by

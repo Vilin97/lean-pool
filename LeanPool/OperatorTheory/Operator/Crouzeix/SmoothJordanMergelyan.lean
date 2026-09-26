@@ -216,44 +216,6 @@ private theorem exists_polynomial_tendstoUniformlyOn_smoothJordanRadialPoint
   rw [inv_sub_smoothJordanRadialPoint c (Omega.boundaryParam t) z hr.1.ne']
   ring
 
-private theorem exists_polynomial_tendstoUniformlyOn_of_iterated_polynomial_limits
-    (K : Set ℂ) (f : ℂ → ℂ) (g : ℕ → ℂ → ℂ)
-    (hg : TendstoUniformlyOn g f atTop K)
-    (hpoly : ∀ n, ∃ q : ℕ → Polynomial ℂ,
-      TendstoUniformlyOn (fun j z => Polynomial.eval z (q j))
-        (g n) atTop K) :
-    ∃ q : ℕ → Polynomial ℂ,
-      TendstoUniformlyOn (fun n z => Polynomial.eval z (q n))
-        f atTop K := by
-  choose q hq using hpoly
-  have hevent : ∀ n : ℕ, ∀ᶠ j in atTop,
-      ∀ z ∈ K, dist (g n z) (Polynomial.eval z (q n j)) <
-        1 / ((n : ℝ) + 1) := by
-    intro n
-    apply (Metric.tendstoUniformlyOn_iff.mp (hq n))
-    positivity
-  choose N hN using fun n => eventually_atTop.1 (hevent n)
-  refine ⟨fun n => q n (N n), ?_⟩
-  rw [Metric.tendstoUniformlyOn_iff]
-  intro ε hε
-  have hg_event : ∀ᶠ n in atTop,
-      ∀ z ∈ K, dist (f z) (g n z) < ε / 2 :=
-    (Metric.tendstoUniformlyOn_iff.mp hg) (ε / 2) (by positivity)
-  have hrate : Tendsto (fun n : ℕ => 1 / ((n : ℝ) + 1))
-      atTop (𝓝 0) := tendsto_one_div_add_atTop_nhds_zero_nat
-  have hrate_event : ∀ᶠ (n : ℕ) in atTop,
-      1 / ((n : ℝ) + 1) < ε / 2 :=
-    hrate.eventually (gt_mem_nhds (by positivity))
-  filter_upwards [hg_event, hrate_event] with n hgn hn z hz
-  calc
-    dist (f z) (Polynomial.eval z (q n (N n))) ≤
-        dist (f z) (g n z) +
-          dist (g n z) (Polynomial.eval z (q n (N n))) :=
-      dist_triangle _ _ _
-    _ < ε / 2 + ε / 2 :=
-      add_lt_add (hgn z hz) ((hN n (N n) le_rfl z hz).trans hn)
-    _ = ε := by ring
-
 /-- A normalized interval Cauchy formula on a compact smooth convex Jordan
 carrier implies the full polynomial approximation property. -/
 theorem SmoothJordanDomain.hasMergelyanPolynomialApproximation_of_intervalCauchyFormula
@@ -284,7 +246,7 @@ theorem SmoothJordanDomain.hasMergelyanPolynomialApproximation_of_intervalCauchy
         (tendstoUniformlyOn_smoothJordanRadialPoint
           (closure Omega.carrier) hcompact c)
   apply
-    exists_polynomial_tendstoUniformlyOn_of_iterated_polynomial_limits
+    exists_polynomial_tendstoUniformlyOn_of_iterated_limits
       (closure Omega.carrier) f g hradial
   intro n
   exact exists_polynomial_tendstoUniformlyOn_smoothJordanRadialPoint

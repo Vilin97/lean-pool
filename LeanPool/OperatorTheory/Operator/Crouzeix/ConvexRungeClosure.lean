@@ -25,7 +25,8 @@ sums into uniform approximation by one polynomial sequence.
 open Filter Polynomial Set
 open scoped Topology
 
-private theorem exists_polynomial_tendstoUniformlyOn_of_iterated_limits
+/-- A uniform limit of uniform polynomial limits admits one polynomial approximating sequence. -/
+theorem exists_polynomial_tendstoUniformlyOn_of_iterated_limits
     (K : Set ℂ) (f : ℂ → ℂ) (g : ℕ → ℂ → ℂ)
     (hg : TendstoUniformlyOn g f atTop K)
     (hpoly : ∀ n, ∃ q : ℕ → Polynomial ℂ,
