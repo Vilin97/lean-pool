@@ -1696,7 +1696,7 @@ private theorem SpecialPeriods.Threefold.VerticalAction.Gluing.holomorphic_of_co
     ContMDiff (((modelWithCornersSelf ℂ (ℂ × ComplexPlane₂))).prod (modelWithCornersSelf ℂ ℂ))
       (modelWithCornersSelf ℂ (ℂ × ComplexPlane₂)) ω (f ∘ q) :=
     hf i
-  have hh := hc.contMDiffAt.comp (q (x, s)) hq.localInverse_contMDiffAt
+  have hh := hc.contMDiffAt.comp (q (x, s)) hq.contMDiffAt_localInverse
   apply hh.congr_of_eventuallyEq
   filter_upwards [hq.localInverse_eventuallyEq_right] with z hz
   change f z = f (q (hq.localInverse z))
@@ -3635,7 +3635,7 @@ private theorem SpecialPeriods.Threefold.VerticalAction.Factor.AdditiveFlow.act_
   let e :=
     SpecialPeriods.Threefold.VerticalAction.Exponential.normalizedExponential_isLocalDiffeomorph s
   have hlog : ContMDiffAt 𝓘(ℂ) 𝓘(ℂ) ω e.localInverse p.2 := by
-    simpa only [hs] using e.localInverse_contMDiffAt
+    simpa only [hs] using e.contMDiffAt_localInverse
   have hpair :
     ContMDiffAt (I.prod 𝓘(ℂ)) (I.prod 𝓘(ℂ)) ω (fun q : M × ℂˣ => (q.1, e.localInverse q.2)) p :=
     contMDiffAt_fst.prodMk (hlog.comp p contMDiffAt_snd)
