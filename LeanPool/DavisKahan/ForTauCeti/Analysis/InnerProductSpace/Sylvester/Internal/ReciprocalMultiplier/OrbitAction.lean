@@ -265,7 +265,7 @@ theorem complexFourierPhase_mul (x y : ℝ) :
   exact (congrArg ((↑) : Circle → ℂ) (Circle.exp_add x y)).symm
 
 /-- The real-linear rotation by `theta` on two copies of a real vector space. -/
-private noncomputable def realRotationLinearEquiv
+noncomputable def realRotationLinearEquiv
     {G : Type*} [AddCommGroup G] [Module ℝ G]
     (theta : ℝ) : (G × G) ≃ₗ[ℝ] (G × G) where
   toFun x :=
@@ -399,7 +399,7 @@ order; the real-only version that lived there is the same construction at `𝕜 
 
 /-- Coordinatewise phase rotations in an orthonormal basis of a `𝕜`-space,
 before transporting the product norm to `WithLp 2`. -/
-private noncomputable def basisDoubledPhaseRotationLinearEquiv
+noncomputable def basisDoubledPhaseRotationLinearEquiv
     (e : OrthonormalBasis ι 𝕜 G) (theta : ι → ℝ) :
     (G × G) ≃ₗ[𝕜] (G × G) := by
   let C := basisDiagonalRealCoeffMap e fun i => Real.cos (theta i)

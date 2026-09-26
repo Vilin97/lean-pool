@@ -36,7 +36,8 @@ variable {E0 : Type*} [NormedAddCommGroup E0] [InnerProductSpace ℂ E0]
 variable {E1 : Type*} [NormedAddCommGroup E1] [InnerProductSpace ℂ E1]
   [CompleteSpace E1]
 
-private abbrev DirectSum (E0 E1 : Type*) := WithLp 2 (E0 × E1)
+/-- The Hilbert direct sum on which an ambient selected graph operator acts. -/
+abbrev DirectSum (E0 E1 : Type*) := WithLp 2 (E0 × E1)
 
 /-- The rectangular first-to-second block of an ambient direct-sum operator. -/
 noncomputable def rectangularAngularPart

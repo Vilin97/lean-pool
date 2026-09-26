@@ -112,6 +112,18 @@ theorem IsCalculusInvariant.borelCalculus_mem {ha : IsStarNormal a} {K : Submodu
     (hx : x ∈ K) : borelCalculus ha hf x ∈ K :=
   hK f hf x hx
 
+/-- A continuous linear map that sends the generating calculus orbit into a closed submodule
+sends the whole cyclic subspace into that submodule. -/
+private theorem map_mem_of_mem_cyclicSubspace
+    (ha : IsStarNormal a) (ξ : H) (T : H →L[ℂ] H) (K : Submodule ℂ H)
+    (hK : IsClosed (K : Set H))
+    (horbit : ∀ (g : spectrum ℂ a → ℂ) (hg : IsBddMeasurable g),
+      T (borelCalculus ha hg ξ) ∈ K) :
+    ∀ x ∈ cyclicSubspace ha ξ, T x ∈ K := by
+  have hle : cyclicSubspace ha ξ ≤ Submodule.comap T.toLinearMap K :=
+    cyclicSubspace_le ha (hK.preimage T.continuous) horbit
+  exact fun x hx => hle hx
+
 /-- **A cyclic subspace is calculus-invariant.**
 
 By minimality (`cyclicSubspace_le`) it suffices to check the calculus orbit of the generating
@@ -119,17 +131,13 @@ vector, where the statement is multiplicativity: `f(a) (g(a) ξ) = (f g)(a) ξ`.
 theorem isCalculusInvariant_cyclicSubspace (ha : IsStarNormal a) (ξ : H) :
     IsCalculusInvariant ha (cyclicSubspace ha ξ) := by
   intro f hf
-  have hle : cyclicSubspace ha ξ
-      ≤ Submodule.comap (borelCalculus ha hf).toLinearMap (cyclicSubspace ha ξ) := by
-    refine cyclicSubspace_le ha
-      ((isClosed_cyclicSubspace ha ξ).preimage (borelCalculus ha hf).continuous) fun g hg => ?_
-    have hmul : borelCalculus ha (hf.mul hg) ξ
-        = borelCalculus ha hf (borelCalculus ha hg ξ) := by
-      rw [borelCalculus_mul ha hf hg, _root_.mul_apply_eq_comp]
-    change borelCalculus ha hf (borelCalculus ha hg ξ) ∈ cyclicSubspace ha ξ
-    rw [← hmul]
-    exact borelCalculus_apply_mem_cyclicSubspace ha (hf.mul hg) ξ
-  exact fun x hx => hle hx
+  apply map_mem_of_mem_cyclicSubspace ha ξ (borelCalculus ha hf)
+    (cyclicSubspace ha ξ) (isClosed_cyclicSubspace ha ξ)
+  intro g hg
+  have hmul : borelCalculus ha (hf.mul hg) ξ =
+      borelCalculus ha hf (borelCalculus ha hg ξ) :=
+    congrArg (fun T : H →L[ℂ] H => T ξ) (borelCalculus_mul ha hf hg)
+  exact hmul ▸ borelCalculus_apply_mem_cyclicSubspace ha (hf.mul hg) ξ
 
 /-- A supremum of calculus-invariant submodules is calculus-invariant. -/
 theorem isCalculusInvariant_iSup {ha : IsStarNormal a} {ι : Type*} {K : ι → Submodule ℂ H}

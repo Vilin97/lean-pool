@@ -107,8 +107,9 @@ private theorem inner_Wlin_Wlin (x y : E4) : ⟪Wlin x, Wlin y⟫_ℝ = ⟪x, y�
 
 /-- The competitor as a linear isometry equivalence. -/
 noncomputable def Wequiv : E4 ≃ₗᵢ[ℝ] E4 :=
-  (LinearEquiv.ofLinearMap Wlin Wlin' Wlin_comp_Wlin' Wlin'_comp_Wlin).isometryOfInner
-    fun x y => inner_Wlin_Wlin x y
+  (LinearEquiv.ofLinearMap Wlin Wlin'
+    (by exact Wlin_comp_Wlin') (by exact Wlin'_comp_Wlin)).isometryOfInner
+    (by intro x y; exact inner_Wlin_Wlin x y)
 
 private theorem Wequiv_apply (x : E4) : Wequiv x = Wlin x := rfl
 
@@ -371,7 +372,7 @@ private theorem orthonormal_mv : Orthonormal ℝ mv := by
 
 /-- The family as an orthonormal basis. -/
 noncomputable def mbasis : OrthonormalBasis (Fin 4) ℝ E4 :=
-  (basisOfLinearIndependentOfCardEqFinrank orthonormal_mv.linearIndependent
+  (basisOfLinearIndependentOfCardEqFinrank (by exact orthonormal_mv.linearIndependent)
     (by simp [])).toOrthonormalBasis
     (by
       rw [coe_basisOfLinearIndependentOfCardEqFinrank]
