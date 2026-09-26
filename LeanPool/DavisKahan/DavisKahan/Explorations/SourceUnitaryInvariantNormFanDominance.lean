@@ -255,6 +255,12 @@ majorization route independently of the finite-rank decomposition needed to
 prove membership.
 -/
 
+/-- Finite-dimensional complex inner-product spaces are complete. -/
+local instance instCompleteSpaceFiniteFanDominance
+    {E : Type v} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [FiniteDimensional ℂ E] : CompleteSpace E :=
+  FiniteDimensional.complete ℂ E
+
 /-- Every operator between finite-dimensional complex Hilbert spaces belongs to
 this source ideal.
 
@@ -2292,7 +2298,8 @@ private theorem fanCounterexampleCoeff_antitone :
 /-- Infinite-rank compact diagonal used to test membership transfer. -/
 noncomputable def fanCounterexampleA :
     FanCounterexampleSpace →L[ℂ] FanCounterexampleSpace :=
-  diagOpLp fanCounterexampleCoeff (K := 1) (by norm_num) fanCounterexampleCoeff_le_one
+  diagOpLp fanCounterexampleCoeff (K := 1) (by norm_num)
+    (by exact fanCounterexampleCoeff_le_one)
 
 @[simp]
 theorem approximationNumber_fanCounterexampleA (n : ℕ) :
