@@ -89,7 +89,7 @@ lemma rFullPart_pow (r m : ℕ) (hm : m ≠ 0) (hr : r ≠ 0) :
     rFullPart r (m ^ r) = m ^ r := by
   apply Nat.factorization_inj
   · exact Nat.ne_of_gt ( rFullPart_pos _ _ ( pow_ne_zero _ hm ) );
-  · aesop;
+  · exact pow_ne_zero _ hm
   · ext p
     by_cases hp : p.Prime
     · rw [rFullPart_factorization _ _ (pow_ne_zero _ hm)]
@@ -118,12 +118,15 @@ lemma pow_dvd_rFullPart (r m d : ℕ) (hm : m ≠ 0) (hdvd : d ^ r ∣ m) :
   rw [ ← Nat.factorization_le_iff_dvd ];
   · intro p
     have := Nat.factorization_le_iff_dvd
-      (show d ^ r ≠ 0 from by aesop)
+      (show d ^ r ≠ 0 from by
+        intro hzero
+        apply hm
+        exact Nat.eq_zero_of_zero_dvd (hzero ▸ hdvd))
       (show m ≠ 0 from hm) |>.2 hdvd
     simp_all +decide [Finsupp.le_def]
     by_cases h : r ≤ m.factorization p <;> simp_all +decide [ rFullPart_factorization ];
     nlinarith [ this p ];
-  · aesop;
+  · exact fun hzero => hm (Nat.eq_zero_of_zero_dvd (hzero ▸ hdvd))
   · exact Nat.ne_of_gt ( rFullPart_pos r m hm )
 
 /-- If d^r ∣ m and m ≠ 0, then d^r ≤ B_r(m). -/

@@ -514,7 +514,7 @@ lemma prime_sq_dvd_pellN_plus2 (p : ℕ) (hp : p.Prime) (hp5 : p % 8 = 5) :
     rw [pellN_eq, show pellX j ^ 2 = 8 * pellY j ^ 2 + 1 by
       linarith [pell_identity j]]
     ring
-  aesop
+  simpa [hj.1, hL.1] using h_div
 
 /-! ## Key lemma and main theorem
 
@@ -658,7 +658,8 @@ From an infinite set, extract a finset of any desired cardinality.
 -/
 lemma exists_finset_of_infinite {α : Type*} {S : Set α} (hS : S.Infinite) (n : ℕ) :
     ∃ T : Finset α, n ≤ T.card ∧ ∀ x ∈ T, x ∈ S := by
-  rcases hS.exists_subset_card_eq n with ⟨ T, hT ⟩; aesop
+  rcases hS.exists_subset_card_eq n with ⟨ T, hT ⟩
+  exact ⟨T, le_of_eq hT.2.symm, hT.1⟩
 
 /-
 For a finset of distinct primes, if each `p^2 ∣ m`, then `∏ p^2 ∣ m`.

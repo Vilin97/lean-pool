@@ -223,7 +223,7 @@ theorem T3 (s t₀ : ℕ) (hs : s.Prime) (hs3 : s ≠ 3) (ht₀ : 1 ≤ t₀ ∧
       512 * (nval s t₀ * rFullPart 3 (nval s t₀ + 1)) ^ 9 ≥ nval s t₀ ^ 9 * tval s t₀ ^ 36 := by
     have := Nat.pow_le_pow_left h2BB_ge_nt4 9
     ring_nf at *
-    aesop
+    omega
   simp_all +decide only [gt_iff_lt]
   exact lt_of_lt_of_le
     (by nlinarith [pow_pos hn_pos 9, pow_pos hn_pos 4,
